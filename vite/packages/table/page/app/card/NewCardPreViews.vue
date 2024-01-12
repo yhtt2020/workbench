@@ -305,6 +305,9 @@ export default {
       }
     },
   },
+  mounted() {
+ 
+  },
   data() {
     return {
       navLists: [],
@@ -412,11 +415,9 @@ export default {
         this.settingVisible = true;
         return;
       }
-      console.log("执行......排查-1", item, i);
       this.add(item, i);
     },
     add(item, index) {
-      console.log("执行......排查-2", item, index);
       index = index ?? this.carouselIndex;
 
       this.addCard(
@@ -425,13 +426,8 @@ export default {
       );
       this.$emit("addSuccess");
       message.success("添加成功！");
-
-      if (item?.name == "clocks") {
-        completeTask("m0101");
-      }
-      if (item?.name == "yuanCommunity") {
-        completeTask("m0302");
-      }
+      completeTask("m0101");
+      completeTask("m0302");
     },
     closeMarket(val) {
       this.openRemote = val;

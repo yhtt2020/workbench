@@ -464,33 +464,32 @@ onMounted(async () => {
     customData.value.icon =
       "https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#ffffff";
   }
-  if (customData.value.model != "custom") {
-    const desktopApps = await ipc.sendSync("getDeskApps");
-    let desktopAppsList = [];
+  if (customData.value.model != "custom") return;
+  const desktopApps = await ipc.sendSync("getDeskApps");
+  let desktopAppsList = [];
 
-    desktopApps.forEach((item) => {
-      const file = {
-        ...defaultData,
-        name: item.name,
-        value: item.path,
-        icon: item.icon,
-        type: "tableApp",
-        id: nanoid(6),
-      };
-      desktopAppsList.push(file);
-    });
-    customData.value.list = customData.value.list.filter((item) =>
-      desktopAppsList.find((file) => item.name == file.name)
-    );
-    let newList = [];
-    desktopAppsList.forEach((item) => {
-      let data = customData.value.list.find((file) => item.name == file.name);
+  desktopApps.forEach((item) => {
+    const file = {
+      ...defaultData,
+      name: item.name,
+      value: item.path,
+      icon: item.icon,
+      type: "tableApp",
+      id: nanoid(6),
+    };
+    desktopAppsList.push(file);
+  });
+  customData.value.list = customData.value.list.filter((item) =>
+    desktopAppsList.find((file) => item.name == file.name)
+  );
+  let newList = [];
+  desktopAppsList.forEach((item) => {
+    let data = customData.value.list.find((file) => item.name == file.name);
 
-      if (typeof data == "undefined") {
-        customData.value.list.push(item);
-      }
-    });
-  }
+    if (typeof data == "undefined") {
+      customData.value.list.push(item);
+    }
+  });
 });
 </script>
 

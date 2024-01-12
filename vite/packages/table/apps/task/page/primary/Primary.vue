@@ -26,7 +26,6 @@
         <div class="flex mb-4">
           <Reward v-for="item in currentTask.reward" v-bind="item" />
         </div>
-
         <StartTask :task="currentTask" class="mt-3"></StartTask>
       </div>
     </div>
@@ -39,8 +38,42 @@ import StartTask from "./StartTask.vue";
 
 import { tasks } from "./Primary";
 import { taskStore } from "../../store";
-import { ref, reactive, computed, toRefs } from "vue";
+import { ref, reactive, computed, toRefs, onMounted } from "vue";
 import Reward from "../../components/Reward.vue";
+import { getAllTask } from "../../api";
+
+const store = taskStore();
+
+const { list, taskID, currentId, completedList, currentTaskList } =
+  toRefs(store);
+
+/**
+ * 首次进入时，处理任务进度
+ */
+onMounted(async () => {
+  let { code, data } = await getAllTask();
+  if (code !== 200) return;
+  currentTaskList.value = data;
+  const type = "main";
+
+  let arr = data.filter((obj) => obj.type === type);
+
+  console.log("arr :>> ", arr);
+  let currentTask = arr.find((item) => {
+    if (item.done == 0) return item;
+    completedList.value.push = item.name;
+  });
+
+  if (!currentTask) {
+    taskID.value = "";
+    return;
+  }
+  console.log("currentTask :>> ", currentTask);
+
+  taskID.value = currentTask.name;
+  currentId.value = currentTask.name;
+});
+// 修改资料直接弹出 301
 
 /**
  * 处理主线任务
@@ -50,9 +83,6 @@ const test = () => {
   store.success = false;
   store.step = -1;
 };
-const store = taskStore();
-
-const { list } = toRefs(store);
 
 // 获取当前章节的所有任务
 let chapter = computed(() => {

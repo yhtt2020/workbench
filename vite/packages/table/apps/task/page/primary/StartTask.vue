@@ -1,13 +1,7 @@
 <template>
-  <!-- 任务弹窗 -->
-  <xt-message
-    @ok="ok()"
-    @no="no()"
-    v-model="data.visible"
-    :text="data.text"
-  ></xt-message>
   <!-- 任务按钮 -->
-  <xt-button v-if="store.startList.includes(task.id)" plain type="theme"  @click="taskGuide()" block
+  {{ startList }}
+  <xt-button v-if="continueTask" plain type="theme" @click="startTask()" block
     >继续任务</xt-button
   >
   <xt-button
@@ -17,19 +11,22 @@
     h="40"
     >领取奖励</xt-button
   >
-  <xt-button v-else style="width: 100%" type="theme"  h="40" @click='startTask'
+  <xt-button v-else style="width: 100%" type="theme" h="40" @click="startTask"
     >开始任务</xt-button
   >
 </template>
 
 <script setup>
-import { reactive, ref, getCurrentInstance } from "vue";
+import { reactive, ref, getCurrentInstance, computed } from "vue";
 import { useRouter } from "vue-router";
 import { guide } from "../../../../ui/components/Task/guide";
 import { lastGuide } from "./lastGuide";
 import { endGuide } from "./endGuide";
 import { taskStore } from "../../store";
-// C:\Users\16110\Desktop\demo1 (2)\browser\vite\packages\table\store.ts
+import { useToast } from "vue-toastification";
+import { storeToRefs } from "pinia";
+import Guide from "../../components/Guide.vue";
+
 import { appStore } from "../../../../store";
 const { proxy } = getCurrentInstance();
 const app = appStore();
@@ -37,6 +34,7 @@ const app = appStore();
 import { getAllTask, completeTask } from "../../api";
 // 初始化
 const store = taskStore();
+const { currentId, startList } = storeToRefs(store);
 const router = useRouter();
 const props = defineProps({
   task: {},
@@ -44,10 +42,24 @@ const props = defineProps({
     default: true,
   },
 });
-const data = reactive({
-  visible: false,
-  text: "",
-});
+const getGuide = () => {
+  const toast = useToast();
+  toast(
+    {
+      component: Guide,
+    },
+    {
+      position: "top-right",
+      icon: false,
+      closeOnClick: false,
+      closeButton: false,
+      pauseOnFocusLoss: true,
+      pauseOnHover: true,
+      timeout: 0,
+      toastClassName: "notice-toast",
+    }
+  );
+};
 
 // 任务步骤初始化
 const init = () => {
@@ -56,14 +68,12 @@ const init = () => {
 };
 
 // 任务引导
-const startTask=()=>{
-  store.startList.push(props.task.id);
-  taskGuide()
-}
-const taskGuide = () => {
+const startTask = () => {
+  startList.value.push(props.task.id);
+  startList.value = [...new Set(startList.value)];
+  currentId.value = props.task.id;
+  getGuide();
   const open = props.task.open;
-  // proxy.$bus()
-  store.startList.push(props.task.id);
   open.forEach((item) => {
     if (item.type === "router") {
       router.push({
@@ -80,21 +90,10 @@ const taskGuide = () => {
   store.isTaskDrawer = false;
 };
 
-const ok = () => {
-  router.push({
-    name: "home",
-  });
-  store.isTaskDrawer = false;
-  //  这里执行fn
-  let fn = lastGuide[store.taskID];
-  data.visible = false;
-  fn && fn();
-  init();
-};
-
-const no = () => {
-  data.visible = false;
-};
+const continueTask = computed(() => {
+  let res = startList.value.includes(props.task.id);
+  return res;
+});
 
 // 领取奖励
 const receive = async () => {
@@ -115,4 +114,8 @@ const receive = async () => {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.test {
+  background: red !important;
+}
+</style>

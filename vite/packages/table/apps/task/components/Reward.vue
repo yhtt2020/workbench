@@ -18,6 +18,7 @@
     >
       {{ types[type].name }}
     </div>
+    {{ types[type].icon }}
     <a-avatar
       v-if="type == 'avatarFrame' || type == 'medal'"
       shape="square"
@@ -77,6 +78,8 @@ const currentId = computed(() => {
 });
 
 const getTask = computed(() => {
+  console.log('currentTaskList.value :>> ', currentTaskList.value);
+  console.log('currentId.value :>> ', currentId.value);
   const result = currentTaskList.value.find(
     (item) => item.name == currentId.value
   );
@@ -88,17 +91,21 @@ const getTask = computed(() => {
   }
 });
 
-const getTaskMedal = computed(() => {
-  if (type.value != "medal") return "";
+const getAvatarFrame = computed(() => {
+  if (type.value != "avatarFrame") return "";
   if (!getTask.value) return "";
 
+  let res = getTask.value.find((item) => item.label == "道具");
   let { data } = getTask.value.find((item) => item.label == "道具");
   return data.icon;
 });
 
-const getAvatarFrame = computed(() => {
-  if (type.value != "avatarFrame") return "";
+const getTaskMedal = computed(() => {
+  console.log('123 :>> ', type.value);
+  if (type.value != "medal") return "";
+  console.log('222222 :>> ', getTask.value);
   if (!getTask.value) return "";
+  console.log('3333 :>> ', 3333);
   let { data } = getTask.value.find((item) => item.label == "勋章");
   return data.icon_sm;
 });

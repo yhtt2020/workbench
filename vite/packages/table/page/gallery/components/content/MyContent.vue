@@ -247,6 +247,7 @@
     },
     // 设置工作台背景和桌面壁纸
     setAppPaper(img){
+      completeTask('M0201')
       if(img !== null){
         message.info('正在为您设置背景');
       }

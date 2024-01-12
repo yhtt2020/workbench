@@ -149,13 +149,14 @@ export default {
 
     // 设置工作台背景和桌面壁纸
     setAppPaper(img){
+
       if(img !== null){  message.info('正在为您设置背景'); }
       if (img.srcProtocol){ this.setBackgroundImage({path: '',  runpath: `file://${img.src}`}); }
       else {
        if (!img.path) { img.path = img.src }
        else { this.setBackgroundImage(img) }
       }
-
+      completeTask('M0201')
       // message.info('正在为您设置壁纸')
       // this.setBackgroundImage(this.paperCurrent.path)
       // this.visibleMenu = false

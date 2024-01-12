@@ -17,7 +17,7 @@
       <template #title>
         <xt-text>
           <xt-new-icon :icon="icon" class="mr-3" size="20" />
-          {{ data.title }}
+          {{ data.name }}
         </xt-text></template
       >
       <xt-title type="text" m="mb">{{ data.info }} </xt-title>

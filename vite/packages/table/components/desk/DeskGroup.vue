@@ -2,7 +2,6 @@
   <div class="relative flex flex-col h-full">
     <!--  工具栏 xt-main-top-util-bar 元素定位类不可删-->
     <xt-mix-menu :menus="menus" class="w-full h-full" ref="mixMenu">
-
       <Desk
         v-if="currentDesk && currentDesk?.cards?.length > 0"
         @changeEditing="editing = !editing"
@@ -368,7 +367,7 @@ import Emoji from "../comp/Emoji.vue";
 import { useFreeLayoutStore } from "./freeLayout/store";
 import { useFloatMenuStore } from "./floatMenu/store";
 import { useDeskStore } from "./store";
-import { completeTask } from '../../apps/task/task'
+import { completeTask } from "../../apps/task/task";
 export default {
   name: "DeskGroup",
   components: {
@@ -495,11 +494,12 @@ export default {
   },
   async mounted() {
     this.$bus.on("M0104", () => {
-      this.currentAddTab.name = 'custom'
-      this.showAddDeskForm();
+      this.currentAddTab.name = "custom";
+      this.addDeskVisible = true;
     });
     this.$bus.on("M0203", () => {
-      this.showAddDeskForm();
+      this.addDeskVisible = true;
+        this.moreDesk();
     });
 
     let obj = {
@@ -627,8 +627,8 @@ export default {
       let ref = this.$refs.mixMenu;
       ref.custom(e);
     },
-    update(){
-      this.$refs.currentDeskRef.update()
+    update() {
+      this.$refs.currentDeskRef.update();
     },
     newAddCard() {
       this.$refs.currentDeskRef.newAddCard();
@@ -645,7 +645,7 @@ export default {
     },
     afterAdded() {
       // completeTask('m0104')
-      completeTask('m0203')
+      completeTask("m0203");
       this.hideMarket();
     },
     openPreview({ scheme, showModal }) {
@@ -760,15 +760,6 @@ export default {
       }
     },
     showAddDeskForm() {
-      if (this.M01022) {
-        this.deskTitle = "新桌面";
-        this.currentAddTab = {
-          title: "自行添加",
-          name: "custom",
-          state: false,
-        };
-      }
-
       this.$refs.currentDeskRef.hideMenu();
       this.menuVisible = false;
       this.addDeskVisible = true;
@@ -858,7 +849,7 @@ export default {
       this.deskTitle = "";
       this.key = Date.now();
       this.addDeskVisible = false;
-      completeTask('m0104')
+      completeTask("m0104");
       // completeTask('m0203')
     },
     cleanMuuriData(list) {

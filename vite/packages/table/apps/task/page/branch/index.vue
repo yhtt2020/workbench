@@ -15,7 +15,7 @@
         <xt-title m="">
           <div class="flex items-center">
             <xt-new-icon :icon="icon" class="mr-3"  size='20'/>
-            {{ task.chapter }}
+            {{ task.name }}
           </div>
           <template #right
             ><Progress :task="task" style="width: 68px; height: 20px"

@@ -19,9 +19,10 @@ export const taskStore = defineStore("taskStore", {
     // 当前任务数据
     currentTaskList: [],
     // 新版任务命名
-    startList: [],
-    completedList: [],
-   rewardVisible: false,
+    startList: [], // 开始中的任务
+    completedList: [], // 以完成的任务
+    claimRewardsList: [], // 完成后未点击领取奖励的任务
+    rewardVisible: false,
     currentId: "",
     currentType: "",
   }),
@@ -40,6 +41,13 @@ export const taskStore = defineStore("taskStore", {
       );
       return foundObject.tasks.find((task) => task.id === id);
     },
+    getTask(id) {
+      if (!id) return "";
+      const foundObject: any = tasks.find((obj) =>
+        obj.tasks.find((task) => task.id === id)
+      );
+      return foundObject.tasks.find((task) => task.id === id);
+    },
   },
   persist: {
     enabled: true,
@@ -53,6 +61,7 @@ export const taskStore = defineStore("taskStore", {
           "isTask",
           "startBranchTask",
           "successBranchTask",
+          //
           "currentUpdateTime",
           "currentTaskList",
           "startList",

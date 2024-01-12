@@ -104,7 +104,7 @@ let menus = ref([
   {
     newIcon: "fluent-emoji:rocket",
     title: "效率办公",
-    value: "works",
+    value: "efficiency",
     callBack: selectBranchTab,
     name: "效率",
   },
@@ -118,7 +118,7 @@ let menus = ref([
   {
     newIcon: "fluent-emoji:thought-balloon",
     title: "社群沟通",
-    value: "chats",
+    value: "association",
     callBack: selectBranchTab,
     name: "社群",
   },
@@ -158,15 +158,13 @@ const updateTaskList = async () => {
   if (code !== 200) return;
   currentTaskList.value = data;
 };
-if (
-  currentTaskList.value.length <= 0 ||
-  updateTime.value != currentUpdateTime.value
-) {
-  updateTaskList();
-}
 
-
-console.log('  currentTaskList.value :>> ',   currentTaskList.value);
+// if (
+//   currentTaskList.value.length <= 0 ||
+//   updateTime.value != currentUpdateTime.value
+// ) {
+//   updateTaskList();
+// }
 </script>
 
 <style lang="scss" scoped></style>

@@ -488,7 +488,7 @@ export default {
             {
               id: 2,
               newIcon: "fluent:app-folder-16-regular",
-              name: "添加文件夹",
+              name: "添加图标分组",
               fn: this.addFolder,
             },
           ],
@@ -644,7 +644,6 @@ export default {
       this.newAddCard();
     });
     this.$bus.on("M0201", () => {
-      // this.$refs.galleryRef.openGalleryModal();
       setTimeout(() => {
       this.$refs.galleryRef.openGalleryModal();
       }, 100);
