@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
 import {nanoid} from "nanoid";
+import _ from 'lodash-es'
 // @ts-ignore
 let arrData = [
   // 旧版底部数据
@@ -268,7 +269,7 @@ export const navStore = defineStore("nav", {
     footNavigationList: [],
     sideNavigationList: [],
     rightNavigationList: [],
-    copyFootNav:[...arrData],
+    copyFootNav:[],
     copySideNav:[],
     copyRightNav:[],
     builtInFeatures: [
@@ -300,12 +301,52 @@ export const navStore = defineStore("nav", {
     // navigationToggle: [true,false,true]
     navigationToggle: [false,false,true],
     loaded:false,
+    init:false,//是否初始化过了
     // 底部导航栏最多图标数
     maxItemNum:null
   }),
   actions: {
+    fixData(nav){
+      const newNav=_.cloneDeep(nav)
+      let isFixed=false
+      let fixedArray=[]
+      for(const icon of newNav){
+        if(!icon) {
+          //自身已经出问题了
+          isFixed=true
+          continue
+        }
+        if(!icon.id){
+          isFixed=true
+          icon.id=nanoid(6)
+          fixedArray.push(icon)
+          continue
+        }
+        if(nav.some(n=>{
+          return n.id===icon.id
+        })){
+          //存在同id，则重新更新id
+          isFixed=true
+          icon.id=nanoid(6)
+        }
+        fixedArray.push(icon)
+      }
+      return {
+        fixed:isFixed,
+        fixedArray
+      }
+    },
     loadNav(){
+      console.log('执行loadNav')
+      if(!this.init){
+        this.copyFootNav=[...arrData]
+        this.init=true
+      }
       if(!this.loaded){
+        let fixedRs=this.fixData(this.copyFootNav)
+        if(fixedRs.fixed){
+          this.copyFootNav=fixedRs.fixedArray
+        }
         //this.copyFootNav = []//JSON.parse(JSON.stringify(this.footNavigationList))
         this.copySideNav = JSON.parse(JSON.stringify(this.sideNavigationList))
         this.copyRightNav = JSON.parse(JSON.stringify(this.rightNavigationList))
@@ -395,7 +436,7 @@ export const navStore = defineStore("nav", {
       {
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths: ['sideNavigationList','footNavigationList','rightNavigationList','navigationToggle','copyFootNav','copySideNav','copyRightNav','copyFlag'],
+      paths: ['sideNavigationList','footNavigationList','rightNavigationList','navigationToggle','copyFootNav','copySideNav','copyRightNav','copyFlag','init'],
         storage: dbStorage,
         // state 中的字段名，按组打包储存
       },

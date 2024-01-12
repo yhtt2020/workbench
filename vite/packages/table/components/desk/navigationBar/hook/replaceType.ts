@@ -2,12 +2,13 @@ import { nanoid } from "nanoid";
 /**
  * 替换导航栏图标格式
  * @param list 导航栏数据
- * @returns 
+ * @returns
  */
 export const replaceType = (list) => {
   // 去除无效图标
   // const arr = list.filter((item) => item !== null && item !== undefined);
   // console.log(arr,'arr')
+
     return list.map((item)=>{
         switch (item.type) {
             case 'systemApp':

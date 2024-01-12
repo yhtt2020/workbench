@@ -418,16 +418,17 @@ export default {
   },
   mounted() {
     // this.popVisible=true
-    this.loadNav()
+
+
     this.enableDrag()
     this.timerRunning = setInterval(() => {
       this.showScreen = !this.showScreen
     }, 5000)
-    this.getMessageIndex().then()
-    //每3分钟刷新一次消息
-    this.updateMessageTimer = setInterval(() => {
-      this.getMessageIndex().then()
-    }, 180000)
+    // this.getMessageIndex().then()
+    // //每3分钟刷新一次消息
+    // this.updateMessageTimer = setInterval(() => {
+    //   this.getMessageIndex().then()
+    // }, 180000)
     let that = this
     this.checkScroll()
     window.addEventListener('resize', that.checkScroll)
@@ -438,7 +439,7 @@ export default {
       content.scrollLeft += event.deltaY
     })
     navigationData.systemAppList.forEach((item) => {
-      this.footNavigationList.forEach((i) => {
+      this.copyFootNav.forEach((i) => {
         if (item.event === i.event) {
           i.type = 'systemApp'
           i.icon = item.icon
@@ -449,7 +450,7 @@ export default {
       })
     })
     // 图标整体替换格式方法
-    this.footNavigationList = this.replaceType(this.footNavigationList)
+    this.copyFootNav = this.replaceType(this.copyFootNav)
 
     this.noticeFlag = true
 
@@ -459,7 +460,7 @@ export default {
       this.parentSize = windowWidth
       this.maxItemNum = Math.round((windowWidth - 240) / 72)
       // if (this.footNavigationList.length > this.maxItemNum) {
-      const width = windowWidth / (240 + this.footNavigationList.length * 72)
+      const width = windowWidth / (240 + this.copyFootNav.length * 72)
       this.navAttribute.navSize = width.toFixed(2) * 100
       this.navAttribute.navSize < 100 ? this.navAttribute.navSize : this.navAttribute.navSize = 100
       // }
@@ -575,12 +576,19 @@ export default {
      */
     showList() {
       return this.copyFootNav.slice(0, this.maxItemNum)
-    }
+    },
+
   },
   watch: {
     copyFootNav: {
       handler(newVal, oldVal) {
-        console.log('检测到底部导航栏变化,newval=',_.cloneDeep(newVal),'oldval=',_.cloneDeep(oldVal),'footNav=',_.cloneDeep(this.footNavigationList),'copy=',_.cloneDeep(this.copyFootNav))
+        console.log('检测到底部导航栏变化,newval=',_.cloneDeep(newVal),'oldval=',_.cloneDeep(oldVal),'copy=',_.cloneDeep(this.copyFootNav))
+        // let fixedRs=this.fixData(newVal)
+        // if(fixedRs.fixed){
+        //   this.copyFootNav=fixedRs.fixedArray
+        // }
+
+        console.log('修复后的newVal',newVal)
         // if (this.footNavigationList.length > this.copyFootNav.length) {
         //   const target = this.updateNavList(this.footNavigationList, this.copyFootNav);
         //   // console.log(target, 'length > copyFootNav')
@@ -668,6 +676,7 @@ export default {
         // if (this.copyFootNav.length === 0 && this.copyFootNav.length > 0) {
         //   this.copyFootNav = JSON.parse(JSON.stringify(this.copyFootNav))
         // }
+        this.syncBottomPanel()
       },
       immediate: true,
       deep: true,
@@ -756,10 +765,11 @@ export default {
     ...mapActions(messageStore, ['getMessageIndex']),
     ...mapActions(appStore, ['toggleFullScreen', 'settings']),
     ...mapActions(navStore, [
+      'fixData',
       'setFootNavigationList',
       'sortFootNavigationList',
       'removeFootNavigationList',
-      'loadNav'
+
     ]),
     ...mapActions(useNavigationStore, ['toggleEdit', 'toggleTaskBox']),
     /**
@@ -825,6 +835,7 @@ export default {
         this.teamVisible = !this.teamVisible
       }
     },
+
     /**
      * 打开文件夹
      */
@@ -1208,8 +1219,17 @@ export default {
      * sortable拖拽函数
      */
     enableDrag() {
+      console.log('触发一次重置 ')
+      if(this.sortable){
+        console.log('先清理 ')
+        this.sortable.destroy()
+      }
       let that = this
       let drop = document.getElementById('bottomContent')
+      if(!drop) {
+        console.error('更新底部导航栏失败，元素不存在')
+        return
+      }
       let index = null
       // let isTimer = false
       let isDrag = false
@@ -1224,6 +1244,7 @@ export default {
         invertSwap: true,
         //
         onStart: function (event) {
+          console.log('onStart')
           if (that.popVisible) {
             that.notifications.NoticeToast()
           }
@@ -1270,18 +1291,15 @@ export default {
           }
         },
         onUpdate: _.debounce( (event)=> {
+          console.log('onUpdate')
           //拖拽排序后，更新数据
           console.log('移动event=',event)
           let cur=this.copyFootNav.splice(event.oldIndex, 1)[0]
+          if(!cur){
+            console.error('移动失败，无法获取到元元素')
+            return
+          }
           this.copyFootNav.splice(event.newIndex,0,cur)
-          const newArray = this.copyFootNav.slice(0);
-          this.copyFootNav = [];
-          this.bottomKey=Date.now()
-          this.$nextTick(() => {
-            this.copyFootNav = newArray;
-            this.enableDrag()
-          });
-
           return
           that.isDelete = false
           let newIndex = event.newIndex,
@@ -1303,6 +1321,7 @@ export default {
           // console.log('isDelete', that.footNavigationList);
         }, 100),
         onEnd: function (event) {
+          console.log('onEnd')
           // console.log(event.originalEvent.clientX, event, 'to end X Y ');
           that.$emit('getDelIcon', false)
           //
@@ -1318,11 +1337,18 @@ export default {
         },
         onMove: function (event, originalEvent) {
           // console.log(event, originalEvent, 'move');
+          console.log('onMove')
           isDrag = true
           that.isDelete = false
+          const moveLeft=event.originalEvent.clientX
+          const panelLeft=that.defaultPosition.x
+          const relativePos=(moveLeft-panelLeft)%72
+          const isGap= relativePos<=20 && relativePos>=0
+          console.log('isGap=',isGap,relativePos)
           return true
         },
         onChoose: function (event) {
+          console.log('onChoose')
           index = event.oldIndex
           that.defaultPosition = {
             x: event.originalEvent.clientX,
@@ -1332,6 +1358,7 @@ export default {
         },
         // 触发替换中发生的事件
         onChange(event) {
+          console.log('onChange')
         },
         /**
          * 合并文件夹操作
@@ -1339,13 +1366,32 @@ export default {
          * @returns {number}
          */
         onUnchoose: function (event) {
+          console.log('onUnchoose')
           // console.log(that.defaultPosition.x, event.originalEvent.clientX, 'unchoose')
           if (!isDrag) {
             // console.log(that.copyFootNav[Math.round(((that.targetPosition.x - that.defaultPosition.x)/72) + index)], '====onEnd'); that.copyFootNav[nIndex]
             const oIndex = index
-            const nIndex = Math.round(((event.originalEvent.clientX - that.defaultPosition.x) / 72) + index)
-            // console.log(oIndex, nIndex, '==oIndex-nIndex');
-            if (oIndex === nIndex) {
+            let nIndex=0
+            //let nIndex = Math.round(((event.originalEvent.clientX - that.defaultPosition.x) / 72) + index)
+            console.log(event)
+
+            const panelLeft=document.getElementById('bottomContent').getBoundingClientRect().left
+            const moveLeft=event.originalEvent.clientX+20
+            console.log('moveLeft=',moveLeft,'panelLeft',panelLeft)
+            const relativePos=(moveLeft-panelLeft)%72
+            const isGap= relativePos<=20 && relativePos>=0
+            if(isGap){
+              console.log('在勾上，直接返回')
+              return 0
+            }
+            nIndex=Math.floor((moveLeft-panelLeft)/72)
+            console.log('不是在勾上',nIndex)
+            if(nIndex>that.copyFootNav.length-1){
+              //超出
+              return 0
+            }
+            if (oIndex === nIndex || nIndex<0) {
+
               return 0
             }
 
@@ -1354,7 +1400,6 @@ export default {
             const merged = that.mergeIconFolder(that.copyFootNav, oIndex, nIndex)
             that.copyFootNav.splice(nIndex, 1, merged)
             that.copyFootNav.splice(oIndex,1)
-            this.bottomKey=Date.now()
             // that.footNavigationList.splice(nIndex, 1, target)
             // const item = that.mergeIconFolder(that.copyFootNav, oIndex, nIndex)
             // that.copyFootNav.splice(nIndex, 1, item)
@@ -1364,6 +1409,15 @@ export default {
             //that.removeFootNavigationList(oIndex)
           }
         }
+      })
+    },
+    /**
+     * 更新底部导航栏，包括刷新和启动拖拽
+     */
+    syncBottomPanel(){
+      this.bottomKey=Date.now()
+      this.$nextTick(()=>{
+        this.enableDrag()
       })
     },
     useWindowSize,
@@ -1522,5 +1576,8 @@ export default {
   :last-child {
     margin-right: 0;
   }
+}
+.merge{
+  border:1px solid var(--active-bg);
 }
 </style>

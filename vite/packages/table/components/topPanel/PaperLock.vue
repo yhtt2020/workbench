@@ -73,7 +73,6 @@ export default defineComponent({
      },1000)
     },
     setLockTimer() {
-      console.log('准备锁屏倒计时')
       this.lockTimeout = (this.settings.lockTimeout || defaultLockTime) - 1;
       if (this.settings.enable) {
         //只有启用了锁屏才会触发这个效果

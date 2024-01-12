@@ -439,6 +439,10 @@ export const mergeIconFolder = (list, index, targetIndex) => {
   console.log('进行合并时候提交的参数是 list=',list ,' index=',index, 'tIndex=',targetIndex)
   const from=list[index]
    const target = list[targetIndex]
+  if(!target) {
+    console.warn('获取不到target')
+    return
+  }
     if(target.type === 'folder'){
         return {
             name: target.name || "文件夹",
