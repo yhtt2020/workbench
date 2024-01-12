@@ -435,10 +435,7 @@ export const  judge=(ele, item)=> {
  * @param index
  * @param targetIndex
  */
-export const mergeIconFolder = (list, index, targetIndex) => {
-  console.log('进行合并时候提交的参数是 list=',list ,' index=',index, 'tIndex=',targetIndex)
-  const from=list[index]
-   const target = list[targetIndex]
+export const mergeIconFolder = (list, from, target) => {
   if(!target) {
     console.warn('获取不到target')
     return

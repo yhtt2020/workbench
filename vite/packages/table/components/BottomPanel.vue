@@ -89,9 +89,9 @@
                   <a-tooltip v-for="(item, index) in copyFootNav" :key="item.id" :title="item.name+item.id"
                     :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }"
                     @mouseenter="showElement(item, index)">
-                    <xt-menu class="item-content" :menus="folderOptions">
+                    <xt-menu :id="item.id" class="item-content" :menus="folderOptions">
                       <div @dragover="onDrag" @dragend="hoverIndex=-1" v-if="!(this.navList.includes(item.event) && this.isOffline)"
-                        class="flex items-center justify-center pointer" :class="{hover:this.hoverIndex===index}"
+                        class="flex items-center justify-center pointer" :class="{hover:(item.id===hoverRealItemId()&& dragItem.id!==hoverRealItemId())}"
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="newOpenApp(item.type, item.value, item)">
                         <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement" :placement="'top'">
@@ -240,6 +240,9 @@ export default {
   },
   data() {
     return {
+      dragItem:null,
+      targetItem:null,
+      cancelUpdate:false,
       sortable: null,
       bottomKey:Date.now(),
       hoverIndex:-1,//当前选中的项目（排除gap）
@@ -582,13 +585,11 @@ export default {
   watch: {
     copyFootNav: {
       handler(newVal, oldVal) {
-        console.log('检测到底部导航栏变化,newval=',_.cloneDeep(newVal),'oldval=',_.cloneDeep(oldVal),'copy=',_.cloneDeep(this.copyFootNav))
         // let fixedRs=this.fixData(newVal)
         // if(fixedRs.fixed){
         //   this.copyFootNav=fixedRs.fixedArray
         // }
 
-        console.log('修复后的newVal',newVal)
         // if (this.footNavigationList.length > this.copyFootNav.length) {
         //   const target = this.updateNavList(this.footNavigationList, this.copyFootNav);
         //   // console.log(target, 'length > copyFootNav')
@@ -642,7 +643,6 @@ export default {
         // }
         // this.updateIcon(this.footNavigationList, this.copyFootNav)
 
-        console.log('合并修改完成后的新数组',_.cloneDeep(this.copyFootNav))
 
         // 防止数据同步失败，导致导航栏数据无法同步，导致数据错位
         // this.$nextTick(() => {
@@ -784,6 +784,25 @@ export default {
         });
       });
       return filteredNavList;
+    },
+    hoverRealItemId(){
+      let parent=document.getElementById('bottomContent')
+      if(!parent){
+        return ''
+      }
+      if(this.hoverIndex <0){
+        return
+      }
+      let i=0
+      for(const child of parent.children){
+        if(i===this.hoverIndex){
+         if(child){
+            return child.id
+          }
+        }
+        i++
+      }
+      return ''
     },
     /**
      * 点击文件夹子图标
@@ -1244,7 +1263,10 @@ export default {
         invertSwap: true,
         //
         onStart: function (event) {
+          that.cancelUpdate=false
           console.log('onStart')
+          that.dragItem=that.copyFootNav[event.oldIndex]
+          console.log('启动拖拽的元素',that.dragItem)
           if (that.popVisible) {
             that.notifications.NoticeToast()
           }
@@ -1291,6 +1313,9 @@ export default {
           }
         },
         onUpdate: _.debounce( (event)=> {
+          if(that.cancelUpdate){
+            return
+          }
           console.log('onUpdate')
           //拖拽排序后，更新数据
           console.log('移动event=',event)
@@ -1356,9 +1381,14 @@ export default {
           }
           // console.log(that.defaultPosition)
         },
+        onSort:function (event){
+          console.log('onSort',event)
+          console.log('item',that.copyFootNav[event.newIndex])
+        },
         // 触发替换中发生的事件
         onChange(event) {
-          console.log('onChange')
+          console.log('onChange',event,that.copyFootNav[event.newIndex])
+          console.log('item')
         },
         /**
          * 合并文件夹操作
@@ -1366,8 +1396,26 @@ export default {
          * @returns {number}
          */
         onUnchoose: function (event) {
+          if(that.hoverRealItemId() && that.hoverRealItemId()!==that.dragItem.id){
+            //存在目标，且不等于自身
+            console.log('需要合并')
+            const merged = that.mergeIconFolder(that.copyFootNav, that.dragItem,that.copyFootNav.find(item=>{
+              return item.id===that.hoverRealItemId()
+            }))
+            console.log('合并出的',merged)
+            console.log('替换成',that.hoverIndex)
+            that.copyFootNav.splice(that.copyFootNav.findIndex(item=>{
+              return item.id===that.hoverRealItemId()
+            }),1,merged)
+            that.copyFootNav=that.copyFootNav.filter(item=>{
+              return item.id!==that.dragItem.id
+            })
+            that.cancelUpdate=true
 
-          console.log('onUnchoose')
+          }
+          that.hoverIndex=-1
+          return
+          console.log('onUnchoose',event)
           // console.log(that.defaultPosition.x, event.originalEvent.clientX, 'unchoose')
           if (!isDrag) {
             // console.log(that.copyFootNav[Math.round(((that.targetPosition.x - that.defaultPosition.x)/72) + index)], '====onEnd'); that.copyFootNav[nIndex]
@@ -1397,12 +1445,7 @@ export default {
             // that.footNavigationList[nIndex] = that.mergeIconFolder(that.footNavigationList, oIndex, nIndex)
             // that.copyFootNav[nIndex] = that.mergeIconFolder(that.copyFootNav, oIndex, nIndex)
             console.log(that.hoverIndex)
-            if(that.hoverIndex>-1){
-              const merged = that.mergeIconFolder(that.copyFootNav, oIndex, that.hoverIndex)
-              that.copyFootNav.splice(that.hoverIndex, 1, merged)
-              that.copyFootNav.splice(oIndex, 1)
-              that.hoverIndex=-1
-            }
+
 
             // that.footNavigationList.splice(nIndex, 1, target)
             // const item = that.mergeIconFolder(that.copyFootNav, oIndex, nIndex)
