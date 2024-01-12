@@ -15,9 +15,9 @@
         <Icon icon="fluent-emoji-flat:desktop-computer" width="24" height="24" />
         <span class="ml-3">屏幕缩放建议</span>
       </div>
-      <div class="icon-dismiss flex items-center justify-center pointer" @click="close" >
-        <Icon color="var(--main-bg)" icon="fluent:dismiss-16-regular" width="12" height="12" />
-      </div>
+      <Icon class="pointer " @click="close" icon="fluent:dismiss-circle-16-filled" width="24" height="24" />
+      <!-- <div class="icon-dismiss flex items-center justify-center pointer" @click="close" >
+      </div> -->
 
     </div>
     <div class="xt-text font-16">当前屏幕分辨率和缩放比例可能无法正常使用工作台，建议调整缩放比例。</div>
@@ -40,7 +40,7 @@
       :min="30" :max="500" 
       v-model:value="newZoom"></a-slider>
     </div>
-    <xt-button class="button-bottom float-right mt-2" @click="close" :w="95" :h="40" type="theme">确定</xt-button>
+    <xt-button class="button-bottom float-right mt-2 " style="border-radius: 10px;" @click="close" :w="95" :h="40" type="theme">确定</xt-button>
   </div>
 
 </template>
@@ -199,5 +199,13 @@ export default {
     width: 21px;
     border-radius: 50%;
     background-color: var(--secondary-text);
+  }
+
+  :deep(.ant-slider){
+    margin:  10px 0px !important;
+  }
+
+  :deep(.ant-input){
+    border-radius: 10px;
   }
 </style>

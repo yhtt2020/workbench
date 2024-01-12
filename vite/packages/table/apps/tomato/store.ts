@@ -50,17 +50,16 @@ export const tomatoStore = defineStore("tomatoStore", {
     ...mapActions(cardStore, ['updateCustomData']),
     // 加载目前的番茄
     getTomatoNum(){
-      let remainingTime = this.getMainingTime();
       if(cache.get('tomatoNum')){
         this.tomatoNum = cache.get('tomatoNum')
       }else{
-        cache.set("tomatoNum",0,remainingTime)
+        cache.set("tomatoNum",0, this.getMidnightTime())
         this.tomatoNum = 0
       }
       if(cache.get('tomatoList')){
         this.tomatoList = cache.get('tomatoList')
       }else{
-        cache.set("tomatoList",[0,0,0,0,0,0,0],remainingTime + (6-new Date().getDay())*24*60*60*1000)
+        cache.set("tomatoList",[0,0,0,0,0,0,0], this.getRemainingTimestamp())
         this.tomatoList = [0,0,0,0,0,0,0]
       }
       this.countTime(this.tomatoList)
@@ -69,13 +68,11 @@ export const tomatoStore = defineStore("tomatoStore", {
 
     // 添加番茄
     addTomatoNum(){
-      // 计算今日剩余时间
-      let remainingTime = this.getMainingTime;
       this.tomatoNum++
       this.tomatoList[new Date().getDay()] = this.tomatoNum;
       // 这个数据今天会过期，用于保存今日番茄
-      cache.set("tomatoNum",this.tomatoNum,remainingTime)
-      cache.set("tomatoList",this.tomatoList,remainingTime + (6-new Date().getDay())*24*60*60*1000)
+      cache.set("tomatoNum",this.tomatoNum, this.getMidnightTime())
+      cache.set("tomatoList",this.tomatoList, this.getRemainingTimestamp())
       this.countTime(this.tomatoList)
       this.max(this.tomatoList)
     },
@@ -222,15 +219,23 @@ export const tomatoStore = defineStore("tomatoStore", {
         isState:this.isState,
       },desk)
     },
+
     // 计算今日剩余的时间戳
-    getMainingTime(){
-      // 计算今日剩余时间戳
+    getMidnightTime(){
       var now = new Date();
       var midnight = new Date();
       midnight.setHours(23, 59, 59, 999);
       var remainingTime = midnight.getTime() - now.getTime() +1;
       return remainingTime
     },
+
+    getRemainingTimestamp() {
+      const now = new Date(); // 获取当前时间
+      const endOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() + (7 - now.getDay()), 0, 0, 0); // 计算本周日凌晨时间
+      const remainingTimestamp = endOfWeek.getTime() - now.getTime(); // 计算剩余时间的毫秒数
+      return remainingTimestamp;
+    },
+
     // 切换顶部状态栏是否显示
     onChangeFull(){
       this.isFullState = !this.isFullState
