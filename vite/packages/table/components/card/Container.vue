@@ -87,8 +87,21 @@
         <!-- 头部右侧 -->
         <div class="flex items-center header-right" style="padding-right: 14px">
           <slot name="right-extend"></slot>
-          <template v-if="rightIcons && rightIcons.length">
-            <div v-for="item in rightIcons" class="header-right-icon mr-1">
+
+          <template
+            v-if="rightIcons && rightIcons.length"
+            v-for="item in rightIcons"
+          >
+            <div v-if="!item.disabled" class="header-right-icon mr-1.5">
+              <div
+                v-if="item.tip"
+                class="absolute xt-modal py-1 px-2 rounded-lg header-right-icon-tip"
+                style="top:-30px;left:50%,transform:translateX(-50%)"
+              >
+                {{ item.tip }}
+                <div class="triangle-bottom"></div>
+              </div>
+
               <xt-ify-icon
                 v-if="item.ifyIcon"
                 :icon="item.ifyIcon"
@@ -206,6 +219,8 @@ export default {
            *    ifyIcon: '新版图标',
            *    showIcon: '图标选择器的图标 小庄定义的命名规范'
            *    fn: lockClick,
+           *    tip：'提示文字',
+           *    disabled: 禁用 true为打开 false为关闭
            * }
            */
           rightIcon: [],
@@ -384,9 +399,10 @@ export default {
 
       if (this.header.refresh) {
         arr.push({
-          newIcon: "fluent:arrow-clockwise-16-regular",
+          ifyIcon: "fluent:arrow-clockwise-16-regular",
           class: this.refreshState ? "refresh" : "",
           fn: this.onRefresh,
+          tip: "刷新",
         });
       }
       return arr;
@@ -583,6 +599,13 @@ export default {
     background: var(--secondary-transp-bg);
   }
 }
+.header-right-icon-tip {
+  display: none;
+}
+.header-right-icon:hover .header-right-icon-tip {
+  display: flex;
+}
+
 .header-default {
   margin-left: 14px;
 }
@@ -598,5 +621,17 @@ export default {
   height: 28px;
   background: var(--modal-bg);
   border-radius: 6px;
+}
+
+.triangle-bottom {
+  position: absolute;
+  bottom: -6px;
+  width: 6px;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid var(--modal-bg);
+  transform: translateX(-50%) rotate(180deg);
+  left: 50%;
 }
 </style>

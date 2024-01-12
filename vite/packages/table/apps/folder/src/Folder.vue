@@ -192,18 +192,14 @@ const header = computed(() => {
     showIcon: customData.value.icon,
     title: customData.value.name,
     // add: true,
-    // refresh: true,
-    // refreshState: refreshState.value,
+    refresh: true,
+    refreshState: refreshState.value,
     leftHover: true,
     leftHoverName: secondary.value ? "编辑文件夹" : "点击打开",
     leftHoverIcon: secondary.value
       ? "fluent:settings-16-regular"
       : "fluent:open-16-regular",
     rightIcon: [
-      // {
-      //   newIcon: lockIcon.value,
-      //   fn: lockClick,
-      // },
       {
         ifyIcon: "fluent:add-16-filled",
         fn: addFileClick,
