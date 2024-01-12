@@ -1,10 +1,11 @@
 const control = {
  list:[
   {
-   id:'music',
-  },
-  {
-   id:'volume',
+   id:'audio',
+   list:[
+    { id:'music'  },
+    { id:'volume' }
+   ],
   },
   {
    icon:'fluent:window-multiple-16-filled',id:'window-control',

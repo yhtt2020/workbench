@@ -50,11 +50,11 @@
       </video>
     </div>
 
-    <div v-else-if="backgroundName.name === 'img' &&  backgroundImage.path " class="fixed bg-image inset-0 video-container ">
+    <div v-else-if="backgroundName.name === 'img' &&  backgroundImage.path !== ''" class="fixed bg-image inset-0 video-container ">
       <img id="wallpaper" style="object-fit: cover;width: 100%;height: 100%" :src="backgroundImage.path">
     </div>
 
-    <div v-else-if="backgroundName.name === 'color' && backgroundColor.color" class="fixed bg-image inset-0 video-container ">
+    <div v-else-if="backgroundName.name === 'color' && backgroundColor.color " class="fixed bg-image inset-0 video-container ">
       <div class="w-full h-full " :style="{background:`${backgroundColor.color}`}"></div>
     </div>
 
