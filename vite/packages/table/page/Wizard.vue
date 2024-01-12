@@ -9,8 +9,10 @@
           <div v-if="step!==0" @click="prevStep" class="top-icon no-drag">
             <MyIcon icon="fluent:chevron-left-16-filled"  width="20" height="20"/>
           </div>
-
-          <div @click="themeSwitch" class="top-icon no-drag right-4">
+          <div @click="themeSwitch" v-if="styles" class="top-icon no-drag right-4">
+            <MyIcon icon="fluent:weather-sunny-16-regular"  width="20" height="20"/>
+          </div>
+          <div @click="themeSwitch" v-else class="top-icon no-drag right-4">
             <MyIcon icon="fluent:weather-moon-16-regular"  width="20" height="20"/>
           </div>
         </div>

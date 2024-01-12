@@ -49,7 +49,7 @@ router.beforeEach((to, from, next) => {
     cardStore().setRouteParams(to.params)
     next()
   }else{
-    message.error("定制过程中无法操作");
+    message.info("定制过程中无法操作");
   }
   
 
