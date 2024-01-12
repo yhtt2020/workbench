@@ -1,5 +1,6 @@
 import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
+import {nanoid} from "nanoid";
 // @ts-ignore
 let arrData = [
   // 旧版底部数据
@@ -245,6 +246,7 @@ let arrData = [
     { 'type': 'systemApp', 'icon': 'fullscreen', 'name': '全屏', 'event': 'fullscreen' },
     { 'type': 'systemApp', 'icon': 'setting', 'name': '设置中心', 'event': 'setting' },
 ]
+// @ts-ignore
 export const navStore = defineStore("nav", {
   state: () => ({
     mainNavigationList: [
@@ -263,10 +265,10 @@ export const navStore = defineStore("nav", {
       //   fn:()=>{  vm.$router.push({ name: 'setting' })}
       // },
     ],
-    footNavigationList: [...arrData],
+    footNavigationList: [],
     sideNavigationList: [],
     rightNavigationList: [],
-    copyFootNav:[],
+    copyFootNav:[...arrData],
     copySideNav:[],
     copyRightNav:[],
     builtInFeatures: [
@@ -297,17 +299,17 @@ export const navStore = defineStore("nav", {
     ],
     // navigationToggle: [true,false,true]
     navigationToggle: [false,false,true],
-    copyFlag:true,
+    loaded:false,
     // 底部导航栏最多图标数
     maxItemNum:null
   }),
   actions: {
-    copyNav(){
-      if(this.copyFlag){
-        this.copyFootNav = JSON.parse(JSON.stringify(this.footNavigationList))
+    loadNav(){
+      if(!this.loaded){
+        //this.copyFootNav = []//JSON.parse(JSON.stringify(this.footNavigationList))
         this.copySideNav = JSON.parse(JSON.stringify(this.sideNavigationList))
         this.copyRightNav = JSON.parse(JSON.stringify(this.rightNavigationList))
-        this.copyFlag = false
+        this.loaded = true
       }
     },
     removeFootNavigationList(index) {
@@ -321,7 +323,8 @@ export const navStore = defineStore("nav", {
     setFootNavigationList(item) {
       // 当元素个数大于限制数时，将无法添加
         // if(this.maxItemNum >= this.footNavigationList.length){
-          this.footNavigationList.unshift(item)
+      if(!item.id) { item.id=nanoid(6)}
+          this.copyFootNav.unshift(item)
         // }
     },
     removeSideNavigationList(index) {

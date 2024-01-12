@@ -1,6 +1,6 @@
 import { nanoid } from "nanoid";
 export const navigationPosition = [
-    
+
     {
         title:'左侧导航',
         description:'在工作台左侧显示导航栏',
@@ -90,7 +90,7 @@ export const moreMenus = [
         visible:true,
         tag:'chat'
     }
-] 
+]
 
 export const rightMenus=[
     {
@@ -404,7 +404,7 @@ export const  judge=(ele, item)=> {
   }
 
 // 图标文件夹模式
-// export const iconFolder= (list,index,tIndex)=>{
+// export const mergeIconFolder= (list,index,tIndex)=>{
 //     const arr = [list[index],list[tIndex]]
 //     return {
 //         name:"文件夹",
@@ -429,10 +429,17 @@ export const  judge=(ele, item)=> {
 //     })
 //     return arr
 // }
-export const iconFolder = (list, index, tIndex) => {
-    const arr = [list[index], list[tIndex]];
-    if(list[tIndex].type === 'folder'){
-        const target = list[tIndex]
+/**
+ * 合并图标组
+ * @param list
+ * @param index
+ * @param targetIndex
+ */
+export const mergeIconFolder = (list, index, targetIndex) => {
+  console.log('进行合并时候提交的参数是 list=',list ,' index=',index, 'tIndex=',targetIndex)
+  const from=list[index]
+   const target = list[targetIndex]
+    if(target.type === 'folder'){
         return {
             name: target.name || "文件夹",
             bg: '',
@@ -440,9 +447,9 @@ export const iconFolder = (list, index, tIndex) => {
             icon: '',
             type: 'folder',
             value: 'folder',
-            children: childrenFolder(arr).flat(1),
+            children: childrenFolder([from,target]).flat(1),
             mode: 'app',
-            id: target.id || nanoid(6),
+            id: nanoid(6),
             size: target.size || '',
             layout : target.layout || '',
         }
@@ -454,12 +461,16 @@ export const iconFolder = (list, index, tIndex) => {
         icon: '',
         type: 'folder',
         value: 'folder',
-        children: childrenFolder(arr).flat(1),
+        children: childrenFolder([from,target]).flat(1),
         mode: 'app',
         id:nanoid(6),
     }
 }
 
+/**
+ * 取出元素的children数组
+ * @param list
+ */
 export const childrenFolder = (list) => {
     let arr = [];
     list.forEach((item) => {
@@ -537,7 +548,7 @@ export const forItem = (arr, list) => {
 //       if (element.type === 'coolApp') {
 //         return item.value.url === element.value.url;
 //       } else if(element.value === 'folder') {
-//         return 
+//         return
 //       }
 //       return item.value === element.value;
 //     });

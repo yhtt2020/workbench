@@ -525,7 +525,7 @@ export default {
   },
   computed: {
     ...mapWritableState(deskStore, ["apiList"]),
-    ...mapWritableState(appStore, ["fullScreen"]),
+    ...mapWritableState(appStore, ["fullScreen", "showGuide"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(useDeskStore, ["menus"]),
 
@@ -779,60 +779,68 @@ export default {
       this.addDeskVisible = true;
     },
     delDesk() {
-      if (this.deskList.length === 1) {
-        this.$xtConfirm("至少保留一个桌面。", "", {
-          noText: null,
-          type: "warning",
-        });
-        return;
-      } else {
-        this.currentDesk?.cards?.forEach((item) => {
-          //移除桌面相关的便签卡片
-          if (item.name === "notes") {
-            tsbApi.db
-              .find({
-                selector: {
-                  _id: "note:" + item.id,
-                },
-              })
-              .then((res) => {
-                if (res?.docs.length) {
-                  tsbApi.db.put({
-                    ...res.docs[0],
-                    // isDelete:true,
-                    deskId: "",
-                    deskName: "",
-                  });
-                }
-              });
-          }
-        });
-        this.$refs.currentDeskRef.hideMenu();
-        this.$xtConfirm("删除当前桌面？此操作不可还原。", "", {
-          type: "warning",
-          okText: "删除桌面",
-          okButtonWidth: "100",
-          ok: () => {
-            this.deskList.splice(
-              this.deskList.findIndex((desk) => {
-                return desk === this.currentDesk;
-              }),
-              1
-            );
-            this.$emit("changeDesk", { id: this.deskList[0].id });
-            this.clearFreeLayout(this.currentDeskId);
-            // 删除桌面数据
-            this.key = Date.now();
-            if (this.displayDesks.length === 1) {
-              notification.open({
-                message: "提示",
-                description:
-                  "当前可用桌面为1个，自动为您隐藏切换桌面菜单。至少有2个桌面的时候才会显示快速切换栏。",
-              });
+      // 定制桌面时需要屏蔽删除功能
+      if(!this.showGuide){
+
+        if (this.deskList.length === 1) {
+          this.$xtConfirm("至少保留一个桌面。", "", {
+            noText: null,
+            type: "warning",
+          });
+          return;
+        } else {
+          this.currentDesk?.cards?.forEach((item) => {
+            //移除桌面相关的便签卡片
+            if (item.name === "notes") {
+              tsbApi.db
+                .find({
+                  selector: {
+                    _id: "note:" + item.id,
+                  },
+                })
+                .then((res) => {
+                  if (res?.docs.length) {
+                    tsbApi.db.put({
+                      ...res.docs[0],
+                      // isDelete:true,
+                      deskId: "",
+                      deskName: "",
+                    });
+                  }
+                });
             }
-          },
-        });
+          });
+          this.$refs.currentDeskRef.hideMenu();
+          this.$xtConfirm("删除当前桌面？此操作不可还原。", "", {
+            type: "warning",
+            okText: "删除桌面",
+            okButtonWidth: "100",
+            ok: () => {
+              this.deskList.splice(
+                this.deskList.findIndex((desk) => {
+                  return desk === this.currentDesk;
+                }),
+                1
+              );
+              this.$emit("changeDesk", { id: this.deskList[0].id });
+              this.clearFreeLayout(this.currentDeskId);
+              // 删除桌面数据
+              this.key = Date.now();
+              if (this.displayDesks.length === 1) {
+                notification.open({
+                  message: "提示",
+                  description:
+                    "当前可用桌面为1个，自动为您隐藏切换桌面菜单。至少有2个桌面的时候才会显示快速切换栏。",
+                });
+              }
+            },
+          });
+        }
+
+      }else{
+        message.info("定制过程中无法操作");
       }
+
     },
     exportDesk() {
       this.$refs.currentDeskRef.hideMenu();

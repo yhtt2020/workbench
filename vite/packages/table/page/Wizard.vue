@@ -9,8 +9,10 @@
           <div v-if="step!==0" @click="prevStep" class="top-icon no-drag">
             <MyIcon icon="fluent:chevron-left-16-filled"  width="20" height="20"/>
           </div>
-
-          <div @click="themeSwitch" class="top-icon no-drag right-4">
+          <div @click="themeSwitch" v-if="styles" class="top-icon no-drag right-4">
+            <MyIcon icon="fluent:weather-sunny-16-regular"  width="20" height="20"/>
+          </div>
+          <div @click="themeSwitch" v-else class="top-icon no-drag right-4">
             <MyIcon icon="fluent:weather-moon-16-regular"  width="20" height="20"/>
           </div>
         </div>
@@ -151,7 +153,7 @@
           </div>
         </div>
         <div v-if="step==4">
-          <div class="text-center xt-text-2 font-16 mt-3">你可以不登录使用工作台大部分效率辅助功能，部分社区类功能可能受到限制</div>
+          <!-- <div class="text-center xt-text-2 font-16 mt-3">你可以不登录使用工作台大部分效率辅助功能，部分社区类功能可能受到限制</div> -->
           <div class="flex flex-wrap justify-center">
             <a-row class="bg-tab" v-for="(item,index) in loginList" :key="index" :style="{'background-image': item.background}">
               <a-col :span="6" class="h-full w-full justify-center items-center" style="display:flex;">

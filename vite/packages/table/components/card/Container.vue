@@ -4,6 +4,7 @@
     :customIndex="customIndex"
     v-model:size="currentSize"
     :sizeList="sizeList"
+    :disableHierarchy="options.hierarchy"
   >
     <div
       v-if="!options?.custom"
@@ -23,7 +24,7 @@
         v-if="!header.disabled"
         @dragstart.stop="titleDragStart"
         draggable="true"
-        class="w-full flex items-center justify-between"
+        class="flex items-center justify-between w-full"
         style="height: 46px; border-radius: 12px 12px 0 0; cursor: grab"
         :style="{
           background: header.bg || '',
@@ -72,7 +73,7 @@
             </div>
             <!-- 标题区域 -->
             <div
-              class="flex items-center px-2 h-full ml-1"
+              class="flex items-center h-full px-2 ml-1"
               @mouseenter="titleMouseEnter"
               @mouseleave="titleMouseLeave"
               :class="{ 'header-title': titleHover }"
@@ -93,6 +94,7 @@
             v-for="item in rightIcons"
           >
             <div v-if="!item.disabled" class="header-right-icon mr-1.5">
+              <!-- 右侧图标悬浮提示 -->
               <div
                 v-if="item.tip"
                 class="absolute xt-modal py-1 px-2 rounded-lg header-right-icon-tip"
@@ -101,7 +103,6 @@
                 {{ item.tip }}
                 <div class="triangle-bottom"></div>
               </div>
-
               <xt-ify-icon
                 v-if="item.ifyIcon"
                 :icon="item.ifyIcon"
@@ -124,6 +125,7 @@
             :customIndex="customIndex"
             model="all"
             v-model:size="currentSize"
+            :disableHierarchy="options.hierarchy"
             :sizeList="sizeList"
           >
             <div class="header-right-icon">
@@ -200,7 +202,7 @@ export default {
   name: "Container",
   props: {
     /**
-     * header body size sizeList defaultData
+     * header body size sizeList defaultData options
      * 均为重构后的数据结构 需要阅读源码
      */
     header: {
@@ -218,16 +220,21 @@ export default {
            *    icon: '旧版图标',
            *    ifyIcon: '新版图标',
            *    showIcon: '图标选择器的图标 小庄定义的命名规范'
-           *    fn: lockClick,
+           *    fn: 点击回调,
            *    tip：'提示文字',
-           *    disabled: 禁用 true为打开 false为关闭
+           *    disabled: 禁用 true为禁用 false为不禁用
            * }
            */
           rightIcon: [],
-          // 右侧添加图标 true为打开 false为关闭
-          add: false,
-          // 右侧刷新图标 true为打开 false为关闭
-          refresh: false,
+          /**
+           * 右侧刷新图标
+           * {
+           *    fn: lockClick,
+           *    tip：'提示文字',
+           *    disabled: 禁用 true为禁用 false为不禁用
+           * }
+           */
+          refresh: {},
           // 标题背景色 true为打开 false为关闭
           bg: false,
           // 标题颜色
@@ -286,12 +293,21 @@ export default {
           bg: "",
           // 自定义全局字体颜色
           color: "",
+          // 是否允许删除组件
+          del: false,
         };
       },
     },
-    //右上角菜单项
+    /**
+     * 右上角菜单项
+     * {
+     *    icon: '旧版图标',
+     *    newIcon: '新版图标',
+     *    fn: 点击回调,
+     *    disabled: 禁用 true为禁用 false为不禁用
+     * }
+     */
     menuList: {
-      // as PropType<IMenuItem>
       type: Array,
       default: () => [],
     },
@@ -324,8 +340,6 @@ export default {
   },
   data() {
     return {
-      // 刷新状态
-      refreshState: false,
       // 左侧区域状态
       showLeftHover: false,
       // 左侧图标区域状态
@@ -356,6 +370,7 @@ export default {
           },
           title: "删除小组件",
           color: "#FF4D4F",
+          disabled: this.options.del ? true : false,
         },
       ];
     },
@@ -390,19 +405,13 @@ export default {
     // 右侧图标
     rightIcons() {
       let arr = [...this.header.rightIcon];
-      if (this.header.add) {
-        arr.push({
-          newIcon: "fluent:add-16-regular",
-          fn: this.onAdd,
-        });
-      }
-
       if (this.header.refresh) {
         arr.push({
           ifyIcon: "fluent:arrow-clockwise-16-regular",
-          class: this.refreshState ? "refresh" : "",
-          fn: this.onRefresh,
-          tip: "刷新",
+          class: this.header.refresh.state ? "refresh" : "",
+          fn: this.header.refresh.fn,
+          tip: this.header.refresh.tip,
+          disabled: this.header.refresh.disabled,
         });
       }
       return arr;
@@ -431,17 +440,6 @@ export default {
     currentSize(newV) {
       this.$emit("update:size", newV);
     },
-    /**
-     * 监听刷新状态变化
-     */
-    "header.refreshState": {
-      handler(newValue, oldValue) {
-        if (!newValue) {
-          this.refreshState = false;
-        }
-      },
-      deep: true,
-    },
   },
   methods: {
     ...mapActions(cardStore, ["removeCard", "updateCustomData"]),
@@ -451,13 +449,11 @@ export default {
       // message.info("开启调整桌面布局可以拖拽小组件");
       const key = `open${Date.now()}`;
       const fn = () => {
-        console.log("this :>> ", this);
         this.$bus.emit("startAdjust");
         notification.close(key);
       };
       notification["info"]({
         message: "开启调整桌面布局可以拖拽小组件",
-        // description: "开启调整桌面布局可以拖拽小组件",
         btn: () =>
           h(
             XtButton,
@@ -471,23 +467,6 @@ export default {
           ),
         key,
       });
-      // notification.open({
-      //   message: "Notification Title",
-      //   description:
-      //     'A function will be be called after the notification is closed (automatically after the "duration" time of manually).',
-      //   btn: () =>
-      //     h(
-      //       XtButton,
-      //       {
-      //         type: "theme",
-      //         size: "small",
-      //         onClick: () => () => {
-      //           console.log("123 :>> ", 123);
-      //         },
-      //       },
-      //       { default: () => "Confirm" }
-      //     ),
-      // });
     },
     // 左侧区域鼠标进入
     leftMouseEnter() {
@@ -524,18 +503,6 @@ export default {
       if (this.header.leftHover) {
         this.$emit("leftClick");
       }
-    },
-    // 新增
-    onAdd() {
-      this.$emit("onAdd");
-    },
-    // 刷新
-    onRefresh() {
-      this.refreshState = true;
-      this.$emit("onRefresh");
-      setTimeout(() => {
-        this.refreshState = false;
-      }, 2000);
     },
     // 右键删除
     doRemoveCard() {
@@ -577,6 +544,7 @@ export default {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -585,9 +553,11 @@ export default {
 .header-right {
   display: none;
 }
+
 .widget:hover .header-right {
   display: flex;
 }
+
 .header-right-icon {
   display: flex;
   justify-content: center;
@@ -595,6 +565,7 @@ export default {
   width: 28px;
   height: 28px;
   border-radius: 6px;
+
   &:hover {
     background: var(--secondary-transp-bg);
   }
@@ -609,6 +580,7 @@ export default {
 .header-default {
   margin-left: 14px;
 }
+
 .header-open {
   height: 28px;
   background: var(--modal-bg);
