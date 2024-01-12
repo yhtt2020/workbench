@@ -22,10 +22,9 @@
       :defaultData="defaultFolderData"
       :header="header"
       :menuList="menuList"
-      v-model:size="customData.size"
       :sizeList="autoSizeList"
       @leftClick="leftClick"
-      @onRefresh="onRefresh"
+      v-model:size="customData.size"
     >
       <!-- 右侧布局切换 -->
       <Resize
@@ -49,10 +48,8 @@
             :layout="customData.layout"
             :model="customData.model"
             @deleteFile="deleteFile"
-            @updateFile="updateFile"
             @updateList="updateList"
             @updateSort="updateSort"
-            @updatePosition="updatePosition"
             @clickFile="clickFile"
           />
         </vue-custom-scrollbar>
@@ -160,20 +157,15 @@ const props = defineProps({
     type: Object,
     default: () => ({
       // 右下角图标显示
-      resize: {
-        default: true,
-        type: Boolean,
-      },
+      resize: true,
       // 设置中尺寸大小选择
-      sizeOption: {
-        default: true,
-        type: Boolean,
-      },
+      sizeOption: true,
       // 设置背景颜色
-      bg: {
-        default: true,
-        type: Boolean,
-      },
+      bg: true,
+      // 隐藏删除小组件选项
+      isDel: false,
+      // 隐藏层级选择
+      hierarchy: false,
     }),
   },
   // 自动设置大小
@@ -191,19 +183,18 @@ const header = computed(() => {
   return {
     showIcon: customData.value.icon,
     title: customData.value.name,
-    // add: true,
-    // refresh: true,
-    // refreshState: refreshState.value,
+    refresh: {
+      tip: "更新桌面数据",
+      disabled: customData.value.model != "custom" ? false : true,
+      state: refreshState.value,
+      fn: refreshDeskApp,
+    },
     leftHover: true,
     leftHoverName: secondary.value ? "编辑文件夹" : "点击打开",
     leftHoverIcon: secondary.value
       ? "fluent:settings-16-regular"
       : "fluent:open-16-regular",
     rightIcon: [
-      // {
-      //   newIcon: lockIcon.value,
-      //   fn: lockClick,
-      // },
       {
         ifyIcon: "fluent:add-16-filled",
         fn: addFileClick,
@@ -219,6 +210,8 @@ const header = computed(() => {
 const options = computed(() => {
   return {
     bg: isDrag.value ? "var(--active-secondary-bg) " : "",
+    del: navBar.value.isDel,
+    hierarchy: navBar.value.hierarchy,
   };
 });
 
@@ -250,14 +243,12 @@ provide("isOutside", isOutside);
  */
 const autoSizeList = computed(() => {
   if (auto.value) {
-    // console.log(auto.value, "自动调整")
     const size = {
       name: autoSize.value,
       value: autoSize.value,
     };
     return [...sizeList.value, size];
   }
-  // console.log(auto.value, '自动调整大小')
   return sizeList.value;
 });
 /**
@@ -277,7 +268,7 @@ const autoSize = computed(() => {
 });
 
 /**
- *
+ *点击组件关闭
  */
 const clickFile = (data) => {
   emit("clickFile", data);
@@ -445,26 +436,23 @@ const expandClose = () => {
 };
 
 const onRefresh = () => {
-  refreshState.value = true;
-  setTimeout(() => {
-    refreshState.value = false;
-  }, 1000);
+  setTimeout(() => {}, 1000);
 };
 
 const isDrag = ref(false);
 const updateBg = (val) => {
-  // customData.value.bg = !customData.value.bg;
   isDrag.value = val;
 };
 
 onBeforeMount(() => {});
 
-onMounted(async () => {
-  if (customData.value.icon === "") {
-    customData.value.icon =
-      "https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#ffffff";
-  }
-  if (customData.value.model != "custom") return;
+/**
+ * 刷新桌面数据
+ */
+const refreshDeskApp = async () => {
+  if (customData.value.model == "custom") return;
+
+  refreshState.value = true;
   const desktopApps = await ipc.sendSync("getDeskApps");
   let desktopAppsList = [];
 
@@ -490,6 +478,17 @@ onMounted(async () => {
       customData.value.list.push(item);
     }
   });
+  setTimeout(() => {
+    refreshState.value = false;
+  }, 1000);
+};
+onMounted(async () => {
+  if (customData.value.icon === "") {
+    customData.value.icon =
+      "https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#ffffff";
+  }
+  if (customData.value.model != "custom") {
+  }
 });
 </script>
 

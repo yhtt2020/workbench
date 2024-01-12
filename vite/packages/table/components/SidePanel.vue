@@ -10,7 +10,7 @@
         <div :id="sortId"
           class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container"
           style="width: 56px;overflow-y:auto;display: flex;flex-direction: column;overflow-x: hidden;align-items: flex-start; ">
-          <a-tooltip :title="item.name" v-for="(item, index) in navigationList" placement="right"
+          <a-tooltip :title="item.name" v-for="(item, index) in navigationList" placement="right" :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }"
             @mouseenter="showElement(item, index)">
             <!-- 左右导航栏隐藏入口 -->
             <xt-menu :menus="iconMenus">
@@ -352,7 +352,7 @@ export default {
 
   },
   methods: {
-    ...mapActions(navStore, ['removeSideNavigationList', 'removeRightNavigationList', 'setSideNavigationList', 'setRightNavigationList', 'setRightNavigationList', 'copyNav']),
+    ...mapActions(navStore, ['removeSideNavigationList', 'removeRightNavigationList', 'setSideNavigationList', 'setRightNavigationList', 'setRightNavigationList', 'loadNav']),
     ...mapActions(useNavigationStore, ['toggleEdit']),
     ...mapActions(appStore, ['toggleFullScreen']),
     updateIcon,

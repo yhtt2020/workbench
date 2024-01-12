@@ -259,7 +259,7 @@ export default {
         this.$refs.rightDrawerRef.openRightDrawer();
         this.hideNoticeEntry();
       }else{
-        message.error("定制过程中无法操作");
+        message.info("定制过程中无法操作");
       }
     },
 

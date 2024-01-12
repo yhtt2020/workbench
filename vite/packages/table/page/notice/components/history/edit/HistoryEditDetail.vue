@@ -33,8 +33,36 @@
    </XtScrollbar>
   </div>
 
-  <div class="h-10">
-    123
+  <div class="flex justify-between items-center py-3">
+    <div class="flex ">
+      <xt-button w="32" h="32" style="border-radius: 8px;" class="mr-3">
+       <div class="flex items-center justify-center">
+         <xt-new-icon icon="fluent:image-multiple-16-regular" size="16"></xt-new-icon>
+       </div>   
+      </xt-button>
+
+      <xt-button w="32" h="32" style="border-radius: 8px;" class="mr-3">
+        <div class="flex items-center justify-center">
+          <xt-new-icon icon="fluent:attach-16-regular" size="16"></xt-new-icon>
+        </div>   
+      </xt-button>
+
+      <xt-button w="32" h="32" style="border-radius: 8px;" class="mr-3">
+        <div class="flex items-center justify-center">
+          <xt-new-icon icon="fluent:link-20-filled" size="16"></xt-new-icon>
+        </div>   
+      </xt-button>
+
+      <xt-button w="32" h="32" style="border-radius: 8px;">
+        <div class="flex items-center justify-center">
+          <xt-new-icon icon="tabler:brand-bilibili" size="16"></xt-new-icon>
+        </div>   
+      </xt-button>
+    </div>
+    <div class="flex items-center">
+      <span class="font-14 xt-text xt-font pr-2">消息有效期:</span>
+      <a-date-picker :bordered="false" v-model:value="cutOffDate" />
+    </div>
   </div>
  </div>
 </template>
@@ -42,6 +70,7 @@
 <script setup>
 import { ref,onMounted,computed,nextTick}  from 'vue';
 import MsgMarkdown from '../../send/MsgMarkdown.vue';
+import dayjs, { Dayjs } from 'dayjs';
 
 const emits = defineEmits(['prev','close']);
 
@@ -62,39 +91,29 @@ const msgSetting = ref({
  summary:'',
  targetType:1000,
  noticeType:1,
- content:''
+ content:'',
+ cover:[{cover:'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/wRPh-ILyc-lb45-ldQ3'}],
+ Attachment:[],
+ buttonLink:[],
+ biliLink:[{title:'电脑副屏系统想天工作台搭配闪蛇ZB133TF便携屏',url:''}],
 })
-const sendList = ref([
-  {
-    newIcon:'fluent:send-32-regular',name:'立即发送',
-    callBack:()=>{
-     send()
-    }, 
-  },
-  {
-    newIcon:'fluent:clock-16-regular',name:'定时发送',
-    callBack:()=>{
-      timingRef.value.openTimeModal()
-    },
-  },
-  {
-    newIcon:'fluent:compose-16-regular',name:'保存草稿',
-    callBack:()=>{
-      notice.createNotice()
-    },
-  }
-])
+
 const msgRef = ref(null);
+const dateFormat = ref('YYYY-MM-DD HH:mm');
+const cutOffDate = ref(dayjs(`${new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000).toLocaleDateString()} ${new Date(new Date().getTime() + 30 * 24 * 60 * 60 * 1000).toTimeString()}`),dateFormat)
 
 
-
+// 返回上一步
 const prevBack = () =>{
  emits('prev');
 }
 
+// 关闭弹窗
 const closeSend = () =>{
  emits('close')
 }
+
+
 
 </script>
 
@@ -105,5 +124,13 @@ const closeSend = () =>{
  & .ant-select-selection-item{
    line-height: 32px !important;
  }
+}
+
+:deep(.ant-picker .ant-picker-suffix){
+  display: none !important;
+}
+:deep(.ant-picker.ant-picker-borderless){
+  background-color: var(--secondary-transp-bg) !important;
+  border-radius: 6px !important;
 }
 </style>

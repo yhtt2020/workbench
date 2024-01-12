@@ -6,7 +6,6 @@
       <div class="xt-font xt-text-2 font-14 font-400">{{ utils.changeTime(item.createTime)}}</div>
     </div>
   </XtScrollbar>
-  <!-- 全部消息 -->
  </div>
 </template>
 

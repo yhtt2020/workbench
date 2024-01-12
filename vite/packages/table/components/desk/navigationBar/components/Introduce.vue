@@ -98,7 +98,7 @@ export default {
         this.dropList = []
       } else {
         for (let i = 0; i <navigationList.length; i++) {
-          if (navigationList[i].name === item.name) return message.info('已添加', 1)
+          if (navigationList[i].name === item.name) return message.info('该图标已添加，无法重复添加。', 1)
         }
         this.updateMainNav(item, 'add')
         item.addNav = true
@@ -117,7 +117,7 @@ export default {
       }
       switch (this.selectNav) {
         case 'foot':
-          this.clickRightListItem(item,index,this.footNavigationList,this.setFootNavigationList)
+          this.clickRightListItem(item,index,this.copyFootNav,this.setFootNavigationList)
           break;
         case 'left':
           this.clickRightListItem(item,index,this.sideNavigationList,this.setSideNavigationList)
@@ -125,8 +125,7 @@ export default {
         case 'right':
           this.clickRightListItem(item,index,this.rightNavigationList,this.setRightNavigationList)
           break;
-
-          case 'desktop':
+        case 'desktop':
           this.$emit('clickListItem', item, index)
           break;
       }
@@ -141,7 +140,7 @@ export default {
   },
   computed: {
     ...mapWritableState(useNavigationStore, ['selectNav', 'currentList']),
-    ...mapWritableState(navStore, ['mainNavigationList', 'sideNavigationList', 'footNavigationList', 'rightNavigationList', 'navigationToggle']),
+    ...mapWritableState(navStore, ['copyFootNav','mainNavigationList', 'sideNavigationList', 'footNavigationList', 'rightNavigationList', 'navigationToggle']),
     filterList() {
       if (this.selectTag === 'webNavigation') {
         return this.filterIcon(this.webList[0])

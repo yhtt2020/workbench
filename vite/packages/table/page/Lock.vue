@@ -349,26 +349,28 @@ export default {
           break;
         // 拾光壁纸
         case 'picking':
-           let pickingUrl = `https://api.nguaduot.cn/timeline/v3?cate=landscape&order=date&no=99999999&date=20500101&score=99999999&client=thisky`
-           axios.get(pickingUrl,{headers:{'Timeline-Client':'thisky'}}).then(async res => {
-            if (res.data.data.length !== 1) {
-            let arr = res.data.data
-            arr.forEach(item => {
-              LockArr.push({
-                src: item.imgurl,
-                path: item.imgurl,
+           let pickUrl = `https://api.nguaduot.cn/timeline/v3?cate=landscape&order=date&no=99999999&date=20500101&score=99999999&client=thisky`
+           axios.get(pickUrl,{headers:{'Timeline-Client':'thisky'}})
+           .then((res)=>{
+            const result = res.data
+            if(result.data.length !== 0){
+              const mapList = result.data.map((item)=>{
+                return {src:item.imgurl,path:item.imgurl}
               })
-            })
-            window.Spotlight.show(LockArr, this.config)
-            } else {
-            return
+              LockArr = mapList;
             }
-           }, rej => {
-            Modal.error({ content: '网络加载错误，请检查设备后重试' })
-            return
-           }).catch((err) => {
-            console.log(err)
+            else {
+              const mapPickList = selectWallPaper.map((item)=>{
+                return {src:item.fullPath,path:item.thumbPath}
+              })
+              LockArr = mapPickList
+            }
+            window.Spotlight.show(LockArr, this.config)
            })
+           .catch((err)=>{
+             console.log('报错',err);
+           })
+        
           break;
         // 精选壁纸 
         case 'recommend':
