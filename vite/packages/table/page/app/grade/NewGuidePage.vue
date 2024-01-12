@@ -501,7 +501,7 @@
         setThemeSwitch(this.styles);
       },
       prevStep () {
-        const index = this.deskId?this.deskId:0
+        const index = this.searchDeskIndex(this.deskId)
         if(this.step == 1){
           this.$xtConfirm("返回上一步将会清空桌面已有的数据并进行重新分析。", "", {
             type: "warning",
