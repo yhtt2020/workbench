@@ -137,22 +137,24 @@ const updateBackground = () => {
     height: 40px;
     border-radius: 10px;
     cursor: pointer;
-    margin-bottom: 16px;
-    margin-right: 16px;
+    // margin-bottom: 16px;
+    // margin-right: 16px;
 }
 
 .item-box {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-center;
-}
-.item-box .item:nth-child(5n + 1) {
-    margin-left: 8px !important;
-}
+    gap: 16px;
 
-.item-box .item:nth-child(5n) {
-    margin-right: 8px !important;
 }
+// .item-box .item:nth-child(5n + 1) {
+//     margin-left: 8px !important;
+// }
+
+// .item-box .item:nth-child(5n) {
+//     margin-right: 8px !important;
+// }
 
 .shadow {
     box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.03);
@@ -180,7 +182,7 @@ const updateBackground = () => {
     border-radius: 12px;
     background-image: url('/img/bg.png') !important;
     background-size: cover;
-    margin-left: 8px;
+    // margin-left: 8px;
 }
 
 // :host-context([data-tippy-root]) :deep .tippy-box[data-theme~='tomato'] {

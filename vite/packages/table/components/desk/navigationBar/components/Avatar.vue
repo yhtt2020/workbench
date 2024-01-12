@@ -5,7 +5,7 @@
     <a-avatar :size="52" shape="square" :src="item.icon" :style="{ borderRadius: navigationBar.iconRadius + 'px' }"
       :class="{ 'shaking-element': shakeElement }"></a-avatar>
   </div>
-  <div v-else style="width: 52px; height: 58px;">
+  <div v-else style="width: 52px; height: 52px;">
     <div style="width: 52px; height: 52px;" class="relative flex items-center justify-center overflow-hidden"
       :style="{ borderRadius: navigationBar.iconRadius + 'px', background: item.bg || '' }">
       <a-avatar :size="36" shape="square" :src="renderIcon(item.icon)"

@@ -82,11 +82,11 @@
               <div class=" scroll-content" style=" flex: 1; display: flex; margin-left: 20px;margin-right: 20px" ref="content">
                 <div :key="bottomKey" style="white-space: nowrap; display: flex; align-items: center;gap:20px" id="bottomContent">
                   <div v-if="copyFootNav.length <= 0" style=""
-                    class="flex items-center justify-center   h-full w-[52px] h-[52px]   6"
+                    class="flex items-center justify-center  w-[52px] h-[52px]"
                     @click="this.editNavigation(this.drawerMenus[0])">
                     <xt-new-icon icon="fluent:add-16-regular" size="32" class="xt-text"></xt-new-icon>
                   </div>
-                  <a-tooltip v-for="(item, index) in copyFootNav" :key="item.id" :title="item.name+item.id"
+                  <a-tooltip v-for="(item, index) in copyFootNav" :key="item.id" :title="item.name"
                     :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }"
                     @mouseenter="showElement(item, index)">
                     <xt-menu class="item-content" :menus="folderOptions">
@@ -116,6 +116,7 @@
       <keep-alive>
         <TaskBox v-if="true"></TaskBox>
       </keep-alive>
+      <Common></Common>
     </div>
 
     <div id="trans" v-show="visibleTrans" style="
@@ -211,6 +212,7 @@ import { nanoid } from "nanoid";
 import { useWindowSize } from '../ui/new/drag/src/hooks/useWindowSize'
 import { useMouseInElement } from "@vueuse/core";
 import Drop from './desk/navigationBar/components/folder/Drop.vue'
+import Common from './desk/navigationBar/components/Common.vue'
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon', 'hiedNavBar'],
@@ -238,7 +240,8 @@ export default {
     Avatar,
     FolderVue,
     Folder,
-    Drop
+    Drop,
+    Common
   },
   data() {
     return {
@@ -451,8 +454,8 @@ export default {
       })
     })
     // 图标整体替换格式方法
-    this.footNavigationList = this.replaceType(this.footNavigationList)
-
+    // this.footNavigationList = this.replaceType(this.footNavigationList)
+    this.copyFootNav = this.replaceType(this.copyFootNav)
     this.noticeFlag = true
 
     this.useWindowSize((size) => {
@@ -583,28 +586,28 @@ export default {
     copyFootNav: {
       handler(newVal, oldVal) {
         console.log('检测到底部导航栏变化,newval=',_.cloneDeep(newVal),'oldval=',_.cloneDeep(oldVal),'footNav=',_.cloneDeep(this.footNavigationList),'copy=',_.cloneDeep(this.copyFootNav))
-        // if (this.footNavigationList.length > this.copyFootNav.length) {
-        //   const target = this.updateNavList(this.footNavigationList, this.copyFootNav);
+        // if (this.copyFootNav.length > this.footNavigationList.length) {
+        //   const target = this.updateNavList(this.copyFootNav, this.footNavigationList);
         //   // console.log(target, 'length > copyFootNav')
         //   // this.copyFootNav = JSON.parse(JSON.stringify(target)).concat(this.copyFootNav);
         //   for (let i = 0; i < target.length; i++) {
-        //     const index = this.footNavigationList.findIndex(item => {
+        //     const index = this.copyFootNav.findIndex(item => {
         //       return this.judge(item, target[i]);
         //     })
-        //     this.copyFootNav.splice(index, 0, JSON.parse(JSON.stringify(target[i])));
+        //     this.footNavigationList.splice(index, 0, JSON.parse(JSON.stringify(target[i])));
         //   }
-        //
-        // } else if (this.footNavigationList.length < this.copyFootNav.length) {
+        
+        // } else if (this.copyFootNav.length < this.footNavigationList.length) {
         //   const target = this.updateNavList(this.copyFootNav, this.footNavigationList);
         //   //console.log(target, 'length < copyFootNav')
         //   const list = target.map(element => {
-        //     return this.copyFootNav.findIndex(item => {
+        //     return this.footNavigationList.findIndex(item => {
         //       // 找到被删除元素在备份数据中的索引
         //       return this.judge(item, element);
         //     });
         //   })
         //   //console.log(list, this.copyFootNav, 'list')
-        //   this.copyFootNav = this.copyFootNav.filter((item, index) => { return list.indexOf(index) === -1 })
+        //   this.footNavigationList = this.footNavigationList.filter((item, index) => { return list.indexOf(index) === -1 })
         // }
         // else {
         //   const rearrangedCopyFootNav = [];
@@ -614,15 +617,15 @@ export default {
         //   //   const correspondingElement = this.copyFootNav.find((copyItem) => {
         //   //     return this.judge(item, copyItem);
         //   //   });
-        //
+        
         //   //   // 如果找到对应元素，则将其放入新数组中
         //   //   if (correspondingElement) {
         //   //     rearrangedCopyFootNav.push(correspondingElement);
         //   //   }
         //   // });
-        //   for (let i = 0; i < this.footNavigationList.length; i++) {
-        //     const item = this.copyFootNav.find((copyItem) => {
-        //       return this.judge(this.footNavigationList[i], copyItem);
+        //   for (let i = 0; i < this.copyFootNav.length; i++) {
+        //     const item = this.footNavigationList.find((copyItem) => {
+        //       return this.judge(this.copyFootNav[i], copyItem);
         //     })
         //     if (item) {
         //       rearrangedCopyFootNav.push(item)
@@ -630,7 +633,7 @@ export default {
         //   }
         //   // 更新 copyFootNav 为重新排列后的数组
         //   // this.copyFootNav.splice(0, this.copyFootNav.length, ...rearrangedCopyFootNav);
-        //   this.copyFootNav = [...rearrangedCopyFootNav]
+        //   this.footNavigationList = [...rearrangedCopyFootNav]
         //   // this.copyFootNav = JSON.parse(JSON.stringify(rearrangedCopyFootNav))
         //   //console.log(this.copyFootNav,'this---exchange')
         // }
@@ -1201,7 +1204,7 @@ export default {
       // this.footNavigationList.unshift(item)
       const index = Math.round ((x - rect.x) / 72)
       console.log(index, 'index');
-      this.footNavigationList.splice(index, 0, item)
+      this.copyFootNav.splice(index, 0, item)
     },
     /**
      * sortable拖拽函数
@@ -1239,7 +1242,7 @@ export default {
             if (!that.isDelete) return
             // console.log(111111);
             that.delItemIcon = false
-            let oneNav = that.footNavigationList[event.oldIndex]
+            let oneNav = that.copyFootNav[event.oldIndex]
             //将要删除的是否是主要功能
             if (!that.mainNavigationList.find((f) => f.name === oneNav.name)) {
               that.removeFootNavigationList(event.oldIndex)
@@ -1342,8 +1345,8 @@ export default {
           if (!isDrag) {
             // console.log(that.copyFootNav[Math.round(((that.targetPosition.x - that.defaultPosition.x)/72) + index)], '====onEnd'); that.copyFootNav[nIndex]
             const oIndex = index
-            const nIndex = Math.round(((event.originalEvent.clientX - that.defaultPosition.x) / 72) + index)
-            // console.log(oIndex, nIndex, '==oIndex-nIndex');
+            const nIndex = Math.round(((event.originalEvent.clientX - that.defaultPosition.x) / ( 72 * (that.navAttribute.navSize / 100))) + index)
+            console.log(oIndex, nIndex,( 72 * (that.navAttribute.navSize / 100)), '==oIndex-nIndex');
             if (oIndex === nIndex) {
               return 0
             }

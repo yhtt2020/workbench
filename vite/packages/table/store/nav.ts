@@ -313,7 +313,7 @@ export const navStore = defineStore("nav", {
       }
     },
     removeFootNavigationList(index) {
-        this.footNavigationList.splice(index, 1)
+        this.copyFootNav.splice(index, 1)
     },
     sortFootNavigationList(evt) {
         let temp = this.footNavigationList[evt.oldIndex]

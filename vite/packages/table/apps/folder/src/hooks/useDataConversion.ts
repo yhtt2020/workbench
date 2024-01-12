@@ -53,6 +53,7 @@ export const useIconConversionNav = (data)=>{
     isBg:data.isBg,
     bg:data.bg,
     type:data.type,
+    id:data.id || nanoid(6),
   }
   return icon;
 }
@@ -67,6 +68,7 @@ export const useFileConversionNav = (data)=>{
     isBg:data.isBackground,
     bg:data.backgroundColor,
     type:data.open.type,
+    id:data.id || nanoid(6),
   }
   return icon;
 }
