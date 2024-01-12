@@ -1,5 +1,5 @@
 <template>
-    <div class="w-[58px] h-[58px] ">
+    <div class="w-[52px] h-[52px] ">
         <div class="w-[52px] h-[52px] p-1 flex flex-wrap justify-center items-center"
             :style="{ borderRadius: navigationStore.iconRadius + 'px' }" style="border: 1px solid var(--divider);">
             <div class=" w-[16px] h-[16px]   flex flex-wrap  justify-center items-center overflow-hidden"
