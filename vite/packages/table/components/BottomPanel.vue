@@ -90,8 +90,8 @@
                     :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }"
                     @mouseenter="showElement(item, index)">
                     <xt-menu class="item-content" :menus="folderOptions">
-                      <div v-if="!(this.navList.includes(item.event) && this.isOffline)"
-                        class="flex items-center justify-center pointer"
+                      <div @dragover="onDrag" @dragend="hoverIndex=-1" v-if="!(this.navList.includes(item.event) && this.isOffline)"
+                        class="flex items-center justify-center pointer" :class="{hover:this.hoverIndex===index}"
                         style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                         @click.stop="newOpenApp(item.type, item.value, item)">
                         <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement" :placement="'top'">
@@ -242,7 +242,7 @@ export default {
     return {
       sortable: null,
       bottomKey:Date.now(),
-
+      hoverIndex:-1,//当前选中的项目（排除gap）
       debug:false,
       tab: 'screen',
 
@@ -1366,6 +1366,7 @@ export default {
          * @returns {number}
          */
         onUnchoose: function (event) {
+
           console.log('onUnchoose')
           // console.log(that.defaultPosition.x, event.originalEvent.clientX, 'unchoose')
           if (!isDrag) {
@@ -1374,32 +1375,35 @@ export default {
             let nIndex=0
             //let nIndex = Math.round(((event.originalEvent.clientX - that.defaultPosition.x) / 72) + index)
             console.log(event)
-
-            const panelLeft=document.getElementById('bottomContent').getBoundingClientRect().left
-            const moveLeft=event.originalEvent.clientX+20
-            console.log('moveLeft=',moveLeft,'panelLeft',panelLeft)
-            const relativePos=(moveLeft-panelLeft)%72
-            const isGap= relativePos<=20 && relativePos>=0
-            if(isGap){
-              console.log('在勾上，直接返回')
-              return 0
-            }
-            nIndex=Math.floor((moveLeft-panelLeft)/72)
-            console.log('不是在勾上',nIndex)
-            if(nIndex>that.copyFootNav.length-1){
-              //超出
-              return 0
-            }
-            if (oIndex === nIndex || nIndex<0) {
-
-              return 0
-            }
+            //
+            // const panelLeft=document.getElementById('bottomContent').getBoundingClientRect().left
+            // const moveLeft=event.originalEvent.clientX+20
+            // console.log('moveLeft=',moveLeft,'panelLeft',panelLeft)
+            // const relativePos=(moveLeft-panelLeft)%72
+            // const isGap= relativePos<=20 && relativePos>=0
+            // if(isGap){
+            //   return 0
+            // }
+            // nIndex=Math.floor((moveLeft-panelLeft)/72)
+            // if(nIndex>that.copyFootNav.length-1){
+            //   //超出
+            //   return 0
+            // }
+            // if (oIndex === nIndex || nIndex<0) {
+            //
+            //   return 0
+            // }
 
             // that.footNavigationList[nIndex] = that.mergeIconFolder(that.footNavigationList, oIndex, nIndex)
             // that.copyFootNav[nIndex] = that.mergeIconFolder(that.copyFootNav, oIndex, nIndex)
-            const merged = that.mergeIconFolder(that.copyFootNav, oIndex, nIndex)
-            that.copyFootNav.splice(nIndex, 1, merged)
-            that.copyFootNav.splice(oIndex,1)
+            console.log(that.hoverIndex)
+            if(that.hoverIndex>-1){
+              const merged = that.mergeIconFolder(that.copyFootNav, oIndex, that.hoverIndex)
+              that.copyFootNav.splice(that.hoverIndex, 1, merged)
+              that.copyFootNav.splice(oIndex, 1)
+              that.hoverIndex=-1
+            }
+
             // that.footNavigationList.splice(nIndex, 1, target)
             // const item = that.mergeIconFolder(that.copyFootNav, oIndex, nIndex)
             // that.copyFootNav.splice(nIndex, 1, item)
@@ -1410,6 +1414,35 @@ export default {
           }
         }
       })
+    },
+    /**
+     * 自动根据当前位置获取到要合并的位置
+     * @param currentLeft
+     * @returns {{gap: boolean, index: number}|number}
+     */
+    getHoverIndex(currentLeft){
+      const panelLeft=document.getElementById('bottomContent').getBoundingClientRect().left
+      const relativePos=(currentLeft-panelLeft)%72
+      const isGap= !(relativePos<=42 && relativePos>=10)
+      let nIndex=Math.floor((currentLeft-panelLeft+20)/72)
+      if(nIndex>this.copyFootNav.length-1){
+        //超出
+        return 0
+      }
+      if (nIndex<1) {
+        return 0
+      }
+      if(isGap){
+        return {
+          gap:true,
+          index:nIndex
+        }
+      }else{
+        return {
+          gap:false,
+          index:nIndex
+        }
+      }
     },
     /**
      * 更新底部导航栏，包括刷新和启动拖拽
@@ -1453,6 +1486,14 @@ export default {
       posX = posX > vW - menuW ? vW - menuW : posX;
       // console.log(posX, 'posX')
       this.left = posX;
+    },
+    onDrag:function (e){
+      let hoverRs=this.getHoverIndex(e.x)
+      if(hoverRs.gap){
+        this.hoverIndex=-1
+      }else{
+        this.hoverIndex=hoverRs.index
+      }
     }
   },
   provide() {
@@ -1577,7 +1618,7 @@ export default {
     margin-right: 0;
   }
 }
-.merge{
-  border:1px solid var(--active-bg);
+.hover{
+ opacity: 0.5;
 }
 </style>
