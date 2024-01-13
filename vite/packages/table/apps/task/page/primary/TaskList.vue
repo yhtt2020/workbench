@@ -45,7 +45,7 @@
 import { ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { taskStore } from "../../store.ts";
-import StartTask from "./StartTask.vue";
+import StartTask from "../../components/StartTask.vue";
 
 const sotre = taskStore();
 const { list } = storeToRefs(sotre);

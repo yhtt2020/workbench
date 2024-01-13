@@ -70,6 +70,9 @@ export default {
     infoUpdated(){
       this.$emit('infoUpdated')
     }
+  },
+  mounted() {
+    this.$bus.on('M0301',this.openUpdateMyInfo)
   }
 }
 </script>

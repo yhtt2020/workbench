@@ -42,7 +42,6 @@ const menus = reactive([
   {
     label: "固定到左侧",
     callBack: () => {
-      console.log("111111111 :>> ", 111111111);
     },
   },
 ]);

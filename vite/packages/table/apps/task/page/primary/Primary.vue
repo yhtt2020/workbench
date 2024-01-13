@@ -1,6 +1,5 @@
 <template>
   <xt-button @click="test()">任务重置</xt-button>
-  <xt-button @click="completeAllTask()"></xt-button>
   <template v-if="store.taskID">
     <!-- 章节进度 -->
     <div class="xt-bg-2 rounded-xl px-4 pt-4 pb-3">
@@ -23,9 +22,7 @@
       <xt-title type="text">{{ currentTask.description }}</xt-title>
       <div class="flex justify-center items-center flex-col">
         <xt-title type="text">完成奖励</xt-title>
-        <div class="flex mb-4">
-          <Reward v-for="item in currentTask.reward" v-bind="item" />
-        </div>
+        <GetReward :id="currentTask.id" />
         <StartTask :task="currentTask" class="mt-3"></StartTask>
       </div>
     </div>
@@ -34,12 +31,12 @@
 </template>
 
 <script setup>
-import StartTask from "./StartTask.vue";
+import StartTask from "../../components/StartTask.vue";
 
 import { tasks } from "./Primary";
 import { taskStore } from "../../store";
 import { ref, reactive, computed, toRefs, onMounted } from "vue";
-import Reward from "../../components/Reward.vue";
+import GetReward from "../../components/GetReward.vue";
 import { getAllTask } from "../../api";
 
 const store = taskStore();
@@ -55,31 +52,32 @@ onMounted(async () => {
   if (code !== 200) return;
   currentTaskList.value = data;
   const type = "main";
-
+  console.log("data :>> ", data);
+  completedList.value = [];
+  data.forEach((item) => {
+    if (item.done == 1) completedList.value.push(item.name);
+  });
+  // 找出主线未完成任务
   let arr = data.filter((obj) => obj.type === type);
 
-  console.log("arr :>> ", arr);
   let currentTask = arr.find((item) => {
     if (item.done == 0) return item;
-    completedList.value.push = item.name;
   });
 
   if (!currentTask) {
     taskID.value = "";
     return;
   }
-  console.log("currentTask :>> ", currentTask);
 
   taskID.value = currentTask.name;
   currentId.value = currentTask.name;
 });
-// 修改资料直接弹出 301
-
 /**
  * 处理主线任务
  */
 const test = () => {
-  store.taskID = "M0302";
+  store.taskID = "M0101";
+  store.currentId = "M0101";
   store.success = false;
   store.step = -1;
 };
@@ -122,14 +120,6 @@ const currentTask = computed(() => {
   return chapter.value.tasks[stage.value];
 });
 
-const completeAllTask = () => {
-  console.log("store :>> ", list.value);
-
-  list.value.forEach((item) => {
-    console.log("item :>> ", item);
-  });
-  // if
-};
 
 const aaa = computed(() => {
   return store.getPrimaryTask("M0101");

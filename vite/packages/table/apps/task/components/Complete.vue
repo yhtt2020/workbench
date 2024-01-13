@@ -54,19 +54,18 @@ const taskStatus = async () => {
 };
 
 const store = taskStore();
-const { taskID, currentTaskList, rewardVisible, currentId, currentType } =
-  storeToRefs(store);
+const {
+  taskID,
+  currentTaskList,
+  rewardVisible,
+  currentId,
+  claimRewardsList,
+} = storeToRefs(store);
 
-const type = computed(() => {
-  const currentType = currentId.value.split("")[0];
-  return currentType;
-});
+
 
 const currentTask = computed(() => {
-  const type = currentId.value.split("")[0];
-  if (type == "M") {
-    return store.getPrimaryTask(currentId.value);
-  }
+  return store.getTask(currentId.value);
 });
 
 const emits = defineEmits(["close-toast"]);
@@ -77,7 +76,8 @@ const close = () => {
 
 const claimReward = () => {
   emits("close-toast");
-  // if (status.value) return;
+  getReward(currentId.value)
+  if (status.value) return;
   rewardVisible.value = true;
 };
 </script>

@@ -9,6 +9,16 @@ export const tasks = {
           id: "Z0101",
           name: "绑定Steam账号",
           info: "游戏助手可以支持绑定Steam账号，读取游戏库数据，在工作台中快速启动你的游戏，还支持个性化游戏桌面搭建和攻略查询。",
+          open: [
+            {
+              type: "router",
+              value: "socialMy",
+            },
+            {
+              type: "bus",
+              value: "M0301",
+            },
+          ],
         },
         {
           pre: "Z0101",
@@ -72,12 +82,24 @@ export const tasks = {
           id: "Z0204",
           name: "创建一个待办",
           info: "工作台内置了一个简洁的待办事项小组件，可以快速创建待办任务。",
+          open: [
+            {
+              type: "router",
+              value: "todo",
+            },
+          ],
         },
         {
           pre: "",
           id: "Z0205",
           name: "写一篇备忘录并添加到桌面",
           info: "用备忘录记录每个重要瞬间！不再错过任何事情，使用备忘录功能轻松记录你的想法、待办事项、会议笔记和重要提醒。每天使用备忘录功能，帮助你保持组织和提醒，让你的生活更加有序和高效。",
+          open: [
+            {
+              type: "router",
+              value: "note",
+            },
+          ],
         },
         {
           pre: "",
@@ -90,6 +112,12 @@ export const tasks = {
           id: "Z0207",
           name: "向AI助手发起一个问题",
           info: "无论是寻求信息、解决疑惑还是获取建议，AI助手都能帮助你快速找到所需的答案。内置官方免费额度，你也可以使用自己的API。",
+          open: [
+            {
+              type: "router",
+              value: "ai",
+            },
+          ],
         },
         {
           pre: "",
@@ -122,6 +150,12 @@ export const tasks = {
           id: "Z0402",
           name: "领取一次小队加速时长",
           info: "等级加速太慢了，让小队帮你提提速",
+          open: [
+            {
+              type: "router",
+              value: "ai",
+            },
+          ],
         },
       ],
     },
@@ -134,12 +168,24 @@ export const tasks = {
           id: "Z0501",
           name: "发布一条全网弹幕",
           info: "与全网的小伙伴互动一下吧",
+          open: [
+            {
+              type: "router",
+              value: "barrage",
+            },
+          ],
         },
         {
           pre: "",
           id: "Z0502",
           name: "发布一条小队弹幕",
           info: "与你的小队成员互动一下吧",
+          open: [
+            {
+              type: "router",
+              value: "barrage",
+            },
+          ],
         },
       ],
     },

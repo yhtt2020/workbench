@@ -21,15 +21,8 @@
         </xt-text></template
       >
       <xt-title type="text" m="mb">{{ data.info }} </xt-title>
-      <xt-button
-        v-if="taskState(data)"
-        @click="getReceive(data)"
-        style="background: #faad14 !important; width: 100%"
-        >领取奖励</xt-button
-      >
-      <xt-button v-else @click="startTak(data)" type="theme" style="width: 100%"
-        >开始任务</xt-button
-      >
+      <GetReward :id="data.id" />
+      <StartTask :task="data" />
     </xt-collapse>
   </div>
 </template>
@@ -42,8 +35,10 @@ import { storeToRefs } from "pinia";
 
 import Progress from "../../components/progress/index.vue";
 import { guide } from "./guide";
+import StartTask from "../../components/StartTask.vue";
 
 import { taskStore } from "../../store";
+import GetReward from "../../components/GetReward.vue";
 
 const store = taskStore();
 const router = useRouter();

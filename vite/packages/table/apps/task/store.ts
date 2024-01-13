@@ -25,6 +25,7 @@ export const taskStore = defineStore("taskStore", {
     rewardVisible: false,
     currentId: "",
     currentType: "",
+    taskAudio: "",
   }),
   getters: {},
   actions: {
@@ -43,10 +44,12 @@ export const taskStore = defineStore("taskStore", {
     },
     getTask(id) {
       if (!id) return "";
-      const foundObject: any = tasks.find((obj) =>
-        obj.tasks.find((task) => task.id === id)
-      );
-      return foundObject.tasks.find((task) => task.id === id);
+
+      const type = id.split("")[0].toUpperCase();
+      if (type == "M") {
+        return this.getPrimaryTask(id);
+      } else {
+      }
     },
   },
   persist: {
@@ -66,6 +69,7 @@ export const taskStore = defineStore("taskStore", {
           "currentTaskList",
           "startList",
           "completedList",
+          "claimRewardsList",
         ],
         storage: localStorage,
       },

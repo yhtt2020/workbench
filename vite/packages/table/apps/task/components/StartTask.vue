@@ -1,15 +1,25 @@
 <template>
-  <!-- 任务按钮 -->
-  {{ startList }}
-  <xt-button v-if="continueTask" plain type="theme" @click="startTask()" block
-    >继续任务</xt-button
+  <p>当前任务ID： {{ task.id }}</p>
+  <p>进行中任务ID： {{ startList }}</p>
+  <p>可领取奖励ID： {{ claimRewardsList }}</p>
+  <p>已完成任务ID： {{ completedList }}</p>
+  <xt-button v-if="completeTask" h="40" type="success" block @click="startTask"
+    >已完成，再次体验</xt-button
   >
   <xt-button
-    v-else-if="isFirst && store.success"
+    v-else-if="getReceiveStatus"
     style="background: #faad14 !important; width: 100%"
     @click="receive()"
     h="40"
     >领取奖励</xt-button
+  >
+  <xt-button
+    v-else-if="continueTask"
+    plain
+    type="theme"
+    @click="startTask()"
+    block
+    >继续任务</xt-button
   >
   <xt-button v-else style="width: 100%" type="theme" h="40" @click="startTask"
     >开始任务</xt-button
@@ -19,28 +29,24 @@
 <script setup>
 import { reactive, ref, getCurrentInstance, computed } from "vue";
 import { useRouter } from "vue-router";
-import { guide } from "../../../../ui/components/Task/guide";
-import { lastGuide } from "./lastGuide";
-import { endGuide } from "./endGuide";
-import { taskStore } from "../../store";
+import { taskStore } from "../store";
 import { useToast } from "vue-toastification";
 import { storeToRefs } from "pinia";
-import Guide from "../../components/Guide.vue";
+import Guide from "./Guide.vue";
+import { getReward, currentType } from "../task";
 
-import { appStore } from "../../../../store";
+import { appStore } from "../../../store";
 const { proxy } = getCurrentInstance();
 const app = appStore();
 
-import { getAllTask, completeTask } from "../../api";
+import { getAllTask } from "../api";
 // 初始化
 const store = taskStore();
-const { currentId, startList } = storeToRefs(store);
+const { currentId, startList, claimRewardsList, completedList } =
+  storeToRefs(store);
 const router = useRouter();
 const props = defineProps({
   task: {},
-  isFirst: {
-    default: true,
-  },
 });
 const getGuide = () => {
   const toast = useToast();
@@ -72,7 +78,11 @@ const startTask = () => {
   startList.value.push(props.task.id);
   startList.value = [...new Set(startList.value)];
   currentId.value = props.task.id;
-  getGuide();
+
+  let type = currentType(props.task.id);
+  if (type == "m") {
+    getGuide();
+  }
   const open = props.task.open;
   open.forEach((item) => {
     if (item.type === "router") {
@@ -97,21 +107,16 @@ const continueTask = computed(() => {
 
 // 领取奖励
 const receive = async () => {
-  store.list.push(store.taskID);
-  store.success = false;
-  let fn = endGuide[store.taskID];
-  store.taskID = props.task.suf;
-  fn && fn();
-  // 1 查询任务状态
-  // 2 是否领取 差ID
-  const { data, code } = await completeTask({
-    taskName: store.taskID,
-    uid: app.userInfo.uid,
-  });
-  if (code !== 200) {
-  }
-  console.log("res :>> ", data, code);
+  getReward(props.task.id);
 };
+const getReceiveStatus = computed(() => {
+  return claimRewardsList.value.includes(props.task.id);
+});
+
+// 已完成任务
+const completeTask = computed(() => {
+  return completedList.value.includes(props.task.id);
+});
 </script>
 
 <style lang="scss" scoped>

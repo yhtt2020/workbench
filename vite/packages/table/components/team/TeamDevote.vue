@@ -89,7 +89,7 @@ import UserAvatar from "../small/UserAvatar.vue";
 import {teamStore} from "../../store/team";
 import {message} from "ant-design-vue";
 import XtButton from '../../ui/libs/Button/index.vue'
-import {completeTask} from "../../apps/task/page/branch/task"
+import {completeTask} from "../../apps/task/task"
 
 export default {
   name: "TeamDevote",

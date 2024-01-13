@@ -5,41 +5,38 @@ import { useToast } from "vue-toastification";
 import { completeTask as completeCurrentTask } from "./api";
 
 import Complete from "./components/Complete.vue";
-export const startTask = (id) => {
-  const store: any = taskStore();
-  const { startList, completedList } = storeToRefs(store);
-  if (startList.value.includes(id)) return true;
-
-  startList.value.push(id);
+// 完成任务
+export const completeTask = async (id) => {
+  const type: any = currentType(id);
+  if (type == "m") {
+    completePrimaryTask(id);
+  } else if (type == "z") {
+    completeBranchTask(id);
+  }
 };
 
-export const completeTask = async (id) => {
-  // 数据初始化
-
-  id = id.toUpperCase();
-  const type = id.split("")[0];
+// 完成主线任务
+export const completePrimaryTask = (id) => {
+  endTask(id);
+};
+// 完成支线任务
+export const completeBranchTask = (id) => {
   const store: any = taskStore();
-  const {
-    startList,
-    completedList,
-    rewardVisible,
-    currentId,
-    currentType,
-    claimRewardsList,
-  } = storeToRefs(store);
-
-  // 判断任务是否开始
-  if (!startList.value.includes(id)) return;
-
-  // 移除开始中的任务
-  startList.value = [...new Set(startList.value)].filter((item) => item !== id);
-
-  claimRewardsList.value.push(id);
-  // 数据预处理
-  currentId.value = id;
-  currentType.value = type;
-  //
+  const { startList, completedList, claimRewardsList } = storeToRefs(store);
+  // 判断是否已完成
+  if (
+    completedList.value.includes(id) ||
+    claimRewardsList.value.includes(id) ||
+    startList.value.includes(id)
+  )
+    return;
+  endTask(id);
+};
+// 获取指引
+const getGuide = () => {
   const toast = useToast();
+  toast.clear();
+
   toast(
     {
       component: Complete,
@@ -56,8 +53,25 @@ export const completeTask = async (id) => {
   );
 };
 
+// 完成后任务后处理
+const endTask = (id) => {
+  const store: any = taskStore();
+  const { startList, currentId, claimRewardsList } = storeToRefs(store);
+
+  if (!startList.value.includes(id)) return;
+
+  // 移除开始中的任务
+  startList.value = [...new Set(startList.value)].filter((item) => item !== id);
+  claimRewardsList.value.push(id);
+  // 数据预处理
+  currentId.value = id;
+  getGuide();
+};
 // 领取奖励
 export const getReward = async (id) => {
+  const toast = useToast();
+  toast.clear();
+
   const app: any = appStore();
   const store: any = taskStore();
   id = id.toUpperCase();
@@ -66,15 +80,24 @@ export const getReward = async (id) => {
     taskName: id,
     uid: app.userInfo.uid,
   });
-  let res = store.getTask(id);
+
   // 清除数据
   store.claimRewardsList = [...new Set(store.claimRewardsList)].filter(
     (item) => item !== id
   );
+  const type = currentType(id);
+  if (type == "m") {
+    let res = store.getTask(id);
+    store.taskID = res.suf;
+  }
 
-  store.taskID = res.suf;
   return {
     data,
     code,
   };
+};
+
+export const currentType = (id) => {
+  const type = id.split("")[0].toLowerCase();
+  return type;
 };

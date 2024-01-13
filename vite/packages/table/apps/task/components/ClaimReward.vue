@@ -5,7 +5,12 @@
       style="width: 500px"
     >
       <audio controls class="hidden" style="" autoplay>
-        <source src="./experience.mp3" type="audio/mpeg" />
+        <source
+          v-if="audio == 'communityPoints'"
+          src="./communityPoints.mp3"
+          type="audio/mpeg"
+        />
+        <source v-else src="./experience.mp3" type="audio/mpeg" />
       </audio>
       <transition
         name="animate__animated animate__bounce"
@@ -21,10 +26,7 @@
       </transition>
 
       <div>{{ types[props.type]?.info }}</div>
-      <div class="flex mt-3">
-        {{ currentTask.reward }}
-        <Reward v-for="item in currentTask.reward" v-bind="item" class="mx-1" />
-      </div>
+      <GetReward @onReward="getAudio" />
     </div>
     <div class="flex justify-between">
       <div></div>
@@ -48,7 +50,7 @@
 import { ref, toRefs, computed, onMounted } from "vue";
 import { taskStore } from "../store";
 import { storeToRefs } from "pinia";
-import Reward from "./Reward.vue";
+import GetReward from "./GetReward.vue";
 import "animate.css";
 import { getReward } from "../task";
 
@@ -59,7 +61,6 @@ const {
   currentTaskList,
   rewardVisible,
   currentId,
-  currentType,
   isTaskDrawer,
 } = storeToRefs(store);
 const props = defineProps({
@@ -76,9 +77,7 @@ onMounted(async () => {
   let { code, data } = await getReward(currentId.value);
 });
 const currentTask = computed(() => {
-  if (currentType.value == "M") {
-    return store.getPrimaryTask(store.currentId);
-  }
+  return store.getTask(store.currentId);
 });
 
 const types = {
@@ -99,6 +98,14 @@ const types = {
 const goTask = () => {
   rewardVisible.value = false;
   isTaskDrawer.value = true;
+};
+const audio = ref("");
+const getAudio = (data) => {
+  if (data == "communityPoints") {
+    audio.value = "communityPoints";
+  } else {
+    audio.value = "experience";
+  }
 };
 </script>
 

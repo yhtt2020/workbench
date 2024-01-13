@@ -18,7 +18,6 @@
     >
       {{ types[type].name }}
     </div>
-    {{ types[type].icon }}
     <a-avatar
       v-if="type == 'avatarFrame' || type == 'medal'"
       shape="square"
@@ -43,19 +42,17 @@ import { ref, toRefs, computed } from "vue";
 import { taskStore } from "../store";
 import { storeToRefs } from "pinia";
 
-const store = taskStore();
-const { taskID, currentTaskList } = storeToRefs(store);
 const props = defineProps({
   type: {},
   value: {},
-  id: {},
+  icon: {},
 });
-const { type, id } = toRefs(props);
+const { type } = toRefs(props);
 const types = computed(() => {
   return {
     medal: {
       name: "勋章",
-      icon: getTaskMedal.value,
+      icon: props.icon,
     },
     communityPoints: {
       name: "积分",
@@ -67,47 +64,9 @@ const types = computed(() => {
     },
     avatarFrame: {
       name: "头像",
-      icon: getAvatarFrame.value,
+      icon: props.icon,
     },
   };
-});
-
-const currentId = computed(() => {
-  if (id.value) return id.value;
-  return taskID.value;
-});
-
-const getTask = computed(() => {
-  console.log('currentTaskList.value :>> ', currentTaskList.value);
-  console.log('currentId.value :>> ', currentId.value);
-  const result = currentTaskList.value.find(
-    (item) => item.name == currentId.value
-  );
-  if (result) {
-    let { awardList } = result;
-    return awardList;
-  } else {
-    return null; // 返回一个默认值
-  }
-});
-
-const getAvatarFrame = computed(() => {
-  if (type.value != "avatarFrame") return "";
-  if (!getTask.value) return "";
-
-  let res = getTask.value.find((item) => item.label == "道具");
-  let { data } = getTask.value.find((item) => item.label == "道具");
-  return data.icon;
-});
-
-const getTaskMedal = computed(() => {
-  console.log('123 :>> ', type.value);
-  if (type.value != "medal") return "";
-  console.log('222222 :>> ', getTask.value);
-  if (!getTask.value) return "";
-  console.log('3333 :>> ', 3333);
-  let { data } = getTask.value.find((item) => item.label == "勋章");
-  return data.icon_sm;
 });
 </script>
 
