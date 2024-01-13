@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
 import {nanoid} from "nanoid";
+import _ from 'lodash-es'
 // @ts-ignore
 let arrData = [
   // 旧版底部数据
@@ -233,18 +234,18 @@ let arrData = [
     //   "event": "power"
     // },
     // 新版默认底部数据
-    { 'type': 'systemApp', 'icon': 'shouye1', 'name': '桌面主页', 'event': 'home' },
-    { 'type': 'systemApp', 'icon': 'yingyongzhongxin', 'name': '应用中心', 'event': 'apps' },
-    { 'type': 'systemApp', 'icon': 'fluent:chat-16-regular', 'name': '社群', 'event': 'chat' },
+    { 'type': 'systemApp', id: '1705025376', 'icon': 'shouye1', 'name': '桌面主页', 'event': 'home' },
+    { 'type': 'systemApp', id: '1705025377', 'icon': 'yingyongzhongxin', 'name': '应用中心', 'event': 'apps' },
+    { 'type': 'systemApp', id: '1705025378', 'icon': 'fluent:chat-16-regular', 'name': '社群', 'event': 'chat' },
     // { 'type': 'systemApp', 'icon': 'kuaijie1', 'name': '快捷指令', 'event': 'deck' },
-    { 'type': 'systemApp', 'icon': 'fluent:document-bullet-list-multiple-24-regular', 'name': '办公助手', 'event': 'work' },
-    { 'type': 'systemApp', 'icon': 'youxishoubing', 'name': '游戏助手', 'event': 'gameIndex' },
-    { 'type': 'systemApp', 'icon': 'yinle1', 'name': '网易云音乐', 'event': 'music' },
+    { 'type': 'systemApp', id: '1705025379', 'icon': 'fluent:document-bullet-list-multiple-24-regular', 'name': '办公助手', 'event': 'work' },
+    { 'type': 'systemApp', id: '1705025380', 'icon': 'youxishoubing', 'name': '游戏助手', 'event': 'gameIndex' },
+    { 'type': 'systemApp', id: '1705025381', 'icon': 'yinle1', 'name': '网易云音乐', 'event': 'music' },
     // { 'type': 'systemApp', 'icon': 'lock', 'name': '锁屏', 'event': 'lock' },
-    { 'type': 'systemApp', 'icon': 'fluent:settings-16-regular', 'name': '任务中心', 'event': 'task' },
-    { 'type': 'systemApp', 'icon': 'fluent:settings-16-regular', 'name': '社区中心', 'event': 'commun' },
-    { 'type': 'systemApp', 'icon': 'fullscreen', 'name': '全屏', 'event': 'fullscreen' },
-    { 'type': 'systemApp', 'icon': 'setting', 'name': '设置中心', 'event': 'setting' },
+    { 'type': 'systemApp', id: '1705025382', 'icon': 'fluent:settings-16-regular', 'name': '任务中心', 'event': 'task' },
+    { 'type': 'systemApp', id: '1705025383', 'icon': 'fluent:settings-16-regular', 'name': '社区中心', 'event': 'commun' },
+    { 'type': 'systemApp', id: '1705025384', 'icon': 'fullscreen', 'name': '全屏', 'event': 'fullscreen' },
+    { 'type': 'systemApp', id: '1705025385', 'icon': 'setting', 'name': '设置中心', 'event': 'setting' },
 ]
 // @ts-ignore
 export const navStore = defineStore("nav", {
@@ -268,7 +269,7 @@ export const navStore = defineStore("nav", {
     footNavigationList: [],
     sideNavigationList: [],
     rightNavigationList: [],
-    copyFootNav:[...arrData],
+    copyFootNav:[],
     copySideNav:[],
     copyRightNav:[],
     builtInFeatures: [
@@ -300,12 +301,52 @@ export const navStore = defineStore("nav", {
     // navigationToggle: [true,false,true]
     navigationToggle: [false,false,true],
     loaded:false,
+    init:false,//是否初始化过了
     // 底部导航栏最多图标数
     maxItemNum:null
   }),
   actions: {
+    fixData(nav){
+      const newNav=_.cloneDeep(nav)
+      let isFixed=false
+      let fixedArray=[]
+      for(const icon of newNav){
+        if(!icon) {
+          //自身已经出问题了
+          isFixed=true
+          continue
+        }
+        if(!icon.id){
+          isFixed=true
+          icon.id=nanoid(6)
+          fixedArray.push(icon)
+          continue
+        }
+        if(nav.some(n=>{
+          return n.id===icon.id
+        })){
+          //存在同id，则重新更新id
+          isFixed=true
+          icon.id=nanoid(6)
+        }
+        fixedArray.push(icon)
+      }
+      return {
+        fixed:isFixed,
+        fixedArray
+      }
+    },
     loadNav(){
+      console.log('执行loadNav')
+      if(!this.init){
+        this.copyFootNav=[...arrData]
+        this.init=true
+      }
       if(!this.loaded){
+        let fixedRs=this.fixData(this.copyFootNav)
+        if(fixedRs.fixed){
+          this.copyFootNav=fixedRs.fixedArray
+        }
         //this.copyFootNav = []//JSON.parse(JSON.stringify(this.footNavigationList))
         this.copySideNav = JSON.parse(JSON.stringify(this.sideNavigationList))
         this.copyRightNav = JSON.parse(JSON.stringify(this.rightNavigationList))
@@ -395,7 +436,7 @@ export const navStore = defineStore("nav", {
       {
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths: ['sideNavigationList','footNavigationList','rightNavigationList','navigationToggle','copyFootNav','copySideNav','copyRightNav','copyFlag'],
+      paths: ['sideNavigationList','footNavigationList','rightNavigationList','navigationToggle','copyFootNav','copySideNav','copyRightNav','copyFlag','init'],
         storage: dbStorage,
         // state 中的字段名，按组打包储存
       },

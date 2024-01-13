@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div class="content mt-4">
     <div class="uni-flex uni-column">
       <div class="flex-item flex-item-V uni-bg-red">
 
@@ -140,7 +140,7 @@ export default {
 .screen {
   box-sizing: border-box;
   cursor: pointer;
-  margin: 10px;
+  margin: 10px 0;
 
   .num {
     color: white;

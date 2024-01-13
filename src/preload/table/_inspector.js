@@ -29,7 +29,6 @@ async function getRealtimeNetworkBandwidth () {
     }
   }
 
-  console.log(networkStats1, networkStats2)
 
   const receivedBytesPerSecond = networkStats2.rx_bytes - networkStats1.rx_bytes
   const sentBytesPerSecond = networkStats2.tx_bytes - networkStats1.tx_bytes

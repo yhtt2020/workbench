@@ -22,10 +22,9 @@
       :defaultData="defaultFolderData"
       :header="header"
       :menuList="menuList"
-      v-model:size="customData.size"
       :sizeList="autoSizeList"
       @leftClick="leftClick"
-      @onRefresh="onRefresh"
+      v-model:size="customData.size"
     >
       <!-- 右侧布局切换 -->
       <Resize
@@ -37,9 +36,13 @@
         <template v-if="customData.list.length <= 0 && !dragSortState">
           <Null :size="customData.size" @addFile="addFileClick" />
         </template>
-        <vue-custom-scrollbar v-else :settings="{
-          suppressScrollY: false,
-        }" class="relative w-full h-full">
+        <vue-custom-scrollbar
+          v-else
+          :settings="{
+            suppressScrollY: false,
+          }"
+          class="relative w-full h-full"
+        >
           <File
             :list="customData.list"
             :layout="customData.layout"
@@ -160,9 +163,9 @@ const props = defineProps({
       // 设置背景颜色
       bg: true,
       // 隐藏删除小组件选项
-      isDel:false,
+      isDel: false,
       // 隐藏层级选择
-      hierarchy:false,
+      hierarchy: false,
     }),
   },
   // 自动设置大小
@@ -180,19 +183,18 @@ const header = computed(() => {
   return {
     showIcon: customData.value.icon,
     title: customData.value.name,
-    // add: true,
-    // refresh: true,
-    // refreshState: refreshState.value,
+    refresh: {
+      tip: "更新桌面数据",
+      disabled: customData.value.model != "custom" ? false : true,
+      state: refreshState.value,
+      fn: refreshDeskApp,
+    },
     leftHover: true,
     leftHoverName: secondary.value ? "编辑文件夹" : "点击打开",
     leftHoverIcon: secondary.value
       ? "fluent:settings-16-regular"
       : "fluent:open-16-regular",
     rightIcon: [
-      // {
-      //   newIcon: lockIcon.value,
-      //   fn: lockClick,
-      // },
       {
         ifyIcon: "fluent:add-16-filled",
         fn: addFileClick,
@@ -208,8 +210,8 @@ const header = computed(() => {
 const options = computed(() => {
   return {
     bg: isDrag.value ? "var(--active-secondary-bg) " : "",
-    del: navBar.value.isDel ,
-    hierarchy: navBar.value.hierarchy
+    del: navBar.value.isDel,
+    hierarchy: navBar.value.hierarchy,
   };
 });
 
@@ -241,14 +243,12 @@ provide("isOutside", isOutside);
  */
 const autoSizeList = computed(() => {
   if (auto.value) {
-    // console.log(auto.value, "自动调整")
     const size = {
       name: autoSize.value,
       value: autoSize.value,
     };
     return [...sizeList.value, size];
   }
-  // console.log(auto.value, '自动调整大小')
   return sizeList.value;
 });
 /**
@@ -276,17 +276,22 @@ const clickFile = (data) => {
 /**
  * 自定义大小
  */
-watch(() => customData.value.size, (newV, oldV) => {
-  console.log(newV, oldV, "newV,oldV");
+watch(
+  () => customData.value.size,
+  (newV, oldV) => {
+    console.log(newV, oldV, "newV,oldV");
     emit("update:size", newV);
   },
-   { deep: true });
+  { deep: true }
+);
 
 /**
  * 自定义布局
  */
-watch(() => customData.value.layout, (newV, oldV) => {
-  console.log(newV, oldV, "newV,oldV");
+watch(
+  () => customData.value.layout,
+  (newV, oldV) => {
+    console.log(newV, oldV, "newV,oldV");
     emit("update:layout", newV);
   }
 );
@@ -431,51 +436,58 @@ const expandClose = () => {
 };
 
 const onRefresh = () => {
-  refreshState.value = true;
-  setTimeout(() => {
-    refreshState.value = false;
-  }, 1000);
+  setTimeout(() => {}, 1000);
 };
 
 const isDrag = ref(false);
 const updateBg = (val) => {
-  // customData.value.bg = !customData.value.bg;
   isDrag.value = val;
 };
 
 onBeforeMount(() => {});
 
+/**
+ * 刷新桌面数据
+ */
+const refreshDeskApp = async () => {
+  if (customData.value.model == "custom") return;
+
+  refreshState.value = true;
+  const desktopApps = await ipc.sendSync("getDeskApps");
+  let desktopAppsList = [];
+
+  desktopApps.forEach((item) => {
+    const file = {
+      ...defaultData,
+      name: item.name,
+      value: item.path,
+      icon: item.icon,
+      type: "tableApp",
+      id: nanoid(6),
+    };
+    desktopAppsList.push(file);
+  });
+  customData.value.list = customData.value.list.filter((item) =>
+    desktopAppsList.find((file) => item.name == file.name)
+  );
+  let newList = [];
+  desktopAppsList.forEach((item) => {
+    let data = customData.value.list.find((file) => item.name == file.name);
+
+    if (typeof data == "undefined") {
+      customData.value.list.push(item);
+    }
+  });
+  setTimeout(() => {
+    refreshState.value = false;
+  }, 1000);
+};
 onMounted(async () => {
   if (customData.value.icon === "") {
     customData.value.icon =
       "https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#ffffff";
   }
   if (customData.value.model != "custom") {
-    const desktopApps = await ipc.sendSync("getDeskApps");
-    let desktopAppsList = [];
-
-    desktopApps.forEach((item) => {
-      const file = {
-        ...defaultData,
-        name: item.name,
-        value: item.path,
-        icon: item.icon,
-        type: "tableApp",
-        id: nanoid(6),
-      };
-      desktopAppsList.push(file);
-    });
-    customData.value.list = customData.value.list.filter((item) =>
-      desktopAppsList.find((file) => item.name == file.name)
-    );
-    let newList = [];
-    desktopAppsList.forEach((item) => {
-      let data = customData.value.list.find((file) => item.name == file.name);
-
-      if (typeof data == "undefined") {
-        customData.value.list.push(item);
-      }
-    });
   }
 });
 </script>

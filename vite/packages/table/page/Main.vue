@@ -39,7 +39,7 @@
       </div>
     </div>
     <div style="flex: 0;">
-      <BottomPanel v-if="!fullScreen" :delZone="delZone" @getDelIcon="getDelIcon" @hiedNavBar="hiedNavBar"></BottomPanel>
+      <BottomPanel v-if="!fullScreen && loaded" :delZone="delZone" @getDelIcon="getDelIcon" @hiedNavBar="hiedNavBar"></BottomPanel>
     </div>
   </div>
 </template>
@@ -64,6 +64,7 @@ export default {
     this.$router.afterEach((to, from) => {
       this.routeUpdateTime = Date.now()
     })
+    this.loadNav()
   },
   computed: {
     fullScreen() {
@@ -71,7 +72,7 @@ export default {
     },
     ...mapWritableState(appStore, ['routeUpdateTime', 'fullScreen', 'settings', 'init']),
     ...mapWritableState(teamStore, ['teamVisible']),
-    ...mapWritableState(navStore, ['sideNavigationList', 'rightNavigationList', 'navigationToggle', 'footNavigationList','copyRightNav','copySideNav']),
+    ...mapWritableState(navStore, ['sideNavigationList', 'rightNavigationList', 'navigationToggle', 'footNavigationList','copyRightNav','copySideNav','loaded']),
     isMain
   },
   data() {
@@ -90,7 +91,7 @@ export default {
     marginLeft() {
       return marginLeft
     },
-    ...mapActions(navStore, ['sortSideNavigationList', 'removeSideNavigationList', 'sortRightNavigationList', 'removeRightNavigationList']),
+    ...mapActions(navStore, ['sortSideNavigationList', 'removeSideNavigationList', 'sortRightNavigationList', 'removeRightNavigationList',  'loadNav']),
     getDelIcon(val) {
       this.delZone = val
     },
