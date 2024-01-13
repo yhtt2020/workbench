@@ -8,31 +8,37 @@
                 <div class="flex justify-between mb-4">
                     <div class="text-base xt-text-2">推荐颜色</div>
                     <!-- <xt-button :w="24" :h="24"> -->
-                    <xt-new-icon icon="fluent:dismiss-circle-16-filled" size="24" 
-                        @click="tippyRef.hide()"></xt-new-icon>
+                    <xt-new-icon icon="fluent:dismiss-circle-16-filled" size="24" @click="tippyRef.hide()"></xt-new-icon>
                     <!-- </xt-button> -->
                 </div>
-                <div class="item-box">
-                    <div class="flex items-center justify-center item" :key="item"
-                        :style="{ background: props.defaultList[`${'color' + item}`] }" v-for="(item, index) in Object.keys(props.defaultList).length"
-                        @click="chooseDf(item)">
-                        <xt-new-icon v-show="colorIndex == item" icon="ri:checkbox-circle-fill" size="20"></xt-new-icon>
+                <div class="flex flex-1 ml-2 mr-2">
+                    <div class="item-box">
+                        <div class="flex items-center justify-center item" :key="item"
+                            :style="{ background: props.defaultList[`${'color' + item}`] }"
+                            v-for="(item, index) in Object.keys(props.defaultList).length" @click="chooseDf(item)">
+                            <xt-new-icon v-show="colorIndex == item" icon="ri:checkbox-circle-fill" size="20"></xt-new-icon>
+                        </div>
+                        <XtBaseColor ref="baseColor" v-model:data="defaultColor" @update:data="updateBackground">
+                        </XtBaseColor>
                     </div>
-                    <XtBaseColor ref="baseColor" v-model:data="defaultColor" @update:data="updateBackground"></XtBaseColor>
                 </div>
+
 
                 <div v-if="props.isLinear" class="h-[1px] w-full mt-4 mb-4" style="background: var(--divider);"></div>
 
                 <div v-if="props.isLinear">
                     <div class="mb-4 text-base xt-text-2">渐变色</div>
-                    <div class="item-box">
-                        <div class="flex items-center justify-center item" :key="item"
-                            :style="{ background: props.linearList[`${'color' + item}`] }"
-                            v-for="(item, index) in Object.keys(props.linearList).length" @click="chooseLinear(item)">
-                            <xt-new-icon v-show="linearIndex == item" icon="ri:checkbox-circle-fill"
-                                size="20"></xt-new-icon>
+                    <div class="flex flex-1 ml-2 mr-2">
+                        <div class="item-box">
+                            <div class="flex items-center justify-center item" :key="item"
+                                :style="{ background: props.linearList[`${'color' + item}`] }"
+                                v-for="(item, index) in Object.keys(props.linearList).length" @click="chooseLinear(item)">
+                                <xt-new-icon v-show="linearIndex == item" icon="ri:checkbox-circle-fill"
+                                    size="20"></xt-new-icon>
+                            </div>
                         </div>
                     </div>
+
                 </div>
             </div>
 
@@ -148,6 +154,7 @@ const updateBackground = () => {
     gap: 16px;
 
 }
+
 // .item-box .item:nth-child(5n + 1) {
 //     margin-left: 8px !important;
 // }
