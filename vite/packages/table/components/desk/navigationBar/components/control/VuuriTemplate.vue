@@ -4,7 +4,7 @@
   >
     <template #item="{ item }" >
       <template v-if="item.id === 'audio'">
-        <div  class="rounded-xl flex flex-col relative" style="height: 120px;">
+        <div  class="rounded-xl flex flex-col relative" style="height: 120px;" @click="controlsAdd(item)">
           <template v-for="listItem in item.list">
             <template v-if="listItem.id === 'music'">
               <div class="w-full xt-bg rounded-lg mb-3.5 flex items-center justify-between" style="height: 54px;padding: 0 22px;">
@@ -29,7 +29,7 @@
         </div>
       </template>
       <template v-else>
-        <div  class="xt-bg rounded-xl flex flex-col items-center justify-center relative" style="height: 120px;">
+        <div  class="xt-bg rounded-xl flex flex-col items-center justify-center relative" style="height: 120px;" @click="controlsAdd(item)">
           <div class="absolute" style="top: 7px;right:-4px;">
             <xt-button style="width: auto !important;" h="0">
               <div class="flex items-center justify-center">
@@ -47,42 +47,51 @@
   </vuuri>
 </template>
 
-<script>
+<script setup>
+import { ref,computed } from'vue';
+import { controlStore } from '../../hook/controlStore';
+import { storeToRefs } from 'pinia';
+
 import vuuri from "../../../../vuuri/Vuuri.vue";
 
-
-export default {
-  props:['list'],
-
-  components:{
-    vuuri,
-  },
-  data(){
-    return{
-      vuuriList:this.list,
-      option:{
-        layout:{ 
-          horizontal:false 
-        },
-      }
-    }
-  },
-
-  computed:{
-    // 计算间距
-    getMargin(){
-      for(const i=0;i<this.list.length;i++){
-       return i%4!==0
-      }
-    }
-  },
-
-  methods:{
-    widthSize(){
-      return 120 + 'px' 
-    }
+const props = defineProps({
+  list:{
+    type:Array,
+    default:()=>[]
   }
-};
+})
+
+const controls = controlStore();
+const { control } = storeToRefs(controls);
+const emit  = defineEmits(['remove']);
+
+const  vuuriList = ref(props.list);
+const option = ref({
+  layout:{ 
+    horizontal:false 
+  },
+})
+
+// 计算间距
+const getMargin = computed(()=>{
+  for(const i=0;i<props.list.length;i++){
+   return i%4!==0
+  }
+})
+
+const widthSize = () =>{
+  return 120 + 'px' 
+}
+
+// 控制中心数据编辑添加
+const controlsAdd = (item) =>{
+  const index = control.value.addList.findIndex((find)=>{ return String(find.id) === String(item.id) });
+  const findIdIndex = controlData.findIndex((find)=>{ return String(find.id) === String(item.id) })
+  if(index === -1){
+    control.value.addList.push(item)
+  }
+  emit('remove',findIdIndex);
+}
 </script>
 
 <style lang="scss" scoped>
