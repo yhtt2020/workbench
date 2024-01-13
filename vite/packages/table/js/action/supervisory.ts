@@ -107,7 +107,6 @@ export async function getSysStats() {
   let osu = window.$models.osUtils
   const inspector=window.$models.inspector
   dsData.useCPU = (await inspector.getCpuUsage()) || 0
-  console.log(await inspector.getCpuUsage())
   const usedMem = await osu.mem.used()
   dsData.useMemory = (usedMem.usedMemMb / usedMem.totalMemMb)*100 || 0
 
@@ -115,7 +114,6 @@ export async function getSysStats() {
   dsData.down=net.receivedBandwidth/2 || 0
   dsData.up=net.sentBandwidth/2 || 0
   dsData.warmCPU=(await inspector.getCpuTemperature() )||0
-  console.log(dsData.warmCPU)
 
   return dsData
 }

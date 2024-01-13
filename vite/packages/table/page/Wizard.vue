@@ -9,8 +9,10 @@
           <div v-if="step!==0" @click="prevStep" class="top-icon no-drag">
             <MyIcon icon="fluent:chevron-left-16-filled"  width="20" height="20"/>
           </div>
-
-          <div @click="themeSwitch" class="top-icon no-drag right-4">
+          <div @click="themeSwitch" v-if="styles" class="top-icon no-drag right-4">
+            <MyIcon icon="fluent:weather-sunny-16-regular"  width="20" height="20"/>
+          </div>
+          <div @click="themeSwitch" v-else class="top-icon no-drag right-4">
             <MyIcon icon="fluent:weather-moon-16-regular"  width="20" height="20"/>
           </div>
         </div>
@@ -30,33 +32,32 @@
           <div style="margin-bottom: 1em" v-else>
             您当前仅有一块屏幕，无法启用副屏模式，您可在增添副屏后启用。<a>了解更多</a>
           </div>
-          <a-row :gutter="20" class="flex justify-center mt-4">
+          <a-row :gutter="20" class="flex justify-center mt-6">
             <a-col >
-              <div :class="{'active':mod==='second-screen'}" @click="this.mod='second-screen'" class="panel pointer px-5 pt-4" style="height:200px;">
+              <div :class="{'active':mod==='second-screen'}" @click="this.mod='second-screen'" class="panel pointer px-5 pt-6">
                 <div class="title">
-                  <MyIcon icon="fluent:tablet-16-regular" width="50px" height="50px" color="var(--primary-text)" />
+                  <MyIcon icon="fluent:tablet-16-regular" width="56px" height="56px" color="var(--primary-text)" />
                   <div class="mt-2">副屏全屏模式</div>
                 </div>
-                <div class="content mt-1">
+                <div class="content mt-3">
                   专为副屏优化，自动缩放界面和字体，提供适合触控操作的交互。
                 </div>
               </div>
             </a-col>
             <a-col >
-              <div :class="{'active':mod==='bootstrap'}" @click="this.mod='bootstrap'" class="panel pointer px-5 pt-4" style="height:200px;">
+              <div :class="{'active':mod==='bootstrap'}" @click="this.mod='bootstrap'" class="panel pointer px-5 pt-6">
                 <div class="title">
                   <!-- <icon icon="kuaijie" style="font-size: 50px"></icon> -->
-                  <MyIcon icon="fluent:window-multiple-16-filled" width="50px" height="50px" color="var(--primary-text)" />
+                  <MyIcon icon="fluent:window-multiple-16-filled" width="56px" height="56px" color="var(--primary-text)" />
                   <div class="mt-2">窗口模式</div>
                 </div>
-                <div class="content mt-1">
+                <div class="content mt-3">
                   以普通应用窗口的模式运行，默认使用ALT+Z组合键控制显示和隐藏。
                 </div>
               </div>
             </a-col>
           </a-row>
-          <div class="xt-text text-center font-16 mt-3">选择菜单模式</div>
-          <!-- 预览图片 -->
+          <!-- <div class="xt-text text-center font-16 mt-3">选择菜单模式</div>
           <div style="position: absolute;">
             <a-image
             :width="200"
@@ -67,8 +68,8 @@
             }"
             :src="urlValue"
             />
-          </div>
-          <a-row :gutter="20" class="flex justify-center mt-3">
+          </div> -->
+          <!-- <a-row :gutter="20" class="flex justify-center mt-3">
             <a-col >
               <div :class="{'active':rightModel==='follow'}" @click="this.rightModel='follow'" class="panel pointer px-5" style="height:110px;">
                 <div class="title mt-3">
@@ -95,7 +96,7 @@
                 </div>
               </div>
             </a-col>
-          </a-row>
+          </a-row> -->
 
 
         </div>
@@ -112,7 +113,7 @@
                 </a>
               </div>
             </div>
-            <div class="h-full flex items-center" style="width: 100px;height: 100px;">
+            <div class="w-full flex items-center" style="width: 100px;height: 100px;">
               <ChooseScreen></ChooseScreen>
             </div>
           </div>
@@ -151,7 +152,7 @@
           </div>
         </div>
         <div v-if="step==4">
-          <div class="text-center xt-text-2 font-16 mt-3">你可以不登录使用工作台大部分效率辅助功能，部分社区类功能可能受到限制</div>
+          <!-- <div class="text-center xt-text-2 font-16 mt-3">你可以不登录使用工作台大部分效率辅助功能，部分社区类功能可能受到限制</div> -->
           <div class="flex flex-wrap justify-center">
             <a-row class="bg-tab" v-for="(item,index) in loginList" :key="index" :style="{'background-image': item.background}">
               <a-col :span="6" class="h-full w-full justify-center items-center" style="display:flex;">

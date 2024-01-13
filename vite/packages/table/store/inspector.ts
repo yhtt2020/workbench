@@ -52,12 +52,10 @@ export const inspectorStore = defineStore(
         this.testingAudio=false
       },
       setDisplayData(data: IDisplayData) {
-        console.log(data)
         let filteredData={}
           Object.keys(data).map(key=>{
           return filteredData[key]=Number(data[key]?.value?data[key]?.value:data[key])
         })
-        console.log(filteredData)
         this.displayData = filteredData;
       },
       setDisplayValue(key, value) {
