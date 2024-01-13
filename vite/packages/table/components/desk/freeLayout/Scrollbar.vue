@@ -52,12 +52,11 @@ onMounted(async () => {
   freeLayoutStore.initFreeLayoutEnv();
   // 实例化滚动条
   perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
-  updateScroll(getFreeLayoutState.value.mode.scroll);
   freeLayoutEnv.value.scrollData = useElementBounding(scrollbar.value);
 
   setTimeout(async () => {
     // 初始化自由布局定位
-    redirect();
+    updateScroll(getFreeLayoutState.value.mode.scroll);
 
     let { width, height } = scrollbar.value?.getBoundingClientRect();
     freeLayoutEnv.value.scrollWidth = width;
@@ -65,24 +64,14 @@ onMounted(async () => {
     // 监听自由布局滚动事件
     scrollbar.value.addEventListener("ps-scroll-x", () => {
       freeLayoutEnv.value.scrollLeft = scrollbar.value?.scrollLeft;
-
-console.log(' scrollbar.value.scrollTop  :>> ',  scrollbar.value.scrollTop );
-
-
     });
     scrollbar.value.addEventListener("ps-scroll-y", () => {
       freeLayoutEnv.value.scrollTop = scrollbar.value?.scrollTop;
-
-      // scrollbar.value.scrollLeft = freeLayoutEnv.value.scrollOldLeft;
-
-console.log(' scrollbar.value.scrollLeft  :>> ',  scrollbar.value.scrollLeft );
-
-
     });
 
     // 完成操作 开启
     freeLayoutEnv.value.loading = true;
-    // redirect();
+    //
 
     // 监听键盘按下事件
     window.addEventListener("keydown", handleKeyDown);
@@ -175,7 +164,10 @@ let initialMousePosition = ref(null);
  */
 //滚动方式
 const updateScroll = (newV) => {
-  console.log("111 :>> ", 111);
+  console.log("滚动方式更新 :>> ", 123);
+  redirect();
+  console.log("scrollbar.value.scrollLeft; :>> ", scrollbar.value.scrollLeft);
+  console.log("scrollbar.value.scrollTop; :>> ", scrollbar.value.scrollTop);
   freeLayoutEnv.value.scrollOldLeft = scrollbar.value.scrollLeft;
   freeLayoutEnv.value.scrollOldTop = scrollbar.value.scrollTop;
   if (newV === "free") {
@@ -194,18 +186,12 @@ const updateScroll = (newV) => {
 
   scrollbar.value.scrollLeft = freeLayoutEnv.value.scrollOldLeft;
   scrollbar.value.scrollTop = freeLayoutEnv.value.scrollOldTop;
-
-  console.log("scrollbar.value.scrollLeft :>> ", scrollbar.value.scrollLeft);
 };
 watch(() => getFreeLayoutState.value?.mode?.scroll, updateScroll);
 // 重置中心区域
 const { width, height } = useElementSize(scrollbar);
 function redirect() {
   let w, h;
-  console.log(
-    "getFreeLayoutState.value.mode.align :>> ",
-    getFreeLayoutState.value.mode.align
-  );
   if (getFreeLayoutState.value.mode.align === "top") {
     h = 0;
     w = getFreeLayoutState.value.canvas.width / 2 - width.value / 2;
