@@ -80,17 +80,16 @@ async function getPosition(item) {
  */
 
 let updateCardTimer: any = null;
-const currentData: any = ref(null);
+const currentData: any = ref({});
 function updateCard(data) {
   console.log("--------------- 自由布局数据更新开始 ---------------");
   console.time("Free Layout Run Time");
   console.log("当前配置项 :>> \n", `桌面ID ${currentID.value}`);
-  let dataObj = {};
-
-  data.forEach((item) => (dataObj[item.id] = item));
-  currentData.value = dataObj;
+  data.forEach((item) => {
+    currentData.value[item.id] = item;
+  });
   for (const key in getFreeLayoutData.value) {
-    if (!(key in dataObj)) {
+    if (!(key in currentData.value)) {
       delete getFreeLayoutData.value[key];
     }
   }
@@ -195,7 +194,7 @@ const disabledInfo = (data) => {
       resetPosition
       parent
       boundary
-      v-if="!getFreeLayoutState.system.hide"
+      v-if="!getFreeLayoutState.system.hide && item?.id"
       :data="item"
       :key="item.id"
       v-model:y="item.top"
@@ -219,17 +218,15 @@ const disabledInfo = (data) => {
       @onDrag="drag"
       @onDragStop="dragStop"
     >
-      <template v-if="currentData">
-        <div
-          class="rounded-xl"
-          :style="{
-            border: isSelectAll ? '3px solid var(--active-bg) ' : '',
-          }"
-          ref="test"
-        >
-          <slot name="box" :data="currentData[item?.id]"></slot>
-        </div>
-      </template>
+      <div
+        class="rounded-xl"
+        :style="{
+          border: isSelectAll ? '3px solid var(--active-bg) ' : '',
+        }"
+        ref="test"
+      >
+        <slot name="box" :data="currentData[item?.id]"></slot>
+      </div>
     </xt-drag>
   </template>
 </template>
