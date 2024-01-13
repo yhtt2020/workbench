@@ -357,9 +357,9 @@ export const navStore = defineStore("nav", {
         this.copyFootNav.splice(index, 1)
     },
     sortFootNavigationList(evt) {
-        let temp = this.footNavigationList[evt.oldIndex]
-        this.footNavigationList.splice(evt.oldIndex, 1)
-        this.footNavigationList.splice(evt.newIndex, 0, temp)
+        let temp = this.copyFootNav[evt.oldIndex]
+        this.copyFootNav.splice(evt.oldIndex, 1)
+        this.copyFootNav.splice(evt.newIndex, 0, temp)
     },
     setFootNavigationList(item) {
       // 当元素个数大于限制数时，将无法添加

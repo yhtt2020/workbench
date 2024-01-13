@@ -19,12 +19,9 @@ import { useFolderStore } from "../../../../../apps/folder/src/store";
 import { useDeskStore } from "../../../../../components/desk/store";
 import { useIconConversionNav } from "../../../../../apps/folder/src/hooks/useDataConversion";
 import {useMouseInElement} from "@vueuse/core"
-
+import _ from 'lodash-es'
 const deskStore = useDeskStore();
 const {isEnterBar} = storeToRefs(deskStore);
-// const targetRef = ref(null);
-// const { isOutside } = useMouseInElement(targetRef);
-// console.log(isOutside,'isOutSide');
 
 const folderStore = useFolderStore();
 const { dragId, isDrag, move, currentId, currentData } =
@@ -32,20 +29,24 @@ const { dragId, isDrag, move, currentId, currentData } =
 
 const emit = defineEmits(['createFile'])
 const handleDrop = async (dragEvent) => {
+  if(!isEnterBar.value) return
   let files = dragEvent.x
-  console.log(currentData.value,files,'currentData.value')
-  const data = useIconConversionNav(currentData.value)
+  const item = _.cloneDeep(currentData.value)
+  const data = useIconConversionNav(item)
   emit('createFile',data,files)
   isEnterBar.value = false;
 };
 const handleDragenter = (dragEvent) => {
-  isEnterBar.value = true;
-  // dragEvent.preventDefault();
+  console.log(move.value,'move')
+  if(dragEvent.dataTransfer.types.length>0){
+    isEnterBar.value = true;
+  }
 };
 
 const handleDragover = (dragEvent) => {
-  isEnterBar.value = false
-  // dragEvent.preventDefault();
+  // isEnterBar.value = false
+  // // dragEvent.preventDefault();
+  // console.log(isEnterBar.value,'isEnterBar from over');
 };
 </script>
   
