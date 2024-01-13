@@ -518,6 +518,7 @@ export default {
     ]),
     ...mapWritableState(taskStore, ['isTask', 'isTaskDrawer']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
+    ...mapWritableState(useDeskStore,['isEnterBar']),
 
     isMain () {
       return isMain()
@@ -1141,61 +1142,61 @@ export default {
      * @param {*} item
      * @param {*} index
      */
-    clickRightListItem (item, index) {
-      this.activeRightItem = index
-      //   this.editFlag = false
-      if (this.selectNav === 'foot') {
-        if (item instanceof Array) {
-          for (let i = 0; i < item.length; i++) {
-            if (!this.footNavigationList.find(j => j.name === item[i].name)) {
-              this.updateMainNav(item[i], 'add')
-              item[i].addNav = true
-              this.setFootNavigationList(item[i])
-            } else {
-              message.info('已添加', 1)
-            }
-          }
-          this.dropList = []
-        } else {
-          for (let i = 0; i < this.footNavigationList.length; i++) {
-            if (this.footNavigationList[i].name === item.name) return message.info('已添加', 1)
-          }
-          this.updateMainNav(item, 'add')
-          item.addNav = true
-          this.setFootNavigationList(item)
-          this.$nextTick(() => {
-            let scrollElem = this.$refs.content
-            scrollElem.scrollTo({ left: scrollElem.scrollWidth, behavior: 'smooth' })
-          })
-        }
-      }
-    },
+    // clickRightListItem (item, index) {
+    //   this.activeRightItem = index
+    //   //   this.editFlag = false
+    //   if (this.selectNav === 'foot') {
+    //     if (item instanceof Array) {
+    //       for (let i = 0; i < item.length; i++) {
+    //         if (!this.footNavigationList.find(j => j.name === item[i].name)) {
+    //           this.updateMainNav(item[i], 'add')
+    //           item[i].addNav = true
+    //           this.setFootNavigationList(item[i])
+    //         } else {
+    //           message.info('已添加', 1)
+    //         }
+    //       }
+    //       this.dropList = []
+    //     } else {
+    //       for (let i = 0; i < this.footNavigationList.length; i++) {
+    //         if (this.footNavigationList[i].name === item.name) return message.info('已添加', 1)
+    //       }
+    //       this.updateMainNav(item, 'add')
+    //       item.addNav = true
+    //       this.setFootNavigationList(item)
+    //       this.$nextTick(() => {
+    //         let scrollElem = this.$refs.content
+    //         scrollElem.scrollTo({ left: scrollElem.scrollWidth, behavior: 'smooth' })
+    //       })
+    //     }
+    //   }
+    // },
     /**
      * 更新图标选择状态
      * @param {*} addItem
      * @param {*} type
      */
-    updateMainNav (addItem, type) {
-      this.mainNavList = this.currentList.length ? this.currentList : this.footNavigationList
-      // console.log(this.mainNavList, 'this.mainNavList')
-      let sumNavList = this.sideNavigationList.concat(this.footNavigationList, this.rightNavigationList)
-      if (type) {
-        this.mainNavList.forEach(item => {
-          if (item?.name === addItem.name) {
-            if (type === 'add') {
-              item.addNav = true
-            } else if (type === 'del') {
-              item.addNav = false
-            }
-          }
-        })
-      } else {
-        for (const i in this.mainNavList) {
-          let stateNav = sumNavList.some(item => item.name === this.mainNavList[i].name)
-          this.mainNavList[i].addNav = stateNav
-        }
-      }
-    },
+    // updateMainNav (addItem, type) {
+    //   this.mainNavList = this.currentList.length ? this.currentList : this.footNavigationList
+    //   // console.log(this.mainNavList, 'this.mainNavList')
+    //   let sumNavList = this.sideNavigationList.concat(this.footNavigationList, this.rightNavigationList)
+    //   if (type) {
+    //     this.mainNavList.forEach(item => {
+    //       if (item?.name === addItem.name) {
+    //         if (type === 'add') {
+    //           item.addNav = true
+    //         } else if (type === 'del') {
+    //           item.addNav = false
+    //         }
+    //       }
+    //     })
+    //   } else {
+    //     for (const i in this.mainNavList) {
+    //       let stateNav = sumNavList.some(item => item.name === this.mainNavList[i].name)
+    //       this.mainNavList[i].addNav = stateNav
+    //     }
+    //   }
+    // },
     completeEdit () {
       this.toggleEdit()
       this.setQuick()
@@ -1488,14 +1489,6 @@ export default {
         this.hoverIndex = -1
       } else {
         this.hoverIndex = hoverRs.index
-      }
-    }
-  },
-  provide () {
-    return {
-      data: {
-        ...this.defaultFolderData,
-        model: 'custom',
       }
     }
   },

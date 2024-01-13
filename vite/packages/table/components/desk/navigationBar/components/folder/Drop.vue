@@ -1,13 +1,6 @@
 <template>
-  <div 
-    class="h-full max-w-full" 
-    @drop="handleDrop" 
-    @dragover="handleDragover" 
-    @dragenter="handleDragenter" 
-    ref="target"
-    @mouseup="handleMouseUp" 
-    @mouseleave="handleMouseLeave" 
-    @mouseover="handleMouseOver">
+  <div class="h-full max-w-full" @drop="handleDrop" @dragover="handleDragover" @dragenter="handleDragenter" ref="target"
+    @mouseup="handleMouseUp" @mouseleave="handleMouseLeave" @mouseover="handleMouseOver">
     <slot></slot>
   </div>
 </template>
@@ -19,7 +12,6 @@ import { storeToRefs } from "pinia";
 import { useFolderStore } from "../../../../../apps/folder/src/store";
 import { useDeskStore } from "../../../../../components/desk/store";
 import { useIconConversionNav, useFileConversionNav, useDeskConversionNav } from "../../../../../apps/folder/src/hooks/useDataConversion";
-import { useMouseInElement } from "@vueuse/core"
 import { myIcons } from "../../../../../store/myIcons";
 import _ from 'lodash-es'
 
@@ -61,12 +53,12 @@ const handleDrop = async (dragEvent) => {
       let file = useDeskConversionNav(dropFiles, fileName, item)
       emit('createFile', file, currentX)
     }))
-  } 
-  // 文件夹图标拖拽
-  else if( dragEvent.data.types[0] === 'text/plain' ) {
+  } else if (dragEvent.dataTransfer?.types[0] === 'text/plain') {
+    // 文件夹图标拖拽
     const item = _.cloneDeep(currentData.value)
     const data = useIconConversionNav(item)
     emit('createFile', data, currentX)
+    currentData.value = ''
   }
   isEnterBar.value = false;
 };
@@ -96,7 +88,7 @@ const handleDragover = (dragEvent) => {
 const handleMouseUp = (e) => {
   iconList.value.forEach((item) => {
     const file = useFileConversionNav(item)
-    emit('createFile', file,e.x)
+    emit('createFile', file, e.x)
   })
   // 2 旧数据删除
   if (iconsRefs.value.length < 1) return;
