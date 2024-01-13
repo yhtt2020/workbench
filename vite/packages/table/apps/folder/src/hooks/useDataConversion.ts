@@ -68,7 +68,22 @@ export const useFileConversionNav = (data)=>{
     isBg:data.isBackground,
     bg:data.backgroundColor,
     type:data.open.type,
-    id:data.id || nanoid(6),
+    id:data.iconIndex || nanoid(6),
   }
   return icon;
+}
+
+// 桌面图标转为导航栏图标
+export const useDeskConversionNav = (icon,name,item)=>{
+  const file = {
+    icon:icon,
+    name,
+    type:'tableApp',
+    bg:'',
+    isBg:false,
+    mode:'app',
+    value:item,
+    id:nanoid(6)
+  }
+  return file
 }

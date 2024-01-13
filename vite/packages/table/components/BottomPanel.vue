@@ -1110,31 +1110,32 @@ export default {
      * 拖拽桌面图标
      * @param {*} e
      */
-    async drop (e) {
-      let files = e.dataTransfer.files
-      let filesArr = []
-      if (files && files.length > 0) {
-        for (let i = 0; i < files.length; i++) {
-          filesArr.push(files[i].path)
-        }
-      }
-      this.dropList = await Promise.all(filesArr.map(async (item) => {
-        const fileName = item.substring(item.lastIndexOf('\\') + 1)
-        let dropFiles = await tsbApi.system.extractFileIcon(item)
-        return {
-          icon: `${dropFiles}`,
-          name: `${fileName}`,
-          value: item,
-          type: 'tableApp',
-          bg: '',
-          isBg: false,
-          mode: 'app'
-        }
-      }))
-      this.clickRightListItem(this.dropList)
-      // 添加完后清空
-      this.dropList = []
-    },
+    // async drop (e) {
+    //   let files = e.dataTransfer.files
+    //   let filesArr = []
+    //   if (files && files.length > 0) {
+    //     for (let i = 0; i < files.length; i++) {
+    //       filesArr.push(files[i].path)
+    //     }
+    //   }
+    //   this.dropList = await Promise.all(filesArr.map(async (item) => {
+    //     const fileName = item.substring(item.lastIndexOf('\\') + 1)
+    //     let dropFiles = await tsbApi.system.extractFileIcon(item)
+    //     console.log(dropFiles,'dropFiles')
+    //     return {
+    //       icon: `${dropFiles}`,
+    //       name: `${fileName}`,
+    //       value: item,
+    //       type: 'tableApp',
+    //       bg: '',
+    //       isBg: false,
+    //       mode: 'app'
+    //     }
+    //   }))
+    //   this.clickRightListItem(this.dropList)
+    //   // 添加完后清空
+    //   this.dropList = []
+    // },
     /**
      * 添加图标
      * @param {*} item
@@ -1244,7 +1245,7 @@ export default {
       const bottom = document.querySelector('#bottomPanel')
       const rect = bottom.getBoundingClientRect()
       const index = Math.round((x - rect.x) / (72 * this.navAttribute.navSize / 100))
-      // console.log(index, this.copyFootNav, 'index');
+      console.log(index,item, 'index');
       this.copyFootNav.splice(index, 0, _.cloneDeep(item))
       console.log(this.dragItem,'')
     },
