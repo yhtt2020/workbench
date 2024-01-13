@@ -1,10 +1,13 @@
 <template>
-  <div class="rounded-xl flex flex-col justify-between control-container p-4" id="controlId" ref="modalRef" style="width: 548px;height: 535px;">
+  <div class="rounded-xl flex flex-col justify-between control-container p-4" id="controlId" 
+   ref="modalRef" style="width: 548px;" :style="editVisible ? { height:'689px' }:{ height:'535px' }"
+  >
     <div class="flex items-center justify-between">
       <div class="flex items-center justify-center">
         <xt-new-icon icon="fluent:toggle-multiple-16-regular" size="20" class="mr-2"></xt-new-icon>
         <span class="xt-text font-14 xt-font">控制中心</span>
       </div>
+
       <template v-if="!editVisible">
         <div class="flex items-center justify-center" >
           <xt-button style="width: auto !important;" h="0" @click="editClick">
@@ -17,12 +20,6 @@
 
       <template v-else>
         <div class="flex items-center">
-          <xt-button style="width: auto !important;" h="0" class="mr-4" @click="addControl">
-            <div class="flex items-center justify-center">
-             <xt-new-icon icon="fluent:add-16-regular" size="16" class="mr-1" :color="'var(--active-bg)'"></xt-new-icon>
-             <span class="xt-font xt-theme-text font-14">添加</span>
-            </div>
-          </xt-button>
           <xt-button style="width: auto !important;" h="0" @click="finshEdit">
             <div class="flex items-center justify-center">
               <span class="xt-font xt-theme-text font-14">完成编辑</span>
@@ -30,31 +27,30 @@
           </xt-button>
         </div>
       </template>
+    </div>
 
-    </div>
-    <div class="flex-1" style="height: 350px;">
-      <ControlDesk v-if="!editVisible"/>
-      <EditControlDesk v-else/>
-    </div>
+    <template v-if="!editVisible">
+      <ControlDesk />
+    </template>
+    <template v-else>
+      <EditControlDesk />
+    </template>
 
     <a-divider style="height: 1px;margin: 16px 0;" />
 
     <div class="flex items-center justify-center" style="height: 66px;">
-       <template v-for="item in bottomButton">
-        <a-tooltip placement="top" :title="item.name">
-          <xt-button w="54" h="54" style="border-radius: 12px;" class="mr-3 button-item xt-bg-t-2" @click="item.fn">
-            <div class="flex items-center justify-center">
-             <xt-new-icon :icon="item.newIcon" size="24"></xt-new-icon>
-            </div>
-          </xt-button>
-        </a-tooltip>
-       </template>
+      <template v-for="item in bottomButton">
+       <a-tooltip placement="top" :title="item.name">
+         <xt-button w="54" h="54" style="border-radius: 12px;" class="mr-3 button-item xt-bg-t-2" @click="item.fn">
+           <div class="flex items-center justify-center">
+            <xt-new-icon :icon="item.newIcon" size="24"></xt-new-icon>
+           </div>
+         </xt-button>
+       </a-tooltip>
+      </template>
     </div>
-  </div>
 
-  <teleport to="body">
-    <AddControlModal ref="addRef"/>
-  </teleport>
+  </div>
 </template>
 
 <script setup>
@@ -64,7 +60,6 @@ import { useRouter } from 'vue-router';
 
 import ControlDesk from './ControlDesk.vue';
 import EditControlDesk from './EditControlDesk.vue';
-import AddControlModal from './AddControlModal.vue';
 
 const router = useRouter()
 const emit = defineEmits(['close'])
@@ -76,7 +71,6 @@ const props = defineProps({
 })
 
 const editVisible = ref(false);
-const addRef = ref(null);
 
 
 // 触发编辑
@@ -89,10 +83,6 @@ const finshEdit = () =>{
   editVisible.value = false
 }
 
-// 控制执行添加
-const addControl = () =>{
-  addRef.value.openAddModal()
-}
 
 const bottomButton = ref([
   {
@@ -137,7 +127,6 @@ const bottomButton = ref([
     }
   }
 ])
-
 </script>
 
 <style lang="scss" scoped>
