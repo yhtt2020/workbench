@@ -4,6 +4,9 @@ import { ref, watch, toRefs, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useFreeLayoutStore } from "./store";
 import { message } from "ant-design-vue";
+import "animate.css";
+import { useDebounceFn } from "@vueuse/core";
+
 // 初始化操作
 const freeLayoutStore: any = useFreeLayoutStore();
 const props = defineProps({
@@ -22,12 +25,15 @@ const {
   isSelectAll,
 } = storeToRefs(freeLayoutStore);
 const snowDrag = ref();
+
+const firstLoading = ref(true);
 onMounted(() => {
-  // setTimeout(() => {
-  //   snowDrag.value.forEach((item) => {
-  //   console.log("item :>> ", item);
-  // });
-  // }, 10);
+  console.log(
+    "freeLayoutEnv.scrollData?.width  :>> ",
+    freeLayoutEnv.value.scrollData?.width
+  );
+  console.log("freeLayoutEnv.scrollData?.width  :>> ", freeLayoutEnv.value);
+  updateCard(currentDesk.value?.cards);
 });
 freeLayoutStore.initFreeLayoutState();
 // 滚动清除cards数据
@@ -85,46 +91,38 @@ function updateCard(data) {
   console.log("--------------- 自由布局数据更新开始 ---------------");
   console.time("Free Layout Run Time");
   console.log("当前配置项 :>> \n", `桌面ID ${currentID.value}`);
+  currentData.value = {};
   data.forEach((item) => {
     currentData.value[item.id] = item;
   });
   for (const key in getFreeLayoutData.value) {
     if (!(key in currentData.value)) {
+      console.log("333333 :>> ", 333333);
       delete getFreeLayoutData.value[key];
+      delete currentData.value[key];
     }
   }
 
   data.forEach((item) => {
     const { id, customData } = item;
-    // 优化2 判断初始化还是更新
-    if (getFreeLayoutData.value[id] && getFreeLayoutData.value[id].id == id) {
-      console.log("旧数据处理 :>> ");
-      getFreeLayoutData.value[id] = {
-        left: getFreeLayoutData.value[id].left || 0,
-        top: getFreeLayoutData.value[id].top || 0,
-        index: getFreeLayoutData.value[id].index || 1,
-        id,
-      };
-    } else {
+    if (getFreeLayoutData.value[id]?.id.toString() != id.toString()) {
       getPosition(item);
     }
   });
   console.timeEnd("Free Layout Run Time");
   console.log("--------------- 自由布局数据更新结束 ---------------");
+  firstLoading.value = false;
 }
-
-watch(
-  currentDesk.value?.cards,
-  (card) => {
-    clearTimeout(updateCardTimer);
-    updateCardTimer = setTimeout(() => {
-      updateCard(card);
-    }, 500);
-  },
-  {
-    immediate: true,
-  }
-);
+const changeCount = useDebounceFn((card) => {
+  updateCard(card);
+}, 500);
+watch(currentDesk.value?.cards, (card) => {
+  if (firstLoading.value) return;
+  clearTimeout(updateCardTimer);
+  updateCardTimer = setTimeout(() => {
+    changeCount(card);
+  }, 500);
+});
 
 const test: any = ref(null);
 const drag = (obj) => {
@@ -166,7 +164,7 @@ const disabledInfo = (data) => {
     class="xt-theme-b h-full flex flex-wrap absolute"
     style="align-content: flex-start !important; visibility: hidden"
     :style="{
-      width: freeLayoutEnv.scrollData?.width + 'px',
+      width: freeLayoutEnv.scrollWidth + 'px',
       height: 100 + '%',
       top: 0 + 'px',
       left: 0 + 'px',
@@ -186,47 +184,52 @@ const disabledInfo = (data) => {
     </div>
   </div>
   <template v-for="item in getFreeLayoutData">
-    <xt-drag
-      :test="1"
-      @onDisabled="disabledInfo"
-      mode="all"
-      ref="snowDrag"
-      resetPosition
-      parent
-      boundary
-      v-if="!getFreeLayoutState.system.hide && item?.id"
-      :data="item"
-      :key="item.id"
-      v-model:y="item.top"
-      v-model:x="item.left"
-      v-model:index="item.index"
-      :parentScale="getFreeLayoutState.canvas.zoom"
-      :afterDraggingAdsorbGrid="getFreeLayoutState.option.afterDragging"
-      :whileDraggingAdsorbGrid="getFreeLayoutState.option.whileDragging"
-      :gridLocation="getFreeLayoutState.option.afterDragging"
-      :collision="getFreeLayoutState.option.collision"
-      :magnet="getFreeLayoutState.option.magnet"
-      :gridMargin="6"
-      :magnetMargin="6"
-      disabledDefaultEvent
-      :grid="[134, 96]"
-      :gridStyle="{
-        border: '2px solid var(--active-bg)',
-      }"
-      :disabled="isDrag ? false : true"
-      @onDragStart="dragStart"
-      @onDrag="drag"
-      @onDragStop="dragStop"
+    <transition
+      leave-active-class="animate__heartBeat"
+      enter-active-class="animate__heartBeat"
     >
-      <div
-        class="rounded-xl"
-        :style="{
-          border: isSelectAll ? '3px solid var(--active-bg) ' : '',
+      <xt-drag
+        :test="1"
+        @onDisabled="disabledInfo"
+        mode="all"
+        ref="snowDrag"
+        resetPosition
+        parent
+        boundary
+        v-if="!getFreeLayoutState.system.hide && item?.id"
+        :data="item"
+        :key="item.id"
+        v-model:y="item.top"
+        v-model:x="item.left"
+        v-model:index="item.index"
+        :parentScale="getFreeLayoutState.canvas.zoom"
+        :afterDraggingAdsorbGrid="getFreeLayoutState.option.afterDragging"
+        :whileDraggingAdsorbGrid="getFreeLayoutState.option.whileDragging"
+        :gridLocation="getFreeLayoutState.option.afterDragging"
+        :collision="getFreeLayoutState.option.collision"
+        :magnet="getFreeLayoutState.option.magnet"
+        :gridMargin="6"
+        :magnetMargin="6"
+        disabledDefaultEvent
+        :grid="[134, 96]"
+        :gridStyle="{
+          border: '2px solid var(--active-bg)',
         }"
-        ref="test"
+        :disabled="isDrag ? false : true"
+        @onDragStart="dragStart"
+        @onDrag="drag"
+        @onDragStop="dragStop"
       >
-        <slot name="box" :data="currentData[item?.id]"></slot>
-      </div>
-    </xt-drag>
+        <div
+          class="rounded-xl"
+          :style="{
+            border: isSelectAll ? '3px solid var(--active-bg) ' : '',
+          }"
+          ref="test"
+        >
+          <slot name="box" :data="currentData[item?.id]"></slot>
+        </div>
+      </xt-drag>
+    </transition>
   </template>
 </template>

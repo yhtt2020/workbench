@@ -8,6 +8,7 @@
       cursor: dragStyle,
     }"
   >
+    {{ freeLayoutEnv.scrollData }}
     <slot> </slot>
   </div>
 </template>
@@ -48,13 +49,13 @@ const scrollbar = ref(null);
 const perfectScrollbar = ref(null);
 
 onMounted(async () => {
+  freeLayoutEnv.value.scrollData = useElementBounding(scrollbar.value);
   // 初始化自由布局环境
   freeLayoutStore.initFreeLayoutEnv();
   // 实例化滚动条
   perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
-  freeLayoutEnv.value.scrollData = useElementBounding(scrollbar.value);
 
-  setTimeout(async () => {
+  // setTimeout(async () => {
   // 初始化自由布局定位
   updateScroll(getFreeLayoutState.value.mode.scroll);
 
@@ -84,7 +85,7 @@ onMounted(async () => {
   // 监听鼠标抬起事件;
   window.addEventListener("mouseup", handleMouseUp);
   document.body.addEventListener("keydown", ignoreSpace);
-  }, 1);
+  // }, 1);
 });
 function ignoreSpace(event) {
   var e = window.event || event;
