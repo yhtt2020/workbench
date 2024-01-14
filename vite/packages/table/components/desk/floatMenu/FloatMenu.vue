@@ -354,6 +354,7 @@ const updateArrange = (newV) => {
     :index="100"
     disabledHandle=".floatMenu"
     :firstPosition="firstPosition"
+    :test="false"
   >
     <div
       class="select-none cursor-move z-24 xt-modal rounded-xl p-3 no-drag xt-shadow xt-b"

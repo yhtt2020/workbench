@@ -8,7 +8,6 @@
       cursor: dragStyle,
     }"
   >
-    {{ freeLayoutEnv.scrollData }}
     <slot> </slot>
   </div>
 </template>
@@ -55,37 +54,37 @@ onMounted(async () => {
   // 实例化滚动条
   perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
 
-  // setTimeout(async () => {
-  // 初始化自由布局定位
-  updateScroll(getFreeLayoutState.value.mode.scroll);
+  setTimeout(async () => {
+    // 初始化自由布局定位
+    updateScroll(getFreeLayoutState.value.mode.scroll);
 
-  let { width, height } = scrollbar.value?.getBoundingClientRect();
-  freeLayoutEnv.value.scrollWidth = width;
-  freeLayoutEnv.value.scrollHeight = height;
-  // 监听自由布局滚动事件
-  scrollbar.value.addEventListener("ps-scroll-x", () => {
-    freeLayoutEnv.value.scrollLeft = scrollbar.value?.scrollLeft;
-  });
-  scrollbar.value.addEventListener("ps-scroll-y", () => {
-    freeLayoutEnv.value.scrollTop = scrollbar.value?.scrollTop;
-  });
+    let { width, height } = scrollbar.value?.getBoundingClientRect();
+    freeLayoutEnv.value.scrollWidth = width;
+    freeLayoutEnv.value.scrollHeight = height;
+    // 监听自由布局滚动事件
+    scrollbar.value.addEventListener("ps-scroll-x", () => {
+      freeLayoutEnv.value.scrollLeft = scrollbar.value?.scrollLeft;
+    });
+    scrollbar.value.addEventListener("ps-scroll-y", () => {
+      freeLayoutEnv.value.scrollTop = scrollbar.value?.scrollTop;
+    });
 
-  // 完成操作 开启
-  freeLayoutEnv.value.loading = true;
-  //
+    // 完成操作 开启
+    freeLayoutEnv.value.loading = true;
+    //
 
-  // 监听键盘按下事件
-  window.addEventListener("keydown", handleKeyDown);
-  // 监听键盘抬起事件
-  window.addEventListener("keyup", handleKeyUp);
-  // 监听鼠标按下事件
-  window.addEventListener("mousedown", handleMouseDown);
-  // 监听鼠标移动事件
-  window.addEventListener("mousemove", handleMouseMove);
-  // 监听鼠标抬起事件;
-  window.addEventListener("mouseup", handleMouseUp);
-  document.body.addEventListener("keydown", ignoreSpace);
-  // }, 1);
+    // 监听键盘按下事件
+    window.addEventListener("keydown", handleKeyDown);
+    // 监听键盘抬起事件
+    window.addEventListener("keyup", handleKeyUp);
+    // 监听鼠标按下事件
+    window.addEventListener("mousedown", handleMouseDown);
+    // 监听鼠标移动事件
+    window.addEventListener("mousemove", handleMouseMove);
+    // 监听鼠标抬起事件;
+    window.addEventListener("mouseup", handleMouseUp);
+    document.body.addEventListener("keydown", ignoreSpace);
+  }, 1);
 });
 function ignoreSpace(event) {
   var e = window.event || event;
