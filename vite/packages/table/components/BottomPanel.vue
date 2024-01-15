@@ -607,37 +607,37 @@ export default {
         // }
 
         // 同步数据 --- 用于重置图标的信息
-        if (this.copyFootNav.length > this.footNavigationList.length) {
-          const target = this.updateNavList(this.copyFootNav, this.footNavigationList);
-          for (let i = 0; i < target.length; i++) {
-            const index = this.copyFootNav.findIndex(item => {
-              return this.judge(item, target[i]);
-            })
-            this.footNavigationList.splice(index, 0, JSON.parse(JSON.stringify(target[i])));
-          }
+        // if (this.copyFootNav.length > this.footNavigationList.length) {
+        //   const target = this.updateNavList(this.copyFootNav, this.footNavigationList);
+        //   for (let i = 0; i < target.length; i++) {
+        //     const index = this.copyFootNav.findIndex(item => {
+        //       return this.judge(item, target[i]);
+        //     })
+        //     this.footNavigationList.splice(index, 0, JSON.parse(JSON.stringify(target[i])));
+        //   }
 
-        } else if (this.copyFootNav.length < this.footNavigationList.length) {
-          const target = this.updateNavList(this.footNavigationList, this.copyFootNav);
-          const list = target.map(element => {
-            return this.footNavigationList.findIndex(item => {
-              // 找到被删除元素在备份数据中的索引
-              return this.judge(item, element);
-            });
-          })
-          this.footNavigationList = this.footNavigationList.filter((item, index) => { return list.indexOf(index) === -1 })
-        }
-        else {
-          const rearrangedCopyFootNav = [];
-          for (let i = 0; i < this.footNavigationList.length; i++) {
-            const item = this.footNavigationList.find((copyItem) => {
-              return this.judge(this.footNavigationList[i], copyItem);
-            })
-            if (item) {
-              rearrangedCopyFootNav.push(item)
-            }
-          }
-          this.footNavigationList = [...rearrangedCopyFootNav]
-        }
+        // } else if (this.copyFootNav.length < this.footNavigationList.length) {
+        //   const target = this.updateNavList(this.footNavigationList, this.copyFootNav);
+        //   const list = target.map(element => {
+        //     return this.footNavigationList.findIndex(item => {
+        //       // 找到被删除元素在备份数据中的索引
+        //       return this.judge(item, element);
+        //     });
+        //   })
+        //   this.footNavigationList = this.footNavigationList.filter((item, index) => { return list.indexOf(index) === -1 })
+        // }
+        // else {
+        //   const rearrangedCopyFootNav = [];
+        //   for (let i = 0; i < this.footNavigationList.length; i++) {
+        //     const item = this.footNavigationList.find((copyItem) => {
+        //       return this.judge(this.footNavigationList[i], copyItem);
+        //     })
+        //     if (item) {
+        //       rearrangedCopyFootNav.push(item)
+        //     }
+        //   }
+        //   this.footNavigationList = [...rearrangedCopyFootNav]
+        // }
 
 
         // 获取最大可添加图标个数
@@ -839,6 +839,12 @@ export default {
       this.quick = true
       this.componentId = 'EditIcon'
       this.editItem = item
+      if(item.default) return
+      item.default = {
+        name:item.name,
+        icon:item.icon
+      }
+      console.log(item.default, 'item.default')
     },
     async toggleTeam() {
       await this.updateMy(0)
