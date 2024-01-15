@@ -1,6 +1,46 @@
 import browser from "../../js/common/browser";
 import { appStore } from "../../store";
 import { taskStore } from "../../apps/task/store";
+import cp from "child_process";
+import fs from "fs";
+async function runApp(uri) {
+  // window.$models.win32.openPath(uri);
+  // return
+  var cp = require("child_process");
+  let realPath = uri
+  let isDir=false
+  if (uri.endsWith('.url') || uri.endsWith('.lnk')) {
+    realPath = await tsbApi.system.getRealPath(uri)
+  }
+  if (uri.endsWith('.url') || uri.endsWith('.lnk')) {
+    cp.spawn(require("path").normalize(realPath), [], {detached: true})
+  }else{
+    cp.spawn('start',[ require("path").normalize(realPath)], {detached: true,shell:true,windowsHide:true})
+  }
+  return
+
+
+  var fs = require('fs');
+  var stat = fs.lstatSync(realPath);
+  isDir=stat.isDirectory()
+  let cmd=require("path").normalize(realPath)
+  if(isDir){
+    cmd='start '
+  }else{
+    if (uri.endsWith('.url') || uri.endsWith('.lnk')) {
+      return cp.spawn(cmd, [], {detached: true})
+    }
+    cmd= require("path").normalize(realPath)
+  }
+  console.log(require("path").normalize(realPath),'ccc')
+  return cp.spawn('start',[ require("path").normalize(realPath)], {detached: true,shell:true,windowsHide:true})
+
+  // cp.spawn(cmd, [], {detached: true}, function (err, stdout, stderr) {
+  //   if (err) {
+  //     console.error(err);
+  //   }
+  // });
+}
 /**
  *
  * @param type
@@ -37,7 +77,8 @@ export const startApp = (type, value, router?) => {
       break;
     // 本地应用
     case "tableApp":
-      window.$models.win32.openPath(require("path").normalize(value));
+      runApp(value)
+      //window.$models.win32.openPath(require("path").normalize(value));
       break;
     // 系统应用
     case "systemApp":
@@ -46,7 +87,15 @@ export const startApp = (type, value, router?) => {
       break;
     // 不知道是什么场景
     case "localApp":
-      window.$models.win32.openPath(value);
+      runApp(value)
+      // cp.spawn(require("path").normalize(value),[],{detached:true},function(err,stdout,stderr){
+      //   if(err){
+      //     console.error(err);
+      //   }
+      //   console.log("stdout:",stdout)
+      //   console.log("stderr:",stderr);
+      // });
+      //window.$models.win32.openPath(value);
       break;
     // 导航栏文件夹
     case "folder":
