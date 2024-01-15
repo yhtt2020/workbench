@@ -38,7 +38,6 @@ export const startApp =async  (type, value, router?) => {
   if (type === "" || value === "") {
     console.warn("startApp :>> type or value 不能为空");
   }
-  console.log("type,value :>> ", type, value);
   switch (type) {
     // 默认浏览器
     case "default":
@@ -89,6 +88,7 @@ export const startApp =async  (type, value, router?) => {
       // console.log(2222);
       break;
   }
+  return true
 };
 
 export const openSysApp = (value, router) => {
