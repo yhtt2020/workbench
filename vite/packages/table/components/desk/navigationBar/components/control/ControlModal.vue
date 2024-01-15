@@ -136,4 +136,28 @@ const bottomButton = ref([
     margin-right: 0 !important;
   }
 }
+
+
+:deep(.grid){
+  position: relative;
+  width: 18em;
+  display: inline-block;
+  border: 5px solid transparent;
+  border-radius: 8px;
+  vertical-align: top;
+
+}
+
+:deep(.muuri-grid){
+  background: transparent !important;
+}
+
+:deep(.muuri-item-content){
+  background: transparent !important;
+}
+
+:deep(.muuri-item){
+  width: auto !important;
+  margin: 0 8px 8px 0 !important;
+}
 </style>

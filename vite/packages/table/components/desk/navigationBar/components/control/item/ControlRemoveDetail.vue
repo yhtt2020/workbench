@@ -1,7 +1,7 @@
 <template>
  <template v-if="controlIndex === 'audio'">
   <div  class="xt-bg rounded-xl flex flex-col items-center justify-center relative" style="height:120px;width: 252px;" >
-   <div class="absolute" style="top: 7px;right:-4px;">
+   <div class="absolute" style="top: 7px;right:-4px;" v-if="status === 'del'">
     <xt-button style="width: auto !important;" h="0">
       <div class="flex items-center justify-center">
         <xt-new-icon icon="fluent:subtract-circle-16-filled" size="20" :color="'var(--error)'"></xt-new-icon>
@@ -17,7 +17,7 @@
 
  <template v-else>
   <div  class="xt-bg rounded-xl flex flex-col items-center justify-center relative" style="height: 120px;width: 120px;" >
-   <div class="absolute" style="top: 7px;right:-4px;">
+   <div class="absolute" style="top: 7px;right:-4px;" v-if="status === 'del'">
     <xt-button style="width: auto !important;" h="0">
       <div class="flex items-center justify-center">
         <xt-new-icon icon="fluent:subtract-circle-16-filled" size="20" :color="'var(--error)'"></xt-new-icon>
@@ -41,6 +41,10 @@ const props = defineProps({
  controlItem:{
   type:Object,
   default:()=>{}
+ },
+ status:{
+  type:String,
+  default:'null'
  }
 })
 

@@ -3,7 +3,7 @@
  :drag-enabled="true" :item-class="getMargin ? 'mr-0':'mr-2 mb-2'"  :get-item-height="getHeight"
 >
  <template #item="{ item }">
-  <ControlRemoveDetail :control-index="item.id" :control-item="item"  @click="removeControl(item,$event)"/>
+  <ControlRemoveDetail :control-index="item.id" :control-item="item" :status="'del'"  @click="removeControl(item,$event)"/>
  </template>
 </Vuuri>
 </template>
