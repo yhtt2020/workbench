@@ -371,7 +371,7 @@
     computed:{
       ...mapWritableState(cardStore,['desks', 'addCard']),
       ...mapWritableState(appStore, ['backgroundSettings', 'backgroundImage', 'styles']),
-      ...mapWritableState(navStore, ['footNavigationList']),
+      ...mapWritableState(navStore, ['copyFootNav']),
       cardList(){
         if(this.deskTypeObj.current){
           return this.currentList
@@ -626,22 +626,23 @@
       },
 
       setExeListNav(){
+        console.log('copyFootNav', this.copyFootNav);
         // 用于添加游戏常用程序文件夹到导航条 与其他添加事件独立开来
         if(this.exeNavList[0].children){
           let num = this.searchNavIndex(this.exeNavList[0].id)
           if(num){
-            this.footNavigationList.splice(num, 1, this.exeNavList[0])
+            this.copyFootNav.splice(num, 1, this.exeNavList[0])
           }else{
-            this.footNavigationList.splice(-2, 0, this.exeNavList[0])
+            this.copyFootNav.splice(-2, 0, this.exeNavList[0])
           }
         }
 
         if(this.exeNavList[1].children){
           let num = this.searchNavIndex(this.exeNavList[1].id)
           if(num){
-            this.footNavigationList.splice(num, 1, this.exeNavList[1])
+            this.copyFootNav.splice(num, 1, this.exeNavList[1])
           }else{
-            this.footNavigationList.splice(-2, 0, this.exeNavList[1])
+            this.copyFootNav.splice(-2, 0, this.exeNavList[1])
           }
         }
       },
@@ -649,7 +650,7 @@
       // 寻找导航条id
       searchNavIndex(id){
         let n = null;
-        this.footNavigationList.forEach((item, index)=>{
+        this.copyFootNav.forEach((item, index)=>{
           if(item.id == id){
             n = index
           }
@@ -683,7 +684,7 @@
             tmp.push(item)
           }
         })
-        this.footNavigationList = [...tmp]
+        this.copyFootNav = [...tmp]
         this.setExeListNav()
         this.nextStep()
 

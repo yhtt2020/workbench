@@ -51,6 +51,7 @@ import { Modal } from 'ant-design-vue'
 import { appsStore } from '../store/apps'
 const { fs } = window.$models
 import {renderIcon} from '../js/common/common'
+import { startApp } from '../ui/hooks/useStartApp'
 export default {
   name: 'MyApps',
   data() {
@@ -81,7 +82,7 @@ export default {
       // }else{
       //   require('electron').shell.openPath(app.path)
       // }
-      require('electron').shell.openPath(require('path').normalize(app.path))
+      startApp('localApp',app.path)
     },
     deleteAnApp(app) {
       Modal.confirm({
