@@ -4,42 +4,29 @@ import { taskStore } from "../../apps/task/store";
 import cp from "child_process";
 import fs from "fs";
 async function runApp(uri) {
-  // window.$models.win32.openPath(uri);
-  // return
-  var cp = require("child_process");
-  let realPath = uri
-  let isDir=false
-  if (uri.endsWith('.url') || uri.endsWith('.lnk')) {
-    realPath = await tsbApi.system.getRealPath(uri)
-  }
-  if (uri.endsWith('.url') || uri.endsWith('.lnk')) {
-    cp.spawn(require("path").normalize(realPath), [], {detached: true})
-  }else{
-    cp.spawn('start',[ require("path").normalize(realPath)], {detached: true,shell:true,windowsHide:true})
-  }
-  return
-
-
-  var fs = require('fs');
-  var stat = fs.lstatSync(realPath);
-  isDir=stat.isDirectory()
-  let cmd=require("path").normalize(realPath)
-  if(isDir){
-    cmd='start '
-  }else{
+  try{
+    var cp = require("child_process");
+    let realPath = uri
+    let isDir=false
     if (uri.endsWith('.url') || uri.endsWith('.lnk')) {
-      return cp.spawn(cmd, [], {detached: true})
+      realPath = await tsbApi.system.getRealPath(uri)
     }
-    cmd= require("path").normalize(realPath)
+    if (uri.endsWith('.url') || uri.endsWith('.lnk')) {
+      if(realPath.startsWith('steam://')){
+        console.log('执行路径A,steam游戏模式',realPath)
+        cp.spawn('start',[realPath], {detached: true,shell:true,windowsHide:true})
+      }else{
+        console.log('执行路径B,普通文件','cwd',require('path').dirname(realPath))
+        cp.spawn(require("path").normalize(realPath), [], {detached: true,cwd:require('path').dirname(realPath)})
+      }
+    }else{
+      console.log('执行路径C')
+      cp.spawn('start',[ require("path").normalize(realPath)], {detached: true,cwd:require('path').dirname(realPath),shell:true,windowsHide:true})
+    }
+    return true
+  }catch (e) {
+    return false
   }
-  console.log(require("path").normalize(realPath),'ccc')
-  return cp.spawn('start',[ require("path").normalize(realPath)], {detached: true,shell:true,windowsHide:true})
-
-  // cp.spawn(cmd, [], {detached: true}, function (err, stdout, stderr) {
-  //   if (err) {
-  //     console.error(err);
-  //   }
-  // });
 }
 /**
  *
@@ -47,7 +34,7 @@ async function runApp(uri) {
  * @param value
  * @param router 这个是路由 ts无法调用 得手动传入
  */
-export const startApp = (type, value, router?) => {
+export const startApp =async  (type, value, router?) => {
   if (type === "" || value === "") {
     console.warn("startApp :>> type or value 不能为空");
   }
@@ -77,7 +64,7 @@ export const startApp = (type, value, router?) => {
       break;
     // 本地应用
     case "tableApp":
-      runApp(value)
+      return await  runApp(value)
       //window.$models.win32.openPath(require("path").normalize(value));
       break;
     // 系统应用
@@ -87,7 +74,7 @@ export const startApp = (type, value, router?) => {
       break;
     // 不知道是什么场景
     case "localApp":
-      runApp(value)
+      return await runApp(value)
       // cp.spawn(require("path").normalize(value),[],{detached:true},function(err,stdout,stderr){
       //   if(err){
       //     console.error(err);

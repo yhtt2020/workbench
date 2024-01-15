@@ -1090,7 +1090,8 @@ export default {
      */
     msgNotice (item) {
       if (item.type === 'tableApp') {
-        message.loading(`打开「${item.name}」...`)
+        message.loading({content:`打开「${item.name}」...`
+        ,key:'tipRun'})
       }
     },
     /**
@@ -1098,13 +1099,16 @@ export default {
      * @param {*} type 图标类型
      * @param {*} value 打开路径
      * @param {*} item 图标详细信息
-     */
-    newOpenApp (type, value, item) {
-      if(item) this.msgNotice(item)
+     */ async newOpenApp (type, value, item) {
+      if (item) this.msgNotice(item)
       if (value === 'home' && item.home) {
         this.jumpDesk = item.home
       }
-      startApp(type, value, this.$router)
+      let rs=await startApp(type, value, this.$router)
+      if(!rs){
+        message.error({content:`打开「${item.name}」失败`
+          ,key:'tipRun'})
+      }
       type !== 'folder' ? this.folderVisible = false : ''
     },
     /**

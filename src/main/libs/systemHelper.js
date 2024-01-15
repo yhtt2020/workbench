@@ -153,6 +153,27 @@ module.exports = class SystemHelper {
       return ''
     }
   }
+
+  /**
+   * 获取.url里 URL信息
+   * @param filePath
+   * @returns {Promise<string>}
+   */
+  static async readUrlInfo(filePath){
+    const fs = require('fs');
+
+    const fileContent = fs.readFileSync(filePath, 'utf-8');
+
+    const urlPattern = /(URL=)(.*)/;
+    const urlMatch = fileContent.match(urlPattern);
+
+    if (urlMatch && urlMatch.length >= 3) {
+      const url = urlMatch[2];
+      return url
+    } else {
+      return ''
+    }
+  }
   static async extractFileIcon (uri) {
     if(uri.endsWith('.url')){
      return await this.readUrlIconInfo(uri)
