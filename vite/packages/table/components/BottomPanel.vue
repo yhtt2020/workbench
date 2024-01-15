@@ -53,9 +53,9 @@
         </div>
       </div>
       <!-- 快速搜索 底部栏区域 -->
-      <!-- <Drop @createFile="createFile"> -->
+      <Drop @createFile="createFile">
       <transition >
-      <div v-if="hoverIndex>-1 && hoverRealItemId()!==dragItem?.id" style="position: absolute;z-index:99999999999;top:-8px;left:50%;transform: translateX(-50%) translateY(-100%)  ;" class="s-bg px-10 py-3 xt-text rounded-lg">松开鼠标合并</div>
+      <div v-if="hoverIndex>-1 && hoverRealItemId()!==dragItem?.id" style="position: absolute;z-index:99999999999;top:-8px;left:50%;transform: translateX(-50%) translateY(-100%)  ;" class="px-10 py-3 rounded-lg s-bg xt-text">松开鼠标合并</div>
       </transition>
       <div id="bottomPanel" @drop.prevent="drop" @dragover.prevent="" class="flex flex-row items-center s-bg" style="
         display: flex;
@@ -66,7 +66,7 @@
         align-items: center;
         /* border-radius: 18px; */
         height: 80px;
-        max-width: 90%;
+        max-width: 100%;
         overflow: hidden;
         margin-right: 10px;
         background: var(--primary-bg);
@@ -87,9 +87,9 @@
           justify-content: center;
         ">
             <div @contextmenu="showMenu" style="height: 52px; width: 100%; overflow: hidden" class="item-content">
-              <div class=" scroll-content" style=" flex: 1; display: flex; margin-left: 20px;margin-right: 20px"
+              <div class="w-full scroll-content" style=" flex: 1; display: flex; margin-left: 20px;margin-right: 20px"
                    ref="content">
-                <div :key="bottomKey" style="white-space: nowrap; display: flex; align-items: center;gap:20px"
+                <div :key="bottomKey" style="white-space: nowrap; display: flex; align-items: center;gap:20px" class="w-full"
                      id="bottomContent">
 
                   <div v-if="copyFootNav.length <= 0" style=""
@@ -100,7 +100,7 @@
                   <a-tooltip v-for="(item, index) in copyFootNav" :key="item.id" :title="item.name"
                              :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }"
                              @mouseenter="showElement(item, index)">
-                    <xt-menu :id="item.id" class="item-content relative overflow-visible" :menus="folderOptions">
+                    <xt-menu :id="item.id" class="relative overflow-visible item-content" :menus="folderOptions">
 
                       <div @dragover="onDrag" @dragend="hoverIndex=-1"
                            v-if="!(this.navList.includes(item.event) && this.isOffline)"
@@ -129,10 +129,11 @@
         </xt-task>
 
       </div>
-      <!-- </Drop> -->
+      </Drop>
       <keep-alive>
         <TaskBox v-if="true"></TaskBox>
       </keep-alive>
+      <Common></Common>
     </div>
 
     <div id="trans" v-show="visibleTrans" style="
@@ -178,6 +179,7 @@ import { taskStore } from '../apps/task/store'
 import { appStore } from '../store'
 import { cardStore } from '../store/card'
 import { navStore } from '../store/nav'
+import {useDeskStore} from '../components/desk/store'
 import { useNavigationStore } from './desk/navigationBar/navigationStore'
 import { mapWritableState, mapActions } from 'pinia'
 import { useWidgetStore } from '../components/card/store'
@@ -224,9 +226,10 @@ import FolderVue from './desk/navigationBar/components/folder/Folder.vue'
 import Folder from '../apps/folder'
 import { defaultFolderData } from '../apps/folder/src/components/options'
 import { nanoid } from 'nanoid'
-import Drop from '../apps/folder/src/components/Drop.vue'
+// import Drop from '../apps/folder/src/components/Drop.vue'
+import Drop from './desk/navigationBar/components/folder/Drop.vue'
 import { useWindowSize } from '../ui/new/drag/src/hooks/useWindowSize'
-
+import Common from './desk/navigationBar/components/Common.vue'
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon', 'hiedNavBar'],
@@ -254,7 +257,8 @@ export default {
     Avatar,
     FolderVue,
     Folder,
-    Drop
+    Drop,
+    Common,
   },
   data () {
     return {
@@ -478,9 +482,10 @@ export default {
       // 获取最大可添加图标个数
       const windowWidth = size.width.value
       this.parentSize = windowWidth
-      this.maxItemNum = Math.round((windowWidth - 240) / 72)
+      this.maxItemNum = Math.round((windowWidth - 240) / 72 )
+      // console.log(this.maxItemNum,'最大导航栏图标个数')
       // if (this.footNavigationList.length > this.maxItemNum) {
-      const width = windowWidth / (240 + this.copyFootNav.length * 72)
+      const width = windowWidth / (240 + this.copyFootNav.length *  72 )
       this.navAttribute.navSize = width.toFixed(2) * 100
       this.navAttribute.navSize < 100 ? this.navAttribute.navSize : this.navAttribute.navSize = 100
       // }
@@ -513,6 +518,7 @@ export default {
     ]),
     ...mapWritableState(taskStore, ['isTask', 'isTaskDrawer']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
+    ...mapWritableState(useDeskStore,['isEnterBar']),
 
     isMain () {
       return isMain()
@@ -656,7 +662,7 @@ export default {
         //   // this.copyFootNav.splice(0, this.copyFootNav.length, ...rearrangedCopyFootNav);
         //   this.copyFootNav = [...rearrangedCopyFootNav]
         //   // this.copyFootNav = JSON.parse(JSON.stringify(rearrangedCopyFootNav))
-        //   //console.log(this.copyFootNav,'this---exchange')
+        // console.log(this.copyFootNav,'this---exchange')
         // }
         // this.updateIcon(this.footNavigationList, this.copyFootNav)
 
@@ -670,7 +676,7 @@ export default {
         // })
         // 获取最大可添加图标个数
         const windowWidth = window.innerWidth
-        this.maxItemNum = Math.round((windowWidth - 240) / 72)
+        this.maxItemNum = Math.round((windowWidth - 240) /( 72 * (this.navAttribute.navSize / 100)))
         // console.log(this.maxItemNum, 'this.maxItemNum', windowWidth, 'windowWidth')
         // let flag = true
         if (this.copyFootNav.length > this.maxItemNum && this.maxItemNum !== null) {
@@ -678,12 +684,12 @@ export default {
           if (this.noticeFlag) {
             this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
               onOk: () => {
-                const width = window.innerWidth / (240 + this.copyFootNav.length * 72)
+                const width = window.innerWidth / (240 + this.copyFootNav.length * ( 72 * (this.navAttribute.navSize / 100)))
                 this.navAttribute.navSize = width
               }
             })
           }
-          const width = window.innerWidth / (240 + this.copyFootNav.length * 72)
+          const width = window.innerWidth / (240 + this.copyFootNav.length * ( 72 * (this.navAttribute.navSize / 100)))
           this.navAttribute.navSize = width.toFixed(2) * 100
           this.noticeFlag = false
         }
@@ -1094,7 +1100,7 @@ export default {
      * @param {*} item 图标详细信息
      */
     newOpenApp (type, value, item) {
-      this.msgNotice(item)
+      if(item) this.msgNotice(item)
       if (value === 'home' && item.home) {
         this.jumpDesk = item.home
       }
@@ -1105,106 +1111,92 @@ export default {
      * 拖拽桌面图标
      * @param {*} e
      */
-    async drop (e) {
-      // console.log(e,'from drop');
-      // this.modelValue=false
-      // const width = window.innerWidth
-      let files = e.dataTransfer.files
-      // if (e.x <= 300) {
-      //   this.selectNav = 'left'
-      // } else if (e.x > 300 && e.x < width - 300) {
-      //   this.selectNav = 'foot'
-      // } else if (e.x >= width - 300) {
-      //   this.selectNav = 'right'
-      // }
-      let filesArr = []
-      if (files && files.length > 0) {
-        for (let i = 0; i < files.length; i++) {
-          filesArr.push(files[i].path)
-        }
-      }
-      this.dropList = await Promise.all(filesArr.map(async (item) => {
-        const fileName = item.substring(item.lastIndexOf('\\') + 1)
-        let dropFiles = await tsbApi.system.extractFileIcon(item)
-        return {
-          icon: `${dropFiles}`,
-          name: `${fileName}`,
-          value: item,
-          type: 'tableApp',
-          bg: '',
-          isBg: false,
-          mode: 'app'
-        }
-      }))
-      this.clickRightListItem(this.dropList)
-      // this.dropList.forEach((item)=>{
-      //   this.setFootNavigationList(item)
-      // })
-
-      // 添加完后清空
-      this.dropList = []
-      // this.modelValue=true
-    },
+    // async drop (e) {
+    //   let files = e.dataTransfer.files
+    //   let filesArr = []
+    //   if (files && files.length > 0) {
+    //     for (let i = 0; i < files.length; i++) {
+    //       filesArr.push(files[i].path)
+    //     }
+    //   }
+    //   this.dropList = await Promise.all(filesArr.map(async (item) => {
+    //     const fileName = item.substring(item.lastIndexOf('\\') + 1)
+    //     let dropFiles = await tsbApi.system.extractFileIcon(item)
+    //     console.log(dropFiles,'dropFiles')
+    //     return {
+    //       icon: `${dropFiles}`,
+    //       name: `${fileName}`,
+    //       value: item,
+    //       type: 'tableApp',
+    //       bg: '',
+    //       isBg: false,
+    //       mode: 'app'
+    //     }
+    //   }))
+    //   this.clickRightListItem(this.dropList)
+    //   // 添加完后清空
+    //   this.dropList = []
+    // },
     /**
      * 添加图标
      * @param {*} item
      * @param {*} index
      */
-    clickRightListItem (item, index) {
-      this.activeRightItem = index
-      //   this.editFlag = false
-      if (this.selectNav === 'foot') {
-        if (item instanceof Array) {
-          for (let i = 0; i < item.length; i++) {
-            if (!this.footNavigationList.find(j => j.name === item[i].name)) {
-              this.updateMainNav(item[i], 'add')
-              item[i].addNav = true
-              this.setFootNavigationList(item[i])
-            } else {
-              message.info('已添加', 1)
-            }
-          }
-          this.dropList = []
-        } else {
-          for (let i = 0; i < this.footNavigationList.length; i++) {
-            if (this.footNavigationList[i].name === item.name) return message.info('已添加', 1)
-          }
-          this.updateMainNav(item, 'add')
-          item.addNav = true
-          this.setFootNavigationList(item)
-          this.$nextTick(() => {
-            let scrollElem = this.$refs.content
-            scrollElem.scrollTo({ left: scrollElem.scrollWidth, behavior: 'smooth' })
-          })
-        }
-      }
-    },
+    // clickRightListItem (item, index) {
+    //   this.activeRightItem = index
+    //   //   this.editFlag = false
+    //   if (this.selectNav === 'foot') {
+    //     if (item instanceof Array) {
+    //       for (let i = 0; i < item.length; i++) {
+    //         if (!this.footNavigationList.find(j => j.name === item[i].name)) {
+    //           this.updateMainNav(item[i], 'add')
+    //           item[i].addNav = true
+    //           this.setFootNavigationList(item[i])
+    //         } else {
+    //           message.info('已添加', 1)
+    //         }
+    //       }
+    //       this.dropList = []
+    //     } else {
+    //       for (let i = 0; i < this.footNavigationList.length; i++) {
+    //         if (this.footNavigationList[i].name === item.name) return message.info('已添加', 1)
+    //       }
+    //       this.updateMainNav(item, 'add')
+    //       item.addNav = true
+    //       this.setFootNavigationList(item)
+    //       this.$nextTick(() => {
+    //         let scrollElem = this.$refs.content
+    //         scrollElem.scrollTo({ left: scrollElem.scrollWidth, behavior: 'smooth' })
+    //       })
+    //     }
+    //   }
+    // },
     /**
      * 更新图标选择状态
      * @param {*} addItem
      * @param {*} type
      */
-    updateMainNav (addItem, type) {
-      this.mainNavList = this.currentList.length ? this.currentList : this.footNavigationList
-      // console.log(this.mainNavList, 'this.mainNavList')
-      let sumNavList = this.sideNavigationList.concat(this.footNavigationList, this.rightNavigationList)
-      if (type) {
-        this.mainNavList.forEach(item => {
-          if (item?.name === addItem.name) {
-            if (type === 'add') {
-              item.addNav = true
-            } else if (type === 'del') {
-              item.addNav = false
-            }
-          }
-        })
-      } else {
-        for (const i in this.mainNavList) {
-          let stateNav = sumNavList.some(item => item.name === this.mainNavList[i].name)
-          this.mainNavList[i].addNav = stateNav
-        }
-      }
-    },
+    // updateMainNav (addItem, type) {
+    //   this.mainNavList = this.currentList.length ? this.currentList : this.footNavigationList
+    //   // console.log(this.mainNavList, 'this.mainNavList')
+    //   let sumNavList = this.sideNavigationList.concat(this.footNavigationList, this.rightNavigationList)
+    //   if (type) {
+    //     this.mainNavList.forEach(item => {
+    //       if (item?.name === addItem.name) {
+    //         if (type === 'add') {
+    //           item.addNav = true
+    //         } else if (type === 'del') {
+    //           item.addNav = false
+    //         }
+    //       }
+    //     })
+    //   } else {
+    //     for (const i in this.mainNavList) {
+    //       let stateNav = sumNavList.some(item => item.name === this.mainNavList[i].name)
+    //       this.mainNavList[i].addNav = stateNav
+    //     }
+    //   }
+    // },
     completeEdit () {
       this.toggleEdit()
       this.setQuick()
@@ -1250,8 +1242,13 @@ export default {
       }
     },
     updateIcon,
-    createFile (item) {
-      console.log(item, 'from drop')
+    createFile (item,x) {
+      const bottom = document.querySelector('#bottomPanel')
+      const rect = bottom.getBoundingClientRect()
+      const index = Math.round((x - rect.x) / (72 * this.navAttribute.navSize / 100))
+      console.log(index,item, 'index');
+      this.copyFootNav.splice(index, 0, _.cloneDeep(item))
+      console.log(this.dragItem,'')
     },
     /**
      * sortable拖拽函数
@@ -1302,7 +1299,7 @@ export default {
             if (!that.isDelete) return
             // console.log(111111);
             that.delItemIcon = false
-            let oneNav = that.footNavigationList[event.oldIndex]
+            let oneNav = that.copyFootNav[event.oldIndex]
             //将要删除的是否是主要功能
             if (!that.mainNavigationList.find((f) => f.name === oneNav.name)) {
               that.removeFootNavigationList(event.oldIndex)
@@ -1346,24 +1343,6 @@ export default {
           }
           this.copyFootNav.splice(event.newIndex, 0, cur)
           return
-          that.isDelete = false
-          let newIndex = event.newIndex,
-            oldIndex = event.oldIndex
-          let newItem = drop.children[newIndex]
-          let oldItem = drop.children[oldIndex]
-          // console.log('newIndex', event)
-          // 先删除移动的节点
-          drop.removeChild(newItem)
-          // 再插入移动的节点到原有节点，还原了移动的操作
-          if (newIndex > oldIndex) {
-            drop.insertBefore(newItem, oldItem)
-          } else {
-            drop.insertBefore(newItem, oldItem.nextSibling)
-          }
-          that.sortFootNavigationList(event)
-          that.footNavigationList = that.footNavigationList.filter((item) => item !== undefined)
-          that.updateMainNav()
-          // console.log('isDelete', that.footNavigationList);
         }, 100),
         onEnd: function (event) {
           console.log('onEnd')
@@ -1432,45 +1411,6 @@ export default {
           }
           that.hoverIndex = -1
           return
-          console.log('onUnchoose', event)
-          // console.log(that.defaultPosition.x, event.originalEvent.clientX, 'unchoose')
-          if (!isDrag) {
-            // console.log(that.copyFootNav[Math.round(((that.targetPosition.x - that.defaultPosition.x)/72) + index)], '====onEnd'); that.copyFootNav[nIndex]
-            const oIndex = index
-            let nIndex = 0
-            //let nIndex = Math.round(((event.originalEvent.clientX - that.defaultPosition.x) / 72) + index)
-            console.log(event)
-            //
-            // const panelLeft=document.getElementById('bottomContent').getBoundingClientRect().left
-            // const moveLeft=event.originalEvent.clientX+20
-            // console.log('moveLeft=',moveLeft,'panelLeft',panelLeft)
-            // const relativePos=(moveLeft-panelLeft)%72
-            // const isGap= relativePos<=20 && relativePos>=0
-            // if(isGap){
-            //   return 0
-            // }
-            // nIndex=Math.floor((moveLeft-panelLeft)/72)
-            // if(nIndex>that.copyFootNav.length-1){
-            //   //超出
-            //   return 0
-            // }
-            // if (oIndex === nIndex || nIndex<0) {
-            //
-            //   return 0
-            // }
-
-            // that.footNavigationList[nIndex] = that.mergeIconFolder(that.footNavigationList, oIndex, nIndex)
-            // that.copyFootNav[nIndex] = that.mergeIconFolder(that.copyFootNav, oIndex, nIndex)
-            console.log(that.hoverIndex)
-
-            // that.footNavigationList.splice(nIndex, 1, target)
-            // const item = that.mergeIconFolder(that.copyFootNav, oIndex, nIndex)
-            // that.copyFootNav.splice(nIndex, 1, item)
-            // const id = that.footNavigationList[nIndex].id
-            //that.copyFootNav[nIndex].id = id
-            // console.log(target, 'target',  that.copyFootNav, 'that.copyFootNav')
-            //that.removeFootNavigationList(oIndex)
-          }
         }
       })
     },
@@ -1539,7 +1479,7 @@ export default {
       // 元素大小
       let menuW = draggableSize[0] * 144
       // console.log(vW,posX,menuW, 'vW');
-      posX = posX > vW - menuW ? vW - menuW : posX
+      posX = posX > vW - menuW ? vW - menuW : (posX - menuW / 2 < 0 ? 0 : posX - menuW / 2);
       // console.log(posX, 'posX')
       this.left = posX
     },
@@ -1549,14 +1489,6 @@ export default {
         this.hoverIndex = -1
       } else {
         this.hoverIndex = hoverRs.index
-      }
-    }
-  },
-  provide () {
-    return {
-      data: {
-        ...this.defaultFolderData,
-        model: 'custom',
       }
     }
   },

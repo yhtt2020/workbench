@@ -8,7 +8,11 @@
           <xt-new-icon v-show=" color == colorList[`${'color' + item}`] " icon="ri:checkbox-circle-fill"
             size="20"></xt-new-icon>
         </div>
-        <colorP @change=" updateBackground " :defaultList=" colorList " :linearList=" linearList " :isLinear=" isLinear " :colorNum="colorShowNum" :linearNum="linearShowNum"/>
+        <ColorPicker 
+          @change=" updateBackground " 
+          :defaultList=" colorList " 
+          :linearList=" linearList " 
+          :isLinear=" isLinear " />
       </div>
 
     </template>
@@ -17,7 +21,7 @@
 
 <script setup lang="ts">
 import { ref, watch, toRefs,onMounted } from "vue";
-import colorP from '../../../../components/desk/navigationBar/components/EditIcon/Children/colorP.vue'
+import ColorPicker from "./components/ColorPicker.vue";
 export interface colorProps {
   switch?: boolean;
   color?: string;
@@ -27,10 +31,6 @@ export interface colorProps {
   isLinear?: boolean;
   // 显示颜色数量
   colorNum?:number;
-  // 推荐颜色选择颜色数量
-  colorShowNum?:number;
-  // 渐变色选择颜色数量
-  linearShowNum?:number;
 }
 const props = withDefaults(defineProps<colorProps>(), {
   switch: true,
@@ -60,8 +60,6 @@ const props = withDefaults(defineProps<colorProps>(), {
   },
   isLinear: true,
   colorNum: 6,
-  colorShowNum: 9,
-  linearShowNum: 10
 });
 const { colorNum, colorShowNum, linearShowNum } = toRefs(props);
 // 按钮回调
@@ -87,8 +85,6 @@ const limitNum = (num:number,list:Array<string>):number | undefined | any=>{
 }
 onMounted(()=>{
   colorNum.value = limitNum(colorNum.value, Object.keys(props.colorList))
-  colorShowNum.value = limitNum(colorShowNum.value, Object.keys(props.colorList))
-  linearShowNum.value = limitNum(linearShowNum.value, Object.keys(props.linearList))
 })
 </script>
 
