@@ -37,8 +37,8 @@ export const oilStore = defineStore("OilPrices", {
 
         // 获取中国所有省份的油价
         async getCityOilData(){
-            if(localCache.get('cityOilData')){
-                this.cityOilData=localCache.get('cityOilData')
+            if(localCache.get('gnyj.query')){
+                this.cityOilData=localCache.get('gnyj.query')
                 // console.log(this.cityOilData);
                 return
             }
@@ -60,7 +60,7 @@ export const oilStore = defineStore("OilPrices", {
                 }else{
                     this.cityOilData = res.data.result.data
                 }
-                localCache.set('cityOilData',this.cityOilData,60*60*12)
+                localCache.set('gnyj.query',this.cityOilData,60*60*12)
             }
             else{
                 return false

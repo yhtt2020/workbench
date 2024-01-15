@@ -210,8 +210,10 @@ const header = computed(() => {
 const options = computed(() => {
   return {
     bg: isDrag.value ? "var(--active-secondary-bg) " : "",
-    del: navBar.value.isDel,
-    hierarchy: navBar.value.hierarchy,
+    // 隐藏删除
+    del: navBar.value.isDel ,
+    // 隐藏层级
+    hierarchy: navBar.value.hierarchy
   };
 });
 
@@ -244,7 +246,7 @@ provide("isOutside", isOutside);
 const autoSizeList = computed(() => {
   if (auto.value) {
     const size = {
-      name: autoSize.value,
+      name: '自动',
       value: autoSize.value,
     };
     return [...sizeList.value, size];

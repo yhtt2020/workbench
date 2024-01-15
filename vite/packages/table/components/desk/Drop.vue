@@ -28,7 +28,7 @@ const { isFreeLayout, getFreeLayoutData, freeLayoutEnv } =
   storeToRefs(freeLayoutStore);
 // 桌面
 const deskStore = useDeskStore();
-const { isEnterFolder, mouseInElement } = storeToRefs(deskStore);
+const { isEnterFolder, mouseInElement,isEnterBar } = storeToRefs(deskStore);
 
 mouseInElement.value = useMouseInElement(target);
 // 图标组件
@@ -36,6 +36,8 @@ const iconStore = myIcons();
 const { iconOption } = storeToRefs(iconStore);
 
 const handleDrop = async (dragEvent) => {
+  console.log("handleDrop",isEnterBar.value);
+  if (isEnterBar.value) return;
   if (isEnterFolder.value) return;
   dragEvent.preventDefault();
   let files = dragEvent.dataTransfer.files;

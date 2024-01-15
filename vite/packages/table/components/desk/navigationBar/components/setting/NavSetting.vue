@@ -21,27 +21,7 @@ const useAppStore=appStore()
 const navigationStore=useNavigationStore()
 const windowHeight=ref(480)
 const windowWidth=ref(460)
-const iconList = ref([
-    {
-        value: 'commun',
-        name: '社区中心',
-        icon: '/logo/commun.svg',
-        bg: '',
-        isBg: false,
-        mode: 'app',
-        type: 'systemApp'
-    },
-    {
-        value: 'task',
-        name: '任务中心',
-        icon: '/logo/task.svg',
-        bg: '',
-        isBg: false,
-        mode: 'app',
-        type: 'systemApp'
-        
-    }
-])
+
 const navigationPosition = ref([
   {
     title: '左侧导航',
@@ -124,35 +104,6 @@ const changeFn=(item,index)=>{
     }
     navigationStore.bottomToggle[index]=item.switch
 }
-/**
- * 社区和任务的监听函数
- * @param target 目标值
- * @param value 
- * @param item 
- */
-const findItem = (target,value,item)=>{
-    if(target){
-        const hasTargetItem = useNavStore.footNavigationList.some(item => item.value === value);
-        if (hasTargetItem) {
-            return true;
-        }
-        useNavStore.setFootNavigationList(item);
-    }else{
-        const index = useNavStore.footNavigationList.findIndex(item => item.value === value);
-        if (index !== -1) {
-           useNavStore.removeFootNavigationList(index); 
-        }
-    }
-}
-/**
- * 社区中心和任务中心
- */
-watch(() => navigationStore.bottomToggle[1], (newValue, oldValue) => {
-    findItem(newValue,'commun',iconList.value[0])
-}, { deep: true, immediate: true });
 
-watch(() => navigationStore.bottomToggle[2], (newValue, oldValue) => {
-    findItem(newValue,'task',iconList.value[1])
-}, { deep: true, immediate: true });
 </script>
 <style lang='scss' scoped></style>
