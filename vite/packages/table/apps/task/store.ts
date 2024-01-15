@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import { tasks } from "./page/primary/Primary";
+import { tasks as branchTasks } from "./page/branch/Branch";
 // @ts-ignore
 export const taskStore = defineStore("taskStore", {
   state: () => ({
@@ -42,13 +43,33 @@ export const taskStore = defineStore("taskStore", {
       );
       return foundObject.tasks.find((task) => task.id === id);
     },
+    getBranchTask(id) {
+      if (!id) return "";
+      let res;
+      for (const it in branchTasks) {
+        let currentIt: any = branchTasks[it];
+
+        currentIt.forEach((i) => {
+          if (res) {
+            return res;
+          }
+          res = i.tasks.find((task) => task.id === id);
+        });
+      }
+      console.log("res :>> ", res);
+      // const item: any = this.currentTaskList.find(
+      //   (obj: any) => obj.name === id
+      // );
+      return res;
+    },
     getTask(id) {
       if (!id) return "";
 
       const type = id.split("")[0].toUpperCase();
       if (type == "M") {
         return this.getPrimaryTask(id);
-      } else {
+      } else if (type == "Z") {
+        return this.getBranchTask(id);
       }
     },
   },

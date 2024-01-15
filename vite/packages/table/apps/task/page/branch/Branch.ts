@@ -224,6 +224,10 @@ export const tasks = {
               type: "router",
               value: "home",
             },
+            {
+              type: "bus",
+              value: "Z0402",
+            },
           ],
         },
       ],

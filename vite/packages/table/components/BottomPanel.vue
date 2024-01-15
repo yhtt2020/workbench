@@ -417,6 +417,18 @@ export default {
     }
   },
   mounted() {
+    console.log('底部进入 :>> ', );
+    // this.$bus.on('M0105',() => { this.editNavigation(this.drawerMenus[0]) })
+    // this.$bus.on('Z0401',() => {
+    //     console.log('Z0401 :>> ', 332222);
+    //       this.showTeamTip = true
+    //      })
+    this.$bus.on('Z0402',async () => {
+      console.log('Z0402 :>> ', 332222)
+      await this.updateMy(0)
+      this.teamVisible = true
+    })
+
     this.$bus.on('M0105',() => { this.editNavigation(this.drawerMenus[0]) })
     this.$bus.on('Z0401',() => {   this.showTeamTip = true })
 

@@ -97,6 +97,8 @@ const startTask = () => {
       });
     }
     if (item.type === "bus") {
+
+      console.log('item.type :>> ', item.value);
       setTimeout(() => {
         proxy.$bus.emit(item.value);
       }, 200);
