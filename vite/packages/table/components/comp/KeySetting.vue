@@ -68,7 +68,7 @@ export default {
       this.keyBoard = true
     },
     getKeyMap(key) {
-      if (this.keyMap[key]) {
+      if (this.keyMap && this.keyMap[key]) {
         this.keys[key].key = this.keyMap[key].split('+')
       }
     },
