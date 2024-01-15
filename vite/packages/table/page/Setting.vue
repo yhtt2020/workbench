@@ -63,7 +63,13 @@
             <!-- <a-col :span="12">
               <div  @click="tipOffline" class="relative btn">
                 离线模式<br />
-                <a-switch @click="this.changeOffline"  v-model:checked="isOffline"></a-switch>
+                <a-switch @click="changeOffline"  v-model:checked="isOffline"></a-switch>
+              </div>
+            </a-col> -->
+            <!-- <a-col :span="12">
+              <div  @click="tipVisitor" class="relative btn">
+                游客模式<br />
+                <a-switch @click="changeVisitor"  v-model:checked="isVisitor"></a-switch>
               </div>
             </a-col> -->
             <a-col :span="12">
@@ -209,7 +215,7 @@
     </vue-custom-scrollbar>
   <xt-msg :modelValue="simpleVisible" title="极简模式" text="使用极简模式后，将隐藏部分娱乐、社交类的功能，例如用户中心，小队，任务功能" :noVisible="false" @ok="this.simpleVisible=false"></xt-msg>
   <div  style="z-index: 90" v-if="editNavigationVisible">
-    <EditNewNavigation @setQuick="editNavigationVisible = false,this.editToggle=false"></EditNewNavigation>
+    <navigationSetting @setQuick="editNavigationVisible = false,this.editToggle=false"></navigationSetting>
   </div>
   <a-drawer :width="500" v-if="styleVisible" v-model:visible="styleVisible" placement="right" style="z-index: 9999999">
     <xt-task id="M0301" no="2"></xt-task>
@@ -263,12 +269,14 @@ import { isMain,isWin } from "../js/common/screenUtils";
 import MyAvatar from "../components/small/MyAvatar.vue";
 // import EditNavigation from '../components/bottomPanel/EditNavigation.vue'
 import EditNewNavigation from "../components/desk/navigationBar/EditNewNavigation.vue";
+import navigationSetting from "../components/desk/navigationBar/navigationSetting.vue";
 import { taskStore } from "../apps/task/store";
 import { offlineStore } from "../js/common/offline";
+import { visitorStore } from "../js/common/visitor";
 import {Icon as Iconify} from '@iconify/vue'
 export default {
   name: "Setting",
-  components: { EditNewNavigation, MyAvatar, SecondPanel, ChooseScreen, GradeSmallTip,Iconify },
+  components: { EditNewNavigation, MyAvatar, SecondPanel, ChooseScreen, GradeSmallTip,Iconify,navigationSetting },
   data() {
     return {
       bgColor: "",
@@ -355,6 +363,7 @@ export default {
     ...mapWritableState(appStore, ["userInfo","backgroundColor"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(offlineStore, ["isOffline"]),
+    ...mapWritableState(visitorStore, ["isVisitor"]),
     ...mapWritableState(useNavigationStore,['bottomToggle','oldToggle','editToggle']),
 
   },
@@ -362,6 +371,7 @@ export default {
   methods: {
     ...mapActions(codeStore, ["verify", "create", "myCode"]),
     ...mapActions(offlineStore, ["changeOffline"]),
+    ...mapActions(visitorStore, ["changeVisitor"]),
     ...mapActions(appStore, ['enterAided', 'leaveAided','enableShake','disableShake']),
     isMain: isMain, isWin,
     goShake(){
@@ -423,6 +433,13 @@ export default {
       Modal.info({
         content:
           "使用离线模式后，将隐藏部分娱乐、社交类的功能，例如游戏、天气等。",
+        centered: true,
+      });
+    },
+    tipVisitor() {
+      Modal.info({
+        content:
+          "使用游客模式后，将隐藏部分娱乐、社交类的功能，例如游戏、天气等。",
         centered: true,
       });
     },

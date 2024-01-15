@@ -1,6 +1,5 @@
 <template>
   <!-- 确认框 -->
-
   <div class="fixed modal-float xt-modal rounded-lg" style="">
     <div class="h-full w-full flex flex-col">
       <div class="w-full flex items-center" style="height:56px;">
@@ -24,11 +23,6 @@
         <xt-button   class="button-bottom mr-3" @click="close"   size="large" >稍后再说</xt-button>
         <xt-button   class="button-bottom mr-4" @click="startGuide"   size="large" type="theme">开始定制</xt-button>
       </div>
-
-
-
-
-
     </div>
 
 
@@ -53,11 +47,6 @@ export default {
     }
   },
   async mounted(){
-    // this.newZoom = await tsbApi.window.getZoomFactor() * 100
-    // this.oldZoom = this.newZoom
-    // this.inputZoom = +(this.newZoom).toFixed(0)
-    // this.getSize()
-    // this.scaleInit = true
   },
   components: { 
     Icon,

@@ -79,6 +79,7 @@ import Modal from '../../components/Modal.vue'
 import { Icon } from '@iconify/vue'
 import dismiss16Filled from '@iconify-icons/fluent/dismiss-16-filled'
 import { cardStore } from '../../store/card'
+import { homeStore } from '../../store/home'
 import { message } from 'ant-design-vue'
 import HistoryList from './components/HistoryList.vue'
 import {Modal as AntModal} from 'ant-design-vue'
@@ -133,6 +134,7 @@ export default {
   computed: {
     ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'isTrash', 'deskList', 'selNoteTitle', 'selIndex']),
     ...mapWritableState(cardStore, ['desks']),
+    ...mapWritableState(homeStore, ["currentDeskId", "currentDeskIndex", 'currentInit']),
     content(){
       return this.noteList[this.selNote].customData?.text
     },
@@ -219,6 +221,10 @@ export default {
               this.deskList?.forEach((item, index) => {
                 if (this.noteList[this.selNote].deskId == item.id) {
                   this.currentDeskId = item.id
+                  this.currentDeskIndex = {
+                    id: item.id,
+                    title: item.name,
+                  };
                   this.$router.push({
                     name: 'home',
                   })

@@ -47,12 +47,13 @@ export const replaceType = (list) => {
                 ...item,
                 mode: 'link',
                 type: 'default',
-                value: item.url || item.value
+                value: item.url || item.value,
               };
           }
     }).map((item) => ({
         ...item,
         bg: '',
-        isBg: false
+        isBg: false,
+        id: item.id ||  nanoid(6)
       }));
 }

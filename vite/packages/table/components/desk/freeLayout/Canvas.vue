@@ -2,12 +2,15 @@
 <template>
   <div
     class="relative mx-auto"
-
-    :style="{
-      width: getFreeLayoutState.canvas.width + 'px',
-      height: getFreeLayoutState.canvas.height + 'px',
-      zoom: getFreeLayoutState.canvas.zoom,
-    }"
+    :style="[
+      {
+        width: getFreeLayoutState.canvas.width + 'px',
+        height: getFreeLayoutState.canvas.height + 'px',
+        zoom: getFreeLayoutState.canvas.zoom,
+      },
+      deviationLeft,
+      deviationTop,
+    ]"
     :class="{
       'xt-theme-b': getFreeLayoutState.line.isAuxLine,
     }"
@@ -68,8 +71,12 @@ import { ItemTypes } from "./types";
 import { useFreeLayoutStore } from "./store";
 // 初始化操作
 const freeLayoutStore: any = useFreeLayoutStore();
-const { getFreeLayoutData, getFreeLayoutState, getFreeLayoutMargin }: any =
-  storeToRefs(freeLayoutStore);
+const {
+  getFreeLayoutData,
+  getFreeLayoutState,
+  getFreeLayoutMargin,
+  freeLayoutEnv,
+}: any = storeToRefs(freeLayoutStore);
 // 辅助线生成
 function auxLine(length: number, factor: number) {
   let arr: any = [];
@@ -91,6 +98,34 @@ const auxLineHeight = computed(() => {
     getFreeLayoutState.value.canvas.height,
     102 - 6 + getFreeLayoutMargin.value * 2
   );
+});
+const updateScroll = (newV) => {
+  console.log("111 :>> ", 111);
+  // freeLayoutEnv.value.scrollOldLeft = scrollbar.value.scrollLeft;
+  // freeLayoutEnv.value.scrollOldTop = scrollbar.value.scrollTop;
+  if (newV === "free") {
+  } else if (newV === "vertical") {
+  } else if (newV === "horizontal") {
+  } else if (newV === "lock") {
+  }
+};
+const deviationTop = computed(() => {
+  let scroll = getFreeLayoutState.value?.mode?.scroll;
+  if (scroll == "lock" || scroll == "horizontal") {
+    return {
+      top: -freeLayoutEnv.value.scrollOldTop + "px",
+    };
+  }
+});
+
+const deviationLeft = computed(() => {
+  let scroll = getFreeLayoutState.value?.mode?.scroll;
+  if (scroll == "lock" || scroll == "vertical") {
+    console.log("deviationLeft :>> ", freeLayoutEnv.value.scrollOldLeft);
+    return {
+      left: -freeLayoutEnv.value.scrollOldLeft + "px",
+    };
+  }
 });
 </script>
 

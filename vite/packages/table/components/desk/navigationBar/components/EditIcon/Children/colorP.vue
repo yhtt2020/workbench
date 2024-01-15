@@ -4,30 +4,31 @@
         <xt-button :w="40" :h="40" class="xt-bg"><xt-new-icon
                 icon="fluent:more-horizontal-16-regular"></xt-new-icon></xt-button>
         <template #content>
-            <div class="w-[315px] rounded-xl shadow p-4 -mt-1 -mr-2 -ml-2 -mb-1">
+            <div class="w-[315px] rounded-xl shadow p-4 -mt-2 -mr-3 -ml-3 -mb-2 xt-modal">
                 <div class="flex justify-between mb-4">
                     <div class="text-base xt-text-2">推荐颜色</div>
-                    <xt-button :w="24" :h="24">
-                        <xt-new-icon icon="fluent:dismiss-circle-16-filled" size="24" class="ml-1"
-                            @click="tippyRef.hide()"></xt-new-icon>
-                    </xt-button>
+                    <!-- <xt-button :w="24" :h="24"> -->
+                    <xt-new-icon icon="fluent:dismiss-circle-16-filled" size="24" 
+                        @click="tippyRef.hide()"></xt-new-icon>
+                    <!-- </xt-button> -->
                 </div>
                 <div class="item-box">
-                    <div class="flex items-center justify-center mr-4 item" :key="item"
+                    <div class="flex items-center justify-center item" :key="item"
                         :style="{ background: props.defaultList[`${'color' + item}`] }" v-for="(item, index) in colorNum"
                         @click="chooseDf(item)">
                         <xt-new-icon v-show="colorIndex == item" icon="ri:checkbox-circle-fill" size="20"></xt-new-icon>
                     </div>
                     <XtBaseColor ref="baseColor" v-model:data="defaultColor" @update:data="updateBackground"></XtBaseColor>
                 </div>
-                <div class="h-[1px] w-full mt-4 mb-4" style="background: var(--divider);"></div>
+
+                <div v-if="props.isLinear" class="h-[1px] w-full mt-4 mb-4" style="background: var(--divider);"></div>
 
                 <div v-if="props.isLinear">
                     <div class="mb-4 text-base xt-text-2">渐变色</div>
                     <div class="item-box">
-                        <div class="flex items-center justify-center mr-4 item" :key="item"
-                            :style="{ background: props.linearList[`${'color' + item}`] }" v-for="(item, index) in linearNum"
-                            @click="chooseLinear(item)">
+                        <div class="flex items-center justify-center item" :key="item"
+                            :style="{ background: props.linearList[`${'color' + item}`] }"
+                            v-for="(item, index) in linearNum" @click="chooseLinear(item)">
                             <xt-new-icon v-show="linearIndex == item" icon="ri:checkbox-circle-fill"
                                 size="20"></xt-new-icon>
                         </div>
@@ -57,8 +58,8 @@ export interface colorPicker {
         [key: string]: string
     },
     isLinear?: boolean,
-    colorNum?:number,
-    linearNum?:number
+    colorNum?: number,
+    linearNum?: number
 }
 const props = withDefaults(defineProps<colorPicker>(), {
     defaultList: {
@@ -86,8 +87,8 @@ const props = withDefaults(defineProps<colorPicker>(), {
         color10: ' linear-gradient(135deg, #A8EEA8 0%, #3354DA 100%)',
     },
     isLinear: true,
-    colorNum:9,
-    linearNum:10
+    colorNum: 9,
+    linearNum: 10
 
 })
 // Object.keys(linearList).length
@@ -137,12 +138,20 @@ const updateBackground = () => {
     border-radius: 10px;
     cursor: pointer;
     margin-bottom: 16px;
+    margin-right: 16px;
 }
 
 .item-box {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: flex-center;
+}
+.item-box .item:nth-child(5n + 1) {
+    margin-left: 8px !important;
+}
+
+.item-box .item:nth-child(5n) {
+    margin-right: 8px !important;
 }
 
 .shadow {
@@ -180,4 +189,5 @@ const updateBackground = () => {
 .tippy-box[data-theme="tomato"] {
     border-radius: 12px !important;
     color: red !important;
-}</style>
+}
+</style>
