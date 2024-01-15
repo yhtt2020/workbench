@@ -2,7 +2,7 @@
   <div class="box rounded-xl">
     <a-collapse
       ghost
-      class="xt-text xt-bg-2 rounded-xl"
+      class="xt-text xt-bg-2 rounded-xl "
       expandIconPosition="right"
     >
       <a-collapse-panel>
@@ -15,7 +15,7 @@
       </a-collapse-panel>
     </a-collapse>
   </div>
-  <br />
+  <!-- <br /> -->
 </template>
 <script lang="ts" setup>
 const props = defineProps({

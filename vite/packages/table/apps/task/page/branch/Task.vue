@@ -13,7 +13,7 @@
         <Progress style="width: 68px; height: 20px" :task="task"
       /></template>
     </xt-text>
-    <xt-collapse v-for="data in task.tasks">
+    <xt-collapse v-for="data in task.tasks" class="mb-3">
       <template #title>
         <xt-text>
           <xt-new-icon :icon="icon" class="mr-3" size="20" />
@@ -21,7 +21,7 @@
         </xt-text></template
       >
       <xt-title type="text" m="mb">{{ data.info }} </xt-title>
-      <GetReward :id="data.id" />
+      <ShowReward :id="data.id" />
       <StartTask :task="data" />
     </xt-collapse>
   </div>
@@ -38,7 +38,7 @@ import { guide } from "./guide";
 import StartTask from "../../components/StartTask.vue";
 
 import { taskStore } from "../../store";
-import GetReward from "../../components/GetReward.vue";
+import ShowReward from "../../components/ShowReward.vue";
 
 const store = taskStore();
 const router = useRouter();

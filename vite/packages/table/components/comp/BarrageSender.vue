@@ -27,7 +27,7 @@ export default {
     }
   },
   mounted () {
-
+console.log('this.currentChannel.name :>> ', this.currentChannel.name);
 
     this.CONST = tsbApi.barrage.CONST
   },

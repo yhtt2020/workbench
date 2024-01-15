@@ -116,6 +116,7 @@ export default {
         if(result.status){
           this.team=result.data
           Modal.success({content:'加入小队成功。',centered:true})
+
           await this.updateMy(0)
           this.$emit(
             'update:visible',false

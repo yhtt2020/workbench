@@ -134,13 +134,12 @@
                 </div>
               </a-col>
               <a-col :span="6">
-                <xt-task  id="M0401" no="1" @cb="basic">
+
                   <div @click="basic" class="btn">
                     <!-- <Icon icon="shezhi" style="font-size: 2em"></Icon> -->
                     <Iconify icon="fluent:settings-16-regular" style="font-size: 2em" />
                     <div>通用设置</div>
                   </div>
-                </xt-task>
               </a-col>
               <a-col v-if="isMain()" :span="6">
                 <div @click="goApps()" class="btn">

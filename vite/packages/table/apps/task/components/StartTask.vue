@@ -3,6 +3,7 @@
   <p>进行中任务ID： {{ startList }}</p>
   <p>可领取奖励ID： {{ claimRewardsList }}</p>
   <p>已完成任务ID： {{ completedList }}</p>
+
   <xt-button v-if="completeTask" h="40" type="success" block @click="startTask"
     >已完成，再次体验</xt-button
   >
@@ -39,7 +40,6 @@ import { appStore } from "../../../store";
 const { proxy } = getCurrentInstance();
 const app = appStore();
 
-import { getAllTask } from "../api";
 // 初始化
 const store = taskStore();
 const { currentId, startList, claimRewardsList, completedList } =
@@ -83,7 +83,13 @@ const startTask = () => {
   if (type == "m") {
     getGuide();
   }
-  const open = props.task.open;
+  const open = props.task?.open;
+  if (!open) {
+    router.push({
+      name: "home",
+    });
+    return;
+  }
   open.forEach((item) => {
     if (item.type === "router") {
       router.push({

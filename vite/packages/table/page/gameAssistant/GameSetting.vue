@@ -185,7 +185,7 @@ import { cardStore } from '../../store/card'
 import { steamUserStore } from '../../store/steamUser'
 import { ExclamationCircleFilled } from '@ant-design/icons-vue'
 
-import {completeTask} from "../../apps/task/page/branch/task"
+import {completeTask} from "../../apps/task/task"
 const { steamSession, path, https,steamUser } = $models
 let LoginSession
 let EAuthTokenPlatformType

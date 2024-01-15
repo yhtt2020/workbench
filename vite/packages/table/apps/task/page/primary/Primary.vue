@@ -1,5 +1,5 @@
 <template>
-  <xt-button @click="test()">任务重置</xt-button>
+  <!-- <xt-button @click="test()">任务重置</xt-button> -->
   <template v-if="store.taskID">
     <!-- 章节进度 -->
     <div class="xt-bg-2 rounded-xl px-4 pt-4 pb-3">
@@ -22,12 +22,12 @@
       <xt-title type="text">{{ currentTask.description }}</xt-title>
       <div class="flex justify-center items-center flex-col">
         <xt-title type="text">完成奖励</xt-title>
-        <GetReward :id="currentTask.id" />
+        <ShowReward :id="currentTask.id" />
         <StartTask :task="currentTask" class="mt-3"></StartTask>
       </div>
     </div>
   </template>
-  <div v-else>已完成所有任务</div>
+  <div v-else class=" text-center">已完成所有任务</div>
 </template>
 
 <script setup>
@@ -36,7 +36,7 @@ import StartTask from "../../components/StartTask.vue";
 import { tasks } from "./Primary";
 import { taskStore } from "../../store";
 import { ref, reactive, computed, toRefs, onMounted } from "vue";
-import GetReward from "../../components/GetReward.vue";
+import ShowReward from "../../components/ShowReward.vue";
 import { getAllTask } from "../../api";
 
 const store = taskStore();

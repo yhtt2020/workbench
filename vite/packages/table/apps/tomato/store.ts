@@ -5,6 +5,7 @@ import cache from "../../components/card/hooks/cache";
 import { cardStore } from '../../store/card';
 import {mapActions, mapState,mapWritableState} from "pinia";
 import { useToast } from "vue-toastification";
+import {completeTask} from '../../apps/task/task'
 const toast = useToast()
 // @ts-ignore
 export const tomatoStore = defineStore("tomatoStore", {
@@ -123,6 +124,7 @@ export const tomatoStore = defineStore("tomatoStore", {
       this.addTomatoNum()
       this.isColor ="#e5b047";
       toast.success("番茄任务完成");
+      completeTask('Z0208')
     },
     // 设置定时器
     interval () {
@@ -197,7 +199,7 @@ export const tomatoStore = defineStore("tomatoStore", {
     //初始化状态
     init(customData,customIndex,desk){
       // 新创建时
-      if (customData) {        
+      if (customData) {
         if(customData.length){
           this.isFull = customData.isFull
           this.isState = customData.isState

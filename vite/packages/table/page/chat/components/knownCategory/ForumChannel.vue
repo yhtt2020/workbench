@@ -7,9 +7,9 @@
       <template v-if="forumList.length === 0" >
         <EmptyStatus />
       </template>
-      
+
       <vue-custom-scrollbar :settings="settingsScroller" style="height: 300px;" v-else>
-        <div v-for="(item,index) in forumList" class="flex items-center xt-bg-2 mb-3 pointer p-5 rounded-lg" 
+        <div v-for="(item,index) in forumList" class="flex items-center xt-bg-2 mb-3 pointer p-5 rounded-lg"
          :class="{'select-bg':selectIndex === index}" @click="selectForum(index,item)"
         >
          <a-avatar :size="40" shape="square" :src="item.logo"></a-avatar>
@@ -34,6 +34,7 @@ import { message } from "ant-design-vue";
 
 import ModalTop from '../ModalTop.vue';
 import EmptyStatus from "../empty/EmptyStatus.vue";
+import {completeTask} from '../../../../apps/task/task'
 
 export default {
   props: ["id", "no"],
@@ -96,6 +97,7 @@ export default {
         };
         channelClass.secondaryChannel(option);
         message.success('版块关联成功');
+        completeTask('Z0604')
         this.closeChannel()
       }else{
         message.warning('版块关联参数必须填完整')

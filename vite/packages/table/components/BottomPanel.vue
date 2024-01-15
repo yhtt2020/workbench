@@ -418,6 +418,7 @@ export default {
   },
   mounted() {
     this.$bus.on('M0105',() => { this.editNavigation(this.drawerMenus[0]) })
+    this.$bus.on('Z0401',() => {   this.showTeamTip = true })
 
     // this.popVisible=true
     this.loadNav()

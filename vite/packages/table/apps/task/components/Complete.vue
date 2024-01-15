@@ -46,6 +46,7 @@ onMounted(() => {
 });
 const status = ref(0);
 const taskStatus = async () => {
+  console.log(' currentId.value :>> ',  currentId.value);
   let { data } = await getTaskStatus({
     taskName: currentId.value,
   });
@@ -76,9 +77,8 @@ const close = () => {
 
 const claimReward = () => {
   emits("close-toast");
-  getReward(currentId.value)
   if (status.value) return;
-  rewardVisible.value = true;
+  getReward(currentId.value)
 };
 </script>
 

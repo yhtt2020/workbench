@@ -26,7 +26,7 @@
       </transition>
 
       <div>{{ types[props.type]?.info }}</div>
-      <GetReward @onReward="getAudio" />
+      <ShowReward @onReward="getAudio" />
     </div>
     <div class="flex justify-between">
       <div></div>
@@ -50,7 +50,7 @@
 import { ref, toRefs, computed, onMounted } from "vue";
 import { taskStore } from "../store";
 import { storeToRefs } from "pinia";
-import GetReward from "./GetReward.vue";
+import ShowReward from "./ShowReward.vue";
 import "animate.css";
 import { getReward } from "../task";
 

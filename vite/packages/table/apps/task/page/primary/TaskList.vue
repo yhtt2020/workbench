@@ -22,20 +22,7 @@
       <xt-text type="2" class="mb-3">{{ data.intro }}</xt-text>
       <xt-text class="mb-3">任务说明</xt-text>
       <xt-text type="2">{{ data.description }}</xt-text>
-      <div class="flex justify-center items-center flex-col">
-        <xt-text type="2" class="my-3 h-4" title="完成奖励" />
-        <div class="xt-theme-text mb-3">
-          暂无任务奖励，后续完工后，我们会自动补发奖励
-        </div>
-        <xt-text
-          type="2"
-          title="当前任务含有操作引导"
-          class="mb-3 h-4"
-          v-if="data.guide"
-        />
-
-        <StartTask :task="data" :isFirst="false" />
-      </div>
+      <StartTask :task="data" :isFirst="false" />
     </xt-collapse>
   </template>
   <xt-text title="暂无已完成任务" v-else />
@@ -48,7 +35,7 @@ import { taskStore } from "../../store.ts";
 import StartTask from "../../components/StartTask.vue";
 
 const sotre = taskStore();
-const { list } = storeToRefs(sotre);
+const { completedList } = storeToRefs(sotre);
 
 const props = defineProps({
   task: {},
@@ -59,7 +46,7 @@ const getCompletedTasks = computed(() => {
   let array = [];
   let count = 0;
   props.task.tasks.forEach((item) => {
-    if (list.value.includes(item.id)) {
+    if (completedList.value.includes(item.id)) {
       array.push(item);
     }
   });

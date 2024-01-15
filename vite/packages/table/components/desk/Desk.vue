@@ -640,6 +640,9 @@ export default {
     this.$bus.on("M0101", () => {
       this.newAddCard();
     });
+    this.$bus.on("Z0106", () => {
+      this.newAddCard();
+    });
     this.$bus.on("M0302", () => {
       this.newAddCard();
     });

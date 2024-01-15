@@ -124,7 +124,7 @@ import VueCustomScrollbar from "../../../../src/components/vue-scrollbar.vue";
 import BackBtn from "../../components/comp/BackBtn.vue";
 import {deckStore} from "./store";
 import {mapActions, mapWritableState} from 'pinia'
-
+import {completeTask} from '../../apps/task/task'
 export default {
   name: 'DeckAdd',
   emits: ['add'],
@@ -271,6 +271,8 @@ export default {
       }
       if (this.addButton(button, this.currentGrid) === 'add') {
         message.success('添加按钮成功')
+           // 支线任务点
+      completeTask('Z0202')
         this.$router.go(-1)
       } else {
         message.success('修改按钮成功')

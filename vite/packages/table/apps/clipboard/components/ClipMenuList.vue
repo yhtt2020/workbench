@@ -5,6 +5,7 @@ import browser from "../../../js/common/browser";
 import {mapActions} from "pinia";
 import {clipboardStore} from "../store";
 import _ from 'lodash-es'
+import {completeTask} from '../../../apps/task/task'
 export default {
   name: "ClipMenuList",
   props: ['clipItem','hidePreview'],
@@ -43,6 +44,7 @@ export default {
             }
             //todo 不同类型的复制
             message.success('复制成功。')
+            completeTask('Z0206')
           }
         },
         {

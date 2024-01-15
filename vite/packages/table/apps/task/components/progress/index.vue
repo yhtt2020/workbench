@@ -20,7 +20,7 @@ import { storeToRefs } from "pinia";
 import { taskStore } from "../../store";
 
 const store = taskStore();
-const { successBranchTask } = storeToRefs(store);
+const { successBranchTask ,completedList} = storeToRefs(store);
 const props = defineProps({
   text: {
     default: "进度",
@@ -45,7 +45,7 @@ const allTaskId = computed(() => {
 const successTask = computed(() => {
   let num = 0;
   allTaskId.value.forEach((item) => {
-    if (successBranchTask.value.includes(item)) num++;
+    if (completedList.value.includes(item)) num++;
   });
   return num;
 });

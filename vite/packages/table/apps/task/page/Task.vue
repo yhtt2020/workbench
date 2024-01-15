@@ -1,13 +1,4 @@
 <template>
-  <!-- <a-drawer
-    :width="512"
-    :closable="false"
-    style="z-index: 1000"
-    placement="right"
-    v-model:visible="store.isTaskDrawer"
-    :bodyStyle="{ padding: ' 0 ', overflow: 'hidden !important' }"
-    @closeMessage="task.isTaskDrawer = false"
-  > -->
   <xt-modal custom v-model="store.isTaskDrawer" boxClass="rounded-xl">
     <div class="xt-modal flex rounded-xl" style="width: 500px; height: 600px">
       <xt-left-menu
@@ -23,7 +14,7 @@
       />
       <div class="flex flex-col w-full">
         <div class="w-full xt-scrollbar xt-text pt-3 pr-3 relative">
-          <Exit />
+          <!-- <Exit /> -->
           <Primary v-if="currentTask == 'Primary'" />
           <Branch
             v-else-if="currentTask == 'Branch'"
@@ -38,8 +29,6 @@
       </div>
     </div>
   </xt-modal>
-
-  <!-- </a-drawer> -->
 </template>
 
 <script setup>
@@ -53,7 +42,7 @@ import Activity from "./activity/index.vue";
 import Daily from "./daily/Daily.vue";
 import Set from "./Set.vue";
 import { tasks } from "../page/branch/Branch.ts";
-import Exit from "../components/Exit.vue";
+// import Exit from "../components/Exit.vue";
 
 import { getAllTask } from "../api";
 
