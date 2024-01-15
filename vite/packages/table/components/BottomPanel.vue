@@ -105,7 +105,7 @@
                       <div @dragover="onDrag" @dragend="hoverIndex=-1"
                            v-if="!(this.navList.includes(item.event) && this.isOffline)"
                            class="flex items-center justify-center pointer"
-                           :class="{hover:(item.id===hoverRealItemId()&& dragItem.id!==hoverRealItemId())}"
+                           :class="{hover:(item.id===hoverRealItemId()&& dragItem?.id!==hoverRealItemId())}"
                            style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                            @click.stop="newOpenApp(item.type, item.value, item)">
 
