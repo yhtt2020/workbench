@@ -230,7 +230,8 @@ import { nanoid } from 'nanoid'
 // import Drop from '../apps/folder/src/components/Drop.vue'
 import Drop from './desk/navigationBar/components/folder/Drop.vue'
 import { useWindowSize, } from '../ui/new/drag/src/hooks/useWindowSize'
-import Common from './desk/navigationBar/components/Common.vue'import { useElementSize } from "../ui/new/drag/src/hooks/useElementSize";
+import Common from './desk/navigationBar/components/Common.vue';
+import { useElementSize } from "../ui/new/drag/src/hooks/useElementSize";
 import ControlModal from './desk/navigationBar/components/control/ControlModal.vue';
 
 
@@ -262,7 +263,7 @@ export default {
     FolderVue,
     Folder,
     Drop,
-    Common,,
+    Common,
     ControlModal,
   },
   data () {
@@ -1110,7 +1111,7 @@ export default {
     newOpenApp (type, value, item) {
       if(value === 'control'){
         this.controlVisible = !this.controlVisible;
-        this.ResetElementPosition()
+        this.resetElementPosition()
       }
       if(item) this.msgNotice(item)
       if (value === 'home' && item.home) {
@@ -1501,6 +1502,7 @@ export default {
       // console.log(posX, 'posX')
         }
       this.left = posX
+      console.log(posX, 'posX')
     },
     onDrag: function (e) {
       let hoverRs = this.getHoverIndex(e.x)
