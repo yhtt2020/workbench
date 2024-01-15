@@ -1,11 +1,16 @@
 <template>
-  <Vuuri v-model="vuuriList" group-id="id" item-key="id" :options="option"
-  :drag-enabled="true" :item-class="getMargin ? 'mr-0':'mr-2 mb-2'"  :get-item-height="getHeight"
-  >
-    <template #item="{ item }">
-      <ControlRemoveDetail :control-index="item.id" :control-item="item" :status="'null'"/>
-    </template>
-  </Vuuri>
+  <div class="flex mt-3" style="height: auto;">
+    <XtScrollbar  :y="true" style="height: 100%;width: 100%;">
+      <Vuuri v-model="vuuriList" group-id="id" item-key="id" :options="option"
+       :drag-enabled="false"   :get-item-height="getHeight"
+      >
+      <!-- :item-class="getMargin ? 'mr-0':'mr-2.5 mb-2.5'" -->
+        <template #item="{ item }">
+          <ControlRemoveDetail :control-index="item.id" :control-item="item" :status="'null'" @click="triggerControl(item)"/>
+        </template>
+      </Vuuri>
+    </XtScrollbar>
+  </div>
 </template>
 
 <script setup>
@@ -30,15 +35,45 @@ const getHeight = () =>{
 }
 
 // 计算间距
-const getMargin = computed(() => {
-  for (const i = 0; i < vuuriList.length; i++) {
-    return i % 4 !== 0;
-  }
-})
+// const getMargin = computed(() => {
+//   for (const i = 0; i < vuuriList.length; i++) {
+//     return i % 4 !== 0;
+//   }
+// })
+
+
+// 实现功能触发
+const triggerControl = (item) =>{
+  console.log('测试',item);
+}
 
 
 </script>
 
 <style lang="scss" scoped>
+
+:deep(.grid){
+  position: relative;
+  width: 18em;
+  display: inline-block;
+  border: 5px solid transparent;
+  border-radius: 8px;
+  vertical-align: top;
+
+}
+
+:deep(.muuri-grid){
+  background: transparent !important;
+}
+
+:deep(.muuri-item-content){
+  background: transparent !important;
+}
+
+:deep(.muuri-item){
+  width: auto !important;
+  margin: 0 12px 12px 0 !important;
+  
+}
 
 </style>

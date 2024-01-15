@@ -1,7 +1,9 @@
 <template>
-  <div class="rounded-xl flex flex-col justify-between control-container p-4" id="controlId" 
-   ref="modalRef" style="width: 548px;" :style="editVisible ? { height:'689px' }:{ height:'535px' }"
+  <!-- :style="editVisible ? { height:'689px' }:{ height:'535px' }" -->
+  <div class="rounded-xl flex flex-col justify-between control-container pl-4 pt-4" id="controlId" 
+   ref="modalRef" style="width: 548px;" 
   >
+
     <div class="flex items-center justify-between">
       <div class="flex items-center justify-center">
         <xt-new-icon icon="fluent:toggle-multiple-16-regular" size="20" class="mr-2"></xt-new-icon>
@@ -9,7 +11,7 @@
       </div>
 
       <template v-if="!editVisible">
-        <div class="flex items-center justify-center" >
+        <div class="flex items-center justify-center pr-4" >
           <xt-button style="width: auto !important;" h="0" @click="editClick">
            <div class="flex items-center justify-center">
             <xt-new-icon icon="fluent:compose-16-regular" size="20"></xt-new-icon>
@@ -19,7 +21,7 @@
       </template>
 
       <template v-else>
-        <div class="flex items-center">
+        <div class="flex items-center pr-4">
           <xt-button style="width: auto !important;" h="0" @click="finshEdit">
             <div class="flex items-center justify-center">
               <span class="xt-font xt-theme-text font-14">完成编辑</span>
@@ -36,9 +38,9 @@
       <EditControlDesk />
     </template>
 
-    <a-divider style="height: 1px;margin: 16px 0;" />
+    <a-divider style="height: 1px;margin: 16px 0;width: 516px;min-width:516px;" />
 
-    <div class="flex items-center justify-center" style="height: 66px;">
+    <div class="flex items-center justify-center" style="height: 85px;">
       <template v-for="item in bottomButton">
        <a-tooltip placement="top" :title="item.name">
          <xt-button w="54" h="54" style="border-radius: 12px;" class="mr-3 button-item xt-bg-t-2" @click="item.fn">
@@ -59,6 +61,8 @@ import { useRouter } from 'vue-router';
 
 import ControlDesk from './ControlDesk.vue';
 import EditControlDesk from './EditControlDesk.vue';
+
+import { controlStore } from '../../hook/controlStore';
 
 const router = useRouter()
 const emit = defineEmits(['close'])
@@ -122,6 +126,14 @@ const bottomButton = ref([
       router.push({ name: 'setting' });
       emit('close')
     }
+  },
+  {
+    newIcon:'fluent:settings-16-regular',name:'清除测试数据',
+    fn:()=>{
+      controlStore().initData();
+      // router.push({ name: 'setting' });
+      // emit('close')
+    }
   }
 ])
 </script>
@@ -135,29 +147,5 @@ const bottomButton = ref([
   &:last-of-type{
     margin-right: 0 !important;
   }
-}
-
-
-:deep(.grid){
-  position: relative;
-  width: 18em;
-  display: inline-block;
-  border: 5px solid transparent;
-  border-radius: 8px;
-  vertical-align: top;
-
-}
-
-:deep(.muuri-grid){
-  background: transparent !important;
-}
-
-:deep(.muuri-item-content){
-  background: transparent !important;
-}
-
-:deep(.muuri-item){
-  width: auto !important;
-  margin: 0 8px 8px 0 !important;
 }
 </style>

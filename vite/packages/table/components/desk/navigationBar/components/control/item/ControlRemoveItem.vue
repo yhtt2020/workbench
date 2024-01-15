@@ -1,9 +1,10 @@
 <template>
- <Vuuri v-model="vuuriList" group-id="id" item-key="id" :options="option"  
- :drag-enabled="true" :item-class="getMargin ? 'mr-0':'mr-2 mb-2'"  :get-item-height="getHeight"
+ <Vuuri v-model="vuuriList" group-id="id" item-key="id" :options="option"  ref="testRef"
+ :drag-enabled="false"   :get-item-height="getHeight"
 >
+ <!-- :item-class="getMargin ? 'mr-0':'mr-2 mb-2'" -->
  <template #item="{ item }">
-  <ControlRemoveDetail :control-index="item.id" :control-item="item" :status="'del'"  @click="removeControl(item,$event)"/>
+  <ControlRemoveDetail :control-index="item.id" :control-item="item" :status="'del'"  @click.stop="removeControl(item,$event)"/>
  </template>
 </Vuuri>
 </template>
@@ -30,6 +31,7 @@ const vuuriList = ref(props.list);
 const option = ref({
  layout:{horizontal:false},
 });
+const testRef = ref(null);
 
 // 计算间距
 const getMargin = computed(() => {
@@ -46,7 +48,6 @@ const getHeight = () =>{
 
 // 移除设置
 const removeControl = (item,evt) =>{
- console.log('111',item);
  const index = control.value.addList.findIndex((find)=>{ return String(find.id) === String(item.id) });
  if(control.value.addList.length !== 1){
   control.value.addList.splice(index,1);
@@ -61,7 +62,12 @@ const removeControl = (item,evt) =>{
  }
 };
 
-
+onMounted(()=>{
+  // testRef.value.muuri.on('dragMove', function (item, event) {
+  //   console.log('111',item);
+  //   console.log('222',event);
+  // })
+})
 </script>
 
 <style lang="scss" scoped>

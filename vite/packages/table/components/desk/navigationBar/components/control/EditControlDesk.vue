@@ -1,14 +1,14 @@
 <template>
-  <div class="flex flex-1" style="height:557px;">
+  <div class="flex  h-3/4">
     <XtScrollbar  :y="true" style="height: 100%;width: 100%;">
       <div class="flex flex-1 flex-col h-3/4">
         <div style="height: 12px;"></div>
         <ControlRemoveItem :list="control.addList" />
       </div>
       
-      <a-divider style="height: 1px;margin: 16px 0;" />
+      <a-divider style="height: 1px;margin: 16px 0;" v-if="control.removeList.length !== 0 || control.addList.length !== 0" />
 
-      <div class="flex flex-1 flex-col h-3/4">
+      <div class="flex flex-1 flex-col h-3/4" v-if="control.removeList.length !== 0">
         <ControlAddItem :list="control.removeList"/>
       </div>
     </XtScrollbar>
@@ -41,7 +41,7 @@ const { control } = storeToRefs(controls)
  
 :deep(.muuri-grid){
   background: transparent !important;
-  height:120px !important;
+  //  height:120px !important;
 }
  
 :deep(.muuri-item-content){
@@ -50,5 +50,7 @@ const { control } = storeToRefs(controls)
 
 :deep(.muuri-item){
   width: auto !important;
+  margin: 0 12px 12px 0 !important;
+ 
 }
 </style>

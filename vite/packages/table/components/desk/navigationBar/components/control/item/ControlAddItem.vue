@@ -1,7 +1,8 @@
 <template>
- <Vuuri v-model="vuuriList" group-id="id" item-key="id" :options="option"  
- :drag-enabled="true" :item-class="getMargin ? 'mr-0':'mr-2 mb-2'"  :get-item-height="getHeight"
+ <Vuuri v-model="vuuriList" group-id="id" item-key="id" :options="option"  test="1" 
+ :drag-enabled="false"   :get-item-height="getHeight"
 >
+<!-- :item-class="getMargin ? 'mr-0':'mr-2 mb-2'" -->
  <template #item="{ item }">
   <ControlAddDetail :control-index="item.id" :control-item="item"  @click="addControl(item)"/>
  </template>
@@ -54,7 +55,9 @@ const addControl = (item) =>{
   }
 }
 
-
+onMounted(()=>{
+  // console.log('222',props.list);
+})
 </script>
 
 <style lang="scss" scoped>

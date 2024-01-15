@@ -121,9 +121,17 @@ function defaultListClick(event) {
 }
 function defaultListContextmenu(event) {
   // 第一次触发后出现弹窗让用户选择
-  if(firstOpen.value){
+  if(!firstOpen.value){
     chooseVisible.value = true
-    firstOpen.value = false
+    firstOpen.value = true
+  }else{
+    // firstOpen.value = false
+    if (rightModel.value == "default") {
+      event.preventDefault();
+      event.stopPropagation();
+      drawerVisible.value = true;
+      onMounted();
+    }
   }
 }
 
