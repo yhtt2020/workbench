@@ -402,7 +402,6 @@ export default {
         },
       ],
       visible: false,
-      imgList:['/img/default.jpg', '/img/flow.jpg']
     }
   },
   async mounted () {

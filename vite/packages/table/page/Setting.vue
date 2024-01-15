@@ -215,7 +215,7 @@
     </vue-custom-scrollbar>
   <xt-msg :modelValue="simpleVisible" title="极简模式" text="使用极简模式后，将隐藏部分娱乐、社交类的功能，例如用户中心，小队，任务功能" :noVisible="false" @ok="this.simpleVisible=false"></xt-msg>
   <div  style="z-index: 90" v-if="editNavigationVisible">
-    <EditNewNavigation @setQuick="editNavigationVisible = false,this.editToggle=false"></EditNewNavigation>
+    <navigationSetting @setQuick="editNavigationVisible = false,this.editToggle=false"></navigationSetting>
   </div>
   <a-drawer :width="500" v-if="styleVisible" v-model:visible="styleVisible" placement="right" style="z-index: 9999999">
     <xt-task id="M0301" no="2"></xt-task>
@@ -269,13 +269,14 @@ import { isMain,isWin } from "../js/common/screenUtils";
 import MyAvatar from "../components/small/MyAvatar.vue";
 // import EditNavigation from '../components/bottomPanel/EditNavigation.vue'
 import EditNewNavigation from "../components/desk/navigationBar/EditNewNavigation.vue";
+import navigationSetting from "../components/desk/navigationBar/navigationSetting.vue";
 import { taskStore } from "../apps/task/store";
 import { offlineStore } from "../js/common/offline";
 import { visitorStore } from "../js/common/visitor";
 import {Icon as Iconify} from '@iconify/vue'
 export default {
   name: "Setting",
-  components: { EditNewNavigation, MyAvatar, SecondPanel, ChooseScreen, GradeSmallTip,Iconify },
+  components: { EditNewNavigation, MyAvatar, SecondPanel, ChooseScreen, GradeSmallTip,Iconify,navigationSetting },
   data() {
     return {
       bgColor: "",

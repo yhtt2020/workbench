@@ -154,14 +154,14 @@
     <!-- 全屏遮罩层 -->
     <div
       v-show="visibleScale || visibleGuide"
-      class="h-full w-full fixed top-0 left-0 ring-0 bottom-0 cursor-not-allowed"
+      class="fixed top-0 bottom-0 left-0 w-full h-full cursor-not-allowed ring-0"
       style="z-index:900;background-color:rgba(255,255,255,0.1);"
     ></div>
 
     <!-- 局部遮罩层 -->
     <!-- <div
       v-show="showGuide"
-      class="w-full fixed left-0 ring-0 bottom-0 cursor-not-allowed"
+      class="fixed bottom-0 left-0 w-full cursor-not-allowed ring-0"
       style="z-index:900;background-color:rgba(255,255,255,0.1);height: 150px;"
     ></div> -->
 
@@ -433,6 +433,7 @@ export default {
       "sideNavigationList",
       "footNavigationList",
       "rightNavigationList",
+      "copyFootNav"
     ]),
     ...mapWritableState(cardStore, [
       "customComponents",
@@ -508,7 +509,7 @@ export default {
   async mounted() {
     this.replaceIcon(this.sideNavigationList);
     this.replaceIcon(this.rightNavigationList);
-    this.replaceIcon(this.footNavigationList);
+    this.replaceIcon(this.copyFootNav);
     // setTimeout(() => {
     //   this.replaceIcon()
     // },500)
@@ -521,7 +522,7 @@ export default {
       }
       this.replaceIcon(this.sideNavigationList);
       this.replaceIcon(this.rightNavigationList);
-      this.replaceIcon(this.footNavigationList);
+      this.replaceIcon(this.copyFootNav);
       n++;
     }, 2000);
     // } else {
