@@ -38,9 +38,9 @@
               <!-- <xt-button size="mini" style="width: 100%" type="theme" @click="login">登录/注册账号</xt-button> -->
               <xt-button size="mini" style="width: 100%" type="theme" @click="login">登录账号</xt-button>
             </a-col>
-            <!-- <a-col flex="1">
-              <xt-button size="mini" style="width: 100%"   @click="offline">离线模式</xt-button>
-            </a-col> -->
+            <a-col flex="1">
+              <xt-button size="mini" style="width: 100%"   @click="visitor">游客模式</xt-button>
+            </a-col>
             <a-col flex="150px" v-if="netError">
               <xt-button style="width: 100%" @click="getUserInfo">重试</xt-button>
             </a-col>
@@ -89,7 +89,7 @@ import { chatStore } from '../store/chat'
 import navigationData from '../js/data/tableData'
 import taskStore from '../page/app/todo/stores/task'
 import cache from "../components/card/hooks/cache";
-import { offlineStore } from '../js/common/offline'
+// import { offlineStore } from '../js/common/offline'
 
 export default {
   name: 'Code',
@@ -184,7 +184,7 @@ export default {
     ...mapWritableState(codeStore, ['myCode', 'serialHash']),
     ...mapWritableState(appStore, ['aided','settings', 'routeUpdateTime', 'userInfo', 'init', 'lvInfo', 'backgroundImage', 'style']),
     ...mapWritableState(navStore, ['sideNavigationList', 'footNavigationList', 'rightNavigationList']),
-    ...mapWritableState(offlineStore, ['isOffline']),
+    // ...mapWritableState(offlineStore, ['isOffline']),
   },
   methods: {
     ...mapActions(cardStore, ['sortClock', 'sortCountdown']),
@@ -358,11 +358,17 @@ export default {
         this.getUserInfo()
       })
     },
-    offline(){
-      this.$router.replace({ name: 'wizard' })
-      cache.set('isOffline',true)
-      window.$isOffline = true
-      this.isOffline = true
+    // offline(){
+    //   this.$router.replace({ name: 'wizard' })
+    //   cache.set('isOffline',true)
+    //   window.$isOffline = true
+    //   this.isOffline = true
+    // }
+    visitor(){
+      this.$router.replace({ name: 'home' })
+      // cache.set('isOffline',true)
+      // window.$isOffline = true
+      // this.isOffline = true
     }
   },
 }
