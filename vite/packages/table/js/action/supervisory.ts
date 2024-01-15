@@ -77,11 +77,16 @@ async function getNetStat(){
   const result = execSync(`powershell -Command "${command}"`);
   console.log(result.toString());
 }
+
+/**
+ *
+ * @param data 原始数据，单位是B
+ */
 export function prettyDisplayBytes(data){
   let unit='KB'
   let num=0
-  data=data/1000
-  if(data < 1000){
+  data=data/1024
+  if(data < 1024){
     num=data
     unit='KB'
   }else if(data<1024000){
