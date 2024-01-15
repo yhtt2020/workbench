@@ -49,6 +49,7 @@
             :model="customData.model"
             @deleteFile="deleteFile"
             @updateList="updateList"
+            @updateFile="updateFile"
             @updateSort="updateSort"
             @clickFile="clickFile"
           />

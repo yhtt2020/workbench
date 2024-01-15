@@ -7,7 +7,7 @@
 <script></script>
 <script setup>
 import { nanoid } from "nanoid";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useFolderStore } from "../../../../../apps/folder/src/store";
 import { useDeskStore } from "../../../../../components/desk/store";
@@ -21,7 +21,7 @@ const { isEnterBar } = storeToRefs(deskStore);
 
 // 文件夹数据
 const folderStore = useFolderStore();
-const { dragId, isDrag, move, currentId, currentData } =
+const { dragId, isDrag, move, currentId, currentData,folderFlag } =
   storeToRefs(folderStore);
 
 // 图标数据
@@ -39,7 +39,7 @@ const handleDrop = async (dragEvent) => {
   if (!isEnterBar.value) return
   let currentX = dragEvent.x
   // 桌面拖拽
-  if (dragEvent.dataTransfer.types[0] === 'Files') {
+  if (folderFlag.value !== 'folder') {
     let files = dragEvent.dataTransfer.files
     let filesArr = []
     if (files && files.length > 0) {
@@ -48,7 +48,8 @@ const handleDrop = async (dragEvent) => {
       }
     }
     await Promise.all(filesArr.map(async (item) => {
-      const fileName = item.substring(item.lastIndexOf('\\') + 1)
+      let fileName = item.substring(item.lastIndexOf('\\') + 1)
+      fileName = getFileName(fileName)
       let dropFiles = await tsbApi.system.extractFileIcon(item)
       let file = useDeskConversionNav(dropFiles, fileName, item)
       emit('createFile', file, currentX)
@@ -59,6 +60,7 @@ const handleDrop = async (dragEvent) => {
     const data = useIconConversionNav(item)
     emit('createFile', data, currentX)
     currentData.value = ''
+    folderFlag.value = ''
   }
   isEnterBar.value = false;
 };
@@ -102,6 +104,21 @@ const handleMouseLeave = () => {
 const handleMouseOver = () => {
 
 }
+
+const getFileName = (name) => {
+  if (typeof name === 'string') {
+    const lastDotIndex = name.lastIndexOf('.');
+    if (lastDotIndex !== -1) {
+      const fileName = name.substring(0, lastDotIndex);
+      return fileName;
+    } else {
+      return name;
+    }
+  } else {
+    return null; 
+  }
+};
+
 </script>
   
 <style lang="scss" scoped></style>
