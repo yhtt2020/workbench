@@ -90,6 +90,7 @@ import navigationData from '../js/data/tableData'
 import taskStore from '../page/app/todo/stores/task'
 import cache from "../components/card/hooks/cache";
 import { offlineStore } from '../js/common/offline'
+import { useWidgetStore } from '../components/card/store'
 
 export default {
   name: 'Code',
@@ -140,6 +141,7 @@ export default {
     this.initStore(teamStore, 'teamStore')
     this.initStore(navStore, 'nav')
     this.initStore(taskStore, 'task')
+    this.initStore(useWidgetStore, 'firstOpen')
     // this.initStore(browserStore,'browserStore')
     browserStore().bindIPC()
     captureStore()//仅触发一下载入
