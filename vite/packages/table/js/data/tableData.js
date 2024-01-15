@@ -335,7 +335,7 @@ export default {
   {
     type:'systemApp',
     icon:'/logo/control.svg',
-    name:'控制中心',
+    name:'控制中心(开发中)',
     event:'control',
   }
 

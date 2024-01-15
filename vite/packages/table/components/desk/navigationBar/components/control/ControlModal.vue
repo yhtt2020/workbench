@@ -55,7 +55,6 @@
 
 <script setup>
 import { ref,computed } from 'vue';
-import {storeToRefs} from 'pinia';
 import { useRouter } from 'vue-router';
 
 import ControlDesk from './ControlDesk.vue';
@@ -72,7 +71,6 @@ const props = defineProps({
 
 const editVisible = ref(false);
 
-
 // 触发编辑
 const editClick = () =>{
   editVisible.value = true
@@ -82,7 +80,6 @@ const editClick = () =>{
 const finshEdit = () =>{
   editVisible.value = false
 }
-
 
 const bottomButton = ref([
   {

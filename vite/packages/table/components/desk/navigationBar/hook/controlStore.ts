@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import dbStorage from "../../../../store/dbStorage";
+// import dbStorage from "../../../../store/dbStorage";
 
 // @ts-ignore
 export const controlStore = defineStore('control',{
@@ -80,7 +80,7 @@ export const controlStore = defineStore('control',{
     {
       paths: ["control"],
       // storage: localStorage,
-      storage: dbStorage,
+      storage: localStorage,
     },
   ],
 },
