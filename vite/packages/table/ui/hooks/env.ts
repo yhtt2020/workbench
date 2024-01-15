@@ -38,10 +38,11 @@ const isWeb = getWebEnv();
 const isClient = getClientEnv();
 const isMac = getMacEnv();
 const isOffline = cache.get('isOffline')
+const isVisitor = cache.get('isVisitor')
 
 export default currentEnv;
 
-export { isWeb, isClient, isMac, isOffline };
+export { isWeb, isClient, isMac, isOffline, isVisitor };
 
 
 module.exports = {
@@ -50,4 +51,5 @@ module.exports = {
   isClient,
   isMac,
   isOffline,
+  isVisitor,
 };
