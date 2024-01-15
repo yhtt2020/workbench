@@ -207,6 +207,10 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         this.getFreeLayoutData[key].top = this.tempData[key].top + num;
       }
     },
+    // 获取一个指定ID的数据
+    getOneFreeLayoutData(id) {
+      return this.freeLayoutData[id];
+    },
   },
   persist: {
     enabled: true,

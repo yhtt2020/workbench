@@ -1,6 +1,6 @@
 <!-- 控制层 数据的处理 -->
 <script setup lang="ts">
-import { ref, watch, toRefs, onMounted } from "vue";
+import { ref, watch, toRefs, onMounted, onBeforeUnmount } from "vue";
 import { storeToRefs } from "pinia";
 import { useFreeLayoutStore } from "./store";
 import { message } from "ant-design-vue";
@@ -94,31 +94,29 @@ async function updateCard(data) {
   currentData.value = {};
   data.forEach((item) => {
     const { id, customData } = item;
-    currentData.value[item.id] = item;
-    if (getFreeLayoutData.value[id]?.id.toString() != id.toString()) {
+    currentData.value[id] = {
+      ...item,
+      id,
+    };
+
+    if (getFreeLayoutData.value[id]?.id != id) {
       getPosition(item);
     }
   });
-  for (const key in getFreeLayoutData.value) {
-    if (!(key in currentData.value)) {
-      delete getFreeLayoutData.value[key];
-    }
-  }
+
   console.timeEnd("Free Layout Run Time");
   console.log("--------------- 自由布局数据更新结束 ---------------");
-  console.log("getFreeLayoutData.value :>> ", getFreeLayoutData.value);
-  // console.log('getFreeLayoutData.value :>> ', getFreeLayoutData.value);
   firstLoading.value = false;
 }
-const changeCount = useDebounceFn((card) => {
-  updateCard(card);
-}, 10);
+
+let updateCardTimer: any;
 watch(currentDesk.value?.cards, (card) => {
   if (firstLoading.value) return;
-  // clearTimeout(updateCardTimer);
-  // updateCardTimer = setTimeout(() => {
-  changeCount(card);
-  // }, 500);
+  clearTimeout(updateCardTimer);
+  updateCardTimer = setTimeout(() => {
+    updateCard(card);
+  }, 10);
+  console.log("watch数据更新了 :>> ");
 });
 
 const test: any = ref(null);
@@ -153,6 +151,21 @@ const disabledInfo = (data) => {
     message.info(data.info);
   }
 };
+
+onBeforeUnmount(() => {
+  let data = {
+    ...currentData.value,
+  };
+  const freeLayout = freeLayoutStore.getOneFreeLayoutData(currentID.value);
+
+  for (const id in freeLayout) {
+    if (data[id]?.id.toString() != id.toString()) {
+      console.log("删除数据 :>> ", id);
+      delete freeLayout[id];
+    }
+  }
+  // console.log("自由布局销毁操作 :>> ", getFreeLayoutData.value);
+});
 </script>
 
 <template>
