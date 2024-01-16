@@ -8,7 +8,7 @@
   >
     <div
       v-if="!options?.custom"
-      class="flex flex-col xt-shadow widget rounded-xl "
+      class="flex flex-col xt-shadow widget rounded-xl"
       :class="[edit ? 'editing' : '']"
       style="backdrop-filter: blur(50px); -webkit-backdrop-filter: blur(50px)"
       :style="[
@@ -178,7 +178,6 @@
 import { h } from "vue";
 import { mapActions, mapWritableState } from "pinia";
 import _ from "lodash-es";
-import { useDebounceFn } from "@vueuse/core";
 import { message, notification } from "ant-design-vue";
 import { cardStore } from "../../store/card";
 import { offlineStore } from "../../js/common/offline";
@@ -269,6 +268,8 @@ export default {
       type: String,
       default: "4x2",
     },
+    // 作为弹窗时的尺寸
+    modalSize: {},
     /**
      * 可选尺寸，此属性设置后，在编辑处会显示可选尺寸。
      * 格式为 { name: '4x2'value: '4x2' }
@@ -396,7 +397,13 @@ export default {
         w = str[0];
         h = str[1];
       }
-
+      console.log("123312312312 :>> ", 123312312312);
+      console.log("this.modalSize :>> ", this.modalSize);
+      if (this.modalSize) {
+        let str = this.modalSize.split("x");
+        w = str[0];
+        h = str[1];
+      }
       return {
         width: w * 134 + (w - 1) * 12 + "px",
         height: h * 96 + (h - 1) * 12 + "px",
