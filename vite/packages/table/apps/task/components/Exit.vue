@@ -3,10 +3,8 @@
     icon="fluent:dismiss-16-regular"
     @click="close()"
     size="16"
-    class="absolute"
-    style="right: 12px"
-    w="32" h="32"
-
+    w="32"
+    h="32"
     radius="8"
   />
 </template>

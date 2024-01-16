@@ -1,8 +1,8 @@
 <template>
-  <p>当前任务ID： {{ task.id }}</p>
+  <!-- <p>当前任务ID： {{ task.id }}</p>
   <p>进行中任务ID： {{ startList }}</p>
   <p>可领取奖励ID： {{ claimRewardsList }}</p>
-  <p>已完成任务ID： {{ completedList }}</p>
+  <p>已完成任务ID： {{ completedList }}</p> -->
 
   <xt-button v-if="completeTask" h="40" type="success" block @click="startTask"
     >已完成，再次体验</xt-button
