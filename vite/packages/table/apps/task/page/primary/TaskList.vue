@@ -21,7 +21,8 @@
       </template>
       <xt-text type="2" class="mb-3">{{ data.intro }}</xt-text>
       <xt-text class="mb-3">任务说明</xt-text>
-      <xt-text type="2">{{ data.description }}</xt-text>
+      <xt-text type="2" class="mb-3">{{ data.description }}</xt-text>
+      <ShowReward :id="data.id" />
       <StartTask :task="data" :isFirst="false" />
     </xt-collapse>
   </template>
@@ -33,6 +34,7 @@ import { ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { taskStore } from "../../store.ts";
 import StartTask from "../../components/StartTask.vue";
+import ShowReward from "../../components/ShowReward.vue";
 
 const sotre = taskStore();
 const { completedList } = storeToRefs(sotre);
