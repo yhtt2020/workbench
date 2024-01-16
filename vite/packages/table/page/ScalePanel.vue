@@ -22,25 +22,22 @@
     </div>
     <div class="xt-text font-16">当前屏幕分辨率和缩放比例可能无法正常使用工作台，建议调整缩放比例。</div>
 
-    <div class="font-16 px-10">
+    <div class="font-16 px-4">
       <div class="xt-text-2 font-14 text-center">推荐使用以下缩放比例</div>
-      <div class="flex justify-center mt-3" v-for="item in proportion">
-        <div class="xt-text xt-bg-2 rounded-lg pointer" style="padding:9px 28px;" @click="setZoomFactor(item.scale)">原生分辨率：{{item.ratio}}， 使用 {{ item.scale }}% 缩放</div>
+      <div class="flex mt-4 justify-between">
+        <div v-for="(item, index) in proportion">
+          <xt-button class="" style="border-radius: 10px;background-color: var(--secondary-bg);" @click="setZoomFactor(item.scale, index)" :w="73" :h="40" :type="item.isCheck?'theme':''">{{ item.ratio }}</xt-button>
+        </div>
       </div>
-      <div class="xt-text-2 font-14 text-center mt-4">自定义设置</div>
-      <div class="flex items-center justify-between xt-text mt-2">
-        <span>缩放比例（输入后回车确认）：</span>
-        <!-- class="h-10 rounded-lg text-center" -->
-        <a-input style="width:100px;height: 40px;" class="w-full xt-mask" v-model:value="inputZoom" @pressEnter="inputEnter"></a-input>
-        <span>%</span>
+      <div class="flex items-center w-full mt-4 justify-between" v-if="proportion[4].isCheck">
+        <a-slider 
+        @afterChange="setZoomFactor" 
+        :min="30" :max="500"
+        v-model:value="newZoom"></a-slider>
+        <a-input style="width:62px;height: 40px;" class="w-full xt-mask" v-model:value="inputZoom" @pressEnter="inputEnter"></a-input>
       </div>
-      <div class="xt-text mt-2">分辨率：宽 1920 x 高 1080</div>
-      <a-slider class="mt-1" 
-      @afterChange="setZoomFactor" 
-      :min="30" :max="500" 
-      v-model:value="newZoom"></a-slider>
     </div>
-    <xt-button class="button-bottom float-right mt-2 " style="border-radius: 10px;" @click="close" :w="95" :h="40" type="theme">确定</xt-button>
+    <xt-button class="button-bottom float-right mt-4 mb-4" style="border-radius: 10px;" @click="close" :w="64" :h="40" type="theme">确定</xt-button>
   </div>
 
 </template>
@@ -56,18 +53,32 @@ export default {
     return {
       proportion:[
         {
-          ratio: '1920x1080',
+          ratio: '100%',
+          scale: 100,
+          isCheck: false,
+        },
+        {
+          ratio: '125%',
           scale: 125,
+          isCheck: false,
         },
         {
-          ratio: '2560x1440',
+          ratio: '150%',
           scale: 150,
+          isCheck: false,
         },
         {
-          ratio: '3840x2160',
+          ratio: '200%',
           scale: 200,
+          isCheck: false,
+        },
+        {
+          ratio: '自定义',
+          scale: 100,
+          isCheck: false,
         },
       ],
+
       showRestore: false,
       currentWidth: '-',
       currentHeight: '-',
@@ -76,6 +87,8 @@ export default {
       oldZoom: 100,
       timeout: 10,
       timer: null,
+      // 记住上次的选择 用于还原功能
+      tmpIndex: 0,
       
     }
   },
@@ -85,6 +98,7 @@ export default {
     this.inputZoom = +(this.newZoom).toFixed(0)
     this.getSize()
     this.scaleInit = true
+    this.getWindowSize()
   },
   components: { 
     Icon,
@@ -93,6 +107,26 @@ export default {
     ...mapWritableState(appStore, ['settings', 'scaleInit']),
   },
   methods: {
+    // 获取当前显示器宽高 根据最长的一段进行判断
+    getWindowSize(){
+      var screenWidth = window.screen.width; // 获取显示器的宽度
+      var screenHeight = window.screen.height; // 获取显示器的高度
+      let max = screenWidth>screenHeight?screenWidth:screenHeight;
+      if(max<=1280){
+        this.proportion[0].isCheck = true
+        this.settings.zoomFactor = 100
+      }else if(max<=1920){
+        this.settings.zoomFactor = 125
+        this.proportion[1].isCheck = true
+      }else if(max<=2560){
+        this.settings.zoomFactor = 150
+        this.proportion[2].isCheck = true
+      }else{
+        this.settings.zoomFactor = 200
+        this.proportion[3].isCheck = true
+      }
+      console.log('出发了');
+    },
     inputEnter() {
       if (!this.inputZoom) {
         this.inputZoom = 30
@@ -104,9 +138,26 @@ export default {
       this.currentWidth = document.body.offsetWidth
       this.currentHeight = document.body.offsetHeight
     },
-    async setZoomFactor(zoom) {
+
+    clearCheak(){
+      this.proportion.forEach(item => {
+        item.isCheck = false
+      });
+    },
+
+    async setZoomFactor(zoom, index) {
       // zoom = +zoom.toFixed(0)
+      if (index < this.proportion.length) {
+        this.proportion.forEach((item, i)=>{
+          if(item.isCheck){
+            this.tmpIndex = i
+          }
+        })
+        this.clearCheak()
+        this.proportion[index].isCheck = true
+      }
       this.inputZoom = zoom
+      this.proportion[4].scale = zoom
       this.oldZoom = this.settings.zoomFactor
       await tsbApi.window.setZoomFactor(zoom / 100)
       this.showRestore = true
@@ -114,8 +165,6 @@ export default {
       setTimeout(() => {
         this.getSize()
       }, 300)
-      // this.showRestore = true
-
     },
     //  
     close(){
@@ -127,6 +176,13 @@ export default {
       this.oldZoom = this.settings.zoomFactor
       this.newZoom = this.oldZoom
       this.inputZoom = this.oldZoom
+
+      // 还原时 变更按钮
+      if (this.proportion[this.tmpIndex]) {
+        this.clearCheak()
+        this.proportion[this.tmpIndex].isCheck = true
+      }
+
       await tsbApi.window.setZoomFactor(this.settings.zoomFactor / 100)
       setTimeout(() => {
         this.getSize()
@@ -183,7 +239,7 @@ export default {
 <style scoped lang="scss">
   .modal-float{
     width: 480px;
-    height: 507px;
+    // height: 308px;
     // background:red;
     z-index: 1000;
     top: 59px;
@@ -207,5 +263,9 @@ export default {
 
   :deep(.ant-input){
     border-radius: 10px;
+  }
+
+  :deep(.ant-slider){
+    width: 335px;
   }
 </style>
