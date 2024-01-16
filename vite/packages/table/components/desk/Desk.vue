@@ -544,7 +544,7 @@ export default {
               }
             }
           },
-          disabled: true,
+          disabled: false,
         },
         {
           id: 11,
