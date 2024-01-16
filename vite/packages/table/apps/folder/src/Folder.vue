@@ -50,7 +50,6 @@
             @deleteFile="deleteFile"
             @updateFile="updateFile"
             @updateList="updateList"
-            @updateFile="updateFile"
             @updateSort="updateSort"
             @clickFile="clickFile"
           />
