@@ -1401,7 +1401,7 @@ export default {
          */
         onUnchoose: function (event) {
           if (this.isEnterBar) return
-          if (that.hoverRealItemId() && that.hoverRealItemId() !== that.dragItem.id) {
+          if (that.hoverRealItemId() && that.hoverRealItemId() !== that.dragItem?.id) {
             //存在目标，且不等于自身，符合合并条件，则执行合并
             const merged = that.mergeIconFolder(that.copyFootNav, that.dragItem, that.copyFootNav.find(item => {
               return item.id === that.hoverRealItemId()
