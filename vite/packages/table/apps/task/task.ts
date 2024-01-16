@@ -70,7 +70,9 @@ const endTask = (id) => {
 
   // 移除开始中的任务
   startList.value = [...new Set(startList.value)].filter((item) => item !== id);
-  claimRewardsList.value.push(id);
+  if (!completedList.value.includes(id)) {
+    claimRewardsList.value.push(id);
+  }
   // 数据预处理
   currentId.value = id;
   getGuide();

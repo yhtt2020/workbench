@@ -1,32 +1,31 @@
 <template>
-  <div>
-
-    2222333
-    <xt-text class="mb-3">
-      <xt-new-icon
-        icon="fluent:chevron-left-16-filled"
-        @click="back()"
-        bgClass="xt-bg-2"
-        class="mr-3"
-        w="40"
-      />
-      {{ task.chapter }}
-      <template #right>
-        <Progress style="width: 68px; height: 20px" :task="task"
-      /></template>
-    </xt-text>
-    <xt-collapse v-for="data in task.tasks" class="mb-3">
-      <template #title>
-        <xt-text>
-          <xt-new-icon :icon="icon" class="mr-3" size="20" />
-          {{ data.name }}
-        </xt-text></template
-      >
-      <xt-title type="text" m="mb">{{ data.info }} </xt-title>
-      <ShowReward :id="data.id" />
-      <StartTask :task="data" />
-    </xt-collapse>
-  </div>
+  <xt-text class="mb-3 flex h-8" v-if="length > 1">
+    <xt-new-icon
+      icon="fluent:chevron-left-16-filled"
+      @click="back()"
+      bgClass="xt-bg-2"
+      class="mr-3"
+      w="40"
+    />
+    {{ task.chapter }}
+    <template #right>
+     <div class="flex items-center">
+      <Progress style="width: 68px; height: 20px;margin-right: 60px;" :task="task"  />
+      <Exit />
+     </div>
+    </template>
+  </xt-text>
+  <xt-collapse v-for="data in task.tasks" class="mb-3">
+    <template #title>
+      <xt-text>
+        <xt-new-icon :icon="icon" class="mr-3" size="20" />
+        {{ data.name }}
+      </xt-text></template
+    >
+    <xt-title type="text" m="mb">{{ data.info }} </xt-title>
+    <ShowReward :id="data.id" />
+    <StartTask :task="data" />
+  </xt-collapse>
 </template>
 
 <script setup>
@@ -41,6 +40,7 @@ import StartTask from "../../components/StartTask.vue";
 
 import { taskStore } from "../../store";
 import ShowReward from "../../components/ShowReward.vue";
+import Exit from "../../components/Exit.vue";
 
 const store = taskStore();
 const router = useRouter();
@@ -51,6 +51,7 @@ const props = defineProps({
     default: {},
   },
   icon: {},
+  length: {},
 });
 
 const emits = defineEmits(["back"]);

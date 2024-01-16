@@ -22,7 +22,6 @@
           {{ completedTask(item.tasks) }}
         </template>
       </xt-text>
-      2
       <xt-text type="2">{{ item.info }}</xt-text>
     </div>
   </template>

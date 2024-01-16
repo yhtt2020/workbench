@@ -12,7 +12,7 @@
   </xt-text>
   <template v-if="getCompletedTasks.length">
     <xt-text type="2" class="mb-4"> {{ task.info }}</xt-text>
-    <xt-collapse v-for="data in getCompletedTasks">
+    <xt-collapse v-for="data in getCompletedTasks" class="mb-3">
       <template #title>
         <xt-text>
           <xt-new-icon icon="fluent-emoji:star" class="mr-3" size="20" />

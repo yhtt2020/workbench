@@ -1,10 +1,10 @@
 <template>
-  <xt-modal custom v-model="store.isTaskDrawer" boxClass="rounded-xl">
+  <xt-modal custom v-model="store.isTaskDrawer" boxClass="rounded-xl" :mask="false">
     <div class="xt-modal flex rounded-xl" style="width: 500px; height: 600px">
       <xt-left-menu
         :list="menusList"
         :last="Offline.isOffline ? 3 : 4"
-        :end="2"
+        :end="1"
         model="id"
         leftClass=" 1 xt-main-bg py-3 h-full  "
         :leftStyle="{
@@ -14,7 +14,6 @@
       />
       <div class="flex flex-col w-full">
         <div class="w-full xt-scrollbar xt-text pt-3 pr-3 relative">
-          <!-- <Exit /> -->
           <Primary v-if="currentTask == 'Primary'" />
           <Branch
             v-else-if="currentTask == 'Branch'"
@@ -42,10 +41,16 @@ import Activity from "./activity/index.vue";
 import Daily from "./daily/Daily.vue";
 import Set from "./Set.vue";
 import { tasks } from "../page/branch/Branch.ts";
+import { useToast } from "vue-toastification";
+
 // import Exit from "../components/Exit.vue";
 
 import { getAllTask } from "../api";
-
+onMounted(() => {
+  const toast = useToast();
+  toast.clear();
+  currentTask.value = "Primary";
+});
 let currentTask = ref("Primary");
 let task = ref([]);
 let icon = ref("");
@@ -111,26 +116,18 @@ let menus = ref([
     callBack: selectBranchTab,
     name: "社群",
   },
-  // {
-  //   newIcon: "fluent-emoji:rainbow",
-  //   value: "Activity",
-  //   title: "活动任务",
+  //   newIcon: "fluent-emoji:bullseye",
+  //   value: "Daily",
+  //   title: "每日",
   //   callBack: selectTab,
-  // name:"活动"
+  //   name: "活动",
   // },
-  {
-    newIcon: "fluent-emoji:bullseye",
-    value: "Daily",
-    title: "每日",
-    callBack: selectTab,
-    name: "活动",
-  },
-  {
-    newIcon: "fluent:building-shop-16-regular",
-    value: "Set",
-    title: "设置",
-    callBack: selectTab,
-  },
+  // {
+  //   newIcon: "fluent:building-shop-16-regular",
+  //   value: "Set",
+  //   title: "设置",
+  //   callBack: selectTab,
+  // },
   {
     newIcon: "fluent:settings-16-regular",
     value: "Set",
