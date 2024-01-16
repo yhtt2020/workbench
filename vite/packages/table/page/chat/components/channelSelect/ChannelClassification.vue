@@ -31,7 +31,7 @@
               </a-input>
             </div>
           </template>
-    
+
           <template v-else>
             <div class="flex w-full justify-between">
               <span class="font-16 font-400 xt-font xt-text">{{ item.name }}</span>
@@ -53,7 +53,7 @@
     </div>
   </div>
 </template>
- 
+
 <script>
 import { mapActions, mapWritableState } from "pinia";
 import Sortable from "sortablejs";
@@ -62,7 +62,7 @@ import { communityStore } from "../../store/communityStore";
 import { message, Modal as ClassModal } from "ant-design-vue";
 import { channelClass } from '../../../../js/chat/createChannelClass';
 import _ from 'lodash-es';
-
+import {completeTask} from '../../../../apps/task/task'
 import ModalTop from "../ModalTop.vue";
 
 
@@ -73,7 +73,7 @@ export default {
   },
 
   async mounted() {
-    
+
   },
 
   data() {
@@ -248,7 +248,7 @@ export default {
             }
           }
           channelClass.secondaryChannel(dataOption);
-        } 
+        }
         this.closeButton()
       }
       else{
@@ -263,11 +263,16 @@ export default {
         message.success('添加应用成功')
         this.closeButton()
       }
+
+
+      completeTask('Z0604')
+
+
     }
   },
 };
 </script>
- 
+
  <style lang="scss" scoped>
 .select-bg {
   background: var(--active-secondary-bg) !important;
@@ -277,4 +282,3 @@ export default {
   font-size: 1rem;
 }
 </style>
- 

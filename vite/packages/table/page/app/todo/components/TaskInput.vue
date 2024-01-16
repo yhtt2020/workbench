@@ -22,7 +22,7 @@ import TimerSelector from "./TimerSelector.vue";
 import listStore from "../stores/list";
 import configStore from "../stores/config";
 // import { completeTask } from "../apps/task/page/branch/task"
- import { completeTask } from "../../../../apps/task/page/branch/task.ts"
+ import { completeTask } from "../../../../apps/task/task"
 import {message} from "ant-design-vue";
 
 dayjs.locale("zh-cn");
@@ -92,7 +92,7 @@ export default {
         return
       }
       // 支线任务点
-      completeTask('Z0203')
+      completeTask('Z0204')
 
       task = Object.assign(this.newTask, {});
       console.log('添加的任务',task)

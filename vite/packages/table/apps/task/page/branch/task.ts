@@ -15,6 +15,5 @@ export const completeTask = (id) => {
     startBranchTask.value = [...startBranchTaskSet];
     successBranchTask.push(id);
     toast.success("任务完成");
-
   }
 };

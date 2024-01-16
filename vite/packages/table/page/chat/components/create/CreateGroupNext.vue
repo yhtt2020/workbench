@@ -118,7 +118,7 @@ export default {
       return item.type === this.defaultType.type
     })
     return index
-   }   
+   }
   },
  },
 
@@ -127,7 +127,7 @@ export default {
    this.$refs.inputRef.focus()
   })
  },
- 
+
  methods:{
   ...mapActions(chatStore,['updateConversation']),
   backButton(){

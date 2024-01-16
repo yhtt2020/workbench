@@ -3,6 +3,8 @@
  */
 import { cardStore } from "../../../../store/card";
 import { defaultFolderData } from "../components/options";
+import { completeTask } from "../../../task/task";
+import { nanoid } from "nanoid";
 import _ from "lodash-es";
 export const registerFolder = (desk) => {
   // const card: any = cardStore();
@@ -20,4 +22,5 @@ export const registerFolder = (desk) => {
     id: Date.now(),
     customData: data,
   });
+  completeTask("M0103");
 };

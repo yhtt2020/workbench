@@ -40,7 +40,7 @@
     </a-row>
   </viewer>
 
-<!-- 
+<!--
 <a-drawer :height="200" v-model:visible="visibleMenu" placement="bottom">
   <a-row :gutter="20" style="text-align: center">
     <a-col :span="4">
@@ -74,7 +74,7 @@ import {message,Modal} from 'ant-design-vue'
 import { isInMyPapers,getFileName } from '../../page/gallery/libs/utils';
 
 import GradeSmallTip from "../GradeSmallTip.vue";
-
+import {completeTask} from '../../apps/task/task'
 export default {
   name: 'PaperList',
   props:['list','isModal'],
@@ -89,17 +89,18 @@ export default {
       visibleMenu:false,
       paperCurrent:null,
       bingMenu:[
-       { 
+       {
         newIcon:'fluent:desktop-16-regular',name:'设为工作台背景',
-        callBack:()=>{ this.setAppPaper(this.paperCurrent) } 
+        callBack:()=>{ this.setAppPaper(this.paperCurrent) ,
+          completeTask('M0201')}
        },
-       { 
+       {
         newIcon:'mingcute:windows-line',name:'设置桌面壁纸',
-        callBack:()=>{ this.setDesktopPaper(this.paperCurrent)  } 
+        callBack:()=>{ this.setDesktopPaper(this.paperCurrent)  }
        },
        {
         newIcon:'fluent:arrow-download-16-regular',name:'下载壁纸',
-        callBack:()=>{ this.download(this.paperCurrent) } 
+        callBack:()=>{ this.download(this.paperCurrent) }
        },
       ]
     }
@@ -148,13 +149,14 @@ export default {
 
     // 设置工作台背景和桌面壁纸
     setAppPaper(img){
+
       if(img !== null){  message.info('正在为您设置背景'); }
       if (img.srcProtocol){ this.setBackgroundImage({path: '',  runpath: `file://${img.src}`}); }
       else {
        if (!img.path) { img.path = img.src }
        else { this.setBackgroundImage(img) }
       }
-
+      completeTask('M0201')
       // message.info('正在为您设置壁纸')
       // this.setBackgroundImage(this.paperCurrent.path)
       // this.visibleMenu = false

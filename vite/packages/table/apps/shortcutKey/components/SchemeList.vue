@@ -9,6 +9,7 @@ import {PlusOutlined, EditOutlined} from '@ant-design/icons-vue'
 import VueCustomScrollbar from "../../../../../src/components/vue-scrollbar.vue";
 import {message, Modal} from "ant-design-vue";
 import { Icon  } from "@iconify/vue";
+import {completeTask} from '../../../apps/task/task'
 export default {
   name: "schemeList",
   components: {VueCustomScrollbar, NotShortcutKey, XtButton, Search, PlusOutlined, EditOutlined,Icon},
@@ -94,6 +95,7 @@ export default {
       })
     },
     btnDetail(item) {
+      completeTask('Z0203')
       if (this.selecting) {
         //执行选中事件
         item.selected = !item.selected

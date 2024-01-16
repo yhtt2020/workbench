@@ -34,13 +34,13 @@ import { taskStore } from "../../store.ts";
 import { tasks } from "./Primary.ts";
 import TaskList from "./TaskList.vue";
 const currentTask = ref(null);
-const sotre = taskStore();
-const { list } = storeToRefs(sotre);
+const store = taskStore();
+const { list, completedList } = storeToRefs(store);
 const completedTask = (tasks) => {
   let length = tasks.length;
   let count = 0;
   tasks.forEach((item) => {
-    if (list.value.includes(item.id)) {
+    if (completedList.value.includes(item.id)) {
       count++;
     }
   });

@@ -40,7 +40,7 @@ import { message } from 'ant-design-vue';
 
 import RadioTab from '../../../../components/RadioTab.vue';
 import ModalTop from '../ModalTop.vue';
-
+import {completeTask} from '../../../../apps/task/task'
 export default {
  props:['no','id'],
 
@@ -95,6 +95,7 @@ export default {
       }
       channelClass.secondaryChannel(option)
       message.success('关联成功')
+      completeTask('Z0604')
       this.closeChannel()
     }else{
       message.warning('参数必须填写完整')

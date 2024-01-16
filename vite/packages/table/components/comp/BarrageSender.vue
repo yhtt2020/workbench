@@ -14,7 +14,8 @@
 import { message } from 'ant-design-vue'
 import { mapActions, mapState } from 'pinia'
 import { teamStore } from '../../store/team'
-import {completeTask} from "../../apps/task/page/branch/task.ts"
+// import {completeTask} from "../../apps/task/page/branch/task.ts"
+import {completeTask} from "../../apps/task/task"
 export default {
   name: 'BarrageSender',
   props:['currentChannel'],
@@ -26,6 +27,8 @@ export default {
     }
   },
   mounted () {
+console.log('this.currentChannel.name :>> ', this.currentChannel.name);
+
     this.CONST = tsbApi.barrage.CONST
   },
   computed:{
@@ -67,6 +70,7 @@ export default {
           }
           console.log('33233333 :>> ', 33233333);
           message.success('弹幕发送成功')
+
           setTimeout(() => {
             if(this.currentChannel.name==='all'){
               this.$emit('loadAllBarrages')

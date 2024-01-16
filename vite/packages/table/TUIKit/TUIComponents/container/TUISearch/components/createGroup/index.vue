@@ -149,7 +149,7 @@ import { SearchOutlined } from '@ant-design/icons-vue'
 import _ from 'lodash-es'
 import { message } from 'ant-design-vue';
 import {chatStore} from '../../../../../../store/chat'
-
+import {completeTask} from '../../../../../../apps/task/task'
 const TUISearch = defineComponent({
   name: 'group',
   props: {
@@ -224,6 +224,7 @@ const TUISearch = defineComponent({
          message.success('入群申请已发出,等待群主和管理员审核')
          data.currentGroup = { apply:true }
         }
+        completeTask('Z0601')
         ctx.emit('close')
       }
 

@@ -607,6 +607,7 @@ export default {
     closeDrawer() {
       this.menuVisible = false
     },
+    // 添加导航图标
     editNavigation(item) {
       if (item.component) {
         this.componentId = item.component

@@ -100,6 +100,8 @@ export default {
 
     },
     change(e, menu) {
+
+      console.log('menu :>> ', menu);
       this.activeIndex = menu.index
       this.$emit('changeTab', {
         index: menu.index,

@@ -70,6 +70,7 @@ import { message } from 'ant-design-vue';
 import { mapActions, mapWritableState } from "pinia";
 import { keyStore } from '../store'
 import Modal from '../../../components/Modal.vue'
+import {completeTask} from '../../../apps/task/task'
 export default {
   name: "Preview",
   components: {
@@ -127,6 +128,8 @@ export default {
     async importScheme () {
       if (await this.import([this.keyScheme])) {
         message.success('下载方案成功。')
+        // 支线任务
+        completeTask('Z0203')
         this.close()
       } else {
         message.error('下载方案失败。')
