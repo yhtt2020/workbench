@@ -6,7 +6,7 @@
     <div style="position: absolute; z-index: 500 !important;"
       :style="{ left: `${this.left}px`, bottom: `${navAttribute.navSize / 100 * 100}px` }" class="rounded-xl pointer "
       id="folder">
-      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:size="updateSize" :customData="customData"
+      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:size="updateSize" :customData="customData" :customIndex="bottomKey"
         :secondary="true" v-if="folderVisible" :expand="{ disabled: true }"
         :navBar="{ resize: false, sizeOption: false, isDel: true, hierarchy: true }" :auto="true" />
     </div>
@@ -30,7 +30,7 @@
         <div class="flex items-center justify-between" :style="{ marginLeft: this.settings.enableChat ? '10px' : '0px' }">
           <MyAvatar :chat="true" :level="false"></MyAvatar>
           <div v-show="settings.enableChat" class="pl-4 pointer">
-            <ChatButton></ChatButton>
+            <ChatButton :tipPosition="navAttribute.navSize"></ChatButton>
           </div>
         </div>
 
@@ -476,11 +476,10 @@ export default {
       const windowWidth = size.width.value
       this.parentSize = windowWidth
       this.maxItemNum = Math.round((windowWidth - 240) / 72)
-      // console.log(this.maxItemNum,'最大导航栏图标个数')
       // if (this.footNavigationList.length > this.maxItemNum) {
       const width = windowWidth / (240 + this.copyFootNav.length * 72)
       this.navAttribute.navSize = width.toFixed(2) * 100
-      this.navAttribute.navSize < 100 ? this.navAttribute.navSize : this.navAttribute.navSize = 100
+      this.navAttribute.navSize = this.navAttribute.navSize < 100 ? this.navAttribute.navSize : 100
       // }
       // console.log(this.navAttribute.navSize, 'size')
     }, 200)
@@ -608,7 +607,7 @@ export default {
         // console.log(111111111,'form copyFootNav',this.copyFootNav)
         // 获取最大可添加图标个数
         const windowWidth = window.innerWidth
-        this.maxItemNum = Math.round((windowWidth - 240) / (72 * (this.navAttribute.navSize / 100)))
+        this.maxItemNum = Math.round((windowWidth - 240) / 72 )
         // console.log(this.maxItemNum, 'this.maxItemNum', windowWidth, 'windowWidth')
         // let flag = true
         if (this.copyFootNav.length > this.maxItemNum && this.maxItemNum !== null) {
@@ -616,12 +615,12 @@ export default {
           if (this.noticeFlag) {
             this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
               onOk: () => {
-                const width = window.innerWidth / (240 + this.copyFootNav.length * (72 * (this.navAttribute.navSize / 100)))
+                const width = window.innerWidth / (240 + this.copyFootNav.length * 72 )
                 this.navAttribute.navSize = width
               }
             })
           }
-          const width = window.innerWidth / (240 + this.copyFootNav.length * (72 * (this.navAttribute.navSize / 100)))
+          const width = window.innerWidth / (240 + this.copyFootNav.length * 72 )
           this.navAttribute.navSize = width.toFixed(2) * 100
           this.noticeFlag = false
         }
