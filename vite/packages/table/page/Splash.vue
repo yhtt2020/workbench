@@ -142,7 +142,7 @@ export default {
     this.initStore(teamStore, 'teamStore')
     this.initStore(navStore, 'nav')
     this.initStore(taskStore, 'task')
-    this.initStore(useWidgetStore, 'firstOpen')
+    this.initStore(useWidgetStore, 'useWidgetStore')
     this.initStore(controlStore, 'control')
     // this.initStore(browserStore,'browserStore')
     browserStore().bindIPC()

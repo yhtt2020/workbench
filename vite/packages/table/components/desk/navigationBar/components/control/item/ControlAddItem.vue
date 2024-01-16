@@ -1,5 +1,5 @@
 <template>
- <Vuuri v-model="vuuriList" group-id="id" item-key="id" :options="option"  test="1" 
+ <Vuuri v-model="vuuriList" group-id="id" item-key="id" :options="option"  test="1"
  :drag-enabled="false"   :get-item-height="getHeight" ref="testRef"
 >
 <!-- :item-class="getMargin ? 'mr-0':'mr-2 mb-2'" -->
@@ -36,15 +36,15 @@ const isClick = ref(true);
 
 
 // 计算间距
-const getMargin = computed(() => {
-  for (const i = 0; i < props.list.length; i++) {
-    return i % 4 !== 0;
-  }
-})
+// const getMargin = computed(() => {
+//   for (let i = 0; i < props.list.length; i++) {
+//     return i % 4 !== 0;
+//   }
+// })
 
 // 获取高度
 const getHeight = () =>{
- return 120 + 'px' 
+ return 120 + 'px'
 }
 
 
