@@ -428,7 +428,8 @@ export default {
     login () {
       tsbApi.user.login((data) => {
         this.getUserInfo()
-        this.step = 4
+        this.finish()
+        // this.step = 4
       })
     },
 
