@@ -17,20 +17,23 @@
         }"
         style="border-radius: 12px 12px 12px 0"
       />
-      <div class="flex flex-col w-full">
-        <div class="w-full xt-scrollbar xt-text pt-3 pr-3 relative">
-          <Primary v-if="currentTask == 'Primary'" />
-          <Branch
-            v-else-if="currentTask == 'Branch'"
-            :tasks="task"
-            :key="Date.now()"
-            :icon="icon"
-          />
-          <Daily v-else-if="currentTask == 'Daily'" class="w-full xt-theme-b" />
-          <Activity v-else-if="currentTask == 'Activity'" />
-          <Set v-else-if="currentTask == 'Set'" />
-        </div>
+      <!-- <div class="flex flex-col w-full">
+       -->
+      <div class="w-full  xt-text pt-3 pr-3 relative">
+        <!-- xt-scrollbar -->
+        <Primary v-if="currentTask == 'Primary'" />
+        <Branch
+          v-else-if="currentTask == 'Branch'"
+          :tasks="task"
+          :key="Date.now()"
+          :icon="icon"
+        />
+        <Daily v-else-if="currentTask == 'Daily'" class="w-full xt-theme-b" />
+        <Activity v-else-if="currentTask == 'Activity'" />
+        <Set v-else-if="currentTask == 'Set'" />
       </div>
+      <!--
+      </div> -->
     </div>
   </xt-modal>
 </template>

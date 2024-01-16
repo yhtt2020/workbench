@@ -1,20 +1,4 @@
 <template>
-  <xt-text class="mb-3 flex h-8" v-if="length > 1">
-    <xt-new-icon
-      icon="fluent:chevron-left-16-filled"
-      @click="back()"
-      bgClass="xt-bg-2"
-      class="mr-3"
-      w="40"
-    />
-    {{ task.chapter }}
-    <template #right>
-     <div class="flex items-center">
-      <Progress style="width: 68px; height: 20px;margin-right: 10px;" :task="task"  />
-      <Exit />
-     </div>
-    </template>
-  </xt-text>
   <xt-collapse v-for="data in task.tasks" class="mb-3">
     <template #title>
       <xt-text>
