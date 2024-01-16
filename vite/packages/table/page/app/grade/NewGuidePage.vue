@@ -80,7 +80,6 @@
           </div>
         </div>
 
-
         <!-- 导入小组件 -->
         <div v-else-if="step == 2">
           <div class="pt-6 text-center font-16 xt-text" >添加推荐小组件</div>
@@ -149,23 +148,19 @@
         <div v-else-if="step == 4">
           <div class="pt-6 text-center font-16 xt-text" >最后一步啦，定制主题 ~</div>
           <div class="px-4">
-
             <div class="p-4 pb-1 mt-2 xt-bg-2 rounded-xl">
               <xt-option-info title="主题色" />
               <xt-option-color :isLinear="false"  v-model:color="themeColor" colorNum="5"  />
             </div>
-  
             <div class="p-4 pb-1 mt-3 xt-bg-2 rounded-xl "><xt-option-info
               title="桌面壁纸"
               info="选择喜欢的图片作为工作台桌面壁纸。"
             />
-
               <xt-button w="200" h="112" class="relative mb-3 xt-bg-m"  style="border-radius: 6px"  @click="openPaperModal" >
                 <div class="absolute top-0 left-0 w-full h-full rounded-md">
                   <img :src="backgroundImage.path" class="object-cover w-full h-full rounded-md"/>
                 </div>
               </xt-button>
-              <!-- <hr /> -->
               <xt-option-info
                 title="桌面壁纸模糊度"
                 info="调节桌面壁纸的模糊程度。"
@@ -176,7 +171,6 @@
             </div>
           </div>
         </div>
-
         <!-- 按钮 -->
         <div class="flex justify-between w-full px-3" style="position: absolute;bottom: 12px;">
           <div class="float-left">
@@ -195,7 +189,6 @@
               <xt-button   class="ml-3 button-bottom" @click="nextStep"   size="large" >暂不添加</xt-button>
               <xt-button   class="ml-3 button-bottom" @click="addFolder"   size="large" type="theme">确定添加({{ folderNum }})</xt-button>
             </div>
-
             <div class="flex" v-if="step==2">
               <xt-button   class="ml-3 button-bottom" @click="nextStep"   size="large" >暂不添加</xt-button>
               <xt-button   class="ml-3 button-bottom" @click="addDeskCard"   size="large" type="theme">确定添加</xt-button>
@@ -209,7 +202,6 @@
             </div>
         </div>
       </div>
-
       <div v-else>
         <div style="height:60px;width:200px" class="flex items-center justify-between px-4 xt-text font-16 pointer" @click="popState = flase">
           定制桌面
@@ -217,11 +209,9 @@
             <MyIcon icon="fluent:full-screen-maximize-16-filled" width="20" height="20" />
           </div>
         </div>
-
     </div>
-
+    <!-- 壁纸模块 -->
     <GalleryModal ref="paperModal" />
-
   </div>
 </template>
 
@@ -407,10 +397,7 @@
 
     },
     mounted(){
-
-      // 
       let items = []
-
       NavList.map(li => {
         return items.push(...li.children)
       })
@@ -468,7 +455,6 @@
       },
     },
     methods:{
-
       // 触发打开壁纸弹窗
       openPaperModal () {
         this.$refs.paperModal.openGalleryModal()
@@ -570,7 +556,6 @@
       addFolder(){
         let folders = []
         const n = this.searchDeskIndex(this.deskId)
-
         this.appList.forEach((item, index)=>{
           const now = new Date().getTime()
           if(item.isCheck){
@@ -585,10 +570,9 @@
                 type: 'tableApp',
               })
             })
-
             let obj = {
               data:{},
-              id: now + index * 5,
+              id: nanoid(6),
               name: 'folder',
               customData: {
                 ...defaultFolderData,
@@ -636,7 +620,6 @@
             this.copyFootNav.splice(-2, 0, this.exeNavList[0])
           }
         }
-
         if(this.exeNavList[1].children){
           let num = this.searchNavIndex(this.exeNavList[1].id)
           if(num){
@@ -661,7 +644,6 @@
       // 添加小组件
       addDeskCard(){
         const n = this.searchDeskIndex(this.deskId)
-
         this.cardList.forEach((item, index)=>{
           if(item.isCheck){
             const now = new Date().getTime() + index * 5
@@ -673,9 +655,7 @@
           }
         })
         this.nextStep();
-
       },
-
       // 替换导航栏
       addNavList(){
         let tmp = []
@@ -687,9 +667,7 @@
         this.copyFootNav = [...tmp]
         this.setExeListNav()
         this.nextStep()
-
       },
-
       // 遍历取桌面序号
       searchDeskIndex(id){
         this.desks.forEach((item, index)=>{
@@ -699,7 +677,6 @@
         })
         return 0
       },
-
       // 预览桌面
       preview(){
         this.popState = true
@@ -708,11 +685,9 @@
       close(){
         this.$emit('closeShowGuide')
       },
-
       // 直接分类可能会失效 需要先将 文件夹 exe文件区分开来
       async getAiAnswer(){
           const desktopApps = await ipc.sendSync('getDeskApps')
-
           // 文件夹
           let folderList = []
           // 图片
@@ -810,13 +785,11 @@
             }
             return this.content
         },
-
     },
   }
 </script>
 
 <style lang="scss" scoped>
-
   .border-1{
       border: 1px solid red;
   }
@@ -920,7 +893,6 @@
 
   }
 
-
   // 滚动条配置
   ::-webkit-scrollbar-thumb {
       background-color: #ccc; /* 滚动条颜色 */
@@ -994,7 +966,6 @@
     opacity: 0.8;
 
   }
-
 
   :deep(.ant-checkbox-disabled){
     background-color: rgba(0, 0, 0, 0.5);
