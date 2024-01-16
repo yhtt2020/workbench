@@ -170,7 +170,7 @@ export default {
         })
         if (haventOk.length) {
           //未全部搞定
-          console.log(haventOk)
+          // console.log(haventOk)
           return
         } else {
           //已经全部搞定

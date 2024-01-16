@@ -2,11 +2,11 @@
   <div class="flex mt-3" style="height: auto;">
     <XtScrollbar  :y="true" style="height: 100%;width: 100%;">
       <Vuuri v-model="vuuriList" group-id="id" item-key="id" :options="option"
-       :drag-enabled="false"   :get-item-height="getHeight"
+       :drag-enabled="true"   :get-item-height="getHeight"
       >
       <!-- :item-class="getMargin ? 'mr-0':'mr-2.5 mb-2.5'" -->
         <template #item="{ item }">
-          <ControlRemoveDetail :control-index="item.id" :control-item="item" :status="'null'" @click="triggerControl(item)"/>
+          <ControlRemoveDetail :control-index="item.id" :control-item="item" :status="'null'" />
         </template>
       </Vuuri>
     </XtScrollbar>
