@@ -1,6 +1,7 @@
 <!-- 滚动条视图和事件 -->
 <template>
   <div
+    v-show="isFreeLayout"
     ref="scrollbar"
     class="no-drag relative w-full h-full"
     style="padding-right: 10px; padding-bottom: 10px; margin-bottom: 12px"
@@ -14,6 +15,7 @@
 <script setup>
 import {
   ref,
+  onBeforeMount,
   onMounted,
   onBeforeUnmount,
   watch,
@@ -43,20 +45,29 @@ const {
   getFreeLayoutData,
   getCurrentDesk,
   isSelectAll,
+  isFreeLayout,
 } = storeToRefs(freeLayoutStore);
 const scrollbar = ref(null);
 const perfectScrollbar = ref(null);
-
-onMounted(async () => {
-  freeLayoutEnv.value.scrollData = useElementBounding(scrollbar.value);
+onBeforeMount(() => {
+  // 关键步骤 初始化自由布局状态数据
+  freeLayoutStore.initFreeLayoutState();
   // 初始化自由布局环境
   freeLayoutStore.initFreeLayoutEnv();
+});
+onMounted(async () => {
+  return;
+  freeLayoutEnv.value.scrollData = useElementBounding(scrollbar.value);
+
   // 实例化滚动条
   perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
 
   setTimeout(async () => {
     // 初始化自由布局定位
-    updateScroll(getFreeLayoutState.value.mode.scroll);
+    let scrollMode = getFreeLayoutState.value?.mode.scroll
+      ? getFreeLayoutState.value.mode.scroll
+      : "free";
+    // updateScroll(scrollMode);
 
     let { width, height } = scrollbar.value?.getBoundingClientRect();
     freeLayoutEnv.value.scrollWidth = width;
@@ -68,10 +79,6 @@ onMounted(async () => {
     scrollbar.value.addEventListener("ps-scroll-y", () => {
       freeLayoutEnv.value.scrollTop = scrollbar.value?.scrollTop;
     });
-
-    // 完成操作 开启
-    freeLayoutEnv.value.loading = true;
-    //
 
     // 监听键盘按下事件
     window.addEventListener("keydown", handleKeyDown);
@@ -86,6 +93,7 @@ onMounted(async () => {
     document.body.addEventListener("keydown", ignoreSpace);
   }, 1);
 });
+
 function ignoreSpace(event) {
   var e = window.event || event;
   if (e.keyCode === 32) {
@@ -154,7 +162,6 @@ function update() {
 }
 
 // 鼠标滚动
-
 let isDragging = ref(false);
 let isKey = ref(false);
 let initialMousePosition = ref(null);
@@ -164,6 +171,7 @@ let initialMousePosition = ref(null);
  */
 //滚动方式
 const updateScroll = (newV) => {
+  return;
   redirect();
   freeLayoutEnv.value.scrollOldLeft = scrollbar.value.scrollLeft;
   freeLayoutEnv.value.scrollOldTop = scrollbar.value.scrollTop;
@@ -184,37 +192,43 @@ const updateScroll = (newV) => {
   scrollbar.value.scrollLeft = freeLayoutEnv.value.scrollOldLeft;
   scrollbar.value.scrollTop = freeLayoutEnv.value.scrollOldTop;
 };
-watch(() => getFreeLayoutState.value?.mode?.scroll, updateScroll);
+watch(() => getFreeLayoutState.value.mode.scroll, updateScroll);
 // 重置中心区域
 const { width, height } = useElementSize(scrollbar);
 function redirect() {
-  let w, h;
-  if (getFreeLayoutState.value?.mode.align == undefined) return;
-  if (getFreeLayoutState.value?.mode.align === "top") {
-    h = 0;
-    w = getFreeLayoutState.value.canvas.width / 2 - width.value / 2;
-  } else if (getFreeLayoutState.value.mode.align === "center") {
-    h = getFreeLayoutState.value.canvas.height / 2 - height.value / 2;
-    w = getFreeLayoutState.value.canvas.width / 2 - width.value / 2;
-  } else if (getFreeLayoutState.value.mode.align === "left") {
-    h = getFreeLayoutState.value.canvas.height / 2 - height.value / 2;
-    w = 0;
-  } else if (getFreeLayoutState.value.mode.align === "right") {
-    h = getFreeLayoutState.value.canvas.height / 2 - height.value / 2;
-    w = getFreeLayoutState.value.canvas.width;
-  } else if (getFreeLayoutState.value.mode.align === "bottom") {
-    h = getFreeLayoutState.value.canvas.height;
-    w = getFreeLayoutState.value.canvas.width / 2 - width.value / 2;
-  } else {
-    // w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
-    // h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
-    w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
-    h = getFreeLayoutState.value.line.centerLine.y;
-  }
-  scrollbar.value.scrollLeft = w;
-  scrollbar.value.scrollTop = h;
-  freeLayoutEnv.value.scrollLeft = w;
-  freeLayoutEnv.value.scrollTop = h;
+  // let w, h;
+  // console.log("getFreeLayoutState.value :>> ", getFreeLayoutState.value);
+  // let currentWidth = getFreeLayoutState.value.canvas.width;
+  // let currentHeight = getFreeLayoutState.value.canvas.height;
+  // let zoom = getFreeLayoutState.value.zoom;
+  // // let currentMode =
+  // // let currentMode =
+  // if (getFreeLayoutState.value?.mode.align == undefined) return;
+  // if (getFreeLayoutState.value?.mode.align === "top") {
+  //   h = 0;
+  //   w = currentWidth / 2 - width.value / 2;
+  // } else if (getFreeLayoutState.value.mode.align === "center") {
+  //   h = currentHeight / 2 - height.value / 2;
+  //   w = currentWidth / 2 - width.value / 2;
+  // } else if (getFreeLayoutState.value.mode.align === "left") {
+  //   h = currentHeight / 2 - height.value / 2;
+  //   w = 0;
+  // } else if (getFreeLayoutState.value.mode.align === "right") {
+  //   h = currentHeight / 2 - height.value / 2;
+  //   w = currentWidth;
+  // } else if (getFreeLayoutState.value.mode.align === "bottom") {
+  //   h = currentHeight;
+  //   w = currentWidth / 2 - width.value / 2;
+  // } else {
+  //   // w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
+  //   // h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
+  //   w = getFreeLayoutState.value.line.centerLine.x / zoom - width.value / 2;
+  //   h = getFreeLayoutState.value.line.centerLine.y / zoom;
+  // }
+  // scrollbar.value.scrollLeft = w;
+  // scrollbar.value.scrollTop = h / zoom;
+  // freeLayoutEnv.value.scrollLeft = w;
+  // freeLayoutEnv.value.scrollTop = h;
 }
 
 // 2023-12-21 结束

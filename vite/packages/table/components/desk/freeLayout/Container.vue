@@ -33,7 +33,7 @@ onMounted(() => {
     updateCard(currentDesk.value?.cards);
   }, 2);
 });
-freeLayoutStore.initFreeLayoutState();
+
 // 滚动清除cards数据
 watch(
   [() => freeLayoutEnv.value.scrollTop, () => freeLayoutEnv.value.scrollLeft],

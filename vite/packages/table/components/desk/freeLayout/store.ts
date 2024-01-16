@@ -140,7 +140,13 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 初始化自由布局状态数据
     initFreeLayoutState() {
-      this.deepMerge(this.getFreeLayoutState, this.defaultState);
+      if (!this.getFreeLayoutState) {
+        this.freeLayoutState[this.getCurrentDeskId] = _.cloneDeep(
+          this.defaultState
+        );
+      } else {
+        this.deepMerge(this.getFreeLayoutState, this.defaultState);
+      }
       console.log("自由布局状态初始化成功 :>> ", this.getFreeLayoutState);
     },
     // 更新自由布局数据
