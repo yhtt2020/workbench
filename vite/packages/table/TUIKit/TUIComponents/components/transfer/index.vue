@@ -142,6 +142,8 @@ import { SearchOutlined } from '@ant-design/icons-vue'
 import { appStore } from '../../../../store'
 import _ from 'lodash-es'
 
+import {completeTask} from '../../../../apps/task/task'
+
 export default defineComponent({
   props:[
     'isH5',
@@ -226,7 +228,7 @@ export default defineComponent({
         source: 'AddSource_Type_Web',
         remark:item.nick
       }
-
+completeTask('Z0602')
       await window.$chat.addFriend(option)
       ctx.emit('close')
     }
@@ -255,6 +257,7 @@ export default defineComponent({
       friendValue,...toRefs(data),isFriend,
 
       handleInput,closeAddFriend,addFriendButton,loadFriend,
+
     }
   }
 

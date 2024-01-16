@@ -13,20 +13,20 @@
         UID：{{ userInfo.uid }} （用于社区活动身份）
       </a-col>
       <a-col :span="24">
-        社区等级：{{ userInfo.grade.new_name }}
+        社区等级：{{ userInfo?.grade.new_name }}
       </a-col>
       <a-col :span="24" style="text-align: center">
         <a-row>
           <a-col :span="8">
-            <div class="num">{{ userInfo.post_count }}</div>
+            <div class="num">{{ userInfo?.post_count }}</div>
             <div>内容</div>
           </a-col>
           <a-col :span="8">
-            <div class="num">{{ userInfo.fans }}</div>
+            <div class="num">{{ userInfo?.fans }}</div>
             <div>粉丝</div>
           </a-col>
           <a-col :span="8">
-            <div class="num">{{ userInfo.follow }}</div>
+            <div class="num">{{ userInfo?.follow }}</div>
             <div>关注</div>
           </a-col>
         </a-row>

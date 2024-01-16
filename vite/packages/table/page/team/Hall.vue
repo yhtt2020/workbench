@@ -55,7 +55,7 @@ import { mapActions ,mapWritableState,mapGetters,mapState} from 'pinia'
 import { teamStore } from '../../store/team'
 import { Modal } from 'ant-design-vue'
 import { appStore } from '../../store'
-import { completeTask } from "../../apps/task/page/branch/task.ts"
+import { completeTask } from "../../apps/task/task"
 export default {
   name: 'Hall',
   components: { TeamList, HorizontalPanel },

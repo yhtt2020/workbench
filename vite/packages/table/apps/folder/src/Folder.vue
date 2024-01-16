@@ -48,7 +48,9 @@
             :layout="customData.layout"
             :model="customData.model"
             @deleteFile="deleteFile"
+            @updateFile="updateFile"
             @updateList="updateList"
+            @updateFile="updateFile"
             @updateSort="updateSort"
             @clickFile="clickFile"
           />
@@ -343,6 +345,7 @@ const updateFile = (data) => {
   const index = customData.value.list.findIndex(
     (item) => item && item.id === data.id
   );
+  console.log('updateFile :>> ', 22233);
 
   customData.value.list[index] = data;
 };

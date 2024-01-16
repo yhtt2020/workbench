@@ -2,7 +2,7 @@ import {defineStore} from "pinia";
 import {setSupervisoryData,getSysStats,IDisplayData} from '../js/action/supervisory'
 import dbStorage from "./dbStorage";
 import audio from "../js/common/audio";
-import { completeTask } from "../apps/task/page/branch/task"
+import { completeTask } from "../apps/task/task"
 import {message} from "ant-design-vue";
 
 
@@ -52,6 +52,9 @@ export const inspectorStore = defineStore(
         this.testingAudio=false
       },
       setDisplayData(data: IDisplayData) {
+        console.log(data)
+                // 性能捕获 支线任务点
+                completeTask('Z0106')
         let filteredData={}
           Object.keys(data).map(key=>{
           return filteredData[key]=Number(data[key]?.value?data[key]?.value:data[key])
@@ -100,8 +103,6 @@ export const inspectorStore = defineStore(
         this.inspectorTimer = setInterval(() => {
           readAida64()
             .then((res) => {
-              // 性能捕获 支线任务点
-              completeTask('Z0106')
               this.runAida64 = true;
               const newData = setSupervisoryData(res);
               this.aidaData=res

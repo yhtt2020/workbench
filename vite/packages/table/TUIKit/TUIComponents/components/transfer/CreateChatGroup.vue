@@ -54,7 +54,7 @@ import { chatStore } from '../../../../store/chat'
 
 import SelectIcon from '../../../../../selectIcon/page/index.vue'
 import ModalTop from '../../../../page/chat/components/ModalTop.vue'
-
+import {completeTask} from '../../../../apps/task/task'
 export default {
  props:['list'],
 
@@ -120,7 +120,7 @@ export default {
       return item.type === this.defaultType.type
     })
     return index
-   }   
+   }
   },
 
  },
@@ -194,6 +194,9 @@ export default {
       // Notify TUIConversation to toggle the current conversation
       window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation);
      })
+
+     completeTask('Z0601')
+
      this.$emit('close')
     }
    }

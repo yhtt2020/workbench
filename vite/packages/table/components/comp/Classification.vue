@@ -4,8 +4,7 @@
     <div @click="closeAdd" class="pointer  xt-bg ">
       <Icon icon="guanbi" class="no-drag xt-text" style="width:18px;height:18px;" ></Icon>
     </div>
-    <xt-task  id='M0104' no='5'  >
-    </xt-task>
+
     <div class="add-navigation-content flex flex-row">
       <div class="left-content">
         <div v-for="(item,index) in navClassify" :style="activeItem ===index?' border-right: 1px rgba(22, 119, 255, 1) solid;' :''">

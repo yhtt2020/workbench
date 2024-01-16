@@ -889,6 +889,7 @@ export default {
 
     },
     showToast (src) {
+      // 222
       toast(
         {
           component: SaveImage,
@@ -936,6 +937,8 @@ export default {
 
           if (this.callback) {
             // Save screenshot to png - base64
+
+// 应该是这一步完成？
             this.callback(canvas.toDataURL('image/png'))
           } else {
             // console.log('Need callback!')
@@ -988,6 +991,7 @@ export default {
     },
     // 开始录制事件
     async startRecording () {
+      // 这一步录制?
       const videoSource = await navigator.mediaDevices.getUserMedia({
         audio: false, // 强行表示不录制音频，音频额外获取
         video: {
@@ -1073,6 +1077,7 @@ export default {
             this.recentType = 'video'
             this.recentFileName = fileName
             message.success('保存录屏成功')
+            //
             this.loadVideos()
           })
         }

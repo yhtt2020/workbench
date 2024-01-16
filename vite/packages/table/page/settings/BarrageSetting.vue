@@ -4,7 +4,8 @@
   <div style="padding: 1em;width: 30em">
     <div class="line">
       <a-alert v-if="!settings.enableBarrage" message="目前弹幕功能未开启，请点击下方开关启用。" type="warning" show-icon />
-      <div class="mt-2" >开启弹幕： <a-switch v-model:checked="settings.enableBarrage"></a-switch></div>
+
+      <div class="mt-2"  @click="start()">开启弹幕： <a-switch v-model:checked="settings.enableBarrage"></a-switch></div>
     </div>
     <div class="line">
 
@@ -37,6 +38,7 @@
 import { appStore } from '../../store'
 import { mapWritableState } from 'pinia'
 import { message, Modal } from 'ant-design-vue'
+import {completeTask} from '../../apps/task/task'
 export default {
   name: 'BarrageSetting',
   computed: {
@@ -70,7 +72,11 @@ export default {
         message.success('刷新成功。')
       }
 
+    },
+    start() {
+      completeTask('M0204')
     }
+
   }
 }
 </script>

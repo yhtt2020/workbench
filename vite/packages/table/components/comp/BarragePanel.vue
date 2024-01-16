@@ -41,6 +41,13 @@ export default {
     }
   },
   mounted () {
+this.$bus.on('Z0502',()=>{
+this.currentChannel={
+    "title": "小队",
+    "name": "team",
+    "state": false
+  }
+})
     this.loading=true
     this.CONST = tsbApi.barrage.CONST
     if(this.defaultChannel==='team'){

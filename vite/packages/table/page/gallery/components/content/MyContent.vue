@@ -10,7 +10,7 @@
             <div class="absolute top-1/2 left-1/2 " style="transform: translate(-50% ,-50%);">
               <div v-if="fileImageExtension(img)" @click="previewVideo(img)"  class="play-icon flex items-center justify-center pointer" style="opacity: 0;">
                 <MyContentIcon icon="fluent:play-16-filled" style="font-size: 2rem;color: var(--active-text) !important;"/>
-              </div> 
+              </div>
               <xt-button w="100" :h="isModal ? 32 : 40" v-else style="opacity: 0; border-radius: 8px;" class="set-paper xt-bg-t-2" @click="setAppPaper(img)">
                 <div class="flex items-center justify-center">
                   <xt-new-icon icon="fluent:checkmark-circle-16-filled" :size="isModal ? 16 : 20" class="mr-1" :color="'var(--active-text)'"></xt-new-icon>
@@ -44,7 +44,7 @@
     <div style="height: 16px;"></div>
   </vue-custom-scrollbar>
  </template>
- 
+
  <script>
  import { mapActions,mapWritableState } from 'pinia';
  import { fileImageExtension,isInActive,getFileName,isInMyPapers,isLocalDownload } from '../../libs/utils';
@@ -55,25 +55,26 @@
  import { useWidgetStore } from '../../../../components/card/store';
 
  import GradeSmallTip from '../../../../components/GradeSmallTip.vue';
+ import {completeTask} from '../../../../apps/task/task'
 
  const fs = window.$models.fs
  const path = require('path')
 
  export default {
    name: "MyContent",
- 
+
    components:{
     MyContentIcon,
    },
- 
+
    props: ['myPaperList','isModal'],
- 
+
    data() {
      return {
       options: { url: 'data-source',},
       myCurrentID:null,
       hoverVisible:false,
- 
+
       settingsScroller: {
        useBothWheelAxes: true,
        swipeEasing: true,
@@ -82,57 +83,58 @@
        wheelPropagation: true,
       },
       myMenus:[
-       { 
+       {
         newIcon:'fluent:desktop-16-regular',name:'设为工作台背景',
-        callBack:()=>{ this.setAppPaper(this.myCurrentID) } 
+        callBack:()=>{ this.setAppPaper(this.myCurrentID)
+          completeTask('M0201')}
        },
-       { 
+       {
         newIcon:'mingcute:windows-line',name:'设置桌面壁纸',
-        callBack:()=>{ this.setDesktopPaper(); } 
+        callBack:()=>{ this.setDesktopPaper(); }
        },
        {
         newIcon:'fluent:arrow-download-16-regular',name:'下载壁纸',
-        callBack:()=>{ this.download(this.myCurrentID); } 
+        callBack:()=>{ this.download(this.myCurrentID); }
        },
-       { 
+       {
         newIcon:'fluent:delete-16-regular',name:'删除该壁纸',color: 'var(--error)',
-        callBack:()=>{ this.delCurrentPaper(); } 
+        callBack:()=>{ this.delCurrentPaper(); }
        },
       ],
       // 动态壁纸的菜单
       liveMenu:[
-       { 
+       {
         newIcon:'fluent:desktop-16-regular',name:'设为工作台背景',
-        callBack:()=>{ this.setAppPaper(this.myCurrentID) } 
+        callBack:()=>{ this.setAppPaper(this.myCurrentID) }
        },
-       { 
+       {
         newIcon:'fluent:delete-16-regular',name:'删除该壁纸',color: 'var(--error)',
-        callBack:()=>{ this.delCurrentPaper(); } 
+        callBack:()=>{ this.delCurrentPaper(); }
        },
       ],
       // 没有下载按钮的菜单
       downloadMenu:[
-       { 
+       {
         newIcon:'fluent:desktop-16-regular',name:'设为工作台背景',
-        callBack:()=>{ this.setAppPaper(this.myCurrentID) } 
+        callBack:()=>{ this.setAppPaper(this.myCurrentID) }
        },
-       { 
+       {
         newIcon:'mingcute:windows-line',name:'设置桌面壁纸',
-        callBack:()=>{ this.setDesktopPaper(); } 
+        callBack:()=>{ this.setDesktopPaper(); }
        },
-       { 
+       {
         newIcon:'fluent:delete-16-regular',name:'删除该壁纸',color: 'var(--error)',
-        callBack:()=>{ this.delCurrentPaper(); } 
+        callBack:()=>{ this.delCurrentPaper(); }
        },
       ]
      }
    },
- 
+
    computed:{
     ...mapWritableState(useWidgetStore,['rightModel']),
     ...mapWritableState(paperStore,['settings','activePapers','myPapers']),
    },
- 
+
    methods:{
     fileImageExtension,isInActive,isInMyPapers,isLocalDownload,
     ...mapActions(paperStore,['addToActive','removeToMyPaper']),
@@ -180,7 +182,7 @@
           else {
             if (this.myPapers.indexOf(this.myCurrentID) !== -1) return this.myPapers.splice(this.myPapers.indexOf(this.myCurrentID), 1);
           }
-        } 
+        }
       }
     },
     // 下载
@@ -202,14 +204,14 @@
       const exist = fileRegex.test(img.path);
       // 判断是否为本地图片
       if(!exist && !regex.test(img.path)){ this.doStartDownload(img); }
-      else { 
+      else {
         this.$xtConfirm('图片已下载','',{
-          index:1020, 
+          index:1020,
           ok: async() => {},
           no: () => {},
           noText: null,
           type:'warning'
-        }) 
+        })
       }
      }
     },
@@ -241,10 +243,11 @@
      if (savePath) {
       this.settings.savePath = savePath[0]
       this.doStartDownload(this.myCurrentID)
-     } 
+     }
     },
     // 设置工作台背景和桌面壁纸
     setAppPaper(img){
+      completeTask('M0201')
       if(img !== null){
         message.info('正在为您设置背景');
       }
@@ -269,13 +272,13 @@
     //根据条件判断进行菜单列表的获取
     getMenuList(img){
       if(this.fileImageExtension(img)) { return this.liveMenu;}
-      else if(this.isLocalDownload(img)) { return this.myMenus;  } 
+      else if(this.isLocalDownload(img)) { return this.myMenus;  }
       else { return this.downloadMenu; }
     }
    },
  };
  </script>
- 
+
  <style lang="scss" scoped>
  .play-icon {
   position: absolute;

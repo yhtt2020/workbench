@@ -50,6 +50,7 @@ import { channelClass } from '../../../../js/chat/createChannelClass';
 import { message } from 'ant-design-vue';
 import { communityStore } from '../../store/communityStore';
 import { Icon as ChatIcon} from '@iconify/vue';
+import {completeTask} from '../../../../apps/task/task'
 
 import ModalTop from '../ModalTop.vue';
 
@@ -156,6 +157,7 @@ export default {
       message.success('关联成功');
       this.closeGroup();
     }
+    completeTask('Z0604')
   },
   // 搜索
   async searchGroup(evt){

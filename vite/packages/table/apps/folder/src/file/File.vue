@@ -289,6 +289,7 @@ const fileDisabled = (item) => {
 
 // 保存数据
 const save = () => {
+  console.log('2233 :>> ', 2233);
   const data = useIconConversionFile(iconStore.edit);
   data.useCount = currentItem.value.useCount;
   data.id = currentItem.value.id;
