@@ -1109,7 +1109,7 @@ export default {
      * @param {*} value 打开路径
      * @param {*} item 图标详细信息
      */
-    newOpenApp (type, value, item) {
+    async newOpenApp (type, value, item) {
       if(value === 'control'){
         this.controlVisible = !this.controlVisible;
         this.resetElementPosition()
@@ -1118,7 +1118,7 @@ export default {
       if (value === 'home' && item.home) {
         this.jumpDesk = item.home
       }
-      let rs=await startApp(type, value, this.$router)
+      let rs= await startApp(type, value, this.$router)
       if(!rs){
         message.error({content:`打开「${item.name}」失败`
           ,key:'tipRun'})
