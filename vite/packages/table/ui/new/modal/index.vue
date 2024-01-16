@@ -219,7 +219,8 @@ const top = computed(() => {
   if (isFull.value) return 0;
   if (windowHeight.value <= 0 || bottomBarHeight <= 0 || modelHeight.value <= 0)
     return -9999;
-  return (windowHeight.value - bottomBarHeight - modelHeight.value) / 2;
+  let a = (windowHeight.value - bottomBarHeight - modelHeight.value) / 2;
+  return a >= 0 ? a : 0;
 });
 
 const resizeModel = (size) => {

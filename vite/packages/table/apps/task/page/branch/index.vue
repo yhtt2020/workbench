@@ -7,25 +7,30 @@
         >你可以自由选择想要了解的功能支线，完成任务即可获得对应奖励。「右键单击」任务可以选择将其「固定在左侧」，方便进行任务追踪。</xt-title
       >
     </div>
-    <xt-menu :menus="menus" v-for="task in tasks">
-      <div
-        class="flex flex-col xt-bg-2 rounded-xl mt-3 p-3"
-        @click="taskClick(task)"
-      >
-        <xt-title m="">
-          <div class="flex items-center">
-            <xt-new-icon :icon="icon" class="mr-3"  size='20'/>
-            {{ task.name }}
-          </div>
-          <template #right
-            ><Progress :task="task" style="width: 68px; height: 20px"
-          /></template>
-        </xt-title>
-        <xt-title type="text" m="mt">
-          {{ task.info }}
-        </xt-title>
-      </div>
-    </xt-menu>
+    <template v-if="tasks.length <= 1">
+      <Task @back="back()" :task="tasks[0]" :icon="icon"
+    /></template>
+    <template v-else>
+      <xt-menu :menus="menus" v-for="task in tasks">
+        <div
+          class="flex flex-col xt-bg-2 rounded-xl mt-3 p-3"
+          @click="taskClick(task)"
+        >
+          <xt-title m="">
+            <div class="flex items-center">
+              <xt-new-icon :icon="icon" class="mr-3" size="20" />
+              {{ task.name }}
+            </div>
+            <template #right
+              ><Progress :task="task" style="width: 68px; height: 20px"
+            /></template>
+          </xt-title>
+          <xt-title type="text" m="mt">
+            {{ task.info }}
+          </xt-title>
+        </div>
+      </xt-menu>
+    </template>
   </template>
 </template>
 
@@ -41,8 +46,7 @@ const props = defineProps({
 const menus = reactive([
   {
     label: "固定到左侧",
-    callBack: () => {
-    },
+    callBack: () => {},
   },
 ]);
 
