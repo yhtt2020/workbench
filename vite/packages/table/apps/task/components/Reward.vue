@@ -21,7 +21,7 @@
     <a-avatar
       v-if="type == 'avatarFrame' || type == 'medal'"
       shape="square"
-      :size="48"
+      :size="56"
       :src="types[type].icon"
       class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
     />
@@ -29,7 +29,7 @@
       v-if="type == 'communityPoints' || type == 'experience'"
       class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
       :icon="types[type].icon"
-      size="48"
+      size="45"
     />
     <div class="absolute z-10 bottom-0 text-sm" v-if="value" style="right: 6px">
       {{ value }}
