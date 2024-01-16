@@ -53,6 +53,23 @@
   </div>
  </template>
 
+ <template v-else-if="isUserLogin && controlIndex === 'user-info'">
+  <div  class="rounded-xl xt-bg flex flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-if="status === 'del'" @click.stop="removeControl">
+    <div class="absolute" style="top: 7px;right:-4px;" >
+      <xt-button style="width: auto !important;" h="0">
+        <div class="flex items-center justify-center">
+          <xt-new-icon icon="fluent:subtract-circle-16-filled" size="20" :color="'var(--error)'"></xt-new-icon>
+        </div>
+      </xt-button>
+    </div>
+    <UserInfoDetail :userinfo="userInfo"/>
+  </div>
+
+  <div  class="rounded-xl xt-bg flex flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-else>
+    <UserInfoDetail :userinfo="userInfo"/>
+  </div>
+ </template>
+
  <template v-else>
   <div  class="xt-bg rounded-xl flex flex-col items-center justify-center relative" style="height: 120px;width: 120px;" v-if="status === 'del'" @click.stop="removeControl">
    <div class="absolute" style="top: 7px;right:-4px;" >
@@ -85,6 +102,9 @@ import { appStore } from '../../../../../../store';
 import { controlStore } from '../../../hook/controlStore';
 import { setThemeSwitch } from '../../../../../card/hooks/themeSwitch';
 import { message,notification } from 'ant-design-vue';
+import { useRouter } from 'vue-router';
+
+import UserInfoDetail from '../userControl/UserInfoDetail.vue'
 
 const props = defineProps({
  controlIndex:{
@@ -101,10 +121,11 @@ const props = defineProps({
 })
 
 const app = appStore();
-const { settings,styles,simple,aided,saving,showWindowController } = storeToRefs(app);
+const { settings,styles,simple,aided,saving,showWindowController,userInfo } = storeToRefs(app);
 const controls = controlStore();
 const { control } = storeToRefs(controls);
 const { proxy } = getCurrentInstance()
+const router = useRouter()
 
 // 通过计算属性来判断控制中心是否开启的状态
 const controlStatus = computed(()=>{
@@ -181,7 +202,17 @@ const triggerControl = () =>{
       break;
     // 摇一摇
     case 'shake':
-      settings.value.shake.enable != settings.value.shake.enable
+      settings.value.shake.enable = !settings.value.shake.enable
+      if(!settings.value.shake.enable){
+        app.enableShake(()=>{
+          router.push({
+            name:'key'
+          })
+        })
+      }
+      else {
+        app.disableShake()
+      }
       break;
     //游戏模式  后期功能实现后再对接
     case 'game-mode':
@@ -206,6 +237,15 @@ const removeControl = () =>{
   }
 }
 
+// 判断用户是否登录
+const isUserLogin = computed(()=>{
+  if(!userInfo.value){
+    return false
+  }
+  else {
+    return true
+  }
+})
 
 </script>
 

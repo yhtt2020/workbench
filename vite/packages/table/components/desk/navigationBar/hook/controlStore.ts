@@ -1,10 +1,11 @@
 import { defineStore } from "pinia";
 import dbStorage from "../../../../store/dbStorage";
+import { appStore } from '../../../../store';
 
 // @ts-ignore
 export const controlStore = defineStore('control',{
  state: () => ({
-   control:{
+  control:{
     addList:[
       {
         id:'audio',
@@ -92,10 +93,13 @@ export const controlStore = defineStore('control',{
        {
         icon:'fluent:games-16-regular',id:'game-mode',
         name:'游戏模式',
+       },
+       {
+        id:'user-info',
        }
     ],
    
-   },
+  },
   //  removeList1:[
   //    {
   //      id:'audio',
@@ -158,6 +162,10 @@ export const controlStore = defineStore('control',{
   //     }
   //  ],
  }),
+ 
+ getters:{
+   
+ },
 
  actions: {
   //  initData(){

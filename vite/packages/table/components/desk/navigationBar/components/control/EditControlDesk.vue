@@ -26,6 +26,7 @@ import ControlRemoveItem from './item/ControlRemoveItem.vue';
 const controls = controlStore();
 const { control } = storeToRefs(controls)
 
+
 </script>
 
 <style lang="scss" scoped>
