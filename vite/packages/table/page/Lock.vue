@@ -111,6 +111,7 @@ import { message, Modal } from 'ant-design-vue'
 import { paperStore } from '../store/paper'
 import axios from 'axios'
 import { Icon as iconify } from '@iconify/vue'
+import { bingGet,paperGet } from '../js/axios/request';
 
 const spotConfig = {
   control: '',
@@ -326,7 +327,7 @@ export default {
         // 必应
         case 'bing':
           let url = 'https://cn.bing.com/HPImageArchive.aspx?format=js&idx=1&n=8';
-          axios.get(url).then(imagesResult => {
+          bingGet(url).then(imagesResult => {
            if (imagesResult.status === 200) {
             let arr = imagesResult.data.images
             arr.forEach(item => {
@@ -349,9 +350,17 @@ export default {
           break;
         // 拾光壁纸
         case 'picking':
-           let pickUrl = `https://api.nguaduot.cn/timeline/v3?cate=landscape&order=date&no=99999999&date=20500101&score=99999999&client=thisky`
-           axios.get(pickUrl,{headers:{'Timeline-Client':'thisky'}})
-           .then((res)=>{
+          const pickUrl = '/timeline/v3';
+          const pickParams = {
+            cateWhat:'landscape',
+            order:'date',
+            no:99999999,
+            score:99999999,
+            date:(new Date().getFullYear())+(new Date().getMonth() + 1).toString().padStart(2, '0')+ ( new Date().getDate().toString().padStart(2, '0')),
+            cateHow:'',
+          }
+          paperGet(pickUrl,pickParams)
+          .then((res)=>{
             const result = res.data
             if(result.data.length !== 0){
               const mapList = result.data.map((item)=>{
@@ -367,10 +376,9 @@ export default {
             }
             window.Spotlight.show(LockArr, this.config)
            })
-           .catch((err)=>{
-             console.log('报错',err);
-           })
-        
+          .catch((err)=>{
+            console.log('报错',err);
+          })
           break;
         // 精选壁纸 
         case 'recommend':

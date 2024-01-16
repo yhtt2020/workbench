@@ -17,6 +17,7 @@
         :expand="{ disabled: true }"
         :navBar="{ resize: false, sizeOption: false,isDel:true,hierarchy:true }"
         :auto="true"/>
+      <ControlModal ref="controlRef" v-if="controlVisible" @close="controlVisible = false" :full="full" @setFull="setFull"/>
     </div>
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
          id="bottom-bar" style="text-align: center;position: relative;" @contextmenu="showMenu"
@@ -105,7 +106,7 @@
                       <div @dragover="onDrag" @dragend="hoverIndex=-1"
                            v-if="!(this.navList.includes(item.event) && this.isOffline)"
                            class="flex items-center justify-center pointer"
-                           :class="{hover:(item.id===hoverRealItemId()&& dragItem.id!==hoverRealItemId())}"
+                           :class="{hover:(item.id===hoverRealItemId()&& dragItem?.id!==hoverRealItemId())}"
                            style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                            @click.stop="newOpenApp(item.type, item.value, item)">
 
@@ -228,8 +229,12 @@ import { defaultFolderData } from '../apps/folder/src/components/options'
 import { nanoid } from 'nanoid'
 // import Drop from '../apps/folder/src/components/Drop.vue'
 import Drop from './desk/navigationBar/components/folder/Drop.vue'
-import { useWindowSize } from '../ui/new/drag/src/hooks/useWindowSize'
-import Common from './desk/navigationBar/components/Common.vue'
+import { useWindowSize, } from '../ui/new/drag/src/hooks/useWindowSize'
+import Common from './desk/navigationBar/components/Common.vue';
+import { useElementSize } from "../ui/new/drag/src/hooks/useElementSize";
+import ControlModal from './desk/navigationBar/components/control/ControlModal.vue';
+
+
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon', 'hiedNavBar'],
@@ -259,6 +264,7 @@ export default {
     Folder,
     Drop,
     Common,
+    ControlModal,
   },
   data () {
     return {
@@ -425,6 +431,8 @@ export default {
       noticeFlag: true,
       left: 0,
       parentSize: 0,
+      // 控制中心弹窗
+      controlVisible:false,
     }
   },
   props: {
@@ -783,6 +791,7 @@ export default {
     },
   },
   methods: {
+    useElementSize,
     ...mapActions(teamStore, ['updateMy']),
     ...mapActions(messageStore, ['getMessageIndex']),
     ...mapActions(appStore, ['toggleFullScreen', 'settings']),
@@ -1090,7 +1099,8 @@ export default {
      */
     msgNotice (item) {
       if (item.type === 'tableApp') {
-        message.loading(`打开「${item.name}」...`)
+        message.loading({content:`打开「${item.name}」...`
+        ,key:'tipRun'})
       }
     },
     /**
@@ -1099,13 +1109,22 @@ export default {
      * @param {*} value 打开路径
      * @param {*} item 图标详细信息
      */
-    newOpenApp (type, value, item) {
+    async newOpenApp (type, value, item) {
+      if(value === 'control'){
+        this.controlVisible = !this.controlVisible;
+        this.resetElementPosition()
+      }
       if(item) this.msgNotice(item)
       if (value === 'home' && item.home) {
         this.jumpDesk = item.home
       }
-      startApp(type, value, this.$router)
+      let rs= await startApp(type, value, this.$router)
+      if(!rs){
+        message.error({content:`打开「${item.name}」失败`
+          ,key:'tipRun'})
+      }
       type !== 'folder' ? this.folderVisible = false : ''
+      
     },
     /**
      * 拖拽桌面图标
@@ -1478,10 +1497,17 @@ export default {
       let posX = Number((this.defaultPosition.x).toFixed(0))
       // 元素大小
       let menuW = draggableSize[0] * 144
+        // let menuW = draggableSize[0] * 140
       // console.log(vW,posX,menuW, 'vW');
-      posX = posX > vW - menuW ? vW - menuW : (posX - menuW / 2 < 0 ? 0 : posX - menuW / 2);
+        if(this.currentItem.value === 'control'){ 
+          posX = posX > vW - menuW ? vW - menuW : posX - 274;
+        }
+        else {
+        posX = posX > vW - menuW ? vW - menuW : (posX - menuW / 2 < 0 ? 0 : posX - menuW / 2);
       // console.log(posX, 'posX')
+        }
       this.left = posX
+      console.log(posX, 'posX')
     },
     onDrag: function (e) {
       let hoverRs = this.getHoverIndex(e.x)

@@ -33,25 +33,25 @@ export const cardStore = defineStore(
         countdownDay: [{
           "eventValue": "中秋节",
           "dateValue": {
-            "year": 2023,
+            "year": 2024,
             "month": 9,
-            "day": 29,
+            "day": 17,
             "hours": 0,
             "minutes": 0,
             "seconds": 0,
-            "week": "星期五"
+            "week": "星期二"
           },
           "type": 'noOver'
         }, {
           "eventValue": "国庆节",
           "dateValue": {
-            "year": 2023,
+            "year": 2024,
             "month": 10,
             "day": 1,
             "hours": 0,
             "minutes": 0,
             "seconds": 0,
-            "week": "星期日"
+            "week": "星期二"
           },
           "type": 'noOver'
         }],

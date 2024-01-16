@@ -21,7 +21,7 @@ class BrowserAction extends ActionExecutor {
             //todo 创建标签组打开
           }
         } else if (args.position === 'system') {
-          require('electron').shell.openExternal(args.url)
+          require("path").normalize(args.url)
           result = 1
         } else {
           result = -1

@@ -32,14 +32,16 @@ const emit = defineEmits(['createFile'])
 
 /**
  * 拖拽，文件夹拖拽和桌面图标拖拽
- * @param {*} dragEvent 
+ * @param {*} dragEvent
  */
 const handleDrop = async (dragEvent) => {
   // 判断是否是从导航栏外部进入到导航栏，防止和导航栏内部的拖拽事件冲突
   if (!isEnterBar.value) return
   let currentX = dragEvent.x
   // 桌面拖拽
-  if (dragEvent.dataTransfer.types[0] === 'Files') {
+  if (dragEvent.dataTransfer.types.some(item=>{
+    return item==='Files'
+  })) {
     let files = dragEvent.dataTransfer.files
     let filesArr = []
     if (files && files.length > 0) {
@@ -56,6 +58,7 @@ const handleDrop = async (dragEvent) => {
   } else if (dragEvent.dataTransfer?.types[0] === 'text/plain') {
     // 文件夹图标拖拽
     const item = _.cloneDeep(currentData.value)
+    console.log(item,'item')
     const data = useIconConversionNav(item)
     emit('createFile', data, currentX)
     currentData.value = ''
@@ -65,7 +68,7 @@ const handleDrop = async (dragEvent) => {
 
 /**
  * 拖拽进入事件
- * @param {*} dragEvent 
+ * @param {*} dragEvent
  */
 const handleDragenter = (dragEvent) => {
   if (dragEvent.dataTransfer.types.length > 0) {
@@ -75,8 +78,8 @@ const handleDragenter = (dragEvent) => {
 };
 
 /**
- * 
- * @param {*} dragEvent 
+ *
+ * @param {*} dragEvent
  */
 const handleDragover = (dragEvent) => {
   dragEvent.preventDefault();
@@ -103,6 +106,5 @@ const handleMouseOver = () => {
 
 }
 </script>
-  
+
 <style lang="scss" scoped></style>
-  

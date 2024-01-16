@@ -22,13 +22,13 @@
             </a-col>
             <a-col>
               <div class="flex flex-col" >
-                <span>元旦</span>
-                <span style="font-size: 12px;">放假3天</span>
+                <span>春节</span>
+                <span style="font-size: 12px;">放假8天</span>
               </div>
             </a-col>
           </a-row>
         </a-col>
-        <a-col :span="13" class="flex flex-row items-center justify-end pt-4 pr-2" >12月30日~1月1日</a-col>
+        <a-col :span="13" class="flex flex-row items-center justify-end pt-4 pr-2" >2月10日~2月17日</a-col>
       </a-row>
 <!--      <a-row class="mt-2 festival " style="border-radius: 12px;background: rgba(42, 42, 42, 1);height: 44px">-->
 <!--        <a-col :span="11" class="flex flex-row items-center pl-2">-->
