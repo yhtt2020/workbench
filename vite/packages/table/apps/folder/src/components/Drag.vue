@@ -27,7 +27,7 @@ const index = inject("index", "");
 const data = inject("data", "");
 const isOutside = inject("isOutside", "");
 const folderStore = useFolderStore();
-const { dragId, isDrag, move, currentId, currentData } =
+const { dragId, isDrag, move, currentId, currentData,folderFlag } =
   storeToRefs(folderStore);
 const props = defineProps({
   data: {},
@@ -41,6 +41,7 @@ const handleDragStart = (event) => {
   dragId.value = index.value;
   currentId.value = index.value;
   currentData.value = props.data;
+  folderFlag.value = "folder"
 };
 // const handleDragLeave = (event) => {
 //   console.log("handleDragLeave :>> ");
