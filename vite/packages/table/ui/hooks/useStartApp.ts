@@ -101,7 +101,9 @@ export const openSysApp = (value, router) => {
   } else if (value === "commun") {
     console.log(1111);
     return;
-  } else {
+  } else if(value === "control"){
+    return;
+  }else {
     router.push({ name: value });
   }
 };

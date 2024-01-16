@@ -1,6 +1,5 @@
 <template>
   <xt-option-tab  v-model="backgroundName.name" :list="tabList" circle class="mb-4"  style="height: 40px;" />
-
   <template v-if="backgroundName.name === 'img'">
     <xt-button w="200" h="112" class="xt-bg-m relative"  style="border-radius: 6px"  @click="openPaperModal" >
      <div class="flex items-center justify-center" v-if="backImage.src === ''">

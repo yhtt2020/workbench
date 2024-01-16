@@ -104,6 +104,7 @@ import { appStore } from "../../store";
 import browser from '../../js/common/browser'
 import { taskStore } from '../../apps/task/store';
 import { message } from 'ant-design-vue';
+import { paperGet } from '../../js/axios/request';
 
 import ClosePaperButton from './components/close/ClosePaperButton.vue';
 import PickDropDetail from './components/content/PickDropDetail.vue';
@@ -184,21 +185,19 @@ export default {
 
     // 获取壁纸源数据
     getPickPaperList(){
+      this.isLoading = true;
       const apiParams = this.pickParams.setting.paperValue;
-      const order = this.pickParams.setting.order.value;
-      const cateHow = this.pickParams.setting.cateHow;
-      const cateWhat = this.pickParams.setting.cateWhat;
-      const date = this.pickParams.setting.dateTime;
-      const url = `https://api.nguaduot.cn${apiParams}?order=${order}&no=${this.pickParams.setting.no}&catehow=${cateHow}&catewaht=${cateWhat}&date=${date}&score=${this.pickParams.setting.score}`
-      this.getAccordingToUrlData(url);
-    },
-    getAccordingToUrlData(url){
-      if (!this.isLoading){
-        this.isLoading = true;
-        axios.get(url,{headers:{'Timeline-Client':'thisky'}})
-        .then((res)=>{
-          console.log('调试-2',res);
-         if(res.status === 200){
+      const params = {
+        order:this.pickParams.setting.order.value,
+        cateHow:this.pickParams.setting.cateHow,
+        cateWhat: this.pickParams.setting.cateWhat,
+        date:this.pickParams.setting.dateTime,
+        score:this.pickParams.setting.score,
+        no:this.pickParams.setting.no,
+      }
+      paperGet(apiParams,params)
+      .then((res)=>{
+        if(res.status === 200){
           let pickImage = res.data.data
           this.count = res.data.count
           let animations = ["ani-gray", "bowen", "ani-rotate"];
@@ -216,22 +215,19 @@ export default {
             })
             this.pickImageData = mapPickImg;
           }
-         }
-        })
-        .catch((error)=>{ console.error(error); })
-        .finally(()=>{
-          this.$nextTick(() => { this.isLoading = false; });
-        })
-      }  
+        }
+      })
+      .catch((error)=>{ console.error(error); })
+      .finally(()=>{
+        this.$nextTick(() => { this.isLoading = false; });
+      })
     },
 
     // 菜单回传事件
     updateList(){
       this.getPickPaperList();
     },
-    // updateImgData(){
-    //   this.getPickPaperList();
-    // },
+ 
 
     // 收藏
     addToMy(img) { 
