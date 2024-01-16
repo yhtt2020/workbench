@@ -44,7 +44,6 @@ export default {
             }
             //todo 不同类型的复制
             message.success('复制成功。')
-            completeTask('Z0206')
           }
         },
         {
