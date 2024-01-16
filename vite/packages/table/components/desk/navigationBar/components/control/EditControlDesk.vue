@@ -6,7 +6,7 @@
         <ControlRemoveItem :list="control.addList" />
       </div>
       
-      <a-divider style="height: 1px;margin: 16px 0;" v-if="control.removeList.length !== 0 " />
+      <a-divider style="height: 1px;margin:8px 0 16px 0;" v-if="control.removeList.length !== 0 " />
 
       <div class="flex flex-1 flex-col h-3/4" v-if="control.removeList.length !== 0">
         <ControlAddItem :list="control.removeList"/>

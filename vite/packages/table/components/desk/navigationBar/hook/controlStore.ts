@@ -34,32 +34,32 @@ export const controlStore = defineStore('control',{
       },
     ],
     removeList:[
-      {
-        id:'audio',
-        list:[
-         { 
-          id:'music', 
-          list:[
-           {
-            icon:'fluent:previous-16-filled',
-            color:'var(--disable-text)'
-           },
-           {
-            icon:'fluent:play-16-filled',
-            color:'rgba(255,255,255,0.85)'
-           },
-           {
-            icon:'fluent:next-16-filled',
-            color:'var(--disable-text)'
-           },
-          ]
-         },
-         { 
-          id:'volume',
-          icon:'fluent:speaker-2-16-regular',
-         }
-        ],
-       },
+      // {
+      //   id:'audio',
+      //   list:[
+      //    { 
+      //     id:'music', 
+      //     list:[
+      //      {
+      //       icon:'fluent:previous-16-filled',
+      //       color:'var(--disable-text)'
+      //      },
+      //      {
+      //       icon:'fluent:play-16-filled',
+      //       color:'rgba(255,255,255,0.85)'
+      //      },
+      //      {
+      //       icon:'fluent:next-16-filled',
+      //       color:'var(--disable-text)'
+      //      },
+      //     ]
+      //    },
+      //    { 
+      //     id:'volume',
+      //     icon:'fluent:speaker-2-16-regular',
+      //    }
+      //   ],
+      //  },
        {
         id:'window-control',
         icon:'fluent:window-multiple-16-filled',

@@ -81,10 +81,10 @@
 <script setup>
 import { ref,computed,getCurrentInstance  } from 'vue';
 import { storeToRefs } from 'pinia';
-import { appStore } from '../../../../../../store'
+import { appStore } from '../../../../../../store';
 import { controlStore } from '../../../hook/controlStore';
-import { setThemeSwitch } from '../../../../../card/hooks/themeSwitch'
-
+import { setThemeSwitch } from '../../../../../card/hooks/themeSwitch';
+import { message,notification } from 'ant-design-vue';
 
 const props = defineProps({
  controlIndex:{
@@ -100,14 +100,13 @@ const props = defineProps({
  }
 })
 
-
 const app = appStore();
 const { settings,styles,simple,aided,saving,showWindowController } = storeToRefs(app);
 const controls = controlStore();
 const { control } = storeToRefs(controls);
 const { proxy } = getCurrentInstance()
 
-
+// 通过计算属性来判断控制中心是否开启的状态
 const controlStatus = computed(()=>{
   switch (props.controlIndex) {
     // 窗口控制
@@ -169,6 +168,16 @@ const triggerControl = () =>{
     // 辅助模式  
     case 'assist-mode':
       aided.value = !aided.value;
+      if(!aided.value){
+        app.leaveAided();
+        message.success('已为您关闭辅助模式')
+      }
+      else {
+        notification.info({
+          message:'开启辅助模式后，工作台将无法被聚焦。此时无法输入任何内容，但是也不会因为点击工作台而切换焦点。可防止游戏窗口失焦。或者搭配快捷键使用。'
+        })
+        app.enterAided();
+      }
       break;
     // 摇一摇
     case 'shake':

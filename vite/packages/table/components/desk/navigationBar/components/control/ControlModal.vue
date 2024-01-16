@@ -38,9 +38,9 @@
       <EditControlDesk />
     </template>
 
-    <a-divider style="height: 1px;margin: 16px 0;width: 516px;min-width:516px;" />
+    <a-divider style="height: 1px;margin: 8px 0 16px 0;width: 516px;min-width:516px;" />
 
-    <div class="flex items-center justify-center" style="height: 85px;">
+    <div class="flex items-center justify-center mb-4">
       <template v-for="item in bottomButton">
        <a-tooltip placement="top" :title="item.name">
          <xt-button w="54" h="54" style="border-radius: 12px;" class="mr-3 button-item xt-bg-t-2" @click="item.fn">
@@ -90,7 +90,7 @@ const finshEdit = () =>{
 
 const bottomButton = ref([
   {
-    newIcon:'fluent:person-16-filled',name:'用户中心',
+    newIcon:'fluent:person-16-regular',name:'用户中心',
     fn:()=>{ 
       router.push({ path: '/my' })
       emit('close') 
