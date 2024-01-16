@@ -127,14 +127,14 @@ const bottomButton = ref([
       emit('close')
     }
   },
-  {
-    newIcon:'fluent:settings-16-regular',name:'清除测试数据',
-    fn:()=>{
-      controlStore().initData();
-      // router.push({ name: 'setting' });
-      // emit('close')
-    }
-  }
+  // {
+  //   newIcon:'fluent:settings-16-regular',name:'清除测试数据',
+  //   fn:()=>{
+  //     controlStore().initData();
+  //     // router.push({ name: 'setting' });
+  //     // emit('close')
+  //   }
+  // }
 ])
 </script>
 

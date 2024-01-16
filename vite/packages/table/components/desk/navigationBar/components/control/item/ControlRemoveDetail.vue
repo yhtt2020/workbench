@@ -71,9 +71,9 @@
   <div v-else class="rounded-xl flex flex-col items-center justify-center relative" 
     style="height: 120px;width: 120px;"  @click.stop="triggerControl" :class="controlStatus.status ? 'xt-theme-bg':'xt-bg'">
     <div class="w-14 h-14 flex items-center xt-bg-t-2 justify-center rounded-full mb-3">
-      <xt-new-icon :icon="controlItem.icon" size="24"></xt-new-icon>
+      <xt-new-icon :icon="controlItem.icon" size="24" :color="controlStatus.status ? 'var(--active-text)':'var(--primary-text)'"></xt-new-icon>
     </div>
-    <span class="xt-text">{{controlItem.name}}</span>
+    <span :class="controlStatus.status ? 'xt-active-text' :'xt-text'">{{controlItem.name}}</span>
   </div>
  </template>
 </template>
