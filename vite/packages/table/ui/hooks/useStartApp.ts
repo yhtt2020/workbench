@@ -14,14 +14,14 @@ async function runApp(uri) {
     if (uri.endsWith('.url') || uri.endsWith('.lnk')) {
       if(realPath.startsWith('steam://')){
         console.log('执行路径A,steam游戏模式',realPath)
-        cp.spawn('start',[realPath], {detached: true,shell:true,windowsHide:true})
+        cp.spawn('start',[realPath], {detached: true,shell:true,windowsHide:true,stdio: 'ignore',})
       }else{
         console.log('执行路径B,普通文件','cwd',require('path').dirname(realPath))
-        cp.spawn(require("path").normalize(realPath), [], {detached: true,cwd:require('path').dirname(realPath)})
+        cp.spawn(require("path").normalize(realPath), [], {detached: true,cwd:require('path').dirname(realPath),stdio: 'ignore',})
       }
     }else{
       console.log('执行路径C')
-      cp.spawn('start',[ require("path").normalize(realPath)], {detached: true,cwd:require('path').dirname(realPath),shell:true,windowsHide:true})
+      cp.spawn('start',[ require("path").normalize(realPath)], {detached: true,cwd:require('path').dirname(realPath),shell:true,windowsHide:true,stdio: 'ignore',})
     }
     return true
   }catch (e) {
