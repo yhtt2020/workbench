@@ -7,8 +7,8 @@ import { completeTask as completeCurrentTask } from "./api";
 import Complete from "./components/Complete.vue";
 // 完成任务
 export const completeTask = async (id) => {
-  console.log("completeTask :>> ", 22233333333);
   const type: any = currentType(id);
+  id = id.toUpperCase();
   if (type == "m") {
     completePrimaryTask(id);
   } else if (type == "z") {
@@ -22,7 +22,12 @@ export const completePrimaryTask = (id) => {
   const { startList, completedList, claimRewardsList } = storeToRefs(store);
   // 判断是否处于开始阶段
   console.log("completePrimaryTask :>> ");
+
+  console.log("completePrimaryTask :>> ", id);
+  // 转为全大写
+
   if (!startList.value.includes(id)) return;
+  console.log("000000 :>> ", 1);
   endTask(id);
 };
 // 完成支线任务
@@ -37,15 +42,25 @@ export const completeBranchTask = (id) => {
     return;
   }
   // 处于未完成阶段
-  if (!completedList.value.includes(id)) {
+  if (!completedList.value.includes(id) && !claimRewardsList.value.includes(id)) {
     endTask(id);
   }
 };
 // 获取指引
-const getGuide = () => {
+const getGuide = (id) => {
+  const store: any = taskStore();
+  const { startList, currentId, claimRewardsList, completedList } =
+    storeToRefs(store);
   const toast = useToast();
   toast.clear();
+  let config: any = {
+    timeout: 0,
+  };
+  if (completedList.value.includes(id)) {
+    config = { timeout: 3000, hideProgressBar: false };
+  }
 
+  console.log("config :>> ", config);
   toast(
     {
       component: Complete,
@@ -56,8 +71,8 @@ const getGuide = () => {
       closeButton: false,
       pauseOnFocusLoss: true,
       pauseOnHover: true,
-      timeout: 0,
       toastClassName: "notice-toast",
+      ...config,
     }
   );
 };
@@ -75,7 +90,8 @@ const endTask = (id) => {
   }
   // 数据预处理
   currentId.value = id;
-  getGuide();
+  console.log("id :>> ", id);
+  getGuide(id);
 };
 // 领取奖励
 export const getReward = async (id) => {

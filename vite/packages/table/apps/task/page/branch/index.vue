@@ -10,13 +10,13 @@
     <div style="" class="flex justify-between items-center mb-3">
       <div style="width: 200px">支线任务</div>
       <div class="flex items-center">
-        <div style="width: 68px;margin-right: 60px" v-if="tasks.length <= 1">
+        <div style="width: 68px;margin-right: 45px" v-if="tasks.length <= 1">
           <Progress
             :task="tasks[0]"
             style="width: 68px; height: 20px; "
           />
         </div>
-        <Header />
+        <Exit />
       </div>
     </div>
     <div class="xt-bg-2 p-3 rounded-xl mb-3">
@@ -55,7 +55,7 @@
 import { ref, reactive } from "vue";
 import Task from "./Task.vue";
 import Progress from "../../components/progress/index.vue";
-import Header from "./Header.vue";
+import Exit from "../../components/Exit.vue";
 const props = defineProps({
   tasks: {},
   icon: {},

@@ -1,5 +1,10 @@
 <template>
-  <xt-modal custom v-model="store.isTaskDrawer" boxClass="rounded-xl" :mask="false">
+  <xt-modal
+    custom
+    v-model="store.isTaskDrawer"
+    boxClass="rounded-xl"
+    :mask="false"
+  >
     <div class="xt-modal flex rounded-xl" style="width: 500px; height: 600px">
       <xt-left-menu
         :list="menusList"
@@ -42,8 +47,6 @@ import Daily from "./daily/Daily.vue";
 import Set from "./Set.vue";
 import { tasks } from "../page/branch/Branch.ts";
 import { useToast } from "vue-toastification";
-
-// import Exit from "../components/Exit.vue";
 
 import { getAllTask } from "../api";
 onMounted(() => {
