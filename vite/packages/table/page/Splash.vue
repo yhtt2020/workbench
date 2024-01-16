@@ -141,7 +141,7 @@ export default {
     this.initStore(teamStore, 'teamStore')
     this.initStore(navStore, 'nav')
     this.initStore(taskStore, 'task')
-    this.initStore(useWidgetStore, 'firstOpen')
+    this.initStore(useWidgetStore, 'useWidgetStore')
     // this.initStore(browserStore,'browserStore')
     browserStore().bindIPC()
     captureStore()//仅触发一下载入
