@@ -58,11 +58,13 @@
 <script setup>
 import { ref,computed } from 'vue';
 import { useRouter } from 'vue-router';
+import { controlStore } from '../../hook/controlStore';
+import { appStore } from '../../../../../store';
 
 import ControlDesk from './ControlDesk.vue';
 import EditControlDesk from './EditControlDesk.vue';
 
-import { controlStore } from '../../hook/controlStore';
+
 
 const router = useRouter()
 const emit = defineEmits(['close'])
@@ -74,6 +76,7 @@ const props = defineProps({
 })
 
 const editVisible = ref(false);
+const app = appStore()
 
 // 触发编辑
 const editClick = () =>{
@@ -103,14 +106,15 @@ const bottomButton = ref([
   {
     newIcon:'fluent:full-screen-maximize-16-regular',name:'全屏',
     fn:()=>{
-      if(props.full){
-        emit('setFull',false)
-        tsbApi.window.setFullScreen(false)
-      }
-      else {
-        emit('setFull',true)
-        tsbApi.window.setFullScreen(true)
-      }
+      app.toggleFullScreen();
+      // if(props.full){
+      //   emit('setFull',false)
+      //   tsbApi.window.setFullScreen(false)
+      // }
+      // else {
+      //   emit('setFull',true)
+      //   tsbApi.window.setFullScreen(true)
+      // }
     }
   },
   {
