@@ -132,7 +132,7 @@
           <div class="pt-6 text-center font-16 xt-text" >添加导航图标</div>
           <div class="text-center font-16 xt-text-2" style="width:704px;margin:16px auto 0;">根据你选择偏好，我们为你推荐了以下图标。你可以稍后添加更多其他的图标。</div>
           <div class="flex flex-wrap content-start mt-4 overflow-hidden overflow-y-auto xt-scrollbar" style="height: 400px;padding-left:19px;" >
-            <div  class="relative flex flex-col items-center pt-4 rounded-lg nav-list xt-bg-2 pointer" v-for="(item, index) in navList"
+            <div  class="relative flex flex-col items-center pt-4 rounded-lg nav-list xt-bg-2 pointer" v-for="(item, index) in navListTmp"
             :class="index%4!=0?'ml-4':'ml-10',index>3?'mt-4':'', index==0?'disabled':''" @click="changeNavList(item, index)">
               <div class="absolute top-1.5 right-1.5 w-8 h-8 rounded-lg xt-bg flex justify-center items-center">
                 <a-checkbox :disabled="index==0" v-model:checked="item.isCheck"></a-checkbox>
@@ -150,17 +150,16 @@
           <div class="px-4">
             <div class="p-4 pb-1 mt-2 xt-bg-2 rounded-xl">
               <xt-option-info title="主题色" />
-              <xt-option-color :isLinear="false"  v-model:color="themeColor" colorNum="5"  />
+              <xt-option-color :isLinear="false"  v-model:color="themeColor" :colorNum="5"  />
             </div>
             <div class="p-4 pb-1 mt-3 xt-bg-2 rounded-xl "><xt-option-info
               title="桌面壁纸"
               info="选择喜欢的图片作为工作台桌面壁纸。"
             />
-              <xt-button w="200" h="112" class="relative mb-3 xt-bg-m"  style="border-radius: 6px"  @click="openPaperModal" >
-                <div class="absolute top-0 left-0 w-full h-full rounded-md">
-                  <img :src="backgroundImage.path" class="object-cover w-full h-full rounded-md"/>
-                </div>
-              </xt-button>
+              <div class="mb-4">
+                <xt-update-desk-bg></xt-update-desk-bg>
+              </div>
+              <hr />
               <xt-option-info
                 title="桌面壁纸模糊度"
                 info="调节桌面壁纸的模糊程度。"
@@ -350,8 +349,8 @@
         imgBlur: 0,
         // 添加到导航栏的游戏常用程序列表
         exeNavList: [
-          { type: 'folder', id: '1705024724', icon: '', name: '游戏', bg: '',isBg: '', mode: 'app', value: 'folder', isCheck: true, children:[]},
-          { type: 'folder', id: '1705024725', icon: '', name: '常用程序', bg: '',isBg: '', mode: 'app', value: 'folder', isCheck: true, children:[]},
+          { type: 'folder', id: '1705024724', icon: '', name: '游戏', bg: '',isBg: '', mode: 'app', value: 'folder', isCheck: false, children:[]},
+          { type: 'folder', id: '1705024725', icon: '', name: '常用程序', bg: '',isBg: '', mode: 'app', value: 'folder', isCheck: false, children:[]},
         ],
         //  给ai做的容错
         fault: [],
@@ -594,11 +593,13 @@
             item.customData?.list.forEach(i=>{
               this.exeNavList[0].children?.push({ type: 'tableApp', icon: i.icon, name: i.name, addNav: true, bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: i.value})
             })
+            this.exeNavList[0].isCheck = true
             
           }else if(item.customData.name == '常用程序'){
             item.customData?.list.forEach(i=>{
               this.exeNavList[1].children?.push({ type: 'tableApp', icon: i.icon, name: i.name, addNav: true, bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: i.value})
             })
+            this.exeNavList[1].isCheck = true
           }else{
             this.addCard(item, this.desks[n]);
           }
@@ -745,14 +746,14 @@
 
               // 处理常用程序 和 游戏 的数据
               tmp.game?.forEach(i=>{
-                  i.icon = desktopApps[i.index].icon
-                  i.path = desktopApps[i.index].path
-                  i.ext = desktopApps[i.index].ext
+                  i.icon = desktopApps[i.index]?.icon
+                  i.path = desktopApps[i.index]?.path
+                  i.ext = desktopApps[i.index]?.ext
               })
               tmp.programs?.forEach(i=>{
-                  i.icon = desktopApps[i.index].icon
-                  i.path = desktopApps[i.index].path
-                  i.ext = desktopApps[i.index].ext
+                  i.icon = desktopApps[i.index]?.icon
+                  i.path = desktopApps[i.index]?.path
+                  i.ext = desktopApps[i.index]?.ext
               })
 
               this.appList[0].list = tmp.game
