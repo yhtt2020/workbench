@@ -1361,10 +1361,10 @@ export default {
      * @returns {{gap: boolean, index: number}|number}
      */
     getHoverIndex(currentLeft) {
-      const panelLeft = document.getElementById('bottomContent').getBoundingClientRect().left
-      const relativePos = (currentLeft - panelLeft) % 72
-      const isGap = !(relativePos <= 42 && relativePos >= 10)
-      let nIndex = Math.floor((currentLeft - panelLeft + 20) / 72)
+      const panelLeft = document.getElementById('bottomContent').getBoundingClientRect().left * (this.navAttribute.navSize / 100)
+      const relativePos = (currentLeft - panelLeft) % (72 * this.navAttribute.navSize / 100)
+      const isGap = !(relativePos <= (42 * this.navAttribute.navSize / 100) && relativePos >= (10 * this.navAttribute.navSize / 100))
+      let nIndex = Math.floor((currentLeft - panelLeft + 20) / (72 * this.navAttribute.navSize / 100))
       if (nIndex > this.copyFootNav.length - 1) {
         //超出
         return 0
