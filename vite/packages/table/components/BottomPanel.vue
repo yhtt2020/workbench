@@ -106,7 +106,7 @@
                       <div @dragover="onDrag" @dragend="hoverIndex=-1"
                            v-if="!(this.navList.includes(item.event) && this.isOffline)"
                            class="flex items-center justify-center pointer"
-                           :class="{hover:(item.id===hoverRealItemId()&& dragItem.id!==hoverRealItemId())}"
+                           :class="{hover:(item.id===hoverRealItemId()&& dragItem?.id!==hoverRealItemId())}"
                            style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                            @click.stop="newOpenApp(item.type, item.value, item)">
 
@@ -1099,7 +1099,8 @@ export default {
      */
     msgNotice (item) {
       if (item.type === 'tableApp') {
-        message.loading(`打开「${item.name}」...`)
+        message.loading({content:`打开「${item.name}」...`
+        ,key:'tipRun'})
       }
     },
     /**
@@ -1117,7 +1118,11 @@ export default {
       if (value === 'home' && item.home) {
         this.jumpDesk = item.home
       }
-      startApp(type, value, this.$router)
+      let rs=await startApp(type, value, this.$router)
+      if(!rs){
+        message.error({content:`打开「${item.name}」失败`
+          ,key:'tipRun'})
+      }
       type !== 'folder' ? this.folderVisible = false : ''
       
     },
