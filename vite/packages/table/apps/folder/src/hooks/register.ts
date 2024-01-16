@@ -16,11 +16,10 @@ export const registerFolder = (desk) => {
   //   },
   //   desk
   // );
-
   let data = _.cloneDeep(defaultFolderData);
   desk.cards.push({
     name: "folder",
-    id: nanoid(6),
+    id: Date.now(),
     customData: data,
   });
   completeTask("M0103");

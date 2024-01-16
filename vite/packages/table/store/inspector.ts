@@ -59,7 +59,6 @@ export const inspectorStore = defineStore(
           Object.keys(data).map(key=>{
           return filteredData[key]=Number(data[key]?.value?data[key]?.value:data[key])
         })
-        console.log(filteredData)
         this.displayData = filteredData;
       },
       setDisplayValue(key, value) {

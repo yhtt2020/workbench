@@ -36,11 +36,10 @@
 
     <Drop>
       <!-- 自由布局 -->
-
       <FreeLayoutScrollbar
         ref="freeLayoutScrollbar"
         class="flex-1"
-        v-if="isFreeLayout && $route.path == '/main' && freeLayout"
+        v-if="isFreeLayout == true && $route.path == '/main' && freeLayout"
       >
         <FreeLayoutCanvas class="home-widgets">
           <FreeLayoutContainer
@@ -662,8 +661,6 @@ export default {
     window.addEventListener("resize", this.resizeHandler);
     this.loaded = true;
     this.resetLayout();
-
-
   },
   unmounted() {
     if (this.fullScreen) {
@@ -685,9 +682,11 @@ export default {
       }, 1);
     },
     freeLayoutScrollbarRedirect() {
+      if (!this.isFreeLayout) return;
       this.$refs.freeLayoutScrollbar.redirect();
     },
     freeLayoutScrollbarUpdate() {
+      if (!this.isFreeLayout) return;
       this.$refs.freeLayoutScrollbar.update();
     },
     learn() {

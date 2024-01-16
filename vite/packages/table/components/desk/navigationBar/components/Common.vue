@@ -8,38 +8,63 @@
 import { ref, reactive, computed, watch, toRef } from 'vue'
 import { useNavigationStore } from '../navigationStore'
 import { appStore } from '../../../../store';
+import { navStore } from '../../../../store/nav'
+const useNavStore = navStore()
 const navigationStore = useNavigationStore()
 const useAppStore = appStore()
-const childrenMenu = computed(() => {
-    return [
-        {
-            id: 1,
-            name: navigationStore.bottomToggle[0] ? '隐藏用户中心' : '显示用户中心',
-            newIcon: "fluent:person-16-regular",
-            fn: () => { navigationStore.bottomToggle[0] = !navigationStore.bottomToggle[0] }
-        },
-        {
-            id: 2,
-            name: navigationStore.bottomToggle[1] ? '隐藏社区助手' : '显示社区助手',
-            newIcon: "fluent:people-community-16-regular",
-            fn: () => { navigationStore.bottomToggle[1] = !navigationStore.bottomToggle[1] }
-        },
-        {
-            id: 3,
-            name: navigationStore.bottomToggle[2] ? '隐藏任务中心' : '显示任务中心',
-            newIcon: "fluent:task-list-square-16-regular",
-            fn: () => { navigationStore.bottomToggle[2] = !navigationStore.bottomToggle[2] }
-        },
-        {
-            id: 4,
-            name: useAppStore.settings.enableChat ? '隐藏社群沟通' : '显示社群沟通',
-            newIcon: "fluent:chat-16-regular",
-            fn: () => { useAppStore.settings.enableChat = !useAppStore.settings.enableChat }
-        },
-    ]
-})
+const iconList = ref([
+    {
+        value: 'commun',
+        name: '社区中心',
+        icon: '/logo/commun.svg',
+        bg: '',
+        isBg: false,
+        mode: 'app',
+        type: 'systemApp'
+    },
+    {
+        value: 'task',
+        name: '任务中心',
+        icon: '/logo/task.svg',
+        bg: '',
+        isBg: false,
+        mode: 'app',
+        type: 'systemApp'
+        
+    }
+])
 watch(() => navigationStore.bottomToggle[0], () => {
     useAppStore.settings.enableChat = !useAppStore.settings.enableChat
 })
+/**
+ * 社区和任务的监听函数
+ * @param target 目标值
+ * @param value 
+ * @param item 
+ */
+ const findItem = (target,value,item)=>{
+    if(target){
+        const hasTargetItem = useNavStore.copyFootNav.some(item => item.value === value);
+        if (hasTargetItem) {
+            return true;
+        }
+        useNavStore.setFootNavigationList(item);
+    }else{
+        const index = useNavStore.copyFootNav.findIndex(item => item.value === value);
+        if (index !== -1) {
+           useNavStore.removeFootNavigationList(index); 
+        }
+    }
+}
+/**
+ * 社区中心和任务中心
+ */
+watch(() => navigationStore.bottomToggle[1], (newValue, oldValue) => {
+    findItem(newValue,'commun',iconList.value[0])
+}, { deep: true, immediate: true });
+
+watch(() => navigationStore.bottomToggle[2], (newValue, oldValue) => {
+    findItem(newValue,'task',iconList.value[1])
+}, { deep: true, immediate: true });
 </script>
 <style lang='scss' scoped></style>

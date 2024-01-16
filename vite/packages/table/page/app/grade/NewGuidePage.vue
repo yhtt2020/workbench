@@ -1,222 +1,222 @@
-<template>
-  <div class="fixed overflow-hidden modal-center xt-modal tran"
-    :class="popState?'pop':step==4?'theme':'Popup' "
-    style="">
-    <div v-if="!popState" class="h-full">
-      <!-- 顶部按钮 -->
-      <div v-if="step!==0" @click="prevStep" class="top-icon no-drag absolute ml-4">
-          <MyIcon icon="fluent:chevron-left-16-filled"  width="20" height="20"/>
-      </div>
-      <div @click="themeSwitch" class="top-icon no-drag absolute mr-4" style="right:0;">
-          <MyIcon icon="fluent:weather-moon-16-regular"  width="20" height="20"/>
-      </div>
-
-      <!-- 选择偏好 -->
-      <div v-if="step==0" class="h-full w-full ">
-        <div v-if="!loading" style="padding-top:80px">
-        <!-- <div v-if="false"> -->
-          <div class="text-center font-16 xt-text ">定制你的桌面</div>
-          <div class="text-center xt-text-2 font-16 mt-3 text-hidden">选择你的使用偏好，我们将为你添加推荐的数据，支持选择多个偏好。</div>
-          <a-row :gutter="20" class="flex justify-center mt-6">
-            <a-col v-for="item in deskType">
-              <div :class="{'active':deskTypeObj[item.key]}"
-              class="setting-panel pointer px-4 pt-5"
-              @click="setDeskType(item.key)"
-              >
-                <div class="title">
-                  <MyIcon :icon="item.icon" width="56" height="56" />
-                  <div class="mt-2">{{ item.title }}</div>
-                </div>
-                <div class="content mt-2">{{ item.content }}</div>
-              </div>
-            </a-col>
-          </a-row>
+  <template>
+    <div class="fixed overflow-hidden modal-center xt-modal tran"
+      :class="popState?'pop':step==4?'theme':'Popup' "
+      style="">
+      <div v-if="!popState" class="h-full">
+        <!-- 顶部按钮 -->
+        <div v-if="step!==0" @click="prevStep" class="absolute ml-4 top-icon no-drag">
+            <MyIcon icon="fluent:chevron-left-16-filled"  width="20" height="20"/>
         </div>
-        <!-- 加载过程 -->
-        <div class="flex justify-center items-center h-full w-full" v-else>
-          <div class="">
-            <div class="font-16 text-center xt-text">智能推荐进行中，稍等一会儿，马上就好~</div>
-            <div class="mt-6" style="width:360px">
-              <a-progress :percent="time" :show-info="false" />
-            </div>
+        <div @click="themeSwitch" class="absolute mr-4 top-icon no-drag" style="right:0;">
+            <MyIcon icon="fluent:weather-moon-16-regular"  width="20" height="20"/>
+        </div>
+
+        <!-- 选择偏好 -->
+        <div v-if="step==0" class="w-full h-full ">
+          <div v-if="!loading" style="padding-top:80px">
+          <!-- <div v-if="false"> -->
+            <div class="text-center font-16 xt-text ">定制你的桌面</div>
+            <div class="mt-3 text-center xt-text-2 font-16 text-hidden">选择你的使用偏好，我们将为你添加推荐的数据，支持选择多个偏好。</div>
+            <a-row :gutter="20" class="flex justify-center mt-6">
+              <a-col v-for="item in deskType">
+                <div :class="{'active':deskTypeObj[item.key]}"
+                class="px-4 pt-5 setting-panel pointer"
+                @click="setDeskType(item.key)"
+                >
+                  <div class="title">
+                    <MyIcon :icon="item.icon" width="56" height="56" />
+                    <div class="mt-2">{{ item.title }}</div>
+                  </div>
+                  <div class="mt-2 content">{{ item.content }}</div>
+                </div>
+              </a-col>
+            </a-row>
           </div>
-        </div>
-      </div>
-
-      <!-- 导入桌面图标 -->
-      <div v-else-if="step == 1">
-        <div class="font-16 xt-text text-center pt-6">导入你的桌面图标</div>
-        <div class="font-16 text-center xt-text-2" style="width:704px;margin:16px auto 0;">我们帮你整理了桌面图标，应用程序类图标我们会帮你整理到导航栏，文件类型图标会整理到桌面，后续你也可以随时将需要快速访问的程序或文件拖放到工作台桌面和导航栏。</div>
-        <div class="xt-scrollbar overflow-hidden overflow-y-auto flex flex-wrap mt-4" style="height: 400px;padding-left:19px;" >
-          <div v-for="(item, index) in appList" :key="index" class="span-list xt-bg-2 pt-2 "
-            :class="index>2?'mt-3':'',index%3!=0?'ml-3':''">
-            <!-- 标题 -->
-            <div class="xt-text-2 font-14 h-8 leading-8 px-3">{{ item.name }} ( {{ item.list?.length }} )
-              <div class="float-right flex items-center">
-                <MyIcon class="pointer" @click="item.type = 'rows'" v-if="item.type == 'columns'" icon="fluent:apps-list-detail-24-regular" width="20" height="20" />
-                <MyIcon class="pointer" @click="item.type = 'columns'" v-else icon="fluent:grid-20-regular" width="20" height="20" />
-                <div class="ml-2 w-8 h-8 rounded-lg xt-bg flex justify-center items-center">
-                  <a-checkbox v-model:checked="item.isCheck"></a-checkbox>
-                </div>
-              </div>
-            </div>
-            <!-- 列展示 -->
-            <div v-if="item.type == 'columns'" class="xt-scrollbar overflow-hidden overflow-y-auto mt-1 px-1" style="height:180px;">
-              <div v-for="app in item.list" class="flex items-center list-rows px-2 xt-text" >
-                <a-avatar shape="square" :size="32" :src="app.icon" class="flex-none"></a-avatar>
-                <div class="text-hidden ml-3">{{ app.name }}</div>
-              </div>
-            </div>
-            <!-- 行展示 -->
-            <div v-else class="xt-scrollbar overflow-hidden overflow-y-auto mt-1 flex flex-wrap justify-space px-2" style="height:194px;">
-              <div v-for="(app, key) in item.list" class="flex list-columns xt-text flex-col text-center items-center"
-              :class="key%3!=0?'ml-1':'', key>2?'mt-2':''"
-              >
-                <a-avatar shape="square" :size="40" :src="app.icon" class="flex-none "></a-avatar>
-                <div style="width:60px;" class="text-hidden mt-1">{{ app.name }}</div>
+          <!-- 加载过程 -->
+          <div class="flex items-center justify-center w-full h-full" v-else>
+            <div class="">
+              <div class="text-center font-16 xt-text">智能推荐进行中，稍等一会儿，马上就好~</div>
+              <div class="mt-6" style="width:360px">
+                <a-progress :percent="time" :show-info="false" />
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-
-      <!-- 导入小组件 -->
-      <div v-else-if="step == 2">
-        <div class="font-16 xt-text text-center pt-6" >添加推荐小组件</div>
-        <div class="font-16 text-center xt-text-2" style="width:704px;margin:16px auto 0;">根据你选择偏好，我们为你推荐了以下小组件。你可以稍后添加更多其他的小组件。</div>
-        <div class="xt-scrollbar overflow-hidden overflow-y-auto flex flex-wrap mt-4" style="height: 400px;padding-left:16px;" >
-          <div v-for="(item, index) in cardList" :key="index" class="card-list xt-bg-2 rounded-lg flex"
-          :class="index%2!=0?'ml-3':'', index>1?'mt-3':''"
-          style="">
-            <div class="xt-bg-m h-full card-left rounded-l-lg flex relative items-center flex-shrink-0 overflow-hidden" style="">
-
-              <div class="flex tran" :style="{transform: `translateX(${-180*item.imgIndex}px)`}">
-                <div v-for="img in item.option" class="flex-shrink-0 flex justify-center" style="width:180px;">
-                  <img :style="{zoom:`${img.zoom}%`}" :src="`https://a.apps.vip/cards/${img.imgName}.png`" />
+        <!-- 导入桌面图标 -->
+        <div v-else-if="step == 1">
+          <div class="pt-6 text-center font-16 xt-text">导入你的桌面图标</div>
+          <div class="text-center font-16 xt-text-2" style="width:704px;margin:16px auto 0;">我们帮你整理了桌面图标，应用程序类图标我们会帮你整理到导航栏，文件类型图标会整理到桌面，后续你也可以随时将需要快速访问的程序或文件拖放到工作台桌面和导航栏。</div>
+          <div class="flex flex-wrap mt-4 overflow-hidden overflow-y-auto xt-scrollbar" style="height: 400px;padding-left:19px;" >
+            <div v-for="(item, index) in appList" :key="index" class="pt-2 span-list xt-bg-2 "
+              :class="index>2?'mt-3':'',index%3!=0?'ml-3':''">
+              <!-- 标题 -->
+              <div class="h-8 px-3 leading-8 xt-text-2 font-14">{{ item.name }} ( {{ item.list?.length }} )
+                <div class="flex items-center float-right">
+                  <MyIcon class="pointer" @click="item.type = 'rows'" v-if="item.type == 'columns'" icon="fluent:apps-list-detail-24-regular" width="20" height="20" />
+                  <MyIcon class="pointer" @click="item.type = 'columns'" v-else icon="fluent:grid-20-regular" width="20" height="20" />
+                  <div class="flex items-center justify-center w-8 h-8 ml-2 rounded-lg xt-bg">
+                    <a-checkbox v-model:checked="item.isCheck"></a-checkbox>
+                  </div>
                 </div>
               </div>
-              <!-- 图片圆点 -->
-              <div class="absolute bottom-3 pointer flex left-1/2" v-if="item.option.length>1" :style="{transform: `translateX(${-6*item.option?.length}px)`}">
-                <div class="circle xt-enable-bg" v-for="(cir, cle) in item.option" @click="item.imgIndex = cle"
-                 :class="cle==item.imgIndex?'circle-active':'', cle>0?'ml-2':''"
-                ></div>
+              <!-- 列展示 -->
+              <div v-if="item.type == 'columns'" class="px-1 mt-1 overflow-hidden overflow-y-auto xt-scrollbar" style="height:180px;">
+                <div v-for="app in item.list" class="flex items-center px-2 list-rows xt-text" >
+                  <a-avatar shape="square" :size="32" :src="app.icon" class="flex-none"></a-avatar>
+                  <div class="ml-3 text-hidden">{{ app.name }}</div>
+                </div>
+              </div>
+              <!-- 行展示 -->
+              <div v-else class="flex flex-wrap px-2 mt-1 overflow-hidden overflow-y-auto xt-scrollbar justify-space" style="height:194px;">
+                <div v-for="(app, key) in item.list" class="flex flex-col items-center text-center list-columns xt-text"
+                :class="key%3!=0?'ml-1':'', key>2?'mt-2':''"
+                >
+                  <a-avatar shape="square" :size="40" :src="app.icon" class="flex-none "></a-avatar>
+                  <div style="width:60px;" class="mt-1 text-hidden">{{ app.name }}</div>
+                </div>
               </div>
             </div>
+          </div>
+        </div>
 
-            <div class="w-full px-3 pt-3 pointer" @click="item.isCheck = !item.isCheck">
-              <div class="flex justify-between w-full items-center">
-                <div class="font-18 xt-text text-hidden">{{ item.cname }}</div>
-                <div class="ml-2 w-8 h-8 rounded-lg xt-bg flex justify-center items-center">
-                  <a-checkbox v-model:checked="item.isCheck"></a-checkbox>
+
+        <!-- 导入小组件 -->
+        <div v-else-if="step == 2">
+          <div class="pt-6 text-center font-16 xt-text" >添加推荐小组件</div>
+          <div class="text-center font-16 xt-text-2" style="width:704px;margin:16px auto 0;">根据你选择偏好，我们为你推荐了以下小组件。你可以稍后添加更多其他的小组件。</div>
+          <div class="flex flex-wrap mt-4 overflow-hidden overflow-y-auto xt-scrollbar" style="height: 400px;padding-left:16px;" >
+            <div v-for="(item, index) in cardList" :key="index" class="flex rounded-lg card-list xt-bg-2"
+            :class="index%2!=0?'ml-3':'', index>1?'mt-3':''"
+            style="">
+              <div class="relative flex items-center flex-shrink-0 h-full overflow-hidden rounded-l-lg xt-bg-m card-left" style="">
+
+                <div class="flex tran" :style="{transform: `translateX(${-180*item.imgIndex}px)`}">
+                  <div v-for="img in item.option" class="flex justify-center flex-shrink-0" style="width:180px;">
+                    <img :style="{zoom:`${img.zoom}%`}" :src="`https://a.apps.vip/cards/${img.imgName}.png`" />
+                  </div>
+                </div>
+                <!-- 图片圆点 -->
+                <div class="absolute flex bottom-3 pointer left-1/2" v-if="item.option.length>1" :style="{transform: `translateX(${-6*item.option?.length}px)`}">
+                  <div class="circle xt-enable-bg" v-for="(cir, cle) in item.option" @click="item.imgIndex = cle"
+                   :class="cle==item.imgIndex?'circle-active':'', cle>0?'ml-2':''"
+                  ></div>
                 </div>
               </div>
 
-              <div class="font-16 xt-text-2 mt-2 text-hidden-2">{{ item.detail }}</div>
-              <div class=" mt-2 ">
-                <span class="font-14 xt-text-2 xt-enable-bg rounded-md"
-                :class="n>0?'ml-1':''" style="padding:4px 8px;"
-                v-for="(key, n) in item.sizes.slice(0, 2)">{{ key }}</span>
-              </div>
-              <div class="xt-text-2 flex items-center mt-4">
-                <MyIcon icon="fluent:arrow-download-20-filled" width="16" height="16" />
-                <div class="ml-1">{{ item.download }}</div>
-              </div>
+              <div class="w-full px-3 pt-3 pointer" @click="item.isCheck = !item.isCheck">
+                <div class="flex items-center justify-between w-full">
+                  <div class="font-18 xt-text text-hidden">{{ item.cname }}</div>
+                  <div class="flex items-center justify-center w-8 h-8 ml-2 rounded-lg xt-bg">
+                    <a-checkbox v-model:checked="item.isCheck"></a-checkbox>
+                  </div>
+                </div>
+
+                <div class="mt-2 font-16 xt-text-2 text-hidden-2">{{ item.detail }}</div>
+                <div class="mt-2 ">
+                  <span class="rounded-md font-14 xt-text-2 xt-enable-bg"
+                  :class="n>0?'ml-1':''" style="padding:4px 8px;"
+                  v-for="(key, n) in item.sizes.slice(0, 2)">{{ key }}</span>
+                </div>
+                <div class="flex items-center mt-4 xt-text-2">
+                  <MyIcon icon="fluent:arrow-download-20-filled" width="16" height="16" />
+                  <div class="ml-1">{{ item.download }}</div>
+                </div>
 
             </div>
           </div>
         </div>
       </div>
 
-      <!-- 导入导航栏 -->
-      <div v-else-if="step == 3">
-        <div class="font-16 xt-text text-center pt-6" >添加导航图标</div>
-        <div class="font-16 text-center xt-text-2" style="width:704px;margin:16px auto 0;">根据你选择偏好，我们为你推荐了以下图标。你可以稍后添加更多其他的图标。</div>
-        <div class="xt-scrollbar overflow-hidden overflow-y-auto flex flex-wrap mt-4 content-start" style="height: 400px;padding-left:19px;" >
-          <div  class="nav-list flex relative xt-bg-2 rounded-lg items-center flex-col pt-4 pointer" v-for="(item, index) in navList"
-          :class="index%4!=0?'ml-4':'ml-10',index>3?'mt-4':'', index==0?'disabled':''" @click="changeNavList(item, index)">
-            <div class="absolute top-1.5 right-1.5 w-8 h-8 rounded-lg xt-bg flex justify-center items-center">
-              <a-checkbox :disabled="index==0" v-model:checked="item.isCheck"></a-checkbox>
+        <!-- 导入导航栏 -->
+        <div v-else-if="step == 3">
+          <div class="pt-6 text-center font-16 xt-text" >添加导航图标</div>
+          <div class="text-center font-16 xt-text-2" style="width:704px;margin:16px auto 0;">根据你选择偏好，我们为你推荐了以下图标。你可以稍后添加更多其他的图标。</div>
+          <div class="flex flex-wrap content-start mt-4 overflow-hidden overflow-y-auto xt-scrollbar" style="height: 400px;padding-left:19px;" >
+            <div  class="relative flex flex-col items-center pt-4 rounded-lg nav-list xt-bg-2 pointer" v-for="(item, index) in navList"
+            :class="index%4!=0?'ml-4':'ml-10',index>3?'mt-4':'', index==0?'disabled':''" @click="changeNavList(item, index)">
+              <div class="absolute top-1.5 right-1.5 w-8 h-8 rounded-lg xt-bg flex justify-center items-center">
+                <a-checkbox :disabled="index==0" v-model:checked="item.isCheck"></a-checkbox>
+              </div>
+              <a-avatar class="flex-none" shape="square" :size="64" :src="item.icon"></a-avatar>
+              <div class="w-full mt-3 text-center font-16 xt-text text-hidden">{{ item.name }}</div>
+              <div class="mt-2 font-14 xt-text-2">{{ item.type=='systemApp'?'系统功能':item.type=='tableApp'?'应用程序':'文件夹' }}</div>
             </div>
-            <a-avatar class="flex-none" shape="square" :size="64" :src="item.icon"></a-avatar>
-            <div class="mt-3 font-16 xt-text text-hidden w-full text-center">{{ item.name }}</div>
-            <div class="mt-2 font-14 xt-text-2">{{ item.type=='systemApp'?'系统功能':item.type=='tableApp'?'应用程序':'文件夹' }}</div>
           </div>
         </div>
-      </div>
 
-      <!-- 导入导航栏 -->
-      <div v-else-if="step == 4">
-        <div class="font-16 xt-text text-center pt-6" >最后一步啦，定制主题 ~</div>
-        <div class="px-4">
+        <!-- 导入导航栏 -->
+        <div v-else-if="step == 4">
+          <div class="pt-6 text-center font-16 xt-text" >最后一步啦，定制主题 ~</div>
+          <div class="px-4">
 
-          <div class="xt-bg-2 p-4 pb-1 mt-2 rounded-xl">
-            <xt-option-info title="主题色" />
-            <xt-option-color :isLinear="false"  v-model:color="themeColor" colorNum="5"  />
-          </div>
-
-          <div class="xt-bg-2 p-4 pb-1 mt-3 rounded-xl "><xt-option-info
-            title="桌面壁纸"
-            info="选择喜欢的图片作为工作台桌面壁纸。"
-          />
-          <xt-update-desk-bg></xt-update-desk-bg>
-            <!-- <xt-button w="200" h="112" class="xt-bg-m relative mb-3"  style="border-radius: 6px"  @click="openPaperModal" >
-              <div class="w-full h-full absolute top-0 left-0 rounded-md">
-                <img :src="backgroundImage.path" class="w-full h-full object-cover rounded-md"/>
-              </div>
-            </xt-button> -->
-            <!-- <hr /> -->
-            <xt-option-info
-              title="桌面壁纸模糊度"
-              info="调节桌面壁纸的模糊程度。"
-              icon="fluent:arrow-clockwise-16-regular"
-              @onIconClick="backgroundSettings.backGroundImgBlur = 0"
+            <div class="p-4 pb-1 mt-2 xt-bg-2 rounded-xl">
+              <xt-option-info title="主题色" />
+              <xt-option-color :isLinear="false"  v-model:color="themeColor" colorNum="5"  />
+            </div>
+  
+            <div class="p-4 pb-1 mt-3 xt-bg-2 rounded-xl "><xt-option-info
+              title="桌面壁纸"
+              info="选择喜欢的图片作为工作台桌面壁纸。"
             />
-            <xt-option-slider v-model:slider="backgroundSettings.backGroundImgBlur" :min="0" :max="100" />
+
+              <xt-button w="200" h="112" class="relative mb-3 xt-bg-m"  style="border-radius: 6px"  @click="openPaperModal" >
+                <div class="absolute top-0 left-0 w-full h-full rounded-md">
+                  <img :src="backgroundImage.path" class="object-cover w-full h-full rounded-md"/>
+                </div>
+              </xt-button>
+              <!-- <hr /> -->
+              <xt-option-info
+                title="桌面壁纸模糊度"
+                info="调节桌面壁纸的模糊程度。"
+                icon="fluent:arrow-clockwise-16-regular"
+                @onIconClick="backgroundSettings.backGroundImgBlur = 0"
+              />
+              <xt-option-slider v-model:slider="backgroundSettings.backGroundImgBlur" :min="0" :max="100" />
+            </div>
           </div>
+        </div>
+
+        <!-- 按钮 -->
+        <div class="flex justify-between w-full px-3" style="position: absolute;bottom: 12px;">
+          <div class="float-left">
+            <xt-button   class="float-left button-bottom" @click="preview"  style="width:113px !important;"  size="large">
+                <div class="flex items-center ">
+                  <MyIcon class="mr-1" icon="fluent:desktop-16-regular" width="20" height="20"/>
+                  预览桌面
+                </div>
+              </xt-button>
+          </div>
+          <div class="flex" v-if="step==0 && !loading">
+            <xt-button   class="ml-3 button-bottom" @click="nextStep"   size="large" >暂不分析</xt-button>
+              <xt-button   class="ml-3 button-bottom" @click="analysis"   size="large" type="theme">开始分析</xt-button>
+          </div>
+          <div class="flex" v-if="step==1">
+              <xt-button   class="ml-3 button-bottom" @click="nextStep"   size="large" >暂不添加</xt-button>
+              <xt-button   class="ml-3 button-bottom" @click="addFolder"   size="large" type="theme">确定添加({{ folderNum }})</xt-button>
+            </div>
+
+            <div class="flex" v-if="step==2">
+              <xt-button   class="ml-3 button-bottom" @click="nextStep"   size="large" >暂不添加</xt-button>
+              <xt-button   class="ml-3 button-bottom" @click="addDeskCard"   size="large" type="theme">确定添加</xt-button>
+            </div>
+            <div class="flex" v-if="step==3">
+              <xt-button   class="ml-3 button-bottom" @click="nextStep"   size="large" >暂不添加</xt-button>
+              <xt-button   class="ml-3 button-bottom" @click="addNavList"   size="large" type="theme">确定添加</xt-button>
+            </div>
+            <div class="flex" v-if="step==4">
+              <xt-button   class="ml-3 button-bottom" @click="close"   size="large" type="theme">Go ~</xt-button>
+            </div>
         </div>
       </div>
 
-      <!-- 按钮 -->
-      <div class="flex w-full justify-between px-3" style="position: absolute;bottom: 12px;">
-        <div class="float-left">
-          <xt-button   class="button-bottom float-left" @click="preview"  style="width:113px !important;"  size="large">
-              <div class=" flex items-center">
-                <MyIcon class="mr-1" icon="fluent:desktop-16-regular" width="20" height="20"/>
-                预览桌面
-              </div>
-            </xt-button>
+      <div v-else>
+        <div style="height:60px;width:200px" class="flex items-center justify-between px-4 xt-text font-16 pointer" @click="popState = flase">
+          定制桌面
+          <div class="flex items-center justify-center w-8 h-8 rounded-lg xt-bg-2">
+            <MyIcon icon="fluent:full-screen-maximize-16-filled" width="20" height="20" />
+          </div>
         </div>
-        <div class="flex" v-if="step==0 && !loading">
-          <xt-button   class="button-bottom ml-3" @click="nextStep"   size="large" >暂不分析</xt-button>
-            <xt-button   class="button-bottom ml-3" @click="analysis"   size="large" type="theme">开始分析</xt-button>
-        </div>
-        <div class="flex" v-if="step==1">
-            <xt-button   class="button-bottom ml-3" @click="nextStep"   size="large" >暂不添加</xt-button>
-            <xt-button   class="button-bottom ml-3" @click="addFolder"   size="large" type="theme">确定添加({{ folderNum }})</xt-button>
-          </div>
-
-          <div class="flex" v-if="step==2">
-            <xt-button   class="button-bottom ml-3" @click="nextStep"   size="large" >暂不添加</xt-button>
-            <xt-button   class="button-bottom ml-3" @click="addDeskCard"   size="large" type="theme">确定添加</xt-button>
-          </div>
-          <div class="flex" v-if="step==3">
-            <xt-button   class="button-bottom ml-3" @click="nextStep"   size="large" >暂不添加</xt-button>
-            <xt-button   class="button-bottom ml-3" @click="addNavList"   size="large" type="theme">确定添加</xt-button>
-          </div>
-          <div class="flex" v-if="step==4">
-            <xt-button   class="button-bottom ml-3" @click="close"   size="large" type="theme">Go ~</xt-button>
-          </div>
-      </div>
-    </div>
-
-    <div v-else>
-      <div style="height:60px;width:200px" class="flex items-center px-4 justify-between xt-text font-16 pointer" @click="popState = flase">
-        定制桌面
-        <div class="w-8 h-8 flex justify-center items-center rounded-lg xt-bg-2">
-          <MyIcon icon="fluent:full-screen-maximize-16-filled" width="20" height="20" />
-        </div>
-      </div>
 
     </div>
 
@@ -229,18 +229,8 @@
   import { mapWritableState, mapActions } from 'pinia';
   import {appStore} from '../../../store';
   import { cardStore } from '../../../store/card';
-  import {defaultAvatar} from '../../../js/common/teamAvatar'
-  import {taskStore} from '../../../apps/task/store'
-  // import GradeNotice from './GradeNotice.vue'
-  import {
-    guideData,workTheme,teamData,modeData,
-    deskTemplate,diyPanel,gamePanel,workPanel,mergePanel,modeImg
-  } from '../../../js/data/guideData'
-  import cache from '../../../components/card/hooks/cache';
-  import HorizontalPanel from '../../../components/HorizontalPanel.vue'
   import _ from 'lodash-es'
   import { Icon as MyIcon, listIcons } from '@iconify/vue';
-  import { homeStore } from '../../../store/home'
   // 修改浅色模式
   import { setThemeSwitch } from "../../../components/card/hooks/themeSwitch";
   // ai分析
@@ -252,7 +242,6 @@
   import { message } from "ant-design-vue";
   import { setBgColor, setSecondaryBgColor } from "../../../components/card/hooks/styleSwitch/setStyle";
   import GalleryModal from "../../../components/paperModal/GalleryModal.vue";
-  
   export default {
     components:{
       MyIcon,
@@ -294,6 +283,8 @@
         loading: false,
         timer: null,
         time: 0,
+        setTime: 120,
+        setTimer: null,
         // 转换好的数据
         appList: [
           {
@@ -339,17 +330,17 @@
         themeState: true,
         baseNavList: [],
         // 三种不同的分类组件
-        assist: ['AIaides', 'clocks', 'countdownDay', 'weather', 'notes', 'customTimer', 'clock', 'todo', 'historyInfo', 'tomatoTimer', 'search', 'Courier', 'wallpaper', 'fish', 'eatToday', 'OilPrices'],
+        assist: ['AIaides', 'clocks', 'countdownDay', 'weather', 'notes', 'customTimer', 'clock', 'todo', 'historyInfo', 'tomatoTimer', 'search', 'Courier', 'wallpaper', 'fish', 'eatToday'],
         assistList: [],
         game: ['gameAssis', 'strategy', 'AIaides', 'wallpaper', 'capture', 'notes', 'music', 'historyInfo', 'tomatoTimer', 'todo', 'games', 'GameEpic', 'myFriends', 'Audio', 'fish'],
         gameList: [],
-        current: ['AIaides', 'clocks', 'countdownDay', 'weather', 'notes', 'customTimer', 'clock', 'todo', 'historyInfo', 'tomatoTimer', 'Courier', 'wallpaper', 'fish', 'Audio', 'eatToday', 'OilPrices', 'games', 'GameEpic', 'myFriends', 'music'],
+        current: ['AIaides', 'clocks', 'countdownDay', 'weather', 'notes', 'customTimer', 'clock', 'todo', 'historyInfo', 'tomatoTimer', 'Courier', 'wallpaper', 'fish', 'Audio', 'eatToday', 'games', 'GameEpic', 'myFriends', 'music'],
         currentList: [],
         // 导航
-        navList: [
-          { type: 'systemApp', icon: '/logo/home.svg', name: '桌面主页', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'home', isCheck: true},
-          { type: 'systemApp', icon: '/logo/app.svg', name: '应用中心', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'apps', isCheck: true},
-          { type: 'folder', icon: '/logo/efficiency.svg', name: '效率助手', bg: '',isBg: '', mode: 'app', value: 'folder', isCheck: true, children:[
+        navListTmp: [
+          { type: 'systemApp', icon: '/logo/home.svg', name: '桌面主页', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'home', isCheck: true, id: '1705024806'},
+          { type: 'systemApp', icon: '/logo/app.svg', name: '应用中心', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'apps', isCheck: true, id: '1705024807'},
+          { type: 'folder', icon: '/logo/efficiency.svg', name: '效率助手', bg: '',isBg: '', mode: 'app', value: 'folder', isCheck: true, id: '1705024808', children:[
             { type: 'systemApp', icon: '/logo/efficiency.svg', name: '效率助手', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'work'},
             { type: 'systemApp', icon: '/logo/directive.svg', name: '快捷指令', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'deck'},
             { type: 'systemApp', icon: '/logo/shortCut.svg', name: '快捷键', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'shortcutIndex'},
@@ -357,11 +348,11 @@
             { type: 'systemApp', icon: '/logo/clipboard.svg', name: '剪切板', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'clipboard'},
             { type: 'systemApp', icon: '/logo/memorandum.svg', name: '备忘录', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'note'},
           ]},
-          { type: 'systemApp', icon: '/logo/game.svg', name: '游戏助手', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'gameIndex', isCheck: true},
-          { type: 'systemApp', icon: '/logo/task.svg', name: '任务中心', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'task', isCheck: true},
-          { type: 'systemApp', icon: '/logo/commun.svg', name: '社区中心', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'commun', isCheck: true},
-          { type: 'systemApp', icon: '/logo/fullscreen.svg', name: '全屏', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'fullscreen', isCheck: true},
-          { type: 'systemApp', icon: '/logo/settings.svg', name: '设置中心', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'setting', isCheck: true},
+          { type: 'systemApp', icon: '/logo/game.svg', name: '游戏助手', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'gameIndex', isCheck: true, id: '1705024809'},
+          { type: 'systemApp', icon: '/logo/task.svg', name: '任务中心', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'task', isCheck: true, id: '1705024810'},
+          { type: 'systemApp', icon: '/logo/commun.svg', name: '社区中心', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'commun', isCheck: true, id: '1705024811'},
+          { type: 'systemApp', icon: '/logo/fullscreen.svg', name: '全屏', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'fullscreen', isCheck: true, id: '1705024812'},
+          { type: 'systemApp', icon: '/logo/settings.svg', name: '设置中心', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'setting', isCheck: true, id: '1705024813'},
         ],
         // 主题色
         themeColor: "",
@@ -369,21 +360,18 @@
         imgBlur: 0,
         // 添加到导航栏的游戏常用程序列表
         exeNavList: [
-          { type: 'folder', icon: '/logo/game.svg', name: '游戏', bg: '',isBg: '', mode: 'app', value: 'folder', isCheck: true, children:[
-            { type: 'systemApp', icon: '/logo/efficiency.svg', name: '效率助手', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'work'},
-          ]},
-          { type: 'folder', icon: '/logo/app.svg', name: '常用程序', bg: '',isBg: '', mode: 'app', value: 'folder', isCheck: true, children:[
-            { type: 'systemApp', icon: '/logo/efficiency.svg', name: '效率助手', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'work'},
-          ]},
+          { type: 'folder', id: '1705024724', icon: '', name: '游戏', bg: '',isBg: '', mode: 'app', value: 'folder', isCheck: true, children:[]},
+          { type: 'folder', id: '1705024725', icon: '', name: '常用程序', bg: '',isBg: '', mode: 'app', value: 'folder', isCheck: true, children:[]},
         ],
-
+        //  给ai做的容错
+        fault: [],
       }
     },
     props:['deskId'],
     computed:{
       ...mapWritableState(cardStore,['desks', 'addCard']),
-      ...mapWritableState(appStore, ['backgroundSettings', 'backgroundImage']),
-      ...mapWritableState(navStore, ['footNavigationList']),
+      ...mapWritableState(appStore, ['backgroundSettings', 'backgroundImage', 'styles']),
+      ...mapWritableState(navStore, ['copyFootNav']),
       cardList(){
         if(this.deskTypeObj.current){
           return this.currentList
@@ -399,17 +387,30 @@
       },
       folderNum(){
         let n = 0
-        this.appList.forEach(item=>{
+        this.appList?.forEach(item=>{
           if (item.isCheck) {
             n++
           }
         })
         return n
-      }
+      },
+
+      navigation(){
+        let tmp = [...this.navListTmp]
+        if(this.deskTypeObj.game){
+          return  tmp
+        }else{
+          tmp.splice(3, 1)
+          return tmp
+        }
+      },
 
     },
     mounted(){
+
+      // 
       let items = []
+
       NavList.map(li => {
         return items.push(...li.children)
       })
@@ -459,6 +460,7 @@
     },
 
     watch: {
+      // 修改主题颜色
       themeColor(newV) {
         if (!newV) return;
         setBgColor(newV);
@@ -466,13 +468,14 @@
       },
     },
     methods:{
+
       // 触发打开壁纸弹窗
       openPaperModal () {
         this.$refs.paperModal.openGalleryModal()
       },
+
       // 调整类型
       setDeskType(type){
-        console.log('type', type,  this.deskTypeObj[type]);
         this.deskTypeObj[type] = !this.deskTypeObj[type]
         if(this.deskTypeObj[type]){
           if(type == 'current'){
@@ -483,47 +486,78 @@
           }
         }
       },
-
+      // 修改导航图标选中
       changeNavList(item, index){
         if(index>0){
           item.isCheck = !item.isCheck
         }else{
           message.info("导航栏中至少包含一个桌面主页");
         }
-
       },
+      // 主题色切换
       themeSwitch(){
         this.styles = !this.styles
         setThemeSwitch(this.styles);
       },
       prevStep () {
-        this.step--
+        const index = this.searchDeskIndex(this.deskId)
+        if(this.step == 1){
+          this.$xtConfirm("返回上一步将会清空桌面已有的数据并进行重新分析。", "", {
+            type: "warning",
+            ok: () => {
+              this.step--
+              this.desks[index].cards = []
+            },
+          });
+        }else if(this.step == 2){
+          this.$xtConfirm("返回上一步将会清空桌面已有的数据。", "", {
+            type: "warning",
+            ok: () => {
+              this.step--
+              this.desks[index].cards = []
+            },
+          });
+        }else if(this.step == 3){
+          this.$xtConfirm("返回上一步将会清除桌面已添加的小组件的数据。", "", {
+            type: "warning",
+            ok: () => {
+              this.step--
+              let tmp = []
+              this.desks[index]?.cards.forEach(item => {
+                if(item.name == 'folder'){
+                  tmp.push(item)
+                }
+              });
+              this.desks[index].cards = [...tmp]
+            },
+          });
+        }else{
+          this.step--
+        }
       },
       nextStep () {
         this.step++
       },
 
-      finish () {
-        this.deskInit = true
-        this.finishWizard()
-        this.$router.replace({ name: 'home' })
-        //
-      },
-
+      // 分析过程
       async analysis(){
         // 请求开始
-        // 开始加载过程
         this.loading = true
         this.getAiAnswer()
         this.timer = setInterval(()=>{
-          this.time+=1
-          if (this.time==99) {
-            this.clear()
+          if (this.time<98) {
+            this.time++
           }
-        },100)
+        },this.setTime)
 
-
-
+        // 添加容错 15秒之后如果ai没跑完 认定为报错 直接进行下一步
+        this.setTimer = setTimeout(() => {
+          this.appList = [...this.fault]
+          this.loading = false
+          this.step = 1
+          this.time = 0
+          this.clear()
+        }, 15000);
       },
 
       clear(){
@@ -534,7 +568,6 @@
 
       // 添加文件夹
       addFolder(){
-        console.log('appList', this.appList);
         let folders = []
         const n = this.searchDeskIndex(this.deskId)
 
@@ -567,32 +600,62 @@
             folders.push(obj)
           }
         })
-        console.log('folders', folders);
-        folders.forEach((item,index)=>{
-          if(item.customData.name == '游戏' || item.customData.name == '常用程序'){
-            let tmpList = []
+
+        // 以下操作将游戏以及常用程序的文件夹区别于其他文件夹放在导航条内 
+        this.exeNavList[0].children = []
+        this.exeNavList[1].children = []
+
+        folders.forEach(item=>{
+          if(item.customData.name == '游戏'){
             item.customData?.list.forEach(i=>{
-              tmpList.push({ type: 'tableApp', icon: i.icon, name: i.name, addNav: true, bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: i.value})
+              this.exeNavList[0].children?.push({ type: 'tableApp', icon: i.icon, name: i.name, addNav: true, bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: i.value})
             })
             
-            this.footNavigationList.splice(-2, 0, ...tmpList)
+          }else if(item.customData.name == '常用程序'){
+            item.customData?.list.forEach(i=>{
+              this.exeNavList[1].children?.push({ type: 'tableApp', icon: i.icon, name: i.name, addNav: true, bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: i.value})
+            })
           }else{
             this.addCard(item, this.desks[n]);
           }
-
+          
         })
 
-        // { type: 'systemApp', icon: '/logo/efficiency.svg', name: '效率助手', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'work'},
+        this.setExeListNav()
+        this.nextStep();
+      },
 
-        // this.footNavigationList = {...tmp}
+      setExeListNav(){
+        console.log('copyFootNav', this.copyFootNav);
+        // 用于添加游戏常用程序文件夹到导航条 与其他添加事件独立开来
+        if(this.exeNavList[0].children){
+          let num = this.searchNavIndex(this.exeNavList[0].id)
+          if(num){
+            this.copyFootNav.splice(num, 1, this.exeNavList[0])
+          }else{
+            this.copyFootNav.splice(-2, 0, this.exeNavList[0])
+          }
+        }
 
-        // this.footNavigationList.splice(-2, 0, {
+        if(this.exeNavList[1].children){
+          let num = this.searchNavIndex(this.exeNavList[1].id)
+          if(num){
+            this.copyFootNav.splice(num, 1, this.exeNavList[1])
+          }else{
+            this.copyFootNav.splice(-2, 0, this.exeNavList[1])
+          }
+        }
+      },
 
-        // })
-
-
-        // this.nextStep();
-
+      // 寻找导航条id
+      searchNavIndex(id){
+        let n = null;
+        this.copyFootNav.forEach((item, index)=>{
+          if(item.id == id){
+            n = index
+          }
+        })
+        return n
       },
 
       // 添加小组件
@@ -615,22 +678,14 @@
 
       // 替换导航栏
       addNavList(){
-        console.log('this.footNavigationList', this.footNavigationList);
         let tmp = []
-        this.navList.forEach(item=>{
+        this.navListTmp.forEach(item=>{
           if (item.isCheck) {
             tmp.push(item)
           }
         })
-        // { type: 'systemApp', icon: '/logo/efficiency.svg', name: '效率助手', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'work'},
-        // 设置全屏需要放在最后 
-
-        // 游戏以及常用程序存在时需要将文件夹放到前面
-
-        // 后续选择的程序也需要放到前面
-
-        this.footNavigationList = [...tmp]
-        
+        this.copyFootNav = [...tmp]
+        this.setExeListNav()
         this.nextStep()
 
       },
@@ -675,14 +730,12 @@
             if(item.ext == ''){
                 // 分离文件夹
                 folderList.push(item)
-            }else if(item.ext == '.exe'){
-                // 分离exe文件
+            }else if(item.ext == '.exe' || item.ext == '.url'){
+                // 分离exe文件以及url文件 url文件暂时认定为
                 if(index){
                     exeStr = exeStr + `{"name":"${item.name}","index":${index}},`
                 }
-                this.navList.push({ type: 'tableApp', icon: item.icon, name: item.name, addNav: true,bg: '',isBg: '', ext: item.ext, summary: '', mode: 'app', value: item.path, isCheck: false})
-
-                // { type: 'systemApp', icon: '/logo/settings.svg', name: '设置中心', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'setting', isCheck: true},
+                exeList.push(item)
             }else{
                 // 判断图片
                 if(this.pictureFormat.includes(item.ext.slice(1))){
@@ -702,18 +755,18 @@
               role: 'user',
               content:`这些是电脑桌面图标的名称，请从效率辅助角度下，将以下数据转换成数组对象之后， ${exeStr} 这些文件根据name属性分成游戏、常用程序两个分类数组，对象名使用"game"和"programs",然后以一个对象包裹着数组的形式将两个数组一起返回，不要带分析过程，不要有多余文字说明，直接返回结果`
           }]).then(res=>{
-              let tmp = JSON.parse(res)
-              // console.log('json22', tmp);
+              this.fault = [...this.appList]
+              this.fault[1].list = exeList
+              this.fault[2].list = folderList
+              this.fault[3].list = pictureList
+              this.fault[4].list = audioList
+              this.fault[5].list = otherList
 
+              let tmp = JSON.parse(res)
               tmp.file = folderList
               tmp.picture = pictureList
               tmp.audio = audioList
               tmp.other = otherList
-
-
-
-              // 分析出来的结果 接下来需要将icon和 path 放进去
-              // console.log('结果tmp', tmp);
 
               // 处理常用程序 和 游戏 的数据
               tmp.game?.forEach(i=>{
@@ -737,18 +790,21 @@
               // 请求结束 进入下一步
               this.loading = false
               this.step = 1
+              this.time = 0
               this.clear()
-              console.log('结果appList', this.appList);
-              console.log('结果desks', this.desks);
+
+              // 清楚超时操作
+              clearTimeout(this.setTimer)
+              this.setTimer = null
           })
         },
-        // "C:\Users\Administrator\AppData\Roaming\天天工作台-development\icons\2b0e338a45aa6536538939ed85a9caafaed1d24e.png"
+
         async processGPTResults(arr) {
             // 获取聊天机器人的回复
             for await (const result of getStreamData(arr)) {
                 if (result.value) {
-                    message.error(result.value.error.message);
-                    return;
+                  message.error(result.value.error.message);
+                  return;
                 }
                 this.content = this.content +  result.content
             }
@@ -777,7 +833,7 @@
   // 桌面主体部分
   .Popup{
     width:800px;
-    height:600px;
+    height:620px;
     top: 50%;
     left: 50%;
     transform: translateX(-400px) translateY(-300px);
@@ -798,23 +854,14 @@
   // 右上角 定制主题
   .theme{
     width:400px;
-    height:640px;
+    height:660px;
     position: fixed;
     top: 60px;
     right: 20px ;
   }
-
-
-
-
   .tran{
     transition: all 0.15s linear;
   }
-
-
-
-
-
 
   .panel {
       border: 2px solid transparent;
@@ -946,6 +993,11 @@
   .nav-list:hover{
     opacity: 0.8;
 
+  }
+
+
+  :deep(.ant-checkbox-disabled){
+    background-color: rgba(0, 0, 0, 0.5);
   }
 
 </style>

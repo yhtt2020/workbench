@@ -209,9 +209,10 @@ export default {
         // 本地应用
         case "tableApp":
           console.log("object :>> ", this.open.value);
-          require("electron").shell.openPath(
-            require("path").normalize(this.open.value)
-          );
+          startApp('localApp',this.open.value)
+          // require("electron").shell.openPath(
+          //   require("path").normalize(this.open.value)
+          // );
           break;
         // 系统应用
         // case "systemApp":
@@ -285,7 +286,7 @@ export default {
             this.$router.push({ name: "app", params: this.linkValue.data });
             break;
           case "localApp":
-            require("electron").shell.openPath(this.linkValue.path);
+            startApp('localApp',this.linkValue.path)//require("electron").shell.openPath(this.linkValue.path);
             break;
           case "lightApp":
             ipc.send("executeAppByPackage", {
@@ -293,14 +294,12 @@ export default {
             });
             break;
           default:
-            require("electron").shell.openPath(this.linkValue.path);
+            startApp('localApp',this.linkValue.path)// require("electron").shell.openPath(this.linkValue.path);
         }
       } else if (this.linkValue) {
         this.linkValue.path
-          ? require("electron").shell.openPath(this.linkValue.path)
-          : require("electron").shell.openPath(
-              require("path").normalize(this.linkValue)
-            );
+          ?startApp('localApp',this.linkValue.path)
+          :startApp('localApp',require("path").normalize(this.linkValue))
       }
     },
   },

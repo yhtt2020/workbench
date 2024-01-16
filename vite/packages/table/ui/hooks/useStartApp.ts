@@ -1,17 +1,43 @@
 import browser from "../../js/common/browser";
 import { appStore } from "../../store";
 import { taskStore } from "../../apps/task/store";
+import cp from "child_process";
+import fs from "fs";
+async function runApp(uri) {
+  try{
+    var cp = require("child_process");
+    let realPath = uri
+    let isDir=false
+    if (uri.endsWith('.url') || uri.endsWith('.lnk')) {
+      realPath = await tsbApi.system.getRealPath(uri)
+    }
+    if (uri.endsWith('.url') || uri.endsWith('.lnk')) {
+      if(realPath.startsWith('steam://')){
+        console.log('执行路径A,steam游戏模式',realPath)
+        cp.spawn('start',[realPath], {detached: true,shell:true,windowsHide:true})
+      }else{
+        console.log('执行路径B,普通文件','cwd',require('path').dirname(realPath))
+        cp.spawn(require("path").normalize(realPath), [], {detached: true,cwd:require('path').dirname(realPath)})
+      }
+    }else{
+      console.log('执行路径C')
+      cp.spawn('start',[ require("path").normalize(realPath)], {detached: true,cwd:require('path').dirname(realPath),shell:true,windowsHide:true})
+    }
+    return true
+  }catch (e) {
+    return false
+  }
+}
 /**
  *
  * @param type
  * @param value
  * @param router 这个是路由 ts无法调用 得手动传入
  */
-export const startApp = (type, value, router?) => {
+export const startApp =async  (type, value, router?) => {
   if (type === "" || value === "") {
     console.warn("startApp :>> type or value 不能为空");
   }
-  console.log("type,value :>> ", type, value);
   switch (type) {
     // 默认浏览器
     case "default":
@@ -37,7 +63,8 @@ export const startApp = (type, value, router?) => {
       break;
     // 本地应用
     case "tableApp":
-      window.$models.win32.openPath(require("path").normalize(value));
+      return await  runApp(value)
+      //window.$models.win32.openPath(require("path").normalize(value));
       break;
     // 系统应用
     case "systemApp":
@@ -46,13 +73,22 @@ export const startApp = (type, value, router?) => {
       break;
     // 不知道是什么场景
     case "localApp":
-      window.$models.win32.openPath(value);
+      return await runApp(value)
+      // cp.spawn(require("path").normalize(value),[],{detached:true},function(err,stdout,stderr){
+      //   if(err){
+      //     console.error(err);
+      //   }
+      //   console.log("stdout:",stdout)
+      //   console.log("stderr:",stderr);
+      // });
+      //window.$models.win32.openPath(value);
       break;
     // 导航栏文件夹
     case "folder":
       // console.log(2222);
       break;
   }
+  return true
 };
 
 export const openSysApp = (value, router) => {

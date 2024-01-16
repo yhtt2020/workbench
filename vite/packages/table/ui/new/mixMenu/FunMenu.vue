@@ -27,6 +27,10 @@
       @close="drawerVisible = false"
     ></DefaultItem>
   </xt-drawer>
+  <teleport to="body">
+    <ChooseModal v-if="chooseVisible" :chooseVisible="chooseVisible" @closeChoose="closeChoose"></ChooseModal>
+  </teleport>
+
 </template>
 
 <script setup>
@@ -34,6 +38,7 @@ import { ref, toRefs, computed, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useWidgetStore } from "../../../components/card/store";
 import DefaultItem from "./DefaultItem.vue";
+import ChooseModal from "./chooseModal.vue";
 const props = defineProps({
   menus: {},
   model: {
@@ -57,10 +62,12 @@ const props = defineProps({
 
 });
 const menu = ref(null);
+const chooseVisible = ref(false);
 const { menus, model, height } = toRefs(props);
 
 const widgetStore = useWidgetStore();
 const { rightModel } = storeToRefs(widgetStore);
+const { firstOpen } = storeToRefs(widgetStore);
 
 const drawerVisible = ref(false);
 
@@ -94,7 +101,9 @@ const defaultList = computed(() => {
 const followList = computed(() => {
   return menus.value;
 });
-
+function closeChoose () {
+  chooseVisible.value = false
+}
 function beforeCreate() {
 
   return rightModel.value == "follow";
@@ -113,11 +122,18 @@ function defaultListClick(event) {
   }
 }
 function defaultListContextmenu(event) {
-  if (rightModel.value == "default") {
-    event.preventDefault();
-    event.stopPropagation();
-    drawerVisible.value = true;
-    onMounted();
+  // 第一次触发后出现弹窗让用户选择
+  if(!firstOpen.value){
+    chooseVisible.value = true
+    firstOpen.value = true
+  }else{
+    // firstOpen.value = false
+    if (rightModel.value == "default") {
+      event.preventDefault();
+      event.stopPropagation();
+      drawerVisible.value = true;
+      onMounted();
+    }
   }
 }
 

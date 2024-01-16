@@ -55,35 +55,35 @@ onMounted(async () => {
   freeLayoutEnv.value.scrollData = useElementBounding(scrollbar.value);
 
   setTimeout(async () => {
-    // 初始化自由布局定位
-    updateScroll(getFreeLayoutState.value.mode.scroll);
+  // 初始化自由布局定位
+  updateScroll(getFreeLayoutState.value.mode.scroll);
 
-    let { width, height } = scrollbar.value?.getBoundingClientRect();
-    freeLayoutEnv.value.scrollWidth = width;
-    freeLayoutEnv.value.scrollHeight = height;
-    // 监听自由布局滚动事件
-    scrollbar.value.addEventListener("ps-scroll-x", () => {
-      freeLayoutEnv.value.scrollLeft = scrollbar.value?.scrollLeft;
-    });
-    scrollbar.value.addEventListener("ps-scroll-y", () => {
-      freeLayoutEnv.value.scrollTop = scrollbar.value?.scrollTop;
-    });
+  let { width, height } = scrollbar.value?.getBoundingClientRect();
+  freeLayoutEnv.value.scrollWidth = width;
+  freeLayoutEnv.value.scrollHeight = height;
+  // 监听自由布局滚动事件
+  scrollbar.value.addEventListener("ps-scroll-x", () => {
+    freeLayoutEnv.value.scrollLeft = scrollbar.value?.scrollLeft;
+  });
+  scrollbar.value.addEventListener("ps-scroll-y", () => {
+    freeLayoutEnv.value.scrollTop = scrollbar.value?.scrollTop;
+  });
 
-    // 完成操作 开启
-    freeLayoutEnv.value.loading = true;
-    //
+  // 完成操作 开启
+  freeLayoutEnv.value.loading = true;
+  //
 
-    // 监听键盘按下事件
-    window.addEventListener("keydown", handleKeyDown);
-    // 监听键盘抬起事件
-    window.addEventListener("keyup", handleKeyUp);
-    // 监听鼠标按下事件
-    window.addEventListener("mousedown", handleMouseDown);
-    // 监听鼠标移动事件
-    window.addEventListener("mousemove", handleMouseMove);
-    // 监听鼠标抬起事件;
-    window.addEventListener("mouseup", handleMouseUp);
-    document.body.addEventListener("keydown", ignoreSpace);
+  // 监听键盘按下事件
+  window.addEventListener("keydown", handleKeyDown);
+  // 监听键盘抬起事件
+  window.addEventListener("keyup", handleKeyUp);
+  // 监听鼠标按下事件
+  window.addEventListener("mousedown", handleMouseDown);
+  // 监听鼠标移动事件
+  window.addEventListener("mousemove", handleMouseMove);
+  // 监听鼠标抬起事件;
+  window.addEventListener("mouseup", handleMouseUp);
+  document.body.addEventListener("keydown", ignoreSpace);
   }, 1);
 });
 function ignoreSpace(event) {
@@ -164,10 +164,7 @@ let initialMousePosition = ref(null);
  */
 //滚动方式
 const updateScroll = (newV) => {
-  console.log("滚动方式更新 :>> ", 123);
   redirect();
-  console.log("scrollbar.value.scrollLeft; :>> ", scrollbar.value.scrollLeft);
-  console.log("scrollbar.value.scrollTop; :>> ", scrollbar.value.scrollTop);
   freeLayoutEnv.value.scrollOldLeft = scrollbar.value.scrollLeft;
   freeLayoutEnv.value.scrollOldTop = scrollbar.value.scrollTop;
   if (newV === "free") {
@@ -192,7 +189,8 @@ watch(() => getFreeLayoutState.value?.mode?.scroll, updateScroll);
 const { width, height } = useElementSize(scrollbar);
 function redirect() {
   let w, h;
-  if (getFreeLayoutState.value.mode.align === "top") {
+  if (getFreeLayoutState.value?.mode.align == undefined) return;
+  if (getFreeLayoutState.value?.mode.align === "top") {
     h = 0;
     w = getFreeLayoutState.value.canvas.width / 2 - width.value / 2;
   } else if (getFreeLayoutState.value.mode.align === "center") {

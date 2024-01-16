@@ -6,6 +6,9 @@ app.whenReady().then(() => {
     // console.log('返回是不是默认浏览器'+isDefault)
     event.reply('returnIsDefaultBrowser', isDefault)
   })
+  ipc.on('getAppMetrics',(event,args)=>{
+    event.returnValue=app.getAppMetrics()
+  })
   // 移除默认浏览器
   ipc.on('callSetOrRemoveDefaultBrowser', async function (event, args) {
     if (app.isDefaultProtocolClient('http')) {

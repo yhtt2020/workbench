@@ -6,6 +6,7 @@ export const useWidgetStore = defineStore("useWidgetStore", {
   state: () => ({
     rightModel: "default",
     edit: false,
+    firstOpen: false,
   }),
   getters: {
 
@@ -15,7 +16,7 @@ export const useWidgetStore = defineStore("useWidgetStore", {
     enabled: true,
     strategies: [
       {
-        paths: ["rightModel"],
+        paths: ["rightModel", 'firstOpen'],
         storage: dbStorage,
       },
     ],

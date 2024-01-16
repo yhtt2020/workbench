@@ -201,7 +201,14 @@ class ApiHandler {
         return event.returnValue = ''
       }
     })
-
+    ApiHandler.on('system', 'getRealPath', async (event, args) => {
+      try {
+        event.returnValue =await SystemHelper.readUrlInfo(args.uri)
+      } catch (e) {
+        console.error('获取文件真实路径失败', e)
+        return event.returnValue = ''
+      }
+    })
     ApiHandler.on('runtime', 'init', (event, args, instance) => {
       try {
         let modMap = {

@@ -77,11 +77,16 @@ async function getNetStat(){
   const result = execSync(`powershell -Command "${command}"`);
   console.log(result.toString());
 }
+
+/**
+ *
+ * @param data 原始数据，单位是B
+ */
 export function prettyDisplayBytes(data){
   let unit='KB'
   let num=0
-  data=data/1000
-  if(data < 1000){
+  data=data/1024
+  if(data < 1024){
     num=data
     unit='KB'
   }else if(data<1024000){
@@ -107,7 +112,6 @@ export async function getSysStats() {
   let osu = window.$models.osUtils
   const inspector=window.$models.inspector
   dsData.useCPU = (await inspector.getCpuUsage()) || 0
-  console.log(await inspector.getCpuUsage())
   const usedMem = await osu.mem.used()
   dsData.useMemory = (usedMem.usedMemMb / usedMem.totalMemMb)*100 || 0
 
@@ -115,7 +119,6 @@ export async function getSysStats() {
   dsData.down=net.receivedBandwidth/2 || 0
   dsData.up=net.sentBandwidth/2 || 0
   dsData.warmCPU=(await inspector.getCpuTemperature() )||0
-  console.log(dsData.warmCPU)
 
   return dsData
 }

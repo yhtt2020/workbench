@@ -9,6 +9,13 @@ const system={
   },
   async extractFileIcon(uri){
     return await  ipcHelper.sendSync('system','extractFileIcon',{uri:uri})
+  },
+  async getRealPath(uri){
+    if (uri.endsWith('.lnk')) {
+      let urlFile = require('electron').shell.readShortcutLink(uri)
+      return urlFile.target
+    }
+    return await  ipcHelper.sendSync('system','getRealPath',{uri:uri})
   }
 }
 module.exports=system

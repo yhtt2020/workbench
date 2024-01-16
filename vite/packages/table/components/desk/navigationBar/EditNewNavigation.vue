@@ -1,6 +1,6 @@
 <template>
     <NewModel class="bottom-edit" :modelValue="modelValue" :nav="true" :header="true" :footer="false" :esc="true"
-        :boxClass="'pr-4 pt-4'" :back="false" @no="setQuick" title="" :mask="false" :index="100">
+        :boxClass="'pr-4 pt-4'" :back="false" @no="setQuick" title="" :mask="false" :index="900">
         <template #nav>
             <div class="relative p-3 -mt-4 xt-bg" style="border-radius: 12px 0px 0px 12px;width: 185px;"
                 :style="{ height: `${navHeight}px` }">

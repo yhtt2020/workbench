@@ -112,4 +112,3 @@ module.exports= {
     win32.mouseHook.close()
   }
 }
-console.log('执行shake','tray')

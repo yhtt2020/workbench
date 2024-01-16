@@ -3,7 +3,9 @@
     ref="tippyRef">
     <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
     <template #content>
-      <div class="flex flex-wrap w-[278px] h-[173px] rounded-xl">
+      <div 
+        class="flex flex-wrap w-[278px] h-[185px] rounded-xl xt-bg -m-3" 
+        style="padding-top: 6px; padding-bottom: 6px;backdrop-filter: blur(50px);">
         <div v-for="t in teamList" :key="t.title" class="team-item" @click="jump(t.type, t)">
           <a-avatar :src="t.img" :size="40"></a-avatar>
           <span>{{ t.title }}</span>
@@ -31,6 +33,7 @@ import { taskStore } from '../../apps/task/store'
 import { offlineStore } from '../../js/common/offline'
 import { renderIcon } from '../../js/common/common'
 import Avatar from '../../components/desk/navigationBar/components/Avatar.vue'
+import { useNavigationStore } from '../desk/navigationBar/navigationStore'
 export default {
   name: "Team",
   components: {
