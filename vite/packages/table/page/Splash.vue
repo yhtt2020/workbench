@@ -262,6 +262,7 @@ export default {
         this.tipped = false
         this.loading = false
         if (args.data.uid <= 0) {
+          // 网络异常 或者 游客模式 下 会卡在当前状态
           window.loadedStore['userInfo'] = true
           return
         }
