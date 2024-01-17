@@ -200,7 +200,7 @@
       <!-- 按钮 -->
       <div class="flex" style="width:100%;justify-content: flex-end;position: absolute;right: 12px;bottom: 12px;">
         <div class="flex" v-if="step == 4">
-          <!-- <xt-button @click="nextStep" size="large"  class="button-bottom ml-3">暂不登录
+          <!-- <xt-button @click="finish" size="large"  class="button-bottom ml-3">暂不登录
           </xt-button> -->
           <div class="flex items-center xt-text-2">暂未开放游客登录</div>
           <xt-button type="theme" v-if="!this.userInfo.uid" @click="login" size="large"  class="button-bottom ml-3">立即登录</xt-button>
