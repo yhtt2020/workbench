@@ -1,7 +1,6 @@
 <template>
   <Teleport to="body">
     <!-- 弹窗 -->
-
     <Transition name="up">
       <div
         v-element-size="resizeModel"
@@ -11,7 +10,7 @@
           isFull ? ' rounded-none w-full h-full' : 'rounded-xl',
         ]"
         ref="modal"
-        class="fixed flex flex-col text-base -translate-x-1/2 left-1/2 rounded-xl xt-modal xt-shadow xt-text"
+        class="no-drag fixed flex flex-col text-base -translate-x-1/2 left-1/2 rounded-xl xt-modal xt-shadow xt-text"
         style="
           border: 1px solid rgba(255, 255, 255, 0.1);
           box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
@@ -219,7 +218,8 @@ const top = computed(() => {
   if (isFull.value) return 0;
   if (windowHeight.value <= 0 || bottomBarHeight <= 0 || modelHeight.value <= 0)
     return -9999;
-  return (windowHeight.value - bottomBarHeight - modelHeight.value) / 2;
+  let a = (windowHeight.value - bottomBarHeight - modelHeight.value) / 2;
+  return a >= 0 ? a : 0;
 });
 
 const resizeModel = (size) => {

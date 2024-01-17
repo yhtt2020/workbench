@@ -118,8 +118,10 @@ export default {
           await this.updateMy(0)
           if (this.team.status === false) {
             this.teamKey = Date.now()
+
             this.showTeamTip = true
           } else {
+
             this.teamVisible = !this.teamVisible
           }
           break;

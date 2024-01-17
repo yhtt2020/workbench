@@ -20,12 +20,15 @@ export default defineComponent({
     enterIM() {
       this.$router.push({name: 'chat'})
     },
+  },
+  props:{
+    tipPosition: Number
   }
 })
 </script>
 
 <template>
-  <a-tooltip title="社群沟通">
+  <a-tooltip title="社群沟通"  :overlayStyle="{ zoom: `${(this.tipPosition / 100)}` }">
   <div @click.stop="enterIM" style="padding-top: 0.6em !important;;position:relative;padding-bottom: 0.5em !important;" >
     <emoji style="width: 52px;height:52px" icon="chat"></emoji>
     <div class="rounded-full flex items-center justify-center  ml-3 p-0.5"

@@ -62,6 +62,8 @@ import { avatarNumber } from '../../js/common/teamAvatar'
 import browser from '../../js/common/browser'
 import { frameStore } from '../../store/avatarFrame'
 import { appStore } from '../../store'
+import {completeTask} from '../../apps/task/task'
+
 
 const screenname = '灵魂虐杀,浅寐,夏微凉っ゛,鱼哭了,陌屿,彼岸,青山独归晚,温唇,忻芝兰,喵咕嘟,皂白七'
 export default {
@@ -169,7 +171,7 @@ export default {
       if (rs.code===200) {
         this.$emit('infoUpdated',{})
         message.success('信息修改成功')
-
+        completeTask('m0301')
         this.updateInfoVisible = false
         this.setInfoVisible(false)
         this.setSecondaryVisible(true)

@@ -2,7 +2,12 @@ body {
   // background: var(--main-bg) !important;
   font-family: "puHuiTi400" !important;
 }
-
+img {
+  user-drag: none;
+  -webkit-user-drag: none; /* Chrome, Safari */
+  -moz-user-drag: none; /* Firefox */
+  -ms-user-drag: none; /* IE10+/Edge */
+}
 .transparent {
   body {
     background: none !important;
@@ -36,6 +41,10 @@ body {
 }
 .xt-theme-text-2 {
   color: var(--active-secondary-bg) !important;
+}
+
+.xt-main-bg {
+  background: var(--main-bg) !important;
 }
 
 /**
@@ -92,7 +101,7 @@ body {
   background: var(--secondary-transp-bg) !important;
 }
 
-.xt-bg-m{
+.xt-bg-m {
   background: var(--main-bg) !important;
 }
 

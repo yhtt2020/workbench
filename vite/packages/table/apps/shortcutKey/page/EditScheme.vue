@@ -274,7 +274,7 @@ import { keyStore } from '../store'
 import { nanoid } from 'nanoid'
 import { message, Modal } from 'ant-design-vue'
 import ColorPicker from '../../../ui/components/ColorPicker/ColorPicker.vue'
-
+import {completeTask} from '../../../apps/task/task'
 export default {
   name: 'ShareKey',
   components: {
@@ -538,6 +538,8 @@ export default {
         if (saveResult) {
           this.saved = true
           message.success('成功保存')
+          // 支线任务
+          completeTask('Z0203')
           setTimeout(() => {
             this.$router.go(-1)
           }, 200)

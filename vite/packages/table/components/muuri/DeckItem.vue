@@ -62,6 +62,7 @@ export default {
         }
         if (failure.length === 0) {
           if (unknown.length) {
+            console.log('333 :>> ', 333);
             message.success({content:`共为您执行${done.length}个动作，成功${success.length}个，未知${unknown.length}个`,key:'action'})
           } else {
             message.success({content:`共为您成功执行${done.length}个动作`,key:'action'})

@@ -79,8 +79,9 @@ const emits = defineEmits([
 const props = defineProps({
   layout: {},
   list: {},
+  modalSize: {},
 });
-const { list, layout } = toRefs(props);
+const { list, layout, modalSize } = toRefs(props);
 /**
  * 监听组件大小变化
  */
@@ -94,16 +95,21 @@ const currentWidth = computed(() => {
 // 拖拽容器
 const sortable = ref();
 const sortableContainer = ref(
-  "xt-sortable-fle-container-" + index.value + Math.ceil(Math.random() * 100)
+  "xt-sortable-fle-container-" +
+    // modalSize.value +
+    index.value +
+    Math.ceil(Math.random() * 100)
 );
+console.log("modalSize.value :>> ", modalSize.value);
+console.log("sortableContainer.value :>> ", sortableContainer.value);
 const sortableBox = ref("xt-sortable-fle-box-" + index.value);
 // 拖拽布局
 const fileLayout = computed(() => {
   let rows = "33.3% 33.3% 33.3%";
-  if (currentWidth.value == 4) {
-    rows = "20% 20% 20%  20% 20%";
-  } else if (currentWidth.value == 6) {
+  if (modalSize.value || currentWidth.value == 6) {
     rows = "14.1%  14.1% 14.1% 14.1% 14.1% 14.1% 14.1% ";
+  } else if (currentWidth.value == 4) {
+    rows = "20% 20% 20%  20% 20%";
   }
   return layout.value === "rows" ? rows : "100%";
 });
@@ -191,7 +197,7 @@ const menuList = computed(() => {
         fileSetVisible.value = true;
       },
       disabled: ["observe", "arrange"].includes(data.value.model)
-       ? true
+        ? true
         : false,
     },
 
@@ -254,7 +260,7 @@ const fileClick = (data) => {
   data.lastUseTime = new Date().getTime();
   startApp(data.type, data.value, router);
   emits("updateSort");
-  emits("clickFile",data);
+  emits("clickFile", data);
 };
 const dragDeleteFile = (data) => {
   emits("deleteFile", data);
@@ -289,6 +295,7 @@ const fileDisabled = (item) => {
 
 // 保存数据
 const save = () => {
+  console.log("2233 :>> ", 2233);
   const data = useIconConversionFile(iconStore.edit);
   data.useCount = currentItem.value.useCount;
   data.id = currentItem.value.id;

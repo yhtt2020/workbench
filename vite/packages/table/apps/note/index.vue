@@ -84,6 +84,7 @@ import { message } from 'ant-design-vue'
 import HistoryList from './components/HistoryList.vue'
 import {Modal as AntModal} from 'ant-design-vue'
 import Markdown from './components/markdown.vue'
+import {completeTask} from '../task/task'
 export default {
   name: 'note',
   components: {
@@ -192,7 +193,7 @@ export default {
             const text = this.noteList[this.selNote]?.customData.text
             this.$refs.copyEditor?.setEditorValue(text);
             let content = this.$refs.copyEditor?.getContent();
-            
+
             require('electron').clipboard.writeText(content)
             message.success('复制内容成功')
             console.log(content, 'HTML内容')
@@ -288,6 +289,7 @@ export default {
     },
     // 切换便签在不同的桌面
     changeDesk () {
+      completeTask('Z0205')
       this.promptVisible = false
       this.switchDesk(this.selNote, this.selIndex)
     },
@@ -303,7 +305,7 @@ export default {
     background-color: #ccc; /* 滚动条颜色 */
     border-radius: 6px; /* 滚动条圆角 */
   }
-  
+
   ::-webkit-scrollbar-thumb:hover {
     background-color: #999; /* 悬停时滚动条颜色 */
   }

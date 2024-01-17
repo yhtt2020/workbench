@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import dbStorage from "../../store/dbStorage";
 import {getDateTime} from '../../util'
+import {completeTask} from '../../apps/task/task'
 let clipboardChanged = null
 //todo 此处要兼容web版
 let win32
@@ -267,6 +268,9 @@ export const clipboardStore = defineStore("clipboardStore", {
       if(!this.settings.enable){
         return
       }
+      // 任务点
+      completeTask('Z0206')
+
       const availableFormats = clipboard.availableFormats()
       const formats = [
         'image/png',

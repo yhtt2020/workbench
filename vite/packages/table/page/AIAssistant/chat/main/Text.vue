@@ -36,7 +36,9 @@
 
 <script setup>
 import { ref, watch } from "vue";
+import {completeTask} from '../../../../apps/task/task'
 
+console.log('completeTask :>> ', completeTask);
 const emits = defineEmits(["onSearch"]);
 const isScrollbar = ref(false);
 const initHeight = ref(true);
@@ -65,6 +67,7 @@ const onInput = (e) => {
 // 搜索
 const onSearch = () => {
   if (props.isSearch && search.value.trim()) {
+    completeTask("Z0207");
     initHeight.value = false;
     isScrollbar.value = false;
     emits("onSearch", search.value);

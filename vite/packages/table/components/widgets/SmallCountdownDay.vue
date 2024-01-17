@@ -16,7 +16,7 @@
       style="
         text-align: center;
         display: flex;
-        font-size: 1.2em;
+        font-size: 1em;
         max-width: 80%;
         margin: 0 auto;
       "
@@ -28,7 +28,7 @@
       >」<span v-if="myCountdownDay[0].type">还有</span>
       <span v-else>已过</span>
     </div>
-    <div style="font-size: 3em; margin-top: 0.1em">
+    <div style="font-size: 2em; margin-top: 0.1em">
       {{
         differenceDay
       }}天

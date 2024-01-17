@@ -1,4 +1,5 @@
 import {arch} from "process";
+import {completeTask} from '../../apps/task/task'
 
 const {exec} = require('child_process')
 const iconv=window.iconv
@@ -27,6 +28,9 @@ export function getResPathJoin(...paths) {
  * @param cmdPath
  */
 export async function runExec(cmdStr, cmdPath?) {
+  console.log('Z0202 :>> ', );
+  completeTask('Z0202')
+
   let promise = new Promise((resolve, reject) => {
     // 执行命令行，如果命令不需要路径，或就是项目根目录，则不需要cwd参数：
     workerProcess = exec(cmdStr, {cwd: cmdPath,encoding:'buffer'})

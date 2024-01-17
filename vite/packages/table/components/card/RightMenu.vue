@@ -11,12 +11,12 @@
   >
     <slot></slot>
     <template #follow>
-      <div class="flex flex-wrap my-1 mb-2 ml-2">
+      <div class="flex flex-wrap my-1 ml-2">
         <template v-if="sizeList.length > 0">
           <div
             v-for="item in sizeList"
             :class="[size == item.value ? 'xt-theme-bg' : 'xt-bg-2']"
-            class="w-12 h-8 mr-2 text-sm xt-base-btn"
+            class="w-12 h-8 mr-2 mb-2 text-sm xt-base-btn"
             style="border-radius: 16px"
             @click="updateSize(item.value)"
           >

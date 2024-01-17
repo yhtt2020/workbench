@@ -58,7 +58,7 @@ class TableManager {
           alwaysOnTop: false,
           width: 1098,
           minimizable: false,
-          height: 618,
+          height: 680,
           minWidth: 800,
           minHeight: 480,
           frame: false,

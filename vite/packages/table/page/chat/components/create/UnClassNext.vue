@@ -53,7 +53,7 @@ import { channelClass } from '../../../../js/chat/createChannelClass'
 import SelectIcon from '../../../../../selectIcon/page/index.vue';
 import ModalTop from '../../../../page/chat/components/ModalTop.vue';
 import ChannelClassification from '../channelSelect/ChannelClassification.vue';
-
+import {completeTask} from '../../../../apps/task/task'
 export default {
  props:['list','no','id'],
 
@@ -118,7 +118,7 @@ export default {
       return item.type === this.defaultType.type
     })
     return index
-   }   
+   }
   },
  },
 
@@ -127,7 +127,7 @@ export default {
    this.$refs.inputRef.focus()
   })
  },
- 
+
  methods:{
   ...mapActions(chatStore,['updateConversation']),
   backButton(){
@@ -193,6 +193,8 @@ export default {
      };
      channelClass.secondaryChannel(channelOption);
      message.success('创建的群聊关联成功');
+     completeTask('Z0604')
+
      this.closeCreate()
     }
    }

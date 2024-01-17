@@ -7,7 +7,8 @@ export const useFolderStore = defineStore("useFolderStore", {
     currentData: null,
     currentId: "",
 
-    move:false
+    move:false,
+    folderFlag:''
   }),
   getters: {},
   actions: {},

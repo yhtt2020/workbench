@@ -7,7 +7,7 @@
 <script></script>
 <script setup>
 import { nanoid } from "nanoid";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useFolderStore } from "../../../../../apps/folder/src/store";
 import { useDeskStore } from "../../../../../components/desk/store";
@@ -21,7 +21,7 @@ const { isEnterBar } = storeToRefs(deskStore);
 
 // 文件夹数据
 const folderStore = useFolderStore();
-const { dragId, isDrag, move, currentId, currentData } =
+const { dragId, isDrag, move, currentId, currentData,folderFlag } =
   storeToRefs(folderStore);
 
 // 图标数据
@@ -32,14 +32,14 @@ const emit = defineEmits(['createFile'])
 
 /**
  * 拖拽，文件夹拖拽和桌面图标拖拽
- * @param {*} dragEvent 
+ * @param {*} dragEvent
  */
 const handleDrop = async (dragEvent) => {
   // 判断是否是从导航栏外部进入到导航栏，防止和导航栏内部的拖拽事件冲突
   if (!isEnterBar.value) return
   let currentX = dragEvent.x
   // 桌面拖拽
-  if (dragEvent.dataTransfer.types[0] === 'Files') {
+  if (folderFlag.value !== 'folder') {
     let files = dragEvent.dataTransfer.files
     let filesArr = []
     if (files && files.length > 0) {
@@ -48,7 +48,8 @@ const handleDrop = async (dragEvent) => {
       }
     }
     await Promise.all(filesArr.map(async (item) => {
-      const fileName = item.substring(item.lastIndexOf('\\') + 1)
+      let fileName = item.substring(item.lastIndexOf('\\') + 1)
+      fileName = getFileName(fileName)
       let dropFiles = await tsbApi.system.extractFileIcon(item)
       let file = useDeskConversionNav(dropFiles, fileName, item)
       emit('createFile', file, currentX)
@@ -56,16 +57,18 @@ const handleDrop = async (dragEvent) => {
   } else if (dragEvent.dataTransfer?.types[0] === 'text/plain') {
     // 文件夹图标拖拽
     const item = _.cloneDeep(currentData.value)
+    console.log(item,'item')
     const data = useIconConversionNav(item)
     emit('createFile', data, currentX)
     currentData.value = ''
+    folderFlag.value = ''
   }
   isEnterBar.value = false;
 };
 
 /**
  * 拖拽进入事件
- * @param {*} dragEvent 
+ * @param {*} dragEvent
  */
 const handleDragenter = (dragEvent) => {
   if (dragEvent.dataTransfer.types.length > 0) {
@@ -75,8 +78,8 @@ const handleDragenter = (dragEvent) => {
 };
 
 /**
- * 
- * @param {*} dragEvent 
+ *
+ * @param {*} dragEvent
  */
 const handleDragover = (dragEvent) => {
   dragEvent.preventDefault();
@@ -102,7 +105,21 @@ const handleMouseLeave = () => {
 const handleMouseOver = () => {
 
 }
+
+const getFileName = (name) => {
+  if (typeof name === 'string') {
+    const lastDotIndex = name.lastIndexOf('.');
+    if (lastDotIndex !== -1) {
+      const fileName = name.substring(0, lastDotIndex);
+      return fileName;
+    } else {
+      return name;
+    }
+  } else {
+    return null;
+  }
+};
+
 </script>
-  
+
 <style lang="scss" scoped></style>
-  

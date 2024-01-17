@@ -1,7 +1,6 @@
 <script lang="ts">
 import KeyInput from "./KeyInput.vue";
 import {message} from "ant-design-vue";
-import {taskStore}from "../../apps/task/store"
 import { mapWritableState } from "pinia";
 import { Icon } from '@iconify/vue';
 import KeyBoard from './KeyBoard.vue'
@@ -31,11 +30,8 @@ export default {
     }
   },
   computed:{
-    ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(keyCutStore, ["keys"]),
-    m04012( ) {
-      return this.taskID == "M0401" && this.step == 2
-    }
+
   },
   async mounted() {
     this.refreshKeys()
@@ -68,7 +64,7 @@ export default {
       this.keyBoard = true
     },
     getKeyMap(key) {
-      if (this.keyMap[key]) {
+      if (this.keyMap && this.keyMap[key]) {
         this.keys[key].key = this.keyMap[key].split('+')
       }
     },
@@ -93,7 +89,6 @@ export default {
 </script>
 
 <template>
-  <xt-task :modelValue="m04012"></xt-task>
   <div v-if="isGuide" class="w-full">
     <div v-for="key in Object.keys(this.keys)" @click="setKey(keys[key], key)" class="xt-bg-2 rounded-lg mt-3 pointer" style="padding:12px 16px;">
       <div class="flex justify-between">

@@ -262,7 +262,7 @@ import XtButton from '../../ui/libs/Button/index.vue'
 import { MoreOutlined, ShopOutlined } from '@ant-design/icons-vue'
 import ShareToChat from '../../ui/chat/ShareToChat.vue'
 
-import { completeTask } from '../../apps/task/page/branch/task.ts'
+import { completeTask } from '../../apps/task/task'
 import { getHide, isHide } from './game'
 
 const toast = useToast()

@@ -20,12 +20,12 @@ const props = defineProps({
     editItem: Object
 })
 const reset = () => {
-    const target = navigationList.value.find(item => item.value === props.editItem.value)
-    props.editItem.name = target?.name
+    // const target = navigationList.value.find(item => item.value === props.editItem.value)
+    props.editItem.name = props.editItem.default.name
 }
-const navigationList = computed(() => {
-    return [...useNavStore.footNavigationList,...useNavStore.sideNavigationList,...useNavStore.rightNavigationList]
-})
+// const navigationList = computed(() => {
+//     return [...useNavStore.footNavigationList,...useNavStore.sideNavigationList,...useNavStore.rightNavigationList]
+// })
 </script>
 <style lang='scss' scoped>
 .input{

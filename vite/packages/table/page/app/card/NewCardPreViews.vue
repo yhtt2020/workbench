@@ -2,18 +2,36 @@
   <div class="main-box">
     <template v-for="(item, index) in displayList" :key="item.name">
       <template v-if="item.name == 'clocks' && M01013">
-        <xt-task :modelValue="M01013" to="" @cb="addNewCard(item)" >
+        <xt-task :modelValue="M01013" to="" @cb="addNewCard(item)">
           <div>
             <div class="box xt-bg-2" style="z-index: 99999999999">
-              <xt-button w="48" h="48" class="no-drag add" @click="addNewCard(item)" v-if="item.option.length <= 1">
+              <xt-button
+                w="48"
+                h="48"
+                class="no-drag add"
+                @click="addNewCard(item)"
+                v-if="item.option.length <= 1"
+              >
                 <div class="flex items-center justify-center">
-                  <xt-new-icon icon="fluent:add-circle-12-filled" style="color: var(--active-text) !important;"></xt-new-icon>
+                  <xt-new-icon
+                    icon="fluent:add-circle-12-filled"
+                    style="color: var(--active-text) !important"
+                  ></xt-new-icon>
                 </div>
               </xt-button>
 
-              <xt-button w="48" h="48" class="no-drag add" v-else @click="addNewCard(item)">
+              <xt-button
+                w="48"
+                h="48"
+                class="no-drag add"
+                v-else
+                @click="addNewCard(item)"
+              >
                 <div class="flex items-center justify-center">
-                  <xt-new-icon icon="fluent:more-horizontal-16-regular" style="color: var(--active-text) !important;"></xt-new-icon>
+                  <xt-new-icon
+                    icon="fluent:more-horizontal-16-regular"
+                    style="color: var(--active-text) !important"
+                  ></xt-new-icon>
                 </div>
               </xt-button>
 
@@ -29,19 +47,33 @@
               <div class="left no-drag" @click="fullScreen(item)">
                 <template v-if="item.option.length > 1">
                   <div class="top">
-                    <img :style="[{ zoom: item.option[0].zoom + '%' }]" :src="getImg(item.option[0].imgName)" alt=""/>
+                    <img
+                      :style="[{ zoom: item.option[0].zoom + '%' }]"
+                      :src="getImg(item.option[0].imgName)"
+                      alt=""
+                    />
                   </div>
                   <div class="bottom">
-                    <img class="small-cover" v-for="i in item.option" :src="getImg(i.imgName)" alt=""/>
+                    <img
+                      class="small-cover"
+                      v-for="i in item.option"
+                      :src="getImg(i.imgName)"
+                      alt=""
+                    />
                   </div>
                 </template>
-                <img v-else :src="getImg(item.option[0].imgName)" alt="" :style="[
-                  {
-                    zoom: item.option[0].zoom
-                      ? item.option[0].zoom + '%'
-                      : '11%',
-                  },
-                ]"/>
+                <img
+                  v-else
+                  :src="getImg(item.option[0].imgName)"
+                  alt=""
+                  :style="[
+                    {
+                      zoom: item.option[0].zoom
+                        ? item.option[0].zoom + '%'
+                        : '11%',
+                    },
+                  ]"
+                />
               </div>
 
               <div class="right" style="">
@@ -52,17 +84,30 @@
                   {{ item.detail }}
                 </div>
                 <div class="icon">
-                  <div class="icon-box xt-active-bg-2" v-for="i in item.sizes" :key="i"
-                       style="color: var(--secondary-text)" :class="i === '社区分享' ? 'share' : ''">
+                  <div
+                    class="icon-box xt-active-bg-2"
+                    v-for="i in item.sizes"
+                    :key="i"
+                    style="color: var(--secondary-text)"
+                    :class="i === '社区分享' ? 'share' : ''"
+                  >
                     {{ i }}
                   </div>
                 </div>
                 <div class="data">
-                  <Icon icon="xiazai" class="icons" style="color: #508bfe; margin: 0; width: 20px"></Icon>
+                  <Icon
+                    icon="xiazai"
+                    class="icons"
+                    style="color: #508bfe; margin: 0; width: 20px"
+                  ></Icon>
                   <div class="data-box">
                     {{ item.download }}
                   </div>
-                  <Icon icon="shijian" class="icons" style="color: #52c41a; margin: 0; width: 20px"></Icon>
+                  <Icon
+                    icon="shijian"
+                    class="icons"
+                    style="color: #52c41a; margin: 0; width: 20px"
+                  ></Icon>
                   <div class="data-box">{{ formatTimestamp(item.time) }}</div>
                 </div>
               </div>
@@ -72,15 +117,33 @@
       </template>
       <div v-else>
         <div class="box xt-bg-2">
-          <xt-button w="48" h="48" class="no-drag add" @click="addNewCard(item)" v-if="item.option.length <= 1">
+          <xt-button
+            w="48"
+            h="48"
+            class="no-drag add"
+            @click="addNewCard(item)"
+            v-if="item.option.length <= 1"
+          >
             <div class="flex items-center justify-center">
-              <xt-new-icon icon="fluent:add-circle-12-filled" style="color: var(--active-text) !important;"></xt-new-icon>
+              <xt-new-icon
+                icon="fluent:add-circle-12-filled"
+                style="color: var(--active-text) !important"
+              ></xt-new-icon>
             </div>
           </xt-button>
 
-          <xt-button w="48" h="48" class="no-drag add" v-else @click="addNewCard(item)">
+          <xt-button
+            w="48"
+            h="48"
+            class="no-drag add"
+            v-else
+            @click="addNewCard(item)"
+          >
             <div class="flex items-center justify-center">
-              <xt-new-icon icon="fluent:more-horizontal-16-regular" style="color: var(--active-text) !important;"></xt-new-icon>
+              <xt-new-icon
+                icon="fluent:more-horizontal-16-regular"
+                style="color: var(--active-text) !important"
+              ></xt-new-icon>
             </div>
           </xt-button>
 
@@ -95,15 +158,32 @@
           <div class="left no-drag" @click="fullScreen(item)">
             <template v-if="item.option.length > 1">
               <div class="top">
-                <img :style="[{ zoom: item.option[0].zoom + '%' }]" :src="getImg(item.option[0].imgName)" alt=""/>
+                <img
+                  :style="[{ zoom: item.option[0].zoom + '%' }]"
+                  :src="getImg(item.option[0].imgName)"
+                  alt=""
+                />
               </div>
               <div class="bottom">
-                <img class="small-cover" v-for="i in item.option" :src="getImg(i.imgName)" alt=""/>
+                <img
+                  class="small-cover"
+                  v-for="i in item.option"
+                  :src="getImg(i.imgName)"
+                  alt=""
+                />
               </div>
             </template>
-            <img v-else style="" :src="getImg(item.option[0].imgName)" alt="" :style="[
-              { zoom: item.option[0].zoom ? item.option[0].zoom + '%' : '11%' },
-            ]"/>
+            <img
+              v-else
+              style=""
+              :src="getImg(item.option[0].imgName)"
+              alt=""
+              :style="[
+                {
+                  zoom: item.option[0].zoom ? item.option[0].zoom + '%' : '11%',
+                },
+              ]"
+            />
           </div>
           <div class="right" style="">
             <div class="title" style="color: var(--primary-text)">
@@ -113,17 +193,30 @@
               {{ item.detail }}
             </div>
             <div class="icon">
-              <div class="icon-box xt-active-bg-2" v-for="i in item.sizes" :key="i" style="color: var(--secondary-text)"
-                   :class="i === '社区分享' ? 'share' : ''">
+              <div
+                class="icon-box xt-active-bg-2"
+                v-for="i in item.sizes"
+                :key="i"
+                style="color: var(--secondary-text)"
+                :class="i === '社区分享' ? 'share' : ''"
+              >
                 {{ i }}
               </div>
             </div>
             <div class="data">
-              <Icon icon="xiazai" class="icons" style="color: #508bfe; margin: 0; width: 20px"></Icon>
+              <Icon
+                icon="xiazai"
+                class="icons"
+                style="color: #508bfe; margin: 0; width: 20px"
+              ></Icon>
               <div class="data-box">
                 {{ item.download }}
               </div>
-              <Icon icon="shijian" class="icons" style="color: #52c41a; margin: 0; width: 20px"></Icon>
+              <Icon
+                icon="shijian"
+                class="icons"
+                style="color: #52c41a; margin: 0; width: 20px"
+              ></Icon>
               <div class="data-box">{{ formatTimestamp(item.time) }}</div>
             </div>
           </div>
@@ -133,30 +226,45 @@
 
     <div class="box" style="opacity: 0; height: 1px"></div>
   </div>
-  <NewPreviewCardDetails v-if="isCardDetails" @addCardAchieve="addCardAchieve" @closeCardDetails="closeCardDetails"
-                         :cardDetails="cardDetails">
+  <NewPreviewCardDetails
+    v-if="isCardDetails"
+    @addCardAchieve="addCardAchieve"
+    @closeCardDetails="closeCardDetails"
+    :cardDetails="cardDetails"
+  >
   </NewPreviewCardDetails>
   <!-- <edit v-if="settingVisible" @close="settingVisible = false" @save="save()"></edit> -->
-  <RemoteMarket :openRemote="openRemote" :custom="remoteContent" :desk="desk" @closeMarket="closeMarket"></RemoteMarket>
+  <RemoteMarket
+    :openRemote="openRemote"
+    :custom="remoteContent"
+    :desk="desk"
+    @closeMarket="closeMarket"
+  ></RemoteMarket>
 
   <!-- 新版图标编辑 -->
-  <IconSet  v-if="settingVisible" v-model="settingVisible" :index="99999" :maskIndex="10001"/>
+  <IconSet
+    v-if="settingVisible"
+    v-model="settingVisible"
+    :index="99999"
+    :maskIndex="10001"
+  />
 </template>
 
 <script>
-import { mapActions, mapWritableState } from 'pinia'
-import { cardStore } from '../../../store/card'
-import { message } from 'ant-design-vue'
-import NewPreviewCardDetails from './NewPreviewCardDetails.vue'
-import Edit from '../../../components/widgets/myIcons/edit/index.vue'
-import RemoteMarket from './RemoteMarket.vue'
-import { myIcons } from '../../../store/myIcons.ts'
-import _ from 'lodash-es'
-import { taskStore } from '../../../apps/task/store'
-import IconSet from '../../../components/widgets/myIcons/set/index.vue'
+import { mapActions, mapWritableState } from "pinia";
+import { cardStore } from "../../../store/card";
+import { message } from "ant-design-vue";
+import NewPreviewCardDetails from "./NewPreviewCardDetails.vue";
+import Edit from "../../../components/widgets/myIcons/edit/index.vue";
+import RemoteMarket from "./RemoteMarket.vue";
+import { myIcons } from "../../../store/myIcons.ts";
+import _ from "lodash-es";
+import { taskStore } from "../../../apps/task/store";
+import { completeTask } from "../../../apps/task/task";
+import IconSet from "../../../components/widgets/myIcons/set/index.vue";
 
 export default {
-  emits: ['close', 'addSuccess'],
+  emits: ["close", "addSuccess"],
   props: {
     allList: {
       type: Array,
@@ -172,31 +280,35 @@ export default {
     desk: {
       type: Object,
       required: true,
-      default: () => { },
+      default: () => {},
     },
     keywords: {
-      type: String
-    }
+      type: String,
+    },
   },
   computed: {
-    ...mapWritableState(myIcons, ['iconOption', 'edit']),
-    ...mapWritableState(taskStore, ['taskID', 'step', 'success']),
-    M01013 () {
-      return this.taskID == 'M0101' && this.step == 3
+    ...mapWritableState(myIcons, ["iconOption", "edit"]),
+    ...mapWritableState(taskStore, ["taskID", "step", "success"]),
+    M01013() {
+      return this.taskID == "M0101" && this.step == 3;
     },
-    displayList () {
+    displayList() {
       if (this.keywords) {
-        return this.allList.filter(item => {
-
-          return item.cname.toLowerCase().includes(this.keywords.toLowerCase()) || item.detail.toLowerCase().includes(this.keywords.toLowerCase())
-
-        })
+        return this.allList.filter((item) => {
+          return (
+            item.cname.toLowerCase().includes(this.keywords.toLowerCase()) ||
+            item.detail.toLowerCase().includes(this.keywords.toLowerCase())
+          );
+        });
       } else {
-        return this.cardList
+        return this.cardList;
       }
-    }
+    },
   },
-  data () {
+  mounted() {
+ 
+  },
+  data() {
     return {
       navLists: [],
       carouselIndex: 0,
@@ -205,124 +317,123 @@ export default {
       settingVisible: false,
       openRemote: false,
       remoteContent: {},
-    }
+    };
   },
   components: {
     NewPreviewCardDetails,
     Edit,
     RemoteMarket,
-    IconSet
+    IconSet,
   },
   watch: {
     navList: {
       immediate: true,
-      handler () {
-        this.navLists = JSON.parse(JSON.stringify(this.cardList))
+      handler() {
+        this.navLists = JSON.parse(JSON.stringify(this.cardList));
       },
     },
     search: {
       immediate: true,
-      handler (newV, oldV) {
-        if (newV == '下载次数')
-          this.navLists = this.mySort(this.navLists, 'download')
-        else if (newV == '更新时间')
-          this.navLists = this.mySort(this.navLists, 'time')
-        else this.navLists = this.cardList
+      handler(newV, oldV) {
+        if (newV == "下载次数")
+          this.navLists = this.mySort(this.navLists, "download");
+        else if (newV == "更新时间")
+          this.navLists = this.mySort(this.navLists, "time");
+        else this.navLists = this.cardList;
       },
     },
   },
   methods: {
-    ...mapActions(cardStore, ['addCard']),
+    ...mapActions(cardStore, ["addCard"]),
     // 添加图标保存
-    save () {
-      if (this.edit.src.length === 0) return message.error('图标不能为空')
-      this.settingVisible = false
+    save() {
+      if (this.edit.src.length === 0) return message.error("图标不能为空");
+      this.settingVisible = false;
       this.addCard(
         {
-          name: 'myIcons',
+          name: "myIcons",
           id: Date.now(),
           customData: { iconList: [{ ...this.edit }] },
         },
         this.desk
-      )
-      this.edit = {}
-      this.$emit('addSuccess')
-      message.success('添加成功！')
+      );
+      this.edit = {};
+      this.$emit("addSuccess");
+      message.success("添加成功！");
     },
-    getImg (url) {
+    getImg(url) {
       return `https://a.apps.vip/cards/${url}.png`;
     },
-    mySort (data, property, asc) {
-      let datas = [...data]
+    mySort(data, property, asc) {
+      let datas = [...data];
       return datas.sort(function (a, b) {
-        a = a[property]
-        b = b[property]
-        if (asc) return a - b
-        else return b - a
-      })
+        a = a[property];
+        b = b[property];
+        if (asc) return a - b;
+        else return b - a;
+      });
     },
-    formatTimestamp (timestamp) {
-      const date = new Date(timestamp)
-      const year = date.getFullYear().toString()
-      const month = (date.getMonth() + 1).toString().padStart(2, '0')
-      const day = date.getDate().toString().padStart(2, '0')
-      return `${year}-${month}-${day}`
+    formatTimestamp(timestamp) {
+      const date = new Date(timestamp);
+      const year = date.getFullYear().toString();
+      const month = (date.getMonth() + 1).toString().padStart(2, "0");
+      const day = date.getDate().toString().padStart(2, "0");
+      return `${year}-${month}-${day}`;
     },
-    closeCardDetails () {
-      this.isCardDetails = false
+    closeCardDetails() {
+      this.isCardDetails = false;
     },
-    addImgClass (index) {
+    addImgClass(index) {
       this.$nextTick(() => {
-        let img = this.$refs.imgRef
-        let width = img[index].naturalWidth
-        let height = img[index].naturalHeight
-        if (width > height) img[index].setAttribute('class', 'img-w')
-        else img[index].setAttribute('class', 'img-h')
-      })
+        let img = this.$refs.imgRef;
+        let width = img[index].naturalWidth;
+        let height = img[index].naturalHeight;
+        if (width > height) img[index].setAttribute("class", "img-w");
+        else img[index].setAttribute("class", "img-h");
+      });
     },
-    addNewCard (item) {
-
+    addNewCard(item) {
       if (item.option[1] != undefined) {
-        this.fullScreen(item)
+        this.fullScreen(item);
       } else {
-        if (item.name === 'remote') {
-          this.openRemote = true
-          this.remoteContent = item
-          return
+        if (item.name === "remote") {
+          this.openRemote = true;
+          this.remoteContent = item;
+          return;
         }
-        this.addCardAchieve(item)
+        this.addCardAchieve(item);
       }
     },
-    fullScreen (item) {
-      this.cardDetails = item
-      this.isCardDetails = true
+    fullScreen(item) {
+      this.cardDetails = item;
+      this.isCardDetails = true;
     },
-    addCardAchieve (item, i) {
+    addCardAchieve(item, i) {
       // 添加图标前处理
-      if (item.name == 'myIcons') {
-        this.edit = _.cloneDeep(this.iconOption)
-        this.settingVisible = true
-        return
+      if (item.name == "myIcons") {
+        this.edit = _.cloneDeep(this.iconOption);
+        this.settingVisible = true;
+        return;
       }
-      console.log('执行......排查-1',item,i);
-      this.add(item, i)
+      this.add(item, i);
     },
-    add (item, index) {
-      console.log('执行......排查-2',item,index);
-      index = index ?? this.carouselIndex
+    add(item, index) {
+      index = index ?? this.carouselIndex;
 
       this.addCard(
         { name: item.option[index].name, id: Date.now(), customData: {} },
         this.desk
-      )
-      this.$emit('addSuccess')
-      message.success('添加成功！')
+      );
+      this.$emit("addSuccess");
+      message.success("添加成功！");
+      completeTask("m0101");
+      completeTask("m0302");
     },
-    closeMarket (val) {
-      this.openRemote = val
+    closeMarket(val) {
+      this.openRemote = val;
     },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -405,12 +516,10 @@ export default {
       border-radius: 10px 0 0 0;
 
       img {
-
         zoom: 0.07;
         border-radius: 8px;
         object-fit: contain;
       }
-
 
       .zoom {
         zoom: 0.05 !important;

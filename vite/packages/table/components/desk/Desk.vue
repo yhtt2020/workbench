@@ -162,7 +162,6 @@
   <xt-modal
     v-model="settingVisible"
     :footer="false"
-    title="桌面设置"
     boxClass="p-4 pb-0"
     :mask="0"
   >
@@ -488,7 +487,7 @@ export default {
             {
               id: 2,
               newIcon: "fluent:app-folder-16-regular",
-              name: "添加文件夹",
+              name: "添加图标分组",
               fn: this.addFolder,
             },
           ],
@@ -545,7 +544,7 @@ export default {
               }
             }
           },
-          disabled: true,
+          disabled: false,
         },
         {
           id: 11,
@@ -627,11 +626,29 @@ export default {
     window.time = Date.now();
   },
   mounted() {
+    // 自动打开编辑
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();
     });
     this.$bus.on("reset", () => {
       this.resetLayout();
+    });
+    this.$bus.on("M0102", () => {
+      this.newAddIcon();
+    });
+    this.$bus.on("M0101", () => {
+      this.newAddCard();
+    });
+    this.$bus.on("Z0106", () => {
+      this.newAddCard();
+    });
+    this.$bus.on("M0302", () => {
+      this.newAddCard();
+    });
+    this.$bus.on("M0201", () => {
+      setTimeout(() => {
+      this.$refs.galleryRef.openGalleryModal();
+      }, 100);
     });
 
     if (window.showed) {

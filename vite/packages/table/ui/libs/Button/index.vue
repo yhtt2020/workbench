@@ -12,6 +12,7 @@
   >
     <slot name="prefix" v-if="iconPosition == 'prefix'">
       <xt-new-icon v-if="icon" :icon="icon" :size="iconSize" />
+      <xt-ify-icon v-if="ifyIcon" :icon="ifyIcon" :size="iconSize" />
     </slot>
     <span>
       <slot></slot>
@@ -54,6 +55,7 @@ interface ButtonProps {
   plain?: boolean;
   // 需要触发复制的字符串
   copy?: string;
+  ifyIcon?: string;
 }
 const props = withDefaults(defineProps<ButtonProps>(), {
   throttleTime: 500,

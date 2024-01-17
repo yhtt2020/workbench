@@ -298,6 +298,7 @@ import { paperStore } from "../../../store/paper";
 import Template from "../../../../user/pages/Template.vue";
 import { cardStore } from "../../../store/card";
 import { message } from "ant-design-vue";
+import { startApp } from '../../../ui/hooks/useStartApp'
 const { appModel } = window.$models;
 export default {
   name: "CustomAssembly",
@@ -530,7 +531,8 @@ export default {
             });
             break;
           default:
-            require("electron").shell.openPath(this.myData.link.path);
+            startApp('localApp',app.path)
+            //require("electron").shell.openPath(this.myData.link.path);
         }
       } else if (this.myData.link) {
         this.myData.link.path
