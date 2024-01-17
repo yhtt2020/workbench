@@ -24,17 +24,17 @@
 
     <div class="font-16 px-4">
       <div class="xt-text-2 font-14 text-center">推荐使用以下缩放比例</div>
-      <div class="flex mt-4 justify-between px-8">
+      <div class="flex mt-4 justify-between">
         <div v-for="(item, index) in proportion">
           <xt-button class="" style="border-radius: 10px;background-color: var(--secondary-bg);" @click="setZoomFactor(item.scale, index)" :w="73" :h="40" :type="item.isCheck?'theme':''">{{ item.ratio }}</xt-button>
         </div>
       </div>
-      <div class="flex items-center w-full mt-4 justify-between" v-if="proportion[3].isCheck">
+      <div class="flex items-center w-full mt-4 justify-between" v-if="proportion[4].isCheck">
         <a-slider 
         @afterChange="setZoomFactor" 
         :min="30" :max="500"
         v-model:value="newZoom"></a-slider>
-        <a-input style="width:62px;height: 40px;" class="w-full xt-mask" v-model:value="inputZoom" @pressEnter="inputEnter"></a-input>
+        <a-input style="width:62px;height: 40px;" class="w-full xt-mask" v-model:value="newZoom" @pressEnter="inputEnter"></a-input>
       </div>
     </div>
     <xt-button class="button-bottom float-right mt-4 mb-4" style="border-radius: 10px;" @click="close" :w="64" :h="40" type="theme">确定</xt-button>
@@ -67,11 +67,11 @@ export default {
           scale: 150,
           isCheck: false,
         },
-        // {
-        //   ratio: '200%',
-        //   scale: 200,
-        //   isCheck: false,
-        // },
+        {
+          ratio: '200%',
+          scale: 200,
+          isCheck: false,
+        },
         {
           ratio: '自定义',
           scale: 100,
@@ -98,7 +98,8 @@ export default {
     this.inputZoom = +(this.newZoom).toFixed(0)
     this.getSize()
     this.scaleInit = true
-    this.getWindowSize()
+    // 调整缩放比例功能 暂时不需要 隐藏
+    // this.getWindowSize()
   },
   components: { 
     Icon,
@@ -111,19 +112,19 @@ export default {
     async getWindowSize(){
       var screenWidth = window.screen.width; // 获取显示器的宽度
       var screenHeight = window.screen.height; // 获取显示器的高度
-      let max = screenWidth>screenHeight?screenWidth:screenHeight;
-      if(max<=1920){
+      let min = screenWidth<screenHeight?screenWidth:screenHeight;
+      if(min<=1080){
         await tsbApi.window.setZoomFactor(100 / 100)
         this.proportion[0].isCheck = true
-        // this.setZoomFactor(100, 0)
-      }else if(max<=2560){
+      }else if(min<=1440){
         await tsbApi.window.setZoomFactor(125 / 100)
         this.proportion[1].isCheck = true
-        // this.setZoomFactor(125, 1)
-      }else{
+      }else if(min<=2160){
         await tsbApi.window.setZoomFactor(150 / 100)
         this.proportion[2].isCheck = true
-        // this.setZoomFactor(150, 2)
+      }else{
+        await tsbApi.window.setZoomFactor(200 / 100)
+        this.proportion[3].isCheck = true
       }
       console.log('出发了');
     },
@@ -157,7 +158,7 @@ export default {
         this.proportion[index].isCheck = true
       }
       this.inputZoom = zoom
-      this.proportion[3].scale = zoom
+      this.proportion[4].scale = zoom
       this.oldZoom = this.settings.zoomFactor
       await tsbApi.window.setZoomFactor(zoom / 100)
       this.showRestore = true
@@ -212,6 +213,7 @@ export default {
         this.timeout = 10
         this.settings.zoomFactor = 100
         this.newZoom = 100
+        this.proportion[4].scale = 100
         this.oldZoom = 100
         this.inputZoom = 100
         this.getSize()

@@ -28,7 +28,7 @@
     ></DefaultItem>
   </xt-drawer>
   <teleport to="body">
-    <ChooseModal v-if="chooseVisible" :chooseVisible="chooseVisible" @closeChoose="closeChoose"></ChooseModal>
+    <ChooseModal v-if="chooseVisible"></ChooseModal>
   </teleport>
 
 </template>
@@ -38,7 +38,7 @@ import { ref, toRefs, computed, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useWidgetStore } from "../../../components/card/store";
 import DefaultItem from "./DefaultItem.vue";
-import ChooseModal from "./chooseModal.vue";
+import ChooseModal from "./ChooseModal.vue";
 const props = defineProps({
   menus: {},
   model: {
@@ -62,12 +62,12 @@ const props = defineProps({
 
 });
 const menu = ref(null);
-const chooseVisible = ref(false);
 const { menus, model, height } = toRefs(props);
 
 const widgetStore = useWidgetStore();
 const { rightModel } = storeToRefs(widgetStore);
 const { firstOpen } = storeToRefs(widgetStore);
+const { chooseVisible } = storeToRefs(widgetStore);
 
 const drawerVisible = ref(false);
 
@@ -101,9 +101,6 @@ const defaultList = computed(() => {
 const followList = computed(() => {
   return menus.value;
 });
-function closeChoose () {
-  chooseVisible.value = false
-}
 function beforeCreate() {
 
   return rightModel.value == "follow";

@@ -47,7 +47,7 @@
         <div v-else-if="step == 1">
           <div class="pt-6 text-center font-16 xt-text">导入你的桌面图标</div>
           <div class="text-center font-16 xt-text-2" style="width:704px;margin:16px auto 0;">我们帮你整理了桌面图标，应用程序类图标我们会帮你整理到导航栏，文件类型图标会整理到桌面，后续你也可以随时将需要快速访问的程序或文件拖放到工作台桌面和导航栏。</div>
-          <div class="flex flex-wrap mt-4 overflow-hidden overflow-y-auto xt-scrollbar" style="height: 400px;padding-left:19px;" >
+          <div class="flex flex-wrap mt-4 overflow-hidden overflow-y-auto xt-scrollbar" style="height: 420px;padding-left:19px;" >
             <div v-for="(item, index) in appList" :key="index" class="pt-2 span-list xt-bg-2 "
               :class="index>2?'mt-3':'',index%3!=0?'ml-3':''">
               <!-- 标题 -->
