@@ -98,9 +98,10 @@ const deviationTop = computed(() => {
   let scroll = getFreeLayoutState.value?.mode?.scroll;
   if (scroll == "lock" || scroll == "horizontal") {
     console.log("deviationTop :>> ", freeLayoutEnv.value.scrollOldTop);
+    const zoom = getFreeLayoutState.value.canvas.zoom;
 
     return {
-      top: `-${freeLayoutEnv.value.scrollTop}px`,
+      top: `-${freeLayoutEnv.value.scrollTop / zoom}px`,
     };
   }
   return {};
@@ -110,8 +111,10 @@ const deviationLeft = computed(() => {
   let scroll = getFreeLayoutState.value?.mode?.scroll;
   if (scroll == "lock" || scroll == "vertical") {
     console.log("deviationLeft :>> ", freeLayoutEnv.value.scrollLeft);
+    const zoom = getFreeLayoutState.value.canvas.zoom;
+
     return {
-      left: `-${freeLayoutEnv.value.scrollLeft}px`,
+      left: `-${freeLayoutEnv.value.scrollLeft / zoom}px`,
     };
   }
   return {};
