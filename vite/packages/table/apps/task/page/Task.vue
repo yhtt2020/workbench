@@ -5,7 +5,7 @@
     boxClass="rounded-xl"
     :mask="false"
   >
-    <div class="xt-modal flex rounded-xl" style="width: 500px; height: 600px">
+    <div class="xt-modal flex rounded-xl" style="width: 500px; height: 636px">
       <xt-left-menu
         :list="menusList"
         :last="Offline.isOffline ? 3 : 4"

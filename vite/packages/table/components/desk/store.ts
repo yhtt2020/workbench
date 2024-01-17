@@ -7,13 +7,11 @@ export const useDeskStore = defineStore("useDeskStore", {
     menus: [], // 桌面菜单配置项
     autoOpenEdit: false, // 是否自动打开编辑
     isEnterFolder: false, // 是否拖拽进入文件夹
-    isEnterBar:false, // 是否拖拽进入导航栏
-    mouseInElement:""
+    isEnterBar: false, // 是否拖拽进入导航栏
+    mouseInElement: "",
+    adjustLayout: false, // 提供给Container组件拖拽头部调用
   }),
-  getters: {
-    newMenus() {},
-    currentMenus() {},
-  },
+  getters: {},
   actions: {
     // 添加菜单项
     addMenu(menu) {

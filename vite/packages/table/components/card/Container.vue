@@ -174,11 +174,10 @@
 </template>
 <!-- lang="ts" -->
 <script>
-// import { PropType } from "vue";
-import { h } from "vue";
 import { mapActions, mapWritableState } from "pinia";
 import _ from "lodash-es";
-import { message, notification } from "ant-design-vue";
+import { useToast } from "vue-toastification";
+
 import { cardStore } from "../../store/card";
 import { offlineStore } from "../../js/common/offline";
 import { useWidgetStore } from "./store";
@@ -186,7 +185,7 @@ import { useFreeLayoutStore } from "../desk/freeLayout/store";
 
 import RightMenu from "./RightMenu.vue";
 import PageState from "./PageState.vue";
-// import { IOption, IMenuItem } from "./types";
+import Msg from "./Msg.vue";
 
 import { deepMerge } from "./ContainerUtils";
 
@@ -197,6 +196,7 @@ export default {
     RightMenu,
     PageState,
     XtButton,
+    Msg,
   },
   name: "Container",
   props: {
@@ -390,20 +390,17 @@ export default {
     getSize() {
       let w = 1;
       let h = 1;
+      let str;
       if (typeof this.currentSize != "string") {
         console.warn("错误的传递 :>> ");
       } else {
-        let str = this.currentSize.split("x");
-        w = str[0];
-        h = str[1];
+        str = this.currentSize.split("x");
       }
-      console.log("123312312312 :>> ", 123312312312);
-      console.log("this.modalSize :>> ", this.modalSize);
       if (this.modalSize) {
-        let str = this.modalSize.split("x");
-        w = str[0];
-        h = str[1];
+        str = this.modalSize.split("x");
       }
+      w = str[0];
+      h = str[1];
       return {
         width: w * 134 + (w - 1) * 12 + "px",
         height: h * 96 + (h - 1) * 12 + "px",
@@ -453,27 +450,23 @@ export default {
     ...mapActions(offlineStore, ["getIsOffline"]),
     // 头部拖拽开始
     titleDragStart() {
-      // message.info("开启调整桌面布局可以拖拽小组件");
-      const key = `open${Date.now()}`;
-      const fn = () => {
-        this.$bus.emit("startAdjust");
-        notification.close(key);
-      };
-      notification["info"]({
-        message: "开启调整桌面布局可以拖拽小组件",
-        btn: () =>
-          h(
-            XtButton,
-            {
-              type: "theme",
-              w: "120",
-              h: 40,
-              onClick: fn,
-            },
-            { default: () => "调整布局" }
-          ),
-        key,
-      });
+      const toast = useToast();
+      toast.clear();
+      toast(
+        {
+          component: Msg,
+        },
+        {
+          icon: false,
+          closeOnClick: false,
+          closeButton: false,
+          pauseOnFocusLoss: true,
+          pauseOnHover: true,
+          toastClassName: "notice-toast",
+          timeout: 3000,
+          hideProgressBar: false,
+        }
+      );
     },
     // 左侧区域鼠标进入
     leftMouseEnter() {
@@ -513,7 +506,7 @@ export default {
     },
     // 右键删除
     doRemoveCard() {
-      this.options.beforeDelete && this.$emit("delete");
+      this.$emit("delete");
       this.removeCard(this.customIndex, this.desk);
     },
 

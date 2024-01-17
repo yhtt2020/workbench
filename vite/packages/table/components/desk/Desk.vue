@@ -342,6 +342,12 @@ export default {
     },
   },
   watch: {
+    adjustLayout(val) {
+      if (val) {
+        this.toggleEditing();
+        this.adjustLayout = false;
+      }
+    },
     deskMenus: {
       handler(newVal) {
         this.deskMenus.forEach((item) => {
@@ -442,7 +448,7 @@ export default {
     ]),
     ...mapWritableState(useFloatMenuStore, ["menus", "newMenus"]),
     ...mapWritableState(useNavigationStore, ["selectNav", "isDesk"]),
-    ...mapWritableState(useDeskStore, ["autoOpenEdit"]),
+    ...mapWritableState(useDeskStore, ["autoOpenEdit", "adjustLayout"]),
     navMenu() {
       if (
         !this.navigationToggle[0] &&
@@ -650,7 +656,7 @@ export default {
     });
     this.$bus.on("M0201", () => {
       setTimeout(() => {
-      this.$refs.galleryRef.openGalleryModal();
+        this.$refs.galleryRef.openGalleryModal();
       }, 100);
     });
 
