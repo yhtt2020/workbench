@@ -97,7 +97,6 @@ const auxLineHeight = computed(() => {
 const deviationTop = computed(() => {
   let scroll = getFreeLayoutState.value?.mode?.scroll;
   if (scroll == "lock" || scroll == "horizontal") {
-    console.log("deviationTop :>> ", freeLayoutEnv.value.scrollOldTop);
     const zoom = getFreeLayoutState.value.canvas.zoom;
 
     return {
@@ -110,7 +109,6 @@ const deviationTop = computed(() => {
 const deviationLeft = computed(() => {
   let scroll = getFreeLayoutState.value?.mode?.scroll;
   if (scroll == "lock" || scroll == "vertical") {
-    console.log("deviationLeft :>> ", freeLayoutEnv.value.scrollLeft);
     const zoom = getFreeLayoutState.value.canvas.zoom;
 
     return {

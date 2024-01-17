@@ -1,6 +1,7 @@
 <!-- 滚动条视图和事件 -->
 <template>
   <div
+    @wheel="handleWheelEvent"
     v-show="isFreeLayout"
     ref="scrollbar"
     class="no-drag relative w-full h-full"
@@ -88,19 +89,20 @@ onMounted(() => {
   window.addEventListener("mouseup", handleMouseUp);
   document.body.addEventListener("keydown", ignoreSpace);
 });
-
+const lock = ref(false);
 watch([isFreeLayout, () => scrollSize.value], ([state, size]) => {
+  if (!state) lock.value = false;
+  if (lock.value) return;
   if (!size) return;
   const { width, height } = size;
   // 等待状态和画布同时加载成功
   if (state && width && height) {
-    console.log("222 :>> ", 222);
     // 初始化自由布局定位
     let scrollMode = getFreeLayoutState.value?.mode.scroll
       ? getFreeLayoutState.value.mode.scroll
       : "free";
     updateScroll(scrollMode);
-  } else {
+    lock.value = true;
   }
 });
 
@@ -125,6 +127,7 @@ let initialMousePosition = ref(null);
  */
 //滚动方式
 const updateScroll = async (newV) => {
+  console.log("2222222 :>> ", 2222222);
   redirect();
   scrollbar.value.scrollLeft = 0;
   scrollbar.value.scrollLeft = 0;
@@ -189,7 +192,13 @@ function handleMouseMove(event) {
     initialMousePosition.value = { x: event.clientX, y: event.clientY };
   }
 }
-
+const handleWheelEvent = (event) => {
+  let scrollMode = getFreeLayoutState.value?.mode.scroll;
+  if (scrollMode != "horizontal") return;
+  // 获取滚动位置
+  const scrollPosition = event.deltaY;
+  scrollbar.value.scrollLeft += scrollPosition;
+};
 // 鼠标抬起
 function handleMouseUp(event) {
   isDragging.value = false;
@@ -222,12 +231,12 @@ function update() {
 
 onBeforeUnmount(() => {
   freeLayoutStore.initFreeLayoutEnv();
-  // scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
-  //   capture: true,
-  // });
-  // scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
-  //   capture: true,
-  // });
+  scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
+    capture: true,
+  });
+  scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
+    capture: true,
+  });
   window.removeEventListener("keydown", handleKeyDown);
   window.removeEventListener("keyup", handleKeyUp);
   window.removeEventListener("mousedown", handleMouseDown);
