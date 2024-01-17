@@ -149,7 +149,7 @@ const updateScroll = async (newV) => {
   }, 1);
 };
 watch(
-  () => getFreeLayoutState.value?.mode.scroll,
+  () => getFreeLayoutState.value?.mode?.scroll,
   (val) => {
     if (!isFreeLayout.value) return;
     updateScroll(val);
