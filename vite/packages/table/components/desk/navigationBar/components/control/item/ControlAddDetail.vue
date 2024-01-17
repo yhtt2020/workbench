@@ -1,7 +1,7 @@
 <template>
   <!-- 音乐播放器和音量调节按钮 -->
  <template v-if="controlIndex === 'audio'">
-   <SystemControlDetail  @click="addControl($event)"/>
+   <SystemControlDetail  @click="addControl($event)" :status="'add'"/>
  </template>
 
  <!-- 用户中心数据信息模块 -->

@@ -1,6 +1,6 @@
 <template>
  <template v-if="controlIndex === 'audio'">
-  <SystemControlDetail @click="removeControl($event)"/>
+  <SystemControlDetail @click="removeControl($event)" :status="status"/>
  </template>
 
  <!-- 用户中心信息 -->
