@@ -103,14 +103,7 @@ const defaultMenu = computed(() => {
   ];
 });
 const updatePosition = () => {
-  getFreeLayoutState.value.mode.align === "custom";
-  getFreeLayoutState.value.line.centerLine = {
-    y: freeLayoutEnv.value.scrollTop,
-    x:
-      freeLayoutEnv.value.scrollLeft + freeLayoutEnv.value.scrollData.width / 2,
-    // x: freeLayoutEnv.value.scrollLeft,
-  };
-
+ freeLayoutStore.updateLocation();
   message.success("修改中心点成功");
 };
 const redirectPosition = () => {
@@ -206,6 +199,7 @@ watch(freeLayoutZoom, (newV) => {
     getFreeLayoutState.value.canvas.zoom = 1;
     freeLayoutZoom.value = 1;
   }
+  redirectPosition();
 });
 
 const defaultZoom = ref(zoom.value);
@@ -320,6 +314,7 @@ const updateArrange = (newV) => {
     :index="100"
     disabledHandle=".floatMenu"
     :firstPosition="firstPosition"
+    :test="false"
   >
     <div
       class="select-none cursor-move z-24 xt-modal rounded-xl p-3 no-drag xt-shadow xt-b"
