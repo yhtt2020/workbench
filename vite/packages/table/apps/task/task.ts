@@ -106,7 +106,7 @@ export const getReward = async (id) => {
 
   if (completedList.value.includes(id)) return;
   // 开始领取
-  rewardVisible.value = true;
+
   const { data, code } = await completeCurrentTask({
     taskName: id,
     uid: app.userInfo.uid,
