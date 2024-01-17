@@ -6,7 +6,7 @@
     <div style="position: absolute; z-index: 500 !important;"
       :style="{ left: `${this.left}px`, bottom: `${navAttribute.navSize / 100 * 100}px` }" class="rounded-xl pointer "
       id="folder">
-      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:size="updateSize" :customData="customData"
+      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:size="updateSize" :customData="customData" :customIndex="bottomKey"
         :secondary="true" v-if="folderVisible" :expand="{ disabled: true }"
         :navBar="{ resize: false, sizeOption: false, isDel: true, hierarchy: true }" :auto="true" />
      
@@ -41,7 +41,7 @@
           </div>
           <!---->
           <div v-show="settings.enableChat" class="pl-4 pointer">
-            <ChatButton></ChatButton>
+            <ChatButton :tipPosition="navAttribute.navSize"></ChatButton>
           </div>
         </div>
 
@@ -56,7 +56,7 @@
       <!-- 快速搜索 底部栏区域 -->
       <Drop @createFile="createFile">
         <transition>
-          <div v-if="hoverIndex > -1 && !isEnterBar && hoverRealItemId() !== dragItem?.id"
+          <div v-if="hoverIndex > -1 && !skipSort && hoverRealItemId() !== dragItem?.id"
             style="position: absolute;z-index:99999999999;top:-8px;left:50%;transform: translateX(-50%) translateY(-100%)  ;"
             class="px-10 py-3 rounded-lg s-bg xt-text">松开鼠标合并</div>
         </transition>
@@ -507,11 +507,10 @@ export default {
       const windowWidth = size.width.value
       this.parentSize = windowWidth
       this.maxItemNum = Math.round((windowWidth - 240) / 72)
-      // console.log(this.maxItemNum,'最大导航栏图标个数')
       // if (this.footNavigationList.length > this.maxItemNum) {
       const width = windowWidth / (240 + this.copyFootNav.length * 72)
       this.navAttribute.navSize = width.toFixed(2) * 100
-      this.navAttribute.navSize < 100 ? this.navAttribute.navSize : this.navAttribute.navSize = 100
+      this.navAttribute.navSize = this.navAttribute.navSize < 100 ? this.navAttribute.navSize : 100
       // }
       // console.log(this.navAttribute.navSize, 'size')
     }, 200)
@@ -636,44 +635,10 @@ export default {
         // if(fixedRs.fixed){
         //   this.copyFootNav=fixedRs.fixedArray
         // }
-
-        // 同步数据 --- 用于重置图标的信息
-        // if (this.copyFootNav.length > this.footNavigationList.length) {
-        //   const target = this.updateNavList(this.copyFootNav, this.footNavigationList);
-        //   for (let i = 0; i < target.length; i++) {
-        //     const index = this.copyFootNav.findIndex(item => {
-        //       return this.judge(item, target[i]);
-        //     })
-        //     this.footNavigationList.splice(index, 0, JSON.parse(JSON.stringify(target[i])));
-        //   }
-
-        // } else if (this.copyFootNav.length < this.footNavigationList.length) {
-        //   const target = this.updateNavList(this.footNavigationList, this.copyFootNav);
-        //   const list = target.map(element => {
-        //     return this.footNavigationList.findIndex(item => {
-        //       // 找到被删除元素在备份数据中的索引
-        //       return this.judge(item, element);
-        //     });
-        //   })
-        //   this.footNavigationList = this.footNavigationList.filter((item, index) => { return list.indexOf(index) === -1 })
-        // }
-        // else {
-        //   const rearrangedCopyFootNav = [];
-        //   for (let i = 0; i < this.footNavigationList.length; i++) {
-        //     const item = this.footNavigationList.find((copyItem) => {
-        //       return this.judge(this.footNavigationList[i], copyItem);
-        //     })
-        //     if (item) {
-        //       rearrangedCopyFootNav.push(item)
-        //     }
-        //   }
-        //   this.footNavigationList = [...rearrangedCopyFootNav]
-        // }
-
-
+        // console.log(111111111,'form copyFootNav',this.copyFootNav)
         // 获取最大可添加图标个数
         const windowWidth = window.innerWidth
-        this.maxItemNum = Math.round((windowWidth - 240) / (72 * (this.navAttribute.navSize / 100)))
+        this.maxItemNum = Math.round((windowWidth - 240) / 72 )
         // console.log(this.maxItemNum, 'this.maxItemNum', windowWidth, 'windowWidth')
         // let flag = true
         if (this.copyFootNav.length > this.maxItemNum && this.maxItemNum !== null) {
@@ -681,12 +646,12 @@ export default {
           if (this.noticeFlag) {
             this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
               onOk: () => {
-                const width = window.innerWidth / (240 + this.copyFootNav.length * (72 * (this.navAttribute.navSize / 100)))
+                const width = window.innerWidth / (240 + this.copyFootNav.length * 72 )
                 this.navAttribute.navSize = width
               }
             })
           }
-          const width = window.innerWidth / (240 + this.copyFootNav.length * (72 * (this.navAttribute.navSize / 100)))
+          const width = window.innerWidth / (240 + this.copyFootNav.length * 72 )
           this.navAttribute.navSize = width.toFixed(2) * 100
           this.noticeFlag = false
         }
@@ -773,13 +738,6 @@ export default {
       },
       deep: true
     },
-    isEnterBar(newV, oldV) {
-      console.log(newV, oldV, 'isEnterBar')
-      if (oldV && !newV) {
-        console.log('完成了')
-        this.skipSort = true
-      }
-    }
   },
   methods: {
     useElementSize,
@@ -812,7 +770,7 @@ export default {
      * @returns {string}
      */
     hoverRealItemId() {
-      if (this.isEnterBar) return
+      // if (this.isEnterBar) return
       let parent = document.getElementById('bottomContent')
       if (!parent) {
         return ''
@@ -871,10 +829,10 @@ export default {
       this.quick = true
       this.componentId = 'EditIcon'
       this.editItem = item
-      if(item.default) return
+      if (item.default) return
       item.default = {
-        name:item.name,
-        icon:item.icon
+        name: item.name,
+        icon: item.icon
       }
       console.log(item.default, 'item.default')
     },
@@ -896,7 +854,8 @@ export default {
       this.folderItem = item
       this.folderList = item.children.map((i) => ({
         ...i,
-        id: nanoid(6)
+        id: nanoid(6),
+        default: i.default ? i.default : { name: i.name, icon: i.icon }
       }))
       this.folderName = item.name
       this.resetElementPosition()
@@ -1237,16 +1196,6 @@ export default {
           })
         }
         this.copyFootNav.splice(index, 1, ...item.children)
-        // console.log(this.footNavigationList, 'foot',this.copyFootNav,'copy')
-        // this.$nextTick(() => {
-        //   // for (let i = 0; i < item.children.length; i++) {
-        //   //   const element = item.children[i];
-        //   //   this.copyFootNav.splice(index + i, 0, element)
-        //   // }
-        //
-        //   // this.copyFootNav = this.updateIcon(this.footNavigationList, this.copyFootNav)
-        //   // console.log(this.footNavigationList, 'foot', this.copyFootNav, 'copy')
-        // })
 
         if (this.folderId == item.id) {
           this.closeFolder()
@@ -1256,11 +1205,29 @@ export default {
     },
     updateIcon,
     createFile(item, x) {
+      this.skipSort = true
       const bottom = document.querySelector('#bottomPanel')
       const rect = bottom.getBoundingClientRect()
       const index = Math.round((x - rect.x) / (72 * this.navAttribute.navSize / 100))
       console.log(index, item, 'index');
-      this.copyFootNav.splice(index, 0, _.cloneDeep(item))
+      this.dragItem = null
+      if (this.copyFootNav[this.hoverIndex]?.type === 'folder') {
+        const merged = this.mergeIconFolder(this.copyFootNav, item ,this.copyFootNav.find(i => {
+          return i.id === this.hoverRealItemId()
+        }))
+        this.copyFootNav.splice(this.copyFootNav.findIndex(i => {
+          return i.id === this.hoverRealItemId()
+        }), 1, merged)
+        this.copyFootNav = this.copyFootNav.filter(i => {
+          return i.id !== item.id
+        })
+      }
+      else{
+       this.copyFootNav.splice(index, 0, _.cloneDeep(item))
+      }
+      // 从外部拖拽元素到导航栏，跳过合并提示
+      this.hoverIndex = -1
+
     },
     /**
      * sortable拖拽函数
@@ -1407,8 +1374,7 @@ export default {
          * @returns {number}
          */
         onUnchoose: function (event) {
-          if (this.isEnterBar) return
-          if (that.hoverRealItemId() && that.hoverRealItemId() !== that.dragItem.id) {
+          if (that.hoverRealItemId() && that.hoverRealItemId() !== that.dragItem?.id) {
             //存在目标，且不等于自身，符合合并条件，则执行合并
             const merged = that.mergeIconFolder(that.copyFootNav, that.dragItem, that.copyFootNav.find(item => {
               return item.id === that.hoverRealItemId()
@@ -1433,10 +1399,10 @@ export default {
      * @returns {{gap: boolean, index: number}|number}
      */
     getHoverIndex(currentLeft) {
-      const panelLeft = document.getElementById('bottomContent').getBoundingClientRect().left
-      const relativePos = (currentLeft - panelLeft) % 72
-      const isGap = !(relativePos <= 42 && relativePos >= 10)
-      let nIndex = Math.floor((currentLeft - panelLeft + 20) / 72)
+      const panelLeft = document.getElementById('bottomContent').getBoundingClientRect().left * (this.navAttribute.navSize / 100)
+      const relativePos = (currentLeft - panelLeft) % (72 * this.navAttribute.navSize / 100)
+      const isGap = !(relativePos <= (42 * this.navAttribute.navSize / 100) && relativePos >= (10 * this.navAttribute.navSize / 100))
+      let nIndex = Math.floor((currentLeft - panelLeft + 20) / (72 * this.navAttribute.navSize / 100))
       if (nIndex > this.copyFootNav.length - 1) {
         //超出
         return 0
@@ -1460,6 +1426,7 @@ export default {
       this.bottomKey = Date.now()
       this.$nextTick(() => {
         this.enableDrag()
+        this.skipSort = false
       })
     },
     useWindowSize,

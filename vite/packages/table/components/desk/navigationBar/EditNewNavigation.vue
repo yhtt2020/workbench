@@ -15,10 +15,12 @@
                     class="flex flex-col justify-center mt-2 text-base xt-text hover-style w-[160px] h-[48px] pointer">
                     <div style="text-align: left !important;" class="ml-12 text-base xt-text"> {{ item.name }}</div>
                 </div>
-                <div v-if="!this.introduceVisible" class="absolute bottom-3 left-3">
+                <div v-if="!this.introduceVisible" class="absolute flex bottom-3 left-3">
                     <a-tooltip title="推荐">
-                        <xt-button :w="40" :h="40" @click="backIntroduce"><xt-new-icon
-                                icon="fluent:emoji-smile-slight-24-regular" size="20"></xt-new-icon></xt-button>
+                        <xt-button :w="40" :h="40" @click="backIntroduce" :icon="'fluent:emoji-smile-slight-24-regular'"></xt-button>
+                    </a-tooltip>
+                    <a-tooltip title="自定义网址" v-if="this.selectNav === 'desktop'" class="ml-2">
+                        <xt-button :w="120" :h="40" @click="isCustomLink" :icon="'fluent:add-16-regular'" class="xt-text-2">自定义</xt-button>
                     </a-tooltip>
 
                 </div>
@@ -67,7 +69,9 @@
     <teleport to="body" :disabled="false">
         <Msg :modelValue="modalVisible" :title="defaultTitle.title" :text='msgText' @no="this.modalVisible = false"
             @ok="onOk"></Msg>
+        <customLink :modelValue="linkVisible" @close="this.linkVisible = false"></customLink>
     </teleport>
+    
 
 
     <!-- </div> -->
@@ -87,6 +91,7 @@ import { addIconPosition } from './index'
 import Sortable from 'sortablejs'
 import { message } from 'ant-design-vue'
 import Msg from '../../../ui/new/msg/index.vue'
+import customLink from './components/CustomLink.vue'
 const { appModel } = window.$models
 export default {
     name: 'EditNewNavigation',
@@ -95,6 +100,7 @@ export default {
         Introduce,
         Custom,
         Msg,
+        customLink
     },
     emits: ['addIcon'],
     props:{
@@ -234,6 +240,7 @@ export default {
             contentWidth: 800,
             modalVisible: false,
             currentTitle: null,
+            linkVisible: false,
         }
     },
     methods: {
@@ -414,7 +421,13 @@ export default {
                 }
 
             });
+        },
+        isCustomLink(){
+           this.linkVisible = true 
+           console.log(this.linkVisible,'linkVisible')
         }
+            
+        
 
     },
     computed: {

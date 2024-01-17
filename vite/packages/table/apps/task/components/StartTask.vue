@@ -97,8 +97,7 @@ const startTask = () => {
       });
     }
     if (item.type === "bus") {
-
-      console.log('item.type :>> ', item.value);
+      console.log("item.type :>> ", item.value);
       setTimeout(() => {
         proxy.$bus.emit(item.value);
       }, 200);
@@ -115,6 +114,7 @@ const continueTask = computed(() => {
 
 // 领取奖励
 const receive = async () => {
+  rewardVisible.value = true;
   getReward(props.task.id);
 };
 const getReceiveStatus = computed(() => {

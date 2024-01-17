@@ -72,7 +72,7 @@ export default {
     },
     ...mapWritableState(appStore, ['routeUpdateTime', 'fullScreen', 'settings', 'init']),
     ...mapWritableState(teamStore, ['teamVisible']),
-    ...mapWritableState(navStore, ['sideNavigationList', 'rightNavigationList', 'navigationToggle', 'footNavigationList','copyRightNav','copySideNav','loaded']),
+    ...mapWritableState(navStore, ['sideNavigationList', 'rightNavigationList', 'navigationToggle', 'footNavigationList','copyRightNav','copySideNav','loaded','copyFootNav']),
     isMain
   },
   data() {
@@ -96,11 +96,11 @@ export default {
       this.delZone = val
     },
     hiedNavBar(value) {
-      const foot = this.navigationToggle[2] ? this.footNavigationList : [];
+      const foot = this.navigationToggle[2] ? this.copyFootNav : [];
       const left = this.navigationToggle[0] ? this.sideNavigationList : [];
       const right = this.navigationToggle[1] ? this.rightNavigationList : [];
       const checkAndToggle = (listToCheck, toggleIndex) => {
-        if (listToCheck.some((item) => item.event === 'home')) {
+        if (listToCheck.some((item) => item.value === 'home')) {
           this.navigationToggle[toggleIndex] = false;
           return;
         }
