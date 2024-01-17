@@ -25,6 +25,7 @@ import { communityStore } from '../store/communityStore'
 
 import GroupsUserFind from './find/groupsUserFind.vue'
 import CommunityFind from './find/communityFind.vue'
+import { appStore } from "../../../store";
 
 export default {
   components:{
@@ -32,6 +33,9 @@ export default {
     SearchIcon,
     CommunityFind,
     GroupsUserFind
+  },
+  computed:{
+    ...mapWritableState(appStore,['userInfo']),
   },
 
   data(){
@@ -48,6 +52,10 @@ export default {
   },
 
   mounted(){
+    // 离线模式下 默认打开群聊和用户界面
+    if(!this.userInfo){
+      this.communityDefault = {title:'群聊和用户',name:'user', state: false}
+    }
     this.$nextTick(()=>{
       if(this.communityDefault.name === 'community'){
         this.$refs.findSearchRef.focus();
@@ -73,6 +81,7 @@ export default {
   watch:{
     'communityDefault':{
       handler(newVal){
+        console.log('1111', this.userInfo, newVal);
         this.communityDefault = newVal
       },
       immediate:true,
@@ -81,6 +90,7 @@ export default {
 
     'isListEmpty':{
       handler(newVal){
+        console.log('1111', this.userInfo);
         if(newVal?.length === 0){
           this.communityDefault = this.communityList[1]
         }else{
