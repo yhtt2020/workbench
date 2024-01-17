@@ -27,7 +27,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       // 系统数据
       system: {
         // 是否使用自由布局
-        isFreeLayout: true,
+        isFreeLayout: false,
         // 隐藏组件
         hide: false,
       },
@@ -144,6 +144,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         this.freeLayoutState[this.getCurrentDeskId] = _.cloneDeep(
           this.defaultState
         );
+        this.freeLayoutData[this.getCurrentDeskId] = {};
       } else {
         this.deepMerge(this.getFreeLayoutState, this.defaultState);
       }
@@ -216,6 +217,46 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     // 获取一个指定ID的数据
     getOneFreeLayoutData(id) {
       return this.freeLayoutData[id];
+    },
+    // 返回中心点
+    redirect() {
+      let w, h;
+      const width = this.freeLayoutEnv.scrollWidth;
+      const height = this.freeLayoutEnv.scrollHeight;
+      const currentWidth = this.getFreeLayoutState.canvas.width;
+      const currentHeight = this.getFreeLayoutState.canvas.height;
+      const zoom = this.getFreeLayoutState.canvas.zoom;
+      const align = this.getFreeLayoutState.mode.align;
+      if (align === "top") {
+        h = 0;
+        w = currentWidth / 2 - width / 2;
+      } else if (align === "center") {
+        h = currentHeight / 2 - height / 2;
+        w = currentWidth / 2 - width / 2;
+      } else if (align === "left") {
+        h = currentHeight / 2 - height / 2;
+        w = 0;
+      } else if (align === "right") {
+        h = currentHeight / 2 - height / 2;
+        w = currentWidth;
+      } else if (align === "bottom") {
+        h = currentHeight;
+        w = currentWidth / 2 - width / 2;
+      } else {
+        // w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
+        // h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
+        w = this.getFreeLayoutState.line.centerLine.x - width / 2;
+        h = this.getFreeLayoutState.line.centerLine.y;
+      }
+      w = w * zoom;
+      h = h * zoom;
+
+      this.freeLayoutEnv.scrollLeft = w;
+      this.freeLayoutEnv.scrollTop = h;
+      return {
+        w,
+        h,
+      };
     },
   },
   persist: {

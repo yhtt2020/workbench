@@ -36,7 +36,11 @@
 
     <Drop>
       <!-- 自由布局 -->
-      <FreeLayoutScrollbar ref="freeLayoutScrollbar" class="flex-1">
+      <FreeLayoutScrollbar
+        ref="freeLayoutScrollbar"
+        class="flex-1"
+        v-if="freeLayout"
+      >
         <FreeLayoutCanvas
           class="home-widgets"
           v-if="isFreeLayout == true && $route.path == '/main' && freeLayout"
