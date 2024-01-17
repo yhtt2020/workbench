@@ -1,10 +1,9 @@
 <template>
  <Vuuri v-model="vuuriList" group-id="id" item-key="id" :options="option"  ref="testRef"
- :drag-enabled="false"   :get-item-height="getHeight"
+ :drag-enabled="true"   :get-item-height="getHeight"
 >
- <!-- :item-class="getMargin ? 'mr-0':'mr-2 mb-2'" -->
  <template #item="{ item }">
-  <ControlRemoveDetail :control-index="item.id" :control-item="item" :status="'del'" />
+  <ControlRemoveDetail :control-index="item.id" :control-item="item" :isClick="isClick" :status="'del'" />
  </template>
 </Vuuri>
 </template>
@@ -27,6 +26,7 @@ const option = ref({
  layout:{horizontal:false},
 });
 const testRef = ref(null);
+const isClick = ref(false);
 
 // 计算间距
 // const getMargin = computed(() => {
@@ -42,10 +42,13 @@ const getHeight = () =>{
 
 
 onMounted(()=>{
-  // testRef.value.muuri.on('dragMove', function (item, event) {
-  //   console.log('111',item);
-  //   console.log('222',event);
-  // })
+  testRef.value.muuri.on('dragEnd', function (item, event) {
+    if(event.distance<40){
+      isClick.value = true;
+    }else{
+      isClick.value = false;
+    }
+  })
 })
 </script>
 

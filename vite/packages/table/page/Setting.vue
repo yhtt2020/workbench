@@ -124,7 +124,7 @@
                 </div>
               </a-col>
               <a-col v-if="simple && !this.isOffline"  :span="6">
-                <MyAvatar :size="37"></MyAvatar>
+                <MyAvatar :size="37"  :limit="true"></MyAvatar>
               </a-col>
             </a-row>
             <div></div>

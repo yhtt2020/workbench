@@ -1,6 +1,6 @@
 <template>
  <template v-if="controlIndex === 'audio'">
-  <div  class="rounded-xl flex flex-col relative" style="height: 120px;width:252px;" >
+  <!-- <div  class="rounded-xl flex flex-col relative" style="height: 120px;width:252px;" >
     <div class="absolute" style="top: 7px;right:-4px;">
       <xt-button style="width: auto !important;" h="0">
         <div class="flex items-center justify-center">
@@ -29,7 +29,7 @@
       </div>
     </div>
 
-  </div>
+  </div> -->
  </template>
 
  <template v-else-if="isUserInfoNull && controlIndex === 'user-info'">
@@ -42,8 +42,6 @@
       </xt-button>
     </div>
     <UserInfoDetail :userinfo="userInfo"/>
-    <!-- {{ controlItem }} -->
-    <!-- {{ isUserInfoNull }} -->
   </div>
  </template>
 

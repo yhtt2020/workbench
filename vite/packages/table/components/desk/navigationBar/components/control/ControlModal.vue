@@ -110,14 +110,6 @@ const bottomButton = ref([
     newIcon:'fluent:full-screen-maximize-16-regular',name:'全屏',
     fn:()=>{
       app.toggleFullScreen();
-      // if(props.full){
-      //   emit('setFull',false)
-      //   tsbApi.window.setFullScreen(false)
-      // }
-      // else {
-      //   emit('setFull',true)
-      //   tsbApi.window.setFullScreen(true)
-      // }
     }
   },
   {
@@ -134,14 +126,14 @@ const bottomButton = ref([
       emit('close')
     }
   },
-  // {
-  //   newIcon:'fluent:settings-16-regular',name:'清除测试数据',
-  //   fn:()=>{
-  //     controlStore().initData();
-  //     // router.push({ name: 'setting' });
-  //     // emit('close')
-  //   }
-  // }
+  {
+    newIcon:'fluent:settings-16-regular',name:'清除测试数据',
+    fn:()=>{
+      controlStore().initData();
+      // router.push({ name: 'setting' });
+      // emit('close')
+    }
+  }
 ])
 
 onMounted(()=>{

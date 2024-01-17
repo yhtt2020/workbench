@@ -3,13 +3,13 @@
     <XtScrollbar  :y="true" style="height: 100%;width: 100%;">
       <div class="flex flex-1 flex-col h-3/4">
         <div style="height: 12px;"></div>
-        <ControlRemoveItem :list="control.addList" />
+        <ControlRemoveItem :list="control.oldList" />
       </div>
       
-      <a-divider style="height: 1px;margin:8px 0 16px 0;" v-if="control.removeList.length !== 0 " />
+      <a-divider style="height: 1px;margin:8px 0 16px 0;" v-if="control.newList.length !== 0 " />
 
-      <div class="flex flex-1 flex-col h-3/4" v-if="control.removeList.length !== 0">
-        <ControlAddItem :list="control.removeList"/>
+      <div class="flex flex-1 flex-col h-3/4" v-if="control.newList.length !== 0">
+        <ControlAddItem :list="control.newList"/>
       </div>
     </XtScrollbar>
   </div>

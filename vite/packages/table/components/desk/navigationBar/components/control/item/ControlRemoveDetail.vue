@@ -1,6 +1,7 @@
 <template>
  <template v-if="controlIndex === 'audio'">
-  <div  class="rounded-xl flex flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-if="status === 'del'" @click.stop="removeControl">
+  <div style="height:120px;width: 252px;">123</div>
+  <!-- <div  class="rounded-xl flex flex-col items-center justify-center relative"  v-if="status === 'del'" @click.stop="removeControl($event)">
    <div class="absolute" style="top: 7px;right:-4px;" >
     <xt-button style="width: auto !important;" h="0">
       <div class="flex items-center justify-center">
@@ -50,11 +51,12 @@
         </xt-button>
        </div>
     </div>
-  </div>
+  </div> -->
  </template>
 
+ <!-- 用户中心信息 -->
  <template v-else-if="isUserLogin && controlIndex === 'user-info'">
-  <div  class="rounded-xl xt-bg flex flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-if="status === 'del'" @click.stop="removeControl">
+  <div  class="rounded-xl xt-bg flex flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-if="status === 'del'" @click.stop="removeControl($event)">
     <div class="absolute" style="top: 7px;right:-4px;" >
       <xt-button style="width: auto !important;" h="0">
         <div class="flex items-center justify-center">
@@ -70,6 +72,7 @@
   </div>
  </template>
 
+ <!-- 其他按钮 -->
  <template v-else>
   <div  class="xt-bg rounded-xl flex flex-col items-center justify-center relative" style="height: 120px;width: 120px;" v-if="status === 'del'" @click.stop="removeControl">
    <div class="absolute" style="top: 7px;right:-4px;" >
@@ -86,7 +89,7 @@
   </div>
 
   <div v-else class="rounded-xl flex flex-col items-center justify-center relative" 
-    style="height: 120px;width: 120px;"  @click.stop="triggerControl" :class="controlStatus.status ? 'xt-theme-bg':'xt-bg'">
+    style="height: 120px;width: 120px;"  @click.stop="triggerControl($event)" :class="controlStatus.status ? 'xt-theme-bg':'xt-bg'">
     <div class="w-14 h-14 flex items-center xt-bg-t-2 justify-center rounded-full mb-3">
       <xt-new-icon :icon="controlItem.icon" size="24" :color="controlStatus.status ? 'var(--active-text)':'var(--primary-text)'"></xt-new-icon>
     </div>
@@ -117,6 +120,10 @@ const props = defineProps({
  status:{
   type:String,
   default:'null'
+ },
+ isClick:{
+  type:Boolean,
+  default:false,
  }
 })
 
@@ -223,14 +230,16 @@ const triggerControl = () =>{
 }
 
 // 编辑控制中心的移除
-const removeControl = () =>{
-  const index = control.value.addList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
-  if(control.value.addList.length !== 1){
-   control.value.addList.splice(index,1);
-   const removeIndex  = control.value.addList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
-   if(removeIndex === -1){
-    control.value.removeList.push(props.controlItem)
-   }
+const removeControl = (evt) =>{
+  if(props.isClick){
+    // const index = control.value.addList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
+    // if(control.value.addList.length !== 1){
+    //  control.value.addList.splice(index,1);
+    //  const removeIndex  = control.value.addList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
+    //  if(removeIndex === -1){
+    //   control.value.removeList.push(props.controlItem)
+    //  }
+    // }
   }
   else {
    evt.preventDefault();
@@ -255,5 +264,3 @@ const isUserLogin = computed(()=>{
   right:  0 !important;
 } 
 </style>
-<!-- top: -10px !important;
-right: -150px !important; -->
