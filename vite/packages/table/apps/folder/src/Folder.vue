@@ -1,14 +1,4 @@
 <template>
-  <!-- <Widget>
-    <File
-      :list="customData.list"
-      :layout="customData.layout"
-      :model="customData.model"
-      @deleteFile="deleteFile"
-      @updateList="updateList"
-      @updateSort="updateSort"
-    />
-  </Widget> -->
   <Drop
     @createFile="createFile"
     @deleteFile="deleteFile"
@@ -16,6 +6,7 @@
     ref="folder"
   >
     <xt-container
+      :modalSize="modalSize"
       :options="options"
       :customIndex="customIndex"
       :customData="customData"
@@ -30,6 +21,7 @@
       <Resize
         :disabled="expand.disabled"
         v-model:size="customData.size"
+        :modalSize="modalSize"
         :resize="navBar.resize"
       >
         <!-- 空状态显示状态 -->
@@ -38,8 +30,10 @@
         </template>
         <vue-custom-scrollbar
           v-else
+          style="padding-right: 4px;"
           :settings="{
             suppressScrollY: false,
+
           }"
           class="relative w-full h-full"
         >
@@ -47,7 +41,9 @@
             :list="customData.list"
             :layout="customData.layout"
             :model="customData.model"
+            :modalSize="modalSize"
             @deleteFile="deleteFile"
+            @updateFile="updateFile"
             @updateList="updateList"
             @updateSort="updateSort"
             @clickFile="clickFile"
@@ -71,8 +67,14 @@
     :isFolder="false"
   />
 
-  <xt-modal custom v-model="expandVisible" boxClass="" @close="expandClose">
-    <Expand :data="props" :auto="false"></Expand>
+  <xt-modal
+    custom
+    v-model="expandVisible"
+    v-if="expandVisible"
+    boxClass=""
+    @close="expandClose"
+  >
+    <Expand :data="props" :auto="false" v-if="expandVisible"></Expand>
   </xt-modal>
 </template>
 
@@ -97,7 +99,6 @@ import { nanoid } from "nanoid";
 import { message } from "ant-design-vue";
 import { defaultData, defaultFolderData } from "./components/options";
 import Null from "./components/Null.vue";
-// import Widget from "../../../components/card/Widget.vue";
 
 import EditNewNavigation from "../../../components/desk/navigationBar/EditNewNavigation.vue";
 import { useNavigationStore } from "../../../components/desk/navigationBar/navigationStore";
@@ -172,9 +173,10 @@ const props = defineProps({
   auto: {
     default: false,
   },
+  modalSize: {},
 });
 
-const { customData, customIndex, expand, secondary, navBar, auto } =
+const { customData, customIndex, expand, secondary, navBar, auto, modalSize } =
   toRefs(props);
 const emit = defineEmits(["update:size", "update:layout", "clickFile"]);
 
@@ -211,9 +213,13 @@ const options = computed(() => {
   return {
     bg: isDrag.value ? "var(--active-secondary-bg) " : "",
     // 隐藏删除
-    del: navBar.value.isDel ,
+    del: navBar.value.isDel,
     // 隐藏层级
-    hierarchy: navBar.value.hierarchy
+    hierarchy: navBar.value.hierarchy,
+    // 二级
+    secondary: {
+      size: "",
+    },
   };
 });
 
@@ -246,7 +252,7 @@ provide("isOutside", isOutside);
 const autoSizeList = computed(() => {
   if (auto.value) {
     const size = {
-      name: '自动',
+      name: "自动",
       value: autoSize.value,
     };
     return [...sizeList.value, size];
@@ -343,6 +349,7 @@ const updateFile = (data) => {
   const index = customData.value.list.findIndex(
     (item) => item && item.id === data.id
   );
+  console.log("updateFile :>> ", 22233);
 
   customData.value.list[index] = data;
 };
@@ -386,24 +393,6 @@ const updateWindowApp = async () => {
     customData.value.list.push(file);
   });
 };
-/**
- * 锁配置
- */
-const lockIcon = computed(() => {
-  return customData.value.lock
-    ? "fluent:lock-closed-16-regular"
-    : "fluent:lock-open-28-regular";
-});
-const lockClick = () => {
-  // 自由排序 or 桌面文件 下紧张默认锁住
-  if (customData.value.sort === "free" || customData.value.model != "custom") {
-    customData.value.lock = true;
-    message.info("自由排序或桌面文件下无法解锁");
-    return;
-  }
-  // customData.value.lock = false;
-  customData.value.lock = !customData.value.lock;
-};
 
 /**
  * 更新拖拽后的排序
@@ -435,10 +424,6 @@ const leftClick = () => {
 
 const expandClose = () => {
   customData.value.size = oldCardSize.value;
-};
-
-const onRefresh = () => {
-  setTimeout(() => {}, 1000);
 };
 
 const isDrag = ref(false);
@@ -485,6 +470,7 @@ const refreshDeskApp = async () => {
   }, 1000);
 };
 onMounted(async () => {
+  console.log(" onMounted:>> ");
   if (customData.value.icon === "") {
     customData.value.icon =
       "https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#ffffff";

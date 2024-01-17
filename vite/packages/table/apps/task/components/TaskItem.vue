@@ -53,6 +53,9 @@ import { StarFilled } from "@ant-design/icons-vue";
 import { taskStore } from "../store";
 import { useRouter } from "vue-router";
 import { guide } from "../../../ui/components/Task/guide";
+
+// import {sUrl} from "../../../consts";
+// import {post} from "../../../js/axios/request";
 const router = useRouter();
 const task = taskStore();
 const props = defineProps({

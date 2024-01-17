@@ -91,6 +91,7 @@ import { cardStore } from '../../store/card'
 import {nanoid} from 'nanoid'
 import { marketStore } from '../../store/market'
 import { taskStore } from '../../apps/task/store'
+import { completeTask } from '../../apps/task/task'
 export default {
   name: 'DeskPreview',
   components: {
@@ -213,6 +214,8 @@ export default {
         settings:this.template.settings
       },this.layoutSize, this.deskList)
       message.success('添加成功')
+      //
+      completeTask('m0203')
       this.$emit('afterAdded')
       this.openDrawer = false
       // setTimeout(() => {

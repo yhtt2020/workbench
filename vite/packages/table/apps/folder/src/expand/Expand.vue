@@ -15,8 +15,9 @@ const props = defineProps({
 });
 const newData = {
   ...props.data,
+  modalSize: "6x5",
 };
-newData.customData.size = "6x4";
+newData.customData.modalSize = "6x5";
 
 // 860,420
 </script>

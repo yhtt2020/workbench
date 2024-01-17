@@ -107,6 +107,8 @@ import ShareDesk from '../../../components/desk/ShareDesk.vue'
 import DeskPreview from '../../../components/desk/DeskPreview.vue'
 import { marketStore } from '../../../store/market'
 import { offlineStore } from "../../../js/common/offline";
+import { taskStore } from "../../../apps/task/store";
+
 
 export default {
   name: 'AddCard',
@@ -166,6 +168,10 @@ export default {
   },
 
   async mounted () {
+if (this.taskID == "M0302") {
+this.updateNavIndex(7)
+
+    }
     // 这里是预留给api请求到时间和下载数据添加数据使用
     let navList = _.cloneDeep(this.baseNavList)
 
@@ -223,6 +229,8 @@ export default {
   computed: {
     ...mapWritableState(offlineStore, ['isOffline','offlineList']),
     ...mapWritableState(deskStore, ['apiList']),
+    ...mapWritableState(taskStore, ["taskID", "step", "success"]),
+
     displayList () {
       // return this.apiList.filter
     },
@@ -412,7 +420,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 999;
+  z-index: 99;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -431,7 +439,7 @@ export default {
 }
 
 .controller {
-  z-index: 9999;
+  z-index: 1000;
   position: fixed;
   top: 0;
   left: 0;

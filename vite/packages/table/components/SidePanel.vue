@@ -307,7 +307,7 @@ export default {
   mounted() {
     this.enableDrag()
     this.colDrop()
-    this.copyNav()
+    this.loadNav()
     // console.log(this.copySideNav, 'copySideNav');
     // this.scrollNav('sideContent', 'scrollTop')
     if (this.navigationList === this.rightNavigationList) {
@@ -607,6 +607,7 @@ export default {
     closeDrawer() {
       this.menuVisible = false
     },
+    // 添加导航图标
     editNavigation(item) {
       if (item.component) {
         this.componentId = item.component

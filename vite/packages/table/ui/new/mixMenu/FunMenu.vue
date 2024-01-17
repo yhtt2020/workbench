@@ -59,6 +59,7 @@ const props = defineProps({
   menuWidth: {
     default: "w-full",
   },
+
 });
 const menu = ref(null);
 const { menus, model, height } = toRefs(props);
@@ -101,6 +102,7 @@ const followList = computed(() => {
   return menus.value;
 });
 function beforeCreate() {
+
   return rightModel.value == "follow";
 }
 
@@ -109,7 +111,7 @@ const onMounted = () => {
   emits("mounted");
 };
 function defaultListClick(event) {
-  if (rightModel.value == "default" && model.value == "all") {
+  if (rightModel.value == "default" && model.value == "all" ) {
     event.preventDefault();
     event.stopPropagation();
     drawerVisible.value = true;

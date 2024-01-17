@@ -32,6 +32,7 @@ import selectIcon from './selectIcon.vue'
 import { webMenus, localFiles, doc } from '../index'
 import { message } from 'ant-design-vue'
 import DataStatu from "../../../widgets/DataStatu.vue";
+import {completeTask} from '../../../../apps/task/task'
 export default {
   name: 'Introduce',
   components: {
@@ -111,8 +112,9 @@ export default {
     },
     // 添加图标函数
     clickListItem(item,index){
-      // if (this.selectNav !== 'desktop') {
-      // }
+      if (this.selectNav !== 'desktop') {
+        completeTask('m0105')
+      }
       switch (this.selectNav) {
         case 'foot':
           this.clickRightListItem(item,index,this.copyFootNav,this.setFootNavigationList)

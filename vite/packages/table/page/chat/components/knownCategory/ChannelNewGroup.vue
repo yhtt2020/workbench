@@ -93,7 +93,7 @@ export default {
      }
     }
     // 清除选中用户
-    const clearSelect = (item) => { 
+    const clearSelect = (item) => {
      const index = _.findIndex(data.selectList,function(o){ return o.userID === item.userID})
      data.selectList.splice(index,1)
     }

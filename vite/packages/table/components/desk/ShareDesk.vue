@@ -89,7 +89,7 @@ import { marketStore } from '../../store/market'
 import { getCurrentInstance } from 'vue'
 import { fileUpload, pathUpload } from '../card/hooks/imageProcessing'
 
-import {completeTask } from "../../apps/task/page/branch/task.ts"
+import {completeTask } from "../../apps/task/task"
 
 export default {
   name: 'ShareDesk',
@@ -269,7 +269,7 @@ export default {
         this.close()
         this.shareModal = true
         this.setInitialData()
-        completeTask('Z0301')
+        completeTask('Z0209')
       }else{
         message.error('上传失败。')
       }

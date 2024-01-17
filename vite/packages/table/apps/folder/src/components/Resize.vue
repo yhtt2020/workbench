@@ -50,9 +50,8 @@ export default {
     odd: {
       default: false,
     },
-    resize: {
-      
-    }
+    resize: {},
+    modalSize: {},
   },
   watch: {
     size(newV) {
@@ -65,7 +64,11 @@ export default {
   mounted() {
     this.drag();
     // 初始化
-    this.dragCallBack(this.size);
+    if (this.modalSize) {
+      this.dragCallBack(this.modalSize);
+    } else {
+      this.dragCallBack(this.size);
+    }
   },
   methods: {
     dragCallBack(e) {

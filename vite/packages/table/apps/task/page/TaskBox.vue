@@ -28,7 +28,7 @@
       </div> -->
     <!-- </xt-menu> -->
   </xt-task>
-  <Task></Task>
+  <Task v-if="store.isTaskDrawer"></Task>
 </template>
 
 <script setup>

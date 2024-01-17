@@ -2,13 +2,13 @@
   <div class="text-base my-3" v-if="title">{{ title }}颜色</div>
   <div>自定义</div>
   <div style="margin: 9.5px">
-    <XtBaseColor v-model:data="colorData"></XtBaseColor>
+    <XtBaseColor v-model:data="colorData" @click="colorClick"></XtBaseColor>
   </div>
 
   <div>系统预设</div>
   <div class="flex flex-wrap">
     <div
-      @click="colorData = colorList[`${'color' + i}`]"
+      @click="colorClick(i)"
       v-for="i in colorLength"
       :style="{ background: colorList[`${'color' + i}`] }"
       style="margin: 9.5px"
@@ -22,6 +22,7 @@
 
 <script>
 import { colorList } from "./color";
+import { completeTask } from "../../../apps/task/task";
 export default {
   name: "XtColor",
 
@@ -60,6 +61,12 @@ export default {
   methods: {
     btnClick() {
       this.$emit("onBtnClick", this.color);
+    },
+    colorClick(i) {
+      completeTask("M0202");
+      console.log('222 :>> ', 222);
+      if (!i) return;
+      this.colorData = this.colorList[`${"color" + i}`];
     },
   },
 };

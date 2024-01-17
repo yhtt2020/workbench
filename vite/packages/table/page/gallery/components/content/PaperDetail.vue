@@ -45,6 +45,7 @@ import { paperStore } from '../../../../store/paper';
 import { isInMyPapers,getFileName } from '../../libs/utils';
 import { message } from 'ant-design-vue';
 import { appStore } from '../../../../store';
+import {completeTask} from '../../../../apps/task/task'
 
 export default {
  props:['isModal','paperList'],
@@ -62,16 +63,17 @@ export default {
     wheelPropagation: true,
    },
    paperMenus:[
-    { 
-     newIcon:'fluent:desktop-16-regular',name:'设为工作台背景', 
-     callBack:()=>{ this.setAppPaper(this.currentPaperImg) },
+    {
+     newIcon:'fluent:desktop-16-regular',name:'设为工作台背景',
+     callBack:()=>{ this.setAppPaper(this.currentPaperImg)
+      completeTask('M0201') },
     },
-    { 
+    {
      newIcon:'mingcute:windows-line',name:'设置桌面壁纸',
      callBack:()=>{ this.setDesktopPaper() },
     },
     {
-     newIcon:'fluent:arrow-download-16-regular',name:'下载壁纸', 
+     newIcon:'fluent:arrow-download-16-regular',name:'下载壁纸',
      callBack:()=>{ this.doStartDownload(this.currentPaperImg) },
     },
    ],
@@ -116,14 +118,14 @@ export default {
       const exist = fileRegex.test(img.path);
       // 判断是否为本地图片
       if(!exist && !regex.test(img.path)){ this.doStartDownload(img); }
-      else { 
+      else {
         this.$xtConfirm('图片已下载','',{
-          index:1020, 
+          index:1020,
           ok: async() => {},
           no: () => {},
           noText: null,
           type:'warning'
-        }) 
+        })
       }
     }
   },
@@ -154,11 +156,12 @@ export default {
     if (savePath) {
       this.settings.savePath = savePath[0]
       this.doStartDownload(this.currentPaperImg)
-    } 
+    }
   },
 
   // 设置工作台背景和桌面壁纸
   setAppPaper(img){
+    completeTask('M0201')
     if(img !== null){  message.info('正在为您设置背景'); }
     if (img.srcProtocol){ this.setBackgroundImage({path: '',  runpath: `file://${img.src}`}); }
     else {
@@ -182,7 +185,7 @@ export default {
       })
     }
   },
-    
+
 
  },
 };

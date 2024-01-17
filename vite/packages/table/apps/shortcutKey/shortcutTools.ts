@@ -2,7 +2,6 @@ import {message, Modal, notification} from "ant-design-vue";
 import {RocketFilled} from "@ant-design/icons-vue";
 import {h} from 'vue'
 import {appStore} from "../../store";
-
 const win32 = $models.win32
 
 function doKey(item) {
@@ -58,6 +57,8 @@ function doKey(item) {
   const alt = keys.includes('alt')
   const win = keys.includes('win')
   console.log('执行键位', mainKey)
+
+
   try {
     if (item.keys.length === 1) {
       if (mainKey) {

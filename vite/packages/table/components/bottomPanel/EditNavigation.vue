@@ -199,7 +199,7 @@
     <xt-task  id='M0104' no='6'  v-if="item.name == '主页'" @cb="clickRightListItem(item,index)">
       <listItem  :item="item" class="rounded-lg right-scroll-list" @click="clickRightListItem(item,index)"></listItem>
     </xt-task>
-      
+
       <listItem v-else  :item="item" class="rounded-lg right-scroll-list" @click="clickRightListItem(item,index)"></listItem>
 </template>
 
@@ -937,7 +937,7 @@ export default {
       this.$emit('setQuick')
       this.routeParams.url && setTimeout(() => {this.$router.push({ name: 'app', params: this.routeParams })}, 400)
     },
-    
+
     addEdit (val) {
       this.selectNav = val
       this.editFlag = true
