@@ -1,57 +1,6 @@
 <template>
  <template v-if="controlIndex === 'audio'">
-  <div style="height:120px;width: 252px;">123</div>
-  <!-- <div  class="rounded-xl flex flex-col items-center justify-center relative"  v-if="status === 'del'" @click.stop="removeControl($event)">
-   <div class="absolute" style="top: 7px;right:-4px;" >
-    <xt-button style="width: auto !important;" h="0">
-      <div class="flex items-center justify-center">
-        <xt-new-icon icon="fluent:subtract-circle-16-filled" size="20" :color="'var(--error)'"></xt-new-icon>
-      </div>
-    </xt-button>
-   </div>
-   
-   <div class="xt-bg w-full rounded-lg mb-4 flex items-center justify-between" style="padding: 0 22px; height: 54px;">
-    <div v-for="item in controlItem.list[0].list">
-     <xt-button style="width: auto;" h="0">
-       <div class="flex items-center justify-center">
-         <xt-new-icon :icon="item.icon" size="24" :color="item.color"></xt-new-icon>
-       </div>
-     </xt-button>
-    </div>
-   </div>
-   <div class="xt-bg w-full flex items-center justify-between rounded-lg" style="height: 52px;">
-     <div class="rounded-tl-lg rounded-bl-lg" style="width:129px;height:52px;background: rgba(255,255,255,0.85);"></div>
-     <div class="pr-4">
-      <xt-button style="width: auto;" h="0">
-        <div class="flex items-center justify-center">
-          <xt-new-icon :icon="controlItem.list[1].icon" size="24"></xt-new-icon>
-        </div>
-      </xt-button>
-     </div>
-   </div>
-  </div>
-
-  <div  class="rounded-xl flex flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-else>
-    <div class="xt-bg w-full rounded-lg mb-4 flex items-center justify-between" style="padding: 0 22px; height: 54px;">
-      <div v-for="item in controlItem.list[0].list">
-       <xt-button style="width: auto;" h="0">
-         <div class="flex items-center justify-center">
-           <xt-new-icon :icon="item.icon" size="24" :color="item.color"></xt-new-icon>
-         </div>
-       </xt-button>
-      </div>
-    </div>
-    <div class="xt-bg w-full flex items-center justify-between rounded-lg" style="height: 52px;">
-       <div class="rounded-tl-lg rounded-bl-lg" style="width:129px;height:52px;background: rgba(255,255,255,0.85);"></div>
-       <div class="pr-4">
-        <xt-button style="width: auto;" h="0">
-          <div class="flex items-center justify-center">
-            <xt-new-icon :icon="controlItem.list[1].icon" size="24"></xt-new-icon>
-          </div>
-        </xt-button>
-       </div>
-    </div>
-  </div> -->
+  <SystemControlDetail @click="removeControl($event)"/>
  </template>
 
  <!-- 用户中心信息 -->
@@ -107,7 +56,8 @@ import { setThemeSwitch } from '../../../../../card/hooks/themeSwitch';
 import { message,notification } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
 
-import UserInfoDetail from '../userControl/UserInfoDetail.vue'
+import UserInfoDetail from '../userControl/UserInfoDetail.vue';
+import SystemControlDetail from '../systemControl/SystemControlDetail.vue';
 
 const props = defineProps({
  controlIndex:{
@@ -231,15 +181,21 @@ const triggerControl = () =>{
 
 // 编辑控制中心的移除
 const removeControl = (evt) =>{
+  // 阻止拖拽
   if(props.isClick){
-    // const index = control.value.addList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
-    // if(control.value.addList.length !== 1){
-    //  control.value.addList.splice(index,1);
-    //  const removeIndex  = control.value.addList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
-    //  if(removeIndex === -1){
-    //   control.value.removeList.push(props.controlItem)
-    //  }
-    // }
+    // 保留一个不能删除
+    if(control.value.oldList.length !== 1){
+      const index = control.value.newList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
+      if(index === -1){
+       const removeIndex  = control.value.oldList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
+       console.log('删除',removeIndex,index);
+       control.value.oldList.splice(removeIndex,1);
+       control.value.newList.push(props.controlItem)
+      }
+    }
+    else {
+     evt.preventDefault();
+    }
   }
   else {
    evt.preventDefault();

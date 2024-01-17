@@ -2,6 +2,7 @@
  <Vuuri v-model="vuuriList" group-id="id" item-key="id" :options="option"  ref="testRef"
  :drag-enabled="true"   :get-item-height="getHeight"
 >
+
  <template #item="{ item }">
   <ControlRemoveDetail :control-index="item.id" :control-item="item" :isClick="isClick" :status="'del'" />
  </template>
@@ -40,7 +41,6 @@ const getHeight = () =>{
  return 120 + 'px' 
 };
 
-
 onMounted(()=>{
   testRef.value.muuri.on('dragEnd', function (item, event) {
     if(event.distance<40){
@@ -49,6 +49,11 @@ onMounted(()=>{
       isClick.value = false;
     }
   })
+})
+
+
+defineExpose({
+  vuuriList
 })
 </script>
 

@@ -35,7 +35,7 @@
       <ControlDesk />
     </template>
     <template v-else>
-      <EditControlDesk />
+      <EditControlDesk ref="editRef"/>
     </template>
 
     <a-divider style="height: 1px;margin: 8px 0 16px 0;width: 516px;min-width:516px;" />
@@ -57,6 +57,7 @@
 
 <script setup>
 import { ref,computed,onMounted,getCurrentInstance } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
 import { controlStore } from '../../hook/controlStore';
 import { appStore } from '../../../../../store';
@@ -80,6 +81,10 @@ const props = defineProps({
 
 const editVisible = ref(false);
 const app = appStore()
+const editRef = ref(null);
+
+const controls = controlStore()
+const { control } = storeToRefs(controls);
 
 // 触发编辑
 const editClick = () =>{
@@ -88,6 +93,7 @@ const editClick = () =>{
 
 // 完成编辑
 const finshEdit = () =>{
+  control.value.oldList = editRef.value.removeRef.vuuriList
   editVisible.value = false
 }
 
