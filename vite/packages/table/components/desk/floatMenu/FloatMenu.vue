@@ -104,14 +104,7 @@ const defaultMenu = computed(() => {
   ];
 });
 const updatePosition = () => {
-  getFreeLayoutState.value.mode.align === "custom";
-  getFreeLayoutState.value.line.centerLine = {
-    y: freeLayoutEnv.value.scrollTop,
-    x:
-      freeLayoutEnv.value.scrollLeft + freeLayoutEnv.value.scrollData.width / 2,
-    // x: freeLayoutEnv.value.scrollLeft,
-  };
-
+ freeLayoutStore.updateLocation();
   message.success("修改中心点成功");
 };
 const redirectPosition = () => {
@@ -240,6 +233,7 @@ watch(freeLayoutZoom, (newV) => {
     getFreeLayoutState.value.canvas.zoom = 1;
     freeLayoutZoom.value = 1;
   }
+  redirectPosition();
 });
 
 const defaultZoom = ref(zoom.value);

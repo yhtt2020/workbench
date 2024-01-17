@@ -65,7 +65,6 @@ onMounted(() => {
   perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
   useElementSize(scrollbar.value, (size) => {
     scrollSize.value = size;
-    console.log("size :>> ", size);
     freeLayoutEnv.value.scrollWidth = size.width;
     freeLayoutEnv.value.scrollHeight = size.height;
   });
@@ -88,16 +87,6 @@ onMounted(() => {
   // 监听鼠标抬起事件;
   window.addEventListener("mouseup", handleMouseUp);
   document.body.addEventListener("keydown", ignoreSpace);
-  return;
-  setTimeout(async () => {
-    // 初始化自由布局定位
-    let scrollMode = getFreeLayoutState.value?.mode.scroll
-      ? getFreeLayoutState.value.mode.scroll
-      : "free";
-    updateScroll(scrollMode);
-
-    // 监听自由布局滚动事件
-  }, 1);
 });
 
 watch([isFreeLayout, () => scrollSize.value], ([state, size]) => {
@@ -135,10 +124,10 @@ let initialMousePosition = ref(null);
  * 2023-12-21
  */
 //滚动方式
-const updateScroll = (newV) => {
+const updateScroll = async (newV) => {
   redirect();
-  freeLayoutEnv.value.scrollOldLeft = scrollbar.value.scrollLeft;
-  freeLayoutEnv.value.scrollOldTop = scrollbar.value.scrollTop;
+  scrollbar.value.scrollLeft = 0;
+  scrollbar.value.scrollLeft = 0;
   if (newV === "free") {
     perfectScrollbar.value.settings.suppressScrollX = false;
     perfectScrollbar.value.settings.suppressScrollY = false;
@@ -152,28 +141,26 @@ const updateScroll = (newV) => {
     perfectScrollbar.value.settings.suppressScrollX = true;
     perfectScrollbar.value.settings.suppressScrollY = true;
   }
-
-  scrollbar.value.scrollLeft = freeLayoutEnv.value.scrollOldLeft;
-  scrollbar.value.scrollTop = freeLayoutEnv.value.scrollOldTop;
   setTimeout(() => {
-    scrollbar.value.scrollLeft += 1;
-    scrollbar.value.scrollLeft -= 1;
+    redirect();
   }, 1);
 };
 watch(
   () => getFreeLayoutState.value?.mode.scroll,
   (val) => {
     if (!isFreeLayout.value) return;
-    console.log("2222 :>> ", 2222);
     updateScroll(val);
   }
 );
 // 重置中心区域
 function redirect() {
-  const { w, h } = freeLayoutStore.redirect();
+  const { w, h } = freeLayoutStore.restoreLocation();
   scrollbar.value.scrollLeft = w;
   scrollbar.value.scrollTop = h;
+  freeLayoutEnv.value.scrollLeft = w;
+  freeLayoutEnv.value.scrollTop = h;
   console.log("  scrollbar.value.scrollLeft :>> ", scrollbar.value.scrollLeft);
+  console.log("  scrollbar.value.scrollTop :>> ", scrollbar.value.scrollTop);
 }
 
 // 鼠标按下

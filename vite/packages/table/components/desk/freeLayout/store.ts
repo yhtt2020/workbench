@@ -219,13 +219,13 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       return this.freeLayoutData[id];
     },
     // 返回中心点
-    redirect() {
+    restoreLocation() {
       let w, h;
-      const width = this.freeLayoutEnv.scrollWidth;
+      const zoom = this.getFreeLayoutState.canvas.zoom;
+      const width = this.freeLayoutEnv.scrollWidth / zoom;
       const height = this.freeLayoutEnv.scrollHeight;
       const currentWidth = this.getFreeLayoutState.canvas.width;
       const currentHeight = this.getFreeLayoutState.canvas.height;
-      const zoom = this.getFreeLayoutState.canvas.zoom;
       const align = this.getFreeLayoutState.mode.align;
       if (align === "top") {
         h = 0;
@@ -246,8 +246,10 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         // w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
         // h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
         w = this.getFreeLayoutState.line.centerLine.x - width / 2;
+        w = this.getFreeLayoutState.line.centerLine.x;
         h = this.getFreeLayoutState.line.centerLine.y;
       }
+      console.log("zoom :>> ", zoom);
       w = w * zoom;
       h = h * zoom;
 
@@ -257,6 +259,17 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         w,
         h,
       };
+    },
+    updateLocation() {
+      this.getFreeLayoutState.mode.align = "custom";
+      this.getFreeLayoutState.line.centerLine.y =
+        this.freeLayoutEnv.scrollTop / this.getFreeLayoutState.canvas.zoom;
+      // getFreeLayoutState.value.line.centerLine.x =
+      //   (freeLayoutEnv.value.scrollLeft +
+      //     freeLayoutEnv.value.scrollData.width / 2) /
+      //   getFreeLayoutState.value.canvas.zoom;
+      this.getFreeLayoutState.line.centerLine.x =
+        this.freeLayoutEnv.scrollLeft / this.getFreeLayoutState.canvas.zoom;
     },
   },
   persist: {
