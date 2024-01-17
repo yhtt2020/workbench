@@ -56,7 +56,7 @@
 </template>
 
 <script setup>
-import { ref,computed } from 'vue';
+import { ref,computed,onMounted,getCurrentInstance } from 'vue';
 import { useRouter } from 'vue-router';
 import { controlStore } from '../../hook/controlStore';
 import { appStore } from '../../../../../store';
@@ -68,6 +68,9 @@ import EditControlDesk from './EditControlDesk.vue';
 
 const router = useRouter()
 const emit = defineEmits(['close'])
+
+const { proxy } = getCurrentInstance()
+
 const props = defineProps({
   full:{
     type:Boolean,
@@ -140,6 +143,14 @@ const bottomButton = ref([
   //   }
   // }
 ])
+
+onMounted(()=>{
+  proxy.$bus.on('closeControl',()=>{
+    emit('close')
+  })
+})
+
+
 </script>
 
 <style lang="scss" scoped>

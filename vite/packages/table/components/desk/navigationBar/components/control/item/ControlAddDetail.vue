@@ -33,7 +33,7 @@
  </template>
 
  <template v-else-if="isUserInfoNull && controlIndex === 'user-info'">
-  <div  class="rounded-xl xt-bg flex flex-col relative" style="height: 120px;width:252px;" >
+  <div  class="rounded-xl xt-bg flex items-center justify-center flex-col relative" style="height: 120px;width:252px;" >
     <div class="absolute" style="top: 7px;right:-4px;">
       <xt-button style="width: auto !important;" h="0">
         <div class="flex items-center justify-center">
@@ -96,5 +96,8 @@ const isUserInfoNull = computed(()=>{
 </script>
 
 <style lang="scss" scoped>
-
+:deep(.big){
+  bottom: 80px !important;
+  right:  0 !important;
+} 
 </style>

@@ -250,5 +250,10 @@ const isUserLogin = computed(()=>{
 </script>
 
 <style lang="scss" scoped>
-
+:deep(.big){
+  bottom: 80px !important;
+  right:  0 !important;
+} 
 </style>
+<!-- top: -10px !important;
+right: -150px !important; -->

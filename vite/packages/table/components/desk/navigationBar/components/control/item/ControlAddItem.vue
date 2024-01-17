@@ -47,7 +47,6 @@ const getHeight = () =>{
 
 // 添加设置
 const addControl = (item,evt) =>{
-  console.log('测试',item);
   if(isClick.value){
     const addIndex = control.value.addList.findIndex((find)=>{ return String(find.id) === String(item.id) });
     if(addIndex === -1){
@@ -62,30 +61,6 @@ const addControl = (item,evt) =>{
 }
 
 onMounted(()=>{
-  // if(!userInfo.value){
-  //   const index = control.value.removeList.findIndex((find)=>{ return String(find.id) === 'user-info' });
-  //   control.value.removeList.splice(index,1)
-  // }
-  // else {
-  //   const mapList = control.value.removeList.map((item)=>{
-  //     if(item.id === 'user-info'){
-  //       return {
-  //         id:'user-info',
-  //         info:{
-  //          avatar:userInfo.value.avatar,
-  //          frame:userInfo.value.frame,
-  //          name:userInfo.value.nickname,
-  //          uid:userInfo.value.uid,
-  //         }
-  //       }
-  //     }
-  //     else {
-  //       return {...item}
-  //     }
-  //   })
-  //   control.value.removeList = mapList;
-  // }
-  // console.log('更新后',control.value.removeList);
   // console.log('222', testRef.value.muuri);
   // testRef.value.muuri.on('dragStart',(item,event)=>{
   //   isClick.value = false;
