@@ -37,7 +37,7 @@ const emit = defineEmits(['createFile'])
 const handleDrop = async (dragEvent) => {
   // 判断是否是从导航栏外部进入到导航栏，防止和导航栏内部的拖拽事件冲突
   if (!isEnterBar.value) return
-  let currentX = dragEvent.x
+  let currentX = dragEvent
   // 桌面拖拽
   if (folderFlag.value !== 'folder') {
     let files = dragEvent.dataTransfer.files
@@ -91,7 +91,7 @@ const handleDragover = (dragEvent) => {
 const handleMouseUp = (e) => {
   iconList.value.forEach((item) => {
     const file = useFileConversionNav(item)
-    emit('createFile', file, e.x)
+    emit('createFile', file, e)
   })
   // 2 旧数据删除
   if (iconsRefs.value.length < 1) return;

@@ -10,7 +10,7 @@
       <div v-if="!fullScreen && navigationToggle[0]"
         style="display: flex;align-content: center;align-items: center;height: 100%">
         <!--左侧栏区域        -->
-        <SidePanel sortId="left" :navigationList="copySideNav" :sortNavigationList="sortSideNavigationList"
+        <SidePanel sortId="left" :navigationList="sideNavigationList" :sortNavigationList="sortSideNavigationList"
           :delNavList="removeSideNavigationList" :otherSwitch1="navigationToggle[1]" :otherSwitch2="navigationToggle[2]"
           :otherNavList1="rightNavigationList" :otherNavList2="footNavigationList" @getDelIcon="getDelIcon"
           @hiedNavBar="hiedNavBar"></SidePanel>
@@ -32,7 +32,7 @@
       </Transition>
       <div v-if="!fullScreen && navigationToggle[1]" style="display: flex;align-content: center;align-items: center">
         <!--右侧栏区域        -->
-        <SidePanel sortId="right" :navigationList="copyRightNav" :sortNavigationList="sortRightNavigationList"
+        <SidePanel sortId="right" :navigationList="rightNavigationList" :sortNavigationList="sortRightNavigationList"
           :delNavList="removeRightNavigationList" :otherSwitch1="navigationToggle[0]" :otherSwitch2="navigationToggle[2]"
           :otherNavList1="leftNavigationList" :otherNavList2="footNavigationList" @getDelIcon="getDelIcon"
           @hiedNavBar="hiedNavBar"></SidePanel>
