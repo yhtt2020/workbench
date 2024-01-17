@@ -84,6 +84,7 @@ import { captureStore } from '../store/capture'
 import { navStore } from '../store/nav'
 import { clipboardStore } from '../apps/clipboard/store'
 import { browserStore } from '../store/browser'
+import { controlStore } from '../components/desk/navigationBar/hook/controlStore'
 import RayMedal from '../components/small/RayMedal.vue'
 import { chatStore } from '../store/chat'
 import navigationData from '../js/data/tableData'
@@ -142,6 +143,7 @@ export default {
     this.initStore(navStore, 'nav')
     this.initStore(taskStore, 'task')
     this.initStore(useWidgetStore, 'useWidgetStore')
+    this.initStore(controlStore, 'control')
     // this.initStore(browserStore,'browserStore')
     browserStore().bindIPC()
     captureStore()//仅触发一下载入
@@ -168,7 +170,7 @@ export default {
         })
         if (haventOk.length) {
           //未全部搞定
-          console.log(haventOk)
+          // console.log(haventOk)
           return
         } else {
           //已经全部搞定

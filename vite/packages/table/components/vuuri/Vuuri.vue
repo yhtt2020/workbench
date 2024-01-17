@@ -10,6 +10,7 @@
       :style="_getItemStyles(item)"
       class="muuri-item"
       :data-item-key="item[itemKey]"
+      :class="itemClass"
     >
       <div class="muuri-item-content">
         <slot name="item" :item="item"/>
@@ -29,6 +30,11 @@ import { deckStore } from '../../apps/deck/store'
 export default {
   name: 'Vuuri',
   props: {
+    itemClass:{
+      type: String,
+      required: false,
+      default: () => `class${uuidv4().replace(/-/g, '')}`
+    },
     /**
      * Optional class name to add to the grid. If not, one will be provided
      */
@@ -106,7 +112,7 @@ export default {
     groupIds: {
       type: [Array],
       required: false
-    }
+    },
   },
   data () {
     return {

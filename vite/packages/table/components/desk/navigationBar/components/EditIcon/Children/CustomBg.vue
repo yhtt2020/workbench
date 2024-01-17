@@ -57,15 +57,15 @@ const getAvatar = (value) => {
 }
 // 重置
 const reset = () => {
-    const target = navigationList.value.find(item =>{
-        if(item.type === 'coolApp'){
-            return item.value.url === props.editItem.value.url
-        }else{
-            return item.value === props.editItem.value
-        }
-    } )
-    // console.log(navigationList.value,'target')
-    props.editItem.icon = target?.icon
+    // const target = navigationList.value.find(item =>{
+    //     if(item.type === 'coolApp'){
+    //         return item.value.url === props.editItem.value.url
+    //     }else{
+    //         return item.value === props.editItem.value
+    //     }
+    // } )
+    // console.log(props.editItem.default,'target')
+    props.editItem.icon = props.editItem.default.icon
     bgColor.value = ''
     props.editItem.bg = ''
     props.editItem.isBg = false
@@ -101,9 +101,9 @@ const imgBg = computed(() => {
     return
   }
 });
-const navigationList = computed(() => {
-    return [...useNavStore.footNavigationList,...useNavStore.sideNavigationList,...useNavStore.rightNavigationList]
-})
+// const navigationList = computed(() => {
+//     return [...useNavStore.footNavigationList,...useNavStore.sideNavigationList,...useNavStore.rightNavigationList]
+// })
 </script>
 <style lang='scss' scoped>
 .reset {

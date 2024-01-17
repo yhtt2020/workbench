@@ -11,16 +11,19 @@
 </template>
 
 <script setup lang='ts'>
-import { ref,onBeforeUnmount,onMounted,watch } from 'vue'
+import { ref,onBeforeUnmount,onMounted,watch,toRefs } from 'vue'
 import settingItem from './settingItem.vue';
 import { useNavigationStore } from '../../navigationStore';
 import { appStore } from '../../../../../store';
 import { navStore } from '../../../../../store/nav'
+import { message } from 'ant-design-vue';
 const useNavStore = navStore()
 const useAppStore=appStore()
 const navigationStore=useNavigationStore()
 const windowHeight=ref(480)
 const windowWidth=ref(460)
+
+const {copyFootNav,sideNavigationList,rightNavigationList,navigationToggle}=toRefs(useNavStore)
 
 const navigationPosition = ref([
   {
@@ -89,8 +92,45 @@ onBeforeUnmount(()=>{
  */
 const change=(item,index)=>{
     // console.log(item,index);
-    useNavStore.navigationToggle[index]=item.switch
     
+    if(item.switch){
+        useNavStore.navigationToggle[index]=item.switch
+    }else{
+        if(checkList(index)){
+            useNavStore.navigationToggle[index]=item.switch
+        }else{
+            useNavStore.navigationToggle[index]=!item.switch
+            item.switch=!item.switch
+            message.info('至少保留一个主页图标');
+        }
+    }
+    
+}
+const checkList = (index)=>{
+    const left = navigationToggle.value[0] ? sideNavigationList.value : []
+    const right = navigationToggle.value[1] ? rightNavigationList.value : []
+    const bottom = navigationToggle.value[2] ? copyFootNav.value : []
+    let arr
+    switch (index) {
+        case 0:
+            arr = [...right, ...bottom]
+            break;
+
+        case 1:
+            arr = [...left, ...bottom]
+            break;
+        
+        case 2:
+            arr = [...left, ...right]
+            break;
+    
+        default:
+            break;
+    }
+    if(arr.some(item => item.value === 'home')){
+        return true
+    }
+    return false
 }
 /**
  * 用户中心，社区中心，任务中心，社群沟通

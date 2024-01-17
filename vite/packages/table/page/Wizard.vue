@@ -101,8 +101,8 @@
 
         </div>
 
-        <div v-if="step===1" class="flex justify-center">
-          <div class="screen-section mt-6" style="height: 320px;padding: 16px 24px;">
+        <div v-if="step===1" class="flex  justify-center h-full w-full">
+          <div class="screen-section mt-6 flex flex-col h-full" style="height: 320px; padding: 16px 24px;">
             <div class="flex justify-between">
               <div>
                 选择您要显示工作台的屏幕，点击即可。
@@ -113,9 +113,11 @@
                 </a>
               </div>
             </div>
-            <div class="w-full flex items-center" style="width: 100px;height: 100px;">
-              <ChooseScreen></ChooseScreen>
-            </div>
+           <div class="flex-1 item-content" style="align-items: center;">
+             <div class="w-full flex items-center" style="width: 100px;height: 100px;">
+               <ChooseScreen></ChooseScreen>
+             </div>
+           </div>
           </div>
         </div>
 
@@ -198,7 +200,7 @@
       <!-- 按钮 -->
       <div class="flex" style="width:100%;justify-content: flex-end;position: absolute;right: 12px;bottom: 12px;">
         <div class="flex" v-if="step == 4">
-          <!-- <xt-button @click="nextStep" size="large"  class="button-bottom ml-3">暂不登录
+          <!-- <xt-button @click="finish" size="large"  class="button-bottom ml-3">暂不登录
           </xt-button> -->
           <div class="flex items-center xt-text-2">暂未开放游客登录</div>
           <xt-button type="theme" v-if="!this.userInfo.uid" @click="login" size="large"  class="button-bottom ml-3">立即登录</xt-button>
@@ -426,7 +428,8 @@ export default {
     login () {
       tsbApi.user.login((data) => {
         this.getUserInfo()
-        this.step = 4
+        this.finish()
+        // this.step = 4
       })
     },
 
