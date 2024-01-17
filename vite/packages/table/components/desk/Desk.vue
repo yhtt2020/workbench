@@ -39,9 +39,12 @@
       <FreeLayoutScrollbar
         ref="freeLayoutScrollbar"
         class="flex-1"
-        v-if="isFreeLayout == true && $route.path == '/main' && freeLayout"
+        v-if="freeLayout"
       >
-        <FreeLayoutCanvas class="home-widgets">
+        <FreeLayoutCanvas
+          class="home-widgets"
+          v-if="isFreeLayout == true && $route.path == '/main' && freeLayout"
+        >
           <FreeLayoutContainer
             :currentDesk="currentDesk"
             :currentID="currentDesk.id"

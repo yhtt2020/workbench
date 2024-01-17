@@ -42,20 +42,14 @@
         class="absolute left-0 right-0"
         style="height: 1px; border: 3px groove var(--active-bg)"
         :style="{
-          top:
-            getFreeLayoutState.line.centerLine.y /
-              getFreeLayoutState.canvas.zoom +
-            'px',
+          top: getFreeLayoutState.line.centerLine.y + 'px',
         }"
       />
       <div
         class="absolute top-0 h-full"
         style="width: 1px; border: 3px groove var(--active-bg)"
         :style="{
-          left:
-            getFreeLayoutState.line.centerLine.x /
-              getFreeLayoutState.canvas.zoom +
-            'px',
+          left: getFreeLayoutState.line.centerLine.x + 'px',
         }"
       />
     </template>
@@ -99,33 +93,29 @@ const auxLineHeight = computed(() => {
     102 - 6 + getFreeLayoutMargin.value * 2
   );
 });
-const updateScroll = (newV) => {
-  console.log("111 :>> ", 111);
-  // freeLayoutEnv.value.scrollOldLeft = scrollbar.value.scrollLeft;
-  // freeLayoutEnv.value.scrollOldTop = scrollbar.value.scrollTop;
-  if (newV === "free") {
-  } else if (newV === "vertical") {
-  } else if (newV === "horizontal") {
-  } else if (newV === "lock") {
-  }
-};
+
 const deviationTop = computed(() => {
   let scroll = getFreeLayoutState.value?.mode?.scroll;
   if (scroll == "lock" || scroll == "horizontal") {
+    const zoom = getFreeLayoutState.value.canvas.zoom;
+
     return {
-      top: -freeLayoutEnv.value.scrollOldTop + "px",
+      top: `-${freeLayoutEnv.value.scrollTop / zoom}px`,
     };
   }
+  return {};
 });
 
 const deviationLeft = computed(() => {
   let scroll = getFreeLayoutState.value?.mode?.scroll;
   if (scroll == "lock" || scroll == "vertical") {
-    console.log("deviationLeft :>> ", freeLayoutEnv.value.scrollOldLeft);
+    const zoom = getFreeLayoutState.value.canvas.zoom;
+
     return {
-      left: -freeLayoutEnv.value.scrollOldLeft + "px",
+      left: `-${freeLayoutEnv.value.scrollLeft / zoom}px`,
     };
   }
+  return {};
 });
 </script>
 
