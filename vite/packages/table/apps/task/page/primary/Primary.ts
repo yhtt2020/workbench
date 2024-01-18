@@ -227,7 +227,7 @@ export const tasks = [
         suf: "M0302",
         repeatable: true,
         frequency: 1,
-        intro: "设置一个你喜欢的头像和昵称，同步展示到工组台和元社区。",
+        intro: "设置一个你喜欢的头像和昵称，同步展示到工作台和元社区。",
         description:
           "在底部导航或工作台设置中心，点击头像即可进入用户中心选择修改资料。",
 
