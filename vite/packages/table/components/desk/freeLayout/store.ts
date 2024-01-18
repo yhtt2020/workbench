@@ -183,8 +183,6 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 删除当前自由布局数据
     clearFreeLayout(id) {
-      console.log("id :>> ", id);
-
       delete this.freeLayoutData[id];
       delete this.freeLayoutState[id];
       console.log("删除数据成功 :>> ", this.freeLayoutState);

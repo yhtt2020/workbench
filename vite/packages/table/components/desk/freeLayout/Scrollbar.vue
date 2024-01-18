@@ -230,12 +230,12 @@ function update() {
 
 onBeforeUnmount(() => {
   freeLayoutStore.initFreeLayoutEnv();
-  scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
-    capture: true,
-  });
-  scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
-    capture: true,
-  });
+  // scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
+  //   capture: true,
+  // });
+  // scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
+  //   capture: true,
+  // });
   window.removeEventListener("keydown", handleKeyDown);
   window.removeEventListener("keyup", handleKeyUp);
   window.removeEventListener("mousedown", handleMouseDown);

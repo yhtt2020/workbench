@@ -457,13 +457,19 @@ const getSize = computed(() => {
  * 数据监听
  */
 // 卡片尺寸更新
-watch(props.size, (val) => {
-  currentSize.value = val;
-});
+watch(
+  () => props.size,
+  (val) => {
+    currentSize.value = val;
+  }
+);
 // 卡片尺寸更新
-watch(currentSize, (val) => {
-  emits("update:size", val);
-});
+watch(
+  () => currentSize.value,
+  (val) => {
+    emits("update:size", val);
+  }
+);
 
 // 方法
 // 头部拖拽开始

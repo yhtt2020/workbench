@@ -258,6 +258,7 @@ import { LoadingOutlined } from "@ant-design/icons-vue";
 import GalleryModal from "../paperModal/GalleryModal.vue";
 import { useAddCard, file } from "../../ui/hooks/useAddCard";
 import { useDeskStore } from "./store";
+import { useCustomLayout } from "./freeLayout/useCustomLayout";
 
 import Drop from "./Drop.vue";
 export default {
@@ -476,6 +477,20 @@ export default {
         currentHide = this.hide;
       }
       return [
+        {
+          id: 0,
+          newIcon: "fluent:add-16-filled",
+          name: "测试",
+          disabled: true,
+          fn: () => {
+            console.log("222 :>> ", 222);
+            useCustomLayout();
+            // 0 提供一个伪卡片
+            // 提供一个添加卡片
+            // 1 添加新的桌面
+            // 2 切换为自由布局
+          },
+        },
         {
           id: 1,
           newIcon: "fluent:add-16-filled",
