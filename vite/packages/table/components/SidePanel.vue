@@ -3,14 +3,6 @@
     <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-h-full" :beforeCreate="beforeCreate"> -->
     <!-- style="z-index: 99" -->
     <!-- 文件夹弹窗 -->
-    <div v-if="false"
-      style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:150px">
-      <div>{{ `left: ${navAttribute.navSize / 100 * this.left}px; top: ${navAttribute.navSize / 100 * this.top}px` }}</div>
-      <div>选中的id{{ hoverIndex }}</div>
-      <div v-for="( item, index) in navigationList" style="margin-bottom: 5px;border-bottom: 4px solid white">
-        {{ index }} {{ item.name }} {{ item.id }} {{ item.children?.length }}
-      </div>
-    </div>
     <div style="position: absolute; z-index: 500 !important;"
       :style="{ left: `${navAttribute.navSize / 100 * this.left}px`, top: `${this.top}px` }" class="rounded-xl pointer "
       id="folder">
@@ -23,56 +15,53 @@
         }" :auto="true" />
     </div>
     <Drop @createFile="createFile">
+      <div v-if="true"
+        style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:150px">
+        <div>{{ `left: ${navAttribute.navSize / 100 * this.left}px; top: ${navAttribute.navSize / 100 * this.top}px` }}
+        </div>
+        <div>{{ sideKey }}</div>
+        <div>选中的id{{ hoverIndex }}</div>
+        <div v-for="( item, index) in navigationList" style="margin-bottom: 5px;border-bottom: 4px solid white">
+          {{ index }} {{ item.name }} {{ item.id }} {{ item.children?.length }}
+        </div>
+      </div>
       <transition>
         <div v-if="hoverIndex > -1 && hoverRealItemId() !== dragItem?.id" :style="mergeTag"
           style="position: absolute;z-index:99999999999;top:50%;transform: translateY(-50%) translateX(-100%);writing-mode: vertical-rl;"
           class="px-3 py-10 rounded-lg s-bg xt-text">松开鼠标合并</div>
       </transition>
-      <div 
-        @click.stop :id="currentId" 
-        style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
+      <div @click.stop :id="currentId" style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
         class="flex flex-row justify-center box common-panel s-bg w-[80px]  xt-bg pt-0 pb-0 relative max-h-full side-bar"
         ref="sideContent" @contextmenu="showMenu"
         :style="{ zoom: `${(this.navAttribute.navSize / 100)}`, borderRadius: this.navAttribute.navRadius + 'px' }">
-        <div 
-          style="width: 52px;margin-top: 20px;margin-bottom: 20px;" 
-          class="w-full" >
-          <div 
-            :id="sortId" 
-            :key="sideKey" 
-            @drop.prevent="drop" @dragover.prevent=""
+        <div style="width: 52px;margin-top: 20px;margin-bottom: 20px;" class="w-full">
+          <div :id="sortId" :key="sideKey"
             class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container"
             style="width: 56px;display: flex;flex-direction: column;overflow: hidden;align-items: flex-start; gap: 20px;">
-            <a-tooltip 
-              v-for="(item, index) in navigationList" 
-              :key="item.id" :title="item.name"
-              :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }" 
-              @mouseenter="showElement(item, index)"
+            <a-tooltip v-for="(item, index) in navigationList" :key="item.id" :title="item.name"
+              :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }" @mouseenter="showElement(item, index)"
               :placement="sortId === 'left' ? 'right' : 'left'">
               <!-- 左右导航栏隐藏入口 -->
-              <xt-menu 
-                :menus="folderOptions" 
-                :id="item.id" 
-                class="relative overflow-visible item-content">
+              <xt-menu :menus="folderOptions" :id="item.id" class="relative overflow-visible item-content">
                 <div 
+                  v-if="!(this.isOffline && this.navList.includes(item.event))" 
+                  class="item-content item-nav"
+                  @click="newOpenApp(item)" 
                   @dragover="onDrag" 
-                  @dragend="hoverIndex = -1" 
-                  :key="item.name" 
-                  @click="newOpenApp(item)"
-                  :class="{ hover: (dragItem && item.id === hoverRealItemId() && dragItem?.id !== hoverRealItemId()) }"
-                  >
-                  <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
-                    :class="{ 'active-back': current(item) }" :style="{ borderRadius: this.iconRadius + 'px' }">
-                    <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"
-                      :placement="sortId === 'left' ? 'right' : 'left'"></Team>
-                    <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
-                      @click="openFolder(item)">
-                    </FolderVue>
-                    <template v-else>
-                      <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
-                    </template>
+                  @dragend="hoverIndex = -1"
+                  :class="{ 
+                    'active-back': current(item), 
+                    hover: (dragItem && item.id === hoverRealItemId() && dragItem?.id !== hoverRealItemId()) }"
+                  :style="{ borderRadius: this.iconRadius + 'px' }">
+                  <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"
+                    :placement="sortId === 'left' ? 'right' : 'left'"></Team>
+                  <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
+                    @click="openFolder(item)">
+                  </FolderVue>
+                  <template v-else>
+                    <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
+                  </template>
 
-                  </div>
                 </div>
               </xt-menu>
             </a-tooltip>
@@ -449,11 +438,11 @@ export default {
       }
     },
     // \
-    mergeTag(){
-      if(this.sortId === 'left'){
-        return {left:145+'px'}
-      }else{
-        return {right:65+'px'}
+    mergeTag() {
+      if (this.sortId === 'left') {
+        return { left: 145 + 'px' }
+      } else {
+        return { right: 65 + 'px' }
       }
     }
   },
@@ -522,16 +511,15 @@ export default {
     },
     sideNavigationList: {
       handler(newV, oldV) {
-        console.log('=====>>>>>>>>',newV, oldV)
         this.syncSidePanel()
       },
-      deep:true,
+      deep: true,
     },
     rightNavigationList: {
       handler(newV, oldV) {
         this.syncSidePanel()
       },
-      deep:true
+      deep: true
     },
     folderList() {
       this.customData = {
@@ -801,7 +789,7 @@ export default {
       const relativePos = (currentLeft - panelLeft) % (72 * this.navAttribute.navSize / 100)
       const isGap = !(relativePos <= (42 * this.navAttribute.navSize / 100) && relativePos >= (10 * this.navAttribute.navSize / 100))
       let nIndex = Math.floor((currentLeft - panelLeft + 20) / (72 * this.navAttribute.navSize / 100))
-      console.log(panelLeft,relativePos,isGap,nIndex,currentLeft,'getHoverIndex')
+      console.log(panelLeft, relativePos, isGap, nIndex, currentLeft, 'getHoverIndex')
       if (nIndex > this.navigationList.length - 1) {
         //超出
         return 0
@@ -836,12 +824,13 @@ export default {
       posY = posY > vW - (menuW / 2) ? vW - menuW : (posY - menuW / 2 < 0 ? 0 : posY - menuW / 2);
       this.top = posY
       this.left = posX < 100 ? 100 : posX - menuW - 130
-      console.log(this.left, this.top , 'posY')
+      console.log(this.left, this.top, 'posY')
     },
     /**
      * 获取当前拖拽元素的坐标
      */
     onDrag: function (e) {
+      console.log('1111', '就触发了？')
       let hoverRs = this.getHoverIndex(e.y)
       if (hoverRs.gap) {
         this.hoverIndex = -1
@@ -1255,4 +1244,5 @@ export default {
     display: none;
     /* Chrome Safari */
   }
-}</style>
+}
+</style>
