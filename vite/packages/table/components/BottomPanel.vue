@@ -13,7 +13,7 @@
     </div>
 
     <div class="absolute" v-if="controlVisible" style="bottom:100px;z-index:888;" :style="{left:`${controlLeft}px`}">
-      <ControlModal></ControlModal>
+      <ControlModal @close="controlVisible = false"></ControlModal>
     </div>
 
     <!--  <ControlModal ref="controlRef" v-if="controlVisible" @close="controlVisible = false" :full="full" @setFull="setFull"/> -->

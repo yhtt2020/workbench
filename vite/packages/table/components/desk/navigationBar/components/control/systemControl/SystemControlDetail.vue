@@ -100,12 +100,12 @@ const list = ref([
   },
   {
     icon:'fluent:play-16-filled',
-    color:'rgba(255,255,255,0.85)',
+    color:'var(--primary-text)',
     fn:()=>{ nextSong() }
   },
   {
     icon:'fluent:next-16-filled',
-    color:'var(--disable-text)',
+    color:'var(--disable-text)', 
     fn:()=>{ play() }
   },
 ])

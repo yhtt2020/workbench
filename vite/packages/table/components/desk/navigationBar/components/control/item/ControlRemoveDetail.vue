@@ -5,7 +5,7 @@
 
  <!-- 用户中心信息 -->
  <template v-else-if="isUserLogin && controlIndex === 'user-info'">
-  <div  class="rounded-xl xt-bg flex flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-if="status === 'del'" @click.stop="removeControl($event)">
+  <div  class="rounded-xl xt-bg flex flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-if="status === 'del'" @click="removeControl($event)">
     <div class="absolute" style="top: 7px;right:-4px;" >
       <xt-button style="width: auto !important;" h="0">
         <div class="flex items-center justify-center">
@@ -23,7 +23,7 @@
 
  <!-- 其他按钮 -->
  <template v-else>
-  <div  class="xt-bg rounded-xl flex flex-col items-center justify-center relative" style="height: 120px;width: 120px;" v-if="status === 'del'" @click.stop="removeControl">
+  <div  class="xt-bg rounded-xl flex flex-col items-center justify-center relative" style="height: 120px;width: 120px;" v-if="status === 'del'" @click="removeControl">
    <div class="absolute" style="top: 7px;right:-4px;" >
     <xt-button style="width: auto !important;" h="0">
       <div class="flex items-center justify-center">
@@ -38,7 +38,7 @@
   </div>
 
   <div v-else class="rounded-xl flex flex-col items-center justify-center relative" 
-    style="height: 120px;width: 120px;"  @click.stop="triggerControl($event)" :class="controlStatus.status ? 'xt-theme-bg':'xt-bg'">
+    style="height: 120px;width: 120px;"  @click="triggerControl($event)" :class="controlStatus.status ? 'xt-theme-bg':'xt-bg'">
     <div class="w-14 h-14 flex items-center xt-bg-t-2 justify-center rounded-full mb-3">
       <xt-new-icon :icon="controlItem.icon" size="24" :color="controlStatus.status ? 'var(--active-text)':'var(--primary-text)'"></xt-new-icon>
     </div>
@@ -95,6 +95,7 @@ const controlStatus = computed(()=>{
       return {status:styles.value,} ;
     // 极简模式
     case 'min-mode':
+      console.log('测试',simple.value);
       return {status:simple.value,} ;
     // 节能模式
     case 'energy-save-mode':
@@ -187,10 +188,9 @@ const removeControl = (evt) =>{
     if(control.value.oldList.length !== 1){
       const index = control.value.newList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
       if(index === -1){
-       const removeIndex  = control.value.oldList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
-       console.log('删除',removeIndex,index);
-       control.value.oldList.splice(removeIndex,1);
        control.value.newList.push(props.controlItem)
+       const removeIndex  = control.value.oldList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
+       control.value.oldList.splice(removeIndex,1);
       }
     }
     else {

@@ -55,10 +55,10 @@ const props = defineProps({
   default:()=>{}
  },
 
- isClick:{
-  type:Boolean,
-  default:false,
- }
+//  isClick:{
+//   type:Boolean,
+//   default:false,
+//  }
 })
 
 const app = appStore();
@@ -79,19 +79,14 @@ const isUserInfoNull = computed(()=>{
 
 // 添加设置
 const addControl = (evt) =>{
-  if(props.isClick){
-    /**逻辑是先增后减**/ 
-    // 添加最新数据
-    const addIndex = control.value.oldList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
-    if(addIndex === -1){
-      control.value.oldList.push(props.controlItem);
-      // 删除原先数据
-      const removeIndex = control.value.newList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
-      control.value.newList.splice(removeIndex,1)
-    }
-  }
-  else {
-    evt.preventDefault();
+  /**逻辑是先增后减**/ 
+  // 添加最新数据
+  const addIndex = control.value.oldList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
+  if(addIndex === -1){
+    control.value.oldList.push(props.controlItem);
+    // 删除原先数据
+    const removeIndex = control.value.newList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
+    control.value.newList.splice(removeIndex,1)
   }
 }
 
