@@ -39,7 +39,6 @@ import { storeToRefs } from "pinia";
 import XtButton from "../../../ui/libs/button/index.vue";
 import XtIfyIcon from "../../../ui/new/IfyIcon/index";
 
-import { getReward } from "../task";
 import { getTaskStatus } from "../api";
 onMounted(() => {
   taskStatus();
@@ -50,7 +49,7 @@ const taskStatus = async () => {
   let { data } = await getTaskStatus({
     taskName: currentId.value,
   });
-
+console.log(' data.status :>> ',  data.status);
   status.value = data.status;
 };
 

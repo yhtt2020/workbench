@@ -227,7 +227,6 @@
       v-model:select-type="currentAddTab"
     >
     </HorizontalPanel>
-    <xt-task id="M0302" no="3"></xt-task>
     <div v-if="currentAddTab.name === 'market'">
       <!--      <div class="p-2 pb-0 mt-2 text-lg">您可以使用其他用户共享给您的分享码直接添加，也可以从桌面市场选择适合的桌面添加。</div>-->
       <!--      <div class="p-2 pt-0">-->
@@ -241,11 +240,9 @@
           <span class="mr-2 desk-title">热门桌面</span>
           <Icon style="font-size: 20px" icon="daohang_remen-xuanzhong"></Icon>
         </span>
-        <xt-task id="M0302" no="4" @cb="moreDesk">
           <div class="btn-item" @click="moreDesk" style="width: 160px">
             更多桌面分享
           </div>
-        </xt-task>
       </div>
       <div>
         <DeskMarket
@@ -547,16 +544,6 @@ export default {
       "selectNav",
       "jumpDesk",
     ]),
-
-    M01022() {
-      return this.taskID == "M0102" && this.step == 2;
-    },
-    M03022() {
-      return this.taskID == "M0302" && this.step == 2;
-    },
-    mixTask() {
-      return this.M01022 || this.M03022;
-    },
     // getHomeSize(){
     //   this.$nextTick(() => {
     //     let height = document.getElementById("cardContent")?.offsetHeight;
