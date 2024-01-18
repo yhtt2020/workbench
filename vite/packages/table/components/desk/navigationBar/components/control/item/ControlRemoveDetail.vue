@@ -160,7 +160,7 @@ const triggerControl = () =>{
     // 摇一摇
     case 'shake':
       settings.value.shake.enable = !settings.value.shake.enable
-      if(!settings.value.shake.enable){
+      if(settings.value.shake.enable){
         app.enableShake(()=>{
           router.push({
             name:'key'
