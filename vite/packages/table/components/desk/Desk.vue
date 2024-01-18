@@ -483,7 +483,6 @@ export default {
           name: "测试",
           disabled: true,
           fn: () => {
-            console.log("222 :>> ", 222);
             useCustomLayout();
             // 0 提供一个伪卡片
             // 提供一个添加卡片

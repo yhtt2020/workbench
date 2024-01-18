@@ -2,43 +2,26 @@ import { storeToRefs } from "pinia";
 import { nanoid } from "nanoid";
 
 import { useAddCard } from "../../../ui/hooks/useAddCard";
-
 import { useFreeLayoutStore } from "../freeLayout/store";
-let headerData = [
-  {
-    size: "2x2",
-    name: "header",
-  },
-  {
-    size: "2x2",
-    name: "header",
-  },
-  {
-    size: "2x4",
-    name: "header",
-  },
-  {
-    size: "2x4",
-    name: "header",
-  },
-  {
-    size: "2x4",
-    name: "header",
-  },
-];
-let folderData = [
-  {
-    size: "2x2",
-    name: "folder",
-  },
-  {
-    size: "2x2",
-    name: "folder",
-  },
-];
+
+import { folderData, headerData, mainData } from "./config";
+// const generateRandomSizes = () => {
+
+//   // for (let i = 0; i < count; i++) {
+//   //   let width = (Math.floor(Math.random() * 2) + 1) * 2;
+//   //   let height = (Math.floor(Math.random() * 2) + 1) * 2;
+//   //   arr.push({
+//   //     size: `${width}x${height}`,
+//   //     name: "test",
+//   //   });
+//   // }
+//   return arr;
+// };
+
 export const useCustomLayout = (
   headerList = [...headerData],
-  folderList = [...folderData]
+  folderList = [...folderData],
+  mainList = [...mainData]
 ) => {
   const freeLayoutStore: any = useFreeLayoutStore();
   const { getFreeLayoutData, getFreeLayoutState, freeLayoutEnv } =
@@ -55,6 +38,18 @@ export const useCustomLayout = (
   let left;
   const resetLeft = () => {
     left = freeLayoutEnv.value.scrollLeft + position;
+  };
+  const setData = (arr) => {
+    arr.forEach((item) => {
+      const { width, height }: any = getSize(item.size);
+      setCard(top, left, item);
+      if (left - freeLayoutEnv.value.scrollLeft - position + width < boxWidth) {
+        left += width + 12;
+      } else {
+        resetLeft();
+        top += height + 12;
+      }
+    });
   };
   resetLeft();
   let top = freeLayoutEnv.value.scrollTop;
@@ -83,13 +78,12 @@ export const useCustomLayout = (
       left += width + 12;
     });
   }
-  let arr = generateRandomSizes(12);
 
   let arr2x2: any = [];
   let arr2x4: any = [];
   let arr4x4: any = [];
 
-  arr.forEach((item) => {
+  mainList.forEach((item) => {
     const { width, height }: any = getSize(item.size);
     if (width == 280 && height == 204) {
       arr2x2.push(item);
@@ -99,12 +93,7 @@ export const useCustomLayout = (
       arr4x4.push(item);
     }
   });
-  console.log("arr :>> ", arr);
-  console.log("arr2x2 :>> ", arr2x2);
-  console.log("arr2x4 :>> ", arr2x4);
-  console.log("arr4x4 :>> ", arr4x4);
   let folderListLength = 4 - folderList.length;
-
   // 有文件夹 但没占满
   if (folderListLength >= 1 && arr2x2.length >= folderListLength) {
     arr2x2.splice(0, folderListLength).forEach((item) => {
@@ -115,51 +104,29 @@ export const useCustomLayout = (
   }
   resetLeft();
   top += 240 - 12 * 2;
+  setData(arr4x4);
 
-  arr4x4.forEach((item) => {
-    const { width, height }: any = getSize(item.size);
-    setCard(top, left, item);
-    if (left - freeLayoutEnv.value.scrollLeft - position + width < boxWidth) {
-      console.log("123 :>> ", 123);
-      left += width + 12;
-    } else {
-      console.log("321 :>> ", 321);
-      resetLeft();
-      top += height + 12;
-    }
-  });
-  return;
-  arr2x4.forEach((item) => {
-    const { width, height }: any = getSize(item.size);
-    setCard(headerTop, left, item);
-    if (left - freeLayoutEnv.value.scrollLeft - position + width < boxWidth) {
-      left += width + 12;
-    } else {
-      resetLeft();
-      headerTop += height + 12;
-    }
-  });
+  setData(arr2x4);
 
-  if (left - freeLayoutEnv.value.scrollLeft + 280 <= boxWidth) {
-    let a = (boxWidth - (left - freeLayoutEnv.value.scrollLeft)) / 280;
+  if (left - freeLayoutEnv.value.scrollLeft - position + 280 < boxWidth) {
+    let rows: any =
+      (boxWidth - (left - freeLayoutEnv.value.scrollLeft - position)) / 280;
 
-    for (let index = 0; index < a; index++) {
-      console.log("index :>> ", index);
+    rows = parseInt(rows);
+    for (let i = 0; i < rows; i++) {
+      let currentTop = top;
+      let num = arr2x2.length > 2 ? 2 : arr2x2.length;
+      arr2x2.splice(0, num).forEach((item) => {
+        const { width, height }: any = getSize(item.size);
+        setCard(currentTop, left, item);
+        currentTop += height + 12;
+      });
+      left += 280 + 12;
     }
   }
   resetLeft();
-  arr2x2.forEach((item) => {
-    const { width, height }: any = getSize(item.size);
-    setCard(headerTop, left, item);
-
-    if (left - freeLayoutEnv.value.scrollLeft - position + width < boxWidth) {
-      left += width + 12;
-    } else {
-      resetLeft();
-
-      headerTop += height + 12;
-    }
-  });
+  top += 96 * 4 + 12 * 4;
+  setData(arr2x2);
 };
 
 const getWidth = (w) => {
@@ -194,43 +161,7 @@ const setCard = (top, left, item) => {
     id,
   };
 
-  useAddCard("test", item, id);
-};
-
-const generateRandomSizes = (count) => {
-  let arr: any = [
-    {
-      size: "2x2",
-      name: "其他小组件",
-    },
-    {
-      size: "2x2",
-      name: "其他小组件",
-    },
-    {
-      size: "2x2",
-      name: "其他小组件",
-    },
-    {
-      size: "2x2",
-      name: "其他小组件",
-    },
-    {
-      size: "2x4",
-      name: "其他小组件",
-    },
-    {
-      size: "2x4",
-      name: "其他小组件",
-    },
-  ];
-  for (let i = 0; i < count; i++) {
-    let width = (Math.floor(Math.random() * 2) + 1) * 2;
-    let height = (Math.floor(Math.random() * 2) + 1) * 2;
-    arr.push({
-      size: `${width}x${height}`,
-      name: "其他小组件",
-    });
-  }
-  return arr;
+  useAddCard(item.name, {
+    ...item
+  }, id);
 };
