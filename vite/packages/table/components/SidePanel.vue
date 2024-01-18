@@ -3,7 +3,7 @@
     <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-h-full" :beforeCreate="beforeCreate"> -->
     <!-- style="z-index: 99" -->
     <!-- 文件夹弹窗 -->
-    <div v-if="true"
+    <div v-if="false"
       style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:150px">
       <div>{{ `left: ${navAttribute.navSize / 100 * this.left}px; top: ${navAttribute.navSize / 100 * this.top}px` }}</div>
       <div>选中的id{{ hoverIndex }}</div>
