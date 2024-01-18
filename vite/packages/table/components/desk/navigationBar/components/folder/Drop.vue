@@ -54,7 +54,7 @@ const handleDrop = async (dragEvent) => {
       let file = useDeskConversionNav(dropFiles, fileName, item)
       emit('createFile', file, currentX)
     }))
-  } else if (dragEvent.dataTransfer?.types[0] === 'text/plain') {
+  }  else if (dragEvent.dataTransfer?.types.some((item)=> item === 'text/plain')){
     // 文件夹图标拖拽
     const item = _.cloneDeep(currentData.value)
     console.log(item,'item')

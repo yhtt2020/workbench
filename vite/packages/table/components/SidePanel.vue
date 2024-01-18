@@ -3,8 +3,9 @@
     <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-h-full" :beforeCreate="beforeCreate"> -->
     <!-- style="z-index: 99" -->
     <!-- 文件夹弹窗 -->
-    <div v-if="false"
+    <div v-if="true"
       style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:150px">
+      <div>{{ `left: ${navAttribute.navSize / 100 * this.left}px; top: ${navAttribute.navSize / 100 * this.top}px` }}</div>
       <div>选中的id{{ hoverIndex }}</div>
       <div v-for="( item, index) in navigationList" style="margin-bottom: 5px;border-bottom: 4px solid white">
         {{ index }} {{ item.name }} {{ item.id }} {{ item.children?.length }}
@@ -23,24 +24,41 @@
     </div>
     <Drop @createFile="createFile">
       <transition>
-        <div v-if="hoverIndex > -1 && hoverRealItemId() !== dragItem?.id"
-          style="position: absolute;z-index:99999999999;left:145px;top:50%;transform: translateY(-50%) translateX(-100%);writing-mode: vertical-rl;"
+        <div v-if="hoverIndex > -1 && hoverRealItemId() !== dragItem?.id" :style="mergeTag"
+          style="position: absolute;z-index:99999999999;top:50%;transform: translateY(-50%) translateX(-100%);writing-mode: vertical-rl;"
           class="px-3 py-10 rounded-lg s-bg xt-text">松开鼠标合并</div>
       </transition>
-      <div @click.stop :id="currentId" style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
+      <div 
+        @click.stop :id="currentId" 
+        style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
         class="flex flex-row justify-center box common-panel s-bg w-[80px]  xt-bg pt-0 pb-0 relative max-h-full side-bar"
         ref="sideContent" @contextmenu="showMenu"
         :style="{ zoom: `${(this.navAttribute.navSize / 100)}`, borderRadius: this.navAttribute.navRadius + 'px' }">
-        <div style="width: 52px;margin-top: 20px;margin-bottom: 20px;" class="w-full" >
-          <div :id="sortId" :key="sideKey" @drop.prevent="drop" @dragover.prevent=""
+        <div 
+          style="width: 52px;margin-top: 20px;margin-bottom: 20px;" 
+          class="w-full" >
+          <div 
+            :id="sortId" 
+            :key="sideKey" 
+            @drop.prevent="drop" @dragover.prevent=""
             class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container"
             style="width: 56px;display: flex;flex-direction: column;overflow: hidden;align-items: flex-start; gap: 20px;">
-            <a-tooltip v-for="(item, index) in navigationList" :key="item.id" :title="item.name"
-              :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }" @mouseenter="showElement(item, index)"
-              placement="right">
+            <a-tooltip 
+              v-for="(item, index) in navigationList" 
+              :key="item.id" :title="item.name"
+              :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }" 
+              @mouseenter="showElement(item, index)"
+              :placement="sortId === 'left' ? 'right' : 'left'">
               <!-- 左右导航栏隐藏入口 -->
-              <xt-menu :menus="folderOptions" :id="item.id" class="relative overflow-visible item-content">
-                <div @dragover="onDrag" @dragend="hoverIndex = -1" :key="item.name" @click="newOpenApp(item)"
+              <xt-menu 
+                :menus="folderOptions" 
+                :id="item.id" 
+                class="relative overflow-visible item-content">
+                <div 
+                  @dragover="onDrag" 
+                  @dragend="hoverIndex = -1" 
+                  :key="item.name" 
+                  @click="newOpenApp(item)"
                   :class="{ hover: (dragItem && item.id === hoverRealItemId() && dragItem?.id !== hoverRealItemId()) }"
                   >
                   <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
@@ -150,7 +168,6 @@ export default {
       menuVisible: false,
       quick: false,
       delNav: false,
-      sortable: null,
       dragEnable: false,
       dragEvent: null,
       drawerMenus: [...extraRightMenu, ...moreMenus],
@@ -431,6 +448,14 @@ export default {
         return '6x4'
       }
     },
+    // \
+    mergeTag(){
+      if(this.sortId === 'left'){
+        return {left:145+'px'}
+      }else{
+        return {right:65+'px'}
+      }
+    }
   },
   mounted() {
     this.enableDrag()
@@ -490,10 +515,23 @@ export default {
           this.navAttribute.navSize = width.toFixed(2) * 100
           this.noticeFlag = false
         }
-        this.syncSidePanel()
+        // this.syncSidePanel()
       },
       immediate: true,
       deep: true,
+    },
+    sideNavigationList: {
+      handler(newV, oldV) {
+        console.log('=====>>>>>>>>',newV, oldV)
+        this.syncSidePanel()
+      },
+      deep:true,
+    },
+    rightNavigationList: {
+      handler(newV, oldV) {
+        this.syncSidePanel()
+      },
+      deep:true
     },
     folderList() {
       this.customData = {
@@ -577,7 +615,7 @@ export default {
       let that = this
       let drop = document.getElementById(this.sortId)
       if (!drop) {
-        console.error('更新底部导航栏失败，元素不存在')
+        console.error('更新侧边导航栏失败，元素不存在')
         return
       }
       let index = null
@@ -641,12 +679,13 @@ export default {
           console.log('onUpdate')
           //拖拽排序后，更新数据
           console.log('移动event=', event)
-          let cur = this.navigationList.splice(event.oldIndex, 1)[0]
+          let cur = this.sideList.splice(event.oldIndex, 1)[0]
           if (!cur) {
             console.error('移动失败，无法获取到元素')
             return
           }
-          this.navigationList.splice(event.newIndex, 0, cur)
+          this.sideList.splice(event.newIndex, 0, cur)
+          this.updateList(this.sideList)
           return
         }, 100),
         onEnd: function (event) {
@@ -700,7 +739,6 @@ export default {
          * @returns {number}
          */
         onUnchoose: function (event) {
-          console.log('onUnchoose',that.hoverRealItemId(),that.dragItem?.id)
           if (that.hoverRealItemId() && that.hoverRealItemId() !== that.dragItem?.id) {
             //存在目标，且不等于自身，符合合并条件，则执行合并
             const merged = that.mergeIconFolder(that.sideList, that.dragItem, that.sideList.find(item => {
@@ -727,7 +765,7 @@ export default {
       } else {
         this.rightNavigationList = _.cloneDeep(list)
       }
-      this.syncSidePanel()
+      // this.syncSidePanel()
     },
     /**
     * 取出当前鼠标指针所对应的数组内的元素的真实id，采用视图查找，所以是精准的
@@ -798,7 +836,7 @@ export default {
       posY = posY > vW - (menuW / 2) ? vW - menuW : (posY - menuW / 2 < 0 ? 0 : posY - menuW / 2);
       this.top = posY
       this.left = posX < 100 ? 100 : posX - menuW - 130
-      console.log(this.left, posY > vW - (menuW / 2), 'posY')
+      console.log(this.left, this.top , 'posY')
     },
     /**
      * 获取当前拖拽元素的坐标
@@ -847,15 +885,15 @@ export default {
  */
     resetFolder(item, index) {
       if (item.children.length > 0) {
-        if (item.children.length + this.navigationList.length > this.maxItemNum) {
+        if (item.children.length + this.sideList.length > this.maxItemNum) {
           this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
             onOk: () => {
               return true
             }
           })
         }
-        this.navigationList.splice(index, 1, ...item.children)
-
+        this.sideList.splice(index, 1, ...item.children)
+        this.updateList(this.sideList)
         if (this.folderId == item.id) {
           this.closeFolder()
         }
