@@ -33,19 +33,18 @@
 </template>
 
 <script setup>
-import { ref, toRefs, computed, onMounted } from "vue";
+import { ref, toRefs, computed, onMounted ,onBeforeMount} from "vue";
 import { taskStore } from "../store";
 import { storeToRefs } from "pinia";
 import XtButton from "../../../ui/libs/button/index.vue";
 import XtIfyIcon from "../../../ui/new/IfyIcon/index";
 
 import { getTaskStatus } from "../api";
-onMounted(() => {
+onBeforeMount(() => {
   taskStatus();
 });
 const status = ref(0);
 const taskStatus = async () => {
-  console.log(" currentId.value :>> ", currentId.value);
   let { data } = await getTaskStatus({
     taskName: currentId.value,
   });

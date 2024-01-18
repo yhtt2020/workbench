@@ -42,7 +42,7 @@ const app = appStore();
 
 // 初始化
 const store = taskStore();
-const { currentId, startList, claimRewardsList, completedList } =
+const { currentId, startList, claimRewardsList, completedList, rewardVisible } =
   storeToRefs(store);
 const router = useRouter();
 const props = defineProps({
@@ -65,12 +65,6 @@ const getGuide = () => {
       toastClassName: "notice-toast",
     }
   );
-};
-
-// 任务步骤初始化
-const init = () => {
-  store.step = 1;
-  store.isTaskDrawer = false;
 };
 
 // 任务引导
@@ -103,8 +97,9 @@ const startTask = () => {
       }, 200);
     }
   });
-
-  store.isTaskDrawer = false;
+  setTimeout(() => {
+    store.isTaskDrawer = false;
+  }, 201);
 };
 
 const continueTask = computed(() => {
