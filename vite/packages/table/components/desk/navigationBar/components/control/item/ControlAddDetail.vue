@@ -1,12 +1,12 @@
 <template>
   <!-- 音乐播放器和音量调节按钮 -->
  <template v-if="controlIndex === 'audio'">
-   <SystemControlDetail  @click="addControl($event)" :status="'add'"/>
+   <SystemControlDetail class="category-button pointer" @click="addControl($event)" :status="'add'"/>
  </template>
 
  <!-- 用户中心数据信息模块 -->
  <template v-else-if="isUserInfoNull && controlIndex === 'user-info'">
-  <div  class="rounded-xl xt-bg flex items-center justify-center flex-col relative" style="height: 120px;width:252px;"  @click="addControl($event)">
+  <div  class="rounded-xl pointer category-button xt-bg flex items-center justify-center flex-col relative" style="height: 120px;width:252px;"  @click="addControl($event)">
     <div class="absolute" style="top: 7px;right:-4px;">
       <xt-button style="width: auto !important;" h="0">
         <div class="flex items-center justify-center">
@@ -20,7 +20,7 @@
 
  <!-- 控制中心其他按钮 -->
  <template v-else>
-  <div  class="xt-bg rounded-xl flex flex-col items-center justify-center relative" style="height: 120px;width: 120px;" @click="addControl($event)">
+  <div  class="xt-bg rounded-xl pointer category-button flex flex-col items-center justify-center relative" style="height: 120px;width: 120px;" @click="addControl($event)">
    <div class="absolute" style="top: 7px;right:-4px;">
     <xt-button style="width: auto !important;" h="0">
       <div class="flex items-center justify-center">
@@ -45,7 +45,6 @@ import { controlStore } from '../../../hook/controlStore';
 import UserInfoDetail from '../userControl/UserInfoDetail.vue';
 import SystemControlDetail from '../systemControl/SystemControlDetail.vue';
 
-
 const props = defineProps({
  controlIndex:{
   type:String,
@@ -54,11 +53,6 @@ const props = defineProps({
   type:Object,
   default:()=>{}
  },
-
-//  isClick:{
-//   type:Boolean,
-//   default:false,
-//  }
 })
 
 const app = appStore();
@@ -74,8 +68,6 @@ const isUserInfoNull = computed(()=>{
     return true
   }
 })
-
-
 
 // 添加设置
 const addControl = (evt) =>{

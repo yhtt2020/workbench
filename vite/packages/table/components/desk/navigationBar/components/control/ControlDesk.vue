@@ -1,10 +1,9 @@
 <template>
   <div class="flex mt-3" style="height: auto;">
     <XtScrollbar  :y="true" style="height: 100%;width: 100%;">
-      <Vuuri v-model="vuuriList" group-id="id" item-key="id" :options="option"
+      <Vuuri v-model="control.oldList" group-id="id" item-key="id" :options="option"
        :drag-enabled="false"   :get-item-height="getHeight"
       >
-      <!-- :item-class="getMargin ? 'mr-0':'mr-2.5 mb-2.5'" -->
         <template #item="{ item }">
           <ControlRemoveDetail :control-index="item.id" :control-item="item" :status="'null'" />
         </template>
@@ -24,7 +23,6 @@ import ControlRemoveDetail from './item/ControlRemoveDetail.vue';
 const controls = controlStore();
 const { control } = storeToRefs(controls);
 
-const vuuriList = ref(control.value.oldList);
 const option = ref({
  layout:{horizontal:false},
 })
@@ -33,20 +31,6 @@ const option = ref({
 const getHeight = () =>{
  return 120 + 'px' 
 }
-
-// 计算间距
-// const getMargin = computed(() => {
-//   for (const i = 0; i < vuuriList.length; i++) {
-//     return i % 4 !== 0;
-//   }
-// })
-
-
-// 实现功能触发
-const triggerControl = (item) =>{
-  console.log('测试',item);
-}
-
 
 </script>
 

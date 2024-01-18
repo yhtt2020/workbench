@@ -1,11 +1,11 @@
 <template>
  <template v-if="controlIndex === 'audio'">
-  <SystemControlDetail @click="removeControl($event)" :status="status"/>
+  <SystemControlDetail class="pointer category-button" @click="removeControl($event)" :status="status"/>
  </template>
 
  <!-- 用户中心信息 -->
  <template v-else-if="isUserLogin && controlIndex === 'user-info'">
-  <div  class="rounded-xl xt-bg flex flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-if="status === 'del'" @click="removeControl($event)">
+  <div  class="rounded-xl xt-bg pointer category-button flex flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-if="status === 'del'" @click="removeControl($event)">
     <div class="absolute" style="top: 7px;right:-4px;" >
       <xt-button style="width: auto !important;" h="0">
         <div class="flex items-center justify-center">
@@ -16,14 +16,14 @@
     <UserInfoDetail :userinfo="userInfo"/>
   </div>
 
-  <div  class="rounded-xl xt-bg flex flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-else>
+  <div  class="rounded-xl xt-bg flex pointer category-button flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-else>
     <UserInfoDetail :userinfo="userInfo"/>
   </div>
  </template>
 
  <!-- 其他按钮 -->
  <template v-else>
-  <div  class="xt-bg rounded-xl flex flex-col items-center justify-center relative" style="height: 120px;width: 120px;" v-if="status === 'del'" @click="removeControl">
+  <div  class="xt-bg rounded-xl pointer category-button flex flex-col items-center justify-center relative" style="height: 120px;width: 120px;" v-if="status === 'del'" @click="removeControl">
    <div class="absolute" style="top: 7px;right:-4px;" >
     <xt-button style="width: auto !important;" h="0">
       <div class="flex items-center justify-center">
@@ -37,12 +37,12 @@
    <span class="xt-text">{{controlItem.name}}</span>
   </div>
 
-  <div v-else class="rounded-xl flex flex-col items-center justify-center relative" 
-    style="height: 120px;width: 120px;"  @click="triggerControl($event)" :class="controlStatus.status ? 'xt-theme-bg':'xt-bg'">
+  <div v-else class="rounded-xl category-button pointer flex flex-col items-center justify-center relative" 
+    style="height: 120px;width: 120px;"  @click="triggerControl($event)" :class="controlStatus?.status ? 'xt-theme-bg':'xt-bg'">
     <div class="w-14 h-14 flex items-center xt-bg-t-2 justify-center rounded-full mb-3">
-      <xt-new-icon :icon="controlItem.icon" size="24" :color="controlStatus.status ? 'var(--active-text)':'var(--primary-text)'"></xt-new-icon>
+      <xt-new-icon :icon="controlItem.icon" size="24" :color="controlStatus?.status ? 'var(--active-text)':'var(--primary-text)'"></xt-new-icon>
     </div>
-    <span :class="controlStatus.status ? 'xt-active-text' :'xt-text'">{{controlItem.name}}</span>
+    <span :class="controlStatus?.status ? 'xt-active-text' :'xt-text'">{{controlItem.name}}</span>
   </div>
  </template>
 </template>
@@ -95,7 +95,6 @@ const controlStatus = computed(()=>{
       return {status:styles.value,} ;
     // 极简模式
     case 'min-mode':
-      console.log('测试',simple.value);
       return {status:simple.value,} ;
     // 节能模式
     case 'energy-save-mode':
@@ -137,7 +136,6 @@ const triggerControl = () =>{
     // 节能模式
     case 'energy-save-mode':
       saving.value = !saving.value;
-      console.log('测试',proxy);
       // 使用节能模式后，将关闭各种界面动画，同时尽可能清理掉滞留内存中的进程。可能导致打开界面效果折损或者应用切换缓慢。但可以显著降低内存、CPU、GPU占用。
       break;
     // 勿扰模式
@@ -188,9 +186,9 @@ const removeControl = (evt) =>{
     if(control.value.oldList.length !== 1){
       const index = control.value.newList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
       if(index === -1){
-       control.value.newList.push(props.controlItem)
-       const removeIndex  = control.value.oldList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
-       control.value.oldList.splice(removeIndex,1);
+        control.value.newList.push(props.controlItem)
+        const removeIndex  = control.value.oldList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
+        control.value.oldList.splice(removeIndex,1);
       }
     }
     else {
