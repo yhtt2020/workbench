@@ -4,14 +4,14 @@
     <!-- style="z-index: 99" -->
     <!-- 文件夹弹窗 -->
     <div v-if="false"
-        style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:150px">
-        <div>选中的id{{ hoverIndex }}</div>
-        <div v-for="( item, index) in navigationList" style="margin-bottom: 5px;border-bottom: 4px solid white">
-          {{ index }} {{ item.name }} {{ item.id }} {{ item.children?.length }}
-        </div>
+      style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:150px">
+      <div>选中的id{{ hoverIndex }}</div>
+      <div v-for="( item, index) in navigationList" style="margin-bottom: 5px;border-bottom: 4px solid white">
+        {{ index }} {{ item.name }} {{ item.id }} {{ item.children?.length }}
       </div>
+    </div>
     <div style="position: absolute; z-index: 500 !important;"
-      :style="{ left: `${navAttribute.navSize / 100 * 100}px`, bottom: `${this.left}px` }" class="rounded-xl pointer "
+      :style="{ left: `${navAttribute.navSize / 100 * this.left}px`, top: `${this.top}px` }" class="rounded-xl pointer "
       id="folder">
       <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:size="updateSize" :customData="customData"
         :customIndex="sideKey" :secondary="true" v-if="folderVisible" :expand="{ disabled: true }" :navBar="{
@@ -24,26 +24,25 @@
     <Drop @createFile="createFile">
       <transition>
         <div v-if="hoverIndex > -1 && hoverRealItemId() !== dragItem?.id"
-          style="position: absolute;z-index:99999999999;left:-8px;top:50%;transform: translateY(-50%) translateX(-100%)  ;"
-          class="px-10 py-3 rounded-lg s-bg xt-text">松开鼠标合并</div>
+          style="position: absolute;z-index:99999999999;left:145px;top:50%;transform: translateY(-50%) translateX(-100%);writing-mode: vertical-rl;"
+          class="px-3 py-10 rounded-lg s-bg xt-text">松开鼠标合并</div>
       </transition>
       <div @click.stop :id="currentId" style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
         class="flex flex-row justify-center box common-panel s-bg w-[80px]  xt-bg pt-0 pb-0 relative max-h-full side-bar"
         ref="sideContent" @contextmenu="showMenu"
         :style="{ zoom: `${(this.navAttribute.navSize / 100)}`, borderRadius: this.navAttribute.navRadius + 'px' }">
-        <div style="width: 52px;" class="w-full">
+        <div style="width: 52px;margin-top: 20px;margin-bottom: 20px;" class="w-full" >
           <div :id="sortId" :key="sideKey" @drop.prevent="drop" @dragover.prevent=""
             class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container"
-            style="width: 56px;display: flex;flex-direction: column;overflow: hidden;align-items: flex-start; ">
+            style="width: 56px;display: flex;flex-direction: column;overflow: hidden;align-items: flex-start; gap: 20px;">
             <a-tooltip v-for="(item, index) in navigationList" :key="item.id" :title="item.name"
-                      :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }"
-                      @mouseenter="showElement(item, index)" placement="right">
+              :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }" @mouseenter="showElement(item, index)"
+              placement="right">
               <!-- 左右导航栏隐藏入口 -->
-              <xt-menu :menus="folderOptions" :id="item.id" class="relative overflow-visible item-content" >
-                <div @dragover="onDrag" @dragend="hoverIndex = -1"
-                 :key="item.name" @click="newOpenApp(item.type, item.value)"
-                 :class="{ hover: (dragItem && item.id === hoverRealItemId() && dragItem?.id !== hoverRealItemId()) }"
-                 :style="{ paddingBottom: index === navigationList.length - 1 ? '12px' : '0px', marginTop: index === 0 ? '12px' : '20px' }">
+              <xt-menu :menus="folderOptions" :id="item.id" class="relative overflow-visible item-content">
+                <div @dragover="onDrag" @dragend="hoverIndex = -1" :key="item.name" @click="newOpenApp(item)"
+                  :class="{ hover: (dragItem && item.id === hoverRealItemId() && dragItem?.id !== hoverRealItemId()) }"
+                  >
                   <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
                     :class="{ 'active-back': current(item) }" :style="{ borderRadius: this.iconRadius + 'px' }">
                     <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"
@@ -275,9 +274,10 @@ export default {
       // 弹窗显示
       noticeFlag: true,
       left: 0,
+      top: 0,
       parentSize: 0,
-      // 控制中心弹窗
-      controlVisible: false,
+      sideList: []
+
     }
   },
   props: {
@@ -435,6 +435,11 @@ export default {
   mounted() {
     this.enableDrag()
     this.loadNav()
+    if (this.sortId === 'left') {
+      this.sideList = this.sideNavigationList
+    } else {
+      this.sideList = this.rightNavigationList
+    }
     // this.navigationList = this.replaceType(this.navigationList)
     /**
      * 监听窗口变化,更新导航栏最大添加个数
@@ -606,36 +611,26 @@ export default {
             }
           }
           delIcon.ondrop = function (ev) {
-            if (!that.isDelete) return
-            // console.log(111111);
-            that.delItemIcon = false
             let oneNav = that.navigationList[event.oldIndex]
             //将要删除的是否是主要功能
-            if (!that.mainNavigationList.find((f) => f.name === oneNav.name)) {
-              that.removeFootNavigationList(event.oldIndex)
+            if (!that.mainNavigationList.find(f => f.name === oneNav.name)) {
+              that.delNavList(event.oldIndex)
               return
             }
             let sumList = []
             // 判断其他导航栏是否是打开状态，是则获取功能列表
-            if (that.leftNav && that.rightNav) {
-              sumList = that.sideNavigationList.concat(
-                that.rightNavigationList
-              )
-            } else if (that.leftNav && !that.rightNav) {
-              sumList = that.sideNavigationList
-            } else if (!that.leftNav && that.rightNav) {
-              sumList = that.rightNavigationList
+            if (that.otherSwitch1 && that.otherSwitch2) {
+              sumList = that.otherNavList1.concat(that.otherNavList2)
+            } else if (that.otherSwitch1 && !that.otherSwitch2) {
+              sumList = that.otherNavList1
+            } else if (!that.otherSwitch1 && that.otherSwitch2) {
+              sumList = that.otherNavList2
             } else {
               message.info(`导航栏中至少保留一个「${oneNav.name}」`)
               // console.log('不可删除')
               return
             }
-            that.delNavigation(
-              sumList,
-              oneNav,
-              event.oldIndex,
-              that.removeFootNavigationList
-            )
+            that.delNavigation(sumList, oneNav, event.oldIndex, that.delNavList)
           }
         },
         onUpdate: _.debounce((event) => {
@@ -705,17 +700,19 @@ export default {
          * @returns {number}
          */
         onUnchoose: function (event) {
+          console.log('onUnchoose',that.hoverRealItemId(),that.dragItem?.id)
           if (that.hoverRealItemId() && that.hoverRealItemId() !== that.dragItem?.id) {
             //存在目标，且不等于自身，符合合并条件，则执行合并
-            const merged = that.mergeIconFolder(that.navigationList, that.dragItem, that.navigationList.find(item => {
+            const merged = that.mergeIconFolder(that.sideList, that.dragItem, that.sideList.find(item => {
               return item.id === that.hoverRealItemId()
             }))
-            that.navigationList.splice(that.navigationList.findIndex(item => {
+            that.sideList.splice(that.sideList.findIndex(item => {
               return item.id === that.hoverRealItemId()
             }), 1, merged)
-            that.navigationList = that.navigationList.filter(item => {
-              return item.id !== that.dragItem?.id
+            that.sideList = that.sideList.filter(item => {
+              return item.id !== that.dragItem.id
             })
+            that.updateList(that.sideList)
             //执行合并后，因为更改了数组，已经自动触发了重置数组，所以不需要再执行update，数据也是正确的
             that.cancelUpdate = true
           }
@@ -723,6 +720,14 @@ export default {
           return
         }
       })
+    },
+    updateList(list) {
+      if (this.sortId === 'left') {
+        this.sideNavigationList = _.cloneDeep(list)
+      } else {
+        this.rightNavigationList = _.cloneDeep(list)
+      }
+      this.syncSidePanel()
     },
     /**
     * 取出当前鼠标指针所对应的数组内的元素的真实id，采用视图查找，所以是精准的
@@ -758,6 +763,7 @@ export default {
       const relativePos = (currentLeft - panelLeft) % (72 * this.navAttribute.navSize / 100)
       const isGap = !(relativePos <= (42 * this.navAttribute.navSize / 100) && relativePos >= (10 * this.navAttribute.navSize / 100))
       let nIndex = Math.floor((currentLeft - panelLeft + 20) / (72 * this.navAttribute.navSize / 100))
+      console.log(panelLeft,relativePos,isGap,nIndex,currentLeft,'getHoverIndex')
       if (nIndex > this.navigationList.length - 1) {
         //超出
         return 0
@@ -783,14 +789,16 @@ export default {
       // 视图大小
       let vW = this.parentSize
       // 元素坐标
-      let posX = Number((this.defaultPosition.y).toFixed(0))
+      let posY = Number((this.defaultPosition.y).toFixed(0))
+      let posX = Number((this.defaultPosition.x).toFixed(0))
       // 元素大小
-      let menuW = draggableSize[1] * 120
+      let menuW = draggableSize[1] * 100
       // let menuW = draggableSize[0] * 140
-      // console.log(vW,posX,menuW, 'vW');
-      posX = posX > vW - (menuW / 2) ? vW - menuW : (posX - menuW / 2 < 0 ? 0 : posX - menuW / 2);
-      this.left = posX
-      console.log(posX, 'posX')
+      // console.log(vW,posY,menuW, 'vW');
+      posY = posY > vW - (menuW / 2) ? vW - menuW : (posY - menuW / 2 < 0 ? 0 : posY - menuW / 2);
+      this.top = posY
+      this.left = posX < 100 ? 100 : posX - menuW - 130
+      console.log(this.left, posY > vW - (menuW / 2), 'posY')
     },
     /**
      * 获取当前拖拽元素的坐标
@@ -812,30 +820,32 @@ export default {
       const index = Math.round((e.y - rect.y) / (72 * this.navAttribute.navSize / 100))
       console.log(index, item, 'index');
       this.dragItem = null
-      if (this.navigationList[this.hoverIndex]?.type === 'folder') {
-        const merged = this.mergeIconFolder(this.navigationList, item, this.navigationList.find(i => {
+      if (this.sideList[this.hoverIndex]?.type === 'folder') {
+        const merged = this.mergeIconFolder(this.sideList, item, this.sideList.find(i => {
           return i.id === this.hoverRealItemId()
         }))
-        this.navigationList.splice(this.navigationList.findIndex(i => {
+        this.sideList.splice(this.sideList.findIndex(i => {
           return i.id === this.hoverRealItemId()
         }), 1, merged)
-        this.navigationList = this.navigationList.filter(i => {
+        this.sideList = this.sideList.filter(i => {
           return i.id !== item.id
         })
+        this.updateList(this.sideList)
       }
       else {
-        this.navigationList.splice(index, 0, _.cloneDeep(item))
+        this.sideList.splice(index, 0, _.cloneDeep(item))
+        this.updateList(this.sideList)
       }
       // 从外部拖拽元素到导航栏，跳过合并提示
       this.hoverIndex = -1
 
     },
-        /**
-     * 解散文件夹和切换文件夹
-     * @param {*} item
-     * @param {*} index
-     */
-     resetFolder(item, index) {
+    /**
+ * 解散文件夹和切换文件夹
+ * @param {*} item
+ * @param {*} index
+ */
+    resetFolder(item, index) {
       if (item.children.length > 0) {
         if (item.children.length + this.navigationList.length > this.maxItemNum) {
           this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
@@ -864,10 +874,10 @@ export default {
         return false
       }
     },
-      /**
-     * 打开文件夹
-     */
-     openFolder(item) {
+    /**
+   * 打开文件夹
+   */
+    openFolder(item) {
       // 获取当前的文件夹
       this.folderItem = item
       this.folderList = item.children.map((i) => ({
@@ -908,8 +918,60 @@ export default {
     updateLayout(value) {
       this.currentItem.layout = value
     },
-    newOpenApp(type, value) {
-      startApp(type, value, this.$router)
+    /**
+     * 打开应用
+     * @param {*} item 图标详细信息
+     */
+    async newOpenApp(item) {
+      this.sideKey = Date.now()
+      let { type, value } = item
+      if (value === 'control') {
+        this.controlVisible = !this.controlVisible;
+        this.resetElementPosition()
+      }
+      if (item) this.msgNotice(item)
+      if (value === 'home' && item.home) {
+        this.jumpDesk = item.home
+      }
+      let rs = await startApp(type, value, this.$router)
+      if (!rs) {
+        message.error({
+          content: `打开「${item.name}」失败`
+          , key: 'tipRun'
+        })
+      }
+      type !== 'folder' ? this.folderVisible = false : ''
+
+    },
+    /**
+ * 点击文件夹子图标
+ * @param {*} item
+ */
+    clickFile(item) {
+      this.folderVisible = false
+      this.msgNotice(item)
+    },
+    /**
+     * 清空当前导航栏
+     */
+    clearAll() {
+      this.sideList = []
+      this.updateList(this.sideList)
+    },
+    closeFolder() {
+      this.folderVisible = false
+    },
+    /**
+     * 打开桌面应用提示
+     * @param {*} item 当前图标
+     */
+    msgNotice(item) {
+      if (item.type === 'tableApp') {
+        message.loading({
+          content: `打开「${item.name}」...`
+          , key: 'tipRun'
+        })
+      }
     },
     useWindowSize,
     delCurrentIcon(currentIndex, currentItem) {
@@ -1155,5 +1217,4 @@ export default {
     display: none;
     /* Chrome Safari */
   }
-}
-</style>
+}</style>

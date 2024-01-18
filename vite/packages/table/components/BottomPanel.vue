@@ -957,14 +957,11 @@ export default {
     },
     /**
      * 打开应用
-     * @param {*} type 图标类型
-     * @param {*} value 打开路径
      * @param {*} item 图标详细信息
      */
     async newOpenApp( item) {
       this.bottomKey = Date.now()
       let { type, value } = item
-      type = (type !== undefined && type !== null) ? type : 'systemApp';
       if(value === 'control'){
         this.controlVisible = !this.controlVisible;
         this.resetElementPosition()
@@ -1231,6 +1228,7 @@ export default {
       const relativePos = (currentLeft - panelLeft) % (72 * this.navAttribute.navSize / 100)
       const isGap = !(relativePos <= (42 * this.navAttribute.navSize / 100) && relativePos >= (10 * this.navAttribute.navSize / 100))
       let nIndex = Math.floor((currentLeft - panelLeft + 20) / (72 * this.navAttribute.navSize / 100))
+      console.log(panelLeft,relativePos,isGap,nIndex,currentLeft,'getHoverIndex')
       if (nIndex > this.copyFootNav.length - 1) {
         //超出
         return 0

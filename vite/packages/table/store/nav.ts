@@ -348,10 +348,18 @@ export const navStore = defineStore("nav", {
           this.copyFootNav=fixedRs.fixedArray
         }
         //this.copyFootNav = []//JSON.parse(JSON.stringify(this.footNavigationList))
-        this.copySideNav = JSON.parse(JSON.stringify(this.sideNavigationList))
-        this.copyRightNav = JSON.parse(JSON.stringify(this.rightNavigationList))
+        // this.copySideNav = JSON.parse(JSON.stringify(this.sideNavigationList))
+        // this.copyRightNav = JSON.parse(JSON.stringify(this.rightNavigationList))
+        this.updateType(this.sideNavigationList)
+        this.updateType(this.rightNavigationList)
         this.loaded = true
       }
+    },
+    updateType(list){
+      list.forEach(element => {
+        element.id = element.id || nanoid(6)
+      });
+      console.log(list,'list')
     },
     removeFootNavigationList(index) {
         this.copyFootNav.splice(index, 1)
