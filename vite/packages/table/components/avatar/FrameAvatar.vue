@@ -112,15 +112,16 @@ export default {
       frameStoreVisible: false,
       docBody:document.body
     }
-  }
-
-  , methods: {
+  }, 
+  methods: {
     avatarGainMethodText,
     textTag,
     titleTagColor,
     avatarTagColor,
     toggleStore () {
       window.toggleFrameStore()
+      // 通过事件触发关闭外层弹窗
+      this.$emit('close')
     }
   }
 }
