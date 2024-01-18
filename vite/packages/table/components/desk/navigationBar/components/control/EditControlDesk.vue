@@ -6,10 +6,10 @@
         <ControlRemoveItem :list="removeList" ref="removeRef" />
       </div>
       
-      <a-divider style="height: 1px;margin:8px 0 16px 0;" v-if="control.newList.length !== 0 " />
+      <a-divider style="height: 1px;margin:8px 0 16px 0;" v-if="addList.length !== 0 " />
 
-      <div class="flex flex-1 flex-col h-3/4" v-if="control.newList.length !== 0">
-        <ControlAddItem :list="control.newList"/>
+      <div class="flex flex-1 flex-col h-3/4" v-if="addList.length !== 0">
+        <ControlAddItem :list="addList"/>
       </div>
     </XtScrollbar>
   </div>
@@ -29,7 +29,11 @@ const { control } = storeToRefs(controls)
 const removeRef = ref(null);
 
 const removeList = computed(()=>{
-  return control.value.oldList
+  return control.value.oldList;
+})
+
+const addList = computed(()=>{
+  return control.value.newList;
 })
 
 defineExpose({
