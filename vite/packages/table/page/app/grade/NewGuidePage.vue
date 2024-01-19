@@ -44,7 +44,7 @@
           </xt-button>
         </div>
         <div class="flex" v-if="step == 0">
-          <xt-button class="ml-3 button-bottom" @click="nextStep" size="large">暂不分析</xt-button>
+          <!-- <xt-button class="ml-3 button-bottom" @click="nextStep" size="large">暂不分析</xt-button> -->
           <xt-button class="ml-3 button-bottom" @click="analysis" size="large" type="theme">开始分析</xt-button>
         </div>
         <div class="flex" v-if="step == 1">
