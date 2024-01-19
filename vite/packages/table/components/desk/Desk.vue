@@ -524,7 +524,7 @@ export default {
           id: 0,
           newIcon: "fluent:add-16-filled",
           name: "测试",
-          disabled: true,
+          disabled: false,
           fn: () => {
             useCustomLayout();
             // 0 提供一个伪卡片

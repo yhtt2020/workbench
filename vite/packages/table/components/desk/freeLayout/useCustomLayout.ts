@@ -1,7 +1,7 @@
 import { storeToRefs } from "pinia";
 import { nanoid } from "nanoid";
 
-import { useAddCard } from "../../../ui/hooks/useAddCard";
+import { useAddCard } from "../../../ui/hooks/useCardSize";
 import { useFreeLayoutStore } from "../freeLayout/store";
 
 import { folderData, headerData, mainData } from "./config";
@@ -19,9 +19,9 @@ import { folderData, headerData, mainData } from "./config";
 // };
 
 export const useCustomLayout = (
+  mainList = [...mainData],
   headerList = [...headerData],
-  folderList = [...folderData],
-  mainList = [...mainData]
+  folderList = [...folderData]
 ) => {
   const freeLayoutStore: any = useFreeLayoutStore();
   const { getFreeLayoutData, getFreeLayoutState, freeLayoutEnv } =
@@ -36,13 +36,19 @@ export const useCustomLayout = (
    * 内置函数
    */
   let left;
+  // 重置left坐标
   const resetLeft = () => {
     left = freeLayoutEnv.value.scrollLeft + position;
   };
+  // 重置top坐标
+  const resetTop = (n) => {
+    top += 96 * n + n * 12;
+  };
+  // 设置卡片数据
   const setData = (arr) => {
     arr.forEach((item) => {
       const { width, height }: any = getSize(item.size);
-      setCard(top, left, item);
+      addCard(top, left, item);
       if (left - freeLayoutEnv.value.scrollLeft - position + width < boxWidth) {
         left += width + 12;
       } else {
@@ -51,81 +57,94 @@ export const useCustomLayout = (
       }
     });
   };
+  // 填充算法
+  const fillGapAlgorithm = (rule = "all") => {
+    // 无余数
+    if (arr2x4.length == 0 && arr2x2.length == 0) return;
+    // 无位置
+    const active =
+      left - freeLayoutEnv.value.scrollLeft - position + 280 <= boxWidth;
+    if (!active) return;
+    // let rows: any = (boxWidth - require) / 280;
+    // rows = parseInt(rows);
+    fillRule(rule);
+
+    fillGapAlgorithm();
+  };
+  const fillRule = (rule) => {
+    if (rule === "all") {
+      if (arr2x4.length > 0) {
+        fill2x4();
+      } else if (arr2x2.length > 0) {
+        fill2x2();
+      }
+    } else if (rule === "2x4") {
+      fill2x4();
+    } else if (rule === "2x2") {
+      fill2x2();
+    }
+  };
+  const fill2x4 = () => {
+    arr2x4.splice(0, 1).forEach((item) => {
+      if (!item) return;
+      const { width, height }: any = getSize(item.size);
+      addCard(top, left, item);
+      left += width + 12;
+    });
+  };
+
+  const fill2x2 = (arr = arr2x2) => {
+    let currentTop = top;
+    let num = arr.length > 2 ? 2 : arr.length;
+    arr.splice(0, num).forEach((item) => {
+      if (!item) return;
+      const { width, height }: any = getSize(item.size);
+      addCard(currentTop, left, item);
+      currentTop += height + 12;
+    });
+    left += 280 + 12;
+  };
+
+  // 初始化数据
   resetLeft();
   let top = freeLayoutEnv.value.scrollTop;
+  let { arr2x2, arr2x4, arr4x4 } = arraySplit(mainList);
 
-  headerList.splice(0, 2).forEach((item) => {
-    const { width, height } = getSize(item.size);
-    setCard(top, left, item);
-    top += height + 12;
-  });
+  /**
+   * 头部区域
+   */
+  if (headerList.length) {
+    let { arr2x2, arr2x4 } = arraySplit(headerList);
+    let num2x2 = arr2x2.length / 2;
 
-  headerList.forEach((item) => {
-    let top = freeLayoutEnv.value.scrollTop;
-    const { width, height } = getSize(item.size);
-    left += width + 12;
-    setCard(top, left, item);
-  });
+    for (let index = 0; index < num2x2; index++) {
+      fill2x2(arr2x2);
+    }
+
+    setData(arr2x4);
+  }
+
+
   /**
    * 文件夹区域
    */
-
   resetLeft();
   if (folderList.length > 0) {
-    folderList.forEach((item) => {
-      const { width, height } = getSize(item.size);
-      setCard(top, left, item);
-      left += width + 12;
-    });
+    setData(folderList);
   }
 
-  let arr2x2: any = [];
-  let arr2x4: any = [];
-  let arr4x4: any = [];
-
-  mainList.forEach((item) => {
-    const { width, height }: any = getSize(item.size);
-    if (width == 280 && height == 204) {
-      arr2x2.push(item);
-    } else if (width == 280 && height == 420) {
-      arr2x4.push(item);
-    } else if (width == 572 && height == 420) {
-      arr4x4.push(item);
-    }
-  });
   let folderListLength = 4 - folderList.length;
-  // 有文件夹 但没占满
   if (folderListLength >= 1 && arr2x2.length >= folderListLength) {
-    arr2x2.splice(0, folderListLength).forEach((item) => {
-      const { width, height }: any = getSize(item.size);
-      setCard(top, left, item);
-      left += width + 12;
-    });
+    fillGapAlgorithm("2x2");
   }
   resetLeft();
-  top += 240 - 12 * 2;
+  resetTop(2);
+
   setData(arr4x4);
-
-  setData(arr2x4);
-
-  if (left - freeLayoutEnv.value.scrollLeft - position + 280 < boxWidth) {
-    let rows: any =
-      (boxWidth - (left - freeLayoutEnv.value.scrollLeft - position)) / 280;
-
-    rows = parseInt(rows);
-    for (let i = 0; i < rows; i++) {
-      let currentTop = top;
-      let num = arr2x2.length > 2 ? 2 : arr2x2.length;
-      arr2x2.splice(0, num).forEach((item) => {
-        const { width, height }: any = getSize(item.size);
-        setCard(currentTop, left, item);
-        currentTop += height + 12;
-      });
-      left += 280 + 12;
-    }
-  }
+  setData(arr2x4.splice(0, arr2x4.length));
+  fillGapAlgorithm();
   resetLeft();
-  top += 96 * 4 + 12 * 4;
+  resetTop(4);
   setData(arr2x2);
 };
 
@@ -147,8 +166,32 @@ const getSize = (size) => {
     height: getHeight(parseInt(h)),
   };
 };
+const arraySplit = (arr) => {
+  let arr2x2: any = [];
+  let arr2x4: any = [];
+  let arr4x4: any = [];
 
-const setCard = (top, left, item) => {
+  arr.forEach((item) => {
+    let str = item.size.split("x");
+    const w = parseInt(str[0]);
+    const h = parseInt(str[1]);
+    if (w == 2 && h == 2) {
+      arr2x2.push(item);
+    } else if (w == 2 && h == 4) {
+      arr2x4.push(item);
+    } else if (w == 4 && h == 4) {
+      arr4x4.push(item);
+    }
+  });
+  return {
+    arr2x2,
+    arr2x4,
+    arr4x4,
+  };
+};
+
+// 添加卡片
+const addCard = (top, left, item) => {
   const freeLayoutStore: any = useFreeLayoutStore();
   const { getFreeLayoutData, getFreeLayoutState, freeLayoutEnv } =
     storeToRefs(freeLayoutStore);
@@ -161,7 +204,11 @@ const setCard = (top, left, item) => {
     id,
   };
 
-  useAddCard(item.name, {
-    ...item
-  }, id);
+  useAddCard(
+    item.name,
+    {
+      ...item,
+    },
+    id
+  );
 };
