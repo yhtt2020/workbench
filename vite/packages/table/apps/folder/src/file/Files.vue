@@ -9,8 +9,8 @@
       <img :src="item.icon" class="w-full h-full " :style="[item.color]"/>
     </div>
     <div
-      class="xt-text-2 text-sm truncate"
-      style="width: 80%"
+      class="xt-text-2 text-xs truncate"
+      style="width: 90%"
       :class="textClass"
     >
       {{ item.name }}

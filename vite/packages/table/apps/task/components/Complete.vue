@@ -39,31 +39,23 @@ import { storeToRefs } from "pinia";
 import XtButton from "../../../ui/libs/button/index.vue";
 import XtIfyIcon from "../../../ui/new/IfyIcon/index";
 
-import { getReward } from "../task";
 import { getTaskStatus } from "../api";
 onMounted(() => {
   taskStatus();
 });
 const status = ref(0);
 const taskStatus = async () => {
-  console.log(' currentId.value :>> ',  currentId.value);
+  console.log(" currentId.value :>> ", currentId.value);
   let { data } = await getTaskStatus({
     taskName: currentId.value,
   });
-
+console.log(' data.status :>> ',  data.status);
   status.value = data.status;
 };
 
 const store = taskStore();
-const {
-  taskID,
-  currentTaskList,
-  rewardVisible,
-  currentId,
-  claimRewardsList,
-} = storeToRefs(store);
-
-
+const { taskID, currentTaskList, rewardVisible, currentId, claimRewardsList } =
+  storeToRefs(store);
 
 const currentTask = computed(() => {
   return store.getTask(currentId.value);
@@ -77,8 +69,7 @@ const close = () => {
 
 const claimReward = () => {
   emits("close-toast");
-  if (status.value) return;
-  getReward(currentId.value)
+  rewardVisible.value = true;
 };
 </script>
 

@@ -39,9 +39,12 @@
       <FreeLayoutScrollbar
         ref="freeLayoutScrollbar"
         class="flex-1"
-        v-if="isFreeLayout == true && $route.path == '/main' && freeLayout"
+        v-if="freeLayout"
       >
-        <FreeLayoutCanvas class="home-widgets">
+        <FreeLayoutCanvas
+          class="home-widgets"
+          v-if="isFreeLayout == true && $route.path == '/main' && freeLayout"
+        >
           <FreeLayoutContainer
             :currentDesk="currentDesk"
             :currentID="currentDesk.id"
@@ -255,6 +258,7 @@ import { LoadingOutlined } from "@ant-design/icons-vue";
 import GalleryModal from "../paperModal/GalleryModal.vue";
 import { useAddCard } from "../../ui/hooks/useAddCard";
 import { useDeskStore } from "./store";
+import { useCustomLayout } from "./freeLayout/useCustomLayout";
 import { useFileConversionIcon} from '../../apps/folder/src/hooks/useDataConversion'
 
 import Drop from "./Drop.vue";
@@ -340,6 +344,12 @@ export default {
     },
   },
   watch: {
+    adjustLayout(val) {
+      if (val) {
+        this.toggleEditing();
+        this.adjustLayout = false;
+      }
+    },
     deskMenus: {
       handler(newVal) {
         this.deskMenus.forEach((item) => {
@@ -440,7 +450,7 @@ export default {
     ]),
     ...mapWritableState(useFloatMenuStore, ["menus", "newMenus"]),
     ...mapWritableState(useNavigationStore, ["selectNav", "isDesk"]),
-    ...mapWritableState(useDeskStore, ["autoOpenEdit"]),
+    ...mapWritableState(useDeskStore, ["autoOpenEdit", "adjustLayout"]),
     navMenu() {
       if (
         !this.navigationToggle[0] &&
@@ -468,6 +478,19 @@ export default {
         currentHide = this.hide;
       }
       return [
+        {
+          id: 0,
+          newIcon: "fluent:add-16-filled",
+          name: "测试",
+          disabled: true,
+          fn: () => {
+            useCustomLayout();
+            // 0 提供一个伪卡片
+            // 提供一个添加卡片
+            // 1 添加新的桌面
+            // 2 切换为自由布局
+          },
+        },
         {
           id: 1,
           newIcon: "fluent:add-16-filled",
@@ -648,7 +671,7 @@ export default {
     });
     this.$bus.on("M0201", () => {
       setTimeout(() => {
-      this.$refs.galleryRef.openGalleryModal();
+        this.$refs.galleryRef.openGalleryModal();
       }, 100);
     });
 

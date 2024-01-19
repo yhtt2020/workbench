@@ -10,7 +10,6 @@ import {
 import { storeToRefs } from "pinia";
 import { useFreeLayoutStore } from "../freeLayout/store";
 import { useWidgetStore } from "../../card/store";
-import Items from "./Items.vue";
 import Item from "./Item.vue";
 import { useFloatMenuStore } from "./store";
 import { message } from "ant-design-vue";
@@ -104,57 +103,13 @@ const defaultMenu = computed(() => {
   ];
 });
 const updatePosition = () => {
-  getFreeLayoutState.value.mode.align === "custom";
-  getFreeLayoutState.value.line.centerLine = {
-    y: freeLayoutEnv.value.scrollTop,
-    x:
-      freeLayoutEnv.value.scrollLeft + freeLayoutEnv.value.scrollData.width / 2,
-    // x: freeLayoutEnv.value.scrollLeft,
-  };
-
+ freeLayoutStore.updateLocation();
   message.success("修改中心点成功");
 };
 const redirectPosition = () => {
   emits("scrollbarRedirect");
 };
 
-// 画布设置
-const freeLayoutMenu = computed(() => {
-  return [
-    {
-      icon: "fluent:compose-16-regular",
-      title: "修改中心点",
-      fn: updatePosition,
-    },
-    {
-      icon: "fluent:resize-large-16-regular",
-      title: "回到中心点",
-      fn: () => {
-        emits("scrollbarRedirect");
-      },
-    },
-    {
-      icon: "fluent:sub-grid-20-regular",
-      type: getFreeLayoutState.value.line.isAuxLine ? "theme" : "default",
-      title: getFreeLayoutState.value.line.isAuxLine
-        ? "关闭网格线"
-        : "打开网格线",
-      fn: () => {
-        getFreeLayoutState.value.line.isAuxLine =
-          !getFreeLayoutState.value.line.isAuxLine;
-      },
-    },
-    {
-      icon: "fluent:timeline-20-regular",
-      title: "拖拽结束吸附于网格",
-      type: getFreeLayoutState.value.option.afterDragging ? "theme" : "default",
-      fn: () => {
-        getFreeLayoutState.value.option.afterDragging =
-          !getFreeLayoutState.value.option.afterDragging;
-      },
-    },
-  ];
-});
 // 画布缩放
 const canvasMenu = computed(() => {
   return [
@@ -167,9 +122,11 @@ const canvasMenu = computed(() => {
           freeLayoutZoom.value -= 5;
         } else {
           if (alone.value) {
-            defaultAloneZoom.value -= 5;
+            const int = Math.round(defaultAloneZoom.value);
+            defaultAloneZoom.value = int - 5;
           } else {
-            defaultZoom.value -= 5;
+            const int = Math.round(defaultZoom.value);
+            defaultZoom.value = int - 5;
           }
         }
       },
@@ -183,9 +140,11 @@ const canvasMenu = computed(() => {
           freeLayoutZoom.value += 5;
         } else {
           if (alone.value) {
-            defaultAloneZoom.value += 5;
+            const int = Math.round(defaultAloneZoom.value);
+            defaultAloneZoom.value = int + 5;
           } else {
-            defaultZoom.value += 5;
+            const int = Math.round(defaultZoom.value);
+            defaultZoom.value = int + 5;
           }
         }
       },
@@ -240,6 +199,7 @@ watch(freeLayoutZoom, (newV) => {
     getFreeLayoutState.value.canvas.zoom = 1;
     freeLayoutZoom.value = 1;
   }
+  redirectPosition();
 });
 
 const defaultZoom = ref(zoom.value);
@@ -354,6 +314,7 @@ const updateArrange = (newV) => {
     :index="100"
     disabledHandle=".floatMenu"
     :firstPosition="firstPosition"
+    :test="false"
   >
     <div
       class="select-none cursor-move z-24 xt-modal rounded-xl p-3 no-drag xt-shadow xt-b"

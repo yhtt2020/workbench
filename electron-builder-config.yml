@@ -42,6 +42,7 @@ dmg:
     sign: false
 
 win:
+#    requestedExecutionLevel: 'requireAdministrator'
     extraResources:
         - from: res
           to: res

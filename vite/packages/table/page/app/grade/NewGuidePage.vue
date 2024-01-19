@@ -47,7 +47,7 @@
         <div v-else-if="step == 1">
           <div class="pt-6 text-center font-16 xt-text">导入你的桌面图标</div>
           <div class="text-center font-16 xt-text-2" style="width:704px;margin:16px auto 0;">我们帮你整理了桌面图标，应用程序类图标我们会帮你整理到导航栏，文件类型图标会整理到桌面，后续你也可以随时将需要快速访问的程序或文件拖放到工作台桌面和导航栏。</div>
-          <div class="flex flex-wrap mt-4 overflow-hidden overflow-y-auto xt-scrollbar" style="height: 400px;padding-left:19px;" >
+          <div class="flex flex-wrap mt-4 overflow-hidden overflow-y-auto xt-scrollbar" style="height: 420px;padding-left:19px;" >
             <div v-for="(item, index) in appList" :key="index" class="pt-2 span-list xt-bg-2 "
               :class="index>2?'mt-3':'',index%3!=0?'ml-3':''">
               <!-- 标题 -->
@@ -79,7 +79,6 @@
             </div>
           </div>
         </div>
-
 
         <!-- 导入小组件 -->
         <div v-else-if="step == 2">
@@ -133,7 +132,7 @@
           <div class="pt-6 text-center font-16 xt-text" >添加导航图标</div>
           <div class="text-center font-16 xt-text-2" style="width:704px;margin:16px auto 0;">根据你选择偏好，我们为你推荐了以下图标。你可以稍后添加更多其他的图标。</div>
           <div class="flex flex-wrap content-start mt-4 overflow-hidden overflow-y-auto xt-scrollbar" style="height: 400px;padding-left:19px;" >
-            <div  class="relative flex flex-col items-center pt-4 rounded-lg nav-list xt-bg-2 pointer" v-for="(item, index) in navList"
+            <div  class="relative flex flex-col items-center pt-4 rounded-lg nav-list xt-bg-2 pointer" v-for="(item, index) in navListTmp"
             :class="index%4!=0?'ml-4':'ml-10',index>3?'mt-4':'', index==0?'disabled':''" @click="changeNavList(item, index)">
               <div class="absolute top-1.5 right-1.5 w-8 h-8 rounded-lg xt-bg flex justify-center items-center">
                 <a-checkbox :disabled="index==0" v-model:checked="item.isCheck"></a-checkbox>
@@ -149,23 +148,18 @@
         <div v-else-if="step == 4">
           <div class="pt-6 text-center font-16 xt-text" >最后一步啦，定制主题 ~</div>
           <div class="px-4">
-
             <div class="p-4 pb-1 mt-2 xt-bg-2 rounded-xl">
               <xt-option-info title="主题色" />
-              <xt-option-color :isLinear="false"  v-model:color="themeColor" colorNum="5"  />
+              <xt-option-color :isLinear="false"  v-model:color="themeColor" :colorNum="5"  />
             </div>
-  
             <div class="p-4 pb-1 mt-3 xt-bg-2 rounded-xl "><xt-option-info
               title="桌面壁纸"
               info="选择喜欢的图片作为工作台桌面壁纸。"
             />
-
-              <xt-button w="200" h="112" class="relative mb-3 xt-bg-m"  style="border-radius: 6px"  @click="openPaperModal" >
-                <div class="absolute top-0 left-0 w-full h-full rounded-md">
-                  <img :src="backgroundImage.path" class="object-cover w-full h-full rounded-md"/>
-                </div>
-              </xt-button>
-              <!-- <hr /> -->
+              <div class="mb-4">
+                <xt-update-desk-bg></xt-update-desk-bg>
+              </div>
+              <hr />
               <xt-option-info
                 title="桌面壁纸模糊度"
                 info="调节桌面壁纸的模糊程度。"
@@ -176,7 +170,6 @@
             </div>
           </div>
         </div>
-
         <!-- 按钮 -->
         <div class="flex justify-between w-full px-3" style="position: absolute;bottom: 12px;">
           <div class="float-left">
@@ -188,14 +181,13 @@
               </xt-button>
           </div>
           <div class="flex" v-if="step==0 && !loading">
-            <xt-button   class="ml-3 button-bottom" @click="nextStep"   size="large" >暂不分析</xt-button>
+            <!-- <xt-button   class="ml-3 button-bottom" @click="nextStep"   size="large" >暂不分析</xt-button> -->
               <xt-button   class="ml-3 button-bottom" @click="analysis"   size="large" type="theme">开始分析</xt-button>
           </div>
           <div class="flex" v-if="step==1">
               <xt-button   class="ml-3 button-bottom" @click="nextStep"   size="large" >暂不添加</xt-button>
               <xt-button   class="ml-3 button-bottom" @click="addFolder"   size="large" type="theme">确定添加({{ folderNum }})</xt-button>
             </div>
-
             <div class="flex" v-if="step==2">
               <xt-button   class="ml-3 button-bottom" @click="nextStep"   size="large" >暂不添加</xt-button>
               <xt-button   class="ml-3 button-bottom" @click="addDeskCard"   size="large" type="theme">确定添加</xt-button>
@@ -209,7 +201,6 @@
             </div>
         </div>
       </div>
-
       <div v-else>
         <div style="height:60px;width:200px" class="flex items-center justify-between px-4 xt-text font-16 pointer" @click="popState = flase">
           定制桌面
@@ -217,11 +208,9 @@
             <MyIcon icon="fluent:full-screen-maximize-16-filled" width="20" height="20" />
           </div>
         </div>
-
     </div>
-
+    <!-- 壁纸模块 -->
     <GalleryModal ref="paperModal" />
-
   </div>
 </template>
 
@@ -262,17 +251,17 @@
                 key: 'game',
                 icon: 'fluent-emoji:joystick',
             },
-            {
-                title: '其他',
-                content: '不指定场景，为你添加更加。',
-                key: 'current',
-                icon: 'fluent-emoji:dotted-six-pointed-star',
-            },
+            // {
+            //     title: '其他',
+            //     content: '不指定场景，为你添加更加。',
+            //     key: 'current',
+            //     icon: 'fluent-emoji:dotted-six-pointed-star',
+            // },
         ],
         deskTypeObj: {
             assist: false,
             game: false,
-            current: false,
+            // current: false,
         },
         step: 0,
         content:'',
@@ -330,12 +319,13 @@
         themeState: true,
         baseNavList: [],
         // 三种不同的分类组件
-        assist: ['AIaides', 'clocks', 'countdownDay', 'weather', 'notes', 'customTimer', 'clock', 'todo', 'historyInfo', 'tomatoTimer', 'search', 'Courier', 'wallpaper', 'fish', 'eatToday'],
+        assist: ['yuanCommunity', 'news', 'HotSearch', 'wallpaper', 'clocks', 'historyInfo', 'notes'],
         assistList: [],
-        game: ['gameAssis', 'strategy', 'AIaides', 'wallpaper', 'capture', 'notes', 'music', 'historyInfo', 'tomatoTimer', 'todo', 'games', 'GameEpic', 'myFriends', 'Audio', 'fish'],
+        game: ['yuanCommunity', 'news', 'HotSearch', 'notes', 'search', 'AIaides', 'countdownDay'],
         gameList: [],
-        current: ['AIaides', 'clocks', 'countdownDay', 'weather', 'notes', 'customTimer', 'clock', 'todo', 'historyInfo', 'tomatoTimer', 'Courier', 'wallpaper', 'fish', 'Audio', 'eatToday', 'games', 'GameEpic', 'myFriends', 'music'],
-        currentList: [],
+
+        // current: ['AIaides', 'clocks', 'countdownDay', 'weather', 'notes', 'customTimer', 'clock', 'todo', 'historyInfo', 'tomatoTimer', 'Courier', 'wallpaper', 'fish', 'Audio', 'eatToday', 'games', 'GameEpic', 'myFriends', 'music'],
+        // currentList: [],
         // 导航
         navListTmp: [
           { type: 'systemApp', icon: '/logo/home.svg', name: '桌面主页', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'home', isCheck: true, id: '1705024806'},
@@ -360,8 +350,8 @@
         imgBlur: 0,
         // 添加到导航栏的游戏常用程序列表
         exeNavList: [
-          { type: 'folder', id: '1705024724', icon: '', name: '游戏', bg: '',isBg: '', mode: 'app', value: 'folder', isCheck: true, children:[]},
-          { type: 'folder', id: '1705024725', icon: '', name: '常用程序', bg: '',isBg: '', mode: 'app', value: 'folder', isCheck: true, children:[]},
+          { type: 'folder', id: '1705024724', icon: '', name: '游戏', bg: '',isBg: '', mode: 'app', value: 'folder', isCheck: false, children:[]},
+          { type: 'folder', id: '1705024725', icon: '', name: '常用程序', bg: '',isBg: '', mode: 'app', value: 'folder', isCheck: false, children:[]},
         ],
         //  给ai做的容错
         fault: [],
@@ -373,16 +363,10 @@
       ...mapWritableState(appStore, ['backgroundSettings', 'backgroundImage', 'styles']),
       ...mapWritableState(navStore, ['copyFootNav']),
       cardList(){
-        if(this.deskTypeObj.current){
-          return this.currentList
-        }else if(this.deskTypeObj.assist && this.deskTypeObj.game){
-          return this.currentList
-        }else if(this.deskTypeObj.assist){
-          return this.assistList
-        }else if(this.deskTypeObj.game){
+        if(this.deskTypeObj.game){
           return this.gameList
         }else{
-          return this.currentList
+          return this.assistList
         }
       },
       folderNum(){
@@ -407,10 +391,7 @@
 
     },
     mounted(){
-
-      // 
       let items = []
-
       NavList.map(li => {
         return items.push(...li.children)
       })
@@ -445,18 +426,18 @@
         })
       })
       // 通用
-      this.current.forEach(i=>{
-        this.baseNavList.forEach(item=>{
-          if(i == item.name){
-            this.currentList.push({
-              ...item,
-              download: Math.floor(Math.random() * 10000) + 1,
-              isCheck: true,
-              imgIndex: 0,
-            })
-          }
-        })
-      })
+      // this.current.forEach(i=>{
+      //   this.baseNavList.forEach(item=>{
+      //     if(i == item.name){
+      //       this.currentList.push({
+      //         ...item,
+      //         download: Math.floor(Math.random() * 10000) + 1,
+      //         isCheck: true,
+      //         imgIndex: 0,
+      //       })
+      //     }
+      //   })
+      // })
     },
 
     watch: {
@@ -468,7 +449,6 @@
       },
     },
     methods:{
-
       // 触发打开壁纸弹窗
       openPaperModal () {
         this.$refs.paperModal.openGalleryModal()
@@ -476,15 +456,17 @@
 
       // 调整类型
       setDeskType(type){
-        this.deskTypeObj[type] = !this.deskTypeObj[type]
-        if(this.deskTypeObj[type]){
-          if(type == 'current'){
-            this.deskTypeObj['game'] = false
-            this.deskTypeObj['assist'] = false
-          }else{
-            this.deskTypeObj['current'] = false
-          }
-        }
+        this.deskTypeObj['game'] = false
+        this.deskTypeObj['assist'] = false
+        this.deskTypeObj[type] = true
+        // if(this.deskTypeObj[type]){
+        //   if(type == 'current'){
+        //     this.deskTypeObj['game'] = false
+        //     this.deskTypeObj['assist'] = false
+        //   }else{
+        //     this.deskTypeObj['current'] = false
+        //   }
+        // }
       },
       // 修改导航图标选中
       changeNavList(item, index){
@@ -570,7 +552,6 @@
       addFolder(){
         let folders = []
         const n = this.searchDeskIndex(this.deskId)
-
         this.appList.forEach((item, index)=>{
           const now = new Date().getTime()
           if(item.isCheck){
@@ -585,10 +566,9 @@
                 type: 'tableApp',
               })
             })
-
             let obj = {
               data:{},
-              id: now + index * 5,
+              id: nanoid(6),
               name: 'folder',
               customData: {
                 ...defaultFolderData,
@@ -610,11 +590,13 @@
             item.customData?.list.forEach(i=>{
               this.exeNavList[0].children?.push({ type: 'tableApp', icon: i.icon, name: i.name, addNav: true, bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: i.value})
             })
+            this.exeNavList[0].isCheck = true
             
           }else if(item.customData.name == '常用程序'){
             item.customData?.list.forEach(i=>{
               this.exeNavList[1].children?.push({ type: 'tableApp', icon: i.icon, name: i.name, addNav: true, bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: i.value})
             })
+            this.exeNavList[1].isCheck = true
           }else{
             this.addCard(item, this.desks[n]);
           }
@@ -636,7 +618,6 @@
             this.copyFootNav.splice(-2, 0, this.exeNavList[0])
           }
         }
-
         if(this.exeNavList[1].children){
           let num = this.searchNavIndex(this.exeNavList[1].id)
           if(num){
@@ -661,7 +642,6 @@
       // 添加小组件
       addDeskCard(){
         const n = this.searchDeskIndex(this.deskId)
-
         this.cardList.forEach((item, index)=>{
           if(item.isCheck){
             const now = new Date().getTime() + index * 5
@@ -673,9 +653,7 @@
           }
         })
         this.nextStep();
-
       },
-
       // 替换导航栏
       addNavList(){
         let tmp = []
@@ -687,9 +665,7 @@
         this.copyFootNav = [...tmp]
         this.setExeListNav()
         this.nextStep()
-
       },
-
       // 遍历取桌面序号
       searchDeskIndex(id){
         this.desks.forEach((item, index)=>{
@@ -699,7 +675,6 @@
         })
         return 0
       },
-
       // 预览桌面
       preview(){
         this.popState = true
@@ -708,11 +683,9 @@
       close(){
         this.$emit('closeShowGuide')
       },
-
       // 直接分类可能会失效 需要先将 文件夹 exe文件区分开来
       async getAiAnswer(){
           const desktopApps = await ipc.sendSync('getDeskApps')
-
           // 文件夹
           let folderList = []
           // 图片
@@ -770,14 +743,14 @@
 
               // 处理常用程序 和 游戏 的数据
               tmp.game?.forEach(i=>{
-                  i.icon = desktopApps[i.index].icon
-                  i.path = desktopApps[i.index].path
-                  i.ext = desktopApps[i.index].ext
+                  i.icon = desktopApps[i.index]?.icon
+                  i.path = desktopApps[i.index]?.path
+                  i.ext = desktopApps[i.index]?.ext
               })
               tmp.programs?.forEach(i=>{
-                  i.icon = desktopApps[i.index].icon
-                  i.path = desktopApps[i.index].path
-                  i.ext = desktopApps[i.index].ext
+                  i.icon = desktopApps[i.index]?.icon
+                  i.path = desktopApps[i.index]?.path
+                  i.ext = desktopApps[i.index]?.ext
               })
 
               this.appList[0].list = tmp.game
@@ -810,13 +783,11 @@
             }
             return this.content
         },
-
     },
   }
 </script>
 
 <style lang="scss" scoped>
-
   .border-1{
       border: 1px solid red;
   }
@@ -920,7 +891,6 @@
 
   }
 
-
   // 滚动条配置
   ::-webkit-scrollbar-thumb {
       background-color: #ccc; /* 滚动条颜色 */
@@ -994,7 +964,6 @@
     opacity: 0.8;
 
   }
-
 
   :deep(.ant-checkbox-disabled){
     background-color: rgba(0, 0, 0, 0.5);

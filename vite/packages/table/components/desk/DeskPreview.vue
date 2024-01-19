@@ -25,9 +25,7 @@
         <Icon icon="tishi-xianxing" class="ml-3" style="width: 24px;height: 24px;"></Icon>
       </div>
       <div class="flex" style="padding: 0">
-   <xt-task @cb="addPlan" :modelValue="m03026">
     <div class="market-button mr-2 active" @click="addPlan"><icon icon="xiazai1"></icon> 立即添加</div>
-   </xt-task>
         <div class="market-button mr-0" @click="doIncSupport"><icon icon="dianzan"></icon> 点赞 {{displayScheme.support}}</div>
       </div>
     </div>
@@ -136,10 +134,6 @@ export default {
   },
   computed: {
     ...mapWritableState(appStore, ['fullScreen','userInfo']),
-    ...mapWritableState(taskStore, ["taskID", "step"]),
-    m03026() {
-      return this.taskID == "M0302" && this.step == 6
-    },
     tagList () {
       if (this.scheme.tags) {
         return this.scheme.tags.split(',')

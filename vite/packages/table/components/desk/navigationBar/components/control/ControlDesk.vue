@@ -24,7 +24,7 @@ import ControlRemoveDetail from './item/ControlRemoveDetail.vue';
 const controls = controlStore();
 const { control } = storeToRefs(controls);
 
-const vuuriList = ref(control.value.addList);
+const vuuriList = ref(control.value.oldList);
 const option = ref({
  layout:{horizontal:false},
 })

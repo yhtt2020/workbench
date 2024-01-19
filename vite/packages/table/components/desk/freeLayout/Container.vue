@@ -1,9 +1,12 @@
 <!-- 控制层 数据的处理 -->
 <script setup lang="ts">
-import { ref, watch, toRefs, onMounted } from "vue";
+import { ref, watch, toRefs, onMounted, onBeforeUnmount } from "vue";
 import { storeToRefs } from "pinia";
 import { useFreeLayoutStore } from "./store";
 import { message } from "ant-design-vue";
+import "animate.css";
+import { useDebounceFn } from "@vueuse/core";
+
 // 初始化操作
 const freeLayoutStore: any = useFreeLayoutStore();
 const props = defineProps({
@@ -22,14 +25,15 @@ const {
   isSelectAll,
 } = storeToRefs(freeLayoutStore);
 const snowDrag = ref();
+
+const firstLoading = ref(true);
 onMounted(() => {
-  // setTimeout(() => {
-  //   snowDrag.value.forEach((item) => {
-  //   console.log("item :>> ", item);
-  // });
-  // }, 10);
+  // 等待滚动视图完成加载
+  setTimeout(() => {
+    updateCard(currentDesk.value?.cards);
+  }, 2);
 });
-freeLayoutStore.initFreeLayoutState();
+
 // 滚动清除cards数据
 watch(
   [() => freeLayoutEnv.value.scrollTop, () => freeLayoutEnv.value.scrollLeft],
@@ -55,6 +59,10 @@ async function getPosition(item) {
       waterfallFlow.value.getBoundingClientRect();
     const { id, name, customData } = item;
     const { left, top } = node.getBoundingClientRect();
+    console.log(
+      " freeLayoutEnv.value.scrollTop :>> ",
+      freeLayoutEnv.value.scrollTop
+    );
     const scrollTop = freeLayoutEnv.value.scrollTop;
     const scrollLeft = freeLayoutEnv.value.scrollLeft;
     getFreeLayoutData.value[id] = {
@@ -78,54 +86,38 @@ async function getPosition(item) {
 /**
  * 更新自由布局数据
  */
-
-let updateCardTimer: any = null;
-const currentData: any = ref(null);
-function updateCard(data) {
+const currentData: any = ref({});
+async function updateCard(data) {
   console.log("--------------- 自由布局数据更新开始 ---------------");
   console.time("Free Layout Run Time");
   console.log("当前配置项 :>> \n", `桌面ID ${currentID.value}`);
-  let dataObj = {};
-
-  data.forEach((item) => (dataObj[item.id] = item));
-  currentData.value = dataObj;
-  for (const key in getFreeLayoutData.value) {
-    if (!(key in dataObj)) {
-      delete getFreeLayoutData.value[key];
-    }
-  }
-
+  currentData.value = {};
   data.forEach((item) => {
     const { id, customData } = item;
-    // 优化2 判断初始化还是更新
-    if (getFreeLayoutData.value[id] && getFreeLayoutData.value[id].id == id) {
-      console.log("旧数据处理 :>> ");
-      getFreeLayoutData.value[id] = {
-        left: getFreeLayoutData.value[id].left || 0,
-        top: getFreeLayoutData.value[id].top || 0,
-        index: getFreeLayoutData.value[id].index || 1,
-        id,
-      };
-    } else {
+    currentData.value[id] = {
+      ...item,
+      id,
+    };
+
+    if (getFreeLayoutData.value[id]?.id != id) {
       getPosition(item);
     }
   });
+
   console.timeEnd("Free Layout Run Time");
   console.log("--------------- 自由布局数据更新结束 ---------------");
+  firstLoading.value = false;
 }
 
-watch(
-  currentDesk.value?.cards,
-  (card) => {
-    clearTimeout(updateCardTimer);
-    updateCardTimer = setTimeout(() => {
-      updateCard(card);
-    }, 500);
-  },
-  {
-    immediate: true,
-  }
-);
+let updateCardTimer: any;
+watch(currentDesk.value?.cards, (card) => {
+  if (firstLoading.value) return;
+  clearTimeout(updateCardTimer);
+  updateCardTimer = setTimeout(() => {
+    updateCard(card);
+  }, 10);
+  console.log("watch数据更新了 :>> ");
+});
 
 const test: any = ref(null);
 const drag = (obj) => {
@@ -159,6 +151,21 @@ const disabledInfo = (data) => {
     message.info(data.info);
   }
 };
+
+onBeforeUnmount(() => {
+  // let data = {
+  //   ...currentData.value,
+  // };
+  // const freeLayout = freeLayoutStore.getOneFreeLayoutData(currentID.value);
+
+  // for (const id in freeLayout) {
+  //   if (data[id]?.id.toString() != id.toString()) {
+  //     console.log("删除数据 :>> ", id);
+  //     delete freeLayout[id];
+  //   }
+  // }
+  // console.log("自由布局销毁操作 :>> ", getFreeLayoutData.value);
+});
 </script>
 
 <template>
@@ -167,7 +174,7 @@ const disabledInfo = (data) => {
     class="xt-theme-b h-full flex flex-wrap absolute"
     style="align-content: flex-start !important; visibility: hidden"
     :style="{
-      width: freeLayoutEnv.scrollData?.width + 'px',
+      width: freeLayoutEnv.scrollWidth + 'px',
       height: 100 + '%',
       top: 0 + 'px',
       left: 0 + 'px',
@@ -188,14 +195,14 @@ const disabledInfo = (data) => {
   </div>
   <template v-for="item in getFreeLayoutData">
     <xt-drag
-      :test="1"
+      v-if="!getFreeLayoutState.system.hide && item?.id"
+      :test="false"
       @onDisabled="disabledInfo"
       mode="all"
       ref="snowDrag"
       resetPosition
       parent
       boundary
-      v-if="!getFreeLayoutState.system.hide"
       :data="item"
       :key="item.id"
       v-model:y="item.top"
@@ -219,17 +226,24 @@ const disabledInfo = (data) => {
       @onDrag="drag"
       @onDragStop="dragStop"
     >
-      <template v-if="currentData">
+      <transition
+        name="animate__animated animate__bounce"
+        :appear="true"
+        enter-active-class="animate__bounceIn"
+        leave-active-class="animate__bounceIn"
+      >
         <div
+          v-if="item.id"
           class="rounded-xl"
           :style="{
             border: isSelectAll ? '3px solid var(--active-bg) ' : '',
           }"
+          :key="item.id"
           ref="test"
         >
           <slot name="box" :data="currentData[item?.id]"></slot>
         </div>
-      </template>
+      </transition>
     </xt-drag>
   </template>
 </template>

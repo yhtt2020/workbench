@@ -1,6 +1,8 @@
 <!-- 滚动条视图和事件 -->
 <template>
   <div
+    @wheel="handleWheelEvent"
+    v-show="isFreeLayout"
     ref="scrollbar"
     class="no-drag relative w-full h-full"
     style="padding-right: 10px; padding-bottom: 10px; margin-bottom: 12px"
@@ -14,6 +16,7 @@
 <script setup>
 import {
   ref,
+  onBeforeMount,
   onMounted,
   onBeforeUnmount,
   watch,
@@ -21,11 +24,12 @@ import {
   computed,
 } from "vue";
 import { storeToRefs } from "pinia";
-import { useElementSize } from "@vueuse/core";
+// import { useElementSize } from "@vueuse/core";
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 import { useElementBounding } from "@vueuse/core";
 import { useFreeLayoutStore } from "./store";
+import { useElementSize } from "../../../ui/new/drag/src/hooks/useElementSize";
 const dragStyle = computed(() => {
   if (isKey.value && isDragging.value) {
     return "grabbing";
@@ -43,35 +47,35 @@ const {
   getFreeLayoutData,
   getCurrentDesk,
   isSelectAll,
+  isFreeLayout,
 } = storeToRefs(freeLayoutStore);
 const scrollbar = ref(null);
 const perfectScrollbar = ref(null);
 
-onMounted(async () => {
+const scrollSize = ref();
+onBeforeMount(() => {
+  // 关键步骤 初始化自由布局状态数据
+  freeLayoutStore.initFreeLayoutState();
   // 初始化自由布局环境
   freeLayoutStore.initFreeLayoutEnv();
-  // 实例化滚动条
-  perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
+});
+onMounted(() => {
   freeLayoutEnv.value.scrollData = useElementBounding(scrollbar.value);
 
-  setTimeout(async () => {
-  // 初始化自由布局定位
-  updateScroll(getFreeLayoutState.value.mode.scroll);
-
-  let { width, height } = scrollbar.value?.getBoundingClientRect();
-  freeLayoutEnv.value.scrollWidth = width;
-  freeLayoutEnv.value.scrollHeight = height;
-  // 监听自由布局滚动事件
+  // 实例化滚动条
+  perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
+  useElementSize(scrollbar.value, (size) => {
+    scrollSize.value = size;
+    freeLayoutEnv.value.scrollWidth = size.width;
+    freeLayoutEnv.value.scrollHeight = size.height;
+  });
+  // 事件监听
   scrollbar.value.addEventListener("ps-scroll-x", () => {
     freeLayoutEnv.value.scrollLeft = scrollbar.value?.scrollLeft;
   });
   scrollbar.value.addEventListener("ps-scroll-y", () => {
     freeLayoutEnv.value.scrollTop = scrollbar.value?.scrollTop;
   });
-
-  // 完成操作 开启
-  freeLayoutEnv.value.loading = true;
-  //
 
   // 监听键盘按下事件
   window.addEventListener("keydown", handleKeyDown);
@@ -84,8 +88,24 @@ onMounted(async () => {
   // 监听鼠标抬起事件;
   window.addEventListener("mouseup", handleMouseUp);
   document.body.addEventListener("keydown", ignoreSpace);
-  }, 1);
 });
+const lock = ref(false);
+watch([isFreeLayout, () => scrollSize.value], ([state, size]) => {
+  if (!state) lock.value = false;
+  if (lock.value) return;
+  if (!size) return;
+  const { width, height } = size;
+  // 等待状态和画布同时加载成功
+  if (state && width && height) {
+    // 初始化自由布局定位
+    let scrollMode = getFreeLayoutState.value?.mode.scroll
+      ? getFreeLayoutState.value.mode.scroll
+      : "free";
+    updateScroll(scrollMode);
+    lock.value = true;
+  }
+});
+
 function ignoreSpace(event) {
   var e = window.event || event;
   if (e.keyCode === 32) {
@@ -95,6 +115,54 @@ function ignoreSpace(event) {
       window.event.returnValue = false;
     }
   }
+}
+
+// 鼠标滚动
+let isDragging = ref(false);
+let isKey = ref(false);
+let initialMousePosition = ref(null);
+
+/**
+ * 2023-12-21
+ */
+//滚动方式
+const updateScroll = async (newV) => {
+  redirect();
+  scrollbar.value.scrollLeft = 0;
+  scrollbar.value.scrollLeft = 0;
+  if (newV === "free") {
+    perfectScrollbar.value.settings.suppressScrollX = false;
+    perfectScrollbar.value.settings.suppressScrollY = false;
+  } else if (newV === "vertical") {
+    perfectScrollbar.value.settings.suppressScrollX = true;
+    perfectScrollbar.value.settings.suppressScrollY = false;
+  } else if (newV === "horizontal") {
+    perfectScrollbar.value.settings.suppressScrollX = false;
+    perfectScrollbar.value.settings.suppressScrollY = true;
+  } else if (newV === "lock") {
+    perfectScrollbar.value.settings.suppressScrollX = true;
+    perfectScrollbar.value.settings.suppressScrollY = true;
+  }
+  setTimeout(() => {
+    redirect();
+  }, 1);
+};
+watch(
+  () => getFreeLayoutState.value?.mode?.scroll,
+  (val) => {
+    if (!isFreeLayout.value) return;
+    updateScroll(val);
+  }
+);
+// 重置中心区域
+function redirect() {
+  const { w, h } = freeLayoutStore.restoreLocation();
+  scrollbar.value.scrollLeft = w;
+  scrollbar.value.scrollTop = h;
+  freeLayoutEnv.value.scrollLeft = w;
+  freeLayoutEnv.value.scrollTop = h;
+  console.log("  scrollbar.value.scrollLeft :>> ", scrollbar.value.scrollLeft);
+  console.log("  scrollbar.value.scrollTop :>> ", scrollbar.value.scrollTop);
 }
 
 // 鼠标按下
@@ -123,7 +191,13 @@ function handleMouseMove(event) {
     initialMousePosition.value = { x: event.clientX, y: event.clientY };
   }
 }
-
+const handleWheelEvent = (event) => {
+  let scrollMode = getFreeLayoutState.value?.mode.scroll;
+  if (scrollMode != "horizontal") return;
+  // 获取滚动位置
+  const scrollPosition = event.deltaY;
+  scrollbar.value.scrollLeft += scrollPosition;
+};
 // 鼠标抬起
 function handleMouseUp(event) {
   isDragging.value = false;
@@ -152,71 +226,6 @@ function handleKeyUp(event) {
 function update() {
   perfectScrollbar.value.update();
 }
-
-// 鼠标滚动
-
-let isDragging = ref(false);
-let isKey = ref(false);
-let initialMousePosition = ref(null);
-
-/**
- * 2023-12-21
- */
-//滚动方式
-const updateScroll = (newV) => {
-  redirect();
-  freeLayoutEnv.value.scrollOldLeft = scrollbar.value.scrollLeft;
-  freeLayoutEnv.value.scrollOldTop = scrollbar.value.scrollTop;
-  if (newV === "free") {
-    perfectScrollbar.value.settings.suppressScrollX = false;
-    perfectScrollbar.value.settings.suppressScrollY = false;
-  } else if (newV === "vertical") {
-    perfectScrollbar.value.settings.suppressScrollX = true;
-    perfectScrollbar.value.settings.suppressScrollY = false;
-  } else if (newV === "horizontal") {
-    perfectScrollbar.value.settings.suppressScrollX = false;
-    perfectScrollbar.value.settings.suppressScrollY = true;
-  } else if (newV === "lock") {
-    perfectScrollbar.value.settings.suppressScrollX = true;
-    perfectScrollbar.value.settings.suppressScrollY = true;
-  }
-
-  scrollbar.value.scrollLeft = freeLayoutEnv.value.scrollOldLeft;
-  scrollbar.value.scrollTop = freeLayoutEnv.value.scrollOldTop;
-};
-watch(() => getFreeLayoutState.value?.mode?.scroll, updateScroll);
-// 重置中心区域
-const { width, height } = useElementSize(scrollbar);
-function redirect() {
-  let w, h;
-  if (getFreeLayoutState.value?.mode.align == undefined) return;
-  if (getFreeLayoutState.value?.mode.align === "top") {
-    h = 0;
-    w = getFreeLayoutState.value.canvas.width / 2 - width.value / 2;
-  } else if (getFreeLayoutState.value.mode.align === "center") {
-    h = getFreeLayoutState.value.canvas.height / 2 - height.value / 2;
-    w = getFreeLayoutState.value.canvas.width / 2 - width.value / 2;
-  } else if (getFreeLayoutState.value.mode.align === "left") {
-    h = getFreeLayoutState.value.canvas.height / 2 - height.value / 2;
-    w = 0;
-  } else if (getFreeLayoutState.value.mode.align === "right") {
-    h = getFreeLayoutState.value.canvas.height / 2 - height.value / 2;
-    w = getFreeLayoutState.value.canvas.width;
-  } else if (getFreeLayoutState.value.mode.align === "bottom") {
-    h = getFreeLayoutState.value.canvas.height;
-    w = getFreeLayoutState.value.canvas.width / 2 - width.value / 2;
-  } else {
-    // w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
-    // h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
-    w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
-    h = getFreeLayoutState.value.line.centerLine.y;
-  }
-  scrollbar.value.scrollLeft = w;
-  scrollbar.value.scrollTop = h;
-  freeLayoutEnv.value.scrollLeft = w;
-  freeLayoutEnv.value.scrollTop = h;
-}
-
 // 2023-12-21 结束
 
 onBeforeUnmount(() => {

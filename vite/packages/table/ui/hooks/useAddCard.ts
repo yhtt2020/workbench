@@ -2,9 +2,7 @@ import { storeToRefs } from "pinia";
 import { useFreeLayoutStore } from "../../components/desk/freeLayout/store";
 import { cardStore } from "../../store/card";
 
-export const useAddCard = (name, customData, id = Date.now()) => {
-
-  console.log('id :>> ', id);
+export const useAddCard = (name, customData = {}, id: any = Date.now()) => {
   const freeLayoutStore = useFreeLayoutStore();
   const { getCurrentDesk }: any = storeToRefs(freeLayoutStore);
   const card: any = cardStore();

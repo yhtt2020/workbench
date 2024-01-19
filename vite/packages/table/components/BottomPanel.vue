@@ -9,9 +9,15 @@
       <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:size="updateSize" :customData="customData"
         :customIndex="bottomKey" :secondary="true" v-if="folderVisible" :expand="{ disabled: true }"
         :navBar="{ resize: false, sizeOption: false, isDel: true, hierarchy: true }" :auto="true" />
-      <ControlModal ref="controlRef" v-if="controlVisible" @close="controlVisible = false" :full="full"
-        @setFull="setFull" />
+
     </div>
+
+    <div class="absolute" v-if="controlVisible" style="bottom:100px;z-index:888;" :style="{left:`${controlLeft}px`}">
+      <ControlModal @close="controlVisible = false"></ControlModal>
+    </div>
+
+    <!--  <ControlModal ref="controlRef" v-if="controlVisible" @close="controlVisible = false" :full="full" @setFull="setFull"/> -->
+
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
       id="bottom-bar" style="text-align: center;position: relative;" @contextmenu="showMenu" v-show="navigationToggle[2]"
       :style="{ zoom: `${(this.navAttribute.navSize / 100)}` }">
@@ -30,7 +36,10 @@
       "
         :style="{ width: this.settings.enableChat ? '160px' : '80px', paddingLeft: this.settings.enableChat ? '16px !important' : '0px !important', paddingRight: this.settings.enableChat ? '16px !important' : '0px !important', borderRadius: this.navAttribute.navRadius + 'px' }">
         <div class="flex items-center justify-between" :style="{ marginLeft: this.settings.enableChat ? '10px' : '0px' }">
-          <MyAvatar :chat="true" :level="false"></MyAvatar>
+          <div @click="openControl($event)">
+            <MyAvatar :chat="true" :level="false" :limit="false"></MyAvatar>
+          </div>
+          <!---->
           <div v-show="settings.enableChat" class="pl-4 pointer">
             <ChatButton :tipPosition="navAttribute.navSize"></ChatButton>
           </div>
@@ -429,7 +438,8 @@ export default {
       left: 0,
       parentSize: 0,
       // 控制中心弹窗
-      controlVisible: false,
+      controlVisible:false,
+      controlLeft:0,
       skipSort: false,
     }
   },
@@ -1009,10 +1019,6 @@ export default {
      * @param {*} item 图标详细信息
      */
     async newOpenApp(type, value, item) {
-      if (value === 'control') {
-        this.controlVisible = !this.controlVisible;
-        this.resetElementPosition()
-      }
       if (item) this.msgNotice(item)
       if (value === 'home' && item.home) {
         this.jumpDesk = item.home
@@ -1025,7 +1031,7 @@ export default {
         })
       }
       type !== 'folder' ? this.folderVisible = false : ''
-
+      this.controlVisible = false;
     },
     completeEdit() {
       this.toggleEdit()
@@ -1303,6 +1309,14 @@ export default {
         }
       }
     },
+
+    //  点击头像框打开控制中心
+    openControl(event){
+      this.controlVisible = !this.controlVisible;
+      this.controlLeft = event.clientX - 200;
+      // this.resetElementPosition(event.clientX)
+    },
+
     /**
      * 重置元素位置
      */
@@ -1311,18 +1325,10 @@ export default {
       // 视图大小
       let vW = this.parentSize
       // 元素坐标
-      let posX = Number((this.defaultPosition.x).toFixed(0))
+      let posX = Number((this.defaultPosition.x).toFixed(0));
       // 元素大小
-      let menuW = draggableSize[0] * 144
-      // let menuW = draggableSize[0] * 140
-      // console.log(vW,posX,menuW, 'vW');
-      if (this.currentItem.value === 'control') {
-        posX = posX > vW - menuW ? vW - menuW : posX - 274;
-      }
-      else {
-        posX = posX > vW - (menuW / 2) ? vW - menuW : (posX - menuW / 2 < 0 ? 0 : posX - menuW / 2);
-        // console.log(posX, 'posX')
-      }
+      let menuW = draggableSize[0] * 140
+      posX = posX > vW - (menuW / 2) ? vW - menuW : (posX - menuW / 2 < 0 ? 0 : posX - menuW / 2);
       this.left = posX
       console.log(posX, 'posX')
     },
@@ -1333,7 +1339,9 @@ export default {
       } else {
         this.hoverIndex = hoverRs.index
       }
-    }
+    },
+
+
   },
 
 }
