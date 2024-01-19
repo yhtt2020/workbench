@@ -112,15 +112,15 @@
                           style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                           @click.stop="newOpenApp(item.type, item.value, item)">
                           <!-- <Drag :data="item" :currentId="currentId"> -->
-                            <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"
-                              :placement="'top'">
-                            </Team>
-                            <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
-                              @click="openFolder(item)">
-                            </FolderVue>
-                            <template v-else>
-                              <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
-                            </template>
+                          <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"
+                            :placement="'top'">
+                          </Team>
+                          <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
+                            @click="openFolder(item)">
+                          </FolderVue>
+                          <template v-else>
+                            <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
+                          </template>
                           <!-- </Drag> -->
 
                         </div>
@@ -217,7 +217,7 @@ import { Icon as navIcon } from '@iconify/vue'
 import navigationData from '../js/data/tableData'
 import { offlineStore } from '../js/common/offline'
 import { moreMenus, extraRightMenu } from '../components/desk/navigationBar/index'
-import { useMergeFolder} from '../components/desk/navigationBar/hook/mergeFolder.ts'
+import { useMergeFolder } from '../components/desk/navigationBar/hook/mergeFolder.ts'
 import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
@@ -442,6 +442,7 @@ export default {
       controlVisible: false,
       controlLeft: 0,
       skipSort: false,
+      skipSimple: false,
     }
   },
   props: {
@@ -679,9 +680,14 @@ export default {
         this.bottomToggle[2] = false
       } else if (!newVal && oldVal) {
         // 当 simple 从开启变为关闭时，开启所有 bottomToggle
-        this.bottomToggle[0] = true
-        this.bottomToggle[1] = true
-        this.bottomToggle[2] = true
+        if (this.skipSimple) {
+          this.bottomToggle[0] = true
+        } else {
+          this.bottomToggle[0] = true
+          this.bottomToggle[1] = true
+          this.bottomToggle[2] = true
+        }
+
       }
     },
     bottomToggle: {
@@ -689,6 +695,7 @@ export default {
       handler(newV, oldV) {
         if ((this.bottomToggle[0] && this.bottomToggle[1] && this.bottomToggle[2]) || this.bottomToggle[0]) {
           this.simple = false
+          this.skipSimple = true
         } else if (!this.bottomToggle[0] && !this.bottomToggle[1] && !this.bottomToggle[2]) {
           this.simple = true
         }
