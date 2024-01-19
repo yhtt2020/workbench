@@ -127,7 +127,6 @@ let initialMousePosition = ref(null);
  */
 //滚动方式
 const updateScroll = async (newV) => {
-  console.log("2222222 :>> ", 2222222);
   redirect();
   scrollbar.value.scrollLeft = 0;
   scrollbar.value.scrollLeft = 0;
@@ -231,12 +230,12 @@ function update() {
 
 onBeforeUnmount(() => {
   freeLayoutStore.initFreeLayoutEnv();
-  scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
-    capture: true,
-  });
-  scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
-    capture: true,
-  });
+  // scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
+  //   capture: true,
+  // });
+  // scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
+  //   capture: true,
+  // });
   window.removeEventListener("keydown", handleKeyDown);
   window.removeEventListener("keyup", handleKeyUp);
   window.removeEventListener("mousedown", handleMouseDown);

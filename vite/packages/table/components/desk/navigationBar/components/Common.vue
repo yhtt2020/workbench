@@ -9,6 +9,7 @@ import { ref, reactive, computed, watch, toRef } from 'vue'
 import { useNavigationStore } from '../navigationStore'
 import { appStore } from '../../../../store';
 import { navStore } from '../../../../store/nav'
+import { nanoid } from 'nanoid';
 const useNavStore = navStore()
 const navigationStore = useNavigationStore()
 const useAppStore = appStore()
@@ -20,7 +21,8 @@ const iconList = ref([
         bg: '',
         isBg: false,
         mode: 'app',
-        type: 'systemApp'
+        type: 'systemApp',
+        id: nanoid(6)
     },
     {
         value: 'task',
@@ -29,7 +31,8 @@ const iconList = ref([
         bg: '',
         isBg: false,
         mode: 'app',
-        type: 'systemApp'
+        type: 'systemApp',
+        id: nanoid(6)
         
     }
 ])
@@ -44,13 +47,22 @@ watch(() => navigationStore.bottomToggle[0], () => {
  */
  const findItem = (target,value,item)=>{
     if(target){
-        const hasTargetItem = useNavStore.copyFootNav.some(item => item.value === value);
+        const hasTargetItem = useNavStore.copyFootNav.some(item => {
+            if(item.type === 'folder'){
+                return item.children.some(child => child.value === value);
+            }
+            return item.value === value});
         if (hasTargetItem) {
             return true;
         }
         useNavStore.setFootNavigationList(item);
     }else{
-        const index = useNavStore.copyFootNav.findIndex(item => item.value === value);
+        const index = useNavStore.copyFootNav.findIndex(item =>{
+            if(item.type === 'folder'){
+                return item.children.some(child => child.value === value);
+            }
+            return item.value === value
+        });
         if (index !== -1) {
            useNavStore.removeFootNavigationList(index); 
         }

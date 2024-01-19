@@ -56,13 +56,8 @@ import { getReward } from "../task";
 
 const store = taskStore();
 const visible = ref(false);
-const {
-  taskID,
-  currentTaskList,
-  rewardVisible,
-  currentId,
-  isTaskDrawer,
-} = storeToRefs(store);
+const { taskID, currentTaskList, rewardVisible, currentId, isTaskDrawer } =
+  storeToRefs(store);
 const props = defineProps({
   type: {
     type: String,
@@ -74,7 +69,7 @@ onMounted(async () => {
   setTimeout(() => {
     visible.value = true;
   }, 10);
-  let { code, data } = await getReward(currentId.value);
+  getReward(currentId.value);
 });
 const currentTask = computed(() => {
   return store.getTask(store.currentId);

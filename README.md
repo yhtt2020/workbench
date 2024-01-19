@@ -48,6 +48,13 @@ B站账号：
 
 7.复制一个/node_modules下的dragula/dist/dragula.css 到 dragula/dist/dragula.min.css，不然会报这个库缺文件
 
+8.在目录 vite\packages\table\js\common\offline.ts 下，将文件的 isOffline 属性改为 true ，启动离线模式
+
+## 【关于离线模式】
+
+离线模式下，我们尽可能减少与服务器的交互，以确保客户端可以独立运行。此模式适合大家自行研究，也可以自行把需要用到的部分封包起来。
+
+
 ## 启动项目
 
 0.hosts下添加映射

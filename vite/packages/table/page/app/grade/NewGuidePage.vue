@@ -181,7 +181,7 @@
               </xt-button>
           </div>
           <div class="flex" v-if="step==0 && !loading">
-            <xt-button   class="ml-3 button-bottom" @click="nextStep"   size="large" >暂不分析</xt-button>
+            <!-- <xt-button   class="ml-3 button-bottom" @click="nextStep"   size="large" >暂不分析</xt-button> -->
               <xt-button   class="ml-3 button-bottom" @click="analysis"   size="large" type="theme">开始分析</xt-button>
           </div>
           <div class="flex" v-if="step==1">
@@ -251,17 +251,17 @@
                 key: 'game',
                 icon: 'fluent-emoji:joystick',
             },
-            {
-                title: '其他',
-                content: '不指定场景，为你添加更加。',
-                key: 'current',
-                icon: 'fluent-emoji:dotted-six-pointed-star',
-            },
+            // {
+            //     title: '其他',
+            //     content: '不指定场景，为你添加更加。',
+            //     key: 'current',
+            //     icon: 'fluent-emoji:dotted-six-pointed-star',
+            // },
         ],
         deskTypeObj: {
             assist: false,
             game: false,
-            current: false,
+            // current: false,
         },
         step: 0,
         content:'',
@@ -319,12 +319,13 @@
         themeState: true,
         baseNavList: [],
         // 三种不同的分类组件
-        assist: ['AIaides', 'clocks', 'countdownDay', 'weather', 'notes', 'customTimer', 'clock', 'todo', 'historyInfo', 'tomatoTimer', 'search', 'Courier', 'wallpaper', 'fish', 'eatToday'],
+        assist: ['yuanCommunity', 'news', 'HotSearch', 'wallpaper', 'clocks', 'historyInfo', 'notes'],
         assistList: [],
-        game: ['gameAssis', 'clocks', 'strategy', 'AIaides', 'wallpaper', 'capture', 'notes', 'music', 'historyInfo', 'tomatoTimer', 'todo', 'games', 'GameEpic', 'myFriends', 'Audio', 'fish'],
+        game: ['yuanCommunity', 'news', 'HotSearch', 'notes', 'search', 'AIaides', 'countdownDay'],
         gameList: [],
-        current: ['AIaides', 'clocks', 'countdownDay', 'weather', 'notes', 'customTimer', 'clock', 'todo', 'historyInfo', 'tomatoTimer', 'Courier', 'wallpaper', 'fish', 'Audio', 'eatToday', 'games', 'GameEpic', 'myFriends', 'music'],
-        currentList: [],
+
+        // current: ['AIaides', 'clocks', 'countdownDay', 'weather', 'notes', 'customTimer', 'clock', 'todo', 'historyInfo', 'tomatoTimer', 'Courier', 'wallpaper', 'fish', 'Audio', 'eatToday', 'games', 'GameEpic', 'myFriends', 'music'],
+        // currentList: [],
         // 导航
         navListTmp: [
           { type: 'systemApp', icon: '/logo/home.svg', name: '桌面主页', addNav: true,bg: '',isBg: '', ext: '', summary: '', mode: 'app', value: 'home', isCheck: true, id: '1705024806'},
@@ -362,16 +363,10 @@
       ...mapWritableState(appStore, ['backgroundSettings', 'backgroundImage', 'styles']),
       ...mapWritableState(navStore, ['copyFootNav']),
       cardList(){
-        if(this.deskTypeObj.current){
-          return this.currentList
-        }else if(this.deskTypeObj.assist && this.deskTypeObj.game){
-          return this.currentList
-        }else if(this.deskTypeObj.assist){
-          return this.assistList
-        }else if(this.deskTypeObj.game){
+        if(this.deskTypeObj.game){
           return this.gameList
         }else{
-          return this.currentList
+          return this.assistList
         }
       },
       folderNum(){
@@ -431,18 +426,18 @@
         })
       })
       // 通用
-      this.current.forEach(i=>{
-        this.baseNavList.forEach(item=>{
-          if(i == item.name){
-            this.currentList.push({
-              ...item,
-              download: Math.floor(Math.random() * 10000) + 1,
-              isCheck: true,
-              imgIndex: 0,
-            })
-          }
-        })
-      })
+      // this.current.forEach(i=>{
+      //   this.baseNavList.forEach(item=>{
+      //     if(i == item.name){
+      //       this.currentList.push({
+      //         ...item,
+      //         download: Math.floor(Math.random() * 10000) + 1,
+      //         isCheck: true,
+      //         imgIndex: 0,
+      //       })
+      //     }
+      //   })
+      // })
     },
 
     watch: {
@@ -461,15 +456,17 @@
 
       // 调整类型
       setDeskType(type){
-        this.deskTypeObj[type] = !this.deskTypeObj[type]
-        if(this.deskTypeObj[type]){
-          if(type == 'current'){
-            this.deskTypeObj['game'] = false
-            this.deskTypeObj['assist'] = false
-          }else{
-            this.deskTypeObj['current'] = false
-          }
-        }
+        this.deskTypeObj['game'] = false
+        this.deskTypeObj['assist'] = false
+        this.deskTypeObj[type] = true
+        // if(this.deskTypeObj[type]){
+        //   if(type == 'current'){
+        //     this.deskTypeObj['game'] = false
+        //     this.deskTypeObj['assist'] = false
+        //   }else{
+        //     this.deskTypeObj['current'] = false
+        //   }
+        // }
       },
       // 修改导航图标选中
       changeNavList(item, index){

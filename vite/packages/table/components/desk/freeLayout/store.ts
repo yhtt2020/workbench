@@ -183,8 +183,6 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 删除当前自由布局数据
     clearFreeLayout(id) {
-      console.log("id :>> ", id);
-
       delete this.freeLayoutData[id];
       delete this.freeLayoutState[id];
       console.log("删除数据成功 :>> ", this.freeLayoutState);
@@ -226,7 +224,10 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       const height = this.freeLayoutEnv.scrollHeight;
       const currentWidth = this.getFreeLayoutState.canvas.width;
       const currentHeight = this.getFreeLayoutState.canvas.height;
-      const align = this.getFreeLayoutState.mode.align;
+      const align = this.getFreeLayoutState.mode.align
+        ? this.getFreeLayoutState.mode.align
+        : "center";
+
       if (align === "top") {
         h = 0;
         w = currentWidth / 2 - width / 2;
@@ -249,7 +250,6 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         w = this.getFreeLayoutState.line.centerLine.x;
         h = this.getFreeLayoutState.line.centerLine.y;
       }
-      console.log("zoom :>> ", zoom);
       w = w * zoom;
       h = h * zoom;
 

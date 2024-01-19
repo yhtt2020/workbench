@@ -173,12 +173,13 @@
   <slot name="msg"></slot>
 </template>
 <!-- lang="ts" -->
-<script>
+<script setup>
 import { mapActions, mapWritableState } from "pinia";
 import _ from "lodash-es";
 import { useToast } from "vue-toastification";
-
-import { cardStore } from "../../store/card";
+import { watch, computed, ref, onBeforeMount, onMounted } from "vue";
+import { storeToRefs } from "pinia";
+import { cardStore as useCardStore } from "../../store/card";
 import { offlineStore } from "../../js/common/offline";
 import { useWidgetStore } from "./store";
 import { useFreeLayoutStore } from "../desk/freeLayout/store";
@@ -191,332 +192,354 @@ import { deepMerge } from "./ContainerUtils";
 
 import XtButton from "../../ui/libs/Button/index.vue";
 
-export default {
-  components: {
-    RightMenu,
-    PageState,
-    XtButton,
-    Msg,
-  },
-  name: "Container",
-  props: {
-    /**
-     * header body size sizeList defaultData options
-     * 均为重构后的数据结构 需要阅读源码
-     */
-    header: {
-      type: Object,
-      default: () => {
-        return {
-          // 禁用头部区域
-          disabled: false,
-          // 左侧图标 适配旧版icon 适配新版newIcon
-          icon: "",
-          ifyIcon: "",
-          /**
-           * 右侧图标
-           * {
-           *    icon: '旧版图标',
-           *    ifyIcon: '新版图标',
-           *    showIcon: '图标选择器的图标 小庄定义的命名规范'
-           *    fn: 点击回调,
-           *    tip：'提示文字',
-           *    disabled: 禁用 true为禁用 false为不禁用
-           * }
-           */
-          rightIcon: [],
-          /**
-           * 右侧刷新图标
-           * {
-           *    fn: lockClick,
-           *    tip：'提示文字',
-           *    disabled: 禁用 true为禁用 false为不禁用
-           * }
-           */
-          refresh: {},
-          // 标题背景色 true为打开 false为关闭
-          bg: false,
-          // 标题颜色
-          color: "",
-          // 鼠标经过显示 整个左侧可操作区域 左侧图标 + 标题区域  true为打开 false为关闭
-          leftHover: false,
-          // 鼠标经过显示 左侧图标 true为打开 false为关闭
-          iconHover: false,
-          // leftHover iconHover同用 leftHoverName leftHoverIcon 两个参数
-          leftHoverName: "",
-          leftHoverIcon: "",
-          // 鼠标经过显示 标题区域  true为打开 false为关闭
-          titleHover: false,
-          titleHoverName: "",
-        };
-      },
-    },
-    body: {
-      default: () => {
-        return {
-          // 是否开启滚动条边距
-          scroll: false,
-          // 自定义背景色
-          bg: "",
-          // 自定义字体颜色
-          color: "",
-        };
-      },
-    },
-    // 卡片尺寸 默认 4x2
-    size: {
-      type: String,
-      default: "4x2",
-    },
-    // 作为弹窗时的尺寸
-    modalSize: {},
-    /**
-     * 可选尺寸，此属性设置后，在编辑处会显示可选尺寸。
-     * 格式为 { name: '4x2'value: '4x2' }
-     */
-    sizeList: {
-      type: Array,
-      default: () => [],
-    },
-    /**
-     * 卡片默认数据
-     * 传递后每次都会帮你校验数据
-     */
-    defaultData: {},
-    // 全局选项
-    options: {
-      type: Object,
-      default: () => {
-        return {
-          // 自定义区域 开启后只保留全局右键功能
-          custom: false,
-          // 自定义全局背景色
-          bg: "",
-          // 自定义全局字体颜色
-          color: "",
-          // 是否允许删除组件
-          del: false,
-        };
-      },
-    },
-    /**
-     * 右上角菜单项
-     * {
-     *    icon: '旧版图标',
-     *    newIcon: '新版图标',
-     *    fn: 点击回调,
-     *    disabled: 禁用 true为禁用 false为不禁用
-     * }
-     */
-    menuList: {
-      type: Array,
-      default: () => [],
-    },
-    //组件索引
-    customIndex: {
-      type: Number,
-      default: 0,
-    },
-    //组件自定义数据，每个卡片独立，并存入桌面数据当中
-    customData: {
-      type: Object,
-      default: () => {},
-    },
-
-    desk: {
-      type: Object,
-      required: true,
-    },
-    env: {
-      type: Object,
-      default: () => {
-        return {
-          web: false,
-          mobile: false,
-          client: false,
-          offline: false,
-        };
-      },
-    },
-  },
-  data() {
-    return {
-      // 左侧区域状态
-      showLeftHover: false,
-      // 左侧图标区域状态
-      showIconHover: false,
-      // 标题区域状态
-      showTitleHover: false,
-      // 卡片尺寸
-      currentSize: this.size,
-    };
-  },
-  computed: {
-    ...mapWritableState(useWidgetStore, ["edit"]),
-    ...mapWritableState(useFreeLayoutStore, ["isSelectAll"]),
-    menus() {
-      return [
-        ...this.menuList,
-        {
-          newIcon: "akar-icons:trash-can",
-          fn: () => {
-            if (this.isSelectAll) {
-            }
-            if (this.options?.type != "note") {
-              this.doRemoveCard();
-            } else {
-              // 便签单独处理
-              this.options?.removeCard();
-            }
-          },
-          title: "删除小组件",
-          color: "#FF4D4F",
-          disabled: this.options.del ? true : false,
-        },
-      ];
-    },
-    // 左侧区域状态
-    leftHover() {
-      return (
-        (this.showLeftHover || this.showIconHover) &&
-        (this.header.leftHover || this.header.iconHover)
-      );
-    },
-    // 标题区域状态
-    titleHover() {
-      return this.showTitleHover && this.header.titleHover;
-    },
-    // 卡片尺寸
-    getSize() {
-      let w = 1;
-      let h = 1;
-      let str;
-      if (typeof this.currentSize != "string") {
-        console.warn("错误的传递 :>> ");
-      } else {
-        str = this.currentSize.split("x");
-      }
-      if (this.modalSize) {
-        str = this.modalSize.split("x");
-      }
-      w = str[0];
-      h = str[1];
+/**
+ * pinia
+ */
+// 卡片数据
+const cardStore = useCardStore();
+//
+const widgetStore = useWidgetStore();
+const { edit } = storeToRefs(widgetStore);
+// 自由布局
+const freeLayoutStore = useFreeLayoutStore();
+const { isSelectAll } = storeToRefs(freeLayoutStore);
+// props
+const props = defineProps({
+  /**
+   * header body size sizeList defaultData options
+   * 均为重构后的数据结构 需要阅读源码
+   */
+  header: {
+    type: Object,
+    default: () => {
       return {
-        width: w * 134 + (w - 1) * 12 + "px",
-        height: h * 96 + (h - 1) * 12 + "px",
+        // 禁用头部区域
+        disabled: false,
+        // 左侧图标 适配旧版icon 适配新版newIcon
+        icon: "",
+        ifyIcon: "",
+        /**
+         * 右侧图标
+         * {
+         *    icon: '旧版图标',
+         *    ifyIcon: '新版图标',
+         *    showIcon: '图标选择器的图标 小庄定义的命名规范'
+         *    fn: 点击回调,
+         *    tip：'提示文字',
+         *    disabled: 禁用 true为禁用 false为不禁用
+         * }
+         */
+        rightIcon: [],
+        /**
+         * 右侧刷新图标
+         * {
+         *    fn: lockClick,
+         *    tip：'提示文字',
+         *    disabled: 禁用 true为禁用 false为不禁用
+         * }
+         */
+        refresh: {},
+        // 标题背景色 true为打开 false为关闭
+        bg: false,
+        // 标题颜色
+        color: "",
+        // 鼠标经过显示 整个左侧可操作区域 左侧图标 + 标题区域  true为打开 false为关闭
+        leftHover: false,
+        // 鼠标经过显示 左侧图标 true为打开 false为关闭
+        iconHover: false,
+        // leftHover iconHover同用 leftHoverName leftHoverIcon 两个参数
+        leftHoverName: "",
+        leftHoverIcon: "",
+        // 鼠标经过显示 标题区域  true为打开 false为关闭
+        titleHover: false,
+        titleHoverName: "",
       };
     },
-    // 右侧图标
-    rightIcons() {
-      let arr = [...this.header.rightIcon];
-      if (this.header.refresh) {
-        arr.push({
-          ifyIcon: "fluent:arrow-clockwise-16-regular",
-          class: this.header.refresh.state ? "refresh" : "",
-          fn: this.header.refresh.fn,
-          tip: this.header.refresh.tip,
-          disabled: this.header.refresh.disabled,
-        });
-      }
-      return arr;
-    },
-    title() {
-      if (this.leftHover) {
-        return this.header.leftHoverName;
-      } else if (this.titleHover) {
-        return this.header.titleHoverName;
-      }
-      return this.header.title;
+  },
+  body: {
+    default: () => {
+      return {
+        // 是否开启滚动条边距
+        scroll: false,
+        // 自定义背景色
+        bg: "",
+        // 自定义字体颜色
+        color: "",
+      };
     },
   },
-  created() {
-    if (!this.defaultData) return;
-    deepMerge(this.customData, this.defaultData);
+  // 卡片尺寸 默认 4x2
+  size: {
+    type: String,
+    default: "4x2",
   },
-  mounted() {},
-  watch: {
-    /**
-     * 监听size变化
-     */
-    size(newV) {
-      this.currentSize = newV;
-    },
-    currentSize(newV) {
-      this.$emit("update:size", newV);
+  // 作为弹窗时的尺寸
+  modalSize: {},
+  /**
+   * 可选尺寸，此属性设置后，在编辑处会显示可选尺寸。
+   * 格式为 { name: '4x2'value: '4x2' }
+   */
+  sizeList: {
+    type: Array,
+    default: () => [],
+  },
+  /**
+   * 卡片默认数据
+   * 传递后每次都会帮你校验数据
+   */
+  defaultData: {},
+  // 全局选项
+  options: {
+    type: Object,
+    default: () => {
+      return {
+        // 自定义区域 开启后只保留全局右键功能
+        custom: false,
+        // 自定义全局背景色
+        bg: "",
+        // 自定义全局字体颜色
+        color: "",
+        // 是否允许删除组件
+        del: false,
+      };
     },
   },
-  methods: {
-    ...mapActions(cardStore, ["removeCard", "updateCustomData"]),
-    ...mapActions(offlineStore, ["getIsOffline"]),
-    // 头部拖拽开始
-    titleDragStart() {
-      const toast = useToast();
-      toast.clear();
-      toast(
-        {
-          component: Msg,
-        },
-        {
-          icon: false,
-          closeOnClick: false,
-          closeButton: false,
-          pauseOnFocusLoss: true,
-          pauseOnHover: true,
-          toastClassName: "notice-toast",
-          timeout: 3000,
-          hideProgressBar: false,
-        }
-      );
-    },
-    // 左侧区域鼠标进入
-    leftMouseEnter() {
-      if (!this.header.leftHover) return;
-      this.showLeftHover = true;
-    },
-    // 左侧区域鼠标离开
-    leftMouseLeave() {
-      if (!this.header.leftHover) return;
-      this.showLeftHover = false;
-    },
-    // 左侧图标鼠标进入
-    iconMouseEnter() {
-      if (!this.header.iconHover) return;
-      this.showIconHover = true;
-    },
-    // 左侧图标鼠标离开
-    iconMouseLeave() {
-      if (!this.header.iconHover) return;
-      this.showIconHover = false;
-    },
-    // 标题区域鼠标进入
-    titleMouseEnter() {
-      if (!this.header.titleHover) return;
-      this.showTitleHover = true;
-    },
-    // 标题区域鼠标离开
-    titleMouseLeave() {
-      if (!this.header.titleHover) return;
-      this.showTitleHover = false;
-    },
-    // 打开
-    leftClick() {
-      if (this.header.leftHover) {
-        this.$emit("leftClick");
-      }
-    },
-    // 右键删除
-    doRemoveCard() {
-      this.$emit("delete");
-      this.removeCard(this.customIndex, this.desk);
-    },
+  /**
+   * 右上角菜单项
+   * {
+   *    icon: '旧版图标',
+   *    newIcon: '新版图标',
+   *    fn: 点击回调,
+   *    disabled: 禁用 true为禁用 false为不禁用
+   * }
+   */
+  menuList: {
+    type: Array,
+    default: () => [],
+  },
+  //组件索引
+  customIndex: {
+    type: Number,
+    default: 0,
+  },
+  //组件自定义数据，每个卡片独立，并存入桌面数据当中
+  customData: {
+    type: Object,
+    default: () => {},
+  },
 
-    // 设置自定义数据
-    setCustomData(key, data) {
-      let obj = {};
-      obj[key] = data;
-      this.updateCustomData(this.customIndex, obj, this.desk);
+  desk: {
+    type: Object,
+    required: true,
+  },
+  env: {
+    type: Object,
+    default: () => {
+      return {
+        web: false,
+        mobile: false,
+        client: false,
+        offline: false,
+      };
     },
   },
+});
+
+onBeforeMount(() => {
+  // 处理默认数据
+  if (props.defaultData) {
+    deepMerge(props.customData, props.defaultData);
+  }
+});
+/**
+ * emits
+ */
+// "update:size" 更新卡片大小回调
+// leftClick 头部左侧鼠标经过点击回调
+// delete 小组件删除回调
+const emits = defineEmits(["update:size", "leftClick", "delete"]);
+
+/**
+ * data
+ */
+// 左侧区域状态
+const showLeftHover = ref(false);
+// 左侧图标区域状态
+const showIconHover = ref(false);
+// 标题区域状态
+const showTitleHover = ref(false);
+// 当前卡片尺寸
+const currentSize = ref(props.size);
+
+/**
+ * 计算属性
+ */
+// 实际渲染的右键菜单
+const menus = computed(() => {
+  return [
+    ...props.menuList,
+    {
+      newIcon: "akar-icons:trash-can",
+      fn: () => {
+        // 未补全?.type
+        if (props.options?.type != "note") {
+          doRemoveCard();
+        } else {
+          // 便签单独处理
+          props.options?.removeCard();
+          emits("");
+        }
+      },
+      title: "删除小组件",
+      color: "#FF4D4F",
+      disabled: props.options?.del ? true : false,
+    },
+  ];
+});
+// 头部左侧显示区域状态
+const leftHover = computed(() => {
+  return (
+    (showLeftHover.value || showIconHover.value) &&
+    (props.header.leftHover || props.header.iconHover)
+  );
+});
+
+// 头部标题显示区域状态
+const titleHover = computed(() => {
+  return showTitleHover.value && props.header.titleHover;
+});
+
+// 头部标题
+const title = computed(() => {
+  if (leftHover.value) {
+    return props.header.leftHoverName;
+  } else if (titleHover.value) {
+    return props.header.titleHoverName;
+  }
+  return props.header.title;
+});
+// 头部右侧图标
+const rightIcons = computed(() => {
+  let arr = [...props.header.rightIcon];
+  if (props.header.refresh) {
+    arr.push({
+      ifyIcon: "fluent:arrow-clockwise-16-regular",
+      class: props.header.refresh.state ? "refresh" : "",
+      fn: props.header.refresh.fn,
+      tip: props.header.refresh.tip,
+      disabled: props.header.refresh.disabled,
+    });
+  }
+  return arr;
+});
+// 卡片尺寸
+const getSize = computed(() => {
+  let w = 1;
+  let h = 1;
+  let str;
+  if (typeof currentSize.value != "string") {
+    console.warn("错误的传递 :>> ");
+  } else {
+    str = currentSize.value.split("x");
+  }
+  if (props.modalSize) {
+    str = props.modalSize.split("x");
+  }
+  w = str[0];
+  h = str[1];
+  return {
+    width: w * 134 + (w - 1) * 12 + "px",
+    height: h * 96 + (h - 1) * 12 + "px",
+  };
+});
+
+/**
+ * 数据监听
+ */
+// 卡片尺寸更新
+watch(
+  () => props.size,
+  (val) => {
+    currentSize.value = val;
+  }
+);
+// 卡片尺寸更新
+watch(
+  () => currentSize.value,
+  (val) => {
+    emits("update:size", val);
+  }
+);
+
+// 方法
+// 头部拖拽开始
+const titleDragStart = () => {
+  const toast = useToast();
+  toast.clear();
+  toast(
+    {
+      component: Msg,
+    },
+    {
+      icon: false,
+      closeOnClick: false,
+      closeButton: false,
+      pauseOnFocusLoss: true,
+      pauseOnHover: true,
+      toastClassName: "notice-toast",
+      timeout: 3000,
+      hideProgressBar: false,
+    }
+  );
+};
+// 左侧区域鼠标进入
+const leftMouseEnter = () => {
+  if (!props.header.leftHover) return;
+  showLeftHover.value = true;
+};
+// 左侧区域鼠标离开
+const leftMouseLeave = () => {
+  if (!props.header.leftHover) return;
+  showLeftHover.value = false;
+};
+// 左侧图标鼠标进入
+const iconMouseEnter = () => {
+  if (!props.header.iconHover) return;
+  showIconHover.value = true;
+};
+// 左侧图标鼠标离开
+const iconMouseLeave = () => {
+  if (!props.header.iconHover) return;
+  showIconHover.value = false;
+};
+// 标题区域鼠标进入
+const titleMouseEnter = () => {
+  if (!props.header.titleHover) return;
+  showTitleHover.value = true;
+};
+// 标题区域鼠标离开
+const titleMouseLeave = () => {
+  if (!props.header.titleHover) return;
+  showTitleHover.value = false;
+};
+
+// 头部左侧点击
+const leftClick = () => {
+  if (props.header.leftHover) {
+    emits("leftClick");
+  }
+};
+// 右键删除
+const doRemoveCard = () => {
+  emits("delete");
+  cardStore.removeCard(props.customIndex, props.desk);
+};
+
+// 设置自定义数据
+const setCustomData = (key, data) => {
+  let obj = {};
+  obj[key] = data;
+  cardStore.updateCustomData(props.customIndex, obj, props.desk);
 };
 </script>
 
