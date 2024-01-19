@@ -38,7 +38,6 @@ const iconList = ref([
     }
 ])
 watch(() => navigationStore.bottomToggle[0], (newV,oldV) => {
-    // useAppStore.settings.enableChat = !useAppStore.settings.enableChat
     newV ? useAppStore.settings.enableChat = true : useAppStore.settings.enableChat = false
 })
 /**

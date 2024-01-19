@@ -24,6 +24,8 @@ const windowHeight=ref(480)
 const windowWidth=ref(460)
 
 const {copyFootNav,sideNavigationList,rightNavigationList,navigationToggle}=toRefs(useNavStore)
+const {bottomToggle} = toRefs(navigationStore)
+const {settings}=toRefs(useAppStore)
 
 const navigationPosition = ref([
   {
@@ -145,5 +147,21 @@ const changeFn=(item,index)=>{
     navigationStore.bottomToggle[index]=item.switch
 }
 
+watch(()=>bottomToggle.value[0],(newV,oldV)=>{
+    console.log(newV,oldV,'navigationToggle');
+    navigationFunction.value[0].switch=newV
+},{deep:true})
+watch(()=>bottomToggle.value[1],(newV,oldV)=>{
+    console.log(newV,oldV,'navigationToggle');
+    navigationFunction.value[1].switch=newV
+},{deep:true})
+watch(()=>bottomToggle.value[2],(newV,oldV)=>{
+    console.log(newV,oldV,'navigationToggle');
+    navigationFunction.value[2].switch=newV
+},{deep:true})
+watch(()=>settings.value.enableChat,(newV,oldV)=>{
+    console.log(newV,oldV,'settings');
+    navigationFunction.value[3].switch=newV
+})
 </script>
 <style lang='scss' scoped></style>

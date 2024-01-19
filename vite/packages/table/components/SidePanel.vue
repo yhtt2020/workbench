@@ -49,7 +49,7 @@
                     hover: (dragItem && item.id === hoverRealItemId() && dragItem?.id !== hoverRealItemId())
                   }"
                   :style="{ borderRadius: this.iconRadius + 'px' }">
-                  <Drag :data="item" :currentId="sortId">
+                  <!-- <Drag :data="item" :currentId="sortId"> -->
                     <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"
                       :placement="sortId === 'left' ? 'right' : 'left'"></Team>
                     <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
@@ -58,7 +58,7 @@
                     <template v-else>
                       <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
                     </template>
-                  </Drag>
+                  <!-- </Drag> -->
 
 
                 </div>
@@ -217,7 +217,7 @@ export default {
           id: 3,
           name: '隐藏当前导航',
           newIcon: 'fluent:eye-off-16-regular',
-          fn: () => { this.$emit('hiedNavBar', 'foot') },
+          fn: () => { this.$emit('hiedNavBar', this.sortId) },
         },
         {
           id: 8,

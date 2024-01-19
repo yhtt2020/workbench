@@ -111,7 +111,7 @@
                           :class="{ hover: (dragItem && item.id === hoverRealItemId() && dragItem?.id !== hoverRealItemId()) }"
                           style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                           @click.stop="newOpenApp(item.type, item.value, item)">
-                          <Drag :data="item" :currentId="currentId">
+                          <!-- <Drag :data="item" :currentId="currentId"> -->
                             <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"
                               :placement="'top'">
                             </Team>
@@ -121,7 +121,7 @@
                             <template v-else>
                               <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
                             </template>
-                          </Drag>
+                          <!-- </Drag> -->
 
                         </div>
                       </xt-menu>
@@ -196,7 +196,7 @@ import { Modal } from 'ant-design-vue'
 import GradeSmallTip from './GradeSmallTip.vue'
 import { isMain } from '../js/common/screenUtils'
 
-import EditNavigation from './bottomPanel/EditNavigation.vue'
+// import EditNavigation from './bottomPanel/EditNavigation.vue'
 import ChangeApp from './bottomPanel/ChangeApp.vue'
 import ScrolX from './ScrolX.vue'
 
@@ -254,7 +254,7 @@ export default {
     Template,
     PanelButton,
     ThunderboltFilled,
-    EditNavigation,
+    // EditNavigation,
     ChangeApp,
     ScrolX,
     GradeSmallTip,
@@ -459,11 +459,6 @@ export default {
     }
   },
   mounted() {
-    // this.$bus.on('M0105',() => { this.editNavigation(this.drawerMenus[0]) })
-    // this.$bus.on('Z0401',() => {
-    //     console.log('Z0401 :>> ', 332222);
-    //       this.showTeamTip = true
-    //      })
     this.$bus.on('Z0402', async () => {
       await this.updateMy(0)
       this.teamVisible = true
