@@ -14,8 +14,8 @@
           hierarchy: true
         }" :auto="true" />
     </div>
-    <Drop @createFile="createFile">
-      <div v-if="true"
+    <Drop @createFile="createFile" :currentId="sortId">
+      <div v-if="false"
         style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:150px">
         <div>{{ `left: ${navAttribute.navSize / 100 * this.left}px; top: ${navAttribute.navSize / 100 * this.top}px` }}
         </div>
@@ -43,24 +43,23 @@
               :placement="sortId === 'left' ? 'right' : 'left'">
               <!-- 左右导航栏隐藏入口 -->
               <xt-menu :menus="folderOptions" :id="item.id" class="relative overflow-visible item-content">
-                <div 
-                  v-if="!(this.isOffline && this.navList.includes(item.event))" 
-                  class="item-content item-nav"
-                  @click="newOpenApp(item)" 
-                  @dragover="onDrag" 
-                  @dragend="hoverIndex = -1"
-                  :class="{ 
-                    'active-back': current(item), 
-                    hover: (dragItem && item.id === hoverRealItemId() && dragItem?.id !== hoverRealItemId()) }"
+                <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
+                  @click="newOpenApp(item)" @dragover="onDrag" @dragend="hoverIndex = -1" :class="{
+                    'active-back': current(item),
+                    hover: (dragItem && item.id === hoverRealItemId() && dragItem?.id !== hoverRealItemId())
+                  }"
                   :style="{ borderRadius: this.iconRadius + 'px' }">
-                  <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"
-                    :placement="sortId === 'left' ? 'right' : 'left'"></Team>
-                  <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
-                    @click="openFolder(item)">
-                  </FolderVue>
-                  <template v-else>
-                    <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
-                  </template>
+                  <Drag :data="item" :currentId="sortId">
+                    <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"
+                      :placement="sortId === 'left' ? 'right' : 'left'"></Team>
+                    <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
+                      @click.stop="openFolder(item)">
+                    </FolderVue>
+                    <template v-else>
+                      <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
+                    </template>
+                  </Drag>
+
 
                 </div>
               </xt-menu>
@@ -107,6 +106,7 @@ import { renderIcon } from '../js/common/common'
 import { moreMenus, extraRightMenu, rightMenus, iconMenus, mergeIconFolder } from '../components/desk/navigationBar/index'
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
+import { useNavBarStore } from './desk/navigationBar/navBar'
 // import EditNavigation from './bottomPanel/EditNavigation.vue';
 import { Notifications } from '../js/common/sessionNotice'
 import Common from './desk/navigationBar/components/Common.vue'
@@ -126,6 +126,7 @@ import Drop from './desk/navigationBar/components/folder/Drop.vue'
 import { useWindowSize, } from '../ui/new/drag/src/hooks/useWindowSize'
 import { useElementSize } from "../ui/new/drag/src/hooks/useElementSize";
 import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
+import Drag from './desk/navigationBar/components/folder/Drag.vue'
 export default {
   name: 'SidePanel',
   components: {
@@ -141,6 +142,7 @@ export default {
     FolderVue,
     Drop,
     Folder,
+    Drag,
   },
   emits: ['getDelIcon', 'hiedNavBar'],
   data() {
@@ -789,7 +791,6 @@ export default {
       const relativePos = (currentLeft - panelLeft) % (72 * this.navAttribute.navSize / 100)
       const isGap = !(relativePos <= (42 * this.navAttribute.navSize / 100) && relativePos >= (10 * this.navAttribute.navSize / 100))
       let nIndex = Math.floor((currentLeft - panelLeft + 20) / (72 * this.navAttribute.navSize / 100))
-      console.log(panelLeft, relativePos, isGap, nIndex, currentLeft, 'getHoverIndex')
       if (nIndex > this.navigationList.length - 1) {
         //超出
         return 0
@@ -830,7 +831,6 @@ export default {
      * 获取当前拖拽元素的坐标
      */
     onDrag: function (e) {
-      console.log('1111', '就触发了？')
       let hoverRs = this.getHoverIndex(e.y)
       if (hoverRs.gap) {
         this.hoverIndex = -1
