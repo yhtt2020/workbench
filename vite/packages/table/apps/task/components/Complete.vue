@@ -48,8 +48,7 @@ const taskStatus = async () => {
   let { data } = await getTaskStatus({
     taskName: currentId.value,
   });
-console.log(' data.status :>> ',  data.status);
-  status.value = data.status;
+  status.value = data.done;
 };
 
 const store = taskStore();

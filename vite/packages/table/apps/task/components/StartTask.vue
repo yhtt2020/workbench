@@ -110,7 +110,6 @@ const continueTask = computed(() => {
 // 领取奖励
 const receive = async () => {
   rewardVisible.value = true;
-  getReward(props.task.id);
 };
 const getReceiveStatus = computed(() => {
   return claimRewardsList.value.includes(props.task.id);
