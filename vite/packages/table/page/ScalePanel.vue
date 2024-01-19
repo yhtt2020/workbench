@@ -126,7 +126,6 @@ export default {
         await tsbApi.window.setZoomFactor(200 / 100)
         this.proportion[3].isCheck = true
       }
-      console.log('出发了');
     },
     inputEnter() {
       if (!this.inputZoom) {
