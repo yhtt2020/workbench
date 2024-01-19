@@ -1,12 +1,15 @@
 <template>
-  <GetSize>
+  <GetSize v-model:customSize="currentSize">
+    <!-- <xt-button>
+      {{ customData?.customSize }}
+    </xt-button> -->
     <RightMenu
       :menus="menus"
       :sizes="sizeList"
       :customIndex="customIndex"
       @removeCard="doRemoveCard"
       v-model:sizeType="sizeType"
-      v-model:oldMenuVisible="menuVisible"
+      v-model:currentSize="currentSize"
       class="relative"
     >
       <div
@@ -51,7 +54,7 @@
                 model="all"
                 @removeCard="doRemoveCard"
                 v-model:sizeType="sizeType"
-                v-model:oldMenuVisible="menuVisible"
+                v-model:currentSize="currentSize"
               >
                 <MenuOutlined class="pointer" />
               </RightMenu>
@@ -112,7 +115,8 @@ export default {
   components: {
     MenuOutlined,
     RightMenu,
-    PageState,GetSize
+    PageState,
+    GetSize,
   },
   name: "Widget",
   props: {
@@ -136,7 +140,7 @@ export default {
     },
     //右上角菜单项
     menuList: {
-      type: Array ,
+      type: Array,
       default: () => [],
     },
     //组件索引
@@ -173,10 +177,7 @@ export default {
   data() {
     return {
       // 小组件
-      widgetSize: {
-        width: "",
-        height: "",
-      },
+      currentSize: this.customData?.customSize,
       //右上角抽屉菜单可见与否的控制
       menuVisible: false,
       //当前设置的组件尺寸数据，对应着props里的sizeList
@@ -224,7 +225,7 @@ export default {
     },
     classes() {
       //默认的对象
-      let defaultClass  = {
+      let defaultClass = {
         gradient: true,
         "gradient--14": true,
       };
@@ -278,6 +279,18 @@ export default {
           {
             width: this.sizeType.width,
             height: this.sizeType.height,
+          },
+          this.desk
+        );
+      },
+    },
+    currentSize: {
+      handler(value) {
+        this.currentSize = value;
+        this.updateCustomData(
+          this.customIndex,
+          {
+            customSize: value,
           },
           this.desk
         );

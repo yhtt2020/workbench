@@ -1,7 +1,7 @@
 import { storeToRefs } from "pinia";
 import { nanoid } from "nanoid";
 
-import { useAddCard } from "../../../ui/hooks/useCardSize";
+import { useAddCard } from "../../../ui/hooks/useAddCard";
 import { useFreeLayoutStore } from "../freeLayout/store";
 
 import { folderData, headerData, mainData } from "./config";
@@ -40,7 +40,7 @@ export const useCustomLayout = (
   const resetLeft = () => {
     left = freeLayoutEnv.value.scrollLeft + position;
   };
-  // 重置top坐标
+  // 重置坐标
   const resetTop = (n) => {
     top += 96 * n + n * 12;
   };

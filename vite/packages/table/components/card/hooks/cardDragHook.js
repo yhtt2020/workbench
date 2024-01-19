@@ -49,6 +49,7 @@ export default {
     ...mapActions(cardStore, ["updateCustomData"]),
     // 初始化宽高
     reSizeInit(e) {
+      console.log("123 :>> ", e);
       this.updateCustomData(
         this.customIndex,
         {
@@ -79,12 +80,13 @@ export default {
         {
           width: this.width,
           height: this.height,
+          customSize: `${this.width * 2}x${this.height * 2}`,
         },
         this.desk
       );
       this.customData.width = this.width;
       this.customData.height = this.height;
-
+      this.customData.customSize = `${this.width * 2}x${this.height * 2}`;
       this.isActive = e;
       this.onReSize &&
         this.onReSize(e, {

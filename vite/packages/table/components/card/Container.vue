@@ -206,7 +206,7 @@ const { isSelectAll } = storeToRefs(freeLayoutStore);
 // props
 const props = defineProps({
   /**
-   * header body size sizeList defaultData options
+   * header body customSize sizeList defaultData options
    * 均为重构后的数据结构 需要阅读源码
    */
   header: {
@@ -269,7 +269,7 @@ const props = defineProps({
     },
   },
   // 卡片尺寸 默认 4x2
-  size: {
+  customSize: {
     type: String,
     default: "4x2",
   },
@@ -354,10 +354,10 @@ onBeforeMount(() => {
 /**
  * emits
  */
-// "update:size" 更新卡片大小回调
+// "update:customSize" 更新卡片大小回调
 // leftClick 头部左侧鼠标经过点击回调
 // delete 小组件删除回调
-const emits = defineEmits(["update:size", "leftClick", "delete"]);
+const emits = defineEmits(["update:customSize", "leftClick", "delete"]);
 
 /**
  * data
@@ -369,7 +369,7 @@ const showIconHover = ref(false);
 // 标题区域状态
 const showTitleHover = ref(false);
 // 当前卡片尺寸
-const currentSize = ref(props.size);
+const currentSize = ref(props.customSize);
 
 /**
  * 计算属性
@@ -458,7 +458,7 @@ const getSize = computed(() => {
  */
 // 卡片尺寸更新
 watch(
-  () => props.size,
+  () => props.customSize,
   (val) => {
     currentSize.value = val;
   }
@@ -467,7 +467,7 @@ watch(
 watch(
   () => currentSize.value,
   (val) => {
-    emits("update:size", val);
+    emits("update:customSize", val);
   }
 );
 
