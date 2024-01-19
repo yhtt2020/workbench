@@ -103,6 +103,8 @@ import CardList from "./components/CardList.vue";
 import Navbar from "./components/Navbar.vue";
 import Theme from "./components/Theme.vue";
 import { NavListTmp } from './components/data';
+import {completeTask} from '../../../apps/task/task'
+
 export default {
   components: {
     MyIcon,
@@ -304,6 +306,11 @@ export default {
 
     // 分析过程
     async analysis() {
+        // message.info("正在分析，请稍等。");
+      message.loading({
+        content: "正在分析，请稍等。",
+        key: "preparing",
+      });
       // 请求开始
       this.loading = true
       this.step = 1
@@ -318,6 +325,7 @@ export default {
       this.setTimer = setTimeout(() => {
         this.appList = [...this.fault]
         this.loading = false
+        this.messageFinish()
         this.time = 0
         this.clear()
       }, 15000);
@@ -327,6 +335,13 @@ export default {
       this.time = 0
       clearInterval(this.timer)
       this.timer = null
+    },
+
+    messageFinish(){
+      message.success({
+        content: "分析完成，请继续完成桌面定制。",
+        key: "preparing",
+      });
     },
 
     // 添加文件夹
@@ -470,6 +485,7 @@ export default {
     },
     // 预览桌面
     close() {
+      completeTask('z0201')
       this.$emit('closeShowGuide')
     },
     // 直接分类可能会失效 需要先将 文件夹 exe文件区分开来
@@ -518,7 +534,6 @@ export default {
         role: 'user',
         content: `这些是电脑桌面图标的名称，请从效率辅助角度下，将以下数据转换成数组对象之后， ${exeStr} 这些文件根据name属性分成游戏、常用程序两个分类数组，对象名使用"game"和"programs",然后以一个对象包裹着数组的形式将两个数组一起返回，不要带分析过程，不要有多余文字说明，直接返回结果`
       }]).then(res => {
-
         // 存储超时数据 用于超时作为应急数据
         this.fault = [...this.appList]
         this.fault[1].list = exeList
@@ -554,6 +569,7 @@ export default {
 
         // 请求结束 进入下一步
         this.loading = false
+        this.messageFinish()
         this.time = 0
         this.clear()
 
