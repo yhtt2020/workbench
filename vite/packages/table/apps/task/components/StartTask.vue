@@ -109,6 +109,7 @@ const continueTask = computed(() => {
 
 // 领取奖励
 const receive = async () => {
+  currentId.value = props.task.id;
   rewardVisible.value = true;
 };
 const getReceiveStatus = computed(() => {
@@ -117,6 +118,7 @@ const getReceiveStatus = computed(() => {
 
 // 已完成任务
 const completeTask = computed(() => {
+console.log('completedList.value :>> ', completedList.value);
   return completedList.value.includes(props.task.id);
 });
 </script>
