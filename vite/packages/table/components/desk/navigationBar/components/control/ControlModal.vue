@@ -1,5 +1,5 @@
 <template>
-  <div class="rounded-xl flex flex-col justify-between control-container pl-4 pt-4" id="controlId" ref="modalRef" >
+  <div class="rounded-xl flex flex-col justify-between control-container xt-shadow pl-4 pt-4" id="controlId" ref="modalRef" >
     <div class="flex items-center justify-between">
       <div class="flex items-center justify-center">
         <xt-new-icon icon="fluent:toggle-multiple-16-regular" size="20" class="mr-2"></xt-new-icon>
@@ -19,9 +19,9 @@
           <div class="mr-3 flex items-center pointer justify-center" @click="restList">
             <xt-button style="width: auto !important;" h="0">
               <div class="flex items-center justify-center">
-                <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="20" class="mr-2" :color="'var(--primary-text)'">
+                <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="20" class="mr-2" :color="'var(--link)'">
                 </xt-new-icon>
-                <span class="xt-font xt-text font-14" >重置</span>
+                <span class="xt-font  font-14  xt-theme-text" >重置</span>
               </div>
             </xt-button>
           </div>
@@ -52,14 +52,6 @@
          </xt-button>
        </a-tooltip>
       </template>
-
-      <a-tooltip placement="top" title="登录" v-if="isLogin">
-        <xt-button w="54" h="54" style="border-radius: 12px;" class="mr-3 button-item xt-bg-t-2" @click="login">
-          <div class="flex items-center justify-center">
-           <xt-new-icon icon="fluent:settings-16-regular" size="24"></xt-new-icon>
-          </div>
-        </xt-button>
-      </a-tooltip>
     </div>
   </div>
 </template>
@@ -110,13 +102,6 @@ const restList = () =>{
   control.value.newList = [];
 }
 
-// 登录
-const login = () =>{
-  tsbApi.user.login((data) => {
-    ipc.send('getDetailUserInfo')
-  })
-}
-
 const bottomButton = ref([
   {
     newIcon:'fluent:person-16-regular',name:'用户中心',
@@ -162,14 +147,6 @@ const bottomButton = ref([
   // }
 ])
 
-const isLogin = computed(()=>{
-  if(!userInfo.value){
-    return true;
-  }
-  else {
-    return false;
-  }
-})
 
 onMounted(()=>{
   proxy.$bus.on('closeControl',()=>{

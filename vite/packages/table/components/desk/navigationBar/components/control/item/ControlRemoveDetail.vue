@@ -4,21 +4,38 @@
  </template>
 
  <!-- 用户中心信息 -->
- <template v-else-if="isUserLogin && controlIndex === 'user-info'">
-  <div  class="rounded-xl xt-bg pointer category-button flex flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-if="status === 'del'" @click="removeControl($event)">
-    <div class="absolute" style="top: 7px;right:-4px;" >
-      <xt-button style="width: auto !important;" h="0">
-        <div class="flex items-center justify-center">
-          <xt-new-icon icon="fluent:subtract-circle-16-filled" size="20" :color="'var(--error)'"></xt-new-icon>
-        </div>
-      </xt-button>
+ <template v-else-if="controlIndex === 'user-info'">
+  <template v-if="isUserLogin">
+    <div  class="rounded-xl xt-bg pointer category-button flex flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-if="status === 'del'" @click="removeControl($event)">
+      <div class="absolute" style="top: 7px;right:-4px;" >
+        <xt-button style="width: auto !important;" h="0">
+          <div class="flex items-center justify-center">
+            <xt-new-icon icon="fluent:subtract-circle-16-filled" size="20" :color="'var(--error)'"></xt-new-icon>
+          </div>
+        </xt-button>
+      </div>
+      <UserInfoDetail :userinfo="userInfo"/>
     </div>
-    <UserInfoDetail :userinfo="userInfo"/>
-  </div>
+    <div  class="rounded-xl xt-bg flex pointer category-button flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-else>
+      <UserInfoDetail :userinfo="userInfo"/>
+    </div>
+  </template>
+  <template v-else>
+    <div  class="rounded-xl xt-bg pointer category-button flex flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-if="status === 'del'" @click="removeControl($event)">
+      <div class="absolute" style="top: 7px;right:-4px;" >
+        <xt-button style="width: auto !important;" h="0">
+          <div class="flex items-center justify-center">
+            <xt-new-icon icon="fluent:subtract-circle-16-filled" size="20" :color="'var(--error)'"></xt-new-icon>
+          </div>
+        </xt-button>
+      </div>
+      <UnLogin />
+    </div>
+    <div  class="rounded-xl xt-bg flex pointer category-button flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-else @click="login">
+      <UnLogin />
+    </div>
+  </template>
 
-  <div  class="rounded-xl xt-bg flex pointer category-button flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-else>
-    <UserInfoDetail :userinfo="userInfo"/>
-  </div>
  </template>
 
  <!-- 其他按钮 -->
@@ -58,6 +75,7 @@ import { useRouter } from 'vue-router';
 
 import UserInfoDetail from '../userControl/UserInfoDetail.vue';
 import SystemControlDetail from '../systemControl/SystemControlDetail.vue';
+import UnLogin from '../userControl/UnLogin.vue';
 
 const props = defineProps({
  controlIndex:{
@@ -210,6 +228,13 @@ const isUserLogin = computed(()=>{
   }
 })
 
+
+// 登录
+const login = () =>{
+ tsbApi.user.login((data) => {
+  ipc.send('getDetailUserInfo')
+ })
+}
 </script>
 
 <style lang="scss" scoped>

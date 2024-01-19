@@ -1,6 +1,6 @@
 <template>
  <div class="flex items-center justify-center w-full px-4">
-  <div  class="relative flex items-center  justify-center">
+  <div  class="relative flex items-center  justify-center" @click="goMy">
    <FrameAvatar :avatar-size="100" :frame-url="userinfo.frame" :avatar-url="userinfo.avatar" class="w-full flex justify-center user-container h-full pb-2 object-fill" 
     alt="" :frame="displayUserInfo?.equippedItems?.frameDetail" @close="close"
    >
@@ -27,6 +27,7 @@ import { ref,onMounted,computed,getCurrentInstance } from 'vue';
 import { storeToRefs } from 'pinia';
 import { teamStore } from '../../../../../../store/team';
 import { appStore } from '../../../../../../store';
+import { useRouter } from 'vue-router';
 
 import FrameAvatar from '../../../../../avatar/FrameAvatar.vue';
 import Medal from '../../../../../team/Medal.vue';
@@ -40,12 +41,14 @@ const props = defineProps({
 })
 
 const { proxy } = getCurrentInstance();
+const router = useRouter()
 
 const team = teamStore();
 const app = appStore();
 const { userCardUserInfo } = storeToRefs(app);
 
 const rankList = ref([]);
+
 
 
 // 获取勋章
@@ -94,6 +97,11 @@ const displayUserInfo = computed(()=>{
  }
 })
 
+// 进入我的
+const goMy = () =>{
+  router.push({ name: 'socialMy' });
+  close()
+}
 
 onMounted(()=>{
  getUserRank()
