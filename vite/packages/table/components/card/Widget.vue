@@ -24,7 +24,7 @@
       <slot name="cardTitle">
         <div
           :class="options.noTitle === true ? 'no-title' : 'content-title'"
-          class="flex items-center justify-between pt-3 px-3"
+          class="flex items-center justify-between px-3 pt-3"
         >
           <div class="left-title" v-if="options.noTitle !== true">
             <!-- 标题左侧插槽 -->
@@ -40,7 +40,7 @@
               <slot name="left-title"></slot>
             </div>
           </div>
-          <div class="z-10 right-title flex" v-if="showRightIcon">
+          <div class="z-10 flex right-title" v-if="showRightIcon">
             <!-- 右侧设置插槽  用于扩展标题菜单左侧位置的内容  -->
             <slot name="right-menu"> </slot>
             <RightMenu
@@ -61,7 +61,7 @@
       <PageState :env="env" :options="options">
         <div class="flex-1 h-0">
           <div
-            class="px-3 pb-2 h-full rounded-b-lg"
+            class="h-full px-3 pb-2 rounded-b-lg"
             :style="{ background: options.showColor ? 'var(--main-bg)' : '' }"
           >
             <slot>
@@ -200,6 +200,7 @@ export default {
           },
           title: "删除小组件",
           color: "#FF4D4F",
+          disabled: this.options?.disabled || false,
         },
       ];
     },

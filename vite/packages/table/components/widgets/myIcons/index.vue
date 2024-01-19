@@ -2,24 +2,14 @@
 <!-- 2023-12-19 该组件数据体和新版本有差异 -->
 <template>
   <!-- 图标组件开始 Widget -->
-  <xt-container
-    :customData="customData"
-    :customIndex="customIndex"
-    :options="options"
-    :menuList="menuList"
-    ref="homelSlotRef"
-    :desk="desk"
-  >
+  <Widget :customData="customData" :editing="true" :customIndex="customIndex" :options="options" :menuList="menuList"
+    ref="homelSlotRef" :desk="desk">
     <div ref="iconRef" class="box-border icon-box" :style="dragStyle">
       <!-- 可放置区域 -->
       <droppable-area @drop="handleDrop">
         <xt-task :modelValue="m0202" @cb="handleMenu">
-          <drag-and-follow
-            :isSelect="isSelect"
-            :length="this.iconsRefs.length"
-            @drag-end="handleDragEnd"
-            @drag-start="handleDragStart"
-          >
+          <drag-and-follow :isSelect="isSelect" :length="this.iconsRefs.length" @drag-end="handleDragEnd"
+            @drag-start="handleDragStart">
             <!-- 多图标组件 -->
             <!-- <template
               v-if="
@@ -51,26 +41,17 @@
                 customData.iconList.length > 0
               "
             > -->
-            <icon
-              :newIcon="customData.newIcon"
-              v-bind="customData.iconList[0]"
-              @custom-event="handleCustomEvent"
-            ></icon>
+            <icon :newIcon="customData.newIcon" v-bind="customData.iconList[0]" @custom-event="handleCustomEvent"></icon>
             <!-- </template> -->
           </drag-and-follow>
         </xt-task>
       </droppable-area>
       <!-- 卡片核心 -->
     </div>
-  </xt-container>
+  </Widget>
   <!-- 图标组件结束 -->
   <!-- 内容编辑 -->
-  <Set
-    v-if="settingVisible"
-    v-model="settingVisible"
-    @save="closeSet"
-    :mask="0"
-  ></Set>
+  <Set v-if="settingVisible" v-model="settingVisible" @save="closeSet" :mask="0"></Set>
   <!-- <Edit v-if="settingVisible" @close="settingVisible = false" @save="save()">
   </Edit> -->
   <!-- 多图标组件设置 -->
@@ -86,13 +67,9 @@
     </div>
   </XtDrawer>
   <!-- 底部导航 -->
-  <XtDrawer v-model="menuVisible">
-    <BottomEdit
-      :menuList="menuList"
-      :copy="customData.copy"
-      :merge="customData.merge"
-    ></BottomEdit>
-  </XtDrawer>
+  <!-- <XtDrawer v-model="menuVisible">
+    <BottomEdit :menuList="menuList" :copy="customData.copy" :merge="customData.merge"></BottomEdit>
+  </XtDrawer> -->
 </template>
 <script>
 // components
@@ -120,6 +97,7 @@ import {
 
 import { nanoid } from "nanoid";
 import { useFreeLayoutStore } from "../../desk/freeLayout/store";
+
 export default {
   props: {
     customIndex: {
@@ -128,7 +106,7 @@ export default {
     },
     customData: {
       type: Object,
-      default: () => {},
+      default: () => { },
     },
     desk: {
       type: Object,
@@ -147,13 +125,12 @@ export default {
   data() {
     return {
       checked: false,
-      menuVisible: false,
       index: 0, // 图标数组的下标
       dargFlag: false, // 记录本地拖拽开启状态 用与区别于全局拖拽
       isSelect: false,
       settingVisible: false, // 编辑状态
       iconsSetVisible: false,
-      options: { custom: true }, // 卡片核心配置
+      options: { hide: true,disabled: true}, // 卡片核心配置
     };
   },
   beforeMount() {
@@ -300,13 +277,14 @@ export default {
             }
           },
         },
-        // {
-        //   icon: "guanbi2",
-        //   title: "删除",
-        //   fn: () => {
-        //     this.deleteIcon();
-        //   },
-        // },
+        {
+          newIcon: "akar-icons:trash-can",
+          title: "删除小组件",
+          color: "#FF4D4F",
+          fn: () => {
+            this.deleteIcon();
+          },
+        },
         // {
         //   icon: "guanbi2",
         //   title: "长按框选图标（开发中）",
@@ -357,10 +335,11 @@ export default {
     },
   },
   methods: {
-    ...mapActions(cardStore, ["updateCustomData", "addCard"]),
+    ...mapActions(cardStore, ["updateCustomData", "addCard",]),
+
+
     openIconsSet() {
       this.iconsSetVisible = true;
-      this.menuVisible = false;
     },
     openEdit() {
       let icon = this.customData.iconList[this.index];
@@ -369,11 +348,10 @@ export default {
       Object.keys(this.iconOption).forEach((k) => {
         this.edit[k] = icon[k] || this.iconOption[k];
       });
-      this.menuVisible = false;
       this.settingVisible = true;
     },
     // 开启框选
-    dragSelection() {},
+    dragSelection() { },
     // ctrl + 点击
     handleCustomEvent(event) {
       console.log(this.customData.iconList[0]);
@@ -469,7 +447,6 @@ export default {
     moveIcon() {
       this.isSelect = true; // 打开选中样式
       this.isSelect = true; // 打开选中样式
-      this.menuVisible = false; // 隐藏控件
       let state = false; // 初始化状态
       // 遍历全局数据并拦截重复的数据
       this.iconList.forEach((item) => {
@@ -492,7 +469,6 @@ export default {
     },
     // 复制新的图标组件
     copyIcon() {
-      this.menuVisible = false; // 隐藏控件
       this.isSelect = false; // 关闭选中样式
       // if (this.isCopy === false && this.isDrag === false)
       //   return message.error("你还未移动任何图标组件");
@@ -563,9 +539,11 @@ export default {
           this.iconsRefs[i].doRemoveCard();
         }
         this.iconsRefs = [];
+        this.iconList = []  // 清空图标列表，防止数据添加到导航栏或者文件夹中
       } else {
         this.$refs.homelSlotRef.doRemoveCard();
       }
+      
     },
     // 更新多图标组件标题
     updateGroupTitle(title) {
