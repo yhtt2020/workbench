@@ -41,7 +41,11 @@
     <template v-else>
       <EditControlDesk ref="editRef"/>
     </template>
-    <a-divider style="height: 1px;margin: 8px 0 16px 0;width: 516px;min-width:516px;border-top:1px solid var(--divider);" />
+  
+    <div class="mt-2 mb-4" style="width: 520px;">
+      <div class="mx-auto xt-bb w-full"></div>
+    </div>
+
     <div class="flex items-center justify-center mb-4">
       <template v-for="item in bottomButton">
        <a-tooltip placement="top" :title="item.name">

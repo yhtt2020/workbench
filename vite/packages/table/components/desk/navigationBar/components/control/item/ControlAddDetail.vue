@@ -7,8 +7,8 @@
  <!-- 用户中心数据信息模块 -->
  <template v-else-if="controlIndex === 'user-info'">
   <template v-if="isUserInfoNull">
-    <div  class="rounded-xl pointer category-button xt-bg flex items-center justify-center flex-col relative" style="height: 120px;width:252px;"  @click="addControl($event)">
-      <div class="absolute" style="top: 7px;right:-4px;">
+    <div  class="rounded-xl pointer category-button xt-bg-t-2 flex items-center justify-center flex-col relative" style="height: 120px;width:252px;"  @click="addControl($event)">
+      <div class="absolute" style="top: 3px;right:-4px;">
         <xt-button style="width: auto !important;" h="0">
           <div class="flex items-center justify-center">
             <xt-new-icon icon="fluent:add-circle-12-filled" size="20" :color="'var(--link)'"></xt-new-icon>
@@ -20,8 +20,8 @@
   </template>
 
   <template v-else>
-    <div  class="rounded-xl pointer category-button xt-bg flex items-center justify-center flex-col relative" style="height: 120px;width:252px;"  @click="addControl($event)">
-      <div class="absolute" style="top: 7px;right:-4px;">
+    <div  class="rounded-xl pointer category-button xt-bg-t-2 flex items-center justify-center flex-col relative" style="height: 120px;width:252px;"  @click="addControl($event)">
+      <div class="absolute" style="top: 3px;right:-4px;">
         <xt-button style="width: auto !important;" h="0">
           <div class="flex items-center justify-center">
             <xt-new-icon icon="fluent:add-circle-12-filled" size="20" :color="'var(--link)'"></xt-new-icon>
@@ -35,7 +35,7 @@
 
  <!-- 控制中心其他按钮 -->
  <template v-else>
-  <div  class="xt-bg rounded-xl pointer category-button flex flex-col items-center justify-center relative" style="height: 120px;width: 120px;" @click="addControl($event)">
+  <div  class="xt-bg-t-2 rounded-xl pointer category-button flex flex-col items-center justify-center relative" style="height: 120px;width: 120px;" @click="addControl($event)">
    <div class="absolute" style="top: 7px;right:-4px;">
     <xt-button style="width: auto !important;" h="0">
       <div class="flex items-center justify-center">

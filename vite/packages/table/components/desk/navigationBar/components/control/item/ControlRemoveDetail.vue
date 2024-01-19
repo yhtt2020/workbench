@@ -6,7 +6,7 @@
  <!-- 用户中心信息 -->
  <template v-else-if="controlIndex === 'user-info'">
   <template v-if="isUserLogin">
-    <div  class="rounded-xl xt-bg pointer category-button flex flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-if="status === 'del'" @click="removeControl($event)">
+    <div  class="rounded-xl xt-bg-t-2 pointer category-button flex flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-if="status === 'del'" @click="removeControl($event)">
       <div class="absolute" style="top: 7px;right:-4px;" >
         <xt-button style="width: auto !important;" h="0">
           <div class="flex items-center justify-center">
@@ -16,12 +16,12 @@
       </div>
       <UserInfoDetail :userinfo="userInfo"/>
     </div>
-    <div  class="rounded-xl xt-bg flex pointer category-button flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-else>
+    <div  class="rounded-xl xt-bg-t-2 flex pointer category-button flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-else>
       <UserInfoDetail :userinfo="userInfo"/>
     </div>
   </template>
   <template v-else>
-    <div  class="rounded-xl xt-bg pointer category-button flex flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-if="status === 'del'" @click="removeControl($event)">
+    <div  class="rounded-xl xt-bg-t-2 pointer category-button flex flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-if="status === 'del'" @click="removeControl($event)">
       <div class="absolute" style="top: 7px;right:-4px;" >
         <xt-button style="width: auto !important;" h="0">
           <div class="flex items-center justify-center">
@@ -31,7 +31,7 @@
       </div>
       <UnLogin />
     </div>
-    <div  class="rounded-xl xt-bg flex pointer category-button flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-else @click="login">
+    <div  class="rounded-xl xt-bg-t-2 flex pointer category-button flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-else @click="login">
       <UnLogin />
     </div>
   </template>
@@ -40,7 +40,7 @@
 
  <!-- 其他按钮 -->
  <template v-else>
-  <div  class="xt-bg rounded-xl pointer category-button flex flex-col items-center justify-center relative" style="height: 120px;width: 120px;" v-if="status === 'del'" @click="removeControl">
+  <div  class="xt-bg-t-2 rounded-xl pointer category-button flex flex-col items-center justify-center relative" style="height: 120px;width: 120px;" v-if="status === 'del'" @click="removeControl">
    <div class="absolute" style="top: 7px;right:-4px;" >
     <xt-button style="width: auto !important;" h="0">
       <div class="flex items-center justify-center">
@@ -55,7 +55,7 @@
   </div>
 
   <div v-else class="rounded-xl category-button pointer flex flex-col items-center justify-center relative" 
-    style="height: 120px;width: 120px;"  @click="triggerControl($event)" :class="controlStatus?.status ? 'xt-theme-bg':'xt-bg'">
+    style="height: 120px;width: 120px;"  @click="triggerControl($event)" :class="controlStatus?.status ? 'xt-theme-bg':'xt-bg-t-2'">
     <div class="w-14 h-14 flex items-center xt-bg-t-2 justify-center rounded-full mb-3">
       <xt-new-icon :icon="controlItem.icon" size="24" :color="controlStatus?.status ? 'var(--active-text)':'var(--primary-text)'"></xt-new-icon>
     </div>
