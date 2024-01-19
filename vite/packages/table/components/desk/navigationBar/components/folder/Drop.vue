@@ -92,7 +92,7 @@ const handleDrop = async (dragEvent) => {
  * @param {*} dragEvent
  */
 const handleDragenter = (dragEvent) => {
-  console.log('拖拽进入','<<<<<<<<<+++=====')
+  // console.log('拖拽进入','<<<<<<<<<+++=====')
   if (dragEvent.dataTransfer.types.length > 0) {
     console.log(dragEvent.dataTransfer.types[0], 'name')
     isEnterBar.value = true;
@@ -108,7 +108,7 @@ const handleDragover = (dragEvent) => {
 };
 
 const handleDragleave = (dragEvent) => {
-  console.log('拖拽离开','<<<<<<<<<+++=====')
+  // console.log('拖拽离开','<<<<<<<<<+++=====')
 }
 /**
  * 鼠标弹起事件
@@ -125,7 +125,7 @@ const handleMouseUp = (e) => {
   });
 }
 const handleMouseLeave = () => {
-
+  
 }
 const handleMouseOver = () => {
 

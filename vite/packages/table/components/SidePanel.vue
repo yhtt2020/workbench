@@ -4,7 +4,7 @@
     <!-- style="z-index: 99" -->
     <!-- 文件夹弹窗 -->
     <div style="position: absolute; z-index: 500 !important;"
-      :style="{ left: `${navAttribute.navSize / 100 * this.left}px`, top: `${this.top}px` }" class="rounded-xl pointer "
+      :style="folderPos" class="rounded-xl pointer "
       id="folder">
       <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:size="updateSize" :customData="customData"
         :customIndex="sideKey" :secondary="true" v-if="folderVisible" :expand="{ disabled: true }" :navBar="{
@@ -115,7 +115,7 @@ import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
 import _ from 'lodash-es'
 import EditIcon from './desk/navigationBar/components/EditIcon/EditIcon.vue'
 import { startApp } from '../ui/hooks/useStartApp'
-import { updateIcon } from '../components/desk/navigationBar/index'
+// import { updateIcon } from '../components/desk/navigationBar/index'
 import Avatar from "./desk/navigationBar/components/Avatar.vue";
 import Team from './bottomPanel/Team.vue'
 import FolderVue from './desk/navigationBar/components/folder/Folder.vue'
@@ -446,7 +446,13 @@ export default {
       } else {
         return { right: 65 + 'px' }
       }
-    }
+    },
+    folderPos(){
+      if(this.sortId==='left'){
+        return { left: `${this.navAttribute.navSize / 100 * 100}px`, top: `${this.top}px` }
+      }
+      return { right: `${this.navAttribute.navSize / 100 * 100}px`, top: `${this.top}px` }
+    },
   },
   mounted() {
     this.enableDrag()
@@ -555,7 +561,6 @@ export default {
     ...mapActions(navStore, ['removeSideNavigationList', 'removeRightNavigationList', 'setSideNavigationList', 'setRightNavigationList', 'setRightNavigationList', 'loadNav']),
     ...mapActions(useNavigationStore, ['toggleEdit']),
     ...mapActions(appStore, ['toggleFullScreen']),
-    updateIcon,
     renderIcon,
     replaceType,
     disableDrag() {
@@ -817,15 +822,10 @@ export default {
       let vW = this.parentSize
       // 元素坐标
       let posY = Number((this.defaultPosition.y).toFixed(0))
-      let posX = Number((this.defaultPosition.x).toFixed(0))
       // 元素大小
       let menuW = draggableSize[1] * 100
-      // let menuW = draggableSize[0] * 140
-      // console.log(vW,posY,menuW, 'vW');
       posY = posY > vW - (menuW / 2) ? vW - menuW : (posY - menuW / 2 < 0 ? 0 : posY - menuW / 2);
       this.top = posY
-      this.left = posX < 100 ? 100 : posX - menuW - 130
-      console.log(this.left, this.top, 'posY')
     },
     /**
      * 获取当前拖拽元素的坐标

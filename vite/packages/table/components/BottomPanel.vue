@@ -12,7 +12,7 @@
 
     </div>
 
-    <div class="absolute" v-if="controlVisible" style="bottom:100px;z-index:888;" :style="{left:`${controlLeft}px`}">
+    <div class="absolute" v-if="controlVisible" style="bottom:100px;z-index:888;" :style="{ left: `${controlLeft}px` }">
       <ControlModal @close="controlVisible = false"></ControlModal>
     </div>
 
@@ -216,7 +216,8 @@ import ChatButton from './bottomPanel/ChatButton.vue'
 import { Icon as navIcon } from '@iconify/vue'
 import navigationData from '../js/data/tableData'
 import { offlineStore } from '../js/common/offline'
-import { moreMenus, extraRightMenu, mergeIconFolder, updateIcon } from '../components/desk/navigationBar/index'
+import { moreMenus, extraRightMenu } from '../components/desk/navigationBar/index'
+import { useMergeFolder} from '../components/desk/navigationBar/hook/mergeFolder.ts'
 import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
@@ -438,8 +439,8 @@ export default {
       left: 0,
       parentSize: 0,
       // 控制中心弹窗
-      controlVisible:false,
-      controlLeft:0,
+      controlVisible: false,
+      controlLeft: 0,
       skipSort: false,
     }
   },
@@ -624,22 +625,11 @@ export default {
         return '6x4'
       }
     },
-    /**
-     * 防止一次性添加过多导致图标截断
-     */
-    showList() {
-      return this.copyFootNav.slice(0, this.maxItemNum)
-    },
 
   },
   watch: {
     copyFootNav: {
       handler(newVal, oldVal) {
-        // let fixedRs=this.fixData(newVal)
-        // if(fixedRs.fixed){
-        //   this.copyFootNav=fixedRs.fixedArray
-        // }
-        // console.log(111111111,'form copyFootNav',this.copyFootNav)
         // 获取最大可添加图标个数
         const windowWidth = window.innerWidth
         this.maxItemNum = Math.round((windowWidth - 240) / 72)
@@ -742,6 +732,18 @@ export default {
       },
       deep: true
     },
+    'navAttribute.navSize': {
+      handler(newV, oldV) {
+        // const bottom = document.getElementById('bottom-bar')
+        // bottom.style.zoom = window.devicePixelRatio
+        // bottom.style.transformOrigin = 'left top'
+        // bottom.style.transform = 'scale(' + (1 / window.devicePixelRatio) + ')'
+        // bottom.style.width = window.devicePixelRatio * 100 + '%'
+        // bottom.style.height = window.devicePixelRatio * 100 + '%'
+        this.syncBottomPanel()
+        console.log('newV', newV, 'oldV', oldV)
+      }
+    }
   },
   methods: {
     useElementSize,
@@ -1065,7 +1067,6 @@ export default {
 
       }
     },
-    updateIcon,
     createFile(item, x) {
       this.skipSort = true
       const bottom = document.querySelector('#bottomPanel')
@@ -1074,7 +1075,7 @@ export default {
       console.log(index, item, 'index');
       this.dragItem = null
       if (this.copyFootNav[this.hoverIndex]?.type === 'folder') {
-        const merged = this.mergeIconFolder(this.copyFootNav, item, this.copyFootNav.find(i => {
+        const merged = this.useMergeFolder(this.copyFootNav, item, this.copyFootNav.find(i => {
           return i.id === this.hoverRealItemId()
         }))
         this.copyFootNav.splice(this.copyFootNav.findIndex(i => {
@@ -1238,7 +1239,7 @@ export default {
         onUnchoose: function (event) {
           if (that.hoverRealItemId() && that.hoverRealItemId() !== that.dragItem?.id) {
             //存在目标，且不等于自身，符合合并条件，则执行合并
-            const merged = that.mergeIconFolder(that.copyFootNav, that.dragItem, that.copyFootNav.find(item => {
+            const merged = that.useMergeFolder(that.copyFootNav, that.dragItem, that.copyFootNav.find(item => {
               return item.id === that.hoverRealItemId()
             }))
             that.copyFootNav.splice(that.copyFootNav.findIndex(item => {
@@ -1293,7 +1294,7 @@ export default {
     },
     useWindowSize,
     replaceType,
-    mergeIconFolder,
+    useMergeFolder,
     renderIcon,
     delNavigation(sumList, oneNav, index, delMethod) {
       if (!this.mainNavigationList.find((item) => item.name === oneNav.name)) {
@@ -1311,7 +1312,7 @@ export default {
     },
 
     //  点击头像框打开控制中心
-    openControl(event){
+    openControl(event) {
       this.controlVisible = !this.controlVisible;
       this.controlLeft = event.clientX - 200;
       // this.resetElementPosition(event.clientX)
@@ -1422,4 +1423,5 @@ export default {
 .v-enter-from,
 .v-leave-to {
   opacity: 0;
-}</style>
+}
+</style>
