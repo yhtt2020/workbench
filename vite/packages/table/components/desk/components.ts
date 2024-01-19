@@ -83,13 +83,15 @@ import RadioTab from "../../components/RadioTab.vue";
 import Menu from "../../ui/new/mixMenu/FunMenu.vue";
 import CurrentDesk from "./set/CurrentDesk.vue";
 import GlobalDesk from "./set/GlobalDesk.vue";
+import Test from "../widgets/test/index.vue";
 
 import Folder from "../../apps/folder";
 
 export default {
   components: {
+    Test,
     LoadingOutlined,
-     GlobalDesk,
+    GlobalDesk,
     CurrentDesk,
     Folder,
     Menu,

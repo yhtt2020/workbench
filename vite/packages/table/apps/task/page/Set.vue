@@ -9,7 +9,7 @@
       </template>
     </xt-title>
     <xt-title type="text" m="mt"
-      >开启后会在底部导航右侧显示「任务中心」入口，你可以在这里快速访问。
+      >开启后会在底部导航显示「任务中心」入口，你可以在这里快速访问。
     </xt-title>
   </div>
 </template>

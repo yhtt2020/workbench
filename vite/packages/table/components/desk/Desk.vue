@@ -39,9 +39,12 @@
       <FreeLayoutScrollbar
         ref="freeLayoutScrollbar"
         class="flex-1"
-        v-if="isFreeLayout == true && $route.path == '/main' && freeLayout"
+        v-if="freeLayout"
       >
-        <FreeLayoutCanvas class="home-widgets">
+        <FreeLayoutCanvas
+          class="home-widgets"
+          v-if="isFreeLayout == true && $route.path == '/main' && freeLayout"
+        >
           <FreeLayoutContainer
             :currentDesk="currentDesk"
             :currentID="currentDesk.id"
@@ -255,6 +258,7 @@ import { LoadingOutlined } from "@ant-design/icons-vue";
 import GalleryModal from "../paperModal/GalleryModal.vue";
 import { useAddCard, file } from "../../ui/hooks/useAddCard";
 import { useDeskStore } from "./store";
+import { useCustomLayout } from "./freeLayout/useCustomLayout";
 
 import Drop from "./Drop.vue";
 export default {
@@ -339,6 +343,19 @@ export default {
     },
   },
   watch: {
+    adjustLayout(val) {
+      if (val) {
+        this.toggleEditing();
+        this.adjustLayout = false;
+      }
+    },
+    // hideCard: {
+    //   handler(newVal) {
+    //     this.addMenu(this.hideCard);
+    //   },
+    //   deep: true,
+    //   immediate: true,
+    // },
     deskMenus: {
       handler(newVal) {
         this.deskMenus.forEach((item) => {
@@ -387,8 +404,7 @@ export default {
           lock: true,
           children: [
             {
-              id: 4,
-              parentId: 3,
+              id: 5,
               newIcon: "fluent:circle-off-16-regular",
               name: "清空桌面",
               fn: () => {
@@ -439,7 +455,43 @@ export default {
     ]),
     ...mapWritableState(useFloatMenuStore, ["menus", "newMenus"]),
     ...mapWritableState(useNavigationStore, ["selectNav", "isDesk"]),
-    ...mapWritableState(useDeskStore, ["autoOpenEdit"]),
+    ...mapWritableState(useDeskStore, ["autoOpenEdit", "adjustLayout"]),
+    // hideCard() {
+    //   let currentHide = null;
+    //   if (this.isFreeLayout) {
+    //     currentHide = this.getFreeLayoutState?.system?.hide;
+    //   } else {
+    //     currentHide = this.hide;
+    //   }
+    //   return {
+    //     id: 20,
+    //     newIcon: "fluent:more-horizontal-16-filled",
+    //     name: "更多",
+    //     lock: true,
+    //     children: [
+    //       {
+    //         id: 1,
+    //         newIcon: this.hide
+    //           ? "fluent:eye-16-regular"
+    //           : "fluent:eye-off-16-regular",
+    //         name: currentHide ? "显示小组件" : "隐藏小组件",
+    //         fn: () => {
+    //           if (this.isFreeLayout) {
+    //             this.getFreeLayoutState.system.hide =
+    //               !this.getFreeLayoutState?.system?.hide;
+    //           } else {
+    //             if (this.hide) {
+    //               this.showDesk();
+    //             } else {
+    //               this.hideDesk();
+    //             }
+    //           }
+    //         },
+    //         disabled: false,
+    //       },
+    //     ],
+    //   };
+    // },
     navMenu() {
       if (
         !this.navigationToggle[0] &&
@@ -466,7 +518,21 @@ export default {
       } else {
         currentHide = this.hide;
       }
+      //   return
       return [
+        {
+          id: 0,
+          newIcon: "fluent:add-16-filled",
+          name: "测试",
+          disabled: true,
+          fn: () => {
+            useCustomLayout();
+            // 0 提供一个伪卡片
+            // 提供一个添加卡片
+            // 1 添加新的桌面
+            // 2 切换为自由布局
+          },
+        },
         {
           id: 1,
           newIcon: "fluent:add-16-filled",
@@ -527,26 +593,6 @@ export default {
         },
 
         {
-          id: 10,
-          newIcon: this.hide
-            ? "fluent:eye-16-regular"
-            : "fluent:eye-off-16-regular",
-          name: currentHide ? "显示小组件" : "隐藏小组件",
-          fn: () => {
-            if (this.isFreeLayout) {
-              this.getFreeLayoutState.system.hide =
-                !this.getFreeLayoutState?.system?.hide;
-            } else {
-              if (this.hide) {
-                this.showDesk();
-              } else {
-                this.hideDesk();
-              }
-            }
-          },
-          disabled: false,
-        },
-        {
           id: 11,
           disabled: true,
           name: "添加到导航栏",
@@ -580,6 +626,34 @@ export default {
           fn: this.showSetting,
         },
         { id: 13, divider: true },
+        {
+          id: 20,
+          newIcon: "fluent:more-horizontal-16-filled",
+          name: "更多",
+          lock: true,
+          children: [
+            {
+              id: 1,
+              newIcon: this.hide
+                ? "fluent:eye-16-regular"
+                : "fluent:eye-off-16-regular",
+              name: currentHide ? "显示小组件" : "隐藏小组件",
+              fn: () => {
+                if (this.isFreeLayout) {
+                  this.getFreeLayoutState.system.hide =
+                    !this.getFreeLayoutState?.system?.hide;
+                } else {
+                  if (this.hide) {
+                    this.showDesk();
+                  } else {
+                    this.hideDesk();
+                  }
+                }
+              },
+              disabled: false,
+            },
+          ],
+        },
       ];
     },
     usingSettings() {
@@ -647,7 +721,7 @@ export default {
     });
     this.$bus.on("M0201", () => {
       setTimeout(() => {
-      this.$refs.galleryRef.openGalleryModal();
+        this.$refs.galleryRef.openGalleryModal();
       }, 100);
     });
 

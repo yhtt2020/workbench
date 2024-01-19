@@ -47,7 +47,7 @@ export const tasks = {
           open: [
             {
               type: "router",
-              value: "video",
+              value: "GameCapture",
             },
           ],
         },
@@ -59,7 +59,7 @@ export const tasks = {
           open: [
             {
               type: "router",
-              value: "video",
+              value: "GameCapture"
             },
           ],
         },

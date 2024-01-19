@@ -39,7 +39,7 @@ export const useFloatMenuStore = defineStore("useFloatMenuStore", {
           }
           children.sort((a, b) => a.id - b.id);
           item.children = children;
-          console.log("item :>> ", item);
+
           return item;
         }
         // 无父级ID 父级存在做替换

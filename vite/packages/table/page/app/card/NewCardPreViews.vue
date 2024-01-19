@@ -306,7 +306,7 @@ export default {
     },
   },
   mounted() {
- 
+
   },
   data() {
     return {
@@ -427,7 +427,10 @@ export default {
       this.$emit("addSuccess");
       message.success("添加成功！");
       completeTask("m0101");
-      completeTask("m0302");
+
+      if (item.name =='yuanCommunity' ) {
+        completeTask("m0302");
+      }
     },
     closeMarket(val) {
       this.openRemote = val;

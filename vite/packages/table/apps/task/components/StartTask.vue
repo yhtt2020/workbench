@@ -42,7 +42,7 @@ const app = appStore();
 
 // 初始化
 const store = taskStore();
-const { currentId, startList, claimRewardsList, completedList } =
+const { currentId, startList, claimRewardsList, completedList, rewardVisible } =
   storeToRefs(store);
 const router = useRouter();
 const props = defineProps({
@@ -65,12 +65,6 @@ const getGuide = () => {
       toastClassName: "notice-toast",
     }
   );
-};
-
-// 任务步骤初始化
-const init = () => {
-  store.step = 1;
-  store.isTaskDrawer = false;
 };
 
 // 任务引导
@@ -97,15 +91,15 @@ const startTask = () => {
       });
     }
     if (item.type === "bus") {
-
-      console.log('item.type :>> ', item.value);
+      console.log("item.type :>> ", item.value);
       setTimeout(() => {
         proxy.$bus.emit(item.value);
       }, 200);
     }
   });
-
-  store.isTaskDrawer = false;
+  setTimeout(() => {
+    store.isTaskDrawer = false;
+  }, 201);
 };
 
 const continueTask = computed(() => {
@@ -115,7 +109,8 @@ const continueTask = computed(() => {
 
 // 领取奖励
 const receive = async () => {
-  getReward(props.task.id);
+  currentId.value = props.task.id;
+  rewardVisible.value = true;
 };
 const getReceiveStatus = computed(() => {
   return claimRewardsList.value.includes(props.task.id);
@@ -123,6 +118,7 @@ const getReceiveStatus = computed(() => {
 
 // 已完成任务
 const completeTask = computed(() => {
+console.log('completedList.value :>> ', completedList.value);
   return completedList.value.includes(props.task.id);
 });
 </script>
