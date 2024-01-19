@@ -349,6 +349,13 @@ export default {
         this.adjustLayout = false;
       }
     },
+    // hideCard: {
+    //   handler(newVal) {
+    //     this.addMenu(this.hideCard);
+    //   },
+    //   deep: true,
+    //   immediate: true,
+    // },
     deskMenus: {
       handler(newVal) {
         this.deskMenus.forEach((item) => {
@@ -397,8 +404,7 @@ export default {
           lock: true,
           children: [
             {
-              id: 4,
-              parentId: 3,
+              id: 5,
               newIcon: "fluent:circle-off-16-regular",
               name: "清空桌面",
               fn: () => {
@@ -450,6 +456,42 @@ export default {
     ...mapWritableState(useFloatMenuStore, ["menus", "newMenus"]),
     ...mapWritableState(useNavigationStore, ["selectNav", "isDesk"]),
     ...mapWritableState(useDeskStore, ["autoOpenEdit", "adjustLayout"]),
+    // hideCard() {
+    //   let currentHide = null;
+    //   if (this.isFreeLayout) {
+    //     currentHide = this.getFreeLayoutState?.system?.hide;
+    //   } else {
+    //     currentHide = this.hide;
+    //   }
+    //   return {
+    //     id: 20,
+    //     newIcon: "fluent:more-horizontal-16-filled",
+    //     name: "更多",
+    //     lock: true,
+    //     children: [
+    //       {
+    //         id: 1,
+    //         newIcon: this.hide
+    //           ? "fluent:eye-16-regular"
+    //           : "fluent:eye-off-16-regular",
+    //         name: currentHide ? "显示小组件" : "隐藏小组件",
+    //         fn: () => {
+    //           if (this.isFreeLayout) {
+    //             this.getFreeLayoutState.system.hide =
+    //               !this.getFreeLayoutState?.system?.hide;
+    //           } else {
+    //             if (this.hide) {
+    //               this.showDesk();
+    //             } else {
+    //               this.hideDesk();
+    //             }
+    //           }
+    //         },
+    //         disabled: false,
+    //       },
+    //     ],
+    //   };
+    // },
     navMenu() {
       if (
         !this.navigationToggle[0] &&
@@ -476,6 +518,7 @@ export default {
       } else {
         currentHide = this.hide;
       }
+      //   return
       return [
         {
           id: 0,
@@ -550,26 +593,6 @@ export default {
         },
 
         {
-          id: 10,
-          newIcon: this.hide
-            ? "fluent:eye-16-regular"
-            : "fluent:eye-off-16-regular",
-          name: currentHide ? "显示小组件" : "隐藏小组件",
-          fn: () => {
-            if (this.isFreeLayout) {
-              this.getFreeLayoutState.system.hide =
-                !this.getFreeLayoutState?.system?.hide;
-            } else {
-              if (this.hide) {
-                this.showDesk();
-              } else {
-                this.hideDesk();
-              }
-            }
-          },
-          disabled: false,
-        },
-        {
           id: 11,
           disabled: true,
           name: "添加到导航栏",
@@ -603,6 +626,34 @@ export default {
           fn: this.showSetting,
         },
         { id: 13, divider: true },
+        {
+          id: 20,
+          newIcon: "fluent:more-horizontal-16-filled",
+          name: "更多",
+          lock: true,
+          children: [
+            {
+              id: 1,
+              newIcon: this.hide
+                ? "fluent:eye-16-regular"
+                : "fluent:eye-off-16-regular",
+              name: currentHide ? "显示小组件" : "隐藏小组件",
+              fn: () => {
+                if (this.isFreeLayout) {
+                  this.getFreeLayoutState.system.hide =
+                    !this.getFreeLayoutState?.system?.hide;
+                } else {
+                  if (this.hide) {
+                    this.showDesk();
+                  } else {
+                    this.hideDesk();
+                  }
+                }
+              },
+              disabled: false,
+            },
+          ],
+        },
       ];
     },
     usingSettings() {
