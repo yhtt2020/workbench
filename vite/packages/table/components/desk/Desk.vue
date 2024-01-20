@@ -256,9 +256,10 @@ import _ from "lodash-es";
 import { registerFolder } from "../../apps/folder/src/hooks/register";
 import { LoadingOutlined } from "@ant-design/icons-vue";
 import GalleryModal from "../paperModal/GalleryModal.vue";
-import { useAddCard, file } from "../../ui/hooks/useAddCard";
+import { useAddCard } from "../../ui/hooks/useAddCard";
 import { useDeskStore } from "./store";
 import { useCustomLayout } from "./freeLayout/useCustomLayout";
+import { useFileConversionIcon} from '../../apps/folder/src/hooks/useDataConversion'
 
 import Drop from "./Drop.vue";
 export default {
@@ -867,10 +868,10 @@ export default {
       this.isDesk = true;
       console.log(this.selectNav, "selectNav");
     },
-    file,
+    useFileConversionIcon,
     useAddCard,
     addIcon(item, index) {
-      const file = this.file(item);
+      const file = this.useFileConversionIcon(item);
       this.useAddCard("myIcons", {
         iconList: [{ ...file }],
         newIcon: true,

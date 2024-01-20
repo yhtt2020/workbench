@@ -328,107 +328,7 @@ export const addIconPosition=[
     }
 ]
 
-// 副本内容与原始内容同步
-export const updateIcon = (list,copy)=>{
-    if (list.length > copy.length) {
-        // console.log('list 大于 copy')
-        const target = updateNavList(list, copy);
-        // console.log(target, 'target[0]')
-        // copy = JSON.parse(JSON.stringify(target)).concat(copy);
-        for(let i=0;i<target.length;i++){
-          const index = list.findIndex(item => {
-              return judge(item, target[i]);
-          })
-          copy.splice(index, 0, target[i]);
-        }
-        return copy
-      } else if (list.length < copy.length) {
-        // console.log('list 小于 copy')
-        const target = updateNavList(copy, list);
-        // console.log(target, 'target[0]')
-        target.forEach(element => {
-          const index = copy.findIndex(item => {
-            // 找到被删除元素在备份数据中的索引
-            return judge(item, element);
-          });
-          if (index !== -1) {
-            copy.splice(index, 1);
-          }
-        })
-        return copy
-      }
-      else {
-        // console.log('list 等于 copy')
-        const rearrangedCopyFootNav = [];
-        // 遍历 footNavigationList，根据其顺序获取 copyFootNav 中对应元素的引用
-        list.forEach((item) => {
-          // 在 copyFootNav 中寻找与 footNavigationList 对应的元素
-          const correspondingElement = copy.find((copyItem) => {
-            return judge(item, copyItem);
-          });
 
-          // 如果找到对应元素，则将其放入新数组中
-          if (correspondingElement) {
-            rearrangedCopyFootNav.push(correspondingElement);
-          }
-        });
-
-        // 更新 copyFootNav 为重新排列后的数组
-        copy = rearrangedCopyFootNav;
-        return copy
-      }
-}
-
-// 查找需要删除/添加的元素
-export const updateNavList = (list,copy)=>{
-    const filteredNavList = list.filter((item) => {
-        return !copy.some((i) => {
-          if (item.type === 'coolApp') {
-            return item.value.url === i.value.url;
-          }
-          return item.value === i.value;
-        });
-      });
-      return filteredNavList;
-}
-
-export const  judge=(ele, item)=> {
-    if (ele.type === 'coolApp') {
-      return ele.value.url === item.value.url
-    } else if (ele.id && item.id) {
-      // console.log(ele, item, 'folder is none')
-      return ele.id === item.id
-    } else {
-      return ele.value === item.value
-    }
-  }
-
-// 图标文件夹模式
-// export const mergeIconFolder= (list,index,tIndex)=>{
-//     const arr = [list[index],list[tIndex]]
-//     return {
-//         name:"文件夹",
-//         bg:'',
-//         isBg:"",
-//         icon:'',
-//         type:'folder',
-//         value:'',
-//         children: Array.flat(childrenFolder(arr),1),
-//         mode:'app',
-//     }
-// }
-
-// export const childrenFolder = (list)=>{
-//     let arr = []
-//     list.map((item)=>{
-//         if(item.children){
-//             childrenFolder(item.children)
-//         }else{
-//             arr.push(item)
-//         }
-//     })
-//     return arr
-// }
 /**
  * 合并图标组
  * @param list
@@ -443,9 +343,9 @@ export const mergeIconFolder = (list, from, target) => {
     if(target.type === 'folder'){
         return {
             name: target.name || "文件夹",
-            bg: '',
+            bg: target.bg || '',
             isBg: false,
-            icon: '',
+            icon: target.icon ||'',
             type: 'folder',
             value: 'folder',
             children: childrenFolder([from,target]).flat(1),
@@ -453,11 +353,12 @@ export const mergeIconFolder = (list, from, target) => {
             id: nanoid(6),
             size: target.size || '',
             layout : target.layout || '',
+            color: target.color || '',
         }
     }
     return {
         name: "文件夹",
-        bg: '',
+        bg:  '',
         isBg: false,
         icon: '',
         type: 'folder',
@@ -504,52 +405,3 @@ export const  deduplicateArray=(arr)=> {
     }, []);
 }
 
-
-export const searchItem = (list,arr) =>{
-    list.forEach(element => {
-        arr.forEach(item => {
-            if(element.type === 'coolApp'){
-                return item.value.url === element.value.url
-            }else{
-                return item.value === element.value
-            }
-        });
-    });
-}
-
-
-export const findItem = (target,list)=>{
-    return target.map(element => {
-        return  list.find(item => {
-            if(element.type === 'coolApp'){
-                return item.value.url === element.value.url
-            } else if(element.value === 'folder'){
-                return findItem(element.children,list.children ? list.children : [list])
-            } else{
-                return item.value === element.value
-            }
-        })
-    })
-}
-
-export const forItem = (arr, list) => {
-    return arr.map(element => {
-      return list.map(item => {
-        if (element.type === 'coolApp') {
-          return item.value.url === element.value.url;
-        } else {
-          return item.value === element.value;
-        }
-      });
-    });
-  };
-// target.forEach(element => {
-//     const index =copyFootNav.findIndex(item => {
-//       // 找到被删除元素在备份数据中的索引
-//       if (element.type === 'coolApp') {
-//         return item.value.url === element.value.url;
-//       } else if(element.value === 'folder') {
-//         return
-//       }
-//       return item.value === element.value;
-//     });

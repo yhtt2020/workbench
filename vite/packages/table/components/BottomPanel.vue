@@ -6,11 +6,18 @@
     <div style="position: absolute; z-index: 500 !important;"
       :style="{ left: `${this.left}px`, bottom: `${navAttribute.navSize / 100 * 100}px` }" class="rounded-xl pointer "
       id="folder">
-      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:size="updateSize" :customData="customData" :customIndex="bottomKey"
-        :secondary="true" v-if="folderVisible" :expand="{ disabled: true }"
+      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:size="updateSize" :customData="customData"
+        :customIndex="bottomKey" :secondary="true" v-if="folderVisible" :expand="{ disabled: true }"
         :navBar="{ resize: false, sizeOption: false, isDel: true, hierarchy: true }" :auto="true" />
-      <ControlModal ref="controlRef" v-if="controlVisible" @close="controlVisible = false" :full="full" @setFull="setFull"/>
+
     </div>
+
+    <div class="absolute" v-if="controlVisible" style="bottom:100px;z-index:888;" :style="{ left: `${controlLeft}px` }">
+      <ControlModal @close="controlVisible = false"></ControlModal>
+    </div>
+
+    <!--  <ControlModal ref="controlRef" v-if="controlVisible" @close="controlVisible = false" :full="full" @setFull="setFull"/> -->
+
     <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
       id="bottom-bar" style="text-align: center;position: relative;" @contextmenu="showMenu" v-show="navigationToggle[2]"
       :style="{ zoom: `${(this.navAttribute.navSize / 100)}` }">
@@ -29,7 +36,10 @@
       "
         :style="{ width: this.settings.enableChat ? '160px' : '80px', paddingLeft: this.settings.enableChat ? '16px !important' : '0px !important', paddingRight: this.settings.enableChat ? '16px !important' : '0px !important', borderRadius: this.navAttribute.navRadius + 'px' }">
         <div class="flex items-center justify-between" :style="{ marginLeft: this.settings.enableChat ? '10px' : '0px' }">
-          <MyAvatar :chat="true" :level="false"></MyAvatar>
+          <div @click="openControl($event)">
+            <MyAvatar :chat="true" :level="false" :limit="false"></MyAvatar>
+          </div>
+          <!---->
           <div v-show="settings.enableChat" class="pl-4 pointer">
             <ChatButton :tipPosition="navAttribute.navSize"></ChatButton>
           </div>
@@ -44,7 +54,7 @@
         </div>
       </div>
       <!-- 快速搜索 底部栏区域 -->
-      <Drop @createFile="createFile">
+      <Drop @createFile="createFile" currentId='bottom'>
         <transition>
           <div v-if="hoverIndex > -1 && !skipSort && hoverRealItemId() !== dragItem?.id"
             style="position: absolute;z-index:99999999999;top:-8px;left:50%;transform: translateX(-50%) translateY(-100%)  ;"
@@ -101,7 +111,7 @@
                           :class="{ hover: (dragItem && item.id === hoverRealItemId() && dragItem?.id !== hoverRealItemId()) }"
                           style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                           @click.stop="newOpenApp(item.type, item.value, item)">
-
+                          <!-- <Drag :data="item" :currentId="currentId"> -->
                           <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"
                             :placement="'top'">
                           </Team>
@@ -111,6 +121,8 @@
                           <template v-else>
                             <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
                           </template>
+                          <!-- </Drag> -->
+
                         </div>
                       </xt-menu>
                     </a-tooltip>
@@ -184,7 +196,7 @@ import { Modal } from 'ant-design-vue'
 import GradeSmallTip from './GradeSmallTip.vue'
 import { isMain } from '../js/common/screenUtils'
 
-import EditNavigation from './bottomPanel/EditNavigation.vue'
+// import EditNavigation from './bottomPanel/EditNavigation.vue'
 import ChangeApp from './bottomPanel/ChangeApp.vue'
 import ScrolX from './ScrolX.vue'
 
@@ -204,10 +216,12 @@ import ChatButton from './bottomPanel/ChatButton.vue'
 import { Icon as navIcon } from '@iconify/vue'
 import navigationData from '../js/data/tableData'
 import { offlineStore } from '../js/common/offline'
-import { moreMenus, extraRightMenu, mergeIconFolder, updateIcon } from '../components/desk/navigationBar/index'
+import { moreMenus, extraRightMenu } from '../components/desk/navigationBar/index'
+import { useMergeFolder } from '../components/desk/navigationBar/hook/mergeFolder.ts'
 import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
+import { useNavBarStore } from './desk/navigationBar/navBar'
 import { Notifications } from '../js/common/sessionNotice'
 // import xtMenu from '../ui/components/Menu/index.vue'
 import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
@@ -225,7 +239,7 @@ import { useWindowSize, } from '../ui/new/drag/src/hooks/useWindowSize'
 import Common from './desk/navigationBar/components/Common.vue';
 import { useElementSize } from "../ui/new/drag/src/hooks/useElementSize";
 import ControlModal from './desk/navigationBar/components/control/ControlModal.vue';
-
+import Drag from './desk/navigationBar/components/folder/Drag.vue'
 
 export default {
   name: 'BottomPanel',
@@ -240,7 +254,7 @@ export default {
     Template,
     PanelButton,
     ThunderboltFilled,
-    EditNavigation,
+    // EditNavigation,
     ChangeApp,
     ScrolX,
     GradeSmallTip,
@@ -257,6 +271,7 @@ export default {
     Drop,
     Common,
     ControlModal,
+    Drag,
   },
   data() {
     return {
@@ -424,8 +439,10 @@ export default {
       left: 0,
       parentSize: 0,
       // 控制中心弹窗
-      controlVisible:false,
+      controlVisible: false,
+      controlLeft: 0,
       skipSort: false,
+      skipSimple: false,
     }
   },
   props: {
@@ -443,18 +460,13 @@ export default {
     }
   },
   mounted() {
-    // this.$bus.on('M0105',() => { this.editNavigation(this.drawerMenus[0]) })
-    // this.$bus.on('Z0401',() => {
-    //     console.log('Z0401 :>> ', 332222);
-    //       this.showTeamTip = true
-    //      })
-    this.$bus.on('Z0402',async () => {
+    this.$bus.on('Z0402', async () => {
       await this.updateMy(0)
       this.teamVisible = true
     })
 
-    this.$bus.on('M0105',() => { this.editNavigation(this.drawerMenus[0]) })
-    this.$bus.on('Z0401',() => {   this.showTeamTip = true })
+    this.$bus.on('M0105', () => { this.editNavigation(this.drawerMenus[0]) })
+    this.$bus.on('Z0401', () => { this.showTeamTip = true })
     // this.popVisible=true
 
     this.enableDrag()
@@ -609,25 +621,14 @@ export default {
         return '6x4'
       }
     },
-    /**
-     * 防止一次性添加过多导致图标截断
-     */
-    showList() {
-      return this.copyFootNav.slice(0, this.maxItemNum)
-    },
 
   },
   watch: {
     copyFootNav: {
       handler(newVal, oldVal) {
-        // let fixedRs=this.fixData(newVal)
-        // if(fixedRs.fixed){
-        //   this.copyFootNav=fixedRs.fixedArray
-        // }
-        // console.log(111111111,'form copyFootNav',this.copyFootNav)
         // 获取最大可添加图标个数
         const windowWidth = window.innerWidth
-        this.maxItemNum = Math.round((windowWidth - 240) / 72 )
+        this.maxItemNum = Math.round((windowWidth - 240) / 72)
         // console.log(this.maxItemNum, 'this.maxItemNum', windowWidth, 'windowWidth')
         // let flag = true
         if (this.copyFootNav.length > this.maxItemNum && this.maxItemNum !== null) {
@@ -635,12 +636,12 @@ export default {
           if (this.noticeFlag) {
             this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
               onOk: () => {
-                const width = window.innerWidth / (240 + this.copyFootNav.length * 72 )
+                const width = window.innerWidth / (240 + this.copyFootNav.length * 72)
                 this.navAttribute.navSize = width
               }
             })
           }
-          const width = window.innerWidth / (240 + this.copyFootNav.length * 72 )
+          const width = window.innerWidth / (240 + this.copyFootNav.length * 72)
           this.navAttribute.navSize = width.toFixed(2) * 100
           this.noticeFlag = false
         }
@@ -679,9 +680,14 @@ export default {
         this.bottomToggle[2] = false
       } else if (!newVal && oldVal) {
         // 当 simple 从开启变为关闭时，开启所有 bottomToggle
-        this.bottomToggle[0] = true
-        this.bottomToggle[1] = true
-        this.bottomToggle[2] = true
+        if (this.skipSimple) {
+          this.bottomToggle[0] = true
+        } else {
+          this.bottomToggle[0] = true
+          this.bottomToggle[1] = true
+          this.bottomToggle[2] = true
+        }
+
       }
     },
     bottomToggle: {
@@ -689,6 +695,7 @@ export default {
       handler(newV, oldV) {
         if ((this.bottomToggle[0] && this.bottomToggle[1] && this.bottomToggle[2]) || this.bottomToggle[0]) {
           this.simple = false
+          this.skipSimple = true
         } else if (!this.bottomToggle[0] && !this.bottomToggle[1] && !this.bottomToggle[2]) {
           this.simple = true
         }
@@ -727,6 +734,18 @@ export default {
       },
       deep: true
     },
+    'navAttribute.navSize': {
+      handler(newV, oldV) {
+        // const bottom = document.getElementById('bottom-bar')
+        // bottom.style.zoom = window.devicePixelRatio
+        // bottom.style.transformOrigin = 'left top'
+        // bottom.style.transform = 'scale(' + (1 / window.devicePixelRatio) + ')'
+        // bottom.style.width = window.devicePixelRatio * 100 + '%'
+        // bottom.style.height = window.devicePixelRatio * 100 + '%'
+        this.syncBottomPanel()
+        console.log('newV', newV, 'oldV', oldV)
+      }
+    }
   },
   methods: {
     useElementSize,
@@ -792,24 +811,6 @@ export default {
     clearAll() {
       this.copyFootNav = []
     },
-    /**
-     * 判断元素是否相同
-     * @param {*} ele
-     * @param {*} item
-     */
-    judge(ele, item) {
-      //增加地址相等判断
-      if (ele === item) {
-        return true
-      }
-      if (ele.type === 'coolApp') {
-        return ele.value.url === item.value.url
-      } else if (ele.id && item.id) {
-        return ele.id === item.id
-      } else {
-        return ele.value === item.value
-      }
-    },
     closeFolder() {
       this.folderVisible = false
       // console.log(1111)
@@ -824,15 +825,6 @@ export default {
         icon: item.icon
       }
       console.log(item.default, 'item.default')
-    },
-    async toggleTeam() {
-      await this.updateMy(0)
-      if (this.team.status === false) {
-        this.teamKey = Date.now()
-        this.showTeamTip = true
-      } else {
-        this.teamVisible = !this.teamVisible
-      }
     },
 
     /**
@@ -894,15 +886,7 @@ export default {
     closeDrawer() {
       this.menuVisible = false
     },
-    checkScroll() {
-      // this.$nextTick(() => {
-      //   if (this.$refs.content.offsetHeight - this.$refs.content.clientHeight > 0) {
-      //     this.$refs.content.style.marginTop = '17px'
-      //   } else {
-      //     this.$refs.content.style.marginTop = '0px'
-      //   }
-      // })
-    },
+    checkScroll() { },
     goMy() {
       this.$router.push({ name: 'socialMy' })
     },
@@ -910,22 +894,6 @@ export default {
     setFull(value) {
       this.full = value
     },
-    // appChange() {
-    //   if (this.showScreen) {
-    //     this.tab = 'screen'
-    //     this.routeParams.url &&
-    //       ipc.send('hideTableApp', {
-    //         app: JSON.parse(JSON.stringify(this.routeParams)),
-    //       })
-    //   } else {
-    //     this.tab = 'apps'
-    //     this.routeParams.url &&
-    //       ipc.send('hideTableApp', {
-    //         app: JSON.parse(JSON.stringify(this.routeParams)),
-    //       })
-    //   }
-    //   this.changeFlag = true
-    // },
     closeChangeApp() {
       this.routeParams.url &&
         setTimeout(() => {
@@ -1020,9 +988,6 @@ export default {
       }
       this.delNavigation(arr, currentItem, currentIndex, this.removeFootNavigationList)
     },
-    // closeEdit(){
-    //   this.editBar=false
-    // },
     transFile() {
       //this.visibleTrans=true
       //document.getElementById('transFrame').src='https://szfilehelper.weixin.qq.com/'
@@ -1045,8 +1010,10 @@ export default {
      */
     msgNotice(item) {
       if (item.type === 'tableApp') {
-        message.loading({content:`打开「${item.name}」...`
-        ,key:'tipRun'})
+        message.loading({
+          content: `打开「${item.name}」...`
+          , key: 'tipRun'
+        })
       }
     },
     /**
@@ -1056,112 +1023,20 @@ export default {
      * @param {*} item 图标详细信息
      */
     async newOpenApp(type, value, item) {
-      if(value === 'control'){
-        this.controlVisible = !this.controlVisible;
-        this.resetElementPosition()
-      }
       if (item) this.msgNotice(item)
       if (value === 'home' && item.home) {
         this.jumpDesk = item.home
       }
-      let rs= await startApp(type, value, this.$router)
-      if(!rs){
-        message.error({content:`打开「${item.name}」失败`
-          ,key:'tipRun'})
+      let rs = await startApp(type, value, this.$router)
+      if (!rs) {
+        message.error({
+          content: `打开「${item.name}」失败`
+          , key: 'tipRun'
+        })
       }
       type !== 'folder' ? this.folderVisible = false : ''
-
+      this.controlVisible = false;
     },
-    /**
-     * 拖拽桌面图标
-     * @param {*} e
-     */
-    // async drop (e) {
-    //   let files = e.dataTransfer.files
-    //   let filesArr = []
-    //   if (files && files.length > 0) {
-    //     for (let i = 0; i < files.length; i++) {
-    //       filesArr.push(files[i].path)
-    //     }
-    //   }
-    //   this.dropList = await Promise.all(filesArr.map(async (item) => {
-    //     const fileName = item.substring(item.lastIndexOf('\\') + 1)
-    //     let dropFiles = await tsbApi.system.extractFileIcon(item)
-    //     console.log(dropFiles,'dropFiles')
-    //     return {
-    //       icon: `${dropFiles}`,
-    //       name: `${fileName}`,
-    //       value: item,
-    //       type: 'tableApp',
-    //       bg: '',
-    //       isBg: false,
-    //       mode: 'app'
-    //     }
-    //   }))
-    //   this.clickRightListItem(this.dropList)
-    //   // 添加完后清空
-    //   this.dropList = []
-    // },
-    /**
-     * 添加图标
-     * @param {*} item
-     * @param {*} index
-     */
-    // clickRightListItem (item, index) {
-    //   this.activeRightItem = index
-    //   //   this.editFlag = false
-    //   if (this.selectNav === 'foot') {
-    //     if (item instanceof Array) {
-    //       for (let i = 0; i < item.length; i++) {
-    //         if (!this.footNavigationList.find(j => j.name === item[i].name)) {
-    //           this.updateMainNav(item[i], 'add')
-    //           item[i].addNav = true
-    //           this.setFootNavigationList(item[i])
-    //         } else {
-    //           message.info('已添加', 1)
-    //         }
-    //       }
-    //       this.dropList = []
-    //     } else {
-    //       for (let i = 0; i < this.footNavigationList.length; i++) {
-    //         if (this.footNavigationList[i].name === item.name) return message.info('已添加', 1)
-    //       }
-    //       this.updateMainNav(item, 'add')
-    //       item.addNav = true
-    //       this.setFootNavigationList(item)
-    //       this.$nextTick(() => {
-    //         let scrollElem = this.$refs.content
-    //         scrollElem.scrollTo({ left: scrollElem.scrollWidth, behavior: 'smooth' })
-    //       })
-    //     }
-    //   }
-    // },
-    /**
-     * 更新图标选择状态
-     * @param {*} addItem
-     * @param {*} type
-     */
-    // updateMainNav (addItem, type) {
-    //   this.mainNavList = this.currentList.length ? this.currentList : this.footNavigationList
-    //   // console.log(this.mainNavList, 'this.mainNavList')
-    //   let sumNavList = this.sideNavigationList.concat(this.footNavigationList, this.rightNavigationList)
-    //   if (type) {
-    //     this.mainNavList.forEach(item => {
-    //       if (item?.name === addItem.name) {
-    //         if (type === 'add') {
-    //           item.addNav = true
-    //         } else if (type === 'del') {
-    //           item.addNav = false
-    //         }
-    //       }
-    //     })
-    //   } else {
-    //     for (const i in this.mainNavList) {
-    //       let stateNav = sumNavList.some(item => item.name === this.mainNavList[i].name)
-    //       this.mainNavList[i].addNav = stateNav
-    //     }
-    //   }
-    // },
     completeEdit() {
       this.toggleEdit()
       this.setQuick()
@@ -1171,8 +1046,6 @@ export default {
       document.removeEventListener('click', this.disableDrag)
       // this.sortable.destroy()
       this.sortable = null
-      // message.info('已中止导航栏调整')
-      // }
     },
     /**
      * 解散文件夹和切换文件夹
@@ -1196,16 +1069,15 @@ export default {
 
       }
     },
-    updateIcon,
     createFile(item, x) {
       this.skipSort = true
       const bottom = document.querySelector('#bottomPanel')
       const rect = bottom.getBoundingClientRect()
-      const index = Math.round((x - rect.x) / (72 * this.navAttribute.navSize / 100))
+      const index = Math.round((x.x - rect.x) / (72 * this.navAttribute.navSize / 100))
       console.log(index, item, 'index');
       this.dragItem = null
       if (this.copyFootNav[this.hoverIndex]?.type === 'folder') {
-        const merged = this.mergeIconFolder(this.copyFootNav, item ,this.copyFootNav.find(i => {
+        const merged = this.useMergeFolder(this.copyFootNav, item, this.copyFootNav.find(i => {
           return i.id === this.hoverRealItemId()
         }))
         this.copyFootNav.splice(this.copyFootNav.findIndex(i => {
@@ -1215,8 +1087,8 @@ export default {
           return i.id !== item.id
         })
       }
-      else{
-       this.copyFootNav.splice(index, 0, _.cloneDeep(item))
+      else {
+        this.copyFootNav.splice(index, 0, _.cloneDeep(item))
       }
       // 从外部拖拽元素到导航栏，跳过合并提示
       this.hoverIndex = -1
@@ -1369,7 +1241,7 @@ export default {
         onUnchoose: function (event) {
           if (that.hoverRealItemId() && that.hoverRealItemId() !== that.dragItem?.id) {
             //存在目标，且不等于自身，符合合并条件，则执行合并
-            const merged = that.mergeIconFolder(that.copyFootNav, that.dragItem, that.copyFootNav.find(item => {
+            const merged = that.useMergeFolder(that.copyFootNav, that.dragItem, that.copyFootNav.find(item => {
               return item.id === that.hoverRealItemId()
             }))
             that.copyFootNav.splice(that.copyFootNav.findIndex(item => {
@@ -1424,7 +1296,7 @@ export default {
     },
     useWindowSize,
     replaceType,
-    mergeIconFolder,
+    useMergeFolder,
     renderIcon,
     delNavigation(sumList, oneNav, index, delMethod) {
       if (!this.mainNavigationList.find((item) => item.name === oneNav.name)) {
@@ -1440,6 +1312,14 @@ export default {
         }
       }
     },
+
+    //  点击头像框打开控制中心
+    openControl(event) {
+      this.controlVisible = !this.controlVisible;
+      this.controlLeft = event.clientX - 200;
+      // this.resetElementPosition(event.clientX)
+    },
+
     /**
      * 重置元素位置
      */
@@ -1448,18 +1328,10 @@ export default {
       // 视图大小
       let vW = this.parentSize
       // 元素坐标
-      let posX = Number((this.defaultPosition.x).toFixed(0))
+      let posX = Number((this.defaultPosition.x).toFixed(0));
       // 元素大小
-      let menuW = draggableSize[0] * 144
-        // let menuW = draggableSize[0] * 140
-      // console.log(vW,posX,menuW, 'vW');
-        if(this.currentItem.value === 'control'){
-          posX = posX > vW - menuW ? vW - menuW : posX - 274;
-        }
-        else {
-        posX = posX > vW - menuW ? vW - menuW : (posX - menuW / 2 < 0 ? 0 : posX - menuW / 2);
-      // console.log(posX, 'posX')
-        }
+      let menuW = draggableSize[0] * 140
+      posX = posX > vW - (menuW / 2) ? vW - menuW : (posX - menuW / 2 < 0 ? 0 : posX - menuW / 2);
       this.left = posX
       console.log(posX, 'posX')
     },
@@ -1470,7 +1342,9 @@ export default {
       } else {
         this.hoverIndex = hoverRs.index
       }
-    }
+    },
+
+
   },
 
 }
@@ -1532,53 +1406,6 @@ export default {
 .bottom-panel .common-panel {
   padding: 0.2em 0.8em 0.2em 0.8em !important;
 }
-
-
-//
-//@media screen and (max-height: 510px) {
-//  .bottom-panel {
-//    zoom:0.9;
-//
-//  }
-//  .chat{
-//    display: none;
-//  }
-//  .user-info{
-//    width: 100%;
-//  }
-//  .user{
-//    width: 12.5em;
-//  }
-//}
-//@media screen and (min-height: 511px) and (max-height: 550px) {
-//  .bottom-panel{
-//    zoom:0.9;
-//
-//  }
-//  .chat{
-//    display: none;
-//  }
-//  .user-info{
-//    width: 100%;
-//  }
-//  .user{
-//    width: 12.5em;
-//  }
-//}
-//@media screen and (min-height: 551px) and (max-height: 610px) {
-//  .bottom-panel {
-//    zoom: 0.9;
-//  }
-//  .chat{
-//    display: none;
-//  }
-//  .user-info{
-//    width: 100%;
-//  }
-//  .user{
-//    width: 12.5em;
-//  }
-//}
 
 .scroll-content {
   :last-child {

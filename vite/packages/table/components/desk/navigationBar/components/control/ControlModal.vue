@@ -35,12 +35,12 @@
       <ControlDesk />
     </template>
     <template v-else>
-      <EditControlDesk />
+      <EditControlDesk ref="editRef"/>
     </template>
 
-    <a-divider style="height: 1px;margin: 16px 0;width: 516px;min-width:516px;" />
+    <a-divider style="height: 1px;margin: 8px 0 16px 0;width: 516px;min-width:516px;" />
 
-    <div class="flex items-center justify-center" style="height: 85px;">
+    <div class="flex items-center justify-center mb-4">
       <template v-for="item in bottomButton">
        <a-tooltip placement="top" :title="item.name">
          <xt-button w="54" h="54" style="border-radius: 12px;" class="mr-3 button-item xt-bg-t-2" @click="item.fn">
@@ -56,16 +56,22 @@
 </template>
 
 <script setup>
-import { ref,computed } from 'vue';
+import { ref,computed,onMounted,getCurrentInstance } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
+import { controlStore } from '../../hook/controlStore';
+import { appStore } from '../../../../../store';
 
 import ControlDesk from './ControlDesk.vue';
 import EditControlDesk from './EditControlDesk.vue';
 
-import { controlStore } from '../../hook/controlStore';
+
 
 const router = useRouter()
 const emit = defineEmits(['close'])
+
+const { proxy } = getCurrentInstance()
+
 const props = defineProps({
   full:{
     type:Boolean,
@@ -74,6 +80,11 @@ const props = defineProps({
 })
 
 const editVisible = ref(false);
+const app = appStore()
+const editRef = ref(null);
+
+const controls = controlStore()
+const { control } = storeToRefs(controls);
 
 // 触发编辑
 const editClick = () =>{
@@ -82,12 +93,13 @@ const editClick = () =>{
 
 // 完成编辑
 const finshEdit = () =>{
+  control.value.oldList = editRef.value.removeRef.vuuriList
   editVisible.value = false
 }
 
 const bottomButton = ref([
   {
-    newIcon:'fluent:person-16-filled',name:'用户中心',
+    newIcon:'fluent:person-16-regular',name:'用户中心',
     fn:()=>{ 
       router.push({ path: '/my' })
       emit('close') 
@@ -103,14 +115,7 @@ const bottomButton = ref([
   {
     newIcon:'fluent:full-screen-maximize-16-regular',name:'全屏',
     fn:()=>{
-      if(props.full){
-        emit('setFull',false)
-        tsbApi.window.setFullScreen(false)
-      }
-      else {
-        emit('setFull',true)
-        tsbApi.window.setFullScreen(true)
-      }
+      app.toggleFullScreen();
     }
   },
   {
@@ -136,6 +141,14 @@ const bottomButton = ref([
   //   }
   // }
 ])
+
+onMounted(()=>{
+  proxy.$bus.on('closeControl',()=>{
+    emit('close')
+  })
+})
+
+
 </script>
 
 <style lang="scss" scoped>

@@ -213,7 +213,7 @@ const options = computed(() => {
   return {
     bg: isDrag.value ? "var(--active-secondary-bg) " : "",
     // 隐藏删除
-    del: navBar.value.isDel,
+    disabled: navBar.value.isDel,
     // 隐藏层级
     hierarchy: navBar.value.hierarchy,
     // 二级

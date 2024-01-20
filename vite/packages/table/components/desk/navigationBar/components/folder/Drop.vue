@@ -1,6 +1,14 @@
 <template>
-  <div class="h-full max-w-full" @drop="handleDrop" @dragover="handleDragover" @dragenter="handleDragenter" ref="target"
-    @mouseup="handleMouseUp" @mouseleave="handleMouseLeave" @mouseover="handleMouseOver">
+  <div 
+    class="h-full max-w-full" 
+    @drop="handleDrop" 
+    @dragover="handleDragover" 
+    @dragenter="handleDragenter" 
+    @dragleave="handleDragleave"
+    ref="target"
+    @mouseup="handleMouseUp" 
+    @mouseleave="handleMouseLeave" 
+    @mouseover="handleMouseOver">
     <slot></slot>
   </div>
 </template>
@@ -11,9 +19,14 @@ import { ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useFolderStore } from "../../../../../apps/folder/src/store";
 import { useDeskStore } from "../../../../../components/desk/store";
+import {useNavBarStore} from '../../navBar'
 import { useIconConversionNav, useFileConversionNav, useDeskConversionNav } from "../../../../../apps/folder/src/hooks/useDataConversion";
 import { myIcons } from "../../../../../store/myIcons";
 import _ from 'lodash-es'
+
+// 导航栏数据
+const navBarStore = useNavBarStore()
+const { navBarId,navBarItem } = storeToRefs(navBarStore)
 
 // 桌面数据
 const deskStore = useDeskStore();
@@ -30,6 +43,10 @@ const { iconList, iconsRefs } = storeToRefs(useIconStore)
 
 const emit = defineEmits(['createFile'])
 
+const props = defineProps({
+  currentId:String
+})
+
 /**
  * 拖拽，文件夹拖拽和桌面图标拖拽
  * @param {*} dragEvent
@@ -37,7 +54,11 @@ const emit = defineEmits(['createFile'])
 const handleDrop = async (dragEvent) => {
   // 判断是否是从导航栏外部进入到导航栏，防止和导航栏内部的拖拽事件冲突
   if (!isEnterBar.value) return
-  let currentX = dragEvent.x
+  let currentX = dragEvent
+  console.log(isEnterBar.value && navBarId.value && navBarId.value !== props.currentId,'hhhhh')
+  if(isEnterBar.value && navBarId.value && navBarId.value !== props.currentId){
+    emit('createFile', navBarItem.value, currentX)
+  }
   // 桌面拖拽
   if (folderFlag.value !== 'folder') {
     let files = dragEvent.dataTransfer.files
@@ -54,7 +75,7 @@ const handleDrop = async (dragEvent) => {
       let file = useDeskConversionNav(dropFiles, fileName, item)
       emit('createFile', file, currentX)
     }))
-  } else if (dragEvent.dataTransfer?.types[0] === 'text/plain') {
+  }  else if (dragEvent.dataTransfer?.types.some((item)=> item === 'text/plain')){
     // 文件夹图标拖拽
     const item = _.cloneDeep(currentData.value)
     console.log(item,'item')
@@ -71,6 +92,7 @@ const handleDrop = async (dragEvent) => {
  * @param {*} dragEvent
  */
 const handleDragenter = (dragEvent) => {
+  // console.log('拖拽进入','<<<<<<<<<+++=====')
   if (dragEvent.dataTransfer.types.length > 0) {
     console.log(dragEvent.dataTransfer.types[0], 'name')
     isEnterBar.value = true;
@@ -85,13 +107,16 @@ const handleDragover = (dragEvent) => {
   dragEvent.preventDefault();
 };
 
+const handleDragleave = (dragEvent) => {
+  // console.log('拖拽离开','<<<<<<<<<+++=====')
+}
 /**
  * 鼠标弹起事件
  */
 const handleMouseUp = (e) => {
   iconList.value.forEach((item) => {
     const file = useFileConversionNav(item)
-    emit('createFile', file, e.x)
+    emit('createFile', file, e)
   })
   // 2 旧数据删除
   if (iconsRefs.value.length < 1) return;
@@ -100,7 +125,7 @@ const handleMouseUp = (e) => {
   });
 }
 const handleMouseLeave = () => {
-
+  
 }
 const handleMouseOver = () => {
 

@@ -204,6 +204,7 @@ export default {
           },
           title: "删除小组件",
           color: "#FF4D4F",
+          disabled: this.options?.disabled || false,
         },
       ];
     },

@@ -1,17 +1,17 @@
 <template>
-    <xt-modal :modelValue="modelValue" :mask="false" :index="100" :header="true" :footer="false" :back="false"
+    <xt-modal :modelValue="modelValue" :mask="false" :index="100" :header="true" :footer="false" :back="false" :full="true"
         @no="setQuick">
         <template #header-center>
-            <HorizontalPanelVue :navList="navList" v-model:selectType="defaultType" :height="32" :itemStyle="{'border-radius': '6px !important'}"/>
+            <HorizontalPanelVue :navList="navList" v-model:selectType="defaultType" :height="32"
+                :itemStyle="{ 'border-radius': '6px !important' }" />
         </template>
-        <template #header-right>
-            <xt-button :w="32" :h="32"><xt-new-icon icon="fluent:full-screen-maximize-16-regular" size="16"
-                    class="xt-text-2" /></xt-button>
-        </template>
-        <!-- 属性插槽 -->
-        <slot v-if="defaultType.value === 'custom'" name="custom"></slot>
-        <!-- 外观插槽 -->
-        <slot v-else name="exterior"></slot>
+        <div class="flex justify-center">
+            <!-- 属性插槽 -->
+            <slot v-if="defaultType.value === 'custom'" name="custom"></slot>
+            <!-- 外观插槽 -->
+            <slot v-else name="exterior"></slot>
+        </div>
+
     </xt-modal>
 </template>
 

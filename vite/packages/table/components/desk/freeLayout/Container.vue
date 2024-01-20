@@ -92,6 +92,7 @@ async function updateCard(data) {
   console.time("Free Layout Run Time");
   console.log("当前配置项 :>> \n", `桌面ID ${currentID.value}`);
   currentData.value = {};
+  console.log('data :>> ', data);
   data.forEach((item) => {
     const { id, customData } = item;
     currentData.value[id] = {

@@ -1,15 +1,15 @@
 <template>
   <div class="flex  h-3/4">
     <XtScrollbar  :y="true" style="height: 100%;width: 100%;">
-      <div class="flex flex-1 flex-col h-3/4">
+      <div class="flex flex-1 flex-col h-3/4 overflow-hidden">
         <div style="height: 12px;"></div>
-        <ControlRemoveItem :list="control.addList" />
+        <ControlRemoveItem :list="removeList" ref="removeRef" />
       </div>
       
-      <a-divider style="height: 1px;margin: 16px 0;" v-if="control.removeList.length !== 0 " />
+      <a-divider style="height: 1px;margin:8px 0 16px 0;" v-if="addList.length !== 0 " />
 
-      <div class="flex flex-1 flex-col h-3/4" v-if="control.removeList.length !== 0">
-        <ControlAddItem :list="control.removeList"/>
+      <div class="flex flex-1 flex-col h-3/4 overflow-hidden" v-if="addList.length !== 0">
+        <ControlAddItem :list="addList"/>
       </div>
     </XtScrollbar>
   </div>
@@ -25,6 +25,20 @@ import ControlRemoveItem from './item/ControlRemoveItem.vue';
 
 const controls = controlStore();
 const { control } = storeToRefs(controls)
+
+const removeRef = ref(null);
+
+const removeList = computed(()=>{
+  return control.value.oldList;
+})
+
+const addList = computed(()=>{
+  return control.value.newList;
+})
+
+defineExpose({
+  removeRef
+})
 
 </script>
 

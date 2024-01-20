@@ -102,7 +102,7 @@
         </div>
 
         <div v-if="step===1" class="flex  justify-center h-full w-full">
-          <div class="screen-section mt-6 flex flex-col h-full" style="height: 320px; padding: 16px 24px;">
+          <div class="screen-section mt-6 flex flex-col h-full" style="height: 420px; padding: 16px 24px;">
             <div class="flex justify-between">
               <div>
                 选择您要显示工作台的屏幕，点击即可。
@@ -114,7 +114,7 @@
               </div>
             </div>
            <div class="flex-1 item-content" style="align-items: center;">
-             <div class="w-full flex items-center" style="width: 100px;height: 100px;">
+             <div class="w-full flex items-center" style="width: 100px;height: 100px;margin-top: -100px;margin-left: -100px">
                <ChooseScreen></ChooseScreen>
              </div>
            </div>

@@ -52,8 +52,8 @@ export const replaceType = (list) => {
           }
     }).map((item) => ({
         ...item,
-        bg: '',
-        isBg: false,
+        bg: item.bg || '',
+        isBg:item.isBg || false,
         id: item.id ||  nanoid(6)
       }));
 }

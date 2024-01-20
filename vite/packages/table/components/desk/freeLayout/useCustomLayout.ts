@@ -47,7 +47,7 @@ export const useCustomLayout = (
   // 设置卡片数据
   const setData = (arr) => {
     arr.forEach((item) => {
-      const { width, height }: any = getSize(item.size);
+      const { width, height }: any = getSize(item.customData.customSize);
       addCard(top, left, item);
       if (left - freeLayoutEnv.value.scrollLeft - position + width < boxWidth) {
         left += width + 12;
@@ -87,7 +87,7 @@ export const useCustomLayout = (
   const fill2x4 = () => {
     arr2x4.splice(0, 1).forEach((item) => {
       if (!item) return;
-      const { width, height }: any = getSize(item.size);
+      const { width, height }: any = getSize(item.customData.customSize);
       addCard(top, left, item);
       left += width + 12;
     });
@@ -98,7 +98,11 @@ export const useCustomLayout = (
     let num = arr.length > 2 ? 2 : arr.length;
     arr.splice(0, num).forEach((item) => {
       if (!item) return;
-      const { width, height }: any = getSize(item.size);
+      console.log(
+        "item.customData.customSize :>> ",
+        item.customData.customSize
+      );
+      const { width, height }: any = getSize(item.customData.customSize);
       addCard(currentTop, left, item);
       currentTop += height + 12;
     });
@@ -123,7 +127,6 @@ export const useCustomLayout = (
 
     setData(arr2x4);
   }
-
 
   /**
    * 文件夹区域
@@ -172,7 +175,7 @@ const arraySplit = (arr) => {
   let arr4x4: any = [];
 
   arr.forEach((item) => {
-    let str = item.size.split("x");
+    let str = item.customData.customSize.split("x");
     const w = parseInt(str[0]);
     const h = parseInt(str[1]);
     if (w == 2 && h == 2) {
@@ -192,10 +195,12 @@ const arraySplit = (arr) => {
 
 // 添加卡片
 const addCard = (top, left, item) => {
+  const reset = false;
   const freeLayoutStore: any = useFreeLayoutStore();
   const { getFreeLayoutData, getFreeLayoutState, freeLayoutEnv } =
     storeToRefs(freeLayoutStore);
-  let id = nanoid(4);
+
+  let id = item?.id || nanoid(4);
 
   getFreeLayoutData.value[id] = {
     left: left,
@@ -204,11 +209,7 @@ const addCard = (top, left, item) => {
     id,
   };
 
-  useAddCard(
-    item.name,
-    {
-      ...item,
-    },
-    id
-  );
+  if (item.id) return;
+
+  useAddCard(item.name, item.customData, id);
 };
