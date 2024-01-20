@@ -26,16 +26,16 @@
                 <div class="line-title xt-text" style="" >快速搭建你的桌面</div>
                 <div class="font-16 xt-text-2 mt-2">你可以将系统桌面或资源管理器中的应用程序快捷方式或文件拖动到桌面，或者选择一下推荐的桌面搭建方式。</div>
                 <div class="mt-6 flex justify-center w-full justify-items-center align-items-center" >
-                  <xt-button :w="113" :h="40" @click="addIcon" class="xt-mask ml-3" key="console" type="primary" >
+                  <xt-button :w="113" :h="40" @click="addIcon" class="xt-bg-2 ml-3" key="console" type="primary" >
                     <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:add-16-regular"></xt-new-icon>添加图标</div>
                   </xt-button>
-                  <xt-button :w="113" :h="40" @click="newAddCard" class="xt-mask ml-3" key="console" type="primary" >
+                  <xt-button :w="113" :h="40" @click="newAddCard" class="xt-bg-2 ml-3" key="console" type="primary" >
                     <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:collections-add-24-regular"></xt-new-icon>添加组件</div>
                   </xt-button>
-                  <xt-button :w="113" :h="40" @click="moreDesk" class="xt-mask ml-3" key="console" type="primary" >
+                  <xt-button :w="113" :h="40" @click="moreDesk" class="xt-bg-2 ml-3" key="console" type="primary" >
                     <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:building-shop-16-regular"></xt-new-icon>桌面市场</div>
                   </xt-button>
-                  <xt-button :w="113" :h="40" @click="importDesk" class="xt-mask ml-3" key="console" type="primary" >
+                  <xt-button :w="113" :h="40" @click="importDesk" class="xt-bg-2 ml-3" key="console" type="primary" >
                     <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:arrow-download-20-filled"></xt-new-icon>导入桌面</div>
                   </xt-button>
                   <!-- <xt-button :w="113" :h="40" @click="moreDesk" class="xt-active-bg ml-3" key="console" type="primary" >
@@ -185,6 +185,37 @@
     </div>
   </div>
 
+  <!-- 添加桌面 弹窗 -->
+  
+  <xt-modal v-model="addDeskVisible" :mask="false" :index="100" :header="true" :footer="false">
+    <div style="width: 800px;height:518px">
+      <div class="font-16 xt-text font-semibold text-center">添加桌面</div>
+      <div class="flex justify-center mt-6">
+        <xt-button :w="145" :h="40" @click="doAddDesk(true)" class="xt-bg-2 ml-3" key="console" type="primary" >
+          <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:desktop-16-regular"></xt-new-icon>创建空白桌面</div>
+        </xt-button>
+        <xt-button :w="145" :h="40" @click="importDesk" class="xt-bg-2 ml-3" key="console" type="primary" >
+          <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:arrow-download-20-filled"></xt-new-icon>导入桌面文件</div>
+        </xt-button>
+        <!-- <xt-button :w="145" :h="40" @click="addIcon" class="xt-active-bg ml-3" key="console" type="primary" >
+          <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:bot-24-regular"></xt-new-icon>桌面智能定制</div>
+        </xt-button> -->
+      </div>
+      <div class="font-16 xt-text font-semibold text-center mt-6">推荐桌面方案</div>
+      <div class="font-16 xt-text-2 text-center mt-4">你可以选择以下来自桌面市场的方案。<a @click="moreDesk">更多桌面</a></div>
+      <div class="mt-4">
+        <DeskMarket
+          :desks="deskList"
+          :items="recommendList"
+          :closeParent="true"
+          @openPreview="openPreview"
+          deskItemStyle="width:317px; height:284px;"
+        ></DeskMarket>
+      </div>
+    </div>
+
+  </xt-modal>
+
   <a-drawer
     height="220"
     placement="bottom"
@@ -203,8 +234,9 @@
     ></AllDeskList>
   </a-drawer>
 
+  <!-- v-if="addDeskVisible" -->
   <a-drawer
-    v-if="addDeskVisible"
+    v-if="false"
     v-model:visible="addDeskVisible"
     width="500"
     title="添加桌面"
@@ -287,6 +319,10 @@
       />
     </div>
   </a-drawer>
+
+
+
+
   <ShareDesk
     :deskList="deskList"
     ref="shareDeskRef"
@@ -818,7 +854,9 @@ export default {
       this.$refs.currentDeskRef.newAddIcon()
     },
 
-    doAddDesk() {
+    doAddDesk(add) {
+      if(add){this.deskTitle = '空白桌面' }
+
       if (this.deskTitle.trim() === "") {
         message.error("请输入新桌面名称");
         return;
@@ -833,6 +871,8 @@ export default {
         icon: "desktop",
         cards: this.cleanMuuriData(deskTemplates[this.selectDesk.name]),
       };
+
+      if(add){ desk.cards = [] }
 
       this.deskList.unshift(desk);
       this.$emit("changeDesk", { id: desk.id });
@@ -862,6 +902,7 @@ export default {
   box-shadow: 0px 0px 10.23px 0px rgba(0,0,0,0.1);
   box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
   border-radius: 12px;
+  backdrop-filter: blur(7px);
 }
 
 .line-title{
