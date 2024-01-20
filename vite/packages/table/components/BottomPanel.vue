@@ -12,7 +12,8 @@
 
     </div>
 
-    <div class="absolute" v-if="controlVisible" style="bottom:100px;z-index:888;" :style="{ left: `${controlLeft}px` }">
+    <div class="absolute" v-if="controlVisible" style="z-index:888;" id="control"
+      :style="{ left: `${controlLeft}px`, bottom: `${navAttribute.navSize / 100 * 100}px` }">
       <ControlModal @close="controlVisible = false"></ControlModal>
     </div>
 
@@ -631,7 +632,7 @@ export default {
         this.maxItemNum = Math.round((windowWidth - 240) / 72)
         // console.log(this.maxItemNum, 'this.maxItemNum', windowWidth, 'windowWidth')
         // let flag = true
-        if (this.copyFootNav.length > this.maxItemNum && this.maxItemNum !== null) {
+        if (this.copyFootNav.length > this.maxItemNum && this.maxItemNum !== null ) {
           // console.log(this.maxItemNum, 'maxItemNum')
           if (this.noticeFlag) {
             this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
@@ -1316,7 +1317,7 @@ export default {
     //  点击头像框打开控制中心
     openControl(event) {
       this.controlVisible = !this.controlVisible;
-      this.controlLeft = event.clientX - 200;
+      this.controlLeft = event.clientX - 274 < 0 ? 0 : event.clientX - 274
       // this.resetElementPosition(event.clientX)
     },
 
