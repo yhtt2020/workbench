@@ -6,7 +6,7 @@
     <div style="position: absolute; z-index: 500 !important;"
       :style="folderPos" class="rounded-xl pointer "
       id="folder">
-      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:size="updateSize" :customData="customData"
+      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:customSize="updateSize" :customData="customData"
         :customIndex="sideKey" :secondary="true" v-if="folderVisible" :expand="{ disabled: true }" :navBar="{
           resize: false,
           sizeOption: false,
@@ -533,7 +533,7 @@ export default {
       this.customData = {
         ...this.defaultFolderData,
         list: this.folderList,
-        size: this.currentItem.size || this.resize,
+        customSize: this.currentItem.size || this.resize,
         name: this.folderName,
         layout: this.currentItem.layout || 'rows',
       }

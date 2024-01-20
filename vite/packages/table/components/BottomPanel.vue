@@ -6,7 +6,7 @@
     <div style="position: absolute; z-index: 500 !important;"
       :style="{ left: `${this.left}px`, bottom: `${navAttribute.navSize / 100 * 100}px` }" class="rounded-xl pointer "
       id="folder">
-      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:size="updateSize" :customData="customData"
+      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:customSize="updateSize" :customData="customData"
         :customIndex="bottomKey" :secondary="true" v-if="folderVisible" :expand="{ disabled: true }"
         :navBar="{ resize: false, sizeOption: false, isDel: true, hierarchy: true }" :auto="true" />
 
@@ -713,7 +713,7 @@ export default {
       this.customData = {
         ...this.defaultFolderData,
         list: this.folderList,
-        size: this.currentItem.size || this.resize,
+        customSize: this.currentItem.customSize || this.resize,
         name: this.folderName,
         layout: this.currentItem.layout || 'rows',
       }
@@ -862,7 +862,7 @@ export default {
      * @param {*} value
      */
     updateSize(value) {
-      this.currentItem.size = value
+      this.currentItem.customSize = value
       this.resetElementPosition()
     },
     /**
@@ -1325,13 +1325,14 @@ export default {
      * 重置元素位置
      */
     resetElementPosition() {
-      const draggableSize = this.currentItem.size ? this.currentItem.size.split('x') : this.resize.split('x')
+      const draggableSize = this.currentItem.customSize ? this.currentItem.customSize.split('x') : this.resize.split('x')
       // 视图大小
       let vW = this.parentSize
       // 元素坐标
       let posX = Number((this.defaultPosition.x).toFixed(0));
       // 元素大小
       let menuW = draggableSize[0] * 140
+      console.log(menuW, 'menuW', vW, 'vW', posX, 'posX')
       posX = posX > vW - (menuW / 2) ? vW - menuW : (posX - menuW / 2 < 0 ? 0 : posX - menuW / 2);
       this.left = posX
       console.log(posX, 'posX')
