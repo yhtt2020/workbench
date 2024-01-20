@@ -1,7 +1,8 @@
 <template>
- <div class="flex items-center justify-center w-full px-4">
+ <div class="flex items-center justify-center w-full" :class=" rankList.length === 0 ? 'px-0':'px-4'">
   <div  class="relative flex items-center  justify-center" @click="goMy">
-   <FrameAvatar :avatar-size="100" :frame-url="userinfo.frame" :avatar-url="userinfo.avatar" class="w-full flex justify-center user-container h-full pb-2 object-fill" 
+    <!--  -->
+   <FrameAvatar :avatar-size="rankList.length === 0 ? 60 : 100" :frame-url="userinfo.frame" :avatar-url="userinfo.avatar" class="w-full flex justify-center user-container h-full pb-2 object-fill" 
     alt="" :frame="displayUserInfo?.equippedItems?.frameDetail" @close="close"
    >
    </FrameAvatar>
@@ -12,7 +13,7 @@
     </a-avatar>
    </a-tooltip>
   </div>
-  <div class="flex flex-col ">
+  <div class="flex flex-col " :class="rankList.length === 0 ? 'ml-3 w-32':''">
    <span class="xt-text font-16 xt-font ml-3">{{ userinfo.nickname }}</span>
    <div class="flex xt-text">
      <OnlineMedal :rank="userinfo.onlineGradeExtra.rank" />
@@ -102,6 +103,7 @@ const goMy = () =>{
   router.push({ name: 'socialMy' });
   close()
 }
+
 
 onMounted(()=>{
  getUserRank()
