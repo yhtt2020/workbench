@@ -1,5 +1,5 @@
 <template>
-  <Widget :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="menuList"
+  <Widget :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="menuList" :custom-data="customData"
           ref="cardSlot">
     <template #left-title-icon>
       <div
@@ -183,11 +183,11 @@ export default {
         wheelPropagation: true,
       },
       eventValue: '',
-      sizeList: [{ title: '1x1', height: 1, width: 1, name: '1x1' }, {
-        title: '1x2',
+      sizeList: [{ title: '2x2', height: 1, width: 1, name: '2x2' }, {
+        title: '2x4',
         height: 2,
         width: 1,
-        name: '1x2'
+        name: '2x4'
       },],
       dateValue: null,
       options: {

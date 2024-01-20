@@ -19,7 +19,8 @@ export const defaultFolderData = {
   name: "文件夹",
   icon: "https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#ffffff",
   list: [],
-  size: "2x2",
+  // size: "2x2",
+  customSize: "2x2",
   // 文件锁 开启后无法拖出
   lock: true,
   // 布局样式

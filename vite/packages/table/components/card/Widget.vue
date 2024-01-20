@@ -1,97 +1,102 @@
 <template>
-  <RightMenu
-    :menus="menus"
-    :sizes="sizeList"
-    :customIndex="customIndex"
-    @removeCard="doRemoveCard"
-    v-model:sizeType="sizeType"
-    v-model:oldMenuVisible="menuVisible"
-    class="relative"
-  >
-    <div
-      v-if="!options?.hide"
-      class="flex flex-col"
-      :class="[edit ? 'editing' : '', classes]"
-      style="color: var(--primary-text); padding: 0"
-      :style="{
-        display: options.hide == true ? 'none' : '',
-        width: customSize.width,
-        height: customSize.height,
-        background: options.background || 'var( --primary-bg)',
-      }"
+  <GetSize v-model:customSize="currentSize">
+    <!-- <xt-button>
+      {{ customData?.customSize }}
+    </xt-button> -->
+    <RightMenu
+      :menus="menus"
+      :sizes="sizeList"
+      :customIndex="customIndex"
+      @removeCard="doRemoveCard"
+      v-model:sizeType="sizeType"
+      v-model:currentSize="currentSize"
+      class="relative"
     >
-      <!--标题栏start-->
-      <slot name="cardTitle">
-        <div
-          :class="options.noTitle === true ? 'no-title' : 'content-title'"
-          class="flex items-center justify-between px-3 pt-3"
-        >
-          <div class="left-title" v-if="options.noTitle !== true">
-            <!-- 标题左侧插槽 -->
-            <slot name="left-title-icon"></slot>
-            <!-- 标题旧版左侧图标 -->
-            <Icon :icon="options.icon" class="title-icon" />
-            <div class="flex w-2/3">
-              <!-- 卡片标题插槽 -->
-              <slot name="title-text">
-                {{ options.title }}
-              </slot>
-              <!-- 标题右侧插槽 -->
-              <slot name="left-title"></slot>
+      <div
+        v-if="!options?.hide"
+        class="flex flex-col"
+        :class="[edit ? 'editing' : '', classes]"
+        style="color: var(--primary-text); padding: 0"
+        :style="{
+          display: options.hide == true ? 'none' : '',
+          width: customSize.width,
+          height: customSize.height,
+          background: options.background || 'var( --primary-bg)',
+        }"
+      >
+        <!--标题栏start-->
+        <slot name="cardTitle">
+          <div
+            :class="options.noTitle === true ? 'no-title' : 'content-title'"
+            class="flex items-center justify-between px-3 pt-3"
+          >
+            <div class="left-title" v-if="options.noTitle !== true">
+              <!-- 标题左侧插槽 -->
+              <slot name="left-title-icon"></slot>
+              <!-- 标题旧版左侧图标 -->
+              <Icon :icon="options.icon" class="title-icon" />
+              <div class="flex w-2/3">
+                <!-- 卡片标题插槽 -->
+                <slot name="title-text">
+                  {{ options.title }}
+                </slot>
+                <!-- 标题右侧插槽 -->
+                <slot name="left-title"></slot>
+              </div>
+            </div>
+            <div class="z-10 flex right-title" v-if="showRightIcon">
+              <!-- 右侧设置插槽  用于扩展标题菜单左侧位置的内容  -->
+              <slot name="right-menu"> </slot>
+              <RightMenu
+                :menus="menus"
+                :sizes="sizeList"
+                :customIndex="customIndex"
+                model="all"
+                @removeCard="doRemoveCard"
+                v-model:sizeType="sizeType"
+                v-model:currentSize="currentSize"
+              >
+                <MenuOutlined class="pointer" />
+              </RightMenu>
             </div>
           </div>
-          <div class="z-10 flex right-title" v-if="showRightIcon">
-            <!-- 右侧设置插槽  用于扩展标题菜单左侧位置的内容  -->
-            <slot name="right-menu"> </slot>
-            <RightMenu
-              :menus="menus"
-              :sizes="sizeList"
-              :customIndex="customIndex"
-              model="all"
-              @removeCard="doRemoveCard"
-              v-model:sizeType="sizeType"
-              v-model:oldMenuVisible="menuVisible"
+        </slot>
+        <!-- 标题栏end   -->
+        <PageState :env="env" :options="options">
+          <div class="flex-1 h-0">
+            <div
+              class="h-full px-3 pb-2 rounded-b-lg"
+              :style="{ background: options.showColor ? 'var(--main-bg)' : '' }"
             >
-              <MenuOutlined class="pointer" />
-            </RightMenu>
+              <slot>
+                <!--  主体内容插槽1  -->
+              </slot>
+            </div>
           </div>
-        </div>
-      </slot>
-      <!-- 标题栏end   -->
-      <PageState :env="env" :options="options">
-        <div class="flex-1 h-0">
-          <div
-            class="h-full px-3 pb-2 rounded-b-lg"
-            :style="{ background: options.showColor ? 'var(--main-bg)' : '' }"
-          >
-            <slot>
-              <!--  主体内容插槽1  -->
-            </slot>
-          </div>
-        </div>
-      </PageState>
-    </div>
-    <div v-else :class="[edit ? 'editing' : '']">
-      <slot>
-        <!--  主体内容插槽2  -->
-      </slot>
-    </div>
+        </PageState>
+      </div>
+      <div v-else :class="[edit ? 'editing' : '']">
+        <slot>
+          <!--  主体内容插槽2  -->
+        </slot>
+      </div>
 
-    <!-- 卡片整体区域end -->
-    <!-- 右上角抽屉菜单扩展 start  -->
-    <template #menuExtra>
-      <slot name="menuExtra"></slot>
-    </template>
-    <!-- 右上角抽屉扩展 end -->
-  </RightMenu>
+      <!-- 卡片整体区域end -->
+      <!-- 右上角抽屉菜单扩展 start  -->
+      <template #menuExtra>
+        <slot name="menuExtra"></slot>
+      </template>
+      <!-- 右上角抽屉扩展 end -->
+    </RightMenu>
+  </GetSize>
+
   <!--额外插槽，用于扩展一些不可见的扩展元素start-->
   <slot name="extra"> </slot>
   <!--额外插槽，用于扩展一些不可见的扩展元素end-->
   <slot name="msg"></slot>
 </template>
 
-<script lang="ts">
-import { PropType } from "vue";
+<script>
 import { mapActions, mapWritableState } from "pinia";
 import { MenuOutlined } from "@ant-design/icons-vue";
 import _ from "lodash-es";
@@ -101,15 +106,17 @@ import { offlineStore } from "../../js/common/offline";
 
 import RightMenu from "./RightMenu.vue";
 import PageState from "./PageState.vue";
-import { IOption, IMenuItem } from "./types";
 import { useWidgetStore } from "./store";
 import { useFreeLayoutStore } from "../desk/freeLayout/store";
+
+import GetSize from "./GetSize.vue";
 
 export default {
   components: {
     MenuOutlined,
     RightMenu,
     PageState,
+    GetSize,
   },
   name: "Widget",
   props: {
@@ -128,12 +135,12 @@ export default {
     },
     //选项
     options: {
-      type: Object as PropType<IOption>,
+      type: Object,
       default: () => ({}),
     },
     //右上角菜单项
     menuList: {
-      type: Array as PropType<IMenuItem>,
+      type: Array,
       default: () => [],
     },
     //组件索引
@@ -170,10 +177,7 @@ export default {
   data() {
     return {
       // 小组件
-      widgetSize: {
-        width: "",
-        height: "",
-      },
+      currentSize: this.customData?.customSize,
       //右上角抽屉菜单可见与否的控制
       menuVisible: false,
       //当前设置的组件尺寸数据，对应着props里的sizeList
@@ -222,7 +226,7 @@ export default {
     },
     classes() {
       //默认的对象
-      let defaultClass: any = {
+      let defaultClass = {
         gradient: true,
         "gradient--14": true,
       };
@@ -276,6 +280,18 @@ export default {
           {
             width: this.sizeType.width,
             height: this.sizeType.height,
+          },
+          this.desk
+        );
+      },
+    },
+    currentSize: {
+      handler(value) {
+        this.currentSize = value;
+        this.updateCustomData(
+          this.customIndex,
+          {
+            customSize: value,
           },
           this.desk
         );

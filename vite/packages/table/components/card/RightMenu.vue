@@ -80,7 +80,7 @@ import { useFreeLayoutStore } from "./../desk/freeLayout/store";
 // 初始化操作
 const freeLayoutStore = useFreeLayoutStore();
 const { getFreeLayoutData, isFreeLayout } = storeToRefs(freeLayoutStore);
-const emits = defineEmits(["sizeType", "onClick"]);
+const emits = defineEmits(["sizeType", "onClick", "update:currentSize"]);
 
 const props = defineProps({
   // 右键菜单数据
@@ -109,10 +109,12 @@ const props = defineProps({
       return [];
     },
   },
+  currentSize: {},
   // 隐藏层级
-  disableHierarchy:false
+  disableHierarchy: false,
 });
-const { menus, sizes, model, sizeList ,size,disableHierarchy} = toRefs(props);
+const { menus, sizes, model, sizeList, size, disableHierarchy, currentSize } =
+  toRefs(props);
 
 const widgetStore = useWidgetStore();
 const { rightModel } = storeToRefs(widgetStore);
@@ -180,12 +182,15 @@ const cardSize = ref(props.sizeType);
 
 watch(cardSize, (newV) => {
   emits("update:sizeType", newV);
+  emits("update:currentSize", newV.name);
 });
 // 旧版菜单展示
 const menuVisible = ref(false);
 
 // 更新卡片大小
 const updateCardSize = (item) => {
+  console.log("item :>> ", item);
+  emits("update:currentSize", item.name);
   cardSize.value = item;
 
   emits("update:sizeType", item);

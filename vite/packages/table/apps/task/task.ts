@@ -2,7 +2,7 @@ import { taskStore } from "./store";
 import { appStore } from "../../store";
 import { storeToRefs } from "pinia";
 import { useToast } from "vue-toastification";
-import { completeTask as completeCurrentTask } from "./api";
+import { completeCurrentTask } from "./api";
 
 import Complete from "./components/Complete.vue";
 // 完成任务
@@ -21,20 +21,14 @@ export const completePrimaryTask = (id) => {
   const store: any = taskStore();
   const { startList, completedList, claimRewardsList } = storeToRefs(store);
   // 判断是否处于开始阶段
-  console.log("completePrimaryTask :>> ");
-
-  console.log("completePrimaryTask :>> ", id);
   // 转为全大写
 
   if (!startList.value.includes(id)) return;
-  console.log("000000 :>> ", 1);
   endTask(id);
 };
 // 完成支线任务
 export const completeBranchTask = (id) => {
   const store: any = taskStore();
-  console.log("completeBranchTask :>> ");
-
   const { startList, completedList, claimRewardsList } = storeToRefs(store);
   // 处于开始阶段
   if (startList.value.includes(id)) {
@@ -60,7 +54,6 @@ const getGuide = (id) => {
     config = { timeout: 3000, hideProgressBar: false };
   }
 
-  console.log("config :>> ", config);
   toast(
     {
       component: Complete,
@@ -90,7 +83,6 @@ const endTask = (id) => {
   }
   // 数据预处理
   currentId.value = id;
-  console.log("id :>> ", id);
   getGuide(id);
 };
 // 领取奖励

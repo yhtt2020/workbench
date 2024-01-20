@@ -6,7 +6,7 @@
     :style="getLayoutSize"
   >
     <div :style="[getImgSize,{background: item.bg}]" class="overflow-hidden rounded-lg">
-      <img :src="item.icon" class="w-full h-full " :style="[item.color]"/>
+      <img  ref="img" :src="src" class="w-full h-full " :style="[item.color]"/>
     </div>
     <div
       class="xt-text-2 text-xs truncate"
@@ -26,16 +26,20 @@ import { rowOption, columnOption } from "./options";
 const props = defineProps({
   item: {},
 });
-
+const img = ref()
+const src= ref(props.item.value)
 const data = inject("data", "");
 const mode = ref("default");
 
 onMounted(() => {
   resize();
+  img.value.onerror = function() {
+  src.value = props.item.icon
+};
 });
 
 watch(
-  () => data.value.size,
+  () => data.value.customSize,
   () => {
     resize();
   },
@@ -45,7 +49,7 @@ watch(
 );
 
 const resize = () => {
-  let [width, height] = data.value.size.split("x");
+  let [width, height] = data.value.customSize.split("x");
   if (width == "2" || height == "2") {
     mode.value = "default";
     return;

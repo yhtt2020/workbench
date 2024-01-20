@@ -7,7 +7,7 @@ export const getAllTask = (data) => {
 };
 
 // 完成一个任务
-export const completeTask = (data) => {
+export const completeCurrentTask = (data) => {
   const res = post(sUrl("/app/userTask/done"), data);
   return res;
 };
