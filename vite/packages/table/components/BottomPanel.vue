@@ -6,13 +6,13 @@
     <div style="position: absolute; z-index: 500 !important;"
       :style="{ left: `${this.left}px`, bottom: `${navAttribute.navSize / 100 * 100}px` }" class="rounded-xl pointer "
       id="folder">
-      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:size="updateSize" :customData="customData" :customIndex="bottomKey"
-        :secondary="true" v-if="folderVisible" :expand="{ disabled: true }"
+      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:size="updateSize" :customData="customData"
+        :customIndex="bottomKey" :secondary="true" v-if="folderVisible" :expand="{ disabled: true }"
         :navBar="{ resize: false, sizeOption: false, isDel: true, hierarchy: true }" :auto="true" />
 
     </div>
 
-    <div class="absolute" v-if="controlVisible" style="bottom:100px;z-index:888;" :style="{left:`${controlLeft}px`}">
+    <div class="absolute" v-if="controlVisible" style="bottom:100px;z-index:888;" :style="{ left: `${controlLeft}px` }">
       <ControlModal @close="controlVisible = false"></ControlModal>
     </div>
 
@@ -54,7 +54,7 @@
         </div>
       </div>
       <!-- 快速搜索 底部栏区域 -->
-      <Drop @createFile="createFile">
+      <Drop @createFile="createFile" currentId='bottom'>
         <transition>
           <div v-if="hoverIndex > -1 && !skipSort && hoverRealItemId() !== dragItem?.id"
             style="position: absolute;z-index:99999999999;top:-8px;left:50%;transform: translateX(-50%) translateY(-100%)  ;"
@@ -111,7 +111,7 @@
                           :class="{ hover: (dragItem && item.id === hoverRealItemId() && dragItem?.id !== hoverRealItemId()) }"
                           style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                           @click.stop="newOpenApp(item.type, item.value, item)">
-
+                          <!-- <Drag :data="item" :currentId="currentId"> -->
                           <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"
                             :placement="'top'">
                           </Team>
@@ -121,6 +121,8 @@
                           <template v-else>
                             <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
                           </template>
+                          <!-- </Drag> -->
+
                         </div>
                       </xt-menu>
                     </a-tooltip>
@@ -194,7 +196,7 @@ import { Modal } from 'ant-design-vue'
 import GradeSmallTip from './GradeSmallTip.vue'
 import { isMain } from '../js/common/screenUtils'
 
-import EditNavigation from './bottomPanel/EditNavigation.vue'
+// import EditNavigation from './bottomPanel/EditNavigation.vue'
 import ChangeApp from './bottomPanel/ChangeApp.vue'
 import ScrolX from './ScrolX.vue'
 
@@ -214,10 +216,12 @@ import ChatButton from './bottomPanel/ChatButton.vue'
 import { Icon as navIcon } from '@iconify/vue'
 import navigationData from '../js/data/tableData'
 import { offlineStore } from '../js/common/offline'
-import { moreMenus, extraRightMenu, mergeIconFolder, updateIcon } from '../components/desk/navigationBar/index'
+import { moreMenus, extraRightMenu } from '../components/desk/navigationBar/index'
+import { useMergeFolder } from '../components/desk/navigationBar/hook/mergeFolder.ts'
 import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
+import { useNavBarStore } from './desk/navigationBar/navBar'
 import { Notifications } from '../js/common/sessionNotice'
 // import xtMenu from '../ui/components/Menu/index.vue'
 import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
@@ -235,7 +239,7 @@ import { useWindowSize, } from '../ui/new/drag/src/hooks/useWindowSize'
 import Common from './desk/navigationBar/components/Common.vue';
 import { useElementSize } from "../ui/new/drag/src/hooks/useElementSize";
 import ControlModal from './desk/navigationBar/components/control/ControlModal.vue';
-
+import Drag from './desk/navigationBar/components/folder/Drag.vue'
 
 export default {
   name: 'BottomPanel',
@@ -250,7 +254,7 @@ export default {
     Template,
     PanelButton,
     ThunderboltFilled,
-    EditNavigation,
+    // EditNavigation,
     ChangeApp,
     ScrolX,
     GradeSmallTip,
@@ -267,6 +271,7 @@ export default {
     Drop,
     Common,
     ControlModal,
+    Drag,
   },
   data() {
     return {
@@ -434,9 +439,10 @@ export default {
       left: 0,
       parentSize: 0,
       // 控制中心弹窗
-      controlVisible:false,
-      controlLeft:0,
+      controlVisible: false,
+      controlLeft: 0,
       skipSort: false,
+      skipSimple: false,
     }
   },
   props: {
@@ -454,18 +460,13 @@ export default {
     }
   },
   mounted() {
-    // this.$bus.on('M0105',() => { this.editNavigation(this.drawerMenus[0]) })
-    // this.$bus.on('Z0401',() => {
-    //     console.log('Z0401 :>> ', 332222);
-    //       this.showTeamTip = true
-    //      })
-    this.$bus.on('Z0402',async () => {
+    this.$bus.on('Z0402', async () => {
       await this.updateMy(0)
       this.teamVisible = true
     })
 
-    this.$bus.on('M0105',() => { this.editNavigation(this.drawerMenus[0]) })
-    this.$bus.on('Z0401',() => {   this.showTeamTip = true })
+    this.$bus.on('M0105', () => { this.editNavigation(this.drawerMenus[0]) })
+    this.$bus.on('Z0401', () => { this.showTeamTip = true })
     // this.popVisible=true
 
     this.enableDrag()
@@ -620,25 +621,14 @@ export default {
         return '6x4'
       }
     },
-    /**
-     * 防止一次性添加过多导致图标截断
-     */
-    showList() {
-      return this.copyFootNav.slice(0, this.maxItemNum)
-    },
 
   },
   watch: {
     copyFootNav: {
       handler(newVal, oldVal) {
-        // let fixedRs=this.fixData(newVal)
-        // if(fixedRs.fixed){
-        //   this.copyFootNav=fixedRs.fixedArray
-        // }
-        // console.log(111111111,'form copyFootNav',this.copyFootNav)
         // 获取最大可添加图标个数
         const windowWidth = window.innerWidth
-        this.maxItemNum = Math.round((windowWidth - 240) / 72 )
+        this.maxItemNum = Math.round((windowWidth - 240) / 72)
         // console.log(this.maxItemNum, 'this.maxItemNum', windowWidth, 'windowWidth')
         // let flag = true
         if (this.copyFootNav.length > this.maxItemNum && this.maxItemNum !== null) {
@@ -646,12 +636,12 @@ export default {
           if (this.noticeFlag) {
             this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
               onOk: () => {
-                const width = window.innerWidth / (240 + this.copyFootNav.length * 72 )
+                const width = window.innerWidth / (240 + this.copyFootNav.length * 72)
                 this.navAttribute.navSize = width
               }
             })
           }
-          const width = window.innerWidth / (240 + this.copyFootNav.length * 72 )
+          const width = window.innerWidth / (240 + this.copyFootNav.length * 72)
           this.navAttribute.navSize = width.toFixed(2) * 100
           this.noticeFlag = false
         }
@@ -690,9 +680,14 @@ export default {
         this.bottomToggle[2] = false
       } else if (!newVal && oldVal) {
         // 当 simple 从开启变为关闭时，开启所有 bottomToggle
-        this.bottomToggle[0] = true
-        this.bottomToggle[1] = true
-        this.bottomToggle[2] = true
+        if (this.skipSimple) {
+          this.bottomToggle[0] = true
+        } else {
+          this.bottomToggle[0] = true
+          this.bottomToggle[1] = true
+          this.bottomToggle[2] = true
+        }
+
       }
     },
     bottomToggle: {
@@ -700,6 +695,7 @@ export default {
       handler(newV, oldV) {
         if ((this.bottomToggle[0] && this.bottomToggle[1] && this.bottomToggle[2]) || this.bottomToggle[0]) {
           this.simple = false
+          this.skipSimple = true
         } else if (!this.bottomToggle[0] && !this.bottomToggle[1] && !this.bottomToggle[2]) {
           this.simple = true
         }
@@ -738,6 +734,18 @@ export default {
       },
       deep: true
     },
+    'navAttribute.navSize': {
+      handler(newV, oldV) {
+        // const bottom = document.getElementById('bottom-bar')
+        // bottom.style.zoom = window.devicePixelRatio
+        // bottom.style.transformOrigin = 'left top'
+        // bottom.style.transform = 'scale(' + (1 / window.devicePixelRatio) + ')'
+        // bottom.style.width = window.devicePixelRatio * 100 + '%'
+        // bottom.style.height = window.devicePixelRatio * 100 + '%'
+        this.syncBottomPanel()
+        console.log('newV', newV, 'oldV', oldV)
+      }
+    }
   },
   methods: {
     useElementSize,
@@ -878,7 +886,7 @@ export default {
     closeDrawer() {
       this.menuVisible = false
     },
-    checkScroll() {},
+    checkScroll() { },
     goMy() {
       this.$router.push({ name: 'socialMy' })
     },
@@ -1002,8 +1010,10 @@ export default {
      */
     msgNotice(item) {
       if (item.type === 'tableApp') {
-        message.loading({content:`打开「${item.name}」...`
-        ,key:'tipRun'})
+        message.loading({
+          content: `打开「${item.name}」...`
+          , key: 'tipRun'
+        })
       }
     },
     /**
@@ -1017,10 +1027,12 @@ export default {
       if (value === 'home' && item.home) {
         this.jumpDesk = item.home
       }
-      let rs= await startApp(type, value, this.$router)
-      if(!rs){
-        message.error({content:`打开「${item.name}」失败`
-          ,key:'tipRun'})
+      let rs = await startApp(type, value, this.$router)
+      if (!rs) {
+        message.error({
+          content: `打开「${item.name}」失败`
+          , key: 'tipRun'
+        })
       }
       type !== 'folder' ? this.folderVisible = false : ''
       this.controlVisible = false;
@@ -1057,7 +1069,6 @@ export default {
 
       }
     },
-    updateIcon,
     createFile(item, x) {
       this.skipSort = true
       const bottom = document.querySelector('#bottomPanel')
@@ -1066,7 +1077,7 @@ export default {
       console.log(index, item, 'index');
       this.dragItem = null
       if (this.copyFootNav[this.hoverIndex]?.type === 'folder') {
-        const merged = this.mergeIconFolder(this.copyFootNav, item ,this.copyFootNav.find(i => {
+        const merged = this.useMergeFolder(this.copyFootNav, item, this.copyFootNav.find(i => {
           return i.id === this.hoverRealItemId()
         }))
         this.copyFootNav.splice(this.copyFootNav.findIndex(i => {
@@ -1076,8 +1087,8 @@ export default {
           return i.id !== item.id
         })
       }
-      else{
-       this.copyFootNav.splice(index, 0, _.cloneDeep(item))
+      else {
+        this.copyFootNav.splice(index, 0, _.cloneDeep(item))
       }
       // 从外部拖拽元素到导航栏，跳过合并提示
       this.hoverIndex = -1
@@ -1230,7 +1241,7 @@ export default {
         onUnchoose: function (event) {
           if (that.hoverRealItemId() && that.hoverRealItemId() !== that.dragItem?.id) {
             //存在目标，且不等于自身，符合合并条件，则执行合并
-            const merged = that.mergeIconFolder(that.copyFootNav, that.dragItem, that.copyFootNav.find(item => {
+            const merged = that.useMergeFolder(that.copyFootNav, that.dragItem, that.copyFootNav.find(item => {
               return item.id === that.hoverRealItemId()
             }))
             that.copyFootNav.splice(that.copyFootNav.findIndex(item => {
@@ -1285,7 +1296,7 @@ export default {
     },
     useWindowSize,
     replaceType,
-    mergeIconFolder,
+    useMergeFolder,
     renderIcon,
     delNavigation(sumList, oneNav, index, delMethod) {
       if (!this.mainNavigationList.find((item) => item.name === oneNav.name)) {
@@ -1303,7 +1314,7 @@ export default {
     },
 
     //  点击头像框打开控制中心
-    openControl(event){
+    openControl(event) {
       this.controlVisible = !this.controlVisible;
       this.controlLeft = event.clientX - 200;
       // this.resetElementPosition(event.clientX)
@@ -1395,6 +1406,7 @@ export default {
 .bottom-panel .common-panel {
   padding: 0.2em 0.8em 0.2em 0.8em !important;
 }
+
 .scroll-content {
   :last-child {
     margin-right: 0;

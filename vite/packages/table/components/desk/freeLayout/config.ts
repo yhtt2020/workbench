@@ -1,130 +1,122 @@
 export const headerData = [
   {
-    size: "2x2",
     name: "test",
+    customData: {
+      customSize: "2x2",
+    },
   },
   {
-    size: "2x2",
     name: "test",
+    customData: {
+      customSize: "2x2",
+    },
   },
   {
-    size: "2x4",
     name: "test",
+    customData: {
+      customSize: "2x2",
+    },
   },
   {
-    size: "2x4",
     name: "test",
+    customData: {
+      customSize: "2x2",
+    },
   },
   {
-    size: "2x4",
     name: "test",
+    customData: {
+      customSize: "2x4",
+    },
+  },
+  {
+    name: "test",
+    customData: {
+      customSize: "2x4",
+    },
   },
 ];
+
 export const folderData = [
   {
-    size: "2x2",
     name: "test",
+    customData: {
+      customSize: "2x2",
+    },
   },
   {
-    size: "2x2",
     name: "test",
+    customData: {
+      customSize: "2x2",
+    },
   },
   {
-    size: "2x2",
     name: "test",
+    customData: {
+      customSize: "2x2",
+    },
   },
 ];
+
 export const mainData = [
   {
-    size: "2x2",
     name: "AIaides",
+    customData: {
+      customSize: "2x2",
+    },
   },
   {
-    size: "2x2",
     name: "AIaides",
+    customData: {
+      customSize: "2x2",
+    },
   },
   {
-    size: "2x2",
     name: "AIaides",
+    customData: {
+      customSize: "2x2",
+    },
   },
   {
-    size: "2x2",
     name: "AIaides",
+    customData: {
+      customSize: "2x2",
+    },
   },
   {
-    size: "2x2",
     name: "AIaides",
+    customData: {
+      customSize: "2x2",
+    },
   },
   {
-    size: "2x2",
-    name: "AIaides",
-  },
-  {
-    size: "2x2",
-    name: "AIaides",
-  },
-  {
-    size: "2x2",
-    name: "AIaides",
-  },
-  {
-    size: "2x2",
-    name: "AIaides",
-  },
-  {
-    size: "2x2",
-    name: "AIaides",
-  },
-  {
-    size: "2x2",
-    name: "AIaides",
-  },
-  {
-    size: "2x2",
-    name: "AIaides",
-  },
-  {
-    size: "2x4",
     name: "test",
+    customData: {
+      customSize: "2x4",
+    },
   },
   {
-    size: "2x4",
     name: "test",
+    customData: {
+      customSize: "2x4",
+    },
   },
   {
-    size: "2x4",
     name: "test",
+    customData: {
+      customSize: "4x4",
+    },
   },
   {
-    size: "2x4",
     name: "test",
+    customData: {
+      customSize: "4x4",
+    },
   },
   {
-    size: "2x4",
     name: "test",
-  },
-  {
-    size: "2x4",
-    name: "test",
-  },
-  {
-    size: "2x4",
-    name: "test",
-  },
-  {
-    size: "2x4",
-    name: "test",
-  },
-  {
-    size: "4x4",
-    name: "test",
-  },
-  {
-    size: "4x4",
-    name: "test",
-  },
-  {
-    size: "4x4",
-    name: "test",
+    customData: {
+      customSize: "4x4",
+    },
   },
 ];

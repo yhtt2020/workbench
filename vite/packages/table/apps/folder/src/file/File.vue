@@ -86,7 +86,7 @@ const { list, layout, modalSize } = toRefs(props);
  * 监听组件大小变化
  */
 const currentWidth = computed(() => {
-  let [width, height] = data.value.size.split("x");
+  let [width, height] = data.value.customSize.split("x");
   return width;
 });
 /**

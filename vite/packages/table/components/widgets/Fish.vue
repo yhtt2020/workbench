@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options"  :customIndex="customIndex" :desk="desk">
+  <Widget :options="options"  :customIndex="customIndex" :desk="desk"  :custom-data="customData">
     <div style="display: flex;flex-direction: column">
       <div style="flex:1;margin-right: 20px;margin-left: 20px">
         <div ref="fish" @click="click" class="fish"
