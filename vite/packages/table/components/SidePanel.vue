@@ -3,11 +3,10 @@
     <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-h-full" :beforeCreate="beforeCreate"> -->
     <!-- style="z-index: 99" -->
     <!-- 文件夹弹窗 -->
-    <div style="position: absolute; z-index: 500 !important;"
-      :style="folderPos" class="rounded-xl pointer "
-      id="folder">
-      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:customSize="updateSize" :customData="customData"
-        :customIndex="sideKey" :secondary="true" v-if="folderVisible" :expand="{ disabled: true }" :navBar="{
+    <div style="position: absolute; z-index: 500 !important;" :style="folderPos" class="rounded-xl pointer " id="folder">
+      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:customSize="updateSize"
+        :customData="customData" :customIndex="sideKey" :secondary="true" v-if="folderVisible"
+        :expand="{ disabled: true }" :navBar="{
           resize: false,
           sizeOption: false,
           isDel: true,
@@ -47,17 +46,16 @@
                   @click="newOpenApp(item)" @dragover="onDrag" @dragend="hoverIndex = -1" :class="{
                     'active-back': current(item),
                     hover: (dragItem && item.id === hoverRealItemId() && dragItem?.id !== hoverRealItemId())
-                  }"
-                  :style="{ borderRadius: this.iconRadius + 'px' }">
+                  }" :style="{ borderRadius: this.iconRadius + 'px' }">
                   <!-- <Drag :data="item" :currentId="sortId"> -->
-                    <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"
-                      :placement="sortId === 'left' ? 'right' : 'left'"></Team>
-                    <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
-                      @click.stop="openFolder(item)">
-                    </FolderVue>
-                    <template v-else>
-                      <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
-                    </template>
+                  <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"
+                    :placement="sortId === 'left' ? 'right' : 'left'"></Team>
+                  <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
+                    @click.stop="openFolder(item)">
+                  </FolderVue>
+                  <template v-else>
+                    <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
+                  </template>
                   <!-- </Drag> -->
 
 
@@ -447,8 +445,8 @@ export default {
         return { right: 65 + 'px' }
       }
     },
-    folderPos(){
-      if(this.sortId==='left'){
+    folderPos() {
+      if (this.sortId === 'left') {
         return { left: `${this.navAttribute.navSize / 100 * 100}px`, top: `${this.top}px` }
       }
       return { right: `${this.navAttribute.navSize / 100 * 100}px`, top: `${this.top}px` }
@@ -982,8 +980,7 @@ export default {
      * 清空当前导航栏
      */
     clearAll() {
-      this.sideList = []
-      this.updateList(this.sideList)
+      this.$bus.emit('clearAll', this.sortId)
     },
     closeFolder() {
       this.folderVisible = false

@@ -139,7 +139,7 @@
       <keep-alive>
         <TaskBox v-if="true"></TaskBox>
       </keep-alive>
-      <Common></Common>
+      <Common ref="common"></Common>
     </div>
 
     <div id="trans" v-show="visibleTrans" style="
@@ -444,6 +444,7 @@ export default {
       controlLeft: 0,
       skipSort: false,
       skipSimple: false,
+      firstCheck:false,
     }
   },
   props: {
@@ -630,10 +631,7 @@ export default {
         // 获取最大可添加图标个数
         const windowWidth = window.innerWidth
         this.maxItemNum = Math.round((windowWidth - 240) / 72)
-        // console.log(this.maxItemNum, 'this.maxItemNum', windowWidth, 'windowWidth')
-        // let flag = true
-        if (this.copyFootNav.length > this.maxItemNum && this.maxItemNum !== null ) {
-          // console.log(this.maxItemNum, 'maxItemNum')
+        if (this.copyFootNav.length > this.maxItemNum && this.maxItemNum !== null  ) {
           if (this.noticeFlag) {
             this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
               onOk: () => {
@@ -810,7 +808,7 @@ export default {
      * 清空当前导航栏
      */
     clearAll() {
-      this.copyFootNav = []
+      this.$bus.emit('clearAll', 'foot')
     },
     closeFolder() {
       this.folderVisible = false
