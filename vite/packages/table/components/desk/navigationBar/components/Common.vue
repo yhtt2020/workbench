@@ -15,7 +15,7 @@ const useNavStore = navStore()
 const navigationStore = useNavigationStore()
 const useAppStore = appStore()
 const { proxy } = getCurrentInstance();
-const {copyFootNav,sideNavigationList,rightNavigationList} = storeToRefs(useNavStore)
+const {copyFootNav,sideNavigationList,rightNavigationList,navigationToggle} = storeToRefs(useNavStore)
 const resetIconList = ref([
     {
         name:'桌面主页',

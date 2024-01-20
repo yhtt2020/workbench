@@ -73,29 +73,20 @@
   } from "../../../../components/widgets/myIcons/set/options";
   const { proxy } = getCurrentInstance();
 
-  const iconStore = myIcons();
-  const { edit } = storeToRefs(iconStore);
+  // const iconStore = myIcons();
+  // const { edit } = storeToRefs(iconStore);
+  const edit = ref({})
   const emits = defineEmits(["close", "update:modelValue", "save"]);
   const props = defineProps({
     modelValue: {},
     index: {
-      default: "10000",
+      default: "1000",
     },
     maskIndex: {
       default: "999",
     },
   });
   const arr = ["internal", "default", "thinksky"];
-//   const res = arr.includes(edit.value.open.type);
-//   if (res) edit.value["type"] = edit.value.open.type;
-//   edit.value["mode"] = res ? "link" : "app";
-//   edit.value["value"] = edit.value.open.value;
-
-
-//   if (!edit.value["defaultIcon"]) {
-//     edit.value["defaultIcon"] = edit.value.src;
-//   }
-//   console.log(edit.value["mode"]);
 
   onMounted(() => {});
   /**
@@ -177,6 +168,13 @@
    * 保存数据
    */
   const save = () => {
+    edit.value = {
+      name: edit.value.titleValue || edit.value.name || "",
+      value: edit.value.value || "",
+      type: edit.value.type || "",
+      icon: edit.value.src || "",
+      ...edit.value,
+    }
     emits("save", edit.value);
   };
   </script>

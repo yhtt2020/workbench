@@ -925,36 +925,13 @@ export default {
     editNavigation(item) {
       if (item.component) {
         this.componentId = item.component
-        // console.log(this.componentId,'===>>1');
         if (item.component === 'EditNavigationIcon') {
           this.editToggle = true
           this.selectNav = 'foot'
           message.success('进入编辑模式')
         }
-        // console.log(this.componentId,'===>>2');
         this.quick = true
-      } else if (item.visible) {
-        switch (item.tag) {
-          case 'task':
-            this.bottomToggle[2] = !this.bottomToggle[2]
-            break
-          case 'community':
-            this.bottomToggle[1] = !this.bottomToggle[1]
-            break
-          case 'user':
-            this.bottomToggle[0] = !this.bottomToggle[0]
-            break
-          case 'chat':
-            this.settings.enableChat = !this.settings.enableChat
-            break
-          case 'hide':
-            this.navigationToggle[2] = false
-            break
-        }
-      } else {
-        return
-      }
-
+      } 
       this.menuVisible = false
     },
     /**

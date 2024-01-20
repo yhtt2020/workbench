@@ -16,9 +16,6 @@
     <Drop @createFile="createFile" :currentId="sortId">
       <div v-if="false"
         style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:150px">
-        <div>{{ `left: ${navAttribute.navSize / 100 * this.left}px; top: ${navAttribute.navSize / 100 * this.top}px` }}
-        </div>
-        <div>{{ sideKey }}</div>
         <div>选中的id{{ hoverIndex }}</div>
         <div v-for="( item, index) in navigationList" style="margin-bottom: 5px;border-bottom: 4px solid white">
           {{ index }} {{ item.name }} {{ item.id }} {{ item.children?.length }}
@@ -221,7 +218,7 @@ export default {
           id: 8,
           name: '清空当前导航栏',
           newIcon: 'fluent:circle-off-16-regular',
-          fn: () => { this.clearAll() },
+          fn: () => { this.clearAll(); },
         },
         {
           id: 4,
@@ -1037,27 +1034,7 @@ export default {
           message.success('进入编辑模式')
         }
         this.quick = true
-      } else if (item.visible) {
-        switch (item.tag) {
-          case 'task':
-            this.bottomToggle[2] = !this.bottomToggle[2]
-            break;
-          case 'community':
-            this.bottomToggle[1] = !this.bottomToggle[1]
-            break;
-          case 'user':
-            this.bottomToggle[0] = !this.bottomToggle[0]
-            break;
-          case 'chat':
-            this.settings.enableChat = !this.settings.enableChat
-            break;
-          case 'hide':
-            this.navVisible()
-            break;
-        }
-      } else {
-        return
-      }
+      } 
 
       this.menuVisible = false
     },
