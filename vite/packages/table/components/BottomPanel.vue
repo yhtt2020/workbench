@@ -57,7 +57,7 @@
       <!-- 快速搜索 底部栏区域 -->
       <Drop @createFile="createFile" currentId='bottom'>
         <transition>
-          <div v-if="hoverIndex > -1 && !skipSort && hoverRealItemId() !== dragItem?.id"
+          <div v-if="hoverIndex > -1 && !skipSort && hoverRealItemId('bottomContent',this.hoverIndex) !== dragItem?.id"
             style="position: absolute;z-index:99999999999;top:-8px;left:50%;transform: translateX(-50%) translateY(-100%)  ;"
             class="px-10 py-3 rounded-lg s-bg xt-text">松开鼠标合并</div>
         </transition>
@@ -109,7 +109,7 @@
                         <div @dragover="onDrag" @dragend="hoverIndex = -1"
                           v-if="!(this.navList.includes(item.event) && this.isOffline)"
                           class="flex items-center justify-center pointer"
-                          :class="{ hover: (dragItem && item.id === hoverRealItemId() && dragItem?.id !== hoverRealItemId()) }"
+                          :class="{ hover: (dragItem && item.id === hoverRealItemId('bottomContent',this.hoverIndex) && dragItem?.id !== hoverRealItemId('bottomContent',this.hoverIndex)) }"
                           style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                           @click.stop="newOpenApp(item.type, item.value, item)">
                           <!-- <Drag :data="item" :currentId="currentId"> -->
@@ -191,13 +191,9 @@ import { mapWritableState, mapActions } from 'pinia'
 import { useWidgetStore } from '../components/card/store'
 import Template from '../../user/pages/Template.vue'
 import { ThunderboltFilled } from '@ant-design/icons-vue'
-import { Modal } from 'ant-design-vue'
-// import SidePanel from './SidePanel.vue'
-// import SecondPanel from './SecondPanel.vue'
 import GradeSmallTip from './GradeSmallTip.vue'
 import { isMain } from '../js/common/screenUtils'
 
-// import EditNavigation from './bottomPanel/EditNavigation.vue'
 import ChangeApp from './bottomPanel/ChangeApp.vue'
 import ScrolX from './ScrolX.vue'
 
@@ -241,6 +237,7 @@ import Common from './desk/navigationBar/components/Common.vue';
 import { useElementSize } from "../ui/new/drag/src/hooks/useElementSize";
 import ControlModal from './desk/navigationBar/components/control/ControlModal.vue';
 import Drag from './desk/navigationBar/components/folder/Drag.vue'
+import {hoverRealItemId} from './desk/navigationBar/hook/hoverRealItemId'
 
 export default {
   name: 'BottomPanel',
@@ -742,7 +739,6 @@ export default {
         // bottom.style.width = window.devicePixelRatio * 100 + '%'
         // bottom.style.height = window.devicePixelRatio * 100 + '%'
         this.syncBottomPanel()
-        console.log('newV', newV, 'oldV', oldV)
       }
     }
   },
@@ -772,30 +768,7 @@ export default {
       })
       return filteredNavList
     },
-    /**
-     * 取出当前鼠标指针所对应的数组内的元素的真实id，采用视图查找，所以是精准的
-     * @returns {string}
-     */
-    hoverRealItemId() {
-      // if (this.isEnterBar) return
-      let parent = document.getElementById('bottomContent')
-      if (!parent) {
-        return ''
-      }
-      if (this.hoverIndex < 0) {
-        return
-      }
-      let i = 0
-      for (const child of parent.children) {
-        if (i === this.hoverIndex) {
-          if (child) {
-            return child.id
-          }
-        }
-        i++
-      }
-      return ''
-    },
+
     /**
      * 点击文件夹子图标
      * @param {*} item
@@ -823,7 +796,6 @@ export default {
         name: item.name,
         icon: item.icon
       }
-      console.log(item.default, 'item.default')
     },
 
     /**
@@ -844,7 +816,6 @@ export default {
       } else if (this.folderVisible && this.currentItem.id && this.folderId === this.currentItem.id) {
         this.folderVisible = false
       } else {
-        console.log(this.currentItem.id, this.folderId, 'this.currentItem.id, this.folderId')
         this.customData = {
           ...this.defaultFolderData,
           list: this.folderList,
@@ -877,8 +848,6 @@ export default {
       this.$emit('hiedNavBar', value)
     },
     showElement(item, index) {
-      // console.log(item,index,'====>>>1111');
-      // this.clickNavigation(item)
       this.currentItem = item
       this.currentIndex = index
     },
@@ -901,9 +870,6 @@ export default {
       this.changeFlag = false
     },
     showMenu() {
-      if (this.rightModel === 'follow') {
-        return
-      }
       this.routeParams.url &&
         ipc.send('hideTableApp', {
           app: JSON.parse(JSON.stringify(this.routeParams)),
@@ -963,22 +929,6 @@ export default {
         return
       }
       this.delNavigation(arr, currentItem, currentIndex, this.removeFootNavigationList)
-    },
-    transFile() {
-      //this.visibleTrans=true
-      //document.getElementById('transFrame').src='https://szfilehelper.weixin.qq.com/'
-      // console.log('发送消息')
-      ipc.send('executeAppByPackage', { package: 'com.thisky.fileHelper' })
-      this.$router.push({
-        name: 'app',
-        params: {
-          theme: '#2c2c2c',
-          name: 'fileHelper',
-          url: 'https://szfilehelper.weixin.qq.com/',
-          preload: 'fileHelper',
-          background: false,
-        },
-      })
     },
     /**
      * 打开桌面应用提示
@@ -1050,14 +1000,13 @@ export default {
       const bottom = document.querySelector('#bottomPanel')
       const rect = bottom.getBoundingClientRect()
       const index = Math.round((x.x - rect.x) / (72 * this.navAttribute.navSize / 100))
-      console.log(index, item, 'index');
       this.dragItem = null
       if (this.copyFootNav[this.hoverIndex]?.type === 'folder') {
         const merged = this.useMergeFolder(this.copyFootNav, item, this.copyFootNav.find(i => {
-          return i.id === this.hoverRealItemId()
+          return i.id === this.hoverRealItemId('bottomContent',this.hoverIndex)
         }))
         this.copyFootNav.splice(this.copyFootNav.findIndex(i => {
-          return i.id === this.hoverRealItemId()
+          return i.id === this.hoverRealItemId('bottomContent',this.hoverIndex)
         }), 1, merged)
         this.copyFootNav = this.copyFootNav.filter(i => {
           return i.id !== item.id
@@ -1166,22 +1115,16 @@ export default {
         }, 100),
         onEnd: function (event) {
           console.log('onEnd')
-          // console.log(event.originalEvent.clientX, event, 'to end X Y ');
           that.$emit('getDelIcon', false)
-          //
           that.popVisible = false
           // 删除
           that.isDelete = true
           index = null
           that.isBorder = false
           isDrag = false
-          // console.log('isDelete', that.footNavigationList);
-          // console.log(that.copyFootNav,'copyFootNav');
 
         },
         onMove: function (event, originalEvent) {
-          // console.log(event, originalEvent, 'move');
-          console.log('onMove')
           isDrag = true
           that.isDelete = false
           const moveLeft = event.originalEvent.clientX
@@ -1198,7 +1141,6 @@ export default {
             x: event.originalEvent.clientX,
             y: event.originalEvent.clientY,
           }
-          // console.log(that.defaultPosition)
         },
         onSort: function (event) {
           console.log('onSort', event)
@@ -1215,13 +1157,13 @@ export default {
          * @returns {number}
          */
         onUnchoose: function (event) {
-          if (that.hoverRealItemId() && that.hoverRealItemId() !== that.dragItem?.id) {
+          if (that.hoverRealItemId('bottomContent',that.hoverIndex) && that.hoverRealItemId('bottomContent',that.hoverIndex) !== that.dragItem?.id) {
             //存在目标，且不等于自身，符合合并条件，则执行合并
             const merged = that.useMergeFolder(that.copyFootNav, that.dragItem, that.copyFootNav.find(item => {
-              return item.id === that.hoverRealItemId()
+              return item.id === that.hoverRealItemId('bottomContent',that.hoverIndex)
             }))
             that.copyFootNav.splice(that.copyFootNav.findIndex(item => {
-              return item.id === that.hoverRealItemId()
+              return item.id === that.hoverRealItemId('bottomContent',that.hoverIndex)
             }), 1, merged)
             that.copyFootNav = that.copyFootNav.filter(item => {
               return item.id !== that.dragItem.id
@@ -1270,6 +1212,7 @@ export default {
         this.skipSort = false
       })
     },
+    hoverRealItemId,
     useWindowSize,
     replaceType,
     useMergeFolder,
@@ -1326,7 +1269,6 @@ export default {
 
 }
 </script>
-<style></style>
 <style lang="scss" scoped>
 .dragging {
   // pointer-events: none !important;

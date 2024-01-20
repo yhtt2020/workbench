@@ -123,6 +123,8 @@ const handleMouseUp = (e) => {
   iconsRefs.value.forEach((item) => {
     item.doRemoveCard();
   });
+  // iconsRefs.value = [];
+  // iconList.value = [];
 }
 const handleMouseLeave = () => {
   

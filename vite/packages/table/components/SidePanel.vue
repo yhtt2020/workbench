@@ -22,7 +22,7 @@
         </div>
       </div>
       <transition>
-        <div v-if="hoverIndex > -1 && hoverRealItemId() !== dragItem?.id" :style="mergeTag"
+        <div v-if="hoverIndex > -1 && hoverRealItemId(this.sortId,this.hoverIndex) !== dragItem?.id" :style="mergeTag"
           style="position: absolute;z-index:99999999999;top:50%;transform: translateY(-50%) translateX(-100%);writing-mode: vertical-rl;"
           class="px-3 py-10 rounded-lg s-bg xt-text">松开鼠标合并</div>
       </transition>
@@ -42,7 +42,7 @@
                 <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
                   @click="newOpenApp(item)" @dragover="onDrag" @dragend="hoverIndex = -1" :class="{
                     'active-back': current(item),
-                    hover: (dragItem && item.id === hoverRealItemId() && dragItem?.id !== hoverRealItemId())
+                    hover: (dragItem && item.id === hoverRealItemId(this.sortId,this.hoverIndex) && dragItem?.id !== hoverRealItemId(this.sortId,this.hoverIndex))
                   }" :style="{ borderRadius: this.iconRadius + 'px' }">
                   <!-- <Drag :data="item" :currentId="sortId"> -->
                   <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"
@@ -102,7 +102,6 @@ import { moreMenus, extraRightMenu, rightMenus, iconMenus, mergeIconFolder } fro
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
 import { useNavBarStore } from './desk/navigationBar/navBar'
-// import EditNavigation from './bottomPanel/EditNavigation.vue';
 import { Notifications } from '../js/common/sessionNotice'
 import Common from './desk/navigationBar/components/Common.vue'
 import xtMenu from '../ui/components/Menu/index.vue'
@@ -110,7 +109,6 @@ import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
 import _ from 'lodash-es'
 import EditIcon from './desk/navigationBar/components/EditIcon/EditIcon.vue'
 import { startApp } from '../ui/hooks/useStartApp'
-// import { updateIcon } from '../components/desk/navigationBar/index'
 import Avatar from "./desk/navigationBar/components/Avatar.vue";
 import Team from './bottomPanel/Team.vue'
 import FolderVue from './desk/navigationBar/components/folder/Folder.vue'
@@ -119,8 +117,8 @@ import { defaultFolderData } from '../apps/folder/src/components/options'
 import { nanoid } from 'nanoid'
 import Drop from './desk/navigationBar/components/folder/Drop.vue'
 import { useWindowSize, } from '../ui/new/drag/src/hooks/useWindowSize'
-import { useElementSize } from "../ui/new/drag/src/hooks/useElementSize";
 import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
+import {hoverRealItemId} from '../components/desk/navigationBar/hook/hoverRealItemId'
 import Drag from './desk/navigationBar/components/folder/Drag.vue'
 export default {
   name: 'SidePanel',
@@ -457,7 +455,6 @@ export default {
     } else {
       this.sideList = this.rightNavigationList
     }
-    // this.navigationList = this.replaceType(this.navigationList)
     /**
      * 监听窗口变化,更新导航栏最大添加个数
      */
@@ -482,19 +479,14 @@ export default {
         setTimeout(() => {
           this.shakeElement = false
         }, 2000)
-      } else {
-        this.disableDrag()
-      }
+      } 
     },
     navigationList: {
       handler(newVal, oldVal) {
         // 获取最大可添加图标个数
         const windowWidth = window.innerHeight
         this.maxItemNum = Math.round((windowWidth) / 72)
-        // console.log(this.maxItemNum, 'this.maxItemNum', windowWidth, 'windowWidth')
-        // let flag = true
         if (this.navigationList.length > this.maxItemNum && this.maxItemNum !== null) {
-          // console.log(this.maxItemNum, 'maxItemNum')
           if (this.noticeFlag) {
             this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
               onOk: () => {
@@ -507,7 +499,6 @@ export default {
           this.navAttribute.navSize = width.toFixed(2) * 100
           this.noticeFlag = false
         }
-        // this.syncSidePanel()
       },
       immediate: true,
       deep: true,
@@ -535,7 +526,6 @@ export default {
     },
     'customData.list': {
       handler(newV, oldV) {
-        // console.log('newV', newV, 'oldV', oldV)
         const list = [...newV]
         this.folderItem.children = list
       },
@@ -546,7 +536,6 @@ export default {
       handler(newV, oldV) {
         this.folderName = newV
         this.folderItem.name = newV
-        // console.log('newV', newV, 'oldV', oldV)
       },
       deep: true
     },
@@ -558,15 +547,7 @@ export default {
     ...mapActions(appStore, ['toggleFullScreen']),
     renderIcon,
     replaceType,
-    disableDrag() {
-      // if (this.sortable) {
-      document.removeEventListener('click', this.disableDrag)
-      // this.sortable.destroy()
-      this.sortable = null
-      // message.info('已中止侧栏调整')
-      return
-      // }
-    },
+    hoverRealItemId,
     editIcon(item) {
       this.quick = true
       this.componentId = 'EditIcon'
@@ -578,7 +559,7 @@ export default {
       }
     },
     /**
-    * 更新底部导航栏，包括刷新和启动拖拽
+    * 更新侧边导航栏，包括刷新和启动拖拽
     */
     syncSidePanel() {
       this.sideKey = Date.now()
@@ -623,9 +604,9 @@ export default {
         //
         onStart: function (event) {
           that.cancelUpdate = false
-          console.log('onStart')
+          // console.log('onStart')
           that.dragItem = that.navigationList[event.oldIndex]
-          console.log('启动拖拽的元素', that.dragItem)
+          // console.log('启动拖拽的元素', that.dragItem)
           if (that.popVisible) {
             that.notifications.NoticeToast()
           }
@@ -666,9 +647,9 @@ export default {
             //如果执行过合并，这里就不需要刷新顺序了。
             return
           }
-          console.log('onUpdate')
+          // console.log('onUpdate')
           //拖拽排序后，更新数据
-          console.log('移动event=', event)
+          // console.log('移动event=', event)
           let cur = this.sideList.splice(event.oldIndex, 1)[0]
           if (!cur) {
             console.error('移动失败，无法获取到元素')
@@ -679,7 +660,7 @@ export default {
           return
         }, 100),
         onEnd: function (event) {
-          console.log('onEnd')
+          // console.log('onEnd')
           // console.log(event.originalEvent.clientX, event, 'to end X Y ');
           that.$emit('getDelIcon', false)
           //
@@ -695,18 +676,18 @@ export default {
         },
         onMove: function (event, originalEvent) {
           // console.log(event, originalEvent, 'move');
-          console.log('onMove')
+          // console.log('onMove')
           isDrag = true
           that.isDelete = false
           const moveLeft = event.originalEvent.clientY
           const panelLeft = that.defaultPosition.y
           const relativePos = (moveLeft - panelLeft) % 72
           const isGap = relativePos <= 20 && relativePos >= 0
-          console.log('isGap=', isGap, relativePos)
+          // console.log('isGap=', isGap, relativePos)
           return true
         },
         onChoose: function (event) {
-          console.log('onChoose')
+          // console.log('onChoose')
           index = event.oldIndex
           that.defaultPosition = {
             x: event.originalEvent.clientX,
@@ -714,28 +695,28 @@ export default {
           }
           // console.log(that.defaultPosition)
         },
-        onSort: function (event) {
-          console.log('onSort', event)
-          console.log('item', that.navigationList[event.newIndex])
-        },
-        // 触发替换中发生的事件
-        onChange(event) {
-          console.log('onChange', event, that.navigationList[event.newIndex])
-          console.log('item')
-        },
+        // onSort: function (event) {
+        //   console.log('onSort', event)
+        //   console.log('item', that.navigationList[event.newIndex])
+        // },
+        // // 触发替换中发生的事件
+        // onChange(event) {
+        //   console.log('onChange', event, that.navigationList[event.newIndex])
+        //   console.log('item')
+        // },
         /**
          * 合并文件夹操作
          * @param event
          * @returns {number}
          */
         onUnchoose: function (event) {
-          if (that.hoverRealItemId() && that.hoverRealItemId() !== that.dragItem?.id) {
+          if (that.hoverRealItemId(that.sortId,that.hoverIndex) && that.hoverRealItemId(that.sortId,that.hoverIndex) !== that.dragItem?.id) {
             //存在目标，且不等于自身，符合合并条件，则执行合并
             const merged = that.mergeIconFolder(that.sideList, that.dragItem, that.sideList.find(item => {
-              return item.id === that.hoverRealItemId()
+              return item.id === that.hoverRealItemId(that.sortId,that.hoverIndex)
             }))
             that.sideList.splice(that.sideList.findIndex(item => {
-              return item.id === that.hoverRealItemId()
+              return item.id === that.hoverRealItemId(that.sortId,that.hoverIndex)
             }), 1, merged)
             that.sideList = that.sideList.filter(item => {
               return item.id !== that.dragItem.id
@@ -757,30 +738,7 @@ export default {
       }
       // this.syncSidePanel()
     },
-    /**
-    * 取出当前鼠标指针所对应的数组内的元素的真实id，采用视图查找，所以是精准的
-    * @returns {string}
-    */
-    hoverRealItemId() {
-      // if (this.isEnterBar) return
-      let parent = document.getElementById(this.sortId)
-      if (!parent) {
-        return ''
-      }
-      if (this.hoverIndex < 0) {
-        return
-      }
-      let i = 0
-      for (const child of parent.children) {
-        if (i === this.hoverIndex) {
-          if (child) {
-            return child.id
-          }
-        }
-        i++
-      }
-      return ''
-    },
+
     /**
      * 自动根据当前位置获取到要合并的位置
      * @param currentLeft
@@ -844,10 +802,10 @@ export default {
       this.dragItem = null
       if (this.sideList[this.hoverIndex]?.type === 'folder') {
         const merged = this.mergeIconFolder(this.sideList, item, this.sideList.find(i => {
-          return i.id === this.hoverRealItemId()
+          return i.id === this.hoverRealItemId(this.sortId,this.hoverIndex)
         }))
         this.sideList.splice(this.sideList.findIndex(i => {
-          return i.id === this.hoverRealItemId()
+          return i.id === this.hoverRealItemId(this.sortId,this.hoverIndex)
         }), 1, merged)
         this.sideList = this.sideList.filter(i => {
           return i.id !== item.id
