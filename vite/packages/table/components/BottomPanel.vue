@@ -365,7 +365,7 @@ export default {
         },
         {
           id: 3,
-          name: '隐藏当前导航',
+          name: '关闭当前导航',
           newIcon: 'fluent:eye-off-16-regular',
           fn: () => { this.$emit('hiedNavBar', 'foot') },
         },

@@ -1,6 +1,6 @@
 <template>
   <div 
-    class="h-full max-w-full" 
+    :class=[dropClass] 
     @drop="handleDrop" 
     @dragover="handleDragover" 
     @dragenter="handleDragenter" 
@@ -44,7 +44,8 @@ const { iconList, iconsRefs } = storeToRefs(useIconStore)
 const emit = defineEmits(['createFile'])
 
 const props = defineProps({
-  currentId:String
+  currentId:String,
+  dropClass:'h-full max-w-full'
 })
 
 /**

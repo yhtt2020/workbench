@@ -11,11 +11,14 @@ import { appStore } from '../../../../store';
 import { navStore } from '../../../../store/nav'
 import {storeToRefs} from 'pinia'
 import { nanoid } from 'nanoid';
+
 const useNavStore = navStore()
 const navigationStore = useNavigationStore()
 const useAppStore = appStore()
 const { proxy } = getCurrentInstance();
 const {copyFootNav,sideNavigationList,rightNavigationList,navigationToggle} = storeToRefs(useNavStore)
+
+// 导航栏重置图标
 const resetIconList = ref([
     {
         name:'桌面主页',
@@ -38,6 +41,7 @@ const resetIconList = ref([
         value:'setting'
     }
 ])
+
 const iconList = ref([
     {
         value: 'commun',
@@ -61,6 +65,8 @@ const iconList = ref([
 
     }
 ])
+
+// 用户中心的社区显示同步
 watch(() => navigationStore.bottomToggle[0], (newV,oldV) => {
     newV ? useAppStore.settings.enableChat = true : useAppStore.settings.enableChat = false
 })
@@ -111,6 +117,8 @@ const clearAll = (list)=>{
     return list
 }
 
+
+// 清空
 onMounted(() => {
     proxy.$bus.on('clearAll', (value)=>{
         switch (value) {

@@ -13,7 +13,7 @@
           hierarchy: true
         }" :auto="true" />
     </div>
-    <Drop @createFile="createFile" :currentId="sortId">
+    <Drop @createFile="createFile" :currentId="sortId" :dropClass="'w-full max-h-full'">
       <div v-if="false"
         style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:150px">
         <div>选中的id{{ hoverIndex }}</div>
@@ -26,21 +26,37 @@
           style="position: absolute;z-index:99999999999;top:50%;transform: translateY(-50%) translateX(-100%);writing-mode: vertical-rl;"
           class="px-3 py-10 rounded-lg s-bg xt-text">松开鼠标合并</div>
       </transition>
-      <div @click.stop :id="currentId" style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
+      <div 
+        @click.stop 
+        :id="currentId" 
+        style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
         class="flex flex-row justify-center box common-panel s-bg w-[80px]  xt-bg pt-0 pb-0 relative max-h-full side-bar"
         ref="sideContent" @contextmenu="showMenu"
         :style="{ zoom: `${(this.navAttribute.navSize / 100)}`, borderRadius: this.navAttribute.navRadius + 'px' }">
         <div style="width: 52px;margin-top: 20px;margin-bottom: 20px;" class="w-full">
           <div :id="sortId" :key="sideKey"
             class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container"
-            style="width: 56px;display: flex;flex-direction: column;overflow: hidden;align-items: flex-start; gap: 20px;">
-            <a-tooltip v-for="(item, index) in navigationList" :key="item.id" :title="item.name"
-              :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }" @mouseenter="showElement(item, index)"
+            style="
+              width: 56px;
+              display: flex;
+              flex-direction: column;
+              overflow: hidden;
+              align-items: flex-start; 
+              gap: 20px;">
+            <a-tooltip v-for="(item, index) in navigationList" 
+              :key="item.id" 
+              :title="item.name"
+              :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }" 
+              @mouseenter="showElement(item, index)"
               :placement="sortId === 'left' ? 'right' : 'left'">
               <!-- 左右导航栏隐藏入口 -->
-              <xt-menu :menus="folderOptions" :id="item.id" class="relative overflow-visible item-content">
-                <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
-                  @click="newOpenApp(item)" @dragover="onDrag" @dragend="hoverIndex = -1" :class="{
+              <xt-menu :menus="folderOptions" :id="item.id" class="relative flex-shrink-0 item-content">
+                <div 
+                  v-if="!(this.isOffline && this.navList.includes(item.event))" 
+                  class="item-content item-nav"
+                  @click="newOpenApp(item)" 
+                  @dragover="onDrag" 
+                  @dragend="hoverIndex = -1" :class="{
                     'active-back': current(item),
                     hover: (dragItem && item.id === hoverRealItemId(this.sortId,this.hoverIndex) && dragItem?.id !== hoverRealItemId(this.sortId,this.hoverIndex))
                   }" :style="{ borderRadius: this.iconRadius + 'px' }">
@@ -54,8 +70,6 @@
                     <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
                   </template>
                   <!-- </Drag> -->
-
-
                 </div>
               </xt-menu>
             </a-tooltip>
@@ -208,7 +222,7 @@ export default {
         },
         {
           id: 3,
-          name: '隐藏当前导航',
+          name: '关闭当前导航',
           newIcon: 'fluent:eye-off-16-regular',
           fn: () => { this.$emit('hiedNavBar', this.sortId) },
         },
@@ -277,7 +291,8 @@ export default {
       left: 0,
       top: 0,
       parentSize: 0,
-      sideList: []
+      sideList: [],
+      maxItemNum:0
 
     }
   },
@@ -336,7 +351,7 @@ export default {
       'sideNavigationList',
       'rightNavigationList',
       'mainNavigationList',
-      'navigationToggle', 'maxItemNum',
+      'navigationToggle',
       'copyFootNav', 'copySideNav', 'copyRightNav'
     ]),
     ...mapWritableState(cardStore, ['routeParams']),
@@ -460,9 +475,10 @@ export default {
      */
     this.useWindowSize((size) => {
       // 获取最大可添加图标个数
-      const windowWidth = size.height.value
+      const windowWidth = size.height.value * 0.8
       this.parentSize = windowWidth
-      this.maxItemNum = Math.round((windowWidth) / 72)
+      this.maxItemNum = Math.floor((windowWidth) / 72)
+      console.log(windowWidth,this.maxItemNum,'<<<<<+++=======')
       const height = windowWidth / (this.navigationList.length * 72)
       this.navAttribute.navSize = height.toFixed(2) * 100
       this.navAttribute.navSize = this.navAttribute.navSize < 100 ? this.navAttribute.navSize : 100
@@ -484,18 +500,18 @@ export default {
     navigationList: {
       handler(newVal, oldVal) {
         // 获取最大可添加图标个数
-        const windowWidth = window.innerHeight
-        this.maxItemNum = Math.round((windowWidth) / 72)
-        if (this.navigationList.length > this.maxItemNum && this.maxItemNum !== null) {
+        const windowWidth = this.parentSize
+        this.maxItemNum = Math.floor((windowWidth) / 72)
+        if (this.navigationList.length > this.maxItemNum && this.maxItemNum !== 0) {
           if (this.noticeFlag) {
             this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
               onOk: () => {
-                const width = window.innerHeight / (this.navigationList.length * 72)
+                const width = this.parentSize / (this.navigationList.length * 72)
                 this.navAttribute.navSize = width
               }
             })
           }
-          const width = window.innerHeight / (this.navigationList.length * 72)
+          const width = this.parentSize / (this.navigationList.length * 72)
           this.navAttribute.navSize = width.toFixed(2) * 100
           this.noticeFlag = false
         }
