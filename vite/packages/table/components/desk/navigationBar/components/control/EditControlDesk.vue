@@ -1,20 +1,18 @@
 <template>
-  <div class="flex flex-1" style="height: 450px;">
+  <div class="flex grow" style="height: 400px;">
     <XtScrollbar  :y="true" style="height: 100%;width: 100%;">
-      <div class="flex flex-1 flex-col h-3/4 overflow-hidden">
+      <div class="flex flex-1 flex-col  overflow-hidden">
         <div style="height: 12px;"></div>
-        <ControlRemoveItem :list="controls.addControlList" ref="removeRef" />
+        <ControlRemoveItem  />
       </div>
 
-      <div class="mb-2 mt-4" v-if="controls.removeControlList.length !== 0 ">
+      <div class="mb-2 mt-4" v-if="control.newList.length !== 0 ">
         <div style="width: 516px;" class="xt-bb mx-auto"></div>
       </div>
-      
-      <!-- <a-divider style="height: 1px;margin:8px 0 16px 0;min-width:516px; border-top:1px solid var(--divider);"  /> -->
 
-      <div class="flex flex-1 flex-col h-3/4 overflow-hidden" v-if="controls.removeControlList.length !== 0">
+      <div class="flex flex-1 flex-col  overflow-hidden" v-if="control.newList.length !== 0">
         <div style="height: 8px;"></div>
-        <ControlAddItem :list="controls.removeControlList" ref="addRef"/>
+        <ControlAddItem />
       </div>
     </XtScrollbar>
   </div>
@@ -29,23 +27,8 @@ import ControlAddItem from './item/ControlAddItem.vue';
 import ControlRemoveItem from './item/ControlRemoveItem.vue';
 
 const controls = controlStore();
-// const { control,addControlList } = storeToRefs(controls)
+const { control } = storeToRefs(controls)
 
-const removeRef = ref(null);
-const addRef = ref(null);
-
-// const removeList = computed(()=>{
-//   return control.value.oldList;
-// })
-
-// const addList = computed(()=>{
-//   return control.value.newList;
-// })
-
-defineExpose({
-  removeRef,
-  addRef
-})
 
 </script>
 
@@ -73,5 +56,9 @@ defineExpose({
   width: auto !important;
   margin: 0 12px 12px 0 !important;
  
+}
+
+:deep(.ps__rail-y){
+  display: none !important;
 }
 </style>
