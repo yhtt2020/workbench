@@ -1,14 +1,15 @@
 <template>
-  <xtMixMenu :menus="rightMenus" name="name" class="flex max-w-full">
+  <xtMixMenu :menus="mainOption" name="name" class="flex max-w-full">
     <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-w-full"  :beforeCreate="beforeCreate"> -->
     <!-- xt-main-bottom-bar 定位类不可删 -->
     <!-- 文件夹弹窗 -->
     <div style="position: absolute; z-index: 500 !important;"
       :style="{ left: `${this.left}px`, bottom: `${navAttribute.navSize / 100 * 100}px` }" class="rounded-xl pointer "
       id="folder">
-      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:customSize="updateSize" :customData="customData"
-        :customIndex="bottomKey" :secondary="true" v-if="folderVisible" :expand="{ disabled: true }"
-        :navBar="{ resize: false, sizeOption: false, isDel: true, hierarchy: true }" :auto="true" />
+      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:customSize="updateSize"
+        :customData="customData" :customIndex="bottomKey" :secondary="true" v-if="folderVisible"
+        :expand="{ disabled: true }" :navBar="{ resize: false, sizeOption: false, isDel: true, hierarchy: true }"
+        :auto="true" />
 
     </div>
 
@@ -18,10 +19,12 @@
     </div>
 
     <!--  <ControlModal ref="controlRef" v-if="controlVisible" @close="controlVisible = false" :full="full" @setFull="setFull"/> -->
-
-    <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
-      id="bottom-bar" style="text-align: center;position: relative;" @contextmenu="showMenu" v-show="navigationToggle[2]"
-      :style="{ zoom: `${(this.navAttribute.navSize / 100)}` }">
+    <!-- <div>{{ !this.isLeaveBar && this.controlVisible && this.folderVisible }} ------ {{ autoVisible }}</div> -->
+    <div @click.stop 
+      class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
+      id="bottom-bar" style="text-align: center;position: relative;" @contextmenu="showMenu" v-show="autoVisible"
+      :style="{ zoom: `${(this.navAttribute.navSize / 100)}` }" @mouseenter="handleMouseEnter"
+      @mouseleave="handleMouseLeave">
       <!-- 快速搜索 底部 用户栏 -->
       <div v-if="(!simple || settings.enableChat) && !this.isOffline && this.bottomToggle[0]"
         class="relative flex flex-row items-center justify-between common-panel user s-bg" style="
@@ -49,7 +52,7 @@
       </div>
       <div v-if="false"
         style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:0">
-        <div>选中的id{{ hoverIndex }}</div>
+        <div>选中的id{{ !this.isLeaveBar && !this.controlVisible && !this.folderVisible }}</div>
         <div v-for="( item, index) in copyFootNav" style="margin-bottom: 5px;border-bottom: 4px solid white">
           {{ index }} {{ item.name }} {{ item.id }} {{ item.children?.length }}
         </div>
@@ -57,11 +60,14 @@
       <!-- 快速搜索 底部栏区域 -->
       <Drop @createFile="createFile" currentId='bottom'>
         <transition>
-          <div v-if="hoverIndex > -1 && !skipSort && hoverRealItemId('bottomContent',this.hoverIndex) !== dragItem?.id"
+          <div v-if="hoverIndex > -1 && !skipSort && hoverRealItemId('bottomContent', this.hoverIndex) !== dragItem?.id"
             style="position: absolute;z-index:99999999999;top:-8px;left:50%;transform: translateX(-50%) translateY(-100%)  ;"
             class="px-10 py-3 rounded-lg s-bg xt-text">松开鼠标合并</div>
         </transition>
-        <div id="bottomPanel" @drop.prevent="drop" @dragover.prevent="" class="flex flex-row items-center s-bg" style="
+        <div id="bottomPanel" 
+        :class="{ 'nav-enter': autoVisible, 'nav-leave': !autoVisible }"
+        @drop.prevent="drop" 
+        @dragover.prevent="" class="flex flex-row items-center s-bg" style="
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -109,7 +115,7 @@
                         <div @dragover="onDrag" @dragend="hoverIndex = -1"
                           v-if="!(this.navList.includes(item.event) && this.isOffline)"
                           class="flex items-center justify-center pointer"
-                          :class="{ hover: (dragItem && item.id === hoverRealItemId('bottomContent',this.hoverIndex) && dragItem?.id !== hoverRealItemId('bottomContent',this.hoverIndex)) }"
+                          :class="{ hover: (dragItem && item.id === hoverRealItemId('bottomContent', this.hoverIndex) && dragItem?.id !== hoverRealItemId('bottomContent', this.hoverIndex)) }"
                           style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                           @click.stop="newOpenApp(item.type, item.value, item)">
                           <!-- <Drag :data="item" :currentId="currentId"> -->
@@ -237,7 +243,7 @@ import Common from './desk/navigationBar/components/Common.vue';
 import { useElementSize } from "../ui/new/drag/src/hooks/useElementSize";
 import ControlModal from './desk/navigationBar/components/control/ControlModal.vue';
 import Drag from './desk/navigationBar/components/folder/Drag.vue'
-import {hoverRealItemId} from './desk/navigationBar/hook/hoverRealItemId'
+import { hoverRealItemId } from './desk/navigationBar/hook/hoverRealItemId'
 
 export default {
   name: 'BottomPanel',
@@ -370,13 +376,13 @@ export default {
           fn: () => { this.$emit('hiedNavBar', 'foot') },
         },
         {
-          id: 8,
+          id: 4,
           name: '清空当前导航栏',
           newIcon: 'fluent:circle-off-16-regular',
           fn: () => { this.clearAll() },
         },
         {
-          id: 4,
+          id: 8,
           name: '更多',
           newIcon: 'fluent:more-horizontal-16-filled',
           children: []
@@ -384,9 +390,10 @@ export default {
         },
         {
           divider: true,
-          id: 5
+          id: 12
         },
         {
+          id: 13,
           type: 'systemApp',
           newIcon: 'fluent:lock-closed-16-regular',
           name: '锁定屏幕',
@@ -394,6 +401,7 @@ export default {
           fn: () => { this.newOpenApp(this.builtInFeatures[0].type, this.builtInFeatures[0].value) }
         },
         {
+          id: 14,
           type: 'systemApp',
           newIcon: 'fluent:settings-16-regular',
           name: '基础设置',
@@ -401,6 +409,7 @@ export default {
           fn: () => { this.newOpenApp(this.builtInFeatures[1].type, this.builtInFeatures[1].value) }
         },
         {
+          id: 15,
           type: 'systemApp',
           newIcon: 'fluent:full-screen-maximize-16-filled',
           name: '全屏显示',
@@ -408,6 +417,7 @@ export default {
           fn: () => { this.newOpenApp(this.builtInFeatures[2].type, this.builtInFeatures[2].value) }
         },
         {
+          id: 16,
           type: 'systemApp',
           newIcon: 'fluent:slide-settings-24-regular',
           name: '设备设置',
@@ -441,7 +451,8 @@ export default {
       controlLeft: 0,
       skipSort: false,
       skipSimple: false,
-      firstCheck:false,
+      isEdge: false,
+      parentHeight: 0
     }
   },
   props: {
@@ -457,6 +468,7 @@ export default {
     if (this.timerRunning) {
       clearInterval(this.timerRunning)
     }
+    window.removeEventListener('mousemove', that.listenMouse)
   },
   mounted() {
     this.$bus.on('Z0402', async () => {
@@ -505,7 +517,9 @@ export default {
     this.useWindowSize((size) => {
       // 获取最大可添加图标个数
       const windowWidth = size.width.value
+      const windowHeight = size.height.value
       this.parentSize = windowWidth
+      this.parentHeight = windowHeight
       this.maxItemNum = Math.round((windowWidth - 240) / 72)
       // if (this.footNavigationList.length > this.maxItemNum) {
       const width = windowWidth / (240 + this.copyFootNav.length * 72)
@@ -514,6 +528,7 @@ export default {
       // }
       // console.log(this.navAttribute.navSize, 'size')
     }, 200)
+    window.addEventListener('mousemove', this.listenMouse)
   },
   computed: {
     ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
@@ -537,7 +552,7 @@ export default {
       'editToggle', 'taskBoxVisible',
       'selectNav', 'bottomToggle',
       'popVisible', 'currentList',
-      'editItem', 'navAttribute', 'iconRadius', 'jumpDesk'
+      'editItem', 'navAttribute', 'iconRadius', 'jumpDesk', 'customOpenNav', 'isLeaveBar'
     ]),
     ...mapWritableState(taskStore, ['isTask', 'isTaskDrawer']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
@@ -605,6 +620,31 @@ export default {
       }
       return this.iconMenus
     },
+    mainOption() {
+      const custom = {
+        id: 5,
+        name: this.customOpenNav ? '关闭自动隐藏' : '开启自动隐藏',
+        newIcon: 'fluent:eye-off-16-regular',
+        fn: () => { this.customOpenNav = !this.customOpenNav }
+      }
+      let arr = [...this.rightMenus, custom]
+      return arr.sort((a, b) => a.id - b.id)
+    },
+
+    autoVisible() {
+      if (this.customOpenNav) {
+        if (this.isEdge) {
+          return true
+        }
+        if (this.isLeaveBar && !this.controlVisible && !this.folderVisible) {
+          return false
+        }
+        return true
+      } else {
+        return this.navigationToggle[2]
+      }
+
+    },
     /**
      * 通过文件夹中数据的多少来自定义大小
      */
@@ -628,7 +668,7 @@ export default {
         // 获取最大可添加图标个数
         const windowWidth = window.innerWidth
         this.maxItemNum = Math.round((windowWidth - 240) / 72)
-        if (this.copyFootNav.length > this.maxItemNum && this.maxItemNum !== null  ) {
+        if (this.copyFootNav.length > this.maxItemNum && this.maxItemNum !== null) {
           if (this.noticeFlag) {
             this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
               onOk: () => {
@@ -755,18 +795,26 @@ export default {
 
     ]),
     ...mapActions(useNavigationStore, ['toggleEdit', 'toggleTaskBox']),
-    /**
-     * 找出不相同元素
-     * @param {*} navList
-     * @param {*} copyList
-     */
-    updateNavList(navList, copyList) {
-      const filteredNavList = navList.filter((item) => {
-        return !copyList.some((i) => {
-          return this.judge(item, i)
-        })
-      })
-      return filteredNavList
+
+    handleMouseEnter(e) {
+      if (this.customOpenNav) {
+        this.isLeaveBar = false
+        // console.log('=========>>>>>>>鼠标离开了', this.isLeaveBar, this.controlVisible, this.folderVisible)
+      }
+    },
+    handleMouseLeave(e) {
+      if (this.customOpenNav) {
+        this.isLeaveBar = true
+        // console.log('===========>>>>>>>>鼠标进入了', this.isLeaveBar,e.y , this.parentHeight )
+      }
+    },
+    listenMouse(e) {
+      if (e.x < 50 || e.x > (this.parentSize - 50) || e.y > (this.parentHeight - 50)) {
+        this.isEdge = true
+        // console.log(e.y, '=======<<<<<<<<', this.isEdge)
+      } else {
+        this.isEdge = false
+      }
     },
 
     /**
@@ -897,7 +945,7 @@ export default {
           message.success('进入编辑模式')
         }
         this.quick = true
-      } 
+      }
       this.menuVisible = false
     },
     /**
@@ -1003,10 +1051,10 @@ export default {
       this.dragItem = null
       if (this.copyFootNav[this.hoverIndex]?.type === 'folder') {
         const merged = this.useMergeFolder(this.copyFootNav, item, this.copyFootNav.find(i => {
-          return i.id === this.hoverRealItemId('bottomContent',this.hoverIndex)
+          return i.id === this.hoverRealItemId('bottomContent', this.hoverIndex)
         }))
         this.copyFootNav.splice(this.copyFootNav.findIndex(i => {
-          return i.id === this.hoverRealItemId('bottomContent',this.hoverIndex)
+          return i.id === this.hoverRealItemId('bottomContent', this.hoverIndex)
         }), 1, merged)
         this.copyFootNav = this.copyFootNav.filter(i => {
           return i.id !== item.id
@@ -1157,13 +1205,13 @@ export default {
          * @returns {number}
          */
         onUnchoose: function (event) {
-          if (that.hoverRealItemId('bottomContent',that.hoverIndex) && that.hoverRealItemId('bottomContent',that.hoverIndex) !== that.dragItem?.id) {
+          if (that.hoverRealItemId('bottomContent', that.hoverIndex) && that.hoverRealItemId('bottomContent', that.hoverIndex) !== that.dragItem?.id) {
             //存在目标，且不等于自身，符合合并条件，则执行合并
             const merged = that.useMergeFolder(that.copyFootNav, that.dragItem, that.copyFootNav.find(item => {
-              return item.id === that.hoverRealItemId('bottomContent',that.hoverIndex)
+              return item.id === that.hoverRealItemId('bottomContent', that.hoverIndex)
             }))
             that.copyFootNav.splice(that.copyFootNav.findIndex(item => {
-              return item.id === that.hoverRealItemId('bottomContent',that.hoverIndex)
+              return item.id === that.hoverRealItemId('bottomContent', that.hoverIndex)
             }), 1, merged)
             that.copyFootNav = that.copyFootNav.filter(item => {
               return item.id !== that.dragItem.id
@@ -1270,6 +1318,13 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+
+.nav-enter{
+  animation: animate__backInUp 1.5s;
+}
+.nav-leave{
+  animation: animate__backOutDown 1.5s;
+}
 .dragging {
   // pointer-events: none !important;
   background-color: red;

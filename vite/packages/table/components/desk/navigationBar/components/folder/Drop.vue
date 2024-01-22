@@ -1,14 +1,7 @@
 <template>
-  <div 
-    :class=[dropClass] 
-    @drop="handleDrop" 
-    @dragover="handleDragover" 
-    @dragenter="handleDragenter" 
-    @dragleave="handleDragleave"
-    ref="target"
-    @mouseup="handleMouseUp" 
-    @mouseleave="handleMouseLeave" 
-    @mouseover="handleMouseOver">
+  <div :class=[dropClass] @drop="handleDrop" @dragover="handleDragover" @dragenter="handleDragenter"
+    @dragleave="handleDragleave" ref="target" @mouseup="handleMouseUp" @mouseleave="handleMouseLeave"
+    @mouseover="handleMouseOver" @mouseenter="handleMouseEnter">
     <slot></slot>
   </div>
 </template>
@@ -19,14 +12,17 @@ import { ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { useFolderStore } from "../../../../../apps/folder/src/store";
 import { useDeskStore } from "../../../../../components/desk/store";
-import {useNavBarStore} from '../../navBar'
+import { useNavBarStore } from '../../navBar'
+import { useNavigationStore } from '../../navigationStore'
 import { useIconConversionNav, useFileConversionNav, useDeskConversionNav } from "../../../../../apps/folder/src/hooks/useDataConversion";
 import { myIcons } from "../../../../../store/myIcons";
 import _ from 'lodash-es'
 
 // 导航栏数据
 const navBarStore = useNavBarStore()
-const { navBarId,navBarItem } = storeToRefs(navBarStore)
+const { navBarId, navBarItem } = storeToRefs(navBarStore)
+const navigationStore = useNavigationStore()
+const { customOpenNav, isLeaveBar } = storeToRefs(navigationStore)
 
 // 桌面数据
 const deskStore = useDeskStore();
@@ -34,7 +30,7 @@ const { isEnterBar } = storeToRefs(deskStore);
 
 // 文件夹数据
 const folderStore = useFolderStore();
-const { dragId, isDrag, move, currentId, currentData,folderFlag } =
+const { dragId, isDrag, move, currentId, currentData, folderFlag } =
   storeToRefs(folderStore);
 
 // 图标数据
@@ -44,8 +40,8 @@ const { iconList, iconsRefs } = storeToRefs(useIconStore)
 const emit = defineEmits(['createFile'])
 
 const props = defineProps({
-  currentId:String,
-  dropClass:'h-full max-w-full'
+  currentId: String,
+  dropClass: 'h-full max-w-full'
 })
 
 /**
@@ -56,8 +52,7 @@ const handleDrop = async (dragEvent) => {
   // 判断是否是从导航栏外部进入到导航栏，防止和导航栏内部的拖拽事件冲突
   if (!isEnterBar.value) return
   let currentX = dragEvent
-  console.log(isEnterBar.value && navBarId.value && navBarId.value !== props.currentId,'hhhhh')
-  if(isEnterBar.value && navBarId.value && navBarId.value !== props.currentId){
+  if (isEnterBar.value && navBarId.value && navBarId.value !== props.currentId) {
     emit('createFile', navBarItem.value, currentX)
   }
   // 桌面拖拽
@@ -76,10 +71,10 @@ const handleDrop = async (dragEvent) => {
       let file = useDeskConversionNav(dropFiles, fileName, item)
       emit('createFile', file, currentX)
     }))
-  }  else if (dragEvent.dataTransfer?.types.some((item)=> item === 'text/plain')){
+  } else if (dragEvent.dataTransfer?.types.some((item) => item === 'text/plain')) {
     // 文件夹图标拖拽
     const item = _.cloneDeep(currentData.value)
-    console.log(item,'item')
+    console.log(item, 'item')
     const data = useIconConversionNav(item)
     emit('createFile', data, currentX)
     currentData.value = ''
@@ -127,11 +122,22 @@ const handleMouseUp = (e) => {
   // iconsRefs.value = [];
   // iconList.value = [];
 }
-const handleMouseLeave = () => {
-  
+const handleMouseLeave = (e) => {
+  // if (customOpenNav.value) {
+  //   isLeaveBar.value = true
+  //   console.log('=======>>>>>>>鼠标离开了', e.x, isLeaveBar.value)
+  // }
+
 }
 const handleMouseOver = () => {
 
+}
+
+const handleMouseEnter = (e) => {
+  // if (customOpenNav.value) {
+  //   isLeaveBar.value = false
+  //   console.log('=======>>>>>>>>鼠标进入了', e.x, isLeaveBar.value)
+  // }
 }
 
 const getFileName = (name) => {
