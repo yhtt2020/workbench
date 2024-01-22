@@ -22,7 +22,7 @@
         </template>
   
         <template v-else>
-
+  
           <div class="w-full h-full hover-container pointer">
             <video class="fullscreen-video" ref="wallpaperVideo" style="border-radius: 8px; object-fit: cover"
              playsinline="" autoplay="" muted="" loop="" v-if="getCustomDataPaper.srcProtocol">
@@ -259,7 +259,7 @@ export default {
     imgWH(){
       if(this.customData && this.customData.width !== undefined){
         const result = { 
-          width:this.customData.width * 280 + (this.customData.width - 1) * 10,
+          width:this.customData.width * 280 + (this.customData.width - 1) * 10 + 2,
           height:this.customData.height * 205 + (this.customData.height - 1) * 10
         }
         return result;
@@ -295,15 +295,15 @@ export default {
       const paperFind = wallpaperOptions.find((find)=>{ return String(find.value) === String(val) });
       this.updateCustomData(this.customIndex, paperFind, this.desk);
       if(paperFind.value === 'my'){
-        this.imgList = [];
+        // this.imgList = [];
         this.imgList = this.myCollectPaper;
       }
       else if(paperFind.value === 'sift'){
-        this.imgList = [];
+        // this.imgList = [];
         this.imgList = selectWallPaper;
       }
       else {
-        this.imgList = [];
+        // this.imgList = [];
         this.getOtherList(paperFind)
       }
     },
