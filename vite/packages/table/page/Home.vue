@@ -155,7 +155,7 @@
     <div
       v-show="visibleScale || visibleGuide"
       class="fixed top-0 bottom-0 left-0 w-full h-full cursor-not-allowed ring-0"
-      style="z-index:900;background-color:rgba(255,255,255,0.1);"
+      style="z-index:900;"
     ></div>
 
     <!-- 局部遮罩层 -->

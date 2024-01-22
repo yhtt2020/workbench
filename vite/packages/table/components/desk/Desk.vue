@@ -523,6 +523,12 @@ export default {
               name: "添加图标分组",
               fn: this.addFolder,
             },
+            // {
+            //   id: 3,
+            //   newIcon: "mingcute:windows-line",
+            //   name: "整理win桌面图标",
+            //   fn: this.addFolder,
+            // },
           ],
         },
 
