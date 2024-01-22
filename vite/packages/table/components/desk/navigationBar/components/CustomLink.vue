@@ -71,31 +71,26 @@
     appearanceOptions,
     appearanceColorOptions,
   } from "../../../../components/widgets/myIcons/set/options";
+  import { getHostAddress } from "../../../widgets/myIcons/edit/hooks/getHostAddress";
   const { proxy } = getCurrentInstance();
 
-  const iconStore = myIcons();
-  const { edit } = storeToRefs(iconStore);
+  // const iconStore = myIcons();
+  // const { edit } = storeToRefs(iconStore);
+  const edit = ref({
+    mode:'link',
+    type:'default'
+  })
   const emits = defineEmits(["close", "update:modelValue", "save"]);
   const props = defineProps({
     modelValue: {},
     index: {
-      default: "10000",
+      default: "1000",
     },
     maskIndex: {
       default: "999",
     },
   });
   const arr = ["internal", "default", "thinksky"];
-//   const res = arr.includes(edit.value.open.type);
-//   if (res) edit.value["type"] = edit.value.open.type;
-//   edit.value["mode"] = res ? "link" : "app";
-//   edit.value["value"] = edit.value.open.value;
-
-
-//   if (!edit.value["defaultIcon"]) {
-//     edit.value["defaultIcon"] = edit.value.src;
-//   }
-//   console.log(edit.value["mode"]);
 
   onMounted(() => {});
   /**
@@ -105,6 +100,12 @@
   watch(visible, (val) => {
     emits("update:modelValue", val);
   });
+  watch(()=>edit.value.value,(newV,oldV)=>{
+    console.log(oldV,'newV,oldV')
+    if(edit.value.value && edit.value.mode === 'link'){
+      edit.value.src = getHostAddress(edit.value.value) + '/favicon.ico'
+    }
+  },{deep:true})
   const close = () => {
     emits("close");
   };
@@ -155,6 +156,9 @@
           if (newVal == "link") {
             edit.value.type = "default";
           }
+          if(newVal === 'app'){
+            edit.value.src = 'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/jmPD-I__T-SMyc-LMzn';
+          }
         },
         no: () => {
           edit.value.mode = oldVal;
@@ -177,6 +181,13 @@
    * 保存数据
    */
   const save = () => {
+    edit.value = {
+      name: edit.value.titleValue || edit.value.name || "",
+      value: edit.value.value || "",
+      type: edit.value.type || "",
+      icon: edit.value.src || "",
+      ...edit.value,
+    }
     emits("save", edit.value);
   };
   </script>

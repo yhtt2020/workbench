@@ -3,64 +3,73 @@
     <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-h-full" :beforeCreate="beforeCreate"> -->
     <!-- style="z-index: 99" -->
     <!-- 文件夹弹窗 -->
-    <div style="position: absolute; z-index: 500 !important;"
-      :style="folderPos" class="rounded-xl pointer "
-      id="folder">
-      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:size="updateSize" :customData="customData"
-        :customIndex="sideKey" :secondary="true" v-if="folderVisible" :expand="{ disabled: true }" :navBar="{
+    <div style="position: absolute; z-index: 500 !important;" :style="folderPos" class="rounded-xl pointer " id="folder">
+      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:customSize="updateSize"
+        :customData="customData" :customIndex="sideKey" :secondary="true" v-if="folderVisible"
+        :expand="{ disabled: true }" :navBar="{
           resize: false,
           sizeOption: false,
           isDel: true,
           hierarchy: true
         }" :auto="true" />
     </div>
-    <Drop @createFile="createFile" :currentId="sortId">
+    <Drop @createFile="createFile" :currentId="sortId" :dropClass="'w-full max-h-full'">
       <div v-if="false"
         style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:150px">
-        <div>{{ `left: ${navAttribute.navSize / 100 * this.left}px; top: ${navAttribute.navSize / 100 * this.top}px` }}
-        </div>
-        <div>{{ sideKey }}</div>
         <div>选中的id{{ hoverIndex }}</div>
         <div v-for="( item, index) in navigationList" style="margin-bottom: 5px;border-bottom: 4px solid white">
           {{ index }} {{ item.name }} {{ item.id }} {{ item.children?.length }}
         </div>
       </div>
       <transition>
-        <div v-if="hoverIndex > -1 && hoverRealItemId() !== dragItem?.id" :style="mergeTag"
+        <div v-if="hoverIndex > -1 && hoverRealItemId(this.sortId,this.hoverIndex) !== dragItem?.id" :style="mergeTag"
           style="position: absolute;z-index:99999999999;top:50%;transform: translateY(-50%) translateX(-100%);writing-mode: vertical-rl;"
           class="px-3 py-10 rounded-lg s-bg xt-text">松开鼠标合并</div>
       </transition>
-      <div @click.stop :id="currentId" style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
+      <div 
+        @click.stop 
+        :id="currentId" 
+        style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
         class="flex flex-row justify-center box common-panel s-bg w-[80px]  xt-bg pt-0 pb-0 relative max-h-full side-bar"
         ref="sideContent" @contextmenu="showMenu"
         :style="{ zoom: `${(this.navAttribute.navSize / 100)}`, borderRadius: this.navAttribute.navRadius + 'px' }">
         <div style="width: 52px;margin-top: 20px;margin-bottom: 20px;" class="w-full">
           <div :id="sortId" :key="sideKey"
             class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container"
-            style="width: 56px;display: flex;flex-direction: column;overflow: hidden;align-items: flex-start; gap: 20px;">
-            <a-tooltip v-for="(item, index) in navigationList" :key="item.id" :title="item.name"
-              :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }" @mouseenter="showElement(item, index)"
+            style="
+              width: 56px;
+              display: flex;
+              flex-direction: column;
+              overflow: hidden;
+              align-items: flex-start; 
+              gap: 20px;">
+            <a-tooltip v-for="(item, index) in navigationList" 
+              :key="item.id" 
+              :title="item.name"
+              :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }" 
+              @mouseenter="showElement(item, index)"
               :placement="sortId === 'left' ? 'right' : 'left'">
               <!-- 左右导航栏隐藏入口 -->
-              <xt-menu :menus="folderOptions" :id="item.id" class="relative overflow-visible item-content">
-                <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
-                  @click="newOpenApp(item)" @dragover="onDrag" @dragend="hoverIndex = -1" :class="{
+              <xt-menu :menus="folderOptions" :id="item.id" class="relative flex-shrink-0 item-content">
+                <div 
+                  v-if="!(this.isOffline && this.navList.includes(item.event))" 
+                  class="item-content item-nav"
+                  @click="newOpenApp(item)" 
+                  @dragover="onDrag" 
+                  @dragend="hoverIndex = -1" :class="{
                     'active-back': current(item),
-                    hover: (dragItem && item.id === hoverRealItemId() && dragItem?.id !== hoverRealItemId())
-                  }"
-                  :style="{ borderRadius: this.iconRadius + 'px' }">
+                    hover: (dragItem && item.id === hoverRealItemId(this.sortId,this.hoverIndex) && dragItem?.id !== hoverRealItemId(this.sortId,this.hoverIndex))
+                  }" :style="{ borderRadius: this.iconRadius + 'px' }">
                   <!-- <Drag :data="item" :currentId="sortId"> -->
-                    <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"
-                      :placement="sortId === 'left' ? 'right' : 'left'"></Team>
-                    <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
-                      @click.stop="openFolder(item)">
-                    </FolderVue>
-                    <template v-else>
-                      <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
-                    </template>
+                  <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"
+                    :placement="sortId === 'left' ? 'right' : 'left'"></Team>
+                  <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
+                    @click.stop="openFolder(item)">
+                  </FolderVue>
+                  <template v-else>
+                    <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
+                  </template>
                   <!-- </Drag> -->
-
-
                 </div>
               </xt-menu>
             </a-tooltip>
@@ -79,12 +88,12 @@
   <Common ref="common"></Common>
   <transition name="fade">
     <div :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }" v-if="quick">
-      <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'">
+      <!-- <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'">
       </EditNewNavigation>
       <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'" @hiedNav="hiedNav">
       </navigationSetting>
-      <!-- 图标编辑 -->
-      <EditIcon @setQuick="setQuick" v-if="componentId === 'EditIcon'"></EditIcon>
+      <EditIcon @setQuick="setQuick" v-if="componentId === 'EditIcon'"></EditIcon> -->
+      <component :is="componentId" @setQuick="setQuick"></component>
     </div>
   </transition>
 </template>
@@ -107,7 +116,6 @@ import { moreMenus, extraRightMenu, rightMenus, iconMenus, mergeIconFolder } fro
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
 import { useNavBarStore } from './desk/navigationBar/navBar'
-// import EditNavigation from './bottomPanel/EditNavigation.vue';
 import { Notifications } from '../js/common/sessionNotice'
 import Common from './desk/navigationBar/components/Common.vue'
 import xtMenu from '../ui/components/Menu/index.vue'
@@ -115,7 +123,6 @@ import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
 import _ from 'lodash-es'
 import EditIcon from './desk/navigationBar/components/EditIcon/EditIcon.vue'
 import { startApp } from '../ui/hooks/useStartApp'
-// import { updateIcon } from '../components/desk/navigationBar/index'
 import Avatar from "./desk/navigationBar/components/Avatar.vue";
 import Team from './bottomPanel/Team.vue'
 import FolderVue from './desk/navigationBar/components/folder/Folder.vue'
@@ -124,8 +131,8 @@ import { defaultFolderData } from '../apps/folder/src/components/options'
 import { nanoid } from 'nanoid'
 import Drop from './desk/navigationBar/components/folder/Drop.vue'
 import { useWindowSize, } from '../ui/new/drag/src/hooks/useWindowSize'
-import { useElementSize } from "../ui/new/drag/src/hooks/useElementSize";
 import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
+import {hoverRealItemId} from '../components/desk/navigationBar/hook/hoverRealItemId'
 import Drag from './desk/navigationBar/components/folder/Drag.vue'
 export default {
   name: 'SidePanel',
@@ -215,7 +222,7 @@ export default {
         },
         {
           id: 3,
-          name: '隐藏当前导航',
+          name: '关闭当前导航',
           newIcon: 'fluent:eye-off-16-regular',
           fn: () => { this.$emit('hiedNavBar', this.sortId) },
         },
@@ -223,7 +230,7 @@ export default {
           id: 8,
           name: '清空当前导航栏',
           newIcon: 'fluent:circle-off-16-regular',
-          fn: () => { this.clearAll() },
+          fn: () => { this.clearAll();},
         },
         {
           id: 4,
@@ -284,7 +291,8 @@ export default {
       left: 0,
       top: 0,
       parentSize: 0,
-      sideList: []
+      sideList: [],
+      maxItemNum:0
 
     }
   },
@@ -343,7 +351,7 @@ export default {
       'sideNavigationList',
       'rightNavigationList',
       'mainNavigationList',
-      'navigationToggle', 'maxItemNum',
+      'navigationToggle',
       'copyFootNav', 'copySideNav', 'copyRightNav'
     ]),
     ...mapWritableState(cardStore, ['routeParams']),
@@ -447,8 +455,8 @@ export default {
         return { right: 65 + 'px' }
       }
     },
-    folderPos(){
-      if(this.sortId==='left'){
+    folderPos() {
+      if (this.sortId === 'left') {
         return { left: `${this.navAttribute.navSize / 100 * 100}px`, top: `${this.top}px` }
       }
       return { right: `${this.navAttribute.navSize / 100 * 100}px`, top: `${this.top}px` }
@@ -462,15 +470,15 @@ export default {
     } else {
       this.sideList = this.rightNavigationList
     }
-    // this.navigationList = this.replaceType(this.navigationList)
     /**
      * 监听窗口变化,更新导航栏最大添加个数
      */
     this.useWindowSize((size) => {
       // 获取最大可添加图标个数
-      const windowWidth = size.height.value
+      const windowWidth = size.height.value * 0.8
       this.parentSize = windowWidth
-      this.maxItemNum = Math.round((windowWidth) / 72)
+      this.maxItemNum = Math.floor((windowWidth) / 72)
+      // console.log(windowWidth,this.maxItemNum,'<<<<<+++=======')
       const height = windowWidth / (this.navigationList.length * 72)
       this.navAttribute.navSize = height.toFixed(2) * 100
       this.navAttribute.navSize = this.navAttribute.navSize < 100 ? this.navAttribute.navSize : 100
@@ -487,32 +495,26 @@ export default {
         setTimeout(() => {
           this.shakeElement = false
         }, 2000)
-      } else {
-        this.disableDrag()
-      }
+      } 
     },
     navigationList: {
       handler(newVal, oldVal) {
         // 获取最大可添加图标个数
-        const windowWidth = window.innerHeight
-        this.maxItemNum = Math.round((windowWidth) / 72)
-        // console.log(this.maxItemNum, 'this.maxItemNum', windowWidth, 'windowWidth')
-        // let flag = true
-        if (this.navigationList.length > this.maxItemNum && this.maxItemNum !== null) {
-          // console.log(this.maxItemNum, 'maxItemNum')
+        const windowWidth = this.parentSize
+        this.maxItemNum = Math.floor((windowWidth) / 72)
+        if (this.navigationList.length > this.maxItemNum && this.maxItemNum !== 0) {
           if (this.noticeFlag) {
             this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
               onOk: () => {
-                const width = window.innerHeight / (this.navigationList.length * 72)
+                const width = this.parentSize / (this.navigationList.length * 72)
                 this.navAttribute.navSize = width
               }
             })
           }
-          const width = window.innerHeight / (this.navigationList.length * 72)
+          const width = this.parentSize / (this.navigationList.length * 72)
           this.navAttribute.navSize = width.toFixed(2) * 100
           this.noticeFlag = false
         }
-        // this.syncSidePanel()
       },
       immediate: true,
       deep: true,
@@ -533,14 +535,13 @@ export default {
       this.customData = {
         ...this.defaultFolderData,
         list: this.folderList,
-        size: this.currentItem.size || this.resize,
+        customSize: this.currentItem.size || this.resize,
         name: this.folderName,
         layout: this.currentItem.layout || 'rows',
       }
     },
     'customData.list': {
       handler(newV, oldV) {
-        // console.log('newV', newV, 'oldV', oldV)
         const list = [...newV]
         this.folderItem.children = list
       },
@@ -551,7 +552,6 @@ export default {
       handler(newV, oldV) {
         this.folderName = newV
         this.folderItem.name = newV
-        // console.log('newV', newV, 'oldV', oldV)
       },
       deep: true
     },
@@ -563,15 +563,7 @@ export default {
     ...mapActions(appStore, ['toggleFullScreen']),
     renderIcon,
     replaceType,
-    disableDrag() {
-      // if (this.sortable) {
-      document.removeEventListener('click', this.disableDrag)
-      // this.sortable.destroy()
-      this.sortable = null
-      // message.info('已中止侧栏调整')
-      return
-      // }
-    },
+    hoverRealItemId,
     editIcon(item) {
       this.quick = true
       this.componentId = 'EditIcon'
@@ -583,7 +575,7 @@ export default {
       }
     },
     /**
-    * 更新底部导航栏，包括刷新和启动拖拽
+    * 更新侧边导航栏，包括刷新和启动拖拽
     */
     syncSidePanel() {
       this.sideKey = Date.now()
@@ -628,9 +620,9 @@ export default {
         //
         onStart: function (event) {
           that.cancelUpdate = false
-          console.log('onStart')
+          // console.log('onStart')
           that.dragItem = that.navigationList[event.oldIndex]
-          console.log('启动拖拽的元素', that.dragItem)
+          // console.log('启动拖拽的元素', that.dragItem)
           if (that.popVisible) {
             that.notifications.NoticeToast()
           }
@@ -671,9 +663,9 @@ export default {
             //如果执行过合并，这里就不需要刷新顺序了。
             return
           }
-          console.log('onUpdate')
+          // console.log('onUpdate')
           //拖拽排序后，更新数据
-          console.log('移动event=', event)
+          // console.log('移动event=', event)
           let cur = this.sideList.splice(event.oldIndex, 1)[0]
           if (!cur) {
             console.error('移动失败，无法获取到元素')
@@ -684,7 +676,7 @@ export default {
           return
         }, 100),
         onEnd: function (event) {
-          console.log('onEnd')
+          // console.log('onEnd')
           // console.log(event.originalEvent.clientX, event, 'to end X Y ');
           that.$emit('getDelIcon', false)
           //
@@ -700,18 +692,18 @@ export default {
         },
         onMove: function (event, originalEvent) {
           // console.log(event, originalEvent, 'move');
-          console.log('onMove')
+          // console.log('onMove')
           isDrag = true
           that.isDelete = false
           const moveLeft = event.originalEvent.clientY
           const panelLeft = that.defaultPosition.y
           const relativePos = (moveLeft - panelLeft) % 72
           const isGap = relativePos <= 20 && relativePos >= 0
-          console.log('isGap=', isGap, relativePos)
+          // console.log('isGap=', isGap, relativePos)
           return true
         },
         onChoose: function (event) {
-          console.log('onChoose')
+          // console.log('onChoose')
           index = event.oldIndex
           that.defaultPosition = {
             x: event.originalEvent.clientX,
@@ -719,28 +711,28 @@ export default {
           }
           // console.log(that.defaultPosition)
         },
-        onSort: function (event) {
-          console.log('onSort', event)
-          console.log('item', that.navigationList[event.newIndex])
-        },
-        // 触发替换中发生的事件
-        onChange(event) {
-          console.log('onChange', event, that.navigationList[event.newIndex])
-          console.log('item')
-        },
+        // onSort: function (event) {
+        //   console.log('onSort', event)
+        //   console.log('item', that.navigationList[event.newIndex])
+        // },
+        // // 触发替换中发生的事件
+        // onChange(event) {
+        //   console.log('onChange', event, that.navigationList[event.newIndex])
+        //   console.log('item')
+        // },
         /**
          * 合并文件夹操作
          * @param event
          * @returns {number}
          */
         onUnchoose: function (event) {
-          if (that.hoverRealItemId() && that.hoverRealItemId() !== that.dragItem?.id) {
+          if (that.hoverRealItemId(that.sortId,that.hoverIndex) && that.hoverRealItemId(that.sortId,that.hoverIndex) !== that.dragItem?.id) {
             //存在目标，且不等于自身，符合合并条件，则执行合并
             const merged = that.mergeIconFolder(that.sideList, that.dragItem, that.sideList.find(item => {
-              return item.id === that.hoverRealItemId()
+              return item.id === that.hoverRealItemId(that.sortId,that.hoverIndex)
             }))
             that.sideList.splice(that.sideList.findIndex(item => {
-              return item.id === that.hoverRealItemId()
+              return item.id === that.hoverRealItemId(that.sortId,that.hoverIndex)
             }), 1, merged)
             that.sideList = that.sideList.filter(item => {
               return item.id !== that.dragItem.id
@@ -762,30 +754,7 @@ export default {
       }
       // this.syncSidePanel()
     },
-    /**
-    * 取出当前鼠标指针所对应的数组内的元素的真实id，采用视图查找，所以是精准的
-    * @returns {string}
-    */
-    hoverRealItemId() {
-      // if (this.isEnterBar) return
-      let parent = document.getElementById(this.sortId)
-      if (!parent) {
-        return ''
-      }
-      if (this.hoverIndex < 0) {
-        return
-      }
-      let i = 0
-      for (const child of parent.children) {
-        if (i === this.hoverIndex) {
-          if (child) {
-            return child.id
-          }
-        }
-        i++
-      }
-      return ''
-    },
+
     /**
      * 自动根据当前位置获取到要合并的位置
      * @param currentLeft
@@ -849,10 +818,10 @@ export default {
       this.dragItem = null
       if (this.sideList[this.hoverIndex]?.type === 'folder') {
         const merged = this.mergeIconFolder(this.sideList, item, this.sideList.find(i => {
-          return i.id === this.hoverRealItemId()
+          return i.id === this.hoverRealItemId(this.sortId,this.hoverIndex)
         }))
         this.sideList.splice(this.sideList.findIndex(i => {
-          return i.id === this.hoverRealItemId()
+          return i.id === this.hoverRealItemId(this.sortId,this.hoverIndex)
         }), 1, merged)
         this.sideList = this.sideList.filter(i => {
           return i.id !== item.id
@@ -982,8 +951,7 @@ export default {
      * 清空当前导航栏
      */
     clearAll() {
-      this.sideList = []
-      this.updateList(this.sideList)
+      this.$bus.emit('clearAll', this.sortId)
     },
     closeFolder() {
       this.folderVisible = false
@@ -1034,33 +1002,13 @@ export default {
       if (item.component) {
         this.componentId = item.component
         // console.log(this.componentId,'===>>1');
-        if (item.component === 'EditNavigationIcon') {
+        if (item.component === 'EditNewNavigation') {
           this.editToggle = true
           this.selectNav = this.sortId
           message.success('进入编辑模式')
         }
         this.quick = true
-      } else if (item.visible) {
-        switch (item.tag) {
-          case 'task':
-            this.bottomToggle[2] = !this.bottomToggle[2]
-            break;
-          case 'community':
-            this.bottomToggle[1] = !this.bottomToggle[1]
-            break;
-          case 'user':
-            this.bottomToggle[0] = !this.bottomToggle[0]
-            break;
-          case 'chat':
-            this.settings.enableChat = !this.settings.enableChat
-            break;
-          case 'hide':
-            this.navVisible()
-            break;
-        }
-      } else {
-        return
-      }
+      } 
 
       this.menuVisible = false
     },
