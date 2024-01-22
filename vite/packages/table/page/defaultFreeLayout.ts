@@ -1,5 +1,6 @@
 
 import { defineStore } from 'pinia';
+// @ts-ignore
 export const defaultFreeLayoutStore = defineStore('defaultFreeLayoutStore', {
   state: () => ({
     "deskDefault": [
@@ -9,12 +10,16 @@ export const defaultFreeLayoutStore = defineStore('defaultFreeLayoutStore', {
           "icon": "desktop",
           "cards": [
               {
-                  "name": "smallWallpaper",
-                  "id": 1701420612329,
+                  "name": "middleWallpaper",
+                  "id": 1705883742578,
                   "customData": {
-                      "value": "必应壁纸",
-                      "name": "bing",
-                      "path": "https://cn.bing.com/HPImageArchive.aspx?format=js&idx=1&n=8"
+                      "name": "拾光壁纸",
+                      "value": "timeline",
+                      "label": "拾光壁纸",
+                      "path": "/timeline/v3",
+                      "customSize": "2x2",
+                      "width": 1,
+                      "height": 1
                   },
                   "data": {}
               },
@@ -84,7 +89,7 @@ export const defaultFreeLayoutStore = defineStore('defaultFreeLayoutStore', {
                   "customData": {
                       "name": "网址导航",
                       "icon": "https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#ffffff",
-                      "size": "4x4",
+                      "customSize": "4x4",
                       "lock": true,
                       "layout": "rows",
                       "sort": "free",
@@ -632,12 +637,11 @@ export const defaultFreeLayoutStore = defineStore('defaultFreeLayoutStore', {
   ],
     freeLayoutDataTmp: {
       "kFe3OXrk": {
-          "1701420612329": {
+          "1705883742578": {
               "left": 1904,
               "top": 2706,
               "index": 1,
-              "id": 1701420612329,
-              "name": "smallWallpaper"
+              "id": 1705883742578
           },
           "1701420672541": {
               "left": 2196,
