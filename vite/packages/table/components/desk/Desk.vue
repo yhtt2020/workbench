@@ -488,23 +488,10 @@ export default {
       //   return
       return [
         {
-          id: -1,
-          newIcon: "fluent:add-16-filled",
-          name: "整理桌面测试",
-          disabled: false,
-          fn: () => {
-            useCustomLayout(this.currentDesk.cards);
-            // 0 提供一个伪卡片
-            // 提供一个添加卡片
-            // 1 添加新的桌面
-            // 2 切换为自由布局
-          },
-        },
-        {
           id: 0,
           newIcon: "fluent:add-16-filled",
           name: "定制桌面测试",
-          disabled: false,
+          disabled: true,
           fn: () => {
             useCustomLayout(mainData, headerData, folderData);
             // 0 提供一个伪卡片
@@ -538,7 +525,21 @@ export default {
             },
           ],
         },
+
         { id: 5, divider: true },
+        {
+          id: 5.1,
+          newIcon: "fluent:glance-horizontal-16-regular",
+          name: "整理桌面",
+          disabled: this.isFreeLayout ? false : true,
+          fn: () => {
+            useCustomLayout(this.currentDesk.cards);
+            // 0 提供一个伪卡片
+            // 提供一个添加卡片
+            // 1 添加新的桌面
+            // 2 切换为自由布局
+          },
+        },
         {
           id: 6,
           newIcon: this.editing

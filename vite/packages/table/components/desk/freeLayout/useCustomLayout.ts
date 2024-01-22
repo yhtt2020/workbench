@@ -20,63 +20,47 @@ export const useCustomLayout = async (
   freeLayoutStore.renewFreeLayout();
 
   getFreeLayoutState.value.system.isFreeLayout = true;
-  function calculateScaleFactor(
-    boxWidth: number,
-    containerWidth: number
-  ): number {
-    // 计算缩放因子
-    let scaleFactor = containerWidth / (boxWidth + 60);
-    // 如果boxWidth本来就小于或等于containerWidth，则不需要缩放，返回1
-    if (boxWidth <= containerWidth) {
-      return 1;
-    }
-    // 返回缩放因子，确保元素在不改变宽高比的前提下缩放至适合容器宽度
-    getFreeLayoutState.value.canvas.zoom = scaleFactor;
-    return scaleFactor;
-  }
+
   const columns = 5;
   let containerWidth = freeLayoutEnv.value.scrollWidth;
-  let boxWidth = useGridToWidth(columns * 2);
+  let layoutWidth = useGridToWidth(columns * 2);
   let scaleFactor = 1;
-
-  // scaleFactor = calculateScaleFactor(boxWidth, containerWidth);
-  // let position = (containerWidth - boxWidth) / 2;
-  scaleFactor = 1;
-  /**
-   * 内置函数
-   */
-  let left = freeLayoutEnv.value.scrollLeft / scaleFactor;
-  let top = freeLayoutEnv.value.scrollTop / scaleFactor;
-  let currentHeight;
+  let position = 50;
   // 重置left坐标
   const resetLeft = () => {
-    left = freeLayoutEnv.value.scrollLeft / scaleFactor;
+    left = freeLayoutEnv.value.scrollLeft / scaleFactor + position;
   };
-
+  const itemStatus = (item) => {
+    const { width, height }: any = useElementSize(item.customData.customSize);
+    // console.log(
+    //   "\u001b[31m" + "----------------数据处理----------------" + "\u001b[0m"
+    // );
+    // console.log(
+    //   "id",
+    //   item?.id,
+    //   ",name",
+    //   item.customData.name || item.name,
+    //   ",元素width :>> ",
+    //   width,
+    //   ",当前位置left :>> ",
+    //   left - freeLayoutEnv.value.scrollLeft,
+    //   ",当前位置缩放后left :>> ",
+    //   left - freeLayoutEnv.value.scrollLeft * scaleFactor
+    // );
+  };
   // 设置卡片数据
   const setData = async (arr: any) => {
-    for (let item of arr) {
+    for (let item of arr.splice(0, arr.length)) {
       // 处理元素位置
       const { width, height }: any = useElementSize(item.customData.customSize);
       currentHeight = height;
 
-      console.log(
-        "",
-        item.customData.name,
-        "元素width :>> ",
-        width,
-        "当前位置left :>> ",
-        left - freeLayoutEnv.value.scrollLeft,
-        "是否超出",
-        widthDetection(width)
-      );
+      itemStatus(item);
       if (widthDetection(width)) {
         console.log("开始请求填充算法 :>> ");
-
         fillGapAlgorithm();
         console.log("------处理结束------");
         resetLeft();
-        console.log("重置后的left :>> ", left - freeLayoutEnv.value.scrollLeft);
         top += height + 12;
       }
       addCard(top, left, item);
@@ -85,14 +69,28 @@ export const useCustomLayout = async (
     fillGapAlgorithm();
     resetLeft();
     top += currentHeight + 12;
-    resetLeft();
   };
   // 检测是否超出
   const widthDetection = (width) => {
-    const active =
-      (left - freeLayoutEnv.value.scrollLeft + width) * scaleFactor > boxWidth;
-
+    let res =
+      left - freeLayoutEnv.value.scrollLeft / scaleFactor + width - position;
+    const active = res > layoutWidth;
     return active;
+  };
+  // 缩放算法
+  const scaleAlgorithm = () => {
+    let currentZoom = getFreeLayoutState.value.canvas.zoom;
+    if (layoutWidth * currentZoom >= containerWidth) {
+      currentZoom = containerWidth / (layoutWidth + 100);
+      //  确保元素在不改变宽高比的前提下缩放至适合容器宽度
+      getFreeLayoutState.value.canvas.zoom = currentZoom;
+      position = 50;
+    } else {
+      position = (containerWidth / currentZoom - layoutWidth) / 2;
+      console.log("position :>> ", position);
+    }
+    scaleFactor = currentZoom;
+    console.log("scaleFactor :>> ", scaleFactor);
   };
   // 填充算法
   const fillGapAlgorithm = async () => {
@@ -115,6 +113,7 @@ export const useCustomLayout = async (
     for (let item of arr2x4.splice(0, 1)) {
       if (!item) return;
       console.log("2x4填充 :>> ");
+      itemStatus(item);
       const { width, height }: any = useElementSize(item.customData.customSize);
       addCard(top, left, item);
       left += width + 12;
@@ -130,6 +129,7 @@ export const useCustomLayout = async (
     for (let item of arr.splice(0, num)) {
       if (!item) return;
       console.log("2x4填充 :>> ");
+      itemStatus(item);
       const { width, height }: any = useElementSize(item.customData.customSize);
       addCard(currentTop, left, item);
       currentTop += height + 12;
@@ -138,6 +138,12 @@ export const useCustomLayout = async (
     return;
   };
 
+  scaleAlgorithm();
+  // scaleFactor = 1
+
+  let left = 1;
+  let top = freeLayoutEnv.value.scrollTop / scaleFactor;
+  let currentHeight;
   // 初始化数据
   resetLeft();
 
@@ -157,8 +163,13 @@ export const useCustomLayout = async (
     resetLeft();
     setData(folder2x2);
   }
+  resetLeft();
+
   setData(arr4x4);
+  resetLeft();
+
   setData(arr2x4);
+
   setData(arr2x2);
 };
 const arraySplit = (arr) => {
@@ -194,12 +205,14 @@ const addCard = (top, left, item) => {
 
   let id = item?.id || nanoid(4);
 
+  let a = left;
   getFreeLayoutData.value[id] = {
-    left: left,
+    left: a,
     top: top,
     index: 1,
     id,
   };
+
   if (item.id) return;
 
   useAddCard(
