@@ -155,18 +155,21 @@
             <div class="p-4 pb-1 mt-3 xt-bg-2 rounded-xl "><xt-option-info
               title="桌面壁纸"
               info="选择喜欢的图片作为工作台桌面壁纸。"
-            />
+            /> 
               <div class="mb-4">
                 <xt-update-desk-bg></xt-update-desk-bg>
               </div>
-              <hr />
-              <xt-option-info
-                title="桌面壁纸模糊度"
-                info="调节桌面壁纸的模糊程度。"
-                icon="fluent:arrow-clockwise-16-regular"
-                @onIconClick="backgroundSettings.backGroundImgBlur = 0"
-              />
-              <xt-option-slider v-model:slider="backgroundSettings.backGroundImgBlur" :min="0" :max="100" />
+              <!-- 修复桌面壁纸设置，选择为纯色后，模糊度选项屏蔽掉bug,可能后续补充的需求 -->
+              <template v-if="backgroundName.name === 'img'">
+                <hr />
+                <xt-option-info
+                 title="桌面壁纸模糊度"
+                 info="调节桌面壁纸的模糊程度。"
+                 icon="fluent:arrow-clockwise-16-regular"
+                 @onIconClick="backgroundSettings.backGroundImgBlur = 0"
+                />
+                <xt-option-slider v-model:slider="backgroundSettings.backGroundImgBlur" :min="0" :max="100" />
+              </template>
             </div>
           </div>
         </div>
@@ -360,7 +363,7 @@
     props:['deskId'],
     computed:{
       ...mapWritableState(cardStore,['desks', 'addCard']),
-      ...mapWritableState(appStore, ['backgroundSettings', 'backgroundImage', 'styles']),
+      ...mapWritableState(appStore, ['backgroundSettings', 'backgroundImage', 'styles','backgroundName']),
       ...mapWritableState(navStore, ['copyFootNav']),
       cardList(){
         if(this.deskTypeObj.game){

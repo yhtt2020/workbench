@@ -119,9 +119,7 @@ export default {
         newIcon: "fluent:chat-16-regular",  tab: "session",
         route: { name: "chatMain", params: { no: "" } },
         callBack: (item) => { selectTab(item) },
-        info:unreadTotal.value === 0 ? [] : ['tr','red',`${unreadTotal.value}`]
-        // unread: unreadTotal.value,
-        // info:['tr','red',`${unreadTotal.value}`]
+        info:unreadTotal.value !== undefined && unreadTotal.value !== 0 ? ["tr","red",`${unreadTotal.value}`] : ["tr","",""],
       },
       {
         tab: "contact", newIcon: "fluent:people-16-regular",
@@ -148,7 +146,6 @@ export default {
         noBg: true,tab:'community',type: 'community',
         route:{ name: 'defaultCommunity',params:{no:1} },
         callBack: (item) => { selectTab(item) },
-        info:[],
       },
     ])
     const footList = ref([
