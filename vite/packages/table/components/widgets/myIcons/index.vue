@@ -2,14 +2,25 @@
 <!-- 2023-12-19 该组件数据体和新版本有差异 -->
 <template>
   <!-- 图标组件开始 Widget -->
-  <Widget :customData="customData" :editing="true" :customIndex="customIndex" :options="options" :menuList="menuList"
-    ref="homelSlotRef" :desk="desk">
+  <Widget
+    :customData="customData"
+    :editing="true"
+    :customIndex="customIndex"
+    :options="options"
+    :menuList="menuList"
+    ref="homelSlotRef"
+    :desk="desk"
+  >
     <div ref="iconRef" class="box-border icon-box" :style="dragStyle">
       <!-- 可放置区域 -->
       <droppable-area @drop="handleDrop">
         <xt-task :modelValue="m0202" @cb="handleMenu">
-          <drag-and-follow :isSelect="isSelect" :length="this.iconsRefs.length" @drag-end="handleDragEnd"
-            @drag-start="handleDragStart">
+          <drag-and-follow
+            :isSelect="isSelect"
+            :length="this.iconsRefs.length"
+            @drag-end="handleDragEnd"
+            @drag-start="handleDragStart"
+          >
             <!-- 多图标组件 -->
             <!-- <template
               v-if="
@@ -41,7 +52,15 @@
                 customData.iconList.length > 0
               "
             > -->
-            <icon :newIcon="customData.newIcon" v-bind="customData.iconList[0]" @custom-event="handleCustomEvent"></icon>
+            <icon
+              v-if="
+                customData.iconList !== undefined &&
+                customData.iconList.length > 0
+              "
+              :newIcon="customData.newIcon"
+              v-bind="customData?.iconList[0]"
+              @custom-event="handleCustomEvent"
+            ></icon>
             <!-- </template> -->
           </drag-and-follow>
         </xt-task>
@@ -51,7 +70,12 @@
   </Widget>
   <!-- 图标组件结束 -->
   <!-- 内容编辑 -->
-  <Set v-if="settingVisible" v-model="settingVisible" @save="closeSet" :mask="0"></Set>
+  <Set
+    v-if="settingVisible"
+    v-model="settingVisible"
+    @save="closeSet"
+    :mask="0"
+  ></Set>
   <!-- <Edit v-if="settingVisible" @close="settingVisible = false" @save="save()">
   </Edit> -->
   <!-- 多图标组件设置 -->
@@ -106,7 +130,7 @@ export default {
     },
     customData: {
       type: Object,
-      default: () => { },
+      default: () => {},
     },
     desk: {
       type: Object,
@@ -130,7 +154,7 @@ export default {
       isSelect: false,
       settingVisible: false, // 编辑状态
       iconsSetVisible: false,
-      options: { hide: true,disabled: true}, // 卡片核心配置
+      options: { hide: true, disabled: true }, // 卡片核心配置
     };
   },
   beforeMount() {
@@ -173,7 +197,20 @@ export default {
     // console.log("this.customData :>> ", this.customData);
     // console.log("window.globalArgs :>> ", window.globalArgs);
 
-    if (this.customData.iconList.length <= 1) return;
+    console.log(
+      "this.customData.iconList?.length 111:>> ",
+      this.customData.iconList?.length
+    );
+    if (
+      this.customData.iconList?.length <= 1 ||
+      this.customData.iconList?.length == undefined
+    )
+      return;
+    console.log(
+      "this.customData.iconList?.length 222:>> ",
+      this.customData.iconList?.length
+    );
+
     let index = this.desk.cards.findIndex(
       (item) => item.id == this.customIndex
     );
@@ -206,7 +243,7 @@ export default {
         list,
       },
     };
-    this.$bus.emit('reset')
+    this.$bus.emit("reset");
   },
   provide() {
     return {
@@ -335,8 +372,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(cardStore, ["updateCustomData", "addCard",]),
-
+    ...mapActions(cardStore, ["updateCustomData", "addCard"]),
 
     openIconsSet() {
       this.iconsSetVisible = true;
@@ -351,7 +387,7 @@ export default {
       this.settingVisible = true;
     },
     // 开启框选
-    dragSelection() { },
+    dragSelection() {},
     // ctrl + 点击
     handleCustomEvent(event) {
       console.log(this.customData.iconList[0]);
@@ -517,7 +553,7 @@ export default {
           },
         };
 
-        this.$bus.emit('reset')
+        this.$bus.emit("reset");
       });
 
       // 遍历图标组件进行删除
@@ -539,11 +575,10 @@ export default {
           this.iconsRefs[i].doRemoveCard();
         }
         this.iconsRefs = [];
-        this.iconList = []  // 清空图标列表，防止数据添加到导航栏或者文件夹中
+        this.iconList = []; // 清空图标列表，防止数据添加到导航栏或者文件夹中
       } else {
         this.$refs.homelSlotRef.doRemoveCard();
       }
-      
     },
     // 更新多图标组件标题
     updateGroupTitle(title) {

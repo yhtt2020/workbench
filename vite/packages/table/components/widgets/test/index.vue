@@ -4,7 +4,7 @@
     :customData="customData"
     :customSize="customData.customSize"
   >
-    {{ customData }}
+    {{ customData?.name }}
   </xt-container>
 </template>
 
