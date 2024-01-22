@@ -98,6 +98,10 @@ export default {
     this.inputZoom = +(this.newZoom).toFixed(0)
     this.getSize()
     this.scaleInit = true
+
+    this.proportion[0].isCheck = true
+
+
     // 调整缩放比例功能 暂时不需要 隐藏
     // this.getWindowSize()
   },
