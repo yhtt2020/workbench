@@ -79,6 +79,7 @@ import SendMessageButton from '../../../../components/sns/SendMessageButton.vue'
 import Modal from '../../../../components/Modal.vue'
 import UserCard from '../../../../components/small/UserCard.vue'
 import { Icon as FindIcon } from '@iconify/vue';
+import {completeTask} from '../../../../apps/task/task'
 // import * as sns from '../../../js/common/sns'
 
 // const router = useRouter()
@@ -136,6 +137,7 @@ export default {
    async addGroup (id) {
     this.$router.push({name:'chatMain'})
     const option = {  groupID: id }
+    completeTask('Z0601')
     await window.$chat.joinGroup(option)
     this.loadGroupRelationship()
    },
