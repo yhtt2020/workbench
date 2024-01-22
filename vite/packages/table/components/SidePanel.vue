@@ -88,12 +88,12 @@
   <Common ref="common"></Common>
   <transition name="fade">
     <div :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }" v-if="quick">
-      <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'">
+      <!-- <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'">
       </EditNewNavigation>
       <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'" @hiedNav="hiedNav">
       </navigationSetting>
-      <!-- 图标编辑 -->
-      <EditIcon @setQuick="setQuick" v-if="componentId === 'EditIcon'"></EditIcon>
+      <EditIcon @setQuick="setQuick" v-if="componentId === 'EditIcon'"></EditIcon> -->
+      <component :is="componentId" @setQuick="setQuick"></component>
     </div>
   </transition>
 </template>
@@ -230,7 +230,7 @@ export default {
           id: 8,
           name: '清空当前导航栏',
           newIcon: 'fluent:circle-off-16-regular',
-          fn: () => { this.clearAll(); },
+          fn: () => { this.clearAll();},
         },
         {
           id: 4,
@@ -478,7 +478,7 @@ export default {
       const windowWidth = size.height.value * 0.8
       this.parentSize = windowWidth
       this.maxItemNum = Math.floor((windowWidth) / 72)
-      console.log(windowWidth,this.maxItemNum,'<<<<<+++=======')
+      // console.log(windowWidth,this.maxItemNum,'<<<<<+++=======')
       const height = windowWidth / (this.navigationList.length * 72)
       this.navAttribute.navSize = height.toFixed(2) * 100
       this.navAttribute.navSize = this.navAttribute.navSize < 100 ? this.navAttribute.navSize : 100
@@ -1002,7 +1002,7 @@ export default {
       if (item.component) {
         this.componentId = item.component
         // console.log(this.componentId,'===>>1');
-        if (item.component === 'EditNavigationIcon') {
+        if (item.component === 'EditNewNavigation') {
           this.editToggle = true
           this.selectNav = this.sortId
           message.success('进入编辑模式')

@@ -20,12 +20,14 @@
 
     <!--  <ControlModal ref="controlRef" v-if="controlVisible" @close="controlVisible = false" :full="full" @setFull="setFull"/> -->
     <!-- <div>{{ !this.isLeaveBar && this.controlVisible && this.folderVisible }} ------ {{ autoVisible }}</div> -->
+    <Transition name="animate__animated animate__bounce"  enter-active-class="animate__bounceInUp" leave-active-class="animate__zoomOutDown">
     <div @click.stop 
       class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
       id="bottom-bar" style="text-align: center;position: relative;" @contextmenu="showMenu" v-show="autoVisible"
       :style="{ zoom: `${(this.navAttribute.navSize / 100)}` }" @mouseenter="handleMouseEnter"
       @mouseleave="handleMouseLeave">
       <!-- 快速搜索 底部 用户栏 -->
+
       <div v-if="(!simple || settings.enableChat) && !this.isOffline && this.bottomToggle[0]"
         class="relative flex flex-row items-center justify-between common-panel user s-bg" style="
         /* vertical-align: top; */
@@ -147,6 +149,7 @@
       </keep-alive>
       <Common ref="common"></Common>
     </div>
+    </Transition>
 
     <div id="trans" v-show="visibleTrans" style="
       position: fixed;
@@ -169,12 +172,12 @@
       <!-- 老版 -->
       <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
       <!-- 新版 -->
-      <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'">
+      <!-- <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'">
       </EditNewNavigation>
       <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'" @hiedNav="hiedNav">
       </navigationSetting>
-      <EditIcon @setQuick="setQuick" v-if="componentId === 'EditIcon'"></EditIcon>
-      <!-- <component :is='componentId'></component> -->
+      <EditIcon @setQuick="setQuick" v-if="componentId === 'EditIcon'"></EditIcon> -->
+      <component :is='componentId' @setQuick="setQuick"></component>
     </div>
   </transition>
 
@@ -244,6 +247,7 @@ import { useElementSize } from "../ui/new/drag/src/hooks/useElementSize";
 import ControlModal from './desk/navigationBar/components/control/ControlModal.vue';
 import Drag from './desk/navigationBar/components/folder/Drag.vue'
 import { hoverRealItemId } from './desk/navigationBar/hook/hoverRealItemId'
+import 'animate.css'
 
 export default {
   name: 'BottomPanel',
@@ -939,7 +943,7 @@ export default {
     editNavigation(item) {
       if (item.component) {
         this.componentId = item.component
-        if (item.component === 'EditNavigationIcon') {
+        if (item.component === 'EditNewNavigation') {
           this.editToggle = true
           this.selectNav = 'foot'
           message.success('进入编辑模式')
@@ -1319,15 +1323,14 @@ export default {
 </script>
 <style lang="scss" scoped>
 
-.nav-enter{
-  animation: animate__backInUp 1.5s;
+.nav-enter-active,
+.nav-leave-active {
+  transition: all 0.8s;
 }
-.nav-leave{
-  animation: animate__backOutDown 1.5s;
-}
-.dragging {
-  // pointer-events: none !important;
-  background-color: red;
+.nav-enter-from,
+.nav-leave-to {
+  opacity: 0;
+  transform: translate3D(10px, -20px,-50%);
 }
 
 .bottom-panel {
