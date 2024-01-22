@@ -1,5 +1,5 @@
 <template>
-<Widget :options="options" :menu-list="menuList" :desk="desk">
+<Widget :options="options" :menu-list="menuList" :desk="desk"  >
   <template #left-title-icon>
         <div
           class="icon"

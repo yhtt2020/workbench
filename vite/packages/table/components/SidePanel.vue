@@ -3,16 +3,8 @@
     <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-h-full" :beforeCreate="beforeCreate"> -->
     <!-- style="z-index: 99" -->
     <!-- 文件夹弹窗 -->
-    <div v-if="false"
-      style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:150px">
-      <div>{{ `left: ${navAttribute.navSize / 100 * this.left}px; top: ${navAttribute.navSize / 100 * this.top}px` }}</div>
-      <div>选中的id{{ hoverIndex }}</div>
-      <div v-for="( item, index) in navigationList" style="margin-bottom: 5px;border-bottom: 4px solid white">
-        {{ index }} {{ item.name }} {{ item.id }} {{ item.children?.length }}
-      </div>
-    </div>
     <div style="position: absolute; z-index: 500 !important;"
-      :style="{ left: `${navAttribute.navSize / 100 * this.left}px`, top: `${this.top}px` }" class="rounded-xl pointer "
+      :style="folderPos" class="rounded-xl pointer "
       id="folder">
       <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:size="updateSize" :customData="customData"
         :customIndex="sideKey" :secondary="true" v-if="folderVisible" :expand="{ disabled: true }" :navBar="{
@@ -22,57 +14,53 @@
           hierarchy: true
         }" :auto="true" />
     </div>
-    <Drop @createFile="createFile">
+    <Drop @createFile="createFile" :currentId="sortId">
+      <div v-if="false"
+        style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:150px">
+        <div>{{ `left: ${navAttribute.navSize / 100 * this.left}px; top: ${navAttribute.navSize / 100 * this.top}px` }}
+        </div>
+        <div>{{ sideKey }}</div>
+        <div>选中的id{{ hoverIndex }}</div>
+        <div v-for="( item, index) in navigationList" style="margin-bottom: 5px;border-bottom: 4px solid white">
+          {{ index }} {{ item.name }} {{ item.id }} {{ item.children?.length }}
+        </div>
+      </div>
       <transition>
         <div v-if="hoverIndex > -1 && hoverRealItemId() !== dragItem?.id" :style="mergeTag"
           style="position: absolute;z-index:99999999999;top:50%;transform: translateY(-50%) translateX(-100%);writing-mode: vertical-rl;"
           class="px-3 py-10 rounded-lg s-bg xt-text">松开鼠标合并</div>
       </transition>
-      <div 
-        @click.stop :id="currentId" 
-        style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
+      <div @click.stop :id="currentId" style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
         class="flex flex-row justify-center box common-panel s-bg w-[80px]  xt-bg pt-0 pb-0 relative max-h-full side-bar"
         ref="sideContent" @contextmenu="showMenu"
         :style="{ zoom: `${(this.navAttribute.navSize / 100)}`, borderRadius: this.navAttribute.navRadius + 'px' }">
-        <div 
-          style="width: 52px;margin-top: 20px;margin-bottom: 20px;" 
-          class="w-full" >
-          <div 
-            :id="sortId" 
-            :key="sideKey" 
-            @drop.prevent="drop" @dragover.prevent=""
+        <div style="width: 52px;margin-top: 20px;margin-bottom: 20px;" class="w-full">
+          <div :id="sortId" :key="sideKey"
             class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container"
             style="width: 56px;display: flex;flex-direction: column;overflow: hidden;align-items: flex-start; gap: 20px;">
-            <a-tooltip 
-              v-for="(item, index) in navigationList" 
-              :key="item.id" :title="item.name"
-              :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }" 
-              @mouseenter="showElement(item, index)"
+            <a-tooltip v-for="(item, index) in navigationList" :key="item.id" :title="item.name"
+              :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }" @mouseenter="showElement(item, index)"
               :placement="sortId === 'left' ? 'right' : 'left'">
               <!-- 左右导航栏隐藏入口 -->
-              <xt-menu 
-                :menus="folderOptions" 
-                :id="item.id" 
-                class="relative overflow-visible item-content">
-                <div 
-                  @dragover="onDrag" 
-                  @dragend="hoverIndex = -1" 
-                  :key="item.name" 
-                  @click="newOpenApp(item)"
-                  :class="{ hover: (dragItem && item.id === hoverRealItemId() && dragItem?.id !== hoverRealItemId()) }"
-                  >
-                  <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
-                    :class="{ 'active-back': current(item) }" :style="{ borderRadius: this.iconRadius + 'px' }">
+              <xt-menu :menus="folderOptions" :id="item.id" class="relative overflow-visible item-content">
+                <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
+                  @click="newOpenApp(item)" @dragover="onDrag" @dragend="hoverIndex = -1" :class="{
+                    'active-back': current(item),
+                    hover: (dragItem && item.id === hoverRealItemId() && dragItem?.id !== hoverRealItemId())
+                  }"
+                  :style="{ borderRadius: this.iconRadius + 'px' }">
+                  <!-- <Drag :data="item" :currentId="sortId"> -->
                     <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"
                       :placement="sortId === 'left' ? 'right' : 'left'"></Team>
                     <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
-                      @click="openFolder(item)">
+                      @click.stop="openFolder(item)">
                     </FolderVue>
                     <template v-else>
                       <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
                     </template>
+                  <!-- </Drag> -->
 
-                  </div>
+
                 </div>
               </xt-menu>
             </a-tooltip>
@@ -118,6 +106,7 @@ import { renderIcon } from '../js/common/common'
 import { moreMenus, extraRightMenu, rightMenus, iconMenus, mergeIconFolder } from '../components/desk/navigationBar/index'
 import navigationSetting from './desk/navigationBar/navigationSetting.vue'
 import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
+import { useNavBarStore } from './desk/navigationBar/navBar'
 // import EditNavigation from './bottomPanel/EditNavigation.vue';
 import { Notifications } from '../js/common/sessionNotice'
 import Common from './desk/navigationBar/components/Common.vue'
@@ -126,7 +115,7 @@ import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
 import _ from 'lodash-es'
 import EditIcon from './desk/navigationBar/components/EditIcon/EditIcon.vue'
 import { startApp } from '../ui/hooks/useStartApp'
-import { updateIcon } from '../components/desk/navigationBar/index'
+// import { updateIcon } from '../components/desk/navigationBar/index'
 import Avatar from "./desk/navigationBar/components/Avatar.vue";
 import Team from './bottomPanel/Team.vue'
 import FolderVue from './desk/navigationBar/components/folder/Folder.vue'
@@ -137,6 +126,7 @@ import Drop from './desk/navigationBar/components/folder/Drop.vue'
 import { useWindowSize, } from '../ui/new/drag/src/hooks/useWindowSize'
 import { useElementSize } from "../ui/new/drag/src/hooks/useElementSize";
 import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
+import Drag from './desk/navigationBar/components/folder/Drag.vue'
 export default {
   name: 'SidePanel',
   components: {
@@ -152,6 +142,7 @@ export default {
     FolderVue,
     Drop,
     Folder,
+    Drag,
   },
   emits: ['getDelIcon', 'hiedNavBar'],
   data() {
@@ -226,7 +217,7 @@ export default {
           id: 3,
           name: '隐藏当前导航',
           newIcon: 'fluent:eye-off-16-regular',
-          fn: () => { this.$emit('hiedNavBar', 'foot') },
+          fn: () => { this.$emit('hiedNavBar', this.sortId) },
         },
         {
           id: 8,
@@ -449,13 +440,19 @@ export default {
       }
     },
     // \
-    mergeTag(){
-      if(this.sortId === 'left'){
-        return {left:145+'px'}
-      }else{
-        return {right:65+'px'}
+    mergeTag() {
+      if (this.sortId === 'left') {
+        return { left: 145 + 'px' }
+      } else {
+        return { right: 65 + 'px' }
       }
-    }
+    },
+    folderPos(){
+      if(this.sortId==='left'){
+        return { left: `${this.navAttribute.navSize / 100 * 100}px`, top: `${this.top}px` }
+      }
+      return { right: `${this.navAttribute.navSize / 100 * 100}px`, top: `${this.top}px` }
+    },
   },
   mounted() {
     this.enableDrag()
@@ -522,16 +519,15 @@ export default {
     },
     sideNavigationList: {
       handler(newV, oldV) {
-        console.log('=====>>>>>>>>',newV, oldV)
         this.syncSidePanel()
       },
-      deep:true,
+      deep: true,
     },
     rightNavigationList: {
       handler(newV, oldV) {
         this.syncSidePanel()
       },
-      deep:true
+      deep: true
     },
     folderList() {
       this.customData = {
@@ -565,7 +561,6 @@ export default {
     ...mapActions(navStore, ['removeSideNavigationList', 'removeRightNavigationList', 'setSideNavigationList', 'setRightNavigationList', 'setRightNavigationList', 'loadNav']),
     ...mapActions(useNavigationStore, ['toggleEdit']),
     ...mapActions(appStore, ['toggleFullScreen']),
-    updateIcon,
     renderIcon,
     replaceType,
     disableDrag() {
@@ -801,7 +796,6 @@ export default {
       const relativePos = (currentLeft - panelLeft) % (72 * this.navAttribute.navSize / 100)
       const isGap = !(relativePos <= (42 * this.navAttribute.navSize / 100) && relativePos >= (10 * this.navAttribute.navSize / 100))
       let nIndex = Math.floor((currentLeft - panelLeft + 20) / (72 * this.navAttribute.navSize / 100))
-      console.log(panelLeft,relativePos,isGap,nIndex,currentLeft,'getHoverIndex')
       if (nIndex > this.navigationList.length - 1) {
         //超出
         return 0
@@ -828,15 +822,10 @@ export default {
       let vW = this.parentSize
       // 元素坐标
       let posY = Number((this.defaultPosition.y).toFixed(0))
-      let posX = Number((this.defaultPosition.x).toFixed(0))
       // 元素大小
       let menuW = draggableSize[1] * 100
-      // let menuW = draggableSize[0] * 140
-      // console.log(vW,posY,menuW, 'vW');
       posY = posY > vW - (menuW / 2) ? vW - menuW : (posY - menuW / 2 < 0 ? 0 : posY - menuW / 2);
       this.top = posY
-      this.left = posX < 100 ? 100 : posX - menuW - 130
-      console.log(this.left, this.top , 'posY')
     },
     /**
      * 获取当前拖拽元素的坐标
@@ -1255,4 +1244,5 @@ export default {
     display: none;
     /* Chrome Safari */
   }
-}</style>
+}
+</style>
