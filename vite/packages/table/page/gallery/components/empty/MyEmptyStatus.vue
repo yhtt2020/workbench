@@ -31,9 +31,19 @@ export default {
 
   methods:{
     goDetail(item){
-      const hasRoute = item.hasOwnProperty('route');
-      if(hasRoute){ this.$router.push(item.route)  }
-      else { this.$emit('importLocal') }
+      if(this.isModal){
+        if(item.index !== 'i'){
+          this.$bus.emit('updatePage',item);
+        }
+        else {
+          this.$emit('importLocal');
+        }
+      }
+      else {
+        const hasRoute = item.hasOwnProperty('route');
+        if(hasRoute){ this.$router.push(item.route)  }
+        else { this.$emit('importLocal') }
+      }
     },
   },
 }
