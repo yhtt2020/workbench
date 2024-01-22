@@ -243,8 +243,16 @@ export default {
 
     // 判断是否添加到收藏中
     isInMyPapers () {
-      const index = this.myPapers.findIndex((img)=>{ return String(this.imgList[this.imgIndex].src ) === String( img.src ) });
-      return index > -1;
+      if(this.customData.paper !== undefined){
+        const index = this.myPapers.findIndex((img)=>{
+          return String(this.customData.paper.src) === String(img.src);
+        });
+        return index > -1;
+      }
+      else {
+        const initIndex = this.myPapers.findIndex((img)=>{ return String(this.imgList[this.imgIndex].src ) === String( img.src ) });
+        return initIndex > -1;
+      }
     },
 
     // 计算图片的宽高
@@ -383,10 +391,10 @@ export default {
     // 收藏壁纸
     collect(){
       if(this.customData && this.customData.value === 'my'){
-        this.removeToMyPaper(this.imgList[this.imgIndex])
+        this.removeToMyPaper(this.customData.paper !== undefined ? this.customData.paper : this.imgList[this.imgIndex])
       }
       else {
-        let image = this.imgList[this.imgIndex]
+        let image = this.customData.paper !== undefined ? this.customData.paper : this.imgList[this.imgIndex];
         this.removeToMyPaper(image)
       }      
     },
