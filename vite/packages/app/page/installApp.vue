@@ -13,9 +13,9 @@
         <a-tab-pane  key="base" tab="基础权限">
           <a-empty style="margin-top: 30px" description="" v-if="!checkHas(this.app.auth.base)">
           </a-empty>
-          <ul class="auth-list">
+          <ul class="auth-list" v-if="authList.baseList">
             <template v-for="item in authList.baseList">
-              <li v-if="app.auth.base[item.key]">
+              <li v-if="app.auth.base?.length>0">
                 <a-checkbox block v-model:checked="userSetting.auth.base[item.key]"> {{ item.alias }}</a-checkbox>
               </li>
             </template>
@@ -24,7 +24,7 @@
         <a-tab-pane  key="api" tab="API权限">
           <a-empty style="margin-top: 30px" description="" v-if="!checkHas(this.app.auth.api)">
           </a-empty>
-          <ul class="auth-list">
+          <ul class="auth-list" v-if="app.auth.api?.length>0">
             <template v-for="item in authList.apiList">
               <li v-if="app.auth.api[item.key]">
                 <a-checkbox block v-model:checked="userSetting.auth.api[item.key]">{{ item.alias }}</a-checkbox>
@@ -36,7 +36,7 @@
           <a-empty style="margin-top: 30px" description="" v-if="!checkHas(this.app.auth.ability)">
 
           </a-empty>
-          <ul class="auth-list">
+          <ul class="auth-list" v-if="app.auth.ability?.length>0">
             <template v-for="item in authList.abilityList">
               <li v-if="app.auth.ability[item.key]">
                 <a-checkbox block v-model:checked="userSetting.auth.ability[item.key]">{{ item.alias }}</a-checkbox>
@@ -103,6 +103,9 @@ export default {
   },
   methods: {
     checkHas(object){
+      if(!object){
+        return false
+      }
       return Object.keys(object).some(key=>{
         console.log(object[key])
         return object[key]
@@ -125,9 +128,9 @@ export default {
         }
       }catch (e) {
         console.warn(e)
-        ipc.send('installAppReturn', { result: false})
+        ipc.send('installAppReturn', { result: false,reason:e})
       }
-      ipc.send('closeSelf')
+     // ipc.send('closeSelf')
     },
     close () {
       ipc.send('installAppReturn', { result: false })
