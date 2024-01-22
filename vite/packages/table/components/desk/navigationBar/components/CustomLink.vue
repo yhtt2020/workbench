@@ -71,11 +71,15 @@
     appearanceOptions,
     appearanceColorOptions,
   } from "../../../../components/widgets/myIcons/set/options";
+  import { getHostAddress } from "../../../widgets/myIcons/edit/hooks/getHostAddress";
   const { proxy } = getCurrentInstance();
 
   // const iconStore = myIcons();
   // const { edit } = storeToRefs(iconStore);
-  const edit = ref({})
+  const edit = ref({
+    mode:'link',
+    type:'default'
+  })
   const emits = defineEmits(["close", "update:modelValue", "save"]);
   const props = defineProps({
     modelValue: {},
@@ -96,6 +100,12 @@
   watch(visible, (val) => {
     emits("update:modelValue", val);
   });
+  watch(()=>edit.value.value,(newV,oldV)=>{
+    console.log(oldV,'newV,oldV')
+    if(edit.value.value && edit.value.mode === 'link'){
+      edit.value.src = getHostAddress(edit.value.value) + '/favicon.ico'
+    }
+  },{deep:true})
   const close = () => {
     emits("close");
   };
@@ -145,6 +155,9 @@
           edit.value.value = "";
           if (newVal == "link") {
             edit.value.type = "default";
+          }
+          if(newVal === 'app'){
+            edit.value.src = 'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/jmPD-I__T-SMyc-LMzn';
           }
         },
         no: () => {
