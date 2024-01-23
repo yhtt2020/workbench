@@ -491,7 +491,7 @@ export default {
           id: 0,
           newIcon: "fluent:add-16-filled",
           name: "定制桌面测试",
-          disabled: false,
+          disabled: true,
           fn: () => {
             useCustomLayout({
               mainList: mainData,
