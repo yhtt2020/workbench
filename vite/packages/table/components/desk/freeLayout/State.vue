@@ -95,10 +95,10 @@
       @click="updateCentre"
       >点击设置当前桌面位置为画布中心</xt-button
     >
-    <div class="flex justify-between mb-4">
+    <!-- <div class="flex justify-between mb-4">
       <div>中心线</div>
       <a-switch v-model:checked="getFreeLayoutState.line.isCenterLine" />
-    </div>
+    </div> -->
   </div>
 </template>
 
