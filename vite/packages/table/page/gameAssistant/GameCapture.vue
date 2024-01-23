@@ -449,7 +449,7 @@ import { formatSeconds, timeStamp } from '../../util'
 import VueCustomScrollbar from '../../../../src/components/vue-scrollbar.vue'
 import filenamify from 'filenamify'
 import { getDefaultMic, getDefaultVolume, setDefaultVolume, setMicVolume } from '../../js/ext/audio/audio'
-
+import {completeTask} from '../../apps/task/task'
 const toast = useToast()
 export default {
   name: 'GameCapture',
@@ -890,6 +890,7 @@ export default {
     },
     showToast (src) {
       // 222
+      completeTask('Z0104')
       toast(
         {
           component: SaveImage,
@@ -1077,7 +1078,7 @@ export default {
             this.recentType = 'video'
             this.recentFileName = fileName
             message.success('保存录屏成功')
-            //
+            completeTask('Z0105')
             this.loadVideos()
           })
         }

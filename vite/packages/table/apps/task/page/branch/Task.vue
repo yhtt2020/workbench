@@ -1,8 +1,10 @@
 <template>
-  <xt-collapse v-for="data in task.tasks" class="mb-3">
+  <xt-collapse v-for="(data, index) in task.tasks" class="mb-3">
     <template #title>
       <xt-text>
-        <xt-new-icon :icon="icon" class="mr-3" size="20" />
+        <!-- <xt-new-icon :icon="icon" class="mr-3" size="20" /> -->
+        {{ index + 1 }}
+        {{ data.id }}
         {{ data.name }}
       </xt-text></template
     >

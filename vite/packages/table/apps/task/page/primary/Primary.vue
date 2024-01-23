@@ -8,7 +8,9 @@
           <xt-new-icon icon="fluent-emoji:star" class="mr-3" size="20" />
           {{ chapter.chapter }}
         </div>
-        <template #right>{{ stage }} / {{ chapter.tasks.length }} </template>
+        <template #right
+          >{{ stage + 1 }} / {{ chapter.tasks.length }}
+        </template>
       </xt-text>
       <div class="mt-1">
         <a-progress :percent="progress" :show-info="false" />
@@ -27,7 +29,7 @@
       </div>
     </div>
   </template>
-  <div v-else class=" text-center">已完成所有任务</div>
+  <div v-else class="text-center">已完成所有任务</div>
 </template>
 
 <script setup>
@@ -119,7 +121,6 @@ const progress = computed(() => {
 const currentTask = computed(() => {
   return chapter.value.tasks[stage.value];
 });
-
 
 const aaa = computed(() => {
   return store.getPrimaryTask("M0101");
