@@ -153,18 +153,18 @@ const disabledInfo = (data) => {
 };
 
 onBeforeUnmount(() => {
-  // let data = {
-  //   ...currentData.value,
-  // };
-  // const freeLayout = freeLayoutStore.getOneFreeLayoutData(currentID.value);
+  let data = {
+    ...currentData.value,
+  };
+  const freeLayout = freeLayoutStore.getOneFreeLayoutData(currentID.value);
 
-  // for (const id in freeLayout) {
-  //   if (data[id]?.id.toString() != id.toString()) {
-  //     console.log("删除数据 :>> ", id);
-  //     delete freeLayout[id];
-  //   }
-  // }
-  // console.log("自由布局销毁操作 :>> ", getFreeLayoutData.value);
+  for (const id in freeLayout) {
+    if (data[id]?.id.toString() != id.toString()) {
+      console.log("删除数据 :>> ", id);
+      delete freeLayout[id];
+    }
+  }
+  console.log("自由布局销毁操作 :>> ", getFreeLayoutData.value);
 });
 </script>
 

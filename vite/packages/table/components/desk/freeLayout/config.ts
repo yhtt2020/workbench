@@ -1,130 +1,122 @@
 export const headerData = [
   {
-    size: "2x2",
     name: "test",
+    customData: {
+      customSize: "2x2",
+      name: "header1",
+    },
   },
   {
-    size: "2x2",
     name: "test",
+    customData: {
+      customSize: "2x2",
+      name: "header2",
+    },
   },
   {
-    size: "2x4",
     name: "test",
+    customData: {
+      customSize: "2x2",
+      name: "header3",
+    },
   },
   {
-    size: "2x4",
     name: "test",
+    customData: {
+      customSize: "2x2",
+      name: "header4",
+    },
   },
   {
-    size: "2x4",
     name: "test",
+    customData: {
+      customSize: "2x4",
+      name: "header5",
+    },
+  },
+  {
+    name: "test",
+    customData: {
+      customSize: "2x4",
+      name: "header6",
+    },
   },
 ];
+
 export const folderData = [
   {
-    size: "2x2",
     name: "test",
+    customData: {
+      customSize: "2x2",
+      name: "folder1",
+    },
   },
   {
-    size: "2x2",
     name: "test",
+    customData: {
+      customSize: "2x2",
+      name: "folder2",
+    },
   },
   {
-    size: "2x2",
     name: "test",
+    customData: {
+      customSize: "2x2",
+      name: "folder3",
+    },
   },
 ];
+
 export const mainData = [
   {
-    size: "2x2",
-    name: "AIaides",
-  },
-  {
-    size: "2x2",
-    name: "AIaides",
-  },
-  {
-    size: "2x2",
-    name: "AIaides",
-  },
-  {
-    size: "2x2",
-    name: "AIaides",
-  },
-  {
-    size: "2x2",
-    name: "AIaides",
-  },
-  {
-    size: "2x2",
-    name: "AIaides",
-  },
-  {
-    size: "2x2",
-    name: "AIaides",
-  },
-  {
-    size: "2x2",
-    name: "AIaides",
-  },
-  {
-    size: "2x2",
-    name: "AIaides",
-  },
-  {
-    size: "2x2",
-    name: "AIaides",
-  },
-  {
-    size: "2x2",
-    name: "AIaides",
-  },
-  {
-    size: "2x2",
-    name: "AIaides",
-  },
-  {
-    size: "2x4",
     name: "test",
+    customData: {
+      customSize: "2x2",
+      name: "其他2x2小组件1",
+    },
   },
   {
-    size: "2x4",
     name: "test",
+    customData: {
+      customSize: "2x2",
+      name: "其他2x2小组件2",
+    },
   },
   {
-    size: "2x4",
     name: "test",
+    customData: {
+      customSize: "2x2",
+      name: "其他2x2小组件3",
+    },
   },
   {
-    size: "2x4",
     name: "test",
+    customData: {
+      customSize: "2x2",
+      name: "其他2x2小组件4",
+    },
+  },
+
+  {
+    name: "test",
+    customData: {
+      customSize: "2x4",
+      name: "其他2x2小组件1",
+    },
   },
   {
-    size: "2x4",
     name: "test",
+    customData: {
+      customSize: "2x4",
+      name: "其他2x4小组件2",
+    },
   },
+
   {
-    size: "2x4",
     name: "test",
-  },
-  {
-    size: "2x4",
-    name: "test",
-  },
-  {
-    size: "2x4",
-    name: "test",
-  },
-  {
-    size: "4x4",
-    name: "test",
-  },
-  {
-    size: "4x4",
-    name: "test",
-  },
-  {
-    size: "4x4",
-    name: "test",
+    customData: {
+      customSize: "4x4",
+      name: "其他4x4小组件1",
+    },
   },
 ];

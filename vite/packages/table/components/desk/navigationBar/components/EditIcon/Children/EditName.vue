@@ -1,5 +1,5 @@
 <template>
-    <div class="w-[452px] xt-bg-2 rounded-xl p-4 ">
+    <div class="w-full p-4 xt-bg-2 rounded-xl " style="min-width: 452px;">
         <div class="flex justify-start">
             <div class="text-base xt-text">图标名称</div>
             <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="16" class="ml-1" @click="reset"></xt-new-icon>

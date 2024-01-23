@@ -39,7 +39,7 @@ onMounted(() => {
 });
 
 watch(
-  () => data.value.size,
+  () => data.value.customSize,
   () => {
     resize();
   },
@@ -49,7 +49,7 @@ watch(
 );
 
 const resize = () => {
-  let [width, height] = data.value.size.split("x");
+  let [width, height] = data.value.customSize.split("x");
   if (width == "2" || height == "2") {
     mode.value = "default";
     return;

@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="{ ...this.options,background:this.isColor}" :customIndex="customIndex" :desk="desk" :showRightIcon="!this.$props.isTop" ref="clockSlot"   :menuList="menuList"  @delete='clearTime'>
+  <Widget :options="{ ...this.options,background:this.isColor}" :customIndex="customIndex" :customData="customData" :desk="desk" :showRightIcon="!this.$props.isTop" ref="clockSlot"   :menuList="menuList"  @delete='clearTime'>
     <div class="title" @click="test">番茄时间</div>
     <div class="time flex justify-center items-center">{{ displayNum(minutes) }}:{{ displayNum(seconds) }}</div>
     <div class="title">今日番茄时间 {{ countToday(this.tomatoNum) }} </div>

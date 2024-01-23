@@ -170,6 +170,7 @@ export default {
   async mounted () {
 if (this.currentId == "M0302") {
 this.updateNavIndex(7)
+this.currentId = ""
 
     }
     // 这里是预留给api请求到时间和下载数据添加数据使用
