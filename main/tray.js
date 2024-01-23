@@ -85,19 +85,20 @@ async function createTrayWin () {
     trayWindow.show()
   })
   trayWindow.on('blur', () => {
-    trayWindow.close()
-    trayWindow = null
+    //trayWindow.close()
+    //trayWindow = null
   })
   trayWindow.on('closed', () => {
     trayWindow = null
   })
+  trayWindow.webContents.openDevTools()
 }
 
 function getUrl (url) {
   let protocolUrl
   protocolUrl = `tsbapp://./${url}` // todo 需要验证正式环境的协议情况
   if (isDevelopmentMode) {
-    protocolUrl = `http://localhost:1600/${url}`
+    protocolUrl = `http://localhost:1600/html/${url}`
   }
   return protocolUrl
 }
@@ -177,9 +178,16 @@ app.whenReady().then(() => {
   tray.on('click', async function (event, position) {
     setTimeout(async () => {
       if (timeCount === 0) {
-        await getTrayWindow()
-        const bounds = trayWindow.getBounds()
-        trayWindow.setPosition(position.x - bounds.width, position.y - bounds.height)
+        // await getTrayWindow()
+        // const bounds = trayWindow.getBounds()
+        // trayWindow.setPosition(position.x - bounds.width, position.y - bounds.height)
+        // if(trayWindow){
+        //   trayWindow.focus()
+        // }
+        global.tableManager.init().then(() => {
+          global.tableWin.window.show()
+          global.tableWin.window.focus()
+        })
         timeCount = 0
       }
     }, 300)

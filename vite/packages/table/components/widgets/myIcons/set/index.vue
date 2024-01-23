@@ -16,7 +16,7 @@
           v-model="currentTab"
           :list="TabList"
           style="width: 168px"
-          class="xt-bg-t-2 p-1"
+          class="p-1 xt-bg-t-2"
           :boxStyle="{ 'border-radius': '10px' }"
           :itemStyle="{ 'border-radius': '6px' }"
       /></template>
@@ -33,7 +33,7 @@
           <div></div>
         </div>
         <div v-else style="width: 452px">
-          <div class="p-4 xt-bg-2 rounded-xl mb-4">
+          <div class="p-4 mb-4 xt-bg-2 rounded-xl">
             <xt-option-info
               title="图标和名称"
               info="支持自定图标和名称。"
@@ -71,6 +71,7 @@
     appearanceOptions,
     appearanceColorOptions,
   } from "./options";
+  import {getHostAddress} from '../edit/hooks/getHostAddress'
   const { proxy } = getCurrentInstance();
 
   const iconStore = myIcons();
@@ -155,6 +156,9 @@
           if (newVal == "link") {
             edit.value.type = "default";
           }
+          if(newVal === 'app'){
+            edit.value.src = 'https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/jmPD-I__T-SMyc-LMzn'
+          }
         },
         no: () => {
           edit.value.mode = oldVal;
@@ -164,6 +168,12 @@
     }
   ),
     onBeforeUnmount(() => {});
+
+  watch(()=>edit.value.value,(newV,oldV)=>{
+    if(newV){
+      edit.value.src = getHostAddress(edit.value.value) + '/favicon.ico'
+    }
+  })
 
   /**
    * 恢复默认图标

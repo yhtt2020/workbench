@@ -1,5 +1,5 @@
 <template>
-    <Widget :options="options" :customIndex="customIndex" :desk="desk" >
+    <Widget :options="options" :customIndex="customIndex" :desk="desk" :customData="customData" >
         <div class="title">本周番茄时间</div>
         <div class="time">{{ this.weekTime }}</div>
 

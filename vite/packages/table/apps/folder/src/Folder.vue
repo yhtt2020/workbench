@@ -15,18 +15,18 @@
       :menuList="menuList"
       :sizeList="autoSizeList"
       @leftClick="leftClick"
-      v-model:size="customData.size"
+      v-model:customSize="customData.customSize"
     >
       <!-- 右侧布局切换 -->
       <Resize
         :disabled="expand.disabled"
-        v-model:size="customData.size"
+        v-model:size="customData.customSize"
         :modalSize="modalSize"
         :resize="navBar.resize"
       >
         <!-- 空状态显示状态 -->
         <template v-if="customData.list.length <= 0 && !dragSortState">
-          <Null :size="customData.size" @addFile="addFileClick" />
+          <Null :size="customData.customSize" @addFile="addFileClick" />
         </template>
         <vue-custom-scrollbar
           v-else
@@ -213,12 +213,12 @@ const options = computed(() => {
   return {
     bg: isDrag.value ? "var(--active-secondary-bg) " : "",
     // 隐藏删除
-    del: navBar.value.isDel,
+    disabled: navBar.value.isDel,
     // 隐藏层级
     hierarchy: navBar.value.hierarchy,
     // 二级
     secondary: {
-      size: "",
+      customSize: "",
     },
   };
 });
@@ -285,10 +285,10 @@ const clickFile = (data) => {
  * 自定义大小
  */
 watch(
-  () => customData.value.size,
+  () => customData.value.customSize,
   (newV, oldV) => {
     console.log(newV, oldV, "newV,oldV");
-    emit("update:size", newV);
+    emit("update:customSize", newV);
   },
   { deep: true }
 );
@@ -418,12 +418,12 @@ const leftClick = () => {
     setVisible.value = true;
   } else {
     expandVisible.value = true;
-    oldCardSize.value = customData.value.size;
+    oldCardSize.value = customData.value.customSize;
   }
 };
 
 const expandClose = () => {
-  customData.value.size = oldCardSize.value;
+  customData.value.customSize = oldCardSize.value;
 };
 
 const isDrag = ref(false);
@@ -475,7 +475,9 @@ onMounted(async () => {
     customData.value.icon =
       "https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#ffffff";
   }
-  if (customData.value.model != "custom") {
+  if (customData.value.customSize =='') {
+    customData.value.customSize=
+    customData.value.size
   }
 });
 </script>
