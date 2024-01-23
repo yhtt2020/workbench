@@ -1,6 +1,7 @@
 <template>
   <div class="fixed overflow-hidden modal-center xt-modal tran" :class="popState ? 'pop' : step == 4 ? 'theme' : 'Popup'"
     style="">
+    <!-- <div @click="test"> 11111111 </div> -->
     <div v-if="!popState" class="h-full">
       <!-- 顶部按钮 -->
       <div v-if="step !== 0" @click="prevStep" class="absolute ml-4 top-icon no-drag">
@@ -116,6 +117,8 @@ import Theme from "./components/Theme.vue";
 import Preview from "./components/Preview.vue";
 import { NavListTmp, GameDesk } from './components/data';
 import {completeTask} from '../../../apps/task/task'
+import { FreeLayoutStore } from "../grade/components/FreeLayout";
+import { useFreeLayoutStore } from "../../../components/desk/freelayout/store";
 
 export default {
   components: {
@@ -185,6 +188,12 @@ export default {
     ...mapWritableState(cardStore, ['desks', 'addCard']),
     ...mapWritableState(appStore, ['backgroundSettings', 'backgroundImage', 'styles','backgroundName']),
     ...mapWritableState(navStore, ['copyFootNav']),
+    ...mapWritableState(FreeLayoutStore, ["assistDesk", "gameDesk"]),
+    ...mapWritableState(useFreeLayoutStore, [
+      "isFreeLayout",
+      "getFreeLayoutState",
+      "defaultState",
+    ]),
     cardList() {
       if (this.deskTypeObj.game) {
         return this.gameList
@@ -257,15 +266,26 @@ export default {
   watch: {
   },
   methods: {
+    ...mapActions(useFreeLayoutStore, ["setFreeLayoutData", "setFreeLayoutState", 'renewFreeLayout']),
 
-    // test(){
-    //   this.scheme = {...GameDesk}
-    //   console.log('scheme', this.scheme)
-    //   this.showModal = true
-    // },
-    // closePreview() {
-    //   this.showModal = false;
-    // },
+    test(){
+      // console.log(111111111111)
+      // console.log(this.assistDesk)
+      // console.log(this.assistDesk)
+      // console.log(this.assistDesk.freeLayoutData)
+      
+      this.setFreeLayoutData('pLar', this.assistDesk.freeLayoutData['pLar'])
+      this.setFreeLayoutState('pLar', this.assistDesk.freeLayoutState['pLar'])
+
+
+      this.scheme = {...GameDesk}
+
+      console.log('scheme', this.scheme)
+      this.showModal = true
+    },
+    closePreview() {
+      this.showModal = false;
+    },
     // 触发打开壁纸弹窗
     openPaperModal() {
       this.$refs.paperModal.openGalleryModal()

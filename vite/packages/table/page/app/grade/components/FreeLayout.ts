@@ -4,16 +4,90 @@ import { defineStore } from 'pinia';
 export const FreeLayoutStore = defineStore('FreeLayoutStore', {
   state: () => ({
     // 效率桌面数据
-    assist: {
-      "desk": [
+    assistDesk: {
+      desk: [
         {
-          "name": "默认布局",
-          "id": "IVkH88Qs",
+          "name": "效率桌面",
+          "id": "_Xc3",
           "icon": "desktop",
           "cards": [
             {
+              "name": "TimerClock",
+              "id": 1705971205206,
+              "customData": {
+                "isFull": false,
+                "isState": true,
+                "customSize": "2x2"
+              },
+              "data": {}
+            },
+            {
+              "name": "AggregateSearch",
+              "id": 1705971216198,
+              "customData": {
+                "sortType": "work",
+                "customSize": "2x2"
+              },
+              "data": {}
+            },
+            {
+              "name": "notes",
+              "id": 1705971265991,
+              "customData": {
+                "title": "桌面便签",
+                "background": "#57BF60",
+                "cardSize": "card",
+                "colors": "#ffffff",
+                "height": 2,
+                "width": 1,
+                "text": "",
+                "dragCardSize": "card",
+                "content": "",
+                "customSize": "2x4"
+              },
+              "_id": "note:1705971265991",
+              "updateTime": 1705971265991,
+              "createTime": 1705971265991,
+              "content": "",
+              "notes": "notes",
+              "isDelete": false,
+              "deskName": "空白桌面",
+              "deskId": "_Xc3",
+              "data": {}
+            },
+            {
+              "name": "AIaides",
+              "id": 1705971276167,
+              "customData": {
+                "customSize": "2x2"
+              },
+              "data": {}
+            },
+            {
+              "name": "countdownDay",
+              "id": 1705971290975,
+              "customData": {
+                "customSize": "2x2",
+                "notRetain": true
+              },
+              "data": {}
+            },
+            {
+              "name": "Todo",
+              "id": 1705971303222,
+              "customData": {
+                "currentTodo": {
+                  "title": "个人",
+                  "nanoid": "T00111"
+                },
+                "width": 1,
+                "height": 2
+              },
+              "data": {}
+            },
+            {
               "name": "folder",
-              "id": 1705906930197,
+              "id": 1705971311447,
               "customData": {
                 "name": "其他文件",
                 "icon": "https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#ffffff",
@@ -29,7 +103,7 @@ export const FreeLayoutStore = defineStore('FreeLayoutStore', {
             },
             {
               "name": "folder",
-              "id": 1705906937618,
+              "id": 1705971312239,
               "customData": {
                 "name": "图片",
                 "icon": "https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#ffffff",
@@ -39,14 +113,13 @@ export const FreeLayoutStore = defineStore('FreeLayoutStore', {
                 "layout": "rows",
                 "sort": "free",
                 "model": "custom",
-                "rules": [],
-                "modalSize": "6x5"
+                "rules": []
               },
               "data": {}
             },
             {
               "name": "folder",
-              "id": 1705906940636,
+              "id": 1705971312963,
               "customData": {
                 "name": "文件夹",
                 "icon": "https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#ffffff",
@@ -62,7 +135,7 @@ export const FreeLayoutStore = defineStore('FreeLayoutStore', {
             },
             {
               "name": "folder",
-              "id": 1705906943715,
+              "id": 1705971319015,
               "customData": {
                 "name": "音视频",
                 "icon": "https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#ffffff",
@@ -72,88 +145,7 @@ export const FreeLayoutStore = defineStore('FreeLayoutStore', {
                 "layout": "rows",
                 "sort": "free",
                 "model": "custom",
-                "rules": [],
-                "modalSize": "6x5"
-              },
-              "data": {}
-            },
-            {
-              "name": "clocks",
-              "id": 1705907148806,
-              "customData": {
-                "dragCardSize": "card small",
-                "width": 1,
-                "height": 1,
-                "customSize": "2x2",
-                "cardSize": "card small",
-                "clockId": "clock4",
-                "imgUrl": "https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg",
-                "blurs": 3,
-                "bgZoom": 0
-              },
-              "data": {}
-            },
-            {
-              "name": "AggregateSearch",
-              "id": 1705907170716,
-              "customData": {
-                "sortType": "work",
-                "customSize": "2x2"
-              },
-              "data": {}
-            },
-            {
-              "name": "notes",
-              "id": 1705907181399,
-              "customData": {
-                "title": "桌面便签",
-                "background": "#57BF60",
-                "cardSize": "card",
-                "colors": "#ffffff",
-                "height": 2,
-                "width": 1,
-                "text": "",
-                "dragCardSize": "card",
-                "content": "",
-                "customSize": "2x4"
-              },
-              "_id": "note:1705907181399",
-              "updateTime": 1705907181399,
-              "createTime": 1705907181399,
-              "content": "",
-              "notes": "notes",
-              "isDelete": false,
-              "deskName": "默认布局",
-              "deskId": "IVkH88Qs",
-              "data": {}
-            },
-            {
-              "name": "AIaides",
-              "id": 1705907211012,
-              "customData": {
-                "customSize": "2x2"
-              },
-              "data": {}
-            },
-            {
-              "name": "countdownDay",
-              "id": 1705907219513,
-              "customData": {
-                "customSize": "2x4",
-                "width": 1,
-                "height": 2,
-                "notRetain": true
-              },
-              "data": {}
-            },
-            {
-              "name": "Todo",
-              "id": 1705907236141,
-              "customData": {
-                "currentTodo": {
-                  "title": "个人",
-                  "nanoid": "T00111"
-                }
+                "rules": []
               },
               "data": {}
             }
@@ -161,269 +153,87 @@ export const FreeLayoutStore = defineStore('FreeLayoutStore', {
           "settings": {
             "cardZoom": 100,
             "marginTop": 0,
-            "cardMargin": 6.121147715196599,
-            "enableZoom": true,
-            "zoom": 105
+            "cardMargin": 5,
+            "enableZoom": true
           },
           "layoutSize": {
             "width": 0,
-            "height": 853
+            "height": 892
           },
-          "deskHeight": 853
+          "deskHeight": 892
         }
       ],
-      "freeLayoutData": {
-        "gd-r6tCo": {
-          "1705883742578": {
+      freeLayoutData: {
+        "_Xc3": {
+          "1705971205206": {
             "left": 1904,
-            "top": 2706,
+            "top": 2382,
             "index": 1,
-            "id": 1705883742578
+            "id": 1705971205206
           },
-          "1701420672541": {
+          "1705971216198": {
+            "left": 1904,
+            "top": 2598,
+            "index": 1,
+            "id": 1705971216198
+          },
+          "1705971265991": {
             "left": 2196,
-            "top": 2490,
+            "top": 2382,
             "index": 1,
-            "id": 1701420672541,
-            "name": "news"
+            "id": 1705971265991
           },
-          "1701420719963": {
+          "1705971276167": {
             "left": 2488,
-            "top": 3138,
+            "top": 2382,
             "index": 1,
-            "id": 1701420719963,
-            "name": "notes"
+            "id": 1705971276167
           },
-          "1701420782369": {
+          "1705971290975": {
             "left": 2488,
-            "top": 2922,
+            "top": 2598,
             "index": 1,
-            "id": 1701420782369,
-            "name": "AggregateSearch"
+            "id": 1705971290975
           },
-          "1701850971669": {
+          "1705971303222": {
             "left": 2780,
-            "top": 3138,
+            "top": 2382,
             "index": 1,
-            "id": 1701850971669,
-            "name": "AIaides"
+            "id": 1705971303222
           },
-          "1701850990017": {
+          "1705971311447": {
             "left": 1904,
-            "top": 2490,
+            "top": 2814,
             "index": 1,
-            "id": 1701850990017,
-            "name": "clocks"
+            "id": 1705971311447
           },
-          "1704444814036": {
-            "left": 2488,
-            "top": 2490,
-            "index": 1,
-            "id": 1704444814036,
-            "name": "folder"
-          },
-          "1701927774475": {
-            "left": 1904,
-            "top": 2922,
-            "index": 1,
-            "id": 1701927774475,
-            "name": "yuanCommunity"
-          },
-          "1702026795921": {
-            "left": 2780,
-            "top": 2922,
-            "index": 1,
-            "id": 1702026795921,
-            "name": "folder"
-          },
-          "1705906879069": {
-            "left": 2488,
-            "top": 2490,
-            "index": 1,
-            "id": 1705906879069
-          },
-          "1705906887800": {
-            "left": 2780,
-            "top": 2490,
-            "index": 1,
-            "id": 1705906887800
-          },
-          "1705906913821": {
+          "1705971312239": {
             "left": 2196,
-            "top": 2490,
+            "top": 2814,
             "index": 1,
-            "id": 1705906913821
+            "id": 1705971312239
           },
-          "1705906930197": {
-            "left": 1904,
-            "top": 2922,
-            "index": 1,
-            "id": 1705906930197
-          },
-          "1705906937618": {
-            "left": 2196,
-            "top": 2922,
-            "index": 1,
-            "id": 1705906937618
-          },
-          "1705906940636": {
+          "1705971312963": {
             "left": 2488,
-            "top": 2922,
+            "top": 2814,
             "index": 1,
-            "id": 1705906940636
+            "id": 1705971312963
           },
-          "1705906943715": {
+          "1705971319015": {
             "left": 2780,
-            "top": 2922,
+            "top": 2814,
             "index": 1,
-            "id": 1705906943715
-          }
-        },
-        "IVkH88Qs": {
-          "1705883742578": {
-            "left": 1904,
-            "top": 2706,
-            "index": 1,
-            "id": 1705883742578
-          },
-          "1701420672541": {
-            "left": 2196,
-            "top": 2490,
-            "index": 1,
-            "id": 1701420672541,
-            "name": "news"
-          },
-          "1701420719963": {
-            "left": 2488,
-            "top": 3138,
-            "index": 1,
-            "id": 1701420719963,
-            "name": "notes"
-          },
-          "1701420782369": {
-            "left": 2488,
-            "top": 2922,
-            "index": 1,
-            "id": 1701420782369,
-            "name": "AggregateSearch"
-          },
-          "1701850971669": {
-            "left": 2780,
-            "top": 3138,
-            "index": 1,
-            "id": 1701850971669,
-            "name": "AIaides"
-          },
-          "1701850990017": {
-            "left": 1904,
-            "top": 2490,
-            "index": 1,
-            "id": 1701850990017,
-            "name": "clocks"
-          },
-          "1704444814036": {
-            "left": 2488,
-            "top": 2490,
-            "index": 1,
-            "id": 1704444814036,
-            "name": "folder"
-          },
-          "1701927774475": {
-            "left": 1904,
-            "top": 2922,
-            "index": 1,
-            "id": 1701927774475,
-            "name": "yuanCommunity"
-          },
-          "1702026795921": {
-            "left": 2780,
-            "top": 2922,
-            "index": 1,
-            "id": 1702026795921,
-            "name": "folder"
-          },
-          "1705906879069": {
-            "left": 2488,
-            "top": 2490,
-            "index": 1,
-            "id": 1705906879069
-          },
-          "1705906887800": {
-            "left": 2780,
-            "top": 2490,
-            "index": 1,
-            "id": 1705906887800
-          },
-          "1705906913821": {
-            "left": 2196,
-            "top": 2490,
-            "index": 1,
-            "id": 1705906913821
-          },
-          "1705906930197": {
-            "left": 1904,
-            "top": 2922,
-            "index": 1,
-            "id": 1705906930197
-          },
-          "1705906937618": {
-            "left": 2196,
-            "top": 2922,
-            "index": 1,
-            "id": 1705906937618
-          },
-          "1705906940636": {
-            "left": 2488,
-            "top": 2922,
-            "index": 1,
-            "id": 1705906940636
-          },
-          "1705906943715": {
-            "left": 2780,
-            "top": 2922,
-            "index": 1,
-            "id": 1705906943715
-          },
-          "1705907148806": {
-            "left": 1904,
-            "top": 2490,
-            "index": 1,
-            "id": 1705907148806
-          },
-          "1705907170716": {
-            "left": 1904,
-            "top": 2706,
-            "index": 1,
-            "id": 1705907170716
-          },
-          "1705907181399": {
-            "left": 2196,
-            "top": 2490,
-            "index": 1,
-            "id": 1705907181399
-          },
-          "1705907211012": {
-            "left": 2488,
-            "top": 2490,
-            "index": 1,
-            "id": 1705907211012
-          },
-          "1705907219513": {
-            "left": 2780,
-            "top": 2490,
-            "index": 1,
-            "id": 1705907219513
-          },
-          "1705907236141": {
-            "left": 2488,
-            "top": 2706,
-            "index": 1,
-            "id": 1705907236141
+            "id": 1705971319015
           }
         }
       },
-      "freeLayoutState": {
-        "gd-r6tCo": {
+      freeLayoutState: {
+        "_Xc3": {
+          "mode": {
+            "arrange": "grid",
+            "scroll": "free",
+            "align": "custom"
+          },
           "system": {
             "isFreeLayout": true,
             "hide": false
@@ -440,8 +250,8 @@ export const FreeLayoutStore = defineStore('FreeLayoutStore', {
             "isBorderLine": false,
             "isCenterLine": false,
             "centerLine": {
-              "x": 1772,
-              "y": 2389
+              "x": 1532,
+              "y": 2257
             },
             "centerPosition": {
               "x": "center",
@@ -453,54 +263,12 @@ export const FreeLayoutStore = defineStore('FreeLayoutStore', {
             "zoom": 1,
             "width": 5000,
             "height": 5000
-          },
-          "mode": {
-            "arrange": "grid",
-            "scroll": "free",
-            "align": "custom"
-          }
-        },
-        "IVkH88Qs": {
-          "system": {
-            "isFreeLayout": true,
-            "hide": false
-          },
-          "option": {
-            "afterDragging": true,
-            "whileDragging": false,
-            "collision": true,
-            "margin": 6,
-            "magnet": false
-          },
-          "line": {
-            "isAuxLine": false,
-            "isBorderLine": false,
-            "isCenterLine": false,
-            "centerLine": {
-              "x": 1772,
-              "y": 2389
-            },
-            "centerPosition": {
-              "x": "center",
-              "y": "top"
-            }
-          },
-          "canvas": {
-            "isInfinite": false,
-            "zoom": 1,
-            "width": 5000,
-            "height": 5000
-          },
-          "mode": {
-            "arrange": "grid",
-            "scroll": "free",
-            "align": "custom"
           }
         }
-      },
+      }
     },
     // 游戏桌面数据
-    game: {
+    gameDesk: {
       "desk": [
         {
           "name": "默认布局",
@@ -792,7 +560,8 @@ export const FreeLayoutStore = defineStore('FreeLayoutStore', {
 
     },
 
-    "deskDefault": [
+    // 新用户第一次进入默认数据
+    deskDefault: [
       {
         "name": "默认布局",
         "id": "kFe3OXrk",

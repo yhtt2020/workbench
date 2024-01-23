@@ -33,6 +33,9 @@
       :alone="settings.enableZoom"
       :hide="hide"
     />
+    <!-- {{ freeLayout }}
+    {{ isFreeLayout }}
+    {{ $route.path }} -->
 
     <Drop>
       <!-- 自由布局 -->

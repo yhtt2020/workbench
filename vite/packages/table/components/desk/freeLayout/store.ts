@@ -273,6 +273,21 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       this.getFreeLayoutState.line.centerLine.x =
         this.freeLayoutEnv.scrollLeft / this.getFreeLayoutState.canvas.zoom;
     },
+    // 设置当前自由布局 属性 
+    setFreeLayoutData(id, data){
+      // console.log('走了？');
+      // console.log('id, data', id, data);
+      // console.log('this.freeLayoutData', this.freeLayoutData);
+      
+      
+      this.freeLayoutData[id] = data
+    },
+    setFreeLayoutState(id, state){
+      // console.log('走了？');
+      // console.log('id, state', id, state);
+      // console.log('this.freeLayoutState', this.freeLayoutState);
+      this.freeLayoutState[id] = state
+    }
   },
   persist: {
     enabled: true,
