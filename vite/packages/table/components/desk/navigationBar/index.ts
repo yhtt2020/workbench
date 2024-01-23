@@ -48,7 +48,7 @@ export const extraRightMenu =  [
     {
         title:'添加导航图标',
         icon:'fluent:add-16-regular',
-        component:'EditNavigationIcon',
+        component:'EditNewNavigation',
 
     },
     {

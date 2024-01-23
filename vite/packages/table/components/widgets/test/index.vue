@@ -3,8 +3,10 @@
     :customIndex="customIndex"
     :customData="customData"
     :customSize="customData.customSize"
+    class="xt-theme-b"
   >
-    {{ customData }}
+    {{ customData?.name }}
+    <p>id： {{ customIndex }}</p>
   </xt-container>
 </template>
 

@@ -16,6 +16,7 @@ const baseApi={
   settings:require('./settings'),//设置接口
   db:require('./db'),//数据库接口,
   web:require('./web'),//网页接口
+  app:require('./app'),//app
   mouse:require('./mouse')//鼠标
 }
 window.baseApi=baseApi

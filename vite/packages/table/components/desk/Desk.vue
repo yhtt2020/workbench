@@ -259,7 +259,8 @@ import GalleryModal from "../paperModal/GalleryModal.vue";
 import { useAddCard } from "../../ui/hooks/useAddCard";
 import { useDeskStore } from "./store"; 
 import { useCustomLayout } from "./freeLayout/useCustomLayout";
-import { useFileConversionIcon} from '../../apps/folder/src/hooks/useDataConversion'
+import { useFileConversionIcon } from "../../apps/folder/src/hooks/useDataConversion";
+import { headerData, mainData, folderData } from "./freeLayout/config";
 
 import Drop from "./Drop.vue";
 export default {
@@ -460,42 +461,7 @@ export default {
     ...mapWritableState(useFloatMenuStore, ["menus", "newMenus"]),
     ...mapWritableState(useNavigationStore, ["selectNav", "isDesk"]),
     ...mapWritableState(useDeskStore, ["autoOpenEdit", "adjustLayout"]),
-    // hideCard() {
-    //   let currentHide = null;
-    //   if (this.isFreeLayout) {
-    //     currentHide = this.getFreeLayoutState?.system?.hide;
-    //   } else {
-    //     currentHide = this.hide;
-    //   }
-    //   return {
-    //     id: 20,
-    //     newIcon: "fluent:more-horizontal-16-filled",
-    //     name: "更多",
-    //     lock: true,
-    //     children: [
-    //       {
-    //         id: 1,
-    //         newIcon: this.hide
-    //           ? "fluent:eye-16-regular"
-    //           : "fluent:eye-off-16-regular",
-    //         name: currentHide ? "显示小组件" : "隐藏小组件",
-    //         fn: () => {
-    //           if (this.isFreeLayout) {
-    //             this.getFreeLayoutState.system.hide =
-    //               !this.getFreeLayoutState?.system?.hide;
-    //           } else {
-    //             if (this.hide) {
-    //               this.showDesk();
-    //             } else {
-    //               this.hideDesk();
-    //             }
-    //           }
-    //         },
-    //         disabled: false,
-    //       },
-    //     ],
-    //   };
-    // },
+
     navMenu() {
       if (
         !this.navigationToggle[0] &&
@@ -527,10 +493,10 @@ export default {
         {
           id: 0,
           newIcon: "fluent:add-16-filled",
-          name: "测试",
-          disabled: false,
+          name: "定制桌面测试",
+          disabled: true,
           fn: () => {
-            useCustomLayout();
+            useCustomLayout(mainData, headerData, folderData);
             // 0 提供一个伪卡片
             // 提供一个添加卡片
             // 1 添加新的桌面
@@ -568,7 +534,21 @@ export default {
             // },
           ],
         },
+
         { id: 5, divider: true },
+        {
+          id: 5.1,
+          newIcon: "fluent:glance-horizontal-16-regular",
+          name: "整理桌面",
+          disabled: this.isFreeLayout ? false : true,
+          fn: () => {
+            useCustomLayout(this.currentDesk.cards);
+            // 0 提供一个伪卡片
+            // 提供一个添加卡片
+            // 1 添加新的桌面
+            // 2 切换为自由布局
+          },
+        },
         {
           id: 6,
           newIcon: this.editing

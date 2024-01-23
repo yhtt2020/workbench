@@ -30,8 +30,8 @@
         </div>
       </div>
       <div class="flex items-center w-full mt-4 justify-between" v-if="proportion[4].isCheck">
-        <a-slider 
-        @afterChange="setZoomFactor" 
+        <a-slider
+        @afterChange="setZoomFactor"
         :min="30" :max="500"
         v-model:value="newZoom"></a-slider>
         <a-input style="width:62px;height: 40px;" class="w-full xt-mask" v-model:value="newZoom" @pressEnter="inputEnter"></a-input>
@@ -42,7 +42,7 @@
 
 </template>
 
-<script> 
+<script>
 import { Icon } from '@iconify/vue';
 import { appStore } from '../store'
 import { mapWritableState } from 'pinia'
@@ -89,7 +89,7 @@ export default {
       timer: null,
       // 记住上次的选择 用于还原功能
       tmpIndex: 0,
-      
+
     }
   },
   async mounted(){
@@ -105,7 +105,7 @@ export default {
     // 调整缩放比例功能 暂时不需要 隐藏
     // this.getWindowSize()
   },
-  components: { 
+  components: {
     Icon,
   },
   computed:{
@@ -170,7 +170,7 @@ export default {
         this.getSize()
       }, 300)
     },
-    //  
+    //
     close(){
       this.sure()
       this.visibleScale = false

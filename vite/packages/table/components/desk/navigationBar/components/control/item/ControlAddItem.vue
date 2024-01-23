@@ -1,16 +1,17 @@
 <template>
- <Vuuri v-model="vuuriList" group-id="id" item-key="id" :options="option"  test="1"
+ <Vuuri v-model="control.newList" group-id="id" item-key="id" :options="option"  test="1"
  :drag-enabled="false"   :get-item-height="getHeight" ref="testRef"
 >
  <template #item="{ item }">
   <ControlAddDetail :control-index="item.id" :control-item="item" />
-  <!-- :is-click="isClick" -->
  </template>
 </Vuuri>
 </template>
 
 <script setup>
 import { ref,computed,onMounted} from "vue";
+import { storeToRefs } from 'pinia';
+import { controlStore } from '../../../hook/controlStore';
 
 import Vuuri from "../../../../../vuuri/Vuuri.vue";
 import ControlAddDetail from "./ControlAddDetail.vue";
@@ -22,13 +23,15 @@ const props = defineProps({
   },
 })
 
+const controls = controlStore();
+const { control } = storeToRefs(controls);
 
-const vuuriList = ref(props.list);
+
 const option = ref({
  layout:{horizontal:false},
 })
 const testRef = ref(null);
-// const isClick = ref(false);
+
 
 // 获取高度
 const getHeight = () =>{

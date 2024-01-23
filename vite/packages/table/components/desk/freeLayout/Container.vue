@@ -92,7 +92,6 @@ async function updateCard(data) {
   console.time("Free Layout Run Time");
   console.log("当前配置项 :>> \n", `桌面ID ${currentID.value}`);
   currentData.value = {};
-  console.log('data :>> ', data);
   data.forEach((item) => {
     const { id, customData } = item;
     currentData.value[id] = {
@@ -154,18 +153,18 @@ const disabledInfo = (data) => {
 };
 
 onBeforeUnmount(() => {
-  // let data = {
-  //   ...currentData.value,
-  // };
-  // const freeLayout = freeLayoutStore.getOneFreeLayoutData(currentID.value);
+  let data = {
+    ...currentData.value,
+  };
+  const freeLayout = freeLayoutStore.getOneFreeLayoutData(currentID.value);
 
-  // for (const id in freeLayout) {
-  //   if (data[id]?.id.toString() != id.toString()) {
-  //     console.log("删除数据 :>> ", id);
-  //     delete freeLayout[id];
-  //   }
-  // }
-  // console.log("自由布局销毁操作 :>> ", getFreeLayoutData.value);
+  for (const id in freeLayout) {
+    if (data[id]?.id.toString() != id.toString()) {
+      console.log("删除数据 :>> ", id);
+      delete freeLayout[id];
+    }
+  }
+  console.log("自由布局销毁操作 :>> ", getFreeLayoutData.value);
 });
 </script>
 

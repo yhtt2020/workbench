@@ -183,7 +183,7 @@ export default {
   props: ['deskId'],
   computed: {
     ...mapWritableState(cardStore, ['desks', 'addCard']),
-    ...mapWritableState(appStore, ['backgroundSettings', 'backgroundImage', 'styles']),
+    ...mapWritableState(appStore, ['backgroundSettings', 'backgroundImage', 'styles','backgroundName']),
     ...mapWritableState(navStore, ['copyFootNav']),
     cardList() {
       if (this.deskTypeObj.game) {
@@ -403,7 +403,7 @@ export default {
         }
       })
 
-      // 以下操作将游戏以及常用程序的文件夹区别于其他文件夹放在导航条内 
+      // 以下操作将游戏以及常用程序的文件夹区别于其他文件夹放在导航条内
       this.exeNavList[0].children = []
       this.exeNavList[1].children = []
 

@@ -457,9 +457,8 @@ export default [
           {
             path: "/gameIndex",
             name: "gameIndex",
-            component: GameIndex,
-            meta:{
-              tab1:'game'
+            redirect:{
+              name:'myGame'
             }
           },
           {
