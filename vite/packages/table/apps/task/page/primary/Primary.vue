@@ -18,7 +18,10 @@
     </div>
     <xt-title>正在进行</xt-title>
     <div class="xt-bg-2 rounded-xl p-3">
-      <xt-title m="">{{ currentTask.name }}</xt-title>
+      <xt-text m="">
+        <SerialNumber :id=" stage + 1" />
+        {{ currentTask.name }}</xt-text
+      >
       <xt-title type="text">{{ currentTask.intro }}</xt-title>
       <xt-title m="">任务说明</xt-title>
       <xt-title type="text">{{ currentTask.description }}</xt-title>
@@ -34,7 +37,7 @@
 
 <script setup>
 import StartTask from "../../components/StartTask.vue";
-
+import SerialNumber from "../../components/SerialNumber.vue";
 import { tasks } from "./Primary";
 import { taskStore } from "../../store";
 import { ref, reactive, computed, toRefs, onMounted } from "vue";
