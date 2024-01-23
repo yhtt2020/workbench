@@ -1,5 +1,5 @@
 <template>
-  <div v-if="fullScreen" class="no-drag">
+  <div v-if="fullScreen && noFullScreen " class="no-drag">
     <div style="position: absolute; right: 10px; top: 10px; z-index: 999">
       <xt-button @click="setFullScreen(false)" :w="40" :h="40" type="theme">
         <Icon style="font-size: 18px" icon="quxiaoquanping_huaban"></Icon>
@@ -257,7 +257,7 @@ import { registerFolder } from "../../apps/folder/src/hooks/register";
 import { LoadingOutlined } from "@ant-design/icons-vue";
 import GalleryModal from "../paperModal/GalleryModal.vue";
 import { useAddCard } from "../../ui/hooks/useAddCard";
-import { useDeskStore } from "./store";
+import { useDeskStore } from "./store"; 
 import { useCustomLayout } from "./freeLayout/useCustomLayout";
 import { useFileConversionIcon} from '../../apps/folder/src/hooks/useDataConversion'
 
@@ -269,6 +269,9 @@ export default {
   components: { LoadingOutlined, EditNewNavigation, GalleryModal, Drop },
   props: {
     freeLayout: {
+      default: true,
+    },
+    noFullScreen: {
       default: true,
     },
     globalSettings: {

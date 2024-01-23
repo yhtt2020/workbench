@@ -1,6 +1,8 @@
 import { defineStore, storeToRefs } from "pinia";
 import { cardStore } from "../../../store/card";
 import { homeStore } from "../../../store/home";
+
+import { FreeLayoutStore } from "../../../page/app/grade/components/FreeLayout";
 import _ from "lodash";
 
 import dbStorage from "../../../store/dbStorage";

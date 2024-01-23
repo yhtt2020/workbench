@@ -19,3 +19,40 @@ export const NavListTmp = [
 ]
 
 
+export const GameDesk = {
+    alias: "游戏桌面",
+    appNanoid: '',
+    categoryId: '1',
+    circle: '',
+    cover: "https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/Ryfl-P1wf-ZD-3-yjz3",
+    createTime: "2023-08-21 09:10:44",
+    dataNanoid: "sOGd4442",
+    direction: 'h',
+    goodSubType: '',
+    goodType: "desk",
+    id: 100,
+    introduceText: '',
+    isOnShelves: 1,
+    isRemoved: 0,
+    layoutSize: '{"width":1870,"height":1070}',
+    name: null,
+    nanoid: "sOGd4442",
+    order: 1,
+    salesType: 0,
+    shareCode: null,
+    sort: 1,
+    summary: '111',
+    support: 2,
+    tags: "生产力,日常",
+    // template: "{'cards':[{'name':'clocks','id':1692330825905,'customData':{},'data':{}},{'name':'voice','id':1692330805293,'customData':{},'data':{}},{'name':'music','id':1692331037689,'customData':{},'data':{}},{'name':'SmallCPUCard','id':1692330848234,'customData':{},'data':{}},{'name':'weather','id':1692330818852,'customData':{},'data':{}},{'name':'HotSearch','id':1692331048852,'customData':{},'data':{}},{'name':'middleWallpaper','id':1692330289500,'customData':{},'data':{}},{'name':'customTimer','id':1692330856521,'customData':{},'data':{}},{'name':'eatToday','id':1692331021642,'customData':{},'data':{}},{'name':'Todo','id':1692331029233,'customData':{},'data':{}},{'name':'ManyFilm','id':1692331059038,'customData':{},'data':{}},{'name':'AggregateSearch','id':1692330988993,'customData':{},'data':{}},{'name':'Remote','id':1692331084843,'customData':{},'data':{}},{'name':'Remote','id':1692331225834,'customData':{},'data':{}}],'settings':{'cardZoom':115.92632719393283,'marginTop':0,'cardMargin':6.7194566683373855}}",
+    template: '{"cards":[{"name":"clocks","id":1692330825905,"customData":{},"data":{}},{"name":"voice","id":1692330805293,"customData":{},"data":{}},{"name":"music","id":1692331037689,"customData":{},"data":{}},{"name":"SmallCPUCard","id":1692330848234,"customData":{},"data":{}},{"name":"weather","id":1692330818852,"customData":{},"data":{}},{"name":"HotSearch","id":1692331048852,"customData":{},"data":{}},{"name":"middleWallpaper","id":1692330289500,"customData":{},"data":{}},{"name":"customTimer","id":1692330856521,"customData":{},"data":{}},{"name":"eatToday","id":1692331021642,"customData":{},"data":{}},{"name":"Todo","id":1692331029233,"customData":{},"data":{}},{"name":"ManyFilm","id":1692331059038,"customData":{},"data":{}},{"name":"AggregateSearch","id":1692330988993,"customData":{},"data":{}},{"name":"Remote","id":1692331084843,"customData":{},"data":{}},{"name":"Remote","id":1692331225834,"customData":{},"data":{}}],"settings":{"cardZoom":115,"marginTop":0,"cardMargin":6}}',
+
+    title: '游戏桌面',
+    uid: 998,
+    updateTime: "2023-08-21 09:10:44",
+    userInfo: {},
+
+
+
+}
+

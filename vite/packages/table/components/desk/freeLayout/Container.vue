@@ -242,6 +242,7 @@ onBeforeUnmount(() => {
           :key="item.id"
           ref="test"
         >
+        {{   item.top }}--- {{   item.left }}
           <slot name="box" :data="currentData[item?.id]"></slot>
         </div>
       </transition>

@@ -78,6 +78,17 @@
     </div>
     <!-- 壁纸模块 -->
     <GalleryModal ref="paperModal" />
+    <teleport to="body">
+      <div style="z-index: 9999">
+        <!-- @afterAdded="afterAdded" -->
+        <Preview
+          :deskList="deskList"
+          :scheme="scheme"
+          :showModal="showModal"
+          @closePreview="closePreview"
+        ></Preview>
+      </div>
+    </teleport>
   </div>
 </template>
 
@@ -102,7 +113,8 @@ import DeskIcon from "./components/DeskIcon.vue";
 import CardList from "./components/CardList.vue";
 import Navbar from "./components/Navbar.vue";
 import Theme from "./components/Theme.vue";
-import { NavListTmp } from './components/data';
+import Preview from "./components/Preview.vue";
+import { NavListTmp, GameDesk } from './components/data';
 import {completeTask} from '../../../apps/task/task'
 
 export default {
@@ -114,6 +126,7 @@ export default {
     CardList,
     Navbar,
     Theme,
+    Preview,
   },
   data() {
     return {
@@ -161,6 +174,10 @@ export default {
       //  给ai做的容错
       fault: [],
       NavbarList: [],
+
+      
+      scheme: {},
+      showModal: false,
     }
   },
   props: ['deskId'],
@@ -240,6 +257,15 @@ export default {
   watch: {
   },
   methods: {
+
+    // test(){
+    //   this.scheme = {...GameDesk}
+    //   console.log('scheme', this.scheme)
+    //   this.showModal = true
+    // },
+    // closePreview() {
+    //   this.showModal = false;
+    // },
     // 触发打开壁纸弹窗
     openPaperModal() {
       this.$refs.paperModal.openGalleryModal()
