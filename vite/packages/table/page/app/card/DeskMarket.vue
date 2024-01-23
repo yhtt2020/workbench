@@ -1,7 +1,7 @@
 <template>
   <!-- 方案列表 -->
   <div class="flex flex-row w-full item-wrapper" style="height: 100%">
-    <div class="item-content" :style="wrapperStyle">
+    <div class="item-content px-8" :style="wrapperStyle">
       <div class="text-center w-full" v-if="displayItems.length == 0">
         <a-empty image="/img/test/load-ail.png" description="暂无分享"></a-empty>
       </div>
