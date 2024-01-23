@@ -20,12 +20,12 @@
 
     <!--  <ControlModal ref="controlRef" v-if="controlVisible" @close="controlVisible = false" :full="full" @setFull="setFull"/> -->
     <!-- <div>{{ !this.isLeaveBar && this.controlVisible && this.folderVisible }} ------ {{ autoVisible }}</div> -->
-    <Transition name="animate__animated animate__bounce"  enter-active-class="animate__bounceInUp" leave-active-class="animate__zoomOutDown">
+    <!-- <Transition name="animate__animated animate__bounce"  enter-active-class="animate__bounceInUp" leave-active-class="animate__zoomOutDown"> -->
+    <AutoHide>
     <div @click.stop 
       class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
       id="bottom-bar" style="text-align: center;position: relative;" @contextmenu="showMenu" v-show="autoVisible"
-      :style="{ zoom: `${(this.navAttribute.navSize / 100)}` }" @mouseenter="handleMouseEnter"
-      @mouseleave="handleMouseLeave">
+      :style="{ zoom: `${(this.navAttribute.navSize / 100)}` }" >
       <!-- 快速搜索 底部 用户栏 -->
 
       <div v-if="(!simple || settings.enableChat) && !this.isOffline && this.bottomToggle[0]"
@@ -149,7 +149,8 @@
       </keep-alive>
       <Common ref="common"></Common>
     </div>
-    </Transition>
+    <!-- </Transition> -->
+    </AutoHide>
 
     <div id="trans" v-show="visibleTrans" style="
       position: fixed;
@@ -248,6 +249,7 @@ import ControlModal from './desk/navigationBar/components/control/ControlModal.v
 import Drag from './desk/navigationBar/components/folder/Drag.vue'
 import { hoverRealItemId } from './desk/navigationBar/hook/hoverRealItemId'
 import 'animate.css'
+import AutoHide from './desk/navigationBar/components/folder/AutoHide.vue'
 
 export default {
   name: 'BottomPanel',
@@ -280,6 +282,7 @@ export default {
     Common,
     ControlModal,
     Drag,
+    AutoHide
   },
   data() {
     return {
@@ -455,7 +458,6 @@ export default {
       controlLeft: 0,
       skipSort: false,
       skipSimple: false,
-      isEdge: false,
       parentHeight: 0
     }
   },
@@ -556,7 +558,7 @@ export default {
       'editToggle', 'taskBoxVisible',
       'selectNav', 'bottomToggle',
       'popVisible', 'currentList',
-      'editItem', 'navAttribute', 'iconRadius', 'jumpDesk', 'customOpenNav', 'isLeaveBar'
+      'editItem', 'navAttribute', 'iconRadius', 'jumpDesk', 'customOpenNav', 'isLeaveBar','isEdge'
     ]),
     ...mapWritableState(taskStore, ['isTask', 'isTaskDrawer']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
@@ -815,7 +817,6 @@ export default {
     listenMouse(e) {
       if (e.x < 50 || e.x > (this.parentSize - 50) || e.y > (this.parentHeight - 50)) {
         this.isEdge = true
-        // console.log(e.y, '=======<<<<<<<<', this.isEdge)
       } else {
         this.isEdge = false
       }
