@@ -121,7 +121,14 @@ export default {
     deskItemStyle: {
       type: String,
       default: () => ''
-    }
+    },    
+    
+    // 处理桌面市场添加 为 false 时 将当前桌面进行替换
+    addDesk: {
+      type: Boolean,
+      default: true,
+    },
+    
   },
   watch: {
     items: {
@@ -160,7 +167,7 @@ export default {
         scheme: {
           ...item,
           dataNanoid: item.nanoid
-        }, showModal: true
+        }, showModal: true, addDesk: this.addDesk,
       })
       // this.scheme = item
       // this.showModal = true

@@ -79,9 +79,12 @@ export const cardStore = defineStore(
       },
       getCurrentIndex() {
         let deskIndex = this.desks.findIndex(item => {
-          return item.nanoid === homeStore().currentDeskIndex.name
+          return item.nanoid === homeStore().currentDeskId
         })
         return deskIndex
+      },
+      getCurrentId(){
+        return homeStore().currentDeskId
       },
       removeDesk(index) {
         if (this.desks.length === 1) {
@@ -113,7 +116,7 @@ export const cardStore = defineStore(
         this.desks.push(desk)
         return desk
       },
-      addShareDesk(data, layoutSize, deskList) {
+      addShareDesk(data, layoutSize, deskList, replace) {
         setTimeout(() => {
           // let cardZoom;
           // if(this.deskSize.cardsHeight){
@@ -135,11 +138,22 @@ export const cardStore = defineStore(
             marketId: data.dataNanoid,
             settings: {...data.settings, enableZoom: true},
             // showSettings: true
+            // deskList
           }
           this.aloneSettings = data.settings
           console.log(desk, '需要添加的desk')
           console.log(deskList, '父列表')
-          deskList.unshift(desk)
+          if(replace >= 0){
+            deskList[replace].cards = [...data.cards]
+          }else{
+            deskList.unshift(desk)
+            // 切换桌面
+            homeStore().currentDeskId = desk.id
+            homeStore().currentDeskIndex = {
+              id: desk.id,
+              title: data.title
+            }
+          }
           //this.switchToDesk(this.deskList.length - 1)
           return desk
         }, 350);
