@@ -12,10 +12,11 @@
   </xt-text>
   <template v-if="getCompletedTasks.length">
     <xt-text type="2" class="mb-4"> {{ task.info }}</xt-text>
-    <xt-collapse v-for="data in getCompletedTasks" class="mb-3">
+    <xt-collapse v-for="(data, index) in getCompletedTasks" class="mb-3">
       <template #title>
         <xt-text>
-          <xt-new-icon icon="fluent-emoji:star" class="mr-3" size="20" />
+
+          <SerialNumber :id="index+1"/>
           {{ data.name }}
         </xt-text>
       </template>
@@ -35,6 +36,7 @@ import { storeToRefs } from "pinia";
 import { taskStore } from "../../store.ts";
 import StartTask from "../../components/StartTask.vue";
 import ShowReward from "../../components/ShowReward.vue";
+import SerialNumber from "../../components/SerialNumber.vue";
 
 const sotre = taskStore();
 const { completedList } = storeToRefs(sotre);

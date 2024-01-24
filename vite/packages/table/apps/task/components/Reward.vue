@@ -25,12 +25,19 @@
       :src="types[type].icon"
       class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
     />
-    <xt-ify-icon
+    <a-avatar
+      v-if="type == 'communityPoints' || type == 'experience'"
+      shape="square"
+      :size="42"
+      :src="types[type].icon"
+      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+    />
+    <!-- <xt-ify-icon
       v-if="type == 'communityPoints' || type == 'experience'"
       class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
       :icon="types[type].icon"
       size="45"
-    />
+    /> -->
     <div class="absolute z-10 bottom-0 text-sm" v-if="value" style="right: 6px">
       {{ value }}
     </div>
@@ -56,11 +63,11 @@ const types = computed(() => {
     },
     communityPoints: {
       name: "积分",
-      icon: "fluent-emoji:gem-stone",
+      icon: "/public/img/task/communityPoints.png",
     },
     experience: {
       name: "经验",
-      icon: "fluent-emoji:coin",
+      icon: "/public/img/task/experience.png",
     },
     avatarFrame: {
       name: "头像",

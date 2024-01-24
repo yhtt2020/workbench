@@ -218,7 +218,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 返回中心点
     restoreLocation() {
-      let w, h;
+      let w, h, left;
       const zoom = this.getFreeLayoutState.canvas.zoom;
       const width = this.freeLayoutEnv.scrollWidth / zoom;
       const height = this.freeLayoutEnv.scrollHeight;
@@ -247,13 +247,13 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         // w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
         // h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
         w = this.getFreeLayoutState.line.centerLine.x - width / 2;
-        w = this.getFreeLayoutState.line.centerLine.x;
+        left = this.getFreeLayoutState.line.centerLine.x;
         h = this.getFreeLayoutState.line.centerLine.y;
       }
       w = w * zoom;
       h = h * zoom;
 
-      this.freeLayoutEnv.scrollLeft = w;
+      this.freeLayoutEnv.scrollLeft = left * zoom;
       this.freeLayoutEnv.scrollTop = h;
       return {
         w,
@@ -264,12 +264,12 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       this.getFreeLayoutState.mode.align = "custom";
       this.getFreeLayoutState.line.centerLine.y =
         this.freeLayoutEnv.scrollTop / this.getFreeLayoutState.canvas.zoom;
-      // getFreeLayoutState.value.line.centerLine.x =
-      //   (freeLayoutEnv.value.scrollLeft +
-      //     freeLayoutEnv.value.scrollData.width / 2) /
-      //   getFreeLayoutState.value.canvas.zoom;
       this.getFreeLayoutState.line.centerLine.x =
-        this.freeLayoutEnv.scrollLeft / this.getFreeLayoutState.canvas.zoom;
+        (this.freeLayoutEnv.scrollLeft +
+          this.freeLayoutEnv.scrollData.width / 2) /
+        this.getFreeLayoutState.canvas.zoom;
+      // this.getFreeLayoutState.line.centerLine.x =
+      //   this.freeLayoutEnv.scrollLeft / this.getFreeLayoutState.canvas.zoom;
     },
   },
   persist: {
