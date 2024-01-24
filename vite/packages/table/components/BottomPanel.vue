@@ -113,7 +113,6 @@
                       :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }"
                       @mouseenter="showElement(item, index)">
                       <xt-menu :id="item.id" class="relative overflow-visible item-content" :menus="folderOptions">
-
                         <div @dragover="onDrag" @dragend="hoverIndex = -1"
                           v-if="!(this.navList.includes(item.event) && this.isOffline)"
                           class="flex items-center justify-center pointer"
@@ -170,14 +169,6 @@
 
   <transition name="fade">
     <div :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }" v-if="quick">
-      <!-- 老版 -->
-      <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
-      <!-- 新版 -->
-      <!-- <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'">
-      </EditNewNavigation>
-      <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'" @hiedNav="hiedNav">
-      </navigationSetting>
-      <EditIcon @setQuick="setQuick" v-if="componentId === 'EditIcon'"></EditIcon> -->
       <component :is='componentId' @setQuick="setQuick"></component>
     </div>
   </transition>

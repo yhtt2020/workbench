@@ -1,3 +1,4 @@
+import { getHostAddress } from './../../../../components/widgets/myIcons/edit/hooks/getHostAddress';
 import { nanoid } from "nanoid";
 
 import { defaultData } from "../components/options";
@@ -84,6 +85,24 @@ export const useDeskConversionNav = (icon,name,item)=>{
     mode:'app',
     value:item,
     id:nanoid(6)
+  }
+  return file
+}
+
+// 桌面链接转为导航栏图标
+export const useLinkConversionNav = (link)=>{
+  const https = link.icon.includes('https')
+  const http = link.icon.includes('http')
+  const file = {
+    name:link.name || '链接',
+    icon: (!https && http) ? link.icon : 'fluent-emoji:globe-with-meridians',
+    type:'default',
+    value:link.value,
+    mode:'link',
+    isBg:false,
+    bg:'var(--secondary-transp-bg)',
+    id:nanoid(6),
+    linkIcon:!(!https && http),
   }
   return file
 }
