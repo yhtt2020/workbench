@@ -22,64 +22,21 @@
       <Desk :noFullScreen="false"  :freeLayout="true" :currentDesk="displayScheme" :settings="displayScheme.settings" :notTrigger="true" :editing="false"></Desk>
     </div>
     <div class="foot flex ">
-      <!-- <div class="flex items-center mr-2">
-        <strong class="mr-2">{{ scheme.alias }}</strong> 共{{ template.cards.length }}个组件，尺寸
-        {{ layoutSize.width + '*' + layoutSize.height }}
-        <Icon icon="tishi-xianxing" class="ml-3" style="width: 24px;height: 24px;"></Icon>
-      </div> -->
       <div class="flex" style="padding: 0">
         <xt-button :w="113" :h="40" @click="addPlan" class="xt-active-bg ml-3 no-drag" key="console" type="primary" >
           <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:add-16-regular"></xt-new-icon>立即添加</div>
         </xt-button>
-      <!-- <div class="market-button mr-2 active" @click="addPlan"><Icon icon="fluent:add-16-regular" width="20" height="20" /> 立即添加</div> -->
-        <!-- <div class="market-button mr-0" @click="doIncSupport"><icon icon="dianzan"></icon> 点赞 {{displayScheme.support}}</div> -->
       </div>
     </div>
   </div>
   <!-- 预览添加抽屉 -->
   <a-drawer v-model:visible="openDrawer" style="z-index:9999999999;" width="320" placement="right">
     <template #closeIcon>
-      <!-- fluent:dismiss-16-regular -->
       <div class="flex justify-center items-center">
         <xt-new-icon size="20" icon="fluent:dismiss-16-regular"></xt-new-icon>
       </div>
     </template>
-    <!-- <template #extra v-if="!displayScheme.uid===userInfo.uid">
-      <a-space>
-        <div class="flex">
-          <div class="pointer mr-3 xt-bg-2 xt-text h-12 w-12 flex items-center rounded-lg justify-center"
-               @click="openSet = true">
-            <Icon icon="dianzan" style="font-size: 1.5em;"></Icon>
-          </div>
-          <div class="add-scheme" @click="addPlan"><icon icon="xiazai1"></icon>立即添加</div>
-        </div>
-      </a-space>
-    </template> -->
     <div class="drawer-center no-drag">
-      <!-- <span class="drawer-title">{{ scheme.alias }} <span class="xt-text-2 " style="user-select: text">{{scheme.nanoid}}</span></span>
-      <span class="drawer-text">{{ scheme.summary }}</span> -->
-      <!-- <div class="flex" v-if="tagList.length>0">
-        <div class="label" v-for="tag in tagList">{{ tag }}</div>
-      </div> -->
-      <!-- <div class="flex justify-between items-center">
-        <span class="flex items-center my-4">
-          <div>
-            <a-avatar size="24" :src="displayScheme.userInfo?.avatar">
-            </a-avatar>
-          </div>
-          <span class="ml-3" style="color: var(--secondary-text);">{{ scheme.userInfo?.nickname }}</span>
-        </span>
-        <span style="color: var(--secondary-text);">
-          <span>
-            <Icon icon="dianzan" class="mr-2"></Icon>
-            <span>{{ scheme.support }}</span>
-          </span>
-          <span class="ml-3">
-            <Icon icon="xiazai" class="mr-2"></Icon>
-            <span>{{ scheme.count }}</span>
-          </span>
-        </span>
-      </div> -->
       <span class="drawer-title">包含以下小组件（{{ template.cards.length }}）</span>
       <div v-for="item in template.cards" :key="item" class="drawer-item">
         <Icon :icon="item.icon" class="mr-2"></Icon>
@@ -188,16 +145,6 @@ export default {
         })
       }
     },
-    // windowHeight(val){
-    //   // let zoom = (val / this.deskHeight * 100).toFixed(2)
-    //   // this.cards.settings.cardZoom = zoom
-    //   let cardContent2 = window.getComputedStyle(document.getElementById("cardContent"));
-    //   let cardContent = document.getElementById("cardContent");
-    //   this.previewHeight = cardContent.offsetHeight
-    //   let previewHeight2 = cardContent.clientHeight
-    //   let cardZoom = (((this.zoom * this.previewHeight) / this.cardsHeight) * 100).toFixed()
-    //   this.cards.settings.cardZoom = cardZoom
-    // }
   },
   methods: {
     ...mapActions(cardStore, ['addShareDesk', 'setDeskSize']),
@@ -225,21 +172,8 @@ export default {
       //
       this.$emit('afterAdded')
       this.openDrawer = false
-      // setTimeout(() => {
-      //   let cardsHeight = document.getElementById('cardContent')?.offsetHeight
-      //   let deskHeight = document.documentElement.clientHeight // 高
-      //   let deskWidth = document.documentElement.clientWidth // 宽
-      //   let size = {
-      //     deskWidth,
-      //     deskHeight,
-      //     cardsHeight,
-      //   }
-      //   this.setDeskSize(size)
-      //   this.cardsHeight = cardsHeight
-      // }, 300)
     },
     close () {
-      // this.cards.settings.cardZoom = this.cardZoom
       this.$emit('closePreview', false)
       this.fullScreen = false
     },

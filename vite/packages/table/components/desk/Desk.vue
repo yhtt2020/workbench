@@ -61,6 +61,8 @@
                 :customData="data?.customData"
                 di
               />
+              <!-- {{ data }} -->
+              <!-- {{ currentDesk.nanoid }} -->
             </template>
           </FreeLayoutContainer>
         </FreeLayoutCanvas>
@@ -693,6 +695,7 @@ export default {
     window.time = Date.now();
   },
   mounted() {
+    console.log('this.currentDesk', this.currentDesk, this)
     // 自动打开编辑
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();
@@ -826,7 +829,6 @@ export default {
               }
             });
             desk.cards = [];
-            console.log(desk);
             this.menuVisible = false;
             this.clearFreeLayoutData();
           },

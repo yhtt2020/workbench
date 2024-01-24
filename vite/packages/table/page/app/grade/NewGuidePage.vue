@@ -193,6 +193,7 @@ export default {
       "isFreeLayout",
       "getFreeLayoutState",
       "defaultState",
+      "previewFlag",
     ]),
     cardList() {
       if (this.deskTypeObj.game) {
@@ -213,6 +214,7 @@ export default {
 
   },
   mounted() {
+    // 卡片数据去重
     this.NavbarList = [...NavListTmp]
     let items = []
     NavList.map(li => {
@@ -248,25 +250,12 @@ export default {
         }
       })
     })
-    // 通用
-    // this.current.forEach(i=>{
-    //   this.baseNavList.forEach(item=>{
-    //     if(i == item.name){
-    //       this.currentList.push({
-    //         ...item,
-    //         download: Math.floor(Math.random() * 10000) + 1,
-    //         isCheck: true,
-    //         imgIndex: 0,
-    //       })
-    //     }
-    //   })
-    // })
   },
 
   watch: {
   },
   methods: {
-    ...mapActions(useFreeLayoutStore, ["setFreeLayoutData", "setFreeLayoutState", 'renewFreeLayout']),
+    ...mapActions(useFreeLayoutStore, ["setFreeLayoutData", "setFreeLayoutState", 'renewFreeLayout', 'getFreeLayout1']),
 
     test(){
       // console.log(111111111111)
@@ -274,16 +263,19 @@ export default {
       // console.log(this.assistDesk)
       // console.log(this.assistDesk.freeLayoutData)
       
-      this.setFreeLayoutData('pLar', this.assistDesk.freeLayoutData['pLar'])
-      this.setFreeLayoutState('pLar', this.assistDesk.freeLayoutState['pLar'])
+      this.getFreeLayout1()
+      
+      // console.log('this.assistDesk', this.assistDesk)
 
-
+      this.setFreeLayoutData('mj36hf6h', this.assistDesk.freeLayoutData)
+      this.setFreeLayoutState('mj36hf6h', this.assistDesk.freeLayoutState)
       this.scheme = {...GameDesk}
-
-      console.log('scheme', this.scheme)
+      // console.log('scheme', this.scheme)
+      this.previewFlag = true
       this.showModal = true
     },
     closePreview() {
+      this.previewFlag = false
       this.showModal = false;
     },
     // 触发打开壁纸弹窗

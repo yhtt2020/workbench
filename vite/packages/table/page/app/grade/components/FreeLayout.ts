@@ -8,7 +8,7 @@ export const FreeLayoutStore = defineStore('FreeLayoutStore', {
       desk: [
         {
           "name": "效率桌面",
-          "id": "_Xc3",
+          "id": "mj36hf6h",
           "icon": "desktop",
           "cards": [
             {
@@ -164,106 +164,103 @@ export const FreeLayoutStore = defineStore('FreeLayoutStore', {
         }
       ],
       freeLayoutData: {
-        "_Xc3": {
-          "1705971205206": {
-            "left": 1904,
-            "top": 2382,
-            "index": 1,
-            "id": 1705971205206
-          },
-          "1705971216198": {
-            "left": 1904,
-            "top": 2598,
-            "index": 1,
-            "id": 1705971216198
-          },
-          "1705971265991": {
-            "left": 2196,
-            "top": 2382,
-            "index": 1,
-            "id": 1705971265991
-          },
-          "1705971276167": {
-            "left": 2488,
-            "top": 2382,
-            "index": 1,
-            "id": 1705971276167
-          },
-          "1705971290975": {
-            "left": 2488,
-            "top": 2598,
-            "index": 1,
-            "id": 1705971290975
-          },
-          "1705971303222": {
-            "left": 2780,
-            "top": 2382,
-            "index": 1,
-            "id": 1705971303222
-          },
-          "1705971311447": {
-            "left": 1904,
-            "top": 2814,
-            "index": 1,
-            "id": 1705971311447
-          },
-          "1705971312239": {
-            "left": 2196,
-            "top": 2814,
-            "index": 1,
-            "id": 1705971312239
-          },
-          "1705971312963": {
-            "left": 2488,
-            "top": 2814,
-            "index": 1,
-            "id": 1705971312963
-          },
-          "1705971319015": {
-            "left": 2780,
-            "top": 2814,
-            "index": 1,
-            "id": 1705971319015
-          }
+        "1705971205206": {
+          "left": 1904,
+          "top": 2382,
+          "index": 1,
+          "id": 1705971205206
+        },
+        "1705971216198": {
+          "left": 1904,
+          "top": 2598,
+          "index": 1,
+          "id": 1705971216198
+        },
+        "1705971265991": {
+          "left": 2196,
+          "top": 2382,
+          "index": 1,
+          "id": 1705971265991
+        },
+        "1705971276167": {
+          "left": 2488,
+          "top": 2382,
+          "index": 1,
+          "id": 1705971276167
+        },
+        "1705971290975": {
+          "left": 2488,
+          "top": 2598,
+          "index": 1,
+          "id": 1705971290975
+        },
+        "1705971303222": {
+          "left": 2780,
+          "top": 2382,
+          "index": 1,
+          "id": 1705971303222
+        },
+        "1705971311447": {
+          "left": 1904,
+          "top": 2814,
+          "index": 1,
+          "id": 1705971311447
+        },
+        "1705971312239": {
+          "left": 2196,
+          "top": 2814,
+          "index": 1,
+          "id": 1705971312239
+        },
+        "1705971312963": {
+          "left": 2488,
+          "top": 2814,
+          "index": 1,
+          "id": 1705971312963
+        },
+        "1705971319015": {
+          "left": 2780,
+          "top": 2814,
+          "index": 1,
+          "id": 1705971319015
         }
+
       },
       freeLayoutState: {
-        "_Xc3": {
-          "mode": {
-            "arrange": "grid",
-            "scroll": "free",
-            "align": "custom"
+        "mode": {
+          "arrange": "grid",
+          "scroll": "free",
+          "align": "custom"
+        },
+        "system": {
+          "isFreeLayout": true,
+          "hide": false
+        },
+        "option": {
+          "afterDragging": true,
+          "whileDragging": false,
+          "collision": true,
+          "margin": 6,
+          "magnet": false
+        },
+        "line": {
+          "isAuxLine": false,
+          "isBorderLine": false,
+          "isCenterLine": false,
+          "centerLine": {
+            "x": 2500,
+            "y": 2340
           },
-          "system": {
-            "isFreeLayout": true,
-            "hide": false
-          },
-          "option": {
-            "afterDragging": true,
-            "whileDragging": false,
-            "collision": true,
-            "margin": 6,
-            "magnet": false
-          },
-          "line": {
-            "isAuxLine": false,
-            "isBorderLine": false,
-            "isCenterLine": false,
-            "centerLine": {
-              "x": 1532,
-              "y": 2257
-            },
-            "centerPosition": {
-              "x": "center",
-              "y": "top"
-            }
-          },
-          "canvas": {
-            "isInfinite": false,
-            "zoom": 1,
-            "width": 5000,
-            "height": 5000
+          "centerPosition": {
+            "x": "center",
+            "y": "top"
           }
+        },
+        "canvas": {
+          "isInfinite": false,
+          "zoom": 1,
+          "width": 5000,
+          "height": 5000
         }
       }
     },
@@ -272,7 +269,7 @@ export const FreeLayoutStore = defineStore('FreeLayoutStore', {
       "desk": [
         {
           "name": "默认布局",
-          "id": "gd-r6tCo",
+          "id": "mj36hf6h",
           "icon": "desktop",
           "cards": [
             {
