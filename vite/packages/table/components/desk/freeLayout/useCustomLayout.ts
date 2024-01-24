@@ -13,7 +13,7 @@ const defaultOptions = {
   mainList: [],
   headerList: [],
   folderList: [],
-  columns: 5,
+  columns: 8,
   cb: () => {},
 };
 export const useCustomLayout = async (options) => {

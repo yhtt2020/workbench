@@ -21,7 +21,7 @@ const { isFreeLayout, getFreeLayoutData, freeLayoutEnv } =
 // 获取桌面数据
 const deskStore = useDeskStore();
 const { mouseInElement,isEnterBar } = storeToRefs(deskStore);
-const emits = defineEmits(["deleteFile", "updatePosition"]);
+const emits = defineEmits(["deleteFile", ]);
 
 const index = inject("index", "");
 const data = inject("data", "");

@@ -32,6 +32,8 @@
       :src="types[type].icon"
       class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
     />
+
+
     <!-- <xt-ify-icon
       v-if="type == 'communityPoints' || type == 'experience'"
       class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
@@ -63,7 +65,7 @@ const types = computed(() => {
     },
     communityPoints: {
       name: "积分",
-      icon: "/public/img/task/communityPoints.png",
+      icon: "/public/img/task/jinbi2.svg",
     },
     experience: {
       name: "经验",

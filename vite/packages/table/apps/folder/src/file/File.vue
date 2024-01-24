@@ -23,7 +23,6 @@
             class="cursor-pointer"
             @click="fileClick(item)"
             @deleteFile="dragDeleteFile"
-            @updatePosition="updatePosition"
             :data="item"
           >
             <Files :item="item"></Files>
@@ -46,10 +45,8 @@ import {
   getCurrentInstance,
   toRefs,
 } from "vue";
-import { useRouter, useRoute } from "vue-router";
 import Files from "./Files.vue";
 import Drag from "../components/Drag.vue";
-import { startApp } from "../../../../ui/hooks/useStartApp";
 import { inject } from "vue";
 import { fileTypes } from "./options";
 import Set from "../../../../components/widgets/myIcons/set/index.vue";
@@ -66,14 +63,11 @@ const data = inject("data", "");
 const iconStore = myIcons();
 const { proxy } = getCurrentInstance();
 
-const router = useRouter();
-
 const emits = defineEmits([
   "deleteFile",
   "updateSort",
   "updateList",
   "updateFile",
-  "updatePosition",
 ]);
 // 父组件数据
 const props = defineProps({
@@ -116,12 +110,8 @@ const fileLayout = computed(() => {
 
 const dragStart = (e) => {};
 const dragEnd = (data) => {
-  // console.log("hhhhh :>> ", 112323123233);
-  // emits("updatePosition", data);
 };
-const updatePosition = (data) => {
-  emits("updatePosition", data);
-};
+
 // 是否禁用拖拽
 watch(
   () => data.value.sort,
@@ -258,7 +248,7 @@ const fileClick = (data) => {
   data.useCount++;
   // 更新使用时间
   data.lastUseTime = new Date().getTime();
-  startApp(data.type, data.value, router);
+  // startApp(data.type, data.value, router);
   emits("updateSort");
   emits("clickFile", data);
 };
