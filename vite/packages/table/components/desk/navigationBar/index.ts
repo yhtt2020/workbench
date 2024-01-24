@@ -213,7 +213,7 @@ export const webMenus=[
         tag:'message'
     },
     {
-        name:'休闲娱乐',
+        name:'游戏娱乐',
         tag:'game'
     },
 ]

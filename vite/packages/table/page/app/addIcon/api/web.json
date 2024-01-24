@@ -355,6 +355,20 @@
   ],
   "game": [
     {
+      "id": 10001,
+      "name": "三国杀OL",
+      "summary": "经典桌游三国杀的网页版，聪明人玩的游戏。",
+      "icon": "https://www.sanguosha.com/favicon.ico",
+      "url": "https://web.sanguosha.com/"
+    },
+    {
+      "id": 10002,
+      "name": "小霸王其乐无穷",
+      "summary": "在线游玩经典小游戏。",
+      "icon": "https://www.yikm.net/logo.png",
+      "url": "https://www.yikm.net/"
+    },
+    {
       "id": 1,
       "name": "网易云音乐",
       "summary": "专注于发现与分享的音乐产品,依托专业音乐人、DJ、好友推荐及社交功能,为用户打造全新的音乐生活。",
