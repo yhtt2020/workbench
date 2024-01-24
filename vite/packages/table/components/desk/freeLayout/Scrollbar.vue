@@ -30,6 +30,9 @@ import "perfect-scrollbar/css/perfect-scrollbar.css";
 import { useElementBounding } from "@vueuse/core";
 import { useFreeLayoutStore } from "./store";
 import { useElementSize } from "../../../ui/new/drag/src/hooks/useElementSize";
+import { useWindowSize } from "../../../ui/new/drag/src/hooks/useWindowSize";
+import { useThrottleFn } from "@vueuse/core";
+
 const dragStyle = computed(() => {
   if (isKey.value && isDragging.value) {
     return "grabbing";
@@ -59,6 +62,7 @@ onBeforeMount(() => {
   // 初始化自由布局环境
   freeLayoutStore.initFreeLayoutEnv();
 });
+
 onMounted(() => {
   freeLayoutEnv.value.scrollData = useElementBounding(scrollbar.value);
 
@@ -71,12 +75,22 @@ onMounted(() => {
   });
   // 事件监听
   scrollbar.value.addEventListener("ps-scroll-x", () => {
+    console.log(
+      "修改前 freeLayoutEnv.value.scrollLeft  :>> ",
+      freeLayoutEnv.value.scrollLeft
+    );
     freeLayoutEnv.value.scrollLeft = scrollbar.value?.scrollLeft;
+    console.log(
+      "修改后 freeLayoutEnv.value.scrollLeft  :>> ",
+      freeLayoutEnv.value.scrollLeft
+    );
   });
   scrollbar.value.addEventListener("ps-scroll-y", () => {
     freeLayoutEnv.value.scrollTop = scrollbar.value?.scrollTop;
   });
-
+  useWindowSize((size) => {
+    freeLayoutStore.restoreLocation();
+  });
   // 监听键盘按下事件
   window.addEventListener("keydown", handleKeyDown);
   // 监听键盘抬起事件
@@ -156,7 +170,7 @@ watch(
 );
 // 重置中心区域
 function redirect() {
-  const { w, h } = freeLayoutStore.restoreLocation();
+  const { w, h,left } = freeLayoutStore.restoreLocation();
   scrollbar.value.scrollLeft = w;
   scrollbar.value.scrollTop = h;
   freeLayoutEnv.value.scrollLeft = w;
@@ -230,6 +244,7 @@ function update() {
 
 onBeforeUnmount(() => {
   freeLayoutStore.initFreeLayoutEnv();
+
   // scrollbar.value.removeEventListener("ps-scroll-x", () => {}, {
   //   capture: true,
   // });

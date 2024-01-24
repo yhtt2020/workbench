@@ -23,7 +23,6 @@ const box = ref(null);
 const emits = defineEmits(["update:customSize"]);
 const getElementSize = (size) => {
   const { width, height } = size;
-  console.log("getElementSize :>> ", 123);
   if (width != 0 && height != 0) {
     let size = `${useWidthTotGrid(width)}x${useHeightToGrid(height)}`;
     emits("update:customSize", size);

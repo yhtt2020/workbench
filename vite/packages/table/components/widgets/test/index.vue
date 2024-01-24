@@ -5,7 +5,7 @@
     :customSize="customData.customSize"
     class="xt-theme-b"
   >
-    {{ customData?.name }}
+    {{ customData }}
     <p>id： {{ customIndex }}</p>
   </xt-container>
 </template>
