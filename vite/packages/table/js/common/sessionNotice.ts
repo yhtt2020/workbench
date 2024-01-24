@@ -237,44 +237,31 @@ export class Notifications {
   private async translateGroupSystemNotice(message: any) {
     const groupResult = await (window as any).$TUIKit.tim.getGroupList()
     // console.log('请求返回结果',groupResult);
-
     const groupList = groupResult?.data?.groupList
     // console.log('查看群聊列表',groupList);
-
     const findGroup = groupList.find((item: any) => {
       return String(item.groupID) === String(message.to)
     })
     // console.log('获取群聊数据',findGroup);
-
     let numArr: any;
     if (message.payload.data === 'group_create') {
       const extension = message.payload.extension
       //console.log('排查',extension);
-
       numArr = this.extractNumbersFromString(extension)
       // console.log('查看strArr',numArr);
     }
-
-
     const option = {
       userIDList: message.payload.data === 'group_create' ? [`${numArr[0]}`] : message.payload.userIDList ? message.payload.userIDList : [`${message.payload.operatorID}`]
     }
     // console.log('查看参数配置',option);
-
-
     const res = await (window as any).$TUIKit.tim.getUserProfile(option)
     // console.log('获取用户名称',res.data);
-
     let userinfo = res.data[0]
     // console.log('排查::>>',userinfo);
-
-
     const groupName = findGroup?.name === undefined ? message.payload.groupProfile.name : findGroup?.name;
     const username = userinfo === undefined ? message.nick : userinfo?.nick;
     // console.log('查看用户昵称',username);
-
     console.log('验证通知消息类型', message.payload.operationType);
-
     switch (message.payload.operationType) {
       case TIM.TYPES.GRP_TIP_MBR_JOIN:
         // console.log('查看消息通知为什么有两条',message.payload);
@@ -304,18 +291,15 @@ export class Notifications {
       default:
         break;
     }
-
   }
 
-
+  
   // 社群消息通知
   public async receiveNotification(msg: any) {
-
-    const data = {...msg.data[0]}
-    const {settings, userInfo} = storeToRefs(appStore())
-    const app = appStore()
-    const server = (window as any).$TUIKit.TUIServer.TUIChat.store
-
+    const app:any = appStore();
+    const {settings, userInfo} = storeToRefs(app);
+    const data = {...msg.data[0]};
+    const server = (window as any).$TUIKit.TUIServer.TUIChat.store;
     const config = {
       enable: settings.value.noticeEnable === false, // 消息通知开关
       global: router.options.history.state.current !== '/chatMain', // 是否在聊天页面
@@ -325,101 +309,89 @@ export class Notifications {
       atMeMsg: data.atUserList.includes(String(userInfo.value.uid)), // @我的消息
       currentDisturb: server.conversation?.groupProfile?.selfInfo.messageRemindType === 'AcceptAndNotify', // 免打扰
       emptyData: Object.keys(server.conversation).length === 0 // 空数据
-    }
-
-    app.showNoticeEntry()
-
+    };
     // 消息内容为text是否存在
-    const isText = data.payload.hasOwnProperty('text')
-
-    if (isText) {
-      // 好友消息
-      if (data.conversationType === 'C2C') {
+    const isText = data.payload.hasOwnProperty('text');
+    if(isText){
+      app.showNoticeEntry();
+      // 好友
+      if(data.conversationType === 'C2C'){
         // 好友消息内容
         const friendContent = {
-          icon: data.avatar,
-          title: `好友${data.nick}的消息`,
-          body: `${data.nick}：${data.payload.text}`,
-          time: data.time,
-          conversationID: data.conversationID,
-          type: 'message',
+         icon: data.avatar,title: `好友${data.nick}的消息`,
+         conversationID: data.conversationID,
+         body: `${data.nick}：${data.payload.text}`,
+         time: data.time,type: 'message',
         }
-        // 全局
-        if (config.global && config.enable && config.cue && !config.currentDisturb) {
-          this.messageWeak(friendContent, data.conversationID)
-        }
-        // 所属应用中(非当前会话)
-        else if (!config.global && config.enable && config.cue && !config.currentSession && !config.currentDisturb) {
+        // 通知开关打开情况下、全局情况下、提示音按钮开启情况下、关闭免打扰情况下
+        if(config.enable && config.global && config.cue && config.currentDisturb) return this.messageWeak(friendContent, data.conversationID);
+        // 通知开关打开、局部情况下、提示音开启情况下、不是当前会话情况下、关闭免打扰的情况下
+        if(config.enable && !config.global && config.cue && !config.currentSession && config.currentDisturb){
           const playElement: HTMLAudioElement = this.createSoundElement();
-          playElement.play()
+          playElement.play();
         }
       }
-
-      // 群聊消息
-      else {
+      // 群聊
+      else{
         const groupResult = await (window as any).$TUIKit.tim.getGroupList();
-        const groupList = groupResult?.data?.groupList
+        const groupList = groupResult?.data?.groupList;
         const findItem = groupList.find((item: any) => {
-          return String(item.groupID) === String(data.to)
-        })
+         return String(item.groupID) === String(data.to)
+        });
         const textContent = {
-          icon: findItem.avatar,
-          title: findItem.name,
+          icon: findItem.avatar, title: findItem.name,
           body: `${data.nick}：${data.payload.text}`,
-          time: data.time,
           conversationID: data.conversationID,
-          type: 'message'
+          time: data.time, type: 'message',
         }
-
-
-        // 群聊消息全局情况下
-        if (config.global && config.enable && config.cue || !config.currentDisturb) {
-          // @我和@所有人的消息
-          if (config.atMeMsg && config.atMsg) {  // 强提醒
-            this.messageStrong(textContent, data.conversationID)
-          } else {
-            this.messageWeak(textContent, data.conversationID)
-          }
+        // console.log('测试-1-全局',config.enable && config.global && config.cue && !config.currentDisturb);
+        // console.log('测试-1.1-全局',config);
+        // console.log('测试-2-局部',config.enable && !config.global && config.cue && !config.currentSession && config.currentDisturb);
+        // console.log('测试-2.1-局部',config);
+        // 群聊全局
+        if(config.enable && config.global && config.cue && config.currentDisturb){
+          // @我和@所有人 强提醒
+          if (config.atMeMsg && config.atMsg) return this.messageStrong(textContent, data.conversationID);
+          // 弱提醒
+          this.messageWeak(textContent, data.conversationID)
         }
-
-        // 所属应用中(非当前会话)
-        else if (!config.global && config.enable && config.cue && !config.currentSession || !config.currentDisturb) {
-          // @我和@所有人的消息
+        else if (config.enable && !config.global && config.cue && !config.currentSession && config.currentDisturb) {
+          // @我和@所有人
           if (config.atMeMsg && config.atMsg) {  // 强提醒
             const strongEl: HTMLAudioElement = this.createSoundStrongElement()
             strongEl.play()
-          } else {
-            const playElement: HTMLAudioElement = this.createSoundElement();
-            playElement.play()
+          } 
+          else {
+           const playElement: HTMLAudioElement = this.createSoundElement();
+           playElement.play()
           }
         }
-
-
       }
-    } else {
-      // console.log('查看情况',data);
-      // console.log('查看判断条件',config.enable && config.cue || !config.currentDisturb);
-
-
-      if (data.conversationType !== 'C2C') {
+    }
+    else{
+      if (data.conversationType !== 'C2C'){
         // 将群聊通知的用户uid进行中文昵称显示
         const systemText = await this.translateGroupSystemNotice(data)
         // 通知、提示音开关是否打开
         if (config.enable && config.cue || !config.currentDisturb) {
-          const systemContent = {
-            title: '社群沟通',
-            icon: '/icons/IM.png',
-            time: data.time,
-            body: systemText,
-            type: 'system',
-            conversationID: data.conversationID,
-          }
-          this.messageWeak(systemContent, data?.conversationID)
+         const systemContent = {
+          title: '社群沟通',  icon: '/icons/IM.png',
+          time: data.time,type: 'system',
+          body: systemText,
+          conversationID: data.conversationID,
+         }
+         this.messageWeak(systemContent, data?.conversationID)
         }
       }
-
     }
-
   }
 
 }
+
+
+
+
+
+
+
+

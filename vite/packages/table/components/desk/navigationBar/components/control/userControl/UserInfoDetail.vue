@@ -148,4 +148,8 @@ onMounted(()=>{
     height: 0 !important;
   }
 }
+
+:deep(.big){
+  display: none !important;
+}
 </style>
