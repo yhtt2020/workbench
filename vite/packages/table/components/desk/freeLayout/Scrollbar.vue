@@ -75,7 +75,15 @@ onMounted(() => {
   });
   // 事件监听
   scrollbar.value.addEventListener("ps-scroll-x", () => {
+    console.log(
+      "修改前 freeLayoutEnv.value.scrollLeft  :>> ",
+      freeLayoutEnv.value.scrollLeft
+    );
     freeLayoutEnv.value.scrollLeft = scrollbar.value?.scrollLeft;
+    console.log(
+      "修改后 freeLayoutEnv.value.scrollLeft  :>> ",
+      freeLayoutEnv.value.scrollLeft
+    );
   });
   scrollbar.value.addEventListener("ps-scroll-y", () => {
     freeLayoutEnv.value.scrollTop = scrollbar.value?.scrollTop;
@@ -162,7 +170,7 @@ watch(
 );
 // 重置中心区域
 function redirect() {
-  const { w, h } = freeLayoutStore.restoreLocation();
+  const { w, h,left } = freeLayoutStore.restoreLocation();
   scrollbar.value.scrollLeft = w;
   scrollbar.value.scrollTop = h;
   freeLayoutEnv.value.scrollLeft = w;

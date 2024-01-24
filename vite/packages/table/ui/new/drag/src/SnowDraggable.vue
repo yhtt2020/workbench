@@ -595,15 +595,7 @@ function snowDrag(event: MouseEvent | TouchEvent) {
   }
   emits("onDrag", dragData.value);
 }
-
-// 拖拽结束
-function snowDragEnd(event?: MouseEvent | TouchEvent) {
-  isDragging.value = false;
-
-  // 隐藏网格位置
-  if (gridLocation.value) {
-    showGridPos.value = false;
-  }
+const adsorbGrid = () => {
   // 拖拽结束吸附网格
   if (afterDraggingAdsorbGrid.value) {
     const [snappedX, snappedY] = getSnapGrid(
@@ -614,11 +606,21 @@ function snowDragEnd(event?: MouseEvent | TouchEvent) {
       parentSize.value.height / scale.value,
       gridMargin.value
     );
-
     // 更新位置
     left.value = snappedX;
     top.value = snappedY;
   }
+};
+// 拖拽结束
+function snowDragEnd(event?: MouseEvent | TouchEvent) {
+  isDragging.value = false;
+
+  // 隐藏网格位置
+  if (gridLocation.value) {
+    showGridPos.value = false;
+  }
+  // 拖拽结束吸附网格
+  adsorbGrid();
   // 冲突检测
   if (collision.value) {
     requestAnimationFrame(() => {
@@ -815,6 +817,7 @@ function magnetDetection(x: number, y: number) {
 
 defineExpose({
   snowDragEnd,
+  adsorbGrid,
 });
 </script>
 <style scoped>
