@@ -32,14 +32,7 @@
    <div class="flex flex-col xt-bg-2 p-4 rounded-lg mb-4">
     <!-- 时钟样式 -->
     <div class="flex flex-col">
-      <span class="xt-text  font-16">12:23</span>
       <span class="xt-text  font-16">时钟样式</span> 
-     <!-- 
-      xt-typefesse-pleine
-      xt-llpixelfun-Regular
-      xt-ouroboros-regular
-      xt-pilowlava-regular
-    -->
     </div>
     <!-- 分割线 -->
     <div class="my-4" >
@@ -48,7 +41,7 @@
     <!-- 字体 -->
     <div class="flex flex-col">
      <span class="xt-text font-16 mb-3">字体</span>
-     <xt-select></xt-select>
+     <xt-select :list="clockOption" v-model="clockValue.name" :zIndex="1200" style="z-index: 150 !important;"></xt-select>
     </div>
    </div>
   </div>
@@ -59,6 +52,35 @@
 import { ref } from "vue";
 
 const clockVisible = ref(false);
+const clockValue = ref(
+  {
+    name:'优设标题黑',
+    value:"font-family: '优设标题黑' !important;"
+  }
+);
+
+const clockOption = [
+  {
+    name:'优设标题黑',
+    value:"font-family: '优设标题黑' !important;"
+  },
+  {
+    name:'Typefesse-Pleine',
+    value:"font-family: 'Typefesse-Pleine' !important;",
+  },
+  {
+    name:'LLPixelFun-Regular',
+    value:"font-family: 'LLPixelFun-Regular' !important;"
+  },
+  {
+    name:'Ouroboros-Regular',
+    value:"font-family: 'Ouroboros-Regular' !important;"
+  },
+  {
+    name:'Pilowlava-Regular',
+    value:"font-family: 'Pilowlava-Regular' !important;"
+  }
+]
 
 // 开启时钟弹窗
 const openClockModal = () => {
