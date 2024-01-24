@@ -1,7 +1,7 @@
 <template>
   <!-- 方案列表 -->
   <div class="flex flex-row w-full item-wrapper" style="height: 100%">
-    <div class="item-content" :style="wrapperStyle">
+    <div class="item-content px-8" :style="wrapperStyle">
       <div class="text-center w-full" v-if="displayItems.length == 0">
         <a-empty image="/img/test/load-ail.png" description="暂无分享"></a-empty>
       </div>
@@ -121,7 +121,14 @@ export default {
     deskItemStyle: {
       type: String,
       default: () => ''
-    }
+    },    
+    
+    // 处理桌面市场添加 为 false 时 将当前桌面进行替换
+    addDesk: {
+      type: Boolean,
+      default: true,
+    },
+    
   },
   watch: {
     items: {
@@ -160,7 +167,7 @@ export default {
         scheme: {
           ...item,
           dataNanoid: item.nanoid
-        }, showModal: true
+        }, showModal: true, addDesk: this.addDesk,
       })
       // this.scheme = item
       // this.showModal = true

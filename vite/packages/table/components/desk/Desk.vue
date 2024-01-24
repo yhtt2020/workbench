@@ -1,5 +1,5 @@
 <template>
-  <div v-if="fullScreen" class="no-drag">
+  <div v-if="fullScreen && noFullScreen " class="no-drag">
     <div style="position: absolute; right: 10px; top: 10px; z-index: 999">
       <xt-button @click="setFullScreen(false)" :w="40" :h="40" type="theme">
         <Icon style="font-size: 18px" icon="quxiaoquanping_huaban"></Icon>
@@ -33,6 +33,9 @@
       :alone="settings.enableZoom"
       :hide="hide"
     />
+    <!-- {{ freeLayout }}
+    {{ isFreeLayout }}
+    {{ $route.path }} -->
 
     <Drop>
       <!-- 自由布局 -->
@@ -58,6 +61,8 @@
                 :customData="data?.customData"
                 di
               />
+              <!-- {{ data }} -->
+              <!-- {{ currentDesk.nanoid }} -->
             </template>
           </FreeLayoutContainer>
         </FreeLayoutCanvas>
@@ -257,7 +262,7 @@ import { registerFolder } from "../../apps/folder/src/hooks/register";
 import { LoadingOutlined } from "@ant-design/icons-vue";
 import GalleryModal from "../paperModal/GalleryModal.vue";
 import { useAddCard } from "../../ui/hooks/useAddCard";
-import { useDeskStore } from "./store";
+import { useDeskStore } from "./store"; 
 import { useCustomLayout } from "./freeLayout/useCustomLayout";
 import { useFileConversionIcon } from "../../apps/folder/src/hooks/useDataConversion";
 import { headerData, mainData, folderData } from "./freeLayout/config";
@@ -270,6 +275,9 @@ export default {
   components: { LoadingOutlined, EditNewNavigation, GalleryModal, Drop },
   props: {
     freeLayout: {
+      default: true,
+    },
+    noFullScreen: {
       default: true,
     },
     globalSettings: {
@@ -491,12 +499,15 @@ export default {
           id: 0,
           newIcon: "fluent:add-16-filled",
           name: "定制桌面测试",
-          disabled: true,
+          disabled: false,
           fn: () => {
             useCustomLayout({
               mainList: mainData,
               headerList: headerData,
               folderList: folderData,
+              cb: () => {
+                this.$bus.emit("adsorbGrid");
+              },
             });
             // 0 提供一个伪卡片
             // 提供一个添加卡片
@@ -545,6 +556,9 @@ export default {
           fn: () => {
             useCustomLayout({
               mainList: this.currentDesk.cards,
+              cb: () => {
+                this.$bus.emit("adsorbGrid");
+              },
             });
             // 0 提供一个伪卡片
             // 提供一个添加卡片
@@ -693,6 +707,7 @@ export default {
     window.time = Date.now();
   },
   mounted() {
+    console.log('this.currentDesk', this.currentDesk, this)
     // 自动打开编辑
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();
@@ -826,7 +841,6 @@ export default {
               }
             });
             desk.cards = [];
-            console.log(desk);
             this.menuVisible = false;
             this.clearFreeLayoutData();
           },

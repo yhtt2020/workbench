@@ -1,6 +1,7 @@
 <template>
   <div class="fixed overflow-hidden modal-center xt-modal tran" :class="popState ? 'pop' : step == 4 ? 'theme' : 'Popup'"
     style="">
+    <!-- <div @click="test"> 11111111 </div> -->
     <div v-if="!popState" class="h-full">
       <!-- 顶部按钮 -->
       <div v-if="step !== 0" @click="prevStep" class="absolute ml-4 top-icon no-drag">
@@ -78,6 +79,17 @@
     </div>
     <!-- 壁纸模块 -->
     <GalleryModal ref="paperModal" />
+    <teleport to="body">
+      <div style="z-index: 9999">
+        <!-- @afterAdded="afterAdded" -->
+        <Preview
+          :deskList="deskList"
+          :scheme="scheme"
+          :showModal="showModal"
+          @closePreview="closePreview"
+        ></Preview>
+      </div>
+    </teleport>
   </div>
 </template>
 
@@ -102,8 +114,11 @@ import DeskIcon from "./components/DeskIcon.vue";
 import CardList from "./components/CardList.vue";
 import Navbar from "./components/Navbar.vue";
 import Theme from "./components/Theme.vue";
-import { NavListTmp } from './components/data';
+import Preview from "./components/Preview.vue";
+import { NavListTmp, GameDesk } from './components/data';
 import {completeTask} from '../../../apps/task/task'
+import { FreeLayoutStore } from "../grade/components/FreeLayout";
+import { useFreeLayoutStore } from "../../../components/desk/freelayout/store";
 
 export default {
   components: {
@@ -114,6 +129,7 @@ export default {
     CardList,
     Navbar,
     Theme,
+    Preview,
   },
   data() {
     return {
@@ -161,6 +177,10 @@ export default {
       //  给ai做的容错
       fault: [],
       NavbarList: [],
+
+      
+      scheme: {},
+      showModal: false,
     }
   },
   props: ['deskId'],
@@ -168,6 +188,13 @@ export default {
     ...mapWritableState(cardStore, ['desks', 'addCard']),
     ...mapWritableState(appStore, ['backgroundSettings', 'backgroundImage', 'styles','backgroundName']),
     ...mapWritableState(navStore, ['copyFootNav']),
+    ...mapWritableState(FreeLayoutStore, ["assistDesk", "gameDesk"]),
+    ...mapWritableState(useFreeLayoutStore, [
+      "isFreeLayout",
+      "getFreeLayoutState",
+      "defaultState",
+      "previewFlag",
+    ]),
     cardList() {
       if (this.deskTypeObj.game) {
         return this.gameList
@@ -187,6 +214,7 @@ export default {
 
   },
   mounted() {
+    // 卡片数据去重
     this.NavbarList = [...NavListTmp]
     let items = []
     NavList.map(li => {
@@ -222,24 +250,34 @@ export default {
         }
       })
     })
-    // 通用
-    // this.current.forEach(i=>{
-    //   this.baseNavList.forEach(item=>{
-    //     if(i == item.name){
-    //       this.currentList.push({
-    //         ...item,
-    //         download: Math.floor(Math.random() * 10000) + 1,
-    //         isCheck: true,
-    //         imgIndex: 0,
-    //       })
-    //     }
-    //   })
-    // })
   },
 
   watch: {
   },
   methods: {
+    ...mapActions(useFreeLayoutStore, ["setFreeLayoutData", "setFreeLayoutState", 'renewFreeLayout', 'getFreeLayout1']),
+
+    test(){
+      // console.log(111111111111)
+      // console.log(this.assistDesk)
+      // console.log(this.assistDesk)
+      // console.log(this.assistDesk.freeLayoutData)
+      
+      this.getFreeLayout1()
+      
+      // console.log('this.assistDesk', this.assistDesk)
+
+      this.setFreeLayoutData('mj36hf6h', this.assistDesk.freeLayoutData)
+      this.setFreeLayoutState('mj36hf6h', this.assistDesk.freeLayoutState)
+      this.scheme = {...GameDesk}
+      // console.log('scheme', this.scheme)
+      this.previewFlag = true
+      this.showModal = true
+    },
+    closePreview() {
+      this.previewFlag = false
+      this.showModal = false;
+    },
     // 触发打开壁纸弹窗
     openPaperModal() {
       this.$refs.paperModal.openGalleryModal()
