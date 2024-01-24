@@ -1,6 +1,13 @@
 <!-- 控制层 数据的处理 -->
 <script setup lang="ts">
-import { ref, watch, toRefs, onMounted, onBeforeUnmount } from "vue";
+import {
+  ref,
+  watch,
+  toRefs,
+  onMounted,
+  onBeforeUnmount,
+  getCurrentInstance,
+} from "vue";
 import { storeToRefs } from "pinia";
 import { useFreeLayoutStore } from "./store";
 import { message } from "ant-design-vue";
@@ -14,6 +21,7 @@ const props = defineProps({
   currentID: {},
   isDrag: {},
 });
+const { proxy }: any = getCurrentInstance();
 
 const { currentDesk, currentID }: any = toRefs(props);
 const {
@@ -32,6 +40,12 @@ onMounted(() => {
   setTimeout(() => {
     updateCard(currentDesk.value?.cards);
   }, 2);
+
+  proxy.$bus.on("adsorbGrid", () => {
+    snowDrag.value.forEach((item) => {
+      item.adsorbGrid();
+    });
+  });
 });
 
 // 滚动清除cards数据
@@ -59,10 +73,6 @@ async function getPosition(item) {
       waterfallFlow.value.getBoundingClientRect();
     const { id, name, customData } = item;
     const { left, top } = node.getBoundingClientRect();
-    console.log(
-      " freeLayoutEnv.value.scrollTop :>> ",
-      freeLayoutEnv.value.scrollTop
-    );
     const scrollTop = freeLayoutEnv.value.scrollTop;
     const scrollLeft = freeLayoutEnv.value.scrollLeft;
     getFreeLayoutData.value[id] = {

@@ -491,12 +491,15 @@ export default {
           id: 0,
           newIcon: "fluent:add-16-filled",
           name: "定制桌面测试",
-          disabled: true,
+          disabled: false,
           fn: () => {
             useCustomLayout({
               mainList: mainData,
               headerList: headerData,
               folderList: folderData,
+              cb: () => {
+                this.$bus.emit("adsorbGrid");
+              },
             });
             // 0 提供一个伪卡片
             // 提供一个添加卡片
@@ -539,6 +542,9 @@ export default {
           fn: () => {
             useCustomLayout({
               mainList: this.currentDesk.cards,
+              cb: () => {
+                this.$bus.emit("adsorbGrid");
+              },
             });
             // 0 提供一个伪卡片
             // 提供一个添加卡片

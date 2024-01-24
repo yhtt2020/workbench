@@ -32,7 +32,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         hide: false,
       },
       option: {
-        afterDragging: false, // 拖拽结束后吸附于网格
+        afterDragging: true, // 拖拽结束后吸附于网格
         whileDragging: false, // 拖拽时以网格移动
         collision: true,
         margin: 6, // 没用目前 可能会直接删
@@ -247,27 +247,33 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         // w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
         // h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
         w = this.getFreeLayoutState.line.centerLine.x - width / 2;
-        left = this.getFreeLayoutState.line.centerLine.x;
+        // left = this.getFreeLayoutState.line.centerLine.x;
         h = this.getFreeLayoutState.line.centerLine.y;
       }
       w = w * zoom;
       h = h * zoom;
 
-      this.freeLayoutEnv.scrollLeft = left * zoom;
+      this.freeLayoutEnv.scrollLeft = w;
+      console.log(
+        "    this.freeLayoutEnv.scrollLeft :>> ",
+        this.freeLayoutEnv.scrollLeft
+      );
       this.freeLayoutEnv.scrollTop = h;
       return {
         w,
         h,
+        left,
       };
     },
     updateLocation() {
+      const zoom = this.getFreeLayoutState.canvas.zoom;
       this.getFreeLayoutState.mode.align = "custom";
       this.getFreeLayoutState.line.centerLine.y =
-        this.freeLayoutEnv.scrollTop / this.getFreeLayoutState.canvas.zoom;
+        this.freeLayoutEnv.scrollTop / zoom;
       this.getFreeLayoutState.line.centerLine.x =
         (this.freeLayoutEnv.scrollLeft +
           this.freeLayoutEnv.scrollData.width / 2) /
-        this.getFreeLayoutState.canvas.zoom;
+        zoom;
       // this.getFreeLayoutState.line.centerLine.x =
       //   this.freeLayoutEnv.scrollLeft / this.getFreeLayoutState.canvas.zoom;
     },
