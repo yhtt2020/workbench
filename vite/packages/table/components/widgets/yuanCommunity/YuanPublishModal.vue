@@ -269,7 +269,7 @@ onMounted(async () => {
     await useYuanCommunityStore.getMyForumList()
     communCate.value.forEach((item) => {
         selectOptions.value.push({
-            value: item.id,
+            value: item.value,
             label: item.name
         })
     })

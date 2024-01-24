@@ -1,5 +1,5 @@
 <template>
-  <xtMixMenu :menus="rightMenus" name="name" :menuHeight="'max-h-full flex'">
+  <xtMixMenu :menus="mainOption" name="name" :menuHeight="'max-h-full flex'">
     <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-h-full" :beforeCreate="beforeCreate"> -->
     <!-- style="z-index: 99" -->
     <!-- 文件夹弹窗 -->
@@ -13,6 +13,7 @@
           hierarchy: true
         }" :auto="true" />
     </div>
+    <!-- <AutoHide> -->
     <Drop @createFile="createFile" :currentId="sortId" :dropClass="'w-full max-h-full'">
       <div v-if="false"
         style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:150px">
@@ -83,16 +84,12 @@
 
       </div>
     </Drop>
+    <!-- </AutoHide> -->
     <!-- </xt-menu> -->
   </xtMixMenu>
   <Common ref="common"></Common>
   <transition name="fade">
     <div :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }" v-if="quick">
-      <!-- <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'">
-      </EditNewNavigation>
-      <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'" @hiedNav="hiedNav">
-      </navigationSetting>
-      <EditIcon @setQuick="setQuick" v-if="componentId === 'EditIcon'"></EditIcon> -->
       <component :is="componentId" @setQuick="setQuick"></component>
     </div>
   </transition>
@@ -134,6 +131,7 @@ import { useWindowSize, } from '../ui/new/drag/src/hooks/useWindowSize'
 import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
 import {hoverRealItemId} from '../components/desk/navigationBar/hook/hoverRealItemId'
 import Drag from './desk/navigationBar/components/folder/Drag.vue'
+import AutoHide from './desk/navigationBar/components/folder/AutoHide.vue';
 export default {
   name: 'SidePanel',
   components: {
@@ -150,8 +148,9 @@ export default {
     Drop,
     Folder,
     Drag,
+    AutoHide
   },
-  emits: ['getDelIcon', 'hiedNavBar'],
+  emits: ['getDelIcon', 'hiedNavBar','openFolder'],
   data() {
     return {
       dragItem: null,
@@ -227,13 +226,13 @@ export default {
           fn: () => { this.$emit('hiedNavBar', this.sortId) },
         },
         {
-          id: 8,
+          id: 4,
           name: '清空当前导航栏',
           newIcon: 'fluent:circle-off-16-regular',
           fn: () => { this.clearAll();},
         },
         {
-          id: 4,
+          id: 9,
           name: '更多',
           newIcon: 'fluent:more-horizontal-16-filled',
           children: []
@@ -241,9 +240,10 @@ export default {
         },
         {
           divider: true,
-          id: 5
+          id: 10
         },
         {
+          id:11,
           type: 'systemApp',
           newIcon: 'fluent:lock-closed-16-regular',
           name: '锁定屏幕',
@@ -251,6 +251,7 @@ export default {
           fn: () => { this.newOpenApp(this.builtInFeatures[0]) }
         },
         {
+          id:15,
           type: 'systemApp',
           newIcon: 'fluent:settings-16-regular',
           name: '基础设置',
@@ -258,6 +259,7 @@ export default {
           fn: () => { this.newOpenApp(this.builtInFeatures[1]) }
         },
         {
+          id:20,
           type: 'systemApp',
           newIcon: 'fluent:full-screen-maximize-16-filled',
           name: '全屏显示',
@@ -265,6 +267,7 @@ export default {
           fn: () => { this.newOpenApp(this.builtInFeatures[2]) }
         },
         {
+          id:25,
           type: 'systemApp',
           newIcon: 'fluent:slide-settings-24-regular',
           name: '设备设置',
@@ -361,7 +364,7 @@ export default {
       'editToggle', 'taskBoxVisible',
       'selectNav', 'bottomToggle',
       'popVisible', 'currentList',
-      'editItem', 'navAttribute', 'iconRadius', 'jumpDesk'
+      'editItem', 'navAttribute', 'iconRadius', 'jumpDesk','customOpenNav','isLeaveBar'
     ]),
     ...mapWritableState(appStore, ['settings']),
     ...mapWritableState(useDeskStore, ['isEnterBar']),
@@ -460,6 +463,16 @@ export default {
         return { left: `${this.navAttribute.navSize / 100 * 100}px`, top: `${this.top}px` }
       }
       return { right: `${this.navAttribute.navSize / 100 * 100}px`, top: `${this.top}px` }
+    },
+    mainOption() {
+      const custom = {
+        id: 5,
+        name: this.customOpenNav ? '关闭自动隐藏' : '开启自动隐藏',
+        newIcon: 'fluent:eye-off-16-regular',
+        fn: () => { this.customOpenNav = !this.customOpenNav }
+      }
+      let arr = [...this.rightMenus, custom]
+      return arr.sort((a, b) => a.id - b.id)
     },
   },
   mounted() {
@@ -898,6 +911,7 @@ export default {
         }
       }
       this.folderId = item.id
+      this.$emit('openFolder', this.folderVisible,this.sortId)
     },
     /**
      * 更新大小尺寸
