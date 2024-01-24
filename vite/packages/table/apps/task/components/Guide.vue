@@ -1,8 +1,6 @@
 <template>
   <div style="width: 355px">
-    <div
-      class="flex justify-between items-center mb-3 h-full"
-    >
+    <div class="flex justify-between items-center mb-3 h-full">
       <div class="text-base flex items-center">任务引导</div>
       <xt-ify-icon
         @click="close()"
@@ -11,6 +9,7 @@
       />
     </div>
     <div>
+
       {{ currentTask?.description || currentTask?.info }}
     </div>
     <div class="flex justify-between mt-3">
@@ -38,10 +37,9 @@ import XtIfyIcon from "../../../ui/new/IfyIcon/index";
 const store = taskStore();
 const { taskID, currentTaskList, rewardVisible, currentId, currentType } =
   storeToRefs(store);
-
 const currentTask = computed(() => {
+  return store.getTask(currentId.value);
 
-    return store.getTask(currentId.value);
 });
 const emits = defineEmits(["close-toast"]);
 const close = () => {
