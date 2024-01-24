@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col items-center justify-center mr-3">
-    <div class="xt-title-font text-lg" style="font-size: 26px">
+    <div class="xt-title-font text-lg" style="font-size: 20px">
       {{ id }}
     </div>
     <div

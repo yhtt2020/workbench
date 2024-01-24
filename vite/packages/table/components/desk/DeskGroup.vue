@@ -18,7 +18,7 @@
         </template>
       </Desk>
       <template v-else>
-        <slot name="empty">、
+        <slot name="empty">
           <!-- 111 -->
           <div class="w-full h-full flex justify-center items-center" style="height: 100% !important">
             <div class=" panel-top xt-bg"  style="">
@@ -64,6 +64,7 @@
                   :closeParent="true"
                   @openPreview="openPreview"
                   deskItemStyle="width:327px; height:290px"
+                  :addDesk="false"
                 ></DeskMarket>
               </vue-custom-scrollbar>
             </div>
@@ -336,14 +337,15 @@
     :layoutSize="layoutSize"
     :desks="deskList"
   ></ExportDesk>
-
   <div style="z-index: 9999">
     <DeskPreview
       @afterAdded="afterAdded"
       :deskList="deskList"
       :scheme="scheme"
+      :addDesk="addDesk"
       :showModal="showModal"
       @closePreview="closePreview"
+      @closeGroup="closeGroup"
     ></DeskPreview>
   </div>
   <div
@@ -652,6 +654,9 @@ export default {
       this.showModal = false;
       //this.getHomeSize()
     },
+    closeGroup() {
+      this.addDeskVisible = false;
+    },
     hideMarket() {
       this.deskMarketVisible = false;
     },
@@ -660,9 +665,10 @@ export default {
       completeTask("m0203");
       this.hideMarket();
     },
-    openPreview({ scheme, showModal }) {
+    openPreview({ scheme, showModal, addDesk }) {
       this.scheme = scheme;
       this.showModal = showModal;
+      this.addDesk = addDesk
     },
     shareDesk() {
       this.$refs.shareDeskRef.update();

@@ -14,17 +14,21 @@ const defaultOptions = {
   headerList: [],
   folderList: [],
   columns: 5,
+  cb: () => {},
 };
 export const useCustomLayout = async (options) => {
   const mergedOptions = _.merge({}, defaultOptions, options);
-  const { mainList, headerList, folderList, columns } = mergedOptions;
-  console.log("mergedOptions :>> ", mergedOptions);
+  const { mainList, headerList, folderList, columns, cb } = mergedOptions;
   const freeLayoutStore: any = useFreeLayoutStore();
   const { getFreeLayoutData, getFreeLayoutState, freeLayoutEnv } =
     storeToRefs(freeLayoutStore);
-  // freeLayoutStore.renewFreeLayout();
   // getFreeLayoutState.value.system.isFreeLayout = true;
-
+  // freeLayoutStore.restoreLocation();
+  console.log(
+    "重置拿到的 freeLayoutEnv.value.scrollLeft :>> ",
+    freeLayoutEnv.value.scrollLeft
+  );
+  // 重置拿到的 freeLayoutEnv.value.scrollLeft :>>  2318.187227866473
   let containerWidth = freeLayoutEnv.value.scrollWidth;
   let layoutWidth = useGridToWidth(columns * 2);
   let scaleFactor = 1;
@@ -35,7 +39,7 @@ export const useCustomLayout = async (options) => {
   };
   // 卡片数据展示
   const itemStatus = (item) => {
-    // return
+    // return;
     const { width, height }: any = useElementSize(item.customData.customSize);
     console.log(
       "\u001b[31m" + "----------------数据处理----------------" + "\u001b[0m"
@@ -54,8 +58,10 @@ export const useCustomLayout = async (options) => {
     );
   };
   const widthDetectionStatus = (width, res, active) => {
-    // return
-
+    return;
+    console.log(
+      "\u001b[31m" + "----------------换行检测----------------" + "\u001b[0m"
+    );
     console.log(
       "当前元素宽度",
       width,
@@ -76,26 +82,64 @@ export const useCustomLayout = async (options) => {
 
     return active;
   };
+
   // 设置卡片数据
   const setData = async (arr: any) => {
+    console.log("开始的top :>> ", top);
+    currentHeight = 0;
+    let last = true;
+    let flag = false;
     for (let item of arr.splice(0, arr.length)) {
       // 处理元素位置
       const { width, height }: any = useElementSize(item.customData.customSize);
-      currentHeight = height;
-
+      console.log("item YuanShu height :>> ", height);
       itemStatus(item);
+      // 元素超出
       if (widthDetection(width)) {
-        console.log("开始请求填充算法 :>> ");
+        currentTop = top;
+        // 先填充空缺的数据
         fillGapAlgorithm();
-        console.log("------处理结束------");
+        // 重置位置
         resetLeft();
-        top += height + 12;
+        flag = true;
+        // 增加高度
+        top += currentHeight + 12;
       }
-      addCard(top, left, item);
-      left += width + 12;
+      if (!last && height != currentHeight) {
+        console.log("不相等高度 :>> ");
+        // 先填充空缺的数据
+        let res =
+          left - freeLayoutEnv.value.scrollLeft / scaleFactor - position;
+        console.log("res :>> ", res);
+        currentTop += currentHeight + 12;
+        currentHeight = height;
+        fillHeight = currentHeight;
+        if (res) {
+          fillGapAlgorithm();
+        }
+        // 重置位置
+        resetLeft();
+        addCard(top, left, item);
+        left += width + 12;
+      } else {
+        console.log("正常添加 :>> ");
+        addCard(top, left, item);
+        left += width + 12;
+        currentHeight = height;
+        flag = false;
+      }
+      fillHeight = currentHeight;
+      if (last) last = false;
     }
-    fillGapAlgorithm();
+
+    currentTop = top;
+
+    let res = left - freeLayoutEnv.value.scrollLeft / scaleFactor - position;
+    if (res) {
+      fillGapAlgorithm();
+    }
     resetLeft();
+
     top += currentHeight + 12;
   };
 
@@ -117,90 +161,115 @@ export const useCustomLayout = async (options) => {
   // 填充算法
   const fillGapAlgorithm = async () => {
     // 无余数
-    if (arr2x4.length == 0 && arr2x2.length == 0) return true;
+    if (arr2x4.length == 0 && arr2x2.length == 0 && arr1x1.length == 0)
+      return true;
     // 无位置
-    let active = widthDetection(280);
-    if (active) return true;
-    if (arr2x4.length > 0 && currentHeight > 280) {
-      fill2x4();
+    let active = widthDetection(134);
+    if (active) {
+      return;
+    }
+    console.log("填充介入 :>> ");
+    // 可以存放2x4
+    console.log("fillHeight - 280 >= 0 :>> ", fillHeight - 280 >= 0);
+    if (arr2x4.length > 0 && fillHeight - 280 >= 0) {
+      console.log("2x4介入 :>> ");
+      fill(arr2x4);
     } else if (arr2x2.length > 0) {
-      fill2x2();
+      fill(arr2x2);
+    } else if (arr1x1.length > 0) {
+      fill(arr1x1);
     } else {
       return;
     }
 
     fillGapAlgorithm();
   };
-  const fill2x4 = async () => {
-    for (let item of arr2x4.splice(0, 1)) {
+  const fill = async (arr, height = fillHeight) => {
+    let flag = false;
+    let itemWidth = 280,
+      itemHeight = 204;
+    for (let item of arr.splice(0, 1)) {
       if (!item) return;
-      console.log("2x4填充 :>> ");
-      itemStatus(item);
       const { width, height }: any = useElementSize(item.customData.customSize);
-      addCard(top, left, item);
-      left += width + 12;
-    }
-    return;
-  };
-  // 填充2x2卡片
-  const fill2x2 = (arr = arr2x2, height = currentHeight) => {
-    let currentTop = top;
-    let rows = useHeightToGrid(height) / 2;
-    let num = arr.length >= rows ? rows : arr.length;
-    // console.log("rows :>> ", rows);
-    for (let item of arr.splice(0, num)) {
-      if (!item) return;
-      console.log("2x4填充 :>> ");
+      itemWidth = width;
+      itemHeight = height;
+
+      console.log(
+        "fillHeight - itemHeight - 12  :>> ",
+        fillHeight - itemHeight - 12
+      );
+      flag = fillHeight - itemHeight < 0;
+
+      console.log("flag :>> ", flag);
+      if (flag) {
+        array.push(item);
+        return;
+      }
+      fillHeight -= height;
       itemStatus(item);
-      const { width, height }: any = useElementSize(item.customData.customSize);
       addCard(currentTop, left, item);
       currentTop += height + 12;
     }
-    left += 280 + 12;
+    console.log("fillHeight - 134  < 0 :>> ", fillHeight - 134);
+    if (fillHeight - 96 < 0) {
+      console.log("换列操作 :>> ");
+      currentTop = top;
+      left += itemWidth + 12;
+      fillHeight = currentHeight;
+    }
     return;
   };
-
   scaleAlgorithm();
 
   let left = 1;
-  let top = freeLayoutEnv.value.scrollTop / scaleFactor;
+  let top = freeLayoutEnv.value.scrollTop / scaleFactor + 12;
   let currentHeight;
+  let currentTop = top;
+  let fillHeight;
   // 初始化数据
   resetLeft();
 
-  let { arr2x2, arr2x4, arr4x4 } = arraySplit(mainList);
-
+  let { arr2x2, arr2x4, arr4x4, arr1x1, arrSpecial } = arraySplit(mainList);
+  let array: any = [];
   if (headerList && headerList.length) {
     let { arr2x2: header2x2, arr2x4: header2x4 } = arraySplit(headerList);
-    let num2x2 = header2x2.length / 2;
-
+    let num2x2 = header2x2.length;
+    currentHeight = 420;
+    fillHeight = currentHeight;
     for (let index = 0; index < num2x2; index++) {
-      fill2x2(header2x2, 420);
+      fill(header2x2, 420);
     }
     setData(header2x4);
   }
+
   if (folderList && folderList.length) {
     let { arr2x2: folder2x2 } = arraySplit(folderList);
     resetLeft();
     setData(folder2x2);
+    // top -= 24;
   }
-  resetLeft();
 
+  resetLeft();
+  setData(arrSpecial);
   setData(arr4x4);
-  resetLeft();
-
   setData(arr2x4);
-  currentHeight = 204;
   setData(arr2x2);
+  setData(arr1x1);
+
+  setTimeout(() => {
+    cb && cb();
+  }, 600);
 };
 const arraySplit = (arr) => {
   let arr2x2: any = [];
   let arr2x4: any = [];
   let arr4x4: any = [];
+  let arr1x1: any = [];
+  let arrSpecial: any = [];
 
   arr.forEach((item) => {
-    if (!item.customData.customSize){
-      console.log('1111111111111111111 :>> ', 1111111111111111111);
+    if (!item.customData.customSize) {
+      console.log("无信息元素 item.customData :>> ", item.customData);
       return;
     }
     let str = item.customData.customSize.split("x");
@@ -212,12 +281,18 @@ const arraySplit = (arr) => {
       arr2x4.push(item);
     } else if (w == 4 && h == 4) {
       arr4x4.push(item);
+    } else if (w == 1 && h == 1) {
+      arr1x1.push(item);
+    } else {
+      arrSpecial.push(item);
     }
   });
   return {
     arr2x2,
     arr2x4,
     arr4x4,
+    arr1x1,
+    arrSpecial,
   };
 };
 
