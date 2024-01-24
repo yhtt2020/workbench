@@ -493,7 +493,11 @@ export default {
           name: "定制桌面测试",
           disabled: true,
           fn: () => {
-            useCustomLayout(mainData, headerData, folderData);
+            useCustomLayout({
+              mainList: mainData,
+              headerList: headerData,
+              folderList: folderData,
+            });
             // 0 提供一个伪卡片
             // 提供一个添加卡片
             // 1 添加新的桌面
@@ -539,7 +543,9 @@ export default {
           name: "整理桌面",
           disabled: this.isFreeLayout ? false : true,
           fn: () => {
-            useCustomLayout(this.currentDesk.cards);
+            useCustomLayout({
+              mainList: this.currentDesk.cards,
+            });
             // 0 提供一个伪卡片
             // 提供一个添加卡片
             // 1 添加新的桌面

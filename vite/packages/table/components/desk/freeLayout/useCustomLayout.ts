@@ -1,6 +1,6 @@
 import { storeToRefs } from "pinia";
 import { nanoid } from "nanoid";
-
+import _ from "lodash";
 import { useAddCard } from "../../../ui/hooks/useAddCard";
 import {
   useGridToWidth,
@@ -9,19 +9,22 @@ import {
 } from "../../../ui/hooks/useCardSize";
 import { useFreeLayoutStore } from "../freeLayout/store";
 
-export const useCustomLayout = async (
-  mainList = [],
-  headerList = [],
-  folderList = []
-) => {
+const defaultOptions = {
+  mainList: [],
+  headerList: [],
+  folderList: [],
+  columns: 5,
+};
+export const useCustomLayout = async (options) => {
+  const mergedOptions = _.merge({}, defaultOptions, options);
+  const { mainList, headerList, folderList, columns } = mergedOptions;
+  console.log("mergedOptions :>> ", mergedOptions);
   const freeLayoutStore: any = useFreeLayoutStore();
   const { getFreeLayoutData, getFreeLayoutState, freeLayoutEnv } =
     storeToRefs(freeLayoutStore);
-  freeLayoutStore.renewFreeLayout();
+  // freeLayoutStore.renewFreeLayout();
+  // getFreeLayoutState.value.system.isFreeLayout = true;
 
-  getFreeLayoutState.value.system.isFreeLayout = true;
-
-  const columns = 5;
   let containerWidth = freeLayoutEnv.value.scrollWidth;
   let layoutWidth = useGridToWidth(columns * 2);
   let scaleFactor = 1;
@@ -30,23 +33,48 @@ export const useCustomLayout = async (
   const resetLeft = () => {
     left = freeLayoutEnv.value.scrollLeft / scaleFactor + position;
   };
+  // 卡片数据展示
   const itemStatus = (item) => {
+    // return
     const { width, height }: any = useElementSize(item.customData.customSize);
-    // console.log(
-    //   "\u001b[31m" + "----------------数据处理----------------" + "\u001b[0m"
-    // );
-    // console.log(
-    //   "id",
-    //   item?.id,
-    //   ",name",
-    //   item.customData.name || item.name,
-    //   ",元素width :>> ",
-    //   width,
-    //   ",当前位置left :>> ",
-    //   left - freeLayoutEnv.value.scrollLeft,
-    //   ",当前位置缩放后left :>> ",
-    //   left - freeLayoutEnv.value.scrollLeft * scaleFactor
-    // );
+    console.log(
+      "\u001b[31m" + "----------------数据处理----------------" + "\u001b[0m"
+    );
+    console.log(
+      "id",
+      item?.id,
+      ",name",
+      item.customData.name || item.name,
+      ",元素width :>> ",
+      width,
+      ",当前位置left :>> ",
+      left - freeLayoutEnv.value.scrollLeft,
+      ",当前位置缩放后left :>> ",
+      left - freeLayoutEnv.value.scrollLeft / scaleFactor
+    );
+  };
+  const widthDetectionStatus = (width, res, active) => {
+    // return
+
+    console.log(
+      "当前元素宽度",
+      width,
+      "画布宽度 :>> ",
+      layoutWidth,
+      "当前宽度 :>> ",
+      res,
+      "是否换行 :>> ",
+      active
+    );
+  };
+  // 检测是否超出
+  const widthDetection = (width) => {
+    let res =
+      left - freeLayoutEnv.value.scrollLeft / scaleFactor - position + width;
+    const active = res > layoutWidth + columns;
+    widthDetectionStatus(width, res, active);
+
+    return active;
   };
   // 设置卡片数据
   const setData = async (arr: any) => {
@@ -70,13 +98,7 @@ export const useCustomLayout = async (
     resetLeft();
     top += currentHeight + 12;
   };
-  // 检测是否超出
-  const widthDetection = (width) => {
-    let res =
-      left - freeLayoutEnv.value.scrollLeft / scaleFactor + width - position;
-    const active = res > layoutWidth;
-    return active;
-  };
+
   // 缩放算法
   const scaleAlgorithm = () => {
     let currentZoom = getFreeLayoutState.value.canvas.zoom;
@@ -120,7 +142,7 @@ export const useCustomLayout = async (
     }
     return;
   };
-
+  // 填充2x2卡片
   const fill2x2 = (arr = arr2x2, height = currentHeight) => {
     let currentTop = top;
     let rows = useHeightToGrid(height) / 2;
@@ -139,7 +161,6 @@ export const useCustomLayout = async (
   };
 
   scaleAlgorithm();
-  // scaleFactor = 1
 
   let left = 1;
   let top = freeLayoutEnv.value.scrollTop / scaleFactor;
@@ -149,7 +170,7 @@ export const useCustomLayout = async (
 
   let { arr2x2, arr2x4, arr4x4 } = arraySplit(mainList);
 
-  if (headerList.length) {
+  if (headerList && headerList.length) {
     let { arr2x2: header2x2, arr2x4: header2x4 } = arraySplit(headerList);
     let num2x2 = header2x2.length / 2;
 
@@ -158,7 +179,7 @@ export const useCustomLayout = async (
     }
     setData(header2x4);
   }
-  if (folderList.length > 0) {
+  if (folderList && folderList.length) {
     let { arr2x2: folder2x2 } = arraySplit(folderList);
     resetLeft();
     setData(folder2x2);
@@ -169,7 +190,7 @@ export const useCustomLayout = async (
   resetLeft();
 
   setData(arr2x4);
-
+  currentHeight = 204;
   setData(arr2x2);
 };
 const arraySplit = (arr) => {
@@ -178,7 +199,10 @@ const arraySplit = (arr) => {
   let arr4x4: any = [];
 
   arr.forEach((item) => {
-    if (!item.customData.customSize) return;
+    if (!item.customData.customSize){
+      console.log('1111111111111111111 :>> ', 1111111111111111111);
+      return;
+    }
     let str = item.customData.customSize.split("x");
     const w = parseInt(str[0]);
     const h = parseInt(str[1]);
