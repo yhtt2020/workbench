@@ -44,7 +44,7 @@ export default{
 
   mounted(){
    this.themeColor = getBgColor();
-   
+   this.textColor = getTextColor();
   },
 
   methods:{
