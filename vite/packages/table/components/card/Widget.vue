@@ -3,17 +3,17 @@
     <!-- <xt-button>
       {{ customData?.customSize }}
     </xt-button> -->
-    <RightMenu 
-      :menus="menus" 
-      :sizes="sizeList" 
-      :customIndex="customIndex" 
+    <RightMenu
+      :menus="menus"
+      :sizes="sizeList"
+      :customIndex="customIndex"
       @removeCard="doRemoveCard"
-      v-model:sizeType="sizeType" 
-      v-model:oldMenuVisible="menuVisible" 
+      v-model:sizeType="sizeType"
+      v-model:oldMenuVisible="menuVisible"
       class="relative">
-      <div 
-        v-if="!options?.hide" 
-        class="flex flex-col" 
+      <div
+        v-if="!options?.hide"
+        class="flex flex-col"
         :class="[edit ? 'editing' : '', classes]"
         style="color: var(--primary-text); padding: 0" :style="{
           display: options.hide == true ? 'none' : '',
@@ -52,7 +52,9 @@
         <!-- 标题栏end   -->
         <PageState :env="env" :options="options">
           <div class="flex-1 h-0">
-            <div class="h-full px-3 pb-2 rounded-b-lg" :style="{ background: options.showColor ? 'var(--main-bg)' : '' }">
+            <div class="h-full px-3 pb-2  rounded-b-lg"
+              :style="{ background: options.showColor ? 'var(--main-bg)' : '' }"
+            >
               <slot>
                 <!--  主体内容插槽1  -->
               </slot>

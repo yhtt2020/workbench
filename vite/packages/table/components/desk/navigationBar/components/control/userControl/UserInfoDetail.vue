@@ -1,7 +1,8 @@
 <template>
- <div class="flex items-center justify-center w-full px-4">
-  <div  class="relative flex items-center justify-center">
-   <FrameAvatar :avatar-size="80" :frame-url="userinfo.frame" :avatar-url="userinfo.avatar" class="w-full flex justify-center h-full pb-2 object-fill" 
+ <div class="flex items-center justify-center w-full" :class=" rankList.length === 0 ? 'px-0':'px-4'">
+  <div  class="relative flex items-center  justify-center" @click="goMy">
+    <!--  -->
+   <FrameAvatar :avatar-size="rankList.length === 0 ? 60 : 100" :frame-url="userinfo.frame" :avatar-url="userinfo.avatar" class="w-full flex justify-center user-container h-full pb-2 object-fill" 
     alt="" :frame="displayUserInfo?.equippedItems?.frameDetail" @close="close"
    >
    </FrameAvatar>
@@ -12,7 +13,7 @@
     </a-avatar>
    </a-tooltip>
   </div>
-  <div class="flex flex-col ml-4">
+  <div class="flex flex-col " :class="rankList.length === 0 ? 'ml-3 w-32':''">
    <span class="xt-text font-16 xt-font ml-3">{{ userinfo.nickname }}</span>
    <div class="flex xt-text">
      <OnlineMedal :rank="userinfo.onlineGradeExtra.rank" />
@@ -27,6 +28,7 @@ import { ref,onMounted,computed,getCurrentInstance } from 'vue';
 import { storeToRefs } from 'pinia';
 import { teamStore } from '../../../../../../store/team';
 import { appStore } from '../../../../../../store';
+import { useRouter } from 'vue-router';
 
 import FrameAvatar from '../../../../../avatar/FrameAvatar.vue';
 import Medal from '../../../../../team/Medal.vue';
@@ -40,6 +42,7 @@ const props = defineProps({
 })
 
 const { proxy } = getCurrentInstance();
+const router = useRouter()
 
 const team = teamStore();
 const app = appStore();
@@ -48,11 +51,12 @@ const { userCardUserInfo } = storeToRefs(app);
 const rankList = ref([]);
 
 
+
 // 获取勋章
 const getUserRank = ()=>{
  team.getUserMedal(props.userinfo.uid).then((res)=>{
   if(res.length !== 0){
-   rankList.value = res;
+   rankList.value = res.slice(0,2);
   } 
  })
 }
@@ -94,6 +98,12 @@ const displayUserInfo = computed(()=>{
  }
 })
 
+// 进入我的
+const goMy = () =>{
+  router.push({ name: 'socialMy' });
+  close()
+}
+
 
 onMounted(()=>{
  getUserRank()
@@ -123,12 +133,23 @@ onMounted(()=>{
 }
 
 :deep(.frame-position){
-  width: 80px !important;
-  height: 80px !important;
+  width: 100px !important;
+  height: 100px !important;
 }
 
 :deep(.avatar-position){
- width:45px !important;
- height: 45px !important;
+ width:52px !important;
+ height: 52px !important;
+}
+
+:deep(.user-container){
+  & div{
+    width: 100px !important;
+    height: 0 !important;
+  }
+}
+
+:deep(.big){
+  display: none !important;
 }
 </style>

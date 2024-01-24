@@ -29,15 +29,6 @@ export default {
       menus: [
         {
           index: 'm',
-          title: '游戏桌面',
-          icon: 'desktop',
-          route:
-          {
-            name: 'gameIndex'
-          }
-        },
-        {
-          index: 'm',
           title: '我的游戏',
           icon: 'wanggeshitu',
           route:

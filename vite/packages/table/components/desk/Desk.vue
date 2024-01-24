@@ -1,5 +1,5 @@
 <template>
-  <div v-if="fullScreen" class="no-drag">
+  <div v-if="fullScreen && noFullScreen " class="no-drag">
     <div style="position: absolute; right: 10px; top: 10px; z-index: 999">
       <xt-button @click="setFullScreen(false)" :w="40" :h="40" type="theme">
         <Icon style="font-size: 18px" icon="quxiaoquanping_huaban"></Icon>
@@ -33,6 +33,9 @@
       :alone="settings.enableZoom"
       :hide="hide"
     />
+    <!-- {{ freeLayout }}
+    {{ isFreeLayout }}
+    {{ $route.path }} -->
 
     <Drop>
       <!-- 自由布局 -->
@@ -58,6 +61,8 @@
                 :customData="data?.customData"
                 di
               />
+              <!-- {{ data }} -->
+              <!-- {{ currentDesk.nanoid }} -->
             </template>
           </FreeLayoutContainer>
         </FreeLayoutCanvas>
@@ -257,9 +262,10 @@ import { registerFolder } from "../../apps/folder/src/hooks/register";
 import { LoadingOutlined } from "@ant-design/icons-vue";
 import GalleryModal from "../paperModal/GalleryModal.vue";
 import { useAddCard } from "../../ui/hooks/useAddCard";
-import { useDeskStore } from "./store";
+import { useDeskStore } from "./store"; 
 import { useCustomLayout } from "./freeLayout/useCustomLayout";
-import { useFileConversionIcon} from '../../apps/folder/src/hooks/useDataConversion'
+import { useFileConversionIcon } from "../../apps/folder/src/hooks/useDataConversion";
+import { headerData, mainData, folderData } from "./freeLayout/config";
 
 import Drop from "./Drop.vue";
 export default {
@@ -269,6 +275,9 @@ export default {
   components: { LoadingOutlined, EditNewNavigation, GalleryModal, Drop },
   props: {
     freeLayout: {
+      default: true,
+    },
+    noFullScreen: {
       default: true,
     },
     globalSettings: {
@@ -457,42 +466,7 @@ export default {
     ...mapWritableState(useFloatMenuStore, ["menus", "newMenus"]),
     ...mapWritableState(useNavigationStore, ["selectNav", "isDesk"]),
     ...mapWritableState(useDeskStore, ["autoOpenEdit", "adjustLayout"]),
-    // hideCard() {
-    //   let currentHide = null;
-    //   if (this.isFreeLayout) {
-    //     currentHide = this.getFreeLayoutState?.system?.hide;
-    //   } else {
-    //     currentHide = this.hide;
-    //   }
-    //   return {
-    //     id: 20,
-    //     newIcon: "fluent:more-horizontal-16-filled",
-    //     name: "更多",
-    //     lock: true,
-    //     children: [
-    //       {
-    //         id: 1,
-    //         newIcon: this.hide
-    //           ? "fluent:eye-16-regular"
-    //           : "fluent:eye-off-16-regular",
-    //         name: currentHide ? "显示小组件" : "隐藏小组件",
-    //         fn: () => {
-    //           if (this.isFreeLayout) {
-    //             this.getFreeLayoutState.system.hide =
-    //               !this.getFreeLayoutState?.system?.hide;
-    //           } else {
-    //             if (this.hide) {
-    //               this.showDesk();
-    //             } else {
-    //               this.hideDesk();
-    //             }
-    //           }
-    //         },
-    //         disabled: false,
-    //       },
-    //     ],
-    //   };
-    // },
+
     navMenu() {
       if (
         !this.navigationToggle[0] &&
@@ -524,10 +498,17 @@ export default {
         {
           id: 0,
           newIcon: "fluent:add-16-filled",
-          name: "测试",
+          name: "定制桌面测试",
           disabled: false,
           fn: () => {
-            useCustomLayout();
+            useCustomLayout({
+              mainList: mainData,
+              headerList: headerData,
+              folderList: folderData,
+              cb: () => {
+                this.$bus.emit("adsorbGrid");
+              },
+            });
             // 0 提供一个伪卡片
             // 提供一个添加卡片
             // 1 添加新的桌面
@@ -557,9 +538,34 @@ export default {
               name: "添加图标分组",
               fn: this.addFolder,
             },
+            // {
+            //   id: 3,
+            //   newIcon: "mingcute:windows-line",
+            //   name: "整理win桌面图标",
+            //   fn: this.addFolder,
+            // },
           ],
         },
+
         { id: 5, divider: true },
+        {
+          id: 5.1,
+          newIcon: "fluent:glance-horizontal-16-regular",
+          name: "整理桌面",
+          disabled: this.isFreeLayout ? false : true,
+          fn: () => {
+            useCustomLayout({
+              mainList: this.currentDesk.cards,
+              cb: () => {
+                this.$bus.emit("adsorbGrid");
+              },
+            });
+            // 0 提供一个伪卡片
+            // 提供一个添加卡片
+            // 1 添加新的桌面
+            // 2 切换为自由布局
+          },
+        },
         {
           id: 6,
           newIcon: this.editing
@@ -701,6 +707,7 @@ export default {
     window.time = Date.now();
   },
   mounted() {
+    console.log('this.currentDesk', this.currentDesk, this)
     // 自动打开编辑
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();
@@ -834,7 +841,6 @@ export default {
               }
             });
             desk.cards = [];
-            console.log(desk);
             this.menuVisible = false;
             this.clearFreeLayoutData();
           },

@@ -53,9 +53,10 @@ export default {
     const galleryVisible = ref(false);
     const modalRef = ref(null);
 
-    const data = reactive({
-      galleryIndex:'m',
-    });
+    // const data = reactive({
+    //   galleryIndex:'m',
+    // });
+    const galleryIndex = ref('m');
 
     // 开启壁纸应用弹窗
     const  openGalleryModal = () =>{
@@ -64,7 +65,7 @@ export default {
 
     // 切换壁纸模块
     const galleryTab = (item) =>{
-      data.galleryIndex = item.index
+      galleryIndex.value = item.index
     }
 
     const galleryList = ref([
@@ -123,18 +124,22 @@ export default {
        }
     })
 
+
     onMounted(()=>{
       nextTick(()=>{
         proxy.$bus.on('closePaper',()=>{
           galleryVisible.value = false
         })
+        proxy.$bus.on('updatePage',(val)=>{
+          const find = galleryList.value.find((find)=>{ return String(find.index) === String(val.index) });
+          galleryIndex.value = find.index;
+        })
       })
     })
 
     return{
-      galleryVisible,galleryList,modalRef,isFull,leftUpdateList,
+      galleryVisible,galleryList,modalRef,isFull,leftUpdateList,galleryIndex,
       openGalleryModal,
-      ...toRefs(data),
     }
   },
  }

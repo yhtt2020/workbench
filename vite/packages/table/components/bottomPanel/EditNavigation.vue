@@ -56,7 +56,6 @@
                 </div>
 
               </div>-->
-              <xt-task  id='M0104' no='3'></xt-task>
               <div class="mb-2 xt-text-2">必选功能（拖拽添加）</div>
               <div class="main-nav" id="mainList" style="width: 320px;zoom:0.8">
                 <div v-for="item in mainNavList" :key="item.name" style="margin:5px">
@@ -170,11 +169,9 @@
             </div>
           </div>
           <div>
-            <xt-task  id='M0104' no='4'  @cb="addEdit('foot')">
             <Icon icon="tianjia"
                   style="width: 56px;height: 56px;color:var(--secondary-text);position:relative;top:2px;"
                   class="mr-8 pointer" @click="addEdit('foot')"></Icon>
-           </xt-task>
           </div>
           <div style="border-left: 1px solid rgba(255, 255, 255, 0.4);"
                class="flex items-center justify-center pl-6 mr-6 pointer">

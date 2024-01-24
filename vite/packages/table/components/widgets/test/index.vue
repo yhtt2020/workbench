@@ -2,9 +2,11 @@
   <xt-container
     :customIndex="customIndex"
     :customData="customData"
-    :size="customData.size"
+    :customSize="customData.customSize"
+    class="xt-theme-b"
   >
-  {{ customData.name }}
+    {{ customData }}
+    <p>id： {{ customIndex }}</p>
   </xt-container>
 </template>
 
@@ -12,8 +14,12 @@
 const props = defineProps({
   customIndex: {},
   customData: {
-    size: {},
-    name:{}
+    default: () => {
+      return {
+        customSize: "2x2",
+        name: "",
+      };
+    },
   },
 });
 </script>

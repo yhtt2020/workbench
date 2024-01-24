@@ -1,44 +1,50 @@
 <template>
-  <!-- :style="editVisible ? { height:'689px' }:{ height:'535px' }" -->
-  <div class="rounded-xl flex flex-col justify-between control-container pl-4 pt-4" id="controlId" 
-   ref="modalRef" style="width: 548px;" 
-  >
-
+  <div class="rounded-xl flex flex-col justify-between control-container xt-shadow pl-4 pt-4" id="controlId" ref="modalRef" >
     <div class="flex items-center justify-between">
       <div class="flex items-center justify-center">
         <xt-new-icon icon="fluent:toggle-multiple-16-regular" size="20" class="mr-2"></xt-new-icon>
         <span class="xt-text font-14 xt-font">控制中心</span>
       </div>
-
       <template v-if="!editVisible">
-        <div class="flex items-center justify-center pr-4" >
-          <xt-button style="width: auto !important;" h="0" @click="editClick">
+        <div class="flex items-center justify-center pr-4 pointer" @click="editClick">
+          <xt-button style="width: auto !important;" h="0" >
            <div class="flex items-center justify-center">
             <xt-new-icon icon="fluent:compose-16-regular" size="20"></xt-new-icon>
            </div>
           </xt-button>
         </div>
       </template>
-
       <template v-else>
-        <div class="flex items-center pr-4">
-          <xt-button style="width: auto !important;" h="0" @click="finshEdit">
-            <div class="flex items-center justify-center">
-              <span class="xt-font xt-theme-text font-14">完成编辑</span>
-            </div>
-          </xt-button>
+        <div class="flex items-center">
+          <div class="mr-3 flex items-center pointer justify-center" @click="restList">
+            <xt-button style="width: auto !important;" h="0">
+              <div class="flex items-center justify-center">
+                <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="20" class="mr-2" :color="'var(--link)'">
+                </xt-new-icon>
+                <span class="xt-font  font-14  xt-theme-text" >重置</span>
+              </div>
+            </xt-button>
+          </div>
+          <div class="flex items-center pointer pr-4" @click="finshEdit">
+            <xt-button style="width: auto !important;" h="0" >
+              <div class="flex items-center justify-center">
+                <span class="xt-font xt-theme-text font-14">完成编辑</span>
+              </div>
+            </xt-button>
+          </div> 
         </div>
       </template>
     </div>
-
     <template v-if="!editVisible">
       <ControlDesk />
     </template>
     <template v-else>
       <EditControlDesk ref="editRef"/>
     </template>
-
-    <a-divider style="height: 1px;margin: 8px 0 16px 0;width: 516px;min-width:516px;" />
+  
+    <div class="mt-2 mb-4" style="width: 520px;">
+      <div class="mx-auto xt-bb w-full"></div>
+    </div>
 
     <div class="flex items-center justify-center mb-4">
       <template v-for="item in bottomButton">
@@ -51,7 +57,6 @@
        </a-tooltip>
       </template>
     </div>
-
   </div>
 </template>
 
@@ -59,13 +64,11 @@
 import { ref,computed,onMounted,getCurrentInstance } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
-import { controlStore } from '../../hook/controlStore';
 import { appStore } from '../../../../../store';
+import { controlStore } from '../../hook/controlStore';
 
 import ControlDesk from './ControlDesk.vue';
 import EditControlDesk from './EditControlDesk.vue';
-
-
 
 const router = useRouter()
 const emit = defineEmits(['close'])
@@ -79,12 +82,13 @@ const props = defineProps({
   }
 })
 
-const editVisible = ref(false);
 const app = appStore()
-const editRef = ref(null);
-
+const { userInfo } = storeToRefs(app);
 const controls = controlStore()
-const { control } = storeToRefs(controls);
+const { control,initList,removeControlList } = storeToRefs(controls);
+
+const editVisible = ref(false);
+const editRef = ref(null);
 
 // 触发编辑
 const editClick = () =>{
@@ -93,8 +97,13 @@ const editClick = () =>{
 
 // 完成编辑
 const finshEdit = () =>{
-  control.value.oldList = editRef.value.removeRef.vuuriList
   editVisible.value = false
+}
+
+// 重置
+const restList = () =>{
+  control.value.oldList = JSON.parse(JSON.stringify(initList.value));
+  control.value.newList = [];
 }
 
 const bottomButton = ref([
@@ -142,19 +151,19 @@ const bottomButton = ref([
   // }
 ])
 
+
 onMounted(()=>{
   proxy.$bus.on('closeControl',()=>{
     emit('close')
   })
 })
-
-
 </script>
 
 <style lang="scss" scoped>
 .control-container{
   backdrop-filter: blur(50px);
   background: var(--primary-bg);
+  width: 548px;
 }
 .button-item{
   &:last-of-type{
