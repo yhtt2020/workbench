@@ -273,10 +273,6 @@ export const iconStatus=[
 
 export const localFiles=[
     {
-        name:'全部',
-        tag:'all'
-    },
-    {
         name:'软件',
         tag:"software"
     },
@@ -287,7 +283,11 @@ export const localFiles=[
     {
         name:"其他",
         tag:'other'
-    }
+    },
+    {
+        name:'全部',
+        tag:'all'
+    },
 ]
 
 export const doc=[
