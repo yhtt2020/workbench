@@ -109,8 +109,7 @@ const fileLayout = computed(() => {
 });
 
 const dragStart = (e) => {};
-const dragEnd = (data) => {
-};
+const dragEnd = (data) => {};
 
 // 是否禁用拖拽
 watch(
@@ -284,11 +283,13 @@ const fileDisabled = (item) => {
 };
 
 // 保存数据
-const save = () => {
-  console.log("2233 :>> ", 2233);
-  const data = useIconConversionFile(iconStore.edit);
+const save = (edit) => {
+  const data = useIconConversionFile(edit);
+  console.log('data :>> ', data);
   data.useCount = currentItem.value.useCount;
   data.id = currentItem.value.id;
+  data.type = iconStore.edit.type
+  data.value = iconStore.edit.value
   emits("updateFile", data);
 };
 </script>
