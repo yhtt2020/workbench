@@ -1,6 +1,7 @@
 const Watch = require('./apiHander/watch')
 const Web = require('./apiHander/web')
 const Window = require('./apiHander/window')
+const App=require('./apiHander/app')
 /**
  * 专用于拆分出api的处理方法，主要是绑定各种方法并进行处理
  */
@@ -31,6 +32,8 @@ class ApiHandler {
     ApiHandler.handlers.push(new Watch())
     ApiHandler.handlers.push(new Web())
     ApiHandler.handlers.push(new Window())
+
+    ApiHandler.handlers.push(new App())
     ApiHandler.handlers.forEach(handler => {
       handler.bindIPC()
     })

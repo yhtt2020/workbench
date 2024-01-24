@@ -48,7 +48,7 @@ export const extraRightMenu =  [
     {
         title:'添加导航图标',
         icon:'fluent:add-16-regular',
-        component:'EditNavigationIcon',
+        component:'EditNewNavigation',
 
     },
     {
@@ -213,7 +213,7 @@ export const webMenus=[
         tag:'message'
     },
     {
-        name:'休闲娱乐',
+        name:'游戏娱乐',
         tag:'game'
     },
 ]

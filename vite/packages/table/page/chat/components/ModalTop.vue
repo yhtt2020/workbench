@@ -1,5 +1,5 @@
 <template>
- <div class="flex w-full mb-5 h-10 items-center justify-center" style="position: relative;">
+ <div class="flex w-full  h-10 items-center justify-center" :class="classTop" style="position: relative;">
   <div class="flex items-center justify-center back-button" v-if="back">
    <xt-button w="40" h="40" style="border-radius: 8px;" class="category-button" @click="backButton">
     <div class="flex items-center justify-center">
@@ -21,7 +21,24 @@
 <script>
 import { Icon as AddIcon } from '@iconify/vue'
 export default {
- props:['title','back'],
+ props:{
+  title:{
+   type:String,
+   default:'文字描述'
+  },
+  // 是否添加返回按钮
+  back:{
+   type:Boolean,
+   default:false,
+  },
+  // 通过类名修改样式
+  classTop:{
+   type:String,
+   default:'mb-5'
+  }
+
+ },
+ // ['title','back','classTop']
 
  components:{
   AddIcon

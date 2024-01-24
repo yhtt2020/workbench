@@ -3,35 +3,35 @@
   <div style="display: flex;height: 100%;color: var(--primary-text)">
     <SecondPanel :search="true" :menus="menus" logo="https://up.apps.vip/logo/favicon.svg" @change-tab="changeTab">
     </SecondPanel>
-    <div v-show="currentIndex === 'my'" @dragover.prevent="dragOver" @drop.prevent="drop" class="app-content s-bg"
-         style="margin: 1em;background: var(--primary-bg);">
-      <div v-if="myApps.length === 0" style="font-size: 2em;padding-top: 6em;text-align: center;">
-        <Icon style="font-size: 2em;vertical-align: middle;"
-              icon="line-dragdroptuofang"></Icon>
-        将应用拖放到此处，即可用于快捷启动
-      </div>
-      <div v-if="myApps.length === 0" style="text-align: center">
-        <div @click="loadDeskIconApps" class="btn" style="font-size: 1.5em;width: 8em">导入桌面应用</div>
-      </div>
-      <div style="margin: 1em">
-        <MyApps
-          @addIcons="iconVisible = true"
-          v-if="myApps.length > 0"
-        ></MyApps>
-        <Teleport to="body">
-          <AddIcon
-            v-if="iconVisible"
-            @getSelectApps="getSelectApps"
-            @close="iconHide"
-            navName="Desktop"
-            :navList="[
-              { name: '桌面图标', component: 'Desktop' },
-            ]"
-          >
-          </AddIcon>
-        </Teleport>
-      </div>
-    </div>
+<!--    <div v-show="currentIndex === 'my'" @dragover.prevent="dragOver" @drop.prevent="drop" class="app-content s-bg"-->
+<!--         style="margin: 1em;background: var(&#45;&#45;primary-bg);">-->
+<!--      <div v-if="myApps.length === 0" style="font-size: 2em;padding-top: 6em;text-align: center;">-->
+<!--        <Icon style="font-size: 2em;vertical-align: middle;"-->
+<!--              icon="line-dragdroptuofang"></Icon>-->
+<!--        将应用拖放到此处，即可用于快捷启动-->
+<!--      </div>-->
+<!--      <div v-if="myApps.length === 0" style="text-align: center">-->
+<!--        <div @click="loadDeskIconApps" class="btn" style="font-size: 1.5em;width: 8em">导入桌面应用</div>-->
+<!--      </div>-->
+<!--      <div style="margin: 1em">-->
+<!--        <MyApps-->
+<!--          @addIcons="iconVisible = true"-->
+<!--          v-if="myApps.length > 0"-->
+<!--        ></MyApps>-->
+<!--        <Teleport to="body">-->
+<!--          <AddIcon-->
+<!--            v-if="iconVisible"-->
+<!--            @getSelectApps="getSelectApps"-->
+<!--            @close="iconHide"-->
+<!--            navName="Desktop"-->
+<!--            :navList="[-->
+<!--              { name: '桌面图标', component: 'Desktop' },-->
+<!--            ]"-->
+<!--          >-->
+<!--          </AddIcon>-->
+<!--        </Teleport>-->
+<!--      </div>-->
+<!--    </div>-->
     <div class="app-content s-bg" style="margin: 1em;background: var(--primary-bg);" v-if="currentIndex === 'qing'">
       <QingApps>
       </QingApps>
@@ -160,12 +160,14 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
-      currentIndex: 'my',
-      menus: [{
-        title: '我的应用',
-        index: 'my',
-        icon: ''
-      }, {
+      currentIndex: 'qing',
+      menus: [
+      //   {
+      //   title: '我的应用',
+      //   index: 'my',
+      //   icon: ''
+      // },
+        {
         title: '轻应用',
         index: 'qing'
       },

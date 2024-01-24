@@ -6,6 +6,7 @@ import { appStore } from "../../store";
 // @ts-ignore
 export const offlineStore = defineStore("offlineStore", {
   state: () => ({
+    // 修改打开离线模式
     isOffline:false,
     
     offlineList:['weather','OilPrices','news','historyInfo','smallRank','gameInformation','yuanCommunity','signIn','Courier'],

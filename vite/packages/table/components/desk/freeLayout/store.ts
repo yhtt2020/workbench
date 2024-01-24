@@ -1,6 +1,8 @@
 import { defineStore, storeToRefs } from "pinia";
 import { cardStore } from "../../../store/card";
 import { homeStore } from "../../../store/home";
+
+import { FreeLayoutStore } from "../../../page/app/grade/components/FreeLayout";
 import _ from "lodash";
 
 import dbStorage from "../../../store/dbStorage";
@@ -78,6 +80,8 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       scrollHeight: 0,
       updatePosition: false,
     },
+    // 控制预览桌面的开关
+    previewFlag: false,
   }),
   getters: {
     // 获取当前桌面数据
@@ -95,7 +99,11 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     getCurrentDeskId() {
       const home: any = homeStore();
       const { currentDeskId } = storeToRefs(home);
-      return currentDeskId.value;
+      if(this.previewFlag){
+        return 'mj36hf6h'
+      }else{
+        return currentDeskId.value;
+      }
     },
     // 获取当前自由布局数据
     getFreeLayoutData() {
@@ -231,7 +239,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       if (align === "top") {
         h = 0;
         w = currentWidth / 2 - width / 2;
-      } else if (align === "center") {
+      } else if (align === "+") {
         h = currentHeight / 2 - height / 2;
         w = currentWidth / 2 - width / 2;
       } else if (align === "left") {
@@ -277,6 +285,25 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       // this.getFreeLayoutState.line.centerLine.x =
       //   this.freeLayoutEnv.scrollLeft / this.getFreeLayoutState.canvas.zoom;
     },
+    // 设置当前自由布局 属性 
+    setFreeLayoutData(id, data){
+      // console.log('走了？');
+      // console.log('id, data', id, data);
+      // console.log('this.freeLayoutData', this.freeLayoutData);
+      
+      
+      this.freeLayoutData[id] = {...data}
+    },
+    setFreeLayoutState(id, state){
+      // console.log('走了？');
+      // console.log('id, state', id, state);
+      // console.log('this.freeLayoutState', this.freeLayoutState);
+      this.freeLayoutState[id] = {...state}
+    },
+    getFreeLayout1(){
+      console.log('this.freeLayoutData', this.freeLayoutData)
+      console.log('this.freeLayoutState', this.freeLayoutState)
+    }
   },
   persist: {
     enabled: true,

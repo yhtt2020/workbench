@@ -28,22 +28,12 @@
               <MyIcon icon="tabler:brand-bilibili" width="20" height="20"  />&nbsp;
               Spacedesk | 把任意设备变成你的第二屏幕，手机、平板、电脑都可以！</a>
             </div>
+            <div  class="flex item-content">购买官方推荐副屏：<xt-button :radius="8" :w="80" :h="34" size="small" type="theme" @click="goBuy">去购买</xt-button></div>
           </div>
           <div style="margin-bottom: 1em" v-else>
             您当前仅有一块屏幕，无法启用副屏模式，您可在增添副屏后启用。<a>了解更多</a>
           </div>
           <a-row :gutter="20" class="flex justify-center mt-6">
-            <a-col >
-              <div :class="{'active':mod==='second-screen'}" @click="this.mod='second-screen'" class="panel pointer px-5 pt-6">
-                <div class="title">
-                  <MyIcon icon="fluent:tablet-16-regular" width="56px" height="56px" color="var(--primary-text)" />
-                  <div class="mt-2">副屏全屏模式</div>
-                </div>
-                <div class="content mt-3">
-                  专为副屏优化，自动缩放界面和字体，提供适合触控操作的交互。
-                </div>
-              </div>
-            </a-col>
             <a-col >
               <div :class="{'active':mod==='bootstrap'}" @click="this.mod='bootstrap'" class="panel pointer px-5 pt-6">
                 <div class="title">
@@ -53,6 +43,17 @@
                 </div>
                 <div class="content mt-3">
                   以普通应用窗口的模式运行，默认使用ALT+Z组合键控制显示和隐藏。
+                </div>
+              </div>
+            </a-col>
+            <a-col >
+              <div :class="{'active':mod==='second-screen'}" @click="this.mod='second-screen'" class="panel pointer px-5 pt-6">
+                <div class="title">
+                  <MyIcon icon="fluent:tablet-16-regular" width="56px" height="56px" color="var(--primary-text)" />
+                  <div class="mt-2">副屏全屏模式</div>
+                </div>
+                <div class="content mt-3">
+                  专为副屏优化，自动缩放界面和字体，提供适合触控操作的交互。
                 </div>
               </div>
             </a-col>
@@ -344,7 +345,7 @@ export default {
       canTouch: true,
       shortKeysTable: 'alt+z',
       shortKeysSearch: 'alt+f',
-      mod: 'second-screen',//bootstrap
+      mod: 'bootstrap',//bootstrap
       steps: [
         {
           title: '设置模式'
@@ -424,6 +425,9 @@ export default {
 
   methods: {
     ...mapActions(appStore, ['finishWizard', 'settings', 'getUserInfo']),
+    goBuy(){
+      browser.openInSystem('https://s.click.taobao.com/isXzP0u')
+    },
     // 登录模块迁移
     login () {
       tsbApi.user.login((data) => {

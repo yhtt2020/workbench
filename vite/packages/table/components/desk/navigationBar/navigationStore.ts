@@ -17,17 +17,6 @@ export const useNavigationStore=defineStore('useNavigationStore',{
             currentList:{},
             // 第一次进入，显示推荐
             introduceVisible:true,
-            // 导航栏数据结构
-            navList:{
-                // 导航名称
-                name:'',
-                // 导航标签
-                tag:'',
-                // 导航类型
-                type:"",
-                // 导航图标列表
-                iconList:[]
-            },
             // 导航栏数据
             navObj:{},
             // 存储改变前的数据
@@ -45,8 +34,6 @@ export const useNavigationStore=defineStore('useNavigationStore',{
                 navSize:100,
                 // 导航栏圆角
                 navRadius:18,
-                // 导航栏背景颜色
-                navBgColor:'var(--primary-bg)',
             },
             // 图标圆角
             iconRadius:12,
@@ -56,6 +43,12 @@ export const useNavigationStore=defineStore('useNavigationStore',{
             targetDesk:'',
             // 跳转桌面,
             jumpDesk:'',
+            // 开启自动隐藏导航栏
+            customOpenNav:false,
+            // 离开导航栏
+            isLeaveBar:false,
+            // 鼠标移动到屏幕边缘
+            isEdge:false,
         }
     },
     actions:{

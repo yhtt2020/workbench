@@ -5,7 +5,7 @@
     :class="[sortableContainer]"
     style="width: 100%"
   >
-    <template v-for="(item, index) in list">
+    <template :key="item.id" v-for="(item, index) in list">
       <div
         v-show="fileDisabled(item)"
         class="xt-sortable-fle-box flex justify-center"
@@ -285,11 +285,11 @@ const fileDisabled = (item) => {
 // 保存数据
 const save = (edit) => {
   const data = useIconConversionFile(edit);
-  console.log('data :>> ', data);
+  console.log("data :>> ", data);
   data.useCount = currentItem.value.useCount;
   data.id = currentItem.value.id;
-  data.type = iconStore.edit.type
-  data.value = iconStore.edit.value
+  data.type = iconStore.edit.type;
+  data.value = iconStore.edit.value;
   emits("updateFile", data);
 };
 </script>

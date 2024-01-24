@@ -1,5 +1,5 @@
 <template>
-  <div class="medal-wrapper">
+  <div v-if="medal?.medal" class="medal-wrapper">
     <tippy trigger="mouseenter click" placement="left">
       <div class="badge-box" style="border:none;background: none;zoom: 0.5;margin: 0">
         <div style="width: 100px;height: 100px;position: relative">
@@ -43,6 +43,7 @@ export default {
   components: [],
   mounted () {
     let medal = this.medal
+    if(!medal?.medal) return
     this.title = medal.medal.alias
     this.summary = medal.medal.summary
     this.getReason = medal.reason

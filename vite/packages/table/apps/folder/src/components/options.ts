@@ -2,7 +2,7 @@
 export const defaultData = {
   useCount: 0, // 使用次数
   lastUseTime: "",
-  mode: "app",
+
   type: "",
   value: "",
   icon: "",

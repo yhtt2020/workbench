@@ -99,10 +99,11 @@ export default {
     //   }
     //
     // },
-    login () {
-      tsbApi.user.login((data) => {
-        ipc.send('getDetailUserInfo')
-      })
+    login (evt) {
+      // evt.preventDefault();
+      // tsbApi.user.login((data) => {
+      //   ipc.send('getDetailUserInfo')
+      // })
     },
     social () {
       if(this.limit){
@@ -124,7 +125,7 @@ export default {
 
 <template>
   <div v-if="!userInfo">
-    <div @click="login" style="padding: 0.5em">
+    <div @click="login($event)" style="padding: 0.5em" class="pointer">
       <a-avatar :size="size||54" class="xt-text">未登录</a-avatar>
       <div>
       </div>

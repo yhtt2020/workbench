@@ -44,46 +44,89 @@ export const useFileConversionIcon = (data) => {
 };
 
 // 文件夹图标转为导航栏图标格式
-export const useIconConversionNav = (data)=>{
+export const useIconConversionNav = (data) => {
   const icon = {
-    icon:data.icon,
-    name:data.name,
-    value:data.value,
-    mode:data.mode,
-    isBg:data.isBg,
-    bg:data.bg,
-    type:data.type,
-    id:data.id || nanoid(6),
-  }
+    icon: data.icon,
+    name: data.name,
+    value: data.value,
+    mode: data.mode,
+    isBg: data.isBg,
+    bg: data.bg,
+    type: data.type,
+    id: data.id || nanoid(6),
+  };
   return icon;
-}
+};
 
 // 单图标组件转为导航栏图标格式
-export const useFileConversionNav = (data)=>{
+export const useFileConversionNav = (data) => {
   const icon = {
-    icon:data.src,
-    name:data.titleValue,
-    value:data.open.value,
-    mode:'app',
-    isBg:data.isBackground,
-    bg:data.backgroundColor,
-    type:data.open.type,
-    id:data.iconIndex || nanoid(6),
-  }
+    icon: data.src,
+    name: data.titleValue,
+    value: data.open.value,
+    mode: "app",
+    isBg: data.isBackground,
+    bg: data.backgroundColor,
+    type: data.open.type,
+    id: data.iconIndex || nanoid(6),
+  };
   return icon;
-}
+};
 
 // 桌面图标转为导航栏图标
-export const useDeskConversionNav = (icon,name,item)=>{
+export const useDeskConversionNav = (icon, name, item) => {
   const file = {
-    icon:icon,
+    icon: icon,
     name,
-    type:'tableApp',
-    bg:'',
-    isBg:false,
-    mode:'app',
-    value:item,
-    id:nanoid(6)
-  }
-  return file
-}
+    type: "tableApp",
+    bg: "",
+    isBg: false,
+    mode: "app",
+    value: item,
+    id: nanoid(6),
+  };
+  return file;
+};
+
+
+export const defaultIconData = {
+  renewTime: "",
+  id: "", // 图标id
+  icon: "", // 显示的图标数据
+  name: "", // 显示的图标名称
+  isName: true, // 是否显示图标名称
+  value: "",
+  /**
+   * 当前mode
+   * app 所有应用
+   * link 网址链接
+   */
+  mode: "app",
+
+  /**
+   * 当前
+   */
+  type: "",
+  bg: "", // 背景颜色
+  isBg: false, // 是否使用背景色
+  radius: 0, // 图标的圆角
+  isRadius: true, // 是否使用图标的圆角
+  useCount: 0, // 使用次数
+  lastUseTime: "", // 上次使用时间
+  iconState: "cover", // 图标状态
+  iconShape: "square", // 图标形状 长方形或正方形
+  // 单图标展示的大小
+  size: "1x1",
+};
+
+// 导航
+
+// 图标
+// model: "file",
+//
+// open: {
+//   type: data.type,
+//   value: data.value,
+// },
+
+// backgroundIndex: 0,

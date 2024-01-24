@@ -1,5 +1,5 @@
 <template>
- <Vuuri v-model="vuuriList" group-id="id" item-key="id" :options="option"  ref="testRef"
+ <Vuuri v-model="control.oldList" group-id="id" item-key="id" :options="option"  ref="testRef"
  :drag-enabled="true"   :get-item-height="getHeight"
 >
 
@@ -11,6 +11,8 @@
 
 <script setup>
 import { ref,computed,onMounted} from "vue";
+import { storeToRefs } from 'pinia';
+import { controlStore } from '../../../hook/controlStore';
 
 import Vuuri from "../../../../../vuuri/Vuuri.vue";
 import ControlRemoveDetail from "./ControlRemoveDetail.vue";
@@ -22,19 +24,16 @@ const props = defineProps({
   },
 });
 
-const vuuriList = ref(props.list);
 const option = ref({
  layout:{horizontal:false},
 });
 const testRef = ref(null);
 const isClick = ref(false);
 
-// 计算间距
-// const getMargin = computed(() => {
-//   for (const i = 0; i < props.list.length; i++) {
-//     return i % 4 !== 0;
-//   }
-// });
+
+const controls = controlStore();
+const { control } = storeToRefs(controls);
+
 
 // 获取高度
 const getHeight = () =>{
@@ -51,10 +50,6 @@ onMounted(()=>{
   })
 })
 
-
-defineExpose({
-  vuuriList
-})
 </script>
 
 <style lang="scss" scoped>
