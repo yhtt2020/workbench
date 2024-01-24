@@ -87,7 +87,7 @@ export const yuanCommunityStore = defineStore("yuanCommunity", {
     getData(data){
       const list=data.map((item)=>{
         return {
-          id:item.id,
+          value:item.id,
           name:item.name
         }
       })
