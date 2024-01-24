@@ -21,7 +21,7 @@
     <!--  <ControlModal ref="controlRef" v-if="controlVisible" @close="controlVisible = false" :full="full" @setFull="setFull"/> -->
     <!-- <div>{{ !this.isLeaveBar && this.controlVisible && this.folderVisible }} ------ {{ autoVisible }}</div> -->
     <Transition name="animate__animated animate__bounce"  enter-active-class="animate__bounceInUp" leave-active-class="animate__zoomOutDown">
-    <div @click.stop 
+    <div @click.stop
       class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
       id="bottom-bar" style="text-align: center;position: relative;" @contextmenu="showMenu" v-show="autoVisible"
       :style="{ zoom: `${(this.navAttribute.navSize / 100)}` }" @mouseenter="handleMouseEnter"
@@ -66,9 +66,9 @@
             style="position: absolute;z-index:99999999999;top:-8px;left:50%;transform: translateX(-50%) translateY(-100%)  ;"
             class="px-10 py-3 rounded-lg s-bg xt-text">松开鼠标合并</div>
         </transition>
-        <div id="bottomPanel" 
+        <div id="bottomPanel"
         :class="{ 'nav-enter': autoVisible, 'nav-leave': !autoVisible }"
-        @drop.prevent="drop" 
+        @drop.prevent="drop"
         @dragover.prevent="" class="flex flex-row items-center s-bg" style="
         display: flex;
         flex-direction: column;
@@ -515,7 +515,12 @@ export default {
     })
     // 图标整体替换格式方法
     this.copyFootNav = this.replaceType(this.copyFootNav)
-
+    //对id进行强制修复
+    this.copyFootNav.forEach(item=>{
+      if(!item.id){
+        item.id=nanoid(6)
+      }
+    })
     this.noticeFlag = true
 
     this.useWindowSize((size) => {
@@ -946,7 +951,6 @@ export default {
         if (item.component === 'EditNewNavigation') {
           this.editToggle = true
           this.selectNav = 'foot'
-          message.success('进入编辑模式')
         }
         this.quick = true
       }
@@ -1218,6 +1222,9 @@ export default {
               return item.id === that.hoverRealItemId('bottomContent', that.hoverIndex)
             }), 1, merged)
             that.copyFootNav = that.copyFootNav.filter(item => {
+              if(!that.dragItem.id){
+                that.dragItem.id=nanoid(6)
+              }
               return item.id !== that.dragItem.id
             })
             //执行合并后，因为更改了数组，已经自动触发了重置数组，所以不需要再执行update，数据也是正确的
