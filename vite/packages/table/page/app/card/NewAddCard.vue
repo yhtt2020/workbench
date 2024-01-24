@@ -168,7 +168,6 @@ export default {
   },
  unmounted() {
   if (this.currentId == "M0302") {
-    this.currentId = ""
     }
  },
   async mounted () {
