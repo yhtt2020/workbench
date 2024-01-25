@@ -2,7 +2,8 @@
   <div style="width: 52px; height: 52px;" v-if="!item.isBg"
     :style="{ borderRadius: navigationBar.iconRadius + 'px', background: item.bg || '' }"
     class="relative flex items-center justify-center ">
-    <xt-new-icon icon="fluent-emoji:globe-with-meridians" size="45" v-if="isLink"></xt-new-icon>
+    <!-- {{ isLink }} -->
+    <xt-new-icon icon="fluent-emoji:globe-showing-asia-australia" size="36" v-if="isLink"></xt-new-icon>
     <a-avatar v-else  :size="52" shape="square" :src="item.icon" :style="{ borderRadius: navigationBar.iconRadius + 'px' }"></a-avatar>
   </div>
   <div v-else style="width: 52px; height: 52px;">
