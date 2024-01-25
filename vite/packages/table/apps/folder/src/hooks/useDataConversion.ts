@@ -121,21 +121,16 @@ export const defaultIconData = {
 
 // 桌面链接转为导航栏图标
 export const useLinkConversionNav = (link)=>{
-  const https = link.icon.includes('https')
-  const http = link.icon.includes('http')
-  if(!https && !http){
-    link.value='http://'+link.value
-  }
   const file = {
     name:link.name || '链接',
-    icon: (!https && http) ? link.icon : 'fluent-emoji:globe-with-meridians',
+    icon:link.icon !== null ? link.icon : 'fluent-emoji:globe-with-meridians',
     type:'default',
-    value:link.value,
+    value: link.value,
     mode:'link',
     isBg:false,
     bg:'var(--secondary-transp-bg)',
     id:nanoid(6),
-    linkIcon:!(!https && http),
+    linkIcon:link.icon === null ? true : false,
   }
   return file
 }

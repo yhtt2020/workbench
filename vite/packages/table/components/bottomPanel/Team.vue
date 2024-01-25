@@ -1,7 +1,7 @@
 <template>
   <tippy :placement="placement" :interactive="true" :appendTo="body" :arrow="false" trigger="click" :zIndex="999999"
     ref="tippyRef">
-    <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
+    <Avatar :item="item"></Avatar>
     <template #content>
       <div 
         class="flex flex-wrap w-[278px] h-[185px] rounded-xl xt-bg -m-3" 
