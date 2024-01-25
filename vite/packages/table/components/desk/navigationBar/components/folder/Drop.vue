@@ -18,7 +18,7 @@ import { useIconConversionNav, useFileConversionNav, useDeskConversionNav,useLin
 import { myIcons } from "../../../../../store/myIcons";
 import _ from 'lodash-es'
 import { getHostAddress } from "../../../../widgets/myIcons/edit/hooks/getHostAddress";
-import { useGetUrlName } from "../../hook/getUrlName";
+import { useGetUrlName,getFavicon } from "../../hook/getUrlName";
 
 // 导航栏数据
 const navBarStore = useNavBarStore()
@@ -74,8 +74,13 @@ const handleDrop = async (dragEvent) => {
         emit('createFile', file, currentX)
       }))
     }else if(link && link !== ''){
-      let transLink = await getHostAddress(link)
-      let linkIcon = transLink  + '/favicon.ico'
+      const http = link.includes('http')
+      const https = link.includes('https')
+      if(!http && !https){
+        link = 'http://' + link
+      }
+      let linkIcon = await getFavicon(link)
+      console.log(linkIcon, 'linkData')
       let name = useGetUrlName(link)
       let target = {name:name,icon:linkIcon,value:link}
       // 链接拖拽
