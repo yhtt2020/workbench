@@ -1,9 +1,9 @@
 <template>
   <div class="clock4">
     <a-row :gutter="16">
-      <div class="gutter-box">{{ hours }}</div>
-      <div class="gutter-box">{{ min }}</div>
-      <template :style="{ display: isSnow == true ? 'inline-block' : 'none' }">
+      <div class="gutter-box" :style="clockFont">{{ hours }}</div>
+      <div class="gutter-box" :style="clockFont">{{ min }}</div>
+      <template :style="{ display: isSnow == true ? 'inline-block' : 'none' },clockFont">
         <div class="gutter-box">{{ second }}</div>
       </template>
     </a-row>
@@ -25,6 +25,9 @@ export default {
       type: Boolean,
       default: true,
     },
+    clockFont:{
+      type:String,
+    }
   },
   mounted() {
     this.timerID = setInterval(this.updateTime, 1000);

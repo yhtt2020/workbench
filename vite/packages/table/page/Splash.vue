@@ -92,7 +92,7 @@ import taskStore from '../page/app/todo/stores/task'
 import cache from "../components/card/hooks/cache";
 import { offlineStore } from '../js/common/offline'
 import { useWidgetStore } from '../components/card/store'
-import { clockStore } from '../components/widgets/clock/hooks/clockStore';
+// import { clockStore } from '../components/widgets/clock/hooks/clockStore';
 
 export default {
   name: 'Code',
@@ -145,7 +145,7 @@ export default {
     this.initStore(taskStore, 'task')
     this.initStore(useWidgetStore, 'useWidgetStore')
     this.initStore(controlStore, 'control')
-    this.initStore(clockStore,'clockStore')
+    // this.initStore(clockStore,'clockStore')
     browserStore().bindIPC()
     captureStore()//仅触发一下载入
     clipboardStore()

@@ -7,15 +7,16 @@
     :menuList="menuList"
     ref="homelSlotRef"
     :desk="desk"
+    :showRightIcon="!customData.backgroundFrame"
   >
     <template #left-title-icon>
         <div class="icon"
           style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; " v-if="!clockSetting.backgroundFrame">
+            left: 2px; " v-if="!customData.backgroundFrame">
           <clockIcon icon="fluent:clock-12-regular" style="font-size: 20px;" />
         </div>
     </template>
-    <cardDrag ref="drag" @reSizeInit="reSizeInit" :style="clockSetting.backgroundFrame ? { height:'100%' }:{height:'140px'}">
+    <cardDrag ref="drag" @reSizeInit="reSizeInit" :style="customData.backgroundFrame ? { height:'100%' }:{height:'140px'}">
       <template #="{ row }">
         <div class="box no-drag" @click="fullScreen()">
           <component
@@ -26,15 +27,14 @@
               isClock5w420: isClock5w420 == true,
             }"
             :style="{ zoom: zoom }"
-            
+            :clockFont="customData.font"
           />
-          <!-- :clockFont="clockSetting.font" -->
         </div>
       </template>
     </cardDrag>
   </Widget>
 
-  <ClockSettingModal ref="clockSettingRef" @updateClockStyle="updateClockStyle"/>
+  <ClockSettingModal ref="clockSettingRef" :customIndex="customIndex" :customData="customData" :desk="desk" @updateClockStyle="updateClockStyle"/>
   <!-- <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
     <template #title>
       <div class="text-center">设置</div>
@@ -66,7 +66,7 @@ import cardDragHook from "../../card/hooks/cardDragHook";
 import cardSizeHook from "../../card/hooks/cardSizeHook";
 import {Icon as clockIcon } from '@iconify/vue';
 import { cardStore } from "../../../store/card.ts";
-import { clockStore } from "./hooks/clockStore";
+// import { clockStore } from "./hooks/clockStore";
 
 import Widget from "../../card/Widget.vue";
 import ClockStyle from "./clockState/ClockStyle.vue";
@@ -139,28 +139,25 @@ export default {
   },
   
   computed:{
-    ...mapWritableState(clockStore,["clockSetting"]),
+    // ...mapWritableState(clockStore,["clockSetting"]),
     
   },
 
   mounted() {
     let setData = {};
-    if (!this.customData.clockId) {
-      setData.clockId = "clock4";
-    }
+    if (!this.customData.clockId) { setData.clockId = "clock4";}
     if (!this.customData.imgUrl) {
-      setData.imgUrl =
-        "https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg";
+      setData.imgUrl ="https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg";
     }
-    if (this.customData.blurs === undefined) {
-      setData.blurs = 3;
+    if (this.customData.blurs === undefined) { setData.blurs = 3;}
+    if (!this.customData.bgZoom) { setData.bgZoom = 0;}
+    if(!this.customData.backgroundFrame){ setData.backgroundFrame = false; }
+    if(!this.customData.font){ 
+      setData.font =  { name:'优设标题黑', value:"font-family: '优设标题黑' !important;" };
     }
-    if (!this.customData.bgZoom) {
-      setData.bgZoom = 0;
-    }
-    if (Object.keys(setData).length) {
-      this.updateCustomData(this.customIndex, setData, this.desk);
-    }
+    if(!this.customData.enableSecond){ setData.enableSecond = false }
+    if(!this.customData.currentStatus) { setData.currentStatus = 'font' }
+    if (Object.keys(setData).length) { this.updateCustomData(this.customIndex, setData, this.desk); }
     this.bgZoom = this.customData.bgZoom;
     this.updateTime();
   },
@@ -306,25 +303,21 @@ export default {
 
   watch:{
     // 时钟背景开关是否开启
-    "clockSetting.backgroundFrame":{
+    "customData.backgroundFrame":{
       handler(newVal){
         if(newVal){
-          const hideOption = { ...this.options,background:"transparent", };
+          const hideOption = { ...this.options,background:"transparent",noTitle:true, };
           this.options = hideOption;
-          this.$nextTick(()=>{
-           document.querySelector(".content-title").style = "display:none !important;";
-           document.querySelector(".gradient").style = "box-shadow:none !important;";
-          });
+          this.customData.hideFrame = true;
         }
         else {
-          const showOption = { ...this.options,background:"var(--primary-bg)" };
+          const showOption = { ...this.options,background:"var(--primary-bg)",noTitle:false, };
           this.options = showOption;
-          this.$nextTick(()=>{
-           document.querySelector(".content-title").style = "display:flex !important;";
-          })
+          this.customData.hideFrame = false;
         }
       },
       immediate:true,
+      deep:true,
     }
   }
 };

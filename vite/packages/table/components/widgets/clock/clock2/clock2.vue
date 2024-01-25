@@ -1,7 +1,7 @@
 <template>
   <div class="clock2 flex flex-col items-center justify-center" style="height: 122px;">
-    <div class="time mb-8">{{ time }}<span :style="{ display: isSnow == true ? 'inline-block' : 'none' }">{{ min }}</span></div>
-    <div class="date" :style="{ display: isSnow == true ? 'inline-block' : 'none' }">{{ date }}</div>
+    <div class="time mb-8" :style="clockFont">{{ time }}<span :style="{ display: isSnow == true ? 'inline-block' : 'none' }">{{ min }}</span></div>
+    <div class="date" :style="{ display: isSnow == true ? 'inline-block' : 'none' },clockFont">{{ date }}</div>
   </div>
 </template>
 
@@ -29,6 +29,9 @@ export default {
       type: String,
       default: true,
     },
+    clockFont:{
+      type:String,
+    }
   },
   mounted() {
     this.timerID = setInterval(this.updateTime, 1000);
