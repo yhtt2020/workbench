@@ -1,6 +1,6 @@
 export const dataList = [
     {
-        name:'板块',
+        name:'版块',
         value:'circle',
     },
     {

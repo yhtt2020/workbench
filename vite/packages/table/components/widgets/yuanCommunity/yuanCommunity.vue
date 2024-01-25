@@ -190,7 +190,9 @@ export default {
         async refreshPost() {
             this.isLoading = true
             // console.log(this.defaultForum,'defaultForum')
-            await this.getCommunityPost(this.defaultForum)
+            let value = 0
+            this.defaultForum.value ? value = this.defaultForum.value : value = 100304
+            await this.getCommunityPost(value)
             this.showForumPost = this.communityPost
             this.isLoading = false
             this.isClick = false

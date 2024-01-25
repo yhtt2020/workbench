@@ -2,8 +2,8 @@
   <div style="width: 52px; height: 52px;" v-if="!item.isBg"
     :style="{ borderRadius: navigationBar.iconRadius + 'px', background: item.bg || '' }"
     class="relative flex items-center justify-center ">
-    <a-avatar :size="52" shape="square" :src="item.icon" :style="{ borderRadius: navigationBar.iconRadius + 'px' }"
-      :class="{ 'shaking-element': shakeElement }"></a-avatar>
+    <xt-new-icon icon="fluent-emoji:globe-with-meridians" size="45" v-if="isLink"></xt-new-icon>
+    <a-avatar v-else  :size="52" shape="square" :src="item.icon" :style="{ borderRadius: navigationBar.iconRadius + 'px' }"></a-avatar>
   </div>
   <div v-else style="width: 52px; height: 52px;">
     <div style="width: 52px; height: 52px;" class="relative flex items-center justify-center overflow-hidden"
@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive } from 'vue'
+import { ref, reactive,computed} from 'vue'
 import { renderIcon } from '../../../../js/common/common';
 import { useNavigationStore } from '../navigationStore';
 const navigationBar = useNavigationStore();
@@ -25,6 +25,13 @@ const props = defineProps({
   shakeElement: Boolean
 })
 
+const isLink = computed(()=>{
+  if(props.item.linkIcon){
+    return true
+  }else{
+    return false
+  }
+})
 </script>
 <style lang='scss' scoped>
 .shaking-element {
