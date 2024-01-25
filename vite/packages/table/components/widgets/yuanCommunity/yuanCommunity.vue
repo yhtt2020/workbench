@@ -210,23 +210,6 @@ export default {
             this.communityReply = []
             this.showDetailModal = value
         },
-        // 选择板块
-        // handleChange(value) {
-        //     value.forEach((item) => {
-        //         // console.log(item);
-        //         const newItem = {
-        //             index: item,
-        //             value: this.forumList[item]
-        //         };
-
-        //         if (!this.selectList.some((el) => el.value.id === newItem.value.id)) {
-        //             this.selectList.push(newItem);
-        //         }
-        //     });
-        //     let temp = this.selectList;
-        //     this.customData.selectList = temp;
-        //     this.forumsList = this.customData.selectList
-        // },
         // 显示发布页是否可见
         publishModalVisible() {
             this.showPublishModal = !this.showPublishModal
@@ -235,17 +218,6 @@ export default {
         modalVisible(val) {
             this.showPublishModal = val
         },
-        // 删除选择的板块
-        // handleDeselect(val) {
-        //     this.selectList = this.customData.selectList.filter((item) => {
-        //         return val.includes(item.index); // 过滤掉 val 中包含的索引的项目
-        //     });
-        //     this.selectList = this.selectList.filter((item, index) => {
-        //         return item.value !== undefined
-        //     })
-        //     let temp = this.selectList
-        //     this.customData.selectList = temp
-        // },
         handleResize() {
             if (window.innerWidth > 1200) {
                 this.toggleDetail = true
@@ -262,7 +234,7 @@ export default {
         },
         memoryPost(){
             const cachePost = JSON.parse(localStorage.getItem('communityContent'))
-            console.log(cachePost,'cachePost');
+            // console.log(cachePost,'cachePost');
             if(cachePost){
                 this.showForumPost = cachePost
                     setTimeout(() => {
@@ -368,7 +340,15 @@ export default {
             this.customData.defaultForum = newValue
             this.defaultSection = this.customData.defaultForum
             // this.isLoading=true
-            this.getCommunityPost(this.customData.defaultForum).then(() => {
+            let target = ''
+            if(this.customData.defaultForum.index){
+                target = this.customData.defaultForum.value.id
+            }else if (this.customData.defaultForum.value){
+                target = this.customData.defaultForum.value
+            }else{
+                target = this.customData.defaultForum
+            }
+            this.getCommunityPost(target).then(() => {
                 this.showForumPost = this.communityPost;
                 // this.isLoading=false
             })
