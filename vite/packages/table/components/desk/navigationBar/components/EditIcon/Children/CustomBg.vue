@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, computed,onMounted } from 'vue'
+import { ref, reactive, computed,onMounted,watch } from 'vue'
 import { useNavigationStore } from '../../../navigationStore'
 import {renderIcon} from '../../../../../../js/common/common'
 import CustomIconBg from './CustomIconBg.vue'
@@ -57,14 +57,6 @@ const getAvatar = (value) => {
 }
 // 重置
 const reset = () => {
-    // const target = navigationList.value.find(item =>{
-    //     if(item.type === 'coolApp'){
-    //         return item.value.url === props.editItem.value.url
-    //     }else{
-    //         return item.value === props.editItem.value
-    //     }
-    // } )
-    // console.log(props.editItem.default,'target')
     props.editItem.icon = props.editItem.default.icon
     bgColor.value = ''
     props.editItem.bg = ''
@@ -72,13 +64,6 @@ const reset = () => {
     props.editItem.color = ''
 }
 // 判断图标类型
-// const isIcon = computed(() => {
-//     if (props.editItem.icon.includes('https')) {
-//         return true
-//     } else {
-//         return false
-//     }
-// })
 const getImgColor = (item) => {
     if(item.icon.includes('color=#')){
         const bg = item.icon.slice(-7)
@@ -101,9 +86,15 @@ const imgBg = computed(() => {
     return
   }
 });
-// const navigationList = computed(() => {
-//     return [...useNavStore.footNavigationList,...useNavStore.sideNavigationList,...useNavStore.rightNavigationList]
-// })
+
+// 
+watch(()=>props.editItem.icon,(newV,oldV)=>{
+    if(props.editItem.icon.includes('color=#')){
+        getImgColor(props.editItem)
+    }else{
+        props.editItem.color = ''
+    }
+})
 </script>
 <style lang='scss' scoped>
 .reset {
