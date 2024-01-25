@@ -531,40 +531,19 @@ export const defaultFreeLayoutStore = defineStore('defaultFreeLayoutStore', {
                   "customData": {
                       "forumList": [
                           {
-                              "id": 100304,
-                              "name": "版本更新",
-                              "title": "工作台用户专属",
-                              "status": 1,
-                              "logo": "https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/8befa3834d2eb29e75685563ef513215.png?upload_type/Tencent_COS",
-                              "creator": 1,
-                              "display": 1
+                            "name": "版本更新",
+                            "value": 100304
                           }
                       ],
                       "selectList": [
                           {
-                              "index": 0,
-                              "value": {
-                                  "id": 100304,
-                                  "name": "版本更新",
-                                  "title": "工作台用户专属",
-                                  "status": 1,
-                                  "logo": "https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/8befa3834d2eb29e75685563ef513215.png?upload_type/Tencent_COS",
-                                  "creator": 1,
-                                  "display": 1
-                              }
+                            "name": "版本更新",
+                            "value": 100304
                           }
                       ],
                       "defaultForum": {
-                          "index": 0,
-                          "value": {
-                              "id": 100304,
-                              "name": "版本更新",
-                              "title": "工作台用户专属",
-                              "status": 1,
-                              "logo": "https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/8befa3834d2eb29e75685563ef513215.png?upload_type/Tencent_COS",
-                              "creator": 1,
-                              "display": 1
-                          }
+                          "name": "版本更新",
+                          "value": 100304
                       }
                   },
                   "data": {}
