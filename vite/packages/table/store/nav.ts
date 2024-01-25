@@ -303,7 +303,11 @@ export const navStore = defineStore("nav", {
     loaded:false,
     init:false,//是否初始化过了
     // 底部导航栏最多图标数
-    maxItemNum:null
+    maxItemNum:null,
+    // 导航栏初始化
+    leftNavInit:false,
+    rightNavInit:false,
+    footNavInit:false,
   }),
   actions: {
     fixData(nav){
@@ -446,7 +450,7 @@ export const navStore = defineStore("nav", {
       {
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths: ['sideNavigationList','footNavigationList','rightNavigationList','navigationToggle','copyFootNav','copySideNav','copyRightNav','copyFlag','init'],
+      paths: ['sideNavigationList','footNavigationList','rightNavigationList','navigationToggle','copyFootNav','copySideNav','copyRightNav','copyFlag','init','leftNavInit','rightNavInit','footNavInit'],
         storage: dbStorage,
         // state 中的字段名，按组打包储存
       },
