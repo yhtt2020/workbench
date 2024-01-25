@@ -120,14 +120,12 @@
                           style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                           @click.stop="newOpenApp(item.type, item.value, item)">
                           <!-- <Drag :data="item" :currentId="currentId"> -->
-                          <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"
-                            :placement="'top'">
-                          </Team>
+                          <Team v-if="item.value === 'commun'" :item="item" :placement="'top'"></Team>
                           <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
                             @click="openFolder(item)">
                           </FolderVue>
                           <template v-else>
-                            <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
+                            <Avatar :item="item"></Avatar>
                           </template>
                           <!-- </Drag> -->
 
