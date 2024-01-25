@@ -7,7 +7,9 @@
     @mouseup="handleMouseUp"
     @mouseleave="handleMouseleave"
     @mouseover="handleMouseover"
+    ref="drop"
   >
+    {{ isOutside }}
     <slot></slot>
   </div>
 </template>
@@ -16,6 +18,7 @@
 import { inject, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { nanoid } from "nanoid";
+import { useMouseInElement } from "@vueuse/core";
 
 import { myIcons } from "../../../../store/myIcons";
 import { useFolderStore } from "../store";
@@ -25,6 +28,7 @@ import { defaultData } from "./options";
 // 获取桌面数据
 const deskStore = useDeskStore();
 const { isEnterFolder } = storeToRefs(deskStore);
+
 // 获取文件夹数据
 const folderStore = useFolderStore();
 const { dragId, isDrag, move, currentId, currentData } =
@@ -36,9 +40,13 @@ const { isDrag: iconDrag, iconList, iconsRefs } = storeToRefs(iconStore);
 // 获取父组件数据
 const data = inject("data", "");
 const index = inject("index", "");
-const isOutside = inject("isOutside", false);
+// const isOutside = inject("isOutside", false);
 // 自定义事件
 const emits = defineEmits(["createFile", "deleteFile", "updateBg"]);
+
+//
+const drop =ref(null)
+const { isOutside } = useMouseInElement(drop);
 
 /**
  * 处理drop放置
@@ -58,7 +66,6 @@ const handleDrop = async (dragEvent) => {
   // 处理系统拖拽进入的文件
   let files = dragEvent.dataTransfer.files;
   if (!files || files.length <= 0) return;
-
 
   for (let file of files) {
     let fileInfo = {
@@ -108,6 +115,10 @@ const handleMouseUp = () => {
 
   // 图标组件添加
   // 1 新数据处理
+
+
+  // if (11) return;
+  if (!isDragIcon.value) return
   iconList.value.forEach((item) => {
     const file = {
       ...defaultData,
@@ -129,9 +140,13 @@ const handleMouseUp = () => {
 
   // 2 旧数据删除
   if (iconsRefs.value.length < 1) return;
+
+  console.log("iconsRefs.value.length  :>> ", iconsRefs.value.length);
   iconsRefs.value.forEach((item) => {
     item.doRemoveCard();
   });
+  iconList.value = [];
+  iconsRefs.value = [];
 };
 
 const handleMouseleave = (dragEvent) => {
@@ -169,11 +184,10 @@ watch(
   () => isDrag.value,
   (val) => {
     if (!isDrag.value) {
-      isDragIcon.value = false
+      isDragIcon.value = false;
     }
   }
 );
-
 </script>
 
 <style lang="scss" scoped></style>

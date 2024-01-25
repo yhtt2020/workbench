@@ -19,19 +19,12 @@
       {{ types[type].name }}
     </div>
     <a-avatar
-      v-if="type == 'avatarFrame' || type == 'medal'"
       shape="square"
-      :size="56"
+      :size="types[type].size"
       :src="types[type].icon"
       class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
     />
-    <a-avatar
-      v-if="type == 'communityPoints' || type == 'experience'"
-      shape="square"
-      :size="42"
-      :src="types[type].icon"
-      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-    />
+
     <!-- <xt-ify-icon
       v-if="type == 'communityPoints' || type == 'experience'"
       class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
@@ -60,18 +53,22 @@ const types = computed(() => {
     medal: {
       name: "勋章",
       icon: props.icon,
+      size: 56,
     },
     communityPoints: {
       name: "积分",
-      icon: "/public/img/task/communityPoints.png",
+      icon: "/public/img/task/communityPoints.svg",
+      size: 56,
     },
     experience: {
       name: "经验",
       icon: "/public/img/task/experience.png",
+      size: 42,
     },
     avatarFrame: {
       name: "头像",
       icon: props.icon,
+      size: 56,
     },
   };
 });

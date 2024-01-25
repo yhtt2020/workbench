@@ -33,14 +33,16 @@
       </template>
     </cardDrag>
   </Widget>
-  <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
+
+  <ClockSettingModal ref="clockSettingRef"/>
+  <!-- <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
     <template #title>
       <div class="text-center">设置</div>
     </template>
-    <!--  -->
+    
     <XtRadio @onChange="__updateSize" :data="customData.dragCardSize"></XtRadio>
     <ClockStyle @updateClockStyle="updateClockStyle"></ClockStyle>
-  </a-drawer>
+  </a-drawer> -->
 
   <ClockFullScreen
     @updateBlur="updateBlur"
@@ -61,6 +63,7 @@
 import Widget from "../../card/Widget.vue";
 import ClockStyle from "./clockState/ClockStyle.vue";
 import ClockFullScreen from "./clockState/ClockFullScreen.vue";
+import ClockSettingModal from "./components/ClockSettingModal.vue";
 
 import mixin from "./hooks/clockMixin.js";
 import { cardStore } from "../../../store/card.ts";
@@ -100,8 +103,9 @@ export default {
           icon: "shezhi1",
           title: "设置",
           fn: () => {
-            this.$refs.homelSlotRef.visible = false;
-            this.settingVisible = true;
+            this.$refs.clockSettingRef.openClockModal();
+            // this.$refs.homelSlotRef.visible = false;
+            // this.settingVisible = true;
           },
         },
       ],
@@ -130,7 +134,8 @@ export default {
     ClockStyle,
     ClockFullScreen,
     cardDrag,
-    clockIcon
+    clockIcon,
+    ClockSettingModal
   },
   created() {},
   mounted() {

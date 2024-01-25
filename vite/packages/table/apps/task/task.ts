@@ -36,7 +36,10 @@ export const completeBranchTask = (id) => {
     return;
   }
   // 处于未完成阶段
-  if (!completedList.value.includes(id) && !claimRewardsList.value.includes(id)) {
+  if (
+    !completedList.value.includes(id) &&
+    !claimRewardsList.value.includes(id)
+  ) {
     endTask(id);
   }
 };
@@ -50,6 +53,10 @@ const getGuide = (id) => {
   let config: any = {
     timeout: 0,
   };
+  console.log(
+    "completedList.value.includes(id) :>> ",
+    completedList.value.includes(id)
+  );
   if (completedList.value.includes(id)) {
     config = { timeout: 3000, hideProgressBar: false };
   }
