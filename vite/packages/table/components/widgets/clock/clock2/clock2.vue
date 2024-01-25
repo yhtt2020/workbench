@@ -1,7 +1,7 @@
 <template>
-  <div class="clock2">
-    <p class="time">{{ time }}<span :style="{ display: isSnow == true ? 'inline-block' : 'none' }">{{ min }}</span></p>
-    <p class="date" :style="{ display: isSnow == true ? 'inline-block' : 'none' }">{{ date }}</p>
+  <div class="clock2 flex flex-col items-center justify-center" style="height: 122px;">
+    <div class="time mb-8">{{ time }}<span :style="{ display: isSnow == true ? 'inline-block' : 'none' }">{{ min }}</span></div>
+    <div class="date" :style="{ display: isSnow == true ? 'inline-block' : 'none' }">{{ date }}</div>
   </div>
 </template>
 
@@ -68,15 +68,30 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.clock2 {
+.clock2{
   color: var(--main-text);
   text-align: center;
   /* width: 100%;
   height: 100%; */
   text-shadow: 0 0 20px #a9a9a9, 0 0 10px rgba(31, 31, 31, 0.25);
+  & .time{
+    font-family: "sans-serif";
+    letter-spacing: 0.05em;
+    font-size: 60px;
+  }
+  & .date{
+    letter-spacing: 0.1em;
+    font-size: 16px;
+  }
+  & .name {
+    letter-spacing: 0.1em;
+    font-size: 12px;
+    // padding: 20px 0 0;
+  }
 
+
+  /** .clock2 {
 }
-
 .clock2 .time {
   font-family: "sans-serif";
   letter-spacing: 0.05em;
@@ -85,16 +100,16 @@ export default {
   margin-top: -10px;
   margin-bottom: 0;
 }
-
 .clock2 .date {
   letter-spacing: 0.1em;
   font-size: 15px;
   margin-top: -15px;
 }
-
 .clock2 .name {
   letter-spacing: 0.1em;
   font-size: 12px;
   padding: 20px 0 0;
+}**/
 }
 </style>
+

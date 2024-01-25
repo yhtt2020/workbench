@@ -26,13 +26,15 @@
               isClock5w420: isClock5w420 == true,
             }"
             :style="{ zoom: zoom }"
+            
           />
+          <!-- :clockFont="clockSetting.font" -->
         </div>
       </template>
     </cardDrag>
   </Widget>
 
-  <ClockSettingModal ref="clockSettingRef"/>
+  <ClockSettingModal ref="clockSettingRef" @updateClockStyle="updateClockStyle"/>
   <!-- <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
     <template #title>
       <div class="text-center">设置</div>
@@ -307,7 +309,7 @@ export default {
     "clockSetting.backgroundFrame":{
       handler(newVal){
         if(newVal){
-          const hideOption = { className: "card small", title: "", icon: "",type: "games",background:"transparent", };
+          const hideOption = { ...this.options,background:"transparent", };
           this.options = hideOption;
           this.$nextTick(()=>{
            document.querySelector(".content-title").style = "display:none !important;";
@@ -315,7 +317,7 @@ export default {
           });
         }
         else {
-          const showOption = { className: "card small",  title: "时钟",  icon: "", type: "games",};
+          const showOption = { ...this.options,background:"var(--primary-bg)" };
           this.options = showOption;
           this.$nextTick(()=>{
            document.querySelector(".content-title").style = "display:flex !important;";

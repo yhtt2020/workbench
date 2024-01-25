@@ -7,7 +7,11 @@ export const clockStore = defineStore('clock',{
   clockSetting:{
    enableSecond:false,
    backgroundFrame:false,
-   
+   font: {
+    name:'优设标题黑',
+    value:"font-family: '优设标题黑' !important;"
+   },
+   currentStatus:"font",
   }
  }),
  actions:{},

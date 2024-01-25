@@ -1,16 +1,15 @@
 <template>
   <div class="FlipClock clock1">
-    <Flipper ref="flipperHour1" />
-    <Flipper ref="flipperHour2" />
+    <Flipper ref="flipperHour1" :style="clockFont" />
+    <Flipper ref="flipperHour2" :style="clockFont" />
     <em>:</em>
-    <Flipper ref="flipperMinute1" />
-    <Flipper ref="flipperMinute2" />
+    <Flipper ref="flipperMinute1" :style="clockFont" />
+    <Flipper ref="flipperMinute2" :style="clockFont" />
     <template :style="{ display: isSnow == true ? 'inline-block' : 'none' }">
       <em>:</em>
-      <Flipper ref="flipperSecond1" />
-      <Flipper ref="flipperSecond2" />
+      <Flipper ref="flipperSecond1" :style="clockFont" />
+      <Flipper ref="flipperSecond2" :style="clockFont" />
     </template>
-
   </div>
 </template>
 
@@ -26,6 +25,9 @@ export default {
       type: String,
       default: true,
     },
+    clockFont:{
+      type:String,
+    }
   },
   data() {
     return {
