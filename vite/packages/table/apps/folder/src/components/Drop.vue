@@ -9,7 +9,6 @@
     @mouseover="handleMouseover"
     ref="drop"
   >
-    {{ isOutside }}
     <slot></slot>
   </div>
 </template>
@@ -40,13 +39,13 @@ const { isDrag: iconDrag, iconList, iconsRefs } = storeToRefs(iconStore);
 // 获取父组件数据
 const data = inject("data", "");
 const index = inject("index", "");
-// const isOutside = inject("isOutside", false);
+const isOutside = inject("isOutside", false);
 // 自定义事件
 const emits = defineEmits(["createFile", "deleteFile", "updateBg"]);
 
 //
 const drop =ref(null)
-const { isOutside } = useMouseInElement(drop);
+
 
 /**
  * 处理drop放置

@@ -13,11 +13,12 @@ const defaultOptions = {
   mainList: [],
   headerList: [],
   folderList: [],
-  columns: 8,
+  columns: 5,
   cb: () => {},
 };
 export const useCustomLayout = async (options) => {
   const mergedOptions = _.merge({}, defaultOptions, options);
+  console.log('mergedOptions :>> ', mergedOptions);
   const { mainList, headerList, folderList, columns, cb } = mergedOptions;
   const freeLayoutStore: any = useFreeLayoutStore();
   const { getFreeLayoutData, getFreeLayoutState, freeLayoutEnv } =

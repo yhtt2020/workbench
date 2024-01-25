@@ -106,6 +106,7 @@ import { startApp } from "../../../ui/hooks/useStartApp";
 import EditNewNavigation from "../../../components/desk/navigationBar/EditNewNavigation.vue";
 import { useNavigationStore } from "../../../components/desk/navigationBar/navigationStore";
 import { useMouseInElement } from "@vueuse/core";
+import { mergeData } from "../../../ui/hooks/useDataConversion";
 const { proxy } = getCurrentInstance();
 const router = useRouter();
 /**
@@ -517,11 +518,13 @@ const refreshDeskApp = async () => {
   }, 1000);
 };
 onMounted(async () => {
-  console.log(" onMounted:>> ");
+  customData.value.list = customData.value.list.map((item) => mergeData(item));
+  // 空图标替换
   if (customData.value.icon === "") {
     customData.value.icon =
       "https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#ffffff";
   }
+  // 旧版大小数据替换
   if (customData.value.customSize == "") {
     customData.value.customSize = customData.value.size;
   }
