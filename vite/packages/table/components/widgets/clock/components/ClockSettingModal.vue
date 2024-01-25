@@ -6,8 +6,7 @@
     <div class="flex flex-col">
      <div class="flex justify-between mb-2.5">
       <span class="xt-font xt-text font-16">秒针</span>
-      <a-switch />
-      <!-- v-model:checked="checked" -->
+      <a-switch v-model:checked="clockSetting.enableSecond"/>
      </div>
      <span class="xt-font xt-text-2 font-14">
       显示秒针可能会影响性能。
@@ -21,7 +20,7 @@
     <div class="flex flex-col">
      <div class="flex justify-between mb-2.5">
       <span class="xt-font xt-text font-16">背景框</span>
-      <a-switch />
+      <a-switch v-model:checked="clockSetting.backgroundFrame"/>
      </div>
      <span class="xt-font xt-text-2 font-14">
       显示时钟组件的背景框。
@@ -49,7 +48,12 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref,watch } from "vue";
+import { storeToRefs } from 'pinia';
+import { clockStore } from '../hooks/clockStore';
+
+const clock = clockStore();
+const { clockSetting } = storeToRefs(clock);
 
 const clockVisible = ref(false);
 const clockValue = ref(
@@ -86,6 +90,16 @@ const clockOption = [
 const openClockModal = () => {
   clockVisible.value = true;
 };
+
+// watch(()=>clockSetting.value.backgroundFrame,(newVal)=>{
+//   const el = document.querySelector('.content-title');
+//   if(newVal){
+//     el.style = 'opacity:0 !important;'
+//   }
+//   else{
+//     el.style = 'opacity:1 !important;'
+//   }
+// },{deep:true,immediate:true})
 
 defineExpose({
   openClockModal,

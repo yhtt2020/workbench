@@ -8,16 +8,14 @@
     ref="homelSlotRef"
     :desk="desk"
   >
-  <template #left-title-icon>
-        <div
-          class="icon"
+    <template #left-title-icon>
+        <div class="icon"
           style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; ">
-          <!-- <RobotOutlined style="font-size: 20px" /> -->
+            left: 2px; " v-if="!clockSetting.backgroundFrame">
           <clockIcon icon="fluent:clock-12-regular" style="font-size: 20px;" />
         </div>
-      </template>
-    <cardDrag ref="drag" @reSizeInit="reSizeInit" class="drag">
+    </template>
+    <cardDrag ref="drag" @reSizeInit="reSizeInit" :style="clockSetting.backgroundFrame ? { height:'100%' }:{height:'140px'}">
       <template #="{ row }">
         <div class="box no-drag" @click="fullScreen()">
           <component
@@ -60,20 +58,20 @@
 </template>
 
 <script>
+import mixin from "./hooks/clockMixin.js";
+import { mapActions, mapWritableState } from "pinia";
+import cardDragHook from "../../card/hooks/cardDragHook";
+import cardSizeHook from "../../card/hooks/cardSizeHook";
+import {Icon as clockIcon } from '@iconify/vue';
+import { cardStore } from "../../../store/card.ts";
+import { clockStore } from "./hooks/clockStore";
+
 import Widget from "../../card/Widget.vue";
 import ClockStyle from "./clockState/ClockStyle.vue";
 import ClockFullScreen from "./clockState/ClockFullScreen.vue";
 import ClockSettingModal from "./components/ClockSettingModal.vue";
-
-import mixin from "./hooks/clockMixin.js";
-import { cardStore } from "../../../store/card.ts";
-import { mapActions } from "pinia";
-
 import cardDrag from "../../card/hooks/cardDrag.vue";
-import cardDragHook from "../../card/hooks/cardDragHook";
 
-import cardSizeHook from "../../card/hooks/cardSizeHook";
-import {Icon as clockIcon } from '@iconify/vue'
 export default {
   mixins: [mixin, cardDragHook, cardSizeHook],
   props: {
@@ -88,6 +86,14 @@ export default {
     desk: {
       type: Object,
     },
+  },
+  components: {
+    Widget,
+    ClockStyle,
+    ClockFullScreen,
+    cardDrag,
+    clockIcon,
+    ClockSettingModal
   },
   data() {
     return {
@@ -129,15 +135,12 @@ export default {
       widthHeightObj: {},
     };
   },
-  components: {
-    Widget,
-    ClockStyle,
-    ClockFullScreen,
-    cardDrag,
-    clockIcon,
-    ClockSettingModal
+  
+  computed:{
+    ...mapWritableState(clockStore,["clockSetting"]),
+    
   },
-  created() {},
+
   mounted() {
     let setData = {};
     if (!this.customData.clockId) {
@@ -298,6 +301,30 @@ export default {
       this.options.title = month + "月" + day + "日 " + dayOfWeek;
     },
   },
+
+  watch:{
+    // 时钟背景开关是否开启
+    "clockSetting.backgroundFrame":{
+      handler(newVal){
+        if(newVal){
+          const hideOption = { className: "card small", title: "", icon: "",type: "games",background:"transparent", };
+          this.options = hideOption;
+          this.$nextTick(()=>{
+           document.querySelector(".content-title").style = "display:none !important;";
+           document.querySelector(".gradient").style = "box-shadow:none !important;";
+          });
+        }
+        else {
+          const showOption = { className: "card small",  title: "时钟",  icon: "", type: "games",};
+          this.options = showOption;
+          this.$nextTick(()=>{
+           document.querySelector(".content-title").style = "display:flex !important;";
+          })
+        }
+      },
+      immediate:true,
+    }
+  }
 };
 </script>
 
