@@ -123,6 +123,9 @@ export const defaultIconData = {
 export const useLinkConversionNav = (link)=>{
   const https = link.icon.includes('https')
   const http = link.icon.includes('http')
+  if(!https && !http){
+    link.value='http://'+link.value
+  }
   const file = {
     name:link.name || '链接',
     icon: (!https && http) ? link.icon : 'fluent-emoji:globe-with-meridians',
