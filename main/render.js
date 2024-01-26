@@ -408,6 +408,51 @@ global.render = {
     })
 
   },
+  /**
+   * 注册工作台应用协议
+   * @param request
+   * @param response
+   */
+  regTTAppProtocol (request, response) {
+    let url=new URL(request.url)
+    let pathName = url.pathname
+    let domain=url.domain
+    console.log(url)
+    let extension = path.extname(pathName).toLowerCase()
+    if (!extension) return
+    pathName = decodeURI(pathName)
+    let filePath
+    let root= require('electron').app.getPath('userData')
+    let appsPath=require('path').join(root,'apps',url.hostname)
+    if(extension==='.html'){
+      filePath=path.join(appsPath, pathName)
+    }else{
+      filePath=path.join(appsPath, pathName)
+    }
+
+    fs.readFile(filePath, (error, data) => {
+      if (error) return
+      let mimeType = ''
+      if (extension === '.js') {
+        mimeType = 'text/javascript'
+      } else if (extension === '.html') {
+        mimeType = 'text/html'
+      } else if (extension === '.css') {
+        mimeType = 'text/css'
+      } else if (extension === '.svg') {
+        mimeType = 'image/svg+xml'
+      } else if (extension === '.json') {
+        mimeType = 'application/json'
+      }else if(extension==='.mp3'){
+        mimeType = 'audio/mpeg'
+      }else if(extension==='.png'){
+        mimeType = 'image/png'
+      }else if(extension==='.jpg'){
+        mimeType = 'image/jpeg'
+      }
+      response({ mimeType, data })
+    })
+  },
   regDefaultProtocol (request, response) {
     let pathName = new URL(request.url).pathname
     let extension = path.extname(pathName).toLowerCase()

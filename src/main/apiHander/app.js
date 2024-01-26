@@ -31,6 +31,13 @@ class App extends Base {
         }
       },BrowserWindow.fromWebContents(event.sender))
     })
+
+    this.on('installTTApp',(event,args)=>{
+    //todo appSqlModel.install()
+      //unzip  copy  generatemd5  writedb    id=>path
+
+      event.reply(args.cbId,{status:1,nanoid:data.nanoid})
+    })
   }
 }
 
