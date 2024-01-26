@@ -3,6 +3,7 @@
     :options="options"
     :sizeList="sizeList"
     :customData="customData"
+    :customIndex="customIndex"
     :desk="desk"
     ref="todoSlot"
     :menuList="toggleTodoList"

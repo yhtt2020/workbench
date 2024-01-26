@@ -1,7 +1,7 @@
 /**
  * 显示的文件类型
  */
-export const fileTypes = {
+export const fileTypes  = {
   app: ["exe"],
   docx: [
     "docx",
