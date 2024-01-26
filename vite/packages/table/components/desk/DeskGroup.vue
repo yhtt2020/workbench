@@ -24,7 +24,7 @@
             <div class=" panel-top xt-bg"  style="">
               <div class="text-center">
                 <div class="line-title xt-text" style="" >快速搭建你的桌面</div>
-                <div class="font-16 xt-text-2 mt-2">你可以将系统桌面或资源管理器中的应用程序快捷方式或文件拖动到桌面，或者选择一下推荐的桌面搭建方式。</div>
+                <div class="font-16 xt-text-2 mt-2">你可以将系统桌面或资源管理器中的应用程序快捷方式或文件拖动到桌面，或者选择以下推荐的桌面搭建方式。</div>
                 <div class="mt-6 flex justify-center w-full justify-items-center align-items-center" >
                   <xt-button :w="113" :h="40" @click="addIcon" class="xt-bg-2 ml-3" key="console" type="primary" >
                     <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:add-16-regular"></xt-new-icon>添加图标</div>
