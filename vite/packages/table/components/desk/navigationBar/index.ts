@@ -213,7 +213,7 @@ export const webMenus=[
         tag:'message'
     },
     {
-        name:'休闲娱乐',
+        name:'游戏娱乐',
         tag:'game'
     },
 ]
@@ -273,10 +273,6 @@ export const iconStatus=[
 
 export const localFiles=[
     {
-        name:'全部',
-        tag:'all'
-    },
-    {
         name:'软件',
         tag:"software"
     },
@@ -287,7 +283,11 @@ export const localFiles=[
     {
         name:"其他",
         tag:'other'
-    }
+    },
+    {
+        name:'全部',
+        tag:'all'
+    },
 ]
 
 export const doc=[

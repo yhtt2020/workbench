@@ -105,11 +105,11 @@ const findItem = (target, value, item) => {
  */
 watch(() => navigationStore.bottomToggle[1], (newValue, oldValue) => {
     findItem(newValue, 'commun', iconList.value[0])
-}, { deep: true, immediate: true });
+}, { deep: true });
 
 watch(() => navigationStore.bottomToggle[2], (newValue, oldValue) => {
     findItem(newValue, 'task', iconList.value[1])
-}, { deep: true, immediate: true });
+}, { deep: true });
 
 const clearAll = (list)=>{
     list = [...resetIconList.value]

@@ -536,7 +536,7 @@ export default [
         meta: {
           rememberChildrenPosition: true
         },
-        redirect: '/desk',
+        redirect: '/ai',
         children: [
           {
             path: '/Note',
@@ -558,15 +558,6 @@ export default [
             path: '/Tomato',
             name: 'tomato',
             component: Tomato
-          },
-          {
-            path: '/desk',
-            name: 'workDesk',
-            component: WorkDesk,
-            meta:{
-              tab1:'work',
-              tab2:'workDesk'
-            }
           },
           {
             path: "/ai",

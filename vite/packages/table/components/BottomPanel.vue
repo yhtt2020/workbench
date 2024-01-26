@@ -20,12 +20,12 @@
 
     <!--  <ControlModal ref="controlRef" v-if="controlVisible" @close="controlVisible = false" :full="full" @setFull="setFull"/> -->
     <!-- <div>{{ !this.isLeaveBar && this.controlVisible && this.folderVisible }} ------ {{ autoVisible }}</div> -->
-    <Transition name="animate__animated animate__bounce"  enter-active-class="animate__bounceInUp" leave-active-class="animate__zoomOutDown">
-    <div @click.stop 
+    <!-- <Transition name="animate__animated animate__bounce"  enter-active-class="animate__bounceInUp" leave-active-class="animate__zoomOutDown"> -->
+    <AutoHide>
+    <div @click.stop
       class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
       id="bottom-bar" style="text-align: center;position: relative;" @contextmenu="showMenu" v-show="autoVisible"
-      :style="{ zoom: `${(this.navAttribute.navSize / 100)}` }" @mouseenter="handleMouseEnter"
-      @mouseleave="handleMouseLeave">
+      :style="{ zoom: `${(this.navAttribute.navSize / 100)}` }" >
       <!-- 快速搜索 底部 用户栏 -->
 
       <div v-if="(!simple || settings.enableChat) && !this.isOffline && this.bottomToggle[0]"
@@ -66,9 +66,9 @@
             style="position: absolute;z-index:99999999999;top:-8px;left:50%;transform: translateX(-50%) translateY(-100%)  ;"
             class="px-10 py-3 rounded-lg s-bg xt-text">松开鼠标合并</div>
         </transition>
-        <div id="bottomPanel" 
+        <div id="bottomPanel"
         :class="{ 'nav-enter': autoVisible, 'nav-leave': !autoVisible }"
-        @drop.prevent="drop" 
+        @drop.prevent="drop"
         @dragover.prevent="" class="flex flex-row items-center s-bg" style="
         display: flex;
         flex-direction: column;
@@ -113,7 +113,6 @@
                       :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }"
                       @mouseenter="showElement(item, index)">
                       <xt-menu :id="item.id" class="relative overflow-visible item-content" :menus="folderOptions">
-
                         <div @dragover="onDrag" @dragend="hoverIndex = -1"
                           v-if="!(this.navList.includes(item.event) && this.isOffline)"
                           class="flex items-center justify-center pointer"
@@ -121,14 +120,12 @@
                           style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                           @click.stop="newOpenApp(item.type, item.value, item)">
                           <!-- <Drag :data="item" :currentId="currentId"> -->
-                          <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"
-                            :placement="'top'">
-                          </Team>
+                          <Team v-if="item.value === 'commun'" :item="item" :placement="'top'"></Team>
                           <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
                             @click="openFolder(item)">
                           </FolderVue>
                           <template v-else>
-                            <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
+                            <Avatar :item="item"></Avatar>
                           </template>
                           <!-- </Drag> -->
 
@@ -149,7 +146,8 @@
       </keep-alive>
       <Common ref="common"></Common>
     </div>
-    </Transition>
+    <!-- </Transition> -->
+    </AutoHide>
 
     <div id="trans" v-show="visibleTrans" style="
       position: fixed;
@@ -169,14 +167,6 @@
 
   <transition name="fade">
     <div :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }" v-if="quick">
-      <!-- 老版 -->
-      <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
-      <!-- 新版 -->
-      <!-- <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'">
-      </EditNewNavigation>
-      <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'" @hiedNav="hiedNav">
-      </navigationSetting>
-      <EditIcon @setQuick="setQuick" v-if="componentId === 'EditIcon'"></EditIcon> -->
       <component :is='componentId' @setQuick="setQuick"></component>
     </div>
   </transition>
@@ -248,6 +238,7 @@ import ControlModal from './desk/navigationBar/components/control/ControlModal.v
 import Drag from './desk/navigationBar/components/folder/Drag.vue'
 import { hoverRealItemId } from './desk/navigationBar/hook/hoverRealItemId'
 import 'animate.css'
+import AutoHide from './desk/navigationBar/components/folder/AutoHide.vue'
 
 export default {
   name: 'BottomPanel',
@@ -280,6 +271,7 @@ export default {
     Common,
     ControlModal,
     Drag,
+    AutoHide
   },
   data() {
     return {
@@ -455,7 +447,6 @@ export default {
       controlLeft: 0,
       skipSort: false,
       skipSimple: false,
-      isEdge: false,
       parentHeight: 0
     }
   },
@@ -515,7 +506,12 @@ export default {
     })
     // 图标整体替换格式方法
     this.copyFootNav = this.replaceType(this.copyFootNav)
-
+    //对id进行强制修复
+    this.copyFootNav.forEach(item=>{
+      if(!item.id){
+        item.id=nanoid(6)
+      }
+    })
     this.noticeFlag = true
 
     this.useWindowSize((size) => {
@@ -556,7 +552,7 @@ export default {
       'editToggle', 'taskBoxVisible',
       'selectNav', 'bottomToggle',
       'popVisible', 'currentList',
-      'editItem', 'navAttribute', 'iconRadius', 'jumpDesk', 'customOpenNav', 'isLeaveBar'
+      'editItem', 'navAttribute', 'iconRadius', 'jumpDesk', 'customOpenNav', 'isLeaveBar','isEdge'
     ]),
     ...mapWritableState(taskStore, ['isTask', 'isTaskDrawer']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
@@ -815,7 +811,6 @@ export default {
     listenMouse(e) {
       if (e.x < 50 || e.x > (this.parentSize - 50) || e.y > (this.parentHeight - 50)) {
         this.isEdge = true
-        // console.log(e.y, '=======<<<<<<<<', this.isEdge)
       } else {
         this.isEdge = false
       }
@@ -946,7 +941,6 @@ export default {
         if (item.component === 'EditNewNavigation') {
           this.editToggle = true
           this.selectNav = 'foot'
-          message.success('进入编辑模式')
         }
         this.quick = true
       }
@@ -1218,6 +1212,9 @@ export default {
               return item.id === that.hoverRealItemId('bottomContent', that.hoverIndex)
             }), 1, merged)
             that.copyFootNav = that.copyFootNav.filter(item => {
+              if(!that.dragItem.id){
+                that.dragItem.id=nanoid(6)
+              }
               return item.id !== that.dragItem.id
             })
             //执行合并后，因为更改了数组，已经自动触发了重置数组，所以不需要再执行update，数据也是正确的

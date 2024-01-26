@@ -13,8 +13,7 @@ const defaultOptions = {
   mainList: [],
   headerList: [],
   folderList: [],
-  // 修改列数 0Dxb
-  columns: 4,
+  columns: 8,
   cb: () => {},
 };
 export const useCustomLayout = async (options) => {

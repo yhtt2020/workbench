@@ -263,7 +263,7 @@ import { registerFolder } from "../../apps/folder/src/hooks/register";
 import { LoadingOutlined } from "@ant-design/icons-vue";
 import GalleryModal from "../paperModal/GalleryModal.vue";
 import { useAddCard } from "../../ui/hooks/useAddCard";
-import { useDeskStore } from "./store"; 
+import { useDeskStore } from "./store";
 import { useCustomLayout } from "./freeLayout/useCustomLayout";
 import { useFileConversionIcon } from "../../apps/folder/src/hooks/useDataConversion";
 import { headerData, mainData, folderData } from "./freeLayout/config";
@@ -502,7 +502,7 @@ export default {
           id: 0,
           newIcon: "fluent:add-16-filled",
           name: "定制桌面测试",
-          disabled: false,
+          disabled: true,
           fn: () => {
             useCustomLayout({
               headerList: headerData,
