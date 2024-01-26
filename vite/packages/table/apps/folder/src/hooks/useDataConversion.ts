@@ -1,7 +1,7 @@
 import { getHostAddress } from './../../../../components/widgets/myIcons/edit/hooks/getHostAddress';
 import { nanoid } from "nanoid";
 
-import { defaultData } from "../components/options";
+import { defaultData } from "../../../../apps/folder/src/components/options";
 export const useIconConversionFile = (data) => {
   const file = {
     ...defaultData,
@@ -79,15 +79,15 @@ export const useDeskConversionNav = (icon, name, item) => {
   const file = {
     icon: icon,
     name,
-    type:'tableApp',
-    bg:'',
-    isBg:false,
-    mode:'app',
-    value:item,
-    id:nanoid(6)
-  }
-  return file
-}
+    type: "tableApp",
+    bg: "",
+    isBg: false,
+    mode: "app",
+    value: item,
+    id: nanoid(6),
+  };
+  return file;
+};
 
 export const defaultIconData = {
   renewTime: "",
@@ -102,7 +102,7 @@ export const defaultIconData = {
    * link 网址链接
    */
   mode: "app",
-
+  attributeEdit: true,
   /**
    * 当前
    */
