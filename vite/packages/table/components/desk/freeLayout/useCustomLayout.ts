@@ -1,7 +1,8 @@
 import { storeToRefs } from "pinia";
 import { nanoid } from "nanoid";
 import _ from "lodash";
-import { useAddCard } from "../../../ui/hooks/useAddCard";
+import { useAddCard, useDelCard } from "../../../ui/hooks/useAddCard";
+import { getSnapGrid } from "../../../ui/new/drag/src/hooks/utils";
 import {
   useGridToWidth,
   useHeightToGrid,
@@ -13,34 +14,64 @@ const defaultOptions = {
   mainList: [],
   headerList: [],
   folderList: [],
-  columns: 5,
+  columns: 4,
   cb: () => {},
+  test: false,
 };
+
 export const useCustomLayout = async (options) => {
+  const getPositioningData = () => {
+    return new Promise((resolve, reject) => {
+      let positioningId = addCard(-999, -999, {});
+      setTimeout(() => {
+        resolve(positioningId);
+      }, 500); // 在500毫秒后返回
+    });
+  };
   const mergedOptions = _.merge({}, defaultOptions, options);
-  console.log('mergedOptions :>> ', mergedOptions);
-  const { mainList, headerList, folderList, columns, cb } = mergedOptions;
+  console.log("mergedOptions :>> ", mergedOptions);
+  const { mainList, headerList, folderList, columns, cb, test } = mergedOptions;
   const freeLayoutStore: any = useFreeLayoutStore();
   const { getFreeLayoutData, getFreeLayoutState, freeLayoutEnv } =
     storeToRefs(freeLayoutStore);
-  // getFreeLayoutState.value.system.isFreeLayout = true;
+
+  if (!getFreeLayoutState.value.system.isFreeLayout)
+    getFreeLayoutState.value.system.isFreeLayout = true;
+  getFreeLayoutState.value.system.isFreeLayout = true;
+
+  let positioningId = await getPositioningData();
   // freeLayoutStore.restoreLocation();
-  console.log(
-    "重置拿到的 freeLayoutEnv.value.scrollLeft :>> ",
-    freeLayoutEnv.value.scrollLeft
-  );
+
   // 重置拿到的 freeLayoutEnv.value.scrollLeft :>>  2318.187227866473
   let containerWidth = freeLayoutEnv.value.scrollWidth;
   let layoutWidth = useGridToWidth(columns * 2);
+  console.log("layoutWidth :>> ", layoutWidth);
   let scaleFactor = 1;
   let position = 50;
   // 重置left坐标
+  let defaultLeft = freeLayoutEnv.value.scrollLeft / scaleFactor + position;
+  let snapped = 0;
   const resetLeft = () => {
     left = freeLayoutEnv.value.scrollLeft / scaleFactor + position;
+    // const [snappedX, snappedY] = getSnapGrid(
+    //   [134, 96],
+    //   left,
+    //   top,
+    //   getFreeLayoutState.value.canvas.width /
+    //     getFreeLayoutState.value.canvas.zoom,
+    //   getFreeLayoutState.value.canvas.height /
+    //     getFreeLayoutState.value.canvas.zoom,
+    //   6
+    // );
+    // console.log("snappedX :>> ", snappedX);
+    // // left = snappedX;
+    // snapped = left - snappedX;
+    // console.log("snapped :>> ", snapped);
+    // left = snappedX;
   };
   // 卡片数据展示
   const itemStatus = (item) => {
-    // return;
+    if (!test) return;
     const { width, height }: any = useElementSize(item.customData.customSize);
     console.log(
       "\u001b[31m" + "----------------数据处理----------------" + "\u001b[0m"
@@ -59,7 +90,7 @@ export const useCustomLayout = async (options) => {
     );
   };
   const widthDetectionStatus = (width, res, active) => {
-    return;
+    if (!test) return;
     console.log(
       "\u001b[31m" + "----------------换行检测----------------" + "\u001b[0m"
     );
@@ -77,7 +108,11 @@ export const useCustomLayout = async (options) => {
   // 检测是否超出
   const widthDetection = (width) => {
     let res =
-      left - freeLayoutEnv.value.scrollLeft / scaleFactor - position + width;
+      left -
+      freeLayoutEnv.value.scrollLeft / scaleFactor -
+      snapped -
+      position +
+      width;
     const active = res > layoutWidth + columns;
     widthDetectionStatus(width, res, active);
 
@@ -86,14 +121,12 @@ export const useCustomLayout = async (options) => {
 
   // 设置卡片数据
   const setData = async (arr: any) => {
-    console.log("开始的top :>> ", top);
     currentHeight = 0;
     let last = true;
     let flag = false;
     for (let item of arr.splice(0, arr.length)) {
       // 处理元素位置
       const { width, height }: any = useElementSize(item.customData.customSize);
-      console.log("item YuanShu height :>> ", height);
       itemStatus(item);
       // 元素超出
       if (widthDetection(width)) {
@@ -107,11 +140,9 @@ export const useCustomLayout = async (options) => {
         top += currentHeight + 12;
       }
       if (!last && height != currentHeight) {
-        console.log("不相等高度 :>> ");
         // 先填充空缺的数据
         let res =
           left - freeLayoutEnv.value.scrollLeft / scaleFactor - position;
-        console.log("res :>> ", res);
         currentTop += currentHeight + 12;
         currentHeight = height;
         fillHeight = currentHeight;
@@ -123,7 +154,6 @@ export const useCustomLayout = async (options) => {
         addCard(top, left, item);
         left += width + 12;
       } else {
-        console.log("正常添加 :>> ");
         addCard(top, left, item);
         left += width + 12;
         currentHeight = height;
@@ -154,10 +184,8 @@ export const useCustomLayout = async (options) => {
       position = 50;
     } else {
       position = (containerWidth / currentZoom - layoutWidth) / 2;
-      console.log("position :>> ", position);
     }
     scaleFactor = currentZoom;
-    console.log("scaleFactor :>> ", scaleFactor);
   };
   // 填充算法
   const fillGapAlgorithm = async () => {
@@ -169,11 +197,8 @@ export const useCustomLayout = async (options) => {
     if (active) {
       return;
     }
-    console.log("填充介入 :>> ");
     // 可以存放2x4
-    console.log("fillHeight - 280 >= 0 :>> ", fillHeight - 280 >= 0);
     if (arr2x4.length > 0 && fillHeight - 280 >= 0) {
-      console.log("2x4介入 :>> ");
       fill(arr2x4);
     } else if (arr2x2.length > 0) {
       fill(arr2x2);
@@ -249,7 +274,6 @@ export const useCustomLayout = async (options) => {
     setData(folder2x2);
     // top -= 24;
   }
-
   resetLeft();
   setData(arrSpecial);
   setData(arr4x4);
@@ -258,6 +282,7 @@ export const useCustomLayout = async (options) => {
   setData(arr1x1);
 
   setTimeout(() => {
+    useDelCard(positioningId);
     cb && cb();
   }, 600);
 };
@@ -318,8 +343,10 @@ const addCard = (top, left, item) => {
   useAddCard(
     item.name,
     {
-      ...item.customData,
+      ...item?.customData,
     },
     id
   );
+
+  return id;
 };
