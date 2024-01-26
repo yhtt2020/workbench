@@ -100,5 +100,22 @@ export default{
 </script>
 
 <style lang="scss" scoped>
-
+:deep(.clock4) {
+  // transform: scale(0.65);
+  & .ant-row{
+    flex-flow: wrap !important;
+    margin-left: -8px !important;
+    margin-right: -8px !important;
+  }
+  & .gutter-box{
+    padding: 8px !important;
+    margin: 8px 0 !important;
+  }
+  /**
+   :deep(.ant-row){
+    margin: 0 !important;
+    flex-flow: nowrap !important;
+  }
+  **/
+}
 </style>
