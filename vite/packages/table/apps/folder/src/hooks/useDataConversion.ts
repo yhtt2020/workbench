@@ -79,24 +79,21 @@ export const useDeskConversionNav = (icon, name, item) => {
   const file = {
     icon: icon,
     name,
-    type:'tableApp',
-    bg:'',
-    isBg:false,
-    mode:'app',
-    value:item,
-    id:nanoid(6)
-  }
-  return file
-}
-
-// 统一图标格式
+    type: "tableApp",
+    bg: "",
+    isBg: false,
+    mode: "app",
+    value: item,
+    id: nanoid(6),
+  };
+  return file;
+};
 export const mergeData = (data) => {
   // console.log((data?.renewTime == defaultIconData.renewTime ? data : ''),'===========<<<<<<<<<<')
   if (data?.renewTime == defaultIconData.renewTime) return data;
   const target= _.merge({}, defaultIconData, data);
   return target;
 };
-
 // 默认图标格式
 export const defaultIconData = {
   renewTime: 20240125, // 图标更新时间
