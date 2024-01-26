@@ -152,6 +152,7 @@ export const useLinkConversionNav = (link)=>{
     bg:'var(--secondary-transp-bg)',
     id:nanoid(6),
     linkIcon:link.icon === null ? true : false,
+    renewTime:Date.now(),
   }
   return file
 }

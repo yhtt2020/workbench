@@ -1,14 +1,14 @@
 <template>
   <div :class=[dropClass] @drop="handleDrop" @dragover="handleDragover" @dragenter="handleDragenter"
-    @dragleave="handleDragleave" ref="target" @mouseup="handleMouseUp" @mouseleave="handleMouseLeave"
-    @mouseover="handleMouseOver" @mouseenter="handleMouseEnter">
+    @dragleave="handleDragleave" ref="target" @mouseup="handleMouseUp" @mouseleave="handleMouseleave"
+    @mouseover="handleMouseover" @mouseenter="handleMouseEnter">
     <slot></slot>
   </div>
 </template>
 <script></script>
 <script setup>
 import { nanoid } from "nanoid";
-import { ref, computed } from "vue";
+import { ref, computed,watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useFolderStore } from "../../../../../apps/folder/src/store";
 import { useDeskStore } from "../../../../../components/desk/store";
@@ -37,7 +37,7 @@ const { dragId, isDrag, move, currentId, currentData, folderFlag } =
 
 // 图标数据
 const useIconStore = myIcons()
-const { iconList, iconsRefs } = storeToRefs(useIconStore)
+const { isDrag: iconDrag,iconList, iconsRefs } = storeToRefs(useIconStore)
 
 const emit = defineEmits(['createFile'])
 
@@ -76,11 +76,13 @@ const handleDrop = async (dragEvent) => {
     }else if(link && link !== ''){
       const http = link.includes('http')
       const https = link.includes('https')
+      // console.log(http, 'http', https, 'https')
       if(!http && !https){
         link = 'http://' + link
+        console.log(link, 'linkData')
+
       }
       let linkIcon = await getFavicon(link)
-      console.log(linkIcon, 'linkData')
       let name = useGetUrlName(link)
       let target = {name:name,icon:linkIcon,value:link}
       // 链接拖拽
@@ -91,6 +93,7 @@ const handleDrop = async (dragEvent) => {
 
   } else if (dragEvent.dataTransfer?.types.some((item) => item === 'text/plain')) {
     // 文件夹图标拖拽
+    move.value = true
     const item = _.cloneDeep(currentData.value)
     console.log(item, 'item')
     const data = useIconConversionNav(item)
@@ -127,6 +130,7 @@ const handleDragleave = (dragEvent) => {
  * 鼠标弹起事件
  */
 const handleMouseUp = (e) => {
+  if(!isDragIcon.value) return;
   iconList.value.forEach((item) => {
     const file = useFileConversionNav(item)
     emit('createFile', file, e)
@@ -139,16 +143,22 @@ const handleMouseUp = (e) => {
   // iconsRefs.value = [];
   // iconList.value = [];
 }
-const handleMouseLeave = (e) => {
-
-}
-const handleMouseOver = () => {
-
-}
+const handleMouseleave = (dragEvent) => {
+  // console.log("鼠标离开 :>> ");
+  isDragIcon.value = false;
+};
+const handleMouseover = (dragEvent) => {
+  // console.log("鼠标进入 :>> ");
+  if (iconDrag.value) {
+    isDragIcon.value = true;
+  }
+};
 
 const handleMouseEnter = (e) => {
 }
 
+
+let isDragIcon = ref(false)
 const getFileName = (name) => {
   if (typeof name === 'string') {
     const lastDotIndex = name.lastIndexOf('.');

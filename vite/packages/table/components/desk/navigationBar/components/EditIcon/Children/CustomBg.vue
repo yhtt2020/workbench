@@ -60,7 +60,7 @@ const getAvatar = (value) => {
 const reset = () => {
     props.editItem.icon = props.editItem.default.icon
     bgColor.value = ''
-    props.editItem.bg = ''
+    props.editItem.bg = props.editItem.default.bg
     props.editItem.isBg = false
     props.editItem.color = ''
     // isReset.value = true

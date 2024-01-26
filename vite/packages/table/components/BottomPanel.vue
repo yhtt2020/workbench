@@ -510,7 +510,7 @@ export default {
     // 图标整体替换格式方法
     // this.copyFootNav = this.replaceType(this.copyFootNav)
     this.copyFootNav = this.copyFootNav.map((item) => this.mergeData(item))
-    console.log(this.copyFootNav, 'copyFootNav')
+    // console.log(this.copyFootNav, 'copyFootNav')
     this.bottomInit = true
     //对id进行强制修复
     this.copyFootNav.forEach(item => {
@@ -671,6 +671,7 @@ export default {
   watch: {
     copyFootNav: {
       handler(newVal, oldVal) {
+        console.log(newVal,'copyFootNav')
         // 获取最大可添加图标个数
         const windowWidth = window.innerWidth
         this.maxItemNum = Math.round((windowWidth - 240) / 72)
@@ -847,7 +848,9 @@ export default {
       if (item.default.name) return
       item.default = {
         name: item.name,
-        icon: item.icon
+        icon: item.icon,
+        bg:item.bg,
+        color:item.color,
       }
       console.log(item,'edit.editItem')
     },

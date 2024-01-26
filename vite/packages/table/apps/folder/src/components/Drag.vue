@@ -61,11 +61,6 @@ const handleDragEnd = (event) => {
   if (!isOutside.value) {
     return;
   }
-  // 判断托起的文件是不是拖入导航栏
-  if (!isEnterBar.value){
-    emits("deleteFile", props.data);
-    return;
-  }
   if (!move.value) {
     const file = {
       model: "file",
@@ -108,6 +103,11 @@ const handleDragEnd = (event) => {
 
     emits("deleteFile", props.data);
 
+    return;
+  }
+  // 判断托起的文件是不是拖入导航栏
+  if (!isEnterBar.value){
+    emits("deleteFile", props.data);
     return;
   }
   // 判断是否处在当前文件夹

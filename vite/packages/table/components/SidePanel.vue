@@ -584,7 +584,9 @@ export default {
       if (item.default.name) return
       item.default = {
         name: item.name,
-        icon: item.icon
+        icon: item.icon,
+        bg:item.bg,
+        color:item.color,
       }
     },
     /**
