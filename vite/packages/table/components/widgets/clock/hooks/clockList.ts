@@ -1,22 +1,22 @@
 export const clockSelectList = [
  {
-  name:'优设标题黑',
+  name:'样式1',
   value:"font-family: '优设标题黑' !important;"
  },
  {
-  name:'Typefesse-Pleine',
+  name:'样式2',
   value:"font-family: 'Typefesse-Pleine' !important;",
  },
  {
-  name:'LLPixelFun-Regular',
+  name:'样式3',
   value:"font-family: 'LLPixelFun-Regular' !important;"
  },
  {
-  name:'Ouroboros-Regular',
+  name:'样式4',
   value:"font-family: 'Ouroboros-Regular' !important;"
  },
  {
-  name:'Pilowlava-Regular',
+  name:'样式5',
   value:"font-family: 'Pilowlava-Regular' !important;"
  }
 ]

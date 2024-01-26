@@ -1,11 +1,11 @@
 <template>
     <div class="clock6">
-        <div class="full-time" :style="clockFont">
+        <div class="full-time">
             <p id="time">{{ time }}</p>
             <p id="am-pm">{{ pmam }}</p>
         </div>
 
-        <div class="days" :style="clockFont">
+        <div class="days">
             <p class="day" :style="day == 0 ? 'color: #afeeee' : ''">sunday</p>
             <p class="day" :style="day == 1 ? 'color: #afeeee' : ''">monday</p>
             <p class="day" :style="day == 2 ? 'color: #afeeee' : ''">tuesday</p>
@@ -15,7 +15,7 @@
             <p class="day" :style="day == 6 ? 'color: #afeeee' : ''">saturday</p>
         </div>
 
-        <div id="full-date" :style="clockFont">{{ fullDate }}</div>
+        <div id="full-date">{{ fullDate }}</div>
     </div>
 </template>
 

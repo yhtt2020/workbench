@@ -1,20 +1,20 @@
 <template>
     <div class="clock5">
         <div class="time-wrapper">
-            <div id="hours" class="time" :style="clockFont">{{ hours }}</div>
-            <div class="time-separator" :style="clockFont">:</div>
-            <div id="minutes" class="time" :style="clockFont">{{ minutes }}</div>
-            <div class="time-separator a" :style="[{ display: isSnow == true ? 'inline-block' : 'none' },clockFont]" >:</div>
-            <div id="seconds" class="time a" :style="[{ display: isSnow == true ? 'inline-block' : 'none' },clockFont]">{{ seconds
-            }}
+            <div id="hours" class="time">{{ hours }}</div>
+            <div class="time-separator">:</div>
+            <div id="minutes" class="time" >{{ minutes }}</div>
+            <div class="time-separator a" :style="{ display: isSnow == true ? 'inline-block' : 'none' }" >:</div>
+            <div id="seconds" class="time a" :style="{ display: isSnow == true ? 'inline-block' : 'none' }">
+                {{ seconds}}
             </div>
         </div>
         <div id="timezone" class="timezone"></div>
         <template :style="{ display: isSnow == true ? 'inline-block' : 'none' }">
             <button id="toggle-button" class="toggle-button no-drag" @click="toggleFormat()">{{ textContent }}</button>
         </template>
-
     </div>
+
     <!-- <div class="container drag pointer">
         <div class="clock5">
             <div class="time-wrapper">
@@ -51,9 +51,6 @@ export default {
             type: String,
             default: true,
         },
-        clockFont:{
-            type:String,
-        }
     },
     mounted() {
         this.timerID = setInterval(this.setTime, 1000);

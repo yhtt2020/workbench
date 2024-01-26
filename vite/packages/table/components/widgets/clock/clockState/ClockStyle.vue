@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col h-full">
     <div class="clock-box xt-bg-t-2 mb-3 pointer" @click="updateClockStyle('clock1')">
-      <clock1 ></clock1>
+      <clock1 :showBackground="false"></clock1>
     </div>
 
     <div class="clock-box  xt-bg-t-2 pointer" @click="updateClockStyle('clock2')">
@@ -12,9 +12,9 @@
       <clock3  ></clock3>
     </div>
 
-    <div class="clock-box no-drag pointer xt-bg-t-2" @click="updateClockStyle('clock4')">
+    <!-- <div class="clock-box no-drag pointer xt-bg-t-2" @click="updateClockStyle('clock4')">
       <clock4 ></clock4>
-    </div>
+    </div> -->
 
     <div class="clock-box clock5 xt-bg-t-2 no-drag pointer" >
       <clock5 @click="updateClockStyle('clock5')"></clock5>

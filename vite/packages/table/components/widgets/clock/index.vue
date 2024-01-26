@@ -7,39 +7,43 @@
     :menuList="menuList"
     ref="homelSlotRef"
     :desk="desk"
-    :showRightIcon="!customData.backgroundFrame"
+    :showRightIcon="customData.backgroundFrame"
   >
     <template #left-title-icon>
         <div class="icon"
           style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; " v-if="!customData.backgroundFrame">
+            left: 2px; " v-if="customData.backgroundFrame">
           <clockIcon icon="fluent:clock-12-regular" style="font-size: 20px;" />
         </div>
     </template>
-    <cardDrag ref="drag" @reSizeInit="reSizeInit" :style="customData.backgroundFrame ? { height:'100%' }:{height:'140px'}">
+
+    <cardDrag ref="drag" @reSizeInit="reSizeInit" class="drag">
       <template #="{ row }">
         <div class="box no-drag" @click="fullScreen()">
           <component
             :is="customData.clockId"
-            :isSnow="isSnow"
+            :isSnow="customData.enableSecond"
             :class="{
               isClock5: isClock5 == true,
               isClock5w420: isClock5w420 == true,
             }"
             :style="{ zoom: zoom }"
             :clockFont="customData.font"
+            :showBackground="true"
+            :size="customData"
           />
         </div>
       </template>
     </cardDrag>
+
+    
   </Widget>
 
-  <ClockSettingModal ref="clockSettingRef" :customIndex="customIndex" :customData="customData" :desk="desk" @updateClockStyle="updateClockStyle"/>
+  <ClockSettingModal ref="clockSettingRef" :customIndex="customIndex" :customData="customData" :desk="desk" @updateClockStyle="updateClockStyle" />
   <!-- <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
     <template #title>
       <div class="text-center">设置</div>
     </template>
-    
     <XtRadio @onChange="__updateSize" :data="customData.dragCardSize"></XtRadio>
     <ClockStyle @updateClockStyle="updateClockStyle"></ClockStyle>
   </a-drawer> -->
@@ -48,13 +52,14 @@
     @updateBlur="updateBlur"
     @updateBgZoom="updateBgZoom"
     v-if="isClockFullScreen"
-    :imgUrl="customData.imgUrl"
+    :imgUrl="backgroundImage.path !== '' ? backgroundImage.path : customData.imgUrl"
     :clock="customData.clockId"
     @exit="isClockFullScreen = false"
     @updateClockStyle="updateClockStyle"
     @updateImgUrl="updateImgUrl"
     :blur="customData.blurs"
     :bgZoom="bgZoom"
+    :customData="customData"
   >
   </ClockFullScreen>
 </template>
@@ -67,14 +72,16 @@ import cardSizeHook from "../../card/hooks/cardSizeHook";
 import {Icon as clockIcon } from '@iconify/vue';
 import { cardStore } from "../../../store/card.ts";
 // import { clockStore } from "./hooks/clockStore";
+import { appStore } from '../../../store';
 
 import Widget from "../../card/Widget.vue";
-import ClockStyle from "./clockState/ClockStyle.vue";
+// import ClockStyle from "./clockState/ClockStyle.vue";
 import ClockFullScreen from "./clockState/ClockFullScreen.vue";
 import ClockSettingModal from "./components/ClockSettingModal.vue";
 import cardDrag from "../../card/hooks/cardDrag.vue";
 
 export default {
+  mixins:[mixin,cardDragHook,],
   mixins: [mixin, cardDragHook, cardSizeHook],
   props: {
     customIndex: {
@@ -91,7 +98,7 @@ export default {
   },
   components: {
     Widget,
-    ClockStyle,
+    // ClockStyle,
     ClockFullScreen,
     cardDrag,
     clockIcon,
@@ -120,7 +127,7 @@ export default {
       week: ["周末", "周一", "周二", "周三", "周四", "周五", "周六"],
       isClockFullScreen: false,
       settingVisible: false,
-      isSnow: true,
+      // isSnow: true,
       isClock5: false,
       isClock5w420: false,
       zoom: "100%",
@@ -129,7 +136,7 @@ export default {
         clock1: [55, 35, 35],
         clock2: [60, 66, 50],
         clock3: [150, 0, 80],
-        clock4: [40, 0, 30],
+        clock4: [140, 0, 30],
         clock5: [50, 0, 25],
         clock6: [80, 0, 80],
       },
@@ -139,8 +146,7 @@ export default {
   },
   
   computed:{
-    // ...mapWritableState(clockStore,["clockSetting"]),
-    
+    ...mapWritableState(appStore,["backgroundImage"]),
   },
 
   mounted() {
@@ -306,14 +312,14 @@ export default {
     "customData.backgroundFrame":{
       handler(newVal){
         if(newVal){
-          const hideOption = { ...this.options,background:"transparent",noTitle:true, };
-          this.options = hideOption;
-          this.customData.hideFrame = true;
-        }
-        else {
           const showOption = { ...this.options,background:"var(--primary-bg)",noTitle:false, };
           this.options = showOption;
           this.customData.hideFrame = false;
+        }
+        else {
+          const hideOption = { ...this.options,background:"transparent",noTitle:true, };
+          this.options = hideOption;
+          this.customData.hideFrame = true;
         }
       },
       immediate:true,
