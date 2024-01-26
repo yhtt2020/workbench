@@ -20,28 +20,28 @@
       <template v-else>
         <slot name="empty">
           <!-- 111 -->
-          <div class="w-full h-full flex justify-center items-center" style="height: 100% !important">
+          <div class="flex items-center justify-center w-full h-full" style="height: 100% !important">
             <div class=" panel-top xt-bg"  style="">
               <div class="text-center">
                 <div class="line-title xt-text" style="" >快速搭建你的桌面</div>
-                <div class="font-16 xt-text-2 mt-2">你可以将系统桌面或资源管理器中的应用程序快捷方式或文件拖动到桌面，或者选择一下推荐的桌面搭建方式。</div>
-                <div class="mt-6 flex justify-center w-full justify-items-center align-items-center" >
-                  <xt-button :w="113" :h="40" @click="addIcon" class="xt-bg-2 ml-3" key="console" type="primary" >
+                <div class="mt-2 font-16 xt-text-2">你可以将系统桌面或资源管理器中的应用程序快捷方式或文件拖动到桌面，或者选择一下推荐的桌面搭建方式。</div>
+                <div class="flex justify-center w-full mt-6 justify-items-center align-items-center" >
+                  <xt-button :w="113" :h="40" @click="addIcon" class="ml-3 xt-bg-2" key="console" type="primary" >
                     <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:add-16-regular"></xt-new-icon>添加图标</div>
                   </xt-button>
-                  <xt-button :w="113" :h="40" @click="newAddCard" class="xt-bg-2 ml-3" key="console" type="primary" >
+                  <xt-button :w="113" :h="40" @click="newAddCard" class="ml-3 xt-bg-2" key="console" type="primary" >
                     <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:collections-add-24-regular"></xt-new-icon>添加组件</div>
                   </xt-button>
-                  <xt-button :w="113" :h="40" @click="moreDesk" class="xt-bg-2 ml-3" key="console" type="primary" >
+                  <xt-button :w="113" :h="40" @click="moreDesk" class="ml-3 xt-bg-2" key="console" type="primary" >
                     <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:building-shop-16-regular"></xt-new-icon>桌面市场</div>
                   </xt-button>
-                  <xt-button :w="113" :h="40" @click="importDesk" class="xt-bg-2 ml-3" key="console" type="primary" >
+                  <xt-button :w="113" :h="40" @click="importDesk" class="ml-3 xt-bg-2" key="console" type="primary" >
                     <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:arrow-download-20-filled"></xt-new-icon>导入桌面</div>
                   </xt-button>
-                  <!-- <xt-button :w="113" :h="40" @click="moreDesk" class="xt-active-bg ml-3" key="console" type="primary" >
+                  <!-- <xt-button :w="113" :h="40" @click="moreDesk" class="ml-3 xt-active-bg" key="console" type="primary" >
                     <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:app-folder-16-regular"></xt-new-icon>图标整理</div>
                   </xt-button> -->
-                  <!-- <xt-button :w="113" :h="40"  @click="newAddCard" class="xt-bg-2 ml-3" key="console" >
+                  <!-- <xt-button :w="113" :h="40"  @click="newAddCard" class="ml-3 xt-bg-2" key="console" >
                     <icon class="mr-1" icon="tianjia2"></icon>添加组件
                   </xt-button> -->
                 </div>
@@ -84,6 +84,8 @@
     <div
       class="flex flex-row xt-main-top-util-bar desk-group-switcher"
       v-if="showTopBar && !fullScreen"
+      @mouseenter = 'handleMouseEnter'
+      @mouseleave = 'handleMouseLeave'
     >
       <!-- tabs   -->
       <div class="panel s-bg">
@@ -190,20 +192,20 @@
   
   <xt-modal v-model="addDeskVisible" :mask="false" :index="100" :header="true" :footer="false">
     <div style="width: 800px;height:518px">
-      <div class="font-16 xt-text font-semibold text-center">添加桌面</div>
+      <div class="font-semibold text-center font-16 xt-text">添加桌面</div>
       <div class="flex justify-center mt-6">
-        <xt-button :w="145" :h="40" @click="doAddDesk(true)" class="xt-bg-2 ml-3" key="console" type="primary" >
+        <xt-button :w="145" :h="40" @click="doAddDesk(true)" class="ml-3 xt-bg-2" key="console" type="primary" >
           <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:desktop-16-regular"></xt-new-icon>创建空白桌面</div>
         </xt-button>
-        <xt-button :w="145" :h="40" @click="importDesk" class="xt-bg-2 ml-3" key="console" type="primary" >
+        <xt-button :w="145" :h="40" @click="importDesk" class="ml-3 xt-bg-2" key="console" type="primary" >
           <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:arrow-download-20-filled"></xt-new-icon>导入桌面文件</div>
         </xt-button>
-        <!-- <xt-button :w="145" :h="40" @click="addIcon" class="xt-active-bg ml-3" key="console" type="primary" >
+        <!-- <xt-button :w="145" :h="40" @click="addIcon" class="ml-3 xt-active-bg" key="console" type="primary" >
           <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:bot-24-regular"></xt-new-icon>桌面智能定制</div>
         </xt-button> -->
       </div>
-      <div class="font-16 xt-text font-semibold text-center mt-6">推荐桌面方案</div>
-      <div class="font-16 xt-text-2 text-center mt-4">你可以选择以下来自桌面市场的方案。<a @click="moreDesk">更多桌面</a></div>
+      <div class="mt-6 font-semibold text-center font-16 xt-text">推荐桌面方案</div>
+      <div class="mt-4 text-center font-16 xt-text-2">你可以选择以下来自桌面市场的方案。<a @click="moreDesk">更多桌面</a></div>
       <div class="mt-4">
         <DeskMarket
           :desks="deskList"
@@ -640,6 +642,13 @@ export default {
     startTask(e) {
       let ref = this.$refs.mixMenu;
       ref.custom(e);
+    },
+    handleMouseEnter(){
+      this.$bus.emit('stopHide')
+    },
+    handleMouseLeave(){
+      console.log(1111111111111111)
+      this.$bus.emit('startHide')
     },
     update() {
       this.$refs.currentDeskRef.update();

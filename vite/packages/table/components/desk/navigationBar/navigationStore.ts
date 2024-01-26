@@ -49,6 +49,8 @@ export const useNavigationStore=defineStore('useNavigationStore',{
             isLeaveBar:false,
             // 鼠标移动到屏幕边缘
             isEdge:false,
+            bottomInit:false,
+
         }
     },
     actions:{

@@ -1,6 +1,6 @@
 import { getHostAddress } from './../../../../components/widgets/myIcons/edit/hooks/getHostAddress';
 import { nanoid } from "nanoid";
-
+import _ from "lodash";
 import { defaultData } from "../../../../apps/folder/src/components/options";
 export const useIconConversionFile = (data) => {
   const file = {
@@ -88,13 +88,23 @@ export const useDeskConversionNav = (icon, name, item) => {
   }
   return file
 }
+
+// 统一图标格式
+export const mergeData = (data) => {
+  // console.log((data?.renewTime == defaultIconData.renewTime ? data : ''),'===========<<<<<<<<<<')
+  if (data?.renewTime == defaultIconData.renewTime) return data;
+  const target= _.merge({}, defaultIconData, data);
+  return target;
+};
+
+// 默认图标格式
 export const defaultIconData = {
-  renewTime: "",
+  renewTime: 20240125, // 图标更新时间
   id: "", // 图标id
   icon: "", // 显示的图标数据
   name: "", // 显示的图标名称
   isName: true, // 是否显示图标名称
-  value: "",
+  value: "", // 图标链接
   /**
    * 当前mode
    * app 所有应用
@@ -103,7 +113,15 @@ export const defaultIconData = {
   mode: "app",
   attributeEdit: true,
   /**
-   * 当前
+   * 图标类型
+   * systemApp 系统应用
+   * coolApp 酷应用
+   * folder 文件夹
+   * lightApp 轻应用
+   * tableApp 桌面应用
+   * default 系统默认浏览器
+   * inner 内置浏览器
+   * xt 想天浏览器
    */
   type: "",
   bg: "", // 背景颜色
@@ -116,17 +134,21 @@ export const defaultIconData = {
   iconShape: "square", // 图标形状 长方形或正方形
   // 单图标展示的大小
   size: "1x1",
+  // 拖拽链接展示图标
+  linkIcon:false,
+  summary:'',   // 酷应用，轻应用，网址导航等图标的简介
+  default:{},   // 数据用于重置图标
 };
 
 // 桌面链接转为导航栏图标
 export const useLinkConversionNav = (link)=>{
   const file = {
     name:link.name || '链接',
-    icon:link.icon !== null ? link.icon : 'fluent-emoji:globe-with-meridians',
+    icon:link.icon !== null ? link.icon : 'fluent-emoji:globe-showing-asia-australia',
     type:'default',
     value: link.value,
     mode:'link',
-    isBg:false,
+    isBg:link.icon === null ? false : true,
     bg:'var(--secondary-transp-bg)',
     id:nanoid(6),
     linkIcon:link.icon === null ? true : false,
