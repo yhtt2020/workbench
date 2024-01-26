@@ -12,7 +12,7 @@ export const replaceType = (list) => {
     return list.map((item)=>{
         switch (item.type) {
             case 'systemApp':
-              return { ...item };
+              return { ...item,};
             case 'coolApp':
               return {
                 ...item,
@@ -52,8 +52,16 @@ export const replaceType = (list) => {
           }
     }).map((item) => ({
         ...item,
-        bg: item.bg || '',
-        isBg:item.isBg || false,
-        id: item.id ||  nanoid(6)
+        bg: item.bg || '',  // 背景色
+        isBg:item.isBg || false,  // 是否有背景
+        id: item.id ||  nanoid(6),  // id
+        isName: true,  // 是否有名称
+        radius:0,  // 圆角
+        useCount:0,  // 使用次数
+        lastUseTime:'',  // 最后使用时间
+        iconState:'cover',  // 图标样式
+        iconShape:'square',  // 图标形状
+        size:item.size || '1x1',  // 图标大小
+        attributeEdit:item.value === 'home' ? false : true,  // 是否可编辑
       }));
 }

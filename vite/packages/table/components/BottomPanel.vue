@@ -113,7 +113,6 @@
                       :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }"
                       @mouseenter="showElement(item, index)">
                       <xt-menu :id="item.id" class="relative overflow-visible item-content" :menus="folderOptions">
-
                         <div @dragover="onDrag" @dragend="hoverIndex = -1"
                           v-if="!(this.navList.includes(item.event) && this.isOffline)"
                           class="flex items-center justify-center pointer"
@@ -121,14 +120,12 @@
                           style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                           @click.stop="newOpenApp(item.type, item.value, item)">
                           <!-- <Drag :data="item" :currentId="currentId"> -->
-                          <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"
-                            :placement="'top'">
-                          </Team>
+                          <Team v-if="item.value === 'commun'" :item="item" :placement="'top'"></Team>
                           <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
                             @click="openFolder(item)">
                           </FolderVue>
                           <template v-else>
-                            <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
+                            <Avatar :item="item"></Avatar>
                           </template>
                           <!-- </Drag> -->
 
@@ -170,14 +167,6 @@
 
   <transition name="fade">
     <div :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }" v-if="quick">
-      <!-- 老版 -->
-      <!-- <EditNavigation @setQuick="setQuick" v-if="componentId === 'EditNavigation'"></EditNavigation> -->
-      <!-- 新版 -->
-      <!-- <EditNewNavigation @setQuick="setQuick" ref="editNewNavigation" v-if="componentId === 'EditNavigationIcon'">
-      </EditNewNavigation>
-      <navigationSetting @setQuick="setQuick" v-if="componentId === 'navigationSetting'" @hiedNav="hiedNav">
-      </navigationSetting>
-      <EditIcon @setQuick="setQuick" v-if="componentId === 'EditIcon'"></EditIcon> -->
       <component :is='componentId' @setQuick="setQuick"></component>
     </div>
   </transition>

@@ -1,3 +1,4 @@
+import { getHostAddress } from './../../../../components/widgets/myIcons/edit/hooks/getHostAddress';
 import { nanoid } from "nanoid";
 
 import { defaultData } from "../../../../apps/folder/src/components/options";
@@ -118,14 +119,18 @@ export const defaultIconData = {
   size: "1x1",
 };
 
-// 导航
-
-// 图标
-// model: "file",
-//
-// open: {
-//   type: data.type,
-//   value: data.value,
-// },
-
-// backgroundIndex: 0,
+// 桌面链接转为导航栏图标
+export const useLinkConversionNav = (link)=>{
+  const file = {
+    name:link.name || '链接',
+    icon:link.icon !== null ? link.icon : 'fluent-emoji:globe-with-meridians',
+    type:'default',
+    value: link.value,
+    mode:'link',
+    isBg:false,
+    bg:'var(--secondary-transp-bg)',
+    id:nanoid(6),
+    linkIcon:link.icon === null ? true : false,
+  }
+  return file
+}

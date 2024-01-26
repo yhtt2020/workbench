@@ -33,6 +33,7 @@ import { webMenus, localFiles, doc } from '../index'
 import { message } from 'ant-design-vue'
 import DataStatu from "../../../widgets/DataStatu.vue";
 import {completeTask} from '../../../../apps/task/task'
+import { nanoid } from 'nanoid'
 export default {
   name: 'Introduce',
   components: {
@@ -193,6 +194,7 @@ export default {
                 type:'default',
                 bg:'',
                 isBg:false,
+                id:nanoid(6),
               }
             })
           }

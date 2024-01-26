@@ -14,9 +14,11 @@ import { useFolderStore } from "../../../../../apps/folder/src/store";
 import { useDeskStore } from "../../../../../components/desk/store";
 import { useNavBarStore } from '../../navBar'
 import { useNavigationStore } from '../../navigationStore'
-import { useIconConversionNav, useFileConversionNav, useDeskConversionNav } from "../../../../../apps/folder/src/hooks/useDataConversion";
+import { useIconConversionNav, useFileConversionNav, useDeskConversionNav,useLinkConversionNav } from "../../../../../apps/folder/src/hooks/useDataConversion";
 import { myIcons } from "../../../../../store/myIcons";
 import _ from 'lodash-es'
+import { getHostAddress } from "../../../../widgets/myIcons/edit/hooks/getHostAddress";
+import { useGetUrlName,getFavicon } from "../../hook/getUrlName";
 
 // 导航栏数据
 const navBarStore = useNavBarStore()
@@ -58,19 +60,35 @@ const handleDrop = async (dragEvent) => {
   // 桌面拖拽
   if (folderFlag.value !== 'folder') {
     let files = dragEvent.dataTransfer.files
+    let link = dragEvent.dataTransfer.getData('text/plain')
     let filesArr = []
     if (files && files.length > 0) {
       for (let i = 0; i < files.length; i++) {
         filesArr.push(files[i].path)
       }
-    }
-    await Promise.all(filesArr.map(async (item) => {
-      let fileName = item.substring(item.lastIndexOf('\\') + 1)
-      fileName = getFileName(fileName)
-      let dropFiles = await tsbApi.system.extractFileIcon(item)
-      let file = useDeskConversionNav(dropFiles, fileName, item)
+      await Promise.all(filesArr.map(async (item) => {
+        let fileName = item.substring(item.lastIndexOf('\\') + 1)
+        fileName = getFileName(fileName)
+        let dropFiles = await tsbApi.system.extractFileIcon(item)
+        let file = useDeskConversionNav(dropFiles, fileName, item)
+        emit('createFile', file, currentX)
+      }))
+    }else if(link && link !== ''){
+      const http = link.includes('http')
+      const https = link.includes('https')
+      if(!http && !https){
+        link = 'http://' + link
+      }
+      let linkIcon = await getFavicon(link)
+      console.log(linkIcon, 'linkData')
+      let name = useGetUrlName(link)
+      let target = {name:name,icon:linkIcon,value:link}
+      // 链接拖拽
+      let file = useLinkConversionNav(target)
+      console.log(name, 'file')
       emit('createFile', file, currentX)
-    }))
+    }
+
   } else if (dragEvent.dataTransfer?.types.some((item) => item === 'text/plain')) {
     // 文件夹图标拖拽
     const item = _.cloneDeep(currentData.value)
@@ -104,7 +122,6 @@ const handleDragover = (dragEvent) => {
 };
 
 const handleDragleave = (dragEvent) => {
-  // console.log('拖拽离开','<<<<<<<<<+++=====')
 }
 /**
  * 鼠标弹起事件
@@ -123,10 +140,6 @@ const handleMouseUp = (e) => {
   // iconList.value = [];
 }
 const handleMouseLeave = (e) => {
-  // if (customOpenNav.value) {
-  //   isLeaveBar.value = true
-  //   console.log('=======>>>>>>>鼠标离开了', e.x, isLeaveBar.value)
-  // }
 
 }
 const handleMouseOver = () => {
@@ -134,10 +147,6 @@ const handleMouseOver = () => {
 }
 
 const handleMouseEnter = (e) => {
-  // if (customOpenNav.value) {
-  //   isLeaveBar.value = false
-  //   console.log('=======>>>>>>>>鼠标进入了', e.x, isLeaveBar.value)
-  // }
 }
 
 const getFileName = (name) => {
