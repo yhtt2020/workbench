@@ -38,6 +38,7 @@
     {{ $route.path }} -->
 
     <Drop>
+      <!-- <WujieVue width="100%" height="100%" name="xxx" url="http://localhost:5173/" ></WujieVue> -->
       <!-- 自由布局 -->
       <FreeLayoutScrollbar
         ref="freeLayoutScrollbar"
@@ -61,14 +62,15 @@
                 :customData="data?.customData"
                 di
               />
-              <!-- {{ data }} -->
-              <!-- {{ currentDesk.nanoid }} -->
             </template>
           </FreeLayoutContainer>
         </FreeLayoutCanvas>
       </FreeLayoutScrollbar>
+      <!-- 默认布局 -->
       <vue-custom-scrollbar
         v-show="!isFreeLayout"
+        :class="previewFlag?'z-50':''"
+        
         class="no-drag"
         key="scrollbar"
         id="scrollerBar"
@@ -262,10 +264,11 @@ import { registerFolder } from "../../apps/folder/src/hooks/register";
 import { LoadingOutlined } from "@ant-design/icons-vue";
 import GalleryModal from "../paperModal/GalleryModal.vue";
 import { useAddCard } from "../../ui/hooks/useAddCard";
-import { useDeskStore } from "./store"; 
+import { useDeskStore } from "./store";
 import { useCustomLayout } from "./freeLayout/useCustomLayout";
 import { useFileConversionIcon } from "../../apps/folder/src/hooks/useDataConversion";
 import { headerData, mainData, folderData } from "./freeLayout/config";
+import { taskStore }from '../../../table/apps/task/store'
 
 import Drop from "./Drop.vue";
 export default {
@@ -462,6 +465,7 @@ export default {
     ...mapWritableState(useFreeLayoutStore, [
       "isFreeLayout",
       "getFreeLayoutState",
+      "previewFlag",
     ]),
     ...mapWritableState(useFloatMenuStore, ["menus", "newMenus"]),
     ...mapWritableState(useNavigationStore, ["selectNav", "isDesk"]),
@@ -499,20 +503,16 @@ export default {
           id: 0,
           newIcon: "fluent:add-16-filled",
           name: "定制桌面测试",
-          disabled: false,
+          disabled: true,
           fn: () => {
             useCustomLayout({
-              mainList: mainData,
               headerList: headerData,
               folderList: folderData,
               cb: () => {
                 this.$bus.emit("adsorbGrid");
               },
             });
-            // 0 提供一个伪卡片
-            // 提供一个添加卡片
-            // 1 添加新的桌面
-            // 2 切换为自由布局
+
           },
         },
         {
@@ -707,6 +707,7 @@ export default {
     window.time = Date.now();
   },
   mounted() {
+    this.initTask()
     console.log('this.currentDesk', this.currentDesk, this)
     // 自动打开编辑
     this.$bus.on("startAdjust", () => {
@@ -754,6 +755,7 @@ export default {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
     ...mapActions(cardStore, ["addCard"]),
     ...mapActions(useDeskStore, ["addMenu"]),
+    ...mapActions(taskStore, ['initTask']),
     addFolder() {
       registerFolder(this.currentDesk);
     },

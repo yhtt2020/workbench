@@ -23,7 +23,7 @@
     </div>
     <div class="foot flex ">
       <div class="flex" style="padding: 0">
-        <xt-button :w="113" :h="40" @click="addPlan" class="xt-active-bg ml-3 no-drag" key="console" type="primary" >
+        <xt-button :w="113" :h="40" @click="addHeaderCard" class="xt-active-bg ml-3 no-drag" style="z-index:500" key="console" type="primary" >
           <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:add-16-regular"></xt-new-icon>立即添加</div>
         </xt-button>
       </div>
@@ -55,7 +55,10 @@ import { cardStore } from '../../../../store/card'
 import {nanoid} from 'nanoid'
 import { Icon  } from '@iconify/vue';
 import { marketStore } from '../../../../store/market'
-
+import { useCustomLayout } from "../../../../components/desk/freeLayout/useCustomLayout";
+import { FreeLayoutStore } from "./FreeLayout";
+import {useFreeLayoutStore} from '../../../../components/desk/freeLayout/store'
+import { useWidgetStore } from "../../../../components/card/store";
 export default {
   name: 'Preview',
   components: {
@@ -101,6 +104,8 @@ export default {
   },
   computed: {
     ...mapWritableState(appStore, ['fullScreen','userInfo']),
+    ...mapWritableState(FreeLayoutStore, ["assistDesk", "gameDesk"]),
+    ...mapWritableState(useWidgetStore, ["edit"]),
     tagList () {
       if (this.scheme.tags) {
         return this.scheme.tags.split(',')
@@ -149,6 +154,8 @@ export default {
   methods: {
     ...mapActions(cardStore, ['addShareDesk', 'setDeskSize']),
     ...mapActions(marketStore,['incSupport']),
+    ...mapActions(useFreeLayoutStore,['initFreeLayoutEnv']),
+    
     async doIncSupport(){
       const rs=await this.incSupport(this.displayScheme.dataNanoid)
       if(rs && rs.msg.includes('取消')){
@@ -160,6 +167,32 @@ export default {
         message.success('感谢您的支持，您的支持是对作者最大的鼓励。')
       }
     },
+
+    // 添加头部卡片
+    addHeaderCard(){
+      // console.log(1111111111111)
+      // 将数据添加到桌面
+      // 将处理好的数据推进  定制头部方法里面 
+      // console.log('this.assistDesk.desk.cards',this.assistDesk.desk[0]?.cards)
+      // setTimeout(() => {
+        this.initFreeLayoutEnv() 
+        this.initFreeLayoutEnv() 
+        this.initFreeLayoutEnv() 
+        useCustomLayout({
+          headerList: this.assistDesk.desk[0]?.cards.slice(0,6),
+          folderList: this.assistDesk.desk[0]?.cards.slice(6, 10),
+          // mainList: mainData,
+          cb: () => {
+            this.$bus.emit("adsorbGrid");
+          },
+        });
+      // }, 2000);
+
+      // 定位到桌面正中央
+      this.close()
+
+    },
+
     addPlan () {
       this.close()
       this.addShareDesk({
@@ -176,6 +209,7 @@ export default {
     close () {
       this.$emit('closePreview', false)
       this.fullScreen = false
+      this.edit = false
     },
     getPreviewHeight () {
       this.$nextTick(() => {

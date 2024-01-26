@@ -16,7 +16,7 @@
       已完成「 {{ currentTask?.name }}」任务，
       {{ status ? "感谢再次体验" : "点击领取奖励" }}。
     </div>
-    <div class="flex justify-between mt-3">
+    <div class="flex justify-between">
       <div></div>
       <xt-button
         @click="claimReward()"
@@ -33,7 +33,7 @@
 </template>
 
 <script setup>
-import { ref, toRefs, computed, onMounted ,onBeforeMount} from "vue";
+import { ref, toRefs, computed, onMounted, onBeforeMount } from "vue";
 import { taskStore } from "../store";
 import { storeToRefs } from "pinia";
 import XtButton from "../../../ui/libs/button/index.vue";
@@ -45,10 +45,11 @@ onBeforeMount(() => {
 });
 const status = ref(0);
 const taskStatus = async () => {
-  let { data } = await getTaskStatus({
-    taskName: currentId.value,
-  });
-  status.value = data.done;
+  // let { data } = await getTaskStatus({
+  //   taskName: currentId.value,
+  // });
+  let res = currentTaskList.value.find((item) => item.name == currentId.value);
+  status.value = res.done;
 };
 
 const store = taskStore();
@@ -67,6 +68,10 @@ const close = () => {
 
 const claimReward = () => {
   emits("close-toast");
+  console.log("status.value :>> ", status.value);
+  if (status.value) {
+    return;
+  }
   rewardVisible.value = true;
 };
 </script>

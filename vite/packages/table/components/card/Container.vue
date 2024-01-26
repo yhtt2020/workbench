@@ -46,7 +46,7 @@
           <slot name="right-extend"></slot>
 
           <template v-if="rightIcons && rightIcons.length" v-for="item in rightIcons">
-            <div v-if="!item.disabled" class="header-right-icon mr-1.5">
+            <div v-if="!item.disabled" class="header-right-icon mr-1">
               <!-- 右侧图标悬浮提示 -->
               <div v-if="item.tip" class="absolute px-2 py-1 rounded-lg xt-modal header-right-icon-tip"
                 style="top:-30px;left:50%,transform:translateX(-50%)">

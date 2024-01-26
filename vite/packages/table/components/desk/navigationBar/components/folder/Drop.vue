@@ -1,22 +1,24 @@
 <template>
   <div :class=[dropClass] @drop="handleDrop" @dragover="handleDragover" @dragenter="handleDragenter"
-    @dragleave="handleDragleave" ref="target" @mouseup="handleMouseUp" @mouseleave="handleMouseLeave"
-    @mouseover="handleMouseOver" @mouseenter="handleMouseEnter">
+    @dragleave="handleDragleave" ref="target" @mouseup="handleMouseUp" @mouseleave="handleMouseleave"
+    @mouseover="handleMouseover" @mouseenter="handleMouseEnter">
     <slot></slot>
   </div>
 </template>
 <script></script>
 <script setup>
 import { nanoid } from "nanoid";
-import { ref, computed } from "vue";
+import { ref, computed,watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useFolderStore } from "../../../../../apps/folder/src/store";
 import { useDeskStore } from "../../../../../components/desk/store";
 import { useNavBarStore } from '../../navBar'
 import { useNavigationStore } from '../../navigationStore'
-import { useIconConversionNav, useFileConversionNav, useDeskConversionNav } from "../../../../../apps/folder/src/hooks/useDataConversion";
+import { useIconConversionNav, useFileConversionNav, useDeskConversionNav,useLinkConversionNav } from "../../../../../apps/folder/src/hooks/useDataConversion";
 import { myIcons } from "../../../../../store/myIcons";
 import _ from 'lodash-es'
+import { getHostAddress } from "../../../../widgets/myIcons/edit/hooks/getHostAddress";
+import { useGetUrlName,getFavicon } from "../../hook/getUrlName";
 
 // 导航栏数据
 const navBarStore = useNavBarStore()
@@ -35,7 +37,7 @@ const { dragId, isDrag, move, currentId, currentData, folderFlag } =
 
 // 图标数据
 const useIconStore = myIcons()
-const { iconList, iconsRefs } = storeToRefs(useIconStore)
+const { isDrag: iconDrag,iconList, iconsRefs } = storeToRefs(useIconStore)
 
 const emit = defineEmits(['createFile'])
 
@@ -58,27 +60,14 @@ const handleDrop = async (dragEvent) => {
   // 桌面拖拽
   if (folderFlag.value !== 'folder') {
     let files = dragEvent.dataTransfer.files
-    let filesArr = []
+    let link = dragEvent.dataTransfer.getData('text/plain')
     if (files && files.length > 0) {
-      for (let i = 0; i < files.length; i++) {
-        filesArr.push(files[i].path)
-      }
+      await handleFileDrop(dragEvent, currentX)
+    }else if(link && link !== ''){
+      await handleLinkDrop(dragEvent, currentX)
     }
-    await Promise.all(filesArr.map(async (item) => {
-      let fileName = item.substring(item.lastIndexOf('\\') + 1)
-      fileName = getFileName(fileName)
-      let dropFiles = await tsbApi.system.extractFileIcon(item)
-      let file = useDeskConversionNav(dropFiles, fileName, item)
-      emit('createFile', file, currentX)
-    }))
   } else if (dragEvent.dataTransfer?.types.some((item) => item === 'text/plain')) {
-    // 文件夹图标拖拽
-    const item = _.cloneDeep(currentData.value)
-    console.log(item, 'item')
-    const data = useIconConversionNav(item)
-    emit('createFile', data, currentX)
-    currentData.value = ''
-    folderFlag.value = ''
+    handleFolderIconDrop(currentX)
   }
   isEnterBar.value = false;
 };
@@ -104,12 +93,13 @@ const handleDragover = (dragEvent) => {
 };
 
 const handleDragleave = (dragEvent) => {
-  // console.log('拖拽离开','<<<<<<<<<+++=====')
 }
+
 /**
  * 鼠标弹起事件
  */
 const handleMouseUp = (e) => {
+  if(!isDragIcon.value) return;
   iconList.value.forEach((item) => {
     const file = useFileConversionNav(item)
     emit('createFile', file, e)
@@ -122,24 +112,24 @@ const handleMouseUp = (e) => {
   // iconsRefs.value = [];
   // iconList.value = [];
 }
-const handleMouseLeave = (e) => {
-  // if (customOpenNav.value) {
-  //   isLeaveBar.value = true
-  //   console.log('=======>>>>>>>鼠标离开了', e.x, isLeaveBar.value)
-  // }
-
-}
-const handleMouseOver = () => {
-
-}
+const handleMouseleave = (dragEvent) => {
+  // console.log("鼠标离开 :>> ");
+  isDragIcon.value = false;
+};
+const handleMouseover = (dragEvent) => {
+  // console.log("鼠标进入 :>> ");
+  if (iconDrag.value) {
+    isDragIcon.value = true;
+  }
+};
 
 const handleMouseEnter = (e) => {
-  // if (customOpenNav.value) {
-  //   isLeaveBar.value = false
-  //   console.log('=======>>>>>>>>鼠标进入了', e.x, isLeaveBar.value)
-  // }
 }
 
+// 防止桌面图标移动时，触发其他事件
+let isDragIcon = ref(false)
+
+// 处理拖拽进入的图标名字
 const getFileName = (name) => {
   if (typeof name === 'string') {
     const lastDotIndex = name.lastIndexOf('.');
@@ -154,6 +144,63 @@ const getFileName = (name) => {
   }
 };
 
+/**
+ * 拖拽文件
+ */
+const handleFileDrop = async (dragEvent, currentX) => {
+  const files = dragEvent.dataTransfer.files;
+
+  if (files && files.length > 0) {
+    const filesArr = Array.from(files).map(file => file.path);
+
+    await Promise.all(filesArr.map(async (item) => {
+      const fileName = getFileName(item.substring(item.lastIndexOf('\\') + 1));
+      const dropFiles = await tsbApi.system.extractFileIcon(item);
+      const file = useDeskConversionNav(dropFiles, fileName, item);
+      emit('createFile', file, currentX);
+    }));
+  }
+};
+
+/**
+ * 拖拽链接
+ * @param {*} dragEvent 
+ * @param {*} currentX 
+ */
+const handleLinkDrop = async (dragEvent, currentX) => {
+  let link = dragEvent.dataTransfer.getData('text/plain');
+
+  if (link && link !== '') {
+    const http = link.includes('http');
+    const https = link.includes('https');
+    
+    if (!http && !https) {
+      link = 'http://' + link;
+      console.log(link, 'linkData');
+    }
+
+    const linkIcon = await getFavicon(link);
+    const name = useGetUrlName(link);
+    const target = { name, icon: linkIcon, value: link };
+
+    const file = useLinkConversionNav(target);
+    console.log(name, 'file');
+    emit('createFile', file, currentX);
+  }
+};
+
+/**
+ * 拖拽文件夹中的图标
+ */
+const handleFolderIconDrop = (currentX) => {
+  move.value = true;
+  const item = _.cloneDeep(currentData.value);
+  console.log(item, 'item');
+  const data = useIconConversionNav(item);
+  emit('createFile', data, currentX);
+  currentData.value = '';
+  folderFlag.value = '';
+};
 </script>
 
 <style lang="scss" scoped></style>

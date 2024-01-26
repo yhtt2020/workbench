@@ -21,7 +21,7 @@ const { isFreeLayout, getFreeLayoutData, freeLayoutEnv } =
 // 获取桌面数据
 const deskStore = useDeskStore();
 const { mouseInElement,isEnterBar } = storeToRefs(deskStore);
-const emits = defineEmits(["deleteFile", "updatePosition"]);
+const emits = defineEmits(["deleteFile", ]);
 
 const index = inject("index", "");
 const data = inject("data", "");
@@ -59,11 +59,6 @@ const handleDragEnd = (event) => {
   }
   // 判断托起的文件所属文件夹ID与当前文件夹ID是否一致
   if (!isOutside.value) {
-    return;
-  }
-  // 判断托起的文件是不是拖入导航栏
-  if (!isEnterBar.value){
-    emits("deleteFile", props.data);
     return;
   }
   if (!move.value) {
@@ -108,6 +103,11 @@ const handleDragEnd = (event) => {
 
     emits("deleteFile", props.data);
 
+    return;
+  }
+  // 判断托起的文件是不是拖入导航栏
+  if (!isEnterBar.value){
+    emits("deleteFile", props.data);
     return;
   }
   // 判断是否处在当前文件夹

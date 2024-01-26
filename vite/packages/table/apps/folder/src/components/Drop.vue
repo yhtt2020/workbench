@@ -7,6 +7,7 @@
     @mouseup="handleMouseUp"
     @mouseleave="handleMouseleave"
     @mouseover="handleMouseover"
+    ref="drop"
   >
     <slot></slot>
   </div>
@@ -16,15 +17,20 @@
 import { inject, ref, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { nanoid } from "nanoid";
+import { useMouseInElement } from "@vueuse/core";
 
 import { myIcons } from "../../../../store/myIcons";
 import { useFolderStore } from "../store";
 import { useDeskStore } from "../../../../components/desk/store";
 
 import { defaultData } from "./options";
+
+import {useLinkConversionNav} from '../../../../apps/folder/src/hooks/useDataConversion'
+import { useGetUrlName, getFavicon } from "../../../../components/desk/navigationBar/hook/getUrlName";
 // 获取桌面数据
 const deskStore = useDeskStore();
 const { isEnterFolder } = storeToRefs(deskStore);
+
 // 获取文件夹数据
 const folderStore = useFolderStore();
 const { dragId, isDrag, move, currentId, currentData } =
@@ -40,6 +46,10 @@ const isOutside = inject("isOutside", false);
 // 自定义事件
 const emits = defineEmits(["createFile", "deleteFile", "updateBg"]);
 
+//
+const drop =ref(null)
+
+
 /**
  * 处理drop放置
  */
@@ -54,24 +64,41 @@ const handleDrop = async (dragEvent) => {
     emits("createFile", { ...currentData.value, id: Date.now() });
     return;
   }
-
-  // 处理系统拖拽进入的文件
+  
+  // console.log("handleDrop :>> ",dragEvent.dataTransfer.getData('text/plain'));
+  // 处理系统拖拽进入的文件和链接
   let files = dragEvent.dataTransfer.files;
-  if (!files || files.length <= 0) return;
+  let link = dragEvent.dataTransfer.getData('text/plain');
+  if (files && files.length > 0){
+    for (let file of files) {
+      let fileInfo = {
+        ...defaultData,
+        id: nanoid(6),
+      };
+      let fileImage = await tsbApi.system.extractFileIcon(file.path);
+      fileInfo.name = file.name;
+      fileInfo.value = file.path;
+      fileInfo.icon = fileImage;
+      fileInfo.type = "tableApp";
+      emits("createFile", fileInfo);
+    }
+  }else if(link && link !== ''){
+    const http = link.includes('http');
+    const https = link.includes('https');
+    if (!http && !https) {
+      link = 'http://' + link;
+      console.log(link, 'linkData');
+    }
 
+    const linkIcon = await getFavicon(link);
+    const name = useGetUrlName(link);
+    const target = { name, icon: linkIcon, value: link };
 
-  for (let file of files) {
-    let fileInfo = {
-      ...defaultData,
-      id: nanoid(6),
-    };
-    let fileImage = await tsbApi.system.extractFileIcon(file.path);
-    fileInfo.name = file.name;
-    fileInfo.value = file.path;
-    fileInfo.icon = fileImage;
-    fileInfo.type = "tableApp";
-    emits("createFile", fileInfo);
+    const file = useLinkConversionNav(target);
+    emits('createFile', file);
   }
+
+  
 };
 
 /**
@@ -108,6 +135,10 @@ const handleMouseUp = () => {
 
   // 图标组件添加
   // 1 新数据处理
+
+  console.log("isDragIcon.value :>> ", isDragIcon.value,isDrag.value,iconDrag.value);
+  // if (11) return;
+  if (!isDragIcon.value) return
   iconList.value.forEach((item) => {
     const file = {
       ...defaultData,
@@ -129,9 +160,13 @@ const handleMouseUp = () => {
 
   // 2 旧数据删除
   if (iconsRefs.value.length < 1) return;
+
+  console.log("iconsRefs.value.length  :>> ", iconsRefs.value.length);
   iconsRefs.value.forEach((item) => {
     item.doRemoveCard();
   });
+  iconList.value = [];
+  iconsRefs.value = [];
 };
 
 const handleMouseleave = (dragEvent) => {
@@ -169,11 +204,10 @@ watch(
   () => isDrag.value,
   (val) => {
     if (!isDrag.value) {
-      isDragIcon.value = false
+      isDragIcon.value = false;
     }
   }
 );
-
 </script>
 
 <style lang="scss" scoped></style>

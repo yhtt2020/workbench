@@ -482,7 +482,6 @@ export default {
     // 点击移动图标组件
     moveIcon() {
       this.isSelect = true; // 打开选中样式
-      this.isSelect = true; // 打开选中样式
       let state = false; // 初始化状态
       // 遍历全局数据并拦截重复的数据
       this.iconList.forEach((item) => {

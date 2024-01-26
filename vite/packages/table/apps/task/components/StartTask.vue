@@ -71,6 +71,8 @@ const getGuide = () => {
 const startTask = () => {
   startList.value.push(props.task.id);
   startList.value = [...new Set(startList.value)];
+
+  console.log("props.task.id :>> ", props.task.id);
   currentId.value = props.task.id;
 
   let type = currentType(props.task.id);
@@ -91,7 +93,6 @@ const startTask = () => {
       });
     }
     if (item.type === "bus") {
-      console.log("item.type :>> ", item.value);
       setTimeout(() => {
         proxy.$bus.emit(item.value);
       }, 200);
@@ -118,7 +119,7 @@ const getReceiveStatus = computed(() => {
 
 // 已完成任务
 const completeTask = computed(() => {
-console.log('completedList.value :>> ', completedList.value);
+  console.log("completedList.value :>> ", completedList.value);
   return completedList.value.includes(props.task.id);
 });
 </script>
