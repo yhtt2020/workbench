@@ -25,6 +25,9 @@ import { useFolderStore } from "../store";
 import { useDeskStore } from "../../../../components/desk/store";
 
 import { defaultData } from "./options";
+
+import {useLinkConversionNav} from '../../../../apps/folder/src/hooks/useDataConversion'
+import { useGetUrlName, getFavicon } from "../../../../components/desk/navigationBar/hook/getUrlName";
 // 获取桌面数据
 const deskStore = useDeskStore();
 const { isEnterFolder } = storeToRefs(deskStore);
@@ -62,23 +65,41 @@ const handleDrop = async (dragEvent) => {
     emits("createFile", { ...currentData.value, id: Date.now() });
     return;
   }
-
-  // 处理系统拖拽进入的文件
+  
+  // console.log("handleDrop :>> ",dragEvent.dataTransfer.getData('text/plain'));
+  // 处理系统拖拽进入的文件和链接
   let files = dragEvent.dataTransfer.files;
-  if (!files || files.length <= 0) return;
+  let link = dragEvent.dataTransfer.getData('text/plain');
+  if (files && files.length > 0){
+    for (let file of files) {
+      let fileInfo = {
+        ...defaultData,
+        id: nanoid(6),
+      };
+      let fileImage = await tsbApi.system.extractFileIcon(file.path);
+      fileInfo.name = file.name;
+      fileInfo.value = file.path;
+      fileInfo.icon = fileImage;
+      fileInfo.type = "tableApp";
+      emits("createFile", fileInfo);
+    }
+  }else if(link && link !== ''){
+    const http = link.includes('http');
+    const https = link.includes('https');
+    if (!http && !https) {
+      link = 'http://' + link;
+      console.log(link, 'linkData');
+    }
 
-  for (let file of files) {
-    let fileInfo = {
-      ...defaultData,
-      id: nanoid(6),
-    };
-    let fileImage = await tsbApi.system.extractFileIcon(file.path);
-    fileInfo.name = file.name;
-    fileInfo.value = file.path;
-    fileInfo.icon = fileImage;
-    fileInfo.type = "tableApp";
-    emits("createFile", fileInfo);
+    const linkIcon = await getFavicon(link);
+    const name = useGetUrlName(link);
+    const target = { name, icon: linkIcon, value: link };
+
+    const file = useLinkConversionNav(target);
+    emits('createFile', file);
   }
+
+  
 };
 
 /**

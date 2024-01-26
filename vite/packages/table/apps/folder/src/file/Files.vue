@@ -1,15 +1,17 @@
 <!-- 渲染不同尺寸的文件状态 -->
 <template>
   <div
-    class="flex  mb-1   items-center"
+    class="flex items-center mb-1"
     :class="boxClass"
     :style="getLayoutSize"
   >
-    <div :style="[getImgSize,{background: item.bg}]" class="overflow-hidden rounded-lg">
-      <img  ref="img" :src="src" class="w-full h-full " :style="[item.color]"/>
+    <div  :style="[getImgSize,{background: item.bg}]" class="overflow-hidden rounded-lg">
+      <!-- item?.linkIcon" 获取链接中无法获取到链接的图标使用默认图标 -->
+      <xt-new-icon :icon="item.icon" size="40" v-if="item?.linkIcon"></xt-new-icon>
+      <img v-else ref="img" :src="src" class="w-full h-full " :style="[item.color]"/>
     </div>
     <div
-      class="xt-text-2 text-xs truncate"
+      class="text-xs truncate xt-text-2"
       style="width: 90%"
       :class="textClass"
     >
@@ -33,9 +35,13 @@ const mode = ref("default");
 
 onMounted(() => {
   resize();
-  img.value.onerror = function() {
-  src.value = props.item.icon
-};
+  props.item.type === 'systemApp' ? src.value = props.item.icon : src.value = props.item.value
+  if(img.value !== undefined){
+    img.value.onerror = function() {
+      src.value = props.item.icon
+    };
+  }
+  
 });
 
 watch(

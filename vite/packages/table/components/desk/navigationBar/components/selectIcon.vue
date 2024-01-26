@@ -63,7 +63,6 @@ export default {
         ...mapActions(navStore, ['setFootNavigationList', 'sortFootNavigationList', 'removeFootNavigationList', 'setSideNavigationList', 'sortSideNavigationList', 'removeSideNavigationList', 'setRightNavigationList', 'sortRightNavigationList', 'removeRightNavigationList', 'setNavigationToggle']),
         // 添加图标的主要函数
         clickRightListItem(item, index) {
-            item.renewTime = Date.now()
             this.$emit('clickRightListItem', item, index)
             //
             completeTask('M0102')
