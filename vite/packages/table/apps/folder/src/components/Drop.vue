@@ -9,7 +9,6 @@
     @mouseover="handleMouseover"
     ref="drop"
   >
-    {{ isOutside }}
     <slot></slot>
   </div>
 </template>
