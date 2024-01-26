@@ -447,7 +447,8 @@ export default {
       controlLeft: 0,
       skipSort: false,
       skipSimple: false,
-      parentHeight: 0
+      parentHeight: 0,
+      hoverTabs:false,
     }
   },
   props: {
@@ -473,6 +474,8 @@ export default {
 
     this.$bus.on('M0105', () => { this.editNavigation(this.drawerMenus[0]) })
     this.$bus.on('Z0401', () => { this.showTeamTip = true })
+    this.$bus.on('stopHide',()=> {this.hoverTabs=true})
+    this.$bus.on('startHide',()=> {this.hoverTabs=false})
     // this.popVisible=true
 
     this.enableDrag()
@@ -639,7 +642,7 @@ export default {
 
     autoVisible() {
       if (this.customOpenNav) {
-        if (this.isEdge) {
+        if (this.isEdge || this.hoverTabs) {
           return true
         }
         if (this.isLeaveBar && !this.controlVisible && !this.folderVisible) {
@@ -779,12 +782,6 @@ export default {
     },
     'navAttribute.navSize': {
       handler(newV, oldV) {
-        // const bottom = document.getElementById('bottom-bar')
-        // bottom.style.zoom = window.devicePixelRatio
-        // bottom.style.transformOrigin = 'left top'
-        // bottom.style.transform = 'scale(' + (1 / window.devicePixelRatio) + ')'
-        // bottom.style.width = window.devicePixelRatio * 100 + '%'
-        // bottom.style.height = window.devicePixelRatio * 100 + '%'
         this.syncBottomPanel()
       }
     }
