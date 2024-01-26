@@ -22,14 +22,13 @@
     <!-- <div>{{ !this.isLeaveBar && this.controlVisible && this.folderVisible }} ------ {{ autoVisible }}</div> -->
     <!-- <Transition name="animate__animated animate__bounce"  enter-active-class="animate__bounceInUp" leave-active-class="animate__zoomOutDown"> -->
     <AutoHide>
-    <div @click.stop
-      class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
-      id="bottom-bar" style="text-align: center;position: relative;" @contextmenu="showMenu" v-show="autoVisible"
-      :style="{ zoom: `${(this.navAttribute.navSize / 100)}` }" >
-      <!-- 快速搜索 底部 用户栏 -->
+      <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
+        id="bottom-bar" style="text-align: center;position: relative;" @contextmenu="showMenu" v-show="autoVisible"
+        :style="{ zoom: `${(this.navAttribute.navSize / 100)}` }">
+        <!-- 快速搜索 底部 用户栏 -->
 
-      <div v-if="(!simple || settings.enableChat) && !this.isOffline && this.bottomToggle[0]"
-        class="relative flex flex-row items-center justify-between common-panel user s-bg" style="
+        <div v-if="(!simple || settings.enableChat) && !this.isOffline && this.bottomToggle[0]"
+          class="relative flex flex-row items-center justify-between common-panel user s-bg" style="
         /* vertical-align: top; */
         margin-top: 0;
         background: var(--primary-bg);
@@ -40,36 +39,35 @@
         display: flex;
         justify-content: center;
       "
-        :style="{ width: this.settings.enableChat ? '160px' : '80px', paddingLeft: this.settings.enableChat ? '16px !important' : '0px !important', paddingRight: this.settings.enableChat ? '16px !important' : '0px !important', borderRadius: this.navAttribute.navRadius + 'px' }">
-        <div class="flex items-center justify-between" :style="{ marginLeft: this.settings.enableChat ? '10px' : '0px' }">
-          <div @click="openControl($event)">
-            <MyAvatar :chat="true" :level="false" :limit="false"></MyAvatar>
+          :style="{ width: this.settings.enableChat ? '160px' : '80px', paddingLeft: this.settings.enableChat ? '16px !important' : '0px !important', paddingRight: this.settings.enableChat ? '16px !important' : '0px !important', borderRadius: this.navAttribute.navRadius + 'px' }">
+          <div class="flex items-center justify-between"
+            :style="{ marginLeft: this.settings.enableChat ? '10px' : '0px' }">
+            <div @click="openControl($event)">
+              <MyAvatar :chat="true" :level="false" :limit="false"></MyAvatar>
+            </div>
+            <!---->
+            <div v-show="settings.enableChat" class="pl-4 pointer">
+              <ChatButton :tipPosition="navAttribute.navSize"></ChatButton>
+            </div>
           </div>
-          <!---->
-          <div v-show="settings.enableChat" class="pl-4 pointer">
-            <ChatButton :tipPosition="navAttribute.navSize"></ChatButton>
-          </div>
-        </div>
 
-      </div>
-      <div v-if="false"
-        style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:0">
-        <div>选中的id{{ !this.isLeaveBar && !this.controlVisible && !this.folderVisible }}</div>
-        <div v-for="( item, index) in copyFootNav" style="margin-bottom: 5px;border-bottom: 4px solid white">
-          {{ index }} {{ item.name }} {{ item.id }} {{ item.children?.length }}
         </div>
-      </div>
-      <!-- 快速搜索 底部栏区域 -->
-      <Drop @createFile="createFile" currentId='bottom'>
-        <transition>
-          <div v-if="hoverIndex > -1 && !skipSort && hoverRealItemId('bottomContent', this.hoverIndex) !== dragItem?.id"
-            style="position: absolute;z-index:99999999999;top:-8px;left:50%;transform: translateX(-50%) translateY(-100%)  ;"
-            class="px-10 py-3 rounded-lg s-bg xt-text">松开鼠标合并</div>
-        </transition>
-        <div id="bottomPanel"
-        :class="{ 'nav-enter': autoVisible, 'nav-leave': !autoVisible }"
-        @drop.prevent="drop"
-        @dragover.prevent="" class="flex flex-row items-center s-bg" style="
+        <div v-if="false"
+          style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:0">
+          <div>选中的id{{ !this.isLeaveBar && !this.controlVisible && !this.folderVisible }}</div>
+          <div v-for="( item, index) in copyFootNav" style="margin-bottom: 5px;border-bottom: 4px solid white">
+            {{ index }} {{ item.name }} {{ item.id }} {{ item.children?.length }}
+          </div>
+        </div>
+        <!-- 快速搜索 底部栏区域 -->
+        <Drop @createFile="createFile" currentId='bottom'>
+          <transition>
+            <div v-if="hoverIndex > -1 && !skipSort && hoverRealItemId('bottomContent', this.hoverIndex) !== dragItem?.id"
+              style="position: absolute;z-index:99999999999;top:-8px;left:50%;transform: translateX(-50%) translateY(-100%)  ;"
+              class="px-10 py-3 rounded-lg s-bg xt-text">松开鼠标合并</div>
+          </transition>
+          <div id="bottomPanel" :class="{ 'nav-enter': autoVisible, 'nav-leave': !autoVisible }" @drop.prevent="drop"
+            @dragover.prevent="" class="flex flex-row items-center s-bg" style="
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -88,8 +86,8 @@
         border: 1px solid var(--divider);
       " :style="{ borderRadius: this.navAttribute.navRadius + 'px' }">
 
-          <xt-task id='M0104' no='1' :mask="false" @cb="showMenu" class="w-full ">
-            <div style="
+            <xt-task id='M0104' no='1' :mask="false" @cb="showMenu" class="w-full ">
+              <div style="
           display: flex;
           flex-direction: row;
           width: 100%;
@@ -98,55 +96,55 @@
           flex-wrap: nowrap;
           justify-content: center;
         ">
-              <div @contextmenu="showMenu" style="height: 52px; width: 100%; overflow: hidden" class="item-content">
-                <div class="w-full scroll-content" style=" flex: 1; display: flex; margin-left: 20px;margin-right: 20px"
-                  ref="content">
-                  <div :key="bottomKey" style="white-space: nowrap; display: flex; align-items: center;gap:20px"
-                    class="w-full" id="bottomContent">
+                <div @contextmenu="showMenu" style="height: 52px; width: 100%; overflow: hidden" class="item-content">
+                  <div class="w-full scroll-content" style=" flex: 1; display: flex; margin-left: 20px;margin-right: 20px"
+                    ref="content">
+                    <div :key="bottomKey" style="white-space: nowrap; display: flex; align-items: center;gap:20px"
+                      class="w-full" id="bottomContent">
 
-                    <div v-if="copyFootNav.length <= 0" style=""
-                      class="flex items-center justify-center  w-[52px] h-[52px]"
-                      @click="this.editNavigation(this.drawerMenus[0])">
-                      <xt-new-icon icon="fluent:add-16-regular" size="32" class="xt-text"></xt-new-icon>
+                      <div v-if="copyFootNav.length <= 0" style=""
+                        class="flex items-center justify-center  w-[52px] h-[52px]"
+                        @click="this.editNavigation(this.drawerMenus[0])">
+                        <xt-new-icon icon="fluent:add-16-regular" size="32" class="xt-text"></xt-new-icon>
+                      </div>
+                      <a-tooltip v-for="(item, index) in copyFootNav" :key="item.id" :title="item.name"
+                        :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }"
+                        @mouseenter="showElement(item, index)">
+                        <xt-menu :id="item.id" class="relative overflow-visible item-content" :menus="folderOptions">
+                          <div @dragover="onDrag" @dragend="hoverIndex = -1"
+                            v-if="!(this.navList.includes(item.event) && this.isOffline)"
+                            class="flex items-center justify-center pointer"
+                            :class="{ hover: (dragItem && item.id === hoverRealItemId('bottomContent', this.hoverIndex) && dragItem?.id !== hoverRealItemId('bottomContent', this.hoverIndex)) }"
+                            style="white-space: nowrap; display: inline-block;border-radius: 18px;"
+                            @click.stop="newOpenApp(item.type, item.value, item)">
+                            <!-- <Drag :data="item" :currentId="currentId"> -->
+                            <Team v-if="item.value === 'commun'" :item="item" :placement="'top'"></Team>
+                            <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
+                              @click="openFolder(item)">
+                            </FolderVue>
+                            <template v-else>
+                              <Avatar :item="item"></Avatar>
+                            </template>
+                            <!-- </Drag> -->
+
+                          </div>
+                        </xt-menu>
+                      </a-tooltip>
                     </div>
-                    <a-tooltip v-for="(item, index) in copyFootNav" :key="item.id" :title="item.name"
-                      :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }"
-                      @mouseenter="showElement(item, index)">
-                      <xt-menu :id="item.id" class="relative overflow-visible item-content" :menus="folderOptions">
-                        <div @dragover="onDrag" @dragend="hoverIndex = -1"
-                          v-if="!(this.navList.includes(item.event) && this.isOffline)"
-                          class="flex items-center justify-center pointer"
-                          :class="{ hover: (dragItem && item.id === hoverRealItemId('bottomContent', this.hoverIndex) && dragItem?.id !== hoverRealItemId('bottomContent', this.hoverIndex)) }"
-                          style="white-space: nowrap; display: inline-block;border-radius: 18px;"
-                          @click.stop="newOpenApp(item.type, item.value, item)">
-                          <!-- <Drag :data="item" :currentId="currentId"> -->
-                          <Team v-if="item.value === 'commun'" :item="item" :placement="'top'"></Team>
-                          <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
-                            @click="openFolder(item)">
-                          </FolderVue>
-                          <template v-else>
-                            <Avatar :item="item"></Avatar>
-                          </template>
-                          <!-- </Drag> -->
 
-                        </div>
-                      </xt-menu>
-                    </a-tooltip>
                   </div>
-
                 </div>
               </div>
-            </div>
-          </xt-task>
+            </xt-task>
 
-        </div>
-      </Drop>
-      <keep-alive>
-        <TaskBox v-if="true"></TaskBox>
-      </keep-alive>
-      <Common ref="common"></Common>
-    </div>
-    <!-- </Transition> -->
+          </div>
+        </Drop>
+        <keep-alive>
+          <TaskBox v-if="true"></TaskBox>
+        </keep-alive>
+        <Common ref="common"></Common>
+      </div>
+      <!-- </Transition> -->
     </AutoHide>
 
     <div id="trans" v-show="visibleTrans" style="
@@ -239,6 +237,7 @@ import Drag from './desk/navigationBar/components/folder/Drag.vue'
 import { hoverRealItemId } from './desk/navigationBar/hook/hoverRealItemId'
 import 'animate.css'
 import AutoHide from './desk/navigationBar/components/folder/AutoHide.vue'
+import { mergeData, defaultIconData } from '../apps/folder/src/hooks/useDataConversion'
 
 export default {
   name: 'BottomPanel',
@@ -275,6 +274,7 @@ export default {
   },
   data() {
     return {
+      defaultIconData,
       dragItem: null,
       targetItem: null,
       cancelUpdate: false,
@@ -447,7 +447,8 @@ export default {
       controlLeft: 0,
       skipSort: false,
       skipSimple: false,
-      parentHeight: 0
+      parentHeight: 0,
+      hoverTabs:false,
     }
   },
   props: {
@@ -473,6 +474,8 @@ export default {
 
     this.$bus.on('M0105', () => { this.editNavigation(this.drawerMenus[0]) })
     this.$bus.on('Z0401', () => { this.showTeamTip = true })
+    this.$bus.on('stopHide',()=> {this.hoverTabs=true})
+    this.$bus.on('startHide',()=> {this.hoverTabs=false})
     // this.popVisible=true
 
     this.enableDrag()
@@ -493,23 +496,29 @@ export default {
       // console.log('wheel',event)
       content.scrollLeft += event.deltaY
     })
-    navigationData.systemAppList.forEach((item) => {
-      this.copyFootNav.forEach((i) => {
-        if (item.event === i.event) {
-          i.type = 'systemApp'
-          i.icon = item.icon
-          i.name = item.name
-          i.value = item.event
-          i.mode = 'app'
-        }
+    if (!this.bottomInit) {
+      navigationData.systemAppList.forEach((item) => {
+        this.copyFootNav.forEach((i) => {
+          if (item.event === i.event) {
+            i.type = 'systemApp'
+            i.icon = item.icon
+            i.name = item.name
+            i.value = item.event
+            i.mode = 'app'
+          }
+        })
       })
-    })
+    }
+
     // 图标整体替换格式方法
-    this.copyFootNav = this.replaceType(this.copyFootNav)
+    // this.copyFootNav = this.replaceType(this.copyFootNav)
+    this.copyFootNav = this.copyFootNav.map((item) => this.mergeData(item))
+    // console.log(this.copyFootNav, 'copyFootNav')
+    this.bottomInit = true
     //对id进行强制修复
-    this.copyFootNav.forEach(item=>{
-      if(!item.id){
-        item.id=nanoid(6)
+    this.copyFootNav.forEach(item => {
+      if (!item.id) {
+        item.id = nanoid(6)
       }
     })
     this.noticeFlag = true
@@ -543,7 +552,7 @@ export default {
       'sideNavigationList',
       'rightNavigationList',
       'mainNavigationList',
-      'navigationToggle', 'maxItemNum',
+      'navigationToggle', 'maxItemNum', 'init',
       'copyFootNav', 'copySideNav', 'copyRightNav'
     ]),
     ...mapWritableState(offlineStore, ['isOffline', 'navList']),
@@ -552,7 +561,7 @@ export default {
       'editToggle', 'taskBoxVisible',
       'selectNav', 'bottomToggle',
       'popVisible', 'currentList',
-      'editItem', 'navAttribute', 'iconRadius', 'jumpDesk', 'customOpenNav', 'isLeaveBar','isEdge'
+      'editItem', 'navAttribute', 'iconRadius', 'jumpDesk', 'customOpenNav', 'isLeaveBar', 'isEdge','bottomInit'
     ]),
     ...mapWritableState(taskStore, ['isTask', 'isTaskDrawer']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
@@ -633,7 +642,7 @@ export default {
 
     autoVisible() {
       if (this.customOpenNav) {
-        if (this.isEdge) {
+        if (this.isEdge || this.hoverTabs) {
           return true
         }
         if (this.isLeaveBar && !this.controlVisible && !this.folderVisible) {
@@ -665,6 +674,7 @@ export default {
   watch: {
     copyFootNav: {
       handler(newVal, oldVal) {
+        console.log(newVal,'copyFootNav')
         // 获取最大可添加图标个数
         const windowWidth = window.innerWidth
         this.maxItemNum = Math.round((windowWidth - 240) / 72)
@@ -772,12 +782,6 @@ export default {
     },
     'navAttribute.navSize': {
       handler(newV, oldV) {
-        // const bottom = document.getElementById('bottom-bar')
-        // bottom.style.zoom = window.devicePixelRatio
-        // bottom.style.transformOrigin = 'left top'
-        // bottom.style.transform = 'scale(' + (1 / window.devicePixelRatio) + ')'
-        // bottom.style.width = window.devicePixelRatio * 100 + '%'
-        // bottom.style.height = window.devicePixelRatio * 100 + '%'
         this.syncBottomPanel()
       }
     }
@@ -795,7 +799,7 @@ export default {
 
     ]),
     ...mapActions(useNavigationStore, ['toggleEdit', 'toggleTaskBox']),
-
+    mergeData,
     handleMouseEnter(e) {
       if (this.customOpenNav) {
         this.isLeaveBar = false
@@ -838,11 +842,14 @@ export default {
       this.quick = true
       this.componentId = 'EditIcon'
       this.editItem = item
-      if (item.default) return
+      if (item.default.name) return
       item.default = {
         name: item.name,
-        icon: item.icon
+        icon: item.icon,
+        bg:item.bg,
+        color:item.color,
       }
+      console.log(item,'edit.editItem')
     },
 
     /**
@@ -1212,8 +1219,8 @@ export default {
               return item.id === that.hoverRealItemId('bottomContent', that.hoverIndex)
             }), 1, merged)
             that.copyFootNav = that.copyFootNav.filter(item => {
-              if(!that.dragItem.id){
-                that.dragItem.id=nanoid(6)
+              if (!that.dragItem.id) {
+                that.dragItem.id = nanoid(6)
               }
               return item.id !== that.dragItem.id
             })
@@ -1319,15 +1326,15 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-
 .nav-enter-active,
 .nav-leave-active {
   transition: all 0.8s;
 }
+
 .nav-enter-from,
 .nav-leave-to {
   opacity: 0;
-  transform: translate3D(10px, -20px,-50%);
+  transform: translate3D(10px, -20px, -50%);
 }
 
 .bottom-panel {
