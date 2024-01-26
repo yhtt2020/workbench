@@ -1,15 +1,9 @@
 <!-- 滚动条视图和事件 -->
 <template>
-  <div
-    @wheel="handleWheelEvent"
-    v-show="isFreeLayout"
-    ref="scrollbar"
-    class="no-drag relative w-full h-full"
-    style="padding-right: 10px; padding-bottom: 10px; margin-bottom: 12px"
-    :style="{
+  <div @wheel="handleWheelEvent" v-show="isFreeLayout" ref="scrollbar" class="no-drag relative w-full h-full"
+    style="padding-right: 10px; padding-bottom: 10px; margin-bottom: 12px" :style="{
       cursor: dragStyle,
-    }"
-  >
+    }">
     <slot> </slot>
   </div>
 </template>
@@ -48,7 +42,7 @@ const {
   dragData,
   freeLayoutEnv,
   getFreeLayoutData,
-  getCurrentDesk,
+  getCurrentDeskId,
   isSelectAll,
   isFreeLayout,
 } = storeToRefs(freeLayoutStore);
@@ -60,7 +54,7 @@ onBeforeMount(() => {
   // 关键步骤 初始化自由布局状态数据
   freeLayoutStore.initFreeLayoutState();
   // 初始化自由布局环境
-  freeLayoutStore.initFreeLayoutEnv();
+  // freeLayoutStore.initFreeLayoutEnv();
 });
 
 onMounted(() => {
@@ -70,20 +64,14 @@ onMounted(() => {
   perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
   useElementSize(scrollbar.value, (size) => {
     scrollSize.value = size;
+    if (size.width == 0 || size.height == 0) return
     freeLayoutEnv.value.scrollWidth = size.width;
     freeLayoutEnv.value.scrollHeight = size.height;
   });
   // 事件监听
   scrollbar.value.addEventListener("ps-scroll-x", () => {
-    console.log(
-      "修改前 freeLayoutEnv.value.scrollLeft  :>> ",
-      freeLayoutEnv.value.scrollLeft
-    );
+ 
     freeLayoutEnv.value.scrollLeft = scrollbar.value?.scrollLeft;
-    console.log(
-      "修改后 freeLayoutEnv.value.scrollLeft  :>> ",
-      freeLayoutEnv.value.scrollLeft
-    );
   });
   scrollbar.value.addEventListener("ps-scroll-y", () => {
     freeLayoutEnv.value.scrollTop = scrollbar.value?.scrollTop;
@@ -170,7 +158,7 @@ watch(
 );
 // 重置中心区域
 function redirect() {
-  const { w, h,left } = freeLayoutStore.restoreLocation();
+  const { w, h, left } = freeLayoutStore.restoreLocation();
   scrollbar.value.scrollLeft = w;
   scrollbar.value.scrollTop = h;
   freeLayoutEnv.value.scrollLeft = w;

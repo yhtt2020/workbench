@@ -13,7 +13,8 @@ const defaultOptions = {
   mainList: [],
   headerList: [],
   folderList: [],
-  columns: 5,
+  // 修改列数 0Dxb
+  columns: 4,
   cb: () => {},
 };
 export const useCustomLayout = async (options) => {
@@ -268,7 +269,7 @@ const arraySplit = (arr) => {
   let arrSpecial: any = [];
 
   arr.forEach((item) => {
-    if (!item.customData.customSize) {
+    if (!item.customData?.customSize) {
       console.log("无信息元素 item.customData :>> ", item.customData);
       return;
     }
