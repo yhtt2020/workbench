@@ -1,7 +1,7 @@
 <template>
   <div class="clock2 flex flex-col items-center justify-center" style="height: 122px;">
-    <div class="time mb-8">{{ time }}<span :style="{ display: isSnow == true ? 'inline-block' : 'none' }">{{ min }}</span></div>
-    <div class="date" :style="{ display: isSnow == true ? 'inline-block' : 'none' }">{{ date }}</div>
+    <div class="time flex mb-8">{{ time }}<span :style="{ display: isSnow == true ? 'inline-block' : 'none' }">{{ min }}</span></div>
+    <div class="date" v-if="hideDate" :style="{ display: isSnow == true ? 'inline-block' : 'none' }">{{ date }}</div>
   </div>
 </template>
 
@@ -29,6 +29,10 @@ export default {
       type: String,
       default: true,
     },
+    hideDate:{
+      type:Boolean,
+      default:true,
+    }
   },
   mounted() {
     this.timerID = setInterval(this.updateTime, 1000);
@@ -76,7 +80,8 @@ export default {
   text-shadow: 0 0 20px #a9a9a9, 0 0 10px rgba(31, 31, 31, 0.25);
   & .time{
     font-family: "sans-serif";
-    letter-spacing: 0.05em;
+    // letter-spacing: 0.05em;
+    letter-spacing: 0.01em;
     font-size: 60px;
   }
   & .date{

@@ -30,7 +30,8 @@
             :style="{ zoom: zoom }"
             :clockFont="customData.font"
             :showBackground="true"
-            :size="customData"
+            :noBg="true"
+            :hideDate="false"
           />
         </div>
       </template>
@@ -133,12 +134,12 @@ export default {
       zoom: "100%",
       zooms: {
         // 无限拉伸是0, 1*1是1 2*2是2
-        clock1: [55, 35, 35],
-        clock2: [60, 66, 50],
+        clock1: [155, 35, 35],
+        clock2: [160, 66, 50],
         clock3: [150, 0, 80],
         clock4: [140, 0, 30],
-        clock5: [50, 0, 25],
-        clock6: [80, 0, 80],
+        clock5: [150, 0, 25],
+        clock6: [180, 0, 80],
       },
       bgZoom: 0,
       widthHeightObj: {},
@@ -343,11 +344,35 @@ export default {
   }
 
   :deep(.clock2) {
-    transform: scale(1.2);
+    // transform: scale(0.2);
+    transform: scale(0.85);
   }
 
+  :deep(.clock4) {
+    transform: scale(0.65);
+    & .ant-row{
+      flex-flow: nowrap !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+    }
+    & .gutter-box{
+      padding: 0 !important;
+    }
+    /**
+     :deep(.ant-row){
+      margin: 0 !important;
+      flex-flow: nowrap !important;
+    }
+    **/
+  }
+
+  :deep(.clock1) {
+    transform: scale(0.65);
+ }
+
   :deep(.clock5) {
-    transform: scale(0.85);
+    transform: scale(0.5);
+    // transform: scale(0.85);
   }
 
   .isClock5w420 {
@@ -399,4 +424,5 @@ export default {
     }
   }
 }
+
 </style>

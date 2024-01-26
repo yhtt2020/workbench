@@ -1,13 +1,22 @@
 <template>
   <div class="clock4">
     <a-row :gutter="16">
-      <div class="gutter-box" :style="[clockFont,noBg ? { background:'transparent !important'}:{ background:'var(--primary-bg) !important' }, ]">{{ hours }}</div>
-      <div class="gutter-box" :style="[clockFont,noBg ? { background:'transparent !important'}:{ background:'var(--primary-bg) !important' }, ]">{{ min }}</div>
+      <div class="gutter-box" :style="[clockFont,noBg ? { background:'transparent !important'}:{ background:' var(--secondary-bg) !important' }]">{{ hours }}</div>
+      <div class="gutter-box" :style="clockFont">:</div>
+      <!-- ant-row -->
+      <div class="gutter-box" :style="[clockFont,noBg ? { background:'transparent !important'}:{ background:' var(--secondary-bg) !important' }]">{{ min }}</div>
+      <div class="gutter-box" :style="clockFont">:</div>
       <template :style="{ display: isSnow == true ? 'inline-block' : 'none' }">
-        <div class="gutter-box" :style="[clockFont,noBg ? { background:'transparent !important'}:{ background:'var(--primary-bg) !important' }, ]">{{ second }}</div>
+        <div class="gutter-box" :style="[clockFont,noBg ? { background:'transparent !important'}:{ background:' var(--secondary-bg) !important' }, ]">{{ second }}</div>
       </template>
     </a-row>
   </div>
+  
+  <!-- <div class="gutter-box" :style="[clockFont,noBg ? { background:'transparent !important'}:{ background:' var(--secondary-bg) !important' }]">{{ hours }}</div>
+  <div class="gutter-box">:</div>
+  <div class="gutter-box" :style="[clockFont,noBg ? { background:'transparent !important'}:{ background:' var(--secondary-bg) !important' }]">{{ min }}</div>
+  <div class="gutter-box" v-if="isSnow">:</div>
+  <div class="gutter-box" v-if="isSnow" :style="[clockFont,noBg ? { background:'transparent !important'}:{ background:' var(--secondary-bg) !important' }, ]">{{ second }}</div> -->
 </template>
 
 <script>
@@ -77,9 +86,10 @@ export default {
   line-height: 138px;
   text-align: center;
   height: 138px;
-  width: 110px;
+  // width: 110px;
+  padding: 8px;
   border-radius: 10px;
-  background: var(--secondary-bg);
+  // background: var(--secondary-bg);
   border-radius: 12px;
   margin: 8px;
 }

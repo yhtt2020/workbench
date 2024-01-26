@@ -48,7 +48,7 @@
           </div>
 
           <div class="clock-box no-drag rounded-lg pointer xt-bg-t-2" @click="updateClock('clock4')">
-            <clock4 :clockFont="customData.font"></clock4>
+            <clock4 :clockFont="customData.font" :noBg="false"></clock4>
           </div>
         </template>
 
