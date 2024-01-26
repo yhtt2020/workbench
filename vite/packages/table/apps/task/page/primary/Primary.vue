@@ -53,29 +53,7 @@ const { list, taskID, currentId, completedList, currentTaskList } =
  * 首次进入时，处理任务进度
  */
 onMounted(async () => {
-  let { code, data } = await getAllTask();
-  if (code !== 200) return;
-  currentTaskList.value = data;
-  const type = "main";
-  console.log("data :>> ", data);
-  completedList.value = [];
-  data.forEach((item) => {
-    if (item.done == 1) completedList.value.push(item.name);
-  });
-  // 找出主线未完成任务
-  let arr = data.filter((obj) => obj.type === type);
-
-  let currentTask = arr.find((item) => {
-    if (item.done == 0) return item;
-  });
-
-  if (!currentTask) {
-    taskID.value = "";
-    return;
-  }
-
-  taskID.value = currentTask.name;
-  currentId.value = currentTask.name;
+  store.initTask();
 });
 /**
  * 处理主线任务

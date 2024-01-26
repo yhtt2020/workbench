@@ -1,8 +1,8 @@
 import { sUrl } from "../../consts";
 import { post } from "../../js/axios/request";
 // 查询全部任务
-export const getAllTask = (data) => {
-  const res = post(sUrl("/app/userTask/getAll"), data);
+export const getAllTask = () => {
+  const res = post(sUrl("/app/userTask/getAll"),);
   return res;
 };
 

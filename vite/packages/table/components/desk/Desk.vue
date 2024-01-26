@@ -62,14 +62,15 @@
                 :customData="data?.customData"
                 di
               />
-              <!-- {{ data }} -->
-              <!-- {{ currentDesk.nanoid }} -->
             </template>
           </FreeLayoutContainer>
         </FreeLayoutCanvas>
       </FreeLayoutScrollbar>
+      <!-- 默认布局 -->
       <vue-custom-scrollbar
         v-show="!isFreeLayout"
+        :class="previewFlag?'z-50':''"
+        
         class="no-drag"
         key="scrollbar"
         id="scrollerBar"
@@ -267,6 +268,7 @@ import { useDeskStore } from "./store";
 import { useCustomLayout } from "./freeLayout/useCustomLayout";
 import { useFileConversionIcon } from "../../apps/folder/src/hooks/useDataConversion";
 import { headerData, mainData, folderData } from "./freeLayout/config";
+import { taskStore }from '../../../table/apps/task/store'
 
 import Drop from "./Drop.vue";
 export default {
@@ -463,6 +465,7 @@ export default {
     ...mapWritableState(useFreeLayoutStore, [
       "isFreeLayout",
       "getFreeLayoutState",
+      "previewFlag",
     ]),
     ...mapWritableState(useFloatMenuStore, ["menus", "newMenus"]),
     ...mapWritableState(useNavigationStore, ["selectNav", "isDesk"]),
@@ -503,7 +506,6 @@ export default {
           disabled: true,
           fn: () => {
             useCustomLayout({
-              mainList: mainData,
               headerList: headerData,
               folderList: folderData,
               cb: () => {
@@ -705,6 +707,7 @@ export default {
     window.time = Date.now();
   },
   mounted() {
+    this.initTask()
     console.log('this.currentDesk', this.currentDesk, this)
     // 自动打开编辑
     this.$bus.on("startAdjust", () => {
@@ -752,6 +755,7 @@ export default {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
     ...mapActions(cardStore, ["addCard"]),
     ...mapActions(useDeskStore, ["addMenu"]),
+    ...mapActions(taskStore, ['initTask']),
     addFolder() {
       registerFolder(this.currentDesk);
     },

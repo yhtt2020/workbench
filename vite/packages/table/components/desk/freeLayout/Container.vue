@@ -42,9 +42,11 @@ onMounted(() => {
   }, 2);
 
   proxy.$bus.on("adsorbGrid", () => {
-    snowDrag.value.forEach((item) => {
+    setTimeout(() => {
+      snowDrag.value?.forEach((item) => {
       item.adsorbGrid();
     });
+  }, 2);
   });
 });
 
