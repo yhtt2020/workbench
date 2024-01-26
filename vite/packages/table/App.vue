@@ -390,7 +390,7 @@ watch: {
     handler() {
       this.onRefreshToken()
     },
-    immediate: true,
+    immediate: false,
   },
 },
 };
