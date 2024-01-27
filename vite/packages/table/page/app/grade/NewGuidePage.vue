@@ -124,7 +124,7 @@ import { useFreeLayoutStore } from "../../../components/desk/freeLayout/store";
 import { useWidgetStore } from "../../../components/card/store";
 import { useCustomLayout } from "../../../components/desk/freeLayout/useCustomLayout";
 
-import FrameTip from "./components/FrameTip.vue";
+// import FrameTip from "./components/FrameTip.vue";
 
 
 export default {
@@ -137,7 +137,7 @@ export default {
     Navbar,
     Theme,
     Preview,
-    FrameTip,
+    // FrameTip,
   },
   data() {
     return {
