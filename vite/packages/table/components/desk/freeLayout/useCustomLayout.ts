@@ -53,20 +53,22 @@ export const useCustomLayout = async (options) => {
   let snapped = 0;
   const resetLeft = () => {
     left = freeLayoutEnv.value.scrollLeft / scaleFactor + position;
-    // const [snappedX, snappedY] = getSnapGrid(
-    //   [134, 96],
-    //   left,
-    //   top,
-    //   getFreeLayoutState.value.canvas.width /
-    //     getFreeLayoutState.value.canvas.zoom,
-    //   getFreeLayoutState.value.canvas.height /
-    //     getFreeLayoutState.value.canvas.zoom,
-    //   6
-    // );
-    // console.log("snappedX :>> ", snappedX);
-    // // left = snappedX;
-    // snapped = left - snappedX;
-    // console.log("snapped :>> ", snapped);
+    const [snappedX, snappedY] = getSnapGrid(
+      [134, 96],
+      left,
+      top,
+      getFreeLayoutState.value.canvas.width /
+        getFreeLayoutState.value.canvas.zoom,
+      getFreeLayoutState.value.canvas.height /
+        getFreeLayoutState.value.canvas.zoom,
+      6
+    );
+    defaultLeft = snappedX / scaleFactor - position;
+    console.log("defaultLeft :>> ", defaultLeft);
+    console.log(
+      "zhengquede ",
+      freeLayoutEnv.value.scrollLeft / scaleFactor - position
+    );
     // left = snappedX;
   };
   // 卡片数据展示
@@ -107,12 +109,9 @@ export const useCustomLayout = async (options) => {
   };
   // 检测是否超出
   const widthDetection = (width) => {
+    // freeLayoutEnv.value.scrollLeft / scaleFactor - position
     let res =
-      left -
-      freeLayoutEnv.value.scrollLeft / scaleFactor -
-      snapped -
-      position +
-      width;
+      left - freeLayoutEnv.value.scrollLeft / scaleFactor - position + width;
     const active = res > layoutWidth + columns;
     widthDetectionStatus(width, res, active);
 

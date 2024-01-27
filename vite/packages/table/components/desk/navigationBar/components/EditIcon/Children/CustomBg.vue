@@ -1,6 +1,6 @@
 <template>
     <div class="w-[452px]">
-        <!-- {{ props.editItem.icon }} -->
+        <!-- {{ props.editItem.default }} -->
         <div class="flex items-center w-full p-4 mb-4 xt-bg-2 rounded-xl">
             <div style="width: 56px; height: 56px;flex-shrink: 0;" v-if="!props.editItem.isBg" :style="{background:props.editItem.isBg ? props.editItem.bg : 'var(--primary-bg)'}"
             class="relative flex items-center justify-center rounded-xl pointer" @click="modelValue=!modelValue">
@@ -56,12 +56,14 @@ const getAvatar = (value) => {
     getImgColor(props.editItem)
 }
 // 重置
+// const isReset = ref(false)
 const reset = () => {
     props.editItem.icon = props.editItem.default.icon
     bgColor.value = ''
-    props.editItem.bg = ''
+    props.editItem.bg = props.editItem.default.bg
     props.editItem.isBg = false
     props.editItem.color = ''
+    // isReset.value = true
 }
 // 判断图标类型
 const getImgColor = (item) => {
@@ -87,14 +89,15 @@ const imgBg = computed(() => {
   }
 });
 
-// 
+// 防止icon变化，导致背景颜色变化，导致图标颜色变化
 watch(()=>props.editItem.icon,(newV,oldV)=>{
-    if(props.editItem.icon.includes('color=#')){
+    if(newV.includes('color=#')){
         getImgColor(props.editItem)
     }else{
         props.editItem.color = ''
     }
 })
+
 </script>
 <style lang='scss' scoped>
 .reset {

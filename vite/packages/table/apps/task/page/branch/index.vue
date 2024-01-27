@@ -20,11 +20,7 @@
           </div>
         </template>
       </xt-text>
-      <xt-scrollbar
-        class="flex-1 w-full overflow-hidden"
-        :x="false"
-        :y="true"
-      >
+      <xt-scrollbar class="flex-1 w-full overflow-hidden" :x="false" :y="true">
         <Task
           @back="back()"
           :task="currentTask"
@@ -58,14 +54,15 @@
       </xt-scrollbar>
       <template v-else>
         <xt-scrollbar class="h-full w-full" :x="false" :y="true">
-          <xt-menu :menus="menus" v-for="task in tasks">
+          <xt-menu :menus="menus" v-for="(task, index) in tasks">
             <div
               class="flex flex-col xt-bg-2 rounded-xl mb-3 p-3 cursor-pointer"
               @click="taskClick(task)"
             >
               <xt-title m="">
                 <div class="flex items-center">
-                  <xt-new-icon :icon="icon" class="mr-3" size="20" />
+                  <SerialNumber :id="index" />
+                  <!-- <xt-new-icon :icon="icon" class="mr-3" size="20" /> -->
                   {{ task.name }}
                 </div>
                 <template #right
@@ -85,6 +82,7 @@
 
 <script setup>
 import { ref, reactive } from "vue";
+import SerialNumber from "../../components/SerialNumber.vue";
 import Task from "./Task.vue";
 import Progress from "../../components/progress/index.vue";
 import Exit from "../../components/Exit.vue";

@@ -20,6 +20,7 @@
 <script>
 import { getBgColor,getTextColor, } from '../card/hooks/styleSwitch/getStyle';
 import { setBgColor,setTextColor,setSecondaryBgColor } from '../card/hooks/styleSwitch/setStyle';
+import {completeTask} from '../../apps/task/task'
 
 export default{
   data(){
@@ -60,10 +61,15 @@ export default{
     if(!newV) return;
     setBgColor(newV);
     setSecondaryBgColor(newV);
+
+    completeTask('M0202')
+
    },
    textColor(newV){
     if(!newV) return;
     setTextColor(newV);
+    completeTask('M0202')
+
    }
 
   },
