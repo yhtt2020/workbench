@@ -6,7 +6,7 @@
     :style="getLayoutSize"
   >
     <div :style="[getImgSize,{background: item.bg}]" class="overflow-hidden rounded-lg">
-      <img  ref="img" :src="src" class="w-full h-full " :style="[item.color]"/>
+      <img  ref="img" :src="item.icon" class="w-full h-full " :style="[item.color]"/>
     </div>
     <div
       class="xt-text-2 text-xs truncate"
