@@ -10,7 +10,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive,computed } from 'vue'
+import { ref, reactive,computed,watch } from 'vue'
 import { useNavigationStore } from '../../navigationStore'
 import SettingModal from '../SettingModal.vue' 
 import Custom from './Children/Custom.vue';

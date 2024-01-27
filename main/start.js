@@ -21,6 +21,9 @@ const {
 electron.protocol.registerSchemesAsPrivileged([
   { scheme: 'tsbapp', privileges: { bypassCSP: true ,standard:true,secure:true,allowServiceWorkers:true,stream:true,supportFetchAPI:true} } //将tsbapp注册为标准协议，以支持localStorage
 ])
+electron.protocol.registerSchemesAsPrivileged([
+  { scheme: 'ttapp', privileges: { bypassCSP: true ,standard:true,secure:true,allowServiceWorkers:true,stream:true,supportFetchAPI:true} } //将ttapp注册为标准协议，以支持localStorage
+])
 global.___dirname=__dirname
 global.ipcMessageMain=require('./src/main/ipcMessageMain.js')
 
@@ -34,7 +37,12 @@ app.on('session-created',async (ses)=>{
   sessions.push(ses)
   ses.protocol.registerBufferProtocol('tsbapp', (request, response) => {
     render.regDefaultProtocol(request, response)
+
   })
+  ses.protocol.registerBufferProtocol('ttapp', (request, response) => {
+    render.regTTAppProtocol(request, response)
+  })
+
   // console.log(ses.serviceWorkers)
   // ses.serviceWorkers.on('console-message', (event, messageDetails) => {
   //   console.log(

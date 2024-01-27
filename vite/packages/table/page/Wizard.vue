@@ -140,7 +140,7 @@
 
         <div v-if="step===3" class="flex justify-center flex-wrap" style="width: 452px;">
           <div class="mt-6 flex justify-center xt-bg-2 xt-text w-full" style="padding: 1em;border-radius: 8px 8px;">
-            <AutoRun isGuide="true"/>
+            <AutoRun :isGuide="true"/>
           </div>
           <div class="w-full">
             <KeySetting isGuide="true"></KeySetting>

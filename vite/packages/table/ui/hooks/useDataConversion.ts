@@ -5,10 +5,16 @@ export const mergeData = (data) => {
   if (data?.renewTime == defaultData.renewTime) return data;
   return _.merge({}, defaultData, data);
 };
+// .xxx
+// xxxImg :  filetype jpg icon exe
+
+//
+
 export const defaultData = {
   renewTime: "20240125",
   id: "", // 图标id
   icon: "", // 显示的图标数据
+  iconType: "", // 图标类型
   name: "", // 显示的图标名称
   isName: true, // 是否显示图标名称
   value: "",
@@ -20,7 +26,8 @@ export const defaultData = {
   mode: "app",
   attributeEdit: true,
   /**
-   * 当前
+   * 当前 系统类型
+   * systemApp
    */
   type: "",
   bg: "", // 背景颜色

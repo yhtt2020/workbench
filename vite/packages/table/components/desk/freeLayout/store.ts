@@ -273,6 +273,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         left,
       };
     },
+    // 修改中心点
     updateLocation() {
       const zoom = this.getFreeLayoutState.canvas.zoom;
       this.getFreeLayoutState.mode.align = "custom";
@@ -287,16 +288,12 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 设置当前自由布局 属性 
     setFreeLayoutData(id, data){
-      // console.log('走了？');
-      // console.log('id, data', id, data);
       // console.log('this.freeLayoutData', this.freeLayoutData);
       
       
       this.freeLayoutData[id] = {...data}
     },
     setFreeLayoutState(id, state){
-      // console.log('走了？');
-      // console.log('id, state', id, state);
       // console.log('this.freeLayoutState', this.freeLayoutState);
       this.freeLayoutState[id] = {...state}
     },

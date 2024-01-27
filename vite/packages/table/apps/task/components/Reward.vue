@@ -57,12 +57,12 @@ const types = computed(() => {
     },
     communityPoints: {
       name: "积分",
-      icon: "/public/img/task/communityPoints.svg",
+      icon: "/img/task/communityPoints.svg",
       size: 56,
     },
     experience: {
       name: "经验",
-      icon: "/public/img/task/experience.png",
+      icon: "/img/task/experience.png",
       size: 42,
     },
     avatarFrame: {

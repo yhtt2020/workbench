@@ -293,7 +293,7 @@ const arraySplit = (arr) => {
   let arrSpecial: any = [];
 
   arr.forEach((item) => {
-    if (!item.customData.customSize) {
+    if (!item.customData?.customSize) {
       console.log("无信息元素 item.customData :>> ", item.customData);
       return;
     }

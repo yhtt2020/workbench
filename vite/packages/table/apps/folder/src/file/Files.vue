@@ -1,15 +1,15 @@
 <!-- 渲染不同尺寸的文件状态 -->
 <template>
-  <div
-    class="flex  mb-1   items-center"
-    :class="boxClass"
-    :style="getLayoutSize"
-  >
-    <div :style="[getImgSize,{background: item.bg}]" class="overflow-hidden rounded-lg">
-      <img  ref="img" :src="item.icon" class="w-full h-full " :style="[item.color]"/>
+  <div class="flex items-center mb-1" :class="boxClass" :style="getLayoutSize">
+    <div
+      :style="[getImgSize, { background: item.bg }]"
+      class="overflow-hidden rounded-lg"
+    >
+      <!-- <xt-new-icon :icon="item.icon" size="40" v-if="item?.linkIcon"></xt-new-icon> -->
+      <img ref="img" :src="src" class="w-full h-full" :style="[item.color]" />
     </div>
     <div
-      class="xt-text-2 text-xs truncate"
+      class="text-xs truncate xt-text-2"
       style="width: 90%"
       :class="textClass"
     >
@@ -26,16 +26,53 @@ import { rowOption, columnOption } from "./options";
 const props = defineProps({
   item: {},
 });
-const img = ref()
-const src= ref(props.item.value)
+const img = ref();
+const src = ref(props.item.icon);
 const data = inject("data", "");
 const mode = ref("default");
-
+// 获取文件后缀
+const getExtension = (filePath) => {
+  const match = filePath.match(/\.([^.]+)$/);
+  return match ? match[1] : "null";
+};
+const imgType = [
+  "png",
+  "jpeg",
+  "jpg",
+  "gif",
+  "psd",
+  "bmp",
+  "fpx",
+  "tiff",
+  "dxf",
+  "eps",
+  "svg",
+  "cdr",
+  "pcx",
+  "emf",
+  "wmf",
+  "swf",
+  "exif",
+  "pdf",
+  "cgm",
+  "raw",
+  "lic",
+  "dng",
+  "raf",
+];
 onMounted(() => {
   resize();
-  img.value.onerror = function() {
-  src.value = props.item.icon
-};
+  let res = imgType.includes(getExtension(props.item.value));
+  if (res) {
+    src.value = props.item.value
+  }
+
+  // props.item.type === 'systemApp' ? src.value = props.item.icon : src.value = props.item.value
+  // if(img.value !== undefined){
+  //   img.value.onerror = function() {
+  //     src.value = props.item.icon
+  //   };
+  // }
 });
 
 watch(
