@@ -1,7 +1,6 @@
 <template>
   <div class="fixed overflow-hidden modal-center xt-modal tran" :class="popState ? 'pop' : step == 4 ? 'theme' : 'Popup'"
     style="">
-    <!-- <div @click="test"> 11111111 </div> -->
     <div v-if="!popState" class="h-full">
       <!-- 顶部按钮 -->
       <div v-if="step !== 0" @click="prevStep" class="absolute ml-4 top-icon no-drag">
@@ -45,12 +44,12 @@
           </xt-button>
         </div>
         <div class="flex" v-if="step == 0">
-          <!-- <xt-button class="ml-3 button-bottom" @click="nextStep" size="large">暂不分析</xt-button> -->
-          <xt-button class="ml-3 button-bottom" @click="analysis" size="large" type="theme">开始分析</xt-button>
+          <xt-button class="ml-3 button-bottom" @click="nextStep" size="large">暂不分析</xt-button>
+          <!-- <xt-button class="ml-3 button-bottom" @click="analysis" size="large" type="theme">开始分析</xt-button> -->
         </div>
         <div class="flex" v-if="step == 1">
-          <xt-button class="ml-3 button-bottom" @click="nextStep" size="large">暂不添加</xt-button>
-          <xt-button class="ml-3 button-bottom" @click="addFolder" size="large" type="theme">确定添加({{ folderNum
+          <xt-button class="ml-3 button-bottom"  @click="nextStep" :disabled="loading" size="large">暂不添加</xt-button>
+          <xt-button class="ml-3 button-bottom"  @click="addFolder" :disabled="loading" size="large" type="theme">确定添加({{ folderNum
           }})</xt-button>
         </div>
         <div class="flex" v-if="step == 2">
@@ -83,12 +82,15 @@
       <div style="z-index: 9999">
         <!-- @afterAdded="afterAdded" -->
         <Preview
+          :deskTypeObj="deskTypeObj"
           :deskList="deskList"
           :scheme="scheme"
           :showModal="showModal"
           @closePreview="closePreview"
+          @analysis="analysis"
         ></Preview>
       </div>
+      <!-- <FrameTip v-if="1"></FrameTip> -->
     </teleport>
   </div>
 </template>
@@ -115,11 +117,14 @@ import CardList from "./components/CardList.vue";
 import Navbar from "./components/Navbar.vue";
 import Theme from "./components/Theme.vue";
 import Preview from "./components/Preview.vue";
-import { NavListTmp, GameDesk } from './components/data';
+import { NavListTmp, GameDesk, AssistDesk } from './components/data';
 import {completeTask} from '../../../apps/task/task'
 import { FreeLayoutStore } from "./components/FreeLayout";
 import { useFreeLayoutStore } from "../../../components/desk/freeLayout/store";
 import { useWidgetStore } from "../../../components/card/store";
+import { useCustomLayout } from "../../../components/desk/freeLayout/useCustomLayout";
+
+import FrameTip from "./components/FrameTip.vue";
 
 
 export default {
@@ -132,6 +137,7 @@ export default {
     Navbar,
     Theme,
     Preview,
+    FrameTip,
   },
   data() {
     return {
@@ -146,8 +152,8 @@ export default {
       // 音视频格式
       audioFormat: ['cda', 'wav', 'mp3', 'aif', 'aiff', 'mid', 'wma', 'ra', 'vqf', 'ape', 'wmv', 'asf', 'asx', 'rm', 'rmvb', 'mpg', 'mpeg', 'mpe', '3gp', 'avi', 'mov', 'ram', 'swf', 'flv', 'mp4', 'ram', 'vob'],
       appList: [
-        { name: '游戏', type: 'rows', list: [], isCheck: true, },
-        { name: '常用程序', type: 'rows', list: [], isCheck: true, },
+        { name: '游戏', type: 'rows', list: [], isCheck: false, },
+        { name: '常用程序', type: 'rows', list: [], isCheck: false, },
         { name: '文件夹', type: 'columns', list: [], isCheck: false, },
         { name: '图片', type: 'rows', list: [], isCheck: false, },
         { name: '音视频', type: 'columns', list: [], isCheck: false, },
@@ -179,10 +185,11 @@ export default {
       //  给ai做的容错
       fault: [],
       NavbarList: [],
-
-      
       scheme: {},
       showModal: false,
+      // 
+      headerList: [],
+      folderList: [],
     }
   },
   props: ['deskId'],
@@ -258,20 +265,30 @@ export default {
   watch: {
   },
   methods: {
-    ...mapActions(useFreeLayoutStore, ["setFreeLayoutData", "setFreeLayoutState", 'renewFreeLayout', 'getFreeLayout1']),
+    ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData", "setFreeLayoutData", "setFreeLayoutState", 'renewFreeLayout', 'getFreeLayout1']),
 
-    test(){
-      
+    // 设置自由布局数据 
+    showFreeLayout(type){
+      if(type == 'game'){
+        this.setFreeLayoutData('mj36hf6h', this.gameDesk.freeLayoutData)
+        this.setFreeLayoutState('mj36hf6h', this.gameDesk.freeLayoutState)
+        this.scheme = {...GameDesk}
+      }else{
+        this.setFreeLayoutData('mj36hf6h', this.assistDesk.freeLayoutData)
+        this.setFreeLayoutState('mj36hf6h', this.assistDesk.freeLayoutState)
+        this.scheme = {...AssistDesk}
+      }
       this.getFreeLayout1()
-      
-      this.setFreeLayoutData('mj36hf6h', this.assistDesk.freeLayoutData)
-      this.setFreeLayoutState('mj36hf6h', this.assistDesk.freeLayoutState)
-      this.scheme = {...GameDesk}
+
+      console.log('this.scheme', this.scheme)
+
+      // this.scheme = {...GameDesk}
 
       this.showModal = true
       this.previewFlag = true
       this.edit = true
     },
+
     closePreview() {
       this.previewFlag = false
       this.showModal = false;
@@ -281,11 +298,14 @@ export default {
       this.$refs.paperModal.openGalleryModal()
     },
 
+    // 
+
     // 调整类型
     setDeskType(type) {
       this.deskTypeObj['game'] = false
       this.deskTypeObj['assist'] = false
       this.deskTypeObj[type] = true
+      this.showFreeLayout(type)
     },
     // 修改导航图标选中
     changeNavList(item, index) {
@@ -384,8 +404,10 @@ export default {
     addFolder() {
       let folders = []
       const n = this.searchDeskIndex(this.deskId)
+
+
+
       this.appList.forEach((item, index) => {
-        const now = new Date().getTime()
         if (item.isCheck) {
           let tmp = [];
           item.list?.forEach(i => {
@@ -400,7 +422,8 @@ export default {
           })
           let obj = {
             data: {},
-            id: nanoid(6),
+            // id: nanoid(6),
+            customSize: "2x2",
             name: 'folder',
             customData: {
               ...defaultFolderData,
@@ -416,6 +439,7 @@ export default {
       // 以下操作将游戏以及常用程序的文件夹区别于其他文件夹放在导航条内
       this.exeNavList[0].children = []
       this.exeNavList[1].children = []
+      this.folderList = []
 
       folders.forEach(item => {
         if (item.customData.name == '游戏') {
@@ -430,17 +454,36 @@ export default {
           })
           this.exeNavList[1].isCheck = true
         } else {
-          this.addCard(item, this.desks[n]);
+          console.log('itemitem', item);
+          // this.addCard(item, this.desks[n]);
+          this.folderList.push({...item})
         }
-
       })
+
+      if(this.deskTypeObj.assist){
+        this.headerList = this.assistDesk.desk[0]?.cards.slice(0,6)
+        // folder = this.assistDesk.desk[0]?.cards.slice(6, 10)
+      }else{
+        this.headerList = this.gameDesk.desk[0]?.cards.slice(0,5)
+        // folder = this.gameDesk.desk[0]?.cards.slice(5, 9)
+      }
+      this.clearFreeLayoutData()
+      setTimeout(()=>{
+        useCustomLayout({
+          headerList: this.headerList,
+          folderList: this.folderList,
+          cb: () => {
+            this.$bus.emit("adsorbGrid");
+          },
+        });
+      },1)
+
 
       this.setExeListNav()
       this.nextStep();
     },
-
+    // 单独处理游戏和常用文件夹 需要添加到导航栏里面
     setExeListNav() {
-      console.log('copyFootNav', this.copyFootNav);
       // 用于添加游戏常用程序文件夹到导航条 与其他添加事件独立开来
       if (this.exeNavList[0]?.children.length) {
         let num = this.searchNavIndex(this.exeNavList[0].id)
@@ -482,18 +525,35 @@ export default {
     // 添加小组件
     addDeskCard() {
       const n = this.searchDeskIndex(this.deskId)
+      let cards = []
       this.cardList.forEach((item, index) => {
+        console.log('item', item )
         if (item.isCheck) {
-          const now = new Date().getTime() + index * 5
-          this.addCard({
-            customData: {},
-            id: now,
+          cards.push({
+            customData: {
+              customSize: item.option[0]?.size,
+              name: item.option[0]?.name
+            },
             name: item.option[0]?.name
-          }, this.desks[n])
+          })
         }
       })
+      console.log('cards', cards)
+      this.clearFreeLayoutData()
+      setTimeout(()=>{
+        useCustomLayout({
+          headerList: this.headerList,
+          folderList: this.folderList,
+          mainList: cards,
+          cb: () => {
+            this.$bus.emit("adsorbGrid");
+          },
+        });
+      },1)
+      // 删除 添加
       this.nextStep();
     },
+
     // 替换导航栏
     addNavList() {
       let tmp = []
@@ -506,6 +566,7 @@ export default {
       this.setExeListNav()
       this.nextStep()
     },
+
     // 遍历取桌面序号
     searchDeskIndex(id) {
       this.desks.forEach((item, index) => {
@@ -515,15 +576,18 @@ export default {
       })
       return 0
     },
+
     // 预览桌面
     preview() {
       this.popState = true
     },
-    // 预览桌面
+
+    // 关闭预览桌面
     close() {
       completeTask('z0201')
       this.$emit('closeShowGuide')
     },
+
     // 直接分类可能会失效 需要先将 文件夹 exe文件区分开来
     async getAiAnswer() {
       const desktopApps = await ipc.sendSync('getDeskApps')
@@ -535,10 +599,11 @@ export default {
       let audioList = []
       // 其他文件
       let otherList = []
-
       // exe
       let exeList = []
       let exeStr = '['
+      // game
+      let gameList = []
 
       desktopApps.forEach((item, index) => {
         if (item.ext == '') {
@@ -546,11 +611,15 @@ export default {
           folderList.push(item)
         } else if (item.ext == '.exe' || item.ext == '.url') {
           console.log('item', item);
-          // 分离exe文件以及url文件 url文件暂时认定为
-          if (index) {
+          // 分离exe文件以及url文件 url文件暂时认定为 常用程序
+          if (!item.icon.includes('steam')) {
             exeStr = exeStr + `{"name":"${item.name}","index":${index}},`
+            exeList.push(item)
+            this.appList[0].isCheck = true
+          }else{
+            gameList.push(item)
+            this.appList[1].isCheck = true
           }
-          exeList.push(item)
         } else {
           // 判断图片
           if (this.pictureFormat.includes(item.ext.slice(1))) {
@@ -572,32 +641,52 @@ export default {
       }]).then(res => {
         // 存储超时数据 用于超时作为应急数据
         this.fault = [...this.appList]
+        this.fault[0].list = gameList
         this.fault[1].list = exeList
         this.fault[2].list = folderList
         this.fault[3].list = pictureList
         this.fault[4].list = audioList
         this.fault[5].list = otherList
 
+        // 这步有可能 会被ai传回数据格式错误 导致报错
         let tmp = JSON.parse(res)
+
+        console.log('tmp', tmp)
+        if(tmp.game.length + tmp.programs.length != exeList.length) return
+
+
         tmp.file = folderList
         tmp.picture = pictureList
         tmp.audio = audioList
         tmp.other = otherList
 
-        // 处理 常用程序 和 游戏 的数据
+        // 处理 常用程序 和 游戏 的数据 上一步ai只是根据名字进行筛选 这步根据返回的序号 将数据分开存储
         tmp.game?.forEach(i => {
-          i.icon = desktopApps[i.index]?.icon
-          i.path = desktopApps[i.index]?.path
-          i.ext = desktopApps[i.index]?.ext
+          // i.icon = desktopApps[i.index]?.icon
+          // i.path = desktopApps[i.index]?.path
+          // i.ext = desktopApps[i.index]?.ext
+          this.appList[0].list.push({
+            ...i,
+            icon: desktopApps[i.index]?.icon,
+            path: desktopApps[i.index]?.path,
+            ext: desktopApps[i.index]?.ext,
+          })
         })
         tmp.programs?.forEach(i => {
           i.icon = desktopApps[i.index]?.icon
           i.path = desktopApps[i.index]?.path
           i.ext = desktopApps[i.index]?.ext
+          // this.appList[1].list.push({
+          //   ...i,
+          //   icon: desktopApps[i.index]?.icon,
+          //   path: desktopApps[i.index]?.path,
+          //   ext: desktopApps[i.index]?.ext,
+          // })
         })
 
-        this.appList[0].list = tmp.game
+        // this.appList[0].list = tmp.game
         this.appList[1].list = tmp.programs
+
         this.appList[2].list = tmp.file
         this.appList[3].list = tmp.picture
         this.appList[4].list = tmp.audio
@@ -606,7 +695,7 @@ export default {
         // 请求结束 进入下一步
         this.loading = false
         this.messageFinish()
-        this.time = 0
+        this.time = 15
         this.clear()
 
         // 清楚超时操作
@@ -614,7 +703,8 @@ export default {
         this.setTimer = null
       })
     },
-
+    
+    // ai封装方法
     async processGPTResults(arr) {
       // 获取聊天机器人的回复
       for await (const result of getStreamData(arr)) {

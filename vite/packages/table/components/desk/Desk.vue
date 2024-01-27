@@ -507,6 +507,7 @@ export default {
             useCustomLayout({
               headerList: headerData,
               folderList: folderData,
+              mainList:  mainData,
               cb: () => {
                 this.$bus.emit("adsorbGrid");
               },

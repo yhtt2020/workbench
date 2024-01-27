@@ -127,6 +127,8 @@ export const useCustomLayout = async (options) => {
     for (let item of arr.splice(0, arr.length)) {
       // 处理元素位置
       const { width, height }: any = useElementSize(item.customData.customSize);
+      console.log("处理元素位置 get   item.customData.customSize :>> ",   item.customData.customSize);
+
       itemStatus(item);
       // 元素超出
       if (widthDetection(width)) {
@@ -145,6 +147,8 @@ export const useCustomLayout = async (options) => {
           left - freeLayoutEnv.value.scrollLeft / scaleFactor - position;
         currentTop += currentHeight + 12;
         currentHeight = height;
+      console.log("元素超出 get currentHeight :>> ", currentHeight);
+
         fillHeight = currentHeight;
         if (res) {
           fillGapAlgorithm();
@@ -159,6 +163,7 @@ export const useCustomLayout = async (options) => {
         currentHeight = height;
         flag = false;
       }
+      console.log("setData get currentHeight :>> ", currentHeight);
       fillHeight = currentHeight;
       if (last) last = false;
     }
@@ -220,10 +225,7 @@ export const useCustomLayout = async (options) => {
       itemWidth = width;
       itemHeight = height;
 
-      console.log(
-        "fillHeight - itemHeight - 12  :>> ",
-        fillHeight - itemHeight - 12
-      );
+      console.log("fill get height :>> ", height);
       flag = fillHeight - itemHeight < 0;
 
       console.log("flag :>> ", flag);
