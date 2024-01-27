@@ -26,7 +26,7 @@
        <hr />
       </template>
     </template>
-   
+
     <xt-option-info
       isSwitch
       v-model:switch="settings.transparent"
