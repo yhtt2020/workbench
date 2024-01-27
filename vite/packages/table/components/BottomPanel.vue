@@ -17,10 +17,6 @@
       :style="{ left: `${controlLeft}px`, bottom: `${navAttribute.navSize / 100 * 100}px` }">
       <ControlModal @close="controlVisible = false"></ControlModal>
     </div>
-
-    <!--  <ControlModal ref="controlRef" v-if="controlVisible" @close="controlVisible = false" :full="full" @setFull="setFull"/> -->
-    <!-- <div>{{ !this.isLeaveBar && this.controlVisible && this.folderVisible }} ------ {{ autoVisible }}</div> -->
-    <!-- <Transition name="animate__animated animate__bounce"  enter-active-class="animate__bounceInUp" leave-active-class="animate__zoomOutDown"> -->
     <AutoHide>
       <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
         id="bottom-bar" style="text-align: center;position: relative;" @contextmenu="showMenu" v-show="autoVisible"
@@ -54,7 +50,7 @@
         </div>
         <div v-if="false"
           style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:0">
-          <div>选中的id{{ !this.isLeaveBar && !this.controlVisible && !this.folderVisible }}</div>
+          <div>选中的id{{ this.isLeaveBar }} {{ isEdge }}</div>
           <div v-for="( item, index) in copyFootNav" style="margin-bottom: 5px;border-bottom: 4px solid white">
             {{ index }} {{ item.name }} {{ item.id }} {{ item.children?.length }}
           </div>
@@ -816,7 +812,9 @@ export default {
       if (e.x < 50 || e.x > (this.parentSize - 50) || e.y > (this.parentHeight - 50)) {
         this.isEdge = true
       } else {
-        this.isEdge = false
+        setTimeout(() => {
+          this.isEdge = false
+        }, 800);
       }
     },
 

@@ -26,7 +26,7 @@ const { isLeaveBar,customOpenNav } = storeToRefs(useNavStore)
 // 鼠标移入
 const handleMouseEnter = () => {
     if(customOpenNav.value){
-       if(!isEnter.value) return
+    //    if(!isEnter.value) return
        isLeaveBar.value = false 
     }
     
@@ -35,8 +35,11 @@ const handleMouseEnter = () => {
 // 鼠标移出
 const handleMouseLeave = () => {
     if(customOpenNav.value){
-       if(!isLeave.value) return
-       isLeaveBar.value = true 
+    //    if(!isLeave.value) return
+       setTimeout(() => {
+        isLeaveBar.value = true 
+       }, 800);
+       
     }
     
 }
@@ -46,6 +49,7 @@ const isLeave = ref(false)
 const isEnter = ref(false)
 // 动画进入前
 const handleBeforeEnter = ()=>{
+    document.documentElement.style.setProperty('--animate-duration', '1s');
     isLeave.value = true
 }
 
@@ -56,6 +60,7 @@ const handleEnter = ()=>{
 
 // 动画离开前
 const handleBeforeLeave = ()=>{
+    document.documentElement.style.setProperty('--animate-duration', '.5s');
     isEnter.value = true
 }
 
