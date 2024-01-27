@@ -32,6 +32,7 @@
             :showBackground="true"
             :noBg="true"
             :hideDate="false"
+            :customData="customData"
           />
         </div>
       </template>
@@ -162,6 +163,7 @@ export default {
     if(!this.customData.font){ 
       setData.font =  "font-family: '优设标题黑' !important;";
     }
+    if(!this.customData.fontColor){ setData.fontColor = '#508BFE' }
     if(!this.customData.enableSecond){ setData.enableSecond = false }
     if(!this.customData.currentStatus) { setData.currentStatus = 'font' }
     if (Object.keys(setData).length) { this.updateCustomData(this.customIndex, setData, this.desk); }

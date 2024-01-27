@@ -10,6 +10,7 @@
           :style="{ zoom: zoom }"
           :noBg="true"
           :clockFont="customData.font"
+          :customData="customData"
         />
         <clock3
           v-if="clock == 'clock3'"
