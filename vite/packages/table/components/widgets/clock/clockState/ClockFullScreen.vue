@@ -1,7 +1,25 @@
 <template>
   <teleport to="body">
     <img class="popContainer" :src="imgUrl" alt="" />
-    <div class="box">
+    <xt-menu :menus="fullMenu" name="name">
+      <div class="box pointer" @click.prevent="exit">
+        <component
+          :is="clock"
+          v-if="clock !== 'clock3'"
+          :key="clock"
+          :style="{ zoom: zoom }"
+          :noBg="true"
+          :clockFont="customData.font"
+        />
+        <clock3
+          v-if="clock == 'clock3'"
+          key="clock3"
+          :style="{ zoom: zoom }"
+        ></clock3>
+      </div>
+    </xt-menu>
+
+    <!-- <div class="box pointer" @click.prevent="exit">
       <component
         :is="clock"
         v-if="clock !== 'clock3'"
@@ -13,43 +31,8 @@
         key="clock3"
         :style="{ zoom: zoom }"
       ></clock3>
-      <div
-        class="flex bottom"
-        :style="optAction == true ? 'display: none' : ''"
-      >
-        <div
-          class="item-icon flex justify-center items-center pointer mr-4 no-drag"
-          @click="up()"
-        >
-          <Icon class="icon" icon="caret-left"></Icon>
-        </div>
-        <div
-          class="item-icon flex justify-center items-center pointer mr-4 no-drag"
-          @click="down()"
-        >
-          <Icon class="icon" icon="caret-right"></Icon>
-        </div>
-        <div
-          class="item-icon flex justify-center items-center pointer mr-4 no-drag"
-          @click="random()"
-        >
-          <Icon class="icon" icon="reload"></Icon>
-        </div>
-        <div
-          class="item-icon flex justify-center items-center pointer mr-4 no-drag"
-          @click="setting()"
-        >
-          <Icon class="icon" icon="setting"></Icon>
-        </div>
-        <div
-          class="item-icon flex justify-center items-center pointer mr-4 no-drag"
-          @click="exit()"
-        >
-          <Icon class="icon" icon="guanbi2"></Icon>
-        </div>
-      </div>
-    </div>
-    <a-drawer
+    </div> -->
+    <!-- <a-drawer
       style="z-index: 999999999; scrollbar-width: none"
       :width="500"
       v-model:visible="settingVisible"
@@ -67,8 +50,17 @@
       >
       </ClockBackground>
       <ClockStyle @updateClockStyle="updateClockStyle"></ClockStyle>
-    </a-drawer>
+    </a-drawer> -->
   </teleport>
+
+  <ClockSettingModal ref="settingModalRef"  :customData="customData" :zIndex="'100000'" @updateClockStyle="updateClockStyle">
+    <template #modelScale>
+      <div class="my-4" >
+        <div class="xt-bb mx-auto"></div>
+      </div>
+      <ClockBackground @img="img" @updateBlur="updateBlur" @updateBgZoom="updateBgZoom" :bgZoom="bgZoom" :blur="blur" />
+    </template>
+  </ClockSettingModal>
 </template>
 
 <script>
@@ -76,11 +68,14 @@ import mixin from "../hooks/clockMixin.js";
 
 import ClockStyle from "./ClockStyle.vue";
 import ClockBackground from "./ClockBackground.vue";
+import ClockSettingModal from "../components/ClockSettingModal.vue";
+
 export default {
   mixins: [mixin],
   components: {
     ClockStyle,
     ClockBackground,
+    ClockSettingModal
   },
   emits: ["updateBgZoom", "updateBlur", "updateClockStyle"],
   props: {
@@ -100,6 +95,10 @@ export default {
       type: String,
       default: 0,
     },
+    customData:{
+      type:Object,
+      default:()=>{}
+    }
   },
   watch: {
     blur(a, b) {
@@ -129,6 +128,14 @@ export default {
       src: "https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg",
       blurs: "blur(10px}",
       zoom: "100%",
+      fullMenu:[
+        {
+          name:'时钟设置',newIcon:'fluent:settings-16-regular', 
+          callBack:()=>{
+           this.setting()
+          }
+        },
+      ]
     };
   },
   methods: {
@@ -148,8 +155,9 @@ export default {
       }, 3000);
     },
     setting() {
-      this.settingVisible = true;
-      this.optAction = false;
+      this.$refs.settingModalRef.openClockModal();
+      // this.settingVisible = true;
+      // this.optAction = false;
     },
     exit() {
       document.removeEventListener("mousemove", this.touchEvent, {

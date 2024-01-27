@@ -158,9 +158,9 @@ export default {
     }
     if (this.customData.blurs === undefined) { setData.blurs = 3;}
     if (!this.customData.bgZoom) { setData.bgZoom = 0;}
-    if(!this.customData.backgroundFrame){ setData.backgroundFrame = false; }
+    if(!this.customData.backgroundFrame){ setData.backgroundFrame = true; }
     if(!this.customData.font){ 
-      setData.font =  { name:'优设标题黑', value:"font-family: '优设标题黑' !important;" };
+      setData.font =  "font-family: '优设标题黑' !important;";
     }
     if(!this.customData.enableSecond){ setData.enableSecond = false }
     if(!this.customData.currentStatus) { setData.currentStatus = 'font' }

@@ -1,5 +1,5 @@
 <template>
-  <xt-modal full v-model="clockVisible" title="时钟设置">
+  <xt-modal full v-model="clockVisible" title="时钟设置" :index="zIndex">
     <div class="flex flex-col h-full mx-2" style="width: 500px">
       <div class="flex flex-col xt-bg-2 p-4 rounded-lg mb-4">
         <div class="flex flex-col">
@@ -25,6 +25,7 @@
           显示时钟组件的背景框。
          </span>
         </div>
+        <slot name="modelScale"></slot>
       </div>
 
       <div class="flex flex-col xt-bg-2 p-4 rounded-lg mb-4 " >
@@ -78,6 +79,10 @@ export default{
     customData:{ type:Object,default:()=>{} },
     desk:{type:Object,default:()=>{}},
     customIndex:{ type:Number,default:()=>{} },
+    zIndex:{
+      type:String,
+      default:'1000'
+    }
   },
   data(){
     return{
@@ -93,6 +98,21 @@ export default{
     },
     updateClock(e){
      this.$emit('updateClockStyle',e)
+    }
+  },
+
+  watch:{
+    "customData.currentStatus":{
+      handler(newV){
+        console.log('newV',newV);
+       if(newV === 'font'){
+        this.updateClock('clock4')
+       }
+       else {
+        this.updateClock('clock1')
+       }
+      },
+      immediate:true,
     }
   }
 }

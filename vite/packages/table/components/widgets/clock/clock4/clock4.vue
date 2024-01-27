@@ -5,7 +5,7 @@
       <div class="gutter-box" :style="clockFont">:</div>
       <!-- ant-row -->
       <div class="gutter-box" :style="[clockFont,noBg ? { background:'transparent !important'}:{ background:' var(--secondary-bg) !important' }]">{{ min }}</div>
-      <div class="gutter-box" :style="clockFont">:</div>
+      <div class="gutter-box" v-if="isSnow" :style="clockFont">:</div>
       <template :style="{ display: isSnow == true ? 'inline-block' : 'none' }">
         <div class="gutter-box" :style="[clockFont,noBg ? { background:'transparent !important'}:{ background:' var(--secondary-bg) !important' }, ]">{{ second }}</div>
       </template>
