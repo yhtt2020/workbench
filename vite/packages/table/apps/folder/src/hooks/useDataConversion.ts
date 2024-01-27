@@ -1,7 +1,7 @@
 import { getHostAddress } from './../../../../components/widgets/myIcons/edit/hooks/getHostAddress';
 import { nanoid } from "nanoid";
 import _ from "lodash";
-import { defaultData } from "../components/options";
+import { defaultData } from "../../../../apps/folder/src/components/options";
 export const useIconConversionFile = (data) => {
   const file = {
     ...defaultData,
@@ -79,24 +79,21 @@ export const useDeskConversionNav = (icon, name, item) => {
   const file = {
     icon: icon,
     name,
-    type:'tableApp',
-    bg:'',
-    isBg:false,
-    mode:'app',
-    value:item,
-    id:nanoid(6)
-  }
-  return file
-}
-
-// 统一图标格式
+    type: "tableApp",
+    bg: "",
+    isBg: false,
+    mode: "app",
+    value: item,
+    id: nanoid(6),
+  };
+  return file;
+};
 export const mergeData = (data) => {
   // console.log((data?.renewTime == defaultIconData.renewTime ? data : ''),'===========<<<<<<<<<<')
   if (data?.renewTime == defaultIconData.renewTime) return data;
   const target= _.merge({}, defaultIconData, data);
   return target;
 };
-
 // 默认图标格式
 export const defaultIconData = {
   renewTime: 20240125, // 图标更新时间
@@ -111,7 +108,7 @@ export const defaultIconData = {
    * link 网址链接
    */
   mode: "app",
-
+  attributeEdit: true,
   /**
    * 图标类型
    * systemApp 系统应用

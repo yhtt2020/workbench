@@ -3,9 +3,12 @@ import dbStorage from "./dbStorage";
 import {steamProtocol} from "../js/common/game";
 import cache from "../components/card/hooks/cache";
 const {steamUser, steamSession, path, https, steamFs} = $models
-let client = new steamUser({
-  enablePicsCache: true
-});
+let client
+setTimeout(()=>{
+  client = new steamUser({
+    enablePicsCache: true
+  });
+},1000)
 
 window.client = client
 // @ts-ignore

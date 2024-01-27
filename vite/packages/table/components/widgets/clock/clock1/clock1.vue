@@ -1,17 +1,23 @@
 <template>
   <div class="FlipClock clock1">
-    <Flipper ref="flipperHour1" />
+    <Flipper ref="flipperHour1"/>
     <Flipper ref="flipperHour2" />
     <em>:</em>
     <Flipper ref="flipperMinute1" />
     <Flipper ref="flipperMinute2" />
-    <template :style="{ display: isSnow == true ? 'inline-block' : 'none' }">
+    <template :style="{ display: isSnow == true ? 'flex' : 'none', }">
       <em>:</em>
       <Flipper ref="flipperSecond1" />
       <Flipper ref="flipperSecond2" />
     </template>
 
+    <!-- <template :style="{ display: isSnow == true ? 'inline-block' : 'none', }">
+      <em>:</em>
+      <Flipper ref="flipperSecond1" />
+      <Flipper ref="flipperSecond2" />
+    </template> -->
   </div>
+  <!-- fontSize:isSnow == true ? '12px':'30px' -->
 </template>
 
 <script>

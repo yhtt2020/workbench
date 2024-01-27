@@ -117,8 +117,10 @@ import Theme from "./components/Theme.vue";
 import Preview from "./components/Preview.vue";
 import { NavListTmp, GameDesk } from './components/data';
 import {completeTask} from '../../../apps/task/task'
-import { FreeLayoutStore } from "../grade/components/FreeLayout";
-import { useFreeLayoutStore } from "../../../components/desk/freelayout/store";
+import { FreeLayoutStore } from "./components/FreeLayout";
+import { useFreeLayoutStore } from "../../../components/desk/freeLayout/store";
+import { useWidgetStore } from "../../../components/card/store";
+
 
 export default {
   components: {
@@ -195,6 +197,7 @@ export default {
       "defaultState",
       "previewFlag",
     ]),
+    ...mapWritableState(useWidgetStore, ["edit"]),
     cardList() {
       if (this.deskTypeObj.game) {
         return this.gameList
@@ -258,21 +261,16 @@ export default {
     ...mapActions(useFreeLayoutStore, ["setFreeLayoutData", "setFreeLayoutState", 'renewFreeLayout', 'getFreeLayout1']),
 
     test(){
-      // console.log(111111111111)
-      // console.log(this.assistDesk)
-      // console.log(this.assistDesk)
-      // console.log(this.assistDesk.freeLayoutData)
       
       this.getFreeLayout1()
       
-      // console.log('this.assistDesk', this.assistDesk)
-
       this.setFreeLayoutData('mj36hf6h', this.assistDesk.freeLayoutData)
       this.setFreeLayoutState('mj36hf6h', this.assistDesk.freeLayoutState)
       this.scheme = {...GameDesk}
-      // console.log('scheme', this.scheme)
-      this.previewFlag = true
+
       this.showModal = true
+      this.previewFlag = true
+      this.edit = true
     },
     closePreview() {
       this.previewFlag = false

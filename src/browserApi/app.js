@@ -40,6 +40,19 @@ const app={
       manifest:manifest,
       cbId:cbId
     })
+  },
+  installTTApp(zipPath,cb){
+    let cbId=require('nanoid').nanoid()
+    ipc.once(cbId,(event,args)=>{
+      if(cb){
+        console.log('安装回调',args)
+        cb(args)
+      }
+    })
+    return send('installTTApp',{
+      manifest:zipPath,
+      cbId:cbId
+    })
   }
 }
 

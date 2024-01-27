@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { tasks } from "./page/primary/Primary";
 import { tasks as branchTasks } from "./page/branch/Branch";
+import { getAllTask } from "./api";
 // @ts-ignore
 export const taskStore = defineStore("taskStore", {
   state: () => ({
@@ -72,6 +73,34 @@ export const taskStore = defineStore("taskStore", {
         return this.getBranchTask(id);
       }
     },
+    // 初始化任务
+    async initTask (){
+      let res = await getAllTask();
+      
+       let { code, data } = res
+      
+      if (code !== 200) return;
+      this.currentTaskList = data;
+      const type = "main";
+      this.completedList = [];
+      data.forEach((item) => {
+        if (item.done == 1) this.completedList.push(item.name);
+      });
+      // 找出主线未完成任务
+      let arr = data.filter((obj) => obj.type === type);
+
+      let currentTask = arr.find((item) => {
+        if (item.done == 0) return item;
+      });
+
+      if (!currentTask) {
+        this.taskID = "";
+        return;
+      }
+
+      this.taskID = currentTask.name;
+      this.currentId = currentTask.name;
+    }
   },
   persist: {
     enabled: true,

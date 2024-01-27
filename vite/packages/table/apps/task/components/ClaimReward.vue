@@ -1,7 +1,7 @@
 <template>
   <xt-modal :footer="0" v-model="rewardVisible">
     <div
-      class="mb-4 flex justify-center items-center flex-col"
+      class=" flex justify-center items-center flex-col"
       style="width: 500px"
     >
       <audio controls class="hidden" style="" autoplay>
@@ -35,12 +35,11 @@
           w="80"
           h="40"
           class="mr-3"
-          type="theme"
           @click="rewardVisible = false"
           radius="8"
           >{{ types[props.type]?.button }}</xt-button
         >
-        <xt-button w="80" h="40" type="theme" @click="goTask">下一个</xt-button>
+        <xt-button w="80" h="40" type="theme" @click="goTask"        radius="8">下一个</xt-button>
       </div>
     </div>
   </xt-modal>
