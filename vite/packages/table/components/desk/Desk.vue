@@ -36,7 +36,6 @@
     <!-- {{ freeLayout }}
     {{ isFreeLayout }}
     {{ $route.path }} -->
-
     <Drop>
       <!-- 自由布局 -->
       <FreeLayoutScrollbar
@@ -206,7 +205,6 @@
       </template>
     </div>
   </xt-modal>
-
   <transition name="fade">
     <div
       class="home-blur"
@@ -274,6 +272,9 @@ export default {
   mixins: [componentsMinis],
   components: { LoadingOutlined, EditNewNavigation, GalleryModal, Drop },
   props: {
+    keepAddIcon:{
+      default:false,
+    },
     freeLayout: {
       default: true,
     },
@@ -467,25 +468,6 @@ export default {
     ...mapWritableState(useNavigationStore, ["selectNav", "isDesk"]),
     ...mapWritableState(useDeskStore, ["autoOpenEdit", "adjustLayout"]),
 
-    navMenu() {
-      if (
-        !this.navigationToggle[0] &&
-        !this.navigationToggle[1] &&
-        !this.navigationToggle[2]
-      ) {
-        return [
-          {
-            id: 10,
-            newIcon: "fluent:eye-16-regular",
-            name: "显示底部导航",
-            fn: () => {
-              this.navigationToggle[2] = true;
-            },
-          },
-        ];
-      }
-      return [];
-    },
     deskMenus() {
       let currentHide = null;
       if (this.isFreeLayout) {
@@ -707,7 +689,8 @@ export default {
     window.time = Date.now();
   },
   mounted() {
-    console.log('this.currentDesk', this.currentDesk, this)
+    this.editVisible = this.keepAddIcon
+    console.log(this.keepAddIcon,'this.keep')
     // 自动打开编辑
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();
