@@ -558,16 +558,17 @@ export default {
           name: "整理桌面",
           disabled: this.isFreeLayout ? false : true,
           fn: () => {
-            useCustomLayout({
-              mainList: this.currentDesk.cards,
-              cb: () => {
-                this.$bus.emit("adsorbGrid");
+            this.$xtConfirm("整理桌面", `整理桌面会将当前自由布局卡片重新规整排列`, {
+              ok: () => {
+                useCustomLayout({
+                  mainList: this.currentDesk.cards,
+                  cb: () => {
+                    this.$bus.emit("adsorbGrid");
+                  },
+                });
               },
+              type: "warning",
             });
-            // 0 提供一个伪卡片
-            // 提供一个添加卡片
-            // 1 添加新的桌面
-            // 2 切换为自由布局
           },
         },
         {
@@ -711,7 +712,7 @@ export default {
     window.time = Date.now();
   },
   mounted() {
-// console.log('this.$refs.xxx :>> ', this.$refs.xxx);
+    // console.log('this.$refs.xxx :>> ', this.$refs.xxx);
     // 自动打开编辑
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();
