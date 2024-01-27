@@ -1,13 +1,22 @@
 <template>
   <div class="clock4">
     <a-row :gutter="16">
-      <div class="gutter-box">{{ hours }}</div>
-      <div class="gutter-box">{{ min }}</div>
+      <div class="gutter-box" :style="[clockFont,noBg ? { background:'transparent !important'}:{ background:' var(--secondary-bg) !important' }]">{{ hours }}</div>
+      <div class="gutter-box" :style="clockFont">:</div>
+      <!-- ant-row -->
+      <div class="gutter-box" :style="[clockFont,noBg ? { background:'transparent !important'}:{ background:' var(--secondary-bg) !important' }]">{{ min }}</div>
+      <div class="gutter-box" :style="clockFont">:</div>
       <template :style="{ display: isSnow == true ? 'inline-block' : 'none' }">
-        <div class="gutter-box">{{ second }}</div>
+        <div class="gutter-box" :style="[clockFont,noBg ? { background:'transparent !important'}:{ background:' var(--secondary-bg) !important' }, ]">{{ second }}</div>
       </template>
     </a-row>
   </div>
+  
+  <!-- <div class="gutter-box" :style="[clockFont,noBg ? { background:'transparent !important'}:{ background:' var(--secondary-bg) !important' }]">{{ hours }}</div>
+  <div class="gutter-box">:</div>
+  <div class="gutter-box" :style="[clockFont,noBg ? { background:'transparent !important'}:{ background:' var(--secondary-bg) !important' }]">{{ min }}</div>
+  <div class="gutter-box" v-if="isSnow">:</div>
+  <div class="gutter-box" v-if="isSnow" :style="[clockFont,noBg ? { background:'transparent !important'}:{ background:' var(--secondary-bg) !important' }, ]">{{ second }}</div> -->
 </template>
 
 <script>
@@ -25,6 +34,13 @@ export default {
       type: Boolean,
       default: true,
     },
+    clockFont:{
+      type:String,
+    },
+    noBg:{
+      type:Boolean,
+      default:false,
+    }
   },
   mounted() {
     this.timerID = setInterval(this.updateTime, 1000);
@@ -66,13 +82,14 @@ export default {
   font-family: Impact;
   font-size: 64px;
   color: var(--primary-text);
-  font-weight: 900;
+  // font-weight: 900;
   line-height: 138px;
   text-align: center;
   height: 138px;
-  width: 110px;
+  // width: 110px;
+  padding: 8px;
   border-radius: 10px;
-  background: var(--secondary-bg);
+  // background: var(--secondary-bg);
   border-radius: 12px;
   margin: 8px;
 }
