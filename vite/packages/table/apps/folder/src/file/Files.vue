@@ -7,8 +7,8 @@
   >
     <div  :style="[getImgSize,{background: item.bg}]" class="overflow-hidden rounded-lg">
       <!-- item?.linkIcon" 获取链接中无法获取到链接的图标使用默认图标 -->
-      <xt-new-icon :icon="item.icon" size="40" v-if="item?.linkIcon"></xt-new-icon>
-      <img v-else ref="img" :src="src" class="w-full h-full " :style="[item.color]"/>
+      <!-- <xt-new-icon :icon="item.icon" size="40" v-if="item?.linkIcon"></xt-new-icon> -->
+      <img ref="img" :src="src" class="w-full h-full " :style="[item.color]"/>
     </div>
     <div
       class="text-xs truncate xt-text-2"

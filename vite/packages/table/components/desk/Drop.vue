@@ -107,7 +107,7 @@ const handleDrop = async (dragEvent) => {
         value: link,
       },
       titleValue: name || '网址链接',
-      src: icon || 'fluent-emoji:globe-showing-asia-australia',
+      src: icon || 'https://a.apps.vip/icons/iconSelect/emoji/globe-showing-asia-australia.svg',
       linkIcon: icon === null ? true : false,
     };
 

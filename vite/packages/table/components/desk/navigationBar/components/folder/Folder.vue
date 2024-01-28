@@ -8,8 +8,8 @@
                 :style="{ 
                     marginRight: index == 3 || index == 1 ? '0px' : '4px',
                     borderRadius: (navigationStore.iconRadius / 4) + 'px',background: item.bg || '' }">
-                <xt-new-icon :icon="item.icon" size="16" v-if="item.linkIcon"></xt-new-icon>
-                <a-avatar v-else :size="16" shape="square" :src="item.icon"
+                <!-- <xt-new-icon :icon="item.icon" size="16" v-if="item.linkIcon"></xt-new-icon> -->
+                <a-avatar :size="16" shape="square" :src="item.icon"
                     :style="[item.color]"></a-avatar>
             </div>
         </div>

@@ -7,7 +7,7 @@ export const mergeData = (data) => {
 };
 // 默认图标格式
 export const defaultData = {
-  renewTime: 20240125, // 图标更新时间
+  renewTime: 20240128, // 图标更新时间
   id: "", // 图标id
   icon: "", // 显示的图标数据
   name: "", // 显示的图标名称
@@ -42,8 +42,6 @@ export const defaultData = {
   iconShape: "square", // 图标形状 长方形或正方形
   // 单图标展示的大小
   size: "1x1",
-  // 拖拽链接展示图标
-  linkIcon:false,
   summary:'',   // 酷应用，轻应用，网址导航等图标的简介
   default:{},   // 数据用于重置图标
 };
@@ -133,3 +131,18 @@ export const useDeskConversionNav = (icon, name, item) => {
   };
   return file;
 };
+
+// 桌面链接转为导航栏和文件夹图标
+export const useLinkConversionNav = (link)=>{
+  const file = {
+    name:link.name || '链接',
+    icon:link.icon !== null ? link.icon : '	https://a.apps.vip/icons/iconSelect/emoji/globe-showing-asia-australia.svg',
+    type:'default',
+    value: link.value,
+    mode:'link',
+    isBg:false,
+    bg:'',
+    id:nanoid(6),
+  }
+  return file
+}
