@@ -3,7 +3,7 @@
     :style="{ borderRadius: navigationBar.iconRadius + 'px', background: item.bg || '' }"
     class="relative flex items-center justify-center ">
     <!-- {{ isLink }} -->
-    <xt-new-icon icon="fluent-emoji:globe-showing-asia-australia" size="36" v-if="isLink"></xt-new-icon>
+    <xt-new-icon :icon="item.icon" size="36" v-if="isLink"></xt-new-icon>
     <a-avatar v-else  :size="52" shape="square" :src="item.icon" :style="{ borderRadius: navigationBar.iconRadius + 'px' }"></a-avatar>
   </div>
   <div v-else style="width: 52px; height: 52px;">

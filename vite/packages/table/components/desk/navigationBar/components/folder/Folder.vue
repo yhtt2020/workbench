@@ -5,8 +5,11 @@
             :style="{ borderRadius: navigationStore.iconRadius + 'px' }" style="border: 1px solid var(--divider);">
             <div class=" w-[16px] h-[16px]   flex flex-wrap  justify-center items-center overflow-hidden" 
                 v-for="(item, index) in list?.slice(0, 4)"
-                :style="{ marginRight: index == 3 || index == 1 ? '0px' : '4px',borderRadius: (navigationStore.iconRadius / 4) + 'px',background: item.bg || '' }">
-                <a-avatar :size="16" shape="square" :src="item.icon"
+                :style="{ 
+                    marginRight: index == 3 || index == 1 ? '0px' : '4px',
+                    borderRadius: (navigationStore.iconRadius / 4) + 'px',background: item.bg || '' }">
+                <xt-new-icon :icon="item.icon" size="16" v-if="item.linkIcon"></xt-new-icon>
+                <a-avatar v-else :size="16" shape="square" :src="item.icon"
                     :style="[item.color]"></a-avatar>
             </div>
         </div>

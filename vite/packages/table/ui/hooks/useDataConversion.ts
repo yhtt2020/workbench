@@ -5,13 +5,14 @@ export const mergeData = (data) => {
   if (data?.renewTime == defaultData.renewTime) return data;
   return _.merge({}, defaultData, data);
 };
+// 默认图标格式
 export const defaultData = {
-  renewTime: "20240125",
+  renewTime: 20240125, // 图标更新时间
   id: "", // 图标id
   icon: "", // 显示的图标数据
   name: "", // 显示的图标名称
   isName: true, // 是否显示图标名称
-  value: "",
+  value: "", // 图标链接
   /**
    * 当前mode
    * app 所有应用
@@ -20,7 +21,15 @@ export const defaultData = {
   mode: "app",
   attributeEdit: true,
   /**
-   * 当前
+   * 图标类型
+   * systemApp 系统应用
+   * coolApp 酷应用
+   * folder 文件夹
+   * lightApp 轻应用
+   * tableApp 桌面应用
+   * default 系统默认浏览器
+   * inner 内置浏览器
+   * xt 想天浏览器
    */
   type: "",
   bg: "", // 背景颜色
@@ -33,6 +42,10 @@ export const defaultData = {
   iconShape: "square", // 图标形状 长方形或正方形
   // 单图标展示的大小
   size: "1x1",
+  // 拖拽链接展示图标
+  linkIcon:false,
+  summary:'',   // 酷应用，轻应用，网址导航等图标的简介
+  default:{},   // 数据用于重置图标
 };
 export const useIconConversionFile = (data) => {
   const file = {
