@@ -545,12 +545,12 @@ export default {
               name: "添加图标分组",
               fn: this.addFolder,
             },
-            // {
-            //   id: 3,
-            //   newIcon: "mingcute:windows-line",
-            //   name: "整理win桌面图标",
-            //   fn: this.addFolder,
-            // },
+            {
+              id: 3,
+              newIcon: "mingcute:windows-line",
+              name: "整理win桌面图标",
+              fn: this.deskIcon,
+            },
           ],
         },
 
@@ -762,6 +762,9 @@ export default {
     ...mapActions(cardStore, ["addCard"]),
     ...mapActions(useDeskStore, ["addMenu"]),
     ...mapActions(taskStore, ['initTask']),
+    deskIcon(){
+      this.$emit("onArrange");
+    },
     addFolder() {
       registerFolder(this.currentDesk);
     },
