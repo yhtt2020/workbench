@@ -160,15 +160,7 @@
             :modalSize="options.modalSize"
             :resize="options.resize"
           >
-            <vue-custom-scrollbar
-              style=""
-              :settings="{
-                suppressScrollY: false,
-              }"
-              class="relative w-full h-full"
-            >
-              <slot> </slot>
-            </vue-custom-scrollbar>
+              <slot></slot>
           </Resize>
         </div>
       </PageState>
@@ -435,7 +427,11 @@ const title = computed(() => {
 const rightIcons = computed(() => {
   let arr = [];
 
-  if (props.header.rightIcon) {
+  console.log(
+    "typeof props.header.rightIcon  :>> ",
+    typeof header.value.rightIcon
+  );
+  if (typeof props.header.rightIcon == "array") {
     arr = [...props.header.rightIcon];
   }
   if (props.header.refresh) {
@@ -459,7 +455,6 @@ const getSize = computed(() => {
   } else {
     str = currentSize.value.split("x");
   }
-
   if (props.options.modalSize) {
     str = props.options.modalSize.split("x");
   }
@@ -489,15 +484,39 @@ watch(
   }
 );
 
-// 方法
+/**
+ * 方法
+ */
+
+// 头部左侧点击
+const leftClick = () => {
+  if (props.header.leftHover) {
+    emits("leftClick");
+  }
+};
+// 右键删除
+const removeCard = () => {
+  emits("delete");
+
+  // if (props.options.deleteFn) {
+  // props.options.deleteFn()
+  // } else {
+  cardStore.removeCard(props.customIndex, props.desk);
+  // }
+};
+
+// 设置自定义数据
+const setCustomData = (key, data) => {
+  let obj = {};
+  obj[key] = data;
+  cardStore.updateCustomData(props.customIndex, obj, props.desk);
+};
 // 头部拖拽开始
 const titleDragStart = () => {
   const toast = useToast();
   toast.clear();
   toast(
-    {
-      component: Msg,
-    },
+    { component: Msg },
     {
       icon: false,
       closeOnClick: false,
@@ -539,30 +558,6 @@ const titleMouseEnter = () => {
 const titleMouseLeave = () => {
   if (!props.header.titleHover) return;
   showTitleHover.value = false;
-};
-
-// 头部左侧点击
-const leftClick = () => {
-  if (props.header.leftHover) {
-    emits("leftClick");
-  }
-};
-// 右键删除
-const removeCard = () => {
-  emits("delete");
-
-  // if (props.options.deleteFn) {
-  // props.options.deleteFn()
-  // } else {
-  cardStore.removeCard(props.customIndex, props.desk);
-  // }
-};
-
-// 设置自定义数据
-const setCustomData = (key, data) => {
-  let obj = {};
-  obj[key] = data;
-  cardStore.updateCustomData(props.customIndex, obj, props.desk);
 };
 
 defineExpose({

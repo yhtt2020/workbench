@@ -28,16 +28,16 @@
       <template v-if="customData.list.length <= 0 && !dragSortState">
         <Null :size="customData.customSize" @addFile="addFileClick" />
       </template>
-      <!-- <vue-custom-scrollbar
+      <vue-custom-scrollbar
 
           style="padding-right: 4px"
           :settings="{
+             useBothWheelAxes: true,
             suppressScrollY: false,
           }"
           class="relative w-full h-full"
-        > -->
+        >
       <File
-        v-else
         :list="customData.list"
         :layout="customData.layout"
         :model="customData.model"
@@ -48,7 +48,7 @@
         @updateSort="updateSort"
         @clickFile="clickFile"
       />
-      <!-- </vue-custom-scrollbar> -->
+      </vue-custom-scrollbar>
       <!-- </Resize> -->
     </xt-container>
   </Drop>
