@@ -23,7 +23,14 @@
             <span class="xt-font xt-text-2 font-14">
              显示时钟组件的背景框。
             </span>
-           </div>
+          </div>
+          <div class="mb-4" >
+            <div class="xt-bb mx-auto"></div>
+          </div>
+          <div class="flex flex-col">
+            <span class="xt-font xt-text font-16">缩放比例</span>
+            <a-slider v-model:value="customData.currentZoom" :max="300" :min="50" />
+          </div>
            <slot name="modelScale"></slot>
         </div>
 
@@ -138,7 +145,12 @@ export default{
       },
       immediate:true,
     },
-  
+    "customData.currentZoom":{
+      handler(newV){
+        this.customData.currentZoom = newV;
+      },
+      immediate:true,
+    }
   }
 }
 
