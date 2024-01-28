@@ -1,5 +1,5 @@
 <template>
-  <!-- 预览 -->1
+  <!-- 预览 -->
   <div class="prompt-modal xt-mask" v-if="showModal">
     <div class="head-icon">
       <div class="icon" @click="close">

@@ -1,6 +1,6 @@
 <template>
   <div v-if="fullScreen && noFullScreen" class="no-drag">
-    <div style="position: absolute; right: 10px; top: 10px; z-index: 999">
+    <div style="position: absolute; right: 75px; top: 16px; z-index: 999">
       <xt-button @click="setFullScreen(false)" :w="40" :h="40" type="theme">
         <Icon style="font-size: 18px" icon="quxiaoquanping_huaban"></Icon>
       </xt-button>
