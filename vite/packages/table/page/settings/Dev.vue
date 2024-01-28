@@ -69,7 +69,6 @@
 import ZoomUI from '../../components/comp/ZoomUI.vue'
 import { appStore } from '../../store'
 import { mapWritableState } from 'pinia'
-import AutoRun from '../../components/comp/AutoRun.vue'
 import { isMain } from '../../js/common/screenUtils'
 import Template from '../../../user/pages/Template.vue'
 import { useWidgetStore } from '../../components/card/store.ts'
@@ -78,7 +77,7 @@ import { prettyDisplayBytes } from '../../js/action/supervisory'
 
 export default {
   name: 'Common',
-  components: { Template, AutoRun, ZoomUI },
+  components: { Template, ZoomUI },
   data () {
     return {
       trayOpen: '',

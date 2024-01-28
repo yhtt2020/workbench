@@ -1,17 +1,17 @@
 <template>
-  <div class="flex flex-row" style="height: 100%">
-    <div class="item-content" style="height: 100%">
+  <div class="flex flex-row"  >
+    <div class="item-content"  >
       <div v-for="item in navLists" :key="item" class="mb-3 mx-2 rounded-lg flex flex-col"
-      :style="avatarBgColor(item.frame.rarity)" style="width:337px;">
+      :style="avatarBgColor(item.frame.rarity)" style="width:337px;min-height: 200px;">
         <div class="avatar-top flex " style="position: relative">
-          <div style="width: 100px;height: 100px;">
+          <div style="width: 100px;height: 100px;min-width: 100px;">
 
             <RayMedal v-if="item.frame.rarity>=4" medalStyle="transform:scale(250%) !important"  :size="120"  style="transform: translateX(-10%) translateY(-5%) " :src="item.cover">
 
             </RayMedal>
             <img v-else :src="item.cover" class="w-full h-full object-fill" alt="">
           </div>
-          <div class="flex flex-col justify-center ml-4">
+          <div class="flex flex-col justify-center ml-2">
             <div class="mt-2">
                   <span class="avatar-font" :style="titleTagColor(item.frame.rarity)">
               {{ item.alias }}

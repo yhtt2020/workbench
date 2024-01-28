@@ -21,16 +21,16 @@
         清空记录
       </div>
     </div>
-    <div class="h-20 set-bg rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">
-      <Icon style="height: 36px;width: 36px" icon="desktop"></Icon>
-      <div class="flex flex-col ml-4 w-2/3">
-        <span class="set-title">游戏桌面</span>
-        <span style="color: var(--secondary-text);">每个游戏的独立桌面</span>
-      </div>
-      <div class="set-bg ml-10 w-28 h-12 rounded-lg flex justify-center items-center pointer" @click="removeAllDesk">
-        删除全部桌面
-      </div>
-    </div>
+<!--    <div class="h-20 set-bg rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">-->
+<!--      <Icon style="height: 36px;width: 36px" icon="desktop"></Icon>-->
+<!--      <div class="flex flex-col ml-4 w-2/3">-->
+<!--        <span class="set-title">游戏桌面</span>-->
+<!--        <span style="color: var(&#45;&#45;secondary-text);">每个游戏的独立桌面</span>-->
+<!--      </div>-->
+<!--      <div class="set-bg ml-10 w-28 h-12 rounded-lg flex justify-center items-center pointer" @click="removeAllDesk">-->
+<!--        删除全部桌面-->
+<!--      </div>-->
+<!--    </div>-->
     <div class="h-20 set-bg rounded-lg flex flex-row items-center px-6 mb-4" style="width: 572px">
       <Icon style="height: 36px;width: 36px" icon="position"></Icon>
       <div class="flex flex-col ml-4 w-2/3">

@@ -6,7 +6,7 @@
   </div>
   <div class="line">
     <div class="mb-1">摇一摇鼠标穿梭：</div>
-    <p>局限性：目前暂不只是坐标轴为负的屏幕穿梭返回。</p>
+    <p>局限性：目前暂不支持坐标轴为负的屏幕穿梭返回。</p>
     <a-switch v-model:checked="settings.shake.enable"></a-switch>
   </div>
   <div v-if="settings.shake.enable">

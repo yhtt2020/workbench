@@ -20,7 +20,7 @@
                         <xt-button :w="40" :h="40" @click="backIntroduce" :icon="'fluent:emoji-smile-slight-24-regular'"></xt-button>
                     </a-tooltip>
                     <a-tooltip title="自定义网址" v-if="this.selectNav === 'desktop'" class="ml-2">
-                        <xt-button :w="120" :h="40" @click="isCustomLink" :icon="'fluent:add-16-regular'" class="xt-text-2">自定义</xt-button>
+                        <xt-button :w="40" :h="40" @click="isCustomLink" :icon="'fluent:add-16-regular'" class="xt-text-2"></xt-button>
                     </a-tooltip>
 
                 </div>

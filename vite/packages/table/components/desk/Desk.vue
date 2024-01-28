@@ -1,5 +1,5 @@
 <template>
-  <div v-if="fullScreen && noFullScreen " class="no-drag">
+  <div v-if="fullScreen && noFullScreen" class="no-drag">
     <div style="position: absolute; right: 10px; top: 10px; z-index: 999">
       <xt-button @click="setFullScreen(false)" :w="40" :h="40" type="theme">
         <Icon style="font-size: 18px" icon="quxiaoquanping_huaban"></Icon>
@@ -38,7 +38,14 @@
     {{ $route.path }} -->
 
     <Drop>
-      <!-- <WujieVue width="100%" height="100%" name="xxx" url="http://localhost:5173/" ></WujieVue> -->
+      <!-- <xt-wu-jie
+        ref="xxx"
+        width="100%"
+        height="100%"
+        name="xxx"
+        url="http://localhost:5173/"
+      ></xt-wu-jie> -->
+      <!-- <Wujie width="100%" height="100%" name="xxx" url="http://localhost:5173/" ></Wujie> -->
       <!-- 自由布局 -->
       <FreeLayoutScrollbar
         ref="freeLayoutScrollbar"
@@ -70,7 +77,7 @@
       <vue-custom-scrollbar
         v-show="!isFreeLayout"
         :class="previewFlag?'z-50':''"
-        
+
         class="no-drag"
         key="scrollbar"
         id="scrollerBar"
@@ -512,7 +519,6 @@ export default {
                 this.$bus.emit("adsorbGrid");
               },
             });
-
           },
         },
         {
@@ -708,7 +714,6 @@ export default {
   },
   mounted() {
     this.initTask()
-    console.log('this.currentDesk', this.currentDesk, this)
     // 自动打开编辑
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();
