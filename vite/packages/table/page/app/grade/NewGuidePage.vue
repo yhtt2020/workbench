@@ -2,10 +2,11 @@
   <div class="fixed overflow-hidden modal-center xt-modal tran" :class="popState ? 'pop' : step == 4 ? 'theme' : 'Popup'"
     style="">
     <div v-if="!popState" class="h-full">
-      <!-- 顶部按钮 -->
-      <div v-if="step !== 0" @click="prevStep" class="absolute ml-4 top-icon no-drag">
+      <!-- 返回按钮 -->
+      <div v-if="step !== 0  && menuList.length > 1" @click="prevStep" class="absolute ml-4 top-icon no-drag">
         <MyIcon icon="fluent:chevron-left-16-filled" width="20" height="20" />
       </div>
+      <!-- 主题色按钮 -->
       <div @click="themeSwitch" class="absolute mr-4 top-icon no-drag" style="right:0;">
         <MyIcon icon="fluent:weather-moon-16-regular" width="20" height="20" />
       </div>
@@ -15,12 +16,12 @@
       </div>
       <!-- 导入桌面图标 -->
       <div v-else-if="step == 1">
-        <DeskIcon :loading="loading" :appList="appList" @setDeskType="setDeskType"></DeskIcon>
+        <DeskIcon :loading="loading" :appList="appList"></DeskIcon>
       </div>
 
       <!-- 导入小组件 -->
       <div v-else-if="step == 2">
-        <CardList :cardList="cardList" @setDeskType="setDeskType"></CardList>
+        <CardList :cardList="cardList"></CardList>
       </div>
 
       <!-- 导入导航栏 -->
@@ -43,10 +44,10 @@
             </div>
           </xt-button>
         </div>
-        <div class="flex" v-if="step == 0">
-          <xt-button class="ml-3 button-bottom" @click="nextStep" size="large">暂不分析</xt-button>
+        <!-- <div class="flex" v-if="step == 0"> -->
+          <!-- <xt-button class="ml-3 button-bottom" @click="nextStep" size="large">暂不分析</xt-button> -->
           <!-- <xt-button class="ml-3 button-bottom" @click="analysis" size="large" type="theme">开始分析</xt-button> -->
-        </div>
+        <!-- </div> -->
         <div class="flex" v-if="step == 1">
           <xt-button class="ml-3 button-bottom"  @click="nextStep" :disabled="loading" size="large">暂不添加</xt-button>
           <xt-button class="ml-3 button-bottom"  @click="addFolder" :disabled="loading" size="large" type="theme">确定添加({{ folderNum
@@ -90,7 +91,6 @@
           @analysis="analysis"
         ></Preview>
       </div>
-      <!-- <FrameTip v-if="1"></FrameTip> -->
     </teleport>
   </div>
 </template>
@@ -123,9 +123,6 @@ import { FreeLayoutStore } from "./components/FreeLayout";
 import { useFreeLayoutStore } from "../../../components/desk/freeLayout/store";
 import { useWidgetStore } from "../../../components/card/store";
 import { useCustomLayout } from "../../../components/desk/freeLayout/useCustomLayout";
-
-// import FrameTip from "./components/FrameTip.vue";
-
 
 export default {
   components: {
@@ -188,13 +185,24 @@ export default {
       scheme: {},
       showModal: false,
       // 
-      headerList: [],
+      headerList: [], 
       folderList: [],
+      //  页面索引
+      stepIndex: 0,
     }
   },
-  props: ['deskId'],
+  props: {
+    deskId: {
+      type: String,
+      default: '',
+    },
+    menuList: {
+      type: Array,
+      default: [0, 1, 2 ,3 ,4],
+    },
+  },
   computed: {
-    ...mapWritableState(cardStore, ['desks', 'addCard']),
+    ...mapWritableState(cardStore, ['desks', 'addCard', 'removeCard']),
     ...mapWritableState(appStore, ['backgroundSettings', 'backgroundImage', 'styles','backgroundName']),
     ...mapWritableState(navStore, ['copyFootNav']),
     ...mapWritableState(FreeLayoutStore, ["assistDesk", "gameDesk"]),
@@ -250,7 +258,7 @@ export default {
     // 游戏娱乐
     this.game.forEach(i => {
       this.baseNavList.forEach(item => {
-        if (i == item.name) {
+          if (i == item.name) {
           this.gameList.push({
             ...item,
             download: Math.floor(Math.random() * 10000) + 1,
@@ -260,6 +268,12 @@ export default {
         }
       })
     })
+
+    // 
+    this.step = this.menuList[this.stepIndex]
+    if(this.step == 1){
+      this.analysis()
+    }
   },
 
   watch: {
@@ -278,11 +292,6 @@ export default {
         this.setFreeLayoutState('mj36hf6h', this.assistDesk.freeLayoutState)
         this.scheme = {...AssistDesk}
       }
-      this.getFreeLayout1()
-
-      console.log('this.scheme', this.scheme)
-
-      // this.scheme = {...GameDesk}
 
       this.showModal = true
       this.previewFlag = true
@@ -326,43 +335,51 @@ export default {
         this.$xtConfirm("返回上一步将会清空桌面已有的数据并进行重新分析。", "", {
           type: "warning",
           ok: () => {
-            this.step--
+            this.step = this.menuList[--this.stepIndex]
+            this.clearFreeLayoutData()
             this.desks[index].cards = []
           },
         });
       } else if (this.step == 2) {
-        this.$xtConfirm("返回上一步将会清空桌面已有的数据。", "", {
+        this.$xtConfirm("返回上一步将会清空桌面文件夹。", "", {
           type: "warning",
           ok: () => {
-            this.step--
-            this.desks[index].cards = []
+            this.step = this.menuList[--this.stepIndex]
+            this.removeFolder()
           },
         });
       } else if (this.step == 3) {
-        this.$xtConfirm("返回上一步将会清除桌面已添加的小组件的数据。", "", {
+        this.$xtConfirm("返回上一步将会清除推荐的卡片。", "", {
           type: "warning",
           ok: () => {
-            this.step--
-            let tmp = []
-            this.desks[index]?.cards.forEach(item => {
-              if (item.name == 'folder') {
-                tmp.push(item)
-              }
-            });
-            this.desks[index].cards = [...tmp]
+            this.step = this.menuList[--this.stepIndex]
+            this.clearFreeLayoutData()
+            setTimeout(()=>{
+              useCustomLayout({
+                headerList: this.headerList,
+                folderList: this.folderList,
+                cb: () => {
+                  this.$bus.emit("adsorbGrid");
+                },
+              });
+            },1)
           },
         });
-      } else {
-        this.step--
+      } else { 
+        this.step = this.menuList[--this.stepIndex]
       }
     },
     nextStep() {
-      this.step++
+      if(this.stepIndex < this.menuList.length - 1){
+        this.step = this.menuList[++this.stepIndex]
+      }else{
+        this.$emit('closeShowGuide')
+      }
+      
     },
 
     // 分析过程
     async analysis() {
-        // message.info("正在分析，请稍等。");
       message.loading({
         content: "正在分析，请稍等。",
         key: "preparing",
@@ -371,11 +388,6 @@ export default {
       this.loading = true
       this.step = 1
       this.getAiAnswer()
-      this.timer = setInterval(() => {
-        if (this.time < 98) {
-          this.time++
-        }
-      }, this.setTime)
 
       // 添加容错 15秒之后如果ai没跑完 认定为报错 直接进行下一步
       this.setTimer = setTimeout(() => {
@@ -404,9 +416,6 @@ export default {
     addFolder() {
       let folders = []
       const n = this.searchDeskIndex(this.deskId)
-
-
-
       this.appList.forEach((item, index) => {
         if (item.isCheck) {
           let tmp = [];
@@ -454,20 +463,19 @@ export default {
           })
           this.exeNavList[1].isCheck = true
         } else {
-          console.log('itemitem', item);
-          // this.addCard(item, this.desks[n]);
           this.folderList.push({...item})
         }
       })
-
+      this.headerList = []
       if(this.deskTypeObj.assist){
         this.headerList = this.assistDesk.desk[0]?.cards.slice(0,6)
-        // folder = this.assistDesk.desk[0]?.cards.slice(6, 10)
-      }else{
+      }else if(this.deskTypeObj.game){
         this.headerList = this.gameDesk.desk[0]?.cards.slice(0,5)
-        // folder = this.gameDesk.desk[0]?.cards.slice(5, 9)
       }
-      this.clearFreeLayoutData()
+      if(this.headerList.length){
+        this.clearFreeLayoutData()
+      }
+
       setTimeout(()=>{
         useCustomLayout({
           headerList: this.headerList,
@@ -477,8 +485,6 @@ export default {
           },
         });
       },1)
-
-
       this.setExeListNav()
       this.nextStep();
     },
@@ -488,14 +494,11 @@ export default {
       if (this.exeNavList[0]?.children.length) {
         let num = this.searchNavIndex(this.exeNavList[0].id)
         if (num) {
-          console.log(1);
           // 如果存在直接删除
           this.copyFootNav.splice(num, 1, this.exeNavList[0])
         } else if(this.copyFootNav.length > 3) {
-          console.log(2);
           this.copyFootNav.splice(-2, 0, this.exeNavList[0])
         }else{
-          console.log(3);
           this.copyFootNav.push({...this.exeNavList[0]})
         }
       }
@@ -511,6 +514,19 @@ export default {
       }
     },
 
+    // 删除桌面文件夹
+    removeFolder(){
+      this.clearFreeLayoutData()
+      setTimeout(()=>{
+        useCustomLayout({
+          headerList: this.headerList,
+          cb: () => {
+            this.$bus.emit("adsorbGrid");
+          },
+        });
+      },1)
+    },
+
     // 寻找导航条id
     searchNavIndex(id) {
       let n = null;
@@ -521,13 +537,11 @@ export default {
       })
       return n
     },
-
     // 添加小组件
     addDeskCard() {
       const n = this.searchDeskIndex(this.deskId)
       let cards = []
       this.cardList.forEach((item, index) => {
-        console.log('item', item )
         if (item.isCheck) {
           cards.push({
             customData: {
@@ -538,7 +552,7 @@ export default {
           })
         }
       })
-      console.log('cards', cards)
+      // 删除 添加
       this.clearFreeLayoutData()
       setTimeout(()=>{
         useCustomLayout({
@@ -550,7 +564,6 @@ export default {
           },
         });
       },1)
-      // 删除 添加
       this.nextStep();
     },
 
@@ -610,7 +623,6 @@ export default {
           // 分离文件夹
           folderList.push(item)
         } else if (item.ext == '.exe' || item.ext == '.url') {
-          console.log('item', item);
           // 分离exe文件以及url文件 url文件暂时认定为 常用程序
           if (!item.icon.includes('steam')) {
             exeStr = exeStr + `{"name":"${item.name}","index":${index}},`
@@ -651,7 +663,6 @@ export default {
         // 这步有可能 会被ai传回数据格式错误 导致报错
         let tmp = JSON.parse(res)
 
-        console.log('tmp', tmp)
         if(tmp.game.length + tmp.programs.length != exeList.length) return
 
 
@@ -662,9 +673,6 @@ export default {
 
         // 处理 常用程序 和 游戏 的数据 上一步ai只是根据名字进行筛选 这步根据返回的序号 将数据分开存储
         tmp.game?.forEach(i => {
-          // i.icon = desktopApps[i.index]?.icon
-          // i.path = desktopApps[i.index]?.path
-          // i.ext = desktopApps[i.index]?.ext
           this.appList[0].list.push({
             ...i,
             icon: desktopApps[i.index]?.icon,
@@ -676,12 +684,6 @@ export default {
           i.icon = desktopApps[i.index]?.icon
           i.path = desktopApps[i.index]?.path
           i.ext = desktopApps[i.index]?.ext
-          // this.appList[1].list.push({
-          //   ...i,
-          //   icon: desktopApps[i.index]?.icon,
-          //   path: desktopApps[i.index]?.path,
-          //   ext: desktopApps[i.index]?.ext,
-          // })
         })
 
         // this.appList[0].list = tmp.game

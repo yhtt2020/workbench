@@ -158,7 +158,7 @@ export default {
   methods: {
     ...mapActions(cardStore, ['addShareDesk', 'setDeskSize']),
     ...mapActions(marketStore,['incSupport']),
-    ...mapActions(useFreeLayoutStore,['initFreeLayoutEnv']),
+    ...mapActions(useFreeLayoutStore,['initFreeLayoutEnv', 'clearFreeLayoutData']),
     
     async doIncSupport(){
       const rs=await this.incSupport(this.displayScheme.dataNanoid)
@@ -174,35 +174,25 @@ export default {
 
     // 添加头部卡片
     addHeaderCard(){
-      // console.log(1111111111111)
       // 将数据添加到桌面
-      // 将处理好的数据推进  定制头部方法里面 
-      // console.log('this.assistDesk.desk.cards',this.assistDesk.desk[0]?.cards)
       setTimeout(() => {
-        // this.initFreeLayoutEnv()
-        let header, folder;
-
+        this.clearFreeLayoutData()
+        let header;
         if(this.deskTypeObj.assist){
           header = this.assistDesk.desk[0]?.cards.slice(0,6)
-          // folder = this.assistDesk.desk[0]?.cards.slice(6, 10)
         }else{
           header = this.gameDesk.desk[0]?.cards.slice(0,5)
-          // folder = this.gameDesk.desk[0]?.cards.slice(5, 9)
         }
         useCustomLayout({
           headerList: header,
-          folderList: folder,
           cb: () => {
             this.$bus.emit("adsorbGrid");
           },
         });
         this.$emit('analysis')
-        
       }, 2);
-
       // 定位到桌面正中央
       this.close()
-
     },
 
     addPlan () {
