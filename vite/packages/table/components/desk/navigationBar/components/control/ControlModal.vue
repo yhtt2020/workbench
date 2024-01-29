@@ -156,6 +156,10 @@ onMounted(()=>{
   proxy.$bus.on('closeControl',()=>{
     emit('close')
   })
+
+  proxy.$bus.on("closeControl",()=>{
+    emit('close')
+  })
 })
 </script>
 

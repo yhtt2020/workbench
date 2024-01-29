@@ -1,16 +1,36 @@
 <template>
   <div class="clock4">
     <a-row :gutter="16">
-      <div class="gutter-box" :style="[clockFont,noBg ? { background:'transparent !important'}:{ background:' var(--secondary-bg) !important' }]">{{ hours }}</div>
-      <div class="gutter-box" :style="clockFont">:</div>
+      <div class="gutter-box" :style="[
+        clockFont,noBg ? { background:'transparent !important'}:{ background:' var(--secondary-bg) !important' },
+        customData?.currentStatus === 'font' ?  {color:`${customData?.fontColor}`} : {}
+       ]"
+      >
+        {{ hours }}
+      </div>
+      <div class="gutter-box" :style="[clockFont,customData?.currentStatus === 'font' ?  {color:`${customData?.fontColor}`} : {}]">:</div>
       <!-- ant-row -->
-      <div class="gutter-box" :style="[clockFont,noBg ? { background:'transparent !important'}:{ background:' var(--secondary-bg) !important' }]">{{ min }}</div>
-      <div class="gutter-box" :style="clockFont">:</div>
+      <div class="gutter-box" :style="[
+        clockFont,noBg ? { background:'transparent !important'}:{ background:' var(--secondary-bg) !important' },
+        customData?.currentStatus === 'font' ?  {color:`${customData?.fontColor}`} : {}
+       ]"
+      >
+        {{ min }}
+      </div>
+      <div class="gutter-box" v-if="isSnow" :style="[clockFont,customData?.currentStatus === 'font' ?  {color:`${customData?.fontColor}`} : {}]">:</div>
       <template :style="{ display: isSnow == true ? 'inline-block' : 'none' }">
-        <div class="gutter-box" :style="[clockFont,noBg ? { background:'transparent !important'}:{ background:' var(--secondary-bg) !important' }, ]">{{ second }}</div>
+        <div class="gutter-box" :style="[
+           clockFont,noBg ? { background:'transparent !important'}:{ background:' var(--secondary-bg) !important' }, 
+           customData?.currentStatus === 'font' ?  {color:`${customData?.fontColor}`} : {}
+          ]"
+        >
+        {{ second }}
+        </div>
       </template>
     </a-row>
   </div>
+
+  <!-- :style="customData?.currentStatus === 'font' ?  {color:`${customData?.fontColor}`} : {}" -->
   
   <!-- <div class="gutter-box" :style="[clockFont,noBg ? { background:'transparent !important'}:{ background:' var(--secondary-bg) !important' }]">{{ hours }}</div>
   <div class="gutter-box">:</div>
@@ -40,6 +60,10 @@ export default {
     noBg:{
       type:Boolean,
       default:false,
+    },
+    customData:{
+      type:Object,
+      default:()=>{}
     }
   },
   mounted() {
