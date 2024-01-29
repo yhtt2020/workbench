@@ -256,7 +256,7 @@ import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
 // 桌面默认数据
 import { defaultFreeLayoutStore } from './defaultFreeLayout'
 import { useFreeLayoutStore } from "../components/desk/freeLayout/store";
-import { defaultIconData, mergeData } from '../../table/apps/folder/src/hooks/useDataConversion'
+import { mergeData } from '../ui/hooks/useDataConversion'
 const { steamUser, steamSession, path, https, steamFs } = $models;
 if (steamUser && steamSession) {
   const { LoginSession, EAuthTokenPlatformType } = steamSession;
@@ -353,7 +353,6 @@ export default {
       hasTriggered: 1,
       // 新建桌面id
       deskId: '',
-      defaultIconData,  // 默认图标格式
     };
   },
   components: {

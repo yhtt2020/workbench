@@ -11,6 +11,7 @@
         :currentDesk="currentDesk"
         v-model:settings="currentDesk.settings"
         :key="currentDeskId"
+        :keepAddIcon="keepAddIcon"
         @onArrange="onArrange"
       >
         <!-- 拿菜单数据 -->
@@ -364,7 +365,7 @@
       :panelIndex="panelIndex"
     ></NewAddCard>
   </div>
-  
+
   <teleport to="body">
     <!-- 使用新版的配置导航 -->
     <NewGuidePage v-if="showGuide" @closeShowGuide="closeShowGuide" :deskId="deskId" :menuList="menuList"></NewGuidePage>
@@ -524,6 +525,8 @@ export default {
       showGuide: false,
       menuList: [],
       recommendList: [], //推荐桌面
+
+      keepAddIcon:false, // 保持添加图标
     };
   },
   async mounted() {
@@ -684,6 +687,7 @@ export default {
     newAddCard() {
       if(!this.showGuide){
         this.$refs.currentDeskRef.newAddCard();
+        this.keepAddIcon = false
       }else{
         message.info("定制过程中无法操作");
       }
@@ -772,7 +776,7 @@ export default {
         }
         let importJsonTxt = require("fs").readFileSync(openPath[0], "utf-8");
         let needImportDesk;
-  
+
         try {
           needImportDesk = JSON.parse(importJsonTxt);
           const { desk, freeLayoutData, freeLayoutState } = needImportDesk;
@@ -790,7 +794,7 @@ export default {
               (g.settings.zoom * cardsHeight) /
               g.deskHeight
             ).toFixed();
-  
+
             g.icon = "desktop";
             g.settings.zoom = parseInt(cardZoom);
             g.id = window.$models.nanoid.nanoid(8);
@@ -813,7 +817,7 @@ export default {
                 g.cards[index] = obj;
               }
             });
-  
+
             if (freeLayoutState[oldId]) {
               this.freeLayoutData[g.id] = freeLayoutData[oldId];
               this.freeLayoutState[g.id] = freeLayoutState[oldId];
@@ -920,6 +924,7 @@ export default {
     addIcon(){
       if(!this.showGuide){
         this.$refs.currentDeskRef.newAddIcon()
+        this.keepAddIcon = true;
       }else{
         message.info("定制过程中无法操作");
       }

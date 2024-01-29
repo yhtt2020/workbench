@@ -83,6 +83,7 @@ const handleDrop = async (dragEvent) => {
       emits("createFile", fileInfo);
     }
   }else if(link && link !== ''){
+    if(isDrag.value) return  // 文件夹内部拖拽时阻止事件触发
     const http = link.includes('http');
     const https = link.includes('https');
     if (!http && !https) {

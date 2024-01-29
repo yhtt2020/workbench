@@ -233,7 +233,7 @@ import Drag from './desk/navigationBar/components/folder/Drag.vue'
 import { hoverRealItemId } from './desk/navigationBar/hook/hoverRealItemId'
 import 'animate.css'
 import AutoHide from './desk/navigationBar/components/folder/AutoHide.vue'
-import { mergeData, defaultIconData } from '../apps/folder/src/hooks/useDataConversion'
+import { mergeData } from '../ui/hooks/useDataConversion'
 
 export default {
   name: 'BottomPanel',
@@ -270,7 +270,6 @@ export default {
   },
   data() {
     return {
-      defaultIconData,
       dragItem: null,
       targetItem: null,
       cancelUpdate: false,
