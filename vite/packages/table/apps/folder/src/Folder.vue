@@ -16,6 +16,7 @@
       :sizeList="autoSizeList"
       @leftClick="leftClick"
       v-model:customSize="customData.customSize"
+      @resize="testss"
     >
       <!-- 右侧布局切换 -->
       <!-- <Resize
@@ -135,6 +136,9 @@ const addFileClick = () => {
   navigationStore.selectNav = "desktop";
   editVisible.value = true;
 };
+const testss= (data)=> {
+  console.log('data :>> ', data);
+}
 const addFile = (data) => {
   const { name, icon, type, value } = data;
   let fileInfo = {
