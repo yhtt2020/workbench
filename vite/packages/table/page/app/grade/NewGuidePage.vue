@@ -89,6 +89,7 @@
           :showModal="showModal"
           @closePreview="closePreview"
           @analysis="analysis"
+          @addStep="addStep"
         ></Preview>
       </div>
     </teleport>
@@ -376,6 +377,10 @@ export default {
         this.$emit('closeShowGuide')
       }
       
+    },
+    
+    addStep(){
+      this.stepIndex++
     },
 
     // 分析过程

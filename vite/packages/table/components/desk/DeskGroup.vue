@@ -662,6 +662,7 @@ export default {
     },
     // 智能定制
     aiCustom(){
+      message.info("开始桌面定制");
       this.addDeskVisible = false
       this.doAddDesk('定制桌面')
       this.menuList = [0, 1, 2]
@@ -675,7 +676,6 @@ export default {
       this.$bus.emit('stopHide')
     },
     handleMouseLeave(){
-      console.log(1111111111111111)
       this.$bus.emit('startHide')
     },
     update() {

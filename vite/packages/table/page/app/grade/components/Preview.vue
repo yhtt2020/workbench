@@ -193,6 +193,7 @@ export default {
       }, 2);
       // 定位到桌面正中央
       this.close()
+      this.$emit('addStep')
     },
 
     addPlan () {
