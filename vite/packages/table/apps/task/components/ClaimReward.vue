@@ -4,7 +4,7 @@
       class=" flex justify-center items-center flex-col"
       style="width: 500px"
     >
-      <audio controls class="hidden" style="" autoplay>
+      <audio controls class="hidden" style="" autoplay :volume="0.1">
         <source
           v-if="audio == 'communityPoints'"
           src="./communityPoints.mp3"
