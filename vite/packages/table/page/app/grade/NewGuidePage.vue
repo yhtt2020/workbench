@@ -3,7 +3,7 @@
     style="">
     <div v-if="!popState" class="h-full">
       <!-- 返回按钮 -->
-      <div v-if="step !== 0  && menuList.length > 1" @click="prevStep" class="absolute ml-4 top-icon no-drag">
+      <div v-if="step !== 0 && menuList.length > 1" @click="prevStep" class="absolute ml-4 top-icon no-drag">
         <MyIcon icon="fluent:chevron-left-16-filled" width="20" height="20" />
       </div>
       <!-- 主题色按钮 -->
@@ -31,7 +31,7 @@
 
       <!-- 定制主题 -->
       <div v-else-if="step == 4">
-        <Theme :backgroundSettings="backgroundSettings"  ></Theme>
+        <Theme :backgroundSettings="backgroundSettings"></Theme>
       </div>
 
       <!-- 按钮 -->
@@ -45,12 +45,13 @@
           </xt-button>
         </div>
         <!-- <div class="flex" v-if="step == 0"> -->
-          <!-- <xt-button class="ml-3 button-bottom" @click="nextStep" size="large">暂不分析</xt-button> -->
-          <!-- <xt-button class="ml-3 button-bottom" @click="analysis" size="large" type="theme">开始分析</xt-button> -->
+        <!-- <xt-button class="ml-3 button-bottom" @click="nextStep" size="large">暂不分析</xt-button> -->
+        <!-- <xt-button class="ml-3 button-bottom" @click="analysis" size="large" type="theme">开始分析</xt-button> -->
         <!-- </div> -->
         <div class="flex" v-if="step == 1">
-          <xt-button class="ml-3 button-bottom"  @click="nextStep" :disabled="loading" size="large">暂不添加</xt-button>
-          <xt-button class="ml-3 button-bottom"  @click="addFolder" :disabled="loading" size="large" type="theme">确定添加({{ folderNum
+          <xt-button class="ml-3 button-bottom" @click="nextStep" :disabled="loading" size="large">暂不添加</xt-button>
+          <xt-button class="ml-3 button-bottom" @click="addFolder" :disabled="loading" size="large" type="theme">确定添加({{
+            folderNum
           }})</xt-button>
         </div>
         <div class="flex" v-if="step == 2">
@@ -82,15 +83,8 @@
     <teleport to="body">
       <div style="z-index: 9999">
         <!-- @afterAdded="afterAdded" -->
-        <Preview
-          :deskTypeObj="deskTypeObj"
-          :deskList="deskList"
-          :scheme="scheme"
-          :showModal="showModal"
-          @closePreview="closePreview"
-          @analysis="analysis"
-          @addStep="addStep"
-        ></Preview>
+        <Preview :deskTypeObj="deskTypeObj" :deskList="deskList" :scheme="scheme" :showModal="showModal"
+          @closePreview="closePreview" @analysis="analysis" @addStep="addStep"></Preview>
       </div>
     </teleport>
   </div>
@@ -119,7 +113,7 @@ import Navbar from "./components/Navbar.vue";
 import Theme from "./components/Theme.vue";
 import Preview from "./components/Preview.vue";
 import { NavListTmp, GameDesk, AssistDesk } from './components/data';
-import {completeTask} from '../../../apps/task/task'
+import { completeTask } from '../../../apps/task/task'
 import { FreeLayoutStore } from "./components/FreeLayout";
 import { useFreeLayoutStore } from "../../../components/desk/freeLayout/store";
 import { useWidgetStore } from "../../../components/card/store";
@@ -186,7 +180,7 @@ export default {
       scheme: {},
       showModal: false,
       // 
-      headerList: [], 
+      headerList: [],
       folderList: [],
       //  页面索引
       stepIndex: 0,
@@ -199,12 +193,12 @@ export default {
     },
     menuList: {
       type: Array,
-      default: [0, 1, 2 ,3 ,4],
+      default: [0, 1, 2, 3, 4],
     },
   },
   computed: {
     ...mapWritableState(cardStore, ['desks', 'addCard', 'removeCard']),
-    ...mapWritableState(appStore, ['backgroundSettings', 'backgroundImage', 'styles','backgroundName']),
+    ...mapWritableState(appStore, ['backgroundSettings', 'backgroundImage', 'styles', 'backgroundName']),
     ...mapWritableState(navStore, ['copyFootNav']),
     ...mapWritableState(FreeLayoutStore, ["assistDesk", "gameDesk"]),
     ...mapWritableState(useFreeLayoutStore, [
@@ -259,7 +253,7 @@ export default {
     // 游戏娱乐
     this.game.forEach(i => {
       this.baseNavList.forEach(item => {
-          if (i == item.name) {
+        if (i == item.name) {
           this.gameList.push({
             ...item,
             download: Math.floor(Math.random() * 10000) + 1,
@@ -272,7 +266,7 @@ export default {
 
     // 
     this.step = this.menuList[this.stepIndex]
-    if(this.step == 1){
+    if (this.step == 1) {
       this.analysis()
     }
   },
@@ -283,15 +277,15 @@ export default {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData", "setFreeLayoutData", "setFreeLayoutState", 'renewFreeLayout', 'getFreeLayout1']),
 
     // 设置自由布局数据 
-    showFreeLayout(type){
-      if(type == 'game'){
+    showFreeLayout(type) {
+      if (type == 'game') {
         this.setFreeLayoutData('mj36hf6h', this.gameDesk.freeLayoutData)
         this.setFreeLayoutState('mj36hf6h', this.gameDesk.freeLayoutState)
-        this.scheme = {...GameDesk}
-      }else{
+        this.scheme = { ...GameDesk }
+      } else {
         this.setFreeLayoutData('mj36hf6h', this.assistDesk.freeLayoutData)
         this.setFreeLayoutState('mj36hf6h', this.assistDesk.freeLayoutState)
-        this.scheme = {...AssistDesk}
+        this.scheme = { ...AssistDesk }
       }
 
       this.showModal = true
@@ -355,7 +349,7 @@ export default {
           ok: () => {
             this.step = this.menuList[--this.stepIndex]
             this.clearFreeLayoutData()
-            setTimeout(()=>{
+            setTimeout(() => {
               useCustomLayout({
                 headerList: this.headerList,
                 folderList: this.folderList,
@@ -363,23 +357,23 @@ export default {
                   this.$bus.emit("adsorbGrid");
                 },
               });
-            },1)
+            }, 1)
           },
         });
-      } else { 
+      } else {
         this.step = this.menuList[--this.stepIndex]
       }
     },
     nextStep() {
-      if(this.stepIndex < this.menuList.length - 1){
+      if (this.stepIndex < this.menuList.length - 1) {
         this.step = this.menuList[++this.stepIndex]
-      }else{
+      } else {
         this.$emit('closeShowGuide')
       }
-      
+
     },
-    
-    addStep(){
+
+    addStep() {
       this.stepIndex++
     },
 
@@ -410,7 +404,7 @@ export default {
       this.timer = null
     },
 
-    messageFinish(){
+    messageFinish() {
       message.success({
         content: "分析完成，请继续完成桌面定制。",
         key: "preparing",
@@ -468,20 +462,11 @@ export default {
           })
           this.exeNavList[1].isCheck = true
         } else {
-          this.folderList.push({...item})
+          this.folderList.push({ ...item })
         }
       })
-      this.headerList = []
-      if(this.deskTypeObj.assist){
-        this.headerList = this.assistDesk.desk[0]?.cards.slice(0,6)
-      }else if(this.deskTypeObj.game){
-        this.headerList = this.gameDesk.desk[0]?.cards.slice(0,5)
-      }
-      if(this.headerList.length){
-        this.clearFreeLayoutData()
-      }
-
-      setTimeout(()=>{
+      this.setHeaderList()
+      setTimeout(() => {
         useCustomLayout({
           headerList: this.headerList,
           folderList: this.folderList,
@@ -489,10 +474,23 @@ export default {
             this.$bus.emit("adsorbGrid");
           },
         });
-      },1)
+      }, 1)
       this.setExeListNav()
       this.nextStep();
     },
+
+    setHeaderList() {
+      this.headerList = []
+      if (this.deskTypeObj.assist) {
+        this.headerList = this.assistDesk.desk[0]?.cards.slice(0, 6)
+      } else if (this.deskTypeObj.game) {
+        this.headerList = this.gameDesk.desk[0]?.cards.slice(0, 5)
+      }
+      if (this.headerList.length) {
+        this.clearFreeLayoutData()
+      }
+    },
+
     // 单独处理游戏和常用文件夹 需要添加到导航栏里面
     setExeListNav() {
       // 用于添加游戏常用程序文件夹到导航条 与其他添加事件独立开来
@@ -501,35 +499,35 @@ export default {
         if (num) {
           // 如果存在直接删除
           this.copyFootNav.splice(num, 1, this.exeNavList[0])
-        } else if(this.copyFootNav.length > 3) {
+        } else if (this.copyFootNav.length > 3) {
           this.copyFootNav.splice(-2, 0, this.exeNavList[0])
-        }else{
-          this.copyFootNav.push({...this.exeNavList[0]})
+        } else {
+          this.copyFootNav.push({ ...this.exeNavList[0] })
         }
       }
       if (this.exeNavList[1]?.children.length) {
         let num = this.searchNavIndex(this.exeNavList[1].id)
         if (num) {
           this.copyFootNav.splice(num, 1, this.exeNavList[1])
-        } else if(this.copyFootNav.length > 3) {
+        } else if (this.copyFootNav.length > 3) {
           this.copyFootNav.splice(-2, 0, this.exeNavList[1])
-        }else{
-          this.copyFootNav.push({...this.exeNavList[1]})
+        } else {
+          this.copyFootNav.push({ ...this.exeNavList[1] })
         }
       }
     },
 
     // 删除桌面文件夹
-    removeFolder(){
+    removeFolder() {
       this.clearFreeLayoutData()
-      setTimeout(()=>{
+      setTimeout(() => {
         useCustomLayout({
           headerList: this.headerList,
           cb: () => {
             this.$bus.emit("adsorbGrid");
           },
         });
-      },1)
+      }, 1)
     },
 
     // 寻找导航条id
@@ -557,9 +555,10 @@ export default {
           })
         }
       })
+      this.setHeaderList()
       // 删除 添加
       this.clearFreeLayoutData()
-      setTimeout(()=>{
+      setTimeout(() => {
         useCustomLayout({
           headerList: this.headerList,
           folderList: this.folderList,
@@ -568,7 +567,7 @@ export default {
             this.$bus.emit("adsorbGrid");
           },
         });
-      },1)
+      }, 1)
       this.nextStep();
     },
 
@@ -633,7 +632,7 @@ export default {
             exeStr = exeStr + `{"name":"${item.name}","index":${index}},`
             exeList.push(item)
             this.appList[0].isCheck = true
-          }else{
+          } else {
             gameList.push(item)
             this.appList[1].isCheck = true
           }
@@ -668,7 +667,7 @@ export default {
         // 这步有可能 会被ai传回数据格式错误 导致报错
         let tmp = JSON.parse(res)
 
-        if(tmp.game.length + tmp.programs.length != exeList.length) return
+        if (tmp.game.length + tmp.programs.length != exeList.length) return
 
 
         tmp.file = folderList
@@ -710,7 +709,7 @@ export default {
         this.setTimer = null
       })
     },
-    
+
     // ai封装方法
     async processGPTResults(arr) {
       // 获取聊天机器人的回复
@@ -728,7 +727,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 .modal-center {
   background: #212121;
   border: 1px solid var(--divider);
@@ -812,5 +810,4 @@ export default {
   border-radius: 6px;
   /* 轨道圆角 */
 }
-
 </style>
