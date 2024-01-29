@@ -275,7 +275,6 @@ import { useDeskStore } from "./store";
 import { useCustomLayout } from "./freeLayout/useCustomLayout";
 import { useFileConversionIcon } from "../../apps/folder/src/hooks/useDataConversion";
 import { headerData, mainData, folderData } from "./freeLayout/config";
-import { taskStore }from '../../../table/apps/task/store'
 
 import Drop from "./Drop.vue";
 export default {
@@ -714,7 +713,6 @@ export default {
     window.time = Date.now();
   },
   mounted() {
-    this.initTask()
     // 自动打开编辑
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();
@@ -761,7 +759,6 @@ export default {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
     ...mapActions(cardStore, ["addCard"]),
     ...mapActions(useDeskStore, ["addMenu"]),
-    ...mapActions(taskStore, ['initTask']),
     deskIcon(){
       this.$emit("onArrange");
     },
