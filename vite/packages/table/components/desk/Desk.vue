@@ -36,7 +36,6 @@
     <!-- {{ freeLayout }}
     {{ isFreeLayout }}
     {{ $route.path }} -->
-
     <Drop>
       <!-- <xt-wu-jie
         ref="xxx"
@@ -46,7 +45,7 @@
         url="http://localhost:5173/"
       ></xt-wu-jie> -->
       <!-- <Wujie width="100%" height="100%" name="xxx" url="http://localhost:5173/" ></Wujie> -->
-      <AppImport></AppImport>
+      <!-- <AppImport></AppImport> -->
 
       <!-- 自由布局 -->
       <FreeLayoutScrollbar
@@ -216,7 +215,6 @@
       </template>
     </div>
   </xt-modal>
-
   <transition name="fade">
     <div
       class="home-blur"
@@ -286,6 +284,9 @@ export default {
   mixins: [componentsMinis, menuMinis],
   components: { LoadingOutlined, EditNewNavigation, GalleryModal, Drop },
   props: {
+    keepAddIcon:{
+      default:false,
+    },
     freeLayout: {
       default: true,
     },
@@ -541,7 +542,9 @@ export default {
     window.time = Date.now();
   },
   mounted() {
-    this.initTask();
+    // 空桌面添加图标保持弹窗
+    this.editVisible = this.keepAddIcon
+    this.initTask()
     // 自动打开编辑
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();

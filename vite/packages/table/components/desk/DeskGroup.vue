@@ -11,6 +11,7 @@
         :currentDesk="currentDesk"
         v-model:settings="currentDesk.settings"
         :key="currentDeskId"
+        :keepAddIcon="keepAddIcon"
       >
         <!-- 拿菜单数据 -->
         <template #settingsAllAfter>
@@ -515,6 +516,8 @@ export default {
       ],
 
       recommendList: [], //推荐桌面
+      
+      keepAddIcon:false, // 保持添加图标
     };
   },
   async mounted() {
@@ -655,6 +658,7 @@ export default {
     },
     newAddCard() {
       this.$refs.currentDeskRef.newAddCard();
+      this.keepAddIcon = false
     },
     learn() {
       this.$refs.currentDeskRef.learn();
@@ -867,6 +871,7 @@ export default {
     // 添加图标
     addIcon(){
       this.$refs.currentDeskRef.newAddIcon()
+      this.keepAddIcon = true;
     },
 
     doAddDesk(add) {
