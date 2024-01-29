@@ -299,7 +299,7 @@ const arraySplit = (arr) => {
       console.log("无信息元素 item.customData :>> ", item.customData);
       return;
     }
-    let str = item.customData.customSize.split("x");
+    let str = item.customData.customSize.split(/x|\*/);
     const w = parseInt(str[0]);
     const h = parseInt(str[1]);
     if (w == 2 && h == 2) {

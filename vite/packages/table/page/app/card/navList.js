@@ -306,7 +306,7 @@ export const NavList = [
           {
             name: "news",
             imgName:'news',
-            size: "4x4",
+            size: "2x4",
             zoom: "18",
           },
         ],
