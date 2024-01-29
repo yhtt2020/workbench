@@ -10,20 +10,17 @@
             </template>
             <template #left-title v-if="showForumList.length > 0">
                 <div @click="refreshPost">
-                    <!-- <xt-button :w="22" :h="22" style="background: transparent;"> -->
-                    <YuanIcon class="xt-text refresh pointer" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
+                    <YuanIcon 
+                        class="xt-text refresh pointer" 
+                        style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
                         icon="akar-icons:arrow-clockwise" />
-                    <!-- </xt-button> -->
                 </div>
             </template>
             <div v-if="showForumList.length > 0">
                 <!-- 顶部导航栏 -->
                 <div class="flex justify-between mt-3">
-                    <YuanHorizontalPanel :navList="showForumList" v-model:selectType="defaultForum"
-                        style="height: 40px;width: 100%;" v-if="this.showForumList.length > 1" @changed="changeContent">
-                    </YuanHorizontalPanel>
+                    <xt-option-tab v-if="showForumList.length > 1" :list="showForumList" :circle="true" v-model="defaultForum" style="height: 40px;"></xt-option-tab>
                 </div>
-                <!-- {{ defaultForum }} -->
                 <!-- 内容区 -->
                 <div :style="{ height: showItem }" v-if="this.showForumPost?.length > 0">
                     <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
@@ -48,24 +45,19 @@
                     </vue-custom-scrollbar>
 
                 </div>
-                <!-- <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据" ></DataStatu> -->
                 <Unusual  :title="'暂无数据'" :buttonTitle="'设置'" v-else @back="backSetting"></Unusual>
             </div>
             <Unusual :title="'暂无数据'" :buttonTitle="'设置'" v-else @back="backSetting"></Unusual>
-            <!-- <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"
-                @click="this.settingVisible = true; this.$refs.cardSlot.visible = false"></DataStatu> -->
-            <xt-button :w="40" :h="40" type="theme" @click="publishModalVisible"
-                style="flex-shrink: 0;position: absolute;right: 24px;bottom: 24px">
-                <div class="flex items-center justify-center">
-                    <YuanIcon class="text-lg " style="font-size: 20px;color: rgba(255,255,255,0.85);"
-                        icon="fluent:add-16-filled" />
-                </div>
+            <xt-button 
+                :w="40" 
+                :h="40"
+                type="theme"  
+                @click="publishModalVisible" 
+                :icon="'fluent:add-16-filled'"
+                style="position: absolute;right: 24px;bottom: 24px;color:rgba(255,255,255,0.85) !important;">
 
             </xt-button>
-
-            <!-- {{ customData.defaultForum.value }} -->
         </Widget>
-        <!-- {{ showForumPost }} -->
         <teleport to="body" :disabled="false">
             <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"
                 @refreshDefaultForum="refreshPost"></YuanPublishModal>
@@ -74,52 +66,16 @@
                     @closeDetail="closeDetail" />
                 <MinDetailModal v-else :cardData="cardData" :showDetailModal="showDetailModal" @closeDetail="closeDetail" />
             </div>
-
-
         </teleport>
+        <CommunitySetting 
+            v-if="settingVisible" 
+            :settingVisible="settingVisible" 
+            :forumList="forumList"
+            :defaultForum="customData.selectList"
+            @forumList="updateForumList"
+            @close="this.settingVisible = false">
+        </CommunitySetting>
 
-        <a-drawer :width="500" title="元社区小组件设置" v-model:visible="settingVisible" placement="right">
-            <template #extra>
-                <xt-button :w="56" :h="32"
-                    style="background-color: var(--active-bg) !important;color: rgba(255, 255, 255, 0.85) !important;font-size: 16px;border-radius: 8px;"
-                    @click="saveSetting">保存</xt-button>
-            </template>
-            <div class="mb-6 xt-text font-16">
-                数据来源
-            </div>
-            <RadioTab :navList="dataType" v-model:selectType="defaultType"></RadioTab>
-            <div class="mt-6 font-16 xt-text">
-                {{ defaultType.title }}
-            </div>
-            <div class="mt-2 mb-4 font-14 xt-text-2">
-                最多支持选择在卡片上的展示5个圈子
-            </div>
-            <!-- {{ selectForumList }}  @change="handleChange(selectValue)" -->
-            <a-select v-model:value="selectValue" mode="tags" autoClearSearchValue="false" class="optionClass" 
-                style="width: 100%;height: 48px;border-radius: 8px;line-height: 48px;" :bordered="false"
-                @deselect="handleDeselect(selectValue)" @select="handleChange(selectValue)">
-                <a-select-option :value="index" v-for="(item, index) in forumList"
-                    class="absolute z-auto xt-bg xt-text-2 selsect-options">
-                    {{ item.name }}
-                </a-select-option>
-                <template #placeholder>
-                    <div class="xt-text font-16">
-                        选择您的圈子
-                    </div>
-                </template>
-                <template #removeIcon>
-                    <YuanIcon icon="fluent:dismiss-16-filled" class="mt-1 xt-text" style="font-size: 14px;"></YuanIcon>
-                </template>
-                <template #suffixIcon>
-                    <YuanIcon icon="fluent:chevron-left-16-filled" style="font-size: 20px;vertical-align: sub;"
-                        class="mr-3 rotate-180 xt-text"></YuanIcon>
-                </template>
-            </a-select>
-            <div class="mt-4 mb-4 text-base xt-text">
-                打开方式
-            </div>
-            <RadioTab :navList="openWay" v-model:selectType="defaultOpenWay"></RadioTab>
-        </a-drawer>
 
     </div>
 </template>
@@ -134,9 +90,9 @@ import { yuanCommunityStore } from '../../../store/yuanCommunity.ts'
 import DataStatu from "../DataStatu.vue"
 import Unusual from '../Unusual.vue'
 import YuanPublishModal from './YuanPublishModal.vue';
-import YuanHorizontalPanel from './YuanHorizontalPanel.vue'
 import detailModal from './DetailModal.vue'
 import MinDetailModal from './MinDetailModal.vue';
+import CommunitySetting from './CommunitySetting.vue';
 export default {
     name: '元社区',
     components: {
@@ -146,10 +102,10 @@ export default {
         RadioTab,
         DataStatu,
         YuanPublishModal,
-        YuanHorizontalPanel,
         detailModal,
         MinDetailModal,
-        Unusual
+        Unusual,
+        CommunitySetting
     },
     props: {
         customIndex: {
@@ -199,13 +155,11 @@ export default {
             currentIndex: 0,
             isLoading: false,
             pageToggle: true,
-            dataType: [{ title: '社区频道', name: 'channel' }, { title: '我加入的圈子', name: 'circle' }],
-            defaultType: { title: '我加入的圈子', name: 'circle' },
             selectForumList: [],
             browserUrl: 'https://s.apps.vip/post/',
             showPublishModal: false,
             selectList: [],
-            defaultForum: { index: 0, value: { name: '版本更新', id: 100304 } },
+            defaultForum:  { name: '版本更新', value: 100304 } ,
             outerSettings: {
                 useBothWheelAxes: true,
                 swipeEasing: true,
@@ -214,8 +168,6 @@ export default {
                 wheelPropagation: true,
             },
             showDetailModal: false,
-            openWay: [{ title: '弹窗形式打开', name: "popup" }, { title: '在元社区主应用中打开', name: "main" }],
-            defaultOpenWay: { title: '弹窗形式打开', name: "popup" },
             cardData: null,
             toggleDetail: true,
             selectValue: [],
@@ -226,6 +178,7 @@ export default {
                 offline: true,
             },
             showForumPost: [],
+            isClick:true,
         }
     },
     methods: {
@@ -236,38 +189,26 @@ export default {
         // 刷新圈子
         async refreshPost() {
             this.isLoading = true
-            await this.getCommunityPost(this.defaultForum.value?.id)
+            // console.log(this.defaultForum,'defaultForum')
+            let value = 0
+            this.defaultForum.value ? value = this.defaultForum.value : value = 100304
+            await this.getCommunityPost(value)
             this.showForumPost = this.communityPost
             this.isLoading = false
+            this.isClick = false
         },
         // 查看内容详情
         showDetail(item) {
             // browser.openInUserSelect(`${this.browserUrl}${item.id}`)
             this.showDetailModal = true
             this.cardData = item
+            this.isClick = false
             // console.log(this.cardData);
         },
         closeDetail(value) {
             this.communityPostDetail = []
             this.communityReply = []
             this.showDetailModal = value
-        },
-        // 选择板块
-        handleChange(value) {
-            value.forEach((item) => {
-                // console.log(item);
-                const newItem = {
-                    index: item,
-                    value: this.forumList[item]
-                };
-
-                if (!this.selectList.some((el) => el.value.id === newItem.value.id)) {
-                    this.selectList.push(newItem);
-                }
-            });
-            let temp = this.selectList;
-            this.customData.selectList = temp;
-            this.forumsList = this.customData.selectList
         },
         // 显示发布页是否可见
         publishModalVisible() {
@@ -276,20 +217,6 @@ export default {
         // 回调
         modalVisible(val) {
             this.showPublishModal = val
-        },
-        // 删除选择的板块
-        handleDeselect(val) {
-            this.selectList = this.customData.selectList.filter((item) => {
-                return val.includes(item.index); // 过滤掉 val 中包含的索引的项目
-            });
-            this.selectList = this.selectList.filter((item, index) => {
-                return item.value !== undefined
-            })
-            let temp = this.selectList
-            this.customData.selectList = temp
-        },
-        saveSetting() {
-            this.settingVisible = false
         },
         handleResize() {
             if (window.innerWidth > 1200) {
@@ -301,6 +228,27 @@ export default {
         backSetting(){
             this.settingVisible = true
             this.$refs.cardSlot.visible = false
+        },
+        updateForumList(list){
+            this.customData.selectList = list
+        },
+        memoryPost(){
+            const cachePost = JSON.parse(localStorage.getItem('communityContent'))
+            // console.log(cachePost,'cachePost');
+            if(cachePost){
+                this.showForumPost = cachePost
+                    setTimeout(() => {
+                        if(this.isClick){
+                            console.log('22222222222222')
+                            this.isLoading = true
+                            this.refreshPost().then(()=>{
+                                this.isLoading = false
+                            })
+                        }
+                    }, 10000);
+            }else{
+                this.showForumPost = this.communityPost
+            }
         }
     },
     computed: {
@@ -343,9 +291,9 @@ export default {
         // },
         scrollBarHeight() {
             if (this.showForumList.length > 1) {
-                return 'calc(100% - 65px)'
+                return 'calc(100% - 73px)'
             } else {
-                return 'calc(100% - 40px)'
+                return 'calc(100% - 22px)'
             }
         },
     },
@@ -355,54 +303,58 @@ export default {
         // console.log(this.myForumList,'this.myForumList');
         // 判断是否刷新加载内容
         if (this.customData && this.customData.defaultForum) {
-            this.defaultForum = this.customData.defaultForum
-            // console.log(this.defaultForum,'1');
+            this.defaultForum = this.customData.defaultForum 
         } else if (this.customData && this.customData.selectList) {
-            // console.log(this.customData.selectList,'2')
             this.defaultForum = this.customData.selectList[0]
         } else {
-            // return this.defaultForum
             this.selectList.push(this.defaultForum)
             this.customData.selectList = this.selectList
         }
     },
     async mounted() {
-        this.isLoading = true
+        // this.isLoading = true
         // 判断组件名称
         if (this.customData.selectList && this.customData.selectList.length === 1) {
-            this.options.title = this.customData.selectList[0].value.name
+            this.options.title = this.customData.selectList[0].name
         }
-        // console.log(this.defaultForum,this.customData.defaultForum,'this.customData.defaultForum');
-        this.isLoading = false
+        // this.isLoading = false
         window.addEventListener("resize", this.handleResize)
-        this.showForumPost = this.communityPost
+        // this.showForumPost = this.communityPost
+        this.memoryPost()
     },
     beforeDestroy() {
         window.removeEventListener("resize", this.handleResize)
     },
     watch: {
         showForumList(newValue) {
-            this.isLoading = true
+            // this.isLoading = true
             if (this.showForumList.length > 0) {
-                this.getCommunityPost(this.showForumList[0].value.id)
+                this.getCommunityPost(this.showForumList[0].value)
             }
-            setTimeout(() => {
-                this.isLoading = false
-            });
+            // setTimeout(() => {
+            //     this.isLoading = false
+            // });
 
         },
         defaultForum(newValue) {
             this.customData.defaultForum = newValue
-            this.defaultForum = this.customData.defaultForum
             this.defaultSection = this.customData.defaultForum
-            this.isLoading=true
-            this.getCommunityPost(this.customData.defaultForum.value?.id).then(() => {
+            // this.isLoading=true
+            let target = ''
+            if(this.customData.defaultForum.index){
+                target = this.customData.defaultForum.value.id
+            }else if (this.customData.defaultForum.value){
+                target = this.customData.defaultForum.value
+            }else{
+                target = this.customData.defaultForum
+            }
+            this.getCommunityPost(target).then(() => {
                 this.showForumPost = this.communityPost;
-                this.isLoading=false
+                // this.isLoading=false
             })
-            // this.showForumPost = this.communityPost
+            // this.isClick = false
+
         },
-        immediate: true,
         // 切换频道和圈子时触发获取
         defaultType(newValue) {
             // console.log(newValue.name);
@@ -415,7 +367,7 @@ export default {
         'customData.selectList': {
             handler(newValue, oldValue) {
                 if (newValue.length === 1) {
-                    this.options.title = newValue[0].value.name
+                    this.options.title = newValue[0].name
                 } else if (newValue.length > 1 || newValue.length < 1) {
                     this.options.title = '元社区'
                 }
@@ -423,38 +375,18 @@ export default {
         },
         settingVisible() {
             // 加载已选择的模块
+            this.isClick = false
             if (this.customData && this.customData.selectList && this.settingVisible == true) {
                 this.selectValue = this.customData.selectList.map((item) => {
                     return item.index
                 })
             }
         }
-    }
+    },
+    unmounted() {
+        console.log('222222222222<<<<<<<<<<<<<',this.showForumPost)
+        localStorage.setItem('communityContent', JSON.stringify(this.showForumPost));
+    },
 }
 </script>
-<style>
-:deep(.xt-active-btn span) {
-    color: rgba(255, 255, 255, 0.85) !important;
-}
-
-:deep(.ant-tag-close-icon) {
-    color: var(--secondary-text);
-    margin-left: 8px;
-    font-size: 12px;
-}
-
-:deep(.ant-select-selection-item) {
-    background: rgba(80, 139, 254, 0.20);
-}
-
-:deep(.ant-select-multiple .ant-select-selection-item) {
-    background: rgba(80, 139, 254, 0.20) !important;
-}
-
-.optionClass {
-    & .ant-select-selection-item {
-        background-color: rgba(80, 139, 254, 0.20) !important;
-        height: 28px;
-    }
-}
-</style>
+<style lang="scss"></style>

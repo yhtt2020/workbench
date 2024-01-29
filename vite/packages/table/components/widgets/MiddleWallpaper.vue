@@ -1,6 +1,6 @@
 <template>
   <a-spin tip="加载中..." :spinning="imgSpin" size="large">
-    <Widget :options="options" :customIndex="customIndex" :menuList="menuList" :sizeList="sizeList" ref="cardSlot"  class="cardSlot" :desk="desk">
+    <Widget :options="options" :customIndex="customIndex" :menuList="menuList" :sizeList="sizeList" ref="cardSlot" :customData="customData"   class="cardSlot" :desk="desk">
       <template #left-title-icon>
         <div class="absolute flex hover-container items-center top-2.5 left-0 justify-center" style="z-index:1000;">
           <xt-new-icon icon="fluent:image-multiple-16-regular" size="29" :color="'var(--active-text)'"></xt-new-icon>
@@ -9,7 +9,7 @@
       <template #title-text>
         <span class="xt-font xt-active-text font-14 font-400" style="z-index:1000;">{{ paperTitle }}</span>
       </template>
-  
+
       <div class="absolute inset-0" style="border-radius: 8px; z-index: 0">
         <template v-if="imgList.length <= 0">
           <div class="w-full  flex flex-col items-center justify-center" :class="paperSize === 2 ? 'h-full':'h-60'">
@@ -18,9 +18,9 @@
               我们提供多种壁纸源供你选择，快快挑选喜爱的壁纸，加入收藏吧。
             </div>
             <xt-button size="mini" :w="100" :h="40" type="theme" style="border-radius: 8px;" @click="goPickOut">去挑选</xt-button>
-          </div> 
+          </div>
         </template>
-  
+
         <template v-else>
 
           <div class="w-full h-full hover-container pointer">
@@ -33,7 +33,7 @@
                 <img  :src="img.src"    :data-source="img.path" :alt="img.resolution" class="w-full h-full object-cover rounded-lg pointer relative">
               </div>
             </viewer>
-  
+
             <div class="absolute bottom-0  flex right-0 hover-item" style="opacity: 0;">
               <xt-button w="40" h="40" class="xt-bg-t-3" style="border-radius: 8px ;margin: 0 12px 10px 0; " @click="lastImg">
                 <div class="flex items-center justify-center">
@@ -72,7 +72,7 @@
       </div>
     </Widget>
   </a-spin>
-  
+
   <teleport to='body'>
     <WallpaperWidgetModal  ref="paperWidgetRef"  :modelValue="wallModelValue" @updateCustomDatas="updatePaperSource"/>
     <GalleryModal ref="galleryRef"/>
@@ -120,7 +120,7 @@ export default {
       default: () => { },
     }
   },
-  
+
   data(){
     return{
       // 组件配置
@@ -134,7 +134,7 @@ export default {
       imgIndex:0,
       randomFlag: false,
       imgSpin:false,
-      imgOption: { 
+      imgOption: {
         url: 'data-source',
         button:false,
         toolbar:false,
@@ -149,24 +149,24 @@ export default {
       ],
       // 右键菜单
       menuList:[
-        { 
-          newIcon:'fluent:image-multiple-16-regular',title:'在应用中打开', 
-          fn:()=>{ this.goGallery(this.customData.value) }, 
+        {
+          newIcon:'fluent:image-multiple-16-regular',title:'在应用中打开',
+          fn:()=>{ this.goGallery(this.customData.value) },
         },
-        { 
+        {
           newIcon:'fluent:chevron-up-16-regular',title:'上一张',
-          fn:()=>{ this.lastImg() },  
+          fn:()=>{ this.lastImg() },
         },
-        { 
-          newIcon:'fluent:chevron-down-16-regular',title:'下一张',fn:()=>{ this.nextImg() },  
+        {
+          newIcon:'fluent:chevron-down-16-regular',title:'下一张',fn:()=>{ this.nextImg() },
         },
-        { 
+        {
           newIcon:'fluent:arrow-clockwise-16-regular',title:'换一换',
           fn:()=>{ this.randomImg() },
         },
-        { 
+        {
           newIcon:'fluent:star-16-regular',title:'添加到收藏',
-          fn:()=>{ this.collect() } 
+          fn:()=>{ this.collect() }
         },
         {
           newIcon:'fluent:more-horizontal-16-regular',title:'更多',
@@ -187,7 +187,7 @@ export default {
           ]
         },
         {
-          newIcon:'fluent:settings-16-regular', title: '设置', 
+          newIcon:'fluent:settings-16-regular', title: '设置',
           fn:()=>{  this.$refs.paperWidgetRef.openWidgetModal()  }
         },
       ],
@@ -243,15 +243,23 @@ export default {
 
     // 判断是否添加到收藏中
     isInMyPapers () {
-      const index = this.myPapers.findIndex((img)=>{ return String(this.imgList[this.imgIndex].src ) === String( img.src ) });
-      return index > -1;
+      if(this.customData.paper !== undefined){
+        const index = this.myPapers.findIndex((img)=>{
+          return String(this.customData.paper.src) === String(img.src);
+        });
+        return index > -1;
+      }
+      else {
+        const initIndex = this.myPapers.findIndex((img)=>{ return String(this.imgList[this.imgIndex].src ) === String( img.src ) });
+        return initIndex > -1;
+      }
     },
 
     // 计算图片的宽高
     imgWH(){
       if(this.customData && this.customData.width !== undefined){
-        const result = { 
-          width:this.customData.width * 280 + (this.customData.width - 1) * 10,
+        const result = {
+          width:this.customData.width * 280 + (this.customData.width - 1) * 10 + 2,
           height:this.customData.height * 205 + (this.customData.height - 1) * 10
         }
         return result;
@@ -281,21 +289,21 @@ export default {
     ...mapActions(appStore, ['setBackgroundImage']),
     ...mapActions(cardStore, ['updateCustomData']),
     getFileName,
-    
+
     // 初始化获取壁纸数据
     initPaperList(val){
       const paperFind = wallpaperOptions.find((find)=>{ return String(find.value) === String(val) });
       this.updateCustomData(this.customIndex, paperFind, this.desk);
       if(paperFind.value === 'my'){
-        this.imgList = [];
+        // this.imgList = [];
         this.imgList = this.myCollectPaper;
       }
       else if(paperFind.value === 'sift'){
-        this.imgList = [];
+        // this.imgList = [];
         this.imgList = selectWallPaper;
       }
       else {
-        this.imgList = [];
+        // this.imgList = [];
         this.getOtherList(paperFind)
       }
     },
@@ -383,12 +391,12 @@ export default {
     // 收藏壁纸
     collect(){
       if(this.customData && this.customData.value === 'my'){
-        this.removeToMyPaper(this.imgList[this.imgIndex])
+        this.removeToMyPaper(this.customData.paper !== undefined ? this.customData.paper : this.imgList[this.imgIndex])
       }
       else {
-        let image = this.imgList[this.imgIndex]
+        let image = this.customData.paper !== undefined ? this.customData.paper : this.imgList[this.imgIndex];
         this.removeToMyPaper(image)
-      }      
+      }
     },
 
     // 设置工作台壁纸
@@ -419,14 +427,14 @@ export default {
       const exist = fileRegex.test(img.path);
       // 判断是否为本地图片
       if(!exist && !regex.test(img.path)){ this.doStartDownload(img); }
-      else { 
+      else {
         this.$xtConfirm('图片已下载','',{
-          index:1020, 
+          index:1020,
           ok: async() => {},
           no: () => {},
           noText: null,
           type:'warning'
-        }) 
+        })
       }
      }
     },
@@ -458,7 +466,7 @@ export default {
      if (savePath) {
       this.settings.savePath = savePath[0]
       this.doStartDownload(this.myCurrentID)
-     } 
+     }
     },
 
     // 设置系统桌面壁纸

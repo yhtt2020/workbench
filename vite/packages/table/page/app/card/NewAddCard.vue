@@ -166,10 +166,14 @@ export default {
       searching:false,
     }
   },
-
+ unmounted() {
+  if (this.currentId == "M0302") {
+    }
+ },
   async mounted () {
-if (this.taskID == "M0302") {
+if (this.currentId == "M0302") {
 this.updateNavIndex(7)
+
 
     }
     // 这里是预留给api请求到时间和下载数据添加数据使用
@@ -229,7 +233,7 @@ this.updateNavIndex(7)
   computed: {
     ...mapWritableState(offlineStore, ['isOffline','offlineList']),
     ...mapWritableState(deskStore, ['apiList']),
-    ...mapWritableState(taskStore, ["taskID", "step", "success"]),
+    ...mapWritableState(taskStore, ["currentId", "step", "success"]),
 
     displayList () {
       // return this.apiList.filter

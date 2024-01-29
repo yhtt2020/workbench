@@ -8,7 +8,9 @@
           <xt-new-icon icon="fluent-emoji:star" class="mr-3" size="20" />
           {{ chapter.chapter }}
         </div>
-        <template #right>{{ stage }} / {{ chapter.tasks.length }} </template>
+        <template #right
+          >{{ stage + 1 }} / {{ chapter.tasks.length }}
+        </template>
       </xt-text>
       <div class="mt-1">
         <a-progress :percent="progress" :show-info="false" />
@@ -16,7 +18,10 @@
     </div>
     <xt-title>正在进行</xt-title>
     <div class="xt-bg-2 rounded-xl p-3">
-      <xt-title m="">{{ currentTask.name }}</xt-title>
+      <xt-text m="">
+        <SerialNumber :id=" stage + 1" />
+        {{ currentTask.name }}</xt-text
+      >
       <xt-title type="text">{{ currentTask.intro }}</xt-title>
       <xt-title m="">任务说明</xt-title>
       <xt-title type="text">{{ currentTask.description }}</xt-title>
@@ -27,12 +32,12 @@
       </div>
     </div>
   </template>
-  <div v-else class=" text-center">已完成所有任务</div>
+  <div v-else class="text-center">已完成所有任务</div>
 </template>
 
 <script setup>
 import StartTask from "../../components/StartTask.vue";
-
+import SerialNumber from "../../components/SerialNumber.vue";
 import { tasks } from "./Primary";
 import { taskStore } from "../../store";
 import { ref, reactive, computed, toRefs, onMounted } from "vue";
@@ -48,29 +53,7 @@ const { list, taskID, currentId, completedList, currentTaskList } =
  * 首次进入时，处理任务进度
  */
 onMounted(async () => {
-  let { code, data } = await getAllTask();
-  if (code !== 200) return;
-  currentTaskList.value = data;
-  const type = "main";
-  console.log("data :>> ", data);
-  completedList.value = [];
-  data.forEach((item) => {
-    if (item.done == 1) completedList.value.push(item.name);
-  });
-  // 找出主线未完成任务
-  let arr = data.filter((obj) => obj.type === type);
-
-  let currentTask = arr.find((item) => {
-    if (item.done == 0) return item;
-  });
-
-  if (!currentTask) {
-    taskID.value = "";
-    return;
-  }
-
-  taskID.value = currentTask.name;
-  currentId.value = currentTask.name;
+  store.initTask();
 });
 /**
  * 处理主线任务
@@ -119,7 +102,6 @@ const progress = computed(() => {
 const currentTask = computed(() => {
   return chapter.value.tasks[stage.value];
 });
-
 
 const aaa = computed(() => {
   return store.getPrimaryTask("M0101");

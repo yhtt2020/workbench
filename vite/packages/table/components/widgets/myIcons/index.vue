@@ -2,8 +2,9 @@
 <!-- 2023-12-19 该组件数据体和新版本有差异 -->
 <template>
   <!-- 图标组件开始 Widget -->
-  <xt-container
+  <Widget
     :customData="customData"
+    :editing="true"
     :customIndex="customIndex"
     :options="options"
     :menuList="menuList"
@@ -52,8 +53,12 @@
               "
             > -->
             <icon
+              v-if="
+                customData.iconList !== undefined &&
+                customData.iconList.length > 0
+              "
               :newIcon="customData.newIcon"
-              v-bind="customData.iconList[0]"
+              v-bind="customData?.iconList[0]"
               @custom-event="handleCustomEvent"
             ></icon>
             <!-- </template> -->
@@ -62,7 +67,7 @@
       </droppable-area>
       <!-- 卡片核心 -->
     </div>
-  </xt-container>
+  </Widget>
   <!-- 图标组件结束 -->
   <!-- 内容编辑 -->
   <Set
@@ -86,13 +91,9 @@
     </div>
   </XtDrawer>
   <!-- 底部导航 -->
-  <XtDrawer v-model="menuVisible">
-    <BottomEdit
-      :menuList="menuList"
-      :copy="customData.copy"
-      :merge="customData.merge"
-    ></BottomEdit>
-  </XtDrawer>
+  <!-- <XtDrawer v-model="menuVisible">
+    <BottomEdit :menuList="menuList" :copy="customData.copy" :merge="customData.merge"></BottomEdit>
+  </XtDrawer> -->
 </template>
 <script>
 // components
@@ -120,6 +121,7 @@ import {
 
 import { nanoid } from "nanoid";
 import { useFreeLayoutStore } from "../../desk/freeLayout/store";
+
 export default {
   props: {
     customIndex: {
@@ -147,13 +149,12 @@ export default {
   data() {
     return {
       checked: false,
-      menuVisible: false,
       index: 0, // 图标数组的下标
       dargFlag: false, // 记录本地拖拽开启状态 用与区别于全局拖拽
       isSelect: false,
       settingVisible: false, // 编辑状态
       iconsSetVisible: false,
-      options: { custom: true }, // 卡片核心配置
+      options: { hide: true, disabled: true }, // 卡片核心配置
     };
   },
   beforeMount() {
@@ -196,7 +197,20 @@ export default {
     // console.log("this.customData :>> ", this.customData);
     // console.log("window.globalArgs :>> ", window.globalArgs);
 
-    if (this.customData.iconList.length <= 1) return;
+    console.log(
+      "this.customData.iconList?.length 111:>> ",
+      this.customData.iconList?.length
+    );
+    if (
+      this.customData.iconList?.length <= 1 ||
+      this.customData.iconList?.length == undefined
+    )
+      return;
+    console.log(
+      "this.customData.iconList?.length 222:>> ",
+      this.customData.iconList?.length
+    );
+
     let index = this.desk.cards.findIndex(
       (item) => item.id == this.customIndex
     );
@@ -229,7 +243,7 @@ export default {
         list,
       },
     };
-    this.$bus.emit('reset')
+    this.$bus.emit("reset");
   },
   provide() {
     return {
@@ -300,13 +314,14 @@ export default {
             }
           },
         },
-        // {
-        //   icon: "guanbi2",
-        //   title: "删除",
-        //   fn: () => {
-        //     this.deleteIcon();
-        //   },
-        // },
+        {
+          newIcon: "akar-icons:trash-can",
+          title: "删除小组件",
+          color: "#FF4D4F",
+          fn: () => {
+            this.deleteIcon();
+          },
+        },
         // {
         //   icon: "guanbi2",
         //   title: "长按框选图标（开发中）",
@@ -358,9 +373,9 @@ export default {
   },
   methods: {
     ...mapActions(cardStore, ["updateCustomData", "addCard"]),
+
     openIconsSet() {
       this.iconsSetVisible = true;
-      this.menuVisible = false;
     },
     openEdit() {
       let icon = this.customData.iconList[this.index];
@@ -369,7 +384,6 @@ export default {
       Object.keys(this.iconOption).forEach((k) => {
         this.edit[k] = icon[k] || this.iconOption[k];
       });
-      this.menuVisible = false;
       this.settingVisible = true;
     },
     // 开启框选
@@ -468,8 +482,6 @@ export default {
     // 点击移动图标组件
     moveIcon() {
       this.isSelect = true; // 打开选中样式
-      this.isSelect = true; // 打开选中样式
-      this.menuVisible = false; // 隐藏控件
       let state = false; // 初始化状态
       // 遍历全局数据并拦截重复的数据
       this.iconList.forEach((item) => {
@@ -492,7 +504,6 @@ export default {
     },
     // 复制新的图标组件
     copyIcon() {
-      this.menuVisible = false; // 隐藏控件
       this.isSelect = false; // 关闭选中样式
       // if (this.isCopy === false && this.isDrag === false)
       //   return message.error("你还未移动任何图标组件");
@@ -541,7 +552,7 @@ export default {
           },
         };
 
-        this.$bus.emit('reset')
+        this.$bus.emit("reset");
       });
 
       // 遍历图标组件进行删除
@@ -563,6 +574,7 @@ export default {
           this.iconsRefs[i].doRemoveCard();
         }
         this.iconsRefs = [];
+        this.iconList = []; // 清空图标列表，防止数据添加到导航栏或者文件夹中
       } else {
         this.$refs.homelSlotRef.doRemoveCard();
       }

@@ -1,46 +1,52 @@
 <template>
-  <!-- :style="editVisible ? { height:'689px' }:{ height:'535px' }" -->
-  <div class="rounded-xl flex flex-col justify-between control-container pl-4 pt-4" id="controlId" 
-   ref="modalRef" style="width: 548px;" 
-  >
-
+  <div class="rounded-xl flex flex-col justify-between control-container xt-shadow pl-4 pt-4" id="controlId" ref="modalRef" >
     <div class="flex items-center justify-between">
       <div class="flex items-center justify-center">
         <xt-new-icon icon="fluent:toggle-multiple-16-regular" size="20" class="mr-2"></xt-new-icon>
         <span class="xt-text font-14 xt-font">控制中心</span>
       </div>
-
       <template v-if="!editVisible">
-        <div class="flex items-center justify-center pr-4" >
-          <xt-button style="width: auto !important;" h="0" @click="editClick">
+        <div class="flex items-center justify-center pr-4 pointer" @click="editClick">
+          <xt-button style="width: auto !important;" h="0" >
            <div class="flex items-center justify-center">
             <xt-new-icon icon="fluent:compose-16-regular" size="20"></xt-new-icon>
            </div>
           </xt-button>
         </div>
       </template>
-
       <template v-else>
-        <div class="flex items-center pr-4">
-          <xt-button style="width: auto !important;" h="0" @click="finshEdit">
-            <div class="flex items-center justify-center">
-              <span class="xt-font xt-theme-text font-14">完成编辑</span>
-            </div>
-          </xt-button>
+        <div class="flex items-center">
+          <div class="mr-3 flex items-center pointer justify-center" @click="restList">
+            <xt-button style="width: auto !important;" h="0">
+              <div class="flex items-center justify-center">
+                <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="20" class="mr-2" :color="'var(--link)'">
+                </xt-new-icon>
+                <span class="xt-font  font-14  xt-theme-text" >重置</span>
+              </div>
+            </xt-button>
+          </div>
+          <div class="flex items-center pointer pr-4" @click="finshEdit">
+            <xt-button style="width: auto !important;" h="0" >
+              <div class="flex items-center justify-center">
+                <span class="xt-font xt-theme-text font-14">完成编辑</span>
+              </div>
+            </xt-button>
+          </div> 
         </div>
       </template>
     </div>
-
     <template v-if="!editVisible">
       <ControlDesk />
     </template>
     <template v-else>
-      <EditControlDesk />
+      <EditControlDesk ref="editRef"/>
     </template>
+  
+    <div class="mt-2 mb-4" style="width: 520px;">
+      <div class="mx-auto xt-bb w-full"></div>
+    </div>
 
-    <a-divider style="height: 1px;margin: 16px 0;width: 516px;min-width:516px;" />
-
-    <div class="flex items-center justify-center" style="height: 85px;">
+    <div class="flex items-center justify-center mb-4">
       <template v-for="item in bottomButton">
        <a-tooltip placement="top" :title="item.name">
          <xt-button w="54" h="54" style="border-radius: 12px;" class="mr-3 button-item xt-bg-t-2" @click="item.fn">
@@ -51,21 +57,24 @@
        </a-tooltip>
       </template>
     </div>
-
   </div>
 </template>
 
 <script setup>
-import { ref,computed } from 'vue';
+import { ref,computed,onMounted,getCurrentInstance } from 'vue';
+import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
+import { appStore } from '../../../../../store';
+import { controlStore } from '../../hook/controlStore';
 
 import ControlDesk from './ControlDesk.vue';
 import EditControlDesk from './EditControlDesk.vue';
 
-import { controlStore } from '../../hook/controlStore';
-
 const router = useRouter()
 const emit = defineEmits(['close'])
+
+const { proxy } = getCurrentInstance()
+
 const props = defineProps({
   full:{
     type:Boolean,
@@ -73,7 +82,13 @@ const props = defineProps({
   }
 })
 
+const app = appStore()
+const { userInfo } = storeToRefs(app);
+const controls = controlStore()
+const { control,initList,removeControlList } = storeToRefs(controls);
+
 const editVisible = ref(false);
+const editRef = ref(null);
 
 // 触发编辑
 const editClick = () =>{
@@ -85,9 +100,15 @@ const finshEdit = () =>{
   editVisible.value = false
 }
 
+// 重置
+const restList = () =>{
+  control.value.oldList = JSON.parse(JSON.stringify(initList.value));
+  control.value.newList = [];
+}
+
 const bottomButton = ref([
   {
-    newIcon:'fluent:person-16-filled',name:'用户中心',
+    newIcon:'fluent:person-16-regular',name:'用户中心',
     fn:()=>{ 
       router.push({ path: '/my' })
       emit('close') 
@@ -103,14 +124,7 @@ const bottomButton = ref([
   {
     newIcon:'fluent:full-screen-maximize-16-regular',name:'全屏',
     fn:()=>{
-      if(props.full){
-        emit('setFull',false)
-        tsbApi.window.setFullScreen(false)
-      }
-      else {
-        emit('setFull',true)
-        tsbApi.window.setFullScreen(true)
-      }
+      app.toggleFullScreen();
     }
   },
   {
@@ -136,12 +150,20 @@ const bottomButton = ref([
   //   }
   // }
 ])
+
+
+onMounted(()=>{
+  proxy.$bus.on('closeControl',()=>{
+    emit('close')
+  })
+})
 </script>
 
 <style lang="scss" scoped>
 .control-container{
   backdrop-filter: blur(50px);
   background: var(--primary-bg);
+  width: 548px;
 }
 .button-item{
   &:last-of-type{

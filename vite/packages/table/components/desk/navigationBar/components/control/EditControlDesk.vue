@@ -1,15 +1,18 @@
 <template>
-  <div class="flex  h-3/4">
+  <div class="flex grow" style="height: 400px;">
     <XtScrollbar  :y="true" style="height: 100%;width: 100%;">
-      <div class="flex flex-1 flex-col h-3/4">
+      <div class="flex flex-1 flex-col  overflow-hidden">
         <div style="height: 12px;"></div>
-        <ControlRemoveItem :list="control.addList" />
+        <ControlRemoveItem  />
       </div>
-      
-      <a-divider style="height: 1px;margin: 16px 0;" v-if="control.removeList.length !== 0 " />
 
-      <div class="flex flex-1 flex-col h-3/4" v-if="control.removeList.length !== 0">
-        <ControlAddItem :list="control.removeList"/>
+      <div class="mb-2 mt-4" v-if="control.newList.length !== 0 ">
+        <div style="width: 516px;" class="xt-bb mx-auto"></div>
+      </div>
+
+      <div class="flex flex-1 flex-col  overflow-hidden" v-if="control.newList.length !== 0">
+        <div style="height: 8px;"></div>
+        <ControlAddItem />
       </div>
     </XtScrollbar>
   </div>
@@ -25,6 +28,7 @@ import ControlRemoveItem from './item/ControlRemoveItem.vue';
 
 const controls = controlStore();
 const { control } = storeToRefs(controls)
+
 
 </script>
 
@@ -52,5 +56,9 @@ const { control } = storeToRefs(controls)
   width: auto !important;
   margin: 0 12px 12px 0 !important;
  
+}
+
+:deep(.ps__rail-y){
+  display: none !important;
 }
 </style>

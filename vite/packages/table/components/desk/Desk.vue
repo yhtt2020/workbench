@@ -1,5 +1,5 @@
 <template>
-  <div v-if="fullScreen" class="no-drag">
+  <div v-if="fullScreen && noFullScreen" class="no-drag">
     <div style="position: absolute; right: 10px; top: 10px; z-index: 999">
       <xt-button @click="setFullScreen(false)" :w="40" :h="40" type="theme">
         <Icon style="font-size: 18px" icon="quxiaoquanping_huaban"></Icon>
@@ -33,15 +33,29 @@
       :alone="settings.enableZoom"
       :hide="hide"
     />
+    <!-- {{ freeLayout }}
+    {{ isFreeLayout }}
+    {{ $route.path }} -->
 
     <Drop>
+      <!-- <xt-wu-jie
+        ref="xxx"
+        width="100%"
+        height="100%"
+        name="xxx"
+        url="http://localhost:5173/"
+      ></xt-wu-jie> -->
+      <!-- <Wujie width="100%" height="100%" name="xxx" url="http://localhost:5173/" ></Wujie> -->
       <!-- 自由布局 -->
       <FreeLayoutScrollbar
         ref="freeLayoutScrollbar"
         class="flex-1"
-        v-if="isFreeLayout == true && $route.path == '/main' && freeLayout"
+        v-if="freeLayout"
       >
-        <FreeLayoutCanvas class="home-widgets">
+        <FreeLayoutCanvas
+          class="home-widgets"
+          v-if="isFreeLayout == true && $route.path == '/main' && freeLayout"
+        >
           <FreeLayoutContainer
             :currentDesk="currentDesk"
             :currentID="currentDesk.id"
@@ -59,8 +73,11 @@
           </FreeLayoutContainer>
         </FreeLayoutCanvas>
       </FreeLayoutScrollbar>
+      <!-- 默认布局 -->
       <vue-custom-scrollbar
         v-show="!isFreeLayout"
+        :class="previewFlag?'z-50':''"
+
         class="no-drag"
         key="scrollbar"
         id="scrollerBar"
@@ -253,8 +270,12 @@ import _ from "lodash-es";
 import { registerFolder } from "../../apps/folder/src/hooks/register";
 import { LoadingOutlined } from "@ant-design/icons-vue";
 import GalleryModal from "../paperModal/GalleryModal.vue";
-import { useAddCard, file } from "../../ui/hooks/useAddCard";
+import { useAddCard } from "../../ui/hooks/useAddCard";
 import { useDeskStore } from "./store";
+import { useCustomLayout } from "./freeLayout/useCustomLayout";
+import { useFileConversionIcon } from "../../apps/folder/src/hooks/useDataConversion";
+import { headerData, mainData, folderData } from "./freeLayout/config";
+import { taskStore }from '../../../table/apps/task/store'
 
 import Drop from "./Drop.vue";
 export default {
@@ -264,6 +285,9 @@ export default {
   components: { LoadingOutlined, EditNewNavigation, GalleryModal, Drop },
   props: {
     freeLayout: {
+      default: true,
+    },
+    noFullScreen: {
       default: true,
     },
     globalSettings: {
@@ -339,6 +363,19 @@ export default {
     },
   },
   watch: {
+    adjustLayout(val) {
+      if (val) {
+        this.toggleEditing();
+        this.adjustLayout = false;
+      }
+    },
+    // hideCard: {
+    //   handler(newVal) {
+    //     this.addMenu(this.hideCard);
+    //   },
+    //   deep: true,
+    //   immediate: true,
+    // },
     deskMenus: {
       handler(newVal) {
         this.deskMenus.forEach((item) => {
@@ -387,8 +424,7 @@ export default {
           lock: true,
           children: [
             {
-              id: 4,
-              parentId: 3,
+              id: 5,
               newIcon: "fluent:circle-off-16-regular",
               name: "清空桌面",
               fn: () => {
@@ -436,10 +472,12 @@ export default {
     ...mapWritableState(useFreeLayoutStore, [
       "isFreeLayout",
       "getFreeLayoutState",
+      "previewFlag",
     ]),
     ...mapWritableState(useFloatMenuStore, ["menus", "newMenus"]),
     ...mapWritableState(useNavigationStore, ["selectNav", "isDesk"]),
-    ...mapWritableState(useDeskStore, ["autoOpenEdit"]),
+    ...mapWritableState(useDeskStore, ["autoOpenEdit", "adjustLayout"]),
+
     navMenu() {
       if (
         !this.navigationToggle[0] &&
@@ -466,7 +504,23 @@ export default {
       } else {
         currentHide = this.hide;
       }
+      //   return
       return [
+        {
+          id: 0,
+          newIcon: "fluent:add-16-filled",
+          name: "定制桌面测试",
+          disabled: true,
+          fn: () => {
+            useCustomLayout({
+              headerList: headerData,
+              folderList: folderData,
+              cb: () => {
+                this.$bus.emit("adsorbGrid");
+              },
+            });
+          },
+        },
         {
           id: 1,
           newIcon: "fluent:add-16-filled",
@@ -490,9 +544,34 @@ export default {
               name: "添加图标分组",
               fn: this.addFolder,
             },
+            // {
+            //   id: 3,
+            //   newIcon: "mingcute:windows-line",
+            //   name: "整理win桌面图标",
+            //   fn: this.addFolder,
+            // },
           ],
         },
+
         { id: 5, divider: true },
+        {
+          id: 5.1,
+          newIcon: "fluent:glance-horizontal-16-regular",
+          name: "整理桌面",
+          disabled: this.isFreeLayout ? false : true,
+          fn: () => {
+            useCustomLayout({
+              mainList: this.currentDesk.cards,
+              cb: () => {
+                this.$bus.emit("adsorbGrid");
+              },
+            });
+            // 0 提供一个伪卡片
+            // 提供一个添加卡片
+            // 1 添加新的桌面
+            // 2 切换为自由布局
+          },
+        },
         {
           id: 6,
           newIcon: this.editing
@@ -527,26 +606,6 @@ export default {
         },
 
         {
-          id: 10,
-          newIcon: this.hide
-            ? "fluent:eye-16-regular"
-            : "fluent:eye-off-16-regular",
-          name: currentHide ? "显示小组件" : "隐藏小组件",
-          fn: () => {
-            if (this.isFreeLayout) {
-              this.getFreeLayoutState.system.hide =
-                !this.getFreeLayoutState?.system?.hide;
-            } else {
-              if (this.hide) {
-                this.showDesk();
-              } else {
-                this.hideDesk();
-              }
-            }
-          },
-          disabled: false,
-        },
-        {
           id: 11,
           disabled: true,
           name: "添加到导航栏",
@@ -580,6 +639,34 @@ export default {
           fn: this.showSetting,
         },
         { id: 13, divider: true },
+        {
+          id: 20,
+          newIcon: "fluent:more-horizontal-16-filled",
+          name: "更多",
+          lock: true,
+          children: [
+            {
+              id: 1,
+              newIcon: this.hide
+                ? "fluent:eye-16-regular"
+                : "fluent:eye-off-16-regular",
+              name: currentHide ? "显示小组件" : "隐藏小组件",
+              fn: () => {
+                if (this.isFreeLayout) {
+                  this.getFreeLayoutState.system.hide =
+                    !this.getFreeLayoutState?.system?.hide;
+                } else {
+                  if (this.hide) {
+                    this.showDesk();
+                  } else {
+                    this.hideDesk();
+                  }
+                }
+              },
+              disabled: false,
+            },
+          ],
+        },
       ];
     },
     usingSettings() {
@@ -626,6 +713,7 @@ export default {
     window.time = Date.now();
   },
   mounted() {
+    this.initTask()
     // 自动打开编辑
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();
@@ -647,7 +735,7 @@ export default {
     });
     this.$bus.on("M0201", () => {
       setTimeout(() => {
-      this.$refs.galleryRef.openGalleryModal();
+        this.$refs.galleryRef.openGalleryModal();
       }, 100);
     });
 
@@ -672,6 +760,7 @@ export default {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
     ...mapActions(cardStore, ["addCard"]),
     ...mapActions(useDeskStore, ["addMenu"]),
+    ...mapActions(taskStore, ['initTask']),
     addFolder() {
       registerFolder(this.currentDesk);
     },
@@ -759,7 +848,6 @@ export default {
               }
             });
             desk.cards = [];
-            console.log(desk);
             this.menuVisible = false;
             this.clearFreeLayoutData();
           },
@@ -793,10 +881,10 @@ export default {
       this.isDesk = true;
       console.log(this.selectNav, "selectNav");
     },
-    file,
+    useFileConversionIcon,
     useAddCard,
     addIcon(item, index) {
-      const file = this.file(item);
+      const file = this.useFileConversionIcon(item);
       this.useAddCard("myIcons", {
         iconList: [{ ...file }],
         newIcon: true,

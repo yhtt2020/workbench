@@ -24,7 +24,7 @@ export default {
       myFrameUrl: '',
     }
   },
-  props: ['size', 'chat', 'level'],
+  props: ['size', 'chat', 'level','limit'],
   computed: {
     ...mapWritableState(messageStore, ['messageIndex', 'totalCount']),
     ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
@@ -99,18 +99,25 @@ export default {
     //   }
     //
     // },
-    login () {
-      tsbApi.user.login((data) => {
-        ipc.send('getDetailUserInfo')
-      })
+    login (evt) {
+      // evt.preventDefault();
+      // tsbApi.user.login((data) => {
+      //   ipc.send('getDetailUserInfo')
+      // })
     },
     social () {
+      if(this.limit){
+        this.$router.push({ name: 'socialMy' });
+      }
+      else {
+        return;
+      }
       // if (this.totalCount) {
       //   this.$router.push({name: 'message'})
       // } else {
       //
       // }
-      this.$router.push({ name: 'socialMy' })
+      //
     },
   }
 }
@@ -118,7 +125,7 @@ export default {
 
 <template>
   <div v-if="!userInfo">
-    <div @click="login" style="padding: 0.5em">
+    <div @click="login($event)" style="padding: 0.5em" class="pointer">
       <a-avatar :size="size||54" class="xt-text">未登录</a-avatar>
       <div>
       </div>
@@ -182,10 +189,10 @@ export default {
 
   </div>
   <template v-else>
-    <div  class="btn" v-if="isMain()"   @click="social" >
-      <FrameAvatar class="frame" :avatarUrl="userInfo.avatar" :avatarSize="size|| 33"
+    <div  class="btn flex-col flex items-center justify-center pb-2" v-if="isMain()"   @click="social" >
+      <FrameAvatar class="frame pt-1" :avatarUrl="userInfo.avatar" :avatarSize="size|| 33"
                    :frameUrl="userInfo.frame"></FrameAvatar>
-      <div>我的</div>
+      <div class="pt-1">我的</div>
     </div>
   </template>
 </template>

@@ -20,7 +20,7 @@
                         <xt-button :w="40" :h="40" @click="backIntroduce" :icon="'fluent:emoji-smile-slight-24-regular'"></xt-button>
                     </a-tooltip>
                     <a-tooltip title="自定义网址" v-if="this.selectNav === 'desktop'" class="ml-2">
-                        <xt-button :w="120" :h="40" @click="isCustomLink" :icon="'fluent:add-16-regular'" class="xt-text-2">自定义</xt-button>
+                        <xt-button :w="40" :h="40" @click="isCustomLink" :icon="'fluent:add-16-regular'" class="xt-text-2"></xt-button>
                     </a-tooltip>
 
                 </div>
@@ -69,12 +69,8 @@
     <teleport to="body" :disabled="false">
         <Msg :modelValue="modalVisible" :title="defaultTitle.title" :text='msgText' @no="this.modalVisible = false"
             @ok="onOk"></Msg>
-        <customLink :modelValue="linkVisible" @close="this.linkVisible = false"></customLink>
+        <customLink v-if="linkVisible" v-model="linkVisible" @save="saveIcon" ref="customLink"></customLink>
     </teleport>
-    
-
-
-    <!-- </div> -->
 </template>
 <script>
 import {cardStore} from '../../../store/card'
@@ -337,13 +333,6 @@ export default {
                     } else if (that.selectNav === 'foot') {
                         that.draggingArea('bottom-bar', evt.oldIndex, that.footNavigationList, that.setFootNavigationList, that.currentList)
                     }
-                    // that.draggingArea('left-drop', evt.oldIndex, that.sideNavigationList, that.setSideNavigationList, that.currentList)
-
-                    // that.draggingArea('right-drop', evt.oldIndex, that.rightNavigationList, that.setRightNavigationList, that.currentList)
-
-                    // that.draggingArea('foot-drop', evt.oldIndex, that.footNavigationList, that.setFootNavigationList, that.currentList)
-
-
                 },
             })
         },
@@ -423,8 +412,11 @@ export default {
             });
         },
         isCustomLink(){
-           this.linkVisible = true 
-           console.log(this.linkVisible,'linkVisible')
+           this.linkVisible = true
+        },
+        saveIcon(value){
+            this.$emit('addIcon', value)
+            this.linkVisible = false
         }
             
         

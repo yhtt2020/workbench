@@ -28,22 +28,12 @@
               <MyIcon icon="tabler:brand-bilibili" width="20" height="20"  />&nbsp;
               Spacedesk | 把任意设备变成你的第二屏幕，手机、平板、电脑都可以！</a>
             </div>
+            <div  class="flex item-content">购买官方推荐副屏：<xt-button :radius="8" :w="80" :h="34" size="small" type="theme" @click="goBuy">去购买</xt-button></div>
           </div>
           <div style="margin-bottom: 1em" v-else>
             您当前仅有一块屏幕，无法启用副屏模式，您可在增添副屏后启用。<a>了解更多</a>
           </div>
           <a-row :gutter="20" class="flex justify-center mt-6">
-            <a-col >
-              <div :class="{'active':mod==='second-screen'}" @click="this.mod='second-screen'" class="panel pointer px-5 pt-6">
-                <div class="title">
-                  <MyIcon icon="fluent:tablet-16-regular" width="56px" height="56px" color="var(--primary-text)" />
-                  <div class="mt-2">副屏全屏模式</div>
-                </div>
-                <div class="content mt-3">
-                  专为副屏优化，自动缩放界面和字体，提供适合触控操作的交互。
-                </div>
-              </div>
-            </a-col>
             <a-col >
               <div :class="{'active':mod==='bootstrap'}" @click="this.mod='bootstrap'" class="panel pointer px-5 pt-6">
                 <div class="title">
@@ -53,6 +43,17 @@
                 </div>
                 <div class="content mt-3">
                   以普通应用窗口的模式运行，默认使用ALT+Z组合键控制显示和隐藏。
+                </div>
+              </div>
+            </a-col>
+            <a-col >
+              <div :class="{'active':mod==='second-screen'}" @click="this.mod='second-screen'" class="panel pointer px-5 pt-6">
+                <div class="title">
+                  <MyIcon icon="fluent:tablet-16-regular" width="56px" height="56px" color="var(--primary-text)" />
+                  <div class="mt-2">副屏全屏模式</div>
+                </div>
+                <div class="content mt-3">
+                  专为副屏优化，自动缩放界面和字体，提供适合触控操作的交互。
                 </div>
               </div>
             </a-col>
@@ -102,7 +103,7 @@
         </div>
 
         <div v-if="step===1" class="flex  justify-center h-full w-full">
-          <div class="screen-section mt-6 flex flex-col h-full" style="height: 320px; padding: 16px 24px;">
+          <div class="screen-section mt-6 flex flex-col h-full" style="height: 420px; padding: 16px 24px;">
             <div class="flex justify-between">
               <div>
                 选择您要显示工作台的屏幕，点击即可。
@@ -114,7 +115,7 @@
               </div>
             </div>
            <div class="flex-1 item-content" style="align-items: center;">
-             <div class="w-full flex items-center" style="width: 100px;height: 100px;">
+             <div class="w-full flex items-center" style="width: 100px;height: 100px;margin-top: -100px;margin-left: -100px">
                <ChooseScreen></ChooseScreen>
              </div>
            </div>
@@ -139,7 +140,7 @@
 
         <div v-if="step===3" class="flex justify-center flex-wrap" style="width: 452px;">
           <div class="mt-6 flex justify-center xt-bg-2 xt-text w-full" style="padding: 1em;border-radius: 8px 8px;">
-            <AutoRun isGuide="true"/>
+            <AutoRun :isGuide="true"/>
           </div>
           <div class="w-full">
             <KeySetting isGuide="true"></KeySetting>
@@ -200,7 +201,7 @@
       <!-- 按钮 -->
       <div class="flex" style="width:100%;justify-content: flex-end;position: absolute;right: 12px;bottom: 12px;">
         <div class="flex" v-if="step == 4">
-          <!-- <xt-button @click="nextStep" size="large"  class="button-bottom ml-3">暂不登录
+          <!-- <xt-button @click="finish" size="large"  class="button-bottom ml-3">暂不登录
           </xt-button> -->
           <div class="flex items-center xt-text-2">暂未开放游客登录</div>
           <xt-button type="theme" v-if="!this.userInfo.uid" @click="login" size="large"  class="button-bottom ml-3">立即登录</xt-button>
@@ -344,7 +345,7 @@ export default {
       canTouch: true,
       shortKeysTable: 'alt+z',
       shortKeysSearch: 'alt+f',
-      mod: 'second-screen',//bootstrap
+      mod: 'bootstrap',//bootstrap
       steps: [
         {
           title: '设置模式'
@@ -424,6 +425,9 @@ export default {
 
   methods: {
     ...mapActions(appStore, ['finishWizard', 'settings', 'getUserInfo']),
+    goBuy(){
+      browser.openInSystem('https://s.click.taobao.com/isXzP0u')
+    },
     // 登录模块迁移
     login () {
       tsbApi.user.login((data) => {

@@ -1,6 +1,6 @@
 <template>
-  <div class="xt-bg pl-6 box h-full" >
-    <div class="pr-4 pt-4" :style="showPreview ? 'width:70%' : 'width:100%'" style="height: 100%;display: flex;flex-direction: column">
+  <div class="xt-bg pl-6 box  " >
+    <div class="pr-4 pt-4  " :style="showPreview ? 'width:70%' : 'width:100%'" style="height: 100%;display: flex;flex-direction: column">
       <!-- 头部导航 -->
       <div class="flex items-center justify-between" style="height: 96px;">
         <div class="flex">
@@ -26,12 +26,14 @@
           </div>
         </div>
       </div>
-      <div class="flex mt-4 h-full" >
+      <div class="flex mt-4 flex-1 h-0 " >
         <!-- 侧边导航 -->
         <NavMenu :list="marketList" :currenIndex="navIndex" @changeNav="updateNavIndex" />
         <!-- 列表内容 -->
         <div class="ml-5 right no-drag h-full"  >
-          <Props :selected="sort" :navList="marketList[navIndex].children" @getFrameImage="getFrameImage"></Props>
+          <xt-scrollbar :y="true" class="h-full">
+            <Props :selected="sort" :navList="marketList[navIndex]?.children" @getFrameImage="getFrameImage"></Props>
+          </xt-scrollbar>
         </div>
       </div>
     </div>
@@ -87,6 +89,7 @@ export default {
       inputSearchValue: '',
       marketList: [
         {cname: '头像框',children: []},
+        {cname: '面板',children: []},
         // {cname: '卡面',children: []},
         // {cname: '宠物',children: []},
         // {cname: '主题',children: []},

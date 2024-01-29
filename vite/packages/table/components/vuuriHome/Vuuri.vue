@@ -26,6 +26,8 @@ import { GridEvent } from './GridEvent'
 import GridStore from './GridStore'
 import { ItemKey, ItemSize, ItemDragHandle } from './constants'
 import _ from 'lodash-es'
+import {mapWritableState} from 'pinia'
+import {useFreeLayoutStore} from '../desk/freeLayout/store'
 
 export default {
   name: 'Vuuri',
@@ -141,6 +143,7 @@ export default {
     modelValue: {
       deep: true,
       handler (newItems, oldValue) {
+        if (this.isFreeLayout) return
         console.log('数据变化')
         if (!this.internallySet) {
           this._sync(newItems, this.copiedItems)
@@ -157,6 +160,8 @@ export default {
     }
   },
   computed: {
+    ...mapWritableState(useFreeLayoutStore, ['isFreeLayout']),
+
     selector () {
       return `.${this.className}`
     }
@@ -549,7 +554,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .muuri-grid {
   position: relative;
 

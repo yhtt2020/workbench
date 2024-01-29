@@ -1,37 +1,36 @@
 <template>
   <!-- 方案列表 -->
-  <div class="flex flex-row w-full item-wrapper" style="height: 100%" >
-    <div class="item-content" :style="wrapperStyle">
-      <div class="text-center w-full" v-if="displayItems.length==0">
+  <div class="flex flex-row w-full item-wrapper" style="height: 100%">
+    <div class="item-content px-8" :style="wrapperStyle">
+      <div class="text-center w-full" v-if="displayItems.length == 0">
         <a-empty image="/img/test/load-ail.png" description="暂无分享"></a-empty>
       </div>
-      <template  v-else v-for="(item, index) in displayItems" :key="item.id" >
-          <xt-task v-if="index == 0" :modelValue="m03025" @cb="previewKay(item)">
-            <div  class="pointer recommend mb-2" :style="deskItemStyle"
-            @click="previewKay(item)">
-            <div class=" cover-wrapper" style="">
+      <template v-else v-for="(item, index) in displayItems" :key="item.id">
+        <xt-task v-if="index == 0" :modelValue="m03025" @cb="previewKay(item)">
+          <div class="pointer recommend mb-2" :style="deskItemStyle" @click="previewKay(item)">
+            <div class=" cover-wrapper xt-main-bg" style="">
               <!-- <a-image :width="328" :height="185" :preview="false" src="../../../../../public/img/test/deckImg.jpg" /> -->
-              <img class="cover-preview" :src="item.cover"/>
+              <img class="cover-preview" :src="item.cover" />
             </div>
-            <div style="padding: 0 14px 14px">
-              <div class="title"><strong class="mr-2">{{ item.alias || item.title }}</strong>
-                <span class="label" v-if="item.tags"
+            <div style="padding: 0 12px 14px">
+              <div class="title">{{ item.alias || item.title }}
+                <!-- <span class="label" v-if="item.tags"
                       v-for="x in item.tags?.split(',')"
-                      :key="x">{{ x }}</span>
+                      :key="x">{{ x }}</span> -->
               </div>
               <div class="flex justify-between items-center mt-3" style="font-size: 14px;color: var(--secondary-text);">
                 <span class="flex items-center">
                   <div @click="showCard(item.id)">
-                    <a-avatar :src="item.userInfo?.avatar" :size="32"></a-avatar>
+                    <a-avatar :src="item.userInfo?.avatar" :size="24"></a-avatar>
                   </div>
-                  <span class="ml-3" style="color: var(--secondary-text);">{{ item.userInfo?.nickname }}</span>
+                  <span class="ml-2 xt-text-2 font-14">{{ item.userInfo?.nickname }}</span>
                 </span>
                 <span style="color: var(--secondary-text);">
-                  <span>
+                  <!-- <span>
                     <Icon icon="dianzan" class="mr-2"></Icon>
                     <span>{{ item.support }}</span>
-                  </span>
-                  <span class="ml-3">
+                  </span> -->
+                  <span class="ml-3 xt-text-3">
                     <Icon icon="xiazai" class="mr-2"></Icon>
                     <span>{{ item.count }}</span>
                   </span>
@@ -39,33 +38,30 @@
               </div>
             </div>
           </div>
-          </xt-task>
+        </xt-task>
 
-        <div v-else class="pointer recommend mb-2" :style="deskItemStyle"
-             @click="previewKay(item)">
-          <div class=" cover-wrapper" style="">
+        <div v-else class="pointer recommend mb-2" :style="deskItemStyle" @click="previewKay(item)">
+          <div class=" cover-wrapper xt-main-bg" style="">
             <!-- <a-image :width="328" :height="185" :preview="false" src="../../../../../public/img/test/deckImg.jpg" /> -->
-            <img class="cover-preview" :src="item.cover"/>
+            <img class="cover-preview" :src="item.cover" />
           </div>
-          <div style="padding: 0 14px 14px">
-            <div class="title"><strong class="mr-2">{{ item.alias || item.title }}</strong>
-              <span class="label" v-if="item.tags"
-                    v-for="x in item.tags?.split(',')"
-                    :key="x">{{ x }}</span>
+          <div style="padding: 0 12px 14px">
+            <div class="title">{{ item.alias || item.title }}
+              <!-- <span class="label" v-if="item.tags" v-for="x in item.tags?.split(',')" :key="x">{{ x }}</span> -->
             </div>
             <div class="flex justify-between items-center mt-3" style="font-size: 14px;color: var(--secondary-text);">
               <span class="flex items-center">
                 <div @click="showCard(item.id)">
-                  <a-avatar :src="item.userInfo?.avatar" :size="32"></a-avatar>
+                  <a-avatar :src="item.userInfo?.avatar" :size="24"></a-avatar>
                 </div>
-                <span class="ml-3" style="color: var(--secondary-text);">{{ item.userInfo?.nickname }}</span>
+                <span class="ml-2 xt-text-2 font-14">{{ item.userInfo?.nickname }}</span>
               </span>
               <span style="color: var(--secondary-text);">
-                <span>
+                <!-- <span>
                   <Icon icon="dianzan" class="mr-2"></Icon>
                   <span>{{ item.support }}</span>
-                </span>
-                <span class="ml-3">
+                </span> -->
+                <span class="ml-3 xt-text-3">
                   <Icon icon="xiazai" class="mr-2"></Icon>
                   <span>{{ item.count }}</span>
                 </span>
@@ -73,7 +69,7 @@
             </div>
           </div>
         </div>
-        </template>
+      </template>
 
     </div>
   </div>
@@ -91,13 +87,13 @@ export default {
   components: {
     // DeskPreview
   },
-  computed:{
+  computed: {
     ...mapWritableState(taskStore, ["taskID", "step"]),
-    m03025( ) {
+    m03025() {
       return this.taskID == "M0302" && this.step == 5
     }
   },
-  data () {
+  data() {
     return {
       displayItems: [],
       // 方案
@@ -125,15 +121,22 @@ export default {
     deskItemStyle: {
       type: String,
       default: () => ''
-    }
+    },    
+    
+    // 处理桌面市场添加 为 false 时 将当前桌面进行替换
+    addDesk: {
+      type: Boolean,
+      default: true,
+    },
+    
   },
   watch: {
     items: {
       immediate: true,
-      handler () {
-        let items= JSON.parse(JSON.stringify(this.items))
-        this.displayItems=items.map(item=>{
-          let  itemNew={
+      handler() {
+        let items = JSON.parse(JSON.stringify(this.items))
+        this.displayItems = items.map(item => {
+          let itemNew = {
             ...item,
             ...item.data
           }
@@ -146,10 +149,10 @@ export default {
   },
   methods: {
     ...mapActions(appStore, ['showUserCard']),
-    showCard (id) {
+    showCard(id) {
       this.showUserCard(id)
     },
-    mySort (data, property, asc) {
+    mySort(data, property, asc) {
       let datas = [...data]
       return datas.sort(function (a, b) {
         a = a[property]
@@ -158,18 +161,18 @@ export default {
         else return b - a
       })
     },
-    previewKay (item) {
+    previewKay(item) {
       console.log(item)
       this.$emit('openPreview', {
         scheme: {
           ...item,
-          dataNanoid:item.nanoid
-        }, showModal: true
+          dataNanoid: item.nanoid
+        }, showModal: true, addDesk: this.addDesk,
       })
       // this.scheme = item
       // this.showModal = true
     },
-    closePreview () {
+    closePreview() {
       // this.showModal = false
     }
   }
@@ -198,10 +201,10 @@ export default {
   overflow: hidden;
 
   .title {
-    font-size: 18px;
     color: var(--primary-text);
-    margin: 10px 0;
-    font-weight: 500;
+    margin-top: 12px;;
+    font-size: 16px;
+    font-weight: 600;
   }
 
   .label {
@@ -251,7 +254,7 @@ export default {
     align-items: end;
     height: 10%;
 
-    > div {
+    >div {
       background: rgba(0, 0, 0, 0.30);
       border-radius: 12px;
       height: 48px;
@@ -287,14 +290,13 @@ export default {
   left: 50%;
   transform: translateX(-50%) translateY(-50%);
   top: 50%;
-  max-width: calc(100%);
-  max-height: calc(100%);
+  max-width: calc(90%);
+  max-height: calc(90%);
   position: absolute;
 }
 
 .cover-wrapper {
   height: 200px;
-  margin: 10px;
   position: relative;
 }
 </style>

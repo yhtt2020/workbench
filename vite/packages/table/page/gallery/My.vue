@@ -51,7 +51,7 @@
 
     <div class="flex-1 h-4/5">
       <template v-if="myPapers.length === 0">
-        <MyEmptyStatus @importLocal="openRight"/>
+        <MyEmptyStatus :isModal="isModal" @importLocal="openRight"/>
       </template>
       <template v-else>
         <MyContent :myPaperList="myPapers" :isModal="isModal" @paperSetting="openBottom" @playPaperVideo="playPaperVideo"/>
@@ -260,8 +260,6 @@ export default {
       }
       this.previewVideoVisible = false;
     },
-
-
   },
 };
 </script>

@@ -21,6 +21,11 @@
 
 <script>
 export default {
+    props:{
+        clockFont:{
+            type:String
+        }
+    },
     data() {
         return {
             time: "",

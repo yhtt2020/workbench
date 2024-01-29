@@ -15,25 +15,24 @@
       :menuList="menuList"
       :sizeList="autoSizeList"
       @leftClick="leftClick"
-      v-model:size="customData.size"
+      v-model:customSize="customData.customSize"
     >
       <!-- 右侧布局切换 -->
       <Resize
         :disabled="expand.disabled"
-        v-model:size="customData.size"
+        v-model:size="customData.customSize"
         :modalSize="modalSize"
         :resize="navBar.resize"
       >
         <!-- 空状态显示状态 -->
         <template v-if="customData.list.length <= 0 && !dragSortState">
-          <Null :size="customData.size" @addFile="addFileClick" />
+          <Null :size="customData.customSize" @addFile="addFileClick" />
         </template>
         <vue-custom-scrollbar
           v-else
-          style="padding-right: 4px;"
+          style="padding-right: 4px"
           :settings="{
             suppressScrollY: false,
-
           }"
           class="relative w-full h-full"
         >
@@ -88,32 +87,33 @@ import {
   onMounted,
   onBeforeUnmount,
   onBeforeMount,
+  getCurrentInstance,
 } from "vue";
+import { useRouter, useRoute } from "vue-router";
+import { nanoid } from "nanoid";
+import { message } from "ant-design-vue";
+
 import File from "./file/File.vue";
 import folderSet from "./folderSet/folderSet.vue";
 import Drop from "./components/Drop.vue";
 import Resize from "./components/Resize.vue";
 import Expand from "./expand/Expand.vue";
 import vueCustomScrollbar from "../../../../../src/components/vue-scrollbar.vue";
-import { nanoid } from "nanoid";
-import { message } from "ant-design-vue";
+
 import { defaultData, defaultFolderData } from "./components/options";
 import Null from "./components/Null.vue";
-
+import { startApp } from "../../../ui/hooks/useStartApp";
 import EditNewNavigation from "../../../components/desk/navigationBar/EditNewNavigation.vue";
 import { useNavigationStore } from "../../../components/desk/navigationBar/navigationStore";
 import { useMouseInElement } from "@vueuse/core";
-
+import { mergeData } from "../../../ui/hooks/useDataConversion";
+const { proxy } = getCurrentInstance();
+const router = useRouter();
 /**
  * 拖拽位置
  */
 const folder = ref(null);
 const { isOutside } = useMouseInElement(folder);
-const updatePosition = (data) => {
-  if (isOutside.value) {
-    customData.value.list.splice(customData.value.list.indexOf(data), 1);
-  }
-};
 
 /**
  * 文件添加
@@ -185,18 +185,23 @@ const header = computed(() => {
   return {
     showIcon: customData.value.icon,
     title: customData.value.name,
-    refresh: {
-      tip: "更新桌面数据",
-      disabled: customData.value.model != "custom" ? false : true,
-      state: refreshState.value,
-      fn: refreshDeskApp,
-    },
+    // refresh: {
+    //   tip: "更新桌面数据",
+    //   disabled: customData.value.model != "custom" ? false : true,
+    //   state: refreshState.value,
+    //   fn: refreshDeskApp,
+    // },
     leftHover: true,
     leftHoverName: secondary.value ? "编辑文件夹" : "点击打开",
     leftHoverIcon: secondary.value
       ? "fluent:settings-16-regular"
       : "fluent:open-16-regular",
     rightIcon: [
+      {
+        ifyIcon: "fluent:open-16-regular",
+        tip: "打开全部",
+        fn: openAllFile,
+      },
       {
         ifyIcon: "fluent:add-16-filled",
         fn: addFileClick,
@@ -208,17 +213,37 @@ const header = computed(() => {
     ],
   };
 });
-
+// 打开所有文件
+const openAllFile = () => {
+  if (customData.value.list.length > 10) {
+    console.log("10 :>> ", 10);
+    proxy.$xtConfirm(
+      "确定要打开全部吗",
+      `即将打开 ${customData.value.list.length} 个图标`,
+      {
+        type: "warning",
+        ok: openAllFileClick,
+      }
+    );
+  } else {
+    openAllFileClick();
+  }
+};
+const openAllFileClick = () => {
+  customData.value.list.forEach((item) => {
+    startApp(item.type, item.value, router);
+  });
+};
 const options = computed(() => {
   return {
     bg: isDrag.value ? "var(--active-secondary-bg) " : "",
     // 隐藏删除
-    del: navBar.value.isDel,
+    disabled: navBar.value.isDel,
     // 隐藏层级
     hierarchy: navBar.value.hierarchy,
     // 二级
     secondary: {
-      size: "",
+      customSize: "",
     },
   };
 });
@@ -279,16 +304,17 @@ const autoSize = computed(() => {
  *点击组件关闭
  */
 const clickFile = (data) => {
+  startApp(data.type, data.value, router);
   emit("clickFile", data);
 };
 /**
  * 自定义大小
  */
 watch(
-  () => customData.value.size,
+  () => customData.value.customSize,
   (newV, oldV) => {
     console.log(newV, oldV, "newV,oldV");
-    emit("update:size", newV);
+    emit("update:customSize", newV);
   },
   { deep: true }
 );
@@ -309,6 +335,28 @@ watch(
 const setVisible = ref(false);
 const menuList = computed(() => {
   return [
+    {
+      title: "一键打开全部",
+      newIcon: "fluent:open-16-regular",
+      fn: openAllFile,
+    },
+    {
+      newIcon: layout.value,
+      title: "排列方式",
+      fn: layoutClick,
+    },
+    {
+      newIcon: "fluent:add-16-filled",
+      title: "添加图标",
+      fn: addFileClick,
+    },
+    {
+      title: "更新桌面数据",
+      disabled: customData.value.model != "custom" ? false : true,
+      newIcon: "fluent:arrow-clockwise-16-regular",
+      fn: refreshDeskApp,
+    },
+    { divider: true },
     {
       title: "设置",
       newIcon: "fluent:settings-16-regular",
@@ -418,12 +466,12 @@ const leftClick = () => {
     setVisible.value = true;
   } else {
     expandVisible.value = true;
-    oldCardSize.value = customData.value.size;
+    oldCardSize.value = customData.value.customSize;
   }
 };
 
 const expandClose = () => {
-  customData.value.size = oldCardSize.value;
+  customData.value.customSize = oldCardSize.value;
 };
 
 const isDrag = ref(false);
@@ -470,12 +518,15 @@ const refreshDeskApp = async () => {
   }, 1000);
 };
 onMounted(async () => {
-  console.log(" onMounted:>> ");
+  customData.value.list = customData.value.list.map((item) => mergeData(item));
+  // 空图标替换
   if (customData.value.icon === "") {
     customData.value.icon =
       "https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#ffffff";
   }
-  if (customData.value.model != "custom") {
+  // 旧版大小数据替换
+  if (customData.value.customSize == "") {
+    customData.value.customSize = customData.value.size;
   }
 });
 </script>

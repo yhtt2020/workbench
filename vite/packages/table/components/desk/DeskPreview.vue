@@ -25,9 +25,7 @@
         <Icon icon="tishi-xianxing" class="ml-3" style="width: 24px;height: 24px;"></Icon>
       </div>
       <div class="flex" style="padding: 0">
-   <xt-task @cb="addPlan" :modelValue="m03026">
     <div class="market-button mr-2 active" @click="addPlan"><icon icon="xiazai1"></icon> 立即添加</div>
-   </xt-task>
         <div class="market-button mr-0" @click="doIncSupport"><icon icon="dianzan"></icon> 点赞 {{displayScheme.support}}</div>
       </div>
     </div>
@@ -125,6 +123,13 @@ export default {
       type: Object,
       default: {},
     },
+
+    // 处理桌面市场添加 为 false 时 将当前桌面进行替换
+    addDesk: {
+      type: Boolean,
+      default: true,
+    },
+
     //显示与隐藏
     showModal: {
       type: Boolean,
@@ -136,10 +141,6 @@ export default {
   },
   computed: {
     ...mapWritableState(appStore, ['fullScreen','userInfo']),
-    ...mapWritableState(taskStore, ["taskID", "step"]),
-    m03026() {
-      return this.taskID == "M0302" && this.step == 6
-    },
     tagList () {
       if (this.scheme.tags) {
         return this.scheme.tags.split(',')
@@ -192,7 +193,7 @@ export default {
     // }
   },
   methods: {
-    ...mapActions(cardStore, ['addShareDesk', 'setDeskSize']),
+    ...mapActions(cardStore, ['addShareDesk', 'setDeskSize', 'getCurrentId']),
     ...mapActions(marketStore,['incSupport']),
     async doIncSupport(){
       const rs=await this.incSupport(this.displayScheme.dataNanoid)
@@ -206,18 +207,33 @@ export default {
       }
     },
     addPlan () {
-      this.close()
+      completeTask('m0203')
+      this.$emit('afterAdded')
+      this.openDrawer = false
+      message.success('添加成功')
+      
+      // 需要替换的桌面index
+      let replace = null
+      let deskId = this.getCurrentId()
+      
+      // 当 addDesk 为false时 需要将数据进行替换
+      if(!this.addDesk){
+        let deskIndex = this.deskList.forEach((item, index)=>{
+          if(item.id == deskId){
+            replace = index 
+          }
+        })
+      }else{
+        replace = -1
+      }
       this.addShareDesk({
         ...this.displayScheme,
         title:this.displayScheme.alias,
         cards:this.template.cards,
         settings:this.template.settings
-      },this.layoutSize, this.deskList)
-      message.success('添加成功')
-      //
-      completeTask('m0203')
-      this.$emit('afterAdded')
-      this.openDrawer = false
+      },this.layoutSize, this.deskList, replace)
+      this.close()
+      this.$emit('closeGroup')
       // setTimeout(() => {
       //   let cardsHeight = document.getElementById('cardContent')?.offsetHeight
       //   let deskHeight = document.documentElement.clientHeight // 高

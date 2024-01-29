@@ -1,9 +1,11 @@
 <template>
-    <div class="w-full h-[40px] mb-4">
-        <div class="flex items-center justify-center w-full h-full xt-bg-2 rounded-xl">{{ props.title }}</div>
+    <div class="w-full">
+        <div class="w-full h-[40px] mb-4">
+            <div class="flex items-center justify-center w-full h-full xt-bg-2 rounded-xl">{{ props.title }}</div>
+        </div>
+        <EditName :editItem="props.editItem"></EditName>
+        <SelectHome v-if="props.editItem.value === 'home'" :editItem="props.editItem"></SelectHome>
     </div>
-    <EditName :editItem="props.editItem"></EditName>
-    <SelectHome v-if="props.editItem.value === 'home'" :editItem="props.editItem"></SelectHome>
 </template>
 
 <script setup lang='ts'>

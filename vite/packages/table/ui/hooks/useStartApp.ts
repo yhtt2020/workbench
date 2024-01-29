@@ -16,13 +16,30 @@ async function runApp(uri) {
         console.log('执行路径A,steam游戏模式',realPath)
         cp.spawn('start',[realPath], {detached: true,shell:true,windowsHide:true,stdio: 'ignore',})
       }else{
-        console.log('执行路径B,普通文件','cwd',require('path').dirname(realPath))
-        cp.spawn(require("path").normalize(realPath), [], {detached: true,cwd:require('path').dirname(realPath),stdio: 'ignore',})
+        console.log('执行路径B,普通快捷方式','cwd',require('path').dirname(realPath))
+        window.$models.win32.openApp(realPath,'','',false,true)
+        //let child=cp.spawn(realPath, {detached: true,cwd:require('path').dirname(realPath),stdio: 'ignore',windowsHide:true,})
+        //child.unref()
+        // setTimeout(()=>{
+        //   console.log('自动关闭')
+        //   window.$models.win32.killProcess(child.pid)
+        // },5000)
       }
     }else{
-      console.log('执行路径C')
-      cp.spawn('start',[ require("path").normalize(realPath)], {detached: true,cwd:require('path').dirname(realPath),shell:true,windowsHide:true,stdio: 'ignore',})
+      var fs = require('fs');
+      var stat = fs.lstatSync(realPath);
+      console.log('执行路径B,普通文件','cwd',require('path').dirname(realPath))
+      isDir=stat.isDirectory()
+      if(isDir){
+        console.log('执行路径D，文件夹',realPath)
+        cp.spawn('start',[ require("path").normalize(realPath)], {detached: true,cwd:require('path').dirname(realPath),shell:true,windowsHide:true,stdio: 'ignore',})
+      }else{
+        console.log('执行路径C，普通文件',realPath)
+        window.$models.win32.openApp(realPath,'','',false,true)
+        //cp.spawn(realPath, {detached: true,cwd:require('path').dirname(realPath),stdio: 'ignore',windowsVerbatimArguments:true})
+      }
     }
+
     return true
   }catch (e) {
     return false

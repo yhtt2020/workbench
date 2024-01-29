@@ -1,6 +1,6 @@
 <template>
     <div class="w-[452px]">
-        <!-- {{ props.editItem.icon }} -->
+        <!-- {{ props.editItem.default }} -->
         <div class="flex items-center w-full p-4 mb-4 xt-bg-2 rounded-xl">
             <div style="width: 56px; height: 56px;flex-shrink: 0;" v-if="!props.editItem.isBg" :style="{background:props.editItem.isBg ? props.editItem.bg : 'var(--primary-bg)'}"
             class="relative flex items-center justify-center rounded-xl pointer" @click="modelValue=!modelValue">
@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, computed,onMounted } from 'vue'
+import { ref, reactive, computed,onMounted,watch } from 'vue'
 import { useNavigationStore } from '../../../navigationStore'
 import {renderIcon} from '../../../../../../js/common/common'
 import CustomIconBg from './CustomIconBg.vue'
@@ -56,29 +56,16 @@ const getAvatar = (value) => {
     getImgColor(props.editItem)
 }
 // 重置
+// const isReset = ref(false)
 const reset = () => {
-    // const target = navigationList.value.find(item =>{
-    //     if(item.type === 'coolApp'){
-    //         return item.value.url === props.editItem.value.url
-    //     }else{
-    //         return item.value === props.editItem.value
-    //     }
-    // } )
-    // console.log(props.editItem.default,'target')
     props.editItem.icon = props.editItem.default.icon
     bgColor.value = ''
-    props.editItem.bg = ''
+    props.editItem.bg = props.editItem.default.bg
     props.editItem.isBg = false
     props.editItem.color = ''
+    // isReset.value = true
 }
 // 判断图标类型
-// const isIcon = computed(() => {
-//     if (props.editItem.icon.includes('https')) {
-//         return true
-//     } else {
-//         return false
-//     }
-// })
 const getImgColor = (item) => {
     if(item.icon.includes('color=#')){
         const bg = item.icon.slice(-7)
@@ -101,9 +88,16 @@ const imgBg = computed(() => {
     return
   }
 });
-// const navigationList = computed(() => {
-//     return [...useNavStore.footNavigationList,...useNavStore.sideNavigationList,...useNavStore.rightNavigationList]
-// })
+
+// 防止icon变化，导致背景颜色变化，导致图标颜色变化
+watch(()=>props.editItem.icon,(newV,oldV)=>{
+    if(newV.includes('color=#')){
+        getImgColor(props.editItem)
+    }else{
+        props.editItem.color = ''
+    }
+})
+
 </script>
 <style lang='scss' scoped>
 .reset {

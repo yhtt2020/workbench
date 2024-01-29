@@ -8,10 +8,11 @@
     "
   >
     <div
-      class="absolute right-0 top-0 text-xs flex justify-center items-center z-10"
+      class="absolute right-0 top-0 text-xs flex justify-center items-center z-10 px-1"
       style="
         background: #508bfe;
-        width: 32px;
+        width: auto;
+
         height: 20px;
         border-radius: 0px 10px 0px 10px;
       "
@@ -19,18 +20,18 @@
       {{ types[type].name }}
     </div>
     <a-avatar
-      v-if="type == 'avatarFrame' || type == 'medal'"
       shape="square"
-      :size="56"
+      :size="types[type].size"
       :src="types[type].icon"
       class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
     />
-    <xt-ify-icon
+
+    <!-- <xt-ify-icon
       v-if="type == 'communityPoints' || type == 'experience'"
       class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
       :icon="types[type].icon"
       size="45"
-    />
+    /> -->
     <div class="absolute z-10 bottom-0 text-sm" v-if="value" style="right: 6px">
       {{ value }}
     </div>
@@ -53,18 +54,22 @@ const types = computed(() => {
     medal: {
       name: "勋章",
       icon: props.icon,
+      size: 56,
     },
     communityPoints: {
       name: "积分",
-      icon: "fluent-emoji:gem-stone",
+      icon: "/img/task/communityPoints.svg",
+      size: 56,
     },
     experience: {
       name: "经验",
-      icon: "fluent-emoji:coin",
+      icon: "/img/task/experience.png",
+      size: 42,
     },
     avatarFrame: {
-      name: "头像",
+      name: "头像框",
       icon: props.icon,
+      size: 56,
     },
   };
 });

@@ -145,18 +145,15 @@
     <NewGuidePage v-if="showGuide" @closeShowGuide="closeShowGuide" :deskId="deskId"></NewGuidePage>
     <!-- <NewGuidePage v-if="showGuide" @closeShowGuide="closeShowGuide" :deskId="deskId"></NewGuidePage> -->
     <!-- 右上方的缩放推荐 -->
-    <ScalePanel v-if="visibleScale" @closeScale="closeScale" ></ScalePanel>
+    <ScalePanel v-if="visibleScale" @closeScale="closeScale"></ScalePanel>
     <!-- <ScalePanel v-if="visibleScale" @closeScale="closeScale" ></ScalePanel> -->
     <!-- 定制桌面流程 -->
     <GuidePanel v-if="visibleGuide" @closeGuide="closeGuide" @addGuide="addGuide"></GuidePanel>
     <!-- <GuidePanel v-if="visibleGuide" @closeGuide="closeGuide" @addGuide="addGuide"></GuidePanel> -->
-    
+
     <!-- 全屏遮罩层 -->
-    <div
-      v-show="visibleScale || visibleGuide"
-      class="fixed top-0 bottom-0 left-0 w-full h-full cursor-not-allowed ring-0"
-      style="z-index:900;background-color:rgba(255,255,255,0.1);"
-    ></div>
+    <div v-show="visibleScale || visibleGuide" class="fixed top-0 bottom-0 left-0 w-full h-full cursor-not-allowed ring-0"
+      style="z-index:900;"></div>
 
     <!-- 局部遮罩层 -->
     <!-- <div
@@ -171,7 +168,6 @@
 </template>
 
 <script>
-import { onMounted } from "vue";
 import Weather from "../components/widgets/Weather.vue";
 import Timer from "../components/widgets/Timer.vue";
 import Music from "../components/widgets/Music.vue";
@@ -260,6 +256,7 @@ import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
 // 桌面默认数据
 import { defaultFreeLayoutStore } from './defaultFreeLayout'
 import { useFreeLayoutStore } from "../components/desk/freeLayout/store";
+import { defaultIconData, mergeData } from '../../table/apps/folder/src/hooks/useDataConversion'
 const { steamUser, steamSession, path, https, steamFs } = $models;
 if (steamUser && steamSession) {
   const { LoginSession, EAuthTokenPlatformType } = steamSession;
@@ -356,6 +353,7 @@ export default {
       hasTriggered: 1,
       // 新建桌面id
       deskId: '',
+      defaultIconData,  // 默认图标格式
     };
   },
   components: {
@@ -433,7 +431,7 @@ export default {
       "sideNavigationList",
       "footNavigationList",
       "rightNavigationList",
-      "copyFootNav"
+      "copyFootNav", 'init', 'leftNavInit', 'rightNavInit', 'footNavInit'
     ]),
     ...mapWritableState(cardStore, [
       "customComponents",
@@ -497,46 +495,24 @@ export default {
       }
     },
   },
-  // beforeUpdate() {
-  //   if (this.hasTriggered <= 10) {
-  //     console.log("chufa");
-  //     this.replaceIcon(this.sideNavigationList);
-  //     this.replaceIcon(this.rightNavigationList);
-  //     this.replaceIcon(this.footNavigationList);
-  //     this.hasTriggered++;
-  //   }
-  // },
   async mounted() {
-    this.replaceIcon(this.sideNavigationList);
-    this.replaceIcon(this.rightNavigationList);
-    this.replaceIcon(this.copyFootNav);
-    // setTimeout(() => {
-    //   this.replaceIcon()
-    // },500)
+    this.replaceIcon(this.sideNavigationList, this.leftNavInit);
+    this.replaceIcon(this.rightNavigationList, this.rightNavInit);
+    this.replaceIcon(this.copyFootNav, this.footNavInit);
     let n = 0;
-    // if (navigator.connection.downlink < 1) {
     let timer = setInterval(() => {
       if (n > 3) {
+        this.leftNavInit = true
+        this.rightNavInit = true
+        this.footNavInit = true
         clearInterval(timer);
         return;
       }
-      this.replaceIcon(this.sideNavigationList);
-      this.replaceIcon(this.rightNavigationList);
-      this.replaceIcon(this.copyFootNav);
+      this.replaceIcon(this.sideNavigationList, this.leftNavInit);
+      this.replaceIcon(this.rightNavigationList, this.rightNavInit);
+      this.replaceIcon(this.copyFootNav, this.footNavInit);
       n++;
     }, 2000);
-    // } else {
-    //   let timer = setInterval(() => {
-    //     if (n > 2) {
-    //       clearInterval(timer);
-    //       return;
-    //     }
-    //     this.replaceIcon(this.sideNavigationList);
-    //     this.replaceIcon(this.rightNavigationList);
-    //     this.replaceIcon(this.footNavigationList);
-    //     n++;
-    //   }, 1000);
-    // }
     // 判断是否是第一次加载
     if (this.deskInit) {
       // 新用户第一次进入加载一个默认桌面
@@ -749,20 +725,26 @@ export default {
       this.iconVisible = true;
       this.menuVisible = false;
     },
-    replaceIcon(navigationList) {
-      navigationData.systemAppList.forEach((item) => {
-        navigationList.forEach((i) => {
-          if (item.event === i.event) {
-            i.type = 'systemApp'
-            i.icon = item.icon
-            i.name = item.name
-            i.value = item.event
-            i.mode = 'app'
-          }
-        })
-      });
-      return this.replaceType(navigationList)
+    replaceIcon(navigationList, init) {
+      if (!init) {
+        navigationData.systemAppList.forEach((item) => {
+          navigationList.forEach((i) => {
+            if (item.event === i.event) {
+              i.type = 'systemApp'
+              i.icon = item.icon
+              i.name = item.name
+              i.value = item.event
+              i.mode = 'app'
+            }
+          })
+        });
+      }
+
+
+      // return this.replaceType(navigationList)
+      return navigationList.map((item) => this.mergeData(item))
     },
+    mergeData,
     setTransparent() {
       console.log(
         "this.appSettings.transparent :>> ",
@@ -1004,7 +986,7 @@ export default {
       this.showGuide = true
     },
     // 关闭引导弹窗
-    closeShowGuide(){
+    closeShowGuide() {
       this.showGuide = false
     },
 

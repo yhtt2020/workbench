@@ -1,7 +1,7 @@
 <template>
   <xt-modal :footer="0" v-model="rewardVisible">
     <div
-      class="mb-4 flex justify-center items-center flex-col"
+      class=" flex justify-center items-center flex-col"
       style="width: 500px"
     >
       <audio controls class="hidden" style="" autoplay>
@@ -35,12 +35,11 @@
           w="80"
           h="40"
           class="mr-3"
-          type="theme"
           @click="rewardVisible = false"
           radius="8"
           >{{ types[props.type]?.button }}</xt-button
         >
-        <xt-button w="80" h="40" type="theme" @click="goTask">下一个</xt-button>
+        <xt-button w="80" h="40" type="theme" @click="goTask"        radius="8">下一个</xt-button>
       </div>
     </div>
   </xt-modal>
@@ -56,13 +55,8 @@ import { getReward } from "../task";
 
 const store = taskStore();
 const visible = ref(false);
-const {
-  taskID,
-  currentTaskList,
-  rewardVisible,
-  currentId,
-  isTaskDrawer,
-} = storeToRefs(store);
+const { taskID, currentTaskList, rewardVisible, currentId, isTaskDrawer } =
+  storeToRefs(store);
 const props = defineProps({
   type: {
     type: String,
@@ -74,7 +68,7 @@ onMounted(async () => {
   setTimeout(() => {
     visible.value = true;
   }, 10);
-  let { code, data } = await getReward(currentId.value);
+  getReward(currentId.value);
 });
 const currentTask = computed(() => {
   return store.getTask(store.currentId);

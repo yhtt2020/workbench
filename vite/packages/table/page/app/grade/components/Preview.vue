@@ -1,0 +1,388 @@
+<template>
+  <!-- 预览 -->1
+  <div class="prompt-modal xt-mask" v-if="showModal">
+    <div class="head-icon">
+      <div class="icon" @click="close">
+        <xt-new-icon size="20" icon="fluent:chevron-left-16-regular"></xt-new-icon>
+        <!-- <Icon icon="guanbi" style="width: 24px;height: 24px;"></Icon> -->
+      </div>
+      <div class="flex">
+        <div class="icon" @click="openDrawer = true">
+          <xt-new-icon size="20" icon="fluent:info-16-regular"></xt-new-icon>
+          <!-- <Icon icon="tishi-xianxing" style="width: 24px;height: 24px;"></Icon> -->
+        </div>
+      </div>
+
+    </div>
+    <!-- 预览 -->
+    <!-- <div class="flex justify-center items-center preview" :style="{'--previewH': previewH}" id="cards" readonly> -->
+    <div class="flex justify-center items-center preview" id="previewContent">
+      <!-- 市场分享 桌面布局定位 -->
+      <!-- noFullScreen 去掉右上角的退出全屏按钮 -->
+      <Desk :noFullScreen="false"  :freeLayout="true" :currentDesk="displayScheme" :settings="displayScheme.settings" :notTrigger="true" :editing="false"></Desk>
+    </div>
+    <div class="foot flex ">
+      <div class="flex" style="padding: 0">
+        <xt-button :w="113" :h="40" @click="addHeaderCard" class="xt-active-bg ml-3 no-drag" style="z-index:500" key="console" type="primary" >
+          <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:add-16-regular"></xt-new-icon>立即添加</div>
+        </xt-button>
+      </div>
+    </div>
+  </div>
+  <!-- 预览添加抽屉 -->
+  <a-drawer v-model:visible="openDrawer" style="z-index:9999999999;" width="320" placement="right">
+    <template #closeIcon>
+      <div class="flex justify-center items-center">
+        <xt-new-icon size="20" icon="fluent:dismiss-16-regular"></xt-new-icon>
+      </div>
+    </template>
+    <div class="drawer-center no-drag">
+      <span class="drawer-title">包含以下小组件（{{ template.cards.length }}）</span>
+      <div v-for="item in template.cards" :key="item" class="drawer-item">
+        <Icon :icon="item.icon" class="mr-2"></Icon>
+        <span>{{ item.name }}</span>
+      </div>
+    </div>
+  </a-drawer>
+</template>
+
+<script>
+import { message } from 'ant-design-vue'
+import { mapActions, mapWritableState } from 'pinia'
+import { appStore } from '../../../../store'
+import Desk from '../../../../components/desk/Desk.vue'
+import { cardStore } from '../../../../store/card'
+import {nanoid} from 'nanoid'
+import { Icon  } from '@iconify/vue';
+import { marketStore } from '../../../../store/market'
+import { useCustomLayout } from "../../../../components/desk/freeLayout/useCustomLayout";
+import { FreeLayoutStore } from "./FreeLayout";
+import {useFreeLayoutStore} from '../../../../components/desk/freeLayout/store'
+import { useWidgetStore } from "../../../../components/card/store";
+export default {
+  name: 'Preview',
+  components: {
+    Desk,
+    Icon,
+  },
+  data () {
+    return {
+      // 添加
+      openDrawer: false,
+      previewH: '100%',
+      displayScheme: {
+        title: '',
+        nanoid: '',
+        cards: [],
+        settings: {}
+      },
+      deskWidth: 0,
+      deskHeight: 0,
+      cardHeight: 0,
+      zoom: 0,
+      cardZoom: 0,
+      windowWidth: document.body.clientWidth,
+      windowHeight: document.body.clientHeight,
+      previewWidth: 0,
+      previewHeight: 0,
+    }
+  },
+  props: {
+    // 方案
+    scheme: {
+      type: Object,
+      default: {},
+    },
+    //显示与隐藏
+    showModal: {
+      type: Boolean,
+      default: () => false
+    },
+    deskList: {
+      type: Array
+    }
+  },
+  computed: {
+    ...mapWritableState(appStore, ['fullScreen','userInfo']),
+    ...mapWritableState(FreeLayoutStore, ["assistDesk", "gameDesk"]),
+    ...mapWritableState(useWidgetStore, ["edit"]),
+    tagList () {
+      if (this.scheme.tags) {
+        return this.scheme.tags.split(',')
+      } else {
+        return []
+      }
+    },
+    layoutSize () {
+      return JSON.parse(this.scheme.layoutSize)
+    },
+    template () {
+      // console.log('this',this)
+      console.log('this.scheme',this.scheme)
+      // console.log('this.scheme.template',this.scheme.template)
+      // console.log('JSON.parse(this.scheme.template',JSON.parse(this.scheme.template))
+      return JSON.parse(this.scheme.template)
+    }
+  },
+  watch: {
+    showModal (newVal) {
+      if (newVal) this.fullScreen = true
+      if (this.fullScreen) {
+        this.cardZoom = this.template.settings.cardZoom
+        this.cardMargin=this.template.settings.cardMargin
+        this.zoom = this.cardZoom / 100
+        this.getPreviewHeight()
+        this.displayScheme = {
+          ...this.scheme,
+          settings: {
+            ...this.template.settings
+          },
+          cards:[
+            ... this.template.cards
+          ],
+        }
+        this.deskWidth = this.layoutSize.width
+        this.deskHeight = this.layoutSize.height
+        this.cardHeight = this.layoutSize.height
+        var that = this
+        window.addEventListener('resize', () => {
+          that.getPreviewHeight()
+        })
+      }
+    },
+  },
+  methods: {
+    ...mapActions(cardStore, ['addShareDesk', 'setDeskSize']),
+    ...mapActions(marketStore,['incSupport']),
+    ...mapActions(useFreeLayoutStore,['initFreeLayoutEnv']),
+    
+    async doIncSupport(){
+      const rs=await this.incSupport(this.displayScheme.dataNanoid)
+      if(rs && rs.msg.includes('取消')){
+        this.displayScheme.support=rs.supportCount
+        message.success('已取消点赞')
+      }else{
+        console.log(rs)
+        this.displayScheme.support=rs.supportCount
+        message.success('感谢您的支持，您的支持是对作者最大的鼓励。')
+      }
+    },
+
+    // 添加头部卡片
+    addHeaderCard(){
+      // console.log(1111111111111)
+      // 将数据添加到桌面
+      // 将处理好的数据推进  定制头部方法里面 
+      // console.log('this.assistDesk.desk.cards',this.assistDesk.desk[0]?.cards)
+      // setTimeout(() => {
+        this.initFreeLayoutEnv() 
+        this.initFreeLayoutEnv() 
+        this.initFreeLayoutEnv() 
+        useCustomLayout({
+          headerList: this.assistDesk.desk[0]?.cards.slice(0,6),
+          folderList: this.assistDesk.desk[0]?.cards.slice(6, 10),
+          // mainList: mainData,
+          cb: () => {
+            this.$bus.emit("adsorbGrid");
+          },
+        });
+      // }, 2000);
+
+      // 定位到桌面正中央
+      this.close()
+
+    },
+
+    addPlan () {
+      this.close()
+      this.addShareDesk({
+        ...this.displayScheme,
+        title:this.displayScheme.alias,
+        cards:this.template.cards,
+        settings:this.template.settings
+      },this.layoutSize, this.deskList)
+      message.success('添加成功')
+      //
+      this.$emit('afterAdded')
+      this.openDrawer = false
+    },
+    close () {
+      this.$emit('closePreview', false)
+      this.fullScreen = false
+      this.edit = false
+    },
+    getPreviewHeight () {
+      this.$nextTick(() => {
+        if (this.fullScreen) {
+          //计算得出修正后的缩放率
+          this.previewHeight = document.getElementById('previewContent')?.offsetHeight
+          let cardZoom = (this.cardZoom * this.previewHeight / this.cardHeight).toFixed()
+          let cardMargin=(this.cardMargin * this.previewHeight / this.cardHeight).toFixed()
+          this.displayScheme.settings.cardZoom = cardZoom
+          this.displayScheme.settings.cardMargin=cardMargin
+          this.displayScheme.settings.enableZoom=true
+        }
+      })
+    }
+
+  },
+  mounted () {
+  },
+}
+</script>
+
+<style lang="scss" scoped>
+
+.prompt-modal {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  // justify-content: space-between;
+  padding: 12px;
+  z-index: 9999999999;
+
+  .head-icon {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    height: 10%;
+
+    .icon {
+      background: var(--secondary-bg);
+      color: var(--primary-text);
+      border-radius: 12px;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+  }
+
+  .foot {
+    display: flex;
+    justify-items: center;
+    align-items: end;
+    height: 10%;
+    // position: absolute;
+    // bottom: 15px;
+    > div {
+      // background: var(--mask-bg);
+      border-radius: 12px;
+      height: 48px;
+      line-height: 48px;
+      padding: 0 16px;
+      font-size: 16px;
+      color: var(--secondary-text);
+    }
+  }
+}
+
+.add-scheme {
+  background: var(--active-bg);
+  font-size: 16px;
+  color: var(--primary-text);
+  border-radius: 12px;
+  width: 128px;
+  height: 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.drawer-center {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .drawer-title {
+    font-size: 16px;
+    color: var(--primary-text);
+    font-weight: 600;
+  }
+
+  .label {
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 4px;
+    font-size: 14px;
+    padding: 0 8px;
+    color: var(--secondary-text);
+    margin-right: 12px;
+  }
+
+  .drawer-text {
+    font-size: 14px;
+    color: var(--secondary-text);
+    font-weight: 400;
+    margin: 8px 0 16px;
+  }
+
+  .drawer-item {
+    height: 48px;
+    background: var(--secondary-bg);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    margin: 16px 0 0;
+    padding: 0 14px;
+    font-size: 16px;
+    color: var(--primary-text);
+    font-weight: 400;
+  }
+}
+
+.test-style {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.desk-style {
+  position: relative;
+}
+
+.desk-style::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 9;
+}
+
+.preview {
+  width: 95%;
+  height: 75%;
+  // height:var(--previewH);
+}
+.market-button {
+  border-radius: 8px;
+  width: 100px;
+  height: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ color:var(--primary-text);
+  padding: 10px;
+  cursor: pointer;
+  &.active,&:hover{
+    background: var(--active-bg);
+    color: var(--active-text);
+  }
+  &:hover{
+    opacity: 0.9;
+  }
+}
+//  .preview2{
+//   width:95%;
+//   height: 90%;
+//  }
+</style>

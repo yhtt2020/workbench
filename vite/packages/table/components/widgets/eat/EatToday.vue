@@ -1,6 +1,7 @@
 <template>
   <Widget
   :options="options"
+  :customIndex="customIndex"
   :customData="customData"
   :desk="desk"
   ref="eatSlot"

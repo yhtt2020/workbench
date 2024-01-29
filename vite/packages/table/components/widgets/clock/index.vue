@@ -7,71 +7,82 @@
     :menuList="menuList"
     ref="homelSlotRef"
     :desk="desk"
+    :showRightIcon="customData.backgroundFrame"
   >
-  <template #left-title-icon>
-        <div
-          class="icon"
+    <template #left-title-icon>
+        <div class="icon"
           style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; ">
-          <!-- <RobotOutlined style="font-size: 20px" /> -->
+            left: 2px; " v-if="customData.backgroundFrame">
           <clockIcon icon="fluent:clock-12-regular" style="font-size: 20px;" />
         </div>
-      </template>
+    </template>
+
     <cardDrag ref="drag" @reSizeInit="reSizeInit" class="drag">
       <template #="{ row }">
         <div class="box no-drag" @click="fullScreen()">
           <component
             :is="customData.clockId"
-            :isSnow="isSnow"
+            :isSnow="customData.enableSecond"
             :class="{
               isClock5: isClock5 == true,
               isClock5w420: isClock5w420 == true,
             }"
             :style="{ zoom: zoom }"
+            :clockFont="customData.font"
+            :showBackground="true"
+            :noBg="true"
+            :hideDate="false"
           />
         </div>
       </template>
     </cardDrag>
+
+    
   </Widget>
-  <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
+
+  <ClockSettingModal ref="clockSettingRef" :customIndex="customIndex" :customData="customData" :desk="desk" @updateClockStyle="updateClockStyle" />
+  <!-- <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
     <template #title>
       <div class="text-center">设置</div>
     </template>
-    <!--  -->
     <XtRadio @onChange="__updateSize" :data="customData.dragCardSize"></XtRadio>
     <ClockStyle @updateClockStyle="updateClockStyle"></ClockStyle>
-  </a-drawer>
+  </a-drawer> -->
 
   <ClockFullScreen
     @updateBlur="updateBlur"
     @updateBgZoom="updateBgZoom"
     v-if="isClockFullScreen"
-    :imgUrl="customData.imgUrl"
+    :imgUrl="backgroundImage.path !== '' ? backgroundImage.path : customData.imgUrl"
     :clock="customData.clockId"
     @exit="isClockFullScreen = false"
     @updateClockStyle="updateClockStyle"
     @updateImgUrl="updateImgUrl"
     :blur="customData.blurs"
     :bgZoom="bgZoom"
+    :customData="customData"
   >
   </ClockFullScreen>
 </template>
 
 <script>
-import Widget from "../../card/Widget.vue";
-import ClockStyle from "./clockState/ClockStyle.vue";
-import ClockFullScreen from "./clockState/ClockFullScreen.vue";
-
 import mixin from "./hooks/clockMixin.js";
-import { cardStore } from "../../../store/card.ts";
-import { mapActions } from "pinia";
-
-import cardDrag from "../../card/hooks/cardDrag.vue";
+import { mapActions, mapWritableState } from "pinia";
 import cardDragHook from "../../card/hooks/cardDragHook";
-
 import cardSizeHook from "../../card/hooks/cardSizeHook";
-import {Icon as clockIcon } from '@iconify/vue'
+import {Icon as clockIcon } from '@iconify/vue';
+import { cardStore } from "../../../store/card.ts";
+// import { clockStore } from "./hooks/clockStore";
+import { appStore } from '../../../store';
+
+import Widget from "../../card/Widget.vue";
+// import ClockStyle from "./clockState/ClockStyle.vue";
+import ClockFullScreen from "./clockState/ClockFullScreen.vue";
+import ClockSettingModal from "./components/ClockSettingModal.vue";
+import cardDrag from "../../card/hooks/cardDrag.vue";
+
 export default {
+  mixins:[mixin,cardDragHook,],
   mixins: [mixin, cardDragHook, cardSizeHook],
   props: {
     customIndex: {
@@ -85,6 +96,14 @@ export default {
     desk: {
       type: Object,
     },
+  },
+  components: {
+    Widget,
+    // ClockStyle,
+    ClockFullScreen,
+    cardDrag,
+    clockIcon,
+    ClockSettingModal
   },
   data() {
     return {
@@ -100,57 +119,52 @@ export default {
           icon: "shezhi1",
           title: "设置",
           fn: () => {
-            this.$refs.homelSlotRef.visible = false;
-            this.settingVisible = true;
+            this.$refs.clockSettingRef.openClockModal();
+            // this.$refs.homelSlotRef.visible = false;
+            // this.settingVisible = true;
           },
         },
       ],
       week: ["周末", "周一", "周二", "周三", "周四", "周五", "周六"],
       isClockFullScreen: false,
       settingVisible: false,
-      isSnow: true,
+      // isSnow: true,
       isClock5: false,
       isClock5w420: false,
       zoom: "100%",
       zooms: {
         // 无限拉伸是0, 1*1是1 2*2是2
-        clock1: [55, 35, 35],
-        clock2: [60, 66, 50],
+        clock1: [155, 35, 35],
+        clock2: [160, 66, 50],
         clock3: [150, 0, 80],
-        clock4: [40, 0, 30],
-        clock5: [50, 0, 25],
-        clock6: [80, 0, 80],
+        clock4: [140, 0, 30],
+        clock5: [150, 0, 25],
+        clock6: [180, 0, 80],
       },
       bgZoom: 0,
       widthHeightObj: {},
     };
   },
-  components: {
-    Widget,
-    ClockStyle,
-    ClockFullScreen,
-    cardDrag,
-    clockIcon
+  
+  computed:{
+    ...mapWritableState(appStore,["backgroundImage"]),
   },
-  created() {},
+
   mounted() {
     let setData = {};
-    if (!this.customData.clockId) {
-      setData.clockId = "clock4";
-    }
+    if (!this.customData.clockId) { setData.clockId = "clock4";}
     if (!this.customData.imgUrl) {
-      setData.imgUrl =
-        "https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg";
+      setData.imgUrl ="https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg";
     }
-    if (this.customData.blurs === undefined) {
-      setData.blurs = 3;
+    if (this.customData.blurs === undefined) { setData.blurs = 3;}
+    if (!this.customData.bgZoom) { setData.bgZoom = 0;}
+    if(!this.customData.backgroundFrame){ setData.backgroundFrame = false; }
+    if(!this.customData.font){ 
+      setData.font =  { name:'优设标题黑', value:"font-family: '优设标题黑' !important;" };
     }
-    if (!this.customData.bgZoom) {
-      setData.bgZoom = 0;
-    }
-    if (Object.keys(setData).length) {
-      this.updateCustomData(this.customIndex, setData, this.desk);
-    }
+    if(!this.customData.enableSecond){ setData.enableSecond = false }
+    if(!this.customData.currentStatus) { setData.currentStatus = 'font' }
+    if (Object.keys(setData).length) { this.updateCustomData(this.customIndex, setData, this.desk); }
     this.bgZoom = this.customData.bgZoom;
     this.updateTime();
   },
@@ -293,6 +307,26 @@ export default {
       this.options.title = month + "月" + day + "日 " + dayOfWeek;
     },
   },
+
+  watch:{
+    // 时钟背景开关是否开启
+    "customData.backgroundFrame":{
+      handler(newVal){
+        if(newVal){
+          const showOption = { ...this.options,background:"var(--primary-bg)",noTitle:false, };
+          this.options = showOption;
+          this.customData.hideFrame = false;
+        }
+        else {
+          const hideOption = { ...this.options,background:"transparent",noTitle:true, };
+          this.options = hideOption;
+          this.customData.hideFrame = true;
+        }
+      },
+      immediate:true,
+      deep:true,
+    }
+  }
 };
 </script>
 
@@ -310,11 +344,35 @@ export default {
   }
 
   :deep(.clock2) {
-    transform: scale(1.2);
+    // transform: scale(0.2);
+    transform: scale(0.85);
   }
 
+  :deep(.clock4) {
+    transform: scale(0.65);
+    & .ant-row{
+      flex-flow: nowrap !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+    }
+    & .gutter-box{
+      padding: 0 !important;
+    }
+    /**
+     :deep(.ant-row){
+      margin: 0 !important;
+      flex-flow: nowrap !important;
+    }
+    **/
+  }
+
+  :deep(.clock1) {
+    transform: scale(0.65);
+ }
+
   :deep(.clock5) {
-    transform: scale(0.85);
+    transform: scale(0.5);
+    // transform: scale(0.85);
   }
 
   .isClock5w420 {
@@ -366,4 +424,5 @@ export default {
     }
   }
 }
+
 </style>

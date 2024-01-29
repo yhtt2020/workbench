@@ -124,7 +124,7 @@
                 </div>
               </a-col>
               <a-col v-if="simple && !this.isOffline"  :span="6">
-                <MyAvatar :size="37"></MyAvatar>
+                <MyAvatar :size="37"  :limit="true"></MyAvatar>
               </a-col>
             </a-row>
             <div></div>
@@ -172,7 +172,7 @@
 
               <a-col :span="6">
 
-                  <div @click="styleVisible = true" class="btn">
+                  <div @click="settingTheme" class="btn">
                     <!-- <Icon icon="yifu" style="font-size: 2em"></Icon> -->
                     <Iconify icon="fluent:color-24-regular" style="font-size: 2em" />
                     <div>主题颜色</div>
@@ -215,11 +215,13 @@
   <div  style="z-index: 90" v-if="editNavigationVisible">
     <navigationSetting @setQuick="editNavigationVisible = false,this.editToggle=false"></navigationSetting>
   </div>
-  <a-drawer :width="500" v-if="styleVisible" v-model:visible="styleVisible" placement="right" style="z-index: 102">
+  <!-- <a-drawer :width="500" v-if="styleVisible" v-model:visible="styleVisible" placement="right" style="z-index: 102">
     <XtColor v-model:color="bgColor" title="主题" btnText="恢复默认主题颜色" @onBtnClick="clearBgColor"></XtColor>
     <XtColor v-model:color="textColor" title="文本" btnText="恢复默认文本颜色" @onBtnClick="clearTextColor"></XtColor>
     <XtColor v-model:color="wallpaperColor" title="背景" @onBtnClick="clearWallpaperColor" btnText="恢复默认壁纸颜色"></XtColor>
-  </a-drawer>
+  </a-drawer> -->
+
+  <ThemeSettingModal ref="themeRef"/>
 
   <a-modal v-model:visible="visibleChooseScreen" :title="null" width="100%" :footer="null" wrap-class-name="full-modal"
     @ok="() => {
@@ -267,13 +269,18 @@ import MyAvatar from "../components/small/MyAvatar.vue";
 // import EditNavigation from '../components/bottomPanel/EditNavigation.vue'
 import EditNewNavigation from "../components/desk/navigationBar/EditNewNavigation.vue";
 import navigationSetting from "../components/desk/navigationBar/navigationSetting.vue";
+import ThemeSettingModal from "../components/setting/ThemeSettingModal.vue";
+
 import { taskStore } from "../apps/task/store";
 import { offlineStore } from "../js/common/offline";
 import { visitorStore } from "../js/common/visitor";
 import {Icon as Iconify} from '@iconify/vue'
 export default {
   name: "Setting",
-  components: { EditNewNavigation, MyAvatar, SecondPanel, ChooseScreen, GradeSmallTip,Iconify,navigationSetting },
+  components: {
+    EditNewNavigation, MyAvatar, SecondPanel, ChooseScreen, GradeSmallTip,Iconify,navigationSetting,
+    ThemeSettingModal
+  },
   data() {
     return {
       bgColor: "",
@@ -347,7 +354,8 @@ export default {
     this.wallpaperColor = getWallpaperColor();
     window.removeEventListener('keydown',this.listenEnter)
     this.$bus.on("M0202", () => {
-      this.styleVisible = true
+      // this.styleVisible = true
+      this.settingTheme();
     });
   },
   computed: {
@@ -542,6 +550,12 @@ export default {
         window.$manager.hidden();
       }
     },
+
+    // 开启主题色设置弹窗
+    settingTheme(){
+      this.$refs.themeRef.openThemeSetting();
+      // this.styleVisible = true;
+    }
   },
 };
 </script>

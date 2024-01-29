@@ -255,7 +255,7 @@ export const navStore = defineStore("nav", {
         type: 'systemApp',
         icon: '/logo/home.svg',
         name: '桌面主页',
-        event: 'home',
+        value: 'home',
         tab:'home'
       },
       // {
@@ -303,7 +303,11 @@ export const navStore = defineStore("nav", {
     loaded:false,
     init:false,//是否初始化过了
     // 底部导航栏最多图标数
-    maxItemNum:null
+    maxItemNum:null,
+    // 导航栏初始化
+    leftNavInit:false,
+    rightNavInit:false,
+    footNavInit:false,
   }),
   actions: {
     fixData(nav){
@@ -348,10 +352,18 @@ export const navStore = defineStore("nav", {
           this.copyFootNav=fixedRs.fixedArray
         }
         //this.copyFootNav = []//JSON.parse(JSON.stringify(this.footNavigationList))
-        this.copySideNav = JSON.parse(JSON.stringify(this.sideNavigationList))
-        this.copyRightNav = JSON.parse(JSON.stringify(this.rightNavigationList))
+        // this.copySideNav = JSON.parse(JSON.stringify(this.sideNavigationList))
+        // this.copyRightNav = JSON.parse(JSON.stringify(this.rightNavigationList))
+        this.updateType(this.sideNavigationList)
+        this.updateType(this.rightNavigationList)
         this.loaded = true
       }
+    },
+    updateType(list){
+      list.forEach(element => {
+        element.id = element.id || nanoid(6)
+      });
+      console.log(list,'list')
     },
     removeFootNavigationList(index) {
         this.copyFootNav.splice(index, 1)
@@ -377,6 +389,7 @@ export const navStore = defineStore("nav", {
         this.sideNavigationList.splice(evt.newIndex, 0, temp)
     },
     setSideNavigationList(item) {
+      if(!item.id) { item.id=nanoid(6)}
       let itemNav = {...item}
       // if(itemNav.name === '主页'){
       //   itemNav.icon = 'shouye1'
@@ -394,6 +407,7 @@ export const navStore = defineStore("nav", {
         this.rightNavigationList.splice(evt.newIndex, 0, temp)
     },
     setRightNavigationList(item) {
+      if(!item.id) { item.id=nanoid(6)}
       let itemNav = {...item}
       // if(itemNav.name === '主页'){
       //   itemNav.icon = 'shouye'
@@ -436,7 +450,7 @@ export const navStore = defineStore("nav", {
       {
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths: ['sideNavigationList','footNavigationList','rightNavigationList','navigationToggle','copyFootNav','copySideNav','copyRightNav','copyFlag','init'],
+      paths: ['sideNavigationList','footNavigationList','rightNavigationList','navigationToggle','copyFootNav','copySideNav','copyRightNav','copyFlag','init','leftNavInit','rightNavInit','footNavInit'],
         storage: dbStorage,
         // state 中的字段名，按组打包储存
       },

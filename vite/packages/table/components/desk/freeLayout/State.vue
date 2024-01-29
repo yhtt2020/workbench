@@ -244,7 +244,6 @@ const alignList = ref([
   },
   {
     name: "桌面顶端",
-    // 默认为顶部水平对齐
     value: "top",
   },
   {
@@ -283,12 +282,7 @@ const updateAlign = (newV) => {
 
 // 重置中心点
 const updateCentre = () => {
-  getFreeLayoutState.value.line.centerLine = {
-    y: freeLayoutEnv.value.scrollTop,
-    x:
-      freeLayoutEnv.value.scrollLeft + freeLayoutEnv.value.scrollData.width / 2,
-  };
-
+  freeLayoutStore.updateLocation();
   message.success("修改中心点成功");
 };
 </script>

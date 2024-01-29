@@ -7,8 +7,8 @@
         <div class="font-16 xt-text ml-4">定制你的专属桌面</div>
       </div>
       <div style="margin-left: 60px;" class="pr-6 font-16 xt-text-2">简单几步，轻松整理你的桌面，为你添加合适的组件和图标。</div>
-      <div class="text-center font-16 xt-text-2 mt-3">完成奖励</div>
-      <div class="flex justify-center mt-3">
+      <div class="text-center font-16 xt-text-2 mt-3 mb-2">可获得丰厚奖励</div>
+      <!-- <div class="flex justify-center mt-3">
         <div class="w-16 h-16 xt-bg-2 rounded-lg flex items-center justify-center relative overflow-hidden" style="border: 1px solid rgba(255,255,255,0.1);">
           <div class="icon-show">积分</div>
           <Icon icon="fluent-emoji:gem-stone" width="48" height="48" />
@@ -18,8 +18,9 @@
           <div class="icon-show">勋章</div>
           <Icon icon="fluent-emoji:sports-medal" width="48" height="48" />
         </div>
-      </div>
-      <div class="flex justify-end mt-5">
+      </div> -->
+      <ShowReward id="Z0201" />
+      <div class="flex justify-end mt-3">
         <xt-button   class="button-bottom mr-3" @click="close"   size="large" >稍后再说</xt-button>
         <xt-button   class="button-bottom mr-4" @click="startGuide"   size="large" type="theme">开始定制</xt-button>
       </div>
@@ -30,26 +31,26 @@
 
 </template>
 
-<script> 
+<script>
 import { Icon } from '@iconify/vue';
 import { mapWritableState } from 'pinia'
 import {cardStore} from "../store/card";
 import {nanoid} from "nanoid";
 import { homeStore } from "../store/home";
-
+import ShowReward from '../apps/task/components/ShowReward.vue'
 export default {
   name: 'GuidePanel',
   data() {
     return {
       currentWidth: '-',
       currentHeight: '-',
-      
+
     }
   },
   async mounted(){
   },
-  components: { 
-    Icon,
+  components: {
+    Icon,ShowReward
   },
 
   computed:{
@@ -72,12 +73,12 @@ export default {
 
     },
 
-    
+
     close(){
       this.$emit('closeGuide')
     },
 
-    
+
     changeDesk(p) {
       this.currentDeskId = p.id;
       let found = this.desks.find((desk) => {
@@ -90,7 +91,7 @@ export default {
         };
       }
     },
-    
+
   }
 }
 </script>
