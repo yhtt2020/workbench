@@ -24,8 +24,11 @@ export default {
   },
   async mounted() {
     this.isAutoRun = await tsbApi.settings.get('autoRun')
-    this.isAutoRun=true
-    this.setAutoRun()
+    if(this.isGuide){
+      //向导页面直接设置为自启动
+      this.isAutoRun=true
+      this.setAutoRun()
+    }
   },
   methods: {
     async setAutoRun() {
