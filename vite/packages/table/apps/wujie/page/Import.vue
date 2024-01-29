@@ -51,11 +51,23 @@ const a = async () => {
 
   // 判断包含文件
 
-  // 读取核心文件
+  // 读取相关文件 在步骤后期需要滞后
   let res = require("fs").readFileSync(filePath, "utf-8");
   res = JSON.parse(res);
+
   if (typeof res !== "object") return message.error("上传的文件数据错误");
-  if (!res.page) return message.error("上传的文件数据错误");
+  let manifestCheck = ["page", "key", "value"];
+  let manifestCheckRes = true;
+  manifestCheck.forEach((key) => {
+    if (res[key] == undefined) {
+      message.error("上传的文件 " + key + "数据错误");
+      manifestCheckRes = false;
+    }
+    //     return;缺少结束操作
+  });
+
+  // manifest.json 检查结果处理
+  if (!manifestCheckRes) return;
 
   // 是否创建文件夹路径
   let temporaryFolderName = "ttapp_test";

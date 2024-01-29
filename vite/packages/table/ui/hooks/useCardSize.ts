@@ -1,5 +1,6 @@
 export const useElementSize = (size) => {
-  let str = size.split("x");
+
+  let str = size.split(/x|\*/);
 
   const w = str[0];
   const h = str[1];

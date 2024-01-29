@@ -14,6 +14,9 @@
 <script setup>
 const header = {
   ifyIcon: "fluent:add-16-filled",
+  leftHover: true,
+  leftHoverName: '222',
+  title: "123",
 };
 const props = defineProps({
   customIndex: {},
