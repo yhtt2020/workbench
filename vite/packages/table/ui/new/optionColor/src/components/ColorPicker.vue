@@ -65,7 +65,6 @@ export interface colorPicker {
     },
     isLinear?: boolean,
     colorNum?: number,
-    linearNum?: number
 }
 const props = withDefaults(defineProps<colorPicker>(), {
     defaultList: {
@@ -94,7 +93,6 @@ const props = withDefaults(defineProps<colorPicker>(), {
     },
     isLinear: true,
     colorNum: 9,
-    linearNum: 10
 
 })
 // Object.keys(linearList).length
