@@ -59,8 +59,14 @@
             </xt-button>
         </Widget>
         <teleport to="body" :disabled="false">
-            <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"
-                @refreshDefaultForum="refreshPost"></YuanPublishModal>
+            <PublishModal 
+                v-if="showPublishModal" 
+                :visible="showPublishModal" 
+                @close="showPublishModal = false"
+                @refreshDefaultForum="refresh"
+                :section="forumList"
+                :defaultSection="defaultForum">
+            </PublishModal>
             <div v-if="showDetailModal">
                 <detailModal v-if="toggleDetail" :cardData="cardData" :showDetailModal="showDetailModal"
                     @closeDetail="closeDetail" />
@@ -93,6 +99,7 @@ import YuanPublishModal from './YuanPublishModal.vue';
 import detailModal from './DetailModal.vue'
 import MinDetailModal from './MinDetailModal.vue';
 import CommunitySetting from './CommunitySetting.vue';
+import PublishModal from './Detail/PublishModal.vue';
 export default {
     name: '元社区',
     components: {
@@ -105,7 +112,8 @@ export default {
         detailModal,
         MinDetailModal,
         Unusual,
-        CommunitySetting
+        CommunitySetting,
+        PublishModal
     },
     props: {
         customIndex: {
@@ -196,6 +204,14 @@ export default {
             this.showForumPost = this.communityPost
             this.isLoading = false
             this.isClick = false
+        },
+        // 发文后刷新页面
+        async refresh(value) {
+            this.isLoading = true
+            this.defaultForum = value
+            await this.getCommunityPost(value)
+            this.showForumPost = this.communityPost
+            this.isLoading = false
         },
         // 查看内容详情
         showDetail(item) {
