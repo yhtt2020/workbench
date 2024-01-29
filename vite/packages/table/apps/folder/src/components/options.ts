@@ -1,3 +1,5 @@
+import { dateTimeStamp } from '../../../../components/widgets/clock/hooks/clockList';
+
 // 单个文件数据
 export const defaultData = {
   useCount: 0, // 使用次数
@@ -32,3 +34,20 @@ export const defaultFolderData = {
   // 分类规则
   rules: [],
 };
+
+// 时钟组件默认customData数据
+export const defaultClockData = {
+  backgroundFrame:true,
+  clockId:"clock4",
+  imgUrl:"https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg",
+  blurs:3,
+  bgZoom:0,
+  zoom:1.5,
+  customSize:"2x2",
+  font:"font-family: '优设标题黑' !important;",
+  fontColor:"#508BFE",
+  enableSecond:false,
+  currentStatus:"font",
+  currentZoom:100,
+  name: dateTimeStamp(Date.now()),
+}

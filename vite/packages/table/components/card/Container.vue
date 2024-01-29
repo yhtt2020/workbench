@@ -1,42 +1,93 @@
 <template>
-  <RightMenu :menus="menus" :customIndex="customIndex" v-model:size="currentSize" :sizeList="sizeList"
-    :disableHierarchy="options.hierarchy">
-    <div v-if="!options?.custom" class="flex flex-col xt-shadow widget rounded-xl" :class="[edit ? 'editing' : '']"
-      style="backdrop-filter: blur(50px); -webkit-backdrop-filter: blur(50px)" :style="[
+  <RightMenu
+    :menus="menus"
+    :customIndex="customIndex"
+    v-model:size="currentSize"
+    :sizeList="sizeList"
+    :disableHierarchy="options.hierarchy"
+  >
+    <div
+      v-if="!options?.custom"
+      class="flex flex-col widget rounded-xl"
+      :class="[
+        edit ? 'editing' : '',
+        options.shadow ? '' : 'shadow  xt-shadow',
+      ]"
+      style=""
+      :style="[
         getSize,
         {
           background: options.bg || 'var( --primary-bg)',
           color: options.color || 'var(--primary-text)',
         },
-      ]">
+      ]"
+    >
       <!-- 头部区域 -->
-      <div v-if="!header.disabled" @dragstart.stop="titleDragStart" draggable="true"
-        class="flex items-center justify-between w-full" style="height: 46px; border-radius: 12px 12px 0 0; cursor: grab"
+      <div
+        v-if="!header.disabled"
+        @dragstart.stop="titleDragStart"
+        draggable="true"
+        class="flex items-center justify-between w-full"
+        style="
+          height: 46px;
+          min-height: 46px;
+          border-radius: 12px 12px 0 0;
+          cursor: grab;
+        "
         :style="{
           background: header.bg || '',
           color: header.color || '',
-        }">
+        }"
+      >
         <!-- 头部左侧 -->
         <div class="flex items-center flex-1" style="height: 28px">
-          <div @click="leftClick" class="flex items-center h-full" @mouseenter="leftMouseEnter"
-            @mouseleave="leftMouseLeave" style="" :class="[
+          <div
+            @click="leftClick"
+            class="flex items-center h-full"
+            @mouseenter="leftMouseEnter"
+            @mouseleave="leftMouseLeave"
+            style=""
+            :class="[
               leftHover ? 'header-open cursor-pointer' : 'header-default',
-            ]">
+            ]"
+          >
             <!-- 图标区域 -->
-            <div class="flex items-center h-full" @mouseenter="iconMouseEnter" @mouseleave="iconMouseLeave">
+            <div
+              class="flex items-center h-full"
+              @mouseenter="iconMouseEnter"
+              @mouseleave="iconMouseLeave"
+            >
               <xt-ify-icon v-if="leftHover" :icon="header.leftHoverIcon" />
               <template v-else>
-                <xt-icon v-if="header.icon" :icon="header.icon" type="" size="19" w="20" />
-                <xt-ify-icon v-else-if="header.ifyIcon" :icon="header.ifyIcon" />
-                <xt-icon-show boxW="20" boxH="20" w="18" h="18" :modelValue="header.showIcon" />
+                <xt-icon
+                  v-if="header.icon"
+                  :icon="header.icon"
+                  type=""
+                  size="19"
+                  w="20"
+                />
+                <xt-ify-icon
+                  v-else-if="header.ifyIcon"
+                  :icon="header.ifyIcon"
+                />
+                <xt-icon-show
+                  v-else-if="header.showIcon"
+                  boxW="20"
+                  boxH="20"
+                  w="18"
+                  h="18"
+                  :modelValue="header.showIcon"
+                />
               </template>
             </div>
             <!-- 标题区域 -->
-            <div class="flex items-center h-full px-2 ml-1" @mouseenter="titleMouseEnter" @mouseleave="titleMouseLeave"
-              :class="{ 'header-title': titleHover }">
-              <slot name="title">
-                {{ title }}
-              </slot>
+            <div
+              class="flex items-center h-full px-2 ml-1"
+              @mouseenter="titleMouseEnter"
+              @mouseleave="titleMouseLeave"
+              :class="{ 'header-title': titleHover }"
+            >
+              <slot name="title"> {{ title }} </slot>
             </div>
             <slot name="left-extend"></slot>
           </div>
@@ -45,37 +96,73 @@
         <div class="flex items-center header-right" style="padding-right: 14px">
           <slot name="right-extend"></slot>
 
-          <template v-if="rightIcons && rightIcons.length" v-for="item in rightIcons">
+          <template
+            v-if="rightIcons && rightIcons.length"
+            v-for="item in rightIcons"
+          >
             <div v-if="!item.disabled" class="header-right-icon mr-1">
               <!-- 右侧图标悬浮提示 -->
-              <div v-if="item.tip" class="absolute px-2 py-1 rounded-lg xt-modal header-right-icon-tip"
-                style="top:-30px;left:50%,transform:translateX(-50%)">
+              <div
+                v-if="item.tip"
+                class="absolute px-2 py-1 rounded-lg xt-modal header-right-icon-tip"
+                style="top:-30px;left:50%,transform:translateX(-50%);z-index: 99999999;"
+              >
                 {{ item.tip }}
                 <div class="triangle-bottom"></div>
               </div>
-              <xt-ify-icon v-if="item.ifyIcon" :icon="item.ifyIcon" @click="item.fn" :class="item.class" size="20" />
-              <xt-icon v-else-if="item.icon" :icon="item.icon" @click="item.fn" type="" size="19" w="20" />
+              <xt-ify-icon
+                v-if="item.ifyIcon"
+                :icon="item.ifyIcon"
+                @click="item.fn"
+                :class="item.class"
+                size="20"
+              />
+              <xt-icon
+                v-else-if="item.icon"
+                :icon="item.icon"
+                @click="item.fn"
+                type=""
+                size="19"
+                w="20"
+              />
             </div>
           </template>
-          <RightMenu :menus="menus" :customIndex="customIndex" model="all" v-model:size="currentSize"
-            :disableHierarchy="options.hierarchy" :sizeList="sizeList">
+          <RightMenu
+            :menus="menus"
+            :customIndex="customIndex"
+            model="all"
+            v-model:size="currentSize"
+            :disableHierarchy="options.hierarchy"
+            :sizeList="sizeList"
+          >
             <div class="header-right-icon">
-              <xt-ify-icon icon="fluent:line-horizontal-3-20-filled" size="20" />
+              <xt-ify-icon
+                icon="fluent:line-horizontal-3-20-filled"
+                size="20"
+              />
             </div>
           </RightMenu>
         </div>
       </div>
       <PageState :env="env" :options="options">
-        <div class="flex-1 h-full rounded-b-lg" :style="[
-          {
-            background: body.bg,
-            color: body.color,
-            padding: body.scroll ? '0 14px' : '0 14px 14px 14px',
-          },
-        ]">
-          <slot>
-            <!--  主体内容插槽1  -->
-          </slot>
+        <div
+          class="flex-1 h-full rounded-b-lg"
+          :style="[
+            {
+              background: body.bg,
+              color: body.color,
+              padding: body.scroll ? '0 14px' : '0 14px 14px 14px',
+            },
+          ]"
+        >
+          <Resize
+            v-model:size="currentSize"
+            :modalSize="options.modalSize"
+            :resize="options.resize"
+            @resize="resize"
+          >
+            <slot></slot>
+          </Resize>
         </div>
       </PageState>
     </div>
@@ -84,37 +171,27 @@
         <!--  主体内容插槽2  -->
       </slot>
     </div>
-
     <!-- 卡片整体区域end -->
-    <!-- 右上角抽屉菜单扩展 start  -->
-    <template #menuExtra>
-      <slot name="menuExtra"></slot>
-    </template>
-    <!-- 右上角抽屉扩展 end -->
   </RightMenu>
-  <!--额外插槽，用于扩展一些不可见的扩展元素start-->
-  <slot name="extra"> </slot>
-  <!--额外插槽，用于扩展一些不可见的扩展元素end-->
-  <slot name="msg"></slot>
 </template>
-<!-- lang="ts" -->
 <script setup>
 import { mapActions, mapWritableState } from "pinia";
 import _ from "lodash-es";
 import { useToast } from "vue-toastification";
-import { watch, computed, ref, onBeforeMount, onMounted } from "vue";
+import { watch, computed, ref, onBeforeMount, onMounted, toRefs } from "vue";
 import { storeToRefs } from "pinia";
 import { cardStore as useCardStore } from "../../store/card";
 import { offlineStore } from "../../js/common/offline";
 import { useWidgetStore } from "./store";
 import { useFreeLayoutStore } from "../desk/freeLayout/store";
 
+import vueCustomScrollbar from "../../../../src/components/vue-scrollbar.vue";
+import Resize from "./Resize.vue";
 import RightMenu from "./RightMenu.vue";
 import PageState from "./PageState.vue";
 import Msg from "./Msg.vue";
 
 import { deepMerge } from "./ContainerUtils";
-
 
 /**
  * pinia
@@ -162,7 +239,7 @@ const props = defineProps({
          *    disabled: 禁用 true为禁用 false为不禁用
          * }
          */
-        refresh: {},
+        refresh: false,
         // 标题背景色 true为打开 false为关闭
         bg: false,
         // 标题颜色
@@ -197,8 +274,7 @@ const props = defineProps({
     type: String,
     default: "4x2",
   },
-  // 作为弹窗时的尺寸
-  modalSize: {},
+
   /**
    * 可选尺寸，此属性设置后，在编辑处会显示可选尺寸。
    * 格式为 { name: '4x2'value: '4x2' }
@@ -225,13 +301,12 @@ const props = defineProps({
         color: "",
         // 是否允许删除组件
         disabled: false,
-        // disabled
-
-        // // 自定义删除
-        // customDel: false
-
-        deleteFn: null
-
+        // 开启后，可拖拽小组件
+        resize: false,
+        // 作为弹窗时的尺寸
+        modalSize: "",
+        // 阴影开关 开启会关闭阴影
+        shadow: false,
       };
     },
   },
@@ -256,7 +331,7 @@ const props = defineProps({
   //组件自定义数据，每个卡片独立，并存入桌面数据当中
   customData: {
     type: Object,
-    default: () => { },
+    default: () => {},
   },
 
   desk: {
@@ -275,7 +350,7 @@ const props = defineProps({
     },
   },
 });
-
+const { header } = toRefs(props);
 onBeforeMount(() => {
   // 处理默认数据
   if (props.defaultData) {
@@ -284,11 +359,18 @@ onBeforeMount(() => {
 });
 /**
  * emits
+ * update:customSize 双向数据绑定
+ * leftClick 头部左侧鼠标经过点击回调
+ * delete 小组件删除回调
+ * resize 更新卡片大小回调
  */
-// "update:customSize" 更新卡片大小回调
-// leftClick 头部左侧鼠标经过点击回调
-// delete 小组件删除回调
-const emits = defineEmits(["update:customSize", "leftClick", "delete"]);
+
+const emits = defineEmits([
+  "update:customSize",
+  "leftClick",
+  "delete",
+  "resize",
+]);
 
 /**
  * data
@@ -351,7 +433,15 @@ const title = computed(() => {
 });
 // 头部右侧图标
 const rightIcons = computed(() => {
-  let arr = [...props.header.rightIcon];
+  let arr = [];
+
+  console.log(
+    "typeof props.header.rightIcon  :>> ",
+    typeof header.value.rightIcon
+  );
+  if (typeof props.header.rightIcon == "array") {
+    arr = [...props.header.rightIcon];
+  }
   if (props.header.refresh) {
     arr.push({
       ifyIcon: "fluent:arrow-clockwise-16-regular",
@@ -373,8 +463,8 @@ const getSize = computed(() => {
   } else {
     str = currentSize.value.split("x");
   }
-  if (props.modalSize) {
-    str = props.modalSize.split("x");
+  if (props.options.modalSize) {
+    str = props.options.modalSize.split("x");
   }
   w = str[0];
   h = str[1];
@@ -402,15 +492,41 @@ watch(
   }
 );
 
-// 方法
+/**
+ * 方法
+ */
+const resize = (data) => {
+  emits("resize", data);
+};
+// 头部左侧点击
+const leftClick = () => {
+  if (props.header.leftHover) {
+    emits("leftClick");
+  }
+};
+// 右键删除
+const removeCard = () => {
+  emits("delete");
+
+  // if (props.options.deleteFn) {
+  // props.options.deleteFn()
+  // } else {
+  cardStore.removeCard(props.customIndex, props.desk);
+  // }
+};
+
+// 设置自定义数据
+const setCustomData = (key, data) => {
+  let obj = {};
+  obj[key] = data;
+  cardStore.updateCustomData(props.customIndex, obj, props.desk);
+};
 // 头部拖拽开始
 const titleDragStart = () => {
   const toast = useToast();
   toast.clear();
   toast(
-    {
-      component: Msg,
-    },
+    { component: Msg },
     {
       icon: false,
       closeOnClick: false,
@@ -454,34 +570,9 @@ const titleMouseLeave = () => {
   showTitleHover.value = false;
 };
 
-// 头部左侧点击
-const leftClick = () => {
-  if (props.header.leftHover) {
-    emits("leftClick");
-  }
-};
-// 右键删除
-const removeCard = () => {
-  emits("delete");
-
-  // if (props.options.deleteFn) {
-  // props.options.deleteFn()
-  // } else {
-  cardStore.removeCard(props.customIndex, props.desk);
-  // }
-
-};
-
-// 设置自定义数据
-const setCustomData = (key, data) => {
-  let obj = {};
-  obj[key] = data;
-  cardStore.updateCustomData(props.customIndex, obj, props.desk);
-};
-
 defineExpose({
-  removeCard
-})
+  removeCard,
+});
 </script>
 
 <style lang="scss" scoped>
@@ -571,5 +662,10 @@ defineExpose({
   border-bottom: 6px solid var(--modal-bg);
   transform: translateX(-50%) rotate(180deg);
   left: 50%;
+}
+
+.shadow {
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
 }
 </style>

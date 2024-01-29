@@ -24,20 +24,29 @@
              显示时钟组件的背景框。
             </span>
           </div>
-          <div class="mb-4" >
+          <div class="my-4" >
             <div class="xt-bb mx-auto"></div>
           </div>
-          <div class="flex flex-col">
-            <span class="xt-font xt-text font-16">缩放比例</span>
-            <a-slider v-model:value="customData.currentZoom" :max="300" :min="50" />
-          </div>
-           <slot name="modelScale"></slot>
+          <template v-if="!isFull">
+            <div class="flex flex-col">
+              <div class="flex items-center justify-start">
+                <span class="xt-font xt-text font-16 mr-3">缩放比例</span>
+                <xt-button style="width: auto !important;" h="0" @click="restZoom">
+                  <div class="flex items-center justify-center">
+                    <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="20"></xt-new-icon>
+                  </div>
+                </xt-button>
+              </div>
+              <a-slider v-model:value="customData.currentZoom" :max="200" :min="50" />
+            </div>
+          </template>
+           <slot name="modelScale" v-else></slot>
         </div>
 
         <div class="flex flex-col xt-bg-2 p-4 rounded-lg mb-4 " >
           <div class="flex flex-col">
             <span class="xt-text mb-3 font-16">时钟样式</span> 
-            <xt-option-tab  v-model="customData.currentStatus" :list="clockTabList" circle  style="height: 40px;" />
+            <xt-option-tab  v-model="customData.currentStatus" :list="clockTabList" circle  style="height: 40px;margin-bottom: 0 !important;" />
           </div>
 
           <template v-if="customData.currentStatus === 'font'">
@@ -98,6 +107,10 @@ export default{
     zIndex:{
       type:String,
       default:'1000'
+    },
+    isFull:{
+      type:Boolean,
+      default:false,
     }
   },
   data(){
@@ -130,6 +143,10 @@ export default{
     // 重置时钟文本颜色
     restClockColor(){
       this.customData.fontColor = "#FFFFFF";
+    },
+    // 重置缩放
+    restZoom(){
+      this.$emit("restZoom")
     }
   },
 

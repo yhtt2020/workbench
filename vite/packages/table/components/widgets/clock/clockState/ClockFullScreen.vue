@@ -54,12 +54,9 @@
     </a-drawer> -->
   </teleport>
 
-  <ClockSettingModal ref="settingModalRef"  :customData="customData" :zIndex="'100000'" @updateClockStyle="updateClockStyle">
+  <ClockSettingModal ref="settingModalRef" :isFull="true" :customData="customData" :zIndex="'100000'" @updateClockStyle="updateClockStyle" >
     <template #modelScale>
-      <div class="my-4" >
-        <div class="xt-bb mx-auto"></div>
-      </div>
-      <ClockBackground @img="img" @updateBlur="updateBlur" @updateBgZoom="updateBgZoom" :bgZoom="bgZoom" :blur="blur" />
+      <ClockBackground @img="img" @updateBlur="updateBlur" @updateBgZoom="updateBgZoom" :bgZoom="bgZoom" :blur="blur" @restFullZoom="restFullZoom"/>
     </template>
   </ClockSettingModal>
 </template>
@@ -213,6 +210,11 @@ export default {
       let num = this.clock.slice(-1);
       this.$emit("updateClockStyle", `clock${parseInt(num) - 1}`);
     },
+
+    restFullZoom(){
+      console.log("this.customData.bgZoom",this.customData.zoom);
+      this.customData.zoom = 0
+    }
   },
 };
 </script>

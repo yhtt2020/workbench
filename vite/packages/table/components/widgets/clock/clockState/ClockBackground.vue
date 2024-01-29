@@ -28,7 +28,15 @@
     <a-slider v-model:value="blurs" :max="100" :step="1" class="no-drag" />
   </div>
   
-  <div class="text-base mb-1">调整时钟比例</div>
+  <!-- <div class="text-base mb-1">调整时钟比例</div> -->
+  <div class="flex items-center">
+    <div class="text-base mb-1 mr-3">缩放比例</div>
+    <xt-button style="width: auto !important;" h="0" @click="restFullZoom">
+      <div class="flex items-center justify-center">
+        <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="20"></xt-new-icon>
+      </div>
+    </xt-button>
+  </div>
   <!--  style="margin-bottom: 10px" -->
   <a-slider v-model:value="zoom" :max="100" :step="1" />
   <ModalList
@@ -118,12 +126,15 @@ export default {
       } else {
       }
     },
+    restFullZoom(){
+      this.$emit("restFullZoom")
+    }
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.flex {
+.flex-bg {
   background: var(--primary-bg);
   border-radius: 5px;
 }
