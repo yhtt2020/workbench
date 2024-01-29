@@ -137,7 +137,6 @@ export default {
             }
             name = `${newW}x${newH}`;
             that.currentSize = name;
-            that.$emit("reSize", name);
           };
           document.onmouseup = function (e) {
             e.stopPropagation();
@@ -145,6 +144,7 @@ export default {
             document.onmouseup = null;
             that.currentSize = name;
             that.dragCallBack(name);
+            that.$emit("resize", name);
 
             that.isDrag = false;
           };

@@ -159,8 +159,9 @@
             v-model:size="currentSize"
             :modalSize="options.modalSize"
             :resize="options.resize"
+            @resize="resize"
           >
-              <slot></slot>
+            <slot></slot>
           </Resize>
         </div>
       </PageState>
@@ -358,11 +359,18 @@ onBeforeMount(() => {
 });
 /**
  * emits
+ * update:customSize 双向数据绑定
+ * leftClick 头部左侧鼠标经过点击回调
+ * delete 小组件删除回调
+ * resize 更新卡片大小回调
  */
-// "update:customSize" 更新卡片大小回调
-// leftClick 头部左侧鼠标经过点击回调
-// delete 小组件删除回调
-const emits = defineEmits(["update:customSize", "leftClick", "delete"]);
+
+const emits = defineEmits([
+  "update:customSize",
+  "leftClick",
+  "delete",
+  "resize",
+]);
 
 /**
  * data
@@ -487,7 +495,9 @@ watch(
 /**
  * 方法
  */
-
+const resize = (data) => {
+  emits("resize", data);
+};
 // 头部左侧点击
 const leftClick = () => {
   if (props.header.leftHover) {
