@@ -20,15 +20,12 @@
         </div>
       </div> -->
       <ShowReward id="Z0201" />
-      <div class="flex justify-end mt-3">
+      <div class="flex justify-end mt-4 mb-1">
         <xt-button   class="button-bottom mr-3" @click="close"   size="large" >稍后再说</xt-button>
         <xt-button   class="button-bottom mr-4" @click="startGuide"   size="large" type="theme">开始定制</xt-button>
       </div>
     </div>
-
-
   </div>
-
 </template>
 
 <script>

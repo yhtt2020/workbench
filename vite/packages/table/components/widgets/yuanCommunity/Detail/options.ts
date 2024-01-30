@@ -18,3 +18,15 @@ export const openWay = [
         value:'mainApp',
     }
 ]
+
+
+export const publishList = [
+    {
+        name: '发动态',
+        value: 'dynamic'
+    },
+    {
+        name: '发帖子',
+        value: 'post'
+    },
+]

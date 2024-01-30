@@ -1,6 +1,6 @@
 <template>
  <template v-if="controlIndex === 'audio'">
-  <SystemControlDetail class="pointer category-button" @click="removeControl($event)" :status="status"/>
+  <SystemControlDetail :class="{'pointer':status==='del','category-button':status==='del'}" @click="removeControl($event)" :status="status"/>
  </template>
 
  <!-- 用户中心信息 -->
@@ -54,7 +54,7 @@
    <span class="xt-text">{{controlItem.name}}</span>
   </div>
 
-  <div v-else class="rounded-xl category-button pointer flex flex-col items-center justify-center relative" 
+  <div v-else class="rounded-xl category-button pointer flex flex-col items-center justify-center relative"
     style="height: 120px;width: 120px;"  @click="triggerControl($event)" :class="controlStatus?.status ? 'xt-theme-bg':'xt-bg-t-2'">
     <div class="w-14 h-14 flex items-center xt-bg-t-2 justify-center rounded-full mb-3">
       <xt-new-icon :icon="controlItem.icon" size="24" :color="controlStatus?.status ? 'var(--active-text)':'var(--primary-text)'"></xt-new-icon>
@@ -120,7 +120,7 @@ const controlStatus = computed(()=>{
     // 勿扰模式
     case 'mute-mode':
       return {status:settings.value.noticeEnable,};
-    // 辅助模式  
+    // 辅助模式
     case 'assist-mode':
       return {status:aided.value,};
     // 摇一摇
@@ -160,7 +160,7 @@ const triggerControl = () =>{
     case 'mute-mode':
       settings.value.noticeEnable = !settings.value.noticeEnable
       break;
-    // 辅助模式  
+    // 辅助模式
     case 'assist-mode':
       aided.value = !aided.value;
       if(!aided.value){
@@ -241,5 +241,5 @@ const login = () =>{
 :deep(.big){
   bottom: 80px !important;
   right:  0 !important;
-} 
+}
 </style>

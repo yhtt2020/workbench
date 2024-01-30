@@ -256,7 +256,7 @@ import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
 // 桌面默认数据
 import { defaultFreeLayoutStore } from './defaultFreeLayout'
 import { useFreeLayoutStore } from "../components/desk/freeLayout/store";
-import { defaultIconData, mergeData } from '../../table/apps/folder/src/hooks/useDataConversion'
+import { mergeData } from '../ui/hooks/useDataConversion'
 const { steamUser, steamSession, path, https, steamFs } = $models;
 if (steamUser && steamSession) {
   const { LoginSession, EAuthTokenPlatformType } = steamSession;
@@ -353,7 +353,6 @@ export default {
       hasTriggered: 1,
       // 新建桌面id
       deskId: '',
-      defaultIconData,  // 默认图标格式
     };
   },
   components: {
@@ -515,6 +514,7 @@ export default {
     }, 2000);
     // 判断是否是第一次加载
     if (this.deskInit) {
+      this.initTask()
       // 新用户第一次进入加载一个默认桌面
       this.addFreeLayoutDesk()
       this.deskInit = false
@@ -786,6 +786,7 @@ export default {
     ...mapActions(appStore, ["setBackgroundImage"]),
     ...mapActions(weatherStore, ["fixData"]),
     // ...mapActions(deskStore, ["setDeskSize"]),
+    ...mapActions(taskStore, ["initTask"]),
     initGrids() {
       this.currentDesk.cards = this.cleanMuuriData(deskTemplate["daily"]);
     },

@@ -4,10 +4,10 @@
         <div class="w-full rounded-md xt-bg-2" style="border: 1px solid var(--divider);">
             <a-input v-model:value="titleValue" placeholder="标题" :bordered="false" />
         </div>
-        <div class="w-full mt-2 text-base xt-bg box " style="height: 85%;">
+        <div class="w-full mt-2 text-base xt-bg box " >
             <div style="font-size: 1rem !important;" class="w-full h-full">
                 <div class="w-full h-full mt-3 mb-2 xt-bg-2 reply-textarea" style="border: 1px solid var(--divider);">
-                    <div class="w-full " :style="{ height: fullScreen ? '100%' : '300px' }" style="overflow: hidden;">
+                    <div class="w-full h-full" style="min-height: 300px;">
                         <MarkDown></MarkDown>
                     </div>
                 </div>

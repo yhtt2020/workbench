@@ -249,7 +249,7 @@ export const FreeLayoutStore = defineStore('FreeLayoutStore', {
           "isBorderLine": false,
           "isCenterLine": false,
           "centerLine": {
-            "x": 2500,
+            "x": 2480,
             "y": 2340
           },
           "centerPosition": {
@@ -409,150 +409,96 @@ export const FreeLayoutStore = defineStore('FreeLayoutStore', {
         }
       ],
       "freeLayoutData": {
-        "gd-r6tCo": {
-          "1705883742578": {
-            "left": 1904,
-            "top": 2706,
-            "index": 1,
-            // "id": 1705883742578
-          },
-          "1701420672541": {
-            "left": 2196,
-            "top": 2490,
-            "index": 1,
-            // "id": 1701420672541,
-            "name": "news"
-          },
-          "1701420719963": {
-            "left": 2488,
-            "top": 3138,
-            "index": 1,
-            // "id": 1701420719963,
-            "name": "notes"
-          },
-          "1701420782369": {
-            "left": 2488,
-            "top": 2922,
-            "index": 1,
-            // "id": 1701420782369,
-            "name": "AggregateSearch"
-          },
-          "1701850971669": {
-            "left": 2780,
-            "top": 3138,
-            "index": 1,
-            // "id": 1701850971669,
-            "name": "AIaides"
-          },
-          "1701850990017": {
-            "left": 1904,
-            "top": 2490,
-            "index": 1,
-            // "id": 1701850990017,
-            "name": "clocks"
-          },
-          "1704444814036": {
-            "left": 2488,
-            "top": 2490,
-            "index": 1,
-            // "id": 1704444814036,
-            "name": "folder"
-          },
-          "1701927774475": {
-            "left": 1904,
-            "top": 2922,
-            "index": 1,
-            // "id": 1701927774475,
-            "name": "yuanCommunity"
-          },
-          "1702026795921": {
-            "left": 2780,
-            "top": 2922,
-            "index": 1,
-            // "id": 1702026795921,
-            "name": "folder"
-          },
-          "1705906879069": {
-            "left": 2488,
-            "top": 2490,
-            "index": 1,
-            // "id": 1705906879069
-          },
-          "1705906887800": {
-            "left": 2780,
-            "top": 2490,
-            "index": 1,
-            // "id": 1705906887800
-          },
-          "1705906913821": {
-            "left": 2196,
-            "top": 2490,
-            "index": 1,
-            // "id": 1705906913821
-          },
-          "1705906930197": {
-            "left": 1904,
-            "top": 2922,
-            "index": 1,
-            // "id": 1705906930197
-          },
-          "1705906937618": {
-            "left": 2196,
-            "top": 2922,
-            "index": 1,
-            // "id": 1705906937618
-          },
-          "1705906940636": {
-            "left": 2488,
-            "top": 2922,
-            "index": 1,
-            // "id": 1705906940636
-          },
-          "1705906943715": {
-            "left": 2780,
-            "top": 2922,
-            "index": 1,
-            // "id": 1705906943715
-          }
+        "1705970982703": {
+          "left": 2050,
+          "top": 2382,
+          "index": 1,
+          "id": 1705970982703
+        },
+        "1705970993302": {
+          "left": 2050,
+          "top": 2814,
+          "index": 1,
+          "id": 1705970993302
+        },
+        "1705971024022": {
+          "left": 2342,
+          "top": 2814,
+          "index": 1,
+          "id": 1705971024022
+        },
+        "1705971024714": {
+          "left": 2634,
+          "top": 2814,
+          "index": 1,
+          "id": 1705971024714
+        },
+        "1705971025192": {
+          "left": 2926,
+          "top": 2814,
+          "index": 1,
+          "id": 1705971025192
+        },
+        "1705971046081": {
+          "left": 2050,
+          "top": 2598,
+          "index": 1,
+          "id": 1705971046081
+        },
+        "1705971085518": {
+          "left": 2342,
+          "top": 2382,
+          "index": 1,
+          "id": 1705971085518
+        },
+        "1705971100326": {
+          "left": 2634,
+          "top": 2382,
+          "index": 1,
+          "id": 1705971100326
+        },
+        "1705971107883": {
+          "left": 2926,
+          "top": 2382,
+          "index": 1,
+          "id": 1705971107883
         }
       },
-      "freeLayoutState": {
-        "gd-r6tCo": {
-          "system": {
-            "isFreeLayout": true,
-            "hide": false
+      freeLayoutState: {
+        "system": {
+          "isFreeLayout": true,
+          "hide": false
+        },
+        "option": {
+          "afterDragging": true,
+          "whileDragging": false,
+          "collision": true,
+          "margin": 6,
+          "magnet": false
+        },
+        "line": {
+          "isAuxLine": false,
+          "isBorderLine": false,
+          "isCenterLine": false,
+          "centerLine": {
+            "x": 2620,
+            "y": 2340
           },
-          "option": {
-            "afterDragging": true,
-            "whileDragging": false,
-            "collision": true,
-            "margin": 6,
-            "magnet": false
-          },
-          "line": {
-            "isAuxLine": false,
-            "isBorderLine": false,
-            "isCenterLine": false,
-            "centerLine": {
-              "x": 1772,
-              "y": 2389
-            },
-            "centerPosition": {
-              "x": "center",
-              "y": "top"
-            }
-          },
-          "canvas": {
-            "isInfinite": false,
-            "zoom": 1,
-            "width": 5000,
-            "height": 5000
-          },
-          "mode": {
-            "arrange": "grid",
-            "scroll": "free",
-            "align": "custom"
+          "centerPosition": {
+            "x": "center",
+            "y": "top"
           }
+        },
+        "canvas": {
+          "isInfinite": false,
+          "zoom": 1,
+          "width": 5000,
+          "height": 5000
+        },
+        "mode": {
+          "arrange": "grid",
+          "scroll": "lock",
+          "align": "custom"
         }
       }
 

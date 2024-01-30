@@ -1,7 +1,7 @@
 <template>
   <!-- 音乐播放器和音量调节按钮 -->
  <template v-if="controlIndex === 'audio'">
-   <SystemControlDetail class="category-button pointer" @click="addControl($event)" :status="'add'"/>
+   <SystemControlDetail class="category-button pointer" :event="false" @click="addControl($event)" :status="'add'"/>
  </template>
 
  <!-- 用户中心数据信息模块 -->
@@ -16,7 +16,7 @@
         </xt-button>
       </div>
       <UserInfoDetail :userinfo="userInfo"/>
-    </div> 
+    </div>
   </template>
 
   <template v-else>
@@ -29,7 +29,7 @@
         </xt-button>
       </div>
       <UnLogin />
-    </div> 
+    </div>
   </template>
  </template>
 
@@ -87,7 +87,7 @@ const isUserInfoNull = computed(()=>{
 
 // 添加设置
 const addControl = (evt) =>{
-  /**逻辑是先增后减**/ 
+  /**逻辑是先增后减**/
   // 添加最新数据
   const addIndex = control.value.oldList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
   if(addIndex === -1){
@@ -104,5 +104,5 @@ const addControl = (evt) =>{
 :deep(.big){
   bottom: 80px !important;
   right:  0 !important;
-} 
+}
 </style>
