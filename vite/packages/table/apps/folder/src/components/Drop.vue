@@ -92,8 +92,7 @@ const handleDrop = async (dragEvent) => {
     }
 
     const linkIcon = await getFavicon(link);
-    const name = useGetUrlName(link);
-    const target = { name, icon: linkIcon, value: link };
+    const target = { name:linkIcon.pageTitle, icon: linkIcon.faviconURL, value: link };
 
     const file = useLinkConversionNav(target);
     emits('createFile', file);
