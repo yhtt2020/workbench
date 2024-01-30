@@ -36,10 +36,10 @@
                                 </div>
 
                             </div>
-                            <div class="flex items-center justify-center w-full h-[40px] mt-3">
+                            <!-- <div class="flex items-center justify-center w-full h-[40px] mt-3">
                                 <xt-button
                                     style="backend:var(--primary-bg);color:var(--secondary-text);width:84px;height:32px;border-radius: 8px;">查看更多</xt-button>
-                            </div>
+                            </div> -->
                         </div>
 
                     </vue-custom-scrollbar>
@@ -197,9 +197,10 @@ export default {
         // 刷新圈子
         async refreshPost() {
             this.isLoading = true
-            // console.log(this.defaultForum,'defaultForum')
+            console.log(this.defaultForum,'defaultForum')
             let value = 0
-            this.defaultForum.value ? value = this.defaultForum.value : value = 100304
+            this.defaultForum.value ? value = this.defaultForum.value : value = this.defaultForum
+            console.log(value,'value')
             await this.getCommunityPost(value)
             this.showForumPost = this.communityPost
             this.isLoading = false

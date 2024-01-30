@@ -12,8 +12,8 @@
                     v-model="currentData">
                 </xt-option-tab>
                 <div class="mt-4 mb-4 h-[1px] w-full " style="background: var(--divider);"></div>
-                <div class="text-base xt-text">板块</div>
-                <div class="mt-2 mb-4 text-sm xt-text-2">最多支持在小组件上展示5个板块</div>
+                <div class="text-base xt-text">版块</div>
+                <div class="mt-2 mb-4 text-sm xt-text-2">最多支持在小组件上展示5个版块</div>
                 <xt-option-multiple 
                     v-model:multiple="defaultForum"
                     class="mt-4" 
