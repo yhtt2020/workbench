@@ -37,7 +37,7 @@
                   </div>
                 </xt-button>
               </div>
-              <a-slider v-model:value="customData.currentZoom" :max="200" :min="50" />
+              <a-slider v-model:value="customData.currentZoom" :max="maxScale?.num" :min="50" />
             </div>
           </template>
            <slot name="modelScale" v-else></slot>
@@ -104,14 +104,8 @@ export default{
     customData:{ type:Object,default:()=>{} },
     desk:{type:Object,default:()=>{}},
     customIndex:{ type:Number,default:()=>{} },
-    zIndex:{
-      type:String,
-      default:'1000'
-    },
-    isFull:{
-      type:Boolean,
-      default:false,
-    }
+    zIndex:{  type:String,  default:'1000'},
+    isFull:{  type:Boolean, default:false, }
   },
   data(){
     return{
@@ -129,6 +123,28 @@ export default{
        color8: '#43CADE',
        color9: '#57BF60',
        color10: '#DE5DB3',
+      }
+    }
+  },
+
+  computed:{
+    // 缩放滑块阈值
+    maxScale(){
+      const width = this.customData.customSize.split("x")[0];
+      const height = this.customData.customSize.split("x")[1];
+      let max = width < height ? width : height;
+      console.log("max",max - 2);
+      if((max-2) === 0){
+        return {num:110};
+      }
+      else if((max-2) === 2){
+        return {num:140};
+      }
+      else if((max-2) === 4){
+        return {num:180};
+      }
+      else if((max - 2) >= 6 ){
+        return {num:200};
       }
     }
   },

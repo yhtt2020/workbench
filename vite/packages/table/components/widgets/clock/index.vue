@@ -4,7 +4,7 @@
   :header="header" :options="option"  @leftClick="fullScreen" @resize="resize"
  >
   <div class="box no-drag" @click="fullScreen">
-    <div style="width: 100%;height: 100%;" class="flex items-center justify-center" :style="newZoom">
+    <div style="width: 100%;height: 100%;" class="flex items-center justify-center" :style="sliderScale">
       <component :is="customData.clockId"  :noBg="true" :customData="customData"
       :isSnow="customData.enableSecond" :hideDate="false" :clockFont="customData.font"
       :style="{zoom:customZoom}"
@@ -20,10 +20,20 @@
  />
 
 
- <ClockFullScreen  v-if="isClockFullScreen"  :customData="customData"  :clock="customData.clockId"
-  :imgUrl="backgroundImage.path !== '' ? backgroundImage.path : customData.imgUrl"
-  @exit="isClockFullScreen = false" 
+ <ClockFullScreen  
+  v-if="isClockFullScreen"  
+  :imgUrl="fullImage" 
+  :clock="customData.clockId"
+  :customData="customData"
+  @exit="isClockFullScreen = false"
  />
+
+ 
+ <!--   :clock="customData.clockId"
+  :imgUrl="backgroundImage.path !== '' ? backgroundImage.path : customData.imgUrl"
+  @exit="isClockFullScreen = false"  :bgZoom="customData.bgZoom"  :blur="customData.blurs"
+  @updateBgZoom="updateBgZoom"  :customIndex="customIndex" 
+  :desk="desk" :customData="customData" -->
 
 </template>
 
@@ -38,20 +48,17 @@ import Resize from "../../../apps/folder/src/components/Resize.vue";
 import ClockSettingModal from "./components/ClockSettingModal.vue";
 import ClockFullScreen from "./clockState/ClockFullScreen.vue";
 
-// import cardDragHook from "../../card/hooks/cardDragHook";
-// import cardSizeHook from "../../card/hooks/cardSizeHook";
-
 export default {
- // cardSizeHook  cardDragHook
  mixins: [mixin,],
+
  components:{
   Resize,ClockSettingModal,ClockFullScreen,
  },
+
  props:{
   customIndex: { type: Number, default: 0,},
   customData: { type: Object,default: () => {},},
   desk: { type: Object, },
-  
  },
 
  data(){
@@ -68,19 +75,6 @@ export default {
    week: ["周末", "周一", "周二", "周三", "周四", "周五", "周六"],
    defaultClockData:defaultClockData,
    isClockFullScreen:false,
-  //  zoom: "1.05",
-  //  zooms: {
-  //   // 无限拉伸是0, 1*1是1 2*2是2
-  //   clock1: [155, 35, 35],
-  //   clock2: [160, 66, 50],
-  //   clock3: [150, 0, 80],
-  //   clock4: [140, 0, 30],
-  //   clock5: [150, 0, 25],
-  //   clock6: [180, 0, 80],
-  //  },
-  //  bgZoom: 0,
-  //  widthHeightObj: {}
-
   }
  },
 
@@ -98,7 +92,6 @@ export default {
    }
    return headerOption;
   },
-
   // 配置数据
   option(){
    const clockOption = {
@@ -108,7 +101,6 @@ export default {
    }
    return clockOption;
   },
-
   // 拖拽缩放
   customZoom(){
     let width = Number(this.customData.customSize.split("x")[0]);
@@ -116,46 +108,42 @@ export default {
     let min = width < height ? width:height;
     let minProp;
     if(this.customData.enableSecond){
-      minProp = ((1.5 - 0.5) + (Number(min)-2) * 0.5) ;
+      minProp = ((1.5 - 0.5) + (Number(min)-2) * 0.4) ;
       this.customData.zoom = minProp;
       return minProp;
     }
     else {
-      minProp = (1.5 + (Number(min)-2) * 0.7) ;
+      minProp = (1.5 + (Number(min)-2) * 0.6) ;
       this.customData.zoom = minProp;
       return minProp;
     }
   },
-
-  // // 设置滑块缩放
-  // newZoom(){
-  //   const w = this.customData.customSize.split("x")[0];
-  //   const h = this.customData.customSize.split("x")[1];
-  //   const min = w < h ? w:h;
-  //   console.log("this.customData.currentZoom",min);
-  //   if(min <= 2 || h<=2){
-  //     const minZoom = ((100  / min) * 0.4 / 10) - 1;
-  //     console.log("minZoom",minZoom);
-      
-  //   }
-
-  //   // return {
-  //   //   zoom:this.customData.currentZoom / 100,
-  //   // }
-  //   // const newScale = Math.floor(this.customData.currentZoom)/100;
-  //   // if(this.customData.enableSecond){
-  //   //   const trueZoom = ((Number(newScale) / 1));
-  //   //   return {zoom:trueZoom};
-  //   // }
-  //   // else {
-  //   //   const falseZoom = (Number(newScale) / 0.7);
-  //   //   return{ zoom:falseZoom};
-  //   // }
-  // },
-
+  // 滑块缩放,是否开启秒针
+  sliderScale(){
+    let width = Number(this.customData.customSize.split("x")[0]);
+    let height = Number(this.customData.customSize.split("x")[1]);
+    let min = width < height ? width:height;
+    if(this.customData.enableSecond){
+      return {
+       transform:`scale(${Number(this.customData.currentZoom) / (100 + (Number(min-2)) * 0.15)})`,
+      }
+    }
+    else {
+      return {
+       transform:`scale(${Number(this.customData.currentZoom) / (100 + (Number(min-2)) * 0.25)})`,
+      }
+    }
+  },
+  // 全屏情况下
+  fullImage(){
+    if(this.backgroundImage.path){
+      return this.backgroundImage.path;
+    }
+    else {
+      return this.customData.imgUrl;
+    }
+  },
  },
-
- mounted(){},
 
  methods:{
   ...mapActions(cardStore, ["updateCustomData"]),
@@ -163,30 +151,18 @@ export default {
   updateClockStyle(e){
    this.updateCustomData(this.customIndex,{ clockId:e },this.desk);
   },
-
   // 时组件全屏
-  fullScreen(){ 
-    this.secondary =!this.secondary;
-    this.isClockFullScreen = true; 
-  },
-
+  fullScreen(){  this.isClockFullScreen = true; },
   // 卡片组件缩放处理
   resize(data) {
-    this.customData.customSize = data;
+    this.updateCustomData(this.customIndex,{customSize:data,currentZoom:100},this.desk);
   },
-  
+  // 重置卡片组件缩放比例
   restZoom(){
-    this.customData.currentZoom = 100;
-  }
+    this.updateCustomData(this.customIndex,{currentZoom:100},this.desk);
+  },
 
  },
-
- watch:{
-  "customData.customZoom":{
-    handler(){},
-
-  }
- }
 
 };
 </script>
