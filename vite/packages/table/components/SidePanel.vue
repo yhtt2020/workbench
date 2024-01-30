@@ -518,15 +518,16 @@ export default {
         if (this.navigationList.length > this.maxItemNum && this.maxItemNum !== 0) {
           if (this.noticeFlag) {
             this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
-              onOk: () => {
+              ok: () => {
                 const width = this.parentSize / (this.navigationList.length * 72)
-                this.navAttribute.navSize = width
+                this.navAttribute.navSize = width.toFixed(2) * 100
+                this.noticeFlag = false
               }
             })
           }
+          if(this.noticeFlag) return
           const width = this.parentSize / (this.navigationList.length * 72)
           this.navAttribute.navSize = width.toFixed(2) * 100
-          this.noticeFlag = false
         }
       },
       immediate: true,
