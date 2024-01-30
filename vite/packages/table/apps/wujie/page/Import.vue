@@ -13,6 +13,7 @@
 import { ref } from "vue";
 import { message } from "ant-design-vue";
 import { nanoid } from "nanoid";
+import { useRegisterTTApps } from "../../../../../../src/ttApps/import";
 import {
   folderExists,
   folderCreate,
@@ -29,11 +30,12 @@ const getFileExtension = (filePath) => {
   return compressedTypes.includes(fileExtension);
 };
 const a = async () => {
+  useRegisterTTApps()
   // imgRef.value.click();
   // imgRef.value.onchange = function (event) {
   //   console.log("files[0] :>> ", files[0]);
   // };
-
+  return;
   let path = await tsbApi.dialog.showOpenDialog({
     title: "选择",
     message: "请选择文件",
@@ -43,9 +45,6 @@ const a = async () => {
 
   // 未上传
   if (!path) return;
-  let filePath = path[0];
-  // 后缀名错误
-  if (!getFileExtension(filePath)) return message.error("上传的文件类型错误");
 
   // 解压
 
@@ -69,11 +68,7 @@ const a = async () => {
   // manifest.json 检查结果处理
   if (!manifestCheckRes) return;
 
-  // 是否创建文件夹路径
-  let temporaryFolderName = "ttapp_test";
-  if (!(await folderExists(temporaryFolderName))) {
-    await folderCreate(temporaryFolderName);
-  }
+
 
   // 先临时用时间做ID
   const id = Date.now();
