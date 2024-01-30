@@ -20,7 +20,8 @@
     <cardDrag ref="drag" @reSizeInit="reSizeInit" class="drag">
       <template #="{ row }">
         <div class="box no-drag" @click="fullScreen()">
-          <component
+          <div :style="newZoom">
+            <component
             :is="customData.clockId"
             :isSnow="customData.enableSecond"
             :class="{
@@ -32,7 +33,10 @@
             :showBackground="true"
             :noBg="true"
             :hideDate="false"
+            :customData="customData"
           />
+          </div>
+          
         </div>
       </template>
     </cardDrag>
@@ -148,8 +152,19 @@ export default {
   
   computed:{
     ...mapWritableState(appStore,["backgroundImage"]),
+    newZoom(){
+      const newScale = Math.floor(this.customData.currentZoom)/100;
+      // 是否开启秒针
+      if(this.customData.enableSecond){
+        console.log('开启',((Number(newScale) / 1)));
+        return {transform: `scale(${((Number(newScale) / 1))})`,}
+      }
+      else {
+        console.log('关闭',((Number(newScale) / 0.7)));
+        return {transform: `scale(${((Number(newScale) / 0.7))})`,}
+      }
+    }
   },
-
   mounted() {
     let setData = {};
     if (!this.customData.clockId) { setData.clockId = "clock4";}
@@ -158,12 +173,20 @@ export default {
     }
     if (this.customData.blurs === undefined) { setData.blurs = 3;}
     if (!this.customData.bgZoom) { setData.bgZoom = 0;}
-    if(!this.customData.backgroundFrame){ setData.backgroundFrame = false; }
+    // 初始化组件背景颜色切换默认值
+    if(!this.customData.backgroundFrame){ setData.backgroundFrame = true; }
+    // 初始化组件字体样式切换默认值
     if(!this.customData.font){ 
-      setData.font =  { name:'优设标题黑', value:"font-family: '优设标题黑' !important;" };
+      setData.font =  "font-family: '优设标题黑' !important;";
     }
+    // 初始化组件字体颜色切换默认值
+    if(!this.customData.fontColor){ setData.fontColor = '#508BFE' }
+    // 初始化秒针默认值
     if(!this.customData.enableSecond){ setData.enableSecond = false }
+    // 初始化状态
     if(!this.customData.currentStatus) { setData.currentStatus = 'font' }
+    // 初始化缩放比
+    if(!this.customData.currentZoom){ setData.currentZoom = '100'}
     if (Object.keys(setData).length) { this.updateCustomData(this.customIndex, setData, this.desk); }
     this.bgZoom = this.customData.bgZoom;
     this.updateTime();

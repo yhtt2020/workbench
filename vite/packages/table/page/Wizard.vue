@@ -28,7 +28,7 @@
               <MyIcon icon="tabler:brand-bilibili" width="20" height="20"  />&nbsp;
               Spacedesk | 把任意设备变成你的第二屏幕，手机、平板、电脑都可以！</a>
             </div>
-            <div  class="flex item-content">购买官方推荐副屏：<xt-button :radius="8" :w="80" :h="34" size="small" type="theme" @click="goBuy">去购买</xt-button></div>
+            <div  class="mt-2 flex item-content items-center">购买官方推荐副屏：<xt-button :radius="8" :w="80" :h="34" size="small" type="theme" @click="goBuy">去购买</xt-button></div>
           </div>
           <div style="margin-bottom: 1em" v-else>
             您当前仅有一块屏幕，无法启用副屏模式，您可在增添副屏后启用。<a>了解更多</a>
@@ -140,7 +140,7 @@
 
         <div v-if="step===3" class="flex justify-center flex-wrap" style="width: 452px;">
           <div class="mt-6 flex justify-center xt-bg-2 xt-text w-full" style="padding: 1em;border-radius: 8px 8px;">
-            <AutoRun isGuide="true"/>
+            <AutoRun :isGuide="true"/>
           </div>
           <div class="w-full">
             <KeySetting isGuide="true"></KeySetting>

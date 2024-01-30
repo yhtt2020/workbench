@@ -7,17 +7,17 @@
         <div v-for="item in frameList" class="w-full mb-3 rounded-lg flex flex-col "
              :style="avatarBgColor(item.frame.rarity)">
           <div class="avatar-top flex " style="position: relative">
-            <div style="width: 100px;height: 100px;">
+            <div style="width: 100px;height: 100px;min-width: 100px">
 
               <RayMedal v-if="item.frame.rarity>=4" medalStyle="transform:scale(250%) !important"  :size="120"  style="transform: translateX(-10%) translateY(-5%) " :src="item.cover">
 
               </RayMedal>
               <img v-else :src="item.cover" class="w-full h-full object-fill" alt="">
-              <div style="margin-top: -8px" v-if="getFramePrice(item)?.originPrice" class="xt-text-2 text-center ">
+              <div style="margin-top: -8px" v-if="getFramePrice(item)?.originPrice!=getFramePrice(item).price" class="xt-text-2 text-center ">
                 <a-badge :numberStyle="{backgroundColor: '#52c41a',borderColor:'transparent'}" :count="getFramePrice(item)?.discountReason"></a-badge>
               </div>
             </div>
-            <div class="flex flex-col justify-center ml-4">
+            <div class="flex flex-col justify-center ml-3">
               <div class="mt-2">
                     <span class="avatar-font" :style="titleTagColor(item.frame.rarity)">
                 {{ item.alias }}
@@ -27,7 +27,7 @@
               </span>
               </div >
 
-              <div class="xt-text-2 mt-1">
+              <div class="xt-text-2 mt-1 pr-1">
                 {{item.summary}}
               </div>
 
@@ -40,30 +40,29 @@
                 </a-avatar-group>
               </div>
             </div>
-            <div title="试穿" @click="tryFrame(item.cover)"  class=" xt-bg px-3 py-1 rounded-full pointer" style="position: absolute;right: 10px;top: 10px" >
+            <xt-button size="small"  :w="70" :h="30" title="试穿" @click="tryFrame(item.cover)"  class=" xt-bg px-3 py-1 rounded-full   pointer xt-text" style="position: absolute;right: 10px;top: 6px" >
               <icon icon="yifu" style="font-size: 18px"></icon> 试穿
-            </div>
+            </xt-button>
           </div>
           <div class="avatar-bottom flex  " v-if="item.prices.length !== 0">
-            <a-button v-if="!item.owned" type="primary" class="mr-3 rounded-xl avatar-font flex items-center justify-center m-3"
+            <xt-button type="theme" v-if="!item.owned" class="mr-3 rounded-xl avatar-font flex items-center justify-center m-3"
                       @click="buyNow(item)" style="color: var(--active-text);height: 44px;"
                       :style="getFrameScore(item)&&false ? {width:'104px'}:{width:'100%'}"
             >
               赞助 ￥ {{ getFramePrice(item).price }}
-              <template  v-if="+getFramePrice(item).originPrice"><span class="line-through ml-2">￥{{getFramePrice(item).originPrice}}</span>
-                <a-badge :count="getDiscount(getFramePrice(item))" class="ml-2" :number-style="{ backgroundColor: '#52c41a',borderColor:'transparent' }"></a-badge></template>
-            </a-button>
-            <a-button v-else type="default" class="mr-3 rounded-xl avatar-font flex items-center justify-center  m-3" style="width: 100%">
-              已有 <span class=" ml-2">￥ {{ getFramePrice(item).price }}</span> <template  v-if="getFramePrice(item).originPrice"><span class="line-through ml-2">￥{{getFramePrice(item).originPrice}}</span>
-            </template>
+              <template  v-if="getFramePrice(item)?.originPrice!=getFramePrice(item).price"><span class="line-through ml-2 mr-1">￥{{getFramePrice(item).originPrice}}</span>
+                <a-badge   :count="getDiscount(getFramePrice(item))" class="ml-2" :number-style="{ backgroundColor: '#52c41a',borderColor:'transparent' }"></a-badge></template>
+            </xt-button>
+            <xt-button  v-else type="default" class="mr-3 rounded-xl avatar-font flex items-center justify-center  m-3" style="width: 100%">
+              已获得 <span class=" ml-2">￥ {{ getFramePrice(item).originPrice }}</span>
 
-            </a-button>
-            <a-button hidden="" type="primary" class="mr-3  rounded-xl avatar-font flex items-center justify-center"
+            </xt-button>
+            <xt-button  hidden="" type="primary" class="mr-3  rounded-xl avatar-font flex items-center justify-center"
                       @click="scorePay(item)" v-if="getFrameScore(item)" style="color: var(--active-text);height: 44px;"
 
             >
               {{ getFrameScore(item) }}积分
-            </a-button>
+            </xt-button>
             <a-button hidden="" type="primary" class="rounded-xl" @click="teamGift(item)"
                       style="height: 44px;color: var(--active-text);"
                       :style="getFrameScore(item)&&false ? {width:'104px'}:{width:'50%'}"

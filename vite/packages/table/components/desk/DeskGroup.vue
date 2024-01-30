@@ -12,6 +12,7 @@
         v-model:settings="currentDesk.settings"
         :key="currentDeskId"
         :keepAddIcon="keepAddIcon"
+        @onArrange="onArrange"
       >
         <!-- 拿菜单数据 -->
         <template #settingsAllAfter>
@@ -27,21 +28,21 @@
                 <div class="line-title xt-text" style="" >快速搭建你的桌面</div>
                 <div class="mt-2 font-16 xt-text-2">你可以将系统桌面或资源管理器中的应用程序快捷方式或文件拖动到桌面，或者选择以下推荐的桌面搭建方式。</div>
                 <div class="flex justify-center w-full mt-6 justify-items-center align-items-center" >
-                  <xt-button :w="113" :h="40" @click="addIcon" class="ml-3 xt-bg-2" key="console" type="primary" >
+                  <xt-button :w="113" :h="40" @click="addIcon" class="ml-3 xt-bg-t-2" key="console" type="primary" >
                     <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:add-16-regular"></xt-new-icon>添加图标</div>
                   </xt-button>
-                  <xt-button :w="113" :h="40" @click="newAddCard" class="ml-3 xt-bg-2" key="console" type="primary" >
+                  <xt-button :w="113" :h="40" @click="newAddCard" class="ml-3 xt-bg-t-2" key="console" type="primary" >
                     <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:collections-add-24-regular"></xt-new-icon>添加组件</div>
                   </xt-button>
-                  <xt-button :w="113" :h="40" @click="moreDesk" class="ml-3 xt-bg-2" key="console" type="primary" >
+                  <xt-button :w="113" :h="40" @click="moreDesk" class="ml-3 xt-bg-t-2" key="console" type="primary" >
                     <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:building-shop-16-regular"></xt-new-icon>桌面市场</div>
                   </xt-button>
-                  <xt-button :w="113" :h="40" @click="importDesk" class="ml-3 xt-bg-2" key="console" type="primary" >
+                  <xt-button :w="113" :h="40" @click="importDesk" class="ml-3 xt-bg-t-2" key="console" type="primary" >
                     <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:arrow-download-20-filled"></xt-new-icon>导入桌面</div>
                   </xt-button>
-                  <!-- <xt-button :w="113" :h="40" @click="moreDesk" class="ml-3 xt-active-bg" key="console" type="primary" >
+                  <xt-button :w="113" :h="40" @click="onArrange" class="ml-3 xt-active-bg" key="console" type="primary" >
                     <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:app-folder-16-regular"></xt-new-icon>图标整理</div>
-                  </xt-button> -->
+                  </xt-button>
                   <!-- <xt-button :w="113" :h="40"  @click="newAddCard" class="ml-3 xt-bg-2" key="console" >
                     <icon class="mr-1" icon="tianjia2"></icon>添加组件
                   </xt-button> -->
@@ -195,15 +196,15 @@
     <div style="width: 800px;height:518px">
       <div class="font-semibold text-center font-16 xt-text">添加桌面</div>
       <div class="flex justify-center mt-6">
-        <xt-button :w="145" :h="40" @click="doAddDesk(true)" class="ml-3 xt-bg-2" key="console" type="primary" >
+        <xt-button :w="145" :h="40" @click="doAddDesk('空白桌面')" class="ml-3 xt-bg-2" key="console" type="primary" >
           <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:desktop-16-regular"></xt-new-icon>创建空白桌面</div>
         </xt-button>
         <xt-button :w="145" :h="40" @click="importDesk" class="ml-3 xt-bg-2" key="console" type="primary" >
           <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:arrow-download-20-filled"></xt-new-icon>导入桌面文件</div>
         </xt-button>
-        <!-- <xt-button :w="145" :h="40" @click="addIcon" class="ml-3 xt-active-bg" key="console" type="primary" >
+        <xt-button :w="145" :h="40" @click="aiCustom" class="ml-3 xt-active-bg" key="console" type="primary" >
           <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:bot-24-regular"></xt-new-icon>桌面智能定制</div>
-        </xt-button> -->
+        </xt-button>
       </div>
       <div class="mt-6 font-semibold text-center font-16 xt-text">推荐桌面方案</div>
       <div class="mt-4 text-center font-16 xt-text-2">你可以选择以下来自桌面市场的方案。<a @click="moreDesk">更多桌面</a></div>
@@ -364,6 +365,11 @@
       :panelIndex="panelIndex"
     ></NewAddCard>
   </div>
+
+  <teleport to="body">
+    <!-- 使用新版的配置导航 -->
+    <NewGuidePage v-if="showGuide" @closeShowGuide="closeShowGuide" :deskId="deskId" :menuList="menuList"></NewGuidePage>
+  </teleport>
 </template>
 
 <script>
@@ -394,6 +400,7 @@ import { useFreeLayoutStore } from "./freeLayout/store";
 import { useFloatMenuStore } from "./floatMenu/store";
 import { useDeskStore } from "./store";
 import { completeTask } from "../../apps/task/task";
+import NewGuidePage from "../../page/app/grade/NewGuidePage.vue";
 export default {
   name: "DeskGroup",
   components: {
@@ -410,6 +417,7 @@ export default {
     AllDeskList,
     GameListDrawer,
     Desk,
+    NewGuidePage,
   },
   emits: ["update:currentDeskId", "showMore"],
   props: {
@@ -514,9 +522,10 @@ export default {
         { title: "从市场添加", name: "market" },
         { title: "自行添加", name: "custom" },
       ],
-
+      showGuide: false,
+      menuList: [],
       recommendList: [], //推荐桌面
-      
+
       keepAddIcon:false, // 保持添加图标
     };
   },
@@ -642,6 +651,26 @@ export default {
     ...mapActions(marketStore, ["getRecommend"]),
     ...mapActions(useFreeLayoutStore, ["clearFreeLayout"]),
     ...mapActions(useDeskStore, ["addMenu"]),
+    closeShowGuide(){
+      this.showGuide = false
+    },
+    // 图标整理
+    onArrange(){
+      if(!this.showGuide){
+        this.menuList = [1]
+        this.showGuide = true
+      }else{
+        message.info("定制过程中无法操作");
+      }
+    },
+    // 智能定制
+    aiCustom(){
+      message.info("开始桌面定制");
+      this.addDeskVisible = false
+      this.doAddDesk('定制桌面')
+      this.menuList = [0, 1, 2]
+      this.showGuide = true
+    },
     startTask(e) {
       let ref = this.$refs.mixMenu;
       ref.custom(e);
@@ -650,15 +679,18 @@ export default {
       this.$bus.emit('stopHide')
     },
     handleMouseLeave(){
-      console.log(1111111111111111)
       this.$bus.emit('startHide')
     },
     update() {
       this.$refs.currentDeskRef.update();
     },
     newAddCard() {
-      this.$refs.currentDeskRef.newAddCard();
-      this.keepAddIcon = false
+      if(!this.showGuide){
+        this.$refs.currentDeskRef.newAddCard();
+        this.keepAddIcon = false
+      }else{
+        message.info("定制过程中无法操作");
+      }
     },
     learn() {
       this.$refs.currentDeskRef.learn();
@@ -684,10 +716,14 @@ export default {
       this.addDesk = addDesk
     },
     shareDesk() {
-      this.$refs.shareDeskRef.update();
-      this.$refs.shareDeskRef.setSelectVal(this.currentDeskId);
-      this.shareDeskVisible = true;
-      this.$refs.currentDeskRef.hideMenu();
+      if(!this.showGuide){
+        this.$refs.shareDeskRef.update();
+        this.$refs.shareDeskRef.setSelectVal(this.currentDeskId);
+        this.shareDeskVisible = true;
+        this.$refs.currentDeskRef.hideMenu();
+      }else{
+        message.info("定制过程中无法操作");
+      }
     },
     closeShare() {
       this.shareDeskVisible = false;
@@ -705,9 +741,13 @@ export default {
       this.$refs.currentDeskRef.newAddCard();
     },
     moreDesk() {
-      this.panelIndex = 1;
-      this.addDeskVisible = false;
-      this.deskMarketVisible = true;
+      if(!this.showGuide){
+        this.panelIndex = 1;
+        this.addDeskVisible = false;
+        this.deskMarketVisible = true;
+      }else{
+        message.info("定制过程中无法操作");
+      }
     },
     setFullScreen(flag = true) {
       this.$refs.currentDeskRef.setFullScreen(flag);
@@ -726,74 +766,82 @@ export default {
       this.allDeskListVisible = true;
     },
     async importDesk() {
-      let openPath = await tsbApi.dialog.showOpenDialog({
-        title: "选择导入的代码",
-        filters: [{ name: "desk存档", extensions: ["desk"] }],
-      });
-      if (!openPath) {
-        return;
-      }
-      let importJsonTxt = require("fs").readFileSync(openPath[0], "utf-8");
-      let needImportDesk;
-
-      try {
-        needImportDesk = JSON.parse(importJsonTxt);
-        const { desk, freeLayoutData, freeLayoutState } = needImportDesk;
-        let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
-        desk.forEach((g) => {
-          let oldId = g.id;
-          //修正一下老版本导出的数据
-          if (g.cardsHeight) {
-            g.deskHeight = g.cardsHeight;
-          }
-          if (g.settings.cardZoom) {
-            g.settings.zoom = g.settings.cardZoom;
-          }
-          let cardZoom = (
-            (g.settings.zoom * cardsHeight) /
-            g.deskHeight
-          ).toFixed();
-
-          g.icon = "desktop";
-          g.settings.zoom = parseInt(cardZoom);
-          g.id = window.$models.nanoid.nanoid(8);
-          // 将导入的便签重新修改时间
-          g?.cards?.forEach((item, index) => {
-            //移除桌面相关的便签卡片
-            if (item.name === "notes") {
-              const now = new Date().getTime();
-              const obj = {
-                ...item,
-                id: now,
-                _id: "note:" + now,
-                createTime: now,
-                updateTime: now,
-                isDelete: false,
-                deskId: g.id,
-                deskName: g.name,
-              };
-              tsbApi.db.put(obj);
-              g.cards[index] = obj;
-            }
-          });
-
-          if (freeLayoutState[oldId]) {
-            this.freeLayoutData[g.id] = freeLayoutData[oldId];
-            this.freeLayoutState[g.id] = freeLayoutState[oldId];
-          }
-          this.deskList.unshift(g);
+      if(!this.showGuide){
+        let openPath = await tsbApi.dialog.showOpenDialog({
+          title: "选择导入的代码",
+          filters: [{ name: "desk存档", extensions: ["desk"] }],
         });
-        this.addDeskVisible = false;
-        message.success("为您成功导入" + desk.length + "个桌面。");
-      } catch (e) {
-        console.warn(e);
-        message.error("导入失败，请检查代码。");
+        if (!openPath) {
+          return;
+        }
+        let importJsonTxt = require("fs").readFileSync(openPath[0], "utf-8");
+        let needImportDesk;
+
+        try {
+          needImportDesk = JSON.parse(importJsonTxt);
+          const { desk, freeLayoutData, freeLayoutState } = needImportDesk;
+          let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
+          desk.forEach((g) => {
+            let oldId = g.id;
+            //修正一下老版本导出的数据
+            if (g.cardsHeight) {
+              g.deskHeight = g.cardsHeight;
+            }
+            if (g.settings.cardZoom) {
+              g.settings.zoom = g.settings.cardZoom;
+            }
+            let cardZoom = (
+              (g.settings.zoom * cardsHeight) /
+              g.deskHeight
+            ).toFixed();
+
+            g.icon = "desktop";
+            g.settings.zoom = parseInt(cardZoom);
+            g.id = window.$models.nanoid.nanoid(8);
+            // 将导入的便签重新修改时间
+            g?.cards?.forEach((item, index) => {
+              //移除桌面相关的便签卡片
+              if (item.name === "notes") {
+                const now = new Date().getTime();
+                const obj = {
+                  ...item,
+                  id: now,
+                  _id: "note:" + now,
+                  createTime: now,
+                  updateTime: now,
+                  isDelete: false,
+                  deskId: g.id,
+                  deskName: g.name,
+                };
+                tsbApi.db.put(obj);
+                g.cards[index] = obj;
+              }
+            });
+
+            if (freeLayoutState[oldId]) {
+              this.freeLayoutData[g.id] = freeLayoutData[oldId];
+              this.freeLayoutState[g.id] = freeLayoutState[oldId];
+            }
+            this.deskList.unshift(g);
+          });
+          this.addDeskVisible = false;
+          message.success("为您成功导入" + desk.length + "个桌面。");
+        } catch (e) {
+          console.warn(e);
+          message.error("导入失败，请检查代码。");
+        }
+      }else{
+        message.info("定制过程中无法操作");
       }
     },
     showAddDeskForm() {
-      this.$refs.currentDeskRef.hideMenu();
-      this.menuVisible = false;
-      this.addDeskVisible = true;
+      if(!this.showGuide){
+        this.$refs.currentDeskRef.hideMenu();
+        this.menuVisible = false;
+        this.addDeskVisible = true;
+      }else{
+        message.info("定制过程中无法操作");
+      }
     },
     delDesk() {
       // 定制桌面时需要屏蔽删除功能
@@ -860,9 +908,13 @@ export default {
 
     },
     exportDesk() {
-      this.$refs.currentDeskRef.hideMenu();
-      this.layoutSize = this.$refs.currentDeskRef.getLayoutSize();
-      this.exportModal = true;
+      if(!this.showGuide){
+        this.$refs.currentDeskRef.hideMenu();
+        this.layoutSize = this.$refs.currentDeskRef.getLayoutSize();
+        this.exportModal = true;
+      }else{
+        message.info("定制过程中无法操作");
+      }
     },
     closeExport(val) {
       this.exportModal = val;
@@ -870,13 +922,16 @@ export default {
 
     // 添加图标
     addIcon(){
-      this.$refs.currentDeskRef.newAddIcon()
-      this.keepAddIcon = true;
+      if(!this.showGuide){
+        this.$refs.currentDeskRef.newAddIcon()
+        this.keepAddIcon = true;
+      }else{
+        message.info("定制过程中无法操作");
+      }
     },
 
-    doAddDesk(add) {
-      if(add){this.deskTitle = '空白桌面' }
-
+    doAddDesk(deskName) {
+      if(deskName){this.deskTitle = deskName }
       if (this.deskTitle.trim() === "") {
         message.error("请输入新桌面名称");
         return;
@@ -891,8 +946,7 @@ export default {
         icon: "desktop",
         cards: this.cleanMuuriData(deskTemplates[this.selectDesk.name]),
       };
-
-      if(add){ desk.cards = [] }
+      if(deskName){ desk.cards = [] }
 
       this.deskList.unshift(desk);
       this.$emit("changeDesk", { id: desk.id });

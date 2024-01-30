@@ -5,6 +5,7 @@
     @dragover="handleDragover"
     @dragenter="handleDragenter"
     ref="target"
+    @click="test"
   >
     <slot></slot>
   </div>
@@ -12,7 +13,7 @@
 <script></script>
 <script setup>
 import { nanoid } from "nanoid";
-import { ref } from "vue";
+import { ref,getCurrentInstance } from "vue";
 import { storeToRefs } from "pinia";
 import { myIcons } from "../../store/myIcons";
 import { useAddCard } from "../../ui/hooks/useAddCard";
@@ -39,6 +40,8 @@ mouseInElement.value = useMouseInElement(target);
 // 图标组件
 const iconStore = myIcons();
 const { iconOption } = storeToRefs(iconStore);
+
+const { proxy } = getCurrentInstance()
 
 const handleDrop = async (dragEvent) => {
   console.log("handleDrop", isEnterBar.value);
@@ -145,6 +148,10 @@ const handleDragenter = (dragEvent) => {
 const handleDragover = (dragEvent) => {
   dragEvent.preventDefault();
 };
+
+const test = () =>{
+  proxy.$bus.emit("closeControl")
+}
 </script>
 
 <style lang="scss" scoped></style>

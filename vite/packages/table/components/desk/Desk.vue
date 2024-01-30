@@ -1,6 +1,6 @@
 <template>
   <div v-if="fullScreen && noFullScreen" class="no-drag">
-    <div style="position: absolute; right: 10px; top: 10px; z-index: 999">
+    <div style="position: absolute; right: 75px; top: 16px; z-index: 999">
       <xt-button @click="setFullScreen(false)" :w="40" :h="40" type="theme">
         <Icon style="font-size: 18px" icon="quxiaoquanping_huaban"></Icon>
       </xt-button>
@@ -273,7 +273,6 @@ import { useDeskStore } from "./store";
 import { useCustomLayout } from "./freeLayout/useCustomLayout";
 import { useFileConversionIcon } from "../../apps/folder/src/hooks/useDataConversion";
 import { headerData, mainData, folderData } from "./freeLayout/config";
-import { taskStore }from '../../../table/apps/task/store'
 
 import Drop from "./Drop.vue";
 export default {
@@ -497,6 +496,7 @@ export default {
             useCustomLayout({
               headerList: headerData,
               folderList: folderData,
+              mainList:  mainData,
               cb: () => {
                 this.$bus.emit("adsorbGrid");
               },
@@ -526,12 +526,12 @@ export default {
               name: "添加图标分组",
               fn: this.addFolder,
             },
-            // {
-            //   id: 3,
-            //   newIcon: "mingcute:windows-line",
-            //   name: "整理win桌面图标",
-            //   fn: this.addFolder,
-            // },
+            {
+              id: 3,
+              newIcon: "mingcute:windows-line",
+              name: "整理win桌面图标",
+              fn: this.deskIcon,
+            },
           ],
         },
 
@@ -697,7 +697,6 @@ export default {
   mounted() {
     // 空桌面添加图标保持弹窗
     this.editVisible = this.keepAddIcon
-    this.initTask()
     // 自动打开编辑
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();
@@ -744,7 +743,9 @@ export default {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
     ...mapActions(cardStore, ["addCard"]),
     ...mapActions(useDeskStore, ["addMenu"]),
-    ...mapActions(taskStore, ['initTask']),
+    deskIcon(){
+      this.$emit("onArrange");
+    },
     addFolder() {
       registerFolder(this.currentDesk);
     },

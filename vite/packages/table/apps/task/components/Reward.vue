@@ -8,10 +8,11 @@
     "
   >
     <div
-      class="absolute right-0 top-0 text-xs flex justify-center items-center z-10"
+      class="absolute right-0 top-0 text-xs flex justify-center items-center z-10 px-1"
       style="
         background: #508bfe;
-        width: 32px;
+        width: auto;
+
         height: 20px;
         border-radius: 0px 10px 0px 10px;
       "
@@ -57,16 +58,16 @@ const types = computed(() => {
     },
     communityPoints: {
       name: "积分",
-      icon: "/public/img/task/communityPoints.svg",
+      icon: "/img/task/communityPoints.svg",
       size: 56,
     },
     experience: {
       name: "经验",
-      icon: "/public/img/task/experience.png",
+      icon: "/img/task/experience.png",
       size: 42,
     },
     avatarFrame: {
-      name: "头像",
+      name: "头像框",
       icon: props.icon,
       size: 56,
     },

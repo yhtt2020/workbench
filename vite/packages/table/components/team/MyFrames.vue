@@ -33,8 +33,8 @@ export default {
         wheelPropagation: true
       },
       frameList: [],
-      canvas:null,
-      ctx:null
+      canvas: null,
+      ctx: null
     }
   },
   computed: {
@@ -86,8 +86,8 @@ export default {
 
       drawHeaderImage(128, 128, 80, 128, item.image, this.userInfo.avatar, (canvas, ctx) => {
         document.getElementById('downloadContainer').appendChild(canvas)
-        this.canvas=canvas
-        this.ctx=ctx
+        this.canvas = canvas
+        this.ctx = ctx
       })
       this.downloadVisible = true
 
@@ -105,7 +105,8 @@ export default {
           'showOverwriteConfirmation'
         ]
       })
-      const base64 = this.canvas.toDataURL('image/png',1)
+      const base64 = this.canvas.toDataURL('image/png', 1)
+
       function dataURLToBlob(fileDataURL) {
         let arr = fileDataURL.split(','),
           mime = arr[0].match(/:(.*?);/)[1],
@@ -115,9 +116,10 @@ export default {
         while (n--) {
           u8arr[n] = bstr.charCodeAt(n)
         }
-        return new Blob([u8arr], { type: mime })
+        return new Blob([u8arr], {type: mime})
       }
-      require('fs').writeFile(savePath,Buffer.from(await dataURLToBlob(base64).arrayBuffer()), (err) => {
+
+      require('fs').writeFile(savePath, Buffer.from(await dataURLToBlob(base64).arrayBuffer()), (err) => {
         if (err) throw err;
         console.log('The file has been saved!');
       });
@@ -152,23 +154,19 @@ export default {
               </span>
         </div>
       </div>
-      <a-row :gutter="10">
-        <a-col :span="12">
-          <a-button v-if="!item.equipped" @click="equip(item)" type="primary" class="rounded-xl h-12 w-full"
-                    style="margin-right: 0;color: var(--active-text);">
-            使用
-          </a-button>
-          <a-button v-else @click="unequip(item)" class="rounded-xl h-12  w-full xt-text-2"
-                    style="margin-right: 0;color: var(--active-text);">
-            使用中
-          </a-button>
-        </a-col>
-        <a-col :span="12">
-          <a-button @click="download(item)" class="rounded-xl h-12  w-full xt-bg xt-text-2">
-            下载头像
-          </a-button>
-        </a-col>
-      </a-row>
+      <div class="flex gap-4 w-full item-content">
+        <xt-button v-if="!item.equipped" @click="equip(item)" type="theme" class="rounded-xl h-12  "
+                   style="margin-right: 0;color: var(--active-text);">
+          使用
+        </xt-button>
+        <xt-button v-else @click="unequip(item)" class="rounded-xl h-12    xt-text-2"
+                   style="margin-right: 0;color: var(--active-text);">
+          使用中
+        </xt-button>
+        <xt-button @click="download(item)" class="rounded-xl h-12    xt-bg xt-text-2">
+          下载头像
+        </xt-button>
+      </div>
 
 
     </div>
@@ -180,9 +178,9 @@ export default {
 
       </div>
       <div class="mt-2">
-        <a-button @click="doDownload" block type="primary" class="rounded-full">
+        <xt-button @click="doDownload" block type="theme" class="rounded-full">
           下载头像
-        </a-button>
+        </xt-button>
       </div>
     </div>
 
