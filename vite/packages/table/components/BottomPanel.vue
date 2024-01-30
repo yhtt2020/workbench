@@ -450,6 +450,7 @@ export default {
       folderId: '',
       // 弹窗显示
       noticeFlag: true,
+      addIconFlag: false,
       left: 0,
       parentSize: 0,
       // 控制中心弹窗
@@ -684,12 +685,11 @@ export default {
   watch: {
     copyFootNav: {
       handler(newVal, oldVal) {
-        console.log(newVal,oldVal,'copyFootNav')
         // 获取最大可添加图标个数
         const windowWidth = window.innerWidth
         this.maxItemNum = Math.round((windowWidth - 240) / 72)
         if (this.copyFootNav.length > this.maxItemNum && this.maxItemNum !== null) {
-          if (this.noticeFlag) {
+          if (this.noticeFlag && this.addIconFlag) {
             this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
               ok: () => {
                 const width = window.innerWidth / (240 + this.copyFootNav.length * 72)
@@ -707,6 +707,13 @@ export default {
       },
       immediate: true,
       deep: true,
+    },
+    "copyFootNav.length": {
+      handler(newVal, oldVal) {
+        if(oldVal !== undefined && newVal !== oldVal){
+          this.addIconFlag = true
+        }
+      }
     },
     delZone(val) {
       this.delNav = val
@@ -1056,6 +1063,8 @@ export default {
               return this.copyFootNav
             }
           })
+        }else{
+          this.copyFootNav.splice(index, 1, ...item.children)
         }
         // this.copyFootNav.splice(index, 1, ...item.children)
 

@@ -29,7 +29,8 @@ export const getFavicon = async (url) => {
     }
 
     // 获取标题
-    const pageTitle = $("title").text().trim();
+    let pageTitle = null
+    pageTitle = $("title").text().trim();
     console.log("Page Title:", pageTitle);
 
     // 返回结果对象
