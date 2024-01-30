@@ -67,56 +67,54 @@ export const folderData = [
   },
 ];
 
-export const mainData = [
-  {
-    name: "test",
-    customData: {
-      customSize: "2x2",
-      name: "其他2x2小组件1",
+export const mainData =[
+    {
+        "customData": {
+            "customSize": "4x4",
+            "name": "yuanCommunity"
+        },
+        "name": "yuanCommunity"
     },
-  },
-  {
-    name: "test",
-    customData: {
-      customSize: "2x2",
-      name: "其他2x2小组件2",
+    {
+        "customData": {
+            "customSize": "4x4",
+            "name": "news"
+        },
+        "name": "news"
     },
-  },
-  {
-    name: "test",
-    customData: {
-      customSize: "2x2",
-      name: "其他2x2小组件3",
+    {
+        "customData": {
+            "customSize": "2x4",
+            "name": "HotSearch"
+        },
+        "name": "HotSearch"
     },
-  },
-  {
-    name: "test",
-    customData: {
-      customSize: "2x2",
-      name: "其他2x2小组件4",
+    {
+        "customData": {
+            "customSize": "4*4",
+            "name": "middleWallpaper"
+        },
+        "name": "middleWallpaper"
     },
-  },
-
-  {
-    name: "test",
-    customData: {
-      customSize: "2x4",
-      name: "其他2x2小组件1",
+    {
+        "customData": {
+            "customSize": "2*2",
+            "name": "clocks"
+        },
+        "name": "clocks"
     },
-  },
-  {
-    name: "test",
-    customData: {
-      customSize: "2x4",
-      name: "其他2x4小组件2",
+    {
+        "customData": {
+            "customSize": "2x2",
+            "name": "historyInfo"
+        },
+        "name": "historyInfo"
     },
-  },
-
-  {
-    name: "test",
-    customData: {
-      customSize: "4x4",
-      name: "其他4x4小组件1",
-    },
-  },
-];
+    {
+        "customData": {
+            "customSize": "2*4",
+            "name": "notes"
+        },
+        "name": "notes"
+    }
+]
