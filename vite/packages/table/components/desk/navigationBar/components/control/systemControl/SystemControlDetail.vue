@@ -3,7 +3,7 @@
   <!-- 移除标记 -->
   <template v-if="status !== null &&  status === 'del'">
     <div class="absolute" style="top: 3px;right:-4px;" >
-      <xt-button style="width: auto !important;" h="0">
+      <xt-button class="pointer" style="width: auto !important;" h="0">
         <div class="flex items-center justify-center">
           <xt-new-icon icon="fluent:subtract-circle-16-filled" size="20" :color="'var(--error)'"></xt-new-icon>
         </div>
@@ -27,19 +27,20 @@
     <div v-for="item in list">
       <xt-button style="width: auto;" h="0" @click="item.fn">
         <div class="flex items-center justify-center">
-          <xt-new-icon :icon="item.icon" size="24" :color="item.color"></xt-new-icon>
+          <xt-new-icon :icon="item.icon" :size="item.size||24" :color="item.color"></xt-new-icon>
         </div>
       </xt-button>
     </div>
   </div>
 
   <!-- 音量调节区域 -->
-  <div class="xt-bg-t-2 w-full flex items-center justify-between rounded-lg" style="height: 54px;">
-    <div class="rounded-tl-lg rounded-bl-lg" style="width:129px;height:52px;background: rgba(255,255,255,0.85);"></div>
+  <div @touchstart="setting=true" @touchmove="syncProgressBar" @touchend="setVolume" @click="setVolume" @mousemove="syncProgressBar" @mousedown="setting=true" @mouseup="setVolume"  class="xt-bg-t-2 w-full flex items-center justify-between rounded-lg pointer" style="height: 54px;">
+    <div class="rounded-tl-lg rounded-bl-lg " :style="{width:(defaultOutput.volume/100*258).toFixed(0)+'px'}" style="height:52px;background: rgba(255,255,255,0.85);"></div>
     <div class="pr-4">
-     <xt-button style="width: auto;" h="0">
+     <xt-button @mousedown.stop @mousemove.stop @mouseup.stop @click="setMuted(!mute)"   @touchend.stop @touchstart.stop @touchmove.stop style="width: auto;" h="0">
        <div class="flex items-center justify-center">
-         <xt-new-icon icon="fluent:speaker-2-16-regular" size="24"></xt-new-icon>
+         <xt-new-icon  v-if="!mute" icon="fluent:speaker-2-16-regular" size="24"></xt-new-icon>
+         <xt-new-icon v-else icon="fluent:speaker-mute-16-regular" size="24"></xt-new-icon>
        </div>
      </xt-button>
     </div>
@@ -49,10 +50,20 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref ,onMounted} from 'vue';
+import { getDefaultVolume, setDefaultVolume } from '../../../../../../js/ext/audio/audio'
+const mute =ref(false)
 
+const defaultOutput=ref({})
+onMounted(async () => {
+  defaultOutput.value = await getDefaultVolume()
+  console.log(defaultOutput)
+  mute.value = defaultOutput.value.muted
+})
+const setting=ref(false)
 const props = defineProps({
-  /**通过status属性来判断音乐播放器是否可以播放,以及音量是否可以调节**/  
+  event:true,
+  /**通过status属性来判断音乐播放器是否可以播放,以及音量是否可以调节**/
   status:{
     type:String,
     default:'null'
@@ -61,34 +72,70 @@ const props = defineProps({
 
 const lastSong = () =>{
   // 做上一首音乐的播放交互逻辑
-  if(props.status === 'null'){ 
-   
+  if(props.status === 'null'){
+    window.$models.win32.sendKeyboard(0xB1)
   }
   // 阻止上一首切换事件
   else {
-    
+
   }
 }
-
+const setMuted=(muteValue,event)=>{
+  setDefaultVolume({
+    muted:muteValue
+  })
+  mute.value=muteValue
+  window.event.stopPropagation()
+}
 const nextSong = ()=>{
   // 做下一首音乐的播放交互逻辑
-  if(props.status === 'null'){ 
-   
+  if(props.status === 'null'){
+    window.$models.win32.sendKeyboard(0xB0)
   }
   // 阻止下一首切换事件
   else {
-    
+
   }
+}
+const syncProgressBar=(event)=>{
+  console.log('触发同步',event)
+  if(setting.value){
+    let val=0
+    if(event.layerX){
+      val=event.layerX
+    }else{
+      val=event.changedTouches[0].clientX-event.target.getBoundingClientRect().x
+    }
+    console.log(val)
+
+    defaultOutput.value.volume= Number((val/258*100).toFixed(2))
+  }
+}
+const setVolume=(event)=>{
+  let val=0
+  if(event.layerX){
+    val=event.layerX
+  }else{
+    val=event.changedTouches[0].clientX-event.target.getBoundingClientRect().x
+  }
+  console.log(event,+(val/258*100).toFixed(2))
+  setting.value=false
+  setDefaultVolume({
+    volume:+(val/258*100).toFixed(2),
+    muted:mute.value
+  })
+  defaultOutput.value.volume= Number((val/258*100).toFixed(2))
+
 }
 
 const play = () =>{
   // 音乐的播放交互逻辑
-  if(props.status === 'null'){ 
-   
+  if(props.status === 'null'){
+    window.$models.win32.sendKeyboard(0xB3)
   }
   // 阻止音乐播放事件
   else {
-    
+
   }
 }
 
@@ -99,14 +146,15 @@ const list = ref([
     fn:()=>{ lastSong() }
   },
   {
-    icon:'fluent:play-16-filled',
+    icon:'fluent:video-play-pause-20-filled',
     color:'var(--primary-text)',
-    fn:()=>{ nextSong() }
+    fn:()=>{ play() },
+    size:32
   },
   {
     icon:'fluent:next-16-filled',
-    color:'var(--disable-text)', 
-    fn:()=>{ play() }
+    color:'var(--disable-text)',
+    fn:()=>{ nextSong() }
   },
 ])
 

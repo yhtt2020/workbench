@@ -11,7 +11,7 @@
                 <Icon class="pointer" @click="item.type = 'rows'" v-if="item.type == 'columns'" icon="fluent:apps-list-detail-24-regular" width="20" height="20" />
                 <Icon class="pointer" @click="item.type = 'columns'" v-else icon="fluent:grid-20-regular" width="20" height="20" />
                 <div class="flex items-center justify-center w-8 h-8 ml-2 rounded-lg xt-bg">
-                    <a-checkbox v-model:checked="item.isCheck"></a-checkbox>
+                    <a-checkbox :disabled="!item.list.length" v-model:checked="item.isCheck"></a-checkbox>
                 </div>
                 </div>
             </div>

@@ -94,8 +94,6 @@ const sortableContainer = ref(
     index.value +
     Math.ceil(Math.random() * 100)
 );
-console.log("modalSize.value :>> ", modalSize.value);
-console.log("sortableContainer.value :>> ", sortableContainer.value);
 const sortableBox = ref("xt-sortable-fle-box-" + index.value);
 // 拖拽布局
 const fileLayout = computed(() => {

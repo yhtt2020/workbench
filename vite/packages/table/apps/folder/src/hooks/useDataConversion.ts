@@ -141,14 +141,14 @@ export const defaultIconData = {
 export const useLinkConversionNav = (link)=>{
   const file = {
     name:link.name || '链接',
-    icon:link.icon !== null ? link.icon : 'fluent-emoji:globe-showing-asia-australia',
+    icon:link.icon !== null ? link.icon : '	https://a.apps.vip/icons/iconSelect/emoji/globe-showing-asia-australia.svg',
     type:'default',
     value: link.value,
     mode:'link',
-    isBg:link.icon === null ? false : true,
-    bg:'var(--secondary-transp-bg)',
+    isBg:false,
+    bg:'',
     id:nanoid(6),
-    linkIcon:link.icon === null ? true : false,
+    linkIcon:false, //link.icon === null ? true : false
   }
   return file
 }

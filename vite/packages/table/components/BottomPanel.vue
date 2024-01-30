@@ -17,6 +17,21 @@
       :style="{ left: `${controlLeft}px`, bottom: `${navAttribute.navSize / 100 * 100}px` }">
       <ControlModal @close="controlVisible = false"></ControlModal>
     </div>
+
+    <!-- <div 
+      class="fixed w-full h-[90px] " 
+      style="bottom: 0px; background-color: red;" 
+      @mouseenter="handleMouseEnter" 
+      @mouseleave="handleMouseLeave">
+      
+    </div> -->
+    <div v-if="false"
+          style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:0">
+          <div>选中的id{{ this.isLeaveBar }} {{ isEdge }}</div>
+          <div v-for="( item, index) in copyFootNav" style="margin-bottom: 5px;border-bottom: 4px solid white">
+            {{ index }} {{ item.name }} {{ item.id }} {{ item.children?.length }}
+          </div>
+    </div>
     <AutoHide>
       <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
         id="bottom-bar" style="text-align: center;position: relative;" @contextmenu="showMenu" v-show="autoVisible"
@@ -233,7 +248,7 @@ import Drag from './desk/navigationBar/components/folder/Drag.vue'
 import { hoverRealItemId } from './desk/navigationBar/hook/hoverRealItemId'
 import 'animate.css'
 import AutoHide from './desk/navigationBar/components/folder/AutoHide.vue'
-import { mergeData, defaultIconData } from '../apps/folder/src/hooks/useDataConversion'
+import { mergeData } from '../ui/hooks/useDataConversion'
 
 export default {
   name: 'BottomPanel',
@@ -270,7 +285,6 @@ export default {
   },
   data() {
     return {
-      defaultIconData,
       dragItem: null,
       targetItem: null,
       cancelUpdate: false,
@@ -799,13 +813,13 @@ export default {
     handleMouseEnter(e) {
       if (this.customOpenNav) {
         this.isLeaveBar = false
-        // console.log('=========>>>>>>>鼠标离开了', this.isLeaveBar, this.controlVisible, this.folderVisible)
+        console.log('=========>>>>>>>鼠标离开了', this.isLeaveBar, this.controlVisible, this.folderVisible)
       }
     },
     handleMouseLeave(e) {
       if (this.customOpenNav) {
         this.isLeaveBar = true
-        // console.log('===========>>>>>>>>鼠标进入了', this.isLeaveBar,e.y , this.parentHeight )
+        console.log('===========>>>>>>>>鼠标进入了', this.isLeaveBar,e.y , this.parentHeight )
       }
     },
     listenMouse(e) {
