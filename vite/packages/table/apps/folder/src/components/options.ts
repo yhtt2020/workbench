@@ -45,7 +45,7 @@ export const defaultClockData = {
   zoom:1.5,
   customSize:"2x2",
   font:"font-family: '优设标题黑' !important;",
-  fontColor:"#508BFE",
+  fontColor:"#FFFFFF",
   enableSecond:false,
   currentStatus:"font",
   currentZoom:100,
