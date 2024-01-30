@@ -3,10 +3,10 @@
     <div class="mt-3 text-center xt-text-2 font-16 text-hidden">选择你的使用偏好，我们将为你添加推荐的数据，支持选择多个偏好。</div>
     <a-row :gutter="20" class="flex justify-center mt-6">
       <a-col v-for="item in deskType">
-        <div :class="{'active':deskTypeObj[item.key]}"
+        <div 
         class="px-4 pt-5 setting-panel pointer"
-        @click="changeType(item.key)"
-        >
+        @click="changeType(item.key)">
+        <!-- :class="{'active':deskTypeObj[item.key]}" -->
           <div class="title">
             <Icon :icon="item.icon" width="56" height="56" />
             <div class="mt-2">{{ item.title }}</div>

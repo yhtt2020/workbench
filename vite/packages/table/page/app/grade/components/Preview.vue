@@ -1,5 +1,5 @@
 <template>
-  <!-- 预览 -->1
+  <!-- 预览 -->
   <div class="prompt-modal xt-mask" v-if="showModal">
     <div class="head-icon">
       <div class="icon" @click="close">
@@ -93,6 +93,10 @@ export default {
       type: Object,
       default: {},
     },
+    deskTypeObj: {
+      type: Object,
+      default: {},
+    },
     //显示与隐藏
     showModal: {
       type: Boolean,
@@ -154,7 +158,7 @@ export default {
   methods: {
     ...mapActions(cardStore, ['addShareDesk', 'setDeskSize']),
     ...mapActions(marketStore,['incSupport']),
-    ...mapActions(useFreeLayoutStore,['initFreeLayoutEnv']),
+    ...mapActions(useFreeLayoutStore,['initFreeLayoutEnv', 'clearFreeLayoutData']),
     
     async doIncSupport(){
       const rs=await this.incSupport(this.displayScheme.dataNanoid)
@@ -170,27 +174,26 @@ export default {
 
     // 添加头部卡片
     addHeaderCard(){
-      // console.log(1111111111111)
       // 将数据添加到桌面
-      // 将处理好的数据推进  定制头部方法里面 
-      // console.log('this.assistDesk.desk.cards',this.assistDesk.desk[0]?.cards)
-      // setTimeout(() => {
-        this.initFreeLayoutEnv() 
-        this.initFreeLayoutEnv() 
-        this.initFreeLayoutEnv() 
+      setTimeout(() => {
+        this.clearFreeLayoutData()
+        let header;
+        if(this.deskTypeObj.assist){
+          header = this.assistDesk.desk[0]?.cards.slice(0,6)
+        }else{
+          header = this.gameDesk.desk[0]?.cards.slice(0,5)
+        }
         useCustomLayout({
-          headerList: this.assistDesk.desk[0]?.cards.slice(0,6),
-          folderList: this.assistDesk.desk[0]?.cards.slice(6, 10),
-          // mainList: mainData,
+          headerList: header,
           cb: () => {
             this.$bus.emit("adsorbGrid");
           },
         });
-      // }, 2000);
-
+        this.$emit('analysis')
+      }, 2);
       // 定位到桌面正中央
       this.close()
-
+      this.$emit('addStep')
     },
 
     addPlan () {

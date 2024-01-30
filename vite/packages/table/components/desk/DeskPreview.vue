@@ -24,10 +24,10 @@
         {{ layoutSize.width + '*' + layoutSize.height }}
         <Icon icon="tishi-xianxing" class="ml-3" style="width: 24px;height: 24px;"></Icon>
       </div>
-      <div class="flex" style="padding: 0">
-    <div class="market-button mr-2 active" @click="addPlan"><icon icon="xiazai1"></icon> 立即添加</div>
-        <div class="market-button mr-0" @click="doIncSupport"><icon icon="dianzan"></icon> 点赞 {{displayScheme.support}}</div>
-      </div>
+      <div class="flex items-center" style="padding: 0">
+        <div class="market-button mr-2 active" @click="addPlan"><icon icon="xiazai1"></icon> 立即添加</div>
+          <div class="market-button mr-0" @click="doIncSupport"><icon icon="dianzan"></icon> 点赞 {{displayScheme.support}}</div>
+        </div>
     </div>
   </div>
   <!-- 预览添加抽屉 -->

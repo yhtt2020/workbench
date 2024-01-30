@@ -131,8 +131,6 @@
                     </div>
 
                 </div>
-                <!-- extra content -->
-                <!-- <slot name="extra-content" /> -->
                 <div style="font-size: 16px !important;" v-if="coverList.length > 0">
                     <a-image :width="200" :src="coverList[0]?.originFileObj.path" />
                 </div>

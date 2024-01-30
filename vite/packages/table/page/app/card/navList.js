@@ -42,7 +42,7 @@ export const NavList = [
           {
             name: "clocks",
             imgName:'clocks',
-            size: "自定义大小",
+            size: "2*2",
             zoom: "20",
           },
         ],
@@ -108,7 +108,7 @@ export const NavList = [
           {
             name: "middleWallpaper",
             imgName:'middleWallpaper',
-            size: "自定义大小",
+            size: "4*4",
             zoom: "24",
           },
           // {
@@ -204,7 +204,7 @@ export const NavList = [
           {
             name: "middleWallpaper",
             imgName:'middleWallpaper',
-            size: "自定义大小",
+            size: "4*4",
             zoom: "24",
           },
           // {
@@ -226,7 +226,7 @@ export const NavList = [
           {
             name: "notes",
             imgName: "notes",
-            size: "自定义大小",
+            size: "2*4",
             zoom: "18",
           },
         ],
@@ -306,7 +306,7 @@ export const NavList = [
           {
             name: "news",
             imgName:'news',
-            size: "4x4",
+            size: "2x4",
             zoom: "18",
           },
         ],
@@ -436,7 +436,7 @@ export const NavList = [
           {
             name: "clocks",
             imgName:'clocks',
-            size: "自定义大小",
+            size: "2x2",
             zoom: "20",
           },
         ],
@@ -580,7 +580,7 @@ export const NavList = [
           {
             name: "notes",
             imgName:'notes',
-            size: "自定义大小",
+            size: "2*4",
             zoom: "18",
           },
         ],
@@ -872,7 +872,7 @@ export const NavList = [
           {
             name: "myIcons",
             imgName:'myIcons',
-            size: "自定义大小",
+            size: "1*1",
             zoom: "20",
           },
         ],
@@ -887,7 +887,7 @@ export const NavList = [
           {
             name: "customAssembly",
             imgName:'customAssembly',
-            size: "自定义大小",
+            size: "2*2",
             zoom: "18",
           },
         ],
@@ -902,7 +902,7 @@ export const NavList = [
           {
             name: "Remote",
             imgName:'remote',
-            size: "自定义大小",
+            size: "2*2",
             zoom: "18",
           },
         ],
