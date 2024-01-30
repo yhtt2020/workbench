@@ -93,9 +93,7 @@ import RadioTab from '../../RadioTab.vue';
 import { mapWritableState, mapActions } from 'pinia';
 import { useCommunityStore } from '../../../page/chat/commun'
 import { yuanCommunityStore } from '../../../store/yuanCommunity.ts'
-import DataStatu from "../DataStatu.vue"
 import Unusual from '../Unusual.vue'
-import YuanPublishModal from './YuanPublishModal.vue';
 import detailModal from './DetailModal.vue'
 import MinDetailModal from './MinDetailModal.vue';
 import CommunitySetting from './CommunitySetting.vue';
@@ -107,8 +105,6 @@ export default {
         YuanIcon,
         communItem,
         RadioTab,
-        DataStatu,
-        YuanPublishModal,
         detailModal,
         MinDetailModal,
         Unusual,
