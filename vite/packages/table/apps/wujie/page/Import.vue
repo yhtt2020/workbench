@@ -13,7 +13,7 @@
 import { ref } from "vue";
 import { message } from "ant-design-vue";
 import { nanoid } from "nanoid";
-import { useRegisterTTApps } from "../../../../../../src/ttApps/import";
+import { useRegisterTTApps } from "../../../../../../src/main/ttApps/useRegisterTTApps";
 import {
   folderExists,
   folderCreate,
@@ -30,18 +30,25 @@ const getFileExtension = (filePath) => {
   return compressedTypes.includes(fileExtension);
 };
 const a = async () => {
-  useRegisterTTApps()
-  // imgRef.value.click();
-  // imgRef.value.onchange = function (event) {
-  //   console.log("files[0] :>> ", files[0]);
-  // };
-  return;
   let path = await tsbApi.dialog.showOpenDialog({
     title: "选择",
     message: "请选择文件",
     multiple: "true",
     properties: ["openFile", "multiSelections"],
   });
+
+
+  tsbApi.ttapp.install(path[0],(data)=>{
+    console.log('data :>> ', data);
+  })
+  return
+  useRegisterTTApps()
+  // imgRef.value.click();
+  // imgRef.value.onchange = function (event) {
+  //   console.log("files[0] :>> ", files[0]);
+  // };
+  return;
+
 
   // 未上传
   if (!path) return;

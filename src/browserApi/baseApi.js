@@ -1,5 +1,6 @@
 window.ipc=require('electron').ipcRenderer
 window=require('../util/util').tools.getWindowArgs(window)
+//
 //补充的api要从这里引入，然后使用preload挂载上去
 const baseApi={
   window:require('./window.js'),//窗口接口
@@ -17,7 +18,9 @@ const baseApi={
   db:require('./db'),//数据库接口,
   web:require('./web'),//网页接口
   app:require('./app'),//app
-  mouse:require('./mouse')//鼠标
+  mouse:require('./mouse'),//鼠标
+  ttapp:require('./ttapp'),//app
+
 }
 window.baseApi=baseApi
 module.exports=baseApi
