@@ -15,7 +15,7 @@
           <div class="my-4" >
             <div class="xt-bb mx-auto"></div>
           </div>
-          <div class="flex flex-col">
+          <div class="flex flex-col" v-if="!isFull">
             <div class="flex justify-between mb-2.5">
              <span class="xt-font xt-text font-16">背景框</span>
              <a-switch v-model:checked="customData.backgroundFrame"/>
@@ -24,7 +24,7 @@
              显示时钟组件的背景框。
             </span>
           </div>
-          <div class="my-4" >
+          <div class="my-4" v-if="!isFull">
             <div class="xt-bb mx-auto"></div>
           </div>
           <template v-if="!isFull">

@@ -3,9 +3,6 @@
   :defaultData="defaultClockData" :menuList="menuList" v-model:customSize="customData.customSize"
   :header="header" :options="option"  @leftClick="fullScreen" @resize="resize"
  >
-  <!-- {{ customData.customSize }}
-  {{ sliderScale }}
-  {{ customZoom }} -->
   <div class="box no-drag" @click="fullScreen">
     <div style="width: 100%;height: 100%;" class="flex items-center justify-center" :style="sliderScale">
       <component :is="customData.clockId"  :noBg="true" :customData="customData"
@@ -19,12 +16,14 @@
 
  <ClockSettingModal  ref="clockSettingRef" :customIndex="customIndex" 
   :desk="desk" :customData="customData" @updateClockStyle="updateClockStyle" :isFull="false"
-  @restZoom="restZoom"
+  @restZoom="restZoom" 
  />
 
 
-<ClockFullScreen  v-if="isClockFullScreen"  :customData="customData" :imgUrl="fullImage" 
-:clock="customData.clockId" @exit="isClockFullScreen = false" @updateBgZoom="updateBgZoom" :bgZoom="customData.bgZoom">
+<ClockFullScreen  v-if="isClockFullScreen"  :customData="customData"
+:clock="customData.clockId"  :bgZoom="customData.bgZoom"  :imgUrl="fullImage" 
+@updateClockStyle="updateClockStyle" @updateBgZoom="updateBgZoom" @exit="isClockFullScreen = false"
+>
 
 </ClockFullScreen>
 
@@ -155,9 +154,14 @@ export default {
   restZoom(){
     this.updateCustomData(this.customIndex,{currentZoom:100},this.desk);
   },
+  // 更新全屏情况下的缩放比例
   updateBgZoom(e) {
     this.updateCustomData( this.customIndex, { bgZoom: e,},this.desk );
     this.bgZoom = e;
+  },
+  // 更新时钟样式
+  updateClockStyle(e){
+    this.updateCustomData( this.customIndex, { clockId: e,},this.desk );
   },
 
  },

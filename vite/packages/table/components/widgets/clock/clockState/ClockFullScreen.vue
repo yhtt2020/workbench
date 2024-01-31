@@ -11,11 +11,13 @@
           :noBg="true"
           :clockFont="customData.font"
           :customData="customData"
+          :isSnow="customData.enableSecond"
         />
         <clock3
-          v-if="clock == 'clock3'"
+          v-if="clock === 'clock3'"
           key="clock3"
           :style="{ zoom: zoom }"
+          :isSnow="customData.enableSecond"
         ></clock3>
       </div>
     </xt-menu>
@@ -46,7 +48,7 @@ export default {
   props: {
     clock: {
       type: String,
-      default: "block1",
+      // default: "block1",
     },
     imgUrl: {
       type: String,
