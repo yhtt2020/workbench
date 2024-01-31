@@ -381,7 +381,7 @@ export default {
       loginList:[
         {
           title:'元社区',
-          content:'开放式社区，与全网小伙伴一同交流你的热爱，欢饮你的加入！',
+          content:'开放式社区，与全网小伙伴一同交流你的热爱，欢迎你的加入！',
           icon:'fluent-emoji:bubbles',
           background:'linear-gradient(107deg, #3E619E 0%, #5D367A 100%)',
         },
