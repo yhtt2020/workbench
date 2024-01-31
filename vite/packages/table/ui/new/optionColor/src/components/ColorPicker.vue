@@ -18,8 +18,15 @@
                             v-for="(item, index) in Object.keys(props.defaultList).length" @click="chooseDf(item)">
                             <xt-new-icon v-show="colorIndex == item" icon="ri:checkbox-circle-fill" size="20"></xt-new-icon>
                         </div>
-                        <XtBaseColor ref="baseColor" v-model:data="defaultColor" @update:data="updateBackground">
+                        <XtBaseColor 
+                            ref="baseColor" 
+                            v-model:data="defaultColor" 
+                            @update:data="updateBackground">
                         </XtBaseColor>
+                        <div class="w-[40px] h-[40px] pointer">
+                           <img src="/img/bg.png" class="w-full h-full" style="object-fit: cover;"> 
+                        </div>
+                        
                     </div>
                 </div>
 
