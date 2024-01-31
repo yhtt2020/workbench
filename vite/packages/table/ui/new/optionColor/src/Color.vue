@@ -86,6 +86,7 @@ const limitNum = (num:number,list:Array<string>):number | undefined | any=>{
 onMounted(()=>{
   colorNum.value = limitNum(colorNum.value, Object.keys(props.colorList))
   console.log(typeof(colorNum.value),'colorNum.value')
+  console.log(typeof(Number(colorNum.value)),'colorNum.value')
 })
 </script>
 

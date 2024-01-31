@@ -18,13 +18,14 @@
                             v-for="(item, index) in Object.keys(props.defaultList).length" @click="chooseDf(item)">
                             <xt-new-icon v-show="colorIndex == item" icon="ri:checkbox-circle-fill" size="20"></xt-new-icon>
                         </div>
-                        <XtBaseColor 
-                            ref="baseColor" 
-                            v-model:data="defaultColor" 
-                            @update:data="updateBackground">
-                        </XtBaseColor>
+                        
                         <div class="w-[40px] h-[40px] pointer">
-                           <img src="/img/bg.png" class="w-full h-full" style="object-fit: cover;"> 
+                           <img src="/img/bg.png" class="w-[40px] h-[40px] absolute" style="object-fit: cover;"> 
+                           <XtBaseColor 
+                                ref="baseColor" 
+                                v-model:data="defaultColor" 
+                                @update:data="updateBackground">
+                            </XtBaseColor>
                         </div>
                         
                     </div>
@@ -192,9 +193,10 @@ const updateBackground = () => {
 
 :deep(.zs-color-picker-btn-color) {
     border-radius: 12px;
-    background-image: url('/img/bg.png') !important;
+    // background-image: url('/img/bg.png') !important;
     background-size: cover;
     // margin-left: 8px;
+    opacity: 0.2;
 }
 
 // :host-context([data-tippy-root]) :deep .tippy-box[data-theme~='tomato'] {
