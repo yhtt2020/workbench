@@ -138,7 +138,7 @@ export const appStore = defineStore('appStore', {
     // 定制弹窗
     showGuide: false,
     // 定制菜单
-    guideList: [],
+    guideList: [0, 1, 2 , 3, 4],
   }),
   getters: {},
 

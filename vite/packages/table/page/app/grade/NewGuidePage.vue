@@ -152,8 +152,6 @@ export default {
         { name: '其他文件', type: 'columns', list: [], isCheck: false, },
       ],
       loading: false,
-      timer: null,
-      time: 0,
       setTime: 120,
       setTimer: null,
       // 转换好的数据
@@ -389,15 +387,7 @@ export default {
         this.appList = [...this.fault]
         this.loading = false
         this.messageFinish()
-        this.time = 0
-        this.clear()
       }, 15000);
-    },
-
-    clear() {
-      this.time = 0
-      clearInterval(this.timer)
-      this.timer = null
     },
 
     messageFinish() {
@@ -688,7 +678,6 @@ export default {
 
         // this.appList[0].list = tmp.game
         this.appList[1].list = tmp.programs
-
         this.appList[2].list = tmp.file
         this.appList[3].list = tmp.picture
         this.appList[4].list = tmp.audio
@@ -697,8 +686,6 @@ export default {
         // 请求结束 进入下一步
         this.loading = false
         this.messageFinish()
-        this.time = 15
-        this.clear()
 
         // 清楚超时操作
         clearTimeout(this.setTimer)
