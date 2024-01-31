@@ -1,6 +1,8 @@
 <template>
-  <xt-button @click="test()">任务重置</xt-button>
+  <!-- <xt-button @click="test()" v-if="settings.enableDev">任务重置</xt-button> -->
   <template v-if="store.taskID">
+    <!-- 用户等级信息 -->
+    <TaskUserInfo />
     <!-- 章节进度 -->
     <div class="xt-bg-2 rounded-xl px-4 pt-4 pb-3">
       <xt-text>
@@ -15,6 +17,7 @@
       <div class="mt-1">
         <a-progress :percent="progress" :show-info="false" />
       </div>
+      <!-- 显示当前奖励内容 -->
     </div>
     <xt-title>正在进行</xt-title>
     <div class="xt-bg-2 rounded-xl p-3">
@@ -32,19 +35,34 @@
       </div>
     </div>
   </template>
-  <div v-else class="text-center">已完成所有任务</div>
+
+  <template v-else>
+    <div class="flex flex-col items-center justify-center h-full">
+      <xt-new-icon icon="fluent-emoji:glowing-star" class="mb-4" size="56"></xt-new-icon>
+      <span class="xt-text-2 font-14 xt-font mb-2">🎉你已经完成所有主线任务！</span>
+      <span class="xt-text-2 font-14 xt-font">可以前往「每日任务」或「支线任务」，</span>
+      <span class="xt-text-2 font-14 xt-font">完成后可以获得更多奖励。</span>
+    </div>
+  </template>
 </template>
 
 <script setup>
-import StartTask from "../../components/StartTask.vue";
-import SerialNumber from "../../components/SerialNumber.vue";
+import {storeToRefs} from 'pinia';
+import { getAllTask } from "../../api";
 import { tasks } from "./Primary";
 import { taskStore } from "../../store";
 import { ref, reactive, computed, toRefs, onMounted } from "vue";
+import { appStore } from '../../../../store';
+
+import StartTask from "../../components/StartTask.vue";
+import SerialNumber from "../../components/SerialNumber.vue";
 import ShowReward from "../../components/ShowReward.vue";
-import { getAllTask } from "../../api";
+import TaskUserInfo from '../../components/userinfo/TaskUserInfo.vue';
 
 const store = taskStore();
+const app = appStore();
+const { settings } = storeToRefs(app);
+
 
 const { list, taskID, currentId, completedList, currentTaskList } =
   toRefs(store);
