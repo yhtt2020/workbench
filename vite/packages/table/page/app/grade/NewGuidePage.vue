@@ -3,7 +3,7 @@
     style="">
     <div v-if="!popState" class="h-full">
       <!-- 返回按钮 -->
-      <div v-if="step !== 0 && menuList.length > 1" @click="prevStep" class="absolute ml-4 top-icon no-drag">
+      <div v-if="step !== 0 && guideList.length > 1" @click="prevStep" class="absolute ml-4 top-icon no-drag">
         <MyIcon icon="fluent:chevron-left-16-filled" width="20" height="20" />
       </div>
       <!-- 主题色按钮 -->
@@ -191,14 +191,10 @@ export default {
       type: String,
       default: '',
     },
-    menuList: {
-      type: Array,
-      default: [0, 1, 2, 3, 4],
-    },
   },
   computed: {
     ...mapWritableState(cardStore, ['desks', 'addCard', 'removeCard']),
-    ...mapWritableState(appStore, ['backgroundSettings', 'backgroundImage', 'styles', 'backgroundName']),
+    ...mapWritableState(appStore, ['backgroundSettings', 'backgroundImage', 'styles', 'backgroundName', 'guideList']),
     ...mapWritableState(navStore, ['copyFootNav']),
     ...mapWritableState(FreeLayoutStore, ["assistDesk", "gameDesk"]),
     ...mapWritableState(useFreeLayoutStore, [
@@ -265,7 +261,7 @@ export default {
     })
 
     // 
-    this.step = this.menuList[this.stepIndex]
+    this.step = this.guideList[this.stepIndex]
     if (this.step == 1) {
       this.analysis()
     }
@@ -330,7 +326,7 @@ export default {
         this.$xtConfirm("返回上一步将会清空桌面已有的数据并进行重新分析。", "", {
           type: "warning",
           ok: () => {
-            this.step = this.menuList[--this.stepIndex]
+            this.step = this.guideList[--this.stepIndex]
             this.clearFreeLayoutData()
             this.desks[index].cards = []
           },
@@ -339,7 +335,7 @@ export default {
         this.$xtConfirm("返回上一步将会清空桌面文件夹。", "", {
           type: "warning",
           ok: () => {
-            this.step = this.menuList[--this.stepIndex]
+            this.step = this.guideList[--this.stepIndex]
             this.removeFolder()
           },
         });
@@ -347,7 +343,7 @@ export default {
         this.$xtConfirm("返回上一步将会清除推荐的卡片。", "", {
           type: "warning",
           ok: () => {
-            this.step = this.menuList[--this.stepIndex]
+            this.step = this.guideList[--this.stepIndex]
             this.clearFreeLayoutData()
             setTimeout(() => {
               useCustomLayout({
@@ -361,12 +357,12 @@ export default {
           },
         });
       } else {
-        this.step = this.menuList[--this.stepIndex]
+        this.step = this.guideList[--this.stepIndex]
       }
     },
     nextStep() {
-      if (this.stepIndex < this.menuList.length - 1) {
-        this.step = this.menuList[++this.stepIndex]
+      if (this.stepIndex < this.guideList.length - 1) {
+        this.step = this.guideList[++this.stepIndex]
       } else {
         this.$emit('closeShowGuide')
       }
@@ -601,7 +597,7 @@ export default {
 
     // 关闭预览桌面
     close() {
-      completeTask('z0201')
+      completeTask('Z0201')
       this.$emit('closeShowGuide')
     },
 
