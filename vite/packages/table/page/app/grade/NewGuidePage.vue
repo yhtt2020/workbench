@@ -436,13 +436,13 @@ export default {
       this.folderList = []
 
       folders.forEach(item => {
-        if (item.customData.name == '游戏') {
+        if (item.customData.name == '游戏' && this.guideList.length != 5) {
           item.customData?.list.forEach(i => {
             this.exeNavList[0].children?.push({ type: 'tableApp', icon: i.icon, name: i.name, addNav: true, bg: '', isBg: '', ext: '', summary: '', mode: 'app', value: i.value })
           })
           this.exeNavList[0].isCheck = true
 
-        } else if (item.customData.name == '常用程序') {
+        } else if (item.customData.name == '常用程序' && this.guideList.length != 5) {
           item.customData?.list.forEach(i => {
             this.exeNavList[1].children?.push({ type: 'tableApp', icon: i.icon, name: i.name, addNav: true, bg: '', isBg: '', ext: '', summary: '', mode: 'app', value: i.value })
           })
