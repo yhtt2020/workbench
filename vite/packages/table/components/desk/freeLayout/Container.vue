@@ -40,8 +40,6 @@ const snowDrag = ref();
 
 const firstLoading = ref(true);
 onMounted(() => {
- let res=  window.useEnv(["mac", "web"]);
- console.log('res :>> ', res);
   // 等待滚动视图完成加载
   setTimeout(() => {
     updateCard(currentDesk.value?.cards);
@@ -139,29 +137,24 @@ const cutCanvas = async () => {
   let { width: canvasWidth, height: canvasHeight } =
     getFreeLayoutState.value.canvas;
   let maxSize = currentData.value[maxItem.id].customData.customSize;
-  //
   const { width: maxWidth, height: maxHeight } = useElementSize(maxSize);
-  let { scrollHeight, scrollWidth } = freeLayoutEnv.value;
-  console.log(
-    "\u001b[31m" + "----------------数据处理----------------" + "\u001b[0m"
-  );
-  console.log("canvasWidth :>> ", canvasWidth);
-  console.log("maxItem.left  :>> ", maxItem.left);
-  console.log("maxWidth :>> ", maxWidth);
-  console.log("scrollWidth :>> ", scrollWidth);
 
-  console.log(
-    "canvasWidth - (maxItem.left + maxWidth + 0) - scrollWidth :>> ",
-    canvasWidth - (maxItem.left + maxWidth + 0) - scrollWidth
-  );
-  if (canvasWidth - (maxItem.left + maxWidth + 0) - scrollWidth > 0) {
+  let { scrollHeight, scrollWidth } = freeLayoutEnv.value;
+
+  if (
+    Math.abs(canvasWidth - (maxItem.left + maxWidth + scrollWidth)) >
+    scrollWidth
+  ) {
     getFreeLayoutState.value.canvas.width =
-      maxItem.left + maxWidth + scrollWidth / 2;
+      maxItem.left + maxWidth + scrollWidth;
   }
 
-  if (canvasHeight - (maxItem.top + maxHeight + 0) - scrollHeight > 0) {
-    getFreeLayoutState.value.canvas.width =
-      maxItem.top + maxHeight + scrollHeight / 2;
+  if (
+    Math.abs(canvasHeight - (maxItem.top + maxHeight + scrollHeight)) >
+    scrollHeight
+  ) {
+    getFreeLayoutState.value.canvas.height =
+      maxItem.top + maxHeight + scrollHeight;
   }
   // if (canvasHeight > maxItem.top + maxHeight + scrollHeight) {
   //   getFreeLayoutState.value.canvas.height =
@@ -230,31 +223,32 @@ const dragStop = (item) => {
   // 如果画布宽度小于拖动元素的宽度，则调整画布宽度
   if (Math.abs(canvasWidth - (item.x + item.width)) <= 400) {
     message.success("已拓展画布区域");
-    getFreeLayoutState.value.canvas.width += scrollWidth / 2;
+    getFreeLayoutState.value.canvas.width += scrollWidth * 0.8;
   }
   // 如果画布高度小于拖动元素的高度，则调整画布高度
   if (Math.abs(canvasHeight - (item.y + item.height)) <= 400) {
     message.success("已拓展画布区域");
-    getFreeLayoutState.value.canvas.height += scrollHeight / 2;
+    getFreeLayoutState.value.canvas.height += scrollHeight * 0.8;
   }
 
   if (item.x < 200) {
     Object.values(getFreeLayoutData.value).forEach((item: any) => {
-      item.left += scrollWidth / 2;
+      item.left += scrollWidth * 0.8;
     });
     message.success("已拓展画布区域");
-    proxy.$bus.on("updateFreeLayoutScrollX", scrollLeft + scrollWidth / 2);
-    getFreeLayoutState.value.canvas.width += scrollWidth / 2;
+    proxy.$bus.on("updateFreeLayoutScrollX", scrollLeft + scrollWidth * 0.8);
+    getFreeLayoutState.value.canvas.width += scrollWidth * 0.8;
   }
   if (item.y < 200) {
     Object.values(getFreeLayoutData.value).forEach((item: any) => {
-      item.top += scrollHeight / 2;
+      item.top += scrollHeight * 0.8;
     });
     message.success("已拓展画布区域");
-    proxy.$bus.on("updateFreeLayoutScrollX", scrollLeft + scrollHeight / 2);
-    getFreeLayoutState.value.canvas.height += scrollHeight / 2;
+    proxy.$bus.on("updateFreeLayoutScrollX", scrollLeft + scrollHeight * 0.8);
+    getFreeLayoutState.value.canvas.height += scrollHeight * 0.8;
   }
-  // cutCanvas();
+
+  cutCanvas();
 
   if (!isSelectAll.value) return;
   snowDrag.value.forEach((item) => {
