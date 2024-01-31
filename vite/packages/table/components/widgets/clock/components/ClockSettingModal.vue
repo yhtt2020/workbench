@@ -15,7 +15,7 @@
           <div class="my-4" >
             <div class="xt-bb mx-auto"></div>
           </div>
-          <div class="flex flex-col">
+          <div class="flex flex-col" v-if="!isFull">
             <div class="flex justify-between mb-2.5">
              <span class="xt-font xt-text font-16">背景框</span>
              <a-switch v-model:checked="customData.backgroundFrame"/>
@@ -24,20 +24,29 @@
              显示时钟组件的背景框。
             </span>
           </div>
-          <div class="mb-4" >
+          <div class="my-4" v-if="!isFull">
             <div class="xt-bb mx-auto"></div>
           </div>
-          <div class="flex flex-col">
-            <span class="xt-font xt-text font-16">缩放比例</span>
-            <a-slider v-model:value="customData.currentZoom" :max="300" :min="50" />
-          </div>
-           <slot name="modelScale"></slot>
+          <template v-if="!isFull">
+            <div class="flex flex-col">
+              <div class="flex items-center justify-start">
+                <span class="xt-font xt-text font-16 mr-3">缩放比例</span>
+                <xt-button style="width: auto !important;" h="0" @click="restZoom">
+                  <div class="flex items-center justify-center">
+                    <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="20"></xt-new-icon>
+                  </div>
+                </xt-button>
+              </div>
+              <a-slider v-model:value="customData.currentZoom" :max="maxScale?.num" :min="50" />
+            </div>
+          </template>
+           <slot name="modelScale" v-else></slot>
         </div>
 
         <div class="flex flex-col xt-bg-2 p-4 rounded-lg mb-4 " >
           <div class="flex flex-col">
             <span class="xt-text mb-3 font-16">时钟样式</span> 
-            <xt-option-tab  v-model="customData.currentStatus" :list="clockTabList" circle  style="height: 40px;" />
+            <xt-option-tab  v-model="customData.currentStatus" :list="clockTabList" circle  style="height: 40px;margin-bottom: 0 !important;" />
           </div>
 
           <template v-if="customData.currentStatus === 'font'">
@@ -95,10 +104,8 @@ export default{
     customData:{ type:Object,default:()=>{} },
     desk:{type:Object,default:()=>{}},
     customIndex:{ type:Number,default:()=>{} },
-    zIndex:{
-      type:String,
-      default:'1000'
-    }
+    zIndex:{  type:String,  default:'1000'},
+    isFull:{  type:Boolean, default:false, }
   },
   data(){
     return{
@@ -120,6 +127,28 @@ export default{
     }
   },
 
+  computed:{
+    // 缩放滑块阈值
+    maxScale(){
+      const width = this.customData.customSize.split("x")[0];
+      const height = this.customData.customSize.split("x")[1];
+      let max = width < height ? width : height;
+      console.log("max",max - 2);
+      if((max-2) === 0){
+        return {num:100};
+      }
+      else if((max-2) === 2){
+        return {num:140};
+      }
+      else if((max-2) === 4){
+        return {num:150};
+      }
+      else if((max - 2) >= 6 ){
+        return {num:200};
+      }
+    }
+  },
+
   methods:{
     openClockModal(){
       this.clockVisible = true;
@@ -130,6 +159,10 @@ export default{
     // 重置时钟文本颜色
     restClockColor(){
       this.customData.fontColor = "#FFFFFF";
+    },
+    // 重置缩放
+    restZoom(){
+      this.$emit("restZoom")
     }
   },
 

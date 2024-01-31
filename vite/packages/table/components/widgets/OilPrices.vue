@@ -23,7 +23,7 @@
         </a-result>
 
       </template>
-      <div v-else>
+      <div v-else-if="showOilData?.length>0">
         <div class="city xt-bg xt-text pointer" @click="showMenu">
           {{ showOilData[0].city }}
           <CaretDownOutlined style="font-size: 16px; " />

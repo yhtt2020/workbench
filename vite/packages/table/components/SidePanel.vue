@@ -291,6 +291,7 @@ export default {
       folderId: '',
       // 弹窗显示
       noticeFlag: true,
+      limitFlag: false,
       left: 0,
       top: 0,
       parentSize: 0,
@@ -516,21 +517,30 @@ export default {
         const windowWidth = this.parentSize
         this.maxItemNum = Math.floor((windowWidth) / 72)
         if (this.navigationList.length > this.maxItemNum && this.maxItemNum !== 0) {
-          if (this.noticeFlag) {
+          if (this.noticeFlag && this.limitFlag) {
             this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
-              onOk: () => {
+              ok: () => {
                 const width = this.parentSize / (this.navigationList.length * 72)
-                this.navAttribute.navSize = width
-              }
+                this.navAttribute.navSize = width.toFixed(2) * 100
+                this.noticeFlag = false
+              },
+              noText:false,
             })
           }
+          if(this.noticeFlag) return
           const width = this.parentSize / (this.navigationList.length * 72)
           this.navAttribute.navSize = width.toFixed(2) * 100
-          this.noticeFlag = false
         }
       },
       immediate: true,
       deep: true,
+    },
+    'navigationList.length': {
+      handler(newV, oldV) {
+        if(oldV !== undefined && newV !== oldV){
+          this.limitFlag = true
+        }
+      }
     },
     sideNavigationList: {
       handler(newV, oldV) {
@@ -860,13 +870,18 @@ export default {
       if (item.children.length > 0) {
         if (item.children.length + this.sideList.length > this.maxItemNum) {
           this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
-            onOk: () => {
-              return true
+            ok: () => {
+              this.sideList.splice(index, 1, ...item.children)
+              this.updateList(this.sideList)
+            },
+            no: () => {
+              return this.sideList
             }
           })
+        }else{
+          this.sideList.splice(index, 1, ...item.children)
+          this.updateList(this.sideList)
         }
-        this.sideList.splice(index, 1, ...item.children)
-        this.updateList(this.sideList)
         if (this.folderId == item.id) {
           this.closeFolder()
         }

@@ -1,5 +1,5 @@
 <template>
-  <!-- <xt-button @click="test()">任务重置</xt-button> -->
+  <xt-button @click="test()">任务重置</xt-button>
   <template v-if="store.taskID">
     <!-- 章节进度 -->
     <div class="xt-bg-2 rounded-xl px-4 pt-4 pb-3">
@@ -9,7 +9,7 @@
           {{ chapter.chapter }}
         </div>
         <template #right
-          >{{ stage + 1 }} / {{ chapter.tasks.length }}
+          >{{ stage + 0 }} / {{ chapter.tasks.length }}
         </template>
       </xt-text>
       <div class="mt-1">
@@ -59,8 +59,8 @@ onMounted(async () => {
  * 处理主线任务
  */
 const test = () => {
-  store.taskID = "M0105";
-  store.currentId = "M0105";
+  store.taskID = "M0101";
+  store.currentId = "M0101";
   store.success = false;
   store.step = -1;
 };

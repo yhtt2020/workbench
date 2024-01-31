@@ -450,6 +450,7 @@ export default {
       folderId: '',
       // 弹窗显示
       noticeFlag: true,
+      addIconFlag: false,
       left: 0,
       parentSize: 0,
       // 控制中心弹窗
@@ -684,27 +685,35 @@ export default {
   watch: {
     copyFootNav: {
       handler(newVal, oldVal) {
-        console.log(newVal,'copyFootNav')
         // 获取最大可添加图标个数
         const windowWidth = window.innerWidth
         this.maxItemNum = Math.round((windowWidth - 240) / 72)
         if (this.copyFootNav.length > this.maxItemNum && this.maxItemNum !== null) {
-          if (this.noticeFlag) {
+          if (this.noticeFlag && this.addIconFlag) {
             this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
-              onOk: () => {
+              ok: () => {
                 const width = window.innerWidth / (240 + this.copyFootNav.length * 72)
-                this.navAttribute.navSize = width
-              }
+                this.navAttribute.navSize = width.toFixed(2) * 100
+                this.noticeFlag = false
+              },
+              noText:false,
             })
           }
+          if(this.noticeFlag) return
           const width = window.innerWidth / (240 + this.copyFootNav.length * 72)
           this.navAttribute.navSize = width.toFixed(2) * 100
-          this.noticeFlag = false
         }
         this.syncBottomPanel()
       },
       immediate: true,
       deep: true,
+    },
+    "copyFootNav.length": {
+      handler(newVal, oldVal) {
+        if(oldVal !== undefined && newVal !== oldVal){
+          this.addIconFlag = true
+        }
+      }
     },
     delZone(val) {
       this.delNav = val
@@ -1047,12 +1056,17 @@ export default {
       if (item.children.length > 0) {
         if (item.children.length + this.copyFootNav.length > this.maxItemNum) {
           this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
-            onOk: () => {
-              return true
+            ok: () => {
+              this.copyFootNav.splice(index, 1, ...item.children)
+            },
+            no: () => {
+              return this.copyFootNav
             }
           })
+        }else{
+          this.copyFootNav.splice(index, 1, ...item.children)
         }
-        this.copyFootNav.splice(index, 1, ...item.children)
+        // this.copyFootNav.splice(index, 1, ...item.children)
 
         if (this.folderId == item.id) {
           this.closeFolder()

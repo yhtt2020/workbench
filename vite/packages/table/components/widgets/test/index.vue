@@ -3,6 +3,7 @@
     :customIndex="customIndex"
     :customData="customData"
     :customSize="customData.customSize"
+    :header="header"
     class="xt-theme-b"
   >
     {{ customData }}
@@ -11,6 +12,12 @@
 </template>
 
 <script setup>
+const header = {
+  ifyIcon: "fluent:add-16-filled",
+  leftHover: true,
+  leftHoverName: '222',
+  title: "123",
+};
 const props = defineProps({
   customIndex: {},
   customData: {

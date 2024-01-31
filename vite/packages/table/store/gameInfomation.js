@@ -5,17 +5,17 @@ import { sUrl } from "../consts"
 import axios from "axios";
 
 
-export async function getGameInfo(url){
+export async function getGameInfo(url,cache=1){
     let params = {
         apiName:"fapigx.esports.query",
         params:JSON.stringify({
             "num":10,
             "page":1,
-            "rand":1,
+            "rand":0,
             "apiName":"fapigx.esports.query"
         }),
         options:JSON.stringify({
-            "cache":1,
+            "cache":cache,
             "ttl":60,
             "key":"fapigx.esports.query"
             }),
