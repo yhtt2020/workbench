@@ -48,6 +48,6 @@ export const defaultClockData = {
   fontColor:"#FFFFFF",
   enableSecond:false,
   currentStatus:"font",
-  currentZoom:100,
+  currentZoom:110,
   name: dateTimeStamp(Date.now()),
 }

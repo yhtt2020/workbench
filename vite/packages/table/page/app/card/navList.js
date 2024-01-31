@@ -606,21 +606,21 @@ export const NavList = [
   {
     cname: "系统",
     children: [
-      {
-        name: "myIcons",
-        cname: "图标组件",
-        detail: "添加一个链接到外部网页的小组件，可以实现各种自定义功能",
-        sizes: ["自定义大小"],
-        option: [
-          {
-            name: "myIcons",
-            imgName:'myIcons',
-            size: "自定义大小",
-            zoom: "11",
-          },
-        ],
-        time: "2023/6/28",
-      },
+      // {
+      //   name: "myIcons",
+      //   cname: "图标组件",
+      //   detail: "添加一个链接到外部网页的小组件，可以实现各种自定义功能",
+      //   sizes: ["自定义大小"],
+      //   option: [
+      //     {
+      //       name: "myIcons",
+      //       imgName:'myIcons',
+      //       size: "自定义大小",
+      //       zoom: "11",
+      //     },
+      //   ],
+      //   time: "2023/6/28",
+      // },
       {
         name: "Audio",
         cname: "音频",
@@ -863,21 +863,21 @@ export const NavList = [
   {
     cname: "创意",
     children: [
-      {
-        name: "myIcons",
-        cname: "图标组件",
-        detail: "添加一个链接到外部网页的小组件，可以实现各种自定义功能",
-        sizes: ["自定义大小"],
-        option: [
-          {
-            name: "myIcons",
-            imgName:'myIcons',
-            size: "1*1",
-            zoom: "20",
-          },
-        ],
-        time: "2023/6/28",
-      },
+      // {
+      //   name: "myIcons",
+      //   cname: "图标组件",
+      //   detail: "添加一个链接到外部网页的小组件，可以实现各种自定义功能",
+      //   sizes: ["自定义大小"],
+      //   option: [
+      //     {
+      //       name: "myIcons",
+      //       imgName:'myIcons',
+      //       size: "1*1",
+      //       zoom: "20",
+      //     },
+      //   ],
+      //   time: "2023/6/28",
+      // },
       {
         name: "customAssembly",
         cname: "自定义图片组件",

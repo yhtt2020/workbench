@@ -101,12 +101,12 @@ export default {
     let min = width < height ? width:height;
     let minProp;
     if(this.customData.enableSecond){
-      minProp = ((1.5 - 0.5) + (Number(min)-2) * 0.4) ;
+      minProp = ((1.5 - 0.5) + (Number(min)-2) * (min<6?0.4:0.5)) ;
       this.customData.zoom = minProp;
       return minProp;
     }
     else {
-      minProp = (1.5 + (Number(min)-2) * 0.6) ;
+      minProp = (1.5 + (Number(min)-2) * (min<6?0.6:0.7)) ;
       this.customData.zoom = minProp;
       return minProp;
     }
@@ -148,11 +148,23 @@ export default {
   fullScreen(){  this.isClockFullScreen = true; },
   // 卡片组件缩放处理
   resize(data) {
-    this.updateCustomData(this.customIndex,{customSize:data,currentZoom:100},this.desk);
+    this.updateCustomData(this.customIndex,{customSize:data},this.desk);
+    const width = this.customData.customSize.split("x")[0];
+    const height = this.customData.customSize.split("x")[1];
+    let max = width < height ? width : height;
+    if((max-2) < 2){
+     this.updateCustomData(this.customIndex,{customZoom:110},this.desk);  
+    }
+    else if((max-2) < 4){
+     this.updateCustomData(this.customIndex,{customZoom:130},this.desk);
+    }
+    else{
+     this.updateCustomData(this.customIndex,{customZoom:140},this.desk);
+    }
   },
   // 重置卡片组件设置中缩放比例
   restZoom(){
-    this.updateCustomData(this.customIndex,{currentZoom:100},this.desk);
+    this.updateCustomData(this.customIndex,{currentZoom:110},this.desk);
   },
   // 更新全屏情况下的缩放比例
   updateBgZoom(e) {
