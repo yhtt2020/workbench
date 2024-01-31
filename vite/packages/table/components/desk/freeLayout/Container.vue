@@ -13,7 +13,11 @@ import { useFreeLayoutStore } from "./store";
 import { message } from "ant-design-vue";
 import "animate.css";
 import { useDebounceFn } from "@vueuse/core";
-
+import {
+  useGridToWidth,
+  useHeightToGrid,
+  useElementSize,
+} from "../../../ui/hooks/useCardSize";
 // 初始化操作
 const freeLayoutStore: any = useFreeLayoutStore();
 const props = defineProps({
@@ -44,9 +48,9 @@ onMounted(() => {
   proxy.$bus.on("adsorbGrid", () => {
     setTimeout(() => {
       snowDrag.value?.forEach((item) => {
-      item.adsorbGrid();
-    });
-  }, 2);
+        item.adsorbGrid();
+      });
+    }, 2);
   });
 });
 
@@ -95,6 +99,61 @@ async function getPosition(item) {
   }
 }
 
+// 裁切画布
+const cutCanvas = async () => {
+  let minLeft: any = undefined;
+  let minTop: any = undefined;
+  let maxLeft: any = 0;
+  let maxTop: any = 0;
+  let minItem: any = {};
+  let maxItem: any = {};
+  Object.values(getFreeLayoutData.value).forEach((item: any) => {
+    // 如果当前 item 的 top 小于 minTop，则更新 minTop
+    if (minTop == undefined || item.top < minTop) {
+      minTop = item.top;
+      minItem = item;
+    }
+    // 如果当前 item 的 left 小于 minLeft，则更新 minLeft
+    if (minLeft == undefined || item.left < minLeft) {
+      minLeft = item.left;
+      minItem = item;
+    }
+
+    // 如果当前 item 的 top 大于 maxTop，则更新 maxTop
+    if (item.top > maxTop) {
+      maxTop = item.top;
+      maxItem = item;
+    }
+
+    // 如果当前 item 的 left 大于 maxLeft，则更新 maxLeft
+    if (item.left > maxLeft) {
+      maxLeft = item.left;
+      maxItem = item;
+    }
+  });
+
+  // 修正最大画布
+  if (!currentData.value[maxItem.id]) return;
+  let { width: canvasWidth, height: canvasHeight } =
+    getFreeLayoutState.value.canvas;
+  let maxSize = currentData.value[maxItem.id].customData.customSize;
+  //
+  const { width: maxWidth, height: maxHeight } = useElementSize(maxSize);
+  let { scrollHeight, scrollWidth } = freeLayoutEnv.value;
+
+  console.log(
+    "  Math.abs(canvasWidth - (maxItem.left + maxWidth)) :>> ",
+    Math.abs(canvasWidth - (maxItem.left + maxWidth))
+  );
+  console.log('scrollWidth :>> ', scrollWidth);
+  if (Math.abs(canvasWidth - (maxItem.left + maxWidth)) < scrollWidth) {
+    getFreeLayoutState.value.canvas.width = maxItem.left + maxWidth + scrollWidth;
+  }
+  if (Math.abs(canvasHeight - (maxItem.top + maxHeight)) > scrollHeight) {
+    getFreeLayoutState.value.canvas.height = maxItem.top + maxHeight + scrollHeight;
+  }
+};
+
 /**
  * 更新自由布局数据
  */
@@ -119,6 +178,7 @@ async function updateCard(data) {
   console.timeEnd("Free Layout Run Time");
   console.log("--------------- 自由布局数据更新结束 ---------------");
   firstLoading.value = false;
+  cutCanvas();
 }
 
 let updateCardTimer: any;
@@ -149,7 +209,22 @@ const dragStart = () => {
 };
 let isDragging = false; // 添加一个标志位来表示当前是否正在拖动
 
-const dragStop = () => {
+// 元素拖拽结束
+const dragStop = (item) => {
+  let { width: canvasWidth, height: canvasHeight } =
+    getFreeLayoutState.value.canvas;
+  let { scrollHeight, scrollWidth } = freeLayoutEnv.value;
+  // 如果画布宽度小于拖动元素的宽度，则调整画布宽度
+  if (Math.abs(canvasWidth - (item.x + item.width)) <= 100) {
+    getFreeLayoutState.value.canvas.width += scrollWidth;
+    proxy.$bus.emit("updateFreeLayoutScroll");
+  }
+  // 如果画布高度小于拖动元素的高度，则调整画布高度
+  if (Math.abs(canvasHeight - (item.y + item.height)) <= 100) {
+    getFreeLayoutState.value.canvas.height += scrollHeight;
+    proxy.$bus.emit("updateFreeLayoutScroll");
+  }
+  cutCanvas();
   if (isDragging) return;
   isDragging = true; // 开始拖动时设置标志位为true
   if (!isSelectAll.value) return;

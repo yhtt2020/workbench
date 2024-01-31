@@ -1,9 +1,6 @@
 <template>
   <xt-modal :footer="0" v-model="rewardVisible">
-    <div
-      class=" flex justify-center items-center flex-col"
-      style="width: 500px"
-    >
+    <div class="flex justify-center items-center flex-col" style="width: 500px">
       <audio controls class="hidden" style="" autoplay>
         <source
           v-if="audio == 'communityPoints'"
@@ -39,7 +36,15 @@
           radius="8"
           >{{ types[props.type]?.button }}</xt-button
         >
-        <xt-button w="80" h="40" type="theme" @click="goTask"        radius="8">下一个</xt-button>
+        <xt-button
+          v-if="currentId != 'Z0201'"
+          w="80"
+          h="40"
+          type="theme"
+          @click="goTask"
+          radius="8"
+          >下一个</xt-button
+        >
       </div>
     </div>
   </xt-modal>
