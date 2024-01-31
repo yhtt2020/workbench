@@ -6,7 +6,7 @@ function send(channel,args={}){
 async function sendSync(channel,args={}){
   return await ipcHelper.sendSync('window',channel,args)
 }
-
+//
 const windowApi = {
   close: () => {
     send('close')

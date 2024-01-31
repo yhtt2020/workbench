@@ -61,7 +61,7 @@ const install = (app: any) => {
     components[name].TUIServer = TUIChat.server;
   });
   TUIChatComponent.TUIServer = TUIChat.server;
-  TUIChatComponent.components = { ...TUIChatComponent.components, ...components };
+  TUIChatComponent.components = { ...TUIChatComponent?.components, ...components };
   app.component(TUIChat.name, TUIChatComponent);
 };
 
