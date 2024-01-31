@@ -166,30 +166,30 @@ export const NavList = [
         name: "supervisory",
         cname: "系统性能监控",
         detail: "同步AIDA64数据，监控你的CPU、GPU、内存、网络等数据。",
-        sizes: ["2*2", "2x4", "4种样式"],
+        sizes: ["2x2", "2x4", "4种样式"],
         option: [
           {
             name: "CPULineChart",
             imgName: 'cpuLineChart',
-            size: "2*4",
+            size: "2x4",
             zoom: "14",
           },
           {
             name: "CPUFourCard",
             imgName:'cpuFourCard',
-            size: "2*4",
+            size: "2x4",
             zoom: "14",
           },
           {
             name: "SmallCPUCard",
             imgName:'smallCPUCard',
-            size: "2*2",
+            size: "2x2",
             zoom: "18",
           },
           {
             name: "SmallGPUCard",
             imgName: 'smallGPUCard',
-            size: "2*2",
+            size: "2x2",
             zoom: "18",
           },
         ],
@@ -667,30 +667,30 @@ export const NavList = [
         name: "supervisory",
         cname: "系统性能监控",
         detail: "同步AIDA64数据，监控你的CPU、GPU、内存、网络等数据。",
-        sizes: ["2*2", "2x4", "4种样式"],
+        sizes: ["2x2", "2x4", "4种样式"],
         option: [
           {
             name: "CPULineChart",
             imgName:'cpuLineChart',
-            size: "2*4",
+            size: "2x4",
             zoom: "8",
           },
           {
             name: "CPUFourCard",
             imgName:'cpuFourCard',
-            size: "2*4",
+            size: "2x4",
             zoom: "11",
           },
           {
             name: "SmallCPUCard",
             imgName:'smallCPUCard',
-            size: "2*2",
+            size: "2x2",
             zoom: "11",
           },
           {
             name: "SmallGPUCard",
             imgName:'smallGPUCard',
-            size: "2*2",
+            size: "2x2",
             zoom: "11",
           },
         ],
@@ -797,7 +797,7 @@ export const NavList = [
         option: [
           {
             name: "audio",
-            imgName:'voice', 
+            imgName:'voice',
             size: "2x4",
           },
           {

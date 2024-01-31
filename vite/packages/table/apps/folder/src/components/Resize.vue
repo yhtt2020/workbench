@@ -4,7 +4,9 @@
     ref="textRef"
     :style="{ width: w, height: h }"
   >
-    <slot></slot>
+  {{ isDrag }}
+    <slot v-if="!isDrag">333</slot>
+    <div v-else></div>
     <svg
       v-show="resize"
       @mousedown.stop
@@ -34,6 +36,7 @@ export default {
     };
   },
   props: {
+    isDrag: false,
     size: {
       type: String,
       default: "",
@@ -99,6 +102,7 @@ export default {
           let h = a.clientHeight;
           let w = a.clientWidth;
           let width, height;
+          this.isDrag = true;
           document.onmousemove = function (e) {
             e.stopPropagation();
             let x = e.clientX;
@@ -137,6 +141,8 @@ export default {
             document.onmouseup = null;
             that.currentSize = name;
             that.dragCallBack(name);
+
+            this.isDrag = false;
           };
         },
         { capture: true }
