@@ -102,13 +102,9 @@ export default {
     const loginTip = (item)=>{
       proxy.$xtConfirm("登录提示", '目前处于游客模式，请登陆后体验完整功能。', {
         ok: () => {
-          console.log(1111);
           tsbApi.user.login((data) => {
             appS.getUserInfo()
           })
-        },
-        no: () => {
-          console.log("222 :>> ", 222);
         },
         okText: "立即登录",
         noText: "暂不登录",
@@ -264,7 +260,6 @@ export default {
     onMounted(()=>{
       com.getMyCommunity();
       com.getCommunityTree();
-      console.log('appS.getUserInfo()111', userInfo)
       // 游客模式下 隐藏 聊天对话 和 通讯录
       if(!userInfo){
         headList.value[0].disabled = true

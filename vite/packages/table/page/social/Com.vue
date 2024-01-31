@@ -3,12 +3,14 @@
     <vue-custom-scrollbar :settings="scrollbarSettings"
                           style="height: 100%;padding: 15px;white-space: nowrap;width: 100%;overflow: hidden">
       <div style="height: 100%;display: inline-block;">
-        <div class="mr-3" style="width: 300px;display: inline-block;white-space: pre-wrap;vertical-align: top">
+        
+        <!-- 游客模式时屏蔽签到 -->
+        <div v-if="userInfo" class="mr-3" style="width: 300px;display: inline-block;white-space: pre-wrap;vertical-align: top">
           <div style="width: 280px" class="mr-3">
             <SingIn :customIndex="1" :customData="{}" :rightIcon="false"></SingIn>
           </div>
-
         </div>
+
         <div class="mr-3" style="display:inline-block ;width: 300px;white-space: pre-wrap;vertical-align: top;">
           <div class="card mb-3"
                style="width: 300px;white-space: pre-wrap; background: var(--primary-bg); color: var(--primary-text)">
@@ -129,6 +131,7 @@ export default {
   },
   computed: {
     ...mapState(teamStore, ['my', 'myTeamNo', 'myTeam']),
+    ...mapState(appStore, ['userInfo']),
   },
   mounted () {
     this.appVersion = tsbApi.runtime.appVersion

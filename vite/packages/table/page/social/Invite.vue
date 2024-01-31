@@ -1,7 +1,7 @@
 <template>
 
 
-  <div class="s-bg ml-3 p-3 rounded-xl  xt-bg"
+  <div v-if="0" class="s-bg ml-3 p-3 rounded-xl  xt-bg"
        style="width: 850px;min-height: 300px;;display: flex;flex-direction: column;max-height: 100%">
     <div class="mb-3" style="width: 300px;">
       <HorizontalPanel :nav-list="tabs" v-model:select-type="tab">
@@ -114,6 +114,9 @@
 
   </div>
 
+  <div v-else>
+    11111111
+  </div>
 </template>
 
 <script>
@@ -199,11 +202,11 @@ export default {
     ...mapState(appStore, ['userInfo']),
     ...mapWritableState(codeStore,['verified']),
     totalHours () {
-      return (this.userInfo.onlineGradeExtra.cumulativeHours)
+      return (this.userInfo.onlineGradeExtra?.cumulativeHours)
     },
 
     canExchange () {
-      return (this.userInfo.onlineGradeExtra.cumulativeHours / 200).toFixed(0)
+      return (this.userInfo.onlineGradeExtra?.cumulativeHours / 200).toFixed(0)
     },
     exchanged () {
       return this.codes.length

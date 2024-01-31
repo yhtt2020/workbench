@@ -60,12 +60,12 @@
                 <a-switch @click.stop="() => { }" v-model:checked="simple"></a-switch>
               </div>
             </a-col>
-            <!-- <a-col :span="12">
+            <a-col :span="12">
               <div  @click="tipOffline" class="relative btn">
                 离线模式<br />
                 <a-switch @click="changeOffline"  v-model:checked="isOffline"></a-switch>
               </div>
-            </a-col> -->
+            </a-col>
             <!-- <a-col :span="12">
               <div  @click="tipVisitor" class="relative btn">
                 游客模式<br />
