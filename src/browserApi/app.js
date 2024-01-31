@@ -24,7 +24,7 @@ const app={
      })
   },
   /**
-   * 安装指定应用
+   * 安装指定应用1
    * @param manifest 安装应用的manifest
    * @param cb  回调
    */

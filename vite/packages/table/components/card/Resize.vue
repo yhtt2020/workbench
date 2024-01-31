@@ -145,6 +145,7 @@ export default {
             that.currentSize = name;
             that.dragCallBack(name);
             that.$emit("resize", name);
+
             that.isDrag = false;
           };
         },

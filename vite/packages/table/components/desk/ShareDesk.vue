@@ -99,6 +99,7 @@ export default {
   },
   data () {
     return {
+      oldSet :this.settings, // 原先设置
       posting:false,//正在上传中
       capture: '',
       showDrawer: false,
@@ -243,8 +244,6 @@ export default {
       } else {
         settings = this.settings
       }
-
-
       settings.cardZoom=Number(settings.cardZoom)*Number(this.shareFullCardZoom)
       settings.cardMargin=Number(settings.cardMargin)*Number(this.shareFullCardZoom)
       const template=JSON.stringify({
@@ -263,6 +262,7 @@ export default {
         layoutSize:JSON.stringify(this.shareFullLayoutSize),
         template:template,
       }
+      // return
       let desk=await  this.addDesk(this.scheme)
       this.posting=false
       if(desk){
@@ -274,6 +274,9 @@ export default {
         message.error('上传失败。')
       }
 
+       this.settings =  this.oldSet
+console.log('this.oldSet :>> ', this.oldSet);
+       console.log('      this.settings :>> ',       this.settings);
     },
     setInitialData () {
       if(this.capturing){

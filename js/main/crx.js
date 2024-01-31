@@ -141,8 +141,9 @@ function getPublicKeyFromProtoBuf (
 
   return null
 }
+module.exports =parseCrx
 
-module.exports = function parseCrx (buf) {
+ function parseCrx (buf) {
   // 50 4b 03 04
   // This is actually a zip file
   if (buf[0] === 80 && buf[1] === 75 && buf[2] === 3 && buf[3] === 4) {

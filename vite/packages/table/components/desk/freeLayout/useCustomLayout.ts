@@ -16,7 +16,7 @@ const defaultOptions = {
   folderList: [],
   columns: 4,
   cb: () => {},
-  test: false,
+  test: true,
 };
 
 export const useCustomLayout = async (options) => {
@@ -40,12 +40,8 @@ export const useCustomLayout = async (options) => {
   getFreeLayoutState.value.system.isFreeLayout = true;
 
   let positioningId = await getPositioningData();
-  // freeLayoutStore.restoreLocation();
-
-  // 重置拿到的 freeLayoutEnv.value.scrollLeft :>>  2318.187227866473
   let containerWidth = freeLayoutEnv.value.scrollWidth;
   let layoutWidth = useGridToWidth(columns * 2);
-  console.log("layoutWidth :>> ", layoutWidth);
   let scaleFactor = 1;
   let position = 50;
   // 重置left坐标
@@ -64,11 +60,6 @@ export const useCustomLayout = async (options) => {
       6
     );
     defaultLeft = snappedX / scaleFactor - position;
-    console.log("defaultLeft :>> ", defaultLeft);
-    console.log(
-      "zhengquede ",
-      freeLayoutEnv.value.scrollLeft / scaleFactor - position
-    );
     // left = snappedX;
   };
   // 卡片数据展示
@@ -76,19 +67,23 @@ export const useCustomLayout = async (options) => {
     if (!test) return;
     const { width, height }: any = useElementSize(item.customData.customSize);
     console.log(
-      "\u001b[31m" + "----------------数据处理----------------" + "\u001b[0m"
+      "\u001b[31m" +
+        "----------------数据处理开始----------------" +
+        "\u001b[0m"
     );
     console.log(
-      "id",
+      "id :>> ",
       item?.id,
-      ",name",
+      ",name :>> ",
       item.customData.name || item.name,
       ",元素width :>> ",
       width,
       ",当前位置left :>> ",
       left - freeLayoutEnv.value.scrollLeft,
       ",当前位置缩放后left :>> ",
-      left - freeLayoutEnv.value.scrollLeft / scaleFactor
+      left - freeLayoutEnv.value.scrollLeft / scaleFactor,
+      "item",
+      item
     );
   };
   const widthDetectionStatus = (width, res, active) => {
@@ -119,7 +114,7 @@ export const useCustomLayout = async (options) => {
   };
 
   // 设置卡片数据
-  const setData = async (arr: any) => {
+  const setData = (arr: any) => {
     currentHeight = 0;
     let last = true;
     let flag = false;
@@ -131,6 +126,13 @@ export const useCustomLayout = async (options) => {
       itemStatus(item);
       // 元素超出
       if (widthDetection(width)) {
+        console.log(
+          "\u001b[31m" +
+            `----------------元素超出${
+              height - currentHeight
+            }----------------` +
+            "\u001b[0m"
+        );
         currentTop = top;
         // 先填充空缺的数据
         fillGapAlgorithm();
@@ -141,6 +143,13 @@ export const useCustomLayout = async (options) => {
         top += currentHeight + 12;
       }
       if (!last && height != currentHeight) {
+        console.log(
+          "\u001b[31m" +
+            `----------------高度不相等${
+              height - currentHeight
+            }----------------` +
+            "\u001b[0m"
+        );
         // 先填充空缺的数据
         let res =
           left - freeLayoutEnv.value.scrollLeft / scaleFactor - position;
@@ -165,6 +174,11 @@ export const useCustomLayout = async (options) => {
       console.log("setData get currentHeight :>> ", currentHeight);
       fillHeight = currentHeight;
       if (last) last = false;
+      console.log(
+        "\u001b[34m" +
+          "----------------数据处理结束----------------" +
+          "\u001b[0m"
+      );
     }
 
     currentTop = top;
@@ -174,7 +188,7 @@ export const useCustomLayout = async (options) => {
       fillGapAlgorithm();
     }
     resetLeft();
-
+    fillHeight = 0;
     top += currentHeight + 12;
   };
 
@@ -257,6 +271,23 @@ export const useCustomLayout = async (options) => {
   resetLeft();
 
   let { arr2x2, arr2x4, arr4x4, arr1x1, arrSpecial } = arraySplit(mainList);
+
+  let a = [...arr2x2];
+  let b = [...arr2x4];
+  let c = [...arr4x4];
+  let d = [...arrSpecial];
+  console.log('a :>> ', a);
+  console.log('b :>> ', b);
+  console.log('c :>> ', c);
+  console.log('d :>> ', d);
+  console.log(
+    "arr2x2, arr2x4, arr4x4, arr1x1, arrSpecial :>> ",
+    arr2x2,
+    arr2x4,
+    arr4x4,
+    arr1x1,
+    arrSpecial
+  );
   let array: any = [];
   if (headerList && headerList.length) {
     let { arr2x2: header2x2, arr2x4: header2x4 } = arraySplit(headerList);
@@ -273,9 +304,15 @@ export const useCustomLayout = async (options) => {
     let { arr2x2: folder2x2 } = arraySplit(folderList);
     resetLeft();
     setData(folder2x2);
-    // top -= 24;
+    resetLeft();
+    currentHeight = 0;
+    currentTop = top;
+    fillHeight = 0;
   }
   resetLeft();
+  console.log('1111111111111 :>> ', 1111111111111);
+  // mainList
+  console.log('arrSpecial :>> ', arrSpecial);
   setData(arrSpecial);
   setData(arr4x4);
   setData(arr2x4);
@@ -299,9 +336,12 @@ const arraySplit = (arr) => {
       console.log("无信息元素 item.customData :>> ", item.customData);
       return;
     }
+
     let str = item.customData.customSize.split(/x|\*/);
+
     const w = parseInt(str[0]);
     const h = parseInt(str[1]);
+
     if (w == 2 && h == 2) {
       arr2x2.push(item);
     } else if (w == 2 && h == 4) {
@@ -331,6 +371,9 @@ const addCard = (top, left, item) => {
 
   let id = item?.id || nanoid(4);
 
+  if (item.name == "news" || item.name == "HotSearch") {
+    console.log("Item.name :>> ", item);
+  }
   let a = left;
   getFreeLayoutData.value[id] = {
     left: a,
