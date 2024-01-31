@@ -3,7 +3,7 @@
     <template v-if="switch">
       <div class="item-box">
         <div class="flex items-center justify-center mr-4 item" :key=" item "
-          :style=" { background: props.colorList[`${'color' + item}`] } " v-for="(item, index) in Number(colorNum) "
+          :style=" { background: props.colorList[`${'color' + item}`] } " v-for="(item, index) in colorNum "
           @click="chooseBg(item)">
           <xt-new-icon v-show=" color == colorList[`${'color' + item}`] " icon="ri:checkbox-circle-fill"
             size="20"></xt-new-icon>

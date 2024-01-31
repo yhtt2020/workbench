@@ -128,15 +128,15 @@
                             :class="{ hover: (dragItem && item.id === hoverRealItemId('bottomContent', this.hoverIndex) && dragItem?.id !== hoverRealItemId('bottomContent', this.hoverIndex)) }"
                             style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                             @click.stop="newOpenApp(item.type, item.value, item)">
-                            <!-- <Drag :data="item" :currentId="currentId"> -->
-                            <Team v-if="item.value === 'commun'" :item="item" :placement="'top'"></Team>
-                            <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
-                              @click="openFolder(item)">
-                            </FolderVue>
-                            <template v-else>
-                              <Avatar :item="item"></Avatar>
-                            </template>
-                            <!-- </Drag> -->
+                            <Drag :data="item" currentId="bottom" @deleteFile="deleteFile">
+                              <Team v-if="item.value === 'commun'" :item="item" :placement="'top'"></Team>
+                              <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
+                                @click="openFolder(item)">
+                              </FolderVue>
+                              <template v-else>
+                                <Avatar :item="item"></Avatar>
+                              </template>
+                            </Drag>
 
                           </div>
                         </xt-menu>
@@ -819,17 +819,11 @@ export default {
     ]),
     ...mapActions(useNavigationStore, ['toggleEdit', 'toggleTaskBox']),
     mergeData,
-    handleMouseEnter(e) {
-      if (this.customOpenNav) {
-        this.isLeaveBar = false
-        console.log('=========>>>>>>>鼠标离开了', this.isLeaveBar, this.controlVisible, this.folderVisible)
-      }
-    },
-    handleMouseLeave(e) {
-      if (this.customOpenNav) {
-        this.isLeaveBar = true
-        console.log('===========>>>>>>>>鼠标进入了', this.isLeaveBar,e.y , this.parentHeight )
-      }
+    deleteFile(data){
+      const index = this.copyFootNav.findIndex(item => item.id === data.id)
+      this.copyFootNav.splice(index,1)
+      console.log('删除成功');
+      this.$emit('getDelIcon', false)
     },
     listenMouse(e) {
       if (e.x < 50 || e.x > (this.parentSize - 50) || e.y > (this.parentHeight - 50)) {
@@ -1151,6 +1145,8 @@ export default {
             //将要删除的是否是主要功能
             if (!that.mainNavigationList.find((f) => f.name === oneNav.name)) {
               that.removeFootNavigationList(event.oldIndex)
+              that.$emit('getDelIcon', false)
+              that.hoverIndex = -1
               return
             }
             let sumList = []

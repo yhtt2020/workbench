@@ -61,16 +61,16 @@
                     'active-back': current(item),
                     hover: (dragItem && item.id === hoverRealItemId(this.sortId,this.hoverIndex) && dragItem?.id !== hoverRealItemId(this.sortId,this.hoverIndex))
                   }" :style="{ borderRadius: this.iconRadius + 'px' }">
-                  <!-- <Drag :data="item" :currentId="sortId"> -->
-                  <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"
-                    :placement="sortId === 'left' ? 'right' : 'left'"></Team>
-                  <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
-                    @click.stop="openFolder(item)">
-                  </FolderVue>
-                  <template v-else>
-                    <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
-                  </template>
-                  <!-- </Drag> -->
+                  <Drag :data="item" :currentId="sortId">
+                    <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"
+                      :placement="sortId === 'left' ? 'right' : 'left'"></Team>
+                    <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
+                      @click.stop="openFolder(item)">
+                    </FolderVue>
+                    <template v-else>
+                      <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
+                    </template>
+                  </Drag>
                 </div>
               </xt-menu>
             </a-tooltip>
