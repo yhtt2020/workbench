@@ -27,18 +27,20 @@
     <div class="text-base" style="margin-bottom: 10px">背景模糊度</div>
     <a-slider v-model:value="blurs" :max="100" :step="1" class="no-drag" />
   </div>
-  
-  <!-- <div class="text-base mb-1">调整时钟比例</div> -->
-  <div class="flex items-center">
-    <div class="text-base mb-1 mr-3">缩放比例</div>
-    <xt-button style="width: auto !important;" h="0" @click="restFullZoom">
-      <div class="flex items-center justify-center">
-        <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="20"></xt-new-icon>
-      </div>
-    </xt-button>
+
+  <div class="flex flex-col">
+    <div class="flex items-center">
+      <div class="text-base mb-1 mr-3">缩放比例</div>
+      <xt-button style="width: auto !important;" h="0" @click="restFullZoom">
+        <div class="flex items-center justify-center">
+          <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="20"></xt-new-icon>
+        </div>
+      </xt-button>
+    </div>
+    <a-slider v-model:value="zoom" :max="150" :min="0" />
   </div>
-  <!--  style="margin-bottom: 10px" -->
-  <a-slider v-model:value="zoom" :max="100" :step="1" />
+  
+
   <ModalList
     v-if="myImgShow"
     v-model:visible="myImgShow"
@@ -126,8 +128,9 @@ export default {
       } else {
       }
     },
+    // 重置全屏情况下设置中缩放
     restFullZoom(){
-      this.$emit("restFullZoom")
+      this.zoom = 50;
     }
   },
 };

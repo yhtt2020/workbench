@@ -135,13 +135,13 @@ export default{
       let max = width < height ? width : height;
       console.log("max",max - 2);
       if((max-2) === 0){
-        return {num:110};
+        return {num:100};
       }
       else if((max-2) === 2){
         return {num:140};
       }
       else if((max-2) === 4){
-        return {num:180};
+        return {num:150};
       }
       else if((max - 2) >= 6 ){
         return {num:200};

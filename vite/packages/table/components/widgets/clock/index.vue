@@ -3,6 +3,9 @@
   :defaultData="defaultClockData" :menuList="menuList" v-model:customSize="customData.customSize"
   :header="header" :options="option"  @leftClick="fullScreen" @resize="resize"
  >
+  <!-- {{ customData.customSize }}
+  {{ sliderScale }}
+  {{ customZoom }} -->
   <div class="box no-drag" @click="fullScreen">
     <div style="width: 100%;height: 100%;" class="flex items-center justify-center" :style="sliderScale">
       <component :is="customData.clockId"  :noBg="true" :customData="customData"
@@ -20,20 +23,10 @@
  />
 
 
- <ClockFullScreen  
-  v-if="isClockFullScreen"  
-  :imgUrl="fullImage" 
-  :clock="customData.clockId"
-  :customData="customData"
-  @exit="isClockFullScreen = false"
- />
+<ClockFullScreen  v-if="isClockFullScreen"  :customData="customData" :imgUrl="fullImage" 
+:clock="customData.clockId" @exit="isClockFullScreen = false" @updateBgZoom="updateBgZoom" :bgZoom="customData.bgZoom">
 
- 
- <!--   :clock="customData.clockId"
-  :imgUrl="backgroundImage.path !== '' ? backgroundImage.path : customData.imgUrl"
-  @exit="isClockFullScreen = false"  :bgZoom="customData.bgZoom"  :blur="customData.blurs"
-  @updateBgZoom="updateBgZoom"  :customIndex="customIndex" 
-  :desk="desk" :customData="customData" -->
+</ClockFullScreen>
 
 </template>
 
@@ -75,6 +68,7 @@ export default {
    week: ["周末", "周一", "周二", "周三", "周四", "周五", "周六"],
    defaultClockData:defaultClockData,
    isClockFullScreen:false,
+   bgZoom: this.customData.bgZoom,
   }
  },
 
@@ -157,9 +151,13 @@ export default {
   resize(data) {
     this.updateCustomData(this.customIndex,{customSize:data,currentZoom:100},this.desk);
   },
-  // 重置卡片组件缩放比例
+  // 重置卡片组件设置中缩放比例
   restZoom(){
     this.updateCustomData(this.customIndex,{currentZoom:100},this.desk);
+  },
+  updateBgZoom(e) {
+    this.updateCustomData( this.customIndex, { bgZoom: e,},this.desk );
+    this.bgZoom = e;
   },
 
  },

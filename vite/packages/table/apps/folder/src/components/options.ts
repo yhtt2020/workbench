@@ -41,7 +41,7 @@ export const defaultClockData = {
   clockId:"clock4",
   imgUrl:"https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg",
   blurs:3,
-  bgZoom:0,
+  bgZoom:50,
   zoom:1.5,
   customSize:"2x2",
   font:"font-family: '优设标题黑' !important;",

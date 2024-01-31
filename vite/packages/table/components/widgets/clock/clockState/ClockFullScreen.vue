@@ -19,44 +19,11 @@
         ></clock3>
       </div>
     </xt-menu>
-
-    <!-- <div class="box pointer" @click.prevent="exit">
-      <component
-        :is="clock"
-        v-if="clock !== 'clock3'"
-        :key="clock"
-        :style="{ zoom: zoom }"
-      />
-      <clock3
-        v-if="clock == 'clock3'"
-        key="clock3"
-        :style="{ zoom: zoom }"
-      ></clock3>
-    </div> -->
-    <!-- <a-drawer
-      style="z-index: 999999999; scrollbar-width: none"
-      :width="500"
-      v-model:visible="settingVisible"
-      placement="right"
-    >
-      <template #title>
-        <div class="text-center">设置</div>
-      </template>
-      <ClockBackground
-        @img="img"
-        @updateBlur="updateBlur"
-        @updateBgZoom="updateBgZoom"
-        :bgZoom="bgZoom"
-        :blur="blur"
-      >
-      </ClockBackground>
-      <ClockStyle @updateClockStyle="updateClockStyle"></ClockStyle>
-    </a-drawer> -->
   </teleport>
 
   <ClockSettingModal ref="settingModalRef" :isFull="true" :customData="customData" :zIndex="'100000'" @updateClockStyle="updateClockStyle" >
     <template #modelScale>
-      <ClockBackground @img="img" @updateBlur="updateBlur" @updateBgZoom="updateBgZoom" :bgZoom="bgZoom" :blur="blur" @restFullZoom="restFullZoom"/>
+      <ClockBackground @img="img" @updateBlur="updateBlur" @updateBgZoom="updateBgZoom" :bgZoom="bgZoom" :blur="blur" />
     </template>
   </ClockSettingModal>
 </template>
@@ -137,26 +104,25 @@ export default {
     };
   },
   methods: {
+    // esc键退出
     esc(e) {
       if (e.keyCode === 27) this.exit();
     },
+    // 触摸事件
     touchEvent() {
       const that = this;
-      // console.log("操作中")
       that.optAction = false; //让判断条件为true
       clearTimeout(this.autoTime); //清除自动刷新页面定时器
       if (that.settingVisible) return;
       this.autoTime = setTimeout(function () {
         that.optAction = true; //页面无操作后3秒，重时开启定时器
-        // console.log("无操作")
-        // that.settingVisible = false;
       }, 3000);
     },
+    // 开启设置
     setting() {
       this.$refs.settingModalRef.openClockModal();
-      // this.settingVisible = true;
-      // this.optAction = false;
     },
+    // 退出
     exit() {
       document.removeEventListener("mousemove", this.touchEvent, {
         capture: true,
@@ -175,25 +141,30 @@ export default {
       });
       this.$emit("exit");
     },
+    // 更新模糊度
     updateBlur(e) {
       this.blurs = `blur(${parseInt(e / 2)}px)`;
       this.$emit("updateBlur", e);
     },
+    // 更新bg缩放
     updateBgZoom(e) {
       this.zoom = `${e + 100}%`;
       this.$emit("updateBgZoom", e);
     },
-
+    // 更新时钟样式
     updateClockStyle(e) {
       this.$emit("updateClockStyle", e);
     },
+    // 更新img
     img(img) {
       this.$emit("updateImgUrl", img);
     },
+    // 随机更新时钟样式
     random() {
       let randNum = Math.floor(Math.random() * 5) + 1;
       this.$emit("updateClockStyle", `clock${randNum}`);
     },
+    // 键盘按下
     down() {
       if (this.clock == "clock6") {
         this.$emit("updateClockStyle", `clock1`);
@@ -202,6 +173,7 @@ export default {
       let num = this.clock.slice(-1);
       this.$emit("updateClockStyle", `clock${1 + parseInt(num)}`);
     },
+    // 键盘抬起
     up() {
       if (this.clock == "clock1") {
         this.$emit("updateClockStyle", `clock6`);
@@ -210,11 +182,6 @@ export default {
       let num = this.clock.slice(-1);
       this.$emit("updateClockStyle", `clock${parseInt(num) - 1}`);
     },
-
-    restFullZoom(){
-      console.log("this.customData.bgZoom",this.customData.zoom);
-      this.customData.zoom = 0
-    }
   },
 };
 </script>
