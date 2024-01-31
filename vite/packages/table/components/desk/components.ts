@@ -86,11 +86,9 @@ import GlobalDesk from "./set/GlobalDesk.vue";
 import Test from "../widgets/test/index.vue";
 
 import Folder from "../../apps/folder";
-import AppImport from "../../apps/wujie/page/Import.vue";
 
 export default {
   components: {
-    AppImport,
     Test,
     LoadingOutlined,
     GlobalDesk,

@@ -12,8 +12,6 @@
 <script setup>
 import { ref } from "vue";
 import { message } from "ant-design-vue";
-import { nanoid } from "nanoid";
-import { useRegisterTTApps } from "../../../../../../src/main/ttApps/useRegisterTTApps";
 import {
   folderExists,
   folderCreate,
@@ -42,12 +40,10 @@ const a = async () => {
     console.log('data :>> ', data);
   })
   return
-  useRegisterTTApps()
   // imgRef.value.click();
   // imgRef.value.onchange = function (event) {
   //   console.log("files[0] :>> ", files[0]);
   // };
-  return;
 
 
   // 未上传

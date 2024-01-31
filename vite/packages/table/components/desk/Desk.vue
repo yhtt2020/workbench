@@ -45,8 +45,6 @@
         url="http://localhost:5173/"
       ></xt-wu-jie> -->
       <!-- <Wujie width="100%" height="100%" name="xxx" url="http://localhost:5173/" ></Wujie> -->
-      <AppImport></AppImport>
-
       <!-- 自由布局 -->
       <FreeLayoutScrollbar
         ref="freeLayoutScrollbar"

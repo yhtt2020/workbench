@@ -10,7 +10,7 @@ const file = {
   /**
    * 检测文件夹是否存在 不存在则创建
    */
-  async checkDir(folderName: string) {
+  async checkDir(folderName) {
     //
     let folderExistsRes = await file.existsFolder(folderName);
     // 不存在则创建
@@ -24,7 +24,7 @@ const file = {
    * @param folderName 要检查的文件夹名称
    * @returns 如果文件夹存在则返回 true，否则返回 false
    */
-  async existsFolder(folderName: any): Promise<boolean> {
+  async existsFolder(folderName) {
     let res = await fs.pathExists(file.pathJoin(folderName));
     return res;
   },
@@ -32,7 +32,7 @@ const file = {
    * 创建文件夹
    * @param folderName 要创建的文件夹名称
    */
-  async createFolder(folderName: any) {
+  async createFolder(folderName) {
     await fs.mkdirp(file.pathJoin(folderName));
   },
   /**
@@ -50,14 +50,14 @@ const file = {
    * @param encoding 编码格式
    * @return 返回读取的文件内容
    */
-  async readFile(fileName: string, encoding = "utf-8") {
+  async readFile(fileName, encoding = "utf-8") {
     let res = await fs.readFileSync(file.pathJoin(fileName), encoding);
     return res;
   },
   /**
    * 删除文件
    */
-  async deleteFile(filePath: any) {
+  async deleteFile(filePath) {
     let res = file.pathJoin(filePath);
     fs.rmdir(res, (err) => {
       if (err) throw err;
@@ -67,7 +67,7 @@ const file = {
   /**
    * 文件解压
    */
-  async unzipFile(filePath: any, destPath: any) {
+  async unzipFile(filePath, destPath) {
     destPath = file.pathJoin(destPath);
     try {
       const crxBuf = await promises.readFile(filePath);
@@ -90,7 +90,7 @@ const file = {
   },
   /**
    * 路径拼接
-   */ pathJoin(paths: any) {
+   */ pathJoin(paths) {
     if (typeof paths == "string") {
       return join(file.getCurrentDir(), paths);
     }
