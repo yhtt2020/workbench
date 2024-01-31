@@ -6,7 +6,7 @@ const browser={
   async openInUserSelect(url:string){
     //获取到用户设置
     let settings=await tsbApi.settings.get('openUrlBrowser')
-    if(settings==='system'){
+    if(settings==='system' || !settings){
       browser.openInSystem(url)
     }else{
       browser.openInInner(url)
