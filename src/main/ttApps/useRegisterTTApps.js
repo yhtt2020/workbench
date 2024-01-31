@@ -5,6 +5,7 @@ const {
   readFile,
   deleteFile,
 } = require("./useFile.js");
+
 const getFileExtension = (filePath) => {
   const compressedTypes = ["zip", "rar", "7z", "json"];
   const fileExtension = filePath.split(".").pop() || "";
