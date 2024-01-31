@@ -96,7 +96,14 @@ onMounted(() => {
   // 监听鼠标抬起事件;
   window.addEventListener("mouseup", handleMouseUp);
   document.body.addEventListener("keydown", ignoreSpace);
-
+  // 监听用于更新滚动条X轴滚动事件
+  proxy.$bus.on("updateFreeLayoutScrollX", (x) => {
+    scrollbar.value.scrollLeft = x;
+  });
+  // 监听用于更新滚动条Y轴滚动事件
+  proxy.$bus.on("updateFreeLayoutScrollY", (y) => {
+    scrollbar.value.scrollTop = y;
+  });
   proxy.$bus.on("updateFreeLayoutScroll", () => {
     perfectScrollbar.value.update();
   });

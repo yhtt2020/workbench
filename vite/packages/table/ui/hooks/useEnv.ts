@@ -1,11 +1,15 @@
 import { isWeb, isClient, isMac, isOffline, isVisitor } from "./env";
 
-const priority = ["web", "offline", "visitor", "client", "mac"];
+const priority = ["web", "offline", "visitor", "mac", "client"];
 
 export const useEnv = (arr) => {
+  if (!Array.isArray(arr)) {
+   return console.warn('环境检测参数必须为数组 :>> ');
+  }
   arr = envSort(arr);
-  console.log('arr :>> ', arr);
+
   let flag: any = false;
+
   for (const iterator of arr) {
     if (flag) return;
     flag = envDetection(iterator);

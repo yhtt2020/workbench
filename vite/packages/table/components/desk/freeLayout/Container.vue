@@ -40,6 +40,8 @@ const snowDrag = ref();
 
 const firstLoading = ref(true);
 onMounted(() => {
+ let res=  window.useEnv(["mac", "web"]);
+ console.log('res :>> ', res);
   // 等待滚动视图完成加载
   setTimeout(() => {
     updateCard(currentDesk.value?.cards);
@@ -140,18 +142,31 @@ const cutCanvas = async () => {
   //
   const { width: maxWidth, height: maxHeight } = useElementSize(maxSize);
   let { scrollHeight, scrollWidth } = freeLayoutEnv.value;
+  console.log(
+    "\u001b[31m" + "----------------数据处理----------------" + "\u001b[0m"
+  );
+  console.log("canvasWidth :>> ", canvasWidth);
+  console.log("maxItem.left  :>> ", maxItem.left);
+  console.log("maxWidth :>> ", maxWidth);
+  console.log("scrollWidth :>> ", scrollWidth);
 
   console.log(
-    "  Math.abs(canvasWidth - (maxItem.left + maxWidth)) :>> ",
-    Math.abs(canvasWidth - (maxItem.left + maxWidth))
+    "canvasWidth - (maxItem.left + maxWidth + 0) - scrollWidth :>> ",
+    canvasWidth - (maxItem.left + maxWidth + 0) - scrollWidth
   );
-  console.log('scrollWidth :>> ', scrollWidth);
-  if (Math.abs(canvasWidth - (maxItem.left + maxWidth)) < scrollWidth) {
-    getFreeLayoutState.value.canvas.width = maxItem.left + maxWidth + scrollWidth;
+  if (canvasWidth - (maxItem.left + maxWidth + 0) - scrollWidth > 0) {
+    getFreeLayoutState.value.canvas.width =
+      maxItem.left + maxWidth + scrollWidth / 2;
   }
-  if (Math.abs(canvasHeight - (maxItem.top + maxHeight)) > scrollHeight) {
-    getFreeLayoutState.value.canvas.height = maxItem.top + maxHeight + scrollHeight;
+
+  if (canvasHeight - (maxItem.top + maxHeight + 0) - scrollHeight > 0) {
+    getFreeLayoutState.value.canvas.width =
+      maxItem.top + maxHeight + scrollHeight / 2;
   }
+  // if (canvasHeight > maxItem.top + maxHeight + scrollHeight) {
+  //   getFreeLayoutState.value.canvas.height =
+  //     maxItem.top + maxHeight + scrollHeight;
+  // }
 };
 
 /**
@@ -178,7 +193,6 @@ async function updateCard(data) {
   console.timeEnd("Free Layout Run Time");
   console.log("--------------- 自由布局数据更新结束 ---------------");
   firstLoading.value = false;
-  cutCanvas();
 }
 
 let updateCardTimer: any;
@@ -204,29 +218,44 @@ const drag = (obj) => {
 };
 
 const dragStart = () => {
-  isDragging = false;
   freeLayoutStore.copyData();
 };
-let isDragging = false; // 添加一个标志位来表示当前是否正在拖动
 
 // 元素拖拽结束
 const dragStop = (item) => {
   let { width: canvasWidth, height: canvasHeight } =
     getFreeLayoutState.value.canvas;
-  let { scrollHeight, scrollWidth } = freeLayoutEnv.value;
+  let { scrollHeight, scrollWidth, scrollLeft, scrollTop } =
+    freeLayoutEnv.value;
   // 如果画布宽度小于拖动元素的宽度，则调整画布宽度
-  if (Math.abs(canvasWidth - (item.x + item.width)) <= 100) {
-    getFreeLayoutState.value.canvas.width += scrollWidth;
-    proxy.$bus.emit("updateFreeLayoutScroll");
+  if (Math.abs(canvasWidth - (item.x + item.width)) <= 400) {
+    message.success("已拓展画布区域");
+    getFreeLayoutState.value.canvas.width += scrollWidth / 2;
   }
   // 如果画布高度小于拖动元素的高度，则调整画布高度
-  if (Math.abs(canvasHeight - (item.y + item.height)) <= 100) {
-    getFreeLayoutState.value.canvas.height += scrollHeight;
-    proxy.$bus.emit("updateFreeLayoutScroll");
+  if (Math.abs(canvasHeight - (item.y + item.height)) <= 400) {
+    message.success("已拓展画布区域");
+    getFreeLayoutState.value.canvas.height += scrollHeight / 2;
   }
-  cutCanvas();
-  if (isDragging) return;
-  isDragging = true; // 开始拖动时设置标志位为true
+
+  if (item.x < 200) {
+    Object.values(getFreeLayoutData.value).forEach((item: any) => {
+      item.left += scrollWidth / 2;
+    });
+    message.success("已拓展画布区域");
+    proxy.$bus.on("updateFreeLayoutScrollX", scrollLeft + scrollWidth / 2);
+    getFreeLayoutState.value.canvas.width += scrollWidth / 2;
+  }
+  if (item.y < 200) {
+    Object.values(getFreeLayoutData.value).forEach((item: any) => {
+      item.top += scrollHeight / 2;
+    });
+    message.success("已拓展画布区域");
+    proxy.$bus.on("updateFreeLayoutScrollX", scrollLeft + scrollHeight / 2);
+    getFreeLayoutState.value.canvas.height += scrollHeight / 2;
+  }
+  // cutCanvas();
+
   if (!isSelectAll.value) return;
   snowDrag.value.forEach((item) => {
     item.snowDragEnd();
