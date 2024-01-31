@@ -1,7 +1,7 @@
 const Base = require('./base')
 const appModel = require('../../model/appModel')
 
-const useRegisterTTApps = require('../../main/ttApps/useRegisterTTApps')
+const useRegisterTTApps = require('../ttApps/useRegisterTTApps')
 const { BrowserWindow } = require('electron')
 class TTApp extends Base {
   instances = []
