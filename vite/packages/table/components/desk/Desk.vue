@@ -425,7 +425,7 @@ export default {
           lock: true,
           children: [
             {
-              id: 5,
+              id: 6,
               newIcon: "fluent:circle-off-16-regular",
               name: "清空桌面",
               fn: () => {
@@ -697,6 +697,9 @@ export default {
     showMenu() {
       if (!this.notTrigger && this.rightModel !== "follow")
         this.menuVisible = true;
+    },
+    arrange(){
+      this.$emit("onArrange");
     },
     // 添加图标
     newAddIcon() {
