@@ -14,7 +14,7 @@
           {{ stage + 0 }} / {{ chapter.tasks.length }}
         </template>
       </xt-text>
-      <div class="mt-1 mb-3">
+      <div class="mt-1 mb-1">
         <a-progress :percent="progress" :show-info="false" />
       </div>
       <TaskReward :showTaskReward="currentTaskReward"></TaskReward>
