@@ -64,7 +64,7 @@ const handleDragEnd = (event) => {
             obj = {
                 ...defaultFolderData,
                 list: props.data.children,
-                customSize:'2x2',
+                customSize:props.data.customSize || '2x2',
                 name:props.data.name,
                 layout:props.data.layout || 'rows',
             }

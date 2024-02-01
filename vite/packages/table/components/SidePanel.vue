@@ -61,7 +61,7 @@
                     'active-back': current(item),
                     hover: (dragItem && item.id === hoverRealItemId(this.sortId,this.hoverIndex) && dragItem?.id !== hoverRealItemId(this.sortId,this.hoverIndex))
                   }" :style="{ borderRadius: this.iconRadius + 'px' }">
-                  <Drag :data="item" :currentId="sortId">
+                  <Drag :data="item" :currentId="sortId" @deleteFile="deleteFile">
                     <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"
                       :placement="sortId === 'left' ? 'right' : 'left'"></Team>
                     <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
@@ -369,6 +369,7 @@ export default {
     ]),
     ...mapWritableState(appStore, ['settings']),
     ...mapWritableState(useDeskStore, ['isEnterBar']),
+    ...mapWritableState(useNavBarStore, ['isEnterDesk']),
     // 判断当前为左侧栏还是右侧栏，返回拖拽id
     currentId() {
       if (this.currentNav === 'left') {
@@ -599,6 +600,13 @@ export default {
         color:item.color,
       }
     },
+    deleteFile(data){
+      const index = this.sideList.findIndex((item) => item.id === data.id)
+      this.sideList.splice(index, 1)
+      this.syncSidePanel()
+      this.updateList(this.sideList)
+      this.$emit('getDelIcon', false)
+    },
     /**
     * 更新侧边导航栏，包括刷新和启动拖拽
     */
@@ -651,20 +659,26 @@ export default {
           if (that.popVisible) {
             that.notifications.NoticeToast()
           }
-          let delIcon = document.getElementById('delIcon2')
+          let del = document.querySelectorAll('#delIcon3')
+          // let delIcon = document.getElementById('delIcon3')
+          console.log('delIcon', del)
           that.delItemIcon = true
           that.$emit('getDelIcon', true)
           that.delNav = true
-          if (that.delNav) {
+          del.forEach((delIcon) => {
+            if (that.delNav) {
             delIcon.ondragover = function (ev) {
               ev.preventDefault()
             }
           }
           delIcon.ondrop = function (ev) {
             let oneNav = that.navigationList[event.oldIndex]
+            that.isEnterDesk = false
             //将要删除的是否是主要功能
             if (!that.mainNavigationList.find(f => f.name === oneNav.name)) {
               that.delNavList(event.oldIndex)
+              that.$emit('getDelIcon', false)
+              that.hoverIndex = -1
               return
             }
             let sumList = []
@@ -682,6 +696,8 @@ export default {
             }
             that.delNavigation(sumList, oneNav, event.oldIndex, that.delNavList)
           }
+          })
+
         },
         onUpdate: _.debounce((event) => {
           if (that.cancelUpdate) {
