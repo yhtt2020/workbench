@@ -33,7 +33,7 @@
      <div class="flex items-center flex-col">
       <xt-text class="xt-text font-14 xt-font font-400">我的积分</xt-text>
       <div style="height: 4px;"></div>
-      <span class="xt-text font-18 xt-font " style="font-weight: 900;">3000</span>
+      <span class="xt-text font-18 xt-font " style="font-weight: 900;">{{ myScore }}</span>
      </div>
      <a-avatar :size="48" shape="circle" src="/img/task/communityPoints.svg"></a-avatar>
     </div>
@@ -48,13 +48,15 @@
 <script setup>
 import { storeToRefs } from 'pinia';
 import { appStore } from '../../../../store';
+import { computed, onMounted, ref } from 'vue';
+import { getTaskScore } from '../../api';
 
 import FrameAvatar from '../../../../components/avatar/FrameAvatar.vue';
-import { computed } from 'vue';
 
 
 const app = appStore();
 const { userInfo,lvInfo } = storeToRefs(app);
+const myScore = ref("");
 
 const props = defineProps({
   showTaskUser:{
@@ -74,7 +76,15 @@ const myLv = computed(()=>{
   }
 })
 
-console.log("userInfo",userInfo.value);
+
+onMounted(()=>{
+  getTaskScore().then((res)=>{
+    console.log("res",res);
+    if(res.code === 200){
+      myScore.value = res.data[1].value;
+    }
+  })
+}) 
 
 </script>
 

@@ -99,6 +99,7 @@ const updateTaskList = async () => {
   if (code !== 200) return;
   currentTaskList.value = data;
 };
+
 </script>
 
 <style lang="scss" scoped>

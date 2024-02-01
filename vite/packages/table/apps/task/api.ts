@@ -17,3 +17,9 @@ export const getTaskStatus = (data) => {
   const res = post(sUrl("/app/userTask/getStatus"), data);
   return res;
 };
+
+// 获取积分
+export const getTaskScore = () =>{
+  const res = post(sUrl("/app/com/scores/list"),{});
+  return res;
+}

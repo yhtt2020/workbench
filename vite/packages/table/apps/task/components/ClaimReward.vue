@@ -12,21 +12,18 @@
         />
         <source v-else src="./experience.mp3" type="audio/mpeg" />
       </audio>
+      <div class="mb-3 xt-text xt-font font-16">
+        🎉{{ types[props.type]?.info }}
+      </div>
       <transition
         name="animate__animated animate__bounce"
         enter-active-class="animate__bounceIn"
         leave-active-class="animate__bounceOut"
       >
-        <xt-ify-icon
-          v-if="visible"
-          icon="fluent-emoji:glowing-star"
-          size="100"
-          class="mb-3"
-        />
+        <ShowReward v-if="visible" @onReward="getAudio" />
       </transition>
 
-      <div>{{ types[props.type]?.info }}</div>
-      <ShowReward @onReward="getAudio" />
+      <TaskUserInfo :show-task-user="true"/>
     </div>
     <div class="flex justify-between">
       <div></div>
@@ -52,6 +49,8 @@ import { storeToRefs } from "pinia";
 import ShowReward from "./ShowReward.vue";
 import "animate.css";
 import { getReward } from "../task";
+
+import TaskUserInfo from "./userinfo/TaskUserInfo.vue";
 
 const store = taskStore();
 const visible = ref(false);
