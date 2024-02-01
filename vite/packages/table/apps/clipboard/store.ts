@@ -2,10 +2,13 @@ import {defineStore} from "pinia";
 import dbStorage from "../../store/dbStorage";
 import {getDateTime} from '../../util'
 import {completeTask} from '../../apps/task/task'
+import { useEnv } from "../../ui/hooks/useEnv";
 let clipboardChanged = null
 //todo 此处要兼容web版
-let win32
-if(process.platform==='win32'){
+let win32,fs,clipboard
+if(!useEnv('web') &&process.platform==='win32'){
+fs = window.$models.fs
+ clipboard = require('electron').clipboard
   win32 = window.$models.win32
   win32.watchClipboard(() => {
     if (clipboardChanged) {
@@ -18,9 +21,8 @@ if(process.platform==='win32'){
 
 
 
-const {fs} = window.$models
 
-const clipboard = require('electron').clipboard
+
 // @ts-ignore
 export const clipboardStore = defineStore("clipboardStore", {
   state: () => ({

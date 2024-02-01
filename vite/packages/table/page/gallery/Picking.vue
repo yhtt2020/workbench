@@ -111,11 +111,13 @@ import PickDropDetail from './components/content/PickDropDetail.vue';
 import GradeSmallTip from "../../components/GradeSmallTip.vue";
 import MinSelect from './components/select/MinSelect.vue';
 import {completeTask} from '../../apps/task/task'
+import { useEnv } from '../../ui/hooks/useEnv';
 
-let fs = require('fs')
-let path = require('path')
-
-
+let fs,path
+ if (!useEnv('web')) {
+   fs = window.$models.fs
+    path = require('path')
+ }
 export default {
   name:'Picking',
 

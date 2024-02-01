@@ -242,8 +242,12 @@ import { setThemeSwitch } from "../components/card/hooks/themeSwitch";
 import { chatStore } from '../store/chat'
 // 顶部状态
 import TopPanel from '../components/TopPanel.vue'
+import {useEnv} from '../ui/hooks/useEnv'
+let settings
+if ( !useEnv('web')) {
+  settings= window.$models.settings
 
-const { settings } = window.$models
+}
 export default {
   name: 'Wizard',
   components: {

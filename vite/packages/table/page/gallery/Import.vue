@@ -48,9 +48,12 @@
 import {mapActions, mapWritableState} from 'pinia'
 import {paperStore} from '../../store/paper'
 import {message, Modal} from 'ant-design-vue'
-
-const fs = window.$models.fs
-const path = require('path')
+import { useEnv } from '../../ui/hooks/useEnv'
+let fs,path
+ if (!useEnv('web')) {
+   fs = window.$models.fs
+    path = require('path')
+ }
 export default {
   name: 'Import',
   data() {
@@ -75,10 +78,10 @@ export default {
       this.activePapers=[];
       // const videoList = fs.readdirSync(path.join(this.settings.savePath, 'lively'));
       // const localPaper =  fs.readdirSync(path.join(path.join(this.settings.savePath), 'static'));
-      // for(const item of videoList){ 
+      // for(const item of videoList){
       //   fs.removeSync(path.join(path.join(this.settings.savePath, 'lively'),`${item}`));
       // };
-      // for(const item of localPaper){ 
+      // for(const item of localPaper){
       //   fs.removeSync(path.join(path.join(path.join(this.settings.savePath), 'static'),`${item}`));
       // }
     },

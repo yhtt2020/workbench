@@ -122,13 +122,16 @@ import {notification} from "ant-design-vue";
 import ModalNotice from "./page/notice/ModalNotice.vue";
 import ClaimReward from "./apps/task/components/ClaimReward.vue";
 import {taskStore} from "./apps/task/store";
-
+import { useEnv } from "./ui/hooks/useEnv";
 notification.config({
 top: '70px',//设置notification默认距离顶部位置
 rtl: false,
 });
 window.browser = browser
-const {appModel} = window.$models
+let appModel
+if (!useEnv('web')) {
+  appModel = window.$models.appModel
+}
 let startX,
 startY,
 moveEndX,
