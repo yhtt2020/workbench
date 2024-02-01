@@ -49,9 +49,14 @@ import { mapWritableState, mapActions, mapState } from 'pinia'
 import { appStore } from '../store'
 import { Modal } from 'ant-design-vue'
 import { appsStore } from '../store/apps'
-const { fs } = window.$models
+
 import {renderIcon} from '../js/common/common'
 import { startApp } from '../ui/hooks/useStartApp'
+import { useEnv } from '../ui/hooks/useEnv'
+let fs
+if (! useEnv('web')) {
+fs = window.$models.fs
+}
 export default {
   name: 'MyApps',
   data() {

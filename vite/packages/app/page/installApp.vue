@@ -60,7 +60,12 @@
 </template>
 
 <script>
-const { appModel } = window.$models
+import {useEnv} from '../../table/ui/hooks/useEnv'
+let appModel
+if (!useEnv('web')) {
+  appModel = window.$models.appModel
+
+}
 import  _ from 'lodash-es'
 export default {
   name: 'installApp',

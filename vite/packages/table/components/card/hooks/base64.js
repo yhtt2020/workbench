@@ -1,8 +1,14 @@
-const { fs } = window.$models;
+
+import { useEnv} from '../../../ui/hooks/useEnv'
 import { myIcons } from "../../../store/myIcons";
 
 import { SHA256 } from "crypto-js";
-const { join } = require("path");
+let fs,json
+if (!useEnv('web')) {
+  fs= window.$models.fs
+  json = require("path").json
+
+}
 const dataURLToBlob = (fileDataURL) => {
   let arr = fileDataURL.split(","),
     mime = arr[0].match(/:(.*?);/)[1],

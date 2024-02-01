@@ -50,7 +50,11 @@ import { SettingOutlined, EditOutlined, EllipsisOutlined } from '@ant-design/ico
 import { mapActions } from 'pinia'
 import { appStore } from '../store'
 import {Modal,message } from 'ant-design-vue'
-const { appModel } = window.$models
+import { useEnv } from '../../table/ui/hooks/useEnv'
+let appModel
+if (!useEnv('web')) {
+  appModel = window.$models.appModel
+}
 export default {
   name: 'AllApps',
   components: {
