@@ -3,7 +3,7 @@
     <div class="flex justify-between items-center mb-3 h-full">
       <div class="text-base flex items-center">
         <xt-ify-icon size="24" icon="fluent-emoji:star" class="mr-2" />
-        任务已完成！
+        任务完成！
       </div>
 
       <xt-ify-icon
@@ -13,7 +13,7 @@
       />
     </div>
     <div class="flex flex-col">
-      <xt-text class="xt-text-2 font-16 xt-font">
+      <xt-text class="xt-text-2 font-16 xt-font mb-3">
         已完成「 {{ currentTask?.name }}」任务，{{ status ? "感谢再次体验" : "点击领取奖励" }}。
       </xt-text>
       <ShowReward :id="currentId"/> 
@@ -38,7 +38,7 @@
 import { ref, toRefs, computed, onMounted, onBeforeMount } from "vue";
 import { taskStore } from "../store";
 import { storeToRefs } from "pinia";
-import XtIfyIcon from "../../../ui/new/IfyIcon/index";
+import XtIfyIcon from "../../../ui/new/IfyIcon/index.vue";
 import { getTaskStatus } from "../api";
 import { Avatar } from 'ant-design-vue';
 

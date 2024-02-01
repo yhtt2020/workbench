@@ -13,7 +13,7 @@
        {{ showTaskReward.experience.total }}
       </div>
      </div>
-     <div class="w-12 h-12 flex items-center justify-center rounded-md relative" style="border: 1px solid rgba(255, 255, 255, 0.1);">
+     <div class="w-12 h-12 flex items-center justify-center rounded-md relative mr-3" style="border: 1px solid rgba(255, 255, 255, 0.1);">
       <div class="absolute top-0 w-6 rounded-tr-md rounded-bl-md flex items-center justify-center" style="height: 15px; font-size: 9px;background: #508bfe;right: -1px;">
         {{ showTaskReward.points.name }}
       </div>
@@ -22,6 +22,28 @@
       </div>
       <div class="absolute bottom-0 w-6 rounded-tr-md rounded-bl-md flex items-center justify-center" style="height: 15px; font-size: 9px;right: -2px;">
        {{ showTaskReward.points.total }}
+      </div>
+     </div>
+
+     <div class="w-12 h-12 flex items-center justify-center rounded-md relative mr-3"
+      style="border: 1px solid rgba(255, 255, 255, 0.1);" v-for="item in showTaskReward.medal.list"
+    >
+      <div class="absolute top-0 w-6 rounded-tr-md rounded-bl-md flex items-center justify-center" style="height: 15px; font-size: 9px;background: #508bfe;right: -1px;">
+        {{ showTaskReward.medal.name }}
+      </div>
+      <div style="width: 36px; height: 36px;" class="flex items-center justify-center">
+       <img :src="item.icon" class="w-full h-full object-cover"/>
+      </div>
+     </div>
+
+     <div class="w-12 h-12 flex items-center justify-center rounded-md relative mr-3"
+      style="border: 1px solid rgba(255, 255, 255, 0.1);" v-for="item in showTaskReward.frame.list"
+    >
+      <div class="absolute top-0 w-6 rounded-tr-md rounded-bl-md flex items-center justify-center" style="height: 15px; font-size: 9px;background: #508bfe;right: -1px;">
+        {{ showTaskReward.frame.name }}
+      </div>
+      <div style="width: 36px; height: 36px;" class="flex items-center justify-center">
+       <img :src="item.icon" class="w-full h-full object-cover"/>
       </div>
      </div>
    </div>

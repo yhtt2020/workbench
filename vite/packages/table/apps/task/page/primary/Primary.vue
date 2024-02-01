@@ -17,9 +17,7 @@
       <div class="mt-1 mb-3">
         <a-progress :percent="progress" :show-info="false" />
       </div>
-
       <TaskReward :showTaskReward="currentTaskReward"></TaskReward>
-
     </div>
     <xt-title>正在进行</xt-title>
     <div class="xt-bg-2 rounded-xl p-3">
@@ -126,14 +124,18 @@ const currentTask = computed(() => {
 
 // 获取当前章节的任务所有奖励
 const currentTaskReward = computed(()=>{
-  const getChapList  =  chapter.value.tasks.map((item)=>{
-    return getCurrentTaskReward(item.id)[0]
-  })
+  const getChapList  =  [];
+  for(const item of chapter.value.tasks){
+    const list =  getCurrentTaskReward(item.id);
+    for(const childrenItem of list){
+      getChapList.push(childrenItem)
+    }
+  }
 
   // 获取经验值
   const experienceValue = getChapList.filter((item)=>{return item.type === "experience"});
   // 获取积分值
-  const communityPointsValue = getChapList.filter((item)=>{return item.type !== "experience"});
+  const communityPointsValue = getChapList.filter((item)=>{return item.type === "communityPoints"});
   // 获取勋章
   const medal = getChapList.filter((item)=>{return item.type === "medal"});
   // 获取头像框
@@ -148,17 +150,16 @@ const currentTaskReward = computed(()=>{
     return sum + item.value
   },0);
 
-
-
   // 等级升级预期
   const lving = Math.floor(experienceTotal / userInfo.value?.grade.next);
+  console.log("frame",getChapList);
 
   return { 
     lving:lving,
     experience:{total:experienceTotal,name:"经验",img:"/img/task/experience.png"},
     points:{total:communityPointsTotal,name:"积分",img:"/img/task/communityPoints.svg"},
     medal:{list:medal,name:"勋章"},
-    frame:{list:frame,name:"头像框"}
+    frame:{list:frame,name:"头像"} 
   };
 
 })

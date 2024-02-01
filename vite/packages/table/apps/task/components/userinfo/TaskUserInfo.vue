@@ -1,13 +1,14 @@
 <template>
- <div class="w-full flex flex-col task-userinfo rounded-lg mb-4 px-4 pt-3 pb-2">
+ <div class="w-full flex flex-col task-userinfo rounded-lg mb-4 px-4 pt-3 pb-2" style="width: 404px;">
   <template v-if="showTaskUser">
    <div class="flex items-center justify-start mb-3">
-    <div style="width: 100px;height: 100px;" class="flex items-center justify-center mr-2">
-     <FrameAvatar class="frame" :avatarUrl="userInfo.avatar" :avatarSize="80"
-     :frameUrl="userInfo.frame" ></FrameAvatar>
-    </div> 
+    <div :style="userInfo.frame !== '' ? {width:'100px',height:'100px',}:{width:'64px',height:'64'}" class="flex items-center justify-center mr-2">
+      <FrameAvatar class="frame" :avatarUrl="userInfo.avatar" :avatarSize="userInfo.frame !== '' ? 80 : 64"
+       :frameUrl="userInfo.frame" ></FrameAvatar>
+    </div>
     <div class="flex items-center flex-col">
      <span class="font-18 xt-font font-600 xt-text">{{ userInfo.nickname }}</span>
+
     </div>
    </div>
   </template>
@@ -18,7 +19,7 @@
       <span class="font-18 xt-font  xt-text" style="font-weight: 900;">Lv{{ userInfo?.grade.new_name.substr(0,1) }}</span>
     </div>
 
-    <a-progress :percent="myLv.currentLv" :showInfo="false" :strokeColor="'var(--primary-text)'" :trailColor="'rgba(255,255,255,0.49)'"/>
+    <a-progress :percent="myLv.currentLv"  :strokeColor="'var(--primary-text)'"/>
     
     <!-- 经验升级进度条-->
     <div class="flex justify-between w-full pt-2">
@@ -66,6 +67,7 @@ const props = defineProps({
 const myLv = computed(()=>{
   const  currentLv =  Math.floor((userInfo.value?.grade.next - userInfo.value?.grade.diff) / userInfo.value?.grade.next * 100) ;
   const lvDiff = userInfo.value?.grade.next - userInfo.value?.grade.diff;
+  console.log("currentLv lvDiff",lvDiff,currentLv,userInfo.value);
   return {
     currentLv:currentLv,
     lvDiff:lvDiff,
@@ -87,6 +89,7 @@ console.log("userInfo",userInfo.value);
 :deep(.ant-progress-inner){
  height: 18px !important;
  width: 168px !important;
+ background:  rgba(255,255,255,0.49) !important;
  & .ant-progress-bg{
   height: 18px !important;
  }
