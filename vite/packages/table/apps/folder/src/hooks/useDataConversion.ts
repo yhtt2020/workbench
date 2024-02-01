@@ -69,7 +69,7 @@ export const useFileConversionNav = (data) => {
     isBg: data.isBackground,
     bg: data.backgroundColor,
     type: data.open.type,
-    id: data.iconIndex || nanoid(6),
+    id: nanoid(6),
   };
   return icon;
 };

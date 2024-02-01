@@ -697,6 +697,14 @@ export default {
   mounted() {
     // 空桌面添加图标保持弹窗
     this.editVisible = this.keepAddIcon
+    this.$bus.on('addCard',(data)=>{
+      this.currentDesk.cards.push({
+        name:'folder',
+        id:Date.now(),
+        customData: data
+      })
+
+    })
     // 自动打开编辑
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();

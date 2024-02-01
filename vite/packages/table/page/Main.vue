@@ -24,7 +24,11 @@
           <router-view></router-view>
         </keep-alive>
         <!-- 删除区域 -->
-        <div class="del-icon" id="delIcon2" v-show="delZone" style="z-index:500;bottom: 0;right: 50%;transform: translateX(50%);">
+        <div 
+          class="del-icon" 
+          id="delIcon2" 
+          v-show="delZone" 
+          style="z-index:500;bottom: 0;right: 50%;transform: translateX(50%);">
           <xt-new-icon icon="fluent:delete-16-regular" size="32" color="#FF4D4F"></xt-new-icon>
         </div>
       </div>
@@ -210,7 +214,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid red;
+  border: 1px dashed red;
   font-size: 18px;
   color: var(--primary-text);
   font-weight: 500;

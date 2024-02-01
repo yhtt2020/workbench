@@ -5,6 +5,7 @@
 </template>
   
 <script setup>
+import {getCurrentInstance} from 'vue'
 import { storeToRefs } from "pinia";
 import { useAddCard } from "../../../../../ui/hooks/useAddCard";
 
@@ -31,6 +32,8 @@ const props = defineProps({
     currentId: ''
 });
 const emits = defineEmits(["deleteFile" ]);
+
+const { proxy } = getCurrentInstance()
 
 /**
  * 文件托起
@@ -61,9 +64,9 @@ const handleDragEnd = (event) => {
             obj = {
                 ...defaultFolderData,
                 list: props.data.children,
-                customSize:props.data.customSize,
+                customSize:'2x2',
                 name:props.data.name,
-                layout:props.data.layout,
+                layout:props.data.layout || 'rows',
             }
             if(isFreeLayout.value){
                 const { x, y } = mouseInElement.value;
@@ -76,14 +79,7 @@ const handleDragEnd = (event) => {
                     id,
                 }
             }
-            console.log(obj,'obj')
-            useAddCard(
-                'folder',
-                {
-                customData: obj,
-                },
-                id
-            )
+            proxy.$bus.emit("addCard", obj);
         }else{
             obj = useFileConversionIcon(props.data)
             let id = Date.now();

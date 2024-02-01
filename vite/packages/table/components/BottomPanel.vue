@@ -25,8 +25,8 @@
       @mouseleave="handleMouseLeave">
       
     </div> -->
-    <div v-if="true"
-          style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:0">
+    <div v-if="false"
+          style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:100px">
           <div>选中的id:===={{ dragItem?.id }} {{ hoverIndex }}</div>
           <div v-for="( item, index) in copyFootNav" style="margin-bottom: 5px;border-bottom: 4px solid white">
             {{ index }} {{ item.name }} {{ item.id }} {{ item.children?.length }}
@@ -1143,6 +1143,7 @@ export default {
             if (!that.isDelete) return
             // console.log(111111);
             that.delItemIcon = false
+            that.isEnterDesk = false
             let oneNav = that.copyFootNav[event.oldIndex]
             //将要删除的是否是主要功能
             if (!that.mainNavigationList.find((f) => f.name === oneNav.name)) {
