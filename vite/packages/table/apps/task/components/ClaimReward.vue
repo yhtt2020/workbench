@@ -1,7 +1,10 @@
 <template>
-  <xt-modal :footer="0" v-model="rewardVisible">
-    <div class="flex justify-center items-center flex-col" style="width: 500px">
-      <audio controls class="hidden" style="" autoplay>
+  <xt-modal :footer="0" v-model="rewardVisible" index="9999">
+    <div
+      class=" flex justify-center items-center flex-col"
+      style="width: 500px"
+    >
+      <audio controls class="hidden" style="" autoplay :volume="0.1">
         <source
           v-if="audio == 'communityPoints'"
           src="./communityPoints.mp3"

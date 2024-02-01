@@ -73,22 +73,24 @@ module.exports = class SystemHelper {
         let _path = _p.replace(/\\\\/g, '/')
         let name = path.parse(_path).name
         let icon = ''
+        let ext= path.parse(_path).ext //取扩展名
         try {
           if (_path.endsWith('.lnk')) {
             let urlFile = require('electron').shell.readShortcutLink(_path)
             _path = urlFile.target
+            ext=path.parse(_path).ext //取实际的扩展名
           } else if (_path.endsWith('.url')) {
             icon = await SystemHelper.readUrlIconInfo(_path)
           }
         } catch (e) {
           console.warn('存在失败的', e, _file)
-          _path = '/icons/winapp.png'
+          icon = '/icons/winapp.png'
         }
 
         filepaths.push({
           name: name,
           path: _path,
-          ext: path.parse(_path).ext,
+          ext: ext,
           icon: icon
         })
 

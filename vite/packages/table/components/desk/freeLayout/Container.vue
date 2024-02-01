@@ -101,6 +101,7 @@ async function getPosition(item) {
 
 // 裁切画布
 const cutCanvas = async () => {
+  if (!getFreeLayoutState.value.canvas.autoExtend) return;
   let minLeft: any = undefined;
   let minTop: any = undefined;
   let maxLeft: any = 0;
@@ -111,6 +112,7 @@ const cutCanvas = async () => {
     // 如果当前 item 的 top 小于 minTop，则更新 minTop
     if (minTop == undefined || item.top < minTop) {
       minTop = item.top;
+      console.log("当前minTop :>> ", minTop);
       minItem = item;
     }
     // 如果当前 item 的 left 小于 minLeft，则更新 minLeft
@@ -137,8 +139,8 @@ const cutCanvas = async () => {
   let { width: canvasWidth, height: canvasHeight } =
     getFreeLayoutState.value.canvas;
   let maxSize = currentData.value[maxItem.id].customData.customSize;
+  //
   const { width: maxWidth, height: maxHeight } = useElementSize(maxSize);
-
   let { scrollHeight, scrollWidth } = freeLayoutEnv.value;
 
   if (
@@ -146,7 +148,8 @@ const cutCanvas = async () => {
     scrollWidth
   ) {
     getFreeLayoutState.value.canvas.width =
-      maxItem.left + maxWidth + scrollWidth;
+      maxItem.left + maxWidth + scrollWidth / 2;
+    console.log('"画布宽度回收" :>> ', "画布宽度回收");
   }
 
   if (
@@ -154,10 +157,38 @@ const cutCanvas = async () => {
     scrollHeight
   ) {
     getFreeLayoutState.value.canvas.height =
-      maxItem.top + maxHeight + scrollHeight;
+      maxItem.top + maxHeight + scrollHeight / 2;
+    console.log('"画布高度回收" :>> ', "画布高度回收");
+  }
+  let res = canvasWidth - (minItem.left - scrollWidth / 2);
+
+  // if (minItem.left > scrollWidth) {
+  //   getFreeLayoutState.value.canvas.width -= res;
+
+  //   getFreeLayoutData.value = Object.values(getFreeLayoutData.value).map(
+  //     (item: any) => {
+  //       item.left -= res;
+  //       return item;
+  //     }
+  //   );
+  // }
+  let hRes = canvasHeight - minTop;
+  if (minTop > scrollHeight) {
+    console.log("顶部空余画布回收触发 :>> ");
+    getFreeLayoutState.value.canvas.height -= minTop - scrollHeight / 2;
+    console.log(
+      " getFreeLayoutState.value.canvas.height  :>> ",
+      getFreeLayoutState.value.canvas.height
+    );
+    getFreeLayoutData.value = Object.values(getFreeLayoutData.value).map(
+      (item: any) => {
+        item.top -= minTop - scrollHeight / 2;
+        return item;
+      }
+    );
   }
   // if (canvasHeight > maxItem.top + maxHeight + scrollHeight) {
-  //   getFreeLayoutState.value.canvas.height =
+  //   getFreeLayoutState.value.canvas.height -= res
   //     maxItem.top + maxHeight + scrollHeight;
   // }
 };
@@ -182,7 +213,13 @@ async function updateCard(data) {
       getPosition(item);
     }
   });
-
+  const freeLayout = freeLayoutStore.getOneFreeLayoutData(currentID.value);
+  for (const id in freeLayout) {
+    if (currentData.value[id]?.id.toString() != id.toString()) {
+      console.log("删除数据 :>> ", id);
+      delete freeLayout[id];
+    }
+  }
   console.timeEnd("Free Layout Run Time");
   console.log("--------------- 自由布局数据更新结束 ---------------");
   firstLoading.value = false;
@@ -216,39 +253,43 @@ const dragStart = () => {
 
 // 元素拖拽结束
 const dragStop = (item) => {
-  let { width: canvasWidth, height: canvasHeight } =
-    getFreeLayoutState.value.canvas;
-  let { scrollHeight, scrollWidth, scrollLeft, scrollTop } =
-    freeLayoutEnv.value;
-  // 如果画布宽度小于拖动元素的宽度，则调整画布宽度
-  if (Math.abs(canvasWidth - (item.x + item.width)) <= 400) {
-    message.success("已拓展画布区域");
-    getFreeLayoutState.value.canvas.width += scrollWidth * 0.8;
-  }
-  // 如果画布高度小于拖动元素的高度，则调整画布高度
-  if (Math.abs(canvasHeight - (item.y + item.height)) <= 400) {
-    message.success("已拓展画布区域");
-    getFreeLayoutState.value.canvas.height += scrollHeight * 0.8;
-  }
+  if (getFreeLayoutState.value.canvas.autoExtend) {
+    let { width: canvasWidth, height: canvasHeight } =
+      getFreeLayoutState.value.canvas;
+    let { scrollHeight, scrollWidth, scrollLeft, scrollTop } =
+      freeLayoutEnv.value;
+    // 如果画布宽度小于拖动元素的宽度，则调整画布宽度
+    if (Math.abs(canvasWidth - (item.x + item.width)) <= 400) {
+      message.success("已拓展画布区域");
+      getFreeLayoutState.value.canvas.width += scrollWidth * 0.8;
+    }
+    // 如果画布高度小于拖动元素的高度，则调整画布高度
+    if (Math.abs(canvasHeight - (item.y + item.height)) <= 400) {
+      message.success("已拓展画布区域");
+      getFreeLayoutState.value.canvas.height += scrollHeight * 0.8;
+    }
 
-  if (item.x < 200) {
-    Object.values(getFreeLayoutData.value).forEach((item: any) => {
-      item.left += scrollWidth * 0.8;
-    });
-    message.success("已拓展画布区域");
-    proxy.$bus.on("updateFreeLayoutScrollX", scrollLeft + scrollWidth * 0.8);
-    getFreeLayoutState.value.canvas.width += scrollWidth * 0.8;
-  }
-  if (item.y < 200) {
-    Object.values(getFreeLayoutData.value).forEach((item: any) => {
-      item.top += scrollHeight * 0.8;
-    });
-    message.success("已拓展画布区域");
-    proxy.$bus.on("updateFreeLayoutScrollX", scrollLeft + scrollHeight * 0.8);
-    getFreeLayoutState.value.canvas.height += scrollHeight * 0.8;
-  }
+    if (item.x < 200) {
+      getFreeLayoutData.value = Object.values(getFreeLayoutData.value).map(
+        (item: any) => {
+          item.left += scrollWidth * 0.8;
+          return item;
+        }
+      );
+      message.success("已拓展画布区域");
+      getFreeLayoutState.value.canvas.width += scrollWidth * 0.8;
+    }
+    if (item.y < 200) {
+      Object.values(getFreeLayoutData.value).forEach((item: any) => {
+        item.top += scrollHeight * 0.8;
+      });
+      message.success("已拓展画布区域");
 
-  cutCanvas();
+      getFreeLayoutState.value.canvas.height += scrollHeight * 0.8;
+    }
+
+    cutCanvas();
+  }
 
   if (!isSelectAll.value) return;
   snowDrag.value.forEach((item) => {

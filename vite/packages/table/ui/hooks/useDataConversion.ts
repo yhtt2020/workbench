@@ -10,6 +10,7 @@ export const defaultData = {
   renewTime: 20240128, // 图标更新时间
   id: "", // 图标id
   icon: "", // 显示的图标数据
+  iconType: "", // 图标类型
   name: "", // 显示的图标名称
   isName: true, // 是否显示图标名称
   value: "", // 图标链接

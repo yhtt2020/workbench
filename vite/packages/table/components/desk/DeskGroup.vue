@@ -365,11 +365,6 @@
       :panelIndex="panelIndex"
     ></NewAddCard>
   </div>
-
-  <teleport to="body">
-    <!-- 使用新版的配置导航 -->
-    <NewGuidePage v-if="showGuide" @closeShowGuide="closeShowGuide" :deskId="deskId" :menuList="menuList"></NewGuidePage>
-  </teleport>
 </template>
 
 <script>
@@ -522,8 +517,6 @@ export default {
         { title: "从市场添加", name: "market" },
         { title: "自行添加", name: "custom" },
       ],
-      showGuide: false,
-      menuList: [],
       recommendList: [], //推荐桌面
 
       keepAddIcon:false, // 保持添加图标
@@ -571,7 +564,7 @@ export default {
   },
   computed: {
     ...mapWritableState(deskStore, ["apiList"]),
-    ...mapWritableState(appStore, ["fullScreen", "showGuide"]),
+    ...mapWritableState(appStore, ["fullScreen", "showGuide", "guideList"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(useDeskStore, ["menus"]),
 
@@ -657,7 +650,7 @@ export default {
     // 图标整理
     onArrange(){
       if(!this.showGuide){
-        this.menuList = [1]
+        this.guideList = [1]
         this.showGuide = true
       }else{
         message.info("定制过程中无法操作");
@@ -665,11 +658,11 @@ export default {
     },
     // 智能定制
     aiCustom(){
+      this.guideList = [0, 1, 2]
+      this.showGuide = true
       message.info("开始桌面定制");
       this.addDeskVisible = false
       this.doAddDesk('定制桌面')
-      this.menuList = [0, 1, 2]
-      this.showGuide = true
     },
     startTask(e) {
       let ref = this.$refs.mixMenu;

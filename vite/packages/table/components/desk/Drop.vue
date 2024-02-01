@@ -100,7 +100,7 @@ const handleDrop = async (dragEvent) => {
       link = 'http://' + link;
     }
 
-    const name = await useGetUrlName(link);
+    // const name = await useGetUrlName(link);
     const icon = await getFavicon(link);
 
     const obj = {
@@ -109,9 +109,8 @@ const handleDrop = async (dragEvent) => {
         type: "default",
         value: link,
       },
-      titleValue: name || '网址链接',
-      src: icon || 'https://a.apps.vip/icons/iconSelect/emoji/globe-showing-asia-australia.svg',
-      linkIcon: icon === null ? true : false,
+      titleValue: icon.pageTitle || '网址链接',
+      src: icon.faviconURL || 'https://a.apps.vip/icons/iconSelect/emoji/globe-showing-asia-australia.svg',
     };
 
     const id = Date.now();

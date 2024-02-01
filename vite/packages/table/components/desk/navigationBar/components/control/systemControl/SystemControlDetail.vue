@@ -97,28 +97,29 @@ const nextSong = ()=>{
 
   }
 }
-const syncProgressBar=(event)=>{
-  console.log('触发同步',event)
-  if(setting.value){
-    let val=0
-    if(event.layerX){
-      val=event.layerX
-    }else{
-      val=event.changedTouches[0].clientX-event.target.getBoundingClientRect().x
-    }
-    console.log(val)
 
-    defaultOutput.value.volume= Number((val/258*100).toFixed(2))
-  }
-}
-const setVolume=(event)=>{
+/**
+ * 获取声控对应的位置
+ * @param event
+ * @returns {*}
+ */
+function getPosVal(event){
   let val=0
-  if(event.layerX){
-    val=event.layerX
+  if(event.clientX){
+    val=event.clientX-event.target.getBoundingClientRect().x
   }else{
     val=event.changedTouches[0].clientX-event.target.getBoundingClientRect().x
   }
-  console.log(event,+(val/258*100).toFixed(2))
+  return val
+}
+const syncProgressBar=(event)=>{
+  if(setting.value){
+    console.log(getPosVal(event))
+    defaultOutput.value.volume= Number((getPosVal(event)/258*100).toFixed(2))
+  }
+}
+const setVolume=(event)=>{
+  let val=getPosVal(event)
   setting.value=false
   setDefaultVolume({
     volume:+(val/258*100).toFixed(2),
