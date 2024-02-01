@@ -15,8 +15,8 @@
         </div>
       </template>
     <template v-if="showSize.width === 1 && showSize.height === 2">
-      <div v-if="defaultGame.name === 'steam'">
-        <div class="flex items-center" v-if="detailShow === false">
+      <div v-if="defaultGame.name === 'steam'" class="w-full h-full">
+        <div class="flex items-center justify-center w-full h-full" v-if="detailShow === false">
       <!-- 这是什么判断 栓q -->
           <a-spin v-if="displaySteamGame.length !== displaySteamGame.length " style="margin: 0 auto;"/>
           <div class="flex flex-col mt-3" v-else>
@@ -42,8 +42,8 @@
       </div>
     </template>
     <template v-else>
-      <div v-if="defaultGame.name === 'steam'">
-        <div class="flex items-center" v-if="detailShow === false">
+      <div v-if="defaultGame.name === 'steam'"  class="w-full h-full">
+        <div class="flex items-center  justify-center w-full h-full" v-if="detailShow === false">
           <a-spin v-if="displaySteamGame.length !== displaySteamGame.length" style="margin: 0 auto;"/>
           <div class="my-game" v-else>
             <XtState  v-if="displaySteamGame.length ==0" :state="'null'" style="width: 538px;height: 352px;" bg=""></XtState>
@@ -229,7 +229,7 @@ export default {
   }
 }
 .my-game{
-  display: grid;
+  // display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 15px;
   justify-content: center;
