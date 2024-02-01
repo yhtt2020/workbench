@@ -14,10 +14,11 @@
           {{ stage + 0 }} / {{ chapter.tasks.length }}
         </template>
       </xt-text>
-      <div class="mt-1">
+      <div class="mt-1 mb-3">
         <a-progress :percent="progress" :show-info="false" />
       </div>
-      <!-- 显示当前奖励内容 -->
+
+      <TaskReward :showTaskReward="currentTaskReward"></TaskReward>
 
     </div>
     <xt-title>正在进行</xt-title>
@@ -54,15 +55,17 @@ import { tasks } from "./Primary";
 import { taskStore } from "../../store";
 import { ref, reactive, computed, toRefs, onMounted } from "vue";
 import { appStore } from '../../../../store';
+import { getCurrentTaskReward } from '../../utils';
 
 import StartTask from "../../components/StartTask.vue";
 import SerialNumber from "../../components/SerialNumber.vue";
 import ShowReward from "../../components/ShowReward.vue";
 import TaskUserInfo from '../../components/userinfo/TaskUserInfo.vue';
+import TaskReward from './TaskReward.vue';
 
 const store = taskStore();
 const app = appStore();
-const { settings } = storeToRefs(app);
+const { settings,userInfo } = storeToRefs(app);
 
 
 const { list, taskID, currentId, completedList, currentTaskList } = toRefs(store);
@@ -121,9 +124,45 @@ const currentTask = computed(() => {
   return chapter.value.tasks[stage.value];
 });
 
-const aaa = computed(() => {
-  return store.getPrimaryTask("M0101");
-});
+// 获取当前章节的任务所有奖励
+const currentTaskReward = computed(()=>{
+  const getChapList  =  chapter.value.tasks.map((item)=>{
+    return getCurrentTaskReward(item.id)[0]
+  })
+
+  // 获取经验值
+  const experienceValue = getChapList.filter((item)=>{return item.type === "experience"});
+  // 获取积分值
+  const communityPointsValue = getChapList.filter((item)=>{return item.type !== "experience"});
+  // 获取勋章
+  const medal = getChapList.filter((item)=>{return item.type === "medal"});
+  // 获取头像框
+  const frame = getChapList.filter((item)=>{return item.type === "avatarFrame"})
+  
+  // 计算经验值总和
+  let experienceTotal = experienceValue.reduce((sum,item)=>{
+    return sum + item.value
+  },0);
+  // 计算积分值总和
+  let communityPointsTotal = communityPointsValue.reduce((sum,item)=>{
+    return sum + item.value
+  },0);
+
+
+
+  // 等级升级预期
+  const lving = Math.floor(experienceTotal / userInfo.value?.grade.next);
+
+  return { 
+    lving:lving,
+    experience:{total:experienceTotal,name:"经验",img:"/img/task/experience.png"},
+    points:{total:communityPointsTotal,name:"积分",img:"/img/task/communityPoints.svg"},
+    medal:{list:medal,name:"勋章"},
+    frame:{list:frame,name:"头像框"}
+  };
+
+})
+
 </script>
 
 <style lang="scss" scoped>
