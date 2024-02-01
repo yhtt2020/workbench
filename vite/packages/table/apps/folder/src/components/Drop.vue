@@ -72,7 +72,6 @@ const handleDrop = async (dragEvent) => {
   }
 
   // 导航栏图标拖拽到文件夹
-  console.log(!isOutside.value && navBarId.value && navBarItem.value,'<<<<<<<<<========')
   if(!isOutside.value && navBarId.value && navBarItem.value){
     if(navBarItem.value.type === 'folder'){
       navBarItem.value.children.forEach((item)=>{

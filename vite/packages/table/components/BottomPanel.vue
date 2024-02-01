@@ -25,9 +25,9 @@
       @mouseleave="handleMouseLeave">
       
     </div> -->
-    <div v-if="false"
+    <div v-if="true"
           style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:0">
-          <div>选中的id{{ this.isLeaveBar }} {{ isEdge }}</div>
+          <div>选中的id:===={{ dragItem?.id }} {{ hoverIndex }}</div>
           <div v-for="( item, index) in copyFootNav" style="margin-bottom: 5px;border-bottom: 4px solid white">
             {{ index }} {{ item.name }} {{ item.id }} {{ item.children?.length }}
           </div>
@@ -577,6 +577,8 @@ export default {
     ...mapWritableState(taskStore, ['isTask', 'isTaskDrawer']),
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
     ...mapWritableState(useDeskStore, ['isEnterBar']),
+
+    ...mapWritableState(useNavBarStore,['isEnterDesk']),
 
     isMain() {
       return isMain()
@@ -1219,11 +1221,11 @@ export default {
         },
         onSort: function (event) {
           console.log('onSort', event)
-          console.log('item', that.copyFootNav[event.newIndex])
+          // console.log('item', that.copyFootNav[event.newIndex])
         },
         // 触发替换中发生的事件
         onChange(event) {
-          console.log('onChange', event, that.copyFootNav[event.newIndex])
+          console.log('onChange', event)
           console.log('item')
         },
         /**

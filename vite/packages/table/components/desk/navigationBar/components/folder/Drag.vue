@@ -31,6 +31,7 @@ const props = defineProps({
     currentId: ''
 });
 const emits = defineEmits(["deleteFile" ]);
+
 /**
  * 文件托起
  */
@@ -42,19 +43,20 @@ const handleDragStart = (event) => {
 // 文件拖拽弹起
 const handleDragEnd = (event) => {
     // 判断是否处在当前文件夹
-    console.log(navBarId.value, 'navBarId.value', props.currentId,isLeaveBar.value)
     // if (navBarId.value != props.currentId) {
     //     emits("deleteFile", props.data);
     //     console.log('你不在当前文件夹')
     // }
     if(isLeaveBar.value) {
         emits("deleteFile", props.data);
+        isLeaveBar.value = false
         console.log('数据添加成功')
     }
-    console.log('数据添加成功>>>>>>>>----',isEnterBar.value)
+    console.log('isEnterDesk',navBarStore.isEnterDesk)
 
-    if(isEnterDesk.value && isEnterBar.value) {
+    if(isEnterDesk.value ) {
         let obj
+        let id = Date.now()
         if(props.data.type === 'folder') {
             obj = {
                 ...defaultFolderData,
@@ -63,6 +65,25 @@ const handleDragEnd = (event) => {
                 name:props.data.name,
                 layout:props.data.layout,
             }
+            if(isFreeLayout.value){
+                const { x, y } = mouseInElement.value;
+                const { scrollLeft, scrollTop } = freeLayoutEnv.value;
+
+                getFreeLayoutData.value[id] = {
+                    left: scrollLeft + x,
+                    top: scrollTop + y -50,
+                    index: 1,
+                    id,
+                }
+            }
+            console.log(obj,'obj')
+            useAddCard(
+                'folder',
+                {
+                customData: obj,
+                },
+                id
+            )
         }else{
             obj = useFileConversionIcon(props.data)
             let id = Date.now();
@@ -91,7 +112,7 @@ const handleDragEnd = (event) => {
     // 数据回收
     navBarItem.value = "";
     navBarId.value = "";
-    isLeaveBar.value = false;
+    // isEnterDesk.value = false
 };
 </script>
   

@@ -45,7 +45,6 @@ const { iconOption } = storeToRefs(iconStore);
 
 // 
 const navBar = useNavBarStore()
-const {isEnterDesk} = storeToRefs(navBar)
 const { proxy } = getCurrentInstance()
 
 const handleDrop = async (dragEvent) => {
@@ -53,7 +52,6 @@ const handleDrop = async (dragEvent) => {
   if (isEnterBar.value || isEnterFolder.value) {
     return;
   }
-  isEnterDesk.value = true
   dragEvent.preventDefault();
   let files = dragEvent.dataTransfer.files;
   let link = dragEvent.dataTransfer.getData('text/plain');
