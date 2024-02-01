@@ -1,5 +1,5 @@
 <template>
-  <!-- <xt-button @click="test()" v-if="settings.enableDev">任务重置</xt-button> -->
+  <xt-button @click="test()" v-if="settings.enableDev">任务重置</xt-button>
   <template v-if="store.taskID">
     <!-- 用户等级信息 -->
     <TaskUserInfo />
@@ -10,14 +10,15 @@
           <xt-new-icon icon="fluent-emoji:star" class="mr-3" size="20" />
           {{ chapter.chapter }}
         </div>
-        <template #right
-          >{{ stage + 0 }} / {{ chapter.tasks.length }}
+        <template #right>
+          {{ stage + 0 }} / {{ chapter.tasks.length }}
         </template>
       </xt-text>
       <div class="mt-1">
         <a-progress :percent="progress" :show-info="false" />
       </div>
       <!-- 显示当前奖励内容 -->
+
     </div>
     <xt-title>正在进行</xt-title>
     <div class="xt-bg-2 rounded-xl p-3">
@@ -64,8 +65,7 @@ const app = appStore();
 const { settings } = storeToRefs(app);
 
 
-const { list, taskID, currentId, completedList, currentTaskList } =
-  toRefs(store);
+const { list, taskID, currentId, completedList, currentTaskList } = toRefs(store);
 
 /**
  * 首次进入时，处理任务进度

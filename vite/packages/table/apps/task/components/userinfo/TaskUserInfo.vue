@@ -18,7 +18,7 @@
      <span class="font-18 xt-font  xt-text" style="font-weight: 900;">Lv{{userInfo.onlineGradeExtra.lv}}</span>
     </div>
     <!-- 经验升级进度条 -->
-    <a-progress :percent="30" :strokeColor="'var(--primary-text)'" :trailColor="'rgba(255,255,255,0.49)'"/>
+    <a-progress :percent="lvInfo.percentage" :showInfo="false" :strokeColor="'var(--primary-text)'" :trailColor="'rgba(255,255,255,0.49)'"/>
     <div class="flex justify-between w-full py-2">
      <xt-text class="xt-text-2 font-12 xt-font font-400">升级所需经验</xt-text>
      <span class="xt-text-2 font-12 xt-font font-400">200</span>
@@ -49,7 +49,7 @@ import FrameAvatar from '../../../../components/avatar/FrameAvatar.vue';
 
 
 const app = appStore();
-const { userInfo } = storeToRefs(app);
+const { userInfo,lvInfo } = storeToRefs(app);
 
 const props = defineProps({
   showTaskUser:{

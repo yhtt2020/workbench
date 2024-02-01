@@ -12,9 +12,11 @@
         icon="fluent:dismiss-circle-16-filled"
       />
     </div>
-    <div>
-      已完成「 {{ currentTask?.name }}」任务，
-      {{ status ? "感谢再次体验" : "点击领取奖励" }}。
+    <div class="flex flex-col">
+      <xt-text class="xt-text-2 font-16 xt-font">
+        已完成「 {{ currentTask?.name }}」任务，{{ status ? "感谢再次体验" : "点击领取奖励" }}。
+      </xt-text>
+      <ShowReward :id="currentId"/> 
     </div>
     <div class="flex justify-between">
       <div></div>
@@ -36,10 +38,13 @@
 import { ref, toRefs, computed, onMounted, onBeforeMount } from "vue";
 import { taskStore } from "../store";
 import { storeToRefs } from "pinia";
-import XtButton from "../../../ui/libs/button/index.vue";
 import XtIfyIcon from "../../../ui/new/IfyIcon/index";
-
 import { getTaskStatus } from "../api";
+import { Avatar } from 'ant-design-vue';
+
+import XtButton from "../../../ui/libs/button/index.vue";
+import ShowReward from "./ShowReward.vue";
+
 onBeforeMount(() => {
   taskStatus();
 });
