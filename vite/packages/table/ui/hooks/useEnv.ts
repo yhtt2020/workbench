@@ -3,8 +3,12 @@ import { isWeb, isClient, isMac, isOffline, isVisitor } from "./env";
 const priority = ["web", "offline", "visitor", "mac", "client"];
 
 export const useEnv = (arr) => {
+  if (typeof arr == "string") {
+    return envDetection(arr);
+  }
+
   if (!Array.isArray(arr)) {
-   return console.warn('环境检测参数必须为数组 :>> ');
+    return console.warn("环境检测参数必须为数组 :>> ");
   }
   arr = envSort(arr);
 

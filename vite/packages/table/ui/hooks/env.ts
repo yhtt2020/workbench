@@ -43,13 +43,3 @@ const isVisitor = cache.get('isVisitor')
 export default currentEnv;
 
 export { isWeb, isClient, isMac, isOffline, isVisitor };
-
-
-module.exports = {
-  currentEnv,
-  isWeb,
-  isClient,
-  isMac,
-  isOffline,
-  isVisitor,
-};
