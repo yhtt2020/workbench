@@ -1,4 +1,8 @@
-const path = require('path')
+import { useEnv } from "./ui/hooks/useEnv"
+let path
+if (!useEnv('web')) {
+ path = require('path')
+}
 
 export function fixHttp (str, ssl = true) {
   if (!str) {
@@ -259,7 +263,7 @@ export function formatTimestamp (timestamp, type) {
   }else{
     return year + "-" + month + "-" + day;
   }
-  
+
 }
 
 export function formatTime(dateTimeStamp){

@@ -1,10 +1,16 @@
 import {arch} from "process";
 import {completeTask} from '../../apps/task/task'
+import {useEnv} from '../../ui/hooks/useEnv'
+let exec,path
+if (!useEnv('web')) {
+  const {exec : newExec} = require('child_process')
+  exec = newExec
+   path=require('path')
 
-const {exec} = require('child_process')
+}
 const iconv=window.iconv
 let workerProcess
-const path=require('path')
+
 export function getResPath() {
   let isDevelopmentMode = 'development-mode' in window.globalArgs
   if (isDevelopmentMode) {

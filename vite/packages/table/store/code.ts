@@ -2,8 +2,8 @@ import {defineStore} from "pinia";
 import {Server} from '../consts'
 import dbStorage from "./dbStorage";
 import {nanoid} from 'nanoid'
-
-const {axios} = window.$models
+import axios from 'axios'
+// const {axios} = window.$models
 const server = Server.baseUrl
 //const server='http://localhost:8001'
 const activeUrl = server + '/app/activeCode'
