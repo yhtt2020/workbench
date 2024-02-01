@@ -396,7 +396,7 @@ const currentSize = ref(props.customSize);
  */
 // 实际渲染的右键菜单
 const menus = computed(() => {
-  return [
+  let menu = [
     ...props.menuList,
     {
       newIcon: "akar-icons:trash-can",
@@ -415,6 +415,9 @@ const menus = computed(() => {
       disabled: props.options?.disabled ? true : false,
     },
   ];
+
+  console.log("menu :>> ", menu);
+  return menu;
 });
 // 头部左侧显示区域状态
 const leftHover = computed(() => {
@@ -442,8 +445,10 @@ const title = computed(() => {
 const rightIcons = computed(() => {
   let arr = [];
 
-  if (typeof props.header.rightIcon == "array") {
+  if (Array.isArray(props.header.rightIcon)) {
     arr = [...props.header.rightIcon];
+  } else {
+    console.log("头部右侧图标不属于数组 :>> ");
   }
   if (props.header.refresh) {
     arr.push({
