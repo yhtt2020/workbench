@@ -77,7 +77,6 @@ import CategoryFloat from '../components/float/CategorysFloat.vue';
 import Commun from '../Commun.vue';
 import CommunitySetting from './setting/index.vue';
 import CommunityHeader from '../components/float/CommunityHeader.vue'
-
 export default {
   components:{
     CategoryFloat,Modal,
@@ -107,12 +106,29 @@ export default {
 
   computed:{
     ...mapWritableState(chatStore,['settings','contactsSet']),
+    ...mapWritableState(communityStore,['settingCommunity','selectedChannelId']),
     isFloat(){
       return this.settings.enableHide
     },
   },
 
+  beforeRouteUpdate(to,from){
+    console.log(to.params.no)
+    if(to.params.no){
+      this.loadCurrentCommunity(to.params.no)
+      if(this.selectedChannelId[to.params.no]){
+        console.log(this.channelList,'刷新频道列表')
+      }
+    }
+
+  },
+
+
   async mounted(){
+    console.log(this.$route)
+    if(this.$route.params.no){
+      this.loadCurrentCommunity(this.$route.params.no)
+    }
     const rs = await articleService.getOne('community_after_created_empty')
     this.emptyArticle = rs
     // 监听当前事件触发
@@ -121,14 +137,18 @@ export default {
     })
     this.$bus.on('currentSet',(args)=>{
       this.currentChannel = args
+      this.$router.push({name:'communitySettings'})
     })
   },
 
+
   methods:{
+
     updateColumn(){},
-    ...mapActions(communityStore,['updateMsgStatus','getCommunityTree']),
+    ...mapActions(communityStore,['updateMsgStatus','getCommunityTree','loadCurrentCommunity','setCommunityChannel']),
     // 当前点击
     async currentItem(item){
+      this.setCommunityChannel(item.id)
       // 链接
       if(item.type === 'link' && item.name !== 'Roadmap'){
         const data = item.props
@@ -188,6 +208,7 @@ export default {
       }
       // 其他
       this.currentChannel = {...item,props:{ ...item.props }};
+     console.log(item,'更改')
     },
 
     clickEmptyButton(item){

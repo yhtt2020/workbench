@@ -329,7 +329,7 @@ export default [
                 },
                 children:[
                   {
-                    path:'/myCommunity/:no/communitySet',
+                    path:'',
                     name:'communitySettings',
                     component:CommunitySetting,
                     meta: {
