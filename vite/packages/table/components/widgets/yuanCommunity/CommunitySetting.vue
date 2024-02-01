@@ -12,14 +12,19 @@
                     v-model="currentData">
                 </xt-option-tab>
                 <div class="mt-4 mb-4 h-[1px] w-full " style="background: var(--divider);"></div>
-                <div class="text-base xt-text">板块</div>
-                <div class="mt-2 mb-4 text-sm xt-text-2">最多支持在小组件上展示5个板块</div>
-                <xt-option-multiple 
+                <div class="text-base xt-text">版块</div>
+                <div class="mt-2 mb-4 text-sm xt-text-2">最多支持在小组件上展示5个版块</div>
+                <!-- <xt-option-multiple 
                     v-model:multiple="defaultForum"
                     class="mt-4" 
                     :list="forumList" 
                     @cb="getCurrentList">
-                </xt-option-multiple>
+                </xt-option-multiple> -->
+                <Select
+                    v-model:multiple="defaultForum"
+                    :list="forumList"
+                    @cb="getCurrentList">
+                </Select>
             </div>
             <div class="w-full h-full p-4 mt-4 rounded-xl xt-bg-2">
                 <div class="text-base xt-text">内容打开方式(开发中)</div>
@@ -42,7 +47,7 @@ import { ref, reactive,computed,watch,toRefs,onMounted} from 'vue'
 import { dataList, openWay } from './Detail/options';
 import {yuanCommunityStore} from '../../../store/yuanCommunity.ts'
 import { storeToRefs } from 'pinia';
-
+import Select from './Select.vue'
 // 板块接口数据
 const store = yuanCommunityStore()
 const {myForumList} = storeToRefs(store)

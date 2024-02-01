@@ -1,6 +1,6 @@
 <template>
   <div v-if="fullScreen && noFullScreen" class="no-drag">
-    <div style="position: absolute; right: 10px; top: 10px; z-index: 999">
+    <div style="position: absolute; right: 75px; top: 16px; z-index: 999">
       <xt-button @click="setFullScreen(false)" :w="40" :h="40" type="theme">
         <Icon style="font-size: 18px" icon="quxiaoquanping_huaban"></Icon>
       </xt-button>
@@ -36,7 +36,6 @@
     <!-- {{ freeLayout }}
     {{ isFreeLayout }}
     {{ $route.path }} -->
-
     <Drop>
       <!-- <xt-wu-jie
         ref="xxx"
@@ -76,8 +75,7 @@
       <!-- 默认布局 -->
       <vue-custom-scrollbar
         v-show="!isFreeLayout"
-        :class="previewFlag?'z-50':''"
-
+        :class="previewFlag ? 'z-50' : ''"
         class="no-drag"
         key="scrollbar"
         id="scrollerBar"
@@ -215,7 +213,6 @@
       </template>
     </div>
   </xt-modal>
-
   <transition name="fade">
     <div
       class="home-blur"
@@ -255,6 +252,7 @@
 <script>
 // 挂载组件请到下面文件
 import componentsMinis from "./components.ts";
+import menuMinis from "./menus.ts";
 import { useNavigationStore } from "./navigationBar/navigationStore";
 import { navStore } from "../../store/nav";
 import Muuri from "muuri";
@@ -275,15 +273,18 @@ import { useDeskStore } from "./store";
 import { useCustomLayout } from "./freeLayout/useCustomLayout";
 import { useFileConversionIcon } from "../../apps/folder/src/hooks/useDataConversion";
 import { headerData, mainData, folderData } from "./freeLayout/config";
-import { taskStore }from '../../../table/apps/task/store'
+import { taskStore } from "../../../table/apps/task/store";
 
 import Drop from "./Drop.vue";
 export default {
   name: "Desk",
   emits: ["changeEditing"],
-  mixins: [componentsMinis],
+  mixins: [componentsMinis, menuMinis],
   components: { LoadingOutlined, EditNewNavigation, GalleryModal, Drop },
   props: {
+    keepAddIcon:{
+      default:false,
+    },
     freeLayout: {
       default: true,
     },
@@ -468,7 +469,6 @@ export default {
     ...mapWritableState(navStore, ["navigationToggle"]),
     ...mapWritableState(appStore, ["fullScreen"]),
     ...mapWritableState(useWidgetStore, ["rightModel"]),
-    // getFreeLayoutState.value.system.hide
     ...mapWritableState(useFreeLayoutStore, [
       "isFreeLayout",
       "getFreeLayoutState",
@@ -477,7 +477,6 @@ export default {
     ...mapWritableState(useFloatMenuStore, ["menus", "newMenus"]),
     ...mapWritableState(useNavigationStore, ["selectNav", "isDesk"]),
     ...mapWritableState(useDeskStore, ["autoOpenEdit", "adjustLayout"]),
-
     navMenu() {
       if (
         !this.navigationToggle[0] &&
@@ -496,178 +495,6 @@ export default {
         ];
       }
       return [];
-    },
-    deskMenus() {
-      let currentHide = null;
-      if (this.isFreeLayout) {
-        currentHide = this.getFreeLayoutState?.system?.hide;
-      } else {
-        currentHide = this.hide;
-      }
-      //   return
-      return [
-        {
-          id: 0,
-          newIcon: "fluent:add-16-filled",
-          name: "定制桌面测试",
-          disabled: true,
-          fn: () => {
-            useCustomLayout({
-              headerList: headerData,
-              folderList: folderData,
-              cb: () => {
-                this.$bus.emit("adsorbGrid");
-              },
-            });
-          },
-        },
-        {
-          id: 1,
-          newIcon: "fluent:add-16-filled",
-          name: "添加图标",
-          fn: this.newAddIcon,
-        },
-        {
-          id: 2,
-          newIcon: "fluent:collections-add-24-regular",
-          name: "添加小组件",
-          fn: this.newAddCard,
-        },
-        {
-          id: 3,
-          newIcon: "fluent:apps-add-in-20-filled",
-          name: "添加更多",
-          children: [
-            {
-              id: 2,
-              newIcon: "fluent:app-folder-16-regular",
-              name: "添加图标分组",
-              fn: this.addFolder,
-            },
-            // {
-            //   id: 3,
-            //   newIcon: "mingcute:windows-line",
-            //   name: "整理win桌面图标",
-            //   fn: this.addFolder,
-            // },
-          ],
-        },
-
-        { id: 5, divider: true },
-        {
-          id: 5.1,
-          newIcon: "fluent:glance-horizontal-16-regular",
-          name: "整理桌面",
-          disabled: this.isFreeLayout ? false : true,
-          fn: () => {
-            useCustomLayout({
-              mainList: this.currentDesk.cards,
-              cb: () => {
-                this.$bus.emit("adsorbGrid");
-              },
-            });
-            // 0 提供一个伪卡片
-            // 提供一个添加卡片
-            // 1 添加新的桌面
-            // 2 切换为自由布局
-          },
-        },
-        {
-          id: 6,
-          newIcon: this.editing
-            ? "fluent:record-stop-16-regular"
-            : "fluent:window-new-16-regular",
-          name: this.editing ? "停止调整" : "调整桌面布局",
-          fn: this.toggleEditing,
-        },
-        {
-          id: 7,
-          newIcon: "fluent:resize-large-16-regular",
-          name: "复原桌面位置",
-          disabled: this.isFreeLayout ? false : true,
-          fn: this.freeLayoutScrollbarRedirect,
-        },
-        {
-          id: 8,
-          newIcon: "fluent:full-screen-maximize-16-filled",
-          name: "全屏桌面",
-          fn: () => {
-            let a = !this.fullScreen;
-            this.setFullScreen(a);
-          },
-        },
-        {
-          id: 9,
-          newIcon: "fluent:image-multiple-16-regular",
-          name: "更换壁纸",
-          fn: () => {
-            this.$refs.galleryRef.openGalleryModal();
-          },
-        },
-
-        {
-          id: 11,
-          disabled: true,
-          name: "添加到导航栏",
-          newIcon: "fluent:tablet-16-regular",
-          lock: true,
-          children: [
-            {
-              id: 1,
-              newIcon: "fluent:tablet-16-regular",
-              name: "底部导航",
-              fn: () => {},
-            },
-            {
-              id: 2,
-              newIcon: "fluent:panel-left-contract-16-regular",
-              name: "右侧导航",
-              fn: () => {},
-            },
-            {
-              id: 3,
-              newIcon: "fluent:panel-right-contract-16-regular",
-              name: "左侧导航",
-              fn: () => {},
-            },
-          ],
-        },
-        {
-          id: 12,
-          newIcon: "fluent:settings-16-regular",
-          name: "桌面设置",
-          fn: this.showSetting,
-        },
-        { id: 13, divider: true },
-        {
-          id: 20,
-          newIcon: "fluent:more-horizontal-16-filled",
-          name: "更多",
-          lock: true,
-          children: [
-            {
-              id: 1,
-              newIcon: this.hide
-                ? "fluent:eye-16-regular"
-                : "fluent:eye-off-16-regular",
-              name: currentHide ? "显示小组件" : "隐藏小组件",
-              fn: () => {
-                if (this.isFreeLayout) {
-                  this.getFreeLayoutState.system.hide =
-                    !this.getFreeLayoutState?.system?.hide;
-                } else {
-                  if (this.hide) {
-                    this.showDesk();
-                  } else {
-                    this.hideDesk();
-                  }
-                }
-              },
-              disabled: false,
-            },
-          ],
-        },
-      ];
     },
     usingSettings() {
       if (this.settings.enableZoom) {
@@ -713,7 +540,8 @@ export default {
     window.time = Date.now();
   },
   mounted() {
-    this.initTask()
+    // 空桌面添加图标保持弹窗
+    this.editVisible = this.keepAddIcon
     // 自动打开编辑
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();
@@ -760,7 +588,7 @@ export default {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
     ...mapActions(cardStore, ["addCard"]),
     ...mapActions(useDeskStore, ["addMenu"]),
-    ...mapActions(taskStore, ['initTask']),
+    ...mapActions(taskStore, ["initTask"]),
     addFolder() {
       registerFolder(this.currentDesk);
     },
@@ -813,7 +641,6 @@ export default {
     iconHide() {
       this.iconVisible = false;
     },
-
     showDesk() {
       this.hide = !this.hide;
       this.menuVisible = false;

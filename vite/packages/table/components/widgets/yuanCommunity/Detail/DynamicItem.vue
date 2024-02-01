@@ -28,26 +28,26 @@ onMounted(() => {
         postValue.value = ''
     }
     // 添加 ResizeObserver 监听外侧 div 的宽度变化
-  const resizeObserver = new ResizeObserver(handleResize);
-  resizeObserver.observe(dynamicWidth.value);
+//   const resizeObserver = new ResizeObserver(handleResize);
+//   resizeObserver.observe(dynamicWidth.value);
 
   // 初始设置一次宽度
-  handleResize();
+//   handleResize();
 })
-onBeforeUnmount(() => {
-  // 移除 ResizeObserver
-  const resizeObserver = new ResizeObserver(() => {});
-  resizeObserver.disconnect();
-});
+// onBeforeUnmount(() => {
+//   // 移除 ResizeObserver
+//   const resizeObserver = new ResizeObserver(() => {});
+//   resizeObserver.disconnect();
+// });
 
-const handleResize = _.debounce((entries) => {
-  const newWidth = entries[0]?.contentRect?.width || 0;
-  if(newWidth>600){
-    textWidth.value = 24
-  }else{
-    textWidth.value = 10
-  }
-});
+// const handleResize = _.debounce((entries) => {
+//   const newWidth = entries[0]?.contentRect?.width || 0;
+//   if(newWidth>600){
+//     textWidth.value = 24
+//   }else{
+//     textWidth.value = 10
+//   }
+// });
 // 文本默认长度
 let textWidth = ref(10)
 // 暂存动态文本

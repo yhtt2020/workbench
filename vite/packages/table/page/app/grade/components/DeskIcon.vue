@@ -11,12 +11,12 @@
                 <Icon class="pointer" @click="item.type = 'rows'" v-if="item.type == 'columns'" icon="fluent:apps-list-detail-24-regular" width="20" height="20" />
                 <Icon class="pointer" @click="item.type = 'columns'" v-else icon="fluent:grid-20-regular" width="20" height="20" />
                 <div class="flex items-center justify-center w-8 h-8 ml-2 rounded-lg xt-bg">
-                    <a-checkbox v-model:checked="item.isCheck"></a-checkbox>
+                    <a-checkbox :disabled="!item.list.length" v-model:checked="item.isCheck"></a-checkbox>
                 </div>
                 </div>
             </div>
             <!-- 列展示 -->
-            <div v-if="item.type == 'columns'" class="w-full px-1 mt-1 overflow-hidden overflow-y-auto xt-scrollbar" style="height:180px;">
+            <div v-if="item.type == 'columns'" class="w-full px-1 mt-1 overflow-hidden overflow-y-auto xt-scrollbar" style="height:200px;">
                 <div v-for="app in item.list" class="flex items-center px-2 list-rows xt-text" >
                 <a-avatar shape="square" :size="32" :src="app.type=='img'?app.path:app.icon" class="flex-none"></a-avatar>
                 <div class="ml-3 text-hidden font-12">{{ app.name }}</div>

@@ -36,10 +36,10 @@
                                 </div>
 
                             </div>
-                            <div class="flex items-center justify-center w-full h-[40px] mt-3">
+                            <!-- <div class="flex items-center justify-center w-full h-[40px] mt-3">
                                 <xt-button
                                     style="backend:var(--primary-bg);color:var(--secondary-text);width:84px;height:32px;border-radius: 8px;">查看更多</xt-button>
-                            </div>
+                            </div> -->
                         </div>
 
                     </vue-custom-scrollbar>
@@ -59,8 +59,14 @@
             </xt-button>
         </Widget>
         <teleport to="body" :disabled="false">
-            <YuanPublishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"
-                @refreshDefaultForum="refreshPost"></YuanPublishModal>
+            <PublishModal 
+                v-if="showPublishModal" 
+                :visible="showPublishModal" 
+                @close="showPublishModal = false"
+                @refreshDefaultForum="refresh"
+                :section="forumList"
+                :defaultSection="defaultForum">
+            </PublishModal>
             <div v-if="showDetailModal">
                 <detailModal v-if="toggleDetail" :cardData="cardData" :showDetailModal="showDetailModal"
                     @closeDetail="closeDetail" />
@@ -87,12 +93,11 @@ import RadioTab from '../../RadioTab.vue';
 import { mapWritableState, mapActions } from 'pinia';
 import { useCommunityStore } from '../../../page/chat/commun'
 import { yuanCommunityStore } from '../../../store/yuanCommunity.ts'
-import DataStatu from "../DataStatu.vue"
 import Unusual from '../Unusual.vue'
-import YuanPublishModal from './YuanPublishModal.vue';
 import detailModal from './DetailModal.vue'
 import MinDetailModal from './MinDetailModal.vue';
 import CommunitySetting from './CommunitySetting.vue';
+import PublishModal from './Detail/PublishModal.vue';
 export default {
     name: '元社区',
     components: {
@@ -100,12 +105,11 @@ export default {
         YuanIcon,
         communItem,
         RadioTab,
-        DataStatu,
-        YuanPublishModal,
         detailModal,
         MinDetailModal,
         Unusual,
-        CommunitySetting
+        CommunitySetting,
+        PublishModal
     },
     props: {
         customIndex: {
@@ -189,13 +193,22 @@ export default {
         // 刷新圈子
         async refreshPost() {
             this.isLoading = true
-            // console.log(this.defaultForum,'defaultForum')
+            console.log(this.defaultForum,'defaultForum')
             let value = 0
-            this.defaultForum.value ? value = this.defaultForum.value : value = 100304
+            this.defaultForum.value ? value = this.defaultForum.value : value = this.defaultForum
+            console.log(value,'value')
             await this.getCommunityPost(value)
             this.showForumPost = this.communityPost
             this.isLoading = false
             this.isClick = false
+        },
+        // 发文后刷新页面
+        async refresh(value) {
+            this.isLoading = true
+            this.defaultForum = value
+            await this.getCommunityPost(value)
+            this.showForumPost = this.communityPost
+            this.isLoading = false
         },
         // 查看内容详情
         showDetail(item) {

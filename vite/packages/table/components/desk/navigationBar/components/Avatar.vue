@@ -3,8 +3,8 @@
     :style="{ borderRadius: navigationBar.iconRadius + 'px', background: item.bg || '' }"
     class="relative flex items-center justify-center ">
     <!-- {{ isLink }} -->
-    <xt-new-icon icon="fluent-emoji:globe-showing-asia-australia" size="36" v-if="isLink"></xt-new-icon>
-    <a-avatar v-else  :size="52" shape="square" :src="item.icon" :style="{ borderRadius: navigationBar.iconRadius + 'px' }"></a-avatar>
+    <!-- <xt-new-icon :icon="item.icon" size="36" v-if="isLink"></xt-new-icon> -->
+    <a-avatar  :size="52" shape="square" :src="item.icon" :style="{ borderRadius: navigationBar.iconRadius + 'px' }"></a-avatar>
   </div>
   <div v-else style="width: 52px; height: 52px;">
     <div style="width: 52px; height: 52px;" class="relative flex items-center justify-center overflow-hidden"
@@ -22,14 +22,6 @@ import { useNavigationStore } from '../navigationStore';
 const navigationBar = useNavigationStore();
 const props = defineProps({
   item: Object,
-})
-
-const isLink = computed(()=>{
-  if(props.item.linkIcon){
-    return true
-  }else{
-    return false
-  }
 })
 </script>
 <style lang='scss' scoped></style>

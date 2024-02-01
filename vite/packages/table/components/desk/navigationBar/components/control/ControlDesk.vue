@@ -29,7 +29,7 @@ const option = ref({
 
 // 获取高度
 const getHeight = () =>{
- return 120 + 'px' 
+ return 120 + 'px'
 }
 
 </script>
@@ -57,7 +57,7 @@ const getHeight = () =>{
 :deep(.muuri-item){
   width: auto !important;
   margin: 0 12px 12px 0 !important;
-  
+
 }
 
 </style>

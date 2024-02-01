@@ -5,13 +5,15 @@ export const mergeData = (data) => {
   if (data?.renewTime == defaultData.renewTime) return data;
   return _.merge({}, defaultData, data);
 };
+// 默认图标格式
 export const defaultData = {
-  renewTime: "20240125",
+  renewTime: 20240128, // 图标更新时间
   id: "", // 图标id
   icon: "", // 显示的图标数据
+  iconType: "", // 图标类型
   name: "", // 显示的图标名称
   isName: true, // 是否显示图标名称
-  value: "",
+  value: "", // 图标链接
   /**
    * 当前mode
    * app 所有应用
@@ -20,7 +22,15 @@ export const defaultData = {
   mode: "app",
   attributeEdit: true,
   /**
-   * 当前
+   * 图标类型
+   * systemApp 系统应用
+   * coolApp 酷应用
+   * folder 文件夹
+   * lightApp 轻应用
+   * tableApp 桌面应用
+   * default 系统默认浏览器
+   * inner 内置浏览器
+   * xt 想天浏览器
    */
   type: "",
   bg: "", // 背景颜色
@@ -33,6 +43,8 @@ export const defaultData = {
   iconShape: "square", // 图标形状 长方形或正方形
   // 单图标展示的大小
   size: "1x1",
+  summary:'',   // 酷应用，轻应用，网址导航等图标的简介
+  default:{},   // 数据用于重置图标
 };
 export const useIconConversionFile = (data) => {
   const file = {
@@ -120,3 +132,18 @@ export const useDeskConversionNav = (icon, name, item) => {
   };
   return file;
 };
+
+// 桌面链接转为导航栏和文件夹图标
+export const useLinkConversionNav = (link)=>{
+  const file = {
+    name:link.name || '链接',
+    icon:link.icon !== null ? link.icon : '	https://a.apps.vip/icons/iconSelect/emoji/globe-showing-asia-australia.svg',
+    type:'default',
+    value: link.value,
+    mode:'link',
+    isBg:false,
+    bg:'',
+    id:nanoid(6),
+  }
+  return file
+}

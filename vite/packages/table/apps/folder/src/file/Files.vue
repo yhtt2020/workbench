@@ -7,8 +7,8 @@
   >
     <div  :style="[getImgSize,{background: item.bg}]" class="overflow-hidden rounded-lg">
       <!-- item?.linkIcon" 获取链接中无法获取到链接的图标使用默认图标 -->
-      <xt-new-icon :icon="item.icon" size="40" v-if="item?.linkIcon"></xt-new-icon>
-      <img v-else ref="img" :src="src" class="w-full h-full " :style="[item.color]"/>
+      <!-- <xt-new-icon :icon="item.icon" size="40" v-if="item?.linkIcon"></xt-new-icon> -->
+      <img ref="img" :src="src" class="w-full h-full " :style="[item.color]"/>
     </div>
     <div
       class="text-xs truncate xt-text-2"
@@ -28,20 +28,53 @@ import { rowOption, columnOption } from "./options";
 const props = defineProps({
   item: {},
 });
-const img = ref()
-const src= ref(props.item.value)
+const img = ref();
+const src = ref(props.item.icon);
 const data = inject("data", "");
 const mode = ref("default");
-
+// 获取文件后缀
+const getExtension = (filePath) => {
+  const match = filePath.match(/\.([^.]+)$/);
+  return match ? match[1] : "null";
+};
+const imgType = [
+  "png",
+  "jpeg",
+  "jpg",
+  "gif",
+  "psd",
+  "bmp",
+  "fpx",
+  "tiff",
+  "dxf",
+  "eps",
+  "svg",
+  "cdr",
+  "pcx",
+  "emf",
+  "wmf",
+  "swf",
+  "exif",
+  "pdf",
+  "cgm",
+  "raw",
+  "lic",
+  "dng",
+  "raf",
+];
 onMounted(() => {
   resize();
-  props.item.type === 'systemApp' ? src.value = props.item.icon : src.value = props.item.value
-  if(img.value !== undefined){
-    img.value.onerror = function() {
-      src.value = props.item.icon
-    };
+  let res = imgType.includes(getExtension(props.item.value));
+  if (res) {
+    src.value = props.item.value
   }
-  
+
+  // props.item.type === 'systemApp' ? src.value = props.item.icon : src.value = props.item.value
+  // if(img.value !== undefined){
+  //   img.value.onerror = function() {
+  //     src.value = props.item.icon
+  //   };
+  // }
 });
 
 watch(

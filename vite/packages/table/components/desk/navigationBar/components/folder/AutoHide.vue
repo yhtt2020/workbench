@@ -5,8 +5,10 @@
         leave-active-class="animate__fadeOutDown"
         @before-enter="handleBeforeEnter"
         @enter="handleEnter"
+        @after-enter="handleAfterEnter"
         @before-leave="handleBeforeLeave"
         @leave="handleLeave"
+        @after-leave="handleAfterLeave"
         @mouseenter="handleMouseEnter" 
         @mouseleave="handleMouseLeave">
         <slot></slot>
@@ -55,6 +57,10 @@ const handleBeforeEnter = ()=>{
 
 // 动画进入
 const handleEnter = ()=>{
+}
+
+
+const handleAfterEnter = ()=>{
     isLeave.value = false
 }
 
@@ -62,11 +68,16 @@ const handleEnter = ()=>{
 const handleBeforeLeave = ()=>{
     document.documentElement.style.setProperty('--animate-duration', '.5s');
     isEnter.value = true
+    
 }
 
 // 动画离开
 const handleLeave = ()=>{
-    isEnter.value = false
+    
+}
+
+const handleAfterLeave = ()=>{
+    isLeave.value = false
 }
 </script>
 <style lang='scss' scoped></style>

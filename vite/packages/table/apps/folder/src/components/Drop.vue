@@ -83,6 +83,7 @@ const handleDrop = async (dragEvent) => {
       emits("createFile", fileInfo);
     }
   }else if(link && link !== ''){
+    if(isDrag.value) return  // 文件夹内部拖拽时阻止事件触发
     const http = link.includes('http');
     const https = link.includes('https');
     if (!http && !https) {
@@ -91,8 +92,7 @@ const handleDrop = async (dragEvent) => {
     }
 
     const linkIcon = await getFavicon(link);
-    const name = useGetUrlName(link);
-    const target = { name, icon: linkIcon, value: link };
+    const target = { name:linkIcon.pageTitle, icon: linkIcon.faviconURL, value: link };
 
     const file = useLinkConversionNav(target);
     emits('createFile', file);

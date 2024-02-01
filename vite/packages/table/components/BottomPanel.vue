@@ -17,6 +17,21 @@
       :style="{ left: `${controlLeft}px`, bottom: `${navAttribute.navSize / 100 * 100}px` }">
       <ControlModal @close="controlVisible = false"></ControlModal>
     </div>
+
+    <!-- <div 
+      class="fixed w-full h-[90px] " 
+      style="bottom: 0px; background-color: red;" 
+      @mouseenter="handleMouseEnter" 
+      @mouseleave="handleMouseLeave">
+      
+    </div> -->
+    <div v-if="false"
+          style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:0">
+          <div>选中的id{{ this.isLeaveBar }} {{ isEdge }}</div>
+          <div v-for="( item, index) in copyFootNav" style="margin-bottom: 5px;border-bottom: 4px solid white">
+            {{ index }} {{ item.name }} {{ item.id }} {{ item.children?.length }}
+          </div>
+    </div>
     <AutoHide>
       <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
         id="bottom-bar" style="text-align: center;position: relative;" @contextmenu="showMenu" v-show="autoVisible"
@@ -233,7 +248,7 @@ import Drag from './desk/navigationBar/components/folder/Drag.vue'
 import { hoverRealItemId } from './desk/navigationBar/hook/hoverRealItemId'
 import 'animate.css'
 import AutoHide from './desk/navigationBar/components/folder/AutoHide.vue'
-import { mergeData, defaultIconData } from '../apps/folder/src/hooks/useDataConversion'
+import { mergeData } from '../ui/hooks/useDataConversion'
 
 export default {
   name: 'BottomPanel',
@@ -270,7 +285,6 @@ export default {
   },
   data() {
     return {
-      defaultIconData,
       dragItem: null,
       targetItem: null,
       cancelUpdate: false,
@@ -436,6 +450,7 @@ export default {
       folderId: '',
       // 弹窗显示
       noticeFlag: true,
+      addIconFlag: false,
       left: 0,
       parentSize: 0,
       // 控制中心弹窗
@@ -670,27 +685,35 @@ export default {
   watch: {
     copyFootNav: {
       handler(newVal, oldVal) {
-        console.log(newVal,'copyFootNav')
         // 获取最大可添加图标个数
         const windowWidth = window.innerWidth
         this.maxItemNum = Math.round((windowWidth - 240) / 72)
         if (this.copyFootNav.length > this.maxItemNum && this.maxItemNum !== null) {
-          if (this.noticeFlag) {
+          if (this.noticeFlag && this.addIconFlag) {
             this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
-              onOk: () => {
+              ok: () => {
                 const width = window.innerWidth / (240 + this.copyFootNav.length * 72)
-                this.navAttribute.navSize = width
-              }
+                this.navAttribute.navSize = width.toFixed(2) * 100
+                this.noticeFlag = false
+              },
+              noText:false,
             })
           }
+          if(this.noticeFlag) return
           const width = window.innerWidth / (240 + this.copyFootNav.length * 72)
           this.navAttribute.navSize = width.toFixed(2) * 100
-          this.noticeFlag = false
         }
         this.syncBottomPanel()
       },
       immediate: true,
       deep: true,
+    },
+    "copyFootNav.length": {
+      handler(newVal, oldVal) {
+        if(oldVal !== undefined && newVal !== oldVal){
+          this.addIconFlag = true
+        }
+      }
     },
     delZone(val) {
       this.delNav = val
@@ -799,13 +822,13 @@ export default {
     handleMouseEnter(e) {
       if (this.customOpenNav) {
         this.isLeaveBar = false
-        // console.log('=========>>>>>>>鼠标离开了', this.isLeaveBar, this.controlVisible, this.folderVisible)
+        console.log('=========>>>>>>>鼠标离开了', this.isLeaveBar, this.controlVisible, this.folderVisible)
       }
     },
     handleMouseLeave(e) {
       if (this.customOpenNav) {
         this.isLeaveBar = true
-        // console.log('===========>>>>>>>>鼠标进入了', this.isLeaveBar,e.y , this.parentHeight )
+        console.log('===========>>>>>>>>鼠标进入了', this.isLeaveBar,e.y , this.parentHeight )
       }
     },
     listenMouse(e) {
@@ -1033,12 +1056,17 @@ export default {
       if (item.children.length > 0) {
         if (item.children.length + this.copyFootNav.length > this.maxItemNum) {
           this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
-            onOk: () => {
-              return true
+            ok: () => {
+              this.copyFootNav.splice(index, 1, ...item.children)
+            },
+            no: () => {
+              return this.copyFootNav
             }
           })
+        }else{
+          this.copyFootNav.splice(index, 1, ...item.children)
         }
-        this.copyFootNav.splice(index, 1, ...item.children)
+        // this.copyFootNav.splice(index, 1, ...item.children)
 
         if (this.folderId == item.id) {
           this.closeFolder()

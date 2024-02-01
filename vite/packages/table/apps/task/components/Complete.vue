@@ -70,7 +70,7 @@ const claimReward = () => {
   emits("close-toast");
   console.log("status.value :>> ", status.value);
   if (status.value) {
-    return;
+    // return;
   }
   rewardVisible.value = true;
 };

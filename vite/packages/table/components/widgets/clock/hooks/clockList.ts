@@ -26,35 +26,14 @@ export const clockTabList = [
  { name:"其他样式",value:"style" }
 ]
 
-
-
-
-
-// import { defineStore } from 'pinia';
-// import dbStorage from '../../../../store/dbStorage';
-
-// // @ts-ignore
-// export const clockStore = defineStore('clock',{
-//  state:()=>({
-//   clockSetting:{
-//    enableSecond:false,
-//    backgroundFrame:false,
-//    font: {
-//     name:'优设标题黑',
-//     value:"font-family: '优设标题黑' !important;"
-//    },
-//    currentStatus:"font",
-//   }
-//  }),
-//  actions:{},
-//  persist: {
-//   enabled:true,
-//   strategies: [{
-//    // 自定义存储的 key，默认是 store.$id
-//    // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-//    path:['clockSetting'],
-//    storage: dbStorage,
-//    // state 中的字段名，按组打包储存
-//   }]
-//  }
-// })
+export function dateTimeStamp(timestamp:any){
+ const date = new Date(timestamp);
+ const year = date.getFullYear();
+ const month = date.getMonth() + 1; // 月份是从0开始的，所以要加1
+ const day = date.getDate();
+ const weekDay = date.getDay(); // 星期几，0表示星期日，1表示星期一，以此类推
+ const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+ const formattedDate = `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`;
+ const formattedWeekDay = weekDays[weekDay];
+ return month + "月" + day + "日"+ "  " + formattedWeekDay;
+}

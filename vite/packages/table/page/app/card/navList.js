@@ -42,7 +42,7 @@ export const NavList = [
           {
             name: "clocks",
             imgName:'clocks',
-            size: "自定义大小",
+            size: "2*2",
             zoom: "20",
           },
         ],
@@ -108,7 +108,7 @@ export const NavList = [
           {
             name: "middleWallpaper",
             imgName:'middleWallpaper',
-            size: "自定义大小",
+            size: "4*4",
             zoom: "24",
           },
           // {
@@ -166,30 +166,30 @@ export const NavList = [
         name: "supervisory",
         cname: "系统性能监控",
         detail: "同步AIDA64数据，监控你的CPU、GPU、内存、网络等数据。",
-        sizes: ["2*2", "2x4", "4种样式"],
+        sizes: ["2x2", "2x4", "4种样式"],
         option: [
           {
             name: "CPULineChart",
             imgName: 'cpuLineChart',
-            size: "2*4",
+            size: "2x4",
             zoom: "14",
           },
           {
             name: "CPUFourCard",
             imgName:'cpuFourCard',
-            size: "2*4",
+            size: "2x4",
             zoom: "14",
           },
           {
             name: "SmallCPUCard",
             imgName:'smallCPUCard',
-            size: "2*2",
+            size: "2x2",
             zoom: "18",
           },
           {
             name: "SmallGPUCard",
             imgName: 'smallGPUCard',
-            size: "2*2",
+            size: "2x2",
             zoom: "18",
           },
         ],
@@ -204,7 +204,7 @@ export const NavList = [
           {
             name: "middleWallpaper",
             imgName:'middleWallpaper',
-            size: "自定义大小",
+            size: "4*4",
             zoom: "24",
           },
           // {
@@ -226,7 +226,7 @@ export const NavList = [
           {
             name: "notes",
             imgName: "notes",
-            size: "自定义大小",
+            size: "2*4",
             zoom: "18",
           },
         ],
@@ -277,6 +277,21 @@ export const NavList = [
     cname: "娱乐资讯",
     children: [
       {
+        name: 'gameInformation',
+        cname: '电竞资讯',
+        detail: '时刻关注电竞游戏资讯',
+        sizes: ['2x4'],
+        option: [
+          {
+            name: 'gameInformation',
+            imgName:'gameInformation',
+            size: '2x2',
+            zoom: '11'
+          },
+        ],
+        time: '2024/1/31'
+      },
+      {
         name: 'singleDoubanFilm',
         cname: '正在热映',
         detail: '电影荒了？来看看近期正在上映的热门电影。',
@@ -306,7 +321,7 @@ export const NavList = [
           {
             name: "news",
             imgName:'news',
-            size: "4x4",
+            size: "2x4",
             zoom: "18",
           },
         ],
@@ -436,7 +451,7 @@ export const NavList = [
           {
             name: "clocks",
             imgName:'clocks',
-            size: "自定义大小",
+            size: "2x2",
             zoom: "20",
           },
         ],
@@ -580,7 +595,7 @@ export const NavList = [
           {
             name: "notes",
             imgName:'notes',
-            size: "自定义大小",
+            size: "2*4",
             zoom: "18",
           },
         ],
@@ -667,30 +682,30 @@ export const NavList = [
         name: "supervisory",
         cname: "系统性能监控",
         detail: "同步AIDA64数据，监控你的CPU、GPU、内存、网络等数据。",
-        sizes: ["2*2", "2x4", "4种样式"],
+        sizes: ["2x2", "2x4", "4种样式"],
         option: [
           {
             name: "CPULineChart",
             imgName:'cpuLineChart',
-            size: "2*4",
+            size: "2x4",
             zoom: "8",
           },
           {
             name: "CPUFourCard",
             imgName:'cpuFourCard',
-            size: "2*4",
+            size: "2x4",
             zoom: "11",
           },
           {
             name: "SmallCPUCard",
             imgName:'smallCPUCard',
-            size: "2*2",
+            size: "2x2",
             zoom: "11",
           },
           {
             name: "SmallGPUCard",
             imgName:'smallGPUCard',
-            size: "2*2",
+            size: "2x2",
             zoom: "11",
           },
         ],
@@ -702,6 +717,21 @@ export const NavList = [
   {
     cname: "游戏",
     children: [
+      {
+        name: 'gameInformation',
+        cname: '电竞资讯',
+        detail: '时刻关注电竞游戏资讯',
+        sizes: ['2x4'],
+        option: [
+          {
+            name: 'gameInformation',
+            imgName:'gameInformation',
+            size: '2x2',
+            zoom: '11'
+          },
+        ],
+        time: '2023/9/8'
+      },
       {
         name: "capture",
         cname: "捕获",
@@ -797,7 +827,7 @@ export const NavList = [
         option: [
           {
             name: "audio",
-            imgName:'voice', 
+            imgName:'voice',
             size: "2x4",
           },
           {
@@ -861,6 +891,71 @@ export const NavList = [
     ],
   },
   {
+    cname:'第三方组件',
+    children: [
+      {
+        name: 'Dashboard',
+        cname: '短说社区数据看板',
+        detail: '支持自定义短说运营数据看板，时刻关注你的社区活跃情况',
+        sizes: ['2x4','4x4'],
+        option: [
+          {
+            name: 'Dashboard',
+            imgName:'dashboard',
+            size: '2x4',
+            zoom: '11'
+          },
+        ],
+        time: '2024/1/31'
+      },
+      {
+        name: 'ShortTodo',
+        cname: '短说社区后台待办',
+        detail: '短说社区审核通知不再遗漏，在工作台中即可快速查看和访问',
+        sizes: ['2x4'],
+        option: [
+          {
+            name: 'ShortTodo',
+            imgName:'shortTodo',
+            size: '2x4',
+            zoom: '20'
+          },
+        ],
+        time: '2024/1/31'
+      },
+      {
+        name: 'Guider',
+        cname: '短说社区助手',
+        detail: '短说社区助手，随时翻阅使用手册，快速进入客服交流群',
+        sizes: ['2x4'],
+        option: [
+          {
+            name: 'Guider',
+            imgName:'Guider',
+            size: '2x4',
+            zoom: '20'
+          },
+        ],
+        time: '2024/1/31'
+      },
+      {
+        name: 'ShortChart',
+        cname: '短说社区数据图表',
+        detail: '将短说管理后台的数据统计面板搬到了工作台，运营数据时刻查看',
+        sizes: ['4x4'],
+        option: [
+          {
+            name: 'ShortChart',
+            imgName: 'shortChart',
+            size: '4x4',
+            zoom: '11'
+          },
+        ],
+        time: '2024/1/31'
+      },
+    ]
+  },
+  {
     cname: "创意",
     children: [
       {
@@ -872,7 +967,7 @@ export const NavList = [
           {
             name: "myIcons",
             imgName:'myIcons',
-            size: "自定义大小",
+            size: "1*1",
             zoom: "20",
           },
         ],
@@ -887,7 +982,7 @@ export const NavList = [
           {
             name: "customAssembly",
             imgName:'customAssembly',
-            size: "自定义大小",
+            size: "2*2",
             zoom: "18",
           },
         ],
@@ -902,7 +997,7 @@ export const NavList = [
           {
             name: "Remote",
             imgName:'remote',
-            size: "自定义大小",
+            size: "2*2",
             zoom: "18",
           },
         ],
@@ -928,21 +1023,7 @@ export const NavList = [
         ],
         time: "2023/6/29",
       },
-      {
-        name: 'gameInformation',
-        cname: '电竞资讯(开发中)',
-        detail: '时刻关注电竞游戏资讯',
-        sizes: ['2x4'],
-        option: [
-          {
-            name: 'gameInformation',
-            imgName:'gameInformation',
-            size: '2x2',
-            zoom: '11'
-          },
-        ],
-        time: '2023/9/8'
-      },
+
 
       {
         name: 'clipBoard',
@@ -959,66 +1040,7 @@ export const NavList = [
         ],
         time: '2023/9/14'
       },
-      {
-        name: 'Dashboard',
-        cname: '社区数据看板(开发中)',
-        detail: '支持自定义短说运营数据看板，时刻关注你的社区活跃情况',
-        sizes: ['2x4','4x4'],
-        option: [
-          {
-            name: 'Dashboard',
-            imgName:'dashboard',
-            size: '2x4',
-            zoom: '11'
-          },
-        ],
-        time: '2023/9/15'
-      },
-      {
-        name: 'ShortTodo',
-        cname: '社区待办(开发中)',
-        detail: '短说社区审核通知不再遗漏，在工作台中即可快速查看和访问',
-        sizes: ['2x4'],
-        option: [
-          {
-            name: 'ShortTodo',
-            imgName:'shortTodo',
-            size: '2x4',
-            zoom: '20'
-          },
-        ],
-        time: '2023/9/16'
-      },
-      {
-        name: 'Guider',
-        cname: '社区助手(开发中)',
-        detail: '短说社区助手，随时翻阅使用手册，快速进入客服交流群',
-        sizes: ['2x4'],
-        option: [
-          {
-            name: 'Guider',
-            imgName:'Guider',
-            size: '2x4',
-            zoom: '20'
-          },
-        ],
-        time: '2023/9/18'
-      },
-      {
-        name: 'ShortChart',
-        cname: '社区数据图表(开发中)',
-        detail: '将短说管理后台的数据统计面板搬到了工作台，运营数据时刻查看',
-        sizes: ['4x4'],
-        option: [
-          {
-            name: 'ShortChart',
-            imgName: 'shortChart',
-            size: '4x4',
-            zoom: '11'
-          },
-        ],
-        time: '2023/9/19'
-      },
+
 
       {
         name:'Courier',

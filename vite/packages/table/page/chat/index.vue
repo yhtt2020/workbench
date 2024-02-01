@@ -46,11 +46,11 @@ export default defineComponent({
           route: { name: 'hall' },
           tab: 'team'
         },
-        {
-          title: '社区', index: 'channel', icon: 'star',
-          route: { name: 'channel' },
-          tab: 'channel'
-        },
+        // {
+        //   title: '社区', index: 'channel', icon: 'star',
+        //   route: { name: 'channel' },
+        //   tab: 'channel'
+        // },
         {
           title: '弹幕', index: 'barrage', icon: 'text-align-left',
           route: { name: 'barrage' },

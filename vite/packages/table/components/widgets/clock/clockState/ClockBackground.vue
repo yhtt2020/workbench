@@ -1,14 +1,14 @@
 <template>
-  <div class="text-base" style="margin-bottom: 10px">背景图片</div>
+  <div class="text-base" style="margin-bottom: 10px" hidden="">背景图片</div>
   <div
     class="xt-text"
-    style=" font-size: 16px; font-weight: 400"
+    style=" font-size: 16px; font-weight: 400" hidden=""
   >
     支持直接复制粘贴图片到此处
   </div>
   <div
     class="flex flex-row justify-between items-center mt-6 drag"
-    style="margin: 12px 0"
+    style="margin: 12px 0" hidden=""
   >
     <div
       class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-1/2 pointer text-base no-drag xt-bg-2"
@@ -23,18 +23,31 @@
       选自壁纸收藏
     </div>
   </div>
+  <div hidden="">
+    <div class="text-base" style="margin-bottom: 10px">背景模糊度</div>
+    <a-slider v-model:value="blurs" :max="100" :step="1" class="no-drag" />
+  </div>
 
-  <div class="text-base" style="margin-bottom: 10px">背景模糊度</div>
-  <a-slider v-model:value="blurs" :max="100" :step="1" class="no-drag" />
-  <div class="text-base" style="margin-bottom: 10px">调整时钟比例</div>
-  <a-slider v-model:value="zoom" :max="100" :step="1" />
+  <div class="flex flex-col">
+    <div class="flex items-center">
+      <div class="text-base mb-1 mr-3">缩放比例</div>
+      <xt-button style="width: auto !important;" h="0" @click="restFullZoom">
+        <div class="flex items-center justify-center">
+          <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="20"></xt-new-icon>
+        </div>
+      </xt-button>
+    </div>
+    <a-slider v-model:value="zoom" :max="150" :min="0" />
+  </div>
+  
+
   <ModalList
     v-if="myImgShow"
     v-model:visible="myImgShow"
     title="我的收藏"
     :imgList="myPapers"
     @sendImg="sendImg"
-    style="z-index: 99999"
+    style="z-index: 99999" hidden=""
   ></ModalList>
   <input style="display: none" ref="fileRef" type="file" name="" id="" />
 </template>
@@ -115,12 +128,16 @@ export default {
       } else {
       }
     },
+    // 重置全屏情况下设置中缩放
+    restFullZoom(){
+      this.zoom = 50;
+    }
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.flex {
+.flex-bg {
   background: var(--primary-bg);
   border-radius: 5px;
 }
