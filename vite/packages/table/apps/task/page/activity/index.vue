@@ -1,6 +1,20 @@
 <template>
-  <div>
-    <xt-text class="mb-3">活动任务</xt-text>
+  <div class="flex flex-col">
+    <div class="flex justify-between mb-4">
+      <div class="flex items-center">
+        <xt-ify-icon icon="fluent-emoji:rainbow" class="mr-3" size="16"></xt-ify-icon>
+        <xt-text class="xt-font font-14">活动任务</xt-text>
+      </div>
+      <Exit />
+    </div>
+    <div class="w-full flex flex-col">
+      <TaskUserInfo />
+      <span class="mb-3 xt-font xt-text-2 font-14">任务列表</span>
+      <Task :task="activeList" @back="back()"></Task>
+    </div>
+  </div>
+
+  <!-- <div>
     <div class="p-3 xt-bg-2 rounded-xl">
       <xt-text class="mb-3">
         <xt-new-icon icon="fluent-emoji:rainbow" size="20" class="mr-3" />
@@ -35,20 +49,60 @@
         >前往推广中心</xt-button
       >
     </div>
-  </div>
+  </div> -->
 </template>
 
 <script setup>
-import { useRouter } from "vue-router";
 import { taskStore } from "../../store.ts";
-import { ref } from "vue";
-const flag = ref(true);
+import { storeToRefs } from "pinia";
+import { computed,ref } from "vue";
+import { tasks } from './Active';
+
+import Exit from '../../components/Exit.vue';
+import TaskUserInfo from "../../components/userinfo/TaskUserInfo.vue";
+import Task from '../branch/Task.vue';
+
 const store = taskStore();
-const router = useRouter();
-const go = () => {
-  router.push({ name: "promotion" });
-  store.isTaskDrawer = false;
-};
+const { currentTaskList,currentTask } = storeToRefs(store);
+const activeList = ref({tasks:tasks.customDesk});
+
+// 获取定制桌面的奖励
+const customDeskReward = computed(()=>{
+  // const reward = currentTaskList.value.some(item => item.name === "Z0201");
+  // if(reward){
+  //   // const findReward = currentTaskList.value.find(item => item.name === "Z0201");
+  //   // const rewardList = findReward.awardList.map((item)=>{
+  //   //   if(item.origin.type === "score"){
+  //   //     return {type:item.origin.type,name:item.label,value:item.origin.value,img:"/img/task/communityPoints.svg"};
+  //   //   }
+  //   //   else {
+  //   //     if(item.origin.type === "medal") return {type:item.origin.type, name:item.label,img:item.data.icon_sm,};
+  //   //     if(item.origin.type === "item") return { type:item.origin.type,img:item.data.image,name:item.label };
+  //   //   }
+  //   // })
+  //   // return {
+  //   //   list:rewardList,
+  //   // }
+  //   // console.log("rewardList",rewardList);
+  //   // return reward;
+  // }
+})
+
+const back = ()=>{
+  currentTask.value = null;
+}
+
+
+// import { useRouter } from "vue-router";
+// import { ref } from "vue";
+// const flag = ref(true);
+// const router = useRouter();
+// const go = () => {
+//   router.push({ name: "promotion" });
+//   store.isTaskDrawer = false;
+// };
+
+// Z0201
 </script>
 
 <style lang="scss" scoped></style>
