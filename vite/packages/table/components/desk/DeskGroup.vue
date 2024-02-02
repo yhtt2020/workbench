@@ -455,24 +455,59 @@ export default {
         children: [
           {
             id: 2,
+            newIcon: "fluent:full-screen-maximize-16-filled",
+            name: "全屏桌面",
+            fn: () => {
+              let a = !this.fullScreen;
+              this.setFullScreen(a);
+            },
+          },
+          {
+            id: 3,
             newIcon: "fluent:arrow-download-20-filled",
             name: "导入桌面",
             fn: this.importDesk,
           },
           {
-            id: 3,
+            id: 4,
             newIcon: "fluent:open-20-filled",
             name: "导出桌面",
             fn: this.exportDesk,
           },
           {
-            id:4,
+            id:5,
             newIcon: "fluent:share-android-24-regular",
             name: "分享桌面",
             fn: this.shareDesk,
           },
+          // {
+          //   id: 8,
+          //   newIcon: this.hide
+          //     ? "fluent:eye-16-regular"
+          //     : "fluent:eye-off-16-regular",
+          //   name: currentHide ? "显示小组件" : "隐藏小组件",
+          //   fn: () => {
+          //     let currentHide = null;
+          //     if (this.isFreeLayout) {
+          //       currentHide = this.getFreeLayoutState?.system?.hide;
+          //     } else {
+          //       currentHide = this.hide;
+          //     }
+          //     if (this.isFreeLayout) {
+          //       this.getFreeLayoutState.system.hide =
+          //         !this.getFreeLayoutState?.system?.hide;
+          //     } else {
+          //       if (this.hide) {
+          //         this.showDesk();
+          //       } else {
+          //         this.hideDesk();
+          //       }
+          //     }
+          //   },
+          //   disabled: false,
+          // },
           {
-            id: 6,
+            id: 9,
             newIcon: "akar-icons:trash-can",
             name: "删除桌面",
             fn: this.delDesk,
@@ -571,6 +606,8 @@ export default {
     ...mapWritableState(useFreeLayoutStore, [
       "freeLayoutData",
       "freeLayoutState",
+      "getFreeLayoutState",
+      "isFreeLayout",
     ]),
     ...mapWritableState(useNavigationStore, [
       "targetDesk",

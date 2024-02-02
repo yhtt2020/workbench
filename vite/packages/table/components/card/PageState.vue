@@ -30,14 +30,15 @@ const isShow = computed(() => {
 const platform = computed(()=>{
   if (props.env.offline && window.$isOffline) {
     return '离线模式'
+  }else if (props.env.offline && window.$isVisitor){
+    return '游客模式'
   }else if(props.env[window.$currentEnv] && window.$currentEnv=='web'){
     return 'web端'
   }else if(props.env[window.$currentEnv] && window.$currentEnv=='mobile'){
     return '移动端'
   }else if(props.env[window.$currentEnv] && window.$currentEnv=='client'){
     return '客户端'
-  }
-  return
+  }return
 })
 
 </script>

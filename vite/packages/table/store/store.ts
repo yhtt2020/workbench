@@ -44,14 +44,26 @@ export const oilStore = defineStore("OilPrices", {
             }
             let res=await get(juheGet,{
                 apiName:'gnyj.query',
-                params:{
-                },
+                params:JSON.stringify({
+                }),
                 options:JSON.stringify({
-                    key:'toutiao.gnyj.query',
+                    key:'gnyj.query',
                     ttl:60*60*12,
                     cache:1,
                 })
             })
+          if(!res){
+            res=await get(juheGet,{
+              apiName:'gnyj.query',
+              params:{
+              },
+              options:JSON.stringify({
+                key:'gnyj.query',
+                ttl:60*60*12,
+                cache:0,
+              })
+            })
+          }
             // console.log(res);
 
             if(res.status){

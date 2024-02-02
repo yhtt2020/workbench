@@ -79,7 +79,15 @@ export default defineComponent({
         if(this.settings.tipLock){
           this.showLockTip = true;
         }
+        if(this.lockTimer){
+          this.clearLockTimer()
+        }
         this.lockTimer = setInterval(() => {
+          if (!this.settings.enable) {
+            //如果发现被禁用了，则直接取消
+            this.clearLockTimer();
+            return
+          }
           this.lockTimeout--;
           if (this.lockTimeout === 0) {
             this.clearLockTimer();

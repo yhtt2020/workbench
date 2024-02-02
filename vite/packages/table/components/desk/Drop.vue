@@ -23,7 +23,9 @@ import { useFreeLayoutStore } from "./freeLayout/store";
 import { useMouseInElement } from '@vueuse/core'
 
 import {useFolderStore} from '../../apps/folder/src/store'
+
 import {getFavicon,useGetUrlName} from './navigationBar/hook/getUrlName'
+import {useNavBarStore} from './navigationBar/navBar'
 const target = ref(null);
 
 const folderStore = useFolderStore();
@@ -41,6 +43,8 @@ mouseInElement.value = useMouseInElement(target);
 const iconStore = myIcons();
 const { iconOption } = storeToRefs(iconStore);
 
+// 
+const navBar = useNavBarStore()
 const { proxy } = getCurrentInstance()
 
 const handleDrop = async (dragEvent) => {
@@ -48,7 +52,6 @@ const handleDrop = async (dragEvent) => {
   if (isEnterBar.value || isEnterFolder.value) {
     return;
   }
-
   dragEvent.preventDefault();
   let files = dragEvent.dataTransfer.files;
   let link = dragEvent.dataTransfer.getData('text/plain');

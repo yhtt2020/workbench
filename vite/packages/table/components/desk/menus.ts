@@ -53,12 +53,12 @@ function deskMenus() {
           name: "添加图标分组",
           fn: this.addFolder,
         },
-        // {
-        //   id: 3,
-        //   newIcon: "mingcute:windows-line",
-        //   name: "整理win桌面图标",
-        //   fn: this.addFolder,
-        // },
+        {
+          id: 3,
+          newIcon: "mingcute:windows-line",
+          name: "导入系统桌面图标",
+          fn: this.arrange,
+        },
       ],
     },
     { id: 5, divider: true },
@@ -101,15 +101,6 @@ function deskMenus() {
       fn: this.freeLayoutScrollbarRedirect,
     },
     {
-      id: 8,
-      newIcon: "fluent:full-screen-maximize-16-filled",
-      name: "全屏桌面",
-      fn: () => {
-        let a = !this.fullScreen;
-        this.setFullScreen(a);
-      },
-    },
-    {
       id: 9,
       newIcon: "fluent:image-multiple-16-regular",
       name: "更换壁纸",
@@ -117,49 +108,49 @@ function deskMenus() {
         this.$refs.galleryRef.openGalleryModal();
       },
     },
+    // {
+    //   id: 10,
+    //   disabled: false,
+    //   name: "添加到导航栏",
+    //   newIcon: "fluent:tablet-16-regular",
+    //   lock: true,
+    //   children: [
+    //     {
+    //       id: 1,
+    //       newIcon: "fluent:tablet-16-regular",
+    //       name: "底部导航",
+    //       fn: () => {},
+    //     },
+    //     {
+    //       id: 2,
+    //       newIcon: "fluent:panel-left-contract-16-regular",
+    //       name: "右侧导航",
+    //       fn: () => {},
+    //     },
+    //     {
+    //       id: 3,
+    //       newIcon: "fluent:panel-right-contract-16-regular",
+    //       name: "左侧导航",
+    //       fn: () => {},
+    //     },
+    //   ],
+    // },
 
-    {
-      id: 11,
-      disabled: true,
-      name: "添加到导航栏",
-      newIcon: "fluent:tablet-16-regular",
-      lock: true,
-      children: [
-        {
-          id: 1,
-          newIcon: "fluent:tablet-16-regular",
-          name: "底部导航",
-          fn: () => {},
-        },
-        {
-          id: 2,
-          newIcon: "fluent:panel-left-contract-16-regular",
-          name: "右侧导航",
-          fn: () => {},
-        },
-        {
-          id: 3,
-          newIcon: "fluent:panel-right-contract-16-regular",
-          name: "左侧导航",
-          fn: () => {},
-        },
-      ],
-    },
-    {
-      id: 12,
-      newIcon: "fluent:settings-16-regular",
-      name: "桌面设置",
-      fn: this.showSetting,
-    },
     { id: 13, divider: true },
     {
       id: 20,
       newIcon: "fluent:more-horizontal-16-filled",
       name: "更多",
       lock: true,
-      children: [
+      children: [          
         {
           id: 1,
+          newIcon: "fluent:settings-16-regular",
+          name: "桌面设置",
+          fn: this.showSetting,
+        },
+        {
+          id: 7,
           newIcon: this.hide
             ? "fluent:eye-16-regular"
             : "fluent:eye-off-16-regular",

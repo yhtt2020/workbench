@@ -1,9 +1,9 @@
 <template>
 
 
-  <div class="s-bg ml-3 p-3 rounded-xl  xt-bg"
-       style="width: 850px;min-height: 300px;;display: flex;flex-direction: column;max-height: 100%">
-    <div class="mb-3" style="width: 300px;">
+  <div v-if="envVisitor" class="s-bg ml-3 p-3 rounded-xl  xt-bg"
+  style="width: 850px;min-height: 300px;;display: flex;flex-direction: column;max-height: 100%">
+  <div class="mb-3" style="width: 300px;">
       <HorizontalPanel :nav-list="tabs" v-model:select-type="tab">
       </HorizontalPanel>
     </div>
@@ -114,6 +114,9 @@
 
   </div>
 
+  <div v-else class=" xt-bg h-full rounded-xl ">
+    <xt-status ele="邀请功能" :list="['visitor']" ></xt-status>
+  </div>
 </template>
 
 <script>
@@ -198,12 +201,15 @@ export default {
   computed: {
     ...mapState(appStore, ['userInfo']),
     ...mapWritableState(codeStore,['verified']),
+    envVisitor(){
+      return !window.useEnv('visitor')
+    },
     totalHours () {
-      return (this.userInfo.onlineGradeExtra.cumulativeHours)
+      return (this.userInfo.onlineGradeExtra?.cumulativeHours)
     },
 
     canExchange () {
-      return (this.userInfo.onlineGradeExtra.cumulativeHours / 200).toFixed(0)
+      return (this.userInfo.onlineGradeExtra?.cumulativeHours / 200).toFixed(0)
     },
     exchanged () {
       return this.codes.length

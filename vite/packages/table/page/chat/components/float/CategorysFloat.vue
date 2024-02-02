@@ -3,7 +3,7 @@
     <img :src="textUrl" class="w-full h-full object-cover" :class="suspension ? 'rounded-t-xl':''"/>
     <div class="community-name h-11 w-full com-line-bg">
       <div class="m-1.5 px-3 items-center drop-hover rounded-lg flex justify-between h-8">
-        <ChatDropDown class="w-full" :enableButton="false"  newIcon="fluent:line-horizontal-3-20-filled" :list="dropMenuList" :title="floatData.communityInfo.name" /> 
+        <ChatDropDown class="w-full" :enableButton="false"  newIcon="fluent:line-horizontal-3-20-filled" :list="dropMenuList" :title="floatData.communityInfo.name" />
       </div>
     </div>
   </div>
@@ -57,7 +57,7 @@
       </template>
 
       <a-divider style="height: 2px;margin:8px 0;border-top:1px solid var(--divider) !important;"/>
-      
+
       <template v-if="floatData.isEmptyData.length === 0">
         <div class="flex items-center justify-center flex-col" v-if="floatData.role !== 'member'" style="height:450px;">
           <EmptyAdd :no="no"/>
@@ -66,8 +66,8 @@
           <a-empty :image="emptyImage" description="这里还没有内容"></a-empty>
         </div>
       </template>
-     
-      
+
+
       <vue-custom-scrollbar :settings="settingsScroller" style="height:60vh;" v-else>
         <template  v-if="singDoubleCol === false && floatData.channelList.length !== 0">
           <div class="flex flex-col" :class="floatData.channelList.length !== 0 ? 'mb-3' : 'm-0'">
@@ -97,12 +97,12 @@
               </div>
           </ChatFold>
         </div>
-      </vue-custom-scrollbar >      
+      </vue-custom-scrollbar >
     </div>
   </div>
 
   <AddNewCategory ref="addCategoryRef" :no="no"/>
-  <AddNewGroup ref="addNewRef" :no="no"/> 
+  <AddNewGroup ref="addNewRef" :no="no"/>
   <!-- <AddInvite ref="addInviteRef" :no="no"/> -->
 </template>
 
@@ -154,12 +154,12 @@ const topHideMenus = ref([
     newIcon:'fluent:text-indent-decrease-16-filled',title:'展开边栏',
     callBack:()=>{ chat.setFloatVisible(false) }
   },
-  // {
-  //   newIcon:'fluent:settings-16-regular',title:'社群设置(开发中)',type:'manage',
-  //   callBack:()=>{
-  //     this.$mit.emit('currentSet',{type:'communitySet',data:this.data})
-  //   }
-  // },
+  {
+    newIcon:'fluent:settings-16-regular',title:'社群设置',type:'manage',
+    callBack:()=>{
+      proxy.$bus.emit('currentSet',{type:'communitySet',data:floatData})
+    }
+  },
   // {icon:'ant-design:team-outlined',title:'成员管理',type:'manage'},
   // {
   //   icon:'fluent:apps-list-detail-24-regular',title:'切换双/单列',
@@ -188,12 +188,12 @@ const topShowMenus = ref([
   //   newIcon:'fluent:people-add-16-regular',title:'邀请其他人',
   //   callBack:()=>{ this.$refs.addInviteRef.openAddInvite()  }
   // },
-  // {
-  //   newIcon:'fluent:settings-16-regular',title:'社群设置(开发中)',type:'manage',
-  //   callBack:()=>{
-  //     this.$mit.emit('currentSet',{type:'communitySet',data:this.data})
-  //   },
-  // },
+  {
+    newIcon:'fluent:settings-16-regular',title:'社群设置',type:'manage',
+    callBack:()=>{
+      proxy.$bus.emit('currentSet',{type:'communitySet',data:floatData})
+    },
+  },
   // {icon:'ant-design:team-outlined',title:'成员管理',type:'manage'},
 ])
 // 不是社群管理员情况下的下拉菜单
@@ -277,10 +277,10 @@ const floatData = computed(()=>{
   // 获取子级频道
   const treeArr = community.value.communityTree;
   if(!isEmptyList(treeArr)){ communityData.list = []; }
-  else { 
+  else {
     const findTree = _.filter(treeArr,function(find){  if(find){ return String(find.no) === String(no) }  });
     if(isEmptyList(findTree)){
-      communityData.list = findTree[0].tree 
+      communityData.list = findTree[0].tree
       // 获取category和channel数据
       const filterCategory = _.filter(findTree[0].tree,function(item){ return item.role === "category" });
       if(isEmptyList(filterCategory)){ communityData.categoryList = filterCategory }

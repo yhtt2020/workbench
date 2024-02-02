@@ -152,8 +152,6 @@ export default {
         { name: '其他文件', type: 'columns', list: [], isCheck: false, },
       ],
       loading: false,
-      timer: null,
-      time: 0,
       setTime: 120,
       setTimer: null,
       // 转换好的数据
@@ -389,15 +387,7 @@ export default {
         this.appList = [...this.fault]
         this.loading = false
         this.messageFinish()
-        this.time = 0
-        this.clear()
       }, 15000);
-    },
-
-    clear() {
-      this.time = 0
-      clearInterval(this.timer)
-      this.timer = null
     },
 
     messageFinish() {
@@ -446,13 +436,13 @@ export default {
       this.folderList = []
 
       folders.forEach(item => {
-        if (item.customData.name == '游戏') {
+        if (item.customData.name == '游戏' && this.guideList.length == 5) {
           item.customData?.list.forEach(i => {
             this.exeNavList[0].children?.push({ type: 'tableApp', icon: i.icon, name: i.name, addNav: true, bg: '', isBg: '', ext: '', summary: '', mode: 'app', value: i.value })
           })
           this.exeNavList[0].isCheck = true
 
-        } else if (item.customData.name == '常用程序') {
+        } else if (item.customData.name == '常用程序' && this.guideList.length == 5) {
           item.customData?.list.forEach(i => {
             this.exeNavList[1].children?.push({ type: 'tableApp', icon: i.icon, name: i.name, addNav: true, bg: '', isBg: '', ext: '', summary: '', mode: 'app', value: i.value })
           })
@@ -471,7 +461,9 @@ export default {
           },
         });
       }, 1)
-      this.setExeListNav()
+      if(this.guideList.length == 5 ){
+        this.setExeListNav()
+      }
       this.nextStep();
     },
 
@@ -688,7 +680,6 @@ export default {
 
         // this.appList[0].list = tmp.game
         this.appList[1].list = tmp.programs
-
         this.appList[2].list = tmp.file
         this.appList[3].list = tmp.picture
         this.appList[4].list = tmp.audio
@@ -697,8 +688,6 @@ export default {
         // 请求结束 进入下一步
         this.loading = false
         this.messageFinish()
-        this.time = 15
-        this.clear()
 
         // 清楚超时操作
         clearTimeout(this.setTimer)

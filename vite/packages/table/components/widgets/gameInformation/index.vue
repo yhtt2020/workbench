@@ -91,7 +91,7 @@ export default {
     },
     methods:{
         async onGetInfo(){
-            let dataList = await getGameInfo("/app/juhe/get");
+            let dataList = await getGameInfo("/app/juhe/get",0);
             this.gameData = dataList;
         },
         jump(url){

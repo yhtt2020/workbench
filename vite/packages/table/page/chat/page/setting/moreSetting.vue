@@ -24,40 +24,44 @@ export default {
   },
 
   computed:{
-    ...mapWritableState(communityStore,['getCommunityDetail']),
-    joinChatList(){
-      const categoryList = this.getCommunityDetail(this.$route.params.no);
-      if(categoryList.tree.length !== 0){
-        const channel = []
-        const category = []
-        for(const cateItem of categoryList.tree){
-         if(cateItem.role === 'channel'){
-          const index = channel.findIndex((item)=>{
-            return item.id === cateItem.id
-          })
-          if(index === -1){
-            channel.push(cateItem)
-          }
-         }
-         if(cateItem.role === 'category'){
-          const list = cateItem.children
-          for(const childItem of list){
-            if(childItem.type === 'group'){
-              const index = category.findIndex((item)=>{
-                return childItem.id === item.id
-              })
-              if(index === -1){
-                category.push(childItem)
-              }
-            }
-          }
-         }
-        }
-        const mergeList = category.concat(channel)
-        return mergeList
-      }else{
-        return []
-      }
+    ...mapWritableState(communityStore,['getCommunityDetail','getChannelList']),
+    async joinChatList () {
+      let community=await this.getCommunityDetail(this.$route.params.no);
+      // console.log(community,'找到的详情')
+      // let channels=this.community.categoryClass
+      // console.log('找到的频道',channels)
+      // const categoryList = community
+      // if (categoryList.tree.length !== 0) {
+      //   const channel = []
+      //   const category = []
+      //   for (const cateItem of categoryList.tree) {
+      //     if (cateItem.role === 'channel') {
+      //       const index = channel.findIndex((item) => {
+      //         return item.id === cateItem.id
+      //       })
+      //       if (index === -1) {
+      //         channel.push(cateItem)
+      //       }
+      //     }
+      //     if (cateItem.role === 'category') {
+      //       const list = cateItem.children
+      //       for (const childItem of list) {
+      //         if (childItem.type === 'group') {
+      //           const index = category.findIndex((item) => {
+      //             return childItem.id === item.id
+      //           })
+      //           if (index === -1) {
+      //             category.push(childItem)
+      //           }
+      //         }
+      //       }
+      //     }
+      //   }
+      //   const mergeList = category.concat(channel)
+      //   return mergeList
+      // } else {
+      //   return []
+      // }
     }
   },
 
@@ -68,12 +72,12 @@ export default {
        return item.id
       })
       console.log('查看name',mapName);
-      this.tagValue = mapName  
+      this.tagValue = mapName
     })
   },
 
   methods:{
-    
+
   }
 };
 </script>

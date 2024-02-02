@@ -3,7 +3,8 @@
         v-model:value="currentMultiple" 
         mode="multiple" 
         show-search 
-        style="width: 100%" 
+        style="width: 100%; padding: 0 !important" 
+        class="rounded-xl"
         :options="list"
         :filter-option="filterOption"
         @change="handleChange">

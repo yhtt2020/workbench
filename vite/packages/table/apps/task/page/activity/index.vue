@@ -45,9 +45,9 @@
           >」任务后，即可获得丰厚奖励。
         </span>
       </xt-text>
-      <xt-button class="mt-3" style="width: 100%" type="theme" @click="go()"
+      <!-- <xt-button class="mt-3" style="width: 100%" type="theme" @click="go()"
         >前往推广中心</xt-button
-      >
+      > -->
     </div>
   </div> -->
 </template>

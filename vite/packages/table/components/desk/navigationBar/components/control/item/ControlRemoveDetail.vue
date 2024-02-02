@@ -233,6 +233,7 @@ const isUserLogin = computed(()=>{
 const login = () =>{
  tsbApi.user.login((data) => {
   ipc.send('getDetailUserInfo')
+  appStore().getUserInfo()
  })
 }
 </script>

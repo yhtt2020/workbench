@@ -117,6 +117,10 @@ const props = defineProps({
   leftMargin: {
     default: "mr-3",
   },
+  // 隐藏按钮
+  disabled: {
+    default: "false",
+  },
 });
 // 全屏控制
 const full = ref(false);
@@ -133,7 +137,11 @@ const { list } = toRefs(props);
 // 动态添加ID
 const newList = computed(() => {
   let index = -1;
-  let res = list.value.map((item) => {
+  // 过滤 将需要隐藏的按钮进行过滤
+  let tmp = list.value?.filter(item=>{
+    return !item.disabled
+  })
+  let res = tmp.map((item) => {
     if (item.full) full.value = true;
     let id = item.id ?? ++index;
     return {

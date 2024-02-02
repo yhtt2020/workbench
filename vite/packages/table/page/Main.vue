@@ -24,7 +24,27 @@
           <router-view></router-view>
         </keep-alive>
         <!-- 删除区域 -->
-        <div class="del-icon" id="delIcon2" v-show="delZone" style="z-index:500"></div>
+        <div 
+          class="del-icon" 
+          id="delIcon2" 
+          v-show="delZone" 
+          style="z-index:500;bottom: 0;right: 50%;transform: translateX(50%);width: 400px;height: 120px;">
+          <xt-new-icon icon="fluent:delete-16-regular" size="32" color="red"></xt-new-icon>
+        </div>
+        <div 
+          class="del-icon" 
+          id="delIcon3" 
+          v-show="delZone" 
+          style="z-index:500;bottom: 50%;left: 0;transform: translateY(50%);width: 120px;height: 400px;">
+          <xt-new-icon icon="fluent:delete-16-regular" size="32" color="red"></xt-new-icon>
+        </div>
+        <div 
+          class="del-icon" 
+          id="delIcon3" 
+          v-show="delZone" 
+          style="z-index:500;bottom: 50%;right: 0;transform: translateY(50%);width: 120px;height: 400px;">
+          <xt-new-icon icon="fluent:delete-16-regular" size="32" color="red"></xt-new-icon>
+        </div>
       </div>
       <Transition name="bounce">
         <div v-if="teamVisible && !fullScreen" class="h-100 "
@@ -63,7 +83,7 @@ import fullScreen from '../components/widgets/myIcons/icons/fullScreen.vue'
 import { message } from 'ant-design-vue'
 import { useNavigationStore } from '../components/desk/navigationBar/navigationStore'
 import AutoHide from '../components/desk/navigationBar/components/folder/AutoHide.vue'
-
+import { Icon as ifyIcon } from '@iconify/vue';
 export default {
   name: 'Main',
   components: { TeamPanel, BottomPanel, TopPanel, SidePanel,AutoHide },
@@ -132,6 +152,7 @@ export default {
     },
     ...mapActions(navStore, ['sortSideNavigationList', 'removeSideNavigationList', 'sortRightNavigationList', 'removeRightNavigationList', 'loadNav']),
     getDelIcon(val) {
+      console.log(val,'from bottom')
       this.delZone = val
     },
     hiedNavBar(value) {
@@ -169,7 +190,6 @@ export default {
     },
     openFolder(value,id) {
       id === 'left' ? this.sideIsOpenFolder = value : this.rightIsOpenFolder = value
-      console.log(value,id,'<<<<<<<<<<<========main')
     },
   }
 }
@@ -200,24 +220,18 @@ export default {
 </style>
 <style lang="scss" scoped>
 .del-icon {
-  width: 100%;
-  height: 100%;
-  // opacity: 0.5;
-  // background: var(--secondary-bg);
-  // backdrop-filter: blur(8px);
-  // border: 1px dashed rgba(255, 255, 255, 0.4);
   border-radius: 16px;
+  text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 3px dashed red;
   font-size: 18px;
-  color: var(--primary-text);
+  // color: var(--primary-text);
   font-weight: 500;
   position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
   z-index: 9;
+  background-color:rgba(244, 58, 58, 0.5) ;
+  color:red !important;
 }
 </style>

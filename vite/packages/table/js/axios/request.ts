@@ -10,6 +10,7 @@ export async function get(url, params = {}) {
   if (result.data.code === 1000) {
     return result.data.data
   } else {
+    console.error(result)
     return null
   }
 }

@@ -320,6 +320,7 @@ export const useCustomLayout = async (options) => {
   setData(arr1x1);
 
   setTimeout(() => {
+    console.log('删除操作 :>> ', );
     useDelCard(positioningId);
     cb && cb();
   }, 600);
