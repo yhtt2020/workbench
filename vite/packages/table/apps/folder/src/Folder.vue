@@ -207,6 +207,7 @@ const header = computed(() => {
     leftHoverIcon: secondary.value
       ? "fluent:settings-16-regular"
       : "fluent:open-16-regular",
+      //
     rightIcon: [
       {
         ifyIcon: "fluent:open-16-regular",

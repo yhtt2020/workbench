@@ -15,6 +15,7 @@ class TTApp extends Base {
     this.on('install', async (event,args)=>{
     //todo appSqlModel.install()
       //unzip  copy  generatemd5  writedb    id=>path
+      console.log('object :>> ', args.zipPath);
     let res =  await useRegisterTTApps(args.zipPath)
     console.log('res :>> ', res);
       event.reply(args.cbId,res)

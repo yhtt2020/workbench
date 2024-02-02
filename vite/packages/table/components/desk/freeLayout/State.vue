@@ -49,6 +49,13 @@
     />
     <hr />
     <xt-option-info
+      title="画布自动延伸"
+      info="自动调节画布尺寸，该功能可能会降低性能。"
+      isSwitch
+      v-model:switch="getFreeLayoutState.canvas.autoExtend"
+    />
+    <hr />
+    <xt-option-info
       title="桌面画布尺寸"
       info="调整整体桌面画布尺寸，宽x高，以及缩放比例。"
       icon="fluent:arrow-clockwise-16-regular"

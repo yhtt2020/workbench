@@ -1,9 +1,15 @@
 <!-- 滚动条视图和事件 -->
 <template>
-  <div @wheel="handleWheelEvent" v-show="isFreeLayout" ref="scrollbar" class="no-drag relative w-full h-full"
-    style="padding-right: 10px; padding-bottom: 10px; margin-bottom: 12px" :style="{
+  <div
+    @wheel="handleWheelEvent"
+    v-show="isFreeLayout"
+    ref="scrollbar"
+    class="no-drag relative w-full h-full"
+    style="padding-right: 10px; padding-bottom: 10px; margin-bottom: 12px"
+    :style="{
       cursor: dragStyle,
-    }">
+    }"
+  >
     <slot> </slot>
   </div>
 </template>
@@ -16,6 +22,7 @@ import {
   watch,
   nextTick,
   computed,
+  getCurrentInstance,
 } from "vue";
 import { storeToRefs } from "pinia";
 // import { useElementSize } from "@vueuse/core";
@@ -26,7 +33,7 @@ import { useFreeLayoutStore } from "./store";
 import { useElementSize } from "../../../ui/new/drag/src/hooks/useElementSize";
 import { useWindowSize } from "../../../ui/new/drag/src/hooks/useWindowSize";
 import { useThrottleFn } from "@vueuse/core";
-
+const { proxy } = getCurrentInstance();
 const dragStyle = computed(() => {
   if (isKey.value && isDragging.value) {
     return "grabbing";
@@ -64,13 +71,12 @@ onMounted(() => {
   perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
   useElementSize(scrollbar.value, (size) => {
     scrollSize.value = size;
-    if (size.width == 0 || size.height == 0) return
+    if (size.width == 0 || size.height == 0) return;
     freeLayoutEnv.value.scrollWidth = size.width;
     freeLayoutEnv.value.scrollHeight = size.height;
   });
   // 事件监听
   scrollbar.value.addEventListener("ps-scroll-x", () => {
- 
     freeLayoutEnv.value.scrollLeft = scrollbar.value?.scrollLeft;
   });
   scrollbar.value.addEventListener("ps-scroll-y", () => {
@@ -90,6 +96,17 @@ onMounted(() => {
   // 监听鼠标抬起事件;
   window.addEventListener("mouseup", handleMouseUp);
   document.body.addEventListener("keydown", ignoreSpace);
+  // 监听用于更新滚动条X轴滚动事件
+  // proxy.$bus.on("updateFreeLayoutScrollX", (x) => {
+  //   scrollbar.value.scrollLeft = x;
+  // });
+  // // 监听用于更新滚动条Y轴滚动事件
+  // proxy.$bus.on("updateFreeLayoutScrollY", (y) => {
+  //   scrollbar.value.scrollTop = y;
+  // });
+  proxy.$bus.on("updateFreeLayoutScroll", () => {
+    perfectScrollbar.value.update();
+  });
 });
 const lock = ref(false);
 watch([isFreeLayout, () => scrollSize.value], ([state, size]) => {

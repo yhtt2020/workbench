@@ -60,6 +60,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         zoom: 1, // 缩放比例
         width: 5000, // 宽
         height: 5000, // 高
+        autoExtend: true, // 自动延伸画布
       },
     },
     // 当前环境状态
@@ -99,9 +100,9 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     getCurrentDeskId() {
       const home: any = homeStore();
       const { currentDeskId } = storeToRefs(home);
-      if(this.previewFlag){
-        return 'mj36hf6h'
-      }else{
+      if (this.previewFlag) {
+        return "mj36hf6h";
+      } else {
         return currentDeskId.value;
       }
     },
@@ -286,21 +287,20 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       // this.getFreeLayoutState.line.centerLine.x =
       //   this.freeLayoutEnv.scrollLeft / this.getFreeLayoutState.canvas.zoom;
     },
-    // 设置当前自由布局 属性 
-    setFreeLayoutData(id, data){
+    // 设置当前自由布局 属性
+    setFreeLayoutData(id, data) {
       // console.log('this.freeLayoutData', this.freeLayoutData);
-      
-      
-      this.freeLayoutData[id] = {...data}
+
+      this.freeLayoutData[id] = { ...data };
     },
-    setFreeLayoutState(id, state){
+    setFreeLayoutState(id, state) {
       // console.log('this.freeLayoutState', this.freeLayoutState);
-      this.freeLayoutState[id] = {...state}
+      this.freeLayoutState[id] = { ...state };
     },
-    getFreeLayout1(){
-      console.log('this.freeLayoutData', this.freeLayoutData)
-      console.log('this.freeLayoutState', this.freeLayoutState)
-    }
+    getFreeLayout1() {
+      console.log("this.freeLayoutData", this.freeLayoutData);
+      console.log("this.freeLayoutState", this.freeLayoutState);
+    },
   },
   persist: {
     enabled: true,

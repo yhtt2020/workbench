@@ -39,7 +39,15 @@
           radius="8"
           >{{ types[props.type]?.button }}</xt-button
         >
-        <xt-button w="80" h="40" type="theme" @click="goTask"        radius="8">下一个</xt-button>
+        <xt-button
+          v-if="currentId != 'Z0201'"
+          w="80"
+          h="40"
+          type="theme"
+          @click="goTask"
+          radius="8"
+          >下一个</xt-button
+        >
       </div>
     </div>
   </xt-modal>

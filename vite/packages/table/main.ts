@@ -2,12 +2,14 @@
 
 // 注册想天客户端状态
 import currentEnv, { isWeb, isClient, isMac, isOffline, isVisitor } from "./ui/hooks/env";
+import {useEnv} from "./ui/hooks/useEnv";
 window.$currentEnv = currentEnv;
 window.$isWeb = isWeb;
 window.$isClient = isClient;
 window.$isMac = isMac;
 window.$isOffline = isOffline;
 window.$isVisitor = isVisitor;
+window.useEnv = useEnv;
 import { createApp } from "vue";
 import Antd from "ant-design-vue";
 // import 'ant-design-vue/dist/antd.less';

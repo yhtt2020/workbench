@@ -21,7 +21,7 @@ const app={
        nanoid:nanoid,
        background:background,
        app:app
-     })
+     }) 
   },
   /**
    * 安装指定应用1
