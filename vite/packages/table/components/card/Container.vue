@@ -175,13 +175,18 @@
   </RightMenu>
 </template>
 <script setup>
-import { mapActions, mapWritableState } from "pinia";
 import _ from "lodash-es";
 import { useToast } from "vue-toastification";
-import { watch, computed, ref, onBeforeMount, onMounted, toRefs } from "vue";
+import {
+  watch,
+  computed,
+  ref,
+  onBeforeMount,
+  getCurrentInstance,
+  toRefs,
+} from "vue";
 import { storeToRefs } from "pinia";
 import { cardStore as useCardStore } from "../../store/card";
-import { offlineStore } from "../../js/common/offline";
 import { useWidgetStore } from "./store";
 import { useFreeLayoutStore } from "../desk/freeLayout/store";
 
@@ -192,6 +197,8 @@ import PageState from "./PageState.vue";
 import Msg from "./Msg.vue";
 
 import { deepMerge } from "./ContainerUtils";
+
+const { proxy } = getCurrentInstance();
 
 /**
  * pinia
@@ -285,7 +292,7 @@ const props = defineProps({
   },
   /**
    * 卡片默认数据
-   * 传递后每次都会帮你校验数据
+   * 传递后每次都会帮你校验数据，不存在的key会进行赋值
    */
   defaultData: {},
   // 全局选项
@@ -359,7 +366,7 @@ onBeforeMount(() => {
 });
 /**
  * emits
- * update:customSize 双向数据绑定
+ * update:customSize 双向数据绑定customSize
  * leftClick 头部左侧鼠标经过点击回调
  * delete 小组件删除回调
  * resize 更新卡片大小回调
@@ -389,7 +396,7 @@ const currentSize = ref(props.customSize);
  */
 // 实际渲染的右键菜单
 const menus = computed(() => {
-  return [
+  let menu = [
     ...props.menuList,
     {
       newIcon: "akar-icons:trash-can",
@@ -408,6 +415,9 @@ const menus = computed(() => {
       disabled: props.options?.disabled ? true : false,
     },
   ];
+
+  console.log("menu :>> ", menu);
+  return menu;
 });
 // 头部左侧显示区域状态
 const leftHover = computed(() => {
@@ -435,12 +445,10 @@ const title = computed(() => {
 const rightIcons = computed(() => {
   let arr = [];
 
-  console.log(
-    "typeof props.header.rightIcon  :>> ",
-    typeof header.value.rightIcon
-  );
-  if (typeof props.header.rightIcon == "array") {
+  if (Array.isArray(props.header.rightIcon)) {
     arr = [...props.header.rightIcon];
+  } else {
+    console.log("头部右侧图标不属于数组 :>> ");
   }
   if (props.header.refresh) {
     arr.push({
@@ -523,21 +531,22 @@ const setCustomData = (key, data) => {
 };
 // 头部拖拽开始
 const titleDragStart = () => {
-  const toast = useToast();
-  toast.clear();
-  toast(
-    { component: Msg },
-    {
-      icon: false,
-      closeOnClick: false,
-      closeButton: false,
-      pauseOnFocusLoss: true,
-      pauseOnHover: true,
-      toastClassName: "notice-toast",
-      timeout: 3000,
-      hideProgressBar: false,
-    }
-  );
+  proxy.$bus.emit("startAdjust");
+  // const toast = useToast();
+  // toast.clear();
+  // toast(
+  //   { component: Msg },
+  //   {
+  //     icon: false,
+  //     closeOnClick: false,
+  //     closeButton: false,
+  //     pauseOnFocusLoss: true,
+  //     pauseOnHover: true,
+  //     toastClassName: "notice-toast",
+  //     timeout: 3000,
+  //     hideProgressBar: false,
+  //   }
+  // );
 };
 // 左侧区域鼠标进入
 const leftMouseEnter = () => {

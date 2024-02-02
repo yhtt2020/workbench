@@ -425,7 +425,7 @@ export default {
           lock: true,
           children: [
             {
-              id: 5,
+              id: 6,
               newIcon: "fluent:circle-off-16-regular",
               name: "清空桌面",
               fn: () => {
@@ -467,7 +467,7 @@ export default {
   },
   computed: {
     ...mapWritableState(navStore, ["navigationToggle"]),
-    ...mapWritableState(appStore, ["fullScreen"]),
+    ...mapWritableState(appStore, ["fullScreen", "showGuide"]),
     ...mapWritableState(useWidgetStore, ["rightModel"]),
     ...mapWritableState(useFreeLayoutStore, [
       "isFreeLayout",
@@ -542,6 +542,15 @@ export default {
   mounted() {
     // 空桌面添加图标保持弹窗
     this.editVisible = this.keepAddIcon
+    this.$bus.on('addCard',(data)=>{
+      let value = _.cloneDeep(data)
+      this.currentDesk.cards.push({
+        name:'folder',
+        id:Date.now(),
+        customData: value
+      })
+
+    })
     // 自动打开编辑
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();
@@ -590,7 +599,11 @@ export default {
     ...mapActions(useDeskStore, ["addMenu"]),
     ...mapActions(taskStore, ["initTask"]),
     addFolder() {
-      registerFolder(this.currentDesk);
+      if(!this.showGuide){
+        registerFolder(this.currentDesk);
+      }else{
+        message.info("定制过程中无法操作");
+      }
     },
     resetLayout() {
       this.hide = true;
@@ -620,15 +633,19 @@ export default {
       this.menuVisible = false;
     },
     toggleEditing() {
-      if (this.editing) {
-        message.info("已关闭拖拽调整");
-      } else {
-        message.info("您可以直接拖拽图标调整位置");
+      if(!this.showGuide){
+        if (this.editing) {
+          message.info("已关闭拖拽调整");
+        } else {
+          message.info("您可以直接拖拽图标调整位置");
+        }
+        this.muuriOptions.layout.horizontal = !this.settings.vDirection;
+        this.$emit("changeEditing", this.editing);
+        this.menuVisible = false;
+        this.key = Date.now();
+      }else{
+        message.info("定制过程中无法操作");
       }
-      this.muuriOptions.layout.horizontal = !this.settings.vDirection;
-      this.$emit("changeEditing", this.editing);
-      this.menuVisible = false;
-      this.key = Date.now();
     },
     showSetting() {
       this.settingVisible = true;
@@ -647,46 +664,54 @@ export default {
     },
     clear(desk) {
       this.menuVisible = false;
-      if (desk) {
-        this.$xtConfirm("清空当前桌面的全部卡片？此操作不可还原。", "", {
-          okText: "清空卡片",
-          okButtonWidth: 100,
-          type: "warning",
-          ok: () => {
-            desk?.cards?.forEach((item) => {
-              //移除桌面相关的便签卡片
-              if (item.name === "notes") {
-                tsbApi.db
-                  .find({
-                    selector: {
-                      _id: "note:" + item.id,
-                    },
-                  })
-                  .then((res) => {
-                    if (res?.docs.length) {
-                      tsbApi.db.put({
-                        ...res.docs[0],
-                        // isDelete:true,
-                        deskId: "",
-                        deskName: "",
-                      });
-                    }
-                  });
-              }
-            });
-            desk.cards = [];
-            this.menuVisible = false;
-            this.clearFreeLayoutData();
-          },
-        });
+      if(!this.showGuide){
+        if (desk) {
+          this.$xtConfirm("清空当前桌面的全部卡片？此操作不可还原。", "", {
+            okText: "清空卡片",
+            okButtonWidth: 100,
+            type: "warning",
+            ok: () => {
+              desk?.cards?.forEach((item) => {
+                //移除桌面相关的便签卡片
+                if (item.name === "notes") {
+                  tsbApi.db
+                    .find({
+                      selector: {
+                        _id: "note:" + item.id,
+                      },
+                    })
+                    .then((res) => {
+                      if (res?.docs.length) {
+                        tsbApi.db.put({
+                          ...res.docs[0],
+                          // isDelete:true,
+                          deskId: "",
+                          deskName: "",
+                        });
+                      }
+                    });
+                }
+              });
+              desk.cards = [];
+              this.menuVisible = false;
+              this.clearFreeLayoutData();
+            },
+          });
+        }
+      }else{
+        message.info("定制过程中无法操作");
       }
     },
     newAddCard() {
-      if (this.autoOpenEdit) {
-        this.toggleEditing();
+      if(!this.showGuide){
+        if (this.autoOpenEdit) {
+          this.toggleEditing();
+        }
+        this.addCardVisible = true;
+        this.menuVisible = false;
+      }else{
+        message.info("定制过程中无法操作");
       }
-      this.addCardVisible = true;
-      this.menuVisible = false;
     },
     hideAddCard() {
       this.addCardVisible = false;
@@ -698,15 +723,25 @@ export default {
       if (!this.notTrigger && this.rightModel !== "follow")
         this.menuVisible = true;
     },
+    arrange(){
+      if(!this.showGuide){
+        this.$emit("onArrange");
+      }else{
+        message.info("定制过程中无法操作");
+      }
+    },
     // 添加图标
     newAddIcon() {
       // this.iconVisible = true;
       // this.menuVisible = false;
-      this.editVisible = true;
-      this.menuVisible = false;
-      this.selectNav = "desktop";
-      this.isDesk = true;
-      console.log(this.selectNav, "selectNav");
+      if(!this.showGuide){
+        this.editVisible = true;
+        this.menuVisible = false;
+        this.selectNav = "desktop";
+        this.isDesk = true;
+      }else{
+        message.info("定制过程中无法操作");
+      }
     },
     useFileConversionIcon,
     useAddCard,

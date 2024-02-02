@@ -17,6 +17,9 @@
           <xt-button @click="openDevTool" :w="140" :h="40" type="theme">打开开发者工具</xt-button>
         </div>
         <div class="line">
+          <xt-button @click="importTTApp" :w="140" :h="40" type="theme">导入测试TTApp</xt-button>
+        </div>
+        <div class="line">
           <xt-button @click="getMemory">获取内存情况</xt-button>
         </div>
         <div>
@@ -108,6 +111,22 @@ export default {
     },
     openDevTool(){
       ipc.send('openDevTool')
+    },
+    async importTTApp(){
+
+      let path = await tsbApi.dialog.showOpenDialog({
+    title: "选择",
+    message: "请选择文件",
+    multiple: "true",
+    properties: ["openFile", "multiSelections"],
+  });
+
+
+  console.log('path[0] :>> ', path[0]);
+let  res =  tsbApi.ttapp.install(path[0],(data)=>{
+    console.log('data :>> ', data);
+  })
+  console.log('res :>> ', res);
     },
     async getMemory () {
        let rs= await ipc.sendSync('getAppMetrics')

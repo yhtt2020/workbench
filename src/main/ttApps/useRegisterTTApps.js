@@ -13,6 +13,7 @@ const getFileExtension = (filePath) => {
 };
 
 module.exports = async function useRegisterTTApps(filePath) {
+  console.log("3333 :>> ", 3333);
   // // 1 获取文件
   // let path = await tsbApi.dialog.showOpenDialog({
   //   title: "选择",
@@ -41,8 +42,7 @@ module.exports = async function useRegisterTTApps(filePath) {
   // 4 //解压到临时目录
   let unzipRes = await unzipFile(filePath, temporaryFolderName);
   if (unzipRes.code !== 200) {
-    event.reply("", unzipRes);
-    return;
+    return unzipRes;
   }
 
   // 5 判断文件是否缺少
@@ -53,27 +53,25 @@ module.exports = async function useRegisterTTApps(filePath) {
     if (!res) checkFileRes.push(path);
   }
   if (checkFileRes.length > 0) {
-    event.reply("", {
+    deleteFile(temporaryFolderName);
+    return {
       status: 1,
       code: 400,
       data: "缺失 " + checkFileRes.join(" , ") + " 文件",
       info: "缺失 " + checkFileRes.join(" , ") + " 文件",
-    });
-    deleteFile(temporaryFolderName);
-    return;
+    };
   }
 
   // 6 判断manifest.json
   let manifestRes = await readFile([...temporaryFolderName, "manifest.json"]);
   manifestRes = JSON.parse(manifestRes);
   if (typeof manifestRes !== "object") {
-    event.reply("", {
+    return {
       status: 1,
       code: 400,
       data: "manifest.json文件不是json数据",
       info: "manifest.json文件不是json数据",
-    });
-    return;
+    };
   }
   let manifestCheck = ["page", "key", "value"];
   let manifestCheckRes = [];

@@ -3,11 +3,14 @@
 
     <SecondPanel :menus="menus" @changeTab="change"></SecondPanel>
         <!-- 快速搜索 基础设置->基础设置 右侧框 -->
-    <div style="padding: 1em;border-radius: 8px;margin-left: 1em;width: 100%;margin: 1em;color: var(--primary-text);background: var(--primary-bg);
+    <div  style="padding: 1em;border-radius: 8px;margin-left: 1em;width: 100%;margin: 1em;color: var(--primary-text);background: var(--primary-bg);
 
     "
-  class="s-bg">
-      <router-view></router-view>
+  class="s-bg h-full">
+      <xt-scrollbar class="h-full" :y="true">
+        <router-view></router-view>
+      </xt-scrollbar>
+
     </div>
 
   </div>

@@ -2,12 +2,12 @@
   <teleport to='body' >
    <Modal v-if="editorVisible" v-model:visible="editorVisible" :blurFlag="true">
     <div class="flex flex-col my-4" style="width:712px;height: 552px;">
-     <ModalTop title="编辑社群(开发中)" @close="editorVisible = false"/>
+     <ModalTop title="编辑社群" @close="editorVisible = false"/>
      <div class="flex px-6 pb-6 justify-between">
       <div class="flex flex-col" style="width: 320px;">
        <div class="w-full flex items-center mb-9 justify-center ">
          <div class="w-16 h-16 relative pointer">
-          <a-avatar shape="square" :size="64" :src="avatar"></a-avatar>
+          <a-avatar shape="square" :size="64" :src="content.icon"></a-avatar>
           <div class="update-icon rounded-full flex items-center justify-center w-6 h-6">
            <EditorIcon icon="fluent:camera-16-regular" style="font-size: 1.3rem;"/>
           </div>
@@ -35,7 +35,7 @@
           <div style="width: 280px;height: 150px;" class="relative">
            <img :src="cover" class="w-full h-full object-cover rounded-t-xl"/>
            <div class="w-12 h-12 flex items-center justify-center" style="position: absolute; bottom:-16px;left:16px;">
-            <a-avatar shape="square" :size="48" :src="avatar"></a-avatar>
+            <a-avatar shape="square" :size="48" :src="content.icon"></a-avatar>
            </div>
           </div>
           <div class="flex flex-col pb-4 px-4" style="margin-top: 30px;">
@@ -114,7 +114,7 @@ export default {
   },
   // 保存社群信息的修改
   saveEditor(){
-    
+
   }
  },
 };

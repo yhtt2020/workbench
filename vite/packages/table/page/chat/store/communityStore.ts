@@ -16,19 +16,43 @@ const getChannelTree = sUrl("/app/community/channel/getTreeList") // 获取树�
 const createChannels = sUrl("/app/community/channel/create") // 创建社群频道
 const deleteCategory = sUrl("/app/community/channel/remove") // 删除社群频道
 const updateChannel = sUrl("/app/community/channel/updateProfile") // 更新社群频道
-
+const getHotList = sUrl("/app/community/getHotList") // 热门社群
+const getByNo=sUrl('/app/community/getByNo')//获取某个社群的详细信息
 // @ts-ignore
 export const communityStore = defineStore('communityStore',{
   state:()=>({
     community:{
       communityList:[], // 获取社群左侧列表
-      communityRecommend:[], // 获取社群推荐数据
+      recommendList:[], // 获取社群推荐数据
       categoryClass:[], // 用于存储新分组
       communityTree:[], // 获取社群树状列表
-    }
+      hotList:[]
+    },
+    selectedChannelId:{
+
+    },//键值对  cno->channelId
+    currentCommunity:null
   }),
 
   actions:{
+    setCommunityChannel(id){
+      this.selectedChannelId[this.currentCommunity.no]=id
+      console.log(this.selectedChannelId)
+    },
+    async loadCurrentCommunity(no){
+      let rs=await this.getCommunityDetail(no)
+      console.log('渠道详情',rs)
+      this.currentCommunity=rs
+
+    },
+    async getCommunityDetail(no) {
+      let rs = await post(getByNo, {no: no})
+      if (rs.status) {
+        return rs.data
+      } else {
+        return null
+      }
+    },
     // 获取推荐社群
     getRecommendCommunityList(){
       post(getRecommendCommunity,{}).then((res:any)=>{
@@ -36,7 +60,18 @@ export const communityStore = defineStore('communityStore',{
         if(status === 1){
           const resNull = res.data !== undefined; // 预防报错
           if(resNull){
-            this.community.communityRecommend = res.data;
+            this.community.recommendList = res.data;
+          }
+        }
+      });
+    },
+    getHotList(){
+      post(getHotList,{}).then((res:any)=>{
+        const status = res.status; // 判断是否请求成功
+        if(status === 1){
+          const resNull = res.data !== undefined; // 预防报错
+          if(resNull){
+            this.community.hotList = res.data.list;
           }
         }
       });
@@ -186,7 +221,7 @@ export const communityStore = defineStore('communityStore',{
     strategies:[
       {
         storage:localStorage,
-        paths:['community'],
+        paths:['community','settingCommunity','currentCommunity','selectedChannelId'],
       }
     ]
   }

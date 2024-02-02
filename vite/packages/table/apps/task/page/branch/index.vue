@@ -61,8 +61,7 @@
             >
               <xt-title m="">
                 <div class="flex items-center">
-                  <SerialNumber :id="index" />
-                  <!-- <xt-new-icon :icon="icon" class="mr-3" size="20" /> -->
+                  <SerialNumber :id="index + 1" />
                   {{ task.name }}
                 </div>
                 <template #right
