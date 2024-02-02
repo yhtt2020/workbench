@@ -33,12 +33,20 @@ const getMacEnv = () => {
   return currentEnv === "mac" ? true : false;
 };
 
+const getOffline = () => {
+  return cache.get('isOffline') ? true : false;
+}
+
+const getVisitor = () => {
+  return cache.get('isVisitor') ? true : false;
+}
+
 const currentEnv = getCurrentEnv();
 const isWeb = getWebEnv();
 const isClient = getClientEnv();
 const isMac = getMacEnv();
-const isOffline = cache.get('isOffline')
-const isVisitor = cache.get('isVisitor')
+const isOffline = getOffline();
+const isVisitor = getVisitor();
 
 export default currentEnv;
 

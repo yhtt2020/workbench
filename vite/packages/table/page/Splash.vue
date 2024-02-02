@@ -90,7 +90,8 @@ import { chatStore } from '../store/chat'
 import navigationData from '../js/data/tableData'
 import taskStore from '../page/app/todo/stores/task'
 import cache from "../components/card/hooks/cache";
-// import { offlineStore } from '../js/common/offline'
+import { offlineStore } from '../js/common/offline'
+import { visitorStore } from '../js/common/visitor'
 import { useWidgetStore } from '../components/card/store'
 // import { clockStore } from '../components/widgets/clock/hooks/clockStore';
 
@@ -145,6 +146,8 @@ export default {
     this.initStore(taskStore, 'task')
     this.initStore(useWidgetStore, 'useWidgetStore')
     this.initStore(controlStore, 'control')
+    this.initStore(offlineStore, 'offlineStore')
+    this.initStore(visitorStore, 'visitorStore')
     // this.initStore(clockStore,'clockStore')
     browserStore().bindIPC()
     captureStore()//仅触发一下载入
@@ -189,6 +192,7 @@ export default {
     ...mapWritableState(codeStore, ['myCode', 'serialHash']),
     ...mapWritableState(appStore, ['aided','settings', 'routeUpdateTime', 'userInfo', 'init', 'lvInfo', 'backgroundImage', 'style']),
     ...mapWritableState(navStore, ['sideNavigationList', 'footNavigationList', 'rightNavigationList']),
+    ...mapWritableState(visitorStore, ['isVisitor']),
     // ...mapWritableState(offlineStore, ['isOffline']),
   },
   methods: {
@@ -364,15 +368,14 @@ export default {
         this.getUserInfo()
       })
     },
-    // offline(){
-    //   this.$router.replace({ name: 'wizard' })
-    //   cache.set('isOffline',true)
-    //   window.$isOffline = true
-    //   this.isOffline = true
-    // }
+
+
     visitor(){
       this.$router.replace({ name: 'home' })
-      // cache.set('isOffline',true)
+      this.isVisitor = true
+      cache.set('isVisitor',true)
+      // console.log('window.$isVisitor', window.$isVisitor)
+      // console.log('window.useEnv', window.useEnv(["offline", "visitor", "mac"]))
       // window.$isOffline = true
       // this.isOffline = true
     }
