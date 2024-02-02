@@ -1,8 +1,15 @@
 import {getResPath, getResPathJoin} from "../../common/exec";
 import {setMuted} from "loudness";
+import { useEnv } from "../../../ui/hooks/useEnv";
 
-const path = require('path');
-const {exec, ChildProcess} = require('child_process');
+let path,exec, ChildProcess
+if (!useEnv()) {
+  path = require('path');
+  exec = require('child_process').exec
+  ChildProcess = require('child_process').ChildProcess
+
+}
+
 const iconv = window.iconv
 //此类将外部的一个项目提取到了项目当中，进行了简化，防止这个包打包之后因为路径问题而无法使用。
 //https://github.com/JosephusPaye/win-audio-outputs

@@ -25,7 +25,7 @@ export function getResPath() {
  * @param paths
  */
 export function getResPathJoin(...paths) {
-  return require('path').join(getResPath(), ...paths)
+  return path?.join(getResPath(), ...paths)
 }
 
 /**

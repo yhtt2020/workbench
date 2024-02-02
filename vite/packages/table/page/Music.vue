@@ -72,8 +72,11 @@ import { appStore } from "../store";
 import SecondPanel from "../components/SecondPanel.vue";
 import { SystemApps } from "../consts";
 import { message } from "ant-design-vue";
-
-let fs = require("fs");
+import {useEnv} from '../../../packages/table/ui/hooks/useEnv'
+let fs
+if (!useEnv('web')) {
+  fs= require("fs");
+}
 export default {
   name: "Apps",
   components: { SecondPanel },

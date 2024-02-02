@@ -4,10 +4,14 @@ import dbStorage from "./dbStorage";
 import audio from "../js/common/audio";
 import { completeTask } from "../apps/task/task"
 import {message} from "ant-design-vue";
+import { useEnv } from "../ui/hooks/useEnv";
 
+let rpc
+if (!useEnv()) {
+  rpc=window.$models.rpc
 
+}
 const readAida64 = window.readAida64
-const {rpc}=window.$models
 // @ts-ignore
 export const inspectorStore = defineStore(
   "inspectorStore",

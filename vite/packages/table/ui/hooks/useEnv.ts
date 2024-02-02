@@ -2,7 +2,7 @@ import { isWeb, isClient, isMac, isOffline, isVisitor } from "./env";
 
 const priority = ["web", "offline", "visitor", "mac", "client"];
 
-export const useEnv = (arr) => {
+export const useEnv = (arr = "web") => {
   if (typeof arr == "string") {
     return envDetection(arr);
   }
