@@ -20,6 +20,7 @@ export const getTaskStatus = (data) => {
 
 // 获取积分
 export const getTaskScore = () =>{
-  const res = post(sUrl("/app/com/scores/list"),{});
+  const option = {cache:0};
+  const res = post(sUrl("/app/com/scores/list"),option);
   return res;
 }

@@ -125,8 +125,10 @@ const currentTask = computed(() => {
 // 获取当前章节的任务所有奖励
 const currentTaskReward = computed(()=>{
   const getChapList  =  [];
+
   for(const item of chapter.value.tasks){
     const list =  getCurrentTaskReward(item.id);
+    console.log("list",list);
     for(const childrenItem of list){
       getChapList.push(childrenItem)
     }
