@@ -26,8 +26,8 @@
       
     </div> -->
     <div v-if="false"
-          style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:0">
-          <div>选中的id{{ this.isLeaveBar }} {{ isEdge }}</div>
+          style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:100px">
+          <div>选中的id:===={{ dragItem?.id }} {{ hoverIndex }}</div>
           <div v-for="( item, index) in copyFootNav" style="margin-bottom: 5px;border-bottom: 4px solid white">
             {{ index }} {{ item.name }} {{ item.id }} {{ item.children?.length }}
           </div>
@@ -128,15 +128,15 @@
                             :class="{ hover: (dragItem && item.id === hoverRealItemId('bottomContent', this.hoverIndex) && dragItem?.id !== hoverRealItemId('bottomContent', this.hoverIndex)) }"
                             style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                             @click.stop="newOpenApp(item.type, item.value, item)">
-                            <!-- <Drag :data="item" :currentId="currentId"> -->
-                            <Team v-if="item.value === 'commun'" :item="item" :placement="'top'"></Team>
-                            <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
-                              @click="openFolder(item)">
-                            </FolderVue>
-                            <template v-else>
-                              <Avatar :item="item"></Avatar>
-                            </template>
-                            <!-- </Drag> -->
+                            <Drag :data="item" currentId="bottom" @deleteFile="deleteFile">
+                              <Team v-if="item.value === 'commun'" :item="item" :placement="'top'"></Team>
+                              <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
+                                @click="openFolder(item)">
+                              </FolderVue>
+                              <template v-else>
+                                <Avatar :item="item"></Avatar>
+                              </template>
+                            </Drag>
 
                           </div>
                         </xt-menu>
@@ -578,6 +578,8 @@ export default {
     // ...mapWritableState(cardStore, ['navigationList', 'routeParams']),
     ...mapWritableState(useDeskStore, ['isEnterBar']),
 
+    ...mapWritableState(useNavBarStore,['isEnterDesk']),
+
     isMain() {
       return isMain()
     },
@@ -819,17 +821,11 @@ export default {
     ]),
     ...mapActions(useNavigationStore, ['toggleEdit', 'toggleTaskBox']),
     mergeData,
-    handleMouseEnter(e) {
-      if (this.customOpenNav) {
-        this.isLeaveBar = false
-        console.log('=========>>>>>>>鼠标离开了', this.isLeaveBar, this.controlVisible, this.folderVisible)
-      }
-    },
-    handleMouseLeave(e) {
-      if (this.customOpenNav) {
-        this.isLeaveBar = true
-        console.log('===========>>>>>>>>鼠标进入了', this.isLeaveBar,e.y , this.parentHeight )
-      }
+    deleteFile(data){
+      const index = this.copyFootNav.findIndex(item => item.id === data.id)
+      this.copyFootNav.splice(index,1)
+      console.log('删除成功');
+      this.$emit('getDelIcon', false)
     },
     listenMouse(e) {
       if (e.x < 50 || e.x > (this.parentSize - 50) || e.y > (this.parentHeight - 50)) {
@@ -1147,10 +1143,13 @@ export default {
             if (!that.isDelete) return
             // console.log(111111);
             that.delItemIcon = false
+            that.isEnterDesk = false
             let oneNav = that.copyFootNav[event.oldIndex]
             //将要删除的是否是主要功能
             if (!that.mainNavigationList.find((f) => f.name === oneNav.name)) {
               that.removeFootNavigationList(event.oldIndex)
+              that.$emit('getDelIcon', false)
+              that.hoverIndex = -1
               return
             }
             let sumList = []
@@ -1223,11 +1222,11 @@ export default {
         },
         onSort: function (event) {
           console.log('onSort', event)
-          console.log('item', that.copyFootNav[event.newIndex])
+          // console.log('item', that.copyFootNav[event.newIndex])
         },
         // 触发替换中发生的事件
         onChange(event) {
-          console.log('onChange', event, that.copyFootNav[event.newIndex])
+          console.log('onChange', event)
           console.log('item')
         },
         /**

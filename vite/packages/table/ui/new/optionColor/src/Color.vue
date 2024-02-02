@@ -3,7 +3,7 @@
     <template v-if="switch">
       <div class="item-box">
         <div class="flex items-center justify-center mr-4 item" :key=" item "
-          :style=" { background: props.colorList[`${'color' + item}`] } " v-for="(item, index) in Number(colorNum) "
+          :style=" { background: props.colorList[`${'color' + item}`] } " v-for="(item, index) in colorNum "
           @click="chooseBg(item)">
           <xt-new-icon v-show=" color == colorList[`${'color' + item}`] " icon="ri:checkbox-circle-fill"
             size="20"></xt-new-icon>
@@ -74,19 +74,22 @@ const updateBackground = (item) => {
   emit("update:color", item);
 };
 const colorIndex = ref(0);
-/**
- * 防止渲染的数据超过颜色列表
- * @param num 页面显示的数目
- * @param list 颜色列表
- */
-const limitNum = (num:number,list:Array<string>):number | undefined | any=>{
-  const length = list.length
-  num > length ? length : num
-}
-onMounted(()=>{
-  colorNum.value = limitNum(colorNum.value, Object.keys(props.colorList))
-  console.log(typeof(colorNum.value),'colorNum.value')
-})
+// /**
+//  * 防止渲染的数据超过颜色列表
+//  * @param num 页面显示的数目
+//  * @param list 颜色列表
+//  */
+// const limitNum = (num:number,list:Array<string>):number | undefined | any=>{
+//   const length = list.length
+//   let res
+//   num > length ? res = length : res = num
+//   return res
+// }
+// onMounted(()=>{
+//   colorNum.value = limitNum(colorNum.value, Object.keys(props.colorList))
+//   console.log(typeof(colorNum.value),colorNum.value,'colorNum.value')
+//   console.log(typeof(Number(colorNum.value)),'colorNum.value')
+// })
 </script>
 
 <style lang="scss" scoped>
