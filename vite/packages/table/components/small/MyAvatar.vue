@@ -49,7 +49,9 @@ export default {
           this.lvInfo.remainHour--
           if (this.lvInfo.remainHour < 0 && this.tipped === false) {
             this.tipped = true
-            ipc.send('getDetailUserInfo')
+            if (!window.useEnv()){
+              ipc.send('getDetailUserInfo')
+            }
             Modal.info({
               title: '升级提示',
               content: '恭喜您等级提升',

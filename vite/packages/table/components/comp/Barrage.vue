@@ -114,13 +114,16 @@ export default {
     manager.setOptions({
       height: 100
     })
-    tsbApi.barrage.init()
+    if (!window.useEnv()) {
+      tsbApi.barrage.init()
 
-    tsbApi.barrage.setOnUrlChanged((url) => {
-      if (this.settings.barrage.browserLink) {
-        this.changeUrl(url)
-      }
-    }) //挂载url变化事件
+tsbApi.barrage.setOnUrlChanged((url) => {
+  if (this.settings.barrage.browserLink) {
+    this.changeUrl(url)
+  }
+}) //挂载url变化事件
+
+    }
 
     this.pageUrl = 'table'// (await tsbApi.tabs.current()).sourceUrl
     if (this.settings.enableBarrage) {

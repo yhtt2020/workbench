@@ -198,6 +198,8 @@ export default defineComponent({
     },
     loadUserInfo(){
       this.loading=true
+      if (window.useEnv()) return
+
       ipc.send('getDetailUserInfo')
     }
   },
