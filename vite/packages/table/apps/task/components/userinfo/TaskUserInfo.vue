@@ -30,7 +30,7 @@
    <a-divider type="vertical" style="height: 48px; border-top: 1px solid var(--divider);" />
    <div style="width: 178px;" class="flex flex-col">
     <div class="flex justify-between items-center mb-1">
-     <div class="flex items-center flex-col">
+     <div class="flex  flex-col">
       <xt-text class="xt-text font-14 xt-font font-400">我的积分</xt-text>
       <div style="height: 4px;"></div>
       <span class="xt-text font-18 xt-font " style="font-weight: 900;">{{ myScore }}</span>
@@ -69,7 +69,7 @@ const props = defineProps({
 const myLv = computed(()=>{
   const  currentLv =  Math.floor((userInfo.value?.grade.next - userInfo.value?.grade.diff) / userInfo.value?.grade.next * 100) ;
   const lvDiff = userInfo.value?.grade.next - userInfo.value?.grade.diff;
-  console.log("currentLv lvDiff",lvDiff,currentLv,userInfo.value);
+  // console.log("currentLv lvDiff",lvDiff,currentLv,userInfo.value);
   return {
     currentLv:currentLv,
     lvDiff:lvDiff,
@@ -79,8 +79,8 @@ const myLv = computed(()=>{
 
 onMounted(()=>{
   getTaskScore().then((res)=>{
-    console.log("res",res);
-    if(res.code === 200){
+    // console.log("res",res);
+    if(res.status === 1){
       myScore.value = res.data[1].value;
     }
   })

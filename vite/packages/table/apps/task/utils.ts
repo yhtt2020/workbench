@@ -31,3 +31,13 @@ export const getCurrentTaskReward = (id:any)=>{
   return null;
  }
 }
+
+// 判断是否完成主线任务
+export const getUnFinishTaskStatus = () =>{
+ const task = taskStore();
+ const { currentTaskList } = storeToRefs(task);
+ const result:any = currentTaskList.value.find((item:any) => item.name == "M0302");
+ // console.log("result",result);
+ return result;
+}
+

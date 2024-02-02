@@ -41,6 +41,8 @@ import { storeToRefs } from "pinia";
 import XtIfyIcon from "../../../ui/new/IfyIcon/index.vue";
 import { getTaskStatus } from "../api";
 import { Avatar } from 'ant-design-vue';
+import { appStore } from "../../../store";
+
 
 import XtButton from "../../../ui/libs/button/index.vue";
 import ShowReward from "./ShowReward.vue";
@@ -48,18 +50,16 @@ import ShowReward from "./ShowReward.vue";
 onBeforeMount(() => {
   taskStatus();
 });
+
 const status = ref(0);
 const taskStatus = async () => {
-  // let { data } = await getTaskStatus({
-  //   taskName: currentId.value,
-  // });
   let res = currentTaskList.value.find((item) => item.name == currentId.value);
   status.value = res.done;
 };
 
 const store = taskStore();
-const { taskID, currentTaskList, rewardVisible, currentId, claimRewardsList } =
-  storeToRefs(store);
+const app = appStore();
+const { taskID, currentTaskList, rewardVisible, currentId, claimRewardsList } = storeToRefs(store);
 
 const currentTask = computed(() => {
   return store.getTask(currentId.value);
@@ -73,7 +73,8 @@ const close = () => {
 
 const claimReward = () => {
   emits("close-toast");
-  console.log("status.value :>> ", status.value);
+  app.getUserInfo();
+  // console.log("status.value :>> ", status.value);
   if (status.value) {
     // return;
   }

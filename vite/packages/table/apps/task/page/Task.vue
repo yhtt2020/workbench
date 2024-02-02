@@ -34,15 +34,21 @@ import { tasks } from "../page/branch/Branch.ts";
 import { useToast } from "vue-toastification";
 
 import { getAllTask } from "../api";
+import {getUnFinishTaskStatus} from "../utils";
+
+
+const store = taskStore();
+
 onMounted(() => {
   const toast = useToast();
   toast.clear();
   currentTask.value = "Primary";
+  store.initTask()
 });
 let currentTask = ref("Primary");
 let task = ref([]);
 let icon = ref("");
-const store = taskStore();
+
 
 const { updateTime, currentUpdateTime, currentTaskList } = storeToRefs(store);
 let Offline = offlineStore();
@@ -57,6 +63,7 @@ const selectBranchTab = (item) => {
   task.value = tasks[item.value];
 };
 const menusList = computed(() => {
+  const isDone = getUnFinishTaskStatus()?.done;
   if (Offline.isOffline) {
     let tmp = ref([]);
     tmp.value = menus.value.filter((i) => {
@@ -64,7 +71,17 @@ const menusList = computed(() => {
     });
     return tmp.value;
   } else {
-    return menus.value;
+    if(isDone === 0){
+      let undone = ref([])
+      undone.value = menus.value.filter((item)=>{ 
+       const option = item.value !== "efficiency" && item.value !== "games" && item.value !== "association";
+       return option;
+      })
+      return undone.value;
+    }
+    else {
+      return menus.value;
+    }
   }
 });
 // 任务配置
@@ -83,6 +100,40 @@ let menus = ref([
     callBack: selectTab,
     name: "活动",
   },
+  // {
+  //  newIcon: "fluent-emoji:bullseye",
+  //  title: "支线任务",
+  //  value: "works",
+  //  callBack: selectTab,
+  // },
+  {
+   newIcon: "fluent-emoji:rocket",
+   title: "效率办公",
+   value: "efficiency",
+   callBack: selectBranchTab,
+   name: "效率",
+  },
+  {
+   newIcon: "fluent-emoji:joystick",
+   title: "游戏辅助",
+   value: "games",
+   callBack: selectBranchTab,
+   name: "游戏",
+  },
+  {
+   newIcon: "fluent-emoji:thought-balloon",
+   title: "社群沟通",
+   value: "association",
+   callBack: selectBranchTab,
+   name: "社群",
+  },
+  // {
+  //   newIcon: "fluent-emoji:bullseye",
+  //   value: "Daily",
+  //   title: "每日任务",
+  //   callBack: selectTab,
+  //   name: "每日",
+  // },
   {
     newIcon: "fluent:settings-16-regular",
     value: "Set",
@@ -110,43 +161,3 @@ const updateTaskList = async () => {
   border-right: none !important;
 }
 </style>
-
-<!-- // // {
-// //   newIcon: "fluent-emoji:bullseye",
-// //   title: "支线任务",
-// //   value: "works",
-// //   callBack: selectTab,
-// // },
-// {
-//   newIcon: "fluent-emoji:rocket",
-//   title: "效率办公",
-//   value: "efficiency",
-//   callBack: selectBranchTab,
-//   name: "效率",
-// },
-// {
-//   newIcon: "fluent-emoji:joystick",
-//   title: "游戏辅助",
-//   value: "games",
-//   callBack: selectBranchTab,
-//   name: "游戏",
-// },
-// {
-//   newIcon: "fluent-emoji:thought-balloon",
-//   title: "社群沟通",
-//   value: "association",
-//   callBack: selectBranchTab,
-//   name: "社群",
-// },
-// //   newIcon: "fluent-emoji:bullseye",
-// //   value: "Daily",
-// //   title: "每日",
-// //   callBack: selectTab,
-// //   name: "活动",
-// // },
-// // {
-// //   newIcon: "fluent:building-shop-16-regular",
-// //   value: "Set",
-// //   title: "设置",
-// //   callBack: selectTab,
-// // }, -->

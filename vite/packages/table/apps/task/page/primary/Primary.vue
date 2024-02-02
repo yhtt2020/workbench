@@ -128,7 +128,6 @@ const currentTaskReward = computed(()=>{
 
   for(const item of chapter.value.tasks){
     const list =  getCurrentTaskReward(item.id);
-    console.log("list",list);
     for(const childrenItem of list){
       getChapList.push(childrenItem)
     }
@@ -154,7 +153,6 @@ const currentTaskReward = computed(()=>{
 
   // 等级升级预期
   const lving = Math.floor(experienceTotal / userInfo.value?.grade.next);
-  console.log("frame",getChapList);
 
   return { 
     lving:lving,
