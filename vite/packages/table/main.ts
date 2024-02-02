@@ -164,7 +164,9 @@ app.component("PanelButton", PanelButton);
 app.component("BackBtn", BackBtn);
 app.component("vueCustomScrollbar", vueCustomScrollbar);
 
-window.USER_DATA_PATH = window.globalArgs["user-data-dir"]; //挂载一个用户数据目录的常量，方便后续开发
+if (!useEnv()){
+  window.USER_DATA_PATH = window.globalArgs["user-data-dir"]; //挂载一个用户数据目录的常量，方便后续开发
+}
 
 window.$app = $app;
 initStores();

@@ -1,12 +1,9 @@
 const userAgent = window.navigator.userAgent;
 const isXT = userAgent.indexOf("天天工作台") > -1;
 const debug=true//开启这里的调试，会输出调试信息
-let model: any = "";
-if (isXT) {
-  const { storageModel } = window.$models;
-  model = storageModel;
-} else {
-  model = localStorage;
+let model: any = localStorage
+if (!window.useEnv()) {
+  model= window.$models.storageModel;
 }
 
 function getSign(): string {

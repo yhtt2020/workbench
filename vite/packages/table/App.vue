@@ -177,7 +177,7 @@ async mounted() {
     tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100).then()
   }
 
-
+if (!window.useEnv()) {
   ipc.on('updateRunningApps', async (event, args) => {
     this.runningApps = args.runningApps
     this.runningAppsInfo = {}
@@ -198,6 +198,8 @@ async mounted() {
     app.capture = args.info.capture + '?t=' + Date.now()
     app.memoryUsage = args.info.memoryUsage
   })
+}
+
 
 
   document.body.classList.add('lg')

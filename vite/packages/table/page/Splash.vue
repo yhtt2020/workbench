@@ -108,7 +108,7 @@ export default {
       launched: false,
       modal: null,
       timeoutHandler: null,
-      version: tsbApi.runtime.appVersion
+      version: window.useEnv() ? '' : tsbApi.runtime.appVersion
     }
   },
   async mounted () {
@@ -252,6 +252,8 @@ export default {
 
     },
     bindUserInfoResponse () {
+      if (window.useEnv()) return
+
       ipc.removeAllListeners('userInfo')
       ipc.on('userInfo', async (event, args) => {
         if (args.data.uid === -2) {
