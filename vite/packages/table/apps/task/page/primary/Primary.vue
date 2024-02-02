@@ -128,8 +128,10 @@ const currentTaskReward = computed(()=>{
 
   for(const item of chapter.value.tasks){
     const list =  getCurrentTaskReward(item.id);
-    for(const childrenItem of list){
-      getChapList.push(childrenItem)
+    if(list){
+      for(const childrenItem of list){
+       getChapList.push(childrenItem)
+      }
     }
   }
 
