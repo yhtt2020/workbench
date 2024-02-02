@@ -29,6 +29,21 @@
     <!-- </xt-menu> -->
   </xt-task>
   <Task v-if="store.isTaskDrawer"></Task>
+   <teleport to='body' >
+    <div class="fixed flex justify-between pr-4 pl-5 pt-4 pb-4 xt-main-bg rounded-md" v-if="!store.$state.smallMize" style="bottom:12%;right: 2%; width: 287px;">
+      <div class="w-full flex items-center justify-between">
+        <div class="flex items-center justify-center">
+          <xt-ify-icon icon="fluent-emoji:star" size="16" class="mr-2"></xt-ify-icon>
+          <span class="xt-font xt-text font-14">任务中心</span>
+        </div>
+        <xt-button w="32" h="32" style="border-radius: 8px;" @click="closeMiniMize">
+          <div class="flex items-center justify-center">
+            <xt-ify-icon icon="fluent:full-screen-maximize-16-regular" size="16"></xt-ify-icon>
+          </div>
+        </xt-button>
+      </div>
+    </div>
+  </teleport>
 </template>
 
 <script setup>
@@ -91,6 +106,11 @@ const menus = reactive([
     },
   },
 ]);
+
+const closeMiniMize = () =>{
+  store.smallMize = true;
+  store.isTaskDrawer = true;
+}
 </script>
 
 <style lang="scss" scoped></style>

@@ -28,6 +28,7 @@ export const taskStore = defineStore("taskStore", {
     currentId: "",
     currentType: "",
     taskAudio: "",
+    smallMize:true, // 任务中心最小化
   }),
   getters: {},
   actions: {

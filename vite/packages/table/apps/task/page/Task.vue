@@ -1,6 +1,6 @@
 <template>
-  <xt-modal custom v-model="store.isTaskDrawer" boxClass="rounded-xl" :mask="false">
-    <div class="xt-modal flex rounded-xl" style="width: 500px; height: 636px">
+  <xt-modal custom v-model="store.isTaskDrawer" boxClass="rounded-xl" :mask="false" v-if="smallMize">
+    <div class="xt-modal flex rounded-xl" style="width: 500px; height: 636px" >
       <xt-left-menu :list="menusList" :end="1" model="id" style="border-radius: 12px 12px 12px 0"
         leftClass=" 1 xt-main-bg py-3 h-full  "  :leftStyle="{'border-radius': '12px 0 0 12px',}"
       />
@@ -50,7 +50,7 @@ let task = ref([]);
 let icon = ref("");
 
 
-const { updateTime, currentUpdateTime, currentTaskList } = storeToRefs(store);
+const { updateTime, currentUpdateTime, currentTaskList,smallMize } = storeToRefs(store);
 let Offline = offlineStore();
 // 切换任务
 const selectTab = (item) => {
@@ -151,6 +151,8 @@ const updateTaskList = async () => {
   currentTaskList.value = data;
 };
 
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -160,4 +162,13 @@ const updateTaskList = async () => {
 :deep(.xt-br){
   border-right: none !important;
 }
+
+.pop {
+  position: fixed;
+  bottom: 16%;
+  right: 5%;
+  width: 200px !important;
+  height: 60px !important;
+}
+
 </style>

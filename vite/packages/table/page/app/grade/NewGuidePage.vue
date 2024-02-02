@@ -745,8 +745,8 @@ export default {
 // 右下角 预览桌面
 .pop {
   position: fixed;
-  bottom: 80px;
-  right: 40px;
+  bottom: 16%;
+  right: 5%;
   width: 200px;
   height: 60px;
 }
