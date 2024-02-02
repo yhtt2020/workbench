@@ -203,7 +203,7 @@
         <div class="flex" v-if="step == 4">
           <!-- <div class="flex items-center xt-text-2">暂未开放游客登录</div> -->
           <!-- <xt-button @click="finish" size="large"  class="button-bottom ml-3">暂不登录</xt-button> -->
-          <xt-button @click="visitor" v-if="!this.userInfo.uid" size="large"  class="button-bottom ml-3">游客模式</xt-button>
+          <xt-button @click="onVisitor" v-if="!this.userInfo.uid" size="large"  class="button-bottom ml-3">游客模式</xt-button>
           <xt-button type="theme" v-if="!this.userInfo.uid" @click="login" size="large"  class="button-bottom ml-3">立即登录</xt-button>
           <xt-button type="theme" v-else @click="finish" size="large"  class="button-bottom ml-3">已登录</xt-button>
         </div>
@@ -535,10 +535,10 @@ export default {
       setThemeSwitch(this.styles);
     },
     // 开启游客模式
-    visitor(){
-      this.$router.replace({ name: 'home' })
+    onVisitor(){
       cache.set("isVisitor", true)
-      // this.isVisitor = true
+      window.$isVisitor = true
+      this.finish()
     }
   }
 }

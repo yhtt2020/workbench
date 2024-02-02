@@ -265,6 +265,7 @@ export const appStore = defineStore('appStore', {
       // 但目前项目中存在掉登录的情况 暂时不能使用 userInfo 进行判断
       cache.set('isVisitor', false)
       visitorStore().isVisitor = false
+      window.$isVisitor = false
     },
 
     /**

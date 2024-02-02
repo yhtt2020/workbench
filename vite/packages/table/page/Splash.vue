@@ -39,7 +39,7 @@
               <xt-button size="mini" style="width: 100%" type="theme" @click="login">登录账号</xt-button>
             </a-col>
             <a-col flex="1">
-              <xt-button size="mini" style="width: 100%"   @click="visitor">游客模式</xt-button>
+              <xt-button size="mini" style="width: 100%"   @click="onVisitor">游客模式</xt-button>
             </a-col>
             <a-col flex="150px" v-if="netError">
               <xt-button style="width: 100%" @click="getUserInfo">重试</xt-button>
@@ -370,12 +370,13 @@ export default {
     },
 
 
-    visitor(){
+    onVisitor(){
       this.$router.replace({ name: 'home' })
       this.isVisitor = true
       cache.set('isVisitor',true)
+      window.$isVisitor = true
       // console.log('window.$isVisitor', window.$isVisitor)
-      // console.log('window.useEnv', window.useEnv(["offline", "visitor", "mac"]))
+      // console.log('window.useEnv', window.useEnv("visitor"))
       // window.$isOffline = true
       // this.isOffline = true
     }

@@ -6,7 +6,7 @@ let plat;
 
 export const useEnv = (arr) => {
   if (typeof arr == "string") {
-    return envDetection(arr);
+    return envDetection(arr)?plat:false;
   }
 
   if (!Array.isArray(arr)) {
@@ -17,8 +17,8 @@ export const useEnv = (arr) => {
   let flag: any = false;
 
   for (const iterator of arr) {
-    if (flag) return plat;
     flag = envDetection(iterator);
+    if(flag) return plat
   }
 
   return flag;
