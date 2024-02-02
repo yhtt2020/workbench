@@ -41,6 +41,7 @@ import XtState from "./libs/State/index.vue"
 import XtTab from "./libs/Tab/index.vue"
 import XtTextarea from "./libs/Textarea/index.vue"
 import XtTitle from "./libs/Title/index.vue"
+import XtStatus from "./libs/Status/index.vue"
 
 
 // 卡片控制器
@@ -84,4 +85,5 @@ export default function (app: App): void {
   app.component('XtScrollbar',XtScrollbar)
   app.component('XtDropdown',XtDropdown)
   app.component('XtUpdateDeskBg',XtUpdateDeskBg)
+  app.component('XtStatus',XtStatus)
 }

@@ -38,9 +38,9 @@
               <!-- <xt-button size="mini" style="width: 100%" type="theme" @click="login">登录/注册账号</xt-button> -->
               <xt-button size="mini" style="width: 100%" type="theme" @click="login">登录账号</xt-button>
             </a-col>
-            <!-- <a-col flex="1">
-              <xt-button size="mini" style="width: 100%"   @click="offline">离线模式</xt-button>
-            </a-col> -->
+            <a-col flex="1">
+              <xt-button size="mini" style="width: 100%"   @click="onVisitor">游客模式</xt-button>
+            </a-col>
             <a-col flex="150px" v-if="netError">
               <xt-button style="width: 100%" @click="getUserInfo">重试</xt-button>
             </a-col>
@@ -91,6 +91,7 @@ import navigationData from '../js/data/tableData'
 import taskStore from '../page/app/todo/stores/task'
 import cache from "../components/card/hooks/cache";
 import { offlineStore } from '../js/common/offline'
+import { visitorStore } from '../js/common/visitor'
 import { useWidgetStore } from '../components/card/store'
 // import { clockStore } from '../components/widgets/clock/hooks/clockStore';
 
@@ -145,6 +146,8 @@ export default {
     this.initStore(taskStore, 'task')
     this.initStore(useWidgetStore, 'useWidgetStore')
     this.initStore(controlStore, 'control')
+    this.initStore(offlineStore, 'offlineStore')
+    this.initStore(visitorStore, 'visitorStore')
     // this.initStore(clockStore,'clockStore')
     browserStore().bindIPC()
     captureStore()//仅触发一下载入
@@ -189,7 +192,8 @@ export default {
     ...mapWritableState(codeStore, ['myCode', 'serialHash']),
     ...mapWritableState(appStore, ['aided','settings', 'routeUpdateTime', 'userInfo', 'init', 'lvInfo', 'backgroundImage', 'style']),
     ...mapWritableState(navStore, ['sideNavigationList', 'footNavigationList', 'rightNavigationList']),
-    ...mapWritableState(offlineStore, ['isOffline']),
+    ...mapWritableState(visitorStore, ['isVisitor']),
+    // ...mapWritableState(offlineStore, ['isOffline']),
   },
   methods: {
     ...mapActions(cardStore, ['sortClock', 'sortCountdown']),
@@ -263,6 +267,7 @@ export default {
         this.tipped = false
         this.loading = false
         if (args.data.uid <= 0) {
+          // 网络异常 或者 游客模式 下 会卡在当前状态
           window.loadedStore['userInfo'] = true
           return
         }
@@ -363,11 +368,17 @@ export default {
         this.getUserInfo()
       })
     },
-    offline(){
-      this.$router.replace({ name: 'wizard' })
-      cache.set('isOffline',true)
-      window.$isOffline = true
-      this.isOffline = true
+
+
+    onVisitor(){
+      this.$router.replace({ name: 'home' })
+      this.isVisitor = true
+      cache.set('isVisitor',true)
+      window.$isVisitor = true
+      // console.log('window.$isVisitor', window.$isVisitor)
+      // console.log('window.useEnv', window.useEnv("visitor"))
+      // window.$isOffline = true
+      // this.isOffline = true
     }
   },
 }

@@ -13,7 +13,7 @@
         UID：{{ userInfo.uid }} （用于社区活动身份）
       </a-col>
       <a-col :span="24">
-        社区等级：{{ userInfo?.grade.new_name }}
+        社区等级：{{ userInfo?.grade?.new_name }}
       </a-col>
       <a-col :span="24" style="text-align: center">
         <a-row>

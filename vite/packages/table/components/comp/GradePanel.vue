@@ -10,7 +10,7 @@
               <a-col :span="20" style="padding-left: 20px">
                 <div style="font-size: 16px;font-weight: bold">{{ userInfo.nickname }}</div>
                 <div class="live-grade" style="cursor:pointer;">
-                  <div class="ts-grade flex justify-start align-center grade-icon" style="margin-top: 4px" v-if="grade.lv > 0" @click="openTip">
+                  <div class="ts-grade flex justify-start align-center grade-icon" style="margin-top: 4px" v-if="grade?.lv > 0" @click="openTip">
                     <div class="ts-grade-crown" v-for="item in userInfo.onlineGradeIcons.crown">
                       <img :src="item.icon" alt="" style="width: 20px; height: 20px">
                     </div>
@@ -34,13 +34,13 @@
           </a-col>
           <a-col :span="10">
             <div class="p-1" style="line-height: 2;background: #333;border-radius: 8px;text-align: center;background-color: var(--active-bg);">
-              在线等级: <span style="font-size: 18px">{{ grade.lv }}</span>级
+              在线等级: <span style="font-size: 18px">{{ grade?.lv }}</span>级
               <div v-if="badge.rank < 300"
                    style="border-radius: 6px;line-height: 18px;padding-bottom:7px"
               ><span>
                                    全球排名:<span style="font-size: 20px;"> {{ badge.rank }}</span>
 </span></div>
-              <div v-else> 超过{{ (grade.percentage*100).toFixed(2) }}%的用户</div>
+              <div v-else> 超过{{ (grade?.percentage*100).toFixed(2) }}%的用户</div>
 
             </div>
           </a-col>
@@ -56,7 +56,7 @@
                 times
               }}次）</span></div>
             <div class="text-grey mt-2" style="line-height: 2">累计在线时长:
-              {{ grade.cumulativeHours }}小时{{ grade.cumulativeMinutes }}分
+              {{ grade?.cumulativeHours }}小时{{ grade?.cumulativeMinutes }}分
             </div>
             <!-- 快速搜索 等级权益 排名 -->
             <div class="badge-box" :style="{'border-color':this.getBadge().color}">
@@ -160,12 +160,15 @@ export default defineComponent({
     this.getUserInfo()
     this.onlineGrade = this.userInfo.onlineGrade
     this.grade = this.userInfo.onlineGradeExtra
-    let lv = this.grade.lv
-    let section = this.gradeTableGenerate(64)[lv + 1]
-    let remain = section[0] * 60 - this.grade.cumulativeMinute
-    this.remainHour = Math.floor(remain / 60)
-    this.remainMinute = remain - (Math.floor(remain / 60) * 60)
-    this.times = this.getTimes()
+    // 处理游客模式报错
+    if(this.grade){
+      let lv = this.grade.lv
+      let section = this.gradeTableGenerate(64)[lv + 1]
+      let remain = section[0] * 60 - this.grade.cumulativeMinute
+      this.remainHour = Math.floor(remain / 60)
+      this.remainMinute = remain - (Math.floor(remain / 60) * 60)
+      this.times = this.getTimes()
+    }
   },
 
   methods: {
@@ -225,7 +228,7 @@ export default defineComponent({
             times--
             this.times = times
             this.setTimes(times)
-            this.distance = (this.grade.distance / 60).toFixed(0) + '小时' + this.grade.distance % 60 + '分'
+            this.distance = (this.grade?.distance / 60).toFixed(0) + '小时' + this.grade?.distance % 60 + '分'
             message.success('已为您查看前一名距离。')
             confirm.destroy()
             return true

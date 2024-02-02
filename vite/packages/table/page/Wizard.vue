@@ -201,11 +201,11 @@
       <!-- 按钮 -->
       <div class="flex" style="width:100%;justify-content: flex-end;position: absolute;right: 12px;bottom: 12px;">
         <div class="flex" v-if="step == 4">
-          <!-- <xt-button @click="finish" size="large"  class="button-bottom ml-3">暂不登录
-          </xt-button> -->
-          <div class="flex items-center xt-text-2">暂未开放游客登录</div>
+          <!-- <div class="flex items-center xt-text-2">暂未开放游客登录</div> -->
+          <!-- <xt-button @click="finish" size="large"  class="button-bottom ml-3">暂不登录</xt-button> -->
+          <xt-button @click="onVisitor" v-if="!this.userInfo.uid" size="large"  class="button-bottom ml-3">游客模式</xt-button>
           <xt-button type="theme" v-if="!this.userInfo.uid" @click="login" size="large"  class="button-bottom ml-3">立即登录</xt-button>
-          <xt-button type="theme" v-if="this.userInfo.uid" @click="finish" size="large"  class="button-bottom ml-3">已登录</xt-button>
+          <xt-button type="theme" v-else @click="finish" size="large"  class="button-bottom ml-3">已登录</xt-button>
         </div>
         <!-- <div class="flex" v-else-if="step == 5">
           <xt-button class="button-bottom ml-3" @click="finish"   size="large" type="theme">快速开始</xt-button>
@@ -242,6 +242,7 @@ import { setThemeSwitch } from "../components/card/hooks/themeSwitch";
 import { chatStore } from '../store/chat'
 // 顶部状态
 import TopPanel from '../components/TopPanel.vue'
+import { visitorStore } from '../js/common/visitor'
 
 const { settings } = window.$models
 export default {
@@ -259,6 +260,7 @@ export default {
     ...mapWritableState(navStore, ['sideNavigationList', 'footNavigationList', 'rightNavigationList']),
     ...mapWritableState(appStore, ['settings', 'init', 'styles','userInfo','deskInit']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
+    ...mapWritableState(visitorStore, ['isVisitor']),
 
     // 标题名称
     title(){
@@ -532,6 +534,12 @@ export default {
       this.styles = !this.styles
       setThemeSwitch(this.styles);
     },
+    // 开启游客模式
+    onVisitor(){
+      cache.set("isVisitor", true)
+      window.$isVisitor = true
+      this.finish()
+    }
   }
 }
 </script>
