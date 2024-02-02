@@ -85,6 +85,7 @@ export default {
   },
   mounted() {
     //确认自启动，如果未启动，则静默启动
+    if (window.useEnv()) return
     let running = ipc.sendSync("ensureTableApp", {
       app: SystemApps.wyyMusic,
     });

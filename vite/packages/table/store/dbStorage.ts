@@ -22,9 +22,8 @@ function getSign(): string {
 
 const dbStorage: Storage = {
   async setItem(key: string, value: string) {
-    if (window.useEnv()) return
     const time=Date.now()
-    model.setItem(key, value, getSign()).then(()=>{
+    model?.setItem(key, value, getSign())?.then(()=>{
       if(debug){
         if(!window.writeLog){
           window.writeLog=[]

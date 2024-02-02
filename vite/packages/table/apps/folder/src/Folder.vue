@@ -18,39 +18,31 @@
       v-model:customSize="customData.customSize"
       @resize="testss"
     >
-      <!-- 右侧布局切换 -->
-      <!-- <Resize
-        :disabled="expand.disabled"
-        v-model:size="customData.customSize"
-        :modalSize="modalSize"
-        :disabled="navBar.resize"
-      > -->
       <!-- 空状态显示状态 -->
       <template v-if="customData.list.length <= 0 && !dragSortState">
         <Null :size="customData.customSize" @addFile="addFileClick" />
       </template>
       <vue-custom-scrollbar
-
-          style="padding-right: 4px"
-          :settings="{
-             useBothWheelAxes: true,
-            suppressScrollY: false,
-          }"
-          class="relative w-full h-full"
-        >
-      <File
-        :list="customData.list"
-        :layout="customData.layout"
-        :model="customData.model"
-        :modalSize="modalSize"
-        @deleteFile="deleteFile"
-        @updateFile="updateFile"
-        @updateList="updateList"
-        @updateSort="updateSort"
-        @clickFile="clickFile"
-      />
+        v-else
+        style="padding-right: 4px"
+        :settings="{
+          useBothWheelAxes: true,
+          suppressScrollY: false,
+        }"
+        class="relative w-full h-full"
+      >
+        <File
+          :list="customData.list"
+          :layout="customData.layout"
+          :model="customData.model"
+          :modalSize="modalSize"
+          @deleteFile="deleteFile"
+          @updateFile="updateFile"
+          @updateList="updateList"
+          @updateSort="updateSort"
+          @clickFile="clickFile"
+        />
       </vue-custom-scrollbar>
-      <!-- </Resize> -->
     </xt-container>
   </Drop>
 
@@ -136,9 +128,9 @@ const addFileClick = () => {
   navigationStore.selectNav = "desktop";
   editVisible.value = true;
 };
-const testss= (data)=> {
-  console.log('data :>> ', data);
-}
+const testss = (data) => {
+  console.log("data :>> ", data);
+};
 const addFile = (data) => {
   const { name, icon, type, value } = data;
   let fileInfo = {
@@ -207,7 +199,7 @@ const header = computed(() => {
     leftHoverIcon: secondary.value
       ? "fluent:settings-16-regular"
       : "fluent:open-16-regular",
-      //
+    //
     rightIcon: [
       {
         ifyIcon: "fluent:open-16-regular",
