@@ -1,29 +1,45 @@
 <template>
-  <div :class=[dropClass] @drop="handleDrop" @dragover="handleDragover" @dragenter="handleDragenter"
-    @dragleave="handleDragleave" ref="target" @mouseup="handleMouseUp" @mouseleave="handleMouseleave"
-    @mouseover="handleMouseover" @mouseenter="handleMouseEnter">
+  <div :class=[dropClass]
+      @drop="handleDrop"
+      @dragover="handleDragover"
+      @dragenter="handleDragenter"
+      @dragleave="handleDragleave"
+      ref="target"
+      @mouseup="handleMouseUp"
+      @mouseleave="handleMouseleave"
+      @mouseover="handleMouseover"
+      @mouseenter="handleMouseEnter">
     <slot></slot>
   </div>
 </template>
 <script></script>
 <script setup>
 import { nanoid } from "nanoid";
-import { ref, computed,watch } from "vue";
+import { ref, computed,watch,provide } from "vue";
 import { storeToRefs } from "pinia";
 import { useFolderStore } from "../../../../../apps/folder/src/store";
 import { useDeskStore } from "../../../../../components/desk/store";
 import { useNavBarStore } from '../../navBar'
 import { useNavigationStore } from '../../navigationStore'
-import { useIconConversionNav, useFileConversionNav, useDeskConversionNav,useLinkConversionNav } from "../../../../../apps/folder/src/hooks/useDataConversion";
+import {
+  useIconConversionNav,
+  useFileConversionNav,
+  useDeskConversionNav,
+  useLinkConversionNav } from "../../../../../apps/folder/src/hooks/useDataConversion";
 import { myIcons } from "../../../../../store/myIcons";
 import _ from 'lodash-es'
-import { getHostAddress } from "../../../../widgets/myIcons/edit/hooks/getHostAddress";
-import { useGetUrlName,getFavicon } from "../../hook/getUrlName";
-import pathLib from 'path'
+import { getFavicon } from "../../hook/getUrlName";
+import { useMouseInElement } from '@vueuse/core'
 
+const target = ref(null);
+const isNavBar = ref(false)
+isNavBar.value = useMouseInElement(target);
+watch(()=>isNavBar.value.isOutside,(newV,oldV)=>{
+  isEnterDesk.value = newV
+})
 // 导航栏数据
 const navBarStore = useNavBarStore()
-const { navBarId, navBarItem } = storeToRefs(navBarStore)
+const { navBarId, navBarItem,isEnterDesk } = storeToRefs(navBarStore)
 const navigationStore = useNavigationStore()
 const { customOpenNav, isLeaveBar } = storeToRefs(navigationStore)
 
@@ -94,6 +110,8 @@ const handleDragover = (dragEvent) => {
 };
 
 const handleDragleave = (dragEvent) => {
+  console.log('我已经离开了')
+  // isEnterBar.value = true;
 }
 
 /**
@@ -187,7 +205,6 @@ const handleLinkDrop = async (dragEvent, currentX) => {
 
     if (!http && !https) {
       link = 'http://' + link;
-      console.log(link, 'linkData');
     }
 
     const linkIcon = await getFavicon(link);
@@ -195,7 +212,6 @@ const handleLinkDrop = async (dragEvent, currentX) => {
     const target = { name:linkIcon.pageTitle, icon: linkIcon.faviconURL, value: link };
 
     const file = useLinkConversionNav(target);
-    console.log(file, 'file');
     emit('createFile', file, currentX);
   }
 };

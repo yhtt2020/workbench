@@ -463,6 +463,7 @@ export default {
       "visibleScale",
       "visibleGuide",
       "showGuide",
+      "guideList",
 
     ]),
 
@@ -995,6 +996,7 @@ export default {
     addGuide(deskId) {
       this.deskId = deskId
       this.showGuide = true
+      this.guideList = [0, 1, 2, 3, 4]
     },
     // 关闭引导弹窗
     closeShowGuide() {

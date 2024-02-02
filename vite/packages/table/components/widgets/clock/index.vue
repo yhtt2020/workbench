@@ -1,5 +1,5 @@
 <template>
- <xt-container :customIndex="customIndex" :customData="customData" :desk="desk" 
+ <xt-container :customIndex="customIndex" :customData="customData" :desk="desk"
   :defaultData="defaultClockData" :menuList="menuList" v-model:customSize="customData.customSize"
   :header="header" :options="option"  @leftClick="fullScreen" @resize="resize"
  >
@@ -14,14 +14,14 @@
 
  </xt-container>
 
- <ClockSettingModal  ref="clockSettingRef" :customIndex="customIndex" 
+ <ClockSettingModal  ref="clockSettingRef" :customIndex="customIndex"
   :desk="desk" :customData="customData" @updateClockStyle="updateClockStyle" :isFull="false"
-  @restZoom="restZoom" 
+  @restZoom="restZoom"
  />
 
 
 <ClockFullScreen  v-if="isClockFullScreen"  :customData="customData"
-:clock="customData.clockId"  :bgZoom="customData.bgZoom"  :imgUrl="fullImage" 
+:clock="customData.clockId"  :bgZoom="customData.bgZoom"  :imgUrl="fullImage"
 @updateClockStyle="updateClockStyle" @updateBgZoom="updateBgZoom" @exit="isClockFullScreen = false"
 >
 
@@ -56,7 +56,7 @@ export default {
  data(){
   return{
    menuList: [
-    { 
+    {
      icon: "shezhi1",title: "设置",
      fn: () => {
       this.$refs.clockSettingRef.openClockModal();
@@ -64,7 +64,7 @@ export default {
     },
    ],
    key: Date.now(),
-   week: ["周末", "周一", "周二", "周三", "周四", "周五", "周六"],
+   week: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
    defaultClockData:defaultClockData,
    isClockFullScreen:false,
    bgZoom: this.customData.bgZoom,

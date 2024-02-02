@@ -27,6 +27,7 @@ import { defaultData } from "./options";
 
 import {useLinkConversionNav} from '../../../../apps/folder/src/hooks/useDataConversion'
 import { useGetUrlName, getFavicon } from "../../../../components/desk/navigationBar/hook/getUrlName";
+import { useNavBarStore } from "../../../../components/desk/navigationBar/navBar";
 // 获取桌面数据
 const deskStore = useDeskStore();
 const { isEnterFolder } = storeToRefs(deskStore);
@@ -46,6 +47,10 @@ const isOutside = inject("isOutside", false);
 // 自定义事件
 const emits = defineEmits(["createFile", "deleteFile", "updateBg"]);
 
+// 获取导航栏数据
+const useNavBar = useNavBarStore();
+const { navBarId, navBarItem,isLeaveBar,isEnterDesk } = storeToRefs(useNavBar);
+
 //
 const drop =ref(null)
 
@@ -54,6 +59,7 @@ const drop =ref(null)
  * 处理drop放置
  */
 const handleDrop = async (dragEvent) => {
+  console.log("拖拽元素放置 :>> ", dragEvent.dataTransfer);
   isEnterFolder.value = false;
   // 非自定义模式禁止图标组件添加
   if (data.value.model !== "custom") return;
@@ -63,6 +69,20 @@ const handleDrop = async (dragEvent) => {
     move.value = true;
     emits("createFile", { ...currentData.value, id: Date.now() });
     return;
+  }
+
+  // 导航栏图标拖拽到文件夹
+  if(!isOutside.value && navBarId.value && navBarItem.value){
+    if(navBarItem.value.type === 'folder'){
+      navBarItem.value.children.forEach((item)=>{
+        emits('createFile', item)
+      })
+    }else{
+      emits('createFile', navBarItem.value)
+    }
+    isLeaveBar.value = true
+    isEnterDesk.value = false
+    return
   }
   
   // console.log("handleDrop :>> ",dragEvent.dataTransfer.getData('text/plain'));

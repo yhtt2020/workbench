@@ -82,7 +82,6 @@ import Introduce from './components/Introduce.vue'
 import { webMenus } from './index'
 import navigationData from '../../../js/data/tableData'
 import { getNavList } from '../../../page/app/addIcon/api/api'
-import Custom from './components/Coutom.vue'
 import { addIconPosition } from './index'
 import Sortable from 'sortablejs'
 import { message } from 'ant-design-vue'
@@ -99,7 +98,6 @@ export default {
     components: {
         NewModel,
         Introduce,
-        Custom,
         Msg,
         customLink
     },
