@@ -4,8 +4,13 @@ import {message} from "ant-design-vue";
 import filenamify from "filenamify";
 
 import {timeStamp} from '../util'
+import { useEnv } from "../ui/hooks/useEnv";
 
-const fs = require('fs')
+let fs
+if (!useEnv()) {
+  fs = require('fs')
+
+}
 // @ts-ignore
 export const captureStore = defineStore("captureStore", {
   state: () => ({

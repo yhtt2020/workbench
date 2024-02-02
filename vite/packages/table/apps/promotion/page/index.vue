@@ -66,8 +66,12 @@
   import appsListDetail24Regular from '@iconify-icons/fluent/apps-list-detail-24-regular';
   import peopleCommunity16Regular from '@iconify-icons/fluent/people-community-16-regular';
   import money16Regular from '@iconify-icons/fluent/money-16-regular';
+let appModel
+import {useEnv} from '../../../ui/hooks/useEnv'
+  if (!useEnv()) {
+    appModel= window.$models.appModel
 
-  const { appModel } = window.$models
+  }
 
     export default {
       name: 'Promotion',

@@ -5,11 +5,19 @@ import {get} from "../js/axios/request";
 import {localCache} from '../js/axios/serverCache'
 import axios from "axios";
 const juheGet = sUrl('/app/juhe/get')
-const https=require('https')
-// 跳过检验证书
-const agent=new https.Agent({
-    rejectUnauthorized:false
+
+import { useEnv } from "../ui/hooks/useEnv";
+let https,agent
+if(!useEnv()) {
+  https=require('https')
+
+  // 跳过检验证书
+  agent =new https.Agent({
+  rejectUnauthorized:false
 })
+
+}
+
 
 // @ts-ignore
 export const oilStore = defineStore("OilPrices", {

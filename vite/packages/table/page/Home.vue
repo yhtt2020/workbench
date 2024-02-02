@@ -257,13 +257,23 @@ import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
 import { defaultFreeLayoutStore } from './defaultFreeLayout'
 import { useFreeLayoutStore } from "../components/desk/freeLayout/store";
 import { mergeData } from '../ui/hooks/useDataConversion'
-const { steamUser, steamSession, path, https, steamFs } = $models;
-if (steamUser && steamSession) {
-  const { LoginSession, EAuthTokenPlatformType } = steamSession;
+import {useEnv} from '../ui/hooks/useEnv'
+let steamUser, steamSession, path, https, steamFs, LoginSession, EAuthTokenPlatformType
+if (!useEnv("web")) {
+  steamUser= $models.steamUser
+  steamSession= $models.steamSession
+  path= $models.path
+  https= $models.https
+  steamFs= $models.steamFs
+  if (steamUser && steamSession) {
+    LoginSession =  steamSession.LoginSession;
+    EAuthTokenPlatformType =  steamSession.EAuthTokenPlatformType;
   var session = new LoginSession(EAuthTokenPlatformType.SteamClient);
   var client = new steamUser({
     enablePicsCache: true,
   });
+}
+
 }
 
 let List = [];
