@@ -234,6 +234,8 @@ const login = () =>{
  tsbApi.user.login((data) => {
   ipc.send('getDetailUserInfo')
   appStore().getUserInfo()
+  appStore().deskInit = true
+  appStore().finishWizard()
  })
 }
 </script>

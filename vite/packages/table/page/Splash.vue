@@ -378,7 +378,7 @@ export default {
       cache.set('isVisitor',true)
       window.$isVisitor = true
       // console.log('window.$isVisitor', window.$isVisitor)
-      // console.log('window.useEnv', window.useEnv("visitor"))
+      // console.log('window.$useEnv', window.$useEnv("visitor"))
       // window.$isOffline = true
       // this.isOffline = true
     }

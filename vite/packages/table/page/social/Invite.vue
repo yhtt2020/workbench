@@ -115,7 +115,7 @@
   </div>
 
   <div v-else class=" xt-bg h-full rounded-xl ">
-    <xt-status ele="邀请功能" :list="['visitor']" ></xt-status>
+    <xt-status name="邀请功能" :limitEnv="['visitor']" ></xt-status>
   </div>
 </template>
 

@@ -244,6 +244,7 @@ import { chatStore } from '../store/chat'
 import TopPanel from '../components/TopPanel.vue'
 import {useEnv} from '../ui/hooks/useEnv'
 import { visitorStore } from '../js/common/visitor'
+import cache from "../components/card/hooks/cache";
 let settings
 if ( !useEnv('web')) {
   settings= window.$models.settings

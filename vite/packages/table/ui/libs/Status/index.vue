@@ -12,12 +12,20 @@
       <div
         class="mt-4"
         :style="{ fontSize: fontSize }"
+        style="font-size: 14px; color: var(--secondary-text)"
+      >
+        {{ ele }}在{{ plat }}下不可用
+      </div>
+      <div
+        class="mt-4"
+        :style="{ fontSize: fontSize }"
         style="
+          font-family: 'PuHuiTi400';
           font-size: 14px;
           color: var(--secondary-text);
         "
       >
-        {{ ele }}在{{ plat }}下不可用
+        {{ name }}在{{ plat }}下不可用
       </div>
     </div>
   </div>
@@ -33,16 +41,12 @@ export default {
   },
   components: {},
   mounted() {
-    console.log("list", this.list);
-    console.log("window.useEnv", window.$useEnv(this.list));
-    const tmp = window.$useEnv(this.list);
-    this.plat = tmp;
-    // window.useEnv(["offline", "visitor", "mac"])
+    this.plat = window.$useEnv(this.limitEnv);
   },
   watch: {},
   props: {
     // 元素名称
-    ele: {
+    name: {
       type: String,
       default: "帕鲁",
     },
@@ -61,7 +65,7 @@ export default {
       type: Number,
       default: 100,
     },
-    list: {
+    limitEnv: {
       type: Array,
       default: ["offline", "visitor", "mac"],
     },
