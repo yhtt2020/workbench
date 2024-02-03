@@ -115,7 +115,7 @@ export const steamUserStore = defineStore("steamUser", {
         });
         return
       }
-      client.logOn({"refreshToken": this.steamLoginData.refreshToken})
+      client?.logOn({"refreshToken": this.steamLoginData.refreshToken})
       client.on('loggedOn', (res, err) => {
         client.setPersona(steamUser.EPersonaState.Online);
         client.on('accountInfo', (name, country, authedMachine, flags, facebookID, facebookName) => {

@@ -8,14 +8,15 @@
 <template>
   <!-- 右键菜单 -->
   <RightMenu
+    v-model:size="currentSize"
     :menus="menus"
     :customIndex="customIndex"
-    v-model:size="currentSize"
     :sizeList="sizeList"
     :disableHierarchy="options.hierarchy"
   >
     <!-- 小组件控制器开始 -->
     <div
+      ref="container"
       v-if="!options?.custom"
       class="flex flex-col widget rounded-xl"
       :class="[edit ? 'editing' : '', options.shadow ? '' : 'shadow xt-shadow']"
@@ -28,6 +29,7 @@
         },
       ]"
     >
+      {{ key }}
       <!-- 小组件头部开始 -->
       <div
         v-if="!header.disabled"
@@ -199,6 +201,7 @@ import { storeToRefs } from "pinia";
 import { cardStore as useCardStore } from "../../store/card";
 import { useWidgetStore } from "./store";
 import { useFreeLayoutStore } from "../desk/freeLayout/store";
+import { useMouseInElement } from "@vueuse/core";
 
 import vueCustomScrollbar from "../../../../src/components/vue-scrollbar.vue";
 import Resize from "./Resize.vue";
@@ -207,7 +210,14 @@ import { useEnv } from "../../ui/hooks/useEnv";
 
 import { deepMerge } from "./ContainerUtils";
 
+const container = ref(null);
+const { isOutside } = useMouseInElement(container);
 const { proxy } = getCurrentInstance();
+const status = computed(() => {
+  return {
+    isOutside: isOutside.value,
+  };
+});
 
 /**
  * pinia
@@ -218,8 +228,7 @@ const cardStore = useCardStore();
 const widgetStore = useWidgetStore();
 const { edit } = storeToRefs(widgetStore);
 // 自由布局
-const freeLayoutStore = useFreeLayoutStore();
-const { isSelectAll } = storeToRefs(freeLayoutStore);
+// const freeLayoutStore = useFreeLayoutStore();
 // props
 /**
  * 均为重构后新的数据结构 和旧版有差异 需要阅读源码
@@ -372,9 +381,12 @@ const props = defineProps({
    * 参数可选 ["web", "offline", "visitor", "mac", "client"]
    */
   limitEnv: { type: Array, default: () => [] },
-  // env
+  /**
+   * 返回小组件控制器所有信息
+   * isOutside 是否处于小组件内部
+   */
+  status: {},
 });
-
 const { header } = toRefs(props);
 onBeforeMount(() => {
   // 处理默认数据
@@ -386,6 +398,7 @@ onBeforeMount(() => {
 // emits 小组件事件回调
 /**
  * update:customSize 双向数据绑定customSize
+ * update:status 双向数据绑定status
  * leftClick 头部左侧鼠标经过点击回调
  * delete 小组件删除回调
  * resize 更新卡片大小回调
@@ -395,6 +408,8 @@ const emits = defineEmits([
   "leftClick",
   "delete",
   "resize",
+  "update:data",
+  "update:status",
 ]);
 
 /**
@@ -408,7 +423,7 @@ const showIconHover = ref(false);
 const showTitleHover = ref(false);
 // 当前卡片尺寸
 const currentSize = ref(props.customSize);
-console.log("props.limitEnv :>> ", props.limitEnv);
+
 /**
  * 计算属性
  */
@@ -508,6 +523,14 @@ watch(
   }
 );
 
+// 更新小组件状态
+watch(
+  () => status.value,
+  (val) => {
+    console.log("123 :>> ", 123);
+    emits("update:status", val);
+  }
+);
 /**
  * 方法
  */

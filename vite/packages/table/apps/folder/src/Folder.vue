@@ -6,6 +6,7 @@
     ref="folder"
   >
     <xt-container
+      v-model:status="status"
       :modalSize="modalSize"
       :options="options"
       :customIndex="customIndex"
@@ -115,6 +116,7 @@ const resize = computed(() => {
   }
   return true;
 });
+const status = ref();
 /**
  * 文件添加
  */
@@ -128,10 +130,10 @@ const addFileClick = () => {
   navigationStore.selectNav = "desktop";
   editVisible.value = true;
 };
-const deleteFn =(fn)=>{
-  console.log('fn :>> ', fn);
-  fn()
-}
+const deleteFn = (fn) => {
+  console.log("fn :>> ", fn);
+  fn();
+};
 
 const addFile = (data) => {
   const { name, icon, type, value } = data;
@@ -278,6 +280,7 @@ const sizeList = ref([
   },
 ]);
 
+console.log("status.value :>> ", status.value);
 provide("index", customIndex);
 provide("data", customData);
 provide("isOutside", isOutside);
