@@ -1,4 +1,4 @@
-import {defineStore} from "pinia";
+import { defineStore } from "pinia";
 import dbStorage from "../../store/dbStorage";
 import {mapActions, mapState,mapWritableState} from "pinia";
 import cache from "../../components/card/hooks/cache";
@@ -8,25 +8,23 @@ export const visitorStore = defineStore("visitorStore", {
   state: () => ({
     isVisitor:false,
     
-    offlineList:['weather','OilPrices','news','historyInfo','smallRank','gameInformation','yuanCommunity','signIn','Courier'],
-    // 屏蔽导航栏
-    navList:['chat', 'market'],
-    // 屏蔽轻应用
-    appList:['应用市场','元社区'],
+    // offlineList:['weather','OilPrices','news','historyInfo','smallRank','gameInformation','yuanCommunity','signIn','Courier'],
+    // // 屏蔽导航栏
+    // navList:['chat', 'market'],
+    // // 屏蔽轻应用
+    // appList:['应用市场','元社区'],
 
 
   }),
   getters:{},
   actions: {
     changeVisitor(){
-      cache.set('isVisitor',this.isVisitor)
+      this.isVisitor = !this.isVisitor
       window.$isVisitor = this.isVisitor
-      // if (appStore().settings.enableBarrage) {
-      //   appStore().settings.enableBarrage = false
-      // }
+      cache.set('isVisitor', this.isVisitor)
     },
     getIsVisitor(){
-      return cache.get('isVisitor')
+      return this.isVisitor
     }
   },
   persist: {

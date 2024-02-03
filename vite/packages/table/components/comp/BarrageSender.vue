@@ -12,10 +12,11 @@
 
 <script>
 import { message } from 'ant-design-vue'
-import { mapActions, mapState } from 'pinia'
+import { mapActions, mapState, mapWritableState } from 'pinia'
 import { teamStore } from '../../store/team'
 // import {completeTask} from "../../apps/task/page/branch/task.ts"
 import {completeTask} from "../../apps/task/task"
+import { appStore } from '../../store'
 export default {
   name: 'BarrageSender',
   props:['currentChannel'],
@@ -27,7 +28,7 @@ export default {
     }
   },
   mounted () {
-console.log('this.currentChannel.name :>> ', this.currentChannel.name);
+    console.log('this.currentChannel.name :>> ', this.currentChannel.name);
 
 if (!this.useEnv()) {
   this.CONST = tsbApi.barrage.CONST
@@ -35,56 +36,72 @@ if (!this.useEnv()) {
   },
   computed:{
     ...mapState(teamStore, ['my','myTeamNo','myTeam']),
+    ...mapWritableState(appStore,['userInfo']),
   },
   methods:{
     ...mapActions(teamStore,['updateMy']),
     async postBarrage () {
-
-      if (!this.postContent) {
-        message.error('请输入弹幕内容')
-        return
-      } else {
-        completeTask('Z0501')
-        let channelType=this.CONST.CHANNEL.PUBLIC
-        let pageUrl='table'
-        if(this.currentChannel.name!=='all'){
-          channelType=this.CONST.CHANNEL.TEAM
-          pageUrl=this.myTeamNo
-          completeTask('Z0502')
-          if(String(pageUrl).trim()===''){
-            await this.updateMy()
-            if(String(pageUrl).trim()===''){
-              message.error('小队号错误，无法发送弹幕')
-            }
-            return
-          }
-        }
-        let data = {
-          channel_type:channelType ,
-          content: this.postContent,
-          page_url: String(pageUrl),
-        }
-        let rs = await tsbApi.barrage.add(data)
-        if (rs.status) {
-          this.postContent = ''
-          if (!this.hideAdmin) {
-            this.hideAdmin = true
-          }
-          console.log('33233333 :>> ', 33233333);
-          message.success('弹幕发送成功')
-
-          setTimeout(() => {
-            if(this.currentChannel.name==='all'){
-              this.$emit('loadAllBarrages')
-            }else{
-              this.$emit('loadTeamBarrage')
-            }
-          }, 5000)
+      if(!window.useEnv('visitor')){
+        if (!this.postContent) {
+          message.error('请输入弹幕内容')
+          return
         } else {
-          console.error(rs)
-          message.error('弹幕发送失败，失败原因：' + rs)
+          completeTask('Z0501')
+          let channelType=this.CONST.CHANNEL.PUBLIC
+          let pageUrl='table'
+          if(this.currentChannel.name!=='all'){
+            channelType=this.CONST.CHANNEL.TEAM
+            pageUrl=this.myTeamNo
+            completeTask('Z0502')
+            if(String(pageUrl).trim()===''){
+              await this.updateMy()
+              if(String(pageUrl).trim()===''){
+                message.error('小队号错误，无法发送弹幕')
+              }
+              return
+            }
+          }
+          let data = {
+            channel_type:channelType ,
+            content: this.postContent,
+            page_url: String(pageUrl),
+          }
+          let rs = await tsbApi.barrage.add(data)
+          if (rs.status) {
+            this.postContent = ''
+            if (!this.hideAdmin) {
+              this.hideAdmin = true
+            }
+            console.log('33233333 :>> ', 33233333);
+            message.success('弹幕发送成功')
+  
+            setTimeout(() => {
+              if(this.currentChannel.name==='all'){
+                this.$emit('loadAllBarrages')
+              }else{
+                this.$emit('loadTeamBarrage')
+              }
+            }, 5000)
+          } else {
+            console.error(rs)
+            message.error('弹幕发送失败，失败原因：' + rs)
+          }
         }
+      }else{
+
+        this.$xtConfirm("登录提示", '目前处于游客模式，请登陆后体验完整功能。', {
+          ok: () => {
+            tsbApi.user.login((data) => {
+              appS.getUserInfo()
+            })
+          },
+          okText: "立即登录",
+          noText: "暂不登录",
+          okButtonWidth: '95',
+          noButtonWidth: '95',
+        });
       }
+
     },
   }
 }

@@ -1,5 +1,6 @@
 import { isWeb, isClient, isMac, isOffline, isVisitor } from "./env";
-import { watch } from "vue";
+
+import cache from "../../components/card/hooks/cache";
 // 权限匹配优先级
 const priority = ["web", "offline", "visitor", "mac", "client"];
 // 路由限制
@@ -23,12 +24,13 @@ const componentLimit = {
 };
 // 汇总所有限制
 const allLimits = {
-  web: [...routerLimit.web, ...componentLimit.web],
-  client: [""],
-  mac: [""],
-  offline: [""],
-  visitor: [""],
+  "网页端": [...routerLimit.web, ...componentLimit.web],
+  "mac端": [""],
+  "客户端": [""],
+  "离线模式": [""],
+  "游客模式": [""],
 };
+
 
 export const useEnv = (arr = "web") => {
   if (typeof arr == "string") {
@@ -70,22 +72,24 @@ const envSort = (arr) => {
 };
 const envDetection = (type) => {
   if (type == "web") {
-    return isWeb ? "web" : "";
+    return isWeb ? "网页端" : "";
   } else if (type == "client") {
-    return isClient ? "client" : "";
+    return isClient ? "客户端" : "";
   } else if (type == "mac") {
-    return isMac ? "mac" : "";
+    return isMac ? "mac端" : "";
   } else if (type == "offline") {
-    return isOffline ? "offline" : "";
+    return cache.get('isOffline') ? "离线模式" : "";
   } else if (type == "visitor") {
-    return isVisitor ? "visitor" : "";
+    return cache.get('isVisitor') ? "游客模式" : "";
   }
 };
 
-export const useLimitEnv = (arr = "web", name) => {
+export const useLimitEnv = (arr, name) => {
   let res = useEnv(arr);
-  let limit = allLimits[res]?.includes(name);
+  let limit = allLimits[res].includes(name);
   console.log("limit :>> ", limit);
+
+
 
   return limit;
 };

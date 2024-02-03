@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { ref, reactive, toRefs, computed, onMounted, nextTick,watch } from "vue";
+import { ref, reactive, toRefs, computed, onMounted, nextTick,watch, getCurrentInstance } from "vue";
 import { useRouter,useRoute} from "vue-router";
 import { storeToRefs } from "pinia";
 import { Icon as ChatIcon } from "@iconify/vue";
@@ -60,7 +60,7 @@ export default {
     const router = useRouter()
     const route = useRoute()
     const TUIServer = window.$TUIKit
-
+    const { proxy } = getCurrentInstance();
     const data = reactive({
       chatVisible:false,
       addIndex:'',
@@ -98,6 +98,21 @@ export default {
       data.chatVisible = true
     }
 
+    // 提示登陆弹窗
+    const loginTip = (item)=>{
+      proxy.$xtConfirm("登录提示", '目前处于游客模式，请登陆后体验完整功能。', {
+        ok: () => {
+          tsbApi.user.login((data) => {
+            appS.getUserInfo()
+          })
+        },
+        okText: "立即登录",
+        noText: "暂不登录",
+        okButtonWidth: '95',
+        noButtonWidth: '95',
+      });
+    }
+
     // 获取总的消息未读数据
     const unreadTotal = computed(()=>{
       const list = window.$TUIKit.store.store.TUIConversation.conversationList;
@@ -118,11 +133,12 @@ export default {
       {
         newIcon: "fluent:chat-16-regular",  tab: "session",
         route: { name: "chatMain", params: { no: "" } },
+        disabled: false,
         callBack: (item) => { selectTab(item) },
         info:unreadTotal.value !== undefined && unreadTotal.value !== 0 ? ["tr","red",`${unreadTotal.value}`] : ["tr","",""],
       },
       {
-        tab: "contact", newIcon: "fluent:people-16-regular",
+        tab: "contact", newIcon: "fluent:people-16-regular",disabled: false,
         route: { name: "contact", params: { no: "" } },
         callBack: (item) => { selectTab(item) },
       },
@@ -157,23 +173,24 @@ export default {
         children:[
           {
             icon: 'message', newIcon:'fluent:chat-16-regular',  name: '发起群聊',index: 'launch',
-            callBack: (item) => { triggerAddModal(item); completeTask('Z0601');}
+            callBack: (item) => { if(!window.useEnv('visitor')){ triggerAddModal(item); completeTask('Z0601') }else{ loginTip() } ;}
+            // callBack: (item) => { if(userInfo){}else{ loginTip() } triggerAddModal(item); completeTask('Z0601');}
           },
           {
             icon: 'team', newIcon:'fluent:people-16-regular',name: '加入群聊', index: 'addGroup',
-            callBack: (item) => { triggerAddModal(item);completeTask('Z0601'); }
+            callBack: (item) => { if(!window.useEnv('visitor')){triggerAddModal(item);completeTask('Z0601');}else{ loginTip() }  }
           },
           {
             icon: 'tianjiachengyuan', newIcon:'fluent:people-add-16-regular', name: '添加好友', index: 'addFriend',
-            callBack: (item) => { triggerAddModal(item);completeTask('Z0602'); }
+            callBack: (item) => { if(!window.useEnv('visitor')){triggerAddModal(item);completeTask('Z0602');}else{ loginTip() }  }
           },
           {
             icon: 'smile',  newIcon:'fluent:emoji-smile-slight-24-regular', name: '创建社群', index: 'createCom',
-            callBack: () => { createCommunity() }
+            callBack: () => { if(!window.useEnv('visitor')){createCommunity()}else{ loginTip() }  }
           },
           {
             icon: 'team',  newIcon:'fluent:people-16-regular', index: 'joinCom', name: '加入社群',
-            callBack: (item) => { triggerAddModal(item) }
+            callBack: (item) => { if(!window.useEnv('visitor')){triggerAddModal(item) }else{ loginTip() } }
           }
         ]
       }
@@ -185,6 +202,8 @@ export default {
         callBack: () => { createCommunity() }
       },
     ])
+
+
 
     /**监听communityList**/
     watch(()=>community.value.communityList,(newVal)=>{
@@ -241,6 +260,11 @@ export default {
     onMounted(()=>{
       com.getMyCommunity();
       com.getCommunityTree();
+      // 游客模式下 隐藏 聊天对话 和 通讯录
+      if(!window.useEnv('visitor')){
+        headList.value[0].disabled = true
+        headList.value[1].disabled = true
+      }
       nextTick(()=>{
         window.$chat.on(window.$TUIKit.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, async(e) => {
           // headList.value[0].unread = e.data === 0 ? 0 : e.data > 99 ? 99 : e.data;

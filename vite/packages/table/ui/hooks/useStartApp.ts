@@ -116,7 +116,6 @@ export const openSysApp = (value, router) => {
   } else if (value === "task") {
     useTakeStore.isTaskDrawer = true;
   } else if (value === "commun") {
-    console.log(1111);
     return;
   } else if(value === "control"){
     return;
