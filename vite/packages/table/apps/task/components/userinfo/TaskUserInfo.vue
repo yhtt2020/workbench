@@ -9,8 +9,8 @@
     <div class="flex  flex-col">
      <span class="font-18 xt-font font-600 xt-text">{{ userInfo.nickname }}</span>
      <div class="flex ">
-       <OnlineMedal v-if="grade.rank" :rank="grade.rank"/>
-       <Medal class="medal" :medal="medal" v-for="medal in medals"></Medal>
+       <OnlineMedal v-if="infoMedal?.grade.rank" :rank="infoMedal?.grade.rank"/>
+       <Medal class="medal" :medal="medal" v-for="medal in infoMedal?.medals"></Medal>
      </div>
     </div>
    </div>
@@ -34,7 +34,7 @@
      <div class="flex  flex-col">
       <xt-text class="xt-text font-14 xt-font font-400">我的积分</xt-text>
       <div style="height: 4px;"></div>
-      <span class="xt-text font-18 xt-font " style="font-weight: 900;">{{ myScore }}</span>
+      <span class="xt-text font-18 xt-font " style="font-weight: 900;">{{ infoMedal.score  }}</span>
      </div>
      <a-avatar :size="48" shape="circle" src="/img/task/communityPoints.svg"></a-avatar>
     </div>
@@ -49,9 +49,8 @@
 <script setup>
 import { storeToRefs } from 'pinia';
 import { appStore } from '../../../../store';
-import { computed, onMounted, ref } from 'vue';
-import { getTaskScore } from '../../api';
-import { teamStore } from '../../../../store/team';
+import { computed, onMounted, ref,nextTick } from 'vue';
+import { taskStore } from '../../store';
 
 import FrameAvatar from '../../../../components/avatar/FrameAvatar.vue';
 import OnlineMedal from '../../../../components/team/OnlineMedal.vue';
@@ -59,11 +58,10 @@ import Medal from '../../../../components/team/Medal.vue';
 
 
 const app = appStore();
+const task = taskStore();
+const { taskUserMedal } = storeToRefs(task);
 const { userInfo } = storeToRefs(app);
-const team = teamStore();
 const myScore = ref("");
-const grade = ref({});
-const medals = ref([]);
 
 const props = defineProps({
   showTaskUser:{
@@ -83,20 +81,16 @@ const myLv = computed(()=>{
   }
 })
 
+const infoMedal = computed(()=>{
+  return taskUserMedal.value;
+})
+
 
 onMounted(()=>{
-  getTaskScore().then((res)=>{
-    if(res.status === 1){
-      myScore.value = res.data[1].value;
-    }
+  nextTick(()=>{
+    task.getTaskUserMedal(userInfo.value?.uid);
+    task.getUserScore();
   })
-  team.getMemberGrade(userInfo.value?.uid).then((res)=>{
-    grade.value = res;
-  })
-  team.getUserMedal(userInfo.value?.uid).then((res)=>{
-    medals.value = res;
-  })
-  
 }) 
 
 </script>

@@ -2,6 +2,9 @@ import { defineStore } from "pinia";
 import { tasks } from "./page/primary/Primary";
 import { tasks as branchTasks } from "./page/branch/Branch";
 import { getAllTask } from "./api";
+import { teamStore } from "../../store/team";
+import { getTaskScore } from './api';
+
 // @ts-ignore
 export const taskStore = defineStore("taskStore", {
   state: () => ({
@@ -29,6 +32,11 @@ export const taskStore = defineStore("taskStore", {
     currentType: "",
     taskAudio: "",
     smallMize:true, // 任务中心最小化
+    taskUserMedal:{ // 用户勋章数据
+      grade:{},
+      medals:[],
+      score:{}
+    }
   }),
   getters: {},
   actions: {
@@ -101,6 +109,26 @@ export const taskStore = defineStore("taskStore", {
 
       this.taskID = currentTask.name;
       this.currentId = currentTask.name;
+    },
+
+    // 获取用户勋章
+    async getTaskUserMedal(uid:any){
+      const taskTeam:any = teamStore();
+      const grade = await taskTeam.getMemberGrade(uid);
+      const medal = await taskTeam.getUserMedal(uid);
+      Promise.all([grade,medal]).then((res)=>{
+        console.log("res",res);
+        this.taskUserMedal.grade = res[0];
+        this.taskUserMedal.medals = res[1];
+      })
+    },
+    // 获取积分
+    getUserScore(){
+      getTaskScore().then((res:any)=>{
+        if(res.status === 1){
+          this.taskUserMedal.score = res.data[1].value;
+        }
+      })
     }
   },
   persist: {
@@ -121,6 +149,7 @@ export const taskStore = defineStore("taskStore", {
           "startList",
           "completedList",
           "claimRewardsList",
+          "taskUserMedal",
         ],
         storage: localStorage,
       },
