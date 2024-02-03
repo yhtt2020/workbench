@@ -1021,6 +1021,12 @@ export default {
      * @param {*} item 图标详细信息
      */
     async newOpenApp(type, value, item) {
+      console.log('value :>> ', value);
+      console.log('type :>> ', type);
+      console.log('3333 :>> ', item);
+      if (window.useLimitEnv('web',value)) return
+
+
       if (item) this.msgNotice(item)
       if (value === 'home' && item.home) {
         this.jumpDesk = item.home

@@ -49,7 +49,7 @@ this.currentChannel={
   }
 })
     this.loading=true
-if (!this.useEnv()) {
+if (!this.$useEnv()) {
   this.CONST = tsbApi.barrage.CONST
 }
     if(this.defaultChannel==='team'){

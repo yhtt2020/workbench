@@ -30,7 +30,7 @@ export default {
   mounted () {
     console.log('this.currentChannel.name :>> ', this.currentChannel.name);
 
-if (!this.useEnv()) {
+if (!this.$useEnv()) {
   this.CONST = tsbApi.barrage.CONST
 }
   },
@@ -41,7 +41,7 @@ if (!this.useEnv()) {
   methods:{
     ...mapActions(teamStore,['updateMy']),
     async postBarrage () {
-      if(!window.useEnv('visitor')){
+      if(!window.$useEnv('visitor')){
         if (!this.postContent) {
           message.error('请输入弹幕内容')
           return
@@ -74,7 +74,7 @@ if (!this.useEnv()) {
             }
             console.log('33233333 :>> ', 33233333);
             message.success('弹幕发送成功')
-  
+
             setTimeout(() => {
               if(this.currentChannel.name==='all'){
                 this.$emit('loadAllBarrages')

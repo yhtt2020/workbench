@@ -9,7 +9,7 @@ window.$isClient = isClient;
 window.$isMac = isMac;
 window.$isOffline = isOffline;
 window.$isVisitor = isVisitor;
-window.useEnv = useEnv;
+window.$useEnv = useEnv;
 window.useLimitEnv = useLimitEnv;
 
 import { createApp } from "vue";
@@ -113,7 +113,7 @@ app.provide("isClient", isClient);
 app.provide("isMac", isMac);
 app.provide("isOffline", isOffline);
 app.provide("isVisitor", isVisitor);
-app.provide("useEnv", useEnv);
+app.provide("$useEnv", useEnv);
 // 使用 globalProperties 将全局变量附加到 Vue 实例上
 app.config.globalProperties.$currentEnv = currentEnv;
 app.config.globalProperties.$isWeb = isWeb;
@@ -122,7 +122,7 @@ app.config.globalProperties.$isMac = isMac;
 app.config.globalProperties.$isOffline = isOffline;
 app.config.globalProperties.$isVisitor = isVisitor;
 app.config.globalProperties.$bus = Mit;
-app.config.globalProperties.useEnv= useEnv;
+app.config.globalProperties.$useEnv= useEnv;
 window.$ui={
   confirm
 }

@@ -1,4 +1,12 @@
+<!-- 小组件控制器 -->
+<!-- 使用前请先阅读控制器源码和使用场景 -->
+<!-- 修改前请先组内同事商谈 -->
+<!-- 使用场景参考
+        简单使用：vite\packages\table\components\widgets\clock\index.vue
+        复杂使用：vite\packages\table\apps\folder\src\Folder.vue
+ -->
 <template>
+  <!-- 右键菜单 -->
   <RightMenu
     :menus="menus"
     :customIndex="customIndex"
@@ -6,13 +14,11 @@
     :sizeList="sizeList"
     :disableHierarchy="options.hierarchy"
   >
+    <!-- 小组件控制器开始 -->
     <div
       v-if="!options?.custom"
       class="flex flex-col widget rounded-xl"
-      :class="[
-        edit ? 'editing' : '',
-        options.shadow ? '' : 'shadow  xt-shadow',
-      ]"
+      :class="[edit ? 'editing' : '', options.shadow ? '' : 'shadow xt-shadow']"
       style=""
       :style="[
         getSize,
@@ -22,7 +28,7 @@
         },
       ]"
     >
-      <!-- 头部区域 -->
+      <!-- 小组件头部开始 -->
       <div
         v-if="!header.disabled"
         @dragstart.stop="titleDragStart"
@@ -89,13 +95,14 @@
             >
               <slot name="title"> {{ title }} </slot>
             </div>
+            <!-- 头部左侧扩展区域 -->
             <slot name="left-extend"></slot>
           </div>
         </div>
         <!-- 头部右侧 -->
         <div class="flex items-center header-right" style="padding-right: 14px">
+          <!-- 右侧扩展区域 -->
           <slot name="right-extend"></slot>
-
           <template
             v-if="rightIcons && rightIcons.length"
             v-for="item in rightIcons"
@@ -144,34 +151,37 @@
           </RightMenu>
         </div>
       </div>
-      <PageState :env="env" :options="options">
-        <div
-          class="flex-1 h-full rounded-b-lg"
-          :style="[
-            {
-              background: body.bg,
-              color: body.color,
-              padding: body.scroll ? '0 14px' : '0 14px 14px 14px',
-            },
-          ]"
+      <!-- 小组件头部结束 -->
+      <!-- 小组件主体开始 -->
+      <xt-status v-if="useEnv(limitEnv)" :ele="header.title" :list="limitEnv" />
+      <div
+        v-else
+        class="flex-1 h-full rounded-b-lg"
+        :style="[
+          {
+            background: body.bg,
+            color: body.color,
+            padding: body.scroll ? '0 14px' : '0 14px 14px 14px',
+          },
+        ]"
+      >
+        <Resize
+          v-model:size="currentSize"
+          :modalSize="options.modalSize"
+          :resize="options.resize"
+          @resize="resize"
         >
-          <Resize
-            v-model:size="currentSize"
-            :modalSize="options.modalSize"
-            :resize="options.resize"
-            @resize="resize"
-          >
-            <slot></slot>
-          </Resize>
-        </div>
-      </PageState>
+          <slot></slot>
+        </Resize>
+      </div>
+      <!-- 小组件主体结束 -->
     </div>
     <div v-else :class="[edit ? 'editing' : '']">
       <slot>
         <!--  主体内容插槽2  -->
       </slot>
     </div>
-    <!-- 卡片整体区域end -->
+    <!-- 小组件控制器结束 -->
   </RightMenu>
 </template>
 <script setup>
@@ -193,8 +203,7 @@ import { useFreeLayoutStore } from "../desk/freeLayout/store";
 import vueCustomScrollbar from "../../../../src/components/vue-scrollbar.vue";
 import Resize from "./Resize.vue";
 import RightMenu from "./RightMenu.vue";
-import PageState from "./PageState.vue";
-import Msg from "./Msg.vue";
+import { useEnv } from "../../ui/hooks/useEnv";
 
 import { deepMerge } from "./ContainerUtils";
 
@@ -212,11 +221,71 @@ const { edit } = storeToRefs(widgetStore);
 const freeLayoutStore = useFreeLayoutStore();
 const { isSelectAll } = storeToRefs(freeLayoutStore);
 // props
+/**
+ * 均为重构后新的数据结构 和旧版有差异 需要阅读源码
+ * 所有参数默认值请都设置为false 请勿随意修改默认值
+ * 新增参数请先商谈
+ */
 const props = defineProps({
+  // ----------下面都属于必填选参数----------
   /**
-   * header body customSize sizeList defaultData options
-   * 均为重构后的数据结构 需要阅读源码
+   * 小组件索引
    */
+  customIndex: {
+    type: Number,
+    default: 0,
+  },
+  /**
+   * 小组件数据
+   */
+  customData: {
+    type: Object,
+    default: () => {},
+  },
+  /**
+   * 小组件所属桌面
+   */
+  desk: {
+    type: Object,
+    required: true,
+  },
+  /**
+   * 小组件大小 默认 2x2
+   */
+  customSize: {
+    type: String,
+    default: "2x2",
+  },
+  // ----------下面都属于可选参数----------
+  /**
+   * 控制全部小组件区域
+   */
+  options: {
+    type: Object,
+    default: () => {
+      return {
+        // 自定义区域 开启后只保留全局右键功能
+        custom: false,
+        // 自定义全局背景色
+        bg: "",
+        // 自定义全局字体颜色
+        color: "",
+        // 是否允许删除组件
+        disabled: false,
+        // 开启后，可拖拽小组件
+        resize: false,
+        // 作为弹窗时的尺寸
+        modalSize: "",
+        // 阴影开关 开启会关闭阴影
+        shadow: false,
+        // 卡片默认数据 传递后每次都会帮你校验数据，不存在的key会进行赋值
+        defaultData: {},
+        // 自定义删除打开后默认删除事件不执行，再删除回调上提供原删除事件
+        customDel: false,
+      };
+    },
+  },
+  // 控制小组件头部区域
   header: {
     type: Object,
     default: () => {
@@ -264,6 +333,7 @@ const props = defineProps({
       };
     },
   },
+  // 控制小组件主体区域
   body: {
     default: () => {
       return {
@@ -276,49 +346,8 @@ const props = defineProps({
       };
     },
   },
-  // 卡片尺寸 默认 4x2
-  customSize: {
-    type: String,
-    default: "4x2",
-  },
-
   /**
-   * 可选尺寸，此属性设置后，在编辑处会显示可选尺寸。
-   * 格式为 { name: '4x2'value: '4x2' }
-   */
-  sizeList: {
-    type: Array,
-    default: () => [],
-  },
-  /**
-   * 卡片默认数据
-   * 传递后每次都会帮你校验数据，不存在的key会进行赋值
-   */
-  defaultData: {},
-  // 全局选项
-  options: {
-    type: Object,
-    default: () => {
-      return {
-        // 自定义区域 开启后只保留全局右键功能
-        custom: false,
-        // 自定义全局背景色
-        bg: "",
-        // 自定义全局字体颜色
-        color: "",
-        // 是否允许删除组件
-        disabled: false,
-        // 开启后，可拖拽小组件
-        resize: false,
-        // 作为弹窗时的尺寸
-        modalSize: "",
-        // 阴影开关 开启会关闭阴影
-        shadow: false,
-      };
-    },
-  },
-  /**
-   * 右上角菜单项
+   * 小组件菜单列表
    * {
    *    icon: '旧版图标',
    *    newIcon: '新版图标',
@@ -330,48 +359,37 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
-  //组件索引
-  customIndex: {
-    type: Number,
-    default: 0,
+  /**
+   * 小组件大小列表
+   * 参考格式 [{ name: '4x2'value: '4x2' }]
+   */
+  sizeList: {
+    type: Array,
+    default: () => [],
   },
-  //组件自定义数据，每个卡片独立，并存入桌面数据当中
-  customData: {
-    type: Object,
-    default: () => {},
-  },
-
-  desk: {
-    type: Object,
-    required: true,
-  },
-  env: {
-    type: Object,
-    default: () => {
-      return {
-        web: false,
-        mobile: false,
-        client: false,
-        offline: false,
-      };
-    },
-  },
+  /**
+   * 小组件不可用环境
+   * 参数可选 ["web", "offline", "visitor", "mac", "client"]
+   */
+  limitEnv: { type: Array, default: () => [] },
+  // env
 });
+
 const { header } = toRefs(props);
 onBeforeMount(() => {
   // 处理默认数据
-  if (props.defaultData) {
-    deepMerge(props.customData, props.defaultData);
+  if (props.options.defaultData) {
+    deepMerge(props.customData, props.options.defaultData);
   }
 });
+
+// emits 小组件事件回调
 /**
- * emits
  * update:customSize 双向数据绑定customSize
  * leftClick 头部左侧鼠标经过点击回调
  * delete 小组件删除回调
  * resize 更新卡片大小回调
  */
-
 const emits = defineEmits([
   "update:customSize",
   "leftClick",
@@ -390,7 +408,7 @@ const showIconHover = ref(false);
 const showTitleHover = ref(false);
 // 当前卡片尺寸
 const currentSize = ref(props.customSize);
-
+console.log("props.limitEnv :>> ", props.limitEnv);
 /**
  * 计算属性
  */
@@ -400,23 +418,13 @@ const menus = computed(() => {
     ...props.menuList,
     {
       newIcon: "akar-icons:trash-can",
-      fn: () => {
-        // 未补全?.type
-        if (props.options?.type != "note") {
-          removeCard();
-        } else {
-          // 便签单独处理
-          props.options?.removeCard();
-          emits("");
-        }
-      },
+      fn: removeCard,
       title: "删除小组件",
       color: "#FF4D4F",
       disabled: props.options?.disabled ? true : false,
     },
   ];
 
-  console.log("menu :>> ", menu);
   return menu;
 });
 // 头部左侧显示区域状态
@@ -514,13 +522,13 @@ const leftClick = () => {
 };
 // 右键删除
 const removeCard = () => {
-  emits("delete");
-
-  // if (props.options.deleteFn) {
-  // props.options.deleteFn()
-  // } else {
+  emits("delete", customDelete);
+  // 属于自定义删除事件
+  if (props.options.customDel) return;
   cardStore.removeCard(props.customIndex, props.desk);
-  // }
+};
+const customDelete = () => {
+  cardStore.removeCard(props.customIndex, props.desk);
 };
 
 // 设置自定义数据
@@ -532,21 +540,6 @@ const setCustomData = (key, data) => {
 // 头部拖拽开始
 const titleDragStart = () => {
   proxy.$bus.emit("startAdjust");
-  // const toast = useToast();
-  // toast.clear();
-  // toast(
-  //   { component: Msg },
-  //   {
-  //     icon: false,
-  //     closeOnClick: false,
-  //     closeButton: false,
-  //     pauseOnFocusLoss: true,
-  //     pauseOnHover: true,
-  //     toastClassName: "notice-toast",
-  //     timeout: 3000,
-  //     hideProgressBar: false,
-  //   }
-  // );
 };
 // 左侧区域鼠标进入
 const leftMouseEnter = () => {

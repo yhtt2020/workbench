@@ -202,7 +202,7 @@ export default {
     ...mapState(appStore, ['userInfo']),
     ...mapWritableState(codeStore,['verified']),
     envVisitor(){
-      return !window.useEnv('visitor')
+      return !window.$useEnv('visitor')
     },
     totalHours () {
       return (this.userInfo.onlineGradeExtra?.cumulativeHours)
@@ -257,7 +257,7 @@ export default {
       this.showUserCard(uid, userInfo)
     },
     friendlyDate: ()=>{
-      if (!window.useEnv('web')) tsbApi.util.friendlyDate()
+      if (!window.$useEnv('web')) tsbApi.util.friendlyDate()
     },
     copy (text) {
       require('electron').clipboard.writeText(text)

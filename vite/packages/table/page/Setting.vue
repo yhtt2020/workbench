@@ -28,7 +28,7 @@
               </div>
             </a-col>
 
-            <a-col :span="12">
+            <a-col :span="12" v-if="!$useEnv()">
               <div class="relative btn">
                 窗口控制<br />
                 <a-switch @click.stop="() => { }" v-model:checked="showWindowController"></a-switch>
@@ -60,7 +60,7 @@
                 <a-switch @click.stop="() => { }" v-model:checked="simple"></a-switch>
               </div>
             </a-col>
-            <a-col :span="12">
+            <a-col :span="12" v-if="0">
               <div  @click="tipOffline" class="relative btn">
                 离线模式<br />
                 <a-switch @click="changeOffline"  v-model:checked="isOffline"></a-switch>
@@ -72,13 +72,13 @@
                 <a-switch @click="changeVisitor"  v-model:checked="isVisitor"></a-switch>
               </div>
             </a-col> -->
-            <a-col :span="12">
+            <a-col :span="12" v-if="!$useEnv()">
               <div  class="relative btn">
                 辅助模式<br />
                 <a-switch @click="this.toggleAided"  v-model:checked="aided"></a-switch>
               </div>
             </a-col>
-            <a-col :span="12">
+            <a-col :span="12" v-if="!$useEnv()">
               <div  class="relative btn" @click="goShake">
                 摇一摇<br />
                 <div @click.stop>

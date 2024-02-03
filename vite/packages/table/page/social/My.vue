@@ -69,7 +69,7 @@ export default {
   },
   computed: {
     envVisitor(){
-      return !window.useEnv('visitor')
+      return !window.$useEnv('visitor')
     },
   },
   mounted(){

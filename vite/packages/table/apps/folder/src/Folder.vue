@@ -10,13 +10,13 @@
       :options="options"
       :customIndex="customIndex"
       :customData="customData"
-      :defaultData="defaultFolderData"
       :header="header"
       :menuList="menuList"
       :sizeList="autoSizeList"
       @leftClick="leftClick"
       v-model:customSize="customData.customSize"
-      @resize="testss"
+      :limitEnv="['web']"
+      @delete="deleteFn"
     >
       <!-- 空状态显示状态 -->
       <template v-if="customData.list.length <= 0 && !dragSortState">
@@ -128,9 +128,11 @@ const addFileClick = () => {
   navigationStore.selectNav = "desktop";
   editVisible.value = true;
 };
-const testss = (data) => {
-  console.log("data :>> ", data);
-};
+const deleteFn =(fn)=>{
+  console.log('fn :>> ', fn);
+  fn()
+}
+
 const addFile = (data) => {
   const { name, icon, type, value } = data;
   let fileInfo = {
@@ -143,6 +145,7 @@ const addFile = (data) => {
   };
   createFile(fileInfo);
 };
+
 /**
  * 初始化阶段
  */
@@ -240,6 +243,7 @@ const openAllFileClick = () => {
 };
 const options = computed(() => {
   return {
+    defaultData: defaultFolderData,
     bg: isDrag.value ? "var(--active-secondary-bg) " : "",
     // 隐藏删除
     disabled: navBar.value.isDel,
@@ -251,6 +255,7 @@ const options = computed(() => {
     },
     resize: resize.value,
     modalSize: modalSize.value,
+    customDel: true,
   };
 });
 

@@ -13,10 +13,10 @@ router.beforeEach((to, from, next) => {
   //
   console.log('to,from :>> ', to,from);
   if (useLimitEnv('web',to.name)) {
+    console.log('路由触发限制环境拦截 :>> ', );
     next({
       name:"home"
     });
-
   }
 
   // 桌面定制时屏蔽路由跳转功能

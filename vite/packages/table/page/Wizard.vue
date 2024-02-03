@@ -243,10 +243,10 @@ import { chatStore } from '../store/chat'
 // 顶部状态
 import TopPanel from '../components/TopPanel.vue'
 import {useEnv} from '../ui/hooks/useEnv'
+import { visitorStore } from '../js/common/visitor'
 let settings
 if ( !useEnv('web')) {
   settings= window.$models.settings
-import { visitorStore } from '../js/common/visitor'
 
 }
 export default {

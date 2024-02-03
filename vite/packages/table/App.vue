@@ -179,7 +179,7 @@ export default {
       this.settings.zoomFactor = 100
       tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100).then()
     }
-if (!window.useEnv()) {
+if (!window.$useEnv()) {
     ipc.on('updateRunningApps', async (event, args) => {
       this.runningApps = args.runningApps
       this.runningAppsInfo = {}

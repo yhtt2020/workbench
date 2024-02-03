@@ -1,8 +1,8 @@
 <template>
   <div
   >
-    <div class="line-title"  v-if="!useEnv()">界面缩放</div>
-    <ZoomUI  v-if="!useEnv()"></ZoomUI>
+    <div class="line-title"  v-if="!$useEnv()">界面缩放</div>
+    <ZoomUI  v-if="!$useEnv()"></ZoomUI>
     <div class="line-title">工作台界面</div>
     <div v-if="!isMain" class="line">
       显示顶部栏：
@@ -20,7 +20,7 @@
     </template>
 
     <div class="line-title">使用习惯</div>
-    <div class="line" v-if="!useEnv()">
+    <div class="line" v-if="!$useEnv()">
       在系统任务栏显示窗口：
       <a-switch v-model:checked="settings.showInTaskBar"></a-switch>
     </div>
@@ -28,7 +28,7 @@
       <div class="line">
         <AutoRun/>
       </div>
-      <div class="line"  v-if="!useEnv()">
+      <div class="line"  v-if="!$useEnv()">
         双击托盘菜单默认打开：
         <a-radio-group v-model:value="trayOpen">
           <!-- 后期可删 -->

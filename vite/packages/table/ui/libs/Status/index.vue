@@ -23,8 +23,8 @@ export default {
   },
   mounted() {
     console.log('list', this.list)
-    console.log('window.useEnv', window.useEnv(this.list))
-    const tmp = window.useEnv(this.list)
+    console.log('window.useEnv', window.$useEnv(this.list))
+    const tmp = window.$useEnv(this.list)
     this.plat = tmp
     // window.useEnv(["offline", "visitor", "mac"])
   },
