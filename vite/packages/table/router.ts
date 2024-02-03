@@ -12,7 +12,7 @@ router.beforeEach((to, from, next) => {
 
   //
   console.log('to,from :>> ', to,from);
-  if (useLimitEnv('web',to.name)) {
+  if (useLimitEnv('web',to.name, false)) {
     console.log('路由触发限制环境拦截 :>> ', );
     next({
       name:"home"

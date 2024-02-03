@@ -19,6 +19,7 @@ const routerLimit = {
     "clipboard",
     "barrage",
     "shortcut",
+    "note",
   ],
 };
 // 组件限制
@@ -86,12 +87,12 @@ const envDetection = (type) => {
   }
 };
 
-export const useLimitEnv = (arr, name) => {
+export const useLimitEnv = (arr, name, msg = true) => {
   let res = useEnv(arr);
   let limit = allLimits[res]?.includes(name);
   console.log("allLimits[res] :>> ", allLimits[res]);
   console.log("limit :>> ", limit);
-  if (limit) {
+  if (limit && msg) {
     confirm(res + "无法使用", "下载客户端体验完整内容。", {
       noText: "稍后再说",
       okText: "立即下载",
