@@ -174,27 +174,22 @@ export default {
           {
             icon: 'message', newIcon:'fluent:chat-16-regular',  name: '发起群聊',index: 'launch',
             callBack: (item) => { if(!window.$useEnv('visitor')){ triggerAddModal(item); completeTask('Z0601') }else{ loginTip() } ;}
-            callBack: (item) => { if(!window.$useEnv('visitor')){ triggerAddModal(item); completeTask('Z0601') }else{ loginTip() } ;}
             // callBack: (item) => { if(userInfo){}else{ loginTip() } triggerAddModal(item); completeTask('Z0601');}
           },
           {
             icon: 'team', newIcon:'fluent:people-16-regular',name: '加入群聊', index: 'addGroup',
             callBack: (item) => { if(!window.$useEnv('visitor')){triggerAddModal(item);completeTask('Z0601');}else{ loginTip() }  }
-            callBack: (item) => { if(!window.$useEnv('visitor')){triggerAddModal(item);completeTask('Z0601');}else{ loginTip() }  }
           },
           {
             icon: 'tianjiachengyuan', newIcon:'fluent:people-add-16-regular', name: '添加好友', index: 'addFriend',
-            callBack: (item) => { if(!window.$useEnv('visitor')){triggerAddModal(item);completeTask('Z0602');}else{ loginTip() }  }
             callBack: (item) => { if(!window.$useEnv('visitor')){triggerAddModal(item);completeTask('Z0602');}else{ loginTip() }  }
           },
           {
             icon: 'smile',  newIcon:'fluent:emoji-smile-slight-24-regular', name: '创建社群', index: 'createCom',
             callBack: () => { if(!window.$useEnv('visitor')){createCommunity()}else{ loginTip() }  }
-            callBack: () => { if(!window.$useEnv('visitor')){createCommunity()}else{ loginTip() }  }
           },
           {
             icon: 'team',  newIcon:'fluent:people-16-regular', index: 'joinCom', name: '加入社群',
-            callBack: (item) => { if(!window.$useEnv('visitor')){triggerAddModal(item) }else{ loginTip() } }
             callBack: (item) => { if(!window.$useEnv('visitor')){triggerAddModal(item) }else{ loginTip() } }
           }
         ]
