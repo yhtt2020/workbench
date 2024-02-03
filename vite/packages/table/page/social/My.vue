@@ -41,7 +41,7 @@ import ComActionPanel from '../../components/comp/ComActionPanel.vue'
 import GroupPanel from '../../components/comp/GroupPanel.vue'
 import UserCard from '../../components/small/UserCard.vue'
 import UpdateMyInfo from '../../components/comp/UpdateMyInfo.vue'
-import { mapActions, mapState } from 'pinia'
+import { mapActions, mapState, mapWritableState } from 'pinia'
 import { appStore } from '../../store'
 import FrameStoreWidget from '../../components/team/FrameStoreWidget.vue'
 import { defaultAvatar } from '../../js/common/teamAvatar'
@@ -51,7 +51,10 @@ export default {
   name: 'My',
   components: { UserCard, GroupPanel, ComActionPanel, ComPanel, GradePanel,FrameStoreWidget,UpdateMyInfo },
   computed: {
-    ...mapState(appStore, ['userInfo','secondaryVisible'])
+    ...mapWritableState(appStore, ['userInfo','secondaryVisible']),
+    envVisitor(){
+      return !window.useEnv('visitor')
+    },
   },
   data(){
     return {
@@ -66,11 +69,6 @@ export default {
       },
       key:Date.now()
     }
-  },
-  computed: {
-    envVisitor(){
-      return !window.useEnv('visitor')
-    },
   },
   mounted(){
     this.$nextTick(()=>{
