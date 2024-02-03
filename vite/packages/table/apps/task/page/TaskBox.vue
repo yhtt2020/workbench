@@ -119,13 +119,13 @@ const closeMiniMize = () =>{
 
 <style lang="scss" scoped>
 .tran {
-  transition: all 0.1s linear;
+  transition: all 0.2s ease-in-out;
 }
 
 
 .pop {
   position: fixed;
-  top: 81% !important;
+  top: 84% !important;
   left:88% !important;
   width: 200px !important;
 }

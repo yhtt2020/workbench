@@ -115,6 +115,7 @@ export const openSysApp = (value, router) => {
     useAppStore.toggleFullScreen();
   } else if (value === "task") {
     useTakeStore.isTaskDrawer = true;
+    useTakeStore.smallMize = true;
   } else if (value === "commun") {
     return;
   } else if(value === "control"){

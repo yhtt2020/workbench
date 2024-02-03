@@ -95,7 +95,14 @@ const startTask = () => {
     }
     if (item.type === "bus") {
       setTimeout(() => {
-        proxy.$bus.emit(item.value);
+        // 是否走定制桌面任务,是的需要先跳转主页后,在打开定制桌面弹窗
+        if(item.value === "customDesk"){
+          router.push({name:"home"});
+          proxy.$bus.emit(item.value);
+        }
+        else {
+          proxy.$bus.emit(item.value);
+        }
       }, 200);
     }
   });

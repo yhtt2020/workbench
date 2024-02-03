@@ -20,10 +20,23 @@
       {{ types[type].name }}
     </div>
 
-    <div :style="{width:`${types[type].size}px`,height:`${types[type].size}px`}"
-     class="flex items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-      <img :src="types[type].icon" class="w-full h-full object-cover"/>
-    </div>
+    <template v-if="claim">
+      <a-popconfirm title="新头像框Get!" ok-text="立即佩戴" cancel-text="稍后再说" @confirm="confirm" @cancel="cancel">
+        <div :style="{width:`${types[type].size}px`,height:`${types[type].size}px`}"
+        class="flex items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+         <img :src="types[type].icon" class="w-full h-full object-cover"/>
+        </div>
+      </a-popconfirm>
+    </template>
+
+    <template v-else>
+      <div :style="{width:`${types[type].size}px`,height:`${types[type].size}px`}"
+      class="flex items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <img :src="types[type].icon" class="w-full h-full object-cover"/>
+      </div>
+    </template>
+
+    
 
     <!-- <a-avatar
       shape="square"
@@ -54,6 +67,7 @@ const props = defineProps({
   type: {},
   value: {},
   icon: {},
+  claim:false,
 });
 const { type } = toRefs(props);
 const types = computed(() => {
@@ -80,6 +94,11 @@ const types = computed(() => {
     },
   };
 });
+
+
+const confirm = () =>{
+
+}
 </script>
 
 <style lang="scss" scoped></style>

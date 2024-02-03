@@ -8,7 +8,7 @@ export const tasks = {
    open: [
      {
       type:'bus',
-      value: "startGuide",
+      value: "customDesk",
      },
    ],
  },
