@@ -28,23 +28,9 @@
     <div class="flex justify-between">
       <div></div>
       <div class="flex items-center">
-        <xt-button
-          w="80"
-          h="40"
-          class="mr-3"
-          @click="rewardVisible = false"
-          radius="8"
-          >{{ types[props.type]?.button }}</xt-button
-        >
-        <xt-button
-          v-if="currentId != 'Z0201'"
-          w="80"
-          h="40"
-          type="theme"
-          @click="goTask"
-          radius="8"
-          >下一个</xt-button
-        >
+        <xt-button w="80" h="40" type="theme" @click="goTask" radius="8">
+          完成
+        </xt-button>
       </div>
     </div>
   </xt-modal>
@@ -62,7 +48,7 @@ import TaskUserInfo from "./userinfo/TaskUserInfo.vue";
 
 const store = taskStore();
 const visible = ref(false);
-const { taskID, currentTaskList, rewardVisible, currentId, isTaskDrawer } =
+const { taskID, currentTaskList, rewardVisible, currentId, isTaskDrawer,smallMize} =
   storeToRefs(store);
 const props = defineProps({
   type: {
@@ -99,6 +85,7 @@ const types = {
 const goTask = () => {
   rewardVisible.value = false;
   isTaskDrawer.value = true;
+  smallMize.value = true;
 };
 const audio = ref("");
 const getAudio = (data) => {

@@ -2,7 +2,9 @@ import { sUrl } from "../../consts";
 import { post } from "../../js/axios/request";
 // 查询全部任务
 export const getAllTask = () => {
-  const res = post(sUrl("/app/userTask/getAll"),);
+  // const option = {cache:1};
+  // option
+  const res = post(sUrl("/app/userTask/getAll"));
   return res;
 };
 
