@@ -29,7 +29,6 @@
         },
       ]"
     >
-      {{ key }}
       <!-- 小组件头部开始 -->
       <div
         v-if="!header.disabled"
@@ -50,8 +49,8 @@
         <!-- 头部左侧 -->
         <div class="flex items-center flex-1" style="height: 28px">
           <div
-            @click="leftClick"
             class="flex items-center h-full"
+            @click="HeaderLeftClick"
             @mouseenter="leftMouseEnter"
             @mouseleave="leftMouseLeave"
             style=""
@@ -62,6 +61,7 @@
             <!-- 图标区域 -->
             <div
               class="flex items-center h-full"
+              @click="HeaderLeftClick"
               @mouseenter="iconMouseEnter"
               @mouseleave="iconMouseLeave"
             >
@@ -91,6 +91,7 @@
             <!-- 标题区域 -->
             <div
               class="flex items-center h-full px-2 ml-1"
+              @click="HeaderNameClick"
               @mouseenter="titleMouseEnter"
               @mouseleave="titleMouseLeave"
               :class="{ 'header-title': titleHover }"
@@ -280,7 +281,7 @@ const props = defineProps({
         // 自定义全局字体颜色
         color: "",
         // 是否允许删除组件
-        disabled: false,
+        disabledDelete: false,
         // 开启后，可拖拽小组件
         resize: false,
         // 作为弹窗时的尺寸
@@ -427,19 +428,21 @@ const currentSize = ref(props.customSize);
 /**
  * 计算属性
  */
+// 删除小组件的数据
+const deleteObj = computed(() => {
+  return {
+    newIcon: "akar-icons:trash-can",
+    fn: removeCard,
+    title: "删除小组件",
+    color: "#FF4D4F",
+    disabled: props.options?.disabledDelete ? true : false,
+  };
+});
 // 实际渲染的右键菜单
 const menus = computed(() => {
-  let menu = [
-    ...props.menuList,
-    {
-      newIcon: "akar-icons:trash-can",
-      fn: removeCard,
-      title: "删除小组件",
-      color: "#FF4D4F",
-      disabled: props.options?.disabled ? true : false,
-    },
-  ];
-
+  let deleteArr = [deleteObj.value];
+  if (useEnv(props.limitEnv)) return deleteArr;
+  let menu = [...props.menuList, ...deleteArr];
   return menu;
 });
 // 头部左侧显示区域状态
@@ -527,7 +530,6 @@ watch(
 watch(
   () => status.value,
   (val) => {
-    console.log("123 :>> ", 123);
     emits("update:status", val);
   }
 );
@@ -538,8 +540,13 @@ const resize = (data) => {
   emits("resize", data);
 };
 // 头部左侧点击
-const leftClick = () => {
+const HeaderLeftClick = () => {
   if (props.header.leftHover) {
+    emits("leftClick");
+  }
+};
+const HeaderNameClick = () => {
+  if (props.header.titleHover) {
     emits("leftClick");
   }
 };
@@ -548,8 +555,9 @@ const removeCard = () => {
   emits("delete", customDelete);
   // 属于自定义删除事件
   if (props.options.customDel) return;
-  cardStore.removeCard(props.customIndex, props.desk);
+  customDelete();
 };
+// 实际删除事件
 const customDelete = () => {
   cardStore.removeCard(props.customIndex, props.desk);
 };
