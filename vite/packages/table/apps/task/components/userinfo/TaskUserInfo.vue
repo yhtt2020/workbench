@@ -10,7 +10,7 @@
      <span class="font-18 xt-font font-600 xt-text">{{ userInfo.nickname }}</span>
      <div class="flex ">
        <OnlineMedal v-if="grade.rank" :rank="grade.rank"/>
-       <Medal :medal="medal" v-for="medal in medals"></Medal>
+       <Medal class="medal" :medal="medal" v-for="medal in medals"></Medal>
      </div>
     </div>
    </div>
@@ -132,4 +132,16 @@ onMounted(()=>{
 :deep(.big){
   padding: 18px !important;
 }
+
+:deep(.medal){
+  & .badge-box{
+    width:auto !important;
+    height: auto !important;
+    & div img{
+      width: 60px !important;
+      margin-left:12px !important;
+    }
+  }
+}
+
 </style>
