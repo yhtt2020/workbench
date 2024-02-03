@@ -18,12 +18,12 @@
       <ControlModal @close="controlVisible = false"></ControlModal>
     </div>
 
-    <!-- <div 
-      class="fixed w-full h-[90px] " 
-      style="bottom: 0px; background-color: red;" 
-      @mouseenter="handleMouseEnter" 
+    <!-- <div
+      class="fixed w-full h-[90px] "
+      style="bottom: 0px; background-color: red;"
+      @mouseenter="handleMouseEnter"
       @mouseleave="handleMouseLeave">
-      
+
     </div> -->
     <div v-if="false"
           style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:100px">
@@ -960,6 +960,8 @@ export default {
      * @param {*} item
      */
     editNavigation(item) {
+
+      console.log('item :>> ', item);
       if (item.component) {
         this.componentId = item.component
         if (item.component === 'EditNewNavigation') {
@@ -1215,6 +1217,7 @@ export default {
         onChoose: function (event) {
           console.log('onChoose')
           index = event.oldIndex
+
           that.defaultPosition = {
             x: event.originalEvent.clientX,
             y: event.originalEvent.clientY,

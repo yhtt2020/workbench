@@ -3,12 +3,22 @@ import routes from "./route/route";
 import {cardStore} from "./store/card";
 import {appStore} from "./store";
 import { message } from "ant-design-vue";
-
+import {useLimitEnv} from "../table/ui/hooks/useEnv";
 const router = createRouter({
   history: createWebHashHistory(),
   routes
 })
 router.beforeEach((to, from, next) => {
+
+  //
+  console.log('to,from :>> ', to,from);
+  if (useLimitEnv('web',to.name)) {
+    next({
+      name:"home"
+    });
+
+  }
+
   // 桌面定制时屏蔽路由跳转功能
   if(!appStore().showGuide){
     //检测是否是需要记忆的
@@ -40,8 +50,8 @@ router.beforeEach((to, from, next) => {
         params: from.params
       }))
     }
-  
-  
+
+
     if (from.name === 'home') {
       document.body.style.setProperty('--backGroundImgBlur', '12px');
       document.body.style.setProperty('--backGroundImgLight', 0.3);
@@ -51,7 +61,7 @@ router.beforeEach((to, from, next) => {
   }else{
     message.info("定制过程中无法操作");
   }
-  
+
 
 })
 router.afterEach((to, from) => {

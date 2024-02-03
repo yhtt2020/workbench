@@ -2,7 +2,7 @@
 
 // 注册想天客户端状态
 import currentEnv, { isWeb, isClient, isMac, isOffline, isVisitor } from "./ui/hooks/env";
-import {useEnv} from "./ui/hooks/useEnv";
+import {useEnv,useLimitEnv} from "./ui/hooks/useEnv";
 window.$currentEnv = currentEnv;
 window.$isWeb = isWeb;
 window.$isClient = isClient;
@@ -10,6 +10,8 @@ window.$isMac = isMac;
 window.$isOffline = isOffline;
 window.$isVisitor = isVisitor;
 window.useEnv = useEnv;
+window.useLimitEnv = useLimitEnv;
+
 import { createApp } from "vue";
 import Antd from "ant-design-vue";
 // import 'ant-design-vue/dist/antd.less';
@@ -111,6 +113,7 @@ app.provide("isClient", isClient);
 app.provide("isMac", isMac);
 app.provide("isOffline", isOffline);
 app.provide("isVisitor", isVisitor);
+app.provide("useEnv", useEnv);
 // 使用 globalProperties 将全局变量附加到 Vue 实例上
 app.config.globalProperties.$currentEnv = currentEnv;
 app.config.globalProperties.$isWeb = isWeb;
@@ -119,7 +122,7 @@ app.config.globalProperties.$isMac = isMac;
 app.config.globalProperties.$isOffline = isOffline;
 app.config.globalProperties.$isVisitor = isVisitor;
 app.config.globalProperties.$bus = Mit;
-app.config.globalProperties.$xtConfirm = confirm;
+app.config.globalProperties.useEnv= useEnv;
 window.$ui={
   confirm
 }

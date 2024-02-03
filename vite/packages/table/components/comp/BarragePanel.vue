@@ -49,7 +49,9 @@ this.currentChannel={
   }
 })
     this.loading=true
-    this.CONST = tsbApi.barrage.CONST
+if (!this.useEnv()) {
+  this.CONST = tsbApi.barrage.CONST
+}
     if(this.defaultChannel==='team'){
       this.channelList=this.channelList.reverse()
       this.currentChannel={name:'team',title:'小队'}

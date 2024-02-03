@@ -100,8 +100,9 @@ export default {
 
     },
     change(e, menu) {
-
       console.log('menu :>> ', menu);
+      let res = window.useLimitEnv('web',menu.name)
+      if (res) return
       this.activeIndex = menu.index
       this.$emit('changeTab', {
         index: menu.index,

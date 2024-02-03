@@ -1,21 +1,20 @@
-<template>
-  <div v-if="showRestore" class="no-drag"
+<template >
+  <div v-if="showRestore && !xuseEnv('web')" class="no-drag"
     style="z-index:9999;position:fixed;left: 1em;top: 1em;background: #333;border-radius:3px;padding: 8px 14px 8px 14px;box-shadow: 0 0 4px rgba(0,0,0,0.76);">
     <div class="mb-3">当前窗口分辨率：{{ currentWidth }} * {{ currentHeight }}，将于{{ timeout }}秒后还原</div>
     <a-button @click="restore" class="ml-3">还原</a-button>
     <a-button @click="reset" class="ml-3">重置</a-button>
     <a-button @click="sure" type="primary" class="ml-3">确认</a-button>
-
   </div>
 
-  <div class="line" >
+  <div class="line"  v-if="!useEnv()">
     缩放比例（输入后回车确认）：
     <!-- 后期可删 -->
     <a-input-number style="color: var(--primary-text);" :min="30" :max="500" @pressEnter="inputEnter"
       v-model:value="inputZoom"></a-input-number>
     %<br>
   </div>
-  <div class="line">
+  <div class="line"   v-if="!useEnv('web')">
 
     分辨率：<span :class="{ 'unfit': fitWidth.status !== 0 }">
       <Icon icon="kuandu" />宽 {{ currentWidth }} <template v-if="fitWidth.status !== 0">（
@@ -45,6 +44,7 @@
 <script>
 import { mapWritableState } from 'pinia'
 import { appStore } from '../../store'
+import  { useEnv } from '../../ui/hooks/useEnv'
 
 export default {
   name: 'ZoomUI',
@@ -61,9 +61,12 @@ export default {
     }
   },
   async mounted() {
-    this.newZoom = await tsbApi.window.getZoomFactor() * 100
+    if (this.useEnv()) {
+      this.newZoom = await tsbApi.window.getZoomFactor() * 100
     this.oldZoom = this.newZoom
     this.inputZoom = +(this.newZoom).toFixed(0)
+
+    }
 
     this.getSize()
 
@@ -72,6 +75,7 @@ export default {
     })
   },
   methods: {
+    useEnv,
     inputEnter() {
       if (!this.inputZoom) {
         this.inputZoom = 30

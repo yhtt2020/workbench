@@ -218,7 +218,9 @@ export default {
 
     },
     async getList() {
-      this.CONST = tsbApi.barrage.CONST
+      if (this.useEnv()) {
+        this.CONST = tsbApi.barrage.CONST
+      }
       try {
         let rs = await tsbApi.barrage.getList(this.CONST.CHANNEL.PUBLIC, this.pageUrl)
         this.barrages = rs.data

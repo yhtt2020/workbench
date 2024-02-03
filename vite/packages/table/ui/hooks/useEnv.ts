@@ -1,6 +1,34 @@
 import { isWeb, isClient, isMac, isOffline, isVisitor } from "./env";
-
+import { watch } from "vue";
+// 权限匹配优先级
 const priority = ["web", "offline", "visitor", "mac", "client"];
+// 路由限制
+const routerLimit = {
+  web: [
+    "screen",
+    "browser",
+    "key",
+    "myGame",
+    "dev",
+    "music",
+    "schemeIndex",
+    "schemeList",
+    " deck",
+    "clipboard",
+  ],
+};
+// 组件限制
+const componentLimit = {
+  web: ["", "", ""],
+};
+// 汇总所有限制
+const allLimits = {
+  web: [...routerLimit.web, ...componentLimit.web],
+  client: [""],
+  mac: [""],
+  offline: [""],
+  visitor: [""],
+};
 
 export const useEnv = (arr = "web") => {
   if (typeof arr == "string") {
@@ -10,6 +38,7 @@ export const useEnv = (arr = "web") => {
   if (!Array.isArray(arr)) {
     return console.warn("环境检测参数必须为数组 :>> ");
   }
+
   arr = envSort(arr);
 
   let flag: any = false;
@@ -41,14 +70,22 @@ const envSort = (arr) => {
 };
 const envDetection = (type) => {
   if (type == "web") {
-    return isWeb;
+    return isWeb ? "web" : "";
   } else if (type == "client") {
-    return isClient;
+    return isClient ? "client" : "";
   } else if (type == "mac") {
-    return isMac;
+    return isMac ? "mac" : "";
   } else if (type == "offline") {
-    return isOffline;
+    return isOffline ? "offline" : "";
   } else if (type == "visitor") {
-    return isVisitor;
+    return isVisitor ? "visitor" : "";
   }
+};
+
+export const useLimitEnv = (arr = "web", name) => {
+  let res = useEnv(arr);
+  let limit = allLimits[res]?.includes(name);
+  console.log("limit :>> ", limit);
+
+  return limit;
 };
