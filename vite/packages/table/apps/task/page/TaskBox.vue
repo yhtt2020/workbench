@@ -29,8 +29,10 @@
     <!-- </xt-menu> -->
   </xt-task>
   <Task v-if="store.isTaskDrawer"></Task>
-   <teleport to='body' >
-    <div class="fixed flex justify-between pr-4 pl-5 pt-4 pb-4 xt-main-bg rounded-md" v-if="!store.$state.smallMize" style="bottom:12%;right: 2%; width: 287px;">
+  <!-- 任务中心最小窗口化 -->
+  <teleport to='body' >
+    <div class="fixed flex justify-between pr-4 pl-5 pt-4 pb-4 xt-main-bg rounded-md" v-if="!store.$state.smallMize" 
+     style="bottom:12%;right: 2%; width: 287px;z-index: 1000;">
       <div class="w-full flex items-center justify-between">
         <div class="flex items-center justify-center">
           <xt-ify-icon icon="fluent-emoji:star" size="16" class="mr-2"></xt-ify-icon>
