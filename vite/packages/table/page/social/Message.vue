@@ -171,7 +171,7 @@
       </a-col>
     </a-row>
     <div v-else class="w-full h-full  s-bg">
-      <xt-status ele="消息功能" :list="['visitor']" ></xt-status>
+      <xt-status name="消息功能" :limitEnv="['visitor']" ></xt-status>
     </div>
   </div>
 </template>
@@ -222,7 +222,7 @@ export default {
   computed: {
     ...mapState(messageStore, ['newFollower', 'systemNotice', 'customNotice', 'push', 'comment', 'mention', 'support']),
     envVisitor(){
-      return !window.useEnv('visitor')
+      return !window.$useEnv('visitor')
     },
 
     interact() {

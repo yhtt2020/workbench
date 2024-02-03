@@ -39,7 +39,7 @@ export default {
   methods:{
     ...mapActions(teamStore,['updateMy']),
     async postBarrage () {
-      if(!window.useEnv('visitor')){
+      if(!window.$useEnv('visitor')){
         if (!this.postContent) {
           message.error('请输入弹幕内容')
           return

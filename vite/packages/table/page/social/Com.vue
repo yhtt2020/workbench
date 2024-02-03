@@ -133,7 +133,7 @@ export default {
     ...mapState(teamStore, ['my', 'myTeamNo', 'myTeam']),
     ...mapState(appStore, ['userInfo']),
     envVisitor(){
-      return !window.useEnv('visitor')
+      return !window.$useEnv('visitor')
     }
   },
   mounted () {

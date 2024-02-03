@@ -96,7 +96,7 @@ export default {
       return leveList.findIndex((n) => n > lv) !== -1 ? leveList.findIndex((n) => n > lv) - 1 : leveList.length - 1
     },
     useVisitor(){
-      return !window.useEnv('visitor')
+      return !window.$useEnv('visitor')
     },
   },
   mounted() {
