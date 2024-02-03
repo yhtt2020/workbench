@@ -1,6 +1,6 @@
 <template>
   <div class="ml-4 w-full h-full">
-    <a-row v-if="0" class="card flex auto-height s-bg " style="width:100%;max-width:50em;padding: 1em; background: var(--primary-bg);color: var(--primary-text)" :gutter="20">
+    <a-row v-if="envVisitor" class="card flex auto-height s-bg " style="width:100%;max-width:50em;padding: 1em; background: var(--primary-bg);color: var(--primary-text)" :gutter="20">
       <a-col :span="24">
         <div class="message-title flex items-center justify-between mb-4">
           <div class="flex items-center">
@@ -171,7 +171,7 @@
       </a-col>
     </a-row>
     <div v-else class="w-full h-full  s-bg">
-      <xt-status ele="消息功能" :list="['offline', 'visitor', 'mac']" ></xt-status>
+      <xt-status ele="消息功能" :list="['visitor']" ></xt-status>
     </div>
   </div>
 </template>
@@ -221,6 +221,10 @@ export default {
   },
   computed: {
     ...mapState(messageStore, ['newFollower', 'systemNotice', 'customNotice', 'push', 'comment', 'mention', 'support']),
+    envVisitor(){
+      return !window.useEnv('visitor')
+    },
+
     interact() {
       const interact = _.concat(this.comment, this.mention, this.support)
       let sorted = interact.sort((item1, item2) => {

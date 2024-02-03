@@ -243,6 +243,7 @@ import { chatStore } from '../store/chat'
 // 顶部状态
 import TopPanel from '../components/TopPanel.vue'
 import { visitorStore } from '../js/common/visitor'
+import cache from "../components/card/hooks/cache";
 
 const { settings } = window.$models
 export default {

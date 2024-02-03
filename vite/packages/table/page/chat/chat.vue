@@ -261,7 +261,8 @@ export default {
       com.getMyCommunity();
       com.getCommunityTree();
       // 游客模式下 隐藏 聊天对话 和 通讯录
-      if(!window.useEnv('visitor')){
+      // console.log("!window.useEnv('visitor')", !window.useEnv('visitor'))
+      if(window.useEnv('visitor')){
         headList.value[0].disabled = true
         headList.value[1].disabled = true
       }
