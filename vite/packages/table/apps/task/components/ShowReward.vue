@@ -12,7 +12,7 @@ import { storeToRefs } from "pinia";
 import Reward from "./Reward.vue";
 
 const store = taskStore();
-const { currentId, currentTaskList } = storeToRefs(store);
+const { currentId, currentTaskList,taskUserMedal } = storeToRefs(store);
 const props = defineProps({
   id: {},
 });
@@ -37,12 +37,16 @@ const getReward = computed(() => {
           type: "avatarFrame",
           icon: item.data.icon,
         });
-      } else if (item.label == "勋章") {
+      } 
+      else if (item.label == "勋章") {
+        taskUserMedal.value.push({medal:{...item.value}});
         arr.push({
           type: "medal",
           icon: item.data.icon_lg,
         });
-      } else if (item.label == "积分") {
+      } 
+      else if (item.label == "积分") {
+        store.getUserScore()
         if (item.data.name == "社区积分") {
           emits("onReward", "communityPoints");
           arr.push({

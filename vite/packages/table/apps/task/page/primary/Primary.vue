@@ -1,6 +1,8 @@
 <template>
-  <xt-button @click="test()">任务重置</xt-button>
+  <xt-button @click="test()" v-if="settings.enableDev">任务重置</xt-button>
   <template v-if="store.taskID">
+    <!-- 用户等级信息 -->
+    <TaskUserInfo />
     <!-- 章节进度 -->
     <div class="xt-bg-2 rounded-xl px-4 pt-4 pb-3">
       <xt-text>
@@ -8,13 +10,14 @@
           <xt-new-icon icon="fluent-emoji:star" class="mr-3" size="20" />
           {{ chapter.chapter }}
         </div>
-        <template #right
-          >{{ stage + 0 }} / {{ chapter.tasks.length }}
+        <template #right>
+          {{ stage + 0 }} / {{ chapter.tasks.length }}
         </template>
       </xt-text>
-      <div class="mt-1">
+      <div class="mt-1 mb-1">
         <a-progress :percent="progress" :show-info="false" />
       </div>
+      <TaskReward :showTaskReward="currentTaskReward"></TaskReward>
     </div>
     <xt-title>正在进行</xt-title>
     <div class="xt-bg-2 rounded-xl p-3">
@@ -32,22 +35,38 @@
       </div>
     </div>
   </template>
-  <div v-else class="text-center">已完成所有任务</div>
+
+  <template v-else>
+    <div class="flex flex-col items-center justify-center h-full">
+      <xt-new-icon icon="fluent-emoji:glowing-star" class="mb-4" size="56"></xt-new-icon>
+      <span class="xt-text-2 font-14 xt-font mb-2">🎉你已经完成所有主线任务！</span>
+      <span class="xt-text-2 font-14 xt-font">可以前往「每日任务」或「支线任务」，</span>
+      <span class="xt-text-2 font-14 xt-font">完成后可以获得更多奖励。</span>
+    </div>
+  </template>
 </template>
 
 <script setup>
-import StartTask from "../../components/StartTask.vue";
-import SerialNumber from "../../components/SerialNumber.vue";
+import {storeToRefs} from 'pinia';
+import { getAllTask } from "../../api";
 import { tasks } from "./Primary";
 import { taskStore } from "../../store";
 import { ref, reactive, computed, toRefs, onMounted } from "vue";
+import { appStore } from '../../../../store';
+import { getCurrentTaskReward } from '../../utils';
+
+import StartTask from "../../components/StartTask.vue";
+import SerialNumber from "../../components/SerialNumber.vue";
 import ShowReward from "../../components/ShowReward.vue";
-import { getAllTask } from "../../api";
+import TaskUserInfo from '../../components/userinfo/TaskUserInfo.vue';
+import TaskReward from './TaskReward.vue';
 
 const store = taskStore();
+const app = appStore();
+const { settings,userInfo } = storeToRefs(app);
 
-const { list, taskID, currentId, completedList, currentTaskList } =
-  toRefs(store);
+
+const { list, taskID, currentId, completedList, currentTaskList } = toRefs(store);
 
 /**
  * 首次进入时，处理任务进度
@@ -103,9 +122,50 @@ const currentTask = computed(() => {
   return chapter.value.tasks[stage.value];
 });
 
-const aaa = computed(() => {
-  return store.getPrimaryTask("M0101");
-});
+// 获取当前章节的任务所有奖励
+const currentTaskReward = computed(()=>{
+  const getChapList  =  [];
+
+  for(const item of chapter.value.tasks){
+    const list =  getCurrentTaskReward(item.id);
+    if(list){
+      for(const childrenItem of list){
+       getChapList.push(childrenItem)
+      }
+    }
+  }
+
+  // 获取经验值
+  const experienceValue = getChapList.filter((item)=>{return item.type === "experience"});
+  // 获取积分值
+  const communityPointsValue = getChapList.filter((item)=>{return item.type === "communityPoints"});
+  // 获取勋章
+  const medal = getChapList.filter((item)=>{return item.type === "medal"});
+  // 获取头像框
+  const frame = getChapList.filter((item)=>{return item.type === "avatarFrame"})
+  
+  // 计算经验值总和
+  let experienceTotal = experienceValue.reduce((sum,item)=>{
+    return sum + item.value
+  },0);
+  // 计算积分值总和
+  let communityPointsTotal = communityPointsValue.reduce((sum,item)=>{
+    return sum + item.value
+  },0);
+
+  // 等级升级预期
+  const lving = Math.floor(experienceTotal / userInfo.value?.grade.next);
+
+  return { 
+    lving:lving,
+    experience:{total:experienceTotal,name:"经验",img:"/img/task/experience.png"},
+    points:{total:communityPointsTotal,name:"积分",img:"/img/task/communityPoints.svg"},
+    medal:{list:medal,name:"勋章"},
+    frame:{list:frame,name:"头像"} 
+  };
+
+})
+
 </script>
 
 <style lang="scss" scoped>
