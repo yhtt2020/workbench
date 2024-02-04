@@ -84,7 +84,7 @@
         </div>
       </div>
 
-    <div class="xt-bg rounded-bl-xl  h-9 absolute top-0 right-0 no-drag z-10" v-if="showWindowController" id="windowController" >
+    <div class="xt-bg rounded-bl-xl  h-9 absolute top-0 right-0 no-drag z-10" v-if="showWindowController && !$useEnv()"  id="windowController" >
       <WindowController></WindowController>
 
     </div>

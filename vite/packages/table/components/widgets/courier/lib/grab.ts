@@ -1,7 +1,10 @@
 import {message} from "ant-design-vue";
 import {courierStore} from "../../../../apps/ecommerce/courier";
-
-const appDirName = window.globalArgs['app-dir_name']
+import { useEnv } from "../../../../ui/hooks/useEnv";
+let appDirName
+if ( !useEnv('web')) {
+   appDirName = window.globalArgs['app-dir_name']
+}
 const grab = {
   tb: {
     login(callback) {

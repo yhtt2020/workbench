@@ -1,26 +1,10 @@
 <template>
-  <xt-modal
-    custom
-    v-model="store.isTaskDrawer"
-    boxClass="rounded-xl"
-    :mask="false"
-  >
-    <div class="xt-modal flex rounded-xl" style="width: 500px; height: 636px">
-      <xt-left-menu
-        :list="menusList"
-        :last="Offline.isOffline ? 3 : 4"
-        :end="1"
-        model="id"
-        leftClass=" 1 xt-main-bg py-3 h-full  "
-        :leftStyle="{
-          'border-radius': '12px 0 0 12px',
-        }"
-        style="border-radius: 12px 12px 12px 0"
+  <xt-modal custom v-model="store.isTaskDrawer" boxClass="rounded-xl" :mask="false" v-if="smallMize">
+    <div class="xt-modal flex rounded-xl" style="width: 500px; height: 742px;" >
+      <xt-left-menu :list="menusList" :end="1" model="id" style="border-radius: 12px 12px 12px 0"
+        leftClass=" 1 xt-main-bg py-3 h-full  "  :leftStyle="{'border-radius': '12px 0 0 12px',}"
       />
-      <!-- <div class="flex flex-col w-full">
-       -->
-      <div class="w-full  xt-text pt-3 pr-3 relative">
-        <!-- xt-scrollbar -->
+       <div class="w-full  xt-text pt-3 pr-3 relative">
         <Primary v-if="currentTask == 'Primary'" />
         <Branch
           v-else-if="currentTask == 'Branch'"
@@ -32,8 +16,6 @@
         <Activity v-else-if="currentTask == 'Activity'" />
         <Set v-else-if="currentTask == 'Set'" />
       </div>
-      <!--
-      </div> -->
     </div>
   </xt-modal>
 </template>
@@ -52,17 +34,23 @@ import { tasks } from "../page/branch/Branch.ts";
 import { useToast } from "vue-toastification";
 
 import { getAllTask } from "../api";
+import {getUnFinishTaskStatus} from "../utils";
+
+
+const store = taskStore();
+
 onMounted(() => {
   const toast = useToast();
   toast.clear();
   currentTask.value = "Primary";
+  store.initTask()
 });
 let currentTask = ref("Primary");
 let task = ref([]);
 let icon = ref("");
-const store = taskStore();
 
-const { updateTime, currentUpdateTime, currentTaskList } = storeToRefs(store);
+
+const { updateTime, currentUpdateTime, currentTaskList,smallMize } = storeToRefs(store);
 let Offline = offlineStore();
 // 切换任务
 const selectTab = (item) => {
@@ -75,6 +63,7 @@ const selectBranchTab = (item) => {
   task.value = tasks[item.value];
 };
 const menusList = computed(() => {
+  const isDone = getUnFinishTaskStatus()?.done;
   if (Offline.isOffline) {
     let tmp = ref([]);
     tmp.value = menus.value.filter((i) => {
@@ -82,57 +71,68 @@ const menusList = computed(() => {
     });
     return tmp.value;
   } else {
-    return menus.value;
+    if(isDone === 0){
+      let undone = ref([])
+      undone.value = menus.value.filter((item)=>{ 
+       const option = item.value !== "efficiency" && item.value !== "games" && item.value !== "association";
+       return option;
+      })
+      return undone.value;
+    }
+    else {
+      return menus.value;
+    }
   }
 });
 // 任务配置
 let menus = ref([
   {
-    // slot: "star",
     newIcon: "fluent-emoji:star",
     value: "Primary",
     title: "主线任务",
     callBack: selectTab,
     name: "主线",
   },
+  {
+    newIcon: "fluent-emoji:rainbow",
+    value: "Activity",
+    title: "活动任务",
+    callBack: selectTab,
+    name: "活动",
+  },
   // {
-  //   newIcon: "fluent-emoji:bullseye",
-  //   title: "支线任务",
-  //   value: "works",
-  //   callBack: selectTab,
+  //  newIcon: "fluent-emoji:bullseye",
+  //  title: "支线任务",
+  //  value: "works",
+  //  callBack: selectTab,
   // },
   {
-    newIcon: "fluent-emoji:rocket",
-    title: "效率办公",
-    value: "efficiency",
-    callBack: selectBranchTab,
-    name: "效率",
+   newIcon: "fluent-emoji:rocket",
+   title: "效率办公",
+   value: "efficiency",
+   callBack: selectBranchTab,
+   name: "效率",
   },
   {
-    newIcon: "fluent-emoji:joystick",
-    title: "游戏辅助",
-    value: "games",
-    callBack: selectBranchTab,
-    name: "游戏",
+   newIcon: "fluent-emoji:joystick",
+   title: "游戏辅助",
+   value: "games",
+   callBack: selectBranchTab,
+   name: "游戏",
   },
   {
-    newIcon: "fluent-emoji:thought-balloon",
-    title: "社群沟通",
-    value: "association",
-    callBack: selectBranchTab,
-    name: "社群",
+   newIcon: "fluent-emoji:thought-balloon",
+   title: "社群沟通",
+   value: "association",
+   callBack: selectBranchTab,
+   name: "社群",
   },
+  // {
   //   newIcon: "fluent-emoji:bullseye",
   //   value: "Daily",
-  //   title: "每日",
+  //   title: "每日任务",
   //   callBack: selectTab,
-  //   name: "活动",
-  // },
-  // {
-  //   newIcon: "fluent:building-shop-16-regular",
-  //   value: "Set",
-  //   title: "设置",
-  //   callBack: selectTab,
+  //   name: "每日",
   // },
   {
     newIcon: "fluent:settings-16-regular",
@@ -151,12 +151,24 @@ const updateTaskList = async () => {
   currentTaskList.value = data;
 };
 
-// if (
-//   currentTaskList.value.length <= 0 ||
-//   updateTime.value != currentUpdateTime.value
-// ) {
-//   updateTaskList();
-// }
+
+
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+:deep(.xt-bt){
+  border-top: none !important;
+}
+:deep(.xt-br){
+  border-right: none !important;
+}
+
+.pop {
+  position: fixed;
+  bottom: 16%;
+  right: 5%;
+  width: 200px !important;
+  height: 60px !important;
+}
+
+</style>

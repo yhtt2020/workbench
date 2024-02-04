@@ -96,10 +96,15 @@ import { paperGet,bingGet } from '../../js/axios/request';
 import Widget from '../card/Widget.vue';
 import WallpaperWidgetModal from '../paperModal/WallpaperWidgetModal.vue';
 import GalleryModal from '../paperModal/GalleryModal.vue';
+import { useEnv } from '../../ui/hooks/useEnv';
 
+let fs
+let path
+if (!useEnv()) {
+  fs = require('fs');
+  path = require('path');
+}
 
-let fs = require('fs');
-let path = require('path');
 
 
 export default {

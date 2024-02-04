@@ -2,8 +2,8 @@ import {defineStore} from "pinia";
 import {Server} from '../consts'
 import {getConfig} from "../js/axios/serverApi";
 import dbStorage from "./dbStorage";
-
-const {axios} = window.$models
+import axios from 'axios'
+// const {axios} = window.$models
 const createUrl = Server.baseUrl + '/app/team/create'
 const joinByNoUrl = Server.baseUrl + '/app/team/joinByNo'
 const quitByNoUrl = Server.baseUrl + '/app/team/quitByNo'

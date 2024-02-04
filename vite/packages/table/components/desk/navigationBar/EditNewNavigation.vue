@@ -87,7 +87,12 @@ import Sortable from 'sortablejs'
 import { message } from 'ant-design-vue'
 import Msg from '../../../ui/new/msg/index.vue'
 import customLink from './components/CustomLink.vue'
-const { appModel } = window.$models
+import {useEnv} from '../../../ui/hooks/useEnv'
+let appModel
+if ( !useEnv('web')) {
+  appModel = window.$models.appModel
+
+}
 export default {
     name: 'EditNewNavigation',
     components: {
@@ -416,8 +421,8 @@ export default {
             this.$emit('addIcon', value)
             this.linkVisible = false
         }
-            
-        
+
+
 
     },
     computed: {

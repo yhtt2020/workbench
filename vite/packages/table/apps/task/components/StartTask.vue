@@ -42,7 +42,7 @@ const app = appStore();
 
 // 初始化
 const store = taskStore();
-const { currentId, startList, claimRewardsList, completedList, rewardVisible } =
+const { currentId, startList, claimRewardsList, completedList, rewardVisible,smallMize } =
   storeToRefs(store);
 const router = useRouter();
 const props = defineProps({
@@ -71,6 +71,7 @@ const getGuide = () => {
 const startTask = () => {
   startList.value.push(props.task.id);
   startList.value = [...new Set(startList.value)];
+  smallMize.value = false;
 
   console.log("props.task.id :>> ", props.task.id);
   currentId.value = props.task.id;
@@ -94,7 +95,14 @@ const startTask = () => {
     }
     if (item.type === "bus") {
       setTimeout(() => {
-        proxy.$bus.emit(item.value);
+        // 是否走定制桌面任务,是的需要先跳转主页后,在打开定制桌面弹窗
+        if(item.value === "customDesk"){
+          router.push({name:"home"});
+          proxy.$bus.emit(item.value);
+        }
+        else {
+          proxy.$bus.emit(item.value);
+        }
       }, 200);
     }
   });

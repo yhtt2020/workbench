@@ -25,7 +25,7 @@
   <!-- 音乐播放器 -->
   <div class="xt-bg-t-2 w-full rounded-lg mb-3 flex items-center justify-between" style="padding: 0 22px; height: 54px;">
     <div v-for="item in list">
-      <xt-button style="width: auto;" h="0" @click="item.fn">
+      <xt-button style="width: auto;" h="0" @click="item.fn" :class="status !== 'null' ? 'unPointer':''">
         <div class="flex items-center justify-center">
           <xt-new-icon :icon="item.icon" :size="item.size||24" :color="item.color"></xt-new-icon>
         </div>
@@ -37,7 +37,7 @@
   <div @touchstart="setting=true" @touchmove="syncProgressBar" @touchend="setVolume" @click="setVolume" @mousemove="syncProgressBar" @mousedown="setting=true" @mouseup="setVolume"  class="xt-bg-t-2 w-full flex items-center justify-between rounded-lg pointer" style="height: 54px;">
     <div class="rounded-tl-lg rounded-bl-lg " :style="{width:(defaultOutput.volume/100*258).toFixed(0)+'px'}" style="height:52px;background: rgba(255,255,255,0.85);"></div>
     <div class="pr-4">
-     <xt-button @mousedown.stop @mousemove.stop @mouseup.stop @click="setMuted(!mute)"   @touchend.stop @touchstart.stop @touchmove.stop style="width: auto;" h="0">
+     <xt-button :class="status !== 'null' ? 'unPointer':''" @mousedown.stop @mousemove.stop @mouseup.stop @click="setMuted(!mute)"   @touchend.stop @touchstart.stop @touchmove.stop style="width: auto;" h="0">
        <div class="flex items-center justify-center">
          <xt-new-icon  v-if="!mute" icon="fluent:speaker-2-16-regular" size="24"></xt-new-icon>
          <xt-new-icon v-else icon="fluent:speaker-mute-16-regular" size="24"></xt-new-icon>
@@ -75,10 +75,6 @@ const lastSong = () =>{
   if(props.status === 'null'){
     window.$models.win32.sendKeyboard(0xB1)
   }
-  // 阻止上一首切换事件
-  else {
-
-  }
 }
 const setMuted=(muteValue,event)=>{
   setDefaultVolume({
@@ -91,10 +87,6 @@ const nextSong = ()=>{
   // 做下一首音乐的播放交互逻辑
   if(props.status === 'null'){
     window.$models.win32.sendKeyboard(0xB0)
-  }
-  // 阻止下一首切换事件
-  else {
-
   }
 }
 
@@ -134,10 +126,6 @@ const play = () =>{
   if(props.status === 'null'){
     window.$models.win32.sendKeyboard(0xB3)
   }
-  // 阻止音乐播放事件
-  else {
-
-  }
 }
 
 const list = ref([
@@ -163,5 +151,7 @@ const list = ref([
 </script>
 
 <style lang="scss" scoped>
-
+.unPointer{
+  pointer-events: none !important;
+}
 </style>

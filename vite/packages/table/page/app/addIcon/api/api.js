@@ -1,13 +1,13 @@
+import { useEnv } from "../../../../ui/hooks/useEnv";
 import service from "./request";
 const homeRecommend = "/app/good/getGoodRecommend"; //首页推荐接口
 const select = "/app/good/app/selectApp";
 import web from './web.json'
 // import isXT from "../../../../components/card/hooks/mode";
 let appModel;
-// if (isXT) {
-const { appModel: model } = window.$models;
-appModel = model;
-// }
+if (!useEnv('web')) {
+  appModel  = window.$models.appModel
+}
 // 首页推荐
 export const getRecommend = () => {
   return service.post(homeRecommend);

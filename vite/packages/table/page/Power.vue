@@ -31,7 +31,12 @@ import BackBtn from '../components/comp/BackBtn.vue'
 import { Modal, message } from 'ant-design-vue'
 import { runNir } from '../js/common/exec'
 import { getSign, isMain } from '../js/common/screenUtils'
-const execShell = require('child_process').exec
+import { useEnv } from '../ui/hooks/useEnv'
+let execShell
+if (!useEnv()) {
+  execShell = require('child_process').exec
+
+}
 export default {
   name: 'Power',
   components: { BackBtn },

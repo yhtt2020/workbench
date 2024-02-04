@@ -74,7 +74,12 @@ import { appStore } from '../../store'
 import {mapWritableState} from 'pinia'
 import GradeSmallTip from "../GradeSmallTip.vue";
 import browser from '../../js/common/browser'
-const {groupApi} = window.$apis
+import {useEnv} from '../../ui/hooks/useEnv'
+let groupApi
+if (!useEnv('web')) {
+  groupApi = window.$apis.groupApi
+
+}
 export default {
   name: 'GroupPanel',
   data(){

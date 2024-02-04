@@ -43,7 +43,12 @@ import {mapWritableState,mapActions} from 'pinia'
 import {appStore} from '../../store'
 import DebugTip from '../../components/DebugTip.vue'
 import _ from 'lodash-es'
-const {appModel} = window.$models
+import { useEnv } from '../../../table/ui/hooks/useEnv'
+let appModel
+if (!useEnv()) {
+
+  appModel = window.$models.appModel
+}
 export default {
   name: 'Optimize',
   components: { DebugTip },

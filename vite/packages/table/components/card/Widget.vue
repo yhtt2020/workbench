@@ -10,22 +10,26 @@
       @removeCard="doRemoveCard"
       v-model:sizeType="sizeType"
       v-model:oldMenuVisible="menuVisible"
-      class="relative">
-
+      class="relative"
+    >
       <div
         v-if="!options?.hide"
         class="flex flex-col"
         :class="[edit ? 'editing' : '', classes]"
-        style="color: var(--primary-text); padding: 0" :style="{
+        style="color: var(--primary-text); padding: 0"
+        :style="{
           display: options.hide == true ? 'none' : '',
           width: customSize.width,
           height: customSize.height,
           background: options.background || 'var( --primary-bg)',
-        }">
+        }"
+      >
         <!--标题栏start-->
         <slot name="cardTitle">
-          <div :class="options.noTitle === true ? 'no-title' : 'content-title'"
-            class="flex items-center justify-between px-3 pt-3">
+          <div
+            :class="options.noTitle === true ? 'no-title' : 'content-title'"
+            class="flex items-center justify-between px-3 pt-3"
+          >
             <div class="left-title" v-if="options.noTitle !== true">
               <!-- 标题左侧插槽 -->
               <slot name="left-title-icon"></slot>
@@ -43,25 +47,36 @@
             <div class="z-10 flex right-title" v-if="showRightIcon">
               <!-- 右侧设置插槽  用于扩展标题菜单左侧位置的内容  -->
               <slot name="right-menu"> </slot>
-              <RightMenu :menus="menus" :sizes="sizeList" :customIndex="customIndex" model="all"
-                @removeCard="doRemoveCard" v-model:sizeType="sizeType" v-model:oldMenuVisible="menuVisible">
+              <RightMenu
+                :menus="menus"
+                :sizes="sizeList"
+                :customIndex="customIndex"
+                model="all"
+                @removeCard="doRemoveCard"
+                v-model:sizeType="sizeType"
+                v-model:oldMenuVisible="menuVisible"
+              >
                 <MenuOutlined class="pointer" />
               </RightMenu>
             </div>
           </div>
         </slot>
         <!-- 标题栏end   -->
-        <PageState :env="env" :options="options">
-          <div class="flex-1 h-0">
-            <div class="h-full px-3 pb-2  rounded-b-lg"
-              :style="{ background: options.showColor ? 'var(--main-bg)' : '' }"
-            >
-              <slot>
-                <!--  主体内容插槽1  -->
-              </slot>
-            </div>
+        <xt-status
+          v-if="useEnv(limitEnv)"
+          :ele="options.title"
+          :list="limitEnv"
+        />
+        <div v-else class="flex-1 h-0">
+          <div
+            class="h-full px-3 pb-2 rounded-b-lg"
+            :style="{ background: options.showColor ? 'var(--main-bg)' : '' }"
+          >
+            <slot>
+
+            </slot>
           </div>
-        </PageState>
+        </div>
       </div>
       <div v-else :class="[edit ? 'editing' : '']">
         <slot>
@@ -96,6 +111,7 @@ import RightMenu from "./RightMenu.vue";
 import PageState from "./PageState.vue";
 import { useWidgetStore } from "./store";
 import { useFreeLayoutStore } from "../desk/freeLayout/store";
+import { useEnv } from "../../ui/hooks/useEnv";
 
 import GetSize from "./GetSize.vue";
 
@@ -139,7 +155,7 @@ export default {
     //组件自定义数据，每个卡片独立，并存入桌面数据当中
     customData: {
       type: Object,
-      default: () => { },
+      default: () => {},
     },
     desk: {
       type: Object,
@@ -150,16 +166,8 @@ export default {
       type: Boolean,
       default: true,
     },
-    env: {
-      type: Object,
-      default: () => {
-        return {
-          web: false,
-          mobile: false,
-          client: false,
-          offline: false,
-        };
-      },
+    limitEnv: {
+      default: "",
     },
   },
   data() {
@@ -263,8 +271,8 @@ export default {
       handler() {
         this.updateCustomData(
           this.$parent.customIndex ||
-          this.$parent.$parent.customIndex ||
-          this.$parent.$attrs.customIndex,
+            this.$parent.$parent.customIndex ||
+            this.$parent.$attrs.customIndex,
           {
             width: this.sizeType.width,
             height: this.sizeType.height,
@@ -290,6 +298,7 @@ export default {
   methods: {
     ...mapActions(cardStore, ["removeCard", "updateCustomData"]),
     ...mapActions(offlineStore, ["getIsOffline"]),
+    useEnv,
     // 右键删除
     doRemoveCard() {
       this.options.beforeDelete && this.$emit("delete");

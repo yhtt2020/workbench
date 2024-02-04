@@ -19,9 +19,9 @@ export const initSocket = async () => {
     },
     query:{
       token:config.headers.Authorization,
-      clientId:tsbApi.runtime.clientId,
-      platform:process.platform,//此处要指定设备平台
-      clientName:tsbApi.runtime.clientName
+      clientId:window.$useEnv() ? '' :tsbApi.runtime.clientId,
+      platform:window.$useEnv() ? '' :process.platform,//此处要指定设备平台
+      clientName:window.$useEnv() ? '' :tsbApi.runtime.clientName
     }
   }
   if(!dev){

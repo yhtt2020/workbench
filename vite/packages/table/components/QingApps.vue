@@ -24,7 +24,12 @@
 import { mapWritableState } from 'pinia'
 import { Modal } from 'ant-design-vue'
 import { offlineStore } from "../js/common/offline";
-const { appModel } = window.$models
+import {useEnv} from '../ui/hooks/useEnv'
+let appModel
+if (!useEnv('web')) {
+  appModel= window.$models.appModel
+
+}
 export default {
   name: 'QingApps',
   computed: {

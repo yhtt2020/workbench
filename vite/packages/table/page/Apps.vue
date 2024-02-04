@@ -141,8 +141,12 @@ import browser from '../js/common/browser'
 import AddIcon from '../page/app/addIcon/index.vue'
 import Desktop from '../page/app/addIcon/modules/Desktop.vue'
 import pathLib from 'path'
+import {useEnv} from '../ui/hooks/useEnv'
+let fs
+if (!useEnv('web') ) {
+fs= window.$models.fs
 
-let { fs } = window.$models
+}
 export default {
   name: 'Apps',
   components: { AddIcon, Desktop, Template, MyApps, QingApps, SecondPanel, NotificationOutlined, FolderOpenOutlined },

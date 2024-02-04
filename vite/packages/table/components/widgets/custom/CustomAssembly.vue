@@ -299,7 +299,13 @@ import Template from "../../../../user/pages/Template.vue";
 import { cardStore } from "../../../store/card";
 import { message } from "ant-design-vue";
 import { startApp } from '../../../ui/hooks/useStartApp'
-const { appModel } = window.$models;
+
+import {useEnv} from '../../../ui/hooks/useEnv'
+let appModel
+if (! useEnv()) {
+  appModel = window.$models.appModel
+
+}
 export default {
   name: "CustomAssembly",
   components: {

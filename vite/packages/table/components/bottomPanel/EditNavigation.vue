@@ -255,7 +255,11 @@ import Classification from '../comp/Classification.vue'
 import { Icon as navIcon } from '@iconify/vue'
 import { message } from 'ant-design-vue'
 import {renderIcon} from '../../js/common/common'
-const { appModel } = window.$models
+import { useEnv } from '../../ui/hooks/useEnv'
+let appModel
+if (!useEnv('web')) {
+  appModel  = window.$models.appModel
+}
 
 const suggestNavigationList = [
 

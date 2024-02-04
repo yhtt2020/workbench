@@ -30,7 +30,9 @@ export default {
   mounted () {
     console.log('this.currentChannel.name :>> ', this.currentChannel.name);
 
-    this.CONST = tsbApi.barrage.CONST
+if (!this.$useEnv()) {
+  this.CONST = tsbApi.barrage.CONST
+}
   },
   computed:{
     ...mapState(teamStore, ['my','myTeamNo','myTeam']),
@@ -72,7 +74,7 @@ export default {
             }
             console.log('33233333 :>> ', 33233333);
             message.success('弹幕发送成功')
-  
+
             setTimeout(() => {
               if(this.currentChannel.name==='all'){
                 this.$emit('loadAllBarrages')

@@ -63,7 +63,12 @@ import { inspectorStore } from '../../../store/inspector'
 import {message} from 'ant-design-vue'
 import {Icon as newIcon} from '@iconify/vue'
 import { prettyDisplayBytes } from '../../../js/action/supervisory'
-const {rpc}=window.$models
+import { useEnv } from "../../../ui/hooks/useEnv";
+let rpc
+if (!useEnv()) {
+  rpc=window.$models.rpc
+
+}
 
 export default {
   name: "CPUFourCard",

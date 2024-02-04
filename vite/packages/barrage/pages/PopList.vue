@@ -147,10 +147,13 @@ export default {
     //   container:document.getElementById('danmuWrapper'),
     //   limit:50
     // })
-    tsbApi.barrage.init()
+    if (!window.$useEnv()) {
+      tsbApi.barrage.init()
     tsbApi.barrage.onUrlChanged(this.changeUrl) //挂载url变化事件
     this.pageUrl = (await tsbApi.tabs.current()).sourceUrl
     this.getList()
+
+    }
 
 
     // setInterval(()=>{
@@ -215,7 +218,9 @@ export default {
 
     },
     async getList() {
-      this.CONST = tsbApi.barrage.CONST
+      if (this.$useEnv()) {
+        this.CONST = tsbApi.barrage.CONST
+      }
       try {
         let rs = await tsbApi.barrage.getList(this.CONST.CHANNEL.PUBLIC, this.pageUrl)
         this.barrages = rs.data

@@ -3,7 +3,7 @@
     <vue-custom-scrollbar :settings="scrollbarSettings"
                           style="height: 100%;padding: 15px;white-space: nowrap;width: 100%;overflow: hidden">
       <div style="height: 100%;display: inline-block;">
-        
+
         <!-- 游客模式时屏蔽签到 -->
         <div v-if="envVisitor" class="mr-3" style="width: 300px;display: inline-block;white-space: pre-wrap;vertical-align: top">
           <div style="width: 280px" class="mr-3">

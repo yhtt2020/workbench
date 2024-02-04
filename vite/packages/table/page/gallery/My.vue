@@ -11,19 +11,19 @@
           <xt-button @click="playAll" class="mr-3 "  h="40" w="113" style="border-radius: 8px;background: rgba(0,0,0,0.2) !important;">
             <div class="flex items-center justify-center">
               <MyIcon icon="fluent:play-16-filled" style="font-size:1.25rem;" class="xt-active-text mr-2" />
-              <span  class="s-text xt-active-text xt-font font-16 font-400" v-if="!isModal">轮播全部</span> 
+              <span  class="s-text xt-active-text xt-font font-16 font-400" v-if="!isModal">轮播全部</span>
             </div>
           </xt-button>
           <xt-button w="154" h="40" @click="playActive" class="mr-3 " style="background: rgba(0,0,0,0.2) !important;border-radius: 8px;">
             <div class="flex items-center justify-center">
               <MyIcon icon="fluent:play-16-filled" style="font-size:1.25rem;" class="xt-active-text mr-2"/>
-              <span  class="s-text xt-active-text xt-font font-16 font-400">轮播选中（ {{ activePapers.length }} ）</span> 
+              <span  class="s-text xt-active-text xt-font font-16 font-400">轮播选中（ {{ activePapers.length }} ）</span>
             </div>
           </xt-button>
           <xt-button h="40" w="154" style="border-radius: 8px;background: rgba(0,0,0,0.2) !important;" @click="openRight"  >
             <div class="flex items-center justify-center">
               <MyIcon icon="fluent:arrow-download-16-regular" style="font-size:1.25rem;" class="xt-active-text mr-2" />
-              <span  class="s-text xt-active-text xt-font font-16 font-400" v-if="!isModal">导入本地图片</span> 
+              <span  class="s-text xt-active-text xt-font font-16 font-400" v-if="!isModal">导入本地图片</span>
             </div>
           </xt-button>
         </template>
@@ -68,7 +68,7 @@
      </div>
     </div>
     <div id="my-mse"></div>
-  </div>  
+  </div>
 </template>
 
 <script>
@@ -84,12 +84,15 @@ import MyEmptyStatus from './components/empty/MyEmptyStatus.vue';
 import MyContent from './components/content/MyContent.vue';
 import PaperRightDrawer from './components/drawer/PaperRightDrawer.vue';
 import ClosePaperButton from './components/close/ClosePaperButton.vue';
+import { useEnv } from '../../ui/hooks/useEnv';
 
-const fs = window.$models.fs;
-const path = require('path');
-
+let fs,path
+ if (!useEnv('web')) {
+   fs = window.$models.fs
+    path = require('path')
+ }
 export default {
-  
+
   components:{ MyIcon,MyContent,MyEmptyStatus,PaperRightDrawer,ClosePaperButton},
 
   props:['isModal'],
@@ -135,7 +138,7 @@ export default {
       this.getLoadLively();
       this.loadStaticPaper();
     }
-    
+
   },
 
   methods:{
@@ -153,30 +156,30 @@ export default {
       }
       window.Spotlight.show(imageArr,{
         control: 'autofit,page,fullscreen,close,zoom,prev,next',
-        play: true, autoslide: true,  infinite: true, 
+        play: true, autoslide: true,  infinite: true,
         progress: false,  title: false, autoplay: true,
       })
     },
     playActive(){
       const playArr = [];
       for(const el of this.activePapers){
-        if(fileImageExtension(el)){ 
+        if(fileImageExtension(el)){
           const playOption = {   'src-mp4': el.srcProtocol, media: 'video',  poster: el.path };
           playArr.push(playOption);
         }
-        else { playArr.push({ src: el.path, }); } 
+        else { playArr.push({ src: el.path, }); }
       }
       window.Spotlight.show(playArr,{
         control: 'autofit,page,fullscreen,close,zoom,prev,next',
-        play: true, autoslide: true,  infinite: true, 
+        play: true, autoslide: true,  infinite: true,
         progress: false,  title: false, autoplay: true,
       });
     },
 
     // 开启抽屉菜单
     openRight(){   this.$refs.rightDrawerRef.openRightDrawer() },
-    openBottom(item){ 
-      this.$refs.bottomDrawerRef.openBottomDrawer(); 
+    openBottom(item){
+      this.$refs.bottomDrawerRef.openBottomDrawer();
       this.currentPaper = item;
     },
 
@@ -188,9 +191,9 @@ export default {
           for(const item of videos){
             let videoPath = path.join(this.settings.savePath, 'lively', item);
             const filename = path.basename(videoPath, '.mp4');
-            const livelyItem = { 
-              src:videoPath, 
-              path: `https://up.apps.vip/lively/${filename}.jpg`, 
+            const livelyItem = {
+              src:videoPath,
+              path: `https://up.apps.vip/lively/${filename}.jpg`,
               srcProtocol: 'file://' + path.join(this.settings.savePath, 'lively', item),
             };
             this.addToStaticPaper(livelyItem);
@@ -218,7 +221,7 @@ export default {
         }
       })
     },
-    
+
     // 获取文件时间
     async getFileCreatedTime(filePath) {
       try {

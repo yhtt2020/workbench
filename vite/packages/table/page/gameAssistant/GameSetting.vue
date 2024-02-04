@@ -185,8 +185,16 @@ import { cardStore } from '../../store/card'
 import { steamUserStore } from '../../store/steamUser'
 import { ExclamationCircleFilled } from '@ant-design/icons-vue'
 
+import {useEnv} from '../../ui/hooks/useEnv'
 import {completeTask} from "../../apps/task/task"
-const { steamSession, path, https,steamUser } = $models
+let steamUser, steamSession, path, https, steamFs
+if (!useEnv()) {
+  steamUser= $models.steamUser
+  steamSession= $models.steamSession
+  path= $models.path
+  https= $models.https
+  steamFs= $models.steamFs
+}
 let LoginSession
 let EAuthTokenPlatformType
 if(steamSession){

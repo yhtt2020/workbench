@@ -1,12 +1,11 @@
+import { useEnv } from "../ui/hooks/useEnv";
+
 const userAgent = window.navigator.userAgent;
 const isXT = userAgent.indexOf("天天工作台") > -1;
 const debug=true//开启这里的调试，会输出调试信息
-let model: any = "";
-if (isXT) {
-  const { storageModel } = window.$models;
-  model = storageModel;
-} else {
-  model = localStorage;
+let model: any = localStorage
+if (!useEnv()) {
+  model= window.$models.storageModel;
 }
 
 function getSign(): string {
@@ -24,7 +23,7 @@ function getSign(): string {
 const dbStorage: Storage = {
   async setItem(key: string, value: string) {
     const time=Date.now()
-    model.setItem(key, value, getSign()).then(()=>{
+    model?.setItem(key, value, getSign())?.then(()=>{
       if(debug){
         if(!window.writeLog){
           window.writeLog=[]

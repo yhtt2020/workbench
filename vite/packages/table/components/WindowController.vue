@@ -61,6 +61,8 @@ export default {
     ...mapWritableState(appStore, ['showWindowController']),
   },
   async mounted () {
+    if (window.$useEnv()) return
+
     this.alwaysTop = await tsbApi.window.isAlwaysOnTop()
   },
   methods: {
