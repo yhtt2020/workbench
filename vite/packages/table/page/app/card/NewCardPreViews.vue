@@ -422,7 +422,7 @@ export default {
       index = index ?? this.carouselIndex;
       let res  =  window.$useComLimit(['web'], item.option[index].name)
       console.log('res',res);
-      if (res) return
+      // if (res) return
       this.addCard(
         { name: item.option[index].name, id: Date.now(), customData: {} },
         this.desk
