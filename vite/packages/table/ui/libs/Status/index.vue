@@ -14,17 +14,6 @@
         :style="{ fontSize: fontSize }"
         style="font-size: 14px; color: var(--secondary-text)"
       >
-        {{ ele }}在{{ plat }}下不可用
-      </div>
-      <div
-        class="mt-4"
-        :style="{ fontSize: fontSize }"
-        style="
-          font-family: 'PuHuiTi400';
-          font-size: 14px;
-          color: var(--secondary-text);
-        "
-      >
         {{ name }}在{{ plat }}下不可用
       </div>
     </div>
@@ -41,7 +30,7 @@ export default {
   },
   components: {},
   mounted() {
-    this.plat = window.$useEnv(this.limitEnv);
+    this.plat = window.$useEnv(this.status);
   },
   watch: {},
   props: {
@@ -65,9 +54,9 @@ export default {
       type: Number,
       default: 100,
     },
-    limitEnv: {
+    status: {
       type: Array,
-      default: ["offline", "visitor", "mac"],
+      default: '',
     },
   },
 };

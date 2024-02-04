@@ -49,10 +49,9 @@ export const useEnv = (arr = "web") => {
   let flag: any = false;
 
   for (const iterator of arr) {
-    if (flag) return;
+    if (flag) return flag;
     flag = envDetection(iterator);
   }
-
   return flag;
 };
 const envSort = (arr) => {

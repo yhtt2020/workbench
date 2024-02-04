@@ -16,7 +16,6 @@
       :sizeList="autoSizeList"
       @leftClick="leftClick"
       v-model:customSize="customData.customSize"
-      :limitEnv="['web']"
       @delete="deleteFn"
     >
       <!-- 空状态显示状态 -->

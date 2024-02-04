@@ -50,7 +50,7 @@
         <div class="flex items-center flex-1" style="height: 28px">
           <div
             class="flex items-center h-full"
-            @click="HeaderLeftClick"
+            @click="leftClick"
             @mouseenter="leftMouseEnter"
             @mouseleave="leftMouseLeave"
             style=""
@@ -61,7 +61,7 @@
             <!-- 图标区域 -->
             <div
               class="flex items-center h-full"
-              @click="HeaderLeftClick"
+              @click="leftIconClick"
               @mouseenter="iconMouseEnter"
               @mouseleave="iconMouseLeave"
             >
@@ -91,7 +91,7 @@
             <!-- 标题区域 -->
             <div
               class="flex items-center h-full px-2 ml-1"
-              @click="HeaderNameClick"
+              @click="titleClick"
               @mouseenter="titleMouseEnter"
               @mouseleave="titleMouseLeave"
               :class="{ 'header-title': titleHover }"
@@ -156,7 +156,12 @@
       </div>
       <!-- 小组件头部结束 -->
       <!-- 小组件主体开始 -->
-      <xt-status v-if="useEnv(limitEnv)" :ele="header.title" :list="limitEnv" />
+      <xt-status
+        v-if="useEnv(limitEnv)"
+        :name="header.title"
+        :status="limitEnv"
+        imgSize="75"
+      />
       <div
         v-else
         class="flex-1 h-full rounded-b-lg"
@@ -195,6 +200,7 @@ import {
   computed,
   ref,
   onBeforeMount,
+  onMounted,
   getCurrentInstance,
   toRefs,
 } from "vue";
@@ -203,6 +209,7 @@ import { cardStore as useCardStore } from "../../store/card";
 import { useWidgetStore } from "./store";
 import { useFreeLayoutStore } from "../desk/freeLayout/store";
 import { useMouseInElement } from "@vueuse/core";
+import { onClickOutside } from "@vueuse/core";
 
 import vueCustomScrollbar from "../../../../src/components/vue-scrollbar.vue";
 import Resize from "./Resize.vue";
@@ -211,15 +218,28 @@ import { useEnv } from "../../ui/hooks/useEnv";
 
 import { deepMerge } from "./ContainerUtils";
 
-const container = ref(null);
+const container = ref(0);
 const { isOutside } = useMouseInElement(container);
+
 const { proxy } = getCurrentInstance();
+// const selected = ref(null);
 const status = computed(() => {
   return {
-    isOutside: isOutside.value,
+    outside: isOutside.value,
+    // selected: selected.value,
   };
 });
-
+onMounted(() => {
+  // onClickOutside(container, (event) => {
+  //   console.log("event :>> ", event);
+  //   console.log("selected.value :>> ", selected.value);
+  //   if (selected.value == 0) {
+  //     selected.value = true;
+  //   } else {
+  //     selected.value = false;
+  //   }
+  // });
+});
 /**
  * pinia
  */
@@ -384,7 +404,7 @@ const props = defineProps({
   limitEnv: { type: Array, default: () => [] },
   /**
    * 返回小组件控制器所有信息
-   * isOutside 是否处于小组件内部
+   * outside 鼠标是否悬浮与小组件
    */
   status: {},
 });
@@ -400,7 +420,11 @@ onBeforeMount(() => {
 /**
  * update:customSize 双向数据绑定customSize
  * update:status 双向数据绑定status
+ *
  * leftClick 头部左侧鼠标经过点击回调
+ * leftIconHover 头部左侧图标经过点击回调
+ * titleHover 头部标题经过点击回调
+ *
  * delete 小组件删除回调
  * resize 更新卡片大小回调
  */
@@ -411,6 +435,8 @@ const emits = defineEmits([
   "resize",
   "update:data",
   "update:status",
+  "leftIconHover",
+  "titleHover",
 ]);
 
 /**
@@ -531,6 +557,9 @@ watch(
   () => status.value,
   (val) => {
     emits("update:status", val);
+  },
+  {
+    immediate: true,
   }
 );
 /**
@@ -540,14 +569,21 @@ const resize = (data) => {
   emits("resize", data);
 };
 // 头部左侧点击
-const HeaderLeftClick = () => {
+const leftClick = () => {
   if (props.header.leftHover) {
     emits("leftClick");
   }
 };
-const HeaderNameClick = () => {
+// 头部图标点击
+const leftIconClick = () => {
+  if (props.header.iconHover) {
+    emits("leftIconHover");
+  }
+};
+// 头部标题点击
+const titleClick = () => {
   if (props.header.titleHover) {
-    emits("leftClick");
+    emits("titleHover");
   }
 };
 // 右键删除

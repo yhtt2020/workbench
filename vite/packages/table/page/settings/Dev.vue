@@ -138,6 +138,7 @@ let  res =  tsbApi.ttapp.install(path[0],(data)=>{
     }
   },
   async mounted () {
+    if (this.$useEnv()) return
     this.trayOpen = await tsbApi.settings.get('trayOpen') || 'table'
     let showInTaskBar = await tsbApi.settings.get('showInTaskBar')
     if (showInTaskBar === undefined) {
