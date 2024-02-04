@@ -63,7 +63,7 @@
         </slot>
         <!-- 标题栏end   -->
         <xt-status
-          v-if="useEnv(limitEnv)"
+          v-if="useEnv(envLimit)"
           :ele="options.title"
           :list="limitEnv"
         />
@@ -165,7 +165,9 @@ export default {
       default: true,
     },
     limitEnv: {
-      default: "",
+      default: ()=>{
+        return ''
+      }
     },
   },
   data() {
