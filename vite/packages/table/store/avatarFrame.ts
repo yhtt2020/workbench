@@ -1,12 +1,8 @@
-import { defineStore } from 'pinia';
-import { sUrl } from '../consts'
-import {getConfig} from "../js/axios/serverApi";
-import dbStorage from "./dbStorage";
-import _ from 'lodash-es';
-import axios from 'axios';
+import {defineStore} from 'pinia';
+import {sUrl} from '../consts'
 // import {message} from "ant-design-vue";
 import cache from '../components/card/hooks/cache'
-import {post,get} from "../js/axios/request";
+import {get, post} from "../js/axios/request";
 
 const getFrameUrl = sUrl('/app/good/frame/list')  // 获取头像商品数据
 const editInfoUrl = sUrl('/app/com/updateUserInfo') // 修改文档信息
@@ -52,9 +48,7 @@ export const frameStore = defineStore('frameStore',{
         goodNanoid,
         priceNanoid
       })
-      if(result){
-        return result.data
-      }
+      return result
     },
     /**
      * 获得支付二维码
@@ -62,22 +56,15 @@ export const frameStore = defineStore('frameStore',{
      * @param payment
      */
     async getQrcode(orderNanoid,payment){
-      const result = await post(getQrcodeUrl, {
-        nanoid:orderNanoid,
-        payment:payment
-      } )
-      if(result.data){
-        return result.data
-      }
+      return await post(getQrcodeUrl, {
+        nanoid: orderNanoid,
+        payment: payment
+      })
     },
 
     async getMyFrames(){
-      console.log(getMyFramesUrl,'获取地址')
-      const result=await get(getMyFramesUrl)
+      return await get(getMyFramesUrl)
 
-      if(result.data){
-        return result.data
-      }
     },
     /**
      * 装备上头像框
@@ -94,7 +81,7 @@ export const frameStore = defineStore('frameStore',{
      * @param orderNanoid
      */
     async checkOrderPaid(orderNanoid){
-      return post(checkOrderPaidUrl,{
+      return await post(checkOrderPaidUrl,{
         nanoid:orderNanoid
       })
     }
