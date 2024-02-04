@@ -99,7 +99,7 @@ export default {
     ...mapActions(appStore,['disableShake','enableShake']),
     setPos () {
       window.addEventListener('keydown', this.listenEnter)
-      this.shakeConfirm = this.$xtConfirm('提示', '请将鼠标移动到您希望在摇一摇后自动定位到的位置，并按下回车键（Enter），期间请勿关闭此窗口', {
+      this.shakeConfirm = window.$ui.confirm('提示', '请将鼠标移动到您希望在摇一摇后自动定位到的位置，并按下回车键（Enter），期间请勿关闭此窗口', {
         mask: true,
         okText: '取消',
         no: false,

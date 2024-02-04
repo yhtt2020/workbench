@@ -68,7 +68,7 @@ function deskMenus() {
       name: "整理桌面",
       disabled: this.isFreeLayout ? false : true,
       fn: () => {
-        this.$xtConfirm(
+        window.$ui.confirm(
           "整理桌面",
           `整理桌面会将当前自由布局卡片重新规整排列`,
           {

@@ -519,7 +519,7 @@ export default {
         this.maxItemNum = Math.floor((windowWidth) / 72)
         if (this.navigationList.length > this.maxItemNum && this.maxItemNum !== 0) {
           if (this.noticeFlag && this.limitFlag) {
-            this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
+            window.$ui.confirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
               ok: () => {
                 const width = this.parentSize / (this.navigationList.length * 72)
                 this.navAttribute.navSize = width.toFixed(2) * 100
@@ -885,7 +885,7 @@ export default {
     resetFolder(item, index) {
       if (item.children.length > 0) {
         if (item.children.length + this.sideList.length > this.maxItemNum) {
-          this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
+          window.$ui.confirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
             ok: () => {
               this.sideList.splice(index, 1, ...item.children)
               this.updateList(this.sideList)

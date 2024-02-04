@@ -321,7 +321,7 @@ export default {
     prevStep() {
       const index = this.searchDeskIndex(this.deskId)
       if (this.step == 1) {
-        this.$xtConfirm("返回上一步将会清空桌面已有的数据并进行重新分析。", "", {
+        window.$ui.confirm("返回上一步将会清空桌面已有的数据并进行重新分析。", "", {
           type: "warning",
           ok: () => {
             this.step = this.guideList[--this.stepIndex]
@@ -330,7 +330,7 @@ export default {
           },
         });
       } else if (this.step == 2) {
-        this.$xtConfirm("返回上一步将会清空桌面文件夹。", "", {
+        window.$ui.confirm("返回上一步将会清空桌面文件夹。", "", {
           type: "warning",
           ok: () => {
             this.step = this.guideList[--this.stepIndex]
@@ -338,7 +338,7 @@ export default {
           },
         });
       } else if (this.step == 3) {
-        this.$xtConfirm("返回上一步将会清除推荐的卡片。", "", {
+        window.$ui.confirm("返回上一步将会清除推荐的卡片。", "", {
           type: "warning",
           ok: () => {
             this.step = this.guideList[--this.stepIndex]
