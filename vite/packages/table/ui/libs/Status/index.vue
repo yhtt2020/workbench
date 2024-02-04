@@ -21,7 +21,7 @@ export default {
   components: {
   },
   mounted() {
-    this.plat = window.$useEnv(this.limitEnv)
+    this.plat = window.$useEnv(this.status)
   },
   watch: {
   },
@@ -46,7 +46,7 @@ export default {
       type: Number,
       default: 100,
     },
-    limitEnv: {
+    status: {
       type: Array,
       default: ["offline", "visitor", "mac"],
     },

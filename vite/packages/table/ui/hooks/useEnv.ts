@@ -16,8 +16,8 @@ export const useEnv = (arr = "web") => {
   let flag: any = false;
 
   for (const iterator of arr) {
-    if (flag) return;
     flag = envDetection(iterator);
+    if (flag) return;
   }
 
   return flag;

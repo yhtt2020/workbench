@@ -26,7 +26,7 @@
   </vueCustomScrollbar>
 
   <div v-else class=" xt-bg h-full rounded-xl ">
-    <xt-status name="我的信息功能" :limitEnv="['visitor']" ></xt-status>
+    <xt-status name="我的信息功能" :status="['visitor']" ></xt-status>
   </div>
 
   <div v-if="secondaryVisible === false">
@@ -53,7 +53,7 @@ export default {
   computed: {
     ...mapWritableState(appStore, ['userInfo','secondaryVisible']),
     envVisitor(){
-      return !window.$useEnv('visitor')
+      return !window.$useEnv(['visitor', 'web'])
     },
   },
   data(){
