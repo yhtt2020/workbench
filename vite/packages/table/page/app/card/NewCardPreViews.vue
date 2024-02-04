@@ -418,8 +418,11 @@ export default {
       this.add(item, i);
     },
     add(item, index) {
-      index = index ?? this.carouselIndex;
 
+      index = index ?? this.carouselIndex;
+      console.log('item :>> ', item.option[index].name);
+      // if (this.$useComEnv( item.option[index].name)) return
+      return
       this.addCard(
         { name: item.option[index].name, id: Date.now(), customData: {} },
         this.desk
