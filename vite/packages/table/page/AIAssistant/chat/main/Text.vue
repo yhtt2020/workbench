@@ -35,8 +35,11 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, getCurrentInstance } from "vue";
 import {completeTask} from '../../../../apps/task/task'
+import { appStore } from "../../../../store"; 
+const { proxy } = getCurrentInstance();
+const appS = appStore();
 
 console.log('completeTask :>> ', completeTask);
 const emits = defineEmits(["onSearch"]);
@@ -66,12 +69,27 @@ const onInput = (e) => {
 
 // 搜索
 const onSearch = () => {
-  if (props.isSearch && search.value.trim()) {
-    completeTask("Z0207");
-    initHeight.value = false;
-    isScrollbar.value = false;
-    emits("onSearch", search.value);
-    search.value = "";
+  if(!window.useEnv('visitor')){
+    if (props.isSearch && search.value.trim()) {
+      completeTask("Z0207");
+      initHeight.value = false;
+      isScrollbar.value = false;
+      emits("onSearch", search.value);
+      search.value = "";
+    }
+  }else{
+    proxy.$xtConfirm("登录提示", '目前处于游客模式，请登陆后体验完整功能。', {
+      ok: () => {
+        tsbApi.user.login((data) => {
+          appS.getUserInfo()
+        })
+      },
+      okText: "立即登录",
+      noText: "暂不登录",
+      okButtonWidth: '95',
+      noButtonWidth: '95',
+    });
+
   }
 };
 </script>
