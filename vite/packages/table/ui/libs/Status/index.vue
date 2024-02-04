@@ -14,18 +14,20 @@
         :style="{ fontSize: fontSize }"
         style="font-size: 14px; color: var(--secondary-text)"
       >
-        {{ name }}在{{ plat }}下不可用
+        {{ name }}在{{ ENV_MAP[plat]  }}下不可用
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import {ENV_MAP} from '../../hooks/useEnv'
 export default {
   name: "XtStatus",
   data() {
     return {
       plat: "",
+      ENV_MAP
     };
   },
   components: {},

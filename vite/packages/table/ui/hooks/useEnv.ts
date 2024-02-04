@@ -2,7 +2,15 @@ import { isWeb, isClient, isMac, isOffline, isVisitor } from "./env";
 import { confirm } from "../new/confirm";
 import cache from "../../components/card/hooks/cache";
 // 权限匹配优先级
-const PRIORITY = ["web", "offline", "visitor", "mac", "client"];
+const PRIORITY = ["web", "offline", "visitor", "mac", "win"];
+// 环境名称
+export const ENV_MAP = {
+  web: "网页端",
+  mac: "mac",
+  win: "win",
+  offline: "离线模式",
+  visitor: "游客模式",
+};
 // 路由限制
 const ROUTER_LIMIT = {
   web: [
@@ -28,11 +36,11 @@ const COMPONENT_LIMIT = {
 };
 // 汇总所有限制
 const ALL_LIMITS = {
-  网页端: [...ROUTER_LIMIT.web, ...COMPONENT_LIMIT.web],
-  mac端: [""],
-  客户端: [""],
-  离线模式: [""],
-  游客模式: [""],
+  web: [...ROUTER_LIMIT.web, ...COMPONENT_LIMIT.web],
+  mac: [""],
+  win: [""],
+  offline: [""],
+  visitor: [""],
 };
 
 // 提示
@@ -69,15 +77,15 @@ const envSort = (arr) => {
 // 环境判断
 const envDetection = (type) => {
   if (type == "web") {
-    return isWeb ? "网页端" : "";
+    return isWeb ? "web" : "";
   } else if (type == "client") {
-    return isClient ? "客户端" : "";
+    return isClient ? "client" : "";
   } else if (type == "mac") {
-    return isMac ? "mac端" : "";
+    return isMac ? "mac" : "";
   } else if (type == "offline") {
-    return cache.get("isOffline") ? "离线模式" : "";
+    return cache.get("isOffline") ? "offline" : "";
   } else if (type == "visitor") {
-    return cache.get("isVisitor") ? "游客模式" : "";
+    return cache.get("isVisitor") ? "visitor" : "";
   }
 };
 // 条件判断
