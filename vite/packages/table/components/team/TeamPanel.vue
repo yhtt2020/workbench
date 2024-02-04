@@ -248,14 +248,14 @@ export default {
       this.updateTeamShip(this.team.no, {
         userCache: 0
       }).then()
-      this.timer = setInterval(() => {
-        console.info('定期更新小队信息')
-        this.updateTeamShip(this.team.no)
-      }, 30000)
+      // this.timer = setInterval(() => {
+      //   console.info('定期更新小队信息')
+      //   this.updateTeamShip(this.team.no)
+      // }, 30000)
     }
   },
   unmounted () {
-    clearInterval(this.timer)
+   // clearInterval(this.timer)
   },
 
   methods: {
