@@ -7,7 +7,7 @@ import axios from 'axios'
 const createUrl = Server.baseUrl + '/app/team/create'
 const joinByNoUrl = Server.baseUrl + '/app/team/joinByNo'
 const quitByNoUrl = Server.baseUrl + '/app/team/quitByNo'
-const disbandByNoUrl=Server.baseUrl+'/app/team/disbandByNo'
+const disbandByNoUrl = Server.baseUrl + '/app/team/disbandByNo'
 const getTeamLeaderUrl = Server.baseUrl + '/app/team/getLeader'
 const getTeamMembersUrl = Server.baseUrl + '/app/team/getMembers'
 
@@ -24,7 +24,7 @@ const getUserMedalUrl = Server.baseUrl + '/app/medal/getUserMedal'
 const getListUrl = Server.baseUrl + '/app/team/getList'
 import {appStore} from "../store";
 import _ from "lodash-es";
-import {get} from "../js/axios/request";
+import {get, post} from "../js/axios/request";
 
 // @ts-ignore
 export const teamStore = defineStore("teamStore", {
@@ -33,7 +33,7 @@ export const teamStore = defineStore("teamStore", {
     //小组
     team: {
       status: false,
-      rankInfo:{}
+      rankInfo: {}
     },
     teamLeader: {
       userInfo: {}
@@ -52,9 +52,9 @@ export const teamStore = defineStore("teamStore", {
         return true
       else return false
     },
-    myTeamNo(state){
+    myTeamNo(state) {
       let teamNo = 0
-      if(typeof state.my.created==='undefined'){
+      if (typeof state.my.created === 'undefined') {
         return 0
       }
       if (state.my.created.hasOwnProperty('no')) {
@@ -68,12 +68,12 @@ export const teamStore = defineStore("teamStore", {
       }
       return teamNo
     },
-    myTeam(state){
+    myTeam(state) {
       let teamNo = {}
-      if(typeof state.my.created==='undefined'){
+      if (typeof state.my.created === 'undefined') {
         return teamNo
       }
-      if (Object.keys(state.my.created).length>0) {
+      if (Object.keys(state.my.created).length > 0) {
         teamNo = state.my.created
       } else if (state.my.joined.length > 0) {
         teamNo = state.my.joined[0]
@@ -82,19 +82,12 @@ export const teamStore = defineStore("teamStore", {
     }
   },
   actions: {
-    async getUserMedal(uid){
-      let conf = await getConfig()
-      conf.params = {uid: uid}
-      let response = await axios.get(getUserMedalUrl, conf)
-      if (response.code === 1000) {
-        return response.data
-      }else{
-        return false
-      }
+    async getUserMedal(uid) {
+      return await get(getUserMedalUrl, {uid: uid})
     },
 
-    async openTeam(){
-      this.teamVisible=true
+    async openTeam() {
+      this.teamVisible = true
     },
     async closeTeam() {
       this.team = {
@@ -118,128 +111,92 @@ export const teamStore = defineStore("teamStore", {
         leaderUserCache = 1,
         cache = 1
       } = query
-      let conf = await getConfig()
-      conf.params = query
-      let time=Date.now()
-      let rs= await get(getListUrl)
-
-      console.log(Date.now()-time +"ms 耗时")
+      let time = Date.now()
+      let rs = await get(getListUrl, query)
       return rs
     },
 
     async getTeamLeader(no, cache = 1, userCache = 1) {
-      let teamLeaderResult = await axios.post(getTeamLeaderUrl, {no: no, cache: cache, userCache: userCache},
-        await getConfig())
-      if (teamLeaderResult.code === 1000) {
-        let data = teamLeaderResult.data
-        if (data.status) {
-          this.teamLeader = data.data
-          return this.teamLeader
-        } else {
-          console.warn('无法取到队长信息')
-        }
+      let data = await post(getTeamLeaderUrl, {no: no, cache: cache, userCache: userCache})
+      if (data.status) {
+        this.teamLeader = data.data
+        return this.teamLeader
+      } else {
+        console.warn('无法取到队长信息')
       }
     },
     async getMemberGrade(uid) {
-      let conf = await getConfig()
-      conf.params = {uid: uid}
-      let response = await axios.get(getUserGradeUrl, conf)
-      if (response.code === 1000) {
-        return response.data
-      }
+      return await get(getUserGradeUrl, {uid: uid})
     },
     async getTeamMembers(no, cache = 1, userCache = 1) {
 
-      let teamMembersResult = await axios.post(getTeamMembersUrl, {no: no, cache: cache, userCache: userCache},
-        await getConfig())
+      let teamMembersResult = await post(getTeamMembersUrl, {no: no, cache: cache, userCache: userCache})
 
-      if (teamMembersResult.code === 1000) {
-        let data = teamMembersResult.data
-        if (data.status) {
-          this.teamMembers = data.data
-          return this.teamMembers
-        } else {
-          console.warn('无法取到队员信息')
-        }
+      if (teamMembersResult.status) {
+        this.teamMembers = teamMembersResult.data
+        return this.teamMembers
+      } else {
+        console.warn('无法取到队员信息')
       }
-    },
+    }
+    ,
     async getMemberDevote() {
-      let result = await axios.get(getMemberDevote,
-        await getConfig())
-      if (result.code === 1000) {
-        let data = result.data
-        if (data) {
-          this.membersDevote = data.data || {}
-          return this.membersDevote
-        } else {
-          this.membersDevote = {}
-          console.warn('无法获取到小队收益')
-        }
+      let data = await get(getMemberDevote)
+      if (data) {
+        this.membersDevote = data.data || {}
+        return this.membersDevote
+      } else {
+        this.membersDevote = {}
+        console.warn('无法获取到小队收益')
       }
     },
 
     async exchangeDevote(from_uid = 0) {
-      let result = await axios.post(exchangeDevoteUrl,
-        {from_uid: from_uid}, await getConfig())
-      if (result.code === 1000) {
-        let data = result.data
-        if (data) {
-          return {
-            status: 1,
-            data
-          }
-        } else {
-          return {
-            status: 0,
-            info: '兑换失败'
-          }
+      let data = await post(exchangeDevoteUrl,
+        {from_uid: from_uid})
+      if (data) {
+        return {
+          status: 1,
+          data
         }
       } else {
         return {
           status: 0,
-          info: '意外错误'
+          info: '兑换失败'
         }
       }
     },
 
-    async refreshTeamUsers(){
-      await this.getTeamLeader(this.team.no,0,0)
-      await this.getTeamMembers(this.team.no,0,0)
+    async refreshTeamUsers() {
+      await this.getTeamLeader(this.team.no, 0, 0)
+      await this.getTeamMembers(this.team.no, 0, 0)
     },
 
-    async updateTeam(no, cache,withRank=false) {
-      let conf = await getConfig()
-      conf.params = {
+    async updateTeam(no, cache, withRank = false) {
+      let params = {
         no: no,
         cache: cache,
-        withRank:withRank
+        withRank: withRank
       }
-      let teamResult = await axios.get(getByNo, conf)
-      if (teamResult.code === 1000) {
-
-        //获取到队伍信息
-        if (teamResult.data.status) {
-
-          this.team = teamResult.data.data
-        } else {
-          this.team = {
-            status: false
-          }
+      let teamResult = await get(getByNo, params)
+      //获取到队伍信息
+      if (teamResult.status) {
+        this.team = teamResult.data
+      } else {
+        this.team = {
+          status: false
         }
       }
     },
 
     async updateMy(cache = 1) {
-      let conf = await getConfig()
-      conf.params = {
+      let params = {
         cache: cache
       }
-      let myTeamResult = await axios.get(getMy, conf)
-      if (myTeamResult.code === 1000) {
-        let data = myTeamResult.data
+      let data = await get(getMy, params)
+      if (data) {
         this.my = data.data
         let teamNo = 0
-        console.log(this.my,'我的小队信息')
         if (this.my.created.hasOwnProperty('no')) {
           //自己是队长
           teamNo = this.my.created.no
@@ -254,7 +211,6 @@ export const teamStore = defineStore("teamStore", {
           await this.updateTeam(teamNo, cache)
         } else {
           await this.closeTeam()
-
         }
       }
     },
@@ -265,13 +221,13 @@ export const teamStore = defineStore("teamStore", {
      * @param no
      * @param options  userCache，用户缓存，默认未1
      */
-    async updateTeamShip(no,options) {
-      const defaultOptions={
-        userCache:1
+    async updateTeamShip(no, options) {
+      const defaultOptions = {
+        userCache: 1
       }
-      options= Object.assign(_.cloneDeep(defaultOptions),options)
-      await this.getTeamLeader(no,options.userCache)
-      await this.getTeamMembers(no,1,options.userCache)
+      options = Object.assign(_.cloneDeep(defaultOptions), options)
+      await this.getTeamLeader(no, options.userCache)
+      await this.getTeamMembers(no, 1, options.userCache)
       if (!this.checkMember()) {
         await this.closeTeam()
       }
@@ -298,8 +254,7 @@ export const teamStore = defineStore("teamStore", {
 
     async joinByNo(no) {
       try {
-        let rs = await axios.post(joinByNoUrl, {no: no},
-          await getConfig())
+        let rs = await post(joinByNoUrl, {no: no})
         return rs
       } catch (e) {
         return {
@@ -317,8 +272,7 @@ export const teamStore = defineStore("teamStore", {
      */
     async quitByNo(no, uid) {
       try {
-        let rs = await axios.post(quitByNoUrl, {no: no, uid: uid},
-          await getConfig())
+        let rs = await post(quitByNoUrl, {no: no, uid: uid})
         return rs
       } catch (e) {
         return {
@@ -335,8 +289,7 @@ export const teamStore = defineStore("teamStore", {
      */
     async disbandByNo(no) {
       try {
-        let rs = await axios.post(disbandByNoUrl, {teamNo: no},
-          await getConfig())
+        let rs = await post(disbandByNoUrl, {teamNo: no})
         return rs
       } catch (e) {
         return {
@@ -356,16 +309,19 @@ export const teamStore = defineStore("teamStore", {
       return rs
     }
   },
-  persist: {
-    enabled: true,
-    strategies: [
-      {
-        paths: ['team', 'teamVisible','my'],
-        // 自定义存储的 key，默认是 store.$id
-        // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-        storage: dbStorage,
-        // state 中的字段名，按组打包储存
-      },
-    ],
-  },
+  persist:
+    {
+      enabled: true,
+      strategies:
+        [
+          {
+            paths: ['team', 'teamVisible', 'my'],
+            // 自定义存储的 key，默认是 store.$id
+            // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
+            storage: dbStorage,
+            // state 中的字段名，按组打包储存
+          },
+        ],
+    }
+  ,
 })
