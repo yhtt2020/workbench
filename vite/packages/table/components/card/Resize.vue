@@ -155,7 +155,7 @@ export default {
   },
   beforeUnmount() {
     let dragRef = this.$refs.dragRef;
-    dragRef.removeEventListener("mousedown", () => {});
+    dragRef?.removeEventListener("mousedown", () => {});
   },
 };
 </script>

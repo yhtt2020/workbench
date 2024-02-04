@@ -63,7 +63,7 @@
         </slot>
         <!-- 标题栏end   -->
         <xt-status
-          v-if="useEnv(limitEnv)"
+          v-if="useEnv(envLimit)"
           :ele="options.title"
           :list="limitEnv"
         />
@@ -72,9 +72,7 @@
             class="h-full px-3 pb-2 rounded-b-lg"
             :style="{ background: options.showColor ? 'var(--main-bg)' : '' }"
           >
-            <slot>
-
-            </slot>
+            <slot> </slot>
           </div>
         </div>
       </div>
@@ -167,7 +165,9 @@ export default {
       default: true,
     },
     limitEnv: {
-      default: "",
+      default: ()=>{
+        return ''
+      }
     },
   },
   data() {
@@ -183,26 +183,29 @@ export default {
   computed: {
     ...mapWritableState(useWidgetStore, ["edit"]),
     ...mapWritableState(useFreeLayoutStore, ["isSelectAll"]),
-    menus() {
-      return [
-        ...this.menuList,
-        {
-          newIcon: "akar-icons:trash-can",
-          fn: () => {
-            if (this.isSelectAll) {
-            }
-            if (this.options?.type != "note") {
-              this.doRemoveCard();
-            } else {
-              // 便签单独处理
-              this.options?.removeCard();
-            }
-          },
-          title: "删除小组件",
-          color: "#FF4D4F",
-          disabled: this.options?.disabled || false,
+    del() {
+      return {
+        newIcon: "akar-icons:trash-can",
+        fn: () => {
+          if (this.isSelectAll) {
+          }
+          if (this.options?.type != "note") {
+            this.doRemoveCard();
+          } else {
+            // 便签单独处理
+            this.options?.removeCard();
+          }
         },
-      ];
+        title: "删除小组件",
+        color: "#FF4D4F",
+        disabled: this.options?.disabled || false,
+      };
+    },
+    menus() {
+      if (this.useEnv(this.limitEnv)) {
+        return [this.del];
+      }
+      return [...this.menuList, this.del];
     },
 
     isCustomData() {

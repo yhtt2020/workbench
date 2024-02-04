@@ -102,7 +102,6 @@ const followList = computed(() => {
   return menus.value;
 });
 function beforeCreate() {
-
   return rightModel.value == "follow";
 }
 

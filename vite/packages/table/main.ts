@@ -2,7 +2,7 @@
 
 // 注册想天客户端状态
 import currentEnv, { isWeb, isClient, isMac, isOffline, isVisitor } from "./ui/hooks/env";
-import {useEnv,useLimitEnv} from "./ui/hooks/useEnv";
+import {useEnv,useEnvLimit,useComLimit} from "./ui/hooks/useEnv";
 window.$currentEnv = currentEnv;
 window.$isWeb = isWeb;
 window.$isClient = isClient;
@@ -10,7 +10,8 @@ window.$isMac = isMac;
 window.$isOffline = isOffline;
 window.$isVisitor = isVisitor;
 window.$useEnv = useEnv;
-window.useLimitEnv = useLimitEnv;
+window.$useEnvLimit = useEnvLimit;
+window.$useComLimit = useComLimit;
 
 import { createApp } from "vue";
 import Antd from "ant-design-vue";
