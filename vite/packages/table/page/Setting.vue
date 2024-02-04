@@ -2,7 +2,6 @@
 
     <vue-custom-scrollbar :settings="scrollbarSettings" style="position: relative; border-radius: 8px; width: 100%;height: 100%">
       <div class="setting-menu" style="display: flex; width: 100%;justify-content: center;justify-items: center">
-
         <!-- 快速搜索 快速开关功能 -->
         <div class="p-4 s-bg" style="
             border-radius: 0.5em;
@@ -13,7 +12,7 @@
           ">
           <h3 style="color: var(--primary-text)">快速开关功能</h3>
           <a-row :gutter="[20, 20]" style="font-size: 1.2em; text-align: center">
-            <a-col :span="12" v-if="!this.isOffline">
+                  <a-col :span="12" v-if="!$useEnv(['visitor','web'])">
               <div class="relative btn">
                 弹幕
                 <br />
@@ -92,7 +91,7 @@
           <div></div>
         </div>
         <div class="" style="display: inline-block; vertical-align: top">
-          <div class="p-4 ml-4 s-bg menu-block">
+          <div class="p-4 ml-4 s-bg menu-block" v-if="!$useEnv()">
             <h3 style="color: var(--primary-text)">常用</h3>
             <a-row style="font-size: 1.2em; text-align: center">
               <a-col v-if="isMain() && isWin()" :span="6">
@@ -147,7 +146,7 @@
                     <div>通用设置</div>
                   </div>
               </a-col>
-              <a-col v-if="isMain()" :span="6">
+              <a-col v-if="isMain() && !$useEnv()" :span="6">
                 <div @click="goApps()" class="btn">
                   <Iconify icon="fluent:grid-16-regular" style="font-size: 2em"></Iconify>
                   <div>应用管理</div>
@@ -198,7 +197,7 @@
                   <div>生成激活码</div>
                 </div>
               </a-col>
-              <a-col :span="6">
+              <a-col :span="6" v-if="!$useEnv()">
                 <div @click="power" class="btn">
                   <!-- <Icon icon="tuichu" style="font-size: 2em"></Icon> -->
                   <Iconify icon="fluent:power-20-filled" style="font-size: 2em" />
@@ -349,6 +348,8 @@ export default {
     // }
   },
   mounted() {
+
+
     this.bgColor = getBgColor();
     this.textColor = getTextColor();
     this.wallpaperColor = getWallpaperColor();

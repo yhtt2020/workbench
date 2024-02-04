@@ -16,7 +16,6 @@
       :sizeList="autoSizeList"
       @leftClick="leftClick"
       v-model:customSize="customData.customSize"
-      :limitEnv="['web']"
       @delete="deleteFn"
     >
       <!-- 空状态显示状态 -->
@@ -248,7 +247,7 @@ const options = computed(() => {
     defaultData: defaultFolderData,
     bg: isDrag.value ? "var(--active-secondary-bg) " : "",
     // 隐藏删除
-    disabled: navBar.value.isDel,
+    disabledDelete: navBar.value.isDel,
     // 隐藏层级
     hierarchy: navBar.value.hierarchy,
     // 二级

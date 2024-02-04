@@ -29,7 +29,6 @@
         },
       ]"
     >
-      {{ key }}
       <!-- 小组件头部开始 -->
       <div
         v-if="!header.disabled"
@@ -50,8 +49,8 @@
         <!-- 头部左侧 -->
         <div class="flex items-center flex-1" style="height: 28px">
           <div
-            @click="leftClick"
             class="flex items-center h-full"
+            @click="leftClick"
             @mouseenter="leftMouseEnter"
             @mouseleave="leftMouseLeave"
             style=""
@@ -62,6 +61,7 @@
             <!-- 图标区域 -->
             <div
               class="flex items-center h-full"
+              @click="leftIconClick"
               @mouseenter="iconMouseEnter"
               @mouseleave="iconMouseLeave"
             >
@@ -91,6 +91,7 @@
             <!-- 标题区域 -->
             <div
               class="flex items-center h-full px-2 ml-1"
+              @click="titleClick"
               @mouseenter="titleMouseEnter"
               @mouseleave="titleMouseLeave"
               :class="{ 'header-title': titleHover }"
@@ -155,7 +156,12 @@
       </div>
       <!-- 小组件头部结束 -->
       <!-- 小组件主体开始 -->
-      <xt-status v-if="useEnv(limitEnv)" :ele="header.title" :list="limitEnv" />
+      <xt-status
+        v-if="useEnv(limitEnv)"
+        :name="header.title"
+        :status="limitEnv"
+        imgSize="75"
+      />
       <div
         v-else
         class="flex-1 h-full rounded-b-lg"
@@ -194,6 +200,7 @@ import {
   computed,
   ref,
   onBeforeMount,
+  onMounted,
   getCurrentInstance,
   toRefs,
 } from "vue";
@@ -202,6 +209,7 @@ import { cardStore as useCardStore } from "../../store/card";
 import { useWidgetStore } from "./store";
 import { useFreeLayoutStore } from "../desk/freeLayout/store";
 import { useMouseInElement } from "@vueuse/core";
+import { onClickOutside } from "@vueuse/core";
 
 import vueCustomScrollbar from "../../../../src/components/vue-scrollbar.vue";
 import Resize from "./Resize.vue";
@@ -210,15 +218,28 @@ import { useEnv } from "../../ui/hooks/useEnv";
 
 import { deepMerge } from "./ContainerUtils";
 
-const container = ref(null);
+const container = ref(0);
 const { isOutside } = useMouseInElement(container);
+
 const { proxy } = getCurrentInstance();
+// const selected = ref(null);
 const status = computed(() => {
   return {
-    isOutside: isOutside.value,
+    outside: isOutside.value,
+    // selected: selected.value,
   };
 });
-
+onMounted(() => {
+  // onClickOutside(container, (event) => {
+  //   console.log("event :>> ", event);
+  //   console.log("selected.value :>> ", selected.value);
+  //   if (selected.value == 0) {
+  //     selected.value = true;
+  //   } else {
+  //     selected.value = false;
+  //   }
+  // });
+});
 /**
  * pinia
  */
@@ -280,7 +301,7 @@ const props = defineProps({
         // 自定义全局字体颜色
         color: "",
         // 是否允许删除组件
-        disabled: false,
+        disabledDelete: false,
         // 开启后，可拖拽小组件
         resize: false,
         // 作为弹窗时的尺寸
@@ -383,7 +404,7 @@ const props = defineProps({
   limitEnv: { type: Array, default: () => [] },
   /**
    * 返回小组件控制器所有信息
-   * isOutside 是否处于小组件内部
+   * outside 鼠标是否悬浮与小组件
    */
   status: {},
 });
@@ -399,7 +420,11 @@ onBeforeMount(() => {
 /**
  * update:customSize 双向数据绑定customSize
  * update:status 双向数据绑定status
+ *
  * leftClick 头部左侧鼠标经过点击回调
+ * leftIconHover 头部左侧图标经过点击回调
+ * titleHover 头部标题经过点击回调
+ *
  * delete 小组件删除回调
  * resize 更新卡片大小回调
  */
@@ -410,6 +435,8 @@ const emits = defineEmits([
   "resize",
   "update:data",
   "update:status",
+  "leftIconHover",
+  "titleHover",
 ]);
 
 /**
@@ -427,19 +454,21 @@ const currentSize = ref(props.customSize);
 /**
  * 计算属性
  */
+// 删除小组件的数据
+const deleteObj = computed(() => {
+  return {
+    newIcon: "akar-icons:trash-can",
+    fn: removeCard,
+    title: "删除小组件",
+    color: "#FF4D4F",
+    disabled: props.options?.disabledDelete ? true : false,
+  };
+});
 // 实际渲染的右键菜单
 const menus = computed(() => {
-  let menu = [
-    ...props.menuList,
-    {
-      newIcon: "akar-icons:trash-can",
-      fn: removeCard,
-      title: "删除小组件",
-      color: "#FF4D4F",
-      disabled: props.options?.disabled ? true : false,
-    },
-  ];
-
+  let deleteArr = [deleteObj.value];
+  if (useEnv(props.limitEnv)) return deleteArr;
+  let menu = [...props.menuList, ...deleteArr];
   return menu;
 });
 // 头部左侧显示区域状态
@@ -527,8 +556,10 @@ watch(
 watch(
   () => status.value,
   (val) => {
-    console.log("123 :>> ", 123);
     emits("update:status", val);
+  },
+  {
+    immediate: true,
   }
 );
 /**
@@ -543,13 +574,26 @@ const leftClick = () => {
     emits("leftClick");
   }
 };
+// 头部图标点击
+const leftIconClick = () => {
+  if (props.header.iconHover) {
+    emits("leftIconHover");
+  }
+};
+// 头部标题点击
+const titleClick = () => {
+  if (props.header.titleHover) {
+    emits("titleHover");
+  }
+};
 // 右键删除
 const removeCard = () => {
   emits("delete", customDelete);
   // 属于自定义删除事件
   if (props.options.customDel) return;
-  cardStore.removeCard(props.customIndex, props.desk);
+  customDelete();
 };
+// 实际删除事件
 const customDelete = () => {
   cardStore.removeCard(props.customIndex, props.desk);
 };

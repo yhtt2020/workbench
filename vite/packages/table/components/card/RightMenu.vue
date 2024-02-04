@@ -198,11 +198,6 @@ const updateCardSize = (item) => {
 /**
  * 新版更新大小
  */
-// const currentSize = ref(props.size);
-
-// watch(size.value, (newV) => {
-//   currentSize.value = newV;
-// });
 
 const updateSize = (size) => {
   emits("update:size", size);

@@ -4,6 +4,7 @@ import {cardStore} from "./store/card";
 import {appStore} from "./store";
 import { message } from "ant-design-vue";
 import {useEnvLimit} from "../table/ui/hooks/useEnv";
+import {useEnvLimit} from "../table/ui/hooks/useEnv";
 const router = createRouter({
   history: createWebHashHistory(),
   routes
@@ -12,7 +13,9 @@ router.beforeEach((to, from, next) => {
 
   //
   console.log('to,from :>> ', to,from);
-  if (useEnvLimit('web',to.name, false)) {
+  if (useEnvLimit('web',to.name, {
+    msg:false
+  })) {
     console.log('路由触发限制环境拦截 :>> ', );
     next({
       name:"home"

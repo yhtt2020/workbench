@@ -305,9 +305,7 @@ export default {
       }
     },
   },
-  mounted() {
-
-  },
+  mounted() {},
   data() {
     return {
       navLists: [],
@@ -418,8 +416,13 @@ export default {
       this.add(item, i);
     },
     add(item, index) {
-      index = index ?? this.carouselIndex;
+      const a = [
 
+      ];
+      index = index ?? this.carouselIndex;
+      let res  =  window.$useComLimit(['web'], item.option[index].name)
+      console.log('res',res);
+      if (res) return
       this.addCard(
         { name: item.option[index].name, id: Date.now(), customData: {} },
         this.desk
@@ -428,7 +431,7 @@ export default {
       message.success("添加成功！");
       completeTask("m0101");
 
-      if (item.name =='yuanCommunity' ) {
+      if (item.name == "yuanCommunity") {
         completeTask("m0302");
       }
     },

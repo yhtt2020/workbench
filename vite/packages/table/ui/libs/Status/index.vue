@@ -13,23 +13,25 @@
         class="mt-4 font-14 xt-text-2"
         :style="{ fontSize: fontSize }"
       >
-        {{ ele }}在{{ plat }}下不可用
+        {{ name }}在{{ ENV_MAP[plat]  }}下不可用
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import {ENV_MAP} from '../../hooks/useEnv'
 export default {
   name: "XtStatus",
   data() {
     return {
       plat: "",
+      ENV_MAP
     };
   },
   components: {},
   mounted() {
-    this.plat = window.$useEnv(this.status)
+    this.plat = window.$useEnv(this.status);
   },
   watch: {},
   props: {
@@ -55,7 +57,7 @@ export default {
     },
     status: {
       type: Array,
-      default: [],
+      default: '',
     },
   },
 };

@@ -81,6 +81,7 @@ export default {
     isMain
   },
   async mounted () {
+    if (this.$useEnv()) return
     this.trayOpen = await tsbApi.settings.get('trayOpen') || 'table'
 
 
