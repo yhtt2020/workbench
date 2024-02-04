@@ -420,9 +420,9 @@ export default {
 
       ];
       index = index ?? this.carouselIndex;
-      console.log("item :>> ", item.option[index].name);
-      console.log("window.$useComEnv :>> ", window.$useComLimit);
-      // if (this.$useComEnv( item.option[index].name)) return
+      let res  =  window.$useComLimit(['web'], item.option[index].name)
+      console.log('res',res);
+      if (res) return
       this.addCard(
         { name: item.option[index].name, id: Date.now(), customData: {} },
         this.desk
