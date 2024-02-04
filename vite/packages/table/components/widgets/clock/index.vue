@@ -1,6 +1,6 @@
 <template>
  <xt-container :customIndex="customIndex" :customData="customData" :desk="desk"
-  :defaultData="defaultClockData" :menuList="menuList" v-model:customSize="customData.customSize"
+ :menuList="menuList" v-model:customSize="customData.customSize"
   :header="header" :options="option"  @leftClick="fullScreen" @resize="resize"
  >
   <div class="box no-drag" @click="fullScreen">
@@ -101,6 +101,7 @@ mounted () {
     shadow:!this.customData.backgroundFrame,
     bg:!this.customData.backgroundFrame ? "transparent" : "",
     resize: true,
+    defaultData :this.defaultClockData
    }
    return clockOption;
   },
