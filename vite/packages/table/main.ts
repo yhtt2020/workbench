@@ -9,6 +9,7 @@ window.$isClient = isClient;
 window.$isMac = isMac;
 window.$isOffline = isOffline;
 window.$isVisitor = isVisitor;
+window.$useEnv = useEnv;
 window.useEnv = useEnv;
 import { createApp } from "vue";
 import Antd from "ant-design-vue";

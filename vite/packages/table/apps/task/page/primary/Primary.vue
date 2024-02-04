@@ -1,5 +1,5 @@
 <template>
-  <xt-button @click="test()" v-if="settings.enableDev">任务重置</xt-button>
+  <!-- <xt-button @click="test()" v-if="settings.enableDev">任务重置</xt-button> -->
   <template v-if="store.taskID">
     <!-- 用户等级信息 -->
     <TaskUserInfo />
@@ -143,7 +143,7 @@ const currentTaskReward = computed(()=>{
   const medal = getChapList.filter((item)=>{return item.type === "medal"});
   // 获取头像框
   const frame = getChapList.filter((item)=>{return item.type === "avatarFrame"})
-  
+
   // 计算经验值总和
   let experienceTotal = experienceValue.reduce((sum,item)=>{
     return sum + item.value
@@ -156,12 +156,12 @@ const currentTaskReward = computed(()=>{
   // 等级升级预期
   const lving = Math.floor(experienceTotal / userInfo.value?.grade.next);
 
-  return { 
+  return {
     lving:lving,
     experience:{total:experienceTotal,name:"经验",img:"/img/task/experience.png"},
     points:{total:communityPointsTotal,name:"积分",img:"/img/task/communityPoints.svg"},
     medal:{list:medal,name:"勋章"},
-    frame:{list:frame,name:"头像"} 
+    frame:{list:frame,name:"头像"}
   };
 
 })

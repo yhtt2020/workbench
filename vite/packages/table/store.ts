@@ -264,8 +264,8 @@ export const appStore = defineStore('appStore', {
       // 登录成功 退出游客模式 
       // 但目前项目中存在掉登录的情况 暂时不能使用 userInfo 进行判断
       cache.set('isVisitor', false)
-      visitorStore().isVisitor = false
-      window.$isVisitor = false
+      // visitorStore().isVisitor = false
+      // window.$isVisitor = false
     },
 
     /**

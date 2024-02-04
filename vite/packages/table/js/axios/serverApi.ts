@@ -8,6 +8,9 @@ export const getConfig = async () => {
   // const { proxy }: any = getCurrentInstance();
   let token;
   let res
+  
+  res  = await window.tsbApi.user.get()
+  token =  res.data.token
 // if (isXT) {
   // res  = await window.tsbApi.user.get()
   // token =  res.data.token
