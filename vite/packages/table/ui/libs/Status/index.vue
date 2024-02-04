@@ -67,7 +67,7 @@ export default {
     },
     status: {
       type: Array,
-      default: ["offline", "visitor", "mac"],
+      default: [],
     },
   },
 };
