@@ -1,6 +1,6 @@
 <template>
  <xt-container :customIndex="customIndex" :customData="customData" :desk="desk"
-  :defaultData="defaultClockData" :menuList="menuList" v-model:customSize="customData.customSize"
+ :menuList="menuList" v-model:customSize="customData.customSize"
   :header="header" :options="option"  @leftClick="fullScreen" @resize="resize"
  >
   <div class="box no-drag" @click="fullScreen">
@@ -91,6 +91,7 @@ export default {
     shadow:!this.customData.backgroundFrame,
     bg:!this.customData.backgroundFrame ? "transparent" : "",
     resize: true,
+    defaultData :this.defaultClockData
    }
    return clockOption;
   },
@@ -153,7 +154,7 @@ export default {
     const height = this.customData.customSize.split("x")[1];
     let max = width < height ? width : height;
     if((max-2) < 2){
-     this.updateCustomData(this.customIndex,{customZoom:110},this.desk);  
+     this.updateCustomData(this.customIndex,{customZoom:110},this.desk);
     }
     else if((max-2) < 4){
      this.updateCustomData(this.customIndex,{customZoom:130},this.desk);

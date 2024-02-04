@@ -155,8 +155,11 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         );
         this.freeLayoutData[this.getCurrentDeskId] = {};
       } else {
-        // this.deepMerge(this.getFreeLayoutState, this.defaultState);
-        this.getFreeLayoutState =  _.merge(this.getFreeLayoutState,  this.defaultState);
+        this.deepMerge(this.getFreeLayoutState, this.defaultState);
+        // this.freeLayoutState[this.getCurrentDeskId] = _.merge(
+        //   this.getFreeLayoutState,
+        //   this.defaultState
+        // );
       }
       console.log("自由布局状态初始化成功 :>> ", this.getFreeLayoutState);
     },
