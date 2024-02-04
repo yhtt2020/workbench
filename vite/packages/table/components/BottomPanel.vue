@@ -692,7 +692,7 @@ export default {
         this.maxItemNum = Math.round((windowWidth - 240) / 72)
         if (this.copyFootNav.length > this.maxItemNum && this.maxItemNum !== null) {
           if (this.noticeFlag && this.addIconFlag) {
-            this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
+            window.$ui.confirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
               ok: () => {
                 const width = window.innerWidth / (240 + this.copyFootNav.length * 72)
                 this.navAttribute.navSize = width.toFixed(2) * 100
@@ -1059,7 +1059,7 @@ export default {
     resetFolder(item, index) {
       if (item.children.length > 0) {
         if (item.children.length + this.copyFootNav.length > this.maxItemNum) {
-          this.$xtConfirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
+          window.$ui.confirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
             ok: () => {
               this.copyFootNav.splice(index, 1, ...item.children)
             },

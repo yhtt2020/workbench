@@ -19,7 +19,7 @@ if (!useEnv()) {
   // if(!token){
   //   console.log(33);
 
-  //   proxy.$xtConfirm("登录提示", '目前处于游客模式，请登陆后体验完整功能。', {
+  //   window.$ui.confirm("登录提示", '目前处于游客模式，请登陆后体验完整功能。', {
   //     ok: () => {
   //       console.log(1111);
   //       tsbApi.user.login((data) => {

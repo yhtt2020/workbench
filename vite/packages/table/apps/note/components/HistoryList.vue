@@ -96,7 +96,7 @@ export default defineComponent({
     },
     restore(){
       if (this.versions.length) {
-        this.$xtConfirm("确定恢复此版本吗？", `恢复 ${this.formatTimestamp(this.selList[this.selIndex]?.createTime, true)} 为保存的版本。` , {
+        window.$ui.confirm("确定恢复此版本吗？", `恢复 ${this.formatTimestamp(this.selList[this.selIndex]?.createTime, true)} 为保存的版本。` , {
           ok: () => {
             const tmp = this.selList[this.selIndex]
             this.saveAppNote(tmp?.noteId.slice(5), tmp.content, true).then(res=>{

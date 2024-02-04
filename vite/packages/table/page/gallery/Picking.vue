@@ -246,7 +246,7 @@ export default {
 
     // 设置系统桌面壁纸
     setDesktopPaper(img){
-      this.$xtConfirm('确定将此壁纸设置为系统桌面壁纸？注意，此处设置不是工作台的壁纸。','',{
+      window.$ui.confirm('确定将此壁纸设置为系统桌面壁纸？注意，此处设置不是工作台的壁纸。','',{
         index:1020,
         ok: () => {
           message.info('正在为您下载并设桌面壁纸');
@@ -261,7 +261,7 @@ export default {
     // 下载壁纸
     download(img){
       if(this.settings.savePath === ''){
-        this.$xtConfirm('您尚未设置壁纸保存目录，请设置目录，设置目录后下载将自动开始。','',{
+        window.$ui.confirm('您尚未设置壁纸保存目录，请设置目录，设置目录后下载将自动开始。','',{
           index:1020,
         ok: async () => { await this.queryStart() },
         no: () => {},

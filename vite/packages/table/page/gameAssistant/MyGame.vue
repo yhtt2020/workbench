@@ -387,9 +387,24 @@ export default {
   methods: {
     getClientIcon,
     ...mapActions(steamUserStore, ['setSteamGameList', 'playGame', 'getClient', 'updateGameTime']),
+    ...mapActions(appStore, ['getUserInfo']),
     getHide,
     goBind () {
-      this.$router.push({ name: 'gameSetting' })
+      if(!window.$useEnv('visitor')){
+        this.$router.push({ name: 'gameSetting' })
+      }else{
+        window.$ui.confirm("登录提示", '目前处于游客模式，请登陆后体验完整功能。', {
+          ok: () => {
+            tsbApi.user.login((data) => {
+              this.getUserInfo()
+            })
+          },
+          okText: "立即登录",
+          noText: "暂不登录",
+          okButtonWidth: '95',
+          noButtonWidth: '95',
+        });
+      }
     },
     openMyGame (item) {
       require('electron').shell.openPath(item.path)

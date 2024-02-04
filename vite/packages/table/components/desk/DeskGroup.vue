@@ -878,7 +878,7 @@ export default {
       if(!this.showGuide){
 
         if (this.deskList.length === 1) {
-          this.$xtConfirm("至少保留一个桌面。", "", {
+          window.$ui.confirm("至少保留一个桌面。", "", {
             noText: null,
             type: "warning",
           });
@@ -906,7 +906,7 @@ export default {
             }
           });
           this.$refs.currentDeskRef.hideMenu();
-          this.$xtConfirm("删除当前桌面？此操作不可还原。", "", {
+          window.$ui.confirm("删除当前桌面？此操作不可还原。", "", {
             type: "warning",
             okText: "删除桌面",
             okButtonWidth: "100",

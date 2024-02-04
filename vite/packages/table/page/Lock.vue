@@ -483,7 +483,7 @@ export default {
         this.$router.replace({
           name: 'my'
         })
-        this.$xtConfirm('请先勾选需要在锁屏上展示的壁纸。','',{
+        window.$ui.confirm('请先勾选需要在锁屏上展示的壁纸。','',{
           index:1020,
           ok: () => { },
           no: () => {},
