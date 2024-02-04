@@ -115,7 +115,7 @@
               </div>
             </div>
            <div class="flex-1 item-content" style="align-items: center;">
-             <div class="w-full flex items-center" style="width: 100px;height: 100px;margin-top: -100px;margin-left: -100px">
+             <div class="w-full flex items-center">
                <ChooseScreen></ChooseScreen>
              </div>
            </div>
