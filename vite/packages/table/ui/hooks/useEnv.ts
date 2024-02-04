@@ -70,24 +70,10 @@ const showConfirm = (name) => {
     okButtonWidth: "95",
     noButtonWidth: "95",
   });
-// 提示
-const showConfirm = (name) => {
-  confirm(name + "无法使用", "下载客户端体验完整内容。", {
-    noText: "稍后再说",
-    okText: "立即下载",
-    ok: () => {
-      window.open("https://www.apps.vip/download/");
-    },
-    okButtonWidth: "95",
-    noButtonWidth: "95",
-  });
 };
-// 环境优先级排序
 // 环境优先级排序
 const envSort = (arr) => {
   arr.sort((a, b) => {
-    const indexA = PRIORITY.indexOf(a);
-    const indexB = PRIORITY.indexOf(b);
     const indexA = PRIORITY.indexOf(a);
     const indexB = PRIORITY.indexOf(b);
 
