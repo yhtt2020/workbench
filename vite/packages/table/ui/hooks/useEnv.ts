@@ -94,8 +94,8 @@ const envSort = (arr) => {
 const envDetection = (type) => {
   if (type == "web") {
     return isWeb ? "web" : "";
-  } else if (type == "client") {
-    return isClient ? "client" : "";
+  } else if (type == "win") {
+    return isClient ? "win" : "";
   } else if (type == "mac") {
     return isMac ? "mac" : "";
   } else if (type == "offline") {

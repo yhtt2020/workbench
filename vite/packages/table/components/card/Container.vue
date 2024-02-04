@@ -159,7 +159,7 @@
       <xt-status
         v-if="useEnv(limitEnv)"
         :name="header.title"
-        :status="limitEnv"
+        :status="envLimit"
         imgSize="75"
       />
       <div
