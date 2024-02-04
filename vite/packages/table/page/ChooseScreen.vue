@@ -6,12 +6,12 @@
       </div>
       <div class="flex-item flex-item-V uni-bg-green">
         <div class="screen-wrapper">
-          <div v-for="display in displays">
+          <div v-for="(display, index) in displays">
             <div @click="setToScreen(display)" class="screen" :class="{'primary':display.workArea.x===0}"
                  @mouseenter="display.enter=true"
                  @mouseleave="display.enter=false"
                  :style="{
-										left:getPosX(display.bounds.x)+'px',
+										left:getPosX(display.bounds.x, index)+'px',
 										top:getPosY(display.bounds.y)+'px',
 										width:getWidth(display.bounds.width)+'px',height:getHeight(display.bounds.height)+'px',display:'inline-block'}">
 
@@ -43,6 +43,8 @@ export default {
       maxHeight: 0,
       displayWidth: 200,//显示最大宽度
       displayHeight: 0,
+      // 偏移量
+      skew: 0,
     }
   },
   async mounted () {
@@ -93,8 +95,15 @@ export default {
     getHeight (height) {
       return (height / this.maxHeight * this.displayHeight).toFixed(0)
     },
-    getPosX (x) {
-      return (x / this.maxWidth * this.displayWidth).toFixed(0)
+    getPosX (x, index) {
+      // return (x / this.maxWidth * this.displayWidth).toFixed(0)
+      // 第一个是计算偏移量 后面的数据都要加上偏移量
+      if(index == 0){
+        this.skew =  0 - (x / this.maxWidth * this.displayWidth).toFixed(0)
+        return 0
+      }else{
+        return (x / this.maxWidth * this.displayWidth).toFixed(0) - 0 + this.skew
+      }
     },
     getPosY (y) {
       return (y / this.maxHeight * this.displayHeight).toFixed(0)
