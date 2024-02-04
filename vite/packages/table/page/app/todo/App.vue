@@ -32,6 +32,7 @@ import ListList from "./components/ListList.vue";
 import VueCustomScrollbars from "./components/VueScrollbar.vue";
 import NavList from "./components/NavList.vue";
 import Modal from "../../../components/Modal.vue";
+import { appStore } from "../../../store";
 
 export default {
   computed: {
@@ -90,6 +91,7 @@ export default {
   },
   methods: {
     ...mapActions(taskStore, ["setActiveTask"]),
+    ...mapActions(appStore, ["getUserInfo"]),
     ...mapActions(listStore, {
       addList: "add",
     }),
@@ -107,10 +109,27 @@ export default {
     },
 
     addNewList() {
-      this.addList(this.newList);
-      // this.addNewListVisible = false;
-      this.promptVisible =false
-      this.newList.title = "";
+
+      if(!window.$useEnv('visitor')){
+        this.addList(this.newList);
+        // this.addNewListVisible = false;
+        this.promptVisible =false
+        this.newList.title = "";
+      }else{
+        this.$xtConfirm("登录提示", '目前处于游客模式，请登陆后体验完整功能。', {
+          ok: () => {
+            tsbApi.user.login((data) => {
+              this.getUserInfo()
+            })
+          },
+          index: 999999,
+          okText: "立即登录",
+          noText: "暂不登录",
+          okButtonWidth: '95',
+          noButtonWidth: '95',
+        });
+      }
+
     },
   },
 };
