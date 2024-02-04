@@ -1024,7 +1024,7 @@ export default {
       console.log('value :>> ', value);
       console.log('type :>> ', type);
       console.log('3333 :>> ', item);
-      if (window.useEnvLimit('web',value)) return
+      if (window.$useEnvLimit('web',value)) return
 
 
       if (item) this.msgNotice(item)

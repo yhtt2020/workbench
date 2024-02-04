@@ -305,9 +305,7 @@ export default {
       }
     },
   },
-  mounted() {
-
-  },
+  mounted() {},
   data() {
     return {
       navLists: [],
@@ -418,11 +416,13 @@ export default {
       this.add(item, i);
     },
     add(item, index) {
+      const a = [
 
+      ];
       index = index ?? this.carouselIndex;
-      console.log('item :>> ', item.option[index].name);
+      console.log("item :>> ", item.option[index].name);
+      console.log("window.$useComEnv :>> ", window.$useComLimit);
       // if (this.$useComEnv( item.option[index].name)) return
-      return
       this.addCard(
         { name: item.option[index].name, id: Date.now(), customData: {} },
         this.desk
@@ -431,7 +431,7 @@ export default {
       message.success("添加成功！");
       completeTask("m0101");
 
-      if (item.name =='yuanCommunity' ) {
+      if (item.name == "yuanCommunity") {
         completeTask("m0302");
       }
     },

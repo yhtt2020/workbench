@@ -32,7 +32,23 @@ const ROUTER_LIMIT = {
 };
 // 组件限制
 const COMPONENT_LIMIT = {
-  web: [],
+  web: [
+    "audio",
+    "voice",
+    "capture",
+    "CaptureNewCard",
+    "CPULineChart",
+    "CPUFourCard",
+    "SmallCPUCard",
+    "SmallGPUCard",
+    "music",
+    "shortcutKey",
+    "MyGameSmall",
+    "SteamFriends",
+    "GameEpic",
+    "clipBoard",
+    "GameStrategy",
+  ],
 };
 // 汇总所有限制
 const ALL_LIMITS = {
