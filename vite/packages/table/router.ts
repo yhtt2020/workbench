@@ -4,6 +4,7 @@ import {cardStore} from "./store/card";
 import {appStore} from "./store";
 import { message } from "ant-design-vue";
 import {useEnvLimit} from "../table/ui/hooks/useEnv";
+import {useEnvLimit} from "../table/ui/hooks/useEnv";
 const router = createRouter({
   history: createWebHashHistory(),
   routes

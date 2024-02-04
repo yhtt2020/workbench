@@ -666,7 +666,7 @@ export default {
       this.menuVisible = false;
       if(!this.showGuide){
         if (desk) {
-          this.$xtConfirm("清空当前桌面的全部卡片？此操作不可还原。", "", {
+          window.$ui.confirm("清空当前桌面的全部卡片？此操作不可还原。", "", {
             okText: "清空卡片",
             okButtonWidth: 100,
             type: "warning",

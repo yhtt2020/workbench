@@ -157,7 +157,7 @@
       <!-- 小组件头部结束 -->
       <!-- 小组件主体开始 -->
       <xt-status
-        v-if="useEnv(limitEnv)"
+        v-if="useEnv(envLimit)"
         :name="header.title"
         :status="envLimit"
         imgSize="75"
@@ -401,7 +401,7 @@ const props = defineProps({
    * 小组件不可用环境
    * 参数可选 ["web", "offline", "visitor", "mac", "client"]
    */
-  limitEnv: { type: Array, default: () => [] },
+  envLimit: { type: Array, default: () => [] },
   /**
    * 返回小组件控制器所有信息
    * outside 鼠标是否悬浮与小组件
@@ -467,7 +467,7 @@ const deleteObj = computed(() => {
 // 实际渲染的右键菜单
 const menus = computed(() => {
   let deleteArr = [deleteObj.value];
-  if (useEnv(props.limitEnv)) return deleteArr;
+  if (useEnv(props.envLimit)) return deleteArr;
   let menu = [...props.menuList, ...deleteArr];
   return menu;
 });

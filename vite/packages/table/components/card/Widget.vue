@@ -64,8 +64,8 @@
         <!-- 标题栏end   -->
         <xt-status
           v-if="useEnv(envLimit)"
-          :ele="options.title"
-          :list="limitEnv"
+          :name="options.title"
+          :status="envLimit"
         />
         <div v-else class="flex-1 h-0">
           <div
@@ -164,7 +164,7 @@ export default {
       type: Boolean,
       default: true,
     },
-    limitEnv: {
+    envLimit: {
       default: ()=>{
         return ''
       }
@@ -202,7 +202,7 @@ export default {
       };
     },
     menus() {
-      if (this.useEnv(this.limitEnv)) {
+      if (this.useEnv(this.envLimit)) {
         return [this.del];
       }
       return [...this.menuList, this.del];

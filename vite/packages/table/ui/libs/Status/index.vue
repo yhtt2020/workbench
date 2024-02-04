@@ -10,9 +10,8 @@
         ></xt-new-icon>
       </div>
       <div
-        class="mt-4"
+        class="mt-4 font-14 xt-text-2"
         :style="{ fontSize: fontSize }"
-        style="font-size: 14px; color: var(--secondary-text)"
       >
         {{ name }}在{{ ENV_MAP[plat]  }}下不可用
       </div>

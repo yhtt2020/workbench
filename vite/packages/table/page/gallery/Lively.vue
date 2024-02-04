@@ -372,7 +372,7 @@ export default {
 
     // 删除动态壁纸
     delDownLoad(item,index){
-      this.$xtConfirm('是否确认取消收藏','取消收藏后会同步删除本地文件',{
+      window.$ui.confirm('是否确认取消收藏','取消收藏后会同步删除本地文件',{
         index:1020,
         ok: async() => {
           const filePath = path.join(this.settings.savePath,'lively');

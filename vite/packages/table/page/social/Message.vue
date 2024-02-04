@@ -171,7 +171,7 @@
       </a-col>
     </a-row>
     <div v-else class="w-full h-full  s-bg">
-      <xt-status name="消息功能" :limitEnv="['visitor']" ></xt-status>
+      <xt-status name="消息功能" :status="['visitor']" ></xt-status>
     </div>
   </div>
 </template>

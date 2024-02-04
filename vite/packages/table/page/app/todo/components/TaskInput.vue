@@ -110,7 +110,7 @@ export default {
           message.error('数据库写入失败')
         }
       }else{
-        this.$xtConfirm("登录提示", '目前处于游客模式，请登陆后体验完整功能。', {
+        window.$ui.confirm("登录提示", '目前处于游客模式，请登陆后体验完整功能。', {
           ok: () => {
             tsbApi.user.login((data) => {
               this.getUserInfo()
