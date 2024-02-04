@@ -24,6 +24,7 @@ import configStore from "../stores/config";
 // import { completeTask } from "../apps/task/page/branch/task"
  import { completeTask } from "../../../../apps/task/task"
 import {message} from "ant-design-vue";
+import { appStore } from "../../../../store"
 
 dayjs.locale("zh-cn");
 dayjs.extend(objectSupport);
@@ -39,6 +40,7 @@ export default {
     ...mapWritableState(taskStore, ["currentTasks", "tasks"]),
     ...mapWritableState(listStore, ["activeList"]),
     ...mapWritableState(configStore, ["runtime"]),
+    ...mapWritableState(appStore, ["getUserInfo"]),
     currentList() {
       if (this.addToList && !['T00111', 'T00222', 'T00333'].includes(this.addToList.nanoid)) {
         return this.addToList
@@ -81,30 +83,47 @@ export default {
     }),
 
     addNewTask() {
-      let task = this.newTask;
-      if (this.currentList) {
-        task.listNanoid = [this.currentList.nanoid]
-      }else{
-        task.listNanoid=[]
-      }
-      if(this.newTask.title.trim()===''){
-        message.error('请输入待办内容')
-        return
-      }
-      // 支线任务点
-      completeTask('Z0204')
 
-      task = Object.assign(this.newTask, {});
-      console.log('添加的任务',task)
-      let rs= this.addTask(task);
-      if(rs){
-        this.newTask.title = "";
-        this.newTask.deadTime = null;
-        this.newTask.listNanoid = [];
-        this.$emit('added')
+      if(!window.$useEnv('visitor')){
+        let task = this.newTask;
+        if (this.currentList) {
+          task.listNanoid = [this.currentList.nanoid]
+        }else{
+          task.listNanoid=[]
+        }
+        if(this.newTask.title.trim()===''){
+          message.error('请输入待办内容')
+          return
+        }
+        // 支线任务点
+        completeTask('Z0204')
+  
+        task = Object.assign(this.newTask, {});
+        console.log('添加的任务',task)
+        let rs= this.addTask(task);
+        if(rs){
+          this.newTask.title = "";
+          this.newTask.deadTime = null;
+          this.newTask.listNanoid = [];
+          this.$emit('added')
+        }else{
+          message.error('数据库写入失败')
+        }
       }else{
-        message.error('数据库写入失败')
+        this.$xtConfirm("登录提示", '目前处于游客模式，请登陆后体验完整功能。', {
+          ok: () => {
+            tsbApi.user.login((data) => {
+              this.getUserInfo()
+            })
+          },
+          index: 999999,
+          okText: "立即登录",
+          noText: "暂不登录",
+          okButtonWidth: '95',
+          noButtonWidth: '95',
+        });
       }
+
 
     },
   },

@@ -6,8 +6,7 @@ import _ from 'lodash-es';
 import axios from 'axios';
 // import {message} from "ant-design-vue";
 import cache from '../components/card/hooks/cache'
-import {post} from "../js/axios/request";
-
+import {post,get} from "../js/axios/request";
 
 const getFrameUrl = sUrl('/app/good/frame/list')  // 获取头像商品数据
 const editInfoUrl = sUrl('/app/com/updateUserInfo') // 修改文档信息
@@ -22,7 +21,9 @@ const equipFrameUrl=sUrl('/app/good/frame/equip')
 //@ts-ignore
 export const frameStore = defineStore('frameStore',{
   state:()=>({
-    frameData:{},
+    frameData:{
+      list:[]
+    },
   }),
 
   actions:{
@@ -30,10 +31,8 @@ export const frameStore = defineStore('frameStore',{
      * 获得头像商品
      */
     async getFrameGoods(){   // 获取头像框商品数据
-      const result = await axios.get(getFrameUrl, { params:{},...await getConfig() })
-      if(result.data.code === 1000){
-        this.frameData.list = result.data.data
-      }
+      const result = await get(getFrameUrl)
+      this.frameData.list = result
     },
     async updateMyinfo(data){  // 修改我的信息
       return  await post(editInfoUrl,data)
@@ -49,14 +48,12 @@ export const frameStore = defineStore('frameStore',{
      */
     async ensureOrder(goodNanoid,priceNanoid){
       console.log(goodNanoid,priceNanoid)
-      const result = await axios.post(ensureOrderUrl, {
+      const result = await post(ensureOrderUrl, {
         goodNanoid,
         priceNanoid
-      },await getConfig() )
-      console.log(result,'确认订单返回1')
-      if(result.data.code === 1000){
-        console.log(result,'确认订单返回')
-        return result.data.data
+      })
+      if(result){
+        return result.data
       }
     },
     /**
@@ -65,24 +62,21 @@ export const frameStore = defineStore('frameStore',{
      * @param payment
      */
     async getQrcode(orderNanoid,payment){
-      const result = await axios.post(getQrcodeUrl, {
+      const result = await post(getQrcodeUrl, {
         nanoid:orderNanoid,
         payment:payment
-      },await getConfig() )
-      if(result.data.code === 1000){
-        return result.data.data
+      } )
+      if(result.data){
+        return result.data
       }
     },
 
     async getMyFrames(){
       console.log(getMyFramesUrl,'获取地址')
-      const result=await axios.get(getMyFramesUrl,{
-        params:{},
-        ...await getConfig()
-      })
+      const result=await get(getMyFramesUrl)
 
-      if(result.data.code===1000){
-        return result.data.data
+      if(result.data){
+        return result.data
       }
     },
     /**

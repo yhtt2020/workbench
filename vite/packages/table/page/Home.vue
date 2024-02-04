@@ -531,6 +531,11 @@ export default {
       this.deskInit = false
       this.visibleScale = true
     }
+
+    this.$bus.on("customDesk",()=>{
+      console.log("定制桌面",this.visibleGuide);
+      this.visibleGuide = true;
+    })
     // this.desks.splice(3,1)
     // await session.startWithCredentials({
     //    accountName: 'snpsly123123',
