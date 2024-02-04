@@ -2,13 +2,24 @@ import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
 import {steamProtocol} from "../js/common/game";
 import cache from "../components/card/hooks/cache";
-const {steamUser, steamSession, path, https, steamFs} = $models
-let client
-setTimeout(()=>{
-  client = new steamUser({
-    enablePicsCache: true
-  });
-},1000)
+import { useEnv } from "../ui/hooks/useEnv";
+
+let steamUser, steamSession, path, https, steamFs, client
+
+if (!useEnv('web')) {
+  steamUser = $models.steamUser
+  path = $models.path
+  steamSession = $models.steamSession
+  https = $models.https
+  steamFs = $models.steamFs
+
+  setTimeout(()=>{
+    client = new steamUser({
+      enablePicsCache: true
+    });
+  },1000)
+}
+
 
 window.client = client
 // @ts-ignore
@@ -104,7 +115,7 @@ export const steamUserStore = defineStore("steamUser", {
         });
         return
       }
-      client.logOn({"refreshToken": this.steamLoginData.refreshToken})
+      client?.logOn({"refreshToken": this.steamLoginData.refreshToken})
       client.on('loggedOn', (res, err) => {
         client.setPersona(steamUser.EPersonaState.Online);
         client.on('accountInfo', (name, country, authedMachine, flags, facebookID, facebookName) => {

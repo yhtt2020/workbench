@@ -1,8 +1,8 @@
 import {defineStore} from "pinia";
 import dbStorage from "./store/dbStorage";
 import {sUrl} from './consts'
-
-const userCardUrl = sUrl('/app/com/userCard')
+import { useEnv} from './ui/hooks/useEnv'
+ const userCardUrl = sUrl('/app/com/userCard')
 import cache from '../table/components/card/hooks/cache'
 import {post} from "./js/axios/request";
 import {message, notification} from "ant-design-vue";
@@ -260,6 +260,7 @@ export const appStore = defineStore('appStore', {
     },
 
     getUserInfo() {
+      if (useEnv()) return
       ipc.send('getDetailUserInfo')
       // 登录成功 退出游客模式 
       // 但目前项目中存在掉登录的情况 暂时不能使用 userInfo 进行判断
@@ -433,7 +434,7 @@ export const appStore = defineStore('appStore', {
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
       paths: [
-              'windowFullScreen', 'windowOriginBounds', 'aided', 'currentRoute', 
+              'windowFullScreen', 'windowOriginBounds', 'aided', 'currentRoute',
               'status', 'settings', 'init', 'agreeTest', 'backgroundSettings', 'infoVisible',
               'backgroundImage', 'saving', 'simple', 'styles', 'stylesIndex', 'style', 'windowFullScreen',
               'aggList', 'deskInit','backgroundName','backgroundColor',

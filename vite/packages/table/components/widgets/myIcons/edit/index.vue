@@ -39,7 +39,11 @@ import MyIcon from "../components/icon.vue";
 import Edit from "./edit.vue";
 
 import mixins from "./hooks/mixins";
-const { fs } = window.$models;
+import {useEnv} from '../../../../ui/hooks/useEnv'
+let fs
+if (! useEnv('web')) {
+  fs = window.$models.fs
+}
 
 export default {
   mixins: [mixins],

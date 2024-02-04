@@ -1,4 +1,4 @@
-// import isXT from "../../ui/hooks/model"
+import {useEnv} from "../../ui/hooks/useEnv"
 import { getCurrentInstance } from 'vue';
 
 import { appStore } from '../../store'
@@ -8,17 +8,17 @@ export const getConfig = async () => {
   // const { proxy }: any = getCurrentInstance();
   let token;
   let res
-  
+if (!useEnv()) {
   res  = await window.tsbApi.user.get()
   token =  res.data.token
-// if (isXT) {
+
   // res  = await window.tsbApi.user.get()
   // token =  res.data.token
 
   // 游客模式下请求无token 提示登陆
   // if(!token){
   //   console.log(33);
-    
+
   //   proxy.$xtConfirm("登录提示", '目前处于游客模式，请登陆后体验完整功能。', {
   //     ok: () => {
   //       console.log(1111);
@@ -35,8 +35,8 @@ export const getConfig = async () => {
   //     noButtonWidth: '95',
   //   });
   // }
-  
-// }
+
+}
 
   return {
     headers: {

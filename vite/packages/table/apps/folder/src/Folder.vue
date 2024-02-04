@@ -6,51 +6,44 @@
     ref="folder"
   >
     <xt-container
+      v-model:status="status"
       :modalSize="modalSize"
       :options="options"
       :customIndex="customIndex"
       :customData="customData"
-      :defaultData="defaultFolderData"
       :header="header"
       :menuList="menuList"
       :sizeList="autoSizeList"
       @leftClick="leftClick"
       v-model:customSize="customData.customSize"
-      @resize="testss"
+      :limitEnv="['web']"
+      @delete="deleteFn"
     >
-      <!-- 右侧布局切换 -->
-      <!-- <Resize
-        :disabled="expand.disabled"
-        v-model:size="customData.customSize"
-        :modalSize="modalSize"
-        :disabled="navBar.resize"
-      > -->
       <!-- 空状态显示状态 -->
       <template v-if="customData.list.length <= 0 && !dragSortState">
         <Null :size="customData.customSize" @addFile="addFileClick" />
       </template>
       <vue-custom-scrollbar
-
-          style="padding-right: 4px"
-          :settings="{
-             useBothWheelAxes: true,
-            suppressScrollY: false,
-          }"
-          class="relative w-full h-full"
-        >
-      <File
-        :list="customData.list"
-        :layout="customData.layout"
-        :model="customData.model"
-        :modalSize="modalSize"
-        @deleteFile="deleteFile"
-        @updateFile="updateFile"
-        @updateList="updateList"
-        @updateSort="updateSort"
-        @clickFile="clickFile"
-      />
+        v-else
+        style="padding-right: 4px"
+        :settings="{
+          useBothWheelAxes: true,
+          suppressScrollY: false,
+        }"
+        class="relative w-full h-full"
+      >
+        <File
+          :list="customData.list"
+          :layout="customData.layout"
+          :model="customData.model"
+          :modalSize="modalSize"
+          @deleteFile="deleteFile"
+          @updateFile="updateFile"
+          @updateList="updateList"
+          @updateSort="updateSort"
+          @clickFile="clickFile"
+        />
       </vue-custom-scrollbar>
-      <!-- </Resize> -->
     </xt-container>
   </Drop>
 
@@ -123,6 +116,7 @@ const resize = computed(() => {
   }
   return true;
 });
+const status = ref();
 /**
  * 文件添加
  */
@@ -136,9 +130,11 @@ const addFileClick = () => {
   navigationStore.selectNav = "desktop";
   editVisible.value = true;
 };
-const testss= (data)=> {
-  console.log('data :>> ', data);
-}
+const deleteFn = (fn) => {
+  console.log("fn :>> ", fn);
+  fn();
+};
+
 const addFile = (data) => {
   const { name, icon, type, value } = data;
   let fileInfo = {
@@ -151,6 +147,7 @@ const addFile = (data) => {
   };
   createFile(fileInfo);
 };
+
 /**
  * 初始化阶段
  */
@@ -207,7 +204,7 @@ const header = computed(() => {
     leftHoverIcon: secondary.value
       ? "fluent:settings-16-regular"
       : "fluent:open-16-regular",
-      //
+    //
     rightIcon: [
       {
         ifyIcon: "fluent:open-16-regular",
@@ -248,6 +245,7 @@ const openAllFileClick = () => {
 };
 const options = computed(() => {
   return {
+    defaultData: defaultFolderData,
     bg: isDrag.value ? "var(--active-secondary-bg) " : "",
     // 隐藏删除
     disabled: navBar.value.isDel,
@@ -259,6 +257,7 @@ const options = computed(() => {
     },
     resize: resize.value,
     modalSize: modalSize.value,
+    customDel: true,
   };
 });
 
@@ -281,6 +280,7 @@ const sizeList = ref([
   },
 ]);
 
+console.log("status.value :>> ", status.value);
 provide("index", customIndex);
 provide("data", customData);
 provide("isOutside", isOutside);

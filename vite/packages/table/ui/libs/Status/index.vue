@@ -1,11 +1,32 @@
 <template>
-  <div class="flex justify-center items-center w-full h-full ">
+  <div class="flex justify-center items-center w-full h-full">
     <!-- xt-bg-t-2 -->
     <div>
       <div class="flex justify-center">
-        <xt-new-icon icon="fluent:plug-disconnected-16-regular" :size="imgSize" color="color: var(--secondary-text);"></xt-new-icon>
+        <xt-new-icon
+          icon="fluent:plug-disconnected-16-regular"
+          :size="imgSize"
+          color="color: var(--secondary-text);"
+        ></xt-new-icon>
       </div>
-      <div class="mt-4" :style="{fontSize: fontSize}"  style="font-family: 'PuHuiTi400';font-size: 14px;color: var(--secondary-text);">{{ name }}在{{ plat }}下不可用</div>
+      <div
+        class="mt-4"
+        :style="{ fontSize: fontSize }"
+        style="font-size: 14px; color: var(--secondary-text)"
+      >
+        {{ ele }}在{{ plat }}下不可用
+      </div>
+      <div
+        class="mt-4"
+        :style="{ fontSize: fontSize }"
+        style="
+          font-family: 'PuHuiTi400';
+          font-size: 14px;
+          color: var(--secondary-text);
+        "
+      >
+        {{ name }}在{{ plat }}下不可用
+      </div>
     </div>
   </div>
 </template>
@@ -15,21 +36,19 @@ export default {
   name: "XtStatus",
   data() {
     return {
-      plat: ''
+      plat: "",
     };
   },
-  components: {
-  },
+  components: {},
   mounted() {
-    this.plat = window.$useEnv(this.limitEnv)
+    this.plat = window.$useEnv(this.limitEnv);
   },
-  watch: {
-  },
+  watch: {},
   props: {
     // 元素名称
     name: {
       type: String,
-      default: '帕鲁',
+      default: "帕鲁",
     },
     // 平台名称
     // plat: {

@@ -1,10 +1,16 @@
 import { storeToRefs  } from 'pinia';
 import { paperStore } from '../../../store/paper';
 import _ from 'lodash-es';
-// let fs = require('fs')
-let fs = (window as any).$models.fs;
+import { useEnv } from '../../../ui/hooks/useEnv';
 
-let path = require('path')
+// let fs = require('fs')
+let fs
+let path
+if (!useEnv('web')) {
+  fs= (window as any).$models.fs;
+  path = require('path')
+}
+
 
 
 // 判断文件是否为图片
@@ -37,7 +43,7 @@ export function changeTime(msec:any){
  let minuteTime:any;
  let secondTime:any;
  // 月
- if((month + 1) >= 10){ monthTime =  (month + 1) ; } 
+ if((month + 1) >= 10){ monthTime =  (month + 1) ; }
  else { monthTime = '0' + (month + 1)  }
  // 天
  if((date + 1) < 10){ dayTime = '0' + date; }
@@ -123,5 +129,5 @@ export function paperDownload(img:any){
  const localList = fs.readdirSync(path.join(path.join(settings.value.savePath), 'static'));
  const fileName = img.path.split('/')[img.path.split('/').length - 1];
  const index = _.findIndex(localList,function(find:any){ return String(find) === String(fileName) });
- return index > -1;  
+ return index > -1;
 }

@@ -125,13 +125,16 @@ import { message, notification } from 'ant-design-vue'
 import ModalNotice from './page/notice/ModalNotice.vue'
 import ClaimReward from './apps/task/components/ClaimReward.vue'
 import { taskStore } from './apps/task/store'
-
+import { useEnv } from "./ui/hooks/useEnv";
 notification.config({
   top: '70px',//设置notification默认距离顶部位置
   rtl: false,
 })
 window.browser = browser
-const { appModel } = window.$models
+let appModel
+if (!useEnv('web')) {
+   appModel  = window.$models.appModel
+}
 let startX,
   startY,
   moveEndX,
@@ -176,7 +179,7 @@ export default {
       this.settings.zoomFactor = 100
       tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100).then()
     }
-
+if (!window.$useEnv()) {
     ipc.on('updateRunningApps', async (event, args) => {
       this.runningApps = args.runningApps
       this.runningAppsInfo = {}
@@ -197,6 +200,8 @@ export default {
       app.capture = args.info.capture + '?t=' + Date.now()
       app.memoryUsage = args.info.memoryUsage
     })
+}
+
 
     document.body.classList.add('lg')
     this.reset()//重置部分状态

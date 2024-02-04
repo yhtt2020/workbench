@@ -80,7 +80,12 @@
 import Classification from "../../../../comp/Classification.vue";
 import navigationData from "../../../../../js/data/tableData";
 import listItem from "../../../../bottomPanel/listItem.vue";
-const { appModel } = window.$models;
+import { useEnv } from "../../../../../ui/hooks/useEnv";
+let appModel
+if (!useEnv()) {
+  appModel = window.$models.appModel
+
+}
 export default {
   components: { Classification, listItem },
   data() {

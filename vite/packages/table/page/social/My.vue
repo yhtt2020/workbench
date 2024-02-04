@@ -70,6 +70,7 @@ export default {
       key:Date.now()
     }
   },
+
   mounted(){
     this.$nextTick(()=>{
       if(!this.secondaryVisible){

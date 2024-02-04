@@ -56,9 +56,13 @@
 
  import GradeSmallTip from '../../../../components/GradeSmallTip.vue';
  import {completeTask} from '../../../../apps/task/task'
+import { useEnv } from '../../../../ui/hooks/useEnv';
+let fs,path
+ if (!useEnv('web')) {
+   fs = window.$models.fs
+    path = require('path')
+ }
 
- const fs = window.$models.fs
- const path = require('path')
 
  export default {
    name: "MyContent",

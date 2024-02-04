@@ -256,7 +256,9 @@ export default {
     showCard (uid, userInfo) {
       this.showUserCard(uid, userInfo)
     },
-    friendlyDate: tsbApi.util.friendlyDate,
+    friendlyDate: ()=>{
+      if (!window.$useEnv('web')) tsbApi.util.friendlyDate()
+    },
     copy (text) {
       require('electron').clipboard.writeText(text)
       message.success('复制邀请码成功。')

@@ -23,7 +23,7 @@
                 <div :style="{width:getWidth(item)+'%'}" style="background: rgb(0 0 0 / 20%);height: 100%; position: absolute;z-index: 3;right: 0;"></div>
                 <img @contextmenu.stop="visibleMenu=true" class="image-item pointer"  :src="getCover(item)" style="position: relative">
               </div>
-                
+
               <div class="absolute top-1 right-3" style="z-index: 50;">
                 <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-3 lively-download" style="border-radius: 8px; opacity: 0;" @click="clickDownload(item)" v-if="getWidth(item)===100 && item.percent===undefined ">
                   <div class="flex items-center justify-center">
@@ -77,7 +77,7 @@
     </vue-custom-scrollbar> -->
    </div>
   </div>
- 
+
 
   <teleport to='body' >
     <div v-show="previewVideoVisible" style="position: fixed;left: 0;right: 0;top: 0;bottom: 0;z-index:9999999" id="previwer">
@@ -92,7 +92,7 @@
             <xt-new-icon icon="fluent:dismiss-16-regular" size="24"></xt-new-icon>
           </div>
         </xt-button>
-  
+
         <!-- <div @click="startDownload()" class="btn pointer"
              style="background: rgba(0,0,0,0.76);min-width: 4em;margin-right: 1em;">
           <Icon icon="xiazai" style="font-size: 2em"></Icon>
@@ -117,6 +117,7 @@ import { paperStore } from '../../store/paper'
 import { isDownLoad } from './libs/utils';
 
 import ClosePaperButton from './components/close/ClosePaperButton.vue'
+import { useEnv } from '../../ui/hooks/useEnv'
 
 const lively = [
   {
@@ -160,9 +161,11 @@ const lively = [
   }
 ]
 const lively2 = ['mylivewallpapers-com-Arcanine-and-Oddish-Pokemon.mp4', 'MyLiveWallpapers-com-Conch-Street-4K.mp4', 'mylivewallpapers-com-Cult-of-the-Lamb-4K.mp4', 'mylivewallpapers-com-Fenrir-Ragnorak-4K.mp4', 'mylivewallpapers-com-Firecracker-Diana-LoL.mp4', 'mylivewallpapers-com-Geralt-Wild-Hunt.mp4', 'mylivewallpapers-com-Ghost-Screen-4K.mp4', 'mylivewallpapers-com-Resident-Evil-Pixels.mp4', 'mylivewallpapers-com-Shiba-Inu.mp4', 'mylivewallpapers-com-Tree-Houses-4K.mp4', 'mylivewallpapers-com-V-Rising.mp4', 'mylivewallpapers-com-White-Wolf.mp4', 'mylivewallpapers-com-Wolf.mp4', 'mylivewallpapers.com-16bit-Japanese-Beach.mp4', 'mylivewallpapers.com-3D-Skull.mp4', 'mylivewallpapers.com-Aquarium.mp4', 'mylivewallpapers.com-Avengers-EndGame.mp4', 'mylivewallpapers.com-Blue-Butterflies.mp4', 'mylivewallpapers.com-Captain-America-VS-Iron-Man.mp4', 'mylivewallpapers.com-Cartoon-Baby-Yoda-Mandalorian.mp4', 'mylivewallpapers.com-Cerberus-Pixel-Art-Helltaker.mp4', 'mylivewallpapers.com-Crocodile-Swamp.mp4', 'mylivewallpapers.com-Dolphin-Island.mp4', 'mylivewallpapers.com-Forest-Deer.mp4', 'mylivewallpapers.com-Geralt-of-Rivia.mp4', 'mylivewallpapers.com-Geralt.mp4', 'mylivewallpapers.com-Glow-Sunset-Mountain.mp4', 'mylivewallpapers.com-Glowing-Deer.mp4', 'mylivewallpapers.com-Hearth-Groves.mp4', 'mylivewallpapers.com-Heimerstinger-LoL.mp4', 'mylivewallpapers.com-Henry-Cavill-The-Witcher.mp4', 'mylivewallpapers.com-Jupiter.mp4', 'mylivewallpapers.com-Lil-SpongeThug-KillaPants.mp4', 'mylivewallpapers.com-Magical-Hummingbird.mp4', 'mylivewallpapers.com-Magical-Underwater.mp4', 'mylivewallpapers.com-Mountain-Lake-Sunset.mp4', 'mylivewallpapers.com-Neutron-Star.mp4', 'mylivewallpapers.com-Nuclear-Blast.mp4', 'mylivewallpapers.com-Ocean-Waves.mp4', 'mylivewallpapers.com-Pickle-Rick.mp4', 'mylivewallpapers.com-Pixel-Flower-Shop.mp4', 'mylivewallpapers.com-Pixel-Pleiades-Overlord.mp4', 'mylivewallpapers.com-Pixel-Waterfall.mp4', 'mylivewallpapers.com-Polar-Bubbles.mp4', 'mylivewallpapers.com-Rick-and-Morty-Escape.mp4', 'mylivewallpapers.com-Rick-N-Morty-Adventures.mp4', 'mylivewallpapers.com-Rise-of-Skywalker.mp4', 'mylivewallpapers.com-Shiba-Inu-Hot-Dog.mp4', 'mylivewallpapers.com-Shiba-Inu-Snow.mp4', 'mylivewallpapers.com-Snow-Deer.mp4', 'mylivewallpapers.com-Sponge-Bob-Coffee.mp4', 'mylivewallpapers.com-Sunset-River-FIX.mp4', 'mylivewallpapers.com-The-Long-Dark.mp4', 'mylivewallpapers.com-Tropical-Waterfall.mp4', 'mylivewallpapers.com-Undead-Pirate.mp4', 'mylivewallpapers.com-Waterfall-Birds-1.mp4', 'mylivewallpapers.com-Waterfall-Fox.mp4']
-let fs = require('fs')
-let path = require('path')
-
+let fs,path
+ if (!useEnv('web')) {
+   fs = window.$models.fs
+    path = require('path')
+ }
 export default {
   name: 'Lively',
 
@@ -188,11 +191,11 @@ export default {
       menuList:[
        {
         newIcon:'fluent:arrow-download-16-regular',name:'下载壁纸',
-        callBack:()=>{ this.clickDownload(this.currentItem) } 
+        callBack:()=>{ this.clickDownload(this.currentItem) }
        },
-       { 
+       {
         newIcon:'fluent:delete-16-regular',name:'删除该壁纸',color: 'var(--error)',
-        callBack:()=>{ this.delDownLoad(this.currentItem,this.currentIndex) } 
+        callBack:()=>{ this.delDownLoad(this.currentItem,this.currentIndex) }
        },
       ]
     }
@@ -383,7 +386,7 @@ export default {
         type:'link'
       })
     }
-    
+
   }
 }
 </script>

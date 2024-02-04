@@ -84,7 +84,7 @@ const handleDrop = async (dragEvent) => {
     isEnterDesk.value = false
     return
   }
-  
+
   // console.log("handleDrop :>> ",dragEvent.dataTransfer.getData('text/plain'));
   // 处理系统拖拽进入的文件和链接
   let files = dragEvent.dataTransfer.files;
@@ -118,7 +118,7 @@ const handleDrop = async (dragEvent) => {
     emits('createFile', file);
   }
 
-  
+
 };
 
 /**

@@ -51,13 +51,3 @@ const isVisitor = getVisitor();
 export default currentEnv;
 
 export { isWeb, isClient, isMac, isOffline, isVisitor };
-
-
-module.exports = {
-  currentEnv,
-  isWeb,
-  isClient,
-  isMac,
-  isOffline,
-  isVisitor,
-};

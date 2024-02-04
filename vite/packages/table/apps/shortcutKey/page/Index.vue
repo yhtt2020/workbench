@@ -5,10 +5,14 @@ import {mapActions, mapWritableState} from "pinia";
 import {keyStore} from "../store";
 import {appStore} from "../../../store";
 
+import {useEnv} from '../../../ui/hooks/useEnv'
 import '../static/style.scss'
 
+let win32
+if (!useEnv()) {
+   win32 = window.$models.win32
+}
 
-const win32 = window.$models.win32
 export default {
   name: "Index",
   components: {SettingFilled, XtButton},

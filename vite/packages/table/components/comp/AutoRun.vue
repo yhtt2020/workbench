@@ -1,12 +1,12 @@
 <template>
-  <div v-if="isGuide" class="w-full">
+  <div v-if="isGuide &&!$useEnv()" class="w-full"  >
     <div class="flex justify-between">
       <span class="xt-text">开机自启动：</span>
       <a-switch  @change="setAutoRun" v-model:checked="isAutoRun"></a-switch>
     </div>
     <span class="xt-text-2 font-14">可能会被安全软件拦截，请允许</span>
   </div>
-  <div v-else>
+  <div v-else-if="!$useEnv()">
     <span class="xt-text" style="font-weight: bold;">开机自启动：</span>
     <a-switch  @change="setAutoRun" v-model:checked="isAutoRun"></a-switch>
     <span class="ml-2">可能会被安全软件拦截，请允许</span>
