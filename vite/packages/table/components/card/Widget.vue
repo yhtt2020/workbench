@@ -166,7 +166,7 @@ export default {
     },
     limitEnv: {
       default: ()=>{
-        return ['win']
+        return ''
       }
     },
   },
