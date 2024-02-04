@@ -120,7 +120,7 @@ export default {
       if(!this.checkTimer){
         this.checkTimer= setInterval(()=>{
           this.checkOrderPaidStatus()
-        },1000)
+        },3000)
       }
     },
     closeTimer(){
@@ -144,7 +144,6 @@ export default {
 
             }
           })
-        } else {
         }
       }
     },
@@ -162,7 +161,6 @@ export default {
       this.qrCode.wechat = ''
       this.error=false
       this.getQrcode(this.order.nanoid, 'wechat').then((rs) => {
-        console.log('微信二维码返回', rs)
         if (rs.status) {
           this.qrCode.wechat = rs.data.qrCode
           return
