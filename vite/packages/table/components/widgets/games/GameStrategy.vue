@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options" :customData="customData" :customIndex="customIndex" :desk="desk">
+  <Widget :limit-env="['web']"  :options="options" :customData="customData" :customIndex="customIndex" :desk="desk">
     <div class="flex items-center" style="position: absolute; top: 0.85rem; left:1rem;">
       <StrategyIcon icon="fluent:games-16-regular" style="font-size: 1.25rem;color:var(--secondary-text);"/>
       <div class="flex items-center justify-center category-button ml-2 py-0.5 px-2 xt-enable-bg xt-text rounded-lg pointer" @click="openGuideDrawer">
@@ -8,20 +8,20 @@
     </div>
 
     <div class="w-full flex mt-3.5 mb-3">
-      <HorizontalPanel style="width: 23.5rem;height: 44px;" 
+      <HorizontalPanel style="width: 23.5rem;height: 44px;"
        :navList="strategyType" v-model:selectType="strategy">
       </HorizontalPanel>
       <xt-new-icon type="theme" icon="fluent:search-20-filled" w="44" bgClass="xt-bg  category-button mx-3" @click="openSearch"></xt-new-icon>
-      
+
       <!-- 视频 -->
       <template v-if="strategy.name === 'video'">
-        <xt-new-icon type="theme" v-if="biliVideoList.length !== 0" 
-        icon="fluent:chevron-left-16-filled" w="44" bgClass="xt-bg  category-button mr-3" 
+        <xt-new-icon type="theme" v-if="biliVideoList.length !== 0"
+        icon="fluent:chevron-left-16-filled" w="44" bgClass="xt-bg  category-button mr-3"
         @click="prevButton" :style="isTop ? { color:'var(--disable-text) !important',cursor:'not-allowed !important' } : { color:'var(--primary-text) !important' }"
        >
        </xt-new-icon>
        <xt-new-icon type="theme" v-if="biliVideoList.length !== 0"
-        icon="fluent:chevron-right-16-filled" w="44" bgClass="xt-bg  category-button " 
+        icon="fluent:chevron-right-16-filled" w="44" bgClass="xt-bg  category-button "
         @click="nextButton" :style="isBottom ? { color:'var(--disable-text) !important',cursor:'not-allowed !important' } : { color:'var(--primary-text) !important' }"
        >
        </xt-new-icon>
@@ -29,13 +29,13 @@
 
       <!-- 图文列表 -->
       <template v-else>
-        <xt-new-icon type="theme" v-if="graphicList.length !== 0" 
-        icon="fluent:chevron-left-16-filled" w="44" bgClass="xt-bg  category-button mr-3" 
+        <xt-new-icon type="theme" v-if="graphicList.length !== 0"
+        icon="fluent:chevron-left-16-filled" w="44" bgClass="xt-bg  category-button mr-3"
         @click="prevButton" :style="isTop ? { color:'var(--disable-text) !important',cursor:'not-allowed !important' } : { color:'var(--primary-text) !important' }"
        >
        </xt-new-icon>
        <xt-new-icon type="theme" v-if="graphicList.length !== 0"
-        icon="fluent:chevron-right-16-filled" w="44" bgClass="xt-bg  category-button " 
+        icon="fluent:chevron-right-16-filled" w="44" bgClass="xt-bg  category-button "
         @click="nextButton" :style="isBottom ? { color:'var(--disable-text) !important',cursor:'not-allowed !important' } : { color:'var(--primary-text) !important' }"
        >
        </xt-new-icon>
@@ -43,15 +43,15 @@
 
     </div>
 
-    
+
     <template v-if="strategy.name === 'video'">
 
       <BiliVideoDetail :list="videoList"/>
-      
+
     </template>
 
     <template v-else>
-      
+
       <GraphicDetail :list="graphicsList"/>
 
     </template>
@@ -59,7 +59,7 @@
 
   </Widget>
 
-  <HorizontalDrawer ref="strategyDrawer" drawerTitle="游戏名称" 
+  <HorizontalDrawer ref="strategyDrawer" drawerTitle="游戏名称"
     v-model:selectRegion="customData.id"
     :rightSelect="recentGameList" @getArea="getArea"
   >
@@ -75,7 +75,7 @@
       </a-input>
     </div>
   </a-drawer>
-  
+
 </template>
 
 <script>
@@ -212,7 +212,7 @@ export default {
       }
     },
 
-    
+
     // 分页
     nextButton(e){
       if(this.isBottom){
@@ -240,14 +240,14 @@ export default {
        }
 
       }
-      
-      
+
+
 
     },
 
     prevButton(e){
       if(this.isTop){
-        
+
         e.preventDefault();
 
       }else{
@@ -271,10 +271,10 @@ export default {
        }
 
       }
-     
+
     }
   },
-  
+
   watch:{
     'strategy':{
       handler(){

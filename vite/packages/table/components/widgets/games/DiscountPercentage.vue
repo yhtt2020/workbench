@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex" :menuList="detailBar" ref="detailSlot" :customData="customData" :desk="desk" :env="env">
+  <Widget :limit-env="['web']"  :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex" :menuList="detailBar" ref="detailSlot" :customData="customData" :desk="desk" :env="env">
     <template #left-title-icon>
         <div
           class="icon"

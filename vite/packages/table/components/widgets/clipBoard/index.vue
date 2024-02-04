@@ -1,7 +1,7 @@
 <template>
     <div>
 
-        <Widget :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk">
+        <Widget :limit-env="['web']"  :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk">
         <div class="icon-topline">
             <!-- <pushpin-outlined></pushpin-outlined> -->
             <newIcon icon="fluent:clipboard-bullet-list-16-regular" style="font-size: 20px;"/>

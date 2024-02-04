@@ -1,5 +1,5 @@
 <template>
-  <Widget :sizeList="sizeList" :customData="customData" :customIndex="customIndex" :options="options" ref="gameSmallSlot" :menuList="gameMiddleBare" :desk="desk">
+  <Widget :limit-env="['web']"  :sizeList="sizeList" :customData="customData" :customIndex="customIndex" :options="options" ref="gameSmallSlot" :menuList="gameMiddleBare" :desk="desk">
     <div @click="goRoute" class="px-1 py-1 pointer" style="position: absolute;left: 45px;top:10px" v-if="myDetailShow === false">
       我的游戏
     </div>
