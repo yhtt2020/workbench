@@ -19,14 +19,14 @@
    <div class="flex flex-col" style="width: 168px;">
     <div class="flex justify-between w-full mb-1">
       <xt-text class="xt-text font-14 xt-font font-400">我的社区等级</xt-text>
-      <span class="font-18 xt-font  xt-text" style="font-weight: 900;">Lv{{ userInfo?.grade.new_name.substr(0,1) }}</span>
+      <span class="font-18 xt-font  xt-text" style="font-weight: 900;">Lv{{ userInfo?.grade.grade }}</span>
     </div>
     <a-progress :percent="myLv.currentLv"  :strokeColor="'var(--primary-text)'"/>
     <!-- 经验升级进度条-->
     <div class="flex justify-between w-full pt-2">
      <xt-text class="xt-text-2 font-12 xt-font font-400">升级所需经验</xt-text>
      <span class="xt-text-2 font-12 xt-font font-400">{{ userInfo?.grade.diff }}</span>
-    </div> 
+    </div>
    </div>
    <a-divider type="vertical" style="height: 48px; border-top: 1px solid var(--divider);" />
    <div style="width: 178px;" class="flex flex-col">
@@ -72,6 +72,7 @@ const props = defineProps({
 
 // 获取我的经验等级
 const myLv = computed(()=>{
+  console.log(userInfo,'当前等级')
   const  currentLv =  Math.floor((userInfo.value?.grade.next - userInfo.value?.grade.diff) / userInfo.value?.grade.next * 100) ;
   const lvDiff = userInfo.value?.grade.next - userInfo.value?.grade.diff;
   // console.log("currentLv lvDiff",lvDiff,currentLv,userInfo.value);
@@ -91,7 +92,7 @@ onMounted(()=>{
     task.getTaskUserMedal(userInfo.value?.uid);
     task.getUserScore();
   })
-}) 
+})
 
 </script>
 
