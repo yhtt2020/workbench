@@ -159,7 +159,7 @@
       <xt-status
         v-if="useEnv(envLimit)"
         :name="header.title"
-        :status="envLimit"
+        :status="limitEnv"
         imgSize="75"
       />
       <div
@@ -409,11 +409,13 @@ const props = defineProps({
   status: {},
 });
 const { header } = toRefs(props);
-onBeforeMount(() => {
+onBeforeMount(async () => {
   // 处理默认数据
   if (props.options.defaultData) {
-    deepMerge(props.customData, props.options.defaultData);
+    props.options.defaultData = await _.merge(props.customData, props.options.defaultData);
+    // _.merge({}, props.options.defaultData, props.customData);
   }
+  console.log("props.options.defaultData :>> ", props.options.defaultData);
 });
 
 // emits 小组件事件回调

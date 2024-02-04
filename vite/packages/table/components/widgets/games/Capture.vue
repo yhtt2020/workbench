@@ -1,5 +1,5 @@
 <template>
-   <Widget :menuList="menuList"  :options="options" :customData="customData" :customIndex="customIndex" :desk="desk">
+   <Widget :limit-env="['web']" :menuList="menuList"  :options="options" :customData="customData" :customIndex="customIndex" :desk="desk">
     <template #left-title-icon>
         <div
           class="icon"
