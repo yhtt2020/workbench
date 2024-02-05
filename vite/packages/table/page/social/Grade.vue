@@ -23,7 +23,7 @@
         <div class="flex flex-row">
           <div class="mt-6 mr-4" style="width: 160px">
             <a-steps direction="vertical" :current="abilityGrade" ref="step" :progressDot="true">
-              <a-step :title="'Lv ' + item" description="null" @click="clickStep(index)" class="left-box"
+              <a-step :title="'Lv ' + item" description=" " @click="clickStep(index)" class="left-box"
                 v-for="(item, index) in leveList" style="color:var(--primary-text);"/>
             </a-steps>
           </div>
@@ -39,6 +39,7 @@
                 <div class="text-white text-more w-full xt-text"  >{{ item.alias }}</div>
                 <div v-if="item.detail[[leveList[clickGrade]]]" class=" text-more w-full xt-text-2">
                   {{ item.detail[[leveList[clickGrade]]] }}</div>
+
               </div>
               <div class="grade-tip" style="color: rgba(255, 255, 255, 0.85);" v-if="item.noOnline">即将上线</div>
             </div>
@@ -126,6 +127,9 @@ export default {
 .left-box {
   :deep(.ant-steps-item-title) {
     color: var(--primary-text) !important;
+  }
+  :deep(.ant-steps-item-content){
+    min-height: 65px;
   }
 }
 @media screen and (min-width: 1492.9px) {
