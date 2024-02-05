@@ -28,6 +28,11 @@ const routes = [
     name:'splash',
     component: Splash
   },
+  {
+    path:'/splash',
+    name:'splash1',
+    component: Splash
+  },
 
 
   {

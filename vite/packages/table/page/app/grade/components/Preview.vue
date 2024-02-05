@@ -159,7 +159,7 @@ export default {
     ...mapActions(cardStore, ['addShareDesk', 'setDeskSize']),
     ...mapActions(marketStore,['incSupport']),
     ...mapActions(useFreeLayoutStore,['initFreeLayoutEnv', 'clearFreeLayoutData']),
-    
+
     async doIncSupport(){
       const rs=await this.incSupport(this.displayScheme.dataNanoid)
       if(rs && rs.msg.includes('取消')){
@@ -187,6 +187,7 @@ export default {
           headerList: header,
           cb: () => {
             this.$bus.emit("adsorbGrid");
+            this.$bus.emit("cutCanvas");
           },
         });
         this.$emit('analysis')
