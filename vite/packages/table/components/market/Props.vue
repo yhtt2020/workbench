@@ -1,7 +1,10 @@
 <template>
   <div class="flex flex-row"  >
     <div class="item-content"  >
-      <div v-for="item in navLists" :key="item" class="mb-3 mx-2 rounded-lg flex flex-col"
+      <div v-if='navLists.length===0' class="item-content mt-10" >
+        <a-empty description="此分类下暂无商品" image="/img/test/load-ail.png"/>
+      </div>
+      <div v-else v-for="item in navLists" :key="item" class="mb-3 mx-2 rounded-lg flex flex-col"
       :style="avatarBgColor(item.frame.rarity)" style="width:337px;min-height: 200px;">
         <div class="avatar-top flex " style="position: relative">
           <div style="width: 100px;height: 100px;min-width: 100px;">

@@ -124,7 +124,7 @@ export default {
       this.fullScreen = false
       this.$router.go(-1)
     },
-    updateNavIndex({index}){
+    updateNavIndex(item,index){
       this.navIndex = index
     },
     changeSelect(event){
