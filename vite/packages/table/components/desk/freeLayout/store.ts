@@ -6,6 +6,8 @@ import { FreeLayoutStore } from "../../../page/app/grade/components/FreeLayout";
 import _ from "lodash";
 
 import dbStorage from "../../../store/dbStorage";
+import { useElementSize } from "../../../ui/hooks/useCardSize";
+import { message } from "ant-design-vue";
 // @ts-ignore
 export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
   state: () => ({
@@ -148,7 +150,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       }
     },
     // 初始化自由布局状态数据
-    initFreeLayoutState() {
+    async initFreeLayoutState() {
       if (!this.getFreeLayoutState) {
         this.freeLayoutState[this.getCurrentDeskId] = _.cloneDeep(
           this.defaultState
@@ -156,10 +158,12 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         this.freeLayoutData[this.getCurrentDeskId] = {};
       } else {
         this.deepMerge(this.getFreeLayoutState, this.defaultState);
-        // this.freeLayoutState[this.getCurrentDeskId] = _.merge(
-        //   this.getFreeLayoutState,
+        // let res = await _.merge(
+        //   this.freeLayoutState[this.getCurrentDeskId],
         //   this.defaultState
         // );
+        // console.log("res :>> ", res);
+        // props.options.defaultData =  _.merge(props.customData, props.options.defaultData);
       }
       console.log("自由布局状态初始化成功 :>> ", this.getFreeLayoutState);
     },

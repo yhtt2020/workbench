@@ -77,6 +77,7 @@ function deskMenus() {
                 mainList: this.currentDesk.cards,
                 cb: () => {
                   this.$bus.emit("adsorbGrid");
+                  this.$bus.emit("cutCanvas");
                 },
               });
             },
@@ -142,7 +143,7 @@ function deskMenus() {
       newIcon: "fluent:more-horizontal-16-filled",
       name: "更多",
       lock: true,
-      children: [          
+      children: [
         {
           id: 1,
           newIcon: "fluent:settings-16-regular",

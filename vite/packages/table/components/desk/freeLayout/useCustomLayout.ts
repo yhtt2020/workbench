@@ -1,6 +1,7 @@
 import { storeToRefs } from "pinia";
 import { nanoid } from "nanoid";
 import _ from "lodash";
+
 import { useAddCard, useDelCard } from "../../../ui/hooks/useAddCard";
 import { getSnapGrid } from "../../../ui/new/drag/src/hooks/utils";
 import {
@@ -29,7 +30,6 @@ export const useCustomLayout = async (options) => {
     });
   };
   const mergedOptions = _.merge({}, defaultOptions, options);
-  console.log("mergedOptions :>> ", mergedOptions);
   const { mainList, headerList, folderList, columns, cb, test } = mergedOptions;
   const freeLayoutStore: any = useFreeLayoutStore();
   const { getFreeLayoutData, getFreeLayoutState, freeLayoutEnv } =
@@ -40,6 +40,7 @@ export const useCustomLayout = async (options) => {
   getFreeLayoutState.value.system.isFreeLayout = true;
 
   let positioningId = await getPositioningData();
+  console.log("positioningId :>> ", positioningId);
   let containerWidth = freeLayoutEnv.value.scrollWidth;
   let layoutWidth = useGridToWidth(columns * 2);
   let scaleFactor = 1;
@@ -121,7 +122,10 @@ export const useCustomLayout = async (options) => {
     for (let item of arr.splice(0, arr.length)) {
       // 处理元素位置
       const { width, height }: any = useElementSize(item.customData.customSize);
-      console.log("处理元素位置 get   item.customData.customSize :>> ",   item.customData.customSize);
+      console.log(
+        "处理元素位置 get   item.customData.customSize :>> ",
+        item.customData.customSize
+      );
 
       itemStatus(item);
       // 元素超出
@@ -155,7 +159,7 @@ export const useCustomLayout = async (options) => {
           left - freeLayoutEnv.value.scrollLeft / scaleFactor - position;
         currentTop += currentHeight + 12;
         currentHeight = height;
-      console.log("元素超出 get currentHeight :>> ", currentHeight);
+        console.log("元素超出 get currentHeight :>> ", currentHeight);
 
         fillHeight = currentHeight;
         if (res) {
@@ -238,10 +242,8 @@ export const useCustomLayout = async (options) => {
       itemWidth = width;
       itemHeight = height;
 
-      console.log("fill get height :>> ", height);
       flag = fillHeight - itemHeight < 0;
 
-      console.log("flag :>> ", flag);
       if (flag) {
         array.push(item);
         return;
@@ -251,7 +253,6 @@ export const useCustomLayout = async (options) => {
       addCard(currentTop, left, item);
       currentTop += height + 12;
     }
-    console.log("fillHeight - 134  < 0 :>> ", fillHeight - 134);
     if (fillHeight - 96 < 0) {
       console.log("换列操作 :>> ");
       currentTop = top;
@@ -276,10 +277,10 @@ export const useCustomLayout = async (options) => {
   let b = [...arr2x4];
   let c = [...arr4x4];
   let d = [...arrSpecial];
-  console.log('a :>> ', a);
-  console.log('b :>> ', b);
-  console.log('c :>> ', c);
-  console.log('d :>> ', d);
+  console.log("a :>> ", a);
+  console.log("b :>> ", b);
+  console.log("c :>> ", c);
+  console.log("d :>> ", d);
   console.log(
     "arr2x2, arr2x4, arr4x4, arr1x1, arrSpecial :>> ",
     arr2x2,
@@ -291,6 +292,8 @@ export const useCustomLayout = async (options) => {
   let array: any = [];
   if (headerList && headerList.length) {
     let { arr2x2: header2x2, arr2x4: header2x4 } = arraySplit(headerList);
+    let e = [...header2x2]
+    console.log('e :>> ', e);
     let num2x2 = header2x2.length;
     currentHeight = 420;
     fillHeight = currentHeight;
@@ -310,20 +313,25 @@ export const useCustomLayout = async (options) => {
     fillHeight = 0;
   }
   resetLeft();
-  console.log('1111111111111 :>> ', 1111111111111);
+  console.log("1111111111111 :>> ", 1111111111111);
   // mainList
-  console.log('arrSpecial :>> ', arrSpecial);
+  console.log("arrSpecial :>> ", arrSpecial);
   setData(arrSpecial);
   setData(arr4x4);
   setData(arr2x4);
   setData(arr2x2);
   setData(arr1x1);
 
+  // 开始收尾
+  useDelCard(positioningId);
   setTimeout(() => {
-    console.log('删除操作 :>> ', );
-    useDelCard(positioningId);
     cb && cb();
-  }, 600);
+  }, 10);
+  // 删除占位数据
+  //
+  // freeLayoutStore.cutCanvas();
+  // freeLayoutStore.updateLocation();
+  console.log("删除操作 :>> ");
 };
 const arraySplit = (arr) => {
   let arr2x2: any = [];
@@ -332,6 +340,7 @@ const arraySplit = (arr) => {
   let arr1x1: any = [];
   let arrSpecial: any = [];
 
+  console.log('arr :>> ', arr);
   arr.forEach((item) => {
     if (!item.customData?.customSize) {
       console.log("无信息元素 item.customData :>> ", item.customData);
