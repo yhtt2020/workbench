@@ -56,7 +56,7 @@ onMounted(() => {
   proxy.$bus.on("cutCanvas", () => {
     setTimeout(() => {
       cutCanvas({
-        extend: false,
+        redirect: true,
       });
       freeLayoutStore.updateLocation();
     }, 1);
@@ -110,23 +110,17 @@ async function getPosition(item) {
 
 // 裁切画布
 const defaultConfig = {
-  extend: true,
+  redirect: false,
   id: null,
 };
 const cutCanvas = async (config) => {
-  // console.log('123 :>> ', 123);
   const mergedOptions = _.merge({}, defaultConfig, config);
-  const { extend, id } = mergedOptions;
+  const { redirect, id } = mergedOptions;
   if (!getFreeLayoutState.value.canvas.autoExtend) return;
-
-  // const  = currentDesk.value.cards
-  console.log("currentData.value :>> ", currentData.value);
   let left: any = Infinity;
   let top: any = Infinity;
   let right: any = 0;
   let bottom: any = 0;
-  let minItem: any = {};
-  let maxItem: any = {};
 
   let rightItem: any = {};
   let bottomItem: any = {};
@@ -163,11 +157,6 @@ const cutCanvas = async (config) => {
       bottomItem = item;
     }
   });
-
-  console.log("bottom :>> ", bottom);
-  console.log("top :>> ", top);
-  console.log("right :>> ", right);
-  console.log("left :>> ", left);
 
   // 获取画布大小
   let { width: canvasWidth, height: canvasHeight } =
@@ -254,19 +243,17 @@ const cutCanvas = async (config) => {
     getFreeLayoutState.value.canvas.height = bottom + viewHeight;
   }
   // 定位修改
+  if (redirect) return;
   setTimeout(() => {
     getFreeLayoutState.value.mode.align = "custom";
     const zoom = getFreeLayoutState.value.canvas.zoom;
     getFreeLayoutState.value.line.centerLine.y = top / zoom;
     getFreeLayoutState.value.line.centerLine.x =
       (left + scrollWidth / 2) / zoom;
-    freeLayoutStore.restoreLocation();
-    setTimeout(() => {}, 500);
+    setTimeout(() => {
+      freeLayoutStore.restoreLocation();
+    }, 500);
   }, 100);
-  // getFreeLayoutState.value.line.centerLine.x =
-  //   (freeLayoutEnv.value.scrollLeft +
-  //     freeLayoutEnv.value.scrollData.width / 2) /
-  //   zoom;
 };
 
 /**
