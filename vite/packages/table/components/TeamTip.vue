@@ -122,8 +122,6 @@ export default {
         }else{
           Modal.error({content:result.info,centered:true})
         }
-
-      }
       // Modal.error({
       //   content: '暂不支持加入小队',
       //   centered: true

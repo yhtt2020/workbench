@@ -17,7 +17,7 @@ export const comStore = defineStore("comStore", {
   actions: {
     async updateTodayRank() {
       let response = await get(getTodayRank)
-      if (response.status === 1) {
+      if (response?.status === 1) {
         this.todayRank = response.data.rankInfo.map(r => {
           // { id: 1, headSculpture: '', username: '阳光小葵', time: '00:01' },
           if (!r.userInfo) {

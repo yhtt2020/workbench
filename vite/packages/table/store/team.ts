@@ -253,17 +253,7 @@ export const teamStore = defineStore("teamStore", {
     },
 
     async joinByNo(no) {
-      try {
-        let rs = await post(joinByNoUrl, {no: no})
-        return rs
-      } catch (e) {
-        return {
-          status: 0,
-          info: e.message
-        }
-        console.warn(e)
-      }
-
+      return await post(joinByNoUrl, {no: no})
     },
     /**
      * 退出或者踢人
