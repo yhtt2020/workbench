@@ -386,7 +386,7 @@ const addCard = (top, left, item) => {
   }
   
   if (item.name == 'notes') {
-    id = Date.now()    
+    id = item?.id || Date.now()    
   }
 
   let a = left;
@@ -397,6 +397,8 @@ const addCard = (top, left, item) => {
     id,
   };
 
+  console.log('getFreeLayoutData.value[id]', id,  getFreeLayoutData.value[id]);
+  
   if (item.id) return;
 
   useAddCard(
