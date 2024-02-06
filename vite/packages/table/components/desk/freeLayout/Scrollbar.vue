@@ -262,6 +262,8 @@ onBeforeUnmount(() => {
   window.removeEventListener("mousemove", handleMouseMove);
   window.removeEventListener("mouseup", handleMouseUp);
   document.body.removeEventListener("keydown", ignoreSpace);
+
+  proxy.$bus.off("updateFreeLayoutScroll")
 });
 defineExpose({
   redirect,

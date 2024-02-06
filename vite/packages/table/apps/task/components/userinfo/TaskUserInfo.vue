@@ -19,7 +19,7 @@
    <div class="flex flex-col" style="width: 168px;">
     <div class="flex justify-between w-full mb-1">
       <xt-text class="xt-text font-14 xt-font font-400">我的社区等级</xt-text>
-      <span class="font-18 xt-font  xt-text" style="font-weight: 900;">Lv{{ userInfo?.grade.grade }}</span>
+      <span class="font-18 xt-font  xt-text" style="font-weight: 900;">Lv{{ userInfo?.grade?.grade }}</span>
     </div>
     <a-progress :percent="myLv.currentLv"  :strokeColor="'var(--primary-text)'"/>
     <!-- 经验升级进度条-->

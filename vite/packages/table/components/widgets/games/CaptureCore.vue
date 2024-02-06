@@ -29,6 +29,7 @@ export default defineComponent({
     ...mapWritableState(captureStore, ['recordedSeconds','sources', 'settings', 'images', 'videos','currentSource','recording']),
   },
   mounted () {
+    if (this.$useEnv()) return
     this.reloadMic()
   },
   methods:{

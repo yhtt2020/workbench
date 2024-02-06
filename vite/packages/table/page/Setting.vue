@@ -354,10 +354,9 @@ export default {
     this.textColor = getTextColor();
     this.wallpaperColor = getWallpaperColor();
     window.removeEventListener('keydown',this.listenEnter)
-    this.$bus.on("M0202", () => {
-      // this.styleVisible = true
-      this.settingTheme();
-    });
+    // this.$bus.on("M0202", () => {
+    //   this.settingTheme();
+    // });
   },
   computed: {
     ...mapWritableState(appStore, [

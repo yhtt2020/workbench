@@ -177,7 +177,7 @@ export default {
       NavbarList: [],
       scheme: {},
       showModal: false,
-      // 
+      //
       headerList: [],
       folderList: [],
       //  页面索引
@@ -258,7 +258,7 @@ export default {
       })
     })
 
-    // 
+    //
     this.step = this.guideList[this.stepIndex]
     if (this.step == 1) {
       this.analysis()
@@ -270,7 +270,7 @@ export default {
   methods: {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData", "setFreeLayoutData", "setFreeLayoutState", 'renewFreeLayout', 'getFreeLayout1']),
 
-    // 设置自由布局数据 
+    // 设置自由布局数据
     showFreeLayout(type) {
       if (type == 'game') {
         this.setFreeLayoutData('mj36hf6h', this.gameDesk.freeLayoutData)
@@ -296,7 +296,7 @@ export default {
       this.$refs.paperModal.openGalleryModal()
     },
 
-    // 
+    //
 
     // 调整类型
     setDeskType(type) {
@@ -513,6 +513,8 @@ export default {
           headerList: this.headerList,
           cb: () => {
             this.$bus.emit("adsorbGrid");
+            this.$bus.emit("cutCanvas");
+
           },
         });
       }, 1)

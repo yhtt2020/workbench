@@ -2,11 +2,8 @@
 
 // 注册想天客户端状态
 import currentEnv, { isWeb, isClient, isMac, isOffline, isVisitor } from "./ui/hooks/env";
-import {useEnv,useEnvLimit,useComLimit} from "./ui/hooks/useEnv";
+import {useEnv,useEnvLimit,useComLimit} from "./permission/useEnv";
 window.$currentEnv = currentEnv;
-window.$isWeb = isWeb;
-window.$isClient = isClient;
-window.$isMac = isMac;
 window.$isOffline = isOffline;
 window.$isVisitor = isVisitor;
 window.$useEnv = useEnv;
@@ -125,7 +122,7 @@ app.config.globalProperties.$isVisitor = isVisitor;
 app.config.globalProperties.$bus = Mit;
 app.config.globalProperties.$useEnv= useEnv;
 window.$ui={
-  confirm
+  confirm,
 }
 
 const pinia = createPinia();

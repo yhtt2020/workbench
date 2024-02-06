@@ -370,13 +370,6 @@ export default {
         this.adjustLayout = false;
       }
     },
-    // hideCard: {
-    //   handler(newVal) {
-    //     this.addMenu(this.hideCard);
-    //   },
-    //   deep: true,
-    //   immediate: true,
-    // },
     deskMenus: {
       handler(newVal) {
         this.deskMenus.forEach((item) => {
@@ -413,8 +406,6 @@ export default {
         this.muuriOptions.layout.horizontal = !newVal.settings?.vDirection;
       }
     },
-    // {
-
     // 监听ID变化
     "currentDesk.id": {
       handler(newVal) {
@@ -555,26 +546,26 @@ export default {
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();
     });
-    this.$bus.on("reset", () => {
-      this.resetLayout();
-    });
-    this.$bus.on("M0102", () => {
-      this.newAddIcon();
-    });
-    this.$bus.on("M0101", () => {
-      this.newAddCard();
-    });
-    this.$bus.on("Z0106", () => {
-      this.newAddCard();
-    });
-    this.$bus.on("M0302", () => {
-      this.newAddCard();
-    });
-    this.$bus.on("M0201", () => {
-      setTimeout(() => {
-        this.$refs.galleryRef.openGalleryModal();
-      }, 100);
-    });
+    // this.$bus.on("reset", () => {
+    //   this.resetLayout();
+    // });
+    // this.$bus.on("M0102", () => {
+    //   this.newAddIcon();
+    // });
+    // this.$bus.on("M0101", () => {
+    //   this.newAddCard();
+    // });
+    // this.$bus.on("Z0106", () => {
+    //   this.newAddCard();
+    // });
+    // this.$bus.on("M0302", () => {
+    //   this.newAddCard();
+    // });
+    // this.$bus.on("M0201", () => {
+    //   setTimeout(() => {
+    //     this.$refs.galleryRef.openGalleryModal();
+    //   }, 100);
+    // });
 
     if (window.showed) {
       this.showGrid = true;

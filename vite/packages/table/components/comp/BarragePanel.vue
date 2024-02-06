@@ -41,13 +41,13 @@ export default {
     }
   },
   mounted () {
-this.$bus.on('Z0502',()=>{
-this.currentChannel={
-    "title": "小队",
-    "name": "team",
-    "state": false
-  }
-})
+// this.$bus.on('Z0502',()=>{
+// this.currentChannel={
+//     "title": "小队",
+//     "name": "team",
+//     "state": false
+//   }
+// })
     this.loading=true
 if (!this.$useEnv()) {
   this.CONST = tsbApi.barrage.CONST

@@ -478,13 +478,13 @@ export default {
     window.removeEventListener('mousemove', that.listenMouse)
   },
   mounted() {
-    this.$bus.on('Z0402', async () => {
-      await this.updateMy(0)
-      this.teamVisible = true
-    })
+    // this.$bus.on('Z0402', async () => {
+    //   await this.updateMy(0)
+    //   this.teamVisible = true
+    // })
 
-    this.$bus.on('M0105', () => { this.editNavigation(this.drawerMenus[0]) })
-    this.$bus.on('Z0401', () => { this.showTeamTip = true })
+    // this.$bus.on('M0105', () => { this.editNavigation(this.drawerMenus[0]) })
+    // this.$bus.on('Z0401', () => { this.showTeamTip = true })
     this.$bus.on('stopHide',()=> {this.hoverTabs=true})
     this.$bus.on('startHide',()=> {this.hoverTabs=false})
     // this.popVisible=true

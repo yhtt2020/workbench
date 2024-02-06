@@ -209,14 +209,11 @@ import { cardStore as useCardStore } from "../../store/card";
 import { useWidgetStore } from "./store";
 import { useFreeLayoutStore } from "../desk/freeLayout/store";
 import { useMouseInElement } from "@vueuse/core";
-import { onClickOutside } from "@vueuse/core";
 
 import vueCustomScrollbar from "../../../../src/components/vue-scrollbar.vue";
 import Resize from "./Resize.vue";
 import RightMenu from "./RightMenu.vue";
 import { useEnv } from "../../ui/hooks/useEnv";
-
-import { deepMerge } from "./ContainerUtils";
 
 const container = ref(0);
 const { isOutside } = useMouseInElement(container);
@@ -312,6 +309,8 @@ const props = defineProps({
         defaultData: {},
         // 自定义删除打开后默认删除事件不执行，再删除回调上提供原删除事件
         customDel: false,
+        // 开启后所有事件相关提示信息会进行输出
+        debug: false,
       };
     },
   },
@@ -413,9 +412,8 @@ onBeforeMount(async () => {
   // 处理默认数据
   if (props.options.defaultData) {
     props.options.defaultData = await _.merge(props.customData, props.options.defaultData);
-    // _.merge({}, props.options.defaultData, props.customData);
+    // console.log("props.options.defaultData :>> ", props.options.defaultData);
   }
-  console.log("props.options.defaultData :>> ", props.options.defaultData);
 });
 
 // emits 小组件事件回调

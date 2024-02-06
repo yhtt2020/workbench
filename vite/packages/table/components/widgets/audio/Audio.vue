@@ -121,6 +121,7 @@ export default {
     }
   },
   mounted () {
+    if (this.$useEnv()) return
     this.init()
   },
   data(){
