@@ -2,7 +2,7 @@
   <!-- <xt-button @click="test()" v-if="settings.enableDev">任务重置</xt-button> -->
   <template v-if="store.taskID">
     <!-- 用户等级信息 -->
-    <TaskUserInfo />
+    <TaskUserInfo v-if="!visitor"/>
     <!-- 章节进度 -->
     <div class="xt-bg-2 rounded-xl px-4 pt-4 pb-3">
       <xt-text>
@@ -67,7 +67,7 @@ const { settings,userInfo } = storeToRefs(app);
 
 
 const { list, taskID, currentId, completedList, currentTaskList } = toRefs(store);
-
+const visitor=ref($useEnv('visitor'))
 /**
  * 首次进入时，处理任务进度
  */
@@ -140,10 +140,17 @@ const currentTaskReward = computed(()=>{
   // 获取积分值
   const communityPointsValue = getChapList.filter((item)=>{return item.type === "communityPoints"});
   // 获取勋章
-  const medal = getChapList.filter((item)=>{return item.type === "medal"});
+  let medals=[]
+  let items=[]
+ getChapList.map((item)=>{
+    if(item.type === "medal")  medals.push(
+     item.data
+    )
+   if(item.type === "avatarFrame")  items.push(
+     item.data
+   )
+ });
   // 获取头像框
-  const frame = getChapList.filter((item)=>{return item.type === "avatarFrame"})
-
   // 计算经验值总和
   let experienceTotal = experienceValue.reduce((sum,item)=>{
     return sum + item.value
@@ -152,16 +159,17 @@ const currentTaskReward = computed(()=>{
   let communityPointsTotal = communityPointsValue.reduce((sum,item)=>{
     return sum + item.value
   },0);
-
+  let lving =0
   // 等级升级预期
-  const lving = Math.floor(experienceTotal / userInfo.value?.grade.next);
-
+  if(!$useEnv('visitor')){
+    lving = Math.floor(experienceTotal / userInfo.value?.grade.next);
+  }
   return {
     lving:lving,
     experience:{total:experienceTotal,name:"经验",img:"/img/task/experience.png"},
     points:{total:communityPointsTotal,name:"积分",img:"/img/task/communityPoints.svg"},
-    medal:{list:medal,name:"勋章"},
-    frame:{list:frame,name:"头像"}
+    medals:{list:medals,name:"勋章"},
+    items:{list:items,name:"头像"}
   };
 
 })
