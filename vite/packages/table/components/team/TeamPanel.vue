@@ -248,14 +248,14 @@ export default {
       this.updateTeamShip(this.team.no, {
         userCache: 0
       }).then()
-      this.timer = setInterval(() => {
-        console.info('定期更新小队信息')
-        this.updateTeamShip(this.team.no)
-      }, 30000)
+      // this.timer = setInterval(() => {
+      //   console.info('定期更新小队信息')
+      //   this.updateTeamShip(this.team.no)
+      // }, 30000)
     }
   },
   unmounted () {
-    clearInterval(this.timer)
+   // clearInterval(this.timer)
   },
 
   methods: {
@@ -313,8 +313,7 @@ export default {
         okText: '请离',
         onOk: async () => {
           let rs = await this.quitByNo(this.team.no, uid)
-          if (rs.code === 1000) {
-            if (rs.data.status) {
+            if (rs?.status) {
               this.closeDetail()
               this.updateTeamShip(this.team.no).then()
               this.updateMy().then()
@@ -323,11 +322,6 @@ export default {
               this.updateMy().then()
               Modal.error({ content: '请离失败', centered: true })
             }
-
-          } else {
-            this.updateMy().then()
-            Modal.error({ content: '请离意外失败', centered: true })
-          }
         }
       })
     },

@@ -1,5 +1,5 @@
 <template>
-  <Widget :options="options" :customIndex="customIndex" :desk="desk">
+  <Widget :limit-env="['web']"  :options="options" :customIndex="customIndex" :desk="desk">
     <template #left-title-icon>
       <div
         class="flex items-center justify-center icon"
@@ -13,7 +13,7 @@
       <newIcon icon="fluent:arrow-sync-20-filled" style="color: var(--primary-text);"/>
     </div>
 
-    
+
     <HorizontalPanel style="min-width: 100%" :navList="epicTips"  v-model:selectType="epicType"  class="mt-2 drawer-item-bg" >
     </HorizontalPanel>
 
@@ -24,7 +24,7 @@
         </div>
         <div v-else class="relative rounded-lg cursor-pointer week-image"  v-for="item in promotionList" @click.stop="enterWeek(item)">
          <img class="rounded-lg" :src="item.keyImages[0].url" alt=""  style="width:100%;height:100%;object-fit: cover;">
-         
+
          <div class="remainder-day xt-num-font-600" style="color: var(--active-text);min-width: 100px;">
           剩余 {{ item.days.start }} 天
          </div>
@@ -43,12 +43,12 @@
         </div>
         <div v-else class="relative rounded-lg cursor-pointer week-image"  v-for="item in unPromotionList" @click.stop="enterWeek(item)">
          <img class="rounded-lg" :src="item.keyImages[0].url" alt=""  style="width:100%;height:100%;object-fit: cover;">
-         
+
          <div class="remainder-day xt-num-font-600" style="color: var(--active-text);min-width: 100px;">
           剩余 {{ item.days.end }} 天
          </div>
          <div class="stablish-province xt-num-font-600" style="min-width: 100px;">
-          立省 
+          立省
           {{ item.price.totalPrice.fmtPrice.originalPrice }}
          </div>
         </div>
@@ -135,7 +135,7 @@ export default {
       },500)
       this.refresh()
     },
-  
+
     enterWeek (item){
       const data = {
         ...item,

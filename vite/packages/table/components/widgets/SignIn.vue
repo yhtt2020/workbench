@@ -1,18 +1,18 @@
 <template>
   <Widget :envLimit="['visitor']" :options="options" :desk="desk" :showRightIcon='rightIcon' :env="env">
     <template #left-title-icon>
-        <div
-          class="icon"
-          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
+      <div
+        class="icon"
+        style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
             left: 2px; ">
-          <newIcon icon="fluent:calendar-16-regular" style="font-size: 20px;" />
-        </div>
-      </template>
+        <newIcon icon="fluent:calendar-16-regular" style="font-size: 20px;"/>
+      </div>
+    </template>
     <div></div>
-<!--    <div class="pointer" @click="activityDescription(illustrateUrl)"-->
-<!--         style="position: absolute;left: 90px;top:15px;font-size: 13px;color: rgba(255, 255, 255, 0.6);background: rgba(255, 255, 255, 0.2); padding: 3px 12px;border-radius: 4px;">-->
-<!--      活动说明-->
-<!--    </div>-->
+    <!--    <div class="pointer" @click="activityDescription(illustrateUrl)"-->
+    <!--         style="position: absolute;left: 90px;top:15px;font-size: 13px;color: rgba(255, 255, 255, 0.6);background: rgba(255, 255, 255, 0.2); padding: 3px 12px;border-radius: 4px;">-->
+    <!--      活动说明-->
+    <!--    </div>-->
     <template v-if="!newPeoplePage">
       <div class="flex justify-between p-4 rounded-lg s-item xt-bg-2 xt-text"
            style="margin-top: 1em;">
@@ -38,7 +38,8 @@
              class="flex items-center justify-between w-full rounded-lg pointer set-type" style="margin: 6px 0 6px;">
           <span class="ranking">{{ item.id }}</span>
           <div class="flex items-center flex-1 ml-3" style="width: 60px">
-            <FrameAvatar style="zoom:0.5;" :avatar-size="60" @click="showCard(item.uid)" :avatar-url="item.avatar" :frame-url="item.equippedItems?.frameDetail?.image">
+            <FrameAvatar style="zoom:0.5;" :avatar-size="60" @click="showCard(item.uid)" :avatar-url="item.avatar"
+                         :frame-url="item.equippedItems?.frameDetail?.image">
               <template #icon>
                 <UserOutlined/>
               </template>
@@ -131,7 +132,8 @@ import { message } from 'ant-design-vue'
 import { appStore } from '../../store'
 import _ from 'lodash-es'
 import FrameAvatar from '../avatar/FrameAvatar.vue'
-import {Icon as newIcon} from '@iconify/vue'
+import { Icon as newIcon } from '@iconify/vue'
+
 export default {
   name: 'SingIn',
   components: {
@@ -180,7 +182,7 @@ export default {
       max: 99999,
       lastUsers: [],
       total: 0,
-      env:{
+      env: {
         web: false,
         mobile: false,
         client: false,
@@ -234,10 +236,10 @@ export default {
           await this.request(this.page)
         }
         // console.log('再次执行弹出')
-        if(this.page===1 && this.lastUsers.length===0 && this.total===0){
+        if (this.page === 1 && this.lastUsers.length === 0 && this.total === 0) {
           //如果是第一页，且已经没有空余的了，不需要再请求
           return
-        }else{
+        } else {
           await this.popUsers()
         }
 
@@ -250,31 +252,13 @@ export default {
       this.total = dailyNew.pageInfo.count
       // console.log(dailyNew, '请求到一页的数据')
     },
-    async getTodayList () {
-      // let rankResponse = await this.getTodayRank()
-      // if(rankResponse.status===1){
-      //   return rankResponse.data.rankInfo.map(r=>{
-      //     // { id: 1, headSculpture: '', username: '阳光小葵', time: '00:01' },
-      //     return {
-      //       id:r.rank,
-      //       uid:r.uid,
-      //       avatar:r.userInfo.avatar || '',
-      //       nickname:r.userInfo.nickname || '',
-      //       time:utils.friendlyDate(r.signTime)
-      //     }
-      //   })
-      // }
-      // console.log(rankResponse)
-    },
     getSingInfo () {
       this.getSignInfo().then(data => {
-        if (data) {
-          if (data.status === 1) {
-            this.signedIn = true
-            return
-          }
+        if (data?.status === 1) {
+          this.signedIn = true
+        }else{
+          this.signedIn = false
         }
-        this.signedIn = false
       })
     },
     showCard (uid, userInfo) {
@@ -282,7 +266,6 @@ export default {
     },
     async signIn () {
       if (!this.signedIn) {
-
         let doSign = await this.doSign()
         if (doSign) {
           this.updateTodayRank().then()

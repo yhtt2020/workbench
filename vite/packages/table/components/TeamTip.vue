@@ -110,13 +110,10 @@ export default {
         message.error('请在左侧输入小队号。')
         return
       }
-      let rs= await this.joinByNo(this.teamNo)
-      if(rs.code===1000){
-        let result=rs.data
-        if(result.status){
+      let result= await this.joinByNo(this.teamNo)
+        if(result?.status){
           this.team=result.data
           Modal.success({content:'加入小队成功。',centered:true})
-
           await this.updateMy(0)
           this.$emit(
             'update:visible',false
@@ -125,8 +122,6 @@ export default {
         }else{
           Modal.error({content:result.info,centered:true})
         }
-
-      }
       // Modal.error({
       //   content: '暂不支持加入小队',
       //   centered: true

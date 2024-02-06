@@ -1,7 +1,10 @@
 <template>
   <div class="flex flex-row"  >
     <div class="item-content"  >
-      <div v-for="item in navLists" :key="item" class="mb-3 mx-2 rounded-lg flex flex-col"
+      <div v-if='navLists.length===0' class="item-content mt-10" >
+        <a-empty description="此分类下暂无商品" image="/img/test/load-ail.png"/>
+      </div>
+      <div v-else v-for="item in navLists" :key="item" class="mb-3 mx-2 rounded-lg flex flex-col"
       :style="avatarBgColor(item.frame.rarity)" style="width:337px;min-height: 200px;">
         <div class="avatar-top flex " style="position: relative">
           <div style="width: 100px;height: 100px;min-width: 100px;">
@@ -43,7 +46,7 @@
                     :style="getFrameScore(item)&&false ? {width:'104px'}:{width:'100%'}"
           >
             赞助 ￥ {{ getFramePrice(item).price }}
-            <template  v-if="getFramePrice(item).originPrice"><span class="line-through ml-2">￥{{getFramePrice(item).originPrice}}</span>
+            <template  v-if="getFramePrice(item).originPrice !== getFramePrice(item).price"><span class="line-through ml-2">￥{{getFramePrice(item).originPrice}}</span>
               <a-badge :count="getDiscount(getFramePrice(item))" class="ml-2" :number-style="{ backgroundColor: '#52c41a',borderColor:'transparent' }"></a-badge></template>
           </a-button>
           <div disabled v-else class="mr-3 avatar-font flex items-center justify-center  m-3" style="height:44px;width: 100%;border: 1px solid var(--divider);color: var(--primary-text);">
@@ -295,7 +298,6 @@ export default {
             return
           }
         }
-
         message.error('生成订单失败，请稍后再试。')
       })
     },

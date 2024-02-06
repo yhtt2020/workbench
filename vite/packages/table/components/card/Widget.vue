@@ -63,9 +63,9 @@
         </slot>
         <!-- 标题栏end   -->
         <xt-status
-          v-if="useEnv(envLimit)"
+          v-if="useEnv(limitEnv)"
           :name="options.title"
-          :status="envLimit"
+          :status="limitEnv"
         />
         <div v-else class="flex-1 h-0">
           <div

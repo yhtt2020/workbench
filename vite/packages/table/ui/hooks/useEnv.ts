@@ -23,7 +23,7 @@ const ROUTER_LIMIT = {
     "music",
     "schemeIndex",
     "schemeList",
-    " deck",
+    "deck",
     "clipboard",
     "barrage",
     "shortcut",
