@@ -240,7 +240,8 @@ export const useCustomLayout = async (options) => {
   const freeLayoutStore: any = useFreeLayoutStore();
   const { getFreeLayoutData, getFreeLayoutState, freeLayoutEnv } =
     storeToRefs(freeLayoutStore);
-    getFreeLayoutState.value.canvas.height += 5000
+  getFreeLayoutState.value.canvas.height += 5000;
+  getFreeLayoutState.value.system.hide = true;
   if (!getFreeLayoutState.value.system.isFreeLayout)
     getFreeLayoutState.value.system.isFreeLayout = true;
 
@@ -250,7 +251,6 @@ export const useCustomLayout = async (options) => {
   let scaleFactor = 1;
   let position = 50;
   // 重置left坐标
-
 
   let left = 1;
   let top = freeLayoutEnv.value.scrollTop / scaleFactor + 12;

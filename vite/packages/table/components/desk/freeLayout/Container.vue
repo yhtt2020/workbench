@@ -292,6 +292,7 @@ const cutCanvas = async (config) => {
     getFreeLayoutState.value.line.centerLine.x =
       (left - position + scrollWidth / 2) / zoom;
     proxy.$bus.emit("restoreLocation");
+    getFreeLayoutState.value.system.hide = false;
   }, 600);
 };
 

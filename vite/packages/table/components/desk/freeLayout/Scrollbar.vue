@@ -110,6 +110,8 @@ onMounted(() => {
   proxy.$bus.on("restoreLocation", () => {
     redirect();
   });
+
+  scrollbar.value.scrollLeft += 0;
 });
 const lock = ref(false);
 watch([isFreeLayout, () => scrollSize.value], ([state, size]) => {
