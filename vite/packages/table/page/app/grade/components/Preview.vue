@@ -185,9 +185,8 @@ export default {
         }
         useCustomLayout({
           headerList: header,
-          cb: () => {
-            this.$bus.emit("adsorbGrid");
-            this.$bus.emit("cutCanvas");
+          cb: (position) => {
+            this.$bus.emit("cutCanvas",position);
           },
         });
         this.$emit('analysis')
