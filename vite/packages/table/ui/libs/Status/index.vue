@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { ENV_MAP } from "../../hooks/useEnv";
+import { ENV_MAP } from "../../../permission/config";
 export default {
   name: "XtStatus",
   data() {

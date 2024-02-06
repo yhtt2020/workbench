@@ -72,7 +72,7 @@ export default {
     }
   },
   mounted() {
-    this.$bus.on('M0301',this.openUpdateMyInfo)
+    // this.$bus.on('M0301',this.openUpdateMyInfo)
   }
 }
 </script>

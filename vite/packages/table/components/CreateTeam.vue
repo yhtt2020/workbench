@@ -82,29 +82,21 @@ export default {
         message.error('小队号不符合规定，请使用随机生成。')
       }
       this.create(this.name, this.no, this.avatar).then(rs => {
-        if (rs.code === 1000) {
-          if(rs.data.status){
-            this.team=rs.data.data
-            Modal.success({
-              content: '小队创建成功。',
-              centered:true
-            })
-            // 支线任务点
-            completeTask('Z0401')
-            this.updateMy().then(()=>{
-              this.$emit('created')
-            })
-
-          }else{
-            Modal.error({
-              content:rs.data.info,
-              centered:true
-            })
-          }
+        if(rs.status){
+          this.team=rs.data
+          Modal.success({
+            content: '小队创建成功。',
+            centered:true
+          })
+          // 支线任务点
+          completeTask('Z0401')
+          this.updateMy().then(()=>{
+            this.$emit('created')
+          })
 
         }else{
           Modal.error({
-            content:'请求意外失败',
+            content:rs.data.info,
             centered:true
           })
         }

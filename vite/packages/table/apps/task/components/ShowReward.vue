@@ -37,14 +37,14 @@ const getReward = computed(() => {
           type: "avatarFrame",
           icon: item.data.icon,
         });
-      } 
+      }
       else if (item.label == "勋章") {
-        taskUserMedal.value.push({medal:{...item.value}});
+        // taskUserMedal.value.push({medal:{...item.value}});
         arr.push({
           type: "medal",
           icon: item.data.icon_lg,
         });
-      } 
+      }
       else if (item.label == "积分") {
         store.getUserScore()
         if (item.data.name == "社区积分") {

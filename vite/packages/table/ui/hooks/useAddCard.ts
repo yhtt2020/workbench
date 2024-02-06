@@ -16,13 +16,16 @@ export const useAddCard = (name, customData = {}, id: any = Date.now()) => {
     getCurrentDesk.value
   );
   return id;
-
-
 };
 
 export const useDelCard = (id, desk = null) => {
   const freeLayoutStore = useFreeLayoutStore();
-  const { getCurrentDesk }: any = storeToRefs(freeLayoutStore);
+  const { getCurrentDeskId, freeLayoutData }: any =
+    storeToRefs(freeLayoutStore);
+
+    console.log('freeLayoutData.value[getCurrentDeskId.value].id111 :>> ', freeLayoutData.value[getCurrentDeskId.value].id);
+  delete freeLayoutData.value[getCurrentDeskId.value].id;
+  console.log('freeLayoutData.value[getCurrentDeskId.value].id222 :>> ', freeLayoutData.value[getCurrentDeskId.value].id);
   const card: any = cardStore();
   card.removeCard(id, desk);
 };

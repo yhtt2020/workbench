@@ -1,4 +1,16 @@
 <template>
+   <XtView type="popup" :showFull="false" v-model="webLogin">
+      <iframe  ref="iframe" id="myFrame"  @load="newLogin"    src="https://s.apps.vip/login?response_type=code&client_id=10001&state=1"  width="700" height="745"></iframe>
+      <!-- http://127.0.0.1:5500/src/receiver.html -->
+      <!-- https://s.apps.vip/login?response_type=code&client_id=10001&state=1 -->
+    </XtView>
+ <!-- <Teleport to="body">
+  <xt-modal :mask="false" :index="999999999" v-model="webLogin">
+      <div style=" width:700px; height:745px">
+     <iframe  ref="iframe" id="myFrame" @load="newLogin" src="https://s.apps.vip/login?response_type=code&client_id=10001&state=1"  width="700" height="745"></iframe>
+      </div>
+    </xt-modal>
+ </Teleport> -->
   <div
     style="display:flex;height: 100vh;text-align: center;align-content: center;align-items: center;background:#333;justify-content: center"
     class="drag">
@@ -20,7 +32,6 @@
     </div>
     <div v-else style="background: #333;width: 100vw;height:auto" class="">
       <div class="p-10 rounded-lg no-drag s-bg" style="width: 600px;margin: auto">
-
         <h3 style="text-align: center;font-size: 1.5em">
           <a-avatar style="vertical-align: top" src="/icons/logo128.png"></a-avatar>
           天天工作台
@@ -45,8 +56,6 @@
               <xt-button style="width: 100%" @click="getUserInfo">重试</xt-button>
             </a-col>
           </a-row>
-
-
         </p>
         <div class="text-center" v-else>
           <div class="inline-block mt-3 mb-3">
@@ -94,12 +103,13 @@ import { offlineStore } from '../js/common/offline'
 import { visitorStore } from '../js/common/visitor'
 import { useWidgetStore } from '../components/card/store'
 // import { clockStore } from '../components/widgets/clock/hooks/clockStore';
-
+import {usePermissionStore} from '../permission/store'
 export default {
   name: 'Code',
   components: { RayMedal },
   data () {
     return {
+      webLogin:false,
       showTip: false,
       loading: false,
       netError: false,
@@ -113,6 +123,27 @@ export default {
     }
   },
   async mounted () {
+    window.addEventListener("message", async (event) => {
+      let token = event?.data?.data?.token
+       // 拿到token
+       if (token) {
+        console.log('token :>> ', token);
+         cache.set('ttToken', token)
+         // let res =  await userPermit()
+         if (res  && this.webLogin) {
+           this.$router.replace({ name: 'home' })
+         }
+         }
+   }, false);
+    // 属于web端
+    if (this.$useEnv()) {
+      // 打开弹窗
+      this.webLogin = true
+      // 监听回调
+
+      return
+    }
+
     // 暂时直接跳转到新登录(可能修复了，代码之后再删)
     // this.$router.replace({ name: 'wizard' })
     // setTimeout(() => {
@@ -193,6 +224,7 @@ export default {
     ...mapWritableState(appStore, ['aided','settings', 'routeUpdateTime', 'userInfo', 'init', 'lvInfo', 'backgroundImage', 'style']),
     ...mapWritableState(navStore, ['sideNavigationList', 'footNavigationList', 'rightNavigationList']),
     ...mapWritableState(visitorStore, ['isVisitor']),
+    ...mapWritableState(usePermissionStore,['token'])
     // ...mapWritableState(offlineStore, ['isOffline']),
   },
   methods: {

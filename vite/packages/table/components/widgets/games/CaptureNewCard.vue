@@ -92,6 +92,7 @@ export default {
     }
   },
   mounted () {
+    if (this.$useEnv()) return
     this.reloadAll()
   },
   computed:{
