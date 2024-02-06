@@ -46,10 +46,10 @@
       ></xt-wu-jie> -->
       <!-- <Wujie width="100%" height="100%" name="xxx" url="http://localhost:5173/" ></Wujie> -->
       <!-- 自由布局 -->
-      <FreeLayoutScrollbar
+      <template v-if="freeLayout">
+        <FreeLayoutScrollbar
         ref="freeLayoutScrollbar"
         class="flex-1"
-        v-if="freeLayout"
       >
         <FreeLayoutCanvas
           class="home-widgets"
@@ -72,6 +72,8 @@
           </FreeLayoutContainer>
         </FreeLayoutCanvas>
       </FreeLayoutScrollbar>
+      </template>
+    
       <!-- 默认布局 -->
       <vue-custom-scrollbar
         v-show="!isFreeLayout"
@@ -154,6 +156,7 @@
               </div>
             </template>
           </vuuri>
+          <!-- 加载状态 -->
           <div
             class="xt-text"
             v-show="!showGrid"
