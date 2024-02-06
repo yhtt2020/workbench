@@ -1,5 +1,5 @@
 <template >
-  <div v-if="showRestore && !xuseEnv('web')" class="no-drag"
+  <div v-if="showRestore && !useEnv('web')" class="no-drag"
     style="z-index:9999;position:fixed;left: 1em;top: 1em;background: #333;border-radius:3px;padding: 8px 14px 8px 14px;box-shadow: 0 0 4px rgba(0,0,0,0.76);">
     <div class="mb-3">当前窗口分辨率：{{ currentWidth }} * {{ currentHeight }}，将于{{ timeout }}秒后还原</div>
     <a-button @click="restore" class="ml-3">还原</a-button>
