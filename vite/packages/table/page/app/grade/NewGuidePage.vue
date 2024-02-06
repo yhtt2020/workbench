@@ -347,8 +347,8 @@ export default {
               useCustomLayout({
                 headerList: this.headerList,
                 folderList: this.folderList,
-                cb: () => {
-                  this.$bus.emit("adsorbGrid");
+                cb: (position) => {
+                  this.$bus.emit("cutCanvas",position);
                 },
               });
             }, 1)
@@ -456,8 +456,8 @@ export default {
         useCustomLayout({
           headerList: this.headerList,
           folderList: this.folderList,
-          cb: () => {
-            this.$bus.emit("adsorbGrid");
+          cb: (position) => {
+            this.$bus.emit("cutCanvas",position);
           },
         });
       }, 1)
@@ -511,10 +511,8 @@ export default {
       setTimeout(() => {
         useCustomLayout({
           headerList: this.headerList,
-          cb: () => {
-            this.$bus.emit("adsorbGrid");
-            this.$bus.emit("cutCanvas");
-
+          cb: (position) => {
+            this.$bus.emit("cutCanvas",position);
           },
         });
       }, 1)
@@ -553,8 +551,8 @@ export default {
           headerList: this.headerList,
           folderList: this.folderList,
           mainList: cards,
-          cb: () => {
-            this.$bus.emit("adsorbGrid");
+          cb: (position) => {
+            this.$bus.emit("cutCanvas",position);
           },
         });
       }, 1)
