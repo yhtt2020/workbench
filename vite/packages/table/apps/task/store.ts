@@ -85,9 +85,9 @@ export const taskStore = defineStore("taskStore", {
     // 初始化任务
     async initTask (){
       let res = await getAllTask();
-      
+
        let { code, data } = res
-      
+
       if (code !== 200) return;
       this.currentTaskList = data;
       const type = "main";

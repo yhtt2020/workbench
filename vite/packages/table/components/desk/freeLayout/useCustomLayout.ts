@@ -237,33 +237,29 @@ export const useCustomLayout = async (options) => {
   const mergedOptions = _.merge({}, defaultOptions, options);
   const { mainList, headerList, folderList, columns, cb, test } = mergedOptions;
 
-  // 数据定义
   const freeLayoutStore: any = useFreeLayoutStore();
   const { getFreeLayoutData, getFreeLayoutState, freeLayoutEnv } =
     storeToRefs(freeLayoutStore);
+    getFreeLayoutState.value.canvas.height += 5000
+  if (!getFreeLayoutState.value.system.isFreeLayout)
+    getFreeLayoutState.value.system.isFreeLayout = true;
+
+  let positioningId = await addPositioningData();
+  let containerWidth = freeLayoutEnv.value.scrollWidth;
   let layoutWidth = useGridToWidth(columns * 2);
   let scaleFactor = 1;
   let position = 50;
-  const defaultLeft = freeLayoutEnv.value.scrollLeft / scaleFactor + position;
-  let snapped = 0;
+  // 重置left坐标
+
+
   let left = 1;
   let top = freeLayoutEnv.value.scrollTop / scaleFactor + 12;
   let currentHeight;
   let currentTop = top;
   let fillHeight;
 
-  // 1 扩展画布高度
-  getFreeLayoutState.value.canvas.height += 10000;
-  // 2 设置自由布局状态
-  if (!getFreeLayoutState.value.system.isFreeLayout)
-    getFreeLayoutState.value.system.isFreeLayout = true;
-  // 3 添加定位卡片
-  let positioningId = await addPositioningData();
-  let containerWidth = freeLayoutEnv.value.scrollWidth;
-
-  // 初始化数据
   scaleAlgorithm();
-
+  // 初始化数据
   resetLeft();
 
   let { arr2x2, arr2x4, arr4x4, arr1x1, arrSpecial } = arraySplit(mainList);
@@ -285,6 +281,7 @@ export const useCustomLayout = async (options) => {
     arrSpecial
   );
   let array: any = [];
+  // 定制头部
   if (headerList && headerList.length) {
     let { arr2x2: header2x2, arr2x4: header2x4 } = arraySplit(headerList);
     let e = [...header2x2];
@@ -298,6 +295,7 @@ export const useCustomLayout = async (options) => {
     setData(header2x4);
   }
 
+  // 定制文件夹
   if (folderList && folderList.length) {
     let { arr2x2: folder2x2 } = arraySplit(folderList);
     resetLeft();
@@ -318,10 +316,13 @@ export const useCustomLayout = async (options) => {
   // 开始收尾
   useDelCard(positioningId);
   setTimeout(() => {
-    cb && cb();
+    cb && cb(position);
   }, 10);
   // 删除占位数据
-
+  //
+  // freeLayoutStore.cutCanvas();
+  // freeLayoutStore.updateLocation();
+  console.log("删除操作 :>> ");
 };
 const arraySplit = (arr) => {
   let arr2x2: any = [];
@@ -382,6 +383,10 @@ const addCard = (top, left, item) => {
     storeToRefs(freeLayoutStore);
 
   let id = item?.id || nanoid(4);
+
+  if (item.name == "news" || item.name == "HotSearch") {
+    console.log("Item.name :>> ", item);
+  }
 
   if (item.name == "notes") {
     id = item?.id || Date.now();

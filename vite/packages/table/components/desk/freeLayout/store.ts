@@ -30,10 +30,8 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       },
       // 系统数据
       system: {
-        // 是否使用自由布局
-        isFreeLayout: false,
-        // 隐藏组件
-        hide: false,
+        isFreeLayout: false, // 是否使用自由布局
+        hide: false, // 隐藏组件
       },
       option: {
         afterDragging: true, // 拖拽结束后吸附于网格
@@ -263,13 +261,18 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       } else {
         // w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
         // h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
+        console.log(
+          "this.getFreeLayoutState.line.centerLine.x  :>> ",
+          this.getFreeLayoutState.line.centerLine.x
+        );
+        console.log("width :>> ", width);
         w = this.getFreeLayoutState.line.centerLine.x - width / 2;
         // left = this.getFreeLayoutState.line.centerLine.x;
         h = this.getFreeLayoutState.line.centerLine.y;
       }
       w = w * zoom;
       h = h * zoom;
-
+console.log('w :>> ', w);
       this.freeLayoutEnv.scrollLeft = w;
       console.log(
         "    this.freeLayoutEnv.scrollLeft :>> ",

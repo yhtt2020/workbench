@@ -45,21 +45,13 @@ onMounted(() => {
   setTimeout(() => {
     updateCard(currentDesk.value?.cards);
   }, 2);
-
-  proxy.$bus.on("adsorbGrid", () => {
-    setTimeout(() => {
-      snowDrag.value?.forEach((item) => {
-        item.adsorbGrid();
-      });
-    }, 1);
-  });
-  proxy.$bus.on("cutCanvas", () => {
+  proxy.$bus.on("cutCanvas", (position) => {
     setTimeout(() => {
       cutCanvas({
         redirect: true,
+        position,
       });
-      freeLayoutStore.updateLocation();
-    }, 1);
+    }, 100);
   });
 });
 
@@ -112,10 +104,12 @@ async function getPosition(item) {
 const defaultConfig = {
   redirect: false,
   id: null,
+  item: {},
+  position: 0,
 };
 const cutCanvas = async (config) => {
   const mergedOptions = _.merge({}, defaultConfig, config);
-  const { redirect, id } = mergedOptions;
+  const { redirect, id, item, position } = mergedOptions;
   if (!getFreeLayoutState.value.canvas.autoExtend) return;
   let left: any = Infinity;
   let top: any = Infinity;
@@ -128,6 +122,20 @@ const cutCanvas = async (config) => {
   let topItem: any = {};
 
   // 找最大最小元素
+  // if (id) {
+  //   let size = currentData?.value[id]?.customData?.customSize;
+  //   let width = 0;
+  //   let height = 0;
+  //   if (size) {
+  //     let sizeObj = useElementSize(size);
+  //     width = sizeObj.width;
+  //     height = sizeObj.height;
+  //   }
+  //   top = item.top;
+  //   left = item.left;
+  //   right = item.left + width;
+  //   bottom = item.top + height;
+  // } else {
   Object.values(getFreeLayoutData.value).forEach((item: any) => {
     if (item.top < top) {
       top = item.top;
@@ -171,9 +179,10 @@ const cutCanvas = async (config) => {
   /**
    * @description: 空白画布回收
    */
+  let deleteArr: any = [];
   // 右边
   if (canvasWidth - right > viewWidth) {
-    console.log("右边空白画布回收 :>> ");
+    deleteArr.push("右边");
     getFreeLayoutState.value.canvas.width = right + viewWidth;
   }
   // 左边
@@ -185,7 +194,7 @@ const cutCanvas = async (config) => {
         return item;
       }
     );
-    console.log("左边空白画布回收 :>> ");
+    deleteArr.push("左边");
     getFreeLayoutState.value.canvas.width -= diff;
   }
   // 上边
@@ -197,20 +206,25 @@ const cutCanvas = async (config) => {
         return item;
       }
     );
-    console.log("上边空白画布回收 :>> ");
+    deleteArr.push("上边");
     getFreeLayoutState.value.canvas.height -= diff;
   }
   // 下边
   if (canvasHeight - bottom > viewHeight) {
     getFreeLayoutState.value.canvas.height = bottom + viewHeight;
-    console.log("下边空白画布回收 :>> ");
+    deleteArr.push("下边");
   }
+  if (deleteArr.length >= 1) {
+    message.success("已为您回收" + deleteArr.join(" ") + " 画布");
+  }
+
   /**
    * @description: 空白画布拓展
    */
+  let addArr: any = [];
   // 右边
   if (canvasWidth - right < viewWidth) {
-    message.success("已为您自动拓展右边画布");
+    addArr.push("右边");
     getFreeLayoutState.value.canvas.width = right + viewWidth;
   }
   // 左边
@@ -222,7 +236,7 @@ const cutCanvas = async (config) => {
         return item;
       }
     );
-    message.success("已为您自动拓展左边画布");
+    addArr.push("左边");
     getFreeLayoutState.value.canvas.width += diff;
   }
   // 上边
@@ -234,26 +248,51 @@ const cutCanvas = async (config) => {
         return item;
       }
     );
-    message.success("已为您自动拓展上边画布");
+    addArr.push("上边");
     getFreeLayoutState.value.canvas.height += diff;
   }
   // 下边
   if (canvasHeight - bottom < viewHeight) {
-    message.success("已为您自动拓展下边画布");
+    addArr.push("下边");
     getFreeLayoutState.value.canvas.height = bottom + viewHeight;
   }
+
+  if (addArr.length >= 1) {
+    message.success("已为您自动 拓展" + addArr.join(" ") + " 画布");
+  }
+
   // 定位修改
-  if (redirect) return;
+  // snowDrag.value?.forEach((item) => {
+  //   item.adsorbGrid();
+  // });
+  if (!redirect) return;
+  //
   setTimeout(() => {
+    Object.values(getFreeLayoutData.value).forEach((item: any) => {
+      console.log("3333 :>> ", 3333);
+      if (item.top < top) {
+        top = item.top;
+        topItem = item;
+      }
+      if (item.left < left) {
+        left = item.left;
+        leftItem = item;
+      }
+    });
+    console.log("getFreeLayoutData.value :>> ", getFreeLayoutData.value);
+    console.log("2222 :>> ", top, left);
     getFreeLayoutState.value.mode.align = "custom";
     const zoom = getFreeLayoutState.value.canvas.zoom;
-    getFreeLayoutState.value.line.centerLine.y = top / zoom;
+    // getFreeLayoutState.value.line.centerLine.y = top / zoom;
+    // getFreeLayoutState.value.line.centerLine.x =
+    //   (left + scrollWidth / 2) / zoom + position;
+
+    getFreeLayoutState.value.line.centerLine.y = top;
+    console.log("position :>> ", position);
     getFreeLayoutState.value.line.centerLine.x =
-      (left + scrollWidth / 2) / zoom;
-    setTimeout(() => {
-      freeLayoutStore.restoreLocation();
-    }, 500);
-  }, 100);
+      (left - position + scrollWidth / 2) / zoom;
+    proxy.$bus.emit("restoreLocation");
+  }, 600);
 };
 
 /**
@@ -316,7 +355,8 @@ const dragStart = () => {
 
 // 元素拖拽结束
 const dragStop = (item) => {
-  cutCanvas({ id: item.data.id });
+  console.log("dragStop item :>> ", item);
+  cutCanvas({ id: item.data.id, item: item.data });
 
   if (!isSelectAll.value) return;
   snowDrag.value.forEach((item) => {
@@ -419,6 +459,9 @@ onBeforeUnmount(() => {
           :key="item.id"
           ref="test"
         >
+          <!-- <xt-button>id： {{ item.id }}</xt-button> -->
+          <!-- <xt-button w="280">top {{ item.top }}</xt-button>
+          <xt-button w="280">left {{ item.left }}</xt-button> -->
           <slot name="box" :data="currentData[item?.id]"></slot>
         </div>
       </transition>

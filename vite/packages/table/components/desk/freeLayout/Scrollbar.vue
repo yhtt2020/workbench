@@ -107,6 +107,9 @@ onMounted(() => {
   proxy.$bus.on("updateFreeLayoutScroll", () => {
     perfectScrollbar.value.update();
   });
+  proxy.$bus.on("restoreLocation", () => {
+    redirect();
+  });
 });
 const lock = ref(false);
 watch([isFreeLayout, () => scrollSize.value], ([state, size]) => {
@@ -174,14 +177,16 @@ watch(
   }
 );
 // 重置中心区域
-function redirect() {
-  const { w, h, left } = freeLayoutStore.restoreLocation();
+async function redirect() {
+  const res = await freeLayoutStore?.restoreLocation();
+  const { w, h, left } = res;
+  scrollbar.value.scrollLeft += 0;
   scrollbar.value.scrollLeft = w;
   scrollbar.value.scrollTop = h;
   freeLayoutEnv.value.scrollLeft = w;
   freeLayoutEnv.value.scrollTop = h;
-  console.log("  scrollbar.value.scrollLeft :>> ", scrollbar.value.scrollLeft);
-  console.log("  scrollbar.value.scrollTop :>> ", scrollbar.value.scrollTop);
+
+  console.log("res :>> ", res);
 }
 
 // 鼠标按下
@@ -263,7 +268,7 @@ onBeforeUnmount(() => {
   window.removeEventListener("mouseup", handleMouseUp);
   document.body.removeEventListener("keydown", ignoreSpace);
 
-  proxy.$bus.off("updateFreeLayoutScroll")
+  proxy.$bus.off("updateFreeLayoutScroll");
 });
 defineExpose({
   redirect,

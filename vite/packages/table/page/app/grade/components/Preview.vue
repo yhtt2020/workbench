@@ -187,7 +187,6 @@ export default {
           headerList: header,
           cb: () => {
             this.$bus.emit("adsorbGrid");
-            this.$bus.emit("cutCanvas");
           },
         });
         this.$emit('analysis')
