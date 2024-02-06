@@ -82,7 +82,7 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
-      take: 100,
+      take: 36,
       page: 1,
       selectTeam: {},
       actionVisible: false,
