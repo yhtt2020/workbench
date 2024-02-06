@@ -390,7 +390,7 @@ export default {
     ...mapActions(appStore, ['getUserInfo']),
     getHide,
     goBind () {
-      if(!window.$useEnv('visitor')){
+      if(!window.$useEnv('guest')){
         this.$router.push({ name: 'gameSetting' })
       }else{
         window.$ui.confirm("登录提示", '目前处于游客模式，请登陆后体验完整功能。', {

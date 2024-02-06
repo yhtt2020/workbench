@@ -1,11 +1,11 @@
 // import devtools from '@vue/devtools'//注释此行无法连接vue调试工具
 
 // 注册想天客户端状态
-import currentEnv, { isWeb, isClient, isMac, isOffline, isVisitor } from "./ui/hooks/env";
+import currentEnv, { isWeb, isClient, isMac, isOffline, isGuest } from "./ui/hooks/env";
 import {useEnv,useEnvLimit,useComLimit} from "./permission/useEnv";
 window.$currentEnv = currentEnv;
 window.$isOffline = isOffline;
-window.$isVisitor = isVisitor;
+window.$isGuest = isGuest;
 window.$useEnv = useEnv;
 window.$useEnvLimit = useEnvLimit;
 window.$useComLimit = useComLimit;
@@ -110,7 +110,7 @@ app.provide("isWeb", isWeb);
 app.provide("isClient", isClient);
 app.provide("isMac", isMac);
 app.provide("isOffline", isOffline);
-app.provide("isVisitor", isVisitor);
+app.provide("isGuest", isGuest);
 app.provide("$useEnv", useEnv);
 // 使用 globalProperties 将全局变量附加到 Vue 实例上
 app.config.globalProperties.$currentEnv = currentEnv;
@@ -118,7 +118,7 @@ app.config.globalProperties.$isWeb = isWeb;
 app.config.globalProperties.$isClient = isClient;
 app.config.globalProperties.$isMac = isMac;
 app.config.globalProperties.$isOffline = isOffline;
-app.config.globalProperties.$isVisitor = isVisitor;
+app.config.globalProperties.$isGuest = isGuest;
 app.config.globalProperties.$bus = Mit;
 app.config.globalProperties.$useEnv= useEnv;
 window.$ui={

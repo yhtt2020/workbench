@@ -37,7 +37,7 @@
         </div>
       </div>
     </div>
-    <div class="preview" v-if="$useEnv=['visitor']">
+    <div class="preview" v-if="$useEnv=['guest']">
       <!-- 替换成游客面板 -->
       <div v-if="0">
         <div  class="flex items-center justify-between mb-6" style="height: 48px;" >
@@ -58,7 +58,7 @@
         </div>
       </div>
       <div v-else class=" xt-bg h-full rounded-xl ">
-        <xt-status name="邀请功能" :status="['visitor']" ></xt-status>
+        <xt-status name="道具商城" :status="['guest']" ></xt-status>
       </div>
     </div>
   </div>
