@@ -86,13 +86,11 @@ export default {
         centered: true,
         onOk: async () => {
           let rs = await this.disbandByNo(this.team.no)
-          if (rs.code === 1000) {
-            if (rs.data.status) {
-              this.updateMy().then()
-              await this.closeTeam()
-              message.success('解散成功。')
-              return
-            }
+          if (rs.data.status) {
+            this.updateMy().then()
+            await this.closeTeam()
+            message.success('解散成功。')
+            return
           }
           message.error('解散小队失败。')
         }
