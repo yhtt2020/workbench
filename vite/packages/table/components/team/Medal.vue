@@ -1,9 +1,9 @@
 <template>
   <div v-if="medal?.medal" class="medal-wrapper">
-    <tippy trigger="mouseenter click" placement="left">
-      <div class="badge-box" style="border:none;background: none;zoom: 0.5;margin: 0">
-        <div style="width: 100px;height: 100px;position: relative">
-          <img style="width: 100px;margin-top: 10px" :src="iconLarge">
+    <tippy trigger="mouseenter click" :placement="placement">
+      <div class="badge-box" :style="{zoom}" style="border:none;background: none;margin: 0">
+        <div :style="{width:size+'px',height:size+'px'}" style="position: relative">
+          <img :style="{width:size+'px'}"  :src="iconLarge">
         </div>
       </div>
       <template #content>
@@ -16,7 +16,7 @@
               <div style="font-size: 13px;font-weight: bold;">{{ title }}</div>
               <div class="" style="font-size: 12px;line-height: 1.5;color: #ccc">{{ summary }}</div>
             </a-col>
-            <a-col :span="24">
+            <a-col :span="24" v-if="getReason">
               <div class="text-grey mt-3" style="font-size: 0.8em">获得原因：{{ getReason }}</div>
             </a-col>
           </a-row>
@@ -30,7 +30,12 @@
 <script>
 export default {
   name: 'Medal',
-  props: ['medal'],
+  props: {
+    'medal':{},
+    'size':100,
+    'zoom':1,
+    'placement':'left'
+  },
   data () {
     return {
       title: '',
@@ -72,11 +77,7 @@ export default {
   }
 }
 
-.badge-box {
-  padding: 18px;
-  padding-top: 10px;
-  margin-top: 18px;
-}
+
 
 .badge-box .badge-num {
   bottom: 12px;
