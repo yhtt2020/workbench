@@ -43,7 +43,6 @@ export default {
   },
   mounted() {
     this.getMyFrames().then(rs => {
-      console.log('获取回的我的头像', rs)
       if (rs.status) {
         console.log(rs.data)
         this.frameList = rs.data.map(itemOwner => {

@@ -16,7 +16,7 @@
     <!-- <div class="flex justify-center items-center preview" :style="{'--previewH': previewH}" id="cards" readonly> -->
     <div class="flex justify-center items-center preview" id="previewContent">
       <!-- 市场分享 桌面布局定位 -->
-      <Desk  :freeLayout="false" :currentDesk="displayScheme" :settings="displayScheme.settings" :notTrigger="true" :editing="false"></Desk>
+      <Desk :muuriOptions="muuriOptions"   :freeLayout="false" :currentDesk="displayScheme" :settings="displayScheme.settings" :notTrigger="true" :editing="false"></Desk>
     </div>
     <div class="foot flex ">
       <div class="flex items-center mr-2">
@@ -90,6 +90,7 @@ import {nanoid} from 'nanoid'
 import { marketStore } from '../../store/market'
 import { taskStore } from '../../apps/task/store'
 import { completeTask } from '../../apps/task/task'
+import Muuri from "muuri";
 export default {
   name: 'DeskPreview',
   components: {
@@ -115,6 +116,35 @@ export default {
       windowHeight: document.body.clientHeight,
       previewWidth: 0,
       previewHeight: 0,
+      muuriOptions: {
+        dragAutoScroll: {},
+        layout: {
+          horizontal: true,
+          alignRight: false,
+          alignBottom: false,
+        },
+        targets: [
+          {
+            element: "#scrollerBar>div",
+          },
+        ],
+        handle: null,
+        threshold: 50,
+        safeZone: 0.2,
+        speed: Muuri.AutoScroller.smoothSpeed(1000, 2000, 2500),
+        sortDuringScroll: true,
+        smoothStop: false,
+        onStart: null,
+        onStop: null,
+        dragSortPredicate: {
+          threshold: 30,
+        },
+        dragSortHeuristics: {
+          sortInterval: 10,
+          minDragDistance: 5,
+          minBounceBackAngle: Math.PI / 2,
+        },
+      },
     }
   },
   props: {

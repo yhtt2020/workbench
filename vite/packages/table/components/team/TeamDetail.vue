@@ -86,13 +86,11 @@ export default {
         centered: true,
         onOk: async () => {
           let rs = await this.disbandByNo(this.team.no)
-          if (rs.code === 1000) {
-            if (rs.data.status) {
-              this.updateMy().then()
-              await this.closeTeam()
-              message.success('解散成功。')
-              return
-            }
+          if (rs.data.status) {
+            this.updateMy().then()
+            await this.closeTeam()
+            message.success('解散成功。')
+            return
           }
           message.error('解散小队失败。')
         }
@@ -112,8 +110,7 @@ export default {
         okText: '退出',
         onOk: async () => {
           let rs = await this.quitByNo(this.team.no)
-          if (rs.code === 1000) {
-            if (rs.data.status) {
+            if (rs?.status) {
               this.updateMy().then()
               await this.closeTeam()
               Modal.info({ content: '退出小队成功', centered: true })
@@ -122,11 +119,6 @@ export default {
               this.updateMy().then()
               Modal.error({ content: '退出小队失败', centered: true })
             }
-          } else {
-            this.updateMy().then()
-            await this.closeTeam()
-            Modal.error({ content: '退出小队意外失败', centered: true })
-          }
         }
       })
     },

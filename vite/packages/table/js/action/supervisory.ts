@@ -6,13 +6,13 @@ export function setSupervisoryData(res) {
   let {
     SGPU1UTI,
     TGPU1DIO,
-    SMEMUTI,
-    SCPUUTI,
-    TCPUPKG,
-    SRTSSFPS,
-    SGPU1USEDDEMEM,
-    TGPU1HOT,
-    TGPUDIO,
+    SMEMUTI,//内存占用率
+    SCPUUTI,// 占用
+    TCPUPKG,// 温度
+    SRTSSFPS,//fps
+    SGPU1USEDDEMEM,//显存
+    TGPU1HOT,// gpu 温度
+    TGPUDIO, 
     TCPUDIO,
     TGPU1
   } = res || {}

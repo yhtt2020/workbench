@@ -110,7 +110,7 @@ export default {
 
     addNewList() {
 
-      if(!window.$useEnv('visitor')){
+      if(!window.$useEnv('guest')){
         this.addList(this.newList);
         // this.addNewListVisible = false;
         this.promptVisible =false

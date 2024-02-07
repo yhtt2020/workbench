@@ -49,7 +49,10 @@ export default {
 
  props:{
   customIndex: { type: Number, default: 0,},
-  customData: { type: Object,default: () => {},},
+  customData: { type: Object,default: {
+      customSize:'2x2',
+      enableSecond:false,
+    }},
   desk: { type: Object, },
  },
 
@@ -70,8 +73,15 @@ export default {
    bgZoom: this.customData.bgZoom,
   }
  },
-
- computed:{
+mounted () {
+  if(typeof this.customData.enableSecond==='undefined'){
+    this.customData.enableSecond=false
+  }
+  if(typeof this.customData.backgroundFrame==='undefined'){
+    this.customData.backgroundFrame=true
+  }
+},
+  computed:{
   ...mapWritableState(appStore,["backgroundImage"]),
   // 组件头部
   header(){
@@ -114,6 +124,9 @@ export default {
   },
   // 滑块缩放,是否开启秒针
   sliderScale(){
+    if(!this.customData.customSize){
+      this.customData.customSize='2x2'
+    }
     let width = Number(this.customData.customSize.split("x")[0]);
     let height = Number(this.customData.customSize.split("x")[1]);
     let min = width < height ? width:height;

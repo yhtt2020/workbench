@@ -98,21 +98,21 @@ export const teamStore = defineStore("teamStore", {
       this.members = []
     },
     async getTeamList(query) {
-      const {
-        take = 1,
-        skip = 0,
-        type = 'active',
-        order = 'create_time',
-        members = 1,
-        memberCache = 1,
-        memberUserCache = 1,
-        leader = 1,
-        leaderCache = 1,
-        leaderUserCache = 1,
-        cache = 1
-      } = query
-      let time = Date.now()
-      let rs = await get(getListUrl, query)
+      let params = {
+        take: 1,
+        skip: 0,
+        type: 'active',
+        order: 'create_time',
+        members: 1,
+        memberCache: 1,
+        memberUserCache: 1,
+        leader: 1,
+        leaderCache: 1,
+        leaderUserCache: 1,
+        cache: 1,
+        ...query
+      }
+      let rs = await get(getListUrl, params)
       return rs
     },
 
@@ -253,17 +253,7 @@ export const teamStore = defineStore("teamStore", {
     },
 
     async joinByNo(no) {
-      try {
-        let rs = await post(joinByNoUrl, {no: no})
-        return rs
-      } catch (e) {
-        return {
-          status: 0,
-          info: e.message
-        }
-        console.warn(e)
-      }
-
+      return await post(joinByNoUrl, {no: no})
     },
     /**
      * 退出或者踢人

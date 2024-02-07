@@ -37,8 +37,8 @@ const getOffline = () => {
   return cache.get("isOffline") ? true : false;
 };
 
-const getVisitor = () => {
-  return cache.get("isVisitor") ? true : false;
+const getGuest = () => {
+  return cache.get("isGuest") ? true : false;
 };
 const getMobileEnv = () => {
   return currentEnv === "mobile" ? true : false;
@@ -50,8 +50,8 @@ const isWindow = getWindowEnv();
 const isMac = getMacEnv();
 const isMobile = getMobileEnv();
 const isOffline = getOffline();
-const isVisitor = getVisitor();
+const isGuest = getGuest();
 // const xttoken
 export default currentEnv;
 
-export { isWeb, isWindow, isMac, isMobile, isOffline, isVisitor };
+export { isWeb, isWindow, isMac, isMobile, isOffline, isGuest };

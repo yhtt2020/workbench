@@ -65,7 +65,7 @@
       <div class="bg-mask rounded-lg p-2 m-3 mx-5 mt-0  "
            style="background: var(--primary-bg);color: var(--primary-text) ;">
        <div class="flex flex-wrap justify-start justify-items-center items-center w-full">
-         <Medal :medal="medal" v-for="medal in medals"></Medal>
+         <Medal  :size="50" :medal="medal" v-for="medal in medals"></Medal>
          <div class="text-center" v-if="medals.length===0">
            空空如也
          </div>

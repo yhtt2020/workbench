@@ -1,5 +1,5 @@
 <template>
-  <Widget :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="menuList"
+  <Widget :envLimit="['guest']" :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="menuList"
           :env="env"
           ref="cardSlot">
     <template #left-title-icon>

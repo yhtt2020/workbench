@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative overflow-hidden rounded-xl"
+    class="relative  rounded-xl"
     style="
       width: 64px;
       height: 64px;
@@ -19,24 +19,37 @@
     >
       {{ types[type].name }}
     </div>
+    <template v-if="type==='item'">
+      <!--   道具   -->
+      <Popconfirm title="新头像框Get!" ok-text="立即佩戴" cancel-text="稍后再说" @confirm="confirm" @cancel="cancel">
+        <!--        <div :style="{width:`${types[type].size}px`,height:`${types[type].size}px`}"-->
+        <!--        class="flex items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">-->
+        <!--         <img :src="types[type].icon" class="w-full h-full object-cover"/>-->
+        <!--        </div>-->
 
-    <template v-if="claim">
-      <a-popconfirm title="新头像框Get!" ok-text="立即佩戴" cancel-text="稍后再说" @confirm="confirm" @cancel="cancel">
-        <div :style="{width:`${types[type].size}px`,height:`${types[type].size}px`}"
-        class="flex items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-         <img :src="types[type].icon" class="w-full h-full object-cover"/>
-        </div>
-      </a-popconfirm>
+<!--        <div :style="{width:`${types[type].size}px`,height:`${types[type].size}px`}"-->
+<!--             class="flex items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">-->
+<!--          <img :src="types[type].icon" class="w-full h-full object-cover"/>-->
+<!--        </div>-->
+<!--        {{data}}-->
+        <Item  :item="data" :size="64" style="width:64px;height:64px"></Item>
+      </Popconfirm>
     </template>
 
+    <template v-else-if="type==='medal'">
+      <!--  勋章    -->
+      <Medal :size="60" style="margin-left: 2px" :medal="{medal:data}"></Medal>
+    </template>
     <template v-else>
-      <div :style="{width:`${types[type].size}px`,height:`${types[type].size}px`}"
-      class="flex items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        <img :src="types[type].icon" class="w-full h-full object-cover"/>
-      </div>
-    </template>
+      <!--  积分    -->
+      <a-tooltip title="经验可用于社区等级提升，积分可用于积分商城兑换礼品。">
+        <div :style="{width:`${types[type].size}px`,height:`${types[type].size}px`}"
+             class="flex items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+          <img :src="types[type].icon" class="w-full h-full object-cover"/>
+        </div>
+      </a-tooltip>
 
-    
+    </template>
 
     <!-- <a-avatar
       shape="square"
@@ -58,45 +71,45 @@
 </template>
 
 <script setup>
-import { ref, toRefs, computed } from "vue";
-import { Avatar } from 'ant-design-vue';
-import { taskStore } from "../store";
-import { storeToRefs } from "pinia";
+import { ref, toRefs, computed } from 'vue'
+import Medal from '../../../components/team/Medal.vue'
+import Item from '../../../components/Item.vue'
+import {Popconfirm} from 'ant-design-vue'
 
 const props = defineProps({
   type: {},
   value: {},
+  data:{},
   icon: {},
-  claim:false,
-});
-const { type } = toRefs(props);
+  claim: false,
+})
+const { type } = toRefs(props)
 const types = computed(() => {
   return {
     medal: {
-      name: "勋章",
+      name: '勋章',
       icon: props.icon,
       size: 56,
     },
     communityPoints: {
-      name: "积分",
-      icon: "/img/task/communityPoints.svg",
+      name: '积分',
+      icon: '/img/task/communityPoints.svg',
       size: 56,
     },
     experience: {
-      name: "经验",
-      icon: "/img/task/experience.png",
+      name: '经验',
+      icon: '/img/task/experience.png',
       size: 42,
     },
-    avatarFrame: {
-      name: "头像框",
+    item: {
+      name: '头像框',
       icon: props.icon,
       size: 56,
     },
-  };
-});
+  }
+})
 
-
-const confirm = () =>{
+const confirm = () => {
 
 }
 </script>

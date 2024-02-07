@@ -1,18 +1,18 @@
 <template>
-  <Widget :options="options" :desk="desk" :showRightIcon='rightIcon' :env="env">
+  <Widget :envLimit="['guest']" :options="options" :desk="desk" :showRightIcon='rightIcon' :env="env">
     <template #left-title-icon>
-        <div
-          class="icon"
-          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
+      <div
+        class="icon"
+        style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
             left: 2px; ">
-          <newIcon icon="fluent:calendar-16-regular" style="font-size: 20px;" />
-        </div>
-      </template>
+        <newIcon icon="fluent:calendar-16-regular" style="font-size: 20px;"/>
+      </div>
+    </template>
     <div></div>
-<!--    <div class="pointer" @click="activityDescription(illustrateUrl)"-->
-<!--         style="position: absolute;left: 90px;top:15px;font-size: 13px;color: rgba(255, 255, 255, 0.6);background: rgba(255, 255, 255, 0.2); padding: 3px 12px;border-radius: 4px;">-->
-<!--      活动说明-->
-<!--    </div>-->
+    <!--    <div class="pointer" @click="activityDescription(illustrateUrl)"-->
+    <!--         style="position: absolute;left: 90px;top:15px;font-size: 13px;color: rgba(255, 255, 255, 0.6);background: rgba(255, 255, 255, 0.2); padding: 3px 12px;border-radius: 4px;">-->
+    <!--      活动说明-->
+    <!--    </div>-->
     <template v-if="!newPeoplePage">
       <div class="flex justify-between p-4 rounded-lg s-item xt-bg-2 xt-text"
            style="margin-top: 1em;">
@@ -38,7 +38,8 @@
              class="flex items-center justify-between w-full rounded-lg pointer set-type" style="margin: 6px 0 6px;">
           <span class="ranking">{{ item.id }}</span>
           <div class="flex items-center flex-1 ml-3" style="width: 60px">
-            <FrameAvatar style="zoom:0.5;" :avatar-size="60" @click="showCard(item.uid)" :avatar-url="item.avatar" :frame-url="item.equippedItems?.frameDetail?.image">
+            <FrameAvatar style="zoom:0.5;" :avatar-size="60" @click="showCard(item.uid)" :avatar-url="item.avatar"
+                         :frame-url="item.equippedItems?.frameDetail?.image">
               <template #icon>
                 <UserOutlined/>
               </template>
@@ -119,6 +120,7 @@
       </div>
     </template>
   </Widget>
+  <AwardModal :tip="tip" :items="awardItems" @close="closeModal" v-model:visible="modalVisible"></AwardModal>
 </template>
 
 <script>
@@ -131,10 +133,13 @@ import { message } from 'ant-design-vue'
 import { appStore } from '../../store'
 import _ from 'lodash-es'
 import FrameAvatar from '../avatar/FrameAvatar.vue'
-import {Icon as newIcon} from '@iconify/vue'
+import { Icon as newIcon } from '@iconify/vue'
+import AwardModal from '../modal/AwardModal.vue'
+
 export default {
   name: 'SingIn',
   components: {
+    AwardModal,
     FrameAvatar,
     Widget,
     HorizontalPanel,
@@ -144,6 +149,9 @@ export default {
   props: ['desk', 'rightIcon'],
   data () {
     return {
+      tip:'',
+      modalVisible: false,
+      awardItems: [],
       options: {
         className: 'card',
         title: '签到',
@@ -180,7 +188,7 @@ export default {
       max: 99999,
       lastUsers: [],
       total: 0,
-      env:{
+      env: {
         web: false,
         mobile: false,
         client: false,
@@ -204,6 +212,12 @@ export default {
   methods: {
     ...mapActions(comStore, ['updateTodayRank', 'doSign', 'getSignInfo', 'getDailyNewUsers']),
     ...mapActions(appStore, ['showUserCard']),
+    showAwardModal () {
+      this.modalVisible = true
+    },
+    closeModal () {
+      this.modalVisible = false
+    },
     async popUsers () {
       // console.log('开始弹出用户')
       if (this.lastUsers.length > 0) {
@@ -234,10 +248,10 @@ export default {
           await this.request(this.page)
         }
         // console.log('再次执行弹出')
-        if(this.page===1 && this.lastUsers.length===0 && this.total===0){
+        if (this.page === 1 && this.lastUsers.length === 0 && this.total === 0) {
           //如果是第一页，且已经没有空余的了，不需要再请求
           return
-        }else{
+        } else {
           await this.popUsers()
         }
 
@@ -250,31 +264,13 @@ export default {
       this.total = dailyNew.pageInfo.count
       // console.log(dailyNew, '请求到一页的数据')
     },
-    async getTodayList () {
-      // let rankResponse = await this.getTodayRank()
-      // if(rankResponse.status===1){
-      //   return rankResponse.data.rankInfo.map(r=>{
-      //     // { id: 1, headSculpture: '', username: '阳光小葵', time: '00:01' },
-      //     return {
-      //       id:r.rank,
-      //       uid:r.uid,
-      //       avatar:r.userInfo.avatar || '',
-      //       nickname:r.userInfo.nickname || '',
-      //       time:utils.friendlyDate(r.signTime)
-      //     }
-      //   })
-      // }
-      // console.log(rankResponse)
-    },
     getSingInfo () {
       this.getSignInfo().then(data => {
-        if (data) {
-          if (data.status === 1) {
-            this.signedIn = true
-            return
-          }
+        if (data?.status === 1) {
+          this.signedIn = true
+        } else {
+          this.signedIn = false
         }
-        this.signedIn = false
       })
     },
     showCard (uid, userInfo) {
@@ -282,15 +278,139 @@ export default {
     },
     async signIn () {
       if (!this.signedIn) {
-
-        let doSign = await this.doSign()
-        if (doSign) {
+        let rs = await this.doSign()
+        // let rs = {
+        //   'status': 1,
+        //   'info': '工作台签到成功，社区签到也成功。',
+        //   'data':
+        //     {
+        //       'comResult':
+        //         {
+        //           'code':
+        //             200,
+        //           'msg':
+        //             'ok',
+        //           'data':
+        //             {
+        //               'msg':
+        //                 '签到成功',
+        //               'jifen':
+        //                 [
+        //                   {
+        //                     'one': 1,
+        //                     'max': 1,
+        //                     'name': '经验值'
+        //                   },
+        //                   {
+        //                     'one': 1,
+        //                     'max': 1,
+        //                     'name': '社区积分'
+        //                   },
+        //                   {
+        //                     'one': 1,
+        //                     'max': 1,
+        //                     'name': '购物积分'
+        //                   },
+        //                   {
+        //                     'one': 0,
+        //                     'max': 0,
+        //                     'name': '贡献值'
+        //                   },
+        //                   {
+        //                     'one': 2,
+        //                     'max': 2,
+        //                     'name': '金豆'
+        //                   }
+        //                 ],
+        //               'scores':
+        //                 [
+        //                   {
+        //                     'flag': 'exp',
+        //                     'name': '经验值',
+        //                     'num': 1
+        //                   },
+        //                   {
+        //                     'flag': 'fly',
+        //                     'name': '社区积分',
+        //                     'num': 1
+        //                   },
+        //                   {
+        //                     'flag': 'buy',
+        //                     'name': '购物积分',
+        //                     'num': 1
+        //                   },
+        //                   {
+        //                     'flag': 'two',
+        //                     'name': '金豆',
+        //                     'num': 2
+        //                   }
+        //                 ],
+        //               'status':
+        //                 1
+        //             }
+        //           ,
+        //           'count':
+        //             0
+        //         }
+        //       ,
+        //       'itemRewards':
+        //         {
+        //           'status':
+        //             1,
+        //           'info':
+        //             '抽中概率，随机数：0.5724386867473654',
+        //           'data':
+        //             [
+        //               {
+        //                 'id': 16,
+        //                 'createTime': '2023-08-10 17:19:34',
+        //                 'updateTime': '2024-02-02 15:56:59',
+        //                 'nanoid': 'PEg8jCkZ',
+        //                 'icon': 'http://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/app/base/19197b88f4484a348577941eef685ba4_cat2.png',
+        //                 'image': 'http://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/app/base/19197b88f4484a348577941eef685ba4_cat2.png',
+        //                 'summary': 'cat',
+        //                 'name': 'bcat',
+        //                 'type': 'frame',
+        //                 'alias': '黑猫',
+        //                 'gainMethod': 'store,sign',
+        //                 'unique': 1
+        //               }
+        //             ]
+        //         }
+        //     }
+        // }
+        if (rs.status) {
           this.updateTodayRank().then()
-          this.toggleModal = true
-          setTimeout(() => {
-            this.toggleModal = false
-          }, 1000)
-          this.signedIn = true
+          //提示奖励
+            this.awardItems=[]
+          rs.data?.itemRewards?.data?.forEach(item=>{
+              this.awardItems.push({
+                type:'item',
+                name:item.name,
+                data:{
+                  ...item,
+                  detail:item
+                },
+
+              })
+            }
+          )
+          rs.data?.comResult?.data?.scores?.forEach(item=>{
+            this.awardItems.push({
+              type:'score',
+              name:item.name,
+              value:item.num,
+              flag:item.flag,
+            })
+          })
+          this.tip='签到成功。每天签到有概率获得<strong class=\'active-bg\'><img style=\'width: 20px\' src=\'/img/bottomPanel/prop.png\'>珍贵道具</strong>哦！'
+          if(this.awardItems.length>0){
+            this.tip=this.tip+'<br>注意：如果您已在社区完成签到，将无法重复获得积分奖励。仅支持通过工作台签到获得道具奖励。'
+          }
+
+          console.log(this.awardItems,'奖品')
+            this.showAwardModal()
+            this.signedIn = true
         } else {
           message.error('签到失败。')
         }

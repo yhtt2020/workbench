@@ -164,7 +164,7 @@ export default {
       type: Boolean,
       default: true,
     },
-    limitEnv: {
+    envLimit: {
       default: ()=>{
         return ''
       }
@@ -202,7 +202,7 @@ export default {
       };
     },
     menus() {
-      if (this.useEnv(this.limitEnv)) {
+      if (this.useEnv(this.envLimit)) {
         return [this.del];
       }
       return [...this.menuList, this.del];

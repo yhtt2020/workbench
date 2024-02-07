@@ -347,8 +347,8 @@ export default {
               useCustomLayout({
                 headerList: this.headerList,
                 folderList: this.folderList,
-                cb: () => {
-                  this.$bus.emit("adsorbGrid");
+                cb: (position) => {
+                  this.$bus.emit("cutCanvas",position);
                 },
               });
             }, 1)
@@ -456,8 +456,8 @@ export default {
         useCustomLayout({
           headerList: this.headerList,
           folderList: this.folderList,
-          cb: () => {
-            this.$bus.emit("adsorbGrid");
+          cb: (position) => {
+            this.$bus.emit("cutCanvas",position);
           },
         });
       }, 1)
@@ -511,8 +511,8 @@ export default {
       setTimeout(() => {
         useCustomLayout({
           headerList: this.headerList,
-          cb: () => {
-            this.$bus.emit("adsorbGrid");
+          cb: (position) => {
+            this.$bus.emit("cutCanvas",position);
           },
         });
       }, 1)
@@ -551,8 +551,8 @@ export default {
           headerList: this.headerList,
           folderList: this.folderList,
           mainList: cards,
-          cb: () => {
-            this.$bus.emit("adsorbGrid");
+          cb: (position) => {
+            this.$bus.emit("cutCanvas",position);
           },
         });
       }, 1)
@@ -612,6 +612,7 @@ export default {
 
       desktopApps.forEach((item, index) => {
         if (item.ext == '') {
+          if(this.guideList.length != 5 ) this.appList[2].isCheck = true
           // 分离文件夹
           folderList.push(item)
         } else if (item.ext == '.exe' || item.ext == '.url') {
@@ -627,12 +628,15 @@ export default {
         } else {
           // 判断图片
           if (this.pictureFormat.includes(item.ext.slice(1))) {
+            if(this.guideList.length != 5 ) this.appList[3].isCheck = true
             pictureList.push({ ...item, type: 'img' })
           }
           // 判断音视频
           else if (this.audioFormat.includes(item.ext.slice(1))) {
+            if(this.guideList.length != 5 ) this.appList[4].isCheck = true
             audioList.push(item)
           } else {
+            if(this.guideList.length != 5 ) this.appList[5].isCheck = true
             otherList.push(item)
           }
         }

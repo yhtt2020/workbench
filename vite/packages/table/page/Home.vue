@@ -525,10 +525,10 @@ export default {
     }, 2000);
     // 判断是否是第一次加载
     if (this.deskInit) {
+      this.deskInit = false
       this.initTask()
       // 新用户第一次进入加载一个默认桌面
-      // this.addFreeLayoutDesk()
-      this.deskInit = false
+      this.addFreeLayoutDesk()
       this.visibleScale = true
     }
 

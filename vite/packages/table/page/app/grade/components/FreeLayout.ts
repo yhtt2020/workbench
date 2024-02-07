@@ -178,19 +178,19 @@ export const FreeLayoutStore = defineStore('FreeLayoutStore', {
           "id": 1705971216198
         },
         "1705971265991": {
-          "left": 2196,
+          "left": 2488,
           "top": 2382,
           "index": 1,
           "id": 1705971265991
         },
         "1705971276167": {
-          "left": 2488,
+          "left": 2196,
           "top": 2382,
           "index": 1,
           "id": 1705971276167
         },
         "1705971290975": {
-          "left": 2488,
+          "left": 2196,
           "top": 2598,
           "index": 1,
           "id": 1705971290975
@@ -274,20 +274,6 @@ export const FreeLayoutStore = defineStore('FreeLayoutStore', {
           "icon": "desktop",
           "cards": [
             {
-              "name": "middleWallpaper",
-              // "id": 1705883742578,
-              "customData": {
-                "name": "拾光壁纸",
-                "value": "timeline",
-                "label": "拾光壁纸",
-                "path": "/timeline/v3",
-                "customSize": "2x2",
-                "width": 1,
-                "height": 1
-              },
-              "data": {}
-            },
-            {
               "name": "clocks",
               // "id": 1701850990017,
               "customData": {
@@ -304,6 +290,28 @@ export const FreeLayoutStore = defineStore('FreeLayoutStore', {
               "data": {}
             },
             {
+              "name": "middleWallpaper",
+              // "id": 1705883742578,
+              "customData": {
+                "name": "拾光壁纸",
+                "value": "timeline",
+                "label": "拾光壁纸",
+                "path": "/timeline/v3",
+                "customSize": "2x2",
+                "width": 1,
+                "height": 1
+              },
+              "data": {}
+            },
+            {
+              "name": "GameEpic",
+              // "id": 1705906913821,
+              "customData": {
+                "customSize": "2x4"
+              },
+              "data": {}
+            },
+            {
               "name": "MyGameSmall",
               // "id": 1705906879069,
               "customData": {
@@ -314,14 +322,6 @@ export const FreeLayoutStore = defineStore('FreeLayoutStore', {
             {
               "name": "audio",
               // "id": 1705906887800,
-              "customData": {
-                "customSize": "2x4"
-              },
-              "data": {}
-            },
-            {
-              "name": "GameEpic",
-              // "id": 1705906913821,
               "customData": {
                 "customSize": "2x4"
               },

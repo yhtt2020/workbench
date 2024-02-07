@@ -30,11 +30,13 @@ const getReward = computed(() => {
   if (result) {
     let { awardList } = result;
     let arr = [];
+    console.log(arr,'奖励内容sad')
     awardList.forEach((item) => {
       if (item.label == "道具") {
         arr.push({
           name: "头像",
-          type: "avatarFrame",
+          type: "item",
+          data:item.data,
           icon: item.data.icon,
         });
       }
@@ -42,6 +44,7 @@ const getReward = computed(() => {
         // taskUserMedal.value.push({medal:{...item.value}});
         arr.push({
           type: "medal",
+          data:item.data,
           icon: item.data.icon_lg,
         });
       }
@@ -62,7 +65,6 @@ const getReward = computed(() => {
         }
       }
     });
-
     return arr;
   } else {
     return null;

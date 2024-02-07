@@ -12,7 +12,7 @@
           ">
           <h3 style="color: var(--primary-text)">快速开关功能</h3>
           <a-row :gutter="[20, 20]" style="font-size: 1.2em; text-align: center">
-                  <a-col :span="12" v-if="!$useEnv(['visitor','web'])">
+                  <a-col :span="12" v-if="!$useEnv(['guest','web'])">
               <div class="relative btn">
                 弹幕
                 <br />
@@ -63,12 +63,6 @@
               <div  @click="tipOffline" class="relative btn">
                 离线模式<br />
                 <a-switch @click="changeOffline"  v-model:checked="isOffline"></a-switch>
-              </div>
-            </a-col> -->
-            <!-- <a-col :span="12">
-              <div  @click="tipVisitor" class="relative btn">
-                游客模式<br />
-                <a-switch @click="changeVisitor"  v-model:checked="isVisitor"></a-switch>
               </div>
             </a-col> -->
             <a-col :span="12" v-if="!$useEnv()">
@@ -272,7 +266,6 @@ import ThemeSettingModal from "../components/setting/ThemeSettingModal.vue";
 
 import { taskStore } from "../apps/task/store";
 import { offlineStore } from "../js/common/offline";
-import { visitorStore } from "../js/common/visitor";
 import {Icon as Iconify} from '@iconify/vue'
 export default {
   name: "Setting",
@@ -371,7 +364,6 @@ export default {
     ...mapWritableState(appStore, ["userInfo","backgroundColor"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(offlineStore, ["isOffline"]),
-    ...mapWritableState(visitorStore, ["isVisitor"]),
     ...mapWritableState(useNavigationStore,['bottomToggle','oldToggle','editToggle']),
 
   },
@@ -379,7 +371,6 @@ export default {
   methods: {
     ...mapActions(codeStore, ["verify", "create", "myCode"]),
     ...mapActions(offlineStore, ["changeOffline"]),
-    ...mapActions(visitorStore, ["changeVisitor"]),
     ...mapActions(appStore, ['enterAided', 'leaveAided','enableShake','disableShake']),
     isMain: isMain, isWin,
     goShake(){
@@ -441,13 +432,6 @@ export default {
       Modal.info({
         content:
           "使用离线模式后，将隐藏部分娱乐、社交类的功能，例如游戏、天气等。",
-        centered: true,
-      });
-    },
-    tipVisitor() {
-      Modal.info({
-        content:
-          "使用游客模式后，将隐藏部分娱乐、社交类的功能，例如游戏、天气等。",
         centered: true,
       });
     },

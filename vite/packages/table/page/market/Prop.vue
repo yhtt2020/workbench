@@ -22,7 +22,7 @@
           />
           <div v-if="!showPreview" @click="openPreview" class="px-6 ml-3 flex items-center xt-mask rounded-lg h-12 pointer">
             <Icon icon="zhankai" style="font-size: 1.5em;"></Icon>
-            <span class="xt-text ml-3" style="font-size: 16px;">装扮预览</span>
+            <span class="xt-text ml-3" style="font-size: 16px;">装扮预览1</span>
           </div>
         </div>
       </div>
@@ -37,22 +37,28 @@
         </div>
       </div>
     </div>
-    <div class="preview" v-if="showPreview">
-      <div class="flex items-center justify-between mb-6" style="height: 48px;">
-       <div class="flex items-center">
-          <div @click="showPreview = false" class="w-12 h-12 pointer flex items-center rounded-lg justify-center"
+    <div class="preview" v-if="$useEnv=['guest']">
+      <!-- 替换成游客面板 -->
+      <div v-if="0">
+        <div  class="flex items-center justify-between mb-6" style="height: 48px;" >
+         <div class="flex items-center">
+            <div @click="showPreview = false" class="w-12 h-12 pointer flex items-center rounded-lg justify-center"
+              style="background: var(--mask-bg);font-size: 16px;color: var(--primary-text);">
+              <Icon icon="zhankai" style="font-size: 1.5em;"></Icon>
+            </div>
+            <span class="xt-text ml-3" style="font-size: 16px;">装扮预览2</span>
+         </div>
+         <div @click="clearExtra" class="w-12 h-12 pointer flex items-center rounded-lg justify-center"
             style="background: var(--mask-bg);font-size: 16px;color: var(--primary-text);">
-            <Icon icon="zhankai" style="font-size: 1.5em;"></Icon>
+            <Icon icon="clear" style="font-size: 1.5em;"></Icon>
           </div>
-          <span class="xt-text ml-3" style="font-size: 16px;">装扮预览</span>
-       </div>
-       <div @click="clearExtra" class="w-12 h-12 pointer flex items-center rounded-lg justify-center"
-          style="background: var(--mask-bg);font-size: 16px;color: var(--primary-text);">
-          <Icon icon="clear" style="font-size: 1.5em;"></Icon>
+        </div>
+        <div class="card half mr-3" style="width:376px;height:600px;background: var(--primary-bg);color: var(--primary-text);padding:0;position: relative">
+          <PropPreview :uid="userInfo.uid" :userInfo="userInfo" :frameImage="frameImage"></PropPreview>
         </div>
       </div>
-      <div class="card half mr-3" style="width:376px;height:600px;background: var(--primary-bg);color: var(--primary-text);padding:0;position: relative">
-        <PropPreview :uid="userInfo.uid" :userInfo="userInfo" :frameImage="frameImage"></PropPreview>
+      <div v-else class=" xt-bg h-full rounded-xl ">
+        <xt-status name="道具商城" :status="['guest']" ></xt-status>
       </div>
     </div>
   </div>
@@ -124,7 +130,7 @@ export default {
       this.fullScreen = false
       this.$router.go(-1)
     },
-    updateNavIndex({index}){
+    updateNavIndex(item,index){
       this.navIndex = index
     },
     changeSelect(event){

@@ -2,7 +2,7 @@
  <div class="flex items-center justify-center w-full" :class=" rankList.length === 0 ? 'px-0':'px-4'">
   <div  class="relative flex items-center  justify-center" @click="goMy">
     <!--  -->
-   <FrameAvatar :avatar-size="rankList.length === 0 ? 60 : 100" :frame-url="userinfo.frame" :avatar-url="userinfo.avatar" class="w-full flex justify-center user-container h-full pb-2 object-fill" 
+   <FrameAvatar :avatar-size="rankList.length === 0 ? 60 : 100" :frame-url="userinfo.frame" :avatar-url="userinfo.avatar" class="w-full flex justify-center user-container h-full pb-2 object-fill"
     alt="" :frame="displayUserInfo?.equippedItems?.frameDetail" @close="close"
    >
    </FrameAvatar>
@@ -17,7 +17,7 @@
    <span class="xt-text font-16 xt-font ml-3">{{ userinfo.nickname }}</span>
    <div class="flex xt-text">
      <OnlineMedal :rank="userinfo.onlineGradeExtra.rank" />
-     <Medal  v-for="medal of rankList" :medal="medal"/>
+     <Medal :zoom="0.5" style="margin-top: 5px;margin-right: 5px" v-for="medal of rankList" :medal="medal"/>
    </div>
   </div>
  </div>
@@ -57,7 +57,7 @@ const getUserRank = ()=>{
  team.getUserMedal(props.userinfo.uid).then((res)=>{
   if(res.length !== 0){
    rankList.value = res.slice(0,2);
-  } 
+  }
  })
 }
 
@@ -89,7 +89,7 @@ const close = () =>{
 const displayUserInfo = computed(()=>{
  if (userCardUserInfo.value) {
   return { ...userCardUserInfo.value, certification: [] }
- } 
+ }
  else if (this.userInfo) {
   return userCardUserInfo.value
  }
