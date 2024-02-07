@@ -36,13 +36,7 @@ export const comStore = defineStore("comStore", {
       }
     },
     async doSign() {
-      let response = await post(doSignUrl)
-        if (response.status === 1) {
-          return true
-        } else {
-          return false
-
-      }
+      return  await post(doSignUrl)
     },
     async getSignInfo() {
       let response = await get(getSignInfoUrl)

@@ -17,7 +17,7 @@
    <span class="xt-text font-16 xt-font ml-3">{{ userinfo.nickname }}</span>
    <div class="flex xt-text">
      <OnlineMedal :rank="userinfo.onlineGradeExtra.rank" />
-     <Medal :zoom="0.5" style="margin-top: 15px;margin-right: 15px" v-for="medal of rankList" :medal="medal"/>
+     <Medal :zoom="0.5" style="margin-top: 5px;margin-right: 5px" v-for="medal of rankList" :medal="medal"/>
    </div>
   </div>
  </div>
