@@ -241,7 +241,8 @@ export const useCustomLayout = async (options) => {
   const freeLayoutStore: any = useFreeLayoutStore();
   const { getFreeLayoutData, getFreeLayoutState, freeLayoutEnv } =
     storeToRefs(freeLayoutStore);
-  getFreeLayoutState.value.canvas.height += 5000;
+  getFreeLayoutState.value.canvas.height += 20000;
+  getFreeLayoutState.value.canvas.width += 20000;
   console.log(
     "  getFreeLayoutState.value.canvas.height :>> ",
     getFreeLayoutState.value.canvas.height

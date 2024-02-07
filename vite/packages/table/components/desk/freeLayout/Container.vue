@@ -54,7 +54,7 @@ onMounted(() => {
         redirect: true,
         position,
       });
-    }, 1000);
+    }, 100);
   });
 });
 
@@ -120,7 +120,6 @@ const cutCanvas = async (config) => {
   if (!getFreeLayoutState.value.canvas.autoExtend) return;
 
   if (redirect) {
-
   }
 
   let left: any = Infinity;
@@ -257,10 +256,13 @@ const cutCanvas = async (config) => {
       canvasWidth - right < viewWidth
     );
     if (canvasWidth - right < viewWidth) {
+      console.log("进入右边扩展 :>> ", 12331312132321);
+
       msgArr.push("右边");
       getFreeLayoutState.value.canvas.width = right + viewWidth;
     }
     if (canvasWidth - right > viewWidth) {
+      console.log("进入右边收缩 :>> ", 12331312132321);
       msgArr.push("右边");
       getFreeLayoutState.value.canvas.width = right + viewWidth - width;
     }
@@ -288,22 +290,35 @@ const cutCanvas = async (config) => {
     });
   }
 
-
-
   console.log("redirect :>> ", redirect);
   if (!redirect) return;
+  let x = Infinity;
+  let y = Infinity;
   setTimeout(() => {
-  getFreeLayoutState.value.mode.align = "custom";
-  const zoom = getFreeLayoutState.value.canvas.zoom;
-  getFreeLayoutState.value.line.centerLine.y = top -20
-  getFreeLayoutState.value.line.centerLine.x =
-    (left - position + scrollWidth / 2) / zoom;
-  proxy.$bus.emit("restoreLocation");
-  getFreeLayoutState.value.system.hide = false;
-  loading.value = false;
-  console.timeEnd("Free Layout Run Time");
-    console.log("--------------- 处理画布结束 ---------------");
-  }, 1000);
+    Object.values(getFreeLayoutData.value).forEach((item: any) => {
+      if (item.top < y) {
+        y = item.top;
+        topItem = item;
+      }
+
+      if (item.left < x) {
+        x = item.left;
+        leftItem = item;
+      }
+    });
+    setTimeout(() => {
+      getFreeLayoutState.value.mode.align = "custom";
+      const zoom = getFreeLayoutState.value.canvas.zoom;
+      getFreeLayoutState.value.line.centerLine.y = y - 20;
+      getFreeLayoutState.value.line.centerLine.x =
+        (x * zoom - position + scrollWidth / 2) / zoom;
+      proxy.$bus.emit("restoreLocation");
+      getFreeLayoutState.value.system.hide = false;
+      loading.value = false;
+      console.timeEnd("Free Layout Run Time");
+      console.log("--------------- 处理画布结束 ---------------");
+    }, 100);
+  }, 100);
 };
 
 /**
