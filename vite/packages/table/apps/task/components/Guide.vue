@@ -17,7 +17,7 @@
     <div class="flex items-center justify-center mb-3">
       <xt-title class="xt-text-2">完成奖励</xt-title>
     </div>
-    <ShowReward :id="currentTask.id"/>
+    <ShowReward :key="currentTask.id" :id="currentTask.id"/>
     <div class="flex justify-between mt-3">
       <div></div>
       <xt-button
@@ -27,7 +27,7 @@
         h="32"
         radius="8"
         :plain="true"
-        >知道了</xt-button
+        >我已了解</xt-button
       >
     </div>
   </div>

@@ -82,12 +82,23 @@ export const tasks = {
       ],
     },
   ],
-
   efficiency: [
     {
       name: "效率",
       info: "了解关于效率办公类功能的使用方式。",
       tasks: [
+        {
+          pre: "",
+          id: "Z0201",
+          name: "完成桌面定制流程",
+          info: "简单几步，轻松整理你的桌面，为你添加合适的组件和图标。",
+          open: [
+            {
+             type:'bus',
+             value: "customDesk",
+            },
+          ],
+        },
         {
           pre: "",
           id: "Z0202",

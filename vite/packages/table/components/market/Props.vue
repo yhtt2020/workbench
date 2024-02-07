@@ -46,7 +46,7 @@
                     :style="getFrameScore(item)&&false ? {width:'104px'}:{width:'100%'}"
           >
             赞助 ￥ {{ getFramePrice(item).price }}
-            <template  v-if="getFramePrice(item).originPrice !== getFramePrice(item).price"><span class="line-through ml-2">￥{{getFramePrice(item).originPrice}}</span>
+            <template  v-if="(getFramePrice(item).originPrice !== getFramePrice(item).price) && getFramePrice(item).originPrice>0"><span class="line-through ml-2">￥{{getFramePrice(item).originPrice}}</span>
               <a-badge :count="getDiscount(getFramePrice(item))" class="ml-2" :number-style="{ backgroundColor: '#52c41a',borderColor:'transparent' }"></a-badge></template>
           </a-button>
           <div disabled v-else class="mr-3 avatar-font flex items-center justify-center  m-3" style="height:44px;width: 100%;border: 1px solid var(--divider);color: var(--primary-text);">
@@ -119,7 +119,6 @@ import { mapState, mapActions, mapWritableState } from 'pinia'
 import PaymentMoney from '../payModal/PaymentMoney.vue'
 import PointPayment from '../payModal/PointPayment.vue'
 import GiftModal from '../payModal/GiftModal.vue'
-import { rarityColor } from '../../js/common/teamAvatar'
 import { appStore } from '../../store'
 import { frameStore } from '../../store/avatarFrame'
 import { teamStore } from '../../store/team'
