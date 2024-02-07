@@ -2,7 +2,7 @@ import { confirm } from "../ui/new/confirm";
 import cache from "../components/card/hooks/cache";
 
 import { ALL_LIMITS, COMPONENT_LIMIT, PRIORITY, ROUTER_LIMIT } from "./config";
-import { isWeb, isWindow, isMac, isOffline, isVisitor } from "./useBaseEnv";
+import { isWeb, isWindow, isMac, isOffline, isGuest } from "./useBaseEnv";
 
 // 提示
 const showConfirm = (name) => {
@@ -43,8 +43,8 @@ const envDetection = (type) => {
     return isMac ? "mac" : "";
   } else if (type == "offline") {
     return cache.get("isOffline") ? "offline" : "";
-  } else if (type == "visitor") {
-    return cache.get("isVisitor") ? "visitor" : "";
+  } else if (type == "guest") {
+    return cache.get("isGuest") ? "guest" : "";
   } else if (type == "window") {
     return isWindow ? "window" : "";
   }
@@ -61,7 +61,7 @@ const checkLimit = (env, name, options) => {
 };
 /*
   环境检测
-  参数: web, client, mac, offline, visitor
+  参数: web, client, mac, offline, guest
   返回: 环境名称
 */
 export const useEnv = (arr = "web") => {

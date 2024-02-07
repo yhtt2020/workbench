@@ -7,7 +7,6 @@ import cache from '../table/components/card/hooks/cache'
 import {post} from "./js/axios/request";
 import {message, notification} from "ant-design-vue";
 import shake from "./js/common/shake";
-import { visitorStore } from '../table/js/common/visitor'
 
 
 // @ts-ignore
@@ -264,9 +263,11 @@ export const appStore = defineStore('appStore', {
       ipc.send('getDetailUserInfo')
       // 登录成功 退出游客模式 
       // 但目前项目中存在掉登录的情况 暂时不能使用 userInfo 进行判断
-      cache.set('isVisitor', false)
-      // visitorStore().isVisitor = false
-      // window.$isVisitor = false
+      if(cache.get('isGuest')){
+        cache.set('isGuest', false)
+        window.$ui.router.replace({ name: 'home' })
+        // window.$ui.router.replace({ name: this.currentRoute })
+      }
     },
 
     /**

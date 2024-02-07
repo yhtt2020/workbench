@@ -1,5 +1,5 @@
 <template>
-  <Widget :envLimit="['visitor']" :options="options" :desk="desk" :showRightIcon='rightIcon' :env="env">
+  <Widget :envLimit="['guest']" :options="options" :desk="desk" :showRightIcon='rightIcon' :env="env">
     <template #left-title-icon>
       <div
         class="icon"

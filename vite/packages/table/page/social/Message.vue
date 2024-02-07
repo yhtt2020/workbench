@@ -1,6 +1,6 @@
 <template>
   <div class="ml-4 w-full h-full">
-    <a-row v-if="envVisitor" class="card flex auto-height s-bg " style="width:100%;max-width:50em;padding: 1em; background: var(--primary-bg);color: var(--primary-text)" :gutter="20">
+    <a-row v-if="envGuest" class="card flex auto-height s-bg " style="width:100%;max-width:50em;padding: 1em; background: var(--primary-bg);color: var(--primary-text)" :gutter="20">
       <a-col :span="24">
         <div class="message-title flex items-center justify-between mb-4">
           <div class="flex items-center">
@@ -171,7 +171,7 @@
       </a-col>
     </a-row>
     <div v-else class="w-full h-full  s-bg">
-      <xt-status name="消息功能" :status="['visitor']" ></xt-status>
+      <xt-status name="消息功能" :status="['guest']" ></xt-status>
     </div>
   </div>
 </template>
@@ -221,8 +221,8 @@ export default {
   },
   computed: {
     ...mapState(messageStore, ['newFollower', 'systemNotice', 'customNotice', 'push', 'comment', 'mention', 'support']),
-    envVisitor(){
-      return !window.$useEnv('visitor')
+    envGuest(){
+      return !window.$useEnv('guest')
     },
 
     interact() {

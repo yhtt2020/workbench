@@ -1,5 +1,5 @@
 <template>
-  <vueCustomScrollbar v-if="envVisitor" :settings="scrollbarSettings" @touchstart.stop @touchmove.stop @touchend.stop
+  <vueCustomScrollbar v-if="envGuest" :settings="scrollbarSettings" @touchstart.stop @touchmove.stop @touchend.stop
                       style="padding: 15px;white-space: nowrap;height: 100%">
 
     <div class="card half mr-3" style="width:330px;background: var(--primary-bg);color: var(--primary-text);padding:0;position: relative">
@@ -26,7 +26,7 @@
   </vueCustomScrollbar>
 
   <div v-else class=" xt-bg h-full rounded-xl ">
-    <xt-status name="我的信息功能" :status="['visitor']" ></xt-status>
+    <xt-status name="我的信息功能" :status="['guest']" ></xt-status>
   </div>
 
   <div v-if="secondaryVisible === false">
@@ -52,8 +52,8 @@ export default {
   components: { UserCard, GroupPanel, ComActionPanel, ComPanel, GradePanel,FrameStoreWidget,UpdateMyInfo },
   computed: {
     ...mapWritableState(appStore, ['userInfo','secondaryVisible']),
-    envVisitor(){
-      return !window.$useEnv(['visitor', 'web'])
+    envGuest(){
+      return !window.$useEnv(['guest', 'web'])
     },
   },
   data(){

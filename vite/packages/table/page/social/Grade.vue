@@ -2,7 +2,7 @@
   <vueCustomScrollbar :settings="scrollbarSettings" style="height: 100%;padding: 15px;">
     <div class="w-full h-full flex justify-center flex-row flex-wrap">
       <!-- 游客模式隐藏 用户信息 -->
-      <div v-if="useVisitor" class="w-full flex flex-col  top-card mr-4" style=" max-width: 572px;">
+      <div v-if="useGuest" class="w-full flex flex-col  top-card mr-4" style=" max-width: 572px;">
         <div class="w-full  pt-4 pb-4 grade-card  rounded-lg  mb-4" style="background: var(--primary-bg);">
           <GradePanel @openGradeTip="openGradeTip"></GradePanel>
         </div>
@@ -96,8 +96,8 @@ export default {
     abilityGrade() {
       return leveList.findIndex((n) => n > lv) !== -1 ? leveList.findIndex((n) => n > lv) - 1 : leveList.length - 1
     },
-    useVisitor(){
-      return !window.$useEnv('visitor')
+    useGuest(){
+      return !window.$useEnv('guest')
     },
   },
   mounted() {

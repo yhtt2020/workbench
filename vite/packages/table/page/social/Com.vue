@@ -5,7 +5,7 @@
       <div style="height: 100%;display: inline-block;">
 
         <!-- 游客模式时屏蔽签到 -->
-        <div v-if="envVisitor" class="mr-3" style="width: 300px;display: inline-block;white-space: pre-wrap;vertical-align: top">
+        <div v-if="envGuest" class="mr-3" style="width: 300px;display: inline-block;white-space: pre-wrap;vertical-align: top">
           <div style="width: 280px" class="mr-3">
             <SingIn :customIndex="1" :customData="{}" :rightIcon="false"></SingIn>
           </div>
@@ -132,8 +132,8 @@ export default {
   computed: {
     ...mapState(teamStore, ['my', 'myTeamNo', 'myTeam']),
     ...mapState(appStore, ['userInfo']),
-    envVisitor(){
-      return !window.$useEnv('visitor')
+    envGuest(){
+      return !window.$useEnv('guest')
     }
   },
   mounted () {
