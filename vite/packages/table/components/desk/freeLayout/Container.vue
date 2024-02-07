@@ -111,10 +111,15 @@ const loading = ref(false);
 const cutCanvas = async (config) => {
   console.log("--------------- 处理画布开始 ---------------");
   console.time("Free Layout Run Time");
-  loading.value = true;
+  // 前置代码 新功能请在后面添加
   const mergedOptions = _.merge({}, defaultConfig, config);
   const { redirect, id, item, position } = mergedOptions;
   if (!getFreeLayoutState.value.canvas.autoExtend) return;
+
+  if (redirect) {
+    loading.value = true;
+  }
+
   let left: any = Infinity;
   let top: any = Infinity;
   let right: any = 0;
