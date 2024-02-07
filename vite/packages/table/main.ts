@@ -123,6 +123,7 @@ app.config.globalProperties.$bus = Mit;
 app.config.globalProperties.$useEnv= useEnv;
 window.$ui={
   confirm,
+  router,
 }
 
 const pinia = createPinia();

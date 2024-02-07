@@ -263,7 +263,11 @@ export const appStore = defineStore('appStore', {
       ipc.send('getDetailUserInfo')
       // 登录成功 退出游客模式 
       // 但目前项目中存在掉登录的情况 暂时不能使用 userInfo 进行判断
-      cache.set('isGuest', false)
+      if(cache.get('isGuest')){
+        cache.set('isGuest', false)
+        window.$ui.router.replace({ name: 'home' })
+        // window.$ui.router.replace({ name: this.currentRoute })
+      }
     },
 
     /**
