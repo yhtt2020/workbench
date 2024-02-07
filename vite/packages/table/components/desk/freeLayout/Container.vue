@@ -196,17 +196,8 @@ const cutCanvas = async (config) => {
    * @description: 空白画布回收
    */
   let msgArr: any = [];
-  // 右边
-  if (redirect || currentRight == right) {
-    if (canvasWidth - right < viewWidth) {
-      msgArr.push("右边");
-      getFreeLayoutState.value.canvas.width = right + viewWidth;
-    } else if (canvasWidth - right > viewWidth) {
-      msgArr.push("右边");
-      getFreeLayoutState.value.canvas.width = right + viewWidth - width;
-    }
-  }
-  // 左边
+
+  // 左上边
   if (redirect || currentLeft == left) {
     if (left < viewWidth) {
       let diff = viewWidth - left;
@@ -229,8 +220,9 @@ const cutCanvas = async (config) => {
       msgArr.push("左边");
       getFreeLayoutState.value.canvas.width -= diff;
     }
-  }
 
+
+  }
   // 上边
   if (redirect || currentTop == top) {
     if (top < viewHeight) {
@@ -255,6 +247,16 @@ const cutCanvas = async (config) => {
       getFreeLayoutState.value.canvas.height -= diff;
     }
   }
+  // 右边
+  if (redirect || currentRight == right) {
+    if (canvasWidth - right < viewWidth) {
+      msgArr.push("右边");
+      getFreeLayoutState.value.canvas.width = right + viewWidth;
+    } else if (canvasWidth - right > viewWidth) {
+      msgArr.push("右边");
+      getFreeLayoutState.value.canvas.width = right + viewWidth - width;
+    }
+  }
   // 下边
   if (redirect || currentBottom == bottom) {
     if (canvasHeight - bottom < viewHeight) {
@@ -277,30 +279,22 @@ const cutCanvas = async (config) => {
       item.adsorbGrid();
     });
   }
+  console.log("topItem 1:>> ", topItem);
+
   if (!redirect) return;
-  //
+  console.log("topItem :>> 2", topItem);
   setTimeout(() => {
-    Object.values(getFreeLayoutData.value).forEach((item: any) => {
-      if (item.top < top) {
-        top = item.top;
-        topItem = item;
-      }
-      if (item.left < left) {
-        left = item.left;
-        leftItem = item;
-      }
-    });
     getFreeLayoutState.value.mode.align = "custom";
     const zoom = getFreeLayoutState.value.canvas.zoom;
-    getFreeLayoutState.value.line.centerLine.y = top;
+    getFreeLayoutState.value.line.centerLine.y = top + 12;
     getFreeLayoutState.value.line.centerLine.x =
       (left - position + scrollWidth / 2) / zoom;
     proxy.$bus.emit("restoreLocation");
-    loading.value = false;
     getFreeLayoutState.value.system.hide = false;
+    loading.value = false;
     console.timeEnd("Free Layout Run Time");
     console.log("--------------- 处理画布结束 ---------------");
-  }, 1);
+  }, 500);
 };
 
 /**
@@ -401,7 +395,7 @@ onBeforeUnmount(() => {
     class="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center"
     style="z-index: 9999; font-size: 64px; background: rgba(0, 0, 0, 0)"
   >
-    <a-spin size="large" style="zoom:1.6" />
+    <a-spin size="large" style="zoom: 1.6" />
   </div>
   <div
     ref="waterfallFlow"
