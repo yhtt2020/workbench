@@ -108,6 +108,8 @@ const defaultConfig = {
   position: 0,
 };
 const cutCanvas = async (config) => {
+  console.log("--------------- 处理画布开始 ---------------");
+  console.time("Free Layout Run Time");
   const mergedOptions = _.merge({}, defaultConfig, config);
   const { redirect, id, item, position } = mergedOptions;
   if (!getFreeLayoutState.value.canvas.autoExtend) return;
@@ -262,10 +264,12 @@ const cutCanvas = async (config) => {
   }
   console.log("被调用了 :>> ");
   proxy.$bus.emit("updateFreeLayoutScroll");
-  // 定位修改
-  snowDrag.value?.forEach((item) => {
-    item.adsorbGrid();
-  });
+  // 处于吸附网格
+  if (getFreeLayoutState.value.mode.arrange == "grid") {
+    snowDrag.value?.forEach((item) => {
+      item.adsorbGrid();
+    });
+  }
   if (!redirect) return;
   //
   setTimeout(() => {
@@ -281,16 +285,15 @@ const cutCanvas = async (config) => {
     });
     getFreeLayoutState.value.mode.align = "custom";
     const zoom = getFreeLayoutState.value.canvas.zoom;
-    // getFreeLayoutState.value.line.centerLine.y = top / zoom;
-    // getFreeLayoutState.value.line.centerLine.x =
-    //   (left + scrollWidth / 2) / zoom + position;
-
     getFreeLayoutState.value.line.centerLine.y = top;
     getFreeLayoutState.value.line.centerLine.x =
       (left - position + scrollWidth / 2) / zoom;
     proxy.$bus.emit("restoreLocation");
     getFreeLayoutState.value.system.hide = false;
-  }, 600);
+
+    console.timeEnd("Free Layout Run Time");
+    console.log("--------------- 处理画布结束 ---------------");
+  }, 6);
 };
 
 /**

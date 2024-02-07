@@ -10,7 +10,6 @@
       cursor: dragStyle,
     }"
   >
-
     <slot> </slot>
   </div>
 </template>
@@ -83,8 +82,9 @@ onMounted(() => {
   scrollbar.value.addEventListener("ps-scroll-y", () => {
     freeLayoutEnv.value.scrollTop = scrollbar.value?.scrollTop;
   });
+  // 监听窗口大小变化
   useWindowSize((size) => {
-    freeLayoutStore.restoreLocation();
+    redirect();
   });
   // 监听键盘按下事件
   window.addEventListener("keydown", handleKeyDown);
@@ -179,6 +179,7 @@ watch(
     updateScroll(val);
   }
 );
+
 // 重置中心区域
 async function redirect() {
   const res = await freeLayoutStore?.restoreLocation();
