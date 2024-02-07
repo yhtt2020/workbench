@@ -19,6 +19,7 @@ import {
   useElementSize,
 } from "../../../ui/hooks/useCardSize";
 import _, { iteratee } from "lodash";
+import { useCutLayout } from "./useCutLayout";
 // 初始化操作
 const freeLayoutStore: any = useFreeLayoutStore();
 const props = defineProps({
@@ -46,12 +47,14 @@ onMounted(() => {
     updateCard(currentDesk.value?.cards);
   }, 2);
   proxy.$bus.on("cutCanvas", (position) => {
+    loading.value = true;
+    console.log("整理桌面回调触发了 :>> ");
     setTimeout(() => {
       cutCanvas({
         redirect: true,
         position,
       });
-    }, 100);
+    }, 1000);
   });
 });
 
@@ -117,7 +120,7 @@ const cutCanvas = async (config) => {
   if (!getFreeLayoutState.value.canvas.autoExtend) return;
 
   if (redirect) {
-    loading.value = true;
+
   }
 
   let left: any = Infinity;
@@ -135,7 +138,6 @@ const cutCanvas = async (config) => {
   let currentRight = 0;
   let currentBottom = 0;
 
-  // 找最大最小元素
   if (id) {
     let size = currentData?.value[id]?.customData?.customSize;
     let width = 0;
@@ -152,6 +154,7 @@ const cutCanvas = async (config) => {
   }
   let width = 0;
   let height = 0;
+  // 找最大最小元素
   Object.values(getFreeLayoutData.value).forEach((item: any) => {
     if (item.top < top) {
       top = item.top;
@@ -197,7 +200,7 @@ const cutCanvas = async (config) => {
    */
   let msgArr: any = [];
 
-  // 左上边
+  // 左边
   if (redirect || currentLeft == left) {
     if (left < viewWidth) {
       let diff = viewWidth - left;
@@ -209,7 +212,8 @@ const cutCanvas = async (config) => {
       );
       msgArr.push("左边");
       getFreeLayoutState.value.canvas.width += diff;
-    } else if (left > viewWidth) {
+    }
+    if (left > viewWidth) {
       let diff = left - viewWidth;
       getFreeLayoutData.value = Object.values(getFreeLayoutData.value).map(
         (item: any) => {
@@ -220,8 +224,6 @@ const cutCanvas = async (config) => {
       msgArr.push("左边");
       getFreeLayoutState.value.canvas.width -= diff;
     }
-
-
   }
   // 上边
   if (redirect || currentTop == top) {
@@ -235,7 +237,8 @@ const cutCanvas = async (config) => {
       );
       msgArr.push("上边");
       getFreeLayoutState.value.canvas.height += diff;
-    } else if (top > viewHeight) {
+    }
+    if (top > viewHeight) {
       let diff = top - viewHeight;
       getFreeLayoutData.value = Object.values(getFreeLayoutData.value).map(
         (item: any) => {
@@ -249,10 +252,15 @@ const cutCanvas = async (config) => {
   }
   // 右边
   if (redirect || currentRight == right) {
+    console.log(
+      "canvasWidth - right < viewWidth :>> ",
+      canvasWidth - right < viewWidth
+    );
     if (canvasWidth - right < viewWidth) {
       msgArr.push("右边");
       getFreeLayoutState.value.canvas.width = right + viewWidth;
-    } else if (canvasWidth - right > viewWidth) {
+    }
+    if (canvasWidth - right > viewWidth) {
       msgArr.push("右边");
       getFreeLayoutState.value.canvas.width = right + viewWidth - width;
     }
@@ -262,7 +270,8 @@ const cutCanvas = async (config) => {
     if (canvasHeight - bottom < viewHeight) {
       msgArr.push("下边");
       getFreeLayoutState.value.canvas.height = bottom + viewHeight;
-    } else if (canvasHeight - bottom > viewHeight) {
+    }
+    if (canvasHeight - bottom > viewHeight) {
       getFreeLayoutState.value.canvas.height = bottom + viewHeight - height;
       msgArr.push("下边");
     }
@@ -272,29 +281,29 @@ const cutCanvas = async (config) => {
     message.success("已为您更新画布画布");
   }
   console.log("被调用了 :>> ");
-  proxy.$bus.emit("updateFreeLayoutScroll");
   // 处于吸附网格
   if (getFreeLayoutState.value.mode.arrange == "grid") {
     snowDrag.value?.forEach((item) => {
       item.adsorbGrid();
     });
   }
-  console.log("topItem 1:>> ", topItem);
 
+
+
+  console.log("redirect :>> ", redirect);
   if (!redirect) return;
-  console.log("topItem :>> 2", topItem);
   setTimeout(() => {
-    getFreeLayoutState.value.mode.align = "custom";
-    const zoom = getFreeLayoutState.value.canvas.zoom;
-    getFreeLayoutState.value.line.centerLine.y = top + 12;
-    getFreeLayoutState.value.line.centerLine.x =
-      (left - position + scrollWidth / 2) / zoom;
-    proxy.$bus.emit("restoreLocation");
-    getFreeLayoutState.value.system.hide = false;
-    loading.value = false;
-    console.timeEnd("Free Layout Run Time");
+  getFreeLayoutState.value.mode.align = "custom";
+  const zoom = getFreeLayoutState.value.canvas.zoom;
+  getFreeLayoutState.value.line.centerLine.y = top -20
+  getFreeLayoutState.value.line.centerLine.x =
+    (left - position + scrollWidth / 2) / zoom;
+  proxy.$bus.emit("restoreLocation");
+  getFreeLayoutState.value.system.hide = false;
+  loading.value = false;
+  console.timeEnd("Free Layout Run Time");
     console.log("--------------- 处理画布结束 ---------------");
-  }, 500);
+  }, 1000);
 };
 
 /**
