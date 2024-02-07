@@ -50,7 +50,7 @@
               <xt-button size="mini" style="width: 100%" type="theme" @click="login">登录账号</xt-button>
             </a-col>
             <a-col flex="1">
-              <xt-button size="mini" style="width: 100%"   @click="onVisitor">游客模式</xt-button>
+              <xt-button size="mini" style="width: 100%"   @click="onGuest">游客模式</xt-button>
             </a-col>
             <a-col flex="150px" v-if="netError">
               <xt-button style="width: 100%" @click="getUserInfo">重试</xt-button>
@@ -100,7 +100,6 @@ import navigationData from '../js/data/tableData'
 import taskStore from '../page/app/todo/stores/task'
 import cache from "../components/card/hooks/cache";
 import { offlineStore } from '../js/common/offline'
-import { visitorStore } from '../js/common/visitor'
 import { useWidgetStore } from '../components/card/store'
 // import { clockStore } from '../components/widgets/clock/hooks/clockStore';
 import {usePermissionStore} from '../permission/store'
@@ -144,21 +143,6 @@ export default {
       return
     }
 
-    // 暂时直接跳转到新登录(可能修复了，代码之后再删)
-    // this.$router.replace({ name: 'wizard' })
-    // setTimeout(() => {
-    //   if(this.init){
-    //     this.$router.replace({ name: 'home' })
-    //   }else{
-    //     this.$router.replace({ name: 'wizard' })
-    //   }
-
-    //   // if (window.$isOffline && this.init) {
-    //   //   this.$router.replace({ name: 'home' })
-    //   //   this.launching = false
-    //   //   // 暂时还没有排查到卡顿原因
-    //   // }
-    // }, 2000)
     if(this.userInfo.uid){
       this.timeout()
     }
@@ -178,7 +162,6 @@ export default {
     this.initStore(useWidgetStore, 'useWidgetStore')
     this.initStore(controlStore, 'control')
     this.initStore(offlineStore, 'offlineStore')
-    this.initStore(visitorStore, 'visitorStore')
     // this.initStore(clockStore,'clockStore')
     browserStore().bindIPC()
     captureStore()//仅触发一下载入
@@ -223,7 +206,6 @@ export default {
     ...mapWritableState(codeStore, ['myCode', 'serialHash']),
     ...mapWritableState(appStore, ['aided','settings', 'routeUpdateTime', 'userInfo', 'init', 'lvInfo', 'backgroundImage', 'style']),
     ...mapWritableState(navStore, ['sideNavigationList', 'footNavigationList', 'rightNavigationList']),
-    ...mapWritableState(visitorStore, ['isVisitor']),
     ...mapWritableState(usePermissionStore,['token'])
     // ...mapWritableState(offlineStore, ['isOffline']),
   },
@@ -404,15 +386,11 @@ export default {
     },
 
 
-    onVisitor(){
+    onGuest(){
       this.$router.replace({ name: 'home' })
-      this.isVisitor = true
-      cache.set('isVisitor',true)
-      window.$isVisitor = true
-      // console.log('window.$isVisitor', window.$isVisitor)
-      // console.log('window.$useEnv', window.$useEnv("visitor"))
-      // window.$isOffline = true
-      // this.isOffline = true
+      // this.isGuest = true
+      cache.set('isGuest',true)
+      // window.$isGuest = true
     }
   },
 }

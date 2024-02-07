@@ -84,7 +84,7 @@ export default {
 
     addNewTask() {
 
-      if(!window.$useEnv('visitor')){
+      if(!window.$useEnv('guest')){
         let task = this.newTask;
         if (this.currentList) {
           task.listNanoid = [this.currentList.nanoid]

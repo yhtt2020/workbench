@@ -30,7 +30,7 @@ const isShow = computed(() => {
 const platform = computed(()=>{
   if (props.env.offline && window.$isOffline) {
     return '离线模式'
-  }else if (props.env.offline && window.$isVisitor){
+  }else if (props.env.offline && window.$isGuest){
     return '游客模式'
   }else if(props.env[window.$currentEnv] && window.$currentEnv=='web'){
     return 'web端'

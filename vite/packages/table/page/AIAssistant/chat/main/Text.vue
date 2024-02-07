@@ -69,7 +69,7 @@ const onInput = (e) => {
 
 // 搜索
 const onSearch = () => {
-  if(!window.$useEnv('visitor')){
+  if(!window.$useEnv('guest')){
     if (props.isSearch && search.value.trim()) {
       completeTask("Z0207");
       initHeight.value = false;

@@ -94,7 +94,7 @@ export default {
             if(!this.loading){
                 this.loading = true
                 await getHistoryInfo("/app/juhe/get").then(res=>{
-                    let random = Math.floor(Math.random() * (res.length + 1))
+                    let random = Math.floor(Math.random() * res.length)
                     this.history = res[random];
                     this.loading = false
                 })
