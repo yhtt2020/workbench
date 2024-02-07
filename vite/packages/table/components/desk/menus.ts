@@ -21,6 +21,7 @@ function deskMenus() {
       name: "定制桌面测试",
       disabled: true,
       fn: () => {
+
         useCustomLayout({
           headerList: headerData,
           folderList: folderData,
@@ -74,9 +75,13 @@ function deskMenus() {
           `整理桌面会将当前自由布局卡片重新规整排列`,
           {
             ok: () => {
+              console.log('整理桌面 :>> ', 1111);
               useCustomLayout({
                 mainList: this.currentDesk.cards,
+                test:false,
                 cb: (position) => {
+              console.log('整理桌面回调 :>> ', 2222);
+
                   this.$bus.emit("cutCanvas", position);
                 },
               });
