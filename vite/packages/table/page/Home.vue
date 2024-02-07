@@ -527,7 +527,7 @@ export default {
     if (this.deskInit) {
       this.initTask()
       // 新用户第一次进入加载一个默认桌面
-      // this.addFreeLayoutDesk()
+      this.addFreeLayoutDesk()
       this.deskInit = false
       this.visibleScale = true
     }
