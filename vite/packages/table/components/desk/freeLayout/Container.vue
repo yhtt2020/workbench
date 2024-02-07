@@ -107,9 +107,11 @@ const defaultConfig = {
   item: {},
   position: 0,
 };
+const loading = ref(false);
 const cutCanvas = async (config) => {
   console.log("--------------- 处理画布开始 ---------------");
   console.time("Free Layout Run Time");
+  loading.value = true;
   const mergedOptions = _.merge({}, defaultConfig, config);
   const { redirect, id, item, position } = mergedOptions;
   if (!getFreeLayoutState.value.canvas.autoExtend) return;
@@ -289,11 +291,11 @@ const cutCanvas = async (config) => {
     getFreeLayoutState.value.line.centerLine.x =
       (left - position + scrollWidth / 2) / zoom;
     proxy.$bus.emit("restoreLocation");
+    loading.value = false;
     getFreeLayoutState.value.system.hide = false;
-
     console.timeEnd("Free Layout Run Time");
     console.log("--------------- 处理画布结束 ---------------");
-  }, 6);
+  }, 1);
 };
 
 /**
@@ -390,6 +392,13 @@ onBeforeUnmount(() => {
 
 <template>
   <div
+    v-if="loading"
+    class="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center"
+    style="z-index: 9999; font-size: 64px; background: rgba(0, 0, 0, 0)"
+  >
+    <a-spin size="large" style="zoom:1.6" />
+  </div>
+  <div
     ref="waterfallFlow"
     class="xt-theme-b h-full flex flex-wrap absolute"
     style="align-content: flex-start !important; visibility: hidden"
@@ -461,7 +470,7 @@ onBeforeUnmount(() => {
           :key="item.id"
           ref="test"
         >
-          <xt-button>id： {{ item.id }}</xt-button>
+          <!-- <xt-button>id： {{ item.id }}</xt-button> -->
           <!-- <xt-button w="280">top {{ item.top }}</xt-button>
           <xt-button w="280">left {{ item.left }}</xt-button> -->
           <slot name="box" :data="currentData[item?.id]"></slot>
@@ -470,3 +479,19 @@ onBeforeUnmount(() => {
     </xt-drag>
   </template>
 </template>
+
+<style lang="scss" scoped>
+.refresh {
+  animation: rotate 0.5s infinite linear;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+</style>
