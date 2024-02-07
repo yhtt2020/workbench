@@ -1,5 +1,6 @@
 import { useCustomLayout } from "./freeLayout/useCustomLayout";
 import { headerData, folderData, mainData } from "./freeLayout/config";
+import { truncate } from "lodash";
 function deskMenus() {
   let currentHide = null;
   if (this.isFreeLayout) {
@@ -18,7 +19,7 @@ function deskMenus() {
       id: 0,
       newIcon: "fluent:add-16-filled",
       name: "定制桌面测试",
-      disabled: false,
+      disabled: true,
       fn: () => {
         useCustomLayout({
           headerList: headerData,
