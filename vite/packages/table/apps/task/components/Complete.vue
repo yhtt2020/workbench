@@ -14,9 +14,11 @@
     </div>
     <div class="flex flex-col">
       <xt-text class="xt-text-2 font-16 xt-font mb-3">
-        已完成「 {{ currentTask?.name }}」任务，{{ status ? "感谢再次体验" : "点击领取奖励" }}。
+        已完成「 {{ currentTask?.name }}」任务，{{
+          status ? "感谢再次体验" : "点击领取奖励"
+        }}。
       </xt-text>
-      <ShowReward :id="currentId"/> 
+      <ShowReward :id="currentId" />
     </div>
     <div class="flex justify-between">
       <div></div>
@@ -40,9 +42,8 @@ import { taskStore } from "../store";
 import { storeToRefs } from "pinia";
 import XtIfyIcon from "../../../ui/new/IfyIcon/index.vue";
 import { getTaskStatus } from "../api";
-import { Avatar } from 'ant-design-vue';
+import { Avatar } from "ant-design-vue";
 import { appStore } from "../../../store";
-
 
 import XtButton from "../../../ui/libs/button/index.vue";
 import ShowReward from "./ShowReward.vue";
@@ -59,7 +60,8 @@ const taskStatus = async () => {
 
 const store = taskStore();
 const app = appStore();
-const { taskID, currentTaskList, rewardVisible, currentId, claimRewardsList } = storeToRefs(store);
+const { taskID, currentTaskList, rewardVisible, currentId, claimRewardsList } =
+  storeToRefs(store);
 
 const currentTask = computed(() => {
   return store.getTask(currentId.value);
@@ -76,8 +78,9 @@ const claimReward = () => {
   app.getUserInfo();
   // console.log("status.value :>> ", status.value);
   if (status.value) {
-    // return;
+    return;
   }
+
   rewardVisible.value = true;
 };
 </script>

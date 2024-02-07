@@ -9,8 +9,7 @@ const router = createRouter({
   routes
 })
 router.beforeEach((to, from, next) => {
-
-  //
+  // 这个判断是环境判断 不能在这之前添加操作
   console.log('to,from :>> ', to,from);
   if (useEnvLimit('web',to.name, {
     msg:false

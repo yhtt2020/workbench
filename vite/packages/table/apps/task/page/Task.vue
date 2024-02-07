@@ -73,7 +73,7 @@ const menusList = computed(() => {
   } else {
     if(isDone === 0){
       let undone = ref([])
-      undone.value = menus.value.filter((item)=>{ 
+      undone.value = menus.value.filter((item)=>{
        const option = item.value !== "efficiency" && item.value !== "games" && item.value !== "association";
        return option;
       })

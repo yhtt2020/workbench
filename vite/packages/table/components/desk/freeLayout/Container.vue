@@ -45,21 +45,13 @@ onMounted(() => {
   setTimeout(() => {
     updateCard(currentDesk.value?.cards);
   }, 2);
-
-  proxy.$bus.on("adsorbGrid", () => {
-    setTimeout(() => {
-      snowDrag.value?.forEach((item) => {
-        item.adsorbGrid();
-      });
-    }, 1);
-  });
-  proxy.$bus.on("cutCanvas", () => {
+  proxy.$bus.on("cutCanvas", (position) => {
     setTimeout(() => {
       cutCanvas({
         redirect: true,
+        position,
       });
-      freeLayoutStore.updateLocation();
-    }, 1);
+    }, 100);
   });
 });
 
@@ -112,11 +104,22 @@ async function getPosition(item) {
 const defaultConfig = {
   redirect: false,
   id: null,
+  item: {},
+  position: 0,
 };
+const loading = ref(false);
 const cutCanvas = async (config) => {
+  console.log("--------------- 处理画布开始 ---------------");
+  console.time("Free Layout Run Time");
+  // 前置代码 新功能请在后面添加
   const mergedOptions = _.merge({}, defaultConfig, config);
-  const { redirect, id } = mergedOptions;
+  const { redirect, id, item, position } = mergedOptions;
   if (!getFreeLayoutState.value.canvas.autoExtend) return;
+
+  if (redirect) {
+    loading.value = true;
+  }
+
   let left: any = Infinity;
   let top: any = Infinity;
   let right: any = 0;
@@ -127,7 +130,28 @@ const cutCanvas = async (config) => {
   let leftItem: any = {};
   let topItem: any = {};
 
+  let currentLeft = 0;
+  let currentTop = 0;
+  let currentRight = 0;
+  let currentBottom = 0;
+
   // 找最大最小元素
+  if (id) {
+    let size = currentData?.value[id]?.customData?.customSize;
+    let width = 0;
+    let height = 0;
+    if (size) {
+      let sizeObj = useElementSize(size);
+      width = sizeObj.width;
+      height = sizeObj.height;
+    }
+    currentTop = item.top;
+    currentLeft = item.left;
+    currentRight = item.left + width;
+    currentBottom = item.top + height;
+  }
+  let width = 0;
+  let height = 0;
   Object.values(getFreeLayoutData.value).forEach((item: any) => {
     if (item.top < top) {
       top = item.top;
@@ -140,8 +164,7 @@ const cutCanvas = async (config) => {
     }
 
     let size = currentData?.value[item.id]?.customData?.customSize;
-    let width = 0;
-    let height = 0;
+
     if (size) {
       let sizeObj = useElementSize(size);
       width = sizeObj.width;
@@ -164,96 +187,120 @@ const cutCanvas = async (config) => {
   // 获取当前窗口大小
   let { scrollHeight, scrollWidth } = freeLayoutEnv.value;
   // 比例
-  const proportion = 0.75;
+  const HEIGHT_PROPORTION = 0.8;
+  const WIDTH_PROPORTION = 0.5;
   // 当前屏幕宽度
-  let viewWidth = scrollWidth * proportion;
-  let viewHeight = scrollHeight * proportion;
+  const viewWidth = scrollWidth * WIDTH_PROPORTION;
+  const viewHeight = scrollHeight * HEIGHT_PROPORTION;
   /**
    * @description: 空白画布回收
    */
+  let msgArr: any = [];
   // 右边
-  if (canvasWidth - right > viewWidth) {
-    console.log("右边空白画布回收 :>> ");
-    getFreeLayoutState.value.canvas.width = right + viewWidth;
+  if (redirect || currentRight == right) {
+    if (canvasWidth - right < viewWidth) {
+      msgArr.push("右边");
+      getFreeLayoutState.value.canvas.width = right + viewWidth;
+    } else if (canvasWidth - right > viewWidth) {
+      msgArr.push("右边");
+      getFreeLayoutState.value.canvas.width = right + viewWidth - width;
+    }
   }
   // 左边
-  if (left > viewWidth) {
-    let diff = left - viewWidth;
-    getFreeLayoutData.value = Object.values(getFreeLayoutData.value).map(
-      (item: any) => {
-        item.left -= diff;
-        return item;
-      }
-    );
-    console.log("左边空白画布回收 :>> ");
-    getFreeLayoutState.value.canvas.width -= diff;
+  if (redirect || currentLeft == left) {
+    if (left < viewWidth) {
+      let diff = viewWidth - left;
+      getFreeLayoutData.value = Object.values(getFreeLayoutData.value).map(
+        (item: any) => {
+          item.left += diff;
+          return item;
+        }
+      );
+      msgArr.push("左边");
+      getFreeLayoutState.value.canvas.width += diff;
+    } else if (left > viewWidth) {
+      let diff = left - viewWidth;
+      getFreeLayoutData.value = Object.values(getFreeLayoutData.value).map(
+        (item: any) => {
+          item.left -= diff;
+          return item;
+        }
+      );
+      msgArr.push("左边");
+      getFreeLayoutState.value.canvas.width -= diff;
+    }
   }
+
   // 上边
-  if (top > viewHeight) {
-    let diff = top - viewHeight;
-    getFreeLayoutData.value = Object.values(getFreeLayoutData.value).map(
-      (item: any) => {
-        item.top -= diff;
-        return item;
-      }
-    );
-    console.log("上边空白画布回收 :>> ");
-    getFreeLayoutState.value.canvas.height -= diff;
+  if (redirect || currentTop == top) {
+    if (top < viewHeight) {
+      let diff = viewHeight - top;
+      getFreeLayoutData.value = Object.values(getFreeLayoutData.value).map(
+        (item: any) => {
+          item.top += diff;
+          return item;
+        }
+      );
+      msgArr.push("上边");
+      getFreeLayoutState.value.canvas.height += diff;
+    } else if (top > viewHeight) {
+      let diff = top - viewHeight;
+      getFreeLayoutData.value = Object.values(getFreeLayoutData.value).map(
+        (item: any) => {
+          item.top -= diff;
+          return item;
+        }
+      );
+      msgArr.push("上边");
+      getFreeLayoutState.value.canvas.height -= diff;
+    }
   }
   // 下边
-  if (canvasHeight - bottom > viewHeight) {
-    getFreeLayoutState.value.canvas.height = bottom + viewHeight;
-    console.log("下边空白画布回收 :>> ");
+  if (redirect || currentBottom == bottom) {
+    if (canvasHeight - bottom < viewHeight) {
+      msgArr.push("下边");
+      getFreeLayoutState.value.canvas.height = bottom + viewHeight;
+    } else if (canvasHeight - bottom > viewHeight) {
+      getFreeLayoutState.value.canvas.height = bottom + viewHeight - height;
+      msgArr.push("下边");
+    }
   }
-  /**
-   * @description: 空白画布拓展
-   */
-  // 右边
-  if (canvasWidth - right < viewWidth) {
-    message.success("已为您自动拓展右边画布");
-    getFreeLayoutState.value.canvas.width = right + viewWidth;
+
+  if (msgArr.length > 0) {
+    message.success("已为您更新画布画布");
   }
-  // 左边
-  if (left < viewWidth) {
-    let diff = viewWidth - left;
-    getFreeLayoutData.value = Object.values(getFreeLayoutData.value).map(
-      (item: any) => {
-        item.left += diff;
-        return item;
-      }
-    );
-    message.success("已为您自动拓展左边画布");
-    getFreeLayoutState.value.canvas.width += diff;
+  console.log("被调用了 :>> ");
+  proxy.$bus.emit("updateFreeLayoutScroll");
+  // 处于吸附网格
+  if (getFreeLayoutState.value.mode.arrange == "grid") {
+    snowDrag.value?.forEach((item) => {
+      item.adsorbGrid();
+    });
   }
-  // 上边
-  if (top < viewHeight) {
-    let diff = viewHeight - top;
-    getFreeLayoutData.value = Object.values(getFreeLayoutData.value).map(
-      (item: any) => {
-        item.top += diff;
-        return item;
-      }
-    );
-    message.success("已为您自动拓展上边画布");
-    getFreeLayoutState.value.canvas.height += diff;
-  }
-  // 下边
-  if (canvasHeight - bottom < viewHeight) {
-    message.success("已为您自动拓展下边画布");
-    getFreeLayoutState.value.canvas.height = bottom + viewHeight;
-  }
-  // 定位修改
-  if (redirect) return;
+  if (!redirect) return;
+  //
   setTimeout(() => {
+    Object.values(getFreeLayoutData.value).forEach((item: any) => {
+      if (item.top < top) {
+        top = item.top;
+        topItem = item;
+      }
+      if (item.left < left) {
+        left = item.left;
+        leftItem = item;
+      }
+    });
     getFreeLayoutState.value.mode.align = "custom";
     const zoom = getFreeLayoutState.value.canvas.zoom;
-    getFreeLayoutState.value.line.centerLine.y = top / zoom;
+    getFreeLayoutState.value.line.centerLine.y = top;
     getFreeLayoutState.value.line.centerLine.x =
-      (left + scrollWidth / 2) / zoom;
-    setTimeout(() => {
-      freeLayoutStore.restoreLocation();
-    }, 500);
-  }, 100);
+      (left - position + scrollWidth / 2) / zoom;
+    proxy.$bus.emit("restoreLocation");
+    loading.value = false;
+    getFreeLayoutState.value.system.hide = false;
+    console.timeEnd("Free Layout Run Time");
+    console.log("--------------- 处理画布结束 ---------------");
+  }, 1);
 };
 
 /**
@@ -316,7 +363,8 @@ const dragStart = () => {
 
 // 元素拖拽结束
 const dragStop = (item) => {
-  cutCanvas({ id: item.data.id });
+  console.log("dragStop item :>> ", item);
+  cutCanvas({ id: item.data.id, item: item.data });
 
   if (!isSelectAll.value) return;
   snowDrag.value.forEach((item) => {
@@ -331,22 +379,30 @@ const disabledInfo = (data) => {
 };
 
 onBeforeUnmount(() => {
+  proxy.$bus.off("cutCanvas");
   let data = {
     ...currentData.value,
   };
-  const freeLayout = freeLayoutStore.getOneFreeLayoutData(currentID.value);
+  // const freeLayout = freeLayoutStore.getOneFreeLayoutData(currentID.value);
 
-  for (const id in freeLayout) {
-    if (data[id]?.id.toString() != id.toString()) {
-      console.log("删除数据 :>> ", id);
-      delete freeLayout[id];
-    }
-  }
-  console.log("自由布局销毁操作 :>> ", getFreeLayoutData.value);
+  // for (const id in freeLayout) {
+  //   if (data[id]?.id.toString() != id.toString()) {
+  //     console.log("删除数据 :>> ", id);
+  //     delete freeLayout[id];
+  //   }
+  // }
+  // console.log("自由布局销毁操作 :>> ", getFreeLayoutData.value);
 });
 </script>
 
 <template>
+  <div
+    v-if="loading"
+    class="fixed top-0 left-0 right-0 bottom-0 flex justify-center items-center"
+    style="z-index: 9999; font-size: 64px; background: rgba(0, 0, 0, 0)"
+  >
+    <a-spin size="large" style="zoom:1.6" />
+  </div>
   <div
     ref="waterfallFlow"
     class="xt-theme-b h-full flex flex-wrap absolute"
@@ -419,9 +475,28 @@ onBeforeUnmount(() => {
           :key="item.id"
           ref="test"
         >
+          <!-- <xt-button>id： {{ item.id }}</xt-button> -->
+          <!-- <xt-button w="280">top {{ item.top }}</xt-button>
+          <xt-button w="280">left {{ item.left }}</xt-button> -->
           <slot name="box" :data="currentData[item?.id]"></slot>
         </div>
       </transition>
     </xt-drag>
   </template>
 </template>
+
+<style lang="scss" scoped>
+.refresh {
+  animation: rotate 0.5s infinite linear;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+</style>

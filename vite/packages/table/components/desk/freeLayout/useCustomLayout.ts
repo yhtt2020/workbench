@@ -21,33 +21,6 @@ const defaultOptions = {
 };
 
 export const useCustomLayout = async (options) => {
-  const getPositioningData = () => {
-    return new Promise((resolve, reject) => {
-      let positioningId = addCard(-999, -999, {});
-      setTimeout(() => {
-        resolve(positioningId);
-      }, 500); // 在500毫秒后返回
-    });
-  };
-  const mergedOptions = _.merge({}, defaultOptions, options);
-  const { mainList, headerList, folderList, columns, cb, test } = mergedOptions;
-  const freeLayoutStore: any = useFreeLayoutStore();
-  const { getFreeLayoutData, getFreeLayoutState, freeLayoutEnv } =
-    storeToRefs(freeLayoutStore);
-
-  if (!getFreeLayoutState.value.system.isFreeLayout)
-    getFreeLayoutState.value.system.isFreeLayout = true;
-  getFreeLayoutState.value.system.isFreeLayout = true;
-
-  let positioningId = await getPositioningData();
-  console.log("positioningId :>> ", positioningId);
-  let containerWidth = freeLayoutEnv.value.scrollWidth;
-  let layoutWidth = useGridToWidth(columns * 2);
-  let scaleFactor = 1;
-  let position = 50;
-  // 重置left坐标
-  let defaultLeft = freeLayoutEnv.value.scrollLeft / scaleFactor + position;
-  let snapped = 0;
   const resetLeft = () => {
     left = freeLayoutEnv.value.scrollLeft / scaleFactor + position;
     const [snappedX, snappedY] = getSnapGrid(
@@ -60,7 +33,6 @@ export const useCustomLayout = async (options) => {
         getFreeLayoutState.value.canvas.zoom,
       6
     );
-    defaultLeft = snappedX / scaleFactor - position;
     // left = snappedX;
   };
   // 卡片数据展示
@@ -87,6 +59,7 @@ export const useCustomLayout = async (options) => {
       item
     );
   };
+  // 换行数据展示
   const widthDetectionStatus = (width, res, active) => {
     if (!test) return;
     console.log(
@@ -105,7 +78,6 @@ export const useCustomLayout = async (options) => {
   };
   // 检测是否超出
   const widthDetection = (width) => {
-    // freeLayoutEnv.value.scrollLeft / scaleFactor - position
     let res =
       left - freeLayoutEnv.value.scrollLeft / scaleFactor - position + width;
     const active = res > layoutWidth + columns;
@@ -113,7 +85,6 @@ export const useCustomLayout = async (options) => {
 
     return active;
   };
-
   // 设置卡片数据
   const setData = (arr: any) => {
     currentHeight = 0;
@@ -195,7 +166,6 @@ export const useCustomLayout = async (options) => {
     fillHeight = 0;
     top += currentHeight + 12;
   };
-
   // 缩放算法
   const scaleAlgorithm = () => {
     let currentZoom = getFreeLayoutState.value.canvas.zoom;
@@ -232,6 +202,7 @@ export const useCustomLayout = async (options) => {
 
     fillGapAlgorithm();
   };
+  // 填充实现
   const fill = async (arr, height = fillHeight) => {
     let flag = false;
     let itemWidth = 280,
@@ -261,13 +232,34 @@ export const useCustomLayout = async (options) => {
     }
     return;
   };
-  scaleAlgorithm();
+
+  // 合并默认配置和用户配置
+  const mergedOptions = _.merge({}, defaultOptions, options);
+  const { mainList, headerList, folderList, columns, cb, test } = mergedOptions;
+
+  const freeLayoutStore: any = useFreeLayoutStore();
+  const { getFreeLayoutData, getFreeLayoutState, freeLayoutEnv } =
+    storeToRefs(freeLayoutStore);
+  getFreeLayoutState.value.canvas.height += 5000;
+  console.log('  getFreeLayoutState.value.canvas.height :>> ',   getFreeLayoutState.value.canvas.height);
+  getFreeLayoutState.value.system.hide = true;
+  if (!getFreeLayoutState.value.system.isFreeLayout)
+    getFreeLayoutState.value.system.isFreeLayout = true;
+
+  let positioningId = await addPositioningData();
+  let containerWidth = freeLayoutEnv.value.scrollWidth;
+  let layoutWidth = useGridToWidth(columns * 2);
+  let scaleFactor = 1;
+  let position = 50;
+  // 重置left坐标
 
   let left = 1;
   let top = freeLayoutEnv.value.scrollTop / scaleFactor + 12;
   let currentHeight;
   let currentTop = top;
   let fillHeight;
+
+  scaleAlgorithm();
   // 初始化数据
   resetLeft();
 
@@ -290,10 +282,11 @@ export const useCustomLayout = async (options) => {
     arrSpecial
   );
   let array: any = [];
+  // 定制头部
   if (headerList && headerList.length) {
     let { arr2x2: header2x2, arr2x4: header2x4 } = arraySplit(headerList);
-    let e = [...header2x2]
-    console.log('e :>> ', e);
+    let e = [...header2x2];
+    console.log("e :>> ", e);
     let num2x2 = header2x2.length;
     currentHeight = 420;
     fillHeight = currentHeight;
@@ -303,6 +296,7 @@ export const useCustomLayout = async (options) => {
     setData(header2x4);
   }
 
+  // 定制文件夹
   if (folderList && folderList.length) {
     let { arr2x2: folder2x2 } = arraySplit(folderList);
     resetLeft();
@@ -313,9 +307,7 @@ export const useCustomLayout = async (options) => {
     fillHeight = 0;
   }
   resetLeft();
-  console.log("1111111111111 :>> ", 1111111111111);
   // mainList
-  console.log("arrSpecial :>> ", arrSpecial);
   setData(arrSpecial);
   setData(arr4x4);
   setData(arr2x4);
@@ -325,12 +317,14 @@ export const useCustomLayout = async (options) => {
   // 开始收尾
   useDelCard(positioningId);
   setTimeout(() => {
-    cb && cb();
+    cb && cb(position);
   }, 10);
   // 删除占位数据
   //
   // freeLayoutStore.cutCanvas();
   // freeLayoutStore.updateLocation();
+  console.log('  getFreeLayoutState.value.canvas.height :>> ',   getFreeLayoutState.value.canvas.height);
+
   console.log("删除操作 :>> ");
 };
 const arraySplit = (arr) => {
@@ -340,7 +334,7 @@ const arraySplit = (arr) => {
   let arr1x1: any = [];
   let arrSpecial: any = [];
 
-  console.log('arr :>> ', arr);
+  console.log("arr :>> ", arr);
   arr.forEach((item) => {
     if (!item.customData?.customSize) {
       console.log("无信息元素 item.customData :>> ", item.customData);
@@ -373,6 +367,18 @@ const arraySplit = (arr) => {
   };
 };
 
+/**
+ * 添加定位数据
+ * 用于打开自由布局画布
+ */
+const addPositioningData = () => {
+  return new Promise((resolve, reject) => {
+    let positioningId = addCard(-999, -999, {});
+    setTimeout(() => {
+      resolve(positioningId);
+    }, 100); // 在100毫秒后返回
+  });
+};
 // 添加卡片
 const addCard = (top, left, item) => {
   const freeLayoutStore: any = useFreeLayoutStore();
@@ -384,9 +390,9 @@ const addCard = (top, left, item) => {
   if (item.name == "news" || item.name == "HotSearch") {
     console.log("Item.name :>> ", item);
   }
-  
+
   if (item.name == 'notes') {
-    id = item?.id || Date.now()    
+    id = item?.id || Date.now()
   }
 
   let a = left;
@@ -398,7 +404,7 @@ const addCard = (top, left, item) => {
   };
 
   console.log('getFreeLayoutData.value[id]', id,  getFreeLayoutData.value[id]);
-  
+
   if (item.id) return;
 
   useAddCard(
