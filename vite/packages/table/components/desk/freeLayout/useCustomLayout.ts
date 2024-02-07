@@ -241,6 +241,7 @@ export const useCustomLayout = async (options) => {
   const { getFreeLayoutData, getFreeLayoutState, freeLayoutEnv } =
     storeToRefs(freeLayoutStore);
   getFreeLayoutState.value.canvas.height += 5000;
+  console.log('  getFreeLayoutState.value.canvas.height :>> ',   getFreeLayoutState.value.canvas.height);
   getFreeLayoutState.value.system.hide = true;
   if (!getFreeLayoutState.value.system.isFreeLayout)
     getFreeLayoutState.value.system.isFreeLayout = true;
@@ -322,6 +323,8 @@ export const useCustomLayout = async (options) => {
   //
   // freeLayoutStore.cutCanvas();
   // freeLayoutStore.updateLocation();
+  console.log('  getFreeLayoutState.value.canvas.height :>> ',   getFreeLayoutState.value.canvas.height);
+
   console.log("删除操作 :>> ");
 };
 const arraySplit = (arr) => {

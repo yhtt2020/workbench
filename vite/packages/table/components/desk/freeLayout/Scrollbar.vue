@@ -10,6 +10,7 @@
       cursor: dragStyle,
     }"
   >
+
     <slot> </slot>
   </div>
 </template>

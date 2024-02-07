@@ -71,6 +71,12 @@ const {
   getFreeLayoutMargin,
   freeLayoutEnv,
 }: any = storeToRefs(freeLayoutStore);
+watch(
+  () => getFreeLayoutState.value.canvas.height,
+  (val) => {
+    console.log("getFreeLayoutState.value.canvas.height val :>> ", val);
+  }
+);
 // 辅助线生成
 function auxLine(length: number, factor: number) {
   let arr: any = [];
