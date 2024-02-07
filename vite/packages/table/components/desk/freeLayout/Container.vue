@@ -264,7 +264,7 @@ const cutCanvas = async (config) => {
     if (canvasWidth - right > viewWidth) {
       console.log("进入右边收缩 :>> ", 12331312132321);
       msgArr.push("右边");
-      getFreeLayoutState.value.canvas.width = right + viewWidth - width;
+      getFreeLayoutState.value.canvas.width = right + viewWidth
     }
   }
   // 下边
