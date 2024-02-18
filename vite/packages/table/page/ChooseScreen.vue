@@ -44,11 +44,20 @@ export default {
       displayWidth: 200,//显示最大宽度
       displayHeight: 0,
       // 偏移量
-      skew: 0,
+      skewX: 0,
+      skewY: 0,
     }
   },
   async mounted () {
     this.displays = await tsbApi.screen.getAllDisplays()
+    this.displays.forEach((item, index)=>{
+      if(item.bounds.x < this.skewX){
+        this.skewX = item.bounds.x
+      }
+      if(item.bounds.y < this.skewY){
+        this.skewY = item.bounds.y
+      }
+    })
     this.getMaxWidth()
   },
   methods: {
@@ -60,7 +69,6 @@ export default {
         height: 400
       }
       tsbApi.window.setFullScreen(false)
-      console.log(this)
       if(this.customCallback ){
         console.log('向上传递事件')
         this.$emit('setScreen',{display})
@@ -96,14 +104,7 @@ export default {
       return (height / this.maxHeight * this.displayHeight).toFixed(0)
     },
     getPosX (x, index) {
-      // return (x / this.maxWidth * this.displayWidth).toFixed(0)
-      // 第一个是计算偏移量 后面的数据都要加上偏移量
-      if(index == 0){
-        this.skew =  0 - (x / this.maxWidth * this.displayWidth).toFixed(0)
-        return 0
-      }else{
-        return (x / this.maxWidth * this.displayWidth).toFixed(0) - 0 + this.skew
-      }
+      return ((x - this.skewX) / this.maxWidth * this.displayWidth).toFixed(0)
     },
     getPosY (y) {
       return (y / this.maxHeight * this.displayHeight).toFixed(0)
