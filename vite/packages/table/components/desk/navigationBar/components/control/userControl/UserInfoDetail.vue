@@ -1,19 +1,19 @@
 <template>
- <div class="flex items-center justify-center w-full" :class=" rankList.length === 0 ? 'px-0':'px-4'">
+ <div class="flex items-center w-full" :class="rankList.length === 0 ? 'px-0':'px-4'">
   <div  class="relative flex items-center  justify-center" @click="goMy">
-    <!--  -->
-   <FrameAvatar :avatar-size="rankList.length === 0 ? 60 : 100" :frame-url="userinfo.frame" :avatar-url="userinfo.avatar" class="w-full flex justify-center user-container h-full pb-2 object-fill"
-    alt="" :frame="displayUserInfo?.equippedItems?.frameDetail" @close="close"
-   >
-   </FrameAvatar>
-   <a-tooltip v-if="displayUserInfo.certification && displayUserInfo.certification.length>0" :title="displayUserInfo.certification[0].name">
-    <a-avatar :src="displayUserInfo.certification[0].attestation_icon"
-     style="position: absolute;width: 20px;height:20px;right: -15px;bottom: 0; z-index:999;"
-    >
-    </a-avatar>
-   </a-tooltip>
+    <div :style="userinfo.frame !== '' ? {width:'100px',height:'100px',}:{width:'64px',height:'64'}" class="flex items-center justify-center">
+      <FrameAvatar :avatarSize="userinfo.frame !== '' ?  80 : 64" :avatarUrl="userinfo.avatar" :frameUrl="userinfo.frame" 
+       class="w-full flex justify-center user-container h-full pb-2 object-fill" :frame="displayUserInfo?.equippedItems?.frameDetail" @close="close"
+      />
+      <a-tooltip v-if="displayUserInfo.certification && displayUserInfo.certification.length>0" :title="displayUserInfo.certification[0].name">
+        <a-avatar :src="displayUserInfo.certification[0].attestation_icon"
+         style="position: absolute;width: 20px;height:20px;right: -15px;bottom: 0; z-index:999;"
+        >
+        </a-avatar>
+      </a-tooltip> 
+    </div>
   </div>
-  <div class="flex flex-col " :class="rankList.length === 0 ? 'ml-3 w-32':''">
+  <div class="flex flex-col " :class="rankList.length === 0 ? 'w-32':''">
    <span class="xt-text font-16 xt-font ml-3">{{ userinfo.nickname }}</span>
    <div class="flex xt-text">
      <OnlineMedal :rank="userinfo.onlineGradeExtra.rank" />
