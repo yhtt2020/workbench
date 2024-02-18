@@ -293,6 +293,7 @@ export default {
   async mounted() {
     this.isLoading = true
     this.getNewsMsg(this.showList[this.currentIndex].tag).then(() => {
+      console.log('1111111>>>', this.newsMsgList)
       this.isLoading = false
     })
     // await this.getNewsData()
