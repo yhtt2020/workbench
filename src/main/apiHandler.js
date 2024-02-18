@@ -3,6 +3,7 @@ const Web = require('./apiHander/web')
 const Window = require('./apiHander/window')
 const App=require('./apiHander/app')
 const TTApp=require('./apiHander/ttapp')
+const System=require('./apiHander/system')
 /**
  * 专用于拆分出api的处理方法，主要是绑定各种方法并进行处理
  */
@@ -33,7 +34,7 @@ class ApiHandler {
     ApiHandler.handlers.push(new Watch())
     ApiHandler.handlers.push(new Web())
     ApiHandler.handlers.push(new Window())
-
+    ApiHandler.handlers.push(new System())
     ApiHandler.handlers.push(new App())
     ApiHandler.handlers.push(new TTApp())
     ApiHandler.handlers.forEach(handler => {
@@ -58,10 +59,6 @@ class ApiHandler {
       else {
         ApiHandler.onUrlChanged.push(instance.window)
       }
-    })
-    // installTTApp
-    ApiHandler.on('testttt', 'get', (event, args, instance) => {
-      console.log('222222222 :>> ', 222222222);
     })
     ApiHandler.on('settings', 'get', (event, args, instance) => {
       event.returnValue = settings.get(args.key)
@@ -201,22 +198,7 @@ class ApiHandler {
 
     })
 
-    ApiHandler.on('system', 'extractFileIcon', async (event, args) => {
-      try {
-        event.returnValue = await SystemHelper.extractFileIcon(args.uri)
-      } catch (e) {
-        console.error('获取文件图标失败', e)
-        return event.returnValue = ''
-      }
-    })
-    ApiHandler.on('system', 'getRealPath', async (event, args) => {
-      try {
-        event.returnValue =await SystemHelper.readUrlInfo(args.uri)
-      } catch (e) {
-        console.error('获取文件真实路径失败', e)
-        return event.returnValue = ''
-      }
-    })
+
     ApiHandler.on('runtime', 'init', (event, args, instance) => {
       try {
         let modMap = {

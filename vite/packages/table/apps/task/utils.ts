@@ -11,10 +11,10 @@ export const getCurrentTaskReward = (id:any)=>{
   let arr:any = [];
   for(const arrItem of awardList){
    if (arrItem.label == "道具"){
-    arr.push({name: "头像", type: "avatarFrame",icon: arrItem.data.icon,})
+    arr.push({name: "头像", type: "avatarFrame",icon: arrItem.data.icon,data:arrItem.data})
    }
    else if (arrItem.label == "勋章"){
-    arr.push({type: "medal",icon: arrItem.data.icon_lg,});
+    arr.push({type: "medal",icon: arrItem.data.icon_lg,data:arrItem.data});
    }
    else if (arrItem.label == "积分"){
     if(arrItem.data.name == "社区积分"){
@@ -26,7 +26,7 @@ export const getCurrentTaskReward = (id:any)=>{
    }
   }
   return arr;
- } 
+ }
  else {
   return null;
  }
