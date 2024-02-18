@@ -1,32 +1,34 @@
 <template>
   <div>
-
-    <Widget :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="menuList"
-      ref="cardSlot" :customData="customData" :env="env">
-      <template #left-title-icon>
-        <div class="icon"
-          style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
-          <!-- <FileSearchOutlined style="font-size: 20px;" /> -->
-          <newIcon icon="fluent:news-16-regular" style="font-size: 24px;" />
-        </div>
-
-      </template>
-      <template #left-title>
-        <div @click="refreshData">
-          <!-- <xt-button :w="22" :h="22" style="background: transparent;"> -->
-          <newIcon class="xt-text refresh pointer" style=" font-size: 18px;vertical-align: sub;"
-            icon="akar-icons:arrow-clockwise" />
-          <!-- </xt-button> -->
-        </div>
-      </template>
+    <xt-container 
+      v-model:customSize="customSize" 
+      :desk="desk" 
+      :header="header" 
+      :sizeList="sizeList" 
+      :options="options" 
+      :customIndex="customIndex" 
+      :menuList="menuList"
+      ref="cardSlot" 
+      :customData="customData" 
+      :env="env">
       <div class="top-bar">
         <div class="center">
           <div :class="['item', { action: currentIndex == index }]" v-for="(title, index) in showList"
-            @click="setCurrentIndex(index)" :style="{ width: this.showSize.width == 1 ? '81px' : '67px' }">
+            @click="setCurrentIndex(index)" :style="{ width: this.showSize.width == 2 ? '81px' : '67px' }">
             <span>{{ title.title }}</span>
           </div>
         </div>
       </div>
+      <!-- {{ currentIndex }}
+      {{ this.customData.index }}
+      <xt-tab 
+        v-model="currentIndex"
+        :list="showList"
+        style="height: 32px;"
+        :boxStyle="{ 'border-radius': '8px' }"
+        :itemStyle="{ 'border-radius': '6px' }"
+        :modeValue="modeValue">
+      </xt-tab> -->
       <div v-if="pageToggle">
         <div v-if="isLoading">
           <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
@@ -48,7 +50,7 @@
 
       </div>
       <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu>
-    </Widget>
+    </xt-container>
 
     <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
       <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
@@ -101,31 +103,35 @@ export default {
       settingVisible: false,
       sizeList: [
         {
-          title: '2x4',
-          height: 2,
-          width: 1,
+          value: '2x4',
           name: '2x4'
         },
         {
-          title: '4x4',
-          height: 2,
-          width: 2,
+          value: '4x4',
           name: '4x4'
         },
         {
-          title: '4x6',
-          height: 3,
-          width: 2,
+          value: '4x6',
           name: '4x6'
         },
 
       ],
+      header:{
+        title:'新闻资讯',
+        ifyIcon:'fluent:news-16-regular',
+        refresh:{
+          fn: this.refreshData,
+          tip:'刷新',
+          state:false
+        }
+        
+      },
+      customSize:'2x4',
       options: {
         className: 'card ',
         title: '新闻资讯',
         icon: '',
         type: 'news'
-
       },
       menuList: [
         {
@@ -251,33 +257,30 @@ export default {
     },
     // 判断尺寸大小
     showSize() {
-      if (this.customData && this.customData.width && this.customData.height) {
-        return { width: this.customData.width, height: this.customData.height }
+      if (this.customSize) {
+        let arr = this.customSize.split('x')
+        return {
+          width: arr[0],
+          height: arr[1]
+        }
       }
-      return this.sizeList[0]
     },
     // 判断不同高度返回不同个数
     copyNum() {
       // return this.showSize.height == 2 ? 6 : 10
-      if (this.showSize.width == 1) {
+      if (this.showSize.width == 2) {
         return 4
       }
-      return this.showSize.height == 2 ? 8 : 12
+      return this.showSize.height == 4 ? 8 : 12
 
     },
     // 判断top-bar需要几个标签
     copyItem() {
-      return this.showSize.width == 1 ? 3 : 8
+      return this.showSize.width == 2 ? 3 : 8
     },
     // 通过接口返回的数据进行裁切，返回适合页面长度的数据
     newsItemList() {
       if (this.customData && this.customData.newsList?.length) {
-        // console.log(this.customData.newsList,'newsList');
-        // if(this.customData.newsList[0].tag){
-        //   this.customData.newsList=this.customData.newsList.tag
-        //   console.log(this.customData.newsList,'newsList-after');
-        //   return []
-        // }
         return this.customData.newsList.slice(0, this.copyNum)
       }
       return this.newsMsgList.slice(0, this.copyNum)
@@ -304,7 +307,7 @@ export default {
 .top-bar {
   display: flex;
   justify-content: space-between;
-  margin-top: 1.8%;
+  // margin-top: 1.8%;
 
   .left,
   .right {
