@@ -1,5 +1,5 @@
 <template>
-  <Widget :envLimit="['guest']" :options="options" :desk="desk" :showRightIcon='rightIcon' :env="env">
+  <Widget :custom-data="customData" :custom-index="customIndex" :envLimit="['guest']" :options="options" :desk="desk" :showRightIcon='rightIcon' :env="env">
     <template #left-title-icon>
       <div
         class="icon"
@@ -146,7 +146,7 @@ export default {
     UserOutlined,
     newIcon
   },
-  props: ['desk', 'rightIcon'],
+  props: ['desk', 'rightIcon','customData','customIndex'],
   data () {
     return {
       tip:'',
