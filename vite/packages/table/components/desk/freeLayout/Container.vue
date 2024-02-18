@@ -194,11 +194,7 @@ const cutCanvas = async (config) => {
   // 当前屏幕宽度
   const viewWidth = scrollWidth * WIDTH_PROPORTION;
   const viewHeight = scrollHeight * HEIGHT_PROPORTION;
-  /**
-   * @description: 空白画布回收
-   */
   let msgArr: any = [];
-
   // 左边
   if (redirect || currentLeft == left) {
     if (left < viewWidth) {
@@ -251,20 +247,15 @@ const cutCanvas = async (config) => {
   }
   // 右边
   if (redirect || currentRight == right) {
-    console.log(
-      "canvasWidth - right < viewWidth :>> ",
-      canvasWidth - right < viewWidth
-    );
     if (canvasWidth - right < viewWidth) {
       console.log("进入右边扩展 :>> ", 12331312132321);
-
       msgArr.push("右边");
       getFreeLayoutState.value.canvas.width = right + viewWidth;
     }
     if (canvasWidth - right > viewWidth) {
       console.log("进入右边收缩 :>> ", 12331312132321);
       msgArr.push("右边");
-      getFreeLayoutState.value.canvas.width = right + viewWidth - width;
+      getFreeLayoutState.value.canvas.width = right + viewWidth
     }
   }
   // 下边
