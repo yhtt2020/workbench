@@ -24,7 +24,7 @@ export async function get(url, params = {}) {
 export async function apiGet(urlRoute,params={}){
   return get(sUrl(urlRoute),params)
 }
-export async function apiPost(urlRoute, data, options = {crud: false}){
+export async function apiPost(urlRoute, data={}, options = {crud: false}){
   return post(sUrl(urlRoute),data,options)
 }
 // mock测试环境下的请求方式
