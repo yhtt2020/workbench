@@ -1,7 +1,7 @@
 <template>
   <div class="fixed overflow-hidden modal-center xt-modal tran" :class="popState ? 'pop' : step == 4 ? 'theme' : 'Popup'"
     style="">
-    {{ step }}
+    <!-- {{ step }} -->
     <div v-if="!popState" class="h-full">
       <!-- 返回按钮 -->
       <div v-if="step !== 0 && guideList.length > 1" @click="prevStep" class="absolute ml-4 top-icon no-drag">
