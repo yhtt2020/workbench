@@ -165,7 +165,10 @@ export default {
         },
         // icon: 'game',
         type: 'games',
-        epicShow: true
+        epicShow: true,
+        defaultData:{
+          customSize: this.customData.customSize ? this.customData.customSize : '2x4',
+        }
       },
       myDetailShow:false,
       middleShow:false,

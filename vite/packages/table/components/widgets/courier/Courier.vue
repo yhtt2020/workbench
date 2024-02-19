@@ -1,8 +1,8 @@
 <template>
   <xt-container 
     :header="header"
-    v-model:customSize="customData.customSize"
-    :envLimit="['guest']" 
+    v-model:customSize="customData.customSize "
+    :envLimit="['guest','offline']" 
     :desk="desk" 
     :sizeList="sizeList" 
     :options="options" 
@@ -142,6 +142,9 @@ export default {
         title: '我的快递',
         icon: '',
         type: 'Courier',
+        defaultData: {
+          customSize: this.customData.customSize !== undefined ? this.customData.customSize : '4x4',
+        }
       },
       menuList: [
         {
@@ -338,6 +341,9 @@ export default {
   },
   async mounted () {
     // console.log(this.courierDetailList)
+    if(this.customData.customSize === undefined){
+      this.customData.customSize = '4x4'
+    }
     this.getDbCourier()
     // console.log(this.storeInfo.jd.order.orders)
     window.addEventListener('resize', this.handleResize)

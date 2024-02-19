@@ -166,6 +166,9 @@ export default {
                 // 左侧图标
                 // icon: "iconamoon:history-fill",
                 // rightIcon:"fluent:open-20-filled",
+                defaultData: {
+                    customSize: this.customData.customSize ? this.customData.customSize : '2x4',
+                }
             },
             targetKeys:[1,2,3,4,5,6,7,8,9],
             // 密钥和地址

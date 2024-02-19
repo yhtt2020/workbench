@@ -140,6 +140,9 @@ export default {
                 rightIcon: ' fluent:arrow-counterclockwise-20-filled',
                 type: 'community',
                 // isEdit: true
+                defaultData: {
+                    customSize: this.customData.customSize ? this.customData.customSize : '4x4',
+                }
             },
             menuList: [
                 {

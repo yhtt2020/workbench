@@ -91,7 +91,10 @@
           className:'card',
           title:'正在热映',
           // icon:'video',
-          type:'singleFilm'
+          type:'singleFilm',
+          defaultData:{
+            customSize: this.customData.customSize ? this.customData.customSize : '2x4',
+          }
         },
         mySize: { title: "1x2", height:2,width:1,name:'1x2' },
         filmList: [],

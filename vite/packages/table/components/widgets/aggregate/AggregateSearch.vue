@@ -19,10 +19,10 @@
     </div>
 
     <div class="flex">
-      <template v-if="showSize.width === 1">
+      <template v-if="showSize.width == 2">
         <div v-for="(item, index) in  aggList.slice(0, 3)" :key="item.id" @click="clickSearchItem(index)">
           <div class="flex rounded-xl active-button pointer items-center justify-center mr-2.5 h-11" v-if="index !== 0"
-            style="background: var(--secondary-bg);" :style="showSize.width === 1 ? { width: '92px' } : { width: '113px' }">
+            style="background: var(--secondary-bg);" :style="showSize.width == 2 ? { width: '92px' } : { width: '113px' }">
             <div class="flex items-center justify-center" style="width: 20px;height:20px;">
               <Icon :icon="item.icon" style="font-size: 2em;color: rgba(82,196,26, 1);"></Icon>
             </div>
@@ -35,7 +35,7 @@
       <template v-else>
         <div v-for="(item, index) in aggList.slice(0, 5)" @click="clickSearchItem(index)">
           <div class="flex rounded-xl active-button pointer items-center justify-center mr-2.5 h-11" v-if="index !== 0"
-            style="background: var(--secondary-bg);" :style="showSize.width === 2 ? { width: '113px' } : { width: '92px' }">
+            style="background: var(--secondary-bg);" :style="showSize.width === 4 ? { width: '113px' } : { width: '92px' }">
             <div class="flex items-center justify-center" style="width: 20px;height:20px;">
               <Icon :icon="item.icon" style="font-size: 2em;color: rgba(82,196,26, 1);"></Icon>
             </div>
@@ -158,10 +158,18 @@ export default {
       }
     },
     showSize() {
-      if (this.customData && this.customData.width && this.customData.height) {
-        return { width: this.customData.width, height: this.customData.height }
+      if(this.customData.customSize){
+        let arr = this.customData.customSize.split('x')
+        return {
+          width: arr[0],
+          height: arr[1],
+        }
+      }else {
+        return {
+          width: 2,
+          height: 2
+        }
       }
-      return this.bottomSizeList[0]
     },
     aggInputValue() {
       return this.aggList[0].icon
