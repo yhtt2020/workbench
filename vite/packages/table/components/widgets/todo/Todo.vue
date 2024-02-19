@@ -1,5 +1,8 @@
 <template>
-  <Widget
+  <xt-container
+    v-model:customSize="customData.customSize"
+    @leftIconHover="todoPage"
+    :header="header"
     :options="options"
     :sizeList="sizeList"
     :customData="customData"
@@ -9,15 +12,14 @@
     :menuList="toggleTodoList"
     :env="env"
   >
-    <template #right-menu>
+    <!-- <template #right-menu>
       <div @click="todoPage" class="float-right pointer" style=" z-index: 0;  margin-left: 10px;">
         <RightOutlined />
       </div>
-    </template>
+    </template> -->
 
     <div style="height:100%;">
-      <div @click="todoPage" class="pointer" style="position: absolute;left: 12px;top:15px;">
-        <!-- <Icon icon="check-square" style="color:var(--secondary-text);font-size:24px"></Icon> -->
+      <!-- <div @click="todoPage" class="pointer" style="position: absolute;left: 12px;top:15px;">
         <newIcon icon="fluent:checkmark-square-24-regular" style="color:var(--secondary-text);font-size:20px"/>
       </div>
 
@@ -25,7 +27,7 @@
         <div   @click.stop="showDrawer">{{ selectTodo.title }}
         </div>
 
-      </div>
+      </div> -->
 
       <div @click.stop style="cursor: auto;height:calc( 100% - 10px);position: relative" class="mt-2 ">
         <Tasklist class="content-box " :data="notFinish"></Tasklist>
@@ -52,7 +54,7 @@
       </div>
 
     </div>
-  </Widget>
+  </xt-container>
   <a-drawer v-model:visible="openSettings" title="设置" placement="right" width="500">
     <div class="flex flex-col" style="color:var(--primary-text)">
       <span class="drawer-title" style="margin-top:0;">类型</span>
@@ -117,7 +119,7 @@ export default {
 
       // options: {className: 'card small',title: '',icon: 'check-square',type: 'todo'},
       options: {className: 'card small', title: '', type: 'todo'},
-      sizeList: [{title: '2x2', height: 1, width: 1, name: '1x1'}, {title: '2x4', height: 2, width: 1, name: '1x2'}],
+      sizeList: [{value: '2x2', name: '2x2'}, {value: '2x4', name: '2x4'}],
       openSettings: false,
       toggleTodoList: [{
         icon: 'shezhi1', title: '设置', fn: () => {
@@ -140,7 +142,7 @@ export default {
         mobile: false,
         client: false,
         offline:false
-      }
+      },
     }
   },
   computed: {
@@ -148,6 +150,22 @@ export default {
     ...mapWritableState(listStore, ["activeList", "lists"]),
     notFinish() {
       return this.taskList.filter(item => !item.completed)
+    },
+    header() {
+      return {
+        ifyIcon:"fluent:checkmark-square-24-regular",
+        title:this.selectTodo.title,
+        iconHover:true,
+        leftHoverIcon:"fluent:checkmark-square-24-regular",
+        rightIcon:[
+          {
+            ifyIcon:'fluent:chevron-right-16-regular',
+            fn:this.todoPage,
+            tip:"前往主应用"
+          }
+          
+        ]
+      }
     }
   },
   async mounted() {
@@ -207,6 +225,11 @@ export default {
     },
     todoPage() {
       this.$router.push({name: 'todo'})
+    }
+  },
+  watch:{
+    customSize(newVal,oldVal){
+      this.customData.customSize = newVal
     }
   }
 }

@@ -1,18 +1,14 @@
 <template>
-  <Widget :options="options" :desk="desk">
-    <div class="absolute w-16 h-6 left-4 top-4 pointer"   @click="moveToday"></div>
+  <xt-container 
+    :options="options" 
+    :desk="desk"
+    :header="header"
+    v-model:customSize="customSize">
+    <div class="absolute w-16 h-6 left-4 top-1 pointer"   @click="moveToday"></div>
     <div style="border-bottom: solid 1px  rgba(255, 255, 255, 0.1);color:var(--primary-text) !important" class="my-calendar">
       <Calendar style="color:var(--primary-text) !important" :is-dark="isDark" :attributes="attributes"  transparent borderless  :color="selectedColor" ref="calendar">
       </Calendar>
     </div>
-    <template #left-title-icon>
-        <div
-          class="icon"
-          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; ">
-          <newIcon icon="fluent:calendar-16-regular" style="font-size: 20px;" />
-        </div>
-      </template>
 
       <a-row class="mt-4 festival s-item xt-bg-2 xt-text" style="border-radius: 12px;height: 60px;">
         <a-col :span="11" class="flex flex-row items-center py-2 pl-2" >
@@ -38,7 +34,7 @@
 <!--        <a-col :span="13"  class="flex items-center justify-end pr-2 text-right">6月22日~6月24日</a-col>-->
 <!--      </a-row>-->
 
-  </Widget>
+  </xt-container>
 
 </template>
 
@@ -68,7 +64,12 @@ export default {
         dates: new Date()
       },],
       selectedColor:'red',
-      isDark:true
+      isDark:true,
+      header:{
+        title:'日历',
+        ifyIcon:"fluent:calendar-16-regular",
+      },
+      customSize:'2x4'
 
 
     }
@@ -110,6 +111,9 @@ export default {
 .ant-picker-calendar .ant-picker-panel {
   border-top: none;
   background: none;
+}
+.vc-header {
+  margin-top: 0px;
 }
 </style>
 <style scoped lang="scss">

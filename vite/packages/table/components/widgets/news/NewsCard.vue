@@ -1,7 +1,7 @@
 <template>
   <div>
     <xt-container 
-      v-model:customSize="customSize" 
+      v-model:customSize="customData.customSize" 
       :desk="desk" 
       :header="header" 
       :sizeList="sizeList" 
@@ -116,22 +116,11 @@ export default {
         },
 
       ],
-      header:{
-        title:'新闻资讯',
-        ifyIcon:'fluent:news-16-regular',
-        refresh:{
-          fn: this.refreshData,
-          tip:'刷新',
-          state:false
-        }
-        
-      },
       customSize:'2x4',
       options: {
-        className: 'card ',
-        title: '新闻资讯',
-        icon: '',
-        type: 'news'
+        defaultData: {
+          customSize:this.customData.customSize ||'2x4',
+        }
       },
       menuList: [
         {
@@ -213,7 +202,8 @@ export default {
         mobile: false,
         client: false,
         offline: true
-      }
+      },
+      refreshFlag: false
     }
   },
   methods: {
@@ -222,8 +212,6 @@ export default {
       this.customData.index = this.currentIndex
       await this.getNewsData()
       this.customData.newsList = this.newsMsgList
-      // console.log(this.customData.newsList,'newsList')
-      // console.log(this.customData,'customData');
     },
     setSortedList(arrList) {
       // 获取拖拽排序后数据
@@ -235,11 +223,14 @@ export default {
       this.customData.tag = tag
       // console.log(this.customData.tag)
       await this.getNewsMsg(this.customData.tag)
-      // this.customData.newsList=this.newsMsgList
+      this.customData.newsList=this.newsMsgList
       // console.log(this.customData.newList);
     },
-    async refreshData() {
-      await this.getNewsData()
+    refreshData() {
+      this.refreshFlag = true
+      this.getNewsData().then(() => {
+        this.refreshFlag = false
+      })
     }
   },
   computed: {
@@ -257,11 +248,16 @@ export default {
     },
     // 判断尺寸大小
     showSize() {
-      if (this.customSize) {
-        let arr = this.customSize.split('x')
+      if (this.customData.customSize) {
+        let arr = this.customData.customSize.split('x')
         return {
           width: arr[0],
           height: arr[1]
+        }
+      }else{
+        return {
+          width: 2,
+          height: 4
         }
       }
     },
@@ -291,16 +287,31 @@ export default {
         return this.showList[this.customData.index].title
       }
       return this.showList[this.currentIndex].title
+    },
+    header(){
+      return {
+        title:'新闻资讯',
+        ifyIcon:'fluent:news-16-regular',
+        refresh:{
+          fn: this.refreshData,
+          tip:'刷新',
+          state:this.refreshFlag ? true : false
+        }
+      }
     }
   },
   async mounted() {
     this.isLoading = true
     this.getNewsMsg(this.showList[this.currentIndex].tag).then(() => {
-      console.log('1111111>>>', this.newsMsgList)
       this.isLoading = false
     })
     // await this.getNewsData()
   },
+  watch: {
+    customSize(newVal,oldVal) {
+      this.customData.customSize = newVal
+    }
+  }
 }
 </script>
 <style lang='scss' scoped>

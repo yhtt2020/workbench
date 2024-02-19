@@ -1,12 +1,16 @@
 <template>
 
-    <Widget :envLimit="['guest']" @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :menuList="menuList" :options="options" ref="dataSlot" :desk="desk">
-        <template #left-title>
-            <Icon icon='fluent:open-20-filled' class="pointer" width="20" height="20" style="position: relative;top:3px;" />
-        </template>
-        <div class="top-icon">
-            <Icon icon="akar-icons:check-box" />
-        </div>
+    <xt-container
+        v-model:customSize = "customSize"
+        :header="header" 
+        :envLimit="['guest']"
+        @click="onHistoryMessage" 
+        :customData="customData" 
+        :customIndex="customIndex" 
+        :menuList="menuList" 
+        :options="options" 
+        ref="dataSlot" 
+        :desk="desk">
 
         <Unusual v-if='!this.access_token || !this.baseUrl' title="请完成小组件配置" buttonTitle="立即配置" :back="back" ></Unusual>
         <div v-else class="dash-board">
@@ -34,7 +38,7 @@
                 </div>
             </vue-custom-scrollbar>
         </a-drawer>
-    </Widget>
+    </xt-container>
 
 
 </template>
@@ -108,6 +112,16 @@ export default {
             accToken:'',
             accUrl:'',
             settingVisible:false,
+            customSize:'2x4',
+            header:{
+                title:'社区待办',
+                ifyIcon:'akar-icons:check-box',
+                rightIcon:[
+                    {
+                        ifyIcon:'fluent:open-20-filled',
+                    }
+                ]
+            }
         };
     },
     mounted() {

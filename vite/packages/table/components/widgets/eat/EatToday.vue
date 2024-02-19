@@ -1,26 +1,18 @@
 <template>
-  <Widget
-  :options="options"
-  :customIndex="customIndex"
-  :customData="customData"
-  :desk="desk"
-  ref="eatSlot"
-  :menuList="menuList"
+  <xt-container
+    :header="header"
+    v-model:customSize="customSize"
+    :options="options"
+    :customIndex="customIndex"
+    :customData="customData"
+    :desk="desk"
+    ref="eatSlot"
+    :menuList="menuList"
   >
-  <template #left-title-icon>
-        <div
-          class="icon"
-          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; ">
-          <newIcon icon="fluent:emoji-smile-slight-24-regular" style="font-size: 20px;" />
-        </div>
-      </template>
-  <div class="truncate" style="position: absolute;left: 45px;font-size: 16px;top:13px;color:var(--primary-text);width: 190px;">{{ title }}
-  </div>
   <div @click="openSettings = true">
     <Turntable :eatList="eatList"></Turntable>
   </div>
-  </Widget>
+  </xt-container>
   <a-drawer v-model:visible="openSettings" title="设置" placement="right" width="500">
     <div class="flex flex-col" style="color:var(--primary-text)">
       <span class="drawer-title" style="margin-bottom:24px;">名称</span>
@@ -66,6 +58,11 @@ export default {
       title: '今天吃什么',
       eatText: '',
       eatList: ['糯米饭','拉面','面包','苹果','牛排','烤鸭','炒饭','火锅'],
+      header:{
+        title: '今天吃什么',
+        ifyIcon:'fluent:emoji-smile-slight-24-regular'
+      },
+      customSize:'2x4'
 }
   },
   computed: {

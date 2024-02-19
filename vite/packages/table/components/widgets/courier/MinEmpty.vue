@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col items-center">
-        <div class="p-4 mt-2 mb-2 rounded-lg xt-bg xt-text" style="font-size: 14px;">
+        <div class="p-4 mb-2 rounded-lg xt-bg xt-text" style="font-size: 14px;">
             在桌面上时刻关注你的快递动态，支持同步主流电商平台的订单列表，自定义修改快递名称和图标。
         </div>
         <!-- <div class="flex">

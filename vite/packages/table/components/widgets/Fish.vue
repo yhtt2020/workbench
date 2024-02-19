@@ -1,6 +1,6 @@
 <template>
-  <Widget :options="options"  :customIndex="customIndex" :desk="desk"  :custom-data="customData">
-    <div style="display: flex;flex-direction: column">
+  <xt-container  :options="options"  :customIndex="customIndex" :desk="desk"  :custom-data="customData">
+    <div style="display: flex;flex-direction: column" class="-mt-6">
       <div style="flex:1;margin-right: 20px;margin-left: 20px">
         <div ref="fish" @click="click" class="fish"
              style="display: flex;align-items: center;align-content: center;height: 205px;width: 100%;justify-content: center;position: relative;cursor: pointer;">
@@ -15,7 +15,7 @@
       </div>
     </div>
     <audio ref="audio" src='/sound/fish.mp3'/>
-  </Widget>
+  </xt-container>
 </template>
 
 <script>

@@ -1,22 +1,22 @@
 <template>
-  <div class="flex mt-2 flex-col justify-start">
-    <div class="epic-detail-image rounded-lg">
+  <div class="flex flex-col justify-start mt-2">
+    <div class="rounded-lg epic-detail-image">
       <img :src="detailOptions.image" alt="" class="rounded-lg">
     </div>
     <span class="mt-2 truncate" style="max-width:252px;font-size: 16px;font-weight: 500;color: var(--primary-text);">{{ detailOptions.title }}</span>
-    <span class="content-introduction h-12" style="font-size: 16px; font-weight: 400;color: var(--secondary-text);">{{detailOptions.summary}}</span>
-    <span class="line-through mt-1 xt-num-font-600" style="color:var(--secondary-text);">{{detailOptions.price}}</span>
-    <div class="flex justify-between items-center">
+    <span class="h-12 content-introduction" style="font-size: 16px; font-weight: 400;color: var(--secondary-text);">{{detailOptions.summary}}</span>
+    <span class="mt-1 line-through xt-num-font-600" style="color:var(--secondary-text);">{{detailOptions.price}}</span>
+    <div class="flex items-center justify-between">
       <span class="xt-num-font-600" style="color: rgba(255, 77, 79, 1);font-size: 16px;font-weight: 600;">免费领取</span>
       <span class="xt-num-font-600" style="background: rgba(255, 77, 79, 1); padding: 1px 7px 3px 6px;border-radius: 4px;color:var(--active-text);">
         剩余{{detailOptions.days}}天
       </span>
     </div>
     <div class="flex justify-between mt-2">
-        <span @click.stop="epicBack" class="w-12 h-12 cursor-pointer epic-back flex items-center rounded-lg justify-center" style="color: var(--primary-text);background: var(--primary-bg);">
+        <span @click.stop="epicBack" class="flex items-center justify-center w-12 h-12 rounded-lg cursor-pointer epic-back" style="color: var(--primary-text);background: var(--primary-bg);">
            <Icon icon="xiangzuo" class="text-xl"></Icon>
         </span>
-        <span @click.stop="onClickOffice" class="w-2/3 epic-back text-center mr-3 pointer rounded-lg s-item" style="padding:13px 30px;color: var(--primary-text);background: var(--primary-bg);">领取</span>
+        <span @click.stop="onClickOffice" class="w-2/3 mr-3 text-center rounded-lg epic-back pointer s-item" style="padding:13px 30px;color: var(--primary-text);background: var(--primary-bg);">领取</span>
     </div>
  </div>
 </template>

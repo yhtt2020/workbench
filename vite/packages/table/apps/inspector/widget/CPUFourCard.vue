@@ -1,13 +1,11 @@
 <template>
-<Widget  :limit-env="['web']" :options="options" :menu-list="menuList" :desk="desk"  >
-  <template #left-title-icon>
-        <div
-          class="icon"
-          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; ">
-          <newIcon icon="fluent:arrow-trending-lines-20-filled" style="font-size: 20px;" />
-        </div>
-      </template>
+<xt-container  
+  :header="header"
+  v-model:customSize="customSize"
+  :envLimit="['web']" 
+  :options="options" 
+  :menu-list="menuList" 
+  :desk="desk"  >
   <div @click="go"  class="top-content pointer" style="color:var(--primary-text)">
     <div><span>{{CPUGPUData.useCPU.toFixed(1)}}%</span>
       <span>
@@ -52,7 +50,7 @@
      </div>
    </div>
   </div>
-</Widget>
+</xt-container>
 </template>
 
 <script>
@@ -102,7 +100,12 @@ export default {
             message.success('复制成功')
           }
         }
-      ]
+      ],
+      header:{
+        title:'性能',
+        ifyIcon:"fluent:arrow-trending-lines-20-filled"
+      },
+      customSize:'2x4'
 
   }
   },
@@ -180,7 +183,7 @@ export default {
   width: 100%;
   align-items: center;
   justify-content: space-between;
-  margin-top: 0px;
+  margin-top: -10px;
 
   >div{
     width: 120px;

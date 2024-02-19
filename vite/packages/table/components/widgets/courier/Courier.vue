@@ -1,32 +1,16 @@
 <template>
-  <Widget :envLimit="['guest']" :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="menuList"
-          :env="env"
-          ref="cardSlot">
-    <template #left-title-icon>
-      <div class="icon"
-           style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
-        <newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon>
-      </div>
-    </template>
-    <div style="position: absolute;top: 14px;left: 120px;">
-      <xt-button :w="22" :h="22" @click="refreshAll" style="background-color: transparent !important;">
-        <div class="flex items-center justify-center">
-          <newIcon class="xt-text refresh" style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
-                   icon="akar-icons:arrow-clockwise"/>
-        </div>
-      </xt-button>
-    </div>
+  <xt-container 
+    :header="header"
+    v-model:customSize="customData.customSize"
+    :envLimit="['guest']" 
+    :desk="desk" 
+    :sizeList="sizeList" 
+    :options="options" 
+    :customIndex="customIndex" 
+    :menuList="menuList"
+    :env="env"
+    ref="cardSlot">
     <div class="flex flex-col w-full" style="height: calc(100% - 12px)">
-      <!-- <template v-if="!showWay"> -->
-      <!-- <div class="flex justify-between w-full mt-2" v-if="courierDetailList.length !== 0">
-          <div class="xt-text xt-font ">快递筛选</div>
-          <div class="flex items-center">
-            <span class="mr-2">2023-11-03 11:11更新</span>
-
-          </div>
-        </div> -->
-      <!-- </template> -->
-
       <div class="flex-1 w-full h-0 courier" style="position:relative;">
         <div v-if="isLoading">
           <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%"/>
@@ -39,11 +23,11 @@
             </MinCourierItem>
           </div>
           <template v-else>
-            <Empty v-if="displayList.length === 0" :exampleVisible="true"/>
+            <Empty v-if="displayList.length === 0 " :exampleVisible="true"/>
             <template v-else>
               <vue-custom-scrollbar ref="threadListRef" :settings="outerSettings"
                                     style="height:100%;overflow: hidden;flex-shrink: 0;width: 100%;"
-                                    class="courier-item mt-2">
+                                    class="mt-2 courier-item">
                 <div v-for="(item, index) in displayList">
                   <ListItem :no-bg="true" :item="item" @goDetail="showDetail(item)"></ListItem>
                   <div v-if="index !== displayList.length - 1" class="divider"></div>
@@ -62,10 +46,6 @@
             </template>
           </template>
         </template>
-<!--        <template v-if="allCourierVisible">-->
-<!--          <LargeCourierModal :route="showCourierDetail?'detail':'list'" :mode="modalMode" :show="courierModalVisible" @close-modal="changeState"/>-->
-<!--&lt;!&ndash;          //<SmallCourierModal v-else :show="allCourierVisible" @close-modal="changeState"/>&ndash;&gt;-->
-<!--        </template>-->
         <teleport to='body'>
           <xt-modal v-if="courierModalVisible" v-model="courierModalVisible" title="" :footer="false"  :header="false" :index="200">
             <LargeCourierDetail @change-route="changeRoute" :route="showCourierDetail?'detail':'list'" :mode="modalMode" @close="courierModalVisible = false;getDbCourier()"/>
@@ -77,7 +57,7 @@
     </div>
 
 
-  </Widget>
+  </xt-container>
   <teleport to='body'>
     <CourierSetting ref="courierSettingRef"/>
   </teleport>
@@ -144,21 +124,15 @@ export default {
       settingVisible: false,
       sizeList: [
         {
-          title: '2x2',
-          height: 1,
-          width: 1,
+          value: '2x2',
           name: '2x2',
         },
         {
-          title: '4x4',
-          height: 2,
-          width: 2,
+          value: '4x4',
           name: '4x4',
         },
         {
-          title: '4x6',
-          height: 3,
-          width: 2,
+          value: '4x6',
           name: '4x6',
         },
 
@@ -283,13 +257,21 @@ export default {
 
     // 判断尺寸大小
     showSize () {
-      if (this.customData && this.customData.width && this.customData.height) {
-        return { width: this.customData.width, height: this.customData.height }
+      if (this.customData.customSize) {
+        let arr = this.customData.customSize.split('x')
+        return {
+          width: arr[0],
+          height: arr[1],
+        }
+      }else{
+        return {
+          width: 4,
+          height: 4
+        }
       }
-      return this.sizeList[2]
     },
     showWay () {
-      if (this.showSize.height === 1) {
+      if (this.showSize.height == 2) {
         return true
       } else {
         return false
@@ -323,6 +305,23 @@ export default {
       return this.autoRefreshTime.find((item) => {
         return item.value === this.settings.courierRefresh.autoTime
       })
+    },
+    header(){
+      return {
+        title:'我的快递',
+        ifyIcon:'fluent:box-16-regular',
+        refresh:{
+          fn:()=>{
+            this.refreshFlag = true
+            this.refreshAll().then(()=>{
+              console.log(111111)
+              this.refreshFlag = false
+            })
+          },
+          tip:'刷新',
+          state:false
+        }
+      }
     }
   },
   watch: {
@@ -332,6 +331,9 @@ export default {
         this.displayList = this.displayList.slice(0, 10)
       },
       immediate: true
+    },
+    customSize (newVal, oldVal) {
+      this.customData.customSize = newVal
     }
   },
   async mounted () {

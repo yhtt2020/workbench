@@ -1,13 +1,12 @@
 <template>
-  <Widget :options="options" ref="weatherSlot" :customIndex="customIndex" :customData="customData" :desk="desk" :env="env">
-    <template #left-title-icon>
-        <div
-          class="icon"
-          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; ">
-          <newIcon icon="fluent:cloud-16-regular" style="font-size: 20px;" />
-        </div>
-      </template>
+  <xt-container  
+    :header="header"
+    :options="options" 
+    ref="weatherSlot" 
+    :customIndex="customIndex" 
+    :customData="customData" 
+    :desk="desk" 
+    :envLimit="['offline']">
     <div v-if="defaultCity" class="px-3 py-1 bg-mask rounded-xl pointer" @click="openWeatherDrawer" style="position: absolute;left: 45px;top:10px">
       {{ defaultCity.name }}
     </div>
@@ -77,7 +76,7 @@
         </template>
       </div>
     </div>
-  </Widget>
+  </xt-container >
 
   <HorizontalDrawer :drawerTitle="drawerTitle" :rightSelect="cities" ref="regionDrawer" v-model:selectRegion="defaultValue" @getArea="getDefaultWeather"></HorizontalDrawer>
 </template>
@@ -121,6 +120,10 @@ export default {
         mobile: false,
         client: false,
         offline:true
+      },
+      header: {
+        title: "天气",
+        ifyIcon:'fluent:cloud-16-regular'
       }
     };
   },

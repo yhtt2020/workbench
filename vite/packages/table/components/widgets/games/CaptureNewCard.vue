@@ -1,23 +1,21 @@
 <template>
-  <Widget :limit-env="['web']" :menuList="menuList" :options="options" :customData="customData" :customIndex="customIndex"
-           ref="captureNewSlot" :desk="desk">
-        <template #left-title-icon>
-        <div class="icon"
-          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; ">
-          <newIcon icon="fluent:resize-video-20-regular" style="font-size: 20px;" />
-        </div>
-      </template>
+   <xt-container 
+    v-model:customSize="customSize"
+    :header="header"
+    :envLimit="['web']" 
+    :menuList="menuList"  
+    :options="options" 
+    :customData="customData" 
+    :customIndex="customIndex" 
+    :desk="desk">
       <CaptureCore @selectSource="visibleSource=true"></CaptureCore>
-
-
     <div class="flex flex-col items-center justify-center">
       <span :class="{disable:!this.settings.imageSavePath}" @click="showImages" class="w-full py-3 mb-3 text-center rounded-lg s-item pointer btn-active voice-hover">我的截屏({{ images.length }})</span>
       <span :class="{disable:!this.settings.videoSavePath}" @click="showVideos" class="w-full py-3 mb-3 text-center rounded-lg s-item pointer btn-active voice-hover">我的录制({{ videos.length }})</span>
       <span class="w-full py-3 mb-2 text-center rounded-lg s-item pointer btn-active voice-hover" @click="visibleSettings=true">快捷键设置</span>
       <span class="w-full py-3 mb-3 text-center rounded-lg s-item pointer btn-active voice-hover" @click="visibleSettings=true">捕获设置</span>
     </div>
-  </Widget>
+  </xt-container>
   <teleport to="#app">
     <Modal v-if="visibleSource" v-model:visible="visibleSource" :blurFlag="true">
       <SourceSelector @choosenSource="choosenSource">
@@ -89,6 +87,11 @@ export default {
       recordKey: 'CTRL + WIN + V',
       microphoneKey: 'CTRL + WIN + J',
       microphoneShow: false,
+      header:{
+        title:'捕获',
+        ifyIcon:'fluent:resize-video-20-regular'
+      },
+      customSize:'2x4'
     }
   },
   mounted () {

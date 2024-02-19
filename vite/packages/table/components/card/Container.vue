@@ -110,7 +110,7 @@
             v-if="rightIcons && rightIcons.length"
             v-for="item in rightIcons"
           >
-            <div v-if="!item.disabled" class="header-right-icon mr-1">
+            <div v-if="!item.disabled" class="mr-1 header-right-icon">
               <!-- 右侧图标悬浮提示 -->
               <div
                 v-if="item.tip"

@@ -1,13 +1,10 @@
 <template>
-  <Widget  :limit-env="['web']"  :options="options" :menu-list="menuList" :desk="desk">
-    <template #left-title-icon>
-        <div
-          class="icon"
-          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; ">
-          <newIcon icon="fluent:arrow-trending-lines-20-filled" style="font-size: 20px;" />
-        </div>
-      </template>
+  <xt-container   
+    :header="header"
+    :envLimit="['web']"  
+    :options="options" 
+    :menu-list="menuList" 
+    :desk="desk">
     <div @click="go" class="content pointer" style="color:var(--primary-text)">
       <div><a-progress type="circle"  stroke-color="#FF9C00" :percent="GPUData.useGPU" :strokeWidth="10" :width="105" style="margin-top: 28px">
         <template #format="percent">
@@ -38,7 +35,7 @@
         <canvas id='myGPUCanvas' ref="myGPUCanvas" style='width:130px;height:40px;margin-top: 5px'> </canvas>
       </div>
     </div>
-  </Widget>
+  </xt-container >
 </template>
 
 <script>
@@ -75,7 +72,11 @@ export default {
             message.success('复制成功')
           }
         }
-      ]
+      ],
+      header:{
+        title: 'GPU',
+        ifyIcon:'fluent:arrow-trending-lines-20-filled'
+      }
     }
   },
   components:{
@@ -131,9 +132,9 @@ export default {
   justify-content: space-between;
   height: 100%;
   font-weight: 400;
-  .right-content{
-    margin-top: 8px;
-  }
+  // .right-content{
+  //   margin-top: 8px;
+  // }
 }
 
 .cpu{
