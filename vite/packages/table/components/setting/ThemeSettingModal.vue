@@ -19,17 +19,14 @@
    </div>
    <div class="flex flex-col">
     <div class="flex items-center h-10">
-     <!-- <span class="xt-font xt-text font-14 mr-3">文字色</span>   -->
      <div class="flex items-center pointer justify-center" @click="restTextColor">
       <xt-button w="120" h="40" style="background: var(--primary-bg) !important;border-radius: 8px;">
-        <div class="flex justify-center items-center">
+        <div class="flex justify-center items-center xt-text">
           重置文字色
-          <!-- <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="20"></xt-new-icon> -->
         </div>
       </xt-button>
      </div>
     </div>
-    <!-- <xt-option-color hidden="" v-model:color="textColor" :colorList="colorList" class="w-full" style="padding-bottom: 0 !important;" :isLinear="false"></xt-option-color> -->
    </div>
 
   </div>
@@ -90,14 +87,6 @@ export default{
    // 重置文字颜色
    restTextColor(){
     delTextColor();
-    if(this.styles){
-      setTextColor("#000000");
-      this.textColor = getTextColor()
-    }
-    else {
-      setTextColor("#FFFFFF");
-      this.textColor = getTextColor()
-    }
    },
    
   },
@@ -109,21 +98,6 @@ export default{
     setSecondaryBgColor(newV);
     completeTask('M0202');
    },
-   textColor(newV){
-    if(!newV) return;
-    setTextColor(newV);
-    completeTask('M0202');
-   },
-   styles(newV){
-    if(newV){
-      setTextColor("#000000");
-      this.textColor = getTextColor()
-    }
-    else {
-      setTextColor("#FFFFFF");
-      this.textColor = getTextColor()
-    }
-   }
   },
 }
 </script>

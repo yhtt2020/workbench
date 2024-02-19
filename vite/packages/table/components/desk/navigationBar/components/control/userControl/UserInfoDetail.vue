@@ -1,19 +1,17 @@
 <template>
- <div class="flex items-center justify-center w-full" :class=" rankList.length === 0 ? 'px-0':'px-4'">
-  <div  class="relative flex items-center  justify-center" @click="goMy">
-    <!--  -->
-   <FrameAvatar :avatar-size="rankList.length === 0 ? 60 : 100" :frame-url="userinfo.frame" :avatar-url="userinfo.avatar" class="w-full flex justify-center user-container h-full pb-2 object-fill"
-    alt="" :frame="displayUserInfo?.equippedItems?.frameDetail" @close="close"
-   >
-   </FrameAvatar>
+ <div class="flex items-center  w-full">
+  <div  class="relative flex items-center  justify-center" :class="userinfo.frame == '' ? 'mx-0':'ml-6 mr-2.5'" @click="goMy">
+    <FrameAvatar :avatarSize="userinfo.frame == '' ?  56 : 80" :avatarUrl="userinfo.avatar" :frameUrl="userinfo.frame" 
+    class="w-full flex justify-center h-full pb-2 object-fill" :frame="displayUserInfo?.equippedItems?.frameDetail" @close="close"
+   />
    <a-tooltip v-if="displayUserInfo.certification && displayUserInfo.certification.length>0" :title="displayUserInfo.certification[0].name">
-    <a-avatar :src="displayUserInfo.certification[0].attestation_icon"
-     style="position: absolute;width: 20px;height:20px;right: -15px;bottom: 0; z-index:999;"
-    >
-    </a-avatar>
-   </a-tooltip>
+     <a-avatar :src="displayUserInfo.certification[0].attestation_icon"
+      style="position: absolute;width: 20px;height:20px;right: -15px;bottom: 0; z-index:999;"
+     >
+     </a-avatar>
+   </a-tooltip> 
   </div>
-  <div class="flex flex-col " :class="rankList.length === 0 ? 'ml-3 w-32':''">
+  <div class="flex flex-col " :class="rankList.length === 0 ? 'w-32':''">
    <span class="xt-text font-16 xt-font ml-3">{{ userinfo.nickname }}</span>
    <div class="flex xt-text">
      <OnlineMedal :rank="userinfo.onlineGradeExtra.rank" />
@@ -132,22 +130,11 @@ onMounted(()=>{
  }
 }
 
-:deep(.frame-position){
-  width: 100px !important;
-  height: 100px !important;
-}
-
 :deep(.avatar-position){
- width:52px !important;
- height: 52px !important;
+ width:80px !important;
+ height:80px !important;
 }
 
-:deep(.user-container){
-  & div{
-    width: 100px !important;
-    height: 0 !important;
-  }
-}
 
 :deep(.big){
   display: none !important;
