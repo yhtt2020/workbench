@@ -1,5 +1,4 @@
 <script lang="ts">
-import {defineComponent} from 'vue'
 import {
   avatarBgColor,
   avatarGainMethodText,
@@ -57,7 +56,7 @@ export default {
     })
   },
   methods: {
-    ...mapActions(frameStore, ['getMyFrames', 'equipFrame']),
+    ...mapActions(frameStore, ['getMyFrames', 'equipFrame','removeFrame']),
     ...mapActions(appStore, ['getUserInfo']),
     ...mapActions(teamStore, ['refreshTeamUsers']),
     avatarTagColor, textTag, titleTagColor, avatarBgColor, avatarGainMethodText,
@@ -78,6 +77,16 @@ export default {
     },
     unequip(item) {
 
+    },
+    async remove() {
+      let rs = await this.removeFrame()
+      if (rs?.status) {
+        message.success('移除头像框成功')
+        this.getUserInfo()
+        this.refreshTeamUsers()
+      } else {
+        message.error('移除头像框失败')
+      }
     },
     download(item) {
 
@@ -134,6 +143,7 @@ export default {
   </div>
   <vue-custom-scrollbar v-else @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
                         style="flex:1;height: 0">
+    <xt-button @click="remove" type="theme" class="w-full mb-3 flex" style="width:100%;"> <div class="flex items-center justify-center"><xt-new-icon class="font-white mr-2" icon="fluent:circle-off-16-regular" ></xt-new-icon> 取消佩戴</div></xt-button>
     <div v-for="item in frameList" class="w-full mb-3 rounded-lg flex flex-col p-3"
          :style="avatarBgColor(item.detail.rarity)">
       <div :id="'frameTop_'+item.nanoid" class="avatar-top flex mb-4">

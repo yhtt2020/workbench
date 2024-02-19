@@ -45,11 +45,8 @@ class system extends Base {
         }catch (e) {
           console.error(b+'浏览器收藏夹无法导入')
         }
-        event.reply(args.cbId,{result:result})
       }
-
-      console.log('获得图标', result)
-
+      event.reply(args.cbId,{result:result})
     })
   }
 }

@@ -7,7 +7,8 @@
         <div v-for="(item,index) in navList" :key="index" style="width:50%;"
              class="h-full nav-item flex justify-center btn-active items-center relative rounded-lg pointer"
              @click.stop="clickNav(item,index)" :class="activeIndex===index ? 'select-item':''">
-          <a-avatar :src="item.icon" :size="24"></a-avatar>
+          <xt-new-icon v-if="item.newIcon" :icon="item.newIcon"></xt-new-icon>
+          <a-avatar v-else :src="item.icon" :size="24"></a-avatar>
           <span class="ml-2">{{ item.title }}</span>
           <div v-if="item.state === true" class="state-dot ml-2"></div>
         </div>
@@ -62,6 +63,54 @@
             <a-col :xs="6" :sm="6" :md="6" :lg="5" class="box-col justify-center">
               {{ parseHours(item.onlineInfo.total_time) }}
               小时
+            </a-col>
+            <a-col :xs="0" :sm="0" :md="0" :lg="7" class="box-col last-col truncate" v-if="item.teamInfo">
+            <span class="mr-4 team-box">
+              <a-avatar :src="item.teamInfo.teamInfo.avatar" :size="40"></a-avatar>
+            </span>
+              <span class="min-back mr-1">{{ item.teamInfo.teamInfo.no }}</span><span> {{
+                item.teamInfo.teamInfo.name
+              }}</span>
+            </a-col>
+            <a-col v-else :span="6" class="box-col last-col flex justify-center">-</a-col>
+          </a-row>
+        </div>
+
+
+      </template>
+      <template v-if="defaultNavList.name === 'people'">
+        <!-- 前三排名 -->
+        <template v-if="top3[rankName].length>0">
+          <ThreeRank :rankList="top3.people" selectValue="总" :showSelect="true" lastName="score"
+                     :unit="top3[rankName][0]['scoreName']"></ThreeRank>
+        </template>
+        <!-- 社区名人榜列表 -->
+        <div class="box">
+          <a-row class="box-head">
+            <a-col class="head-col" :xs="12" :sm="12" :md="12" :lg="7">用户</a-col>
+            <a-col class="head-col" :xs="6" :sm="6" :md="6" :lg="5" style="font-weight: bold">
+              <icon style="font-size:20px" icon="trophy"></icon>
+              总社区经验
+            </a-col>
+            <a-col class="head-col" :xs="6" :sm="6" :md="6" :lg="5">等级</a-col>
+            <a-col class="head-col last-col" :xs="0" :sm="0" :md="0" :lg="7">小队</a-col>
+          </a-row>
+          <a-row :class="getExtraClass(item.no)" class="box-list hovered pointer"
+                 @click="showCard(item.uid,item.userInfo)"
+                 v-for="(item,index) in list" :key="item.id">
+            <a-col :xs="12" :sm="12" :md="12" :lg="7" class="box-col px-4 ">
+              <MedalNo :no="item.no"></MedalNo>
+              <span class="mx-4">
+              <FrameAvatar :avatar-url="item.userInfo.avatar"
+                           :frame-url="item.userInfo.equippedItems.frameDetail?.image" :avatar-size="50"></FrameAvatar>
+            </span>
+              <span class="xt-text truncate" style="font-size: 16px;">{{ item.name }}</span>
+            </a-col>
+            <a-col :xs="6" :sm="6" :md="6" :lg="5" class="box-col justify-center">
+              <span>{{ item.score }} {{item.scoreName}}</span>
+            </a-col>
+            <a-col :xs="6" :sm="6" :md="6" :lg="5" class="box-col justify-center">
+              {{ item.grade.name }}
             </a-col>
             <a-col :xs="0" :sm="0" :md="0" :lg="7" class="box-col last-col truncate" v-if="item.teamInfo">
             <span class="mr-4 team-box">
@@ -176,7 +225,7 @@
           </div>
         </div>
         <!-- 我的排名 -->
-        <div class="my-style">
+        <div class="my-style" >
           <a-row class="box-list my-rank xt-mask">
             <a-col :xs="11" :sm="11" :md="12" :lg="7" class="box-col px-4">
               <div class="ranking-back">{{ myInvite.id }}</div>
@@ -272,7 +321,7 @@
 
 
       </template>
-      <div class="switch-data mt-2" v-if="true" style="z-index: 999999;margin-bottom: 120px">
+      <div  class="switch-data mt-2" v-if="pageInfo.pages>1" style="z-index: 999999;margin-bottom: 120px">
         <div @click.stop='homePage' :class="page === 1 ? 'pag-active' : ''" class="mr-3">
           <icon icon="henggang" style="font-size: 1.7em;transform: rotate(90deg);margin-right: -10px"></icon>
           <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
@@ -291,7 +340,7 @@
       </div>
     </div>
     <!-- 切换数据 -->
-    <div style="position:absolute;bottom: 0;width: 100%">
+    <div v-if="rankName!=='people'" style="position:absolute;bottom: 0;width: 100%">
 
       <!-- 我的排名 -->
       <div class="my-style" v-if="rankName!=='onlineTeamSum'">
@@ -386,7 +435,8 @@ export default {
       onLineList,// 在线榜
       top3: {
         onlineUserSum: [],
-        onlineTeamSum: []
+        onlineTeamSum: [],
+        people:[]
       },//前3名，用于格式化前三名的头像
 
       myRanking,// 我的在线榜排行
@@ -401,6 +451,7 @@ export default {
       navList: [
         { title: '在线榜', icon: '../../../../public/img/rankingList/rocket.png', name: 'onlineUser' },
         { title: '小队榜', icon: '../../../../public/img/rankingList/tiny_spot.png', name: 'onlineTeamSum' },
+       { title: '名人榜', newIcon: 'fluent-emoji:crown', name: 'people' },
         // { title: '邀请榜', icon: '../../../../public/img/rankingList/handshake.png', name: 'invite' },
         // { title: '签到榜', icon: '../../../../public/img/rankingList/mantelpiece.png', name: 'signIn' }
       ],
@@ -506,6 +557,20 @@ export default {
     reloadMy () {
       this.getMy(this.rankName)
     },
+    getTop3People(){
+      let rank=this.rankLists.people[1]
+      let top3=[]
+      for(const num of[0,1,2]){
+        top3.push({
+          uid:rank[num].uid,
+          name:rank[num].name,
+          avatar:rank[num].avatar,
+          score:rank[num].score,
+          scoreName:rank[num].scoreName
+        })
+      }
+      return top3
+    },
     getTop3FromUserSumRank () {
       let top3 = [
         {
@@ -533,37 +598,40 @@ export default {
       return top3
     },
     reload () {
-      this.getRank(this.rankName, this.page, { withTeam: 1 }).then(() => {
-        if (this.rankName === 'onlineUserSum') {
-          this.top3['onlineUserSum'] = this.getTop3FromUserSumRank()
-        } else if (this.rankName === 'onlineTeamSum') {
-          let top3 = [
-            {
-              ...this.rankLists.onlineTeamSum[1][0],
-              avatar: this.rankLists.onlineTeamSum[1][0].teamInfo.avatar,
-              name: this.rankLists.onlineTeamSum[1][0].teamInfo.name,
-              id: this.rankLists.onlineTeamSum[1][0].teamInfo.no
-            },
-            {
-              ...this.rankLists.onlineTeamSum[1][1],
-              avatar: this.rankLists.onlineTeamSum[1][1].teamInfo.avatar,
-              name: this.rankLists.onlineTeamSum[1][1].teamInfo.name,
-              id: this.rankLists.onlineTeamSum[1][1].teamInfo.no
-            },
-            {
-              ...this.rankLists.onlineTeamSum[1][2],
-              avatar: this.rankLists.onlineTeamSum[1][2].teamInfo.avatar,
-              name: this.rankLists.onlineTeamSum[1][2].teamInfo.name,
-              id: this.rankLists.onlineTeamSum[1][2].teamInfo.no
-            },
-          ]
-          top3[0].total = this.parseHours(top3[0].totalTime, 2)
-          top3[1].total = this.parseHours(top3[1].totalTime, 2)
-          top3[2].total = this.parseHours(top3[2].totalTime, 2)
-          this.top3['onlineTeamSum'] = top3
-        }
 
-      })
+        this.getRank(this.rankName, this.page, { withTeam: 1 }).then(() => {
+          if (this.rankName === 'onlineUserSum') {
+            this.top3['onlineUserSum'] = this.getTop3FromUserSumRank()
+          } else if (this.rankName === 'onlineTeamSum') {
+            let top3 = [
+              {
+                ...this.rankLists.onlineTeamSum[1][0],
+                avatar: this.rankLists.onlineTeamSum[1][0].teamInfo.avatar,
+                name: this.rankLists.onlineTeamSum[1][0].teamInfo.name,
+                id: this.rankLists.onlineTeamSum[1][0].teamInfo.no
+              },
+              {
+                ...this.rankLists.onlineTeamSum[1][1],
+                avatar: this.rankLists.onlineTeamSum[1][1].teamInfo.avatar,
+                name: this.rankLists.onlineTeamSum[1][1].teamInfo.name,
+                id: this.rankLists.onlineTeamSum[1][1].teamInfo.no
+              },
+              {
+                ...this.rankLists.onlineTeamSum[1][2],
+                avatar: this.rankLists.onlineTeamSum[1][2].teamInfo.avatar,
+                name: this.rankLists.onlineTeamSum[1][2].teamInfo.name,
+                id: this.rankLists.onlineTeamSum[1][2].teamInfo.no
+              },
+            ]
+            top3[0].total = this.parseHours(top3[0].totalTime, 2)
+            top3[1].total = this.parseHours(top3[1].totalTime, 2)
+            top3[2].total = this.parseHours(top3[2].totalTime, 2)
+            this.top3['onlineTeamSum'] = top3
+          }else if(this.rankName==='people'){
+            this.top3['people']=this.getTop3People()
+          }
+
+        })
 
     },
     getExtraClass (no) {
