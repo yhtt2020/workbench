@@ -4,8 +4,8 @@
       <xt-text>
         <SerialNumber :id="index + 1" />
         {{ data.name }}
-      </xt-text></template
-    >
+      </xt-text>
+    </template>
     <xt-title type="text" m="mb">{{ data.info }} </xt-title>
     <ShowReward :id="data.id" />
     <StartTask :task="data" />

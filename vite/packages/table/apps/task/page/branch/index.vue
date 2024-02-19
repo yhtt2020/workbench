@@ -40,9 +40,9 @@
         </div>
       </div>
       <div class="xt-bg-2 p-3 rounded-xl mb-3">
-        <xt-title type="text"
-          >你可以自由选择想要了解的功能支线，完成任务即可获得对应奖励。</xt-title
-        >
+        <xt-title type="text">
+          你可以自由选择想要了解的功能支线，完成任务即可获得对应奖励。
+        </xt-title>
       </div>
       <xt-scrollbar
         v-if="tasks.length <= 1"
@@ -50,7 +50,7 @@
         :x="false"
         :y="true"
       >
-        <Task @back="back()" :task="tasks[0]" :icon="icon" :length="1" />
+        <Task @back="back()" :task="filterTask" :icon="icon" :length="1" />
       </xt-scrollbar>
       <template v-else>
         <xt-scrollbar class="h-full w-full" :x="false" :y="true">
@@ -80,7 +80,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive,computed } from "vue";
 import SerialNumber from "../../components/SerialNumber.vue";
 import Task from "./Task.vue";
 import Progress from "../../components/progress/index.vue";
@@ -105,6 +105,11 @@ const taskClick = (task) => {
 const back = () => {
   currentTask.value = null;
 };
+
+const filterTask = computed(()=>{
+  const filterRes = props.tasks[0].tasks.filter((item)=>{ return String(item.id) !== 'Z0201' });
+  return {tasks:filterRes};
+})
 </script>
 
 <style lang="scss" scoped></style>
