@@ -13,7 +13,7 @@
     <div @click="enterWeather">
       <div v-if="!cities.length">
         <div>
-          <a-col style="text-align: center; margin-top: 1em">
+          <a-col style="text-align: center; margin-top: 0em">
             <Icon style=" width: 5em;  height: 5em;    vertical-align: middle; " icon="icon_qingtian"></Icon>
           </a-col>
         </div>
