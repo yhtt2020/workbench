@@ -1,4 +1,6 @@
-<template><div></div></template>
+<template>
+  <div></div>
+</template>
 
 <script setup lang="ts">
 import { getCurrentInstance } from 'vue';
@@ -8,7 +10,7 @@ const { proxy }: any = getCurrentInstance();
 // 局部导入
 // import { confirm } from "../../../ui/new/confirm/index";
 // 组合式API
-proxy.$xtConfirm("麦麦麦", "我吃麦当劳，你吃麦当劳，我们都吃麦当劳", {
+window.$ui.confirm("麦麦麦", "我吃麦当劳，你吃麦当劳，我们都吃麦当劳", {
   ok: () => {
     console.log("111 :>> ", 111);
   },
