@@ -1,5 +1,6 @@
 import axios from "axios";
 import {getConfig} from "./serverApi";
+import {sUrl} from "../../consts";
 
 export async function get(url, params = {}) {
   const result = await axios.get(url, {
@@ -15,6 +16,17 @@ export async function get(url, params = {}) {
   }
 }
 
+/**
+ *
+ * @param urlRoute 路由，不需要拼接url
+ * @param params
+ */
+export async function apiGet(urlRoute,params={}){
+  return get(sUrl(urlRoute),params)
+}
+export async function apiPost(urlRoute, data, options = {crud: false}){
+  return post(sUrl(urlRoute),data,options)
+}
 // mock测试环境下的请求方式
 export async function postMock(url, data, options = {crud: false}) {
   url=url.replace('https://wad.apps.vip/api','https://mock.apifox.cn/m1/1677090-0-default')
