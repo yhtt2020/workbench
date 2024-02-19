@@ -6,7 +6,7 @@
        <span class="xt-font xt-text font-14 font-400 ml-3">历史消息</span>
     </div>
 
-    <xt-tab :list="tabList" v-model="tabValue" class="xt-bg-2 p-1 h-8 mb-3" style="width: 248px;border-radius: 8px;"></xt-tab>
+    <xt-tab :list="tabList" v-model="tabValue" class="xt-bg-2 p-1 h-8" style="width: 248px;border-radius: 8px;"></xt-tab>
 
     <xt-button w="32" h="32" style="border-radius: 8px;" @click="closeModal">
       <div class="flex items-center justify-center">

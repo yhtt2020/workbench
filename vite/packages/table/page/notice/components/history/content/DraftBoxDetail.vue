@@ -3,7 +3,7 @@
   <XtScrollbar  :y="true" style="height: 100%;width: 100%;"> 
     <template v-if="draftBox.length  === 0">
       <div class="flex items-center h-full justify-center">
-        <a-empty :image="simpleImage" :description="'暂无消息草稿 '" />
+        <a-empty :image="simpleImage" :description="'暂无草稿消息'" />
       </div>
     </template>
     <template v-else>

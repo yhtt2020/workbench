@@ -1,6 +1,12 @@
 <template>
  <div class="flex flex-col flex-1 mt-5" style="height: calc(100% - 160px);">
-  <XtScrollbar  :y="true" style="height: 100%;width: 100%;">
+  <template v-if="allList.length == 0">
+    <div class="flex items-center h-full justify-center">
+      <a-empty :image="simpleImage" :description="'暂无历史消息'" />
+    </div>
+  </template>
+
+  <XtScrollbar  :y="true" style="height: 100%;width: 100%;" v-else>
     <div v-for="item in allList" class="xt-bg-2 flex pointer justify-between items-center mb-3 rounded-xl px-4 py-3" @click="enterDetail(item)">
       <div class="flex items-center ">
         <span class="xt-font xt-text font-14 font-400 mr-3">
@@ -10,7 +16,6 @@
           {{ item.content.title }}
         </span>
       </div>
-      <!--  -->
       <div class="xt-font xt-text-2 font-14 font-400">{{ utils.changeTime(item.createTime)}}</div>
     </div>
   </XtScrollbar>
@@ -27,6 +32,7 @@ const emit = defineEmits(['enter'])
 
 const notice = noticeStore()
 const { detailList,detailItem } = storeToRefs(notice);
+const simpleImage = ref('/img/state/null.png')
 
 const allList = computed(()=>{
   const filterList = detailList.value.filter((item)=>{ return item.type === 'push'  });
@@ -50,5 +56,19 @@ const enterDetail = (value) =>{
 </script>
 
 <style lang="scss" scoped>
+:deep(.ant-empty){
+  margin: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  flex-direction: column;
+  & .ant-empty-image{
+    width: 64px !important;
+    height: 64px !important;
+  }
 
+  & .ant-empty-description{
+    margin: 0 !important;
+  }
+}
 </style>

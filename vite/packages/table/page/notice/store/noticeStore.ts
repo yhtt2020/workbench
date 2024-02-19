@@ -6,7 +6,7 @@ import {post} from '../../../js/axios/request'
 
 const addNotice = sUrl("/app/notice/add");  // 创建消息
 const sendNotice = sUrl("/app/notice/startPush"); // 推送消息
-
+const deleteNotice = sUrl("/app/notice/delete"); // 删除消息
 
 
 // 初始化编辑数据
@@ -80,7 +80,7 @@ export const noticeStore = defineStore('notice', {
 
       if (onlineNoticeRs.status) {
         let onlineNotices:any = []
-        console.log(onlineNoticeRs,'list')
+        // console.log(onlineNoticeRs,'list')
         for (const notice of onlineNoticeRs.data.list) {
           let has = list.some((li:any) => {
             return li.content.id === notice.id
@@ -95,7 +95,7 @@ export const noticeStore = defineStore('notice', {
             this.putMessageData(window.$notice._convertNoticeMsg(notice),notice.noticeType)
           }
         }
-        console.log(onlineNotices,'onlineNotices')
+        // console.log(onlineNotices,'onlineNotices')
 
         let onlineNotice =
           list = [
@@ -112,7 +112,7 @@ export const noticeStore = defineStore('notice', {
       // console.log('查看排序后的消息列表',sortData);
 
 
-      console.log(sortData)
+      // console.log(sortData)
       this.detailList = sortData
 
     },
@@ -127,7 +127,7 @@ export const noticeStore = defineStore('notice', {
         createTime: Date.now(),
         updateTime: Date.now()
       }
-      console.log('写入数据',message)
+      // console.log('写入数据',message)
       await tsbApi.db.put(message)
       await this.getNoticeList()
     },
@@ -141,7 +141,7 @@ export const noticeStore = defineStore('notice', {
         ...(await tsbApi.db.allDocs('weakSystem:')).rows,
         ...(await tsbApi.db.allDocs('strongNotice:')).rows
       ])
-      console.log('老的残余数据', data)
+      // console.log('老的残余数据', data)
       for (const item of data) {
         await tsbApi.db.remove(item.doc)
         // console.log('查看item',item);
@@ -164,7 +164,7 @@ export const noticeStore = defineStore('notice', {
           },
         }
       })
-      let list = []
+      let list:any = []
       if (rs.docs) {
         list = rs.docs
       } else {
@@ -172,15 +172,17 @@ export const noticeStore = defineStore('notice', {
       }
 
       for(const li of list){
-        await tsbApi.db.remove(li)
+        await tsbApi.db.remove(li);
+        await this.removePushMsg(String(li.content.id));
       }
       this.getNoticeList()
     },
 
     // 将单个历史消息通知进行删除
     async delSingleHistoryNotice(item: any) {
-      console.log(item)
+      // console.log("item",item)
       await tsbApi.db.remove(item)
+      await this.removePushMsg(String(item.content.id));
       await this.getNoticeList()
     },
 
@@ -220,6 +222,12 @@ export const noticeStore = defineStore('notice', {
         this.getNoticeList();
         return res
       }
+    },
+
+    // 删除推送消息
+    async removePushMsg(id:any){
+      const res = await post(deleteNotice,{id:id});
+      console.log("res",res);
     },
 
     // 清空编辑数据
