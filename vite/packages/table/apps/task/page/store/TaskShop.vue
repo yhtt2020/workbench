@@ -15,8 +15,8 @@
       <div style="width: 200px;height: 200px;" class="mb-3">
         <img src="/img/taskShop.png" class="w-full h-full rounded-md object-cover" alt="">
       </div>      
-      <span class="xt-text-2  font-14 xt-font">打开微信扫一扫,在元社区积分商城中选择你想要兑</span>
-      <span class="xt-text-2  font-14 xt-font">换的礼品</span>
+      <span class="xt-text-2  font-16 xt-font">微信扫一扫,</span>
+      <span class="xt-text-2  font-16 xt-font">在元社区积分商城中选择你想要兑换的礼品</span>
     </div>
   </div>
 </template>
