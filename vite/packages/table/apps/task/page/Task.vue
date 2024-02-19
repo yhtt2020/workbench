@@ -1,5 +1,5 @@
 <template>
-  <xt-modal custom v-model="store.isTaskDrawer" boxClass="rounded-xl" :mask="false" v-if="smallMize">
+  <xt-modal custom v-model="store.isTaskDrawer" boxClass="rounded-xl" :mask="false" v-if="smallMize" :index="1500">
     <div class="xt-modal flex rounded-xl" style="width: 500px; height: 742px;" >
       <xt-left-menu :list="menusList" :end="2" model="id" style="border-radius: 12px 12px 12px 0"
         leftClass=" 1 xt-main-bg py-3 h-full  "  :leftStyle="{'border-radius': '12px 0 0 12px',}"
