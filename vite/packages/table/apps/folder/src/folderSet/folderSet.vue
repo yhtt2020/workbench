@@ -1,27 +1,18 @@
 <template>
   <div>
-    <xt-modal
-      title="分组设置"
-      v-model="setVisible"
-      @close="setVisible = false"
-      full
-      :footer="false"
-      boxClass="px-4 pt-4"
-    >
+    <xt-modal title="分组设置" v-model="setVisible" @close="setVisible = false" full :footer="false" boxClass="px-4 pt-4">
       <xt-option-from :options="nameOptions" :data="data">
         <template #name>
-          <xt-option-icon
-            class="mb-3"
-            v-model:icon="data.icon"
-            v-model:input="data.name"
-          />
+          <xt-option-icon class="mb-3" v-model:icon="data.icon" v-model:input="data.name" />
         </template>
       </xt-option-from>
       <xt-option-from :options="filesOptions" :data="data" style="width: 542px">
         <template #model>
           <xt-option-info title="分组模式" :info="modelInfo" />
         </template>
-        <template #custom> <div class="mb-3">正在火速开发中</div> </template>
+        <template #custom>
+          <div class="mb-3">正在火速开发中</div>
+        </template>
       </xt-option-from>
     </xt-modal>
   </div>
@@ -70,7 +61,7 @@ watch(
   () => props.data.model,
   (newVal, oldVal) => {
     if (newVal === "custom") {
-      proxy.$xtConfirm(
+      window.$ui.confirm(
         "是否切换模式",
         "切换自定义模式将会清空当前分组，是否继续？",
         {
@@ -89,7 +80,7 @@ watch(
     }
 
     if (oldVal == "observe" || oldVal == "arrange") return;
-    proxy.$xtConfirm("是否切换模式", "切换模式将会清空当前分组，是否继续？", {
+    window.$ui.confirm("是否切换模式", "切换模式将会清空当前分组，是否继续？", {
       okText: "切换",
       ok: () => {
         data.value.list = [];

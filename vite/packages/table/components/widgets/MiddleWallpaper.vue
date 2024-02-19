@@ -12,9 +12,9 @@
 
       <div class="absolute inset-0" style="border-radius: 8px; z-index: 0">
         <template v-if="imgList.length <= 0">
-          <div class="w-full  flex flex-col items-center justify-center" :class="paperSize === 2 ? 'h-full':'h-60'">
+          <div class="flex flex-col items-center justify-center w-full" :class="paperSize === 2 ? 'h-full':'h-60'">
             <newIcon icon="fluent-emoji:framed-picture" style="font-size: 3.5rem;" v-if="paperSize === 2"/>
-            <div class="xt-font p-3 rounded-lg xt-text font-14 xt-bg-t-2  font-400" :class="paperSize === 2 ? 'my-6':'my-2'" :style="paperSize === 2 ? {width:'auto'} :{ width:'210px',}">
+            <div class="p-3 rounded-lg xt-font xt-text font-14 xt-bg-t-2 font-400" :class="paperSize === 2 ? 'my-6':'my-2'" :style="paperSize === 2 ? {width:'auto'} :{ width:'210px',}">
               我们提供多种壁纸源供你选择，快快挑选喜爱的壁纸，加入收藏吧。
             </div>
             <xt-button size="mini" :w="100" :h="40" type="theme" style="border-radius: 8px;" @click="goPickOut">去挑选</xt-button>
@@ -30,11 +30,11 @@
             </video>
             <viewer :images="[getCustomDataPaper]" :options="imgOption" v-else>
               <div v-for=" (img,index)  in  [getCustomDataPaper] " :style="{width:`${imgWH.width}px`,height:`${imgWH.height}px`}" class="rounded-lg">
-                <img  :src="img.src"    :data-source="img.path" :alt="img.resolution" class="w-full h-full object-cover rounded-lg pointer relative">
+                <img  :src="img.src"    :data-source="img.path" :alt="img.resolution" class="relative object-cover w-full h-full rounded-lg pointer">
               </div>
             </viewer>
 
-            <div class="absolute bottom-0  flex right-0 hover-item" style="opacity: 0;">
+            <div class="absolute bottom-0 right-0 flex hover-item" style="opacity: 0;">
               <xt-button w="40" h="40" class="xt-bg-t-3" style="border-radius: 8px ;margin: 0 12px 10px 0; " @click="lastImg">
                 <div class="flex items-center justify-center">
                   <xt-new-icon icon="fluent:chevron-left-16-regular" size="20"></xt-new-icon>

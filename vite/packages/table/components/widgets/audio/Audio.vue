@@ -1,11 +1,13 @@
 <template>
-  <Widget :customData="customData" :limit-env="['web']" :customIndex="customIndex" :options="options" :desk="desk" :menu-list="menus">
-    <template #left-title-icon>
-      <div class="icon"
-        style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
-        <newIcon icon="akar-icons:sound-on" class="" style="font-size: 20px;"></newIcon>
-      </div>
-    </template>
+  <xt-container 
+    :header="header"
+    v-model:customSize="customSize"
+    :customData="customData" 
+    :limit-env="['web']" 
+    :customIndex="customIndex" 
+    :options="options" 
+    :desk="desk" 
+    :menu-list="menus">
     <HorizontalPanel style="min-width: 100%" :navList="audioTitle" v-model:selectType="audioType"  class="mt-4"></HorizontalPanel>
 
     <div  v-if="audioType.name === 'output'" class="flex flex-col mt-4 xt-text" style="">
@@ -67,7 +69,7 @@
         </template>
       </vue-custom-scrollbar>
     </div>
-  </Widget>
+  </xt-container>
   <audio id="speakerAudio" src='/sound/gua.mp3'>
     您的浏览器暂不支持音频播放
   </audio>
@@ -126,6 +128,11 @@ export default {
   },
   data(){
     return{
+      header:{
+        title:'音频',
+        ifyIcon:'akar-icons:sound-on'
+      },
+      customSize:'2x4',
       options: {
         className: 'card',
         title: '音频',

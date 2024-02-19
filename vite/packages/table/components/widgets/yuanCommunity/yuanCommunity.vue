@@ -1,53 +1,50 @@
 <template>
     <div>
-        <Widget :desk="desk" :options="options" :customIndex="customIndex" :menuList="menuList" ref="cardSlot" :env="env"
-            :sizeList="sizeList" :customData="customData">
-            <template #left-title-icon>
-                <div class="icon"
-                    style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
-                    <YuanIcon icon="fluent:chat-16-regular" style="font-size: 24px;"></YuanIcon>
-                </div>
-            </template>
-            <template #left-title v-if="showForumList.length > 0">
-                <div @click="refreshPost">
-                    <YuanIcon 
-                        class="xt-text refresh pointer" 
-                        style=" font-size: 18px;margin-top: 1px;vertical-align: sub;"
-                        icon="akar-icons:arrow-clockwise" />
-                </div>
-            </template>
-            <div v-if="showForumList.length > 0">
-                <!-- 顶部导航栏 -->
-                <div class="flex justify-between mt-3">
-                    <xt-option-tab v-if="showForumList.length > 1" :list="showForumList" :circle="true" v-model="defaultForum" style="height: 40px;"></xt-option-tab>
-                </div>
-                <!-- 内容区 -->
-                <div :style="{ height: showItem }" v-if="this.showForumPost?.length > 0">
-                    <vue-custom-scrollbar ref="threadListRef" :key="currentPage" :settings="outerSettings"
-                        style="overflow: hidden;flex-shrink: 0;width: 100%;" :style="{ height: scrollBarHeight }">
-                        <div v-if="isLoading">
-                            <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
-                        </div>
-                        <div class="content" v-else>
-                            <div v-for="(item, index) in showForumPost" style="display: flex;" class="">
-                                <div class="item" @click="showDetail(item)">
-                                    <!-- {{ item.pc_summary }} -->
-                                    <communItem :key="index" :copyNum="copyNum" :showForumPost="item" />
-                                </div>
-
+        <xt-container
+            v-model:customSize="customData.customSize"
+            :header="header" 
+            :desk="desk" 
+            :options="options" 
+            :customIndex="customIndex" 
+            :menuList="menuList" 
+            ref="cardSlot" 
+            :env="env"
+            :sizeList="sizeList" 
+            :customData="customData">
+            <div v-if="showForumList.length > 0" class="flex flex-col flex-1 " style="height: calc(100%);">
+            <xt-option-tab 
+                v-if="showForumList.length > 1" 
+                :list="showForumList" 
+                :circle="true" 
+                v-model="defaultForum" 
+                style="height: 40px;">
+            </xt-option-tab>
+            <div  v-if="showForumPost.length > 0" class="flex flex-col flex-1 w-full h-0">
+                <vue-custom-scrollbar ref="threadListRef"  :settings="outerSettings"
+                    style="overflow: hidden;width: 100%;" class="flex-1">
+                    <div v-if="isLoading">
+                        <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
+                    </div>
+                    <div class="content" v-else>
+                        <div v-for="(item, index) in showForumPost" style="display: flex;" class="">
+                            <div class="item" @click="showDetail(item)">
+                                <communItem :key="index" :showForumPost="item" />
                             </div>
-                            <!-- <div class="flex items-center justify-center w-full h-[40px] mt-3">
-                                <xt-button
-                                    style="backend:var(--primary-bg);color:var(--secondary-text);width:84px;height:32px;border-radius: 8px;">查看更多</xt-button>
-                            </div> -->
                         </div>
-
-                    </vue-custom-scrollbar>
-
-                </div>
-                <Unusual  :title="'暂无数据'" :buttonTitle="'设置'" v-else @back="backSetting"></Unusual>
+                        <!-- <div class="flex items-center justify-center w-full h-[40px] mt-3">
+                            <xt-button :w="84" :h="32"
+                                style="
+                                backend:var(--primary-bg);
+                                color:var(--secondary-text);
+                                border-radius: 8px;">查看更多
+                            </xt-button>
+                        </div> -->
+                    </div>
+                </vue-custom-scrollbar>
             </div>
-            <Unusual :title="'暂无数据'" :buttonTitle="'设置'" v-else @back="backSetting"></Unusual>
+            <Unusual  :title="'暂无数据'" :buttonTitle="'设置'" v-else @back="backSetting"></Unusual>
+        </div>
+        <Unusual :title="'暂无数据'" :buttonTitle="'设置'" v-else @back="backSetting"></Unusual>
             <xt-button 
                 :w="40" 
                 :h="40"
@@ -57,7 +54,7 @@
                 style="position: absolute;right: 24px;bottom: 24px;color:rgba(255,255,255,0.85) !important;">
 
             </xt-button>
-        </Widget>
+        </xt-container>
         <teleport to="body" :disabled="false">
             <PublishModal 
                 v-if="showPublishModal" 
@@ -128,15 +125,11 @@ export default {
         return {
             sizeList: [
                 {
-                    title: '4x4',
-                    height: 2,
-                    width: 2,
+                    value: '4x4',
                     name: '4x4'
                 },
                 {
-                    title: '4x6',
-                    height: 3,
-                    width: 2,
+                    value: '4x6',
                     name: '4x6'
                 },
 
@@ -147,6 +140,9 @@ export default {
                 rightIcon: ' fluent:arrow-counterclockwise-20-filled',
                 type: 'community',
                 // isEdit: true
+                defaultData: {
+                    customSize: this.customData.customSize ? this.customData.customSize : '4x4',
+                }
             },
             menuList: [
                 {
@@ -269,10 +265,18 @@ export default {
         ...mapWritableState(useCommunityStore, ['communityReply', 'communityPostDetail']),
         // 判断尺寸大小
         showSize() {
-            if (this.customData && this.customData.width && this.customData.height) {
-                return { width: this.customData.width, height: this.customData.height }
+            if (this.customData.customSize) {
+                let arr = this.customData.customSize.split('x')
+                return {
+                  width: arr[0],
+                  height: arr[1]
+                }
+            }else{
+              return {
+                width: 4,
+                height: 4
+              }
             }
-            return this.sizeList[0]
         },
         showItem() {
             if (this.customData && this.customData.height) {
@@ -302,11 +306,22 @@ export default {
         //     }
         //     return this.communityPost?.slice(0, 10)
         // },
-        scrollBarHeight() {
-            if (this.showForumList.length > 1) {
-                return 'calc(100% - 73px)'
-            } else {
-                return 'calc(100% - 22px)'
+        // scrollBarHeight() {
+        //     if (this.showForumList.length > 1) {
+        //         return 'calc(100% - 83px)'
+        //     } else {
+        //         return 'calc(100% - 32px)'
+        //     }
+        // },
+        header(){
+            return {
+                title: this.options.title,
+                ifyIcon:'fluent:chat-16-regular',
+                refresh:{
+                    fn:this.refreshPost,
+                    tip:"刷新",
+                    state:this.isLoading ? true : false
+                }
             }
         },
     },
@@ -339,6 +354,9 @@ export default {
         window.removeEventListener("resize", this.handleResize)
     },
     watch: {
+        customSize(newVal,oldVal) {
+            this.customData.customSize = newVal
+        },
         showForumList(newValue) {
             // this.isLoading = true
             if (this.showForumList.length > 0) {

@@ -94,35 +94,35 @@ export default defineComponent({
 
 <template>
   <div style="min-height: 100px"  v-if="!currentSource.id">
-    <div @click="selectSource" class="flex flex-col items-center justify-center " style="margin-top: 50px">
-      <span class="mb-3 s-item w-full pointer my-active btn-active voice-hover text-center rounded-lg py-3 "><icon icon="wanggeshitu"></icon> 选择捕获源使用</span>
+    <div @click="selectSource" class="flex flex-col items-center justify-center " style="margin-top: 30px">
+      <span class="w-full py-3 mb-3 text-center rounded-lg s-item pointer my-active btn-active voice-hover "><icon icon="wanggeshitu"></icon> 选择捕获源使用</span>
     </div>
   </div>
-  <div v-else class="mb-5 flex justify-center items-center mx-5 my-8" style="color:var(--primary-text)">
+  <div v-else class="flex items-center justify-center mx-5 my-8 mb-5" style="color:var(--primary-text)">
     <div @click="selectSource" style="width: 150px;position: absolute;left: 90px;top: 16px" class="truncate pointer" >
       <a-avatar style="vertical-align: top" shape="square" :size="20" :src="'file://'+currentSource.icon"></a-avatar> {{currentSource.name}}
     </div>
-    <div  @click="captureScreen" :class="{disable:!this.settings.imageSavePath}" class="flex justify-center pointer  items-center mr-6 flex-col ml-6" >
-              <span class="px-4 voice-hover py-4 btn-active rounded-full mb-3" style="background: var(--secondary-bg);">
+    <div  @click="captureScreen" :class="{disable:!this.settings.imageSavePath}" class="flex flex-col items-center justify-center ml-6 mr-6 pointer" >
+              <span class="px-4 py-4 mb-3 rounded-full voice-hover btn-active" style="background: var(--secondary-bg);">
                 <Icon  icon="camera" style="font-size: 2em;"></Icon>
               </span>
       <span>截屏</span>
     </div>
 
-    <div v-if="!recording" @click="startRecord"  :class="{disable:!this.settings.videoSavePath}" class="flex justify-center pointer items-center mr-6 flex-col">
-            <span class="px-4 voice-hover py-4  btn-active rounded-full mb-3" style="background: var(--secondary-bg);">
+    <div v-if="!recording" @click="startRecord"  :class="{disable:!this.settings.videoSavePath}" class="flex flex-col items-center justify-center mr-6 pointer">
+            <span class="px-4 py-4 mb-3 rounded-full voice-hover btn-active" style="background: var(--secondary-bg);">
               <Icon icon="record-circle-line" style="font-size: 2em;"></Icon>
             </span>
       <span>录制</span>
     </div>
-    <div v-else @click="stopRecord"  :class="{disable:!this.settings.videoSavePath}" class="flex justify-center pointer items-center mr-6 flex-col">
-            <span class="px-4 voice-hover py-4  btn-active rounded-full mb-3" style="background: var(--secondary-bg);">
+    <div v-else @click="stopRecord"  :class="{disable:!this.settings.videoSavePath}" class="flex flex-col items-center justify-center mr-6 pointer">
+            <span class="px-4 py-4 mb-3 rounded-full voice-hover btn-active" style="background: var(--secondary-bg);">
               <Icon icon="record-circle-line" style="font-size: 2em;color:red"></Icon>
             </span>
       <span>{{ formatSeconds(this.recordedSeconds )||'0秒' }}</span>
     </div>
-    <div @click="clickMicMute" class="flex  justify-center pointer items-center mr-6 flex-col">
-            <span class="px-4 voice-hover btn-active py-4 rounded-full mb-3" style="background:  var(--secondary-bg);">
+    <div @click="clickMicMute" class="flex flex-col items-center justify-center mr-6 pointer">
+            <span class="px-4 py-4 mb-3 rounded-full voice-hover btn-active" style="background:  var(--secondary-bg);">
               <Icon icon="mic-on" style="font-size: 2em;" v-if="systemMicrophone.muted === false"></Icon>
               <Icon icon="mic-off" style="font-size: 2em;" v-else></Icon>
             </span>

@@ -1,58 +1,37 @@
 <template>
-    <xt-modal
-      v-model="visible"
-      :footer="0"
-      @close="close"
-      :index="index"
-      :maskIndex="maskIndex"
-    >
-      <template #header-right>
-        <xt-button @click="save" w="60" h="32" radius="8" type="theme"
-          >保存</xt-button
-        >
-      </template>
-      <template #header-center>
-        <xt-tab
-          v-model="currentTab"
-          :list="TabList"
-          style="width: 168px"
-          class="p-1 xt-bg-t-2"
-          :boxStyle="{ 'border-radius': '10px' }"
-          :itemStyle="{ 'border-radius': '6px' }"
-      /></template>
-      <div style="height: 50vh">
-        <div class="flex justify-center mb-3" style="zoom: 0.8">
-          <Icon v-bind="edit" :edit="true"></Icon>
-        </div>
-        <div style="width: 452px" v-if="currentTab == 'attribute'">
-          <xt-option-from :options="attributeOptions" :data="edit">
-            <template #custom>
-              <LocalApp @click="" @onLocalApp="updateApp"></LocalApp>
-            </template>
-          </xt-option-from>
-          <div></div>
-        </div>
-        <div v-else style="width: 452px">
-          <div class="p-4 mb-4 xt-bg-2 rounded-xl">
-            <xt-option-info
-              title="图标和名称"
-              info="支持自定图标和名称。"
-              icon="fluent:arrow-clockwise-16-regular"
-              @onIconClick="refreshIcon"
-            />
-            <xt-option-icon
-              v-model:icon="edit.src"
-              v-model:input="edit.titleValue"
-            />
-          </div>
-          <xt-option-from :options="appearanceNameOptions" :data="edit" />
-          <xt-option-from :options="appearanceOptions" :data="edit" />
-          <xt-option-from :options="appearanceColorOptions" :data="edit" />
-        </div>
+  <xt-modal v-model="visible" :footer="0" @close="close" :index="index" :maskIndex="maskIndex">
+    <template #header-right>
+      <xt-button @click="save" w="60" h="32" radius="8" type="theme">保存</xt-button>
+    </template>
+    <template #header-center>
+      <xt-tab v-model="currentTab" :list="TabList" style="width: 168px" class="p-1 xt-bg-t-2"
+        :boxStyle="{ 'border-radius': '10px' }" :itemStyle="{ 'border-radius': '6px' }" /></template>
+    <div style="height: 50vh">
+      <div class="flex justify-center mb-3" style="zoom: 0.8">
+        <Icon v-bind="edit" :edit="true"></Icon>
       </div>
-    </xt-modal>
-  </template>
-  <script setup>
+      <div style="width: 452px" v-if="currentTab == 'attribute'">
+        <xt-option-from :options="attributeOptions" :data="edit">
+          <template #custom>
+            <LocalApp @click="" @onLocalApp="updateApp"></LocalApp>
+          </template>
+        </xt-option-from>
+        <div></div>
+      </div>
+      <div v-else style="width: 452px">
+        <div class="p-4 mb-4 xt-bg-2 rounded-xl">
+          <xt-option-info title="图标和名称" info="支持自定图标和名称。" icon="fluent:arrow-clockwise-16-regular"
+            @onIconClick="refreshIcon" />
+          <xt-option-icon v-model:icon="edit.src" v-model:input="edit.titleValue" />
+        </div>
+        <xt-option-from :options="appearanceNameOptions" :data="edit" />
+        <xt-option-from :options="appearanceOptions" :data="edit" />
+        <xt-option-from :options="appearanceColorOptions" :data="edit" />
+      </div>
+    </div>
+  </xt-modal>
+</template>
+<script setup>
   import { storeToRefs } from "pinia";
   import {
     ref,
@@ -148,7 +127,7 @@
       //
       // }
       console.log("newVal,oldVal :>> ", newVal, oldVal);
-      proxy.$xtConfirm("是否切换模式", "切换模式将清空数据，是否继续？", {
+      window.$ui.confirm("是否切换模式", "切换模式将清空数据，是否继续？", {
         okText: "切换",
 
         ok: () => {
@@ -192,4 +171,4 @@
   };
   </script>
 
-  <style lang="scss" scoped></style>
+<style lang="scss" scoped></style>
