@@ -35,6 +35,7 @@ import { mapActions, mapWritableState } from "pinia";
 import { defaultClockData } from "../../../apps/folder/src/components/options";
 import { cardStore } from "../../../store/card";
 import { appStore } from '../../../store';
+import { dateTimeStamp } from './hooks/clockList';
 
 import Resize from "../../../apps/folder/src/components/Resize.vue";
 import ClockSettingModal from "./components/ClockSettingModal.vue";
@@ -71,22 +72,27 @@ export default {
    defaultClockData:defaultClockData,
    isClockFullScreen:false,
    bgZoom: this.customData.bgZoom,
+   clockDay:this.dateTimeStamp(Date.now()),
   }
  },
-mounted () {
+ mounted () {
   if(typeof this.customData.enableSecond==='undefined'){
     this.customData.enableSecond=false
   }
   if(typeof this.customData.backgroundFrame==='undefined'){
     this.customData.backgroundFrame=true
   }
-},
-  computed:{
+  // 在不切换页面的情况下,通过定时器来实现自动更新时钟日期标题
+  this.clockTime = setInterval(()=>{
+    this.clockDay = this.dateTimeStamp(Date.now());
+  },12 * 60 * 60 * 1000);
+ },
+ computed:{
   ...mapWritableState(appStore,["backgroundImage"]),
   // 组件头部
   header(){
    const headerOption = {
-    title:this.customData.backgroundFrame ? this.customData.name : "",
+    title:this.customData.backgroundFrame ? `${this.clockDay}` : "",
     ifyIcon: this.customData.backgroundFrame ? "fluent:clock-12-regular" : "",
     leftHover: true,
     leftHoverName:"进入全屏",
@@ -154,6 +160,7 @@ mounted () {
 
  methods:{
   ...mapActions(cardStore, ["updateCustomData"]),
+  dateTimeStamp,
   // 更换时钟组件
   updateClockStyle(e){
    this.updateCustomData(this.customIndex,{ clockId:e },this.desk);
@@ -190,6 +197,10 @@ mounted () {
     this.updateCustomData( this.customIndex, { clockId: e,},this.desk );
   },
 
+ },
+
+ unmounted(){
+  clearInterval(this.clockTime);
  },
 
 };
