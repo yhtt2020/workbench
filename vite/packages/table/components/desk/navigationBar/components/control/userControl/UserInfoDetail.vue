@@ -1,6 +1,6 @@
 <template>
  <div class="flex items-center  w-full">
-  <div  class="relative flex items-center  justify-center" :class="userinfo.frame == '' ? 'mx-0':'ml-6 mr-2.5'" @click="goMy">
+  <div  class="relative flex items-center  justify-center" :class="userinfo.frame == '' ? 'ml-6 mr-0.5':'ml-6 mr-4'" @click="goMy">
     <FrameAvatar :avatarSize="userinfo.frame == '' ?  56 : 80" :avatarUrl="userinfo.avatar" :frameUrl="userinfo.frame" 
     class="w-full flex justify-center h-full pb-2 object-fill" :frame="displayUserInfo?.equippedItems?.frameDetail" @close="close"
    />
