@@ -11,7 +11,7 @@
     ref="gameSmallSlot" 
     :menuList="gameMiddleBare" 
     :desk="desk">
-    <template v-if="showSize.width === 1 && showSize.height === 2">
+    <template v-if="showSize.width == 2 && showSize.height == 4">
       <div v-if="defaultGame.name === 'steam'" class="w-full h-full">
         <div class="flex items-center justify-center w-full h-full" v-if="detailShow === false">
       <!-- 这是什么判断 栓q -->
