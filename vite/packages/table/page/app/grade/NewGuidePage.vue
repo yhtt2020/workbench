@@ -1,7 +1,6 @@
 <template>
-  <div class="fixed overflow-hidden modal-center xt-modal tran" :class="popState ? 'pop' : step == 4 ? 'theme' : 'Popup'"
+  <div class="fixed overflow-hidden modal-center xt-modal tran" :class="popState ? 'pop' : step == 5 ? 'theme' : 'Popup'"
     style="">
-    {{ step }}
     <div v-if="!popState" class="h-full">
       <!-- 返回按钮 -->
       <div v-if="step !== 0 && guideList.length > 1" @click="prevStep" class="absolute ml-4 top-icon no-drag">
@@ -69,6 +68,10 @@
           <xt-button class="ml-3 button-bottom" @click="addNavList" size="large" type="theme">确定添加</xt-button>
         </div>
         <div class="flex" v-if="step == 4">
+          <!-- <xt-button class="ml-3 button-bottom" @click="nextStep" size="large">暂不添加</xt-button> -->
+          <xt-button class="ml-3 button-bottom" @click="nextStep" size="large" type="theme">下一步</xt-button>
+        </div>
+        <div class="flex" v-if="step == 5">
           <xt-button class="ml-3 button-bottom" @click="close" size="large" type="theme">Go ~</xt-button>
         </div>
       </div>

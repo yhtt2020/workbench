@@ -56,13 +56,10 @@
     computed:{
     },
     methods: {
-        test(){
-            await tsbApi.system.getBrowserBookmark(
-                ['edge','chrome'],
-                (data)=>{
-                    console.log('data11',data)
-                }
-            )
+        async test(){
+            // let nn = await tsbApi.system.getBrowserBookmark(['edge','chrome'])
+            await tsbApi.system.getBrowserBookmark('chrome', (data)=>{console.log(data)})
+            await tsbApi.system.getBrowserBookmark('edge', (data)=>{console.log(data)})
         },
       
     }
