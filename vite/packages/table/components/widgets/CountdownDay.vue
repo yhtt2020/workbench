@@ -1,15 +1,15 @@
 <template>
-  <Widget :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" :menuList="menuList" :custom-data="customData"
-          ref="cardSlot">
-    <template #left-title-icon>
-      <div
-        class="icon"
-        style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; ">
-        <newIcon icon="fluent-calendar-16-regular" style="font-size: 20px;"/>
-      </div>
-    </template>
-    <div class="mt-4 content"
+  <xt-container 
+    :desk="desk" 
+    :sizeList="sizeList" 
+    :options="options" 
+    :customIndex="customIndex" 
+    :menuList="menuList" 
+    :custom-data="customData"
+    ref="cardSlot"
+    :header="header"
+    v-model:customSize="customData.customSize">
+    <div class="mt-1 content"
          style="display: flex;flex-direction: column;justify-content: space-between;padding: 0;align-items: center"
          v-if="countdownDays.length <= 0">
       <a-empty :description="null" image="/img/test/load-ail.png"/>
@@ -17,7 +17,7 @@
                 @click="()=>{settingVisible=true;goAddEvent()}">立即添加
       </a-button>
     </div>
-    <div class="mt-2 content " style="height: 100% ;overflow: hidden;" v-else>
+    <div class="mt-1 content" style="height: 100% ;overflow: hidden;" v-else>
       <xt-scrollbar @click="settingVisible=true" class="w-full h-full" :y="true">
         <div
           class="px-4 mb-3 event-list s-item xt-bg-2" style=""
@@ -44,7 +44,7 @@
         </div>
       </xt-scrollbar>
     </div>
-  </Widget>
+  </xt-container>
   <a-drawer :width="500" v-model:visible="settingVisible" placement="right" @close="()=>{this.goAddFlag = false}">
     <template #title>
       <div class="text-center">纪念日设置</div>
@@ -183,10 +183,8 @@ export default {
         wheelPropagation: true,
       },
       eventValue: '',
-      sizeList: [{ title: '2x2', height: 1, width: 1, name: '2x2' }, {
-        title: '2x4',
-        height: 2,
-        width: 1,
+      sizeList: [{ value: '2x2', name: '2x2' }, {
+        value: '2x4',
         name: '2x4'
       },],
       dateValue: null,
@@ -207,7 +205,11 @@ export default {
       value: null,
       visible: false,
       goAddFlag: false,
-      countdownDays: []
+      countdownDays: [],
+      header:{
+        title:'纪念日',
+        ifyIcon:'fluent-calendar-16-regular',
+      }
     }
   },
   computed: {
@@ -288,6 +290,9 @@ export default {
       handler (val) {
         this.setCountdownDay()
       }
+    },
+    customSize(newVal,oldVal) {
+      this.customData.customSize = newVal
     }
   }
 }

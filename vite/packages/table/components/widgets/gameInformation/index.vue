@@ -1,19 +1,14 @@
 <template>
-    <Widget :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk" :env="env">
-        <template #left-title-icon>
-            <div class="icon"
-                style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 4px;top: 14px;">
-                <MyIcon icon="fluent:games-16-filled" width="20" height="20" />
-                <!-- <newIcon icon="fluent:box-16-regular" class="" style="font-size: 20px;"></newIcon> -->
-            </div>
-        </template>
-        <!-- icon图标<icon icon="shuaxin"></icon> -->
-        <!-- <MyIcon icon="fluent:games-16-filled" class="myIcon" /> -->
+    <xt-container 
+        v-model:customSize="customSize"
+        :header="header"
+        :customData="customData" 
+        :customIndex="customIndex" 
+        :options="options" 
+        ref="homelSlotRef" 
+        :desk="desk" 
+        :envLimit="['offline']">
         <div class="box-border">
-            <div ref="refreshButton" @click="refreshNow" class="pointer" style="position: absolute;left: 120px;top: 16px;">
-                <!-- <icon icon="shuaxin"></icon> -->
-                <MyIcon icon="fluent:arrow-counterclockwise-20-filled"  style="font-size: 20px;"/>
-            </div>
             <div class="card-body"   v-for="(value,index) in gameData.slice(0, 3)" :key="index" @click="jump(value.url)" >
                 <div class="left-card">
                     <div class="title-article xt-text">{{value.title}}</div>
@@ -31,7 +26,7 @@
 
 
 
-    </Widget>
+    </xt-container>
 </template>
 
 <script>
@@ -72,18 +67,11 @@ export default {
             options: {
                 className: "card double",
                 title: "电竞资讯",
-                // icon: "bianji",
-                newIcon: "fluent:games-16-filled",
                 type: 'gameInformation'
-                // icon: "games-16-filled",
             },
             gameData:[],
-            env:{
-                web: false,
-                mobile: false,
-                client: false,
-                offline:true
-            }
+            customSize:'4x4',
+            refreshFlag:false
         };
     },
     mounted() {
@@ -99,12 +87,23 @@ export default {
             browser.openInUserSelect("https:" + url)
         },
         refreshNow(){
-            this.$refs.refreshButton.classList.add('animate-spin')
-            setTimeout(()=>{
-                this.$refs.refreshButton.classList.remove('animate-spin')
-                message.success({content:'刷新资讯成功',key:'refreshZixun'})
-            },500)
-            this.onGetInfo()
+            this.refreshFlag = true
+            this.onGetInfo().then(()=>{
+                this.refreshFlag = false
+            })
+        }
+    },
+    computed: {
+        header() {
+            return {
+                title:'电竞资讯',
+                ifyIcon:'fluent:games-16-filled',
+                refresh:{
+                    fn:this.refreshNow,
+                    tip:'刷新',
+                    state:this.refreshFlag ? true : false
+                }
+            }
         }
     }
 };

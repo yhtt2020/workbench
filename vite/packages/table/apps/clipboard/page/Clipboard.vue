@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center clip-container justify-between mx-4 my-4">
+  <div class="flex items-center justify-between mx-4 my-4 clip-container">
     <div class="flex">
       <!-- tab切换开始 -->
       <HorzontanlPanelIcon :navList="clipType" v-model:selectType="tab" class="mr-3"></HorzontanlPanelIcon>
@@ -8,7 +8,7 @@
       <!-- 导航栏筛选开始 -->
       <TabSwitching :navList="filterList" v-model:activeType="currentFilter"></TabSwitching>
       <div class="all-button" style="display: none;">
-        <div class="flex items-center s-bg button-active p-3 pointer rounded-md mr-3" @click="openClipType">
+        <div class="flex items-center p-3 mr-3 rounded-md s-bg button-active pointer" @click="openClipType">
           <Icon :icon="currentFilter.icon" style="font-size:1.5em;"></Icon>
           <span class="ml-1">{{ currentFilter.title }}</span>
         </div>
@@ -19,33 +19,33 @@
     <!-- 搜索按钮和设置按钮开始 -->
     <div class="flex">
       <div @click="clipSearch"
-           class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center mr-3">
+           class="flex items-center justify-center w-12 h-12 mr-3 rounded-lg pointer button-active s-bg">
         <Icon icon="sousuo" style="font-size: 1.5em;"></Icon>
       </div>
-      <div class="pointer button-active s-bg h-12 w-12 flex items-center rounded-lg justify-center" @click="openSet">
+      <div class="flex items-center justify-center w-12 h-12 rounded-lg pointer button-active s-bg" @click="openSet">
         <Icon icon="shezhi" style="font-size: 1.5em;"></Icon>
       </div>
     </div>
     <!-- 搜索按钮和设置按钮结束 -->
   </div>
 
-  <div v-if="this.searchWords" class="xt-bg pointer rounded-full p-2 text-center xt-text mx-10" @click="drawerVisible=true">
+  <div v-if="this.searchWords" class="p-2 mx-10 text-center rounded-full xt-bg pointer xt-text" @click="drawerVisible=true">
     关键词：{{this.searchWords}} <close-circle-filled class="ml-3" @click.stop="this.searchWords='';this.doSearch()" />
   </div>
   <!-- 剪切板列表展示区域开始 -->
   <div v-if="isWin()">
-    <div class="xt-bg-2 rounded-lg p-4 px-5 w-auto m-auto" v-if="!settings.enable">
-      <div class="float-left mr-2 pt-1" ><iconify style="font-size: 18px;vertical-align: text-bottom" icon="akar-icons:info-fill"></iconify> 当前剪切板功能未开启，请在设置中开启，或者直接点击</div> <xt-button @click="settings.enable=true" type="theme" size="mini" :w="70" :h="35">开启</xt-button>
+    <div class="w-auto p-4 px-5 m-auto rounded-lg xt-bg-2" v-if="!settings.enable">
+      <div class="float-left pt-1 mr-2" ><iconify style="font-size: 18px;vertical-align: text-bottom" icon="akar-icons:info-fill"></iconify> 当前剪切板功能未开启，请在设置中开启，或者直接点击</div> <xt-button @click="settings.enable=true" type="theme" size="mini" :w="70" :h="35">开启</xt-button>
     </div>
   </div>
   <template v-else>
-    <div class="xt-bg-2 rounded-lg p-4 px-5 w-auto m-auto"  >
-      <div class=" mr-2 pt-1 " ><iconify style="font-size: 18px;vertical-align: text-bottom" icon="akar-icons:info-fill"></iconify> 暂不支持在非Windows平台上使用剪切板功能。请耐心等待版本更新。</div>
+    <div class="w-auto p-4 px-5 m-auto rounded-lg xt-bg-2"  >
+      <div class="pt-1 mr-2 " ><iconify style="font-size: 18px;vertical-align: text-bottom" icon="akar-icons:info-fill"></iconify> 暂不支持在非Windows平台上使用剪切板功能。请耐心等待版本更新。</div>
     </div>
   </template>
 
   <vue-custom-scrollbar style="width: 100%" @ps-x-reach-end="doLoadNextPage" ref="wrapper" @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller"
-                        class="mx-4 my-2 py-4 h-full ">
+                        class="h-full py-4 mx-4 my-2 ">
     <ClipList :clipList="clipContents" ></ClipList>
   </vue-custom-scrollbar>
 <!--  <div class="text-center">-->
@@ -59,9 +59,9 @@
   <!-- 搜索右侧抽屉开始 -->
   <a-drawer :width="500" v-model:visible="drawerVisible" title="搜索" placement="right">
     <div class="flex mb-3">
-      <a-input @keydown.enter="clickSearch" allow-clear placeholder="输入关键词" class="no-drag h-10 w-full" v-model:value="searchWords"
+      <a-input @keydown.enter="clickSearch" allow-clear placeholder="输入关键词" class="w-full h-10 no-drag" v-model:value="searchWords"
                style="background: var(--secondary-bg);"></a-input>
-      <div class="h-10 w-24 ml-3 s-item pointer flex button-active items-center justify-center rounded-lg"
+      <div class="flex items-center justify-center w-24 h-10 ml-3 rounded-lg s-item pointer button-active"
            @click="clickSearch" style="background: var(--secondary-bg);">
         搜索
       </div>

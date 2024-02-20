@@ -1,10 +1,14 @@
 <template>
   <div>
-    <Widget :customData="customData" :customIndex="customIndex" :menuList="menuList" :options="options" ref="cardSlot"
-            :desk="desk">
-      <div class="icon">
-        <Icon icon="fluent:flash-16-regular"/>
-      </div>
+    <xt-container
+      :header="header"
+      v-model:customSize="customSize" 
+      :customData="customData" 
+      :customIndex="customIndex" 
+      :menuList="menuList" 
+      :options="options" 
+      ref="cardSlot"    
+      :desk="desk">
       <!-- 快捷键列表 更多快捷键 -->
       <div v-show="defaultType.name === 'recent'" class="top-list">
 
@@ -86,7 +90,7 @@
         </template>
 
       </div>
-    </Widget>
+    </xt-container>
   </div>
   <!-- 设置面板 -->
   <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
@@ -189,7 +193,11 @@ export default {
       ],
       // 快捷键测试数据
       currentKeyList: [],
-
+      customSize:'4x4',
+      header:{
+        title:'快捷键',
+        ifyIcon:"fluent:flash-16-regular",
+      }
       // 快捷键测试数据 提交删
       // keyList: [
       //   {
@@ -605,7 +613,7 @@ export default {
   // border: 1px solid #fff;
   width: 265px;
   height: 88px;
-  margin-top: 14px;
+  // margin-top: 14px;
   background: rgba(0, 0, 0, 0.30);
   border-radius: 12px;
 }
@@ -675,7 +683,7 @@ export default {
   float: left;
   background: rgba(0, 0, 0, 0.30);
   border-radius: 12px;
-  margin-top: 16px;
+  // margin-top: 16px;
 }
 
 .name-img {

@@ -1,25 +1,22 @@
 <template>
-  <Widget :limit-env="['web']"  :sizeList="sizeList" :customData="customData" :customIndex="customIndex" :options="options" ref="gameSmallSlot" :menuList="gameMiddleBare" :desk="desk">
-    <div @click="goRoute" class="px-1 py-1 pointer" style="position: absolute;left: 45px;top:10px" v-if="myDetailShow === false">
-      我的游戏
-    </div>
-    <div class="px-1 py-1" style="position: absolute;left: 45px;top:10px" v-else>
-      当前游戏
-    </div>
-    <template #left-title-icon>
-        <div
-          class="icon"
-          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; ">
-          <newIcon icon="mdi:steam" style="font-size: 20px;" />
-        </div>
-      </template>
+  <xt-container 
+    @titleHover="goRoute"
+    :header="header"
+    v-model:customSize="customData.customSize"
+    :envLimit="['web']"  
+    :sizeList="sizeList" 
+    :customData="customData" 
+    :customIndex="customIndex" 
+    :options="options" 
+    ref="gameSmallSlot" 
+    :menuList="gameMiddleBare" 
+    :desk="desk">
     <template v-if="showSize.width === 1 && showSize.height === 2">
       <div v-if="defaultGame.name === 'steam'" class="w-full h-full">
         <div class="flex items-center justify-center w-full h-full" v-if="detailShow === false">
       <!-- 这是什么判断 栓q -->
           <a-spin v-if="displaySteamGame.length !== displaySteamGame.length " style="margin: 0 auto;"/>
-          <div class="flex flex-col mt-3" v-else>
+          <div class="flex flex-col " v-else>
             <XtState  v-if="displaySteamGame.length ==0"  :state="'null'" style="width: 250px;height: 352px;" bg=""></XtState>
            <div v-for="item in displaySteamGame.slice(0,2)" @click="enterMyGameDetail(item)" class="flex flex-col mb-4 rounded-lg s-item pointer">
             <div style="height:118.53px;" >
@@ -43,7 +40,7 @@
     </template>
     <template v-else>
       <div v-if="defaultGame.name === 'steam'"  class="w-full h-full">
-        <div class="flex items-center  justify-center w-full h-full" v-if="detailShow === false">
+        <div class="flex items-center justify-center w-full h-full" v-if="detailShow === false">
           <a-spin v-if="displaySteamGame.length !== displaySteamGame.length" style="margin: 0 auto;"/>
           <div class="my-game" v-else>
             <XtState  v-if="displaySteamGame.length ==0" :state="'null'" style="width: 538px;height: 352px;" bg=""></XtState>
@@ -67,7 +64,7 @@
         <MyGameSmallDetail :otherGame="otherData" :size="customData"  v-else  @quitGame="closeOtherGame"></MyGameSmallDetail>
       </div>
     </template>
-  </Widget>
+  </xt-container>
   <a-drawer v-model:visible="middleShow" title="设置" placement="right" width="500">
     <!-- <template #extra>
       <div class="flex items-center justify-center w-16 h-10 rounded-lg drawer-item-bg pointer" @click="saveSize">保存</div>
@@ -125,10 +122,18 @@ export default {
   computed:{
     ...mapWritableState(steamUserStore,['steamGameList']),
     showSize(){
-      if(this.customData && this.customData.width && this.customData.height){
-        return {width:this.customData.width,height:this.customData.height}
+      if (this.customData.customSize) {
+        let arr = this.customData.customSize.split('x')
+        return {
+          width: arr[0],
+          height: arr[1]
+        }
+      }else{
+        return {
+          width: 2,
+          height: 4
+        }
       }
-      return this.sizeList[0]
     },
     defaultGame(){
       if(this.customData && this.customData.name){
@@ -140,6 +145,14 @@ export default {
       return this.steamGameList.filter(game=>{
         return !isHide('steam',game.appid)
       })
+    },
+    header(){
+      return {
+        title:this.myDetailShow === true ? '游戏详情' : '我的游戏',
+        ifyIcon:'mdi:steam',
+        titleHover: !this.myDetailShow,
+        titleHoverName:'我的游戏'
+      }
     }
   },
   data(){
@@ -152,7 +165,10 @@ export default {
         },
         // icon: 'game',
         type: 'games',
-        epicShow: true
+        epicShow: true,
+        defaultData:{
+          customSize: this.customData.customSize ? this.customData.customSize : '2x4',
+        }
       },
       myDetailShow:false,
       middleShow:false,
@@ -161,7 +177,7 @@ export default {
       detailShow:false,
       CPUShow:false,
       otherDetailShow:false,
-      sizeList:[{title:'1x2',width:1,height:2,name:'1x2'},{title:'2x2',width:2,height:2,name:'2x2'}],
+      sizeList:[{value:'2x4',name:'2x4'},{value:'4x4',name:'4x4'}],
       gameMiddleBare:[ { icon: 'shezhi1', title: '设置', fn: () => {this.middleShow = true;this.$refs.gameSmallSlot.visible = false } } ],
       showGameType:[{title:'Steam游戏，按最近游玩时间顺序展示',name:'steam'},{title:'其他游戏，按最近游玩时间顺序展示(正在开发中)',name:'other'}],
       // steamCardSize:[{title:'1x2',className:'',name:'1x2'}, {title:'2x2',className:'double',name:'2x2'}],
@@ -187,6 +203,9 @@ export default {
         // this.$emit('customEvent')
       },
       immediate:true,
+    },
+    customSize(newV,oldV){
+      this.customData.customSize = newV
     }
   },
   methods:{

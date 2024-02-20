@@ -1,22 +1,17 @@
 <template>
-    <Widget :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk"
-    :env="env">
-        <template #left-title-icon>
-            <div class="icon"
-                style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 3px;top: 13px;">
-                <Icon icon="fluent:clock-12-regular" width="20" height="20" />
-            </div>
-        </template>
-        <template #left-title>
-            <Icon @click="onHistoryMessage" class="xt-text refresh pointer" style=" font-size: 18px;vertical-align: sub;" icon="akar-icons:arrow-clockwise" />
-            <!-- <div @click="onHistoryMessage">2
-            </div> -->
-        </template>
+    <xt-container 
+        :header="header"
+        :customData="customData" 
+        :customIndex="customIndex" 
+        :options="options" 
+        ref="homelSlotRef" 
+        :desk="desk"
+        :envLimit="['offline']">
         <div class="box-flex">
             <div>{{ this.history?.date }}</div>
             <div>{{ this.history?.title }}</div>
         </div>
-    </Widget>
+    </xt-container>
 </template>
 
 <script>
@@ -65,12 +60,7 @@ export default {
                 tetle:""
             },
             timer:"12",
-            env:{
-                web: false,
-                mobile: false,
-                client: false,
-                offline:true
-            }
+            
         };
     },
     mounted() {
@@ -101,6 +91,19 @@ export default {
             }
         },
     },
+    computed:{
+        header(){
+            return {
+                title:'历史上的今天',
+                ifyIcon:"fluent:clock-12-regular",
+                refresh:{
+                    fn:this.onHistoryMessage,
+                    tip:'刷新',
+                    state:this.loading ? true : false
+                }
+            }
+        }
+    }
 };
 </script>
 

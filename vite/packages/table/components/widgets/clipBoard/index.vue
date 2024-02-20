@@ -1,11 +1,18 @@
 <template>
     <div>
 
-        <Widget :limit-env="['web']"  :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk">
-        <div class="icon-topline">
-            <!-- <pushpin-outlined></pushpin-outlined> -->
+        <xt-container 
+            :header="header"
+            v-model:customSize="customSize"
+            :envLimit="['web']"  
+            :customData="customData" 
+            :customIndex="customIndex" 
+            :options="options" 
+            ref="homelSlotRef" 
+            :desk="desk">
+        <!-- <div class="icon-topline">
             <newIcon icon="fluent:clipboard-bullet-list-16-regular" style="font-size: 20px;"/>
-        </div>
+        </div> -->
         <div class="top-col">
             <div class="col-left">
                 <span class="relative flex items-center justify-center flex-1 h-full nav-item pointer span-flex"  :class="['item', { action: actionIndex == 1 }]" @click="onChangeTopIndex(1)">
@@ -100,7 +107,7 @@
         </div>
 
 
-    </Widget>
+    </xt-container>
     </div>
         <!-- 设置面板 -->
         <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
@@ -247,7 +254,12 @@ export default {
                     type:'image'
                 }
 
-            ]
+            ],
+            header: {
+                title:'剪贴板',
+                ifyIcon:'fluent:clipboard-bullet-list-16-regular',
+            },
+            customSize:'4x4'
         };
     },
     async mounted() {
@@ -281,7 +293,7 @@ export default {
     }
     .top-col{
         display: flex;
-        margin-top: 12px;
+        // margin-top: 12px;
         width: 100%;
         height: 44px;
         // border: 1px solid #fff;

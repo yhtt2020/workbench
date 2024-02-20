@@ -1,11 +1,16 @@
 <template>
-  <Widget :desk="desk" :options="options" :customIndex="customIndex" :menuList="menuList" ref="cardSlot">
+  <xt-container 
+    :desk="desk" 
+    :options="options" 
+    :customIndex="customIndex" 
+    :menuList="menuList" 
+    ref="cardSlot">
     <!-- <div class="flex flex-col items-center"> -->
     <div v-if="countDowntime.hours" style="display: flex;flex-direction: column;justify-content: space-between; "
       class="mt-4">
-      <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
+      <!-- <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
         <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
-      </div>
+      </div> -->
       <div style="text-align: center;color: var(--primary-text);font-size:16px  ;" class="font-14">
         <clockIcon icon="fluent:clock-12-regular" class="mr-2 title-icon"
           style="cursor:pointer ;font-size: 20px;text-align: center; vertical-align: sub;">
@@ -26,9 +31,9 @@
       </div>
     </div>
     <div class="flex flex-col h-full text-center" v-else-if="clockEvent.length <= 0" style="width: 100%">
-      <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
+      <!-- <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
         <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
-      </div>
+      </div> -->
       <div class="flex flex-col items-center justify-center h-full">
         <xt-button class="rounded-lg  w-[120px] h-[45px] xt-active-bg mb-4 border-0 p-0 font-16" type="primary"
           @click="onSetup">添加闹钟</xt-button>
@@ -38,9 +43,9 @@
 
     </div>
     <div @click="onSetup" class="flex flex-col mt-6 text-center cursor-pointer" v-else>
-      <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
+      <!-- <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
 
-      </div>
+      </div> -->
       <div style="text-align: center;font-family: PingFangSC-Regular !important;font-size: 16px;font-weight: 400; "
         class="font-14">
         <clockIcon icon="fluent:clock-alarm-16-filled" class="mr-2 title-icon"
@@ -57,7 +62,7 @@
         {{ clockEvent[0].eventValue }}
       </div>
     </div>
-  </Widget>
+  </xt-container>
   <!-- {{ topClockSettingVisible }} -->
   <!-- <clockDrawer v-if="topClockSettingVisible"></clockDrawer> -->
   <a-drawer v-model:visible="topClockSettingVisible" class="custom-class xt-text" style="color: red" title="设置"

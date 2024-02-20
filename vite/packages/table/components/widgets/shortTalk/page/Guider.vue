@@ -1,22 +1,24 @@
 <template>
 
-    <Widget :envLimit="['guest']" @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :options="options" ref="homelSlotRef" :desk="desk" >
-        <template #left-title>
-            <Icon icon='fluent:open-20-filled' class="pointer" width="20" height="20" style="position: relative;top:3px;" />
-        </template>
-        <div class="top-icon">
-            <Icon icon="akar-icons:chat-question" />
-        </div>
-        <div class="guider-body xt-scrollbar overflow-hidden mt-3" style="height: 360px;">
+    <xt-container 
+        :header="header"
+        v-model:customSize="customSize"
+        :envLimit="['guest']"  
+        :customData="customData" 
+        :customIndex="customIndex" 
+        :options="options" 
+        ref="homelSlotRef" 
+        :desk="desk" >
+        <div class="mt-1 overflow-hidden guider-body xt-scrollbar" style="height: 360px;">
             <div class="guider-cell pointer" v-for="(item,index) in dataList" :key="index" @click="jumpUrl(item.url)">
-                <div class="cell-icon flex items-center">
+                <div class="flex items-center cell-icon">
                     <Icon :icon="item.icon"  width="20" height="20" />
                 </div>
                 <span style="margin-left: 10px;">{{ item.title }}</span>
             </div>
         </div>
 
-    </Widget>
+    </xt-container>
 
 
 </template>
@@ -103,7 +105,17 @@ export default {
                     icon:'fluent-emoji-flat:thought-balloon',
                     url:'https://www.yuque.com/thisky/ne5ut5',
                 },
-            ]
+            ],
+            header:{
+                title:'社区助手',
+                ifyIcon:'akar-icons:chat-question',
+                rightIcon:[
+                    {
+                        ifyIcon:'fluent:open-20-filled',
+                    }
+                ]
+            },
+            customSize:'2x4'
         };
     },
     async mounted() {

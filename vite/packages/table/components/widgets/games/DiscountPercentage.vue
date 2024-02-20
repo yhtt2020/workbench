@@ -1,16 +1,19 @@
 <template>
-  <Widget :limit-env="['web']"  :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex" :menuList="detailBar" ref="detailSlot" :customData="customData" :desk="desk" :env="env">
-    <template #left-title-icon>
-        <div
-          class="icon"
-          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; ">
-          <newIcon icon="mdi:steam" style="font-size: 20px;" />
-        </div>
-      </template>
-    <div class="px-3 py-1 rounded-lg bg-mask pointer xt-bg-2" @click="showRegionSelect"
+  <xt-container
+    @titleHover="showRegionSelect"
+    v-model:customSize="customSize"
+    :header="header" 
+    :envLimit="['web']"  
+    :options="options" 
+    :confirmCCData="confirmCCData" 
+    :customIndex="customIndex" 
+    :menuList="detailBar" 
+    ref="detailSlot" 
+    :customData="customData" 
+    :desk="desk">
+    <!-- <div class="px-3 py-1 rounded-lg bg-mask pointer xt-bg-2" @click="showRegionSelect"
          style="position: absolute;left: 45px;top:10px;">{{ region.name }}
-    </div>
+    </div> -->
     <a-spin v-if="isLoading === true" style="display: flex; justify-content: center; align-items:center;margin-top: 60%"></a-spin>
     <template v-else-if="fail">
       <a-result :status="null" title="请确认网络" style="margin-top: 3em">
@@ -24,7 +27,7 @@
         <div class='w-full'>
           <swiper  @touchstart.stop @touchmove.stop @touchend.stop  :spaceBetween="30" :loop="true" :autoplay="{ delay: 2500,disableOnInteraction: false,}" :pagination="{clickable:true}" :modules="modules" class="mySwiper" >
           <swiper-slide v-for="item in list">
-            <div class="w-full mt-5 cursor-pointer" v-for="imgItem in item[0]" @click="goToGameAppDetails(imgItem,customData.id)"   style="height:118px;position: relative;">
+            <div class="w-full mt-3 cursor-pointer" v-for="imgItem in item[0]" @click="goToGameAppDetails(imgItem,customData.id)"   style="height:118px;position: relative;">
               <img :src="imgItem.header_image" alt="" class="rounded-lg" style="width:100%;height:100%;object-fit: cover;">
               <div class="text-center bg-black right-top w-14 bg-opacity-70" style="color:var(--active-text);font-family: oswald;border-top-left-radius: 7px;border-bottom-right-radius: 7px;">-{{imgItem.discount_percent}}%</div>
             </div>
@@ -88,7 +91,7 @@
       </template>
     </template>
 
-  </Widget>
+  </xt-container>
 
   <HorizontalDrawer :drawerTitle="drawerTitle" ref="regionDrawer" v-model:selectRegion="customData.id" :rightSelect="regionRange" @getArea="getArea" ></HorizontalDrawer>
 </template>
@@ -159,12 +162,8 @@ export default {
       id:'',
       isLoading:false,
       detailBar:[{icon:"shezhi1",title:'设置',fn:()=>{this.$refs.regionDrawer.detailDisplay = true; this.$refs.detailSlot.visible = false}}],
-      env:{
-        web: false,
-        mobile: false,
-        client: false,
-        offline:false
-      }
+      customSize:'2x4',
+      
     }
   },
   mounted(){
@@ -213,6 +212,14 @@ export default {
         return groups
       } else {
         return []
+      }
+    },
+    header(){
+      return {
+        title:this.region.name,
+        ifyIcon:'mdi:steam',
+        titleHover:true,
+        titleHoverName:this.region.name
       }
     }
   },

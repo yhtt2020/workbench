@@ -1,20 +1,13 @@
 <template>
-  <Widget :limit-env="['web']"  :options="options" :customIndex="customIndex" :desk="desk">
-    <template #left-title-icon>
-      <div
-        class="flex items-center justify-center icon"
-        style="width: 38px;height:24px; position: absolute; left: 2px"
-      >
-        <newIcon icon="cib:epic-games" style="font-size: 20px" />
-      </div>
-    </template>
+  <xt-container 
+    :header="header"
+    v-model:customSize="customSize"
+    :envLimit="['web']"  
+    :options="options" 
+    :customIndex="customIndex" 
+    :desk="desk">
 
-    <div ref="refreshButton" class="flex items-center justify-center pointer" style="position: absolute;left: 130px;top: 19px;" @click.stop="refreshNow">
-      <newIcon icon="fluent:arrow-sync-20-filled" style="color: var(--primary-text);"/>
-    </div>
-
-
-    <HorizontalPanel style="min-width: 100%" :navList="epicTips"  v-model:selectType="epicType"  class="mt-2 drawer-item-bg" >
+    <HorizontalPanel style="min-width: 100%" :navList="epicTips"  v-model:selectType="epicType"  class=" drawer-item-bg" >
     </HorizontalPanel>
 
     <template v-if="epicType.name === 'week'">
@@ -55,7 +48,7 @@
       </div>
       <EpicDetail :detailOptions="detailList" :detailType="epicType" v-else @update:backShow="detailBack"></EpicDetail>
     </template>
-  </Widget>
+  </xt-container>
 </template>
 
 <script>
@@ -109,11 +102,25 @@ export default {
       unPromotionList: [],
 
       detailList: {},
+
+      customSize:'2x4',
+      refreshFlag:false,
     }
   },
 
   computed:{
-    ...mapWritableState(epicStore,['epicData'])
+    ...mapWritableState(epicStore,['epicData']),
+    header(){
+      return {
+        title: 'Epic喜加一',
+        ifyIcon:'cib:epic-games',
+        refresh:{
+          fn:this.refreshNow,
+          tip:'刷新',
+          state:this.refreshFlag ? true : false
+        }
+      }
+    }
   },
 
   mounted() {
@@ -128,12 +135,11 @@ export default {
     ...mapActions(epicStore,['getEpicData','refresh']),
     // 点击刷新
     refreshNow(){
-      this.$refs.refreshButton.classList.add('animate-spin')
-      setTimeout(()=>{
-        this.$refs.refreshButton.classList.remove('animate-spin')
-        message.success('数据更新成功')
-      },500)
+      this.refreshFlag = true
       this.refresh()
+      setTimeout(()=>{
+        this.refreshFlag = false
+      },500)
     },
 
     enterWeek (item){

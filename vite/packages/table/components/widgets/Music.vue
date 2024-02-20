@@ -1,13 +1,9 @@
 <template>
-  <Widget :options="options" :customIndex="customIndex" :desk="desk">
-    <template #left-title-icon>
-        <div
-          class="icon"
-          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; ">
-          <newIcon icon="fluent:music-note-2-16-regular" style="font-size: 20px;" />
-        </div>
-      </template>
+  <xt-container 
+    :header="header"
+    :options="options" 
+    :customIndex="customIndex" 
+    :desk="desk">
     <div
       @click="enterMusic"
       class="pointer"
@@ -24,7 +20,7 @@
       <a-col :span="12"> </a-col>
       <a-col :span="12"> </a-col>
     </a-row>
-  </Widget>
+  </xt-container>
 </template>
 <script>
 import { appStore } from "../../store";
@@ -54,6 +50,10 @@ export default {
         // icon: "customerservice",
         type: "music",
       },
+      header:{
+        title:'网易云',
+        ifyIcon:'fluent:music-note-2-16-regular'
+      }
     };
   },
   components: {

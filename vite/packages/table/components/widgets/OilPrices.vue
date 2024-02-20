@@ -1,16 +1,16 @@
 <template>
   <div>
-    <Widget :options="options" :customIndex="customIndex" :customData="customData" :menuList="menuList" ref="cardSlot"
-      :desk="desk" :size="size" :env="env">
-      <template #left-title-icon>
-        <div class="icon" style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; ">
-          <newIcon icon="fluent:gas-pump-24-regular" style="font-size: 22px;" />
-        </div>
-      </template>
-      <!-- {{ currentCity }} -->
-      <!-- {{ cityOilData }} -->
-      <!-- {{ cityOilList }} -->
+    <xt-container 
+      :header="header"
+      v-model:customSize="customSize"
+      :options="options" 
+      :customIndex="customIndex" 
+      :customData="customData" 
+      :menuList="menuList" 
+      ref="cardSlot"
+      :desk="desk" 
+      :size="size" 
+      :envLimit="['offline']">
       <div v-if="isLoading">
         <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 60%" />
       </div>
@@ -56,8 +56,7 @@
         </div>
       </div>
 
-    </Widget>
-    <!-- {{ showOilData[0] }} -->
+    </xt-container>
     <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
       <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
         <div class="primary-title" style="color: var(--primary-text);">选择地区</div>
@@ -105,10 +104,6 @@ export default {
     return {
       fail: false,
       options: {
-        className: 'card ',
-        title: '今日油价',
-        icon: '',
-        type: 'OilPrices',
       },
       menuList: [
         {
@@ -117,6 +112,11 @@ export default {
           fn: () => { this.settingVisible = true; this.$refs.cardSlot.visible = false }
         },
       ],
+      header: {
+        title: '今日油价',
+        ifyIcon:'fluent:gas-pump-24-regular'
+      },
+      customSize: '2x4',
       currentIndex: 0,
       size: {
         width: 1,
@@ -223,7 +223,7 @@ export default {
   font-size: 16px;
   color: rgba(255, 255, 255, 0.85);
   font-weight: 400;
-  margin-top: 14px;
+  // margin-top: 14px;
 }
 
 .oil {

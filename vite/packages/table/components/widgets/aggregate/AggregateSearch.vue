@@ -1,15 +1,16 @@
 <template>
-  <Widget :editing="editing" :sizeList="bottomSizeList" :customData="customData" :customIndex="customIndex" :desk="desk" :options="options"
-    :menuList="gameMiddleBare" ref="aggregateSearchSlot">
-    <template #left-title-icon>
-        <div
-          class="icon"
-          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; ">
-          <newIcon icon="fluent:search-20-filled" style="font-size: 20px;" />
-        </div>
-      </template>
-    <div class="flex items-center justify-center w-full p-2 mt-8 mb-3 rounded-xl pointer"
+  <xt-container 
+    :header="header"
+    v-model:customSize="customData.customSize"
+    :editing="editing" 
+    :sizeList="bottomSizeList" 
+    :customData="customData" 
+    :customIndex="customIndex"
+    :desk="desk" 
+    :options="options"
+    :menuList="gameMiddleBare" 
+    ref="aggregateSearchSlot">
+    <div class="flex items-center justify-center w-full p-2 mt-4 mb-3 rounded-xl pointer"
       style="border: 1px solid var(--divider); background: var(--secondary-bg);" @click="enterSearchEngine">
       <div class="flex items-center justify-center" style="width: 20px;height:20px;">
         <Icon :icon="aggInputValue" style="font-size: 4em;color: rgba(82,196,26, 1);"></Icon>
@@ -18,10 +19,10 @@
     </div>
 
     <div class="flex">
-      <template v-if="showSize.width === 1">
+      <template v-if="showSize.width == 2">
         <div v-for="(item, index) in  aggList.slice(0, 3)" :key="item.id" @click="clickSearchItem(index)">
           <div class="flex rounded-xl active-button pointer items-center justify-center mr-2.5 h-11" v-if="index !== 0"
-            style="background: var(--secondary-bg);" :style="showSize.width === 1 ? { width: '92px' } : { width: '113px' }">
+            style="background: var(--secondary-bg);" :style="showSize.width == 2 ? { width: '92px' } : { width: '113px' }">
             <div class="flex items-center justify-center" style="width: 20px;height:20px;">
               <Icon :icon="item.icon" style="font-size: 2em;color: rgba(82,196,26, 1);"></Icon>
             </div>
@@ -34,7 +35,7 @@
       <template v-else>
         <div v-for="(item, index) in aggList.slice(0, 5)" @click="clickSearchItem(index)">
           <div class="flex rounded-xl active-button pointer items-center justify-center mr-2.5 h-11" v-if="index !== 0"
-            style="background: var(--secondary-bg);" :style="showSize.width === 2 ? { width: '113px' } : { width: '92px' }">
+            style="background: var(--secondary-bg);" :style="showSize.width === 4 ? { width: '113px' } : { width: '92px' }">
             <div class="flex items-center justify-center" style="width: 20px;height:20px;">
               <Icon :icon="item.icon" style="font-size: 2em;color: rgba(82,196,26, 1);"></Icon>
             </div>
@@ -49,7 +50,7 @@
         <Icon icon="gengduo1" style="font-size: 1.5em;"></Icon>
       </div>
     </div>
-  </Widget>
+  </xt-container>
 
 
   <a-drawer :width="500" title="设置" placement="right" v-model:visible="aggSearchShow" @close="aggSearchShow = false">
@@ -122,7 +123,7 @@ export default {
       searchVisible: false, // 显示模态弹窗
       AggregateList, // 没有排序过的聚合搜索数据
 
-      bottomSizeList: [{ title: '2x2', width: 1, height: 1, name: '1x1' }, { title: '4x2', width: 2, height: 1, name: '2x1' }], // 底部设置中尺寸大小切换
+      bottomSizeList: [{ value: '2x2', name: '2x2' }, { value: '4x2', name: '4x2' }], // 底部设置中尺寸大小切换
       gameMiddleBare: [{ icon: 'shezhi1', title: '设置', fn: () => { this.aggSearchShow = true; this.$refs.aggregateSearchSlot.visible = false } }],
 
       settingsScroller: {
@@ -140,7 +141,11 @@ export default {
       ],
       defaultLink: this.updateLink,
 
-      openId: ''  // 根据卡片外部的id进行弹窗内搜索引擎的锁定
+      openId: '',  // 根据卡片外部的id进行弹窗内搜索引擎的锁定
+      header:{
+        title:'聚合搜索',
+        ifyIcon:'fluent:search-20-filled',
+      }
     }
   },
 
@@ -153,10 +158,18 @@ export default {
       }
     },
     showSize() {
-      if (this.customData && this.customData.width && this.customData.height) {
-        return { width: this.customData.width, height: this.customData.height }
+      if(this.customData.customSize){
+        let arr = this.customData.customSize.split('x')
+        return {
+          width: arr[0],
+          height: arr[1],
+        }
+      }else {
+        return {
+          width: 2,
+          height: 2
+        }
       }
-      return this.bottomSizeList[0]
     },
     aggInputValue() {
       return this.aggList[0].icon
@@ -185,6 +198,11 @@ export default {
       this.searchVisible = true
       this.openId = index
     },
+  },
+  watch:{
+    customSize(newVal,oldVal){
+      this.customData.customSize = newVal
+    }
   }
 }
 </script>

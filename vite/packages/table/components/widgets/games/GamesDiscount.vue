@@ -1,14 +1,16 @@
 <template>
-  <Widget  :limit-env="['web']"  :options="options" :confirmCCData="confirmCCData" :customIndex="customIndex"
-                     :customData="customData" :menuList="gameBare" ref="gameSlot" :desk="desk">
-                     <template #left-title-icon>
-        <div
-          class="icon"
-          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; ">
-          <newIcon icon="mdi:steam" style="font-size: 20px;" />
-        </div>
-      </template>
+  <xt-container
+    @titleHover="showRegionSelect"
+    v-model:customSize="customSize"
+    :header="header" 
+    :envLimit="['web']"  
+    :options="options" 
+    :confirmCCData="confirmCCData" 
+    :customIndex="customIndex" 
+    :menuList="gameBare" 
+    ref="detailSlot" 
+    :customData="customData" 
+    :desk="desk">
     <div class="px-3 py-1 rounded-lg bg-mask pointer xt-bg-2" @click="showRegionSelect"
          style="position: absolute;left: 45px;top:10px;color:var(--primary-text)">{{ region.name }}
     </div>
@@ -25,7 +27,7 @@
     <template v-else>
       <template v-if="gameShow ===false">
 
-        <div class="flex flex-col discount-item" style="margin-top: 1em;">
+        <div class="flex flex-col discount-item" style="margin-top: 0em;">
           <div class="flex flex-col ">
             <div class="flex w-full rounded-md cursor-pointer" @click="enterDetail(item,customData.id)"
                  v-for="item in list" style="position:relative;height:65px; margin-bottom: 12px;overflow: hidden">
@@ -108,7 +110,7 @@
       </template>
     </template>
 
-  </Widget>
+  </xt-container>
 
   <HorizontalDrawer :drawerTitle="drawerTitle" ref="regionDrawer" v-model:selectRegion="customData.id" :rightSelect="regionRange" @getArea="getArea"></HorizontalDrawer>
 </template>
@@ -175,12 +177,7 @@ export default {
           this.$refs.gameSlot.visible = false
         }
       }],
-      env:{
-        web: false,
-        mobile: false,
-        client: false,
-        offline: false,
-      }
+      customSize:'2x4',
     }
   },
   computed: {
@@ -205,6 +202,14 @@ export default {
       if (this.data[this.region.id]) {
         return this.getRandomList(this.data[this.region.id].list)
       } else return []
+    },
+    header(){
+      return {
+        title:this.region.name,
+        ifyIcon:'mdi:steam',
+        titleHover:true,
+        titleHoverName:this.region.name
+      }
     }
   },
 

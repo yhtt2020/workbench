@@ -1,18 +1,15 @@
 <template>
-    <Widget :options="options" :customIndex="customIndex" :custom-data="customData">
-      <template #left-title-icon>
-        <div
-          class="icon"
-          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; ">
-          <newIcon icon="fluent:movies-and-tv-16-regular" style="font-size: 20px;" />
-        </div>
-      </template>
+    <xt-container 
+      :header="header"
+      v-model:customSize="customSize"
+      :options="options" 
+      :customIndex="customIndex" 
+      :custom-data="customData">
       <div class="example" v-if="isLoading">
         <a-spin />
       </div>
       <div v-else>
-        <div class="flex" style="margin-top: 13px;color: var(--primary-text);" v-if="pageToggle">
+        <div class="flex" style="margin-top: 0px;color: var(--primary-text);" v-if="pageToggle">
           <div class="cursor-pointer" style="width: 240px;height: 354px;margin: 0 16px 0 5px;" v-if="fatherWidth == 2">
             <a-image :src="detailMovie.img" width="240px" height="354px" style="object-fit: cover;" class="rounded-lg" alt="" />
           </div>
@@ -55,7 +52,7 @@
         </div>
         <DataStatu v-else-if="!pageToggle" @notData="notData"></DataStatu>
       </div>
-     </Widget>
+     </xt-container>
 </template>
 
 <script>
@@ -99,7 +96,12 @@
         },
         detailMovie: {},
         pageToggle: true,
-        isLoading: false
+        isLoading: false,
+        customSize:'2x4',
+        header:{
+          ifyIcon:"fluent:movies-and-tv-16-regular",
+          title:"正在热映",
+        }
       };
     },
     methods: {

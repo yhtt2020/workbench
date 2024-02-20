@@ -8,7 +8,7 @@
     <template :key="item.id" v-for="(item, index) in list">
       <div
         v-show="fileDisabled(item)"
-        class="xt-sortable-fle-box flex justify-center"
+        class="flex justify-center xt-sortable-fle-box"
         @drag="dragStart($event)"
         @dragend="dragEnd(item)"
         :class="[sortableBox]"
@@ -196,7 +196,7 @@ const menuList = computed(() => {
         : false,
       color: "#FF4D4F",
       fn: () => {
-        proxy.$xtConfirm("确定删除吗？", "", {
+        window.$ui.confirm("确定删除吗？", "", {
           type: "warning",
           ok: deleteFile,
         });

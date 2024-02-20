@@ -1,13 +1,24 @@
 <template>
 
-    <Widget :envLimit="['guest']" @click="onHistoryMessage" :sizeList="sizeList" :customData="customData" :customIndex="customIndex" :options="options" ref="cardSlot" :desk="desk"  :menuList="menuList">
-        <template #left-title>
+    <xt-container 
+        :header="header"
+        v-model:customSize="customData.customSize"
+        :envLimit="['guest']" 
+        @click="onHistoryMessage" 
+        :sizeList="sizeList" 
+        :customData="customData" 
+        :customIndex="customIndex" 
+        :options="options" 
+        ref="cardSlot" 
+        :desk="desk"  
+        :menuList="menuList">
+        <!-- <template #left-title>
             <Icon icon='fluent:open-20-filled' class="pointer" width="20" height="20" style="position: relative;top:3px;" />
         </template>
         <div class="top-icon">
             <Icon icon="majesticons:monitor-line" />
-        </div>
-        <div class="dash-board overflow-hidden" style="height: 370px;">
+        </div> -->
+        <div class="overflow-hidden dash-board" style="height: 370px;">
             <Unusual v-if='!this.access_token || !this.baseUrl' title="请完成小组件配置" buttonTitle="立即配置" :back="back" ></Unusual>
             <div v-else class="dash-cell" v-for="(item,index) in targetKeys" :key="index">
                 <div class="cell-title">{{ this.mockData[item-1].title }}</div>
@@ -27,10 +38,10 @@
                         <div>在使用该功能前，需要关联您的短说社区系统，请在短说管理后台获取系统密钥，填入下方输入框，以及您的管理后台地址，成功完成配置后即可使用。</div>
                         <div>在想天浏览器中打开短说管理后台，可以自动检测获取密钥。</div>
                     </div>
-                    <p class="ml-1 mt-1">密钥</p>
-                    <a-input spellcheck="false" style="border-radius: 10px;" v-model:value="this.accToken" placeholder="请输入" class="search pl-1 input-txt"></a-input>
+                    <p class="mt-1 ml-1">密钥</p>
+                    <a-input spellcheck="false" style="border-radius: 10px;" v-model:value="this.accToken" placeholder="请输入" class="pl-1 search input-txt"></a-input>
                     <p class="ml-1">管理后台地址</p>
-                    <a-input spellcheck="false" style="border-radius: 10px;" v-model:value="this.accUrl" placeholder="请输入" class="search pl-1 input-txt"></a-input>
+                    <a-input spellcheck="false" style="border-radius: 10px;" v-model:value="this.accUrl" placeholder="请输入" class="pl-1 search input-txt"></a-input>
                 </div>
                 <div v-show="!this.setVisible && this.access_token && this.baseUrl">
                     <div class="text-title" @click="this.setVisible = !this.setVisible">
@@ -49,7 +60,7 @@
                         v-model:value="this.options.title"
                         @change="changeName"
                         :maxlength="20"
-                        class="search pl-1"></a-input>
+                        class="pl-1 search"></a-input>
                     </p>
                     <!--  穿梭框 -->
                     <p>选择统计数值</p>
@@ -70,7 +81,7 @@
             </vue-custom-scrollbar>
         </a-drawer>
 
-    </Widget>
+    </xt-container>
 
 
 </template>
@@ -125,15 +136,11 @@ export default {
             },
             sizeList: [
                 {
-                title: '2x4',
-                height: 2,
-                width: 1,
+                value: '2x4',
                 name: '2x4'
                 },
                 {
-                title: '4x4',
-                height: 2,
-                width: 2,
+                value: '4x4',
                 name: '4x4'
                 },
             ],
@@ -159,12 +166,23 @@ export default {
                 // 左侧图标
                 // icon: "iconamoon:history-fill",
                 // rightIcon:"fluent:open-20-filled",
+                defaultData: {
+                    customSize: this.customData.customSize ? this.customData.customSize : '2x4',
+                }
             },
             targetKeys:[1,2,3,4,5,6,7,8,9],
             // 密钥和地址
             accToken:'',
             accUrl:'',
-
+            header:{
+                title:'社区数据',
+                ifyIcon:'majesticons:monitor-line',
+                rightIcon:[
+                    {
+                        ifyIcon:'fluent:open-20-filled',
+                    }
+                ]
+            }
         };
     },
     mounted() {
@@ -234,6 +252,9 @@ export default {
             this.accUrl = this.baseUrl
                 this.init()
             }
+        },
+        customSize(newVal,oldVal){
+            this.customData.customSize = newVal
         }
     }
 };
@@ -264,7 +285,7 @@ export default {
         height: 112px;
         background: rgba(0,0,0,0.30);
         border-radius: 10px;
-        margin-top: 12px;
+        // margin-top: 12px;
     }
 
     .dash-cell .cell-title{

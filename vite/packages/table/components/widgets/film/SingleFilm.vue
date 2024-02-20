@@ -1,14 +1,10 @@
 <template>
-    <Widget :desk="desk" :options="options" v-if="!detailToggle">
-      <template #left-title-icon>
-        <div
-          class="icon"
-          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; ">
-          <newIcon icon="fluent:movies-and-tv-16-regular" style="font-size: 20px;" />
-        </div>
-      </template>
-      <span style="position: absolute;top: 18px;left: 115px"><icon style="font-size: 18px" icon="shuaxin"></icon></span>
+    <xt-container 
+      :header="header"
+      v-model:customSize="customSize"
+      :desk="desk" 
+      :options="options" 
+      v-if="!detailToggle">
       <div v-if="pageToggle">
         <div v-if="isLoading">
           <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 60%"/>
@@ -16,7 +12,7 @@
         <div v-else>
           <div class="pointer title-refresh" @click="refreshPage"></div>
           <div class="w-full cursor-pointer"
-          style="width: 240px;height: 354px;margin: 13px auto 0;position: relative;"
+          style="width: 240px;height: 354px;margin: 0px auto 0;position: relative;"
           @click="btnDetail(singleFilm.id)"
           >
             <a-image :preview="false" :src="singleFilm.img" width="240px" height="354px" alt="" class="rounded-lg" style="object-fit: cover;" />
@@ -32,7 +28,7 @@
       </div>
 
       <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu>
-    </Widget>
+    </xt-container>
     <FilmDetail v-if="detailToggle" :detailId="detailId" @detailBack="detailBack"></FilmDetail>
 </template>
 
@@ -70,10 +66,6 @@
     data() {
       return {
         options:{
-          className:'card',
-          title:'正在热映',
-          // icon:'video',
-          type:'singleFilm'
         },
         filmList: [],
         singleFilm: {},
@@ -86,6 +78,16 @@
           mobile: false,
           client: false,
           offline:false
+        },
+        customSize:'2x4',
+        header:{
+          ifyIcon:"fluent:movies-and-tv-16-regular",
+          title:"正在热映",
+          refresh:{
+            fn:this.refreshPage,
+            tip:'刷新',
+            
+          }
         }
       };
     },

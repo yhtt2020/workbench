@@ -1,24 +1,16 @@
 <template>
-  <Widget
-  :options="options"
-  :sizeList="sizeList"
-  :customData="customData"
-  :customIndex="customIndex"
-  :desk="desk"
-  >
-  <template #left-title-icon>
-        <div
-          class="icon"
-          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; ">
-          <newIcon icon="ri:weibo-fill" style="font-size: 20px;" />
-        </div>
-      </template>
+  <xt-container
+    v-model:customSize="customData.customSize"
+    :header="header"
+    :options="options"
+    :sizeList="sizeList"
+    :customData="customData"
+    :customIndex="customIndex"
+    :desk="desk">
   <div class="flex flex-col mt-1 overflow hot-box" style="height: 95%;">
-    <div ref="refreshButton" @click="refreshNow" class="pointer" style="position: absolute;left: 120px;top: 16px;">
-      <!-- <icon icon="shuaxin"></icon> -->
+    <!-- <div ref="refreshButton" @click="refreshNow" class="pointer" style="position: absolute;left: 120px;top: 16px;">
       <newIcon icon="fluent:arrow-counterclockwise-20-filled" style="font-size: 20px;"/>
-    </div>
+    </div> -->
     <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 100%;">
 
       <div  v-for="item in hotList" :key="item.id" @click="jump(item.title)"
@@ -38,7 +30,7 @@
     </vue-custom-scrollbar>
 
 </div>
-  </Widget>
+  </xt-container>
 </template>
 
 <script>
@@ -77,12 +69,24 @@ export default {
         wheelPropagation: true
       },
       options: {className: 'card',title: '微博热搜',type: 'hotSearch'},
-      sizeList:[{title:'2x4',height:2,width:1,name:'1x2'},{title:'4x4',height:2,width:2,name:'2x2'}],
-      hotList: []
+      sizeList:[{value:'2x4',name:'2x4'},{value:'4x4',name:'4x4'}],
+      hotList: [],
+      refreshFlag:false
     }
   },
   computed: {
-    ...mapWritableState(hotStore,['data'])
+    ...mapWritableState(hotStore,['data']),
+    header() {
+      return {
+        title:'微博热搜',
+        ifyIcon:'ri:weibo-fill',
+        refresh:{
+          state:this.refreshFlag ? true : false,
+          fn:this.refreshNow,
+          tip:'刷新',
+        }
+      }
+    }
   },
   async mounted() {
     this.getData().then(()=>{
@@ -97,12 +101,12 @@ export default {
       browser.openInUserSelect('https://s.weibo.com/weibo?q='+words)
     },
     refreshNow(){
-      this.$refs.refreshButton.classList.add('animate-spin')
+      this.refreshFlag = true
+      this.refresh()
       setTimeout(()=>{
-        this.$refs.refreshButton.classList.remove('animate-spin')
+        this.refreshFlag = false
         message.success({content: '刷新榜单成功',key:'refreshWeibo' })
       },500)
-      this.refresh()
     },
     fix(heat){
       const display=heat.split(' ')
@@ -111,6 +115,11 @@ export default {
       }
       display[1]=(Number(display[1])/10000).toFixed(1)+'万'
       return display[0]+' '+display[1]
+    }
+  },
+  watch: {
+    customSize(newVal,oldVal) {
+      this.customData.customSize = newVal
     }
   }
 }
