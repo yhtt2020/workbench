@@ -4,7 +4,9 @@
       <div class="flex flex-col ">
         <span class="font-16 font-500 mb-4" style="color: var(--primary-text);">官方推荐</span>
         <div class="content-list">
-          <div v-for="item in community.recommendList" class="category-bg pointer  content-item rounded-xl pb-4 mb-4" style="position: relative;">
+          <div v-for="item in community.recommendList" class="category-bg pointer  content-item rounded-xl pb-4 mb-4" 
+           style="position: relative;" @click="enterCommunity(item)"
+          >
             <div style="height:150px;margin-bottom: 30px;">
               <img class="w-full h-full rounded-t-xl object-cover " src="https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/Yzzj-zana-AI6F-jnTG">
             </div>
@@ -34,25 +36,23 @@
 
           </div>
         </div>
-
         <span class="font-16 font-500 mb-4" style="color: var(--primary-text);">热门社群</span>
         <div class="content-list">
-          <div v-for="item in community.hotList" class="category-bg pointer content-item  pb-4 rounded-xl  mb-4" style="position: relative;">
+          <div v-for="item in community.hotList" class="category-bg pointer content-item  pb-4 rounded-xl  mb-4" style="position: relative;"
+          @click="enterCommunity(item)"
+          >
             <div style="height:150px;margin-bottom: 30px;">
               <img class="w-full h-full rounded-t-xl object-cover " src="https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/Yzzj-zana-AI6F-jnTG">
             </div>
             <div class="flex mb-4" style="position: absolute; left: 16px;top: 120px;">
               <a-avatar :size="48" shape="square" :src="item.icon"></a-avatar>
             </div>
-
             <div class="px-4 flex flex-col">
               <div class="category-18-500 mb-3" style="color:var(--primary-text);">{{ item.name }}</div>
-
               <div class="flex mb-3">
                 <div class="category-12-400 px-2 rounded-md flex items-center justify-center" style="color: var(--active-bg);background: var(--active-secondary-bg);">社群号:{{item.no}}</div>
                 <div class="category-12-400 px-1 rounded-md mx-2 flex items-center justify-center" style="color:var(--warning);background:rgba(250,173,20,0.2);">{{item.level}}级</div>
               </div>
-
               <div class="category-14-400 mb-4" style="color:var(--primary-text);max-width: 248px;">
                 {{ item.summary }}
               </div>
@@ -66,7 +66,6 @@
             </div>
           </div>
         </div>
-
       </div>
     </vue-custom-scrollbar>
   </div>
@@ -76,15 +75,15 @@
       <div class="flex flex-col " style="width: 1184px;">
         <span class="font-16 font-500 my-4" style="color: var(--primary-text);">搜索结果</span>
         <div class="content-list">
-          <div v-for="item in searchResList" class="category-bg pointer  content-item rounded-xl pb-4 mb-4" style="position: relative;">
-
+          <div v-for="item in searchResList" class="category-bg pointer  content-item rounded-xl pb-4 mb-4" 
+           style="position: relative;"  @click="enterCommunity(item)"
+          >
             <div style="height:150px;margin-bottom: 30px;">
               <img class="w-full h-full rounded-t-xl object-cover " src="https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/Yzzj-zana-AI6F-jnTG">
             </div>
             <div class="flex mb-4" style="position: absolute; left: 16px;top: 120px;">
               <a-avatar :size="48" shape="square" :src="item.icon"></a-avatar>
             </div>
-
             <div class="px-4 flex flex-col">
               <div class="category-18-500 mb-3" style="color:var(--primary-text);">
                 {{ item.name }}
@@ -104,7 +103,6 @@
                 </span>
               </div>
             </div>
-
           </div>
         </div>
       </div>
@@ -162,6 +160,15 @@ export default {
 
  methods:{
   ...mapActions(communityStore,['getHotList','getRecommendCommunityList']),
+  // 进入相对应社群
+  enterCommunity(item){
+    const list = this.community.communityList.map((item)=>{ return item.communityInfo.no });
+    const isJoin  = list.some((findItem)=>{ return Number(findItem) === Number(item.no) });
+    // console.log("item",isJoin);
+    if(isJoin){
+      this.$router.push({name:'myCommunity',params:{no:item.no}});
+    }
+  }
  },
 
  watch:{
