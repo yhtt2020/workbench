@@ -1,6 +1,6 @@
 <template>
   <xt-modal custom v-model="store.isTaskDrawer" boxClass="rounded-xl" :mask="false" v-if="smallMize" :index="1500">
-    <div class="xt-modal flex rounded-xl" style="width: 500px;height:  742px;" >
+    <div class="xt-modal flex task-modal rounded-xl" style="width: 500px;" >
       <xt-left-menu :list="menusList" :end="2" model="id" style="border-radius: 12px 12px 12px 0"
         leftClass=" 1 xt-main-bg py-3 h-full  "  :leftStyle="{'border-radius': '12px 0 0 12px',}"
       />
@@ -169,7 +169,6 @@ const updateTaskList = async () => {
 :deep(.xt-br){
   border-right: none !important;
 }
-
 .pop {
   position: fixed;
   bottom: 16%;
@@ -178,4 +177,15 @@ const updateTaskList = async () => {
   height: 60px !important;
 }
 
+@media screen and(max-height:480px){
+  .task-modal{
+    height: 480px !important;
+  }
+}
+
+@media screen and(min-height:481px) {
+  .task-modal{
+    height:  742px !important;
+  }
+}
 </style>
