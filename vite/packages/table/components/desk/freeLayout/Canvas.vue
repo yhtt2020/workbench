@@ -72,7 +72,7 @@ const {
   freeLayoutEnv,
 }: any = storeToRefs(freeLayoutStore);
 watch(
-  () => getFreeLayoutState.value.canvas.height,
+  () => getFreeLayoutState.value?.canvas.height,
   (val) => {
     console.log("getFreeLayoutState.value.canvas.height val :>> ", val);
   }

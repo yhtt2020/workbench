@@ -21,9 +21,8 @@
     成就勋章
   </div>
   <div class="bg-mask rounded-lg p-3 m-3 mt-0  mb-0">
-      <OnlineMedal v-if="grade.rank" :rank="grade.rank"></OnlineMedal>
-      <Medal :medal="medal" v-for="medal in medals"></Medal>
-
+    <div v-if="medals.length===0">暂无勋章</div>
+      <Medal  :size="50" :medal="medal" v-for="medal in medals"></Medal>
   </div>
   <div class=" mb-0 pd-0 m-3 p-3 mt-0">
     小队贡献

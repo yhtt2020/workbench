@@ -78,7 +78,7 @@ const onSearch = () => {
       search.value = "";
     }
   }else{
-    window.$ui.confirm("登录提示", '目前处于游客模式，请登陆后体验完整功能。', {
+    window.$ui.confirm("登录提示", '目前处于游客模式，请登录后体验完整功能。', {
       ok: () => {
         tsbApi.user.login((data) => {
           appS.getUserInfo()

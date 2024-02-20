@@ -10,6 +10,7 @@ import {
   useElementSize,
 } from "../../../ui/hooks/useCardSize";
 import { useFreeLayoutStore } from "../freeLayout/store";
+import {useCutLayout } from './useCutLayout'
 
 const defaultOptions = {
   mainList: [],
@@ -240,8 +241,12 @@ export const useCustomLayout = async (options) => {
   const freeLayoutStore: any = useFreeLayoutStore();
   const { getFreeLayoutData, getFreeLayoutState, freeLayoutEnv } =
     storeToRefs(freeLayoutStore);
-  getFreeLayoutState.value.canvas.height += 5000;
-  console.log('  getFreeLayoutState.value.canvas.height :>> ',   getFreeLayoutState.value.canvas.height);
+  getFreeLayoutState.value.canvas.height += 20000;
+  getFreeLayoutState.value.canvas.width += 20000;
+  console.log(
+    "  getFreeLayoutState.value.canvas.height :>> ",
+    getFreeLayoutState.value.canvas.height
+  );
   getFreeLayoutState.value.system.hide = true;
   if (!getFreeLayoutState.value.system.isFreeLayout)
     getFreeLayoutState.value.system.isFreeLayout = true;
@@ -316,16 +321,15 @@ export const useCustomLayout = async (options) => {
 
   // 开始收尾
   useDelCard(positioningId);
-  setTimeout(() => {
-    cb && cb(position);
-  }, 10);
-  // 删除占位数据
-  //
-  // freeLayoutStore.cutCanvas();
-  // freeLayoutStore.updateLocation();
-  console.log('  getFreeLayoutState.value.canvas.height :>> ',   getFreeLayoutState.value.canvas.height);
-
-  console.log("删除操作 :>> ");
+  cb && cb(position);
+  // resetLeft();
+  // getFreeLayoutState.value.mode.align = "custom";
+  // const zoom = getFreeLayoutState.value.canvas.zoom;
+  // getFreeLayoutState.value.line.centerLine.y =
+  //   freeLayoutEnv.value.scrollTop / scaleFactor
+  // getFreeLayoutState.value.line.centerLine.x =
+  //   (left - position + freeLayoutEnv.value.scrollWidth / 2) / zoom;
+  // getFreeLayoutState.value.system.hide = false;
 };
 const arraySplit = (arr) => {
   let arr2x2: any = [];
@@ -391,8 +395,8 @@ const addCard = (top, left, item) => {
     console.log("Item.name :>> ", item);
   }
 
-  if (item.name == 'notes') {
-    id = item?.id || Date.now()
+  if (item.name == "notes") {
+    id = item?.id || Date.now();
   }
 
   let a = left;
@@ -403,7 +407,7 @@ const addCard = (top, left, item) => {
     id,
   };
 
-  console.log('getFreeLayoutData.value[id]', id,  getFreeLayoutData.value[id]);
+  console.log("getFreeLayoutData.value[id]", id, getFreeLayoutData.value[id]);
 
   if (item.id) return;
 

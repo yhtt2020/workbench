@@ -1,7 +1,7 @@
 <template>
-  <xt-modal custom v-model="store.isTaskDrawer" boxClass="rounded-xl" :mask="false" v-if="smallMize">
-    <div class="xt-modal flex rounded-xl" style="width: 500px; height: 742px;" >
-      <xt-left-menu :list="menusList" :end="1" model="id" style="border-radius: 12px 12px 12px 0"
+  <xt-modal custom v-model="store.isTaskDrawer" boxClass="rounded-xl" :mask="false" v-if="smallMize" :index="1500">
+    <div class="xt-modal flex rounded-xl" style="width: 500px;height:  742px;" >
+      <xt-left-menu :list="menusList" :end="2" model="id" style="border-radius: 12px 12px 12px 0"
         leftClass=" 1 xt-main-bg py-3 h-full  "  :leftStyle="{'border-radius': '12px 0 0 12px',}"
       />
        <div class="w-full  xt-text pt-3 pr-3 relative">
@@ -15,6 +15,7 @@
         <Daily v-else-if="currentTask == 'Daily'" class="w-full xt-theme-b" />
         <Activity v-else-if="currentTask == 'Activity'" />
         <Set v-else-if="currentTask == 'Set'" />
+        <TaskShop v-else-if="currentTask == 'Shop'"/>
       </div>
     </div>
   </xt-modal>
@@ -32,10 +33,9 @@ import Daily from "./daily/Daily.vue";
 import Set from "./Set.vue";
 import { tasks } from "../page/branch/Branch.ts";
 import { useToast } from "vue-toastification";
-
 import { getAllTask } from "../api";
 import {getUnFinishTaskStatus} from "../utils";
-
+import TaskShop from "./store/TaskShop.vue";
 
 const store = taskStore();
 
@@ -134,6 +134,13 @@ let menus = ref([
   //   callBack: selectTab,
   //   name: "每日",
   // },
+
+  {
+    newIcon:"fluent:building-shop-16-regular",
+    value:"Shop",
+    title:"商店",
+    callBack:selectTab,
+  },
   {
     newIcon: "fluent:settings-16-regular",
     value: "Set",

@@ -1,12 +1,18 @@
 const { exists, mkdirSync, readFile, unlink, writeFile } = require('fs')
 const fs = require('fs')
-const ipc = require('electron').ipcRenderer
+
+const { ipcRenderer: ipc } = require('electron')
 let baseStorePath = ''
 let favStorePath = ''
-ipc.on('getUserDataPath', (event, args) => {
-  baseStorePath = args
-  ipc.send('canCloseInterval')
-})
+if(typeof window !=='undefined'){
+  //渲染进程中
+  const ipc = require('electron').ipcRenderer
+  ipc.on('getUserDataPath', (event, args) => {
+    baseStorePath = args
+    ipc.send('canCloseInterval')
+  })
+}
+
 
 const fileHelpers = {
   // 异步封装   判断文件是否存在函数

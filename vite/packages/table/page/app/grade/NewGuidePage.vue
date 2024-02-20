@@ -1,6 +1,7 @@
 <template>
   <div class="fixed overflow-hidden modal-center xt-modal tran" :class="popState ? 'pop' : step == 4 ? 'theme' : 'Popup'"
     style="">
+    <!-- {{ step }} -->
     <div v-if="!popState" class="h-full">
       <!-- 返回按钮 -->
       <div v-if="step !== 0 && guideList.length > 1" @click="prevStep" class="absolute ml-4 top-icon no-drag">
@@ -29,8 +30,13 @@
         <Navbar :NavbarList="NavbarList" @changeNavList="changeNavList"></Navbar>
       </div>
 
-      <!-- 定制主题 -->
+      <!-- 导入收藏夹 -->
       <div v-else-if="step == 4">
+        <Favorites ></Favorites>
+      </div>
+
+      <!-- 定制主题 -->
+      <div v-else-if="step == 5">
         <Theme :backgroundSettings="backgroundSettings"></Theme>
       </div>
 
@@ -110,6 +116,7 @@ import DeskType from "./components/DeskType.vue";
 import DeskIcon from "./components/DeskIcon.vue";
 import CardList from "./components/CardList.vue";
 import Navbar from "./components/Navbar.vue";
+import Favorites from "./components/Favorites.vue";
 import Theme from "./components/Theme.vue";
 import Preview from "./components/Preview.vue";
 import { NavListTmp, GameDesk, AssistDesk } from './components/data';
@@ -127,6 +134,7 @@ export default {
     DeskIcon,
     CardList,
     Navbar,
+    Favorites,
     Theme,
     Preview,
     // FrameTip,

@@ -1,10 +1,10 @@
 <template>
-  <xt-container 
+  <xt-container
     v-model:customSize="customSize"
     :header="header"
-    :envLimit="['guest','offline']" 
-    :options="options" 
-    :desk="desk" 
+    :custom-data="customData" :custom-index="customIndex" :envLimit="['guest','offline']"
+    :options="options"
+    :desk="desk"
     :showRightIcon='rightIcon'>
     <div></div>
     <!--    <div class="pointer" @click="activityDescription(illustrateUrl)"-->
@@ -144,7 +144,7 @@ export default {
     UserOutlined,
     newIcon
   },
-  props: ['desk', 'rightIcon'],
+  props: ['desk', 'rightIcon','customData','customIndex'],
   data () {
     return {
       tip:'',
@@ -191,7 +191,7 @@ export default {
         title:"签到",
         ifyIcon:"fluent:calendar-16-regular",
       }
-      
+
 
     }
   },

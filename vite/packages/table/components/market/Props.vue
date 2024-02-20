@@ -41,33 +41,34 @@
           </div>
         </div>
         <div class="avatar-bottom flex  " v-if="item.prices.length !== 0">
-          <a-button v-if="!item.owned" type="primary" class="mr-3 rounded-xl avatar-font flex items-center justify-center m-3"
+          <xt-button type="theme"
+            v-if="!item.owned"  class="mr-3 rounded-xl avatar-font flex items-center justify-center m-3"
                     @click="buyNow(item)" style="color: var(--active-text);height: 44px;"
                     :style="getFrameScore(item)&&false ? {width:'104px'}:{width:'100%'}"
           >
             赞助 ￥ {{ getFramePrice(item).price }}
             <template  v-if="(getFramePrice(item).originPrice !== getFramePrice(item).price) && getFramePrice(item).originPrice>0"><span class="line-through ml-2">￥{{getFramePrice(item).originPrice}}</span>
               <a-badge :count="getDiscount(getFramePrice(item))" class="ml-2" :number-style="{ backgroundColor: '#52c41a',borderColor:'transparent' }"></a-badge></template>
-          </a-button>
-          <div disabled v-else class="mr-3 avatar-font flex items-center justify-center  m-3" style="height:44px;width: 100%;border: 1px solid var(--divider);color: var(--primary-text);">
+          </xt-button>
+          <xt-button disabled v-else class="mr-3 avatar-font flex items-center justify-center  m-3" style="height:44px;width: 100%;border: 1px solid var(--divider);color: var(--primary-text);">
             已有
-          </div>
+          </xt-button>
           <!-- <a-button v-else type="default" class="mr-3 rounded-xl avatar-font flex items-center justify-center  m-3" style="width: 100%">
             已有 <span class=" ml-2">￥ {{ getFramePrice(item).price }}</span> <template  v-if="getFramePrice(item).originPrice"><span class="line-through ml-2">￥{{getFramePrice(item).originPrice}}</span>
             </template>
           </a-button> -->
-          <a-button hidden="" type="primary" class="mr-3  rounded-xl avatar-font flex items-center justify-center"
+          <xt-button type="theme" hidden="" class="mr-3  rounded-xl avatar-font flex items-center justify-center"
                     @click="scorePay(item)" v-if="getFrameScore(item)" style="color: var(--active-text);height: 44px;"
 
           >
             {{ getFrameScore(item) }}积分
-          </a-button>
-          <a-button hidden="" type="primary" class="rounded-xl" @click="teamGift(item)"
+          </xt-button>
+          <xt-button hidden="" type="theme" class="rounded-xl" @click="teamGift(item)"
                     style="height: 44px;color: var(--active-text);"
                     :style="getFrameScore(item)&&false ? {width:'104px'}:{width:'50%'}"
           >
             赠送
-          </a-button>
+          </xt-button>
         </div>
       </div>
       <div class="mb-3 mx-2" style="width:337px;opacity: 0;height: 1px;"></div>

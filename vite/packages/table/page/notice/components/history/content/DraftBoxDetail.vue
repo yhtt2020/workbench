@@ -3,7 +3,7 @@
     <XtScrollbar :y="true" style="height: 100%;width: 100%;">
       <template v-if="draftBox.length === 0">
         <div class="flex items-center h-full justify-center">
-          <a-empty :image="simpleImage" :description="'暂无消息草稿 '" />
+          <a-empty :image="simpleImage" :description="'暂无草稿消息'" />
         </div>
       </template>
       <template v-else>
@@ -23,39 +23,40 @@
   </div>
 </template>
 
-<script setup>
-import { ref,getCurrentInstance } from 'vue';
-import { storeToRefs } from 'pinia';
+<script>
+import { mapWritableState } from 'pinia';
 import { noticeStore } from '../../../store/noticeStore';
+export default {
+  name:'DraftBoxDetail',
 
+  data(){
+    return{
+      simpleImage:'/img/state/null.png',
+    }
+  },
 
+  computed:{
+    ...mapWritableState(noticeStore,['draftBox']),
+  },
 
-const notice = noticeStore();
-const { draftBox } = storeToRefs(notice);
-
-const simpleImage = ref('/img/state/null.png')
-
-const { proxy } = getCurrentInstance();
-
-const emit = defineEmits(['edit'])
-
-// 删除草稿箱
-const deleteDraftBox = (item) =>{
-  window.$ui.confirm('确定删除吗？','',{
-    type: "warning",
-    ok:()=>{
-      draftBox.value.splice(item,1)
+  methods:{
+    // 编辑草稿箱
+    editDraftBox(item){
+      this.$emit('edit',item);
     },
-  })
-}
 
-// 编辑草稿箱
-const editDraftBox = (item) =>{
- emit('edit',item)
-}
-
-
-
+    // 删除草稿箱
+    deleteDraftBox(item){
+      window.$ui.confirm('确定删除吗？','',{
+       type: "warning",
+       ok:()=>{
+        this.draftBox.splice(item,1)
+       },
+       noText: null,
+      })
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -76,3 +77,24 @@ const editDraftBox = (item) =>{
   }
 }
 </style>
+
+
+<!--
+
+<script setup>
+const notice = noticeStore();
+const { draftBox } = storeToRefs(notice);
+
+const simpleImage = ref()
+
+const { proxy } = getCurrentInstance();
+
+const emit = defineEmits(['edit'])
+
+// 删除草稿箱
+const deleteDraftBox = (item) =>{
+
+}
+
+
+ -->

@@ -8,16 +8,15 @@
     "
   >
     <div
-      class="absolute right-0 top-0 text-xs flex justify-center items-center z-10 px-1"
+      class="absolute right-0 top-0 text-white text-xs flex justify-center items-center z-10 px-1"
       style="
         background: #508bfe;
         width: auto;
-
         height: 20px;
         border-radius: 0px 10px 0px 10px;
       "
     >
-      {{ types[type].name }}
+      {{ item.name || name}}
     </div>
     <template v-if="type==='item'">
       <!--   道具   -->
@@ -27,12 +26,12 @@
         <!--         <img :src="types[type].icon" class="w-full h-full object-cover"/>-->
         <!--        </div>-->
 
-<!--        <div :style="{width:`${types[type].size}px`,height:`${types[type].size}px`}"-->
-<!--             class="flex items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">-->
-<!--          <img :src="types[type].icon" class="w-full h-full object-cover"/>-->
-<!--        </div>-->
-<!--        {{data}}-->
-        <Item  :item="data" :size="64" style="width:64px;height:64px"></Item>
+        <!--        <div :style="{width:`${types[type].size}px`,height:`${types[type].size}px`}"-->
+        <!--             class="flex items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">-->
+        <!--          <img :src="types[type].icon" class="w-full h-full object-cover"/>-->
+        <!--        </div>-->
+        <!--        {{data}}-->
+        <Item :item="data" :size="64" style="width:64px;height:64px"></Item>
       </Popconfirm>
     </template>
 
@@ -43,9 +42,9 @@
     <template v-else>
       <!--  积分    -->
       <a-tooltip title="经验可用于社区等级提升，积分可用于积分商城兑换礼品。">
-        <div :style="{width:`${types[type].size}px`,height:`${types[type].size}px`}"
+        <div :style="{width:`${item.size}px`,height:`${item.size}px`}"
              class="flex items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <img :src="types[type].icon" class="w-full h-full object-cover"/>
+          <img :src="item.icon" class="w-full h-full object-cover"/>
         </div>
       </a-tooltip>
 
@@ -74,41 +73,52 @@
 import { ref, toRefs, computed } from 'vue'
 import Medal from '../../../components/team/Medal.vue'
 import Item from '../../../components/Item.vue'
-import {Popconfirm} from 'ant-design-vue'
+import { Popconfirm } from 'ant-design-vue'
 
 const props = defineProps({
   type: {},
+  name:'',
   value: {},
-  data:{},
+  flag:'',
+  data: {},
   icon: {},
   claim: false,
 })
 const { type } = toRefs(props)
-const types = computed(() => {
-  return {
-    medal: {
-      name: '勋章',
-      icon: props.icon,
-      size: 56,
-    },
-    communityPoints: {
-      name: '积分',
-      icon: '/img/task/communityPoints.svg',
-      size: 56,
-    },
-    experience: {
-      name: '经验',
-      icon: '/img/task/experience.png',
-      size: 42,
-    },
-    item: {
-      name: '头像框',
-      icon: props.icon,
-      size: 56,
-    },
-  }
-})
 
+const types = {
+  medal: {
+    name: '勋章',
+    icon: props.icon,
+    size: 56,
+  },
+  communityPoints: {
+    name: '积分',
+    icon: '/img/task/communityPoints.svg',
+    size: 56,
+  },
+  experience: {
+    name: '经验',
+    icon: '/img/task/experience.png',
+    size: 42,
+  },
+  item: {
+    name: '头像框',
+    icon: props.icon,
+    size: 56,
+  },
+  score: {
+    icon: '/img/task/communityPoints.svg',
+    size: 56,
+  },
+}
+const item = computed(() => {
+  console.log(props.type, types[props.type], 'xuyao')
+  if(props.flag==='exp'){
+    return types['experience']
+  }
+  return types[props.type]
+})
 const confirm = () => {
 
 }

@@ -6,11 +6,10 @@
       <FrameAvatar class="frame" :avatarUrl="userInfo.avatar" :avatarSize="userInfo.frame !== '' ? 80 : 64"
        :frameUrl="userInfo.frame" ></FrameAvatar>
     </div>
-    <div class="flex  flex-col">
+    <div class="flex  flex-col flex-1 w-0">
      <span class="font-18 xt-font font-600 xt-text">{{ userInfo.nickname }}</span>
-     <div class="flex ">
-       <OnlineMedal v-if="infoMedal?.grade.rank" :rank="infoMedal?.grade.rank"/>
-       <Medal class="medal" :medal="medal" v-for="medal in infoMedal?.medals"></Medal>
+     <div class="flex flex-1 w-full  overflow-hidden">
+         <Medal :zoom="0.9" class="medal" :medal="medal" v-for="medal in infoMedal?.medals"></Medal>
      </div>
     </div>
    </div>
@@ -32,11 +31,14 @@
    <div style="width: 178px;" class="flex flex-col">
     <div class="flex justify-between items-center mb-1">
      <div class="flex  flex-col">
-      <xt-text class="xt-text font-14 xt-font font-400">我的积分</xt-text>
+      <xt-text class="xt-text font-14 xt-font font-400">社区积分</xt-text>
       <div style="height: 4px;"></div>
-      <span class="xt-text font-18 xt-font " style="font-weight: 900;">{{ infoMedal.score  }}</span>
+      <span class="xt-text font-18 xt-font " style="font-weight: 900;"> <a-avatar :size="24" shape="circle" src="/img/task/communityPoints.svg"></a-avatar> {{ infoMedal.score  }}</span>
+
      </div>
-     <a-avatar :size="48" shape="circle" src="/img/task/communityPoints.svg"></a-avatar>
+      <div class="flex-1 w-0 ml-2">
+        <xt-button :w="110" :h="40" @click="showProp"><img style="width: 20px" src="/img/bottomPanel/prop.png"> 我的道具</xt-button>
+      </div>
     </div>
     <xt-text class="xt-text-2 font-12 xt-font font-400">
      后续可用于兑换（暂未上线商城）
@@ -44,6 +46,7 @@
    </div>
   </div>
  </div>
+  <MyProp :showMyProp="myPropVisible" @closeMyProp="closeMyProp"></MyProp>
 </template>
 
 <script setup>
@@ -55,6 +58,7 @@ import { taskStore } from '../../store';
 import FrameAvatar from '../../../../components/avatar/FrameAvatar.vue';
 import OnlineMedal from '../../../../components/team/OnlineMedal.vue';
 import Medal from '../../../../components/team/Medal.vue';
+import MyProp from '../../../../components/team/MyProp.vue'
 
 
 const app = appStore();
@@ -85,8 +89,13 @@ const myLv = computed(()=>{
 const infoMedal = computed(()=>{
   return taskUserMedal.value;
 })
-
-
+const myPropVisible=ref(false)
+const showProp=()=>{
+  myPropVisible.value=true
+}
+const   closeMyProp=()=>{
+  myPropVisible.value=false
+}
 onMounted(()=>{
   nextTick(()=>{
     task.getTaskUserMedal(userInfo.value?.uid);
