@@ -1,16 +1,22 @@
 <template>
   <a-spin tip="加载中..." :spinning="imgSpin" size="large">
-    <Widget :options="options" :customIndex="customIndex" :menuList="menuList" :sizeList="sizeList" ref="cardSlot" :customData="customData"   class="cardSlot" :desk="desk">
-      <template #left-title-icon>
-        <div class="absolute flex hover-container items-center top-2.5 left-0 justify-center" style="z-index:1000;">
-          <xt-new-icon icon="fluent:image-multiple-16-regular" size="29" :color="'var(--active-text)'"></xt-new-icon>
-       </div>
-      </template>
-      <template #title-text>
-        <span class="xt-font xt-active-text font-14 font-400" style="z-index:1000;">{{ paperTitle }}</span>
-      </template>
-
-      <div class="absolute inset-0" style="border-radius: 8px; z-index: 0">
+    <xt-container 
+      :header="header"
+      v-model:customSize = 'customData.customSize'
+      :options="options" 
+      :customIndex="customIndex" 
+      :menuList="menuList" 
+      :sizeList="sizeList" 
+      ref="cardSlot" 
+      :customData="customData"   
+      class="cardSlot" :desk="desk">
+      <div 
+        class="absolute inset-0" 
+        style="
+          border-radius: 8px; 
+          z-index:0;
+          left:-14px;
+          top: -45px;">
         <template v-if="imgList.length <= 0">
           <div class="flex flex-col items-center justify-center w-full" :class="paperSize === 2 ? 'h-full':'h-60'">
             <newIcon icon="fluent-emoji:framed-picture" style="font-size: 3.5rem;" v-if="paperSize === 2"/>
@@ -34,7 +40,7 @@
               </div>
             </viewer>
 
-            <div class="absolute bottom-0 right-0 flex hover-item" style="opacity: 0;">
+            <div class="absolute flex hover-item" style="opacity: 0;z-index: 1 !important;bottom: -12px;right: -12px;">
               <xt-button w="40" h="40" class="xt-bg-t-3" style="border-radius: 8px ;margin: 0 12px 10px 0; " @click="lastImg">
                 <div class="flex items-center justify-center">
                   <xt-new-icon icon="fluent:chevron-left-16-regular" size="20"></xt-new-icon>
@@ -56,7 +62,7 @@
                   <xt-new-icon icon="fluent:arrow-clockwise-16-regular" :class="randomFlag ? 'replace-it' : ''" size="20"></xt-new-icon>
                 </div>
               </xt-button>
-              <xt-button w="40" h="40" class="xt-bg-t-3" style="border-radius: 8px ;margin: 0 12px 10px 0;" v-if="paperSize === 2" @click="download(getCustomDataPaper)" >
+              <xt-button w="40" h="40" class="xt-bg-t-3" style="border-radius: 8px ;margin: 0 12px 10px 0;" v-if="paperSize == 4" @click="download(getCustomDataPaper)" >
                 <div class="flex items-center justify-center">
                   <xt-new-icon icon="fluent:arrow-download-16-regular" size="20"></xt-new-icon>
                 </div>
@@ -70,7 +76,7 @@
           </div>
         </template>
       </div>
-    </Widget>
+    </xt-container>
   </a-spin>
 
   <teleport to='body'>
@@ -129,10 +135,6 @@ export default {
   data(){
     return{
       // 组件配置
-      options: {
-        className: 'card double', title: '壁纸',
-        type: 'MiddleWallpaper',  icon: "",
-      },
 
       // 壁纸数据
       imgList:[],
@@ -149,8 +151,8 @@ export default {
 
       // 大小切换
       sizeList:[
-        { title: '2x2', height: 1,width: 1, name: '2x2',},
-        { title: '4x4', height: 2, width: 2, name: '4x4', },
+        { value: '2x2',  name: '2x2',},
+        { value: '4x4',  name: '4x4', },
       ],
       // 右键菜单
       menuList:[
@@ -201,7 +203,19 @@ export default {
 
   computed:{
     ...mapWritableState(paperStore, ['myPapers', 'settings']),
-
+    header(){
+      return {
+        title: this.paperTitle,
+        ifyIcon: 'fluent:image-multiple-16-regular',
+      }
+    },
+    options(){
+      return {
+        defaultData:{
+          customSize:this.customData.customSize ? this.customData.customSize : '4x4',
+        }
+      }
+    },
     // 组件标题
     paperTitle(){
       if(this.customData && this.customData.value !== undefined){
@@ -227,8 +241,9 @@ export default {
     },
     // 动态切换大小
     paperSize(){
-      if(this.customData && this.customData.width !== undefined ){
-        return this.customData.width
+      if(this.customData && this.customData.customSize !== undefined ){
+        let list = this.customData.customSize.split('x');
+        return list[0]
       }
       else {
         return 2
@@ -262,17 +277,18 @@ export default {
 
     // 计算图片的宽高
     imgWH(){
-      if(this.customData && this.customData.width !== undefined){
+      if(this.customData && this.customData.customSize !== undefined){
+        let arr = this.customData.customSize.split('x')
         const result = {
-          width:this.customData.width * 280 + (this.customData.width - 1) * 10 + 2,
-          height:this.customData.height * 205 + (this.customData.height - 1) * 10
+          width:arr[0] * 134 + (arr[0] - 1) * 12 ,
+          height:arr[1] * 96 + (arr[1] - 1) * 12
         }
         return result;
       }
       else {
         return {
-          width: 2 * 280 + (2-1) * 10,
-          height:2 * 205 + (2-1) * 10
+          width: 4 * 134 + (4-1) * 12,
+          height:4 * 96 + (4-1) * 12
         }
       }
     }
@@ -505,7 +521,11 @@ export default {
 
 
   },
-
+  watch: {
+    customSize(newVal,oldVal){
+      this.customData.customSize = newVal
+    }
+  }
 }
 </script>
 

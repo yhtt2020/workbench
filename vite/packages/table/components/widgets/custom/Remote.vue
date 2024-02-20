@@ -4,6 +4,7 @@
   <!--  </div>-->
 <xt-task :modelValue="m03031" @cb="openRightMenu">
   <xt-container 
+    :header="header"
     v-model:customSize="customData.customSize"
     :customIndex="customIndex" 
     :size="customSize" 
@@ -218,6 +219,11 @@ export default {
       return {
         bg:this.customData.hideFrame ? 'transparent' : '',
         shadow: this.customData.hideFrame
+      }
+    },
+    header(){
+      return {
+        disabled: this.customData.hideFrame
       }
     }
   },
