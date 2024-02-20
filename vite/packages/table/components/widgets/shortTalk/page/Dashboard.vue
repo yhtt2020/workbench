@@ -190,7 +190,7 @@ export default {
         this.accToken = this.access_token
         this.accUrl = this.baseUrl
         this.init()
-
+        
 
     },
     methods:{
@@ -215,7 +215,9 @@ export default {
             }
             // 初始化获取详细数据
             this.getBoardData()
-
+            if(this.customData.customSize === undefined){
+                this.customData.customSize = '2x4'
+            }
 
         },
         // 修改设置的数组

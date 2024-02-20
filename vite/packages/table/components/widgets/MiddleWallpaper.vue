@@ -212,7 +212,7 @@ export default {
     options(){
       return {
         defaultData:{
-          customSize:this.customData.customSize ? this.customData.customSize : '4x4',
+          customSize:'4x4',
         }
       }
     },
@@ -303,6 +303,9 @@ export default {
         this.initPaperList('timeline')
       }
     })
+    if(this.customData.customSize === undefined){
+            this.customData.customSize = '4x4'
+    }
   },
 
   methods:{
