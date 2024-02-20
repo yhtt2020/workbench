@@ -14,7 +14,7 @@
                 {{ item.content.title }}
               </div>
             </div>
-            <xt-button w="21" h="21"  @click="delSingleHistoryNotice(item)">
+            <xt-button w="21" h="21"  @click="delSingleHistoryNotice(item)" v-if="item.type !== 'push'">
               <div class="flex items-center justify-center">
                 <DetailIcon icon="akar-icons:circle-x-fill" class="category-button pointer" style="font-size: 1.25rem;color:var(--secondary-text);" />
               </div>

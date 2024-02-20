@@ -40,7 +40,11 @@ export const getFavicon = async (url) => {
     };
   } catch (error) {
     console.error("Error:", error);
-    return null;
+    const obj = {
+      faviconURL: null,
+      pageTitle: null
+    }
+    return obj;
   }
 };
 

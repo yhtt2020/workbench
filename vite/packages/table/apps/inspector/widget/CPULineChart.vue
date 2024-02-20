@@ -1,5 +1,11 @@
 <template>
-  <Widget  :limit-env="['web']" :options="options" :menu-list="menuList" :desk="desk">
+  <xt-container
+    v-model:customSize="customSize"
+    :header="header"  
+    :limit-env="['web']" 
+    :options="options" 
+    :menu-list="menuList" 
+    :desk="desk">
     <template #left-title-icon>
       <div
         class="icon"
@@ -89,7 +95,7 @@
     </div>
 
 
-  </Widget>
+  </xt-container>
 </template>
 
 <script>
@@ -111,10 +117,9 @@ export default {
   data () {
     return {
       options: {
-        className: 'card',
-        title: '性能',
-        // icon:'dashboard',
-        type: 'CPULineChart'
+        defaultData:{
+          customSize: '2x4'
+        }
       },
       CPUOption,
       GPUOption,
@@ -138,7 +143,12 @@ export default {
             message.success('复制成功')
           }
         }
-      ]
+      ],
+      header:{
+        title:'性能',
+        ifyIcon:'fluent:arrow-trending-lines-20-filled'
+      },
+      customSize:'2x4'
     }
   },
 

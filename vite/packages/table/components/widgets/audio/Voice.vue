@@ -1,5 +1,13 @@
 <template>
-  <Widget :limit-env="['web']" :customIndex="customIndex" :customData="customData" :options="options" :desk="desk" :menu-list="menus">
+  <xt-container 
+    :header="header" 
+    v-model:customSize="customSize"  
+    :limit-env="['web']" 
+    :customIndex="customIndex" 
+    :customData="customData" 
+    :options="options" 
+    :desk="desk" 
+    :menu-list="menus">
     <template #left-title-icon>
       <div class="icon"
         style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
@@ -55,7 +63,7 @@
     <audio id="speakerAudio" src='/sound/gua.mp3'>
       您的浏览器暂不支持音频播放
     </audio>
-  </Widget>
+  </xt-container >
 </template>
 
 <script>
@@ -117,7 +125,12 @@ export default {
             })
           }
         }
-      ]
+      ],
+      header:{
+        title:'音频',
+        ifyIcon:'akar-icons:sound-on'
+      },
+      customSize:'2x4',
     }
   },
   computed:{

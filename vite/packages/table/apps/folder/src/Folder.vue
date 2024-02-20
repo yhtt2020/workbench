@@ -1,72 +1,28 @@
 <template>
-  <Drop
-    @createFile="createFile"
-    @deleteFile="deleteFile"
-    @updateBg="updateBg"
-    ref="folder"
-  >
-    <xt-container
-      v-model:status="status"
-      :modalSize="modalSize"
-      :options="options"
-      :customIndex="customIndex"
-      :customData="customData"
-      :header="header"
-      :menuList="menuList"
-      :sizeList="autoSizeList"
-      @leftClick="leftClick"
-      v-model:customSize="customData.customSize"
-      @delete="deleteFn"
-    >
+  <Drop @createFile="createFile" @deleteFile="deleteFile" @updateBg="updateBg" ref="folder">
+    <xt-container v-model:status="status" :modalSize="modalSize" :options="options" :customIndex="customIndex"
+      :customData="customData" :header="header" :menuList="menuList" :sizeList="autoSizeList" @leftClick="leftClick"
+      v-model:customSize="customData.customSize" @delete="deleteFn">
       <!-- 空状态显示状态 -->
       <template v-if="customData.list.length <= 0 && !dragSortState">
         <Null :size="customData.customSize" @addFile="addFileClick" />
       </template>
-      <vue-custom-scrollbar
-        v-else
-        style="padding-right: 4px"
-        :settings="{
-          useBothWheelAxes: true,
-          suppressScrollY: false,
-        }"
-        class="relative w-full h-full"
-      >
-        <File
-          :list="customData.list"
-          :layout="customData.layout"
-          :model="customData.model"
-          :modalSize="modalSize"
-          @deleteFile="deleteFile"
-          @updateFile="updateFile"
-          @updateList="updateList"
-          @updateSort="updateSort"
-          @clickFile="clickFile"
-        />
+      <vue-custom-scrollbar v-else style="padding-right: 4px" :settings="{
+        useBothWheelAxes: true,
+        suppressScrollY: false,
+      }" class="relative w-full h-full">
+        <File :list="customData.list" :layout="customData.layout" :model="customData.model" :modalSize="modalSize"
+          @deleteFile="deleteFile" @updateFile="updateFile" @updateList="updateList" @updateSort="updateSort"
+          @clickFile="clickFile" />
       </vue-custom-scrollbar>
     </xt-container>
   </Drop>
 
-  <folderSet
-    v-if="setVisible"
-    :data="customData"
-    @close="setVisible = false"
-    @updateSort="updateSort"
-    @updateWindowApp="updateWindowApp"
-  />
-  <EditNewNavigation
-    v-if="editVisible"
-    @setQuick="editVisible = false"
-    @addIcon="addFile"
-    :isFolder="false"
-  />
+  <folderSet v-if="setVisible" :data="customData" @close="setVisible = false" @updateSort="updateSort"
+    @updateWindowApp="updateWindowApp" />
+  <EditNewNavigation v-if="editVisible" @setQuick="editVisible = false" @addIcon="addFile" :isFolder="false" />
 
-  <xt-modal
-    custom
-    v-model="expandVisible"
-    v-if="expandVisible"
-    boxClass=""
-    @close="expandClose"
-  >
+  <xt-modal custom v-model="expandVisible" v-if="expandVisible" boxClass="" @close="expandClose">
     <Expand :data="props" :auto="false" v-if="expandVisible"></Expand>
   </xt-modal>
 </template>
@@ -103,6 +59,7 @@ import { useMouseInElement } from "@vueuse/core";
 import { mergeData } from "../../../ui/hooks/useDataConversion";
 const { proxy } = getCurrentInstance();
 const router = useRouter();
+
 /**
  * 拖拽位置
  */
@@ -225,7 +182,7 @@ const header = computed(() => {
 const openAllFile = () => {
   if (customData.value.list.length > 10) {
     console.log("10 :>> ", 10);
-    proxy.$xtConfirm(
+    window.$ui.confirm(
       "确定要打开全部吗",
       `即将打开 ${customData.value.list.length} 个图标`,
       {

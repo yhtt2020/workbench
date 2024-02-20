@@ -717,10 +717,10 @@ export default {
     newAddCard() {
       if(!this.showGuide){
         this.$refs.currentDeskRef.newAddCard();
-        this.keepAddIcon = false
       }else{
         message.info("定制过程中无法操作");
       }
+      this.keepAddIcon = false
     },
     learn() {
       this.$refs.currentDeskRef.learn();

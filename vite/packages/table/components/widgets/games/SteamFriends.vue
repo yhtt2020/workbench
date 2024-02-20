@@ -1,19 +1,26 @@
 <template>
-  <Widget  :limit-env="['web']"  :options="options" :customData="customData" :customIndex="customIndex" style="overflow: hidden" :desk="desk">
+  <xt-container
+    :header="header"  
+    :envLimit="['web']"  
+    :options="options" 
+    :customData="customData" 
+    :customIndex="customIndex" 
+    style="overflow: hidden" 
+    :desk="desk">
     <!-- <a-empty style="margin-top: 10px" description="您还没有好友或未绑定Steam">
 
     </a-empty> -->
-    <template #left-title-icon>
+    <!-- <template #left-title-icon>
         <div
           class="icon"
           style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
             left: 2px; ">
           <newIcon icon="mdi:steam" style="font-size: 20px;" />
         </div>
-      </template>
+      </template> -->
     <XtState v-if="myFriends.length===0"  zoom="30" :state="'null'" :text="{'null':'您还没有好友或未绑定Steam'}" bg="" style="width: 100%;height: 80%;" class="mt-2"></XtState>
     <vue-custom-scrollbar v-else :settings="scrollbarSettings" style="height: 90%">
-      <div class="mt-5 my-friends"  >
+      <div class="mt-2 my-friends"  >
           <div v-for="item in myFriends" class=" avatar-item">
             <a-popover :content="item.player_name">
               <a-avatar shape="square" :size="48" :src="item.avatar_url_medium"  class="mb-4 rounded-md" style="border:3px solid rgba(82, 196, 26, 1);"></a-avatar>
@@ -21,7 +28,7 @@
           </div>
       </div>
     </vue-custom-scrollbar>
-  </Widget>
+  </xt-container>
 </template>
 <script>
 
@@ -64,6 +71,10 @@ export default {
         title: 'Steam好友',
         // icon: 'steam',
         type: 'games',
+      },
+      header:{
+        title:'Steam好友',
+        ifyIcon:'mdi:steam',
       }
     }
   },

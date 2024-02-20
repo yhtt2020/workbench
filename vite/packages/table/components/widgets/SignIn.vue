@@ -1,13 +1,11 @@
 <template>
-  <Widget :envLimit="['guest']" :options="options" :desk="desk" :showRightIcon='rightIcon' :env="env">
-    <template #left-title-icon>
-      <div
-        class="icon"
-        style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; ">
-        <newIcon icon="fluent:calendar-16-regular" style="font-size: 20px;"/>
-      </div>
-    </template>
+  <xt-container
+    v-model:customSize="customSize"
+    :header="header"
+    :custom-data="customData" :custom-index="customIndex" :envLimit="['guest','offline']"
+    :options="options"
+    :desk="desk"
+    :showRightIcon='rightIcon'>
     <div></div>
     <!--    <div class="pointer" @click="activityDescription(illustrateUrl)"-->
     <!--         style="position: absolute;left: 90px;top:15px;font-size: 13px;color: rgba(255, 255, 255, 0.6);background: rgba(255, 255, 255, 0.2); padding: 3px 12px;border-radius: 4px;">-->
@@ -15,7 +13,7 @@
     <!--    </div>-->
     <template v-if="!newPeoplePage">
       <div class="flex justify-between p-4 rounded-lg s-item xt-bg-2 xt-text"
-           style="margin-top: 1em;">
+           style="margin-top: 0em;">
         <div>
           <div class="mt-2" style=" font-size: 16px; font-weight: 600;">
             {{ signedIn ? '今日已签到' : '今日未签到' }}
@@ -119,7 +117,7 @@
           </span>
       </div>
     </template>
-  </Widget>
+  </xt-container>
   <AwardModal :tip="tip" :items="awardItems" @close="closeModal" v-model:visible="modalVisible"></AwardModal>
 </template>
 
@@ -146,7 +144,7 @@ export default {
     UserOutlined,
     newIcon
   },
-  props: ['desk', 'rightIcon'],
+  props: ['desk', 'rightIcon','customData','customIndex'],
   data () {
     return {
       tip:'',
@@ -188,12 +186,12 @@ export default {
       max: 99999,
       lastUsers: [],
       total: 0,
-      env: {
-        web: false,
-        mobile: false,
-        client: false,
-        offline: true,
+      customSize: '2x4',
+      header:{
+        title:"签到",
+        ifyIcon:"fluent:calendar-16-regular",
       }
+
 
     }
   },

@@ -110,7 +110,7 @@
             v-if="rightIcons && rightIcons.length"
             v-for="item in rightIcons"
           >
-            <div v-if="!item.disabled" class="header-right-icon mr-1">
+            <div v-if="!item.disabled" class="mr-1 header-right-icon">
               <!-- 右侧图标悬浮提示 -->
               <div
                 v-if="item.tip"
@@ -411,8 +411,12 @@ const { header } = toRefs(props);
 onBeforeMount(async () => {
   // 处理默认数据
   if (props.options.defaultData) {
-    props.options.defaultData = await _.merge(props.customData, props.options.defaultData);
-    // console.log("props.options.defaultData :>> ", props.options.defaultData);
+
+    props.options.defaultData = await _.merge(
+      {},
+      props.options.defaultData,
+      props.customData
+    );
   }
 });
 
@@ -449,6 +453,7 @@ const showIconHover = ref(false);
 // 标题区域状态
 const showTitleHover = ref(false);
 // 当前卡片尺寸
+console.log("props.customSize :>> ", props.customSize);
 const currentSize = ref(props.customSize);
 
 /**
@@ -548,6 +553,7 @@ watch(
 watch(
   () => currentSize.value,
   (val) => {
+    console.log("val :>> ", val);
     emits("update:customSize", val);
   }
 );

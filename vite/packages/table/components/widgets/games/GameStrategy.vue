@@ -1,13 +1,14 @@
 <template>
-  <Widget :limit-env="['web']"  :options="options" :customData="customData" :customIndex="customIndex" :desk="desk">
-    <div class="flex items-center" style="position: absolute; top: 0.85rem; left:1rem;">
-      <StrategyIcon icon="fluent:games-16-regular" style="font-size: 1.25rem;color:var(--secondary-text);"/>
-      <div class="flex items-center justify-center category-button ml-2 py-0.5 px-2 xt-enable-bg xt-text rounded-lg pointer" @click="openGuideDrawer">
-        游戏攻略- {{ customData.chineseName }}
-      </div>
-    </div>
-
-    <div class="w-full flex mt-3.5 mb-3">
+  <xt-container 
+    @titleHover="openGuideDrawer"
+    v-model:customSize="customSize"
+    :header='header'
+    :envLimit="['web']"  
+    :options="options" 
+    :customData="customData" 
+    :customIndex="customIndex" 
+    :desk="desk">
+    <div class="flex w-full mb-3">
       <HorizontalPanel style="width: 23.5rem;height: 44px;"
        :navList="strategyType" v-model:selectType="strategy">
       </HorizontalPanel>
@@ -57,7 +58,7 @@
     </template>
 
 
-  </Widget>
+  </xt-container>
 
   <HorizontalDrawer ref="strategyDrawer" drawerTitle="游戏名称"
     v-model:selectRegion="customData.id"
@@ -124,13 +125,21 @@ export default {
 
       isTop: true,  // 当前页面是否到达顶部
       isBottom: false,  // 当前页面是否到达底部
-
+      customSize:'4x4',
     }
   },
 
   computed:{
     ...mapWritableState(steamUserStore, ['recentGameList']),
     ...mapWritableState(gameStrategyStore,['biliVideoList','graphicList']),
+    header(){
+      return {
+        title:`游戏攻略 - ${this.customData.chineseName || ''}`,
+        ifyIcon:'fluent:games-16-regular',
+        titleHover:true,
+        titleHoverName:`游戏攻略 - ${this.customData.chineseName || ''}`,
+      }
+    },
 
     // 计算总页数
     totalPages(){

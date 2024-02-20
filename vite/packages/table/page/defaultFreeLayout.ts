@@ -554,6 +554,7 @@ export const defaultFreeLayoutStore = defineStore('defaultFreeLayoutStore', {
                 "customData": {
                     "name": "常用软件",
                     "icon": "https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#ffffff",
+                    "customSize": "2x2",
                     "size": "2x2",
                     "lock": true,
                     "layout": "rows",

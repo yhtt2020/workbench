@@ -1,23 +1,15 @@
 <template>
-  <Widget 
+  <xt-container 
+  :header="header"
+  :envLimit="['offline']"
+  @titleHover="showDrawer"
+  v-model:customSize="customData.customSize"
   :options="options" 
   :sizeList="sizeList"
   :customData="customData"
   :desk="desk" 
   ref="rankingSmallSlot" 
-  :env="env"
   :menuList="toggleRankingList">
-  <template #left-title-icon>
-        <div
-          class="icon"
-          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; ">
-          <newIcon icon="fluent:people-community-16-regular" style="font-size: 20px;" />
-        </div>
-      </template>
-  <div class="px-3 py-1 rounded-lg bg-mask pointer" @click="showDrawer"
-    style="position: absolute;left: 45px;top:10px;background: var(--primary-bg);color:var(--primary-text)">{{ rankingType[rankIndex].title }}
-  </div>
     <!-- 总在线时长榜 -->
     <div class="content-box" v-if="rankIndex === 0">
       <!-- 列表 -->
@@ -47,7 +39,7 @@
     <div class="content-box" v-if="rankIndex === 6">
       <RankList></RankList>
     </div>
-  </Widget>
+  </xt-container>
   <a-drawer v-model:visible="middleShow" title="设置" placement="right" width="500">
     <div class="flex flex-col" style="color:var(--primary-text)">
       <span   v-for="(item,index) in rankingType" :key="index"  
@@ -90,7 +82,7 @@ export default {
   data () {
     return {
       options: {className: 'card small',title: '排行榜',type: 'smallRank'},
-      sizeList:[{title:'1x1',height:1,width:1,name:'1x1'},{title:'1x2',height:2,width:1,name:'1x2'},],
+      sizeList:[{value:'2x2',name:'2x2'},{value:'2x4',name:'2x4'},],
       //在线时长榜
       onLineList,
       // 小队榜
@@ -111,12 +103,6 @@ export default {
         {title:'连续签到榜',name:'series'},
       ],
       rankIndex: 0,
-      env:{
-        web: false,
-        mobile: false,
-        client: false,
-        offline: true,
-      }
     }
   },
   mounted() {
@@ -137,6 +123,21 @@ export default {
     showDrawer(){
       this.middleShow = true
       this.$refs.rankingSmallSlot.visible = false
+    }
+  },
+  watch: {
+    customSize(newVal,oldVal) {
+      this.customData.customSize = newVal
+    }
+  },
+  computed: {
+    header(){
+      return {
+        title:this.rankingType[this.rankIndex].title,
+        ifyIcon:'fluent:people-community-16-regular',
+        titleHover:true,
+        titleHoverName:this.rankingType[this.rankIndex].title,
+      }
     }
   }
 }

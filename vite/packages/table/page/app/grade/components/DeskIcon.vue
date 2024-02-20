@@ -35,37 +35,40 @@
         </div>
     </div>
   </template>
-  
-  <script> 
+
+  <script>
   import { Icon } from '@iconify/vue';
-  
+
   export default {
     name: 'DeskIcon',
     props: ['appList', 'loading'],
     data() {
       return {
-        
+
       }
     },
     async mounted(){
     },
-    components: { 
+    components: {
       Icon,
     },
-  
+
     computed:{
     },
     methods: {
-        async test(){
-            // let nn = await tsbApi.system.getBrowserBookmark(['edge','chrome'])
-            await tsbApi.system.getBrowserBookmark('chrome', (data)=>{console.log(data)})
-            await tsbApi.system.getBrowserBookmark('edge', (data)=>{console.log(data)})
-        },
-      
+        // test(){
+        //     await tsbApi.system.getBrowserBookmark(
+        //         ['edge','chrome'],
+        //         (data)=>{
+        //             console.log('data11',data)
+        //         }
+        //     )
+        // },
+
     }
   }
   </script>
-  
+
   <style scoped lang="scss">
     // 滚动条配置
     ::-webkit-scrollbar-thumb {
@@ -112,4 +115,3 @@
   }
 
   </style>
-  

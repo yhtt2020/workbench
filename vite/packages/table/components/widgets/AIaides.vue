@@ -1,14 +1,15 @@
 <template>
   <div>
-    <Widget :desk="desk" :sizeList="sizeList" :options="options" :customIndex="customIndex" ref="cardSlot"
-      :customData="customData">
-      <template #left-title-icon>
-        <div class="icon" style=" width: 38px; height: 24px;position: absolute;left: 4px;top:14px">
-          <!-- <RobotOutlined style="font-size: 20px" /> -->
-          <AiIcon icon="fluent:bot-24-regular" style="font-size: 22px;" />
-        </div>
-      </template>
-      <div class="mt-4">
+    <xt-container
+      :desk="desk" 
+      :sizeList="sizeList" 
+      :options="options" 
+      :customIndex="customIndex" 
+      ref="cardSlot"
+      :customData="customData"
+      :header="header"
+      v-model:customSize="customData.customSize">
+      <div class="mt-1">
         <a-input v-model:value="inputValue" :bordered="false" placeholder="问我任何问题" class=" xt-bg h-[48px] rounded-xl"
           @keyup.enter="enterMsg">
           <template #suffix>
@@ -34,7 +35,7 @@
         </template>
       </div>
 
-    </Widget>
+    </xt-container>
   </div>
 </template>
 
@@ -75,8 +76,8 @@ export default {
   data() {
     return {
       sizeList: [
-        { title: "2x2", height: 1, width: 1, name: "2x2" },
-        { title: "2x4", height: 2, width: 1, name: "2x4" },
+        { value: "2x2", name: "2x2" },
+        { value: "2x4", name: "2x4" },
       ],
       options: {
         className: "card small ",
@@ -87,7 +88,13 @@ export default {
       currentIndex: 0,
       settingVisible: false,
       inputValue: "",
+      header: {
+      ifyIcon:"fluent:bot-24-regular",
+      title:"AI助手",
+      },
+      customSize:'2x2',
     };
+
   },
   methods: {
     // 跳转至AI，并创建新对话
@@ -110,16 +117,29 @@ export default {
     ...mapWritableState(aiStore, ["recentList", "selectTopicIndex"]),
     // 判断尺寸大小
     showSize() {
-      if (this.customData && this.customData.width && this.customData.height) {
-        return { width: this.customData.width, height: this.customData.height };
+      if (this.customData.customSize) {
+        let arr = this.customData.customSize.split('x')
+        return {
+          width: arr[0],
+          height: arr[1]
+        }
+      }else{
+        return {
+          width: 2,
+          height: 2
+        }
       }
-      return this.sizeList[0];
     },
     // 判断不同高度返回不同具体会话个数
     copyNum() {
-      return this.showSize.height == 1 ? 1 : this.recentList?.slice(0, 4).length;
+      return this.showSize.height == 2 ? 1 : this.recentList?.slice(0, 4).length;
     },
   },
+  watch: {
+    customSize(newVal,oldVal) {
+      this.customData.customSize = newVal
+    }
+  }
 };
 </script>
 <!-- <style lang="scss" scoped>

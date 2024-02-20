@@ -1,12 +1,15 @@
 <template>
 
-    <Widget :envLimit="['guest']" @click="onHistoryMessage" :customData="customData" :customIndex="customIndex" :menuList="menuList" :options="options" ref="dataSlot" :desk="desk" >
-        <template #left-title>
-            <Icon icon='fluent:open-20-filled' class="pointer" width="20" height="20" style="position: relative;top:3px;" />
-        </template>
-        <div class="top-icon">
-            <Icon icon="fluent:arrow-trending-lines-20-filled" />
-        </div>
+    <xt-container 
+        :header="header"
+        v-model:customSize="customSize"
+        :envLimit="['guest']" 
+        :customData="customData" 
+        :customIndex="customIndex" 
+        :menuList="menuList" 
+        :options="options" 
+        ref="dataSlot" 
+        :desk="desk" >
         <Unusual v-if='!this.access_token || !this.baseUrl' title="请完成小组件配置" buttonTitle="立即配置" :back="back" ></Unusual>
         <div v-else class="echarts" ref="myChart" :style="myChartStyle"></div>
         <!-- 设置面板 -->
@@ -22,10 +25,10 @@
                         <div>在使用该功能前，需要关联您的短说社区系统，请在短说管理后台获取系统密钥，填入下方输入框，以及您的管理后台地址，成功完成配置后即可使用。</div>
                         <div>在想天浏览器中打开短说管理后台，可以自动检测获取密钥。</div>
                     </div>
-                    <p class="ml-1 mt-1">密钥</p>
-                    <a-input spellcheck="false" style="border-radius: 10px;" v-model:value="this.accToken" placeholder="请输入" class="search pl-1 input-txt"></a-input>
-                    <p class="ml-1 mt-2">管理后台地址</p>
-                    <a-input spellcheck="false" style="border-radius: 10px;" v-model:value="this.accUrl" placeholder="请输入" class="search pl-1 input-txt"></a-input>
+                    <p class="mt-1 ml-1">密钥</p>
+                    <a-input spellcheck="false" style="border-radius: 10px;" v-model:value="this.accToken" placeholder="请输入" class="pl-1 search input-txt"></a-input>
+                    <p class="mt-2 ml-1">管理后台地址</p>
+                    <a-input spellcheck="false" style="border-radius: 10px;" v-model:value="this.accUrl" placeholder="请输入" class="pl-1 search input-txt"></a-input>
                 </div>
                 <div v-show="!this.setVisible">
                     <div class="txt-content pointer" style="height: 48px;color: var(--primary-text);background: var(--secondary-bg);" @click="this.setVisible = !this.setVisible">
@@ -37,16 +40,16 @@
                     </div>
                     <p class="ml-1">图表类型</p>
                     <RadioTab :navList="dataType" v-model:selectType="defaultDataType"></RadioTab>
-                    <p class="ml-1 mt-3">时间周期</p>
+                    <p class="mt-3 ml-1">时间周期</p>
                     <RadioTab :navList="timeType" v-model:selectType="defaultTimeType" ></RadioTab>
                     <div  v-show="this.defaultDataType.name == 'visit'">
                     <!-- <div > -->
-                        <p class="ml-1 mt-3">平台类型</p>
+                        <p class="mt-3 ml-1">平台类型</p>
                         <RadioTab  :navList="platType"  class="nav-type"
                         v-model:selectType="defaultPlatType"  ></RadioTab>
                     </div>
                     <div>
-                        <p class="ml-1 mt-3">数据更新频率</p>
+                        <p class="mt-3 ml-1">数据更新频率</p>
                         <a-select
                             ref="select"
                             v-model:value="timeVal"
@@ -64,7 +67,7 @@
                 </div>
             </vue-custom-scrollbar>
         </a-drawer>
-    </Widget>
+    </xt-container>
 </template>
 
 <script>
@@ -191,7 +194,16 @@ export default {
             accToken:'',
             accUrl:'',
             timer:"",
-
+            header:{
+                title:'社区访问数据/每日/全部',
+                ifyIcon:'fluent:arrow-trending-lines-20-filled',
+                rightIcon:[
+                    {
+                        ifyIcon:'fluent:open-20-filled',
+                    }
+                ]
+            },
+            customSize:'4x4'
 
         };
     },

@@ -1,5 +1,7 @@
 <template>
-    <Widget
+    <xt-container
+    :header="header"
+    v-model:customSize="customData.customSize"
     :desk="desk"
     :sizeList="sizeList"
     :options="options"
@@ -9,15 +11,7 @@
     :env="env"
     v-if="!detailToggle"
     >
-    <template #left-title-icon>
-        <div
-          class="icon"
-          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; ">
-          <newIcon icon="fluent:movies-and-tv-16-regular" style="font-size: 20px;" />
-        </div>
-      </template>
-      <span style="position: absolute;top: 16px;left: 120px"><icon style="font-size: 18px" icon="shuaxin"></icon></span>
+      <!-- <span style="position: absolute;top: 16px;left: 120px"><icon style="font-size: 18px" icon="shuaxin"></icon></span> -->
       <div v-if="pageToggle">
         <div class="example" v-if="isLoading">
           <a-spin />
@@ -55,7 +49,7 @@
         </div>
       </div>
       <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu>
-    </Widget>
+    </xt-container>
     <FilmDetail v-if="detailToggle" :detailId="detailId" :fatherWidth="customData.width" @detailBack="detailBack"></FilmDetail>
 </template>
 
@@ -92,12 +86,15 @@
     },
     data() {
       return {
-        sizeList:[{title:'1x2',height:2,width:1,name:'1x2'},{title:'2x2',height:2,width:2,name:'2x2'},],
+        sizeList:[{value:'2x4',name:'2x4'},{value:'4x4',name:'4x4'},],
         options:{
           className:'card',
           title:'正在热映',
           // icon:'video',
-          type:'singleFilm'
+          type:'singleFilm',
+          defaultData:{
+            customSize: this.customData.customSize ? this.customData.customSize : '2x4',
+          }
         },
         mySize: { title: "1x2", height:2,width:1,name:'1x2' },
         filmList: [],
@@ -112,6 +109,15 @@
           mobile: false,
           client: false,
           offline:false
+        },
+        header:{
+          ifyIcon:"fluent:movies-and-tv-16-regular",
+          title:"正在热映",
+          refresh:{
+            fn:this.refreshPage,
+            tip:'刷新',
+            
+          }
         }
       };
     },
@@ -125,6 +131,9 @@
         },
         deep: true,
         immediate: true
+      },
+      customSize(newVal,oldVal){
+        this.customData.customSize = newVal
       }
     },
     methods: {
@@ -175,7 +184,7 @@
   .film-box{
     display: flex;
     flex-flow: wrap;
-    margin: 13px 0 0 3px;
+    margin: 0px 0 0 3px;
   }
   .film-box>div:nth-child(odd){
     margin-right: 16px;

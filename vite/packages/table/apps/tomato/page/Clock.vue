@@ -1,9 +1,15 @@
 <template>
-  <Widget :options="{ ...this.options,background:this.isColor}" :customIndex="customIndex" :customData="customData" :desk="desk" :showRightIcon="!this.$props.isTop" ref="clockSlot"   :menuList="menuList"  @delete='clearTime'>
-    <div class="title" @click="test">番茄时间</div>
-    <div class="time flex justify-center items-center">{{ displayNum(minutes) }}:{{ displayNum(seconds) }}</div>
+  <xt-container 
+    :options="{ ...this.options,bg:this.isColor}" 
+    :customIndex="customIndex" :customData="customData" 
+    :desk="desk" :showRightIcon="!this.$props.isTop" 
+    ref="clockSlot"   
+    :menuList="menuList"  
+    @delete='clearTime'>
+    <div class="absolute title " @click="test" style="left: 36%;top: -34px; ">番茄时间</div>
+    <div class="flex items-center justify-center time">{{ displayNum(minutes) }}:{{ displayNum(seconds) }}</div>
     <div class="title">今日番茄时间 {{ countToday(this.tomatoNum) }} </div>
-    <div class="icon-box pb-3" style="color: rgba(255,255,255,0.85);">
+    <div class="pb-3 icon-box" style="color: rgba(255,255,255,0.85);">
       <!-- 开始 -->
       <div class="icon" v-if="running && isPause" @click="onPause">
         <Icon icon="fluent:play-16-filled" />
@@ -57,7 +63,7 @@
                 </div>
           </vue-custom-scrollbar>
       </a-drawer>
-    </Widget>
+    </xt-container>
   </template>
 
 <script>
@@ -168,7 +174,7 @@
       color: rgba(255,255,255,0.85);
       text-align: center;
       font-weight: 600;
-      margin: 8px 0 0 0;
+      margin: 0px 0 0 0;
     }
 
     .icon-box{

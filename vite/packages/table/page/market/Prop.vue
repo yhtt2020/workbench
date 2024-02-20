@@ -37,16 +37,16 @@
         </div>
       </div>
     </div>
-    <div class="preview" v-if="$useEnv=['guest']">
+    <div class="preview">
       <!-- 替换成游客面板 -->
-      <div v-if="0">
+      <div v-if="envGuest">
         <div  class="flex items-center justify-between mb-6" style="height: 48px;" >
          <div class="flex items-center">
             <div @click="showPreview = false" class="w-12 h-12 pointer flex items-center rounded-lg justify-center"
               style="background: var(--mask-bg);font-size: 16px;color: var(--primary-text);">
               <Icon icon="zhankai" style="font-size: 1.5em;"></Icon>
             </div>
-            <span class="xt-text ml-3" style="font-size: 16px;">装扮预览2</span>
+            <span class="xt-text ml-3" style="font-size: 16px;">装扮预览</span>
          </div>
          <div @click="clearExtra" class="w-12 h-12 pointer flex items-center rounded-lg justify-center"
             style="background: var(--mask-bg);font-size: 16px;color: var(--primary-text);">
@@ -57,7 +57,7 @@
           <PropPreview :uid="userInfo.uid" :userInfo="userInfo" :frameImage="frameImage"></PropPreview>
         </div>
       </div>
-      <div v-else class=" xt-bg h-full rounded-xl ">
+      <div v-else class=" xt-bg h-full rounded-xl">
         <xt-status name="道具商城" :status="['guest']" ></xt-status>
       </div>
     </div>
@@ -108,6 +108,9 @@ export default {
   computed: {
     ...mapWritableState(appStore, ['fullScreen','userInfo']),
     ...mapWritableState(frameStore, ['frameData']),
+    envGuest(){
+      return !window.$useEnv('guest')
+    },
   },
   watch: {
     frameData: {

@@ -2,7 +2,7 @@ import {defineStore} from 'pinia';
 import {sUrl} from '../consts'
 // import {message} from "ant-design-vue";
 import cache from '../components/card/hooks/cache'
-import {get, post} from "../js/axios/request";
+import { apiPost, get, post} from "../js/axios/request";
 
 const getFrameUrl = sUrl('/app/good/frame/list')  // 获取头像商品数据
 const editInfoUrl = sUrl('/app/com/updateUserInfo') // 修改文档信息
@@ -32,6 +32,9 @@ export const frameStore = defineStore('frameStore',{
     },
     async updateMyinfo(data){  // 修改我的信息
       return  await post(editInfoUrl,data)
+    },
+    async removeFrame(){
+      return apiPost('/app/item/removeEquipment',{position:'frame'})
     },
     saveAvatarUrl(){ // 将返回的图片路径进行缓存
       this.frameData.avatar_url =  cache.get('avatar_url')

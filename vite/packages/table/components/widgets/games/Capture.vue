@@ -1,15 +1,14 @@
 <template>
-   <Widget :limit-env="['web']" :menuList="menuList"  :options="options" :customData="customData" :customIndex="customIndex" :desk="desk">
-    <template #left-title-icon>
-        <div
-          class="icon"
-          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; ">
-          <newIcon icon="fluent:resize-video-20-regular" style="font-size: 20px;" />
-        </div>
-      </template>
+   <xt-container 
+    :header="header"
+    :envLimit="['web']" 
+    :menuList="menuList"  
+    :options="options" 
+    :customData="customData" 
+    :customIndex="customIndex" 
+    :desk="desk">
      <CaptureCore @selectSource="visibleSource=true"></CaptureCore>
-   </Widget>
+   </xt-container>
   <teleport to="#app">
     <Modal v-if="visibleSource" v-model:visible="visibleSource"  :blurFlag="true">
       <SourceSelector @choosenSource="choosenSource">
@@ -22,19 +21,15 @@
 </template>
 
 <script>
-import Widget from '../../card/Widget.vue'
 import CaptureCore from './CaptureCore.vue'
 import SourceSelector from '../../modal/SourceSelector.vue'
 import CaptureSettings from '../../modal/CaptureSettings.vue'
 import Modal from '../../Modal.vue'
-import { Icon as newIcon } from '@iconify/vue'
 export default {
   name:'Capture',
   components:{
     Modal, CaptureSettings, SourceSelector,
     CaptureCore,
-    Widget,
-    newIcon
   },
   props:{
     customIndex: {
@@ -74,6 +69,10 @@ export default {
         // icon: 'video',
         type: 'games',
       },
+      header:{
+        title:'捕获',
+        ifyIcon:'fluent:resize-video-20-regular'
+      }
 
     }
   },
