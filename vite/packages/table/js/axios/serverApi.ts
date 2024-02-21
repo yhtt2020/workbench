@@ -36,9 +36,8 @@ if (!useEnv()) {
   //   });
   // }
 
-}else {
-  token =  cache.get('ttUserToken')
 }
+token = cache.get('ttUserToken')
 console.log('getConfig token :>> ', token);
   return {
     headers: {

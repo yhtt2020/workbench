@@ -14,12 +14,12 @@ router.beforeEach(async(to, from, next) =>  {
   console.log("to,from :>> ", to, from);
   let userRes = await useUserPermit()
   console.log('userRes :>> ', userRes);
-  if (!userRes) {
-    console.log("用户未登录，跳转到登录页");
-    next({
-      name: "splash",
-    });
-  }
+  // if (!userRes) {
+  //   console.log("用户未登录，跳转到登录页");
+  //   next({
+  //     name: "splash",
+  //   });
+  // }
   if (
     useEnvLimit("web", to.name, {
       msg: false,

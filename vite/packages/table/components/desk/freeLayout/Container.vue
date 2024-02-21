@@ -54,7 +54,7 @@ onMounted(() => {
         redirect: true,
         position,
       });
-    }, 100);
+    }, 200);
   });
 });
 
@@ -182,20 +182,27 @@ const cutCanvas = async (config) => {
       bottomItem = item;
     }
   });
-
+  console.log("left :>> ", left);
+  console.log("top :>> ", top);
+  console.log("right :>> ", right);
+  console.log("bottom :>> ", bottom);
   // 获取画布大小
   let { width: canvasWidth, height: canvasHeight } =
     getFreeLayoutState.value.canvas;
   // 获取当前窗口大小
   let { scrollHeight, scrollWidth } = freeLayoutEnv.value;
   // 比例
-  const HEIGHT_PROPORTION = 0.6;
-  const WIDTH_PROPORTION = 0.5;
+  const HEIGHT_PROPORTION = 1;
+  const WIDTH_PROPORTION = 1;
   // 当前屏幕宽度
   const viewWidth = scrollWidth * WIDTH_PROPORTION;
   const viewHeight = scrollHeight * HEIGHT_PROPORTION;
   let msgArr: any = [];
+
+  console.log("原始宽度 :>> ", getFreeLayoutState.value.canvas.width);
+  console.log("原始高度 :>> ", getFreeLayoutState.value.canvas.height);
   // 左边
+
   if (redirect || currentLeft == left) {
     if (left < viewWidth) {
       let diff = viewWidth - left;
@@ -208,8 +215,7 @@ const cutCanvas = async (config) => {
       console.log("触发左边扩展 :>> ");
       msgArr.push("左边");
       getFreeLayoutState.value.canvas.width += diff;
-    }
-    if (left > viewWidth) {
+    } else if (left > viewWidth) {
       let diff = left - viewWidth;
       getFreeLayoutData.value = Object.values(getFreeLayoutData.value).map(
         (item: any) => {
@@ -219,7 +225,6 @@ const cutCanvas = async (config) => {
       );
       msgArr.push("左边");
       console.log("触发左边收缩 :>> ");
-
       getFreeLayoutState.value.canvas.width -= diff;
     }
   }
@@ -253,32 +258,23 @@ const cutCanvas = async (config) => {
     }
   }
   // 右边
+  console.log("right :>> ", right);
   if (redirect || currentRight == right) {
-    if (canvasWidth - right < viewWidth) {
-      console.log("触发右边扩展 :>> ");
-      msgArr.push("右边");
-      getFreeLayoutState.value.canvas.width = right + viewWidth;
-    }
-    if (canvasWidth - right > viewWidth) {
-      console.log("触发右边收缩 :>> ");
-      msgArr.push("右边");
-      getFreeLayoutState.value.canvas.width = right + viewWidth;
-    }
+    console.log("触发右边扩展 :>> ");
+    msgArr.push("右边");
+    console.log("right :>> ", right);
+    console.log("canvasWidth :>> ", canvasWidth);
+    getFreeLayoutState.value.canvas.width = right + viewWidth;
   }
   // 下边
   if (redirect || currentBottom == bottom) {
-    if (canvasHeight - bottom < viewHeight) {
-      console.log("触发下边扩展 :>> ");
-      msgArr.push("下边");
-      getFreeLayoutState.value.canvas.height = bottom + viewHeight;
-    }
-    if (canvasHeight - bottom > viewHeight) {
-      getFreeLayoutState.value.canvas.height = bottom + viewHeight - height;
-      msgArr.push("下边");
-      console.log("触发下边收缩 :>> ");
-    }
+    console.log("触发下边扩展 :>> ");
+    msgArr.push("下边");
+    getFreeLayoutState.value.canvas.height = bottom + viewHeight;
   }
 
+  console.log("实际宽度 :>> ", getFreeLayoutState.value.canvas.width);
+  console.log("实际高度 :>> ", getFreeLayoutState.value.canvas.height);
   if (msgArr.length > 0) {
     message.success("已为您更新画布画布");
   }
@@ -494,8 +490,10 @@ onBeforeUnmount(() => {
           ref="test"
         >
           <!-- <xt-button>id： {{ item.id }}</xt-button> -->
-          <!-- <xt-button w="280">top {{ item.top }}</xt-button>
-          <xt-button w="280">left {{ item.left }}</xt-button> -->
+
+          <!-- <xt-button  w="280" h="400">  {{ freeLayoutEnv.scrollData }} </xt-button> -->
+          <!-- <xt-button w="280">top {{ item.top }}</xt-button> -->
+          <!-- <xt-button w="280">left {{ item.left }}</xt-button> -->
           <slot name="box" :data="currentData[item?.id]"></slot>
         </div>
       </transition>

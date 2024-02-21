@@ -3,7 +3,7 @@
     <div class="flex items-center my-3 mx-3">
       <div class="pt-2 ml-2" style="width:70px;height:70px;position:relative;text-align: center;">
         <FrameAvatar :frame="displayUserInfo?.equippedItems?.frameDetail" :avatarSize="60"
-                     :avatarUrl="displayUserInfo.avatar" :frameUrl="displayUserInfo.frame">
+                     :avatarUrl="displayUserInfo.avatar" :frameUrl="userInfo.frame">
         </FrameAvatar>
         <a-tooltip v-if="displayUserInfo.certification && displayUserInfo.certification.length>0"
                    :title="displayUserInfo.certification[0].name">

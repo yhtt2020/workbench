@@ -453,7 +453,6 @@ const showIconHover = ref(false);
 // 标题区域状态
 const showTitleHover = ref(false);
 // 当前卡片尺寸
-console.log("props.customSize :>> ", props.customSize);
 const currentSize = ref(props.customSize);
 
 /**
@@ -504,8 +503,6 @@ const rightIcons = computed(() => {
 
   if (Array.isArray(props.header.rightIcon)) {
     arr = [...props.header.rightIcon];
-  } else {
-    console.log("头部右侧图标不属于数组 :>> ");
   }
   if (props.header.refresh) {
     arr.push({

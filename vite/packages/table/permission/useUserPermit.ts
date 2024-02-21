@@ -12,33 +12,30 @@ const setUserInfo = async () => {
   const userStore: any = appStore();
   if (userStore.userInfo) return true;
   let res = await getUserInfo();
-
+  console.log("res :>> ", res);
   setLV(res.data);
-  userStore.userInfo = res.data.data;
-  console.log('res.data.data :>> ', res.data.data);
-  console.log('  userStore.userInfo :>> ',   userStore.userInfo);
-  cache.set("ttUserInfo",    res.data.data);
-  if (res.data.data) {
-    return true
-  }
+
+  let userData = res.data.data;
+  // 获取头像框信息
+  let response = await userStore.getUserCard(userData.uid);
+  console.log("response :>> ", response);
+  userData.frame = response.data.frame;
+  userStore.userInfo = userData;
+  return true;
 };
 /**
  * 用户许可
  */
 export const useUserPermit = async () => {
-  // 非客户端情况
-  if (useEnv()) {
-    // 1 判断是否存在token
-    const token = cache.get("ttToken");
-    // 2 有token 尝试请求出用户数据
-    if (token) {
-      // 没用户信息
-      let res = await setUserInfo();
-      return res;
-    } else {
-      // 4 没token
-      return false;
-    }
+  // 1 判断是否存在token
+  const token = cache.get("ttUserToken");
+  // 2 有token 尝试请求出用户数据
+  if (token) {
+    let res = await setUserInfo();
+    return res;
+  } else {
+    // 4 没token
+    return false;
   }
   // 放行
   return true;
