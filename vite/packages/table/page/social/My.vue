@@ -53,7 +53,7 @@ export default {
   computed: {
     ...mapWritableState(appStore, ['userInfo','secondaryVisible']),
     envGuest(){
-      return !window.$useEnv(['guest', 'web'])
+      return !window.$useEnv(['guest'])
     },
   },
   data(){

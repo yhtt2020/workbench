@@ -1,36 +1,36 @@
 <template>
   <div class="mt-3">
-    <div class="flex justify-between justify-center" v-if="size.width === 2 && size.height === 2">
+    <div class="flex justify-center justify-between" v-if="size.width === 2 && size.height === 2">
       <div class="flex flex-col" style="width:73.53%;">
-        <div class=" relative" style="width:400px;height:188px;">
+        <div class="relative " style="width:400px;height:188px;">
           <img class="rounded-lg" style="width: 100%;height: 100%; object-fit: cover;" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${steamDetail.appid}/header.jpg`" alt="">
           <div class="in-run" v-if="isRunGame === true">正在运行</div>
         </div>
         <span class="my-4">{{steamDetail.name}}</span>
         <div class="flex">
           <div class="flex flex-col">
-            <span class="show-time mb-2">最近游玩 : {{ getDateMyTime(steamDetail.time) }}</span>
+            <span class="mb-2 show-time">最近游玩 : {{ getDateMyTime(steamDetail.time) }}</span>
             <span class="show-time">M站评分 : {{ steamDetail.metacritic_score ? steamDetail.metacritic_score : '-' }}</span>
           </div>
           <div class="flex flex-col ml-32">
-            <span class="show-time mb-2">过去两周 : {{ twoWeekTime(steamDetail.time) }}</span>
+            <span class="mb-2 show-time">过去两周 : {{ twoWeekTime(steamDetail.time) }}</span>
             <span class="show-time">总数 : {{ totalTime(steamDetail.time) }}</span>
           </div>
         </div>
 
         <div class="flex mt-2">
-          <div class="flex items-center detail-active mr-3 s-item pointer px-3 rounded-lg" @click="backGameList">
+          <div class="flex items-center px-3 mr-3 rounded-lg detail-active s-item pointer" @click="backGameList">
             <Icon icon="xiangzuo" style="font-size: 1.8em;"></Icon>
           </div>
-          <div @click="startGame" v-if="runningGame.appid!==steamDetail.appid" class="flex game-start-button items-center mr-3  detail-active s-item  rounded-lg pointer  justify-center" style="background: rgba(82,196,26,1);padding: 13px 40px;">
+          <div @click="startGame" v-if="runningGame.appid!==steamDetail.appid" class="flex items-center justify-center mr-3 rounded-lg game-start-button detail-active s-item pointer" style="background: rgba(82,196,26,1);padding: 13px 40px;">
             <Icon icon="bofang" style="font-size: 1.2em;"></Icon>
             <span class="ml-2">开始游戏</span>
           </div>
-          <div @click="closeGame" v-else class="flex items-center mr-3 game-start-button running  detail-active s-item  rounded-lg pointer  justify-center" style="padding: 13px 40px;">
+          <div @click="closeGame" v-else class="flex items-center justify-center mr-3 rounded-lg game-start-button running detail-active s-item pointer" style="padding: 13px 40px;">
             <Icon icon="guanbi" style="font-size: 1.2em;"></Icon>
             <span class="ml-2">关闭游戏</span>
           </div>
-          <div @click="guidelineJump(steamDetail.appid)" class="flex  py-3 s-item px-15 detail-active  rounded-lg pointer items-center justify-center"  style="padding: 13px 40px;">
+          <div @click="guidelineJump(steamDetail.appid)" class="flex items-center justify-center py-3 rounded-lg s-item px-15 detail-active pointer"  style="padding: 13px 40px;">
             <Icon icon="trophy" style="font-size: 1.2em;"></Icon>
             <span class="ml-2">游戏攻略</span>
           </div>
@@ -58,7 +58,7 @@
             CPU
           </span>
         </div>
-        <div class="flex s-item rounded-lg flex-col items-center justify-center" style="padding: 18px 6px;">
+        <div class="flex flex-col items-center justify-center rounded-lg s-item" style="padding: 18px 6px;">
           <span class="flex items-center justify-center" style="width:100px;line-height: 53px;font-size: 30px;font-weight: 600;">
             {{  CPUGPUData.useGPU.value }}
           </span>
@@ -69,11 +69,11 @@
         </div>
       </div>
     </div>
-    <div class="mt-3 flex flex-col  relative" v-else>
+    <div class="relative flex flex-col mt-3" v-else>
       <div style="height: 118px;" class="mb-3.5">
         <img class="rounded-lg" style="width: 100%;height: 100%; object-fit: cover;" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${steamDetail.appid}/header.jpg`" alt="">
       </div>
-      <div class="m-in-run mt-1" v-if="isRunGame === true">正在运行</div>
+      <div class="mt-1 m-in-run" v-if="isRunGame === true">正在运行</div>
       <div class="flex items-center justify-center">
         <span class="truncate mb-2.5 " style="max-width: 180px;">{{steamDetail.name}}</span>
       </div>
@@ -81,19 +81,19 @@
       <span class="flex items-center mb-2.5 justify-center last-time">过去两周 : {{twoWeekTime(steamDetail.time)}} 小时</span>
       <span class="flex items-center mb-2.5 justify-center last-time">总数 : {{totalTime(steamDetail.time)}} 小时</span>
       <div class="flex items-center">
-        <div @click="backGameList" class="flex items-center detail-active mb-2 mr-3 s-item rounded-lg pointer" style="padding: 13px 12px;">
+        <div @click="backGameList" class="flex items-center mb-2 mr-3 rounded-lg detail-active s-item pointer" style="padding: 13px 12px;">
           <Icon icon="xiangzuo" style="font-size: 1.5em;"></Icon>
         </div>
-        <div @click="guidelineJump(steamDetail.appid)" style="padding:12px 35px;" class="flex mb-2  w-full s-item detail-active  rounded-lg pointer items-center justify-center">
+        <div @click="guidelineJump(steamDetail.appid)" style="padding:12px 35px;" class="flex items-center justify-center w-full mb-2 rounded-lg s-item detail-active pointer">
           <Icon icon="trophy" style="font-size: 1.2em;"></Icon>
           <span class="ml-2">游戏攻略</span>
         </div>
       </div>
-      <div @click="startGame" v-if="runningGame.appid!==steamDetail.appid" style="background: rgba(82,196,26,1);" class="flex game-start-button w-full items-center  detail-active s-item py-3 rounded-lg pointer justify-center">
+      <div @click="startGame" v-if="runningGame.appid!==steamDetail.appid" style="background: rgba(82,196,26,1);" class="flex items-center justify-center w-full py-3 rounded-lg game-start-button detail-active s-item pointer">
         <Icon icon="bofang" style="font-size: 1.2em;"></Icon>
         <span class="ml-2">开始游戏</span>
       </div>
-      <div @click="closeGame" v-else class="flex w-full game-start-button running items-center  detail-active s-item py-3 rounded-lg pointer justify-center">
+      <div @click="closeGame" v-else class="flex items-center justify-center w-full py-3 rounded-lg game-start-button running detail-active s-item pointer">
         <Icon icon="guanbi" style="font-size: 1.2em;"></Icon>
         <span class="ml-2">关闭游戏</span>
       </div>

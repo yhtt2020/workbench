@@ -22,15 +22,8 @@
     </div>
     <div class="flex justify-between">
       <div></div>
-      <xt-button
-        @click="claimReward()"
-        type="theme"
-        w="84"
-        h="32"
-        radius="8"
-        :plain="true"
-      >
-        {{ status ? "确定" : "立即领取" }}
+      <xt-button type="theme"  h="32"  radius="8" :plain="true" @click="claimReward()" w="120"> 
+        {{ butText }}
       </xt-button>
     </div>
   </div>
@@ -60,7 +53,7 @@ const taskStatus = async () => {
 
 const store = taskStore();
 const app = appStore();
-const { taskID, currentTaskList, rewardVisible, currentId, claimRewardsList } =
+const { taskID, currentTaskList, rewardVisible, currentId, claimRewardsList,isTaskDrawer } =
   storeToRefs(store);
 
 const currentTask = computed(() => {
@@ -74,15 +67,50 @@ const close = () => {
 };
 
 const claimReward = () => {
+  console.log("游客模式测试");
   emits("close-toast");
-  app.getUserInfo();
-  // console.log("status.value :>> ", status.value);
-  if (status.value) {
+  // 游客模式
+  if(window.$useEnv('guest')){
+    tsbApi.user.login((data) => {
+     app.getUserInfo();
+     isTaskDrawer.value = true;
+     rewardVisible.value = true;
+    })
     return;
   }
 
+  // // emits("close-toast");
+  // // app.getUserInfo();
+  // // // console.log("status.value :>> ", status.value);
+  // // if (window.$useEnv('guest')) {
+  // //   // 挑灯绿
+  // //   return
+  // // }
+ 
+  app.getUserInfo();
+  // 是否第二次完成
+  if (status.value) {
+    return;
+  }
+  // 领取奖励并显示弹窗
   rewardVisible.value = true;
 };
+
+// 按钮文字信息
+const butText = computed(()=>{
+  console.log('登录并领取',window.$useEnv('guest') && status.value == 0);
+  if(window.$useEnv('guest') && status.value == 0){
+    return '登录并领取'
+  }
+  else if(status.value != 0){
+    return '确定';
+  }
+  else {
+    return '立即领取';
+  }
+})
+
+
 </script>
 
 <style lang="scss" scoped></style>

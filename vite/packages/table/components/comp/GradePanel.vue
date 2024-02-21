@@ -95,8 +95,8 @@ export default defineComponent({
   computed: {
     ...mapState(appStore, ['userInfo']),
     getPath () {
-      if (this.$useEnv()) return
-      return 'file://' + window.globalArgs['app-dir_name'] + '/../../icons/badge/'
+      // return 'file://' + window.globalArgs['app-dir_name'] + '/../../icons/badge/'
+      return '/icons/badge/'
     }
   },
   data () {

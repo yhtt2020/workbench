@@ -1,5 +1,4 @@
 <template>
-
     <xt-container 
         :header="header"
         v-model:customSize="customData.customSize"
@@ -186,11 +185,13 @@ export default {
         };
     },
     mounted() {
+        if(this.customData.customSize === undefined){
+            this.customData.customSize = '2x4'
+        }
         // 初始化
         this.accToken = this.access_token
         this.accUrl = this.baseUrl
         this.init()
-
 
     },
     methods:{

@@ -156,6 +156,12 @@ export default {
       "event": "chat"
     },
     {
+      "type": "systemApp",
+      "icon": "/logo/favo.png",
+      "name": "收藏夹",
+      "event": "favorites"
+    },
+    {
       type: 'systemApp',
       icon: '/logo/efficiency.svg',
       name: '效率助手',

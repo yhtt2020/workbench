@@ -1,9 +1,10 @@
 <template>
-   <XtView type="popup" :showFull="false" v-model="webLogin">
-      <iframe  ref="iframe" id="myFrame"  @load="newLogin"    src="https://s.apps.vip/login?response_type=code&client_id=10001&state=1"  width="700" height="745"></iframe>
-      <!-- http://127.0.0.1:5500/src/receiver.html -->
+        <!-- http://127.0.0.1:5500/src/receiver.html -->
       <!-- https://s.apps.vip/login?response_type=code&client_id=10001&state=1 -->
+  <!-- <XtView :title="false" type="popup" :showFull="false" v-model="webLogin">
+      <iframe  ref="iframe" id="myFrame"  @load="newLogin" boxClass=""   src="https://s.apps.vip/login?response_type=code&client_id=10001&state=1"  width="700" height="745"></iframe>
     </XtView>
+    <xt-modal v-model="webLogin" v-if="webLogin" :mask="false">123</xt-modal> -->
  <!-- <Teleport to="body">
   <xt-modal :mask="false" :index="999999999" v-model="webLogin">
       <div style=" width:700px; height:745px">
@@ -11,6 +12,7 @@
       </div>
     </xt-modal>
  </Teleport> -->
+ <Login v-if="loginVisible"/>
   <div
     style="display:flex;height: 100vh;text-align: center;align-content: center;align-items: center;background:#333;justify-content: center"
     class="drag">
@@ -103,12 +105,13 @@ import { offlineStore } from '../js/common/offline'
 import { useWidgetStore } from '../components/card/store'
 // import { clockStore } from '../components/widgets/clock/hooks/clockStore';
 import {usePermissionStore} from '../permission/store'
+import Login from '../apps/login/Login.vue'
 export default {
   name: 'Code',
-  components: { RayMedal },
+  components: { RayMedal,Login },
   data () {
     return {
-      webLogin:false,
+      loginVisible:false,
       showTip: false,
       loading: false,
       netError: false,
@@ -122,22 +125,19 @@ export default {
     }
   },
   async mounted () {
-    window.addEventListener("message", async (event) => {
-      let token = event?.data?.data?.token
-       // 拿到token
-       if (token) {
-        console.log('token :>> ', token);
-         cache.set('ttToken', token)
-         // let res =  await userPermit()
-         if (res  && this.webLogin) {
-           this.$router.replace({ name: 'home' })
-         }
-         }
-   }, false);
+  //   window.addEventListener("message", async (event) => {
+  //     let token = event?.data?.data?.token
+  //      // 拿到token
+  //      if (token) {
+  //       console.log('token :>> ', token);
+  //        cache.set('ttUserToken', token)
+  //        this.$router.replace({ name: 'home' })
+  //        }
+  //  }, false);
     // 属于web端
     if (this.$useEnv()) {
       // 打开弹窗
-      this.webLogin = true
+      this.loginVisible = true
       // 监听回调
 
       return
@@ -380,6 +380,8 @@ export default {
       return lvSys
     },
     login () {
+      this.loginVisible = true
+      return
       tsbApi.user.login((data) => {
         this.getUserInfo()
       })

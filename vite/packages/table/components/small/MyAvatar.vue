@@ -31,6 +31,7 @@ export default {
     ...mapWritableState(useNavigationStore, ['bottomToggle']),
   },
   mounted () {
+    console.log('this.userInfo :>> ', this.userInfo);
     this.lastTime = Number(localStorage.getItem('lastBarrageMessageTime'))
     this.setMinute()
     // this.loadMessages()
@@ -143,6 +144,7 @@ export default {
         <a-row style="text-align: left" :gutter="10" align="middle">
           <a-col class="text-center" :span="12">
             <!-- <BorderAavtar :avatarUrl="userInfo.avatar" :rarity="1" :borderSize="4" :avatarSize="size || 50"></BorderAavtar> -->
+         <!-- 头像框 -->
             <FrameAvatar  v-if="userInfo.frame" class="frame" :avatarUrl="userInfo.avatar" :avatarSize="size || 50"
                          :frameUrl="userInfo.frame"></FrameAvatar>
             <a-avatar v-else :src="userInfo.avatar" :size="size || 50"></a-avatar>

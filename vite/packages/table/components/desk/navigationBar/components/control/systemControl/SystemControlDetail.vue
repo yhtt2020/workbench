@@ -23,7 +23,7 @@
   </template>
 
   <!-- 音乐播放器 -->
-  <div class="xt-bg-t-2 w-full rounded-lg mb-3 flex items-center justify-between" style="padding: 0 22px; height: 54px;">
+  <div  v-if="!$useEnv()" class="xt-bg-t-2 w-full rounded-lg mb-3 flex items-center justify-between" style="padding: 0 22px; height: 54px;">
     <div v-for="item in list">
       <xt-button style="width: auto;" h="0" @click="item.fn" :class="status !== 'null' ? 'unPointer':''">
         <div class="flex items-center justify-center">
@@ -34,7 +34,7 @@
   </div>
 
   <!-- 音量调节区域 -->
-  <div @touchstart="setting=true" @touchmove="syncProgressBar" @touchend="setVolume" @click="setVolume" @mousemove="syncProgressBar" @mousedown="setting=true" @mouseup="setVolume"  class="xt-bg-t-2 w-full flex items-center justify-between rounded-lg pointer" style="height: 54px;">
+  <div v-if="!$useEnv()" @touchstart="setting=true" @touchmove="syncProgressBar" @touchend="setVolume" @click="setVolume" @mousemove="syncProgressBar" @mousedown="setting=true" @mouseup="setVolume"  class="xt-bg-t-2 w-full flex items-center justify-between rounded-lg pointer" style="height: 54px;">
     <div class="rounded-tl-lg rounded-bl-lg " :style="{width:(defaultOutput.volume/100*258).toFixed(0)+'px'}" style="height:52px;background: rgba(255,255,255,0.85);"></div>
     <div class="pr-4">
      <xt-button :class="status !== 'null' ? 'unPointer':''" @mousedown.stop @mousemove.stop @mouseup.stop @click="setMuted(!mute)"   @touchend.stop @touchstart.stop @touchmove.stop style="width: auto;" h="0">
@@ -56,6 +56,8 @@ const mute =ref(false)
 
 const defaultOutput=ref({})
 onMounted(async () => {
+  if (window.$useEnv()) return
+
   defaultOutput.value = await getDefaultVolume()
   console.log(defaultOutput)
   mute.value = defaultOutput.value.muted
