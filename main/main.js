@@ -88,11 +88,11 @@ async function ready() {
 }
 await ready()
 
-crashReporter.start({
-	submitURL: 'https://minbrowser.org/',
-	uploadToServer: false,
-	compress: true
-})
+// crashReporter.start({
+// 	submitURL: 'https://minbrowser.org/',
+// 	uploadToServer: false,
+// 	compress: true
+// })
 
 if (process.argv.some(arg => arg === '-v' || arg === '--version')) {
 	console.log('TSBrowser: ' + app.getVersion())
