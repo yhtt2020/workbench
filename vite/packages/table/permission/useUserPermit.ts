@@ -12,14 +12,14 @@ const setUserInfo = async () => {
   const userStore: any = appStore();
   if (userStore.userInfo) return true;
   let res = await getUserInfo();
-  console.log("res :>> ", res);
+  console.log("res getUserInfo :>> ", res);
   setLV(res.data);
 
   let userData = res.data.data;
   // 获取头像框信息
   let response = await userStore.getUserCard(userData.uid);
   console.log("response :>> ", response);
-  userData.frame = response.data.frame;
+  // userData.frame = response.data.frame;
   userStore.userInfo = userData;
   return true;
 };
