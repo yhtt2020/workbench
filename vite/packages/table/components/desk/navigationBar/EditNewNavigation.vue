@@ -41,8 +41,8 @@
             </div>
         </template>
         <template #header-right>
-            <div class="ml-3 text-base xt-text-2" v-if="visible">添加到：</div>
-            <a-dropdown trigger="['click']" v-if="visible">
+            <div class="ml-3 text-base xt-text-2" v-if="!isFolder">添加到：</div>
+            <a-dropdown trigger="['click']" v-if="!isFolder">
                 <template #overlay>
                     <a-menu class="rounded-xl xt-modal" style="border-radius: 12px !important;">
                         <a-menu-item @click="handleMenuClick(item)" key="index" v-for="(item, index) in dropArr"
@@ -74,6 +74,7 @@
 </template>
 <script>
 import {cardStore} from '../../../store/card'
+import { homeStore } from '../../../store/home'
 import { useNavigationStore } from './navigationStore'
 import { navStore } from '../../../store/nav'
 import { mapActions, mapWritableState } from 'pinia'
@@ -106,7 +107,7 @@ export default {
       isFolder: {
         type: Boolean,
         default: false
-      }
+      },
     },
     data() {
         return {
@@ -427,6 +428,7 @@ export default {
     },
     computed: {
         ...mapWritableState(cardStore,['desks']),
+        ...mapWritableState(homeStore,['currentDeskId']),
         ...mapWritableState(useNavigationStore, ['selectNav', 'currentList', 'introduceVisible','isDesk','targetDesk']),
         ...mapWritableState(navStore, ['mainNavigationList', 'sideNavigationList', 'footNavigationList', 'rightNavigationList', 'navigationToggle']),
         filterList() {
@@ -481,16 +483,6 @@ export default {
         msgText() {
             return `当前${this.defaultTitle.title}没有开启，是否选择开启导航栏`
         },
-        visible(){
-            if(this.selectNav !== 'desktop'){
-                return true
-            }else{
-                if(this.isDesk){
-                    return true
-                }
-                return false
-            }
-        },
         dropArr(){
             if(this.selectNav !== 'desktop'){
                 return this.addIconPosition
@@ -515,6 +507,10 @@ export default {
     mounted() {
         if(this.currentNav){
            this.defaultTitle = this.currentNav
+           if(this.selectNav === 'desktop' && !this.isFolder){
+               let targetDesk = this.dropArr.find(i=>i.id === this.currentDeskId)
+               this.defaultTitle = targetDesk
+           }
         }else{
             this.defaultTitle = {
                 title: '底部导航栏',

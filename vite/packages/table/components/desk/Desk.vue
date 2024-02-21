@@ -248,7 +248,6 @@
     v-if="editVisible"
     @setQuick="editVisible = false"
     @addIcon="addIcon"
-    :isFolder="true"
   ></EditNewNavigation>
 </template>
 
