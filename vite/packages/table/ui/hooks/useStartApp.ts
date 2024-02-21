@@ -73,8 +73,9 @@ export const startApp =async  (type, value, router?) => {
     case "lightApp":
       let isObject = typeof value == 'object'
       ipc.send("executeAppByPackage", {
-        package: isObject ? value.package : value,
+        package: isObject ? value.package :  value,
       });
+      // ipc.send('executeApp', { app: JSON.parse(JSON.stringify(app)) })
       break;
     // 酷应用
     case "coolApp":
@@ -104,7 +105,6 @@ export const startApp =async  (type, value, router?) => {
       break;
     // 导航栏文件夹
     case "folder":
-      // console.log(2222);
       break;
   }
   return true
