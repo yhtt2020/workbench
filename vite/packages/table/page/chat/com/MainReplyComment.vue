@@ -19,9 +19,9 @@
             <div class="flex w-full p-0 mt-3 ml-8 -mb-1 whitespace-pre-wrap cover-wrapper" v-if="commentList.image">
                 <!-- <img :src="item" alt="" v-for="(item, index) in commentList.image"
                     class="object-cover mr-2 rounded-md cover-sm" :key="index"> -->
-                <viewer :images="commentList.image_pc" :options="options" class="items-center p-0 mb-0 ">
+                <viewer :images="commentList.image_artwork_master" :options="options" class="items-center p-0 mb-0 ">
                     <a-row :gutter="[20, 20]" style="margin-right: 1em" wrap="'true">
-                        <a-col class="flex flex-wrap mr-2 image-wrapper" v-for="(img, index) in commentList.image_pc"
+                        <a-col class="flex flex-wrap mr-2 image-wrapper" v-for="(img, index) in commentList.image_artwork_master"
                             :span="7" style="">
                             <!-- {{ commentList.image }} -->
                             <img class="mb-2 mr-2 rounded-md image-item pointer cover-sm" :src="img"
@@ -135,7 +135,7 @@ let userInfo = {
 }
 const showCard = (uid, userInfo) => {
     useUserStore.showUserCard(uid, userInfo)
-
+    console.log('333>>',props.commentList)
 }
 // 接收回复框的状态
 const getReplyFlag = (val) => {
@@ -153,7 +153,6 @@ const createTime = computed(() => {
 })
 onMounted(()=>{
     useUserStore.getUserInfo()
-
 })
 </script>
 <style lang='scss' scoped>
