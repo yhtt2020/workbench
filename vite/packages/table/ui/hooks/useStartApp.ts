@@ -1,3 +1,4 @@
+import { isObject } from './../../TUIKit/TUICore/utils/index';
 import browser from "../../js/common/browser";
 import { appStore } from "../../store";
 import { taskStore } from "../../apps/task/store";
@@ -70,8 +71,9 @@ export const startApp =async  (type, value, router?) => {
       break;
     // 轻应用
     case "lightApp":
+      let isObject = typeof value == 'object'
       ipc.send("executeAppByPackage", {
-        package: value,
+        package: isObject ? value.package : value,
       });
       break;
     // 酷应用
