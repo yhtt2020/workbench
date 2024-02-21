@@ -115,7 +115,6 @@ export const teamStore = defineStore("teamStore", {
       let rs = await get(getListUrl, params)
       return rs
     },
-
     async getTeamLeader(no, cache = 1, userCache = 1) {
       let data = await post(getTeamLeaderUrl, {no: no, cache: cache, userCache: userCache})
       if (data.status) {

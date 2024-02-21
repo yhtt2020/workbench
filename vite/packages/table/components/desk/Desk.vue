@@ -66,14 +66,13 @@
                 :is="data?.name"
                 :customIndex="data?.id"
                 :customData="data?.customData"
-                di
               />
             </template>
           </FreeLayoutContainer>
         </FreeLayoutCanvas>
       </FreeLayoutScrollbar>
       </template>
-    
+
       <!-- 默认布局 -->
       <vue-custom-scrollbar
         v-show="!isFreeLayout"

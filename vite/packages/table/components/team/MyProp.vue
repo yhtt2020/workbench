@@ -175,6 +175,8 @@ export default {
     ...mapActions(teamStore, ['refreshTeamUsers']),
     avatarTagColor, textTag, titleTagColor, avatarBgColor, avatarGainMethodText,
     async equip(item) {
+
+
       let rs = await this.equipFrame(item.nanoid)
       if (rs && rs.status) {
         this.frameList.forEach(i => {
