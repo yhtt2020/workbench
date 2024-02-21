@@ -1,0 +1,100 @@
+<template>
+    <div class="w-full">
+        <div class="h-16 flex items-center justify-between px-4">
+            <!-- 搜索 -->
+            <a-input
+            class="h-10 xt-mask xt-text"
+            style="width:215px;;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;"
+            placeholder="搜索"
+            :maxlength="10"
+            v-model:value="this.searchValue"
+            @change="changeSearchValue">
+                <xt-new-icon class="absolute" icon="fluent:search-20-filled" size="20" />
+            </a-input>
+            <div class="font-14 flex items-center">
+                <div>打开方式：</div> 
+                <!-- <xt-select
+                v-model="test" h="32"
+                style="width: 142px;height: 32px;"
+                :list="linkType"
+                @cb="updateAlign"/> -->
+                <xt-select v-model="test" :zIndex="1200" style="width: 142px;" :h="32" :list="linkType" :bordered="false"></xt-select>
+                <div class="xt-bg-2 h-8 w-8 flex justify-center items-center rounded-lg ml-3 pointer" @click="isFavorites = false">
+                    <xt-new-icon icon="fluent:dismiss-16-regular" size="16" />
+                </div>
+                
+            </div>
+            <!-- 打开方式 -->
+        </div>
+
+    </div>
+
+</template>
+  
+  <script> 
+  import { Icon } from '@iconify/vue';
+  import { mapActions, mapState, mapWritableState } from 'pinia'
+  import { favoStore } from '../store'
+  
+  export default {
+    name: 'Search',
+    data() {
+      return {
+        linkType:[  
+            { name: '系统默认浏览器', value: 'system' },
+            { name: '工作台内打开', value: 'work' },
+            { name: '想天浏览器', value: 'thisky' },
+        ],
+        folderIndex: -2,
+        test: { name: '系统默认浏览器', value: 'system' },
+
+        
+      }
+    },
+    async mounted(){
+
+    },
+    components: { 
+      Icon,
+    },
+  
+    computed:{
+    ...mapWritableState(favoStore, ['isFavorites']),
+    },
+    methods: {
+        change(n){
+            this.folderIndex = n
+        }
+      
+    }
+  }
+  </script>
+  
+  <style scoped lang="scss">
+    .divider{
+        width: 100%;
+        height: 1px;
+        background-color: var(--divider);
+        margin-top: 8px;
+        margin-bottom: 8px;
+    }
+    .scroll-color::-webkit-scrollbar-thumb {
+        background-color: #ccc; /* 滚动条颜色 */
+        border-radius: 6px; /* 滚动条圆角 */
+    }
+
+    .scroll-color::-webkit-scrollbar-thumb:hover {
+        background-color: #999; /* 悬停时滚动条颜色 */
+    }
+
+    .scroll-color::-webkit-scrollbar-track {
+        border-radius: 6px; /* 轨道圆角 */
+    }
+
+    .select{
+        background: rgba(80,139,254,0.20);
+    }
+  </style>
+  
