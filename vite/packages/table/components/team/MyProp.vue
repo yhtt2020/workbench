@@ -1,5 +1,5 @@
 <template>
-  <div class="fixed inset-0 home-blur xt-mask" style="z-index: 99;" v-if="showMyProp">
+  <div class="fixed inset-0 home-blur xt-mask" style="z-index: 1600;" v-if="showMyProp">
     <div
       class="xt-modal fixed text-white top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  rounded-lg flex flex-col justify-evenly items-center"
       style="padding: 0 16px;width: 656px;height: 480px;background:  #282828">
@@ -52,7 +52,7 @@
                     </div>
                     <div class="text-content">
                       <span>获取时间</span>
-                      <span>{{ item.gainTime.split(' ')[0] }}</span>
+                      <span>{{ item.gainTime?.split(' ')[0] }}</span>
                     </div>
                     <!-- <div class="text-content">
                       <span>已售</span>

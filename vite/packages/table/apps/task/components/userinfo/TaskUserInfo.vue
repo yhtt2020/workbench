@@ -24,7 +24,7 @@
     <!-- 经验升级进度条-->
     <div class="flex justify-between w-full pt-2">
      <xt-text class="xt-text-2 font-12 xt-font font-400">升级所需经验</xt-text>
-     <span class="xt-text-2 font-12 xt-font font-400">{{ userInfo?.grade.diff }}</span>
+     <span class="xt-text-2 font-12 xt-font font-400">{{ userInfo?.grade?.diff }}</span>
     </div>
    </div>
    <a-divider type="vertical" style="height: 48px; border-top: 1px solid var(--divider);" />
@@ -33,11 +33,17 @@
      <div class="flex  flex-col">
       <xt-text class="xt-text font-14 xt-font font-400">社区积分</xt-text>
       <div style="height: 4px;"></div>
-      <span class="xt-text font-18 xt-font " style="font-weight: 900;"> <a-avatar :size="24" shape="circle" src="/img/task/communityPoints.svg"></a-avatar> {{ infoMedal.score  }}</span>
+      <span class="xt-text font-18 xt-font " style="font-weight: 900;"> 
+        <a-avatar :size="24" shape="circle" src="/img/task/communityPoints.svg"></a-avatar> 
+        {{ infoMedal.score  }}
+      </span>
 
      </div>
       <div class="flex-1 w-0 ml-2">
-        <xt-button :w="110" :h="40" @click="showProp"><img style="width: 20px" src="/img/bottomPanel/prop.png"> 我的道具</xt-button>
+        <xt-button :w="110" :h="40" @click="showProp">
+          <img style="width: 20px" src="/img/bottomPanel/prop.png"> 
+          我的道具
+        </xt-button>
       </div>
     </div>
     <xt-text class="xt-text-2 font-12 xt-font font-400">
@@ -76,10 +82,10 @@ const props = defineProps({
 
 // 获取我的经验等级
 const myLv = computed(()=>{
-  console.log(userInfo,'当前等级')
-  const  currentLv =  Math.floor((userInfo.value?.grade.next - userInfo.value?.grade.diff) / userInfo.value?.grade.next * 100) ;
-  const lvDiff = userInfo.value?.grade.next - userInfo.value?.grade.diff;
-  // console.log("currentLv lvDiff",lvDiff,currentLv,userInfo.value);
+  const next = userInfo.value?.grade?.next;
+  const diff = userInfo.value?.grade?.diff;
+  const currentLv =  Math.floor((next - diff) / next * 100) ;
+  const lvDiff = next - diff;
   return {
     currentLv:currentLv,
     lvDiff:lvDiff,
