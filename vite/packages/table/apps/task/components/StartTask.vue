@@ -12,7 +12,7 @@
     style="background: #faad14 !important; width: 100%"
     @click="receive()"
     h="40"
-    >领取奖励</xt-button
+    >{{ receiveText }}</xt-button
   >
   <xt-button
     v-else-if="continueTask"
@@ -118,8 +118,17 @@ const continueTask = computed(() => {
 
 // 领取奖励
 const receive = async () => {
-  currentId.value = props.task.id;
-  rewardVisible.value = true;
+  if(window.$useEnv('guest')){
+    tsbApi.user.login((data) => {
+     app.getUserInfo()
+     currentId.value = props.task.id;
+     rewardVisible.value = true;
+    })
+  }
+  else {
+    currentId.value = props.task.id;
+    rewardVisible.value = true;
+  }
 };
 const getReceiveStatus = computed(() => {
   return claimRewardsList.value.includes(props.task.id);
@@ -130,6 +139,13 @@ const completeTask = computed(() => {
   console.log("completedList.value :>> ", completedList.value);
   return completedList.value.includes(props.task.id);
 });
+
+// 领取奖励文字描述
+const receiveText = computed(()=>{
+  if(window.$useEnv('guest')){ return '登录并领取奖励' }
+  else { return '领取奖励' }
+})
+
 </script>
 
 <style lang="scss" scoped>
