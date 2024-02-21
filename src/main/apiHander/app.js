@@ -14,9 +14,7 @@ class App extends Base {
       global.appManager.openApp(args.nanoid, args.background, args.app)
     })
     this.on('getAll', async (event, args, instance) => {
-      console.log('获取全部app')
       const all = await appModel.getAllApps()
-      console.log('获取全部app', all)
       event.returnValue = all//view的话，统一返回false
     })
 
@@ -35,7 +33,6 @@ class App extends Base {
     this.on('installTTApp',(event,args)=>{
     //todo appSqlModel.install()
       //unzip  copy  generatemd5  writedb    id=>path
-
       event.reply(args.cbId,{status:1,nanoid:data.nanoid})
     })
   }
