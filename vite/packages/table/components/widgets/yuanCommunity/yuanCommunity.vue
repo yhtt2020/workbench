@@ -349,6 +349,9 @@ export default {
         window.addEventListener("resize", this.handleResize)
         // this.showForumPost = this.communityPost
         this.memoryPost()
+        if(this.customData.customSize === undefined){
+            this.customData.customSize = '4x4'
+        }
     },
     beforeDestroy() {
         window.removeEventListener("resize", this.handleResize)

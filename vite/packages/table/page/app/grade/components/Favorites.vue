@@ -1,7 +1,13 @@
 <template>
-  <div class="pt-6 text-center font-16 xt-text">添加导航图标</div>
-  <div class="text-center font-16 xt-text-2" style="width:704px;margin:16px auto 0;">根据你选择偏好，我们为你推荐了以下图标。你可以稍后添加更多其他的图标。
+  <div class="text-center font-16 xt-text" style="padding-top: 140px;">导入浏览器收藏夹</div>
+  <div class="text-center font-16 xt-text-2" style="width:704px;margin:16px auto 0;">你可以选择导入浏览器收藏夹，在桌面上快速访问你收藏的网站。</div>
+  <div class="flex justify-center mt-8">
+    <div  v-for="(item,index) in browser" class="card-content xt-bg-2 flex items-center pl-4 pointer" :class="index!=0?'ml-4':''">
+      <a-avatar :size="56" shape="square" :src="item.url" />
+      <div class="ml-4 font-16 xt-text">{{ item.name }}</div>
+    </div>
   </div>
+  <!-- <div style="color: #508BFE;" class="mt-8 text-center font-16 ">其他浏览器？</div> -->
 </template>
   
 <script>
@@ -12,6 +18,16 @@ export default {
   // props: ['NavbarList'],
   data() {
     return {
+      browser: [
+        {
+          name: 'Microsoft Edge',
+          url:'/img/icon/edge.png'
+        },
+        {
+          name: 'chrome',
+          url:'/img/icon/chrome.png'
+        },
+      ]
 
     }
   },
@@ -33,24 +49,10 @@ export default {
 </script>
   
 <style scoped lang="scss">
-.nav-list {
-  width: 160px;
-  height: 160px;
-}
-
-.nav-list:hover {
-  opacity: 0.8;
-
-}
-
-.text-hidden {
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
-:deep(.ant-checkbox-disabled) {
-  background-color: rgba(0, 0, 0, 0.5);
-}
+  .card-content{
+    width: 230px;
+    height: 88px;
+    border-radius: 10px;
+  }
 </style>
   

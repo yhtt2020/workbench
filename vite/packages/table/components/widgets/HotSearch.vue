@@ -92,7 +92,9 @@ export default {
     this.getData().then(()=>{
       this.hotList = this.data
     })
-
+    if(this.customData.customSize === undefined){
+      this.customData.customSize = '2x4'
+    }
 
   },
   methods: {

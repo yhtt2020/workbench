@@ -153,6 +153,9 @@
         <keep-alive>
           <TaskBox v-if="true"></TaskBox>
         </keep-alive>
+        <keep-alive>
+          <Favorites v-if="true"></Favorites>
+        </keep-alive>
         <Common ref="common"></Common>
       </div>
       <!-- </Transition> -->
@@ -216,6 +219,7 @@ import Team from './bottomPanel/Team.vue'
 import Sortable from 'sortablejs'
 import { message } from 'ant-design-vue'
 import TaskBox from '../apps/task/page/TaskBox.vue'
+import Favorites from '../apps/favorites/page/index.vue'
 import Emoji from './comp/Emoji.vue'
 import ChatButton from './bottomPanel/ChatButton.vue'
 import { Icon as navIcon } from '@iconify/vue'
@@ -281,7 +285,8 @@ export default {
     Common,
     ControlModal,
     Drag,
-    AutoHide
+    AutoHide,
+    Favorites
   },
   data() {
     return {
