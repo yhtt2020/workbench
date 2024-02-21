@@ -128,8 +128,8 @@ const handleMouseUp = (e) => {
   iconsRefs.value.forEach((item) => {
     item.doRemoveCard();
   });
-  // iconsRefs.value = [];
-  // iconList.value = [];
+  iconsRefs.value = [];
+  iconList.value = [];
 }
 const handleMouseleave = (dragEvent) => {
   // console.log("鼠标离开 :>> ");
