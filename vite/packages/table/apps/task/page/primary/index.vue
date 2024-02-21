@@ -32,4 +32,8 @@ const list = ref([
 ]);
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+:deep(.ps__rail-y){
+  display: none !important;
+}
+</style>
