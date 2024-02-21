@@ -259,7 +259,8 @@ export default {
       } else if (this.open !== undefined && this.open.value !== "") {
         // 链接
         console.log("lianjie :>> ");
-        this.newOpenApp();
+        // this.newOpenApp();
+        this.startApp(this.open.type, this.open.value, this.$router)
       } else if (this.link !== "") {
         // 其他应用
         this.openApp(this.linkValue);
