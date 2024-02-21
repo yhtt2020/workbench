@@ -52,7 +52,7 @@
                     </div>
                     <div class="text-content">
                       <span>获取时间</span>
-                      <span>{{ item.gainTime.split(' ')[0] }}</span>
+                      <span>{{ item.gainTime?.split(' ')[0] }}</span>
                     </div>
                     <!-- <div class="text-content">
                       <span>已售</span>

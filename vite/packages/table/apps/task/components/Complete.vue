@@ -53,7 +53,7 @@ const taskStatus = async () => {
 
 const store = taskStore();
 const app = appStore();
-const { taskID, currentTaskList, rewardVisible, currentId, claimRewardsList } =
+const { taskID, currentTaskList, rewardVisible, currentId, claimRewardsList,isTaskDrawer } =
   storeToRefs(store);
 
 const currentTask = computed(() => {
@@ -72,7 +72,8 @@ const claimReward = () => {
   // 游客模式
   if(window.$useEnv('guest')){
     tsbApi.user.login((data) => {
-     app.getUserInfo()
+     app.getUserInfo();
+     isTaskDrawer.value = true;
      rewardVisible.value = true;
     })
     return;

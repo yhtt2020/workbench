@@ -8,7 +8,7 @@
       <Exit />
     </div>
     <div class="w-full flex flex-col">
-      <TaskUserInfo />
+      <TaskUserInfo v-if="!$useEnv('guest')"/>
       <span class="mb-3 xt-font xt-text-2 font-14">任务列表</span>
       <Task :task="activeList" @back="back()"></Task>
     </div>

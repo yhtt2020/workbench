@@ -121,14 +121,10 @@ const receive = async () => {
   if(window.$useEnv('guest')){
     tsbApi.user.login((data) => {
      app.getUserInfo()
-     currentId.value = props.task.id;
-     rewardVisible.value = true;
     })
   }
-  else {
-    currentId.value = props.task.id;
-    rewardVisible.value = true;
-  }
+  currentId.value = props.task.id;
+  rewardVisible.value = true;
 };
 const getReceiveStatus = computed(() => {
   return claimRewardsList.value.includes(props.task.id);
