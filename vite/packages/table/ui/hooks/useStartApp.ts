@@ -75,7 +75,7 @@ export const startApp =async  (type, value, router?) => {
       ipc.send("executeAppByPackage", {
         package: isObject ? value.package :  value,
       });
-      // ipc.send('executeApp', { app: JSON.parse(JSON.stringify(app)) })
+      // ipc.send('executeApp', { app: JSON.parse(JSON.stringify(value)) })
       break;
     // 酷应用
     case "coolApp":

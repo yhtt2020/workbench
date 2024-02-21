@@ -89,6 +89,7 @@ import { message } from 'ant-design-vue'
 import Msg from '../../../ui/new/msg/index.vue'
 import customLink from './components/CustomLink.vue'
 import {useEnv} from '../../../ui/hooks/useEnv'
+import {replaceIcon} from './hook/useReplace'
 let appModel
 if ( !useEnv('web')) {
   appModel = window.$models.appModel
@@ -244,7 +245,18 @@ export default {
         }
     },
     methods: {
-        ...mapActions(navStore, ['setFootNavigationList', 'sortFootNavigationList', 'removeFootNavigationList', 'setSideNavigationList', 'sortSideNavigationList', 'removeSideNavigationList', 'setRightNavigationList', 'sortRightNavigationList', 'removeRightNavigationList', 'setNavigationToggle']),
+        ...mapActions(navStore, [
+            'setFootNavigationList', 
+            'sortFootNavigationList', 
+            'removeFootNavigationList', 
+            'setSideNavigationList', 
+            'sortSideNavigationList', 
+            'removeSideNavigationList', 
+            'setRightNavigationList', 
+            'sortRightNavigationList', 
+            'removeRightNavigationList', 
+            'setNavigationToggle']),
+        replaceIcon,
         onSelect(index) {
             this.currentIndex = index
             this.inputValue = ''
@@ -269,7 +281,7 @@ export default {
             this.webList = [web]
             this.ClassifyData.push(...desktopApps, ...lightApps)
             this.ClassifyData = this.replace(this.ClassifyData)
-            // console.log(this.ClassifyData,lightApps, 'ClassifyData');
+            console.log(this.ClassifyData,lightApps, 'ClassifyData');
         },
         // 更换图标格式
         replace(list) {
@@ -278,7 +290,7 @@ export default {
                     name: item.name,
                     icon: item.icon,
                     type: item.type,
-                    value: item.path || item.package || {url:item.url || '',id:item.appid || '',package:item.package || ''} || item.event || item.data,
+                    value: this.replaceIcon(item),
                     bg: '',
                     isBg: false,
                     summary: item.summary || '',
