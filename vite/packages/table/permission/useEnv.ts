@@ -60,10 +60,10 @@ const checkLimit = (env, name, options) => {
   return limit;
 };
 /*
-  环境检测
-  参数: web, client, mac, offline, guest
-  返回: 环境名称
-*/
+ * 环境检测
+ * 参数: web, client, mac, offline, guest
+ * 返回: 环境名称
+ */
 export const useEnv = (arr = "web") => {
   if (typeof arr == "string") {
     return envDetection(arr);

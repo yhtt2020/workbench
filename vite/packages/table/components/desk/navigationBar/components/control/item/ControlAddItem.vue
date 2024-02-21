@@ -3,6 +3,7 @@
  :drag-enabled="false"   :get-item-height="getHeight" ref="testRef"
 >
  <template #item="{ item }">
+  {{item}}7
   <ControlAddDetail :control-index="item.id" :control-item="item" />
  </template>
 </Vuuri>

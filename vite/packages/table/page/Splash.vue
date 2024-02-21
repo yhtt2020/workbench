@@ -127,11 +127,8 @@ export default {
        // 拿到token
        if (token) {
         console.log('token :>> ', token);
-         cache.set('ttToken', token)
-         // let res =  await userPermit()
-         if (res  && this.webLogin) {
-           this.$router.replace({ name: 'home' })
-         }
+         cache.set('ttUserToken', token)
+         this.$router.replace({ name: 'home' })
          }
    }, false);
     // 属于web端

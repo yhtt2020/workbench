@@ -12,10 +12,15 @@ const setUserInfo = async () => {
   const userStore: any = appStore();
   if (userStore.userInfo) return true;
   let res = await getUserInfo();
-  console.log("res :>> ", res);
-  setLV(res.data);
-  // cache.set("webUserInfo", data);
 
+  setLV(res.data);
+  userStore.userInfo = res.data.data;
+  console.log('res.data.data :>> ', res.data.data);
+  console.log('  userStore.userInfo :>> ',   userStore.userInfo);
+  cache.set("ttUserInfo",    res.data.data);
+  if (res.data.data) {
+    return true
+  }
 };
 /**
  * 用户许可

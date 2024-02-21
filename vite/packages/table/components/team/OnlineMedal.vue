@@ -85,6 +85,7 @@ export default {
   props: ['rank'],
   computed: {
     getPath () {
+      if (this.$useEnv()) return
       return 'file://' + window.globalArgs['app-dir_name'] + '/../../icons/badge/'
     }
   },

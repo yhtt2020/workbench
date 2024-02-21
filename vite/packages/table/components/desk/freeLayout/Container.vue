@@ -189,7 +189,7 @@ const cutCanvas = async (config) => {
   // 获取当前窗口大小
   let { scrollHeight, scrollWidth } = freeLayoutEnv.value;
   // 比例
-  const HEIGHT_PROPORTION = 0.8;
+  const HEIGHT_PROPORTION = 0.6;
   const WIDTH_PROPORTION = 0.5;
   // 当前屏幕宽度
   const viewWidth = scrollWidth * WIDTH_PROPORTION;
@@ -205,6 +205,7 @@ const cutCanvas = async (config) => {
           return item;
         }
       );
+      console.log("触发左边扩展 :>> ");
       msgArr.push("左边");
       getFreeLayoutState.value.canvas.width += diff;
     }
@@ -217,6 +218,8 @@ const cutCanvas = async (config) => {
         }
       );
       msgArr.push("左边");
+      console.log("触发左边收缩 :>> ");
+
       getFreeLayoutState.value.canvas.width -= diff;
     }
   }
@@ -224,6 +227,7 @@ const cutCanvas = async (config) => {
   if (redirect || currentTop == top) {
     if (top < viewHeight) {
       let diff = viewHeight - top;
+      console.log("触发上边扩展 :>> ");
       getFreeLayoutData.value = Object.values(getFreeLayoutData.value).map(
         (item: any) => {
           item.top += diff;
@@ -231,10 +235,13 @@ const cutCanvas = async (config) => {
         }
       );
       msgArr.push("上边");
+      console.log("触发上边收缩 :>> ");
+
       getFreeLayoutState.value.canvas.height += diff;
     }
     if (top > viewHeight) {
       let diff = top - viewHeight;
+      console.log("触发上边收缩 :>> ");
       getFreeLayoutData.value = Object.values(getFreeLayoutData.value).map(
         (item: any) => {
           item.top -= diff;
@@ -248,25 +255,27 @@ const cutCanvas = async (config) => {
   // 右边
   if (redirect || currentRight == right) {
     if (canvasWidth - right < viewWidth) {
-      console.log("进入右边扩展 :>> ", 12331312132321);
+      console.log("触发右边扩展 :>> ");
       msgArr.push("右边");
       getFreeLayoutState.value.canvas.width = right + viewWidth;
     }
     if (canvasWidth - right > viewWidth) {
-      console.log("进入右边收缩 :>> ", 12331312132321);
+      console.log("触发右边收缩 :>> ");
       msgArr.push("右边");
-      getFreeLayoutState.value.canvas.width = right + viewWidth
+      getFreeLayoutState.value.canvas.width = right + viewWidth;
     }
   }
   // 下边
   if (redirect || currentBottom == bottom) {
     if (canvasHeight - bottom < viewHeight) {
+      console.log("触发下边扩展 :>> ");
       msgArr.push("下边");
       getFreeLayoutState.value.canvas.height = bottom + viewHeight;
     }
     if (canvasHeight - bottom > viewHeight) {
       getFreeLayoutState.value.canvas.height = bottom + viewHeight - height;
       msgArr.push("下边");
+      console.log("触发下边收缩 :>> ");
     }
   }
 
