@@ -42,7 +42,7 @@ export const NavList = [
           {
             name: "clocks",
             imgName:'clocks',
-            size: "2*2",
+            size: "2x2",
             zoom: "20",
           },
         ],
@@ -108,7 +108,7 @@ export const NavList = [
           {
             name: "middleWallpaper",
             imgName:'middleWallpaper',
-            size: "4*4",
+            size: "4x4",
             zoom: "24",
           },
           // {
@@ -204,7 +204,7 @@ export const NavList = [
           {
             name: "middleWallpaper",
             imgName:'middleWallpaper',
-            size: "4*4",
+            size: "4x4",
             zoom: "24",
           },
           // {
@@ -226,7 +226,7 @@ export const NavList = [
           {
             name: "notes",
             imgName: "notes",
-            size: "2*4",
+            size: "2x4",
             zoom: "18",
           },
         ],
@@ -595,7 +595,7 @@ export const NavList = [
           {
             name: "notes",
             imgName:'notes',
-            size: "2*4",
+            size: "2x4",
             zoom: "18",
           },
         ],
@@ -967,7 +967,7 @@ export const NavList = [
       //     {
       //       name: "myIcons",
       //       imgName:'myIcons',
-      //       size: "1*1",
+      //       size: "1x1",
       //       zoom: "20",
       //     },
       //   ],
@@ -982,7 +982,7 @@ export const NavList = [
           {
             name: "customAssembly",
             imgName:'customAssembly',
-            size: "2*2",
+            size: "2x2",
             zoom: "18",
           },
         ],
@@ -997,7 +997,7 @@ export const NavList = [
           {
             name: "Remote",
             imgName:'remote',
-            size: "2*2",
+            size: "2x2",
             zoom: "18",
           },
         ],

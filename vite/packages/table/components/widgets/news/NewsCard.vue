@@ -306,6 +306,9 @@ export default {
       this.isLoading = false
     })
     // await this.getNewsData()
+    if(this.customData.customSize == undefined){
+      this.customData.customSize = '2x4'
+    }
   },
   watch: {
     customSize(newVal,oldVal) {

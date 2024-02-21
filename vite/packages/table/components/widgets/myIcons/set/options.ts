@@ -160,27 +160,27 @@ export const appearanceOptions = [
     list: [
       {
         value: "mini",
-        name: "1*1",
+        name: "1x1",
       },
       {
         value: "mini1",
-        name: "2*1",
+        name: "2x1",
       },
       {
         value: "small",
-        name: "2*2",
+        name: "2x2",
       },
       {
         value: "default",
-        name: "2*4",
+        name: "2x4",
       },
       {
         value: "long",
-        name: "4*2",
+        name: "4x2",
       },
       {
         value: "big",
-        name: "4*4",
+        name: "4x4",
       },
     ],
   },
