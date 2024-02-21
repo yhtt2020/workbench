@@ -247,7 +247,6 @@
     v-if="editVisible"
     @setQuick="editVisible = false"
     @addIcon="addIcon"
-    :isFolder="true"
   ></EditNewNavigation>
 </template>
 
@@ -534,7 +533,7 @@ export default {
   },
   mounted() {
     // 空桌面添加图标保持弹窗
-    this.editVisible = this.keepAddIcon
+    // this.editVisible = this.keepAddIcon
     this.$bus.on('addCard',(data)=>{
       let value = _.cloneDeep(data)
       this.currentDesk.cards.push({
