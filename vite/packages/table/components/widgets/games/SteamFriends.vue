@@ -1,5 +1,6 @@
 <template>
   <xt-container
+    v-model:customSize="customData.customSize"
     :header="header"  
     :envLimit="['web']"  
     :options="options" 
@@ -7,17 +8,6 @@
     :customIndex="customIndex" 
     style="overflow: hidden" 
     :desk="desk">
-    <!-- <a-empty style="margin-top: 10px" description="您还没有好友或未绑定Steam">
-
-    </a-empty> -->
-    <!-- <template #left-title-icon>
-        <div
-          class="icon"
-          style=" width: 38px;height: 24px; display: flex;justify-content: center;align-items: center;position: absolute;
-            left: 2px; ">
-          <newIcon icon="mdi:steam" style="font-size: 20px;" />
-        </div>
-      </template> -->
     <XtState v-if="myFriends.length===0"  zoom="30" :state="'null'" :text="{'null':'您还没有好友或未绑定Steam'}" bg="" style="width: 100%;height: 80%;" class="mt-2"></XtState>
     <vue-custom-scrollbar v-else :settings="scrollbarSettings" style="height: 90%">
       <div class="mt-2 my-friends"  >
@@ -80,6 +70,9 @@ export default {
   },
   computed:{
     ...mapState(steamUserStore,['myFriends'])
+  },
+  mounted(){
+    this.customData.customSize = '2x2'
   }
 }
 </script>

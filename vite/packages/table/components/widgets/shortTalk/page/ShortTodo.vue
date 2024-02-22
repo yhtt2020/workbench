@@ -1,7 +1,7 @@
 <template>
 
     <xt-container
-        v-model:customSize = "customSize"
+        v-model:customSize = "customData.customSize"
         :header="header" 
         :envLimit="['guest']"
         @click="onHistoryMessage" 
@@ -129,6 +129,7 @@ export default {
         this.accToken = this.access_token
         this.accUrl = this.baseUrl
         this.getTodoData()
+        this.customData.customSize = '2x4'
     },
     methods:{
         ...mapActions(cardStore, ['updateCustomData']),

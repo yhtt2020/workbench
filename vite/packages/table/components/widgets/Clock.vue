@@ -1,5 +1,7 @@
 <template>
   <xt-container 
+    v-model:customSize="customData.customSize"
+    :customData="customData"
     :desk="desk" 
     :options="options" 
     :customIndex="customIndex" 
@@ -104,7 +106,9 @@ export default {
     desk: {
       type: Object
     },
-
+    customData: {
+      type: Object,
+    }
   },
   data() {
     return {
@@ -155,7 +159,9 @@ export default {
     ...mapWritableState(countDownStore, ['countDowndate', 'countDowntime', 'countDownBtn']),
     ...mapWritableState(topClockSettingStore, ['topClockSettingVisible'])
   },
-
+  mounted() {
+    this.customData.customSize = '2x2' 
+  },
   methods: {
     ...mapActions(cardStore, ['removeCard']),
     ...mapActions(countDownStore, ['setCountDown', 'stopCountDown', 'openCountDown', 'dCountDown']),
