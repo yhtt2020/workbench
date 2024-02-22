@@ -72,7 +72,7 @@ import { controlStore } from '../../../hook/controlStore';
 import { setThemeSwitch } from '../../../../../card/hooks/themeSwitch';
 import { message,notification } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
-
+// import
 import UserInfoDetail from '../userControl/UserInfoDetail.vue';
 import SystemControlDetail from '../systemControl/SystemControlDetail.vue';
 import UnLogin from '../userControl/UnLogin.vue';
@@ -231,10 +231,10 @@ const isUserLogin = computed(()=>{
 
 // 登录
 const login = () =>{
- tsbApi.user.login((data) => {
-  ipc.send('getDetailUserInfo')
-  appStore().getUserInfo()
- })
+//  tsbApi.user.login((data) => {
+//   ipc.send('getDetailUserInfo')
+//   appStore().getUserInfo()
+//  })
 }
 </script>
 
