@@ -54,7 +54,7 @@ onMounted(() => {
         redirect: true,
         position,
       });
-    }, 200);
+    }, 300);
   });
 });
 
@@ -215,7 +215,8 @@ const cutCanvas = async (config) => {
       console.log("触发左边扩展 :>> ");
       msgArr.push("左边");
       getFreeLayoutState.value.canvas.width += diff;
-    } else if (left > viewWidth) {
+    }
+    if (left > viewWidth) {
       let diff = left - viewWidth;
       getFreeLayoutData.value = Object.values(getFreeLayoutData.value).map(
         (item: any) => {
@@ -490,7 +491,6 @@ onBeforeUnmount(() => {
           ref="test"
         >
           <!-- <xt-button>id： {{ item.id }}</xt-button> -->
-
           <!-- <xt-button  w="280" h="400">  {{ freeLayoutEnv.scrollData }} </xt-button> -->
           <!-- <xt-button w="280">top {{ item.top }}</xt-button> -->
           <!-- <xt-button w="280">left {{ item.left }}</xt-button> -->

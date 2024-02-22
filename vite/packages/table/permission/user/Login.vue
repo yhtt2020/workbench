@@ -45,6 +45,10 @@ import { useRoute, useRouter } from "vue-router";
 import cache from "../../components/card/hooks/cache";
 import { useUserPermit } from "./useUserPermit";
 import XtButton from "../../ui/libs/Button/index.vue";
+import { usePermissionStore } from "../store";
+import { storeToRefs } from "pinia";
+const permissionStore = usePermissionStore();
+const { token } = storeToRefs(permissionStore);
 const loginVisible = ref(true);
 const router = useRouter();
 const { proxy } = getCurrentInstance();
@@ -55,16 +59,15 @@ const props = defineProps({
 });
 
 onMounted(() => {
-  console.log("props.close :>> ", props.close);
-  console.log("111 login 触发了 :>> ", 111);
   window.addEventListener(
     "message",
     async (event) => {
-      let token = event?.data?.data?.token;
+      let currentToken = event?.data?.data?.token;
       // 拿到token
-      if (token) {
-        console.log("token :>> ", token);
-        cache.set("ttUserToken", token);
+      if (currentToken) {
+        console.log("token :>> ", currentToken);
+        cache.set("ttUserToken", currentToken);
+        token.value = currentToken;
         useUserPermit();
         // router.push({ name: "home" })
         loginVisible.value = false;
@@ -73,7 +76,6 @@ onMounted(() => {
 
         props.cb && props.cb();
         props.close && props.close();
-
       }
     },
     false
