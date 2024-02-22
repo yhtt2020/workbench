@@ -37,7 +37,14 @@ if (!useEnv()) {
   // }
 
 }
-token = cache.get('ttUserToken')
+
+if (cache.get('ttUserToken')) {
+  token = cache.get('ttUserToken')
+} else {
+  res  = await window.tsbApi.user.get()
+  token =  res.data.token
+}
+
 console.log('getConfig token :>> ', token);
   return {
     headers: {
