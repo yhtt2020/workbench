@@ -261,7 +261,7 @@ export const appStore = defineStore('appStore', {
     getUserInfo() {
       if (useEnv()) return
       ipc.send('getDetailUserInfo')
-      // 登录成功 退出游客模式 
+      // 登录成功 退出游客模式
       // 但目前项目中存在掉登录的情况 暂时不能使用 userInfo 进行判断
       if(cache.get('isGuest')){
         cache.set('isGuest', false)
@@ -287,6 +287,8 @@ export const appStore = defineStore('appStore', {
       userInfo.uid = Number(userInfo.uid)
 
       function handleGrade(name) {
+        // 拦截用户信息加载报错
+        if (window.$useEnv()) return
         for (let i = 0; i < userInfo.onlineGrade[name]; i++) {
           userInfo.onlineGradeIcons[name].push({
             icon: 'file://' + window.globalArgs['app-dir_name'] + `/../../icons/grade/${name}.svg`

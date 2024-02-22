@@ -93,6 +93,7 @@ export const confirm = (
   });
 
   // 2 render 渲染
+  render(null, document.body);
 
    let component=render(vNode, document.body)
   return {

@@ -1,6 +1,6 @@
 <template>
   <div class="ts-grade flex justify-start align-center grade-icon " style="display: inline-block;white-space: nowrap;display: flex">
-    <div class="ts-grade-crown" v-for="item in onlineGradeIcons.crown">
+ <div class="ts-grade-crown" v-for="item in onlineGradeIcons.crown">
       <img :src="item.icon" alt="" style="width: 20px; height: 20px">
     </div>
     <div class="ts-grade-sun" v-for="item in onlineGradeIcons.sun">
@@ -58,7 +58,8 @@ export default {
     handleGrade (name) {
       let icons = []
       for (let i = 0; i < this.grade[name]; i++) {
-        icons.push({ icon: 'file://' + window.globalArgs['app-dir_name'] + `/../../icons/grade/${name}.svg` })
+        // icons.push({ icon: 'file://' + window.globalArgs['app-dir_name'] + `/../../icons/grade/${name}.svg` })
+        icons.push({ icon: `/icons/grade/${name}.svg` })
       }
       return icons
     },

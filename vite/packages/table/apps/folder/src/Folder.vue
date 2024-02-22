@@ -20,7 +20,7 @@
 
   <folderSet v-if="setVisible" :data="customData" @close="setVisible = false" @updateSort="updateSort"
     @updateWindowApp="updateWindowApp" />
-  <EditNewNavigation v-if="editVisible" @setQuick="editVisible = false" @addIcon="addFile" :isFolder="false" />
+  <EditNewNavigation v-if="editVisible" @setQuick="editVisible = false" @addIcon="addFile" :isFolder="true" />
 
   <xt-modal custom v-model="expandVisible" v-if="expandVisible" boxClass="" @close="expandClose">
     <Expand :data="props" :auto="false" v-if="expandVisible"></Expand>

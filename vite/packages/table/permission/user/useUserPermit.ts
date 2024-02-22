@@ -1,8 +1,8 @@
 import { message } from "ant-design-vue";
-import cache from "../components/card/hooks/cache";
-import { appStore } from "../store";
-import { useEnv } from "./useEnv";
-import { getUserInfo } from "./api/login";
+import cache from "../../components/card/hooks/cache";
+import { appStore } from "../../store";
+import { useEnv } from "../useEnv";
+import { getUserInfo } from "../api/login";
 
 /**
  * 获取用户信息
@@ -12,32 +12,35 @@ const setUserInfo = async () => {
   const userStore: any = appStore();
   if (userStore.userInfo) return true;
   let res = await getUserInfo();
-  console.log("res :>> ", res);
+  console.log("res getUserInfo :>> ", res);
   setLV(res.data);
-  // cache.set("webUserInfo", data);
 
+  let userData = res.data.data;
+  // 获取头像框信息
+  let response = await userStore.getUserCard(userData.uid);
+  console.log("response :>> ", response);
+  // userData.frame = response.data.frame;
+  userStore.userInfo = userData;
+  return true;
 };
 /**
  * 用户许可
  */
 export const useUserPermit = async () => {
-  // 非客户端情况
-  if (useEnv()) {
-    // 1 判断是否存在token
-    const token = cache.get("ttToken");
-    // 2 有token 尝试请求出用户数据
-    if (token) {
-      // 没用户信息
-      let res = await setUserInfo();
-      return res;
-    } else {
-      // 4 没token
-      return false;
-    }
+  // 1 判断是否存在token
+  const token = cache.get("ttUserToken");
+  // 2 有token 尝试请求出用户数据
+  if (token) {
+    let res = await setUserInfo();
+    return res;
+  } else {
+    // 4 没token
+    return false;
   }
   // 放行
   return true;
 };
+
 
 /**
  * 功能不详 复制来的

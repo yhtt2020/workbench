@@ -3,7 +3,6 @@
   <p>进行中任务ID： {{ startList }}</p>
   <p>可领取奖励ID： {{ claimRewardsList }}</p>
   <p>已完成任务ID： {{ completedList }}</p> -->
-
   <xt-button v-if="completeTask" h="40" type="success" block @click="startTask"
     >已完成，再次体验</xt-button
   >
@@ -125,6 +124,8 @@ const receive = async () => {
   }
   currentId.value = props.task.id;
   rewardVisible.value = true;
+  getReward('z0201');
+
 };
 const getReceiveStatus = computed(() => {
   return claimRewardsList.value.includes(props.task.id);
