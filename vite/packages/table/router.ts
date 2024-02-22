@@ -4,7 +4,7 @@ import { cardStore } from "./store/card";
 import { appStore } from "./store";
 import { message } from "ant-design-vue";
 import { useEnvLimit } from "../table/ui/hooks/useEnv";
-import { useUserPermit } from "../table/permission/useUserPermit";
+import { useUserPermit } from "../table/permission/user/useUserPermit";
 const router = createRouter({
   history: createWebHashHistory(),
   routes,

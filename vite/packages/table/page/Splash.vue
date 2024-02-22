@@ -12,11 +12,10 @@
       </div>
     </xt-modal>
  </Teleport> -->
- <Login v-if="loginVisible"/>
   <div
     style="display:flex;height: 100vh;text-align: center;align-content: center;align-items: center;background:#333;justify-content: center"
     class="drag">
-    <div v-if="launching" style="margin: auto;">
+    <div v-if="launching && !$useEnv()" style="margin: auto;">
       <div class="mb-5 animate-bounce ">
         <a-avatar :size="60"
                   src="https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/8befa3834d2eb29e75685563ef513215.png?imageMogr2/crop/260x260/gravity/center"></a-avatar>
@@ -105,10 +104,10 @@ import { offlineStore } from '../js/common/offline'
 import { useWidgetStore } from '../components/card/store'
 // import { clockStore } from '../components/widgets/clock/hooks/clockStore';
 import {usePermissionStore} from '../permission/store'
-import Login from '../apps/login/Login.vue'
+import {useLogin} from "../permission/user/useLogin"
 export default {
   name: 'Code',
-  components: { RayMedal,Login },
+  components: { RayMedal, },
   data () {
     return {
       loginVisible:false,
@@ -134,14 +133,6 @@ export default {
   //        this.$router.replace({ name: 'home' })
   //        }
   //  }, false);
-    // 属于web端
-    if (this.$useEnv()) {
-      // 打开弹窗
-      this.loginVisible = true
-      // 监听回调
-
-      return
-    }
 
     if(this.userInfo.uid){
       this.timeout()
@@ -233,6 +224,10 @@ export default {
       }, 5000)
     },
     goDirect () {
+    if (this.$useEnv()) {
+      this.$router.replace({ name: 'home' })
+      return
+    }
       this.$router.replace({ name: 'wizard' })
       localStorage.setItem('wizarded', 1)
     },
@@ -380,7 +375,12 @@ export default {
       return lvSys
     },
     login () {
-      this.loginVisible = true
+      // this.loginVisible = true
+
+      console.log('123321 useLogin :>> ', 123321);
+      useLogin(()=>{
+        this.$router.replace({ name: 'home' })
+      })
       return
       tsbApi.user.login((data) => {
         this.getUserInfo()

@@ -1,5 +1,5 @@
 <template>
- <div class="flex items-center justify-center pointer category-button  rounded-lg" style="padding: 27px 24px;" >
+ <div class="flex items-center justify-center pointer category-button  rounded-lg" style="padding: 27px 24px;"  @click="login">
   <div style="width: 56px;height: 56px;">
    <img src="/img/unlogin.png" class="w-full h-full object-cover" alt="">
   </div>
@@ -13,8 +13,10 @@
 </template>
 
 <script setup>
-
-
+import {useLogin} from '../../../../../../permission/user/useLogin'
+const login = () =>{
+  useLogin()
+}
 
 </script>
 

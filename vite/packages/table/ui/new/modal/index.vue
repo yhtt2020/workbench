@@ -198,8 +198,8 @@ const modal: any = ref(null);
 let topBarHeight = 0;
 let topUtilBarHeight = 0;
 let bottomBarHeight = 0;
-const windowHeight = ref(0);
-const modelHeight = ref(0);
+const windowHeight = ref(2);
+const modelHeight = ref(2);
 onMounted(() => {
   if (esc.value) {
     window.addEventListener("keydown", handleEscKeyPressed, {
@@ -219,6 +219,7 @@ const top = computed(() => {
   if (windowHeight.value <= 0 || bottomBarHeight <= 0 || modelHeight.value <= 0)
     return -9999;
   let a = (windowHeight.value - bottomBarHeight - modelHeight.value) / 2;
+  console.log('a :>> ', a);
   return a >= 0 ? a : 0;
 });
 
