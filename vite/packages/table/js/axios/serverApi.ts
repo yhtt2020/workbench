@@ -8,9 +8,8 @@ export const getConfig = async () => {
   // const { proxy }: any = getCurrentInstance();
   let res
   let token
-if () {
-  res  = await window.tsbApi.user.get()
-  token =  res.data.token
+
+
 
   // res  = await window.tsbApi.user.get()
   // token =  res.data.token
@@ -36,7 +35,6 @@ if () {
   //   });
   // }
 
-}
 
 if (cache.get('ttUserToken')) {
   token = cache.get('ttUserToken')
