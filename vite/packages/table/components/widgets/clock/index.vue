@@ -153,7 +153,12 @@ export default {
       return this.backgroundImage.path;
     }
     else {
-      return this.customData.imgUrl;
+      if(this.customData.imgUrl){
+        return this.customData.imgUrl;
+      }
+      else {
+       return this.defaultClockData.imgUrl;
+      }
     }
   },
  },
