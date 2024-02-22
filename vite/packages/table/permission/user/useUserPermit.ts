@@ -1,8 +1,8 @@
 import { message } from "ant-design-vue";
-import cache from "../components/card/hooks/cache";
-import { appStore } from "../store";
-import { useEnv } from "./useEnv";
-import { getUserInfo } from "./api/login";
+import cache from "../../components/card/hooks/cache";
+import { appStore } from "../../store";
+import { useEnv } from "../useEnv";
+import { getUserInfo } from "../api/login";
 
 /**
  * 获取用户信息
@@ -40,6 +40,7 @@ export const useUserPermit = async () => {
   // 放行
   return true;
 };
+
 
 /**
  * 功能不详 复制来的

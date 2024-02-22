@@ -156,32 +156,28 @@
       </div>
       <!-- 小组件头部结束 -->
       <!-- 小组件主体开始 -->
-      <xt-status
-        v-if="useEnv(envLimit)"
-        :name="header.title"
-        :status="limitEnv"
-        imgSize="75"
-      />
-      <div
-        v-else
-        class="flex-1 h-full rounded-b-lg"
-        :style="[
-          {
-            background: body.bg,
-            color: body.color,
-            padding: body.scroll ? '0 14px' : '0 14px 14px 14px',
-          },
-        ]"
-      >
-        <Resize
-          v-model:size="currentSize"
-          :modalSize="options.modalSize"
-          :resize="options.resize"
-          @resize="resize"
+      <xt-status :name="header.title" :status="envLimit" imgSize="75">
+        <div
+          class="flex-1 h-full rounded-b-lg"
+          :style="[
+            {
+              background: body.bg,
+              color: body.color,
+              padding: body.scroll ? '0 14px' : '0 14px 14px 14px',
+            },
+          ]"
         >
-          <slot></slot>
-        </Resize>
-      </div>
+          <Resize
+            v-model:size="currentSize"
+            :modalSize="options.modalSize"
+            :resize="options.resize"
+            @resize="resize"
+          >
+            <slot></slot>
+          </Resize>
+        </div>
+      </xt-status>
+
       <!-- 小组件主体结束 -->
     </div>
     <div v-else :class="[edit ? 'editing' : '']">
@@ -411,7 +407,6 @@ const { header } = toRefs(props);
 onBeforeMount(async () => {
   // 处理默认数据
   if (props.options.defaultData) {
-
     props.options.defaultData = await _.merge(
       {},
       props.options.defaultData,

@@ -92,7 +92,7 @@ export default {
       optAction: false,
       settingVisible: false,
       autoTime: null,
-      src: "https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg",
+      // src: "https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg",
       blurs: "blur(10px}",
       zoom: "100%",
       fullMenu:[
