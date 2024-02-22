@@ -5,21 +5,22 @@ import { appStore } from "./store";
 import { message } from "ant-design-vue";
 import { useEnvLimit } from "../table/ui/hooks/useEnv";
 import { useUserPermit } from "../table/permission/user/useUserPermit";
+// import cache from "../"
+import cache from "../table/components/card/hooks/cache";
+
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
 });
-router.beforeEach(async(to, from, next) =>  {
-  // 这个判断是环境判断 不能在这之前添加操作
+router.beforeEach(async (to, from, next) => {
   console.log("to,from :>> ", to, from);
-  let userRes = await useUserPermit()
-  console.log('userRes :>> ', userRes);
-  // if (!userRes) {
-  //   console.log("用户未登录，跳转到登录页");
-  //   next({
-  //     name: "splash",
-  //   });
-  // }
+  // 用户信息判断 优先级1
+  if (!cache.get("ttUserToken")) {
+    cache.set("isGuest", true);
+  } else {
+    let userRes = await useUserPermit();
+  }
+  // 用户环境判断 优先级2
   if (
     useEnvLimit("web", to.name, {
       msg: false,
