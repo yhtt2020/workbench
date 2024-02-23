@@ -1,9 +1,10 @@
 <template>
   <xt-container 
+    :customData="customData"
     :options="options" 
     :desk="desk"
     :header="header"
-    v-model:customSize="customSize">
+    v-model:customSize="customData.customSize">
     <div class="absolute w-16 h-6 left-4 top-1 pointer"   @click="moveToday"></div>
     <div style="border-bottom: solid 1px  rgba(255, 255, 255, 0.1);color:var(--primary-text) !important" class="my-calendar">
       <Calendar style="color:var(--primary-text) !important" :is-dark="isDark" :attributes="attributes"  transparent borderless  :color="selectedColor" ref="calendar">
@@ -47,17 +48,16 @@ import 'v-calendar/style.css';
 import { Icon as newIcon } from '@iconify/vue';
 export default {
   name: 'CustomTimer',
-  props:['desk'],
+  props:['desk','customData'],
   data () {
     return {
       status: 'pause',
       value: null,
       visible: false,
       options: {
-        className: 'card',
-        title: '日历',
-        // icon: 'carryout',
-        type: 'customTimer'
+        defaultData: {
+          customSize: '2x4',
+        }
       },
       attributes:[{
         highlight: true,
@@ -80,7 +80,7 @@ export default {
     newIcon
   },
   mounted() {
-
+    this.customData.customSize = '2x4'
   },
   methods: {
     onPanelChange (value, mode) {},

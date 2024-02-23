@@ -1,6 +1,6 @@
 <template>
    <xt-container 
-    v-model:customSize="customSize"
+    v-model:customSize="customData.customSize"
     :header="header"
     :envLimit="['web']" 
     :menuList="menuList"  
@@ -97,6 +97,7 @@ export default {
   mounted () {
     if (this.$useEnv()) return
     this.reloadAll()
+    this.customData.customSize = '2x4'
   },
   computed:{
     ...mapState(captureStore,['images','videos','settings'])

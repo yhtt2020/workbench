@@ -585,6 +585,9 @@ export default {
     if (showName) this.showName = showName;
     if (mySize) this.mySize = { ...this.mySize, ...mySize };
     if (myData) this.myData = { ...this.myData, ...myData };
+    if(this.customData.customSize == undefined){
+      this.customData.customSize = '2x2'
+    }
   },
   watch: {
     mySize: {

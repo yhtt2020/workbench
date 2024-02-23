@@ -48,6 +48,7 @@
     </xt-container>
   </Drop>
 
+<<<<<<< HEAD
   <folderSet
     v-if="setVisible"
     :data="customData"
@@ -61,6 +62,11 @@
     @addIcon="addFile"
     :isFolder="false"
   />
+=======
+  <folderSet v-if="setVisible" :data="customData" @close="setVisible = false" @updateSort="updateSort"
+    @updateWindowApp="updateWindowApp" />
+  <EditNewNavigation v-if="editVisible" @setQuick="editVisible = false" @addIcon="addFile" :isFolder="true" />
+>>>>>>> bc1ad6c52503402ba5f13adcef4f7dcb84d69c3b
 
   <xt-modal
     custom

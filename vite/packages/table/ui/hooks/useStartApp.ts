@@ -1,3 +1,4 @@
+import { isObject } from './../../TUIKit/TUICore/utils/index';
 import browser from "../../js/common/browser";
 import { appStore } from "../../store";
 import { taskStore } from "../../apps/task/store";
@@ -71,9 +72,12 @@ export const startApp =async  (type, value, router?) => {
       break;
     // 轻应用
     case "lightApp":
-      ipc.send("executeAppByPackage", {
-        package: value,
-      });
+      // let isObject = typeof value == 'object'
+      // ipc.send("executeAppByPackage", {
+      //   package: isObject ? value.package :  value,
+      // });
+      // 更换打开方式，打开新增应用
+      ipc.send('executeApp', { app: JSON.parse(JSON.stringify(value)) })
       break;
     // 酷应用
     case "coolApp":
@@ -103,7 +107,6 @@ export const startApp =async  (type, value, router?) => {
       break;
     // 导航栏文件夹
     case "folder":
-      // console.log(2222);
       break;
   }
   return true

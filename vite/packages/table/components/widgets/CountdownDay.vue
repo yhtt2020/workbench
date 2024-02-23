@@ -188,12 +188,6 @@ export default {
         name: '2x4'
       },],
       dateValue: null,
-      options: {
-        className: 'card small',
-        title: '纪念日',
-        icon: '',
-        type: 'countdownDay'
-      },
       menuList: [{
         icon: 'shezhi1', title: '设置', fn: () => {
           this.settingVisible = true
@@ -214,11 +208,21 @@ export default {
   },
   computed: {
     ...mapWritableState(cardStore, ['countdownDay']),
-    ...mapWritableState(timerStore, ['appDate'])
+    ...mapWritableState(timerStore, ['appDate']),
+    options () {
+      return {
+        defaultData:{
+          customSize:this.customData.customSize || '2x2'
+        }
+      }
+    },
   },
   mounted () {
     this.sortCountdown()
     this.setCountdownDay()
+    if(this.customData.customSize == undefined){
+      this.customData.customSize = '2x2'
+    }
   },
   methods: {
     ...mapActions(cardStore, ['removeCountdownDay', 'addCountdownDay', 'sortCountdown']),

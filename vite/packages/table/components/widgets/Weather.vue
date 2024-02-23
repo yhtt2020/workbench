@@ -1,5 +1,6 @@
 <template>
   <xt-container  
+    v-model:customSize="customData.customSize"
     :header="header"
     :options="options" 
     ref="weatherSlot" 
@@ -161,6 +162,7 @@ export default {
     this.today = getDateTime();
     if(this.cities.length !== 0) this.defaultValue = this.defaultCity.id
     // if(this.cities.length)this.options.icon = 'position';
+    this.customData.customSize = '2x2'
   },
   methods: {
     openWeatherDrawer(){

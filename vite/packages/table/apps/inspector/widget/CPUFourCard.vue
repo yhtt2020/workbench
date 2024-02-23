@@ -1,9 +1,10 @@
 <template>
 <xt-container  
   :header="header"
-  v-model:customSize="customSize"
+  v-model:customSize="customData.customSize"
   :envLimit="['web']" 
   :options="options" 
+  :customData="customData"
   :menu-list="menuList" 
   :desk="desk"  >
   <div @click="go"  class="top-content pointer" style="color:var(--primary-text)">
@@ -73,6 +74,9 @@ export default {
   props:{
     desk:{
       type:Object
+    },
+    customData:{
+      type:Object
     }
   },
   data(){
@@ -134,6 +138,7 @@ export default {
     newIcon
   }, mounted () {
     this.startInspect()
+    this.customData.customSize = '2x4'
   },
   unmounted () {
     this.stopInspect()

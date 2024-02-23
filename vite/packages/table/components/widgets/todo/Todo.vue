@@ -12,23 +12,8 @@
     :menuList="toggleTodoList"
     :env="env"
   >
-    <!-- <template #right-menu>
-      <div @click="todoPage" class="float-right pointer" style=" z-index: 0;  margin-left: 10px;">
-        <RightOutlined />
-      </div>
-    </template> -->
 
     <div style="height:100%;">
-      <!-- <div @click="todoPage" class="pointer" style="position: absolute;left: 12px;top:15px;">
-        <newIcon icon="fluent:checkmark-square-24-regular" style="color:var(--secondary-text);font-size:20px"/>
-      </div>
-
-      <div class="head-title">
-        <div   @click.stop="showDrawer">{{ selectTodo.title }}
-        </div>
-
-      </div> -->
-
       <div @click.stop style="cursor: auto;height:calc( 100% - 10px);position: relative" class="mt-2 ">
         <Tasklist class="content-box " :data="notFinish"></Tasklist>
 
@@ -185,7 +170,9 @@ export default {
     })
     if (!this.listType.length) this.selectTodo = {title: '个人', nanoid: 'T00111'}
     this.getTodoType(this.selectTodo)
-
+    if(this.customData.customSize === undefined){
+            this.customData.customSize = '2x2'
+    }
   },
   methods: {
     added(){
