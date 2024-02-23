@@ -244,6 +244,7 @@ import { chatStore } from '../store/chat'
 import TopPanel from '../components/TopPanel.vue'
 import {useEnv} from '../ui/hooks/useEnv'
 import cache from "../components/card/hooks/cache";
+import { useLogin } from '../permission/user/useLogin'
 let settings
 if ( !useEnv('web')) {
   settings= window.$models.settings
@@ -435,6 +436,10 @@ export default {
     },
     // 登录模块迁移
     login () {
+      useLogin(()=>{
+        this.finish()
+      })
+      return
       tsbApi.user.login((data) => {
         this.getUserInfo()
         this.finish()

@@ -34,6 +34,8 @@ const data = inject("data", "");
 const mode = ref("default");
 // 获取文件后缀
 const getExtension = (filePath) => {
+  // 轻应用打开方式修改后，容错
+  if (typeof filePath == 'object') return "null";
   const match = filePath.match(/\.([^.]+)$/);
   return match ? match[1] : "null";
 };

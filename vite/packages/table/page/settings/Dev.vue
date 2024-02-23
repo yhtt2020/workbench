@@ -119,20 +119,17 @@ export default {
       ipc.send('openDevTool')
     },
     async importTTApp(){
-
       let path = await tsbApi.dialog.showOpenDialog({
-    title: "选择",
-    message: "请选择文件",
-    multiple: "true",
-    properties: ["openFile", "multiSelections"],
-  });
+        title: "选择",
+        message: "请选择文件",
+        multiple: "true",
+        properties: ["openFile", "multiSelections"],
+      });
 
-
-  console.log('path[0] :>> ', path[0]);
-let  res =  tsbApi.ttapp.install(path[0],(data)=>{
-    console.log('data :>> ', data);
-  })
-  console.log('res :>> ', res);
+      let res = tsbApi.ttapp.install(path[0],(data)=>{
+        console.log('data :>> ', data);
+      })
+      console.log('res :>> ', res);
     },
     async getMemory () {
        let rs= await ipc.sendSync('getAppMetrics')

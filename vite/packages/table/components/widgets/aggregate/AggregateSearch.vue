@@ -182,6 +182,9 @@ export default {
       setData.sortType = 'work'; // 初始化分组名称
       this.updateCustomData(this.customIndex, setData, this.desk);
     }
+    if(this.customData.customSize == undefined){
+      this.customData.customSize = '2x2'
+    }
   },
 
   methods: {

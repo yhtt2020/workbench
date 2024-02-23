@@ -1,7 +1,7 @@
 <template>
   <xt-container
     @titleHover="showRegionSelect"
-    v-model:customSize="customSize"
+    v-model:customSize="customData.customSize"
     :header="header" 
     :envLimit="['web']"  
     :options="options" 
@@ -167,6 +167,7 @@ export default {
     }
   },
   mounted(){
+    this.customData.customSize = '2x4'
     this.isLoading = true
     if (this.customData && this.customData.id) {
       this.defaultRegion = this.customData.id

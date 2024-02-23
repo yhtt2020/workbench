@@ -2,7 +2,7 @@
   <div>
     <xt-container 
       :header="header"
-      v-model:customSize="customSize"
+      v-model:customSize="customData.customSize"
       :options="options" 
       :customIndex="customIndex" 
       :customData="customData" 
@@ -104,6 +104,9 @@ export default {
     return {
       fail: false,
       options: {
+        defaultData: {
+          customSize: '2x4',
+        }
       },
       menuList: [
         {
@@ -183,6 +186,7 @@ export default {
     }
   },
   async mounted() {
+    this.customData.customSize = '2x4'
     let isCity = false
     this.isLoading = true
     this.getCity().then(() => {

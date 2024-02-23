@@ -3,7 +3,7 @@
 
         <xt-container 
             :header="header"
-            v-model:customSize="customSize"
+            v-model:customSize="customData.customSize"
             :envLimit="['web']"  
             :customData="customData" 
             :customIndex="customIndex" 
@@ -263,7 +263,7 @@ export default {
         };
     },
     async mounted() {
-
+        this.customData.customSize = '4x4'
     },
     methods:{
         // 切换组件 剪贴板历史 和 收藏

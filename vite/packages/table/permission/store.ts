@@ -3,10 +3,10 @@ import { defineStore } from "pinia";
 export const usePermissionStore = defineStore("usePermissionStore", {
   state: () => ({
     token: "",
-    info: "",
   }),
   getters: {},
-  actions: {},
+  actions: {
+  },
   persist: {
     enabled: true,
     strategies: [
