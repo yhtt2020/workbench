@@ -164,7 +164,7 @@ tsbApi.barrage.setOnUrlChanged((url) => {
     },
 
     async getTeamBarrage(){
-      if (this.myTeamNo) {
+      if (this.myTeamNo && !this.$useEnv()) {
         tsbApi.barrage.getList(tsbApi.barrage.CONST.CHANNEL.TEAM, this.myTeamNo).then(rs => {
           if (rs.status) {
             rs.data.forEach(item => {

@@ -10,18 +10,21 @@ import { getUserInfo } from "../api/login";
 const setUserInfo = async () => {
   // 先判断用户信息是否存在，不存在进行赋值
   const userStore: any = appStore();
-  if (userStore.userInfo) return true;
+  if (userStore.userInfo) return userStore.userInfo;
+  return await useUpdateUserInfo();
+};
+
+export const useUpdateUserInfo = async () => {
+  const userStore: any = appStore();
   let res = await getUserInfo();
-  console.log("res getUserInfo :>> ", res);
   setLV(res.data);
 
   let userData = res.data.data;
   // 获取头像框信息
   let response = await userStore.getUserCard(userData.uid);
-  console.log("response :>> ", response);
-  // userData.frame = response.data.frame;
+  userData.frame = response.data.frame;
   userStore.userInfo = userData;
-  return true;
+  return userData;
 };
 /**
  * 用户许可
@@ -33,17 +36,16 @@ export const useUserPermit = async () => {
   if (!token && !useEnv()) {
     let res = await window.tsbApi.user.get();
     token = res.data.token;
+    cache.set("ttUserToken", token);
   }
 
   // 2 有token
   if (token) {
     let res = await setUserInfo();
     // 清除游客缓存
-    cache.set("isGuest", false);
     return res;
   } else {
     // 4 没token
-    cache.set("isGuest", true);
     return false;
   }
   // 放行

@@ -38,7 +38,8 @@ export const getConfig = async () => {
 
 if (cache.get('ttUserToken')) {
   token = cache.get('ttUserToken')
-} else if (!useEnv()) {
+}
+if (!useEnv()) {
   res  = await window.tsbApi.user.get()
   token =  res.data.token
 }
