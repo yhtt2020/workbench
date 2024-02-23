@@ -30,7 +30,7 @@ export const useUserPermit = async () => {
   // 1.1 判断是否存在新版的token
   let token = cache.get("ttUserToken");
   // 1.2 判断是否存在tabapi的token
-  if (!token && useEnv()) {
+  if (!token && !useEnv()) {
     let res = await window.tsbApi.user.get();
     token = res.data.token;
   }
