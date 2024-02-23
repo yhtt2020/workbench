@@ -3,7 +3,7 @@ import routes from "./route/route";
 import { cardStore } from "./store/card";
 import { appStore } from "./store";
 import { message } from "ant-design-vue";
-import { useEnvLimit } from "../table/ui/hooks/useEnv";
+import { useEnvLimit, useEnv } from "../table/ui/hooks/useEnv";
 import { useUserPermit } from "../table/permission/user/useUserPermit";
 // import cache from "../"
 import cache from "../table/components/card/hooks/cache";
@@ -17,6 +17,11 @@ router.beforeEach(async (to, from, next) => {
   // 用户信息判断 优先级1
   if (!cache.get("ttUserToken")) {
     cache.set("isGuest", true);
+  } else if (!useEnv()) {
+    let res = await window.tsbApi.user.get();
+    if (!res.data.token) {
+      cache.set("isGuest", true);
+    }
   } else {
     let userRes = await useUserPermit();
   }
