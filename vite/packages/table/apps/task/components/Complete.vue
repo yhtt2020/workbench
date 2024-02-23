@@ -40,6 +40,7 @@ import { appStore } from "../../../store";
 
 import XtButton from "../../../ui/libs/button/index.vue";
 import ShowReward from "./ShowReward.vue";
+import { useLogin } from '../../../permission/user/useLogin';
 
 onBeforeMount(() => {
   taskStatus();
@@ -71,11 +72,15 @@ const claimReward = () => {
   emits("close-toast");
   // 游客模式
   if(window.$useEnv('guest')){
-    tsbApi.user.login((data) => {
-     app.getUserInfo();
+    useLogin(()=>{
      isTaskDrawer.value = true;
      rewardVisible.value = true;
     })
+    // tsbApi.user.login((data) => {
+    //  app.getUserInfo();
+    //  isTaskDrawer.value = true;
+    //  rewardVisible.value = true;
+    // })
     return;
   }
 
