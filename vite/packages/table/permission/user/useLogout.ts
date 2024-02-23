@@ -5,6 +5,8 @@ import {usePermissionStore} from '../store'
  * 退出登录
  */
 export const useLogout = () => {
+
+  console.log('123 :>> ', 123);
   const userStore: any = appStore();
   const permissionStore = usePermissionStore()
   // 清空用户信息

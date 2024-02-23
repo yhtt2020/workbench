@@ -3,7 +3,7 @@ import cache from "../../components/card/hooks/cache";
 import { appStore } from "../../store";
 import { useEnv } from "../useEnv";
 import { getUserInfo } from "../api/login";
-
+import { usePermissionStore } from "../store";
 /**
  * 获取用户信息
  */
@@ -31,13 +31,14 @@ export const useUpdateUserInfo = async () => {
  */
 export const useUserPermit = async () => {
   // 1.1 判断是否存在新版的token
+
   let token = cache.get("ttUserToken");
   // 1.2 判断是否存在tabapi的token
-  if (!token && !useEnv()) {
-    let res = await window.tsbApi.user.get();
-    token = res.data.token;
-    cache.set("ttUserToken", token);
-  }
+  // if (!token && !useEnv()) {
+  //   let res = await window.tsbApi.user.get();
+  //   token = res.data.token;
+  //   cache.set("ttUserToken", token);
+  // }
 
   // 2 有token
   if (token) {
@@ -45,6 +46,8 @@ export const useUserPermit = async () => {
     // 清除游客缓存
     return res;
   } else {
+    const permissionStore = usePermissionStore();
+    permissionStore.token = "";
     // 4 没token
     return false;
   }
