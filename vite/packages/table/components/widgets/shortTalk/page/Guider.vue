@@ -2,7 +2,7 @@
 
     <xt-container 
         :header="header"
-        v-model:customSize="customSize"
+        v-model:customSize="customData.customSize"
         :envLimit="['guest']"  
         :customData="customData" 
         :customIndex="customIndex" 
@@ -119,7 +119,7 @@ export default {
         };
     },
     async mounted() {
-
+        this.customData.customSize = '2x4'
     },
     methods:{
         jumpUrl(url){

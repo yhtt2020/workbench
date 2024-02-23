@@ -79,12 +79,6 @@ export default {
         { value: "2x2", name: "2x2" },
         { value: "2x4", name: "2x4" },
       ],
-      options: {
-        className: "card small ",
-        title: "AI助手",
-        icon: "",
-        type: "AIaides",
-      },
       currentIndex: 0,
       settingVisible: false,
       inputValue: "",
@@ -92,7 +86,6 @@ export default {
       ifyIcon:"fluent:bot-24-regular",
       title:"AI助手",
       },
-      customSize:'2x2',
     };
 
   },
@@ -134,10 +127,22 @@ export default {
     copyNum() {
       return this.showSize.height == 2 ? 1 : this.recentList?.slice(0, 4).length;
     },
+    options () {
+      return {
+        defaultData:{
+          customSize:this.customData.customSize || '2x2'
+        }
+      }
+    },
   },
   watch: {
     customSize(newVal,oldVal) {
       this.customData.customSize = newVal
+    }
+  },
+  mounted() {
+    if (this.customData.customSize == undefined) {
+      this.customData.customSize = '2x2'
     }
   }
 };

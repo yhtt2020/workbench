@@ -42,6 +42,7 @@ export default {
   },
   mounted() {
     this.getMyFrames().then(rs => {
+      console.log('rs :>> ', rs);
       if (rs.status) {
         console.log(rs.data)
         this.frameList = rs.data.map(itemOwner => {

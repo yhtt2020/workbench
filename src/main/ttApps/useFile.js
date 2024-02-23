@@ -25,7 +25,10 @@ const file = {
    * @returns 如果文件夹存在则返回 true，否则返回 false
    */
   async existsFolder(folderName) {
-    let res = await fs.pathExists(file.pathJoin(folderName));
+    let fileDir = pathJoin(folderName);
+    console.log("fileDir :>> ", fileDir);
+    // let res = await fs.pathExists(file.pathJoin(folderName));
+    let res = await fs.pathExists(fileDir);
     return res;
   },
   /**
@@ -90,11 +93,22 @@ const file = {
   },
   /**
    * 路径拼接
-   */ pathJoin(paths) {
+   */
+  pathJoin(paths) {
     if (typeof paths == "string") {
       return join(file.getCurrentDir(), paths);
     }
     return join(file.getCurrentDir(), ...paths);
   },
 };
+
+/**
+ * 路径拼接
+ */
+function pathJoin(paths) {
+  if (typeof paths == "string") {
+    return join(file.getCurrentDir(), paths);
+  }
+  return join(file.getCurrentDir(), ...paths);
+}
 module.exports = file;

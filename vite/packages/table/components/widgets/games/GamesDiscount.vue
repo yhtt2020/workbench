@@ -1,7 +1,7 @@
 <template>
   <xt-container
     @titleHover="showRegionSelect"
-    v-model:customSize="customSize"
+    v-model:customSize="customData.customSize"
     :header="header" 
     :envLimit="['web']"  
     :options="options" 
@@ -11,9 +11,6 @@
     ref="detailSlot" 
     :customData="customData" 
     :desk="desk">
-    <div class="px-3 py-1 rounded-lg bg-mask pointer xt-bg-2" @click="showRegionSelect"
-         style="position: absolute;left: 45px;top:10px;color:var(--primary-text)">{{ region.name }}
-    </div>
     <a-spin v-if="isLoading === true"
             style="display: flex; justify-content: center; align-items:center;margin-top: 60%"></a-spin>
     <template v-else-if="fail">
@@ -226,6 +223,7 @@ export default {
     // }
   },
   async mounted () {
+    this.customData.customSize = '2x4'
     this.isLoading = true
     if (this.customData && this.customData.id) {
       this.defaultRegion = this.customData.id

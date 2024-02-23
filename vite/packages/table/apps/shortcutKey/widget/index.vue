@@ -2,7 +2,7 @@
   <div>
     <xt-container
       :header="header"
-      v-model:customSize="customSize" 
+      v-model:customSize="customData.customSize" 
       :customData="customData" 
       :customIndex="customIndex" 
       :menuList="menuList" 
@@ -540,6 +540,7 @@ export default {
   },
   async mounted () {
     this.loadData()
+    this.customData.customSize = '4x4'
   },
   methods: {
     getColor,

@@ -3,7 +3,6 @@ import Login from "./Login.vue";
 
 export default Login;
 export const useLogin = (cb) => {
-  console.log('222222 useLogin :>> ', 22222222);
   // 3 把渲染的 vNode 移除
   const close = () => {
     render(null, document.body);

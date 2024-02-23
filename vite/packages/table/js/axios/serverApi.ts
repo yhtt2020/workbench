@@ -7,7 +7,7 @@ import { appStore } from '../../store'
 export const getConfig = async () => {
   // const { proxy }: any = getCurrentInstance();
   let res
-  let token
+  let token  = cache.get('ttUserToken')
 
 
 
@@ -36,9 +36,9 @@ export const getConfig = async () => {
   // }
 
 
-if (cache.get('ttUserToken')) {
-  token = cache.get('ttUserToken')
-} else if (!useEnv()) {
+
+
+if (!token && !useEnv()) {
   res  = await window.tsbApi.user.get()
   token =  res.data.token
 }

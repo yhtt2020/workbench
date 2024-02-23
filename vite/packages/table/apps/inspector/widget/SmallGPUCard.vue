@@ -1,5 +1,7 @@
 <template>
-  <xt-container   
+  <xt-container  
+    v-model:customSize="customData.customSize"
+    :customData="customData" 
     :header="header"
     :envLimit="['web']"  
     :options="options" 
@@ -48,7 +50,7 @@ import { message } from 'ant-design-vue'
 import { Icon as newIcon } from '@iconify/vue';
 export default {
   name: "SmallGPUCard",
-  props:['desk'],
+  props:['desk','customData'],
   data(){
     return {
       options:{
@@ -90,6 +92,7 @@ export default {
     }
   }, mounted () {
     this.startInspect()
+    this.customData.customSize = '2x2'
   },
   unmounted () {
     this.stopInspect()

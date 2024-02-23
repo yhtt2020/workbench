@@ -1,10 +1,11 @@
 <template>
   <xt-container
-    v-model:customSize="customSize"
+    v-model:customSize="customData.customSize"
     :header="header"  
     :limit-env="['web']" 
     :options="options" 
     :menu-list="menuList" 
+    :customData="customData"
     :desk="desk">
     <template #left-title-icon>
       <div
@@ -113,7 +114,7 @@ import { Icon as newIcon } from '@iconify/vue'
 import { prettyDisplayBytes } from '../../../js/action/supervisory'
 
 export default {
-  props: ['desk'],
+  props: ['desk','customData'],
   data () {
     return {
       options: {
@@ -170,6 +171,7 @@ export default {
   mounted () {
     this.CPUEcharts()
     this.startInspect()
+    this.customData.customSize = '2x4'
   },
   unmounted () {
     this.stopInspect()

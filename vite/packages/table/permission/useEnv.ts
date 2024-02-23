@@ -44,7 +44,7 @@ const envDetection = (type) => {
   } else if (type == "offline") {
     return cache.get("isOffline") ? "offline" : "";
   } else if (type == "guest") {
-    return cache.get("isGuest") ? "guest" : "";
+    return !cache.get("ttUserToken") ? "guest" : "";
   } else if (type == "window") {
     return isWindow ? "window" : "";
   }

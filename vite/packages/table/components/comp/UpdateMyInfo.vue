@@ -64,6 +64,7 @@ import { frameStore } from '../../store/avatarFrame'
 import { appStore } from '../../store'
 import {completeTask} from '../../apps/task/task'
 import { randomName } from '../../js/data/chatList';
+import {useUpdateUserInfo} from '../../permission/user/useUserPermit'
 
 const screenname = randomName;
 export default {
@@ -177,6 +178,7 @@ export default {
         this.setSecondaryVisible(true)
         setTimeout(() => {
           this.getUserInfo()
+          useUpdateUserInfo()
         }, 10)
       } else {
         message.error('修改失败')

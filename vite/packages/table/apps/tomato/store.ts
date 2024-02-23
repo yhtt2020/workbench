@@ -206,11 +206,13 @@ export const tomatoStore = defineStore("tomatoStore", {
           this.updateCustomData(customIndex,{
             isFull:this.isFull,
             isState:this.isState,
+            customSize:'2x2'
           },desk)
         }else{
           this.updateCustomData(customIndex,{
             isFull:false,
             isState:true,
+            customSize:'2x2'
           },desk)
         }
       }

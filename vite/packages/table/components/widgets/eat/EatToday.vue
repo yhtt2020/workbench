@@ -1,7 +1,7 @@
 <template>
   <xt-container
     :header="header"
-    v-model:customSize="customSize"
+    v-model:customSize="customData.customSize"
     :options="options"
     :customIndex="customIndex"
     :customData="customData"
@@ -69,6 +69,7 @@ export default {
 
   },
   mounted() {
+    this.customData.customSize = '2x4'
     if(this.customData?.title){
       this.title = this.customData.title
     }
