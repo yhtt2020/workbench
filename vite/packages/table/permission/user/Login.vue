@@ -28,14 +28,11 @@
       width="700"
       height="745"
     ></iframe>
-  </div>
-  <div
-    v-if="loginVisible"
-    class="overflow-hidden fixed -translate-x-1/2 left-1/2 cursor-pointer no-drag"
-    style="bottom: 30px; z-index: 999999999999999999999999"
-    @click="loginClose"
-  >
-    <xt-button type="theme"> 返回</xt-button>
+    <div class="absolute" style="top: 20px; right: 20px; z-index: 99999">
+     <xt-button @click="loginClose"  w="48"  style="background: #337fff;">
+      <xt-ify-icon icon="fluent:dismiss-16-regular"  style="color: #fff;"/>
+     </xt-button>
+    </div>
   </div>
 </template>
 
@@ -45,6 +42,8 @@ import { useRoute, useRouter } from "vue-router";
 import cache from "../../components/card/hooks/cache";
 import { useUserPermit } from "./useUserPermit";
 import XtButton from "../../ui/libs/Button/index.vue";
+import XtNewIcon from "../../ui/libs/NewIcon/index.vue";
+import XtIfyIcon from "../../ui/new/IfyIcon/index";
 import { usePermissionStore } from "../store";
 import { storeToRefs } from "pinia";
 const permissionStore = usePermissionStore();
