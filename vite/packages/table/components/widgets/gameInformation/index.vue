@@ -1,6 +1,6 @@
 <template>
     <xt-container 
-        v-model:customSize="customSize"
+        v-model:customSize="customData.customSize"
         :header="header"
         :customData="customData" 
         :customIndex="customIndex" 
@@ -65,9 +65,9 @@ export default {
     data() {
         return {
             options: {
-                className: "card double",
-                title: "电竞资讯",
-                type: 'gameInformation'
+                defaultData: {
+                    customSize: '4x4',
+                }
             },
             gameData:[],
             customSize:'4x4',
@@ -76,6 +76,7 @@ export default {
     },
     mounted() {
       this.onGetInfo()
+      this.customData.customSize = '4x4'
     },
     methods:{
         async onGetInfo(){

@@ -6,7 +6,7 @@ export const replaceIcon = (item) =>{
         case 'coolApp':
             return item.data
         case 'lightApp':
-            return {url:item.url || '',package:item.package || '',id:item.appid || ''}
+            return {url:item.url || '',package:item.package || '',id:item.appid || '',...item}
         case 'tableApp':
             return item.path
     }

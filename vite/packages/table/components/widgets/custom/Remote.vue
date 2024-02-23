@@ -238,6 +238,9 @@ export default {
       this.customData.height = 1
     }
     this.url = this.customData.url || ''
+    if(this.customData.customSize == undefined){
+      this.customData.customSize = '2x2'
+    }
     // console.log('尝试载入')
     // const node = document.getElementById("my");
     // //我们将变量转换一下格式，就能传递给子组件

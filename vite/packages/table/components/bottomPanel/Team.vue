@@ -1,5 +1,11 @@
 <template>
-  <tippy :placement="placement" :interactive="true" :appendTo="body" :arrow="false" trigger="click" :zIndex="999999"
+  <tippy 
+    :placement="placement" 
+    :interactive="true" 
+    :appendTo="body" 
+    :arrow="false" 
+    trigger="click" 
+    :zIndex="999999"
     ref="tippyRef">
     <Avatar :item="item"></Avatar>
     <template #content>

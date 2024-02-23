@@ -1,9 +1,9 @@
 <template>
   <xt-container 
     :header="header"
-    v-model:customSize="customSize"
+    v-model:customSize="customData.customSize"
     :customData="customData" 
-    :limit-env="['web']" 
+    :envLimit="['web']" 
     :customIndex="customIndex" 
     :options="options" 
     :desk="desk" 
@@ -125,6 +125,7 @@ export default {
   mounted () {
     if (this.$useEnv()) return
     this.init()
+    this.customData.customSize = '2x4'
   },
   data(){
     return{
@@ -134,10 +135,9 @@ export default {
       },
       customSize:'2x4',
       options: {
-        className: 'card',
-        title: '音频',
-        // icon: 'sound',
-        type: 'games',
+        defaultData: {
+          customSize: '2x4',
+        }
       },
       devices:[],
       defaultOutput:{},

@@ -1,5 +1,7 @@
 <template>
   <xt-container 
+    v-model:customSize="customData.customSize"
+    :customData = "customData"
     :header="header"
     :options="options" 
     :customIndex="customIndex" 
@@ -68,6 +70,9 @@ export default {
       this.$router.push("/music");
     },
   },
+  mounted() {
+    this.customData.customSize = '2x2'
+  }
 };
 </script>
 

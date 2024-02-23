@@ -1,7 +1,7 @@
 <template>
   <xt-container 
     @titleHover="openGuideDrawer"
-    v-model:customSize="customSize"
+    v-model:customSize="customData.customSize"
     :header='header'
     :envLimit="['web']"  
     :options="options" 
@@ -172,6 +172,7 @@ export default {
       this.getBiliData(this.customData.chineseName)
       this.getGraphicData(this.customData.chineseName)
     }
+    this.customData.customSize = '4x4'
   },
 
   methods:{

@@ -1,7 +1,7 @@
 <template>
     <xt-container 
       :header="header"
-      v-model:customSize="customSize"
+      v-model:customSize="customData.customSize"
       :desk="desk" 
       :options="options" 
       v-if="!detailToggle">
@@ -109,6 +109,7 @@
 
     },
     async mounted() {
+      this.customData.customSize = '2x4'
       this.isLoading = true
       this.getData().then(()=>{
         if(!this.data){

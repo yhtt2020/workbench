@@ -1,5 +1,6 @@
 <template>
    <xt-container 
+    v-model:customSize="customData.customSize"
     :header="header"
     :envLimit="['web']" 
     :menuList="menuList"  
@@ -80,6 +81,9 @@ export default {
     choosenSource(){
       this.visibleSource=false
     },
+  },
+  mounted(){
+    this.customData.customSize = '2x2'
   }
 
 

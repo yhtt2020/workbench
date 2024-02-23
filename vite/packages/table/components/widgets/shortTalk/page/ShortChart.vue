@@ -2,7 +2,7 @@
 
     <xt-container 
         :header="header"
-        v-model:customSize="customSize"
+        v-model:customSize="customData.customSize"
         :envLimit="['guest']" 
         :customData="customData" 
         :customIndex="customIndex" 
@@ -249,11 +249,13 @@ export default {
                     "defaultDataType": this.defaultDataType,
                     "defaultTimeType": this.defaultTimeType,
                     "defaultPlatType": this.defaultPlatType,
+                    customSize : "4x4"
                 },this.desk)
             }else{
                this.defaultDataType = this.customData.defaultDataType
                this.defaultTimeType = this.customData.defaultTimeType
                this.defaultPlatType = this.customData.defaultPlatType
+               this.customData.customSize = '4x4'
             }
 
             // this.accToken = this.access_token
