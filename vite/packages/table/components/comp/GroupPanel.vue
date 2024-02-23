@@ -133,6 +133,7 @@ export default {
      * @returns {Promise<void>}
      */
     async getMyCircle ( options) {
+      if (this.$useEnv()) return
       const result = await groupApi.getMyCircle(options)
       if (result.code === 1000) {
         this.myData.myCircle=result.data
