@@ -236,7 +236,6 @@
   </transition>
   <AddIcon @close="iconHide" v-if="iconVisible" :desk="currentDesk"></AddIcon>
   <GalleryModal ref="galleryRef" />
-  <!-- 111 -->
   <EditNewNavigation
     v-if="editVisible"
     @setQuick="editVisible = false"

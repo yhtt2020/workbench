@@ -61,9 +61,19 @@
     @addIcon="addFile"
     :isFolder="false"
   />
-  <folderSet v-if="setVisible" :data="customData" @close="setVisible = false" @updateSort="updateSort"
-    @updateWindowApp="updateWindowApp" />
-  <EditNewNavigation v-if="editVisible" @setQuick="editVisible = false" @addIcon="addFile" :isFolder="true" />
+  <folderSet
+    v-if="setVisible"
+    :data="customData"
+    @close="setVisible = false"
+    @updateSort="updateSort"
+    @updateWindowApp="updateWindowApp"
+  />
+  <EditNewNavigation
+    v-if="editVisible"
+    @setQuick="editVisible = false"
+    @addIcon="addFile"
+    :isFolder="true"
+  />
 
   <xt-modal
     custom
@@ -498,7 +508,6 @@ const updateBg = (val) => {
   isDrag.value = val;
 };
 
-
 /**
  * 刷新桌面数据
  */
@@ -535,15 +544,13 @@ const refreshDeskApp = async () => {
     refreshState.value = false;
   }, 1000);
 };
+function handleClick(e) {
+  if (e.target?.closest(".tt-folder-container") == null) {
+    console.log("123 :>> ", 123);
+  }
+}
 onMounted(async () => {
-
-window.addEventListener("click", function (e) {
-    if (e.target?.closest(".tt-folder-container") == null) {
-
-      // emits("close");
-      console.log('123 :>> ', 123);
-    }
-  });
+  window.addEventListener("click", handleClick);
 
   customData.value.list = customData.value.list.map((item) => mergeData(item));
   // 空图标替换
@@ -556,12 +563,10 @@ window.addEventListener("click", function (e) {
     customData.value.customSize = customData.value.size;
   }
   // 冒泡排序
-
-
 });
 
 onBeforeMount(() => {
-  window.removeEventListener("click", function (e) {});
+  window.removeEventListener("click", handleClick);
 });
 </script>
 
