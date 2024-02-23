@@ -1,28 +1,74 @@
 <template>
-  <Drop @createFile="createFile" @deleteFile="deleteFile" @updateBg="updateBg" ref="folder">
-    <xt-container v-model:status="status" :modalSize="modalSize" :options="options" :customIndex="customIndex"
-      :customData="customData" :header="header" :menuList="menuList" :sizeList="autoSizeList" @leftClick="leftClick"
-      v-model:customSize="customData.customSize" @delete="deleteFn">
+  <Drop
+    @createFile="createFile"
+    @deleteFile="deleteFile"
+    @updateBg="updateBg"
+    ref="folder"
+    class="tt-folder-container"
+  >
+    <xt-container
+      v-model:status="status"
+      :modalSize="modalSize"
+      :options="options"
+      :customIndex="customIndex"
+      :customData="customData"
+      :header="header"
+      :menuList="menuList"
+      :sizeList="autoSizeList"
+      @leftClick="leftClick"
+      v-model:customSize="customData.customSize"
+      @delete="deleteFn"
+      class="tt-folder-container"
+    >
       <!-- 空状态显示状态 -->
       <template v-if="customData.list.length <= 0 && !dragSortState">
         <Null :size="customData.customSize" @addFile="addFileClick" />
       </template>
-      <vue-custom-scrollbar v-else style="padding-right: 4px" :settings="{
-        useBothWheelAxes: true,
-        suppressScrollY: false,
-      }" class="relative w-full h-full">
-        <File :list="customData.list" :layout="customData.layout" :model="customData.model" :modalSize="modalSize"
-          @deleteFile="deleteFile" @updateFile="updateFile" @updateList="updateList" @updateSort="updateSort"
-          @clickFile="clickFile" />
+      <vue-custom-scrollbar
+        v-else
+        style="padding-right: 4px"
+        :settings="{
+          useBothWheelAxes: true,
+          suppressScrollY: false,
+        }"
+        class="relative w-full h-full"
+      >
+        <File
+          :list="customData.list"
+          :layout="customData.layout"
+          :model="customData.model"
+          :modalSize="modalSize"
+          @deleteFile="deleteFile"
+          @updateFile="updateFile"
+          @updateList="updateList"
+          @updateSort="updateSort"
+          @clickFile="clickFile"
+        />
       </vue-custom-scrollbar>
     </xt-container>
   </Drop>
 
-  <folderSet v-if="setVisible" :data="customData" @close="setVisible = false" @updateSort="updateSort"
-    @updateWindowApp="updateWindowApp" />
-  <EditNewNavigation v-if="editVisible" @setQuick="editVisible = false" @addIcon="addFile" :isFolder="false" />
+  <folderSet
+    v-if="setVisible"
+    :data="customData"
+    @close="setVisible = false"
+    @updateSort="updateSort"
+    @updateWindowApp="updateWindowApp"
+  />
+  <EditNewNavigation
+    v-if="editVisible"
+    @setQuick="editVisible = false"
+    @addIcon="addFile"
+    :isFolder="false"
+  />
 
-  <xt-modal custom v-model="expandVisible" v-if="expandVisible" boxClass="" @close="expandClose">
+  <xt-modal
+    custom
+    v-model="expandVisible"
+    v-if="expandVisible"
+    boxClass=""
+    @close="expandClose"
+  >
     <Expand :data="props" :auto="false" v-if="expandVisible"></Expand>
   </xt-modal>
 </template>
@@ -449,7 +495,6 @@ const updateBg = (val) => {
   isDrag.value = val;
 };
 
-onBeforeMount(() => {});
 
 /**
  * 刷新桌面数据
@@ -488,6 +533,12 @@ const refreshDeskApp = async () => {
   }, 1000);
 };
 onMounted(async () => {
+  window.addEventListener("click", function (e) {
+    if (e.target?.closest(".tt-folder-container") == null) {
+      // emits("close");
+      console.log('123 :>> ', 123);
+    }
+  });
   customData.value.list = customData.value.list.map((item) => mergeData(item));
   // 空图标替换
   if (customData.value.icon === "") {
@@ -498,6 +549,10 @@ onMounted(async () => {
   if (customData.value.customSize == "") {
     customData.value.customSize = customData.value.size;
   }
+});
+
+onBeforeMount(() => {
+  window.removeEventListener("click", function (e) {});
 });
 </script>
 
