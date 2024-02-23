@@ -68,7 +68,7 @@ const close = () => {
 };
 
 const claimReward = () => {
-  console.log("游客模式测试");
+  // console.log("游客模式测试");
   emits("close-toast");
   // 游客模式
   if(window.$useEnv('guest')){
@@ -103,7 +103,7 @@ const claimReward = () => {
 
 // 按钮文字信息
 const butText = computed(()=>{
-  console.log('登录并领取',window.$useEnv('guest') && status.value == 0);
+  // console.log('登录并领取',window.$useEnv('guest') && status.value == 0);
   if(window.$useEnv('guest') && status.value == 0){
     return '登录并领取'
   }

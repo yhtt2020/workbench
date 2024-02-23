@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { reactive, ref, getCurrentInstance, computed } from "vue";
+import { reactive, ref, getCurrentInstance, computed,onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { taskStore } from "../store";
 import { useToast } from "vue-toastification";
@@ -150,6 +150,11 @@ const receiveText = computed(()=>{
   else { return '领取奖励' }
 })
 
+onMounted(()=>{
+  proxy.$.appContext.app.config.globalProperties.$bus.on('start',()=>{
+    startList.value.push(props.task.id);
+  })
+})
 </script>
 
 <style lang="scss" scoped>
