@@ -27,20 +27,28 @@ const setUserInfo = async () => {
  * 用户许可
  */
 export const useUserPermit = async () => {
-  // 1 判断是否存在token
-  const token = cache.get("ttUserToken");
-  // 2 有token 尝试请求出用户数据
+  // 1.1 判断是否存在新版的token
+  let token = cache.get("ttUserToken");
+  // 1.2 判断是否存在tabapi的token
+  if (!token && useEnv()) {
+    let res = await window.tsbApi.user.get();
+    token = res.data.token;
+  }
+
+  // 2 有token
   if (token) {
     let res = await setUserInfo();
+    // 清除游客缓存
+    cache.set("isGuest", false);
     return res;
   } else {
     // 4 没token
+    cache.set("isGuest", true);
     return false;
   }
   // 放行
   return true;
 };
-
 
 /**
  * 功能不详 复制来的

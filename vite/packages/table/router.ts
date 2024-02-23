@@ -15,16 +15,8 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   console.log("to,from :>> ", to, from);
   // 用户信息判断 优先级1
-  if (!cache.get("ttUserToken")) {
-    cache.set("isGuest", true);
-  } else if (!useEnv()) {
-    let res = await window.tsbApi.user.get();
-    if (!res.data.token) {
-      cache.set("isGuest", true);
-    }
-  } else {
-    let userRes = await useUserPermit();
-  }
+  let userRes = await useUserPermit();
+
   // 用户环境判断 优先级2
   if (
     useEnvLimit("web", to.name, {

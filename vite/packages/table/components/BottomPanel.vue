@@ -254,6 +254,14 @@ import 'animate.css'
 import AutoHide from './desk/navigationBar/components/folder/AutoHide.vue'
 import { mergeData } from '../ui/hooks/useDataConversion'
 
+
+import { useFullscreen } from '@vueuse/core'
+const {
+            //是否全屏状态
+            isFullscreen,
+            //切换全屏
+            toggle
+        } = useFullscreen()
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon', 'hiedNavBar'],
@@ -1028,7 +1036,12 @@ export default {
     async newOpenApp(type, value, item) {
       console.log('value :>> ', value);
       console.log('type :>> ', type);
-      console.log('3333 :>> ', item);
+      console.log('item :>> ', item);
+      if (value == 'fullscreen' && window.$useEnv()) {
+        toggle()
+        console.log('isFullscreen :>> ', isFullscreen);
+        return
+      }
       if (window.$useEnvLimit('web',value)) return
 
 
