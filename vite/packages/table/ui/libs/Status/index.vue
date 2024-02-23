@@ -1,5 +1,8 @@
 <template>
-  <div v-if="plat" class="flex flex-col justify-center items-center w-full h-full">
+  <div
+    v-if="plat"
+    class="flex flex-col justify-center items-center w-full h-full"
+  >
     <div class="flex justify-center">
       <xt-new-icon
         icon="fluent:plug-disconnected-16-regular"
@@ -18,7 +21,7 @@
 import { ENV_MAP } from "../../../permission/config";
 import { usePermissionStore } from "../../../permission/store";
 import { mapWritableState } from "pinia";
-
+import cache from "../../../components/card/hooks/cache";
 export default {
   name: "XtStatus",
   data() {
@@ -34,11 +37,11 @@ export default {
   watch: {
     token: {
       handler(val) {
-        setTimeout(() => {
-          let res = this.$useEnv(this.status);
-          console.log("current res :>> ", res);
-          this.plat = res;
-        }, 1000);
+        let res = this.$useEnv(this.status);
+        this.plat = res;
+        if (val) {
+          cache.set("isGuest", "");
+        }
       },
     },
   },
