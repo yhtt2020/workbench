@@ -66,8 +66,11 @@ export const frameStore = defineStore('frameStore',{
     },
 
     async getMyFrames(){
-      return await get(getMyFramesUrl)
+      let res =  await get(getMyFramesUrl)
 
+      console.log('getMyFrames res  :>> ', res);
+
+      return res
     },
     /**
      * 装备上头像框

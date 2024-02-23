@@ -3,51 +3,44 @@ import cache from "../../components/card/hooks/cache";
 import { appStore } from "../../store";
 import { useEnv } from "../useEnv";
 import { getUserInfo } from "../api/login";
-
+import { usePermissionStore } from "../store";
+import { useLogout } from "./useLogout";
 /**
  * 获取用户信息
  */
 const setUserInfo = async () => {
   // 先判断用户信息是否存在，不存在进行赋值
   const userStore: any = appStore();
-  if (userStore.userInfo) return true;
+  if (userStore.userInfo) return userStore.userInfo;
+  return await useUpdateUserInfo();
+};
+
+export const useUpdateUserInfo = async () => {
+  const userStore: any = appStore();
   let res = await getUserInfo();
-  console.log("res getUserInfo :>> ", res);
   setLV(res.data);
 
   let userData = res.data.data;
   // 获取头像框信息
   let response = await userStore.getUserCard(userData.uid);
-  console.log("response :>> ", response);
-  // userData.frame = response.data.frame;
+  userData.frame = response.data.frame;
   userStore.userInfo = userData;
-  return true;
+  return userData;
 };
 /**
  * 用户许可
  */
 export const useUserPermit = async () => {
-  // 1.1 判断是否存在新版的token
   let token = cache.get("ttUserToken");
-  // 1.2 判断是否存在tabapi的token
-  if (!token && !useEnv()) {
-    let res = await window.tsbApi.user.get();
-    token = res.data.token;
-  }
 
-  // 2 有token
-  if (token) {
+  // 有token
+  if (cache.get("ttUserToken")) {
     let res = await setUserInfo();
-    // 清除游客缓存
-    cache.set("isGuest", false);
     return res;
-  } else {
-    // 4 没token
-    cache.set("isGuest", true);
-    return false;
   }
-  // 放行
-  return true;
+  // 没token
+  useLogout();
+  return false;
 };
 
 /**

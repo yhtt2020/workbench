@@ -70,9 +70,6 @@ onMounted(() => {
         useUserPermit();
         // router.push({ name: "home" })
         loginVisible.value = false;
-
-        cache.set("isGuest", false);
-
         props.cb && props.cb();
         props.close && props.close();
       }
