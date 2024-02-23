@@ -91,6 +91,7 @@ export const useCustomLayout = async (options) => {
     currentHeight = 0;
     let last = true;
     let flag = false;
+
     for (let item of arr.splice(0, arr.length)) {
       // 处理元素位置
       const { width, height }: any = useElementSize(item.customData.customSize);
@@ -167,6 +168,7 @@ export const useCustomLayout = async (options) => {
     fillHeight = 0;
     top += currentHeight + 12;
   };
+  // 获取元素宽度                                                
   // 缩放算法
   const scaleAlgorithm = () => {
     let currentZoom = getFreeLayoutState.value.canvas.zoom;
