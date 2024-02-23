@@ -4,6 +4,7 @@ import { appStore } from "../../store";
 import { useEnv } from "../useEnv";
 import { getUserInfo } from "../api/login";
 import { usePermissionStore } from "../store";
+import { useLogout } from "./useLogout";
 /**
  * 获取用户信息
  */
@@ -30,29 +31,16 @@ export const useUpdateUserInfo = async () => {
  * 用户许可
  */
 export const useUserPermit = async () => {
-  // 1.1 判断是否存在新版的token
-
   let token = cache.get("ttUserToken");
-  // 1.2 判断是否存在tabapi的token
-  // if (!token && !useEnv()) {
-  //   let res = await window.tsbApi.user.get();
-  //   token = res.data.token;
-  //   cache.set("ttUserToken", token);
-  // }
 
-  // 2 有token
-  if (token) {
+  // 有token
+  if (cache.get("ttUserToken")) {
     let res = await setUserInfo();
-    // 清除游客缓存
     return res;
-  } else {
-    const permissionStore = usePermissionStore();
-    permissionStore.token = "";
-    // 4 没token
-    return false;
   }
-  // 放行
-  return true;
+  // 没token
+  useLogout();
+  return false;
 };
 
 /**
