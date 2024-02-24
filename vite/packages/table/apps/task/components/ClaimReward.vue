@@ -133,19 +133,16 @@ const taskLastGuide = () =>{
 }
 
 const goTask = () => {
-  console.log("测试",currentTask.value);
-  console.log("判断",currentTask.value.suf === '');
-  console.log("测试2",currentTask.value.suf === 'M0201');
+  // 完成主线第一章所有任务后的预告提示
   if(currentTask.value.suf === 'M0201'){
     rewardVisible.value = false;
     taskFirstGuide()
   }
-
+  // 完成主线所有任务后的预告提示
   else if(currentTask.value.suf === ''){
     rewardVisible.value = false;
     taskLastGuide();
   }
-
   else {
     rewardVisible.value = false;
     isTaskDrawer.value = true;

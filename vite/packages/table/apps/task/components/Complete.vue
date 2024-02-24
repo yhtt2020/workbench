@@ -73,7 +73,7 @@ const claimReward = () => {
   // 游客模式
   if(window.$useEnv('guest')){
     useLogin(()=>{
-     isTaskDrawer.value = true;
+    //  isTaskDrawer.value = true;
      rewardVisible.value = true;
     })
     // tsbApi.user.login((data) => {

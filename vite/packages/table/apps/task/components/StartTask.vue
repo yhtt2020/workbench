@@ -73,7 +73,7 @@ const startTask = () => {
   startList.value = [...new Set(startList.value)];
   smallMize.value = false;
 
-  console.log("props.task.id :>> ", props.task.id);
+  // console.log("props.task.id :>> ", props.task.id);
   currentId.value = props.task.id;
 
   let type = currentType(props.task.id);
@@ -140,7 +140,7 @@ const getReceiveStatus = computed(() => {
 
 // 已完成任务
 const completeTask = computed(() => {
-  console.log("completedList.value :>> ", completedList.value);
+  // console.log("completedList.value :>> ", completedList.value);
   return completedList.value.includes(props.task.id);
 });
 
