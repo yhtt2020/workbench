@@ -844,7 +844,7 @@ import NewGuidePage from "../../page/app/grade/NewGuidePage.vue";
             // 将导入的便签重新修改时间
             g?.cards?.forEach((item, index) => {
               //移除桌面相关的便签卡片
-              if (item.name === "notes") {
+              if (item.name === "notes" && !this.$useEnv()) {
                 const now = new Date().getTime();
                 const obj = {
                   ...item,
@@ -901,7 +901,7 @@ import NewGuidePage from "../../page/app/grade/NewGuidePage.vue";
         } else {
           this.currentDesk?.cards?.forEach((item) => {
             //移除桌面相关的便签卡片
-            if (item.name === "notes") {
+            if (item.name === "notes" && !this.$useEnv()) {
               tsbApi.db
                 .find({
                   selector: {
