@@ -12,22 +12,23 @@
       <hr />
       <!-- 修复桌面壁纸设置，选择为纯色后，模糊度选项屏蔽掉这个bug,可能后续补充的需求 -->
       <template v-if="backgroundName.name === 'img'">
-       <xt-option-info
-        title="桌面壁纸模糊度"
-        info="调节桌面壁纸的模糊程度。"
-        icon="fluent:arrow-clockwise-16-regular"
-        @onIconClick="backgroundSettings.backGroundImgBlur = 0"
-       />
-       <xt-option-slider
-        v-model:slider="backgroundSettings.backGroundImgBlur"
-        :min="0"
-        :max="100"
-       />
-       <hr />
+        <xt-option-info
+          title="桌面壁纸模糊度"
+          info="调节桌面壁纸的模糊程度。"
+          icon="fluent:arrow-clockwise-16-regular"
+          @onIconClick="backgroundSettings.backGroundImgBlur = 0"
+        />
+        <xt-option-slider
+          v-model:slider="backgroundSettings.backGroundImgBlur"
+          :min="0"
+          :max="100"
+        />
+        <hr />
       </template>
     </template>
 
     <xt-option-info
+      v-if="!$useEnv()"
       isSwitch
       v-model:switch="settings.transparent"
       title="透明背景"
@@ -130,10 +131,10 @@ import { useDeskStore } from "../store";
 
 const router = useRouter();
 const app = appStore();
-const { settings, backgroundSettings,backgroundName } = storeToRefs(app);
+const { settings, backgroundSettings, backgroundName } = storeToRefs(app);
 
 const deskStore = useDeskStore();
-const {autoOpenEdit} =storeToRefs(deskStore)
+const { autoOpenEdit } = storeToRefs(deskStore);
 // props
 const props = defineProps({
   globalSettings: {},

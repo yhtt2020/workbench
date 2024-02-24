@@ -177,6 +177,17 @@ export default {
         return
       }
       this.dataInit()
+      if (this.$useEnv()) {
+        console.log('this.getShareJson() :>> ', this.getShareJson());
+        const blob = new Blob([JSON.stringify(this.getShareJson())], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'desk.json'; // 下载文件的名称
+        link.click();
+        URL.revokeObjectURL(url);
+        return
+      }
       let savePath = await tsbApi.dialog.showSaveDialog({
         title: '选择保存位置',
         defaultPath: '我的桌面分享.desk',
