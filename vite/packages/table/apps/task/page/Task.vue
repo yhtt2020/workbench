@@ -50,7 +50,7 @@ let task = ref([]);
 let icon = ref("");
 
 
-const { updateTime, currentUpdateTime, currentTaskList,smallMize } = storeToRefs(store);
+const { updateTime, currentUpdateTime, currentTaskList,smallMize,temporaryStatus } = storeToRefs(store);
 let Offline = offlineStore();
 // 切换任务
 const selectTab = (item) => {
@@ -58,6 +58,7 @@ const selectTab = (item) => {
 };
 // 切换不同支线
 const selectBranchTab = (item) => {
+  if(temporaryStatus.value){ temporaryStatus.value = false; }
   icon.value = item.newIcon;
   currentTask.value = "Branch";
   task.value = tasks[item.value];

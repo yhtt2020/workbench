@@ -41,7 +41,7 @@ export const defaultClockData = {
   clockId:"clock4",
   imgUrl:"https://a.apps.vip/icons/defaultBackground.jpg",
   blurs:3,
-  bgZoom:50,
+  bgZoom:100,
   zoom:1.5,
   customSize:"2x2",
   font:"font-family: '优设标题黑' !important;",
