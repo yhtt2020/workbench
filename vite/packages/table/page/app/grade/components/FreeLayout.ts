@@ -584,6 +584,7 @@ export const FreeLayoutStore = defineStore('FreeLayoutStore', {
               "bgZoom": 0,
               "backgroundFrame":true,
               "enableSecond":false,
+              "currentZoom":100,
             },
             "data": {}
           },
