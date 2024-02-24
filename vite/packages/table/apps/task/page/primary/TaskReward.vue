@@ -84,7 +84,7 @@ const props = defineProps({
 
 
 const isExits = computed(()=>{
-  if(showTaskReward.items && showTaskReward.medals){
+  if(props.showTaskReward.items && props.showTaskReward.medals){
     return true;
   }
   else {

@@ -46,17 +46,17 @@ const task = taskStore();
 const { currentId,temporaryStatus,isTaskDrawer,startList,smallMize,currentTaskList } = storeToRefs(task);
 
 const emits = defineEmits(["close-toast","startTask"]);
-const { proxy } = getCurrentInstance();
 
 const close = () =>{
  emits('close-toast');
 };
 
+// 获取当前任务
 const currentTask = computed(()=>{
   return task.getTask(currentId.value);
 });
 
-
+// 获取弹窗标题
 const taskName = computed(()=>{
   if(currentTask.value.suf === 'M0201'){
     return currentTask.value.showOne;
@@ -66,9 +66,9 @@ const taskName = computed(()=>{
   }
 })
 
-
+// 获取奖励
 const taskGetReward = computed(()=>{
-  console.log('测试',currentTaskList.value);
+  // 完成第一章任务后的预告提示
   if(currentTask.value.suf === 'M0201'){
     const list = ['M0201','M0202','M0203','M0204'];
     const filterList = {  points:[], experience:[], };
@@ -85,20 +85,54 @@ const taskGetReward = computed(()=>{
     const point = filterList.points.reduce((sum,item)=>{ return sum + item.value},0);
     const experience = filterList.experience.reduce((sum,item)=>{ return sum + item.value},0)
     return {
-      experience:{total:point,name:"经验",img:"/img/task/experience.png"},
-      points:{total:experience,name:"积分",img:"/img/task/communityPoints.svg"},
+      experience:{total:experience,name:"经验",img:"/img/task/experience.png"},
+      points:{total:point,name:"积分",img:"/img/task/communityPoints.svg"},
     }
   }
+  // 完成主线任务后的预告提示
   else if(currentTask.value.suf === ''){
-    
+    const lastList  = currentTaskList.value.filter(( item )=>{  return item.type === 'branch' });
+    const total = {  point:[],experience:[],avatar:[],medal:[]};
+    // 遍历将数据归类
+    for(const item of lastList){
+      const res = getCurrentTaskReward(item.name);
+      for(const childrenItem of res){
+        // 积分
+        if(childrenItem.type === 'communityPoints'){
+          total.point.push(childrenItem)
+        }
+        // 经验
+        else if(childrenItem.type === 'experience'){
+          total.experience.push(childrenItem)
+        }
+        // 头像
+        else if(childrenItem.type === 'avatarFrame'){
+          total.avatar.push(childrenItem)
+        }
+        // 勋章
+        else if(childrenItem.type === 'medal'){
+          total.medal.push(childrenItem.data)
+        }
+      }
+    }
+    // 求和
+    const pointTotal = total.point.reduce((sum,item)=>{ return sum + item.value},0);
+    const experienceTotal = total.experience.reduce((sum,item)=>{ return sum + item.value},0);
+    return {
+      experience:{total:experienceTotal,name:"经验",img:"/img/task/experience.png"},
+      points:{total:pointTotal,name:"积分",img:"/img/task/communityPoints.svg"},
+      medals:{list:total.medal.slice(0,2),name:"勋章"},
+      items:{list:[{...total.avatar[0].data}],name:"头像"}
+    }
   }
 })
 
 // 立即查看
 const immediatelyView = () =>{
-  emits('close-toast');
   isTaskDrawer.value = true;
   temporaryStatus.value = true;
+  smallMize.value = true;
+  emits('close-toast');
 }
 
 // 立即开始

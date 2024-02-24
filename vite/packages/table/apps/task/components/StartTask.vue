@@ -42,7 +42,7 @@ const app = appStore();
 
 // 初始化
 const store = taskStore();
-const { currentId, startList, claimRewardsList, completedList, rewardVisible,smallMize } =
+const { currentId, startList, claimRewardsList, completedList, rewardVisible,smallMize,isTaskDrawer } =
   storeToRefs(store);
 const router = useRouter();
 const props = defineProps({
@@ -152,7 +152,8 @@ const receiveText = computed(()=>{
 
 onMounted(()=>{
   proxy.$.appContext.app.config.globalProperties.$bus.on('start',()=>{
-    startList.value.push(props.task.id);
+    isTaskDrawer.value = true;
+    smallMize.value = true;
   })
 })
 </script>
