@@ -1,12 +1,12 @@
 <template>
-  <div v-if="!isWin()" class="xt-bg-2 mt-10 rounded-lg p-4 px-5 w-auto m-auto">
-    <div class=" mr-2 pt-1 ">
+  <div v-if="!isWin()" class="w-auto p-4 px-5 m-auto mt-10 rounded-lg xt-bg-2">
+    <div class="pt-1 mr-2 ">
       <iconify style="font-size: 18px;vertical-align: text-bottom" icon="akar-icons:info-fill"></iconify>
       暂不支持在非Windows平台上使用快捷指令功能。请耐心等待版本更新。
     </div>
   </div>
   <template v-else>
-    <div v-if="this.grids.length === 0" class=" box p-5 w-full item-content " style="max-height: 100%">
+    <div v-if="this.grids.length === 0" class="w-full p-5 box item-content" style="max-height: 100%">
       <a-result class="w-full rounded-lg xt-text" style="background: none;width:100%"
                 status="success" title="使用快捷指令"
                 sub-title="快捷指令功能，我们又称之为Dreamdeck，此功能的使用需要有一定的计算机基础知识。">
@@ -37,7 +37,7 @@
     </div>
 
   </template>
-  <div v-if="this.grids.length !== 0" class="flex flex-col h-full w-full">
+  <div v-if="this.grids.length !== 0" class="flex flex-col w-full h-full">
     <div v-if="sharing"  >
       <div class="font">请选择您要分享的小组，勾选后，在底部选择需要分享的方式。</div>
     </div>
@@ -50,7 +50,7 @@
         <div style="width: auto;white-space: nowrap">
           <div @contextmenu.stop="showMenu(grid.id)" :style="{ width: getWidth(grid.cols) }" style="display: inline-block"
                v-for="(grid, index) in            grids           ">
-            <h3 class="pointer text-more xt-text pl-3" v-if="sharing">
+            <h3 class="pl-3 pointer text-more xt-text" v-if="sharing">
               <a-checkbox v-model:checked="selectedGridIds[grid.id]" class="xt-text">{{ grid.title }}</a-checkbox>
             </h3>
             <template v-else>
@@ -77,7 +77,7 @@
                    v-if="grid.children.length === 0 && editing === false" class="grid">
                 <a-button block size="large" style="max-width: calc(100% - 0.6em)" type="primary" @click.stop="add(grid)">
                   <plus-outlined/>
-                  添加
+                  添加 
                 </a-button>
               </div>
 
@@ -111,7 +111,7 @@
 
       </vue-custom-scrollbar>
     </div>
-    <div v-if="sharing" class="sharing-bottom-panel w-full p-2" >
+    <div v-if="sharing" class="w-full p-2 sharing-bottom-panel" >
       <a-row>
         <a-col :span="12">
           当前选中的组：
@@ -253,9 +253,14 @@
       </a-col>
 
       <a-col>
-        <div @click="addBoard" class="btn relative">
+        <div @click="addBoard" class="relative btn">
           <Icon style="font-size: 3em" icon="tianjiawenjianjia"></Icon>
           <div>添加分组</div>
+          <GradeSmallTip
+            v-if="titleTip !== undefined"
+            powerType="quickInstructions" 
+            :lastPowerType="titleTip">
+          </GradeSmallTip>
         </div>
       </a-col>
       <a-col v-if="menuType === 'grid'">
@@ -403,7 +408,7 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(appStore, ['fullScreen']),
+    ...mapWritableState(appStore, ['fullScreen','lvInfo']),
     ...mapWritableState(deckStore, ['grids', 'editing', 'settings']),
     selectedGrids () {
       let selectedIds = Object.keys(this.selectedGridIds).filter(key => {
@@ -412,6 +417,15 @@ export default {
       return this.grids.filter(g => {
         return selectedIds.indexOf(String(g.id)) > -1
       })
+    },
+    titleTip(){
+      const lv = Number(this.lvInfo.lv)
+      let group = this.grids.filter(g => g?.tag === 'new'); 
+      if(lv < 2 && group.length >= 5){
+        return '10组'
+      }else if(lv < 5 && group.length >= 10){
+        return '不限制'
+      }
     }
   },
   mounted () {
@@ -428,8 +442,8 @@ export default {
     isWin,
     powerState,
     limitTip () {
-      this.$refs.smallTip.clickTip()
-      this.$refs.smallTip.limitFlag = true
+      // this.$refs.smallTip.clickTip()
+      // this.$refs.smallTip.limitFlag = true
     },
     toggleEditGrid () {
       if (!this.currentGrid.cols) {
@@ -675,7 +689,7 @@ export default {
         message.error('必须选择添加到的分组')
         return
       }
-
+      console.log('add', params)
       this.currentItem = undefined
       this.$router.push({
         name: 'deckAdd',
@@ -717,15 +731,17 @@ export default {
 
     },
     addBoard () {
-      if (this.superiorLimit <= this.grids.length) {
-        this.limitTip()
-        return
-      }
+      console.log(this.superiorLimit,this.grids.length)
+      // if (this.superiorLimit <= this.grids.length) {
+      //   this.limitTip()
+      //   return
+      // }
       let grid = {
         id: Date.now(),
         title: '新组',
         children: [],
-        cols: 2
+        cols: 2,
+        tag:'new' //辨别新建组，防止模板指令组干扰
       }
       this.grids.push(grid)
       // this.$nextTick(() => {
