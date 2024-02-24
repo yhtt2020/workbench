@@ -152,6 +152,9 @@
         <keep-alive>
           <TaskBox v-if="true"></TaskBox>
         </keep-alive>
+        <keep-alive>
+          <Favorites v-if="true"></Favorites>
+        </keep-alive>
         <Common ref="common"></Common>
       </div>
       <!-- </Transition> -->
@@ -215,6 +218,7 @@ import Team from './bottomPanel/Team.vue'
 import Sortable from 'sortablejs'
 import { message } from 'ant-design-vue'
 import TaskBox from '../apps/task/page/TaskBox.vue'
+import Favorites from '../apps/favorites/page/index.vue'
 import Emoji from './comp/Emoji.vue'
 import ChatButton from './bottomPanel/ChatButton.vue'
 import { Icon as navIcon } from '@iconify/vue'
@@ -249,6 +253,14 @@ import 'animate.css'
 import AutoHide from './desk/navigationBar/components/folder/AutoHide.vue'
 import { mergeData } from '../ui/hooks/useDataConversion'
 
+
+import { useFullscreen } from '@vueuse/core'
+const {
+            //是否全屏状态
+            isFullscreen,
+            //切换全屏
+            toggle
+        } = useFullscreen()
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon', 'hiedNavBar'],
@@ -280,7 +292,8 @@ export default {
     Common,
     ControlModal,
     Drag,
-    AutoHide
+    AutoHide,
+    Favorites
   },
   data() {
     return {
@@ -1022,7 +1035,12 @@ export default {
     async newOpenApp(type, value, item) {
       console.log('value :>> ', value);
       console.log('type :>> ', type);
-      console.log('3333 :>> ', item);
+      console.log('item :>> ', item);
+      if (value == 'fullscreen' && window.$useEnv()) {
+        toggle()
+        console.log('isFullscreen :>> ', isFullscreen);
+        return
+      }
       if (window.$useEnvLimit('web',value)) return
 
 

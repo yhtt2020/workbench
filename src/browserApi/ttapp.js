@@ -7,7 +7,7 @@ function send(channel,args={}){
 async function sendSync(channel,args={}){
   return await ipcHelper.sendSync('ttapp',channel,args)
 }
-//
+//1
 const ttapp = {
   install(zipPath,cb){
     let cbId=require('nanoid').nanoid()

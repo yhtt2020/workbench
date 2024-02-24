@@ -1,6 +1,6 @@
 <template>
   <!-- 音乐播放器和音量调节按钮 -->
- <template v-if="controlIndex === 'audio'">
+ <template v-if="controlIndex === 'audio' && !$useEnv()">
    <SystemControlDetail class="category-button pointer" :event="false" @click="addControl($event)" :status="'add'"/>
  </template>
 

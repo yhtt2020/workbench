@@ -1,15 +1,13 @@
 <template>
-  <vueCustomScrollbar v-if="envGuest" :settings="scrollbarSettings" @touchstart.stop @touchmove.stop @touchend.stop
-                      style="padding: 15px;white-space: nowrap;height: 100%">
 
+    <vueCustomScrollbar  :settings="scrollbarSettings" @touchstart.stop @touchmove.stop @touchend.stop
+                      style="padding: 15px;white-space: nowrap;height: 100%">
+                      <xt-status name="我的信息功能" :status="['guest']" >
     <div class="card half mr-3" style="width:330px;background: var(--primary-bg);color: var(--primary-text);padding:0;position: relative">
       <userCard :key="key" :uid="userInfo?.uid" :userInfo="userInfo">
       </userCard>
       <span @click="toggleFrameStore()" style="position: absolute;right: 20px;top: 40px;" class="px-3 py-1 xt-active-bg rounded-full  pointer"><icon icon="gift" style="font-size: 18px"></icon> 头像框</span>
     </div>
-
-
-
     <div class="mr-3" style="width: 400px;display: inline-block;vertical-align: top;white-space: pre-wrap">
       <!-- 快速搜索 用户->我的 -->
       <div class="card half" style="width: 400px;padding: 1em;display: inline-block;margin-bottom: 1em;background: var(--primary-bg);color: var(--primary-text);">
@@ -22,12 +20,13 @@
     <div class="card" style="width: 400px;padding: 1em;display: inline-block;margin-bottom: 1em;background: var(--primary-bg);color: var(--primary-text);">
       <GroupPanel></GroupPanel>
     </div>
+  </xt-status>
 
   </vueCustomScrollbar>
-
+<!--
   <div v-else class=" xt-bg h-full rounded-xl ">
     <xt-status name="我的信息功能" :status="['guest']" ></xt-status>
-  </div>
+  </div> -->
 
   <div v-if="secondaryVisible === false">
     <UpdateMyInfo @infoUpdated="infoUpdated" ref="myInfoRef"></UpdateMyInfo>
@@ -53,7 +52,7 @@ export default {
   computed: {
     ...mapWritableState(appStore, ['userInfo','secondaryVisible']),
     envGuest(){
-      return !window.$useEnv(['guest', 'web'])
+      return !window.$useEnv(['guest'])
     },
   },
   data(){

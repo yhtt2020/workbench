@@ -42,6 +42,7 @@ export default {
   },
   mounted() {
     this.getMyFrames().then(rs => {
+      console.log('rs :>> ', rs);
       if (rs.status) {
         console.log(rs.data)
         this.frameList = rs.data.map(itemOwner => {
@@ -61,6 +62,8 @@ export default {
     ...mapActions(teamStore, ['refreshTeamUsers']),
     avatarTagColor, textTag, titleTagColor, avatarBgColor, avatarGainMethodText,
     async equip(item) {
+  console.log(123,item);
+
       let rs = await this.equipFrame(item.nanoid)
       console.log(rs)
       if (rs && rs.status) {
@@ -70,6 +73,7 @@ export default {
         item.equipped = true
         this.getUserInfo()
         this.refreshTeamUsers()
+        this.userInfo.frame = item.image
         message.success('装备成功。')
       } else {
         message.error('装备失败，请稍后再试。')
@@ -82,6 +86,7 @@ export default {
       let rs = await this.removeFrame()
       if (rs?.status) {
         message.success('移除头像框成功')
+        this.userInfo.frame = ''
         this.getUserInfo()
         this.refreshTeamUsers()
       } else {

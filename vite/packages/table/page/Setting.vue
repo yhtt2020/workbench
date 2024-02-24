@@ -266,7 +266,9 @@ import ThemeSettingModal from "../components/setting/ThemeSettingModal.vue";
 
 import { taskStore } from "../apps/task/store";
 import { offlineStore } from "../js/common/offline";
-import {Icon as Iconify} from '@iconify/vue'
+import { completeTask } from '../apps/task/task';
+import {Icon as Iconify} from '@iconify/vue';
+
 export default {
   name: "Setting",
   components: {
@@ -528,6 +530,7 @@ export default {
       });
     },
     switchBarrage(value) {
+      completeTask("M0204");
       if (value) {
         window.$manager.show();
       } else {

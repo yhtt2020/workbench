@@ -2,6 +2,7 @@ import { isObject } from './../../TUIKit/TUICore/utils/index';
 import browser from "../../js/common/browser";
 import { appStore } from "../../store";
 import { taskStore } from "../../apps/task/store";
+import { favoStore } from "../../apps/favorites/store";
 import cp from "child_process";
 import fs from "fs";
 async function runApp(uri) {
@@ -114,12 +115,16 @@ export const startApp =async  (type, value, router?) => {
 export const openSysApp = (value, router) => {
   const useAppStore: any = appStore();
   const useTakeStore = taskStore();
+  const usefavoStore = favoStore();
   if (value === "fullscreen") {
     useAppStore.toggleFullScreen();
   } else if (value === "task") {
     useTakeStore.isTaskDrawer = true;
     useTakeStore.smallMize = true;
   } else if (value === "commun") {
+    return;
+  }else if(value === "favorites"){
+    usefavoStore.isFavorites = true
     return;
   } else if(value === "control"){
     return;

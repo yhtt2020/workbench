@@ -3,7 +3,7 @@
     <div class="flex items-center my-3 mx-3">
       <div class="pt-2 ml-2" style="width:70px;height:70px;position:relative;text-align: center;">
         <FrameAvatar :frame="displayUserInfo?.equippedItems?.frameDetail" :avatarSize="60"
-                     :avatarUrl="displayUserInfo.avatar" :frameUrl="displayUserInfo.frame">
+                     :avatarUrl="displayUserInfo.avatar" :frameUrl="userInfo.frame">
         </FrameAvatar>
         <a-tooltip v-if="displayUserInfo.certification && displayUserInfo.certification.length>0"
                    :title="displayUserInfo.certification[0].name">
@@ -72,6 +72,13 @@
        </div>
 
       </div>
+      <div class="mx-5 mb-4">
+        <xt-button block class="" @click="exit">
+        <div class="error">
+          退出登录
+        </div>
+       </xt-button>
+      </div>
     </div>
     <div class="px-5 pb-4" v-if="uid!==myUserInfo.uid" v-show="relationship!=='unload'">
       <a-row :gutter="12" v-if="relationship!=='unknown'">
@@ -111,6 +118,7 @@ import FrameAvatar from '../avatar/FrameAvatar.vue'
 import FrameStoreWidget from '../team/FrameStoreWidget.vue'
 import TencentCloudChat from 'tim-js-sdk'
 import { message } from 'ant-design-vue'
+import { useLogout } from '../../permission/user/useLogout'
 
 export default {
   name: 'UserCard',
@@ -172,6 +180,19 @@ export default {
   methods: {
     ...mapActions(teamStore, ['getMemberGrade', 'getUserMedal']),
     ...mapActions(appStore, ['getUserCard']),
+    exit() {
+
+window.$ui.confirm("确定退出登录吗？", "", {
+okText: "确定",
+ok: () => {
+   useLogout()
+},
+no: () => {
+
+},
+type: "warning",
+});
+},
     async updateUserInfo () {
       let response = await this.getUserCard(this.uid)
       if (response.code === 200) {

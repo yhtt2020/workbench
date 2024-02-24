@@ -20,6 +20,9 @@
           <xt-button @click="importTTApp" :w="140" :h="40" type="theme">导入测试TTApp</xt-button>
         </div>
         <div class="line">
+          <xt-button @click="exit" :w="140" :h="40" type="theme">退出登录</xt-button>
+        </div>
+        <div class="line">
           <xt-button @click="getMemory">获取内存情况</xt-button>
         </div>
         <div>
@@ -77,7 +80,7 @@ import Template from '../../../user/pages/Template.vue'
 import { useWidgetStore } from '../../components/card/store.ts'
 import { message } from 'ant-design-vue'
 import { prettyDisplayBytes } from '../../js/action/supervisory'
-
+import {useLogout} from '../../permission/user/useLogout'
 export default {
   name: 'Common',
   components: { Template, ZoomUI },
@@ -104,6 +107,9 @@ export default {
     isMain
   },
   methods:{
+    exit(){
+      useLogout()
+    },
     friendlyDate(){
     },
     prettyDisplayBytes(val){
@@ -113,20 +119,17 @@ export default {
       ipc.send('openDevTool')
     },
     async importTTApp(){
-
       let path = await tsbApi.dialog.showOpenDialog({
-    title: "选择",
-    message: "请选择文件",
-    multiple: "true",
-    properties: ["openFile", "multiSelections"],
-  });
+        title: "选择",
+        message: "请选择文件",
+        multiple: "true",
+        properties: ["openFile", "multiSelections"],
+      });
 
-
-  console.log('path[0] :>> ', path[0]);
-let  res =  tsbApi.ttapp.install(path[0],(data)=>{
-    console.log('data :>> ', data);
-  })
-  console.log('res :>> ', res);
+      let res = tsbApi.ttapp.install(path[0],(data)=>{
+        console.log('data :>> ', data);
+      })
+      console.log('res :>> ', res);
     },
     async getMemory () {
        let rs= await ipc.sendSync('getAppMetrics')

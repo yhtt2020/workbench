@@ -39,7 +39,7 @@ export const defaultFolderData = {
 export const defaultClockData = {
   backgroundFrame:true,
   clockId:"clock4",
-  imgUrl:"https://p.ananas.chaoxing.com/star3/origin/fa7d6f2c69aae528484d8278575c28ef.jpg",
+  imgUrl:"https://a.apps.vip/icons/defaultBackground.jpg",
   blurs:3,
   bgZoom:50,
   zoom:1.5,

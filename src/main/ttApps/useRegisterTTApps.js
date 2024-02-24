@@ -82,13 +82,12 @@ module.exports = async function useRegisterTTApps(filePath) {
   });
 
   if (manifestCheckRes.length > 0) {
-    event.reply("", {
+    deleteFile(temporaryFolderName);
+    return {
       status: 1,
       code: 400,
       data: "manifest.json文件缺少 " + manifestCheckRes.join(" , ") + " 数据",
       info: "manifest.json文件缺少 " + manifestCheckRes.join(" , ") + " 数据",
-    });
-    deleteFile(temporaryFolderName);
-    return;
+    };
   }
 };

@@ -266,6 +266,7 @@ export default {
             this.$emit('setQuick')
         },
         async loadDeskIconApps() {
+          if (this.$useEnv()) return
             const lightApps = await appModel.getAllApps()
             // console.log(lightApps, 'lightApps');
             for (let i = 0; i < lightApps.length; i++) {

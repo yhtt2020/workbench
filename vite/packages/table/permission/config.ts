@@ -16,7 +16,7 @@ export const ROUTER_LIMIT = {
     "browser",
     "key",
     "myGame",
-    "dev",
+    // "dev",
     "music",
     "schemeIndex",
     "schemeList",

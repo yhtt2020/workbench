@@ -63,9 +63,10 @@ import browser from '../../js/common/browser'
 import { frameStore } from '../../store/avatarFrame'
 import { appStore } from '../../store'
 import {completeTask} from '../../apps/task/task'
+import { randomName } from '../../js/data/chatList';
+import {useUpdateUserInfo} from '../../permission/user/useUserPermit'
 
-
-const screenname = '灵魂虐杀,浅寐,夏微凉っ゛,鱼哭了,陌屿,彼岸,青山独归晚,温唇,忻芝兰,喵咕嘟,皂白七'
+const screenname = randomName;
 export default {
   components:{
     Modal,UploadImage,
@@ -140,7 +141,7 @@ export default {
 
     },
     rollName(){  // 掷骰子随机昵称
-      let groups = screenname.split(',')
+      let groups = screenname;
       let j = Math.ceil((Math.random() * groups.length)) - 1
       if (this.j === j) {
         this.rollName()
@@ -177,6 +178,7 @@ export default {
         this.setSecondaryVisible(true)
         setTimeout(() => {
           this.getUserInfo()
+          useUpdateUserInfo()
         }, 10)
       } else {
         message.error('修改失败')
