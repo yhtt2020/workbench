@@ -394,9 +394,12 @@ export default {
       if (item.option[1] != undefined) {
         this.fullScreen(item);
       } else {
-        if (item.name === "remote") {
-          this.openRemote = true;
+        if (item.name === "remote" ) {
+          if (!window.$useComLimit(['web'], item.name)) {
+            this.openRemote = true;
           this.remoteContent = item;
+          }
+
           return;
         }
         this.addCardAchieve(item);
