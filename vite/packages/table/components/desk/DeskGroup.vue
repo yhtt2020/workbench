@@ -953,6 +953,13 @@ import NewGuidePage from "../../page/app/grade/NewGuidePage.vue";
 
     },
     exportDesk() {
+      if (this.$useEnv('guest')) {
+        console.log('访客模式下无法导出桌面')
+        window.$ui.confirm("访客模式下无法导出桌面", "", {
+          type: "warning",
+        });
+        return
+      }
       if(!this.showGuide){
         this.$refs.currentDeskRef.hideMenu();
         this.layoutSize = this.$refs.currentDeskRef.getLayoutSize();
