@@ -1,79 +1,94 @@
 <template>
-  <!-- 图片上传组件 -->
-  <a-upload :style="size" class="pointer" 
-   @change="uplaodImageChange" :before-upload="beforeUpload"
-   :show-upload-list="false"
-  >  
-    <img v-if="showAvatar !== ''" :src="showAvatar" alt="avatar" class="rounded-full" style="height:48px;width:48px;"/>
-    <Icon v-else icon="tianjia2" style="font-size: 3em;"></Icon>
-    <div v-if="showAvatar !== ''" class="rounded-xl pointer"  @click.stop="deleteAvatar" style="width:20p;height:20px;position: absolute;top:6px;left: 47px;">
-      <Icon icon="close-circle-fill" style="color: var(--secondary-text);font-size: 1.25em;"></Icon>
-    </div>
-  </a-upload>
+  <div class="avatar-box rounded-md pointer relative" @click="uploadAvatar">
+    <template v-if="currentAvatar !== ''">
+      <a-avatar :src="currentAvatar" :size="48"></a-avatar>
+      <div class="absolute flex items-center justify-center"
+       v-if="currentAvatar !== ''" @click.stop="clearAvatar"
+       style="top: 4px ; right:4px;"
+      >
+        <xt-ify-icon icon="fluent:dismiss-16-regular" size="16"></xt-ify-icon>
+      </div>
+    </template>
+    <template v-else>
+      <xt-ify-icon icon="fluent:add-16-regular" size="32"></xt-ify-icon>
+    </template>
+  </div>
+  <input type="file" style="display: none;" class="uploadImage" @change="getUploadImage($event)"/>
 </template>
 
-<script>
-import { mapActions,mapWritableState } from 'pinia';
-import api from '../../../src/model/api';
+<script setup lang="ts"> 
+import { ref, watch } from "vue";
+import { fileUpload } from '../components/card/hooks/imageProcessing';
 import { message } from 'ant-design-vue';
-import cache from './card/hooks/cache';
-import { frameStore } from '../store/avatarFrame';
-import { appStore } from '../store';
-export default {
-  name:'UploadImage',
-  computed:{
-    ...mapWritableState(frameStore,['frameData']),
-    ...mapWritableState(appStore,['userInfo'])
-  },
-  data(){
-    return{
-      showAvatar:''
-    }
-  },
-  mounted(){
-    if(this.userInfo.avatar){
-      this.showAvatar = this.userInfo.avatar
-    }
-  },
-  methods:{
-    ...mapActions(frameStore,['saveAvatarUrl']),
-    uplaodImageChange(info){  // info 上传文件的所有信息
-      const formData = new FormData();
-      formData.append("file", info.file)
-      api.postCosUpload(formData,(err,res)=>{
-        if(!err){
-          message.error('数据上传失败')
-        }else{
-          const avatarUrl = 'http://'+ res.data.data
-          if(avatarUrl){
-            message.success('自定义头像上传成功')
-            this.showAvatar = avatarUrl
-          }
-          cache.set('avatar_url',avatarUrl)
-          this.saveAvatarUrl()
-        }
-      })
-    },
-    beforeUpload(file){  // 上传之前的准备工作 
-      const regex =  /^image\/(jpeg|png|jpg)$/;  // 通过正则表达式匹配是否指定的png jpg jpeg的类型文件  
-      const isFileType = !regex.test(file.type)
-      if(isFileType){ 
-        message.error('只能上传JPG和PNG格式图片');
-      }
-      const isLt2M = file.size / 1024 / 1024 < 2;
-      if (!isLt2M) {
-        message.error('上传图片不能大于2MB');
-      }
-      return isFileType && isLt2M;
-    },
-    deleteAvatar(){
-      this.showAvatar = ''
-      cache.del('avatar_url')
-    },
-  },
+
+export interface tabProps {
+  modelValue: any;
+  avatar:string,
 }
+const props = withDefaults(defineProps<tabProps>(), {
+  avatar:'',
+});
+
+const currentAvatar = ref(props.modelValue);
+const emits = defineEmits(["update:modelValue", "cb"]);
+
+watch(()=>props.modelValue,(newVal)=>{
+  currentAvatar.value = newVal;
+})
+watch(currentAvatar, () => {
+  emits("update:modelValue", currentAvatar.value);
+  emits("cb", currentAvatar.value);
+});
+
+// 清空头像
+const clearAvatar = () =>{
+  emits("update:modelValue", currentAvatar.value = '');
+  emits("cb", currentAvatar.value = '');
+}
+
+// 触发上传头像
+const uploadAvatar = () =>{
+  const el:any = document.querySelector(".uploadImage");
+  el.click();
+}
+const getUploadImage = async(evt:any) =>{
+  const file = evt.target.files[0];
+  console.log("file",file);
+  
+  // 通过正则表达式匹配是否指定的png jpg jpeg的类型文件  
+  const regex =  /^image\/(jpeg|png|jpg)$/;
+  const isFileType = !regex.test(file.type);
+  // 限制图片尺寸仅限于2MB
+  
+  const isLt2M = Math.ceil(file.size / 1024 / 1024) > 2;
+  console.log("isLt2M",isLt2M,Math.ceil(file.size / 1024 / 1024));
+  
+
+  if(isFileType){
+    message.error('只能上传JPG和PNG格式图片');
+  }
+  else if(isLt2M){
+    message.error('上传图片不能大于2MB');
+  }
+  else {
+    await fileUpload(file).then((res)=>{
+      emits("update:modelValue", currentAvatar.value = res);
+      emits("cb", currentAvatar.value = res);
+    }) 
+  }
+}
+
+
 </script>
 
 <style lang="scss" scoped>
-
+.avatar-box{
+  width: 72px;
+  height: 72px;
+  background: var(--secondary-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 6px !important;
+}
 </style>

@@ -42,7 +42,8 @@
       </a-col>
     </a-row>
   </div>
-  <UpdateMyInfo @infoUpdated="infoUpdated" ref="myInfoRef"></UpdateMyInfo>
+  <UpdateMyInfo  ref="myInfoRef"></UpdateMyInfo>
+  <!-- @infoUpdated="infoUpdated" -->
 </template>
 
 <script>
@@ -67,9 +68,9 @@ export default {
     go(url){
       browser.openInInner(url)
     },
-    infoUpdated(){
-      this.$emit('infoUpdated')
-    }
+    // infoUpdated(){
+    //   this.$emit('infoUpdated')
+    // }
   },
   mounted() {
     // this.$bus.on('M0301',this.openUpdateMyInfo)
