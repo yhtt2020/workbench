@@ -118,6 +118,7 @@ const handleDragleave = (dragEvent) => {
  * 鼠标弹起事件
  */
 const handleMouseUp = (e) => {
+  let isCtrl = e.ctrlKey
   if(!isDragIcon.value) return;
   iconList.value.forEach((item) => {
     const file = useFileConversionNav(item)
@@ -125,9 +126,11 @@ const handleMouseUp = (e) => {
   })
   // 2 旧数据删除
   if (iconsRefs.value.length < 1) return;
-  iconsRefs.value.forEach((item) => {
-    item.doRemoveCard();
-  });
+  if(!isCtrl){
+    iconsRefs.value.forEach((item) => {
+      item.doRemoveCard();
+    });
+  }
   iconsRefs.value = [];
   iconList.value = [];
 }
