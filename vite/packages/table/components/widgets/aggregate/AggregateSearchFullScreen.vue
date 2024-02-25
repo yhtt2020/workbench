@@ -184,6 +184,9 @@ export default {
       return index
     },
     getClipBoardData(){  // 获取剪切板数据
+      if (this.$useEnv()) {
+        return []
+      }
       const clipBoardText = clipboard.readText()
       const clipBoardList = clipBoardText.split('\r\n')
       return [...clipBoardList]
