@@ -45,6 +45,7 @@ export const COMPONENT_LIMIT = {
     "GameEpic",
     "clipBoard",
     "GameStrategy",
+    "Courier",
   ],
 };
 // 汇总所有限制

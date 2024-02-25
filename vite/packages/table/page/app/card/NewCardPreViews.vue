@@ -420,6 +420,7 @@ export default {
 
       ];
       index = index ?? this.carouselIndex;
+      console.log('item.option[index].name :>> ', item.option[index].name);
       let res  =  window.$useComLimit(['web'], item.option[index].name)
       if (res) return
       this.addCard(
