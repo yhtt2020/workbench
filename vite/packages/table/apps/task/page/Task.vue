@@ -54,11 +54,11 @@ const { updateTime, currentUpdateTime, currentTaskList,smallMize,temporaryStatus
 let Offline = offlineStore();
 // 切换任务
 const selectTab = (item) => {
+  if(temporaryStatus.value){ temporaryStatus.value = false; }
   currentTask.value = item.value;
 };
 // 切换不同支线
 const selectBranchTab = (item) => {
-  if(temporaryStatus.value){ temporaryStatus.value = false; }
   icon.value = item.newIcon;
   currentTask.value = "Branch";
   task.value = tasks[item.value];
