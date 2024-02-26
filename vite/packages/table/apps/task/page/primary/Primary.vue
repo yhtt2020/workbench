@@ -34,6 +34,7 @@
         <StartTask :task="currentTask" class="mt-3"></StartTask>
       </div>
     </div>
+    <div style="height: 16px;"></div>
   </template>
 
   <template v-else>
@@ -162,7 +163,12 @@ const currentTaskReward = computed(()=>{
   let lving =0
   // 等级升级预期
   if(!$useEnv('guest')){
-    lving = Math.floor(experienceTotal / userInfo.value?.grade?.next);
+    if(Math.ceil(experienceTotal / userInfo.value?.grade?.next) > 1){
+      lving  = 1;
+    }
+    else {
+      lving = Math.ceil(experienceTotal / userInfo.value?.grade?.next);
+    }
   }
   return {
     lving:lving,

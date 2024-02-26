@@ -178,15 +178,31 @@ const updateTaskList = async () => {
   height: 60px !important;
 }
 
-@media screen and(max-height:480px){
+@media screen and(max-height:500px){
   .task-modal{
-    height: 480px !important;
+    height: 460px !important;
   }
 }
 
-@media screen and(min-height:481px) {
+@media screen and(min-height:501px) and(max-height:700px){
   .task-modal{
-    height:  742px !important;
+    height:  620px !important;
   }
 }
+
+@media screen and(min-height:701px) {
+  .task-modal{
+    height:  720px !important;
+  }
+}
+
+
 </style>
+<!-- 
+@media screen and(max-height:700px) {
+  .task-modal{
+    height:  640px !important;
+  }
+}
+
+ -->
