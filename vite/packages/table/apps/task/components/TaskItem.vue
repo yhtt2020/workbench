@@ -83,7 +83,7 @@ const taskGuide = () => {
   task.isTaskDrawer = false;
 };
 
-console.log('object :>> ', props.currentStage);
+// console.log('object :>> ', props.currentStage);
 // 获取当前任务的下标;
 // const stage = computed(() => {
 //   let index = 0;

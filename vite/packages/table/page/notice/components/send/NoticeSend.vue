@@ -191,44 +191,15 @@ const appointRef = ref(null);
 
 
 /**事件处理方法**/
-// 发送
-const send = () =>{
-  isLoading.value = true;
-  setTimeout(async ()=>{
-    // 判断是否在已经成为草稿箱
-    if(msgSetting.value.hasOwnProperty('id')){
-     const res = await notice.pushNoticeMsg(msgSetting.value.id)
-     if(res.status === 1){
-      isLoading.value = false;
-     }
-    }
-    else {
-     const res = await notice.createNotice()
-     const result = await notice.pushNoticeMsg(res)
-     if(result.status === 1){
-      isLoading.value = false;
-     }
-    }
-  },200)
-}
-
-
 // 弹窗关闭
-const closeSend = () =>{
-  emits('close');
-}
-
+const closeSend = () =>{ emits('close');};
 // 返回按钮
 const backClick = () =>{
   notice.initMsgData()
   emits('back')
 }
-
-
 // 图片上传
-const uploadImage = async() =>{
-  document.querySelector('.imgRef').click();
-}
+const uploadImage = async() =>{  document.querySelector('.imgRef').click();};
 const getMessageImg = async(evt) =>{
   const fileList = evt.target.files;
   if(msgSetting.value.covers.length === 3){
@@ -244,30 +215,18 @@ const getMessageImg = async(evt) =>{
     }
   }
 }
-
-
 // 上传附件
-const uploadAttachment = async() =>{
-  document.querySelector('.attachmentRef').click();
-} 
+const uploadAttachment = async() =>{ document.querySelector('.attachmentRef').click();}; 
 const getAttachmentFile = async(evt) =>{
   const fileList = evt.target.files;
   for(const item of fileList){
     msgSetting.value.attachments.push({href:await fileUpload(item),title:item.name}) 
   }
 }
-
-
 // 链接上传
-const uploadButtonLink = () =>{
-  buttonLink.value.openButtonModal()
-}
-
-
+const uploadButtonLink = () =>{ buttonLink.value.openButtonModal()};
 // b站视频链接
-const uploadBiliLink = () =>{
-  biliLink.value.openBiliModal();
-}
+const uploadBiliLink = () =>{ biliLink.value.openBiliModal();};
 
 // 打开用户选择
 const openUser = () =>{
@@ -282,6 +241,35 @@ const openUser = () =>{
     case 1003:
       appointRef.value.openAppointModal()
       break;
+  }
+}
+// 发送
+const send = () =>{
+  // 发送文字内容不为空
+  const emptyContent = msgSetting.value.content.split('\n')[0] !== '';
+  if(msgSetting.value.title !== '' && emptyContent){
+    isLoading.value = true;
+    setTimeout(async ()=>{
+     // 判断是否在已经成为草稿箱
+     if(msgSetting.value.hasOwnProperty('id')){
+      const res = await notice.pushNoticeMsg(msgSetting.value.id)
+      if(res.status === 1){
+       isLoading.value = false;
+       notice.initMsgData();
+      }
+     }
+     else {
+      const res = await notice.createNotice()
+      const result = await notice.pushNoticeMsg(res)
+      if(result.status === 1){
+       isLoading.value = false;
+       notice.initMsgData();
+      }
+     }
+    },200)
+  }
+  else {
+    message.warning('发送内容不能为空')
   }
 }
 

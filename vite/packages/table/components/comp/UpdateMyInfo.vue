@@ -1,253 +1,210 @@
 <template>
-  <Modal v-model:visible="updateInfoVisible"  v-show="updateInfoVisible"  :blurFlag="true" style="z-index: 5000;">
-    <div class="flex flex-col items-center myinfo-container justify-between w-full p-3">
-      <vue-custom-scrollbar :settings="settingsScroller" class="w-full">
-        <div class="flex justify-between items-center w-full h-12 mb-3">
-          <div class="flex items-center update-title justify-center" style="width:95%;">
-            我的信息
-          </div>
-          <div class="w-12 h-12 flex items-center com-button pointer justify-center rounded-lg" style="background: var(--secondary-bg);" @click="closeUpdateMyInfo">
-            <Icon icon="guanbi" style="font-size: 1.45em;"></Icon>
-          </div>
-        </div>
-        <div class="flex-grow flex w-full justify-between px-5">
-          <div class="w-1/2 flex flex-col">
-            <span class="update-title mb-3">昵称</span>
-            <div class="flex items-center rounded-xl justify-center h-10 px-3 mb-3" style="border: 1px solid var(--divider);background: var(--secondary-bg);">
-              <a-input v-model:value="randomNickname" placeholder="请输入" :bordered="false" style="padding: 0;width:90%;"></a-input>
-              <div class="flex p-1 rounded-md pointer" style="background: var(--active-bg);" @click="roll" >
-                <Icon id="touzi" ref="touzi" class=" " icon="touzi" style="font-size: 1.8em"></Icon>
-              </div>
-            </div>
-            <span class="update-title mb-3">头像</span>
-            <div class="flex w-full mx-1.5 flex-wrap justify-between" style="position: relative;">
-              <UploadImage :key="key" class="avatar-box rounded-lg"></UploadImage>
-              <div v-for="item in avatarNumber" class="avatar-box rounded-lg pointer  mb-3" :class="{'select-active':presetIndex === item.id}"  @click="selectPreset(item)">
-               <a-avatar :size="48" :src="getAvatarUrl(item.id)"></a-avatar>
-              </div>
+  <xt-modal v-model="data.myInfoVisible" title="我的信息">
+    <div class="myinfo-container flex flex-col">
+      <xt-scrollbar :y="true" class="h-full flex justify-between w-full">
+        <div class="w-1/2 flex grow flex-col">
+          <span class="xt-text font-16 xt-font mb-3">昵称</span>
+          <div class="flex items-center rounded-xl justify-center h-10 px-3 mb-3" style="border: 1px solid var(--divider);background: var(--secondary-bg);">
+            <a-input v-model:value="data.randomNick" placeholder="请输入" :bordered="false" style="padding: 0;width:90%;"></a-input>
+            <div class="flex p-1 rounded-md pointer" style="background: var(--active-bg);" @click="roll" >
+              <Icon id="touzi" ref="touzi" class=" " icon="touzi" style="font-size: 1.5rem"></Icon>
             </div>
           </div>
-          <a-divider type="vertical" class="mx-6"  style="height:380px;"/>
-          <div class="w-1/2 flex flex-col">
-            <span class="update-title mb-3">个性签名</span>
-            <a-textarea v-model:value="areaValue" placeholder="请输入" class="rounded-lg no-scrollbar mb-6"  :rows="3" :maxlength="200" style="height: 100px;background: var(--secondary-bg);border: 1px solid var(--divider);"/>
-            <span class="update-title mt-3 mb-3">性别</span>
-            <HorizontalPanel :navList="sexType" v-model:selectType="gender"></HorizontalPanel>
-            <div class="my-16 flex mx-auto">
-              <span class="com-title" style="color: var(--secondary-text);">更多个人信息编辑、账号设置等，请前往</span>
-              <span class="go-com pl-2 pointer"  @click="go('https://s.apps.vip/user/info')" >元社区</span>
+
+          <span class="xt-text font-16 xt-font mb-3">头像</span>
+          <div class="flex w-full mx-1.5 flex-wrap justify-between" style="position: relative;">
+            <UploadImage v-model="infoAvatar"/>
+            <div v-for="item in presetAvatar" class="avatar-box rounded-lg pointer  mb-3" @click="selectPresetAvatar(item)"
+             :class="{'select-active':data.presetIndex === item.id}"
+            >
+              <a-avatar :size="48" :src="presetAvatarUrl(item.id)"></a-avatar>
             </div>
           </div>
         </div>
-        <div class="flex w-full items-center justify-center mt-6" >
-          <a-button type="primary" class="h-48 rounded-xl mr-3" @click="closeUpdateMyInfo" style="width:120px;color: var(--primary-text);border:none;background: var(--secondary-bg);">
-           稍后设置
-          </a-button>
-          <a-button type="primary" class="h-48 rounded-xl" style="width:120px;color: var(--active-text);" @click="comSave">
-           保存
-          </a-button>
+        <a-divider type="vertical" class="myInfo-divider"  style="margin: 0 16px;"/>
+        <div class="w-1/2 grow flex flex-col myInfo-divider">
+          <span class="xt-text font-16 xt-font mb-3">个性签名</span>
+          <a-textarea v-model:value="data.sign" placeholder="暂无签名" 
+            class="no-scrollbar"  :rows="3" :maxlength="200" 
+            style="height: 100px;margin-bottom:12px;background: var(--secondary-bg);border: 1px solid var(--divider); border-radius: 8px;"
+          />
+          
+          <span class="xt-text font-16 xt-font mb-3">性别</span>
+          <xt-tab v-model="selectSexItem" :list="data.selectSex" class="p-1 xt-bg-t-2 h-10" :boxStyle="{ 'border-radius': '10px' }" :itemStyle="{ 'border-radius': '6px' }" />
+
+          <div class="more-info my-3 flex items-center justify-center">
+            <div class="flex items-center">
+              <span class="xt-text-2 font-16 xt-font pr-0.5">更多个人信息编辑、账号设置等，请前往</span>
+              <xt-button h="0" style="width: auto !important;" @click="goYuanCommunity">
+                <span class="xt-theme-text">元社区</span>
+              </xt-button>
+            </div>
+          </div>
         </div>
-      </vue-custom-scrollbar>
+      </xt-scrollbar>
+      <div class="w-full flex items-center justify-center">
+        <div class="flex">
+          <xt-button class="mr-3" h="40" @click="laterSetup">稍后设置</xt-button>
+          <xt-button type="theme" h="40" @click="saveMyInfo">保存</xt-button>
+        </div>
+      </div>
     </div>
-  </Modal>
+  </xt-modal>
 </template>
 
-<script>
-import { mapWritableState,mapActions } from 'pinia'
-import {message} from 'ant-design-vue'
-import Modal from '../Modal.vue'
-import UploadImage from '../UploadImage.vue'
-import HorizontalPanel from '../HorizontalPanel.vue'
-import { avatarNumber } from '../../js/common/teamAvatar'
-import browser from '../../js/common/browser'
-import { frameStore } from '../../store/avatarFrame'
-import { appStore } from '../../store'
-import {completeTask} from '../../apps/task/task'
+<script setup>
+import { ref,computed,onMounted,watch} from 'vue';
 import { randomName } from '../../js/data/chatList';
-import {useUpdateUserInfo} from '../../permission/user/useUserPermit'
+import { storeToRefs } from 'pinia';
+import { appStore } from '../../store';
+import { message } from 'ant-design-vue';
+import browser from '../../js/common/browser';
+import { avatarNumber } from '../../js/common/teamAvatar';
+import { frameStore } from '../../store/avatarFrame';
+import {completeTask} from '../../apps/task/task';
 
+import UploadImage from '../UploadImage.vue';
+
+const app = appStore();
+const { userInfo } = storeToRefs(app);
+const frame = frameStore();
+
+// 临时数据
+const data = ref({
+  myInfoVisible:false,
+  // 随机昵称
+  randomNick:null,
+  // 个性签名
+  sign:null,
+  timer:null,
+  i:1, j:1, k:0,
+  selectSex:[
+    {
+      name:'保密',
+      value:'0',
+    },
+    {
+      name:'男',
+      value:'1',
+    },
+    {
+      name:'女',
+      value:'2',
+    },
+  ],
+  // 预设头像选中下标
+  presetIndex:'',  
+});
+// 接收切换到的性别
+const selectSexItem = ref('0');
 const screenname = randomName;
-export default {
-  components:{
-    Modal,UploadImage,
-    HorizontalPanel
-  },
-  emits:['infoUpdated'],
-  props:{
-    updateVisible:{
-      type:Boolean,
-      default:false
-    }
-  },
-  data(){
-    return{
-      key:Date.now(),
-      updateInfoVisible:this.updateVisible,
-      settingsScroller: {
-        useBothWheelAxes: true,
-        swipeEasing: true,
-        suppressScrollY: false,
-        suppressScrollX: true,
-        wheelPropagation: true
-      },
-      avatarNumber,
-      sexType:[    // 性别类型
-        {title:'保密',sex:0},
-        {title:'男',sex:1},
-        {title:'女',sex:2}
-      ],
-      gender:'', // 接收切换到的性别
-      areaValue:'',  // 接收文本输入框值
-      randomNickname:'',
-      presetIndex:'',  // 预设头像选中下标
-      i: 1,
-      j: 1,
-      k: 0,
-      no: 0,
-    }
-  },
-  computed:{
-    ...mapWritableState(appStore,['userInfo']),
-    ...mapWritableState(frameStore,['frameData'])
-  },
-  mounted(){
-    if(this.userInfo){
-     this.randomNickname = this.userInfo.nickname
-     this.areaValue = this.userInfo.signature
-    }
-  },
-  methods:{
-    ...mapActions(appStore,['editPresetAvatar','setInfoVisible','setSecondaryVisible','getUserInfo']),
-    ...mapActions(frameStore,['updateMyinfo']),
-    openMyInfo(){
-      this.key=Date.now()
-      this.updateInfoVisible = true
+const presetAvatar = ref(avatarNumber);
+// 头像URL
+const infoAvatar = ref('');
 
-    },
-    // 随机筛选
-    roll (animate=true) {
-      if(animate){
-        if(this.timer){
-          clearTimeout(this.timer)
-        }
-        $('#touzi').addClass('animate-spin')
-        this.timer=setTimeout(()=>{
-          this.rollName()
-          $('#touzi').removeClass('animate-spin')
-        },400)
-      }else{
-        this.rollName()
-      }
+/**事件方法**/ 
+// 打开修改信息弹窗
+const openMyInfo = () =>{ data.value.myInfoVisible = true;};
+// 稍后设置
+const laterSetup = () =>{ data.value.myInfoVisible = false;};
+// 预设头像url拼接
+const presetAvatarUrl = (id) =>{ return 'https://up.apps.vip/avatar/' +  id + '.png';};
 
-    },
-    rollName(){  // 掷骰子随机昵称
-      let groups = screenname;
-      let j = Math.ceil((Math.random() * groups.length)) - 1
-      if (this.j === j) {
-        this.rollName()
-        return
-      }
-      this.j = j
-      this.randomNickname = groups[j]
-    },
-    // 预设头像拼接
-    getAvatarUrl(item){
-      return 'https://up.apps.vip/avatar/' +  item + '.png'
-    },
-    // 点击选中预设头像
-    selectPreset(item){
-      this.presetIndex = item.id
-      this.frameData.avatar_url = this.getAvatarUrl(item.id)
-    },
-    // 点击保存
-    async comSave () {
-      const saveUpdateMyInfo = {
-        nickname: this.randomNickname,
-        sex: this.gender.sex,
-        signature: this.areaValue,
-        avatar: this.frameData.avatar_url
-      }
-      let rs = await this.updateMyinfo(saveUpdateMyInfo)
-      console.log(rs)
-      if (rs.code===200) {
-        this.$emit('infoUpdated',{})
-        message.success('信息修改成功')
-        completeTask('m0301')
-        this.updateInfoVisible = false
-        this.setInfoVisible(false)
-        this.setSecondaryVisible(true)
-        setTimeout(() => {
-          this.getUserInfo()
-          useUpdateUserInfo()
-        }, 10)
-      } else {
-        message.error('修改失败')
-      }
-
-    },
-    go(url){
-      browser.openInInner(url)
-    },
-    closeUpdateMyInfo(){
-      this.updateInfoVisible = false
-      this.setInfoVisible(false)
-      this.setSecondaryVisible(true)
+// 随机获取昵称
+const roll = (animate=true) =>{
+  if(animate){
+    if(data.value.timer){
+      clearTimeout(data.value.timer);
     }
-  },
-  watch:{
-    'gender':{
-      handler(newVal){
-        this.gender = newVal
-      }
+    $('#touzi').addClass('animate-spin');
+    data.value.timer = setTimeout(()=>{
+      rollName();
+      $('#touzi').removeClass('animate-spin');
+    },400);
+  }
+  else {
+    rollName();
+  }
+};
+const rollName = () =>{
+  let groups = screenname;
+  let j = Math.ceil((Math.random() * groups.length)) - 1;
+  if(data.value.j === j){ rollName(); return; };
+  data.value.j = j;
+  data.value.randomNick = groups[data.value.j];
+};
+// 保存修改后的信息
+const saveMyInfo = async() =>{
+  const isEmptyStr = data.value.randomNick && data.value.sign;
+  if(infoAvatar.value === ''){
+    message.warning('头像不能为空');
+    return
+  }
+  else if(!isEmptyStr){
+    message.warning('请完善修改信息');
+    return;
+  }
+  else {
+    const infoOption = {
+      nickname:data.value.randomNick,
+      signature:data.value.sign,
+      avatar:infoAvatar.value,
+      sex:selectSexItem.value,
+    }
+    console.log('infoOption',infoOption);
+    let result = await frame.updateMyinfo(infoOption);
+    console.log("result",result);
+    if(result.code === 200){
+      message.success('修改成功');
+      data.value.myInfoVisible = false;
+      completeTask('m0301');
+      setTimeout(()=>{
+        app.getUserInfo();
+      },3 * 1000);
+      console.log('数据更新',userInfo.value);
+    }
+    else{
+      message.error('修改失败');
     }
   }
+};
+// 跳转元社区
+const goYuanCommunity = () =>{
+  const url = "https://s.apps.vip/user/info";
+  browser.openInUserSelect(url);
+};
+// 选择当前预设头像
+const selectPresetAvatar = (item) =>{
+  infoAvatar.value = presetAvatarUrl(item.id);
+  data.value.presetIndex = item.id;
 }
+
+
+
+
+onMounted(()=>{
+  console.log('测试',userInfo.value,data.value);
+  data.value.randomNick = userInfo.value.nickname;
+  data.value.sign = userInfo.value.signature;
+  infoAvatar.value = userInfo.value.avatar;
+})
+
+defineExpose({
+  openMyInfo
+})
 </script>
 
 <style lang="scss" scoped>
+.myinfo-container{
+  width: 946px;
+}
 .animate-spin{
   animation: spin .6s linear infinite !important;
 }
-
-
-.update-title{
-
-  font-size: 16px;
-  color: var(--primary-text);
-  font-weight: 500;
-}
-
-.com-title{
-
-  font-size: 16px;
-  font-weight: 400;
-}
-
-.com-button{
-  &:active{
-    filter: brightness(0.8);
-    opacity: 0.8;
-  }
-  &:hover{
-    opacity: 0.8;
-  }
-}
-
-.no-scrollbar ::-webkit-scrollbar {
-  display: none;
-}
-
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
   overflow-y: auto;
-}
-
-.go-com{
-
-  font-size: 16px;
-  color:var(--active-bg);
-  font-weight: 500;
 }
 .avatar-box{
   width: 72px;
@@ -258,38 +215,42 @@ export default {
   justify-content: center;
   margin-right: 6px !important;
 }
-
 .select-active{
   border: 1px solid var(--active-bg);
   background: rgba(80,139,254,0.20);
 }
 
-:deep(.nav-item){
-  border-radius: 10px !important;
-}
-
-.myinfo-container{
-  width: 946px;
-}
-
-@media screen and (max-width:840px) {
+/**最大宽度**/
+@media screen and (max-width:840px){
   .myinfo-container{
-    width:780px !important;
-  }
-  .avatar-box{
-    margin-right: 5px !important;
+    width:700px !important;
   }
 }
 
-@media screen and (max-height:599px) {
-  :deep(.ps-container){
-    height: 90vh !important;
+/**最小高度和最大高度的响应式**/
+@media screen and (max-height:480px) {
+  .myinfo-container{
+    height: 360px !important;
+  }
+  .myInfo-divider{
+    height:  360px !important;
+  }
+  .more-info{
+    height: 25% !important;
   }
 }
-
-@media screen and (min-height:600px) {
-  :deep(.ps-container){
-    height: 545px !important;
+@media screen and (min-height:481px) {
+  .myinfo-container{
+    height:  569px !important;
   }
+  .myInfo-divider{
+    height:  520px !important;
+  }
+  .more-info{
+    height: 50% !important;
+  }
+}
+:deep(.ps__rail-y){
+  display: none !important;
 }
 </style>

@@ -15,7 +15,7 @@
       {{ currentTask?.description || currentTask?.info }}
     </div>
     <div class="flex items-center justify-center mb-3">
-      <xt-title class="xt-text-2">完成奖励</xt-title>
+      <xt-title class="xt-text-2">预计可获得奖励</xt-title>
     </div>
     <ShowReward :key="currentTask.id" :id="currentTask.id"/>
     <div class="flex justify-between mt-3">
