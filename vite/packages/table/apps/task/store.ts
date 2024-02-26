@@ -36,7 +36,9 @@ export const taskStore = defineStore("taskStore", {
       grade:{},
       medals:[],
       score:{}
-    }
+    },
+    // 临时存储主线任务完成后的状态
+    temporaryStatus:false,
   }),
   getters: {},
   actions: {
@@ -66,7 +68,7 @@ export const taskStore = defineStore("taskStore", {
           res = i.tasks.find((task) => task.id === id);
         });
       }
-      console.log("res :>> ", res);
+      // console.log("res :>> ", res);
       // const item: any = this.currentTaskList.find(
       //   (obj: any) => obj.name === id
       // );
@@ -117,7 +119,7 @@ export const taskStore = defineStore("taskStore", {
       const grade = await taskTeam.getMemberGrade(uid);
       const medal = await taskTeam.getUserMedal(uid);
       Promise.all([grade,medal]).then((res)=>{
-        console.log("res",res);
+        // console.log("res",res);
         this.taskUserMedal.grade = res[0];
         this.taskUserMedal.medals = res[1];
       })
@@ -143,7 +145,6 @@ export const taskStore = defineStore("taskStore", {
           "isTask",
           "startBranchTask",
           "successBranchTask",
-          //
           "currentUpdateTime",
           "currentTaskList",
           "startList",

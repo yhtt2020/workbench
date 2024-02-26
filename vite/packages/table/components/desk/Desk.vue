@@ -205,7 +205,6 @@
           :fixedFloat="settings.enableZoom"
           :freeFloat="isFreeLayout"
         />
-        <slot name="settingsAllAfter"></slot>
       </template>
     </div>
   </xt-modal>
@@ -236,7 +235,6 @@
   </transition>
   <AddIcon @close="iconHide" v-if="iconVisible" :desk="currentDesk"></AddIcon>
   <GalleryModal ref="galleryRef" />
-  <!-- 111 -->
   <EditNewNavigation
     v-if="editVisible"
     @setQuick="editVisible = false"
@@ -359,6 +357,31 @@ export default {
     },
   },
   watch: {
+    // 是否开启独立布局
+    "settings.enableZoom": {
+      handler(newVal) {
+        if (newVal) {
+          this.currentSettingTab = "current";
+        }
+      },
+      deep: true,
+      immediate: true,
+    },
+    // 是否开启自由布局
+    isFreeLayout: {
+      handler(newVal) {
+        if (newVal) {
+          this.currentSettingTab = "current";
+        }
+      },
+      immediate: true,
+    },
+    // 当两个布局都未开启 设置为通用设置
+    settingVisible(val) {
+      if (!val && !this.isFreeLayout && !this.settings.enableZoom) {
+        this.currentSettingTab = "all";
+      }
+    },
     adjustLayout(val) {
       if (val) {
         this.toggleEditing();
@@ -463,6 +486,12 @@ export default {
     ...mapWritableState(useFloatMenuStore, ["menus", "newMenus"]),
     ...mapWritableState(useNavigationStore, ["selectNav", "isDesk"]),
     ...mapWritableState(useDeskStore, ["autoOpenEdit", "adjustLayout"]),
+    // 根据当前桌面配置确定展示的对应桌面设置
+    currentDeskEnv() {
+      if (this.isFreeLayout || 0) {
+        return "current";
+      }
+    },
     navMenu() {
       if (
         !this.navigationToggle[0] &&
@@ -659,7 +688,7 @@ export default {
             ok: () => {
               desk?.cards?.forEach((item) => {
                 //移除桌面相关的便签卡片
-                if (item.name === "notes") {
+                if (item.name === "notes" && !this.$useEnv()) {
                   tsbApi.db
                     .find({
                       selector: {

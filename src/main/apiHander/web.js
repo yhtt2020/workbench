@@ -64,6 +64,30 @@ class Web extends Base {
 
     })
 
+    this.on('getCacheSize',async (event,args) => {
+      event.reply(args.cbId,{
+        size: await require('electron').session.defaultSession.getCacheSize()
+      })
+    })
+    this.on('clearCache',async(event,args)=>{
+      event.reply(args.cbId,{
+        result:await require('electron').session.defaultSession.clearCache({
+          storages:['image','css','script','cache','media']
+        })
+      })
+    })
+    this.on('getWebCacheSize',async (event,args) => {
+      event.reply(args.cbId,{
+        size: await require('electron').session.fromPartition('persist:webcontent').getCacheSize()
+      })
+    })
+    this.on('clearWebCache',async(event,args)=>{
+      event.reply(args.cbId,{
+        result:await require('electron').session.fromPartition('persist:webcontent').clearCache({
+          storages:['image','css','script','cache','media']
+        })
+      })
+    })
   }
 }
 

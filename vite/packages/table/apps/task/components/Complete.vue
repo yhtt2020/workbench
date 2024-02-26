@@ -40,6 +40,7 @@ import { appStore } from "../../../store";
 
 import XtButton from "../../../ui/libs/button/index.vue";
 import ShowReward from "./ShowReward.vue";
+import { useLogin } from '../../../permission/user/useLogin';
 
 onBeforeMount(() => {
   taskStatus();
@@ -67,15 +68,19 @@ const close = () => {
 };
 
 const claimReward = () => {
-  console.log("游客模式测试");
+  // console.log("游客模式测试");
   emits("close-toast");
   // 游客模式
   if(window.$useEnv('guest')){
-    tsbApi.user.login((data) => {
-     app.getUserInfo();
-     isTaskDrawer.value = true;
+    useLogin(()=>{
+    //  isTaskDrawer.value = true;
      rewardVisible.value = true;
     })
+    // tsbApi.user.login((data) => {
+    //  app.getUserInfo();
+    //  isTaskDrawer.value = true;
+    //  rewardVisible.value = true;
+    // })
     return;
   }
 
@@ -98,7 +103,7 @@ const claimReward = () => {
 
 // 按钮文字信息
 const butText = computed(()=>{
-  console.log('登录并领取',window.$useEnv('guest') && status.value == 0);
+  // console.log('登录并领取',window.$useEnv('guest') && status.value == 0);
   if(window.$useEnv('guest') && status.value == 0){
     return '登录并领取'
   }

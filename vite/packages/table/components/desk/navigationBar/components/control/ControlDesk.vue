@@ -2,7 +2,7 @@
   <div class="flex mt-3" style="height: auto">
     <XtScrollbar :y="true" style="height: 100%; width: 100%">
       <Vuuri
-        v-model="control.oldList"
+        v-model="controlList"
         group-id="id"
         item-key="id"
         :options="option"
@@ -10,9 +10,8 @@
         :get-item-height="getHeight"
       >
         <template #item="{ item }">
-<!-- {{ item.id }} -->
+          <!--   v-if="limit(item.id)" -->
           <ControlRemoveDetail
-          v-if="limit(item.id)"
             :control-index="item.id"
             :control-item="item"
             :status="'null'"
@@ -43,17 +42,25 @@ const option = ref({
 const getHeight = () => {
   return 120 + "px";
 };
+
+const controlList = computed(()=>{
+  if (!window.$useEnv()) return control.value.oldList;
+  const arr = ["window-control", "assist-mode", "audio",'energy-save-mode','shake'];
+  let filterList = control.value.oldList.filter(item => !arr.includes(item.id));
+  return filterList;
+})
+
 // const
 // 传入数组然后判断是否存在
-const limit = (id) => {
-  if (!window.$useEnv()) return true;
-  const arr = ["window-control", "assist-mode", "audio",'energy-save-mode','shake'];
+// const limit = (id) => {
+//   if (!window.$useEnv()) return true;
+//   const arr = ["window-control", "assist-mode", "audio",'energy-save-mode','shake'];
 
-  if (arr.includes(id)) {
-    return false;
-  }
-  return true;
-};
+//   if (arr.includes(id)) {
+//     return false;
+//   }
+//   return true;
+// };
 </script>
 
 <style lang="scss" scoped>
