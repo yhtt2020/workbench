@@ -287,7 +287,9 @@ export default {
       console.log('ipc',userInfo)
         let lvInfo = this.lvInfo
         lvInfo.lv = userInfo.onlineGradeExtra.lv
+        // 当前等级的区间
         let current = this.gradeTableGenerate(64)[lvInfo.lv]
+        // 下一等级的区间
         let section = this.gradeTableGenerate(64)[lvInfo.lv + 1]
         let remain = section[0] * 60 - (userInfo.onlineGradeExtra.minutes)
         lvInfo.remainHour = Math.floor(remain / 60)
@@ -357,6 +359,7 @@ export default {
       }
 
     },
+    // 生成等级区间
     gradeTableGenerate (num) {
       let lvSys = {}
       for (let i = 0; i < num + 1; i++) {

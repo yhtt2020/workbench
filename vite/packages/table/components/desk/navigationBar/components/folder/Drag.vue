@@ -18,6 +18,11 @@ import { useFreeLayoutStore } from "../../../freeLayout/store";
 
 import { useDeskStore } from "../../../store";
 
+// 图标托起提示
+import TipsInfo from './TipsInfo.vue';
+import { useToast } from 'vue-toastification'
+const toast = useToast()
+
 const deskStore = useDeskStore();
 const { mouseInElement,isEnterBar } = storeToRefs(deskStore);
 
@@ -26,7 +31,7 @@ const { isFreeLayout, getFreeLayoutData, freeLayoutEnv } =
   storeToRefs(freeLayoutStore);
 
 const navBarStore = useNavBarStore()
-const { navBarId, navBarItem,isLeaveBar,isEnterDesk } = storeToRefs(navBarStore)
+const { navBarId, navBarItem,isLeaveBar,isEnterDesk,neverTip } = storeToRefs(navBarStore)
 const props = defineProps({
     data: {},
     currentId: ''
@@ -35,13 +40,20 @@ const emits = defineEmits(["deleteFile" ]);
 
 const { proxy } = getCurrentInstance()
 
+// 是否按下ctrl键
+let isCtrl = false
 /**
  * 文件托起
  */
 const handleDragStart = (event) => {
+    if(!neverTip.value){
+      ctrlTip()  
+    }
     navBarId.value = props.currentId
     navBarItem.value = props.data
     console.log('数据传递成功')
+    console.log(event.ctrlKey,'<<<<<<');
+    isCtrl = event.ctrlKey
 };
 // 文件拖拽弹起
 const handleDragEnd = (event) => {
@@ -55,7 +67,6 @@ const handleDragEnd = (event) => {
         isLeaveBar.value = false
         console.log('数据添加成功')
     }
-    console.log('isEnterDesk',navBarStore.isEnterDesk)
 
     if(isEnterDesk.value ) {
         let obj
@@ -102,7 +113,10 @@ const handleDragEnd = (event) => {
               id
             );
         }
-        emits("deleteFile", props.data);
+        if(!isCtrl){
+           emits("deleteFile", props.data); 
+        }
+        
 
     }
     // 数据回收
@@ -110,6 +124,24 @@ const handleDragEnd = (event) => {
     navBarId.value = "";
     // isEnterDesk.value = false
 };
+
+const ctrlTip = () =>{
+    toast(
+        {
+          component: TipsInfo,
+        },
+        {
+          position: "top-right",
+          icon: false,
+          closeOnClick: false,
+          closeButton: false,
+          pauseOnFocusLoss: true,
+          pauseOnHover: true,
+          timeout: 5000,
+          toastClassName: "notice-toast",
+        }
+    );
+}
 </script>
   
 <style lang="scss" scoped></style>
