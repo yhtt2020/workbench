@@ -1,12 +1,12 @@
 <template>
-  <xt-container 
-    :header="header" 
-    v-model:customSize="customData.customSize"  
-    :envLimit="['web']" 
-    :customIndex="customIndex" 
-    :customData="customData" 
-    :options="options" 
-    :desk="desk" 
+  <xt-container
+    :header="header"
+    v-model:customSize="customData.customSize"
+    :envLimit="['web']"
+    :customIndex="customIndex"
+    :customData="customData"
+    :options="options"
+    :desk="desk"
     :menu-list="menus">
     <template #left-title-icon>
       <div class="icon"
@@ -138,6 +138,7 @@ export default {
   },
   async mounted () {
     this.customData.customSize = '2x4'
+    if (this.$useEnv()) return
     this.init()
     //
     // const device = await navigator.bluetooth.requestDevice({

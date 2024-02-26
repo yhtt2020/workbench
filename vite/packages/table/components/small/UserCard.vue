@@ -72,7 +72,7 @@
        </div>
 
       </div>
-      <div class="mx-5 mb-4">
+      <div class="mx-5 mb-4" v-if="uid==myUserInfo.uid">
         <xt-button block class="" @click="exit">
         <div class="error">
           退出登录
@@ -133,6 +133,7 @@ export default {
       userCardUserInfo: {},
       relationship: 'unload',
       inBlackList: 'unload',
+      visible:true
     }
   },
   watch: {

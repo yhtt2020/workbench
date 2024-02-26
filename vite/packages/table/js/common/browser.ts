@@ -6,6 +6,11 @@ const browser={
    * @param url
    */
   async openInUserSelect(url:string){
+
+    if (window.$useEnv()){
+      window.open(url,'_blank')
+      return
+    }
     //获取到用户设置
     if(isWeb){
       return window.open(url)
@@ -21,8 +26,9 @@ const browser={
    * 在系统默认浏览器内打开
    */
   openInSystem(url:string){
-    if(isWeb){
-      return window.open(url)
+    if (window.$useEnv()){
+      window.open(url,'_blank')
+      return
     }
     console.log('在系统默认浏览器打开',url)
     require('electron').shell.openExternal((url))
@@ -32,8 +38,9 @@ const browser={
    * @constructor
    */
   openInInner(url:string){
-    if(isWeb){
-      return window.open(url)
+    if (window.$useEnv()){
+      window.open(url,'_blank')
+      return
     }
     console.log('在想天浏览器打开',url)
     ipc.send('addTab',{url:url})
@@ -42,8 +49,9 @@ const browser={
    * 在工作台内打开
    */
   openInTable(url:string,options:{}){
-    if(isWeb){
-      return window.open(url)
+    if (window.$useEnv()){
+      window.open(url,'_blank')
+      return
     }
     window.$app.$router.push({
       name:"browser",
