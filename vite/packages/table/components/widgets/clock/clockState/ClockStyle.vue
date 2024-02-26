@@ -47,12 +47,15 @@
 
 </template>
 <script>
-import mixin from "../hooks/clockMixin.js"
+import mixin from "../hooks/clockMixin.js";
+import { localCache } from '../../../../js/axios/serverCache';
+
 export default {
   mixins: [mixin],
   emits:['updateClockStyle'],
   methods: {
     updateClockStyle(e) {
+      localCache.set('clockName',e);
       this.$emit("updateClockStyle", e);
     },
   },
