@@ -53,10 +53,10 @@ const getGuide = (id) => {
   let config: any = {
     timeout: 0,
   };
-  console.log(
-    "completedList.value.includes(id) :>> ",
-    completedList.value.includes(id)
-  );
+  // console.log(
+  //   "completedList.value.includes(id) :>> ",
+  //   completedList.value.includes(id)
+  // );
   if (completedList.value.includes(id)) {
     config = { timeout: 3000, hideProgressBar: false };
   }
