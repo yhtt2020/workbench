@@ -92,6 +92,9 @@ export const tasks = [
             value: "home",
           },
         ],
+        showOne:{
+          name:'推荐进行下一章节任务~'
+        },
       },
     ],
   },
@@ -213,6 +216,9 @@ export const tasks = [
             value: "home",
           },
         ],
+        showPrimary:{
+          name:'支线任务已解锁~'
+        }
       },
     ],
   },

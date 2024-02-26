@@ -1,5 +1,6 @@
 import axios from './baseURL'
-import { sUrl } from '../../packages/table/consts'
+import { sUrl } from '../../packages/table/consts';
+import { getConfig } from '../../packages/table/js/axios/serverApi';
 const url = {
   homeRecommend:'/app/good/getGoodRecommend',//首页推挤接口
   select:'/app/good/app/selectApp',
@@ -18,17 +19,21 @@ const url = {
   forumIndex:'/app/forum/forumIndex',
 }
 
-const getConfig = async () => {
-  let token;
-    const res = await window.tsbApi.user.get()
-    token = res.data.token
+// const getConfig = async () => {
+//   let token;
+//     const res = await window.tsbApi.user.get()
+//     console.log('res',res);
+//     token = res.data.token
 
-  return {
-    headers: {
-      'Authorization': token
-    }
-  }
-}
+//   return {
+//     headers: {
+//       'Authorization': token
+//     }
+//   }
+// }
+
+
+
 const result = (res,callback)=>{
   if(res.data.code == 1000){
     callback(true,res)
@@ -52,6 +57,7 @@ const api = {
       data,
       await getConfig()
     )
+    console.log("post",res);
     result(res,callback)
   }
 }

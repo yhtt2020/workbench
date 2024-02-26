@@ -36,7 +36,9 @@ export const taskStore = defineStore("taskStore", {
       grade:{},
       medals:[],
       score:{}
-    }
+    },
+    // 临时存储主线任务完成后的状态
+    temporaryStatus:false,
   }),
   getters: {},
   actions: {

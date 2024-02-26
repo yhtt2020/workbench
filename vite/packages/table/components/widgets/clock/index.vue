@@ -1,7 +1,7 @@
 <template>
  <xt-container :customIndex="customIndex" :customData="customData" :desk="desk"
  :menuList="menuList" v-model:customSize="customData.customSize"
-  :header="header" :options="option"  @leftClick="fullScreen" @resize="resize"
+  :header="header" :options="options"  @leftClick="fullScreen" @resize="resize"
  >
   <div class="box no-drag" @click="fullScreen">
     <div style="width: 100%;height: 100%;" class="flex items-center justify-center" :style="sliderScale">
@@ -32,7 +32,7 @@
 <script>
 import mixin from "./hooks/clockMixin.js";
 import { mapActions, mapWritableState } from "pinia";
-import { defaultClockData } from "../../../apps/folder/src/components/options";
+// import { defaultClockData } from "../../../apps/folder/src/components/options";
 import { cardStore } from "../../../store/card";
 import { appStore } from '../../../store';
 import { dateTimeStamp } from './hooks/clockList';
@@ -69,7 +69,7 @@ export default {
    ],
    key: Date.now(),
    week: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
-   defaultClockData:defaultClockData,
+  //  defaultClockData:defaultClockData,
    isClockFullScreen:false,
    bgZoom: this.customData.bgZoom,
    clockDay:this.dateTimeStamp(Date.now()),
@@ -82,10 +82,31 @@ export default {
   if(typeof this.customData.backgroundFrame==='undefined'){
     this.customData.backgroundFrame=true
   }
+  if(this.customData.customZoom === undefined){
+     this.updateCustomData(this.customIndex,{
+         backgroundFrame:true,
+        clockId:"clock4",
+        imgUrl:"https://a.apps.vip/icons/defaultBackground.jpg",
+        blurs:3,
+        bgZoom:100,
+        zoom:1.5,
+        customSize:"2x2",
+        font:"font-family: '优设标题黑' !important;",
+        fontColor:"#FFFFFF",
+        enableSecond:false,
+        currentStatus:"font",
+        currentZoom:100,
+        name: dateTimeStamp(Date.now()),
+     },this.desk)
+  }
   // 在不切换页面的情况下,通过定时器来实现自动更新时钟日期标题
   this.clockTime = setInterval(()=>{
     this.clockDay = this.dateTimeStamp(Date.now());
   },12 * 60 * 60 * 1000);
+  /**
+   *   
+   * 
+   * **/ 
  },
  computed:{
   ...mapWritableState(appStore,["backgroundImage"]),
@@ -102,14 +123,27 @@ export default {
    return headerOption;
   },
   // 配置数据
-  option(){
-   const clockOption = {
-    shadow:!this.customData.backgroundFrame,
-    bg:!this.customData.backgroundFrame ? "transparent" : "",
-    resize: true,
-    defaultData :this.defaultClockData
-   }
-   return clockOption;
+  options(){
+    return{
+      shadow:!this.customData.backgroundFrame,
+      bg:!this.customData.backgroundFrame ? "transparent" : "",
+      resize: true,
+      defaultData:{
+        backgroundFrame:true,
+        clockId:"clock4",
+        imgUrl:"https://a.apps.vip/icons/defaultBackground.jpg",
+        blurs:3,
+        bgZoom:100,
+        zoom:1.5,
+        customSize:"2x2",
+        font:"font-family: '优设标题黑' !important;",
+        fontColor:"#FFFFFF",
+        enableSecond:false,
+        currentStatus:"font",
+        currentZoom:100,
+        name: dateTimeStamp(Date.now()),
+      },
+    }
   },
   // 拖拽缩放
   customZoom(){
@@ -157,7 +191,7 @@ export default {
         return this.customData.imgUrl;
       }
       else {
-       return this.defaultClockData.imgUrl;
+      //  return this.defaultClockData.imgUrl;
       }
     }
   },
