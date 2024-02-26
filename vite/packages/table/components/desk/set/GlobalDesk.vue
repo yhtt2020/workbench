@@ -67,7 +67,7 @@
     <hr />
     <xt-option-info
       title="组件间距"
-      info="调节组件之间的间距，默认为 12%。"
+      info="调节组件之间的间距，默认为 12px。"
       icon="fluent:arrow-clockwise-16-regular"
       @onIconClick="globalSettings.cardMargin = 12"
     />
