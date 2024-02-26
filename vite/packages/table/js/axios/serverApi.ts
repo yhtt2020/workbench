@@ -43,7 +43,7 @@ if (!token && !useEnv()) {
   token =  res.data.token
 }
 
-console.log('getConfig token :>> ', token);
+// console.log('getConfig token :>> ', token);
   return {
     headers: {
       'Authorization': token

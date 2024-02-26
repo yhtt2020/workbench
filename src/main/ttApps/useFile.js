@@ -1,9 +1,8 @@
 // const extractZip = require("../../../js/main/crx");
-const extractZip = require("../../../js/main/crx.js");
-const parseCrx = require("../../../js/main/zip.js");
+const extractZip = require("../../../js/main/zip.js");
 const { join } = require("path");
 const { promises } = require("fs");
-const fs = require("fs");
+const fs = require("fs-extra");
 const electron = require("electron");
 
 const file = {
@@ -51,17 +50,18 @@ const file = {
    * 读取文件
    * @param fileName 要读取的文件名称
    * @param encoding 编码格式
-   * @return 返回读取的文件内容
+   * @return string
    */
-  async readFile(fileName, encoding = "utf-8") {
-    let res = await fs.readFileSync(file.pathJoin(fileName), encoding);
-    return res;
+   readFile(fileName, encoding = "utf-8") {
+    return fs.readFileSync(fileName, {
+      encoding: encoding
+    });
   },
   /**
    * 删除文件
    */
   async deleteFile(filePath) {
-    let res = file.pathJoin(filePath);
+    let res = filePath;
     fs.rmdir(res, (err) => {
       if (err) throw err;
       console.log(`File ${res} has been deleted`);
@@ -73,9 +73,9 @@ const file = {
   async unzipFile(filePath, destPath) {
     destPath = file.pathJoin(destPath);
     try {
-      const crxBuf = await promises.readFile(filePath);
-      const crxInfo = parseCrx(crxBuf);
-      let res = await extractZip(crxInfo.zip, destPath);
+      const zipBuf = await promises.readFile(filePath);
+     // const crxInfo = parseCrx(crxBuf);
+      let res = await extractZip(zipBuf, destPath);
       return {
         status: 1,
         code: 200,

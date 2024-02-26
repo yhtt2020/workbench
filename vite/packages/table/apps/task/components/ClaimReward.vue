@@ -37,19 +37,22 @@
 </template>
 
 <script setup>
-import { ref, toRefs, computed, onMounted } from "vue";
+import { ref, toRefs, computed, onMounted,getCurrentInstance } from "vue";
 import { taskStore } from "../store";
 import { storeToRefs } from "pinia";
 import ShowReward from "./ShowReward.vue";
 import "animate.css";
 import { getReward } from "../task";
+import { useToast } from 'vue-toastification';
 
 import TaskUserInfo from "./userinfo/TaskUserInfo.vue";
+import TaskGuide from "./TaskGuide.vue";
 
 const store = taskStore();
 const visible = ref(false);
-const { taskID, currentTaskList, rewardVisible, currentId, isTaskDrawer,smallMize} =
-  storeToRefs(store);
+const { taskID, currentTaskList, rewardVisible, currentId, isTaskDrawer,smallMize} = storeToRefs(store);
+const { proxy  } = getCurrentInstance();
+
 const props = defineProps({
   type: {
     type: String,
@@ -57,9 +60,11 @@ const props = defineProps({
   },
   info: {},
 });
+
 onMounted(async () => {
   setTimeout(() => {
     visible.value = true;
+    console.log('第三个定时器',333333);
   }, 10);
   getReward(currentId.value);
 });
@@ -82,11 +87,69 @@ const types = {
   },
 };
 
+// 完成第一章主线任务
+const taskFirstGuide = () =>{
+  const toast = useToast();
+  toast(
+    {
+      component:TaskGuide,
+      listeners:{
+         startTask:()=>{
+          proxy.$.appContext.app.config.globalProperties.$bus.emit('start');
+         }
+      }
+    },
+    {
+      position: "top-right",
+      icon: false,
+      closeOnClick: false,
+      closeButton: false,
+      pauseOnFocusLoss: true,
+      pauseOnHover: true,
+      timeout: 0,
+      toastClassName: "notice-toast",
+    }
+  )
+}
+
+// 完成主线任务最后一个
+const taskLastGuide = () =>{
+  const toast = useToast();
+  toast(
+    {
+      component:TaskGuide,
+    },
+    {
+      position: "top-right",
+      icon: false,
+      closeOnClick: false,
+      closeButton: false,
+      pauseOnFocusLoss: true,
+      pauseOnHover: true,
+      timeout: 0,
+      toastClassName: "notice-toast",
+    }
+  )
+}
+
 const goTask = () => {
-  rewardVisible.value = false;
-  isTaskDrawer.value = true;
-  smallMize.value = true;
+  // 完成主线第一章所有任务后的预告提示
+  if(currentTask.value.suf === 'M0201'){
+    rewardVisible.value = false;
+    taskFirstGuide()
+  }
+  // 完成主线所有任务后的预告提示
+  else if(currentTask.value.suf === ''){
+    rewardVisible.value = false;
+    taskLastGuide();
+  }
+  else {
+    rewardVisible.value = false;
+    isTaskDrawer.value = true;
+    smallMize.value = true;
+  }
 };
+
 const audio = ref("");
 const getAudio = (data) => {
   if (data == "communityPoints") {

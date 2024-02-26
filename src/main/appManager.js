@@ -663,7 +663,7 @@ class AppManager {
     ipc.once('installAppReturn', (event, args) => {
       callback(args)
     })
-    installWindow.webContents.openDevTools()
+    //installWindow.webContents.openDevTools()
   }
 
   openAppManage(){

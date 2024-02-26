@@ -1,3 +1,5 @@
+import { isWeb } from "../../permission/useBaseEnv"
+
 const browser={
   /**
    * 在用户选择的浏览器内打开，根据工作台设置自动选择浏览器
@@ -10,6 +12,9 @@ const browser={
       return
     }
     //获取到用户设置
+    if(isWeb){
+      return window.open(url)
+    }
     let settings=await tsbApi.settings.get('openUrlBrowser')
     if(settings==='system' || !settings){
       browser.openInSystem(url)

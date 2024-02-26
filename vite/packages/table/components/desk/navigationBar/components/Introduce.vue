@@ -135,7 +135,9 @@ export default {
     // 搜索目标图标
     filterIcon(list) {
       const inputValueLowerCase = this.inputValue.toLowerCase();
-      return list?.filter(i => i.name.toLowerCase().includes(inputValueLowerCase));
+      // web端无法获取到图标，新增容错
+      list === undefined ? list = [] : list
+      return list.filter(i => i.name.toLowerCase().includes(inputValueLowerCase));
     }
 
   },

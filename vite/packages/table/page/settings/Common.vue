@@ -43,6 +43,16 @@
       <div style='width:120px'> 右键菜单模式：</div>
       <xt-radio v-model:data='rightModel' :list='rightMenuList'/>
     </div>
+    <div class="line-title">数据缓存</div>
+    <div class="line flex ">
+      <div class="p-2">当前系统缓存数据大小：{{displayCacheSize}}</div>  <xt-button class="ml-4  " :w="100" :h="40" type="theme" @click="clearCache">清理缓存</xt-button>
+
+    </div>
+    <div class="line flex">
+      <div class="p-2">当前内置浏览器缓存数据大小：{{displayWebCacheSize}}</div>  <xt-button class="ml-4  " :w="140" :h="40" type="theme" @click="clearWebCache">清理浏览器缓存</xt-button>
+
+    </div>
+
   </div>
 
 </template>
@@ -55,12 +65,17 @@ import AutoRun from '../../components/comp/AutoRun.vue'
 import { isMain } from '../../js/common/screenUtils'
 import Template from '../../../user/pages/Template.vue'
 import { useWidgetStore } from '../../components/card/store.ts'
+import { prettyDisplayBytes } from '../../js/action/supervisory'
+import { confirm } from '../../ui/new/confirm'
+import { message } from 'ant-design-vue'
 
 export default {
   name: 'Common',
   components: { Template, AutoRun, ZoomUI },
   data () {
     return {
+      cacheSize:0,//系统缓存
+      webCacheSize:0,//浏览器缓存大小
       trayOpen: '',
       showInTaskBar: false,
       rightMenuList: [
@@ -78,13 +93,68 @@ export default {
   computed: {
     ...mapWritableState(appStore, ['settings']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
-    isMain
+    isMain,
+    displayCacheSize(){
+      return prettyDisplayBytes(this.cacheSize)
+    },
+    displayWebCacheSize(){
+      return prettyDisplayBytes(this.webCacheSize)
+    }
   },
   async mounted () {
     if (this.$useEnv()) return
     this.trayOpen = await tsbApi.settings.get('trayOpen') || 'table'
+    tsbApi.web.getCacheSize((data)=>{
+      console.log('获取到了',data)
+      this.cacheSize=data.size
+    })
+    tsbApi.web.getWebCacheSize((data)=>{
+      this.webCacheSize=data.size
+    })
 
+  },
+  methods:{
+    clearCache(){
+      let beforeSize=this.cacheSize
+      window.$ui.confirm("清理缓存",'确定清理工作台系统缓存？此操作将自动清理图片和脚本等临时文件，但不会移除存储内容。', {
+        noText: "取消",
+        okText: "立即清理",
+        ok: () => {
+          tsbApi.web.clearCache(()=>{
+            console.log('执行到了')
+            tsbApi.web.getCacheSize((data)=>{
+              this.cacheSize=data.size
+              let releaseSize=beforeSize-this.cacheSize
+              const tip='清理完成，本次清理共计释放空间：'+prettyDisplayBytes(releaseSize)
+              message.success(tip)
+            })
+          })
+        },
+        okButtonWidth: "95",
+        noButtonWidth: "95",
+      });
+    },
+    clearWebCache(){
+      let beforeSize=this.webCacheSize
+      window.$ui.confirm("清理缓存",'确定清理内置浏览器缓存？此操作将自动清理内置浏览器的图片和脚本等临时文件，但不会移除存储内容，故操作不能彻底释放缓存空间。', {
+        noText: "取消",
+        okText: "立即清理",
+        ok: () => {
+          tsbApi.web.clearWebCache(()=>{
+            console.log('执行到了')
+            tsbApi.web.getWebCacheSize((data)=>{
 
+              this.webCacheSize=data.size
+              let releaseSize=beforeSize-this.webCacheSize
+              const tip='清理完成，本次清理共计释放空间：'+prettyDisplayBytes(releaseSize)
+              message.success(tip)
+            })
+          })
+        },
+        okButtonWidth: "95",
+        noButtonWidth: "95",
+      });
+    }
   },
   watch: {
     'trayOpen': {

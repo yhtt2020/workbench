@@ -8,15 +8,22 @@
     <!-- 点击层 -->
     <a-dropdown :trigger="['click']" placement="top">
       <template #overlay v-if="data.children">
-        <div class="xt-modal rounded-xl p-1 xt-b">
+        <div class="p-1 xt-modal rounded-xl xt-b">
           <template v-for="item in data.children">
             <div
               @click="onItemClick(item)"
-              class="flex items-center pl-3 cursor-pointer box text-base xt-text"
+              class="relative flex items-center pl-3 text-base cursor-pointer box xt-text"
               style="width: 184px; height: 44px; border-radius: 10px"
             >
-              <xt-base-icon :icon="item.icon" class="mr-3"></xt-base-icon>
-              {{ item.name }}
+              <div v-if="item.slot && item.slot !== ''">
+                <slot :name="item.slot"></slot>
+              </div>
+              <div v-else>
+                <xt-base-icon :icon="item.icon" class="mr-3"></xt-base-icon>
+                {{ item.name }}
+              </div>              
+              <!-- <GradeSmallTip v-if="item.index === 'createCom'" :w="184" :h="44" powerType="createChat" lastPowerType="最多创建一个社群" :limit="false"></GradeSmallTip> -->
+              
             </div>
           </template>
         </div>
@@ -45,6 +52,7 @@
 
 <script setup>
 import { computed } from "vue";
+import GradeSmallTip from "../../../components/GradeSmallTip.vue";
 const props = defineProps({
   data: {},
 });

@@ -190,6 +190,8 @@ const props = defineProps({
       isDel: false,
       // 隐藏层级选择
       hierarchy: false,
+      // 点击文件夹外部关闭
+      close: Boolean,
     }),
   },
   // 自动设置大小
@@ -201,7 +203,7 @@ const props = defineProps({
 
 const { customData, customIndex, expand, secondary, navBar, auto, modalSize } =
   toRefs(props);
-const emit = defineEmits(["update:size", "update:layout", "clickFile"]);
+const emit = defineEmits(["update:size", "update:layout", "clickFile",'close']);
 
 const refreshState = ref(false);
 const header = computed(() => {
