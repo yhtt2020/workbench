@@ -266,6 +266,8 @@ export default {
             this.$emit('setQuick')
         },
         async loadDeskIconApps() {
+            const web = await getNavList()
+            this.webList = [web]
           if (this.$useEnv()) return
             const lightApps = await appModel.getAllApps()
             // console.log(lightApps, 'lightApps');
@@ -278,8 +280,6 @@ export default {
             for (let i = 0; i < desktopApps.length; i++) {
                 desktopApps[i].type = 'tableApp'
             }
-            const web = await getNavList()
-            this.webList = [web]
             this.ClassifyData.push(...desktopApps, ...lightApps)
             this.ClassifyData = this.replace(this.ClassifyData)
             console.log(this.ClassifyData,lightApps, 'ClassifyData');

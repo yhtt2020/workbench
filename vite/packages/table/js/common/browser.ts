@@ -1,10 +1,20 @@
+import { isWeb } from "../../permission/useBaseEnv"
+
 const browser={
   /**
    * 在用户选择的浏览器内打开，根据工作台设置自动选择浏览器
    * @param url
    */
   async openInUserSelect(url:string){
+
+    if (window.$useEnv()){
+      window.open(url,'_blank')
+      return
+    }
     //获取到用户设置
+    if(isWeb){
+      return window.open(url)
+    }
     let settings=await tsbApi.settings.get('openUrlBrowser')
     if(settings==='system' || !settings){
       browser.openInSystem(url)
@@ -16,6 +26,10 @@ const browser={
    * 在系统默认浏览器内打开
    */
   openInSystem(url:string){
+    if (window.$useEnv()){
+      window.open(url,'_blank')
+      return
+    }
     console.log('在系统默认浏览器打开',url)
     require('electron').shell.openExternal((url))
   },
@@ -24,6 +38,10 @@ const browser={
    * @constructor
    */
   openInInner(url:string){
+    if (window.$useEnv()){
+      window.open(url,'_blank')
+      return
+    }
     console.log('在想天浏览器打开',url)
     ipc.send('addTab',{url:url})
   },
@@ -31,6 +49,10 @@ const browser={
    * 在工作台内打开
    */
   openInTable(url:string,options:{}){
+    if (window.$useEnv()){
+      window.open(url,'_blank')
+      return
+    }
     window.$app.$router.push({
       name:"browser",
       params:{

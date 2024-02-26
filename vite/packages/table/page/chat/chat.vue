@@ -7,6 +7,15 @@
       <CategoryFloat v-if="item.route.params.no !== 1" :no="item.route.params.no" @clickItem="currentItem"></CategoryFloat>
       <DefaultFloat v-else></DefaultFloat>
     </template>
+    <template #createCom>
+      <GradeSmallTip powerType="createChat" :lastPowerType="limitClick"  v-if="limitClick !== undefined"></GradeSmallTip>
+      <xt-new-icon icon="fluent:add-16-regular" ></xt-new-icon>
+    </template>
+    <template #createChat>
+      <GradeSmallTip :w="184" :h="44" powerType="createChat" :lastPowerType="limitClick" :limit="false"></GradeSmallTip>
+      <xt-base-icon icon="smile" class="mr-3"></xt-base-icon>
+      创建社群 
+    </template>
   </xt-left-menu>
   <teleport to='body'>
     <Modal v-if="chatVisible" v-model:visible="chatVisible" :blurFlag="true">
@@ -40,13 +49,13 @@ import CreateGroup from '../../TUIKit/TUIComponents/container/TUISearch/componen
 import CategoryFloat from './components/float/CategorysFloat.vue';
 import DefaultFloat from './components/float/DefaultsFloat.vue';
 import JoinCommunitys from './components/communityJoin/JoinCommunitys.vue';
-
+import GradeSmallTip from "../../components/GradeSmallTip.vue";
 export default {
   name: "chat",
   components: {
     ChatIcon,CreateCommunity,Modal,AddFriend,
     Transfer,CreateGroup,CategoryFloat,DefaultFloat,
-    JoinCommunitys,
+    JoinCommunitys,GradeSmallTip
   },
 
   setup(props, ctx) {
@@ -56,7 +65,7 @@ export default {
 
     const { community } = storeToRefs(com);
     const { settings,contactsSet } = storeToRefs(chat)
-    const { userInfo } = appS;
+    const { userInfo,lvInfo } = appS;
     const router = useRouter()
     const route = useRoute()
     const TUIServer = window.$TUIKit
@@ -185,7 +194,11 @@ export default {
             callBack: (item) => { if(!window.$useEnv('guest')){triggerAddModal(item);completeTask('Z0602');}else{ loginTip() }  }
           },
           {
-            icon: 'smile',  newIcon:'fluent:emoji-smile-slight-24-regular', name: '创建社群', index: 'createCom',
+            icon: 'smile',  
+            newIcon:'fluent:emoji-smile-slight-24-regular', 
+            name: '创建社群', 
+            index: 'createCom',
+            slot:'createChat',
             callBack: () => { if(!window.$useEnv('guest')){createCommunity()}else{ loginTip() }  }
           },
           {
@@ -199,7 +212,8 @@ export default {
       {
         newIcon:'fluent:add-16-filled',
         id:2,
-        callBack: () => { createCommunity() }
+        callBack: () => { createCommunity() },
+        slot:'createCom',
       },
     ])
 
@@ -256,6 +270,15 @@ export default {
       }
     })
 
+    const limitClick = computed(()=>{
+      let lv = lvInfo.lv
+      if(lv < 3 && filterList.value.length >= 0){
+        return '最多创建一个社群'
+      }else if(lv < 5 && filterList.value.length >= 1){
+        return '最多创建五个社群'
+      }
+    })
+
     /**初始化挂载**/
     onMounted(()=>{
       com.getMyCommunity();
@@ -285,7 +308,7 @@ export default {
       headList,bodyList,footList,
       filterList, createCommunityList,
       ...toRefs(data),createCommunity,
-      selectTab,triggerAddModal,
+      selectTab,triggerAddModal,limitClick
     }
   }
 

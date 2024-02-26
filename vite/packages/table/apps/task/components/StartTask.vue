@@ -27,13 +27,14 @@
 </template>
 
 <script setup>
-import { reactive, ref, getCurrentInstance, computed } from "vue";
+import { reactive, ref, getCurrentInstance, computed,onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { taskStore } from "../store";
 import { useToast } from "vue-toastification";
 import { storeToRefs } from "pinia";
 import Guide from "./Guide.vue";
 import { getReward, currentType } from "../task";
+import { useLogin } from '../../../permission/user/useLogin';
 
 import { appStore } from "../../../store";
 const { proxy } = getCurrentInstance();
@@ -41,7 +42,7 @@ const app = appStore();
 
 // 初始化
 const store = taskStore();
-const { currentId, startList, claimRewardsList, completedList, rewardVisible,smallMize } =
+const { currentId, startList, claimRewardsList, completedList, rewardVisible,smallMize,isTaskDrawer } =
   storeToRefs(store);
 const router = useRouter();
 const props = defineProps({
@@ -72,7 +73,7 @@ const startTask = () => {
   startList.value = [...new Set(startList.value)];
   smallMize.value = false;
 
-  console.log("props.task.id :>> ", props.task.id);
+  // console.log("props.task.id :>> ", props.task.id);
   currentId.value = props.task.id;
 
   let type = currentType(props.task.id);
@@ -118,12 +119,18 @@ const continueTask = computed(() => {
 // 领取奖励
 const receive = async () => {
   if(window.$useEnv('guest')){
-    tsbApi.user.login((data) => {
-     app.getUserInfo()
+    useLogin(()=>{
+      currentId.value = props.task.id;
+      rewardVisible.value = true;
     })
+    // tsbApi.user.login((data) => {
+    //  app.getUserInfo()
+    // })
   }
-  currentId.value = props.task.id;
-  rewardVisible.value = true;
+  else {
+    currentId.value = props.task.id;
+    rewardVisible.value = true;
+  }
   getReward('z0201');
 
 };
@@ -133,7 +140,7 @@ const getReceiveStatus = computed(() => {
 
 // 已完成任务
 const completeTask = computed(() => {
-  console.log("completedList.value :>> ", completedList.value);
+  // console.log("completedList.value :>> ", completedList.value);
   return completedList.value.includes(props.task.id);
 });
 
@@ -143,6 +150,12 @@ const receiveText = computed(()=>{
   else { return '领取奖励' }
 })
 
+onMounted(()=>{
+  proxy.$.appContext.app.config.globalProperties.$bus.on('start',()=>{
+    isTaskDrawer.value = true;
+    smallMize.value = true;
+  })
+})
 </script>
 
 <style lang="scss" scoped>

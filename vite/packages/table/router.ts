@@ -16,7 +16,12 @@ router.beforeEach(async (to, from, next) => {
   console.log("to,from :>> ", to, from);
   // 用户信息判断 优先级1
   let userRes = await useUserPermit();
-
+  console.log('to.name  :>> ', to.name );
+  if (to.name === "splash" && userRes) {
+    next({
+      name: "home",
+    });
+  }
   // 用户环境判断 优先级2
   if (
     useEnvLimit("web", to.name, {

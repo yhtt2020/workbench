@@ -113,7 +113,7 @@ const types = {
   },
 }
 const item = computed(() => {
-  console.log(props.type, types[props.type], 'xuyao')
+  // console.log(props.type, types[props.type], 'xuyao')
   if(props.flag==='exp'){
     return types['experience']
   }

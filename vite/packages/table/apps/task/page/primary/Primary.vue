@@ -17,7 +17,7 @@
       <div class="mt-1 mb-1">
         <a-progress :percent="progress" :show-info="false" />
       </div>
-      <TaskReward :showTaskReward="currentTaskReward"></TaskReward>
+      <TaskReward :showTaskReward="currentTaskReward" :showTip="true" :isCenter="''"></TaskReward>
     </div>
     <xt-title>正在进行</xt-title>
     <div class="xt-bg-2 rounded-xl p-3">

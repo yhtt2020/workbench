@@ -30,7 +30,6 @@ const getReward = computed(() => {
   if (result) {
     let { awardList } = result;
     let arr = [];
-    console.log(arr,'奖励内容sad')
     awardList.forEach((item) => {
       if (item.label == "道具") {
         arr.push({

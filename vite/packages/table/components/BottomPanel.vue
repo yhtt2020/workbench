@@ -6,9 +6,9 @@
     <div style="position: absolute; z-index: 500 !important;"
       :style="{ left: `${this.left}px`, bottom: `${navAttribute.navSize / 100 * 100}px` }" class="rounded-xl pointer "
       id="folder">
-      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:customSize="updateSize"
+      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:customSize="updateSize" @close="folderVisible = false"
         :customData="customData" :customIndex="bottomKey" :secondary="true" v-if="folderVisible"
-        :expand="{ disabled: true }" :navBar="{ resize: false, sizeOption: false, isDel: true, hierarchy: true }"
+        :expand="{ disabled: true }" :navBar="{ resize: false, sizeOption: false, isDel: true, hierarchy: true, close: true }"
         :auto="true" />
 
     </div>
