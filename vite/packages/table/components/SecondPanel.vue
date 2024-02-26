@@ -1,7 +1,7 @@
 <template>
   <!-- 快速搜索 基础设置->基础设置 菜单 -->
 
-  <div class="second-panel  mt-3" :class="{ 'large': this.size === 'large', 'small': this.size === 'small' }"
+  <div class="mt-3 second-panel" :class="{ 'large': this.size === 'large', 'small': this.size === 'small' }"
     id="secondPanel">
 
     <div style="margin-bottom:2em;" v-if="gallery === true">
@@ -10,14 +10,14 @@
         <span style="margin-left: 0.5em;font-size: 1em;" class="s-text" >返回</span>
       </div>
     </div>
-    <div @click="change($event, menu)" class="menu relative s-icon" :class="{ 'xt-active-btn': current(menu) }"
+    <div @click="change($event, menu)" class="relative menu s-icon" :class="{ 'xt-active-btn': current(menu) }"
       v-for="(menu) in menus" style="color:var(--primary-text)">
       <div class="flex items-center justify-start">
         <Icon v-if="menu.icon" :icon="menu.icon"></Icon>
         <SecondPanelIcon :icon="menu.newIcon" class="xt-text" v-else-if="menu.newIcon" style="font-size:1.25rem;"/>
         <span style="margin-left: 0.5em;font-size: 1em;color: var(--font-color);" class="xt-text">{{ menu.title }}</span>
       </div>
-      <!-- <GradeSmallTip powerType="lockWallpaper" lastPowerType="动态壁纸" v-if="menu.title === '动态壁纸'"></GradeSmallTip> -->
+      <GradeSmallTip powerType="lockWallpaper" lastPowerType="动态壁纸" v-if="menu.title === '动态壁纸'" :limit="false"></GradeSmallTip>
     </div>
     <!-- <xt-task :modelValue="M01035"></xt-task> -->
   </div>
@@ -140,7 +140,7 @@ export default {
 
     &.active {}
 
-    width: 8em;
+    width: 9em;
     padding-left: 1em;
     font-size: 1.3em;
     height: 3em;

@@ -42,6 +42,10 @@ const newsMsgList = defineProps({
 })
 const goNews = () => {
 
+  if (window.$useEnv()) {
+    window.open(newsMsgList.newsMsgList.url, '_blank')
+    return
+  }
   browser.openInSystem(newsMsgList.newsMsgList.url)
 }
 const timer = computed(() => {

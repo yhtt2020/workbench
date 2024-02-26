@@ -1,6 +1,6 @@
 <template>
   <div
-    class="xt-text flex h-full"
+    class="flex h-full xt-text"
     style="box-sizing: border-box"
     :class="[typeClass]"
   >
@@ -24,8 +24,12 @@
           v-for="item in list.array"
           :data="item"
         >
+          <!-- float组件中用于等级显示 -->
+          <template #[item.slot] v-for="item in item.children">
+            <slot :name="item.slot"></slot>
+          </template>
           <div
-            class="flex flex-col justify-center items-center cursor-pointer"
+            class="relative flex flex-col items-center justify-center cursor-pointer"
             :class="[list?.boxClass]"
           >
             <Box :item="item" :id="currentIndex" :model="model">
@@ -38,7 +42,7 @@
             <div
               v-if="item.name"
               style="height: 16px; margin-top: 2px"
-              class="text-xs w-full xt-text-2 truncate text-center"
+              class="w-full text-xs text-center truncate xt-text-2"
             >
               {{ item.name }}
             </div>
@@ -51,7 +55,7 @@
     </div>
     <!-- 左侧区域结束 -->
     <!-- 主体区域开始 -->
-    <div class="flex h-full flex-1 w-0">
+    <div class="flex flex-1 w-0 h-full">
       <slot></slot>
     </div>
     <!-- 主体区域结束 -->
@@ -66,6 +70,7 @@ import Float from "./Float.vue";
 import Box from "./Box.vue";
 import Item from "./Item.vue";
 import { appStore } from "../../../store";
+import GradeSmallTip from "../../../components/GradeSmallTip.vue";
 const store = appStore();
 const { fullScreen } = storeToRefs(store);
 

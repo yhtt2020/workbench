@@ -1,7 +1,13 @@
 <template>
   <div id="galleryContainer"  style="text-align: center;display: flex;height: 100%">
-    <SecondPanel :search="true" :goHome="goHome" :menus="menus" :gallery="gallery" style="padding: 1em; text-align: left; "  @changeTab="changeTab"></SecondPanel>
-    <div id="parentScroller" class="grow shrink mx-4 flex flex-col w-full h-full xt-bg px-4 pt-4  rounded-xl">
+    <SecondPanel 
+      :search="true" 
+      :goHome="goHome" 
+      :menus="menus" 
+      :gallery="gallery" 
+      style="padding: 1em; text-align: left; "  
+      @changeTab="changeTab"></SecondPanel>
+    <div id="parentScroller" class="flex flex-col w-full h-full px-4 pt-4 mx-4 grow shrink xt-bg rounded-xl">
       <router-view></router-view>
     </div>
   </div>

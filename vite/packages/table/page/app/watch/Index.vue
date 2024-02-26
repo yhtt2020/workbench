@@ -17,7 +17,7 @@
               <template #item="{ item }">
                 <Widget :uniqueKey="item.nanoid" >
                   <div @contextmenu.stop="showMenu(item)"   @click="goDashboard(item.nanoid)" class="p-2 bili-card" style="background: var(--primary-bg);color: var(--primary-text);">
-                    <div class="text-more text-base mb-4 text-left">
+                    <div class="mb-4 text-base text-left text-more">
                       <!--               <a-avatar :src="item.task.icon"></a-avatar> -->
                       <Icon icon="bilibili" style="font-size: 20px;vertical-align: text-top"></Icon>
                  {{ item.title || '-' }} <span style="float:right"><Icon icon="shijian"></icon> {{formatSeconds(item.interval)}}</span>
@@ -31,7 +31,7 @@
                           </a-avatar>
                         </a-col>
                         <a-col :span="14">
-                          <div class="text-more text-xs" :title="item.data.title">{{ item.data.title || '-' }}</div>
+                          <div class="text-xs text-more" :title="item.data.title">{{ item.data.title || '-' }}</div>
                           <div>
                             <a-row class="text-xs" :gutter="10">
                               <a-col :span="12">
@@ -118,7 +118,7 @@
               <template #item="{ item }">
                 <Widget :uniqueKey="item.id" >
                   <div @contextmenu.stop="showMenu(item)" @click="goDashboard(item.nanoid)" class="p-2 bili-card" style="background: var(--primary-bg);color: var(--primary-text);">
-                    <div class="text-more text-base mb-4 text-left">
+                    <div class="mb-4 text-base text-left text-more">
                       <!--               <a-avatar :src="item.task.icon"></a-avatar> -->
                       <Icon icon="bilibili" style="font-size: 20px;vertical-align: text-top"></Icon>
                    233   {{ item.title }} <span style="float:right"><Icon icon="shijian"></icon> {{formatSeconds(item.interval)}}</span>
@@ -132,7 +132,7 @@
                           </a-avatar>
                         </a-col>
                         <a-col :span="14">
-                          <div class="text-more text-xs">{{ item.data.title }}</div>
+                          <div class="text-xs text-more">{{ item.data.title }}</div>
                           <div>
                             <a-row class="text-xs" :gutter="10">
                               <a-col :span="12">
@@ -209,7 +209,7 @@
       </a-tab-pane>
       <template #rightExtra>
         <a-dropdown-button type="primary" @click="addVideo">
-          创建任务
+          创建任务 <GradeSmallTip powerType="dataMonitoring" :lastPowerType="limitTask" v-if="limitTask !== ''"></GradeSmallTip>
           <template #overlay>
             <a-menu @click="handleMenuClick">
               <a-menu-item @click="test" key="1">
@@ -345,13 +345,13 @@
 
   </a-drawer>
   <a-modal v-model:visible="clickTipShow" :closable="false"  title="" @ok="()=>{}" :footer="null" style="font-size: 8px" :maskClosable="false" :centered="true">
-    <div class="flex flex-col items-center rounded-lg h-44 w-96 justify-evenly text-sm text-white mx-auto" style="background: rgba(33, 33, 33, 1);">
+    <div class="flex flex-col items-center mx-auto text-sm text-white rounded-lg h-44 w-96 justify-evenly" style="background: rgba(33, 33, 33, 1);">
       <div><Icon icon="-dengpao" style="font-size: 1.2em" class="mr-2"></Icon>提示</div>
       <div v-if="blocking===false">当前「 等级{{lv}} 」，解锁{{powerAlias}}功能需要达到「 等级 {{powerLv}} 」</div>
       <div v-else>当前「 等级{{lv}} 」，已达当前等级上限</div>
-      <div class="flex flex-row w-2/3  justify-between">
-        <div class="rounded-lg w-28 h-10 flex justify-center items-center mt-4 pointer" style="background: rgba(42, 42, 42, 1);" @click="goGrade">了解更多</div>
-        <div class="rounded-lg w-28 h-10 flex justify-center items-center mt-4 pointer" style="background: rgba(42, 42, 42, 1);" @click="closeTip">关闭</div>
+      <div class="flex flex-row justify-between w-2/3">
+        <div class="flex items-center justify-center h-10 mt-4 rounded-lg w-28 pointer" style="background: rgba(42, 42, 42, 1);" @click="goGrade">了解更多</div>
+        <div class="flex items-center justify-center h-10 mt-4 rounded-lg w-28 pointer" style="background: rgba(42, 42, 42, 1);" @click="closeTip">关闭</div>
       </div>
     </div>
   </a-modal>
@@ -365,12 +365,17 @@ import bili from '../../../js/watch/bili'
 import BiliStage from '../../../components/watch/BiliStage.vue'
 import { formatSeconds,fixHttp } from '../../../util'
 import {powerState} from '../../../js/watch/grade'
+
+import GradeSmallTip from '../../../components/GradeSmallTip.vue'
+import { appStore } from '../../../store'
+import { mapState, mapWritableState } from 'pinia'
 export default {
   name: 'Index',
   components: {
     BiliStage,
     Widget,
     Vuuri,
+    GradeSmallTip
   },
   data () {
     return {
@@ -416,7 +421,19 @@ export default {
       powerLv:0,
     }
   },
-  computed: {},
+  computed: {
+    ...mapWritableState(appStore, ['lvInfo']),
+    limitTask(){
+      const lv = this.lvInfo.lv
+      if(lv < 3 && this.tasks.length >= 3){
+        return '同时监控5个'
+      }else if(lv < 10 && this.tasks.length >= 5){
+        return '不限制'
+      }else{
+        return ''
+      }
+    }
+  },
   mounted () {
     this.lv = lv
     const {blocking,superiorLimit,powerAlias,powerLv}=this.powerState('dataMonitoring',lv)

@@ -189,7 +189,11 @@ const bottomButton = ref([
   //   }
   // }
 ]);
-
+function handleClick(e) {
+    if (e.target?.closest(".tt-container-box-1234") == null) {
+      emit("close");
+    }
+  }
 onMounted(() => {
   proxy.$bus.on("closeControl", () => {
     emit("close");
@@ -198,16 +202,11 @@ onMounted(() => {
   proxy.$bus.on("closeControl", () => {
     emit("close");
   });
-  window.addEventListener("click", function (e) {
-    if (e.target?.closest(".tt-container-box-1234") == null) {
-      emit("close");
-      // console.log('33333 :>> ', 33333);
-    }
-  });
+  window.addEventListener("click",handleClick);
 });
 
 onBeforeMount(() => {
-  window.removeEventListener("click", function (e) {});
+  window.removeEventListener("click",handleClick);
 });
 </script>
 
