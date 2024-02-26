@@ -34,6 +34,7 @@
         <StartTask :task="currentTask" class="mt-3"></StartTask>
       </div>
     </div>
+    <div style="height: 16px;"></div>
   </template>
 
   <template v-else>
