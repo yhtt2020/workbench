@@ -86,9 +86,11 @@ import GlobalDesk from "./set/GlobalDesk.vue";
 import Test from "../widgets/test/index.vue";
 
 import Folder from "../../apps/folder";
+import DeskSet from './set//Set.vue';
 
 export default {
   components: {
+    DeskSet,
     Test,
     LoadingOutlined,
     GlobalDesk,

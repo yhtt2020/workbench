@@ -170,6 +170,9 @@
     </Drop>
   </div>
 
+  <xt-modal v-model="setVisible" :footer="false" boxClass="" :mask="0" :header="false">
+    <DeskSet @close="setVisible = false" />
+  </xt-modal>
   <xt-modal
     v-model="settingVisible"
     :footer="false"
@@ -521,6 +524,7 @@ export default {
   },
   data() {
     return {
+      setVisible: false,
       showGrid: false,
       loaded: false,
       vurriEnable: false,
@@ -663,7 +667,7 @@ export default {
     },
     showSetting() {
       this.settingVisible = true;
-      this.menuVisible = false;
+      this.setVisible = true;
     },
     hideDesk() {
       this.hide = !this.hide;

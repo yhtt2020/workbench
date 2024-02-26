@@ -6,7 +6,7 @@ import { completeCurrentTask } from "./api";
 
 import Complete from "./components/Complete.vue";
 // 完成任务
-export const completeTask = async (id) => {
+export const completeTask = async (id, cb?) => {
   const type: any = currentType(id);
   id = id.toUpperCase();
   if (type == "m") {

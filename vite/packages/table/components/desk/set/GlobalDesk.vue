@@ -65,6 +65,7 @@
       :max="500"
     />
     <hr />
+    {{ globalSettings }}
     <xt-option-info
       title="组件间距"
       info="调节组件之间的间距，默认为 12px。"
