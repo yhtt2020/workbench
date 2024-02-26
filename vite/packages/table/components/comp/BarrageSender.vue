@@ -6,8 +6,18 @@
         <span style="color:var(--primary-text)">{{ currentChannel.title }}</span>
       </template>
     </a-input>
-    <xt-button  style="border-top-left-radius: 0;border-bottom-left-radius: 0;border-radius:6px" type="theme" :w="70" :h="32" class="xt-text" @click="postBarrage" >发送</xt-button>
+    <xt-button  
+      style="border-top-left-radius: 0;border-bottom-left-radius: 0;border-radius:6px" 
+      type="theme" 
+      :w="70" :h="32" class="xt-text" @click="postBarrage" >
+      发送 
+      <GradeSmallTipVue 
+        powerType="barrage" 
+        lastPowerType="发弹幕">
+      </GradeSmallTipVue>
+    </xt-button>
   </a-input-group>
+  
 </template>
 
 <script>
@@ -17,8 +27,12 @@ import { teamStore } from '../../store/team'
 // import {completeTask} from "../../apps/task/page/branch/task.ts"
 import {completeTask} from "../../apps/task/task"
 import { appStore } from '../../store'
+import GradeSmallTipVue from '../GradeSmallTip.vue'
 export default {
   name: 'BarrageSender',
+  components:{
+    GradeSmallTipVue,
+  },
   props:['currentChannel'],
   emits:['loadTeamBarrage','loadAllBarrages'],
   data(){
@@ -36,12 +50,16 @@ if (!this.$useEnv()) {
   },
   computed:{
     ...mapState(teamStore, ['my','myTeamNo','myTeam']),
-    ...mapWritableState(appStore,['userInfo']),
+    ...mapWritableState(appStore,['userInfo','lvInfo']),
   },
   methods:{
     ...mapActions(teamStore,['updateMy']),
     async postBarrage () {
       if(!window.$useEnv('guest')){
+        if(this.lvInfo.lv < 1){
+          this.checkLevel()
+          return
+        }
         if (!this.postContent) {
           message.error('请输入弹幕内容')
           return
@@ -103,6 +121,22 @@ if (!this.$useEnv()) {
       }
 
     },
+    checkLevel(){
+      let hour = this.lvInfo.remainHour
+      window.$ui.confirm(
+        `解锁该功能需要达到「1」级`,
+        `保持工作台登录在线，即可升级，距离解锁该功能还需要「${hour}」小时`,
+        
+        {
+          ok: () => {
+            
+          },
+          noText:false,
+          okText:'OK',
+          type: 'warning',
+        },
+      )
+      }
   }
 }
 </script>

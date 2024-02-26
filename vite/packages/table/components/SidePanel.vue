@@ -4,13 +4,14 @@
     <!-- style="z-index: 99" -->
     <!-- 文件夹弹窗 -->
     <div style="position: absolute; z-index: 500 !important;" :style="folderPos" class="rounded-xl pointer " id="folder">
-      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:customSize="updateSize"
+      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:customSize="updateSize" @close="folderVisible = false"
         :customData="customData" :customIndex="sideKey" :secondary="true" v-if="folderVisible"
         :expand="{ disabled: true }" :navBar="{
           resize: false,
           sizeOption: false,
           isDel: true,
-          hierarchy: true
+          hierarchy: true,
+          close: true
         }" :auto="true" />
     </div>
     <!-- <AutoHide> -->

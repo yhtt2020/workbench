@@ -180,6 +180,8 @@ const props = defineProps({
       isDel: false,
       // 隐藏层级选择
       hierarchy: false,
+      // 点击文件夹外部关闭
+      close: Boolean,
     }),
   },
   // 自动设置大小
@@ -191,7 +193,7 @@ const props = defineProps({
 
 const { customData, customIndex, expand, secondary, navBar, auto, modalSize } =
   toRefs(props);
-const emit = defineEmits(["update:size", "update:layout", "clickFile"]);
+const emit = defineEmits(["update:size", "update:layout", "clickFile",'close']);
 
 const refreshState = ref(false);
 const header = computed(() => {
@@ -536,14 +538,16 @@ const refreshDeskApp = async () => {
   }, 1000);
 };
 onMounted(async () => {
-
-window.addEventListener("click", function (e) {
-    if (e.target?.closest(".tt-folder-container") == null) {
-
-      // emits("close");
-      console.log('123 :>> ', 123);
-    }
-  });
+  if (navBar.value.close) {
+    window.addEventListener("click", function (e) {
+      if (e.target?.closest(".tt-folder-container") == null) {
+      
+        emit("close");
+        console.log('123 :>> ', 123);
+      }
+    });
+  }
+  
 
   customData.value.list = customData.value.list.map((item) => mergeData(item));
   // 空图标替换
