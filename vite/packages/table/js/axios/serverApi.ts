@@ -43,7 +43,6 @@ if (cache.get('ttUserToken')) {
   token =  res.data.token
 }
 
-console.log('getConfig token :>> ', token);
   return {
     headers: {
       'Authorization': token

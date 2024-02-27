@@ -18,7 +18,6 @@ const setUserInfo = async () => {
   let userData = res.data.data;
   // 获取头像框信息
   let response = await userStore.getUserCard(userData.uid);
-  console.log("response :>> ", response);
   // userData.frame = response.data.frame;
   userStore.userInfo = userData;
   return true;

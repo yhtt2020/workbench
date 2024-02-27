@@ -36,7 +36,6 @@ export async function* gpt(messages) {
   while (true) {
     const res = await reader.read();
     let { done, value } = res;
-    console.log("res :>> ", res);
     if (res.done) {
       // // 当 done 为 true 时，表示数据传输已完成
       // console.log("数据传输已完成1");
