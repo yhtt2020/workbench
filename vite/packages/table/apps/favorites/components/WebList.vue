@@ -1,18 +1,26 @@
 <template>
     <div class="w-full pl-4 xt-scrollbar scroll-color" style="height: 640px;">
-        <div class="h-14 mb-1 flex items-center p-4 pointer rounded-lg font-16 xt-text list-hover justify-between" style="width: 728px;" @click="change(index, item.url)" v-for="(item,index) in showList" :class="urlIndex == index?'xt-bg-2':''" >
-          <!-- <a-avatar :size="24" shape="square" :src="getIcon(item.url)" />
-          <div class="ml-4">{{ item.name }}</div> -->
-          <WebItem :item="item"></WebItem>
+        <div class="h-14 mb-1 flex items-center p-4 pointer rounded-lg font-16 xt-text list-hover justify-between" style="width: 728px;" @click="change(index, item)" v-for="(item,index) in showList" :class="urlIndex == index?'xt-bg-2':'',item.check?'xt-bg-2':''" >
+          <WebItem :item="item" :checkFlag="checkFlag"></WebItem>
+          
+          <div v-if="item.favo" class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg ml-2 hover-right-2">
+            <xt-new-icon icon="fluent:star-16-filled" color="#faad14" size="16" />
+          </div>
           <div class="flex hover-right">
-            <div class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg">
+            <!-- 修改 -->
+            <div @click="showRenameModal(item)" class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg">
               <xt-new-icon icon="fluent:compose-16-regular" size="16" />
             </div>
-            <div class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg ml-2">
-              <xt-new-icon icon="fluent:add-16-regular" size="16" />
-            </div>
-            <div class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg ml-2">
-              <xt-new-icon icon="fluent:star-16-regular" size="16" />
+            <!-- 添加 -->
+            <xt-menu :menus="menus" model="click" @mounted="changeMenu(item, index)">
+              <div class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg ml-2">
+                <xt-new-icon icon="fluent:add-16-regular" size="16" />
+              </div>
+            </xt-menu>
+            <!-- 收藏 -->
+            <div class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg ml-2" @click="changeFavo(item)">
+              <xt-new-icon v-if="item.favo" icon="fluent:star-16-filled" color="#faad14" size="16" />
+              <xt-new-icon v-else icon="fluent:star-16-regular" size="16" />
             </div>
           </div>
         </div>
@@ -26,11 +34,13 @@
   import { mapActions, mapState, mapWritableState } from 'pinia'
   import { favoStore } from '../store'
   import WebItem from './WebItem.vue'
+  import { message } from 'ant-design-vue';
+  // import { browser } from '../../../js/common/browser'
   
   
   export default {
     name: 'WebList',
-    props: ['showList'],
+    props: ['showList', 'checkFlag', 'menus'],
     data() {
       return {
         
@@ -45,15 +55,46 @@
     },
   
     computed:{
-      ...mapWritableState(favoStore, ['isFavorites', 'urlIndex']),
+      ...mapWritableState(favoStore, ['isFavorites', 'urlIndex', 'allList', 'browserType']),
       
     },
     methods: {
-        change(n, url){
-          // browser.openInUserSelect(url)
+      // 添加到桌面
+      changeMenu(item, index){
+        this.urlIndex = index
+        this.$emit('changeIcon', [item])
+      },
+      change(n, item){
+        if(this.checkFlag){
+          item.check = !item.check
+        }else{
           this.urlIndex = n
-        },
-      
+          // if(this.browserType.type == 'system'){
+          //   // browser.openInSystem(item.url)
+          //   browser.openInUserSelect(item.url)
+          // }else if(this.browserType.type == 'thisky'){
+          //   browser.openInInner(item.url)
+          // }else{
+          //   browser.openInTable(item.url)
+          // }
+        }
+      },
+      showRenameModal(item){
+        this.$emit('showRenameModal', item)
+      },
+      changeFavo(item){
+        this.allList.forEach((i, index)=>{
+          if(i.guid == item.guid){
+            if (i.favo) {
+              message.success('取消收藏')
+            }else{
+              message.success('收藏成功')
+            }
+            i.favo = !this.allList[index].favo
+            this.$emit('countFavo')
+          }
+        })
+      },
     }
   }
   </script>
@@ -92,6 +133,9 @@
     }
     .list-hover:hover .hover-right{
       display: flex;
+    }
+    .list-hover:hover .hover-right-2{
+      display: none;
     }
   </style>
   
