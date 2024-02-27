@@ -5,34 +5,38 @@ import { useToast } from "vue-toastification";
 import { completeCurrentTask } from "./api";
 
 import Complete from "./components/Complete.vue";
-// 完成任务
-export const completeTask = async (id) => {
+/**
+ * 完成任务
+ * @param id 任务ID
+ * @param cb 完成任务的回调 会在 endTask 中调用
+ */
+export const completeTask = async (id, cb?) => {
   const type: any = currentType(id);
   id = id.toUpperCase();
   if (type == "m") {
-    completePrimaryTask(id);
+    completePrimaryTask(id, cb);
   } else if (type == "z") {
-    completeBranchTask(id);
+    completeBranchTask(id, cb);
   }
 };
 
 // 完成主线任务
-export const completePrimaryTask = (id) => {
+export const completePrimaryTask = (id, cb?) => {
   const store: any = taskStore();
   const { startList, completedList, claimRewardsList } = storeToRefs(store);
   // 判断是否处于开始阶段
   // 转为全大写
 
   if (!startList.value.includes(id)) return;
-  endTask(id);
+  endTask(id, cb);
 };
 // 完成支线任务
-export const completeBranchTask = (id) => {
+export const completeBranchTask = (id, cb?) => {
   const store: any = taskStore();
   const { startList, completedList, claimRewardsList } = storeToRefs(store);
   // 处于开始阶段
   if (startList.value.includes(id)) {
-    endTask(id);
+    endTask(id, cb);
     return;
   }
   // 处于未完成阶段
@@ -40,7 +44,7 @@ export const completeBranchTask = (id) => {
     !completedList.value.includes(id) &&
     !claimRewardsList.value.includes(id)
   ) {
-    endTask(id);
+    endTask(id, cb);
   }
 };
 // 获取指引
@@ -78,7 +82,7 @@ const getGuide = (id) => {
 };
 
 // 完成后任务后处理
-const endTask = (id) => {
+const endTask = (id, cb?) => {
   const store: any = taskStore();
   const { startList, currentId, claimRewardsList, completedList } =
     storeToRefs(store);
@@ -90,12 +94,15 @@ const endTask = (id) => {
   }
   // 数据预处理
   currentId.value = id;
+  cb && cb();
   getGuide(id);
 };
 // 领取奖励
-export const getReward = async (id) => {
+export const getReward = async (id, cb?) => {
   const toast = useToast();
   toast.clear();
+
+  cb && cb();
 
   const app: any = appStore();
   const store: any = taskStore();
