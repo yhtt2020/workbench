@@ -1,10 +1,13 @@
 <template>
     <div class="flex">
-        <a-avatar :size="24" shape="square" :src="url" />
-        <!-- <img :src="url" class="h-6 w-6" alt=""> -->
-        <div class="ml-4">{{ item.name }}</div>
-        <!-- <div style="opacity: 0;">{{ url }}</div> -->
+        <div class="w-8 h-5" v-if="checkFlag">
+          <a-checkbox v-model:checked="item.check"></a-checkbox>
+        </div>
+        <a-avatar :size="24" shape="square" :src="showIcon" />
+        <div class="ml-4">{{ showName }}</div>
     </div>
+    
+
 </template>
   
   <script> 
@@ -15,14 +18,24 @@
   
   export default {
     name: 'WebItem',
-    props: ['item'],
+    props: ['item', 'checkFlag'],
     data() {
       return {
-        url:'https://a.apps.vip/icons/iconSelect/emoji/globe-showing-asia-australia.svg'
+        url:'https://a.apps.vip/icons/iconSelect/emoji/globe-showing-asia-australia.svg',
       }
     },
     mounted(){
-        console.log(this.item)
+    },
+    components: { 
+      Icon,
+    },
+  
+    computed:{
+      ...mapWritableState(favoStore, ['isFavorites', 'urlIndex', 'allList']),
+      showName(){
+        return this.item.rename?this.item.rename:this.item.name
+      },
+      showIcon(){
         if(this.item.icon){
             this.url = this.item.icon
         }else{  
@@ -38,13 +51,8 @@
                 })
             })
         }
-    },
-    components: { 
-      Icon,
-    },
-  
-    computed:{
-      ...mapWritableState(favoStore, ['isFavorites', 'urlIndex', 'allList']),
+        return this.url
+      }
       
     },
     methods: {

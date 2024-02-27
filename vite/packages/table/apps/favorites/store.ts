@@ -20,6 +20,13 @@ export const favoStore = defineStore("favoStore", {
     // 序列
     folderIndex: null,
     urlIndex:null,
+    browserList: {
+      chrome: true,
+      edge: true,
+    },
+    updateTime: null,
+    searchValue: '',
+    folderIcons: []
 
   }),
   actions: {
@@ -34,7 +41,7 @@ export const favoStore = defineStore("favoStore", {
       // 自定义存储的 key，默认是 store.$id
       // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
       storage: dbStorage,
-      paths: ['allList', 'folderList']
+      paths: ['allList', 'folderList', 'browserList', 'updateTime']
       // state 中的字段名，按组打包储存
     }]
   }
