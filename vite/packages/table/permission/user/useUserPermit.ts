@@ -23,7 +23,7 @@ export const useUpdateUserInfo = async () => {
   let userData = res.data.data;
   // 获取头像框信息
   let response = await userStore.getUserCard(userData.uid);
-  userData.frame = response.data.frame;
+  // userData.frame = response.data.frame;
   userStore.userInfo = userData;
   return userData;
 };

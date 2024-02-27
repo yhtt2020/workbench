@@ -261,23 +261,14 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       } else {
         // w = getFreeLayoutState.value.line.centerLine.x - width.value / 2;
         // h = getFreeLayoutState.value.line.centerLine.y - height.value / 2;
-        console.log(
-          "this.getFreeLayoutState.line.centerLine.x  :>> ",
-          this.getFreeLayoutState.line.centerLine.x
-        );
-        console.log("width :>> ", width);
         w = this.getFreeLayoutState.line.centerLine.x - width / 2;
         // left = this.getFreeLayoutState.line.centerLine.x;
         h = this.getFreeLayoutState.line.centerLine.y;
       }
       w = w * zoom;
       h = h * zoom;
-console.log('w :>> ', w);
       this.freeLayoutEnv.scrollLeft = w;
-      console.log(
-        "    this.freeLayoutEnv.scrollLeft :>> ",
-        this.freeLayoutEnv.scrollLeft
-      );
+
       this.freeLayoutEnv.scrollTop = h;
       return {
         w,

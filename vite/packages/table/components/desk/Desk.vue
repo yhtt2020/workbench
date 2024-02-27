@@ -427,6 +427,7 @@ export default {
     // 监听ID变化
     "currentDesk.id": {
       handler(newVal) {
+        this.$bus.off("startAdjust");
         let obj = {
           id: 20,
           newIcon: "fluent:more-horizontal-16-filled",
@@ -556,7 +557,7 @@ export default {
   },
   mounted() {
     // 空桌面添加图标保持弹窗
-    // this.editVisible = this.keepAddIcon
+    // this.editVisible = this.keepAddIcon;
     // this.$bus.on("addCard", (data) => {
     //   let value = _.cloneDeep(data);
     //   console.log("value :>> ", this.currentDesk);

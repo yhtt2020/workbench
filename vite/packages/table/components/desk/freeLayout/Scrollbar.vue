@@ -190,7 +190,6 @@ async function redirect() {
   freeLayoutEnv.value.scrollLeft = w;
   freeLayoutEnv.value.scrollTop = h;
 
-  console.log("res :>> ", res);
 }
 
 // 鼠标按下
