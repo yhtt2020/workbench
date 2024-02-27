@@ -9,6 +9,7 @@
             border-radius: 10px;"
             placeholder="搜索"
             :maxlength="10"
+            allow-clear
             v-model:value="searchValue"
             @change="changeSearchValue">
                 <xt-new-icon class="absolute" icon="fluent:search-20-filled" size="20" />
@@ -20,7 +21,7 @@
                 style="width: 142px;height: 32px;"
                 :list="linkType"
                 @cb="updateAlign"/> -->
-                <xt-select v-model="test" :zIndex="1200" style="width: 160px;" :h="32" :list="linkType" :bordered="false"></xt-select>
+                <xt-select v-model="browserType" :zIndex="1200" style="width: 160px;" :h="32" :list="linkType" :bordered="false"></xt-select>
                 <div class="xt-bg-2 h-8 w-8 flex justify-center items-center rounded-lg ml-3 pointer" @click="isFavorites = false">
                     <xt-new-icon icon="fluent:dismiss-16-regular" size="16" />
                 </div>
@@ -47,7 +48,6 @@
             { name: '工作台内打开', value: 'work' },
         ],
         folderIndex: -2,
-        test: { name: '系统默认浏览器', value: 'system' },
 
         
       }
@@ -60,7 +60,7 @@
     },
   
     computed:{
-    ...mapWritableState(favoStore, ['isFavorites', 'searchValue']),
+    ...mapWritableState(favoStore, ['isFavorites', 'searchValue', 'browserType']),
     },
     methods: {
         change(n){

@@ -35,16 +35,7 @@
         let scaleW = (380 / ( 135 * str[0])).toFixed(4)
         let scaleH = (260 / ( 100 * str[1])).toFixed(4)
         this.scale = scaleW > scaleH?scaleH:scaleW
-        // let max = str[0] > str[1]?str[0]:str[1]
-        // if(max < 4){
-        //   this.scale = 1
-        // }else if(max < 6){
-        //   this.scale = 0.6
-        // }else if(max < 8){
-        //   this.scale = 0.4
-        // }else{
-        //   this.scale = 0.2
-        // }
+        this.scale = this.scale > 1?1:this.scale
         return str.join('x')
       }
     },

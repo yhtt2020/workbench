@@ -35,7 +35,7 @@
   import { favoStore } from '../store'
   import WebItem from './WebItem.vue'
   import { message } from 'ant-design-vue';
-  // import { browser } from '../../../js/common/browser'
+  import browser from '../../../js/common/browser'
   
   
   export default {
@@ -69,14 +69,13 @@
           item.check = !item.check
         }else{
           this.urlIndex = n
-          // if(this.browserType.type == 'system'){
-          //   // browser.openInSystem(item.url)
-          //   browser.openInUserSelect(item.url)
-          // }else if(this.browserType.type == 'thisky'){
-          //   browser.openInInner(item.url)
-          // }else{
-          //   browser.openInTable(item.url)
-          // }
+          if(this.browserType == 'system'){
+            browser.openInUserSelect(item.url)
+          }else if(this.browserType == 'thisky'){
+            browser.openInInner(item.url)
+          }else if(this.browserType == 'work'){
+            browser.openInTable(item.url)
+          }
         }
       },
       showRenameModal(item){

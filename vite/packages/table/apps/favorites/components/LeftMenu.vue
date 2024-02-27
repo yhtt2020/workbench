@@ -11,7 +11,7 @@
             <div class="divider"></div>
         </div> -->
         <!-- 列表 -->
-        <div class="xt-scrollbar scroll-color font-16" style="height: 580px;">
+        <div class="xt-scrollbar scroll-color font-16" style="height: 650px;">
             <div v-for="(item, index) in folder" >
                 <div style="width: 215px;" class="ml-3 h-12 flex mb-2 items-center px-3 w-full justify-between pointer rounded-lg" @click="change(index)"  :class="index==folderIndex?'select':''" >
     
