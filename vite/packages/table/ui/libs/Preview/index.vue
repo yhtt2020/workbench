@@ -37,7 +37,6 @@
       ...mapWritableState(favoStore, ['folderIcons']),
       showCard(){
         let arr = []
-        console.log('this.desks', this.desks)
         this.desks.forEach(item => {
           item.cards.forEach((card, index) => {
             if(card.name == 'folder') arr.push({
@@ -53,7 +52,6 @@
         })
         if(arr.length) this.chooseIndex = 0
         this.cardList = arr
-        console.log('arr12132356', arr)
         return arr
       }
     },
@@ -63,23 +61,15 @@
     methods: {
       change(){
         let index = 0
-        // console.log('index', index, this.desks, this.desks[index], this.cardList)
         this.desks.forEach(item=>{
           if(item.id == this.cardList[this.chooseIndex].deskId){
-            console.log(1321315,item);
             item.cards.forEach(card=>{
               if(card.id == this.cardList[this.chooseIndex].id){
-                console.log('1456s456fa456', card)
                 card.customData.list.push(...this.folderIcons)
               }
             })
           }
         })
-        // this.desks[index].cards.forEach(item=>{
-        //   if(item.id == this.cardList[this.chooseIndex].id){
-        //     console.log('1456s456fa456', item)
-        //   }
-        // })
       }
     },
   };
