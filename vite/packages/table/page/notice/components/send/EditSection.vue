@@ -22,7 +22,8 @@
     </div>      
    </template>
 
-   <a-input class="h-10 xt-bg-t-2 " v-model:value="msgSetting.title" style="border-radius: 10px;margin-bottom: 16px;border: 1px solid var(--divider) !important;" :bordered="true" placeholder="标题"></a-input>
+   <a-input class="h-10 xt-bg-t-2 " v-model:value="msgSetting.title" :bordered="true" placeholder="标题" :maxlength="20"
+   style="border-radius: 10px;margin-bottom: 16px;border: 1px solid var(--divider) !important;" />
    <a-textarea v-model:value="msgSetting.summary" placeholder="摘要（选填）" class="xt-bg-t-2" style="border-radius: 10px;margin-bottom: 16px;border: 1px solid var(--divider) !important;" :bordered="true" :rows="4" />
    <MsgMarkdown ref="mkRef" :msgContent="msgSetting.content"/>
 

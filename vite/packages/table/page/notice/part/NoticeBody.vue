@@ -36,7 +36,7 @@ export default defineComponent({
      </ImagePreviewGroup>
    </div>
    <div>
-     {{ content.body }}
+     {{ content.content }}
    </div>
  </div>
 
