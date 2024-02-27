@@ -27,7 +27,7 @@
     </div> -->
     <div v-if="false"
           style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:100px">
-          <div>选中的id:===={{ dragItem?.id }} {{ hoverIndex }}</div>
+          <div>选中的id:===={{ this.left }} {{parentHeight - this.navAttribute.navSize / 100 * 100 }} {{ parentHeight }}</div>
           <div v-for="( item, index) in copyFootNav" style="margin-bottom: 5px;border-bottom: 4px solid white">
             {{ index }} {{ item.name }} {{ item.id }} {{ item.children?.length }}
           </div>
@@ -128,9 +128,9 @@
                             style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                             @click.stop="newOpenApp(item.type, item.value, item)">
                             <Drag :data="item" currentId="bottom" @deleteFile="deleteFile">
-                              <Team v-if="item.value === 'commun'" :item="item" :placement="'top'"></Team>
+                              <Team v-if="item.value === 'commun'" :item="item" :placement="'top'" :x="this.realXY.x" :y="this.realXY.y"></Team>
                               <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
-                                @click="openFolder(item)">
+                                >
                               </FolderVue>
                               <template v-else>
                                 <Avatar :item="item"></Avatar>
@@ -694,7 +694,12 @@ export default {
         return '6x4'
       }
     },
-
+    realXY() {
+      return {
+        x: this.left,
+        y: this.parentHeight - this.navAttribute.navSize / 100 * 100 - 175
+      }
+    }
   },
   watch: {
     copyFootNav: {
@@ -836,7 +841,7 @@ export default {
     deleteFile(data){
       const index = this.copyFootNav.findIndex(item => item.id === data.id)
       this.copyFootNav.splice(index,1)
-      console.log('删除成功');
+      // console.log('删除成功');
       this.$emit('getDelIcon', false)
     },
     listenMouse(e) {
@@ -878,7 +883,7 @@ export default {
         bg:item.bg,
         color:item.color,
       }
-      console.log(item,'edit.editItem')
+      // console.log(item,'edit.editItem')
     },
 
     /**
@@ -973,7 +978,7 @@ export default {
      */
     editNavigation(item) {
 
-      console.log('item :>> ', item);
+      // console.log('item :>> ', item);
       if (item.component) {
         this.componentId = item.component
         if (item.component === 'EditNewNavigation') {
@@ -1033,12 +1038,16 @@ export default {
      * @param {*} item 图标详细信息
      */
     async newOpenApp(type, value, item) {
-      console.log('value :>> ', value);
-      console.log('type :>> ', type);
-      console.log('item :>> ', item);
+      // console.log('value :>> ', value);
+      // console.log('type :>> ', type);
+      // console.log('item :>> ', item);
+      if(type === 'folder'){
+        this.openFolder(item)
+      }
+      this.resetElementPosition()
       if (value == 'fullscreen' && window.$useEnv()) {
         toggle()
-        console.log('isFullscreen :>> ', isFullscreen);
+        // console.log('isFullscreen :>> ', isFullscreen);
         return
       }
       if (window.$useEnvLimit('web',value)) return
@@ -1123,15 +1132,15 @@ export default {
      * sortable拖拽函数
      */
     enableDrag() {
-      console.log('触发一次重置 ')
+      // console.log('触发一次重置 ')
       if (this.sortable) {
-        console.log('先清理 ')
+        // console.log('先清理 ')
         this.sortable.destroy()
       }
       let that = this
       let drop = document.getElementById('bottomContent')
       if (!drop) {
-        console.error('更新底部导航栏失败，元素不存在')
+        // console.error('更新底部导航栏失败，元素不存在')
         return
       }
       let index = null
@@ -1149,9 +1158,9 @@ export default {
         //
         onStart: function (event) {
           that.cancelUpdate = false
-          console.log('onStart')
+          // console.log('onStart')
           that.dragItem = that.copyFootNav[event.oldIndex]
-          console.log('启动拖拽的元素', that.dragItem)
+          // console.log('启动拖拽的元素', that.dragItem)
           if (that.popVisible) {
             that.notifications.NoticeToast()
           }
@@ -1205,19 +1214,19 @@ export default {
             //如果执行过合并，这里就不需要刷新顺序了。
             return
           }
-          console.log('onUpdate')
+          // console.log('onUpdate')
           //拖拽排序后，更新数据
-          console.log('移动event=', event)
+          // console.log('移动event=', event)
           let cur = this.copyFootNav.splice(event.oldIndex, 1)[0]
           if (!cur) {
-            console.error('移动失败，无法获取到元素')
+            // console.error('移动失败，无法获取到元素')
             return
           }
           this.copyFootNav.splice(event.newIndex, 0, cur)
           return
         }, 100),
         onEnd: function (event) {
-          console.log('onEnd')
+          // console.log('onEnd')
           that.$emit('getDelIcon', false)
           that.popVisible = false
           // 删除
@@ -1234,11 +1243,11 @@ export default {
           const panelLeft = that.defaultPosition.x
           const relativePos = (moveLeft - panelLeft) % 72
           const isGap = relativePos <= 20 && relativePos >= 0
-          console.log('isGap=', isGap, relativePos)
+          // console.log('isGap=', isGap, relativePos)
           return true
         },
         onChoose: function (event) {
-          console.log('onChoose')
+          // console.log('onChoose')
           index = event.oldIndex
 
           that.defaultPosition = {
@@ -1247,13 +1256,13 @@ export default {
           }
         },
         onSort: function (event) {
-          console.log('onSort', event)
+          // console.log('onSort', event)
           // console.log('item', that.copyFootNav[event.newIndex])
         },
         // 触发替换中发生的事件
         onChange(event) {
-          console.log('onChange', event)
-          console.log('item')
+          // console.log('onChange', event)
+          // console.log('item')
         },
         /**
          * 合并文件夹操作
@@ -1357,10 +1366,10 @@ export default {
       let posX = Number((this.defaultPosition.x).toFixed(0));
       // 元素大小
       let menuW = draggableSize[0] * 140
-      console.log(menuW, 'menuW', vW, 'vW', posX, 'posX')
+      // console.log(menuW, 'menuW', vW, 'vW', posX, 'posX')
       posX = posX > vW - (menuW / 2) ? vW - menuW : (posX - menuW / 2 < 0 ? 0 : posX - menuW / 2);
       this.left = posX
-      console.log(posX, 'posX')
+      // console.log(posX, 'posX')
     },
     onDrag: function (e) {
       let hoverRs = this.getHoverIndex(e.x)

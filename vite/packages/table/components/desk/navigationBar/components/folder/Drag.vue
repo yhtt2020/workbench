@@ -5,7 +5,7 @@
 </template>
   
 <script setup>
-import {getCurrentInstance} from 'vue'
+import {getCurrentInstance,onMounted,computed} from 'vue'
 import { storeToRefs } from "pinia";
 import { useAddCard } from "../../../../../ui/hooks/useAddCard";
 
@@ -18,9 +18,19 @@ import { useFreeLayoutStore } from "../../../freeLayout/store";
 
 import { useDeskStore } from "../../../store";
 
+// 获取桌面信息
+import _ from 'lodash-es'
+import { homeStore } from '../../../../../store/home';
+import { cardStore } from '../../../../../store/card';
+const home = homeStore()
+const card = cardStore()
+const {currentDeskId} = storeToRefs(home)
+const {desks} = storeToRefs(card)
+
 // 图标托起提示
 import TipsInfo from './TipsInfo.vue';
 import { useToast } from 'vue-toastification'
+import {ctrlTip} from '../../hook/toastTip'
 const toast = useToast()
 
 const deskStore = useDeskStore();
@@ -90,7 +100,8 @@ const handleDragEnd = (event) => {
                     id,
                 }
             }
-            proxy.$bus.emit("addCard", obj);
+            // proxy.$bus.emit("addCard", obj);
+            addFolder(obj)
         }else{
             obj = useFileConversionIcon(props.data)
             let id = Date.now();
@@ -125,22 +136,22 @@ const handleDragEnd = (event) => {
     // isEnterDesk.value = false
 };
 
-const ctrlTip = () =>{
-    toast(
-        {
-          component: TipsInfo,
-        },
-        {
-          position: "top-right",
-          icon: false,
-          closeOnClick: false,
-          closeButton: false,
-          pauseOnFocusLoss: true,
-          pauseOnHover: true,
-          timeout: 5000,
-          toastClassName: "notice-toast",
-        }
-    );
+// 获取当前桌面数据
+const currentDesk = computed(()=>{
+  let desk = desks.value.find((item)=>{
+    return item.id === currentDeskId.value
+  })
+  return desk
+})
+
+// 导航栏文件夹添加到桌面
+const addFolder = (item) => {
+  let value = _.cloneDeep(item)
+  currentDesk.value.cards.push({
+    name: "folder",
+    id: Date.now(),
+    customData: value,
+  })
 }
 </script>
   

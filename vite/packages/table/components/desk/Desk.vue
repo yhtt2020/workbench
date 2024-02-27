@@ -557,14 +557,15 @@ export default {
   mounted() {
     // 空桌面添加图标保持弹窗
     // this.editVisible = this.keepAddIcon
-    this.$bus.on("addCard", (data) => {
-      let value = _.cloneDeep(data);
-      this.currentDesk.cards.push({
-        name: "folder",
-        id: Date.now(),
-        customData: value,
-      });
-    });
+    // this.$bus.on("addCard", (data) => {
+    //   let value = _.cloneDeep(data);
+    //   console.log("value :>> ", this.currentDesk);
+    //   this.currentDesk.cards.push({
+    //     name: "folder",
+    //     id: Date.now(),
+    //     customData: value,
+    //   });
+    // });
     // 自动打开编辑
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();
