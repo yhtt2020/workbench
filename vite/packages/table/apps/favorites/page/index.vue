@@ -152,12 +152,14 @@ export default {
         if(this.folderList[this.folderIndex]?.type == 'all'){
           arr = this.allList.filter(item => {
             let name = item.rename?item.rename:item.name
-            return item.browser == this.folderList[this.folderIndex].browser && name.indexOf(this.searchValue) > -1
+            return item.browser == this.folderList[this.folderIndex].browser && name.indexOf(this.searchValue) > -1 
+            || item.url.indexOf(this.searchValue) > -1
           })
         }else if(this.folderList[this.folderIndex]?.type == 'folder'){
           arr = this.allList.filter(item => {
             let name = item.rename?item.rename:item.name
             return item.parent == this.folderList[this.folderIndex].guid && name.indexOf(this.searchValue) > -1
+            || item.url.indexOf(this.searchValue) > -1
           })
         }
       }else if(this.folderIndex == 0){
