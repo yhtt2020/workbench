@@ -31,6 +31,7 @@
     "dtpweb": "^2.3.20231108",
     "echarts": "^5.4.1",
     "filenamify": "^5.1.1",
+    "hevue-img-preview": "^6.1.0",
     "html2canvas": "^1.4.1",
     "jquery": "^3.6.3",
     "jsqr": "^1.4.0",
