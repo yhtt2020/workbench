@@ -37,6 +37,9 @@ export default {
           route: "QRCodeGeneration",
         },
         { name: "一键取色", img: "colorSelection", route: "colorSelection" },
+        {
+          name:'图片加水印',img:"watermark",route:"watermark"
+        }
         // { name: "搜索网格", img: "searchTools", route: "searchTools" },
         // { name: "文件分享", img: "fileFhare", route: "fileFhare" },
 
