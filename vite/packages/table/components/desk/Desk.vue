@@ -171,7 +171,7 @@
   </div>
 
   <xt-modal v-model="setVisible" :footer="false" boxClass="" :mask="0" :header="false">
-    <DeskSet @close="setVisible = false" />
+    <SystemSet @close="setVisible = false" />
   </xt-modal>
   <xt-modal
     v-model="settingVisible"
@@ -430,6 +430,7 @@ export default {
     // 监听ID变化
     "currentDesk.id": {
       handler(newVal) {
+        this.$bus.off("startAdjust");
         let obj = {
           id: 20,
           newIcon: "fluent:more-horizontal-16-filled",
@@ -666,7 +667,7 @@ export default {
       }
     },
     showSetting() {
-      this.settingVisible = true;
+      // this.settingVisible = true;
       this.setVisible = true;
     },
     hideDesk() {
@@ -863,6 +864,11 @@ export default {
       return this.adjustZoom;
     },
   },
+  beforeDestroy() {
+    console.log('123 :>> ', 123);
+
+
+  }
 };
 </script>
 

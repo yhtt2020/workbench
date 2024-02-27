@@ -86,11 +86,10 @@ import GlobalDesk from "./set/GlobalDesk.vue";
 import Test from "../widgets/test/index.vue";
 
 import Folder from "../../apps/folder";
-import DeskSet from './set//Set.vue';
-
+import SystemSet from '../../apps/systemSet/index';
 export default {
   components: {
-    DeskSet,
+    SystemSet,
     Test,
     LoadingOutlined,
     GlobalDesk,

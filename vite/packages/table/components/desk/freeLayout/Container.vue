@@ -280,13 +280,14 @@ const cutCanvas = async (config) => {
     message.success("已为您更新画布画布");
   }
   console.log("被调用了 :>> ");
-  // 处于吸附网格
-  if (getFreeLayoutState.value.mode.arrange == "grid") {
-    snowDrag.value?.forEach((item) => {
-      item.adsorbGrid();
-    });
-  }
-
+  setTimeout(() => {
+    // 处于吸附网格
+    if (getFreeLayoutState.value.mode.arrange == "grid") {
+      snowDrag.value?.forEach((item) => {
+        item.adsorbGrid();
+      });
+    }
+  }, 2);
   console.log("redirect :>> ", redirect);
   if (!redirect) return;
   let x = Infinity;
