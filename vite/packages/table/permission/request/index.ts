@@ -9,7 +9,7 @@ const request = new XyRequest({
   },
   interceptors: {
     requestInterceptor: (config: any) => {
-      config.headers.Authorization = cache.get("ttToken");
+      config.headers.Authorization = cache.get("ttUserToken");
       return config;
     },
     requestInterceptorCatch: (err: any) => {

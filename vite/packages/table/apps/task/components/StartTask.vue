@@ -3,7 +3,6 @@
   <p>进行中任务ID： {{ startList }}</p>
   <p>可领取奖励ID： {{ claimRewardsList }}</p>
   <p>已完成任务ID： {{ completedList }}</p> -->
-
   <xt-button v-if="completeTask" h="40" type="success" block @click="startTask"
     >已完成，再次体验</xt-button
   >
@@ -12,7 +11,7 @@
     style="background: #faad14 !important; width: 100%"
     @click="receive()"
     h="40"
-    >领取奖励</xt-button
+    >{{ receiveText }}</xt-button
   >
   <xt-button
     v-else-if="continueTask"
@@ -28,13 +27,14 @@
 </template>
 
 <script setup>
-import { reactive, ref, getCurrentInstance, computed } from "vue";
+import { reactive, ref, getCurrentInstance, computed,onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { taskStore } from "../store";
 import { useToast } from "vue-toastification";
 import { storeToRefs } from "pinia";
 import Guide from "./Guide.vue";
 import { getReward, currentType } from "../task";
+import { useLogin } from '../../../permission/user/useLogin';
 
 import { appStore } from "../../../store";
 const { proxy } = getCurrentInstance();
@@ -42,7 +42,7 @@ const app = appStore();
 
 // 初始化
 const store = taskStore();
-const { currentId, startList, claimRewardsList, completedList, rewardVisible,smallMize } =
+const { currentId, startList, claimRewardsList, completedList, rewardVisible,smallMize,isTaskDrawer } =
   storeToRefs(store);
 const router = useRouter();
 const props = defineProps({
@@ -73,7 +73,7 @@ const startTask = () => {
   startList.value = [...new Set(startList.value)];
   smallMize.value = false;
 
-  console.log("props.task.id :>> ", props.task.id);
+  // console.log("props.task.id :>> ", props.task.id);
   currentId.value = props.task.id;
 
   let type = currentType(props.task.id);
@@ -118,8 +118,21 @@ const continueTask = computed(() => {
 
 // 领取奖励
 const receive = async () => {
-  currentId.value = props.task.id;
-  rewardVisible.value = true;
+  if(window.$useEnv('guest')){
+    useLogin(()=>{
+      currentId.value = props.task.id;
+      rewardVisible.value = true;
+    })
+    // tsbApi.user.login((data) => {
+    //  app.getUserInfo()
+    // })
+  }
+  else {
+    currentId.value = props.task.id;
+    rewardVisible.value = true;
+  }
+  getReward('z0201');
+
 };
 const getReceiveStatus = computed(() => {
   return claimRewardsList.value.includes(props.task.id);
@@ -127,9 +140,22 @@ const getReceiveStatus = computed(() => {
 
 // 已完成任务
 const completeTask = computed(() => {
-  console.log("completedList.value :>> ", completedList.value);
+  // console.log("completedList.value :>> ", completedList.value);
   return completedList.value.includes(props.task.id);
 });
+
+// 领取奖励文字描述
+const receiveText = computed(()=>{
+  if(window.$useEnv('guest')){ return '登录并领取奖励' }
+  else { return '领取奖励' }
+})
+
+onMounted(()=>{
+  proxy.$.appContext.app.config.globalProperties.$bus.on('start',()=>{
+    isTaskDrawer.value = true;
+    smallMize.value = true;
+  })
+})
 </script>
 
 <style lang="scss" scoped>

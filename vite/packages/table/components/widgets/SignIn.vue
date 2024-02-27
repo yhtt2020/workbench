@@ -1,6 +1,6 @@
 <template>
   <xt-container
-    v-model:customSize="customSize"
+    v-model:customSize="customData.customSize"
     :header="header"
     :custom-data="customData" :custom-index="customIndex" :envLimit="['guest','offline']"
     :options="options"
@@ -202,6 +202,7 @@ export default {
     this.request().then(() => {
       this.popUsers()
     })
+    this.customData.customSize = '2x4'
   },
   computed: {
     ...mapWritableState(comStore, ['todayRank']),

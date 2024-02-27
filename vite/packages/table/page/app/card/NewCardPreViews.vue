@@ -394,9 +394,12 @@ export default {
       if (item.option[1] != undefined) {
         this.fullScreen(item);
       } else {
-        if (item.name === "remote") {
-          this.openRemote = true;
+        if (item.name === "remote" ) {
+          if (!window.$useComLimit(['web'], item.name)) {
+            this.openRemote = true;
           this.remoteContent = item;
+          }
+
           return;
         }
         this.addCardAchieve(item);
@@ -420,6 +423,7 @@ export default {
 
       ];
       index = index ?? this.carouselIndex;
+      console.log('item.option[index].name :>> ', item.option[index].name);
       let res  =  window.$useComLimit(['web'], item.option[index].name)
       if (res) return
       this.addCard(

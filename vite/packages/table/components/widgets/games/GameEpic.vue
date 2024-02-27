@@ -1,7 +1,8 @@
 <template>
   <xt-container 
     :header="header"
-    v-model:customSize="customSize"
+    v-model:customSize="customData.customSize"
+    :customData="customData"
     :envLimit="['web']"  
     :options="options" 
     :customIndex="customIndex" 
@@ -72,7 +73,7 @@ export default {
     newIcon,
   },
 
-  props: ["desk", "customIndex"],
+  props: ["desk", "customIndex",'customData'],
 
   data() {
     return {
@@ -102,8 +103,7 @@ export default {
       unPromotionList: [],
 
       detailList: {},
-
-      customSize:'2x4',
+      
       refreshFlag:false,
     }
   },
@@ -129,6 +129,7 @@ export default {
       this.unPromotionList = this.epicData.unPromotionList
       this.promotionList = this.epicData.promotionList
     }
+    this.customData.customSize = '2x4'
   },
 
   methods: {

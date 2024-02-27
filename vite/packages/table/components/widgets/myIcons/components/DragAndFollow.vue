@@ -39,6 +39,11 @@ import { mapWritableState, mapActions } from "pinia";
 import { cardStore } from "../../../../store/card";
 import { useFreeLayoutStore } from "../../../desk/freeLayout/store";
 import { homeStore } from '../../../../store/home'
+// 拖拽图标时，提示信息
+import { useNavBarStore } from "../../../desk/navigationBar/navBar";
+import TipsInfo from "../../../desk/navigationBar/components/folder/TipsInfo.vue";
+import { useToast } from 'vue-toastification'
+const toast = useToast()
 export default {
   emits: ["drag-start", "drag-end", "click"],
   data() {
@@ -58,15 +63,19 @@ export default {
   },
   computed: {
     ...mapWritableState(homeStore, ["currentDeskId"]),
+    ...mapWritableState(useNavBarStore, ["neverTip"]),
   },
   methods: {
     ...mapActions(useFreeLayoutStore, ["isFreeLayout"]),
     // 鼠标按下事件处理方法
     handleMouseDown(event) {
+      console.log("handleMouseDown");
+      if (event.button !== 0) return; // 只允许左键拖拽
       this.followPosition = { x: event.clientX, y: event.clientY }; // 初始化拖拽元素坐标
       event.preventDefault();
       event.stopPropagation();
       this.dragStartTimer = setTimeout(() => {
+        this.coastTip()
         document.body.style.cursor = "move"; // 拖拽手指
         this.$emit("drag-start", event);
         event.preventDefault();
@@ -143,6 +152,25 @@ export default {
         // this.$emit("iconClick");
       }
     },
+    // 拖拽图标时，提示信息
+    coastTip(){
+      if (this.neverTip) return;
+      toast(
+        {
+          component: TipsInfo,
+        },
+        {
+          position: "top-right",
+          icon: false,
+          closeOnClick: false,
+          closeButton: false,
+          pauseOnFocusLoss: true,
+          pauseOnHover: true,
+          timeout: 5000,
+          toastClassName: "notice-toast",
+        }
+      );
+    }
   },
   mounted() {
     this.$nextTick(() => {

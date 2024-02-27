@@ -1,5 +1,5 @@
 <template>
-  <div class="s-bg m-2 rounded-md px-5 xt-bg xt-text" style="height: calc(100% - 20px);">
+  <div class="px-5 m-2 rounded-md s-bg xt-bg xt-text" style="height: calc(100% - 20px);">
     <back-btn class="xt-bg-2 xt-text"></back-btn>
     <div  style="font-size: 18px;display: flex;flex-direction: column;height: 100%">
       <h3 class="mt-3" style="text-align: center;">
@@ -158,6 +158,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.grids,'<<<<<<<<======')
     this.currentGrid = this.grids.find(g => {
       return String(g.id) === String(this.$route.params.gridId)
     })

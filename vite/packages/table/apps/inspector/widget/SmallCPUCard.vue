@@ -1,9 +1,11 @@
 <template>
   <xt-container  
+    v-model:customSize="customData.customSize"
     :header="header"
     :envLimit="['web']" 
     :options="options" 
     :menu-list="menuList" 
+    :customData="customData"
     :desk="desk">
     <div @click="go" class="content pointer" style="color:var(--primary-text)">
       <div><a-progress type="circle"  stroke-color="#FF9C00" :percent="CPUData.useCPU" :strokeWidth="10" :width="105" style="margin-top: 28px">
@@ -89,6 +91,9 @@ export default {
   props:{
     desk:{
       type:Object
+    },
+    customData:{
+      type:Object
     }
   },
   computed:{
@@ -96,6 +101,7 @@ export default {
     ...mapWritableState(appStore,['saving'])
   }, mounted () {
     this.startInspect()
+    this.customData.customSize = '2x2'
   },
   unmounted () {
     this.stopInspect()

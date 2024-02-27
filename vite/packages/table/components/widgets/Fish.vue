@@ -1,5 +1,10 @@
 <template>
-  <xt-container  :options="options"  :customIndex="customIndex" :desk="desk"  :custom-data="customData">
+  <xt-container
+    v-model:customSize="customData.customSize"  
+    :options="options"  
+    :customIndex="customIndex" 
+    :desk="desk"  
+    :custom-data="customData">
     <div style="display: flex;flex-direction: column" class="-mt-6">
       <div style="flex:1;margin-right: 20px;margin-left: 20px">
         <div ref="fish" @click="click" class="fish"
@@ -102,6 +107,9 @@ export default {
       }, 200)
     },
   },
+  mounted () {
+    this.customData.customSize = '2x2'
+  }
 }
 </script>
 

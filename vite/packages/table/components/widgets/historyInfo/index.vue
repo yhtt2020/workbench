@@ -1,5 +1,6 @@
 <template>
     <xt-container 
+        v-model:customSize="customData.customSize"
         :header="header"
         :customData="customData" 
         :customIndex="customIndex" 
@@ -64,6 +65,7 @@ export default {
         };
     },
     mounted() {
+        this.customData.customSize = '2x2'
         this.onHistoryMessage()
         // 设置一次性定时器 当天12点过后自动触发事件
         let now = new Date;

@@ -159,6 +159,9 @@
       }
     },
     mounted() {
+      if(this.customData.customSize === undefined){
+        this.customData.customSize = '2x4'
+      }
       this.isLoading = true
       this.getData().then(()=>{
         if(!this.data){

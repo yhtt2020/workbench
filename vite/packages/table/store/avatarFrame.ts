@@ -31,6 +31,7 @@ export const frameStore = defineStore('frameStore',{
       this.frameData.list = result
     },
     async updateMyinfo(data){  // 修改我的信息
+      console.log("await post(editInfoUrl,data)",await post(editInfoUrl,data));
       return  await post(editInfoUrl,data)
     },
     async removeFrame(){
@@ -66,8 +67,11 @@ export const frameStore = defineStore('frameStore',{
     },
 
     async getMyFrames(){
-      return await get(getMyFramesUrl)
+      let res =  await get(getMyFramesUrl)
 
+      console.log('getMyFrames res  :>> ', res);
+
+      return res
     },
     /**
      * 装备上头像框

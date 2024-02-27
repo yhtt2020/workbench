@@ -1,26 +1,27 @@
 <template>
-  <div class="flex justify-center items-center w-full h-full">
-    <!-- xt-bg-t-2 -->
-    <div>
-      <div class="flex justify-center">
-        <xt-new-icon
-          icon="fluent:plug-disconnected-16-regular"
-          :size="imgSize"
-          color="color: var(--secondary-text);"
-        ></xt-new-icon>
-      </div>
-      <div
-        class="mt-4 font-14 xt-text-2"
-        :style="{ fontSize: fontSize }"
-      >
-        {{ name }} 在 {{ ENV_MAP[plat] }} 下不可用
-      </div>
+  <div
+    v-if="plat"
+    class="flex flex-col justify-center items-center w-full h-full"
+  >
+    <div class="flex justify-center">
+      <xt-new-icon
+        icon="fluent:plug-disconnected-16-regular"
+        :size="imgSize"
+        color="color: var(--secondary-text);"
+      ></xt-new-icon>
+    </div>
+    <div class="mt-4 font-14 xt-text-2" :style="{ fontSize: fontSize }">
+      {{ name }} 在 {{ ENV_MAP[plat] }} 下不可用
     </div>
   </div>
+  <slot v-else></slot>
 </template>
 
 <script>
 import { ENV_MAP } from "../../../permission/config";
+import { usePermissionStore } from "../../../permission/store";
+import { mapWritableState } from "pinia";
+import cache from "../../../components/card/hooks/cache";
 export default {
   name: "XtStatus",
   data() {
@@ -32,22 +33,29 @@ export default {
   components: {},
   mounted() {
     this.plat = this.$useEnv(this.status);
-    console.log("ENV_MAP :>> ", ENV_MAP);
-    console.log("this.status :>> ", this.status);
-    console.log(" this.plat  :>> ", this.plat);
   },
-  watch: {},
+  watch: {
+    token: {
+      handler(val) {
+        setTimeout(() => {
+          let res = this.$useEnv(this.status);
+          console.log("watch token :>> ", this.token);
+          console.log("res :>> ", res);
+          console.log('this.status :>> ', this.status);
+          this.plat = res;
+          if (val) {
+            cache.set("isGuest", "");
+          }
+        }, 1000);
+      },
+    },
+  },
   props: {
     // 元素名称
     name: {
       type: String,
       default: "帕鲁",
     },
-    // 平台名称
-    // plat: {
-    //   type: String,
-    //   default: '上班时间',
-    // },
     // 文字大小
     fontSize: {
       type: Number,
@@ -62,6 +70,9 @@ export default {
       type: Array,
       default: "",
     },
+  },
+  computed: {
+    ...mapWritableState(usePermissionStore, ["token"]),
   },
 };
 </script>

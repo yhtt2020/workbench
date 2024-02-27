@@ -365,6 +365,7 @@
       :panelIndex="panelIndex"
     ></NewAddCard>
   </div>
+  <input style="display: none" ref="fileRef" type="file" />
 </template>
 
 <script>
@@ -396,7 +397,7 @@ import { useFloatMenuStore } from "./floatMenu/store";
 import { useDeskStore } from "./store";
 import { completeTask } from "../../apps/task/task";
 import NewGuidePage from "../../page/app/grade/NewGuidePage.vue";
-export default {
+ export default {
   name: "DeskGroup",
   components: {
     Emoji,
@@ -479,6 +480,7 @@ export default {
             newIcon: "fluent:share-android-24-regular",
             name: "分享桌面",
             fn: this.shareDesk,
+            disabled: window.$useEnv(),
           },
           // {
           //   id: 8,
@@ -796,19 +798,31 @@ export default {
       this.allDeskListVisible = true;
     },
     async importDesk() {
-      if(!this.showGuide){
-        let openPath = await tsbApi.dialog.showOpenDialog({
-          title: "选择导入的代码",
-          filters: [{ name: "desk存档", extensions: ["desk"] }],
-        });
-        if (!openPath) {
-          return;
-        }
-        let importJsonTxt = require("fs").readFileSync(openPath[0], "utf-8");
-        let needImportDesk;
+      let fileRef = this.$refs.fileRef;
+        fileRef.click();
+        let that = this;
+        fileRef.onchange = function (event) {
+          if (this.files.length === 0) return;
+          const file = this.files[0];
+          const reader = new FileReader();
+          reader.onload = function (event) {
+            that.readConfig(event.target.result);
+          };
+          // 开始读取文件，读取完成后会触发 onload 事件
+          reader.readAsText(file); // 如果是二进制文件，可以使用 reader.readAsArrayBuffer(file) 或者 reader.readAsDataURL(file)
+        };
 
-        try {
-          needImportDesk = JSON.parse(importJsonTxt);
+
+    },
+    // 读取文件配置
+    async readConfig(file) {
+      if(!this.showGuide){
+        // let importJsonTxt = require("fs").readFileSync(openPath[0], "utf-8");
+        let needImportDesk;
+// console.log("importJsonTxt :>> ", importJsonTxt);
+
+        // try {
+          needImportDesk = JSON.parse(file);
           const { desk, freeLayoutData, freeLayoutState } = needImportDesk;
           let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
           desk.forEach((g) => {
@@ -824,14 +838,13 @@ export default {
               (g.settings.zoom * cardsHeight) /
               g.deskHeight
             ).toFixed();
-
             g.icon = "desktop";
             g.settings.zoom = parseInt(cardZoom);
-            g.id = window.$models.nanoid.nanoid(8);
+            g.id =nanoid(8);
             // 将导入的便签重新修改时间
             g?.cards?.forEach((item, index) => {
               //移除桌面相关的便签卡片
-              if (item.name === "notes") {
+              if (item.name === "notes" && !this.$useEnv()) {
                 const now = new Date().getTime();
                 const obj = {
                   ...item,
@@ -843,7 +856,9 @@ export default {
                   deskId: g.id,
                   deskName: g.name,
                 };
-                tsbApi.db.put(obj);
+                if (!this.$useEnv()) {
+                  tsbApi.db.put(obj);
+                }
                 g.cards[index] = obj;
               }
             });
@@ -856,10 +871,10 @@ export default {
           });
           this.addDeskVisible = false;
           message.success("为您成功导入" + desk.length + "个桌面。");
-        } catch (e) {
-          console.warn(e);
-          message.error("导入失败，请检查代码。");
-        }
+        // } catch (e) {
+        //   console.warn(e);
+        //   message.error("导入失败，请检查代码。");
+        // }
       }else{
         message.info("定制过程中无法操作");
       }
@@ -886,7 +901,7 @@ export default {
         } else {
           this.currentDesk?.cards?.forEach((item) => {
             //移除桌面相关的便签卡片
-            if (item.name === "notes") {
+            if (item.name === "notes" && !this.$useEnv()) {
               tsbApi.db
                 .find({
                   selector: {
@@ -938,6 +953,13 @@ export default {
 
     },
     exportDesk() {
+      if (this.$useEnv('guest')) {
+        console.log('访客模式下无法导出桌面')
+        window.$ui.confirm("访客模式下无法导出桌面", "", {
+          type: "warning",
+        });
+        return
+      }
       if(!this.showGuide){
         this.$refs.currentDeskRef.hideMenu();
         this.layoutSize = this.$refs.currentDeskRef.getLayoutSize();

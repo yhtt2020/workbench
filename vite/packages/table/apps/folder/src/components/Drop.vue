@@ -28,6 +28,7 @@ import { defaultData } from "./options";
 import {useLinkConversionNav} from '../../../../apps/folder/src/hooks/useDataConversion'
 import { useGetUrlName, getFavicon } from "../../../../components/desk/navigationBar/hook/getUrlName";
 import { useNavBarStore } from "../../../../components/desk/navigationBar/navBar";
+
 // 获取桌面数据
 const deskStore = useDeskStore();
 const { isEnterFolder } = storeToRefs(deskStore);
@@ -147,9 +148,9 @@ const handleDragleave = (dragEvent) => {
 /**
  * 处理鼠标弹起
  */
-const handleMouseUp = () => {
-  // console.log("鼠标弹起 :>> ");
-
+const handleMouseUp = (e) => {
+  // console.log("鼠标弹起 :>> ",e.ctrlKey);
+  let isCtrl = e.ctrlKey;
   // 非自定义模式禁止图标组件添加
   if (data.value.model !== "custom") return;
 
@@ -182,9 +183,12 @@ const handleMouseUp = () => {
   if (iconsRefs.value.length < 1) return;
 
   console.log("iconsRefs.value.length  :>> ", iconsRefs.value.length);
-  iconsRefs.value.forEach((item) => {
-    item.doRemoveCard();
-  });
+  if(!isCtrl){
+    iconsRefs.value.forEach((item) => {
+      item.doRemoveCard();
+    });
+  }
+  
   iconList.value = [];
   iconsRefs.value = [];
 };

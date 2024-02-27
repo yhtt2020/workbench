@@ -25,8 +25,8 @@ export const sizeValues = {
     },
   },
   mini: {
-    w: 134,
-    h: 86,
+    w: 135,
+    h: 97,
     square: {
       w: 66,
       h: 66,
@@ -38,7 +38,7 @@ export const sizeValues = {
   },
   mini1: {
     w: 280,
-    h: 96,
+    h: 97,
     square: {
       w: 66,
       h: 66,
@@ -50,7 +50,7 @@ export const sizeValues = {
   },
   small: {
     w: 280,
-    h: 205,
+    h: 204,
     square: {
       w: 175,
       h: 175,

@@ -2,7 +2,7 @@
   <!-- <xt-button @click="test()" v-if="settings.enableDev">任务重置</xt-button> -->
   <template v-if="store.taskID">
     <!-- 用户等级信息 -->
-    <TaskUserInfo v-if="!visitor"/>
+    <TaskUserInfo v-if="!$useEnv('guest')"/>
     <!-- 章节进度 -->
     <div class="xt-bg-2 rounded-xl px-4 pt-4 pb-3">
       <xt-text>
@@ -17,7 +17,7 @@
       <div class="mt-1 mb-1">
         <a-progress :percent="progress" :show-info="false" />
       </div>
-      <TaskReward :showTaskReward="currentTaskReward"></TaskReward>
+      <TaskReward :showTaskReward="currentTaskReward" :showTip="true" :isCenter="''"></TaskReward>
     </div>
     <xt-title>正在进行</xt-title>
     <div class="xt-bg-2 rounded-xl p-3">
@@ -34,6 +34,7 @@
         <StartTask :task="currentTask" class="mt-3"></StartTask>
       </div>
     </div>
+    <div style="height: 16px;"></div>
   </template>
 
   <template v-else>
@@ -161,8 +162,13 @@ const currentTaskReward = computed(()=>{
   },0);
   let lving =0
   // 等级升级预期
-  if(!$useEnv('visitor')){
-    lving = Math.floor(experienceTotal / userInfo.value?.grade.next);
+  if(!$useEnv('guest')){
+    if(Math.ceil(experienceTotal / userInfo.value?.grade?.next) > 1){
+      lving  = 1;
+    }
+    else {
+      lving = Math.ceil(experienceTotal / userInfo.value?.grade?.next);
+    }
   }
   return {
     lving:lving,

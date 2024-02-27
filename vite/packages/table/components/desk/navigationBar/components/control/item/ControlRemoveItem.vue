@@ -1,5 +1,5 @@
 <template>
- <Vuuri v-model="control.oldList" group-id="id" item-key="id" :options="option"  ref="testRef"
+ <Vuuri v-model="controlList" group-id="id" item-key="id" :options="option"  ref="testRef"
  :drag-enabled="true"   :get-item-height="getHeight"
 >
 
@@ -39,6 +39,14 @@ const { control } = storeToRefs(controls);
 const getHeight = () =>{
  return 120 + 'px' 
 };
+
+const controlList = computed(()=>{
+  if (!window.$useEnv()) return control.value.oldList;
+  const arr = ["window-control", "assist-mode", "audio",'energy-save-mode','shake'];
+  let filterList = control.value.oldList.filter(item => !arr.includes(item.id));
+  return filterList;
+})
+
 
 onMounted(()=>{
   testRef.value.muuri.on('dragEnd', function (item, event) {

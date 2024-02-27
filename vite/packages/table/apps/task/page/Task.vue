@@ -1,6 +1,6 @@
 <template>
   <xt-modal custom v-model="store.isTaskDrawer" boxClass="rounded-xl" :mask="false" v-if="smallMize" :index="1500">
-    <div class="xt-modal flex rounded-xl" style="width: 500px;height:  742px;" >
+    <div class="xt-modal flex task-modal rounded-xl" style="width: 500px;" >
       <xt-left-menu :list="menusList" :end="2" model="id" style="border-radius: 12px 12px 12px 0"
         leftClass=" 1 xt-main-bg py-3 h-full  "  :leftStyle="{'border-radius': '12px 0 0 12px',}"
       />
@@ -50,10 +50,11 @@ let task = ref([]);
 let icon = ref("");
 
 
-const { updateTime, currentUpdateTime, currentTaskList,smallMize } = storeToRefs(store);
+const { updateTime, currentUpdateTime, currentTaskList,smallMize,temporaryStatus } = storeToRefs(store);
 let Offline = offlineStore();
 // 切换任务
 const selectTab = (item) => {
+  if(temporaryStatus.value){ temporaryStatus.value = false; }
   currentTask.value = item.value;
 };
 // 切换不同支线
@@ -169,7 +170,6 @@ const updateTaskList = async () => {
 :deep(.xt-br){
   border-right: none !important;
 }
-
 .pop {
   position: fixed;
   bottom: 16%;
@@ -178,4 +178,31 @@ const updateTaskList = async () => {
   height: 60px !important;
 }
 
+@media screen and(max-height:500px){
+  .task-modal{
+    height: 460px !important;
+  }
+}
+
+@media screen and(min-height:501px) and(max-height:700px){
+  .task-modal{
+    height:  620px !important;
+  }
+}
+
+@media screen and(min-height:701px) {
+  .task-modal{
+    height:  720px !important;
+  }
+}
+
+
 </style>
+<!-- 
+@media screen and(max-height:700px) {
+  .task-modal{
+    height:  640px !important;
+  }
+}
+
+ -->

@@ -6,9 +6,9 @@
     <div style="position: absolute; z-index: 500 !important;"
       :style="{ left: `${this.left}px`, bottom: `${navAttribute.navSize / 100 * 100}px` }" class="rounded-xl pointer "
       id="folder">
-      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:customSize="updateSize"
+      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:customSize="updateSize" @close="folderVisible = false"
         :customData="customData" :customIndex="bottomKey" :secondary="true" v-if="folderVisible"
-        :expand="{ disabled: true }" :navBar="{ resize: false, sizeOption: false, isDel: true, hierarchy: true }"
+        :expand="{ disabled: true }" :navBar="{ resize: false, sizeOption: false, isDel: true, hierarchy: true, close: true }"
         :auto="true" />
 
     </div>
@@ -77,7 +77,7 @@
               style="position: absolute;z-index:99999999999;top:-8px;left:50%;transform: translateX(-50%) translateY(-100%)  ;"
               class="px-10 py-3 rounded-lg s-bg xt-text">松开鼠标合并</div>
           </transition>
-          <div id="bottomPanel" :class="{ 'nav-enter': autoVisible, 'nav-leave': !autoVisible }" @drop.prevent="drop"
+          <div id="bottomPanel"  @drop.prevent="drop"
             @dragover.prevent="" class="flex flex-row items-center s-bg" style="
         display: flex;
         flex-direction: column;
@@ -99,14 +99,13 @@
 
             <xt-task id='M0104' no='1' :mask="false" @cb="showMenu" class="w-full ">
               <div style="
-          display: flex;
-          flex-direction: row;
-          width: 100%;
-          height: 52px;
-          align-items: start;
-          flex-wrap: nowrap;
-          justify-content: center;
-        ">
+                    display: flex;
+                    flex-direction: row;
+                    width: 100%;
+                    height: 52px;
+                    align-items: start;
+                    flex-wrap: nowrap;
+                    justify-content: center;">
                 <div @contextmenu="showMenu" style="height: 52px; width: 100%; overflow: hidden" class="item-content">
                   <div class="w-full scroll-content" style=" flex: 1; display: flex; margin-left: 20px;margin-right: 20px"
                     ref="content">
@@ -254,6 +253,14 @@ import 'animate.css'
 import AutoHide from './desk/navigationBar/components/folder/AutoHide.vue'
 import { mergeData } from '../ui/hooks/useDataConversion'
 
+
+import { useFullscreen } from '@vueuse/core'
+const {
+            //是否全屏状态
+            isFullscreen,
+            //切换全屏
+            toggle
+        } = useFullscreen()
 export default {
   name: 'BottomPanel',
   emits: ['getDelIcon', 'hiedNavBar'],
@@ -990,7 +997,7 @@ export default {
      * @param {*} currentItem 当前删除图标
      */
     delCurrentIcon(currentIndex, currentItem) {
-      if (!this.mainNavigationList.find(f => f.name === currentItem.name)) {
+      if (!this.mainNavigationList.find(f => f.value === currentItem.value)) {
         this.removeFootNavigationList(currentIndex)
         return
       }
@@ -1028,7 +1035,12 @@ export default {
     async newOpenApp(type, value, item) {
       console.log('value :>> ', value);
       console.log('type :>> ', type);
-      console.log('3333 :>> ', item);
+      console.log('item :>> ', item);
+      if (value == 'fullscreen' && window.$useEnv()) {
+        toggle()
+        console.log('isFullscreen :>> ', isFullscreen);
+        return
+      }
       if (window.$useEnvLimit('web',value)) return
 
 

@@ -1,9 +1,10 @@
 <template>
-   <XtView type="popup" :showFull="false" v-model="webLogin">
-      <iframe  ref="iframe" id="myFrame"  @load="newLogin"    src="https://s.apps.vip/login?response_type=code&client_id=10001&state=1"  width="700" height="745"></iframe>
-      <!-- http://127.0.0.1:5500/src/receiver.html -->
+        <!-- http://127.0.0.1:5500/src/receiver.html -->
       <!-- https://s.apps.vip/login?response_type=code&client_id=10001&state=1 -->
+  <!-- <XtView :title="false" type="popup" :showFull="false" v-model="webLogin">
+      <iframe  ref="iframe" id="myFrame"  @load="newLogin" boxClass=""   src="https://s.apps.vip/login?response_type=code&client_id=10001&state=1"  width="700" height="745"></iframe>
     </XtView>
+    <xt-modal v-model="webLogin" v-if="webLogin" :mask="false">123</xt-modal> -->
  <!-- <Teleport to="body">
   <xt-modal :mask="false" :index="999999999" v-model="webLogin">
       <div style=" width:700px; height:745px">
@@ -14,7 +15,7 @@
   <div
     style="display:flex;height: 100vh;text-align: center;align-content: center;align-items: center;background:#333;justify-content: center"
     class="drag">
-    <div v-if="launching" style="margin: auto;">
+    <div v-if="launching && !$useEnv()" style="margin: auto;">
       <div class="mb-5 animate-bounce ">
         <a-avatar :size="60"
                   src="https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/8befa3834d2eb29e75685563ef513215.png?imageMogr2/crop/260x260/gravity/center"></a-avatar>
@@ -103,12 +104,13 @@ import { offlineStore } from '../js/common/offline'
 import { useWidgetStore } from '../components/card/store'
 // import { clockStore } from '../components/widgets/clock/hooks/clockStore';
 import {usePermissionStore} from '../permission/store'
+import {useLogin} from "../permission/user/useLogin"
 export default {
   name: 'Code',
-  components: { RayMedal },
+  components: { RayMedal, },
   data () {
     return {
-      webLogin:false,
+      loginVisible:false,
       showTip: false,
       loading: false,
       netError: false,
@@ -122,26 +124,15 @@ export default {
     }
   },
   async mounted () {
-    window.addEventListener("message", async (event) => {
-      let token = event?.data?.data?.token
-       // 拿到token
-       if (token) {
-        console.log('token :>> ', token);
-         cache.set('ttToken', token)
-         // let res =  await userPermit()
-         if (res  && this.webLogin) {
-           this.$router.replace({ name: 'home' })
-         }
-         }
-   }, false);
-    // 属于web端
-    if (this.$useEnv()) {
-      // 打开弹窗
-      this.webLogin = true
-      // 监听回调
-
-      return
-    }
+  //   window.addEventListener("message", async (event) => {
+  //     let token = event?.data?.data?.token
+  //      // 拿到token
+  //      if (token) {
+  //       console.log('token :>> ', token);
+  //        cache.set('ttUserToken', token)
+  //        this.$router.replace({ name: 'home' })
+  //        }
+  //  }, false);
 
     if(this.userInfo.uid){
       this.timeout()
@@ -233,6 +224,10 @@ export default {
       }, 5000)
     },
     goDirect () {
+    if (this.$useEnv()) {
+      this.$router.replace({ name: 'home' })
+      return
+    }
       this.$router.replace({ name: 'wizard' })
       localStorage.setItem('wizarded', 1)
     },
@@ -292,7 +287,9 @@ export default {
       console.log('ipc',userInfo)
         let lvInfo = this.lvInfo
         lvInfo.lv = userInfo.onlineGradeExtra.lv
+        // 当前等级的区间
         let current = this.gradeTableGenerate(64)[lvInfo.lv]
+        // 下一等级的区间
         let section = this.gradeTableGenerate(64)[lvInfo.lv + 1]
         let remain = section[0] * 60 - (userInfo.onlineGradeExtra.minutes)
         lvInfo.remainHour = Math.floor(remain / 60)
@@ -362,6 +359,7 @@ export default {
       }
 
     },
+    // 生成等级区间
     gradeTableGenerate (num) {
       let lvSys = {}
       for (let i = 0; i < num + 1; i++) {
@@ -380,6 +378,13 @@ export default {
       return lvSys
     },
     login () {
+      // this.loginVisible = true
+
+      console.log('123321 useLogin :>> ', 123321);
+      useLogin(()=>{
+        this.$router.replace({ name: 'home' })
+      })
+      return
       tsbApi.user.login((data) => {
         this.getUserInfo()
       })

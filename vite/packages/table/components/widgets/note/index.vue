@@ -1,32 +1,27 @@
 <template>
-  <Widget
+  <xt-container
+    @delete="removeNote"
+    v-model:customSize="customData.customSize"
+    :header="header"
     :customData="customData"
-    :size="reSize"
     :customIndex="customIndex"
-    :options="{...this.options,background:this.customData.background,title:this.customData.title}"
+    :options="noteOptions"
     :menuList="menuList"
     ref="homelSlotRef"
     :desk="desk"
     style="background: #191919; !important"
   >
-    <template #left-title-icon>
-      <!-- 图标 -->
-      <div class="icon flex justify-center align-center"
-           style="width: 35px;height: 24px;position: absolute;left: 3px;top:16px;color:#fff">
-        <Icon :icon="icons.notepad12Regular" width="20" height="20" />
-      </div>
-    </template>
-    <template #msg>
+    <!-- {{ customData.customSize }} -->
       <teleport to="body">                                                       
         <xt-msg title="确定删除小组件" text="默认仅删除小组件，备忘录数据不会清除。"  :modelValue="removeValue" @no="no" @ok="ok">
           <template #checkbox>
-            <div class="font-14 mr-4" style="color: var(--secondary-text) !important;">
+            <div class="mr-4 font-14" style="color: var(--secondary-text) !important;">
               <a-checkbox class="xt-text-2" v-model:checked="isRemove">同时删除便签数据</a-checkbox>
             </div>
           </template>
         </xt-msg>
       </teleport>
-    </template>
+    <!-- </template> -->
     <!-- 窗口化 -->
     <!-- <template #right-menu>
       <div class="pointer" v-if="options.isCopy" style="position: absolute; left:-28px;top:2px;" @click="options.copyContent">
@@ -53,12 +48,12 @@
     </template>
     <!-- <cardDrag ref="drag" @reSizeInit="reSizeInit"> </cardDrag> -->
 
-    <cardDrag ref="drag" @reSizeInit="reSizeInit">
-      <template #="{ row }">
+    <!-- <cardDrag ref="drag" @reSizeInit="reSizeInit"> -->
+      <!-- <template #="{ row }"> -->
         <Markdown ref="mdEditor" :customData="customData" :customIndex="customIndex" :desk="desk"></Markdown>
-      </template>
-    </cardDrag>
-  </Widget>
+      <!-- </template> -->
+    <!-- </cardDrag> -->
+  </xt-container>
   <!-- <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
     <template #title>
       <div class="text-center">设置</div>
@@ -83,16 +78,16 @@
       <div style="width:500px;height:466px;">
         <div class="p-4 font-16" style="height:64px;line-height: 32px;text-align: center;color: var(--primary-text);">
           「桌面便签」设置
-          <div class="flex justify-center items-center rounded-lg pointer" style="width:32px;height:32px;background-color: var(--secondary-bg);float: right;" @click="settingVisible = false">
+          <div class="flex items-center justify-center rounded-lg pointer" style="width:32px;height:32px;background-color: var(--secondary-bg);float: right;" @click="settingVisible = false">
             <Icon icon="fluent:dismiss-16-filled" />
           </div>
         </div>
         <!--  -->
           <div class="w-full" style="padding:0 24px 24px 24px;height:400px;">
-            <div class="w-full h-full rounded-lg p-4" style="background-color: var(--secondary-bg);">
+            <div class="w-full h-full p-4 rounded-lg" style="background-color: var(--secondary-bg);">
               <div style="color:var(--primary-text);font-size: 16px;">小组件尺寸</div>
 
-              <!-- <xt-tab v-model="cardSize" :list="sizeType1" class="xt-bg-2 p-1 h-12 mb-3"  @click="__updateSize" :data="customData.dragCardSize"/> -->
+              <!-- <xt-tab v-model="cardSize" :list="sizeType1" class="h-12 p-1 mb-3 xt-bg-2"  @click="__updateSize" :data="customData.dragCardSize"/> -->
 
               <!-- <RadioTab  :navList="sizeType"  class="nav-type"
                         v-model:selectType="cardSize"  @click="test" ></RadioTab> -->
@@ -103,9 +98,9 @@
               <a-divider style="height: 1px; background-color: var(--divider-text); margin: 16px 0; " />
               <div style="color:var(--primary-text);font-size: 16px;">便签主题色</div>
               <div>
-                <div class="item-box mt-4">
+                <div class="mt-4 item-box">
                   <div
-                    class="item mr-4 flex justify-center items-center"
+                    class="flex items-center justify-center mr-4 item"
                     :key="item"
                     :style="{ background: color[`${'color' + item}`] }"
                     v-for="item,index in 6"
@@ -182,6 +177,21 @@ export default {
     ...mapWritableState(noteStore, ['selNoteText', 'initFlag']),
     content(){
       return this.customData.text
+    },
+    header(){
+      return {
+        title: this.customData.title,
+        ifyIcon: this.icons.notepad12Regular,
+      }
+    },
+    noteOptions(){
+      return {
+        ...this.options,
+        bg:this.customData.background,
+        title:this.customData.title,
+        resize:true,
+        customDel:this.customDel
+      }
     }
   },
   data () {
@@ -302,6 +312,7 @@ export default {
           { name: '4x6', value: '4x6' },
       ],
       colorIndex:1,
+      customDel:true
     }
   },
   created () {
@@ -337,20 +348,31 @@ export default {
   methods: {
 
     ...mapActions(noteStore, ['changeDeskBg', 'saveDeskTitle']),
-
+    removeNote(){          
+      this.removeValue = true
+      this.isRemove = false
+    },
     // 替换原有删除逻辑
     no(){
       this.removeValue = false
     },
     async ok(){
-      this.removeValue = false
       // 删除便签时需要清除db数据
       let getDb = await tsbApi.db.find({
         selector: {
           _id: 'note:' + this.customIndex,
         },
       })
-      this.$refs.homelSlotRef.doRemoveCard()
+      // 在触发删除前，设置可以删除卡片
+      this.customDel = false
+      // 保存变化前的是否保留数据
+      let temp = this.isRemove
+      this.$nextTick(()=>{
+        // 触发组件的删除函数
+        this.$refs.homelSlotRef.removeCard()
+        this.removeValue = false
+        this.isRemove = temp
+      })
       if(this.isRemove && getDb.docs.length){
         await tsbApi.db.put({
           ...getDb.docs[0],

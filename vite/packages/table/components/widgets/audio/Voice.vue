@@ -1,12 +1,12 @@
 <template>
-  <xt-container 
-    :header="header" 
-    v-model:customSize="customSize"  
-    :limit-env="['web']" 
-    :customIndex="customIndex" 
-    :customData="customData" 
-    :options="options" 
-    :desk="desk" 
+  <xt-container
+    :header="header"
+    v-model:customSize="customData.customSize"
+    :envLimit="['web']"
+    :customIndex="customIndex"
+    :customData="customData"
+    :options="options"
+    :desk="desk"
     :menu-list="menus">
     <template #left-title-icon>
       <div class="icon"
@@ -102,10 +102,9 @@ export default {
       defaultMic:{},
       defaultOutput:{},
       options: {
-        className: 'card',
-        title: '音频',
-        // icon: 'sound',
-        type: 'games',
+        defaultData: {
+          customSize: '2x4',
+        }
       },
       audioValue:50,
       outputShow:false,
@@ -138,6 +137,8 @@ export default {
     ...mapWritableState(appStore,['settings'])
   },
   async mounted () {
+    this.customData.customSize = '2x4'
+    if (this.$useEnv()) return
     this.init()
     //
     // const device = await navigator.bluetooth.requestDevice({

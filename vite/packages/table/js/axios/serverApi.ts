@@ -1,16 +1,15 @@
 import {useEnv} from "../../ui/hooks/useEnv"
 import { getCurrentInstance } from 'vue';
-
+import cache from "../../components/card/hooks/cache";
 import { appStore } from '../../store'
 // 全局导入
 
 export const getConfig = async () => {
   // const { proxy }: any = getCurrentInstance();
-  let token;
   let res
-if (!useEnv()) {
-  res  = await window.tsbApi.user.get()
-  token =  res.data.token
+  let token  = cache.get('ttUserToken')
+
+
 
   // res  = await window.tsbApi.user.get()
   // token =  res.data.token
@@ -36,8 +35,15 @@ if (!useEnv()) {
   //   });
   // }
 
+
+
+
+if (!token && !useEnv()) {
+  res  = await window.tsbApi.user.get()
+  token =  res.data.token
 }
 
+// console.log('getConfig token :>> ', token);
   return {
     headers: {
       'Authorization': token

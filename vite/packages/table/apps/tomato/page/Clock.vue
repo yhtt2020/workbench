@@ -1,5 +1,6 @@
 <template>
   <xt-container 
+    v-model:customSize="customData.customSize"
     :options="{ ...this.options,bg:this.isColor}" 
     :customIndex="customIndex" :customData="customData" 
     :desk="desk" :showRightIcon="!this.$props.isTop" 
@@ -125,6 +126,7 @@
     },
     mounted(){
       this.getTomatoNum();
+      this.customData.customSize = '2x2'
       this.init(this.customData,this.customIndex,this.desk);
     },
     computed: {

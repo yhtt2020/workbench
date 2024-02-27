@@ -109,6 +109,9 @@ export default {
     if (this.customData?.id) {
       this.rankIndex = this.customData.id
     }
+    if(this.customData.customSize == undefined){
+      this.customData.customSize = '2x2'
+    }
   },
   methods: {
     ...mapActions(appStore,['showUserCard']),
@@ -157,8 +160,8 @@ export default {
 }
 
 .content-box {
-  height: calc(100% - 35px);
-  margin-top: 10px;
+  height: calc(100% );
+  // margin-top: 3px;
   overflow: hidden;
 }
 

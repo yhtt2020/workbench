@@ -1,28 +1,87 @@
 <template>
-  <Drop @createFile="createFile" @deleteFile="deleteFile" @updateBg="updateBg" ref="folder">
-    <xt-container v-model:status="status" :modalSize="modalSize" :options="options" :customIndex="customIndex"
-      :customData="customData" :header="header" :menuList="menuList" :sizeList="autoSizeList" @leftClick="leftClick"
-      v-model:customSize="customData.customSize" @delete="deleteFn">
+  <Drop
+    @createFile="createFile"
+    @deleteFile="deleteFile"
+    @updateBg="updateBg"
+    ref="folder"
+    class="tt-folder-container"
+  >
+    <xt-container
+      v-model:status="status"
+      :modalSize="modalSize"
+      :options="options"
+      :customIndex="customIndex"
+      :customData="customData"
+      :header="header"
+      :menuList="menuList"
+      :sizeList="autoSizeList"
+      @leftClick="leftClick"
+      v-model:customSize="customData.customSize"
+      @delete="deleteFn"
+      class="tt-folder-container"
+    >
       <!-- 空状态显示状态 -->
       <template v-if="customData.list.length <= 0 && !dragSortState">
         <Null :size="customData.customSize" @addFile="addFileClick" />
       </template>
-      <vue-custom-scrollbar v-else style="padding-right: 4px" :settings="{
-        useBothWheelAxes: true,
-        suppressScrollY: false,
-      }" class="relative w-full h-full">
-        <File :list="customData.list" :layout="customData.layout" :model="customData.model" :modalSize="modalSize"
-          @deleteFile="deleteFile" @updateFile="updateFile" @updateList="updateList" @updateSort="updateSort"
-          @clickFile="clickFile" />
+      <vue-custom-scrollbar
+        v-else
+        style="padding-right: 4px"
+        :settings="{
+          useBothWheelAxes: true,
+          suppressScrollY: false,
+        }"
+        class="relative w-full h-full"
+      >
+        <File
+          :list="customData.list"
+          :layout="customData.layout"
+          :model="customData.model"
+          :modalSize="modalSize"
+          @deleteFile="deleteFile"
+          @updateFile="updateFile"
+          @updateList="updateList"
+          @updateSort="updateSort"
+          @clickFile="clickFile"
+        />
       </vue-custom-scrollbar>
     </xt-container>
   </Drop>
 
-  <folderSet v-if="setVisible" :data="customData" @close="setVisible = false" @updateSort="updateSort"
-    @updateWindowApp="updateWindowApp" />
-  <EditNewNavigation v-if="editVisible" @setQuick="editVisible = false" @addIcon="addFile" :isFolder="false" />
+  <folderSet
+    v-if="setVisible"
+    :data="customData"
+    @close="setVisible = false"
+    @updateSort="updateSort"
+    @updateWindowApp="updateWindowApp"
+  />
+  <EditNewNavigation
+    v-if="editVisible"
+    @setQuick="editVisible = false"
+    @addIcon="addFile"
+    :isFolder="false"
+  />
+  <folderSet
+    v-if="setVisible"
+    :data="customData"
+    @close="setVisible = false"
+    @updateSort="updateSort"
+    @updateWindowApp="updateWindowApp"
+  />
+  <EditNewNavigation
+    v-if="editVisible"
+    @setQuick="editVisible = false"
+    @addIcon="addFile"
+    :isFolder="true"
+  />
 
-  <xt-modal custom v-model="expandVisible" v-if="expandVisible" boxClass="" @close="expandClose">
+  <xt-modal
+    custom
+    v-model="expandVisible"
+    v-if="expandVisible"
+    boxClass=""
+    @close="expandClose"
+  >
     <Expand :data="props" :auto="false" v-if="expandVisible"></Expand>
   </xt-modal>
 </template>
@@ -131,6 +190,8 @@ const props = defineProps({
       isDel: false,
       // 隐藏层级选择
       hierarchy: false,
+      // 点击文件夹外部关闭
+      close: Boolean,
     }),
   },
   // 自动设置大小
@@ -142,7 +203,7 @@ const props = defineProps({
 
 const { customData, customIndex, expand, secondary, navBar, auto, modalSize } =
   toRefs(props);
-const emit = defineEmits(["update:size", "update:layout", "clickFile"]);
+const emit = defineEmits(["update:size", "update:layout", "clickFile",'close']);
 
 const refreshState = ref(false);
 const header = computed(() => {
@@ -449,8 +510,6 @@ const updateBg = (val) => {
   isDrag.value = val;
 };
 
-onBeforeMount(() => {});
-
 /**
  * 刷新桌面数据
  */
@@ -487,7 +546,14 @@ const refreshDeskApp = async () => {
     refreshState.value = false;
   }, 1000);
 };
+function handleClick(e) {
+  if (e.target?.closest(".tt-folder-container") == null) {
+    console.log("123 :>> ", 123);
+  }
+}
 onMounted(async () => {
+  window.addEventListener("click", handleClick);
+
   customData.value.list = customData.value.list.map((item) => mergeData(item));
   // 空图标替换
   if (customData.value.icon === "") {
@@ -498,6 +564,11 @@ onMounted(async () => {
   if (customData.value.customSize == "") {
     customData.value.customSize = customData.value.size;
   }
+  // 冒泡排序
+});
+
+onBeforeMount(() => {
+  window.removeEventListener("click", handleClick);
 });
 </script>
 

@@ -3,7 +3,13 @@
   <!--&lt;!&ndash;  <my-list id="my" > <slot></slot></my-list>&ndash;&gt;-->
   <!--  </div>-->
 <xt-task :modelValue="m03031" @cb="openRightMenu">
-  <Widget :customIndex="customIndex" :size="customSize" :options="options" :menuList="menuList"
+  <xt-container 
+    :header="header"
+    v-model:customSize="customData.customSize"
+    :customIndex="customIndex" 
+    :size="customSize" 
+    :options="options" 
+    :menuList="menuList"
     ref="remote" :custom-data="customData" :desk="desk" :showRightIcon="notTrigger ? false : true">
     <div ref="cardSize" style="align-items: center;align-content: center;width: 100%;height:100%;text-align: center" :class="notTrigger ? 'trigger' : '' ">
       <div v-if="!customData.url"
@@ -17,7 +23,7 @@
         </iframe>
       </template>
     </div>
-  </Widget>
+  </xt-container>
 </xt-task>
   <a-drawer v-model:visible="panelVisible">
     <div class="line">
@@ -48,7 +54,8 @@
 import Widget from '../../card/Widget.vue'
 import { message } from 'ant-design-vue'
 import {taskStore} from "../../../apps/task/store"
-import { mapWritableState } from 'pinia';
+import { mapWritableState, mapActions } from 'pinia';
+import { cardStore } from "../../../store/card";
 // import RemoteShare from '../../card/remote/RemoteShare.vue';
 function loadScript(src, id, callback) {
   const s = document.createElement("script", id);
@@ -96,13 +103,6 @@ export default {
       showCommunity: false,
       id: Date.now().toString(),
       openShare: false,
-      options: {
-        className: 'card small',
-        title: '',
-        icon: '',
-        type: 'remote',
-        noTitle: true,
-      },
       menuList: [
         {
           icon: "shop",
@@ -147,6 +147,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(cardStore, ["updateCustomData"]),
     openRightMenu(){
       this.$refs.remote.menuVisible = true
     },
@@ -163,6 +164,9 @@ export default {
       this.customData.width = this.width / 2
       this.customData.height = this.height / 2
       this.customData.url = this.url
+      this.updateCustomData(this.customIndex,{
+        customSize:`${this.width}x${this.height}`,
+      },this.desk)
       message.success('修改成功')
 
     },
@@ -210,6 +214,17 @@ export default {
     cardSize() {
       const { width, height } = this.$refs.cardSize.getBoundingClientRect();
       return { width, height };
+    },
+    options(){
+      return {
+        bg:this.customData.hideFrame ? 'transparent' : '',
+        shadow: this.customData.hideFrame
+      }
+    },
+    header(){
+      return {
+        disabled: this.customData.hideFrame
+      }
     }
   },
   mounted() {
@@ -223,6 +238,9 @@ export default {
       this.customData.height = 1
     }
     this.url = this.customData.url || ''
+    if(this.customData.customSize == undefined){
+      this.customData.customSize = '2x2'
+    }
     // console.log('尝试载入')
     // const node = document.getElementById("my");
     // //我们将变量转换一下格式，就能传递给子组件

@@ -14,6 +14,14 @@ import { useAddCard } from "../../../../ui/hooks/useAddCard";
 import { useDeskStore } from "../../../../components/desk/store";
 import { useFreeLayoutStore } from "../../../../components/desk/freeLayout/store";
 
+// 图标托起提示和ctrl复制图标
+import { useNavBarStore } from '../../../../components/desk/navigationBar/navBar'
+import { useToast } from 'vue-toastification'
+import TipsInfo from '../../../../components/desk/navigationBar/components/folder/TipsInfo.vue';
+const toast = useToast()
+const navBar = useNavBarStore()
+const { neverTip } = storeToRefs(navBar)
+
 // 自由布局
 const freeLayoutStore = useFreeLayoutStore();
 const { isFreeLayout, getFreeLayoutData, freeLayoutEnv } =
@@ -32,16 +40,20 @@ const { dragId, isDrag, move, currentId, currentData,folderFlag } =
 const props = defineProps({
   data: {},
 });
+
+let isCtrl = false
 /**
  * 文件托起
  */
 const handleDragStart = (event) => {
+  ctrlTip()
   move.value = false;
   isDrag.value = true;
   dragId.value = index.value;
   currentId.value = index.value;
   currentData.value = props.data;
   folderFlag.value = "folder"
+  isCtrl = event.ctrlKey
 };
 // const handleDragLeave = (event) => {
 //   console.log("handleDragLeave :>> ");
@@ -100,23 +112,46 @@ const handleDragEnd = (event) => {
       },
       id
     );
-
-    emits("deleteFile", props.data);
+    
+    if(!isCtrl){
+      emits("deleteFile", props.data);
+    }
 
     return;
   }
   // 判断托起的文件是不是拖入导航栏
   if (!isEnterBar.value){
+    if(isCtrl) return
     emits("deleteFile", props.data);
     return;
   }
   // 判断是否处在当前文件夹
   if (index.value != currentId.value) {
+    if(isCtrl) return
     emits("deleteFile", props.data);
   }
   // 数据回收
   dragId.value = "";
   currentId.value = "";
+};
+
+const ctrlTip = () => {
+  if (neverTip.value) return;
+  toast(
+    {
+      component: TipsInfo,
+    },
+    {
+      position: "top-right",
+      icon: false,
+      closeOnClick: false,
+      closeButton: false,
+      pauseOnFocusLoss: true,
+      pauseOnHover: true,
+      timeout: 0,
+      toastClassName: "notice-toast",
+    }
+  );
 };
 </script>
 

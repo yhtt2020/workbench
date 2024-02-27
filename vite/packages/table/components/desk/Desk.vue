@@ -33,9 +33,6 @@
       :alone="settings.enableZoom"
       :hide="hide"
     />
-    <!-- {{ freeLayout }}
-    {{ isFreeLayout }}
-    {{ $route.path }} -->
     <Drop>
       <!-- <xt-wu-jie
         ref="xxx"
@@ -47,33 +44,29 @@
       <!-- <Wujie width="100%" height="100%" name="xxx" url="http://localhost:5173/" ></Wujie> -->
       <!-- 自由布局 -->
       <template v-if="freeLayout">
-        <FreeLayoutScrollbar
-        ref="freeLayoutScrollbar"
-        class="flex-1"
-      >
-        <FreeLayoutCanvas
-          class="home-widgets"
-          v-if="isFreeLayout == true && $route.path == '/main' && freeLayout"
-        >
-          <FreeLayoutContainer
-            :currentDesk="currentDesk"
-            :currentID="currentDesk.id"
-            :isDrag="editing"
+        <FreeLayoutScrollbar ref="freeLayoutScrollbar" class="flex-1">
+          <FreeLayoutCanvas
+            class="home-widgets"
+            v-if="isFreeLayout == true && $route.path == '/main' && freeLayout"
           >
-            <template #box="{ data }">
-              <component
-                :desk="currentDesk"
-                :is="data?.name"
-                :customIndex="data?.id"
-                :customData="data?.customData"
-                di
-              />
-            </template>
-          </FreeLayoutContainer>
-        </FreeLayoutCanvas>
-      </FreeLayoutScrollbar>
+            <FreeLayoutContainer
+              :currentDesk="currentDesk"
+              :currentID="currentDesk.id"
+              :isDrag="editing"
+            >
+              <template #box="{ data }">
+                <component
+                  :desk="currentDesk"
+                  :is="data?.name"
+                  :customIndex="data?.id"
+                  :customData="data?.customData"
+                />
+              </template>
+            </FreeLayoutContainer>
+          </FreeLayoutCanvas>
+        </FreeLayoutScrollbar>
       </template>
-    
+
       <!-- 默认布局 -->
       <vue-custom-scrollbar
         v-show="!isFreeLayout"
@@ -212,7 +205,6 @@
           :fixedFloat="settings.enableZoom"
           :freeFloat="isFreeLayout"
         />
-        <slot name="settingsAllAfter"></slot>
       </template>
     </div>
   </xt-modal>
@@ -243,12 +235,10 @@
   </transition>
   <AddIcon @close="iconHide" v-if="iconVisible" :desk="currentDesk"></AddIcon>
   <GalleryModal ref="galleryRef" />
-  <!-- 111 -->
   <EditNewNavigation
     v-if="editVisible"
     @setQuick="editVisible = false"
     @addIcon="addIcon"
-    :isFolder="true"
   ></EditNewNavigation>
 </template>
 
@@ -285,8 +275,8 @@ export default {
   mixins: [componentsMinis, menuMinis],
   components: { LoadingOutlined, EditNewNavigation, GalleryModal, Drop },
   props: {
-    keepAddIcon:{
-      default:false,
+    keepAddIcon: {
+      default: false,
     },
     freeLayout: {
       default: true,
@@ -367,6 +357,31 @@ export default {
     },
   },
   watch: {
+    // 是否开启独立布局
+    "settings.enableZoom": {
+      handler(newVal) {
+        if (newVal) {
+          this.currentSettingTab = "current";
+        }
+      },
+      deep: true,
+      immediate: true,
+    },
+    // 是否开启自由布局
+    isFreeLayout: {
+      handler(newVal) {
+        if (newVal) {
+          this.currentSettingTab = "current";
+        }
+      },
+      immediate: true,
+    },
+    // 当两个布局都未开启 设置为通用设置
+    settingVisible(val) {
+      if (!val && !this.isFreeLayout && !this.settings.enableZoom) {
+        this.currentSettingTab = "all";
+      }
+    },
     adjustLayout(val) {
       if (val) {
         this.toggleEditing();
@@ -471,6 +486,12 @@ export default {
     ...mapWritableState(useFloatMenuStore, ["menus", "newMenus"]),
     ...mapWritableState(useNavigationStore, ["selectNav", "isDesk"]),
     ...mapWritableState(useDeskStore, ["autoOpenEdit", "adjustLayout"]),
+    // 根据当前桌面配置确定展示的对应桌面设置
+    currentDeskEnv() {
+      if (this.isFreeLayout || 0) {
+        return "current";
+      }
+    },
     navMenu() {
       if (
         !this.navigationToggle[0] &&
@@ -535,16 +556,15 @@ export default {
   },
   mounted() {
     // 空桌面添加图标保持弹窗
-    this.editVisible = this.keepAddIcon
-    this.$bus.on('addCard',(data)=>{
-      let value = _.cloneDeep(data)
+    // this.editVisible = this.keepAddIcon
+    this.$bus.on("addCard", (data) => {
+      let value = _.cloneDeep(data);
       this.currentDesk.cards.push({
-        name:'folder',
-        id:Date.now(),
-        customData: value
-      })
-
-    })
+        name: "folder",
+        id: Date.now(),
+        customData: value,
+      });
+    });
     // 自动打开编辑
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();
@@ -593,9 +613,9 @@ export default {
     ...mapActions(useDeskStore, ["addMenu"]),
     ...mapActions(taskStore, ["initTask"]),
     addFolder() {
-      if(!this.showGuide){
+      if (!this.showGuide) {
         registerFolder(this.currentDesk);
-      }else{
+      } else {
         message.info("定制过程中无法操作");
       }
     },
@@ -627,7 +647,7 @@ export default {
       this.menuVisible = false;
     },
     toggleEditing() {
-      if(!this.showGuide){
+      if (!this.showGuide) {
         if (this.editing) {
           message.info("已关闭拖拽调整");
         } else {
@@ -637,7 +657,7 @@ export default {
         this.$emit("changeEditing", this.editing);
         this.menuVisible = false;
         this.key = Date.now();
-      }else{
+      } else {
         message.info("定制过程中无法操作");
       }
     },
@@ -658,7 +678,7 @@ export default {
     },
     clear(desk) {
       this.menuVisible = false;
-      if(!this.showGuide){
+      if (!this.showGuide) {
         if (desk) {
           window.$ui.confirm("清空当前桌面的全部卡片？此操作不可还原。", "", {
             okText: "清空卡片",
@@ -667,7 +687,7 @@ export default {
             ok: () => {
               desk?.cards?.forEach((item) => {
                 //移除桌面相关的便签卡片
-                if (item.name === "notes") {
+                if (item.name === "notes" && !this.$useEnv()) {
                   tsbApi.db
                     .find({
                       selector: {
@@ -692,18 +712,18 @@ export default {
             },
           });
         }
-      }else{
+      } else {
         message.info("定制过程中无法操作");
       }
     },
     newAddCard() {
-      if(!this.showGuide){
+      if (!this.showGuide) {
         if (this.autoOpenEdit) {
           this.toggleEditing();
         }
         this.addCardVisible = true;
         this.menuVisible = false;
-      }else{
+      } else {
         message.info("定制过程中无法操作");
       }
     },
@@ -717,10 +737,10 @@ export default {
       if (!this.notTrigger && this.rightModel !== "follow")
         this.menuVisible = true;
     },
-    arrange(){
-      if(!this.showGuide){
+    arrange() {
+      if (!this.showGuide) {
         this.$emit("onArrange");
-      }else{
+      } else {
         message.info("定制过程中无法操作");
       }
     },
@@ -728,12 +748,12 @@ export default {
     newAddIcon() {
       // this.iconVisible = true;
       // this.menuVisible = false;
-      if(!this.showGuide){
+      if (!this.showGuide) {
         this.editVisible = true;
         this.menuVisible = false;
         this.selectNav = "desktop";
         this.isDesk = true;
-      }else{
+      } else {
         message.info("定制过程中无法操作");
       }
     },

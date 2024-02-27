@@ -41,8 +41,8 @@
             </div>
         </template>
         <template #header-right>
-            <div class="ml-3 text-base xt-text-2" v-if="visible">添加到：</div>
-            <a-dropdown trigger="['click']" v-if="visible">
+            <div class="ml-3 text-base xt-text-2" v-if="!isFolder">添加到：</div>
+            <a-dropdown trigger="['click']" v-if="!isFolder">
                 <template #overlay>
                     <a-menu class="rounded-xl xt-modal" style="border-radius: 12px !important;">
                         <a-menu-item @click="handleMenuClick(item)" key="index" v-for="(item, index) in dropArr"
@@ -74,6 +74,7 @@
 </template>
 <script>
 import {cardStore} from '../../../store/card'
+import { homeStore } from '../../../store/home'
 import { useNavigationStore } from './navigationStore'
 import { navStore } from '../../../store/nav'
 import { mapActions, mapWritableState } from 'pinia'
@@ -88,6 +89,7 @@ import { message } from 'ant-design-vue'
 import Msg from '../../../ui/new/msg/index.vue'
 import customLink from './components/CustomLink.vue'
 import {useEnv} from '../../../ui/hooks/useEnv'
+import {replaceIcon} from './hook/useReplace'
 let appModel
 if ( !useEnv('web')) {
   appModel = window.$models.appModel
@@ -106,7 +108,7 @@ export default {
       isFolder: {
         type: Boolean,
         default: false
-      }
+      },
     },
     data() {
         return {
@@ -243,7 +245,18 @@ export default {
         }
     },
     methods: {
-        ...mapActions(navStore, ['setFootNavigationList', 'sortFootNavigationList', 'removeFootNavigationList', 'setSideNavigationList', 'sortSideNavigationList', 'removeSideNavigationList', 'setRightNavigationList', 'sortRightNavigationList', 'removeRightNavigationList', 'setNavigationToggle']),
+        ...mapActions(navStore, [
+            'setFootNavigationList', 
+            'sortFootNavigationList', 
+            'removeFootNavigationList', 
+            'setSideNavigationList', 
+            'sortSideNavigationList', 
+            'removeSideNavigationList', 
+            'setRightNavigationList', 
+            'sortRightNavigationList', 
+            'removeRightNavigationList', 
+            'setNavigationToggle']),
+        replaceIcon,
         onSelect(index) {
             this.currentIndex = index
             this.inputValue = ''
@@ -253,6 +266,9 @@ export default {
             this.$emit('setQuick')
         },
         async loadDeskIconApps() {
+            const web = await getNavList()
+            this.webList = [web]
+          if (this.$useEnv()) return
             const lightApps = await appModel.getAllApps()
             // console.log(lightApps, 'lightApps');
             for (let i = 0; i < lightApps.length; i++) {
@@ -264,11 +280,9 @@ export default {
             for (let i = 0; i < desktopApps.length; i++) {
                 desktopApps[i].type = 'tableApp'
             }
-            const web = await getNavList()
-            this.webList = [web]
             this.ClassifyData.push(...desktopApps, ...lightApps)
             this.ClassifyData = this.replace(this.ClassifyData)
-            // console.log(this.ClassifyData, 'ClassifyData');
+            console.log(this.ClassifyData,lightApps, 'ClassifyData');
         },
         // 更换图标格式
         replace(list) {
@@ -277,7 +291,7 @@ export default {
                     name: item.name,
                     icon: item.icon,
                     type: item.type,
-                    value: item.path || item.package || item.url || item.event || item.data,
+                    value: this.replaceIcon(item),
                     bg: '',
                     isBg: false,
                     summary: item.summary || '',
@@ -427,6 +441,7 @@ export default {
     },
     computed: {
         ...mapWritableState(cardStore,['desks']),
+        ...mapWritableState(homeStore,['currentDeskId']),
         ...mapWritableState(useNavigationStore, ['selectNav', 'currentList', 'introduceVisible','isDesk','targetDesk']),
         ...mapWritableState(navStore, ['mainNavigationList', 'sideNavigationList', 'footNavigationList', 'rightNavigationList', 'navigationToggle']),
         filterList() {
@@ -481,16 +496,6 @@ export default {
         msgText() {
             return `当前${this.defaultTitle.title}没有开启，是否选择开启导航栏`
         },
-        visible(){
-            if(this.selectNav !== 'desktop'){
-                return true
-            }else{
-                if(this.isDesk){
-                    return true
-                }
-                return false
-            }
-        },
         dropArr(){
             if(this.selectNav !== 'desktop'){
                 return this.addIconPosition
@@ -515,6 +520,10 @@ export default {
     mounted() {
         if(this.currentNav){
            this.defaultTitle = this.currentNav
+           if(this.selectNav === 'desktop' && !this.isFolder){
+               let targetDesk = this.dropArr.find(i=>i.id === this.currentDeskId)
+               this.defaultTitle = targetDesk
+           }
         }else{
             this.defaultTitle = {
                 title: '底部导航栏',

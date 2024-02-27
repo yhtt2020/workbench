@@ -131,11 +131,12 @@ export default {
           message.success('添加成功',0.5)
           break;
       }
-
     },
     // 搜索目标图标
     filterIcon(list) {
       const inputValueLowerCase = this.inputValue.toLowerCase();
+      // web端无法获取到图标，新增容错
+      list === undefined ? list = [] : list
       return list.filter(i => i.name.toLowerCase().includes(inputValueLowerCase));
     }
 

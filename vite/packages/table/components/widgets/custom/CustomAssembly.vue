@@ -1,14 +1,25 @@
 <template>
-  <Widget
+  <xt-container
+    v-model:customSize="customData.customSize"
+    :header="header"
     :customIndex="customIndex"
     :options="options"
     :menuList="menuList"
     ref="customAssembly"
     :custom-data="customData"
     :desk="desk">
-    <div v-if="Object.keys(myData.img).length > 0" class="absolute inset-0" style="border-radius: 8px; z-index: -1">
+    <div 
+      v-if="Object.keys(myData.img).length > 0" 
+      class="absolute inset-0" 
+      style="
+        border-radius: 8px; 
+        z-index: -1;
+        left: -14px;
+        right: -14px;
+        bottom: -14px;
+        top: -45px;">
       <div
-        class="h-full w-full pointer"
+        class="w-full h-full pointer"
         @click="openApp"
         v-if="Object.keys(myData.img).length > 0"
       >
@@ -28,43 +39,43 @@
           @error="imgError"
           :src="myData.img.path"
           alt=""
-          class="h-full w-full"
+          class="w-full h-full"
           style="border-radius: 8px; object-fit: cover"
           v-else-if="myData.img.path && imgState"
         />
         <img
           @error="imgError"
           :src="myData.img.src"
-          class="h-full w-full"
+          class="w-full h-full"
           style="border-radius: 8px; object-fit: cover"
           v-else-if="myData.img.src && imgState"
         />
         <img
           src="https://a.apps.vip/cards/smallWallpaper.png"
-          class="h-full w-full"
+          class="w-full h-full"
           style="border-radius: 8px; object-fit: cover"
           v-else
         />
       </div>
 
       <div
-        class="game-item-title-bg w-full h-12 absolute bottom-0 flex items-center pl-3"
+        class="absolute bottom-0 flex items-center w-full h-12 pl-3 game-item-title-bg"
         v-if="showName"
         style="border-radius: 0 0 8px 8px;color: var(--primary-text);"
       >
         {{ myData.title }}
       </div>
     </div>
-    <div v-else class="flex justify-center items-center flex-col h-full">
+    <div v-else class="flex flex-col items-center justify-center h-full">
       <!-- <a-empty description="" /> -->
 
-      <xt-button type="theme"
-                 @click="importFile"
-      >
+      <xt-button 
+        type="theme"
+        @click="importFile">
         选择图片
       </xt-button>
     </div>
-  </Widget>
+  </xt-container>
   <a-drawer
     v-model:visible="panelVisible"
     :width="500"
@@ -74,7 +85,7 @@
   >
     <template #extra>
       <div
-        class="flex justify-center items-center rounded-lg h-10 drawer-item-bg w-16 pointer"
+        class="flex items-center justify-center w-16 h-10 rounded-lg drawer-item-bg pointer"
         @click="saveData" style="background: #508BFE ;color:white"
       >
         保存
@@ -86,7 +97,7 @@
       style="height: calc(100% - 10px)"
     >
       <!-- <div class="text-base ">小组件尺寸</div> -->
-    <XtRadio :list="sizeList" v-model:data="mySize.className" value="className" ></XtRadio>
+    <XtRadio :list="sizeList" v-model:data="mySize.title" value="title" ></XtRadio>
 
     <!-- this.mySize.className; -->
     <!-- // 旧版本逻辑 -->
@@ -96,25 +107,25 @@
         class="mt-6"
         bg-color="drawer-item-select-bg"
       ></HorizontalPanel> -->
-      <div class="flex mb-2 flex-row justify-between items-center mt-2">
+      <div class="flex flex-row items-center justify-between mt-2 mb-2">
         <div class="text-base">显示名称</div>
         <div><a-switch v-model:checked="showName" /></div>
       </div>
       <a-input
         v-model:value="myData.title"
-        class="rounded-lg mt-6 drawer-item-bg xt-bg-2"
+        class="mt-6 rounded-lg drawer-item-bg xt-bg-2"
         style="height: 48px;color: var(--primary-text);border: 0px;"
         placeholder=""
       >
       </a-input>
       <div class="mt-6 text-base">小组件封面</div>
-      <!--    <div class=" mt-2 text-base" style="color: rgba(255, 255, 255, 0.4);">支持直接复制粘贴图片到此处</div>-->
+      <!--    <div class="mt-2 text-base " style="color: rgba(255, 255, 255, 0.4);">支持直接复制粘贴图片到此处</div>-->
       <div
-        class="flex flex-row justify-between items-center mt-6 gap-3"
+        class="flex flex-row items-center justify-between gap-3 mt-6"
         v-if="!Object.keys(myData.img).length > 0"
       >
         <xt-button type="theme"
-          class="  w-full  " style="width:50%"
+          class="w-full " style="width:50%"
           @click="importFile"
         >
           选择图片
@@ -126,7 +137,7 @@
         </xt-button>
       </div>
       <div v-else>
-        <div class="h-16 w-16 mt-6 relative">
+        <div class="relative w-16 h-16 mt-6">
           <video
             class="fullscreen-video"
             ref="wallpaperVideo"
@@ -142,18 +153,18 @@
           <img
             :src="myData.img.middleSrc"
             alt=""
-            class="h-full w-full"
+            class="w-full h-full"
             style="border-radius: 8px; object-fit: cover"
             v-else-if="myData.img.middleSrc"
           />
           <img
             :src="myData.img.src"
-            class="h-full w-full"
+            class="w-full h-full"
             style="border-radius: 8px; object-fit: cover"
             v-else-if="myData.img.src"
           />
           <div
-            class="rounded-full flex-shrink-0 w-5 h-5 flex justify-center items-center pointer absolute top-0 right-0 translate-x-1/2 -translate-y-1/2"
+            class="absolute top-0 right-0 flex items-center justify-center flex-shrink-0 w-5 h-5 translate-x-1/2 -translate-y-1/2 rounded-full pointer"
             @click="deleteImg"
             style="background: rgba(255, 255, 255, 0.5)"
           >
@@ -165,16 +176,16 @@
       <div class="mt-2 text-base" style="color: var(--secondary-text)">
         支持选择Windows应用的快捷方式来作为小组件的点击启动目标
       </div>
-      <div class="flex flex-row justify-between items-center mt-6">
+      <div class="flex flex-row items-center justify-between mt-6">
         <div
-          class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-1/2 pointer xt-bg-2"
+          class="flex items-center justify-center w-1/2 h-12 rounded-lg drawer-item-bg pointer xt-bg-2"
           @click="customClick"
           v-if="!myData.link"  style="color: var(--primary-text);"
         >
           本地应用
         </div>
         <div
-          class="flex justify-center items-center rounded-lg h-12 drawer-item-bg w-1/2 ml-3 pointer xt-bg-2"
+          class="flex items-center justify-center w-1/2 h-12 ml-3 rounded-lg drawer-item-bg pointer xt-bg-2"
           v-if="!myData.link"
           @click="showAppNav"  style="color: var(--primary-text);"
         >
@@ -182,12 +193,12 @@
         </div>
         <div
           v-else
-          class="w-full rounded-lg h-9 flex justify-between items-center px-2"
+          class="flex items-center justify-between w-full px-2 rounded-lg h-9"
           style="background: rgba(42, 42, 42, 1)"
         >
-          <div class="text-more w-2/3">{{ title }}</div>
+          <div class="w-2/3 text-more">{{ title }}</div>
           <div
-            class="rounded-full flex-shrink-0 w-5 h-5 flex justify-center items-center pointer"
+            class="flex items-center justify-center flex-shrink-0 w-5 h-5 rounded-full pointer"
             @click="deleteApp"
             style="background: rgba(255, 255, 255, 0.5)"
           >
@@ -206,7 +217,7 @@
       <div v-show="nowClassify !== 'localApp'" class="h-full">
         <a-input
           v-model:value="selectContent"
-          class="no-drag h-10 rounded-lg"
+          class="h-10 rounded-lg no-drag"
           placeholder="搜索"
           style="background: rgba(42, 42, 42, 0.6)"
         >
@@ -230,7 +241,7 @@
       </div>
       <div
         v-show="nowClassify === 'localApp'"
-        class="flex flex-col items-start text-zinc-500 h-full"
+        class="flex flex-col items-start h-full text-zinc-500"
       >
         <div>1. 点击选择需要添加的应用快捷方式</div>
         <div>2. 拖动应用快捷方式拖放到下方</div>
@@ -248,7 +259,7 @@
           添加快捷方式
         </div>
         <ScrolX :height="66">
-          <div class="flex flex-row w-full justify-start mt-4 -ml-8 pt-4 pl-4">
+          <div class="flex flex-row justify-start w-full pt-4 pl-4 mt-4 -ml-8">
             <div v-for="(item, index) in dropList" class="flex ml-4">
               <a-badge>
                 <template #count>
@@ -267,7 +278,7 @@
         </ScrolX>
         <div
           @click="clickRightListItem(dropList)"
-          class="pointer flex justify-center items-center mt-2 w-24 h-12 rounded-lg"
+          class="flex items-center justify-center w-24 h-12 mt-2 rounded-lg pointer"
           style="background: rgb(42, 42, 42); color: rgba(255, 255, 255, 0.85)"
         >
           确定添加
@@ -335,9 +346,9 @@ export default {
       imgState: true,
       myImgShow: false,
       sizeList: [
-        { title: "1x1", className: "small", name: "1x1" },
-        { title: "1x2", className: "", name: "1x2" },
-        { title: "2x2", className: "double", name: "2x2" },
+        { title: "2x2", className: "small", name: "2x2" },
+        { title: "2x4", className: "", name: "2x4" },
+        { title: "4x4", className: "double", name: "4x4" },
       ],
       navClassify: [...navigationData.navigationClassify],
       editFlag: false,
@@ -352,7 +363,7 @@ export default {
       nowClassify: "systemApp",
       selectContent: "",
       showName: false,
-      mySize: { title: "1x1", className: "small" },
+      mySize: { title: "2x2", className: "small" },
       myData: { title: "", link: undefined, img: {} },
       panelVisible: false,
       options: {
@@ -376,6 +387,9 @@ export default {
           },
         },
       ],
+      header:{
+        // disabled:true
+      }
     };
   },
   computed: {
@@ -557,6 +571,7 @@ export default {
         showName: this.showName,
         mySize: this.mySize,
         myData: this.myData,
+        customSize: this.mySize.title
       },this.desk);
       message.success("保存成功");
       this.panelVisible = false;
@@ -570,6 +585,9 @@ export default {
     if (showName) this.showName = showName;
     if (mySize) this.mySize = { ...this.mySize, ...mySize };
     if (myData) this.myData = { ...this.myData, ...myData };
+    if(this.customData.customSize == undefined){
+      this.customData.customSize = '2x2'
+    }
   },
   watch: {
     mySize: {
