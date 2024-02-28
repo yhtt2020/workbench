@@ -277,7 +277,7 @@ const cutCanvas = async (config) => {
   console.log("实际宽度 :>> ", getFreeLayoutState.value.canvas.width);
   console.log("实际高度 :>> ", getFreeLayoutState.value.canvas.height);
   if (msgArr.length > 0) {
-    message.success("已为您更新画布画布");
+    message.success("已为您更新画布");
   }
   console.log("被调用了 :>> ");
   setTimeout(() => {
