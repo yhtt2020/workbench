@@ -170,6 +170,9 @@
     </Drop>
   </div>
 
+  <xt-modal v-model="setVisible" :footer="false" boxClass="" :mask="0" :header="false">
+    <SystemSet @close="setVisible = false" />
+  </xt-modal>
   <xt-modal
     v-model="settingVisible"
     :footer="false"
@@ -522,6 +525,7 @@ export default {
   },
   data() {
     return {
+      setVisible: false,
       showGrid: false,
       loaded: false,
       vurriEnable: false,
@@ -614,6 +618,10 @@ export default {
     ...mapActions(cardStore, ["addCard"]),
     ...mapActions(useDeskStore, ["addMenu"]),
     ...mapActions(taskStore, ["initTask"]),
+    // 打开系统设置
+    showSystemSet() {
+      this.setVisible = true;
+    },
     addFolder() {
       if (!this.showGuide) {
         registerFolder(this.currentDesk);
@@ -665,7 +673,6 @@ export default {
     },
     showSetting() {
       this.settingVisible = true;
-      this.menuVisible = false;
     },
     hideDesk() {
       this.hide = !this.hide;
@@ -861,6 +868,11 @@ export default {
       return this.adjustZoom;
     },
   },
+  beforeDestroy() {
+    console.log('123 :>> ', 123);
+
+
+  }
 };
 </script>
 

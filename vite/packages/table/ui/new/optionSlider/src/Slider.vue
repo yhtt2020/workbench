@@ -34,10 +34,11 @@ const props = withDefaults(defineProps<sliderProps>(), {
 });
 
 const currentSlider = ref(props.slider);
-const emits = defineEmits(["update:slider"]);
+const emits = defineEmits(["update:slider",'cb']);
 
 watch(currentSlider, (newV) => {
   emits("update:slider", currentSlider.value);
+  emits("cb", currentSlider.value);
 });
 
 watch(

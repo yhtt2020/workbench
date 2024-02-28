@@ -287,7 +287,7 @@ const cutCanvas = async (config) => {
         item.adsorbGrid();
       });
     }
-  }, 1);
+  }, 2);
   console.log("redirect :>> ", redirect);
   if (!redirect) return;
   let x = Infinity;
