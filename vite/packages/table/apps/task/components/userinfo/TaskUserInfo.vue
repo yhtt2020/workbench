@@ -47,7 +47,7 @@
       </div>
     </div>
     <xt-text class="xt-text-2 font-12 xt-font font-400">
-     后续可用于兑换（暂未上线商城）
+     后续可用于兑换
     </xt-text>
    </div>
   </div>

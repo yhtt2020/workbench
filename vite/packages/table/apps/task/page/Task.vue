@@ -43,7 +43,8 @@ onMounted(() => {
   const toast = useToast();
   toast.clear();
   currentTask.value = "Primary";
-  store.initTask()
+  store.initTask();
+  store.getPointGoods();
 });
 let currentTask = ref("Primary");
 let task = ref([]);
