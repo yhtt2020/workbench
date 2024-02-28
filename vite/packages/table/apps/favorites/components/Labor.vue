@@ -1,18 +1,18 @@
 <template>
     <div class="absolute bottom-4 right-4">
       <!-- 收藏 -->
-        <xt-button class="absolute tran right-0" @click="addFavo" :radius="8" :w="32" :h="32" :class="checkFlag?'b-10 opacity-100':'bottom-0 opacity-0'">
+        <xt-button class="absolute tran right-0 shadow" @click="addFavo" :radius="8" :w="32" :h="32" :class="checkFlag?'b-10 opacity-100':'bottom-0 opacity-0'">
             <xt-new-icon v-if="!favoFlag" icon="fluent:star-16-regular" size="16" />
             <xt-new-icon v-else icon="fluent:star-16-filled" size="16" color="#faad14" />
         </xt-button>
         <!-- 添加到桌面 -->
         <xt-menu :menus="menus" model="click"  @mounted="changeMenu">
-          <xt-button class="absolute tran right-0" :radius="8" :w="32" :h="32" :class="checkFlag?'b-20 opacity-100':'bottom-0 opacity-0'">
+          <xt-button class="absolute tran right-0 shadow" :radius="8" :w="32" :h="32" :class="checkFlag?'b-20 opacity-100':'bottom-0 opacity-0'">
               <xt-new-icon icon="fluent:add-20-regular" size="16" />
           </xt-button>
         </xt-menu>
         <!-- 菜单 -->
-        <xt-button @click="changeList" type="theme" :radius="8" :w="32" :h="32" class="absolute bottom-0 right-0">
+        <xt-button @click="changeList" type="theme" :radius="8" :w="32" :h="32" class="absolute bottom-0 right-0 shadow">
             <xt-new-icon icon="fluent:grid-20-regular" size="16" />
         </xt-button>
     </div>
@@ -42,7 +42,7 @@
     },
   
     computed:{
-      ...mapWritableState(favoStore, ['isFavorites', 'urlIndex', 'allList']),
+      ...mapWritableState(favoStore, ['isFavorites', 'allList']),
       
     },
     methods: {
@@ -89,5 +89,14 @@
     .b-20{
         bottom: 80px;
     }
+
+    .shadow{
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0px 0px 3px 0px rgba(0,0,0,0.03);
+      box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
+      box-shadow: 0px 0px 40px 0px rgba(0,0,0,0.2);
+    }
+
+
   </style>
   

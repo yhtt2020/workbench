@@ -6,7 +6,7 @@
         <LeftMenu @changeFolder="changeFolder" @refresh="refresh"></LeftMenu>
         <div class="w-full flex-1">
           <Search></Search>
-          <WebList @changeIcon="changeIcon" @countFavo="countFavo" @showRenameModal="showRenameModal" :checkFlag="checkFlag" :showList="showList" :menus="menus"></WebList>
+          <WebList @refresh="refresh" @changeIcon="changeIcon" @countFavo="countFavo" @showRenameModal="showRenameModal" :checkFlag="checkFlag" :showList="showList" :menus="menus"></WebList>
         </div>
 
         <Labor @changeIcon="changeIcon" :menus="menus" :checkFlag="checkFlag" @changeCheck="changeCheck" @countFavo="countFavo"></Labor>
@@ -143,23 +143,24 @@ export default {
   },
 
   computed:{
-    ...mapWritableState(favoStore, ['isFavorites', 'allList', 'folderList', 'folderIndex', 'urlIndex', 'browserList', 'updateTime', 'searchValue', 'folderIcons']),
+    ...mapWritableState(favoStore, ['isFavorites', 'allList', 'folderList', 'folderIndex', 'browserList', 'updateTime', 'searchValue', 'folderIcons']),
     ...mapWritableState(useWidgetStore, ['edit']),
     ...mapWritableState(cardStore, ['desks', 'addCard']),
     showList(){
+      const folder = this.folderList[this.folderIndex]
       let arr =[]
       if (this.folderIndex>=1) {
-        if(this.folderList[this.folderIndex]?.type == 'all'){
+        if(folder?.type == 'all'){
           arr = this.allList.filter(item => {
             let name = item.rename?item.rename:item.name
-            return item.browser == this.folderList[this.folderIndex].browser && name?.indexOf(this.searchValue) > -1 
-            || item.url?.indexOf(this.searchValue) > -1
+            return item.browser == folder.browser && (name?.indexOf(this.searchValue) > -1 
+            || item.url?.indexOf(this.searchValue) > -1)
           })
-        }else if(this.folderList[this.folderIndex]?.type == 'folder'){
+        }else if(folder?.type == 'folder'){
           arr = this.allList.filter(item => {
             let name = item.rename?item.rename:item.name
-            return item.parent == this.folderList[this.folderIndex].guid && name?.indexOf(this.searchValue) > -1
-            || item.url?.indexOf(this.searchValue) > -1
+            return item.parent == folder.guid && (name?.indexOf(this.searchValue) > -1
+            || item.url?.indexOf(this.searchValue) > -1)
           })
         }
       }else if(this.folderIndex == 0){
@@ -249,6 +250,8 @@ export default {
             rename: null,
           })
           this.allList = this.mergeArraysByGuid(this.allList, res)
+          
+          message.success('浏览器收藏夹数据刷新成功！')
         }else{
           message.error('浏览器收藏夹读取失败！')
         }
@@ -328,7 +331,6 @@ export default {
     // 切换文件夹列表
     changeFolder(index){
       this.folderIndex = index
-      this.urlIndex = null
     },
 
     // 数组去重
@@ -355,7 +357,6 @@ export default {
 
     // 切换编辑状态
     changeCheck(){
-      this.urlIndex = null
       this.checkFlag = !this.checkFlag
       if(!this.checkFlag){
         this.clearCheck()
