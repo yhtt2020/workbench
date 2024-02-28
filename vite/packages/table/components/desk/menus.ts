@@ -151,6 +151,13 @@ function deskMenus() {
       lock: true,
       children: [
         {
+          id: 0,
+          newIcon: "fluent:settings-16-regular",
+          name: "系统设置",
+          fn: this.showSystemSet,
+          disabled: import.meta.env.DEV ? false : true,
+        },
+        {
           id: 1,
           newIcon: "fluent:settings-16-regular",
           name: "桌面设置",

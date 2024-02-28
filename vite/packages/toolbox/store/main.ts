@@ -4,6 +4,7 @@ import { defineStore } from "pinia";
 export const main = defineStore("main", {
   state: () => ({
     useTool: "",
+    autoHide:true,
   }),
   actions: {},
 });

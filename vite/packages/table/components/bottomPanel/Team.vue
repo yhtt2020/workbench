@@ -1,16 +1,16 @@
 <template>
+  <!-- :popperOptions="popperOptions" -->
   <tippy 
     :placement="placement" 
     :interactive="true" 
     :appendTo="body" 
     :arrow="false" 
-    trigger="click" 
-    :zIndex="999999"
+    trigger="click"
+    :zIndex="999999" 
     ref="tippyRef">
     <Avatar :item="item"></Avatar>
     <template #content>
-      <div 
-        class="flex flex-wrap w-[278px] h-[185px] rounded-xl xt-bg -m-3" 
+      <div class="flex flex-wrap w-[278px] h-[185px] rounded-xl xt-bg -m-3"
         style="padding-top: 6px; padding-bottom: 6px;backdrop-filter: blur(50px);">
         <div v-for="t in teamList" :key="t.title" class="team-item" @click="jump(t.type, t)">
           <a-avatar :src="t.img" :size="40"></a-avatar>
@@ -18,7 +18,7 @@
         </div>
         <div class="team-item" @click="openTask()">
           <a-avatar src="/img/task/star.png" :size="40"></a-avatar>
-          <span>任务中心</span>
+          <span>任务中心 </span>
         </div>
       </div>
     </template>
@@ -51,10 +51,12 @@ export default {
   props: {
     item: Object,
     shakeElement: Boolean,
-    placement:{
+    placement: {
       type: String,
       default: 'top'
-    }
+    },
+    x: Number,
+    y: Number,
   },
   data() {
     return {
@@ -97,7 +99,7 @@ export default {
       //显示小组提示
       showTeamTip: false,
       openTeam: false,
-      showMyProp: false
+      showMyProp: false,
     }
   },
   computed: {
@@ -106,7 +108,32 @@ export default {
     ...mapWritableState(offlineStore, ['isOffline']),
     body() {
       return document.body
-    }
+    },
+    // tippy自定义位置
+    // popperOptions() {
+    //   return {
+    //     modifiers: [
+    //       {
+    //         name: 'computeStyles',
+    //         options: {
+    //           adaptive: false, // 禁用自适应，否则将无法设置 fixed 位置
+    //         },
+    //       },
+    //       {
+    //         name: 'applyStyles',
+    //         fn: ({ state }) => {
+    //           this.$nextTick(()=>{
+    //             Object.assign(state.elements.popper.style, {
+    //               position: 'fixed',
+    //               left: `${this.x}px`,
+    //               top: `${this.y}px`, 
+    //             });
+    //           })
+    //         },
+    //       },
+    //     ],
+    //   };
+    // },
   },
   methods: {
     renderIcon,
@@ -145,6 +172,19 @@ export default {
       this.showMyProp = val
     }
   },
+  watch:{
+    x(val){
+      console.log('x',val)
+      // this.$refs.tippyRef.destroy()
+      this.$nextTick(()=>{
+        this.$refs.tippyRef.enable()
+      })
+    },
+    y(val){
+      console.log('y',val)
+      // this.$refs.tippyRef.popperInstance.update()
+    }
+  }
 }
 </script>
 

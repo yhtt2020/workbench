@@ -8,18 +8,16 @@ const browser={
   async openInUserSelect(url:string){
 
     if (window.$useEnv()){
-      window.open(url,'_blank')
-      return
+      return  window.open(url,'_blank')
     }
     //获取到用户设置
-    if(isWeb){
-      return window.open(url)
-    }
     let settings=await tsbApi.settings.get('openUrlBrowser')
     if(settings==='system' || !settings){
       browser.openInSystem(url)
-    }else{
+    }else if(settings==='inner'){
       browser.openInInner(url)
+    } else {
+      browser.openInTable(url,{})
     }
   },
   /**

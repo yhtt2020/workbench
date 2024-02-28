@@ -14,7 +14,7 @@
       <xt-new-icon v-if="icon" :icon="icon" :size="iconSize" />
       <xt-ify-icon v-if="ifyIcon" :icon="ifyIcon" :size="iconSize" />
     </slot>
-    <span>
+    <span class="px-1">
       <slot></slot>
     </span>
     <slot name="postfix" v-if="iconPosition == 'postfix'">

@@ -176,7 +176,7 @@ export function handleTipMessageShowContext(message: any) {
         options.text = `群成员：${userName} 退出群聊`;
         break;
       case TIM.TYPES.GRP_TIP_MBR_KICKED_OUT:
-        options.text = `${t('message.tip.群成员')}：${userName}被群管理员踢出群聊`;
+        options.text = `${t('message.tip.群成员')}：${userName}被群管理员移出群聊`;
         break;
       case TIM.TYPES.GRP_TIP_MBR_SET_ADMIN:
         options.text = `${t('message.tip.群成员')}：${userName} ${t('message.tip.成为管理员')}`;

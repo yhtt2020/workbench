@@ -1,16 +1,16 @@
 <template>
-  <xt-container 
+  <xt-container
     :header="header"
     v-model:customSize="customData.customSize "
-    :envLimit="['guest','offline']" 
-    :desk="desk" 
-    :sizeList="sizeList" 
-    :options="options" 
-    :customIndex="customIndex" 
+    :envLimit="['guest','offline']"
+    :desk="desk"
+    :sizeList="sizeList"
+    :options="options"
+    :customIndex="customIndex"
     :menuList="menuList"
     :env="env"
     ref="cardSlot">
-    <div class="flex flex-col w-full" style="height: calc(100% - 12px)">
+    <div class="flex flex-col w-full" style="height: 100%">
       <div class="flex-1 w-full h-0 courier" style="position:relative;">
         <div v-if="isLoading">
           <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%"/>

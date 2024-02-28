@@ -55,17 +55,17 @@
         <!-- <xt-button class="ml-3 button-bottom" @click="analysis" size="large" type="theme">开始分析</xt-button> -->
         <!-- </div> -->
         <div class="flex" v-if="step == 1">
-          <xt-button class="ml-3 button-bottom" @click="nextStep" :disabled="loading" size="large">暂不添加</xt-button>
+          <xt-button class="ml-3 button-bottom" @click="nextStep" size="large">跳过</xt-button>
           <xt-button class="ml-3 button-bottom" @click="addFolder" :disabled="loading" size="large" type="theme">确定添加({{
             folderNum
           }})</xt-button>
         </div>
         <div class="flex" v-if="step == 2">
-          <xt-button class="ml-3 button-bottom" @click="nextStep" size="large">暂不添加</xt-button>
+          <xt-button class="ml-3 button-bottom" @click="nextStep" size="large">跳过</xt-button>
           <xt-button class="ml-3 button-bottom" @click="addDeskCard" size="large" type="theme">确定添加</xt-button>
         </div>
         <div class="flex" v-if="step == 3">
-          <xt-button class="ml-3 button-bottom" @click="nextStep" size="large">暂不添加</xt-button>
+          <xt-button class="ml-3 button-bottom" @click="nextStep" size="large">跳过</xt-button>
           <xt-button class="ml-3 button-bottom" @click="addNavList" size="large" type="theme">确定添加</xt-button>
         </div>
         <div class="flex" v-if="step == 4">

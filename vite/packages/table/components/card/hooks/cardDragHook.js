@@ -49,7 +49,6 @@ export default {
     ...mapActions(cardStore, ["updateCustomData"]),
     // 初始化宽高
     reSizeInit(e) {
-      console.log("123 :>> ", e);
       this.updateCustomData(
         this.customIndex,
         {

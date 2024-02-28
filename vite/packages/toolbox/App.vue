@@ -10,6 +10,9 @@ import dayjs from "dayjs";
 import "dayjs/locale/zh-cn";
 dayjs.locale("zh-cn");
 import toolsMain from "./views/main/index.vue";
+import { main } from "./store/main";
+import {mapWritableState} from 'pinia'
+
 export default {
   data() {
     return {
@@ -19,6 +22,16 @@ export default {
   components: {
     toolsMain,
   },
+  computed: {
+    ...mapWritableState(main, ["autoHide"]),
+  },
+  mounted () {
+    window.addEventListener('blur', () => {
+      if(this.autoHide){
+        tsbApi.window.hide()
+      }
+    })
+  }
 };
 </script>
 
