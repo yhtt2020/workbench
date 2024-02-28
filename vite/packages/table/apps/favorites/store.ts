@@ -19,7 +19,6 @@ export const favoStore = defineStore("favoStore", {
     folderList: [],
     // 序列
     folderIndex: null,
-    urlIndex:null,
     browserList: {
       chrome: true,
       edge: true,

@@ -22,7 +22,7 @@
                             <img v-if="item.browser == 'chrome'" src="/img/icon/chrome.png" class="absolute right-0 w-3 bottom-0" alt="">
                             <img v-else src="/img/icon/edge.png" class="absolute right-0 w-3 bottom-0" alt="">
                         </div>
-                        <div class="ml-3">{{ item?.name }}</div>
+                        <div class="ml-3 text-overflow" style="max-width: 130px;">{{ item?.name }}</div>
                     </div>
                     <!-- <div class="xt-text-2">{{ item.num }}</div> -->
                     <div class="xt-text-2">{{ getNum(item) }}</div>
@@ -160,6 +160,12 @@
 
     .border-active{
         border: 1px solid #508bfe;
+    }
+
+    .text-overflow{
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   </style>
   

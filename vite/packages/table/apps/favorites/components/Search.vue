@@ -21,7 +21,17 @@
                 style="width: 142px;height: 32px;"
                 :list="linkType"
                 @cb="updateAlign"/> -->
-                <xt-select v-model="browserType" :zIndex="1200" style="width: 160px;" :h="32" :list="linkType" :bordered="false"></xt-select>
+
+                <!-- <xt-select v-model="browserType" :zIndex="1200" style="width: 160px;" :h="32" :list="linkType" :bordered="false"></xt-select> -->
+                <a-select
+                    v-model:value="browserType"
+                    class="rounded-lg xt-bg"
+                    style="width: 142px;"
+                    placeholder="Tags Mode"
+                    :options="linkType"
+                ></a-select>
+
+
                 <div class="xt-bg-2 h-8 w-8 flex justify-center items-center rounded-lg ml-3 pointer" @click="isFavorites = false">
                     <xt-new-icon icon="fluent:dismiss-16-regular" size="16" />
                 </div>
@@ -43,9 +53,9 @@
     data() {
       return {
         linkType:[  
-            { name: '系统默认浏览器', value: 'system' },
-            { name: '想天浏览器', value: 'thisky' },
-            { name: '工作台内打开', value: 'work' },
+            { label: '系统默认浏览器', value: 'system' },
+            { label: '想天浏览器', value: 'thisky' },
+            { label: '工作台内打开', value: 'work' },
         ],
         folderIndex: -2,
 
@@ -72,6 +82,10 @@
   </script>
   
   <style scoped lang="scss">
+
+    :deep(.ant-select-selector){
+        border-radius: 8px !important;
+    }
     .divider{
         width: 100%;
         height: 1px;
