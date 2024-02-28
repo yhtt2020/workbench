@@ -152,14 +152,14 @@ export default {
         if(this.folderList[this.folderIndex]?.type == 'all'){
           arr = this.allList.filter(item => {
             let name = item.rename?item.rename:item.name
-            return item.browser == this.folderList[this.folderIndex].browser && name.indexOf(this.searchValue) > -1 
-            || item.url.indexOf(this.searchValue) > -1
+            return item.browser == this.folderList[this.folderIndex].browser && name?.indexOf(this.searchValue) > -1 
+            || item.url?.indexOf(this.searchValue) > -1
           })
         }else if(this.folderList[this.folderIndex]?.type == 'folder'){
           arr = this.allList.filter(item => {
             let name = item.rename?item.rename:item.name
-            return item.parent == this.folderList[this.folderIndex].guid && name.indexOf(this.searchValue) > -1
-            || item.url.indexOf(this.searchValue) > -1
+            return item.parent == this.folderList[this.folderIndex].guid && name?.indexOf(this.searchValue) > -1
+            || item.url?.indexOf(this.searchValue) > -1
           })
         }
       }else if(this.folderIndex == 0){
@@ -228,6 +228,14 @@ export default {
             res.push(...this.flattenChildrenArray(data.result[browser], browser, 0))
             this.folderList.unshift({
               name: '最近添加',
+              type: 'recent',
+              browser: browser,
+              // num: allNum,
+              rename: null,
+              time: new Date().getTime()
+            })
+            this.folderList.unshift({
+              name: '全部',
               type: 'all',
               browser: browser,
               // num: allNum,
@@ -244,6 +252,7 @@ export default {
         }else{
           message.error('浏览器收藏夹读取失败！')
         }
+        // console.log('this.all', this.allList)
       })
       // const filteredArray = this.mergeUniqueArrays(arr1, arr2);
     },
@@ -251,6 +260,7 @@ export default {
     // 将数据进行拆分
     flattenChildrenArray(obj, browser, level, parent) {
       let num = 0
+      const time = new Date().getTime()
       obj.children?.forEach(item => {
           if(item.type != 'folder') {
             this.resTmp.push({
@@ -261,6 +271,7 @@ export default {
               rename: null,
               favo: false,
               check: false,
+              time: time,
             });
             num++
           }
@@ -275,6 +286,7 @@ export default {
           num: num,
           rename: null,
           type: 'folder',
+          time: time,
         })
       }
       return this.resTmp;
