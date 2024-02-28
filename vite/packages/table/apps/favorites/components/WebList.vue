@@ -15,7 +15,7 @@
           </div>
           <div class="flex hover-right">
             <!-- 修改 -->
-            <div @click="showRenameModal(item)" class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg">
+            <div @click.stop="showRenameModal(item)" class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg">
               <xt-new-icon icon="fluent:compose-16-regular" size="16" />
             </div>
             <!-- 添加 -->
@@ -25,7 +25,7 @@
               </div>
             </xt-menu>
             <!-- 收藏 -->
-            <div class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg ml-2" @click="changeFavo(item)">
+            <div class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg ml-2" @click.stop="changeFavo(item)">
               <xt-new-icon v-if="item.favo" icon="fluent:star-16-filled" color="#faad14" size="16" />
               <xt-new-icon v-else icon="fluent:star-16-regular" size="16" />
             </div>
