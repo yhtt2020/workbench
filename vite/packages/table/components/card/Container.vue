@@ -197,6 +197,7 @@ import {
   ref,
   onBeforeMount,
   onMounted,
+  onBeforeUnmount,
   getCurrentInstance,
   toRefs,
 } from "vue";
@@ -414,7 +415,9 @@ onBeforeMount(async () => {
     );
   }
 });
+onBeforeUnmount(()=>{
 
+})
 // emits 小组件事件回调
 /**
  * update:customSize 双向数据绑定customSize

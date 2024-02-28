@@ -24,7 +24,7 @@
              </div>
              <div class="flex w-full justify-between">
                <div class="xt-font font-18 font-900" style="color:  #FA7B14;">
-                 {{ getDetailData.price_project?.item[0]?.jifen_num}}积分
+                 {{ getDetailData.price_project?.item[0]?.jifen_num}} {{ getDetailData.price_project?.item[0]?.jifen_name }}
                </div>
                <div class="xt-font font-14 xt-text-2" v-if="getDetailData.sales !== 0">
                   {{ getDetailData.sales }}人已兑换
@@ -36,7 +36,7 @@
            </div>
          </div>
          <div class="fixed bottom-4 flex items-center justify-center" style="width: 404px;">
-           <xt-button w="404" h="40" style="border-radius: 10px; background: #FA7B14 !important;" v-if=" getDetailData.stock !== 0">
+           <xt-button w="404" h="40" style="border-radius: 10px; background: #FA7B14 !important;" v-if=" getDetailData.stock !== 0" @click="useQRcodeScan">
              使用{{ getDetailData.price_project?.item[0]?.jifen_num }}积分兑换
            </xt-button>
            <xt-button w="404" h="40" style="border-radius: 10px;background: var(--secondary-text)  !important;" :disabled="true" v-else>
@@ -49,6 +49,7 @@
     </div>
   </template>
   
+ <PointScan v-else :getDetail="getDetailData" @back="scanVisible = false"/>
 
 </template>
 
@@ -59,19 +60,12 @@ import { taskStore } from '../../store';
 
 import Exit from '../../components/Exit.vue';
 import PointGoodsSwiper from './PointGoodsSwiper.vue';
+import PointScan from './PointScan.vue';
 
 const emits = defineEmits(['back']);
-
 const task = taskStore();
 const { pointGoodsDetail } = storeToRefs(task);
-
-const props = defineProps({
-   id:{
-    type:Number,
-   }
-});
 const scanVisible = ref(false);
-
 
 const getDetailData = computed(()=>{
   if(pointGoodsDetail.value){
@@ -84,7 +78,9 @@ const backGoodPage = () =>{
  emits('back');
 }
 
-
+const useQRcodeScan = () =>{
+  scanVisible.value = true
+}
 </script>
 
 <style lang="scss" scoped>

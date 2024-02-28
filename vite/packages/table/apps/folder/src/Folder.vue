@@ -297,7 +297,6 @@ const sizeList = ref([
   },
 ]);
 
-console.log("status.value :>> ", status.value);
 provide("index", customIndex);
 provide("data", customData);
 provide("isOutside", isOutside);

@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div class="mt-2">
+        <div >
             <div class="flex ">
-              <div class="flex items-center justify-center mr-4 rounded-lg">
+              <div class="flex items-center justify-center mr-2 rounded-lg">
                 <Cover :cover="courier.cover" :store="courier.store" bg="var(--mask-bg)"></Cover>
               </div>
                 <div class="ml-2 flex flex-col justify-between h-[56px]" >

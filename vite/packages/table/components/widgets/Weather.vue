@@ -1,5 +1,6 @@
 <template>
-  <xt-container  
+  <xt-container 
+    @titleHover="openWeatherDrawer"
     v-model:customSize="customData.customSize"
     :header="header"
     :options="options" 
@@ -8,9 +9,9 @@
     :customData="customData" 
     :desk="desk" 
     :envLimit="['offline']">
-    <div v-if="defaultCity" class="px-3 py-1 bg-mask rounded-xl pointer" @click="openWeatherDrawer" style="position: absolute;left: 45px;top:10px">
+    <!-- <div v-if="defaultCity" class="px-3 py-1 bg-mask rounded-xl pointer" @click="openWeatherDrawer" style="position: absolute;left: 45px;top:10px">
       {{ defaultCity.name }}
-    </div>
+    </div> -->
     <div @click="enterWeather">
       <div v-if="!cities.length">
         <div>
@@ -43,7 +44,7 @@
               </div>
             </a-col>
           </a-row>
-          <a-row style="margin-top: .5em">
+          <a-row >
             <a-col :span="12" style="text-align: center">
               <div style="font-size: 1.2em; font-weight: bold">明天</div>
               <div style="font-size: 1.1em">
@@ -122,10 +123,6 @@ export default {
         client: false,
         offline:true
       },
-      header: {
-        title: "天气",
-        ifyIcon:'fluent:cloud-16-regular'
-      }
     };
   },
 
@@ -144,6 +141,14 @@ export default {
     //     return {}
     //   }
     // },
+    header(){
+      return {
+        title:this.defaultCity?.name ? this.defaultCity?.name : "天气",
+        ifyIcon:'fluent:cloud-16-regular',
+        titleHoverName:this.defaultCity?.name ? this.defaultCity?.name : "天气",
+        titleHover:true,
+      }
+    },
     defaultCity(){
       if(this.customData && this.customData.id){
           const found = this.cities.find(el=>{

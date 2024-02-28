@@ -1,22 +1,48 @@
 <template>
-    <div class="w-full pl-4 xt-scrollbar scroll-color" style="height: 640px;">
-        <div class="h-14 mb-1 flex items-center p-4 pointer rounded-lg font-16 xt-text list-hover justify-between" style="width: 728px;" @click="change(index, item.url)" v-for="(item,index) in showList" :class="urlIndex == index?'xt-bg-2':''" >
-          <!-- <a-avatar :size="24" shape="square" :src="getIcon(item.url)" />
-          <div class="ml-4">{{ item.name }}</div> -->
-          <WebItem :item="item"></WebItem>
+    <div class="w-full pl-4 xt-scrollbar scroll-color " style="height: 640px;">
+        <div v-if="showList.length" class="h-16 mb-1 flex items-center p-4 pointer rounded-lg font-16 xt-text list-hover justify-between tran" style="width: 728px;" @click="change(index, item)" v-for="(item,index) in showList" :class="item.check?'xt-bg-2':''" >
+          <div class='flex h-full items-center'>
+            <WebItem class="" :item="item" :checkFlag="checkFlag"></WebItem>
+            <!-- style="width: 530px;" -->
+            <div class="flex flex-col ml-3 font-16 xt-text" style="max-width: 520px;">
+              <div class="text-overflow">{{ item.name }}</div>
+              <div class="xt-text-2 url-hover font-14 text-overflow">{{ item.url }}</div>
+            </div>
+          </div>
+          
+          <div v-if="item.favo" class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg ml-2 hover-right-2">
+            <xt-new-icon icon="fluent:star-16-filled" color="#faad14" size="16" />
+          </div>
           <div class="flex hover-right">
-            <div class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg">
+            <!-- 修改 -->
+            <div @click.stop="showRenameModal(item)" class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg">
               <xt-new-icon icon="fluent:compose-16-regular" size="16" />
             </div>
-            <div class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg ml-2">
-              <xt-new-icon icon="fluent:add-16-regular" size="16" />
-            </div>
-            <div class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg ml-2">
-              <xt-new-icon icon="fluent:star-16-regular" size="16" />
+            <!-- 添加 -->
+            <xt-menu :menus="menus" model="click" @mounted="changeMenu(item, index)">
+              <div class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg ml-2">
+                <xt-new-icon icon="fluent:add-16-regular" size="16" />
+              </div>
+            </xt-menu>
+            <!-- 收藏 -->
+            <div class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg ml-2" @click.stop="changeFavo(item)">
+              <xt-new-icon v-if="item.favo" icon="fluent:star-16-filled" color="#faad14" size="16" />
+              <xt-new-icon v-else icon="fluent:star-16-regular" size="16" />
             </div>
           </div>
         </div>
-
+        <div v-else class="flex items-center justify-center h-full">
+          <div style="width: 452px;height: 200px;" class="flex flex-col items-center">
+            <xt-new-icon icon="fluent-emoji-flat:globe-with-meridians" color="#faad14" size="56" />
+            <div class="xt-text font-14 xt-mask rounded-xl p-3 px-4 mt-4">暂无数据，请在你使用的浏览器中管理收藏夹，工作台会同步读取收藏夹数据。</div>
+            <xt-button @click="refresh" type="theme" :radius="8" :w="72" :h="32" class="mt-4">
+              <div class="flex items-center">
+                <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="16" />
+                <div class="xt-text font-14 ml-2">刷新</div>
+              </div>
+            </xt-button>
+          </div>
+        </div>
     </div>
 
 </template>
@@ -26,11 +52,13 @@
   import { mapActions, mapState, mapWritableState } from 'pinia'
   import { favoStore } from '../store'
   import WebItem from './WebItem.vue'
+  import { message } from 'ant-design-vue';
+  import browser from '../../../js/common/browser'
   
   
   export default {
     name: 'WebList',
-    props: ['showList'],
+    props: ['showList', 'checkFlag', 'menus'],
     data() {
       return {
         
@@ -45,15 +73,47 @@
     },
   
     computed:{
-      ...mapWritableState(favoStore, ['isFavorites', 'urlIndex']),
+      ...mapWritableState(favoStore, ['isFavorites', 'allList', 'browserType']),
       
     },
     methods: {
-        change(n, url){
-          // browser.openInUserSelect(url)
-          this.urlIndex = n
-        },
-      
+      // 添加到桌面
+      changeMenu(item, index){
+        this.$emit('changeIcon', [item])
+      },
+      change(n, item){
+        if(this.checkFlag){
+          item.check = !item.check
+        }else{
+          if(this.browserType == 'system'){
+            browser.openInUserSelect(item.url)
+          }else if(this.browserType == 'thisky'){
+            browser.openInInner(item.url)
+          }else if(this.browserType == 'work'){
+            browser.openInTable(item.url)
+          }
+        }
+      },
+      showRenameModal(item){
+        this.$emit('showRenameModal', item)
+      },
+      changeFavo(item){
+        this.allList.forEach((i, index)=>{
+          if(i.guid == item.guid){
+            if (i.favo) {
+              message.success('取消收藏')
+            }else{
+              message.success('收藏成功')
+            }
+            i.favo = !this.allList[index].favo
+            this.$emit('countFavo')
+          }
+        })
+      },
+
+      refresh(){
+        this.$emit('refresh')
+      }
     }
   }
   </script>
@@ -88,10 +148,33 @@
     }
 
     .list-hover:hover{
-      opacity: 0.8;
+      // opacity: 0.8;
+      // height: 80px;
+      background: var(--secondary-bg);
     }
+
+    // .url-hover{
+    //   display: none;
+    // }
+    // .list-hover:hover .url-hover{
+    //   display: block;
+    // }
     .list-hover:hover .hover-right{
       display: flex;
     }
+    .list-hover:hover .hover-right-2{
+      display: none;
+    }
+
+    .tran{
+      transition: all 0.1s;
+    }
+
+    .text-overflow{
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
   </style>
   

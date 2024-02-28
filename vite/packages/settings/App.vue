@@ -201,6 +201,7 @@ export default defineComponent({
   mounted() {
     let url = new URL(window.location)
 
+    console.log('settings :>> ', settings);
     var type = url.searchParams.get('tab')
     this.activeKey = type || 'Privacy'
     settings.get('downloadAutoSave', (value) => {
@@ -215,6 +216,7 @@ export default defineComponent({
     // settings.load()
     settingPage.init()
     settings.get('autoRun', (value) => {
+      console.log('123321 :>> ', 123321);
       if (value !== undefined)
         this.autoStart = value
     })
@@ -405,6 +407,7 @@ export default defineComponent({
 
     changeAutoStart(value) {
       let isAutoRun = value.target.checked
+      console.log('isAutoRun :>> ', isAutoRun);
       ipc.send('setAutoRun', { value: isAutoRun })
     },
     changeCloseExit(value) {

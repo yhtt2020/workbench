@@ -1,23 +1,34 @@
 <template>
   <teleport to='body' >
-    <xt-modal custom  boxClass="rounded-xl" :mask="true" v-model="isFavorites" v-if="isFavorites" >
-        <div class="xt-modal flex rounded-xl relative" style="width: 1000px; height: 720px;" >
-          <!-- 左侧列表 -->
-          <LeftMenu @changeFolder="changeFolder"></LeftMenu>
-          <div class="w-full flex-1">
-            <Search></Search>
-            
-            <!-- <div @click="test">1453456</div> -->
-            <WebList :showList="showList"></WebList>
-          </div>
-
-          <Labor></Labor>
-
-
-          
-
-          
+    <xt-modal custom  boxClass="rounded-xl" :mask="false" v-model="isFavorites" v-if="isFavorites" >
+      <div class="xt-modal flex rounded-xl relative overflow-hidden" style="width: 1000px; height: 720px;" >
+        <!-- 左侧列表 -->
+        <LeftMenu @changeFolder="changeFolder" @refresh="refresh"></LeftMenu>
+        <div class="w-full flex-1">
+          <Search></Search>
+          <WebList @refresh="refresh" @changeIcon="changeIcon" @countFavo="countFavo" @showRenameModal="showRenameModal" :checkFlag="checkFlag" :showList="showList" :menus="menus"></WebList>
         </div>
+
+        <Labor @changeIcon="changeIcon" :menus="menus" :checkFlag="checkFlag" @changeCheck="changeCheck" @countFavo="countFavo"></Labor>
+        <xt-preview v-if="previewFlag" v-model="previewFlag" @ok="addFolderIcon"></xt-preview>
+        
+      </div>
+    </xt-modal>
+    <!-- 修改网址名称 -->
+    <xt-modal title="编辑名称" :maskIndex="1001" :index="1002" boxClass="rounded-xl p-4" :mask="true" :header="true" :footer="true" v-model="renameFlag" v-if="renameFlag" @ok="changeName" >
+      <div class="xt-modal flex rounded-xl relative" style="width: 466px; height: 50px;" >
+        <xt-input style="height: 40px;width: 400px;" v-model="rename" placeholder="请输入网站名称" class="h-10 rounded-lg xt-text ml-2 xt-main-bg"></xt-input>
+        <xt-button @click="rename = tmpName" :radius="10" :w="40" :h="40" class="xt-main-bg ml-3">
+            <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="20" />
+        </xt-button>
+      </div>
+    </xt-modal>
+    <!-- 添加到桌面 -->
+    <xt-modal title="添加到桌面" :maskIndex="1001" :index="1002" boxClass="rounded-xl p-4" :mask="true" :header="true" :footer="true" v-model="deskFlag" v-if="deskFlag" @ok="addDeskIcon" >
+      <div class="xt-modal flex rounded-xl relative" style="width: 466px; height: 50px;" >
+        <!-- <xt-input style="height: 40px;width: 400px;" v-model="rename" placeholder="请输入网站名称" class="h-10 rounded-lg xt-text ml-2 xt-main-bg"></xt-input> -->
+        <xt-select v-model="deskIndex" :zIndex="1200" style="width: 100%;" :list="deskList" :bordered="false"></xt-select>
+      </div>
     </xt-modal>
   </teleport>
 </template>
@@ -26,22 +37,102 @@
 import { Icon } from '@iconify/vue';
 import { mapActions, mapState, mapWritableState } from 'pinia'
 import { favoStore } from '../store'
+import { useWidgetStore } from '../../../components/card/store'; 
 import LeftMenu from '../components/LeftMenu.vue'
 import Search from '../components/Search.vue'
 import Labor from '../components/Labor.vue'
 import WebList from '../components/WebList.vue'
 import { message } from 'ant-design-vue'
+import _ from 'lodash-es'
+import {cardStore} from '../../../store/card';
+import { nanoid } from 'nanoid'
 
 
 export default {
   name: 'favorites',
   data() {
     return {
-      showList: [],
+      renameFlag: false,
+      tmpName: '',
+      tmpGuid: '',
+      rename: '',
+      checkFlag: false,
+      previewFlag: false,
+      deskFlag: false,
+      resTmp: [],
+      deskIndex: {},
       
+      menus: [
+      {
+          label: '添加到桌面',
+          newIcon:'fluent:desktop-16-regular',
+          callBack: async () => {
+            this.deskFlag = true
+          }
+        },
+        {
+          label: '添加到分组',
+          newIcon: 'fluent:app-folder-16-regular',
+          callBack: () => {
+
+            this.previewFlag = true
+            this.edit = true
+          },
+        },
+      ],
+      deskIcons: [],
+      // 文件夹默认数据
+      defaultFolderIcon: {
+        attributeEdit: true,
+        bg: '',
+        iconShape: "square",
+        iconState: "cover",
+        iconType: "",
+        isBg: false,
+        isName: true,
+        isRadius: false,
+        lastUseTime: '',
+        mode: "link",
+        radius: 5,
+        size: "1x1",
+        summary: "",
+        type: '',
+        useCount: '',
+        name: "",
+        value: '',
+        icon: null,
+      },
+      // 桌面图标数据
+      defaultDeskIcon: {
+        customData:{
+          customSize: '1x1',
+          groupTitle: '分组',
+          iconList: [
+            {
+              open: {
+                type: 'default',
+                value: null,
+              },
+              src: null,
+              titleValue: '',
+            }
+          ],
+          size:{
+            h: "204px",
+            w: "280px"
+          },
+          zoom: {
+            state: true,
+            value: ""
+          },
+        },
+        id: null,
+        name: "myIcons"
+      },
+
     }
   },
-  async mounted(){
+  mounted(){
   },
   components: { 
     Icon,
@@ -52,82 +143,194 @@ export default {
   },
 
   computed:{
-    ...mapWritableState(favoStore, ['isFavorites', 'allList', 'folderList', 'folderIndex', 'urlIndex']),
+    ...mapWritableState(favoStore, ['isFavorites', 'allList', 'folderList', 'folderIndex', 'browserList', 'updateTime', 'searchValue', 'folderIcons']),
+    ...mapWritableState(useWidgetStore, ['edit']),
+    ...mapWritableState(cardStore, ['desks', 'addCard']),
+    showList(){
+      const folder = this.folderList[this.folderIndex]
+      let arr =[]
+      if (this.folderIndex>=1) {
+        if(folder?.type == 'all'){
+          arr = this.allList.filter(item => {
+            let name = item.rename?item.rename:item.name
+            return item.browser == folder.browser && (name?.indexOf(this.searchValue) > -1 
+            || item.url?.indexOf(this.searchValue) > -1)
+          })
+        }else if(folder?.type == 'folder'){
+          arr = this.allList.filter(item => {
+            let name = item.rename?item.rename:item.name
+            return item.parent == folder.guid && (name?.indexOf(this.searchValue) > -1
+            || item.url?.indexOf(this.searchValue) > -1)
+          })
+        }
+      }else if(this.folderIndex == 0){
+        arr = this.allList.filter(item => {
+          let name = item.rename?item.rename:item.name
+          return item.favo && name.indexOf(this.searchValue) > -1
+        })
+      }
+      return arr
+    },
+    deskList(){
+      let arr = []
+      this.desks.forEach((item, index)=>{
+        arr.push({name: item.name, value: index})
+      })
+      if(arr.length){
+        this.deskIndex = 0
+      }
+      return arr
+    
+    },
   },
   methods: {
-    async test(){
-      await tsbApi.system.getBrowserBookmark(['chrome', 'edge'], (data)=>{
-      // await tsbApi.system.getBrowserBookmark(['edge', 'chrome'], (data)=>{
-        console.log(data)
+    // 添加到桌面
+    addDeskIcon(){
+      this.deskIcons.forEach(item=>{
+        this.addCard(item, this.desks[this.deskIndex])
+      })
+      this.clearCheck()
+    },
+    // 添加到文件夹
+    addFolderIcon(){
+      this.clearCheck()
+    },
+    // 修改名字
+    changeName(){
+      this.allList.forEach((i, index)=>{
+        if(i.guid == this.tmpGuid){
+          i.rename = this.rename
+          message.success('修改名称成功！')
+        }
+      })
+    },
+    // 修改名称弹窗
+    showRenameModal(item){
+      this.renameFlag = true
+      this.tmpName = item.name
+      this.tmpGuid = item.guid
+      this.rename = item.rename?item.rename:item.name
+    },
+    async refresh(){
+      // this.allList = []
+      let arrTmp = []
+      for(let n in this.browserList){
+        arrTmp.push(n)
+      }
+
+      await tsbApi.system.getBrowserBookmark(arrTmp, (data)=>{
+        this.updateTime = new Date().getTime()
         this.folderList = []
-        this.allList = []
+        // this.allList = []
+        let res = []
         if(data.result){
-          data.result.chrome.children.forEach(item => {
-          // data.result.edge.children.forEach(item => {
-            // 文件夹的情况下存文件夹
-            if(item.type == 'folder'){
-              let num = 0;
-              item.children.forEach(i=>{
-                this.allList.push({
-                  ...i,
-                  parent: item.guid,
-                  icon: null,
-                })
-                num++
-              })
-              this.folderList.push({
-                ...item,
-                browser: 'chrome',
-                // browser: 'edge',
-                num: num,
-              })
-            }else{
-              this.allList.push({
-                ...item,
-                parent: null,
-                icon: null,
-              })
-            }
-          });
-          console.log('this.allList', this.allList)
-          console.log('this.folderList', this.folderList)
+          for (let browser in data.result){
+            this.resTmp = []
+            res.push(...this.flattenChildrenArray(data.result[browser], browser, 0))
+            this.folderList.unshift({
+              name: '最近添加',
+              type: 'recent',
+              browser: browser,
+              // num: allNum,
+              rename: null,
+              time: new Date().getTime()
+            })
+            this.folderList.unshift({
+              name: '全部',
+              type: 'all',
+              browser: browser,
+              // num: allNum,
+              rename: null,
+            })
+          }
+          this.folderList.unshift({
+            name: '我的收藏',
+            type: 'favo',
+            num: 0,
+            rename: null,
+          })
+          this.allList = this.mergeArraysByGuid(this.allList, res)
+          
+          message.success('浏览器收藏夹数据刷新成功！')
         }else{
           message.error('浏览器收藏夹读取失败！')
         }
+        // console.log('this.all', this.allList)
       })
-      // await tsbApi.system.getBrowserBookmark('chrome', (data)=>{
-      //   console.log(data)
-      // })
-      // await tsbApi.system.getBrowserBookmark('edge', (data)=>{
-      //   console.log(data)
-      // })
-      // const arr1 = [
-      //   { guid: 'guid1', name: 'John' },
-      //   { guid: 'guid2', name: 'Jane' }
-      // ];
-
-      // const arr2 = [
-      //   { guid: 'guid1', age: 25 },
-      //   { guid: 'guid3', age: 30 }
-      // ];
       // const filteredArray = this.mergeUniqueArrays(arr1, arr2);
-      // console.log('filteredArray', filteredArray);
     },
+
+    // 将数据进行拆分
+    flattenChildrenArray(obj, browser, level, parent) {
+      let num = 0
+      const time = new Date().getTime()
+      obj.children?.forEach(item => {
+          if(item.type != 'folder') {
+            this.resTmp.push({
+              ...item,
+              browser: browser,
+              parent: parent,
+              icon: null,
+              rename: null,
+              favo: false,
+              check: false,
+              time: time,
+            });
+            num++
+          }
+          if (item.children) {
+            this.flattenChildrenArray(item, browser, level+1, level==0?item.guid:parent);
+          }
+      });
+      if(level == 1){
+        this.folderList.push({
+          ...obj,
+          browser: browser,
+          num: num,
+          rename: null,
+          type: 'folder',
+          time: time,
+        })
+      }
+      return this.resTmp;
+    },
+
+    // 改变图标类型
+    changeIcon(arr){
+      let newFolder = []
+      let newIcon = []
+      arr.forEach(item=>{
+        newIcon.push({
+          ...this.defaultDeskIcon,
+          customData: {
+            ...this.defaultDeskIcon.customData,
+            iconList: [
+              {
+                open: {
+                  type: 'default',
+                  value: item.url,
+                },
+                src: item.icon,
+                titleValue: item.name,
+              }
+            ],
+          },
+          id: nanoid(6),
+        })
+        newFolder.push({
+          ...this.defaultFolderIcon,
+          ...item, 
+        })
+      })
+      this.deskIcons = newIcon
+      this.folderIcons = newFolder
+    },
+
+    
 
     // 切换文件夹列表
     changeFolder(index){
-      // console.log('index', index)
       this.folderIndex = index
-      this.urlIndex = null
-      if (index>=0) {
-        // console.log('this.folderList[index]', this.folderList[index])
-        // console.log('this.allList', this.allList)
-        this.showList = this.allList.filter(item => {
-          return item.parent == this.folderList[index].guid
-        })
-        
-      }
-
     },
 
     // 数组去重
@@ -141,7 +344,38 @@ export default {
           }
       }
       return mergedArray;
-    }
+    },
+
+    // 统计收藏数量
+    countFavo(){
+      let num = 0;
+      this.allList.forEach(item=>{
+        if(item.favo) num++
+      })
+      this.folderList[0].num = num
+    },
+
+    // 切换编辑状态
+    changeCheck(){
+      this.checkFlag = !this.checkFlag
+      if(!this.checkFlag){
+        this.clearCheck()
+      }
+    },
+
+    // 清楚数据的选中状态
+    clearCheck(){
+      this.allList.forEach(item=>{
+        if(item.check) item.check = false
+      })
+    },
+
+    mergeArraysByGuid(arr1, arr2) {
+      const existingGuids = new Set(arr1.map(obj => obj.guid));
+      const newObjects = arr2.filter(obj => !existingGuids.has(obj.guid));
+      const mergedArray = [...arr1, ...newObjects];
+      return mergedArray;
+    },
   },
 
 }

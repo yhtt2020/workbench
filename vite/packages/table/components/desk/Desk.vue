@@ -170,6 +170,9 @@
     </Drop>
   </div>
 
+  <xt-modal v-model="setVisible" :footer="false" boxClass="" :mask="0" :header="false">
+    <SystemSet @close="setVisible = false" />
+  </xt-modal>
   <xt-modal
     v-model="settingVisible"
     :footer="false"
@@ -427,6 +430,7 @@ export default {
     // 监听ID变化
     "currentDesk.id": {
       handler(newVal) {
+        this.$bus.off("startAdjust");
         let obj = {
           id: 20,
           newIcon: "fluent:more-horizontal-16-filled",
@@ -521,6 +525,7 @@ export default {
   },
   data() {
     return {
+      setVisible: false,
       showGrid: false,
       loaded: false,
       vurriEnable: false,
@@ -556,15 +561,16 @@ export default {
   },
   mounted() {
     // 空桌面添加图标保持弹窗
-    // this.editVisible = this.keepAddIcon
-    this.$bus.on("addCard", (data) => {
-      let value = _.cloneDeep(data);
-      this.currentDesk.cards.push({
-        name: "folder",
-        id: Date.now(),
-        customData: value,
-      });
-    });
+    // this.editVisible = this.keepAddIcon;
+    // this.$bus.on("addCard", (data) => {
+    //   let value = _.cloneDeep(data);
+    //   console.log("value :>> ", this.currentDesk);
+    //   this.currentDesk.cards.push({
+    //     name: "folder",
+    //     id: Date.now(),
+    //     customData: value,
+    //   });
+    // });
     // 自动打开编辑
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();
@@ -612,6 +618,10 @@ export default {
     ...mapActions(cardStore, ["addCard"]),
     ...mapActions(useDeskStore, ["addMenu"]),
     ...mapActions(taskStore, ["initTask"]),
+    // 打开系统设置
+    showSystemSet() {
+      this.setVisible = true;
+    },
     addFolder() {
       if (!this.showGuide) {
         registerFolder(this.currentDesk);
@@ -663,7 +673,6 @@ export default {
     },
     showSetting() {
       this.settingVisible = true;
-      this.menuVisible = false;
     },
     hideDesk() {
       this.hide = !this.hide;
@@ -859,6 +868,11 @@ export default {
       return this.adjustZoom;
     },
   },
+  beforeDestroy() {
+    console.log('123 :>> ', 123);
+
+
+  }
 };
 </script>
 

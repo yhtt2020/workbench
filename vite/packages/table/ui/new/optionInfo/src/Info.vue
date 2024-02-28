@@ -2,7 +2,7 @@
   <div class="flex justify-between text-base xt-text mb-2.5" v-if="title">
     <!-- 左侧 -->
     <div class="flex items-center">
-      <span> {{ title }}</span>
+      <span> {{ title }} </span>
       <div class="">
         <slot name="icon">
           <xt-new-icon
@@ -18,19 +18,19 @@
 
     <!-- 右侧 -->
     <div class="flex items-center">
-     <slot name="right">
-      <a-switch
-        v-if="isSwitch"
-        v-model:checked="currentSwitch"
-        @change="changeSwitch"
-      />
+     <div class="mr-3"> <slot name="right"> </slot></div>
       <div
         v-if="isState"
         class="xt-bg-t-2 h-6 rounded-md xt-text-2 text-sm flex justify-center items-center px-1"
       >
         {{ state }}
       </div>
-     </slot>
+      <a-switch
+        v-if="isSwitch"
+        v-model:checked="currentSwitch"
+        @change="changeSwitch"
+
+      />
     </div>
   </div>
   <div class="text-sm xt-text-2 mb-2.5" v-if="info">{{ info }}</div>
@@ -44,11 +44,13 @@ interface infoProps {
   info: string;
   isSwitch: boolean;
   switch: boolean;
-  isState: any;
+  isState: boolean;
   state: any;
   icon: string;
 }
-const props = withDefaults(defineProps<infoProps>(), {});
+const props = withDefaults(defineProps<infoProps>(), {
+  info: "",
+});
 const emits = defineEmits(["update:switch", "onIconClick"]);
 const { title, info, isSwitch, isState, icon } = toRefs(props);
 // 选择回调

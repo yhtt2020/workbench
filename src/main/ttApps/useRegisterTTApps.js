@@ -18,14 +18,6 @@ const tempPath=function (p){
 }
 module.exports = async function useRegisterTTApps (filePath) {
   console.log('3333 :>> ', 3333)
-  // // 1 获取文件
-  // let path = await tsbApi.dialog.showOpenDialog({
-  //   title: "选择",
-  //   message: "请选择文件",
-  //   multiple: "true",
-  //   properties: ["openFile", "multiSelections"],
-  // });
-  // if (!path) return;
 
   // 2 处理文件类型
   if (!getFileExtension(filePath)) {

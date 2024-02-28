@@ -19,14 +19,16 @@
                     h="32" 
                     radius="8" 
                     :plain="true"
-                    class="mr-4">下次不再提示</xt-button>
+                    class="mr-4" 
+                    style="background-color: var(--secondary-bg);">下次不再提示</xt-button>
                 <xt-button 
                     @click="close" 
                     type="theme" 
                     w="84" 
                     h="32" 
                     radius="8" 
-                    :plain="true">好的</xt-button>
+                    :plain="true"
+                    style="background-color: var(--active-bg);">好的</xt-button>
             </div>
         </div>
 

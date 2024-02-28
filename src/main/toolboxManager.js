@@ -43,21 +43,22 @@ class ToolboxManager {
           event.preventDefault()
         }
       })
-      window.on('blur',()=>{
-        if(!window.webContents.isDevToolsOpened()){
-          this.windowInstance.close() //注释此行禁止失焦隐藏
-          this.windowInstance=null
-        }
-      })
+      // window.on('blur',()=>{
+      //   if(!window.webContents.isDevToolsOpened()){
+      //     this.windowInstance.close() //注释此行禁止失焦隐藏
+      //     this.windowInstance=null
+      //   }
+      // })
       window.on('closed', () => {
         this.windowInstance = null
       })
     } else {
+      this.windowInstance.window.show()
       this.windowInstance.window.focus()
     }
   }
 
-   alive () {
+  alive () {
     if (this.windowInstance) {
       if (this.windowInstance.window) {
         if (!this.windowInstance.window.isDestroyed()) {
@@ -68,21 +69,25 @@ class ToolboxManager {
     return false
   }
 
-   close () {
+  close () {
     if (this.windowInstance) {
       if (this.windowInstance.window) {
         if (!this.windowInstance.window.isDestroyed()) {
-          this.windowInstance.close()
-          this.windowInstance = null
+          if (this.windowInstance.window.isVisible()) {
+            this.windowInstance.window.hide()
+          } else {
+            this.open()
+          }
+
         }
       }
     }
   }
 
   async toggle () {
-    if(this.alive()){
+    if (this.alive()) {
       this.close()
-    }else{
+    } else {
       await this.open()
     }
   }
