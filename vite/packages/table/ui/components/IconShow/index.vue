@@ -38,7 +38,6 @@
 import { ref, toRefs, onMounted, onBeforeUnmount, computed, watch } from "vue";
 //解析出来的颜色
 const visible = ref("");
-const avatarUrl = ref(props.modelValue);
 
 const props = defineProps({
   // 选择器数组
@@ -94,6 +93,7 @@ const props = defineProps({
     default: "cover",
   },
 });
+const avatarUrl = ref(props.modelValue);
 const { modelValue } = toRefs(props);
 const emits = defineEmits(["update:modelValue", "cb"]);
 const color = computed(() => {

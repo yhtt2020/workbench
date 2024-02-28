@@ -10,7 +10,7 @@
         :options="options" 
         ref="dataSlot" 
         :desk="desk" >
-        <Unusual v-if='!this.access_token || !this.baseUrl' title="请完成小组件配置" buttonTitle="立即配置" :back="back" ></Unusual>
+        <Unusual v-if='!this.access_token || !this.baseUrl' title="请完成小组件配置" buttonTitle="立即配置" @back="back" ></Unusual>
         <div v-else class="echarts" ref="myChart" :style="myChartStyle"></div>
         <!-- 设置面板 -->
         <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
