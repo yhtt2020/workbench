@@ -1,14 +1,13 @@
 <template>
-  <xt-option-box>
+  <xt-option-box class="mt-3">
     <xt-option-info
       title="摇一摇鼠标穿梭"
       isSwitch
       v-model:switch="settings.shake.enable"
     />
-    <xt-text type="2">目前暂不支持坐标轴为负的屏幕穿梭返回。</xt-text>
     <template v-if="settings.shake.enable">
+      <xt-text type="2">目前暂不支持坐标轴为负的屏幕穿梭返回。</xt-text>
       <xt-text type="2" class="mb-3">
-        {{ settings.shake }}
         穿梭位置： x:{{ settings.shake.pos.x }} y:{{ settings.shake.pos.y }}
       </xt-text>
       <xt-option-info title="灵敏度" />
@@ -18,10 +17,17 @@
         :list="sensitive"
         v-model="sensitiveValue"
       />
+      {{ sensitiveValue }}123
       <hr />
       <xt-option-info title="穿梭音效" />
-      <xt-option-select :list="sounds" v-model="sound" />
-      <xt-button type="theme" :x="80" :h="40" size="mini" @click="setPos"
+      <xt-option-select :list="newSounds" v-model="sound" />
+      <xt-button
+        type="theme"
+        class="my-3"
+        :x="80"
+        :h="40"
+        size="mini"
+        @click="setPos"
         >重新设置</xt-button
       >
     </template>
@@ -40,12 +46,35 @@ export default {
   },
   data() {
     return {
+      aaa: "",
       sensitive: [
-        { name: "低", value: "6" },
-        { name: "中", value: "5" },
-        { name: "高", value: "4" },
+        { title: "低", name: "6" },
+        { title: "中", name: "5" },
+        { title: "高", name: "4" },
       ],
       sounds: [
+        {
+          title: "木鱼",
+          name: "fish.mp3",
+        },
+        {
+          title: "青蛙叫",
+          name: "gua.mp3",
+        },
+        {
+          title: "逼兜",
+          name: "bidou.wav",
+        },
+        {
+          title: "篮球",
+          name: "lanqiu.wav",
+        },
+        {
+          title: "歘",
+          name: "chua.wav",
+        },
+      ],
+      newSounds: [
         {
           name: "木鱼",
           value: "fish.mp3",
@@ -67,8 +96,8 @@ export default {
           value: "chua.wav",
         },
       ],
-      sound: {},
-      sensitiveValue: {},
+      sound: "",
+      sensitiveValue: "",
       listenEnter: (event) => {
         if (event.code === "Enter") {
           let win32 = $models.win32;
@@ -95,7 +124,7 @@ export default {
     };
   },
   mounted() {
-    this.sound.name = this.settings.shake.audio;
+    this.sound = this.settings.shake.audio;
     this.sensitiveValue = String(this.settings.shake.sensitive);
     console.log(this.sound, this.sensitiveValue);
   },
@@ -140,7 +169,7 @@ export default {
     sound: {
       handler(newVal) {
         console.log(newVal);
-        this.settings.shake.audio = newVal.name;
+        this.settings.shake.audio = newVal;
         this.$nextTick(() => {
           document.getElementById("shakeAudio").play();
         });
