@@ -91,9 +91,9 @@
 <script>
 import { clockTabList,clockSelectList } from '../hooks/clockList';
 import mixin from "../hooks/clockMixin.js";
+import { localCache } from '../../../../js/axios/serverCache';
 
 import ClockStyle from '../clockState/ClockStyle.vue';
-
 
 export default{
   mixins: [mixin],
@@ -169,7 +169,8 @@ export default{
         this.updateClock('clock4');
        }
        else {
-        this.updateClock('clock1');
+        // console.log('更新',localCache.get('clockName'));
+        this.updateClock(localCache.get('clockName'));
        }
       },
       immediate:true,

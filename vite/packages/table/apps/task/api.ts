@@ -26,3 +26,17 @@ export const getTaskScore = () =>{
   const res = post(sUrl("/app/com/scores/list"),option);
   return res;
 }
+
+
+// 获取积分所有商品
+export const getPointProduct = async() =>{
+  const res = await  post(sUrl("/app/scoreShop/getColumnList"));
+  return res;
+}
+
+// 获取积分商品详情
+export const getPointProductDetail = async(id:any) =>{
+  const option = { id:id };
+  const res = await post(sUrl("/app/scoreShop/detail"),option);
+  return res;
+}
