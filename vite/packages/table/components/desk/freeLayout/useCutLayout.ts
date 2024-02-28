@@ -177,7 +177,7 @@ export const useCutLayout = async (config) => {
   }
 
   if (msgArr.length > 0) {
-    message.success("已为您更新画布画布");
+    message.success("已为您更新画布");
   }
   console.log("被调用了 :>> ");
   // 处于吸附网格
