@@ -38,6 +38,5 @@ export const getPointProduct = async() =>{
 export const getPointProductDetail = async(id:any) =>{
   const option = { id:id };
   const res = await post(sUrl("/app/scoreShop/detail"),option);
-  console.log('详情',res);
   return res;
 }

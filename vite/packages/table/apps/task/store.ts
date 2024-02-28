@@ -175,6 +175,8 @@ export const taskStore = defineStore("taskStore", {
           "completedList",
           "claimRewardsList",
           "taskUserMedal",
+          "pointGoods",
+          "pointGoodsDetail"
         ],
         storage: localStorage,
       },

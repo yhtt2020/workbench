@@ -1,5 +1,7 @@
 <template>
- <swiper :spaceBetween="30" :loop="true" :autoplay="{ delay: 2500,disableOnInteraction: false,}" :pagination="{clickable:true}" :modules="modules" class="mySwiper" >
+ <swiper :spaceBetween="30" :loop="true" :autoplay="{ delay: 2500,disableOnInteraction: false,}" 
+  :pagination="{clickable:true}" :modules="modules" class="mySwiper" :navigation="true"
+ >
   <swiper-slide v-for="imgItem in swiperList">
     <div class="w-full cursor-pointer"  style="position: relative;" :style="{height:`${height}px`}">
       <img :src="imgItem" alt="" :class="swiperClass" style="width:100%;height:100%;object-fit: cover;">
@@ -12,7 +14,8 @@
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { Pagination } from 'swiper';
+import 'swiper/css/navigation';
+import { Pagination,Navigation } from 'swiper';
 
 export default {
  components:{
@@ -35,7 +38,7 @@ export default {
  data(){
   return{
    // 小圆点指示器配置
-    modules:[Pagination]
+    modules:[Pagination,Navigation]
   }
  }
 };
@@ -48,5 +51,17 @@ export default {
 :deep(.swiper-pagination){
   position: absolute !important;
   bottom: 0 !important;
+}
+
+:deep(.swiper-button-next){
+  width: 24px !important;
+  height: 24px !important;
+  color: var(--secondary-text) !important;
+}
+
+:deep(.swiper-button-prev){
+  width: 24px !important;
+  height: 24px !important;
+  color: var(--secondary-text) !important
 }
 </style>
