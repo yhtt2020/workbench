@@ -14,7 +14,7 @@
       </div>
     </div>
     <!-- 右侧功能区 -->
-    <div class="p-3 xt-modal" style="width: 492px">
+    <div class="p-3 xt-modal h-full flex flex-col" style="width: 520px">
       <!-- 头部 -->
       <div class="flex justify-between items-center mb-3">
         <div class="flex items-center">
@@ -33,8 +33,10 @@
 
       <!-- <xt-scrollbar> -->
       <!-- <div class=" overflow-hidden overflow-y-auto xt-scrollbar"> -->
-      <component :is="components[setList[activeIndex].component]" />
 
+      <xt-scrollbar class="flex-1 w-full overflow-hidden" :x="false" :y="true">
+        <component :is="components[setList[activeIndex].component]" />
+      </xt-scrollbar>
       <!-- </div> -->
       <!-- </xt-scrollbar> -->
     </div>
@@ -48,7 +50,7 @@ import Theme from "../theme/Theme.vue";
 import develop from "../develop/Develop.vue";
 import device from "../device/Device.vue";
 import key from "../key/Key.vue";
-import splitScreen from "../splitScreen/SplitScreen.vue";
+import Screen from "../Screen/Screen.vue";
 import barrage from "../barrage/Barrage.vue";
 
 const components = shallowReactive({
@@ -57,7 +59,7 @@ const components = shallowReactive({
   develop,
   device,
   key,
-  splitScreen,
+  Screen,
   barrage,
 });
 type SetItem = {
@@ -81,7 +83,7 @@ const setList = ref<SetItem[]>([
   {
     name: "分屏设置",
     icon: "fluent:window-multiple-16-filled",
-    component: "splitScreen",
+    component: "Screen",
   },
   {
     name: "弹幕设置",

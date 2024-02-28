@@ -17,10 +17,9 @@
         :list="sensitive"
         v-model="sensitiveValue"
       />
-      {{ sensitiveValue }}123
       <hr />
       <xt-option-info title="穿梭音效" />
-      <xt-option-select :list="newSounds" v-model="sound" />
+      <xt-option-select :list="sounds" v-model="sound" />
       <xt-button
         type="theme"
         class="my-3"
@@ -48,33 +47,11 @@ export default {
     return {
       aaa: "",
       sensitive: [
-        { title: "低", name: "6" },
-        { title: "中", name: "5" },
-        { title: "高", name: "4" },
+        { name: "低", value: "6" },
+        { name: "中", value: "5" },
+        { name: "高", value: "4" },
       ],
       sounds: [
-        {
-          title: "木鱼",
-          name: "fish.mp3",
-        },
-        {
-          title: "青蛙叫",
-          name: "gua.mp3",
-        },
-        {
-          title: "逼兜",
-          name: "bidou.wav",
-        },
-        {
-          title: "篮球",
-          name: "lanqiu.wav",
-        },
-        {
-          title: "歘",
-          name: "chua.wav",
-        },
-      ],
-      newSounds: [
         {
           name: "木鱼",
           value: "fish.mp3",
@@ -111,9 +88,9 @@ export default {
           message.success("设置摇一摇定位成功。");
           window.shake.pos = this.settings.shake.pos;
           this.shakeConfirm.close();
-          this.$router.push({
-            name: "key",
-          });
+          // this.$router.push({
+          //   name: "key",
+          // });
           window.removeEventListener("keydown", this.listenEnter);
 
           event.preventDefault();
