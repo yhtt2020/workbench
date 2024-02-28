@@ -617,6 +617,10 @@ export default {
     ...mapActions(cardStore, ["addCard"]),
     ...mapActions(useDeskStore, ["addMenu"]),
     ...mapActions(taskStore, ["initTask"]),
+    // 打开系统设置
+    showSystemSet() {
+      this.setVisible = true;
+    },
     addFolder() {
       if (!this.showGuide) {
         registerFolder(this.currentDesk);
@@ -667,8 +671,7 @@ export default {
       }
     },
     showSetting() {
-      // this.settingVisible = true;
-      this.setVisible = true;
+      this.settingVisible = true;
     },
     hideDesk() {
       this.hide = !this.hide;
