@@ -71,7 +71,6 @@ export const taskStore = defineStore("taskStore", {
           res = i.tasks.find((task) => task.id === id);
         });
       }
-      // console.log("res :>> ", res);
       // const item: any = this.currentTaskList.find(
       //   (obj: any) => obj.name === id
       // );
