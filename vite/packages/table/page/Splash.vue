@@ -15,7 +15,8 @@
   <div
     style="display:flex;height: 100vh;text-align: center;align-content: center;align-items: center;background:#333;justify-content: center"
     class="drag">
-    <div v-if="launching && !$useEnv()" style="margin: auto;">
+    <!-- && !$useEnv() -->
+    <div v-if="launching" style="margin: auto;">
       <div class="mb-5 animate-bounce ">
         <a-avatar :size="60"
                   src="https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/8befa3834d2eb29e75685563ef513215.png?imageMogr2/crop/260x260/gravity/center"></a-avatar>
@@ -124,50 +125,46 @@ export default {
     }
   },
   async mounted () {
-  //   window.addEventListener("message", async (event) => {
-  //     let token = event?.data?.data?.token
-  //      // 拿到token
-  //      if (token) {
-  //       console.log('token :>> ', token);
-  //        cache.set('ttUserToken', token)
-  //        this.$router.replace({ name: 'home' })
-  //        }
-  //  }, false);
 
-    if(this.userInfo.uid){
-      this.timeout()
-    }
 
-    //启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成
-    //注意，此处的第二个参数，必须和此store同名，尤其注意有些命名里带了store的
-    this.initStore(appStore, 'appStore')
-    this.initStore(codeStore, 'code')
-    this.initStore(cardStore, 'cardStore')
-    this.initStore(weatherStore, 'weather')
-    this.initStore(paperStore, 'paper')
-    this.initStore(deckStore, 'deck')
-    this.initStore(screenStore, 'screen')
-    this.initStore(teamStore, 'teamStore')
-    this.initStore(navStore, 'nav')
-    this.initStore(taskStore, 'task')
-    this.initStore(useWidgetStore, 'useWidgetStore')
-    this.initStore(controlStore, 'control')
-    this.initStore(offlineStore, 'offlineStore')
-    // this.initStore(clockStore,'clockStore')
-    browserStore().bindIPC()
-    captureStore()//仅触发一下载入
-    clipboardStore()
-    if (isMain()) {
-      this.bindMainIPC()
-    } else {
-      this.bindSubIPC()
-    }
-
+    Promise.all([
+      //启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成
+      //注意，此处的第二个参数，必须和此store同名，尤其注意有些命名里带了store的
+      await this.initStore(appStore, "appStore"),
+      await this.initStore(codeStore, "code"),
+      await this.initStore(cardStore, "cardStore"),
+      await this.initStore(weatherStore, "weather"),
+      await this.initStore(paperStore, "paper"),
+      await this.initStore(deckStore, "deck"),
+      await this.initStore(screenStore, "screen"),
+      await this.initStore(teamStore, "teamStore"),
+      await this.initStore(navStore, "nav"),
+      await this.initStore(taskStore, "task"),
+      await this.initStore(useWidgetStore, "useWidgetStore"),
+      await this.initStore(controlStore, "control"),
+      await this.initStore(offlineStore, "offlineStore"),
+      await this.initStore(clipboardStore, "clipboardStore"),
+      await  browserStore().bindIPC(),
+      await  captureStore(),//仅触发一下载入
+      await this.bindIPC(),
+    ]);
+    console.log('加载完成 :>> ', );
     window.loadedStore['userInfo'] = false
-
     this.bindUserInfoResponse()
+    this.getUserInfo()
+    this.sortClock()
 
+
+   // 登录过
+   if(this.userInfo.uid && this.init){
+      this.loginOk()
+      return
+      // this.timeout()
+    }
+    this.afterLaunch()
+    return
     setTimeout(() => {
+      return
       this.storeReadyTimer = setInterval(() => {
         if (!this.launching) {
           return
@@ -189,8 +186,6 @@ export default {
       }, 1000)
     }, 100)
 
-    this.getUserInfo()
-    this.sortClock()
 
   },
   computed: {
@@ -207,6 +202,13 @@ export default {
     ...mapActions(appStore, ['getUserInfo', 'setUser','enterAided','ensureShake']),
     ...mapActions(steamUserStore, ['bindClientEvents']),
     ...mapActions(captureStore, ['bindCaptureIPC']),
+    bindIPC() {
+      if (isMain()) {
+      this.bindMainIPC()
+    } else {
+      this.bindSubIPC()
+    }
+    },
     timeout () {
       this.timeoutHandler = setTimeout(() => {
         this.launching = false
@@ -305,9 +307,12 @@ export default {
       })
     },
     initStore (store, name) {
+      console.log('window.loadedStore :>> ', window.loadedStore);
+      // loadedStore 不存在初始化对象
       if (!window.loadedStore) {
         window.loadedStore = {}
       }
+
       if (typeof window.loadedStore[name] === 'undefined') {
         window.loadedStore[name] = false
       }
@@ -315,9 +320,11 @@ export default {
     },
 
     async afterLaunch () {
-      if(!this.init && isMain()){
+      // 未初始化
+      if(!this.init && (isMain() || this.$useEnv('web'))){
         this.$router.replace({ name: 'wizard' })
       }
+      if (this.$useEnv('web')) return
       if(this.aided){
         message.warn('当前应用正运行在辅助模式下，无法被聚焦。如需退出，请到【设置】界面关闭。')
         this.enterAided()
@@ -338,18 +345,7 @@ export default {
       this.ensureShake(false)//确认摇一摇功能状态
       await tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100)//根据设置进行缩放比的强制调整
       tsbApi.window.setSkipTaskbar(!this.settings.showInTaskBar)
-      if (this.settings.darkMod) {
-        // if( this.backgroundImage.path===''&&!this.backgroundImage.runpath) {
-        //   document.body.style.background = '#191919'
-        //
-        //
-        // }else if(this.backgroundImage.runpath){
-        //
-        // }else{
-        //   document.body.style.background=  ''
-        //   document.body.style.backgroundImage = "url(" + this.backgroundImage.path + ")"
-        // }
-      }
+
       this.launching = false
       if (!this.userInfo) {
         //如果个人信息不存在，则直接返回
@@ -382,7 +378,7 @@ export default {
 
       console.log('123321 useLogin :>> ', 123321);
       useLogin(()=>{
-        this.$router.replace({ name: 'home' })
+        this.loginOk()
       })
       return
       tsbApi.user.login((data) => {
@@ -390,7 +386,9 @@ export default {
       })
     },
 
-
+loginOk(){
+  this.$router.replace({ name: 'home' })
+},
     onGuest(){
       this.$router.replace({ name: 'home' })
       // this.isGuest = true

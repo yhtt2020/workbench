@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
 import {defineComponent} from 'vue'
 import NoticeBody from "./part/NoticeBody.vue";
 import UrlButtons from "./part/UrlButtons.vue";
@@ -49,19 +49,22 @@ export default defineComponent({
 </script>
 
 <template>
-  <xt-modal v-if="message?.id" v-model="visible" :footer="false" :title="message.title" boxClass="p-4 " :mask="1">
-  <div  style="max-width:600px" >
-    <div class="mt-2 mb-10">
-      <NoticeBody :content="message"></NoticeBody>
-    </div>
-    <div class="flex justify-center w-full gap-2  ">
-      <div class="flex justify-end gap-4">
-        <UrlButtons @close="close" :urls="urls"></UrlButtons>
+  <xt-modal v-if="message?.id" v-model="visible" :footer="false" :header="true" boxClass="p-4 " :mask="1">
+    <template #header-center>
+      <span class="xt-text font-16 truncate" style="width: 200px;">
+        {{ message.title  }}
+      </span>
+    </template>
+    <div  style="min-width:600px" >
+      <div class="mt-2 mb-10">
+        <NoticeBody :content="message"></NoticeBody>
+      </div>
+      <div class="flex justify-center w-full gap-2  ">
+        <div class="flex justify-end gap-4">
+          <UrlButtons @close="close" :urls="urls"></UrlButtons>
+        </div>
       </div>
     </div>
-
-  </div>
-
   </xt-modal>
 </template>
 

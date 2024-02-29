@@ -1,14 +1,14 @@
 import { defineStore } from "pinia";
 import { tasks } from "./page/primary/Primary";
 import { tasks as branchTasks } from "./page/branch/Branch";
-import { getAllTask } from "./api";
+import { getAllTask,getTaskScore,getPointProduct,getPointProductDetail} from "./api";
 import { teamStore } from "../../store/team";
-import { getTaskScore } from './api';
 
 // @ts-ignore
 export const taskStore = defineStore("taskStore", {
   state: () => ({
     firstTask: false, //首次任务
+    firstShop:true, // 首次积分商店
     isTask: true, // 首页展示任务中心
     isTaskDrawer: false, // 打开任务中心
     taskID: "M0101", // 任务ID
@@ -39,6 +39,10 @@ export const taskStore = defineStore("taskStore", {
     },
     // 临时存储主线任务完成后的状态
     temporaryStatus:false,
+    // 积分商品
+    pointGoods:[],
+    // 积分商品详情
+    pointGoodsDetail:{},
   }),
   getters: {},
   actions: {
@@ -68,7 +72,6 @@ export const taskStore = defineStore("taskStore", {
           res = i.tasks.find((task) => task.id === id);
         });
       }
-      // console.log("res :>> ", res);
       // const item: any = this.currentTaskList.find(
       //   (obj: any) => obj.name === id
       // );
@@ -112,7 +115,6 @@ export const taskStore = defineStore("taskStore", {
       this.taskID = currentTask.name;
       this.currentId = currentTask.name;
     },
-
     // 获取用户勋章
     async getTaskUserMedal(uid:any){
       const taskTeam:any = teamStore();
@@ -131,7 +133,29 @@ export const taskStore = defineStore("taskStore", {
           this.taskUserMedal.score = res.data[1].value;
         }
       })
-    }
+    },
+    // 获取商品
+    getPointGoods(){
+      getPointProduct().then(res=>{
+        if(res){
+          const goodList:any = [];
+          for(const item of res){
+            for(const childrenItem of item.product_list){
+              goodList.push(childrenItem);
+            };
+          };
+          this.pointGoods = goodList;
+        }
+      })
+    },
+    // 获取商品详情
+    getPointGoodsDetail(id:any){
+      getPointProductDetail(id).then(res=>{
+        if(res){
+         this.pointGoodsDetail = res.storeInfo;
+        }
+      })
+    },
   },
   persist: {
     enabled: true,
@@ -151,6 +175,9 @@ export const taskStore = defineStore("taskStore", {
           "completedList",
           "claimRewardsList",
           "taskUserMedal",
+          "pointGoods",
+          "pointGoodsDetail",
+          "firstShop",
         ],
         storage: localStorage,
       },

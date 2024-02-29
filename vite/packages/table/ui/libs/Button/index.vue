@@ -11,10 +11,10 @@
     }"
   >
     <slot name="prefix" v-if="iconPosition == 'prefix'">
-      <xt-new-icon v-if="icon" :icon="icon" :size="iconSize" />
+      <xt-new-icon v-if="icon" :icon="icon" :size="iconSize"  />
       <xt-ify-icon v-if="ifyIcon" :icon="ifyIcon" :size="iconSize" />
     </slot>
-    <span>
+    <span >
       <slot></slot>
     </span>
     <slot name="postfix" v-if="iconPosition == 'postfix'">

@@ -13,10 +13,19 @@
     "lib": ["esnext", "dom"],
     "skipLibCheck": true,
     "types": [
-//      "pinia-plugin-persist",
-     // "ts-api-types"
+      //      "pinia-plugin-persist",
+      // "ts-api-types"1vite\
     ]
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "packages/**/*.d.ts"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.d.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "packages/**/*.d.ts",
+    "packages/table/ui/new/new.d.ts",
+    "./packages/table/ui/new/new.d.ts",
+    "packages/table/ui/**/*.d.ts",
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

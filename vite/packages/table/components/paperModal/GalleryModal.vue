@@ -126,7 +126,12 @@ export default {
 
 
     onMounted(()=>{
+
       nextTick(()=>{
+        proxy.$bus.on('lockScreenSet',()=>{
+          // galleryVisible.value = false
+          galleryIndex.value = 's'
+        })
         proxy.$bus.on('closePaper',()=>{
           galleryVisible.value = false
         })

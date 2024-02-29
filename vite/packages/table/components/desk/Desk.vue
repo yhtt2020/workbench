@@ -169,8 +169,20 @@
       </vue-custom-scrollbar>
     </Drop>
   </div>
-
+  <!-- 系统设置 -->
   <xt-modal
+    v-model="setVisible"
+    v-if="setVisible"
+    :footer="false"
+    boxClass=""
+    :mask="0"
+    :header="false"
+  >
+    <SystemSet @close="setVisible = false" />
+  </xt-modal>
+  <!-- 桌面设置 -->
+  <xt-modal
+    v-if="settingVisible"
     v-model="settingVisible"
     :footer="false"
     boxClass="p-4 pb-0"
@@ -208,6 +220,7 @@
       </template>
     </div>
   </xt-modal>
+  <!-- 添加小组件 -->
   <transition name="fade">
     <div
       class="home-blur"
@@ -233,6 +246,7 @@
       ></NewAddCard>
     </div>
   </transition>
+  <!-- 添加图标 -->
   <AddIcon @close="iconHide" v-if="iconVisible" :desk="currentDesk"></AddIcon>
   <GalleryModal ref="galleryRef" />
   <EditNewNavigation
@@ -427,6 +441,10 @@ export default {
     // 监听ID变化
     "currentDesk.id": {
       handler(newVal) {
+        this.$bus.off("startAdjust");
+        this.$bus.off("lockScreen");
+        this.$bus.off("openSystemSet");
+
         let obj = {
           id: 20,
           newIcon: "fluent:more-horizontal-16-filled",
@@ -521,6 +539,7 @@ export default {
   },
   data() {
     return {
+      setVisible: false,
       showGrid: false,
       loaded: false,
       vurriEnable: false,
@@ -556,7 +575,7 @@ export default {
   },
   mounted() {
     // 空桌面添加图标保持弹窗
-    // this.editVisible = this.keepAddIcon
+    // this.editVisible = this.keepAddIcon;
     // this.$bus.on("addCard", (data) => {
     //   let value = _.cloneDeep(data);
     //   console.log("value :>> ", this.currentDesk);
@@ -590,6 +609,20 @@ export default {
     //     this.$refs.galleryRef.openGalleryModal();
     //   }, 100);
     // });
+    this.$bus.on("lockScreen", () => {
+      this.$refs.galleryRef.openGalleryModal();
+      setTimeout(() => {
+        this.$bus.emit("lockScreenSet");
+        }, 100);
+    });
+    this.$bus.on("openSystemSet", () => {
+
+      console.log('openSystemSet :>> ', );
+
+
+     this.showSystemSet();
+    });
+
 
     if (window.showed) {
       this.showGrid = true;
@@ -613,6 +646,10 @@ export default {
     ...mapActions(cardStore, ["addCard"]),
     ...mapActions(useDeskStore, ["addMenu"]),
     ...mapActions(taskStore, ["initTask"]),
+    // 打开系统设置
+    showSystemSet() {
+      this.setVisible = true;
+    },
     addFolder() {
       if (!this.showGuide) {
         registerFolder(this.currentDesk);
@@ -664,7 +701,6 @@ export default {
     },
     showSetting() {
       this.settingVisible = true;
-      this.menuVisible = false;
     },
     hideDesk() {
       this.hide = !this.hide;
@@ -859,6 +895,9 @@ export default {
     getAdjustZoom() {
       return this.adjustZoom;
     },
+  },
+  beforeDestroy() {
+    console.log("123 :>> ", 123);
   },
 };
 </script>

@@ -17,9 +17,9 @@
         <div class="top-icon">
             <Icon icon="majesticons:monitor-line" />
         </div> -->
-        <div class="overflow-hidden dash-board" style="height: 370px;">
+        <div class="overflow-hidden dash-board" style="height: 365px;">
             <Unusual v-if='!this.access_token || !this.baseUrl' title="请完成小组件配置" buttonTitle="立即配置" @back="back" ></Unusual>
-            <div v-else class="dash-cell" v-for="(item,index) in targetKeys" :key="index">
+            <div v-else class="mt-2 dash-cell" v-for="(item,index) in targetKeys" :key="index">
                 <div class="cell-title">{{ this.mockData[item-1].title }}</div>
                 <div class="cell-num" style="font-family: 'Oswald-Medium';">{{ this.mockData[item-1].num == undefined?'-':this.mockData[item-1].num }}</div>
             </div>

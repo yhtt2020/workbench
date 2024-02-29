@@ -129,7 +129,11 @@ class Window extends Base {
       }
 
     })
-
+    this.on('hide', (event, args, instance) => {
+      if (instance.type === 'window') {
+        instance.window.hide()
+      }
+    })
     this.on('setBounds', (event, args, instance) => {
       if (instance.type === 'frameWindow') {
         instance.frame.setBounds(args)

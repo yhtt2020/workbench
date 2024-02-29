@@ -1,28 +1,37 @@
 <template>
   <div class="flex w-full h-full flex-col">
-    <div class="flex items-center justify-between">
-      <div class="flex items-center">
-        <xt-ify-icon
-          icon="fluent:building-shop-16-filled"
-          class="mr-2 xt-text"
-          size="16"
-        ></xt-ify-icon>
-        <span class="xt-text xt-font font-14">扫一扫</span>
-      </div>
-      <Exit />
-    </div>
-    <div class="flex grow flex-col items-center justify-center">
-      <div style="width: 200px;height: 200px;" class="mb-3">
-        <img src="/img/taskShop.png" class="w-full h-full rounded-md object-cover" alt="">
-      </div>      
-      <span class="xt-text-2  font-16 xt-font">微信扫一扫</span>
-      <span class="xt-text-2  font-16 xt-font">在元社区积分商城中选择你想要兑换的礼品</span>
-    </div>
+    <PointGoodsList :list="goodList" @enterDetail="goDetail"  v-if="!detailVisible"/>
+    <PointGoodsDetail v-else  :id="goodID" @back="detailVisible = false"/>
   </div>
 </template>
 
 <script setup>
-import Exit from "../../components/Exit.vue";
+import {ref,onMounted,computed} from 'vue';
+import { taskStore } from '../../store';
+import { storeToRefs } from 'pinia';
+
+
+import PointGoodsList from './PointGoodsList.vue';
+import PointGoodsDetail from './PointGoodsDetail.vue';
+
+const task = taskStore();
+const { pointGoods }  = storeToRefs(task);
+// 商品列表
+const goodList = ref(pointGoods.value);
+
+// 今日详情
+const detailVisible = ref(false);
+// 获取商品详情id
+const goodID = ref(0)
+
+/**事件**/
+// 进入详情 
+const goDetail = (id) =>{
+  task.getPointGoodsDetail(id);
+  setTimeout(()=>{
+    detailVisible.value = true;
+  },300)
+}
 
 
 </script>

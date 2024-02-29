@@ -105,7 +105,7 @@ export default {
   <!-- 键盘 -->
 
   <!-- v-if="keyBoard" -->
-
+<!-- 11 -->
   <div v-else>
     <div v-for="key in Object.keys(this.keys)">
       <div class="line">
