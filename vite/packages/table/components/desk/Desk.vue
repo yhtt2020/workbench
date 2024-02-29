@@ -169,11 +169,20 @@
       </vue-custom-scrollbar>
     </Drop>
   </div>
-
-  <xt-modal v-model="setVisible" :footer="false" boxClass="" :mask="0" :header="false">
+  <!-- 系统设置 -->
+  <xt-modal
+    v-model="setVisible"
+    v-if="setVisible"
+    :footer="false"
+    boxClass=""
+    :mask="0"
+    :header="false"
+  >
     <SystemSet @close="setVisible = false" />
   </xt-modal>
+  <!-- 桌面设置 -->
   <xt-modal
+    v-if="settingVisible"
     v-model="settingVisible"
     :footer="false"
     boxClass="p-4 pb-0"
@@ -211,6 +220,7 @@
       </template>
     </div>
   </xt-modal>
+  <!-- 添加小组件 -->
   <transition name="fade">
     <div
       class="home-blur"
@@ -236,6 +246,7 @@
       ></NewAddCard>
     </div>
   </transition>
+  <!-- 添加图标 -->
   <AddIcon @close="iconHide" v-if="iconVisible" :desk="currentDesk"></AddIcon>
   <GalleryModal ref="galleryRef" />
   <EditNewNavigation
@@ -431,6 +442,9 @@ export default {
     "currentDesk.id": {
       handler(newVal) {
         this.$bus.off("startAdjust");
+        this.$bus.off("lockScreen");
+        this.$bus.off("openSystemSet");
+
         let obj = {
           id: 20,
           newIcon: "fluent:more-horizontal-16-filled",
@@ -594,6 +608,20 @@ export default {
     //     this.$refs.galleryRef.openGalleryModal();
     //   }, 100);
     // });
+    this.$bus.on("lockScreen", () => {
+      this.$refs.galleryRef.openGalleryModal();
+      setTimeout(() => {
+        this.$bus.emit("lockScreenSet");
+        }, 100);
+    });
+    this.$bus.on("openSystemSet", () => {
+
+      console.log('openSystemSet :>> ', );
+
+
+     this.showSystemSet();
+    });
+
 
     if (window.showed) {
       this.showGrid = true;
@@ -868,10 +896,8 @@ export default {
     },
   },
   beforeDestroy() {
-    console.log('123 :>> ', 123);
-
-
-  }
+    console.log("123 :>> ", 123);
+  },
 };
 </script>
 
