@@ -25,7 +25,7 @@
                         <div class="ml-3 text-overflow" style="max-width: 130px;">{{ item?.name }}</div>
                     </div>
                     <div class="xt-text-2">{{ getNum(item) }}</div>
-                    <i v-if="item.unRead" class="h-3 w-3 absolute rounded-full right-1 top-1" style="border: 2px solid var(--secondary-text);background: red;"></i>
+                    <i v-if="item?.unRead" class="h-3 w-3 absolute rounded-full right-1 top-1" style="border: 2px solid var(--secondary-text);background: red;"></i>
                 </div>
                 <div class="px-3" v-if="index==0">
                     <div class="divider"></div>
