@@ -292,7 +292,6 @@ export default {
               favo: false,
               check: false,
               time: time,
-              recent: false,
             });
             num++
           }
@@ -400,7 +399,7 @@ export default {
       const newObjects = arr2.filter(obj => !existingGuids.has(obj.guid));
       // 这部分是新建的网址 需要添加到最近更新
       if(newObjects.length > 0){
-        // this.clearRecent()
+        this.clearRecent()
         // console.log(111, this.folderList, newObjects)
         newObjects.forEach(item=>{
           item.recent = true          
