@@ -1,8 +1,10 @@
 <template>
-  <div class="w-8 h-5" v-if="checkFlag">
-    <a-checkbox v-model:checked="item.check"></a-checkbox>
+  <div class="flex">
+    <div class="w-8 h-5" v-if="checkFlag">
+      <a-checkbox v-model:checked="item.check"></a-checkbox>
+    </div>
+    <a-avatar :size="24" shape="square" :src="showIcon" />
   </div>
-  <a-avatar :size="24" shape="square" :src="showIcon" />
     
 
 </template>
@@ -29,12 +31,6 @@
   
     computed:{
       ...mapWritableState(favoStore, ['isFavorites', 'allList']),
-      showName(){
-        return this.item.rename?this.item.rename:this.item.name
-      },
-      showUrl(){
-        return this.item.url
-      },
       showIcon(){
         if(this.item.icon){
             this.url = this.item.icon
@@ -56,7 +52,6 @@
       
     },
     methods: {
-      
     }
   }
   </script>

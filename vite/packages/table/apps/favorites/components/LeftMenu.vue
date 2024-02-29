@@ -46,7 +46,7 @@
             <a-tooltip>
                 <template #title>{{ refreshTime }}</template>
                 <xt-button @click="fresh" :radius="8" :w="32" :h="32">
-                    <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="16" />
+                    <xt-new-icon class="rotate-button" ref="rotate" icon="fluent:arrow-clockwise-16-regular" size="16"  />
                 </xt-button>
             </a-tooltip>
         </div>
@@ -66,7 +66,7 @@
     props: ['changeFolder'],
     data() {
       return {
-        
+        rotation: 0,
       }
     },
     async mounted(){
@@ -100,7 +100,9 @@
             this.$emit('changeFolder', n)
         },
         fresh(){
+            this.rotation += 360;
             this.$emit('refresh')
+            document.querySelector('.rotate-button').style.transform = `rotate(${this.rotation}deg)`
         },
         getNum(i){
             if(i){
@@ -166,6 +168,28 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+
+    .loading{
+        transition: all 1s rotate infinite;
+    }
+
+    // @keyframes rotate {
+    //     0% {
+    //         transform: rotate(0deg);
+    //     }
+    //     100% {
+    //         transform: rotate(360deg);
+    //     }
+    // }
+
+    .rotate-button {
+        color: white;
+        font-size: 16px;
+        text-align: center;
+        line-height: 100px;
+        cursor: pointer;
+        transition: transform 0.5s;
     }
   </style>
   
