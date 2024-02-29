@@ -30,7 +30,7 @@
             <!-- 输入框 -->
             <a-input v-if="currentTag !== 'recommendation' && currentTag !== 'custom'" placeholder="搜索"
                 style="width: 244px;height: 32px;border-radius: 10px;margin-left: 12px;background: var(--main-bg);" v-model:value="inputValue"
-                @keydown.enter="onSearch" class="">
+                class="">
                 <template #suffix>
                     <xt-new-icon icon="fluent:search-16-regular" size="20" class="xt-text-2" />
                 </template>
