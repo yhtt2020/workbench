@@ -147,7 +147,7 @@ export const appStore = defineStore('appStore', {
     ensureShake(startWizard=true) {
       if (this.settings.shake.enable) {
         //初始化摇一摇功能
-        window.shake = this.settings.shake
+        window.shake = {...this.settings.shake}
         this.enableShake(null,startWizard)
       } else {
         window.shake = {
@@ -161,13 +161,13 @@ export const appStore = defineStore('appStore', {
       if (!this.settings.shake.init && startWizard) {
         shake.startWizard(cb)
       } else {
-        window.shake=this.settings.shake
+        window.shake={...this.settings.shake}
         shake.start()
       }
     },
     //禁用摇一摇
     disableShake() {
-      window.shake=this.settings.shake
+      window.shake={...this.settings.shake}
       console.log('禁用摇一摇功能')
       shake.stop()
     },
