@@ -39,7 +39,7 @@
         :min="0"
         :max="100"
       />
-      <hr />
+
     </template>
     <hr />
     <xt-option-info

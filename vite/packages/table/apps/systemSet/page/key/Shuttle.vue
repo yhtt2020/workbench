@@ -1,14 +1,13 @@
 <template>
-  <xt-option-box>
+  <xt-option-box class="mt-3">
     <xt-option-info
       title="摇一摇鼠标穿梭"
       isSwitch
       v-model:switch="settings.shake.enable"
     />
-    <xt-text type="2">目前暂不支持坐标轴为负的屏幕穿梭返回。</xt-text>
     <template v-if="settings.shake.enable">
+      <xt-text type="2">目前暂不支持坐标轴为负的屏幕穿梭返回。</xt-text>
       <xt-text type="2" class="mb-3">
-        {{ settings.shake }}
         穿梭位置： x:{{ settings.shake.pos.x }} y:{{ settings.shake.pos.y }}
       </xt-text>
       <xt-option-info title="灵敏度" />
@@ -21,7 +20,13 @@
       <hr />
       <xt-option-info title="穿梭音效" />
       <xt-option-select :list="sounds" v-model="sound" />
-      <xt-button type="theme" :x="80" :h="40" size="mini" @click="setPos"
+      <xt-button
+        type="theme"
+        class="my-3"
+        :x="80"
+        :h="40"
+        size="mini"
+        @click="setPos"
         >重新设置</xt-button
       >
     </template>
@@ -40,6 +45,7 @@ export default {
   },
   data() {
     return {
+      aaa: "",
       sensitive: [
         { name: "低", value: "6" },
         { name: "中", value: "5" },
@@ -67,8 +73,8 @@ export default {
           value: "chua.wav",
         },
       ],
-      sound: {},
-      sensitiveValue: {},
+      sound: "",
+      sensitiveValue: "",
       listenEnter: (event) => {
         if (event.code === "Enter") {
           let win32 = $models.win32;
@@ -82,9 +88,9 @@ export default {
           message.success("设置摇一摇定位成功。");
           window.shake.pos = this.settings.shake.pos;
           this.shakeConfirm.close();
-          this.$router.push({
-            name: "key",
-          });
+          // this.$router.push({
+          //   name: "key",
+          // });
           window.removeEventListener("keydown", this.listenEnter);
 
           event.preventDefault();
@@ -95,7 +101,7 @@ export default {
     };
   },
   mounted() {
-    this.sound.name = this.settings.shake.audio;
+    this.sound = this.settings.shake.audio;
     this.sensitiveValue = String(this.settings.shake.sensitive);
     console.log(this.sound, this.sensitiveValue);
   },
@@ -140,7 +146,7 @@ export default {
     sound: {
       handler(newVal) {
         console.log(newVal);
-        this.settings.shake.audio = newVal.name;
+        this.settings.shake.audio = newVal;
         this.$nextTick(() => {
           document.getElementById("shakeAudio").play();
         });
