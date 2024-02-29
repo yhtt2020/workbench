@@ -13,7 +13,7 @@
         <!-- 列表 -->
         <div class="xt-scrollbar scroll-color font-16" style="height: 650px;">
             <div v-for="(item, index) in folder" >
-                <div style="width: 215px;" class="ml-3 h-12 flex mb-2 items-center px-3 w-full justify-between pointer rounded-lg" @click="change(index)"  :class="index==folderIndex?'select':''" >
+                <div style="width: 215px;" class="ml-3 h-12 flex mb-2 items-center px-3 w-full justify-between pointer rounded-lg relative" @click="change(index)"  :class="index==folderIndex?'select':''" >
     
                     <div class="flex">
                         <xt-new-icon v-if="index==0" icon="fluent:star-16-regular" size="20" />
@@ -24,8 +24,8 @@
                         </div>
                         <div class="ml-3 text-overflow" style="max-width: 130px;">{{ item?.name }}</div>
                     </div>
-                    <!-- <div class="xt-text-2">{{ item.num }}</div> -->
                     <div class="xt-text-2">{{ getNum(item) }}</div>
+                    <i v-if="item.unRead" class="h-3 w-3 absolute rounded-full right-1 top-1" style="border: 2px solid var(--secondary-text);background: red;"></i>
                 </div>
                 <div class="px-3" v-if="index==0">
                     <div class="divider"></div>
@@ -75,7 +75,19 @@
     components: { 
       Icon,
     },
-  
+    watch:{
+      
+        folderIndex:{
+        handler(newVal, oldVal) {
+            // 清除未读消息的小红点
+            // this.folderList[oldVal].unRead = false
+            if(this.folderList[oldVal]) this.folderList[oldVal].unRead = false
+            // console.log('oldVal', oldVal, this.folderList[oldVal])
+            // this.folderIndex[oldVal]
+        },
+        immediate:true
+      },
+    },
     computed:{
         ...mapWritableState(favoStore, ['isFavorites', 'allList', 'folderList', 'folderIndex', 'browserList', 'updateTime']),
         folder(){
@@ -119,10 +131,12 @@
                     this.allList.forEach(item => {
                         if(item.browser == i.browser) num++ 
                     });
+                }else if(i.type == 'recent'){
+                    this.allList.forEach(item => {
+                        if(item.browser == i.browser && item.recent) num++ 
+                    });
                 }
                 return num
-            }else{
-                return 0
             }
         },
       

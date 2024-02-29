@@ -308,6 +308,7 @@ export default {
           rename: null,
           type: 'folder',
           time: time,
+          unRead: false,
         })
       }
       return this.resTmp;
@@ -387,14 +388,27 @@ export default {
         if(item.check) item.check = false
       })
     },
+    // 清楚数据的最近添加状态
+    clearRecent(){
+      this.allList.forEach(item=>{
+        if(item.recent) item.recent = false
+      })
+    },
 
     mergeArraysByGuid(arr1, arr2) {
       const existingGuids = new Set(arr1.map(obj => obj.guid));
       const newObjects = arr2.filter(obj => !existingGuids.has(obj.guid));
       // 这部分是新建的网址 需要添加到最近更新
       if(newObjects.length > 0){
+        // this.clearRecent()
+        // console.log(111, this.folderList, newObjects)
         newObjects.forEach(item=>{
           item.recent = true          
+          this.folderList.forEach(folder=>{
+            if(folder.guid == item.parent){
+              folder.unRead = true
+            }
+          })
         })
       }
       const content = newObjects.length?`浏览器收藏夹数据刷新成功。本次更新${newObjects.length}条新网址`:'浏览器收藏夹数据刷新成功。'
