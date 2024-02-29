@@ -16,8 +16,16 @@
     </xt-modal>
     <!-- 修改网址名称 -->
     <xt-modal title="编辑名称" :maskIndex="1001" :index="1002" boxClass="rounded-xl p-4" :mask="true" :header="true" :footer="true" v-model="renameFlag" v-if="renameFlag" @ok="changeName" >
-      <div class="xt-modal flex rounded-xl relative" style="width: 466px; height: 50px;" >
-        <xt-input style="height: 40px;width: 400px;" v-model="rename" placeholder="请输入网站名称" class="h-10 rounded-lg xt-text ml-2 xt-main-bg"></xt-input>
+      <div class="xt-modal flex rounded-xl relative items-center" style="width: 466px; height: 50px;" >
+        <!-- <xt-input style="height: 40px;width: 400px;" v-model="rename" placeholder="请输入网站名称" class="h-10 rounded-lg xt-text ml-2 xt-main-bg"></xt-input> -->
+        <a-input
+          class="h-10 xt-mask xt-text w-full"
+          style="border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 10px;"
+          placeholder="请输入网站名称"
+          allow-clear
+          v-model:value="rename">
+        </a-input>
         <xt-button @click="rename = tmpName" :radius="10" :w="40" :h="40" class="xt-main-bg ml-3">
             <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="20" />
         </xt-button>
@@ -146,30 +154,41 @@ export default {
     ...mapWritableState(favoStore, ['isFavorites', 'allList', 'folderList', 'folderIndex', 'browserList', 'updateTime', 'searchValue', 'folderIcons']),
     ...mapWritableState(useWidgetStore, ['edit']),
     ...mapWritableState(cardStore, ['desks', 'addCard']),
+    // 过滤出制定数组
     showList(){
       const folder = this.folderList[this.folderIndex]
-      let arr =[]
-      if (this.folderIndex>=1) {
-        if(folder?.type == 'all'){
-          arr = this.allList.filter(item => {
-            let name = item.rename?item.rename:item.name
-            return item.browser == folder.browser && (name?.indexOf(this.searchValue) > -1 
-            || item.url?.indexOf(this.searchValue) > -1)
-          })
-        }else if(folder?.type == 'folder'){
-          arr = this.allList.filter(item => {
-            let name = item.rename?item.rename:item.name
-            return item.parent == folder.guid && (name?.indexOf(this.searchValue) > -1
-            || item.url?.indexOf(this.searchValue) > -1)
-          })
-        }
-      }else if(this.folderIndex == 0){
-        arr = this.allList.filter(item => {
-          let name = item.rename?item.rename:item.name
-          return item.favo && name.indexOf(this.searchValue) > -1
-        })
+      if(folder?.type == 'all'){
+        let nn = []
+        nn = this.allList.reduce((acc, item) => {
+          if (item.browser === folder.browser && (name?.indexOf(this.searchValue) > -1 || item.url?.indexOf(this.searchValue) > -1)) {
+            acc.push(item);
+          }
+          return acc;
+        }, []);
+        return nn
+
+      }else if(folder?.type == 'folder'){
+        return this.allList.reduce((acc, item) => {
+          if (item.parent == folder.guid && (name?.indexOf(this.searchValue) > -1 || item.url?.indexOf(this.searchValue) > -1)) {
+            acc.push(item);
+          }
+          return acc;
+        }, []);
+      }else if(folder?.type == 'favo'){
+        return this.allList.reduce((acc, item) => {
+          if (item.favo && (name?.indexOf(this.searchValue) > -1 || item.url?.indexOf(this.searchValue) > -1)) {
+            acc.push(item);
+          }
+          return acc;
+        }, []);
+      }else if(folder?.type == 'recent'){
+        return this.allList.reduce((acc, item) => {
+          if (item.browser === folder.browser && item.recent && (name?.indexOf(this.searchValue) > -1 || item.url?.indexOf(this.searchValue) > -1)) {
+            acc.push(item);
+          }
+          return acc;
+        }, []);
       }
-      return arr
     },
     deskList(){
       let arr = []
@@ -250,12 +269,10 @@ export default {
             rename: null,
           })
           this.allList = this.mergeArraysByGuid(this.allList, res)
-          
-          message.success('浏览器收藏夹数据刷新成功！')
+
         }else{
           message.error('浏览器收藏夹读取失败！')
         }
-        // console.log('this.all', this.allList)
       })
       // const filteredArray = this.mergeUniqueArrays(arr1, arr2);
     },
@@ -275,6 +292,7 @@ export default {
               favo: false,
               check: false,
               time: time,
+              recent: false,
             });
             num++
           }
@@ -290,6 +308,7 @@ export default {
           rename: null,
           type: 'folder',
           time: time,
+          unRead: false,
         })
       }
       return this.resTmp;
@@ -369,10 +388,31 @@ export default {
         if(item.check) item.check = false
       })
     },
+    // 清楚数据的最近添加状态
+    clearRecent(){
+      this.allList.forEach(item=>{
+        if(item.recent) item.recent = false
+      })
+    },
 
     mergeArraysByGuid(arr1, arr2) {
       const existingGuids = new Set(arr1.map(obj => obj.guid));
       const newObjects = arr2.filter(obj => !existingGuids.has(obj.guid));
+      // 这部分是新建的网址 需要添加到最近更新
+      if(newObjects.length > 0){
+        // this.clearRecent()
+        // console.log(111, this.folderList, newObjects)
+        newObjects.forEach(item=>{
+          item.recent = true          
+          this.folderList.forEach(folder=>{
+            if(folder.guid == item.parent){
+              folder.unRead = true
+            }
+          })
+        })
+      }
+      const content = newObjects.length?`浏览器收藏夹数据刷新成功。本次更新${newObjects.length}条新网址`:'浏览器收藏夹数据刷新成功。'
+      message.success(content)
       const mergedArray = [...arr1, ...newObjects];
       return mergedArray;
     },
@@ -382,4 +422,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
+  // :deep(.)
 </style>

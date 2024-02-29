@@ -13,7 +13,7 @@
         <!-- 列表 -->
         <div class="xt-scrollbar scroll-color font-16" style="height: 650px;">
             <div v-for="(item, index) in folder" >
-                <div style="width: 215px;" class="ml-3 h-12 flex mb-2 items-center px-3 w-full justify-between pointer rounded-lg" @click="change(index)"  :class="index==folderIndex?'select':''" >
+                <div style="width: 215px;" class="ml-3 h-12 flex mb-2 items-center px-3 w-full justify-between pointer rounded-lg relative" @click="change(index)"  :class="index==folderIndex?'select':''" >
     
                     <div class="flex">
                         <xt-new-icon v-if="index==0" icon="fluent:star-16-regular" size="20" />
@@ -24,8 +24,8 @@
                         </div>
                         <div class="ml-3 text-overflow" style="max-width: 130px;">{{ item?.name }}</div>
                     </div>
-                    <!-- <div class="xt-text-2">{{ item.num }}</div> -->
                     <div class="xt-text-2">{{ getNum(item) }}</div>
+                    <i v-if="item.unRead" class="h-3 w-3 absolute rounded-full right-1 top-1" style="border: 2px solid var(--secondary-text);background: red;"></i>
                 </div>
                 <div class="px-3" v-if="index==0">
                     <div class="divider"></div>
@@ -46,7 +46,7 @@
             <a-tooltip>
                 <template #title>{{ refreshTime }}</template>
                 <xt-button @click="fresh" :radius="8" :w="32" :h="32">
-                    <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="16" />
+                    <xt-new-icon class="rotate-button" ref="rotate" icon="fluent:arrow-clockwise-16-regular" size="16"  />
                 </xt-button>
             </a-tooltip>
         </div>
@@ -66,7 +66,7 @@
     props: ['changeFolder'],
     data() {
       return {
-        
+        rotation: 0,
       }
     },
     async mounted(){
@@ -75,7 +75,19 @@
     components: { 
       Icon,
     },
-  
+    watch:{
+      
+        folderIndex:{
+        handler(newVal, oldVal) {
+            // 清除未读消息的小红点
+            // this.folderList[oldVal].unRead = false
+            if(this.folderList[oldVal]) this.folderList[oldVal].unRead = false
+            // console.log('oldVal', oldVal, this.folderList[oldVal])
+            // this.folderIndex[oldVal]
+        },
+        immediate:true
+      },
+    },
     computed:{
         ...mapWritableState(favoStore, ['isFavorites', 'allList', 'folderList', 'folderIndex', 'browserList', 'updateTime']),
         folder(){
@@ -100,7 +112,9 @@
             this.$emit('changeFolder', n)
         },
         fresh(){
+            this.rotation += 360;
             this.$emit('refresh')
+            document.querySelector('.rotate-button').style.transform = `rotate(${this.rotation}deg)`
         },
         getNum(i){
             if(i){
@@ -117,10 +131,12 @@
                     this.allList.forEach(item => {
                         if(item.browser == i.browser) num++ 
                     });
+                }else if(i.type == 'recent'){
+                    this.allList.forEach(item => {
+                        if(item.browser == i.browser && item.recent) num++ 
+                    });
                 }
                 return num
-            }else{
-                return 0
             }
         },
       
@@ -166,6 +182,28 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+
+    .loading{
+        transition: all 1s rotate infinite;
+    }
+
+    // @keyframes rotate {
+    //     0% {
+    //         transform: rotate(0deg);
+    //     }
+    //     100% {
+    //         transform: rotate(360deg);
+    //     }
+    // }
+
+    .rotate-button {
+        color: white;
+        font-size: 16px;
+        text-align: center;
+        line-height: 100px;
+        cursor: pointer;
+        transition: transform 0.5s;
     }
   </style>
   

@@ -1,11 +1,12 @@
 <template>
     <div class="w-full pl-4 xt-scrollbar scroll-color " style="height: 640px;">
-        <div v-if="showList.length" class="h-16 mb-1 flex items-center p-4 pointer rounded-lg font-16 xt-text list-hover justify-between tran" style="width: 728px;" @click="change(index, item)" v-for="(item,index) in showList" :class="item.check?'xt-bg-2':''" >
+        <!-- <div v-if="1" class="h-16 mb-1 flex items-center p-4 pointer rounded-lg font-16 xt-text list-hover justify-between tran" style="width: 728px;" @click="change(index, item)" v-for="(item,index) in list" :class="item.check?'xt-bg-2':''" > -->
+        <div v-if="1" class="h-16 mb-1 flex items-center p-4 pointer rounded-lg font-16 xt-text list-hover justify-between tran" style="width: 728px;" @click="change(index, item)" v-for="(item,index) in show" :class="item.check?'xt-bg-2':''" >
           <div class='flex h-full items-center'>
             <WebItem class="" :item="item" :checkFlag="checkFlag"></WebItem>
             <!-- style="width: 530px;" -->
             <div class="flex flex-col ml-3 font-16 xt-text" style="max-width: 520px;">
-              <div class="text-overflow">{{ item.name }}</div>
+              <div class="text-overflow">{{ item.rename?item.rename:item.name }}</div>
               <div class="xt-text-2 url-hover font-14 text-overflow">{{ item.url }}</div>
             </div>
           </div>
@@ -61,11 +62,15 @@
     props: ['showList', 'checkFlag', 'menus'],
     data() {
       return {
-        
+        show: [],
+        timer: null,
+        tIndex: 0,
+        n: 0,
       }
     },
-    async mounted(){
+    mounted(){
 
+      
     },
     components: { 
       Icon,
@@ -76,7 +81,32 @@
       ...mapWritableState(favoStore, ['isFavorites', 'allList', 'browserType']),
       
     },
+    watch:{
+      
+      showList:{
+        handler(newVal, oldVal) {
+          this.clear()
+          this.show = newVal?.slice(0, 10)
+          this.nIndex = 0;
+          this.n = Math.ceil(newVal?.length / 10)
+
+          this.timer = setInterval(() => {
+            this.show = newVal?.slice(0, 10 * this.n)
+            if(this.nIndex <= this.n){
+              this.nIndex++
+            }else{
+              this.clear()
+            }
+          }, 1)
+        },
+        immediate:true
+      },
+    },
     methods: {
+      clear(){
+        clearInterval(this.timer)
+        this.timer = null
+      },
       // 添加到桌面
       changeMenu(item, index){
         this.$emit('changeIcon', [item])
