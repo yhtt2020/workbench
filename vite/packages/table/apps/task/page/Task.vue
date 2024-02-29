@@ -1,7 +1,7 @@
 <template>
   <xt-modal custom v-model="store.isTaskDrawer" boxClass="rounded-xl" :mask="false" v-if="smallMize" :index="1500">
     <div class="xt-modal flex task-modal rounded-xl" style="width: 500px;" >
-      <xt-left-menu :list="menusList" :end="2" model="id" style="border-radius: 12px 12px 12px 0"
+      <xt-left-menu :list="menusList" :end="1" model="id" style="border-radius: 12px 12px 12px 0"
         leftClass=" 1 xt-main-bg py-3 h-full  "  :leftStyle="{'border-radius': '12px 0 0 12px',}"
       />
        <div class="w-full  xt-text pt-3 pr-3 relative">
@@ -22,7 +22,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, computed } from "vue";
+import { ref, watch, onMounted, computed,getCurrentInstance } from "vue";
 import { storeToRefs } from "pinia";
 import { taskStore } from "../store";
 import { offlineStore } from "../../../js/common/offline";
@@ -38,21 +38,15 @@ import {getUnFinishTaskStatus} from "../utils";
 import TaskShop from "./store/TaskShop.vue";
 
 const store = taskStore();
+const { updateTime, currentUpdateTime, currentTaskList,smallMize,temporaryStatus } = storeToRefs(store);
 
-onMounted(() => {
-  const toast = useToast();
-  toast.clear();
-  currentTask.value = "Primary";
-  store.initTask();
-  store.getPointGoods();
-});
+const { proxy } = getCurrentInstance();
+
+let Offline = offlineStore();
 let currentTask = ref("Primary");
 let task = ref([]);
 let icon = ref("");
 
-
-const { updateTime, currentUpdateTime, currentTaskList,smallMize,temporaryStatus } = storeToRefs(store);
-let Offline = offlineStore();
 // 切换任务
 const selectTab = (item) => {
   if(temporaryStatus.value){ temporaryStatus.value = false; }
@@ -138,10 +132,12 @@ let menus = ref([
   // },
 
   {
-    newIcon:"fluent:building-shop-16-regular",
+    newIcon:"fluent-emoji:shopping-bags",
     value:"Shop",
+    info:['tr','warn',''],
     title:"商店",
     callBack:selectTab,
+    name:'商店',
   },
   {
     newIcon: "fluent:settings-16-regular",
@@ -161,7 +157,22 @@ const updateTaskList = async () => {
 };
 
 
-
+onMounted(() => {
+  const toast = useToast();
+  toast.clear();
+  currentTask.value = "Primary";
+  store.initTask();
+  store.getPointGoods();
+  proxy.$.appContext.config.globalProperties.$bus.on('getGood',()=>{
+    if(store.isTaskDrawer){
+      currentTask.value = "Shop";
+    }
+    else {
+      store.isTaskDrawer = true;
+      currentTask.value = "Shop";
+    }
+  });
+});
 </script>
 
 <style lang="scss" scoped>
@@ -197,13 +208,9 @@ const updateTaskList = async () => {
   }
 }
 
-
-</style>
-<!-- 
-@media screen and(max-height:700px) {
-  .task-modal{
-    height:  640px !important;
-  }
+:deep(.tt-info-red){
+  width: 12px !important;
+  height:12px !important;
+  border: 2px solid #ffffff;
 }
-
- -->
+</style>

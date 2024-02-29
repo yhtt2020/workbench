@@ -71,7 +71,7 @@ export default {
         </div>
       </transition>
 
-      <TaskUserInfo :show-task-user="true"/>
+      <TaskUserInfo :show-task-user="true" :showPointGood="true"/>
     </div>
     <div class="flex item-content mt-5">
       <div></div>

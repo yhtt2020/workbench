@@ -39,10 +39,13 @@
           <Exit />
         </div>
       </div>
-      <div class="xt-bg-2 p-3 rounded-xl mb-3">
-        <xt-title type="text">
-          你可以自由选择想要了解的功能支线，完成任务即可获得对应奖励。
-        </xt-title>
+      <div class="mb-3" style="width: 404px;">
+        <template v-if="!$useEnv('guest')">
+          <TaskUserInfo :showPointGood="true"/>
+        </template>
+        <div class="xt-bg-2  rounded-xl p-3">
+          <TaskReward :showTaskReward="getZTaskReward" :showTip="true" :isCenter="''"/>
+        </div>
       </div>
       <xt-scrollbar
         v-if="tasks.length <= 1"
@@ -81,14 +84,25 @@
 
 <script setup>
 import { ref, reactive,computed } from "vue";
+import { getCurrentTaskReward } from '../../utils';
+import { storeToRefs } from 'pinia';
+import { appStore } from '../../../../store';
+import grade from '../../../../js/common/grade';
+
 import SerialNumber from "../../components/SerialNumber.vue";
 import Task from "./Task.vue";
 import Progress from "../../components/progress/index.vue";
 import Exit from "../../components/Exit.vue";
+import TaskUserInfo from "../../components/userinfo/TaskUserInfo.vue";
+import TaskReward from "../primary/TaskReward.vue";
+
+
 const props = defineProps({
   tasks: {},
   icon: {},
 });
+const app  = appStore();
+const { userInfo,lvInfo } = storeToRefs(app);
 
 const menus = reactive([
   {
@@ -96,8 +110,8 @@ const menus = reactive([
     callBack: () => {},
   },
 ]);
-
 const currentTask = ref(null);
+
 const taskClick = (task) => {
   currentTask.value = task;
 };
@@ -109,7 +123,59 @@ const back = () => {
 const filterTask = computed(()=>{
   const filterRes = props.tasks[0].tasks.filter((item)=>{ return String(item.id) !== 'Z0201' });
   return {tasks:filterRes};
+});
+
+// 获取奖励
+const getZTaskReward = computed(()=>{
+  if(props.tasks.length === 3){
+    const chatTaskID = [];
+    for(const taskItem of props.tasks){
+      for(const childrenItem of taskItem.tasks){
+        chatTaskID.push(childrenItem.id);
+      }
+    };
+    const resList = mergeList(chatTaskID);
+    return getTotal(resList);
+  }
+  else {
+    const idList = props.tasks[0].tasks.map((item)=>{ return item.id });
+    const resList = mergeList(idList);
+    return getTotal(resList);
+  }
 })
+// 将奖励数据进行合并
+const mergeList = (arr) =>{
+  const getRewardList = [];
+  for(const id of arr){
+    const result = getCurrentTaskReward(id);
+    for(const children of result){
+      getRewardList.push(children)
+    }
+  };
+  return getRewardList;
+};
+// 合并计算总数
+const getTotal = (list) =>{
+  // 合并经验值,并且计算出总经验值
+  const expList = list.filter((item)=>{ return item.type === 'experience' }).reduce((sum,item)=>{
+    return sum + item.value
+  },0);
+  // 合并积分值,并且计算出总积分值
+  const points = list.filter((item)=>{ return item.type === 'communityPoints' }).reduce((sum,item)=>{
+    return sum + item.value
+  },0);
+  const medal = list.filter((item)=>{ return item.type === 'medal' }).map((item)=>{ return item.data;  });
+  console.log('结果',grade.gradeTableGenerate(10),lvInfo.value);
+  console.log('结果',userInfo.value);
+
+  return  {
+    experience:{total:expList,name:"经验",img:"/img/task/experience.png",},
+    points:{total:points,name:"积分",img:"/img/task/communityPoints.svg"},
+    medals:{list:medal,name:"勋章"},
+    items:{}
+  }
+}
+
 </script>
 
 <style lang="scss" scoped></style>
