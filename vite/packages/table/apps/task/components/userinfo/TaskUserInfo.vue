@@ -46,9 +46,16 @@
         </xt-button>
       </div>
     </div>
-    <xt-text class="xt-text-2 font-12 xt-font font-400">
-     后续可用于兑换（暂未上线商城）
-    </xt-text>
+    <div class="flex justify-between">
+      <xt-text class="xt-text-2 font-12 xt-font font-400">
+        后续可用于兑换
+      </xt-text>
+      <xt-button v-if="showPointGood" class="relative" w="120" h="0" @click="goShop">
+        <div v-for="item in goodImage" class="absolute rounded-md flex items-center justify-end good-image" style="width: 24px;height: 24px;border: 2px solid var(--primary-text);">
+          <img :src="item.image"  class="rounded-md w-full h-full object-cover" alt="">
+        </div>
+      </xt-button>
+    </div>
    </div>
   </div>
  </div>
@@ -58,8 +65,9 @@
 <script setup>
 import { storeToRefs } from 'pinia';
 import { appStore } from '../../../../store';
-import { computed, onMounted, ref,nextTick } from 'vue';
+import { computed, onMounted, ref,nextTick,getCurrentInstance} from 'vue';
 import { taskStore } from '../../store';
+import { getUserInfo } from '../../../../permission/api/login';
 
 import FrameAvatar from '../../../../components/avatar/FrameAvatar.vue';
 import OnlineMedal from '../../../../components/team/OnlineMedal.vue';
@@ -68,15 +76,22 @@ import MyProp from '../../../../components/team/MyProp.vue'
 
 
 const app = appStore();
-const task = taskStore();
-const { taskUserMedal } = storeToRefs(task);
 const { userInfo } = storeToRefs(app);
+const task = taskStore();
+const { taskUserMedal,pointGoods } = storeToRefs(task);
 const myScore = ref("");
+const myPropVisible=ref(false);
+const { proxy }  = getCurrentInstance();
+
 
 const props = defineProps({
   showTaskUser:{
    type:Boolean,
    default:false,
+  },
+  showPointGood:{
+    type:Boolean,
+    default:false,
   }
 })
 
@@ -90,32 +105,36 @@ const myLv = computed(()=>{
     currentLv:currentLv,
     lvDiff:lvDiff,
   }
-})
-
+});
 const infoMedal = computed(()=>{
   return taskUserMedal.value;
-})
-const myPropVisible=ref(false)
-const showProp=()=>{
-  myPropVisible.value=true
-}
-const   closeMyProp=()=>{
-  myPropVisible.value=false
-}
-onMounted(()=>{
-  nextTick(()=>{
-    task.getTaskUserMedal(userInfo.value?.uid);
-    task.getUserScore();
-  })
+});
+const goodImage = computed(()=>{
+  return pointGoods.value.slice(0,4);
 })
 
+/**事件**/
+const showProp=()=>{
+  myPropVisible.value=true
+};
+const closeMyProp=()=>{
+  myPropVisible.value=false
+};
+const goShop = () =>{
+  proxy.$.appContext.config.globalProperties.$bus.emit('getGood');
+}
+
+onMounted(()=>{
+  getUserInfo();
+  task.getTaskUserMedal(userInfo.value?.uid);
+  task.getUserScore();
+});
 </script>
 
 <style lang="scss" scoped>
 .task-userinfo{
  background-image: linear-gradient(118deg, #FA7B14 0%, #DA6733 100%);
 }
-
 :deep(.ant-progress-text){
  display: none !important;
 }
@@ -127,7 +146,6 @@ onMounted(()=>{
   height: 18px !important;
  }
 }
-
 :deep(.badge-box){
   & div{
     width: auto !important;
@@ -138,11 +156,9 @@ onMounted(()=>{
   }
   padding: 0 !important;
 }
-
 :deep(.big){
   padding: 18px !important;
 }
-
 :deep(.medal){
   & .badge-box{
     width:auto !important;
@@ -153,5 +169,19 @@ onMounted(()=>{
     }
   }
 }
-
+.good-image{
+  top:0;
+  &:nth-of-type(1){
+    right: 45px;
+  }
+  &:nth-of-type(2){
+    right: 35px;
+  }
+  &:nth-of-type(3){
+    right: 20px;
+  }
+  &:nth-of-type(4){
+    right: 5px;
+  }
+}
 </style>

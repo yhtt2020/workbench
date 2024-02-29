@@ -8,7 +8,9 @@
       <Exit />
     </div>
     <div class="w-full flex flex-col">
-      <TaskUserInfo v-if="!$useEnv('guest')"/>
+      <template v-if="!$useEnv('guest')">
+        <TaskUserInfo :showPointGood="true"/>
+      </template>
       <span class="mb-3 xt-font xt-text-2 font-14">任务列表</span>
       <Task :task="activeList" @back="back()"></Task>
     </div>

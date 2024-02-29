@@ -219,7 +219,6 @@ const top = computed(() => {
   if (windowHeight.value <= 0 || bottomBarHeight <= 0 || modelHeight.value <= 0)
     return -9999;
   let a = (windowHeight.value - bottomBarHeight - modelHeight.value) / 2;
-  console.log('a :>> ', a);
   return a >= 0 ? a : 0;
 });
 

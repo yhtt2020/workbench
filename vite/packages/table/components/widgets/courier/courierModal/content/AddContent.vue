@@ -89,8 +89,8 @@ function clear(){
 }
 
 // 关闭
-const close = () => { 
-  emits('close') 
+const close = () => {
+  emits('close')
 }
 
 // 创建快递输入框
@@ -112,7 +112,7 @@ const getCourierNumber = (item, index) =>{
     const result = getCourierName(item)
     console.log('result',result);
     courier.updateNewCourierInfo({ code: result.code, label: result.name, orderNum: item, phoneLastNum: '' }, index)
-  } 
+  }
   else {
     courier.updateNewCourierInfo({ code: '自动识别', label: '自动识别', orderNum: '', phoneLastNum: '' }, index)
   }
@@ -122,7 +122,7 @@ const getCourierNumber = (item, index) =>{
 const searchCourier = (evt) =>{
   console.log('查看搜索结果', evt)
   // const find = optionList.value.find((item)=>{ return String(item.label) === String(evt) });
-  
+
   // if(courierLists.value.length === 1){
   //   if(courierLists.value.orderNum){
   //     courierLists.value[0].code = find.value;
@@ -139,7 +139,7 @@ const searchCourier = (evt) =>{
 // 快递添加完成
 const addCourierData = (evt) =>{
   if(courierLists.value.length === 1){
-    if(courierLists.value.orderNum){
+    if(courierLists.value[0].orderNum){
       const addItem = {
         code:courierLists.value[0].code,
         orderNum:courierLists.value[0].orderNum,
@@ -151,7 +151,8 @@ const addCourierData = (evt) =>{
       emits('close');
     }
     else {
-      message.warning('请添加快递信息');
+      console.log(courierLists.value)
+      message.warning('请填写快递单号');
       evt.preventDefault();
     }
   }

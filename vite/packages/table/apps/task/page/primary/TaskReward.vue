@@ -2,7 +2,7 @@
   <div class="flex w-full h-full flex-col" :class="isCenter">
     <div class="flex mb-2" v-if="showTip">
       <span  class="xt-text-2 font-14 font-400 xt-font">完成章节任务累计可获得以下奖励</span>
-      <span class="xt-text-2 font-14 font-400 xt-font"  v-if="showTaskReward.lving !== 0">，预计可升 <span class="xt-font font-18" style="font-weight: 900;color: #FA7B14;">{{ showTaskReward.lving }}</span> 级！</span>
+      <span class="xt-text-2 font-14 font-400 xt-font"  v-if="expectedLV !== 0">，预计可升 <span class="xt-font font-18" style="font-weight: 900;color: #FA7B14;">{{ expectedLV }}</span> 级！</span>
     </div>
     <div class="flex ">
       <a-tooltip title="经验可以提升社区等级" placement="bottom">
@@ -62,6 +62,8 @@
 
 <script setup>
 import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
+import { appStore } from '../../../../store';
 
 import Medal from '../../../../components/team/Medal.vue';
 import Item from '../../../../components/Item.vue';
@@ -82,6 +84,9 @@ const props = defineProps({
   }
 });
 
+const app = appStore();
+const { userInfo } = storeToRefs(app);
+
 
 const isExits = computed(()=>{
   if(props.showTaskReward.items && props.showTaskReward.medals){
@@ -90,7 +95,19 @@ const isExits = computed(()=>{
   else {
     return false;
   }
-})
+});
+
+// 计算预计升多少级
+const expectedLV = computed(()=>{
+  const exp = props.showTaskReward.experience.total;
+  const diff = userInfo.value?.grade?.diff;
+  if((exp > diff)){
+    return 1;
+  }
+  else {
+    return 0;
+  }
+});
 
 </script>
 

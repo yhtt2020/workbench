@@ -18,6 +18,7 @@ import { useFreeLayoutStore } from "../../../../components/desk/freeLayout/store
 import { useNavBarStore } from '../../../../components/desk/navigationBar/navBar'
 import { useToast } from 'vue-toastification'
 import TipsInfo from '../../../../components/desk/navigationBar/components/folder/TipsInfo.vue';
+import {ctrlTip} from '../../../../components/desk/navigationBar/hook/toastTip'
 const toast = useToast()
 const navBar = useNavBarStore()
 const { neverTip } = storeToRefs(navBar)
@@ -46,7 +47,9 @@ let isCtrl = false
  * 文件托起
  */
 const handleDragStart = (event) => {
-  ctrlTip()
+  if (!neverTip.value) {
+    ctrlTip();
+  }
   move.value = false;
   isDrag.value = true;
   dragId.value = index.value;
@@ -135,24 +138,24 @@ const handleDragEnd = (event) => {
   currentId.value = "";
 };
 
-const ctrlTip = () => {
-  if (neverTip.value) return;
-  toast(
-    {
-      component: TipsInfo,
-    },
-    {
-      position: "top-right",
-      icon: false,
-      closeOnClick: false,
-      closeButton: false,
-      pauseOnFocusLoss: true,
-      pauseOnHover: true,
-      timeout: 0,
-      toastClassName: "notice-toast",
-    }
-  );
-};
+// const ctrlTip = () => {
+//   if (neverTip.value) return;
+//   toast(
+//     {
+//       component: TipsInfo,
+//     },
+//     {
+//       position: "top-right",
+//       icon: false,
+//       closeOnClick: false,
+//       closeButton: false,
+//       pauseOnFocusLoss: true,
+//       pauseOnHover: true,
+//       timeout: 0,
+//       toastClassName: "notice-toast",
+//     }
+//   );
+// };
 </script>
 
 <style lang="scss" scoped></style>

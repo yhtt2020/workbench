@@ -23,7 +23,7 @@
         <ShowReward v-if="visible" @onReward="getAudio" />
       </transition>
 
-      <TaskUserInfo :show-task-user="true"/>
+      <TaskUserInfo :showTaskUser="true" :showPointGood="true"/>
     </div>
     <div class="flex justify-between">
       <div></div>

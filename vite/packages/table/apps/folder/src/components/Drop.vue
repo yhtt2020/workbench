@@ -157,7 +157,6 @@ const handleMouseUp = (e) => {
   // 图标组件添加
   // 1 新数据处理
 
-  console.log("isDragIcon.value :>> ", isDragIcon.value,isDrag.value,iconDrag.value);
   // if (11) return;
   if (!isDragIcon.value) return
   iconList.value.forEach((item) => {

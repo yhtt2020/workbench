@@ -16,6 +16,7 @@
       border-radius: 18px;
       overflow: hidden;
       z-index: 999999999999999999999999;
+      background: #fff;
     "
     v-if="loginVisible"
   >
