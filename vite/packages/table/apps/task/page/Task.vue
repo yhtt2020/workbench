@@ -134,7 +134,7 @@ let menus = ref([
   {
     newIcon:"fluent-emoji:shopping-bags",
     value:"Shop",
-    info:['tr','warn',''],
+    info:['tr','red',''],
     title:"商店",
     callBack:selectTab,
     name:'商店',

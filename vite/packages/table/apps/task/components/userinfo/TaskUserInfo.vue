@@ -67,6 +67,7 @@ import { storeToRefs } from 'pinia';
 import { appStore } from '../../../../store';
 import { computed, onMounted, ref,nextTick,getCurrentInstance} from 'vue';
 import { taskStore } from '../../store';
+import { getUserInfo } from '../../../../permission/api/login';
 
 import FrameAvatar from '../../../../components/avatar/FrameAvatar.vue';
 import OnlineMedal from '../../../../components/team/OnlineMedal.vue';
@@ -124,10 +125,9 @@ const goShop = () =>{
 }
 
 onMounted(()=>{
-  nextTick(()=>{
-    task.getTaskUserMedal(userInfo.value?.uid);
-    task.getUserScore();
-  })
+  getUserInfo();
+  task.getTaskUserMedal(userInfo.value?.uid);
+  task.getUserScore();
 });
 </script>
 

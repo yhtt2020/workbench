@@ -83,11 +83,11 @@
 </template>
 
 <script setup>
-import { ref, reactive,computed } from "vue";
+import { ref, reactive,computed,onMounted } from "vue";
 import { getCurrentTaskReward } from '../../utils';
 import { storeToRefs } from 'pinia';
 import { appStore } from '../../../../store';
-import grade from '../../../../js/common/grade';
+import { getUserInfo } from '../../../../permission/api/login';
 
 import SerialNumber from "../../components/SerialNumber.vue";
 import Task from "./Task.vue";
@@ -165,9 +165,7 @@ const getTotal = (list) =>{
     return sum + item.value
   },0);
   const medal = list.filter((item)=>{ return item.type === 'medal' }).map((item)=>{ return item.data;  });
-  console.log('结果',grade.gradeTableGenerate(10),lvInfo.value);
-  console.log('结果',userInfo.value);
-
+  
   return  {
     experience:{total:expList,name:"经验",img:"/img/task/experience.png",},
     points:{total:points,name:"积分",img:"/img/task/communityPoints.svg"},
@@ -176,6 +174,12 @@ const getTotal = (list) =>{
   }
 }
 
+
+onMounted(()=>{
+  getUserInfo().then((res)=>{
+    console.log('结果',res);
+  })
+})
 </script>
 
 <style lang="scss" scoped></style>
