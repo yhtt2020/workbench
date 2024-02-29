@@ -125,11 +125,7 @@ export default {
     }
   },
   async mounted () {
-    // 登录过
-    if(this.userInfo.uid && this.init){
-      //
-      this.timeout()
-    }
+
 
     Promise.all([
       //启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成
@@ -157,8 +153,15 @@ export default {
     this.bindUserInfoResponse()
     this.getUserInfo()
     this.sortClock()
-    this.afterLaunch()
 
+
+   // 登录过
+   if(this.userInfo.uid && this.init){
+      this.loginOk()
+      return
+      // this.timeout()
+    }
+    this.afterLaunch()
     return
     setTimeout(() => {
       return
@@ -318,9 +321,10 @@ export default {
 
     async afterLaunch () {
       // 未初始化
-      if(!this.init && isMain()){
+      if(!this.init && (isMain() || this.$useEnv('web'))){
         this.$router.replace({ name: 'wizard' })
       }
+      if (this.$useEnv('web')) return
       if(this.aided){
         message.warn('当前应用正运行在辅助模式下，无法被聚焦。如需退出，请到【设置】界面关闭。')
         this.enterAided()
@@ -374,7 +378,7 @@ export default {
 
       console.log('123321 useLogin :>> ', 123321);
       useLogin(()=>{
-        this.$router.replace({ name: 'home' })
+        this.loginOk()
       })
       return
       tsbApi.user.login((data) => {
@@ -382,7 +386,9 @@ export default {
       })
     },
 
-
+loginOk(){
+  this.$router.replace({ name: 'home' })
+},
     onGuest(){
       this.$router.replace({ name: 'home' })
       // this.isGuest = true
