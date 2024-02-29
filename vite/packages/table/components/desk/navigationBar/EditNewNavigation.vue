@@ -282,7 +282,7 @@ export default {
             }
             this.ClassifyData.push(...desktopApps, ...lightApps)
             this.ClassifyData = this.replace(this.ClassifyData)
-            console.log(this.ClassifyData,lightApps, 'ClassifyData');
+            // console.log(this.ClassifyData,lightApps, 'ClassifyData');
         },
         // 更换图标格式
         replace(list) {

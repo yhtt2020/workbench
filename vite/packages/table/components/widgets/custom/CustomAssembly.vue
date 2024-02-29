@@ -96,17 +96,7 @@
       class="relative"
       style="height: calc(100% - 10px)"
     >
-      <!-- <div class="text-base ">小组件尺寸</div> -->
     <XtRadio :list="sizeList" v-model:data="mySize.title" value="title" ></XtRadio>
-
-    <!-- this.mySize.className; -->
-    <!-- // 旧版本逻辑 -->
-      <!-- <HorizontalPanel
-        :navList="sizeList"
-        v-model:select-type="mySize"
-        class="mt-6"
-        bg-color="drawer-item-select-bg"
-      ></HorizontalPanel> -->
       <div class="flex flex-row items-center justify-between mt-2 mb-2">
         <div class="text-base">显示名称</div>
         <div><a-switch v-model:checked="showName" /></div>
@@ -119,7 +109,6 @@
       >
       </a-input>
       <div class="mt-6 text-base">小组件封面</div>
-      <!--    <div class="mt-2 text-base " style="color: rgba(255, 255, 255, 0.4);">支持直接复制粘贴图片到此处</div>-->
       <div
         class="flex flex-row items-center justify-between gap-3 mt-6"
         v-if="!Object.keys(myData.img).length > 0"
@@ -293,6 +282,17 @@
       @sendImg="sendImg"
     ></ModalList>
   </a-drawer>
+  <!-- 新版设置 -->
+  <!-- <CustomModal 
+    :modalVisible="panelVisible"  
+    @close="panelVisible = false"
+    :customInput="myData.title"
+    :linkPath="myData.link"
+    :showName="showName"
+    :imgSrc="imgSrc"
+    @update:img="updateImg"
+    @updateBorder="updateBorder"
+    :noBorder="customData.hideFrame"/> -->
 </template>
 
 
@@ -312,6 +312,7 @@ import { message } from "ant-design-vue";
 import { startApp } from '../../../ui/hooks/useStartApp'
 
 import {useEnv} from '../../../ui/hooks/useEnv'
+import CustomModal from './components/CustomModal.vue'
 let appModel
 if (! useEnv()) {
   appModel = window.$models.appModel
@@ -326,6 +327,7 @@ export default {
     Classification,
     listItem,
     ModalList,
+    CustomModal
   },
   props: {
     customIndex: {
@@ -366,13 +368,6 @@ export default {
       mySize: { title: "2x2", className: "small" },
       myData: { title: "", link: undefined, img: {} },
       panelVisible: false,
-      options: {
-        className: "card small",
-        title: "",
-        icon: "",
-        type: "remote",
-        noTitle: true,
-      },
       ClassifyData: [
         ...navigationData.coolAppList,
         ...navigationData.systemAppList,
@@ -403,6 +398,15 @@ export default {
     },
     title() {
       return this.myData.link.name || this.myData.link;
+    },
+    imgSrc(){
+      return this.myData.img.middleSrc || this.myData.img.src
+    },
+    options(){
+      return {
+        bg:this.customData.hideFrame ? 'transparent' : '',
+        shadow: this.customData.hideFrame
+      }
     },
   },
   created() {
@@ -493,6 +497,12 @@ export default {
     },
     sendImg(img) {
       this.myData.img = img;
+    },
+    updateImg(img) {
+      this.myData.img = img;
+    },
+    updateBorder(val) {
+      this.customData.hideFrame = val
     },
     async customClick() {
       let openPath = await tsbApi.dialog.showOpenDialog({
