@@ -38,7 +38,7 @@ import {getUnFinishTaskStatus} from "../utils";
 import TaskShop from "./store/TaskShop.vue";
 
 const store = taskStore();
-const { updateTime, currentUpdateTime, currentTaskList,smallMize,temporaryStatus } = storeToRefs(store);
+const { updateTime, currentUpdateTime, currentTaskList,smallMize,temporaryStatus,firstShop } = storeToRefs(store);
 
 const { proxy } = getCurrentInstance();
 
@@ -50,6 +50,7 @@ let icon = ref("");
 // 切换任务
 const selectTab = (item) => {
   if(temporaryStatus.value){ temporaryStatus.value = false; }
+  if(item.value === 'Shop'){ firstShop.value = false }
   currentTask.value = item.value;
 };
 // 切换不同支线
@@ -76,7 +77,23 @@ const menusList = computed(() => {
       return undone.value;
     }
     else {
-      return menus.value;
+      if(firstShop.value){
+        return menus.value;
+      }
+      else{
+        const mapMenus = menus.value.map((item)=>{ 
+          if(item.value === 'Shop'){
+            return {
+              ...item,
+              info:[],
+            }
+          }
+          else {
+            return item;
+          }
+        })
+        return mapMenus;
+      }
     }
   }
 });
