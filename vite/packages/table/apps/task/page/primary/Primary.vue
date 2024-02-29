@@ -2,7 +2,7 @@
   <!-- <xt-button @click="test()" v-if="settings.enableDev">任务重置</xt-button> -->
   <template v-if="store.taskID">
     <!-- 用户等级信息 -->
-    <TaskUserInfo v-if="!$useEnv('guest')"/>
+    <TaskUserInfo v-if="!$useEnv('guest')" :showPointGood="true"/>
     <!-- 章节进度 -->
     <div class="xt-bg-2 rounded-xl px-4 pt-4 pb-3">
       <xt-text>
@@ -160,18 +160,18 @@ const currentTaskReward = computed(()=>{
   let communityPointsTotal = communityPointsValue.reduce((sum,item)=>{
     return sum + item.value
   },0);
-  let lving =0
+  // let lving =0
   // 等级升级预期
-  if(!$useEnv('guest')){
-    if(Math.ceil(experienceTotal / userInfo.value?.grade?.next) > 1){
-      lving  = 1;
-    }
-    else {
-      lving = Math.ceil(experienceTotal / userInfo.value?.grade?.next);
-    }
-  }
+  // if(!$useEnv('guest')){
+  //   // if(Math.ceil(experienceTotal / userInfo.value?.grade?.next) > 1){
+  //   //   lving  = 1;
+  //   // }
+  //   // else {
+  //   //   lving = Math.ceil(experienceTotal / userInfo.value?.grade?.next);
+  //   // }
+  // }
   return {
-    lving:lving,
+    // lving:lving,
     experience:{total:experienceTotal,name:"经验",img:"/img/task/experience.png"},
     points:{total:communityPointsTotal,name:"积分",img:"/img/task/communityPoints.svg"},
     medals:{list:medals,name:"勋章"},

@@ -8,6 +8,7 @@ import { teamStore } from "../../store/team";
 export const taskStore = defineStore("taskStore", {
   state: () => ({
     firstTask: false, //首次任务
+    firstShop:true, // 首次积分商店
     isTask: true, // 首页展示任务中心
     isTaskDrawer: false, // 打开任务中心
     taskID: "M0101", // 任务ID
@@ -175,7 +176,8 @@ export const taskStore = defineStore("taskStore", {
           "claimRewardsList",
           "taskUserMedal",
           "pointGoods",
-          "pointGoodsDetail"
+          "pointGoodsDetail",
+          "firstShop",
         ],
         storage: localStorage,
       },

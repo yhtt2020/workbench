@@ -35,7 +35,7 @@
              <div v-html="getDetailData.description" class="description-content flex flex-col p-4"></div>
            </div>
          </div>
-         <div class="fixed bottom-4 flex items-center justify-center" style="width: 404px;">
+         <div class="fixed bottom-4  flex items-center justify-center" style="width: 404px; z-index: 1200;">
            <xt-button w="404" h="40" style="border-radius: 10px; background: #FA7B14 !important;" v-if=" getDetailData.stock !== 0" @click="useQRcodeScan">
              使用{{ getDetailData.price_project?.item[0]?.jifen_num }}积分兑换
            </xt-button>
