@@ -4,6 +4,7 @@
     style="height: 40px"
     v-model="currentInput"
     @blur="updateInput"
+    @keyup.enter="enterInput"
   />
   <div class="pb-4"></div>
 </template>
@@ -23,11 +24,14 @@ watch(
     currentInput.value = value;
   }
 );
-
+const enterInput = () => {
+  emits("enter", currentInput.value);
+};
 const currentInput = ref(props.input);
-const emits = defineEmits(["update:input"]);
+const emits = defineEmits(["update:input", "enter",'cb']);
 const updateInput = () => {
   emits("update:input", currentInput.value);
+  emits("cb", currentInput.value);
 };
 </script>
 

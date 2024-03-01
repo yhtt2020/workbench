@@ -8,7 +8,7 @@ import {post} from "./js/axios/request";
 import {message, notification} from "ant-design-vue";
 import shake from "./js/common/shake";
 
-
+import { getUserInfo as useGetUserInfo } from "./permission/api/login";
 // @ts-ignore
 // @ts-ignore
 export const appStore = defineStore('appStore', {
@@ -149,7 +149,7 @@ export const appStore = defineStore('appStore', {
     ensureShake(startWizard=true) {
       if (this.settings.shake.enable) {
         //初始化摇一摇功能
-        window.shake = this.settings.shake
+        window.shake = {...this.settings.shake}
         this.enableShake(null,startWizard)
       } else {
         window.shake = {
@@ -163,13 +163,13 @@ export const appStore = defineStore('appStore', {
       if (!this.settings.shake.init && startWizard) {
         shake.startWizard(cb)
       } else {
-        window.shake=this.settings.shake
+        window.shake={...this.settings.shake}
         shake.start()
       }
     },
     //禁用摇一摇
     disableShake() {
-      window.shake=this.settings.shake
+      window.shake={...this.settings.shake}
       console.log('禁用摇一摇功能')
       shake.stop()
     },
@@ -260,9 +260,12 @@ export const appStore = defineStore('appStore', {
       this.status.music.cover = status.cover.replace("34y34", "120y120"); //修正封面
     },
 
-    getUserInfo() {
+   async getUserInfo() {
       if (useEnv()) return
       ipc.send('getDetailUserInfo')
+      // getUserInfo
+      //  let res= await useGetUserInfo()
+
       // 登录成功 退出游客模式
       // 但目前项目中存在掉登录的情况 暂时不能使用 userInfo 进行判断
       if(cache.get('isGuest')){

@@ -3,18 +3,46 @@
     <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-w-full"  :beforeCreate="beforeCreate"> -->
     <!-- xt-main-bottom-bar 定位类不可删 -->
     <!-- 文件夹弹窗 -->
-    <div style="position: absolute; z-index: 500 !important;"
-      :style="{ left: `${this.left}px`, bottom: `${navAttribute.navSize / 100 * 100}px` }" class="rounded-xl pointer "
-      id="folder">
-      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:customSize="updateSize" @close="folderVisible = false"
-        :customData="customData" :customIndex="bottomKey" :secondary="true" v-if="folderVisible"
-        :expand="{ disabled: true }" :navBar="{ resize: false, sizeOption: false, isDel: true, hierarchy: true, close: true }"
-        :auto="true" />
-
+    <div
+      style="position: absolute; z-index: 500 !important"
+      :style="{
+        left: `${this.left}px`,
+        bottom: `${(navAttribute.navSize / 100) * 100}px`,
+      }"
+      class="rounded-xl pointer"
+      id="folder"
+    >
+      <Folder
+        @clickFile="clickFile"
+        @update:layout="updateLayout"
+        @update:customSize="updateSize"
+        @close="folderVisible = false"
+        :customData="customData"
+        :customIndex="bottomKey"
+        :secondary="true"
+        v-if="folderVisible"
+        :expand="{ disabled: true }"
+        :navBar="{
+          resize: false,
+          sizeOption: false,
+          isDel: true,
+          hierarchy: true,
+          close: true,
+        }"
+        :auto="true"
+      />
     </div>
 
-    <div class="absolute" v-if="controlVisible" style="z-index:888;" id="control"
-      :style="{ left: `${controlLeft}px`, bottom: `${navAttribute.navSize / 100 * 100}px` }">
+    <div
+      class="absolute"
+      v-if="controlVisible"
+      style="z-index: 888"
+      id="control"
+      :style="{
+        left: `${controlLeft}px`,
+        bottom: `${(navAttribute.navSize / 100) * 100}px`,
+      }"
+    >
       <ControlModal @close="controlVisible = false"></ControlModal>
     </div>
 
@@ -25,34 +53,73 @@
       @mouseleave="handleMouseLeave">
 
     </div> -->
-    <div v-if="false"
-          style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:100px">
-          <div>选中的id:===={{ this.left }} {{parentHeight - this.navAttribute.navSize / 100 * 100 }} {{ parentHeight }}</div>
-          <div v-for="( item, index) in copyFootNav" style="margin-bottom: 5px;border-bottom: 4px solid white">
-            {{ index }} {{ item.name }} {{ item.id }} {{ item.children?.length }}
-          </div>
+    <div
+      v-if="false"
+      style="
+        position: fixed;
+        top: 10px;
+        background: black;
+        color: white;
+        z-index: 99999;
+        line-height: 14px;
+        text-align: left;
+        max-width: 100vw;
+        left: 100px;
+      "
+    >
+      <div>选中的id:===={{ this.left }} {{parentHeight - this.navAttribute.navSize / 100 * 100 }} {{ parentHeight }}</div>
+      <div
+        v-for="(item, index) in copyFootNav"
+        style="margin-bottom: 5px; border-bottom: 4px solid white"
+      >
+        {{ index }} {{ item.name }} {{ item.id }} {{ item.children?.length }}
+      </div>
     </div>
     <AutoHide>
-      <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
-        id="bottom-bar" style="text-align: center;position: relative;" @contextmenu="showMenu" v-show="autoVisible"
-        :style="{ zoom: `${(this.navAttribute.navSize / 100)}` }">
+      <div
+        @click.stop
+        class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
+        id="bottom-bar"
+        style="text-align: center; position: relative"
+        @contextmenu="showMenu"
+        v-show="autoVisible"
+        :style="{ zoom: `${this.navAttribute.navSize / 100}` }"
+      >
         <!-- 快速搜索 底部 用户栏 -->
 
-        <div v-if="(!simple || settings.enableChat) && !this.isOffline && this.bottomToggle[0]"
-          class="relative flex flex-row items-center justify-between common-panel user s-bg" style="
-        /* vertical-align: top; */
-        margin-top: 0;
-        background: var(--primary-bg);
-        color: var(--primary-text);
-        border-radius: 18px;
-        border: 1px solid var(--divider);
-        height: 80px;
-        display: flex;
-        justify-content: center;
-      "
-          :style="{ width: this.settings.enableChat ? '160px' : '80px', paddingLeft: this.settings.enableChat ? '16px !important' : '0px !important', paddingRight: this.settings.enableChat ? '16px !important' : '0px !important', borderRadius: this.navAttribute.navRadius + 'px' }">
-          <div class="flex items-center justify-between"
-            :style="{ marginLeft: this.settings.enableChat ? '10px' : '0px' }">
+        <div
+          v-if="
+            (!simple || settings.enableChat) &&
+            !this.isOffline &&
+            this.bottomToggle[0]
+          "
+          class="relative flex flex-row items-center justify-between common-panel user s-bg"
+          style="
+            /* vertical-align: top; */
+            margin-top: 0;
+            background: var(--primary-bg);
+            color: var(--primary-text);
+            border-radius: 18px;
+            border: 1px solid var(--divider);
+            height: 80px;
+            display: flex;
+            justify-content: center;
+          "
+          :style="{
+            width: this.settings.enableChat ? '160px' : '80px',
+            paddingLeft: this.settings.enableChat
+              ? '16px !important'
+              : '0px !important',
+            paddingRight: this.settings.enableChat
+              ? '16px !important'
+              : '0px !important',
+            borderRadius: this.navAttribute.navRadius + 'px',
+          }"
+        >
+          <div
+            class="flex items-center justify-between"
+            :style="{ marginLeft: this.settings.enableChat ? '10px' : '0px' }"
+          >
             <div @click="openControl($event)">
               <MyAvatar :chat="true" :level="false" :limit="false"></MyAvatar>
             </div>
@@ -61,92 +128,193 @@
               <ChatButton :tipPosition="navAttribute.navSize"></ChatButton>
             </div>
           </div>
-
         </div>
-        <div v-if="false"
-          style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:0">
+        <div
+          v-if="false"
+          style="
+            position: fixed;
+            top: 10px;
+            background: black;
+            color: white;
+            z-index: 99999;
+            line-height: 14px;
+            text-align: left;
+            max-width: 100vw;
+            left: 0;
+          "
+        >
           <div>选中的id{{ this.isLeaveBar }} {{ isEdge }}</div>
-          <div v-for="( item, index) in copyFootNav" style="margin-bottom: 5px;border-bottom: 4px solid white">
-            {{ index }} {{ item.name }} {{ item.id }} {{ item.children?.length }}
+          <div
+            v-for="(item, index) in copyFootNav"
+            style="margin-bottom: 5px; border-bottom: 4px solid white"
+          >
+            {{ index }} {{ item.name }} {{ item.id }}
+            {{ item.children?.length }}
           </div>
         </div>
         <!-- 快速搜索 底部栏区域 -->
-        <Drop @createFile="createFile" currentId='bottom'>
+        <Drop @createFile="createFile" currentId="bottom">
           <transition>
-            <div v-if="hoverIndex > -1 && !skipSort && hoverRealItemId('bottomContent', this.hoverIndex) !== dragItem?.id"
-              style="position: absolute;z-index:99999999999;top:-8px;left:50%;transform: translateX(-50%) translateY(-100%)  ;"
-              class="px-10 py-3 rounded-lg s-bg xt-text">松开鼠标合并</div>
+            <div
+              v-if="
+                hoverIndex > -1 &&
+                !skipSort &&
+                hoverRealItemId('bottomContent', this.hoverIndex) !==
+                  dragItem?.id
+              "
+              style="
+                position: absolute;
+                z-index: 99999999999;
+                top: -8px;
+                left: 50%;
+                transform: translateX(-50%) translateY(-100%);
+              "
+              class="px-10 py-3 rounded-lg s-bg xt-text"
+            >
+              松开鼠标合并
+            </div>
           </transition>
-          <div id="bottomPanel"  @drop.prevent="drop"
-            @dragover.prevent="" class="flex flex-row items-center s-bg" style="
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        justify-items: center;
-        align-content: center;
-        align-items: center;
-        /* border-radius: 18px; */
-        height: 80px;
-        max-width: 100%;
-        overflow: hidden;
-        margin-right: 10px;
-        background: var(--primary-bg);
-        color: var(--primary-text);
-        z-index: 99;
-        min-width: 80px;
-        border: 1px solid var(--divider);
-      " :style="{ borderRadius: this.navAttribute.navRadius + 'px' }">
-
-            <xt-task id='M0104' no='1' :mask="false" @cb="showMenu" class="w-full ">
-              <div style="
-                    display: flex;
-                    flex-direction: row;
-                    width: 100%;
-                    height: 52px;
-                    align-items: start;
-                    flex-wrap: nowrap;
-                    justify-content: center;">
-                <div @contextmenu="showMenu" style="height: 52px; width: 100%; overflow: hidden" class="item-content">
-                  <div class="w-full scroll-content" style=" flex: 1; display: flex; margin-left: 20px;margin-right: 20px"
-                    ref="content">
-                    <div :key="bottomKey" style="white-space: nowrap; display: flex; align-items: center;gap:20px"
-                      class="w-full" id="bottomContent">
-
-                      <div v-if="copyFootNav.length <= 0" style=""
-                        class="flex items-center justify-center  w-[52px] h-[52px]"
-                        @click="this.editNavigation(this.drawerMenus[0])">
-                        <xt-new-icon icon="fluent:add-16-regular" size="32" class="xt-text"></xt-new-icon>
+          <div
+            id="bottomPanel"
+            @drop.prevent="drop"
+            @dragover.prevent=""
+            class="flex flex-row items-center s-bg"
+            style="
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              justify-items: center;
+              align-content: center;
+              align-items: center;
+              /* border-radius: 18px; */
+              height: 80px;
+              max-width: 100%;
+              overflow: hidden;
+              margin-right: 10px;
+              background: var(--primary-bg);
+              color: var(--primary-text);
+              z-index: 99;
+              min-width: 80px;
+              border: 1px solid var(--divider);
+            "
+            :style="{ borderRadius: this.navAttribute.navRadius + 'px' }"
+          >
+            <xt-task
+              id="M0104"
+              no="1"
+              :mask="false"
+              @cb="showMenu"
+              class="w-full"
+            >
+              <div
+                style="
+                  display: flex;
+                  flex-direction: row;
+                  width: 100%;
+                  height: 52px;
+                  align-items: start;
+                  flex-wrap: nowrap;
+                  justify-content: center;
+                "
+              >
+                <div
+                  @contextmenu="showMenu"
+                  style="height: 52px; width: 100%; overflow: hidden"
+                  class="item-content"
+                >
+                  <div
+                    class="w-full scroll-content"
+                    style="
+                      flex: 1;
+                      display: flex;
+                      margin-left: 20px;
+                      margin-right: 20px;
+                    "
+                    ref="content"
+                  >
+                    <div
+                      :key="bottomKey"
+                      style="
+                        white-space: nowrap;
+                        display: flex;
+                        align-items: center;
+                        gap: 20px;
+                      "
+                      class="w-full"
+                      id="bottomContent"
+                    >
+                      <div
+                        v-if="copyFootNav.length <= 0"
+                        style=""
+                        class="flex items-center justify-center w-[52px] h-[52px]"
+                        @click="this.editNavigation(this.drawerMenus[0])"
+                      >
+                        <xt-new-icon
+                          icon="fluent:add-16-regular"
+                          size="32"
+                          class="xt-text"
+                        ></xt-new-icon>
                       </div>
-                      <a-tooltip v-for="(item, index) in copyFootNav" :key="item.id" :title="item.name"
-                        :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }"
-                        @mouseenter="showElement(item, index)">
-                        <xt-menu :id="item.id" class="relative overflow-visible item-content" :menus="folderOptions">
-                          <div @dragover="onDrag" @dragend="hoverIndex = -1"
-                            v-if="!(this.navList.includes(item.event) && this.isOffline)"
+                      <a-tooltip
+                        v-for="(item, index) in copyFootNav"
+                        :key="item.id"
+                        :title="item.name"
+                        :overlayStyle="{
+                          zoom: `${this.navAttribute.navSize / 100}`,
+                        }"
+                        @mouseenter="showElement(item, index)"
+                      >
+                        <xt-menu
+                          :id="item.id"
+                          class="relative overflow-visible item-content"
+                          :menus="folderOptions"
+                        >
+                          <div
+                            @dragover="onDrag"
+                            @dragend="hoverIndex = -1"
+                            v-if="
+                              !(
+                                this.navList.includes(item.event) &&
+                                this.isOffline
+                              )
+                            "
                             class="flex items-center justify-center pointer"
-                            :class="{ hover: (dragItem && item.id === hoverRealItemId('bottomContent', this.hoverIndex) && dragItem?.id !== hoverRealItemId('bottomContent', this.hoverIndex)) }"
+                            :class="{
+                              hover:
+                                dragItem &&
+                                item.id ===
+                                  hoverRealItemId(
+                                    'bottomContent',
+                                    this.hoverIndex
+                                  ) &&
+                                dragItem?.id !==
+                                  hoverRealItemId(
+                                    'bottomContent',
+                                    this.hoverIndex
+                                  ), }"
                             style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                             @click.stop="newOpenApp(item.type, item.value, item)">
                             <Drag :data="item" currentId="bottom" @deleteFile="deleteFile">
                               <Team v-if="item.value === 'commun'" :item="item" :placement="'top'" :x="this.realXY.x" :y="this.realXY.y"></Team>
-                              <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
-                                >
+                              <FolderVue
+                                v-else-if="item.type === 'folder'"
+                                :iconList="item.children"
+                                :item="item"
+
+                              >
                               </FolderVue>
                               <template v-else>
                                 <Avatar :item="item"></Avatar>
                               </template>
                             </Drag>
-
                           </div>
                         </xt-menu>
                       </a-tooltip>
                     </div>
-
                   </div>
                 </div>
               </div>
             </xt-task>
-
           </div>
         </Drop>
         <keep-alive>
@@ -160,15 +328,22 @@
       <!-- </Transition> -->
     </AutoHide>
 
-    <div id="trans" v-show="visibleTrans" style="
-      position: fixed;
-      left: 0;
-      top: 0;
-      width: 100vw;
-      height: 100vh;
-      background: #2c2c2c;
-    ">
-      <a-button @click="visibleTrans = false" style="position: fixed; left: 10px; top: 10px">取消
+    <div
+      id="trans"
+      v-show="visibleTrans"
+      style="
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #2c2c2c;
+      "
+    >
+      <a-button
+        @click="visibleTrans = false"
+        style="position: fixed; left: 10px; top: 10px"
+        >取消
       </a-button>
       <iframe id="transFrame" style="width: 100vw; height: 100vh; border: none">
       </iframe>
@@ -177,14 +352,26 @@
   </xtMixMenu>
 
   <transition name="fade">
-    <div :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }" v-if="quick">
-      <component :is='componentId' @setQuick="setQuick"></component>
+    <div
+      :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }"
+      v-if="quick"
+    >
+      <component :is="componentId" @setQuick="setQuick"></component>
     </div>
   </transition>
 
-  <div class="fixed inset-0 home-blur" style="z-index: 999; background: var(--mask-background-color)" v-if="changeFlag"
-    @click="closeChangeApp">
-    <ChangeApp :tab="tab" @closeChangeApp="closeChangeApp" :full="full" @setFull="setFull"></ChangeApp>
+  <div
+    class="fixed inset-0 home-blur"
+    style="z-index: 999; background: var(--mask-background-color)"
+    v-if="changeFlag"
+    @click="closeChangeApp"
+  >
+    <ChangeApp
+      :tab="tab"
+      @closeChangeApp="closeChangeApp"
+      :full="full"
+      @setFull="setFull"
+    ></ChangeApp>
   </div>
   <TeamTip :key="teamKey" v-model:visible="showTeamTip"></TeamTip>
 </template>
@@ -1038,9 +1225,15 @@ export default {
      * @param {*} item 图标详细信息
      */
     async newOpenApp(type, value, item) {
-      // console.log('value :>> ', value);
-      // console.log('type :>> ', type);
-      // console.log('item :>> ', item);
+      if (item.name === '设置中心') {
+        this.$router.push({
+          name:'home'
+        })
+        setTimeout(() => {
+          this.$bus.emit("openSystemSet")
+        }, 500);
+        return
+      }
       if(type === 'folder'){
         this.openFolder(item)
       }
@@ -1414,14 +1607,14 @@ export default {
 .delete-icon {
   width: 14px;
   height: 14px;
-  color: #FF4D4F;
+  color: #ff4d4f;
   position: absolute;
   top: 5px;
   right: 5px;
 }
 
 .cursor-style {
-  cursor: url('/img/test/load-ail.png'), pointer;
+  cursor: url("/img/test/load-ail.png"), pointer;
 }
 
 .btn {

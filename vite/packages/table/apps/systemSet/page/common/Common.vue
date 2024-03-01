@@ -33,8 +33,7 @@
       </div>
     </div>
   </a-modal>
-  <!-- 主题颜色 -->
-  <ThemeSettingModal ref="themeRef" />
+
   <!-- 1 -->
   <xt-option-box v-if="!$useEnv()">
     <xt-option-info
@@ -120,7 +119,6 @@ import { appStore as useAppStore } from "../../../../store";
 import { useWidgetStore } from "../../../../components/card/store";
 import { browserList, rightMenuList, trayList } from "./config";
 
-import ThemeSettingModal from "../../../../components/setting/ThemeSettingModal.vue";
 import ChooseScreen from "../../../../page/ChooseScreen.vue";
 
 const router = useRouter();
@@ -136,8 +134,8 @@ const { rightModel } = storeToRefs(widgetStore);
 
 const { proxy } = getCurrentInstance();
 
-const themeRef = ref();
 const visibleChooseScreen = ref(false);
+const emits = defineEmits(["switchNav"]);
 const itemList = computed(() => {
   return [
     {
@@ -161,18 +159,20 @@ const itemList = computed(() => {
       disabled: proxy.$useEnv(),
     },
     {
-      name: "分屏设置",
-      icon: "fluent:window-multiple-16-filled",
+      name: "鼠标穿梭",
+      icon: "fluent:cursor-click-20-regular",
       fn: () => {
-        router.push({ name: "subscreen" });
+        emits("switchNav", "key");
       },
       disabled: proxy.$useEnv(),
     },
     {
-      name: "主题外观",
-      icon: "fluent:color-24-regular",
+      name: "锁屏设置",
+      icon: "fluent:lock-closed-16-regular",
       fn: () => {
-        themeRef.value?.openThemeSetting();
+        // router.push({ name: "papersSetting" });
+        proxy.$bus.emit("lockScreen");
+
       },
       disabled: false,
     },

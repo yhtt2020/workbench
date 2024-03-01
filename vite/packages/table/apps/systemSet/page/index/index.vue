@@ -35,7 +35,10 @@
       <!-- <div class=" overflow-hidden overflow-y-auto xt-scrollbar"> -->
 
       <xt-scrollbar class="flex-1 w-full overflow-hidden" :x="false" :y="true">
-        <component :is="components[setList[activeIndex].component]" />
+        <component
+          :is="components[setList[activeIndex].component]"
+          @switchNav="switchNav"
+        />
       </xt-scrollbar>
       <!-- </div> -->
       <!-- </xt-scrollbar> -->
@@ -105,6 +108,11 @@ const closeSet = () => {
 const activeIndex = ref(0);
 const selectSet = (index: number) => {
   activeIndex.value = index;
+};
+
+const switchNav = (nav: string) => {
+  let res = setList.value.findIndex((item) => item.component === nav)
+  selectSet(res);
 };
 </script>
 

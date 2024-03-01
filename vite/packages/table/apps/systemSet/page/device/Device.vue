@@ -19,29 +19,45 @@
   </xt-option-box>
   <xt-option-box>
     <xt-option-info title="音频输出设备" />
-    <div
-      v-for="audio in audioList"
-      @click="setAudio(audio, audioList)"
-      class="cursor-pointer h-11 flex items-center pl-3 rounded-xl mb-3"
-      :class="{ 'xt-theme-bg-2': audio.isDefaultForMultimedia }"
-    >
-      <Icon icon="yinlianglabashengyin" class="mr-3" />
-      {{ audio.name }} ({{ audio.deviceName }})
-      <span v-if="audio.deviceId === 'default'">当前</span>
-    </div>
+    <template v-if="audioList.length">
+      <div
+        v-for="audio in audioList"
+        @click="setAudio(audio, audioList)"
+        class="cursor-pointer h-11 flex items-center pl-3 rounded-xl mb-3"
+        :class="{ 'xt-theme-bg-2': audio.isDefaultForMultimedia }"
+      >
+        <Icon icon="yinlianglabashengyin" class="mr-3" />
+        {{ audio.name }} ({{ audio.deviceName }})
+        <span v-if="audio.deviceId === 'default'">当前</span>
+      </div>
+    </template>
+    <xt-text
+      type="2"
+      v-else
+      class="flex justify-center items-center mb-4"
+      title="未检测到输出设备"
+    ></xt-text>
   </xt-option-box>
   <xt-option-box>
     <xt-option-info title="音频输入设备" />
-    <div
-      v-for="audio in micList"
-      @click="setAudio(audio, micList)"
-      class="cursor-pointer h-11 flex items-center pl-3 rounded-xl mb-3"
-      :class="{ 'xt-theme-bg-2': audio.isDefaultForMultimedia }"
-    >
-      <Icon icon="maikefeng"></Icon>
-      {{ audio.name }}（{{ audio.deviceName }}）
-      <span v-if="audio.deviceId === 'default'">当前</span>
-    </div>
+    <template v-if="micList.length">
+      <div
+        v-for="audio in micList"
+        @click="setAudio(audio, micList)"
+        class="cursor-pointer h-11 flex items-center pl-3 rounded-xl mb-3"
+        :class="{ 'xt-theme-bg-2': audio.isDefaultForMultimedia }"
+      >
+        <Icon icon="maikefeng"></Icon>
+        {{ audio.name }}（{{ audio.deviceName }}）
+        <span v-if="audio.deviceId === 'default'">当前</span>
+      </div>
+    </template>
+    <xt-text
+      type="2"
+      v-else
+      class="flex justify-center items-center mb-4"
+      title="未检测到输入设备"
+    ></xt-text>
   </xt-option-box>
 </template>
 
