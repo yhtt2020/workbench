@@ -67,6 +67,7 @@
     data() {
       return {
         rotation: 0,
+        folderTmp: [],
       }
     },
     async mounted(){
@@ -81,7 +82,7 @@
         handler(newVal, oldVal) {
             // 清除未读消息的小红点
             // this.folderList[oldVal].unRead = false
-            if(this.folderList[oldVal]) this.folderList[oldVal].unRead = false
+            if(this.folderList[oldVal]) this.folderTmp[oldVal].unRead = false
             // console.log('oldVal', oldVal, this.folderList[oldVal])
             // this.folderIndex[oldVal]
         },
@@ -96,6 +97,7 @@
                 return this.browserList[item.browser]
             })
             arr.unshift(this.folderList[0])
+            this.folderTmp = arr
             return arr
         },
         refreshTime(){
