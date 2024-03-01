@@ -1,10 +1,17 @@
 <template>
-  <xt-collapse v-for="(data, index) in task.tasks" class="mb-3">
+  <xt-collapse v-for="(data, index) in task.tasks" class="mb-3" :index="index" v-model="data.isCollapseStatus">
     <template #title>
-      <xt-text>
-        <SerialNumber :id="index + 1" />
-        {{ data.name }}
-      </xt-text>
+      <div class="flex justify-between w-full">
+        <xt-text>
+          <SerialNumber :id="index + 1" />
+          <span style="max-width: 280px;">
+            {{ data.name }}
+          </span>
+        </xt-text>
+        <div class="flex items-center justify-center">
+          <ShowReward v-if="!isCollapse(index,data)" :id="data.id" class="showReward-title"/>
+        </div>
+      </div>
     </template>
     <xt-title type="text" m="mb">{{ data.info }} </xt-title>
     <ShowReward :id="data.id" />
@@ -34,11 +41,40 @@ const props = defineProps({
   icon: {},
   length: {},
 });
+// const isCollapseStatus = ref({});
 
 const emits = defineEmits(["back"]);
 const back = () => {
   emits("back");
 };
+
+// 根据当前id来判断是否触发当前任务折叠
+const isCollapse = (index,data) =>{
+  if(data.isCollapseStatus?.index === index){
+    if(data.isCollapseStatus?.val === '0'){
+      return true;
+    }
+    else {
+      return false
+    }
+  }
+  else {
+    return false;
+  }
+  // console.log('data',index,data);
+  // v-if="data.isCollapseStatus?.val !== '0' && data.isCollapseStatus?.index === index"
+  // return data.isCollapseStatus?.val !== '0' && data.isCollapseStatus?.index === index
+}
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+:deep(.ant-collapse-header){
+  padding: 12px 16px 12px 16px !important ;
+}
+:deep( .showReward-title){
+  margin-bottom: 0 !important;
+  & .reward-w{
+    zoom:0.5;
+  }
+}
+</style>

@@ -4,8 +4,9 @@
       ghost
       class="xt-text xt-bg-2 rounded-xl "
       expandIconPosition="right"
+      v-model:activeKey="activeKey"
     >
-      <a-collapse-panel>
+      <a-collapse-panel :show-arrow="showArrow">
         <template #header>
           <slot name="title"> {{ title }}</slot>
         </template>
@@ -15,17 +16,33 @@
       </a-collapse-panel>
     </a-collapse>
   </div>
-  <!-- <br /> -->
 </template>
 <script lang="ts" setup>
-const props = defineProps({
-  title: {
-    default: "test title",
-  },
-  content: {
-    default: "test content",
-  },
-});
+import { ref,computed,watch, onMounted } from 'vue';
+
+export interface collapse {
+  modelValue:any,
+  title:any,
+  content:any,
+  showArrow:boolean,
+  isActive:any,
+  index:any,
+}
+
+const props = withDefaults(defineProps<collapse>(),{
+  title: "test title",
+  content:"test content",
+  showArrow:false,
+  isActive:{},
+  index:null,
+})
+
+const activeKey = ref(false);
+const emits = defineEmits(["update:modelValue", "cb"]);
+
+watch(()=>activeKey.value,(newVal)=>{
+  emits("update:modelValue",{val:newVal[0],index:props.index} );
+})
 </script>
 
 <style lang="scss" scoped>
