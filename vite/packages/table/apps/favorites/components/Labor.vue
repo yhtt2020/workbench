@@ -61,9 +61,11 @@
 
       addFavo(){
         this.favoFlag = !this.favoFlag
+        const now = new Date().getTime()
         this.allList.forEach(i=>{
           if(i.check){
             i.favo = this.favoFlag
+            i.favoTime = now
           }
         })
         if(this.favoFlag){

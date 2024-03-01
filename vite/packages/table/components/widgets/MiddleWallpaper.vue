@@ -34,11 +34,24 @@
              playsinline="" autoplay="" muted="" loop="" v-if="getCustomDataPaper.srcProtocol">
              <source :src="getCustomDataPaper.srcProtocol" type="video/mp4" id="bgVid"/>
             </video>
-            <viewer :images="[getCustomDataPaper]" :options="imgOption" v-else>
+            <!-- <viewer :images="[getCustomDataPaper]" :options="imgOption" v-else>
               <div v-for=" (img,index)  in  [getCustomDataPaper] " :style="{width:`${imgWH.width}px`,height:`${imgWH.height}px`}" class="rounded-lg">
                 <img  :src="img.src"    :data-source="img.path" :alt="img.resolution" class="relative object-cover w-full h-full rounded-lg pointer">
               </div>
-            </viewer>
+            </viewer> -->
+            <xt-preview-img
+              :imgList="imagesList"
+              :imgW="imgWH.width"
+              :imgH="imgWH.height"
+              :multiple="true"
+              :maskClose="true"
+              :controlOption="{
+                  controlBar: true,
+                  closeBtn: true,
+                  arrowBtn: true,
+              }">
+              
+            </xt-preview-img>
 
             <div class="absolute flex hover-item" style="opacity: 0;z-index: 1 !important;bottom: -12px;right: -12px;">
               <xt-button w="40" h="40" class="xt-bg-t-3" style="border-radius: 8px ;margin: 0 12px 10px 0; " @click="lastImg">
@@ -275,6 +288,13 @@ export default {
       }
     },
 
+    // 
+    imagesList () {
+      return [this.getCustomDataPaper].map((img,index) => {
+        return img.src
+      })
+    },
+
     // 计算图片的宽高
     imgWH(){
       if(this.customData && this.customData.customSize !== undefined){
@@ -304,7 +324,7 @@ export default {
       }
     })
     if(this.customData.customSize === undefined){
-            this.customData.customSize = '4x4'
+      this.customData.customSize = '4x4'
     }
   },
 

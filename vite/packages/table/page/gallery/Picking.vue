@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full flex flex-col">
+  <div class="flex flex-col w-full h-full">
     <div class="flex items-center justify-between mb-2">
       <div class="flex items-center justify-center">
         <xt-new-icon icon="fluent:image-multiple-16-regular" size="20" class="mr-2 xt-text" ></xt-new-icon>
@@ -36,16 +36,16 @@
         <viewer :images="pickImageData" :options="options" >
           <a-row :gutter="[16, 16]" id="pick-images" ref="pickRef">
             <a-col class="image-wrapper " v-for=" (img,index)  in  pickImageData " :span="6" >
-              <div class="pointer w-full h-full pick-paper" >
+              <div class="w-full h-full pointer pick-paper" >
                 <xt-mix-menu :menus="pickPaperMenu" fn="callBack"  @mounted="this.currentPaper = img" :stopPropagation="false" >
                   <img  class="image-item pointer" :src="img.src" :data-source="img.path" :alt="img.resolution" style="position: relative">
-                  <div class="absolute top-1 flex right-3">
-                    <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-3 mr-2 img-button" style="border-radius: 8px; opacity: 0;" @click="download(img)">
+                  <div class="absolute flex top-1 right-3">
+                    <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="mr-2 xt-bg-t-3 img-button" style="border-radius: 8px; opacity: 0;" @click="download(img)">
                       <div class="flex items-center justify-center">
                         <xt-new-icon icon="fluent:arrow-download-16-regular" :size="isModal ? 16 : 20" :color="'var(--active-text)'"></xt-new-icon>
                       </div>
                     </xt-button>
-                    <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-3 mr-2 img-button" style="border-radius: 8px; opacity: 0; " @click="addToMy(img)"
+                    <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="mr-2 xt-bg-t-3 img-button" style="border-radius: 8px; opacity: 0; " @click="addToMy(img)"
                     :style="isInMyPapers(img) ? { opacity: '1' } :{ opacity: '0' }"
                     >
                       <div class="flex items-center justify-center">
@@ -55,7 +55,7 @@
                     </xt-button>
                   </div>
                   <div class="absolute" style="top:50%;left:50%;transform: translate(-50%,-50%);">
-                    <xt-button w="100" :h="isModal ? 32 : 40" class="xt-bg-t-3 mr-2 img-button" style="border-radius: 8px; opacity: 0;" @click="setAppPaper(img)">
+                    <xt-button w="100" :h="isModal ? 32 : 40" class="mr-2 xt-bg-t-3 img-button" style="border-radius: 8px; opacity: 0;" @click="setAppPaper(img)">
                       <div class="flex items-center justify-center">
                         <xt-new-icon icon="fluent:checkmark-circle-16-filled" :size="isModal ? 16 : 20" class="mr-1 " :color="'var(--active-text)'"></xt-new-icon>
                         <span :class="isModal ? 'font-14 font-400': 'font-16 font-400'" class="xt-active-text xt-font">设为壁纸</span>
@@ -67,6 +67,41 @@
             </a-col>
           </a-row>
         </viewer>
+        <!-- <xt-preview-img
+          :imgList="imagesList"
+          >
+          <template #menu>
+            <xt-mix-menu 
+              :menus="pickPaperMenu" 
+              fn="callBack"  
+              @mounted="this.currentPaper = img" 
+              :stopPropagation="false" >
+            </xt-mix-menu>
+            <div class="absolute flex top-1 right-3">
+                    <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="mr-2 xt-bg-t-3 img-button" style="border-radius: 8px; opacity: 0;" @click="download(img)">
+                      <div class="flex items-center justify-center">
+                        <xt-new-icon icon="fluent:arrow-download-16-regular" :size="isModal ? 16 : 20" :color="'var(--active-text)'"></xt-new-icon>
+                      </div>
+                    </xt-button>
+                    <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="mr-2 xt-bg-t-3 img-button" style="border-radius: 8px; opacity: 0; " @click="addToMy(img)"
+                    :style="isInMyPapers(img) ? { opacity: '1' } :{ opacity: '0' }"
+                    >
+                      <div class="flex items-center justify-center">
+                        <xt-new-icon icon="fluent:star-16-filled" v-if="isInMyPapers(img)" :size="isModal ? 16 : 20" :color="'var(--warning)'"></xt-new-icon>
+                        <xt-new-icon icon="fluent:star-16-regular" v-else :size="isModal ? 16 : 20" :color="'var(--active-text)'"></xt-new-icon>
+                      </div>
+                    </xt-button>
+                  </div>
+                  <div class="absolute" style="top:50%;left:50%;transform: translate(-50%,-50%);">
+                    <xt-button w="100" :h="isModal ? 32 : 40" class="mr-2 xt-bg-t-3 img-button" style="border-radius: 8px; opacity: 0;" @click="setAppPaper(img)">
+                      <div class="flex items-center justify-center">
+                        <xt-new-icon icon="fluent:checkmark-circle-16-filled" :size="isModal ? 16 : 20" class="mr-1 " :color="'var(--active-text)'"></xt-new-icon>
+                        <span :class="isModal ? 'font-14 font-400': 'font-16 font-400'" class="xt-active-text xt-font">设为壁纸</span>
+                      </div>
+                    </xt-button>
+                  </div>
+          </template>
+        </xt-preview-img> -->
         <div style="height:16px;"></div>
       </XtScrollbar>
 
@@ -76,7 +111,7 @@
           <viewer :images="pickImageData" :options="options" >
             <a-row :gutter="[16, 16]" id="pick-images" ref="pickRef">
               <a-col class="image-wrapper " v-for=" (img,index)  in  pickImageData " :span="6" >
-                <div class="pointer w-full h-full my-paper" >
+                <div class="w-full h-full pointer my-paper" >
                   <xt-mix-menu :menus="pickPaperMenu" fn="callBack"  @mounted="this.currentPaper = img" :stopPropagation="false" >
                     <img  class="image-item pointer" :src="img.src" :data-source="img.path" :alt="img.resolution" style="position: relative">
                     <div class="absolute top-1 right-3">
@@ -162,6 +197,11 @@ export default {
   computed:{
     ...mapWritableState(pickPaperStore,['pickParams']),
     ...mapWritableState(paperStore,['settings']),
+    // imagesList () {
+    //   return this.pickImageData.map((item) => {
+    //     return item.src
+    //   })
+    // }
   },
 
   mounted(){

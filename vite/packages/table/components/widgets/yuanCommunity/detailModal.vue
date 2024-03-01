@@ -106,7 +106,7 @@
 
                                 </div>
                                 <template v-if="cardData.image_170_170">
-                                    <viewer :images="cardData.image_170_170" :options="options"
+                                    <!-- <viewer :images="cardData.image_170_170" :options="options"
                                         class="items-center p-0 mb-0 ">
                                         <a-row :gutter="[20, 20]" style="margin-right: 1em" wrap="'true">
                                             <a-col class="flex flex-wrap mr-2 image-wrapper"
@@ -117,7 +117,19 @@
                                                     style="position: relative object-fit: fill;">
                                             </a-col>
                                         </a-row>
-                                    </viewer>
+                                    </viewer> -->
+                                    <xt-preview-img
+                                        :imgList="imgList"
+                                        :imgW="200"
+                                        :imgH="100"
+                                        :multiple="true"
+                                        :maskClose="true"
+                                        :controlOption="{
+                                            controlBar: true,
+                                            closeBtn: true,
+                                            arrowBtn: true,
+                                        }"
+                                    ></xt-preview-img>
                                 </template>
 
                             </div>
@@ -176,6 +188,15 @@ import browser from '../../../js/common/browser';
 import emojiReplace from '../../../js/chat/emoji'
 import { message } from "ant-design-vue";
 import Detail from '../../../page/chat/com/Detail.vue';
+import PreviewImg from './Detail/PreviewImg.vue';
+import { Item } from 'ant-design-vue/lib/menu';
+const props = defineProps({
+    showDetailModal: Boolean,
+    cardData: {
+        type: Object,
+        default: () => []
+    }
+})
 const useUserStore = appStore()
 const store = useCommunityStore();
 let uid = store.communityPostDetail.user?.uid
@@ -199,6 +220,13 @@ const custom = computed(() => {
 const showCard = (uid, userInfo) => {
     useUserStore.showUserCard(uid, userInfo)
 }
+
+const imgList = computed(() => {
+    const list = props.cardData.image
+    return list.map((item) => {
+        return item.image
+    })
+})
 const goYuan = () => {
     browser.openInUserSelect(`https://s.apps.vip/post/${props.cardData.pay_set.tid}`)
 }
@@ -240,13 +268,7 @@ const clickCollect = async () => {
     }
 
 }
-const props = defineProps({
-    showDetailModal: Boolean,
-    cardData: {
-        type: Object,
-        default: () => []
-    }
-})
+
 const createTime = computed(() => {
     let [date, time] = props.cardData.create_time.split(' ')
     return [date, time]
