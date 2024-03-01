@@ -315,9 +315,10 @@ export default {
     },
 
     async afterLaunch () {
-      if(!this.init && isMain()){
+      if(!this.init && (isMain() || this.$useEnv('web'))){
         this.$router.replace({ name: 'wizard' })
       }
+      if (this.$useEnv('web')) return
       if(this.aided){
         message.warn('当前应用正运行在辅助模式下，无法被聚焦。如需退出，请到【设置】界面关闭。')
         this.enterAided()
@@ -378,9 +379,6 @@ export default {
       return lvSys
     },
     login () {
-      // this.loginVisible = true
-
-      console.log('123321 useLogin :>> ', 123321);
       useLogin(()=>{
         this.$router.replace({ name: 'home' })
       })

@@ -133,6 +133,8 @@ export const appStore = defineStore('appStore', {
     deskInit: false,
     // 桌面缩放
     visibleScale: false,
+    // web端登录框
+    visibleWeb: false,
     // 是否开始定制
     visibleGuide: false,
     // 定制弹窗
