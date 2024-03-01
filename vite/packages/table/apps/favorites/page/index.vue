@@ -179,7 +179,7 @@ export default {
           if (item.favo && (name?.indexOf(this.searchValue) > -1 || item.url?.indexOf(this.searchValue) > -1)) {
             acc.push(item);
           }
-          return acc;
+          return this.sortByFavoTime(acc);
         }, []);
       }else if(folder?.type == 'recent'){
         return this.allList.reduce((acc, item) => {
@@ -344,8 +344,10 @@ export default {
       this.folderIcons = newFolder
     },
 
-    
-
+    // 排序算法
+    sortByFavoTime(arr) {
+      return arr.sort((a, b) => b.favoTime - a.favoTime);
+    },
     // 切换文件夹列表
     changeFolder(index){
       this.folderIndex = index
