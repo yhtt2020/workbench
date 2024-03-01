@@ -322,13 +322,13 @@ export default {
   width: 320px;
 }
 
-@media screen and(max-width: 840px) {
+@media screen and (max-width: 840px) {
   .max-search {
     width: 60px !important;
   }
 }
 
-@media screen and(min-width: 1050px) {
+@media screen and (min-width: 1050px) {
   .max-search {
     width: 320px !important;
   }
