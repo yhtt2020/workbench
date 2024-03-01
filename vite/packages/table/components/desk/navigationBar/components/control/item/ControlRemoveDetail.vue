@@ -129,6 +129,8 @@ const controlStatus = computed(()=>{
     //游戏模式  后期功能实现后再对接
     case 'game-mode':
       return {status:false};
+    case 'barrage':
+      return {status:settings.value.enableBarrage}; 
     default:
       break;
   }
@@ -136,7 +138,6 @@ const controlStatus = computed(()=>{
 
 // 触发控制中心状态修改
 const triggerControl = () =>{
-  // console.log('测试',settings.value);
   switch (props.controlIndex) {
     // 窗口控制
     case 'window-control':
@@ -191,6 +192,9 @@ const triggerControl = () =>{
     //游戏模式  后期功能实现后再对接
     case 'game-mode':
       return {status:false};
+    case 'barrage':
+      settings.value.enableBarrage = !settings.value.enableBarrage;
+      break;
     default:
       break;
   }
