@@ -41,7 +41,6 @@ const props = defineProps({
   icon: {},
   length: {},
 });
-// const isCollapseStatus = ref({});
 
 const emits = defineEmits(["back"]);
 const back = () => {
@@ -61,9 +60,6 @@ const isCollapse = (index,data) =>{
   else {
     return false;
   }
-  // console.log('data',index,data);
-  // v-if="data.isCollapseStatus?.val !== '0' && data.isCollapseStatus?.index === index"
-  // return data.isCollapseStatus?.val !== '0' && data.isCollapseStatus?.index === index
 }
 </script>
 
