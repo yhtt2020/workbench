@@ -14,8 +14,8 @@ export const NavListTmp = [
     { type: 'systemApp', icon: '/logo/game.svg', name: '游戏助手', addNav: true, bg: '', isBg: '', ext: '', summary: '', mode: 'app', value: 'gameIndex', isCheck: true, id: '1705024809' },
     { type: 'systemApp', icon: '/logo/task.svg', name: '任务中心', addNav: true, bg: '', isBg: '', ext: '', summary: '', mode: 'app', value: 'task', isCheck: true, id: '1705024810' },
     { type: 'systemApp', icon: '/logo/commun.svg', name: '社区中心', addNav: true, bg: '', isBg: '', ext: '', summary: '', mode: 'app', value: 'commun', isCheck: true, id: '1705024811' },
-    { type: 'systemApp', icon: '/logo/fullScreen.svg', name: '全屏', addNav: true, bg: '', isBg: '', ext: '', summary: '', mode: 'app', value: 'fullscreen', isCheck: true, id: '1705024812' },
-    { type: 'systemApp', icon: '/logo/settings.svg', name: '设置中心', addNav: true, bg: '', isBg: '', ext: '', summary: '', mode: 'app', value: 'setting', isCheck: true, id: '1705024813' },
+    { type: 'systemApp', icon: '/logo/fullScreen.svg', name: '全屏', addNav: true, bg: '', isBg: '', ext: '', summary: '', mode: 'app', value: 'fullscreen', isCheck: false, id: '1705024812' },
+    { type: 'systemApp', icon: '/logo/settings.svg', name: '设置中心', addNav: true, bg: '', isBg: '', ext: '', summary: '', mode: 'app', value: 'setting', isCheck: false, id: '1705024813' },
 ]
 
 
