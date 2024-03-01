@@ -147,12 +147,14 @@
     <!-- 右上方的缩放推荐 -->
     <ScalePanel v-if="visibleScale" @closeScale="closeScale"></ScalePanel>
     <!-- <ScalePanel v-if="visibleScale" @closeScale="closeScale" ></ScalePanel> -->
+    <!-- 仅限于web的登录提示弹窗 -->
+    <WebLogin v-if="visibleWeb" @closeWebLogin="closeWebLogin" @addWebLogin="addWebLogin"></WebLogin>
     <!-- 定制桌面流程 -->
     <GuidePanel v-if="visibleGuide" @closeGuide="closeGuide" @addGuide="addGuide"></GuidePanel>
     <!-- <GuidePanel v-if="visibleGuide" @closeGuide="closeGuide" @addGuide="addGuide"></GuidePanel> -->
 
     <!-- 全屏遮罩层 -->
-    <div v-show="visibleScale || visibleGuide" class="fixed top-0 bottom-0 left-0 w-full h-full cursor-not-allowed ring-0"
+    <div v-show="visibleScale || visibleGuide || visibleWeb" class="fixed top-0 bottom-0 left-0 w-full h-full cursor-not-allowed ring-0"
       style="z-index:900;"></div>
 
     <!-- 局部遮罩层 -->
@@ -240,6 +242,7 @@ import HotSearch from "../components/widgets/HotSearch.vue";
 import RadioTab from "../components/RadioTab.vue";
 import ScalePanel from "./ScalePanel.vue";
 import GuidePanel from "./GuidePanel.vue";
+import WebLogin from "./WebLogin.vue";
 
 // import News from "../components/widgets/news/NewsCard.vue";
 import GalleryModal from '../components/paperModal/GalleryModal.vue';
@@ -434,6 +437,7 @@ export default {
     GalleryModal,
     ScalePanel,
     GuidePanel,
+    WebLogin,
   },
   computed: {
     ...mapWritableState(navStore, [
@@ -461,6 +465,7 @@ export default {
       "searchFullScreen",
       "deskInit",
       "visibleScale",
+      "visibleWeb",
       "visibleGuide",
       "showGuide",
       "guideList",
@@ -527,9 +532,13 @@ export default {
     if (this.deskInit) {
       this.deskInit = false
       this.initTask()
-      // 新用户第一次进入加载一个默认桌面
+      // 配置向导 之后的行为
       this.addFreeLayoutDesk()
-      this.visibleScale = true
+      if(!useEnv("web")){
+        this.visibleScale = true
+      }else{
+        this.visibleWeb = true
+      }
     }
 
     this.$bus.on("customDesk",()=>{
@@ -992,9 +1001,18 @@ export default {
       this.visibleScale = false
       this.visibleGuide = true
     },
+    // 关闭缩放弹窗
+    closeWebLogin() {
+      this.visibleWeb = false
+    },
     // 关闭引导弹窗
     closeGuide() {
       this.visibleGuide = false
+    },
+
+    addWebLogin(){
+      this.visibleWeb = false
+      this.visibleGuide = true
     },
 
     // 触发引导弹窗
