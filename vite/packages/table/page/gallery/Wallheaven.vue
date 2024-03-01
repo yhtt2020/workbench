@@ -109,7 +109,7 @@
           </a-col>
         </a-row>
       </viewer>
-      <div v-if="isLoading === false && hotHeavenList.length === 0" class="flex align-center justify-center" style="height: 80vh">
+      <div v-if="isLoading === false && hotHeavenList.length === 0" class="flex justify-center align-center" style="height: 80vh">
         <a-empty description="未找到图片信息"/>
       </div>
      </template>
@@ -130,7 +130,7 @@
           </a-col>
         </a-row>
       </viewer>
-      <div v-if="isLoading === false && acgHeavenList.length === 0" class="flex align-center justify-center" style="height: 80vh">
+      <div v-if="isLoading === false && acgHeavenList.length === 0" class="flex justify-center align-center" style="height: 80vh">
         <a-empty description="未找到图片信息"/>
       </div>
     </template>
@@ -151,7 +151,7 @@
           </a-col>
         </a-row>
       </viewer>
-      <div v-if="isLoading === false &&  peopleHeavenList.length === 0" class="flex align-center justify-center" style="height: 80vh">
+      <div v-if="isLoading === false &&  peopleHeavenList.length === 0" class="flex justify-center align-center" style="height: 80vh">
         <a-empty description="未找到图片信息"/>
       </div>
     </template>

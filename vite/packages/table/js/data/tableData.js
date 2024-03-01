@@ -338,12 +338,12 @@ export default {
     event: 'setting',
     fn: () => { vm.$router.push({ name: 'setting' })}
   },
-  // {
-  //   type:'systemApp',
-  //   icon:'/logo/control.svg',
-  //   name:'控制中心(开发中)',
-  //   event:'control',
-  // }
+  {
+    type:'systemApp',
+    icon:'/logo/control.svg',
+    name:'弹幕',
+    event:'control',
+  }
 
   ],
 }
