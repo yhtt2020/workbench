@@ -33,7 +33,7 @@ export const chatList = [
             role: 'channel', type: 'link', name: '阿皮动态',
             props: {
               url: 'https://space.bilibili.com/167397379/video',
-              openMethod: 'userSelect'  //根据用户工作台设置 不填写openMethod则以iframe加载。部分网页无法正常加载。
+              openMethod: 'systemMethod'  //根据用户工作台设置 不填写openMethod则以iframe加载。部分网页无法正常加载。
             }
           },
           {
@@ -70,7 +70,10 @@ export const chatList = [
             role: 'channel',
             name: 'Roadmap',
             type: 'link',
-            props: { url: 'http://kanban.xiangtian.ren/b/Bd6fRiZPo3RTxq9ok/board' }
+            props: { 
+              url: 'http://kanban.xiangtian.ren/b/Bd6fRiZPo3RTxq9ok/board',
+              openMethod:'currentPage'
+            }
           },
         ]
       },
