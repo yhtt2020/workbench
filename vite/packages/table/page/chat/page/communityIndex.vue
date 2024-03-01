@@ -47,10 +47,10 @@
         <Commun v-else-if="currentChannel.type === 'forum'" :forum-id="currentChannel.props.id" />
         <TUIChat v-else-if="currentChannel.type==='group'"></TUIChat>
         <template v-else-if="currentChannel.type==='link'">
-          <div v-if="currentChannel.props.openMethod==='userSelect'" style="text-align: center;margin-top: 30%">
+          <iframe v-if="currentChannel.props.openMethod === 'currentPage'" :src="currentChannel.props.url" class="m-2" style="border: none;background: none;border-radius: 4px;width: calc(100% - 10px);height: calc(100% - 10px)"></iframe>
+          <div v-else style="text-align: center;margin-top: 30%">
             当前频道需要浏览器打开。
           </div>
-          <iframe v-else :src="currentChannel.props.url" class="m-2" style="border: none;background: none;border-radius: 4px;width: calc(100% - 10px);height: calc(100% - 10px)"></iframe>
         </template>
       </div>
     </a-col>
@@ -114,8 +114,18 @@ export default defineComponent({
 
     const currentItem = async (item) => {
       if (item.type === 'link') {
-        if (item.props.openMethod === 'userSelect') {
-          browser.openInUserSelect(item.props.url)
+        console.log('测试',item.props.openMethod);
+        // 想天浏览器打开
+        if(item.props.openMethod === 'userSelect'){
+          browser.openInInner(item.props.url);
+        }
+        // 系统默认浏览器打开
+        else if(item.props.openMethod === 'systemMethod'){
+          browser.openInSystem(item.props.url) 
+        }
+        // 当前页面打开
+        else if(item.props.openMethod === 'currentPage'){
+          return ;
         }
       }
       if (item.type === 'group') {
@@ -132,13 +142,9 @@ export default defineComponent({
             window.TUIKitTUICore.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation)
           })
         } else {
-          // isDisable判断群聊是否禁止加入
-          if (isDisable) {
-            data.group = res.data.group
-            // data.showModal = true
-          } else {
-            message.warn('该群禁止加入')
-          }
+          // isDisable 禁止加入
+          if (isDisable) return data.group = res.data.group;
+          message.warn('该群禁止加入');
         }
       }
       data.currentChannel = item
