@@ -95,7 +95,7 @@
     "chokidar": "^3.4.0",
     "concurrently": "^5.2.0",
     "decomment": "^0.9.5",
-    "electron": "22.3.27",
+    "electron": "^22.3.27",
     "electron-builder": "23.2.0",
     "electron-devtools-installer": "^3.2.0",
     "electron-installer-windows": "^3.0.0",

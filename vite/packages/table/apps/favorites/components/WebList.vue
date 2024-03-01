@@ -128,6 +128,7 @@
         this.$emit('showRenameModal', item)
       },
       changeFavo(item){
+        const now = new Date().getTime()
         this.allList.forEach((i, index)=>{
           if(i.guid == item.guid){
             if (i.favo) {
@@ -136,6 +137,7 @@
               message.success('收藏成功')
             }
             i.favo = !this.allList[index].favo
+            i.favoTime = now
             this.$emit('countFavo')
           }
         })
