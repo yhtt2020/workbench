@@ -18,7 +18,7 @@
     </template>
   </xt-menu>
 
-  <xt-drawer v-model="drawerVisible" :height="h">
+  <xt-drawer v-if="drawerVisible" v-model="drawerVisible" :height="h">
     <slot name="drawer"></slot>
     <DefaultItem
       :menus="menuList"
@@ -39,6 +39,7 @@ import { storeToRefs } from "pinia";
 import { useWidgetStore } from "../../../components/card/store";
 import DefaultItem from "./DefaultItem.vue";
 import ChooseModal from "./ChooseModal.vue";
+import { truncate } from "fs-extra";
 const props = defineProps({
   menus: {},
   model: {
@@ -120,16 +121,16 @@ function defaultListClick(event) {
 function defaultListContextmenu(event) {
   // 第一次触发后出现弹窗让用户选择
   if(!firstOpen.value){
+    console.log('触发第一次选择');
     chooseVisible.value = true
-    firstOpen.value = true
-  }else{
-    // firstOpen.value = false
-    if (rightModel.value == "default") {
-      event.preventDefault();
-      event.stopPropagation();
-      drawerVisible.value = true;
-      onMounted();
-    }
+    firstOpen.value = truncate
+    return
+  }
+  if (rightModel.value == "default") {
+    event.preventDefault();
+    event.stopPropagation();
+    drawerVisible.value = true;
+    onMounted();
   }
 }
 
