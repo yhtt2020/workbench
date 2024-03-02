@@ -22,7 +22,7 @@
           />
           <div v-if="!showPreview" @click="openPreview" class="px-6 ml-3 flex items-center xt-mask rounded-lg h-12 pointer">
             <Icon icon="zhankai" style="font-size: 1.5em;"></Icon>
-            <span class="xt-text ml-3" style="font-size: 16px;">装扮预览1</span>
+            <span class="xt-text ml-3" style="font-size: 16px;">装扮预览</span>
           </div>
         </div>
       </div>

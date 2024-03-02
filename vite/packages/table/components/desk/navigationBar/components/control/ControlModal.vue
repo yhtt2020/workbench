@@ -94,6 +94,7 @@ import {
   computed,
   onMounted,
   getCurrentInstance,
+  onUnmounted,
   onBeforeMount,
 } from "vue";
 import { storeToRefs } from "pinia";
@@ -176,7 +177,12 @@ const bottomButton = ref([
     newIcon: "fluent:settings-16-regular",
     name: "设置",
     fn: () => {
-      router.push({ name: "setting" });
+      router.push({
+          name:'home'
+        })
+        setTimeout(() => {
+          proxy.$bus.emit("openSystemSet")
+        }, 500);
       emit("close");
     },
   },
@@ -204,10 +210,8 @@ onMounted(() => {
   });
   window.addEventListener("click",handleClick);
 });
-
-onBeforeMount(() => {
-  window.removeEventListener("click",handleClick);
-});
+onUnmounted(()=>{  window.removeEventListener("click",handleClick);
+})
 </script>
 
 <style lang="scss" scoped>

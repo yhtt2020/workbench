@@ -66,7 +66,6 @@ protocolManager = {
       if (assignApps.length === 0) {
         console.error('不存在对应应用')
       }
-      console.log(assignApps,'关联的应用')
       if (assignApps.length > 1) {
         global.appManager.openApp(
           assignApps[0].nanoid,

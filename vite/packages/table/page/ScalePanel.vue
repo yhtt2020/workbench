@@ -26,7 +26,7 @@
       <div class="xt-text-2 font-14 text-center">推荐使用以下缩放比例</div>
       <div class="flex mt-4 justify-between">
         <div v-for="(item, index) in proportion">
-          <xt-button class="" style="border-radius: 10px;background-color: var(--secondary-bg);" @click="setZoomFactor(item.scale, index)" :w="73" :h="40" :type="item.isCheck?'theme':''">{{ item.ratio }}</xt-button>
+          <xt-button class="" style="border-radius: 10px;background-color: var(--secondary-bg);" @click="setZoomFactor(item.scale, index)" :w="60" :h="30" :type="item.isCheck?'theme':''">{{ item.ratio }}</xt-button>
         </div>
       </div>
       <div class="flex items-center w-full mt-4 justify-between" v-if="proportion[4].isCheck">
@@ -52,6 +52,11 @@ export default {
   data() {
     return {
       proportion:[
+        {
+          ratio: '75%',
+          scale: 75,
+          isCheck: false,
+        },
         {
           ratio: '100%',
           scale: 100,
@@ -99,7 +104,7 @@ export default {
     this.getSize()
     this.scaleInit = true
 
-    this.proportion[0].isCheck = true
+    this.proportion[1].isCheck = true
 
 
     // 调整缩放比例功能 暂时不需要 隐藏

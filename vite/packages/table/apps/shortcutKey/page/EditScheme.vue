@@ -373,10 +373,11 @@ export default {
   },
   beforeRouteLeave (to, from, next) {
     if (!this.saved) {
-      Modal.confirm({
-        content: '尚未保存，是否离开？',
-        centered: true,
-        onOk: () => {
+      window.$ui.confirm(
+        '保存提醒',
+        '尚未保存，是否离开？',
+        {
+        ok: () => {
           next()
         }
       })

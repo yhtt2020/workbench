@@ -184,7 +184,9 @@ const appModel = {
   authApiList,
   authAbilityList,
 
-  defaultOptimize: defaultOptimize,
+  defaultOptimize: defaultOptimize,//常量对象的赋值，一般要规避一个地址引用带来的变化
+
+
 
   async initDb () {
     settingModel = new SettingModel()

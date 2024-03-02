@@ -104,7 +104,6 @@ win32.mouseHook.on('move', (x, y, mousePoint) => {
 })
 module.exports= {
   start:()=>{
-    console.log('开始hook监听鼠标')
     win32.mouseHook.start()
   },
   stop:()=>{

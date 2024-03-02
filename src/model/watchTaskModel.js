@@ -41,7 +41,6 @@ class WatchTaskModel {
 
   async del(task){
     try{
-      console.log(task)
       await this.db.knex('task').where({nanoid:task.nanoid}).del()
       await this.db.knex('data').where({task_id:task.nanoid}).del()
       return true

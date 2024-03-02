@@ -37,7 +37,7 @@
       <div class="bg-mask rounded-lg p-3 m-3 mx-5 mt-0  "
            style="background: var(--primary-bg);color: var(--primary-text) ;">
         <OnlineMedal v-if="grade.rank" :rank="grade.rank"></OnlineMedal>
-        <Medal :medal="medal" v-for="medal in medals"></Medal>
+        <Medal :size="55" :medal="medal" v-for="medal in medals"></Medal>
       </div>
     </div>
   </div>
