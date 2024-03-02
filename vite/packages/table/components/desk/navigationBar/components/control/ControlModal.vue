@@ -94,6 +94,7 @@ import {
   computed,
   onMounted,
   getCurrentInstance,
+  onUnmounted,
   onBeforeMount,
 } from "vue";
 import { storeToRefs } from "pinia";
@@ -204,10 +205,8 @@ onMounted(() => {
   });
   window.addEventListener("click",handleClick);
 });
-
-onBeforeMount(() => {
-  window.removeEventListener("click",handleClick);
-});
+onUnmounted(()=>{  window.removeEventListener("click",handleClick);
+})
 </script>
 
 <style lang="scss" scoped>
