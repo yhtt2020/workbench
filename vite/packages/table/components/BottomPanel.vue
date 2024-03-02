@@ -1225,6 +1225,7 @@ export default {
         setTimeout(() => {
           this.$bus.emit("openSystemSet")
         return
+      })
       }
       if(type === 'folder'){
         this.openFolder(item)
