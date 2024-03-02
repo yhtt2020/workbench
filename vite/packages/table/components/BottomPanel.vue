@@ -219,8 +219,8 @@
               >
                 <div
                   @contextmenu="showMenu"
-                  style="height: 52px; width: 100%; overflow: hidden"
-                  class="item-content"
+                  style="height: 52px; width: 100%;"
+                  class="flex flex-wrap justify-center"
                 >
                   <div
                     class="w-full scroll-content"
@@ -266,7 +266,7 @@
                       >
                         <xt-menu
                           :id="item.id"
-                          class="relative overflow-visible item-content"
+                          class="relative w-full flex flex-wrap justify-center overflow-visible"
                           :menus="folderOptions"
                         >
                           <div
@@ -304,7 +304,14 @@
                               >
                               </FolderVue>
                               <template v-else>
-                                <Avatar :item="item"></Avatar>
+                                <Avatar :item="item">
+                                  <template #control>
+                                    <div 
+                                      style="background-color: #ff4d4f;border: 2px solid ;" 
+                                      class="absolute top-0 flex items-center justify-center flex-shrink-0 w-4 h-4 translate-x-6 -translate-y-1/3 rounded-full pointer" >
+                                    </div>
+                                  </template>
+                                </Avatar>
                               </template>
                             </Drag>
                           </div>
@@ -719,11 +726,10 @@ export default {
         })
       })
     }
-
     // 图标整体替换格式方法
     // this.copyFootNav = this.replaceType(this.copyFootNav)
     this.copyFootNav = this.copyFootNav.map((item) => this.mergeData(item))
-    // console.log(this.copyFootNav, 'copyFootNav')
+    console.log(this.copyFootNav, 'copyFootNav')
     this.bottomInit = true
     //对id进行强制修复
     this.copyFootNav.forEach(item => {

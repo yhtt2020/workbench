@@ -342,6 +342,7 @@ export default {
     type:'systemApp',
     icon:'/logo/control.svg',
     name:'控制中心',
+    slot:'control',
     event:'control',
   }
 
