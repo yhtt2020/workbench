@@ -3,16 +3,12 @@ import {Server} from '../consts'
 import dbStorage from "./dbStorage";
 import {nanoid} from 'nanoid'
 import axios from 'axios'
-// const {axios} = window.$models
-const server = Server.baseUrl
 //const server='http://localhost:8001'
-const activeUrl = server + '/app/activeCode'
-const verifyUrl = server + '/app/verifyCode'
-const createUrl = server + '/app/createCodes'
-const exchangeUrl = server + '/app/exchangeCode'
-const listUrl = server + '/app/listCodes'
+const activeUrl =  '/app/activeCode'
+const verifyUrl = '/app/verifyCode'
+const createUrl = '/app/createCodes'
 import {getConfig} from "../js/axios/serverApi";
-import {post} from "../js/axios/request";
+import {apiGet, apiPost, post} from "../js/axios/request";
 // @ts-ignore
 export const codeStore = defineStore('code', {
   state: () => ({
@@ -24,11 +20,11 @@ export const codeStore = defineStore('code', {
 
     async active(code) {
       let data={key: code}
-      return await  post(activeUrl, data)
+      return await  apiPost(activeUrl, data)
     },
 
     async create() {
-      axios.get(createUrl, {params: {num: 10}}).then((createRS) => {
+      apiGet(createUrl, {params: {num: 10}}).then((createRS) => {
         this.loading = false
       }).catch(e => {
         this.loading = false
@@ -36,67 +32,33 @@ export const codeStore = defineStore('code', {
     },
 
     async listCodes() {
-      let rs = await axios.post(listUrl, undefined, await getConfig())
-      if (rs.code !== 1000) {
-        console.warn(rs)
-        return {
-          status: 0
-        }
-      } else {
-        return {
-          status: 1,
-          data: rs.data
-        }
-      }
+      return await apiPost( '/app/listCodes', undefined)
     },
     async exchange(num = 1) {
-      let rs = await axios.post(exchangeUrl, {num}, await getConfig())
-      if (rs.code !== 1000) {
-        console.warn(rs)
-        return {
-          status: 0
-        }
-      } else {
+      let rs = await apiPost( '/app/exchangeCode', {num})
+      if (rs) {
         return {
           status: 1,
-          data: rs.data
+          data: rs
         }
+      } else {
+        return {status:0}
       }
     },
 
-    getSerialHash() {
-      if (!this.serialHash) {
-        this.serialHash = nanoid(8)
-      }
-      return this.serialHash
-    },
 
     async verify(uid) {
-      // if (!this.myCode) {
-      //   console.warn('未设置激活码')
-      //   return false
-      // }
-
-      // let hash = this.getSerialHash()
-
       let data={
-        // serialHash: hash,
         key: this.myCode,
         uid:uid
       }
-      let rs = await axios.post(verifyUrl,data)
-      if (rs.code !== 1000) {
-        // this.myCode = ''
-        console.warn('返回失败', rs)
-        if(rs.code==='ENOTFOUND'){
-          throw 'neterror'
-        }
-        this.verified=false
-        return false
-      } else {
-        console.log(rs)
+      let rs = await apiPost(verifyUrl,data)
+      if (rs) {
         this.verified=true
         return true
+      } else {
+        this.verified=false
+        return false
       }
     }
   },

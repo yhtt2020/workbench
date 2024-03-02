@@ -177,7 +177,12 @@ const bottomButton = ref([
     newIcon: "fluent:settings-16-regular",
     name: "设置",
     fn: () => {
-      router.push({ name: "setting" });
+      router.push({
+          name:'home'
+        })
+        setTimeout(() => {
+          proxy.$bus.emit("openSystemSet")
+        }, 500);
       emit("close");
     },
   },

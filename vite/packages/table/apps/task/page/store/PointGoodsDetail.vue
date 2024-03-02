@@ -48,7 +48,7 @@
       </div>
     </div>
   </template>
-  
+
  <PointScan v-else :getDetail="getDetailData" @back="scanVisible = false"/>
 
 </template>
@@ -84,20 +84,20 @@ const useQRcodeScan = () =>{
 </script>
 
 <style lang="scss" scoped>
-@media screen and(max-height:480px) {
+@media screen and (max-height:480px) {
  .good-container{
   height: 390px !important;
- } 
+ }
 }
-@media screen and(min-height:481px) and (max-height:700px){
+@media screen and (min-height:481px) and (max-height:700px){
  .good-container{
   height: 550px !important;
- } 
+ }
 }
-@media screen and(min-height:701px) {
+@media screen and (min-height:701px) {
  .good-container{
   height: 650px !important;
- } 
+ }
 }
 :deep(.ps__rail-y){
  display: none !important;

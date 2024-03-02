@@ -39,7 +39,7 @@
 
   <xt-option-box v-if="currentScreen.key !== 'main'" :key="currentScreen.title">
     <xt-option-info
-      title="启动分屏"
+      title="运行"
       isSwitch
       v-model:switch="currentScreen.running"
     />
@@ -47,7 +47,7 @@
     <template v-if="currentScreen.settings">
       <hr />
       <xt-option-info
-        title="自启动"
+        title="自动运行（跟随工作台启动）"
         isSwitch
         v-model:switch="currentScreen.settings.autoRun"
       />

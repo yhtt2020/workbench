@@ -19,9 +19,9 @@
                 exchanged
               }}</strong>，剩余：<strong
               class="text-red-400">{{ leave }}</strong>。
-            <a-button type="primary" @click="confirmExchange" :disabled="leave===0" style="color:var(--main-text)">
+            <xt-button style="display: inline-block" type="theme" @click="confirmExchange" :disabled="leave===0" :w="80"  :h="30" :radius="8">
               兑换1枚
-            </a-button>
+            </xt-button>
           </p>
 
           <p>您已成功邀请{{ invitedUsers.length }}位用户。</p>
@@ -90,7 +90,7 @@
               </div>
             </div>
             <br>
-            前往<a-button @click.stop="goToMy" class="mx-2" size="small" type="primary">我的</a-button>界面查看。
+            前往<xt-button style="display: inline-block; " class="mx-2" :w="80" :h="30" :radius="8" type="theme" @click="goToMy"   size="small" >我的</xt-button>界面查看。
             可在"我的"界面查看。
           </div>
 
@@ -283,9 +283,7 @@ export default {
     },
     async loadCodes () {
       let rs = await this.listCodes()
-      if (rs.status) {
-        this.codes = rs.data
-      }
+      this.codes = rs
       let marked
       try {
         marked = JSON.parse(localStorage.getItem('marked'))
@@ -302,16 +300,13 @@ export default {
       return this.marked.indexOf(key) > -1
     },
     confirmExchange () {
-      Modal.confirm({
-        content: '确认使用200小时在线时长兑换1枚邀请码？此操作无法撤回。兑换并不会减少你的在线时长以及影响你的在线等级，请放心。',
-        okText: '确认兑换',
-        onOk: async () => {
+      window.$ui.confirm('兑换确认','确认使用200小时在线时长兑换1枚邀请码？此操作无法撤回。兑换并不会减少你的在线时长以及影响你的在线等级，请放心。',{
+        ok: async () => {
           let rs = await this.exchange()
           if (rs.status) {
             rs.data.forEach(item => {
               this.codes.unshift(item)
             })
-
             message.success('兑换成功。')
           } else {
             message.error('兑换失败，您已无法兑换邀请码。')

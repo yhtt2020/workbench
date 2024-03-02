@@ -1,16 +1,16 @@
 <template>
   <vueCustomScrollbar :settings="scrollbarSettings" style="height: 100%;padding: 15px;">
-    <div class="w-full h-full flex justify-center flex-row flex-wrap">
+    <div class="flex flex-row flex-wrap justify-center w-full h-full">
       <!-- 游客模式隐藏 用户信息 -->
-      <div v-if="useGuest" class="w-full flex flex-col  top-card mr-4" style=" max-width: 572px;">
-        <div class="w-full  pt-4 pb-4 grade-card  rounded-lg  mb-4" style="background: var(--primary-bg);">
+      <div v-if="useGuest" class="flex flex-col w-full mr-4 top-card" style=" max-width: 572px;">
+        <div class="w-full pt-4 pb-4 mb-4 rounded-lg grade-card" style="background: var(--primary-bg);">
           <GradePanel @openGradeTip="openGradeTip"></GradePanel>
         </div>
-        <div class="rounded-lg flex-1 w-full  tip-card px-5 text-white" style="background: var(--primary-bg);">
-          <div class="flex items-center -ml-4 mt-3">
+        <div class="flex-1 w-full px-5 text-white rounded-lg tip-card" style="background: var(--primary-bg);">
+          <div class="flex items-center mt-3 -ml-4">
             <Icon icon="-dengpao" style="width: 24px;height: 24px;" class="mx-2 text-white"></Icon>Tips
           </div>
-          <div class="h-2/3 w-full rounded-lg flex flex-col justify-evenly px-4 mt-2 xt-bg-2"
+          <div class="flex flex-col w-full px-4 mt-2 rounded-lg h-2/3 justify-evenly xt-bg-2"
             style="color:var(--primary-text)">
             <div>1. 保持在线状态即可升级</div>
             <div>2. 目前有「{{leveList.length}}」个不同的等级权益，高等级还能优先体验新功能</div>
@@ -18,7 +18,7 @@
           </div>
         </div>
       </div>
-      <div class="grade-card p-6 rounded-lg  mr-4" style=" background:var(--primary-bg)">
+      <!-- <div class="p-6 mr-4 rounded-lg grade-card" style=" background:var(--primary-bg)">
         <div class="text-white" style="color:var(--primary-text);">等级权益</div>
         <div class="flex flex-row">
           <div class="mt-6 mr-4" style="width: 160px">
@@ -27,17 +27,14 @@
                 v-for="(item, index) in leveList" style="color:var(--primary-text);"/>
             </a-steps>
           </div>
-          <div class="flex flex-wrap justify-between  bottom-card w-full">
-            <!-- <div v-for="item in powerList" class="rounded-lg h-1/6  mt-2 flex flex-row items-center p-2 relative"
-              style="width: calc(50% - 8px);"
-              :style="item.detail[[leveList[clickGrade]]] ? 'background: rgba(42, 42, 42, 1)' : 'background: rgba(42, 42, 42, 1);opacity: 0.6;'"> -->
-              <div v-for="item in powerList" class="rounded-lg h-1/6  mt-2 flex flex-row items-center p-2 relative"
+          <div class="flex flex-wrap justify-between w-full bottom-card">
+              <div v-for="item in powerList" class="relative flex flex-row items-center p-2 mt-2 rounded-lg h-1/6 "
               style="width: calc(50% - 8px);"
               :style="item.detail[[leveList[clickGrade]]] ? 'background: var(--secondary-bg)' : 'background: var(--secondary-bg);opacity: 0.6;'">
-              <Icon :icon="item.icon" style="width: 24px;height: 24px;color: var(--primary-text);" class="mr-4 ml-2 text-white"></Icon>
+              <Icon :icon="item.icon" style="width: 24px;height: 24px;color: var(--primary-text);" class="ml-2 mr-4 text-white"></Icon>
               <div style="width: calc(100% - 50px)">
-                <div class="text-white text-more w-full xt-text"  >{{ item.alias }}</div>
-                <div v-if="item.detail[[leveList[clickGrade]]]" class=" text-more w-full xt-text-2">
+                <div class="w-full text-white text-more xt-text"  >{{ item.alias }}</div>
+                <div v-if="item.detail[[leveList[clickGrade]]]" class="w-full text-more xt-text-2">
                   {{ item.detail[[leveList[clickGrade]]] }}</div>
 
               </div>
@@ -45,16 +42,18 @@
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
+      <!-- 等级权益组件 -->
+      <Level :abilityGrade="abilityGrade" v-if="useGuest" :isLogin="useGuest"></Level>
     </div>
   </vueCustomScrollbar>
-  <div class="home-blur fixed inset-0 float-tip" style="z-index: 999" v-if="tipFlag" @click.stop="closeTip">
-    <div class="rounded-lg  w-96  h-60  px-5 text-white absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+  <div class="fixed inset-0 home-blur float-tip" style="z-index: 999" v-if="tipFlag" @click.stop="closeTip">
+    <div class="absolute px-5 text-white -translate-x-1/2 -translate-y-1/2 rounded-lg w-96 h-60 top-1/2 left-1/2"
       style="background: rgba(33, 33, 33, 1);">
-      <div class="flex items-center -ml-4 mt-3">
+      <div class="flex items-center mt-3 -ml-4">
         <Icon icon="-dengpao" style="width: 24px;height: 24px;" class="mx-2 text-white"></Icon>Tips
       </div>
-      <div class="h-2/3 w-full rounded-lg flex flex-col justify-evenly px-4 mt-2"
+      <div class="flex flex-col w-full px-4 mt-2 rounded-lg h-2/3 justify-evenly"
         style="background: rgba(42, 42, 42, 1);">
         <div>1. 保持在线状态即可升级</div>
         <div>2. 目前有「{{leveList.length}}」个不同的等级权益，高等级还能优先体验新功能</div>
@@ -69,9 +68,10 @@ import GradePanel from '../../components/comp/GradePanel.vue'
 import { leveList, powerList } from '../../js/data/abilityData'
 import { mapState } from "pinia";
 import { appStore } from "../../store";
+import Level from './Level.vue';
 export default {
   name: "Grade",
-  components: { GradePanel },
+  components: { GradePanel,Level },
   data() {
     return {
       leveList,
@@ -103,7 +103,7 @@ export default {
   mounted() {
 
     this.grade = this.userInfo.onlineGradeExtra
-      this.clickStep(this.abilityGrade)
+      // this.clickStep(this.abilityGrade)
   },
   methods: {
     openGradeTip() {
@@ -112,13 +112,13 @@ export default {
     closeTip() {
       this.tipFlag = false
     },
-    clickStep(e) {
-      for (let i = 0; i < this.$refs.step.$el.children.length; i++) {
-        this.$refs.step.$el.children[i].children[0].children[2].children[0].style.background = ''
-      }
-      this.$refs.step.$el.children[e].children[0].children[2].children[0].style.background = 'var(--active-bg)'
-      this.clickGrade = e
-    }
+    // clickStep(e) {
+    //   for (let i = 0; i < this.$refs.step.$el.children.length; i++) {
+    //     this.$refs.step.$el.children[i].children[0].children[2].children[0].style.background = ''
+    //   }
+    //   this.$refs.step.$el.children[e].children[0].children[2].children[0].style.background = 'var(--active-bg)'
+    //   this.clickGrade = e
+    // }
   }
 }
 </script>

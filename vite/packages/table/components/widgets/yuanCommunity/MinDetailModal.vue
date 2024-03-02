@@ -111,7 +111,7 @@
                                     class="mb-2 rounded-md cover-lm " :key="index" style="object-fit: fill;">
                             </ul> -->
                                     <!-- :options="options" -->
-                                    <viewer :images="cardData.image_170_170" :options="options"
+                                    <!-- <viewer :images="cardData.image_170_170" :options="options"
                                         class="items-center p-0 mb-0 ">
                                         <a-row :gutter="[20, 20]" style="margin-right: 1em" wrap="'true">
                                             <a-col class="flex flex-wrap mr-2 image-wrapper"
@@ -122,7 +122,19 @@
                                                     style="position: relative object-fit: fill;">
                                             </a-col>
                                         </a-row>
-                                    </viewer>
+                                    </viewer> -->
+                                    <xt-preview-img
+                                        :imgList="imgList"
+                                        :imgW="150"
+                                        :imgH="100"
+                                        :multiple="true"
+                                        :maskClose="true"
+                                        :controlOption="{
+                                            controlBar: true,
+                                            closeBtn: true,
+                                            arrowBtn: true,
+                                        }"
+                                    ></xt-preview-img>
                                 </template>
 
                             </div>
@@ -211,6 +223,12 @@ onMounted(() => {
     windowHeight.value = window.innerHeight
     // console.log(props.cardData)
     refresh()
+})
+const imgList = computed(() => {
+    const list = props.cardData.image
+    return list.map((item) => {
+        return item.image
+    })
 })
 const custom = computed(() => {
     return props.showDetailModal

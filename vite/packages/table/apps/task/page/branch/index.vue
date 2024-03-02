@@ -39,13 +39,10 @@
           <Exit />
         </div>
       </div>
-      <div class="mb-3" style="width: 404px;">
+      <div style="width: 404px;">
         <template v-if="!$useEnv('guest')">
           <TaskUserInfo :showPointGood="true"/>
         </template>
-        <div class="xt-bg-2  rounded-xl p-3">
-          <TaskReward :showTaskReward="getZTaskReward" :showTip="true" :isCenter="''"/>
-        </div>
       </div>
       <xt-scrollbar
         v-if="tasks.length <= 1"
@@ -53,6 +50,9 @@
         :x="false"
         :y="true"
       >
+        <div class="xt-bg-2  rounded-xl p-3 mb-4">
+          <TaskReward :showTaskReward="getZTaskReward" :showTip="true" :isCenter="''"/>
+        </div>
         <Task @back="back()" :task="filterTask" :icon="icon" :length="1" />
       </xt-scrollbar>
       <template v-else>

@@ -68,9 +68,6 @@ export const frameStore = defineStore('frameStore',{
 
     async getMyFrames(){
       let res =  await get(getMyFramesUrl)
-
-      console.log('getMyFrames res  :>> ', res);
-
       return res
     },
     /**

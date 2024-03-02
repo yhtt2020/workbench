@@ -25,10 +25,11 @@ export default defineComponent({
       const bounds = await tsbApi.window.getBounds()
       this.originBounds = bounds
       const newBounds={x:0,y:0,width:0,height:0}
-      newBounds.x= +(this.originBounds.x-(1400-this.originBounds.width)/2).toFixed(0)
-      newBounds.y= +(this.originBounds.y-(1000-this.originBounds.height)/2).toFixed(0)
       newBounds.width=1400
-      newBounds.height=1000
+      newBounds.height=800
+      newBounds.x= +(this.originBounds.x-(newBounds.width-this.originBounds.width)/2).toFixed(0)
+      newBounds.y= +(this.originBounds.y-(newBounds.height-this.originBounds.height)/2).toFixed(0)
+
       tsbApi.window.setBounds(newBounds)
     }
   }

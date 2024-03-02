@@ -145,7 +145,7 @@ export default {
       document.getElementById('address').value = args.url
       document.getElementById('addressWrapper').style.display = 'none'
       document.title = args.title
-      document.body.style.backgroundColor = args.app.user_theme_color ? args.app.user_theme_color : args.app.theme_color
+      document.body.style.backgroundColor = (args.app.user_theme_color ? args.app.user_theme_color : args.app.theme_color)|| 'rgb(60,120,216)'
 
       //暂时取消应用市场的窗体返回图标
       if(!args.app.window.frameWindow.controllers.goBack)  document.getElementById('goBack').hidden = true

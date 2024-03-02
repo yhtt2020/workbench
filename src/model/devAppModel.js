@@ -105,7 +105,7 @@ const devAppModel = {
       url: '',
       preload: '',
       logo: '',
-      theme_color: '#f1f1f1',
+      theme_color: '#3c78d8',
       window: {
         defaultType:'frameWindow',
         frameWindow: {

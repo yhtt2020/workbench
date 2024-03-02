@@ -548,7 +548,6 @@ const refreshDeskApp = async () => {
 };
 function handleClick(e) {
   if (e.target?.closest(".tt-folder-container") == null) {
-    console.log("123 :>> ", 123);
   }
 }
 onUnmounted(()=>{
