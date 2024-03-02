@@ -33,15 +33,15 @@
      <div class="flex  flex-col">
       <xt-text class="xt-text font-14 xt-font font-400">社区积分</xt-text>
       <div style="height: 4px;"></div>
-      <span class="xt-text font-18 xt-font " style="font-weight: 900;"> 
-        <a-avatar :size="24" shape="circle" src="/img/task/communityPoints.svg"></a-avatar> 
+      <span class="xt-text font-18 xt-font " style="font-weight: 900;">
+        <a-avatar :size="24" shape="circle" src="/img/task/communityPoints.svg"></a-avatar>
         {{ infoMedal.score  }}
       </span>
 
      </div>
       <div class="flex-1 w-0 ml-2">
         <xt-button :w="110" :h="40" @click="showProp">
-          <img style="width: 20px" src="/img/bottomPanel/prop.png"> 
+          <img style="width: 20px" src="/img/bottomPanel/prop.png">
           我的道具
         </xt-button>
       </div>
@@ -51,7 +51,7 @@
         后续可用于兑换
       </xt-text>
       <xt-button v-if="showPointGood" class="relative" w="120" h="0" @click="goShop">
-        <div v-for="item in goodImage" class="absolute rounded-md flex items-center justify-end good-image" style="width: 24px;height: 24px;border: 2px solid var(--primary-text);">
+        <div v-for="item in goodImage" class="absolute rounded-md flex items-center justify-end good-image" style="width: 24px;height: 24px;box-shadow: 0 0 4px #333 ">
           <img :src="item.image"  class="rounded-md w-full h-full object-cover" alt="">
         </div>
       </xt-button>
