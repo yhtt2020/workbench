@@ -129,29 +129,6 @@
             </div>
           </div>
         </div>
-        <div
-          v-if="false"
-          style="
-            position: fixed;
-            top: 10px;
-            background: black;
-            color: white;
-            z-index: 99999;
-            line-height: 14px;
-            text-align: left;
-            max-width: 100vw;
-            left: 0;
-          "
-        >
-          <div>选中的id{{ this.isLeaveBar }} {{ isEdge }}</div>
-          <div
-            v-for="(item, index) in copyFootNav"
-            style="margin-bottom: 5px; border-bottom: 4px solid white"
-          >
-            {{ index }} {{ item.name }} {{ item.id }}
-            {{ item.children?.length }}
-          </div>
-        </div>
         <!-- 快速搜索 底部栏区域 -->
         <Drop @createFile="createFile" currentId="bottom">
           <transition>
@@ -364,6 +341,14 @@
       v-if="quick"
     >
       <component :is="componentId" @setQuick="setQuick"></component>
+      <!-- <navigationSetting
+        v-if="componentId === 'navigationSetting'"
+        @setQuick="setQuick"
+      ></navigationSetting>
+      <EditNewNavigation
+        v-if="componentId === 'EditNewNavigation'"
+        @setQuick="setQuick"
+      ></EditNewNavigation> -->
     </div>
   </transition>
 
@@ -1173,6 +1158,7 @@ export default {
 
       // console.log('item :>> ', item);
       if (item.component) {
+        console.log('item :>> ', item.component);
         this.componentId = item.component
         if (item.component === 'EditNewNavigation') {
           this.editToggle = true

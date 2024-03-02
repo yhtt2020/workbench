@@ -546,7 +546,7 @@ const refreshDeskApp = async () => {
   }, 1000);
 };
 function handleClick(e) {
-  if (e.target?.closest(".tt-folder-container") == null && navBar.value.close) {
+  if (e.target?.closest(".tt-folder-container") == null) {
     emit('close')
     // console.log("123 :>> ", 123);
   }
