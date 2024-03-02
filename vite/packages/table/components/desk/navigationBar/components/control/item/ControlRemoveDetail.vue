@@ -70,6 +70,7 @@
       <xt-new-icon :icon="controlItem.icon" size="24" :color="controlStatus?.status ? 'var(--active-text)':'var(--primary-text)'"></xt-new-icon>
     </div>
     <span :class="controlStatus?.status ? 'xt-active-text' :'xt-text'">{{controlItem.name}}</span>
+    <div class="absolute red-content rounded-full" v-if="!firstVisible && controlIndex === 'barrage'"></div>
   </div>
  </template>
 </template>
@@ -108,7 +109,7 @@ const props = defineProps({
 const app = appStore();
 const { settings,styles,simple,aided,saving,showWindowController,userInfo } = storeToRefs(app);
 const controls = controlStore();
-const { control } = storeToRefs(controls);
+const { control,firstVisible } = storeToRefs(controls);
 const { proxy } = getCurrentInstance()
 const router = useRouter()
 
@@ -202,8 +203,10 @@ const triggerControl = () =>{
     //游戏模式  后期功能实现后再对接
     case 'game-mode':
       return {status:false};
+    // 弹幕
     case 'barrage':
       settings.value.enableBarrage = !settings.value.enableBarrage;
+      firstVisible.value = true;
       break;
     default:
       break;
@@ -266,5 +269,13 @@ const login = () =>{
 
 .prevent-no-item{
   pointer-events: none !important;
+}
+
+.red-content{
+  width: 12px;
+  height:12px;
+  background: red;
+  top: 1px;
+  right: 1px;
 }
 </style>

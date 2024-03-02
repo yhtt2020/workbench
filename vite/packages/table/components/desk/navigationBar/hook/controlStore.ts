@@ -93,7 +93,7 @@ export const controlStore = defineStore("control", {
       },
       {
         icon:"fluent:code-text-16-regular",
-        id:"",
+        id:"barrage",
         name:"弹幕"
       },
       {
@@ -114,6 +114,8 @@ export const controlStore = defineStore("control", {
       //  name:'游戏模式',
       // },
     ],
+    // 第一次触发
+    firstVisible:false,
   }),
 
   getters: {
@@ -140,7 +142,7 @@ export const controlStore = defineStore("control", {
     enabled: true,
     strategies: [
       {
-        paths: ["control", "initList"],
+        paths: ["control", "initList","firstVisible"],
         // storage: dbStorage,
         storage: localStorage,
       },

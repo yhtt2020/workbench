@@ -52,6 +52,7 @@ onMounted(()=>{
   // 拖拽移动中事件
   testRef.value.muuri.on('dragMove',(item,event) =>{
     isClick.value = false;
+    console.log('item',item);
   });
 
   // 拖拽结束后释放拖拽事件
