@@ -10,7 +10,7 @@
               <a-col :span="20" style="padding-left: 20px">
                 <div style="font-size: 16px;font-weight: bold">{{ userInfo.nickname }}</div>
                 <div class="live-grade" style="cursor:pointer;">
-                  <div class="ts-grade flex justify-start align-center grade-icon" style="margin-top: 4px" v-if="grade?.lv > 0" @click="openTip">
+                  <div class="flex justify-start ts-grade align-center grade-icon" style="margin-top: 4px" v-if="grade?.lv > 0" @click="openTip">
                     <div class="ts-grade-crown" v-for="item in userInfo.onlineGradeIcons.crown">
                       <img :src="item.icon" alt="" style="width: 20px; height: 20px">
                     </div>
@@ -24,7 +24,7 @@
                       <img :src="item.icon" alt="" style="width: 20px; height: 20px">
                     </div>
                   </div>
-                  <div v-else class="ts-grade flex justify-start align-center" style="margin-top: 4px; color: #B6B6B6">
+                  <div v-else class="flex justify-start ts-grade align-center" style="margin-top: 4px; color: #B6B6B6">
                     剩余{{ remainHour }}小时{{ remainMinute }}分达到1级
                   </div>
                 </div>
@@ -49,13 +49,13 @@
         <a-row>
           <div class="arrow-box" style="width:100%;line-height: 2">
 
-            <div class="text-grey mt-2" style="line-height: 2">升级剩余时长: {{ remainHour }}小时{{ remainMinute }}分</div>
-            <div class="tip text-grey mt-2">距离上一名 ： {{ distance }} <span class="text-button" :disabled="this.times===0"
+            <div class="mt-2 text-grey" style="line-height: 2">升级剩余时长: {{ remainHour }}小时{{ remainMinute }}分</div>
+            <div class="mt-2 tip text-grey">距离上一名 ： {{ distance }} <span class="text-button" :disabled="this.times===0"
                                                                          @click="use" type="primary"
                                                                          style="margin-left:20px;margin-top: 10px">查看（{{
                 times
               }}次）</span></div>
-            <div class="text-grey mt-2" style="line-height: 2">累计在线时长:
+            <div class="mt-2 text-grey" style="line-height: 2">累计在线时长:
               {{ grade?.cumulativeHours }}小时{{ grade?.cumulativeMinutes }}分
             </div>
             <!-- 快速搜索 等级权益 排名 -->

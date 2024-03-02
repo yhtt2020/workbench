@@ -374,9 +374,6 @@ export default {
       return lvSys
     },
     login () {
-      // this.loginVisible = true
-
-      console.log('123321 useLogin :>> ', 123321);
       useLogin(()=>{
         this.loginOk()
       })

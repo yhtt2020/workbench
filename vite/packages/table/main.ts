@@ -9,7 +9,7 @@ window.$isGuest = isGuest;
 window.$useEnv = useEnv;
 window.$useEnvLimit = useEnvLimit;
 window.$useComLimit = useComLimit;
-
+//import {initDb} from './js/api/db'
 import { createApp } from "vue";
 import Antd from "ant-design-vue";
 // import 'ant-design-vue/dist/antd.less';
@@ -79,7 +79,7 @@ import routerTab from "./js/common/routerTab";
 //腾讯IM部分
 import { loadChat, TUIKit } from "./chat";
 loadChat();
-
+//initDb()
 //socket部分
 import { initSocket } from "./js/socket/socket";
 initSocket();
@@ -89,6 +89,7 @@ import { Notifications } from "./js/common/sessionNotice";
 
 import WujieVue from "wujie-vue3";
 import mitt from "mitt";
+import hevueImgPreview from 'hevue-img-preview'
 const { bus, setupApp, preloadApp, destroyApp } = WujieVue;
 
 // Your SDKAppID
@@ -104,6 +105,7 @@ dayjs.locale("zh-cn");
 const app = createApp(App);
 
 app.use(WujieVue)
+app.use(hevueImgPreview)
 // 使用 provide 将全局变量作为响应式对象
 app.provide("currentEnv", currentEnv);
 app.provide("isWeb", isWeb);

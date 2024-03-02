@@ -13,7 +13,7 @@ export const leveList = [0,1,2,3,5,10]
 export const powerList = [
   // 壁纸
   {
-    icon:'image',
+    icon:'fluent:lock-closed-16-regular',
     name:'lockWallpaper',
     alias:'锁屏壁纸',
     detail:{
@@ -26,11 +26,11 @@ export const powerList = [
   },
   // 弹幕
   {
-    icon:'smile',
+    icon:'fluent:code-text-16-regular',
     name:'barrage',
     alias:'弹幕',
     detail: {
-      0:'',
+      0:'仅看弹幕',
       1:'发弹幕',
       2:'发弹幕',
       3:'发弹幕',
@@ -40,7 +40,7 @@ export const powerList = [
   },
   // 快捷指令
   {
-    icon:'thunderbolt',
+    icon:'fluent:flash-16-regular',
     name:'quickInstructions',
     alias:'快捷指令',
     detail: {
@@ -56,7 +56,7 @@ export const powerList = [
   },
   // 小队
   {
-    icon:'team',
+    icon:'fluent:emoji-smile-slight-24-regular',
     name:'team',
     alias:'小队',
     detail: {
@@ -70,7 +70,7 @@ export const powerList = [
   },
   // 数据监控
   {
-    icon:'linechart',
+    icon:'fluent:arrow-trending-lines-20-filled',
     name:'dataMonitoring',
     alias:'数据监控助手',
     detail: {
@@ -85,7 +85,7 @@ export const powerList = [
   },
   // 社群
   {
-    icon:'chat',
+    icon:'fluent:people-16-regular',
     name:"createChat",
     alias:'创建社群',
     detail:{
@@ -100,72 +100,72 @@ export const powerList = [
 
 
   // 工作台已经弃用
-  {
-    icon:'appstore',
-    name:'bottomNavigation',
-    alias:'自定义底部导航',
-    detail:{
-      0:'可编辑',
-      1:'可编辑',
-      2:'可编辑',
-      3:'可编辑',
-      5:'可编辑',
-      10:'可编辑'
-    }
- },
+//   {
+//     icon:'appstore',
+//     name:'bottomNavigation',
+//     alias:'自定义底部导航',
+//     detail:{
+//       0:'可编辑',
+//       1:'可编辑',
+//       2:'可编辑',
+//       3:'可编辑',
+//       5:'可编辑',
+//       10:'可编辑'
+//     }
+//  },
 
- {
-  icon:'pause',
-  name:'sideNavigation',
-  alias:'自定义侧边导航',
-  detail:{
-     3:' ',
-     5:' ',
-     10:' '
-   }
-  },
+//  {
+//   icon:'pause',
+//   name:'sideNavigation',
+//   alias:'自定义侧边导航',
+//   detail:{
+//      3:' ',
+//      5:' ',
+//      10:' '
+//    }
+//   },
 
-  {
-    icon:'desktop',
-    name:'mainWallpaper',
-    alias:'主页面壁纸',
-    detail:{
-      0:'限时体验',
-      1:'限时体验',
-      2:'限时体验',
-      3:'限时体验',
-      5:'限时体验',
-      10:'限时体验'
-    }
-  },
+  // {
+  //   icon:'desktop',
+  //   name:'mainWallpaper',
+  //   alias:'主页面壁纸',
+  //   detail:{
+  //     0:'限时体验',
+  //     1:'限时体验',
+  //     2:'限时体验',
+  //     3:'限时体验',
+  //     5:'限时体验',
+  //     10:'限时体验'
+  //   }
+  // },
 
-  {
-    icon:'chengyuan',
-    name:'group',
-    alias:'团队',
-    detail: {
-      0:'仅加入',
-      1:'创建团队',
-      2:'创建团队',
-      3:'创建团队',
-      5:'创建团队',
-      10:'创建团队'
-    }
-  },
+  // {
+  //   icon:'chengyuan',
+  //   name:'group',
+  //   alias:'团队',
+  //   detail: {
+  //     0:'仅加入',
+  //     1:'创建团队',
+  //     2:'创建团队',
+  //     3:'创建团队',
+  //     5:'创建团队',
+  //     10:'创建团队'
+  //   }
+  // },
 
-  {
-    icon:'comment',
-    name:'closeChat',
-    alias:'轻聊',
-    detail:{
-      0:'创建群聊',    
-      1:'创建群聊',    
-      2:'创建群聊',    
-      3:'创建群聊',
-      5:' ',
-      10:' '
-    }
-  },
+  // {
+  //   icon:'comment',
+  //   name:'closeChat',
+  //   alias:'轻聊',
+  //   detail:{
+  //     0:'创建群聊',    
+  //     1:'创建群聊',    
+  //     2:'创建群聊',    
+  //     3:'创建群聊',
+  //     5:' ',
+  //     10:' '
+  //   }
+  // },
 ]
 
 

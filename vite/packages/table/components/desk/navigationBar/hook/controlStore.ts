@@ -40,6 +40,11 @@ export const controlStore = defineStore("control", {
           name: "辅助模式",
         },
         {
+          icon:"fluent:code-text-16-regular",
+          id:"barrage",
+          name:"弹幕"
+        },
+        {
           id: "user-info",
         },
         {
@@ -87,6 +92,11 @@ export const controlStore = defineStore("control", {
         name: "勿扰模式",
       },
       {
+        icon:"fluent:code-text-16-regular",
+        id:"",
+        name:"弹幕"
+      },
+      {
         icon: "fluent:accessibility-16-regular",
         id: "assist-mode",
         name: "辅助模式",
@@ -131,7 +141,8 @@ export const controlStore = defineStore("control", {
     strategies: [
       {
         paths: ["control", "initList"],
-        storage: dbStorage,
+        // storage: dbStorage,
+        storage: localStorage,
       },
     ],
   },
