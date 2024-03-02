@@ -236,7 +236,6 @@ function devicePermissionHandler (details) {
 session.defaultSession.setPermissionRequestHandler(pagePermissionRequestHandler)
 session.defaultSession.setPermissionCheckHandler(pagePermissionCheckHandler)
 session.defaultSession.setDevicePermissionHandler(devicePermissionHandler)
-session.get
 app.on('session-created', function (session) {
   session.setPermissionRequestHandler(pagePermissionRequestHandler)
   session.setPermissionCheckHandler(pagePermissionCheckHandler)

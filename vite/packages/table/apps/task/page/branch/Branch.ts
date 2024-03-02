@@ -15,6 +15,7 @@ export const tasks = {
               value: "gameSetting",
             },
           ],
+          index:0,
         },
         {
           pre: "",
@@ -27,6 +28,7 @@ export const tasks = {
               value: "myGame",
             },
           ],
+          index:1,
         },
         // {
         //   id: "Z0103",
@@ -50,6 +52,7 @@ export const tasks = {
               value: "GameCapture",
             },
           ],
+          index:2,
         },
         {
           pre: "",
@@ -62,6 +65,7 @@ export const tasks = {
               value: "GameCapture"
             },
           ],
+          index:3,
         },
         {
           pre: "",
@@ -78,6 +82,7 @@ export const tasks = {
               value: "Z0106",
             },
           ],
+          index:4,
         },
       ],
     },
@@ -99,6 +104,7 @@ export const tasks = {
              value: "customDesk",
             },
           ],
+          index:0,
         },
         {
           pre: "",
@@ -111,6 +117,7 @@ export const tasks = {
               value: "deck",
             },
           ],
+          index:0,
         },
         {
           pre: "",
@@ -123,6 +130,7 @@ export const tasks = {
               value: "schemeIndex",
             },
           ],
+          index:1,
         },
         {
           pre: "",
@@ -135,6 +143,7 @@ export const tasks = {
               value: "todo",
             },
           ],
+          index:2,
         },
         {
           pre: "",
@@ -147,6 +156,7 @@ export const tasks = {
               value: "note",
             },
           ],
+          index:3,
         },
         {
           pre: "",
@@ -159,6 +169,7 @@ export const tasks = {
               value: "clipboard",
             },
           ],
+          index:4,
         },
         {
           pre: "",
@@ -171,6 +182,7 @@ export const tasks = {
               value: "ai",
             },
           ],
+          index:5,
         },
         {
           pre: "",
@@ -183,6 +195,7 @@ export const tasks = {
               value: "home",
             },
           ],
+          index:6,
         },
         {
           pre: "",
@@ -195,6 +208,7 @@ export const tasks = {
               value: "home",
             },
           ],
+          index:7,
         },
       ],
     },
@@ -219,6 +233,7 @@ export const tasks = {
               value: "Z0401",
             },
           ],
+          index:0,
         },
         {
           pre: "",
@@ -235,6 +250,7 @@ export const tasks = {
               value: "Z0402",
             },
           ],
+          index:1,
         },
       ],
     },
@@ -253,6 +269,7 @@ export const tasks = {
               value: "barrage",
             },
           ],
+          index:0,
         },
         {
           pre: "",
@@ -269,6 +286,7 @@ export const tasks = {
               value: "Z0502",
             },
           ],
+          index:1,
         },
       ],
     },
@@ -288,6 +306,7 @@ export const tasks = {
               value: "chat",
             },
           ],
+          index:0,
         },
         {
           pre: "",
@@ -300,6 +319,7 @@ export const tasks = {
               value: "chat",
             },
           ],
+          index:1,
         },
         // {
         //   pre: "",
@@ -318,6 +338,7 @@ export const tasks = {
               value: "chat",
             },
           ],
+          index:2,
         },
       ],
     },

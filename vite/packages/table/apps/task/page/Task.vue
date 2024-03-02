@@ -81,7 +81,7 @@ const menusList = computed(() => {
         return menus.value;
       }
       else{
-        const mapMenus = menus.value.map((item)=>{ 
+        const mapMenus = menus.value.map((item)=>{
           if(item.value === 'Shop'){
             return {
               ...item,
@@ -207,19 +207,19 @@ onMounted(() => {
   height: 60px !important;
 }
 
-@media screen and(max-height:500px){
+@media screen and (max-height:500px){
   .task-modal{
     height: 460px !important;
   }
 }
 
-@media screen and(min-height:501px) and(max-height:700px){
+@media screen and (min-height:501px) and (max-height:700px){
   .task-modal{
     height:  620px !important;
   }
 }
 
-@media screen and(min-height:701px) {
+@media screen and (min-height:701px) {
   .task-modal{
     height:  720px !important;
   }

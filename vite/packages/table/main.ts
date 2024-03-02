@@ -9,7 +9,7 @@ window.$isGuest = isGuest;
 window.$useEnv = useEnv;
 window.$useEnvLimit = useEnvLimit;
 window.$useComLimit = useComLimit;
-
+//import {initDb} from './js/api/db'
 import { createApp } from "vue";
 import Antd from "ant-design-vue";
 // import 'ant-design-vue/dist/antd.less';
@@ -79,7 +79,7 @@ import routerTab from "./js/common/routerTab";
 //腾讯IM部分
 import { loadChat, TUIKit } from "./chat";
 loadChat();
-
+//initDb()
 //socket部分
 import { initSocket } from "./js/socket/socket";
 initSocket();

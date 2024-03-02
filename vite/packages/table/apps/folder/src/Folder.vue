@@ -95,6 +95,7 @@ import {
   provide,
   onMounted,
   onBeforeUnmount,
+  onUnmounted,
   onBeforeMount,
   getCurrentInstance,
 } from "vue";
@@ -551,6 +552,9 @@ function handleClick(e) {
     // console.log("123 :>> ", 123);
   }
 }
+onUnmounted(()=>{
+  window.removeEventListener("click", handleClick);
+})
 onMounted(async () => {
   if(navBar.value.close){
     window.addEventListener("click", handleClick);
@@ -569,9 +573,6 @@ onMounted(async () => {
   // 冒泡排序
 });
 
-onBeforeMount(() => {
-  window.removeEventListener("click", handleClick);
-});
 </script>
 
 <style lang="scss" scoped>

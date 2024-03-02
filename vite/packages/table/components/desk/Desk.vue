@@ -169,17 +169,6 @@
       </vue-custom-scrollbar>
     </Drop>
   </div>
-  <!-- 系统设置 -->
-  <xt-modal
-    v-model="setVisible"
-    v-if="setVisible"
-    :footer="false"
-    boxClass=""
-    :mask="0"
-    :header="false"
-  >
-    <SystemSet @close="setVisible = false" />
-  </xt-modal>
   <!-- 桌面设置 -->
   <xt-modal
     v-if="settingVisible"
@@ -443,7 +432,6 @@ export default {
       handler(newVal) {
         this.$bus.off("startAdjust");
         this.$bus.off("lockScreen");
-        this.$bus.off("openSystemSet");
 
         let obj = {
           id: 20,
@@ -615,13 +603,7 @@ export default {
         this.$bus.emit("lockScreenSet");
         }, 100);
     });
-    this.$bus.on("openSystemSet", () => {
 
-      console.log('openSystemSet :>> ', );
-
-
-     this.showSystemSet();
-    });
 
 
     if (window.showed) {
@@ -648,7 +630,7 @@ export default {
     ...mapActions(taskStore, ["initTask"]),
     // 打开系统设置
     showSystemSet() {
-      this.setVisible = true;
+     this.$bus.emit("openSystemSet");
     },
     addFolder() {
       if (!this.showGuide) {
@@ -897,7 +879,6 @@ export default {
     },
   },
   beforeDestroy() {
-    console.log("123 :>> ", 123);
   },
 };
 </script>

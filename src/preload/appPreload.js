@@ -48,7 +48,12 @@ ipc.invoke('appPreloadReady', tools.execDomain(location.href)).then(args => {
   let assignSdkObject =  Object.assign(sdkObject, args.saApp)
 
   tsbSdk.listener(assignSdkObject) //浏览器侧sdk挂载
-  contextBridge.exposeInMainWorld('$browser', 'tsbrowser') //此处挂载上browserTag //todo 此处要考虑如何兼容不需要本地sdk的系统应用
+  try{
+    contextBridge.exposeInMainWorld('$browser', 'tsbrowser') //此处挂载上browserTag //todo 此处要考虑如何兼容不需要本地sdk的系统应用
+
+  }catch (e) {
+    console.log('已经开了nodej集成')
+  }
 
   window.addEventListener('message', function(e) {
     let eventName = e.data.eventName

@@ -244,7 +244,6 @@ watch(
 );
 onMounted(async () => {
   if (proxy.$useEnv()) return;
-  console.log("123 :>> ", 123);
   // 获取窗口缩放
   windowZoom.value = (await tsbApi.window.getZoomFactor()) * 100 || 100;
   oldWindowZoom.value = windowZoom.value;

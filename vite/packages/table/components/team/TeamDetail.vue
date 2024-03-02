@@ -30,26 +30,24 @@
 
   </div>
 
-  <div style="position: absolute;bottom: 0;margin-left:34px;color: var(--primary-text);">
-    <a-row class="m-5" :gutter="16">
-      <a-col>
-        <div v-if="teamLeader.userInfo.uid!==userInfo.uid" @click="quit"
-             class="rounded-lg bg-mask px-6 py-3 pointer xt-bg-2">
-          <icon icon="guanbi2" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
-          退出小队
-        </div>
-        <div v-else @click="dismiss" class="rounded-lg bg-mask px-6 py-3 pointer xt-bg-2" style="">
-          <icon icon="guanbi2" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
-          解散小队
-        </div>
-      </a-col>
-      <a-col>
-        <div class="rounded-lg bg-mask px-6 py-3 pointer xt-bg-2" @click="goHall" style="">
-          <icon icon="team" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
-          小队大厅
-        </div>
-      </a-col>
-    </a-row>
+  <div style="position: absolute;bottom: 14px;left:14px;right:14px;color: var(--primary-text);">
+    <div    class="flex justify-between">
+      <div>
+         <xt-button type="error" v-if="teamLeader.userInfo.uid!==userInfo.uid"  @click="quit">
+           <icon icon="guanbi2" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
+           退出小队
+         </xt-button>
+         <xt-button type="error"  v-else  @click="dismiss"> <icon icon="guanbi2" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
+           解散小队</xt-button>
+      </div>
+      <div >
+         <xt-button type="theme" @click="goHall">
+           <icon icon="team" style="font-size: 1.3em;vertical-align: text-bottom"></icon>
+           小队大厅
+         </xt-button>
+
+      </div>
+    </div>
   </div>
 </template>
 
@@ -104,20 +102,17 @@ export default {
       this.$emit('onReceiveTeamEarnings')
     },
     quit () {
-      Modal.confirm({
-        content: '退出小队后，您将无法再为小队做出贡献，但是历史贡献记录将被保留，以便您回到队伍后继承。',
-        centered: true,
+      window.$ui.confirm('退出小队','退出小队后，您将无法再为小队做出贡献，但是历史贡献记录将被保留，以便您回到队伍后继承。',
+        {
         okText: '退出',
-        onOk: async () => {
+        ok: async () => {
           let rs = await this.quitByNo(this.team.no)
             if (rs?.status) {
               this.updateMy().then()
               await this.closeTeam()
-              Modal.info({ content: '退出小队成功', centered: true })
+              message.info('退出小队成功')
             } else {
-              await this.closeTeam()
-              this.updateMy().then()
-              Modal.error({ content: '退出小队失败', centered: true })
+              message.error('退出小队失败')
             }
         }
       })

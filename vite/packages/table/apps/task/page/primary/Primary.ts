@@ -25,6 +25,7 @@ export const tasks = [
             value: "home",
           },
         ],
+        index:0,
       },
       {
         id: "M0102",
@@ -42,6 +43,7 @@ export const tasks = [
             value: "home",
           },
         ],
+        index:1,
       },
       {
         id: "M0103",
@@ -59,6 +61,7 @@ export const tasks = [
             value: "home",
           },
         ],
+        index:2,
       },
       {
         id: "M0104",
@@ -76,6 +79,7 @@ export const tasks = [
             value: "home",
           },
         ],
+        index:3,
       },
       {
         id: "M0105",
@@ -92,6 +96,7 @@ export const tasks = [
             value: "home",
           },
         ],
+        index:4,
         showOne:{
           name:'推荐进行下一章节任务~'
         },
@@ -118,6 +123,7 @@ export const tasks = [
             value: "home",
           },
         ],
+        index:0,
       },
       {
         id: "M0202",
@@ -128,7 +134,7 @@ export const tasks = [
         frequency: 1,
         intro: "你可以自由修改工作台的主题颜色和文字颜色，来搭配你的桌面壁纸。",
         description:"在工作台设置（你可以从导航栏图标或导航栏右键菜单中找到设置入口）中，选择「主题」，即可在出现的弹窗中选择你喜欢的主题配色。",
-
+        index:1,
         open: [
           {
             type: "router",
@@ -151,6 +157,7 @@ export const tasks = [
             value: "home",
           },
         ],
+        index:2,
       },
       {
         id: "M0204",
@@ -167,6 +174,7 @@ export const tasks = [
             value: "home",
           },
         ],
+        index:3,
       },
     ],
   },
@@ -183,7 +191,7 @@ export const tasks = [
         frequency: 1,
         intro: "设置一个你喜欢的头像和昵称，同步展示到工作台和元社区。",
         description:"在底部导航或工作台设置中心，点击头像即可进入用户中心选择修改资料。",
-
+        index:0,
         open: [
           {
             type: "router",
@@ -218,7 +226,8 @@ export const tasks = [
         ],
         showPrimary:{
           name:'支线任务已解锁~'
-        }
+        },
+        index:1,
       },
     ],
   },

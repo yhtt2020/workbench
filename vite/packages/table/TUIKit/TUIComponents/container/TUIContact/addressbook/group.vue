@@ -118,31 +118,31 @@ export default defineComponent({
   }
 }
 
-@media screen and(max-height:600px) {
+@media screen and (max-height:600px) {
   :deep(.ps-container){
     height:85% !important;
   }
 }
 
-@media screen and(min-height:601px) and (max-height:700px) {
+@media screen and (min-height:601px) and (max-height:700px) {
   :deep(.ps-container){
     height:90% !important;
   }
 }
 
-@media screen and(min-height:701px) and (max-height:800px) {
+@media screen and (min-height:701px) and (max-height:800px) {
   :deep(.ps-container){
     height:90% !important;
   }
 }
 
-@media screen and(min-height:801px) and (max-height:900px) {
+@media screen and (min-height:801px) and (max-height:900px) {
   :deep(.ps-container){
     height:90% !important;
   }
 }
 
-@media screen and(min-height:901px) {
+@media screen and (min-height:901px) {
   :deep(.ps-container){
     height:92% !important;
   }

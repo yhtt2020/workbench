@@ -240,10 +240,10 @@ export default {
       formState: {
         name: '',
         summary: '',
-        theme_color: '',
+        theme_color: '#3c78d8',
         optimize: '',
         user_theme_colors: {
-          hex:'#ffffff'
+          hex:'#3c78d8'
         }
       },
     }

@@ -151,15 +151,15 @@ export default {
       this.setCommunityChannel(item.id)
       // 链接
       if(item.type === 'link' && item.name !== 'Roadmap'){
-        const data = item.props
-        // 暂时实现通过想天浏览器打开和电脑系统默认的浏览器打开,当前页面助手无法实现
-        switch (data.openMethod){
-          case 'userSelect':
-           browser.openInUserSelect(data.url)
-           break;
-          case 'systemSelect':
-           browser.openInSystem(data.url)
-           break;
+        const method = item.props.openMethod;
+        const url = item.props.url;
+        // 想天浏览器打开
+        if(method === 'userSelect'){
+          browser.openInInner(url);
+        }
+        // 系统浏览器打开
+        else if(method === 'systemSelect' ){
+          browser.openInSystem(url)
         }
       }
       // 群聊
