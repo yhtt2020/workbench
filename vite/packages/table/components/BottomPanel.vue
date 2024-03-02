@@ -1225,7 +1225,8 @@ export default {
      * @param {*} item 图标详细信息
      */
     async newOpenApp(type, value, item) {
-      if (item.name === '设置中心') {
+      // 新版设置打开方式
+      if (value === 'setting') {
         this.$router.push({
           name:'home'
         })

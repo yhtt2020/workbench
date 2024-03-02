@@ -546,12 +546,15 @@ const refreshDeskApp = async () => {
   }, 1000);
 };
 function handleClick(e) {
-  if (e.target?.closest(".tt-folder-container") == null) {
-    console.log("123 :>> ", 123);
+  if (e.target?.closest(".tt-folder-container") == null && navBar.value.close) {
+    emit('close')
+    // console.log("123 :>> ", 123);
   }
 }
 onMounted(async () => {
-  window.addEventListener("click", handleClick);
+  if(navBar.value.close){
+    window.addEventListener("click", handleClick);
+  }
 
   customData.value.list = customData.value.list.map((item) => mergeData(item));
   // 空图标替换
