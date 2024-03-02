@@ -1,8 +1,12 @@
 <template>
   <!-- Your Drag-and-Drop Application -->
-  <!-- 任务弹窗 -->
   <!-- <xt-task-reward/> -->
-  <ClaimReward v-if="rewardVisible"/>
+
+    <!-- 领取任务奖励弹窗 -->
+  <!-- <ClaimReward v-if="rewardVisible"/> -->
+
+<Global/>
+
   <div style="z-index:9999" v-if="settings.down.enable" v-for="item of settings.down.count" :key="item"
        :class="settings.down.type + 'flake'"></div>
   <a-config-provider :locale="locale">
@@ -123,8 +127,9 @@ import { DndProvider } from 'vue3-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { message, notification } from 'ant-design-vue'
 import ModalNotice from './page/notice/ModalNotice.vue'
-import ClaimReward from './apps/task/components/ClaimReward.vue'
-import { taskStore } from './apps/task/store'
+// import ClaimReward from './apps/task/components/ClaimReward.vue'
+import Global from './apps/Global/Global.vue'
+// import { taskStore } from './apps/task/store'
 import { useEnv } from "./ui/hooks/useEnv";
 notification.config({
   top: '70px',//设置notification默认距离顶部位置
@@ -144,7 +149,7 @@ let startX,
 const distX = 80 //滑动感知最小距离
 const distY = 80 //滑动感知最小距离
 export default {
-  components: { ModalNotice, FrameStoreWidget, Modal, UserCard, Barrage, DndProvider, ClaimReward },
+  components: { Global,ModalNotice, FrameStoreWidget, Modal, UserCard, Barrage, DndProvider,  },
   data () {
     return {
       HTML5Backend,
@@ -237,7 +242,6 @@ if (!window.$useEnv()) {
     ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo', 'runningTableApps']),
     ...mapWritableState(screenStore, ['taggingScreen', 'screenDetail']),
     ...mapWritableState(steamUserStore, ['steamLoginData']),
-    ...mapWritableState(taskStore, ['rewardVisible']),
   },
   methods: {
     ...mapActions(appStore, ['setMusic', 'reset', 'toggleFullScreen', 'exitFullScreen', 'ensureFullScreen']),

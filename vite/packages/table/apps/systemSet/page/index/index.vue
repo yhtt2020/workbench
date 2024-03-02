@@ -1,49 +1,55 @@
 <template>
-  <div class="flex overflow-hidden rounded-xl" style="height: 70vh">
-    <!-- 左侧导航栏 -->
-    <div class="flex flex-col p-3 xt-main-bg" style="width: 200px">
-      <div
-        v-for="(item, index) in setList"
-        class="flex items-center mb-3 cursor-pointer"
-        style="height: 44px; border-radius: 10px"
-        @click="selectSet(index)"
-        :class="{ 'xt-theme-bg-2': activeIndex === index }"
-      >
-        <xt-ify-icon :icon="item.icon" class="mx-3" />
-        {{ item.name }}
-      </div>
-    </div>
-    <!-- 右侧功能区 -->
-    <div class="p-3 xt-modal h-full flex flex-col" style="width: 520px">
-      <!-- 头部 -->
-      <div class="flex justify-between items-center mb-3">
-        <div class="flex items-center">
-          <xt-ify-icon :icon="setList[activeIndex].icon" class="mr-3" />
-          {{ setList[activeIndex].name }}
+  <xt-modal
+    v-model="systemVisible"
+    :footer="false"
+    boxClass=""
+    :mask="0"
+    :header="false"
+  >
+    <div class="flex overflow-hidden rounded-xl" style="height: 70vh">
+      <!-- 左侧导航栏 -->
+      <div class="flex flex-col p-3 xt-main-bg" style="width: 200px">
+        <div
+          v-for="(item, index) in setList"
+          class="flex items-center mb-3 cursor-pointer"
+          style="height: 44px; border-radius: 10px"
+          @click="selectSet(index)"
+          :class="{ 'xt-theme-bg-2': activeIndex === index }"
+        >
+          <xt-ify-icon :icon="item.icon" class="mx-3" />
+          {{ item.name }}
         </div>
-        <xt-button
-          @click="closeSet"
-          icon="fluent:dismiss-16-regular"
-          w="32"
-          h="32"
-          radius="8"
-          iconSize="16"
-        ></xt-button>
       </div>
-
-      <!-- <xt-scrollbar> -->
-      <!-- <div class=" overflow-hidden overflow-y-auto xt-scrollbar"> -->
-
-      <xt-scrollbar class="flex-1 w-full overflow-hidden" :x="false" :y="true">
-        <component
-          :is="components[setList[activeIndex].component]"
-          @switchNav="switchNav"
-        />
-      </xt-scrollbar>
-      <!-- </div> -->
-      <!-- </xt-scrollbar> -->
+      <!-- 右侧功能区 -->
+      <div class="p-3 xt-modal h-full flex flex-col" style="width: 520px">
+        <!-- 头部 -->
+        <div class="flex justify-between items-center mb-3">
+          <div class="flex items-center">
+            <xt-ify-icon :icon="setList[activeIndex].icon" class="mr-3" />
+            {{ setList[activeIndex].name }}
+          </div>
+          <xt-button
+            @click="closeSet"
+            icon="fluent:dismiss-16-regular"
+            w="32"
+            h="32"
+            radius="8"
+            iconSize="16"
+          ></xt-button>
+        </div>
+        <xt-scrollbar
+          class="flex-1 w-full overflow-hidden"
+          :x="false"
+          :y="true"
+        >
+          <component
+            :is="components[setList[activeIndex].component]"
+            @switchNav="switchNav"
+          />
+        </xt-scrollbar>
+      </div>
     </div>
-  </div>
+  </xt-modal>
 </template>
 
 <script setup lang="ts">
@@ -55,7 +61,10 @@ import device from "../device/Device.vue";
 import key from "../key/Key.vue";
 import Screen from "../Screen/Screen.vue";
 import barrage from "../barrage/Barrage.vue";
-
+import { useGlobalStore } from "../../../Global/store";
+import { storeToRefs } from "pinia";
+const globalStore = useGlobalStore();
+const { systemVisible } = storeToRefs(globalStore);
 const components = shallowReactive({
   Common,
   Theme,
@@ -101,7 +110,8 @@ const emits = defineEmits(["close"]);
 
 // 关闭设置
 const closeSet = () => {
-  emits("close", false);
+  // emits("close", false);
+  systemVisible.value = false;
   console.log("关闭设置");
 };
 // 选择设置
@@ -111,7 +121,7 @@ const selectSet = (index: number) => {
 };
 
 const switchNav = (nav: string) => {
-  let res = setList.value.findIndex((item) => item.component === nav)
+  let res = setList.value.findIndex((item) => item.component === nav);
   selectSet(res);
 };
 </script>
