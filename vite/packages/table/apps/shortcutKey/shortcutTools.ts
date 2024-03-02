@@ -12,15 +12,17 @@ if (!useEnv()) {
 
 function doKey(item) {
   if (!appStore().aided) {
-    Modal.confirm({
-      content: '必须开启辅助模式才可以触发快捷键，是否为您打开辅助模式？',
-      onOk: () => {
+    window.$ui.confirm(
+      '辅助模式开启确认',
+      '必须开启辅助模式才可以触发快捷键，是否为您打开辅助模式？',
+      {
+      ok: () => {
         appStore().enterAided()
         notification.info({
-          message: '已为您打开辅助模式，请再次点击快捷键。'
+          message: '已为您开启辅助模式，请再次点击快捷键。'
         })
       },
-      okText: '打开辅助模式',
+      okText: '开启',
       centered: true,
     })
     return
