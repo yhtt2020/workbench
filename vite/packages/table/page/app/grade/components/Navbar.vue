@@ -1,6 +1,6 @@
 <template>
   <div class="pt-6 text-center font-16 xt-text">添加导航图标</div>
-  <div class="text-center font-16 xt-text-2" style="width:704px;margin:16px auto 0;">根据你选择偏好，我们为你推荐了以下图标。你可以稍后添加更多其他的图标。
+  <div class="text-center font-16 xt-text-2" style="width:704px;margin:16px auto 0;">根据您的偏好，为你推荐以下图标。你稍后可添加更多图标。
   </div>
   <div class="flex flex-wrap content-start mt-4 overflow-hidden overflow-y-auto xt-scrollbar"
     style="height: 400px;padding-left:19px;">
@@ -18,7 +18,7 @@
     </div>
   </div>
 </template>
-  
+
 <script>
 import { Icon } from '@iconify/vue';
 
@@ -46,7 +46,7 @@ export default {
   }
 }
 </script>
-  
+
 <style scoped lang="scss">
 .nav-list {
   width: 160px;
@@ -68,4 +68,3 @@ export default {
   background-color: rgba(0, 0, 0, 0.5);
 }
 </style>
-  
