@@ -29,7 +29,6 @@
 
   <teleport to='body'>
     <NoticeEditorModal ref="editorRef"/>
-    <xt-confirm v-if="loginVisible" noText="暂不登录" okText="立即登录" okButtonWidth="95" noButtonWidth="95" title="登录提示" content="目前处于游客模式，请登录后体验完整功能。" :no="no" :ok="login"></xt-confirm>
   </teleport>
 </template>
 
@@ -43,13 +42,13 @@ import { Icon as NoticeIcon } from '@iconify/vue'
 import NoticeDetail from "./noticeDetail.vue";
 import NoticeSetting from "./noticeSetting.vue";
 import NoticeEditorModal from "./components/NoticeEditorModal.vue";
-import {useLogin} from '../../permission/user/useLogin'
 
 import { message } from 'ant-design-vue'
 
 const app = appStore()
 const notice = noticeStore()
-const { settings } = storeToRefs(app)
+const { settings } = storeToRefs(app) 
+const { loginVisible } = storeToRefs(app) 
 const { detailList } = storeToRefs(notice)
 
 const emits = defineEmits(["closeMessage"])
@@ -62,8 +61,6 @@ const top = ref({
 })
 
 const editorRef = ref(null);
-const loginVisible = ref(false);
-
 const selectTab = (item) =>{
   // console.log('查看数据',item);
   top.value = item
@@ -87,14 +84,6 @@ const clearAll = () =>{
 const close = () =>{
   emits('closeMessage')
 }
-const login = () =>{
-  loginVisible.value = false
-  useLogin()
-}
-const no = () =>{
-  loginVisible.value = false
-}
-
 
 
 
@@ -142,9 +131,6 @@ const leftList = ref([
       // 游客模式下不能打开编辑窗
       if(window.$useEnv('guest')){
         loginVisible.value = true
-      }else{
-        close()
-        editorRef.value.openEditorModal();
       }
     }
   },
