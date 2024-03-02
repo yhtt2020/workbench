@@ -28,9 +28,9 @@
           style="position: absolute;z-index:99999999999;top:50%;transform: translateY(-50%) translateX(-100%);writing-mode: vertical-rl;"
           class="px-3 py-10 rounded-lg s-bg xt-text">松开鼠标合并</div>
       </transition>
-      <div 
-        @click.stop 
-        :id="currentId" 
+      <div
+        @click.stop
+        :id="currentId"
         style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
         class="flex flex-row justify-center box common-panel s-bg w-[80px]  xt-bg pt-0 pb-0 relative max-h-full side-bar"
         ref="sideContent" @contextmenu="showMenu"
@@ -43,21 +43,21 @@
               display: flex;
               flex-direction: column;
               overflow: hidden;
-              align-items: flex-start; 
+              align-items: flex-start;
               gap: 20px;">
-            <a-tooltip v-for="(item, index) in navigationList" 
-              :key="item.id" 
+            <a-tooltip v-for="(item, index) in navigationList"
+              :key="item.id"
               :title="item.name"
-              :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }" 
+              :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }"
               @mouseenter="showElement(item, index)"
               :placement="sortId === 'left' ? 'right' : 'left'">
               <!-- 左右导航栏隐藏入口 -->
               <xt-menu :menus="folderOptions" :id="item.id" class="relative flex-shrink-0 item-content">
-                <div 
-                  v-if="!(this.isOffline && this.navList.includes(item.event))" 
+                <div
+                  v-if="!(this.isOffline && this.navList.includes(item.event))"
                   class="item-content item-nav"
-                  @click="newOpenApp(item)" 
-                  @dragover="onDrag" 
+                  @click="newOpenApp(item)"
+                  @dragover="onDrag"
                   @dragend="hoverIndex = -1" :class="{
                     'active-back': current(item),
                     hover: (dragItem && item.id === hoverRealItemId(this.sortId,this.hoverIndex) && dragItem?.id !== hoverRealItemId(this.sortId,this.hoverIndex))
@@ -511,7 +511,7 @@ export default {
         setTimeout(() => {
           this.shakeElement = false
         }, 2000)
-      } 
+      }
     },
     navigationList: {
       handler(newVal, oldVal) {
@@ -969,6 +969,12 @@ export default {
     async newOpenApp(item) {
       this.sideKey = Date.now()
       let { type, value } = item
+      if (item.name === '设置中心') {
+        this.$router.push({
+          name:'home'
+        })
+      }
+
       if (value === 'control') {
         this.controlVisible = !this.controlVisible;
         this.resetElementPosition()
@@ -1056,7 +1062,7 @@ export default {
           message.success('进入编辑模式')
         }
         this.quick = true
-      } 
+      }
 
       this.menuVisible = false
     },

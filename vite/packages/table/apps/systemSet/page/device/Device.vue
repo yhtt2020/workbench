@@ -175,7 +175,6 @@ export default {
       this.bright = (await brightness.get()) * 100;
     },
     async setVol() {
-      console.log("123 :>> ", 123);
       await loudness.setVolume(Number(this.vol));
       this.gua();
     },
