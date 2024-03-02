@@ -34,18 +34,15 @@ async function runExec (cmdStr, cmdPath) {
 
     // 打印正常的后台可执行程序输出
     workerProcess.stdout.on('data', function (data) {
-      console.log('stdout: ' + iconv.decode(Buffer.from(data, 'binary'), 'GBK'))
       resolve(iconv.decode(Buffer.from(data, 'binary'), 'GBK'))
     })
 //退出之后的输出
     workerProcess.on('close', function (code) {
       resolve(code)
-      console.log('out code：' + code)
     })
 
     // 打印错误的后台可执行程序输出
     workerProcess.stderr.on('data', function (data) {
-      console.log('stderr: ' + iconv.decode(Buffer.from(data, 'binary'), 'GBK'))
       reject(iconv.decode(Buffer.from(data, 'binary'), 'GBK'))
     })
   })
@@ -193,7 +190,6 @@ module.exports = class SystemHelper {
         // let icon = fileIcon.getFileIcon(uri,256)  //await require('electron').app.getFileIcon(uri)
         const exePath = getResPathJoin('extracticon.exe')
         const cmd = `"${exePath}" "${uri}" "${filePath}"`
-        console.log(cmd, '输出的cmd')
         await runExec(cmd)
       } catch (e) {
         console.error('意外报错', e)

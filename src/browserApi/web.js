@@ -19,7 +19,6 @@ const web = {
     if (callback) {
       var cbId = 'callback_' + require('nanoid').nanoid(8)
       ipc.once(cbId, (e, a) => {
-        console.log('接收到了消息回调',a)
         callback(a)
       })
     }

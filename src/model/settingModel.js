@@ -119,7 +119,6 @@ class SettingModel {
      if (sign) map.sign=sign
     if (group) map.group=group
     if (key) map.key=key
-    console.log(map)
     return await sqlDb.knex('setting').where(map).delete()
   }
 
