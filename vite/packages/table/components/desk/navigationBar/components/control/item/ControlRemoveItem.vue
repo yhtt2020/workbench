@@ -28,7 +28,7 @@ const option = ref({
  layout:{horizontal:false},
 });
 const testRef = ref(null);
-const isClick = ref(false);
+const isClick = ref(true);
 
 
 const controls = controlStore();
@@ -49,13 +49,16 @@ const controlList = computed(()=>{
 
 
 onMounted(()=>{
-  testRef.value.muuri.on('dragEnd', function (item, event) {
-    if(event.distance<40){
-      isClick.value = true;
-    }else{
-      isClick.value = false;
-    }
-  })
+  // 拖拽移动中事件
+  testRef.value.muuri.on('dragMove',(item,event) =>{
+    isClick.value = false;
+  });
+
+  // 拖拽结束后释放拖拽事件
+  testRef.value.muuri.on('dragReleaseEnd',(item,event)=>{
+    isClick.value = true;
+  });
+
 })
 
 </script>

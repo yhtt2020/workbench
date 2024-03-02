@@ -1,12 +1,17 @@
 <template>
  <template v-if="controlIndex === 'audio'">
-  <SystemControlDetail :class="{'pointer':status==='del','category-button':status==='del'}" @click="removeControl($event)" :status="status"/>
+  <SystemControlDetail 
+   :class="{'pointer':status==='del','category-button':status==='del','prevent-no-item':isClick === true,'prevent-item':isClick === false}" 
+   @click="removeControl($event)" :status="status"/>
  </template>
 
  <!-- 用户中心信息 -->
  <template v-else-if="controlIndex === 'user-info'">
   <template v-if="isUserLogin">
-    <div  class="rounded-xl xt-bg-t-2 pointer category-button flex flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-if="status === 'del'" @click="removeControl($event)">
+    <div  class="rounded-xl xt-bg-t-2 pointer category-button flex flex-col items-center justify-center relative"
+     style="height:120px;width: 252px;" v-if="status === 'del'" @click="removeControl($event)" 
+     :class="isClick ? 'prevent-item':'prevent-no-item'"
+    >
       <div class="absolute" style="top: 7px;right:-4px;" >
         <xt-button style="width: auto !important;" h="0">
           <div class="flex items-center justify-center">
@@ -21,7 +26,10 @@
     </div>
   </template>
   <template v-else>
-    <div  class="rounded-xl xt-bg-t-2 pointer category-button flex flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-if="status === 'del'" @click="removeControl($event)">
+    <div  class="rounded-xl xt-bg-t-2 pointer category-button flex flex-col items-center justify-center relative" 
+     style="height:120px;width: 252px;" v-if="status === 'del'" @click="removeControl($event)" 
+     :class="isClick ? 'prevent-item':'prevent-no-item'" 
+    >
       <div class="absolute" style="top: 7px;right:-4px;" >
         <xt-button style="width: auto !important;" h="0">
           <div class="flex items-center justify-center">
@@ -40,7 +48,9 @@
 
  <!-- 其他按钮 -->
  <template v-else>
-  <div  class="xt-bg-t-2 rounded-xl pointer category-button flex flex-col items-center justify-center relative" style="height: 120px;width: 120px;" v-if="status === 'del'" @click="removeControl">
+  <div  class="xt-bg-t-2 rounded-xl pointer category-button flex flex-col items-center justify-center relative" style="height: 120px;width: 120px;"
+   v-if="status === 'del'" @click="removeControl" :class="isClick ? 'prevent-item':'prevent-no-item'"
+  >
    <div class="absolute" style="top: 7px;right:-4px;" >
     <xt-button style="width: auto !important;" h="0">
       <div class="flex items-center justify-center">
@@ -202,24 +212,25 @@ const triggerControl = () =>{
 
 // 编辑控制中心的移除
 const removeControl = (evt) =>{
-  // 阻止拖拽
-  if(props.isClick){
-    // 保留一个不能删除
-    if(control.value.oldList.length !== 1){
-      const index = control.value.newList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
-      if(index === -1){
-        control.value.newList.push(props.controlItem)
-        const removeIndex  = control.value.oldList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
-        control.value.oldList.splice(removeIndex,1);
-      }
-    }
-    else {
-     evt.preventDefault();
-    }
+  const index = control.value.newList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
+  if(index === -1){
+    control.value.newList.push(props.controlItem)
+    const removeIndex  = control.value.oldList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
+    control.value.oldList.splice(removeIndex,1);
   }
-  else {
-   evt.preventDefault();
-  }
+  // // 阻止拖拽
+  // if(props.isClick){
+  //   // 保留一个不能删除
+  //   if(control.value.oldList.length !== 1){
+      
+  //   }
+  //   else {
+  //    evt.preventDefault();
+  //   }
+  // }
+  // else {
+  //  evt.preventDefault();
+  // }
 }
 
 // 判断用户是否登录
@@ -246,5 +257,14 @@ const login = () =>{
 :deep(.big){
   bottom: 80px !important;
   right:  0 !important;
+}
+
+
+.prevent-item{
+  pointer-events: all !important;
+}
+
+.prevent-no-item{
+  pointer-events: none !important;
 }
 </style>
