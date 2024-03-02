@@ -341,7 +341,7 @@ export default {
   {
     type:'systemApp',
     icon:'/logo/control.svg',
-    name:'弹幕',
+    name:'控制中心',
     event:'control',
   }
 

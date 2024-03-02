@@ -47,6 +47,7 @@
             <CustomLink
                 v-if="linkVisible"
                 v-model="linkVisible"
+                :linkLimit="{hideTab:true,hideIcon:true}"
                 @save="saveLink">
             </CustomLink>
         </teleport>
@@ -58,6 +59,7 @@ import { ref, reactive, computed, toRefs,watch,onMounted } from 'vue'
 import UploadImage from './UploadImg.vue';
 import EditNewNavigation from '../../../desk/navigationBar/EditNewNavigation.vue';
 import CustomLink from '../../../desk/navigationBar/components/CustomLink.vue';
+import {useNavigationStore} from '../../../desk/navigationBar/navigationStore';
 const props = defineProps({
     modalVisible: {
         type: Boolean,
@@ -90,6 +92,8 @@ const editVisible = ref(false)
 const appPath = ref('')
 const inputPath = ref('')
 const linkVisible = ref(false)
+
+const store = useNavigationStore()
 
 const { noBorder, showName,customInput,linkPath } = toRefs(props)
 
@@ -183,6 +187,7 @@ const localFile = async() => {
 
 const openApp = () => {
     editVisible.value = true
+    store.selectNav = 'desktop'
 }
 
 const getApp = (item:object,index: number) => {
