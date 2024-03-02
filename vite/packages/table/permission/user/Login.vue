@@ -30,9 +30,9 @@
       height="745"
     ></iframe>
     <div class="absolute" style="top: 20px; right: 20px; z-index: 99999">
-     <xt-button @click="loginClose"  w="48"  style="background: #337fff;">
-      <xt-ify-icon icon="fluent:dismiss-16-regular"  style="color: #fff;"/>
-     </xt-button>
+      <xt-button @click="loginClose" w="48" style="background: #337fff">
+        <xt-ify-icon icon="fluent:dismiss-16-regular" style="color: #fff" />
+      </xt-button>
     </div>
   </div>
 </template>
@@ -52,7 +52,9 @@ const { token } = storeToRefs(permissionStore);
 const loginVisible = ref(true);
 const router = useRouter();
 const { proxy } = getCurrentInstance();
+import { useGlobalStore } from "../../apps/global/store";
 
+const globalStore = useGlobalStore();
 const props = defineProps({
   close: {},
   cb: {},
@@ -69,9 +71,9 @@ onMounted(() => {
         cache.set("ttUserToken", currentToken);
         token.value = currentToken;
         useUserPermit();
-        // router.push({ name: "home" })
         loginVisible.value = false;
         props.cb && props.cb();
+        globalStore.loginVisible = false;
         props.close && props.close();
       }
     },
@@ -82,7 +84,8 @@ const emits = defineEmits(["close"]);
 
 const loginClose = () => {
   loginVisible.value = false;
-  props.close.value && props.close();
+  globalStore.loginVisible = false;
+  props?.close && props.close();
 
   emits("close");
 };

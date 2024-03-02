@@ -95,6 +95,7 @@ import {
   provide,
   onMounted,
   onBeforeUnmount,
+  onUnmounted,
   onBeforeMount,
   getCurrentInstance,
 } from "vue";
@@ -549,6 +550,9 @@ function handleClick(e) {
   if (e.target?.closest(".tt-folder-container") == null) {
   }
 }
+onUnmounted(()=>{
+  window.removeEventListener("click", handleClick);
+})
 onMounted(async () => {
   window.addEventListener("click", handleClick);
 
@@ -565,9 +569,6 @@ onMounted(async () => {
   // 冒泡排序
 });
 
-onBeforeMount(() => {
-  window.removeEventListener("click", handleClick);
-});
 </script>
 
 <style lang="scss" scoped>
