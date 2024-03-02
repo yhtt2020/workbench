@@ -61,7 +61,7 @@ import device from "../device/Device.vue";
 import key from "../key/Key.vue";
 import Screen from "../Screen/Screen.vue";
 import barrage from "../barrage/Barrage.vue";
-import { useGlobalStore } from "../../../Global/store";
+import { useGlobalStore } from "../../../global/store";
 import { storeToRefs } from "pinia";
 const globalStore = useGlobalStore();
 const { systemVisible } = storeToRefs(globalStore);

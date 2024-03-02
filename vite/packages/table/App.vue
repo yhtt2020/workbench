@@ -128,7 +128,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import { message, notification } from 'ant-design-vue'
 import ModalNotice from './page/notice/ModalNotice.vue'
 // import ClaimReward from './apps/task/components/ClaimReward.vue'
-import Global from './apps/Global/Global.vue'
+import Global from './apps/global/Global.vue'
 // import { taskStore } from './apps/task/store'
 import { useEnv } from "./ui/hooks/useEnv";
 notification.config({
