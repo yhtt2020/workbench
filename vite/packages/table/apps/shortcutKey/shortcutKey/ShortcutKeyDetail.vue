@@ -422,8 +422,8 @@ export default {
     },
     btnEdit () {
       this.openSet = false
-      console.log(this.appContent,'需要编辑')
-      this.$router.push({ name: 'shareKey', params: { id: this.appContent.id } })
+      let params={ id: this.appContent.id }
+      this.$router.push({ name: 'shareKey', params: params})
     },
     async btnDel () {
       window.$ui.confirm(
