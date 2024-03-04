@@ -50,6 +50,7 @@ import CategoryFloat from './components/float/CategorysFloat.vue';
 import DefaultFloat from './components/float/DefaultsFloat.vue';
 import JoinCommunitys from './components/communityJoin/JoinCommunitys.vue';
 import GradeSmallTip from "../../components/GradeSmallTip.vue";
+import {useGlobalStore} from '../../apps/Global/store'
 export default {
   name: "chat",
   components: {
@@ -70,6 +71,9 @@ export default {
     const route = useRoute()
     const TUIServer = window.$TUIKit
     const { proxy } = getCurrentInstance();
+    const globalStore = useGlobalStore();
+    const { loginVisible } = storeToRefs(globalStore);
+
     const data = reactive({
       chatVisible:false,
       addIndex:'',
@@ -111,9 +115,7 @@ export default {
     const loginTip = (item)=>{
       window.$ui.confirm("登录提示", '目前处于游客模式，请登录后体验完整功能。', {
         ok: () => {
-          tsbApi.user.login((data) => {
-            appS.getUserInfo()
-          })
+          loginVisible.value = true
         },
         okText: "立即登录",
         noText: "暂不登录",
