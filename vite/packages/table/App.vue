@@ -1,11 +1,15 @@
 <template>
   <!-- Your Drag-and-Drop Application -->
-  <!-- 任务弹窗 -->
   <!-- <xt-task-reward/> -->
   <!-- 登录引导弹窗 -->
   <!-- {{loginVisible}} -->
   <xt-confirm v-if="loginVisible" noText="暂不登录" okText="立即登录" okButtonWidth="95" noButtonWidth="95" title="登录提示" content="目前处于游客模式，请登录后体验完整功能。" :no="unLoginModal" :ok="loginModal"></xt-confirm>
-  <ClaimReward v-if="rewardVisible"/>
+
+    <!-- 领取任务奖励弹窗 -->
+  <!-- <ClaimReward v-if="rewardVisible"/> -->
+
+<Global/>
+
   <div style="z-index:9999" v-if="settings.down.enable" v-for="item of settings.down.count" :key="item"
        :class="settings.down.type + 'flake'"></div>
   <a-config-provider :locale="locale">
@@ -126,8 +130,9 @@ import { DndProvider } from 'vue3-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { message, notification } from 'ant-design-vue'
 import ModalNotice from './page/notice/ModalNotice.vue'
-import ClaimReward from './apps/task/components/ClaimReward.vue'
-import { taskStore } from './apps/task/store'
+// import ClaimReward from './apps/task/components/ClaimReward.vue'
+import Global from './apps/global/Global.vue'
+// import { taskStore } from './apps/task/store'
 import { useEnv } from "./ui/hooks/useEnv";
 import {useLogin} from '../table/permission/user/useLogin'
 notification.config({
@@ -148,7 +153,7 @@ let startX,
 const distX = 80 //滑动感知最小距离
 const distY = 80 //滑动感知最小距离
 export default {
-  components: { ModalNotice, FrameStoreWidget, Modal, UserCard, Barrage, DndProvider, ClaimReward },
+  components: { Global,ModalNotice, FrameStoreWidget, Modal, UserCard, Barrage, DndProvider,  },
   data () {
     return {
       HTML5Backend,
@@ -241,7 +246,6 @@ if (!window.$useEnv()) {
     ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo', 'runningTableApps']),
     ...mapWritableState(screenStore, ['taggingScreen', 'screenDetail']),
     ...mapWritableState(steamUserStore, ['steamLoginData']),
-    ...mapWritableState(taskStore, ['rewardVisible']),
   },
   methods: {
     ...mapActions(appStore, ['setMusic', 'reset', 'toggleFullScreen', 'exitFullScreen', 'ensureFullScreen']),

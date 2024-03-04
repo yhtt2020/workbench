@@ -3,7 +3,6 @@ window.tsbApi = require('../browserApi/baseApi')
 window.tableApi = require('../tableApi/baseApi')
 const shake= require('./table/_shake')
 const groupApi = require('../api/groupApi')
-//
 let ipc = require('electron').ipcRenderer
 ipc.on('updateMusicStatus', (e, a) => {
   if (window.updateMusicStatusHandler) {
@@ -21,35 +20,42 @@ window.fs = require('fs-extra')
 
 const win32 = require('hmc-win32')
 const StorageModel = require('../model/storageModel')
-window.$models = {
+window.$models={
   appModel: require('../model/appModel'),
-  axios: require('axios'),
-  nanoid: require('nanoid'),
-  fs: require('fs-extra'),
   storageModel: new StorageModel(),
-  sysInfo: require('systeminformation'),
-  inspector: require('./table/_inspector'),
-  path: require('path'),
-  https: require('https'),
-  steamFs: require('fs'),
-  rpc: require('../rpc/rpc'),
-  electron: require('electron'),
-  osUtils: require('node-os-utils'),
-  shake:shake,
-  win32
 }
-window.win32=win32 //方便调试
-try {
-  window.$models.steamUser = require('steam-user')
+setTimeout(()=>{
+  window.$models = {
+    ...window.$models,
+    axios: require('axios'),
+    nanoid: require('nanoid'),
+    fs: require('fs-extra'),
+    sysInfo: require('systeminformation'),
+    inspector: require('./table/_inspector'),
+    path: require('path'),
+    https: require('https'),
+    steamFs: require('fs'),
+    rpc: require('../rpc/rpc'),
+    electron: require('electron'),
+    osUtils: require('node-os-utils'),
+    shake:shake,
+    win32
+  }
+  try {
+    window.$models.steamUser = require('steam-user')
 
-} catch (e) {
-  console.error('注册steam包失败，错误信息：', e)
-}
-try {
-  window.$models.steamSession = require('steam-session')
-} catch (e) {
-  console.error('注册steamSession包失败，错误信息：', e)
-}
+  } catch (e) {
+    console.error('注册steam包失败，错误信息：', e)
+  }
+  try {
+    window.$models.steamSession = require('steam-session')
+  } catch (e) {
+    console.error('注册steamSession包失败，错误信息：', e)
+  }
+})
+
+window.win32=win32 //方便调试
+
 window.$models.appModel.initDb()
 
 window.$models.storageModel.initDb()

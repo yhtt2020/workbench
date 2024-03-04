@@ -16,8 +16,8 @@
        <span class="xt-text xt-font font-16 font-400">壁纸存储位置</span>
        <span class="xt-text-2 xt-font font-14 font-400 my-3">选择我的收藏壁纸存储的文件路径。</span>
        <div class="flex">
-        <a-input placeholder="请选择壁纸保存地址" class="h-10" @click="showSaveDialog" 
-         style="background: var(--secondary-transp-bg);border-radius: 8px;cursor: pointer;width: 92%;"  
+        <a-input placeholder="请选择壁纸保存地址" class="h-10" @click="showSaveDialog"
+         style="background: var(--secondary-transp-bg);border-radius: 8px;cursor: pointer;width: 92%;"
          spellcheck="false" v-model:value="settings.savePath"  :bordered="false"
         />
         <xt-button w="40" h="40" class="xt-bg-t-2 ml-2" @click="openSavePath">
@@ -52,7 +52,7 @@
           <span class="xt-font xt-text text-start font-16 font-400">进入锁屏时间</span>
           <span class="xt-font xt-text-2 font-14 text-start font-400 my-2.5">设置进入锁屏的时间。</span>
           <div class="flex items-center">
-            <a-input-number   spellcheck="false" default-value="3" v-model:value="settings.lockTimeout" 
+            <a-input-number   spellcheck="false" default-value="3" v-model:value="settings.lockTimeout"
             style="width: 210px;background: var(--secondary-transp-bg);border-radius: 8px;" :bordered="false"   />
             <span class="ml-2 xt-font xt-text font-14 font-400">秒</span>
           </div>
@@ -63,7 +63,7 @@
           <span class="xt-font xt-text font-16 font-400">锁屏壁纸轮播时间</span>
           <span class="xt-font xt-text-2 font-14 font-400 my-2.5">设置每张壁纸图片的之间的轮播间隔。</span>
           <div class="flex items-center">
-            <a-input-number default-value="3" v-model:value="settings.interval" 
+            <a-input-number default-value="3" v-model:value="settings.interval"
             style="width: 210px;background: var(--secondary-transp-bg);border-radius: 8px;" :bordered="false"   spellcheck="false"/>
             <span class="ml-2 xt-font xt-text font-14 font-400">秒</span>
           </div>
@@ -99,7 +99,7 @@
           <a-switch v-model:checked="settings.showWeather"></a-switch>
         </div>
         <a-divider  style="height: 1px; border-top: 1px solid var(--divider);margin: 16px 0 16px 0 ;" />
-         
+
         <div class="flex w-full justify-between">
           <span class="xt-font xt-text font-16 font-400">锁屏界面显示媒体播放状态</span>
           <a-switch v-model:checked="settings.showProgress"></a-switch>
@@ -123,8 +123,8 @@
             <span class="w-full xt-text xt-font text-start font-16 font-400">壁纸存储位置</span>
             <span class="w-full xt-text-2 text-start xt-font font-14 font-400 my-3">选择我的收藏壁纸存储的文件路径。</span>
             <div class="flex">
-              <a-input placeholder="请选择壁纸保存地址" class="h-10" @click="showSaveDialog" 
-               style="background: var(--secondary-transp-bg);border-radius: 8px;cursor: pointer;width: 92%;"  
+              <a-input placeholder="请选择壁纸保存地址" class="h-10" @click="showSaveDialog"
+               style="background: var(--secondary-transp-bg);border-radius: 8px;cursor: pointer;width: 92%;"
                spellcheck="false" v-model:value="settings.savePath"  :bordered="false"
               />
               <xt-button w="40" h="40" class=" ml-2" @click="openSavePath">
@@ -133,7 +133,7 @@
                </div>
               </xt-button>
             </div>
-            
+
           </div>
 
           <!-- 锁屏设置开关 -->
@@ -155,7 +155,7 @@
               <a-switch v-model:checked="settings.showWeather"></a-switch>
             </div>
             <a-divider  style="height: 1px; border-top: 1px solid var(--divider);margin: 16px 0 16px 0 ;" />
-   
+
             <div class="flex w-full justify-between">
               <span class="xt-font xt-text font-16 font-400">锁屏界面显示媒体播放状态</span>
               <a-switch v-model:checked="settings.showProgress"></a-switch>
@@ -187,7 +187,7 @@
               <span class="xt-font text-start xt-text font-16 font-400">进入锁屏时间</span>
               <span class="xt-font xt-text-2 text-start font-14 font-400 my-2.5">设置进入锁屏的时间。</span>
               <div class="flex items-center">
-              <a-input-number default-value="3"  v-model:value="settings.lockTimeout" 
+              <a-input-number default-value="3"  v-model:value="settings.lockTimeout"
                style="width: 210px;background: var(--secondary-transp-bg);border-radius: 8px;" :bordered="false"    spellcheck="false"
               />
               <span class="ml-2 xt-font xt-text  font-14 font-400">秒</span>
@@ -199,8 +199,8 @@
               <span class="xt-font text-start xt-text font-16 font-400">锁屏壁纸轮播时间</span>
               <span class="xt-font xt-text-2 text-start font-14 font-400 my-2.5">设置每张壁纸图片的之间的轮播间隔。</span>
               <div class="flex items-center">
-              <a-input-number default-value="3" v-model:value="settings.interval" 
-               style="width: 210px;background: var(--secondary-transp-bg);border-radius: 8px;" :bordered="false"  spellcheck="false" 
+              <a-input-number default-value="3" v-model:value="settings.interval"
+               style="width: 210px;background: var(--secondary-transp-bg);border-radius: 8px;" :bordered="false"  spellcheck="false"
               />
               <span class="ml-2 xt-font xt-text font-14 font-400">秒</span>
               </div>
@@ -230,13 +230,13 @@
               <a-switch v-model:checked="settings.showUnreadMessage"></a-switch>
             </div>
             <a-divider  style="height: 1px; border-top: 1px solid var(--divider);margin: 16px 0 16px 0 ;" />
-   
+
             <div class="flex w-full justify-between mb-2.5">
               <span class="xt-font xt-text font-16 font-400">锁屏界面显示天气</span>
               <a-switch v-model:checked="settings.showWeather"></a-switch>
             </div>
             <a-divider  style="height: 1px; border-top: 1px solid var(--divider);margin: 16px 0 16px 0 ;" />
-   
+
             <div class="flex w-full justify-between">
               <span class="xt-font xt-text font-16 font-400">锁屏界面显示媒体播放状态</span>
               <a-switch v-model:checked="settings.showProgress"></a-switch>
@@ -247,26 +247,26 @@
       </div>
     </div>
    </template>
-   
+
    <div style="height: 16px;"></div>
   </vue-custom-scrollbar>
- 
+
  </template>
- 
+
  <script>
  import { mapActions,mapWritableState } from 'pinia';
  import { paperStore } from '../../../../store/paper';
  import { startApp } from '../../../../ui/hooks/useStartApp';
- 
+
  import RadioTab from '../../../../components/RadioTab.vue';
- 
+
  export default {
   props:['isModal'],
- 
+
   components:{
    RadioTab
   },
- 
+
   data(){
    return{
     settingsScroller: {
@@ -276,7 +276,7 @@
      suppressScrollX: true,
      wheelPropagation: true
     },
- 
+
     selectList:[
      { value:'my',name:'我的收藏(全部)' },
      { value:'myActive',name:'我的收藏(仅选中)' },
@@ -286,24 +286,24 @@
     ],
    }
   },
- 
+
   computed:{
    ...mapWritableState(paperStore,['settings']),
    pageSize(){
      console.log('执行....测试',window.innerWidth);
    }
   },
- 
+
   methods:{
    startApp,
    async showSaveDialog() {
     let savePath = await tsbApi.dialog.showOpenDialog({
-     title: '选择目录', message: '请选择下载壁纸的目录', 
+     title: '选择目录', message: '请选择下载壁纸的目录',
      properties: [ 'openDirectory', 'createDirectory',]
     })
     if (savePath) return this.settings.savePath = savePath[0];
    },
- 
+
    getPaper(evt){
     if(evt === 'my'){
       this.settings.playType = 'my'
@@ -322,15 +322,15 @@
       }
    },
   },
- 
+
  };
  </script>
- 
+
  <style lang="scss" scoped>
  .card{
   width: 452px;
  }
- 
+
  :deep(.ant-input){
   color: var(--secondary-text) !important;
   font-size: 16px !important;
@@ -348,20 +348,20 @@
  :deep(.ant-select-selection-item){
   line-height: 40px !important;
  }
- 
+
  :deep(.nav-box){
   border-radius: 8px !important;
  }
- 
+
  :deep(.ant-input-number-input){
    height: 40px !important;
  }
- 
+
  :deep(.ant-select-arrow){
   color: var(--primary-text) !important;
  }
- 
- @media screen and(max-width: 1170px) {
+
+ @media screen and (max-width: 1170px) {
    .min-card{
      display: block !important;
    }
@@ -369,8 +369,8 @@
      display: none !important;
    }
  }
- 
- @media screen and(min-width: 1171px) {
+
+ @media screen and (min-width: 1171px) {
    .min-card{
      display: none !important;
    }

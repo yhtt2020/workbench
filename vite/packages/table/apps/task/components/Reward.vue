@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative  rounded-xl"
+    class="relative  rounded-xl reward-w"
     style="
       width: 64px;
       height: 64px;
@@ -21,20 +21,9 @@
     <template v-if="type==='item'">
       <!--   道具   -->
       <Popconfirm title="新头像框Get!" ok-text="立即佩戴" cancel-text="稍后再说" @confirm="confirm" @cancel="cancel">
-        <!--        <div :style="{width:`${types[type].size}px`,height:`${types[type].size}px`}"-->
-        <!--        class="flex items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">-->
-        <!--         <img :src="types[type].icon" class="w-full h-full object-cover"/>-->
-        <!--        </div>-->
-
-        <!--        <div :style="{width:`${types[type].size}px`,height:`${types[type].size}px`}"-->
-        <!--             class="flex items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">-->
-        <!--          <img :src="types[type].icon" class="w-full h-full object-cover"/>-->
-        <!--        </div>-->
-        <!--        {{data}}-->
         <Item :item="data" :size="64" style="width:64px;height:64px"></Item>
       </Popconfirm>
     </template>
-
     <template v-else-if="type==='medal'">
       <!--  勋章    -->
       <Medal :size="60" style="margin-left: 2px" :medal="{medal:data}"></Medal>
@@ -47,22 +36,7 @@
           <img :src="item.icon" class="w-full h-full object-cover"/>
         </div>
       </a-tooltip>
-
     </template>
-
-    <!-- <a-avatar
-      shape="square"
-      :size="types[type].size"
-      :src="types[type].icon"
-      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-    /> -->
-
-    <!-- <xt-ify-icon
-      v-if="type == 'communityPoints' || type == 'experience'"
-      class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-      :icon="types[type].icon"
-      size="45"
-    /> -->
     <div class="absolute z-10 bottom-0 text-sm" v-if="value" style="right: 4px">
       {{ value }}
     </div>

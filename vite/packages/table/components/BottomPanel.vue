@@ -1225,12 +1225,7 @@ export default {
      */
     async newOpenApp(type, value, item) {
       if (item.name === '设置中心') {
-        this.$router.push({
-          name:'home'
-        })
-        setTimeout(() => {
           this.$bus.emit("openSystemSet")
-        }, 500);
         return
       }
       if(type === 'folder'){

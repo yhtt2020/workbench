@@ -137,8 +137,6 @@ class TableAppManager {
     this.runningApps.forEach(app => {
       this.closeApp(this.getName(app.name))
     })
-    console.log(this.runningAppsInstance)
-    console.log(this.runningApps)
   }
 
   closeApp (name) {

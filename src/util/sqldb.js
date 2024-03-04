@@ -4,8 +4,11 @@ const dbUtil=require('../util/dbUtil')
 
 class SqlDb {
   knex
+  // SqlDb 初始化
   constructor (dbName='db') {
+    // 获取数据库路径
     const dbPath = dbUtil.getDbPath(dbName)
+    // 初始化knex实例
     this.knex = knex({
       client: 'sqlite3',
       connection: {

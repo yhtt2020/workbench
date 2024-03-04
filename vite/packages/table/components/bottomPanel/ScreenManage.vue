@@ -108,7 +108,7 @@
                 @change="toggleScreen"
                 v-model:checked="currentScreen.running"
               ></a-switch>
-              <div class="mt-3">启用分屏</div>
+              <div class="mt-3">启动</div>
             </div>
           </a-col>
           <a-col v-if="currentScreen.settings" :span="5">
