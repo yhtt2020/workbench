@@ -16,7 +16,7 @@
         <Activity v-else-if="currentTask == 'Activity'" />
         <Set v-else-if="currentTask == 'Set'" />
         <TaskShop v-else-if="currentTask == 'Shop'"/>
-      </div>
+       </div>
     </div>
   </xt-modal>
 </template>

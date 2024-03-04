@@ -1,5 +1,12 @@
 <template>
   <div class="flex flex-col h-full">
+   <div class="flex items-center justify-between mb-3">
+    <div class="flex items-center">
+      <xt-ify-icon icon="fluent-emoji:shopping-bags" class="mr-2 xt-text" size="16"></xt-ify-icon>
+      <span class="xt-text xt-font font-14">积分商城</span>
+    </div>
+    <Exit />
+   </div>
    <TaskUserInfo v-if="!$useEnv('guest')"/>
    <div class="flex grow " style="height: 200px;">
     <xt-scrollbar class="w-full "  :x="false" :y="true">
@@ -26,6 +33,7 @@
 
 <script setup>
 import { ref,computed } from 'vue';
+import Exit from "../../components/Exit.vue";
 import TaskUserInfo from '../../components/userinfo/TaskUserInfo.vue';
 
 const props = defineProps({
