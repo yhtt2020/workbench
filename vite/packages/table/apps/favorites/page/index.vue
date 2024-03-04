@@ -271,6 +271,7 @@ export default {
             type: 'favo',
             // num: 0,
             rename: null,
+            unRead: false,
           })
           this.allList = this.mergeArraysByGuid(this.allList, res)
 
@@ -406,11 +407,10 @@ export default {
       // 这部分是新建的网址 需要添加到最近更新
       if(newObjects.length > 0){
         this.clearRecent()
-        // console.log(111, this.folderList, newObjects)
         newObjects.forEach(item=>{
           item.recent = true          
           this.folderList.forEach(folder=>{
-            if(folder.guid == item.parent){
+            if(folder.guid == item.parent && item.parent){
               folder.unRead = true
             }
           })
