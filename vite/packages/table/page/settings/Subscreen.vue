@@ -1,131 +1,153 @@
 <template>
   <ScreenManage></ScreenManage>
-<!--  <div class="mb-3">-->
-<!--    此功能暂时未完成开发，请勿尝试。-->
-<!--  </div>-->
-<!--  <a-tabs v-if="true" style="width:100%" v-model:activeKey="activeKey" type="editable-card" @edit="onEdit">-->
-<!--    <a-tab-pane v-for="screen in screens" :key="screen.key" :tab="screen.title" :closable="screen.closable">-->
-<!--      <div class="line-title">-->
-<!--        基础设置-->
-<!--      </div>-->
-<!--      <div v-if="screen.key !== 'main'" class="line">-->
-<!--        名称：-->
-<!--        <a-input class="ml-3" v-model:value="screen.title" style="width: 250px"></a-input>-->
-<!--      </div>-->
-<!--      <div class="line">-->
-<!--        默认进入页面： <a-button type="primary" size="small">选择</a-button>-->
-<!--      </div>-->
-<!--      <template v-if="screen.key !== 'main'">-->
-<!--        <div class="line">-->
-<!--          开机自启动：-->
-<!--          <a-switch v-model:checked="screen.settings.autoRun"></a-switch>-->
-<!--        </div>-->
-<!--        &lt;!&ndash;分屏专属设置项目        &ndash;&gt;-->
+  <!--  <div class="mb-3">-->
+  <!--    此功能暂时未完成开发，请勿尝试。-->
+  <!--  </div>-->
+  <!--  <a-tabs v-if="true" style="width:100%" v-model:activeKey="activeKey" type="editable-card" @edit="onEdit">-->
+  <!--    <a-tab-pane v-for="screen in screens" :key="screen.key" :tab="screen.title" :closable="screen.closable">-->
+  <!--      <div class="line-title">-->
+  <!--        基础设置-->
+  <!--      </div>-->
+  <!--      <div v-if="screen.key !== 'main'" class="line">-->
+  <!--        名称：-->
+  <!--        <a-input class="ml-3" v-model:value="screen.title" style="width: 250px"></a-input>-->
+  <!--      </div>-->
+  <!--      <div class="line">-->
+  <!--        默认进入页面： <a-button type="primary" size="small">选择</a-button>-->
+  <!--      </div>-->
+  <!--      <template v-if="screen.key !== 'main'">-->
+  <!--        <div class="line">-->
+  <!--          开机自启动：-->
+  <!--          <a-switch v-model:checked="screen.settings.autoRun"></a-switch>-->
+  <!--        </div>-->
+  <!--        &lt;!&ndash;分屏专属设置项目        &ndash;&gt;-->
 
-<!--        &lt;!&ndash;分屏专属设置项目end        &ndash;&gt;-->
-<!--      </template>-->
-<!--      <div class="line-title">-->
-<!--        系统功能设置-->
-<!--      </div>-->
-<!--      <template v-if="this.currentTip && this.tips[this.currentTip]">-->
-<!--        <a-alert class="mb-3" v-if="this.tips[this.currentTip].status" :message="this.tips[this.currentTip].content"-->
-<!--          type="info" closable :after-close="closeTip(this.currentTip)" />-->
-<!--      </template>-->
+  <!--        &lt;!&ndash;分屏专属设置项目end        &ndash;&gt;-->
+  <!--      </template>-->
+  <!--      <div class="line-title">-->
+  <!--        系统功能设置-->
+  <!--      </div>-->
+  <!--      <template v-if="this.currentTip && this.tips[this.currentTip]">-->
+  <!--        <a-alert class="mb-3" v-if="this.tips[this.currentTip].status" :message="this.tips[this.currentTip].content"-->
+  <!--          type="info" closable :after-close="closeTip(this.currentTip)" />-->
+  <!--      </template>-->
 
-<!--      <template v-if="screen.key !== 'main'">-->
-<!--        <div v-if="screen.apps" class="line">-->
-<!--          独立底部导航栏：-->
-<!--          <a-switch v-model:checked="screen.apps.bottomPanel"></a-switch>-->
-<!--        </div>-->
-<!--        <div v-if="screen.apps" class="line">-->
-<!--          独立卡片桌面：-->
-<!--          <a-switch v-model:checked="screen.apps.home"></a-switch>-->
-<!--        </div>-->
-<!--        <div v-if="screen.apps" class="line">-->
-<!--          独立壁纸：-->
-<!--          <a-switch v-model:checked="screen.apps.paper"></a-switch>-->
-<!--        </div>-->
-<!--        <div v-if="screen.apps" class="line">-->
-<!--          独立快捷指令：-->
-<!--          <a-switch v-model:checked="screen.apps.deck"></a-switch>-->
-<!--        </div>-->
-<!--      </template>-->
-<!--    </a-tab-pane>-->
-<!--  </a-tabs>-->
+  <!--      <template v-if="screen.key !== 'main'">-->
+  <!--        <div v-if="screen.apps" class="line">-->
+  <!--          独立底部导航栏：-->
+  <!--          <a-switch v-model:checked="screen.apps.bottomPanel"></a-switch>-->
+  <!--        </div>-->
+  <!--        <div v-if="screen.apps" class="line">-->
+  <!--          独立卡片桌面：-->
+  <!--          <a-switch v-model:checked="screen.apps.home"></a-switch>-->
+  <!--        </div>-->
+  <!--        <div v-if="screen.apps" class="line">-->
+  <!--          独立壁纸：-->
+  <!--          <a-switch v-model:checked="screen.apps.paper"></a-switch>-->
+  <!--        </div>-->
+  <!--        <div v-if="screen.apps" class="line">-->
+  <!--          独立快捷指令：-->
+  <!--          <a-switch v-model:checked="screen.apps.deck"></a-switch>-->
+  <!--        </div>-->
+  <!--      </template>-->
+  <!--    </a-tab-pane>-->
+  <!--  </a-tabs>-->
 </template>
 
 <script lang="ts">
-import { screenStore } from '../../store/screen'
-import { mapWritableState, mapActions } from 'pinia'
-import { nanoid } from 'nanoid'
-import { Modal } from 'ant-design-vue'
+import { screenStore } from "../../store/screen";
+import { mapWritableState, mapActions } from "pinia";
+import { nanoid } from "nanoid";
+import { Modal } from "ant-design-vue";
 import ChooseScreen from "../ChooseScreen.vue";
 import ScreenManage from "../../components/bottomPanel/ScreenManage.vue";
 
 export default {
-  name: 'subScreen',
-  components: {ScreenManage, ChooseScreen},
+  name: "subScreen",
+  components: { ScreenManage, ChooseScreen },
   data() {
     return {
-      activeKey: 'main',
-
-    }
+      activeKey: "main",
+    };
   },
   mounted() {
-    this.resetTips()
-    this.getTip()
+    this.resetTips();
+    this.getTip();
   },
   methods: {
-    ...mapActions(screenStore, ['reset', 'tips', 'currentTip', 'resetTips']),
+    ...mapActions(screenStore, ["reset", "tips", "currentTip", "resetTips"]),
     getTip() {
-      this.currentTip = ''
-      Object.keys(this.tips).forEach(key => {
+      this.currentTip = "";
+      Object.keys(this.tips).forEach((key) => {
         if (this.tips[key].status) {
-          this.currentTip = key
-          return false
+          this.currentTip = key;
+          return false;
         }
-      })
+      });
     },
     closeTip(tag) {
-      this.tips[tag].status = false
-      this.getTip()
+      this.tips[tag].status = false;
+      this.getTip();
     },
     onEdit(targetKey: string | MouseEvent, action: string) {
-      if (action === 'add') {
-        this.add()
+      if (action === "add") {
+        this.add();
       } else {
-        this.remove(targetKey as String)
+        this.remove(targetKey as String);
       }
     },
     add() {
       this.screens.push({
         key: nanoid(6),
-        title: '分屏',
+        title: "分屏",
         closable: true,
         settings: {
-          autoRun: false
+          autoRun: false,
         },
         apps: {
-          deck: false
-        }
-      })
+          deck: false,
+        },
+      });
     },
     remove(targetKey) {
+      console.log('确认删除分屏 :>> ', 222222222);
+      window.$ui.confirm(
+        "确认删除分屏？",
+        "此操作不可恢复，将丢失分屏全部的设置，请谨慎操作。",
+        {
+          type: "warning",
+          ok: () => {
+            console.log("123321 确认删除分屏 :>> ", 123321);
+            this.screens.splice(
+              this.screens.findIndex((s) => {
+                return s.key === targetKey;
+              }),
+              1
+            );
+          },
+          okText: "确认删除",
+        }
+      );
+      return;
       Modal.confirm({
-        content: '确认删除分屏？此操作不可恢复，将丢失分屏全部的设置，请谨慎操作。',
+        content:
+          "确认删除分屏？此操作不可恢复，将丢失分屏全部的设置，请谨慎操作。",
         onOk: () => {
-          this.screens.splice(this.screens.findIndex(s => {
-            return s.key === targetKey
-          }), 1)
+          this.screens.splice(
+            this.screens.findIndex((s) => {
+              return s.key === targetKey;
+            }),
+            1
+          );
         },
-        okText: '确认删除'
-      })
-    }
+        okText: "确认删除",
+      });
+    },
   },
   computed: {
-    ...mapWritableState(screenStore, ['screens'])
-  }
-}
+    ...mapWritableState(screenStore, ["screens"]),
+  },
+};
 </script>
 
 <style scoped></style>

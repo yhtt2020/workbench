@@ -34,6 +34,7 @@ import {
   computed,
   watch,
   onBeforeUnmount,
+  onUnmounted,
   nextTick,
 } from "vue";
 import { useWindowSize } from "./hooks/useWindowSize";

@@ -130,6 +130,9 @@ export default {
     Promise.all([
       //启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成
       //注意，此处的第二个参数，必须和此store同名，尤其注意有些命名里带了store的
+      await  browserStore().bindIPC(),
+      await  captureStore(),//仅触发一下载入
+      await this.bindIPC(),
       await this.initStore(appStore, "appStore"),
       await this.initStore(codeStore, "code"),
       await this.initStore(cardStore, "cardStore"),
@@ -144,15 +147,16 @@ export default {
       await this.initStore(controlStore, "control"),
       await this.initStore(offlineStore, "offlineStore"),
       await this.initStore(clipboardStore, "clipboardStore"),
-      await  browserStore().bindIPC(),
-      await  captureStore(),//仅触发一下载入
-      await this.bindIPC(),
     ]);
+    let haventOk=Object.keys(window.loadedStore).filter(key => {
+          let check = !window.loadedStore[key]
+          if (window.loadedStore[key] === false)
+            return check
+        })
+        console.log('haventOk :>> ', haventOk);
     console.log('加载完成 :>> ', );
     window.loadedStore['userInfo'] = false
-    this.bindUserInfoResponse()
-    this.getUserInfo()
-    this.sortClock()
+
 
 
    // 登录过
@@ -161,10 +165,8 @@ export default {
       return
       // this.timeout()
     }
-    this.afterLaunch()
-    return
+
     setTimeout(() => {
-      return
       this.storeReadyTimer = setInterval(() => {
         if (!this.launching) {
           return
@@ -185,7 +187,9 @@ export default {
         }
       }, 1000)
     }, 100)
-
+    this.bindUserInfoResponse()
+    this.getUserInfo()
+    this.sortClock()
 
   },
   computed: {
@@ -202,7 +206,7 @@ export default {
     ...mapActions(appStore, ['getUserInfo', 'setUser','enterAided','ensureShake']),
     ...mapActions(steamUserStore, ['bindClientEvents']),
     ...mapActions(captureStore, ['bindCaptureIPC']),
-    bindIPC() {
+   async bindIPC() {
       if (isMain()) {
       this.bindMainIPC()
     } else {
@@ -306,7 +310,7 @@ export default {
         }
       })
     },
-    initStore (store, name) {
+   async initStore (store, name) {
       console.log('window.loadedStore :>> ', window.loadedStore);
       // loadedStore 不存在初始化对象
       if (!window.loadedStore) {
@@ -316,7 +320,8 @@ export default {
       if (typeof window.loadedStore[name] === 'undefined') {
         window.loadedStore[name] = false
       }
-      store()
+     await store()
+     console.log('ok :>> ', );
     },
 
     async afterLaunch () {
