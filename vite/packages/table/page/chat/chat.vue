@@ -92,8 +92,12 @@ export default {
 
     //触发社群创建入口
     const createCommunity = () =>{
-      data.chatVisible = true
-      data.addIndex = 'createCom'
+      if(!window.$useEnv('guest')){
+        data.chatVisible = true
+        data.addIndex = 'createCom'
+      }else{ 
+        loginTip() 
+      }
     }
     // 切换左侧tab
     const selectTab = async (item)=>{
