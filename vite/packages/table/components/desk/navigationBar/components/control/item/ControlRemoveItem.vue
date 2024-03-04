@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import { ref,computed,onMounted} from "vue";
+import { ref,computed,onMounted, } from "vue";
 import { storeToRefs } from 'pinia';
 import { controlStore } from '../../../hook/controlStore';
 
@@ -30,10 +30,8 @@ const option = ref({
 const testRef = ref(null);
 const isClick = ref(true);
 
-
 const controls = controlStore();
-const { control } = storeToRefs(controls);
-
+const { control,updateList } = storeToRefs(controls);
 
 // 获取高度
 const getHeight = () =>{
@@ -47,13 +45,21 @@ const controlList = computed(()=>{
   return filterList;
 })
 
-
 onMounted(()=>{
   // 拖拽移动中事件
   testRef.value.muuri.on('dragMove',(item,event) =>{
     isClick.value = false;
-    console.log('item',item);
   });
+
+  // 拖拽排序结束后
+  testRef.value.muuri.on('dragEnd',()=>{
+    const updateItem = testRef.value.muuri.getItems().map((mapItem)=>{
+      return {
+        id:mapItem.getElement().dataset.itemKey,
+      }
+    });
+    updateList.value = [...updateItem];
+  })
 
   // 拖拽结束后释放拖拽事件
   testRef.value.muuri.on('dragReleaseEnd',(item,event)=>{
@@ -61,6 +67,7 @@ onMounted(()=>{
   });
 
 })
+console.log('更新',updateList.value);
 
 </script>
 
