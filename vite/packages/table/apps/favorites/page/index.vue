@@ -265,7 +265,7 @@ export default {
           this.folderList.unshift({
             name: '我的收藏',
             type: 'favo',
-            num: 0,
+            // num: 0,
             rename: null,
           })
           this.allList = this.mergeArraysByGuid(this.allList, res)
@@ -358,10 +358,10 @@ export default {
       let guidSet = new Set(arr1.map(item => item.guid));
       let mergedArray = arr1.slice();
       for (let item of arr2) {
-          if (!guidSet.has(item.guid)) {
-              mergedArray.push(item);
-              guidSet.add(item.guid);
-          }
+        if (!guidSet.has(item.guid)) {
+          mergedArray.push(item);
+          guidSet.add(item.guid);
+        }
       }
       return mergedArray;
     },

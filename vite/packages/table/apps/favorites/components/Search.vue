@@ -14,6 +14,7 @@
             @change="changeSearchValue">
                 <xt-new-icon class="absolute" icon="fluent:search-20-filled" size="20" />
             </a-input>
+            <!-- <div @click="test">测试</div> -->
             <div class="font-14 flex items-center">
                 <div>打开方式：</div> 
                 <!-- <xt-select
@@ -75,6 +76,9 @@
     methods: {
         change(n){
             this.folderIndex = n
+        },
+        test(){
+            this.$router.push("/wizard");
         }
       
     }

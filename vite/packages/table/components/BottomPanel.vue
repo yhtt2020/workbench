@@ -106,11 +106,11 @@
             justify-content: center;
           "
           :style="{
-            width: this.settings.enableChat ? '160px' : '80px',
-            paddingLeft: this.settings.enableChat
+            width: !$useEnv(['guest']) && this.settings.enableChat ? '160px' : '80px',
+            paddingLeft: !$useEnv(['guest']) &&this.settings.enableChat
               ? '16px !important'
               : '0px !important',
-            paddingRight: this.settings.enableChat
+            paddingRight: !$useEnv(['guest']) &&this.settings.enableChat
               ? '16px !important'
               : '0px !important',
             borderRadius: this.navAttribute.navRadius + 'px',
@@ -118,13 +118,12 @@
         >
           <div
             class="flex items-center justify-between"
-            :style="{ marginLeft: this.settings.enableChat ? '10px' : '0px' }"
+            :style="{ marginLeft: !$useEnv(['guest']) &&this.settings.enableChat ? '10px' : '0px' }"
           >
             <div @click="openControl($event)">
               <MyAvatar :chat="true" :level="false" :limit="false"></MyAvatar>
             </div>
-            <!---->
-            <div v-show="settings.enableChat" class="pl-4 pointer">
+            <div v-show="!$useEnv(['guest']) && settings.enableChat" class="pl-4 pointer">
               <ChatButton :tipPosition="navAttribute.navSize"></ChatButton>
             </div>
           </div>
