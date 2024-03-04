@@ -256,6 +256,7 @@ const send = () =>{
       if(res.status === 1){
        isLoading.value = false;
        notice.initMsgData();
+       msgEditor.value.mkRef.setEditorValue('');
       }
      }
      else {
@@ -264,9 +265,10 @@ const send = () =>{
       if(result.status === 1){
        isLoading.value = false;
        notice.initMsgData();
+       msgEditor.value.mkRef.setEditorValue('');
       }
      }
-    },200)
+    },100);
   }
   else {
     message.warning('发送内容不能为空')

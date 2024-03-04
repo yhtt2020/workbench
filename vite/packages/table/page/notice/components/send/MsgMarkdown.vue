@@ -190,10 +190,10 @@ export default {
   },
   methods: {
     setEditorValue (value) {
-      console.log('执行',this.contentEditor);
-      console.log('执行',this.contentEditor?.setValue());
+      // console.log('执行',this.contentEditor);
+      // console.log('执行',this.contentEditor?.setValue());
       // 子组件中的事件逻辑
-      this.contentEditor?.setValue(1111);
+      this.contentEditor?.setValue(value);
     },
     getContent () {
       return this.contentEditor.getHTML()

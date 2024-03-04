@@ -30,7 +30,7 @@ export const noticeStore = defineStore("notice", {
     msgSetting: {
       title: "", // 标题
       summary: "", // 摘要
-      content: "测试", // 正文
+      content: "", // 正文
       noticeType: 1, // 消息类型
       covers: [], // 封面
       urls: [], //  按钮链接
