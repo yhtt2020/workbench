@@ -297,6 +297,7 @@ export default {
                     summary: item.summary || '',
                     mode: item.type === 'lightApp' ? 'link' : 'app',
                     ext: item.ext || '',
+                    slot:item.slot || '',
                 }
             })
         },

@@ -82,7 +82,8 @@
         handler(newVal, oldVal) {
             // 清除未读消息的小红点
             // this.folderList[oldVal].unRead = false
-            if(this.folderList[oldVal]) this.folderTmp[oldVal].unRead = false
+            if(this.folderTmp[newVal]) this.folderTmp[newVal].unRead = false
+            // if(this.folderList[oldVal]) this.folderTmp[oldVal].unRead = false
             // console.log('oldVal', oldVal, this.folderList[oldVal])
             // this.folderIndex[oldVal]
         },

@@ -7,7 +7,7 @@ export const mergeData = (data) => {
 };
 // 默认图标格式
 export const defaultData = {
-  renewTime: 20240128, // 图标更新时间
+  renewTime: 20240302, // 图标更新时间
   id: "", // 图标id
   icon: "", // 显示的图标数据
   iconType: "", // 图标类型
@@ -45,6 +45,7 @@ export const defaultData = {
   size: "1x1",
   summary:'',   // 酷应用，轻应用，网址导航等图标的简介
   default:{},   // 数据用于重置图标
+  slot:'' ,     // 插槽
 };
 export const useIconConversionFile = (data) => {
   const file = {
