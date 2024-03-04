@@ -216,12 +216,16 @@ export default {
     },
     // 修改名字
     changeName(){
-      this.allList.forEach((i, index)=>{
-        if(i.guid == this.tmpGuid){
-          i.rename = this.rename
-          message.success('修改名称成功！')
-        }
-      })
+      if(this.rename == ''){
+        message.error('名称不能为空！')
+      }else{
+        this.allList.forEach((i, index)=>{
+          if(i.guid == this.tmpGuid){
+            i.rename = this.rename
+            message.success('修改名称成功！')
+          }
+        })
+      }
     },
     // 修改名称弹窗
     showRenameModal(item){
