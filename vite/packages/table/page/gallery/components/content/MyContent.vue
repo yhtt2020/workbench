@@ -1,14 +1,18 @@
 <template>
   <vue-custom-scrollbar :settings="settingsScroller" class="grow shrink" style="height: 100%;">
     <div style="height: 8px;"></div>
-    <viewer :images="myPaperList" :options="options" >
+    <!-- <viewer :images="myPaperList" :options="options" > -->
       <a-row :gutter="[16, 16]" id="bingImages">
        <a-col class="image-wrapper" v-for="(img,index) in myPaperList" :span="6"  >
-         <div class="pointer w-full h-full my-paper" >
+         <div class="w-full h-full pointer my-paper" >
           <xt-mix-menu :menus="getMenuList(img)" fn="callBack"  @mounted="this.myCurrentID = img" :stopPropagation="false" >
-            <img :src="fileImageExtension(img) ? img.path : img.src" :data-source="img.path" :alt="img.resolution"   class="image-item pointer relative" />
+            <xt-preview-img
+              :imgList="imgList"
+              :index="index">
+              <img :src="fileImageExtension(img) ? img.path : img.src" :data-source="img.path" :alt="img.resolution"   class="relative image-item pointer" />
+            </xt-preview-img>
             <div class="absolute top-1/2 left-1/2 " style="transform: translate(-50% ,-50%);">
-              <div v-if="fileImageExtension(img)" @click="previewVideo(img)"  class="play-icon flex items-center justify-center pointer" style="opacity: 0;">
+              <div v-if="fileImageExtension(img)" @click="previewVideo(img)"  class="flex items-center justify-center play-icon pointer" style="opacity: 0;">
                 <MyContentIcon icon="fluent:play-16-filled" style="font-size: 2rem;color: var(--active-text) !important;"/>
               </div>
               <xt-button w="100" :h="isModal ? 32 : 40" v-else style="opacity: 0; border-radius: 8px;" class="set-paper xt-bg-t-2" @click="setAppPaper(img)">
@@ -24,7 +28,7 @@
               </xt-button>
             </div>
             <div class="absolute flex " style="right:16px;" :style="isModal ? {top: '4px'}:{top: '8px'}" v-if="isLocalDownload(img)">
-              <xt-button  :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-2 mr-2 img-button" style="border-radius: 8px; opacity: 0;" @click="download(img)">
+              <xt-button  :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="mr-2 xt-bg-t-2 img-button" style="border-radius: 8px; opacity: 0;" @click="download(img)">
                 <div class="flex items-center justify-center">
                   <xt-new-icon icon="fluent:arrow-download-16-regular" :size="isModal ? 16 : 20" :color="'var(--active-text)'"></xt-new-icon>
                 </div>
@@ -40,7 +44,7 @@
          </div>
        </a-col>
       </a-row>
-    </viewer>
+    <!-- </viewer> -->
     <div style="height: 16px;"></div>
   </vue-custom-scrollbar>
  </template>
@@ -137,6 +141,14 @@ let fs,path
    computed:{
     ...mapWritableState(useWidgetStore,['rightModel']),
     ...mapWritableState(paperStore,['settings','activePapers','myPapers']),
+    imgList(){
+      return this.myPaperList.map(item => {
+        return item.path;
+      })
+    }
+   },
+   mounted(){
+    console.log('myPaperList',this.myPaperList);
    },
 
    methods:{

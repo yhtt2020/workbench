@@ -1,6 +1,6 @@
 <template>
-  <div class="w-full h-full flex flex-col">
-    <div class=" flex items-center justify-between mb-2 " :class="isModal ? 'h-8' : 'h-10'">
+  <div class="flex flex-col w-full h-full">
+    <div class="flex items-center justify-between mb-2 " :class="isModal ? 'h-8' : 'h-10'">
       <div class="flex items-center justify-center">
         <xt-new-icon icon="uim:bing" size="20" class="mr-2"></xt-new-icon>
         <span  class="xt-text xt-font" :class="isModal ? 'font-14 font-400' : 'font-16 font-600'">必应壁纸</span>
@@ -13,7 +13,7 @@
     <div class="flex-1 h-4/5">
       <vue-custom-scrollbar  :settings="settingsScroller" class="grow shrink" style="height: 100%;">
         <div style="height: 8px;"></div>
-        <PaperList :list="bingImages" :isModal="isModal"></PaperList>
+        <PaperList :list="bingImages" :isModal="isModal" :imgList="imgList"></PaperList>
         <div style="height: 16px;"></div>
       </vue-custom-scrollbar>
     </div>
@@ -87,6 +87,13 @@ export default {
     }
 
   },
+  computed:{
+    imgList(){
+      return this.bingImages.map((item) => {
+        return item.path
+      })
+    }
+  },
 
   mounted() {
     $('.image-wrapper').on('touchmove', (e) => {
@@ -117,7 +124,7 @@ export default {
     //   // this.getBingWallPaper(this.page).then()
     //   // console.log('执行333',this.page);
     // })
-
+    
   },
 
   methods: {

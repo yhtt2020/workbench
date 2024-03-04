@@ -107,29 +107,32 @@
                                 </div>
                                 <template v-if="cardData.image_170_170">
                                     <!-- <viewer :images="cardData.image_170_170" :options="options"
-                                        class="items-center p-0 mb-0 ">
+                                        class="items-center p-0 mb-0 "> -->
                                         <a-row :gutter="[20, 20]" style="margin-right: 1em" wrap="'true">
                                             <a-col class="flex flex-wrap mr-2 image-wrapper"
-                                                v-for="(img, index) in cardData.image" :span="11" style="">
+                                                v-for="(img, index) in cardData.image_170_170" :span="11" style="">
+                                                <xt-preview-img
+                                                    :imgList="imgList"
+                                                    :multiple="true"
+                                                    :maskClose="true"
+                                                    :controlOption="{
+                                                        controlBar: true,
+                                                        closeBtn: true,
+                                                        arrowBtn: true,
+                                                    }"
+                                                    :index="index"
+                                                >
                                                 <img class="mb-2 mr-2 rounded-md image-item pointer cover-lm"
                                                     :src="img.image" :data-source="cardData.image[index].image"
                                                     @contextmenu.stop="showMenu(img)"
                                                     style="position: relative object-fit: fill;">
+                                                </xt-preview-img>
                                             </a-col>
                                         </a-row>
-                                    </viewer> -->
-                                    <xt-preview-img
-                                        :imgList="imgList"
-                                        :imgW="200"
-                                        :imgH="100"
-                                        :multiple="true"
-                                        :maskClose="true"
-                                        :controlOption="{
-                                            controlBar: true,
-                                            closeBtn: true,
-                                            arrowBtn: true,
-                                        }"
-                                    ></xt-preview-img>
+                                    <!-- </viewer> -->
+
+                                
+                                    
                                 </template>
 
                             </div>
