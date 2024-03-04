@@ -159,13 +159,6 @@ export default {
 
 
 
-   // 登录过
-   if(this.userInfo.uid && this.init){
-      this.loginOk()
-      return
-      // this.timeout()
-    }
-
     setTimeout(() => {
       this.storeReadyTimer = setInterval(() => {
         if (!this.launching) {
@@ -190,7 +183,6 @@ export default {
     this.bindUserInfoResponse()
     this.getUserInfo()
     this.sortClock()
-    this.$router.replace({ name: 'home' })
 
   },
   computed: {
@@ -326,6 +318,14 @@ export default {
     },
 
     async afterLaunch () {
+
+   // 登录过
+   if(this.userInfo.uid && this.init){
+      this.loginOk()
+      return
+      // this.timeout()
+    }
+
       // 未初始化
       if(!this.init && (isMain() || this.$useEnv('web'))){
         this.$router.replace({ name: 'wizard' })

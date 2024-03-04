@@ -96,7 +96,7 @@ import WujieVue from "wujie-vue3";
 import { tt,Mit } from "./permission/global/global";
 
 
-// import hevueImgPreview from 'hevue-img-preview'
+import hevueImgPreview from 'hevue-img-preview'
 const { bus, setupApp, preloadApp, destroyApp } = WujieVue;
 
 // Your SDKAppID
