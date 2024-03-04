@@ -70,7 +70,7 @@
       <xt-new-icon :icon="controlItem.icon" size="24" :color="controlStatus?.status ? 'var(--active-text)':'var(--primary-text)'"></xt-new-icon>
     </div>
     <span :class="controlStatus?.status ? 'xt-active-text' :'xt-text'">{{controlItem.name}}</span>
-    <div class="absolute red-content rounded-full" v-if="!firstVisible && controlIndex === 'barrage'"></div>
+    <div class="absolute red-content rounded-full" v-if="!firstVisible && controlIndex === 'barrage'" style="border: 2px solid #ffffff;"></div>
   </div>
  </template>
 </template>
@@ -207,6 +207,12 @@ const triggerControl = () =>{
     case 'barrage':
       settings.value.enableBarrage = !settings.value.enableBarrage;
       firstVisible.value = true;
+      if(settings.value.enableBarrage){
+        message.info('已为开启弹幕模式');
+      }
+      else {
+        message.info('已为关闭弹幕模式');
+      }
       break;
     default:
       break;
@@ -221,19 +227,6 @@ const removeControl = (evt) =>{
     const removeIndex  = control.value.oldList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
     control.value.oldList.splice(removeIndex,1);
   }
-  // // 阻止拖拽
-  // if(props.isClick){
-  //   // 保留一个不能删除
-  //   if(control.value.oldList.length !== 1){
-      
-  //   }
-  //   else {
-  //    evt.preventDefault();
-  //   }
-  // }
-  // else {
-  //  evt.preventDefault();
-  // }
 }
 
 // 判断用户是否登录
