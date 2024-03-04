@@ -106,11 +106,11 @@
             justify-content: center;
           "
           :style="{
-            width: this.settings.enableChat ? '160px' : '80px',
-            paddingLeft: this.settings.enableChat
+            width: !$useEnv(['guest']) && this.settings.enableChat ? '160px' : '80px',
+            paddingLeft: !$useEnv(['guest']) &&this.settings.enableChat
               ? '16px !important'
               : '0px !important',
-            paddingRight: this.settings.enableChat
+            paddingRight: !$useEnv(['guest']) &&this.settings.enableChat
               ? '16px !important'
               : '0px !important',
             borderRadius: this.navAttribute.navRadius + 'px',
@@ -118,38 +118,14 @@
         >
           <div
             class="flex items-center justify-between"
-            :style="{ marginLeft: this.settings.enableChat ? '10px' : '0px' }"
+            :style="{ marginLeft: !$useEnv(['guest']) &&this.settings.enableChat ? '10px' : '0px' }"
           >
             <div @click="openControl($event)">
               <MyAvatar :chat="true" :level="false" :limit="false"></MyAvatar>
             </div>
-            <!---->
-            <div v-show="settings.enableChat" class="pl-4 pointer">
+            <div v-show="!$useEnv(['guest']) && settings.enableChat" class="pl-4 pointer">
               <ChatButton :tipPosition="navAttribute.navSize"></ChatButton>
             </div>
-          </div>
-        </div>
-        <div
-          v-if="false"
-          style="
-            position: fixed;
-            top: 10px;
-            background: black;
-            color: white;
-            z-index: 99999;
-            line-height: 14px;
-            text-align: left;
-            max-width: 100vw;
-            left: 0;
-          "
-        >
-          <div>选中的id{{ this.isLeaveBar }} {{ isEdge }}</div>
-          <div
-            v-for="(item, index) in copyFootNav"
-            style="margin-bottom: 5px; border-bottom: 4px solid white"
-          >
-            {{ index }} {{ item.name }} {{ item.id }}
-            {{ item.children?.length }}
           </div>
         </div>
         <!-- 快速搜索 底部栏区域 -->
@@ -219,8 +195,8 @@
               >
                 <div
                   @contextmenu="showMenu"
-                  style="height: 52px; width: 100%; overflow: hidden"
-                  class="item-content"
+                  style="height: 52px; width: 100%;"
+                  class="flex flex-wrap justify-center"
                 >
                   <div
                     class="w-full scroll-content"
@@ -266,7 +242,7 @@
                       >
                         <xt-menu
                           :id="item.id"
-                          class="relative overflow-visible item-content"
+                          class="relative w-full flex flex-wrap justify-center overflow-visible"
                           :menus="folderOptions"
                         >
                           <div
@@ -304,7 +280,14 @@
                               >
                               </FolderVue>
                               <template v-else>
-                                <Avatar :item="item"></Avatar>
+                                <Avatar :item="item">
+                                  <template #control>
+                                    <div 
+                                      style="background-color: #ff4d4f;border: 2px solid ;" 
+                                      class="absolute top-0 flex items-center justify-center flex-shrink-0 w-4 h-4 translate-x-6 -translate-y-1/3 rounded-full pointer" >
+                                    </div>
+                                  </template>
+                                </Avatar>
                               </template>
                             </Drag>
                           </div>
@@ -357,6 +340,14 @@
       v-if="quick"
     >
       <component :is="componentId" @setQuick="setQuick"></component>
+      <!-- <navigationSetting
+        v-if="componentId === 'navigationSetting'"
+        @setQuick="setQuick"
+      ></navigationSetting>
+      <EditNewNavigation
+        v-if="componentId === 'EditNewNavigation'"
+        @setQuick="setQuick"
+      ></EditNewNavigation> -->
     </div>
   </transition>
 
@@ -719,11 +710,10 @@ export default {
         })
       })
     }
-
     // 图标整体替换格式方法
     // this.copyFootNav = this.replaceType(this.copyFootNav)
     this.copyFootNav = this.copyFootNav.map((item) => this.mergeData(item))
-    // console.log(this.copyFootNav, 'copyFootNav')
+    console.log(this.copyFootNav, 'copyFootNav')
     this.bottomInit = true
     //对id进行强制修复
     this.copyFootNav.forEach(item => {
@@ -1167,6 +1157,7 @@ export default {
 
       // console.log('item :>> ', item);
       if (item.component) {
+        console.log('item :>> ', item.component);
         this.componentId = item.component
         if (item.component === 'EditNewNavigation') {
           this.editToggle = true
@@ -1225,9 +1216,15 @@ export default {
      * @param {*} item 图标详细信息
      */
     async newOpenApp(type, value, item) {
-      if (item.name === '设置中心') {
+      // 新版设置打开方式
+      if (value === 'setting') {
+        this.$router.push({
+          name:'home'
+        })
+        setTimeout(() => {
           this.$bus.emit("openSystemSet")
         return
+      })
       }
       if(type === 'folder'){
         this.openFolder(item)

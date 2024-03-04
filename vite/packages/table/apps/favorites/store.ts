@@ -16,7 +16,14 @@ export const favoStore = defineStore("favoStore", {
     edgeList: [],
     // 将收藏夹数据打散存入 最近添加
     allList: [],
-    folderList: [],
+    folderList: [
+      {
+        name: '我的收藏',
+        type: 'favo',
+        num: 0,
+        rename: null,
+      }
+    ],
     // 序列
     folderIndex: null,
     browserList: {
