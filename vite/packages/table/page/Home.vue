@@ -163,8 +163,6 @@
       class="fixed bottom-0 left-0 w-full cursor-not-allowed ring-0"
       style="z-index:900;background-color:rgba(255,255,255,0.1);height: 150px;"
     ></div> -->
-
-    <xt-confirm v-if="loginVisible" noText="暂不登录" okText="立即登录" okButtonWidth="95" noButtonWidth="95" title="登录提示" content="目前处于游客模式，请登录后体验完整功能。" :no="unLoginModal" :ok="loginModal"></xt-confirm>
   </teleport>
 
   <GalleryModal ref="galleryRef" />
@@ -244,7 +242,6 @@ import RadioTab from "../components/RadioTab.vue";
 import ScalePanel from "./ScalePanel.vue";
 import GuidePanel from "./GuidePanel.vue";
 import WebLogin from "./WebLogin.vue";
-import {useLogin} from '../../table/permission/user/useLogin'
 
 // import News from "../components/widgets/news/NewsCard.vue";
 import GalleryModal from '../components/paperModal/GalleryModal.vue';
@@ -476,7 +473,6 @@ export default {
 
     ...mapWritableState(appStore, {
       appSettings: "settings",
-      loginVisible: "loginVisible"
     }),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(homeStore, ["currentDeskId", "currentDeskIndex", 'currentInit']),
@@ -998,16 +994,6 @@ export default {
         }
       })
     },
-
-    loginModal () {
-      useLogin()
-      this.loginVisible = false
-    },
-
-    unLoginModal () {
-      this.loginVisible = false
-    },
-
     // 关闭缩放弹窗
     closeScale() {
       this.visibleScale = false

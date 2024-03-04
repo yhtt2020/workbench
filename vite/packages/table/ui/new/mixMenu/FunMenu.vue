@@ -123,7 +123,7 @@ function defaultListContextmenu(event) {
   if(!firstOpen.value){
     console.log('触发第一次选择');
     chooseVisible.value = true
-    firstOpen.value = truncate
+    firstOpen.value = true
     return
   }
   if (rightModel.value == "default") {
