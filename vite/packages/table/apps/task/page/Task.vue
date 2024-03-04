@@ -67,34 +67,27 @@ const menusList = computed(() => {
       return i.value != "chats" && i.value != "Activity";
     });
     return tmp.value;
-  } else {
-    if(isDone === 0){
-      let undone = ref([])
-      undone.value = menus.value.filter((item)=>{
-       const option = item.value !== "efficiency" && item.value !== "games" && item.value !== "association";
-       return option;
-      })
-      return undone.value;
-    }
-    else {
-      if(firstShop.value){
-        return menus.value;
-      }
-      else{
-        const mapMenus = menus.value.map((item)=>{
-          if(item.value === 'Shop'){
-            return {
-              ...item,
-              info:[],
-            }
-          }
-          else {
-            return item;
-          }
-        })
-        return mapMenus;
-      }
-    }
+  } 
+  else if(isDone === 0){
+    let undone = ref([]);
+    undone.value = menus.value.filter((item)=>{
+      const option = item.value !== "efficiency" && item.value !== "games" && item.value !== "association";
+      return option;
+    });
+    if(firstShop.value)  return undone.value;
+    const infoUndone = undone.value.map((item)=>{
+      if(item.value === 'Shop')  return { ...item,info:[],}
+      return {...item}
+    });
+    return infoUndone;
+  }
+  else {
+    if(firstShop.value) return menus.value;
+    const mapMenus = menus.value.map((item)=>{
+      if(item.value === 'Shop')  return { ...item,info:[],}
+      return {...item}
+    });
+    return mapMenus;
   }
 });
 // 任务配置
