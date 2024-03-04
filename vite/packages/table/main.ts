@@ -135,8 +135,8 @@ window.$ui = {
 };
 
 window.tt = tt;
-// app.provide("tt", tt);
-// app.config.globalProperties.tt = tt;
+app.provide("tt", tt);
+app.config.globalProperties.tt = tt;
 
 const pinia = createPinia();
 pinia.use(piniaPersist);

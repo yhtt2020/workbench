@@ -57,6 +57,7 @@ onMounted(() => {
 const test = () => {
   // window.tt.runTime
   // window.tt
+  console.log('proxy :>> ', proxy);
   // console.log("test",t);
   // tt.api.
   // console.log('tt.runTime.env :>> ', tt.env(""));

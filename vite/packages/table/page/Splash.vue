@@ -169,11 +169,7 @@ export default {
           if (window.loadedStore[key] === false)
             return check
         })
-        if (haventOk.length) {
-          //未全部搞定
-          // console.log(haventOk)
-          return
-        } else {
+        if (haventOk.length <=1 ) {
           //已经全部搞定
           clearInterval(this.storeReadyTimer)
           this.afterLaunch()
@@ -318,7 +314,6 @@ export default {
     },
 
     async afterLaunch () {
-
    // 登录过
    if(this.userInfo.uid && this.init){
       this.loginOk()
@@ -355,12 +350,11 @@ export default {
       this.launching = false
       if (!this.userInfo) {
         //如果个人信息不存在，则直接返回
+
         return
       } else {
         this.enter()
       }
-      this.$router.replace({ name: 'home' })
-
     },
     // 生成等级区间
     gradeTableGenerate (num) {
