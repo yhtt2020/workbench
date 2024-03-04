@@ -190,6 +190,7 @@ export default {
     this.bindUserInfoResponse()
     this.getUserInfo()
     this.sortClock()
+    this.$router.replace({ name: 'home' })
 
   },
   computed: {
@@ -358,6 +359,7 @@ export default {
       } else {
         this.enter()
       }
+      this.$router.replace({ name: 'home' })
 
     },
     // 生成等级区间

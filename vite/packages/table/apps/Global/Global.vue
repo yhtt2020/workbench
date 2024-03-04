@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // 这个文件存放是所有场景都需要弹出的组件
 // 记得写注释
-import { ref, onMounted, getCurrentInstance, onUnmounted } from "vue";
+import { ref, onMounted, getCurrentInstance, onUnmounted, inject } from "vue";
 // store
 import { storeToRefs } from "pinia";
 import { taskStore as useTaskStore } from "../task/store";
@@ -11,7 +11,7 @@ import ClaimReward from "../task/components/ClaimReward.vue";
 import SystemSet from "../systemSet";
 import { useLogin } from "../../permission/user/useLogin";
 import Login from "../../permission/user/Login.vue";
-
+const tt = inject("tt");
 const { proxy }: any = getCurrentInstance();
 
 const taskStore: any = useTaskStore();
@@ -36,6 +36,7 @@ const openFile = (cb?: Function) => {
       event.target.value = "";
       fileVisible.value = false;
     };
+    // proxy.tt
   }, 10);
 };
 onMounted(() => {
@@ -52,6 +53,15 @@ onMounted(() => {
     openFile(cb);
   });
 });
+
+const test = () => {
+  // window.tt.runTime
+  // window.tt
+  // console.log("test",t);
+  // tt.api.
+  // console.log('tt.runTime.env :>> ', tt.env(""));
+};
+
 </script>
 
 <template>
