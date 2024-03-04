@@ -128,7 +128,9 @@ export const openSysApp = (value, router) => {
     return;
   } else if(value === "control"){
     return;
-  }else {
+  } else if(value === "setting"){
+    return;
+  } else {
     router.push({ name: value });
   }
 };
