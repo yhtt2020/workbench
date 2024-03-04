@@ -189,10 +189,10 @@ export default {
         // 刷新圈子
         async refreshPost() {
             this.isLoading = true
-            console.log(this.defaultForum,'defaultForum')
+            // console.log(this.defaultForum,'defaultForum')
             let value = 0
             this.defaultForum.value ? value = this.defaultForum.value : value = this.defaultForum
-            console.log(value,'value')
+            // console.log(value,'value')
             await this.getCommunityPost(value)
             this.showForumPost = this.communityPost
             this.isLoading = false
@@ -248,7 +248,7 @@ export default {
                 this.showForumPost = cachePost
                     setTimeout(() => {
                         if(this.isClick){
-                            console.log('22222222222222')
+                            // console.log('22222222222222')
                             this.isLoading = true
                             this.refreshPost().then(()=>{
                                 this.isLoading = false
@@ -418,7 +418,7 @@ export default {
         }
     },
     unmounted() {
-        console.log('222222222222<<<<<<<<<<<<<',this.showForumPost)
+        // console.log('222222222222<<<<<<<<<<<<<',this.showForumPost)
         localStorage.setItem('communityContent', JSON.stringify(this.showForumPost));
     },
 }

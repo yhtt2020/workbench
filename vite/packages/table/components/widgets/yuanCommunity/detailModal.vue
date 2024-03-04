@@ -191,7 +191,6 @@ import browser from '../../../js/common/browser';
 import emojiReplace from '../../../js/chat/emoji'
 import { message } from "ant-design-vue";
 import Detail from '../../../page/chat/com/Detail.vue';
-import PreviewImg from './Detail/PreviewImg.vue';
 import { Item } from 'ant-design-vue/lib/menu';
 const props = defineProps({
     showDetailModal: Boolean,

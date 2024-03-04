@@ -36,7 +36,7 @@
             </video>
             <!-- <viewer :images="[getCustomDataPaper]" :options="imgOption" v-else> -->
             <template v-else>
-              <div v-for=" (img,index)  in  [getCustomDataPaper] " :style="{width:`${imgWH.width}px`,height:`${imgWH.height}px`}" class="rounded-lg">
+              <div v-for=" (img,index)  in  [getCustomDataPaper] " :style="{width:`${imgWH.width}px`,height:`${imgWH.height}px`}" class="overflow-hidden rounded-lg">
                 <xt-preview-img
                   :imgList="imagesList"
                   :multiple="true"
@@ -47,8 +47,9 @@
                       arrowBtn: true,
                   }"
                   :index="index"
+                  class="w-full h-full"
                 >
-                <img  :src="img.src"    :data-source="img.path" :alt="img.resolution" class="relative object-cover w-full h-full rounded-lg pointer">
+                <img  :src="img.src" :data-source="img.path" :alt="img.resolution" class="relative object-cover w-full h-full rounded-lg pointer">
                 </xt-preview-img>
               </div>
             </template>
