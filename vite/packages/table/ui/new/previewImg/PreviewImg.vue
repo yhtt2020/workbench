@@ -1,9 +1,9 @@
 <template>
     <div
         style="width: 100%;height: 100%;gap: 10px;"
-        :class="['listClass']"
+        :class="[listClass]"
         class="flex flex-wrap items-center ">
-        <div v-for="(item,index) in imgList">
+        <div v-for="(item,index) in imgList" class="relative">
             <slot name="menu">
                 <img 
                     :src="item" 
@@ -14,19 +14,20 @@
                         width: imgW + 'px',
                         height: imgH + 'px',
                     }" 
-                    class="rounded-lg"
-                    :class="['imgClass']"
+                    :class="[imgClass]"
                     style="object-fit: cover;"> 
+                    <!-- 补充内容 -->
+                    <slot name="extra"></slot> 
+                    
             </slot>
            
         </div>
-        <!-- 补充内容 -->
-        <slot></slot>
+
     </div>
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive,getCurrentInstance,computed,onMounted } from 'vue'
+import { ref, reactive,getCurrentInstance,computed,onMounted,toRefs } from 'vue'
 import 'hevue-img-preview/css/default.css'
 const {proxy} = getCurrentInstance()
 export interface imgPreviewProps {
@@ -53,20 +54,22 @@ const props = withDefaults(defineProps<imgPreviewProps>(),{
         closeBtn: true,
         arrowBtn: true,
     },
+    imgClass: 'rounded-lg',
 }) 
+
+const {imgW,imgH,imgList,maskClose} = toRefs(props)
 
 // 点击图片预览
 const clickFn = (index: Number) => {
-    console.log('imgList',props.imgH,props.imgW)
     // 预览图片列表
-    const list = props.previewList ? props.previewList : props.imgList
+    const list = props.previewList ? props.previewList : imgList.value
     
     proxy.$hevueImgPreview({
         nowImgIndex: index,
         multiple:true,
         imgList: list,
-        clickMaskCLose:props.controlOption.closeBtn && !props.controlOption.closeBtn ? true : props.maskClose,
-        arrowBtn:props.imgList.length === 1 ? false : props.controlOption.arrowBtn,
+        clickMaskCLose:props.controlOption.closeBtn && !props.controlOption.closeBtn ? true : maskClose.value,
+        arrowBtn:list.length === 1 ? false : props.controlOption.arrowBtn,
         controlBar:props.controlOption.controlBar,
         closeBtn:props.controlOption.closeBtn,
     })

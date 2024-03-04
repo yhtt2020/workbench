@@ -13,7 +13,7 @@
       class="absolute inset-0" 
       style="
         border-radius: 8px; 
-        z-index: -1;
+        z-index: 1;
         left: -14px;
         right: -14px;
         bottom: -14px;
@@ -76,223 +76,22 @@
       </xt-button>
     </div>
   </xt-container>
-  <a-drawer
-    v-model:visible="panelVisible"
-    :width="500"
-    title="设置"
-    :headerStyle="{ border: 0 }"
-    :bodyStyle="{ padding: '0 24px ' }"
-  >
-    <template #extra>
-      <div
-        class="flex items-center justify-center w-16 h-10 rounded-lg drawer-item-bg pointer"
-        @click="saveData" style="background: #508BFE ;color:white"
-      >
-        保存
-      </div>
-    </template>
-    <vue-custom-scrollbar
-      :settings="rightScrollbarSettings"
-      class="relative"
-      style="height: calc(100% - 10px)"
-    >
-    <XtRadio :list="sizeList" v-model:data="mySize.title" value="title" ></XtRadio>
-      <div class="flex flex-row items-center justify-between mt-2 mb-2">
-        <div class="text-base">显示名称</div>
-        <div><a-switch v-model:checked="showName" /></div>
-      </div>
-      <a-input
-        v-model:value="myData.title"
-        class="mt-6 rounded-lg drawer-item-bg xt-bg-2"
-        style="height: 48px;color: var(--primary-text);border: 0px;"
-        placeholder=""
-      >
-      </a-input>
-      <div class="mt-6 text-base">小组件封面</div>
-      <div
-        class="flex flex-row items-center justify-between gap-3 mt-6"
-        v-if="!Object.keys(myData.img).length > 0"
-      >
-        <xt-button type="theme"
-          class="w-full " style="width:50%"
-          @click="importFile"
-        >
-          选择图片
-        </xt-button>
-        <xt-button
-          @click="openMy" style="width:50%"
-        >
-          选自壁纸收藏
-        </xt-button>
-      </div>
-      <div v-else>
-        <div class="relative w-16 h-16 mt-6">
-          <video
-            class="fullscreen-video"
-            ref="wallpaperVideo"
-            style="border-radius: 8px; object-fit: cover"
-            playsinline=""
-            autoplay=""
-            muted=""
-            loop=""
-            v-if="myData.img.srcProtocol"
-          >
-            <source :src="myData.img.srcProtocol" type="video/mp4" id="bgVid" />
-          </video>
-          <img
-            :src="myData.img.middleSrc"
-            alt=""
-            class="w-full h-full"
-            style="border-radius: 8px; object-fit: cover"
-            v-else-if="myData.img.middleSrc"
-          />
-          <img
-            :src="myData.img.src"
-            class="w-full h-full"
-            style="border-radius: 8px; object-fit: cover"
-            v-else-if="myData.img.src"
-          />
-          <div
-            class="absolute top-0 right-0 flex items-center justify-center flex-shrink-0 w-5 h-5 translate-x-1/2 -translate-y-1/2 rounded-full pointer"
-            @click="deleteImg"
-            style="background: rgba(255, 255, 255, 0.5)"
-          >
-            <Icon icon="guanbi" style="color: black; height: 10px"></Icon>
-          </div>
-        </div>
-      </div>
-      <div class="mt-6 text-base">快捷方式</div>
-      <div class="mt-2 text-base" style="color: var(--secondary-text)">
-        支持选择Windows应用的快捷方式来作为小组件的点击启动目标
-      </div>
-      <div class="flex flex-row items-center justify-between mt-6">
-        <div
-          class="flex items-center justify-center w-1/2 h-12 rounded-lg drawer-item-bg pointer xt-bg-2"
-          @click="customClick"
-          v-if="!myData.link"  style="color: var(--primary-text);"
-        >
-          本地应用
-        </div>
-        <div
-          class="flex items-center justify-center w-1/2 h-12 ml-3 rounded-lg drawer-item-bg pointer xt-bg-2"
-          v-if="!myData.link"
-          @click="showAppNav"  style="color: var(--primary-text);"
-        >
-          选自应用导航
-        </div>
-        <div
-          v-else
-          class="flex items-center justify-between w-full px-2 rounded-lg h-9"
-          style="background: rgba(42, 42, 42, 1)"
-        >
-          <div class="w-2/3 text-more">{{ title }}</div>
-          <div
-            class="flex items-center justify-center flex-shrink-0 w-5 h-5 rounded-full pointer"
-            @click="deleteApp"
-            style="background: rgba(255, 255, 255, 0.5)"
-          >
-            <Icon icon="guanbi" style="color: black; height: 10px"></Icon>
-          </div>
-        </div>
-      </div>
-    </vue-custom-scrollbar>
-    <div v-if="editFlag || myImgShow" class="fixed inset-0"></div>
-    <Classification
-      :navClassify="navClassify"
-      v-if="editFlag"
-      v-model:show="editFlag"
-      @clickLeftList="clickItem"
-    >
-      <div v-show="nowClassify !== 'localApp'" class="h-full">
-        <a-input
-          v-model:value="selectContent"
-          class="h-10 rounded-lg no-drag"
-          placeholder="搜索"
-          style="background: rgba(42, 42, 42, 0.6)"
-        >
-          <template #prefix>
-            <Icon icon="sousuo" class="text-gray-600"></Icon>
-          </template>
-        </a-input>
-        <vue-custom-scrollbar
-          key="scrollbar"
-          :settings="rightScrollbarSettings"
-          class="relative"
-          style="height: calc(100% - 40px); padding: 5px 0"
-        >
-          <listItem
-            v-for="(item, index) in filterList"
-            :item="item"
-            class="rounded-lg right-scroll-list"
-            @click="clickRightListItem(item, index)"
-          ></listItem>
-        </vue-custom-scrollbar>
-      </div>
-      <div
-        v-show="nowClassify === 'localApp'"
-        class="flex flex-col items-start h-full text-zinc-500"
-      >
-        <div>1. 点击选择需要添加的应用快捷方式</div>
-        <div>2. 拖动应用快捷方式拖放到下方</div>
-        <div>3. 支持批量添加</div>
-        <div
-          class="border-dashed w-full h-1/2 mt-2.5 rounded-lg flex flex-row justify-center items-center"
-          @dragover.prevent=""
-          @drop.prevent="drop"
-        >
-          <Icon
-            icon="tianjia2"
-            style="width: 18px; height: 18px"
-            class="mr-2"
-          ></Icon>
-          添加快捷方式
-        </div>
-        <ScrolX :height="66">
-          <div class="flex flex-row justify-start w-full pt-4 pl-4 mt-4 -ml-8">
-            <div v-for="(item, index) in dropList" class="flex ml-4">
-              <a-badge>
-                <template #count>
-                  <Icon
-                    icon="guanbi2"
-                    style="height: 24px; width: 24px; color: crimson"
-                    @click="deleteDropList(index)"
-                    class="pointer"
-                  ></Icon>
-                </template>
-                <a-avatar :size="40" shape="square" :src="item.icon">
-                </a-avatar>
-              </a-badge>
-            </div>
-          </div>
-        </ScrolX>
-        <div
-          @click="clickRightListItem(dropList)"
-          class="flex items-center justify-center w-24 h-12 mt-2 rounded-lg pointer"
-          style="background: rgb(42, 42, 42); color: rgba(255, 255, 255, 0.85)"
-        >
-          确定添加
-        </div>
-      </div>
-    </Classification>
-    <ModalList
-      v-if="myImgShow"
-      v-model:visible="myImgShow"
-      title="我的收藏"
-      :imgList="myPapers"
-      @sendImg="sendImg"
-    ></ModalList>
-  </a-drawer>
   <!-- 新版设置 -->
-  <!-- <CustomModal 
+  <CustomModal 
     :modalVisible="panelVisible"  
     @close="panelVisible = false"
     :customInput="myData.title"
     :linkPath="myData.link"
     :showName="showName"
-    :imgSrc="imgSrc"
+    :img="imgSrc"
     @update:img="updateImg"
     @updateBorder="updateBorder"
-    :noBorder="customData.hideFrame"/> -->
+    :noBorder="customData.hideFrame"
+    @updateName="updateName"
+    @updateInput="updateInput"
+    @updateLink="updateLink"
+    @localFile="localFile"
+    />
 </template>
 
 
@@ -389,13 +188,13 @@ export default {
   },
   computed: {
     ...mapWritableState(paperStore, ["settings", "myPapers"]),
-    filterList() {
-      return this.ClassifyData.filter((i) => {
-        return (
-          i.type === this.nowClassify && i.name.includes(this.selectContent)
-        );
-      });
-    },
+    // filterList() {
+    //   return this.ClassifyData.filter((i) => {
+    //     return (
+    //       i.type === this.nowClassify && i.name.includes(this.selectContent)
+    //     );
+    //   });
+    // },
     title() {
       return this.myData.link.name || this.myData.link;
     },
@@ -405,66 +204,13 @@ export default {
     options(){
       return {
         bg:this.customData.hideFrame ? 'transparent' : '',
-        shadow: this.customData.hideFrame
+        shadow: this.customData.hideFrame,
+        resize: true,
       }
     },
-  },
-  created() {
-    this.loadDeskIconApps();
   },
   methods: {
     ...mapActions(cardStore, ["updateCustomData"]),
-    async loadDeskIconApps() {
-      const lightApps = await appModel.getAllApps();
-      for (let i = 0; i < lightApps.length; i++) {
-        lightApps[i].icon = lightApps[i].logo;
-        lightApps[i].type = "lightApp";
-      }
-      const desktopApps = await ipc.sendSync("getDeskApps");
-      for (let i = 0; i < desktopApps.length; i++) {
-        desktopApps[i].type = "tableApp";
-      }
-      this.ClassifyData.push(...desktopApps, ...lightApps);
-    },
-    showAppNav() {
-      this.editFlag = true;
-    },
-    deleteApp() {
-      this.myData.link = undefined;
-    },
-    deleteImg() {
-      this.myData.img = {};
-    },
-    clickItem(item) {
-      this.activeRightItem = 0;
-      this.nowClassify = item.name;
-    },
-    async drop(e) {
-      let files = e.dataTransfer.files;
-      let filesArr = [];
-      if (files && files.length > 0) {
-        for (let i = 0; i < files.length; i++) {
-          filesArr.push(files[i].path);
-        }
-      }
-      this.dropFiles = await ipc.sendSync("getFilesIcon", {
-        files: JSON.parse(JSON.stringify(filesArr)),
-      });
-      this.dropList.push(...this.dropFiles);
-    },
-    deleteDropList(index) {
-      this.dropList.splice(index, 1);
-    },
-    clickRightListItem(item, index) {
-      this.activeRightItem = index;
-      this.editFlag = false;
-      if (item instanceof Array) {
-        this.myData.link = item[0];
-        this.dropList = [];
-      } else {
-        this.myData.link = item;
-      }
-    },
     async importFile() {
       let openPath = await tsbApi.dialog.showOpenDialog({
         title: "选择导入的代码",
@@ -486,6 +232,7 @@ export default {
         this.myData.img = {};
         if (imgReg.test(openPath[0])) {
           this.myData.img.src = openPath[0];
+          this.saveData()
         } else if (videoReg.test(openPath[0])) {
           this.myData.img.srcProtocol = openPath[0];
           this.$nextTick(() => {
@@ -495,29 +242,41 @@ export default {
         }
       }
     },
+    
     sendImg(img) {
       this.myData.img = img;
+      this.saveData()
     },
+    // 替换图片
     updateImg(img) {
       this.myData.img = img;
+      this.saveData()
     },
+    // 无边框
     updateBorder(val) {
       this.customData.hideFrame = val
     },
-    async customClick() {
-      let openPath = await tsbApi.dialog.showOpenDialog({
-        title: "选择图片",
-        filters: [{ name: "图片", extensions: ["png",'jpeg','jpg','svg','bmp','gif','webp'] },{ name: "全部", extensions: ["*"] }],
-        properties: ["multiSelections"],
-      });
-      if (!openPath) {
-        return;
-      } else {
-        this.myData.link = openPath[0];
-      }
+    // 底部名称
+    updateName(val) {
+      this.showName = val
+      this.saveData()
     },
-    openMy() {
-      this.myImgShow = true;
+    // 名称
+    updateInput(val) {
+      this.myData.title = val
+      this.saveData()
+    },
+    // 链接
+    updateLink(val) {
+      this.myData.link = val
+      this.saveData()
+      // console.log('updateLink',this.myData.link);
+    },
+    // 本地文件路径
+    localFile(val){
+      this.myData.link = val
+      this.saveData()
+      // console.log('localFile',val);
     },
     openApp() {
       if (typeof this.myData.link === "object" && this.myData.link.type) {
@@ -572,19 +331,20 @@ export default {
             );
       }
     },
+    // 保存数据到缓存
     saveData() {
-      if (!Object.keys(this.myData.img).length > 0) {
-        message.warning("未添加小组件封面");
-        return;
-      }
+      // if (!Object.keys(this.myData.img).length > 0) {
+      //   message.warning("未添加小组件封面");
+      //   return;
+      // }
       this.updateCustomData(this.customIndex, {
         showName: this.showName,
         mySize: this.mySize,
         myData: this.myData,
         customSize: this.mySize.title
       },this.desk);
-      message.success("保存成功");
-      this.panelVisible = false;
+      // message.success("保存成功");
+      // this.panelVisible = false;
     },
     imgError() {
       this.imgState = false;
@@ -599,16 +359,15 @@ export default {
       this.customData.customSize = '2x2'
     }
   },
-  watch: {
-    mySize: {
-      handler(newV)  {
-        this.options.className = "card" + " " + this.mySize.className;
-        this.$emit("customEvent");
-      },
-      immediate: true,
-      deep:true
-    },
-  },
+  // watch: {
+  //   'myData.img':{
+  //     handler(newV,oldV){
+  //       console.log('newV',newV,'oldV',oldV);
+  //     },
+  //     deep:true,
+  //     immediate:true
+  //   }
+  // },
 };
 </script>
 

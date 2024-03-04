@@ -548,13 +548,17 @@ const refreshDeskApp = async () => {
 };
 function handleClick(e) {
   if (e.target?.closest(".tt-folder-container") == null) {
+    emit('close')
+    // console.log("123 :>> ", 123);
   }
 }
 onUnmounted(()=>{
   window.removeEventListener("click", handleClick);
 })
 onMounted(async () => {
-  window.addEventListener("click", handleClick);
+  if(navBar.value.close){
+    window.addEventListener("click", handleClick);
+  }
 
   customData.value.list = customData.value.list.map((item) => mergeData(item));
   // 空图标替换

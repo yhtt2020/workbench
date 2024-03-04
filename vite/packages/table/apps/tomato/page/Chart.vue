@@ -1,5 +1,10 @@
 <template>
-    <Widget :options="options" :customIndex="customIndex" :desk="desk" :customData="customData" >
+    <xt-container 
+        :options="options" 
+        :customSize="'2x2'"
+        :customIndex="customIndex" 
+        :desk="desk" 
+        :customData="customData" >
         <div class="title">本周番茄时间</div>
         <div class="time">{{ this.weekTime }}</div>
 
@@ -15,7 +20,7 @@
                 <template #title style="font-family:Oswald-SemiBold">{{'星期'+ week[index] + ' : ' + countToday(item)}}</template>
             </a-tooltip>
         </div>
-    </Widget>
+    </xt-container>
 </template>
 
 <script>
@@ -53,7 +58,7 @@
                     icon:'',
                     type:'timer',
                     noTitle:true,
-                    background:"#24B284",
+                    bg:"#24B284",
                 },
                 activeIndex:0,
                 week:['日','一','二','三','四','五','六']
@@ -87,6 +92,9 @@
         color: rgba(255,255,255,0.60);
         font-weight: 400;
         text-align: center;
+        position: absolute;
+        top: -34px;
+        left: 80px;
     }
     .time{
         letter-spacing: 1px;
@@ -99,7 +107,7 @@
 
     .echarts{
         // border: 1px solid #fff;
-        margin-top: 6px;
+        // margin-top: 6px;
         height: 120px;
         display: flex;
         justify-content: space-between;
