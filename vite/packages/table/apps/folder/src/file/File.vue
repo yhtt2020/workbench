@@ -44,18 +44,22 @@ import {
   computed,
   getCurrentInstance,
   toRefs,
+  defineAsyncComponent,
 } from "vue";
 import Files from "./Files.vue";
 import Drag from "../components/Drag.vue";
 import { inject } from "vue";
 import { fileTypes } from "./options";
-import Set from "../../../../components/widgets/myIcons/set/index.vue";
 import { myIcons } from "../../../../store/myIcons";
-
 import {
   useFileConversionIcon,
   useIconConversionFile,
 } from "../hooks/useDataConversion";
+const Set = defineAsyncComponent(() =>
+  import("../../../../components/widgets/myIcons/set/index.vue")
+);
+
+
 
 const index = inject("index", "");
 const data = inject("data", "");

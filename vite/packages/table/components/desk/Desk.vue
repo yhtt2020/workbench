@@ -184,6 +184,7 @@
       v-if="addCardVisible"
     >
       <NewAddCard
+        v-if="addCardVisible"
         @close="hideAddCard"
         @addSuccess="hideAddCard"
         :desk="currentDesk"
@@ -617,7 +618,7 @@ export default {
       // this.settingVisible = true;
       this.$bus.emit("openSystemSet");
       setTimeout(() => {
-        this.$bus.emit("selectSystemNav",2);
+        this.$bus.emit("selectSystemNav", 2);
       }, 10);
     },
     hideDesk() {

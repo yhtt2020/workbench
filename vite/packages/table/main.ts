@@ -134,6 +134,13 @@ window.$ui = {
   router,
 };
 const newTT: TT = tt;
+
+declare global {
+  interface Window {
+    tt: TT;
+  }
+}
+
 window.tt = tt;
 app.provide("tt", newTT);
 app.config.globalProperties.tt = newTT;

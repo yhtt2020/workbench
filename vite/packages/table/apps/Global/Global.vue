@@ -1,15 +1,26 @@
 <script setup lang="ts">
 // 这个文件存放是所有场景都需要弹出的组件
 // 记得写注释
-import { ref, onMounted, getCurrentInstance, onUnmounted, inject } from "vue";
+import {
+  ref,
+  onMounted,
+  getCurrentInstance,
+  onUnmounted,
+  inject,
+  defineAsyncComponent,
+} from "vue";
 // store
 import { storeToRefs } from "pinia";
 import { taskStore as useTaskStore } from "../task/store";
 import { useGlobalStore } from "./store";
-// components
-import ClaimReward from "../task/components/ClaimReward.vue";
-import SystemSet from "../systemSet";
-import Login from "../../permission/user/Login.vue";
+// components 非首次加载请使用defineAsyncComponent包裹
+const ClaimReward = defineAsyncComponent(
+  () => import("../task/components/ClaimReward.vue")
+);
+const SystemSet = defineAsyncComponent(() => import("../systemSet"));
+const Login = defineAsyncComponent(
+  () => import("../../permission/user/Login.vue")
+);
 // hooks
 import { useLogin } from "../../permission/user/useLogin";
 const tt: any = inject("tt");
@@ -53,7 +64,7 @@ onMounted(() => {
   proxy.$bus.on("openFile", (cb) => {
     openFile(cb);
   });
-// window.tt.
+  // window.tt.
 });
 
 const test = () => {
