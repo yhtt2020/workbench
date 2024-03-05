@@ -159,11 +159,11 @@ export default {
         message.info('至少选择1个方案。')
         return
       }
-      Modal.confirm({
-        centered:true,
-        content:'确认删除这'+this.selectedCount+"个方案？此操作不可撤销。",
-        okText:'确认删除',
-        onOk:()=>{
+      window.$ui.confirm(
+        '删除确认',
+        '确认删除这'+this.selectedCount+"个方案？此操作不可撤销。",
+        {
+        ok:()=>{
           this.selectedSchemes.forEach(async scheme=>{
             await this.removeScheme(scheme)
           })

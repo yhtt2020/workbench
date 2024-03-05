@@ -1,10 +1,14 @@
 <template>
-  <viewer :images="list" :options="options">
+  <!-- <viewer :images="list" :options="options"> -->
     <a-row :gutter="[16,16]" id="bingImages">
       <a-col class="image-wrapper " v-for="(img,index) in list" :span="6" style="">
-        <div class="pointer w-full h-full bing-paper" >
+        <div class="w-full h-full pointer bing-paper" >
           <xt-mix-menu :menus="bingMenu" fn="callBack" @mounted="paperCurrent = img" :stopPropagation="false">
-            <img class="image-item pointer" :src="img.src" :data-source="img.path" style="position: relative">
+            <xt-preview-img 
+              :imgList="imgList"
+              :index="index">
+              <img class="image-item pointer" :src="img.src" :data-source="img.path" style="position: relative">
+            </xt-preview-img>
             <div class="absolute " style="top:50%;left:50%;transform: translate(-50% ,-50%);">
               <xt-button w="100" :h="isModal ? 32 : 40"  style="opacity: 0; border-radius: 8px;" class="set-paper xt-bg-t-3" @click="setAppPaper(img)">
                 <div class="flex items-center justify-center">
@@ -13,13 +17,13 @@
                 </div>
               </xt-button>
             </div>
-            <div class="absolute right-2 top-1  flex">
-              <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-3 img-button mr-1" style="border-radius: 8px; opacity: 0;" @click="download(img)" >
+            <div class="absolute flex right-2 top-1">
+              <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="mr-1 xt-bg-t-3 img-button" style="border-radius: 8px; opacity: 0;" @click="download(img)" >
                 <div class="flex items-center justify-center">
                  <xt-new-icon icon="fluent:arrow-download-16-regular" :size="isModal ? 16 : 20" :color="'var(--active-text)'"></xt-new-icon>
                 </div>
               </xt-button>
-              <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-3 img-button mr-1" style="border-radius: 8px;" @click="addToMy(img)" :style="isInMyPapers(img) ? { opacity: '1' } :{ opacity: '0' }">
+              <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="mr-1 xt-bg-t-3 img-button" style="border-radius: 8px;" @click="addToMy(img)" :style="isInMyPapers(img) ? { opacity: '1' } :{ opacity: '0' }">
                 <div class="flex items-center justify-center">
                  <xt-new-icon icon="fluent:star-16-filled" v-if="isInMyPapers(img)" :size="isModal ? 16 : 20" :color="'var(--warning)'"></xt-new-icon>
                  <xt-new-icon icon="fluent:star-16-regular" v-else :size="isModal ? 16 : 20" :color="'var(--active-text)'"></xt-new-icon>
@@ -38,7 +42,7 @@
         </div> -->
       </a-col>
     </a-row>
-  </viewer>
+  <!-- </viewer> -->
 
 <!--
 <a-drawer :height="200" v-model:visible="visibleMenu" placement="bottom">
@@ -57,7 +61,7 @@
       </div>
     </a-col>
     <a-col :span="4">
-      <div @click="setAppPaper" class="btn relative">
+      <div @click="setAppPaper" class="relative btn">
         <Icon style="font-size: 3em" icon="tianjia1"></Icon>
         <div>设为工作台背景</div>
       </div>
@@ -77,7 +81,7 @@ import GradeSmallTip from "../GradeSmallTip.vue";
 import {completeTask} from '../../apps/task/task'
 export default {
   name: 'PaperList',
-  props:['list','isModal'],
+  props:['list','isModal','imgList'],
   components:{
     GradeSmallTip
   },

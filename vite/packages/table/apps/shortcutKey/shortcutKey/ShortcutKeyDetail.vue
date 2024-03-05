@@ -422,13 +422,15 @@ export default {
     },
     btnEdit () {
       this.openSet = false
-      this.$router.push({ name: 'shareKey', params: { id: this.appContent.id } })
+      let params={ id: this.appContent.id }
+      this.$router.push({ name: 'shareKey', params: params})
     },
     async btnDel () {
-      Modal.confirm({
-        centered: true,
-        content: '是否删除此方案？此操作不可恢复。',
-        onOk: async () => {
+      window.$ui.confirm(
+        '删除确认',
+        '是否删除此方案？此操作不可恢复。',
+        {
+        ok: async () => {
           let rs=await this.removeScheme(this.appContent)
           if(rs){
             message.success('删除成功')

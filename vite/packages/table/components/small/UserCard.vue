@@ -99,6 +99,10 @@
           <XtButton @click="sendMessage" :type="relationship==='yes'?'theme':'default'" style="width:100%">发消息</XtButton>
         </a-col>
       </a-row>
+      <div class="text-center" v-else-if="$useEnv('guest')">
+        <icon icon="tishi-xianxing"></icon>
+        游客模式下无法使用好友功能
+      </div>
       <div class="text-center" v-else>
         <icon icon="tishi-xianxing"></icon>
         对方未登录过社群，无法使用好友功能
@@ -119,6 +123,7 @@ import FrameStoreWidget from '../team/FrameStoreWidget.vue'
 import TencentCloudChat from 'tim-js-sdk'
 import { message } from 'ant-design-vue'
 import { useLogout } from '../../permission/user/useLogout'
+import { useEnv } from '../../permission/useEnv'
 
 export default {
   name: 'UserCard',

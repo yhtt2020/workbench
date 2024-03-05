@@ -150,7 +150,6 @@
       class="fixed bottom-0 left-0 w-full cursor-not-allowed ring-0"
       style="z-index:900;background-color:rgba(255,255,255,0.1);height: 150px;"
     ></div> -->
-
   </teleport>
 
   <GalleryModal ref="galleryRef" />
@@ -966,7 +965,6 @@ export default {
         }
       })
     },
-
     // 关闭缩放弹窗
     closeScale() {
       this.visibleScale = false

@@ -1,6 +1,16 @@
 export const NavListTmp = [
     { type: 'systemApp', icon: '/logo/home.svg', name: '桌面主页', addNav: true, bg: '', isBg: '', ext: '', summary: '', mode: 'app', value: 'home', isCheck: true, id: '1705024806' },
     { type: 'systemApp', icon: '/logo/app.svg', name: '应用中心', addNav: true, bg: '', isBg: '', ext: '', summary: '', mode: 'app', value: 'apps', isCheck: true, id: '1705024807' },
+  {
+    addNav: true,
+    "type": "systemApp",
+    "icon": "/logo/favo.png",
+    "name": "收藏夹",
+    mode: 'app',
+    value: 'favorites',
+    isCheck: true,
+   id: '1705024803'
+  },
     {
         type: 'folder', icon: '/logo/efficiency.svg', name: '效率助手', bg: '', isBg: '', mode: 'app', value: 'folder', isCheck: true, id: '1705024808', children: [
             { type: 'systemApp', icon: '/logo/efficiency.svg', name: '效率助手', addNav: true, bg: '', isBg: '', ext: '', summary: '', mode: 'app', value: 'work' },
@@ -14,8 +24,8 @@ export const NavListTmp = [
     { type: 'systemApp', icon: '/logo/game.svg', name: '游戏助手', addNav: true, bg: '', isBg: '', ext: '', summary: '', mode: 'app', value: 'gameIndex', isCheck: true, id: '1705024809' },
     { type: 'systemApp', icon: '/logo/task.svg', name: '任务中心', addNav: true, bg: '', isBg: '', ext: '', summary: '', mode: 'app', value: 'task', isCheck: true, id: '1705024810' },
     { type: 'systemApp', icon: '/logo/commun.svg', name: '社区中心', addNav: true, bg: '', isBg: '', ext: '', summary: '', mode: 'app', value: 'commun', isCheck: true, id: '1705024811' },
-    { type: 'systemApp', icon: '/logo/fullScreen.svg', name: '全屏', addNav: true, bg: '', isBg: '', ext: '', summary: '', mode: 'app', value: 'fullscreen', isCheck: true, id: '1705024812' },
-    { type: 'systemApp', icon: '/logo/settings.svg', name: '设置中心', addNav: true, bg: '', isBg: '', ext: '', summary: '', mode: 'app', value: 'setting', isCheck: true, id: '1705024813' },
+    { type: 'systemApp', icon: '/logo/fullScreen.svg', name: '全屏', addNav: true, bg: '', isBg: '', ext: '', summary: '', mode: 'app', value: 'fullscreen', isCheck: false, id: '1705024812' },
+    { type: 'systemApp', icon: '/logo/settings.svg', name: '设置中心', addNav: true, bg: '', isBg: '', ext: '', summary: '', mode: 'app', value: 'setting', isCheck: false, id: '1705024813' },
 ]
 
 

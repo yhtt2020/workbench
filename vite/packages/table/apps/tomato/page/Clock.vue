@@ -1,6 +1,6 @@
 <template>
   <xt-container 
-    v-model:customSize="customData.customSize"
+    :customSize="'2x2'"
     :options="{ ...this.options,bg:this.isColor}" 
     :customIndex="customIndex" :customData="customData" 
     :desk="desk" :showRightIcon="!this.$props.isTop" 
@@ -105,12 +105,9 @@
         // 设置
         settingVisible:false,
         options:{
-          className:'card small',
-          title:'TimerClock',
-          type:'timer',
-          noTitle:true,
-          background:"#E7763E",
-          beforeDelete:true,
+          defaultData:{
+            customSize:'2x2'
+          }
         },
         menuList: [
             {
@@ -126,7 +123,7 @@
     },
     mounted(){
       this.getTomatoNum();
-      this.customData.customSize = '2x2'
+      // this.customData.customSize = '2x2';
       this.init(this.customData,this.customIndex,this.desk);
     },
     computed: {

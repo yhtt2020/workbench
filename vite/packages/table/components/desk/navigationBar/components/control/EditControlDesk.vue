@@ -3,7 +3,7 @@
     <XtScrollbar  :y="true" style="height: 100%;width: 100%;">
       <div class="flex flex-1 flex-col  overflow-hidden">
         <div style="height: 12px;"></div>
-        <ControlRemoveItem  />
+        <ControlRemoveItem />
       </div>
 
       <div class="mb-2 mt-4" v-if="control.newList.length !== 0 ">
@@ -27,7 +27,7 @@ import ControlAddItem from './item/ControlAddItem.vue';
 import ControlRemoveItem from './item/ControlRemoveItem.vue';
 
 const controls = controlStore();
-const { control } = storeToRefs(controls)
+const { control } = storeToRefs(controls);
 
 
 </script>

@@ -192,7 +192,7 @@ export default {
     ...mapActions(cardStore, ['sortClock', 'sortCountdown']),
     ...mapActions(screenStore, ['bindMainIPC', 'bindSubIPC', 'onTableStarted']),
     ...mapActions(codeStore, ['active', 'getSerialHash', 'verify']),
-    ...mapActions(appStore, ['getUserInfo', 'setUser','enterAided','ensureShake']),
+    ...mapActions(appStore, ['getUserInfo', 'setUser','enterAided','ensureShake', 'finishWizard']),
     ...mapActions(steamUserStore, ['bindClientEvents']),
     ...mapActions(captureStore, ['bindCaptureIPC']),
    async bindIPC() {
@@ -384,14 +384,15 @@ export default {
       })
     },
 
-loginOk(){
-  this.$router.replace({ name: 'home' })
-},
+    loginOk(){
+      this.$router.replace({ name: 'home' })
+      if(!this.init && this.$useEnv('web')) this.finishWizard()
+
+    },
     onGuest(){
       this.$router.replace({ name: 'home' })
-      // this.isGuest = true
+      if(!this.init && this.$useEnv('web')) this.finishWizard()
       cache.set('isGuest',true)
-      // window.$isGuest = true
     }
   },
 }

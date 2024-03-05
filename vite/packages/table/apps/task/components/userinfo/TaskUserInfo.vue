@@ -1,65 +1,67 @@
 <template>
  <div class="w-full flex flex-col task-userinfo rounded-lg mb-4 px-4 pt-3 pb-2" style="width: 404px;">
   <template v-if="showTaskUser">
-   <div class="flex items-center justify-start mb-3">
-    <div :style="userInfo.frame !== '' ? {width:'100px',height:'100px',}:{width:'64px',height:'64'}" class="flex items-center justify-center mr-4">
-      <FrameAvatar class="frame" :avatarUrl="userInfo.avatar" :avatarSize="userInfo.frame !== '' ? 80 : 64"
-       :frameUrl="userInfo.frame" ></FrameAvatar>
+    <div class="flex items-center justify-start mb-3">
+      <div :style="userInfo.frame !== '' ? {width:'100px',height:'100px',}:{width:'64px',height:'64'}" class="flex items-center justify-center mr-4">
+        <FrameAvatar class="frame" :avatarUrl="userInfo.avatar" :avatarSize="userInfo.frame !== '' ? 80 : 64" :frameUrl="userInfo.frame" ></FrameAvatar>
+      </div>
+      <div class="flex  flex-col flex-1 w-0">
+        <span class="font-18 xt-font font-600 xt-text">{{ userInfo.nickname }}</span>
+        <div class="flex flex-1 w-full  overflow-hidden">
+          <Medal :zoom="0.9" class="medal" :medal="medal" v-for="medal in infoMedal?.medals"></Medal>
+        </div>
+      </div>
     </div>
-    <div class="flex  flex-col flex-1 w-0">
-     <span class="font-18 xt-font font-600 xt-text">{{ userInfo.nickname }}</span>
-     <div class="flex flex-1 w-full  overflow-hidden">
-         <Medal :zoom="0.9" class="medal" :medal="medal" v-for="medal in infoMedal?.medals"></Medal>
-     </div>
-    </div>
-   </div>
   </template>
   <div class="flex justify-between items-center">
-   <div class="flex flex-col" style="width: 168px;">
-    <div class="flex justify-between w-full mb-1">
-      <xt-text class="xt-text font-14 xt-font font-400">我的社区等级</xt-text>
-      <span class="font-18 xt-font  xt-text" style="font-weight: 900;">Lv{{ userInfo?.grade?.grade }}</span>
+    <div class="w-1/2 flex flex-col">
+      <!-- 等级信息 -->
+      <div class="flex justify-between w-full mb-1">
+        <xt-text class="xt-text font-14 xt-font font-400">我的社区等级</xt-text>
+        <span class="font-18 xt-font  xt-text" style="font-weight: 900;">Lv{{ userInfo?.grade?.grade }}</span>
+      </div>
+      <!-- 经验升级进度条 -->
+      <a-progress :percent="myLv.currentLv"  :strokeColor="'var(--primary-text)'"/>
+      <!-- 下一级升级经验 -->
+      <div class="flex justify-between w-full pt-2">
+        <xt-text class="xt-text-2 font-12 xt-font font-400">升级所需经验</xt-text>
+        <span class="xt-text-2 font-12 xt-font font-400">{{ userInfo?.grade?.diff }}</span>
+      </div>
     </div>
-    <a-progress :percent="myLv.currentLv"  :strokeColor="'var(--primary-text)'"/>
-    <!-- 经验升级进度条-->
-    <div class="flex justify-between w-full pt-2">
-     <xt-text class="xt-text-2 font-12 xt-font font-400">升级所需经验</xt-text>
-     <span class="xt-text-2 font-12 xt-font font-400">{{ userInfo?.grade?.diff }}</span>
-    </div>
-   </div>
-   <a-divider type="vertical" style="height: 48px; border-top: 1px solid var(--divider);" />
-   <div style="width: 178px;" class="flex flex-col">
-    <div class="flex justify-between items-center mb-1">
-     <div class="flex  flex-col">
-      <xt-text class="xt-text font-14 xt-font font-400">社区积分</xt-text>
-      <div style="height: 4px;"></div>
-      <span class="xt-text font-18 xt-font " style="font-weight: 900;"> 
-        <a-avatar :size="24" shape="circle" src="/img/task/communityPoints.svg"></a-avatar> 
-        {{ infoMedal.score  }}
-      </span>
 
-     </div>
-      <div class="flex-1 w-0 ml-2">
-        <xt-button :w="110" :h="40" @click="showProp">
-          <img style="width: 20px" src="/img/bottomPanel/prop.png"> 
-          我的道具
+    <a-divider type="vertical" style="margin: 0 15px; height: 48px; border-top: 1px solid var(--divider);" />
+
+    <div class="w-1/2 flex flex-col">
+      <div class="flex justify-between items-center">
+        <xt-text class="xt-text font-14 xt-font font-400">社区积分</xt-text>
+        <div class="flex" @click="showProp">
+          <xt-button :w="72" :h="32"  class="xt-bg-t-2" style="border-radius: 8px;">
+            <div class="flex items-center justify-center ">
+              <img style="width: 20px;height:20px;"  src="/img/bottomPanel/prop.png" class="mr-1 object-cover">
+              <span class="font-14 xt-font xt-text">道具</span>
+            </div>
+          </xt-button>
+        </div>
+      </div>
+      <div class="w-full flex items-center">
+        <a-avatar :size="24" shape="circle" src="/img/task/communityPoints.svg"></a-avatar>
+        <span class="xt-text font-18 xt-font " style="font-weight: 900;">{{ infoMedal.score  }}</span>
+      </div>
+      <div class="flex justify-between">
+        <xt-text class="xt-text-2 font-12 xt-font font-400">
+          可兑换的商品
+        </xt-text>
+        <xt-button v-if="showPointGood" class="relative" w="120" h="0" @click="goShop">
+          <div v-for="item in goodImage" class="absolute rounded-md flex items-center justify-end good-image" 
+            style="border: 2px solid rgba(255,255,255,0.85);width: 24px;height: 24px;box-shadow: 0 0 4px #333;">
+            <img :src="item.image"  class="w-full h-full object-cover" style="" alt="">
+          </div>
         </xt-button>
       </div>
     </div>
-    <div class="flex justify-between">
-      <xt-text class="xt-text-2 font-12 xt-font font-400">
-        后续可用于兑换
-      </xt-text>
-      <xt-button v-if="showPointGood" class="relative" w="120" h="0" @click="goShop">
-        <div v-for="item in goodImage" class="absolute rounded-md flex items-center justify-end good-image" style="width: 24px;height: 24px;border: 2px solid var(--primary-text);">
-          <img :src="item.image"  class="rounded-md w-full h-full object-cover" alt="">
-        </div>
-      </xt-button>
-    </div>
-   </div>
   </div>
  </div>
-  <MyProp :showMyProp="myPropVisible" @closeMyProp="closeMyProp"></MyProp>
+ <MyProp :showMyProp="myPropVisible" @closeMyProp="closeMyProp"></MyProp>
 </template>
 
 <script setup>
@@ -78,7 +80,7 @@ import MyProp from '../../../../components/team/MyProp.vue'
 const app = appStore();
 const { userInfo } = storeToRefs(app);
 const task = taskStore();
-const { taskUserMedal,pointGoods } = storeToRefs(task);
+const { taskUserMedal,pointGoods,rewardVisible } = storeToRefs(task);
 const myScore = ref("");
 const myPropVisible=ref(false);
 const { proxy }  = getCurrentInstance();
@@ -121,6 +123,7 @@ const closeMyProp=()=>{
   myPropVisible.value=false
 };
 const goShop = () =>{
+  rewardVisible.value=false
   proxy.$.appContext.config.globalProperties.$bus.emit('getGood');
 }
 
@@ -172,16 +175,16 @@ onMounted(()=>{
 .good-image{
   top:0;
   &:nth-of-type(1){
-    right: 45px;
+    right: 47px;
   }
   &:nth-of-type(2){
-    right: 35px;
+    right: 34px;
   }
   &:nth-of-type(3){
     right: 20px;
   }
   &:nth-of-type(4){
-    right: 5px;
+    right: 3px;
   }
 }
 </style>

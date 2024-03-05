@@ -56,7 +56,7 @@ export default {
       }
     },
     {
-      path: '/schemeList',
+      path: '/schemeList:exeName',
       name: 'schemeList',
       component: SchemeList,
       meta:{
@@ -66,7 +66,7 @@ export default {
       }
     },
     {
-      path: '/shareKey',
+      path: '/shareKey:id',
       name: 'shareKey',
       component: ShareKey,
       meta:{

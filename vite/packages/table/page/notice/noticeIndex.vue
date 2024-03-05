@@ -47,7 +47,8 @@ import { message } from 'ant-design-vue'
 
 const app = appStore()
 const notice = noticeStore()
-const { settings } = storeToRefs(app)
+const { settings } = storeToRefs(app) 
+const { loginVisible } = storeToRefs(app) 
 const { detailList } = storeToRefs(notice)
 
 const emits = defineEmits(["closeMessage"])
@@ -60,7 +61,6 @@ const top = ref({
 })
 
 const editorRef = ref(null);
-
 const selectTab = (item) =>{
   // console.log('查看数据',item);
   top.value = item
@@ -84,6 +84,7 @@ const clearAll = () =>{
 const close = () =>{
   emits('closeMessage')
 }
+
 
 
 
@@ -127,8 +128,14 @@ const leftList = ref([
   {
     newIcon:'fluent:send-32-regular', flag: true,
     callBack:()=>{
-      close()
-      editorRef.value.openEditorModal();
+      // 游客模式下不能打开编辑窗
+      if(window.$useEnv('guest')){
+        loginVisible.value = true
+      }
+      else {
+        close();
+        editorRef.value.openEditorModal();
+      }
     }
   },
   {

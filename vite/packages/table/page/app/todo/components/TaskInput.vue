@@ -25,6 +25,7 @@ import configStore from "../stores/config";
  import { completeTask } from "../../../../apps/task/task"
 import {message} from "ant-design-vue";
 import { appStore } from "../../../../store"
+import { useGlobalStore } from "../../../../apps/Global/store"
 
 dayjs.locale("zh-cn");
 dayjs.extend(objectSupport);
@@ -41,6 +42,7 @@ export default {
     ...mapWritableState(listStore, ["activeList"]),
     ...mapWritableState(configStore, ["runtime"]),
     ...mapWritableState(appStore, ["getUserInfo"]),
+    ...mapWritableState(useGlobalStore, ["loginVisible"]),
     currentList() {
       if (this.addToList && !['T00111', 'T00222', 'T00333'].includes(this.addToList.nanoid)) {
         return this.addToList
@@ -112,9 +114,7 @@ export default {
       }else{
         window.$ui.confirm("登录提示", '目前处于游客模式，请登录后体验完整功能。', {
           ok: () => {
-            tsbApi.user.login((data) => {
-              this.getUserInfo()
-            })
+            this.loginVisible = true
           },
           index: 999999,
           okText: "立即登录",

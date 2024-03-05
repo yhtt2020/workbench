@@ -33,7 +33,7 @@ import VueCustomScrollbars from "./components/VueScrollbar.vue";
 import NavList from "./components/NavList.vue";
 import Modal from "../../../components/Modal.vue";
 import { appStore } from "../../../store";
-
+import {useGlobalStore} from '../../../apps/Global/store'
 export default {
   computed: {
     ...mapState(taskStore, [
@@ -44,6 +44,7 @@ export default {
     ]),
     ...mapState(configStore, ["config"]),
     ...mapWritableState(listStore, ["activeList"]),
+    ...mapWritableState(useGlobalStore, ["loginVisible"]),
     ...mapState(listStore, ["lists", "displayLists"]),
     ...mapState(taskStore,['displayList'])
   },
@@ -118,9 +119,7 @@ export default {
       }else{
         window.$ui.confirm("登录提示", '目前处于游客模式，请登录后体验完整功能。', {
           ok: () => {
-            tsbApi.user.login((data) => {
-              this.getUserInfo()
-            })
+            this.loginVisible = true
           },
           index: 999999,
           okText: "立即登录",

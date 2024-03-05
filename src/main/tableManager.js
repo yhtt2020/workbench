@@ -283,7 +283,6 @@ app.whenReady().then(() => {
           icon=await app.getFileIcon(link ? link.target : file)
         }catch (e){
           icon ='/icons/winapp.png'
-          console.log('获取图标失败')
         }
 
         result.push({

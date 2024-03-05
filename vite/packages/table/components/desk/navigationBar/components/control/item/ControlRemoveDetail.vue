@@ -1,12 +1,17 @@
 <template>
- <template v-if="controlIndex === 'audio'">
-  <SystemControlDetail :class="{'pointer':status==='del','category-button':status==='del'}" @click="removeControl($event)" :status="status"/>
+ <template v-if="controlID === 'audio'">
+  <SystemControlDetail 
+   :class="{'pointer':status==='del','category-button':status==='del','prevent-no-item':isClick === true,'prevent-item':isClick === false}" 
+   @click="removeControl($event)" :status="status"/>
  </template>
 
  <!-- 用户中心信息 -->
- <template v-else-if="controlIndex === 'user-info'">
+ <template v-else-if="controlID === 'user-info'">
   <template v-if="isUserLogin">
-    <div  class="rounded-xl xt-bg-t-2 pointer category-button flex flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-if="status === 'del'" @click="removeControl($event)">
+    <div  class="rounded-xl xt-bg-t-2 pointer category-button flex flex-col items-center justify-center relative"
+     style="height:120px;width: 252px;" v-if="status === 'del'" @click="removeControl($event)" 
+     :class="isClick ? 'prevent-item':'prevent-no-item'"
+    >
       <div class="absolute" style="top: 7px;right:-4px;" >
         <xt-button style="width: auto !important;" h="0">
           <div class="flex items-center justify-center">
@@ -21,7 +26,10 @@
     </div>
   </template>
   <template v-else>
-    <div  class="rounded-xl xt-bg-t-2 pointer category-button flex flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-if="status === 'del'" @click="removeControl($event)">
+    <div  class="rounded-xl xt-bg-t-2 pointer category-button flex flex-col items-center justify-center relative" 
+     style="height:120px;width: 252px;" v-if="status === 'del'" @click="removeControl($event)" 
+     :class="isClick ? 'prevent-item':'prevent-no-item'" 
+    >
       <div class="absolute" style="top: 7px;right:-4px;" >
         <xt-button style="width: auto !important;" h="0">
           <div class="flex items-center justify-center">
@@ -40,7 +48,9 @@
 
  <!-- 其他按钮 -->
  <template v-else>
-  <div  class="xt-bg-t-2 rounded-xl pointer category-button flex flex-col items-center justify-center relative" style="height: 120px;width: 120px;" v-if="status === 'del'" @click="removeControl">
+  <div  class="xt-bg-t-2 rounded-xl pointer category-button flex flex-col items-center justify-center relative" style="height: 120px;width: 120px;"
+   v-if="status === 'del'" @click="removeControl" :class="isClick ? 'prevent-item':'prevent-no-item'"
+  >
    <div class="absolute" style="top: 7px;right:-4px;" >
     <xt-button style="width: auto !important;" h="0">
       <div class="flex items-center justify-center">
@@ -60,6 +70,7 @@
       <xt-new-icon :icon="controlItem.icon" size="24" :color="controlStatus?.status ? 'var(--active-text)':'var(--primary-text)'"></xt-new-icon>
     </div>
     <span :class="controlStatus?.status ? 'xt-active-text' :'xt-text'">{{controlItem.name}}</span>
+    <div class="absolute red-content rounded-full" v-if="!firstVisible && controlIndex === 'barrage'" style="border: 2px solid #ffffff;"></div>
   </div>
  </template>
 </template>
@@ -98,9 +109,11 @@ const props = defineProps({
 const app = appStore();
 const { settings,styles,simple,aided,saving,showWindowController,userInfo } = storeToRefs(app);
 const controls = controlStore();
-const { control } = storeToRefs(controls);
+const { control,firstVisible } = storeToRefs(controls);
 const { proxy } = getCurrentInstance()
-const router = useRouter()
+const router = useRouter();
+const controlID = ref(props.controlIndex);
+
 
 // 通过计算属性来判断控制中心是否开启的状态
 const controlStatus = computed(()=>{
@@ -192,8 +205,16 @@ const triggerControl = () =>{
     //游戏模式  后期功能实现后再对接
     case 'game-mode':
       return {status:false};
+    // 弹幕
     case 'barrage':
       settings.value.enableBarrage = !settings.value.enableBarrage;
+      firstVisible.value = true;
+      if(settings.value.enableBarrage){
+        message.info('已为开启弹幕模式');
+      }
+      else {
+        message.info('已为关闭弹幕模式');
+      }
       break;
     default:
       break;
@@ -202,23 +223,11 @@ const triggerControl = () =>{
 
 // 编辑控制中心的移除
 const removeControl = (evt) =>{
-  // 阻止拖拽
-  if(props.isClick){
-    // 保留一个不能删除
-    if(control.value.oldList.length !== 1){
-      const index = control.value.newList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
-      if(index === -1){
-        control.value.newList.push(props.controlItem)
-        const removeIndex  = control.value.oldList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
-        control.value.oldList.splice(removeIndex,1);
-      }
-    }
-    else {
-     evt.preventDefault();
-    }
-  }
-  else {
-   evt.preventDefault();
+  const index = control.value.newList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
+  if(index === -1){
+    control.value.newList.push(props.controlItem)
+    const removeIndex  = control.value.oldList.findIndex((find)=>{ return String(find.id) === String(props.controlIndex) });
+    control.value.oldList.splice(removeIndex,1);
   }
 }
 
@@ -246,5 +255,22 @@ const login = () =>{
 :deep(.big){
   bottom: 80px !important;
   right:  0 !important;
+}
+
+
+.prevent-item{
+  pointer-events: all !important;
+}
+
+.prevent-no-item{
+  pointer-events: none !important;
+}
+
+.red-content{
+  width: 12px;
+  height:12px;
+  background: red;
+  top: 1px;
+  right: 1px;
 }
 </style>
