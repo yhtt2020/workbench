@@ -273,6 +273,7 @@ export default {
         }
       });
     },
+    // 删除分屏
     remove() {
       Modal.confirm({
         centered: true,

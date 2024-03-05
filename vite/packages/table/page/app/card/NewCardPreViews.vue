@@ -242,12 +242,12 @@
   ></RemoteMarket>
 
   <!-- 新版图标编辑 -->
-  <IconSet
+  <!-- <IconSet
     v-if="settingVisible"
     v-model="settingVisible"
     :index="99999"
     :maskIndex="10001"
-  />
+  /> -->
 </template>
 
 <script>
@@ -255,13 +255,12 @@ import { mapActions, mapWritableState } from "pinia";
 import { cardStore } from "../../../store/card";
 import { message } from "ant-design-vue";
 import NewPreviewCardDetails from "./NewPreviewCardDetails.vue";
-import Edit from "../../../components/widgets/myIcons/edit/index.vue";
 import RemoteMarket from "./RemoteMarket.vue";
 import { myIcons } from "../../../store/myIcons.ts";
 import _ from "lodash-es";
 import { taskStore } from "../../../apps/task/store";
 import { completeTask } from "../../../apps/task/task";
-import IconSet from "../../../components/widgets/myIcons/set/index.vue";
+// import IconSet from "../../../components/widgets/myIcons/set/index.vue";
 
 export default {
   emits: ["close", "addSuccess"],
@@ -319,9 +318,8 @@ export default {
   },
   components: {
     NewPreviewCardDetails,
-    Edit,
     RemoteMarket,
-    IconSet,
+    // IconSet,
   },
   watch: {
     navList: {

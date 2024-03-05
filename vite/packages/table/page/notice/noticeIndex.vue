@@ -132,6 +132,10 @@ const leftList = ref([
       if(window.$useEnv('guest')){
         loginVisible.value = true
       }
+      else {
+        close();
+        editorRef.value.openEditorModal();
+      }
     }
   },
   {

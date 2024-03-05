@@ -4,11 +4,11 @@
       <xt-button @click="save" w="60" h="32" radius="8" type="theme">保存</xt-button>
     </template>
     <template #header-center>
-      <xt-tab v-model="currentTab" :list="TabList" style="width: 168px" class="p-1 xt-bg-t-2" v-if="!linkLimit.hideTab" 
+      <xt-tab v-model="currentTab" :list="TabList" style="width: 168px" class="p-1 xt-bg-t-2" v-if="!linkLimit.hideTab"
         :boxStyle="{ 'border-radius': '10px' }" :itemStyle="{ 'border-radius': '6px' }" /></template>
     <div style="height: 50vh">
       <div class="flex justify-center mb-3" style="zoom: 0.8" v-if="!linkLimit.hideIcon">
-        <Icon v-bind="edit" :edit="true"></Icon>
+        <Icon v-if="visible" v-bind="edit" :edit="true"></Icon>
       </div>
       <div style="width: 452px" v-if="currentTab == 'attribute'">
         <xt-option-from :options="attributeOptions" :data="edit">
@@ -40,9 +40,11 @@
     onMounted,
     onBeforeUnmount,
     getCurrentInstance,
+    defineAsyncComponent
   } from "vue";
   import { myIcons } from "../../../../store/myIcons";
-  import Icon from "../../../../components/widgets/myIcons/components/icon.vue";
+  // import Icon from "../../../../components/widgets/myIcons/components/icon.vue";
+  const Icon = defineAsyncComponent(() => import("../../../../components/widgets/myIcons/components/icon.vue"));
   import LocalApp from "../../../../components/widgets/myIcons/set/LocalApp.vue";
   import {
     attributeOptions,

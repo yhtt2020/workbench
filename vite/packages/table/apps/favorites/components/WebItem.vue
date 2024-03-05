@@ -1,9 +1,12 @@
 <template>
-  <div class="flex">
+  <div class="flex ">
     <div class="w-8 h-5" v-if="checkFlag">
       <a-checkbox v-model:checked="item.check"></a-checkbox>
     </div>
-    <a-avatar :size="24" shape="square" :src="showIcon" />
+    <div class="relative">
+      <a-avatar :size="24" shape="square" :src="showIcon" />
+      <i v-if="item.unRead" class="h-3 w-3 absolute rounded-full" style="border: 2px solid var(--secondary-text);background: red;top:-4px;right:-6px;"></i>
+    </div>
   </div>
     
 

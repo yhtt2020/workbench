@@ -59,7 +59,7 @@ onMounted(async () => {
   if (window.$useEnv()) return
 
   defaultOutput.value = await getDefaultVolume()
-  console.log(defaultOutput)
+  // console.log(defaultOutput)
   mute.value = defaultOutput.value.muted
 })
 const setting=ref(false)
