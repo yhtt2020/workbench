@@ -201,6 +201,10 @@
       </template>
       <!-- 全局桌面设置 -->
       <template v-else>
+        {{ globalSettings }}
+        <div>
+          {{ settings }}
+        </div>
         <GlobalDesk
           :globalSettings="globalSettings"
           :fixedFloat="settings.enableZoom"
@@ -432,7 +436,7 @@ export default {
       handler(newVal) {
         this.$bus.off("startAdjust");
         this.$bus.off("lockScreen");
-
+        this.$bus.off("scrollbarUpdate");
         let obj = {
           id: 20,
           newIcon: "fluent:more-horizontal-16-filled",
@@ -577,6 +581,9 @@ export default {
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();
     });
+    this.$bus.on("scrollbarUpdate", () => {
+      this.freeLayoutScrollbarUpdate();
+    });
     // this.$bus.on("reset", () => {
     //   this.resetLayout();
     // });
@@ -601,10 +608,8 @@ export default {
       this.$refs.galleryRef.openGalleryModal();
       setTimeout(() => {
         this.$bus.emit("lockScreenSet");
-        }, 100);
+      }, 100);
     });
-
-
 
     if (window.showed) {
       this.showGrid = true;
@@ -630,7 +635,7 @@ export default {
     ...mapActions(taskStore, ["initTask"]),
     // 打开系统设置
     showSystemSet() {
-     this.$bus.emit("openSystemSet");
+      this.$bus.emit("openSystemSet");
     },
     addFolder() {
       if (!this.showGuide) {
@@ -878,8 +883,7 @@ export default {
       return this.adjustZoom;
     },
   },
-  beforeDestroy() {
-  },
+  beforeDestroy() {},
 };
 </script>
 

@@ -1,4 +1,5 @@
 <template>
+
   <div class="flex justify-between mb-3">
     <template v-for="item in itemList">
       <div

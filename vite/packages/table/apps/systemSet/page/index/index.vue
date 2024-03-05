@@ -23,12 +23,26 @@
       <!-- 右侧功能区 -->
       <div class="p-3 xt-modal h-full flex flex-col" style="width: 520px">
         <!-- 头部 -->
-        <div class="flex justify-between items-center mb-3">
-          <div class="flex items-center">
+        <div class="flex items-center mb-3 w-full">
+          <div
+            class="flex justify-center w-full"
+            v-if="setList[activeIndex].component == 'Desk'"
+          >
+            <xt-tab
+              style="height: 34px; width: 300px"
+              boxClass="p-1 xt-bg-2"
+              :boxStyle="{ 'border-radius': '10px' }"
+              :itemStyle="{ 'border-radius': '6px' }"
+              v-model="deskTab"
+              :list="settingsTab"
+            />
+          </div>
+          <div v-else class="flex items-center">
             <xt-ify-icon :icon="setList[activeIndex].icon" class="mr-3" />
             {{ setList[activeIndex].name }}
           </div>
           <xt-button
+            class="absolute right-3"
             @click="closeSet"
             icon="fluent:dismiss-16-regular"
             w="32"
@@ -42,10 +56,13 @@
           :x="false"
           :y="true"
         >
-          <component
-            :is="components[setList[activeIndex].component]"
-            @switchNav="switchNav"
-          />
+          <KeepAlive>
+            <Component
+              :is="components[setList[activeIndex].component]"
+              :deskTab="deskTab"
+              @switchNav="switchNav"
+            />
+          </KeepAlive>
         </xt-scrollbar>
       </div>
     </div>
@@ -66,6 +83,7 @@ const Desk = defineAsyncComponent(() => import("../desk/Desk.vue"));
 import { useGlobalStore } from "../../../global/store";
 
 import { storeToRefs } from "pinia";
+import { setList } from "./config";
 const globalStore = useGlobalStore();
 const { systemVisible } = storeToRefs(globalStore);
 const components = shallowReactive({
@@ -78,44 +96,11 @@ const components = shallowReactive({
   barrage,
   Desk,
 });
-type SetItem = {
-  name: string;
-  icon: string;
-  component: string;
-};
-const setList = ref<SetItem[]>([
-  {
-    name: "通用设置",
-    icon: "fluent:settings-16-regular",
-    component: "Common",
-  },
-
-  { name: "主题外观", icon: "fluent:color-24-regular", component: "Theme" },
-  {
-    name: "桌面设置",
-    icon: "fluent:desktop-16-regular",
-    component: "Desk",
-  },
-  {
-    name: "设备设置",
-    icon: "fluent:slide-settings-24-regular",
-    component: "device",
-  },
-
-  {
-    name: "分屏设置",
-    icon: "fluent:window-multiple-16-filled",
-    component: "Screen",
-  },
-  {
-    name: "弹幕设置",
-    icon: "fluent:code-text-16-regular",
-    component: "barrage",
-  },
-  { name: "按键设置", icon: "fluent:keyboard-16-regular", component: "key" },
-  { name: "开发模式", icon: "fluent:code-16-regular", component: "develop" },
-]);
-
+const deskTab = ref("all");
+const settingsTab = [
+  { name: "通用设置", value: "all" },
+  { name: "当前桌面", value: "current" },
+];
 const emits = defineEmits(["close"]);
 
 // 关闭设置
