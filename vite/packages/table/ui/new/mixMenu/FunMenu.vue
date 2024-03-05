@@ -19,7 +19,6 @@
   </xt-menu>
 
   <xt-drawer v-if="drawerVisible" v-model="drawerVisible" :height="h">
-  <xt-drawer v-if="drawerVisible" v-model="drawerVisible" :height="h">
     <slot name="drawer"></slot>
     <DefaultItem
       :menus="menuList"
