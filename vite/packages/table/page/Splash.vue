@@ -169,7 +169,8 @@ export default {
           if (window.loadedStore[key] === false)
             return check
         })
-        if (haventOk.length <=1 ) {
+        console.log('haventOk.length <=1 :>> ', haventOk.length);
+        if (haventOk.length <=2 ) {
           //已经全部搞定
           clearInterval(this.storeReadyTimer)
           this.afterLaunch()

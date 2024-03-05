@@ -157,77 +157,41 @@
 
 <script>
 import Weather from "../components/widgets/Weather.vue";
-import Timer from "../components/widgets/Timer.vue";
-import Music from "../components/widgets/Music.vue";
-import Stock from "../components/widgets/Stock.vue";
-import AddMore from "../components/widgets/AddMore.vue";
-import Dou from "../components/widgets/Dou.vue";
-import Fish from "../components/widgets/Fish.vue";
-import CustomTimer from "../components/widgets/CustomTimer.vue";
-import SmallCountdownDay from "../components/widgets/SmallCountdownDay.vue";
-import Clock from "../components/widgets/Clock.vue";
-import CountdownDay from "../components/widgets/CountdownDay.vue";
+
+
 import { mapActions, mapWritableState } from "pinia";
 import { cardStore } from "../store/card";
 import vuuri from "../components/vuuriHome/Vuuri.vue";
 import Widget from "../components/muuri/Widget.vue";
 import { message, Modal } from "ant-design-vue";
-import CPULineChart from "../apps/inspector/widget/CPULineChart.vue";
-import CPUFourCard from "../apps/inspector/widget/CPUFourCard.vue";
-import InternalList from "../apps/inspector/widget/InternalList.vue";
-import SmallCPUCard from "../apps/inspector/widget/SmallCPUCard.vue";
-import SmallGPUCard from "../apps/inspector/widget/SmallGPUCard.vue";
-import GamesDiscount from "../components/widgets/games/GamesDiscount.vue";
+
 import GuidePage from "./app/grade/GuidePage.vue";
 import NewGuidePage from "./app/grade/NewGuidePage.vue";
-import DiscountPercentage from "../components/widgets/games/DiscountPercentage.vue";
-import MiddleWallpaper from "../components/widgets/MiddleWallpaper.vue";
-import SmallWallpaper from "../components/widgets/SmallWallpaper.vue";
-import MyGameSmall from "../components/widgets/games/MyGameSmall.vue";
-import Capture from "../components/widgets/games/Capture.vue";
-import AddCard from "./app/card/AddCard.vue";
+
+// import AddCard from "./app/card/AddCard.vue";
 import GradeNotice from "./app/grade/GradeNotice.vue";
-import Voice from "../components/widgets/audio/Voice.vue";
-import Audio from "../components/widgets/audio/Audio.vue";
+
 import CaptureNewCard from "../components/widgets/games/CaptureNewCard.vue";
 import { runExec } from "../js/common/exec";
 import { appStore } from "../store";
-import Remote from "../components/widgets/custom/Remote.vue";
 import { weatherStore } from "../store/weather";
-import GameEpic from "../components/widgets/games/GameEpic.vue";
-import CustomAssembly from "../components/widgets/custom/CustomAssembly.vue";
-import SignIn from "../components/widgets/SignIn.vue";
-import SingleFilm from "../components/widgets/film/SingleFilm.vue";
-import ManyFilm from "../components/widgets/film/ManyFilm.vue";
-import SteamFriends from "../components/widgets/games/SteamFriends.vue";
 import Muuri from "muuri";
 import HorizontalPanel from "../components/HorizontalPanel.vue";
-import Clocks from "../components/widgets/clock/index.vue";
-import Notes from "../components/widgets/note/index.vue";
 import ShortcutKeyDetail from "../apps/shortcutKey/shortcutKey/ShortcutKeyDetail.vue";
 import NotShortcutKey from "../apps/shortcutKey/page/NotShortcutKey.vue";
 import ShortcutKeyList from "../apps/shortcutKey/shortcutKey/ShortcutKeyList.vue";
-import GameStrategy from "../components/widgets/games/GameStrategy.vue";
-import KeyBoard from "../apps/shortcutKey/components/KeyBoard.vue";
-import SmallRank from "../components/widgets/SmallRank.vue";
-import AggregateSearch from "../components/widgets/aggregate/AggregateSearch.vue";
 import UpdateMyInfo from "../components/comp/UpdateMyInfo.vue";
 import ShareDesk from "../components/desk/ShareDesk.vue";
 import DeskMarket from "./app/card/DeskMarket.vue";
-import DeskPreview from "../components/desk/DeskPreview.vue";
+// import DeskPreview from "../components/desk/DeskPreview.vue";
 import ExportDesk from "../components/desk/ExportDesk.vue";
 import DeskGroup from "../components/desk/DeskGroup.vue";
 import Template from "../../user/pages/Template.vue";
 import Icon from "../components/Icon.vue";
-import Todo from "../components/widgets/todo/Todo.vue";
-import EatToday from "../components/widgets/eat/EatToday.vue";
-import HotSearch from "../components/widgets/HotSearch.vue";
-import RadioTab from "../components/RadioTab.vue";
 import ScalePanel from "./ScalePanel.vue";
 import GuidePanel from "./GuidePanel.vue";
 import WebLogin from "./WebLogin.vue";
 
-// import News from "../components/widgets/news/NewsCard.vue";
 import GalleryModal from '../components/paperModal/GalleryModal.vue';
 import {
   setTransparent,
@@ -358,62 +322,21 @@ export default {
     DeskGroup,
     HorizontalPanel,
     Modal,
-    Dou,
-    AddMore,
-    Stock,
-    Music,
     Weather,
-    Timer,
-    CustomTimer,
-    SmallCountdownDay,
-    Clock,
-    Remote,
-    CountdownDay,
-    Fish,
     vuuri,
     Widget,
-    CPULineChart,
-    CPUFourCard,
-    InternalList,
-    SmallCPUCard,
-    SmallGPUCard,
-    AddCard,
     GradeNotice,
-    GamesDiscount,
-    DiscountPercentage,
-    MiddleWallpaper,
-    SmallWallpaper,
-    GameEpic,
-    MyGameSmall,
-    Capture,
-    CustomAssembly,
-    SignIn,
-    SingleFilm,
-    ManyFilm,
-    Voice,
     Audio,
-    SteamFriends,
     CaptureNewCard,
-    Clocks,
-    Notes,
     GuidePage,
     NewGuidePage,
     ShortcutKeyDetail,
     NotShortcutKey,
     ShortcutKeyList,
-    GameStrategy,
-    KeyBoard,
-    SmallRank,
-    AggregateSearch,
     ShareDesk,
     DeskMarket,
-    DeskPreview,
     UpdateMyInfo,
     ExportDesk,
-    Todo,
-    EatToday,
-    HotSearch,
-    RadioTab,
     GalleryModal,
     ScalePanel,
     GuidePanel,
