@@ -93,10 +93,10 @@ import { Notifications } from "./js/common/sessionNotice";
 
 import WujieVue from "wujie-vue3";
 
-import { tt,Mit } from "./permission/global/global";
+import { tt, Mit } from "./permission/global/global";
+import type { TT } from "./permission/global/type";
 
-
-import hevueImgPreview from 'hevue-img-preview'
+import hevueImgPreview from "hevue-img-preview";
 const { bus, setupApp, preloadApp, destroyApp } = WujieVue;
 
 // Your SDKAppID
@@ -133,10 +133,10 @@ window.$ui = {
   confirm,
   router,
 };
-
+const newTT: TT = tt;
 window.tt = tt;
-app.provide("tt", tt);
-app.config.globalProperties.tt = tt;
+app.provide("tt", newTT);
+app.config.globalProperties.tt = newTT;
 
 const pinia = createPinia();
 pinia.use(piniaPersist);

@@ -53,15 +53,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, shallowReactive } from "vue";
-import Common from "../common/Common.vue";
-import Theme from "../theme/Theme.vue";
-import develop from "../develop/Develop.vue";
-import device from "../device/Device.vue";
-import key from "../key/Key.vue";
-import Screen from "../Screen/Screen.vue";
-import barrage from "../barrage/Barrage.vue";
+import { ref, shallowReactive, defineAsyncComponent } from "vue";
+const Common = defineAsyncComponent(() => import("../common/Common.vue"));
+const Theme = defineAsyncComponent(() => import("../theme/Theme.vue"));
+const develop = defineAsyncComponent(() => import("../develop/Develop.vue"));
+const device = defineAsyncComponent(() => import("../device/Device.vue"));
+const key = defineAsyncComponent(() => import("../key/Key.vue"));
+const Screen = defineAsyncComponent(() => import("../Screen/Screen.vue"));
+const barrage = defineAsyncComponent(() => import("../barrage/Barrage.vue"));
+const Desk = defineAsyncComponent(() => import("../desk/Desk.vue"));
+
 import { useGlobalStore } from "../../../global/store";
+
 import { storeToRefs } from "pinia";
 const globalStore = useGlobalStore();
 const { systemVisible } = storeToRefs(globalStore);
@@ -73,6 +76,7 @@ const components = shallowReactive({
   key,
   Screen,
   barrage,
+  Desk,
 });
 type SetItem = {
   name: string;
@@ -88,10 +92,16 @@ const setList = ref<SetItem[]>([
 
   { name: "主题外观", icon: "fluent:color-24-regular", component: "Theme" },
   {
+    name: "桌面设置",
+    icon: "fluent:desktop-16-regular",
+    component: "Desk",
+  },
+  {
     name: "设备设置",
     icon: "fluent:slide-settings-24-regular",
     component: "device",
   },
+
   {
     name: "分屏设置",
     icon: "fluent:window-multiple-16-filled",

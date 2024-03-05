@@ -9,9 +9,10 @@ import { useGlobalStore } from "./store";
 // components
 import ClaimReward from "../task/components/ClaimReward.vue";
 import SystemSet from "../systemSet";
-import { useLogin } from "../../permission/user/useLogin";
 import Login from "../../permission/user/Login.vue";
-const tt = inject("tt");
+// hooks
+import { useLogin } from "../../permission/user/useLogin";
+const tt: any = inject("tt");
 const { proxy }: any = getCurrentInstance();
 
 const taskStore: any = useTaskStore();
@@ -52,17 +53,18 @@ onMounted(() => {
   proxy.$bus.on("openFile", (cb) => {
     openFile(cb);
   });
+// window.tt.
 });
 
 const test = () => {
   // window.tt.runTime
   // window.tt
-  console.log('proxy :>> ', proxy);
+  // console.log('proxy :>> ',);
   // console.log("test",t);
   // tt.api.
   // console.log('tt.runTime.env :>> ', tt.env(""));
+  // tt
 };
-
 </script>
 
 <template>
