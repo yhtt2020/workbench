@@ -1,40 +1,4 @@
 <template>
-  <!-- 1 -->
-  <div class="xt-bg-2 p-4 pb-1 mb-4 rounded-xl">
-    <xt-option-info
-      title="桌面壁纸"
-      info="选择喜欢的图片作为工作台桌面壁纸。"
-    />
-    <template v-if="!settings.transparent">
-      <div class="flex flex-col mb-4">
-        <xt-update-desk-bg></xt-update-desk-bg>
-      </div>
-      <hr />
-      <!-- 修复桌面壁纸设置，选择为纯色后，模糊度选项屏蔽掉这个bug,可能后续补充的需求 -->
-      <template v-if="backgroundName.name === 'img'">
-        <xt-option-info
-          title="桌面壁纸模糊度"
-          info="调节桌面壁纸的模糊程度。"
-          icon="fluent:arrow-clockwise-16-regular"
-          @onIconClick="backgroundSettings.backGroundImgBlur = 0"
-        />
-        <xt-option-slider
-          v-model:slider="backgroundSettings.backGroundImgBlur"
-          :min="0"
-          :max="100"
-        />
-        <hr />
-      </template>
-    </template>
-
-    <xt-option-info
-      v-if="!$useEnv()"
-      isSwitch
-      v-model:switch="settings.transparent"
-      title="透明背景"
-      info="设置工作台窗口背景为透明，此功能下小组件的背景模糊会失效。"
-    />
-  </div>
   <!-- 2 -->
   <div class="xt-bg-2 p-4 pb-1 mb-4 rounded-xl">
     <xt-option-info
@@ -135,9 +99,8 @@ const app = appStore();
 const cardStore = useCardStore();
 // 这个应该是全局桌面参数
 const { settings: globalSettings } = storeToRefs(cardStore);
-const { settings, backgroundSettings, backgroundName } = storeToRefs(app);
+const { settings} = storeToRefs(app);
 
-console.log("getCurrentDesk.value :>> ", getCurrentDesk.value);
 const currentDeskSettings = computed(() => {
   return getCurrentDesk.value.settings;
 });

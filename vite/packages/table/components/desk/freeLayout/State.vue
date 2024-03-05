@@ -122,14 +122,8 @@ const {
   getFreeLayoutState,
   isFreeLayout,
   freeLayoutEnv,
-  freeLayoutData,
-  defaultState,
-  freeLayoutState,
-  getCurrentDeskId,
-  getFreeLayoutData,
 } = storeToRefs(freeLayoutStore);
 
-//
 // @scrollbarRedirect="freeLayoutScrollbarRedirect"
 //     @scrollbarUpdate="freeLayoutScrollbarUpdate"
 

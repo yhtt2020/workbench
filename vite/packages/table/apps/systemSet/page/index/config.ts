@@ -3,7 +3,7 @@ type SetItem = {
   icon: string;
   component: string;
 };
-export const setList = <SetItem[]>[
+export const navList = <SetItem[]>[
   {
     name: "通用设置",
     icon: "fluent:settings-16-regular",

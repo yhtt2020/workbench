@@ -169,50 +169,6 @@
       </vue-custom-scrollbar>
     </Drop>
   </div>
-  <!-- 桌面设置 -->
-  <xt-modal
-    v-if="settingVisible"
-    v-model="settingVisible"
-    :footer="false"
-    boxClass="p-4 pb-0"
-    :mask="0"
-  >
-    <template #header-center>
-      <xt-tab
-        v-if="settingVisible"
-        style="height: 34px; width: 300px"
-        boxClass="p-1 xt-bg-2"
-        :boxStyle="{ 'border-radius': '10px' }"
-        :itemStyle="{ 'border-radius': '6px' }"
-        v-model="currentSettingTab"
-        :list="settingsTab"
-      ></xt-tab>
-    </template>
-    <div style="height: calc(66vh); width: 452px">
-      <!-- 当前桌面设置 -->
-      <template v-if="currentSettingTab === 'current' && currentDesk.settings">
-        <CurrentDesk :fixedSettings="settings" :currentDesk="currentDesk" />
-        <FreeLayoutState
-          v-if="$route.path == '/main' && freeLayout"
-          @scrollbarRedirect="freeLayoutScrollbarRedirect"
-          @scrollbarUpdate="freeLayoutScrollbarUpdate"
-          :id="currentDesk.id"
-        ></FreeLayoutState>
-      </template>
-      <!-- 全局桌面设置 -->
-      <template v-else>
-        {{ globalSettings }}
-        <div>
-          {{ settings }}
-        </div>
-        <GlobalDesk
-          :globalSettings="globalSettings"
-          :fixedFloat="settings.enableZoom"
-          :freeFloat="isFreeLayout"
-        />
-      </template>
-    </div>
-  </xt-modal>
   <!-- 添加小组件 -->
   <transition name="fade">
     <div
@@ -364,31 +320,6 @@ export default {
     },
   },
   watch: {
-    // 是否开启独立布局
-    "settings.enableZoom": {
-      handler(newVal) {
-        if (newVal) {
-          this.currentSettingTab = "current";
-        }
-      },
-      deep: true,
-      immediate: true,
-    },
-    // 是否开启自由布局
-    isFreeLayout: {
-      handler(newVal) {
-        if (newVal) {
-          this.currentSettingTab = "current";
-        }
-      },
-      immediate: true,
-    },
-    // 当两个布局都未开启 设置为通用设置
-    settingVisible(val) {
-      if (!val && !this.isFreeLayout && !this.settings.enableZoom) {
-        this.currentSettingTab = "all";
-      }
-    },
     adjustLayout(val) {
       if (val) {
         this.toggleEditing();
@@ -553,11 +484,7 @@ export default {
         wheelPropagation: true,
         currentItemId: -1,
       },
-      settingsTab: [
-        { name: "通用设置", value: "all" },
-        { name: "当前桌面", value: "current" },
-      ],
-      currentSettingTab: "all",
+
       resizeHandler: null,
       editVisible: false,
     };
@@ -687,7 +614,11 @@ export default {
       }
     },
     showSetting() {
-      this.settingVisible = true;
+      // this.settingVisible = true;
+      this.$bus.emit("openSystemSet");
+      setTimeout(() => {
+        this.$bus.emit("selectSystemNav",2);
+      }, 10);
     },
     hideDesk() {
       this.hide = !this.hide;

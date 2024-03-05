@@ -10,10 +10,10 @@
       <!-- 左侧导航栏 -->
       <div class="flex flex-col p-3 xt-main-bg" style="width: 200px">
         <div
-          v-for="(item, index) in setList"
+          v-for="(item, index) in navList"
           class="flex items-center mb-3 cursor-pointer"
           style="height: 44px; border-radius: 10px"
-          @click="selectSet(index)"
+          @click="selectNav(index)"
           :class="{ 'xt-theme-bg-2': activeIndex === index }"
         >
           <xt-ify-icon :icon="item.icon" class="mx-3" />
@@ -26,7 +26,7 @@
         <div class="flex items-center mb-3 w-full">
           <div
             class="flex justify-center w-full"
-            v-if="setList[activeIndex].component == 'Desk'"
+            v-if="navList[activeIndex].component == 'Desk'"
           >
             <xt-tab
               style="height: 34px; width: 300px"
@@ -38,12 +38,12 @@
             />
           </div>
           <div v-else class="flex items-center">
-            <xt-ify-icon :icon="setList[activeIndex].icon" class="mr-3" />
-            {{ setList[activeIndex].name }}
+            <xt-ify-icon :icon="navList[activeIndex].icon" class="mr-3" />
+            {{ navList[activeIndex].name }}
           </div>
           <xt-button
             class="absolute right-3"
-            @click="closeSet"
+            @click="closeNav"
             icon="fluent:dismiss-16-regular"
             w="32"
             h="32"
@@ -58,7 +58,7 @@
         >
           <KeepAlive>
             <Component
-              :is="components[setList[activeIndex].component]"
+              :is="components[navList[activeIndex].component]"
               :deskTab="deskTab"
               @switchNav="switchNav"
             />
@@ -70,7 +70,18 @@
 </template>
 
 <script setup lang="ts">
-import { ref, shallowReactive, defineAsyncComponent } from "vue";
+import {
+  ref,
+  shallowReactive,
+  defineAsyncComponent,
+  onMounted,
+  getCurrentInstance,
+} from "vue";
+import { useGlobalStore } from "../../../global/store";
+import { storeToRefs } from "pinia";
+import { navList } from "./config";
+import { useFreeLayoutStore } from "../../../../components/desk/freeLayout/store";
+
 const Common = defineAsyncComponent(() => import("../common/Common.vue"));
 const Theme = defineAsyncComponent(() => import("../theme/Theme.vue"));
 const develop = defineAsyncComponent(() => import("../develop/Develop.vue"));
@@ -80,12 +91,13 @@ const Screen = defineAsyncComponent(() => import("../Screen/Screen.vue"));
 const barrage = defineAsyncComponent(() => import("../barrage/Barrage.vue"));
 const Desk = defineAsyncComponent(() => import("../desk/Desk.vue"));
 
-import { useGlobalStore } from "../../../global/store";
+const { proxy }: any = getCurrentInstance();
 
-import { storeToRefs } from "pinia";
-import { setList } from "./config";
 const globalStore = useGlobalStore();
 const { systemVisible } = storeToRefs(globalStore);
+const freeLayoutStore = useFreeLayoutStore();
+const { isFreeLayout, getCurrentDesk }: any = storeToRefs(freeLayoutStore);
+
 const components = shallowReactive({
   Common,
   Theme,
@@ -96,29 +108,39 @@ const components = shallowReactive({
   barrage,
   Desk,
 });
+
 const deskTab = ref("all");
 const settingsTab = [
   { name: "通用设置", value: "all" },
   { name: "当前桌面", value: "current" },
 ];
+
 const emits = defineEmits(["close"]);
 
 // 关闭设置
-const closeSet = () => {
-  // emits("close", false);
+const closeNav = () => {
   systemVisible.value = false;
-  console.log("关闭设置");
 };
-// 选择设置
+
+// 选择导航
 const activeIndex = ref(0);
-const selectSet = (index: number) => {
+const selectNav = (index: number) => {
   activeIndex.value = index;
 };
 
 const switchNav = (nav: string) => {
-  let res = setList.value.findIndex((item) => item.component === nav);
-  selectSet(res);
+  let res = navList.findIndex((item) => item.component === nav);
+  selectNav(res);
 };
+
+onMounted(() => {
+  if (isFreeLayout.value || getCurrentDesk.value.settings.enableZoom) {
+    deskTab.value = "current";
+  }
+  proxy.$bus.on("selectSystemNav", (id)=>{
+    selectNav(id);
+  });
+});
 </script>
 
 <style lang="scss" scoped>
