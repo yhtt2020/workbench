@@ -18,27 +18,27 @@
             <div class="flex w-full p-0 mt-3 -mb-1 whitespace-pre-wrap cover-wrapper" v-if="replyCom.image">
                 <!-- <img :src="item" alt="" v-for="(item, index) in replyCom.image_pc"
                     class="object-cover mr-2 rounded-md cover-sm" :key="index"> -->
-                <!-- <viewer :images="replyCom.image_pc" :options="options" class="items-center p-0 mb-0 ">
+                <!-- <viewer :images="replyCom.image_pc" :options="options" class="items-center p-0 mb-0 "> -->
                     <a-row :gutter="[20, 20]" style="margin-right: 1em" wrap="'true">
                         <a-col class="flex flex-wrap mr-2 image-wrapper" v-for="(img, index) in replyCom.image_pc"
                             :span="7" style="">
+                            <xt-preview-img
+                                :imgList="replyCom.image_pc"
+                                :multiple="true"
+                                :maskClose="true"
+                                :controlOption="{
+                                    controlBar: true,
+                                    closeBtn: true,
+                                    arrowBtn: true,
+                                }"
+                                :index="index"
+                            >
                             <img class="mb-2 mr-2 rounded-md image-item pointer cover-sm" :src="img"
                                 :data-source="replyCom.image_artwork_master[index]" style="position: relative object-fit: fill;">
+                            </xt-preview-img>
                         </a-col>
                     </a-row>
-                </viewer> -->
-                <xt-preview-img
-                    :imgList="replyCom.image_pc"
-                    :imgW="56"
-                    :imgH="56"
-                    :multiple="true"
-                    :maskClose="true"
-                    :controlOption="{
-                        controlBar: true,
-                        closeBtn: true,
-                        arrowBtn: true,
-                    }"
-                ></xt-preview-img>
+                <!-- </viewer> -->
             </div>
             <div class="flex justify-between  mt-3  h-[20px] xt-text-2 font-14">
                 <div class="flex items-center justify-center ">

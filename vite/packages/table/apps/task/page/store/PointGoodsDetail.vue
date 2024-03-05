@@ -14,8 +14,8 @@
       </div>
       <div class="flex grow flex-col good-container">
         <xt-scrollbar class="w-full"  :x="false" :y="true">
-         <div style="width: 404px;height: 300px;">
-           <PointGoodsSwiper :swiperList="getDetailData.slider_image" :height="300" :swiperClass="'rounded-xl'"/>
+         <div style="width: 404px;height: 404px;">
+           <PointGoodsSwiper :swiperList="getDetailData.slider_image" :height="404" :swiperClass="'rounded-xl'"/>
          </div>
          <div style="width: 404px;" class="flex flex-col ">
            <div class="p-4 flex flex-col xt-bg-2 rounded-xl my-4">
