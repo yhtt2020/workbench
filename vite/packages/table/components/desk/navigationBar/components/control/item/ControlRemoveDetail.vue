@@ -1,12 +1,12 @@
 <template>
- <template v-if="controlIndex === 'audio'">
+ <template v-if="controlID === 'audio'">
   <SystemControlDetail 
    :class="{'pointer':status==='del','category-button':status==='del','prevent-no-item':isClick === true,'prevent-item':isClick === false}" 
    @click="removeControl($event)" :status="status"/>
  </template>
 
  <!-- 用户中心信息 -->
- <template v-else-if="controlIndex === 'user-info'">
+ <template v-else-if="controlID === 'user-info'">
   <template v-if="isUserLogin">
     <div  class="rounded-xl xt-bg-t-2 pointer category-button flex flex-col items-center justify-center relative"
      style="height:120px;width: 252px;" v-if="status === 'del'" @click="removeControl($event)" 
@@ -111,7 +111,9 @@ const { settings,styles,simple,aided,saving,showWindowController,userInfo } = st
 const controls = controlStore();
 const { control,firstVisible } = storeToRefs(controls);
 const { proxy } = getCurrentInstance()
-const router = useRouter()
+const router = useRouter();
+const controlID = ref(props.controlIndex);
+
 
 // 通过计算属性来判断控制中心是否开启的状态
 const controlStatus = computed(()=>{

@@ -69,7 +69,7 @@
     </div>
 
     <div class="flex items-center justify-center mb-4">
-      <template v-for="item in bottomButton">
+      <template v-for="item in buttonList">
         <a-tooltip placement="top" :title="item.name">
           <xt-button
             w="54"
@@ -118,7 +118,7 @@ const props = defineProps({
 });
 
 const app = appStore();
-const { userInfo } = storeToRefs(app);
+const { windowFullScreen } = storeToRefs(app);
 const controls = controlStore();
 const { control, initList, updateList } = storeToRefs(controls);
 
@@ -191,25 +191,38 @@ const bottomButton = ref([
       emit("close");
     },
   },
-  // {
-  //   newIcon:'fluent:settings-16-regular',name:'清除测试数据',
-  //   fn:()=>{
-  //     controlStore().initData();
-  //     // router.push({ name: 'setting' });
-  //     // emit('close')
-  //   }
-  // }
 ]);
+
+const buttonList = computed(()=>{
+  if(windowFullScreen.value){
+    const mapBottomButton = bottomButton.value.map((item)=>{
+      if(item.name === '全屏'){
+        return {
+          ...item,
+          newIcon:"fluent:full-screen-minimize-16-regular"
+        }
+      }
+      else {
+        return {...item}
+      }
+    });
+    return mapBottomButton;
+  }
+  else {
+    return bottomButton.value;
+  }
+})
+
 function handleClick(e) {
   if (e.target?.closest(".tt-container-box-1234") == null) {
     emit("close");
   }
-}
+};
+
 onMounted(() => {
   proxy.$bus.on("closeControl", () => {
     emit("close");
   });
-
   proxy.$bus.on("closeControl", () => {
     emit("close");
   });
@@ -217,7 +230,7 @@ onMounted(() => {
 });
 onUnmounted(()=>{ 
   window.removeEventListener("click",handleClick);
-})
+});
 </script>
 
 <style lang="scss" scoped>
