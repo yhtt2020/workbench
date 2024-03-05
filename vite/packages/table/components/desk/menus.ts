@@ -155,7 +155,7 @@ function deskMenus() {
           newIcon: "fluent:settings-16-regular",
           name: "系统设置",
           fn: this.showSystemSet,
-          disabled: import.meta.env.DEV ? false : true,
+          // disabled: import.meta.env.DEV ? false : true,
         },
         {
           id: 1,

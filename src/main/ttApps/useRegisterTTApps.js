@@ -5,7 +5,10 @@ const {
   readFile,
   deleteFile,
   pathJoin,
+  getCurrentDir,
 } = require("./useFile.js");
+const { join } = require("path");
+
 const fs = require("fs-extra");
 const ttAppModel = require("../../model/ttAppModel.js");
 
@@ -21,7 +24,9 @@ module.exports = async function useRegisterTTApps(filePath) {
   console.log("1、开始注册ttApp :>> ");
 
   // 2 处理文件类型
+  console.log("2、处理文件类型 :>> ");
   if (!getFileExtension(filePath)) {
+    console.log("2.1、类型错误 :>> ");
     return {
       status: 1,
       code: 400,
@@ -30,34 +35,38 @@ module.exports = async function useRegisterTTApps(filePath) {
     };
   }
   // ttAppModel.initDb();
-  // 3 处理文件路径
-  let temporaryFolderName = "ttapp_test_" + Date.now(); // 临时文件夹名称
-  if (!(await existsFolder(temporaryFolderName))) {
-    await createFolder(temporaryFolderName);
+  let folderType = "ttapp_test"; // 临时文件夹名称
+
+  // 3 处理解压文件路径
+  let folderName = [folderType, String(Date.now())]; // 临时文件夹名称
+  // await createFolder(folderName);
+  console.log("3、创建好的文件路径 :>> ", pathJoin(folderName));
+  if (!(await existsFolder(folderName))) {
+    console.log("3.1、文件夹不存在进行创建 :>> ");
+    await createFolder(folderType);
   }
-  console.log("2、创建好的文件路径 :>> ", temporaryFolderName);
 
   // 4 //解压到临时目录
-  let unzipRes = await unzipFile(filePath, temporaryFolderName);
+  console.log("4、解压到临时目录 :>> ");
+  let unzipRes = await unzipFile(filePath, folderName);
+
   if (unzipRes.code !== 200) {
+    console.log("4.1、解压失败 :>> ");
     return unzipRes;
   }
 
   // 5 判断文件是否缺少
+  console.log("5、判断文件是否缺少 :>> ");
   let checkFilePath = ["manifest.json"];
-
-  let checkPath = pathJoin([temporaryFolderName]);
-  console.log('checkPath :>> ', checkPath);
   let checkFileRes = [];
   for (let path of checkFilePath) {
-    let res = fs.existsSync(checkPath);
-    console.log("检查", pathJoin(temporaryFolderName, path));
+    let res = await existsFolder(folderName);
     if (!res) checkFileRes.push(path);
   }
   if (checkFileRes.length > 0) {
-    console.log('缺少文件了 开始删除 :>> ', );
+    console.log("5.1、缺少文件了 开始删除 :>> ");
     // 删除会报错
-    await deleteFile(pathJoin(temporaryFolderName));
+    await deleteFile(pathJoin(folderName));
     return {
       status: 1,
       code: 400,
@@ -65,10 +74,9 @@ module.exports = async function useRegisterTTApps(filePath) {
       info: "缺失 " + checkFileRes.join(" , ") + " 文件",
     };
   }
-
   // 6 判断manifest.json
   let pathManifest = pathJoin([temporaryFolderName, "manifest.json"]);
-  if (!fs.existsSync(pathManifest)) {
+  if (!existsFolder(pathManifest)) {
     return {
       status: 0,
       info: "manifest.json文件不存在",
@@ -77,7 +85,7 @@ module.exports = async function useRegisterTTApps(filePath) {
   let manifestRes = readFile(pathManifest);
   try {
     manifestRes = JSON.parse(manifestRes);
-    console.log('manifest.json 正常转义为对象了 :>> ', );
+    console.log("manifest.json 正常转义为对象了 :>> ");
   } catch (e) {
     return {
       status: 0,

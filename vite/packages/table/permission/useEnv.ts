@@ -64,7 +64,11 @@ const checkLimit = (env, name, options) => {
  * 参数: web, client, mac, offline, guest
  * 返回: 环境名称
  */
-export const useEnv = (arr = "web") => {
+export type baseEnv = "web" | "client" | "mac" | "offline" | "guest";
+export type useEnvType = baseEnv | any;
+
+export type UseEnv = (arr: useEnvType) => baseEnv;
+export const useEnv: UseEnv = (arr = "web") => {
   if (typeof arr == "string") {
     return envDetection(arr);
   }
@@ -83,6 +87,7 @@ export const useEnv = (arr = "web") => {
     if (flag) return flag;
   }
 };
+
 // 全局限制实现
 export const useEnvLimit = (env, name, options = {}) => {
   return checkLimit(env, name, { options, limitArr: ALL_LIMITS });
@@ -94,4 +99,8 @@ export const useComLimit = (env, name, options = {}) => {
 // 路由限制实现
 export const useRouterLimit = (env, name, options = {}) => {
   return checkLimit(env, name, { options, limitArr: ROUTER_LIMIT });
+};
+
+export const currentEnv = () => {
+  return useEnv(["web", "offline", "guest", "mac", "window"]);
 };

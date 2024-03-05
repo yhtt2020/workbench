@@ -3,7 +3,7 @@ import ConfirmComponent from "./Confirm.vue";
 
 export default ConfirmComponent;
 
-interface ConfirmOptions {
+export interface ConfirmOptions {
   noText?: string | boolean | undefined;
   okText?: string;
   ok?: () => void;
@@ -37,9 +37,16 @@ interface ConfirmOptions {
  * @param options.noButtonWidth - 取消按钮宽度（默认：64）
  *
  */
-export const confirm = (
-  title: string,
-  content?: string,
+
+export type Confirm = (
+  title: string | undefined,
+  content?: string | undefined,
+  options?: ConfirmOptions
+) => void;
+
+export const confirm: Confirm = (
+  title,
+  content?,
   options: ConfirmOptions = {
     noText: "取消",
     okText: "确认",
@@ -54,7 +61,7 @@ export const confirm = (
     okButtonWidth: "64",
     noButtonWidth: "64",
   }
-) => {
+): void => {
   const {
     noText,
     okText,
@@ -71,6 +78,7 @@ export const confirm = (
 
   // 3 把渲染的 vNode 移除
   const close = () => {
+    console.log("关闭事件 :>> ");
     render(null, document.body);
   };
 
@@ -95,9 +103,9 @@ export const confirm = (
   // 2 render 渲染
   render(null, document.body);
 
-   let component=render(vNode, document.body)
+  let component = render(vNode, document.body);
   return {
     component,
-    close
-  }
+    close,
+  };
 };

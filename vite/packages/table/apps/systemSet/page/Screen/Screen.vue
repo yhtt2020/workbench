@@ -218,7 +218,7 @@ export default {
         "确认删除分屏？",
         "此操作不可恢复，将丢失分屏全部的设置，请谨慎操作。",
         {
-          onOk: () => {
+          ok: () => {
             this.screens.splice(
               this.screens.findIndex((s) => {
                 return s.key === this.currentScreen.key;

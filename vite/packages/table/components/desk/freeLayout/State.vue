@@ -122,18 +122,13 @@ const {
   getFreeLayoutState,
   isFreeLayout,
   freeLayoutEnv,
-  freeLayoutData,
-  defaultState,
-  freeLayoutState,
-  getCurrentDeskId,
-  getFreeLayoutData,
 } = storeToRefs(freeLayoutStore);
 
-function freeDeskResize() {
-  emits("scrollbarRedirect");
-}
+// @scrollbarRedirect="freeLayoutScrollbarRedirect"
+//     @scrollbarUpdate="freeLayoutScrollbarUpdate"
+
 const emitScrollbarUpdate = (event) => {
-  emits("scrollbarUpdate");
+  proxy.$bus.emit("scrollbarUpdate");
 };
 function updatePosition() {
   freeLayoutEnv.value.updatePosition = true;

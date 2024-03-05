@@ -798,9 +798,22 @@ import NewGuidePage from "../../page/app/grade/NewGuidePage.vue";
       this.allDeskListVisible = true;
     },
     async importDesk() {
+      // openFile
+      let that = this;
+      this.$bus.emit('openFile',(file)=>{
+
+
+        console.log('file :>> ', file);
+        const reader = new FileReader();
+          reader.onload = function (event) {
+            that.readConfig(event.target.result);
+          };
+          reader.readAsText(file);
+      })
+      return
       let fileRef = this.$refs.fileRef;
         fileRef.click();
-        let that = this;
+        // let that = this;
         fileRef.onchange = function (event) {
           if (this.files.length === 0) return;
           const file = this.files[0];
