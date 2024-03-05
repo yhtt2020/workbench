@@ -2,11 +2,19 @@ import { defineAsyncComponent } from "vue";
 /**
  * 挂载相关组件
  */
-import { LoadingOutlined } from "@ant-design/icons-vue";
 import Vuuri from "../vuuriHome/Vuuri.vue";
-import CPULineChart from "../../apps/inspector/widget/CPULineChart.vue";
-import CPUFourCard from "../../apps/inspector/widget/CPUFourCard.vue";
-import InternalList from "../../apps/inspector/widget/InternalList.vue";
+// import CPULineChart from "../../apps/inspector/widget/CPULineChart.vue";
+const CPULineChart = defineAsyncComponent(
+  () => import("../../apps/inspector/widget/CPULineChart.vue")
+);
+// import CPUFourCard from "../../apps/inspector/widget/CPUFourCard.vue";
+const CPUFourCard = defineAsyncComponent(
+  () => import("../../apps/inspector/widget/CPUFourCard.vue")
+);
+// import InternalList from "../../apps/inspector/widget/InternalList.vue";
+const InternalList = defineAsyncComponent(
+  () => import("../../apps/inspector/widget/InternalList.vue")
+);
 import SmallCPUCard from "../../apps/inspector/widget/SmallCPUCard.vue";
 import SmallGPUCard from "../../apps/inspector/widget/SmallGPUCard.vue";
 import GamesDiscount from "../widgets/games/GamesDiscount.vue";
@@ -53,14 +61,16 @@ import TimerClock from "../../apps/tomato/page/Clock.vue";
 const NewAddCard = defineAsyncComponent(
   () => import("../../page/app/card/NewAddCard.vue")
 );
-import MyIcons from "../widgets/myIcons/index.vue";
+// import MyIcons from "../widgets/myIcons/index.vue";
+const MyIcons = defineAsyncComponent(
+  () => import("../widgets/myIcons/index.vue")
+);
 import AggregateSearch from "../widgets/aggregate/AggregateSearch.vue";
 import AggregateSearchFullScreen from "../widgets/aggregate/AggregateSearchFullScreen.vue";
 import GameStrategy from "../widgets/games/GameStrategy.vue";
 
 import VueCustomScrollbar from "../../../../src/components/vue-scrollbar.vue";
 import HorizontalPanel from "../HorizontalPanel.vue";
-import AddIcon from "../../page/app/addIcon/index.vue";
 import News from "../widgets/news/NewsCard.vue";
 import Template from "../../../user/pages/Template.vue";
 import SmallRank from "../widgets/SmallRank.vue";
@@ -76,32 +86,24 @@ import Courier from "../widgets/courier/Courier.vue";
 import FreeLayoutScrollbar from "./freeLayout/Scrollbar.vue";
 import FreeLayoutContainer from "./freeLayout/Container.vue";
 import FreeLayoutState from "./freeLayout/State.vue";
-import FreeLayoutMask from "./freeLayout/Mask.vue";
 import FreeLayoutCanvas from "./freeLayout/Canvas.vue";
-import FloatMenu from "./floatMenu/FloatMenu.vue";
-import RadioTab from "../../components/RadioTab.vue";
-import Menu from "../../ui/new/mixMenu/FunMenu.vue";
-import CurrentDesk from "./set/CurrentDesk.vue";
-import GlobalDesk from "./set/GlobalDesk.vue";
-import Test from "../widgets/test/index.vue";
+// import FloatMenu from "./floatMenu/FloatMenu.vue";
+const FloatMenu = defineAsyncComponent(
+  () => import("./floatMenu/FloatMenu.vue")
+);
+// import Test from "../widgets/test/index.vue";
+const Test = defineAsyncComponent(() => import("../widgets/test/index.vue"));
 
-import Folder from "../../apps/folder";
-import SystemSet from '../../apps/systemSet/index';
+// import Folder from "../../apps/folder";
+const Folder = defineAsyncComponent(() => import("../../apps/folder"));
 export default {
   components: {
-    SystemSet,
     Test,
-    LoadingOutlined,
-    GlobalDesk,
-    CurrentDesk,
     Folder,
-    Menu,
-    RadioTab,
     FreeLayoutScrollbar,
     FloatMenu,
     FreeLayoutContainer,
     FreeLayoutCanvas,
-    FreeLayoutMask,
     FreeLayoutState,
     GameInformation,
     HistoryInfo,
@@ -156,7 +158,6 @@ export default {
     AggregateSearch,
     AggregateSearchFullScreen,
     MyIcons,
-    AddIcon,
     SmallRank,
     Todo,
     EatToday,
