@@ -74,7 +74,6 @@ import "../../public/css/toast.scss";
 import "../../public/css/category.scss";
 
 import { router } from "./router";
-import routerTab from "./js/common/routerTab";
 
 //腾讯IM部分
 import { loadChat, TUIKit } from "./chat";
