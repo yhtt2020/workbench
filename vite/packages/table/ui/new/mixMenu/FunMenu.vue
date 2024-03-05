@@ -30,7 +30,6 @@
   <teleport to="body">
     <ChooseModal v-if="chooseVisible"></ChooseModal>
   </teleport>
-
 </template>
 
 <script setup>
@@ -39,7 +38,6 @@ import { storeToRefs } from "pinia";
 import { useWidgetStore } from "../../../components/card/store";
 import DefaultItem from "./DefaultItem.vue";
 import ChooseModal from "./ChooseModal.vue";
-import { truncate } from "fs-extra";
 const props = defineProps({
   menus: {},
   model: {
@@ -60,7 +58,6 @@ const props = defineProps({
   menuWidth: {
     default: "w-full",
   },
-
 });
 const menu = ref(null);
 const { menus, model, height } = toRefs(props);
@@ -111,7 +108,7 @@ const onMounted = () => {
   emits("mounted");
 };
 function defaultListClick(event) {
-  if (rightModel.value == "default" && model.value == "all" ) {
+  if (rightModel.value == "default" && model.value == "all") {
     event.preventDefault();
     event.stopPropagation();
     drawerVisible.value = true;
@@ -120,12 +117,12 @@ function defaultListClick(event) {
 }
 function defaultListContextmenu(event) {
   // 第一次触发后出现弹窗让用户选择
-  if(!firstOpen.value){
-    console.log('触发第一次选择');
-    chooseVisible.value = true
-    firstOpen.value = true
-    return
+  if (!firstOpen.value) {
+    chooseVisible.value = true;
+    firstOpen.value = true;
+    return;
   }
+
   if (rightModel.value == "default") {
     event.preventDefault();
     event.stopPropagation();
