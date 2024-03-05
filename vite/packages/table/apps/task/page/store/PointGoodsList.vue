@@ -12,7 +12,7 @@
     <xt-scrollbar class="w-full "  :x="false" :y="true">
      <div class="grid grid-cols-2 gap-4">
       <div v-for="item in list" :key="item.id" class="good-item  pointer rounded-lg xt-bg-2 flex flex-col" @click="goGoodDetail(item.id)">
-       <div style="height: 140px;" class="w-full">
+       <div style="height: 194px;" class="w-full">
         <img :src="item.image" class="rounded-tl-xl rounded-tr-xl w-full h-full object-cover" />
        </div>
        <div class="px-2.5 py-2 flex flex-col">
