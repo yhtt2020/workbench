@@ -140,8 +140,6 @@ export default {
 
     }
   },
-  mounted(){
-  },
   components: { 
     Icon,
     LeftMenu,
@@ -201,6 +199,20 @@ export default {
       return arr
     
     },
+  },
+
+  watch:{
+    // 监听是否刷新
+    isFavorites:{
+      handler(newVal, oldVal) {
+        if(newVal == true){
+          this.refresh()
+        }
+      },
+      immediate:true
+    },
+  },
+  mounted(){
   },
   methods: {
     // 添加到桌面
