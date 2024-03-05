@@ -2,11 +2,16 @@
  <swiper :spaceBetween="30" :loop="true" :autoplay="{ delay: 2500,disableOnInteraction: false,}" 
   :pagination="{clickable:true}" :modules="modules" class="mySwiper" :navigation="true"
  >
- <!-- <xt-preview-img ></xt-preview-img> -->
+  
   <swiper-slide v-for="imgItem in swiperList">
-    <div class="w-full cursor-pointer"  style="position: relative;" :style="{height:`${height}px`}">
-      <img :src="imgItem" alt="" :class="swiperClass" style="width:100%;height:100%;object-fit: cover;">
-    </div>
+    <xt-preview-img :imgList="swiperList" :multiple="true" :maskClose="true"  
+     :controlOption="{ controlBar: true,  closeBtn: true, arrowBtn: true,}"
+     :index="index" class="w-full h-full" 
+    >
+      <div class="w-full cursor-pointer"  style="position: relative;" :style="{height:`${height}px`}">
+       <img :src="imgItem" alt="" :class="swiperClass" style="width:100%;height:100%;object-fit: cover;">
+      </div> 
+    </xt-preview-img>
   </swiper-slide>
 </swiper>
 </template>
@@ -55,14 +60,18 @@ export default {
 }
 
 :deep(.swiper-button-next){
-  width: 24px !important;
-  height: 24px !important;
-  color: var(--secondary-text) !important;
+  color: #ffffff !important;
 }
 
 :deep(.swiper-button-prev){
-  width: 24px !important;
-  height: 24px !important;
-  color: var(--secondary-text) !important
+  color: #ffffff !important;
 }
+
+:deep(.swiper-button-next:after){
+  font-size: 24px !important;
+}
+:deep(.swiper-button-prev:after){
+  font-size: 24px !important;
+}
+
 </style>

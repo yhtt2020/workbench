@@ -175,7 +175,7 @@ onMounted(()=>{
 .good-image{
   top:0;
   &:nth-of-type(1){
-    right: 45px;
+    right: 47px;
   }
   &:nth-of-type(2){
     right: 34px;
