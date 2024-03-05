@@ -2,7 +2,7 @@
   <div class="flex flex-col h-full">
    <div class="flex items-center justify-between mb-3">
     <div class="flex items-center">
-      <xt-ify-icon icon="fluent:building-shop-16-filled" class="mr-2 xt-text" size="16"></xt-ify-icon>
+      <xt-ify-icon icon="fluent-emoji:shopping-bags" class="mr-2 xt-text" size="16"></xt-ify-icon>
       <span class="xt-text xt-font font-14">积分商城</span>
     </div>
     <Exit />

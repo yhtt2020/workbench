@@ -2,6 +2,7 @@
  <swiper :spaceBetween="30" :loop="true" :autoplay="{ delay: 2500,disableOnInteraction: false,}" 
   :pagination="{clickable:true}" :modules="modules" class="mySwiper" :navigation="true"
  >
+ <!-- <xt-preview-img ></xt-preview-img> -->
   <swiper-slide v-for="imgItem in swiperList">
     <div class="w-full cursor-pointer"  style="position: relative;" :style="{height:`${height}px`}">
       <img :src="imgItem" alt="" :class="swiperClass" style="width:100%;height:100%;object-fit: cover;">

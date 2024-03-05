@@ -120,7 +120,7 @@ const props = defineProps({
 const app = appStore();
 const { userInfo } = storeToRefs(app);
 const controls = controlStore();
-const { control, initList, removeControlList } = storeToRefs(controls);
+const { control, initList, updateList } = storeToRefs(controls);
 
 const editVisible = ref(false);
 const editRef = ref(null);
@@ -132,12 +132,17 @@ const editClick = () => {
 
 // 完成编辑
 const finshEdit = () => {
-  editVisible.value = false;
+  const updateListItem = updateList.value.map((item)=>{
+    const index = control.value.oldList.findIndex((findItem)=>{ return String(item.id) === String(findItem.id) });
+    return {...control.value.oldList[index]};
+  })
+  control.value.oldList = [...updateListItem];
+  editVisible.value = false; 
 };
 
 // 重置
 const restList = () => {
-  control.value.oldList = JSON.parse(JSON.stringify(initList.value));
+  control.value.oldList = [...initList.value];
   control.value.newList = [];
 };
 
@@ -196,10 +201,10 @@ const bottomButton = ref([
   // }
 ]);
 function handleClick(e) {
-    if (e.target?.closest(".tt-container-box-1234") == null) {
-      emit("close");
-    }
+  if (e.target?.closest(".tt-container-box-1234") == null) {
+    emit("close");
   }
+}
 onMounted(() => {
   proxy.$bus.on("closeControl", () => {
     emit("close");
@@ -210,7 +215,8 @@ onMounted(() => {
   });
   window.addEventListener("click",handleClick);
 });
-onUnmounted(()=>{  window.removeEventListener("click",handleClick);
+onUnmounted(()=>{ 
+  window.removeEventListener("click",handleClick);
 })
 </script>
 
