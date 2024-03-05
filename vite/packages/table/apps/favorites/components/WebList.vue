@@ -1,7 +1,7 @@
 <template>
     <div class="w-full pl-4 xt-scrollbar scroll-color " style="height: 640px;">
         <div v-if="show?.length" >
-          <xt-menu :menus="rightMenu" @mounted="changeMenu(item, index)" class="h-16 mb-1 flex items-center p-4 pointer rounded-lg font-16 xt-text list-hover justify-between tran" style="width: 728px;" @click="change(index, item)" v-for="(item,index) in show" :class="item.check?'xt-bg-2':''" >
+          <xt-menu :menus="rightMenu" @mounted="changeMenu(item, index)" class="h-16 mb-1 flex items-center p-4 pointer rounded-lg font-16 xt-text list-hover justify-between tran" @mouseover="read(item)" style="width: 728px;" @click="change(index, item)" v-for="(item,index) in show" :class="item.check?'xt-bg-2':''" >
             <div class='flex h-full items-center'>
               <WebItem class="" :item="item" :checkFlag="checkFlag"></WebItem>
               <!-- style="width: 530px;" -->
@@ -82,14 +82,13 @@
       
     },
     watch:{
-      
+      // 优化列表加载速度
       showList:{
         handler(newVal, oldVal) {
           this.clear()
           this.show = newVal?.slice(0, 10)
           this.nIndex = 0;
           this.n = Math.ceil(newVal?.length / 10)
-
           this.timer = setInterval(() => {
             this.show = newVal?.slice(0, 10 * this.n)
             if(this.nIndex <= this.n){
@@ -103,6 +102,7 @@
       },
     },
     methods: {
+      // 清楚定时器
       clear(){
         clearInterval(this.timer)
         this.timer = null
@@ -111,6 +111,7 @@
       changeMenu(item, index){
         this.$emit('changeIcon', [item])
       },
+      // 改变打开网页方式
       change(n, item){
         if(this.checkFlag){
           item.check = !item.check
@@ -124,9 +125,11 @@
           }
         }
       },
+      // 修改名称
       showRenameModal(item){
         this.$emit('showRenameModal', item)
       },
+      // 收藏
       changeFavo(item){
         const now = new Date().getTime()
         this.allList.forEach((i, index)=>{
@@ -142,9 +145,13 @@
           }
         })
       },
-
+      // 刷新
       refresh(){
         this.$emit('refresh')
+      },
+      // 已读网址
+      read(item){
+        item.unRead = false
       }
     }
   }
