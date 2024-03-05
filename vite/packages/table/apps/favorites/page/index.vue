@@ -6,7 +6,7 @@
         <LeftMenu @changeFolder="changeFolder" @refresh="refresh"></LeftMenu>
         <div class="w-full flex-1">
           <Search></Search>
-          <WebList @refresh="refresh" @changeIcon="changeIcon" @countFavo="countFavo" @showRenameModal="showRenameModal" :checkFlag="checkFlag" :showList="showList" :menus="menus"></WebList>
+          <WebList @refresh="refresh" @changeIcon="changeIcon" @countFavo="countFavo" @showRenameModal="showRenameModal" :checkFlag="checkFlag" :showList="showList" :menus="menus" :rightMenu="rightMenu"></WebList>
         </div>
 
         <Labor @changeIcon="changeIcon" :menus="menus" :checkFlag="checkFlag" @changeCheck="changeCheck" @countFavo="countFavo"></Labor>
@@ -69,9 +69,10 @@ export default {
       deskFlag: false,
       resTmp: [],
       deskIndex: {},
-      
+      // 临时存放数据
+      itemTmp: {},
       menus: [
-      {
+        {
           label: '添加到桌面',
           newIcon:'fluent:desktop-16-regular',
           callBack: async () => {
@@ -87,6 +88,32 @@ export default {
             this.edit = true
           },
         },
+      ],
+      rightMenu: [
+        {
+          label: '复制网址',
+          newIcon:'fluent:copy-20-regular',
+          callBack: async () => {
+            require('electron').clipboard.writeText(this.itemTmp.url)
+            message.success('复制内容成功')
+          }
+        },
+        {
+          label: '添加到桌面',
+          newIcon:'fluent:desktop-16-regular',
+          callBack: async () => {
+            this.deskFlag = true
+          }
+        },
+        {
+          label: '添加到分组',
+          newIcon: 'fluent:app-folder-16-regular',
+          callBack: () => {
+            this.previewFlag = true
+            this.edit = true
+          },
+        },
+        
       ],
       deskIcons: [],
       // 文件夹默认数据
@@ -139,8 +166,6 @@ export default {
       },
 
     }
-  },
-  mounted(){
   },
   components: { 
     Icon,
@@ -202,6 +227,20 @@ export default {
     
     },
   },
+
+  watch:{
+    // 监听是否刷新
+    isFavorites:{
+      handler(newVal, oldVal) {
+        if(newVal == true){
+          this.refresh()
+        }
+      },
+      immediate:true
+    },
+  },
+  mounted(){
+  },
   methods: {
     // 添加到桌面
     addDeskIcon(){
@@ -216,12 +255,16 @@ export default {
     },
     // 修改名字
     changeName(){
-      this.allList.forEach((i, index)=>{
-        if(i.guid == this.tmpGuid){
-          i.rename = this.rename
-          message.success('修改名称成功！')
-        }
-      })
+      if(this.rename == ''){
+        message.error('名称不能为空！')
+      }else{
+        this.allList.forEach((i, index)=>{
+          if(i.guid == this.tmpGuid){
+            i.rename = this.rename
+            message.success('修改名称成功！')
+          }
+        })
+      }
     },
     // 修改名称弹窗
     showRenameModal(item){
@@ -267,6 +310,7 @@ export default {
             type: 'favo',
             // num: 0,
             rename: null,
+            unRead: false,
           })
           this.allList = this.mergeArraysByGuid(this.allList, res)
 
@@ -315,6 +359,7 @@ export default {
 
     // 改变图标类型
     changeIcon(arr){
+      if (arr.length == 1) this.itemTmp = arr[0]
       let newFolder = []
       let newIcon = []
       arr.forEach(item=>{
@@ -402,11 +447,10 @@ export default {
       // 这部分是新建的网址 需要添加到最近更新
       if(newObjects.length > 0){
         this.clearRecent()
-        // console.log(111, this.folderList, newObjects)
         newObjects.forEach(item=>{
           item.recent = true          
           this.folderList.forEach(folder=>{
-            if(folder.guid == item.parent){
+            if(folder.guid == item.parent && item.parent){
               folder.unRead = true
             }
           })

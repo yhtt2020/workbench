@@ -20,7 +20,7 @@
             <div v-if="refreshDetailFlag">
                 <div class="card-top">
                     <div class="top-left">
-                        <a-avatar :src="cardData.user.avatar" :size="32" class="pointer"
+                        <a-avatar :src="cardData.user?.avatar" :size="32" class="pointer"
                             @click.stop="showCard(uid, userInfo)">
                             <template #icon>
                                 <UserOutlined />
@@ -63,33 +63,28 @@
 
                         </div>
                         <template v-if="cardData.image_170_170">
-                            <!-- <ul class="flex flex-wrap items-center p-0 mb-0 ">
-                                <img :src="item.image" v-for="(item, index) in cardData.image_170_170" @click="showImage"
-                                    class="mb-2 rounded-md cover-lm " :key="index" style="object-fit: fill;">
-                            </ul> -->
-                            <!-- :options="options" -->
-                            <!-- <viewer :images="cardData.image_170_170" :options="options" class="items-center p-0 mb-0 ">
+                            <!-- <viewer :images="cardData.image_170_170" :options="options" class="items-center p-0 mb-0 "> -->
                                 <a-row :gutter="[20, 20]" style="margin-right: 1em" wrap="'true">
                                     <a-col class="flex flex-wrap mr-2 image-wrapper"
                                         v-for="(img, index) in cardData.image_170_170" :span="11" style="">
+                                        <xt-preview-img
+                                            :imgList="imgList"
+                                            :multiple="true"
+                                            :maskClose="true"
+                                            :controlOption="{
+                                                controlBar: true,
+                                                closeBtn: true,
+                                                arrowBtn: true,
+                                            }"
+                                            :index="index"
+                                        >
                                         <img class="mb-2 mr-2 rounded-md image-item pointer cover-lm" :src="img.image"
                                             :data-source="cardData.image[index].image" @contextmenu.stop="showMenu(img)"
                                             style="position: relative object-fit: fill;">
+                                        </xt-preview-img>
                                     </a-col>
                                 </a-row>
-                            </viewer> -->
-                            <xt-preview-img
-                                :imgList="imgList"
-                                :imgW="150"
-                                :imgH="100"
-                                :multiple="true"
-                                :maskClose="true"
-                                :controlOption="{
-                                    controlBar: true,
-                                    closeBtn: true,
-                                    arrowBtn: true,
-                                }"
-                            ></xt-preview-img>
+                            <!-- </viewer> -->
                         </template>
 
                     </div>

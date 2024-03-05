@@ -49,8 +49,11 @@
     </div>
 
     <div class="mt-10">
-      <a-button :disabled="hasTeam" @click="joinTeam(selectTeam)" block type="primary" size="large"
+      <a-button v-if="!$useEnv('guest')" :disabled="hasTeam" @click="joinTeam(selectTeam)" block type="primary" size="large"
                 style="color:var(--primary-text);background: var(--primary-bg);">加入小队
+      </a-button>
+      <a-button v-else :disabled="true"  block type="primary" size="large"
+                style="color:var(--primary-text);background: var(--primary-bg);">游客模式下无法使用小队功能
       </a-button>
     </div>
   </a-drawer>
