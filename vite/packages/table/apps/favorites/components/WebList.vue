@@ -1,36 +1,36 @@
 <template>
     <div class="w-full pl-4 xt-scrollbar scroll-color " style="height: 640px;">
-        <!-- <div v-if="1" class="h-16 mb-1 flex items-center p-4 pointer rounded-lg font-16 xt-text list-hover justify-between tran" style="width: 728px;" @click="change(index, item)" v-for="(item,index) in list" :class="item.check?'xt-bg-2':''" > -->
-        <div v-if="show?.length" class="h-16 mb-1 flex items-center p-4 pointer rounded-lg font-16 xt-text list-hover justify-between tran" style="width: 728px;" @click="change(index, item)" v-for="(item,index) in show" :class="item.check?'xt-bg-2':''" >
-          <div class='flex h-full items-center'>
-            <WebItem class="" :item="item" :checkFlag="checkFlag"></WebItem>
-            <!-- style="width: 530px;" -->
-            <div class="flex flex-col ml-3 font-16 xt-text" style="max-width: 520px;">
-              <div class="text-overflow">{{ item.rename?item.rename:item.name }}</div>
-              <div class="xt-text-2 url-hover font-14 text-overflow">{{ item.url }}</div>
-            </div>
-          </div>
-          
-          <div v-if="item.favo" class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg ml-2 hover-right-2">
-            <xt-new-icon icon="fluent:star-16-filled" color="#faad14" size="16" />
-          </div>
-          <div class="flex hover-right">
-            <!-- 修改 -->
-            <div @click.stop="showRenameModal(item)" class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg">
-              <xt-new-icon icon="fluent:compose-16-regular" size="16" />
-            </div>
-            <!-- 添加 -->
-            <xt-menu :menus="menus" model="click" @mounted="changeMenu(item, index)">
-              <div class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg ml-2">
-                <xt-new-icon icon="fluent:add-16-regular" size="16" />
+        <div v-if="show?.length" >
+          <xt-menu :menus="rightMenu" @mounted="changeMenu(item, index)" class="h-16 mb-1 flex items-center p-4 pointer rounded-lg font-16 xt-text list-hover justify-between tran" style="width: 728px;" @click="change(index, item)" v-for="(item,index) in show" :class="item.check?'xt-bg-2':''" >
+            <div class='flex h-full items-center'>
+              <WebItem class="" :item="item" :checkFlag="checkFlag"></WebItem>
+              <!-- style="width: 530px;" -->
+              <div class="flex flex-col ml-3 font-16 xt-text" style="max-width: 520px;">
+                <div class="text-overflow">{{ item.rename?item.rename:item.name }}</div>
+                <div class="xt-text-2 url-hover font-14 text-overflow">{{ item.url }}</div>
               </div>
-            </xt-menu>
-            <!-- 收藏 -->
-            <div class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg ml-2" @click.stop="changeFavo(item)">
-              <xt-new-icon v-if="item.favo" icon="fluent:star-16-filled" color="#faad14" size="16" />
-              <xt-new-icon v-else icon="fluent:star-16-regular" size="16" />
             </div>
-          </div>
+            <div v-if="item.favo" class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg ml-2 hover-right-2">
+              <xt-new-icon icon="fluent:star-16-filled" color="#faad14" size="16" />
+            </div>
+            <div class="flex hover-right">
+              <!-- 修改 -->
+              <div @click.stop="showRenameModal(item)" class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg">
+                <xt-new-icon icon="fluent:compose-16-regular" size="16" />
+              </div>
+              <!-- 添加 -->
+              <xt-menu :menus="menus" model="click" @mounted="changeMenu(item, index)">
+                <div class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg ml-2">
+                  <xt-new-icon icon="fluent:add-16-regular" size="16" />
+                </div>
+              </xt-menu>
+              <!-- 收藏 -->
+              <div class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg ml-2" @click.stop="changeFavo(item)">
+                <xt-new-icon v-if="item.favo" icon="fluent:star-16-filled" color="#faad14" size="16" />
+                <xt-new-icon v-else icon="fluent:star-16-regular" size="16" />
+              </div>
+            </div>
+          </xt-menu>
         </div>
         <div v-else class="flex items-center justify-center h-full">
           <div style="width: 452px;height: 200px;" class="flex flex-col items-center">
@@ -59,7 +59,7 @@
   
   export default {
     name: 'WebList',
-    props: ['showList', 'checkFlag', 'menus'],
+    props: ['showList', 'checkFlag', 'menus', 'rightMenu'],
     data() {
       return {
         show: [],

@@ -55,6 +55,7 @@
         let arr = this.allList.filter(item=>{
           return item.check
         })
+        if(arr.length == 0) message.error('请至少选择一个网址进行操作！')
         this.$emit('changeIcon', arr)
 
       },

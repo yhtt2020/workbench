@@ -6,7 +6,7 @@
         <LeftMenu @changeFolder="changeFolder" @refresh="refresh"></LeftMenu>
         <div class="w-full flex-1">
           <Search></Search>
-          <WebList @refresh="refresh" @changeIcon="changeIcon" @countFavo="countFavo" @showRenameModal="showRenameModal" :checkFlag="checkFlag" :showList="showList" :menus="menus"></WebList>
+          <WebList @refresh="refresh" @changeIcon="changeIcon" @countFavo="countFavo" @showRenameModal="showRenameModal" :checkFlag="checkFlag" :showList="showList" :menus="menus" :rightMenu="rightMenu"></WebList>
         </div>
 
         <Labor @changeIcon="changeIcon" :menus="menus" :checkFlag="checkFlag" @changeCheck="changeCheck" @countFavo="countFavo"></Labor>
@@ -69,9 +69,10 @@ export default {
       deskFlag: false,
       resTmp: [],
       deskIndex: {},
-      
+      // 临时存放数据
+      itemTmp: {},
       menus: [
-      {
+        {
           label: '添加到桌面',
           newIcon:'fluent:desktop-16-regular',
           callBack: async () => {
@@ -87,6 +88,32 @@ export default {
             this.edit = true
           },
         },
+      ],
+      rightMenu: [
+        {
+          label: '复制网址',
+          newIcon:'fluent:copy-20-regular',
+          callBack: async () => {
+            require('electron').clipboard.writeText(this.itemTmp.url)
+            message.success('复制内容成功')
+          }
+        },
+        {
+          label: '添加到桌面',
+          newIcon:'fluent:desktop-16-regular',
+          callBack: async () => {
+            this.deskFlag = true
+          }
+        },
+        {
+          label: '添加到分组',
+          newIcon: 'fluent:app-folder-16-regular',
+          callBack: () => {
+            this.previewFlag = true
+            this.edit = true
+          },
+        },
+        
       ],
       deskIcons: [],
       // 文件夹默认数据
@@ -332,6 +359,7 @@ export default {
 
     // 改变图标类型
     changeIcon(arr){
+      if (arr.length == 1) this.itemTmp = arr[0]
       let newFolder = []
       let newIcon = []
       arr.forEach(item=>{
