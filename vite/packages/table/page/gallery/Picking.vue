@@ -33,12 +33,16 @@
 
       <XtScrollbar  :y="true" style="height: 100%;" id="pick-wrapper" ref="pickWrapperRef" v-show="isLoading === false">
         <div style="height:8px;"></div>
-        <viewer :images="pickImageData" :options="options" >
+        <!-- <viewer :images="pickImageData" :options="options" > -->
           <a-row :gutter="[16, 16]" id="pick-images" ref="pickRef">
             <a-col class="image-wrapper " v-for=" (img,index)  in  pickImageData " :span="6" >
               <div class="w-full h-full pointer pick-paper" >
                 <xt-mix-menu :menus="pickPaperMenu" fn="callBack"  @mounted="this.currentPaper = img" :stopPropagation="false" >
+                  <xt-preview-img
+                    :imgList="imagesList"
+                    :index="index">
                   <img  class="image-item pointer" :src="img.src" :data-source="img.path" :alt="img.resolution" style="position: relative">
+                </xt-preview-img>
                   <div class="absolute flex top-1 right-3">
                     <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="mr-2 xt-bg-t-3 img-button" style="border-radius: 8px; opacity: 0;" @click="download(img)">
                       <div class="flex items-center justify-center">
@@ -66,7 +70,7 @@
               </div>
             </a-col>
           </a-row>
-        </viewer>
+        <!-- </viewer> -->
         <!-- <xt-preview-img
           :imgList="imagesList"
           >
@@ -197,11 +201,11 @@ export default {
   computed:{
     ...mapWritableState(pickPaperStore,['pickParams']),
     ...mapWritableState(paperStore,['settings']),
-    // imagesList () {
-    //   return this.pickImageData.map((item) => {
-    //     return item.src
-    //   })
-    // }
+    imagesList () {
+      return this.pickImageData.map((item) => {
+        return item.path
+      })
+    }
   },
 
   mounted(){
@@ -214,6 +218,7 @@ export default {
       }
     })
     this.getPickPaperList();
+    
   },
 
   methods:{

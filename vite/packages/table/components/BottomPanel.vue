@@ -242,7 +242,7 @@
                       >
                         <xt-menu
                           :id="item.id"
-                          class="relative w-full flex flex-wrap justify-center overflow-visible"
+                          class="relative flex flex-wrap justify-center w-full overflow-visible"
                           :menus="folderOptions"
                         >
                           <div
@@ -284,7 +284,7 @@
                                   <template #control>
                                     <div 
                                       style="background-color: #ff4d4f;border: 2px solid ;" 
-                                      class="absolute top-0 flex items-center justify-center flex-shrink-0 w-4 h-4 translate-x-6 -translate-y-1/3 rounded-full pointer" >
+                                      class="absolute top-0 flex items-center justify-center flex-shrink-0 w-4 h-4 translate-x-6 rounded-full -translate-y-1/3 pointer" >
                                     </div>
                                   </template>
                                 </Avatar>
@@ -645,7 +645,7 @@ export default {
       parentSize: 0,
       // 控制中心弹窗
       controlVisible: false,
-      controlLeft: 0,
+      controlLeft: 100,
       skipSort: false,
       skipSimple: false,
       parentHeight: 0,
@@ -1216,6 +1216,11 @@ export default {
      * @param {*} item 图标详细信息
      */
     async newOpenApp(type, value, item) {
+      this.resetElementPosition()
+      if(value === 'control' && !this.controlVisible){
+        this.controlVisible = true
+        return
+      }
       // 新版设置打开方式
       if (value === 'setting') {
         this.$router.push({
@@ -1229,7 +1234,6 @@ export default {
       if(type === 'folder'){
         this.openFolder(item)
       }
-      this.resetElementPosition()
       if (value == 'fullscreen' && window.$useEnv()) {
         toggle()
         // console.log('isFullscreen :>> ', isFullscreen);

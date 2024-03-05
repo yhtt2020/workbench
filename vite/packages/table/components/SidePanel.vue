@@ -628,15 +628,15 @@ export default {
      * sortable拖拽函数
      */
     enableDrag() {
-      console.log('触发一次重置 ')
+      // console.log('触发一次重置 ')
       if (this.sortable) {
-        console.log('先清理 ')
+        // console.log('先清理 ')
         this.sortable.destroy()
       }
       let that = this
       let drop = document.getElementById(this.sortId)
       if (!drop) {
-        console.error('更新侧边导航栏失败，元素不存在')
+        // console.error('更新侧边导航栏失败，元素不存在')
         return
       }
       let index = null
@@ -662,7 +662,7 @@ export default {
           }
           let del = document.querySelectorAll('#delIcon3')
           // let delIcon = document.getElementById('delIcon3')
-          console.log('delIcon', del)
+          // console.log('delIcon', del)
           that.delItemIcon = true
           that.$emit('getDelIcon', true)
           that.delNav = true
@@ -710,7 +710,7 @@ export default {
           // console.log('移动event=', event)
           let cur = this.sideList.splice(event.oldIndex, 1)[0]
           if (!cur) {
-            console.error('移动失败，无法获取到元素')
+            // console.error('移动失败，无法获取到元素')
             return
           }
           this.sideList.splice(event.newIndex, 0, cur)
@@ -856,7 +856,7 @@ export default {
       const bottom = document.getElementById(this.sortId)
       const rect = bottom.getBoundingClientRect()
       const index = Math.round((e.y - rect.y) / (72 * this.navAttribute.navSize / 100))
-      console.log(index, item, 'index');
+      // console.log(index, item, 'index');
       this.dragItem = null
       if (this.sideList[this.hoverIndex]?.type === 'folder') {
         const merged = this.mergeIconFolder(this.sideList, item, this.sideList.find(i => {
