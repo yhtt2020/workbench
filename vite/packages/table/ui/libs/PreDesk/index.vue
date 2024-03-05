@@ -3,7 +3,7 @@
         <div :style="{'transform': `scale(${scale})`}">
           <component
             :desk="currentDesk"
-            :is="chooseIndex?.test"
+            :is="chooseIndex?.cardName"
             :customIndex="chooseIndex?.id"
             :customSize="customSize"
             :customData="customData"
@@ -28,20 +28,27 @@
         return this.backgroundImage.path?background:"url('https://a.apps.vip/icons/defaultBackground.jpg')"
       },
       customData(){
+        if(this.chooseIndex){
+          return this.chooseIndex.customData
+        }
+        return 
         return this.chooseIndex.customData?this.chooseIndex.customData:this.desks[0].cards[0].customData
       },
       customSize(){
-        let str = this.chooseIndex.customData.customSize.split(/x|\*/);
-        let scaleW = (380 / ( 135 * str[0])).toFixed(4)
-        let scaleH = (260 / ( 100 * str[1])).toFixed(4)
-        this.scale = scaleW > scaleH?scaleH:scaleW
-        this.scale = this.scale > 1?1:this.scale
-        return str.join('x')
+        if(this.chooseIndex){
+          let str = this.chooseIndex.customData.customSize.split(/x|\*/);
+          let scaleW = (380 / ( 135 * str[0])).toFixed(4)
+          let scaleH = (260 / ( 100 * str[1])).toFixed(4)
+          this.scale = scaleW > scaleH?scaleH:scaleW
+          this.scale = this.scale > 1?1:this.scale
+          return this.chooseIndex.customData.customSize
+        }
+        return '2x2'
       }
     },
     data() {
       return {
-        test: true,
+        cardName: true,
         scale: 1,
       }
     },
