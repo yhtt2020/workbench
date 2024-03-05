@@ -449,6 +449,7 @@ export default {
         this.clearRecent()
         newObjects.forEach(item=>{
           item.recent = true          
+          item.unRead = true
           this.folderList.forEach(folder=>{
             if(folder.guid == item.parent && item.parent){
               folder.unRead = true
