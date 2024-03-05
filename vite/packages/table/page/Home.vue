@@ -114,19 +114,6 @@
       <!--      </template>-->
     </desk-group>
   </div>
-
-  <transition name="fade">
-    <div class="" style="
-        position: fixed;
-        top: 0;
-        right: 0;
-        left: 0;
-        bottom: 0;
-        z-index: 999;
-      " v-if="iconVisible">
-      <AddIcon @setCustoms="setCustoms" @close="iconHide" :desk="currentDesk"></AddIcon>
-    </div>
-  </transition>
   <!-- <div class="fixed inset-0 p-12 home-blur" style="z-index: 999" >
     <GradeNotice></GradeNotice>
   </div> -->
@@ -218,13 +205,10 @@ import Muuri from "muuri";
 import HorizontalPanel from "../components/HorizontalPanel.vue";
 import Clocks from "../components/widgets/clock/index.vue";
 import Notes from "../components/widgets/note/index.vue";
-import myIcons from "../components/widgets/myIcons/index.vue";
-import NewAddCard from "./app/card/NewAddCard.vue";
 import ShortcutKeyDetail from "../apps/shortcutKey/shortcutKey/ShortcutKeyDetail.vue";
 import NotShortcutKey from "../apps/shortcutKey/page/NotShortcutKey.vue";
 import ShortcutKeyList from "../apps/shortcutKey/shortcutKey/ShortcutKeyList.vue";
 import GameStrategy from "../components/widgets/games/GameStrategy.vue";
-import AddIcon from "./app/addIcon/index.vue";
 import KeyBoard from "../apps/shortcutKey/components/KeyBoard.vue";
 import SmallRank from "../components/widgets/SmallRank.vue";
 import AggregateSearch from "../components/widgets/aggregate/AggregateSearch.vue";
@@ -413,15 +397,12 @@ export default {
     CaptureNewCard,
     Clocks,
     Notes,
-    myIcons,
-    NewAddCard,
     GuidePage,
     NewGuidePage,
     ShortcutKeyDetail,
     NotShortcutKey,
     ShortcutKeyList,
     GameStrategy,
-    AddIcon,
     KeyBoard,
     SmallRank,
     AggregateSearch,
@@ -739,17 +720,7 @@ export default {
         "https://www.bilibili.com/video/BV1Th4y1o7SZ/?vd_source=2b7e342ffb60104849f5db6262bb1e0b"
       );
     },
-    iconHide() {
-      this.iconVisible = false;
-    },
-    hideAddCard() {
-      this.visibleAdd = false;
-    },
-    // 添加图标
-    newAddIcon() {
-      this.iconVisible = true;
-      this.menuVisible = false;
-    },
+
     replaceIcon(navigationList, init) {
       if (!init) {
         navigationData.systemAppList.forEach((item) => {
@@ -1062,9 +1033,7 @@ export default {
     setCustom() {
       this.custom = false;
     },
-    setCustoms() {
-      this.visibleAdd = false;
-    },
+
     shareDesk() {
       this.openDesk = true;
       this.menuVisible = false;

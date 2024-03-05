@@ -98,7 +98,6 @@
 <script>
 // components
 import Widget from "../../card/Widget.vue";
-import Edit from "./edit/index.vue";
 import icon from "./components/icon.vue";
 import icons from "./icons/index.vue";
 import DragAndFollow from "./components/DragAndFollow.vue";
@@ -139,7 +138,6 @@ export default {
   components: {
     Set,
     Widget,
-    Edit,
     icons,
     icon,
     DragAndFollow,
