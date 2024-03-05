@@ -176,7 +176,7 @@
               <shop-outlined/>
             </xt-button>
             <!--                <div class="pointer s-item h-10 w-10 flex justify-center items-center rounded-lg ml-4" @click="deleteGame"><Icon style=""   icon="delete"></Icon></div>-->
-            <Menu :menus="gameMenus">
+            <Menu model="click" :menus="gameMenus">
               <xt-button :w="40" :h="40">
                 <more-outlined/>
               </xt-button>
