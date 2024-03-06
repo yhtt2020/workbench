@@ -28,7 +28,11 @@ htmls.forEach(html=>{
   inputs[html]=getPath(html)
 })
 export default defineConfig({
-  plugins: [vue(),require('tailwindcss'),
+  plugins: [  vue({
+    script: {
+      defineModel: true
+    }
+  }),require('tailwindcss'),
     require('autoprefixer')],
   base:'./',
   build:{
