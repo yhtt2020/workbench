@@ -398,6 +398,10 @@ export default {
       this.setTimer = setTimeout(() => {
         this.appList = [...this.fault]
         this.loading = false
+        // 效率辅助下取消游戏勾选
+        if(this.deskTypeObj.assist){
+          this.appList[0].isCheck = false
+        }
         this.messageFinish()
       }, 15000);
     },
@@ -700,6 +704,11 @@ export default {
         this.appList[3].list = tmp.picture
         this.appList[4].list = tmp.audio
         this.appList[5].list = tmp.other
+
+        // 效率辅助下取消游戏勾选
+        if(this.deskTypeObj.assist){
+          this.appList[0].isCheck = false
+        }
 
         // 请求结束 进入下一步
         this.loading = false
