@@ -130,6 +130,9 @@ export default {
     Promise.all([
       //启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成
       //注意，此处的第二个参数，必须和此store同名，尤其注意有些命名里带了store的
+      await  browserStore().bindIPC(),
+      await  captureStore(),//仅触发一下载入
+      await this.bindIPC(),
       await this.initStore(appStore, "appStore"),
       await this.initStore(codeStore, "code"),
       await this.initStore(cardStore, "cardStore"),
@@ -144,28 +147,19 @@ export default {
       await this.initStore(controlStore, "control"),
       await this.initStore(offlineStore, "offlineStore"),
       await this.initStore(clipboardStore, "clipboardStore"),
-      await  browserStore().bindIPC(),
-      await  captureStore(),//仅触发一下载入
-      await this.bindIPC(),
     ]);
+    let haventOk=Object.keys(window.loadedStore).filter(key => {
+          let check = !window.loadedStore[key]
+          if (window.loadedStore[key] === false)
+            return check
+        })
+        console.log('haventOk :>> ', haventOk);
     console.log('加载完成 :>> ', );
     window.loadedStore['userInfo'] = false
-    // this.launching = false
-    this.bindUserInfoResponse()
-    this.getUserInfo()
-    this.sortClock()
 
 
-   // 登录过
-   if(this.userInfo.uid && this.init){
-      this.loginOk()
-      return
-      // this.timeout()
-    }
-    this.afterLaunch()
-    return
+
     setTimeout(() => {
-      return
       this.storeReadyTimer = setInterval(() => {
         if (!this.launching) {
           return
@@ -175,18 +169,16 @@ export default {
           if (window.loadedStore[key] === false)
             return check
         })
-        if (haventOk.length) {
-          //未全部搞定
-          // console.log(haventOk)
-          return
-        } else {
+        if (haventOk.length <=1 ) {
           //已经全部搞定
           clearInterval(this.storeReadyTimer)
           this.afterLaunch()
         }
       }, 1000)
     }, 100)
-
+    this.bindUserInfoResponse()
+    this.getUserInfo()
+    this.sortClock()
 
   },
   computed: {
@@ -203,7 +195,7 @@ export default {
     ...mapActions(appStore, ['getUserInfo', 'setUser','enterAided','ensureShake', 'finishWizard']),
     ...mapActions(steamUserStore, ['bindClientEvents']),
     ...mapActions(captureStore, ['bindCaptureIPC']),
-    bindIPC() {
+   async bindIPC() {
       if (isMain()) {
       this.bindMainIPC()
     } else {
@@ -307,7 +299,7 @@ export default {
         }
       })
     },
-    initStore (store, name) {
+   async initStore (store, name) {
       console.log('window.loadedStore :>> ', window.loadedStore);
       // loadedStore 不存在初始化对象
       if (!window.loadedStore) {
@@ -317,10 +309,18 @@ export default {
       if (typeof window.loadedStore[name] === 'undefined') {
         window.loadedStore[name] = false
       }
-      store()
+     await store()
+     console.log('ok :>> ', );
     },
 
     async afterLaunch () {
+   // 登录过
+   if(this.userInfo.uid && this.init){
+      this.loginOk()
+      return
+      // this.timeout()
+    }
+
       // 未初始化
       if(!this.init && (isMain() || this.$useEnv('web'))){
         this.$router.replace({ name: 'wizard' })
@@ -350,11 +350,11 @@ export default {
       this.launching = false
       if (!this.userInfo) {
         //如果个人信息不存在，则直接返回
+
         return
       } else {
         this.enter()
       }
-
     },
     // 生成等级区间
     gradeTableGenerate (num) {
@@ -387,7 +387,7 @@ export default {
     loginOk(){
       this.$router.replace({ name: 'home' })
       if(!this.init && this.$useEnv('web')) this.finishWizard()
-      
+
     },
     onGuest(){
       this.$router.replace({ name: 'home' })

@@ -114,7 +114,7 @@
 <script lang="ts">
 import { computed, defineComponent, reactive, toRefs, watchEffect } from 'vue';
 import Datepicker from '@vuepic/vue-datepicker';
-import '@vuepic/vue-datepicker/dist/main.css';
+// import '@vuepic/vue-datepicker/dist/main.css';
 
 const TUIProfileEdit:any = defineComponent({
   props: {

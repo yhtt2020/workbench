@@ -24,9 +24,7 @@ const file = {
    * @returns 如果文件夹存在则返回 true，否则返回 false
    */
   async existsFolder(folderName) {
-    let fileDir = pathJoin(folderName);
-    console.log("fileDir :>> ", fileDir);
-    // let res = await fs.pathExists(file.pathJoin(folderName));
+    let fileDir = file.pathJoin(folderName);
     let res = await fs.pathExists(fileDir);
     return res;
   },
@@ -64,7 +62,7 @@ const file = {
     // let res = file.pathJoin(filePath);
     fs.rmdir(filePath, (err) => {
       if (err) {
-      console.log(`File ${res} xxxxxxxxxx`);
+        console.log(`File ${res} xxxxxxxxxx`);
 
         throw err;
       }
@@ -98,6 +96,9 @@ const file = {
   /**
    * 路径拼接
    */
+  // const tempPath = function (p) {
+  //   return require("path").join(require("electron").app.getPath("userData"), p);
+  // };
   pathJoin(paths) {
     if (typeof paths == "string") {
       return join(file.getCurrentDir(), paths);

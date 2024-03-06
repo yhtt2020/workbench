@@ -1,9 +1,14 @@
 // import devtools from '@vue/devtools'//注释此行无法连接vue调试工具
-
 // 注册想天客户端状态
-import currentEnv, { isWeb, isClient, isMac, isOffline, isGuest } from "./ui/hooks/env";
-import {useEnv,useEnvLimit,useComLimit} from "./permission/useEnv";
-window.$currentEnv = currentEnv;
+import { isWeb, isClient, isMac, isOffline, isGuest } from "./ui/hooks/env";
+import {
+  useEnv,
+  useEnvLimit,
+  useComLimit,
+  currentEnv,
+} from "./permission/useEnv";
+import type { UseEnv, baseEnv } from "./permission/useEnv";
+
 window.$isOffline = isOffline;
 window.$isGuest = isGuest;
 window.$useEnv = useEnv;
@@ -44,14 +49,13 @@ import "vue-toastification/dist/index.css";
 import XTUI from "./ui/new/index.js";
 import registerXTUI from "./ui/index";
 // 注册任务引导
-import VueShepherdPlugin from "vue-shepherd";
+// import VueShepherdPlugin from "vue-shepherd";
 import "shepherd.js/dist/css/shepherd.css";
 // 注册系统相关样式和字体
 import "../../public/css/index.scss";
-//
-// import { confirm } from "../../../ui/new/confirm/index";
-import { confirm } from "./ui/new/confirm";
 
+import { confirm } from "./ui/new/confirm";
+import type { Confirm } from "./ui/new/confirm";
 // 导入codemirror主题色样式表和语言包
 import "codemirror/lib/codemirror.css";
 import "codemirror/mode/javascript/javascript";
@@ -74,7 +78,6 @@ import "../../public/css/toast.scss";
 import "../../public/css/category.scss";
 
 import { router } from "./router";
-import routerTab from "./js/common/routerTab";
 
 //腾讯IM部分
 import { loadChat, TUIKit } from "./chat";
@@ -88,8 +91,11 @@ import initStores from "./initStores";
 import { Notifications } from "./js/common/sessionNotice";
 
 import WujieVue from "wujie-vue3";
-import mitt from "mitt";
-import hevueImgPreview from 'hevue-img-preview'
+
+import { tt, Mit } from "./permission/global/global";
+import type { TT } from "./permission/global/type";
+
+import hevueImgPreview from "hevue-img-preview";
 const { bus, setupApp, preloadApp, destroyApp } = WujieVue;
 
 // Your SDKAppID
@@ -98,14 +104,12 @@ const { bus, setupApp, preloadApp, destroyApp } = WujieVue;
 const notice = new Notifications();
 window.$notice = notice;
 
-const Mit = mitt();
-
 dayjs.locale("zh-cn");
 
 const app = createApp(App);
 
-app.use(WujieVue)
-app.use(hevueImgPreview)
+app.use(WujieVue);
+// app.use(hevueImgPreview)
 // 使用 provide 将全局变量作为响应式对象
 app.provide("currentEnv", currentEnv);
 app.provide("isWeb", isWeb);
@@ -114,6 +118,7 @@ app.provide("isMac", isMac);
 app.provide("isOffline", isOffline);
 app.provide("isGuest", isGuest);
 app.provide("$useEnv", useEnv);
+
 // 使用 globalProperties 将全局变量附加到 Vue 实例上
 app.config.globalProperties.$currentEnv = currentEnv;
 app.config.globalProperties.$isWeb = isWeb;
@@ -122,11 +127,22 @@ app.config.globalProperties.$isMac = isMac;
 app.config.globalProperties.$isOffline = isOffline;
 app.config.globalProperties.$isGuest = isGuest;
 app.config.globalProperties.$bus = Mit;
-app.config.globalProperties.$useEnv= useEnv;
-window.$ui={
+app.config.globalProperties.$useEnv = useEnv;
+window.$ui = {
   confirm,
   router,
+};
+const newTT: TT = tt;
+
+declare global {
+  interface Window {
+    tt: TT;
+  }
 }
+
+window.tt = tt;
+app.provide("tt", newTT);
+app.config.globalProperties.tt = newTT;
 
 const pinia = createPinia();
 pinia.use(piniaPersist);
@@ -158,7 +174,7 @@ const $app = app
   .use(Toast, options)
   .use(TUIKit)
   .use(WujieVue)
-  .use(VueShepherdPlugin)
+  // .use(VueShepherdPlugin)
   .use(XTUI)
   .mount("#app");
 registerXTUI(app);
@@ -168,11 +184,12 @@ app.component("PanelButton", PanelButton);
 app.component("BackBtn", BackBtn);
 app.component("vueCustomScrollbar", vueCustomScrollbar);
 
-if (!useEnv()){
+if (!useEnv()) {
   window.USER_DATA_PATH = window.globalArgs["user-data-dir"]; //挂载一个用户数据目录的常量，方便后续开发
 }
 
 window.$app = $app;
+// window.$bus = Mit.emit;
 initStores();
 // devtools.connect()
 export { router };
