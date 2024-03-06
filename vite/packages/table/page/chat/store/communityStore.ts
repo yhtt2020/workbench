@@ -211,7 +211,8 @@ export const communityStore = defineStore('communityStore',{
     // 更新社群父级目录
     async updateCategoryData(data:any,no:any){
       const res = await post(updateChannel,data);
-      console.log('执行......更新',res);
+      if(res.status === 1){ this.updateCommunityTree(no) } 
+      return res;
     }
 
   },
