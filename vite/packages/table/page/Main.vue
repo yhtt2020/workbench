@@ -152,7 +152,6 @@ export default {
     },
     ...mapActions(navStore, ['sortSideNavigationList', 'removeSideNavigationList', 'sortRightNavigationList', 'removeRightNavigationList', 'loadNav']),
     getDelIcon(val) {
-      console.log(val,'from bottom')
       this.delZone = val
     },
     hiedNavBar(value) {
@@ -176,48 +175,12 @@ export default {
         checkAndToggle([...left, ...foot], 1);
       }
     },
-    handleMouseEnter(e) {
-      if (this.customOpenNav) {
-        this.isLeaveBar = false
-        console.log('=========>>>>>>>鼠标离开了', this.isLeaveBar, this.controlVisible, this.folderVisible)
-      }
-    },
-    handleMouseLeave(e) {
-      if (this.customOpenNav) {
-        this.isLeaveBar = true
-        console.log('===========>>>>>>>>鼠标进入了', this.isLeaveBar, e.y,)
-      }
-    },
     openFolder(value,id) {
       id === 'left' ? this.sideIsOpenFolder = value : this.rightIsOpenFolder = value
     },
   }
 }
 </script>
-
-<style>
-.bounce-enter-active {
-  animation: bounce-in 0.5s;
-}
-
-.bounce-leave-active {
-  animation: bounce-in 0.5s reverse;
-}
-
-@keyframes bounce-in {
-  0% {
-    transform: scale(0);
-  }
-
-  50% {
-    transform: scale(1.25);
-  }
-
-  100% {
-    transform: scale(1);
-  }
-}
-</style>
 <style lang="scss" scoped>
 .del-icon {
   border-radius: 16px;
