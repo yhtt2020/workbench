@@ -47,11 +47,9 @@ export default {
   methods: {
     refresh() {
       if(!this.settings.enableBarrage){
-        Modal.confirm({
-          centered:true,
-          content:'当前未启用弹幕功能，需要启用后方可测试。',
-          okText:'启用并测试',
-          onOk:()=>{
+        window.$ui.confirm('当前未启用弹幕功能，需要启用后方可测试。','',{
+          okText:'启用',
+          ok:()=>{
             this.settings.enableBarrage=true
             window.$manager.setOptions(
               {
@@ -60,7 +58,10 @@ export default {
             )
             window.$manager.test()
             message.success('刷新成功。')
-          }
+          },
+          noText:'取消',
+          centered: true,
+          type: "warning",
         })
       }else{
         window.$manager.setOptions(
@@ -71,7 +72,6 @@ export default {
         window.$manager.test()
         message.success('刷新成功。')
       }
-
     },
     start() {
       completeTask('M0204')
