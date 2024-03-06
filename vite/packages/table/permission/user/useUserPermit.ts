@@ -32,7 +32,7 @@ export const useUpdateUserInfo = async () => {
  */
 export const useUserPermit = async () => {
   let token = cache.get("ttUserToken");
-
+console.log('123333 :>> ', 123333);
   // 有token
   if (cache.get("ttUserToken")) {
     let res = await setUserInfo();
