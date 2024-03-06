@@ -79,16 +79,15 @@ import {
 } from "vue";
 import { useGlobalStore } from "../../../global/store";
 import { storeToRefs } from "pinia";
-import { navList } from "./config";
 import { useFreeLayoutStore } from "../../../../components/desk/freeLayout/store";
 
 const Common = defineAsyncComponent(() => import("../common/Common.vue"));
 const Theme = defineAsyncComponent(() => import("../theme/Theme.vue"));
 const develop = defineAsyncComponent(() => import("../develop/Develop.vue"));
-const device = defineAsyncComponent(() => import("../device/Device.vue"));
-const key = defineAsyncComponent(() => import("../key/Key.vue"));
+const Device = defineAsyncComponent(() => import("../device/Device.vue"));
+const Key = defineAsyncComponent(() => import("../key/Key.vue"));
 const Screen = defineAsyncComponent(() => import("../Screen/Screen.vue"));
-const barrage = defineAsyncComponent(() => import("../barrage/Barrage.vue"));
+const Barrage = defineAsyncComponent(() => import("../barrage/Barrage.vue"));
 const Desk = defineAsyncComponent(() => import("../desk/Desk.vue"));
 
 const { proxy }: any = getCurrentInstance();
@@ -102,12 +101,59 @@ const components = shallowReactive({
   Common,
   Theme,
   develop,
-  device,
-  key,
+  Device,
+  Key,
   Screen,
-  barrage,
+  Barrage,
   Desk,
 });
+type SetItem = {
+  name: string;
+  icon: string;
+  component: string;
+};
+const navList = <SetItem[]>[
+  {
+    name: "通用设置",
+    icon: "fluent:settings-16-regular",
+    component: "Common",
+    disabled: false,
+  },
+
+  { name: "主题外观", icon: "fluent:color-24-regular", component: "Theme" },
+  {
+    name: "桌面设置",
+    icon: "fluent:desktop-16-regular",
+    component: "Desk",
+    disabled: false,
+  },
+  {
+    name: "设备设置",
+    icon: "fluent:slide-settings-24-regular",
+    component: "Device",
+    disabled: false,
+  },
+
+  {
+    name: "分屏设置",
+    icon: "fluent:window-multiple-16-filled",
+    component: "Screen",
+    disabled: false,
+  },
+  {
+    name: "弹幕设置",
+    icon: "fluent:code-text-16-regular",
+    component: "Barrage",
+  },
+  {
+    name: "按键设置",
+    icon: "fluent:keyboard-16-regular",
+    component: "Key",
+    disabled: false,
+  },
+
+  { name: "开发模式", icon: "fluent:code-16-regular", component: "Develop" },
+];
 
 const deskTab = ref("all");
 const settingsTab = [
@@ -137,7 +183,7 @@ onMounted(() => {
   if (isFreeLayout.value || getCurrentDesk.value.settings.enableZoom) {
     deskTab.value = "current";
   }
-  proxy.$bus.on("selectSystemNav", (id)=>{
+  proxy.$bus.on("selectSystemNav", (id) => {
     selectNav(id);
   });
 });
