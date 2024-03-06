@@ -1,6 +1,6 @@
 <template>
 
-  <div class="flex justify-between mb-3">
+  <div class="flex justify-between mb-4">
     <template v-for="item in itemList">
       <div
         style="width: 105px; height: 105px; border-radius: 12px"
