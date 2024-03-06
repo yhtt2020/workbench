@@ -112,14 +112,9 @@
           >
             <div v-if="!item.disabled" class="mr-1 header-right-icon">
               <!-- 右侧图标悬浮提示 -->
-              <div
-                v-if="item.tip"
-                class="absolute px-2 py-1 rounded-lg xt-modal header-right-icon-tip"
-                style="top:-30px;left:50%,transform:translateX(-50%);z-index: 99999999;"
-              >
-                {{ item.tip }}
-                <div class="triangle-bottom"></div>
-              </div>
+            <a-tooltip :title="item.tip">
+
+
               <xt-ify-icon
                 v-if="item.ifyIcon"
                 :icon="item.ifyIcon"
@@ -134,7 +129,7 @@
                 type=""
                 size="19"
                 w="20"
-              />
+              /></a-tooltip>
             </div>
           </template>
           <RightMenu
