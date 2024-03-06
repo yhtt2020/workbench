@@ -207,12 +207,15 @@ const triggerControl = () =>{
       return {status:false};
     // 弹幕
     case 'barrage':
-      settings.value.enableBarrage = !settings.value.enableBarrage;
+      settings.value.enableBarrage =!settings.value.enableBarrage;
       firstVisible.value = true;
+      // console.log('测试',window.$manager);
       if(settings.value.enableBarrage){
+        window.$manager.show();
         message.info('已为开启弹幕模式');
       }
       else {
+        window.$manager.hidden();
         message.info('已为关闭弹幕模式');
       }
       break;
