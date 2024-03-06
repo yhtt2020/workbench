@@ -63,15 +63,13 @@ export default {
     uninstall (app) {
       let that = this
       let appId = app.nanoid
-      Modal.confirm({
-        centered: true,
-        title: '确定卸载此应用？',
-        content:
-          '此操作将卸载应用并清空所有应用数据，且无法还原。请谨慎操作。',
+      window.$ui.confirm(
+         '确定卸载此应用？',
+        '此操作将卸载应用并清空所有应用数据，且无法还原。请谨慎操作。',
+        {
         okText: '确认',
-        okType: 'danger',
-        cancelText: '取消',
-        onOk () {
+        type: 'warning',
+        ok () {
           appModel.uninstall(app.nanoid).then(
             (success) => {
               for (let i = 0; i < that.apps.length; i++) {
