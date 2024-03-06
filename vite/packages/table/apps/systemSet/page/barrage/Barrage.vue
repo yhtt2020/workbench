@@ -22,12 +22,12 @@
     </div>
     <hr />
     <xt-option-info title="弹幕方向" />
-  
+
     <xt-option-tab
       :list="barrageList"
       v-model="appSettings.barrage.direction"
       circle
-      style="margin-bottom: 0; height: 40px"
+      style="margin-bottom: 16px; height: 40px"
     />
     <hr />
     <xt-option-info

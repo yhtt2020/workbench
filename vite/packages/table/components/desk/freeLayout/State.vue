@@ -38,7 +38,7 @@
       :list="arrangeList"
       @cb="updateArrange"
       circle
-      style="height: 40px"
+      style="height: 40px;"
     />
     <hr />
     <xt-option-info

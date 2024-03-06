@@ -1,5 +1,9 @@
 <template>
-  <div class="flex justify-between text-base xt-text mb-2.5" v-if="title">
+  <div
+    class="flex justify-between text-base xt-text"
+    v-if="title"
+    :class="[info ? 'mb-2.5' : 'mb-4']"
+  >
     <!-- 左侧 -->
     <div class="flex items-center">
       <span> {{ title }} </span>
@@ -18,7 +22,7 @@
 
     <!-- 右侧 -->
     <div class="flex items-center">
-     <div class="mr-3"> <slot name="right"> </slot></div>
+      <div class="mr-3"><slot name="right"> </slot></div>
       <div
         v-if="isState"
         class="xt-bg-t-2 h-6 rounded-md xt-text-2 text-sm flex justify-center items-center px-1"
@@ -29,11 +33,10 @@
         v-if="isSwitch"
         v-model:checked="currentSwitch"
         @change="changeSwitch"
-
       />
     </div>
   </div>
-  <div class="text-sm xt-text-2 mb-2.5" v-if="info">{{ info }}</div>
+  <div class="text-sm xt-text-2 mb-4" v-if="info">{{ info }}</div>
 </template>
 
 <script setup lang="ts">
