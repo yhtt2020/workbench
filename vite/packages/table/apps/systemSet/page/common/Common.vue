@@ -35,22 +35,6 @@
   </a-modal>
 
   <Zoom />
-  <!-- 1 -->
-  <xt-option-box v-if="!$useEnv()">
-    <xt-option-info
-      title="桌面缩放"
-      info="调节桌面的缩放比例，默认为100%。"
-      icon="fluent:arrow-clockwise-16-regular"
-      @onIconClick="resetWindow"
-    />
-    <xt-option-slider
-      v-model:slider="windowZoom"
-      :min="20"
-      :max="500"
-      class="pb-3"
-      style="margin-bottom: 0 !important"
-    />
-  </xt-option-box>
   <!-- 2 -->
   <xt-option-box>
     <xt-option-info
@@ -179,27 +163,6 @@ const itemList = computed(() => {
     },
   ];
 });
-/**
- * 窗口缩放
- */
-const windowZoom = ref(100);
-const oldWindowZoom = ref(100);
-// 重置窗口
-const resetWindow = async () => {
-  await tsbApi.window.setZoomFactor(1);
-  appSettings.value.zoomFactor = 100;
-  windowZoom.value = 100;
-};
-// 监听窗口缩放
-watch(
-  () => windowZoom.value,
-  async (value) => {
-    // 调整窗口大小
-    await tsbApi.window.setZoomFactor(+value / 100);
-    // 保存设置
-    appSettings.value.zoomFactor = value;
-  }
-);
 
 /**
  * 托盘模式

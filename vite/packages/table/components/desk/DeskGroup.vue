@@ -374,13 +374,13 @@ import { useNavigationStore } from "../desk/navigationBar/navigationStore";
 import { appStore } from "../../store";
 import { taskStore } from "../../apps/task/store";
 import { mapActions, mapWritableState } from "pinia";
-import GameListDrawer from "../game/GameListDrawer.vue";
+// import GameListDrawer from "../game/GameListDrawer.vue";
 import AllDeskList from "./AllDeskList.vue";
 import { message, Modal, notification } from "ant-design-vue";
 import HorizontalPanel from "../HorizontalPanel.vue";
 import ExportDesk from "./ExportDesk.vue";
 import { nanoid } from "nanoid";
-import Template from "../../../user/pages/Template.vue";
+// import Template from "../../../user/pages/Template.vue";
 
 import { deskTemplates } from "../../js/data/deskTemplates";
 import DeskMarket from "../../page/app/card/DeskMarket.vue";
@@ -407,11 +407,11 @@ import NewGuidePage from "../../page/app/grade/NewGuidePage.vue";
     NewAddCard,
     ShareDesk,
     DeskMarket,
-    Template,
+    // Template,
     ExportDesk,
     HorizontalPanel,
     AllDeskList,
-    GameListDrawer,
+    // GameListDrawer,
     Desk,
     NewGuidePage,
   },

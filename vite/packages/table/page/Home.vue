@@ -156,42 +156,25 @@
 </template>
 
 <script>
-import Weather from "../components/widgets/Weather.vue";
 
-
+import { message, Modal } from "ant-design-vue";
 import { mapActions, mapWritableState } from "pinia";
 import { cardStore } from "../store/card";
-import vuuri from "../components/vuuriHome/Vuuri.vue";
-import Widget from "../components/muuri/Widget.vue";
-import { message, Modal } from "ant-design-vue";
-
-import GuidePage from "./app/grade/GuidePage.vue";
-import NewGuidePage from "./app/grade/NewGuidePage.vue";
-
-// import AddCard from "./app/card/AddCard.vue";
-import GradeNotice from "./app/grade/GradeNotice.vue";
-
-import CaptureNewCard from "../components/widgets/games/CaptureNewCard.vue";
 import { runExec } from "../js/common/exec";
 import { appStore } from "../store";
 import { weatherStore } from "../store/weather";
-import Muuri from "muuri";
-import HorizontalPanel from "../components/HorizontalPanel.vue";
-import ShortcutKeyDetail from "../apps/shortcutKey/shortcutKey/ShortcutKeyDetail.vue";
-import NotShortcutKey from "../apps/shortcutKey/page/NotShortcutKey.vue";
-import ShortcutKeyList from "../apps/shortcutKey/shortcutKey/ShortcutKeyList.vue";
-import UpdateMyInfo from "../components/comp/UpdateMyInfo.vue";
-import ShareDesk from "../components/desk/ShareDesk.vue";
-import DeskMarket from "./app/card/DeskMarket.vue";
-// import DeskPreview from "../components/desk/DeskPreview.vue";
-import ExportDesk from "../components/desk/ExportDesk.vue";
+
+import NewGuidePage from "./app/grade/NewGuidePage.vue";
+
+// import AddCard from "./app/card/AddCard.vue";
 import DeskGroup from "../components/desk/DeskGroup.vue";
-import Template from "../../user/pages/Template.vue";
-import Icon from "../components/Icon.vue";
+
+import Muuri from "muuri";
+import UpdateMyInfo from "../components/comp/UpdateMyInfo.vue";
 import ScalePanel from "./ScalePanel.vue";
 import GuidePanel from "./GuidePanel.vue";
-import WebLogin from "./WebLogin.vue";
 
+import WebLogin from "./WebLogin.vue";
 import GalleryModal from '../components/paperModal/GalleryModal.vue';
 import {
   setTransparent,
@@ -316,27 +299,11 @@ export default {
     };
   },
   components: {
-    // News,
-    Icon,
-    Template,
     DeskGroup,
-    HorizontalPanel,
     Modal,
-    Weather,
-    vuuri,
-    Widget,
-    GradeNotice,
-    Audio,
-    CaptureNewCard,
-    GuidePage,
+    // Audio,
     NewGuidePage,
-    ShortcutKeyDetail,
-    NotShortcutKey,
-    ShortcutKeyList,
-    ShareDesk,
-    DeskMarket,
     UpdateMyInfo,
-    ExportDesk,
     GalleryModal,
     ScalePanel,
     GuidePanel,
