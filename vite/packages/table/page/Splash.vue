@@ -196,6 +196,7 @@ export default {
           if (window.loadedStore[key] === false) return check;
         });
         console.log("haventOk.length <=1 :>> ", haventOk.length);
+        console.log("haventOk :>> ", haventOk);
         if (haventOk.length <= 2) {
           //已经全部搞定
           clearInterval(this.storeReadyTimer);
@@ -390,6 +391,8 @@ export default {
       this.ensureShake(false); //确认摇一摇功能状态
       await tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100); //根据设置进行缩放比的强制调整
       tsbApi.window.setSkipTaskbar(!this.settings.showInTaskBar);
+      this.loginOk();
+
     },
     // 生成等级区间  应该不需要了
     gradeTableGenerate(num) {
