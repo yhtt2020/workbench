@@ -25,12 +25,11 @@
           <div class="mt-10">
             <div class="box-foot action-panel" style="height:300px"  >
               <div class="line-title text-center ">按键确认</div>
-              <div class="active flex flex-wrap" style="height:120px;">
+              <div class="active flex flex-wrap" style="height:120px;gap:10px">
 
-                <div v-for="(item, index) in keyContent.keyArr" class="flex items-center" :key="item">
+                <div v-for="(item, index) in keyContent.keyArr" class="flex items-center  "  :key="item">
                   <!-- :style="item.field === 'keyList[0]' || item.field === 'keyList[1]' ? 'width:44px' : 'padding:0 10px;'" -->
                   <div class="key-item" style="min-width:44px;padding:0 10px;">{{ item.key }}</div>
-                  <span class="mx-3" v-if="keyContent.keyArr.length != (index + 1)">+</span>
                 </div>
               </div>
               <div class="btn-box">
@@ -109,7 +108,7 @@ export default {
         {
           key: 'Ctrl',
           // color:'rgb(255, 108, 97)',
-          checked: false,  
+          checked: false,
           isGray: false,
         },
         {
@@ -606,7 +605,7 @@ export default {
 
       // 快捷键存入
       let rs = ipc.sendSync('setKeyMap', {key: this.$props?.type, shortcut: keyCut})
-    
+
       // 成功后将数据存入store
       if (rs) {
         this.$props.refreshKeys()
