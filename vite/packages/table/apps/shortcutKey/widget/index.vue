@@ -27,7 +27,7 @@
         </div>
 
         <div class="button-bom ">
-          <div @click="$router.push({name:'schemeList'})" class="p-firse pointer" style="width: 100%;">
+          <div @click="$router.push({name:'shortcutIndex'})" class="p-firse pointer" style="width: 100%;">
             <!-- <icon></icon> -->
             更多快捷键
           </div>
