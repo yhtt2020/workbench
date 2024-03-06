@@ -863,6 +863,7 @@ export default {
     // 关闭缩放弹窗
     closeWebLogin() {
       this.visibleWeb = false
+      this.visibleGuide = true
     },
     // 关闭引导弹窗
     closeGuide() {

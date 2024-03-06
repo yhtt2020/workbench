@@ -125,8 +125,6 @@ export default {
     }
   },
   async mounted () {
-
-
     Promise.all([
       //启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成
       //注意，此处的第二个参数，必须和此store同名，尤其注意有些命名里带了store的
@@ -184,7 +182,7 @@ export default {
   },
   computed: {
     ...mapWritableState(codeStore, ['myCode', 'serialHash']),
-    ...mapWritableState(appStore, ['aided','settings', 'routeUpdateTime', 'userInfo', 'init', 'lvInfo', 'backgroundImage', 'style']),
+    ...mapWritableState(appStore, ['aided','settings', 'routeUpdateTime', 'userInfo', 'init', 'lvInfo', 'backgroundImage', 'style', 'visibleWeb']),
     ...mapWritableState(navStore, ['sideNavigationList', 'footNavigationList', 'rightNavigationList']),
     ...mapWritableState(usePermissionStore,['token'])
     // ...mapWritableState(offlineStore, ['isOffline']),
@@ -323,10 +321,13 @@ export default {
     }
 
       // 未初始化
-      if(!this.init && (isMain() || this.$useEnv('web'))){
+      if(!this.init && (isMain() && !this.$useEnv('web'))){
         this.$router.replace({ name: 'wizard' })
       }
-      if (this.$useEnv('web')) return
+      if (this.$useEnv('web')) {
+        this.launching = false
+        return
+      }
       if(this.aided){
         message.warn('当前应用正运行在辅助模式下，无法被聚焦。如需退出，请到【设置】界面关闭。')
         this.enterAided()
@@ -387,12 +388,17 @@ export default {
 
     loginOk(){
       this.$router.replace({ name: 'home' })
-      if(!this.init && this.$useEnv('web')) this.finishWizard()
-
+      if(!this.init && this.$useEnv('web')) {
+        this.finishWizard()
+        this.visibleWeb = true
+      }
     },
     onGuest(){
       this.$router.replace({ name: 'home' })
-      if(!this.init && this.$useEnv('web')) this.finishWizard()
+      if(!this.init && this.$useEnv('web')) {
+        this.finishWizard()
+        this.visibleWeb = true
+      }
       cache.set('isGuest',true)
     }
   },

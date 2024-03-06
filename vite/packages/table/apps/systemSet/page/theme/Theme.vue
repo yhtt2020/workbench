@@ -25,9 +25,9 @@
   <xt-option-box>
     <xt-option-info title="桌面壁纸" />
     <xt-update-desk-bg />
-
+    <hr style="margin: 16px 0 !important;" v-if="backgroundName.name === 'img'"/>
     <template v-if="backgroundName.name === 'img'">
-      <div class="pt-3"></div>
+      <!-- <div class="pt-3"></div> -->
       <xt-option-info
         title="桌面壁纸模糊度"
         info="调节桌面壁纸的模糊程度。"

@@ -35,15 +35,18 @@ import { storeToRefs } from "pinia";
 import Guide from "./Guide.vue";
 import { getReward, currentType } from "../task";
 import { useLogin } from '../../../permission/user/useLogin';
-
 import { appStore } from "../../../store";
+import { teamStore } from '../../../store/team';
+
 const { proxy } = getCurrentInstance();
 const app = appStore();
-
-// 初始化
 const store = taskStore();
+const smallTeam = teamStore();
+
 const { currentId, startList, claimRewardsList, completedList, rewardVisible,smallMize,isTaskDrawer } =
   storeToRefs(store);
+const { hasTeam } = storeToRefs(smallTeam);
+
 const router = useRouter();
 const props = defineProps({
   task: {},
@@ -123,9 +126,6 @@ const receive = async () => {
       currentId.value = props.task.id;
       rewardVisible.value = true;
     })
-    // tsbApi.user.login((data) => {
-    //  app.getUserInfo()
-    // })
   }
   else {
     currentId.value = props.task.id;
@@ -140,8 +140,12 @@ const getReceiveStatus = computed(() => {
 
 // 已完成任务
 const completeTask = computed(() => {
-  // console.log("completedList.value :>> ", completedList.value);
-  return completedList.value.includes(props.task.id);
+  if(hasTeam.value){
+    return completedList.value.includes(props.task.id);
+  }
+  else {
+    return false;
+  }
 });
 
 // 领取奖励文字描述

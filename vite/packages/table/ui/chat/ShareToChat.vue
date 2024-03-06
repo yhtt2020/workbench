@@ -117,7 +117,7 @@ export default defineComponent({
     const getForwardList = async () => {
       const list = window.$TUIKit.TUIServer.TUIConversation.store.conversationList
       const sortList = list.sort((a, b) => {
-        return b.lastMessage.lastTime - a.lastMessage.lastTime
+        return b.lastMessage?.lastTime - a.lastMessage?.lastTime
       })
       data.allList = sortList // 将所有的数据进行获取
       console.log('获取20条', sortList.slice(0, 20).length)

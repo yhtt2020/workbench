@@ -77,7 +77,7 @@ const enableNotice = () =>{
 
 
 const clearAll = () =>{
-  notice.clear(top.value.type)
+  notice.clear()
   message.success('已为您清空本地消息（不包含推送等网络消息）')
 }
 

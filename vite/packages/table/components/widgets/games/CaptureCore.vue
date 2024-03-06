@@ -98,8 +98,8 @@ export default defineComponent({
       <span class="w-full py-3 mb-3 text-center rounded-lg s-item pointer my-active btn-active voice-hover "><icon icon="wanggeshitu"></icon> 选择捕获源使用</span>
     </div>
   </div>
-  <div v-else class="flex items-center justify-center mx-5 my-8 mb-5" style="color:var(--primary-text)">
-    <div @click="selectSource" style="width: 150px;position: absolute;left: 90px;top: 16px" class="truncate pointer" >
+  <div v-else class="flex items-center justify-center mx-5 my-8 mb-5 relative" style="color:var(--primary-text)">
+    <div @click="selectSource" style="width: 200px;position: absolute;left: -10px;top: -30px" class="truncate pointer" >
       <a-avatar style="vertical-align: top" shape="square" :size="20" :src="'file://'+currentSource.icon"></a-avatar> {{currentSource.name}}
     </div>
     <div  @click="captureScreen" :class="{disable:!this.settings.imageSavePath}" class="flex flex-col items-center justify-center ml-6 mr-6 pointer" >

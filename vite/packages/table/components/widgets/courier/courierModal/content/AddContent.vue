@@ -137,18 +137,18 @@ const searchCourier = (evt) =>{
 }
 
 // 快递添加完成
-const addCourierData = (evt) =>{
+const addCourierData = async (evt) =>{
   if(courierLists.value.length === 1){
     if(courierLists.value[0].orderNum){
-      const addItem = {
-        code:courierLists.value[0].code,
-        orderNum:courierLists.value[0].orderNum,
-        phoneLastNum:courierLists.value[0].phoneLastNum,
-      };
-      addCourier.putCourierInfo(addItem);
-      message.success('添加快递成功。');
-      clear();
-      emits('close');
+      const addCode = courierLists.value[0].code;
+      const addNum = courierLists.value[0].orderNum;
+      const addPhone = courierLists.value[0].phoneLastNum;
+      const result = await addCourier.putCourierInfo(addCode,addNum,addPhone);
+      if(result){
+        message.success('添加快递成功。');
+        clear();
+        emits('close');
+      } 
     }
     else {
       console.log(courierLists.value)
