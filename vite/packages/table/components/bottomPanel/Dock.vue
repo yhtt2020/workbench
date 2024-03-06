@@ -151,7 +151,7 @@
                             ),
                       }"
                       style="white-space: nowrap; display: inline-block;border-radius: 18px;"
-                      @click.stop="newOpenApp(item)"
+                      @click.stop="newOpenApp(item,$event)"
                     >
                       <Drag :data="item" currentId="bottom" @deleteFile="deleteFile">
                         <Team
@@ -585,10 +585,10 @@
        * 打开应用
        * @param {*} item 图标详细信息
        */
-      async newOpenApp(item) {
+      async newOpenApp(item,e) {
         const { type, value } = item
         if (value === 'control'){
-          this.$emit('control')
+          this.$emit('control',e)
           return
         }
         if (value === 'setting') {
