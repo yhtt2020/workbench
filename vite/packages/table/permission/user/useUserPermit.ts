@@ -1,6 +1,8 @@
 import { message } from "ant-design-vue";
 import cache from "../../components/card/hooks/cache";
 import { appStore } from "../../store";
+import { chatStore } from "../../store/chat";
+
 import { useEnv } from "../useEnv";
 import { getUserInfo } from "../api/login";
 import { usePermissionStore } from "../store";
@@ -9,12 +11,15 @@ import { useLogout } from "./useLogout";
  * 获取用户信息
  */
 const setUserInfo = async () => {
-  // 先判断用户信息是否存在，不存在进行赋值
   const userStore: any = appStore();
+  // 先判断用户信息是否存在，不存在进行赋值
   if (userStore.userInfo) return userStore.userInfo;
   return await useUpdateUserInfo();
 };
 
+/**
+ * 更新用户信息
+ */
 export const useUpdateUserInfo = async () => {
   const userStore: any = appStore();
   let res = await getUserInfo();
@@ -25,6 +30,7 @@ export const useUpdateUserInfo = async () => {
   let response = await userStore.getUserCard(userData.uid);
   // userData.frame = response.data.frame;
   userStore.userInfo = userData;
+  chatStore().login();
   return userData;
 };
 /**
@@ -32,7 +38,7 @@ export const useUpdateUserInfo = async () => {
  */
 export const useUserPermit = async () => {
   let token = cache.get("ttUserToken");
-console.log('123333 :>> ', 123333);
+  console.log("123333 :>> ", 123333);
   // 有token
   if (cache.get("ttUserToken")) {
     let res = await setUserInfo();

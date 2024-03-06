@@ -131,7 +131,7 @@ import { navStore } from "../store/nav";
 import { clipboardStore } from "../apps/clipboard/store";
 import { browserStore } from "../store/browser";
 import { controlStore } from "../components/desk/navigationBar/hook/controlStore";
-import { chatStore } from "../store/chat";
+// import { chatStore } from "../store/chat";
 import navigationData from "../js/data/tableData";
 import taskStore from "../page/app/todo/stores/task";
 import cache from "../components/card/hooks/cache";
@@ -275,7 +275,7 @@ export default {
     },
     enter() {
       clearTimeout(this.timeoutHandler); //清理掉超时提示
-      chatStore().login();
+      // chatStore().login();
       if (localStorage.getItem("wizarded")) {
         const currentRoute = appStore().currentRoute;
         if (currentRoute) {
