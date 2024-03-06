@@ -1,5 +1,4 @@
 <template>
-
   <div class="flex justify-between mb-4">
     <template v-for="item in itemList">
       <div
@@ -35,6 +34,7 @@
     </div>
   </a-modal>
 
+  <Zoom />
   <!-- 1 -->
   <xt-option-box v-if="!$useEnv()">
     <xt-option-info
@@ -121,6 +121,7 @@ import { useWidgetStore } from "../../../../components/card/store";
 import { browserList, rightMenuList, trayList } from "./config";
 
 import ChooseScreen from "../../../../page/ChooseScreen.vue";
+import Zoom from "./Zoom.vue";
 
 const router = useRouter();
 
@@ -173,7 +174,6 @@ const itemList = computed(() => {
       fn: () => {
         // router.push({ name: "papersSetting" });
         proxy.$bus.emit("lockScreen");
-
       },
       disabled: false,
     },
