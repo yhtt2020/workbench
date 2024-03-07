@@ -416,6 +416,7 @@ export default {
 
     loginOk() {
       // 完成引导并登录
+      console.log('this.userInfo  :>> ', this.userInfo );
       if (this.userInfo && this.init) {
         this.enter();
         return;
