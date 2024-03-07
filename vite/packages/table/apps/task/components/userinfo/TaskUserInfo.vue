@@ -70,6 +70,7 @@ import { appStore } from '../../../../store';
 import { computed, onMounted, ref,nextTick,getCurrentInstance} from 'vue';
 import { taskStore } from '../../store';
 import { getUserInfo } from '../../../../permission/api/login';
+import { useUpdateUserInfo } from '../../../../permission/user/useUserPermit';
 
 import FrameAvatar from '../../../../components/avatar/FrameAvatar.vue';
 import OnlineMedal from '../../../../components/team/OnlineMedal.vue';
@@ -127,10 +128,16 @@ const goShop = () =>{
   proxy.$.appContext.config.globalProperties.$bus.emit('getGood');
 }
 
+// 更新用户信息
+const updateTaskUserInfo = () =>{
+  useUpdateUserInfo()
+}
+
 onMounted(()=>{
   getUserInfo();
   task.getTaskUserMedal(userInfo.value?.uid);
   task.getUserScore();
+  updateTaskUserInfo();
 });
 </script>
 

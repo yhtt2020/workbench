@@ -19,8 +19,16 @@
         <div class="xt-text xt-font truncate font-14" style="max-width: 194px;">
          {{ item.store_name }}
         </div>
-        <div class="xt-font font-14 font-600" style="color:#FA7B14;">
-         {{ item.price_project.item[0].jifen_num}}积分
+        <div class="flex justify-between">
+          <div class="xt-font font-14 font-600" style="color:#FA7B14;">
+            {{ item.price_project.item[0].jifen_num}}积分
+          </div>
+          <span class="xt-font font-12  xt-text-2" v-if="item.stock !== 0">
+            {{ item.stock }} 库存
+          </span>
+          <span v-else class="xt-font font-12  xt-text-2">
+            已售罄
+          </span>
         </div>
        </div>
       </div> 

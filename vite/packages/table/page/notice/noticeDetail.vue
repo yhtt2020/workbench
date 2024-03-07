@@ -24,7 +24,6 @@
             <NoticeBody :content="item.content"></NoticeBody>
           </div>
           <div class="flex justify-between">
-            {{ item.content.time }}
             <div class="flex items-center justify-center  xt-font" style="color: var(--disable-text);">{{formatTime(item.content.time)}}</div>
             <div class="flex flex-end gap-2">
               <UrlButtons @viewNow="reviewMessage(item.content.conversationID)" :urls="item.urls"></UrlButtons>
