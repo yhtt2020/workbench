@@ -323,6 +323,7 @@ export default {
         } else {
             this.selectList.push(this.defaultForum)
             this.customData.selectList = this.selectList
+            this.defaultForum = this.customData.selectList[0]
         }
     },
     async mounted() {
