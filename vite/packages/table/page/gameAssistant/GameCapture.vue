@@ -935,10 +935,8 @@ export default {
           let ctx = canvas.getContext('2d')
           // Draw video on canvas
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height)
-
           if (this.callback) {
             // Save screenshot to png - base64
-
 // 应该是这一步完成？
             this.callback(canvas.toDataURL('image/png'))
           } else {
@@ -959,7 +957,7 @@ export default {
 
       // mac 和 windows 获取 chromeMediaSourceId 的方式不同
       if (require('os').platform() === 'win32') {
-        navigator.getUserMedia({
+        navigator.mediaDevices.getUserMedia({
           audio: false,
           video: {
             mandatory: {
@@ -971,9 +969,7 @@ export default {
               maxHeight: 8000,
             },
           },
-        }, handleStream, () => {
-
-        })
+        }).then(handleStream)
       } else {
         // navigator.getUserMedia({
         //   audio: false,
@@ -1023,7 +1019,6 @@ export default {
 // 接着手工移除点不用的视频源，即可完成音频流的获取
       (audioSource.getVideoTracks() || []).forEach(track => audioSource.removeTrack(track))
       // 合并音频流与视频流
-
       const combinedSource = new MediaStream([...audioSource.getAudioTracks(), ...videoSource.getVideoTracks()])
 
       let types = [
@@ -1040,7 +1035,6 @@ export default {
         // 可以自行测试需要的编码的MIME Type是否支持
 
       }
-
       const recorder = new MediaRecorder(combinedSource, {
         mimeType: 'video/webm;codecs=vp9',
         // 支持手动设置码率，这里设了1.5Mbps的码率，以限制码率较大的情况
@@ -1100,7 +1094,6 @@ export default {
         this.recording = true
         this.recordedSeconds = 0
         this.setRecordingTimer()
-
         this.recorder = recorder
       }
 

@@ -25,7 +25,7 @@
             @deleteFile="dragDeleteFile"
             :data="item"
           >
-            <Files :item="item"></Files>
+              <Files :item="item"></Files>
           </Drag>
         </xt-mix-menu>
       </div>
@@ -58,8 +58,6 @@ import {
 const Set = defineAsyncComponent(() =>
   import("../../../../components/widgets/myIcons/set/index.vue")
 );
-
-
 
 const index = inject("index", "");
 const data = inject("data", "");

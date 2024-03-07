@@ -134,6 +134,7 @@ window.$ui = {
 };
 const newTT: TT = tt;
 
+
 declare global {
   interface Window {
     tt: TT;
@@ -174,6 +175,7 @@ const $app = app
   .use(Toast, options)
   .use(TUIKit)
   .use(WujieVue)
+  .use(hevueImgPreview)
   // .use(VueShepherdPlugin)
   .use(XTUI)
   .mount("#app");

@@ -245,13 +245,15 @@ const closeDetail = (value) => {
   updateScroller()
 }
 onBeforeMount(async () => {
- 
+  NProgress.configure({ showSpinner: false });
+  await NProgress.configure({ parent: '.container' })
 })
 onMounted(async() => {
   // setCurrentIndex(0)
-  store.getCommunityPost(props.forumId);
-  NProgress.done()
   NProgress.start()
+  store.getCommunityPost(props.forumId).then(() => {
+    NProgress.done()
+  })
   NProgress.configure({ showSpinner: false });
   await NProgress.configure({ parent: '.container' })
 })

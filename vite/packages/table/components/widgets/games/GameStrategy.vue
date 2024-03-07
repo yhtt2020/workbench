@@ -137,7 +137,7 @@ export default {
         title:`游戏攻略 - ${this.customData.chineseName || ''}`,
         ifyIcon:'fluent:games-16-regular',
         titleHover:true,
-        titleHoverName:`游戏攻略 - ${this.customData.chineseName || ''}`,
+        titleHoverName:"点击打开",
       }
     },
 

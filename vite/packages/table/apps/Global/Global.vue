@@ -79,7 +79,6 @@ const test = () => {
 </script>
 
 <template>
-  <!-- <xt-button @click="test">test</xt-button> -->
   <!-- 领取任务奖励 -->
   <ClaimReward v-if="rewardVisible" />
   <!-- 系统设置 -->
@@ -88,5 +87,7 @@ const test = () => {
   <Login v-if="loginVisible" @cb="loginCb" />
   <!-- 文件弹窗 -->
   <input v-if="fileVisible" style="display: none" ref="file" type="file" />
+
+
 </template>
 <style lang="scss" scoped></style>

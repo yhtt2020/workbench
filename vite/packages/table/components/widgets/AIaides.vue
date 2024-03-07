@@ -1,6 +1,7 @@
 <template>
   <div>
     <xt-container
+      @titleHover="pushToMain"
       :desk="desk" 
       :sizeList="sizeList" 
       :options="options" 
@@ -83,8 +84,10 @@ export default {
       settingVisible: false,
       inputValue: "",
       header: {
-      ifyIcon:"fluent:bot-24-regular",
-      title:"AI助手",
+        ifyIcon:"fluent:bot-24-regular",
+        title:"AI助手",
+        titleHover:true,
+        titleHoverName:'打开应用',
       },
     };
 
@@ -103,6 +106,9 @@ export default {
     goPage(index) {
       console.log(index);
       this.selectTopicIndex = this.recentList[index].id;
+      this.$router.push({ name: "ai" });
+    },
+    pushToMain() {
       this.$router.push({ name: "ai" });
     },
   },

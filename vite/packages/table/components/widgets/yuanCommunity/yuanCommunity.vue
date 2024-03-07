@@ -1,6 +1,7 @@
 <template>
     <div>
         <xt-container
+            @titleHover="settingVisible = true"
             v-model:customSize="customData.customSize"
             :header="header" 
             :desk="desk" 
@@ -296,23 +297,6 @@ export default {
             }
             return this.selectList.slice(0, 5)
         },
-        // async forumPost() {
-        //     this.customData.forumPost = await this.communityPost.list
-        //     return this.customData.forumPost
-        // },
-        // showForumPost() {
-        //     if (this.customData && this.customData.forumPost) {
-        //         return this.customData.forumPost?.slice(0, 10)
-        //     }
-        //     return this.communityPost?.slice(0, 10)
-        // },
-        // scrollBarHeight() {
-        //     if (this.showForumList.length > 1) {
-        //         return 'calc(100% - 83px)'
-        //     } else {
-        //         return 'calc(100% - 32px)'
-        //     }
-        // },
         header(){
             return {
                 title: this.options.title,
@@ -321,7 +305,9 @@ export default {
                     fn:this.refreshPost,
                     tip:"刷新",
                     state:this.isLoading ? true : false
-                }
+                },
+                titleHoverName:'点击切换',
+                titleHover:true,
             }
         },
     },
@@ -423,4 +409,4 @@ export default {
     },
 }
 </script>
-<style lang="scss"></style>
+<style lang="scss"></style>../../../page/chat/commun.ts./YuanCommunity.vue/index.ts
