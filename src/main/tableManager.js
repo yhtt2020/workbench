@@ -89,6 +89,24 @@ class TableManager {
         }
         c({ cancel: false, responseHeaders: d.responseHeaders })
       })
+      tableWin.window.webContents.session.setPermissionCheckHandler((detail)=>{
+        return true
+      })
+      tableWin.window.webContents.session.setPermissionRequestHandler((webContents, permission, callback) => {
+        callback(true)
+        // console.log('执行到了老方法，')
+        // let allowedPermissions = ['audioCapture', 'media', 'fullscreen'] // Full list here: https://developer.chrome.com/extensions/declare_permissions#manifest
+        //
+        // if (allowedPermissions.includes(permission)) {
+        //   callback(true) // Approve permission request
+        // } else {
+        //   console.error(
+        //     `The application tried to request permission for '${permission}'. This permission was not whitelisted and has been blocked.`
+        //   )
+        //
+        //   callback(false) // Deny
+        // }
+      })
       this.window = tableWin.window
       if (tableWinSetting) {
         this.window.setBounds(tableWinSetting.bounds)
@@ -109,19 +127,7 @@ class TableManager {
       //   }
       // })
       tableWin.window.webContents.loadURL(render.getUrl('table.html', {}, 'table.com'))
-      tableWin.window.webContents.session.setPermissionRequestHandler((webContents, permission, callback) => {
-        let allowedPermissions = ['audioCapture', 'media', 'fullscreen'] // Full list here: https://developer.chrome.com/extensions/declare_permissions#manifest
 
-        if (allowedPermissions.includes(permission)) {
-          callback(true) // Approve permission request
-        } else {
-          console.error(
-            `The application tried to request permission for '${permission}'. This permission was not whitelisted and has been blocked.`
-          )
-
-          callback(false) // Deny
-        }
-      })
 
       tableWin.window.on('close', () => {
         this.saveBounds()
