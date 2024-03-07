@@ -65,7 +65,9 @@ export default {
         clickRightListItem(item, index) {
             this.$emit('clickRightListItem', item, index)
             //
-            completeTask('M0102')
+            completeTask('M0102',()=>{
+                this.$bus.emit('closeEdit')
+            })
         },
         renderIcon(icon) {
             return renderIcon(icon);

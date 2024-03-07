@@ -139,6 +139,9 @@ export default {
           const find = galleryList.value.find((find)=>{ return String(find.index) === String(val.index) });
           galleryIndex.value = find.index;
         })
+        proxy.$bus.on('closePaperModal',()=>{
+          galleryVisible.value = false
+        })
       })
     })
 

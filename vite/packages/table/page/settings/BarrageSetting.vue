@@ -74,7 +74,9 @@ export default {
       }
     },
     start() {
-      completeTask('M0204')
+      completeTask('M0204',()=>{
+        this.$bus.emit('closeSystemSet');
+      })
     }
 
   }

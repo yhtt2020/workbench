@@ -58,7 +58,7 @@
 import { storeToRefs } from "pinia";
 import { appStore as useAppStore } from "../../../../store";
 import { setThemeSwitch } from "../../../../components/card/hooks/themeSwitch";
-import { onMounted, ref } from "vue";
+import { onMounted, ref,getCurrentInstance } from "vue";
 import { getBgColor } from "../../../../components/card/hooks/styleSwitch/getStyle";
 import { completeTask } from "../../../task/task";
 import {
@@ -82,6 +82,8 @@ const themeModeList = [
     value: true,
   },
 ];
+const { proxy } = getCurrentInstance();
+// 
 
 // 更新主题
 const updateThemeMode = (data) => {
@@ -92,7 +94,9 @@ const themeColor = ref("");
 const updateThemeColor = (value) => {
   setBgColor(value);
   setSecondaryBgColor(value);
-  completeTask("M0202");
+  completeTask("M0202",()=>{
+    proxy.$bus.emit('closeSystemSet');
+  });
 };
 onMounted(() => {
   themeColor.value = getBgColor();
