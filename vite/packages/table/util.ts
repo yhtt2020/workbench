@@ -268,10 +268,11 @@ export function formatTimestamp (timestamp, type) {
 
 export function formatTime(dateTimeStamp:any){
   const currentTime:any = new Date();
-  const seconds = Math.floor((currentTime.getTime() - dateTimeStamp) / 1000);
+  const dateStr = new Date(dateTimeStamp * 1000);
+  const seconds = Math.floor((currentTime.getTime() - dateStr) / 1000);
   const interval = Math.floor(seconds / 31536000);
-  if (interval > 1) return new Date(dateTimeStamp).toLocaleString();
-  if (interval === 1)  return new Date(dateTimeStamp).toLocaleDateString();
+  if (interval > 1) return dateStr.toLocaleString();
+  if (interval === 1)  return dateStr.toLocaleDateString();
   if (seconds < 60) return "刚刚";
   if (seconds < 3600) return Math.floor(seconds / 60) + " 分钟前";
   if (seconds < 86400) return Math.floor(seconds / 3600) + " 小时前";

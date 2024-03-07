@@ -10,9 +10,13 @@
         </div>
 
         <Labor @changeIcon="changeIcon" :menus="menus" :checkFlag="checkFlag" @changeCheck="changeCheck" @countFavo="countFavo"></Labor>
-        <xt-preview v-if="previewFlag" v-model="previewFlag" @ok="addFolderIcon"></xt-preview>
         
       </div>
+    </xt-modal>
+    <!-- 添加分组预览 -->
+    
+    <xt-modal v-model="previewFlag" :index="99999999" :maskIndex="9999999" title="添加到分组"  boxClass="rounded-xl p-4" :mask="true" :header="true" :footer="true"  v-if="previewFlag" @ok="addHandle" >
+      <xt-preview v-if="previewFlag" :previewFlag="previewFlag" ref="preview"></xt-preview>
     </xt-modal>
     <!-- 修改网址名称 -->
     <xt-modal title="编辑名称" :maskIndex="1001" :index="1002" boxClass="rounded-xl p-4" :mask="true" :header="true" :footer="true" v-model="renameFlag" v-if="renameFlag" @ok="changeName" >
@@ -35,7 +39,7 @@
     <xt-modal title="添加到桌面" :maskIndex="1001" :index="1002" boxClass="rounded-xl p-4" :mask="true" :header="true" :footer="true" v-model="deskFlag" v-if="deskFlag" @ok="addDeskIcon" >
       <div class="xt-modal flex rounded-xl relative" style="width: 466px; height: 50px;" >
         <!-- <xt-input style="height: 40px;width: 400px;" v-model="rename" placeholder="请输入网站名称" class="h-10 rounded-lg xt-text ml-2 xt-main-bg"></xt-input> -->
-        <xt-select v-model="deskIndex" :zIndex="1200" style="width: 100%;" :list="deskList" :bordered="false"></xt-select>
+        <xt-select v-model="deskIndex" :zIndex="1200" style="width: 100%;height: 40px;" :list="deskList" :bordered="false"></xt-select>
       </div>
     </xt-modal>
   </teleport>
@@ -54,6 +58,7 @@ import { message } from 'ant-design-vue'
 import _ from 'lodash-es'
 import {cardStore} from '../../../store/card';
 import { nanoid } from 'nanoid'
+import { registerFolder } from "../../../apps/folder/src/hooks/register";
 
 
 export default {
@@ -75,7 +80,7 @@ export default {
         {
           label: '添加到桌面',
           newIcon:'fluent:desktop-16-regular',
-          callBack: async () => {
+          callBack: () => {
             this.deskFlag = true
           }
         },
@@ -83,7 +88,6 @@ export default {
           label: '添加到分组',
           newIcon: 'fluent:app-folder-16-regular',
           callBack: () => {
-
             this.previewFlag = true
             this.edit = true
           },
@@ -178,7 +182,7 @@ export default {
   computed:{
     ...mapWritableState(favoStore, ['isFavorites', 'allList', 'folderList', 'folderIndex', 'browserList', 'updateTime', 'searchValue', 'folderIcons']),
     ...mapWritableState(useWidgetStore, ['edit']),
-    ...mapWritableState(cardStore, ['desks', 'addCard']),
+    ...mapWritableState(cardStore, ['desks', 'addCard', 'currentDesk']),
     // 过滤出制定数组
     showList(){
       const folder = this.folderList[this.folderIndex]
@@ -242,6 +246,30 @@ export default {
   mounted(){
   },
   methods: {
+    // 
+    addHandle(){
+      const preview = this.$refs.preview
+      // 如果是新建文件夹 需要直接传数据 
+      if(preview.chooseIndex?.value == 0){
+        registerFolder(this.desks[preview.deskIndex], this.folderIcons)
+        message.success('添加图标成功！')
+      }else{
+        // 直接将数据添加进去 
+        this.desks.forEach(item=>{
+          if(item.id == preview.cardTmp?.deskId){
+            item.cards.forEach(card=>{
+              if(card.id == preview.cardTmp?.id) {
+                card.customData.list.push(...this.folderIcons)
+                message.success('添加图标成功！')
+              }
+            })
+          }
+        })
+      }
+      // 
+      this.checkFlag = false
+      this.clearCheck()
+    },
     // 添加到桌面
     addDeskIcon(){
       this.deskIcons.forEach(item=>{

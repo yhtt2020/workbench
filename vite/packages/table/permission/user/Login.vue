@@ -10,7 +10,7 @@
     ></div>
   </Transition>
   <div
-    class="overflow-hidden fixed -translate-x-1/2 left-1/2 top-1/2 -translate-y-1/2"
+    class="overflow-hidden fixed -translate-x-1/2 left-1/2 top-1/2 -translate-y-1/2 no-drag"
     style="
       height: 745px;
       border-radius: 18px;

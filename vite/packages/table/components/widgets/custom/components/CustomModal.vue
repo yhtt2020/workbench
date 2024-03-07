@@ -14,7 +14,7 @@
                 <xt-button w="132" h="40" radius="8" class="xt-bg" @click="localFile">本地文件</xt-button>
                 <xt-button w="132" h="40" radius="8" class="xt-bg" @click="openApp">应用导航</xt-button>
             </div>
-            <div class="mt-4" v-else>
+            <div class="mt-4 min-w-[450px]" v-else>
               <xt-option-input v-model:input="inputPath"></xt-option-input>
             </div>
 

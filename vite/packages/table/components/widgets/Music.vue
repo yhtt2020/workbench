@@ -1,5 +1,6 @@
 <template>
   <xt-container 
+    @titleHover="enterMusic"
     v-model:customSize="customData.customSize"
     :customData = "customData"
     :header="header"
@@ -54,7 +55,9 @@ export default {
       },
       header:{
         title:'网易云',
-        ifyIcon:'fluent:music-note-2-16-regular'
+        ifyIcon:'fluent:music-note-2-16-regular',
+        titleHover:true,
+        titleHoverName:'打开应用',
       }
     };
   },

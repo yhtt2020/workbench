@@ -1,5 +1,6 @@
 <template>
    <xt-container 
+    @titleHover="enterCapture"
     v-model:customSize="customData.customSize"
     :header="header"
     :envLimit="['web']" 
@@ -89,7 +90,9 @@ export default {
       microphoneShow: false,
       header:{
         title:'捕获',
-        ifyIcon:'fluent:resize-video-20-regular'
+        ifyIcon:'fluent:resize-video-20-regular',
+        titleHover:true,
+        titleHoverName:'打开应用',
       },
       customSize:'2x4'
     }
@@ -118,7 +121,10 @@ export default {
     },
     showVideos(){
       this.openDir(this.settings.videoSavePath)
-    }
+    },
+    enterCapture(){
+      this.$router.push('GameCapture')
+    },
   }
 }
 </script>
