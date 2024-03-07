@@ -1,6 +1,7 @@
 <template>
   <div>
     <xt-container 
+      @titleHover="settingVisible = true"
       v-model:customSize="customData.customSize" 
       :desk="desk" 
       :header="header" 
@@ -296,7 +297,9 @@ export default {
           fn: this.refreshData,
           tip:'刷新',
           state:this.refreshFlag ? true : false
-        }
+        },
+        titleHover:true,
+        titleHoverName:'点击切换',
       }
     }
   },

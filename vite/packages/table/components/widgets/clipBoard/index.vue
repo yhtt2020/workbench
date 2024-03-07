@@ -2,6 +2,7 @@
     <div>
 
         <xt-container 
+            @titleHover="enterBoard"
             :header="header"
             v-model:customSize="customData.customSize"
             :envLimit="['web']"  
@@ -258,6 +259,8 @@ export default {
             header: {
                 title:'剪贴板',
                 ifyIcon:'fluent:clipboard-bullet-list-16-regular',
+                titleHover:true,
+                titleHoverName:'打开应用',
             },
             customSize:'4x4'
         };
@@ -274,6 +277,9 @@ export default {
         onChangeTodo(index){
             this.selectTodo = this.todoList[index-1];
             this.settingVisible = false
+        },
+        enterBoard(){
+            this.$router.push("clipboard");
         }
     }
 };

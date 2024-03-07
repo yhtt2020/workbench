@@ -151,7 +151,7 @@ export default {
         title:this.myDetailShow === true ? '游戏详情' : '我的游戏',
         ifyIcon:'mdi:steam',
         titleHover: !this.myDetailShow,
-        titleHoverName:'我的游戏'
+        titleHoverName:'点击打开'
       }
     }
   },
