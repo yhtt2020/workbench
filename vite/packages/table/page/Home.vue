@@ -1,10 +1,4 @@
 <template>
-  <div
-    v-if="hide"
-    style="position: fixed; top: 0; bottom: 0; right: 0; left: 0"
-    @click="hideDesk"
-    @contextmenu="hideDesk"
-  ></div>
   <div style="height: 100%">
     <desk-group
       @changeDesk="changeDesk"
@@ -22,7 +16,10 @@
     style="z-index: 999"
     v-if="infoVisible === true"
   >
-    <UpdateMyInfo :updateVisible="true"></UpdateMyInfo>
+    <UpdateMyInfo
+      v-if="infoVisible === true"
+      :updateVisible="true"
+    ></UpdateMyInfo>
   </div>
   <teleport to="body">
     <!-- 使用新版的配置导航 -->
@@ -71,8 +68,6 @@ import { weatherStore } from "../store/weather";
 import NewGuidePage from "./app/grade/NewGuidePage.vue";
 
 import DeskGroup from "../components/desk/DeskGroup.vue";
-
-import Muuri from "muuri";
 import UpdateMyInfo from "../components/comp/UpdateMyInfo.vue";
 import ScalePanel from "./ScalePanel.vue";
 import GuidePanel from "./GuidePanel.vue";
@@ -143,36 +138,7 @@ export default {
       inspectorTimer: null,
       reserveTimer: null,
       custom: false,
-      muuriOptions: {
-        layout: {
-          fillGaps: true,
-          horizontal: false,
-          alignRight: false,
-          alignBottom: false,
-          rounding: true,
-        },
-        targets: [
-          {
-            element: "#scrollerBar>div",
-          },
-        ],
-        handle: null,
-        threshold: 50,
-        safeZone: 0.2,
-        speed: Muuri.AutoScroller.smoothSpeed(1000, 2000, 2500),
-        sortDuringScroll: true,
-        smoothStop: false,
-        onStart: null,
-        onStop: null,
-        dragSortPredicate: {
-          threshold: 30,
-        },
-        dragSortHeuristics: {
-          sortInterval: 10,
-          minDragDistance: 5,
-          minBounceBackAngle: Math.PI / 2,
-        },
-      },
+
       openDesk: false,
       deskType: [
         { title: "日常桌面", name: "daily" },
@@ -435,11 +401,7 @@ export default {
     initGrids() {
       this.currentDesk.cards = this.cleanMuuriData(deskTemplate["daily"]);
     },
-    hideDesk() {
-      this.fullScreen = !this.fullScreen;
-      this.hide = !this.hide;
-      this.menuVisible = false;
-    },
+
     showAddDeskForm() {
       this.menuVisible = false;
       this.addDeskVisible = true;
@@ -620,14 +582,15 @@ export default {
     },
   },
   watch: {
-    currentDeskIndex: {
-      handler() {
-        this.updateLayout();
-      },
-    },
+    // currentDeskIndex: {
+    //   handler() {
+    //     this.updateLayout();
+    //   },
+    // },
 
     backgroundSettings: {
       handler() {
+        console.log("2222222222 :>> ", 2222222222);
         document.body.style.setProperty(
           "--backGroundImgBlur",
           this.backgroundSettings.backGroundImgBlur + "px"

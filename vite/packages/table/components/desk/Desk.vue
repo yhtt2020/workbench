@@ -163,7 +163,7 @@
               left: 50%;
             "
           >
-            <loading-outlined />
+            <LoadingOutlined />
           </div>
         </div>
       </vue-custom-scrollbar>
@@ -184,6 +184,7 @@
       v-if="addCardVisible"
     >
       <NewAddCard
+        v-if="addCardVisible"
         @close="hideAddCard"
         @addSuccess="hideAddCard"
         :desk="currentDesk"
@@ -207,6 +208,7 @@
 <script>
 // 挂载组件请到下面文件
 import componentsMinis from "./components.ts";
+import { LoadingOutlined } from "@ant-design/icons-vue";
 import menuMinis from "./menus.ts";
 import { useNavigationStore } from "./navigationBar/navigationStore";
 import { navStore } from "../../store/nav";
@@ -224,9 +226,7 @@ import { registerFolder } from "../../apps/folder/src/hooks/register";
 import GalleryModal from "../paperModal/GalleryModal.vue";
 import { useAddCard } from "../../ui/hooks/useAddCard";
 import { useDeskStore } from "./store";
-import { useCustomLayout } from "./freeLayout/useCustomLayout";
 import { useFileConversionIcon } from "../../apps/folder/src/hooks/useDataConversion";
-import { headerData, mainData, folderData } from "./freeLayout/config";
 import { taskStore } from "../../../table/apps/task/store";
 
 import Drop from "./Drop.vue";
@@ -234,7 +234,7 @@ export default {
   name: "Desk",
   emits: ["changeEditing"],
   mixins: [componentsMinis, menuMinis],
-  components: {  EditNewNavigation, GalleryModal, Drop },
+  components: { EditNewNavigation, GalleryModal, Drop ,LoadingOutlined},
   props: {
     keepAddIcon: {
       default: false,
@@ -614,7 +614,7 @@ export default {
       // this.settingVisible = true;
       this.$bus.emit("openSystemSet");
       setTimeout(() => {
-        this.$bus.emit("selectSystemNav",2);
+        this.$bus.emit("selectSystemNav", 2);
       }, 10);
     },
     hideDesk() {
