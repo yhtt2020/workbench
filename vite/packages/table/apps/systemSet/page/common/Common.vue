@@ -209,8 +209,8 @@ watch(
 onMounted(async () => {
   if (proxy.$useEnv()) return;
   // 获取窗口缩放
-  windowZoom.value = (await tsbApi.window.getZoomFactor()) * 100 || 100;
-  oldWindowZoom.value = windowZoom.value;
+  // windowZoom.value = (await tsbApi.window.getZoomFactor()) * 100 || 100;
+  // oldWindowZoom.value = windowZoom.value;
   // 获取托盘模式
   trayMode.value = (await tsbApi.settings.get("trayMode")) || "table";
   // 获取浏览器模式
