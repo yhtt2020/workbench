@@ -235,6 +235,11 @@ export default {
     closeOtherGame(){
       this.otherDetailShow = false
     }
+  },
+  mounted(){
+    if(this.customData.customSize === undefined ){
+      this.customData.customSize = '2x4'
+    }
   }
 }
 </script>
