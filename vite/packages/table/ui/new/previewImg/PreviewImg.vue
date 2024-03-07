@@ -1,78 +1,60 @@
 <template>
-    <div
-        style="width: 100%;height: 100%;gap: 10px;"
-        :class="['listClass']"
-        class="flex flex-wrap items-center ">
-        <div v-for="(item,index) in imgList">
-            <slot name="menu">
-                <img 
-                    :src="item" 
-                    alt="" 
-                    @click="clickFn(index)" 
-                    :key="index" 
-                    :style="{
-                        width: imgW + 'px',
-                        height: imgH + 'px',
-                    }" 
-                    class="rounded-lg"
-                    :class="['imgClass']"
-                    style="object-fit: cover;"> 
-            </slot>
-           
-        </div>
-        <!-- 补充内容 -->
+    <div @click="clickFn(index)" v-if="visible">
         <slot></slot>
     </div>
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive,getCurrentInstance,computed,onMounted } from 'vue'
+import { ref, reactive,getCurrentInstance,computed,onMounted,toRefs,onBeforeUnmount } from 'vue'
 import 'hevue-img-preview/css/default.css'
 const {proxy} = getCurrentInstance()
 export interface imgPreviewProps {
-    imgList: Array<string>; // 图片列表
-    previewList?: Array<string>; // 预览图片列表
-    imgW?: number; // 图片宽度
-    imgH?: number; // 图片高度
+    imgList: Array<string>; // 预览图片列表,需要传入只包含图片地址的数组，否则无法预览
     maskClose?: boolean; // 点击遮罩关闭
     controlOption?:{
         controlBar?: boolean; // 控制条 
         closeBtn?: boolean; // 关闭按钮
         arrowBtn?: boolean; // 箭头按钮
     };
-    imgClass?: string; // 图片样式
-    listClass?: string; // 列表样式
+    index?: number; // 当前图片索引,如果是多图预览，必须要传入索引，否则会出现点开图片预览后，图片索引不正确的问题
 }
 const props = withDefaults(defineProps<imgPreviewProps>(),{
     imgList: [],
-    imgW: 100,
-    imgH: 100,
     maskClose: true,
     controlOption:{
         controlBar: true,
         closeBtn: true,
         arrowBtn: true,
     },
+    index: 0
 }) 
+
+const visible = ref(false)
+
+const {index,imgList,maskClose,controlOption} = toRefs(props)
 
 // 点击图片预览
 const clickFn = (index: Number) => {
-    console.log('imgList',props.imgH,props.imgW)
-    // 预览图片列表
-    const list = props.previewList ? props.previewList : props.imgList
-    
     proxy.$hevueImgPreview({
         nowImgIndex: index,
         multiple:true,
-        imgList: list,
-        clickMaskCLose:props.controlOption.closeBtn && !props.controlOption.closeBtn ? true : props.maskClose,
-        arrowBtn:props.imgList.length === 1 ? false : props.controlOption.arrowBtn,
-        controlBar:props.controlOption.controlBar,
-        closeBtn:props.controlOption.closeBtn,
+        imgList: imgList.value,
+        clickMaskCLose:controlOption.value.closeBtn && !controlOption.value.closeBtn ? true : maskClose.value,
+        arrowBtn:imgList.value.length === 1 ? false : controlOption.value.arrowBtn,
+        controlBar:controlOption.value.controlBar,
+        closeBtn:controlOption.value.closeBtn,
     })
 }
 
 onMounted(() => {
+    // console.log('imgList=',imgList.value,'index=',index);
+    visible.value = true
 })
+
+onBeforeUnmount(() => {
+    visible.value = false
+    console.log('imgPreview unmounted');
+})
+
 </script>
 <style lang='scss' scoped></style>

@@ -2,9 +2,8 @@
   <div style="width: 52px; height: 52px;" v-if="!item.isBg"
     :style="{ borderRadius: navigationBar.iconRadius + 'px', background: item.bg || '' }"
     class="relative flex items-center justify-center ">
-    <!-- {{ isLink }} -->
-    <!-- <xt-new-icon :icon="item.icon" size="36" v-if="isLink"></xt-new-icon> -->
     <a-avatar  :size="52" shape="square" :src="item.icon" :style="{ borderRadius: navigationBar.iconRadius + 'px' }"></a-avatar>
+    <slot :name="item.slot"></slot>
   </div>
   <div v-else style="width: 52px; height: 52px;">
     <div style="width: 52px; height: 52px;" class="relative flex items-center justify-center overflow-hidden"

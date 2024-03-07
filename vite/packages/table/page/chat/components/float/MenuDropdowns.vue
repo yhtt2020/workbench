@@ -23,7 +23,7 @@
     </div>
   </xt-menu>
 
-  <!-- <LinkSetting ref="linkRef" :no="no" :item="item" :id="item.id"/> -->
+  <LinkSetting ref="linkRef" :no="no" :item="item" />
 </template>
 
 <script>
@@ -61,13 +61,13 @@ export default {
      {
       name:'删除应用', newIcon:'akar-icons:trash-can',color: 'var(--error)',
       callBack:()=>{
-        Modal.confirm({
-          content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
-          centered:true,
-          onOk: async ()=>{
+        window.$ui.confirm('删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？','',{
+          ok:async ()=>{
             const res = await community.removeCategory(data.revID.id,props.no);
             message.success(`${res.info}`);
-          }
+          },
+          type:'warning',
+          noText:'取消'
         })
       }
      }
@@ -81,13 +81,13 @@ export default {
       {
         name:'删除应用',newIcon:'akar-icons:trash-can',color: 'var(--error)',
         callBack:()=>{
-          Modal.confirm({
-            content:'删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？',
-            centered:true,
-            onOk: async ()=>{
+          window.$ui.confirm('删除分类操作不可撤销，分类被删除后，子应用将被移动到顶层。是否确定删除？','',{
+            ok:async ()=>{
               const res = await community.removeCategory(data.revID.id,props.no);
               message.success(`${res.info}`);
-            }
+            },
+            type:'warning',
+            noText:'取消'
           })
         }
       },

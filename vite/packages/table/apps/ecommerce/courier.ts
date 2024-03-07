@@ -60,7 +60,7 @@ export const courierStore = defineStore("courier", {
         logisticCode: logisticCode,
         customerName: customerName
       }
-      let response = await post(kdniao, option)
+      let response = await post(kdniao, option);
       if (response.Success) {
         //更详细的监测
         let now = Date.now()
@@ -84,7 +84,8 @@ export const courierStore = defineStore("courier", {
           return false
         }
 
-      }
+      };
+      return response.Success;
     },
 
     async followCourier(id) {

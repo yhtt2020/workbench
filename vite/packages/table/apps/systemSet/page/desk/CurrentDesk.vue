@@ -1,7 +1,7 @@
 <template>
   <div class="p-4 mb-4 text-base xt-bg-2 rounded-xl">
     <div class="mb-4">桌面名称</div>
-    <xt-input v-model="currentDesk.name" class="xt-modal xt-b"></xt-input>
+    <xt-input v-model="getCurrentDesk.name" class="xt-modal xt-b"></xt-input>
   </div>
   <div class="xt-bg-2 p-4 mb-4 rounded-xl">
     <div class="mb-2.5">桌面布局模式</div>
@@ -30,20 +30,20 @@
     />
     <xt-option-info
       isSwitch
-      v-model:switch="fixedSettings.enableZoom"
+      v-model:switch="currentDeskSettings.enableZoom"
       title="独立缩放"
       info="开启独立缩放后，将不再使用「通用设置」中的相关缩放设置。"
     />
-    <template v-if="fixedSettings.enableZoom">
+    <template v-if="currentDeskSettings.enableZoom">
       <hr />
       <xt-option-info
         title="桌面缩放"
         info="调节桌面的缩放比例，默认为100%。"
         icon="fluent:arrow-clockwise-16-regular"
-        @onIconClick="fixedSettings.cardZoom = 100"
+        @onIconClick="currentDeskSettings.cardZoom = 100"
       />
       <xt-option-slider
-        v-model:slider="fixedSettings.cardZoom"
+        v-model:slider="currentDeskSettings.cardZoom"
         :min="20"
         :max="500"
       />
@@ -52,10 +52,10 @@
         title="组件间距"
         info="调节组件之间的间距，默认为 12px。"
         icon="fluent:arrow-clockwise-16-regular"
-        @onIconClick="fixedSettings.cardMargin = 12"
+        @onIconClick="currentDeskSettings.cardMargin = 12"
       />
       <xt-option-slider
-        v-model:slider="fixedSettings.cardMargin"
+        v-model:slider="currentDeskSettings.cardMargin"
         :min="6"
         :max="30"
       />
@@ -63,34 +63,35 @@
       <xt-option-info
         title="桌面距离顶部状态栏间距"
         info="调节桌面和「顶部状态栏」的间距。"
-        @onIconClick="fixedSettings.marginTop = 0"
+        @onIconClick="currentDeskSettings.marginTop = 0"
         icon="fluent:arrow-clockwise-16-regular"
       />
       <xt-option-slider
-        v-model:slider="fixedSettings.marginTop"
+        v-model:slider="currentDeskSettings.marginTop"
         :min="0"
         :max="200"
         style="margin: 0 !important"
       />
     </template>
   </div>
+  <!-- v-if="$route.path == '/main' && freeLayout" -->
+  <FreeLayoutState v-else />
 </template>
 
 <script setup>
-import { ref, toRefs } from "vue";
+import { ref, toRefs, computed, defineAsyncComponent } from "vue";
 import { storeToRefs } from "pinia";
-import { useFreeLayoutStore } from "../freeLayout/store";
+const FreeLayoutState = defineAsyncComponent(() =>
+  import("../../../../components/desk/freeLayout/State.vue")
+);
+import { useFreeLayoutStore } from "../../../../components/desk/freeLayout/store";
 // pinia
 const freeLayoutStore = useFreeLayoutStore();
-const { isFreeLayout } = storeToRefs(freeLayoutStore);
+const { isFreeLayout, getCurrentDesk } = storeToRefs(freeLayoutStore);
 
-// props
-const props = defineProps({
-  fixedSettings: {},
-  currentDesk: {},
+const currentDeskSettings = computed(() => {
+  return getCurrentDesk.value.settings;
 });
-const { fixedSettings } = toRefs(props);
-
 // 桌面布局切换
 const currentLayout = ref(isFreeLayout.value === true ? "free" : "fixed");
 const layoutList = ref([
@@ -108,7 +109,7 @@ const updateTab = (data) => {
 };
 
 const fixedLayout = ref(
-  fixedSettings.value.vDirection ? "vertical" : "horizontal"
+  currentDeskSettings.value.vDirection ? "vertical" : "horizontal"
 );
 const fixedLayoutList = ref([
   {
@@ -122,7 +123,7 @@ const fixedLayoutList = ref([
 ]);
 
 const updateFixedLayout = (data) => {
-  fixedSettings.value.vDirection = !fixedSettings.value.vDirection;
+  currentDeskSettings.value.vDirection = !currentDeskSettings.value.vDirection;
 };
 </script>
 

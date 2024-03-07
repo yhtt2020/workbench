@@ -24,9 +24,7 @@ const file = {
    * @returns 如果文件夹存在则返回 true，否则返回 false
    */
   async existsFolder(folderName) {
-    let fileDir = pathJoin(folderName);
-    console.log("fileDir :>> ", fileDir);
-    // let res = await fs.pathExists(file.pathJoin(folderName));
+    let fileDir = file.pathJoin(folderName);
     let res = await fs.pathExists(fileDir);
     return res;
   },
@@ -52,18 +50,22 @@ const file = {
    * @param encoding 编码格式
    * @return string
    */
-   readFile(fileName, encoding = "utf-8") {
+  readFile(fileName, encoding = "utf-8") {
     return fs.readFileSync(fileName, {
-      encoding: encoding
+      encoding: encoding,
     });
   },
   /**
    * 删除文件
    */
   async deleteFile(filePath) {
-    let res = filePath;
-    fs.rmdir(res, (err) => {
-      if (err) throw err;
+    // let res = file.pathJoin(filePath);
+    fs.rmdir(filePath, (err) => {
+      if (err) {
+        console.log(`File ${res} xxxxxxxxxx`);
+
+        throw err;
+      }
       console.log(`File ${res} has been deleted`);
     });
   },
@@ -74,7 +76,7 @@ const file = {
     destPath = file.pathJoin(destPath);
     try {
       const zipBuf = await promises.readFile(filePath);
-     // const crxInfo = parseCrx(crxBuf);
+      // const crxInfo = parseCrx(crxBuf);
       let res = await extractZip(zipBuf, destPath);
       return {
         status: 1,
@@ -94,6 +96,9 @@ const file = {
   /**
    * 路径拼接
    */
+  // const tempPath = function (p) {
+  //   return require("path").join(require("electron").app.getPath("userData"), p);
+  // };
   pathJoin(paths) {
     if (typeof paths == "string") {
       return join(file.getCurrentDir(), paths);

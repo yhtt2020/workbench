@@ -39,7 +39,7 @@
 
   <xt-option-box v-if="currentScreen.key !== 'main'" :key="currentScreen.title">
     <xt-option-info
-      title="启动分屏"
+      title="运行"
       isSwitch
       v-model:switch="currentScreen.running"
     />
@@ -47,7 +47,7 @@
     <template v-if="currentScreen.settings">
       <hr />
       <xt-option-info
-        title="自启动"
+        title="自动运行（跟随工作台启动）"
         isSwitch
         v-model:switch="currentScreen.settings.autoRun"
       />
@@ -218,7 +218,7 @@ export default {
         "确认删除分屏？",
         "此操作不可恢复，将丢失分屏全部的设置，请谨慎操作。",
         {
-          onOk: () => {
+          ok: () => {
             this.screens.splice(
               this.screens.findIndex((s) => {
                 return s.key === this.currentScreen.key;

@@ -1,6 +1,7 @@
 <template>
     <div>
         <xt-container
+            @titleHover="settingVisible = true"
             v-model:customSize="customData.customSize"
             :header="header" 
             :desk="desk" 
@@ -189,10 +190,10 @@ export default {
         // 刷新圈子
         async refreshPost() {
             this.isLoading = true
-            console.log(this.defaultForum,'defaultForum')
+            // console.log(this.defaultForum,'defaultForum')
             let value = 0
             this.defaultForum.value ? value = this.defaultForum.value : value = this.defaultForum
-            console.log(value,'value')
+            // console.log(value,'value')
             await this.getCommunityPost(value)
             this.showForumPost = this.communityPost
             this.isLoading = false
@@ -248,7 +249,7 @@ export default {
                 this.showForumPost = cachePost
                     setTimeout(() => {
                         if(this.isClick){
-                            console.log('22222222222222')
+                            // console.log('22222222222222')
                             this.isLoading = true
                             this.refreshPost().then(()=>{
                                 this.isLoading = false
@@ -296,23 +297,6 @@ export default {
             }
             return this.selectList.slice(0, 5)
         },
-        // async forumPost() {
-        //     this.customData.forumPost = await this.communityPost.list
-        //     return this.customData.forumPost
-        // },
-        // showForumPost() {
-        //     if (this.customData && this.customData.forumPost) {
-        //         return this.customData.forumPost?.slice(0, 10)
-        //     }
-        //     return this.communityPost?.slice(0, 10)
-        // },
-        // scrollBarHeight() {
-        //     if (this.showForumList.length > 1) {
-        //         return 'calc(100% - 83px)'
-        //     } else {
-        //         return 'calc(100% - 32px)'
-        //     }
-        // },
         header(){
             return {
                 title: this.options.title,
@@ -321,7 +305,9 @@ export default {
                     fn:this.refreshPost,
                     tip:"刷新",
                     state:this.isLoading ? true : false
-                }
+                },
+                titleHoverName:'点击切换',
+                titleHover:true,
             }
         },
     },
@@ -418,9 +404,9 @@ export default {
         }
     },
     unmounted() {
-        console.log('222222222222<<<<<<<<<<<<<',this.showForumPost)
+        // console.log('222222222222<<<<<<<<<<<<<',this.showForumPost)
         localStorage.setItem('communityContent', JSON.stringify(this.showForumPost));
     },
 }
 </script>
-<style lang="scss"></style>
+<style lang="scss"></style>../../../page/chat/commun.ts./YuanCommunity.vue/index.ts

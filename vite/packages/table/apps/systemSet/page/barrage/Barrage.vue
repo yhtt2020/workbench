@@ -22,12 +22,12 @@
     </div>
     <hr />
     <xt-option-info title="弹幕方向" />
-  
+
     <xt-option-tab
       :list="barrageList"
       v-model="appSettings.barrage.direction"
       circle
-      style="margin-bottom: 0; height: 40px"
+      style="margin-bottom: 16px; height: 40px"
     />
     <hr />
     <xt-option-info
@@ -66,6 +66,7 @@ const barrageList = [
 
 const refresh = () => {
   if (!appSettings.value.enableBarrage) {
+    window.$manager.show();
     window.$ui.confirm("当前未启用弹幕功能，需要启用后方可测试。", "", {
       okText: "启用并测试",
       type: "warning",
@@ -80,6 +81,7 @@ const refresh = () => {
       },
     });
   } else {
+    window.$manager.hidden();
     window.$manager.setOptions({
       ...appSettings.value.barrage,
     });

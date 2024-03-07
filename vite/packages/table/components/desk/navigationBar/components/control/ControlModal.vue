@@ -69,7 +69,7 @@
     </div>
 
     <div class="flex items-center justify-center mb-4">
-      <template v-for="item in bottomButton">
+      <template v-for="item in buttonList">
         <a-tooltip placement="top" :title="item.name">
           <xt-button
             w="54"
@@ -94,6 +94,7 @@ import {
   computed,
   onMounted,
   getCurrentInstance,
+  onUnmounted,
   onBeforeMount,
 } from "vue";
 import { storeToRefs } from "pinia";
@@ -117,9 +118,9 @@ const props = defineProps({
 });
 
 const app = appStore();
-const { userInfo } = storeToRefs(app);
+const { windowFullScreen } = storeToRefs(app);
 const controls = controlStore();
-const { control, initList, removeControlList } = storeToRefs(controls);
+const { control, initList, updateList } = storeToRefs(controls);
 
 const editVisible = ref(false);
 const editRef = ref(null);
@@ -131,12 +132,17 @@ const editClick = () => {
 
 // 完成编辑
 const finshEdit = () => {
-  editVisible.value = false;
+  const updateListItem = updateList.value.map((item)=>{
+    const index = control.value.oldList.findIndex((findItem)=>{ return String(item.id) === String(findItem.id) });
+    return {...control.value.oldList[index]};
+  })
+  control.value.oldList = [...updateListItem];
+  editVisible.value = false; 
 };
 
 // 重置
 const restList = () => {
-  control.value.oldList = JSON.parse(JSON.stringify(initList.value));
+  control.value.oldList = [...initList.value];
   control.value.newList = [];
 };
 
@@ -176,36 +182,53 @@ const bottomButton = ref([
     newIcon: "fluent:settings-16-regular",
     name: "设置",
     fn: () => {
-      router.push({ name: "setting" });
+      router.push({
+          name:'home'
+        })
+        setTimeout(() => {
+          proxy.$bus.emit("openSystemSet")
+        }, 500);
       emit("close");
     },
   },
-  // {
-  //   newIcon:'fluent:settings-16-regular',name:'清除测试数据',
-  //   fn:()=>{
-  //     controlStore().initData();
-  //     // router.push({ name: 'setting' });
-  //     // emit('close')
-  //   }
-  // }
 ]);
-function handleClick(e) {
-    if (e.target?.closest(".tt-container-box-1234") == null) {
-      emit("close");
-    }
+
+const buttonList = computed(()=>{
+  if(windowFullScreen.value){
+    const mapBottomButton = bottomButton.value.map((item)=>{
+      if(item.name === '全屏'){
+        return {
+          ...item,
+          newIcon:"fluent:full-screen-minimize-16-regular"
+        }
+      }
+      else {
+        return {...item}
+      }
+    });
+    return mapBottomButton;
   }
+  else {
+    return bottomButton.value;
+  }
+})
+
+function handleClick(e) {
+  if (e.target?.closest(".tt-container-box-1234") == null) {
+    emit("close");
+  }
+};
+
 onMounted(() => {
   proxy.$bus.on("closeControl", () => {
     emit("close");
   });
-
   proxy.$bus.on("closeControl", () => {
     emit("close");
   });
   window.addEventListener("click",handleClick);
 });
-
-onBeforeMount(() => {
+onUnmounted(()=>{ 
   window.removeEventListener("click",handleClick);
 });
 </script>

@@ -10,7 +10,7 @@
     ></div>
   </Transition>
   <div
-    class="overflow-hidden fixed -translate-x-1/2 left-1/2 top-1/2 -translate-y-1/2"
+    class="overflow-hidden fixed -translate-x-1/2 left-1/2 top-1/2 -translate-y-1/2 no-drag"
     style="
       height: 745px;
       border-radius: 18px;
@@ -30,9 +30,9 @@
       height="745"
     ></iframe>
     <div class="absolute" style="top: 20px; right: 20px; z-index: 99999">
-     <xt-button @click="loginClose"  w="48"  style="background: #337fff;">
-      <xt-ify-icon icon="fluent:dismiss-16-regular"  style="color: #fff;"/>
-     </xt-button>
+      <xt-button @click="loginClose" w="48" style="background: #337fff">
+        <xt-ify-icon icon="fluent:dismiss-16-regular" style="color: #fff" />
+      </xt-button>
     </div>
   </div>
 </template>
@@ -43,7 +43,6 @@ import { useRoute, useRouter } from "vue-router";
 import cache from "../../components/card/hooks/cache";
 import { useUserPermit } from "./useUserPermit";
 import XtButton from "../../ui/libs/Button/index.vue";
-import XtNewIcon from "../../ui/libs/NewIcon/index.vue";
 import XtIfyIcon from "../../ui/new/IfyIcon/index";
 import { usePermissionStore } from "../store";
 import { storeToRefs } from "pinia";
@@ -52,7 +51,9 @@ const { token } = storeToRefs(permissionStore);
 const loginVisible = ref(true);
 const router = useRouter();
 const { proxy } = getCurrentInstance();
+import { useGlobalStore } from "../../apps/global/store";
 
+const globalStore = useGlobalStore();
 const props = defineProps({
   close: {},
   cb: {},
@@ -68,10 +69,10 @@ onMounted(() => {
         console.log("token :>> ", currentToken);
         cache.set("ttUserToken", currentToken);
         token.value = currentToken;
-        useUserPermit();
-        // router.push({ name: "home" })
+        await useUserPermit();
         loginVisible.value = false;
         props.cb && props.cb();
+        globalStore.loginVisible = false;
         props.close && props.close();
       }
     },
@@ -82,7 +83,8 @@ const emits = defineEmits(["close"]);
 
 const loginClose = () => {
   loginVisible.value = false;
-  props.close.value && props.close();
+  globalStore.loginVisible = false;
+  props?.close && props.close();
 
   emits("close");
 };

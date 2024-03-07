@@ -47,7 +47,7 @@ const backImage = computed(() => {
   if (backgroundImage.value.path !== "") {
     return { src: backgroundImage.value.src };
   } else {
-    return { src: "https://a.apps.vip/papers/neom-207NEuFvjlg-unsplash.jpg" };
+    return { src: "https://a.apps.vip/icons/defaultBackground.jpg" };
   }
 });
 

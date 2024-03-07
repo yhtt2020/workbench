@@ -28,9 +28,9 @@
           style="position: absolute;z-index:99999999999;top:50%;transform: translateY(-50%) translateX(-100%);writing-mode: vertical-rl;"
           class="px-3 py-10 rounded-lg s-bg xt-text">松开鼠标合并</div>
       </transition>
-      <div 
-        @click.stop 
-        :id="currentId" 
+      <div
+        @click.stop
+        :id="currentId"
         style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
         class="flex flex-row justify-center box common-panel s-bg w-[80px]  xt-bg pt-0 pb-0 relative max-h-full side-bar"
         ref="sideContent" @contextmenu="showMenu"
@@ -43,21 +43,21 @@
               display: flex;
               flex-direction: column;
               overflow: hidden;
-              align-items: flex-start; 
+              align-items: flex-start;
               gap: 20px;">
-            <a-tooltip v-for="(item, index) in navigationList" 
-              :key="item.id" 
+            <a-tooltip v-for="(item, index) in navigationList"
+              :key="item.id"
               :title="item.name"
-              :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }" 
+              :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }"
               @mouseenter="showElement(item, index)"
               :placement="sortId === 'left' ? 'right' : 'left'">
               <!-- 左右导航栏隐藏入口 -->
               <xt-menu :menus="folderOptions" :id="item.id" class="relative flex-shrink-0 item-content">
-                <div 
-                  v-if="!(this.isOffline && this.navList.includes(item.event))" 
+                <div
+                  v-if="!(this.isOffline && this.navList.includes(item.event))"
                   class="item-content item-nav"
-                  @click="newOpenApp(item)" 
-                  @dragover="onDrag" 
+                  @click="newOpenApp(item)"
+                  @dragover="onDrag"
                   @dragend="hoverIndex = -1" :class="{
                     'active-back': current(item),
                     hover: (dragItem && item.id === hoverRealItemId(this.sortId,this.hoverIndex) && dragItem?.id !== hoverRealItemId(this.sortId,this.hoverIndex))
@@ -511,7 +511,7 @@ export default {
         setTimeout(() => {
           this.shakeElement = false
         }, 2000)
-      } 
+      }
     },
     navigationList: {
       handler(newVal, oldVal) {
@@ -628,15 +628,15 @@ export default {
      * sortable拖拽函数
      */
     enableDrag() {
-      console.log('触发一次重置 ')
+      // console.log('触发一次重置 ')
       if (this.sortable) {
-        console.log('先清理 ')
+        // console.log('先清理 ')
         this.sortable.destroy()
       }
       let that = this
       let drop = document.getElementById(this.sortId)
       if (!drop) {
-        console.error('更新侧边导航栏失败，元素不存在')
+        // console.error('更新侧边导航栏失败，元素不存在')
         return
       }
       let index = null
@@ -662,7 +662,7 @@ export default {
           }
           let del = document.querySelectorAll('#delIcon3')
           // let delIcon = document.getElementById('delIcon3')
-          console.log('delIcon', del)
+          // console.log('delIcon', del)
           that.delItemIcon = true
           that.$emit('getDelIcon', true)
           that.delNav = true
@@ -710,7 +710,7 @@ export default {
           // console.log('移动event=', event)
           let cur = this.sideList.splice(event.oldIndex, 1)[0]
           if (!cur) {
-            console.error('移动失败，无法获取到元素')
+            // console.error('移动失败，无法获取到元素')
             return
           }
           this.sideList.splice(event.newIndex, 0, cur)
@@ -856,7 +856,7 @@ export default {
       const bottom = document.getElementById(this.sortId)
       const rect = bottom.getBoundingClientRect()
       const index = Math.round((e.y - rect.y) / (72 * this.navAttribute.navSize / 100))
-      console.log(index, item, 'index');
+      // console.log(index, item, 'index');
       this.dragItem = null
       if (this.sideList[this.hoverIndex]?.type === 'folder') {
         const merged = this.mergeIconFolder(this.sideList, item, this.sideList.find(i => {
@@ -967,8 +967,13 @@ export default {
      * @param {*} item 图标详细信息
      */
     async newOpenApp(item) {
-      this.sideKey = Date.now()
       let { type, value } = item
+      if (item.name === '设置中心') {
+          this.$bus.emit("openSystemSet")
+      }
+      this.sideKey = Date.now()
+
+
       if (value === 'control') {
         this.controlVisible = !this.controlVisible;
         this.resetElementPosition()
@@ -1056,7 +1061,7 @@ export default {
           message.success('进入编辑模式')
         }
         this.quick = true
-      } 
+      }
 
       this.menuVisible = false
     },

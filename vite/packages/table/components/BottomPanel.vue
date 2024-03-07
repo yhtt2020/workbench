@@ -128,29 +128,6 @@
             </div>
           </div>
         </div>
-        <div
-          v-if="false"
-          style="
-            position: fixed;
-            top: 10px;
-            background: black;
-            color: white;
-            z-index: 99999;
-            line-height: 14px;
-            text-align: left;
-            max-width: 100vw;
-            left: 0;
-          "
-        >
-          <div>选中的id{{ this.isLeaveBar }} {{ isEdge }}</div>
-          <div
-            v-for="(item, index) in copyFootNav"
-            style="margin-bottom: 5px; border-bottom: 4px solid white"
-          >
-            {{ index }} {{ item.name }} {{ item.id }}
-            {{ item.children?.length }}
-          </div>
-        </div>
         <!-- 快速搜索 底部栏区域 -->
         <Drop @createFile="createFile" currentId="bottom">
           <transition>
@@ -218,8 +195,8 @@
               >
                 <div
                   @contextmenu="showMenu"
-                  style="height: 52px; width: 100%; overflow: hidden"
-                  class="item-content"
+                  style="height: 52px; width: 100%;"
+                  class="flex flex-wrap justify-center"
                 >
                   <div
                     class="w-full scroll-content"
@@ -265,7 +242,7 @@
                       >
                         <xt-menu
                           :id="item.id"
-                          class="relative overflow-visible item-content"
+                          class="relative flex flex-wrap justify-center w-full overflow-visible"
                           :menus="folderOptions"
                         >
                           <div
@@ -303,7 +280,14 @@
                               >
                               </FolderVue>
                               <template v-else>
-                                <Avatar :item="item"></Avatar>
+                                <Avatar :item="item">
+                                  <template #control>
+                                    <div
+                                      style="background-color: #ff4d4f;border: 2px solid ;"
+                                      class="absolute top-0 flex items-center justify-center flex-shrink-0 w-4 h-4 translate-x-6 rounded-full -translate-y-1/3 pointer" >
+                                    </div>
+                                  </template>
+                                </Avatar>
                               </template>
                             </Drag>
                           </div>
@@ -356,6 +340,14 @@
       v-if="quick"
     >
       <component :is="componentId" @setQuick="setQuick"></component>
+      <!-- <navigationSetting
+        v-if="componentId === 'navigationSetting'"
+        @setQuick="setQuick"
+      ></navigationSetting>
+      <EditNewNavigation
+        v-if="componentId === 'EditNewNavigation'"
+        @setQuick="setQuick"
+      ></EditNewNavigation> -->
     </div>
   </transition>
 
@@ -653,7 +645,7 @@ export default {
       parentSize: 0,
       // 控制中心弹窗
       controlVisible: false,
-      controlLeft: 0,
+      controlLeft: 100,
       skipSort: false,
       skipSimple: false,
       parentHeight: 0,
@@ -718,11 +710,14 @@ export default {
         })
       })
     }
-
     // 图标整体替换格式方法
     // this.copyFootNav = this.replaceType(this.copyFootNav)
     this.copyFootNav = this.copyFootNav.map((item) => this.mergeData(item))
-    // console.log(this.copyFootNav, 'copyFootNav')
+    if(window.$useEnv(['guest'])){
+      this.copyFootNav = this.copyFootNav.filter(item=>{
+        return item.event != "commun"
+      })
+    }
     this.bottomInit = true
     //对id进行强制修复
     this.copyFootNav.forEach(item => {
@@ -1166,6 +1161,7 @@ export default {
 
       // console.log('item :>> ', item);
       if (item.component) {
+        console.log('item :>> ', item.component);
         this.componentId = item.component
         if (item.component === 'EditNewNavigation') {
           this.editToggle = true
@@ -1224,19 +1220,18 @@ export default {
      * @param {*} item 图标详细信息
      */
     async newOpenApp(type, value, item) {
-      if (item.name === '设置中心') {
-        this.$router.push({
-          name:'home'
-        })
-        setTimeout(() => {
-          this.$bus.emit("openSystemSet")
-        }, 500);
+      this.resetElementPosition()
+      if(value === 'control' && !this.controlVisible){
+        this.controlVisible = true
         return
+      }
+      // 新版设置打开方式
+      if (value === 'setting') {
+          this.$bus.emit("openSystemSet")
       }
       if(type === 'folder'){
         this.openFolder(item)
       }
-      this.resetElementPosition()
       if (value == 'fullscreen' && window.$useEnv()) {
         toggle()
         // console.log('isFullscreen :>> ', isFullscreen);

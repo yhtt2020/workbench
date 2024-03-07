@@ -1,5 +1,6 @@
 <template>
   <xt-container 
+    @titleHover="aggSearchShow = true"
     :header="header"
     v-model:customSize="customData.customSize"
     :editing="editing" 
@@ -145,6 +146,8 @@ export default {
       header:{
         title:'聚合搜索',
         ifyIcon:'fluent:search-20-filled',
+        titleHover:true,
+        titleHoverName:'点击切换',
       }
     }
   },

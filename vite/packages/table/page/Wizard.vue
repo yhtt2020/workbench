@@ -21,14 +21,14 @@
       <div class="w-full flex justify-center" style="text-align: left;font-size: 1.2em;margin: auto;position: relative;">
         <div v-if="step===0">
           <div class="font-16" style="text-align: center;color: var(--secondary-text);" v-if="true">
-            如果正在使用扩展屏或者副屏幕，推荐使用「副屏模式」
+            如果正在使用扩展屏，推荐使用「副屏模式」
             <div class="flex justify-center">
               没有副屏？点击了解 &nbsp;
               <a @click="openVideo" class="flex items-center" style="color: #00AEEC;">
               <MyIcon icon="tabler:brand-bilibili" width="20" height="20"  />&nbsp;
-              Spacedesk | 把任意设备变成你的第二屏幕，手机、平板、电脑都可以！</a>
+              把任意设备变成你的第二屏幕，手机、平板、电脑都可以！</a>
             </div>
-            <div  class="mt-2 flex item-content items-center">购买官方推荐副屏：<xt-button :radius="8" :w="80" :h="34" size="small" type="theme" @click="goBuy">去购买</xt-button></div>
+<!--            <div  class="mt-2 flex item-content items-center">购买官方推荐副屏：<xt-button :radius="8" :w="80" :h="34" size="small" type="theme" @click="goBuy">去购买</xt-button></div>-->
           </div>
           <div style="margin-bottom: 1em" v-else>
             您当前仅有一块屏幕，无法启用副屏模式，您可在增添副屏后启用。<a>了解更多</a>
@@ -39,10 +39,10 @@
                 <div class="title">
                   <!-- <icon icon="kuaijie" style="font-size: 50px"></icon> -->
                   <MyIcon icon="fluent:window-multiple-16-filled" width="56px" height="56px" color="var(--primary-text)" />
-                  <div class="mt-2">窗口模式</div>
+                  <div class="mt-2">主屏窗口模式</div>
                 </div>
                 <div class="content mt-3">
-                  以普通应用窗口的模式运行，默认使用ALT+Z组合键控制显示和隐藏。
+                  和普通软件一样，使用快捷键显示/隐藏界面。
                 </div>
               </div>
             </a-col>
@@ -50,10 +50,10 @@
               <div :class="{'active':mod==='second-screen'}" @click="this.mod='second-screen'" class="panel pointer px-5 pt-6">
                 <div class="title">
                   <MyIcon icon="fluent:tablet-16-regular" width="56px" height="56px" color="var(--primary-text)" />
-                  <div class="mt-2">副屏全屏模式</div>
+                  <div class="mt-2">副屏模式</div>
                 </div>
                 <div class="content mt-3">
-                  专为副屏优化，自动缩放界面和字体，提供适合触控操作的交互。
+                  专为副屏优化，自动缩放界面和字体，适配触摸。
                 </div>
               </div>
             </a-col>
@@ -269,7 +269,7 @@ export default {
     // 标题名称
     title(){
       if(this.step == 0){
-        return '天天工作台使用向导'
+        return '使用向导'
       }else if(this.step == 1){
         return '选择屏幕'
       }else if(this.step == 2){
@@ -277,7 +277,7 @@ export default {
       }else if(this.step == 3){
         return '更多设置'
       }else if(this.step == 4){
-        return '登录工作台'
+        return '登录账号'
       }else if(this.step == 5){
         return '选择配置'
       }else{

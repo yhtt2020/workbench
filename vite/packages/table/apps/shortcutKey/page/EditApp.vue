@@ -50,10 +50,11 @@ export default {
       this.formApp.icon=newIcon
     },
     async removeApp() {
-      Modal.confirm({
-        content: '是否删除此应用，此操作会删除应用，但不会删除应用关联的快捷键方案。',
-        centered: true,
-        onOk: () => {
+      window.$ui.confirm(
+        '删除确认',
+        '是否删除此应用，此操作会删除应用，但不会删除应用关联的快捷键方案。',
+        {
+         ok: () => {
           this.removeCustomApp(this.originApp)
           message.success('删除成功')
           this.$router.go(-1)

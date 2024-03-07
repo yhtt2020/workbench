@@ -40,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, toRefs, onMounted, onBeforeUnmount } from "vue";
+import { ref, computed, toRefs, onMounted, onBeforeUnmount, onUnmounted } from "vue";
 import useWindowViewport from "./useWindowViewport";
 import { reSize as vResize } from "./useElementResize";
 import Menus from "./Menus.vue";
@@ -225,10 +225,16 @@ onMounted(() => {
   window.addEventListener("click", handleCloseMenu, { capture: true });
   window.addEventListener("contextmenu", handleCloseMenu, { capture: true });
 });
-onBeforeUnmount(() => {
-  window.addEventListener("click", handleCloseMenu, { capture: true });
-  window.addEventListener("contextmenu", handleCloseMenu, { capture: true });
+
+
+onUnmounted(() => {
+  window.removeEventListener("click", handleCloseMenu, { capture: true });
+  window.removeEventListener("contextmenu", handleCloseMenu, { capture: true });
 });
+// onBeforeUnmount(() => {
+//   window.addEventListener("click", handleCloseMenu, { capture: true });
+//   window.addEventListener("contextmenu", handleCloseMenu, { capture: true });
+// });
 
 defineExpose({
   handleOpenMenu,

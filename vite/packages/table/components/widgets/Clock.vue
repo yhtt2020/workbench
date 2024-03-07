@@ -44,7 +44,7 @@
       </div>
 
     </div>
-    <div @click="onSetup" class="flex flex-col mt-6 text-center cursor-pointer" v-else>
+    <div @click="onSetup" class="flex flex-col  text-center cursor-pointer" v-else>
       <!-- <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
 
       </div> -->
@@ -56,7 +56,7 @@
         下一个闹钟
       </div>
       <!-- style="font-size: 3em; margin-top: 0.5em" -->
-      <div class="mt-4 mb-4 font-40" style="font-family:Oswald-SemiBold !important; font-size: 40px; font-weight: 600;">
+      <div class="mt-2 mb-4 font-40" style="font-family:Oswald-SemiBold !important; font-size: 40px; font-weight: 600;">
         <!-- <icon icon="naozhong"></icon> -->
         {{ clockEvent[0].dateValue.hours }}:{{ clockEvent[0].dateValue.minutes }}
       </div>

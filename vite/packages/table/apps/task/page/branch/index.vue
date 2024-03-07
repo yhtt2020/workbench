@@ -31,7 +31,11 @@
     </div>
     <template v-else>
       <div style="" class="flex justify-between items-center mb-3">
-        <div style="width: 200px">支线任务</div>
+
+        <div class="flex items-center" style="width: 200px">
+          <xt-ify-icon :icon="icon" size="20" class="mr-3"></xt-ify-icon>
+          <span class="xt-text font-14 xt-font">支线任务</span>
+        </div>
         <div class="flex items-center">
           <div style="width: 68px; margin-right: 10px" v-if="tasks.length <= 1">
             <Progress :task="tasks[0]" style="width: 68px; height: 20px" />

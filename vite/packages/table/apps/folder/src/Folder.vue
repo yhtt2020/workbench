@@ -24,6 +24,7 @@
       <template v-if="customData.list.length <= 0 && !dragSortState">
         <Null :size="customData.customSize" @addFile="addFileClick" />
       </template>
+      <!-- 非空状态 -->
       <vue-custom-scrollbar
         v-else
         style="padding-right: 4px"
@@ -47,21 +48,7 @@
       </vue-custom-scrollbar>
     </xt-container>
   </Drop>
-
-  <folderSet
-    v-if="setVisible"
-    :data="customData"
-    @close="setVisible = false"
-    @updateSort="updateSort"
-    @updateWindowApp="updateWindowApp"
-  />
-  <EditNewNavigation
-    v-if="editVisible"
-    @setQuick="editVisible = false"
-    @addIcon="addFile"
-    :isFolder="false"
-  />
-  <folderSet
+  <FolderSet
     v-if="setVisible"
     :data="customData"
     @close="setVisible = false"
@@ -75,15 +62,12 @@
     :isFolder="true"
   />
 
-  <xt-modal
-    custom
-    v-model="expandVisible"
+  <Expand
+    :data="props"
+    :auto="false"
     v-if="expandVisible"
-    boxClass=""
     @close="expandClose"
-  >
-    <Expand :data="props" :auto="false" v-if="expandVisible"></Expand>
-  </xt-modal>
+  ></Expand>
 </template>
 
 <script setup>
@@ -95,27 +79,35 @@ import {
   provide,
   onMounted,
   onBeforeUnmount,
+  onUnmounted,
   onBeforeMount,
   getCurrentInstance,
+  defineAsyncComponent,
 } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { nanoid } from "nanoid";
 import { message } from "ant-design-vue";
 
 import File from "./file/File.vue";
-import folderSet from "./folderSet/folderSet.vue";
 import Drop from "./components/Drop.vue";
-import Resize from "./components/Resize.vue";
-import Expand from "./expand/Expand.vue";
+
 import vueCustomScrollbar from "../../../../../src/components/vue-scrollbar.vue";
 
 import { defaultData, defaultFolderData } from "./components/options";
-import Null from "./components/Null.vue";
 import { startApp } from "../../../ui/hooks/useStartApp";
-import EditNewNavigation from "../../../components/desk/navigationBar/EditNewNavigation.vue";
 import { useNavigationStore } from "../../../components/desk/navigationBar/navigationStore";
 import { useMouseInElement } from "@vueuse/core";
 import { mergeData } from "../../../ui/hooks/useDataConversion";
+
+const Null = defineAsyncComponent(() => import("./components/Null.vue"));
+const Expand = defineAsyncComponent(() => import("./expand/Expand.vue"));
+const FolderSet = defineAsyncComponent(() =>
+  import("./folderSet/folderSet.vue")
+);
+const EditNewNavigation = defineAsyncComponent(() =>
+  import("../../../components/desk/navigationBar/EditNewNavigation.vue")
+);
+
 const { proxy } = getCurrentInstance();
 const router = useRouter();
 
@@ -203,7 +195,12 @@ const props = defineProps({
 
 const { customData, customIndex, expand, secondary, navBar, auto, modalSize } =
   toRefs(props);
-const emit = defineEmits(["update:size", "update:layout", "clickFile",'close']);
+const emit = defineEmits([
+  "update:size",
+  "update:layout",
+  "clickFile",
+  "close",
+]);
 
 const refreshState = ref(false);
 const header = computed(() => {
@@ -501,6 +498,7 @@ const leftClick = () => {
 };
 
 const expandClose = () => {
+  expandVisible.value = false;
   customData.value.customSize = oldCardSize.value;
 };
 
@@ -547,11 +545,17 @@ const refreshDeskApp = async () => {
 };
 function handleClick(e) {
   if (e.target?.closest(".tt-folder-container") == null) {
-    console.log("123 :>> ", 123);
+    emit('close')
+    // console.log("123 :>> ", 123);
   }
 }
+onUnmounted(() => {
+  window.removeEventListener("click", handleClick);
+});
 onMounted(async () => {
-  window.addEventListener("click", handleClick);
+  if(navBar.value.close){
+    window.addEventListener("click", handleClick);
+  }
 
   customData.value.list = customData.value.list.map((item) => mergeData(item));
   // 空图标替换
@@ -564,10 +568,6 @@ onMounted(async () => {
     customData.value.customSize = customData.value.size;
   }
   // 冒泡排序
-});
-
-onBeforeMount(() => {
-  window.removeEventListener("click", handleClick);
 });
 </script>
 

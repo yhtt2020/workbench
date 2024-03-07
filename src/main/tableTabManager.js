@@ -199,8 +199,6 @@ class TableTabManager {
     this.runningTabs.forEach(app => {
       this.closeTab(this.getName(app.name))
     })
-    console.log(this.runningTabsInstance)
-    console.log(this.runningTabs)
   }
 
   closeTab (id) {

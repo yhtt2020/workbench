@@ -76,10 +76,8 @@
     @save="closeSet"
     :mask="0"
   ></Set>
-  <!-- <Edit v-if="settingVisible" @close="settingVisible = false" @save="save()">
-  </Edit> -->
   <!-- 多图标组件设置 -->
-  <XtDrawer v-model="iconsSetVisible" placement="right">
+  <!-- <XtDrawer v-model="iconsSetVisible" placement="right">
     <div class="p-4 xt-bg-2 rounded-xl">
       <div class="flex justify-between mb-2">
         <div>放大模式</div>
@@ -89,22 +87,16 @@
         该模式下可以自由拖动文件夹大小，直接点击打开文件夹内的应用或连接。
       </div>
     </div>
-  </XtDrawer>
-  <!-- 底部导航 -->
-  <!-- <XtDrawer v-model="menuVisible">
-    <BottomEdit :menuList="menuList" :copy="customData.copy" :merge="customData.merge"></BottomEdit>
   </XtDrawer> -->
 </template>
 <script>
+import { defineAsyncComponent } from "vue";
 // components
 import Widget from "../../card/Widget.vue";
-import Edit from "./edit/index.vue";
 import icon from "./components/icon.vue";
-import icons from "./icons/index.vue";
 import DragAndFollow from "./components/DragAndFollow.vue";
 import DroppableArea from "./components/DroppableArea.vue";
-import BottomEdit from "./components/bottomEdit.vue";
-import Set from "./set/index.vue";
+const Set = defineAsyncComponent(() => import("./set/index.vue"));
 // pinia
 import { mapActions, mapWritableState } from "pinia";
 import { cardStore } from "../../../store/card.ts";
@@ -139,12 +131,9 @@ export default {
   components: {
     Set,
     Widget,
-    Edit,
-    icons,
     icon,
     DragAndFollow,
     DroppableArea,
-    BottomEdit,
   },
   data() {
     return {

@@ -52,7 +52,7 @@ function sendIPCToDownloadWindow (action, data) {
   setTimeout(()=>{
     if(downloadWindow && !downloadWindow.isDestroyed())
     downloadWindow.webContents.send(action, data || {})
-  },20)
+  },200)
 
 
 
@@ -111,7 +111,7 @@ async function downloadHandler (event, item, webContents) {
   const suffixName = require('path').extname(item.getFilename())
   savePathFilename = path.basename(item.getSavePath())
   const simpleName = item.getFilename().substring(0, item.getFilename().lastIndexOf('.'))
-  sendIPCToMainWindow('isDownload')
+  sendIPCToMainWindow('isDownload',{},false)
   // const savePathPrefix = settings.get('downloadSavePath') + '\\'
   const savePathPrefix = settings.get('downloadSavePath')
   var fs = require('fs')

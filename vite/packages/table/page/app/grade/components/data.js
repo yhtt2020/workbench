@@ -1,6 +1,16 @@
 export const NavListTmp = [
     { type: 'systemApp', icon: '/logo/home.svg', name: '桌面主页', addNav: true, bg: '', isBg: '', ext: '', summary: '', mode: 'app', value: 'home', isCheck: true, id: '1705024806' },
     { type: 'systemApp', icon: '/logo/app.svg', name: '应用中心', addNav: true, bg: '', isBg: '', ext: '', summary: '', mode: 'app', value: 'apps', isCheck: true, id: '1705024807' },
+  {
+    addNav: true,
+    "type": "systemApp",
+    "icon": "/logo/favo.png",
+    "name": "收藏夹",
+    mode: 'app',
+    value: 'favorites',
+    isCheck: true,
+   id: '1705024803'
+  },
     {
         type: 'folder', icon: '/logo/efficiency.svg', name: '效率助手', bg: '', isBg: '', mode: 'app', value: 'folder', isCheck: true, id: '1705024808', children: [
             { type: 'systemApp', icon: '/logo/efficiency.svg', name: '效率助手', addNav: true, bg: '', isBg: '', ext: '', summary: '', mode: 'app', value: 'work' },
