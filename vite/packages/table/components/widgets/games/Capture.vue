@@ -1,13 +1,14 @@
 <template>
-   <xt-container 
-    @titleHover="enterCapture"
+   <xt-container
     v-model:customSize="customData.customSize"
     :header="header"
-    :envLimit="['web']" 
-    :menuList="menuList"  
-    :options="options" 
-    :customData="customData" 
-    :customIndex="customIndex" 
+    :envLimit="['web']"
+    :menuList="menuList"
+    :options="options"
+    :customData="customData"
+    :customIndex="customIndex"
+    @titleHover="goCapture"
+    @leftClick="goCapture"
     :desk="desk">
      <CaptureCore @selectSource="visibleSource=true"></CaptureCore>
    </xt-container>
@@ -72,11 +73,13 @@ export default {
         type: 'games',
       },
       header:{
+        titleHover:true,
         title:'捕获',
         ifyIcon:'fluent:resize-video-20-regular',
-        titleHover:true,
-        titleHoverName:'打开应用',
-      }
+        leftHoverName:'打开应用',
+        leftHover:true,
+        leftHoverIcon:'fluent:open-16-regular'
+      },
 
     }
   },
@@ -84,9 +87,12 @@ export default {
     choosenSource(){
       this.visibleSource=false
     },
-    enterCapture(){
-      this.$router.push('GameCapture')
-    },
+    goCapture(){
+      this.$router.push({
+        name:'GameCapture'
+      })
+    }
+
   },
   mounted(){
     this.customData.customSize = '2x2'
