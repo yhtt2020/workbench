@@ -967,18 +967,11 @@ export default {
      * @param {*} item 图标详细信息
      */
     async newOpenApp(item) {
-      console.log('2222222222222 :>> ', item);
+      let { type, value } = item
       if (item.name === '设置中心') {
-        this.$router.push({
-          name:'home'
-        })
-        setTimeout(() => {
           this.$bus.emit("openSystemSet")
-        }, 500);
-        return
       }
       this.sideKey = Date.now()
-      let { type, value } = item
 
 
       if (value === 'control') {
