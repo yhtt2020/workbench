@@ -35,7 +35,7 @@
     <xt-modal title="添加到桌面" :maskIndex="1001" :index="1002" boxClass="rounded-xl p-4" :mask="true" :header="true" :footer="true" v-model="deskFlag" v-if="deskFlag" @ok="addDeskIcon" >
       <div class="xt-modal flex rounded-xl relative" style="width: 466px; height: 50px;" >
         <!-- <xt-input style="height: 40px;width: 400px;" v-model="rename" placeholder="请输入网站名称" class="h-10 rounded-lg xt-text ml-2 xt-main-bg"></xt-input> -->
-        <xt-select v-model="deskIndex" :zIndex="1200" style="width: 100%;" :list="deskList" :bordered="false"></xt-select>
+        <xt-select v-model="deskIndex" :zIndex="1200" style="width: 100%;height: 40px;" :list="deskList" :bordered="false"></xt-select>
       </div>
     </xt-modal>
   </teleport>
@@ -75,7 +75,7 @@ export default {
         {
           label: '添加到桌面',
           newIcon:'fluent:desktop-16-regular',
-          callBack: async () => {
+          callBack: () => {
             this.deskFlag = true
           }
         },
@@ -83,7 +83,6 @@ export default {
           label: '添加到分组',
           newIcon: 'fluent:app-folder-16-regular',
           callBack: () => {
-
             this.previewFlag = true
             this.edit = true
           },
