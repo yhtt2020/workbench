@@ -10,8 +10,7 @@
             placeholder="搜索"
             :maxlength="10"
             allow-clear
-            v-model:value="searchValue"
-            @change="changeSearchValue">
+            v-model:value="searchValue">
                 <xt-new-icon class="absolute" icon="fluent:search-20-filled" size="20" />
             </a-input>
             <!-- <div @click="test">测试</div> -->
