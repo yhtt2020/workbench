@@ -1,162 +1,63 @@
 <template>
-  <div v-if="hide" style="position: fixed; top: 0; bottom: 0; right: 0; left: 0" @click="hideDesk"
-    @contextmenu="hideDesk"></div>
-  <!--  <div v-if="!hide" @contextmenu="showMenu" style="-->
-  <!--      display: flex;-->
-  <!--      align-items: flex-start;-->
-  <!--      flex-direction: column;-->
-  <!--      justify-content: left;-->
-  <!--      flex-grow: 1;-->
-  <!--      flex-shrink: 1;-->
-  <!--      height: 100%;-->
-  <!--      width: 100%;-->
-  <!--      margin-left: 15px;-->
-  <!--    ">-->
-  <!--    <div class="mb-2 text-left" v-if="desks.length > 1">-->
-  <!--      <HorizontalPanel @changed="this.key = Date.now()" :navList="desksList" v-model:selectType="currentDeskIndex">-->
-  <!--      </HorizontalPanel>-->
-  <!--    </div>-->
-  <!--    <div class="p-3 m-auto" v-if="this.currentDesk.cards.length === 0">-->
-  <!--      <div style="width: 100%;">-->
-  <!--        <a-result class="m-auto rounded-lg s-bg"-->
-  <!--          style="margin: auto;background: var(&#45;&#45;primary-bg);color: var(&#45;&#45;primary-text);" status="success" title="使用卡片桌面"-->
-  <!--          sub-title="您可以长按空白处、右键添加卡片。">-->
-  <!--          <template #extra>-->
-  <!--            <a-button @click="newAddCard" class="mr-10 xt-active-bg" key="console" type="primary" style="color:var(&#45;&#45;active-text)">添加第一张卡片</a-button>-->
-  <!--            <a-button key="buy" @click="learn"-->
-  <!--              style="">学习</a-button>-->
-  <!--          </template>-->
-
-  <!--          <div class="desc">-->
-  <!--            <p style="font-size: 16px">-->
-  <!--              <strong>您可以通过桌面设置调节卡片到合适的大小</strong>-->
-  <!--            </p>-->
-  <!--            <p>-->
-  <!--              <close-circle-outlined :style="{ color: 'red' }" />-->
-  <!--              从社区获得分享代码（此功能暂未上线，请耐心等待）-->
-  <!--              <a>从社区导入 &gt;</a>-->
-  <!--            </p>-->
-  <!--          </div>-->
-  <!--        </a-result>-->
-  <!--      </div>-->
-  <!--    </div>-->
-  <!--    <vue-custom-scrollbar key="scrollbar" id="scrollerBar" @contextmenu.stop="showMenu" :settings="scrollbarSettings"-->
-  <!--      style="position: relative; border-radius: 8px; width: calc(100% - 20px); height: 100%;">-->
-  <!--      <div style="-->
-  <!--          white-space: nowrap;-->
-  <!--          height: 100%;-->
-  <!--          width: 100%;-->
-  <!--          display: flex;-->
-  <!--          align-items: center;-->
-  <!--          align-content: center;-->
-  <!--        " :style="{ 'padding-top': this.cardSettings.marginTop + 'px' }"-->
-  <!--        id="cardContent">-->
-  <!--        &lt;!&ndash;      <div style="width: 43em;display: inline-block;" v-for="(grid,index) in customComponents">&ndash;&gt;-->
-  <!--        &lt;!&ndash;        <div>&ndash;&gt;-->
-  <!--        &lt;!&ndash;          <vuuri group-id="grid.id" :drag-enabled="true" v-model="grid.children" class="grid" ref="grid">&ndash;&gt;-->
-  <!--        &lt;!&ndash;          <template #item="{ item }">&ndash;&gt;-->
-  <!--        &lt;!&ndash;              <div style="display: inline-block" >&ndash;&gt;-->
-  <!--        &lt;!&ndash;                <Widget @contextmenu.stop="showMenu(item.id,{item,grid},'item')"   :item="item"&ndash;&gt;-->
-  <!--        &lt;!&ndash;                    :uniqueKey="String(item.id)"&ndash;&gt;-->
-  <!--        &lt;!&ndash;                    :showDelete="true"&ndash;&gt;-->
-  <!--        &lt;!&ndash;                    :resizable="true"&ndash;&gt;-->
-  <!--        &lt;!&ndash;            >&ndash;&gt;-->
-  <!--        &lt;!&ndash;            <component :is="item.name" :customIndex="item.id" ></component></Widget></div>&ndash;&gt;-->
-  <!--        &lt;!&ndash;          </template>&ndash;&gt;-->
-  <!--        &lt;!&ndash;          </vuuri></div></div>&ndash;&gt;-->
-  <!--        <vuuri v-if="currentDesk.cards" :get-item-margin="() => {-->
-  <!--            return cardSettings.cardMargin + 'px';-->
-  <!--          }-->
-  <!--          " group-id="grid.id" v-model="currentDesk.cards" :key="key" :style="{-->
-
-  <!--      height: '100%',-->
-  <!--      width: '100%',-->
-  <!--    }" class="grid home-widgets" ref="grid" :options="muuriOptions" :drag-enabled="true">-->
-  <!--          <template #item="{ item }">-->
-  <!--            <div  :style="{  zoom: (this.cardSettings.cardZoom / 100).toFixed(2),}">-->
-  <!--              <component :desk="currentDesk" :is="item.name" :customIndex="item.id"  :editing="editing" :customData="item.customData" @customEvent="customEvent"></component>-->
-  <!--            </div>-->
-  <!--          </template>-->
-  <!--        </vuuri>-->
-  <!--      </div>-->
-  <!--    </vue-custom-scrollbar>-->
-  <!--  </div>-->
   <div style="height: 100%">
-    <desk-group @changeDesk="changeDesk" ref="deskGroupRef" :settings="settings" :desk-list="desks"
-      v-model:currentDeskId="this.currentDeskId">
-      <template #settingsAll>
-      </template>
-      <!--      <template #empty>-->
-      <!--        <div style="width: 100%;height: 100%;" :class="notTrigger ? 'trigger' : '' " class="m-auto">-->
-      <!--          <div style="width: 100%;height: 100%">-->
-      <!--            <a-result class="m-auto rounded-lg s-bg xt-bg" style="margin: auto;width: 580px" status="success" title="使用卡片桌面"-->
-      <!--                      sub-title="您可以长按空白处、右键添加卡片。">-->
-      <!--              <template #extra>-->
-      <!--                <a-button style="color: var(&#45;&#45;active-text);" @click="newAddCard" class="mr-10 xt-active-bg" key="console"-->
-      <!--                          type="primary"><icon class="mr-1" icon="tianjia2"></icon>&nbsp;添加第一张卡片-->
-      <!--                </a-button>-->
-      <!--                <a-button class="xt-bg-2"  key="buy" @click="learn"><icon class="mr-1" icon="bofang"></icon>&nbsp;学习</a-button>-->
-      <!--                <a-button class="xt-bg-2" key="buy" @click="delDesk"><icon class="mr-1" icon="shanchu"></icon>&nbsp;删除桌面</a-button>-->
-      <!--              </template>-->
-
-      <!--              <div class="desc xt-text">-->
-      <!--                <p style="font-size: 16px">-->
-      <!--                  <strong>您可以通过桌面设置调节卡片到合适的大小</strong>-->
-      <!--                </p>-->
-      <!--                <p>-->
-      <!--                  从社区获得分享代码（此功能暂未上线，请耐心等待）-->
-      <!--                  <a>从社区导入 &gt;</a>-->
-      <!--                </p>-->
-      <!--              </div>-->
-      <!--            </a-result>-->
-      <!--          </div>-->
-      <!--        </div>-->
-      <!--      </template>-->
+    <desk-group
+      @changeDesk="changeDesk"
+      ref="deskGroupRef"
+      :settings="settings"
+      :desk-list="desks"
+      v-model:currentDeskId="this.currentDeskId"
+    >
+      <template #settingsAll> </template>
     </desk-group>
   </div>
-  <!-- <div class="fixed inset-0 p-12 home-blur" style="z-index: 999" >
-    <GradeNotice></GradeNotice>
-  </div> -->
-  <!-- 引导暂时隐藏 等后续开发 -->
-  <!-- <div class="fixed inset-0 flex items-center justify-center" style="z-index: 999" v-if="false">
-    <GuidePage></GuidePage>
-  </div> -->
-
-
   <!-- 检测到用户头像为默认头像时触发用户中心个人信息修改弹窗 -->
-  <div class="fixed inset-0 home-guide" style="z-index: 999" v-if="infoVisible === true">
-    <UpdateMyInfo :updateVisible="true"></UpdateMyInfo>
+  <div
+    class="fixed inset-0 home-guide"
+    style="z-index: 999"
+    v-if="infoVisible === true"
+  >
+    <UpdateMyInfo
+      v-if="infoVisible === true"
+      :updateVisible="true"
+    ></UpdateMyInfo>
   </div>
   <teleport to="body">
     <!-- 使用新版的配置导航 -->
-    <NewGuidePage v-if="showGuide" @closeShowGuide="closeShowGuide" :deskId="deskId"></NewGuidePage>
+    <NewGuidePage
+      v-if="showGuide"
+      @closeShowGuide="closeShowGuide"
+      :deskId="deskId"
+    ></NewGuidePage>
     <!-- <NewGuidePage v-if="showGuide" @closeShowGuide="closeShowGuide" :deskId="deskId"></NewGuidePage> -->
     <!-- 右上方的缩放推荐 -->
     <ScalePanel v-if="visibleScale" @closeScale="closeScale"></ScalePanel>
     <!-- <ScalePanel v-if="visibleScale" @closeScale="closeScale" ></ScalePanel> -->
     <!-- 仅限于web的登录提示弹窗 -->
-    <WebLogin v-if="visibleWeb" @closeWebLogin="closeWebLogin" @addWebLogin="addWebLogin"></WebLogin>
+    <WebLogin
+      v-if="visibleWeb"
+      @closeWebLogin="closeWebLogin"
+      @addWebLogin="addWebLogin"
+    ></WebLogin>
     <!-- 定制桌面流程 -->
-    <GuidePanel v-if="visibleGuide" @closeGuide="closeGuide" @addGuide="addGuide"></GuidePanel>
+    <GuidePanel
+      v-if="visibleGuide"
+      @closeGuide="closeGuide"
+      @addGuide="addGuide"
+    ></GuidePanel>
     <!-- <GuidePanel v-if="visibleGuide" @closeGuide="closeGuide" @addGuide="addGuide"></GuidePanel> -->
 
     <!-- 全屏遮罩层 -->
-    <div v-show="visibleScale || visibleGuide || visibleWeb" class="fixed top-0 bottom-0 left-0 w-full h-full cursor-not-allowed ring-0"
-      style="z-index:900;"></div>
-
-    <!-- 局部遮罩层 -->
-    <!-- <div
-      v-show="showGuide"
-      class="fixed bottom-0 left-0 w-full cursor-not-allowed ring-0"
-      style="z-index:900;background-color:rgba(255,255,255,0.1);height: 150px;"
-    ></div> -->
+    <div
+      v-show="visibleScale || visibleGuide || visibleWeb"
+      class="fixed top-0 bottom-0 left-0 w-full h-full cursor-not-allowed ring-0"
+      style="z-index: 900"
+    ></div>
   </teleport>
 
   <GalleryModal ref="galleryRef" />
 </template>
 
 <script>
-
 import { message, Modal } from "ant-design-vue";
 import { mapActions, mapWritableState } from "pinia";
 import { cardStore } from "../store/card";
@@ -166,47 +67,45 @@ import { weatherStore } from "../store/weather";
 
 import NewGuidePage from "./app/grade/NewGuidePage.vue";
 
-// import AddCard from "./app/card/AddCard.vue";
 import DeskGroup from "../components/desk/DeskGroup.vue";
-
-import Muuri from "muuri";
 import UpdateMyInfo from "../components/comp/UpdateMyInfo.vue";
 import ScalePanel from "./ScalePanel.vue";
 import GuidePanel from "./GuidePanel.vue";
 
 import WebLogin from "./WebLogin.vue";
-import GalleryModal from '../components/paperModal/GalleryModal.vue';
-import {
-  setTransparent,
-  detTransparent,
-} from "../components/card/hooks/themeSwitch";
+import GalleryModal from "../components/paperModal/GalleryModal.vue";
 import { taskStore } from "../apps/task/store";
 import navigationData from "../js/data/tableData";
 import { navStore } from "../store/nav";
 import { homeStore } from "../store/home";
 import _ from "lodash-es";
-import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
+import { replaceType } from "../components/desk/navigationBar/hook/replaceType";
 // 桌面默认数据
-import { defaultFreeLayoutStore } from './defaultFreeLayout'
+import { defaultFreeLayoutStore } from "./defaultFreeLayout";
 import { useFreeLayoutStore } from "../components/desk/freeLayout/store";
-import { mergeData } from '../ui/hooks/useDataConversion'
-import {useEnv} from '../ui/hooks/useEnv'
-let steamUser, steamSession, path, https, steamFs, LoginSession, EAuthTokenPlatformType
+import { mergeData } from "../ui/hooks/useDataConversion";
+import { useEnv } from "../ui/hooks/useEnv";
+let steamUser,
+  steamSession,
+  path,
+  https,
+  steamFs,
+  LoginSession,
+  EAuthTokenPlatformType;
 if (!useEnv("web")) {
-  steamUser= $models.steamUser
-  steamSession= $models.steamSession
-  path= $models.path
-  https= $models.https
-  steamFs= $models.steamFs
+  steamUser = $models.steamUser;
+  steamSession = $models.steamSession;
+  path = $models.path;
+  https = $models.https;
+  steamFs = $models.steamFs;
   if (steamUser && steamSession) {
-    LoginSession =  steamSession.LoginSession;
-    EAuthTokenPlatformType =  steamSession.EAuthTokenPlatformType;
-  var session = new LoginSession(EAuthTokenPlatformType.SteamClient);
-  var client = new steamUser({
-    enablePicsCache: true,
-  });
-}
-
+    LoginSession = steamSession.LoginSession;
+    EAuthTokenPlatformType = steamSession.EAuthTokenPlatformType;
+    var session = new LoginSession(EAuthTokenPlatformType.SteamClient);
+    var client = new steamUser({
+      enablePicsCache: true,
+    });
+  }
 }
 
 let List = [];
@@ -239,36 +138,7 @@ export default {
       inspectorTimer: null,
       reserveTimer: null,
       custom: false,
-      muuriOptions: {
-        layout: {
-          fillGaps: true,
-          horizontal: false,
-          alignRight: false,
-          alignBottom: false,
-          rounding: true,
-        },
-        targets: [
-          {
-            element: "#scrollerBar>div",
-          },
-        ],
-        handle: null,
-        threshold: 50,
-        safeZone: 0.2,
-        speed: Muuri.AutoScroller.smoothSpeed(1000, 2000, 2500),
-        sortDuringScroll: true,
-        smoothStop: false,
-        onStart: null,
-        onStop: null,
-        dragSortPredicate: {
-          threshold: 30,
-        },
-        dragSortHeuristics: {
-          sortInterval: 10,
-          minDragDistance: 5,
-          minBounceBackAngle: Math.PI / 2,
-        },
-      },
+
       openDesk: false,
       deskType: [
         { title: "日常桌面", name: "daily" },
@@ -295,7 +165,7 @@ export default {
       // 在页面创建的第一次触发，后面就不触发了--替换图标
       hasTriggered: 1,
       // 新建桌面id
-      deskId: '',
+      deskId: "",
     };
   },
   components: {
@@ -314,7 +184,11 @@ export default {
       "sideNavigationList",
       "footNavigationList",
       "rightNavigationList",
-      "copyFootNav", 'init', 'leftNavInit', 'rightNavInit', 'footNavInit'
+      "copyFootNav",
+      "init",
+      "leftNavInit",
+      "rightNavInit",
+      "footNavInit",
     ]),
     ...mapWritableState(cardStore, [
       "customComponents",
@@ -339,18 +213,28 @@ export default {
       "visibleGuide",
       "showGuide",
       "guideList",
-
     ]),
 
     ...mapWritableState(appStore, {
       appSettings: "settings",
     }),
     ...mapWritableState(taskStore, ["taskID", "step"]),
-    ...mapWritableState(homeStore, ["currentDeskId", "currentDeskIndex", 'currentInit']),
-    ...mapWritableState(useFreeLayoutStore, ['freeLayoutData', 'freeLayoutState']),
-    ...mapWritableState(defaultFreeLayoutStore, ['deskDefault', 'freeLayoutDataTmp', 'freeLayoutStateTmp']),
+    ...mapWritableState(homeStore, [
+      "currentDeskId",
+      "currentDeskIndex",
+      "currentInit",
+    ]),
+    ...mapWritableState(useFreeLayoutStore, [
+      "freeLayoutData",
+      "freeLayoutState",
+    ]),
+    ...mapWritableState(defaultFreeLayoutStore, [
+      "deskDefault",
+      "freeLayoutDataTmp",
+      "freeLayoutStateTmp",
+    ]),
     deskGroupRef() {
-      return this.$refs.deskGroupRef
+      return this.$refs.deskGroupRef;
     },
     desksList() {
       return this.desks.map((desk) => {
@@ -375,7 +259,7 @@ export default {
         });
         return find;
       } else {
-        this.currentDeskId = this.desks[0].id
+        this.currentDeskId = this.desks[0].id;
         return this.desks[0];
       }
     },
@@ -387,9 +271,9 @@ export default {
     let n = 0;
     let timer = setInterval(() => {
       if (n > 3) {
-        this.leftNavInit = true
-        this.rightNavInit = true
-        this.footNavInit = true
+        this.leftNavInit = true;
+        this.rightNavInit = true;
+        this.footNavInit = true;
         clearInterval(timer);
         return;
       }
@@ -400,126 +284,21 @@ export default {
     }, 2000);
     // 判断是否是第一次加载
     if (this.deskInit) {
-      this.deskInit = false
-      this.initTask()
+      this.deskInit = false;
+      this.initTask();
       // 配置向导 之后的行为
-      this.addFreeLayoutDesk()
-      if(!useEnv("web")){
-        this.visibleScale = true
-      }else{
-        this.visibleWeb = true
+      this.addFreeLayoutDesk();
+      if (!useEnv("web")) {
+        this.visibleScale = true;
+      } else {
+        this.visibleWeb = true;
       }
     }
 
-    this.$bus.on("customDesk",()=>{
-      console.log("定制桌面",this.visibleGuide);
+    this.$bus.on("customDesk", () => {
+      console.log("定制桌面", this.visibleGuide);
       this.visibleGuide = true;
-    })
-    // this.desks.splice(3,1)
-    // await session.startWithCredentials({
-    //    accountName: 'snpsly123123',
-    //    password:'xyx86170060',
-    //   // steamGuardCode:'5BCMH'
-    //  }).then((res) =>{
-    //    console.log(res)
-    //  }).catch(err=>{
-    //    console.log(err)
-    //  })
-    //  session.on('authenticated', async () => {
-    //    console.log(`Logged into Steam as ${session.accountName}`);
-    //    let webCookies = await session.getWebCookies();
-    //    if (webCookies) {
-    //      const steamLoginData = {
-    //        accessToken: session.accessToken,
-    //        refreshToken: session.refreshToken,
-    //        webCookies: webCookies
-    //      }
-    //      console.log(steamLoginData)
-    //    }
-    //  });
-    //  client.logOn({"refreshToken": 'eyAidHlwIjogIkpXVCIsICJhbGciOiAiRWREU0EiIH0.eyAiaXNzIjogInN0ZWFtIiwgInN1YiI6ICI3NjU2MTE5OTI0MzA3NjczMSIsICJhdWQiOiBbICJjbGllbnQiLCAid2ViIiwgInJlbmV3IiwgImRlcml2ZSIgXSwgImV4cCI6IDE3MDIyNTcxNTgsICJuYmYiOiAxNjc1Mjk5NTkwLCAiaWF0IjogMTY4MzkzOTU5MCwgImp0aSI6ICIxNEJCXzIyODVDQzAzXzVDNTA1IiwgIm9hdCI6IDE2ODM5Mzk1OTAsICJwZXIiOiAxLCAiaXBfc3ViamVjdCI6ICIxMTEuMy4xMS4xNzMiLCAiaXBfY29uZmlybWVyIjogIjE4NS4yMzAuMjQ1LjIxMCIgfQ.C3cpZLysxiWU6UuyfyHGYKidNiWXCkyBbr6I0LLY5qIjodrwoHPE1pWsv0NIIvU10--EUme20XCf9aQR43R9CQ'})
-    //  client.on('loggedOn', async function () {
-    //    console.log("Logged into Steam as " + client.steamID.getSteamID64());
-    //    //  console.log(client)
-    //    // const appid = 570;
-    //    // const coverUrl = `https://steamcdn-a.akamaihd.net/steam/apps/${appid}/header.jpg`;
-    //    // const cacheDir = path.join('C:\\Users\\2\\Desktop\\abc', 'pics_cache');
-    //    // if (!steamFs.existsSync(cacheDir)) {
-    //    //   steamFs.mkdirSync(cacheDir);
-    //    //   console.log(steamFs.existsSync(cacheDir))
-    //    // }
-    //    //
-    //    // const cacheFile = path.join(cacheDir, `${appid}_header.jpg`);
-    //
-    //    // const file = steamFs.createWriteStream(cacheFile);
-    //    // const request = https.get(coverUrl, (response) => {
-    //    //   response.pipe(file);
-    //    // });
-    //    // const steamid = client.steamID.getSteamID64();
-    //    // const avatarUrl = `https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/5a/5a8d6e7a7d9d7d9d7d9d7d9d7d9d7d9d7d9d7d9.jpg`;
-    //    // const avatarCacheDir = path.join('C:\\Users\\2\\Desktop\\abc', 'pics_cache', 'avatars');
-    //    //
-    //    // if (!steamFs.existsSync(avatarCacheDir)) {
-    //    //   steamFs.mkdirSync(avatarCacheDir);
-    //    // }
-    //    //
-    //    // const avatarCacheFile = path.join(avatarCacheDir, `${steamid}.jpg`);
-    //    //
-    //    // const avatarFile = steamFs.createWriteStream(avatarCacheFile);
-    //    // const avatarRequest = https.get(avatarUrl, (response) => {
-    //    //   response.pipe(avatarFile);
-    //    // });
-    //    client.setPersona(steamUser.EPersonaState.Online);
-    //
-    //    client.on('appOwnershipCached', () => {
-    //      console.log('Game ownership cached');
-    //
-    //      client.getProductInfo(client.getOwnedApps({excludeFree: false}),[],(err,data)=>{
-    //        console.log(data)
-    //     if(err) console.log(err)
-    //        Object.keys(data).forEach(i=>{
-    //           if(data[i].appinfo.common){
-    //             if(data[i].appinfo.common.type === 'Game'){
-    //               console.log(data[i],data[i].appinfo.common.oslist)
-    //               // console.log(data[i].appinfo.common.name_localized||data[i].appinfo.common.name
-    //               // )
-    //             }
-    //           }
-    //        })
-    //      })
-    //      // client.getUserOwnedApps(client.steamID.getSteamID64(),[],(err,data)=>{
-    //      //  if(err) console.log(err)
-    //      //   console.log(data)
-    //      // })
-    //    });
-    //
-    //    client.on('error', async function (err) {
-    //      console.log(err)
-    //    })
-    //
-    //  })
-    // await session.startWithCredentials({
-    //       accountName: 'snpsly123',
-    //       password:'xyx86170060',
-    //       steamGuardCode:'5BCMH'
-    //     }).then((res) =>{
-    //   console.log(res)
-    // }).catch(err=>{
-    //   console.log(err)
-    // })
-    //    session.on('authenticated', async () => {
-    //      console.log(`Logged into Steam as ${session.accountName}`);
-    //      let webCookies = await session.getWebCookies();
-    //
-    //      if (webCookies) {
-    //       const steamLoginData = {
-    //          accessToken: session.accessToken,
-    //          refreshToken: session.refreshToken,
-    //          webCookies: webCookies
-    //        }
-    //        console.log(steamLoginData)
-    //      }
-    //    });
+    });
     if (!this.moved) {
       //最早的修复
       this.desks[0].cards = this.customComponents;
@@ -536,38 +315,11 @@ export default {
       };
     }
     this.fixData();
-    // window.onresize = () => {
-    //   this.scrollbar = Date.now();
-
-    //   this.$nextTick(() => {
-    //     let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
-    //     let deskHeight = document.documentElement.clientHeight // 高
-    //     let deskWidth = document.documentElement.clientWidth // 宽
-    //     let size = {
-    //       deskWidth,
-    //       deskHeight,
-    //       cardsHeight,
-    //     }
-    //     console.log(cardsHeight)
-    //     this.setDeskSize(size)
-    //   })
-    // };
-    // this.setInitCard()
-
-    // if(this.currentDesk?.settings === 'current'){
-    //   this.cardSettings = this.currentDesk.aloneSettings
-    //   this.cardDesk = 'current'
-    // }else{
-    //   this.cardSettings = this.settings
-    //   this.cardDesk = 'all'
-    // }
-    //this.customComponents=[{name:'Music',id:2},{name:'Weather',id:3},{name:'Timer',id:4}]//重置
     if (this.customComponents.length > 0) {
       if (typeof this.customComponents[0] === "string") {
         this.customComponents = [];
       }
     }
-    //  this.hotDesk.push(this.deskList[0].children[0])
   },
   created() {
     if (this.currentDesk.cards.length) {
@@ -598,11 +350,11 @@ export default {
     /**
      * 更新布局，会自动判断布局存在与否
      */
-    updateLayout() {
-      if (this.$refs.grid) {
-        this.$refs.grid.update();
-      }
-    },
+    // updateLayout() {
+    //   if (this.$refs.grid) {
+    //     this.$refs.grid.update();
+    //   }
+    // },
     replaceType,
     learn() {
       browser.openInTable(
@@ -615,49 +367,23 @@ export default {
         navigationData.systemAppList.forEach((item) => {
           navigationList.forEach((i) => {
             if (item.event === i.event) {
-              i.type = 'systemApp'
-              i.icon = item.icon
-              i.name = item.name
-              i.value = item.event
-              i.mode = 'app'
+              i.type = "systemApp";
+              i.icon = item.icon;
+              i.name = item.name;
+              i.value = item.event;
+              i.mode = "app";
             }
-          })
+          });
         });
       }
 
-
       // return this.replaceType(navigationList)
-      return navigationList.map((item) => this.mergeData(item))
+      return navigationList.map((item) => this.mergeData(item));
     },
     mergeData,
-    setTransparent() {
-      console.log(
-        "this.appSettings.transparent :>> ",
-        this.appSettings.transparent
-      );
-      if (this.appSettings.transparent) {
-        // setWallpaperColor('none')
-        setTransparent();
-      } else {
-        detTransparent();
-      }
-      // if (this.appSettings.transparent) {
-      //   window.localStorage.setItem("transparent", JSON.stringify("true"));
-      //   document.documentElement.classList.add("transparent");
-      // } else {
-      //   window.localStorage.removeItem("transparent")
-      //   document.documentElement.classList.remove("transparent");
-      // }
-    },
-    customEvent() {
-      this.updateLayout();
-    },
-    touch(event) {
-      // if (this.editing) {
-      //   event.stopPropagation();
-      // } else {
-      // }
-    },
+    // customEvent() {
+    //   this.updateLayout();
+    // },
     runExec,
     ...mapActions(cardStore, [
       "getCurrentDesk",
@@ -675,11 +401,7 @@ export default {
     initGrids() {
       this.currentDesk.cards = this.cleanMuuriData(deskTemplate["daily"]);
     },
-    hideDesk() {
-      this.fullScreen = !this.fullScreen;
-      this.hide = !this.hide;
-      this.menuVisible = false;
-    },
+
     showAddDeskForm() {
       this.menuVisible = false;
       this.addDeskVisible = true;
@@ -754,36 +476,6 @@ export default {
         });
       }
     },
-    // delDesk() {
-    //   if (this.desks.length === 1) {
-    //     Modal.info({
-    //       content: "至少保留一个桌面",
-    //       centered: true,
-    //     });
-    //     return;
-    //   } else {
-    //     Modal.confirm({
-    //       centered: true,
-    //       content: "删除当前桌面？此操作不可还原。",
-    //       onOk: () => {
-    //         this.menuVisible = false;
-    //         this.desksList.
-    //         this.key = Date.now();
-    //       },
-    //       okText: "删除桌面",
-    //     });
-    //   }
-    // },
-    // setInitCard(){
-    //   if(this.currentDesk.showSettings){
-    //     this.cardSettings = this.currentDesk.aloneSettings
-    //     this.cardDesk = 'current'
-    //     this.cardSwitch = true
-    //   }else{
-    //     this.cardSettings = this.settings
-    //     this.cardDesk = 'all'
-    //   }
-    // },
 
     // 第一次登录默认数据
     addFreeLayoutDesk() {
@@ -791,231 +483,114 @@ export default {
         // 会有一个清除数据的过程 暂时没找到原因 先用定时器延迟执行
         setTimeout(() => {
           let deskTmp = _.cloneDeep(this.deskDefault[0]);
-          let oldId = deskTmp.id
-          let cardZoom = ((deskTmp.settings.zoom * 10) / deskTmp.deskHeight).toFixed();
+          let oldId = deskTmp.id;
+          let cardZoom = (
+            (deskTmp.settings.zoom * 10) /
+            deskTmp.deskHeight
+          ).toFixed();
           deskTmp.settings.zoom = parseInt(cardZoom);
           deskTmp.id = window.$models.nanoid.nanoid(8);
           if (this.freeLayoutStateTmp[oldId]) {
-            this.freeLayoutData[deskTmp.id] = this.freeLayoutDataTmp[oldId]
-            this.freeLayoutState[deskTmp.id] = this.freeLayoutStateTmp[oldId]
+            this.freeLayoutData[deskTmp.id] = this.freeLayoutDataTmp[oldId];
+            this.freeLayoutState[deskTmp.id] = this.freeLayoutStateTmp[oldId];
           }
-          this.desks[0] = deskTmp
-          this.currentDeskId = deskTmp.id
-          this.addApptoDesk()
-          this.currentInit = false
-        }, 2000)
+          this.desks[0] = deskTmp;
+          this.currentDeskId = deskTmp.id;
+          this.addApptoDesk();
+          this.currentInit = false;
+        }, 2000);
       }
     },
 
     // 第一次登录加载桌面应用
     async addApptoDesk() {
-      const desktopApps = await ipc.sendSync('getDeskApps')
-      let appList = []
-      desktopApps.forEach(i => {
-        if (i.ext == '.exe') {
-          appList.push(i)
+      const desktopApps = await ipc.sendSync("getDeskApps");
+      let appList = [];
+      desktopApps.forEach((i) => {
+        if (i.ext == ".exe") {
+          appList.push(i);
         }
-      })
-      let appListHandle = []
-      appList.forEach(item => {
-        const now = new Date().getTime()
+      });
+      let appListHandle = [];
+      appList.forEach((item) => {
+        const now = new Date().getTime();
         let obj = {
-          "value": item.path,
-          "icon": item.icon,
-          "name": item.name,
-          "id": now,
-          "useCount": 0,
-          "lastUseTime": "",
-          "mode": "link",
-          "type": "default",
-          "iconState": "cover",
-          "iconShape": "square",
-          "isName": true,
-          "bg": "",
-          "isBg": false,
-          "radius": 5,
-          "isRadius": true,
-        }
-        appListHandle.push(obj)
-      })
+          value: item.path,
+          icon: item.icon,
+          name: item.name,
+          id: now,
+          useCount: 0,
+          lastUseTime: "",
+          mode: "link",
+          type: "default",
+          iconState: "cover",
+          iconShape: "square",
+          isName: true,
+          bg: "",
+          isBg: false,
+          radius: 5,
+          isRadius: true,
+        };
+        appListHandle.push(obj);
+      });
       this.desks[0].cards.forEach((item, index) => {
         // 直接修改默认数据
-        if (item.id == '1702026795921') {
+        if (item.id == "1702026795921") {
           // 如果一个图标都读取不出来 则将组件换成历史上的今天
           if (appListHandle.length > 1) {
-            this.desks[0].cards[index].customData.list = appListHandle
+            this.desks[0].cards[index].customData.list = appListHandle;
           } else {
             this.desks[0].cards[index] = {
-              "name": "historyInfo",
-              "id": 1702026795921,
-              "customData": {},
-              "data": {}
-            }
+              name: "historyInfo",
+              id: 1702026795921,
+              customData: {},
+              data: {},
+            };
           }
         }
-      })
+      });
     },
     // 关闭缩放弹窗
     closeScale() {
-      this.visibleScale = false
-      this.visibleGuide = true
+      this.visibleScale = false;
+      this.visibleGuide = true;
     },
     // 关闭缩放弹窗
     closeWebLogin() {
-      this.visibleWeb = false
-      this.visibleGuide = true
+      this.visibleWeb = false;
+      this.visibleGuide = true;
     },
     // 关闭引导弹窗
     closeGuide() {
-      this.visibleGuide = false
+      this.visibleGuide = false;
     },
 
-    addWebLogin(){
-      this.visibleWeb = false
-      this.visibleGuide = true
+    addWebLogin() {
+      this.visibleWeb = false;
+      this.visibleGuide = true;
     },
 
     // 触发引导弹窗
     addGuide(deskId) {
-      this.deskId = deskId
-      this.showGuide = true
-      this.guideList = [0, 1, 2, 3, 4, 5]
+      this.deskId = deskId;
+      this.showGuide = true;
+      this.guideList = [0, 1, 2, 3, 4, 5];
     },
     // 关闭引导弹窗
     closeShowGuide() {
-      this.showGuide = false
-    },
-
-
-    showSetting() {
-      // this.setInitCard()
-      this.settingVisible = true;
-      this.menuVisible = false;
-    },
-    goPaper() {
-      // this.$router.push({ name: "my" });
-      this.$refs.galleryRef.openGalleryModal();
-    },
-    addCard() {
-      this.custom = true;
-      this.menuVisible = false;
-    },
-    newAddCard() {
-      this.$refs.deskGroupRef.addCard();
-    },
-    showMenu() {
-      this.menuVisible = true;
-    },
-    onClose() {
-      this.menuVisible = false;
-    },
-    toggleEditing() {
-      this.editing = !this.editing;
-      if (this.editing) {
-        message.info("您可以直接拖拽图标调整位置，支持跨组调整");
-      } else {
-        message.info("已关闭拖拽调整");
-      }
-      this.menuVisible = false;
-      this.key = Date.now();
-    },
-    setCustom() {
-      this.custom = false;
-    },
-
-    shareDesk() {
-      this.openDesk = true;
-      this.menuVisible = false;
-    },
-    openPerview({ scheme, showModal }) {
-      this.scheme = scheme;
-      this.showModal = showModal;
-    },
-    closePreview() {
-      this.showModal = false;
-      this.getHomeSize();
-    },
-    closeShare(val) {
-      this.openDesk = val;
-    },
-    moreDesk() {
-      this.panelIndex = 1;
-      this.visibleAdd = true;
-      this.addDeskVisible = false;
-    },
-    getHomeSize() {
-      this.$nextTick(() => {
-        let height = document.getElementById("cardContent")?.offsetHeight;
-        let width = document.getElementById("cardContent")?.offsetWidth;
-        const windowHeight = document.documentElement.clientHeight; // 高
-        let windowWidth = document.documentElement.clientWidth; // 宽
-        let size = {
-          width,
-          height,
-          windowHeight,
-          windowWidth,
-        };
-        // console.log(cardsHeight)
-        console.log(size, "输出");
-        this.setDeskSize(size);
-      });
-    },
-    switchChange(val) {
-      if (!this.currentDesk.settings) {
-        this.currentDesk.settings = {
-          cardMargin: 5,
-          cardZoom: 100,
-          marginTop: 0,
-          enableZoom: true,
-        };
-      } else {
-        this.currentDesk.settings.enableZoom = val;
-      }
-      // this.currentDesk.settings.enableZoom = val
-    },
-    closeExport(val) {
-      this.exportModal = val;
-    },
-    async importDesk() {
-      let openPath = await tsbApi.dialog.showOpenDialog({
-        title: "选择导入的代码",
-        filters: [{ name: "desk存档", extensions: ["desk"] }],
-      });
-      if (!openPath) {
-        return;
-      }
-      let importJsonTxt = require("fs").readFileSync(openPath[0], "utf-8");
-      let needImportDesk = [];
-      try {
-        needImportDesk = JSON.parse(importJsonTxt);
-        let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
-        needImportDesk.forEach((g) => {
-          let cardZoom = (
-            (g.settings.cardZoom * cardsHeight) /
-            g.cardsHeight
-          ).toFixed();
-
-          g.settings.cardZoom = parseInt(cardZoom);
-          g.nanoid = window.$models.nanoid.nanoid(8);
-          this.desks.push(g);
-        });
-        this.addDeskVisible = false;
-        message.success("为您成功导入" + needImportDesk.length + "个桌面。");
-      } catch (e) {
-        console.error(e);
-        message.error("导入失败，请检查代码。", e);
-      }
+      this.showGuide = false;
     },
   },
   watch: {
-    currentDeskIndex: {
-      handler() {
-        this.updateLayout();
-      },
-    },
+    // currentDeskIndex: {
+    //   handler() {
+    //     this.updateLayout();
+    //   },
+    // },
 
     backgroundSettings: {
       handler() {
+        console.log("2222222222 :>> ", 2222222222);
         document.body.style.setProperty(
           "--backGroundImgBlur",
           this.backgroundSettings.backGroundImgBlur + "px"
@@ -1028,13 +603,13 @@ export default {
       deep: true,
       immediate: true,
     },
-    "settings.cardMargin": {
-      handler(newValue) {
-        this.key = Date.now();
-        // //$('.muuri-item').css('margin',newValue+'px')
-        this.updateLayout();
-      },
-    },
+    // "settings.cardMargin": {
+    //   handler(newValue) {
+    //     this.key = Date.now();
+    //     // //$('.muuri-item').css('margin',newValue+'px')
+    //     this.updateLayout();
+    //   },
+    // },
     currentDesk: {
       deep: true,
       handler(val) {
@@ -1050,66 +625,12 @@ export default {
         }
       },
     },
-    cardDesk(val) {
-      //  switch (val) {
-      //   case 'all':
-      //     // this.cardDesk = 'current'
-      //     // if(this.currentDesk.settings.enableZoom){
-      //     //   this.cardDesk = 'current'
-      //     //   return message.info('当前卡片关闭后可切换')
-      //     // }
-      //     // this.cardSettings = this.settings
-      //     break;
-      //   case 'current':
-      //     if(this.currentDesk.showSettings){
-      //       this.cardSettings = this.currentDesk.settings
-      //       this.cardSwitch = true
-      //     }else{
-      //       this.cardSwitch = false
-      //     }
-      //   // this.cardSettings = this.currentDesk.aloneSettings
-      //     break;
-      // }
-      // if(this.currentDesk.aloneSettings){
-      //   this.cardSettings = this.currentDesk.aloneSettings
-      // }else{
-      //   this.cardSettings = this.settings
-      // }
-      // switch (val) {
-      //   case 'all':
-      //     console.log("a11",this.settings)
-      //     this.cardSettings = this.settings
-      //     break;
-      //   case 'current':
-      //   this.cardSettings = this.currentDesk.aloneSettings
-      //     break;
-      // }
-    },
-    // cardSettings: {
-    //   deep: true,
-    //   handler(val){
-    //     switch (this.cardDesk) {
-    //       case 'all':
-    //         this.settings = val
-    //         // console.log("this.settings",this.settings)
-    //         break;
 
-    //       case 'current':
-    //         if(this.currentDesk.showSettings)this.currentDesk.aloneSettings = val
-    //         break;
-    //   }
-    //   }
-    // }
-    // showModal: {
-    //   handler(newValue) {
-    //     this.$refs.grid.update();
-    //   },
-    // }
-  },
-  beforeUnmount() {
-    let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
-    this.lastHeight = cardsHeight;
-    // console.log("销毁组件",cardsHeight);
+    beforeUnmount() {
+      let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
+      this.lastHeight = cardsHeight;
+      // console.log("销毁组件",cardsHeight);
+    },
   },
 };
 </script>
@@ -1198,11 +719,6 @@ export default {
     padding: 0;
   }
 
-  /**
-  .muuri-item {
-  }
-  */
-
   .card {
     position: relative;
     border: 0;
@@ -1219,93 +735,4 @@ export default {
   }
 }
 </style>
-<style lang="scss">
-//@media screen and (max-height: 510px) {
-//  #scrollerBar {
-//    zoom: 0.718;
-//    width: calc(100vw + 40em);
-//  }
-//  .ant-tooltip{
-//    zoom: 0.718;
-//  }
-//}
-//@media screen and (min-height: 511px) and (max-height: 550px) {
-//  #scrollerBar {
-//    zoom: 0.78;
-//    width: calc(100vw +  24em);
-//  }
-//  .ant-tooltip{
-//    zoom: 0.78;
-//  }
-//}
-//
-//@media screen and (min-height: 551px) and (max-height: 610px) {
-//  #scrollerBar {
-//    zoom: 0.88;
-//    width: calc(100vw + 8em);
-//  }
-//  .ant-tooltip{
-//    zoom: 0.88;
-//  }
-//}
-//
-//@media screen and (min-height: 610px) and (max-height: 710px) {
-//  #scrollerBar {
-//    zoom: 1;
-//    width: calc(100vw - 9em);
-//  }
-//}
-//@media screen and (min-height: 711px) and (max-height: 810px) {
-//  #scrollerBar {
-//    zoom: 1.2;
-//    width: calc(100vw - 9em);
-//  }
-//  .ant-tooltip{
-//    zoom: 1.2;
-//  }
-//}
-//
-//@media screen and (min-height: 811px) and (max-height: 910px) {
-//  #scrollerBar {
-//    zoom: 1.4;
-//    width: calc(100vw - 9em);
-//  }
-//  .ant-tooltip{
-//    zoom: 1.4;
-//  }
-//}
-//@media screen and (min-height: 911px) and (max-height: 1020px) {
-//  #scrollerBar {
-//    zoom: 1.7;
-//    width: calc(100vw - 9em);
-//  }
-//  .ant-tooltip{
-//    zoom: 1.7;
-//  }
-//}
-//@media screen and (min-height: 1021px) and (max-height: 1220px) {
-//  #scrollerBar {
-//    zoom: 1;
-//    width: calc(100vw - 9em);
-//  }
-//
-//}
-//@media screen and (min-height: 1221px) and (max-height: 1320px) {
-//  #scrollerBar {
-//    zoom: 1.1;
-//    width: calc(100vw - 9em);
-//  }
-//  .ant-tooltip{
-//    zoom: 1.1;
-//  }
-//}
-//@media screen and (min-height: 1321px) and (max-height: 2880px) {
-//  #scrollerBar {
-//    zoom: 1.4;
-//    width: calc(100vw - 9em);
-//  }
-//  .ant-tooltip{
-//    zoom: 1.4;
-//  }
-//}
-</style>
+<style lang="scss"></style>

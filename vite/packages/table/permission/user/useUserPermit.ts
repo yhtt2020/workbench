@@ -1,12 +1,11 @@
-import { message } from "ant-design-vue";
 import cache from "../../components/card/hooks/cache";
 import { appStore } from "../../store";
 import { chatStore } from "../../store/chat";
 
 import { useEnv } from "../useEnv";
 import { getUserInfo } from "../api/login";
-import { usePermissionStore } from "../store";
 import { useLogout } from "./useLogout";
+import { setLV } from "./useUtils";
 /**
  * 获取用户信息
  */
@@ -23,14 +22,16 @@ const setUserInfo = async () => {
 export const useUpdateUserInfo = async () => {
   const userStore: any = appStore();
   let res = await getUserInfo();
+  // 旧版本用户信息处理逻辑
   setLV(res.data);
 
   let userData = res.data.data;
   // 获取头像框信息
-  let response = await userStore.getUserCard(userData.uid);
+  // let response = await userStore.getUserCard(userData.uid);
   // userData.frame = response.data.frame;
-  userStore.userInfo = userData;
-  chatStore().login();
+  // userStore.userInfo = userData;
+  // 社区登录
+  chatStore()?.login();
   return userData;
 };
 /**
@@ -38,64 +39,19 @@ export const useUpdateUserInfo = async () => {
  */
 export const useUserPermit = async () => {
   let token = cache.get("ttUserToken");
-  console.log("123333 :>> ", 123333);
+
+  // 兼容旧版本tsbApi获取token方案
+  if (!token && !useEnv("web")) {
+    let res = await window.tsbApi.user.get();
+    token = res.data.token;
+    cache.set("ttUserToken", token);
+  }
   // 有token
-  if (cache.get("ttUserToken")) {
+  if (token) {
     let res = await setUserInfo();
     return res;
   }
   // 没token
   useLogout();
   return false;
-};
-
-/**
- * 功能不详 复制来的
- */
-const gradeTableGenerate = (num) => {
-  let lvSys = {};
-  for (let i = 0; i < num + 1; i++) {
-    let arrLef = 0;
-    let arrRg = 0;
-    for (let j = 0; j < i; j++) {
-      arrLef += 10 * (j + 2);
-    }
-    for (let k = 0; k < i + 1; k++) {
-      arrRg += 10 * (k + 2);
-    }
-    arrRg -= 1;
-    lvSys[`${i}`] = [arrLef, arrRg];
-  }
-  delete lvSys["lv0"];
-  return lvSys;
-};
-
-/**
- * 功能不详 复制来的
- */
-const setLV = (args) => {
-  if (args.data.uid === -2) {
-    message.error({
-      content: "网络错误，请重试",
-      key: "net",
-    });
-  }
-  if (args.data.uid <= 0) {
-    return;
-  }
-
-  const userInfo = args.data;
-  const userStore: any = appStore();
-  let lvInfo = userStore.lvInfo;
-  lvInfo.lv = userInfo.onlineGradeExtra.lv;
-  let current = gradeTableGenerate(64)[lvInfo.lv];
-  let section = gradeTableGenerate(64)[lvInfo.lv + 1];
-  let remain = section[0] * 60 - userInfo.onlineGradeExtra.minutes;
-  lvInfo.remainHour = Math.floor(remain / 60);
-  lvInfo.remainMinute = remain - Math.floor(remain / 60) * 60;
-  lvInfo.minute = userInfo.onlineGradeExtra.minutes;
-  lvInfo.percentage =
-    ((lvInfo.minute - current[0] * 60) / ((current[1] - current[0]) * 60)) *
-    100;
-  userStore.setUser(userInfo);
 };
