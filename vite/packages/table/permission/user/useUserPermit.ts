@@ -1,4 +1,3 @@
-import { message } from "ant-design-vue";
 import cache from "../../components/card/hooks/cache";
 import { appStore } from "../../store";
 import { chatStore } from "../../store/chat";
@@ -23,14 +22,16 @@ const setUserInfo = async () => {
 export const useUpdateUserInfo = async () => {
   const userStore: any = appStore();
   let res = await getUserInfo();
+  // 旧版本用户信息处理逻辑
   setLV(res.data);
 
   let userData = res.data.data;
   // 获取头像框信息
   let response = await userStore.getUserCard(userData.uid);
   // userData.frame = response.data.frame;
-  userStore.userInfo = userData;
-  chatStore().login();
+  // userStore.userInfo = userData;
+  // 社区登录
+  chatStore()?.login();
   return userData;
 };
 /**
@@ -38,9 +39,15 @@ export const useUpdateUserInfo = async () => {
  */
 export const useUserPermit = async () => {
   let token = cache.get("ttUserToken");
-  console.log("123333 :>> ", 123333);
+
+  // 兼容旧版本tsbApi获取token方案
+  if (!token && !useEnv("web")) {
+    let res = await window.tsbApi.user.get();
+    token = res.data.token;
+    cache.set("ttUserToken", token);
+  }
   // 有token
-  if (cache.get("ttUserToken")) {
+  if (token) {
     let res = await setUserInfo();
     return res;
   }
@@ -74,12 +81,6 @@ const gradeTableGenerate = (num) => {
  * 功能不详 复制来的
  */
 const setLV = (args) => {
-  if (args.data.uid === -2) {
-    message.error({
-      content: "网络错误，请重试",
-      key: "net",
-    });
-  }
   if (args.data.uid <= 0) {
     return;
   }

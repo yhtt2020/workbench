@@ -68,7 +68,6 @@
           </div>
           <a-row :gutter="10" class="w-full">
             <a-col flex="1">
-              <!-- <xt-button size="mini" style="width: 100%" type="theme" @click="login">登录/注册账号</xt-button> -->
               <xt-button
                 size="mini"
                 style="width: 100%"
@@ -132,13 +131,11 @@ import { clipboardStore } from "../apps/clipboard/store";
 import { browserStore } from "../store/browser";
 import { controlStore } from "../components/desk/navigationBar/hook/controlStore";
 // import { chatStore } from "../store/chat";
-import navigationData from "../js/data/tableData";
 import taskStore from "../page/app/todo/stores/task";
 import cache from "../components/card/hooks/cache";
 import { offlineStore } from "../js/common/offline";
 import { useWidgetStore } from "../components/card/store";
 // import { clockStore } from '../components/widgets/clock/hooks/clockStore';
-import { usePermissionStore } from "../permission/store";
 import { useLogin } from "../permission/user/useLogin";
 export default {
   name: "Code",
@@ -226,7 +223,6 @@ export default {
       "footNavigationList",
       "rightNavigationList",
     ]),
-    ...mapWritableState(usePermissionStore, ["token"]),
     // ...mapWritableState(offlineStore, ['isOffline']),
   },
   methods: {
@@ -392,7 +388,6 @@ export default {
       await tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100); //根据设置进行缩放比的强制调整
       tsbApi.window.setSkipTaskbar(!this.settings.showInTaskBar);
       this.loginOk();
-
     },
     // 生成等级区间  应该不需要了
     gradeTableGenerate(num) {
@@ -420,6 +415,7 @@ export default {
 
     loginOk() {
       // 完成引导并登录
+      console.log('this.userInfo  :>> ', this.userInfo );
       if (this.userInfo && this.init) {
         this.enter();
         return;

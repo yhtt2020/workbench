@@ -34,7 +34,7 @@
     </div>
   </a-modal>
 
-  <Zoom />
+  <Zoom  v-if="!$useEnv('web')"/>
   <!-- 2 -->
   <xt-option-box>
     <xt-option-info
