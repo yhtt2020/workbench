@@ -28,7 +28,7 @@
                         </a-avatar>
                         <div class="user-msg">
                             <div class="username" style="color: var(--primary-text);">
-                                {{ cardData.user.nickname }}
+                                {{ cardData.user?.nickname }}
                             </div>
                             <div class="self-msg " style="color:  var(--secondary-text);">
                                 <span class="date">{{ createTime[0] }}</span>

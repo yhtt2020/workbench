@@ -205,7 +205,7 @@ export default {
         title:this.region.name,
         ifyIcon:'mdi:steam',
         titleHover:true,
-        titleHoverName:this.region.name
+        titleHoverName:'点击切换'
       }
     }
   },

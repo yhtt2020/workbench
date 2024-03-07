@@ -146,6 +146,7 @@ const currentDesk = computed(()=>{
 
 // 导航栏文件夹添加到桌面
 const addFolder = (item) => {
+  item.list = _.cloneDeep(item.list)
   let value = _.cloneDeep(item)
   currentDesk.value.cards.push({
     name: "folder",
