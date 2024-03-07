@@ -145,7 +145,7 @@ export default {
       return {
         title:this.defaultCity?.name ? this.defaultCity?.name : "天气",
         ifyIcon:'fluent:cloud-16-regular',
-        titleHoverName:this.defaultCity?.name ? this.defaultCity?.name : "天气",
+        titleHoverName:'点击切换',
         titleHover:true,
       }
     },

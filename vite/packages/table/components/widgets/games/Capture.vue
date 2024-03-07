@@ -76,7 +76,7 @@ export default {
         titleHover:true,
         title:'捕获',
         ifyIcon:'fluent:resize-video-20-regular',
-        leftHoverName:'跳转到捕获',
+        leftHoverName:'打开应用',
         leftHover:true,
         leftHoverIcon:'fluent:open-16-regular'
       },

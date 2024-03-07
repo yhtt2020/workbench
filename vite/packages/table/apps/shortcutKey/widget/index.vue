@@ -2,6 +2,7 @@
   <div>
     <xt-container
       :header="header"
+      @titleHover="openMainApp"
       v-model:customSize="customData.customSize" 
       :customData="customData" 
       :customIndex="customIndex" 
@@ -197,6 +198,8 @@ export default {
       header:{
         title:'快捷键',
         ifyIcon:"fluent:flash-16-regular",
+        titleHover:true,
+        titleHoverName:'打开应用',
       }
       // 快捷键测试数据 提交删
       // keyList: [
@@ -545,6 +548,9 @@ export default {
   methods: {
     getColor,
     ...mapActions(keyStore, ['setRecentlyUsedList']),
+    openMainApp () {
+      this.$router.push({ name: 'shortcutIndex' })
+    },
     clickItem(item){
       shortcutTools.doKey(item)
     },

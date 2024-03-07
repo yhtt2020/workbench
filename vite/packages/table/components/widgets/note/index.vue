@@ -1,5 +1,6 @@
 <template>
   <xt-container
+    @titleHover="enterNote"
     @delete="removeNote"
     v-model:customSize="customData.customSize"
     :header="header"
@@ -182,6 +183,8 @@ export default {
       return {
         title: this.customData.title,
         ifyIcon: this.icons.notepad12Regular,
+        titleHover: true,
+        titleHoverName: '打开应用',
       }
     },
     noteOptions(){
@@ -387,6 +390,15 @@ export default {
           deskName:'',
         })
       }
+    },
+
+    enterNote () {
+      this.$router.push({
+        name: 'note',
+        params: {
+          customIndex: this.customIndex,
+        },
+      })
     },
 
     updateBackground (backgroundColor,n) {

@@ -69,7 +69,13 @@
     <teleport to="body" :disabled="false">
         <Msg :modelValue="modalVisible" :title="defaultTitle.title" :text='msgText' @no="this.modalVisible = false"
             @ok="onOk"></Msg>
-        <customLink v-if="linkVisible" v-model="linkVisible" @save="saveIcon" ref="customLink"></customLink>
+        <customLink 
+            v-if="linkVisible" 
+            v-model="linkVisible" 
+            @save="saveIcon" 
+            ref="customLink" 
+            :linkLimit="{hideTab:false,hideIcon:false}">
+        </customLink>
     </teleport>
 </template>
 <script>
