@@ -388,7 +388,6 @@ export default {
       await tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100); //根据设置进行缩放比的强制调整
       tsbApi.window.setSkipTaskbar(!this.settings.showInTaskBar);
       this.loginOk();
-
     },
     // 生成等级区间  应该不需要了
     gradeTableGenerate(num) {

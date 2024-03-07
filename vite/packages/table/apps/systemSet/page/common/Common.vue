@@ -105,7 +105,7 @@ import { useWidgetStore } from "../../../../components/card/store";
 import { browserList, rightMenuList, trayList } from "./config";
 
 import ChooseScreen from "../../../../page/ChooseScreen.vue";
-// import Zoom from "./Zoom.vue";
+import Zoom from "./Zoom.vue";
 
 const router = useRouter();
 
