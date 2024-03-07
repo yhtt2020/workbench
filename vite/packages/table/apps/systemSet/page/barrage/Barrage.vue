@@ -66,6 +66,7 @@ const barrageList = [
 
 const refresh = () => {
   if (!appSettings.value.enableBarrage) {
+    window.$manager.show();
     window.$ui.confirm("当前未启用弹幕功能，需要启用后方可测试。", "", {
       okText: "启用并测试",
       type: "warning",
@@ -80,6 +81,7 @@ const refresh = () => {
       },
     });
   } else {
+    window.$manager.hidden();
     window.$manager.setOptions({
       ...appSettings.value.barrage,
     });

@@ -13,7 +13,7 @@ const router = createRouter({
   routes,
 });
 router.beforeEach(async (to, from, next) => {
-  console.log("to,from :>> ", to, from);
+  console.log("to,from :>> ", to.params, from);
   // 用户信息判断 优先级1
   let userRes = await useUserPermit();
   console.log("to.name  :>> ", to.name);
@@ -84,6 +84,7 @@ router.beforeEach(async (to, from, next) => {
   }
 });
 router.afterEach((to, from) => {
+  console.log('要跳转的路由参数params=',to.params)
   appStore().currentRoute = {
     name: to.name,
     params: to.params,
