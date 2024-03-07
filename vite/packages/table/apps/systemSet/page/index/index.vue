@@ -9,16 +9,18 @@
     <div class="flex overflow-hidden rounded-xl" style="height: 70vh">
       <!-- 左侧导航栏 -->
       <div class="flex flex-col p-3 xt-main-bg" style="width: 200px">
-        <div
-          v-for="(item, index) in navList"
-          class="flex items-center mb-3 cursor-pointer"
-          style="height: 44px; border-radius: 10px"
-          @click="selectNav(index)"
-          :class="{ 'xt-theme-bg-2': activeIndex === index }"
-        >
-          <xt-ify-icon :icon="item.icon" class="mx-3" />
-          {{ item.name }}
-        </div>
+        <template v-for="(item, index) in navList">
+          <div
+            v-if="!item.disabled"
+            class="flex items-center mb-3 cursor-pointer"
+            style="height: 44px; border-radius: 10px"
+            @click="selectNav(index)"
+            :class="{ 'xt-theme-bg-2': activeIndex === index }"
+          >
+            <xt-ify-icon :icon="item.icon" class="mx-3" />
+            {{ item.name }}
+          </div>
+        </template>
       </div>
       <!-- 右侧功能区 -->
       <div class="p-3 xt-modal h-full flex flex-col" style="width: 520px">
@@ -77,13 +79,13 @@ import {
   onMounted,
   getCurrentInstance,
 } from "vue";
-import { useGlobalStore } from "../../../global/store";
+import { useGlobalStore } from "../../../Global/store";
 import { storeToRefs } from "pinia";
 import { useFreeLayoutStore } from "../../../../components/desk/freeLayout/store";
 
 const Common = defineAsyncComponent(() => import("../common/Common.vue"));
 const Theme = defineAsyncComponent(() => import("../theme/Theme.vue"));
-const develop = defineAsyncComponent(() => import("../develop/Develop.vue"));
+const Develop = defineAsyncComponent(() => import("../develop/Develop.vue"));
 const Device = defineAsyncComponent(() => import("../device/Device.vue"));
 const Key = defineAsyncComponent(() => import("../key/Key.vue"));
 const Screen = defineAsyncComponent(() => import("../Screen/Screen.vue"));
@@ -100,7 +102,7 @@ const { isFreeLayout, getCurrentDesk }: any = storeToRefs(freeLayoutStore);
 const components = shallowReactive({
   Common,
   Theme,
-  develop,
+  Develop,
   Device,
   Key,
   Screen,
@@ -111,6 +113,7 @@ type SetItem = {
   name: string;
   icon: string;
   component: string;
+  disabled: boolean;
 };
 const navList = <SetItem[]>[
   {
@@ -131,27 +134,27 @@ const navList = <SetItem[]>[
     name: "设备设置",
     icon: "fluent:slide-settings-24-regular",
     component: "Device",
-    disabled: false,
+    disabled: proxy.$useEnv("web") ? true : false,
   },
 
   {
     name: "分屏设置",
     icon: "fluent:window-multiple-16-filled",
     component: "Screen",
-    disabled: false,
+    disabled: proxy.$useEnv("web") ? true : false,
   },
   {
     name: "弹幕设置",
     icon: "fluent:code-text-16-regular",
     component: "Barrage",
+    disabled: proxy.$useEnv("web") ? true : false,
   },
   {
     name: "按键设置",
     icon: "fluent:keyboard-16-regular",
     component: "Key",
-    disabled: false,
+    disabled: proxy.$useEnv("web") ? true : false,
   },
-
   { name: "开发模式", icon: "fluent:code-16-regular", component: "Develop" },
 ];
 

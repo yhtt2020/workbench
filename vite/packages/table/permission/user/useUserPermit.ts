@@ -30,7 +30,7 @@ export const useUpdateUserInfo = async () => {
   let response = await userStore.getUserCard(userData.uid);
   // userData.frame = response.data.frame;
   userStore.userInfo = userData;
-  chatStore().login();
+  chatStore()?.login();
   return userData;
 };
 /**
@@ -38,9 +38,15 @@ export const useUpdateUserInfo = async () => {
  */
 export const useUserPermit = async () => {
   let token = cache.get("ttUserToken");
-  console.log("123333 :>> ", 123333);
+
+  // 兼容旧版本tsbApi获取token方案
+  if (!token && !useEnv("web")) {
+    let res = await window.tsbApi.user.get();
+    token = res.data.token;
+    cache.set("ttUserToken", token);
+  }
   // 有token
-  if (cache.get("ttUserToken")) {
+  if (token) {
     let res = await setUserInfo();
     return res;
   }
