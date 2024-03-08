@@ -15,12 +15,12 @@
             size="20"
           ></xt-new-icon>
         </div>
-        <ColorPicker
+        <!-- <ColorPicker
           @change="updateBackground"
           :defaultList="colorList"
           :linearList="linearList"
           :isLinear="isLinear"
-        />
+        /> -->
       </div>
     </template>
   </div>
@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import { ref, watch, toRefs, onMounted } from "vue";
-import ColorPicker from "./components/ColorPicker.vue";
+// import ColorPicker from "./components/ColorPicker.vue";
 export interface colorProps {
   switch?: boolean;
   color?: string;
