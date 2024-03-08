@@ -1,3 +1,5 @@
+import { frameStore } from './../../store/avatarFrame';
+import { teamStore } from './../../store/team';
 import { tt } from './../../permission/global/global';
 import { isObject } from './../../TUIKit/TUICore/utils/index';
 import browser from "../../js/common/browser";
@@ -160,12 +162,21 @@ const openFixedApp = {
   myProp: () => {
     const store = useComStore();
     store.showMyProp = true;
-    console.log('store.showMyProp',store.showMyProp)
   },
   // 小队
   team: () => {
-    const store = useComStore();
+    openTeam();
+  }
+}
+
+// 打开小队判断
+const openTeam = async() => {
+  const store = useComStore();
+  const team = teamStore();
+  await team.updateMy(0)
+  if(team.status === false){
     store.showTeamTip = true;
-    console.log('store.showTeamTip',store.showTeamTip)
+  }else{
+    team.teamVisible = !team.teamVisible;
   }
 }
