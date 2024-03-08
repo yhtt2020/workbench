@@ -271,7 +271,15 @@
                             style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                             @click.stop="newOpenApp(item.type, item.value, item)">
                             <Drag :data="item" currentId="bottom" @deleteFile="deleteFile">
-                              <Team v-if="item.value === 'commun'" :item="item" :placement="'top'" :x="this.realXY.x" :y="this.realXY.y"></Team>
+                              <Team 
+                                @close="this.comVisible = false"
+                                v-if="item.value === 'commun'" 
+                                :item="item" 
+                                :placement="'top'" 
+                                :x="this.realXY.x" 
+                                :y="this.navAttribute.navSize"
+                                :visible = "this.comVisible"
+                              ></Team>
                               <FolderVue
                                 v-else-if="item.type === 'folder'"
                                 :iconList="item.children"
@@ -650,6 +658,7 @@ export default {
       skipSimple: false,
       parentHeight: 0,
       hoverTabs:false,
+      comVisible:false,
     }
   },
   props: {
@@ -878,7 +887,7 @@ export default {
     realXY() {
       return {
         x: this.left,
-        y: this.parentHeight - this.navAttribute.navSize / 100 * 100 - 175
+        y: this.parentHeight - this.navAttribute.navSize / 100 * 100 - 145
       }
     }
   },
@@ -1225,6 +1234,10 @@ export default {
         this.controlVisible = true
         return
       }
+      if(value === 'commun'){
+        this.comVisible = !this.comVisible
+        return
+      }
       // 新版设置打开方式
       if (value === 'setting') {
           this.$bus.emit("openSystemSet")
@@ -1253,6 +1266,7 @@ export default {
       }
       type !== 'folder' ? this.folderVisible = false : ''
       this.controlVisible = false;
+      this.comVisible = false
     },
     completeEdit() {
       this.toggleEdit()

@@ -1,8 +1,10 @@
+import { tt } from './../../permission/global/global';
 import { isObject } from './../../TUIKit/TUICore/utils/index';
 import browser from "../../js/common/browser";
 import { appStore } from "../../store";
 import { taskStore } from "../../apps/task/store";
 import { favoStore } from "../../apps/favorites/store";
+import { useComStore } from '../../components/bottomPanel/comStore';
 import cp from "child_process";
 import fs from "fs";
 async function runApp(uri) {
@@ -58,6 +60,9 @@ export const startApp =async  (type, value, router?) => {
     console.warn("startApp :>> type or value 不能为空");
   }
   switch (type) {
+    case "fixed":
+      openFixedApp[value]();
+      break;
     // 默认浏览器
     case "default":
       browser.openInSystem(value);
@@ -112,25 +117,55 @@ export const startApp =async  (type, value, router?) => {
   return true
 };
 
+
+// 打开特殊系统应用，无需要通过路由打开的图标
 export const openSysApp = (value, router) => {
   const useAppStore: any = appStore();
   const useTakeStore = taskStore();
   const usefavoStore = favoStore();
+  // 全屏
   if (value === "fullscreen") {
     useAppStore.toggleFullScreen();
   } else if (value === "task") {
+    // 任务
     useTakeStore.isTaskDrawer = true;
     useTakeStore.smallMize = true;
   } else if (value === "commun") {
+    // 社区中心
     return;
   }else if(value === "favorites"){
+    // 收藏夹
     usefavoStore.isFavorites = true
     return;
   } else if(value === "control"){
+    // 控制中心
     return;
   } else if(value === "setting"){
+    // 设置
     return;
   } else {
+    // 通过路由打开
     router.push({ name: value });
   }
 };
+
+
+// 打开固定应用
+const openFixedApp = {
+  // 系统设置
+  systemSet: () => {
+    window.tt.user.systemSet();
+  },
+  // 我的道具
+  myProp: () => {
+    const store = useComStore();
+    store.showMyProp = true;
+    console.log('store.showMyProp',store.showMyProp)
+  },
+  // 小队
+  team: () => {
+    const store = useComStore();
+    store.showTeamTip = true;
+    console.log('store.showTeamTip',store.showTeamTip)
+  }
+}

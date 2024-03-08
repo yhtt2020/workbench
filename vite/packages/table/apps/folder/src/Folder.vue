@@ -184,6 +184,8 @@ const props = defineProps({
       hierarchy: false,
       // 点击文件夹外部关闭
       close: Boolean,
+      // 禁用头部
+      disableHeader: false,
     }),
   },
   // 自动设置大小
@@ -205,6 +207,7 @@ const emit = defineEmits([
 const refreshState = ref(false);
 const header = computed(() => {
   return {
+    // disabled: navBar.value.disableHeader,
     showIcon: customData.value.icon,
     title: customData.value.name,
     // refresh: {
@@ -213,13 +216,22 @@ const header = computed(() => {
     //   state: refreshState.value,
     //   fn: refreshDeskApp,
     // },
-    leftHover: true,
+    leftHover: !navBar.value.disableHeader,  // 当为社区图标时，隐藏hover功能
     leftHoverName: secondary.value ? "编辑文件夹" : "点击打开",
     leftHoverIcon: secondary.value
       ? "fluent:settings-16-regular"
       : "fluent:open-16-regular",
     //
-    rightIcon: [
+    rightIcon: rightIcons.value,
+  };
+});
+
+// 处理社区中心图标隐藏部分功能，社区中心图标不显示右侧图标
+const rightIcons = computed(() => {
+  if(navBar.value.disableHeader){
+    return []
+  } else {
+    return [
       {
         ifyIcon: "fluent:open-16-regular",
         tip: "打开全部",
@@ -233,9 +245,9 @@ const header = computed(() => {
         ifyIcon: layout.value,
         fn: layoutClick,
       },
-    ],
-  };
-});
+    ]
+  }
+})
 // 打开所有文件
 const openAllFile = () => {
   if (customData.value.list.length > 10) {
