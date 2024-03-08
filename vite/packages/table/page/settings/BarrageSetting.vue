@@ -39,6 +39,7 @@ import { appStore } from '../../store'
 import { mapWritableState } from 'pinia'
 import { message, Modal } from 'ant-design-vue'
 import {completeTask} from '../../apps/task/task'
+
 export default {
   name: 'BarrageSetting',
   computed: {
@@ -76,10 +77,16 @@ export default {
     start() {
       completeTask('M0204',()=>{
         this.$bus.emit('closeSystemSet');
-      })
+      });
+      if(this.settings.enableBarrage){
+        window.$manager.test();
+        window.$manager.show();
+      }
+      else {
+        window.$manager.hidden();
+      }
     }
-
-  }
+  },
 }
 </script>
 

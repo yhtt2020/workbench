@@ -50,7 +50,7 @@
 import { storeToRefs } from "pinia";
 import { appStore as useAppStore } from "../../../../store";
 import { message } from "ant-design-vue";
-import { watch,getCurrentInstance } from 'vue';
+import { watch,getCurrentInstance,watchEffect, computed } from 'vue';
 import { completeTask } from '../../../task/task';
 
 const appStore: any = useAppStore();
@@ -95,9 +95,15 @@ const refresh = () => {
 };
 
 watch(()=>appSettings.value.enableBarrage,(newV)=>{
+  if(newV){
+    window.$manager.test();
+    window.$manager.show();
+  }
+  else {
+    window.$manager.hidden();
+  }
   completeTask("M0204",()=>{ proxy.$bus.emit('closeSystemSet');});
 })
-
 </script>
 
 <style lang="scss" scoped></style>
