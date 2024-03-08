@@ -9,27 +9,43 @@
     <div class="flex overflow-hidden rounded-xl" style="height: 70vh">
       <!-- 左侧导航栏 -->
       <div class="flex flex-col p-3 xt-main-bg" style="width: 200px">
-        <div
-          v-for="(item, index) in setList"
-          class="flex items-center mb-3 cursor-pointer"
-          style="height: 44px; border-radius: 10px"
-          @click="selectSet(index)"
-          :class="{ 'xt-theme-bg-2': activeIndex === index }"
-        >
-          <xt-ify-icon :icon="item.icon" class="mx-3" />
-          {{ item.name }}
-        </div>
+        <template v-for="(item, index) in navList">
+          <div
+            v-if="!item.disabled"
+            class="flex items-center mb-3 cursor-pointer"
+            style="height: 44px; border-radius: 10px"
+            @click="selectNav(index)"
+            :class="{ 'xt-theme-bg-2': activeIndex === index }"
+          >
+            <xt-ify-icon :icon="item.icon" class="mx-3" />
+            {{ item.name }}
+          </div>
+        </template>
       </div>
       <!-- 右侧功能区 -->
       <div class="p-3 xt-modal h-full flex flex-col" style="width: 520px">
         <!-- 头部 -->
-        <div class="flex justify-between items-center mb-3">
-          <div class="flex items-center">
-            <xt-ify-icon :icon="setList[activeIndex].icon" class="mr-3" />
-            {{ setList[activeIndex].name }}
+        <div class="flex items-center mb-3 w-full">
+          <div
+            class="flex justify-center w-full"
+            v-if="navList[activeIndex].component == 'Desk'"
+          >
+            <xt-tab
+              style="height: 34px; width: 300px"
+              boxClass="p-1 xt-bg-2"
+              :boxStyle="{ 'border-radius': '10px' }"
+              :itemStyle="{ 'border-radius': '6px' }"
+              v-model="deskTab"
+              :list="settingsTab"
+            />
+          </div>
+          <div v-else class="flex items-center">
+            <xt-ify-icon :icon="navList[activeIndex].icon" class="mr-3" />
+            {{ navList[activeIndex].name }}
           </div>
           <xt-button
-            @click="closeSet"
+            class="absolute right-3"
+            @click="closeNav"
             icon="fluent:dismiss-16-regular"
             w="32"
             h="32"
@@ -42,10 +58,13 @@
           :x="false"
           :y="true"
         >
-          <component
-            :is="components[setList[activeIndex].component]"
-            @switchNav="switchNav"
-          />
+          <KeepAlive>
+            <Component
+              :is="components[navList[activeIndex].component]"
+              :deskTab="deskTab"
+              @switchNav="switchNav"
+            />
+          </KeepAlive>
         </xt-scrollbar>
       </div>
     </div>
@@ -53,77 +72,124 @@
 </template>
 
 <script setup lang="ts">
-import { ref, shallowReactive } from "vue";
-import Common from "../common/Common.vue";
-import Theme from "../theme/Theme.vue";
-import develop from "../develop/Develop.vue";
-import device from "../device/Device.vue";
-import key from "../key/Key.vue";
-import Screen from "../Screen/Screen.vue";
-import barrage from "../barrage/Barrage.vue";
-import { useGlobalStore } from "../../../global/store";
+import {
+  ref,
+  shallowReactive,
+  defineAsyncComponent,
+  onMounted,
+  getCurrentInstance,
+} from "vue";
+import { useGlobalStore } from "../../../Global/store";
 import { storeToRefs } from "pinia";
+import { useFreeLayoutStore } from "../../../../components/desk/freeLayout/store";
+
+const Common = defineAsyncComponent(() => import("../common/Common.vue"));
+const Theme = defineAsyncComponent(() => import("../theme/Theme.vue"));
+const Develop = defineAsyncComponent(() => import("../develop/Develop.vue"));
+const Device = defineAsyncComponent(() => import("../device/Device.vue"));
+const Key = defineAsyncComponent(() => import("../key/Key.vue"));
+const Screen = defineAsyncComponent(() => import("../Screen/Screen.vue"));
+const Barrage = defineAsyncComponent(() => import("../barrage/Barrage.vue"));
+const Desk = defineAsyncComponent(() => import("../desk/Desk.vue"));
+
+const { proxy }: any = getCurrentInstance();
+
 const globalStore = useGlobalStore();
 const { systemVisible } = storeToRefs(globalStore);
+const freeLayoutStore = useFreeLayoutStore();
+const { isFreeLayout, getCurrentDesk }: any = storeToRefs(freeLayoutStore);
+
 const components = shallowReactive({
   Common,
   Theme,
-  develop,
-  device,
-  key,
+  Develop,
+  Device,
+  Key,
   Screen,
-  barrage,
+  Barrage,
+  Desk,
 });
 type SetItem = {
   name: string;
   icon: string;
   component: string;
+  disabled: boolean;
 };
-const setList = ref<SetItem[]>([
+const navList = <SetItem[]>[
   {
     name: "通用设置",
     icon: "fluent:settings-16-regular",
     component: "Common",
+    disabled: false,
   },
 
   { name: "主题外观", icon: "fluent:color-24-regular", component: "Theme" },
   {
+    name: "桌面设置",
+    icon: "fluent:desktop-16-regular",
+    component: "Desk",
+    disabled: false,
+  },
+  {
     name: "设备设置",
     icon: "fluent:slide-settings-24-regular",
-    component: "device",
+    component: "Device",
+    disabled: proxy.$useEnv("web") ? true : false,
   },
+
   {
     name: "分屏设置",
     icon: "fluent:window-multiple-16-filled",
     component: "Screen",
+    disabled: proxy.$useEnv("web") ? true : false,
   },
   {
     name: "弹幕设置",
     icon: "fluent:code-text-16-regular",
-    component: "barrage",
+    component: "Barrage",
+    disabled: proxy.$useEnv("web") ? true : false,
   },
-  { name: "按键设置", icon: "fluent:keyboard-16-regular", component: "key" },
-  { name: "开发模式", icon: "fluent:code-16-regular", component: "develop" },
-]);
+  {
+    name: "按键设置",
+    icon: "fluent:keyboard-16-regular",
+    component: "Key",
+    disabled: proxy.$useEnv("web") ? true : false,
+  },
+  { name: "开发模式", icon: "fluent:code-16-regular", component: "Develop" },
+];
+
+const deskTab = ref("all");
+const settingsTab = [
+  { name: "通用设置", value: "all" },
+  { name: "当前桌面", value: "current" },
+];
 
 const emits = defineEmits(["close"]);
 
 // 关闭设置
-const closeSet = () => {
-  // emits("close", false);
+const closeNav = () => {
   systemVisible.value = false;
-  console.log("关闭设置");
 };
-// 选择设置
+
+// 选择导航
 const activeIndex = ref(0);
-const selectSet = (index: number) => {
+const selectNav = (index: number) => {
   activeIndex.value = index;
 };
 
 const switchNav = (nav: string) => {
-  let res = setList.value.findIndex((item) => item.component === nav);
-  selectSet(res);
+  let res = navList.findIndex((item) => item.component === nav);
+  selectNav(res);
 };
+
+onMounted(() => {
+  if (isFreeLayout.value || getCurrentDesk.value.settings.enableZoom) {
+    deskTab.value = "current";
+  }
+  proxy.$bus.on("selectSystemNav", (id) => {
+    selectNav(id);
+  });
+});
 </script>
 
 <style lang="scss" scoped>

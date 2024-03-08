@@ -229,6 +229,11 @@ export default {
     }
     // 图标整体替换格式方法
     this.copyFootNav = this.copyFootNav.map((item) => this.mergeData(item))
+    if(window.$useEnv(['guest'])){
+      this.copyFootNav = this.copyFootNav.filter(item=>{
+        return item.event != "commun"
+      })
+    }
     this.bottomInit = true
     //对id进行强制修复
     this.copyFootNav.forEach(item => {

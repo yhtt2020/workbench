@@ -77,7 +77,7 @@ const enableNotice = () =>{
 
 
 const clearAll = () =>{
-  notice.clear(top.value.type)
+  notice.clear()
   message.success('已为您清空本地消息（不包含推送等网络消息）')
 }
 
@@ -131,6 +131,10 @@ const leftList = ref([
       // 游客模式下不能打开编辑窗
       if(window.$useEnv('guest')){
         loginVisible.value = true
+      }
+      else {
+        close();
+        editorRef.value.openEditorModal();
       }
     }
   },

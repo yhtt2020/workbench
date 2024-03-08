@@ -6,7 +6,7 @@ const toast = useToast({
 })
 
 let lastToastTime = 0;
-const toastInterval = 5000; 
+const toastInterval = 5000;
 
 export const ctrlTip = () => {
     const currentTime = Date.now();

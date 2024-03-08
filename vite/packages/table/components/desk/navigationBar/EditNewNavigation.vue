@@ -69,10 +69,17 @@
     <teleport to="body" :disabled="false">
         <Msg :modelValue="modalVisible" :title="defaultTitle.title" :text='msgText' @no="this.modalVisible = false"
             @ok="onOk"></Msg>
-        <customLink v-if="linkVisible" v-model="linkVisible" @save="saveIcon" ref="customLink"></customLink>
+        <customLink 
+            v-if="linkVisible" 
+            v-model="linkVisible" 
+            @save="saveIcon" 
+            ref="customLink" 
+            :linkLimit="{hideTab:false,hideIcon:false}">
+        </customLink>
     </teleport>
 </template>
 <script>
+import { defineAsyncComponent} from 'vue'
 import {cardStore} from '../../../store/card'
 import { homeStore } from '../../../store/home'
 import { useNavigationStore } from './navigationStore'
@@ -87,7 +94,8 @@ import { addIconPosition } from './index'
 import Sortable from 'sortablejs'
 import { message } from 'ant-design-vue'
 import Msg from '../../../ui/new/msg/index.vue'
-import customLink from './components/CustomLink.vue'
+// import customLink from './components/CustomLink.vue'
+const customLink = defineAsyncComponent(() => import('./components/CustomLink.vue'))
 import {useEnv} from '../../../ui/hooks/useEnv'
 import {replaceIcon} from './hook/useReplace'
 let appModel
@@ -246,15 +254,15 @@ export default {
     },
     methods: {
         ...mapActions(navStore, [
-            'setFootNavigationList', 
-            'sortFootNavigationList', 
-            'removeFootNavigationList', 
-            'setSideNavigationList', 
-            'sortSideNavigationList', 
-            'removeSideNavigationList', 
-            'setRightNavigationList', 
-            'sortRightNavigationList', 
-            'removeRightNavigationList', 
+            'setFootNavigationList',
+            'sortFootNavigationList',
+            'removeFootNavigationList',
+            'setSideNavigationList',
+            'sortSideNavigationList',
+            'removeSideNavigationList',
+            'setRightNavigationList',
+            'sortRightNavigationList',
+            'removeRightNavigationList',
             'setNavigationToggle']),
         replaceIcon,
         onSelect(index) {

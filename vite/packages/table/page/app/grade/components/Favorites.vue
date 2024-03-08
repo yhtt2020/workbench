@@ -66,7 +66,7 @@ export default {
   }
   .select-bg{
     border: 1px solid red;
-    background: rgba(80,139,254,0.20);
+    background: rgba(80,139,254,0.20) !important;
     border: 1px solid rgba(80,139,254,1);
     // border-radius: 10px;
   }

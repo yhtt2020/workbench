@@ -130,18 +130,19 @@ export default {
   methods: {
     ...mapActions(courierStore,['clearDb']),
     clear(){
-      Modal.confirm({
-        centered:true,
-        content:'是否清空全部的数据？此操作不可恢复。清空后仍可通过刷新重新获取订单。',
-        onOk:async () => {
-          let rs = await this.clearDb()
+      window.$ui.confirm('是否清空全部的数据？此操作不可恢复。清空后仍可通过刷新重新获取订单。','',{
+        ok: async ()=>{
+          let rs = await this.clearDb();
           if (rs) {
             message.success('清空数据成功。')
           } else {
             message.error('清空失败。')
           }
-        }
-      })
+        },
+        no: () => {},
+        type:'warning',
+        noText:'取消',
+      });
     },
     // 关联京东
     bindJd() {

@@ -176,7 +176,7 @@
               <shop-outlined/>
             </xt-button>
             <!--                <div class="pointer s-item h-10 w-10 flex justify-center items-center rounded-lg ml-4" @click="deleteGame"><Icon style=""   icon="delete"></Icon></div>-->
-            <Menu :menus="gameMenus">
+            <Menu model="click" :menus="gameMenus">
               <xt-button :w="40" :h="40">
                 <more-outlined/>
               </xt-button>
@@ -261,6 +261,7 @@ import Menu from '../../ui/components/Menu/index.vue'
 import XtButton from '../../ui/libs/Button/index.vue'
 import { MoreOutlined, ShopOutlined } from '@ant-design/icons-vue'
 import ShareToChat from '../../ui/chat/ShareToChat.vue'
+import {useGlobalStore} from '../../apps/Global/store'
 
 import { completeTask } from '../../apps/task/task'
 import { getHide, isHide } from './game'
@@ -345,6 +346,7 @@ export default {
   computed: {
     ...mapWritableState(steamUserStore, ['steamGameList', 'localGameList', 'runningGame', 'showTime', 'deskList', 'hideGames']),
     ...mapWritableState(appStore, ['fullScreen']),
+    ...mapWritableState(useGlobalStore, ['loginVisible']),
     ...mapWritableState(steamUserStore, {
       gameSettings: 'settings'
     }),
@@ -395,9 +397,7 @@ export default {
       }else{
         window.$ui.confirm("登录提示", '目前处于游客模式，请登录后体验完整功能。', {
           ok: () => {
-            tsbApi.user.login((data) => {
-              this.getUserInfo()
-            })
+            this.loginVisible = true
           },
           okText: "立即登录",
           noText: "暂不登录",

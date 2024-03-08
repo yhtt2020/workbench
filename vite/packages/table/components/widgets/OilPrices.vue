@@ -1,6 +1,7 @@
 <template>
   <div>
     <xt-container 
+      @titleHover="settingVisible = true"
       :header="header"
       v-model:customSize="customData.customSize"
       :options="options" 
@@ -117,7 +118,9 @@ export default {
       ],
       header: {
         title: '今日油价',
-        ifyIcon:'fluent:gas-pump-24-regular'
+        ifyIcon:'fluent:gas-pump-24-regular',
+        titleHover: true,
+        titleHoverName: '点击切换',
       },
       customSize: '2x4',
       currentIndex: 0,

@@ -266,57 +266,17 @@ export function formatTimestamp (timestamp, type) {
 
 }
 
-export function formatTime(dateTimeStamp){
-
-  const minute = 1000 * 60;
-  const hour = minute * 60;
-  const day = hour * 24;
-  const week = day * 7;
-  const now = new Date().getTime();
-  const diffValue = now - dateTimeStamp;
-  let result = '';
-
-  if (diffValue < 0) {
-   return;
-  }
-
-  const minC = diffValue / minute;
-  const hourC = diffValue / hour;
-  const dayC = diffValue / day;
-  const weekC = diffValue / week;
-
-  if (weekC >= 1 && weekC <= 4) {
-
-    result = ` ${parseInt(`${weekC}`, 10)}周前`;
-
-  }else if (dayC >= 1 && dayC <= 6){
-
-    result = ` ${parseInt(`${dayC}`, 10)}天前`;
-
-  }else if (hourC >= 1 && hourC <= 23){
-
-    result = ` ${parseInt(`${hourC}`, 10)}小时前`;
-
-  }else if (minC >= 1 && minC <= 59){
-
-    result = ` ${parseInt(`${minC}`, 10)}分钟前`;
-
-  }else if (diffValue >= 0 && diffValue <= minute){
-
-    result = '刚刚';
-
-  }else{
-
-    const datetime = new Date();
-    datetime.setTime(dateTimeStamp);
-    const Nyear = datetime.getFullYear();
-    const Nmonth = datetime.getMonth() + 1 < 10 ? `0${datetime.getMonth() + 1}` : datetime.getMonth() + 1;
-    const Ndate = datetime.getDate() < 10 ? `0${datetime.getDate()}` : datetime.getDate();
-     result = `${Nyear}-${Nmonth}-${Ndate}`;
-
-  }
-
-  return result;
-
+export function formatTime(dateTimeStamp:any){
+  const currentTime:any = new Date();
+  const dateStr = new Date(dateTimeStamp * 1000);
+  const seconds = Math.floor((currentTime.getTime() - dateStr) / 1000);
+  const interval = Math.floor(seconds / 31536000);
+  if (interval > 1) return dateStr.toLocaleString();
+  if (interval === 1)  return dateStr.toLocaleDateString();
+  if (seconds < 60) return "刚刚";
+  if (seconds < 3600) return Math.floor(seconds / 60) + " 分钟前";
+  if (seconds < 86400) return Math.floor(seconds / 3600) + " 小时前";
+  if (seconds < 604800)  return Math.floor(seconds / 86400) + " 天前";
+  if (seconds < 2419200) return Math.floor(seconds / 604800) + " 周前";
 }
 

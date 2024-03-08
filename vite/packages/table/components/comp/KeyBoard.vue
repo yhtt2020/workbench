@@ -14,10 +14,11 @@
             <div class="key-box mt-6">
               <div v-for="(item, index) in modifierKeyOne"
                    :key="item"
-                   :style="{backgroundColor:item.color}"
                    :class="[item.checked ? 'xt-active-btn':'', item.isGray ? 'text-gray':'']"
                    @click="onKeyDown(item, index, 'modifierKeyOne', true)"
-                   class="key-item pointer no-drag">
+                   class="key-item pointer no-drag"
+                   :style="{backgroundColor:item.color}"
+                   >
                 {{ item.key }}
               </div>
             </div>
@@ -25,12 +26,11 @@
           <div class="mt-10">
             <div class="box-foot action-panel" style="height:300px"  >
               <div class="line-title text-center ">按键确认</div>
-              <div class="active flex flex-wrap" style="height:120px;">
+              <div class="active flex flex-wrap" style="height:120px;gap:10px">
 
-                <div v-for="(item, index) in keyContent.keyArr" class="flex items-center" :key="item">
+                <div v-for="(item, index) in keyContent.keyArr" class="flex items-center  "  :key="item">
                   <!-- :style="item.field === 'keyList[0]' || item.field === 'keyList[1]' ? 'width:44px' : 'padding:0 10px;'" -->
                   <div class="key-item" style="min-width:44px;padding:0 10px;">{{ item.key }}</div>
-                  <span class="mx-3" v-if="keyContent.keyArr.length != (index + 1)">+</span>
                 </div>
               </div>
               <div class="btn-box">
@@ -46,6 +46,7 @@
                  :key="item"
                  :class="item.checked ? 'xt-active-btn':'' "
                  @click="onKeyDown(item, index, 'keyList[0]')"
+                 :style="{fontSize:item.size?item.size+'px':''}"
                  class="key-item w-11 pointer no-drag">
               {{ item.key }}
             </div>
@@ -56,6 +57,7 @@
                  :key="item"
                  :class="item.checked ? 'xt-active-btn':'' "
                  @click="onKeyDown(item, index, 'keyList[1]')"
+                 :style="{fontSize:item.size?item.size+'px':''}"
                  class="key-item w-11 pointer no-drag">
               {{ item.key }}
             </div>
@@ -65,6 +67,7 @@
                  :key="item"
                  :class="item.checked ? 'xt-active-btn':'' "
                  @click="onKeyDown(item, index, 'keyList[2]')"
+                 :style="{fontSize:item.size?item.size+'px':''}"
                  class="key-item px-3 pointer no-drag">
               {{ item.key }}
             </div>
@@ -109,7 +112,7 @@ export default {
         {
           key: 'Ctrl',
           // color:'rgb(255, 108, 97)',
-          checked: false,  
+          checked: false,
           isGray: false,
         },
         {
@@ -283,6 +286,7 @@ export default {
           {
             key: 'Home',
             checked: false,
+            size: '14'
           },
           {
             key: 'End',
@@ -291,18 +295,22 @@ export default {
           {
             key: 'PgUp',
             checked: false,
+            size: '14'
           },
           {
             key: 'PgDn',
             checked: false,
+            size: '14'
           },
           {
             key: 'Pause',
             checked: false,
+            size: '14'
           },
           {
             key: 'Insert',
             checked: false,
+            size: '14'
           },
           {
             key: 'Del',
@@ -311,14 +319,17 @@ export default {
           {
             key: 'PrtSc',
             checked: false,
+            size: '14'
           },
           {
             key: 'NLock',
             checked: false,
+            size: '14'
           },
           {
             key: 'CLock',
             checked: false,
+            size: '14'
           },
           {
             key: 'Left',
@@ -331,10 +342,12 @@ export default {
           {
             key: 'Right',
             checked: false,
+            size: '14'
           },
           {
             key: 'Down',
             checked: false,
+            size: '14'
           },
           {
             key: 'Fn',
@@ -347,6 +360,7 @@ export default {
           {
             key: 'Enter',
             checked: false,
+            size: '14'
           }
         ],
         [
@@ -455,6 +469,7 @@ export default {
           {
             key: 'Space',
             checked: false,
+            size: '14'
           },
         ],
         [
@@ -606,7 +621,7 @@ export default {
 
       // 快捷键存入
       let rs = ipc.sendSync('setKeyMap', {key: this.$props?.type, shortcut: keyCut})
-    
+
       // 成功后将数据存入store
       if (rs) {
         this.$props.refreshKeys()

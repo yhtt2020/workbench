@@ -163,52 +163,12 @@
               left: 50%;
             "
           >
-            <loading-outlined />
+            <LoadingOutlined />
           </div>
         </div>
       </vue-custom-scrollbar>
     </Drop>
   </div>
-  <!-- 桌面设置 -->
-  <xt-modal
-    v-if="settingVisible"
-    v-model="settingVisible"
-    :footer="false"
-    boxClass="p-4 pb-0"
-    :mask="0"
-  >
-    <template #header-center>
-      <xt-tab
-        v-if="settingVisible"
-        style="height: 34px; width: 300px"
-        boxClass="p-1 xt-bg-2"
-        :boxStyle="{ 'border-radius': '10px' }"
-        :itemStyle="{ 'border-radius': '6px' }"
-        v-model="currentSettingTab"
-        :list="settingsTab"
-      ></xt-tab>
-    </template>
-    <div style="height: calc(66vh); width: 452px">
-      <!-- 当前桌面设置 -->
-      <template v-if="currentSettingTab === 'current' && currentDesk.settings">
-        <CurrentDesk :fixedSettings="settings" :currentDesk="currentDesk" />
-        <FreeLayoutState
-          v-if="$route.path == '/main' && freeLayout"
-          @scrollbarRedirect="freeLayoutScrollbarRedirect"
-          @scrollbarUpdate="freeLayoutScrollbarUpdate"
-          :id="currentDesk.id"
-        ></FreeLayoutState>
-      </template>
-      <!-- 全局桌面设置 -->
-      <template v-else>
-        <GlobalDesk
-          :globalSettings="globalSettings"
-          :fixedFloat="settings.enableZoom"
-          :freeFloat="isFreeLayout"
-        />
-      </template>
-    </div>
-  </xt-modal>
   <!-- 添加小组件 -->
   <transition name="fade">
     <div
@@ -224,6 +184,7 @@
       v-if="addCardVisible"
     >
       <NewAddCard
+        v-if="addCardVisible"
         @close="hideAddCard"
         @addSuccess="hideAddCard"
         :desk="currentDesk"
@@ -236,18 +197,18 @@
     </div>
   </transition>
   <!-- 添加图标 -->
-  <AddIcon @close="iconHide" v-if="iconVisible" :desk="currentDesk"></AddIcon>
-  <GalleryModal ref="galleryRef" />
   <EditNewNavigation
     v-if="editVisible"
     @setQuick="editVisible = false"
     @addIcon="addIcon"
   ></EditNewNavigation>
+  <GalleryModal ref="galleryRef" />
 </template>
 
 <script>
 // 挂载组件请到下面文件
 import componentsMinis from "./components.ts";
+import { LoadingOutlined } from "@ant-design/icons-vue";
 import menuMinis from "./menus.ts";
 import { useNavigationStore } from "./navigationBar/navigationStore";
 import { navStore } from "../../store/nav";
@@ -262,13 +223,10 @@ import { useFloatMenuStore } from "./floatMenu/store";
 import EditNewNavigation from "./navigationBar/EditNewNavigation.vue";
 import _ from "lodash-es";
 import { registerFolder } from "../../apps/folder/src/hooks/register";
-import { LoadingOutlined } from "@ant-design/icons-vue";
 import GalleryModal from "../paperModal/GalleryModal.vue";
 import { useAddCard } from "../../ui/hooks/useAddCard";
 import { useDeskStore } from "./store";
-import { useCustomLayout } from "./freeLayout/useCustomLayout";
 import { useFileConversionIcon } from "../../apps/folder/src/hooks/useDataConversion";
-import { headerData, mainData, folderData } from "./freeLayout/config";
 import { taskStore } from "../../../table/apps/task/store";
 
 import Drop from "./Drop.vue";
@@ -276,7 +234,7 @@ export default {
   name: "Desk",
   emits: ["changeEditing"],
   mixins: [componentsMinis, menuMinis],
-  components: { LoadingOutlined, EditNewNavigation, GalleryModal, Drop },
+  components: { EditNewNavigation, GalleryModal, Drop ,LoadingOutlined},
   props: {
     keepAddIcon: {
       default: false,
@@ -360,31 +318,6 @@ export default {
     },
   },
   watch: {
-    // 是否开启独立布局
-    "settings.enableZoom": {
-      handler(newVal) {
-        if (newVal) {
-          this.currentSettingTab = "current";
-        }
-      },
-      deep: true,
-      immediate: true,
-    },
-    // 是否开启自由布局
-    isFreeLayout: {
-      handler(newVal) {
-        if (newVal) {
-          this.currentSettingTab = "current";
-        }
-      },
-      immediate: true,
-    },
-    // 当两个布局都未开启 设置为通用设置
-    settingVisible(val) {
-      if (!val && !this.isFreeLayout && !this.settings.enableZoom) {
-        this.currentSettingTab = "all";
-      }
-    },
     adjustLayout(val) {
       if (val) {
         this.toggleEditing();
@@ -432,7 +365,7 @@ export default {
       handler(newVal) {
         this.$bus.off("startAdjust");
         this.$bus.off("lockScreen");
-
+        this.$bus.off("scrollbarUpdate");
         let obj = {
           id: 20,
           newIcon: "fluent:more-horizontal-16-filled",
@@ -535,7 +468,6 @@ export default {
       freeDeskState: false,
       stashBound: { width: 0, height: 0, zoom: 0 },
       adjustZoom: 1,
-      iconVisible: false,
       settingVisible: false,
       hide: false,
       key: Date.now(),
@@ -549,11 +481,7 @@ export default {
         wheelPropagation: true,
         currentItemId: -1,
       },
-      settingsTab: [
-        { name: "通用设置", value: "all" },
-        { name: "当前桌面", value: "current" },
-      ],
-      currentSettingTab: "all",
+
       resizeHandler: null,
       editVisible: false,
     };
@@ -576,6 +504,9 @@ export default {
     // 自动打开编辑
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();
+    });
+    this.$bus.on("scrollbarUpdate", () => {
+      this.freeLayoutScrollbarUpdate();
     });
     // this.$bus.on("reset", () => {
     //   this.resetLayout();
@@ -601,10 +532,8 @@ export default {
       this.$refs.galleryRef.openGalleryModal();
       setTimeout(() => {
         this.$bus.emit("lockScreenSet");
-        }, 100);
+      }, 100);
     });
-
-
 
     if (window.showed) {
       this.showGrid = true;
@@ -630,7 +559,7 @@ export default {
     ...mapActions(taskStore, ["initTask"]),
     // 打开系统设置
     showSystemSet() {
-     this.$bus.emit("openSystemSet");
+      this.$bus.emit("openSystemSet");
     },
     addFolder() {
       if (!this.showGuide) {
@@ -682,14 +611,15 @@ export default {
       }
     },
     showSetting() {
-      this.settingVisible = true;
+      // this.settingVisible = true;
+      this.$bus.emit("openSystemSet");
+      setTimeout(() => {
+        this.$bus.emit("selectSystemNav", 2);
+      }, 10);
     },
     hideDesk() {
       this.hide = !this.hide;
       this.menuVisible = false;
-    },
-    iconHide() {
-      this.iconVisible = false;
     },
     showDesk() {
       this.hide = !this.hide;
@@ -765,8 +695,6 @@ export default {
     },
     // 添加图标
     newAddIcon() {
-      // this.iconVisible = true;
-      // this.menuVisible = false;
       if (!this.showGuide) {
         this.editVisible = true;
         this.menuVisible = false;
@@ -878,8 +806,7 @@ export default {
       return this.adjustZoom;
     },
   },
-  beforeDestroy() {
-  },
+  beforeDestroy() {},
 };
 </script>
 

@@ -28,6 +28,7 @@ import { teamStore } from '../../store/team'
 import {completeTask} from "../../apps/task/task"
 import { appStore } from '../../store'
 import GradeSmallTipVue from '../GradeSmallTip.vue'
+import {useGlobalStore} from '../../apps/Global/store'
 export default {
   name: 'BarrageSender',
   components:{
@@ -51,6 +52,7 @@ if (!this.$useEnv()) {
   computed:{
     ...mapState(teamStore, ['my','myTeamNo','myTeam']),
     ...mapWritableState(appStore,['userInfo','lvInfo']),
+    ...mapWritableState(useGlobalStore,['loginVisible']),
   },
   methods:{
     ...mapActions(teamStore,['updateMy']),
@@ -109,9 +111,7 @@ if (!this.$useEnv()) {
 
         window.$ui.confirm("登录提示", '目前处于游客模式，请登录后体验完整功能。', {
           ok: () => {
-            tsbApi.user.login((data) => {
-              appS.getUserInfo()
-            })
+            this.loginVisible = true
           },
           okText: "立即登录",
           noText: "暂不登录",

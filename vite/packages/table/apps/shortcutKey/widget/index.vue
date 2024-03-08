@@ -2,6 +2,7 @@
   <div>
     <xt-container
       :header="header"
+      @titleHover="openMainApp"
       v-model:customSize="customData.customSize" 
       :customData="customData" 
       :customIndex="customIndex" 
@@ -27,7 +28,7 @@
         </div>
 
         <div class="button-bom ">
-          <div @click="$router.push({name:'schemeList'})" class="p-firse pointer" style="width: 100%;">
+          <div @click="$router.push({name:'shortcutIndex'})" class="p-firse pointer" style="width: 100%;">
             <!-- <icon></icon> -->
             更多快捷键
           </div>
@@ -197,6 +198,8 @@ export default {
       header:{
         title:'快捷键',
         ifyIcon:"fluent:flash-16-regular",
+        titleHover:true,
+        titleHoverName:'打开应用',
       }
       // 快捷键测试数据 提交删
       // keyList: [
@@ -545,6 +548,9 @@ export default {
   methods: {
     getColor,
     ...mapActions(keyStore, ['setRecentlyUsedList']),
+    openMainApp () {
+      this.$router.push({ name: 'shortcutIndex' })
+    },
     clickItem(item){
       shortcutTools.doKey(item)
     },

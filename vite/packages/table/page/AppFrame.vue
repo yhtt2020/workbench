@@ -179,7 +179,7 @@ export default {
           app,
         };
         this.app = app;
-        if (Window.$useEnv()) {
+        if (!window.$useEnv('web')) {
           ipc.send("executeTableApp", args);
         setTimeout(() => {
           ipc.send("getRunningApps");

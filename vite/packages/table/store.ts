@@ -298,7 +298,8 @@ export const appStore = defineStore('appStore', {
         if (window.$useEnv()) return
         for (let i = 0; i < userInfo.onlineGrade[name]; i++) {
           userInfo.onlineGradeIcons[name].push({
-            icon: 'file://' + window.globalArgs['app-dir_name'] + `/../../icons/grade/${name}.svg`
+            // icon: 'file://' + window.globalArgs['app-dir_name'] + `/../../icons/grade/${name}.svg`
+            icon: `/icons/grade/${name}.svg`
           })
         }
       }

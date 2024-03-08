@@ -112,14 +112,9 @@
           >
             <div v-if="!item.disabled" class="mr-1 header-right-icon">
               <!-- 右侧图标悬浮提示 -->
-              <div
-                v-if="item.tip"
-                class="absolute px-2 py-1 rounded-lg xt-modal header-right-icon-tip"
-                style="top:-30px;left:50%,transform:translateX(-50%);z-index: 99999999;"
-              >
-                {{ item.tip }}
-                <div class="triangle-bottom"></div>
-              </div>
+            <a-tooltip :title="item.tip" :get-popup-container="getPopupContainer">
+
+
               <xt-ify-icon
                 v-if="item.ifyIcon"
                 :icon="item.ifyIcon"
@@ -134,7 +129,7 @@
                 type=""
                 size="19"
                 w="20"
-              />
+              /></a-tooltip>
             </div>
           </template>
           <RightMenu
@@ -211,6 +206,7 @@ import vueCustomScrollbar from "../../../../src/components/vue-scrollbar.vue";
 import Resize from "./Resize.vue";
 import RightMenu from "./RightMenu.vue";
 import { useEnv } from "../../ui/hooks/useEnv";
+import { trigger } from "mousetrap";
 
 const container = ref(0);
 const { isOutside } = useMouseInElement(container);
@@ -640,6 +636,10 @@ const titleMouseLeave = () => {
   showTitleHover.value = false;
 };
 
+// 自动调整tip弹出位置
+const getPopupContainer = (trigger) => {
+  return trigger.parentElement;
+};
 defineExpose({
   removeCard,
 });

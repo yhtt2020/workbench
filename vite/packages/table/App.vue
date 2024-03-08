@@ -1,6 +1,9 @@
 <template>
   <!-- Your Drag-and-Drop Application -->
   <!-- <xt-task-reward/> -->
+  <!-- 登录引导弹窗 -->
+  <!-- {{loginVisible}} -->
+  <xt-confirm v-if="loginVisible" noText="暂不登录" okText="立即登录" okButtonWidth="95" noButtonWidth="95" title="登录提示" content="目前处于游客模式，请登录后体验完整功能。" :no="unLoginModal" :ok="loginModal"></xt-confirm>
 
     <!-- 领取任务奖励弹窗 -->
   <!-- <ClaimReward v-if="rewardVisible"/> -->
@@ -131,6 +134,7 @@ import ModalNotice from './page/notice/ModalNotice.vue'
 import Global from './apps/global/Global.vue'
 // import { taskStore } from './apps/task/store'
 import { useEnv } from "./ui/hooks/useEnv";
+import {useLogin} from '../table/permission/user/useLogin'
 notification.config({
   top: '70px',//设置notification默认距离顶部位置
   rtl: false,
@@ -237,7 +241,7 @@ if (!window.$useEnv()) {
   computed: {
     ...mapWritableState(cardStore, ['customComponents', 'clockEvent', 'clockFlag']),
     ...mapWritableState(timerStore, ['appDate']),
-    ...mapWritableState(appStore, ['userCardVisible', 'fullScreen', 'userCardUid', 'userCardUserInfo', 'settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage', 'backgroundColor', 'backgroundName']),
+    ...mapWritableState(appStore, ['userCardVisible', 'fullScreen', 'userCardUid', 'userCardUserInfo', 'settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage', 'backgroundColor', 'backgroundName', 'loginVisible']),
     ...mapWritableState(codeStore, ['myCode']),
     ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo', 'runningTableApps']),
     ...mapWritableState(screenStore, ['taggingScreen', 'screenDetail']),
@@ -262,6 +266,15 @@ if (!window.$useEnv()) {
         }
       }
     },
+    loginModal () {
+      useLogin()
+      this.loginVisible = false
+    },
+
+    unLoginModal () {
+      this.loginVisible = false
+    },
+
     bindTouchEvents () {
       $('.a-container').on('touchstart', (e) => {
         startX = e.originalEvent.changedTouches[0].pageX,

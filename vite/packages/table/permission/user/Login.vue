@@ -10,7 +10,7 @@
     ></div>
   </Transition>
   <div
-    class="overflow-hidden fixed -translate-x-1/2 left-1/2 top-1/2 -translate-y-1/2"
+    class="overflow-hidden fixed -translate-x-1/2 left-1/2 top-1/2 -translate-y-1/2 no-drag"
     style="
       height: 745px;
       border-radius: 18px;
@@ -43,7 +43,6 @@ import { useRoute, useRouter } from "vue-router";
 import cache from "../../components/card/hooks/cache";
 import { useUserPermit } from "./useUserPermit";
 import XtButton from "../../ui/libs/Button/index.vue";
-import XtNewIcon from "../../ui/libs/NewIcon/index.vue";
 import XtIfyIcon from "../../ui/new/IfyIcon/index";
 import { usePermissionStore } from "../store";
 import { storeToRefs } from "pinia";
@@ -70,7 +69,7 @@ onMounted(() => {
         console.log("token :>> ", currentToken);
         cache.set("ttUserToken", currentToken);
         token.value = currentToken;
-        useUserPermit();
+        await useUserPermit();
         loginVisible.value = false;
         props.cb && props.cb();
         globalStore.loginVisible = false;

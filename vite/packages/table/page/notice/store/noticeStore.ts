@@ -30,7 +30,7 @@ export const noticeStore = defineStore("notice", {
     msgSetting: {
       title: "", // 标题
       summary: "", // 摘要
-      content: "测试", // 正文
+      content: "", // 正文
       noticeType: 1, // 消息类型
       covers: [], // 封面
       urls: [], //  按钮链接
@@ -76,14 +76,14 @@ export const noticeStore = defineStore("notice", {
              return li.content.id === notice.id;
            });
            if (!has) {
-            const convertedData: any = window.$notice._convertNoticeMsg(notice);
+            const convertedData: any = (window as any).$notice._convertNoticeMsg(notice);
             onlineNotices.push({
               ...convertedData,
               type: convertedData.type,
               noticeType: notice.noticeType,
             });
             this.putMessageData(
-              window.$notice._convertNoticeMsg(notice),
+              {...convertedData},
               notice.noticeType
             );
            }
@@ -99,13 +99,14 @@ export const noticeStore = defineStore("notice", {
 
     // 将忽略的消息通知进行数据库存储
     async putMessageData(data: any, type: any) {
+      const time = data.time;
       const message = {
-        _id: `message:${Date.now()}`,
+        _id: `message:${time}`,
         type: data.type,
         noticeType: type,
         content: { ...data },
-        createTime: Date.now(),
-        updateTime: Date.now(),
+        createTime:time,
+        updateTime:time,
       };
       // console.log('写入数据',message)
       await tsbApi.db.put(message);
@@ -143,6 +144,7 @@ export const noticeStore = defineStore("notice", {
       }
 
       for (const li of list) {
+        this.removePushMsg(li);
         await tsbApi.db.remove(li);
       }
       this.getNoticeList();
@@ -167,8 +169,9 @@ export const noticeStore = defineStore("notice", {
         attachments: JSON.stringify(this.msgSetting.attachments),
         targetType: this.msgSetting.targetType,
         targetList: JSON.stringify(this.msgSetting.targetList),
-        sendTime: Number(this.msgSetting.sendTime),
+        sendTime: `${this.msgSetting.sendTime}`,
       };
+      // console.log('排查',option);
       const res = await post(addNotice, option);
       if (res.status === 1) {
         const index = this.draftBox.findIndex((find: any) => {

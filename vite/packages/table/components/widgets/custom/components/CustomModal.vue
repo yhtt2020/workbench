@@ -14,24 +14,24 @@
                 <xt-button w="132" h="40" radius="8" class="xt-bg" @click="localFile">本地文件</xt-button>
                 <xt-button w="132" h="40" radius="8" class="xt-bg" @click="openApp">应用导航</xt-button>
             </div>
-            <div class="mt-4" v-else>
-              <xt-option-input v-model:input="inputPath"></xt-option-input>  
+            <div class="mt-4 min-w-[450px]" v-else>
+              <xt-option-input v-model:input="inputPath"></xt-option-input>
             </div>
-            
+
         </div>
         <div class="p-4 mt-4 rounded-lg xt-bg-2">
-            <xt-option-info 
-                :title="unBorder.title" 
-                :info="unBorder.info" 
-                :isSwitch="unBorder.isSwitch" 
+            <xt-option-info
+                :title="unBorder.title"
+                :info="unBorder.info"
+                :isSwitch="unBorder.isSwitch"
                 :switch="unBorder.switch"
                 @update:switch="updateBorder">
             </xt-option-info>
             <div class="w-full h-[1px] mb-2" style="background:var(--divider) ;"></div>
-            <xt-option-info 
-                :title="displayName.title" 
-                :info="displayName.info" 
-                :isSwitch="displayName.isSwitch" 
+            <xt-option-info
+                :title="displayName.title"
+                :info="displayName.info"
+                :isSwitch="displayName.isSwitch"
                 :switch="displayName.switch"
                 @update:switch="updateName">
             </xt-option-info>
@@ -55,10 +55,12 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, computed, toRefs,watch,onMounted } from 'vue'
+import { ref, reactive, computed, toRefs,watch,onMounted,defineAsyncComponent } from 'vue'
 import UploadImage from './UploadImg.vue';
-import EditNewNavigation from '../../../desk/navigationBar/EditNewNavigation.vue';
-import CustomLink from '../../../desk/navigationBar/components/CustomLink.vue';
+// import EditNewNavigation from '../../../desk/navigationBar/EditNewNavigation.vue';
+const EditNewNavigation = defineAsyncComponent(() => import('../../../desk/navigationBar/EditNewNavigation.vue'));
+// import CustomLink from '../../../desk/navigationBar/components/CustomLink.vue';
+const CustomLink = defineAsyncComponent(() => import('../../../desk/navigationBar/components/CustomLink.vue'));
 import {useNavigationStore} from '../../../desk/navigationBar/navigationStore';
 const props = defineProps({
     modalVisible: {

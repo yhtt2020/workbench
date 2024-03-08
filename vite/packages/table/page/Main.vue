@@ -24,24 +24,24 @@
           <router-view></router-view>
         </keep-alive>
         <!-- 删除区域 -->
-        <div 
-          class="del-icon" 
-          id="delIcon2" 
-          v-show="delZone && this.navigationToggle[2]" 
+        <div
+          class="del-icon"
+          id="delIcon2"
+          v-show="delZone && this.navigationToggle[2]"
           style="z-index:500;bottom: 0;right: 50%;transform: translateX(50%);width: 400px;height: 120px;">
           <xt-new-icon icon="fluent:delete-16-regular" size="32" color="red"></xt-new-icon>
         </div>
-        <div 
-          class="del-icon" 
-          id="delIcon3" 
-          v-show="delZone && this.navigationToggle[0]" 
+        <div
+          class="del-icon"
+          id="delIcon3"
+          v-show="delZone && this.navigationToggle[0]"
           style="z-index:500;bottom: 50%;left: 0;transform: translateY(50%);width: 120px;height: 400px;">
           <xt-new-icon icon="fluent:delete-16-regular" size="32" color="red"></xt-new-icon>
         </div>
-        <div 
-          class="del-icon" 
-          id="delIcon3" 
-          v-show="delZone && this.navigationToggle[1]" 
+        <div
+          class="del-icon"
+          id="delIcon3"
+          v-show="delZone && this.navigationToggle[1]"
           style="z-index:500;bottom: 50%;right: 0;transform: translateY(50%);width: 120px;height: 400px;">
           <xt-new-icon icon="fluent:delete-16-regular" size="32" color="red"></xt-new-icon>
         </div>
@@ -79,7 +79,7 @@ import TeamPanel from '../components/team/TeamPanel.vue'
 import { teamStore } from '../store/team'
 import { isMain } from '../js/common/screenUtils'
 import { navStore } from '../store/nav'
-import fullScreen from '../components/widgets/myIcons/icons/fullScreen.vue'
+// import fullScreen from '../components/widgets/myIcons/icons/fullScreen.vue'
 import { message } from 'ant-design-vue'
 import { useNavigationStore } from '../components/desk/navigationBar/navigationStore'
 import AutoHide from '../components/desk/navigationBar/components/folder/AutoHide.vue'

@@ -1,40 +1,4 @@
 <template>
-  <!-- 1 -->
-  <div class="xt-bg-2 p-4 pb-1 mb-4 rounded-xl">
-    <xt-option-info
-      title="桌面壁纸"
-      info="选择喜欢的图片作为工作台桌面壁纸。"
-    />
-    <template v-if="!settings.transparent">
-      <div class="flex flex-col mb-4">
-        <xt-update-desk-bg></xt-update-desk-bg>
-      </div>
-      <hr />
-      <!-- 修复桌面壁纸设置，选择为纯色后，模糊度选项屏蔽掉这个bug,可能后续补充的需求 -->
-      <template v-if="backgroundName.name === 'img'">
-        <xt-option-info
-          title="桌面壁纸模糊度"
-          info="调节桌面壁纸的模糊程度。"
-          icon="fluent:arrow-clockwise-16-regular"
-          @onIconClick="backgroundSettings.backGroundImgBlur = 0"
-        />
-        <xt-option-slider
-          v-model:slider="backgroundSettings.backGroundImgBlur"
-          :min="0"
-          :max="100"
-        />
-        <hr />
-      </template>
-    </template>
-
-    <xt-option-info
-      v-if="!$useEnv()"
-      isSwitch
-      v-model:switch="settings.transparent"
-      title="透明背景"
-      info="设置工作台窗口背景为透明，此功能下小组件的背景模糊会失效。"
-    />
-  </div>
   <!-- 2 -->
   <div class="xt-bg-2 p-4 pb-1 mb-4 rounded-xl">
     <xt-option-info
@@ -47,7 +11,7 @@
   <!-- 3 -->
   <div class="xt-bg-2 p-4 mb-4 rounded-xl">
     <div
-      v-if="fixedFloat || freeFloat"
+      v-if="currentDeskSettings.enableZoom || isFreeLayout"
       class="rounded-xl text-sm p-3 xt-bg-t-2 mb-3"
       style="color: var(--warning)"
     >
@@ -122,26 +86,27 @@
   </div>
 </template>
 <script setup>
-import { message } from "ant-design-vue";
 import { useRouter } from "vue-router";
 import { ref, toRefs, computed } from "vue";
 import { storeToRefs } from "pinia";
-import { appStore } from "../../../store";
-import { useDeskStore } from "../store";
-
-const router = useRouter();
+import { appStore } from "../../../../store";
+import { useDeskStore } from "../../../../components/desk/store";
+import { cardStore as useCardStore } from "../../../../store/card";
+import { useFreeLayoutStore } from "../../../../components/desk/freeLayout/store";
+const freeLayoutStore = useFreeLayoutStore();
+const { getCurrentDesk, isFreeLayout } = storeToRefs(freeLayoutStore);
 const app = appStore();
-const { settings, backgroundSettings, backgroundName } = storeToRefs(app);
+const cardStore = useCardStore();
+// 这个应该是全局桌面参数
+const { settings: globalSettings } = storeToRefs(cardStore);
+const { settings} = storeToRefs(app);
 
+const currentDeskSettings = computed(() => {
+  return getCurrentDesk.value.settings;
+});
 const deskStore = useDeskStore();
 const { autoOpenEdit } = storeToRefs(deskStore);
-// props
-const props = defineProps({
-  globalSettings: {},
-  fixedFloat: {},
-  freeFloat: {},
-});
-const { fixedFloat, freeFloat } = toRefs(props);
+
 const fallingList = ref([
   {
     value: "rain",

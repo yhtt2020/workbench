@@ -72,41 +72,41 @@ export const controlStore = defineStore("control", {
         name: "窗口控制",
       },
       {
-        icon: "fluent:dark-theme-20-filled",
         id: "light-color-mode",
+        icon: "fluent:dark-theme-20-filled",
         name: "浅色模式",
       },
       {
-        icon: "fluent:desktop-16-regular",
         id: "min-mode",
+        icon: "fluent:desktop-16-regular",
         name: "极简模式",
       },
       {
-        icon: "fluent:battery-10-16-regular",
         id: "energy-save-mode",
+        icon: "fluent:battery-10-16-regular",
         name: "节能模式",
       },
       {
-        icon: "fluent:alert-off-16-regular",
         id: "mute-mode",
+        icon: "fluent:alert-off-16-regular",
         name: "勿扰模式",
       },
       {
+        id:"barrage",
         icon:"fluent:code-text-16-regular",
-        id:"",
         name:"弹幕"
       },
       {
-        icon: "fluent:accessibility-16-regular",
         id: "assist-mode",
+        icon: "fluent:accessibility-16-regular",
         name: "辅助模式",
       },
       {
         id: "user-info",
       },
       {
-        icon: "fluent:cursor-click-20-regular",
         id: "shake",
+        icon: "fluent:cursor-click-20-regular",
         name: "摇一摇",
       },
       // {
@@ -114,6 +114,9 @@ export const controlStore = defineStore("control", {
       //  name:'游戏模式',
       // },
     ],
+    // 第一次触发
+    firstVisible:false,
+    updateList:[],
   }),
 
   getters: {
@@ -140,7 +143,7 @@ export const controlStore = defineStore("control", {
     enabled: true,
     strategies: [
       {
-        paths: ["control", "initList"],
+        paths: ["control","firstVisible","updateList"],
         // storage: dbStorage,
         storage: localStorage,
       },
