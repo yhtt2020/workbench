@@ -143,6 +143,7 @@ const controlStatus = computed(()=>{
     case 'game-mode':
       return {status:false};
     case 'barrage':
+      if(settings.value.enableBarrage){  window.$manager.test() }
       return {status:settings.value.enableBarrage}; 
     default:
       break;
