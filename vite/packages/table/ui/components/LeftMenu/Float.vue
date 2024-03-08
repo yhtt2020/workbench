@@ -21,9 +21,8 @@
               <div v-else>
                 <xt-base-icon :icon="item.icon" class="mr-3"></xt-base-icon>
                 {{ item.name }}
-              </div>              
-              <!-- <GradeSmallTip v-if="item.index === 'createCom'" :w="184" :h="44" powerType="createChat" lastPowerType="最多创建一个社群" :limit="false"></GradeSmallTip> -->
-              
+              </div>
+
             </div>
           </template>
         </div>
@@ -52,7 +51,6 @@
 
 <script setup>
 import { computed } from "vue";
-import GradeSmallTip from "../../../components/GradeSmallTip.vue";
 const props = defineProps({
   data: {},
 });
