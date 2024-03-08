@@ -20,6 +20,8 @@
       @delete="deleteFn"
       class="tt-folder-container"
     >
+  <!-- <xt-tip key="df31gg"> <xt-button @click="test">test</xt-button> </xt-tip> -->
+
       <!-- 空状态显示状态 -->
       <template v-if="customData.list.length <= 0 && !dragSortState">
         <Null :size="customData.customSize" @addFile="addFileClick" />

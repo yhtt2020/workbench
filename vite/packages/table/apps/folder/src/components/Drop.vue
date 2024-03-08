@@ -1,16 +1,19 @@
 <template>
-  <div
-    class="w-full h-full rounded-xl"
-    @drop.prevent.stop="handleDrop"
-    @dragenter.prevent.stop="handleDragenter"
-    @dragleave.prevent.stop="handleDragleave"
-    @mouseup="handleMouseUp"
-    @mouseleave="handleMouseleave"
-    @mouseover="handleMouseover"
-    ref="drop"
-  >
-    <slot></slot>
-  </div>
+
+    <div
+      class="w-full h-full rounded-xl"
+      @drop.prevent.stop="handleDrop"
+      @dragenter.prevent.stop="handleDragenter"
+      @dragleave.prevent.stop="handleDragleave"
+      @mouseup="handleMouseUp"
+      @mouseleave="handleMouseleave"
+      @mouseover="handleMouseover"
+      ref="drop"
+    >
+      <slot></slot>
+    </div>
+
+
 </template>
 
 <script setup>
@@ -25,8 +28,11 @@ import { useDeskStore } from "../../../../components/desk/store";
 
 import { defaultData } from "./options";
 
-import {useLinkConversionNav} from '../../../../apps/folder/src/hooks/useDataConversion'
-import { useGetUrlName, getFavicon } from "../../../../components/desk/navigationBar/hook/getUrlName";
+import { useLinkConversionNav } from "../../../../apps/folder/src/hooks/useDataConversion";
+import {
+  useGetUrlName,
+  getFavicon,
+} from "../../../../components/desk/navigationBar/hook/getUrlName";
 import { useNavBarStore } from "../../../../components/desk/navigationBar/navBar";
 
 // 获取桌面数据
@@ -50,11 +56,11 @@ const emits = defineEmits(["createFile", "deleteFile", "updateBg"]);
 
 // 获取导航栏数据
 const useNavBar = useNavBarStore();
-const { navBarId, navBarItem,isLeaveBar,isEnterDesk } = storeToRefs(useNavBar);
+const { navBarId, navBarItem, isLeaveBar, isEnterDesk } =
+  storeToRefs(useNavBar);
 
 //
-const drop =ref(null)
-
+const drop = ref(null);
 
 /**
  * 处理drop放置
@@ -73,24 +79,24 @@ const handleDrop = async (dragEvent) => {
   }
 
   // 导航栏图标拖拽到文件夹
-  if(!isOutside.value && navBarId.value && navBarItem.value){
-    if(navBarItem.value.type === 'folder'){
-      navBarItem.value.children.forEach((item)=>{
-        emits('createFile', item)
-      })
-    }else{
-      emits('createFile', navBarItem.value)
+  if (!isOutside.value && navBarId.value && navBarItem.value) {
+    if (navBarItem.value.type === "folder") {
+      navBarItem.value.children.forEach((item) => {
+        emits("createFile", item);
+      });
+    } else {
+      emits("createFile", navBarItem.value);
     }
-    isLeaveBar.value = true
-    isEnterDesk.value = false
-    return
+    isLeaveBar.value = true;
+    isEnterDesk.value = false;
+    return;
   }
 
   // console.log("handleDrop :>> ",dragEvent.dataTransfer.getData('text/plain'));
   // 处理系统拖拽进入的文件和链接
   let files = dragEvent.dataTransfer.files;
-  let link = dragEvent.dataTransfer.getData('text/plain');
-  if (files && files.length > 0){
+  let link = dragEvent.dataTransfer.getData("text/plain");
+  if (files && files.length > 0) {
     for (let file of files) {
       let fileInfo = {
         ...defaultData,
@@ -103,23 +109,25 @@ const handleDrop = async (dragEvent) => {
       fileInfo.type = "tableApp";
       emits("createFile", fileInfo);
     }
-  }else if(link && link !== ''){
-    if(isDrag.value) return  // 文件夹内部拖拽时阻止事件触发
-    const http = link.includes('http');
-    const https = link.includes('https');
+  } else if (link && link !== "") {
+    if (isDrag.value) return; // 文件夹内部拖拽时阻止事件触发
+    const http = link.includes("http");
+    const https = link.includes("https");
     if (!http && !https) {
-      link = 'http://' + link;
-      console.log(link, 'linkData');
+      link = "http://" + link;
+      console.log(link, "linkData");
     }
 
     const linkIcon = await getFavicon(link);
-    const target = { name:linkIcon.pageTitle, icon: linkIcon.faviconURL, value: link };
+    const target = {
+      name: linkIcon.pageTitle,
+      icon: linkIcon.faviconURL,
+      value: link,
+    };
 
     const file = useLinkConversionNav(target);
-    emits('createFile', file);
+    emits("createFile", file);
   }
-
-
 };
 
 /**
@@ -158,7 +166,7 @@ const handleMouseUp = (e) => {
   // 1 新数据处理
 
   // if (11) return;
-  if (!isDragIcon.value) return
+  if (!isDragIcon.value) return;
   iconList.value.forEach((item) => {
     const file = {
       ...defaultData,
@@ -182,12 +190,12 @@ const handleMouseUp = (e) => {
   if (iconsRefs.value.length < 1) return;
 
   console.log("iconsRefs.value.length  :>> ", iconsRefs.value.length);
-  if(!isCtrl){
+  if (!isCtrl) {
     iconsRefs.value.forEach((item) => {
       item.doRemoveCard();
     });
   }
-  
+
   iconList.value = [];
   iconsRefs.value = [];
 };
