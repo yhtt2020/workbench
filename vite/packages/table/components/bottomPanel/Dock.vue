@@ -279,7 +279,10 @@
             id: 7,
             label: '导航栏设置',
             newIcon: 'fluent:settings-16-regular',
-            callBack: () => { this.editNavigation(this.drawerMenus[1]) }
+            callBack: () => { this.$bus.emit("openSystemSet");
+              setTimeout(() => {
+                this.$bus.emit("selectSystemNav", 3);
+              }, 10); }
           }
         ],
         currentIndex: null,
@@ -325,7 +328,7 @@
       ...mapWritableState(offlineStore, ['isOffline', 'navList']),
       ...mapWritableState(useNavigationStore, [
         'editToggle',
-        'selectNav', 'bottomToggle',
+        'selectNav', 
         'popVisible', 'currentList',
         'editItem', 'navAttribute',  'jumpDesk',
       ]),

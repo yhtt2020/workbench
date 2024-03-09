@@ -28,7 +28,6 @@ export default {
   computed: {
     ...mapWritableState(messageStore, ['messageIndex', 'totalCount']),
     ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
-    ...mapWritableState(useNavigationStore, ['bottomToggle']),
   },
   mounted () {
     console.log('this.userInfo :>> ', this.userInfo);
@@ -193,8 +192,8 @@ export default {
 
   </div>
   <template v-else>
-    <div  class="btn flex-col flex items-center justify-center pb-2" v-if="isMain()"   @click="social" >
-      <FrameAvatar class="frame pt-1" :avatarUrl="userInfo.avatar" :avatarSize="size|| 33"
+    <div  class="flex flex-col items-center justify-center pb-2 btn" v-if="isMain()"   @click="social" >
+      <FrameAvatar class="pt-1 frame" :avatarUrl="userInfo.avatar" :avatarSize="size|| 33"
                    :frameUrl="userInfo.frame"></FrameAvatar>
       <div class="pt-1">我的</div>
     </div>

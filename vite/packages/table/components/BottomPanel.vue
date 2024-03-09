@@ -134,7 +134,10 @@ export default {
           id: 2,
           name: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          fn: () => { this.editNavigation(this.drawerMenus[1]) },
+          fn: () => { this.$bus.emit("openSystemSet");
+            setTimeout(() => {
+              this.$bus.emit("selectSystemNav", 3);
+            }, 10); },
         },
         {
           id: 3,
