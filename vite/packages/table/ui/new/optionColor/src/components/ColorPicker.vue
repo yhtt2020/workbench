@@ -150,6 +150,7 @@ const updateBackground = () => {
     emit('change', defaultColor.value)
 }
 
+// 容错处理，防止没有获取到tippyRef，导致页面卡死
 const hideTippy = () => {
     if(tippyRef.value){
         tippyRef.value.hide()

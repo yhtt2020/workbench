@@ -22,12 +22,17 @@
         </div>
         <xt-selectIcon :defaultIcon="defaultIcon" v-model="modelValue" @getAvatar="getAvatar"
             :isUpload="true"></xt-selectIcon>
-        <CustomIconBg 
+        <!-- <CustomIconBg 
             :color="props.editItem.bg"
             :colorSwitch="navigationStore.colorSwitch"
             @update:colorSwitch="navigationStore.colorSwitch = !navigationStore.colorSwitch" 
             @changeBg="changeBg"  
-            :tip="'通用的图标背景色，仅支持选了icon和emoji的图标背景。'"/>
+            :tip="'通用的图标背景色，仅支持选了icon和emoji的图标背景。'"/> -->
+        <xt-option-box>
+            <xt-option-info title="自定义图标背景色" isSwitch="true" v-model:switch="navigationStore.colorSwitch"
+                info="通用的图标背景色，仅支持选了icon和emoji的图标背景。" />
+            <xt-option-color v-if="navigationStore.colorSwitch" v-model:color="props.editItem.bg" @cb="changeBg" />
+        </xt-option-box>
     </div>
 </template>
 
@@ -35,7 +40,6 @@
 import { ref, reactive, computed,onMounted,watch } from 'vue'
 import { useNavigationStore } from '../../../navigationStore'
 import {renderIcon} from '../../../../../../js/common/common'
-import CustomIconBg from './CustomIconBg.vue'
 import { navStore } from '../../../../../../store/nav';
 const useNavStore = navStore()
 const navigationStore = useNavigationStore()
