@@ -1229,6 +1229,7 @@ export default {
      * @param {*} item 图标详细信息
      */
     async newOpenApp(type, value, item) {
+      type !== 'folder' ? this.folderVisible = false : ''
       this.resetElementPosition()
       if(value === 'control' && !this.controlVisible){
         this.controlVisible = true
@@ -1247,7 +1248,6 @@ export default {
       }
       if (value == 'fullscreen' && window.$useEnv()) {
         toggle()
-        // console.log('isFullscreen :>> ', isFullscreen);
         return
       }
       if (window.$useEnvLimit('web',value)) return
@@ -1264,7 +1264,6 @@ export default {
           , key: 'tipRun'
         })
       }
-      type !== 'folder' ? this.folderVisible = false : ''
       this.controlVisible = false;
       this.comVisible = false
     },

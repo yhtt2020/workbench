@@ -22,8 +22,12 @@
         </div>
         <xt-selectIcon :defaultIcon="defaultIcon" v-model="modelValue" @getAvatar="getAvatar"
             :isUpload="true"></xt-selectIcon>
-        <CustomIconBg :colorSwitch="navigationStore.colorSwitch"
-            @update:colorSwitch="navigationStore.colorSwitch = !navigationStore.colorSwitch" @changeBg="changeBg"  :tip="'通用的图标背景色，仅支持选了icon和emoji的图标背景。'"/>
+        <CustomIconBg 
+            :color="props.editItem.bg"
+            :colorSwitch="navigationStore.colorSwitch"
+            @update:colorSwitch="navigationStore.colorSwitch = !navigationStore.colorSwitch" 
+            @changeBg="changeBg"  
+            :tip="'通用的图标背景色，仅支持选了icon和emoji的图标背景。'"/>
     </div>
 </template>
 
