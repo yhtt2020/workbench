@@ -13,8 +13,10 @@
     </template>
     <template #createChat>
       <GradeSmallTip :w="184" :h="44" powerType="createChat" :lastPowerType="limitClick" :limit="false"></GradeSmallTip>
-      <xt-base-icon icon="smile" class="mr-3"></xt-base-icon>
-      创建社群 
+      <div class="flex items-center">
+        <xt-ify-icon icon="fluent:emoji-smile-slight-24-regular" class="mr-3"></xt-ify-icon>
+        创建社群 
+      </div>
     </template>
   </xt-left-menu>
   <teleport to='body'>
@@ -187,20 +189,23 @@ export default {
         newIcon:'fluent:add-16-filled', icon: 'tianjia2',
         children:[
           {
-            icon: 'message', newIcon:'fluent:chat-16-regular',  name: '发起群聊',index: 'launch',
+            // icon: 'message', 
+            newIcon:'fluent:chat-16-regular',  name: '发起群聊',index: 'launch',
             callBack: (item) => { if(!window.$useEnv('guest')){ triggerAddModal(item); completeTask('Z0601') }else{ loginTip() } ;}
             // callBack: (item) => { if(userInfo){}else{ loginTip() } triggerAddModal(item); completeTask('Z0601');}
           },
           {
-            icon: 'team', newIcon:'fluent:people-16-regular',name: '加入群聊', index: 'addGroup',
+            // icon: 'team', 
+            newIcon:'fluent:people-16-regular',name: '加入群聊', index: 'addGroup',
             callBack: (item) => { if(!window.$useEnv('guest')){triggerAddModal(item);completeTask('Z0601');}else{ loginTip() }  }
           },
           {
-            icon: 'tianjiachengyuan', newIcon:'fluent:people-add-16-regular', name: '添加好友', index: 'addFriend',
+            // icon: 'tianjiachengyuan', 
+            newIcon:'fluent:people-add-16-regular', name: '添加好友', index: 'addFriend',
             callBack: (item) => { if(!window.$useEnv('guest')){triggerAddModal(item);completeTask('Z0602');}else{ loginTip() }  }
           },
           {
-            icon: 'smile',  
+            // icon: 'smile',  
             newIcon:'fluent:emoji-smile-slight-24-regular', 
             name: '创建社群', 
             index: 'createCom',
