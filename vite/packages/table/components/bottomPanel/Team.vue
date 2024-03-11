@@ -1,12 +1,12 @@
 <template>
   <!-- :popperOptions="popperOptions" -->
-  <tippy 
-    :placement="placement" 
-    :interactive="true" 
-    :appendTo="body" 
-    :arrow="false" 
+  <tippy
+    :placement="placement"
+    :interactive="true"
+    :appendTo="body"
+    :arrow="false"
     trigger="click"
-    :zIndex="999999" 
+    :zIndex="999999"
     ref="tippyRef">
     <Avatar :item="item"></Avatar>
     <template #content>
@@ -126,7 +126,7 @@ export default {
     //             Object.assign(state.elements.popper.style, {
     //               position: 'fixed',
     //               left: `${this.x}px`,
-    //               top: `${this.y}px`, 
+    //               top: `${this.y}px`,
     //             });
     //           })
     //         },
@@ -174,14 +174,12 @@ export default {
   },
   watch:{
     x(val){
-      console.log('x',val)
       // this.$refs.tippyRef.destroy()
       this.$nextTick(()=>{
         this.$refs.tippyRef.enable()
       })
     },
     y(val){
-      console.log('y',val)
       // this.$refs.tippyRef.popperInstance.update()
     }
   }
