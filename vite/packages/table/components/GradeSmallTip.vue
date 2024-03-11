@@ -86,11 +86,11 @@ export default {
   mounted() {
     this.lv = lv
     const { tipTitle, blocking, powerLv, powerAlias, superiorLimit } = this.powerState(this.powerType, lv, this.lastPowerType)
-    this.tipTitle = tipTitle
-    this.blocking = blocking
-    this.powerLv = powerLv
-    this.powerAlias = powerAlias
-    this.superiorLimit = superiorLimit
+    this.tipTitle = tipTitle  // 提示文字
+    this.blocking = blocking  // 是否阻塞
+    this.powerLv = powerLv  // 目标等级
+    this.powerAlias = powerAlias  // 当前等级别名
+    this.superiorLimit = superiorLimit  
   },
   methods: {
     powerState,
@@ -105,6 +105,7 @@ export default {
       this.$emit('closeDrawer')
       this.$router.push({ name: 'grade' })
     },
+    // 等级表生成
     gradeTableGenerate (num) {
       let lvSys = {}
       for (let i = 0; i < num + 1; i++) {

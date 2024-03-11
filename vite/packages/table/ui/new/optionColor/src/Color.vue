@@ -16,6 +16,7 @@
           ></xt-new-icon>
         </div>
         <!-- <ColorPicker
+          v-model:color="color"
           @change="updateBackground"
           :defaultList="colorList"
           :linearList="linearList"
@@ -68,7 +69,7 @@ const props = withDefaults(defineProps<colorProps>(), {
   isLinear: true,
   colorNum: 6,
 });
-const { colorNum, colorShowNum, linearShowNum } = toRefs(props);
+const { colorNum,color} = toRefs(props);
 // 按钮回调
 const emit = defineEmits(["update:color", "cb"]);
 const chooseBg = (item) => {

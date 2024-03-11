@@ -40,7 +40,7 @@
       <span class="drawer-title">包含以下小组件（{{ template.cards.length }}）</span>
       <div v-for="item in template.cards" :key="item" class="drawer-item">
         <Icon :icon="item.icon" class="mr-2"></Icon>
-        <span>{{ item.name }}</span>
+        <span>{{ getName(item.name) }}</span>
       </div>
     </div>
   </a-drawer>
@@ -59,6 +59,8 @@ import { useCustomLayout } from "../../../../components/desk/freeLayout/useCusto
 import { FreeLayoutStore } from "./FreeLayout";
 import {useFreeLayoutStore} from '../../../../components/desk/freeLayout/store'
 import { useWidgetStore } from "../../../../components/card/store";
+import { NavList } from '../../card/navList'
+import _ from 'lodash-es'
 export default {
   name: 'Preview',
   components: {
@@ -85,6 +87,7 @@ export default {
       windowHeight: document.body.clientHeight,
       previewWidth: 0,
       previewHeight: 0,
+      baseNavList: [],
     }
   },
   props: {
@@ -121,10 +124,13 @@ export default {
       return JSON.parse(this.scheme.layoutSize)
     },
     template () {
-      // console.log('this',this)
-      console.log('this.scheme',this.scheme)
-      // console.log('this.scheme.template',this.scheme.template)
-      // console.log('JSON.parse(this.scheme.template',JSON.parse(this.scheme.template))
+      // // 卡片数据去重
+      let items = []
+      NavList.map(li => {
+        return items.push(...li.children)
+      })
+      items = _.uniqBy(items, (li) => { return li.name })
+      this.baseNavList = items
       return JSON.parse(this.scheme.template)
     }
   },
@@ -170,6 +176,17 @@ export default {
         this.displayScheme.support=rs.supportCount
         message.success('感谢您的支持，您的支持是对作者最大的鼓励。')
       }
+    },
+    // 获取组件名称
+    getName(name){
+      let nameTmp = ''
+      this.baseNavList.forEach(item=>{
+        item.option.forEach(card=>{
+          if(card.name==name) nameTmp = item.cname
+          if(name=='folder') nameTmp = '文件夹'
+        })
+      })
+      return nameTmp?nameTmp:name
     },
 
     // 添加头部卡片
