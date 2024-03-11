@@ -204,7 +204,10 @@ export default {
           id: 7,
           label: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          callBack: () => { this.editNavigation(this.drawerMenus[1]) }
+          callBack: () => { this.$bus.emit("openSystemSet");
+              setTimeout(() => {
+                this.$bus.emit("selectSystemNav", 3);
+              }, 10); }
         }
       ],
       mainMenus: [
@@ -218,7 +221,10 @@ export default {
           id: 2,
           name: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          fn: () => { this.editNavigation(this.drawerMenus[1]) },
+          fn: () => { this.$bus.emit("openSystemSet");
+              setTimeout(() => {
+                this.$bus.emit("selectSystemNav", 3);
+              }, 10); },
         },
         {
           id: 3,
@@ -402,12 +408,12 @@ export default {
           newIcon: "fluent:task-list-square-16-regular",
           fn: () => { this.bottomToggle[2] = !this.bottomToggle[2] }
         },
-        {
-          id: 4,
-          name: this.settings.enableChat ? '隐藏社群沟通' : '显示社群沟通',
-          newIcon: "fluent:chat-16-regular",
-          fn: () => { this.settings.enableChat = !this.settings.enableChat }
-        },
+        // {
+        //   id: 4,
+        //   name: this.settings.enableChat ? '隐藏社群沟通' : '显示社群沟通',
+        //   newIcon: "fluent:chat-16-regular",
+        //   fn: () => { this.settings.enableChat = !this.settings.enableChat }
+        // },
       ]
 
     },
