@@ -6,51 +6,78 @@ import {
   onMounted,
   onBeforeUnmount,
   getCurrentInstance,
+  watch,
 } from "vue";
 
 import cache from "../../../../components/card/hooks/cache";
 const { proxy }: any = getCurrentInstance();
 
 interface TipProps {
+  // 提示的key值 作为缓存查询使用
+  name: string;
+  // 校验值 作为key的校验 用于判断内容是否已更新
+  check?: string;
   // 提示距离顶部的距离
   top?: number;
   // 提示距离 的距离
   right?: number;
   // 提示的层级
   z: number;
-  mode: "default" | "custom";
-
-  color?: string;
+  // 提示触发的类型
   type: "click" | "hover" | "custom";
-  // 提示的key值 作为缓存查询使用
-  key: string;
-  // 校验值 作为key的校验 用于判断内容是否已更新
-  check?: string;
+  mode: "default" | "custom";
+  color?: string;
+  // 开启边框
+  border?: boolean;
 }
 
 const props = withDefaults(defineProps<TipProps>(), {
-  top: -10,
-  right: -10,
+  top: -5,
+  right: -5,
+  z: 9999,
   color: "red",
   type: "click",
   mode: "default",
   check: "1",
-  key: "tip",
+  name: "tip",
+  border: true,
 });
-const { color, top, right, key, type, check } = toRefs(props);
-
-const tipStyle = computed(() => {
+const { color, top, right, name, check, type, border } = toRefs(props);
+watch(
+  () => check.value,
+  (val) => {
+    console.log('val :>> ', val);
+    checkVal.value = val;
+    updateTipData(true);
+    updateTipVisible();
+  }
+);
+const checkVal = ref(check.value);
+const tipPos = computed(() => {
   return {
     top: `${top.value}px`,
     right: `${right.value}px`,
+    zIndex: props.z,
   };
+});
+
+const tipStyle = computed(() => {
+  let res: any = {
+    background: color.value,
+    border: "2px solid var(--secondary-text)",
+    width: "12px",
+    height: "12px",
+  };
+  if (!border.value) {
+    res.border = "";
+  }
+
+  return res;
 });
 
 const tipVisible = ref(false);
 const tip = ref<HTMLDivElement | null>(null);
 onMounted(() => {
-  console.log("key.value :>> ", key.value);
-  return
   let tipObj = cache.get("ttTip");
 
   // tipObj不存在
@@ -58,16 +85,16 @@ onMounted(() => {
     tipObj = {};
   }
 
-  // tipObj中key不存在 或者 check不一致
-  if (!tipObj[key.value] || tipObj[key.value].check != check.value) {
+  // tipObj中name不存在 或者 check不一致
+  if (!tipObj[name.value] || tipObj[name.value].check !=  checkVal.value) {
     updateTipData(true);
   }
 
   updateTipVisible();
 
   if (type.value === "custom") {
-    proxy.$bus.on("closeTip", (specifyKey: string) => {
-      if (specifyKey == key.value) {
+    proxy.$bus.on("closeTip", (specifyName: string) => {
+      if (specifyName == name.value) {
         disabledTip();
       }
     });
@@ -75,18 +102,19 @@ onMounted(() => {
 });
 
 // 保存提示
-const updateTipData = (disabled) => {
+const updateTipData = (disabled: boolean) => {
   let tipObj = cache.get("ttTip");
   let obj = {
     disabled,
-    check: check.value,
+    check: checkVal.value,
   };
-  tipObj[key.value] = obj;
+  console.log('obj :>> ', obj);
+  tipObj[name.value] = obj;
   cache.set("ttTip", tipObj);
 };
 const updateTipVisible = () => {
   let tipObj = cache.get("ttTip");
-  tipVisible.value = tipObj[key.value].disabled;
+  tipVisible.value = tipObj[name.value].disabled;
 };
 
 const disabledTip = () => {
@@ -121,23 +149,14 @@ onBeforeUnmount(() => {
     style="overflow: visible !important"
   >
     <!-- 提示 -->
-    <div
-      v-if="tipVisible"
-      class="absolute"
-      :style="[tipStyle]"
-      style="z-index: 999999"
-    >
-      <!-- 默认提示 -->
-      <span
-        v-if="mode == 'default'"
+    <div v-if="tipVisible" class="absolute" :style="[tipPos]">
+      <!-- 默认 -->
+      <div
+        v-if="mode === 'default'"
         class="rounded-full"
-        style="width: 20px; height: 20px"
-        :style="{
-          backGround: color,
-        }"
-      >
-      </span>
-      <!-- 自定义提示 -->
+        :style="[tipStyle]"
+      ></div>
+      <!-- 自定义 -->
       <slot v-else name="custom"></slot>
     </div>
     <slot />

@@ -69,7 +69,6 @@ import Float from "./Float.vue";
 import Box from "./Box.vue";
 import Item from "./Item.vue";
 import { appStore } from "../../../store";
-import GradeSmallTip from "../../../components/GradeSmallTip.vue";
 const store = appStore();
 const { fullScreen } = storeToRefs(store);
 

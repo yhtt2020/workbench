@@ -11,8 +11,9 @@ export const taskStore = defineStore("taskStore", {
     firstShop:true, // 首次积分商店
     isTask: true, // 首页展示任务中心
     isTaskDrawer: false, // 打开任务中心
-    taskID: "M0101", // 任务ID
+
     success: false,
+    taskID: "M0101", // 任务ID
     step: -1, // 任务步骤
     list: [], // 已完成主线
     deskID: 0,
