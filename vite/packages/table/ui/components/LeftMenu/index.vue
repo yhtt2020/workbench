@@ -136,14 +136,14 @@ const typeClass = computed(() => {
   }
 });
 
-const { list } = toRefs(props);
+const { list ,index} = toRefs(props);
 // 动态添加ID
 const newList = computed(() => {
   let index = -1;
   // 过滤 将需要隐藏的按钮进行过滤
-  let tmp = list.value?.filter(item=>{
-    return !item.disabled
-  })
+  let tmp = list.value?.filter((item) => {
+    return !item.disabled;
+  });
   let res = tmp.map((item) => {
     if (item.full) full.value = true;
     let id = item.id ?? ++index;
@@ -183,17 +183,27 @@ const listOption = computed(() => {
 });
 
 // 动态获取ID
-const index = computed(() => {
-  return isNaN(props.index.value) ? newList.value[0].id : props.index.value;
+const indexs = computed(() => {
+  return isNaN(props.index) ? newList.value[0].id : props.index;
 });
 
 // 选择ID
-const currentIndex = ref(index.value);
-
+const currentIndex = ref(indexs.value);
+watch(
+  () => index.value,
+  (val) => {
+    console.log("val :>> ", val);
+    selectClick(val);
+  },
+  {
+    deep: true,
+  }
+);
 //选中事件
 const emit = defineEmits(["modelValue", "index"]);
 const selectClick = (id, flag) => {
   emit("update:index", id);
+  console.log('更新触发了 :>> ', );
   if (flag) return;
   currentIndex.value = id;
 };

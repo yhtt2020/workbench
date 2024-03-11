@@ -66,7 +66,7 @@ import { completeTask } from "../../../task/task";
 import {
   setBgColor,
   setSecondaryBgColor,
-} from "../../../../components//card//hooks/styleSwitch/setStyle";
+} from "../../../../components/card/hooks/styleSwitch/setStyle";
 const appStore: any = useAppStore();
 const {
   settings: appSettings,

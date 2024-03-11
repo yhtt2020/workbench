@@ -13,11 +13,8 @@ class TTApp extends Base {
   }
   bindIPC () {
     this.on('install', async (event,args)=>{
-    //todo appSqlModel.install()
-      //unzip  copy  generatemd5  writedb    id=>path
-      console.log('object :>> ', args.zipPath);
     let res =  await useRegisterTTApps(args.zipPath)
-    console.log('res :>> ', res);
+    console.log('install res :>> ', res);
       event.reply(args.cbId,res)
     })
   }

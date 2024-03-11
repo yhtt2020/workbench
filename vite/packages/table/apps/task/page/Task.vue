@@ -1,10 +1,23 @@
 <template>
-  <xt-modal custom v-model="store.isTaskDrawer" boxClass="rounded-xl" :mask="false" v-if="smallMize" :index="1500">
-    <div class="xt-modal flex task-modal rounded-xl" style="width: 500px;" >
-      <xt-left-menu :list="menusList" :end="1" model="id" style="border-radius: 12px 12px 12px 0"
-        leftClass=" 1 xt-main-bg py-3 h-full  "  :leftStyle="{'border-radius': '12px 0 0 12px',}"
+  <xt-modal
+    custom
+    v-model="store.isTaskDrawer"
+    boxClass="rounded-xl"
+    :mask="false"
+    v-if="smallMize"
+    :index="1500"
+  >
+    <div class="xt-modal flex task-modal rounded-xl" style="width: 500px">
+      <xt-left-menu
+        :list="menusList"
+        :end="1"
+        v-model:index="index"
+        model="id"
+        style="border-radius: 12px 12px 12px 0"
+        leftClass=" 1 xt-main-bg py-3 h-full  "
+        :leftStyle="{ 'border-radius': '12px 0 0 12px' }"
       />
-       <div class="w-full  xt-text pt-3 pr-3 relative">
+      <div class="w-full xt-text pt-3 pr-3 relative">
         <Primary v-if="currentTask == 'Primary'" />
         <Branch
           v-else-if="currentTask == 'Branch'"
@@ -15,14 +28,14 @@
         <Daily v-else-if="currentTask == 'Daily'" class="w-full xt-theme-b" />
         <Activity v-else-if="currentTask == 'Activity'" />
         <Set v-else-if="currentTask == 'Set'" />
-        <TaskShop v-else-if="currentTask == 'Shop'"/>
-       </div>
+        <TaskShop v-else-if="currentTask == 'Shop'" />
+      </div>
     </div>
   </xt-modal>
 </template>
 
 <script setup>
-import { ref, watch, onMounted, computed,getCurrentInstance } from "vue";
+import { ref, watch, onMounted, computed, getCurrentInstance } from "vue";
 import { storeToRefs } from "pinia";
 import { taskStore } from "../store";
 import { offlineStore } from "../../../js/common/offline";
@@ -34,11 +47,20 @@ import Set from "./Set.vue";
 import { tasks } from "../page/branch/Branch.ts";
 import { useToast } from "vue-toastification";
 import { getAllTask } from "../api";
-import {getUnFinishTaskStatus} from "../utils";
+import { getUnFinishTaskStatus } from "../utils";
 import TaskShop from "./store/TaskShop.vue";
 
 const store = taskStore();
-const { updateTime, currentUpdateTime, currentTaskList,smallMize,temporaryStatus,firstShop } = storeToRefs(store);
+const {
+  updateTime,
+  currentId,
+  currentUpdateTime,
+  currentTaskList,
+  smallMize,
+  temporaryStatus,
+  firstShop,
+  currentCompleteTaskId
+} = storeToRefs(store);
 
 const { proxy } = getCurrentInstance();
 
@@ -46,15 +68,22 @@ let Offline = offlineStore();
 let currentTask = ref("Primary");
 let task = ref([]);
 let icon = ref("");
-
+const test = (id) => {
+  index.value = id;
+};
 // 切换任务
 const selectTab = (item) => {
-  if(temporaryStatus.value){ temporaryStatus.value = false; }
-  if(item.value === 'Shop'){ firstShop.value = false }
+  if (temporaryStatus.value) {
+    temporaryStatus.value = false;
+  }
+  if (item.value === "Shop") {
+    firstShop.value = false;
+  }
   currentTask.value = item.value;
 };
 // 切换不同支线
 const selectBranchTab = (item) => {
+  console.log("222222222 :>> ", 222222222);
   icon.value = item.newIcon;
   currentTask.value = "Branch";
   task.value = tasks[item.value];
@@ -67,25 +96,26 @@ const menusList = computed(() => {
       return i.value != "chats" && i.value != "Activity";
     });
     return tmp.value;
-  } 
-  else if(isDone === 0){
+  } else if (isDone === 0) {
     let undone = ref([]);
-    undone.value = menus.value.filter((item)=>{
-      const option = item.value !== "efficiency" && item.value !== "games" && item.value !== "association";
+    undone.value = menus.value.filter((item) => {
+      const option =
+        item.value !== "efficiency" &&
+        item.value !== "games" &&
+        item.value !== "association";
       return option;
     });
-    if(firstShop.value)  return undone.value;
-    const infoUndone = undone.value.map((item)=>{
-      if(item.value === 'Shop')  return { ...item,info:[],}
-      return {...item}
+    if (firstShop.value) return undone.value;
+    const infoUndone = undone.value.map((item) => {
+      if (item.value === "Shop") return { ...item, info: [] };
+      return { ...item };
     });
     return infoUndone;
-  }
-  else {
-    if(firstShop.value) return menus.value;
-    const mapMenus = menus.value.map((item)=>{
-      if(item.value === 'Shop')  return { ...item,info:[],}
-      return {...item}
+  } else {
+    if (firstShop.value) return menus.value;
+    const mapMenus = menus.value.map((item) => {
+      if (item.value === "Shop") return { ...item, info: [] };
+      return { ...item };
     });
     return mapMenus;
   }
@@ -113,25 +143,25 @@ let menus = ref([
   //  callBack: selectTab,
   // },
   {
-   newIcon: "fluent-emoji:rocket",
-   title: "效率办公",
-   value: "efficiency",
-   callBack: selectBranchTab,
-   name: "效率",
+    newIcon: "fluent-emoji:rocket",
+    title: "效率办公",
+    value: "efficiency",
+    callBack: selectBranchTab,
+    name: "效率",
   },
   {
-   newIcon: "fluent-emoji:joystick",
-   title: "游戏辅助",
-   value: "games",
-   callBack: selectBranchTab,
-   name: "游戏",
+    newIcon: "fluent-emoji:joystick",
+    title: "游戏辅助",
+    value: "games",
+    callBack: selectBranchTab,
+    name: "游戏",
   },
   {
-   newIcon: "fluent-emoji:thought-balloon",
-   title: "社群沟通",
-   value: "association",
-   callBack: selectBranchTab,
-   name: "社群",
+    newIcon: "fluent-emoji:thought-balloon",
+    title: "社群沟通",
+    value: "association",
+    callBack: selectBranchTab,
+    name: "社群",
   },
   // {
   //   newIcon: "fluent-emoji:bullseye",
@@ -142,12 +172,12 @@ let menus = ref([
   // },
 
   {
-    newIcon:"fluent-emoji:shopping-bags",
-    value:"Shop",
-    info:['tr','red',''],
-    title:"商店",
-    callBack:selectTab,
-    name:'商店',
+    newIcon: "fluent-emoji:shopping-bags",
+    value: "Shop",
+    info: ["tr", "red", ""],
+    title: "商店",
+    callBack: selectTab,
+    name: "商店",
   },
   {
     newIcon: "fluent:settings-16-regular",
@@ -165,31 +195,49 @@ const updateTaskList = async () => {
   if (code !== 200) return;
   currentTaskList.value = data;
 };
-
-
+//
+const index = ref(0);
 onMounted(() => {
   const toast = useToast();
   toast.clear();
   currentTask.value = "Primary";
   store.initTask();
   store.getPointGoods();
-  proxy.$.appContext.config.globalProperties.$bus.on('getGood',()=>{
-    if(store.isTaskDrawer){
+  proxy.$.appContext.config.globalProperties.$bus.on("getGood", () => {
+    if (store.isTaskDrawer) {
       currentTask.value = "Shop";
-    }
-    else {
+    } else {
       store.isTaskDrawer = true;
       currentTask.value = "Shop";
     }
   });
+
+  if (currentCompleteTaskId.value) {
+    let type = currentCompleteTaskId.value.charAt(0);
+    // 截取字符串后面的字符
+    if (type == "M" || type == "m") return;
+    let taskType = taskMap[currentCompleteTaskId.value.charAt(2)];
+    let res = menus.value.find((item) => item.value == taskType);
+    index.value = 2;
+    currentTask.value = taskType;
+    res.callBack(res);
+    currentCompleteTaskId.value = "";
+  }
 });
+const taskMap = {
+  1: "games", // 游戏
+  2: "efficiency", // 效率
+  4: "association",
+  5: "association",
+  6: "association",
+};
 </script>
 
 <style lang="scss" scoped>
-:deep(.xt-bt){
+:deep(.xt-bt) {
   border-top: none !important;
 }
-:deep(.xt-br){
+:deep(.xt-br) {
   border-right: none !important;
 }
 .pop {
@@ -200,27 +248,27 @@ onMounted(() => {
   height: 60px !important;
 }
 
-@media screen and (max-height:500px){
-  .task-modal{
+@media screen and (max-height: 500px) {
+  .task-modal {
     height: 460px !important;
   }
 }
 
-@media screen and (min-height:501px) and (max-height:700px){
-  .task-modal{
-    height:  620px !important;
+@media screen and (min-height: 501px) and (max-height: 700px) {
+  .task-modal {
+    height: 620px !important;
   }
 }
 
-@media screen and (min-height:701px) {
-  .task-modal{
-    height:  720px !important;
+@media screen and (min-height: 701px) {
+  .task-modal {
+    height: 720px !important;
   }
 }
 
-:deep(.tt-info-red){
+:deep(.tt-info-red) {
   width: 12px !important;
-  height:12px !important;
+  height: 12px !important;
   border: 2px solid #ffffff;
 }
 </style>
