@@ -1,0 +1,12 @@
+<template>
+    <div>
+        <SelectIcon />
+    </div>
+</template>
+
+<script setup lang='ts'>
+import { ref, reactive } from 'vue'
+import SelectIcon from './SelectIcon.vue'
+
+</script>
+<style lang='scss' scoped></style>

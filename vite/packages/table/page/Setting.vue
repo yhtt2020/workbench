@@ -1,226 +1,228 @@
 <template>
 
-    <vue-custom-scrollbar :settings="scrollbarSettings" style="position: relative; border-radius: 8px; width: 100%;height: 100%">
-      <div class="setting-menu" style="display: flex; width: 100%;justify-content: center;justify-items: center">
-        <!-- 快速搜索 快速开关功能 -->
-        <div class="p-4 s-bg" style="
+  <vue-custom-scrollbar :settings="scrollbarSettings"
+    style="position: relative; border-radius: 8px; width: 100%;height: 100%">
+    <div class="setting-menu" style="display: flex; width: 100%;justify-content: center;justify-items: center">
+      <!-- 快速搜索 快速开关功能 -->
+      <div class="p-4 s-bg" style="
             border-radius: 0.5em;
             width: 20em;
             display: inline-block;
             color: var(--primary-text);
             background: var(--primary-bg);
           ">
-          <h3 style="color: var(--primary-text)">快速开关功能</h3>
-          <a-row :gutter="[20, 20]" style="font-size: 1.2em; text-align: center">
-                  <a-col :span="12" v-if="!$useEnv(['guest','web'])">
-              <div class="relative btn">
-                弹幕
-                <br />
-                <a-switch @change="switchBarrage" v-model:checked="settings.enableBarrage"></a-switch>
-              </div>
-            </a-col>
+        <h3 style="color: var(--primary-text)">快速开关功能</h3>
+        <a-row :gutter="[20, 20]" style="font-size: 1.2em; text-align: center">
+          <a-col :span="12" v-if="!$useEnv(['guest', 'web'])">
+            <div class="relative btn">
+              弹幕
+              <br />
+              <a-switch @change="switchBarrage" v-model:checked="settings.enableBarrage"></a-switch>
+            </div>
+          </a-col>
 
-            <a-col :span="12">
-              <div style="cursor: help" @click="tipSaving" class="relative btn">
-                节能模式<br />
-                <a-switch @click.stop="() => { }" v-model:checked="saving"></a-switch>
-              </div>
-            </a-col>
+          <a-col :span="12">
+            <div style="cursor: help" @click="tipSaving" class="relative btn">
+              节能模式<br />
+              <a-switch @click.stop="() => { }" v-model:checked="saving"></a-switch>
+            </div>
+          </a-col>
 
-            <a-col :span="12" v-if="!$useEnv()">
-              <div class="relative btn">
-                窗口控制<br />
-                <a-switch @click.stop="() => { }" v-model:checked="showWindowController"></a-switch>
-              </div>
-            </a-col>
-            <a-col :span="12">
-              <div class="relative btn test">
-                浅色模式<br />
-                <!-- <a-switch @click.native.stop="styleSwitch($event)" v-model:checked="styles"></a-switch> -->
-                <a-switch @click="themeSwitch()" v-model:checked="styles"></a-switch>
-              </div>
-            </a-col>
+          <a-col :span="12" v-if="!$useEnv()">
+            <div class="relative btn">
+              窗口控制<br />
+              <a-switch @click.stop="() => { }" v-model:checked="showWindowController"></a-switch>
+            </div>
+          </a-col>
+          <a-col :span="12">
+            <div class="relative btn test">
+              浅色模式<br />
+              <!-- <a-switch @click.native.stop="styleSwitch($event)" v-model:checked="styles"></a-switch> -->
+              <a-switch @click="themeSwitch()" v-model:checked="styles"></a-switch>
+            </div>
+          </a-col>
 
-            <a-col  :span="12" v-if="!this.isOffline">
-              <div class="relative btn">
-                社群沟通<br />
-                <a-switch v-model:checked="settings.enableChat"></a-switch>
-              </div>
-            </a-col>
-            <a-col v-if="isMain()" :span="12">
-              <div class="relative btn">
-                消息免打扰<br />
-                <a-switch v-model:checked="settings.noticeEnable"></a-switch>
-              </div>
-            </a-col>
-            <a-col :span="12" v-if="!this.isOffline">
-              <div style="cursor: help" @click="tipSimple" class="relative btn">
-                极简模式<br />
-                <a-switch @click.stop="() => { }" v-model:checked="simple"></a-switch>
-              </div>
-            </a-col>
-            <!-- <a-col :span="12">
+          <a-col :span="12" v-if="!this.isOffline">
+            <div class="relative btn">
+              社群沟通<br />
+              <a-switch v-model:checked="settings.enableChat"></a-switch>
+            </div>
+          </a-col>
+          <a-col v-if="isMain()" :span="12">
+            <div class="relative btn">
+              消息免打扰<br />
+              <a-switch v-model:checked="settings.noticeEnable"></a-switch>
+            </div>
+          </a-col>
+          <a-col :span="12" v-if="!this.isOffline">
+            <div style="cursor: help" @click="tipSimple" class="relative btn">
+              极简模式<br />
+              <a-switch @click.stop="() => { }" v-model:checked="simple"></a-switch>
+            </div>
+          </a-col>
+          <!-- <a-col :span="12">
               <div  @click="tipOffline" class="relative btn">
                 离线模式<br />
                 <a-switch @click="changeOffline"  v-model:checked="isOffline"></a-switch>
               </div>
             </a-col> -->
-            <a-col :span="12" v-if="!$useEnv()">
-              <div  class="relative btn">
-                辅助模式<br />
-                <a-switch @click="this.toggleAided"  v-model:checked="aided"></a-switch>
+          <a-col :span="12" v-if="!$useEnv()">
+            <div class="relative btn">
+              辅助模式<br />
+              <a-switch @click="this.toggleAided" v-model:checked="aided"></a-switch>
+            </div>
+          </a-col>
+          <a-col :span="12" v-if="!$useEnv()">
+            <div class="relative btn" @click="goShake">
+              摇一摇<br />
+              <div @click.stop>
+                <a-switch v-model:checked="settings.shake.enable"></a-switch>
+              </div>
+
+            </div>
+          </a-col>
+        </a-row>
+
+        <div></div>
+      </div>
+      <div class="" style="display: inline-block; vertical-align: top">
+        <div class="p-4 ml-4 s-bg menu-block" v-if="!$useEnv()">
+          <h3 style="color: var(--primary-text)">常用</h3>
+          <a-row style="font-size: 1.2em; text-align: center">
+            <a-col v-if="isMain() && isWin()" :span="6">
+              <div @click="setTouch" class="btn">
+                <!-- <Icon icon="Touch" style="font-size: 2em"></Icon> -->
+                <Iconify icon="fluent:hand-draw-16-regular" style="font-size: 2em" />
+                <div>设置触摸屏</div>
               </div>
             </a-col>
-            <a-col :span="12" v-if="!$useEnv()">
-              <div  class="relative btn" @click="goShake">
-                摇一摇<br />
-                <div @click.stop>
-                  <a-switch  v-model:checked="settings.shake.enable"></a-switch>
-                </div>
-
+            <!--              <a-col v-if="isMain() && isWin()" :span="6">-->
+            <!--                <div @click="setPen" class="btn">-->
+            <!--                  <Icon icon="icon-checkin" style="font-size: 2em"></Icon>-->
+            <!--                  <Iconify icon="fluent:pen-sparkle-16-regular" style="font-size: 2em" />  -->
+            <!--                  <div>设置笔</div>-->
+            <!--                </div>-->
+            <!--              </a-col>-->
+            <a-col :span="6">
+              <div @click="chooseScreen" class="btn">
+                <!-- <Icon icon="touping" style="font-size: 2em"></Icon> -->
+                <Iconify icon="majesticons:monitor-line" style="font-size: 2em" />
+                <div>选择屏幕</div>
               </div>
+            </a-col>
+            <a-col :span="6">
+              <div v-if="isMain()" @click="subscreen" class="btn">
+                <!-- <Icon icon="pingmufenge02" style="font-size: 2em"></Icon> -->
+                <Iconify icon="fluent:slide-settings-24-regular" style="font-size: 2em" />
+                <div> 分屏设置</div>
+              </div>
+            </a-col>
+            <a-col v-if="simple && !this.isOffline" :span="6">
+              <MyAvatar :size="37" :limit="true"></MyAvatar>
             </a-col>
           </a-row>
-
           <div></div>
         </div>
-        <div class="" style="display: inline-block; vertical-align: top">
-          <div class="p-4 ml-4 s-bg menu-block" v-if="!$useEnv()">
-            <h3 style="color: var(--primary-text)">常用</h3>
-            <a-row style="font-size: 1.2em; text-align: center">
-              <a-col v-if="isMain() && isWin()" :span="6">
-                <div @click="setTouch" class="btn">
-                  <!-- <Icon icon="Touch" style="font-size: 2em"></Icon> -->
-                  <Iconify icon="fluent:hand-draw-16-regular" style="font-size: 2em" />
-                  <div>设置触摸屏</div>
-                </div>
-              </a-col>
-<!--              <a-col v-if="isMain() && isWin()" :span="6">-->
-<!--                <div @click="setPen" class="btn">-->
-<!--                  <Icon icon="icon-checkin" style="font-size: 2em"></Icon>-->
-<!--                  <Iconify icon="fluent:pen-sparkle-16-regular" style="font-size: 2em" />  -->
-<!--                  <div>设置笔</div>-->
-<!--                </div>-->
-<!--              </a-col>-->
-              <a-col :span="6">
-                <div @click="chooseScreen" class="btn">
-                  <!-- <Icon icon="touping" style="font-size: 2em"></Icon> -->
-                  <Iconify icon="majesticons:monitor-line" style="font-size: 2em" />
-                  <div>选择屏幕</div>
-                </div>
-              </a-col>
-              <a-col :span="6">
-                <div v-if="isMain()"  @click="subscreen" class="btn">
-                  <!-- <Icon icon="pingmufenge02" style="font-size: 2em"></Icon> -->
-                  <Iconify icon="fluent:slide-settings-24-regular" style="font-size: 2em" />
-                  <div > 分屏设置</div>
-                </div>
-              </a-col>
-              <a-col v-if="simple && !this.isOffline"  :span="6">
-                <MyAvatar :size="37"  :limit="true"></MyAvatar>
-              </a-col>
-            </a-row>
-            <div></div>
-          </div>
-          <div   class="p-4 mt-4 ml-4 s-bg menu-block">
-            <h3 style="color: var(--primary-text)">其他</h3>
-            <a-row style="font-size: 1.2em; text-align: center" :gutter="[10, 10]">
-              <a-col v-if="isMain()" :span="6">
-                <div @click="editNavigation" class="btn">
-                  <!-- <Icon icon="Pushpin" style="font-size: 2em"></Icon> -->
-                  <Iconify icon="fluent:tablet-16-regular" style="font-size: 2em" />
-                  <div>导航栏编辑</div>
-                </div>
-              </a-col>
-              <a-col :span="6">
+        <div class="p-4 mt-4 ml-4 s-bg menu-block">
+          <h3 style="color: var(--primary-text)">其他</h3>
+          <a-row style="font-size: 1.2em; text-align: center" :gutter="[10, 10]">
+            <a-col v-if="isMain()" :span="6">
+              <div @click="editNavigation" class="btn">
+                <!-- <Icon icon="Pushpin" style="font-size: 2em"></Icon> -->
+                <Iconify icon="fluent:tablet-16-regular" style="font-size: 2em" />
+                <div>导航栏编辑</div>
+              </div>
+            </a-col>
+            <a-col :span="6">
 
-                  <div @click="basic" class="btn">
-                    <!-- <Icon icon="shezhi" style="font-size: 2em"></Icon> -->
-                    <Iconify icon="fluent:settings-16-regular" style="font-size: 2em" />
-                    <div>通用设置</div>
-                  </div>
-              </a-col>
-              <a-col v-if="isMain() && !$useEnv()" :span="6">
-                <div @click="goApps()" class="btn">
-                  <Iconify icon="fluent:grid-16-regular" style="font-size: 2em"></Iconify>
-                  <div>应用管理</div>
-                </div>
-              </a-col>
-              <!-- <Icon icon="jurassic_nav" style="font-size: 2em"></Icon> -->
-             <!-- <a-col v-if="isMain()" :span="6">
+              <div @click="basic" class="btn">
+                <!-- <Icon icon="shezhi" style="font-size: 2em"></Icon> -->
+                <Iconify icon="fluent:settings-16-regular" style="font-size: 2em" />
+                <div>通用设置</div>
+              </div>
+            </a-col>
+            <a-col v-if="isMain() && !$useEnv()" :span="6">
+              <div @click="goApps()" class="btn">
+                <Iconify icon="fluent:grid-16-regular" style="font-size: 2em"></Iconify>
+                <div>应用管理</div>
+              </div>
+            </a-col>
+            <!-- <Icon icon="jurassic_nav" style="font-size: 2em"></Icon> -->
+            <!-- <a-col v-if="isMain()" :span="6">
                <div @click="wizard" class="btn">
                  <Iconify icon="fluent:star-settings-24-regular" style="font-size: 2em" />
                  <div>配置向导</div>
                </div>
              </a-col> -->
 
-              <a-col :span="6">
-                <div @click="papersSettings" class="btn">
-                  <!-- <Icon icon="banner" style="font-size: 2em"></Icon> -->
-                  <Iconify icon="fluent:image-multiple-16-regular" style="font-size: 2em" />
-                  <div>壁纸</div>
-                </div>
-              </a-col>
+            <a-col :span="6">
+              <div @click="papersSettings" class="btn">
+                <!-- <Icon icon="banner" style="font-size: 2em"></Icon> -->
+                <Iconify icon="fluent:image-multiple-16-regular" style="font-size: 2em" />
+                <div>壁纸</div>
+              </div>
+            </a-col>
 
 
-              <a-col :span="6">
+            <a-col :span="6">
 
-                  <div @click="settingTheme" class="btn">
-                    <!-- <Icon icon="yifu" style="font-size: 2em"></Icon> -->
-                    <Iconify icon="fluent:color-24-regular" style="font-size: 2em" />
-                    <div>主题颜色</div>
-                  </div>
-              </a-col>
-              <a-col v-if="isMain() && !this.isOffline" :span="6">
-                <div @click="invite" class="btn">
-                  <!-- <Icon icon="tianjiachengyuan" style="font-size: 2em"></Icon> -->
-                  <Iconify icon="fluent:people-add-16-regular" style="font-size: 2em" />
-                  <div>邀请</div>
-                </div>
-              </a-col>
-              <a-col v-if="isMain() && !this.isOffline" :span="6">
-                <div @click="verify" class="btn">
-                  <!-- <Icon icon="team" style="font-size: 2em"></Icon> -->
-                  <Iconify icon="fluent:people-16-regular" style="font-size: 2em" />
-                  <div>受邀</div>
-                </div>
-              </a-col>
-              <a-col v-if="userInfo && userInfo.uid === 4 && isMain() && false" :span="6">
-                <div @click="createCodes" class="btn">
-                  <Icon icon="shezhi" style="font-size: 2em"></Icon>
-                  <div>生成激活码</div>
-                </div>
-              </a-col>
-              <a-col :span="6" v-if="!$useEnv()">
-                <div @click="power" class="btn">
-                  <!-- <Icon icon="tuichu" style="font-size: 2em"></Icon> -->
-                  <Iconify icon="fluent:power-20-filled" style="font-size: 2em" />
-                  <div>电源</div>
-                </div>
-              </a-col>
-            </a-row>
-            <div></div>
-          </div>
+              <div @click="settingTheme" class="btn">
+                <!-- <Icon icon="yifu" style="font-size: 2em"></Icon> -->
+                <Iconify icon="fluent:color-24-regular" style="font-size: 2em" />
+                <div>主题颜色</div>
+              </div>
+            </a-col>
+            <a-col v-if="isMain() && !this.isOffline" :span="6">
+              <div @click="invite" class="btn">
+                <!-- <Icon icon="tianjiachengyuan" style="font-size: 2em"></Icon> -->
+                <Iconify icon="fluent:people-add-16-regular" style="font-size: 2em" />
+                <div>邀请</div>
+              </div>
+            </a-col>
+            <a-col v-if="isMain() && !this.isOffline" :span="6">
+              <div @click="verify" class="btn">
+                <!-- <Icon icon="team" style="font-size: 2em"></Icon> -->
+                <Iconify icon="fluent:people-16-regular" style="font-size: 2em" />
+                <div>受邀</div>
+              </div>
+            </a-col>
+            <a-col v-if="userInfo && userInfo.uid === 4 && isMain() && false" :span="6">
+              <div @click="createCodes" class="btn">
+                <Icon icon="shezhi" style="font-size: 2em"></Icon>
+                <div>生成激活码</div>
+              </div>
+            </a-col>
+            <a-col :span="6" v-if="!$useEnv()">
+              <div @click="power" class="btn">
+                <!-- <Icon icon="tuichu" style="font-size: 2em"></Icon> -->
+                <Iconify icon="fluent:power-20-filled" style="font-size: 2em" />
+                <div>电源</div>
+              </div>
+            </a-col>
+          </a-row>
+          <div></div>
         </div>
       </div>
-    </vue-custom-scrollbar>
-  <xt-msg :modelValue="simpleVisible" title="极简模式" text="使用极简模式后，将隐藏部分娱乐、社交类的功能，例如用户中心，小队，任务功能" :noVisible="false" @ok="this.simpleVisible=false"></xt-msg>
-  <div  style="z-index: 90" v-if="editNavigationVisible">
+    </div>
+  </vue-custom-scrollbar>
+  <xt-msg :modelValue="simpleVisible" title="极简模式" text="使用极简模式后，将隐藏部分娱乐、社交类的功能，例如用户中心，小队，任务功能" :noVisible="false"
+    @ok="this.simpleVisible = false"></xt-msg>
+  <!-- <div  style="z-index: 90" v-if="editNavigationVisible">
     <navigationSetting @setQuick="editNavigationVisible = false,this.editToggle=false"></navigationSetting>
-  </div>
+  </div> -->
   <!-- <a-drawer :width="500" v-if="styleVisible" v-model:visible="styleVisible" placement="right" style="z-index: 102">
     <XtColor v-model:color="bgColor" title="主题" btnText="恢复默认主题颜色" @onBtnClick="clearBgColor"></XtColor>
     <XtColor v-model:color="textColor" title="文本" btnText="恢复默认文本颜色" @onBtnClick="clearTextColor"></XtColor>
     <XtColor v-model:color="wallpaperColor" title="背景" @onBtnClick="clearWallpaperColor" btnText="恢复默认壁纸颜色"></XtColor>
   </a-drawer> -->
 
-  <ThemeSettingModal ref="themeRef"/>
+  <ThemeSettingModal ref="themeRef" />
 
   <a-modal v-model:visible="visibleChooseScreen" :title="null" width="100%" :footer="null" wrap-class-name="full-modal"
     @ok="() => {
-        this.visibleChooseScreen = false;
-      }
-      ">
+    this.visibleChooseScreen = false;
+  }
+    ">
     <div style="zoom: 1.5; font-size: 16px; padding-top: 5em; text-align: center">
       <div style="width: 500px; overflow: visible; display: inline-block">
         <ChooseScreen></ChooseScreen>
@@ -260,8 +262,7 @@ import GradeSmallTip from "../components/GradeSmallTip.vue";
 import { isMain,isWin } from "../js/common/screenUtils";
 import MyAvatar from "../components/small/MyAvatar.vue";
 // import EditNavigation from '../components/bottomPanel/EditNavigation.vue'
-import EditNewNavigation from "../components/desk/navigationBar/EditNewNavigation.vue";
-import navigationSetting from "../components/desk/navigationBar/navigationSetting.vue";
+import EditNewNavigation from "../components/desk/addIcon/EditNewNavigation.vue";
 import ThemeSettingModal from "../components/setting/ThemeSettingModal.vue";
 
 import { taskStore } from "../apps/task/store";
@@ -272,7 +273,7 @@ import {Icon as Iconify} from '@iconify/vue';
 export default {
   name: "Setting",
   components: {
-    EditNewNavigation, MyAvatar, SecondPanel, ChooseScreen, GradeSmallTip,Iconify,navigationSetting,
+    EditNewNavigation, MyAvatar, SecondPanel, ChooseScreen, GradeSmallTip,Iconify,
     ThemeSettingModal
   },
   data() {
@@ -531,11 +532,11 @@ export default {
   // width: 455px;
   // height: 100px;
 }
-.menu-block{
+
+.menu-block {
   border-radius: 0.5em;
   width: 40em;
   color: var(--primary-text);
   background: var(--primary-bg);
 }
-
-</style>
+</style>../components/desk/addIcon/EditNewNavigation.vue

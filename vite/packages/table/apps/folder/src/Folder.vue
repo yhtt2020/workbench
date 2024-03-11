@@ -1,73 +1,28 @@
 <template>
-  <Drop
-    @createFile="createFile"
-    @deleteFile="deleteFile"
-    @updateBg="updateBg"
-    ref="folder"
-    class="tt-folder-container"
-  >
-    <xt-container
-      v-model:status="status"
-      :modalSize="modalSize"
-      :options="options"
-      :customIndex="customIndex"
-      :customData="customData"
-      :header="header"
-      :menuList="menuList"
-      :sizeList="autoSizeList"
-      @leftClick="leftClick"
-      v-model:customSize="customData.customSize"
-      @delete="deleteFn"
-      class="tt-folder-container"
-    >
+  <Drop @createFile="createFile" @deleteFile="deleteFile" @updateBg="updateBg" ref="folder" class="tt-folder-container">
+    <xt-container v-model:status="status" :modalSize="modalSize" :options="options" :customIndex="customIndex"
+      :customData="customData" :header="header" :menuList="menuList" :sizeList="autoSizeList" @leftClick="leftClick"
+      v-model:customSize="customData.customSize" @delete="deleteFn" class="tt-folder-container">
       <!-- 空状态显示状态 -->
       <template v-if="customData.list.length <= 0 && !dragSortState">
         <Null :size="customData.customSize" @addFile="addFileClick" />
       </template>
       <!-- 非空状态 -->
-      <vue-custom-scrollbar
-        v-else
-        style="padding-right: 4px"
-        :settings="{
-          useBothWheelAxes: true,
-          suppressScrollY: false,
-        }"
-        class="relative w-full h-full"
-      >
-        <File
-          :list="customData.list"
-          :layout="customData.layout"
-          :model="customData.model"
-          :modalSize="modalSize"
-          @deleteFile="deleteFile"
-          @updateFile="updateFile"
-          @updateList="updateList"
-          @updateSort="updateSort"
-          @clickFile="clickFile"
-        />
+      <vue-custom-scrollbar v-else style="padding-right: 4px" :settings="{
+    useBothWheelAxes: true,
+    suppressScrollY: false,
+  }" class="relative w-full h-full">
+        <File :list="customData.list" :layout="customData.layout" :model="customData.model" :modalSize="modalSize"
+          @deleteFile="deleteFile" @updateFile="updateFile" @updateList="updateList" @updateSort="updateSort"
+          @clickFile="clickFile" />
       </vue-custom-scrollbar>
     </xt-container>
   </Drop>
-  <FolderSet
-    v-if="setVisible"
-    :data="customData"
-    @close="setVisible = false"
-    @updateSort="updateSort"
-    @updateWindowApp="updateWindowApp"
-  />
-  <EditNewNavigation
-    v-if="editVisible"
-    @setQuick="editVisible = false"
-    @addIcon="addFile"
-    :isFolder="true"
-  />
+  <FolderSet v-if="setVisible" :data="customData" @close="setVisible = false" @updateSort="updateSort"
+    @updateWindowApp="updateWindowApp" />
+  <EditNewNavigation v-if="editVisible" @setQuick="editVisible = false" @addIcon="addFile" :isFolder="true" />
 
-  <Expand
-    :data="props"
-    :auto="false"
-    v-if="expandVisible"
-    @close="expandClose"
-  ></Expand>
+  <Expand :data="props" :auto="false" v-if="expandVisible" @close="expandClose"></Expand>
 </template>
 
 <script setup>
@@ -105,7 +60,7 @@ const FolderSet = defineAsyncComponent(() =>
   import("./folderSet/folderSet.vue")
 );
 const EditNewNavigation = defineAsyncComponent(() =>
-  import("../../../components/desk/navigationBar/EditNewNavigation.vue")
+  import("../../../components/desk/addIcon/EditNewNavigation.vue")
 );
 
 const { proxy } = getCurrentInstance();
@@ -576,3 +531,4 @@ onMounted(async () => {
   margin-left: 0px !important;
 }
 </style>
+../../../components/desk/addIcon/EditNewNavigation.vue

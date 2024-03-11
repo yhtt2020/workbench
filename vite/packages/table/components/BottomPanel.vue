@@ -18,11 +18,7 @@
         <UserBar @openControl="openControl"></UserBar>
         <!-- 快速搜索 底部栏区域 -->
         <Drop @createFile="createFile" currentId="bottom">
-          <Dock 
-            @edit="edit" 
-            @control="openControl" 
-            @getDelIcon="getDelIcon" 
-            ref="dock">
+          <Dock @edit="edit" @control="openControl" @getDelIcon="getDelIcon" ref="dock">
           </Dock>
         </Drop>
         <keep-alive>
@@ -65,8 +61,7 @@ import navigationData from '../js/data/tableData'
 import { offlineStore } from '../js/common/offline'
 import { moreMenus, extraRightMenu } from '../components/desk/navigationBar/index'
 import { useMergeFolder } from '../components/desk/navigationBar/hook/mergeFolder.ts'
-import navigationSetting from './desk/navigationBar/navigationSetting.vue'
-import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
+import EditNewNavigation from './desk/addIcon/EditNewNavigation.vue'
 import { useNavBarStore } from './desk/navigationBar/navBar'
 import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
 import EditIcon from './desk/navigationBar/components/EditIcon/EditIcon.vue'
@@ -98,7 +93,6 @@ export default {
     Dock,
     TeamTip,
     TaskBox,
-    navigationSetting,
     EditNewNavigation,
     xtMixMenu,
     EditIcon,
@@ -212,7 +206,7 @@ export default {
   props: {
   },
   unmounted() {
-    window.removeEventListener('mousemove', that.listenMouse)
+    window.removeEventListener('mousemove', this.listenMouse)
   },
   mounted() {
     this.$bus.on('stopHide', () => { this.hoverTabs = true })
@@ -560,4 +554,4 @@ export default {
   opacity: 0.5;
 }
 </style>
-./bottomPanel/Dock.vue/index.ts
+./bottomPanel/Dock.vue/index.ts./desk/addIcon/EditNewNavigation.vue/index.ts

@@ -9,45 +9,31 @@
         <div class="p-4 mt-4 rounded-lg xt-bg-2">
             <div class="mb-4 text-base xt-text">链接</div>
             <div class="text-sm xt-text-2 ">设置点击图片后打开的链接地址。</div>
-            <div class="flex flex-row items-center justify-center mt-4" style="gap: 20px;" v-if="appPath == undefined || appPath == '' ">
+            <div class="flex flex-row items-center justify-center mt-4" style="gap: 20px;"
+                v-if="appPath == undefined || appPath == ''">
                 <xt-button w="132" h="40" radius="8" class="xt-bg" @click="openLink">网站链接</xt-button>
                 <xt-button w="132" h="40" radius="8" class="xt-bg" @click="localFile">本地文件</xt-button>
                 <xt-button w="132" h="40" radius="8" class="xt-bg" @click="openApp">应用导航</xt-button>
             </div>
             <div class="mt-4 min-w-[450px]" v-else>
-              <xt-option-input v-model:input="inputPath"></xt-option-input>
+                <xt-option-input v-model:input="inputPath"></xt-option-input>
             </div>
 
         </div>
         <div class="p-4 mt-4 rounded-lg xt-bg-2">
-            <xt-option-info
-                :title="unBorder.title"
-                :info="unBorder.info"
-                :isSwitch="unBorder.isSwitch"
-                :switch="unBorder.switch"
-                @update:switch="updateBorder">
+            <xt-option-info :title="unBorder.title" :info="unBorder.info" :isSwitch="unBorder.isSwitch"
+                :switch="unBorder.switch" @update:switch="updateBorder">
             </xt-option-info>
             <div class="w-full h-[1px] mb-2" style="background:var(--divider) ;"></div>
-            <xt-option-info
-                :title="displayName.title"
-                :info="displayName.info"
-                :isSwitch="displayName.isSwitch"
-                :switch="displayName.switch"
-                @update:switch="updateName">
+            <xt-option-info :title="displayName.title" :info="displayName.info" :isSwitch="displayName.isSwitch"
+                :switch="displayName.switch" @update:switch="updateName">
             </xt-option-info>
             <xt-option-input v-model:input="inputValue"></xt-option-input>
         </div>
         <teleport to='body'>
-            <EditNewNavigation
-                :isFolder="true"
-                v-if="editVisible"
-                @setQuick="editVisible = false"
-                @addIcon="getApp">
+            <EditNewNavigation :isFolder="true" v-if="editVisible" @setQuick="editVisible = false" @addIcon="getApp">
             </EditNewNavigation>
-            <CustomLink
-                v-if="linkVisible"
-                v-model="linkVisible"
-                :linkLimit="{hideTab:true,hideIcon:true}"
+            <CustomLink v-if="linkVisible" v-model="linkVisible" :linkLimit="{ hideTab: true, hideIcon: true }"
                 @save="saveLink">
             </CustomLink>
         </teleport>
@@ -55,13 +41,13 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, computed, toRefs,watch,onMounted,defineAsyncComponent } from 'vue'
+import { ref, reactive, computed, toRefs, watch, onMounted, defineAsyncComponent } from 'vue'
 import UploadImage from './UploadImg.vue';
 // import EditNewNavigation from '../../../desk/navigationBar/EditNewNavigation.vue';
-const EditNewNavigation = defineAsyncComponent(() => import('../../../desk/navigationBar/EditNewNavigation.vue'));
+const EditNewNavigation = defineAsyncComponent(() => import('../../../desk/addIcon/EditNewNavigation.vue'));
 // import CustomLink from '../../../desk/navigationBar/components/CustomLink.vue';
 const CustomLink = defineAsyncComponent(() => import('../../../desk/navigationBar/components/CustomLink.vue'));
-import {useNavigationStore} from '../../../desk/navigationBar/navigationStore';
+import { useNavigationStore } from '../../../desk/navigationBar/navigationStore';
 const props = defineProps({
     modalVisible: {
         type: Boolean,
@@ -83,7 +69,7 @@ const props = defineProps({
         type: String,
         default: ''
     },
-    img:{
+    img: {
         type: Object,
         default: {}
     }
@@ -97,7 +83,7 @@ const linkVisible = ref(false)
 
 const store = useNavigationStore()
 
-const { noBorder, showName,customInput,linkPath } = toRefs(props)
+const { noBorder, showName, customInput, linkPath } = toRefs(props)
 
 const emit = defineEmits([
     'close',
@@ -152,17 +138,17 @@ const updateName = (val: boolean) => {
     // console.log('updateName', val)
 }
 
-watch(()=>inputValue.value, (val) => {
+watch(() => inputValue.value, (val) => {
     emit('updateInput', val)
     // console.log('customInput', val)
 })
 
-watch(()=>inputPath.value, (val) => {
+watch(() => inputPath.value, (val) => {
     emit('updateLink', val)
     // console.log('linkPath', val)
 })
 
-watch(()=>linkPath.value, (val) => {
+watch(() => linkPath.value, (val) => {
     appPath.value = val
     inputPath.value = appPath.value.value || appPath.value
     // console.log('linkPath', val)
@@ -174,17 +160,17 @@ onMounted(() => {
     inputPath.value = appPath.value.value || appPath.value
 })
 
-const localFile = async() => {
+const localFile = async () => {
     let openPath = await tsbApi.dialog.showOpenDialog({
         title: "选择图片",
-        filters: [{ name: "图片", extensions: ["png",'jpeg','jpg','svg','bmp','gif','webp'] },{ name: "全部", extensions: ["*"] }],
+        filters: [{ name: "图片", extensions: ["png", 'jpeg', 'jpg', 'svg', 'bmp', 'gif', 'webp'] }, { name: "全部", extensions: ["*"] }],
         properties: ["multiSelections"],
-      });
-      if (!openPath) {
+    });
+    if (!openPath) {
         return;
-      } else {
+    } else {
         emit('localFile', openPath[0])
-      }
+    }
 }
 
 const openApp = () => {
@@ -192,7 +178,7 @@ const openApp = () => {
     store.selectNav = 'desktop'
 }
 
-const getApp = (item:object,index: number) => {
+const getApp = (item: object, index: number) => {
     // console.log('getApp', index, item)
     emit('updateLink', item)
     editVisible.value = false
@@ -204,3 +190,4 @@ const updateImg = (img) => {
 }
 </script>
 <style lang='scss' scoped></style>
+../../../desk/addIcon/EditNewNavigation.vue
