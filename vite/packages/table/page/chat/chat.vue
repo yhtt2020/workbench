@@ -4,7 +4,7 @@
       <router-view ></router-view>
     </div>
     <template v-for="item in filterList" #[item.float]>
-      <CategoryFloat v-if="item.route.params.no !== 1" :no="item.route.params.no" @clickItem="currentItem"></CategoryFloat>
+      <CategoryFloat v-if="item.route?.params?.no !== 1" :no="item.route?.params?.no" @clickItem="currentItem"></CategoryFloat>
       <DefaultFloat v-else></DefaultFloat>
     </template>
     <template #createCom>
