@@ -547,6 +547,9 @@ export default {
         })
         window.addEventListener("resize", this.handleResize)
         this.handleResize()
+        this.$bus.on('closeEdit',()=>{
+            this.modelValue = false;
+        })
     },
     beforeUnmount() {
         window.removeEventListener("resize", this.handleResize)

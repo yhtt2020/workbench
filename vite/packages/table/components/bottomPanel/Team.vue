@@ -1,209 +1,151 @@
 <template>
-  <!-- :popperOptions="popperOptions" -->
-  <tippy 
-    :placement="placement" 
-    :interactive="true" 
-    :appendTo="body" 
-    :arrow="false" 
-    trigger="click"
-    :zIndex="999999" 
-    ref="tippyRef">
-    <Avatar :item="item"></Avatar>
-    <template #content>
-      <div class="flex flex-wrap w-[278px] h-[185px] rounded-xl xt-bg -m-3"
-        style="padding-top: 6px; padding-bottom: 6px;backdrop-filter: blur(50px);">
-        <div v-for="t in teamList" :key="t.title" class="team-item" @click="jump(t.type, t)">
-          <a-avatar :src="t.img" :size="40"></a-avatar>
-          <span>{{ t.title }}</span>
-        </div>
-        <div class="team-item" @click="openTask()">
-          <a-avatar src="/img/task/star.png" :size="40"></a-avatar>
-          <span>任务中心 </span>
-        </div>
-      </div>
-    </template>
-  </tippy>
-  <teleport to='body'>
-    <TeamTip :key="teamKey" v-model:visible="showTeamTip"></TeamTip>
-    <MyProp :showMyProp="showMyProp" @closeMyProp="closeMyProp"></MyProp>
+  <Avatar :item="item" />
+
+    <teleport to='body'>
+    <div
+    style="position: absolute; z-index: 500 !important"
+      :style="{
+        left: `${x}px`,
+        bottom: `${y}px`,
+      }"
+      class="rounded-xl pointer"
+      id="folder"
+    >
+    <Folder
+      @clickFile="close"
+      @close = "close"
+      :customData="customData"
+      :customIndex="bottomKey"
+      :secondary="true"
+      v-if="visible"
+      :expand="{ disabled: true }"
+      :navBar="{
+        resize: false,
+        sizeOption: false,
+        isDel: true,
+        hierarchy: true,
+        close: true,
+        disableHeader: true,
+      }"
+      :auto="true"
+      />
+    </div>
+    <TeamTip :key="teamKey" v-model:visible="store.showTeamTip"></TeamTip>
+    <MyProp :showMyProp="store.showMyProp" @closeMyProp="closeMyProp"></MyProp>
   </teleport>
 </template>
 
-<script>
-import TeamTip from '../TeamTip.vue'
-import { mapWritableState, mapActions } from 'pinia'
-import { teamStore } from '../../store/team'
-import MyProp from '../team/MyProp.vue'
-import Emoji from '../comp/Emoji.vue'
-import { taskStore } from '../../apps/task/store'
-import { offlineStore } from '../../js/common/offline'
-import { renderIcon } from '../../js/common/common'
+<script setup lang='ts'>
+import { ref,computed,toRefs,onMounted,watch } from 'vue'
 import Avatar from '../../components/desk/navigationBar/components/Avatar.vue'
-import { useNavigationStore } from '../desk/navigationBar/navigationStore'
-export default {
-  name: "Team",
-  components: {
-    Emoji,
-    TeamTip,
-    MyProp,
-    Avatar
-  },
-  props: {
-    item: Object,
-    shakeElement: Boolean,
-    placement: {
-      type: String,
-      default: 'top'
-    },
-    x: Number,
-    y: Number,
-  },
-  data() {
-    return {
-      teamList: [
-        {
-          img: '/img/bottomPanel/my.png',
-          title: '我的',
-          route: {
-            name: 'socialMy'
-          },
-          type: 'route'
-        },
-        {
-          img: '/img/bottomPanel/team.png',
-          title: '小队',
-          type: 'team'
-        },
-        {
-          img: '/img/bottomPanel/rank.png',
-          title: '榜单',
-          route: {
-            name: 'rank'
-          },
-          type: 'route'
-        },
-        {
-          img: '/img/bottomPanel/prop.png',
-          title: '我的道具',
-          type: 'prop'
-        },
-        {
-          img: '/img/bottomPanel/market.png',
-          title: '道具商城',
-          route: {
-            name: 'prop'
-          },
-          type: 'route'
-        },
-      ],
-      //显示小组提示
-      showTeamTip: false,
-      openTeam: false,
-      showMyProp: false,
-    }
-  },
-  computed: {
-    ...mapWritableState(teamStore, ['team', 'teamVisible']),
-    ...mapWritableState(taskStore, ['isTaskDrawer']),
-    ...mapWritableState(offlineStore, ['isOffline']),
-    body() {
-      return document.body
-    },
-    // tippy自定义位置
-    // popperOptions() {
-    //   return {
-    //     modifiers: [
-    //       {
-    //         name: 'computeStyles',
-    //         options: {
-    //           adaptive: false, // 禁用自适应，否则将无法设置 fixed 位置
-    //         },
-    //       },
-    //       {
-    //         name: 'applyStyles',
-    //         fn: ({ state }) => {
-    //           this.$nextTick(()=>{
-    //             Object.assign(state.elements.popper.style, {
-    //               position: 'fixed',
-    //               left: `${this.x}px`,
-    //               top: `${this.y}px`, 
-    //             });
-    //           })
-    //         },
-    //       },
-    //     ],
-    //   };
-    // },
-  },
-  methods: {
-    renderIcon,
-    ...mapActions(teamStore, ['updateMy']),
-    openTask() {
-      this.isTaskDrawer = true
-      this.$refs.tippyRef.hide()
-    },
-    async jump(type, val) {
-      switch (type) {
-        case 'route':
-          this.$router.push(val.route)
-          break;
-        case 'team':
-          await this.updateMy(0)
-          if (this.team.status === false) {
-            this.teamKey = Date.now()
+import Folder from '../../apps/folder/src/Folder.vue';
+import TeamTip from '../TeamTip.vue'
+import MyProp from '../team/MyProp.vue'
+import { defaultFolderData } from '../../apps/folder/src/components/options';
+import { nanoid } from 'nanoid';
 
-            this.showTeamTip = true
-          } else {
+import { useComStore } from './comStore';
+// import { storeToRefs } from 'pinia';
+const store = useComStore()
+// const {showTeamTip,showMyProp} = storeToRefs(store)
 
-            this.teamVisible = !this.teamVisible
-          }
-          break;
-        case 'prop':
-          this.showMyProp = true
-          break;
-      }
-      this.openTeam = false
-      this.$refs.tippyRef.hide()
-    },
-    toggleTeam() {
-      this.openTeam = !this.openTeam
-    },
-    closeMyProp(val) {
-      this.showMyProp = val
-    }
+const props = defineProps<{
+  item: any,
+  x: number,
+  y: number,
+  visible: boolean
+}>()
+
+const { item, x, y,visible } = toRefs(props)
+
+const emit = defineEmits(['close'])
+
+// 文件夹数据列表
+const list = ref([
+  {
+    icon: '/img/bottomPanel/my.png',
+    name: '我的',
+    value: 'socialMy',
+    type: 'systemApp',
+    id:nanoid(6)
   },
-  watch:{
-    x(val){
-      console.log('x',val)
-      // this.$refs.tippyRef.destroy()
-      this.$nextTick(()=>{
-        this.$refs.tippyRef.enable()
-      })
-    },
-    y(val){
-      console.log('y',val)
-      // this.$refs.tippyRef.popperInstance.update()
-    }
+  {
+    icon: '/img/bottomPanel/team.png',
+    name: '小队',
+    type: 'fixed',
+    id:nanoid(6),
+    value:'team'
+  },
+  {
+    icon: '/img/bottomPanel/rank.png',
+    name: '榜单',
+    value: 'rank',
+    type: 'systemApp',
+    id:nanoid(6)
+  },
+  {
+    icon: '/img/bottomPanel/prop.png',
+    name: '我的道具',
+    type: 'fixed',
+    id:nanoid(6),
+    value:'myProp'
+  },
+  {
+    icon: '/img/bottomPanel/market.png',
+    name: '道具商城',
+    value: 'prop',
+    type: 'systemApp',
+    id:nanoid(6)
+  },
+  {
+    icon:'/img/task/star.png',
+    name: '任务',
+    value: 'task',
+    type:'systemApp',
+    id:nanoid(6)
   }
+])
+
+
+const bottomKey = ref(Date.now())
+
+const customData = computed(() => {
+  return {
+    ...defaultFolderData,
+    list:list.value,
+    customSize:'2x2',
+    name:'社区助手',
+    layout:'rows',
+  }
+})
+
+// 关闭文件夹
+const close = (item) => {
+  emit('close')
 }
+
+// 关闭我的道具弹窗
+const closeMyProp = () => {
+  store.showMyProp = false
+}
+
+// watch(
+//   () => store.showTeamTip,
+//   () => {
+//     console.log('showTeamTip',store.showTeamTip);
+//   }
+// )
+// watch(
+//   () => store.showMyProp,
+//   () => {
+//     console.log('showMyProp',store.showMyProp);
+//   }
+// )
+
+
+// onMounted(() => {
+//   console.log('mounted',customData.value);
+// })
 </script>
 
-<style lang="scss" scoped>
-.team-item {
-  width: 80px;
-  height: 80px;
-  border-radius: 12px;
-  margin: 0 6px 12px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0 6px;
-  cursor: pointer;
-  color: var(--primary-text);
-
-  &:hover {
-    background: rgba(80, 139, 254, 0.20);
-  }
-}
-</style>
+<style lang='scss' scoped></style>

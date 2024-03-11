@@ -8,7 +8,7 @@
                 <div class="flex justify-between mb-4">
                     <div class="text-base xt-text-2">推荐颜色</div>
                     <!-- <xt-button :w="24" :h="24"> -->
-                    <xt-new-icon icon="fluent:dismiss-circle-16-filled" size="24" @click="tippyRef.hide()"></xt-new-icon>
+                    <xt-new-icon icon="fluent:dismiss-circle-16-filled" size="24" @click="hideTippy"></xt-new-icon>
                     <!-- </xt-button> -->
                 </div>
                 <div class="flex flex-1 ml-2 mr-2">
@@ -16,7 +16,7 @@
                         <div class="flex items-center justify-center item" :key="item"
                             :style="{ background: props.defaultList[`${'color' + item}`] }"
                             v-for="(item, index) in Object.keys(props.defaultList).length" @click="chooseDf(item)">
-                            <xt-new-icon v-show="colorIndex == item" icon="ri:checkbox-circle-fill" size="20"></xt-new-icon>
+                            <xt-new-icon v-show="color == props.defaultList[`${'color' + item}`]" icon="ri:checkbox-circle-fill" size="20"></xt-new-icon>
                         </div>
                         
                         <div class="w-[40px] h-[40px] pointer">
@@ -41,7 +41,7 @@
                             <div class="flex items-center justify-center item" :key="item"
                                 :style="{ background: props.linearList[`${'color' + item}`] }"
                                 v-for="(item, index) in Object.keys(props.linearList).length" @click="chooseLinear(item)">
-                                <xt-new-icon v-show="linearIndex == item" icon="ri:checkbox-circle-fill"
+                                <xt-new-icon v-show="color == props.linearList[`${'color' + item}`]" icon="ri:checkbox-circle-fill"
                                     size="20"></xt-new-icon>
                             </div>
                         </div>
@@ -56,8 +56,10 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, toRefs, computed, onMounted } from 'vue'
 import 'tippy.js/dist/tippy.css';
+import {message} from 'ant-design-vue'
+
 const colorIndex = ref(0)
 const linearIndex = ref(0)
 const defaultColor = ref('#508BFE')
@@ -65,14 +67,18 @@ const emit = defineEmits(['change'])
 // tippy弹窗
 const tippyRef = ref(null)
 export interface colorPicker {
+    // 普通颜色列表
     defaultList: {
         [key: string]: string
     },
+    // 渐变色列表
     linearList: {
         [key: string]: string
     },
+    // 是否显示渐变色
     isLinear?: boolean,
-    colorNum?: number,
+    // 选中的颜色
+    color: string,
 }
 const props = withDefaults(defineProps<colorPicker>(), {
     defaultList: {
@@ -100,9 +106,10 @@ const props = withDefaults(defineProps<colorPicker>(), {
         color10: ' linear-gradient(135deg, #A8EEA8 0%, #3354DA 100%)',
     },
     isLinear: true,
-    colorNum: 9,
 
 })
+
+const { color} = toRefs(props);
 // Object.keys(linearList).length
 const body = computed(() => {
     return document.body
@@ -120,7 +127,7 @@ const chooseDf = (item) => {
         linearIndex.value = 0;
         emit('change', props.defaultList[`color${item}`]);
     }
-    tippyRef.value.hide()
+    hideTippy()
 }
 /**
  * 线性渐变
@@ -134,13 +141,22 @@ const chooseLinear = (item) => {
         colorIndex.value = 0;
         emit('change', props.linearList[`color${item}`]);
     }
-    tippyRef.value.hide()
+    hideTippy()
 }
 /**
  * 取色器
  */
 const updateBackground = () => {
     emit('change', defaultColor.value)
+}
+
+// 容错处理，防止没有获取到tippyRef，导致页面卡死
+const hideTippy = () => {
+    if(tippyRef.value){
+        tippyRef.value.hide()
+    }else{
+        message.error('自动关闭失败，请手动关闭')
+    }
 }
 </script>
 <style lang='scss' scoped>
@@ -149,8 +165,6 @@ const updateBackground = () => {
     height: 40px;
     border-radius: 10px;
     cursor: pointer;
-    // margin-bottom: 16px;
-    // margin-right: 16px;
 }
 
 .item-box {
@@ -161,29 +175,10 @@ const updateBackground = () => {
 
 }
 
-// .item-box .item:nth-child(5n + 1) {
-//     margin-left: 8px !important;
-// }
-
-// .item-box .item:nth-child(5n) {
-//     margin-right: 8px !important;
-// }
-
 .shadow {
     box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.03);
     box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
     box-shadow: 0px 0px 40px 0px rgba(0, 0, 0, 0.2);
-}
-
-:deep(.tippy-box) {
-    border-radius: 12px !important;
-    padding: 0px;
-    background: var(--modal-bg);
-
-    & .tippy-content {
-        background: var(--modal-bg) !important;
-        padding: 0px;
-    }
 }
 
 :deep(.zs-color-picker-btn) {
@@ -193,18 +188,7 @@ const updateBackground = () => {
 
 :deep(.zs-color-picker-btn-color) {
     border-radius: 12px;
-    // background-image: url('/img/bg.png') !important;
     background-size: cover;
-    // margin-left: 8px;
     opacity: 0.2;
-}
-
-// :host-context([data-tippy-root]) :deep .tippy-box[data-theme~='tomato'] {
-//   background-color: tomato !important;
-//   color: yellow !important;
-// }
-.tippy-box[data-theme="tomato"] {
-    border-radius: 12px !important;
-    color: red !important;
 }
 </style>

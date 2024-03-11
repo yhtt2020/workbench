@@ -16,7 +16,7 @@ import PointGoodsDetail from './PointGoodsDetail.vue';
 import Exit from "../../components/Exit.vue";
 
 const task = taskStore();
-const { pointGoods }  = storeToRefs(task);
+const { pointGoods,pointGoodsDetail }  = storeToRefs(task);
 // 商品列表
 const goodList = ref(pointGoods.value);
 
@@ -28,10 +28,20 @@ const goodID = ref(0);
 /**事件**/
 // 详情 
 const goDetail = (id) =>{
-  task.getPointGoodsDetail(id);
-  setTimeout(()=>{
-    detailVisible.value = true;
-  },300)
+  if(window.$useEnv('guest')){
+    const isItem = pointGoods.value.some((item)=>{ return item.id === id });
+    if(isItem){
+      const currentDetail = pointGoods.value.find((item)=>{ return item.id === id });
+      pointGoodsDetail.value = currentDetail;
+      detailVisible.value = true;
+    }
+  }
+  else {
+    task.getPointGoodsDetail(id);
+    setTimeout(()=>{
+      detailVisible.value = true;
+    },300);
+  }
 }
 
 </script>

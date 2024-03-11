@@ -167,7 +167,7 @@ export const tasks = [
         repeatable: true,
         frequency: 1,
         intro: "是时候和其他人见面了，开启弹幕功能吧！",
-        description: "在设置中心或社群应用的弹幕设置界面开启弹幕。",
+        description: "在设置中心、社群应用、控制中心的弹幕设置界面开启弹幕。",
         open: [
           {
             type: "router",

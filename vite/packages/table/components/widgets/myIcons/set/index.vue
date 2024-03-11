@@ -3,6 +3,7 @@
     <template #header-right>
       <xt-button @click="save" w="60" h="32" radius="8" type="theme">保存</xt-button>
     </template>
+
     <template #header-center>
       <xt-tab v-model="currentTab" :list="TabList" style="width: 168px" class="p-1 xt-bg-t-2"
         :boxStyle="{ 'border-radius': '10px' }" :itemStyle="{ 'border-radius': '6px' }" /></template>
@@ -12,6 +13,7 @@
       </div>
       <div style="width: 452px" v-if="currentTab == 'attribute'">
         <xt-option-from :options="attributeOptions" :data="edit">
+
           <template #custom>
             <LocalApp @click="" @onLocalApp="updateApp"></LocalApp>
           </template>
@@ -31,6 +33,7 @@
     </div>
   </xt-modal>
 </template>
+
 <script setup>
 import { storeToRefs } from "pinia";
 import {
@@ -80,7 +83,7 @@ console.log(edit.value["mode"]);
 {
 }
 
-onMounted(() => {});
+onMounted(() => { });
 /**
  * 控制弹窗显示
  */
@@ -150,17 +153,16 @@ watch(
     });
   }
 ),
-  onBeforeUnmount(() => {});
+  onBeforeUnmount(() => { });
 
 watch(
   () => edit.value.value,
   (newV, oldV) => {
-    if (newV) {
+    if (newV && edit.value.mode == "link") {
       edit.value.src = getHostAddress(edit.value.value) + "/favicon.ico";
     }
   }
 );
-
 /**
  * 恢复默认图标
  */

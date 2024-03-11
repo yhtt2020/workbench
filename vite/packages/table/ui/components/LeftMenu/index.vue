@@ -64,7 +64,6 @@
 
 <script setup>
 import { ref, computed, watch, toRefs } from "vue";
-import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import Float from "./Float.vue";
 import Box from "./Box.vue";
