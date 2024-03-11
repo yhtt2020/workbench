@@ -530,7 +530,9 @@ export default {
       });
     },
     switchBarrage(value) {
-      completeTask("M0204");
+      completeTask("M0204",()=>{
+        this.$bus.emit('closeSystemSet');
+      });
       if (value) {
         window.$manager.show();
       } else {

@@ -292,7 +292,7 @@ console.log('this.oldSet :>> ', this.oldSet);
       this.shareModal = val
     },
     setSelectVal (id) {
-      this.deskList.forEach(desk => {
+      this.deskList?.forEach(desk => {
         if (desk.id === id) {
           this.sharingDesk = desk
           this.shareName = desk.name

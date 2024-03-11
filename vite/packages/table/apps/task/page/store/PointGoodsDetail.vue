@@ -19,8 +19,14 @@
          </div>
          <div style="width: 404px;" class="flex flex-col ">
            <div class="p-4 flex flex-col xt-bg-2 rounded-xl my-4">
-             <div class="xt-text xt-font font-16 mb-3">
-               {{ getDetailData.store_name }}
+             <div class="mb-3 flex justify-between items-center w-full">
+               <span class="xt-text xt-font font-16 " style="max-width:280px;"> {{ getDetailData.store_name }}</span>
+               <template v-if="getDetailData.stock !== 0">
+                <span class="xt-text xt-font font-14">{{ getDetailData.stock }}库存</span>
+               </template>
+               <template v-else>
+                <span class="xt-text xt-font font-14">已售罄</span>
+               </template>
              </div>
              <div class="flex w-full justify-between">
                <div class="xt-font font-18 font-900" style="color:  #FA7B14;">
@@ -76,11 +82,18 @@ const getDetailData = computed(()=>{
 // 返回
 const backGoodPage = () =>{
  emits('back');
-}
+};
 
 const useQRcodeScan = () =>{
   scanVisible.value = true
-}
+};
+
+const isGuest = computed(()=>{
+  return window.$useEnv('guest');
+});
+
+
+
 </script>
 
 <style lang="scss" scoped>

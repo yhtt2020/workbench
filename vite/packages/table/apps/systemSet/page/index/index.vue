@@ -189,6 +189,9 @@ onMounted(() => {
   proxy.$bus.on("selectSystemNav", (id) => {
     selectNav(id);
   });
+  proxy.$bus.on('closeSystemSet',()=>{
+    systemVisible.value = false;
+  })
 });
 </script>
 

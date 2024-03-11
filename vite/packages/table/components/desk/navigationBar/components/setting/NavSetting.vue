@@ -158,8 +158,31 @@ watch(()=>bottomToggle.value[1],(newV,oldV)=>{
 watch(()=>bottomToggle.value[2],(newV,oldV)=>{
     console.log(newV,oldV,'navigationToggle');
     navigationFunction.value[2].switch=newV
-},{deep:true})
+},{deep:true});
+// 监听用户中心
 watch(()=>settings.value.enableChat,(newV,oldV)=>{
+    if(newV){
+      const index =  copyFootNav.value.findIndex((item)=>{ return item.value === 'control' });
+      if(index !== -1){ copyFootNav.value.splice(index,1) }
+    }
+    else {
+        const isControl = copyFootNav.value.some((item)=>{ return item.value === 'control' });
+        const controlOption = {
+            addNav:true,
+            bg:"",
+            ext:"",
+            icon:"/logo/control.svg",
+            id:"CaWUiH",
+            isBg:false,
+            mode:"app",
+            name:"控制中心",
+            slot:"control",
+            summary: "",
+            type: "systemApp",
+            value:"control",
+        }
+        if(!isControl){  copyFootNav.value.unshift({...controlOption});}
+    }
     console.log(newV,oldV,'settings');
     navigationFunction.value[3].switch=newV
 })
