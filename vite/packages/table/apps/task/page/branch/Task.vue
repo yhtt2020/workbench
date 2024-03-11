@@ -1,32 +1,34 @@
 <template>
-  <xt-collapse
+  <a-collapse
     v-for="(data, index) in taskList"
-    class="mb-3 opacity-50"
-    :index="index"
-    v-model="data.isCollapseStatus"
+    v-model:activeKey="data.activeKey"
+    class="xt-text xt-bg-2"
+    expandIconPosition="right"
     :style="{
       opacity: data.finished ? 0.5 : 1,
     }"
   >
-    <template #title>
-      <div class="flex justify-between w-full">
-        <xt-text>
-          <SerialNumber :id="index + 1" />
-          <span style="max-width: 280px">
-            {{ data.name }}
-          </span>
-        </xt-text>
-        <div class="flex items-center justify-center">
-          <div v-if="data.finished" style="width: 46px">已完成</div>
-          <ShowReward v-else :id="data.id" class="showReward-title" />
-          <!-- v-else-if="!isCollapse(index, data)" -->
+    <a-collapse-panel key="1" :show-arrow="false">
+      <template #header>
+        <div class="flex justify-between w-full">
+          <xt-text>
+            <SerialNumber :id="index + 1" />
+            <span style="max-width: 280px">
+              {{ data.name }}
+            </span>
+          </xt-text>
+          <div class="flex items-center justify-center">
+            <div v-if="data.finished" style="width: 46px">已完成</div>
+            <ShowReward v-else :id="data.id" class="showReward-title" />
+          </div>
         </div>
-      </div>
-    </template>
-    <xt-title type="text" m="mb">{{ data.info }} </xt-title>
-    <ShowReward :id="data.id" />
-    <StartTask :task="data" />
-  </xt-collapse>
+      </template>
+      <xt-title type="text" m="mb">{{ data.info }} </xt-title>
+      <ShowReward :id="data.id" />
+      <StartTask :task="data" />
+    </a-collapse-panel>
+  </a-collapse>
+
 </template>
 
 <script setup>
@@ -71,22 +73,24 @@ const isCollapse = (index, data) => {
 };
 
 const finished = (id) => {
-  // successBranchTask(id);
-  // claimRewardsList, completedList
   if (claimRewardsList.value.includes(id) || completedList.value.includes(id)) {
     return true;
-  } else {
-    return false;
   }
+  return false;
 };
 
 const taskList = ref([]);
 let finishedList = [];
 let notFinishedList = [];
+const activeKey = ref(["0"]);
 onMounted(() => {
   taskList.value = props.task.tasks.forEach((item) => {
     const isFinished = finished(item.id);
     const newItem = { ...item, finished: isFinished };
+    if (activeKey.value[0] == "0" && !isFinished) {
+      newItem.activeKey = "1";
+      activeKey.value = ["1"];
+    }
     (isFinished ? finishedList : notFinishedList).push(newItem);
   });
   taskList.value = [...notFinishedList, ...finishedList];
@@ -102,5 +106,30 @@ onMounted(() => {
   & .reward-w {
     zoom: 0.5;
   }
+}
+
+// 新增
+:deep(.ant-collapse-content) {
+  background: none;
+}
+
+:deep(.ant-collapse-content) {
+  border: none !important;
+}
+.ant-collapse {
+  border-radius: 12px;
+  border: none !important;
+  margin-bottom: 16px;
+}
+:deep(.ant-collapse-item) {
+  border: none !important;
+}
+:deep(.ant-collapse-header) {
+  color: var(--primary-text) !important;
+}
+:deep(.ant-collapse-content-box) {
+  padding-top: 0 !important;
+
+  color: var(--primary-text) !important;
 }
 </style>
