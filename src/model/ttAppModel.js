@@ -1,26 +1,22 @@
 const { SqlDb } = require("../util/sqldb");
-const { nanoid } = require('nanoid')
+const { nanoid } = require("nanoid");
 
 const sqlDb = new SqlDb();
 const ttAppModel = {
   /**
    * 初始化数据库
    */
-  async initDb() {
+  async initDb(id) {
     // 是否存在ttApp表
-    console.log("----------- ttAppModel 我执行啦 -----------");
-
     let exists = await sqlDb.knex.schema.hasTable("ttApp");
-
     // 不存在则创建
     if (!exists) {
-      console.log("object :>> ", object);
       await sqlDb.knex.schema.createTable("ttApp", function (t) {
         t.string("nanoid").primary().unique(); //本地id
       });
     }
-    console.log("来了老弟 :>> ");
-    // sqlDb.knex.raw("INSERT INTO ttApp VALUES ('wanan123')").then((resp) => {
+    // let sql = `INSERT INTO ttApp VALUES ('${id}')`;
+    // sqlDb.knex.raw(sql).then((resp) => {
     //   console.log("resp :>> ", resp);
     //   console.log("resp :>> ", resp);
     //   console.log("resp :>> ", resp);
@@ -29,15 +25,12 @@ const ttAppModel = {
     //   console.log("resp :>> ", resp);
     //   console.log("resp :>> ", resp);
     // });
-    sqlDb
+    return sqlDb
       .knex("ttApp")
-      .insert({ nanoid: nanoid()})
+      .insert({ nanoid: id })
       .then(() => {
         console.log("Inserted");
-        console.log("Inserted");
-        console.log("Inserted");
-        console.log("Inserted");
-        console.log("Inserted");
+        return true;
       })
       .catch((err) => {
         console.log(err);
