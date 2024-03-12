@@ -4,11 +4,11 @@
       <div
         style="width: 105px; height: 105px; border-radius: 12px"
         class="flex flex-col items-center justify-center xt-bg-2 cursor-pointer"
-        v-if="!item.disabled"
+        v-if="!item?.disabled"
         @click="item.fn"
       >
         <xt-ify-icon :icon="item.icon" size="32" />
-        {{ item.name }}
+        {{ item?.name }}
       </div>
     </template>
   </div>
@@ -34,7 +34,7 @@
     </div>
   </a-modal>
 
-  <Zoom  v-if="!$useEnv('web')"/>
+  <Zoom v-if="!$useEnv('web')" />
   <!-- 2 -->
   <xt-option-box>
     <xt-option-info
@@ -148,7 +148,7 @@ const itemList = computed(() => {
       name: "鼠标穿梭",
       icon: "fluent:cursor-click-20-regular",
       fn: () => {
-        emits("switchNav", "key");
+        emits("switchNav", "Key");
       },
       disabled: proxy.$useEnv(),
     },

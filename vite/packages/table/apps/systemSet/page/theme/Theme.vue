@@ -10,9 +10,9 @@
     />
     <div class="pb-3"></div>
   </xt-option-box>
-
   <xt-option-box>
     <xt-option-info title="主题色" />
+    <!-- <XtBaseColor v-model:data="themeColor"> </XtBaseColor> -->
     <xt-option-color
       v-model:color="themeColor"
       class="w-full"
@@ -25,7 +25,10 @@
   <xt-option-box>
     <xt-option-info title="桌面壁纸" />
     <xt-update-desk-bg />
-    <hr style="margin: 16px 0 !important;" v-if="backgroundName.name === 'img'"/>
+    <hr
+      style="margin: 16px 0 !important"
+      v-if="backgroundName.name === 'img'"
+    />
     <template v-if="backgroundName.name === 'img'">
       <!-- <div class="pt-3"></div> -->
       <xt-option-info
@@ -39,7 +42,6 @@
         :min="0"
         :max="100"
       />
-
     </template>
     <hr />
     <xt-option-info
@@ -58,7 +60,7 @@
 import { storeToRefs } from "pinia";
 import { appStore as useAppStore } from "../../../../store";
 import { setThemeSwitch } from "../../../../components/card/hooks/themeSwitch";
-import { onMounted, ref } from "vue";
+import { onMounted, ref,getCurrentInstance } from "vue";
 import { getBgColor } from "../../../../components/card/hooks/styleSwitch/getStyle";
 import { completeTask } from "../../../task/task";
 import {
@@ -82,20 +84,26 @@ const themeModeList = [
     value: true,
   },
 ];
+const { proxy } = getCurrentInstance();
+// 
 
 // 更新主题
 const updateThemeMode = (data) => {
   setThemeSwitch(data);
 };
 
-const themeColor = ref("");
+const themeColor = ref("#508BFE");
+
 const updateThemeColor = (value) => {
   setBgColor(value);
   setSecondaryBgColor(value);
-  completeTask("M0202");
+  completeTask("M0202",()=>{
+    proxy.$bus.emit('closeSystemSet');
+  });
 };
+
 onMounted(() => {
-  themeColor.value = getBgColor();
+  themeColor.value = getBgColor() || "#508BFE";
 });
 </script>
 

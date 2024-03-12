@@ -25,7 +25,7 @@
       <!-- 右侧功能区 -->
       <div class="p-3 xt-modal h-full flex flex-col" style="width: 520px">
         <!-- 头部 -->
-        <div class="flex items-center mb-3 w-full">
+        <div class="flex items-center mb-3 w-full" style="height: 34px">
           <div
             class="flex justify-center w-full"
             v-if="navList[activeIndex].component == 'Desk'"
@@ -78,6 +78,7 @@ import {
   defineAsyncComponent,
   onMounted,
   getCurrentInstance,
+  onUnmounted,
 } from "vue";
 import { useGlobalStore } from "../../../Global/store";
 import { storeToRefs } from "pinia";
@@ -189,6 +190,13 @@ onMounted(() => {
   proxy.$bus.on("selectSystemNav", (id) => {
     selectNav(id);
   });
+  proxy.$bus.on("closeSystemSet", () => {
+    systemVisible.value = false;
+  });
+});
+onUnmounted(() => {
+  proxy.$bus.off("selectSystemNav");
+  proxy.$bus.off("closeSystemSet");
 });
 </script>
 

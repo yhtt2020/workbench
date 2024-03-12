@@ -94,7 +94,9 @@ let fs,path
        {
         newIcon:'fluent:desktop-16-regular',name:'设为工作台背景',
         callBack:()=>{ this.setAppPaper(this.myCurrentID)
-          completeTask('M0201')}
+          completeTask('M0201',()=>{
+            this.$bus.emit('closePaperModal')
+          })}
        },
        {
         newIcon:'mingcute:windows-line',name:'设置桌面壁纸',
@@ -263,7 +265,9 @@ let fs,path
     },
     // 设置工作台背景和桌面壁纸
     setAppPaper(img){
-      completeTask('M0201')
+      completeTask('M0201',()=>{
+        this.$bus.emit('closePaperModal')
+      })
       if(img !== null){
         message.info('正在为您设置背景');
       }

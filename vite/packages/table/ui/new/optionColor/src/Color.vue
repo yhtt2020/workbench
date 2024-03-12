@@ -15,12 +15,13 @@
             size="20"
           ></xt-new-icon>
         </div>
-        <ColorPicker
+        <!-- <ColorPicker
+          v-model:color="color"
           @change="updateBackground"
           :defaultList="colorList"
           :linearList="linearList"
           :isLinear="isLinear"
-        />
+        /> -->
       </div>
     </template>
   </div>
@@ -28,7 +29,7 @@
 
 <script setup lang="ts">
 import { ref, watch, toRefs, onMounted } from "vue";
-import ColorPicker from "./components/ColorPicker.vue";
+// import ColorPicker from "./components/ColorPicker.vue";
 export interface colorProps {
   switch?: boolean;
   color?: string;
@@ -68,7 +69,7 @@ const props = withDefaults(defineProps<colorProps>(), {
   isLinear: true,
   colorNum: 6,
 });
-const { colorNum, colorShowNum, linearShowNum } = toRefs(props);
+const { colorNum,color} = toRefs(props);
 // 按钮回调
 const emit = defineEmits(["update:color", "cb"]);
 const chooseBg = (item) => {

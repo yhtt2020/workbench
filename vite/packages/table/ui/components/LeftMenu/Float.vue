@@ -19,11 +19,19 @@
                 <slot :name="item.slot"></slot>
               </div>
               <div v-else>
-                <xt-base-icon :icon="item.icon" class="mr-3"></xt-base-icon>
-                {{ item.name }}
-              </div>              
-              <!-- <GradeSmallTip v-if="item.index === 'createCom'" :w="184" :h="44" powerType="createChat" lastPowerType="最多创建一个社群" :limit="false"></GradeSmallTip> -->
-              
+                <div v-if="item.icon">
+                  <xt-base-icon :icon="item.icon" class="mr-3"></xt-base-icon>
+                  {{ item.name }}
+                </div>
+                <div v-else class="flex items-center justify-center" >
+                  <xt-ify-icon :icon="item.newIcon" class="mr-3"></xt-ify-icon>
+                  {{ item.name }} 
+                </div>
+                <!-- <xt-base-icon :icon="item.icon" class="mr-3"></xt-base-icon>
+                <xt-ify-icon :icon="item.newIcon" class="mr-3"></xt-ify-icon>
+                {{ item.name }} -->
+              </div>
+
             </div>
           </template>
         </div>
@@ -52,7 +60,6 @@
 
 <script setup>
 import { computed } from "vue";
-import GradeSmallTip from "../../../components/GradeSmallTip.vue";
 const props = defineProps({
   data: {},
 });

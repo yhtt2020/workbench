@@ -154,7 +154,7 @@ export default {
       let res = tsbApi.ttapp.install(path[0], (data) => {
         console.log("data :>> ", data);
       });
-      console.log("res :>> ", res);
+      console.log("importTTApp res :>> ", res);
     },
     async getMemory() {
       let rs = await ipc.sendSync("getAppMetrics");

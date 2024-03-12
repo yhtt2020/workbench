@@ -90,7 +90,7 @@ export default {
 
 <template>
   <div v-if="isGuide" class="w-full">
-    <div v-for="key in Object.keys(this.keys)" @click="setKey(keys[key], key)" class="xt-bg-2 rounded-lg mt-3 pointer" style="padding:12px 16px;">
+    <div v-for="key in Object.keys(this.keys)" @click="setKey(keys[key], key)" class="xt-bg-2 rounded-lg mb-3 pointer" style="padding:12px 16px;">
       <div class="flex justify-between">
         <div class="flex xt-text">
           {{ this.keys[key].title }}快捷键：

@@ -8,6 +8,7 @@ const {
   getCurrentDir,
 } = require("./useFile.js");
 const { join } = require("path");
+const { nanoid } = require("nanoid");
 
 const fs = require("fs-extra");
 const ttAppModel = require("../../model/ttAppModel.js");
@@ -22,7 +23,7 @@ const tempPath = function (p) {
 };
 module.exports = async function useRegisterTTApps(filePath) {
   console.log("1、开始注册ttApp :>> ");
-
+  const id = nanoid(4);
   // 2 处理文件类型
   console.log("2、处理文件类型 :>> ");
   if (!getFileExtension(filePath)) {
@@ -34,13 +35,13 @@ module.exports = async function useRegisterTTApps(filePath) {
       info: "上传的文件类型错误",
     };
   }
-  // ttAppModel.initDb();
+
   let folderType = "ttapp_test"; // 临时文件夹名称
 
   // 3 处理解压文件路径
-  let folderName = [folderType, String(Date.now())]; // 临时文件夹名称
+  let folderName = [folderType, id]; // 临时文件夹名称
   // await createFolder(folderName);
-  console.log("3、创建好的文件路径 :>> ", pathJoin(folderName));
+  console.log("3、创建文件路径 :>> ", pathJoin(folderName));
   if (!(await existsFolder(folderName))) {
     console.log("3.1、文件夹不存在进行创建 :>> ");
     await createFolder(folderType);
@@ -49,7 +50,6 @@ module.exports = async function useRegisterTTApps(filePath) {
   // 4 //解压到临时目录
   console.log("4、解压到临时目录 :>> ");
   let unzipRes = await unzipFile(filePath, folderName);
-
   if (unzipRes.code !== 200) {
     console.log("4.1、解压失败 :>> ");
     return unzipRes;
@@ -60,13 +60,12 @@ module.exports = async function useRegisterTTApps(filePath) {
   let checkFilePath = ["manifest.json"];
   let checkFileRes = [];
   for (let path of checkFilePath) {
-    let res = await existsFolder(folderName);
+    let res = await existsFolder([...folderName, path]);
     if (!res) checkFileRes.push(path);
   }
   if (checkFileRes.length > 0) {
     console.log("5.1、缺少文件了 开始删除 :>> ");
-    // 删除会报错
-    await deleteFile(pathJoin(folderName));
+    await deleteFile(folderName);
     return {
       status: 1,
       code: 400,
@@ -75,32 +74,22 @@ module.exports = async function useRegisterTTApps(filePath) {
     };
   }
   // 6 判断manifest.json
-  let pathManifest = pathJoin([temporaryFolderName, "manifest.json"]);
-  if (!existsFolder(pathManifest)) {
-    return {
-      status: 0,
-      info: "manifest.json文件不存在",
-    };
-  }
+  console.log("6、判断manifest.json文件 :>> ");
+  let pathManifest = pathJoin([...folderName, "manifest.json"]);
   let manifestRes = readFile(pathManifest);
-  try {
-    manifestRes = JSON.parse(manifestRes);
-    console.log("manifest.json 正常转义为对象了 :>> ");
-  } catch (e) {
-    return {
-      status: 0,
-      info: "manifest.json文件不是标准的json数据",
-    };
-  }
-
+  manifestRes = JSON.parse(manifestRes);
+  // 6.1、manifest.json文件不是标准的json数据
   if (typeof manifestRes !== "object") {
+    console.log("6.1、manifest.json文件不是标准的json数据 :>> ");
     return {
       status: 1,
       code: 400,
       data: "manifest.json文件不是json数据",
     };
   }
-  let manifestCheck = ["page", "key", "value"];
+  // 6.2、manifest.json文件缺少数据
+  // let manifestCheck = ["page", "key", "value"];
+  let manifestCheck = [];
   let manifestCheckRes = [];
   manifestCheck.forEach((key) => {
     if (manifestRes[key] == undefined) {
@@ -109,7 +98,8 @@ module.exports = async function useRegisterTTApps(filePath) {
   });
 
   if (manifestCheckRes.length > 0) {
-    await deleteFile(temporaryFolderName);
+    console.log("6.1、manifest.json文件缺少数据 :>> ");
+    await deleteFile(folderName);
     return {
       status: 1,
       code: 400,
@@ -117,4 +107,8 @@ module.exports = async function useRegisterTTApps(filePath) {
       info: "manifest.json文件缺少 " + manifestCheckRes.join(" , ") + " 数据",
     };
   }
+
+  // 7、实现注册
+  let res = await ttAppModel.initDb(id);
+  console.log("7 res :>> ", res);
 };

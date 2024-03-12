@@ -7,7 +7,7 @@
         v-if="modelValue"
         :class="[
           boxClass,
-          isFull ? ' rounded-none w-full h-full' : 'rounded-xl',
+          isFull ? 'rounded-none w-full h-full' : 'rounded-xl',
         ]"
         ref="modal"
         class="no-drag fixed flex flex-col text-base -translate-x-1/2 left-1/2 rounded-xl xt-modal xt-shadow xt-text"
@@ -169,7 +169,9 @@ export interface ModalProps {
   custom?: boolean;
   // 开启全屏功能
   full?: boolean;
-  scrollbarPadding: { paddingRight: "8px"; paddingLeft: "8px" };
+  scrollbarPadding?: {
+    [key: string]: string;
+  };
 }
 const props = withDefaults(defineProps<ModalProps>(), {
   modelValue: false,
@@ -188,6 +190,7 @@ const props = withDefaults(defineProps<ModalProps>(), {
   beforeUnmount: () => true,
   custom: false,
   full: false,
+  scrollbarPadding: { paddingRight: "0px", paddingLeft: "0px" },
 });
 const { esc, modelValue, beforeMount, beforeUnmount } = toRefs(props);
 const isFull = ref(false);
@@ -245,7 +248,6 @@ const handleEscKeyPressed = (event) => {
     onNo();
   }
 };
-
 /**
  * 全屏状态切换
  * */

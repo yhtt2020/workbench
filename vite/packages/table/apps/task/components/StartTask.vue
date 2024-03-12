@@ -45,7 +45,8 @@ const smallTeam = teamStore();
 
 const { currentId, startList, claimRewardsList, completedList, rewardVisible,smallMize,isTaskDrawer } =
   storeToRefs(store);
-const { hasTeam } = storeToRefs(smallTeam);
+const { hasTeam,team } = storeToRefs(smallTeam);
+const { userInfo } = storeToRefs(app);
 
 const router = useRouter();
 const props = defineProps({
@@ -123,6 +124,7 @@ const continueTask = computed(() => {
 const receive = async () => {
   if(window.$useEnv('guest')){
     useLogin(()=>{
+      store.initTask();
       currentId.value = props.task.id;
       rewardVisible.value = true;
     })
@@ -140,11 +142,11 @@ const getReceiveStatus = computed(() => {
 
 // 已完成任务
 const completeTask = computed(() => {
-  if(hasTeam.value){
-    return completedList.value.includes(props.task.id);
+  if(props.task.id === 'Z0401'){
+    return hasTeam.value && completedList.value.includes(props.task.id);
   }
-  else {
-    return false;
+  else{
+    return completedList.value.includes(props.task.id);
   }
 });
 

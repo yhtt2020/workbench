@@ -4,7 +4,7 @@
       <router-view ></router-view>
     </div>
     <template v-for="item in filterList" #[item.float]>
-      <CategoryFloat v-if="item.route.params.no !== 1" :no="item.route.params.no" @clickItem="currentItem"></CategoryFloat>
+      <CategoryFloat v-if="item.route?.params?.no !== 1" :no="item.route?.params?.no" @clickItem="currentItem"></CategoryFloat>
       <DefaultFloat v-else></DefaultFloat>
     </template>
     <template #createCom>
@@ -13,8 +13,10 @@
     </template>
     <template #createChat>
       <GradeSmallTip :w="184" :h="44" powerType="createChat" :lastPowerType="limitClick" :limit="false"></GradeSmallTip>
-      <xt-base-icon icon="smile" class="mr-3"></xt-base-icon>
-      创建社群 
+      <div class="flex items-center">
+        <xt-ify-icon icon="fluent:emoji-smile-slight-24-regular" class="mr-3"></xt-ify-icon>
+        创建社群 
+      </div>
     </template>
   </xt-left-menu>
   <teleport to='body'>
@@ -22,10 +24,11 @@
       <AddFriend v-if="addIndex === 'launch'" @close="chatVisible = false"></AddFriend>
       <CreateGroup v-if="addIndex === 'addGroup'" @close="chatVisible = false" :isH5="env.isH5"/>
       <Transfer v-if="addIndex === 'addFriend'" @close="chatVisible = false" :isH5="env.isH5"></Transfer>
-      <CreateCommunity v-if="addIndex === 'createCom'" @close="chatVisible = false"></CreateCommunity>
       <JoinCommunitys v-if="addIndex === 'joinCom'" @close="chatVisible = false"></JoinCommunitys>
     </Modal>
+    <CreateCommunity />
   </teleport>
+
 </template>
 
 <script>
@@ -50,13 +53,14 @@ import CategoryFloat from './components/float/CategorysFloat.vue';
 import DefaultFloat from './components/float/DefaultsFloat.vue';
 import JoinCommunitys from './components/communityJoin/JoinCommunitys.vue';
 import GradeSmallTip from "../../components/GradeSmallTip.vue";
-import {useGlobalStore} from '../../apps/Global/store'
+import {useGlobalStore} from '../../apps/Global/store';
 export default {
   name: "chat",
   components: {
-    ChatIcon,CreateCommunity,Modal,AddFriend,
+    ChatIcon,Modal,AddFriend,
     Transfer,CreateGroup,CategoryFloat,DefaultFloat,
-    JoinCommunitys,GradeSmallTip
+    JoinCommunitys,GradeSmallTip,
+    CreateCommunity,
   },
 
   setup(props, ctx) {
@@ -93,10 +97,10 @@ export default {
     //触发社群创建入口
     const createCommunity = () =>{
       if(!window.$useEnv('guest')){
-        data.chatVisible = true
-        data.addIndex = 'createCom'
-      }else{ 
-        loginTip() 
+        proxy.$bus.emit('createModal');
+      }
+      else {
+        loginTip();
       }
     }
     // 切换左侧tab
@@ -187,25 +191,31 @@ export default {
         newIcon:'fluent:add-16-filled', icon: 'tianjia2',
         children:[
           {
-            icon: 'message', newIcon:'fluent:chat-16-regular',  name: '发起群聊',index: 'launch',
+            // icon: 'message', 
+            newIcon:'fluent:chat-16-regular',  name: '发起群聊',index: 'launch',
             callBack: (item) => { if(!window.$useEnv('guest')){ triggerAddModal(item); completeTask('Z0601') }else{ loginTip() } ;}
             // callBack: (item) => { if(userInfo){}else{ loginTip() } triggerAddModal(item); completeTask('Z0601');}
           },
           {
-            icon: 'team', newIcon:'fluent:people-16-regular',name: '加入群聊', index: 'addGroup',
+            // icon: 'team', 
+            newIcon:'fluent:people-16-regular',name: '加入群聊', index: 'addGroup',
             callBack: (item) => { if(!window.$useEnv('guest')){triggerAddModal(item);completeTask('Z0601');}else{ loginTip() }  }
           },
           {
-            icon: 'tianjiachengyuan', newIcon:'fluent:people-add-16-regular', name: '添加好友', index: 'addFriend',
+            // icon: 'tianjiachengyuan', 
+            newIcon:'fluent:people-add-16-regular', name: '添加好友', index: 'addFriend',
             callBack: (item) => { if(!window.$useEnv('guest')){triggerAddModal(item);completeTask('Z0602');}else{ loginTip() }  }
           },
           {
-            icon: 'smile',  
+            // icon: 'smile',  
             newIcon:'fluent:emoji-smile-slight-24-regular', 
             name: '创建社群', 
             index: 'createCom',
             slot:'createChat',
-            callBack: () => { if(!window.$useEnv('guest')){createCommunity()}else{ loginTip() }  }
+            callBack: () => { 
+              createCommunity();
+              // if(!window.$useEnv('guest')){createCommunity()}else{ loginTip() } 
+            }
           },
           {
             icon: 'team',  newIcon:'fluent:people-16-regular', index: 'joinCom', name: '加入社群',
