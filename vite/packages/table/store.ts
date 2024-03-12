@@ -143,6 +143,8 @@ export const appStore = defineStore('appStore', {
     guideList: [],
     // 登录提示弹窗
     loginVisible: false,
+    // 定制桌面提示
+    firstGuide: false,
   }),
   getters: {},
 
