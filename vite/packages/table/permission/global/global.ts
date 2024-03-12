@@ -2,7 +2,7 @@ import { currentEnv, useEnv } from "../useEnv";
 import { TT } from "./type";
 import mitt from "mitt";
 const Mit = mitt();
-export { Mit };
+
 export const tt: TT = {
   runTime: {
     isEnv: useEnv,
@@ -19,4 +19,10 @@ export const tt: TT = {
       Mit.emit("openLogin", cb);
     },
   },
+  sys: {
+    openSystemSet: () => {
+      Mit.emit("openSystemSet");
+    },
+  },
 };
+export { Mit };
