@@ -65,7 +65,7 @@
   />
 
   <Expand
-    :data="props"
+    :data="expandList"
     :auto="false"
     v-if="expandVisible"
     @close="expandClose"
@@ -100,6 +100,7 @@ import { startApp } from "../../../ui/hooks/useStartApp";
 import { useNavigationStore } from "../../../components/desk/navigationBar/navigationStore";
 import { useMouseInElement } from "@vueuse/core";
 import { mergeData } from "../../../ui/hooks/useDataConversion";
+import {expandData} from './hooks/expandCom'
 
 const Null = defineAsyncComponent(() => import("./components/Null.vue"));
 const Expand = defineAsyncComponent(() => import("./expand/Expand.vue"));
@@ -341,10 +342,18 @@ const autoSize = computed(() => {
   }
 });
 
+const expandList = ref(props)
+
 /**
  *点击组件关闭
  */
 const clickFile = (data) => {
+  if(data.value === 'commun'){
+    expandVisible.value = true
+    expandList.value = expandData()
+    oldCardSize.value = customData.value.customSize
+    return
+  }
   startApp(data.type, data.value, router);
   emit("clickFile", data);
 };
@@ -357,7 +366,7 @@ watch(
     console.log(newV, oldV, "newV,oldV");
     emit("update:customSize", newV);
   },
-  { deep: true }
+  { deep : true }
 );
 
 /**
