@@ -121,43 +121,11 @@ onMounted(()=>{
     openCreateModal();
   });
   nextTick(()=>{
-    const inputDom = document.querySelector('.search');
-    inputDom.focus();
+    if(createVisible.value){
+      const inputDom = document.querySelector('.search');
+      inputDom.focus();
+    }
   });
 })
 </script>
 
-<style lang="scss" scoped>
-.back{
- position: absolute;
- top:0;
- left:0;
- background: var(--secondary-bg);
-}
-.close{
- position: absolute;
- top:0;
- right:-1px;
- background: var(--secondary-bg);
-}
-.active-button{
- &:active{
-  filter: brightness(0.8);
-  opacity: 0.8;
- }
- &:hover{
-  opacity: 0.8;
- }
-}
-.font-16-400{
- font-size: 16px;
- font-weight: 400;
-}
-
-:deep(.search){
- color: var(--secondary-text);
- &::placeholder{
-   color: var(--secondary-text);
- }
-}
-</style>
