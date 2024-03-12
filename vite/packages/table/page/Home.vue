@@ -590,7 +590,6 @@ export default {
 
     backgroundSettings: {
       handler() {
-        console.log("2222222222 :>> ", 2222222222);
         document.body.style.setProperty(
           "--backGroundImgBlur",
           this.backgroundSettings.backGroundImgBlur + "px"
