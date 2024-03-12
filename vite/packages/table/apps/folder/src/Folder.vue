@@ -348,9 +348,12 @@ const expandList = ref(props)
  *点击组件关闭
  */
 const clickFile = (data) => {
+  // 当为社区中心时
   if(data.value === 'commun'){
     expandVisible.value = true
+    // 文件夹参数
     expandList.value = expandData()
+    // 保留原来的大小
     oldCardSize.value = customData.value.customSize
     return
   }
@@ -568,8 +571,11 @@ const refreshDeskApp = async () => {
 };
 function handleClick(e) {
   if (e.target?.closest(".tt-folder-container") == null) {
-    emit('close')
-    // console.log("123 :>> ", 123);
+    // 当二级菜单打开时，失焦了也无法关闭文件夹
+    const secondeMenu = (setVisible.value || editVisible.value || expandVisible.value)
+    if(!secondeMenu){
+      emit('close')
+    }
   }
 }
 onUnmounted(() => {
