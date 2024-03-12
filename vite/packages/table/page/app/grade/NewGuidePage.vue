@@ -788,7 +788,7 @@ export default {
 // 右上角 定制主题
 .theme {
   width: 400px;
-  height: 660px;
+  height: 680px;
   position: fixed;
   top: 60px;
   right: 20px;
