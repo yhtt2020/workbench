@@ -1,0 +1,102 @@
+export const localFiles=[
+    {
+        name:'软件',
+        tag:"app"
+    },
+    {
+        name:'文档',
+        tag:'docx'
+    },
+    {
+        name:"其他",
+        tag:'other'
+    },
+    {
+        name:'全部',
+        tag:'all'
+    },
+]
+
+export const doc=[
+    ".docx",
+    ".pptx",
+    '.txt',
+    '.pdf',
+    '.xlsx',
+    '.doc',
+    '.ppt',
+    '.xls',
+    '.md',
+    '.xml',
+    '.docm',
+    '.odt',
+    '.csv',
+    '.pptm',
+    '.ppsm',
+]
+
+export const apps=[
+    '.exe',
+    '.msi',
+    '.apk',
+    '.app',
+    '.url',
+    '.bat',
+    '.cmd',
+    '.com',
+    '.gadget',
+    '.jar',
+    '.wsf',
+    '.msc',
+    '.scr',
+    '.cpl',
+    '.appx',
+    '.appxbundle',
+    '.msix',
+    '.msixbundle',
+    '.xap',
+    '.xpi',
+    '.crx',
+    '.link',
+    '.desktop',
+    '.sh',
+    '.run',
+    '.bin',
+    '.appimage',
+    '.deb',
+]
+
+export const webMenus=[
+    {
+        name:'新闻资讯',
+        tag:'information'
+    },
+    {
+        name:'文档表单',
+        tag:'docx'
+    },
+    {
+        name:'常用邮箱',
+        tag:'email'
+    },
+    {
+        name:'程序开发',
+        tag:'code'
+    },
+    {
+        name:'效率工具',
+        tag:'effect'
+    },
+    {
+        name:'设计工具',
+        tag:'design'
+    },
+    {
+        name:'即时通讯',
+        tag:'message'
+    },
+    {
+        name:'游戏娱乐',
+        tag:'game'
+    },
+]
