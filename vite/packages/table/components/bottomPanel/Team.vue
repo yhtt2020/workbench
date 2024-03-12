@@ -114,7 +114,7 @@ const customData = computed(() => {
     ...defaultFolderData,
     list:list.value,
     customSize:'2x2',
-    name:'社区助手',
+    name:'社区中心',
     layout:'rows',
   }
 })
