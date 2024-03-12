@@ -1,29 +1,36 @@
-import { frameStore } from './../../store/avatarFrame';
-import { teamStore } from './../../store/team';
-import { tt } from './../../permission/global/global';
-import { isObject } from './../../TUIKit/TUICore/utils/index';
+import { teamStore } from "./../../store/team";
+import { tt, Mit } from "./../../permission/global/global";
+import { isObject } from "./../../TUIKit/TUICore/utils/index";
 import browser from "../../js/common/browser";
 import { appStore } from "../../store";
 import { taskStore } from "../../apps/task/store";
 import { favoStore } from "../../apps/favorites/store";
-import { useComStore } from '../../components/bottomPanel/comStore';
-import cp from "child_process";
+import { useComStore } from "../../components/bottomPanel/comStore";
 import fs from "fs";
 async function runApp(uri) {
-  try{
+  try {
     var cp = require("child_process");
-    let realPath = uri
-    let isDir=false
-    if (uri.endsWith('.url') || uri.endsWith('.lnk')) {
-      realPath = await tsbApi.system.getRealPath(uri)
+    let realPath = uri;
+    let isDir = false;
+    if (uri.endsWith(".url") || uri.endsWith(".lnk")) {
+      realPath = await tsbApi.system.getRealPath(uri);
     }
-    if (uri.endsWith('.url') || uri.endsWith('.lnk')) {
-      if(realPath.startsWith('steam://')){
-        console.log('执行路径A,steam游戏模式',realPath)
-        cp.spawn('start',[realPath], {detached: true,shell:true,windowsHide:true,stdio: 'ignore',})
-      }else{
-        console.log('执行路径B,普通快捷方式','cwd',require('path').dirname(realPath))
-        window.$models.win32.openApp(realPath,'','',false,true)
+    if (uri.endsWith(".url") || uri.endsWith(".lnk")) {
+      if (realPath.startsWith("steam://")) {
+        console.log("执行路径A,steam游戏模式", realPath);
+        cp.spawn("start", [realPath], {
+          detached: true,
+          shell: true,
+          windowsHide: true,
+          stdio: "ignore",
+        });
+      } else {
+        console.log(
+          "执行路径B,普通快捷方式",
+          "cwd",
+          require("path").dirname(realPath)
+        );
+        window.$models.win32.openApp(realPath, "", "", false, true);
         //let child=cp.spawn(realPath, {detached: true,cwd:require('path').dirname(realPath),stdio: 'ignore',windowsHide:true,})
         //child.unref()
         // setTimeout(()=>{
@@ -31,24 +38,34 @@ async function runApp(uri) {
         //   window.$models.win32.killProcess(child.pid)
         // },5000)
       }
-    }else{
-      var fs = require('fs');
+    } else {
+      var fs = require("fs");
       var stat = fs.lstatSync(realPath);
-      console.log('执行路径B,普通文件','cwd',require('path').dirname(realPath))
-      isDir=stat.isDirectory()
-      if(isDir){
-        console.log('执行路径D，文件夹',realPath)
-        cp.spawn('start',[ require("path").normalize(realPath)], {detached: true,cwd:require('path').dirname(realPath),shell:true,windowsHide:true,stdio: 'ignore',})
-      }else{
-        console.log('执行路径C，普通文件',realPath)
-        window.$models.win32.openApp(realPath,'','',false,true)
+      console.log(
+        "执行路径B,普通文件",
+        "cwd",
+        require("path").dirname(realPath)
+      );
+      isDir = stat.isDirectory();
+      if (isDir) {
+        console.log("执行路径D，文件夹", realPath);
+        cp.spawn("start", [require("path").normalize(realPath)], {
+          detached: true,
+          cwd: require("path").dirname(realPath),
+          shell: true,
+          windowsHide: true,
+          stdio: "ignore",
+        });
+      } else {
+        console.log("执行路径C，普通文件", realPath);
+        window.$models.win32.openApp(realPath, "", "", false, true);
         //cp.spawn(realPath, {detached: true,cwd:require('path').dirname(realPath),stdio: 'ignore',windowsVerbatimArguments:true})
       }
     }
 
-    return true
-  }catch (e) {
-    return false
+    return true;
+  } catch (e) {
+    return false;
   }
 }
 /**
@@ -57,7 +74,7 @@ async function runApp(uri) {
  * @param value
  * @param router 这个是路由 ts无法调用 得手动传入
  */
-export const startApp =async  (type, value, router?) => {
+export const startApp = async (type, value, router?) => {
   if (type === "" || value === "") {
     console.warn("startApp :>> type or value 不能为空");
   }
@@ -84,7 +101,7 @@ export const startApp =async  (type, value, router?) => {
       //   package: isObject ? value.package :  value,
       // });
       // 更换打开方式，打开新增应用
-      ipc.send('executeApp', { app: JSON.parse(JSON.stringify(value)) })
+      ipc.send("executeApp", { app: JSON.parse(JSON.stringify(value)) });
       break;
     // 酷应用
     case "coolApp":
@@ -92,7 +109,7 @@ export const startApp =async  (type, value, router?) => {
       break;
     // 本地应用
     case "tableApp":
-      return await  runApp(value)
+      return await runApp(value);
       //window.$models.win32.openPath(require("path").normalize(value));
       break;
     // 系统应用
@@ -102,7 +119,7 @@ export const startApp =async  (type, value, router?) => {
       break;
     // 不知道是什么场景
     case "localApp":
-      return await runApp(value)
+      return await runApp(value);
       // cp.spawn(require("path").normalize(value),[],{detached:true},function(err,stdout,stderr){
       //   if(err){
       //     console.error(err);
@@ -116,9 +133,8 @@ export const startApp =async  (type, value, router?) => {
     case "folder":
       break;
   }
-  return true
+  return true;
 };
-
 
 // 打开特殊系统应用，无需要通过路由打开的图标
 export const openSysApp = (value, router) => {
@@ -134,29 +150,30 @@ export const openSysApp = (value, router) => {
     useTakeStore.smallMize = true;
   } else if (value === "commun") {
     // 社区中心
-    return;
-  }else if(value === "favorites"){
+  } else if (value === "favorites") {
     // 收藏夹
-    usefavoStore.isFavorites = true
-    return;
-  } else if(value === "control"){
+    usefavoStore.isFavorites = true;
+  } else if (value === "control") {
     // 控制中心
-    return;
-  } else if(value === "setting"){
+  } else if (value === "setting") {
     // 设置
-    return;
+    Mit.emit("openSystemSet");
+  } else if (value === "status") {
+    Mit.emit("openSystemSet");
+    setTimeout(() => {
+      Mit.emit("selectSystemNav", 3);
+    }, 100);
   } else {
     // 通过路由打开
     router.push({ name: value });
   }
 };
 
-
 // 打开固定应用
 const openFixedApp = {
   // 系统设置
   systemSet: () => {
-    window.tt.user.systemSet();
+    window.tt.sys.openSystemSet();
   },
   // 我的道具
   myProp: () => {
@@ -166,17 +183,17 @@ const openFixedApp = {
   // 小队
   team: () => {
     openTeam();
-  }
-}
+  },
+};
 
 // 打开小队判断
-const openTeam = async() => {
+const openTeam = async () => {
   const store = useComStore();
   const team = teamStore();
-  await team.updateMy(0)
-  if(team.status === false){
+  await team.updateMy(0);
+  if (team.status === false) {
     store.showTeamTip = true;
-  }else{
+  } else {
     team.teamVisible = !team.teamVisible;
   }
-}
+};
