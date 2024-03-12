@@ -25,7 +25,7 @@
       <!-- 右侧功能区 -->
       <div class="p-3 xt-modal h-full flex flex-col" style="width: 520px">
         <!-- 头部 -->
-        <div class="flex items-center mb-3 w-full">
+        <div class="flex items-center mb-3 w-full" style="height: 34px;">
           <div
             class="flex justify-center w-full"
             v-if="navList[activeIndex].component == 'Desk'"

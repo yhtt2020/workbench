@@ -38,7 +38,7 @@
       :list="arrangeList"
       @cb="updateArrange"
       circle
-      style="height: 40px;"
+      style="height: 40px"
     />
     <hr />
     <xt-option-info
@@ -54,36 +54,40 @@
       isSwitch
       v-model:switch="getFreeLayoutState.canvas.autoExtend"
     />
-    <hr />
-    <xt-option-info
-      title="桌面画布尺寸"
-      info="调整整体桌面画布尺寸，宽x高，以及缩放比例。"
-      icon="fluent:arrow-clockwise-16-regular"
-      @onIconClick="onIconClick"
-    />
-    <div class="mb-4 flex items-center relative" style="height: 40px">
-      <xt-input
-        v-model="deskWidth"
-        @blur="updateDeskSize"
-        class="xt-bg-t-2 xt-b"
-        style="width: 146px"
+    <template v-if="!getFreeLayoutState.canvas.autoExtend">
+      <hr />
+      <xt-option-info
+        title="桌面画布尺寸"
+        info="调整整体桌面画布尺寸，宽x高，以及缩放比例。"
+        icon="fluent:arrow-clockwise-16-regular"
+        @onIconClick="onIconClick"
       />
-      <div class="flex justify-center items-center" style="width: 36px">x</div>
-      <xt-input
-        v-model="deskHeight"
-        @blur="updateDeskSize"
-        class="xt-bg-t-2 xt-b"
-        style="width: 146px"
-      />
-      <xt-input
-        v-model="deskZoom"
-        @blur="updateDeskSize"
-        class="xt-bg-t-2 xt-b absolute right-0"
-        style="width: 74px"
-      >
-        <template #suffix> % </template>
-      </xt-input>
-    </div>
+      <div class="mb-4 flex items-center relative" style="height: 40px">
+        <xt-input
+          v-model="deskWidth"
+          @blur="updateDeskSize"
+          class="xt-bg-t-2 xt-b"
+          style="width: 146px"
+        />
+        <div class="flex justify-center items-center" style="width: 36px">
+          x
+        </div>
+        <xt-input
+          v-model="deskHeight"
+          @blur="updateDeskSize"
+          class="xt-bg-t-2 xt-b"
+          style="width: 146px"
+        />
+        <xt-input
+          v-model="deskZoom"
+          @blur="updateDeskSize"
+          class="xt-bg-t-2 xt-b absolute right-0"
+          style="width: 74px"
+        >
+          <template #suffix> % </template>
+        </xt-input>
+      </div>
+    </template>
     <hr />
     <xt-option-info
       title="对齐方式"
@@ -118,11 +122,8 @@ import { message } from "ant-design-vue";
 // 初始化操作
 const emits = defineEmits(["scrollbarRedirect", "scrollbarUpdate"]);
 const freeLayoutStore = useFreeLayoutStore();
-const {
-  getFreeLayoutState,
-  isFreeLayout,
-  freeLayoutEnv,
-} = storeToRefs(freeLayoutStore);
+const { getFreeLayoutState, isFreeLayout, freeLayoutEnv } =
+  storeToRefs(freeLayoutStore);
 
 // @scrollbarRedirect="freeLayoutScrollbarRedirect"
 //     @scrollbarUpdate="freeLayoutScrollbarUpdate"
