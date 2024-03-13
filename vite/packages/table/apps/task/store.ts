@@ -19,6 +19,7 @@ export const taskStore = defineStore("taskStore", {
 
     success: false,
     taskID: "M0101", // 任务ID
+    taskTmp: "", // 暂存任务ID
     step: -1, // 任务步骤
     list: [], // 已完成主线
     deskID: 0,

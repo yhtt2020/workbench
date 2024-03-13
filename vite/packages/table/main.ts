@@ -49,7 +49,7 @@ import "vue-toastification/dist/index.css";
 import XTUI from "./ui/new/index.js";
 import registerXTUI from "./ui/index";
 // 注册任务引导
-// import VueShepherdPlugin from "vue-shepherd";
+import VueShepherdPlugin from "vue-shepherd";
 import "shepherd.js/dist/css/shepherd.css";
 // 注册系统相关样式和字体
 import "../../public/css/index.scss";
@@ -176,7 +176,7 @@ const $app = app
   .use(TUIKit)
   .use(WujieVue)
   .use(hevueImgPreview)
-  // .use(VueShepherdPlugin)
+  .use(VueShepherdPlugin)
   .use(XTUI)
   .mount("#app");
 registerXTUI(app);

@@ -333,4 +333,18 @@ export const guide = {
       success: true,
     },
   ],
+  // 桌面定制专用
+  D0001: [
+    {
+      type: "router",
+      value: "home",
+    },
+    {
+      title: "提示",
+      text: "点击此处可以快速切换多个桌面。",
+    },
+    {
+      success: true,
+    },
+  ],
 };
