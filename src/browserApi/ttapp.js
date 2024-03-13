@@ -19,10 +19,10 @@ const ttapp = {
         cb(args);
       }
     });
-    return send("install", {
-      zipPath,
-      cbId,
-    });
+      return send("install", {
+        zipPath,
+        cbId,
+      });
   },
   uninstall(id, cb) {
     let cbId = require("nanoid").nanoid();

@@ -26,7 +26,7 @@ class TTApp extends Base {
     this.on("uninstall", async (event, args) => {
       console.log("uninstall res :>> ");
       let res = await useUninstall(args.id);
-      event.reply(args.cbId, args);
+      event.reply(args.cbId, res);
     });
   }
 }

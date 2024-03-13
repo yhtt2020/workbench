@@ -17,10 +17,16 @@
       </div>
       <div class="line">
         <xt-button @click="installTTApp" :w="140" :h="40" type="theme"
-          >安装测试TTApp</xt-button
+          >安装TTApp</xt-button
         >
         <xt-button @click="uninstallTTApp" :w="140" :h="40" type="theme"
-          >卸载测试TTApp</xt-button
+          >卸载TTApp</xt-button
+        >
+        <xt-button @click="getTTApp" :w="140" :h="40" type="theme"
+          >获取TTApp</xt-button
+        >
+        <xt-button @click="selectTTApp" :w="140" :h="40" type="theme"
+          >查询TTApp</xt-button
         >
       </div>
       <div class="line">
@@ -160,7 +166,17 @@ export default {
       console.log("installTTApp res :>> ", res);
     },
     uninstallTTApp() {
-      tsbApi.ttapp.uninstall("12345", (data) => {
+      tsbApi.ttapp.uninstall("SjjL", (data) => {
+        console.log("data :>> ", data);
+      });
+    },
+    getTTApp() {
+      tsbApi.ttapp.get("SjjL", (data) => {
+        console.log("data :>> ", data);
+      });
+    },
+    selectTTApp() {
+      tsbApi.ttapp.get("SjjL", (data) => {
         console.log("data :>> ", data);
       });
     },

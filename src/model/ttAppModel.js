@@ -36,6 +36,23 @@ const ttAppModel = {
         console.log(err);
       });
   },
+  /**
+   * 删除ttApp
+   */
+  async del(id) {
+    // return sqlDb
+    //   .knex("ttApp")
+    //   .where({ nanoid: id })
+    //   .del()
+    //   .then(() => {
+    //     console.log("Deleted");
+    //     return true;
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+    return await sqlDb.knex("ttApp").where({ nanoid: id }).del();
+  },
 
   // 增删改查
   // https://blog.csdn.net/m0_51810668/article/details/131277990

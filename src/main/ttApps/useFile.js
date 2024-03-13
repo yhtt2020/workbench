@@ -66,7 +66,7 @@ const file = {
    */
   async deleteFile(filePath) {
     try {
-      fse.removeSync(file.pathJoin(filePath));
+     await fse.removeSync(file.pathJoin(filePath));
       return true;
     } catch (err) {
       console.error("Error deleting directory:", err);
