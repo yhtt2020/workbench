@@ -1,3 +1,6 @@
+/**
+ * ttapp.js
+ */
 // const extractZip = require("../../../js/main/crx");
 const extractZip = require("../../../js/main/zip.js");
 const { join } = require("path");

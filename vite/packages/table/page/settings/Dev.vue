@@ -16,8 +16,11 @@
         >
       </div>
       <div class="line">
-        <xt-button @click="importTTApp" :w="140" :h="40" type="theme"
-          >导入测试TTApp</xt-button
+        <xt-button @click="installTTApp" :w="140" :h="40" type="theme"
+          >安装测试TTApp</xt-button
+        >
+        <xt-button @click="uninstallTTApp" :w="140" :h="40" type="theme"
+          >卸载测试TTApp</xt-button
         >
       </div>
       <div class="line">
@@ -143,7 +146,7 @@ export default {
     openDevTool() {
       ipc.send("openDevTool");
     },
-    async importTTApp() {
+    async installTTApp() {
       let path = await tsbApi.dialog.showOpenDialog({
         title: "选择",
         message: "请选择文件",
@@ -154,7 +157,12 @@ export default {
       let res = tsbApi.ttapp.install(path[0], (data) => {
         console.log("data :>> ", data);
       });
-      console.log("importTTApp res :>> ", res);
+      console.log("installTTApp res :>> ", res);
+    },
+    uninstallTTApp() {
+      tsbApi.ttapp.uninstall("12345", (data) => {
+        console.log("data :>> ", data);
+      });
     },
     async getMemory() {
       let rs = await ipc.sendSync("getAppMetrics");

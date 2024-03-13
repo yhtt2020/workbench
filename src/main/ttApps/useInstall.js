@@ -1,3 +1,6 @@
+/**
+ * ttapp.js
+ */
 const {
   existsFolder,
   createFolder,
@@ -21,7 +24,7 @@ const getFileExtension = (filePath) => {
 const tempPath = function (p) {
   return require("path").join(require("electron").app.getPath("userData"), p);
 };
-module.exports = async function useRegisterTTApps(filePath) {
+module.exports = async function useInstall(filePath) {
   console.log("1、开始注册ttApp :>> ");
   const id = nanoid(4);
   // 2 处理文件类型
