@@ -257,18 +257,16 @@ onBeforeMount(() => {});
 // 挂载后
 onMounted(() => {
   // 注册单例弹窗监听
+  console.log('props.type :>> ', props.type);
   if (props.type) {
+    proxy.$bus.emit("modalClose", props.type);
     setTimeout(() => {
-      proxy.$bus.on(
-        "modalClose",
-        (currentType) => {
-          if (type.value == currentType) {
-            close();
-          }
-        },
-        100
-      );
-    });
+      proxy.$bus.on("modalClose", (currentType) => {
+        if (type.value == currentType) {
+          close();
+        }
+      });
+    }, 1);
   }
 
   // 注册esc键监听

@@ -7,6 +7,8 @@ const Base = require("./base");
 
 const useInstall = require("../ttApps/useInstall");
 const useUninstall = require("../ttApps/useUninstall");
+
+const { useSelect, useSelectAll } = require("../ttApps/useSelect");
 const { BrowserWindow } = require("electron");
 class TTApp extends Base {
   instances = [];
@@ -17,15 +19,26 @@ class TTApp extends Base {
     super("ttapp");
   }
   bindIPC() {
+    // 安装
     this.on("install", async (event, args) => {
       let res = await useInstall(args.zipPath);
       console.log("install res :>> ", res);
       event.reply(args.cbId, res);
     });
-
+    // 卸载
     this.on("uninstall", async (event, args) => {
       console.log("uninstall res :>> ");
       let res = await useUninstall(args.id);
+      event.reply(args.cbId, res);
+    });
+    // 查询
+    this.on("select", async (event, args) => {
+      let res = await useSelect(args.id);
+      event.reply(args.cbId, res);
+    });
+    // 查询所有
+    this.on("selectAll", async (event, args) => {
+      let res = await useSelectAll();
       event.reply(args.cbId, res);
     });
   }

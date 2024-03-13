@@ -22,11 +22,11 @@
         <xt-button @click="uninstallTTApp" :w="140" :h="40" type="theme"
           >卸载TTApp</xt-button
         >
-        <xt-button @click="getTTApp" :w="140" :h="40" type="theme"
-          >获取TTApp</xt-button
-        >
         <xt-button @click="selectTTApp" :w="140" :h="40" type="theme"
           >查询TTApp</xt-button
+        >
+        <xt-button @click="selectAllTTApp" :w="140" :h="40" type="theme"
+          >查询所有TTApp</xt-button
         >
       </div>
       <div class="line">
@@ -170,13 +170,13 @@ export default {
         console.log("data :>> ", data);
       });
     },
-    getTTApp() {
-      tsbApi.ttapp.get("SjjL", (data) => {
+    selectTTApp() {
+      tsbApi.ttapp.select("SjjL", (data) => {
         console.log("data :>> ", data);
       });
     },
-    selectTTApp() {
-      tsbApi.ttapp.get("SjjL", (data) => {
+    selectAllTTApp() {
+      tsbApi.ttapp.selectAll("SjjL", (data) => {
         console.log("data :>> ", data);
       });
     },

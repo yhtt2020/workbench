@@ -19,20 +19,37 @@ const ttapp = {
         cb(args);
       }
     });
-      return send("install", {
-        zipPath,
-        cbId,
-      });
+    return send("install", {
+      zipPath,
+      cbId,
+    });
   },
   uninstall(id, cb) {
     let cbId = require("nanoid").nanoid();
     ipc.once(cbId, (event, args) => {
-      if (cb) {
-        console.log("卸载回调", args);
-        cb(args);
-      }
+     cb && cb(args);
     });
     return send("uninstall", {
+      id,
+      cbId,
+    });
+  },
+  select(id, cb) {
+    let cbId = require("nanoid").nanoid();
+    ipc.once(cbId, (event, args) => {
+      cb && cb(args);
+    });
+    return send("select", {
+      id,
+      cbId,
+    });
+  },
+  selectAll(id, cb) {
+    let cbId = require("nanoid").nanoid();
+    ipc.once(cbId, (event, args) => {
+      cb && cb(args);
+    });
+    return send("selectAll", {
       id,
       cbId,
     });

@@ -11,11 +11,9 @@ const {
   pathJoin,
   getCurrentDir,
 } = require("./useFile.js");
-const { join } = require("path");
 const { nanoid } = require("nanoid");
 
-const fs = require("fs-extra");
-const ttAppModel = require("../../model/ttAppModel.js");
+const ttAppModel = require("./useDb.js");
 
 const getFileExtension = (filePath) => {
   const compressedTypes = ["zip", "rar", "7z", "json"];

@@ -64,6 +64,13 @@ onMounted(() => {
   proxy.$bus.on("openFile", (cb) => {
     openFile(cb);
   });
+
+  setTimeout(() => {
+    proxy.$bus.emit("openSystemSet");
+    setTimeout(() => {
+      proxy.$bus.emit("selectSystemNav", 7);
+    }, 1000);
+  }, 3000);
   // window.tt.
 });
 
@@ -87,7 +94,5 @@ const test = () => {
   <Login v-if="loginVisible" @cb="loginCb" />
   <!-- 文件弹窗 -->
   <input v-if="fileVisible" style="display: none" ref="file" type="file" />
-
-
 </template>
 <style lang="scss" scoped></style>

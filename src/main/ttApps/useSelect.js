@@ -11,41 +11,40 @@ const {
   pathJoin,
   getCurrentDir,
 } = require("./useFile.js");
-const ttAppModel = require("../../model/ttAppModel.js");
+const ttAppModel = require("./useDb.js");
 
-module.exports = useSelect = async (id) => {
+const useSelect = async (id) => {
   console.log("拿到id :>> ", id);
-  // 1、检查是否存在
-  console.log("1、检查是否存在 :>> ");
-  let folderType = "ttapp_test"; // 临时文件夹名称
-  let folderName = [folderType, id]; // 临时文件夹名称
-  // if (!(await existsFolder(folderName))) {
-  //   return {
-  //     status: 1,
-  //     code: 200,
-  //     data: "已删除",
-  //     info: "已删除",
-  //   };
-  // }
-
-  // 2、删除文件
-  console.log("2、删除文件 :>> ");
-  await deleteFile(["ttapp_test", id]);
-  let delSqlRes = await ttAppModel.del(id);
-  console.log("delSqlRes :>> ", delSqlRes);
-  if (!(await existsFolder(folderName))) {
-    return {
-      status: 1,
-      code: 200,
-      data: "已删除",
-      info: "已删除",
-    };
-  } else {
+  let res = await ttAppModel.select(id);
+  console.log("res :>> ", res);
+  console.log("res.length :>> ", res.length);
+  if (res.length) {
     return {
       status: 0,
-      code: 400,
-      data: "删除失败",
-      info: "删除失败",
+      code: 200,
+      data: res[0],
+      info: "获取成功",
     };
   }
+  return {
+    status: 1,
+    code: 400,
+    data: "获取失败",
+    info: "获取失败",
+  };
+};
+const useSelectAll = async (id) => {
+  let res = await ttAppModel.selectAll();
+
+  return {
+    status: 0,
+    code: 200,
+    data: res,
+    info: "获取成功",
+  };
+};
+
+module.exports = {
+  useSelect,
+  useSelectAll,
 };
