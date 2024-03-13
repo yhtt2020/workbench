@@ -19,8 +19,8 @@ import { createApp } from "vue";
 import Antd from "ant-design-vue";
 // import 'ant-design-vue/dist/antd.less';
 import App from "./App.vue";
-import ColorPicker from "colorpicker-v3";
-import "colorpicker-v3/style.css";
+import Vue3ColorPicker from "vue3-colorpicker";
+import "vue3-colorpicker/style.css";
 import { createRouter, createWebHashHistory } from "vue-router";
 import { createPinia } from "pinia";
 import "dayjs/locale/zh-cn";
@@ -154,7 +154,7 @@ const options: PluginOptions = {};
 const $app = app
   .use(pinia)
   .use(Antd)
-  .use(ColorPicker)
+  .use(Vue3ColorPicker)
   .use(router)
   .use(VueViewer)
   .use(setupCalendar, {})

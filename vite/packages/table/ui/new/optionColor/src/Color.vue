@@ -15,13 +15,14 @@
             size="20"
           ></xt-new-icon>
         </div>
-        <!-- <ColorPicker
-          v-model:color="color"
-          @change="updateBackground"
+        <span class="mt-2">其他：</span>
+        <color-picker
+          v-model:pureColor="color"
+          v-on:update:pureColor="updateBackground"
           :defaultList="colorList"
           :linearList="linearList"
           :isLinear="isLinear"
-        /> -->
+        />
       </div>
     </template>
   </div>
@@ -115,5 +116,10 @@ const colorIndex = ref(0);
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
+}
+:deep(.vc-color-wrap){
+  width:40px;
+  height:40px;
+  border-radius: 10px;
 }
 </style>

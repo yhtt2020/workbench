@@ -2,10 +2,10 @@
   <div class="flex justify-between">
     <div class="flex items-center h-12">
       <XtMenu :menus="menus" :data="index" v-for="(item, index) in colorList">
-        <colorPicker
+        <color-picker
           class="mr-3"
           style="margin-top: 6px"
-          v-model:hex="colorList[index]"
+          v-model:pureColor="colorList[index]"
           @click="selectColor(index)"
           :style="{
             border: index == selectIndex ? '4px solid var(--active-bg)' : '',
@@ -97,8 +97,8 @@
 </template>
 
 <script>
-import ColorPicker from "colorpicker-v3";
-import "colorpicker-v3/style.css";
+import { ColorPicker } from "vue3-colorpicker";
+import "vue3-colorpicker/style.css";
 import { defineAsyncComponent } from "vue";
 import tinycolor from "tinycolor2";
 import { colorSelection } from "../../../store/colorSelection";

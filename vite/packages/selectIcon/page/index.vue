@@ -37,8 +37,8 @@
 
           <div class="select-color" v-show="isShowBgColor" style="flex-wrap: wrap;z-index: 100;color: var(--primary-text);" >
             <div class="ml-4 mt-2">自定义</div>
-            <div style='width: 40px;height:40px;border-radius: 10px;' class="flex justify-center items-center mt-1 ml-3" :class="selBgColor == 6 ? 'sel-active':''">
-              <XtBaseColor v-model:data="bgColor[6]" @click="changeBgColor(6)"></XtBaseColor>
+            <div style='width: 40px;height:40px;border-radius: 10px;padding: 8px' class="flex justify-center items-center mt-1 ml-3" :class="selBgColor == 6 ? 'sel-active':''">
+              <XtBaseColor shape="circle" v-model:data="bgColor[6]" @click="changeBgColor(6)"></XtBaseColor>
             </div>
             <div class="ml-4 mt-1">系统预设</div>
             <div class="flex flex-wrap">
@@ -260,6 +260,12 @@
   </script>
 
   <style lang="scss" scoped>
+  :deep(.vc-color-wrap){
+    width:40px;
+    height:40px;
+    border-radius: 10px;
+    margin-right: 0px;
+  }
   .top-triangle{
     width: 0;
     height: 0;
@@ -280,11 +286,7 @@
   .float-icon :deep(.ant-avatar){
     border-radius: 0 !important;
   }
-  .float-icon :deep(.zs-color-picker-btn-color){
-    border-radius: 50% !important;
-    width: 24px;
-    height: 24px;
-  }
+
     .top-icon{
       height: 48px;
       border-bottom: 1px solid var(--secondary-bg);

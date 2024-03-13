@@ -12,7 +12,7 @@
   </xt-option-box>
   <xt-option-box>
     <xt-option-info title="主题色" />
-    <!-- <XtBaseColor v-model:data="themeColor"> </XtBaseColor> -->
+
     <xt-option-color
       v-model:color="themeColor"
       class="w-full"
@@ -85,7 +85,7 @@ const themeModeList = [
   },
 ];
 const { proxy } = getCurrentInstance();
-// 
+//
 
 // 更新主题
 const updateThemeMode = (data) => {
@@ -107,4 +107,6 @@ onMounted(() => {
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+</style>
