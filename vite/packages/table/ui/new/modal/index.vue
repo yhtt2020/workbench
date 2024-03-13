@@ -190,7 +190,7 @@ const props = withDefaults(defineProps<ModalProps>(), {
   beforeUnmount: () => true,
   custom: false,
   full: false,
-  scrollbarPadding: { paddingRight: "8px", paddingLeft: "8px" },
+  scrollbarPadding: { paddingRight: "0px", paddingLeft: "0px" },
 });
 const { esc, modelValue, beforeMount, beforeUnmount } = toRefs(props);
 const isFull = ref(false);

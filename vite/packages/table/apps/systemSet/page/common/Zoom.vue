@@ -91,14 +91,14 @@ export default {
     };
   },
   async mounted() {
-    if (this.useEnv()) {
-      this.newZoom = (await tsbApi.window.getZoomFactor()) * 100;
-      this.oldZoom = this.newZoom;
-      this.inputZoom = +this.newZoom.toFixed(0);
-    }
+    this.newZoom = (await tsbApi.window.getZoomFactor()) * 100;
+    this.oldZoom = this.newZoom;
+    this.inputZoom = +this.newZoom.toFixed(0);
 
     this.getSize();
-
+    setTimeout(() => {
+      this.showRestore = false;
+    }, 100);
     this.$bus.on("resetWindow", () => {
       this.reset();
     });
