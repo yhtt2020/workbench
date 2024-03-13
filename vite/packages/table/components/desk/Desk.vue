@@ -532,7 +532,7 @@ export default {
       this.$refs.galleryRef.openGalleryModal();
       setTimeout(() => {
         this.$bus.emit("lockScreenSet");
-      }, 100);
+      }, 300);
     });
 
     if (window.showed) {

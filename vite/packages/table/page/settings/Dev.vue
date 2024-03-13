@@ -16,8 +16,17 @@
         >
       </div>
       <div class="line">
-        <xt-button @click="importTTApp" :w="140" :h="40" type="theme"
-          >导入测试TTApp</xt-button
+        <xt-button @click="installTTApp" :w="140" :h="40" type="theme"
+          >安装TTApp</xt-button
+        >
+        <xt-button @click="uninstallTTApp" :w="140" :h="40" type="theme"
+          >卸载TTApp</xt-button
+        >
+        <xt-button @click="selectTTApp" :w="140" :h="40" type="theme"
+          >查询TTApp</xt-button
+        >
+        <xt-button @click="selectAllTTApp" :w="140" :h="40" type="theme"
+          >查询所有TTApp</xt-button
         >
       </div>
       <div class="line">
@@ -143,7 +152,7 @@ export default {
     openDevTool() {
       ipc.send("openDevTool");
     },
-    async importTTApp() {
+    async installTTApp() {
       let path = await tsbApi.dialog.showOpenDialog({
         title: "选择",
         message: "请选择文件",
@@ -154,7 +163,22 @@ export default {
       let res = tsbApi.ttapp.install(path[0], (data) => {
         console.log("data :>> ", data);
       });
-      console.log("importTTApp res :>> ", res);
+      console.log("installTTApp res :>> ", res);
+    },
+    uninstallTTApp() {
+      tsbApi.ttapp.uninstall("SjjL", (data) => {
+        console.log("data :>> ", data);
+      });
+    },
+    selectTTApp() {
+      tsbApi.ttapp.select("SjjL", (data) => {
+        console.log("data :>> ", data);
+      });
+    },
+    selectAllTTApp() {
+      tsbApi.ttapp.selectAll("SjjL", (data) => {
+        console.log("data :>> ", data);
+      });
     },
     async getMemory() {
       let rs = await ipc.sendSync("getAppMetrics");
