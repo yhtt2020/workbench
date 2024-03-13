@@ -1,3 +1,7 @@
+/**
+ * ttapp.js
+ * @description 处理文件相关操作
+ */
 // const extractZip = require("../../../js/main/crx");
 const extractZip = require("../../../js/main/zip.js");
 const { join } = require("path");
@@ -62,7 +66,7 @@ const file = {
    */
   async deleteFile(filePath) {
     try {
-      fse.removeSync(file.pathJoin(filePath));
+     await fse.removeSync(file.pathJoin(filePath));
       return true;
     } catch (err) {
       console.error("Error deleting directory:", err);

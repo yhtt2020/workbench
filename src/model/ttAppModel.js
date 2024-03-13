@@ -18,12 +18,6 @@ const ttAppModel = {
     // let sql = `INSERT INTO ttApp VALUES ('${id}')`;
     // sqlDb.knex.raw(sql).then((resp) => {
     //   console.log("resp :>> ", resp);
-    //   console.log("resp :>> ", resp);
-    //   console.log("resp :>> ", resp);
-    //   console.log("resp :>> ", resp);
-    //   console.log("resp :>> ", resp);
-    //   console.log("resp :>> ", resp);
-    //   console.log("resp :>> ", resp);
     // });
     return sqlDb
       .knex("ttApp")
@@ -35,6 +29,46 @@ const ttAppModel = {
       .catch((err) => {
         console.log(err);
       });
+  },
+  /**
+   * 删除ttApp
+   */
+  async del(id) {
+    // return sqlDb
+    //   .knex("ttApp")
+    //   .where({ nanoid: id })
+    //   .del()
+    //   .then(() => {
+    //     console.log("Deleted");
+    //     return true;
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+    try {
+      await sqlDb.knex("ttApp").where({ nanoid: id }).del();
+      return true;
+    } catch (err) {
+      console.error("Error deleting directory:", err);
+      return false;
+    }
+  },
+  /**
+   * 查询所有
+   */
+  async selectAll() {
+    // let sql = `INSERT INTO ttApp VALUES ('${id}')`;
+    let sql = `SELECT * FROM ttApp`;
+    let res = await sqlDb.knex.raw(sql);
+    return res;
+  },
+  /**
+   * 查询
+   */
+  async select(id) {
+    let sql = `SELECT * FROM ttApp WHERE nanoid='${id}'`;
+    let res = await await sqlDb.knex.raw(sql);
+    return res;
   },
 
   // 增删改查

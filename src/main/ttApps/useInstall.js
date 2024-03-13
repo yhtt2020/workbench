@@ -1,3 +1,7 @@
+/**
+ * ttapp.js
+ * @description 安装ttapp
+ */
 const {
   existsFolder,
   createFolder,
@@ -7,11 +11,9 @@ const {
   pathJoin,
   getCurrentDir,
 } = require("./useFile.js");
-const { join } = require("path");
 const { nanoid } = require("nanoid");
 
-const fs = require("fs-extra");
-const ttAppModel = require("../../model/ttAppModel.js");
+const ttAppModel = require("./useDb.js");
 
 const getFileExtension = (filePath) => {
   const compressedTypes = ["zip", "rar", "7z", "json"];
@@ -21,7 +23,7 @@ const getFileExtension = (filePath) => {
 const tempPath = function (p) {
   return require("path").join(require("electron").app.getPath("userData"), p);
 };
-module.exports = async function useRegisterTTApps(filePath) {
+module.exports = async function useInstall(filePath) {
   console.log("1、开始注册ttApp :>> ");
   const id = nanoid(4);
   // 2 处理文件类型
