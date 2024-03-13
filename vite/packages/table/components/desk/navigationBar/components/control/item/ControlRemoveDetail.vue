@@ -87,6 +87,7 @@ import { completeTask } from '../../../../../../apps/task/task'
 import UserInfoDetail from '../userControl/UserInfoDetail.vue';
 import SystemControlDetail from '../systemControl/SystemControlDetail.vue';
 import UnLogin from '../userControl/UnLogin.vue';
+import { navStore } from "../../../../../../store/nav";
 
 const props = defineProps({
  controlIndex:{
@@ -113,6 +114,8 @@ const { control,firstVisible } = storeToRefs(controls);
 const { proxy } = getCurrentInstance()
 const router = useRouter();
 const controlID = ref(props.controlIndex);
+const nav = navStore();
+const { copyFootNav } = storeToRefs(nav);
 
 
 // 通过计算属性来判断控制中心是否开启的状态
@@ -164,7 +167,30 @@ const triggerControl = () =>{
       break;
     // 极简模式
     case 'min-mode':
-      simple.value = !simple.value
+      simple.value = !simple.value;
+      console.log('测试',simple.value);
+      if(simple.value){
+        const isControl = copyFootNav.value.some((item)=>{ return item.value === 'control' });
+        const controlOption = {
+          addNav:true,
+          bg:"",
+          ext:"",
+          icon:"/logo/control.svg",
+          id:"CaWUiH",
+          isBg:false,
+          mode:"app",
+          name:"控制中心",
+          slot:"control",
+          summary: "",
+          type: "systemApp",
+          value:"control",
+        }
+        if(!isControl){  copyFootNav.value.unshift({...controlOption});}
+      }
+      else {
+        const index =  copyFootNav.value.findIndex((item)=>{ return item.value === 'control' });
+        if(index !== -1){ copyFootNav.value.splice(index,1) }
+      }
       break;
     // 节能模式
     case 'energy-save-mode':
