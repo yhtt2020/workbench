@@ -1,5 +1,6 @@
 /**
  * ttapp.js
+ * @description 应该是主进程的回调处理
  */
 const ipcHelper = require("./ipcHelper");
 
@@ -9,7 +10,6 @@ function send(channel, args = {}) {
 async function sendSync(channel, args = {}) {
   return await ipcHelper.sendSync("ttapp", channel, args);
 }
-// 应该是发送给主进程的消息
 const ttapp = {
   install(zipPath, cb) {
     let cbId = require("nanoid").nanoid();

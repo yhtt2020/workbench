@@ -1,5 +1,6 @@
 /**
  * ttapp.js
+ * @description 处理文件相关操作
  */
 // const extractZip = require("../../../js/main/crx");
 const extractZip = require("../../../js/main/zip.js");

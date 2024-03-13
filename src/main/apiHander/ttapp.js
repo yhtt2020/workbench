@@ -1,5 +1,6 @@
 /**
  * ttapp.js
+ * @description 应该是接收主进程的消息
  */
 const Base = require("./base");
 // const appModel = require("../../model/appModel");
@@ -15,7 +16,6 @@ class TTApp extends Base {
   constructor() {
     super("ttapp");
   }
-  // 应该是接收主进程的消息
   bindIPC() {
     this.on("install", async (event, args) => {
       let res = await useInstall(args.zipPath);
@@ -24,7 +24,7 @@ class TTApp extends Base {
     });
 
     this.on("uninstall", async (event, args) => {
-      console.log("uninstall res :>> ", );
+      console.log("uninstall res :>> ");
       let res = await useUninstall(args.id);
       event.reply(args.cbId, args);
     });

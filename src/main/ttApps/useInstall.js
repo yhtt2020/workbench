@@ -1,5 +1,6 @@
 /**
  * ttapp.js
+ * @description 安装ttapp
  */
 const {
   existsFolder,
