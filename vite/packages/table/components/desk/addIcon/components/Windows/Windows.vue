@@ -13,7 +13,7 @@
             {{ item.name }}
         </xt-button>
     </div>
-    <IconList :list="filterList" info="桌面图标"></IconList>
+    <IconList :list="filterList" info="桌面图标" @clickItem="addIcon"></IconList>
 </template>
 
 <script setup lang='ts'>
@@ -21,8 +21,11 @@ import { ref, onMounted,computed } from 'vue'
 import IconList from '../IconList.vue';
 import { mergeData } from '../../../../../ui/hooks/useDataConversion';
 import {localFiles,doc,apps} from '../../hook/defaultData'
+import { useReplace } from '../../hook/useReplace';
 
 const tableApp = ref<string[]>([])
+
+const emit = defineEmits(['addIcon'])
 
 // 索引
 const clickIndex = ref(0)
@@ -30,7 +33,8 @@ const clickIndex = ref(0)
 // 获取桌面图标,统一图标格式
 onMounted(async () => {
     tableApp.value = await ipc.sendSync('getDeskApps')
-    addType(tableApp.value)
+    await addType(tableApp.value)
+    tableApp.value = useReplace(tableApp.value)
     tableApp.value = tableApp.value.map((item) => {
         return mergeData(item)
     })
@@ -42,7 +46,6 @@ const addType = (list: string[]) => {
         // 防止重复遍历
         if (item.type === 'tableApp') return
         item.type = 'tableApp'
-        item.value = item.path
     })
 }
 
@@ -75,6 +78,10 @@ const filterList = computed( () => {
     }
 })
 
+// 添加图标
+const addIcon = (item) => {
+    emit('addIcon',item)
+}
 
 
 </script>

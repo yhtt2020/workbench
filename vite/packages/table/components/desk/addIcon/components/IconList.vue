@@ -1,6 +1,11 @@
 <template>
     <div class="flex flex-wrap" :style="{ gap: gap + 'px' }">
-        <SelectIcon v-for="(item, index) in list" :key="index" :item="item" :info="info" />
+        <SelectIcon 
+            v-for="(item, index) in list" 
+            :key="index" 
+            :item="item" 
+            :info="info"
+            @clickRightListItem="clickItem" />
     </div>
 </template>
 
@@ -18,6 +23,12 @@ const props = defineProps({
 })
 
 const { list, gap, info } = toRefs(props)
+
+const emit = defineEmits(['clickItem'])
+
+const clickItem = (item) => {
+    emit('clickItem', item)
+}
 
 </script>
 <style lang='scss' scoped></style>
