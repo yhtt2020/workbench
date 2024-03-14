@@ -1,5 +1,8 @@
 <template>
-    <div draggable="true" @dragstart="handleDragStart" @dragend="handleDragEnd">
+    <div 
+      draggable="true" 
+      @dragstart="handleDragStart" 
+      @dragend="handleDragEnd">
         <slot></slot>
     </div>
 </template>
@@ -50,6 +53,7 @@ const emits = defineEmits(["deleteFile" ]);
 
 const { proxy } = getCurrentInstance()
 
+// 特殊图标阻止拖拽添加到桌面
 const isSpecial = computed(() => {
   return ['commun' , 'control'].includes(props.data.value)
 })
@@ -60,13 +64,17 @@ let isCtrl = false
  * 文件托起
  */
 const handleDragStart = (event) => {
+  // 当被拖拽时，提示
     if(!neverTip.value && !isSpecial.value){
       ctrlTip()  
     }
+    // 传递导航栏id
     navBarId.value = props.currentId
+    // 传递拖拽数据
     navBarItem.value = props.data
     console.log('数据传递成功')
     console.log(event.ctrlKey,'<<<<<<');
+    // 判断是否按下ctrl键
     isCtrl = event.ctrlKey
 };
 // 文件拖拽弹起
@@ -76,12 +84,15 @@ const handleDragEnd = (event) => {
     //     emits("deleteFile", props.data);
     //     console.log('你不在当前文件夹')
     // }
+
+    // 判断是否离开导航栏，如果离开了则删除数据
     if(isLeaveBar.value) {
         emits("deleteFile", props.data);
         isLeaveBar.value = false
         console.log('数据添加成功')
     }
 
+    // 判断是否进入桌面
     if(isEnterDesk.value ) {
         let obj
         let id = Date.now()
@@ -134,6 +145,7 @@ const handleDragEnd = (event) => {
               id
             );
         }
+        // 如果按下了ctrl键则不删除数据
         if(!isCtrl){
            emits("deleteFile", props.data); 
         }
