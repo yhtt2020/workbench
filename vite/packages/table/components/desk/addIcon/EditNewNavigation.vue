@@ -44,7 +44,10 @@
             <!-- 自定义 -->
             <teleport to='body'>
               <CustomIcon v-if="iconIndex === 'CustomIcon'" @addIcon="addIcon"></CustomIcon>
+              <!-- 以文件夹形式添加,预览 -->
               <xt-preview v-if="previewFlag" v-model="previewFlag" @ok="addFolderIcon"></xt-preview>
+              <!-- 添加到桌面 -->
+              <AddDesk v-if="deskFlag" :list="multipleList"></AddDesk>
             </teleport>
           </xt-scrollbar>
         </div>
@@ -71,12 +74,15 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, watch, defineAsyncComponent } from 'vue'
+import { ref, watch, defineAsyncComponent,onBeforeMount } from 'vue'
+import AddDesk from './components/AddDesk.vue'
+import {message} from 'ant-design-vue'
+
 import { useNavigationStore } from '../navigationBar/navigationStore';
 import { navStore } from '../../../store/nav';
-
 import { useIconStore } from './store';
 import { storeToRefs } from 'pinia';
+
 const iconStore = useIconStore()
 const { multipleList, isMultiple } = storeToRefs(iconStore)
 
@@ -97,13 +103,14 @@ const Browser = defineAsyncComponent(() => import('./components/Browser/Browser.
 const CoolApp = defineAsyncComponent(() => import('./components/CoolApp/CoolApp.vue'))
 const LightApp = defineAsyncComponent(() => import('./components/LightApp/LightApp.vue'))
 const CustomIcon = defineAsyncComponent(() => import('./components/CustomIcon/CustomIcon.vue'))
-const Labor = defineAsyncComponent(() => import('../../../apps/favorites/components/Labor.vue'))
+const Labor = defineAsyncComponent(() => import('./components/Labor.vue'))
 
 // 常量
 const iconIndex = ref('Windows')  // 默认显示的组件
 const editVisible = ref(true)  // 是否显示
 const inputValue = ref('')  // 输入框的值
 const previewFlag = ref(false)  // 是否显示预览
+const deskFlag = ref(false)  // 是否显示添加到桌面
 
 // 右下角添加的菜单
 const menus = ref([
@@ -111,12 +118,14 @@ const menus = ref([
     label: '添加到桌面',
     newIcon:'fluent:desktop-16-regular',
     callBack: async () => {
+      deskFlag.value = true
     }
   },
   {
     label: '添加到分组',
     newIcon: 'fluent:app-folder-16-regular',
     callBack: () => {
+      previewFlag.value = true
     },
   },
 ])
@@ -191,7 +200,7 @@ const chooseItem = (item) => {
 
 // 添加图标
 const addIcon = (item:object | undefined) => {
-  console.log(item,'>>>>>>>>')
+  message.success('添加成功')
   const tag = selectNav.value
   switch (tag) {
     case 'foot':
@@ -211,6 +220,10 @@ const addIcon = (item:object | undefined) => {
 
 const addMultiple = () => {
   previewFlag.value = true
+}
+
+const addFolderIcon = () => {
+  previewFlag.value = false
   isMultiple.value = false
 }
 
@@ -221,5 +234,10 @@ watch(
     multipleList.value = []
   }
 )
+
+// 防止退出后，还是多选状态
+onBeforeMount(() => {
+  isMultiple.value = false
+})
 </script>
 <style lang='scss' scoped></style>

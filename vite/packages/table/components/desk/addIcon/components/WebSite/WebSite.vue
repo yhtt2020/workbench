@@ -13,17 +13,24 @@
             {{ item.name }}
         </xt-button>
     </div>
-    <IconList :list="list" @clickItem="addIcon"></IconList>
+    <IconList :list="filterList" @clickItem="addIcon"></IconList>
+    <Empty v-if="filterList.length === 0"></Empty>
 </template>
 
 <script setup lang='ts'>
 import { ref, onMounted,computed } from 'vue'
+import Empty from '../Empty.vue';
 import { getNavList } from '../../../../../page/app/addIcon/api/api'
 import { webMenus } from '../../hook/defaultData'
 import { useReplace } from '../../hook/useReplace';
 import IconList from '../IconList.vue';
+import { useFilterList } from '../../hook/useFilterList';
 
 const emit = defineEmits(['addIcon'])
+
+const props = defineProps({
+    value: String
+})
 
 // 获取所有的图标
 const webList = ref({})
@@ -41,10 +48,18 @@ const list = computed(() => {
     const arr = webList.value[tag.value]
     if(arr) {
         const newArr = useReplace(arr)
-        console.log(newArr)
         return newArr
     }
     return webList.value[tag.value]
+})
+
+// 筛选列表
+const filterList = computed(() => {
+    let arr = list.value
+    if(! arr) {
+        arr = []
+    }
+    return useFilterList(arr,props.value)
 })
 
 // 切换
