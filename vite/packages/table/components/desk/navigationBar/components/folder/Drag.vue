@@ -50,13 +50,17 @@ const emits = defineEmits(["deleteFile" ]);
 
 const { proxy } = getCurrentInstance()
 
+const isSpecial = computed(() => {
+  return ['commun' , 'control'].includes(props.data.value)
+})
+
 // 是否按下ctrl键
 let isCtrl = false
 /**
  * 文件托起
  */
 const handleDragStart = (event) => {
-    if(!neverTip.value){
+    if(!neverTip.value && !isSpecial.value){
       ctrlTip()  
     }
     navBarId.value = props.currentId
@@ -81,6 +85,12 @@ const handleDragEnd = (event) => {
     if(isEnterDesk.value ) {
         let obj
         let id = Date.now()
+        if(isSpecial.value){
+          toast.error('特殊图标不允许拖拽到桌面',{
+            timeout:1500
+          })
+          return
+        }
         if(props.data.type === 'folder') {
             obj = {
                 ...defaultFolderData,
