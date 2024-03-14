@@ -15,10 +15,17 @@
             size="20"
           ></xt-new-icon>
         </div>
-        <span class="mt-2">其他：</span>
-        <color-picker
+        <!-- <span class="mt-2">其他：</span> -->
+        <!-- <color-picker
           v-model:pureColor="color"
           v-on:update:pureColor="updateBackground"
+          :defaultList="colorList"
+          :linearList="linearList"
+          :isLinear="isLinear"
+        /> -->
+        <ColorPicker
+          v-model:color="color"
+          @change="updateBackground"
           :defaultList="colorList"
           :linearList="linearList"
           :isLinear="isLinear"
@@ -30,7 +37,7 @@
 
 <script setup lang="ts">
 import { ref, watch, toRefs, onMounted } from "vue";
-// import ColorPicker from "./components/ColorPicker.vue";
+import ColorPicker from "./components/ColorPicker.vue";
 export interface colorProps {
   switch?: boolean;
   color?: string;
