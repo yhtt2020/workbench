@@ -3,6 +3,7 @@ const baseApi = require('./baseApi.js')
 const url = {
   logoutBrowser: '/app/logoutBrowser',
   loginBrowser: '/app/loginBrowser',
+  loginBrowserWithToken: '/app/loginBrowserWithToken',
   shareTasks: '/app/createTask',
   autoLogin: '/app/autoLogin',
   imAutoLogin: '/app/imAutoLogin',
@@ -11,6 +12,9 @@ const url = {
 const authApi = {
   async loginBrowser(info) {
     return baseApi.axios(url.loginBrowser, info, 'post', true)
+  },
+  async loginBrowserWithToken(info) {
+    return baseApi.axios(url.loginBrowserWithToken, info, 'post', true)
   },
   async logoutBrowser () {
     await baseApi.init()
