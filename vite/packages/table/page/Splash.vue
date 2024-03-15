@@ -11,6 +11,7 @@
     "
     class="drag"
   >
+    <!-- 加载动画 -->
     <div v-if="launching" style="margin: auto">
       <div class="mb-5 animate-bounce">
         <a-avatar
@@ -43,6 +44,7 @@
         欢迎回来，又是元气满满的一天！
       </div>
     </div>
+    <!-- 加载完成 -->
     <div v-else style="background: #333; width: 100vw; height: auto" class="">
       <div
         class="p-10 rounded-lg no-drag s-bg"
@@ -58,6 +60,7 @@
         <div class="mb-10 ml-40 text-center text-md">
           —— 划时代的副屏效率神器
         </div>
+        <!-- 未登录 -->
         <div v-if="!userInfo">
           <div class="mb-5 xt-text" style="font-size: 16px">
             由于本产品功能需要借助网络，如您不希望登录，则可使用离线模式，此模式下，依赖于网络的功能将被隐藏。<br />
@@ -88,6 +91,7 @@
             </a-col>
           </a-row>
         </div>
+        <!-- 已登录 -->
         <div class="text-center" v-else>
           <div class="inline-block mt-3 mb-3">
             <div>
@@ -152,15 +156,19 @@ export default {
       modal: null,
       timeoutHandler: null,
       version: window.$useEnv() ? "" : tsbApi.runtime.appVersion,
+      // 超时定时器
+      timeout: null,
     };
   },
   async mounted() {
     Promise.all([
+      // 这个没走db 单独处理
+      controlStore(),
+      browserStore().bindIPC(),
+      this.bindIPC(),
       //启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成
       //注意，此处的第二个参数，必须和此store同名，尤其注意有些命名里带了store的
-      await browserStore().bindIPC(),
-      await captureStore(), //仅触发一下载入
-      await this.bindIPC(),
+      await captureStore(),
       await this.initStore(appStore, "appStore"),
       await this.initStore(codeStore, "code"),
       await this.initStore(cardStore, "cardStore"),
@@ -172,34 +180,27 @@ export default {
       await this.initStore(navStore, "nav"),
       await this.initStore(taskStore, "task"),
       await this.initStore(useWidgetStore, "useWidgetStore"),
-      await this.initStore(controlStore, "control"),
       await this.initStore(offlineStore, "offlineStore"),
       await this.initStore(clipboardStore, "clipboardStore"),
     ]);
-    let haventOk = Object.keys(window.loadedStore).filter((key) => {
-      let check = !window.loadedStore[key];
-      if (window.loadedStore[key] === false) return check;
-    });
-    console.log("加载完成 :>> ");
-    window.loadedStore["userInfo"] = false;
+    // 新增一个定时器 用于异常情况清空loading
+    this.timeout = setTimeout(() => {
+      this.launching = false;
+    }, 5000);
 
     setTimeout(() => {
       this.storeReadyTimer = setInterval(() => {
-        if (!this.launching) {
-          return;
-        }
         let haventOk = Object.keys(window.loadedStore).filter((key) => {
           let check = !window.loadedStore[key];
           if (window.loadedStore[key] === false) return check;
         });
-        console.log("haventOk.length <=1 :>> ", haventOk.length);
-        console.log("haventOk :>> ", haventOk);
-        if (haventOk.length <= 2) {
-          //已经全部搞定
+        //已经全部搞定
+        if (haventOk.length <= 0) {
+          console.log("确认完成加载 :>> ");
           clearInterval(this.storeReadyTimer);
           this.afterLaunch();
         }
-      }, 1000);
+      }, 500);
     }, 100);
     // this.bindUserInfoResponse();
     // this.getUserInfo();
@@ -245,22 +246,7 @@ export default {
         this.bindSubIPC();
       }
     },
-    // 应该不需要了
-    timeout() {
-      this.timeoutHandler = setTimeout(() => {
-        this.launching = false;
-        window.loadedStore["userInfo"] = true;
-        this.loading = false;
-        Modal.error({
-          content:
-            "服务器连接超时。可能服务器正在维护，请稍后再试或者使用离线模式。",
-          key: "error",
-          okText: "确定",
-          centered: true,
-          onOk: () => {},
-        });
-      }, 5000);
-    },
+
     // 感觉不需要
     goDirect() {
       if (this.$useEnv()) {
@@ -353,10 +339,14 @@ export default {
         window.loadedStore = {};
       }
 
+      console.log("name :>> ", name);
+      // console.log('window.loadedStore[name] :>> ', window.loadedStore[name]);
+
       if (typeof window.loadedStore[name] === "undefined") {
         window.loadedStore[name] = false;
       }
-      await store();
+      let res = await store();
+      return res;
     },
 
     async afterLaunch() {
@@ -365,6 +355,11 @@ export default {
         this.loginOk();
         return;
       }
+      /**
+       * 开始初始化
+       * 具体执行不知道 不用管
+       */
+
       if (this.aided) {
         message.warn(
           "当前应用正运行在辅助模式下，无法被聚焦。如需退出，请到【设置】界面关闭。"
@@ -387,25 +382,10 @@ export default {
       this.ensureShake(false); //确认摇一摇功能状态
       await tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100); //根据设置进行缩放比的强制调整
       tsbApi.window.setSkipTaskbar(!this.settings.showInTaskBar);
+      /**
+       * 初始化完成
+       */
       this.loginOk();
-    },
-    // 生成等级区间  应该不需要了
-    gradeTableGenerate(num) {
-      let lvSys = {};
-      for (let i = 0; i < num + 1; i++) {
-        let arrLef = 0;
-        let arrRg = 0;
-        for (let j = 0; j < i; j++) {
-          arrLef += 10 * (j + 2);
-        }
-        for (let k = 0; k < i + 1; k++) {
-          arrRg += 10 * (k + 2);
-        }
-        arrRg -= 1;
-        lvSys[`${i}`] = [arrLef, arrRg];
-      }
-      delete lvSys["lv0"];
-      return lvSys;
     },
     login() {
       useLogin(() => {
@@ -415,7 +395,7 @@ export default {
 
     loginOk() {
       // 完成引导并登录
-      console.log('this.userInfo  :>> ', this.userInfo );
+      console.log("this.userInfo  :>> ", this.userInfo);
       if (this.userInfo && this.init) {
         this.enter();
         return;
@@ -427,7 +407,7 @@ export default {
         return;
       }
       // 首次客户端引导
-      if (!this.init && isMain() && !this.$useEnv("web")) {
+      if (!this.init && isMain()) {
         this.$router.replace({ name: "wizard" });
         return;
       }
@@ -443,6 +423,9 @@ export default {
       }
       cache.set("isGuest", true);
     },
+  },
+  beforeDestroy() {
+    clearTimeout(this.timeout);
   },
 };
 </script>
