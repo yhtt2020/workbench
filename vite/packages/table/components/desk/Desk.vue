@@ -34,14 +34,20 @@
       :hide="hide"
     />
     <Drop>
+      <!-- <WujieVue
+      width="100%"
+      height="100%"
+      name="vue2-demo"
+      url="https://www.yinaor.com/docs/front/micro/micro-wujie/"
+    ></WujieVue> -->
       <!-- <xt-wu-jie
         ref="xxx"
         width="100%"
         height="100%"
         name="xxx"
         url="http://localhost:5173/"
-      ></xt-wu-jie> -->
-      <!-- <Wujie width="100%" height="100%" name="xxx" url="http://localhost:5173/" ></Wujie> -->
+      ></xt-wu-jie>
+      <Wujie width="100%" height="100%" name="xxx" url="http://localhost:5173/" ></Wujie> -->
       <!-- 自由布局 -->
       <template v-if="freeLayout">
         <FreeLayoutScrollbar ref="freeLayoutScrollbar" class="flex-1">
@@ -223,6 +229,7 @@ import { useFloatMenuStore } from "./floatMenu/store";
 import EditNewNavigation from "./navigationBar/EditNewNavigation.vue";
 import _ from "lodash-es";
 import { registerFolder } from "../../apps/folder/src/hooks/register";
+import { useRegisterTTAppCard } from "../../apps/ttAppCard/src/hooks/useRegisterTTAppCard";
 import GalleryModal from "../paperModal/GalleryModal.vue";
 import { useAddCard } from "../../ui/hooks/useAddCard";
 import { useDeskStore } from "./store";
@@ -567,6 +574,9 @@ export default {
       } else {
         message.info("定制过程中无法操作");
       }
+    },
+    addTTAppCard() {
+      useRegisterTTAppCard(this.currentDesk);
     },
     resetLayout() {
       this.hide = true;

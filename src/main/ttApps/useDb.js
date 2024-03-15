@@ -6,13 +6,15 @@ const ttAppModel = {
   /**
    * 初始化数据库
    */
-  async initDb(id) {
+  async initDb(ttAppData) {
+    const { id, modules } = ttAppData;
     // 是否存在ttApp表
     let exists = await sqlDb.knex.schema.hasTable("ttApp");
     // 不存在则创建
     if (!exists) {
       await sqlDb.knex.schema.createTable("ttApp", function (t) {
         t.string("nanoid").primary().unique(); //本地id
+        t.string("modules"); //本地id
       });
     }
     // let sql = `INSERT INTO ttApp VALUES ('${id}')`;
@@ -21,7 +23,7 @@ const ttAppModel = {
     // });
     return sqlDb
       .knex("ttApp")
-      .insert({ nanoid: id })
+      .insert({ nanoid: id, modules })
       .then(() => {
         console.log("Inserted");
         return true;

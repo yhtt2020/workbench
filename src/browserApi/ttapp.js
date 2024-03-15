@@ -27,7 +27,7 @@ const ttapp = {
   uninstall(id, cb) {
     let cbId = require("nanoid").nanoid();
     ipc.once(cbId, (event, args) => {
-     cb && cb(args);
+      cb && cb(args);
     });
     return send("uninstall", {
       id,
@@ -44,13 +44,13 @@ const ttapp = {
       cbId,
     });
   },
-  selectAll(id, cb) {
+  selectAll(cb) {
     let cbId = require("nanoid").nanoid();
     ipc.once(cbId, (event, args) => {
+      console.log("args :>> ", args);
       cb && cb(args);
     });
     return send("selectAll", {
-      id,
       cbId,
     });
   },

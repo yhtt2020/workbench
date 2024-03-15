@@ -176,7 +176,7 @@ export default {
       });
     },
     selectAllTTApp() {
-      tsbApi.ttapp.selectAll("SjjL", (data) => {
+      tsbApi.ttapp.selectAll((data) => {
         console.log("data :>> ", data);
       });
     },

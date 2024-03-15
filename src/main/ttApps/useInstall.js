@@ -109,8 +109,19 @@ module.exports = async function useInstall(filePath) {
       info: "manifest.json文件缺少 " + manifestCheckRes.join(" , ") + " 数据",
     };
   }
+  // 7
+  let modules = {};
+  for (const [key, value] of Object.entries(manifestRes.modules)) {
+    modules[key] = value.entry;
+  }
+  console.log("7、获取modules配置 :>> ", modules);
+  let modulesJson = JSON.stringify(modules);
 
+  const ttAppData = {
+    id,
+    modules: modulesJson,
+  };
   // 7、实现注册
-  let res = await ttAppModel.initDb(id);
+  let res = await ttAppModel.initDb(ttAppData);
   console.log("7 res :>> ", res);
 };

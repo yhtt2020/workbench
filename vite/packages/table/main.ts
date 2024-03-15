@@ -90,13 +90,13 @@ import initStores from "./initStores";
 
 import { Notifications } from "./js/common/sessionNotice";
 
-import WujieVue from "wujie-vue3";
+import Wujie from 'wujie-vue3'
 
 import { tt, Mit } from "./permission/global/global";
 import type { TT } from "./permission/global/type";
 
 import hevueImgPreview from "hevue-img-preview";
-const { bus, setupApp, preloadApp, destroyApp } = WujieVue;
+const { bus, setupApp, preloadApp, destroyApp } = Wujie;
 
 // Your SDKAppID
 // init TUIKit
@@ -108,7 +108,7 @@ dayjs.locale("zh-cn");
 
 const app = createApp(App);
 
-app.use(WujieVue);
+app.use(Wujie);
 // app.use(hevueImgPreview)
 // 使用 provide 将全局变量作为响应式对象
 app.provide("currentEnv", currentEnv);
@@ -174,7 +174,7 @@ const $app = app
   )
   .use(Toast, options)
   .use(TUIKit)
-  .use(WujieVue)
+  // .use(WujieVue)
   .use(hevueImgPreview)
   .use(VueShepherdPlugin)
   .use(XTUI)

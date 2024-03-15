@@ -6,10 +6,7 @@
     :mask="0"
     :header="false"
   >
-    <!-- <xt-modal v-model="test1" type="test1" v-if="test1" @close=""></xt-modal>
-    <xt-modal v-model="test2" type="test1" v-if="test2" @close=""></xt-modal>
-    <xt-button @click="test1fn">test1</xt-button>
-    <xt-button @click="test2fn">test2</xt-button> -->
+
     <div class="flex overflow-hidden rounded-xl" style="height: 70vh">
       <!-- 左侧导航栏 -->
       <div class="flex flex-col p-3 xt-main-bg" style="width: 200px">
@@ -96,15 +93,6 @@ const Key = defineAsyncComponent(() => import("../key/Key.vue"));
 const Screen = defineAsyncComponent(() => import("../Screen/Screen.vue"));
 const Barrage = defineAsyncComponent(() => import("../barrage/Barrage.vue"));
 const Desk = defineAsyncComponent(() => import("../desk/Desk.vue"));
-
-// const test1 = ref(false);
-// const test2 = ref(false);
-// const test1fn = () => {
-//   test1.value = !test1.value;
-// };
-// const test2fn = () => {
-//   test2.value = !test2.value;
-// };
 
 const { proxy }: any = getCurrentInstance();
 

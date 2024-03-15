@@ -1,6 +1,5 @@
 import { useCustomLayout } from "./freeLayout/useCustomLayout";
 import { headerData, folderData, mainData } from "./freeLayout/config";
-import { truncate } from "lodash";
 function deskMenus() {
   let currentHide = null;
   if (this.isFreeLayout) {
@@ -61,6 +60,12 @@ function deskMenus() {
           name: "导入系统桌面图标",
           fn: this.arrange,
           disabled: window.$useEnv(),
+        },
+        {
+          id: 4,
+          newIcon: "fluent:app-folder-16-regular",
+          name: "添加无界app",
+          fn: this.addTTAppCard,
         },
       ],
     },
