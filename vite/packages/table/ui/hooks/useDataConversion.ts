@@ -31,6 +31,7 @@ export const defaultData = {
    * default 系统默认浏览器
    * inner 内置浏览器
    * xt 想天浏览器
+   * fixed
    */
   type: "",
   bg: "", // 背景颜色

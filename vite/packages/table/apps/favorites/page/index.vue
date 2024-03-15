@@ -1,10 +1,10 @@
 <template>
   <teleport to='body' >
     <xt-modal custom  boxClass="rounded-xl" :mask="false" v-model="isFavorites" v-if="isFavorites" >
-      <div class="xt-modal flex rounded-xl relative overflow-hidden" style="width: 1000px; height: 720px;" >
+      <div class="relative flex overflow-hidden xt-modal rounded-xl" style="width: 1000px; height: 720px;" >
         <!-- 左侧列表 -->
         <LeftMenu @changeFolder="changeFolder" @refresh="refresh"></LeftMenu>
-        <div class="w-full flex-1">
+        <div class="flex-1 w-full">
           <Search></Search>
           <WebList @refresh="refresh" @changeIcon="changeIcon" @countFavo="countFavo" @showRenameModal="showRenameModal" :checkFlag="checkFlag" :showList="showList" :menus="menus" :rightMenu="rightMenu"></WebList>
         </div>
@@ -16,25 +16,25 @@
     </xt-modal>
     <!-- 修改网址名称 -->
     <xt-modal title="编辑名称" :maskIndex="1001" :index="1002" boxClass="rounded-xl p-4" :mask="true" :header="true" :footer="true" v-model="renameFlag" v-if="renameFlag" @ok="changeName" >
-      <div class="xt-modal flex rounded-xl relative items-center" style="width: 466px; height: 50px;" >
-        <!-- <xt-input style="height: 40px;width: 400px;" v-model="rename" placeholder="请输入网站名称" class="h-10 rounded-lg xt-text ml-2 xt-main-bg"></xt-input> -->
+      <div class="relative flex items-center xt-modal rounded-xl" style="width: 466px; height: 50px;" >
+        <!-- <xt-input style="height: 40px;width: 400px;" v-model="rename" placeholder="请输入网站名称" class="h-10 ml-2 rounded-lg xt-text xt-main-bg"></xt-input> -->
         <a-input
-          class="h-10 xt-mask xt-text w-full"
+          class="w-full h-10 xt-mask xt-text"
           style="border: 1px solid rgba(255,255,255,0.1);
           border-radius: 10px;"
           placeholder="请输入网站名称"
           allow-clear
           v-model:value="rename">
         </a-input>
-        <xt-button @click="rename = tmpName" :radius="10" :w="40" :h="40" class="xt-main-bg ml-3">
+        <xt-button @click="rename = tmpName" :radius="10" :w="40" :h="40" class="ml-3 xt-main-bg">
             <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="20" />
         </xt-button>
       </div>
     </xt-modal>
     <!-- 添加到桌面 -->
     <xt-modal title="添加到桌面" :maskIndex="1001" :index="1002" boxClass="rounded-xl p-4" :mask="true" :header="true" :footer="true" v-model="deskFlag" v-if="deskFlag" @ok="addDeskIcon" >
-      <div class="xt-modal flex rounded-xl relative" style="width: 466px; height: 50px;" >
-        <!-- <xt-input style="height: 40px;width: 400px;" v-model="rename" placeholder="请输入网站名称" class="h-10 rounded-lg xt-text ml-2 xt-main-bg"></xt-input> -->
+      <div class="relative flex xt-modal rounded-xl" style="width: 466px; height: 50px;" >
+        <!-- <xt-input style="height: 40px;width: 400px;" v-model="rename" placeholder="请输入网站名称" class="h-10 ml-2 rounded-lg xt-text xt-main-bg"></xt-input> -->
         <xt-select v-model="deskIndex" :zIndex="1200" style="width: 100%;" :list="deskList" :bordered="false"></xt-select>
       </div>
     </xt-modal>
@@ -434,6 +434,7 @@ export default {
         if(item.check) item.check = false
       })
     },
+    
     // 清楚数据的最近添加状态
     clearRecent(){
       this.allList.forEach(item=>{

@@ -111,8 +111,7 @@ import routerTab from '../js/common/routerTab'
 import { Icon as navIcon } from '@iconify/vue';
 import { renderIcon } from '../js/common/common'
 import { moreMenus, extraRightMenu, rightMenus, iconMenus, mergeIconFolder } from '../components/desk/navigationBar/index'
-import navigationSetting from './desk/navigationBar/navigationSetting.vue'
-import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
+import EditNewNavigation from './desk/addIcon/EditNewNavigation.vue'
 import { useNavBarStore } from './desk/navigationBar/navBar'
 import { Notifications } from '../js/common/sessionNotice'
 import Common from './desk/navigationBar/components/Common.vue'
@@ -137,7 +136,6 @@ export default {
   name: 'SidePanel',
   components: {
     navIcon,
-    navigationSetting,
     EditNewNavigation,
     Common,
     xtMenu,
