@@ -12,7 +12,7 @@
         <!-- 选择列表 -->
         <div class="flex top-icon">
           <div class="flex type-select" style="color:var(--primary-text)">
-              <span v-for="(item,index) in menus" @click="onSelChange(index)" :class="selIndex == index ? 'active':''">{{ item,index }}</span>
+              <span v-for="(item,index) in menus" :key="index" @click="onSelChange(index)" :class="selIndex == index ? 'active':''">{{ item }}</span>
               <span @click="onSelChange(menus.length)" v-if="isUpload" :class="selIndex == menus.length ? 'active':''">自定义</span>
           </div>
           <div class="flex items-center pointer xt-text" @click="clearAvatar">移除</div>
@@ -38,17 +38,24 @@
           <div v-if="menus[selIndex] == 'icon'" class="flex items-center justify-center ml-3 pointer" style="width: 40px;height:40px;background: var(--secondary-bg);border-radius: 10px;position: relative;" @click="isShowBgColor=!isShowBgColor">
             <a-tooltip>
               <template #title>颜色选择</template>
-              <div class="circle" :style="{background:bgColor[selBgColor]}" ></div>
+              <div class="circle" :style="{'background':bgColor[selBgColor]}" ></div>
             </a-tooltip>
 
             <div class="select-color" v-show="isShowBgColor" style="flex-wrap: wrap;z-index: 100;color: var(--primary-text);" >
               <div class="mt-2 ml-4">自定义</div>
-              <div style='width: 40px;height:40px;border-radius: 10px;' class="flex items-center justify-center mt-1 ml-3" :class="selBgColor == 6 ? 'sel-active':''">
-                <XtBaseColor v-model:data="bgColor[6]" @click="changeBgColor(6)"></XtBaseColor>
+              <div style='width: 40px;height:40px;border-radius: 10px;' @click.stop="changeBgColor(6)" class="flex items-center justify-center mt-1 ml-3 overflow-hidden" :class="selBgColor == 6 ? 'sel-active':''">
+                <color-picker
+                  v-model:pureColor="bgColor[6]"
+                  v-on:update:pureColor="onSelBg"
+                  :z-index="9999999999999"
+                  shape="circle"
+                  blur-close
+                  format="hex6"
+                />
               </div>
               <div class="mt-1 ml-4">系统预设</div>
               <div class="flex flex-wrap">
-                <div v-for="(item,index) in bgColor.slice(0,6)" class="flex items-center justify-center mt-2 ml-3 pointer" style='width: 40px;height:40px;border-radius: 10px;' :class="selBgColor == index ? 'sel-active':''" @click="changeBgColor(index)">
+                <div v-for="(item,index) in bgColor.slice(0,6)" :key="index" class="flex items-center justify-center mt-2 ml-3 pointer" style='width: 40px;height:40px;border-radius: 10px;' :class="selBgColor == index ? 'sel-active':''" @click="changeBgColor(index)">
                   <div class="circle" :style="{background:bgColor[index]}"></div>
                 </div>
               </div>
@@ -68,7 +75,7 @@
           <div v-show="!!searchValue" v-for="(item,index) in search" :key="index" @click="onSelectIcon(item.name)" class="flex items-center justify-center mt-2 ml-2 overflow-hidden pointer" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
             <a-tooltip>
               <template #title>{{ item.alias }}</template>
-              <a-avatar :src="`https://a.apps.vip/icons/iconSelect/${key}/${item.name}.svg`" :alt="item.alias" width="32" height="32" :style="{'filter': menus[selIndex] == 'icon'?`drop-shadow(${bgColor[selBgColor]} 80px 0)`:'',transform:menus[selIndex] == 'icon'?'translateX(-80px)':''}"></a-avatar>
+              <a-avatar :src="`https://a.apps.vip/icons/iconSelect/${key}/${item.name}.svg`" :alt="item.alias" width="32" height="32" :style="{'filter': menus[selIndex] == 'icon'?`drop-shadow(${bgColor[selBgColor]} 80px 0)`:'','transform':menus[selIndex] == 'icon'?'translateX(-80px)':''}"></a-avatar>
             </a-tooltip>
           </div>
 
@@ -104,6 +111,8 @@
   import iconList from './iconList/icon'
   import emojisList from './iconList/emojis'
   import goodsList from './iconList/goods'
+  import { ColorPicker } from "vue3-colorpicker";
+  import "vue3-colorpicker/style.css";
 
 //   const icon = iconList.list
 //   const emoji = emojisList.list
@@ -192,6 +201,9 @@
         selIndex.value = n
         selectIcon.value = -1
         searchValue.value = ''
+    }
+    const onSelBg = () =>{
+        selBgColor.value = 6
     }
 
     // 选择图标
@@ -400,5 +412,11 @@
       }
      }
 
+     :deep(.vc-color-wrap){
+      width:24px !important;
+      height:24px !important;
+      margin-right: 0 !important;
+      border: 1px solid #fff !important;
 
+     }
   </style>
