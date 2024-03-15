@@ -23,13 +23,11 @@ const emit = defineEmits(['choose'])
 // 选择图标类型回调
 const chooseIcon = (item) => {
     emit('choose',item)
-    console.log('i just choose you',item)
 }
 
 // 选择团队图标类型回调
 const chooseTeam = (item) => {
     emit('choose',item)
-    console.log('i just choose you',item)
 }
 
 </script>

@@ -55,7 +55,7 @@
             <!-- 网址应用 -->
             <WebSite v-if="iconIndex === 'WebSite'" v-model:value="inputValue" @addIcon="addIcon"></WebSite>
             <!-- 收藏夹 -->
-            <Browser v-if="iconIndex === 'Browser'" v-model:value="inputValue" @addIcon="addIcon"></Browser>
+            <Browser v-if="iconIndex === 'Browser'" v-model:value="inputValue" @addIcon="addIcon" :menus="menus"></Browser>
             <!-- 酷应用 -->
             <CoolApp v-if="iconIndex === 'CoolApp'" v-model:value="inputValue" @addIcon="addIcon"></CoolApp>
             <!-- 轻应用 -->
@@ -104,6 +104,7 @@ import {message} from 'ant-design-vue'
 import 'animate.css'
 import { storeToRefs } from 'pinia';
 import {position} from './hook/defaultData'
+import { completeTask } from '../../../apps/task/task'
 
 import AddDesk from './components/AddDesk.vue'
 import DropDown from './components/DropDown.vue'
@@ -121,7 +122,7 @@ const useNavStore = useNavigationStore()
 const { selectNav } = storeToRefs(useNavStore)
 
 const useNav = navStore()
-const { copyFootNav,sideNavigationList,rightNavigationList} = storeToRefs(useNav)
+const { copyFootNav,sideNavigationList,rightNavigationList,navigationToggle} = storeToRefs(useNav)
 
 const useCard = cardStore()
 const {desks} = storeToRefs(useCard)
@@ -267,7 +268,9 @@ const addIcon = (item: object | undefined) => {
   if (navMap.value.hasOwnProperty(tag)) {
     let check = checkNav(tag, item);
     if (check) {
-      navMap[tag].unshift(item);
+      // 在导航栏添加图标，完成任务
+      completeTask('m0105')
+      navMap.value[tag].unshift(item);
       message.success('添加成功');
     }
   } else {
@@ -313,6 +316,7 @@ const changeTitle = (item) => {
   selectNav.value = item.value
 }
 
+// 下拉框数据切换
 const dropArr = computed(() => {
   if(selectNav.value === 'desktop' || selectNav.value === ''){
     return desks.value.map((item,index) => {
@@ -333,6 +337,42 @@ watch(
   () => iconIndex.value,
   () => {
     multipleList.value = []
+  }
+)
+
+// 当导航栏未创建时，提示是否创建
+watch(
+  () => selectNav.value,
+  (newVal,oldVal) => {
+    const obj = {
+      'foot': navigationToggle.value[2],
+      'left': navigationToggle.value[0],
+      'right': navigationToggle.value[1],
+      "desktop": true,
+    }
+    if(!obj[newVal]){
+      window.$ui.confirm(
+        `当前${defaultTitle.value.name}没有开启，是否选择开启导航栏`,
+        '',
+        {
+          ok:() => {
+            console.log(obj[newVal])
+            // obj[newVal] = true;
+            if(newVal === 'foot'){
+              navigationToggle.value[2] = true
+            } else if (newVal === 'left') {
+              navigationToggle.value[0] = true
+            } else if (newVal === 'right') {
+              navigationToggle.value[1] = true
+            }
+          },
+          no:() => {
+            selectNav.value = oldVal
+            defaultTitle.value = position.find(item => item.value === oldVal)
+          }
+        }
+      )
+    }
   }
 )
 
