@@ -1,6 +1,6 @@
 <template>
     <!-- ref="tippyRef" -->
-    <tippy  trigger="click" placement="right" :interactive="true" :appendTo="body" :arrow="false">
+    <tippy ref="tippyRef" trigger="click" placement="right" :interactive="true" :appendTo="body" :arrow="false">
         <xt-button 
             :w="40" 
             :h="40" 
@@ -12,7 +12,7 @@
                 <div class="flex justify-between mb-4">
                     <div class="text-base xt-text-2">推荐颜色</div>
                     <!-- <xt-button :w="24" :h="24"> -->
-                    <!-- <xt-new-icon icon="fluent:dismiss-circle-16-filled" size="24" @click="hideTippy"></xt-new-icon> -->
+                    <xt-new-icon icon="fluent:dismiss-circle-16-filled" size="24" @click="hideTippy"></xt-new-icon>
                     <!-- </xt-button> -->
                 </div>
                 <div class="flex flex-1 ml-2 mr-2">
@@ -24,7 +24,7 @@
                         </div>
                         
                         <div class="w-[40px] h-[40px] pointer">
-                           <img src="/img/bg.png" class="w-[40px] h-[40px] absolute" style="object-fit: cover;"> 
+                           <img src="/img/bg.png" class="w-[40px] h-[40px] absolute" style="object-fit: cover;z-index: 999;pointer-events: none;"> 
                            <XtBaseColor 
                                 v-model:data="defaultColor" 
                                 @update:data="updateBackground">
@@ -130,7 +130,7 @@ const chooseDf = (item) => {
         linearIndex.value = 0;
         emit('change', props.defaultList[`color${item}`]);
     }
-    // hideTippy()
+    hideTippy()
 }
 /**
  * 线性渐变
@@ -154,13 +154,13 @@ const updateBackground = () => {
 }
 
 // 容错处理，防止没有获取到tippyRef，导致页面卡死
-// const hideTippy = () => {
-//     if(tippyRef.value){
-//         tippyRef.value.hide()
-//     }else{
-//         message.error('自动关闭失败，请手动关闭')
-//     }
-// }
+const hideTippy = () => {
+    if(tippyRef.value){
+        tippyRef.value.hide()
+    }else{
+        message.error('自动关闭失败，请手动关闭')
+    }
+}
 </script>
 <style lang='scss' scoped>
 .item {
@@ -184,9 +184,10 @@ const updateBackground = () => {
     box-shadow: 0px 0px 40px 0px rgba(0, 0, 0, 0.2);
 }
 
-:deep(.zs-color-picker-btn) {
+:deep(.vc-color-wrap) {
     width: 40px;
     height: 40px;
+    border-radius: 12px;
 }
 
 :deep(.zs-color-picker-btn-color) {
