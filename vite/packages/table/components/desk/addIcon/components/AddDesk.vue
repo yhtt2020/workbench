@@ -7,8 +7,10 @@
         :mask="true" 
         :header="true"
         :footer="true" 
-        v-model="deskFlag" 
-        @ok="addDeskIcon">
+        v-model="deskFlag"
+        @ok="addDeskIcon"
+        @no="close"
+        @close="close">
         <div 
             class="relative flex rounded-xl" 
             style="width: 466px;">
@@ -52,6 +54,9 @@ const props = defineProps({
     list: Array,
 })
 
+const emit = defineEmits(['close'])
+
+// 获取桌面列表
 const deskList = computed(() => {
     return desks.value.map((item,index) => {
         return {
@@ -85,15 +90,7 @@ const addDeskIcon = () => {
 const addCard = (item) =>{
     const file = useFileConversionIcon(item)
     const card = _.cloneDeep(file)
-    console.log(card)
     const id = nanoid(6)
-    // useAddCard(
-    //     'myIcons',
-    //     {
-    //         iconList:[{...card}],
-    //     },
-    //     Date.now()
-    // )
     chooseDesk.value.cards.push({
         name:'myIcons',
         customData: {
@@ -108,8 +105,11 @@ watch(() => defaultDesk.value, (val) => {
     chooseDesk.value = desks.value.find(item => {
         return item.id === val
     })
-    console.log(chooseDesk.value)
 })
+
+const close = () => {
+    emit('close')
+}
 
 
 

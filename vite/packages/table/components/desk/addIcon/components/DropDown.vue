@@ -1,0 +1,36 @@
+<template>
+    <a-dropdown trigger="['click']">
+        <template #overlay>
+            <a-menu class="rounded-xl xt-modal" style="border-radius: 12px !important;">
+                <a-menu-item @click="handleMenuClick(item)" key="index" v-for="(item, index) in list"
+                    class="flex items-center justify-center hover-style ">
+                    <div class="flex items-center justify-center rounded-md xt-text">{{ item.name }}</div>
+                </a-menu-item>
+            </a-menu>
+        </template>
+        <xt-button :w="120" :h="32" :class="[className]">
+            <div class="flex justify-between">
+                <div class="text-base xt-text omit-1">{{ defaultTitle.name }}</div>
+                <xt-new-icon icon="fluent:chevron-left-16-regular" size="20" class="-rotate-90 xt-text"></xt-new-icon>
+            </div>
+        </xt-button>
+    </a-dropdown>
+</template>
+
+<script setup lang='ts'>
+import { ref, reactive } from 'vue'
+
+const props = defineProps({
+    list: Array, // 数据列表
+    defaultTitle: Object, // 默认数据
+    className:String
+})
+
+const emit = defineEmits(['change'])  
+
+const handleMenuClick = (item: any) => {
+    emit('change', item)
+}
+
+</script>
+<style lang='scss' scoped></style>
