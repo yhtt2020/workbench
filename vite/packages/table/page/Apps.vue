@@ -505,15 +505,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions(appsStore, ['addApps']),
+    ...mapActions(appsStore, ['addApps','openApp']),
     getSelectApps (data) {
       this.addApps(data['default'])
     },
     executeApp (appData) {
-      this.$router.push({
-        name: 'app',
-        params: appData
-      })
+      this.openApp(appData)
     },
     open (app) {
       require('electron').shell.openPath(app.path)
