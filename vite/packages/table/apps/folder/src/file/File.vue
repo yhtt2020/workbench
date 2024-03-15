@@ -37,6 +37,7 @@
 
 <script setup>
 import Sortable from "sortablejs";
+import { storeToRefs } from "pinia";
 import {
   ref,
   onMounted,
@@ -51,6 +52,7 @@ import Drag from "../components/Drag.vue";
 import { inject } from "vue";
 import { fileTypes } from "./options";
 import { myIcons } from "../../../../store/myIcons";
+import { useFolderStore } from "../store";
 import {
   useFileConversionIcon,
   useIconConversionFile,
@@ -64,6 +66,9 @@ const data = inject("data", "");
 
 const iconStore = myIcons();
 const { proxy } = getCurrentInstance();
+
+const folderStore = useFolderStore();
+const { focusClose } = storeToRefs(folderStore);
 
 const emits = defineEmits([
   "deleteFile",
@@ -184,6 +189,7 @@ const menuList = computed(() => {
         let data = useFileConversionIcon(currentItem.value);
         iconStore.edit = data;
         fileSetVisible.value = true;
+        focusClose.value = true;
       },
       disabled: ["observe", "arrange"].includes(data.value.model)
         ? true
@@ -198,6 +204,7 @@ const menuList = computed(() => {
         : false,
       color: "#FF4D4F",
       fn: () => {
+        focusClose.value = true;
         window.$ui.confirm("确定删除吗？", "", {
           type: "warning",
           ok: deleteFile,

@@ -102,6 +102,9 @@ import { useMouseInElement } from "@vueuse/core";
 import { mergeData } from "../../../ui/hooks/useDataConversion";
 import {expandData} from './hooks/expandCom'
 
+import { useFolderStore } from "./store";
+import { storeToRefs } from "pinia";
+
 const Null = defineAsyncComponent(() => import("./components/Null.vue"));
 const Expand = defineAsyncComponent(() => import("./expand/Expand.vue"));
 const FolderSet = defineAsyncComponent(() =>
@@ -113,6 +116,9 @@ const EditNewNavigation = defineAsyncComponent(() =>
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
+
+const folderStore = useFolderStore();
+const { focusClose } = storeToRefs(folderStore)
 
 /**
  * 拖拽位置
@@ -439,11 +445,13 @@ const layoutClick = () => {
 
 // 增
 const createFile = (data) => {
+  focusClose.value = true
   customData.value.list.push(data);
 };
 // 删
 const deleteFile = (data) => {
   customData.value.list.splice(customData.value.list.indexOf(data), 1);
+  focusClose.value = false
 };
 // 改
 const updateFile = (data) => {
@@ -506,6 +514,7 @@ const updateList = (data) => {
   setTimeout(() => {
     customData.value.list = data;
     dragSortState.value = false;
+    focusClose.value = false   // 编辑完后，恢复失焦自动关闭
   }, 10);
 };
 
@@ -572,10 +581,10 @@ const refreshDeskApp = async () => {
 function handleClick(e) {
   if (e.target?.closest(".tt-folder-container") == null) {
     // 当二级菜单打开时，失焦了也无法关闭文件夹
-    const secondeMenu = (setVisible.value || editVisible.value || expandVisible.value)
-    if(!secondeMenu){
-      emit('close')
+    if(focusClose.value){
+      return
     }
+    emit('close')
   }
 }
 onUnmounted(() => {
@@ -583,7 +592,10 @@ onUnmounted(() => {
 });
 onMounted(async () => {
   if(navBar.value.close){
-    window.addEventListener("click", handleClick);
+    // if(!focusClose.value){
+       window.addEventListener("click", handleClick);
+    // }
+   
   }
 
   customData.value.list = customData.value.list.map((item) => mergeData(item));
@@ -597,6 +609,33 @@ onMounted(async () => {
     customData.value.customSize = customData.value.size;
   }
   // 冒泡排序
+
+  // 监听文件夹当打开编辑时，阻止失焦自动关闭
+  watch(() => editVisible.value, (val) => {
+    if(val){
+      focusClose.value = true
+      return
+    }
+    focusClose.value = false
+  })
+
+  // 监听文件夹当打开设置时，阻止失焦自动关闭
+  watch(() => setVisible.value, (val) => {
+    if(val){
+      focusClose.value = true
+      return
+    }
+    focusClose.value = false
+  })
+
+  // 监听文件夹当打开展开时，阻止失焦自动关闭
+  watch(() => expandVisible.value, (val) => {
+    if(val){
+      focusClose.value = true
+      return
+    }
+    focusClose.value = false
+  })
 });
 </script>
 
