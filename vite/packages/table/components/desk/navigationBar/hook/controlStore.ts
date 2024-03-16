@@ -117,6 +117,8 @@ export const controlStore = defineStore("control", {
     // 第一次触发
     firstVisible:false,
     updateList:[],
+    // 清除底部导航栏控制中心红点显示
+    firstNavVisible:true,
   }),
 
   getters: {
@@ -143,7 +145,7 @@ export const controlStore = defineStore("control", {
     enabled: true,
     strategies: [
       {
-        paths: ["control","firstVisible","updateList"],
+        paths: ["control","firstVisible","updateList","firstNavVisible"],
         // storage: dbStorage,
         storage: localStorage,
       },

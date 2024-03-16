@@ -125,6 +125,7 @@ import UserNavBar from "./bottomPanel/community/UserNavBar.vue";
 import CommunityNav from "./bottomPanel/community/CommunityNav.vue";
 import TeamNav from "./bottomPanel/community/TeamNav.vue";
 import AppModal from "./bottomPanel/community/AppModal.vue";
+import { controlStore } from "./desk/navigationBar/hook/controlStore";
 
 const {
   //是否全屏状态
@@ -152,7 +153,7 @@ export default {
     UserNavBar,
     CommunityNav,
     TeamNav,
-    AppModal
+    AppModal,
   },
   data() {
     return {
@@ -368,6 +369,7 @@ export default {
     ...mapWritableState(useDeskStore, ["isEnterBar"]),
 
     ...mapWritableState(useNavBarStore, ["isEnterDesk"]),
+    ...mapWritableState(controlStore, ["firstNavVisible"]),
 
     isMain() {
       return isMain();
@@ -608,6 +610,8 @@ export default {
 
     //  点击头像框打开控制中心
     openControl(event) {
+      // 触发工作台首次进入小红点,进行关闭
+      this.firstNavVisible = false;
       this.controlVisible = !this.controlVisible;
       this.controlLeft = event.clientX - 274 < 0 ? 0 : event.clientX - 274;
     },
