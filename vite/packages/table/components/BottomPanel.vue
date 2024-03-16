@@ -53,7 +53,20 @@
         <Common ref="common"></Common>
 
         <!-- 社群开关开启后,用户头像信息放底部导航栏右侧 -->
-        <UserNavBar v-if="communityNavVisible" @openControl="openControl"/>
+        <UserNavBar v-if="communityNavVisible" @openControl="openControl" />
+
+        <!-- 团队导航弹窗 -->
+        <div
+          v-if="teamNavVisible"
+          class="absolute"
+          :style="{
+            left: `${teamNavLeft}px`,
+            bottom: `${(navAttribute.navSize / 100) * 100}px`,
+          }"
+          style="z-index: 800"
+        >
+          <TeamNav @close="teamNavVisible = false" />
+        </div>
       </div>
     </AutoHide>
   </xtMixMenu>
@@ -66,6 +79,7 @@
       <component :is="componentId" @setQuick="setQuick"></component>
     </div>
   </transition>
+  <AppModal />
 </template>
 
 <script>
@@ -109,6 +123,8 @@ import Dock from "./bottomPanel/Dock.vue";
 import { useFullscreen } from "@vueuse/core";
 import UserNavBar from "./bottomPanel/community/UserNavBar.vue";
 import CommunityNav from "./bottomPanel/community/CommunityNav.vue";
+import TeamNav from "./bottomPanel/community/TeamNav.vue";
+import AppModal from "./bottomPanel/community/AppModal.vue";
 
 const {
   //是否全屏状态
@@ -134,7 +150,9 @@ export default {
     Favorites,
     UserBar,
     UserNavBar,
-    CommunityNav
+    CommunityNav,
+    TeamNav,
+    AppModal
   },
   data() {
     return {
@@ -142,12 +160,10 @@ export default {
       hoverIndex: -1, //当前选中的项目（排除gap）
       debug: false,
       tab: "screen",
-
       quick: false,
       leftNav: false,
       rightNav: false,
       delNav: false,
-      //screenWidth: document.body.clientWidth
       drawerMenus: [...extraRightMenu, ...moreMenus],
       componentId: "EditNavigationIcon",
       mainMenus: [
@@ -249,6 +265,9 @@ export default {
       parentHeight: 0,
       hoverTabs: false,
       delZone: false,
+      // 团队导航
+      teamNavVisible: false,
+      teamNavLeft: 100,
     };
   },
   props: {},
@@ -290,7 +309,6 @@ export default {
       }
     });
     this.noticeFlag = true;
-
     this.useWindowSize((size) => {
       // 获取最大可添加图标个数
       const windowWidth = size.width.value;
@@ -304,6 +322,11 @@ export default {
         this.navAttribute.navSize < 100 ? this.navAttribute.navSize : 100;
     }, 200);
     window.addEventListener("mousemove", this.listenMouse);
+    // 点击团队导航打开团队组件
+    this.$bus.on("openTeamNav", (evt) => {
+      this.teamNavVisible = !this.teamNavVisible;
+      this.teamNavLeft = evt.clientX - 274 < 0 ? 0 : evt.clientX - 274;
+    });
   },
   computed: {
     ...mapWritableState(appStore, ["userInfo", "settings", "lvInfo", "simple"]),

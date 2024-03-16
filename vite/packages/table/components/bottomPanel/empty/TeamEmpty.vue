@@ -29,7 +29,7 @@
 
 <script setup>
 import { ref,getCurrentInstance,onMounted,onUnmounted } from 'vue';
-import EditNewNavigation from '../../desk/navigationBar/EditNewNavigation.vue';
+import EditNewNavigation from '../../desk/navigationBar/OldEditNewNavigation.vue';
 import { storeToRefs } from 'pinia';
 import { communityNavStore } from '../store/communityNavStore';
 

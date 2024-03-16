@@ -54,7 +54,7 @@ import LeftMenu from "../left/LeftMenu.vue";
 import CreateFolder from "./CreateFolder.vue";
 import Search from "../search/ComModalSearch.vue";
 import RightListDeatil from "./RightListDeatil.vue";
-import EditNewNavigation from "../../desk/navigationBar/EditNewNavigation.vue";
+import EditNewNavigation from "../../desk/navigationBar/OldEditNewNavigation.vue";
 
 const { proxy } = getCurrentInstance();
 

@@ -4,6 +4,7 @@
     @drop.prevent.stop="handleDrop"
     @dragenter.prevent.stop="handleDragenter"
     @dragleave.prevent.stop="handleDragleave"
+    @dragover.prevent
     @mouseup="handleMouseUp"
     @mouseleave="handleMouseleave"
     @mouseover="handleMouseover"

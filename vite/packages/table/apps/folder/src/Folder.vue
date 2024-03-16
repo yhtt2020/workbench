@@ -1,28 +1,85 @@
 <template>
-  <Drop @createFile="createFile" @deleteFile="deleteFile" @updateBg="updateBg" ref="folder" class="tt-folder-container">
-    <xt-container v-model:status="status" :modalSize="modalSize" :options="options" :customIndex="customIndex"
-      :customData="customData" :header="header" :menuList="menuList" :sizeList="autoSizeList" @leftClick="leftClick"
-      v-model:customSize="customData.customSize" @delete="deleteFn" class="tt-folder-container">
+  <Drop
+    @createFile="createFile"
+    @deleteFile="deleteFile"
+    @updateBg="updateBg"
+    ref="folder"
+    class="tt-folder-container"
+  >
+    <xt-container
+      v-model:status="status"
+      :modalSize="modalSize"
+      :options="options"
+      :customIndex="customIndex"
+      :customData="customData"
+      :header="header"
+      :menuList="menuList"
+      :sizeList="autoSizeList"
+      @leftClick="leftClick"
+      v-model:customSize="customData.customSize"
+      @delete="deleteFn"
+      class="tt-folder-container"
+    >
+      <!-- 头部自定义下拉菜单(仅支持左和右)-->
+      <template #customRightMenu>
+        <slot name="customRightMenu"></slot>
+      </template>
+
       <!-- 空状态显示状态 -->
       <template v-if="customData.list.length <= 0 && !dragSortState">
-        <Null :size="customData.customSize" @addFile="addFileClick" />
+        <Null
+          :size="customData.customSize"
+          @addFile="addFileClick"
+          v-if="!navBar.isOut"
+        />
+        <slot name="navEmpty"></slot>
       </template>
+
       <!-- 非空状态 -->
-      <vue-custom-scrollbar v-else style="padding-right: 4px" :settings="{
-    useBothWheelAxes: true,
-    suppressScrollY: false,
-  }" class="relative w-full h-full">
-        <File :list="customData.list" :layout="customData.layout" :model="customData.model" :modalSize="modalSize"
-          @deleteFile="deleteFile" @updateFile="updateFile" @updateList="updateList" @updateSort="updateSort"
-          @clickFile="clickFile" />
+      <vue-custom-scrollbar
+        v-else
+        style="padding-right: 4px"
+        :settings="{
+          useBothWheelAxes: true,
+          suppressScrollY: false,
+        }"
+        class="relative w-full h-full"
+      >
+        <File
+          :list="customData.list"
+          :layout="customData.layout"
+          :model="customData.model"
+          :modalSize="modalSize"
+          @deleteFile="deleteFile"
+          @updateFile="updateFile"
+          @updateList="updateList"
+          @updateSort="updateSort"
+          @clickFile="clickFile"
+        />
       </vue-custom-scrollbar>
+
     </xt-container>
   </Drop>
-  <FolderSet v-if="setVisible" :data="customData" @close="setVisible = false" @updateSort="updateSort"
-    @updateWindowApp="updateWindowApp" />
-  <EditNewNavigation v-if="editVisible" @setQuick="editVisible = false" @addIcon="addFile" :isFolder="true" />
+  <FolderSet
+    v-if="setVisible"
+    :data="customData"
+    @close="setVisible = false"
+    @updateSort="updateSort"
+    @updateWindowApp="updateWindowApp"
+  />
+  <EditNewNavigation
+    v-if="editVisible"
+    @setQuick="editVisible = false"
+    @addIcon="addFile"
+    :isFolder="true"
+  />
 
-  <Expand :data="props" :auto="false" v-if="expandVisible" @close="expandClose"></Expand>
+  <Expand
+    :data="props"
+    :auto="false"
+    v-if="expandVisible"
+    @close="expandClose"
+  ></Expand>
 </template>
 
 <script setup>
@@ -139,6 +196,8 @@ const props = defineProps({
       hierarchy: false,
       // 点击文件夹外部关闭
       close: Boolean,
+      // 是否开启外部右键菜单
+      isOut: false,
     }),
   },
   // 自动设置大小
@@ -159,37 +218,41 @@ const emit = defineEmits([
 
 const refreshState = ref(false);
 const header = computed(() => {
-  return {
-    showIcon: customData.value.icon,
-    title: customData.value.name,
-    // refresh: {
-    //   tip: "更新桌面数据",
-    //   disabled: customData.value.model != "custom" ? false : true,
-    //   state: refreshState.value,
-    //   fn: refreshDeskApp,
-    // },
-    leftHover: true,
-    leftHoverName: secondary.value ? "编辑文件夹" : "点击打开",
-    leftHoverIcon: secondary.value
-      ? "fluent:settings-16-regular"
-      : "fluent:open-16-regular",
-    //
-    rightIcon: [
-      {
-        ifyIcon: "fluent:open-16-regular",
-        tip: "打开全部",
-        fn: openAllFile,
-      },
-      {
-        ifyIcon: "fluent:add-16-filled",
-        fn: addFileClick,
-      },
-      {
-        ifyIcon: layout.value,
-        fn: layoutClick,
-      },
-    ],
-  };
+  if (!navBar.value.isOut) {
+    return {
+      showIcon: customData.value.icon,
+      title: customData.value.name,
+      // refresh: {
+      //   tip: "更新桌面数据",
+      //   disabled: customData.value.model != "custom" ? false : true,
+      //   state: refreshState.value,
+      //   fn: refreshDeskApp,
+      // },
+      leftHover: true,
+      leftHoverName: secondary.value ? "编辑文件夹" : "点击打开",
+      leftHoverIcon: secondary.value
+        ? "fluent:settings-16-regular"
+        : "fluent:open-16-regular",
+      //
+      rightIcon: [
+        {
+          ifyIcon: "fluent:open-16-regular",
+          tip: "打开全部",
+          fn: openAllFile,
+        },
+        {
+          ifyIcon: "fluent:add-16-filled",
+          fn: addFileClick,
+        },
+        {
+          ifyIcon: layout.value,
+          fn: layoutClick,
+        },
+      ],
+    };
+  } else {
+    return customData.value.header;
+  }
 });
 // 打开所有文件
 const openAllFile = () => {
@@ -227,6 +290,7 @@ const options = computed(() => {
     resize: resize.value,
     modalSize: modalSize.value,
     customDel: true,
+    rightMenuVisible: navBar.value.customRight,
   };
 });
 
@@ -316,37 +380,41 @@ watch(
  */
 const setVisible = ref(false);
 const menuList = computed(() => {
-  return [
-    {
-      title: "一键打开全部",
-      newIcon: "fluent:open-16-regular",
-      fn: openAllFile,
-    },
-    {
-      newIcon: layout.value,
-      title: "排列方式",
-      fn: layoutClick,
-    },
-    {
-      newIcon: "fluent:add-16-filled",
-      title: "添加图标",
-      fn: addFileClick,
-    },
-    {
-      title: "更新桌面数据",
-      disabled: customData.value.model != "custom" ? false : true,
-      newIcon: "fluent:arrow-clockwise-16-regular",
-      fn: refreshDeskApp,
-    },
-    { divider: true },
-    {
-      title: "设置",
-      newIcon: "fluent:settings-16-regular",
-      fn: () => {
-        setVisible.value = true;
+  if (!navBar.value.isOut) {
+    return [
+      {
+        title: "一键打开全部",
+        newIcon: "fluent:open-16-regular",
+        fn: openAllFile,
       },
-    },
-  ];
+      {
+        newIcon: layout.value,
+        title: "排列方式",
+        fn: layoutClick,
+      },
+      {
+        newIcon: "fluent:add-16-filled",
+        title: "添加图标",
+        fn: addFileClick,
+      },
+      {
+        title: "更新桌面数据",
+        disabled: customData.value.model != "custom" ? false : true,
+        newIcon: "fluent:arrow-clockwise-16-regular",
+        fn: refreshDeskApp,
+      },
+      { divider: true },
+      {
+        title: "设置",
+        newIcon: "fluent:settings-16-regular",
+        fn: () => {
+          setVisible.value = true;
+        },
+      },
+    ];
+  } else {
+    return customData.value.menuList;
+  }
 });
 /**
  * 文件夹布局图标状态
@@ -368,11 +436,20 @@ const layoutClick = () => {
 
 // 增
 const createFile = (data) => {
-  customData.value.list.push(data);
+  if(!navBar.value.isOut){
+    customData.value.list.push(data);
+  }
+  else{
+    emit('createNav',data);
+  }
 };
 // 删
 const deleteFile = (data) => {
-  customData.value.list.splice(customData.value.list.indexOf(data), 1);
+  if (!navBar.value.isOut) {
+    customData.value.list.splice(customData.value.list.indexOf(data), 1);
+  } else {
+    emit("deleteNavApp", data);
+  }
 };
 // 改
 const updateFile = (data) => {
@@ -500,7 +577,7 @@ const refreshDeskApp = async () => {
 };
 function handleClick(e) {
   if (e.target?.closest(".tt-folder-container") == null) {
-    emit('close')
+    emit("close");
     // console.log("123 :>> ", 123);
   }
 }
@@ -508,7 +585,7 @@ onUnmounted(() => {
   window.removeEventListener("click", handleClick);
 });
 onMounted(async () => {
-  if(navBar.value.close){
+  if (navBar.value.close) {
     window.addEventListener("click", handleClick);
   }
 
@@ -523,6 +600,14 @@ onMounted(async () => {
     customData.value.customSize = customData.value.size;
   }
   // 冒泡排序
+
+  // 开启导航添加
+  proxy.$bus.on("openEditNav",()=>{
+    addFileClick();
+  });
+  proxy.$bus.on("closeNav",()=>{
+    editVisible.value = false;
+  })
 });
 </script>
 
