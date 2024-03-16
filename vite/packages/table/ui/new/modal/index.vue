@@ -217,8 +217,7 @@ const modelHeight = ref(2);
 
 const top = computed(() => {
   if (isFull.value) return 0;
-  if (windowHeight.value <= 0 || bottomBarHeight <= 0 || modelHeight.value <= 0)
-    return -9999;
+
   let a = (windowHeight.value - bottomBarHeight - modelHeight.value) / 2;
   return a >= 0 ? a : 0;
 });
@@ -257,7 +256,7 @@ onBeforeMount(() => {});
 // 挂载后
 onMounted(() => {
   // 注册单例弹窗监听
-  console.log('props.type :>> ', props.type);
+  console.log("props.type :>> ", props.type);
   if (props.type) {
     proxy.$bus.emit("modalClose", props.type);
     setTimeout(() => {
