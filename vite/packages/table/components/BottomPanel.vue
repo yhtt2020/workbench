@@ -290,7 +290,7 @@
                               <template v-else>
                                 <Avatar :item="item">
                                   <template #control>
-                                    <div
+                                    <div  v-if="false"
                                       style="background-color: #ff4d4f;border: 2px solid ;"
                                       class="absolute top-0 flex items-center justify-center flex-shrink-0 w-4 h-4 translate-x-6 rounded-full -translate-y-1/3 pointer" >
                                     </div>
