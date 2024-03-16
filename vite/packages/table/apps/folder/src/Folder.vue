@@ -441,6 +441,7 @@ const createFile = (data) => {
   }
   else{
     emit('createNav',data);
+    editVisible.value = false;
   }
 };
 // 删

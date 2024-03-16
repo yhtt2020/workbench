@@ -170,22 +170,19 @@ const teamNavData = computed(() => {
 
 // 删除
 const deleteNav = (data) => {
-  // console.log('删除',data);
   const index = teamNavList.value.findIndex((item) => {
-    return item.id === data.id;
+    return item.name === data.name;
   });
   teamNavList.value.splice(index, 1);
 };
 // 添加
 const createNav = (data) => {
-  // console.log('创建',data);
   teamNavList.value.push(data);
 };
 
 onMounted(() => {
   proxy.$bus.on("getApp", (data) => {
-    //  console.log('获取添加',data);
-    teamNavList.value.push(data.item);
+    teamNavList.value.push(data);
     proxy.$bus.emit("closeNav");
   });
 });

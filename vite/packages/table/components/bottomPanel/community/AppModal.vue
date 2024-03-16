@@ -54,7 +54,7 @@ import LeftMenu from "../left/LeftMenu.vue";
 import CreateFolder from "./CreateFolder.vue";
 import Search from "../search/ComModalSearch.vue";
 import RightListDeatil from "./RightListDeatil.vue";
-import EditNewNavigation from "../../desk/navigationBar/OldEditNewNavigation.vue";
+import EditNewNavigation from "../../desk/addIcon/EditNewNavigation.vue";
 
 const { proxy } = getCurrentInstance();
 
@@ -85,21 +85,19 @@ const editList = ref([
 ]);
 
 const addFile = (data) =>{
-  console.log('测试',data);
-  // const type = appModalList.value[appFolderIndex.value].type;
-  // if(type !== 'all' && type !== 'like'){
-  //   const index = appModalList.value[appFolderIndex.value].list.findIndex((item)=>{ 
-  //     return String(item.name) === String(data.name); 
-  //   });
-  //   console.log('测试',index);
-  //   if(index === -1){
-  //     appModalList.value[appFolderIndex.value].list.push(data);
-  //   }
-  //   editVisible.value = false;
-  // }
-  // else {
-  //   console.log("后续做处理");
-  // }
+  const type = appModalList.value[appFolderIndex.value].type;
+  if(type !== 'all' && type !== 'like'){
+    const index = appModalList.value[appFolderIndex.value].list.findIndex((item)=>{ 
+      return String(item.name) === String(data.name); 
+    });
+    if(index === -1){
+      appModalList.value[appFolderIndex.value].list.push(data);
+    }
+    editVisible.value = false;
+  }
+  else {
+    console.log("后续做处理");
+  }
 }
 
 // 选择切换文件数据

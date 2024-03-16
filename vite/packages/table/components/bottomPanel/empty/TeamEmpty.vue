@@ -29,7 +29,7 @@
 
 <script setup>
 import { ref,getCurrentInstance,onMounted,onUnmounted } from 'vue';
-import EditNewNavigation from '../../desk/navigationBar/OldEditNewNavigation.vue';
+import EditNewNavigation from '../../desk/addIcon/EditNewNavigation.vue';
 import { storeToRefs } from 'pinia';
 import { communityNavStore } from '../store/communityNavStore';
 
@@ -52,6 +52,16 @@ const { teamNavList } = storeToRefs(communityNav);
 const addApp = () =>{
   editVisible.value = true;
 };
+
+const addFile = (data) =>{
+  proxy.$bus.emit("getApp",data);
+}
+
+onMounted(()=>{
+  proxy.$bus.on('closeNav',()=>{
+    editVisible.value = false;
+  })
+})
 </script>
 
 <style lang="scss" scoped>
