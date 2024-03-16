@@ -35,8 +35,7 @@
             <xt-option-info 
                 title="社群导航（开发中）"
                 isSwitch="true"
-                switch="true"
-                info="在专属导航栏中快速访问你的社群应用" />
+                info="在专属导航栏中快速访问你的社群应用" v-model:switch="communityNavVisible"/>
         </xt-option-box>
         <xt-option-box>
             <xt-option-info 
@@ -60,7 +59,7 @@ const {navigationToggle} = storeToRefs(useNavStore)
 
 // 用户头像开关
 const navBarStore = useNavigationStore()
-const {bottomToggle} = storeToRefs(navBarStore)
+const {bottomToggle,communityNavVisible} = storeToRefs(navBarStore)
 
 // 导航栏风格
 const styleList = ref([
