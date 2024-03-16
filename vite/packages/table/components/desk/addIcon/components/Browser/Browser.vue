@@ -2,11 +2,44 @@
     <div class="flex w-full h-full " style="overflow:hidden;" @wheel.stop>
         <LeftMenu @changeFolder="changeFolder" @refresh="refresh">
         </LeftMenu>
-        <WebList class="w-full h-full" @refresh="refresh" @changeIcon="changeIcon" @countFavo="countFavo"
-            @showRenameModal="showRenameModal" :checkFlag="isMultiple" :showList="showList" :menus="menus"
+        <WebList 
+            class="w-full h-full" 
+            @refresh="refresh" 
+            @changeIcon="changeIcon" 
+            @countFavo="countFavo"
+            @showRenameModal="showRenameModal" 
+            :checkFlag="isMultiple" 
+            :showList="showList" 
+            :menus="menus"
             :rightMenu="rightMenu">
         </WebList>
     </div>
+    <!-- 修改网址名称 -->
+    <xt-modal 
+        title="编辑名称" 
+        :maskIndex="1001" 
+        :index="1002" 
+        boxClass="rounded-xl p-4" 
+        :mask="true" 
+        :header="true" 
+        :footer="true" 
+        v-model="renameFlag" 
+        v-if="renameFlag" 
+        @ok="changeName" >
+      <div class="relative flex items-center xt-modal rounded-xl" style="width: 466px; height: 50px;" >
+        <a-input
+          class="w-full h-10 xt-mask xt-text"
+          style="border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 10px;"
+          placeholder="请输入网站名称"
+          allow-clear
+          v-model:value="rename">
+        </a-input>
+        <xt-button @click="rename = tmpName" :radius="10" :w="40" :h="40" class="ml-3 xt-main-bg">
+            <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="20" />
+        </xt-button>
+      </div>
+    </xt-modal>
 
 </template>
 
@@ -77,6 +110,10 @@ const defaultFolderIcon = ref({
     value: '',
     icon: null,
 })
+const renameFlag = ref(false)
+const rename = ref('')
+const tmpName = ref('')
+const tmpGuid = ref('')
 
 const deskIcons = ref([])
 
@@ -233,28 +270,17 @@ const sortByFavoTime = (arr) => {
     })
 }
 
+// 修改格式，添加图标到桌面和文件夹
 const changeIcon = (item) => {
     if (item.length === 1) itemTmp.value = item[0]
     let newFolder = []
     let newIcon = []
     item.forEach(i => {
-        newIcon.push({
-            ...defaultDeskIcon.value,
-            customData: {
-                ...defaultDeskIcon.customData,
-                iconList: [
-                    {
-                        open: {
-                            type: 'default',
-                            value: i.url,
-                        },
-                        src: i.icon,
-                        titleValue: i.title,
-                    }
-                ]
-            },
-            id: nanoid(6),
-        })
+        // 新增为桌面图标
+        i.value = i.url
+        i.type = 'default'
+        newIcon.push(i)
+
         newFolder.push({
             ...defaultFolderIcon,
             ...i
@@ -262,7 +288,28 @@ const changeIcon = (item) => {
     })
     folderIcons.value = newFolder
     multipleList.value.push(...newIcon)
-    console.log(multipleList.value)
+    // console.log(multipleList.value)
+}
+
+// 重命名
+const showRenameModal = (item) => {
+    renameFlag.value = true
+    tmpName.value = item.name
+    tmpGuid.value = item.guid
+}
+
+// 重命名
+const changeName = () => {
+    if(rename.value === '') {
+        message.error('名字不能为空')
+    }else{
+        allList.value.forEach((i) => {
+            if(i.guid === tmpGuid.value){
+                i.rename = rename.value
+                message.success('名字修改成功')
+            }
+        })
+    }
 }
 </script>
 

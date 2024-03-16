@@ -78,7 +78,7 @@
         leave-active-class="animate__fadeOutDown">
         <xt-button 
           @click="addMultiple"
-          v-if="isMultiple" 
+          v-if="isMultiple && iconIndex !== 'Browser'" 
           w="135" 
           h="40" 
           radius="20" 
@@ -114,21 +114,32 @@ import { navStore } from '../../../store/nav';
 import {cardStore} from '../../../store/card'
 import {homeStore} from '../../../store/home'
 import { useIconStore } from './store';
+import { favoStore } from '../../../apps/favorites/store'
+import { MultiStats } from 'webpack';
 
+// 获取到当前多选的图标
 const iconStore = useIconStore()
 const { multipleList, isMultiple } = storeToRefs(iconStore)
 
+// 导航栏选择
 const useNavStore = useNavigationStore()
 const { selectNav } = storeToRefs(useNavStore)
 
+// 导航栏
 const useNav = navStore()
 const { copyFootNav,sideNavigationList,rightNavigationList,navigationToggle} = storeToRefs(useNav)
 
+// 桌面
 const useCard = cardStore()
 const {desks} = storeToRefs(useCard)
 
+// 当前桌面id
 const useHome = homeStore()
 const {currentDeskId} = storeToRefs(useHome)
+
+// 收藏夹
+const useFavoStore = favoStore()
+const { folderIcons,allList } = storeToRefs(useFavoStore)
 
 
 // 组件动态引入
@@ -182,18 +193,43 @@ const menus = ref([
     label: '添加到桌面',
     newIcon:'fluent:desktop-16-regular',
     callBack: async () => {
+      if(iconIndex.value === 'Browser'){
+        filterCheck()
+      }
       deskFlag.value = true
+      unCheck()
     }
   },
   {
     label: '添加到分组',
     newIcon: 'fluent:app-folder-16-regular',
     callBack: () => {
+      if(iconIndex.value === 'Browser'){
+        filterCheck()
+      }
       previewFlag.value = true
+      folderIcons.value = multipleList.value
+      unCheck()
     },
   },
 ])
 
+// 用于在多选情况下收藏夹内容，兼容 ---- 只用于收藏夹
+const filterCheck = () => {
+  const list = allList.value.filter((item) => item.check)
+  multipleList.value = [...list]
+}
+
+// 添加成功后，取消选中状态 --- 只用于收藏夹
+const unCheck = () => {
+  allList.value.forEach((item) => {
+    if(item.check){
+      item.check = false
+    }
+  })
+}
+
+// 修改多选状态
 const changeState = () => {
   isMultiple.value = !isMultiple.value
 }
@@ -289,16 +325,18 @@ const checkNav = (nav,item) => {
   return true
 }
 
+// 预览
 const addMultiple = () => {
   previewFlag.value = true
 }
 
+// 预览后
 const addFolderIcon = () => {
   previewFlag.value = false
   isMultiple.value = false
 }
 
-
+// 下拉框
 onMounted(() => {
   let tag = selectNav.value === '' ? 'desktop' : selectNav.value
   if(tag === 'desktop'){
@@ -333,6 +371,7 @@ const dropArr = computed(() => {
   }
 })
 
+// 进行切换时，数据清空
 watch(
   () => iconIndex.value,
   () => {
@@ -376,7 +415,7 @@ watch(
   }
 )
 
-// 防止退出后，还是多选状态
+// 防止退出后再次打开，还是多选状态
 onBeforeUnmount(() => {
   isMultiple.value = false
 })
