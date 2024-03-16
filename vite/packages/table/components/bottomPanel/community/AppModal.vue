@@ -40,7 +40,7 @@
       </div>
     </div>
   </xt-modal>
-  <CreateFolder />
+  <CreateFolder ref="appCreateFolder"/>
   
   <EditNewNavigation v-if="editVisible" :isFolder="true"  @setQuick="editVisible = false"  @addIcon="addFile"/>
 </template>
@@ -63,6 +63,9 @@ const { appModalList,appFolderIndex } = storeToRefs(communityNav);
 
 const appModelVisible = ref(false);
 const editVisible = ref(false);
+const editShow = ref(true);
+const appCreateFolder = ref(null);
+
 // 编辑操作列表
 const editList = ref([
  {
@@ -79,7 +82,7 @@ const editList = ref([
   icon:'fluent:folder-16-regular',
   name:'添加文件夹',
   fn:()=>{
-    proxy.$bus.emit('openFolder');
+    appCreateFolder.value.openCreateFolder();
   }
  }
 ]);
