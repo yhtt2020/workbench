@@ -168,7 +168,6 @@ const triggerControl = () =>{
     // 极简模式
     case 'min-mode':
       simple.value = !simple.value;
-      console.log('测试',simple.value);
       if(simple.value){
         const isControl = copyFootNav.value.some((item)=>{ return item.value === 'control' });
         const controlOption = {
