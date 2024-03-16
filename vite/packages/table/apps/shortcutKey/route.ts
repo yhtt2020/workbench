@@ -66,7 +66,7 @@ export default {
       }
     },
     {
-      path: '/shareKey:id',
+      path: '/shareKey:id?',
       name: 'shareKey',
       component: ShareKey,
       meta:{
