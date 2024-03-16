@@ -126,7 +126,7 @@ watch(
     }
 
     & :nth-of-type(3) {
-        right: 45px;
+        right: 47px;
     }
 }
 </style>
