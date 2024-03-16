@@ -892,6 +892,8 @@ import NewGuidePage from "../../page/app/grade/NewGuidePage.vue";
           });
           this.addDeskVisible = false;
           message.success("为您成功导入" + desk.length + "个桌面。");
+          this.setCurrentDeskId(needImportDesk.desk[0].id);
+          // 1
         // } catch (e) {
         //   console.warn(e);
         //   message.error("导入失败，请检查代码。");

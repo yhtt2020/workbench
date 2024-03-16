@@ -15,7 +15,7 @@
         :data-id="item.id"
       >
         <xt-mix-menu
-          @mounted="handleMenuMounted(item)"
+          @onBeforeCreate="handleMenuMounted(item)"
           :menus="menuList"
           :menuWidth="layout === 'rows' ? '' : 'w-full'"
         >
@@ -25,7 +25,7 @@
             @deleteFile="dragDeleteFile"
             :data="item"
           >
-              <Files :item="item"></Files>
+            <Files :item="item"></Files>
           </Drag>
         </xt-mix-menu>
       </div>
@@ -60,6 +60,7 @@ import {
 const Set = defineAsyncComponent(() =>
   import("../../../../components/widgets/myIcons/set/index.vue")
 );
+import { startApp } from "../../../../ui/hooks/useStartApp";
 
 const index = inject("index", "");
 const data = inject("data", "");
@@ -149,6 +150,7 @@ const currentTab = ref("");
 const currentItem = ref();
 // 菜单展开回调
 const handleMenuMounted = (item) => {
+  console.log("222 :>> ", 222);
   currentItem.value = item;
 };
 
@@ -163,11 +165,22 @@ const menuList = computed(() => {
         fileClick(currentItem.value);
       },
     },
-    // {
-    //   name: "打开存储路径",
-    //   newIcon: "fluent:folder-16-regular",
-    //   fn: () => {},
-    // },
+    {
+      name: "打开存储路径",
+      newIcon: "fluent:folder-16-regular",
+      fn: () => {
+        let realPath = currentItem.value.value;
+        var fs = require("fs");
+        var stat = fs.lstatSync(realPath);
+        var isDir = stat.isDirectory();
+        realPath = isDir ? realPath : require("path").dirname(realPath);
+        window.$models.win32.openPath(require("path").normalize(realPath));
+      },
+      disabled:
+        currentItem.value && currentItem.value.type == "tableApp"
+          ? false
+          : true,
+    },
     // {
     //   name: "复制",
     //   newIcon: "fluent:copy-16-regular",
