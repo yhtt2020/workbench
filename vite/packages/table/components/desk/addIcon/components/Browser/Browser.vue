@@ -1,7 +1,7 @@
 <template>
     <div class="flex w-full h-full " style="overflow:hidden;" @wheel.stop>
-        <LeftMenu @changeFolder="changeFolder" @refresh="refresh">
-        </LeftMenu>
+        <!-- <LeftMenu @changeFolder="changeFolder" @refresh="refresh">
+        </LeftMenu> -->
         <WebList 
             class="w-full h-full" 
             @refresh="refresh" 
@@ -120,6 +120,7 @@ const deskIcons = ref([])
 const props = defineProps({
     value: String,
     menus: Array,
+    nav:Object,
 })
 
 const { value, menus } = toRefs(props)
@@ -134,15 +135,21 @@ const rightMenu = computed(() => {
                 message.success('复制内容成功')
             }
         },
+        {
+            label:'添加到导航栏',
+            newIcon:'fluent:star-20-regular', 
+            children:[
+            ]
+        },
         ...menus.value
     ]
 })
 
-// 切换文件夹
-const changeFolder = (index) => {
-    console.log(index)
-    folderIndex.value = index
-}
+const rightMenus = computed(() => {
+    return {
+        
+    }
+})
 
 // 加载数据
 const refresh = async () => {

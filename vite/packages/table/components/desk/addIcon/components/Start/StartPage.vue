@@ -1,10 +1,12 @@
 <template>
     <div class="flex flex-col items-center justify-center w-full h-full">
         <Item 
+            classItem="max-w-[705px] justify-start"
             :menu="menu"  
             @choose="chooseIcon">
         </Item>
         <Item 
+            classItem="justify-center"
             className="mt-8"
             :menu="teamMenu" 
             @choose="chooseTeam">

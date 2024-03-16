@@ -23,6 +23,9 @@
         leftClass="xt-main-bg"
         class="w-full">
         <!-- 右侧功能区 -->
+        <div v-if="iconIndex === 'Browser'" class="h-full max-w-[250px] flex-shrink-0" style="overflow:hidden;" @wheel.stop>
+          <LeftMenu @changeFolder="changeFolder" @refresh="refresh"></LeftMenu>
+        </div>
         <div class="flex flex-col w-full h-full p-3 xt-modal">
           <!-- 头部 -->
           <div class="flex items-center justify-between w-full mb-3">
@@ -55,7 +58,7 @@
             <!-- 网址应用 -->
             <WebSite v-if="iconIndex === 'WebSite'" v-model:value="inputValue" @addIcon="addIcon"></WebSite>
             <!-- 收藏夹 -->
-            <Browser v-if="iconIndex === 'Browser'" v-model:value="inputValue" @addIcon="addIcon" :menus="menus"></Browser>
+            <Browser v-if="iconIndex === 'Browser'" :nav="navMap" v-model:value="inputValue" @addIcon="addIcon" :menus="menus"></Browser>
             <!-- 酷应用 -->
             <CoolApp v-if="iconIndex === 'CoolApp'" v-model:value="inputValue" @addIcon="addIcon"></CoolApp>
             <!-- 轻应用 -->
@@ -108,6 +111,7 @@ import { completeTask } from '../../../apps/task/task'
 
 import AddDesk from './components/AddDesk.vue'
 import DropDown from './components/DropDown.vue'
+import LeftMenu from '../../../apps/favorites/components/LeftMenu.vue';
 
 import { useNavigationStore } from '../navigationBar/navigationStore';
 import { navStore } from '../../../store/nav';
@@ -115,7 +119,6 @@ import {cardStore} from '../../../store/card'
 import {homeStore} from '../../../store/home'
 import { useIconStore } from './store';
 import { favoStore } from '../../../apps/favorites/store'
-import { MultiStats } from 'webpack';
 
 // 获取到当前多选的图标
 const iconStore = useIconStore()
@@ -139,7 +142,7 @@ const {currentDeskId} = storeToRefs(useHome)
 
 // 收藏夹
 const useFavoStore = favoStore()
-const { folderIcons,allList } = storeToRefs(useFavoStore)
+const { folderIcons,allList,folderIndex } = storeToRefs(useFavoStore)
 
 
 // 组件动态引入
@@ -193,7 +196,7 @@ const menus = ref([
     label: '添加到桌面',
     newIcon:'fluent:desktop-16-regular',
     callBack: async () => {
-      if(iconIndex.value === 'Browser'){
+      if(iconIndex.value === 'Browser' && isMultiple.value){
         filterCheck()
       }
       deskFlag.value = true
@@ -204,7 +207,7 @@ const menus = ref([
     label: '添加到分组',
     newIcon: 'fluent:app-folder-16-regular',
     callBack: () => {
-      if(iconIndex.value === 'Browser'){
+      if(iconIndex.value === 'Browser' && isMultiple.value){
         filterCheck()
       }
       previewFlag.value = true
@@ -336,6 +339,11 @@ const addFolderIcon = () => {
   isMultiple.value = false
 }
 
+// 收藏夹切换文件夹
+const changeFolder = (index) => {
+  folderIndex.value = index
+}
+
 // 下拉框
 onMounted(() => {
   let tag = selectNav.value === '' ? 'desktop' : selectNav.value
@@ -374,7 +382,7 @@ const dropArr = computed(() => {
 // 进行切换时，数据清空
 watch(
   () => iconIndex.value,
-  () => {
+  (val) => {
     multipleList.value = []
   }
 )
@@ -383,27 +391,26 @@ watch(
 watch(
   () => selectNav.value,
   (newVal,oldVal) => {
-    const obj = {
-      'foot': navigationToggle.value[2],
-      'left': navigationToggle.value[0],
-      'right': navigationToggle.value[1],
+    // 判断是否开启导航栏
+    const nav = {
+      'foot':navigationToggle[2],
+      'left':navigationToggle[0],
+      'right':navigationToggle[1],
       "desktop": true,
     }
-    if(!obj[newVal]){
+    // 提示是否开启导航栏
+    const obj = {
+      'foot': () => {navigationToggle.value[2] = true},
+      'left': () => {navigationToggle.value[0] = true},
+      'right': () => {navigationToggle.value[1] = true},
+    }
+    if(!nav[newVal]){
       window.$ui.confirm(
         `当前${defaultTitle.value.name}没有开启，是否选择开启导航栏`,
         '',
         {
           ok:() => {
-            console.log(obj[newVal])
-            // obj[newVal] = true;
-            if(newVal === 'foot'){
-              navigationToggle.value[2] = true
-            } else if (newVal === 'left') {
-              navigationToggle.value[0] = true
-            } else if (newVal === 'right') {
-              navigationToggle.value[1] = true
-            }
+            obj[newVal]()
           },
           no:() => {
             selectNav.value = oldVal
