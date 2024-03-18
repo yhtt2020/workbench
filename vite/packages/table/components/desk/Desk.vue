@@ -229,7 +229,6 @@ import { useFloatMenuStore } from "./floatMenu/store";
 import EditNewNavigation from "./navigationBar/EditNewNavigation.vue";
 import _ from "lodash-es";
 import { registerFolder } from "../../apps/folder/src/hooks/register";
-import { useRegisterTTAppCard } from "../../apps/ttAppCard/src/hooks/useRegisterTTAppCard";
 import GalleryModal from "../paperModal/GalleryModal.vue";
 import { useAddCard } from "../../ui/hooks/useAddCard";
 import { useDeskStore } from "./store";
@@ -574,9 +573,6 @@ export default {
       } else {
         message.info("定制过程中无法操作");
       }
-    },
-    addTTAppCard() {
-      useRegisterTTAppCard(this.currentDesk);
     },
     resetLayout() {
       this.hide = true;

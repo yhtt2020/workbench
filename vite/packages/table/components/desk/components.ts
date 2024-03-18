@@ -225,10 +225,16 @@ const Test = defineAsyncComponent(() => import("../widgets/test/index.vue"));
 
 // import Folder from "../../apps/folder";
 const Folder = defineAsyncComponent(() => import("../../apps/folder"));
-const TTAppCard = defineAsyncComponent(() => import("../../apps/ttAppCard"));
+const TTAppCard = defineAsyncComponent(
+  () => import("../../apps/ttApp/src/modules/card")
+);
+const TTAppModal = defineAsyncComponent(
+  () => import("../../apps/ttApp/src/modules/modal")
+);
 export default {
   components: {
     TTAppCard,
+    TTAppModal,
     Test,
     Folder,
     FreeLayoutScrollbar,
