@@ -8,21 +8,25 @@ export const communityNavStore = defineStore("communityNav", {
     // 文件应用排序
     layOut: "rows",
     // 应用模式数据结构
-    appModalList:[
+    appModalList: [
       {
-        name: '我的收藏',
-        type: 'like',
+        name: "我的收藏",
+        type: "like",
         rename: null,
-        list:[],
+        list: [],
       },
       {
-        name:'全部',
-        type:'all',
+        name: "全部",
+        type: "all",
         rename: null,
-      }
+      },
     ],
     // 应用模式下的下标
-    appFolderIndex:1,
+    appFolderIndex: 1,
+    // 开启设置模式
+    settingEnable: false,
+    // 社群导航-应用模式-设置模式-模式选择 (默认选中应用模式)
+    settingType: "app",
   }),
 
   actions: {},
@@ -31,7 +35,14 @@ export const communityNavStore = defineStore("communityNav", {
     enabled: true,
     strategies: [
       {
-        paths: ["teamNavList", "layOut","appModalList","appFolderIndex"],
+        paths: [
+          "teamNavList",
+          "layOut",
+          "appModalList",
+          "appFolderIndex",
+          "settingEnable",
+          "settingType",
+        ],
         storage: localStorage,
       },
     ],

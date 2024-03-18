@@ -6,6 +6,7 @@
         style="width: 452px; height: 40px"
         class="xt-bg-t-2 xt-b"
         placeholder="文件夹名称"
+        :maxlength="8"
       ></xt-input>
       <div class="mt-4 flex items-center justify-end w-full">
         <xt-button w="64" h="40" class="mr-3" @click="folderVisible = false">

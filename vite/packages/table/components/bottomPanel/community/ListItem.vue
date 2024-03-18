@@ -1,8 +1,8 @@
 <template>
   <template v-if="list.length !== 0">
     <div class="grid-container" >
-      <div v-for="item in list" class="grid-item xt-bg-2 rounded-xl pointer flex items-center justify-center">
-       <xt-menu name="name" :menus="menuList" @contextmenu="currentItem = item">
+      <div v-for="item in list" class="grid-item xt-bg-2 rounded-xl pointer flex items-center justify-center" @click="openApp(item)">
+       <xt-menu name="name" :menus="menuList" @contextmenu="currentItem = item,currentIndex = index">
          <div class="flex items-center flex-col justify-center">
            <img :src="item.icon" style="width: 64px;height: 64px;" class="object-cover rounded-xl mb-3" alt=""/>
            <span class="font-16 xt-font xt-text">{{ item.name }}</span>
@@ -34,12 +34,18 @@ const props = defineProps({
 });
 const { list,listType } = toRefs(props);
 
+// 当前子项数据
+const currentItem = ref(null);
+const currentIndex = ref(null);
 
 // 右键菜单操作
 const detailMenus = ref([
   {
     newIcon:'fluent:open-16-regular',
     name:'打开',
+    callBack:()=>{
+
+    },
   },
   {
     newIcon:'fluent:star-16-regular',
@@ -76,6 +82,9 @@ const detailMenus = ref([
     newIcon:'fluent:delete-16-regular',
     name:'删除',
     color:'var(--error)',
+    callBack:()=>{
+      
+    }
   }
 ])
 const likeMenu = ref([
@@ -106,8 +115,6 @@ const likeMenu = ref([
     ] 
   },
 ])
-// 当前子项数据
-const currentItem = ref(null);
 
 const menuList = computed(()=>{
   if(listType.value === 'like'){
@@ -123,6 +130,11 @@ const menuList = computed(()=>{
 const addFolder = () =>{
   console.log('测试',currentItem.value);
 }
+// 打开应用模式中应用
+const openApp = (data) =>{
+  console.log('测试',data);
+}
+
 </script>
 
 <style lang="scss" scoped>
