@@ -36,7 +36,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch, getCurrentInstance } from "vue";
 import { storeToRefs } from "pinia";
 import { communityNavStore } from "../store/communityNavStore";
 
@@ -44,6 +44,7 @@ const emit = defineEmits(["close"]);
 
 const communityNav = communityNavStore();
 const { settingType } = storeToRefs(communityNav);
+const { proxy } = getCurrentInstance();
 
 const selectList = ref([
   {
@@ -60,6 +61,18 @@ const selectList = ref([
 const closeSetting = () => {
   emit("close");
 };
+
+watch(()=>settingType.value,(newVal)=>{
+  if(newVal === 'component'){
+    window.$ui.confirm('使用「组件模式」','切换到组件模式后，所有网站和应用都会合并到一个分组中。',{
+      ok:()=>{
+        proxy.$bus.emit("closeModal");
+      },
+      noText:'取消',
+      okText:'确定'
+    })
+  }
+})
 </script>
 
 <style lang="scss" scoped>

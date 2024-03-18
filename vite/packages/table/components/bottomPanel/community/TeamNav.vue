@@ -84,9 +84,9 @@ const dropList = ref([
     icon: "fluent:settings-16-regular",
     name: "设置",
     fn: () => {
-      proxy.$bus.emit("openAppVisible");
-      settingEnable.value = true;
-      closeNav();
+      // proxy.$bus.emit("openAppVisible");
+      // settingEnable.value = true;
+      // closeNav();
     },
   },
 ]);

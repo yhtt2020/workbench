@@ -179,6 +179,9 @@ onMounted(() => {
   proxy.$bus.on("openAppVisible", () => {
     appModelVisible.value = true;
   });
+  proxy.$bus.on("closeModal",()=>{
+    appModelVisible.value  = false;
+  })
 });
 </script>
 

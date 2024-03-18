@@ -24,12 +24,15 @@ import { computed, ref, getCurrentInstance } from "vue";
 import { nanoid } from "nanoid";
 import { communityStore } from "../../../page/chat/store/communityStore";
 import { useRouter } from "vue-router";
+import { communityNavStore } from "../store/communityNavStore"; 
 
 import Avatar from "../../desk/navigationBar/components/Avatar.vue";
 
 const communityNav = communityStore();
 const { community } = storeToRefs(communityNav);
 const router = useRouter();
+const comNav = communityNavStore();
+const { settingType } = storeToRefs(comNav);
 
 const { proxy } = getCurrentInstance();
 
@@ -73,7 +76,7 @@ const communityNavList = computed(() => {
         type: "systemApp",
         id: nanoid(12),
         fn: (event) => {
-          proxy.$bus.emit("openTeamNav", event);
+          openNav(event);
         },
       },
       {
@@ -113,7 +116,7 @@ const communityNavList = computed(() => {
         type: "systemApp",
         id: nanoid(12),
         fn: (event) => {
-          proxy.$bus.emit("openTeamNav", event);
+          openNav(event);
         },
       },
       {
@@ -130,6 +133,15 @@ const communityNavList = computed(() => {
   }
 });
 
+
+const openNav = (event) =>{
+  if(settingType.value === 'app'){
+    proxy.$bus.emit("openAppVisible");
+  }
+  else {
+    proxy.$bus.emit("openTeamNav", event);
+  }
+}
 
 </script>
 
