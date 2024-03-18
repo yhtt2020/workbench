@@ -13,7 +13,7 @@
         :maxlength="10"
         allow-clear
         v-model:value="searchValue"
-        @change="changeSearchValue($event)" 
+        @change="changeSearchValue()"
       >
         <xt-ify-icon
           class="absolute"
@@ -26,7 +26,7 @@
         <a-select
           v-model:value="browserType"
           class="xt-bg"
-          style="width: 142px;"
+          style="width: 142px"
           placeholder="Tags Mode"
           :options="linkType"
         ></a-select>
@@ -43,56 +43,70 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed,getCurrentInstance } from "vue";
 import { storeToRefs } from "pinia";
 import { favoStore } from "../../../apps/favorites/store";
+import { communityNavStore } from "../store/communityNavStore";
 
 const emit = defineEmits(["close"]);
 
 const favo = favoStore();
 const { browserType } = storeToRefs(favo);
+const communityNav = communityNavStore();
+const { appModalList } = storeToRefs(communityNav);
+
+const { proxy } = getCurrentInstance();
 
 const linkType = ref([
   { label: "系统默认浏览器", value: "system" },
   { label: "想天浏览器", value: "thisky" },
   { label: "工作台内打开", value: "work" },
 ]);
-const searchValue = ref('');
+const searchValue = ref("");
 
 const close = () => {
- emit("close");
+  emit("close");
 };
 
-const changeSearchValue = (evt) =>{
- console.log('测试',evt.target.value);
-}
+const changeSearchValue = () => {
+  if (searchValue.value !== "") {
+    const mList = appModalList.value[1].list.concat(appModalList.value[0].list);
+    const result = mList.filter((item) => {
+      return item.name === searchValue.value || item.url === searchValue.value;
+    });
+    proxy.$bus.emit("getSearchList",result);
+  }
+  else {
+    proxy.$bus.emit("getSearchList",[]);
+  }
+};
 </script>
 
 <style lang="scss" scoped>
-:deep(.ant-select-selector){
- border-radius: 8px !important;
+:deep(.ant-select-selector) {
+  border-radius: 8px !important;
 }
-.divider{
- width: 100%;
- height: 1px;
- background-color: var(--divider);
- margin-top: 8px;
- margin-bottom: 8px;
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--divider);
+  margin-top: 8px;
+  margin-bottom: 8px;
 }
 .scroll-color::-webkit-scrollbar-thumb {
- background-color: #ccc; /* 滚动条颜色 */
- border-radius: 6px; /* 滚动条圆角 */
+  background-color: #ccc; /* 滚动条颜色 */
+  border-radius: 6px; /* 滚动条圆角 */
 }
 
 .scroll-color::-webkit-scrollbar-thumb:hover {
- background-color: #999; /* 悬停时滚动条颜色 */
+  background-color: #999; /* 悬停时滚动条颜色 */
 }
 
 .scroll-color::-webkit-scrollbar-track {
- border-radius: 6px; /* 轨道圆角 */
+  border-radius: 6px; /* 轨道圆角 */
 }
 
-.select{
- background: rgba(80,139,254,0.20);
+.select {
+  background: rgba(80, 139, 254, 0.2);
 }
 </style>
