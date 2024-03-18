@@ -1,2 +1,2 @@
-import TTapp from "./src/views/TTapp.vue";
-export default TTapp;
+import TTApp from "./src/ttApp/TTApp.vue";
+export default TTApp;

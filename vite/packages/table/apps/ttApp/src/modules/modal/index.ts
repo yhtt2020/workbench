@@ -1,2 +1,2 @@
-import TTAppCard from "./Card.vue";
-export default TTAppCard;
+import TTAppModal from "./Modal.vue";
+export default TTAppModal;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
-import TTapp from "../../views/TTApp.vue";
+import TTApp from "../../ttApp/TTApp.vue";
 import { useParserCard } from "../../parser/card";
 const data: any = ref({});
 const loading = ref(false);
@@ -68,7 +68,7 @@ const header = computed(() => {
       class="overflow-scroll w-full xt-theme-b flex flex-col h-full xt-scrollbar"
       style="overflow: hidden !important"
     >
-      <TTapp v-if="visible" @close="visible = false" />
+      <TTApp v-if="visible" @close="visible = false" />
       {{ visible }}
       <xt-button @click="visible = true">打开控制中心</xt-button>
       <!-- <WujieVue
