@@ -9,7 +9,7 @@
     :secondary="true"
   >
     <template #navEmpty>
-      <TeamEmpty />
+      <TeamEmpty @close="closeNav"/>
     </template>
     <template #customRightMenu>
       <xt-dropdown :buttonVisible="false" :placement="'bottomRight'">
@@ -52,7 +52,7 @@ import TeamEmpty from "../empty/TeamEmpty.vue";
 const emit = defineEmits(['close']);
 
 const communityNav = communityNavStore();
-const { teamNavList, layOut } = storeToRefs(communityNav);
+const { teamNavList, layOut,settingEnable } = storeToRefs(communityNav);
 const { proxy } = getCurrentInstance();
 
 const navBar = ref({
@@ -74,7 +74,7 @@ const dropList = ref([
         type: "warning",
         ok:()=>{
           proxy.$bus.emit("openAppVisible");
-          emit("close");
+          closeNav();
         },
         noText:'取消'
       });
@@ -84,7 +84,9 @@ const dropList = ref([
     icon: "fluent:settings-16-regular",
     name: "设置",
     fn: () => {
-
+      proxy.$bus.emit("openAppVisible");
+      settingEnable.value = true;
+      closeNav();
     },
   },
 ]);
@@ -179,6 +181,10 @@ const deleteNav = (data) => {
 const createNav = (data) => {
   teamNavList.value.push(data);
 };
+
+const closeNav = () =>{
+  emit('close');
+}
 
 onMounted(() => {
   proxy.$bus.on("getApp", (data) => {

@@ -7,7 +7,7 @@
         择合适的团队导航应用规模；当前为「组件形式」，适合数量不多的
         情况使用；如果需要进行具体分类，推荐使用「应用模式」。
       </div>
-      <div class="flex items-center justify-center w-full">
+      <div class="flex items-center justify-center w-full" @click="enterAppMode">
         <xt-button w="84" h="32" class="mr-3 xt-bg-t-2" style="border-radius: 8px;">
           应用模式
         </xt-button>
@@ -33,6 +33,8 @@ import EditNewNavigation from '../../desk/addIcon/EditNewNavigation.vue';
 import { storeToRefs } from 'pinia';
 import { communityNavStore } from '../store/communityNavStore';
 
+const emit = defineEmits(['close']);
+
 const props = defineProps({
   isEmpty:{
     type:Boolean,
@@ -55,6 +57,11 @@ const addApp = () =>{
 
 const addFile = (data) =>{
   proxy.$bus.emit("getApp",data);
+}
+// 开启应用模式
+const enterAppMode = () =>{
+  proxy.$bus.emit("openAppVisible");
+  emit('close');
 }
 
 onMounted(()=>{

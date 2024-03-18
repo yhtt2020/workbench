@@ -83,7 +83,13 @@ const detailMenus = ref([
     name:'删除',
     color:'var(--error)',
     callBack:()=>{
-      
+      console.log('获取当前删除的数据',currentItem.value);
+      console.log('根据类型进行判断',listType);
+      /**实现删除逻辑思路
+       * 1.获取当前需要删除的数据
+       * 2.匹配出当前选中的类型,根据当前类型进行判断是否存在,如果存在就继续删除操作
+       * 
+       * **/ 
     }
   }
 ])
