@@ -10,6 +10,8 @@
     @click="defaultListClick"
     @contextmenu="defaultListContextmenu"
     @mounted="onMounted"
+    @onMounted="onMounted"
+    @onBeforeCreate="onBeforeCreate"
     :stopPropagation="stopPropagation"
   >
     <slot> </slot>
@@ -103,9 +105,13 @@ function beforeCreate() {
   return rightModel.value == "follow";
 }
 
-const emits = defineEmits(["mounted"]);
+const emits = defineEmits(["mounted", "onMounted", "onBeforeCreate"]);
 const onMounted = () => {
   emits("mounted");
+  emits("onMounted");
+};
+const onBeforeCreate = () => {
+  emits("onBeforeCreate");
 };
 function defaultListClick(event) {
   if (rightModel.value == "default" && model.value == "all") {
