@@ -24,7 +24,6 @@
               >{{ item.name }}</span
             >
           </div>
-          <!--  -->
           <div class="absolute  top-1 right-1" v-if="false">
             <xt-ify-icon icon="fluent:star-16-filled" size="20" style="color: var(--warning);"></xt-ify-icon>
           </div>
