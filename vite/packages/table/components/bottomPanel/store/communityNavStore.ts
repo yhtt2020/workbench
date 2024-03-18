@@ -19,6 +19,7 @@ export const communityNavStore = defineStore("communityNav", {
         name: "全部",
         type: "all",
         rename: null,
+        list:[],
       },
     ],
     // 应用模式下的下标

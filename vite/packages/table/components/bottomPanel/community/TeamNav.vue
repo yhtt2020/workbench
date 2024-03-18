@@ -179,7 +179,12 @@ const deleteNav = (data) => {
 };
 // 添加
 const createNav = (data) => {
-  teamNavList.value.push(data);
+  const index = teamNavList.value.findIndex((item) => {
+    return item.name === data.name;
+  });
+  if(index === -1){
+    teamNavList.value.push(data);
+  }
 };
 
 const closeNav = () =>{
@@ -188,7 +193,7 @@ const closeNav = () =>{
 
 onMounted(() => {
   proxy.$bus.on("getApp", (data) => {
-    teamNavList.value.push(data);
+    createNav(data);
     proxy.$bus.emit("closeNav");
   });
 });

@@ -147,18 +147,17 @@ const rightMenu = ref([
 
 // 获取数量
 const getNum = (item) => {
-  return item?.list?.length;
+  if(item.type !== undefined){
+    return item?.list?.length;
+  }
+  else {
+    const list = appModalList.value[1]?.list?.filter((filterItem)=>{ return filterItem.n_id === item.id });
+    return list?.length;
+  }
 };
 // 全部的数量
 const allNum = computed(() => {
-  const num = appModalList.value.reduce((total, item) => {
-    if (item.list && Array.isArray(item.list)) {
-      return total + item?.list?.length;
-    } else {
-      return total;
-    }
-  }, 0);
-  return num;
+  return appModalList.value[1].list?.length;
 });
 // 修改状态
 const updateIndex = (data) => {

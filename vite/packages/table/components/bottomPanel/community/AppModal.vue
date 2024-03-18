@@ -141,9 +141,19 @@ const editList = ref([
   },
 ]);
 
+// 添加数据
 const addFile = (data) => {
+  // 添加类型、 全部 、收藏
   const type = appModalList.value[appFolderIndex.value].type;
-  if (type !== "all" && type !== "like") {
+  if(type === undefined){
+    const option = {
+      n_id:appModalList.value[appFolderIndex.value].id,
+      ...data,
+    }
+    appModalList.value[1].list.push(option);
+    editVisible.value = false;
+  }
+  else if(type === 'all'){
     const index = appModalList.value[appFolderIndex.value].list.findIndex(
       (item) => {
         return String(item.name) === String(data.name);
@@ -153,8 +163,6 @@ const addFile = (data) => {
       appModalList.value[appFolderIndex.value].list.push(data);
     }
     editVisible.value = false;
-  } else {
-    console.log("后续做处理");
   }
 };
 // 选择切换文件数据

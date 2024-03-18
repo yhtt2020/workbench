@@ -9,7 +9,7 @@
          <div style="max-width: 200px;text-align: center; " class="mb-4">
           <span class="font-16 xt-text xt-font" >{{ item.title }}</span>
          </div>
-         <xt-button v-if="item.btnText !== ''" type="theme" w="84" h="32" style="border-radius: 8px;">
+         <xt-button v-if="item.btnText !== ''" type="theme" w="84" h="32" style="border-radius: 8px;" @click="add">
           {{ item.btnText }}
          </xt-button>
          <xt-button v-if="item.disableBtnText !== ''"  w="84" h="32" class="xt-bg-t-2" style="border-radius: 8px;">
@@ -53,6 +53,10 @@ const list = ref([
   disableBtnText:''
  }
 ])
+
+const add = () =>{
+  
+}
 
 </script>
 

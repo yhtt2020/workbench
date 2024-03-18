@@ -50,7 +50,7 @@ const { updateFolder, isEdit } = toRefs(props);
 
 const addFolder = (evt) => {
   if (isEdit.value) {
-    // 更新
+    // 更新文件夹名称
     const updateList = appModalList.value.map((item, index) => {
       if (updateFolder.value?.index === index) {
         return { ...item, name: folderName.value };
@@ -67,7 +67,6 @@ const addFolder = (evt) => {
         name: folderName.value,
         rename: null,
         time: new Date().getTime(),
-        list: [],
         id: nanoid(8),
       };
       const index = appModalList.value.findIndex((item) => {

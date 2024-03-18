@@ -36,21 +36,13 @@ const props = defineProps({
 const { detailIndex } = toRefs(props);
 // 获取全部详情
 const allDetailList = computed(()=>{
-  const list = appModalList.value.reduce((acc,item)=>{
-    if(item.list && Array.isArray(item.list)){
-      return [...acc,...item.list]
-    }
-    else{
-      return [];
-    }
-  },[]);
-  return list;
+  return appModalList.value[1].list; 
 });
 // 指定的详情
 const appointDetail = computed(()=>{
-  if(Array.isArray(appModalList.value[detailIndex.value].list)){
-    return appModalList.value[detailIndex.value].list;
-  }
+  const n_id = appModalList.value[detailIndex.value].id;
+  const list = appModalList.value[1].list.filter((item)=>{ return item.n_id === n_id });
+  return list;
 });
 // 获取type
 const type = computed(()=>{

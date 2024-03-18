@@ -7,8 +7,8 @@
         择合适的团队导航应用规模；当前为「组件形式」，适合数量不多的
         情况使用；如果需要进行具体分类，推荐使用「应用模式」。
       </div>
-      <div class="flex items-center justify-center w-full" @click="enterAppMode">
-        <xt-button w="84" h="32" class="mr-3 xt-bg-t-2" style="border-radius: 8px;">
+      <div class="flex items-center justify-center w-full" >
+        <xt-button w="84" h="32" class="mr-3 xt-bg-t-2" style="border-radius: 8px;" @click="enterAppMode">
           应用模式
         </xt-button>
         <xt-button w="84" h="32" type="theme" style="border-radius: 8px;" @click="addApp">
