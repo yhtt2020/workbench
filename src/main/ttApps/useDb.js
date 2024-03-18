@@ -1,3 +1,6 @@
+/**
+ * 二次封装db ttapp.js
+ */
 const { SqlDb } = require("../../util/sqldb");
 const { nanoid } = require("nanoid");
 
@@ -13,8 +16,8 @@ const ttAppModel = {
     // 不存在则创建
     if (!exists) {
       await sqlDb.knex.schema.createTable("ttApp", function (t) {
-        t.string("nanoid").primary().unique(); //本地id
-        t.string("modules"); //本地id
+        t.string("id").primary().unique(); // 唯一ID
+        t.string("modules"); // 模块
       });
     }
     // let sql = `INSERT INTO ttApp VALUES ('${id}')`;
@@ -23,7 +26,7 @@ const ttAppModel = {
     // });
     return sqlDb
       .knex("ttApp")
-      .insert({ nanoid: id, modules })
+      .insert({ id, modules })
       .then(() => {
         console.log("Inserted");
         return true;
@@ -37,7 +40,7 @@ const ttAppModel = {
    */
   async del(id) {
     try {
-      await sqlDb.knex("ttApp").where({ nanoid: id }).del();
+      await sqlDb.knex("ttApp").where({ id: id }).del();
       return true;
     } catch (err) {
       console.log(err);
@@ -56,7 +59,7 @@ const ttAppModel = {
    * 查询
    */
   async select(id) {
-    let sql = `SELECT * FROM ttApp WHERE nanoid='${id}'`;
+    let sql = `SELECT * FROM ttApp WHERE id='${id}'`;
     let res = await await sqlDb.knex.raw(sql);
     return res;
   },

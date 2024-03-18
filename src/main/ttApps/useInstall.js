@@ -1,5 +1,5 @@
 /**
- * ttapp.js
+ * 安装ttapp ttapp.js
  * @description 安装ttapp
  */
 const {
@@ -38,7 +38,8 @@ module.exports = async function useInstall(filePath) {
     };
   }
 
-  let folderType = "ttapp_test"; // 临时文件夹名称
+  // let folderType = "ttapp_test"; // 临时文件夹名称
+  let folderType = "apps"; // 临时文件夹名称
 
   // 3 处理解压文件路径
   let folderName = [folderType, id]; // 临时文件夹名称
@@ -111,11 +112,12 @@ module.exports = async function useInstall(filePath) {
   }
   // 7
   let modules = {};
-  for (const [key, value] of Object.entries(manifestRes.modules)) {
-    modules[key] = value.entry;
-  }
+  // console.log('manifestRes.modules :>> ', manifestRes.modules);
+  // for (const [key, value] of Object.entries(manifestRes.modules)) {
+  //   modules[key] = value.entry;
+  // }
   console.log("7、获取modules配置 :>> ", modules);
-  let modulesJson = JSON.stringify(modules);
+  let modulesJson = JSON.stringify( manifestRes.modules);
 
   const ttAppData = {
     id,

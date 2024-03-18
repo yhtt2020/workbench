@@ -1,5 +1,5 @@
 /**
- * ttapp.js
+ * 接收主进程的消息 ttapp.js
  * @description 应该是接收主进程的消息
  */
 const Base = require("./base");
