@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
-import TTApp from "../../ttApp/TTApp.vue";
-import { useParserCard } from "../../parser/card";
+import TTApp from "../../ttApp";
+import { useParserCard } from "../../parser";
 const data: any = ref({});
-const loading = ref(false);
+const loading = ref(true);
 
 const wujieHeader: any = ref({});
 const wujie: any = ref({});
@@ -17,15 +17,9 @@ onMounted(async () => {
     wujieHeader.value = config.header;
     wujie.value = config.wujie;
     data.value = config;
+    loading.value = false;
   });
 });
-// 旧版测试代码
-// const header = {
-//   ifyIcon: "fluent:add-16-filled",
-//   leftHover: true,
-//   leftHoverName: "222",
-//   title: "123",
-// };
 const props = defineProps({
   customIndex: {},
   customData: {
@@ -34,24 +28,24 @@ const props = defineProps({
 });
 const visible = ref(false);
 
-const rightIcons = computed(() => {
-  let res = [
-    {
-      title: "更新桌面数据",
-      newIcon: "fluent:arrow-clockwise-16-regular",
-      fn: () => {},
-    },
-  ];
-  return res;
+const refresh = ref({
+  fn: () => {
+    loading.value = true;
+    setTimeout(() => {
+      loading.value = false;
+    }, 1);
+  },
+  newIcon: "fluent:arrow-clockwise-16-regular",
+  tip: "刷新",
+  title: "刷新",
 });
 
 const header = computed(() => {
   return {
     ...wujieHeader.value,
-    rightIcons: rightIcons.value,
+    refresh: refresh.value,
   };
 });
-// 9OdI
 </script>
 
 <template>
@@ -59,6 +53,7 @@ const header = computed(() => {
     :customIndex="customIndex"
     :customData="customData"
     :header="header"
+    :menuList="[refresh]"
     customSize="8x8"
     class="xt-theme-b"
   >
@@ -71,14 +66,14 @@ const header = computed(() => {
       <TTApp v-if="visible" @close="visible = false" />
       {{ visible }}
       <xt-button @click="visible = true">打开控制中心</xt-button>
-      <!-- <WujieVue
+      <WujieVue
+        v-if="!loading"
         width="100%"
         height="100%"
         :name="wujie.name || ''"
         :url="wujie.url || ''"
       >
-
-      </WujieVue> -->
+      </WujieVue>
       <!-- http://1611037570.3vhost.club/ -->
       <!-- url="ttapp://2mhM/index.html -->
       <!-- url="https://www.yinaor.com/docs/front/micro/micro-intro/" -->

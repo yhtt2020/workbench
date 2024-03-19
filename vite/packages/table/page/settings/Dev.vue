@@ -8,7 +8,6 @@
         v-model:switch="settings.enableDev"
       />
     </xt-option-box>
-
     <template v-if="settings.enableDev">
       <div class="line">
         <xt-button @click="openDevTool" :w="140" :h="40" type="theme"
@@ -16,18 +15,7 @@
         >
       </div>
       <div class="line">
-        <xt-button @click="installTTApp" :w="140" :h="40" type="theme"
-          >安装TTApp</xt-button
-        >
-        <xt-button @click="uninstallTTApp" :w="140" :h="40" type="theme"
-          >卸载TTApp</xt-button
-        >
-        <xt-button @click="selectTTApp" :w="140" :h="40" type="theme"
-          >查询TTApp</xt-button
-        >
-        <xt-button @click="selectAllTTApp" :w="140" :h="40" type="theme"
-          >查询所有TTApp</xt-button
-        >
+        <TTApp />
       </div>
       <div class="line">
         <xt-button @click="exit" :w="140" :h="40" type="theme"
@@ -116,9 +104,10 @@ import { useWidgetStore } from "../../components/card/store.ts";
 import { message } from "ant-design-vue";
 import { prettyDisplayBytes } from "../../js/action/supervisory";
 import { useLogout } from "../../permission/user/useLogout";
+import TTApp from "../../apps/ttApp";
 export default {
   name: "Common",
-  components: { Template, ZoomUI },
+  components: { Template, ZoomUI, TTApp },
   data() {
     return {
       trayOpen: "",
@@ -152,34 +141,7 @@ export default {
     openDevTool() {
       ipc.send("openDevTool");
     },
-    async installTTApp() {
-      let path = await tsbApi.dialog.showOpenDialog({
-        title: "选择",
-        message: "请选择文件",
-        multiple: "true",
-        properties: ["openFile", "multiSelections"],
-      });
 
-      let res = tsbApi.ttapp.install(path[0], (data) => {
-        console.log("data :>> ", data);
-      });
-      console.log("installTTApp res :>> ", res);
-    },
-    uninstallTTApp() {
-      tsbApi.ttapp.uninstall("SjjL", (data) => {
-        console.log("data :>> ", data);
-      });
-    },
-    selectTTApp() {
-      tsbApi.ttapp.select("SjjL", (data) => {
-        console.log("data :>> ", data);
-      });
-    },
-    selectAllTTApp() {
-      tsbApi.ttapp.selectAll((data) => {
-        console.log("data :>> ", data);
-      });
-    },
     async getMemory() {
       let rs = await ipc.sendSync("getAppMetrics");
       this.metrics = rs.sort((item1, item2) => {
