@@ -24,13 +24,19 @@
               >{{ item.name }}</span
             >
           </div>
-          <div class="absolute top-1 right-1" v-if="false">
-            <xt-ify-icon
-              icon="fluent:star-16-filled"
-              size="20"
-              style="color: var(--warning)"
-            ></xt-ify-icon>
-          </div>
+          {{ isHide(item) }}
+          <!-- {{ isHide(item) !== -1 }}
+          <div class="absolute top-1 right-1" v-if="isHide(item)">
+            <xt-button h="0" style="width: auto !important" @click="removeFolder(item)">
+              <div class="flex items-center justify-center">
+                <xt-ify-icon
+                  icon="fluent:star-16-filled"
+                  size="20"
+                  style="color: var(--warning)"
+                ></xt-ify-icon>
+              </div>
+            </xt-button>
+          </div> -->
         </xt-menu>
       </div>
     </div>
@@ -198,6 +204,8 @@ const openApp = (data) => {
       browser.openInTable(data.url);
     }
     proxy.$bus.emit("closeModal");
+  } else if (type === "coolApp" || type === "lightApp") {
+    router.push({ name: "app", params: { ...data } });
   } else {
     startApp(data.type, data.value);
     proxy.$bus.emit("closeModal");
@@ -213,20 +221,22 @@ const removeItem = (data) => {
 
 // 取消收藏
 const removeFolder = (data) => {
-  const id = data?.id;
-  const index = appModalList.value[0]?.list.findIndex((item) => {
-    return item.id === id;
-  });
+  const index = appModalList.value[0]?.list?.indexOf(data);
   appModalList.value[0]?.list?.splice(index, 1);
 };
 
 // 是否收藏
-// const isHide = (index) => {
-//   // const arr1 = appModalList.value[0]?.list;
-//   // const arr2 = appModalList.value[1]?.list;
-//   // console.log('测试',list.value.includes(arr2[index]));
-//   // return list.value.includes(arr2[index]);
-// };
+const isHide = (data) => {
+  if (listType.value !== "like") {
+    const index = appModalList.value[0]?.list?.indexOf(data);
+    console.log("index", index);
+  } else {
+    return false;
+  }
+  // console.log('测试',appModalList.value[0]?.list?.includes(data),listType.value);
+  // const index = appModalList.value[0]?.list?.indexOf(data);
+  // return index;
+};
 </script>
 
 <style lang="scss" scoped>

@@ -59,8 +59,8 @@ const { proxy } = getCurrentInstance();
 
 const navBar = ref({
   isOut: true,
-  resize: false,
-  sizeOption: false,
+  resize: true,
+  sizeOption: true,
   isDel: true,
   hierarchy: true,
   close: true,
@@ -125,8 +125,8 @@ const teamNavData = computed(() => {
             {
               type: "warning",
               ok: () => {
-                settingType.value = "app";
                 proxy.$bus.emit("openAppVisible");
+                settingType.value = "app";
                 closeNav();
               },
               noText: "取消",

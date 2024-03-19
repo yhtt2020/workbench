@@ -2,7 +2,7 @@
   <template v-if="searchResult.length === 0">
     <!-- 全部详情 -->
     <template v-if="type === 'all'">
-      <ListItem :list="allDetailList" />
+      <ListItem :list="allDetailList" :listType="'all'" />
     </template>
     <!-- 收藏详情 -->
     <template v-else-if="type === 'like'">

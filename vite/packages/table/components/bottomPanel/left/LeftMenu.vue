@@ -95,6 +95,7 @@ import { storeToRefs } from "pinia";
 import { communityNavStore } from "../store/communityNavStore";
 
 import CreateFolder from "../community/CreateFolder.vue";
+import { message } from "ant-design-vue";
 
 const { proxy } = getCurrentInstance();
 const emit = defineEmits(["change", "close"]);
@@ -137,6 +138,7 @@ const rightMenu = ref([
           noText: "取消",
           ok: () => {
             appModalList.value.splice(currentDel.value, 1);
+            message.success('应用移除成功')
           },
           type: "warning",
         }

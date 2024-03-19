@@ -60,7 +60,7 @@ const addFolder = (evt) => {
     });
     appModalList.value = updateList;
     folderVisible.value = false;
-    message.success("文件夹更新成功");
+    message.success("文件夹名称更新成功");
     folderName.value = "";
   } else {
     if (folderName.value !== "") {

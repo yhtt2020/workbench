@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-import { ref, computed,getCurrentInstance } from "vue";
+import { ref, computed, getCurrentInstance } from "vue";
 import { storeToRefs } from "pinia";
 import { favoStore } from "../../../apps/favorites/store";
 import { communityNavStore } from "../store/communityNavStore";
@@ -70,14 +70,15 @@ const close = () => {
 
 const changeSearchValue = () => {
   if (searchValue.value !== "") {
+    const textRegex = new RegExp(searchValue.value, "i");
     const mList = appModalList.value[1].list.concat(appModalList.value[0].list);
     const result = mList.filter((item) => {
-      return item.name === searchValue.value || item.url === searchValue.value;
+      return textRegex.test(item.name) || textRegex.test(item.url);
     });
-    proxy.$bus.emit("getSearchList",result);
-  }
-  else {
-    proxy.$bus.emit("getSearchList",[]);
+    // console.log('搜索',result);
+    proxy.$bus.emit("getSearchList", result);
+  } else {
+    proxy.$bus.emit("getSearchList", []);
   }
 };
 </script>

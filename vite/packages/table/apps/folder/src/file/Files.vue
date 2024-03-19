@@ -12,7 +12,7 @@
     </div>
     <div
       class="text-xs truncate xt-text-2"
-      style="width: 90%"
+      style="width: 90%;"
       :class="textClass"
     >
       {{ item.name }}
@@ -112,7 +112,7 @@ const currentLayout = computed(() => {
     return rowOption;
   } else {
     boxClass.value = "pl-3  mb-1";
-    textClass.value = "ml-3";
+    textClass.value = "ml-3 text-left";
     return columnOption;
   }
 });
