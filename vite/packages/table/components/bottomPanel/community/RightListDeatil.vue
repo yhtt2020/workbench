@@ -63,7 +63,8 @@ const type = computed(() => {
 // 获取我的收藏数据
 const likeDetailList = computed(() => {
   if (type.value === "like") {
-    return appModalList.value[0].list;
+    const list = appModalList.value[1].list?.filter((item)=>{ return item.favo === true });
+    return list;
   }
 });
 

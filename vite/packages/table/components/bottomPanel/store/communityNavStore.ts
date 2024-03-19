@@ -11,7 +11,6 @@ export const communityNavStore = defineStore("communityNav", {
         name: "我的收藏",
         type: "like",
         rename: null,
-        list: [],
       },
       {
         name: "全部",

@@ -71,7 +71,7 @@ const close = () => {
 const changeSearchValue = () => {
   if (searchValue.value !== "") {
     const textRegex = new RegExp(searchValue.value, "i");
-    const mList = appModalList.value[1].list.concat(appModalList.value[0].list);
+    const mList = appModalList.value[1].list;
     const result = mList.filter((item) => {
       return textRegex.test(item.name) || textRegex.test(item.url);
     });

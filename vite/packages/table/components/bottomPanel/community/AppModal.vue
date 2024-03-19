@@ -157,6 +157,7 @@ const addAppFile = (data) => {
       const option = {
         n_id: appModalList.value[appFolderIndex.value].id,
         ...data,
+        favo:false,
       };
       appModalList.value[1].list.push(option);
       editVisible.value = false;
@@ -167,7 +168,7 @@ const addAppFile = (data) => {
         }
       );
       if (index === -1) {
-        appModalList.value[appFolderIndex.value].list.push(data);
+        appModalList.value[appFolderIndex.value].list.push({...data,favo:false,});
       }
       editVisible.value = false;
     }

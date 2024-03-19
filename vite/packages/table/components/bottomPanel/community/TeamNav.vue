@@ -192,7 +192,7 @@ const createNav = (data) => {
   } else {
     const index = appModalList.value[1]?.list?.indexOf(data);
     if (index === -1) {
-      appModalList.value[1]?.list?.push(data);
+      appModalList.value[1]?.list?.push({...data,favo:false,});
       message.success('应用添加成功');
     }
   }

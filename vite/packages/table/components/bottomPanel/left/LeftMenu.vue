@@ -149,8 +149,9 @@ const rightMenu = ref([
 
 // 获取数量
 const getNum = (item) => {
-  if(item.type !== undefined){
-    return item?.list?.length;
+  if(item.type === 'like'){
+    const list = appModalList.value[1]?.list?.filter((filterItem)=>{ return filterItem.favo === true });
+    return list?.length;
   }
   else {
     const list = appModalList.value[1]?.list?.filter((filterItem)=>{ return filterItem.n_id === item.id });

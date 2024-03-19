@@ -24,10 +24,14 @@
               >{{ item.name }}</span
             >
           </div>
-          {{ isHide(item) }}
-          <!-- {{ isHide(item) !== -1 }}
-          <div class="absolute top-1 right-1" v-if="isHide(item)">
-            <xt-button h="0" style="width: auto !important" @click="removeFolder(item)">
+          <div class="absolute top-2 right-2" v-if="isHide(item)">
+            <xt-button
+              h="32"
+              w="32"
+              class="xt-bg-t-2"
+              style="border-radius: 8px"
+              @click="removeFolder(item)"
+            >
               <div class="flex items-center justify-center">
                 <xt-ify-icon
                   icon="fluent:star-16-filled"
@@ -36,7 +40,7 @@
                 ></xt-ify-icon>
               </div>
             </xt-button>
-          </div> -->
+          </div>
         </xt-menu>
       </div>
     </div>
@@ -95,7 +99,7 @@ const detailMenus = ref([
     newIcon: "fluent:star-16-regular",
     name: "添加到收藏",
     callBack: () => {
-      addFolder();
+      addFolder(currentItem.value);
     },
   },
   {
@@ -182,14 +186,19 @@ const menuList = computed(() => {
 });
 
 // 添加收藏
-const addFolder = () => {
+const addFolder = (data) => {
   const id = currentItem.value?.id;
-  const index = appModalList.value[0]?.list.findIndex((item) => {
-    return item.id === id;
+  const updateList = appModalList.value[1]?.list.map((item) => {
+    if (item.id === id) {
+      return { ...item, favo: true };
+    } else if (item.name === data.name) {
+      return { ...item, favo: true };
+    } else {
+      return item;
+    }
   });
-  if (index === -1) {
-    appModalList.value[0]?.list.push(currentItem.value);
-  }
+
+  appModalList.value[1].list = updateList;
 };
 // 打开应用模式中应用
 const openApp = (data) => {
@@ -221,21 +230,24 @@ const removeItem = (data) => {
 
 // 取消收藏
 const removeFolder = (data) => {
-  const index = appModalList.value[0]?.list?.indexOf(data);
-  appModalList.value[0]?.list?.splice(index, 1);
+  const updateList = appModalList.value[1]?.list.map((item) => {
+    if (item.id === data.id) {
+      return { ...item, favo: false };
+    } else {
+      return item;
+    }
+  });
+
+  appModalList.value[1].list = updateList;
 };
 
 // 是否收藏
 const isHide = (data) => {
   if (listType.value !== "like") {
-    const index = appModalList.value[0]?.list?.indexOf(data);
-    console.log("index", index);
+    return data.favo;
   } else {
     return false;
   }
-  // console.log('测试',appModalList.value[0]?.list?.includes(data),listType.value);
-  // const index = appModalList.value[0]?.list?.indexOf(data);
-  // return index;
 };
 </script>
 

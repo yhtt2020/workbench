@@ -102,13 +102,14 @@ const addFolderApp = (data) => {
       const option = {
         n_id: id,
         ...data,
+        favo:false,
       };
       if (!appModalList.value[1].list.includes(data)) {
         appModalList.value[1].list.push(option);
       }
     } else {
       if (appModalList.value[1].list.includes(data)) {
-        appModalList.value[1].list.push(data);
+        appModalList.value[1].list.push({...data,favo:false,});
       }
     }
     message.success('应用添加成功');
