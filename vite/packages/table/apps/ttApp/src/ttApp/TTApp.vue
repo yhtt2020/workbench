@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { useRegisterCard } from "../register/card";
+import { useRegisterCard } from "../register";
+import { useInstallTTApp } from "../hooks";
 const test = ref(true);
 const emits = defineEmits(["close"]);
 const onClose = () => {
@@ -24,18 +25,9 @@ const registerCard = (id: string) => {
 };
 
 const installTTApp = async (id: string) => {
-  let path = await tsbApi.dialog.showOpenDialog({
-    title: "选择",
-    message: "请选择文件",
-    multiple: "true",
-    properties: ["openFile", "multiSelections"],
-  });
-
-  let res = tsbApi.ttapp.install(path[0], (data) => {
-    console.log("data :>> ", data);
-  });
-  console.log("installTTApp res :>> ", res);
+  useInstallTTApp();
 };
+
 const uninstallTTApp = (id: string) => {
   tsbApi.ttapp.uninstall("SjjL", (data) => {
     console.log("data :>> ", data);
