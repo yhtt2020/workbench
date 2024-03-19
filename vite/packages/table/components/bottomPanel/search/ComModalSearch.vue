@@ -11,18 +11,30 @@
         "
         placeholder="搜索"
         :maxlength="10"
-        allow-clear
+        :allow-clear="false"
         v-model:value="searchValue"
         @change="changeSearchValue()"
       >
-        <xt-ify-icon
-          class="absolute"
-          icon="fluent:search-20-filled"
-          size="20"
-        />
+        <template #suffix>
+          <xt-ify-icon
+            v-if="searchValue === ''"
+            class="absolute right-3 xt-text-2"
+            icon="fluent:search-20-filled"
+            size="20" @click="changeSearchValue()"
+          />
+          <xt-ify-icon
+            v-else
+            icon="fluent:dismiss-16-regular"
+            size="16"
+            class="absolute right-3 xt-text-2"
+            @click="searchValue = ''"
+          ></xt-ify-icon>
+        </template>
       </a-input>
+
+
       <div class="font-14 flex items-center">
-        <div>打开方式：</div>
+        <div class="xt-font xt-text-2 font-14">网站打开方式：</div>
         <a-select
           v-model:value="browserType"
           class="xt-bg"

@@ -11,7 +11,7 @@
           :menus="menuList"
           @contextmenu="(currentItem = item), (currentIndex = index)"
         >
-          <div class="flex items-center flex-col justify-center">
+          <div class="flex items-center flex-col justify-center" @click="openApp(item)">
             <img
               :src="item.icon"
               style="width: 64px; height: 64px"
