@@ -13,6 +13,7 @@
     <div
       class="text-xs truncate xt-text-2"
       style="width: 90%;text-align: left;"
+      :style="{textAlign:props.layout === 'rows' ? 'center' : 'left'}"
       :class="textClass"
     >
       {{ item.name }}
@@ -27,6 +28,7 @@ import { rowOption, columnOption } from "./options";
 // props
 const props = defineProps({
   item: {},
+  layout:'rows'
 });
 const img = ref();
 const src = ref(props.item.icon);
