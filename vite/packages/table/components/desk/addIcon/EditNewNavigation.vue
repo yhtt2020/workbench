@@ -115,6 +115,9 @@ import 'animate.css'
 import { storeToRefs } from 'pinia';
 import {position} from './hook/defaultData'
 import { completeTask } from '../../../apps/task/task'
+import _ from 'lodash-es'
+import { useFileConversionIcon } from '../../../ui/hooks/useDataConversion'
+import { nanoid } from 'nanoid';
 
 import AddDesk from './components/AddDesk.vue'
 import DropDown from './components/DropDown.vue'
@@ -249,7 +252,6 @@ const menus = ref([
         label:'主导航',
         newIcon:'fluent:tablet-16-regular',
         callBack: () => {
-          console.log('主导航')
           addMoreIcon('foot','主导航')
         }
       },
@@ -257,7 +259,6 @@ const menus = ref([
         label:'左侧导航栏',
         newIcon:'fluent:panel-left-contract-16-regular',
         callBack: () => {
-          console.log('左侧导航栏')
           addMoreIcon('left','左侧导航栏')
         }
       },
@@ -265,7 +266,6 @@ const menus = ref([
         label:'右侧导航栏',
         newIcon:'fluent:panel-right-contract-16-regular',
         callBack: () => {
-          console.log('右侧导航栏')
           addMoreIcon('right','右侧导航栏')
         }
       }
@@ -398,7 +398,24 @@ const addIcon = (item: object | undefined) => {
       message.success('添加成功');
     }
   } else {
-    emit('addIcon', item);
+    if(currentDeskId.value === defaultTitle.value.id){
+      emit('addIcon', item);
+    } else {
+      const target = desks.value.find((i) => i.id === defaultTitle.value.id);
+      if (target) {
+        const card = _.cloneDeep(item);
+        const i = useFileConversionIcon(card)
+        const id = nanoid(6)
+        target.cards.push({
+          name:"myIcons",
+          customData:{
+            iconList:[{...i}]
+          },
+          id
+        })
+      }
+    }
+    
     message.success('添加成功');
   }
 }
@@ -416,6 +433,7 @@ const checkNav = (nav,item) => {
 // 预览
 const addMultiple = () => {
   previewFlag.value = true
+  folderIcons.value = multipleList.value
 }
 
 // 预览后
