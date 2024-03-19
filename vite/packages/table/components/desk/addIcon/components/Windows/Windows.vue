@@ -59,7 +59,6 @@ const addType = (list: string[]) => {
 // 修改索引
 const onClick = (index: number) => {
     clickIndex.value = index
-    console.log(filterList.value)
 }
 
 // 筛选图标列表
@@ -70,13 +69,13 @@ const filterList = computed( () => {
             return tableApp.value
             break;
         case 'app':
-            return tableApp.value.filter((item) => {apps.includes(item.ext)})
+            return tableApp.value.filter((item) => apps.includes(item.ext))
             break;
         case 'docx':
             return tableApp.value.filter((item) => doc.includes(item.ext))
             break;
         case 'other':
-            return tableApp.value.filter((item) => !item.value.endsWith('.exe') && !doc.includes(item.ext))
+            return tableApp.value.filter((item) => !apps.includes(item.ext) && !doc.includes(item.ext))
             break;
         default:
             return tableApp.value

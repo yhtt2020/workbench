@@ -68,6 +68,7 @@
               <CustomIcon v-if="iconIndex === 'CustomIcon'" @addIcon="addIcon"></CustomIcon>
               <!-- 以文件夹形式添加,预览 -->
               <xt-preview v-if="previewFlag" v-model="previewFlag" @ok="addFolderIcon"></xt-preview>
+              <!-- <Preview v-if="previewFlag" v-model="previewFlag" @ok="addFolderIcon"></Preview> -->
               <!-- 添加到桌面 -->
               <AddDesk v-if="deskFlag" :list="multipleList" @close="deskFlag=false"></AddDesk>
             </teleport>
@@ -102,7 +103,13 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, watch, defineAsyncComponent,onBeforeUnmount,onMounted, computed } from 'vue'
+import { 
+  ref, 
+  watch, 
+  defineAsyncComponent,
+  onBeforeUnmount,
+  onMounted, 
+  computed } from 'vue'
 import {message} from 'ant-design-vue'
 import 'animate.css'
 import { storeToRefs } from 'pinia';
@@ -112,6 +119,7 @@ import { completeTask } from '../../../apps/task/task'
 import AddDesk from './components/AddDesk.vue'
 import DropDown from './components/DropDown.vue'
 import LeftMenu from '../../../apps/favorites/components/LeftMenu.vue';
+import Preview from './components/Preview.vue';
 
 import { useNavigationStore } from '../navigationBar/navigationStore';
 import { navStore } from '../../../store/nav';
@@ -178,6 +186,24 @@ const navMap = ref({
   'right': rightNavigationList.value
 })
 
+// 判断是否开启导航栏
+const nav = computed(() => {
+  return {
+    'foot':navigationToggle.value[2],
+    'left':navigationToggle.value[0],
+    'right':navigationToggle.value[1],
+    "desktop": true,
+  }
+})
+// 提示是否开启导航栏
+const obj = computed(() => {
+  return {
+    'foot': () => {navigationToggle.value[2] = true},
+    'left': () => {navigationToggle.value[0] = true},
+    'right': () => {navigationToggle.value[1] = true},
+  }
+})
+
 // export interface EditType {
 //   isFolder: boolean
 // }
@@ -215,6 +241,36 @@ const menus = ref([
       unCheck()
     },
   },
+  {
+    label:'添加到导航栏',
+    newIcon:"fluent:tablet-16-regular",
+    children:[
+      {
+        label:'主导航',
+        newIcon:'fluent:tablet-16-regular',
+        callBack: () => {
+          console.log('主导航')
+          addMoreIcon('foot','主导航')
+        }
+      },
+      {
+        label:'左侧导航栏',
+        newIcon:'fluent:panel-left-contract-16-regular',
+        callBack: () => {
+          console.log('左侧导航栏')
+          addMoreIcon('left','左侧导航栏')
+        }
+      },
+      {
+        label:'右侧导航栏',
+        newIcon:'fluent:panel-right-contract-16-regular',
+        callBack: () => {
+          console.log('右侧导航栏')
+          addMoreIcon('right','右侧导航栏')
+        }
+      }
+    ]
+  }
 ])
 
 // 用于在多选情况下收藏夹内容，兼容 ---- 只用于收藏夹
@@ -230,6 +286,35 @@ const unCheck = () => {
       item.check = false
     }
   })
+}
+
+// 右键菜单导航栏添加图标
+const addMoreIcon = (bar:String,tip:String) => {
+  const _addIcon = () => {
+    multipleList.value.forEach((item) => {
+      navMap.value[bar].unshift(item)
+    })
+    message.success('添加成功')
+    isMultiple.value = false
+    multipleList.value = []
+  }
+  if(!nav.value[bar]){
+    window.$ui.confirm(
+      `当前${tip}没有开启，是否选择开启导航栏`,
+      '',
+      {
+        ok:() => {
+          obj.value[bar]()
+          _addIcon()
+        },
+        no:() => {
+          multipleList.value = []
+        }
+      }
+    )
+  } else {
+    _addIcon()
+  }
 }
 
 // 修改多选状态
@@ -391,26 +476,13 @@ watch(
 watch(
   () => selectNav.value,
   (newVal,oldVal) => {
-    // 判断是否开启导航栏
-    const nav = {
-      'foot':navigationToggle[2],
-      'left':navigationToggle[0],
-      'right':navigationToggle[1],
-      "desktop": true,
-    }
-    // 提示是否开启导航栏
-    const obj = {
-      'foot': () => {navigationToggle.value[2] = true},
-      'left': () => {navigationToggle.value[0] = true},
-      'right': () => {navigationToggle.value[1] = true},
-    }
-    if(!nav[newVal]){
+    if(!nav.value[newVal]){
       window.$ui.confirm(
         `当前${defaultTitle.value.name}没有开启，是否选择开启导航栏`,
         '',
         {
           ok:() => {
-            obj[newVal]()
+            obj.value[newVal]()
           },
           no:() => {
             selectNav.value = oldVal
@@ -425,6 +497,8 @@ watch(
 // 防止退出后再次打开，还是多选状态
 onBeforeUnmount(() => {
   isMultiple.value = false
+  selectNav.value = '' // 重置导航栏
+  multipleList.value = [] // 重置多选 
 })
 </script>
 <style lang='scss' scoped></style>

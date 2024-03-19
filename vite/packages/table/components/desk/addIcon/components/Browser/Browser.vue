@@ -1,7 +1,5 @@
 <template>
     <div class="flex w-full h-full " style="overflow:hidden;" @wheel.stop>
-        <!-- <LeftMenu @changeFolder="changeFolder" @refresh="refresh">
-        </LeftMenu> -->
         <WebList 
             class="w-full h-full" 
             @refresh="refresh" 
@@ -35,8 +33,13 @@
           allow-clear
           v-model:value="rename">
         </a-input>
-        <xt-button @click="rename = tmpName" :radius="10" :w="40" :h="40" class="ml-3 xt-main-bg">
-            <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="20" />
+        <xt-button 
+            @click="rename = tmpName" 
+            :radius="10" 
+            :w="40" 
+            :h="40" 
+            class="ml-3 xt-main-bg" 
+            icon="fluent:arrow-clockwise-16-regular">
         </xt-button>
       </div>
     </xt-modal>
@@ -44,8 +47,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, computed, onMounted, toRefs } from 'vue'
-import { nanoid } from 'nanoid'
+import { ref , computed , toRefs } from 'vue'
 import { message } from 'ant-design-vue'
 import { storeToRefs } from 'pinia';
 
@@ -53,7 +55,6 @@ import { favoStore } from '../../../../../apps/favorites/store'
 import { useIconStore } from '../../store'
 
 import WebList from './WebList.vue';
-import LeftMenu from '../../../../../apps/favorites/components/LeftMenu.vue';
 
 const favo = favoStore()
 const { isFavorites, allList, folderList, folderIndex, browserList, updateTime, folderIcons } = storeToRefs(favo)
@@ -135,20 +136,8 @@ const rightMenu = computed(() => {
                 message.success('复制内容成功')
             }
         },
-        {
-            label:'添加到导航栏',
-            newIcon:'fluent:star-20-regular', 
-            children:[
-            ]
-        },
         ...menus.value
     ]
-})
-
-const rightMenus = computed(() => {
-    return {
-        
-    }
 })
 
 // 加载数据

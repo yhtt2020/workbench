@@ -12,7 +12,7 @@
     </div>
     <div
       class="text-xs truncate xt-text-2"
-      style="width: 90%"
+      style="width: 90%;text-align: left;"
       :class="textClass"
     >
       {{ item.name }}
@@ -78,7 +78,6 @@ onMounted(() => {
   //   };
   // }
 });
-
 watch(
   () => data.value.customSize,
   () => {
