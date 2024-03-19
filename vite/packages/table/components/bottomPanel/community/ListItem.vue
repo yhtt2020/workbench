@@ -51,6 +51,7 @@ import browser from "../../../js/common/browser";
 import { useRouter, useRoute } from "vue-router";
 
 import AddFolderEmpty from "../empty/AppFolderEmpty.vue";
+import { message } from "ant-design-vue";
 
 const communityNav = communityNavStore();
 const { appModalList } = storeToRefs(communityNav);
@@ -207,6 +208,7 @@ const openApp = (data) => {
 const removeItem = (data) => {
   const index = appModalList.value[1]?.list?.indexOf(data);
   appModalList.value[1]?.list?.splice(index, 1);
+  message.success("应用移除成功");
 };
 
 // 取消收藏

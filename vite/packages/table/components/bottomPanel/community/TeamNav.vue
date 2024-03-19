@@ -179,6 +179,7 @@ const teamNavData = computed(() => {
 const deleteNav = (data) => {
   const index = appModalList.value[1]?.list?.indexOf(data);
   appModalList.value[1]?.list?.splice(index, 1);
+  message.success('应用移除成功')
 };
 // 添加
 const createNav = (data) => {
@@ -192,6 +193,7 @@ const createNav = (data) => {
     const index = appModalList.value[1]?.list?.indexOf(data);
     if (index === -1) {
       appModalList.value[1]?.list?.push(data);
+      message.success('应用添加成功');
     }
   }
 };

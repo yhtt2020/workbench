@@ -60,7 +60,8 @@ const addFolder = (evt) => {
     });
     appModalList.value = updateList;
     folderVisible.value = false;
-    folderName.value = '';
+    message.success("文件夹更新成功");
+    folderName.value = "";
   } else {
     if (folderName.value !== "") {
       const data = {
@@ -76,9 +77,9 @@ const addFolder = (evt) => {
         appModalList.value.push(data);
       }
       folderVisible.value = false;
+      message.success("文件夹创建成功");
       folderName.value = "";
-    } 
-    else {
+    } else {
       message.warning("文件名称不能为空");
     }
   }

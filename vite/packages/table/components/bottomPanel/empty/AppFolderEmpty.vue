@@ -111,6 +111,7 @@ const addFolderApp = (data) => {
         appModalList.value[1].list.push(data);
       }
     }
+    message.success('应用添加成功');
   }
 };
 </script>
