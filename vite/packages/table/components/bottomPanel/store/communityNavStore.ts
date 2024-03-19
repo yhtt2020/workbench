@@ -3,8 +3,6 @@ import { defineStore } from "pinia";
 // @ts-ignore
 export const communityNavStore = defineStore("communityNav", {
   state: () => ({
-    // 团队导航数据
-    teamNavList: [],
     // 文件应用排序
     layOut: "rows",
     // 应用模式数据结构
@@ -19,7 +17,7 @@ export const communityNavStore = defineStore("communityNav", {
         name: "全部",
         type: "all",
         rename: null,
-        list:[],
+        list: [],
       },
     ],
     // 应用模式下的下标
@@ -37,7 +35,6 @@ export const communityNavStore = defineStore("communityNav", {
     strategies: [
       {
         paths: [
-          "teamNavList",
           "layOut",
           "appModalList",
           "appFolderIndex",

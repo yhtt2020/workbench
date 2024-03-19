@@ -12,7 +12,7 @@
     <template #navEmpty>
       <TeamEmpty @close="closeNav" />
     </template>
-    <template #customRightMenu>
+    <!-- <template #customRightMenu>
       <xt-dropdown :buttonVisible="false" :placement="'bottomRight'">
         <template #sendIcon>
           <xt-ify-icon icon="fluent:line-horizontal-3-20-filled"></xt-ify-icon>
@@ -33,7 +33,7 @@
           </template>
         </div>
       </xt-dropdown>
-    </template>
+    </template> -->
   </Folder>
 </template>
 
@@ -45,6 +45,7 @@ import {
 } from "../../../apps/folder/src/components/options";
 import { storeToRefs } from "pinia";
 import { communityNavStore } from "../store/communityNavStore";
+import { message } from "ant-design-vue";
 
 import Folder from "../../../apps/folder/src/Folder.vue";
 import TeamEmpty from "../empty/TeamEmpty.vue";
@@ -53,7 +54,7 @@ import TeamEmpty from "../empty/TeamEmpty.vue";
 const emit = defineEmits(["close"]);
 
 const communityNav = communityNavStore();
-const { teamNavList, layOut, settingEnable,settingType } = storeToRefs(communityNav);
+const { layOut, settingType, appModalList } = storeToRefs(communityNav);
 const { proxy } = getCurrentInstance();
 
 const navBar = ref({
@@ -63,38 +64,10 @@ const navBar = ref({
   isDel: true,
   hierarchy: true,
   close: true,
-  customRight: true,
+  customRight: false,
 });
 const headerTitle = ref("网址导航");
 const teamFolderRef = ref(null);
-const dropList = ref([
-  {
-    icon: "fluent:app-folder-16-regular",
-    name: "应用模式",
-    fn: () => {
-      window.$ui.confirm(
-        "使用「应用模式」",
-        "切换到「应用模式」，将为你保留当前已经添加的网站和应用。",
-        {
-          type: "warning",
-          ok: () => {
-            settingType.value = "app";
-            proxy.$bus.emit("openAppVisible");
-            closeNav();
-          },
-          noText: "取消",
-        }
-      );
-    },
-  },
-  {
-    icon: "fluent:settings-16-regular",
-    name: "设置",
-    fn: () => {
-      teamFolderRef.value.openSetVisible();
-    },
-  },
-]);
 
 const layOutIcon = computed(() => {
   if (layOut.value === "rows") {
@@ -105,10 +78,11 @@ const layOutIcon = computed(() => {
 });
 
 const navList = computed(() => {
-  const filterList = teamNavList.value.filter((item) => {
-    return item !== null;
-  });
-  return filterList;
+  return appModalList.value[1]?.list;
+  // const filterList = teamNavList.value.filter((item) => {
+  //   return item !== null;
+  // });
+  // return filterList;
 });
 
 const teamNavData = computed(() => {
@@ -139,6 +113,32 @@ const teamNavData = computed(() => {
           } else {
             layOut.value = "rows";
           }
+        },
+      },
+      {
+        newIcon: "fluent:app-folder-16-regular",
+        title: "应用模式",
+        fn: () => {
+          window.$ui.confirm(
+            "使用「应用模式」",
+            "切换到「应用模式」，将为你保留当前已经添加的网站和应用。",
+            {
+              type: "warning",
+              ok: () => {
+                settingType.value = "app";
+                proxy.$bus.emit("openAppVisible");
+                closeNav();
+              },
+              noText: "取消",
+            }
+          );
+        },
+      },
+      {
+        newIcon: "fluent:settings-16-regular",
+        title: "设置",
+        fn: () => {
+          teamFolderRef.value.openSetVisible();
         },
       },
     ],
@@ -177,18 +177,22 @@ const teamNavData = computed(() => {
 
 // 删除
 const deleteNav = (data) => {
-  const index = teamNavList.value.findIndex((item) => {
-    return item.name === data.name;
-  });
-  teamNavList.value.splice(index, 1);
+  const index = appModalList.value[1]?.list?.indexOf(data);
+  appModalList.value[1]?.list?.splice(index, 1);
 };
 // 添加
 const createNav = (data) => {
-  const index = teamNavList.value.findIndex((item) => {
-    return item.name === data.name;
-  });
-  if (index === -1) {
-    teamNavList.value.push(data);
+  if (
+    data.value === "commun" ||
+    data.value === "control" ||
+    data.value === "setting"
+  ) {
+    message.warning("该应用不支持添加");
+  } else {
+    const index = appModalList.value[1]?.list?.indexOf(data);
+    if (index === -1) {
+      appModalList.value[1]?.list?.push(data);
+    }
   }
 };
 
