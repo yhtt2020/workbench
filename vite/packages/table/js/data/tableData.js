@@ -162,11 +162,71 @@ export default {
       "event": "favorites"
     },
     {
-      type: 'systemApp',
+      type: 'folder',
       icon: '/logo/efficiency.svg',
       name: '效率助手',
       tab:'work',
       event: 'work',
+      children:[
+        { 
+          type: 'systemApp', 
+          icon: '/logo/efficiency.svg', 
+          name: '效率助手', 
+          bg: '', 
+          isBg: false, 
+          ext: '', 
+          mode: 'app', 
+          value: 'work' 
+        },
+        { 
+          type: 'systemApp', 
+          icon: '/logo/directive.svg', 
+          name: '快捷指令',  
+          bg: '', 
+          isBg:false, 
+          ext: '',  
+          mode: 'app', 
+          value: 'deck' 
+        },
+        { 
+          type: 'systemApp', 
+          icon: '/logo/shortCut.svg', 
+          name: '快捷键',  
+          bg: '', 
+          isBg:false,
+          ext: '',
+          mode: 'app', 
+          value: 'shortcutIndex' 
+        },
+        { 
+          type: 'systemApp', 
+          icon: '/logo/ai.svg', 
+          name: 'AI助手',  
+          bg: '', 
+          isBg:false, 
+          ext: '', 
+          mode: 'app', 
+          value: 'ai' 
+        },
+        { 
+          type: 'systemApp', 
+          icon: '/logo/clipboard.svg', 
+          name: '剪切板',  
+          bg: '', 
+          isBg:false,  
+          mode: 'app', 
+          value: 'clipboard' 
+        },
+        { 
+          type: 'systemApp', 
+          icon: '/logo/memorandum.svg', 
+          name: '备忘录',  
+          bg: '', 
+          isBg:false, 
+          mode: 'app', 
+          value: 'note' 
+        },
+      ]
     },
     {
       type: 'systemApp',

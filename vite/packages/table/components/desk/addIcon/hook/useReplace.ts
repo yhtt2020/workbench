@@ -1,4 +1,5 @@
 // 统一替换图标字段
+import { nanoid } from "nanoid"
 export const useReplace = (list) => {
     const arr = list.map((item) => {
         return {
@@ -12,6 +13,7 @@ export const useReplace = (list) => {
             mode: item.type === 'lightApp' ? 'link' : 'app',
             ext: item.ext || '',
             slot:item.slot || '',
+            id:nanoid(6),
         }
     })
     arr.forEach(item => {

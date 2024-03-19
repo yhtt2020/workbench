@@ -95,6 +95,7 @@ export default {
           newIcon:'fluent:copy-20-regular',
           callBack: async () => {
             require('electron').clipboard.writeText(this.itemTmp.url)
+            console.log(this.itemTmp.url)
             message.success('复制内容成功')
           }
         },
@@ -176,7 +177,15 @@ export default {
   },
 
   computed:{
-    ...mapWritableState(favoStore, ['isFavorites', 'allList', 'folderList', 'folderIndex', 'browserList', 'updateTime', 'searchValue', 'folderIcons']),
+    ...mapWritableState(favoStore, 
+      ['isFavorites', 
+        'allList', 
+        'folderList', 
+        'folderIndex', 
+        'browserList', 
+        'updateTime', 
+        'searchValue', 
+        'folderIcons']),
     ...mapWritableState(useWidgetStore, ['edit']),
     ...mapWritableState(cardStore, ['desks', 'addCard']),
     // 过滤出制定数组
@@ -279,7 +288,6 @@ export default {
       for(let n in this.browserList){
         arrTmp.push(n)
       }
-
       await tsbApi.system.getBrowserBookmark(arrTmp, (data)=>{
         this.updateTime = new Date().getTime()
         this.folderList = []

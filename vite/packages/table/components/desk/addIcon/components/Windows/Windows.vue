@@ -13,19 +13,26 @@
             {{ item.name }}
         </xt-button>
     </div>
-    <IconList :list="filterList" info="桌面图标" @clickItem="addIcon"></IconList>
+    <IconList :list="list" info="桌面图标" @clickItem="addIcon"></IconList>
+    <Empty v-if="list.length === 0"></Empty>
 </template>
 
 <script setup lang='ts'>
 import { ref, onMounted,computed } from 'vue'
 import IconList from '../IconList.vue';
+import Empty from '../Empty.vue';
 import { mergeData } from '../../../../../ui/hooks/useDataConversion';
 import {localFiles,doc,apps} from '../../hook/defaultData'
 import { useReplace } from '../../hook/useReplace';
+import { useFilterList } from '../../hook/useFilterList';
 
 const tableApp = ref<string[]>([])
 
 const emit = defineEmits(['addIcon'])
+
+const props = defineProps({
+    value: String
+})
 
 // 索引
 const clickIndex = ref(0)
@@ -52,8 +59,6 @@ const addType = (list: string[]) => {
 // 修改索引
 const onClick = (index: number) => {
     clickIndex.value = index
-    const list = tableApp.value.filter((item) => { apps.includes(item.ext);})
-    console.log(filterList.value,list)
 }
 
 // 筛选图标列表
@@ -64,13 +69,13 @@ const filterList = computed( () => {
             return tableApp.value
             break;
         case 'app':
-            return tableApp.value.filter((item) => {apps.includes(item.ext)})
+            return tableApp.value.filter((item) => apps.includes(item.ext))
             break;
         case 'docx':
             return tableApp.value.filter((item) => doc.includes(item.ext))
             break;
         case 'other':
-            return tableApp.value.filter((item) => !item.value.endsWith('.exe') && !doc.includes(item.ext))
+            return tableApp.value.filter((item) => !apps.includes(item.ext) && !doc.includes(item.ext))
             break;
         default:
             return tableApp.value
@@ -82,6 +87,11 @@ const filterList = computed( () => {
 const addIcon = (item) => {
     emit('addIcon',item)
 }
+
+// 搜索后列表
+const list = computed(() => {
+    return useFilterList(filterList.value,props.value)
+})
 
 
 </script>

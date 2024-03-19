@@ -5,7 +5,7 @@
             <div class="mt-4 text-center xt-text-2">{{ menu.info }}</div> 
         </div>
     </div>
-    <div class="flex flex-wrap justify-center" style="gap: 24px;">
+    <div class="flex flex-wrap" style="gap: 24px;" :class="classItem">
         <Icon 
             :item="item" 
             @click="choose(item)" 
@@ -23,7 +23,8 @@ import Icon from './Icon.vue'
 
 const props = defineProps({
     menu: Object,
-    className: String
+    className: String,  // 文字类
+    classItem: String,  // 按钮类
 })
 
 const { menu,className } = toRefs(props)

@@ -1,10 +1,12 @@
 <template>
-    <div class="flex flex-col items-center w-full h-full">
+    <div class="flex flex-col items-center justify-center w-full h-full">
         <Item 
+            classItem="max-w-[705px] justify-start"
             :menu="menu"  
             @choose="chooseIcon">
         </Item>
         <Item 
+            classItem="justify-center"
             className="mt-8"
             :menu="teamMenu" 
             @choose="chooseTeam">
@@ -23,13 +25,11 @@ const emit = defineEmits(['choose'])
 // 选择图标类型回调
 const chooseIcon = (item) => {
     emit('choose',item)
-    console.log('i just choose you',item)
 }
 
 // 选择团队图标类型回调
 const chooseTeam = (item) => {
     emit('choose',item)
-    console.log('i just choose you',item)
 }
 
 </script>
