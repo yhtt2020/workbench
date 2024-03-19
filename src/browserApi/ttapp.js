@@ -14,10 +14,7 @@ const ttapp = {
   install(zipPath, cb) {
     let cbId = require("nanoid").nanoid();
     ipc.once(cbId, (event, args) => {
-      if (cb) {
-        console.log("安装回调", args);
-        cb(args);
-      }
+      cb && cb(args);
     });
     return send("install", {
       zipPath,
