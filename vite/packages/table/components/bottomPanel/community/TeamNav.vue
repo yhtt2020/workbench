@@ -7,9 +7,10 @@
     :expand="{ disabled: true }"
     :auto="true"
     :secondary="true"
+    ref="teamFolderRef"
   >
     <template #navEmpty>
-      <TeamEmpty @close="closeNav"/>
+      <TeamEmpty @close="closeNav" />
     </template>
     <template #customRightMenu>
       <xt-dropdown :buttonVisible="false" :placement="'bottomRight'">
@@ -49,10 +50,10 @@ import Folder from "../../../apps/folder/src/Folder.vue";
 import TeamEmpty from "../empty/TeamEmpty.vue";
 // import AppModal from "./AppModal.vue";
 
-const emit = defineEmits(['close']);
+const emit = defineEmits(["close"]);
 
 const communityNav = communityNavStore();
-const { teamNavList, layOut,settingEnable } = storeToRefs(communityNav);
+const { teamNavList, layOut, settingEnable,settingType } = storeToRefs(communityNav);
 const { proxy } = getCurrentInstance();
 
 const navBar = ref({
@@ -65,28 +66,32 @@ const navBar = ref({
   customRight: true,
 });
 const headerTitle = ref("网址导航");
+const teamFolderRef = ref(null);
 const dropList = ref([
   {
     icon: "fluent:app-folder-16-regular",
     name: "应用模式",
     fn: () => {
-      window.$ui.confirm('使用「应用模式」','切换到「应用模式」，将为你保留当前已经添加的网站和应用。',{
-        type: "warning",
-        ok:()=>{
-          proxy.$bus.emit("openAppVisible");
-          closeNav();
-        },
-        noText:'取消'
-      });
+      window.$ui.confirm(
+        "使用「应用模式」",
+        "切换到「应用模式」，将为你保留当前已经添加的网站和应用。",
+        {
+          type: "warning",
+          ok: () => {
+            settingType.value = "app";
+            proxy.$bus.emit("openAppVisible");
+            closeNav();
+          },
+          noText: "取消",
+        }
+      );
     },
   },
   {
     icon: "fluent:settings-16-regular",
     name: "设置",
     fn: () => {
-      // proxy.$bus.emit("openAppVisible");
-      // settingEnable.value = true;
-      // closeNav();
+      teamFolderRef.value.openSetVisible();
     },
   },
 ]);
@@ -117,7 +122,7 @@ const teamNavData = computed(() => {
         newIcon: "fluent:add-16-filled",
         title: "添加图标",
         fn: () => {
-          proxy.$bus.emit("openEditNav");
+          teamFolderRef.value.editVisible = true;
         },
       },
       {
@@ -145,7 +150,7 @@ const teamNavData = computed(() => {
           ifyIcon: "fluent:add-16-filled",
           tip: "添加应用",
           fn: () => {
-            proxy.$bus.emit("openEditNav");
+            teamFolderRef.value.editVisible = true;
           },
         },
         {
@@ -182,14 +187,14 @@ const createNav = (data) => {
   const index = teamNavList.value.findIndex((item) => {
     return item.name === data.name;
   });
-  if(index === -1){
+  if (index === -1) {
     teamNavList.value.push(data);
   }
 };
 
-const closeNav = () =>{
-  emit('close');
-}
+const closeNav = () => {
+  emit("close");
+};
 
 onMounted(() => {
   proxy.$bus.on("getApp", (data) => {

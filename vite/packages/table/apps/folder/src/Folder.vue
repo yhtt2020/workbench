@@ -582,6 +582,12 @@ function handleClick(e) {
     // console.log("123 :>> ", 123);
   }
 }
+
+// 打开分组设置
+const openSetVisible = () =>{
+  setVisible.value = true;
+}
+
 onUnmounted(() => {
   window.removeEventListener("click", handleClick);
 });
@@ -610,6 +616,11 @@ onMounted(async () => {
     editVisible.value = false;
   })
 });
+
+defineExpose({
+  openSetVisible,
+  editVisible,
+})
 </script>
 
 <style lang="scss" scoped>

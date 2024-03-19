@@ -133,7 +133,6 @@ const communityNavList = computed(() => {
   }
 });
 
-
 const openNav = (event) =>{
   if(settingType.value === 'app'){
     proxy.$bus.emit("openAppVisible");

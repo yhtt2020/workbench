@@ -2,7 +2,7 @@
   <template v-if="list.length !== 0">
     <div class="grid-container">
       <div
-        v-for="(item,index) in list"
+        v-for="(item, index) in list"
         class="grid-item xt-bg-2 rounded-xl pointer flex items-center justify-center relative"
         @click="openApp(item)"
       >
@@ -11,7 +11,7 @@
           :menus="menuList"
           @contextmenu="(currentItem = item), (currentIndex = index)"
         >
-          <div class="flex items-center flex-col justify-center ">
+          <div class="flex items-center flex-col justify-center">
             <img
               :src="item.icon"
               style="width: 64px; height: 64px"
@@ -24,8 +24,12 @@
               >{{ item.name }}</span
             >
           </div>
-          <div class="absolute  top-1 right-1" v-if="false">
-            <xt-ify-icon icon="fluent:star-16-filled" size="20" style="color: var(--warning);"></xt-ify-icon>
+          <div class="absolute top-1 right-1" v-if="false">
+            <xt-ify-icon
+              icon="fluent:star-16-filled"
+              size="20"
+              style="color: var(--warning)"
+            ></xt-ify-icon>
           </div>
         </xt-menu>
       </div>
@@ -38,15 +42,23 @@
 </template>
 
 <script setup>
-import { computed, ref, toRefs } from "vue";
+import { computed, getCurrentInstance, ref, toRefs } from "vue";
 import { storeToRefs } from "pinia";
 import { communityNavStore } from "../store/communityNavStore";
 import { startApp } from "../../../ui/hooks/useStartApp";
+import { favoStore } from "../../../apps/favorites/store";
+import browser from "../../../js/common/browser";
+import { useRouter, useRoute } from "vue-router";
 
 import AddFolderEmpty from "../empty/AppFolderEmpty.vue";
 
 const communityNav = communityNavStore();
 const { appModalList } = storeToRefs(communityNav);
+const favo = favoStore();
+const { browserType } = storeToRefs(favo);
+
+const router = useRouter();
+const { proxy } = getCurrentInstance();
 
 const props = defineProps({
   list: {
@@ -110,16 +122,12 @@ const detailMenus = ref([
     name: "删除",
     color: "var(--error)",
     callBack: () => {
+      removeItem(currentItem.value);
       // window.$ui.confirm('','',{
       //   ok:()=>{
 
       //   }
       // });
-      const n_id = currentItem.value.n_id;
-      const index = appModalList.value[1]?.list.findIndex((item) => {
-        return item.n_id === n_id;
-      });
-      appModalList.value[1]?.list?.splice(index, 1);
     },
   },
 ]);
@@ -132,11 +140,11 @@ const likeMenu = ref([
     },
   },
   {
-    newIcon:'fluent:star-16-filled',
+    newIcon: "fluent:star-16-filled",
     name: "取消收藏",
-    callBack:()=>{
+    callBack: () => {
       removeFolder(currentItem.value);
-    }
+    },
   },
   {
     newIcon: "fluent:desktop-16-regular",
@@ -169,30 +177,54 @@ const menuList = computed(() => {
 // 添加收藏
 const addFolder = () => {
   const id = currentItem.value?.id;
-  const index = appModalList.value[0]?.list.findIndex((item)=>{ return item.id === id });
-  if(index === -1){
+  const index = appModalList.value[0]?.list.findIndex((item) => {
+    return item.id === id;
+  });
+  if (index === -1) {
     appModalList.value[0]?.list.push(currentItem.value);
   }
 };
 // 打开应用模式中应用
 const openApp = (data) => {
-  startApp(data.type, data.value, data.router);
+  const type = data.type;
+  // 默认通过浏览器方式打开
+  if (type === "default") {
+    if (browserType.value === "system") {
+      browser.openInUserSelect(data.url);
+    } else if (browserType.value == "thisky") {
+      browser.openInInner(data.url);
+    } else if (browserType.value == "work") {
+      browser.openInTable(data.url);
+    }
+    proxy.$bus.emit("closeModal");
+  } else {
+    startApp(data.type, data.value);
+    proxy.$bus.emit("closeModal");
+  }
+};
+
+// 删除数据
+const removeItem = (data) => {
+  const index = appModalList.value[1]?.list?.indexOf(data);
+  appModalList.value[1]?.list?.splice(index, 1);
+};
+
+// 取消收藏
+const removeFolder = (data) => {
+  const id = data?.id;
+  const index = appModalList.value[0]?.list.findIndex((item) => {
+    return item.id === id;
+  });
+  appModalList.value[0]?.list?.splice(index, 1);
 };
 
 // 是否收藏
-const isHide = (index) =>{
-  // const arr1 = appModalList.value[0]?.list;
-  // const arr2 = appModalList.value[1]?.list;
-  // console.log('测试',list.value.includes(arr2[index]));
-  // return list.value.includes(arr2[index]);
-}
-
-// 取消收藏
-const removeFolder = (data) =>{
-  const id = data?.id;
-  const index = appModalList.value[0]?.list.findIndex((item)=>{ return item.id === id });
-  appModalList.value[0]?.list?.splice(index,1);
-}
+// const isHide = (index) => {
+//   // const arr1 = appModalList.value[0]?.list;
+//   // const arr2 = appModalList.value[1]?.list;
+//   // console.log('测试',list.value.includes(arr2[index]));
+//   // return list.value.includes(arr2[index]);
+// };
 </script>
 
 <style lang="scss" scoped>

@@ -66,6 +66,7 @@ watch(()=>settingType.value,(newVal)=>{
   if(newVal === 'component'){
     window.$ui.confirm('使用「组件模式」','切换到组件模式后，所有网站和应用都会合并到一个分组中。',{
       ok:()=>{
+        settingType.value = "component";
         proxy.$bus.emit("closeModal");
       },
       noText:'取消',

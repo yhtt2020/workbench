@@ -81,18 +81,21 @@
           </div>
         </template>
         <template v-else>
-          <Setting @close="appModelVisible = false,settingEnable = false;"/>
+          <Setting
+            @close="(appModelVisible = false), (settingEnable = false)"
+          />
         </template>
       </div>
     </div>
   </xt-modal>
+
   <CreateFolder ref="appCreateFolder" />
 
   <EditNewNavigation
     v-if="editVisible"
     :isFolder="true"
     @setQuick="editVisible = false"
-    @addIcon="addFile"
+    @addIcon="addAppFile"
   />
 </template>
 
@@ -107,11 +110,13 @@ import Search from "../search/ComModalSearch.vue";
 import RightListDeatil from "./RightListDeatil.vue";
 import EditNewNavigation from "../../desk/addIcon/EditNewNavigation.vue";
 import Setting from "../setting/CommunitySetting.vue";
+import { message } from "ant-design-vue";
 
 const { proxy } = getCurrentInstance();
 
 const communityNav = communityNavStore();
-const { appModalList, appFolderIndex,settingEnable } = storeToRefs(communityNav);
+const { appModalList, appFolderIndex, settingEnable } =
+  storeToRefs(communityNav);
 
 const appModelVisible = ref(false);
 const editVisible = ref(false);
@@ -142,27 +147,30 @@ const editList = ref([
 ]);
 
 // 添加数据
-const addFile = (data) => {
-  // 添加类型、 全部 、收藏
-  const type = appModalList.value[appFolderIndex.value].type;
-  if(type === undefined){
-    const option = {
-      n_id:appModalList.value[appFolderIndex.value].id,
-      ...data,
-    }
-    appModalList.value[1].list.push(option);
-    editVisible.value = false;
-  }
-  else if(type === 'all'){
-    const index = appModalList.value[appFolderIndex.value].list.findIndex(
-      (item) => {
-        return String(item.name) === String(data.name);
+const addAppFile = (data) => {
+  if (data.value === "commun" || data.value === "control") {
+    message.warning("该应用不支持添加");
+  } else {
+    // 添加类型、 全部 、收藏
+    const type = appModalList.value[appFolderIndex.value].type;
+    if (type === undefined) {
+      const option = {
+        n_id: appModalList.value[appFolderIndex.value].id,
+        ...data,
+      };
+      appModalList.value[1].list.push(option);
+      editVisible.value = false;
+    } else if (type === "all") {
+      const index = appModalList.value[appFolderIndex.value].list.findIndex(
+        (item) => {
+          return String(item.name) === String(data.name);
+        }
+      );
+      if (index === -1) {
+        appModalList.value[appFolderIndex.value].list.push(data);
       }
-    );
-    if (index === -1) {
-      appModalList.value[appFolderIndex.value].list.push(data);
+      editVisible.value = false;
     }
-    editVisible.value = false;
   }
 };
 // 选择切换文件数据
@@ -179,9 +187,9 @@ onMounted(() => {
   proxy.$bus.on("openAppVisible", () => {
     appModelVisible.value = true;
   });
-  proxy.$bus.on("closeModal",()=>{
-    appModelVisible.value  = false;
-  })
+  proxy.$bus.on("closeModal", () => {
+    appModelVisible.value = false;
+  });
 });
 </script>
 

@@ -27,7 +27,7 @@ export const communityNavStore = defineStore("communityNav", {
     // 开启设置模式
     settingEnable: false,
     // 社群导航-应用模式-设置模式-模式选择 (默认选中应用模式)
-    settingType: "app",
+    settingType: "component",
   }),
 
   actions: {},
