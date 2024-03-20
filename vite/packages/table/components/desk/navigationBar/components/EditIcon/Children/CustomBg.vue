@@ -1,35 +1,42 @@
 <template>
     <div class="w-[452px]">
-        <!-- {{ props.editItem.default }} -->
-        <div class="flex items-center w-full p-4 mb-4 xt-bg-2 rounded-xl">
-            <div style="width: 56px; height: 56px;flex-shrink: 0;" v-if="!props.editItem.isBg" :style="{background:props.editItem.isBg ? props.editItem.bg : 'var(--primary-bg)'}"
-            class="relative flex items-center justify-center rounded-xl pointer" @click="modelValue=!modelValue">
-                <a-avatar :size="52" shape="square" :src="props.editItem.icon" ></a-avatar>
-            </div>
-            <div v-else style="width: 56px; height: 56px;flex-shrink: 0;" :style="{background:props.editItem.isBg ? props.editItem.bg : 'var(--primary-bg)'}"
-            class="relative flex items-center justify-center overflow-hidden rounded-xl pointer" @click="modelValue=!modelValue">
-                <a-avatar :size="36" shape="square" :src="props.editItem.icon" :style="[props.editItem.color]" ></a-avatar>
-            </div>
-            <!-- {{ imgBg  }} -->
-            <div class="flex flex-col justify-start ml-5">
-                <div class="text-sm xt-text">点击图标选择合适的icon、emoji，或上传自定义图片。</div>
-                <!-- {{ props.editItem.color }} -->
-                <div class="flex justify-start mt-1" @click="reset">
-                    <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="16" class="reset"></xt-new-icon>
-                    <div class="ml-2 text-sm reset pointer">重置图标</div>
+        <!-- 图标与名称预览 -->
+        <div class="flex items-center justify-center mb-4">
+            <div class="flex flex-col items-center justify-center">
+                <div class="relative overflow-hidden rounded-lg w-[72px] h-[72px] flex items-center justify-center pointer"
+                    :style="{background:editItem.isBg ? editItem.bg : 'var(--primary-bg)'}">
+                    <a-avatar 
+                        :size="52" 
+                        shape="square" 
+                        :src="editItem.icon" 
+                        :style="[editItem.color]" >
+                    </a-avatar>
                 </div>
+                <div class="mt-2 text-sm text-center xt-text">{{ editItem.name }}</div>
             </div>
+            
         </div>
-        <xt-selectIcon :defaultIcon="defaultIcon" v-model="modelValue" @getAvatar="getAvatar"
-            :isUpload="true"></xt-selectIcon>
-        <!-- <CustomIconBg 
-            :color="props.editItem.bg"
-            :colorSwitch="navigationStore.colorSwitch"
-            @update:colorSwitch="navigationStore.colorSwitch = !navigationStore.colorSwitch" 
-            @changeBg="changeBg"  
-            :tip="'通用的图标背景色，仅支持选了icon和emoji的图标背景。'"/> -->
+        <!-- 修改图标和名称 -->
+        <div class="p-4 mb-4 xt-bg-2 rounded-xl">
+          <xt-option-info
+            title="图标和名称"
+            info="支持自定图标和名称。"
+            icon="fluent:arrow-clockwise-16-regular"
+            @onIconClick="reset"
+          />
+          <xt-option-icon
+            :key="editItem.name"
+            v-model:icon="editItem.icon"
+            v-model:input="editItem.name"
+            @cb="getAvatar"
+          />
+        </div>
+        <!-- 图标背景颜色选择 -->
         <xt-option-box>
-            <xt-option-info title="自定义图标背景色" isSwitch="true" v-model:switch="navigationStore.colorSwitch"
+            <xt-option-info 
+                title="自定义图标背景色" 
+                isSwitch="true" 
+                v-model:switch="navigationStore.colorSwitch"
                 info="通用的图标背景色，仅支持选了icon和emoji的图标背景。" />
             <xt-option-color v-if="navigationStore.colorSwitch" v-model:color="props.editItem.bg" @cb="changeBg" />
         </xt-option-box>
@@ -37,41 +44,39 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, computed,onMounted,watch } from 'vue'
+import { ref,watch } from 'vue'
 import { useNavigationStore } from '../../../navigationStore'
-import {renderIcon} from '../../../../../../js/common/common'
-import { navStore } from '../../../../../../store/nav';
-const useNavStore = navStore()
 const navigationStore = useNavigationStore()
-const modelValue = ref(false)
-const defaultIcon = ref('')
-const bgColor = ref('')
 const props=defineProps({
     editItem:Object
 })
 // 回调改变背景颜色
 const changeBg = (value) => {
     if(props.editItem.isBg){
-        bgColor.value = value
         props.editItem.bg = value
     }
 
 }
 // 获取图标
 const getAvatar = (value) => {
-    props.editItem.icon = value
+    // props.editItem.icon = value
     props.editItem.isBg = true
     getImgColor(props.editItem)
 }
 // 重置
-// const isReset = ref(false)
 const reset = () => {
-    props.editItem.icon = props.editItem.default.icon
-    bgColor.value = ''
-    props.editItem.bg = props.editItem.default.bg
-    props.editItem.isBg = false
-    props.editItem.color = ''
-    // isReset.value = true
+    const editItem : any = props.editItem
+    // console.log(editItem.default)
+    // 图标
+    editItem.icon = editItem.default.icon
+    // 背景颜色
+    editItem.bg = editItem.default.bg
+    // 是否显示背景颜色
+    editItem.isBg = false
+    // 图标颜色
+    editItem.color = ''
+    // 名称
+    editItem.name = editItem.default.name
 }
 // 判断图标类型
 const getImgColor = (item) => {
@@ -83,19 +88,6 @@ const getImgColor = (item) => {
         }
     }
 }
-// 图片颜色解析
-const imgBg = computed(() => {
-  const img = props.editItem.icon
-  if(img.includes('color=#')){
-    const bg = img.slice(-7)
-    return {
-      filter: `drop-shadow(${bg} 80px 0)`,
-      transform: 'translateX(-80px)',
-    };
-  }else{
-    return
-  }
-});
 
 // 防止icon变化，导致背景颜色变化，导致图标颜色变化
 watch(()=>props.editItem.icon,(newV,oldV)=>{
