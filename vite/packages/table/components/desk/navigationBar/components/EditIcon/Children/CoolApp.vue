@@ -6,13 +6,13 @@
             <div class="mt-2 mb-2 text-sm xt-text-2">选择应用打开方式，进入主应用或以窗口模式打开；部分应用在窗口模式下功能较为精简。</div>
             <RadioTab :navList="appModel" v-model:selectType="defaultModel" :bgColor="'xt-bg'" :height="40"/>
         </div>
-        <EditName :editItem="props.editItem"></EditName>
+        <!-- <EditName :editItem="props.editItem"></EditName> -->
     </div>
 </template>
 
 <script setup lang='ts'>
 import { ref, reactive } from 'vue'
-import EditName from './EditName.vue'
+// import EditName from './EditName.vue'
 import RadioTab from '../../../../../RadioTab.vue';
 const appModel=ref([{title:"主应用模式",name:'main'},{title:'窗口模式',name:'window'}])
 const defaultModel=ref({title:'主应用模式',name:'main'})
