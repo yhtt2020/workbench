@@ -12,7 +12,7 @@
 <script setup lang='ts'>
 import { ref, reactive,computed,watch } from 'vue'
 import { useNavigationStore } from '../../navigationStore'
-import SettingModal from '../SettingModal.vue' 
+import SettingModal from '../SettingModal.vue'
 import Custom from './Children/Custom.vue';
 import CustomBg from './Children/CustomBg.vue';
 import Common from './Children/Common.vue';
