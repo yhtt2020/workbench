@@ -39,7 +39,7 @@
     </div> -->
     <div
       v-if="isTitle"
-      class="h-5 mx-auto text-center truncate xt-text"
+      class="h-6 mx-auto text-center truncate xt-text"
       :style="[textSize]"
       :data-index="index"
     >
