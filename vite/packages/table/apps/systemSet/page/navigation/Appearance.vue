@@ -2,17 +2,17 @@
     <div class="w-full h-full">
         <xt-option-box>
             <xt-option-info title="导航栏尺寸" icon="fluent:arrow-clockwise-16-regular"
-                @onIconClick="navAttribute.navSize = 100" />
+                @onIconClick="resetSize" />
             <xt-option-slider v-model:slider="navAttribute.navSize" :min="0" :max="300" />
         </xt-option-box>
         <xt-option-box>
             <xt-option-info title="导航栏圆角" icon="fluent:arrow-clockwise-16-regular"
-                @onIconClick="navAttribute.navRadius = 18" />
+                @onIconClick="resetRadius" />
             <xt-option-slider v-model:slider="navAttribute.navRadius" :min="0" :max="80" />
             <hr />
             <xt-option-info title="图标圆角" icon="fluent:arrow-clockwise-16-regular"
-                @onIconClick="iconRadius = 12" />
-            <xt-option-slider v-model:slider=" iconRadius" :min="0" :max="52" />
+                @onIconClick="resetIcon" />
+            <xt-option-slider v-model:slider=" navigationStore.iconRadius" :min="0" :max="52" />
         </xt-option-box>
         <xt-option-box>
             <xt-option-info 
@@ -66,5 +66,16 @@ const changeBg = (value) => {
     });
 };
 
+const resetSize = () => {
+    navAttribute.value.navSize = 100
+}
+
+const resetRadius = () => {
+    navAttribute.value.navRadius = 18
+}
+
+const resetIcon = () => {
+    iconRadius.value = 12
+}
 </script>
 <style lang='scss' scoped></style>
