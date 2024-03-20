@@ -67,6 +67,9 @@
         >
           <TeamNav @close="teamNavVisible = false" />
         </div>
+
+        <!-- 社群搜索 -->
+
       </div>
     </AutoHide>
   </xtMixMenu>
@@ -269,6 +272,9 @@ export default {
       // 团队导航
       teamNavVisible: false,
       teamNavLeft: 100,
+      // 社群搜索
+      comSearchVisible:false,
+      comSearchLeft:100,
     };
   },
   props: {},
@@ -328,6 +334,11 @@ export default {
       this.teamNavVisible = !this.teamNavVisible;
       this.teamNavLeft = evt.clientX - 274 < 0 ? 0 : evt.clientX - 274;
     });
+    // 触发社群搜索弹窗
+    this.$bus.on("openComSearch",(evt)=>{
+      this.comSearchVisible = true;
+      // this.comSearchLeft
+    })
   },
   computed: {
     ...mapWritableState(appStore, ["userInfo", "settings", "lvInfo", "simple"]),
