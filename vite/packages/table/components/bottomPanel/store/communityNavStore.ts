@@ -25,6 +25,8 @@ export const communityNavStore = defineStore("communityNav", {
     settingEnable: false,
     // 社群导航-应用模式-设置模式-模式选择 (默认选中应用模式)
     settingType: "component",
+    // 开启自定义图标背景色
+    switchColor:false,
   }),
 
   actions: {},
@@ -39,6 +41,7 @@ export const communityNavStore = defineStore("communityNav", {
           "appFolderIndex",
           "settingEnable",
           "settingType",
+          "switchColor"
         ],
         storage: localStorage,
       },

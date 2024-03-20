@@ -23,7 +23,7 @@
         :itemStyle="{ 'border-radius': '6px' }"
       />
     </template>
-    
+
     <div class="h-2/3">
       <div class="flex justify-center mb-3">
         <template v-if="currentTab == 'attribute'">
@@ -91,7 +91,7 @@
             @onIconClick="refreshName"
           />
           <a-input
-            style="width: 100%; border-radius: 8px;"
+            style="width: 100%; border-radius: 8px"
             class="xt-bg"
             allowClear
             v-model:value="customName"
@@ -111,6 +111,19 @@
             v-model:input="customName"
           />
         </div>
+
+        <div class="p-4  xt-bg-2 rounded-xl">
+          <xt-option-info
+            title="自定义图标背景色"
+            isSwitch="true"
+            v-model:switch="switchColor"
+            info="默认使用通用设置，不支持已经上传自定义图片的图标。"
+          />
+          <xt-option-color
+          v-if="switchColor"
+          v-model:color="color"
+          @cb="changeBg" />
+        </div>
       </div>
     </div>
   </xt-modal>
@@ -128,10 +141,15 @@ import {
 } from "vue";
 import { storeToRefs } from "pinia";
 import { message } from "ant-design-vue";
+import { appearanceColorOptions } from "../../widgets/myIcons/set/options";
+import { communityNavStore } from "../store/communityNavStore";
 
 import LocalApp from "../../widgets/myIcons/set/LocalApp.vue";
 
 const { proxy } = getCurrentInstance();
+
+const communityNav = communityNavStore();
+const { switchColor } = storeToRefs(communityNav);
 
 const props = defineProps({
   modelValue: {},
@@ -142,13 +160,13 @@ const props = defineProps({
     default: "999",
   },
 });
-
 const { modelValue } = toRefs(props);
 
 const visible = ref(false);
 const customName = ref("");
 const currentIcon = ref("");
 const customUrl = ref("");
+const color = ref("");
 
 // 控制tab
 const currentTab = ref("attribute");
@@ -216,6 +234,12 @@ const save = () => {
 const updateApp = (data) => {
   console.log("更新", data);
 };
+
+// 修改自定义图标背景色
+const changeBg = (data) =>{
+  modelValue.value.isBg = true;
+  modelValue.value.bg = data;
+}
 
 onMounted(() => {
   nextTick(() => {});
