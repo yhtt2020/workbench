@@ -1,5 +1,5 @@
 /**
- * 主进程的回调处理 ttapp.js
+ * 主进程回调 ipcHelper ttapp.js
  * @description 应该是主进程的回调处理
  */
 const ipcHelper = require("./ipcHelper");
