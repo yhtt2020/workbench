@@ -3,16 +3,16 @@
         <!-- 图标与名称预览 -->
         <div class="flex items-center justify-center mb-4">
             <div class="flex flex-col items-center justify-center">
-                <div class="relative overflow-hidden rounded-lg w-[52px] h-[52px] flex items-center justify-center"
+                <div class="relative overflow-hidden rounded-lg w-[72px] h-[72px] flex items-center justify-center pointer"
                     :style="{background:editItem.isBg ? editItem.bg : 'var(--primary-bg)'}">
                     <a-avatar 
-                        :size="42" 
+                        :size="52" 
                         shape="square" 
                         :src="editItem.icon" 
                         :style="[editItem.color]" >
                     </a-avatar>
                 </div>
-                <xt-text class="mt-2 text-sm text-center">{{ editItem.name }}</xt-text>
+                <div class="mt-2 text-sm text-center xt-text">{{ editItem.name }}</div>
             </div>
             
         </div>
