@@ -254,7 +254,7 @@ export const appStore = defineStore('appStore', {
      */
     finishWizard() {
       this.init = true;
-      localStorage.setItem('wizarded', String(true))
+      localStorage.setItem('wizarded', '1')
       this.agreeTest = true
 
     },
