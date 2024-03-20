@@ -69,6 +69,9 @@ watch(()=>settingType.value,(newVal)=>{
         settingType.value = "component";
         proxy.$bus.emit("closeModal");
       },
+      no:()=>{
+        settingType.value = "app";
+      },
       noText:'取消',
       okText:'确定'
     })

@@ -11,7 +11,10 @@
           :menus="menuList"
           @contextmenu="(currentItem = item), (currentIndex = index)"
         >
-          <div class="flex items-center flex-col justify-center" @click="openApp(item)">
+          <div
+            class="flex items-center flex-col justify-center"
+            @click="openApp(item)"
+          >
             <img
               :src="item.icon"
               style="width: 64px; height: 64px"
@@ -23,6 +26,9 @@
               style="max-width: 100px"
               >{{ item.name }}</span
             >
+            <span class="xt-text-2 text-center xt-font font-14">
+              <!-- {{ getFileTypeName(item) }} -->
+            </span>
           </div>
           <div class="absolute top-2 right-2" v-if="isHide(item)">
             <xt-button
@@ -49,6 +55,8 @@
   <template v-else>
     <AddFolderEmpty />
   </template>
+  
+  <EditIcon ref="editRef"  v-model="currentEditData"/>
 </template>
 
 <script setup>
@@ -59,9 +67,10 @@ import { startApp } from "../../../ui/hooks/useStartApp";
 import { favoStore } from "../../../apps/favorites/store";
 import browser from "../../../js/common/browser";
 import { useRouter, useRoute } from "vue-router";
+import { message } from "ant-design-vue";
 
 import AddFolderEmpty from "../empty/AppFolderEmpty.vue";
-import { message } from "ant-design-vue";
+import EditIcon from "../setting/EditIcon.vue";
 
 const communityNav = communityNavStore();
 const { appModalList } = storeToRefs(communityNav);
@@ -85,6 +94,8 @@ const { list, listType } = toRefs(props);
 // 当前子项数据
 const currentItem = ref(null);
 const currentIndex = ref(null);
+const editRef = ref(null);
+const currentEditData = ref('');
 
 // 右键菜单操作
 const detailMenus = ref([
@@ -99,7 +110,7 @@ const detailMenus = ref([
     newIcon: "fluent:star-16-regular",
     name: "添加到收藏",
     callBack: () => {
-      addFolder(currentItem.value);
+      addFolder(currentIndex.value);
     },
   },
   {
@@ -127,6 +138,9 @@ const detailMenus = ref([
   {
     newIcon: "fluent:compose-16-regular",
     name: "编辑",
+    callBack: () => {
+      editItem(currentItem.value);
+    },
   },
   {
     newIcon: "fluent:delete-16-regular",
@@ -147,7 +161,7 @@ const likeMenu = ref([
     newIcon: "fluent:open-16-regular",
     name: "打开",
     callBack: () => {
-      openApp(currentItem.value);
+      openApp(currentItem.value,'like');
     },
   },
   {
@@ -155,6 +169,7 @@ const likeMenu = ref([
     name: "取消收藏",
     callBack: () => {
       removeFolder(currentItem.value);
+      // removeFolder(currentIndex.value,'like');
     },
   },
   {
@@ -186,18 +201,14 @@ const menuList = computed(() => {
 });
 
 // 添加收藏
-const addFolder = (data) => {
-  const id = currentItem.value?.id;
-  const updateList = appModalList.value[1]?.list.map((item) => {
-    if (item.id === id) {
+const addFolder = (currentIndex) => {
+  const updateList = appModalList.value[1]?.list.map((item,index) => {
+    if (currentIndex === index) {
       return { ...item, favo: true };
-    } else if (item.name === data.name) {
-      return { ...item, favo: true };
-    } else {
+    }  else {
       return item;
     }
   });
-
   appModalList.value[1].list = updateList;
 };
 // 打开应用模式中应用
@@ -212,12 +223,12 @@ const openApp = (data) => {
     } else if (browserType.value == "work") {
       browser.openInTable(data.url);
     }
-    proxy.$bus.emit("closeModal");
+    // proxy.$bus.emit("closeModal");
   } else if (type === "coolApp" || type === "lightApp") {
     router.push({ name: "app", params: { ...data } });
   } else {
     startApp(data.type, data.value);
-    proxy.$bus.emit("closeModal");
+    // proxy.$bus.emit("closeModal");
   }
 };
 
@@ -230,14 +241,14 @@ const removeItem = (data) => {
 
 // 取消收藏
 const removeFolder = (data) => {
-  const updateList = appModalList.value[1]?.list.map((item) => {
-    if (item.id === data.id) {
+  const updateList = appModalList.value[1]?.list.map((item,index) => {
+    const removeIndex = appModalList.value[1]?.list.indexOf(data);
+     if (removeIndex ===  index) {
       return { ...item, favo: false };
     } else {
       return item;
     }
   });
-
   appModalList.value[1].list = updateList;
 };
 
@@ -249,6 +260,19 @@ const isHide = (data) => {
     return false;
   }
 };
+
+// 编辑
+const editItem = (data) => {
+  currentEditData.value = data;
+  editRef.value.openEditIcon();
+};
+
+// 获取文件类型
+const getFileTypeName = (data) => {
+  // console.log('类型1',data.type);
+  // console.log('类型2',data.ext);
+  // if (data.type === "default") return "网页";
+};
 </script>
 
 <style lang="scss" scoped>
@@ -259,6 +283,7 @@ const isHide = (data) => {
 }
 .grid-item {
   width: 133px;
-  height: 133px;
+  height: auto;
+  padding: 17px 0;
 }
 </style>

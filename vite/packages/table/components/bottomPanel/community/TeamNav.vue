@@ -12,28 +12,6 @@
     <template #navEmpty>
       <TeamEmpty @close="closeNav" />
     </template>
-    <!-- <template #customRightMenu>
-      <xt-dropdown :buttonVisible="false" :placement="'bottomRight'">
-        <template #sendIcon>
-          <xt-ify-icon icon="fluent:line-horizontal-3-20-filled"></xt-ify-icon>
-        </template>
-        <div class="xt-bg-2 rounded-xl p-2" style="width: 180px">
-          <template v-for="item in dropList">
-            <div
-              class="px-3 py-2 flex items-center pointer rounded-lg w-full xt-hover"
-              @click="item.fn"
-            >
-              <xt-ify-icon
-                :icon="item.icon"
-                size="20"
-                class="mr-3"
-              ></xt-ify-icon>
-              <span class="xt-font xt-text font-16">{{ item.name }}</span>
-            </div>
-          </template>
-        </div>
-      </xt-dropdown>
-    </template> -->
   </Folder>
 </template>
 
@@ -129,6 +107,9 @@ const teamNavData = computed(() => {
                 settingType.value = "app";
                 closeNav();
               },
+              no:()=>{
+                settingType.value = "component";
+              },
               noText: "取消",
             }
           );
@@ -207,6 +188,7 @@ onMounted(() => {
     createNav(data);
     proxy.$bus.emit("closeNav");
   });
+  
 });
 </script>
 

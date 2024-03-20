@@ -46,7 +46,7 @@ const allDetailList = computed(() => {
 });
 // 指定的详情
 const appointDetail = computed(() => {
-  const n_id = appModalList.value[detailIndex.value].id;
+  const n_id = appModalList.value[detailIndex.value]?.id;
   const list = appModalList.value[1].list.filter((item) => {
     return item.n_id === n_id;
   });
@@ -54,8 +54,8 @@ const appointDetail = computed(() => {
 });
 // 获取type
 const type = computed(() => {
-  if (appModalList.value[detailIndex.value].type) {
-    return appModalList.value[detailIndex.value].type;
+  if (appModalList.value[detailIndex.value]?.type) {
+    return appModalList.value[detailIndex.value]?.type;
   } else {
     return "other";
   }

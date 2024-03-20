@@ -138,7 +138,7 @@ const rightMenu = ref([
           noText: "取消",
           ok: () => {
             appModalList.value.splice(currentDel.value, 1);
-            message.success('应用移除成功')
+            message.success("应用移除成功");
           },
           type: "warning",
         }
@@ -149,12 +149,15 @@ const rightMenu = ref([
 
 // 获取数量
 const getNum = (item) => {
-  if(item.type === 'like'){
-    const list = appModalList.value[1]?.list?.filter((filterItem)=>{ return filterItem.favo === true });
+  if (item.type === "like") {
+    const list = appModalList.value[1]?.list?.filter((filterItem) => {
+      return filterItem?.favo === true;
+    });
     return list?.length;
-  }
-  else {
-    const list = appModalList.value[1]?.list?.filter((filterItem)=>{ return filterItem.n_id === item.id });
+  } else {
+    const list = appModalList.value[1]?.list?.filter((filterItem) => {
+      return filterItem?.n_id === item.id;
+    });
     return list?.length;
   }
 };
