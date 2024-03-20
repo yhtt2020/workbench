@@ -5,7 +5,7 @@
 const Base = require("./base");
 // const appModel = require("../../model/appModel");
 
-const useInstall = require("../ttApps/useInstall");
+const { useInstall, useWriteJson } = require("../ttApps/useInstall");
 const useUninstall = require("../ttApps/useUninstall");
 
 const { useSelect, useSelectAll } = require("../ttApps/useSelect");
@@ -24,6 +24,12 @@ class TTApp extends Base {
       let res = await useInstall(args.zipPath);
       event.reply(args.cbId, res);
     });
+    // 写入json
+    this.on("writeJson", async (event, args) => {
+      console.log('args :>> ', args);
+      let res = await useWriteJson(args.id, args.data);
+      event.reply(args.cbId, res);
+    });
     // 卸载
     this.on("uninstall", async (event, args) => {
       let res = await useUninstall(args.id);
@@ -39,6 +45,7 @@ class TTApp extends Base {
       let res = await useSelectAll();
       event.reply(args.cbId, res);
     });
+
   }
 }
 

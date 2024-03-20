@@ -21,6 +21,17 @@ const ttapp = {
       cbId,
     });
   },
+  writeJson(id, data, cb) {
+    let cbId = require("nanoid").nanoid();
+    ipc.once(cbId, (event, args) => {
+      cb && cb(args);
+    });
+    return send("writeJson", {
+      id,
+      data,
+      cbId,
+    });
+  },
   uninstall(id, cb) {
     let cbId = require("nanoid").nanoid();
     ipc.once(cbId, (event, args) => {

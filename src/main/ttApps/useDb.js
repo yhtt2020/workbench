@@ -2,7 +2,6 @@
  * 二次封装db ttapp.js
  */
 const { SqlDb } = require("../../util/sqldb");
-const { nanoid } = require("nanoid");
 
 const sqlDb = new SqlDb();
 const ttAppModel = {

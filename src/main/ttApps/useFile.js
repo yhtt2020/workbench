@@ -6,8 +6,6 @@
 const extractZip = require("../../../js/main/zip.js");
 const { join } = require("path");
 const { promises } = require("fs");
-const fs = require("fs-extra");
-
 const fse = require("fs-extra");
 const electron = require("electron");
 
@@ -31,7 +29,7 @@ const file = {
    */
   async existsFolder(folderName) {
     let fileDir = file.pathJoin(folderName);
-    let res = await fs.pathExists(fileDir);
+    let res = await fse.pathExists(fileDir);
     return res;
   },
   /**
@@ -39,7 +37,7 @@ const file = {
    * @param folderName 要创建的文件夹名称
    */
   async createFolder(folderName) {
-    await fs.mkdirp(file.pathJoin(folderName));
+    await fse.mkdirp(file.pathJoin(folderName));
   },
   /**
    * 获取当前工作目录
@@ -57,7 +55,7 @@ const file = {
    * @return string
    */
   readFile(fileName, encoding = "utf-8") {
-    return fs.readFileSync(fileName, {
+    return fse.readFileSync(fileName, {
       encoding: encoding,
     });
   },
@@ -66,7 +64,7 @@ const file = {
    */
   async deleteFile(filePath) {
     try {
-     await fse.removeSync(file.pathJoin(filePath));
+      await fse.removeSync(file.pathJoin(filePath));
       return true;
     } catch (err) {
       console.error("Error deleting directory:", err);
@@ -106,15 +104,19 @@ const file = {
     }
     return join(file.getCurrentDir(), ...paths);
   },
+  /**
+   * 写入文件
+   */
+  async writeFile(filePath, data) {
+    try {
+      fse.writeFileSync(file.pathJoin(filePath), data);
+      return true;
+    } catch (err) {
+      console.error("Error writing file:", err);
+      return false;
+    }
+  },
+  /** */
 };
 
-/**
- * 路径拼接
- */
-function pathJoin(paths) {
-  if (typeof paths == "string") {
-    return join(file.getCurrentDir(), paths);
-  }
-  return join(file.getCurrentDir(), ...paths);
-}
 module.exports = file;

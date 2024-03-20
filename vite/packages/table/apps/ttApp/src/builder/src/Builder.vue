@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import Item from "./component/Item.vue";
 interface FormData {
   name: string;
+  description: string;
   card: {
     main: string;
     customSize: string;
@@ -11,6 +12,7 @@ interface FormData {
 
 const formData = reactive<FormData>({
   name: "",
+  description: "",
   card: {
     main: "",
     customSize: "2x2",
@@ -18,17 +20,33 @@ const formData = reactive<FormData>({
 });
 const onFinish = (values: any) => {
   console.log("Success:", values);
+  let data = {
+    name: formData.name,
+    description: formData.description,
+    modules: {
+      card: formData.card,
+    },
+  };
+  let dataJson = JSON.stringify(data);
+  console.log("data.value :>> ", dataJson);
+  tsbApi.ttapp.writeJson("XKqb", dataJson);
 };
 
 const onFinishFailed = (errorInfo: any) => {
   console.log("Failed:", errorInfo);
 };
+
 const config = [
   {
     type: "input",
     label: "应用名称",
     key: "name",
     rules: [{ required: true, message: "必填!" }],
+  },
+  {
+    type: "input",
+    label: "描述",
+    key: "description",
   },
   {
     type: "object",
@@ -49,7 +67,6 @@ const config = [
     ],
   },
 ];
-const test = () => {};
 </script>
 <template>
   {{ formData }}

@@ -6,11 +6,12 @@ const {
   existsFolder,
   createFolder,
   unzipFile,
-  readFile,
   deleteFile,
-  pathJoin,
-  getCurrentDir,
+  writeFile,
 } = require("./useFile.js");
+
+const fse = require("fs-extra");
+
 const { nanoid } = require("nanoid");
 
 const ttAppModel = require("./useDb.js");
@@ -20,12 +21,9 @@ const getFileExtension = (filePath) => {
   const fileExtension = filePath.split(".").pop() || "";
   return compressedTypes.includes(fileExtension);
 };
-const tempPath = function (p) {
-  return require("path").join(require("electron").app.getPath("userData"), p);
-};
-module.exports = async function useInstall(filePath) {
+const useInstall = async (filePath) => {
   console.log("1、开始注册ttApp :>> ");
-  const id = nanoid(4);
+
   // 2 处理文件类型
   console.log("2、处理文件类型 :>> ");
   if (!getFileExtension(filePath)) {
@@ -38,13 +36,12 @@ module.exports = async function useInstall(filePath) {
     };
   }
 
-  // let folderType = "ttapp_test"; // 临时文件夹名称
-  let folderType = "apps"; // 临时文件夹名称
-
   // 3 处理解压文件路径
-  let folderName = [folderType, id]; // 临时文件夹名称
-  // await createFolder(folderName);
-  console.log("3、创建文件路径 :>> ", pathJoin(folderName));
+  console.log("3、创建文件路径 :>> ");
+  const id = nanoid(4);
+  const folderType = "apps_test"; // 临时文件夹名称
+  const folderName = [folderType, id]; // 临时文件夹名称
+
   if (!(await existsFolder(folderName))) {
     console.log("3.1、文件夹不存在进行创建 :>> ");
     await createFolder(folderType);
@@ -76,54 +73,65 @@ module.exports = async function useInstall(filePath) {
       info: "缺失 " + checkFileRes.join(" , ") + " 文件",
     };
   }
-  // 6 判断manifest.json
-  console.log("6、判断manifest.json文件 :>> ");
-  let pathManifest = pathJoin([...folderName, "manifest.json"]);
-  let manifestRes = readFile(pathManifest);
-  manifestRes = JSON.parse(manifestRes);
-  // 6.1、manifest.json文件不是标准的json数据
-  if (typeof manifestRes !== "object") {
-    console.log("6.1、manifest.json文件不是标准的json数据 :>> ");
-    return {
-      status: 1,
-      code: 400,
-      data: "manifest.json文件不是json数据",
-    };
-  }
-  // 6.2、manifest.json文件缺少数据
-  // let manifestCheck = ["page", "key", "value"];
-  let manifestCheck = [];
-  let manifestCheckRes = [];
-  manifestCheck.forEach((key) => {
-    if (manifestRes[key] == undefined) {
-      manifestCheckRes.push(key);
-    }
-  });
-
-  if (manifestCheckRes.length > 0) {
-    console.log("6.1、manifest.json文件缺少数据 :>> ");
-    await deleteFile(folderName);
-    return {
-      status: 1,
-      code: 400,
-      data: "manifest.json文件缺少 " + manifestCheckRes.join(" , ") + " 数据",
-      info: "manifest.json文件缺少 " + manifestCheckRes.join(" , ") + " 数据",
-    };
-  }
-  // 7
-  let modules = {};
-  // console.log('manifestRes.modules :>> ', manifestRes.modules);
-  // for (const [key, value] of Object.entries(manifestRes.modules)) {
-  //   modules[key] = value.entry;
+  // // 6 判断manifest.json
+  // console.log("6、判断manifest.json文件 :>> ");
+  // let pathManifest = pathJoin([...folderName, "manifest.json"]);
+  // let manifestRes = readFile(pathManifest);
+  // manifestRes = JSON.parse(manifestRes);
+  // // 6.1、manifest.json文件不是标准的json数据
+  // if (typeof manifestRes !== "object") {
+  //   console.log("6.1、manifest.json文件不是标准的json数据 :>> ");
+  //   return {
+  //     status: 1,
+  //     code: 400,
+  //     data: "manifest.json文件不是json数据",
+  //   };
   // }
-  console.log("7、获取modules配置 :>> ", modules);
-  let modulesJson = JSON.stringify( manifestRes.modules);
+  // // 6.2、manifest.json文件缺少数据
+  // // let manifestCheck = ["page", "key", "value"];
+  // let manifestCheck = [];
+  // let manifestCheckRes = [];
+  // manifestCheck.forEach((key) => {
+  //   if (manifestRes[key] == undefined) {
+  //     manifestCheckRes.push(key);
+  //   }
+  // });
+
+  // if (manifestCheckRes.length > 0) {
+  //   console.log("6.1、manifest.json文件缺少数据 :>> ");
+  //   await deleteFile(folderName);
+  //   return {
+  //     status: 1,
+  //     code: 400,
+  //     data: "manifest.json文件缺少 " + manifestCheckRes.join(" , ") + " 数据",
+  //     info: "manifest.json文件缺少 " + manifestCheckRes.join(" , ") + " 数据",
+  //   };
+  // }
+  // 7
+  // let modules = {};
+  // console.log("7、获取modules配置 :>> ", modules);
+  // let modulesJson = JSON.stringify(manifestRes.modules);
 
   const ttAppData = {
     id,
-    modules: modulesJson,
+    modules: "",
   };
   // 7、实现注册
   let res = await ttAppModel.initDb(ttAppData);
-  console.log("7 res :>> ", res);
+  if (res) {
+    return id;
+  } else {
+    return false;
+  }
+};
+const useWriteJson = async (id, data) => {
+  console.log("id,data :>> ", id, data);
+  const folderType = "apps_test"; // 临时文件夹名称
+  const folderName = [folderType, id, "manifest.json"];
+  let res = await writeFile(folderName, data);
+  console.log("文件已成功写入", res);
+};
+module.exports = {
+  useInstall,
+  useWriteJson,
 };
