@@ -55,8 +55,8 @@
   <template v-else>
     <AddFolderEmpty />
   </template>
-  
-  <EditIcon ref="editRef"  v-model="currentEditData"/>
+
+  <EditIcon ref="editRef" v-model="currentEditData" />
 </template>
 
 <script setup>
@@ -95,7 +95,7 @@ const { list, listType } = toRefs(props);
 const currentItem = ref(null);
 const currentIndex = ref(null);
 const editRef = ref(null);
-const currentEditData = ref('');
+const currentEditData = ref("");
 
 // 右键菜单操作
 const detailMenus = ref([
@@ -110,7 +110,7 @@ const detailMenus = ref([
     newIcon: "fluent:star-16-regular",
     name: "添加到收藏",
     callBack: () => {
-      addFolder(currentIndex.value);
+      addFolder(currentItem.value);
     },
   },
   {
@@ -161,7 +161,7 @@ const likeMenu = ref([
     newIcon: "fluent:open-16-regular",
     name: "打开",
     callBack: () => {
-      openApp(currentItem.value,'like');
+      openApp(currentItem.value, "like");
     },
   },
   {
@@ -201,11 +201,12 @@ const menuList = computed(() => {
 });
 
 // 添加收藏
-const addFolder = (currentIndex) => {
-  const updateList = appModalList.value[1]?.list.map((item,index) => {
+const addFolder = (data) => {
+  const updateList = appModalList.value[1]?.list.map((item, index) => {
+    const currentIndex = appModalList.value[1]?.list.indexOf(data);
     if (currentIndex === index) {
       return { ...item, favo: true };
-    }  else {
+    } else {
       return item;
     }
   });
@@ -241,9 +242,9 @@ const removeItem = (data) => {
 
 // 取消收藏
 const removeFolder = (data) => {
-  const updateList = appModalList.value[1]?.list.map((item,index) => {
+  const updateList = appModalList.value[1]?.list.map((item, index) => {
     const removeIndex = appModalList.value[1]?.list.indexOf(data);
-     if (removeIndex ===  index) {
+    if (removeIndex === index) {
       return { ...item, favo: false };
     } else {
       return item;
