@@ -576,18 +576,9 @@ export default {
     handleMenu() {
       this.menuVisible = true;
     },
-    // 保存图标
-    save() {
-      if (this.edit.src.length === 0) return message.error("图标不能为空");
-      Object.keys(this.edit).forEach(
-        (k) => (this.customData.iconList[this.index][k] = this.edit[k])
-      );
-
-      message.success("保存成功");
-      this.settingVisible = false;
-    },
     // 适配新版保存图标
     closeSet() {
+      console.log('22222 :>> ', this.edit);
       this.customData.iconList[this.index] = {
         ...this.edit,
         open: {
@@ -600,7 +591,6 @@ export default {
         "      this.customData.iconList[this.index] :>> ",
         this.customData.iconList[this.index]
       );
-      message.success("保存成功");
       this.settingVisible = false;
     },
   },

@@ -112,23 +112,23 @@
           >
             <div v-if="!item.disabled" class="mr-1 header-right-icon">
               <!-- 右侧图标悬浮提示 -->
-            <a-tooltip :title="item.tip" :get-popup-container="getPopupContainer">
-
-
-              <xt-ify-icon
-                v-if="item.ifyIcon"
-                :icon="item.ifyIcon"
-                @click="item.fn"
-                :class="item.class"
-                size="20"
-              />
-              <xt-icon
-                v-else-if="item.icon"
-                :icon="item.icon"
-                @click="item.fn"
-                type=""
-                size="19"
-                w="20"
+              <a-tooltip
+                :title="item.tip"
+                :get-popup-container="getPopupContainer"
+              >
+                <xt-ify-icon
+                  v-if="item.ifyIcon"
+                  :icon="item.ifyIcon"
+                  @click="item.fn"
+                  :class="item.class"
+                  size="20" />
+                <xt-icon
+                  v-else-if="item.icon"
+                  :icon="item.icon"
+                  @click="item.fn"
+                  type=""
+                  size="19"
+                  w="20"
               /></a-tooltip>
             </div>
           </template>
@@ -304,6 +304,8 @@ const props = defineProps({
         customDel: false,
         // 开启后所有事件相关提示信息会进行输出
         debug: false,
+        // 是否禁用标题拖拽
+        disabledDrag: false,
       };
     },
   },
@@ -411,9 +413,7 @@ onBeforeMount(async () => {
     );
   }
 });
-onBeforeUnmount(()=>{
-
-})
+onBeforeUnmount(() => {});
 // emits 小组件事件回调
 /**
  * update:customSize 双向数据绑定customSize
@@ -603,6 +603,7 @@ const setCustomData = (key, data) => {
 };
 // 头部拖拽开始
 const titleDragStart = () => {
+  if (props.options.disabledDrag) return;
   proxy.$bus.emit("startAdjust");
 };
 // 左侧区域鼠标进入
