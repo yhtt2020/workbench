@@ -2,35 +2,39 @@
   <div class="w-full">
     <div class="h-16 flex items-center justify-between px-4">
       <!-- 搜索 -->
-      <a-input
-        class="h-8 xt-mask xt-text"
-        style="
-          width: 215px;
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          border-radius: 10px;
-        "
-        placeholder="搜索"
-        :maxlength="10"
-        :allow-clear="false"
-        v-model:value="searchValue"
-        @change="changeSearchValue()"
-      >
-        <template #suffix>
-          <xt-ify-icon
-            v-if="searchValue === ''"
-            class="absolute right-3 xt-text-2"
-            icon="fluent:search-20-filled"
-            size="20" @click="changeSearchValue()"
-          />
-          <xt-ify-icon
-            v-else
-            icon="fluent:dismiss-16-regular"
-            size="16"
-            class="absolute right-3 xt-text-2"
-            @click="searchValue = ''"
-          ></xt-ify-icon>
-        </template>
-      </a-input>
+      <div class="flex w-full">
+        <a-input
+          class="h-8 xt-mask xt-text"
+          style="
+            width: 215px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+          "
+          placeholder="搜索"
+          :maxlength="10"
+          :allow-clear="false"
+          v-model:value="searchValue"
+          @change="changeSearchValue()"
+        >
+          <template #suffix>
+            <xt-ify-icon
+              v-if="searchValue === ''"
+              class="absolute right-3 xt-text-2"
+              icon="fluent:search-20-filled"
+              size="20" @click="changeSearchValue()"
+            />
+            <xt-ify-icon
+              v-else
+              icon="fluent:dismiss-16-regular"
+              size="16"
+              class="absolute right-3 xt-text-2"
+              @click="searchValue = ''"
+            ></xt-ify-icon>
+          </template>
+        </a-input>
+
+        <xt-option-select class="select-container"   :border="false" ></xt-option-select>
+      </div>
 
 
       <div class="font-14 flex items-center">
@@ -122,4 +126,16 @@ const changeSearchValue = () => {
 .select {
   background: rgba(80, 139, 254, 0.2);
 }
+
+:deep(.select-container){
+  height:32px !important;
+  border-radius: 8px !important;
+  margin-left: 12px;
+  max-width: 120px !important;
+  background: var(--secondary-bg) !important;
+  & .ant-select-selection-item{
+    line-height: 32px !important;
+  }
+}
+
 </style>

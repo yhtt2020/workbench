@@ -6,10 +6,10 @@
     :mask="false"
     :index="600"
   >
-    <!-- <Drop >
-      @createFile=""
+    <!-- 外部网页链接拖拽 -->
+    <!-- <LinkDrop>
       
-    </Drop> -->
+    </LinkDrop> -->
 
     <div
       style="width: 1000px; height: 720px"
@@ -85,11 +85,11 @@
             </xt-scrollbar>
           </div>
         </template>
-        <template v-else>
+        <!-- <template v-else>
           <Setting
             @close="(appModelVisible = false), (settingEnable = false)"
           />
-        </template>
+        </template> -->
       </div>
     </div>
   </xt-modal>
@@ -116,7 +116,7 @@ import Search from "../search/ComModalSearch.vue";
 import RightListDeatil from "./RightListDeatil.vue";
 import EditNewNavigation from "../../desk/addIcon/EditNewNavigation.vue";
 import Setting from "../setting/CommunitySetting.vue";
-import Drop from "../../../apps/folder/src/components/Drop.vue";
+// import LinkDrop from "../drop/LinkDrop.vue";
 
 const { proxy } = getCurrentInstance();
 
@@ -138,11 +138,11 @@ const editList = ref([
       editVisible.value = true;
     },
   },
-  //  {
-  //   name:'从桌面、导航和分组中选择',
-  //   icon:'fluent:app-folder-16-regular',
-  //   fn:()=>{}
-  //  },
+   {
+    name:'从桌面、导航和分组中选择',
+    icon:'fluent:app-folder-16-regular',
+    fn:()=>{}
+   },
   {
     icon: "fluent:folder-16-regular",
     name: "添加文件夹",
