@@ -1,133 +1,65 @@
 <template>
-  <xt-modal
-    v-model="visible"
-    :footer="0"
-    @close="close"
-    :index="index"
-    :maskIndex="maskIndex"
-  >
-    <!-- 右侧头部 -->
+  <xt-modal v-model="visible" :footer="0" @close="close" :index="index" :mask="false">
     <template #header-right>
-      <xt-button @click="save" w="60" h="32" radius="8" type="theme">
-        保存
-      </xt-button>
+      <xt-button @click="save" w="60" h="32" radius="8" type="theme">保存</xt-button>
     </template>
-    <!-- 头部居中 -->
+
     <template #header-center>
-      <xt-tab
-        v-model="currentTab"
-        :list="TabList"
-        style="width: 168px"
-        class="p-1 xt-bg-t-2"
-        :boxStyle="{ 'border-radius': '10px' }"
-        :itemStyle="{ 'border-radius': '6px' }"
+      <xt-tab v-model="currentTab" :list="TabList" style="width: 168px" 
+       class="p-1 xt-bg-t-2"
+       :boxStyle="{ 'border-radius': '10px' }" :itemStyle="{ 'border-radius': '6px' }"
       />
     </template>
 
-    <div class="h-2/3">
-      <div class="flex justify-center mb-3">
+    <div style="height:auto;">
+      <div style="width: 452px" class="flex flex-col">
+        <!-- 属性 -->
         <template v-if="currentTab == 'attribute'">
-          <!-- 系统应用 -->
-          <div
-            class="flex items-center flex-col py-3 justify-center w-full icon-hover pointer"
-            style="width: 135px"
-            v-if="!isSystem"
-          >
-            <a-avatar :src="currentIcon" :size="64" shape="square"></a-avatar>
-            <span
-              class="xt-text-2 xt-font font-14 mt-2 truncate"
-              style="max-width: 100px"
-              >{{ modelValue.name }}</span
-            >
+          <div class="flex justify-center mb-3" style="zoom: 0.8" v-if="!isSystem">
+            <Icon v-if="visible" v-bind="edit" :edit="true"></Icon>
           </div>
-          <!-- 非系统应用 -->
-          <div
-            class="flex flex-col items-center justify-center w-full rounded-xl xt-bg-2 p-4"
-            v-else
-          >
-            <span class="xt-text font-16 xt-font"
-              >当前图标为「系统功能」类型。</span
-            >
+
+          <div class="flex flex-col items-center justify-center w-full mb-3 rounded-xl xt-bg-2 p-4" v-else>
+            <span class="xt-text font-16 xt-font">
+              当前图标为「系统功能」类型。
+            </span>
           </div>
+
+          <template v-if="!isSystem">
+            <div class="flex flex-col w-full rounded-xl xt-bg-2 p-4">
+              <span class="xt-text font-16 xt-font">图标链接</span>
+              <template v-if="edit.type === 'default'">
+                <a-input :spellcheck="false"  style="width: 100%; border-radius: 8px; margin: 12px 0"
+                 class="xt-bg" allowClear v-model:value="edit.url"
+                />
+              </template>
+
+              <template v-else>
+                <a-input :spellcheck="false"  style="width: 100%; border-radius: 8px; margin: 12px 0"
+                 class="xt-bg" allowClear v-model:value="edit.path" 
+                /> 
+                <LocalApp @onLocalApp="updateApp"></LocalApp>
+              </template> 
+            </div>
+          </template>
         </template>
+
         <template v-else>
-          <div
-            class="flex items-center flex-col py-3 justify-center w-full icon-hover pointer"
-            style="width: 135px"
-          >
-            <a-avatar :src="currentIcon" :size="64" shape="square"></a-avatar>
-            <span
-              class="xt-text-2 xt-font font-14 mt-2 truncate"
-              style="max-width: 100px"
-              >{{ modelValue.name }}</span
-            >
+          <div class="flex justify-center mb-3" style="zoom: 0.8" >
+            <Icon v-if="visible" v-bind="edit" :edit="true"></Icon>
           </div>
+          <div class="p-4 mb-4 xt-bg-2 rounded-xl">
+            <xt-option-info title="图标和名称" info="支持自定图标和名称。" icon="fluent:arrow-clockwise-16-regular"
+              @onIconClick="refreshIcon" />
+            <xt-option-icon v-model:icon="edit.src" v-model:input="edit.titleValue" />
+          </div>
+          <xt-option-from :options="appearanceColorOptions" :data="edit" />
         </template>
-      </div>
-      <div
-        style="width: 452px"
-        class="flex flex-col"
-        v-if="currentTab == 'attribute'"
-      >
-        <div
-          class="flex flex-col w-full rounded-xl xt-bg-2 p-4"
-          v-if="!isSystem"
-        >
-          <span class="xt-text font-16 xt-font">图标链接</span>
-          <a-input
-            style="width: 100%; border-radius: 8px; margin: 12px 0"
-            class="xt-bg"
-            allowClear
-            v-model:value="customUrl"
-          ></a-input>
-          <LocalApp @onLocalApp="updateApp"></LocalApp>
-        </div>
-
-        <div class="flex flex-col w-full rounded-xl xt-bg-2 p-4" v-else>
-          <xt-option-info
-            title="图标和名称"
-            info="修改当前引用图标名称"
-            icon="fluent:arrow-clockwise-16-regular"
-            @onIconClick="refreshName"
-          />
-          <a-input
-            style="width: 100%; border-radius: 8px"
-            class="xt-bg"
-            allowClear
-            v-model:value="customName"
-          ></a-input>
-        </div>
-      </div>
-      <div v-else style="width: 452px">
-        <div class="p-4 mb-4 xt-bg-2 rounded-xl">
-          <xt-option-info
-            title="图标和名称"
-            info="支持自定图标和名称。"
-            icon="fluent:arrow-clockwise-16-regular"
-            @onIconClick="refreshIcon"
-          />
-          <xt-option-icon
-            v-model:icon="currentIcon"
-            v-model:input="customName"
-          />
-        </div>
-
-        <div class="p-4  xt-bg-2 rounded-xl">
-          <xt-option-info
-            title="自定义图标背景色"
-            isSwitch="true"
-            v-model:switch="switchColor"
-            info="默认使用通用设置，不支持已经上传自定义图片的图标。"
-          />
-          <xt-option-color
-          v-if="switchColor"
-          v-model:color="color"
-          @cb="changeBg" />
-        </div>
       </div>
     </div>
   </xt-modal>
 </template>
+
 <script setup>
 import {
   ref,
@@ -136,41 +68,30 @@ import {
   onMounted,
   onBeforeUnmount,
   getCurrentInstance,
+  defineAsyncComponent,
   toRefs,
-  nextTick,
+  nextTick
 } from "vue";
 import { storeToRefs } from "pinia";
-import { message } from "ant-design-vue";
-import { appearanceColorOptions } from "../../widgets/myIcons/set/options";
-import { communityNavStore } from "../store/communityNavStore";
+import { myIcons } from "../../../store/myIcons";
 
+const Icon = defineAsyncComponent(() => import("../../widgets/myIcons/components/icon.vue"));
 import LocalApp from "../../widgets/myIcons/set/LocalApp.vue";
-
-const { proxy } = getCurrentInstance();
-
-const communityNav = communityNavStore();
-const { switchColor } = storeToRefs(communityNav);
+import { appearanceColorOptions, } from "../../widgets/myIcons/set/options";
 
 const props = defineProps({
   modelValue: {},
   index: {
-    default: "1000",
-  },
-  maskIndex: {
-    default: "999",
+    default: "610",
   },
 });
 const { modelValue } = toRefs(props);
 
+// 控制弹窗显示
 const visible = ref(false);
-const customName = ref("");
-const currentIcon = ref("");
-const customUrl = ref("");
-const color = ref("");
-
-// 控制tab
+// 控制头部tab
 const currentTab = ref("attribute");
-const TabList = ref([
+const TabList = [
   {
     name: "属性",
     value: "attribute",
@@ -179,9 +100,11 @@ const TabList = ref([
     name: "外观",
     value: "appearance",
   },
-]);
+];
+const edit = ref({});
+const appearanceData = ref({})
 
-// 判断是否为系统应用
+// 是否为系统应用
 const isSystem = computed(() => {
   if (modelValue.value.type === "systemApp") {
     return true;
@@ -195,65 +118,67 @@ const openEditIcon = () => {
   visible.value = true;
   nextTick(() => {
     modelValue.value.default = {
-      icon: modelValue.value.icon,
-      name: modelValue.value.name,
-      url: modelValue.value.url ? modelValue.value.url : "",
+      ...modelValue.value
+    }
+    edit.value = {
+      src:modelValue.value.icon,
+      titleValue:modelValue.value.name,
+      isReSize:true,
+      value:modelValue.value.name,
+      url:modelValue.value.url,
+      path:modelValue.value.path,
+      type:modelValue.value.type,
+      backgroundColor:modelValue.value.bg,
+      isBackground:modelValue.value.isBg,
     };
-    customName.value = modelValue.value.name;
-    currentIcon.value = modelValue.value.icon;
-    customUrl.value = modelValue.value.url;
+    appearanceData.value = {
+      ...modelValue.value
+    };
   });
 };
-
-// 刷新重置
-const refreshIcon = () => {
-  if (Object.keys(modelValue.value.default).length !== 0) {
-    customName.value = modelValue.value?.default?.name;
-    customUrl.value = modelValue.value?.default?.url;
-    currentIcon.value = modelValue.value?.default?.icon;
+// 本地应用更新
+const updateApp = (data) =>{
+  edit.value = {
+    ...edit.value,
+    src:data.icon,
+    titleValue:data.name,
+    path:data.value,
+    type:data.type
+  } 
+};
+// 保存更新的数据
+const save = () =>{
+  if(currentTab.value === 'attribute'){
+    modelValue.value.name = edit.value.titleValue;
+    modelValue.value.url = edit.value.url;
+    modelValue.value.path = edit.value.path;
+    modelValue.value.value = edit.value.url || edit.value.path;
+    visible.value = false;
+  }
+  else {
+    modelValue.value.name = edit.value.titleValue;
+    modelValue.value.icon = edit.value.src;
+    modelValue.value.bg = edit.value?.backgroundColor;
+    modelValue.value.isBg = edit.value?.isBackground;
+    visible.value = false;
   }
 };
-const refreshName = () => {
-  if (Object.keys(modelValue.value.default).length !== 0) {
-    customName.value = modelValue.value?.default?.name;
-  }
-};
-
-// 保存
-const save = () => {
-  if (currentTab.value === "attribute") {
-    modelValue.value.name = customName.value;
-  } else {
-    modelValue.value.name = customName.value;
-    modelValue.value.icon = currentIcon.value;
-  }
-  visible.value = false;
-};
-
-// 更新app
-const updateApp = (data) => {
-  console.log("更新", data);
-};
-
-// 修改自定义图标背景色
-const changeBg = (data) =>{
-  modelValue.value.isBg = true;
-  modelValue.value.bg = data;
+// 重置刷新
+const refreshIcon = () =>{
+  edit.value.src = modelValue.value?.default?.icon;
+  edit.value.titleValue = modelValue.value?.default?.name,
+  edit.value. isReSize = true,
+  edit.value.value = modelValue.value?.default?.name,
+  edit.value.url= modelValue.value?.default?.url,
+  edit.value.bg=modelValue.value?.default?.bg,
+  edit.value.isBg=modelValue.value?.default?.isBg
 }
-
-onMounted(() => {
-  nextTick(() => {});
-});
 
 defineExpose({
   openEditIcon,
 });
 </script>
+
 <style lang="scss" scoped>
-.icon-hover {
-  &:hover {
-    background: var(--secondary-bg);
-    border-radius: 12px;
-  }
-}
-</style> 
+
+</style>

@@ -6,6 +6,11 @@
     :mask="false"
     :index="600"
   >
+    <!-- <Drop >
+      @createFile=""
+      
+    </Drop> -->
+
     <div
       style="width: 1000px; height: 720px"
       class="xt-modal flex rounded-xl relative overflow-hidden"
@@ -103,6 +108,7 @@
 import { ref, computed, getCurrentInstance, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { communityNavStore } from "../store/communityNavStore";
+import { message } from "ant-design-vue";
 
 import LeftMenu from "../left/LeftMenu.vue";
 import CreateFolder from "./CreateFolder.vue";
@@ -110,7 +116,7 @@ import Search from "../search/ComModalSearch.vue";
 import RightListDeatil from "./RightListDeatil.vue";
 import EditNewNavigation from "../../desk/addIcon/EditNewNavigation.vue";
 import Setting from "../setting/CommunitySetting.vue";
-import { message } from "ant-design-vue";
+import Drop from "../../../apps/folder/src/components/Drop.vue";
 
 const { proxy } = getCurrentInstance();
 
@@ -157,7 +163,7 @@ const addAppFile = (data) => {
       const option = {
         n_id: appModalList.value[appFolderIndex.value].id,
         ...data,
-        favo:false,
+        favo: false,
       };
       appModalList.value[1].list.push(option);
       editVisible.value = false;
@@ -168,7 +174,10 @@ const addAppFile = (data) => {
         }
       );
       if (index === -1) {
-        appModalList.value[appFolderIndex.value].list.push({...data,favo:false,});
+        appModalList.value[appFolderIndex.value].list.push({
+          ...data,
+          favo: false,
+        });
       }
       editVisible.value = false;
     }

@@ -15,12 +15,18 @@
             class="flex items-center flex-col justify-center"
             @click="openApp(item)"
           >
-            <img
-              :src="item.icon"
+            <div
               style="width: 64px; height: 64px"
-              class="object-cover rounded-xl mb-3"
-              alt=""
-            />
+              class="rounded-md"
+              :style="item.isBg ? { background: `${item.bg}` } : {}"
+            >
+              <img
+                :src="item.icon"
+                style="width: 64px; height: 64px"
+                class="object-cover rounded-xl mb-3"
+                alt=""
+              />
+            </div>
             <span
               class="font-16 xt-font xt-text truncate"
               style="max-width: 100px"
