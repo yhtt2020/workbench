@@ -2,7 +2,7 @@
     <!-- <teleport to='body' > -->
         <!-- v-model="renameFlag" -->
         <xt-modal v-model="test" index="99999999" :maskIndex="9999999" title="添加到分组"  boxClass="rounded-xl p-4" :mask="true" :header="true" :footer="true"  v-if="test" @ok="change" >
-          <div class="relative px-2 xt-modal rounded-xl" style="width: 466px; height: 380px;" >
+          <div @click.stop="tt" class="relative px-2 xt-modal rounded-xl" style="width: 466px; height: 380px;" >
             <div >
               <div class="flex">
                 <xt-select v-model="deskIndex" @change="changeDesk" :zIndex="999999999" class="w-1/3" :h="40" :list="deskList" :bordered="false"></xt-select>
@@ -39,12 +39,11 @@ import { nanoid } from 'nanoid';
   export default {
     data() {
       return {
-        test: true,
-        chooseIndex: null,
-        cardList: [],
+        chooseIndex: {name: '新建文件夹', value: 0,},
         deskList: [],
-        deskFlag: false,
         deskIndex: 0,
+        // 处理完的数据 
+        cardTmp: {},
       }
     },
     props: ['previewFlag'],
@@ -53,73 +52,61 @@ import { nanoid } from 'nanoid';
       ...mapWritableState(useWidgetStore, ['edit']),
       ...mapWritableState(favoStore, ['folderIcons']),
       showCard(){
-        let arr = []
-        arr = this.cardList.filter(item=>{
-          return item.deskId == this.deskList[this.deskIndex].id
-        })
-        arr.unshift({name: '新建文件夹', value: -1})
-        this.chooseIndex = 0
-        return arr
+        return this.deskList[this.deskIndex]?.folder
       },
       card(){
-        if(this.chooseIndex >= 0){
-          return this.cardList[this.chooseIndex]
-        }else{
-          return {
-            name: '文件夹', 
-            id: nanoid(6), 
-            cardName: 'folder', 
-            customData:{
-              customSize: '2x2',
-              list: [],
-            }
-          }
+        if(this.deskList){
+          this.cardTmp = this.deskList[this.deskIndex]?.folder[this.chooseIndex]
+          return this.cardTmp
         }
+        return
       }
     },
     beforeUnmount(){
       this.edit = false
     },
     mounted() {
-      let arr = []
       this.deskList = []
       this.desks.forEach((item, i) => {
+        this.deskList.push({
+          name: item.name,
+          value: i,
+          id: item.id,
+          // 预览数据
+          folder: [
+            {
+              name: '新建文件夹', 
+              value: 0,
+              id: '170000000', 
+              cardName: 'folder', 
+              customData:{
+                customSize: '2x2',
+                list: [],
+                icon: "https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#ffffff",
+                model: "custom",
+                name: '文件夹',
+              },
+              deskId:nanoid(6)
+            }
+          ],
+        })
+        // 取出全部文件夹
         item.cards.forEach((card, index) => {
-          if(card.name == 'folder') arr.push({
+          if(card.name == 'folder') this.deskList[i].folder.push({
             ...card,
             name: card.customData?.name,
-            value: arr.length,
+            value: this.deskList[i].folder.length,
             cardName: 'folder',
             index: index,
             deskId: item.id
           })
         })
-        this.deskList.push({
-          name: item.name,
-          value: i,
-          id: item.id
-        })
       })
-      if(arr.length) this.chooseIndex = 0
-      this.cardList = arr
     },
     methods: {
-      addFolder(){
-        registerFolder(this.desks[this.deskIndex])
-      },
-      change(){
-        this.desks.forEach(item=>{
-          if(item.id == this.cardList[this.chooseIndex].deskId){
-            item.cards.forEach(card=>{
-              if(card.id == this.cardList[this.chooseIndex].id) card.customData.list.push(...this.folderIcons)
-            })
-          }
-        })
-      },
+      // 切换桌面列表
       changeDesk(){
-        console.log('deskIndex', this.deskIndex)
-        console.log('cardList', this.cardList)
-        console.log('deskList', this.deskList)
+        this.chooseIndex = {name: '新建文件夹', value: 0,}
       },
     },
   };

@@ -19,8 +19,8 @@ import { createApp } from "vue";
 import Antd from "ant-design-vue";
 // import 'ant-design-vue/dist/antd.less';
 import App from "./App.vue";
-import ColorPicker from "colorpicker-v3";
-import "colorpicker-v3/style.css";
+import Vue3ColorPicker from "vue3-colorpicker";
+import "vue3-colorpicker/style.css";
 import { createRouter, createWebHashHistory } from "vue-router";
 import { createPinia } from "pinia";
 import "dayjs/locale/zh-cn";
@@ -49,7 +49,7 @@ import "vue-toastification/dist/index.css";
 import XTUI from "./ui/new/index.js";
 import registerXTUI from "./ui/index";
 // 注册任务引导
-// import VueShepherdPlugin from "vue-shepherd";
+import VueShepherdPlugin from "vue-shepherd";
 import "shepherd.js/dist/css/shepherd.css";
 // 注册系统相关样式和字体
 import "../../public/css/index.scss";
@@ -134,6 +134,7 @@ window.$ui = {
 };
 const newTT: TT = tt;
 
+
 declare global {
   interface Window {
     tt: TT;
@@ -153,7 +154,7 @@ const options: PluginOptions = {};
 const $app = app
   .use(pinia)
   .use(Antd)
-  .use(ColorPicker)
+  .use(Vue3ColorPicker)
   .use(router)
   .use(VueViewer)
   .use(setupCalendar, {})
@@ -175,7 +176,7 @@ const $app = app
   .use(TUIKit)
   .use(WujieVue)
   .use(hevueImgPreview)
-  // .use(VueShepherdPlugin)
+  .use(VueShepherdPlugin)
   .use(XTUI)
   .mount("#app");
 registerXTUI(app);

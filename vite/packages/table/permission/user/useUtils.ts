@@ -42,8 +42,8 @@ const gradeTableGenerate = (num) => {
 };
 
 export const setLV = (args) => {
-  if (args.data.uid <= 0) {
-    return;
+  if (!args) {
+    return false;
   }
 
   // ai 助手理论正确
@@ -85,4 +85,6 @@ export const setLV = (args) => {
 
   // 更新或设置用户的整体信息
   userStore.setUser(userInfo);
+
+  return true;
 };

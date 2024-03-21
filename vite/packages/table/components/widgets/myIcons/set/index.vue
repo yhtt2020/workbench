@@ -1,29 +1,56 @@
 <template>
-  <xt-modal v-model="visible" :footer="0" @close="close" :index="index" :maskIndex="maskIndex">
+  <xt-modal
+    v-model="visible"
+    :footer="0"
+    @close="close"
+    :index="index"
+    :maskIndex="maskIndex"
+  >
     <template #header-right>
-      <xt-button @click="save" w="60" h="32" radius="8" type="theme">保存</xt-button>
+      <xt-button @click="save" w="60" h="32" radius="8" type="theme"
+        >保存</xt-button
+      >
     </template>
+
     <template #header-center>
-      <xt-tab v-model="currentTab" :list="TabList" style="width: 168px" class="p-1 xt-bg-t-2"
-        :boxStyle="{ 'border-radius': '10px' }" :itemStyle="{ 'border-radius': '6px' }" /></template>
+      <xt-tab
+        v-model="currentTab"
+        :list="TabList"
+        style="width: 168px"
+        class="p-1 xt-bg-t-2"
+        :boxStyle="{ 'border-radius': '10px' }"
+        :itemStyle="{ 'border-radius': '6px' }"
+    /></template>
     <div style="height: 50vh">
-      <div class="flex justify-center mb-3" style="zoom: 0.8">
-        <Icon v-bind="edit" :edit="true"></Icon>
-      </div>
       <div style="width: 452px" v-if="currentTab == 'attribute'">
-        <xt-option-from :options="attributeOptions" :data="edit">
-          <template #custom>
-            <LocalApp @click="" @onLocalApp="updateApp"></LocalApp>
-          </template>
-        </xt-option-from>
-        <div></div>
+        <xt-option-box v-if="edit.open.type == 'systemApp'">
+          <xt-text class="mb-3" center> 当前图标为「系统功能」类型。 </xt-text>
+        </xt-option-box>
+        <template v-else>
+          <xt-option-from :options="attributeOptions" :data="edit">
+            <template #custom>
+              <LocalApp @click="" @onLocalApp="updateApp"></LocalApp>
+            </template>
+          </xt-option-from>
+        </template>
       </div>
       <div v-else style="width: 452px">
-        <div class="p-4 mb-4 xt-bg-2 rounded-xl">
-          <xt-option-info title="图标和名称" info="支持自定图标和名称。" icon="fluent:arrow-clockwise-16-regular"
-            @onIconClick="refreshIcon" />
-          <xt-option-icon v-model:icon="edit.src" v-model:input="edit.titleValue" />
+        <div class="flex justify-center mb-3" style="zoom: 0.8">
+          <Icon v-bind="edit" :edit="true"></Icon>
         </div>
+        <div class="p-4 mb-4 xt-bg-2 rounded-xl">
+          <xt-option-info
+            title="图标和名称"
+            info="支持自定图标和名称。"
+            icon="fluent:arrow-clockwise-16-regular"
+            @onIconClick="refreshIcon"
+          />
+          <xt-option-icon
+            v-model:icon="edit.src"
+            v-model:input="edit.titleValue"
+          />
+        </div>
+        <!-- systemApp -->
         <xt-option-from :options="appearanceNameOptions" :data="edit" />
         <xt-option-from :options="appearanceOptions" :data="edit" />
         <xt-option-from :options="appearanceColorOptions" :data="edit" />
@@ -31,8 +58,11 @@
     </div>
   </xt-modal>
 </template>
+
 <script setup>
 import { storeToRefs } from "pinia";
+import { message } from "ant-design-vue";
+
 import {
   ref,
   computed,
@@ -41,7 +71,6 @@ import {
   onBeforeUnmount,
   getCurrentInstance,
 } from "vue";
-import { message } from "ant-design-vue";
 import { myIcons } from "../../../../store/myIcons";
 import Icon from "../components/icon.vue";
 import LocalApp from "./LocalApp.vue";
@@ -68,7 +97,8 @@ const props = defineProps({
 });
 const arr = ["internal", "default", "thinksky"];
 const res = arr.includes(edit.value.open.type);
-if (res) edit.value["type"] = edit.value.open.type;
+edit.value.type = edit.value.open.type;
+
 edit.value["mode"] = res ? "link" : "app";
 edit.value["value"] = edit.value.open.value;
 
@@ -125,10 +155,6 @@ const updateApp = (data) => {
 watch(
   () => edit.value.mode,
   (newVal, oldVal) => {
-    // edit.value.value = "";
-    // if (newVal == "link") {
-    //
-    // }
     console.log("newVal,oldVal :>> ", newVal, oldVal);
     window.$ui.confirm("是否切换模式", "切换模式将清空数据，是否继续？", {
       okText: "切换",
@@ -155,12 +181,11 @@ watch(
 watch(
   () => edit.value.value,
   (newV, oldV) => {
-    if (newV) {
+    if (newV && edit.value.mode == "link") {
       edit.value.src = getHostAddress(edit.value.value) + "/favicon.ico";
     }
   }
 );
-
 /**
  * 恢复默认图标
  */
@@ -173,10 +198,9 @@ const refreshIcon = () => {
  * 保存数据
  */
 const save = () => {
+  console.log(" edit.value :>> ", edit.value);
   emits("save", edit.value);
-  console.log("edit.value :>> ", edit.value);
   // fileSetVisible
-  // message
   message.success("保存成功");
   visible.value = false;
 };

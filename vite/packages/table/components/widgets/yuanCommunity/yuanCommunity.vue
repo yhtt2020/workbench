@@ -46,7 +46,7 @@
             <Unusual  :title="'暂无数据'" :buttonTitle="'设置'" v-else @back="backSetting"></Unusual>
         </div>
         <Unusual :title="'暂无数据'" :buttonTitle="'设置'" v-else @back="backSetting"></Unusual>
-            <xt-button 
+            <!-- <xt-button 
                 :w="40" 
                 :h="40"
                 type="theme"  
@@ -54,7 +54,7 @@
                 :icon="'fluent:add-16-filled'"
                 style="position: absolute;right: 24px;bottom: 24px;color:rgba(255,255,255,0.85) !important;">
 
-            </xt-button>
+            </xt-button> -->
         </xt-container>
         <teleport to="body" :disabled="false">
             <PublishModal 
@@ -308,6 +308,13 @@ export default {
                 },
                 titleHoverName:'点击切换',
                 titleHover:true,
+                rightIcon:[
+                    {
+                        tip:"发布",
+                        ifyIcon:'fluent:add-16-regular',
+                        fn:this.publishModalVisible,
+                    }
+                ]
             }
         },
     },
@@ -323,6 +330,7 @@ export default {
         } else {
             this.selectList.push(this.defaultForum)
             this.customData.selectList = this.selectList
+            this.defaultForum = this.customData.selectList[0]
         }
     },
     async mounted() {

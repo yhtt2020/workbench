@@ -22,7 +22,7 @@
     </div>
     <div class="flex justify-between">
       <div></div>
-      <xt-button type="theme"  h="32"  radius="8" :plain="true" @click="claimReward()" w="120"> 
+      <xt-button type="theme"  h="32"  radius="8" :plain="true" @click="claimReward()" w="120">
         {{ butText }}
       </xt-button>
     </div>
@@ -38,7 +38,7 @@ import { getTaskStatus } from "../api";
 import { Avatar } from "ant-design-vue";
 import { appStore } from "../../../store";
 
-import XtButton from "../../../ui/libs/button/index.vue";
+import XtButton from "../../../ui/libs/Button/index.vue";
 import ShowReward from "./ShowReward.vue";
 import { useLogin } from '../../../permission/user/useLogin';
 
@@ -91,7 +91,7 @@ const claimReward = () => {
   // //   // 挑灯绿
   // //   return
   // // }
- 
+
   app.getUserInfo();
   // 是否第二次完成
   if (status.value) {

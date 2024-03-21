@@ -126,7 +126,8 @@
 
 <script>
 import { appStore } from "../store";
-import { mapWritableState } from "pinia";
+import {appsStore} from '../store/apps';
+import { mapWritableState,mapActions } from "pinia";
 import { PlusOutlined, MinusOutlined } from "@ant-design/icons-vue";
 import _ from "lodash-es";
 export default {
@@ -150,7 +151,8 @@ export default {
     ...mapWritableState(appStore, ["fullScreen", "settings", "saving"]),
   },
   mounted() {
-    let app = this.$route.params;
+    let app =JSON.parse(JSON.stringify(this.getPreparingAppInfo()));
+    console.log('要启动的应用=',app)
     if (typeof app.fullScreen === "undefined") {
       app.fullScreen = true; //默认全屏
     } else {
@@ -202,6 +204,7 @@ export default {
     this.handleLeave();
   },
   methods: {
+    ...mapActions(appsStore,['getPreparingAppInfo']),
     fixZoom(num) {
       return Number(((num * this.settings.zoomFactor) / 100).toFixed(0));
     },

@@ -449,7 +449,7 @@ export default {
       this.$refs.galleryRef.openGalleryModal();
       setTimeout(() => {
         this.$bus.emit("lockScreenSet");
-      }, 100);
+      }, 300);
     });
 
     if (window.showed) {
@@ -532,7 +532,7 @@ export default {
       this.$bus.emit("openSystemSet");
       setTimeout(() => {
         this.$bus.emit("selectSystemNav", 2);
-      }, 10);
+      }, 100);
     },
     hideDesk() {
       this.hide = !this.hide;

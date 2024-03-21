@@ -96,7 +96,10 @@ export default {
        {
         newIcon:'fluent:desktop-16-regular',name:'设为工作台背景',
         callBack:()=>{ this.setAppPaper(this.paperCurrent) ,
-          completeTask('M0201')}
+          completeTask('M0201',()=>{
+            this.$bus.emit('closePaperModal')
+          })
+        }
        },
        {
         newIcon:'mingcute:windows-line',name:'设置桌面壁纸',
@@ -160,7 +163,9 @@ export default {
        if (!img.path) { img.path = img.src }
        else { this.setBackgroundImage(img) }
       }
-      completeTask('M0201')
+      completeTask('M0201',()=>{
+        this.$bus.emit('closePaperModal')
+      })
       // message.info('正在为您设置壁纸')
       // this.setBackgroundImage(this.paperCurrent.path)
       // this.visibleMenu = false

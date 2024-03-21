@@ -8,7 +8,8 @@ export const useFolderStore = defineStore("useFolderStore", {
     currentId: "",
 
     move:false,
-    folderFlag:''
+    folderFlag:'',
+    focusClose:false, // 导航栏打开文件夹后，失焦后是否自动关闭
   }),
   getters: {},
   actions: {},

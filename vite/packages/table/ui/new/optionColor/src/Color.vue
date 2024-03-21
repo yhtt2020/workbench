@@ -15,7 +15,16 @@
             size="20"
           ></xt-new-icon>
         </div>
+        <!-- <span class="mt-2">其他：</span> -->
+        <!-- <color-picker
+          v-model:pureColor="color"
+          v-on:update:pureColor="updateBackground"
+          :defaultList="colorList"
+          :linearList="linearList"
+          :isLinear="isLinear"
+        /> -->
         <ColorPicker
+          v-model:color="color"
           @change="updateBackground"
           :defaultList="colorList"
           :linearList="linearList"
@@ -68,7 +77,7 @@ const props = withDefaults(defineProps<colorProps>(), {
   isLinear: true,
   colorNum: 6,
 });
-const { colorNum, colorShowNum, linearShowNum } = toRefs(props);
+const { colorNum,color} = toRefs(props);
 // 按钮回调
 const emit = defineEmits(["update:color", "cb"]);
 const chooseBg = (item) => {
@@ -114,5 +123,10 @@ const colorIndex = ref(0);
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-start;
+}
+:deep(.vc-color-wrap){
+  width:40px;
+  height:40px;
+  border-radius: 10px;
 }
 </style>

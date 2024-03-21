@@ -110,7 +110,7 @@
          :style="showDetail === false ? { width:'80px' } : { width:'100px' }"
     >
       <div v-if="!showDetail" @click="showBarragePanel"
-           class="p-2 pt-2 p-3 truncate font-large text-center pointer"
+           class="p-2 pt-2 truncate font-large text-center pointer"
            style="font-size: 1.1em">
         <div>
           <a-avatar :size="50" shape="square" :src="team.avatar"></a-avatar>
