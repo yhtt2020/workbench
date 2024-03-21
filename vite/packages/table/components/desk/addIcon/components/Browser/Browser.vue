@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref , computed , toRefs } from 'vue'
+import { ref , computed , toRefs , onBeforeMount } from 'vue'
 import { message } from 'ant-design-vue'
 import { storeToRefs } from 'pinia';
 
@@ -62,7 +62,7 @@ const { isFavorites, allList, folderList, folderIndex, browserList, updateTime, 
 const store = useIconStore()
 const { isMultiple,multipleList } = storeToRefs(store)
 
-const resTmp = ref([])
+const resTmp : any = ref([])
 const itemTmp = ref({})
 const defaultDeskIcon = ref({
     customData: {
@@ -145,7 +145,7 @@ const refresh = async () => {
     let arrTmp = Object.keys(browserList.value)
     updateTime.value = new Date().getTime()
     folderList.value = []
-    let res = []
+    let res : any = []
     try {
         for (const browser of arrTmp) {
             const data = await tsbApi.system.getBrowserBookmark(browser)
@@ -223,6 +223,28 @@ const flattenChildrenArray = (obj, browser, level, parent) => {
     return resTmp.value
 }
 
+const mergeArraysByGuid = (arr1, arr2) => {
+    const existingGuids = new Set(arr1.map(item => item.guid));
+    const newObjects = arr2.filter(item => !existingGuids.has(item.guid));
+    
+    if(newObjects.length > 0){
+        newObjects.forEach(item => {
+            item.recent = true
+            item.unRead = true
+            folderList.value.forEach(folder => {
+                if(folder.guid == item.parent && item.parent){
+                    folder.unRead = true
+                }
+            })
+        })
+    }
+    
+    const content = newObjects.length ? `浏览器收藏夹数据刷新成功。本次更新${newObjects.length}条数据` : '浏览器收藏夹数据刷新成功。'
+    message.success(content)
+    const mergedArray = [...arr1, ...newObjects];
+    return mergedArray
+}
+
 // 展示数据
 const showList = computed(() => {
     const folder = folderList.value[folderIndex.value]
@@ -269,8 +291,8 @@ const sortByFavoTime = (arr) => {
 // 修改格式，添加图标到桌面和文件夹
 const changeIcon = (item) => {
     if (item.length === 1) itemTmp.value = item[0]
-    let newFolder = []
-    let newIcon = []
+    let newFolder : any = []
+    let newIcon : any = []
     item.forEach(i => {
         // 新增为桌面图标
         i.value = i.url
@@ -278,7 +300,7 @@ const changeIcon = (item) => {
         newIcon.push(i)
 
         newFolder.push({
-            ...defaultFolderIcon,
+            ...defaultFolderIcon, 
             ...i
         })
     })
@@ -299,7 +321,7 @@ const changeName = () => {
     if(rename.value === '') {
         message.error('名字不能为空')
     }else{
-        allList.value.forEach((i) => {
+        allList.value.forEach((i : any) => {
             if(i.guid === tmpGuid.value){
                 i.rename = rename.value
                 message.success('名字修改成功')
@@ -307,6 +329,11 @@ const changeName = () => {
         })
     }
 }
+
+// 挂载时刷新数据
+// onBeforeMount(() => {
+//     refresh()
+// })
 </script>
 
 <style lang='scss' scoped></style>

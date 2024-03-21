@@ -118,6 +118,7 @@ import { completeTask } from '../../../apps/task/task'
 import _ from 'lodash-es'
 import { useFileConversionIcon } from '../../../ui/hooks/useDataConversion'
 import { nanoid } from 'nanoid';
+import {refresh} from './hook/useRefresh'
 
 import AddDesk from './components/AddDesk.vue'
 import DropDown from './components/DropDown.vue'
@@ -195,7 +196,8 @@ const nav = computed(() => {
     'foot':navigationToggle.value[2],
     'left':navigationToggle.value[0],
     'right':navigationToggle.value[1],
-    "desktop": true,
+    "desktop": true, // 兼容老版本桌面选择
+    '':true,  // 未传值情况
   }
 })
 // 提示是否开启导航栏
@@ -207,11 +209,11 @@ const obj = computed(() => {
   }
 })
 
-// export interface EditType {
-//   isFolder: boolean
-// }
+export interface EditType {
+  isFolder: boolean
+}
 
-const props = defineProps({
+const props = withDefaults(defineProps<EditType>(), {
   isFolder: false
 })
 
