@@ -245,7 +245,10 @@ const header = computed(() => {
         : "fluent:open-16-regular",
       //
       rightIcon: rightIcons.value,
-  };
+    };
+  } else {
+    return customData.value.header;
+  }
 });
 
 // 处理社区中心图标隐藏部分功能，社区中心图标不显示右侧图标
@@ -269,9 +272,6 @@ const rightIcons = computed(() => {
         },
       ]
     }
-  } else {
-    return customData.value.header;
-  }
 })
 // 打开所有文件
 const openAllFile = () => {

@@ -16,10 +16,10 @@
         <template #sendIcon>
           <xt-ify-icon icon="fluent:line-horizontal-3-20-filled"></xt-ify-icon>
         </template>
-        <div class="xt-bg-2 rounded-xl p-2" style="width: 180px">
+        <div class="p-2 xt-bg-2 rounded-xl" style="width: 180px">
           <template v-for="item in dropList">
             <div
-              class="px-3 py-2 flex items-center pointer rounded-lg w-full xt-hover"
+              class="flex items-center w-full px-3 py-2 rounded-lg pointer xt-hover"
               @click="item.fn"
             >
               <xt-ify-icon
@@ -63,6 +63,7 @@ const navBar = ref({
   hierarchy: true,
   close: true,
   customRight: true,
+  
 });
 const headerTitle = ref("网址导航");
 const dropList = ref([
