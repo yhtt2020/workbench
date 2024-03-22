@@ -1,19 +1,26 @@
 <template>
-    <IconList :list="lightApp" info="轻应用" @clickItem="addIcon"></IconList>
+    <IconList :list="list" info="轻应用" @clickItem="addIcon"></IconList>
+    <Empty v-if="list.length === 0"></Empty>
 </template>
 
 <script setup lang='ts'>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted,computed } from 'vue'
+import Empty from '../Empty.vue';
 import {useEnv} from '../../../../../ui/hooks/useEnv'
 import IconList from '../IconList.vue';
 import { mergeData } from '../../../../../ui/hooks/useDataConversion';
 import { useReplace } from '../../hook/useReplace';
+import { useFilterList } from '../../hook/useFilterList';
 
 const appModel = window.$models.appModel
 
 const lightApp = ref<string[]>([])
 
 const emit = defineEmits(['addIcon'])
+
+const props = defineProps({
+    value: String
+})
 
 onMounted( async() => {
     if(!useEnv('web')){
@@ -42,6 +49,14 @@ const addType = (list:string[]) => {
 const addIcon = (item) => {
     emit('addIcon', item)
 }
+
+const list = computed(() => {
+    const arr = lightApp.value
+    if(! arr) {
+        return []
+    }
+    return useFilterList(arr,props.value)
+})
 
 </script>
 <style lang='scss' scoped></style>

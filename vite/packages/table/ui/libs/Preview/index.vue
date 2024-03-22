@@ -2,7 +2,7 @@
     <!-- <teleport to='body' > -->
         <!-- v-model="renameFlag" -->
         <xt-modal v-model="test" index="99999999" :maskIndex="9999999" title="添加到分组"  boxClass="rounded-xl p-4" :mask="true" :header="true" :footer="true"  v-if="test" @ok="change" >
-          <div @click.stop="tt" class="xt-modal rounded-xl relative px-2" style="width: 466px; height: 380px;" >
+          <div class="relative px-2 xt-modal rounded-xl" style="width: 466px; height: 380px;" >
             <div >
               <div class="flex">
                 <xt-select v-model="deskIndex" @change="changeDesk" :zIndex="999999999" class="w-1/3" :h="40" :list="deskList" :bordered="false"></xt-select>
@@ -14,7 +14,7 @@
         </xt-modal>
         <!-- 添加到桌面 -->
         <!-- <xt-modal title="添加到桌面" :maskIndex="99999999" :index="999999999" boxClass="rounded-xl p-4" :mask="true" :header="true" :footer="true" v-model="deskFlag" v-if="deskFlag" @ok="addFolder" >
-          <div class="xt-modal flex rounded-xl relative" style="width: 466px; height: 50px;" >
+          <div class="relative flex xt-modal rounded-xl" style="width: 466px; height: 50px;" >
             <xt-select v-model="deskIndex" :zIndex="9999999999" style="width: 100%;" :list="deskList" :bordered="false"></xt-select>
           </div>
         </xt-modal> -->

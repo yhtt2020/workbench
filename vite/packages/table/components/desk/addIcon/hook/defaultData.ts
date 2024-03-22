@@ -100,3 +100,23 @@ export const webMenus=[
         tag:'game'
     },
 ]
+
+
+export const position=[
+    {
+        name:'左侧导航',
+        value:'left'
+    },
+    {
+        name:'右侧导航',
+        value:'right'
+    },
+    {
+        name:'底部导航',
+        value:'foot'
+    },
+    {
+        name:"桌面",
+        value:"desktop"
+    }
+]
