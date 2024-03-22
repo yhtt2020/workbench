@@ -13,7 +13,7 @@
     <div
       class="text-xs truncate xt-text-2"
       style="width: 90%;text-align: left;"
-      :style="{textAlign:props.layout === 'rows' ? 'center' : 'left'};"
+      :style="{textAlign:props.layout === 'rows' ? 'center' : 'left'}"
       :class="textClass"
     >
       {{ item.name }}
