@@ -75,8 +75,8 @@ const list = ref([
       "fluent:app-folder-16-regular",
     ],
     title: "从你的桌面、导航栏、分组中选择添加",
-    btnText: "",
-    disableBtnText: "暂不支持",
+    btnText: "选择添加",
+    disableBtnText: "",
   },
   {
     icon: ["fluent:hard-drive-16-regular"],

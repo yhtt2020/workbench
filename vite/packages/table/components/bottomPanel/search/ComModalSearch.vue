@@ -2,7 +2,7 @@
   <div class="w-full">
     <div class="h-16 flex items-center justify-between px-4">
       <!-- 搜索 -->
-      <div class="flex w-full">
+      <div class="flex">
         <a-input
           class="h-8 xt-mask xt-text"
           style="
@@ -91,7 +91,6 @@ const changeSearchValue = () => {
     const result = mList.filter((item) => {
       return textRegex.test(item.name) || textRegex.test(item.url);
     });
-    // console.log('搜索',result);
     proxy.$bus.emit("getSearchList", result);
   } else {
     proxy.$bus.emit("getSearchList", []);

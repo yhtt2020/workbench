@@ -33,7 +33,7 @@
               >{{ item.name }}</span
             >
             <span class="xt-text-2 text-center xt-font font-14">
-              <!-- {{ getFileTypeName(item) }} -->
+              {{ getFileTypeName(item) }}
             </span>
           </div>
           <div class="absolute top-2 right-2" v-if="isHide(item)">
@@ -74,6 +74,7 @@ import { favoStore } from "../../../apps/favorites/store";
 import browser from "../../../js/common/browser";
 import { useRouter, useRoute } from "vue-router";
 import { message } from "ant-design-vue";
+import { fileTypeClass } from "../hooks/getFileType";
 
 import AddFolderEmpty from "../empty/AppFolderEmpty.vue";
 import EditIcon from "../setting/EditIcon.vue";
@@ -198,6 +199,7 @@ const likeMenu = ref([
     ],
   },
 ]);
+
 const menuList = computed(() => {
   if (listType.value === "like") {
     return likeMenu.value;
@@ -238,14 +240,12 @@ const openApp = (data) => {
     // proxy.$bus.emit("closeModal");
   }
 };
-
 // 删除数据
 const removeItem = (data) => {
   const index = appModalList.value[1]?.list?.indexOf(data);
   appModalList.value[1]?.list?.splice(index, 1);
   message.success("应用移除成功");
 };
-
 // 取消收藏
 const removeFolder = (data) => {
   const updateList = appModalList.value[1]?.list.map((item, index) => {
@@ -258,7 +258,6 @@ const removeFolder = (data) => {
   });
   appModalList.value[1].list = updateList;
 };
-
 // 是否收藏
 const isHide = (data) => {
   if (listType.value !== "like") {
@@ -267,7 +266,6 @@ const isHide = (data) => {
     return false;
   }
 };
-
 // 编辑
 const editItem = (data) => {
   currentEditData.value = data;
@@ -276,9 +274,7 @@ const editItem = (data) => {
 
 // 获取文件类型
 const getFileTypeName = (data) => {
-  // console.log('类型1',data.type);
-  // console.log('类型2',data.ext);
-  // if (data.type === "default") return "网页";
+  return fileTypeClass.fileType(data);
 };
 </script>
 

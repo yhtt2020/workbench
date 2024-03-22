@@ -85,11 +85,11 @@
             </xt-scrollbar>
           </div>
         </template>
-        <!-- <template v-else>
+        <template v-else>
           <Setting
             @close="(appModelVisible = false), (settingEnable = false)"
           />
-        </template> -->
+        </template>
       </div>
     </div>
   </xt-modal>
@@ -138,11 +138,11 @@ const editList = ref([
       editVisible.value = true;
     },
   },
-   {
+  {
     name:'从桌面、导航和分组中选择',
     icon:'fluent:app-folder-16-regular',
     fn:()=>{}
-   },
+  },
   {
     icon: "fluent:folder-16-regular",
     name: "添加文件夹",
