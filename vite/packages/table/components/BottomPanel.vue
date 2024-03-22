@@ -83,6 +83,8 @@
     </div>
   </transition>
   <AppModal />
+
+  <Setting />
 </template>
 
 <script>
@@ -129,6 +131,7 @@ import CommunityNav from "./bottomPanel/community/CommunityNav.vue";
 import TeamNav from "./bottomPanel/community/TeamNav.vue";
 import AppModal from "./bottomPanel/community/AppModal.vue";
 import { controlStore } from "./desk/navigationBar/hook/controlStore";
+import Setting from "./bottomPanel/setting/CommunitySetting.vue";
 
 const {
   //是否全屏状态

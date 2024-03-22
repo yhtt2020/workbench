@@ -29,6 +29,7 @@ export const communityNavStore = defineStore("communityNav", {
     switchColor:false,
     // 默认选择文件类型的全部
     fileType: "all",
+    
   }),
 
   actions: {},
@@ -44,7 +45,6 @@ export const communityNavStore = defineStore("communityNav", {
           "settingEnable",
           "settingType",
           "switchColor",
-          "fileType",
         ],
         storage: localStorage,
       },

@@ -27,12 +27,11 @@ import { message } from "ant-design-vue";
 
 import Folder from "../../../apps/folder/src/Folder.vue";
 import TeamEmpty from "../empty/TeamEmpty.vue";
-// import AppModal from "./AppModal.vue";
 
 const emit = defineEmits(["close"]);
 
 const communityNav = communityNavStore();
-const { layOut, settingType, appModalList } = storeToRefs(communityNav);
+const { layOut, settingType, appModalList,settingEnable } = storeToRefs(communityNav);
 const { proxy } = getCurrentInstance();
 
 const navBar = ref({
@@ -46,6 +45,7 @@ const navBar = ref({
 });
 const headerTitle = ref("网址导航");
 const teamFolderRef = ref(null);
+const teamNavSetting = ref(null);
 
 const layOutIcon = computed(() => {
   if (layOut.value === "rows") {
@@ -95,24 +95,15 @@ const teamNavData = computed(() => {
       },
       {
         newIcon: "fluent:app-folder-16-regular",
-        title: "应用模式",
+        title: "导航设置",
         fn: () => {
-          window.$ui.confirm(
-            "使用「应用模式」",
-            "切换到「应用模式」，将为你保留当前已经添加的网站和应用。",
-            {
-              type: "warning",
-              ok: () => {
-                proxy.$bus.emit("openAppVisible");
-                settingType.value = "app";
-                closeNav();
-              },
-              no:()=>{
-                settingType.value = "component";
-              },
-              noText: "取消",
-            }
-          );
+          if(settingEnable.value){
+            closeNav(); 
+            proxy.$bus.emit("openAppSetting")
+          }
+          else {
+            proxy.$bus.emit("openAppSetting");
+          }
         },
       },
       {

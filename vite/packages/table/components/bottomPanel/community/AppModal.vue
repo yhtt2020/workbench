@@ -77,19 +77,12 @@
         </template>
       </LeftMenu>
       <div class="w-full h-full flex flex-col">
-        <template v-if="!settingEnable">
-          <Search @close="appModelVisible = false"></Search>
-          <div class="grow">
-            <xt-scrollbar :y="true" class="w-full p-3" style="height: 650px">
-              <RightListDeatil :detailIndex="appFolderIndex" />
-            </xt-scrollbar>
-          </div>
-        </template>
-        <template v-else>
-          <Setting
-            @close="(appModelVisible = false), (settingEnable = false)"
-          />
-        </template>
+        <Search @close="appModelVisible = false"></Search>
+        <div class="grow">
+          <xt-scrollbar :y="true" class="w-full p-3" style="height: 650px">
+            <RightListDeatil :detailIndex="appFolderIndex" />
+          </xt-scrollbar>
+        </div>
       </div>
     </div>
   </xt-modal>
@@ -102,6 +95,8 @@
     @setQuick="editVisible = false"
     @addIcon="addAppFile"
   />
+
+  <Setting ref="appSetting"/>
 </template>
 
 <script setup>
@@ -121,13 +116,13 @@ import Setting from "../setting/CommunitySetting.vue";
 const { proxy } = getCurrentInstance();
 
 const communityNav = communityNavStore();
-const { appModalList, appFolderIndex, settingEnable } =
+const { appModalList, appFolderIndex } =
   storeToRefs(communityNav);
 
 const appModelVisible = ref(false);
 const editVisible = ref(false);
-const editShow = ref(true);
 const appCreateFolder = ref(null);
+const appSetting = ref(null);
 
 // 编辑操作列表
 const editList = ref([
@@ -181,16 +176,16 @@ const addAppFile = (data) => {
       }
       editVisible.value = false;
     }
+    message.success("应用添加成功");
   }
 };
 // 选择切换文件数据
 const selectFolder = (data) => {
   appFolderIndex.value = data;
-  settingEnable.value = false;
 };
 // 设置
 const enterSetting = () => {
-  settingEnable.value = true;
+  appSetting.value.openAppSetting();
 };
 
 onMounted(() => {

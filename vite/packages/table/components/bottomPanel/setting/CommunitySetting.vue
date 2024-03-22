@@ -1,26 +1,21 @@
 <template>
-  <div class="flex p-4 flex-col w-full h-full">
-    <div class="flex items-center justify-between" style="margin-bottom: 22px">
-      <div class="flex items-center">
-        <xt-ify-icon
-          icon="fluent:settings-16-regular"
-          size="20"
-          class="mr-2"
-        ></xt-ify-icon>
-        <span class="xt-font xt-text font-14">设置</span>
-      </div>
-      <xt-button w="32" h="32" @click="closeSetting">
-        <div class="flex items-center justify-center">
-          <xt-ify-icon icon="fluent:dismiss-16-regular" size="16"></xt-ify-icon>
-        </div>
-      </xt-button>
-    </div>
-    <div class="flex items-center justify-center w-full">
-      <div style="width: 452px" class="flex flex-col p-4 xt-bg-2 rounded-xl">
-        <span class="w-full xt-font xt-text font-16">模式选择</span>
-        <span class="mt-2.5 mb-3 xt-font xt-text-2 font-14"
-          >应用模式适合需要进行分类时使用，组件模式适合数量较少时使用。</span
+  <xt-modal v-model="communitySetVisible" title="团队导航设置" :maskIndex="700">
+    <div class="flex flex-col px-2" style="width: 500px">
+      <div class="w-full xt-bg-2 flex flex-col rounded-xl p-4 ">
+        <span class="xt-font xt-text font-16">团队空间容量</span>
+        <span class="xt-font xt-text-2 font-14 mt-1.5 mb-1"
+          >你可以上传单个大小不超过10MB文件到团队空间中。</span
         >
+        <a-progress :percent="10" :show-info="false" />
+        <span class="xt-font xt-text-2 font-14 mt-1">
+          已用:200MB，剩余:300MB
+        </span>
+      </div>
+      <div class="w-full xt-bg-2 flex flex-col rounded-xl p-4 my-4">
+        <span class="w-full xt-font xt-text font-16">模式选择</span>
+        <span class="mt-2.5 mb-3 xt-font xt-text-2 font-14">
+          应用模式适合需要进行分类时使用，组件模式适合数量较少时使用。
+        </span>
         <xt-option-tab
           :list="selectList"
           :boxClass="'p-1 xt-bg-2'"
@@ -29,23 +24,27 @@
           :itemStyle="{ 'border-radius': '6px' }"
           circle="true"
           v-model="settingType"
-        ></xt-option-tab>
+        />
+      </div>
+      <div class="w-full xt-bg-2 flex justify-between  rounded-xl p-4 ">
+        <span>打开图标后自动关闭团队导航窗口</span>
+        <a-switch v-model:checked="settingEnable"></a-switch>
       </div>
     </div>
-  </div>
+  </xt-modal>
 </template>
 
 <script setup>
-import { ref, computed, watch, getCurrentInstance } from "vue";
+import { ref, getCurrentInstance,watch,onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { communityNavStore } from "../store/communityNavStore";
 
-const emit = defineEmits(["close"]);
-
-const communityNav = communityNavStore();
-const { settingType } = storeToRefs(communityNav);
 const { proxy } = getCurrentInstance();
 
+const communityNav = communityNavStore();
+const { settingType,settingEnable } = storeToRefs(communityNav);
+
+const communitySetVisible = ref(false);
 const selectList = ref([
   {
     name: "应用模式",
@@ -57,10 +56,12 @@ const selectList = ref([
   },
 ]);
 
-// 关闭设置
-const closeSetting = () => {
-  emit("close");
+
+// 开启设置弹窗
+const openAppSetting = () => {
+  communitySetVisible.value = true;
 };
+
 
 watch(()=>settingType.value,(newVal)=>{
   if(newVal === 'component'){
@@ -68,15 +69,37 @@ watch(()=>settingType.value,(newVal)=>{
       ok:()=>{
         settingType.value = "component";
         proxy.$bus.emit("closeModal");
-      },
-      no:()=>{
-        settingType.value = "app";
+        communitySetVisible.value = false; 
       },
       noText:'取消',
       okText:'确定'
     })
   }
-})
+  else{
+    window.$ui.confirm(
+      "使用「应用模式」",
+      "切换到「应用模式」，将为你保留当前已经添加的网站和应用。",
+      {
+        type: "warning",
+        ok: () => {
+          proxy.$bus.emit("openAppVisible");
+          settingType.value = "app";
+        },
+        noText: "取消",
+      }
+    );
+  }    
+});
+
+onMounted(() => {
+  proxy.$bus.on("openAppSetting", () => {
+    communitySetVisible.value = true;
+  });
+});
+
+defineExpose({
+  openAppSetting,
+});
 </script>
 
 <style lang="scss" scoped>
