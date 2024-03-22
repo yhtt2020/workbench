@@ -1,5 +1,5 @@
 // import { apps, doc } from "../../desk/addIcon/hook/defaultData";
-const apps = [
+export  const apps = [
   '.exe',
   '.msi',
   '.apk',
@@ -47,6 +47,9 @@ export const fileTypeClass = {
             return item === softFileName
           });
           if(isSoft)  return "软件";
+          return "文件";
+        }
+        else{
           return "文件";
         }
       }

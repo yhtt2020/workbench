@@ -1,4 +1,5 @@
 <template>
+  <!-- 应用模式中的拖拽 -->
   <div
     class="w-full h-full rounded-xl"
     @drop.prevent.stop="handleDrop"

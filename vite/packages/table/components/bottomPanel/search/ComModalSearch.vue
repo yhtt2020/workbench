@@ -21,7 +21,8 @@
               v-if="searchValue === ''"
               class="absolute right-3 xt-text-2"
               icon="fluent:search-20-filled"
-              size="20" @click="changeSearchValue()"
+              size="20"
+              @click="changeSearchValue()"
             />
             <xt-ify-icon
               v-else
@@ -33,9 +34,13 @@
           </template>
         </a-input>
 
-        <xt-option-select class="select-container"   :border="false" ></xt-option-select>
+        <xt-option-select
+          class="select-container"
+          :list="fileTypeList"
+          v-model="fileType"
+          :border="false"
+        />
       </div>
-
 
       <div class="font-14 flex items-center">
         <div class="xt-font xt-text-2 font-14">网站打开方式：</div>
@@ -59,17 +64,19 @@
 </template>
 
 <script setup>
-import { ref, computed, getCurrentInstance } from "vue";
+import { ref, computed, getCurrentInstance,watch } from "vue";
 import { storeToRefs } from "pinia";
 import { favoStore } from "../../../apps/favorites/store";
 import { communityNavStore } from "../store/communityNavStore";
+import { apps } from '../hooks/getFileType';
+import { doc } from "../../desk/addIcon/hook/defaultData";
 
 const emit = defineEmits(["close"]);
 
 const favo = favoStore();
 const { browserType } = storeToRefs(favo);
 const communityNav = communityNavStore();
-const { appModalList } = storeToRefs(communityNav);
+const { appModalList, fileType } = storeToRefs(communityNav);
 
 const { proxy } = getCurrentInstance();
 
@@ -79,6 +86,16 @@ const linkType = ref([
   { label: "工作台内打开", value: "work" },
 ]);
 const searchValue = ref("");
+// 文件类型下拉列表
+const fileTypeList = ref([
+  { name: "全部类型", value: "all" },
+  { name: "文件", value: "file" },
+  { name: "网页", value: "web" },
+  { name: "轻应用", value: "lightApp" },
+  { name: "系统应用", value: "systemApp" },
+  { name: "酷应用", value: "coolApp" },
+  { name: "软件", value: "soft" },
+]);
 
 const close = () => {
   emit("close");
@@ -96,6 +113,56 @@ const changeSearchValue = () => {
     proxy.$bus.emit("getSearchList", []);
   }
 };
+
+// 根据下拉选择的类型结果返回不同数据
+const getFileList = (data) =>{
+  let result = [];
+  const list = appModalList.value[1].list;
+  if(data === 'all'){
+    result = list;
+  }
+  else if(data === 'file'){
+    result = list.filter((item) => {
+      if (typeof item.value === "string" && item.value.startsWith("C:\\")){
+        // 拆分获取文件扩展名
+        const fileName = item.value.split("\\").pop().split(".");
+        const filesName = `.${item.value.split("\\").pop().split(".").pop()}`;
+        const isFile = doc.some((someItem) => {
+          return someItem === filesName;
+        });
+        return fileName.length == 1 || isFile;
+      }
+    });
+  }
+  else if(data === 'soft'){
+    result = list.filter((item) => {
+      if (typeof item.value === "string" && item.value.startsWith("C:\\")){
+        const filesName = `.${item.value.split("\\").pop().split(".").pop()}`;
+        const isSoft = apps.some((someItem) => {
+          return someItem === filesName;
+        });
+        return isSoft;
+      }
+    });
+  }
+  else if (data === 'web'){
+    result = list.filter((item) => {
+      return item.type === 'default';
+    });
+  }
+  else {
+    result = list.filter((item) => {
+      return item.type === data;
+    });
+  }
+  return result;
+}
+
+// 使用监听器监听fileType的变化
+watch(()=>fileType.value, (value) => {
+  proxy.$bus.emit("getSelectList", getFileList(value));
+},{ deep:true,immediate:true });
+
 </script>
 
 <style lang="scss" scoped>
@@ -126,15 +193,14 @@ const changeSearchValue = () => {
   background: rgba(80, 139, 254, 0.2);
 }
 
-:deep(.select-container){
-  height:32px !important;
+:deep(.select-container) {
+  height: 32px !important;
   border-radius: 8px !important;
   margin-left: 12px;
   max-width: 120px !important;
   background: var(--secondary-bg) !important;
-  & .ant-select-selection-item{
+  & .ant-select-selection-item {
     line-height: 32px !important;
   }
 }
-
 </style>

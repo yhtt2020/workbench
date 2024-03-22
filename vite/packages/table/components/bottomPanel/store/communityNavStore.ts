@@ -27,6 +27,8 @@ export const communityNavStore = defineStore("communityNav", {
     settingType: "component",
     // 开启自定义图标背景色
     switchColor:false,
+    // 默认选择文件类型的全部
+    fileType: "all",
   }),
 
   actions: {},
@@ -41,7 +43,8 @@ export const communityNavStore = defineStore("communityNav", {
           "appFolderIndex",
           "settingEnable",
           "settingType",
-          "switchColor"
+          "switchColor",
+          "fileType",
         ],
         storage: localStorage,
       },
