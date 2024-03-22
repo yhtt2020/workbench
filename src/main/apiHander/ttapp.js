@@ -5,7 +5,11 @@
 const Base = require("./base");
 // const appModel = require("../../model/appModel");
 
-const { useInstall, useWriteJson } = require("../ttApps/useInstall");
+const {
+  useInstall,
+  useWriteJson,
+  installV2
+} = require("../ttApps/useInstall");
 const useUninstall = require("../ttApps/useUninstall");
 
 const { useSelect, useSelectAll } = require("../ttApps/useSelect");
@@ -21,12 +25,11 @@ class TTApp extends Base {
   bindIPC() {
     // 安装
     this.on("install", async (event, args) => {
-      let res = await useInstall(args.zipPath);
+      let res = await installV2(args.zipPath);
       event.reply(args.cbId, res);
     });
     // 写入json
     this.on("writeJson", async (event, args) => {
-      console.log('args :>> ', args);
       let res = await useWriteJson(args.id, args.data);
       event.reply(args.cbId, res);
     });
@@ -45,7 +48,6 @@ class TTApp extends Base {
       let res = await useSelectAll();
       event.reply(args.cbId, res);
     });
-
   }
 }
 

@@ -8,8 +8,7 @@ const ttAppModel = {
   /**
    * 初始化数据库
    */
-  async initDb(ttAppData) {
-    const { id, modules } = ttAppData;
+  async initDb() {
     // 是否存在ttApp表
     let exists = await sqlDb.knex.schema.hasTable("ttApp");
     // 不存在则创建
@@ -23,16 +22,32 @@ const ttAppModel = {
     // sqlDb.knex.raw(sql).then((resp) => {
     //   console.log("resp :>> ", resp);
     // });
-    return sqlDb
-      .knex("ttApp")
-      .insert({ id, modules })
-      .then(() => {
-        console.log("Inserted");
-        return true;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  },
+  /**
+   * 插入数据
+   */
+  async insert(data) {
+    try {
+      // let { id, modules } = ttAppData;
+      // let sql = `INSERT INTO ttApp VALUES ('${id}', '${modules}')`;
+      // let res = await sqlDb.knex.raw(sql);
+      await ttAppModel.initDb();
+
+      const { id, modules } = data;
+      return sqlDb
+        .knex("ttApp")
+        .insert({ id, modules })
+        .then(() => {
+          return true;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      return res;
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
   },
   /**
    * 删除

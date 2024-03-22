@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from "vue";
 import Item from "./component/Item.vue";
+import { useInstallTTApp } from "../../hooks";
 interface FormData {
   name: string;
   description: string;
@@ -29,13 +30,24 @@ const onFinish = (values: any) => {
   };
   let dataJson = JSON.stringify(data);
   console.log("data.value :>> ", dataJson);
-  tsbApi.ttapp.writeJson("XKqb", dataJson);
+  tsbApi.ttapp.writeJson(id.value, data);
 };
 
 const onFinishFailed = (errorInfo: any) => {
-  console.log("Failed:", errorInfo);
+  // console.log("Failed:", errorInfo);
+};
+const id = ref("");
+const installTTApp = async () => {
+  let res = await useInstallTTApp();
+  id.value = res;
+  console.log("res :>> ", res);
 };
 
+const a = () => {
+  tsbApi.ttapp.completeInstall(id.value, (res) => {
+    console.log("res :>> ", res);
+  });
+};
 const config = [
   {
     type: "input",
@@ -112,4 +124,10 @@ const config = [
       <a-button type="primary" html-type="submit">Submit</a-button>
     </a-form-item>
   </a-form>
+
+  {{ id }}
+  <xt-button @click="a()" :w="140" :h="40" type="theme">合并</xt-button>
+  <xt-button @click="installTTApp()" :w="140" :h="40" type="theme"
+    >安装TTApp</xt-button
+  >
 </template>

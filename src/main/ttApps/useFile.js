@@ -54,10 +54,35 @@ const file = {
    * @param encoding 编码格式
    * @return string
    */
-  readFile(fileName, encoding = "utf-8") {
-    return fse.readFileSync(fileName, {
-      encoding: encoding,
-    });
+  async readFile(fileName, encoding = "utf-8") {
+    let folderExistsRes = await file.existsFolder(fileName);
+    if (!folderExistsRes) {
+      return {
+        status: 0,
+        code: 400,
+        info: "文件不存在",
+        data: "文件不存在",
+      };
+    }
+    try {
+      let res = await fse.readFileSync(file.pathJoin(fileName), {
+        encoding: encoding,
+      });
+      return {
+        status: 0,
+        code: 200,
+        info: "读取成功",
+        data: res,
+      };
+    } catch (err) {
+      console.error("Error deleting directory:", err);
+      return {
+        status: 0,
+        code: 400,
+        info: "读取失败",
+        data: "读取失败",
+      };
+    }
   },
   /**
    * 删除文件
@@ -116,7 +141,41 @@ const file = {
       return false;
     }
   },
-  /** */
+  /**
+   * 移动文件夹
+   */
+  async moveFolder(source, dest) {
+    try {
+      console.log("----------------------------);:>> ");
+      console.log("file.pathJoin(source) :>> ", file.pathJoin(source));
+      console.log("file.pathJoin(dest) :>> ", file.pathJoin(dest));
+      console.log("----------------------------);:>> ");
+      await fse.move(file.pathJoin(source), file.pathJoin(dest), {
+        overwrite: true,
+      });
+      return true;
+    } catch (err) {
+      console.error("Error moving folder:", err);
+      return false;
+    }
+  },
+  /**
+   * 复制文件夹 没生效
+   */
+  async copyFolder(source, dest) {
+    try {
+      console.log("file.pathJoin(source) :>> ", file.pathJoin(source));
+      console.log("file.pathJoin(dest) :>> ", file.pathJoin(dest));
+      fse.copySync(file.pathJoin(source), file.pathJoin(dest), {
+        overwrite: true,
+      });
+      console.log("Folder copied successfully!");
+      return true;
+    } catch (error) {
+      console.error("Error copying folder:", error);
+      return false;
+    }
+  },
 };
 
 module.exports = file;

@@ -5583,9 +5583,9 @@ ws@~8.11.0:
   resolved "https://registry.npmmirror.com/ws/-/ws-8.11.0.tgz"
   integrity sha512-HPG3wQd9sNQoT9xHyNCXoDUa+Xw/VevmY9FoHyQ+g+rrMn4j6FB4np7Z0OhdTgjx6MgQLK7jwSy1YecU1+4Asg==
 
-wujie-vue3@^1.0.18:
+wujie-vue3@^1.0.22:
   version "1.0.22"
-  resolved "https://registry.npmmirror.com/wujie-vue3/-/wujie-vue3-1.0.22.tgz"
+  resolved "https://registry.npmmirror.com/wujie-vue3/-/wujie-vue3-1.0.22.tgz#03badf79fd870c99f95cd998bd22babb32acd3c6"
   integrity sha512-/FD52+3rEg4vQb6EhSq+V9WMhaHYyVliUsVDBIzePcX0yUsep+4oC8r3EmyeS2dfEl3DCmMwLz5MnBGL3c4Msw==
   dependencies:
     wujie "1.0.22"

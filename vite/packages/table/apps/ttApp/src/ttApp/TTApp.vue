@@ -25,12 +25,6 @@ const registerCard = (id: string) => {
   });
 };
 
-const installTTApp = async () => {
-  let res = await useInstallTTApp();
-  ttappStore.selectAll();
-  console.log("res :>> ", res);
-};
-
 const uninstallTTApp = async (id: string) => {
   ttappStore.uninstall(id);
 };
@@ -48,9 +42,7 @@ const selectAllTTApp = async () => {
   <xt-modal v-model="test" @close="onClose">
     <Builder />
     <div class="line">
-      <xt-button @click="installTTApp()" :w="140" :h="40" type="theme"
-        >安装TTApp</xt-button
-      >
+
       <xt-button @click="selectAllTTApp()" :w="140" :h="40" type="theme"
         >查询所有TTApp</xt-button
       >
