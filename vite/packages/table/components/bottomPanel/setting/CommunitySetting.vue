@@ -1,5 +1,5 @@
 <template>
-  <xt-modal v-model="communitySetVisible" title="团队导航设置" :maskIndex="700">
+  <xt-modal v-model="communitySetVisible" title="团队导航设置" :maskIndex="900">
     <div class="flex flex-col px-2" style="width: 500px">
       <div class="w-full xt-bg-2 flex flex-col rounded-xl p-4 ">
         <span class="xt-font xt-text font-16">团队空间容量</span>
@@ -84,6 +84,7 @@ watch(()=>settingType.value,(newVal)=>{
         ok: () => {
           proxy.$bus.emit("openAppVisible");
           settingType.value = "app";
+          communitySetVisible.value = false; 
         },
         noText: "取消",
       }

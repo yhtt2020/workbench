@@ -57,10 +57,6 @@ const layOutIcon = computed(() => {
 
 const navList = computed(() => {
   return appModalList.value[1]?.list;
-  // const filterList = teamNavList.value.filter((item) => {
-  //   return item !== null;
-  // });
-  // return filterList;
 });
 
 const teamNavData = computed(() => {

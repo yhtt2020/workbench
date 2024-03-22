@@ -4,7 +4,7 @@
     custom
     boxClass="rounded-xl"
     :mask="false"
-    :index="600"
+    :index="850"
   >
     <!-- 外部网页链接拖拽 -->
     <!-- <LinkDrop>
