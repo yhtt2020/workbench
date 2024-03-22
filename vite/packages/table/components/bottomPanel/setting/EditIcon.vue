@@ -1,5 +1,5 @@
 <template>
-  <xt-modal v-model="visible" :footer="0" @close="close" :index="index" :mask="false">
+  <xt-modal v-model="visible" :footer="0" @close="close" :index="index" :maskIndex="900">
     <template #header-right>
       <xt-button @click="save" w="60" h="32" radius="8" type="theme">保存</xt-button>
     </template>
@@ -82,7 +82,7 @@ import { appearanceColorOptions, } from "../../widgets/myIcons/set/options";
 const props = defineProps({
   modelValue: {},
   index: {
-    default: "610",
+    default: "910",
   },
 });
 const { modelValue } = toRefs(props);

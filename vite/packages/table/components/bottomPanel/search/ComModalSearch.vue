@@ -68,7 +68,7 @@ import { ref, computed, getCurrentInstance,watch } from "vue";
 import { storeToRefs } from "pinia";
 import { favoStore } from "../../../apps/favorites/store";
 import { communityNavStore } from "../store/communityNavStore";
-import { apps,doc } from '../hooks/getFileType';
+import { apps,doc,getSoftData } from '../hooks/getFileType';
 
 const emit = defineEmits(["close"]);
 
@@ -134,15 +134,7 @@ const getFileList = (data) =>{
     });
   }
   else if(data === 'soft'){
-    result = list.filter((item) => {
-      if (typeof item.value === "string" && item.value.startsWith("C:\\")){
-        const filesName = `.${item.value.split("\\").pop().split(".").pop()}`;
-        const isSoft = apps.some((someItem) => {
-          return someItem === filesName;
-        });
-        return isSoft;
-      }
-    });
+    result = getSoftData(list);
   }
   else if (data === 'web'){
     result = list.filter((item) => {

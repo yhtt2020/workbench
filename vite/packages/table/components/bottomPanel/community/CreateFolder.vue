@@ -1,5 +1,5 @@
 <template>
-  <xt-modal v-model="folderVisible" :index="650" :title="'添加文件夹'">
+  <xt-modal v-model="folderVisible" :index="900" :title="'添加文件夹'">
     <div style="width: 500px" class="flex items-center justify-center flex-col">
       <xt-input
         v-model="folderName"
