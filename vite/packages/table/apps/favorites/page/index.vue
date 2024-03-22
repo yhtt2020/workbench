@@ -17,6 +17,7 @@
     
     <xt-modal v-model="previewFlag" :index="99999999" :maskIndex="9999999" title="添加到分组"  boxClass="rounded-xl p-4" :mask="true" :header="true" :footer="true"  v-if="previewFlag" @ok="addHandle" >
       <xt-preview v-if="previewFlag" :previewFlag="previewFlag" ref="preview"></xt-preview>
+      
     </xt-modal>
     <!-- 修改网址名称 -->
     <xt-modal title="编辑名称" :maskIndex="1001" :index="1002" boxClass="rounded-xl p-4" :mask="true" :header="true" :footer="true" v-model="renameFlag" v-if="renameFlag" @ok="changeName" >
