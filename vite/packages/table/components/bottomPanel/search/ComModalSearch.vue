@@ -68,8 +68,7 @@ import { ref, computed, getCurrentInstance,watch } from "vue";
 import { storeToRefs } from "pinia";
 import { favoStore } from "../../../apps/favorites/store";
 import { communityNavStore } from "../store/communityNavStore";
-import { apps } from '../hooks/getFileType';
-import { doc } from "../../desk/addIcon/hook/defaultData";
+import { apps,doc } from '../hooks/getFileType';
 
 const emit = defineEmits(["close"]);
 

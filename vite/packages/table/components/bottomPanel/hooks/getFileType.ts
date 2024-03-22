@@ -30,6 +30,25 @@ export  const apps = [
   '.deb',
   '.lnk',
 ];
+
+export  const doc=[
+  ".docx",
+  ".pptx",
+  '.txt',
+  '.pdf',
+  '.xlsx',
+  '.doc',
+  '.ppt',
+  '.xls',
+  '.md',
+  '.xml',
+  '.docm',
+  '.odt',
+  '.csv',
+  '.pptm',
+  '.ppsm',
+  '.zip',
+]
 // 获取文件分类类型
 export const fileTypeClass = {
   // 文件类型
