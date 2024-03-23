@@ -85,8 +85,10 @@
     </LinkDrop>
   </xt-modal>
 
+  <!-- 应用模式中文件创建弹窗 -->
   <CreateFolder ref="appCreateFolder" />
 
+  <!-- 选择应用弹窗 -->
   <EditNewNavigation
     v-if="editVisible"
     :isFolder="true"
