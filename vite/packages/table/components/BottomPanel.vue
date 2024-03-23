@@ -65,7 +65,7 @@
           }"
           style="z-index: 800"
         >
-          <TeamNav @close="teamNavVisible = false" />
+          <TeamNav @close="teamNavVisible = false" @openSet="settingModal"/>
         </div>
 
         <!-- 加入的社群搜索 -->
@@ -94,7 +94,7 @@
   </transition>
   <AppModal />
 
-  <Setting />
+  <Setting ref="modeSetRef"/>
 </template>
 
 <script>
@@ -143,6 +143,7 @@ import AppModal from "./bottomPanel/community/AppModal.vue";
 import { controlStore } from "./desk/navigationBar/hook/controlStore";
 import Setting from "./bottomPanel/setting/CommunitySetting.vue";
 import ComNavSearch from "./bottomPanel/search/ComNavSearch.vue";
+import { communityStore } from "../page/chat/store/communityStore";
 
 // 是否全屏状态 切换全屏
 const { isFullscreen, toggle } = useFullscreen();
@@ -351,6 +352,12 @@ export default {
       this.comSearchVisible = !this.comSearchVisible;
       this.comSearchLeft = evt.clientX - 274 < 0 ? 0 : evt.clientX - 50;
     });
+    // 获取社群列表
+    this.getMyCommunity();
+    // 开启应用模式
+    this.$bus.on("openAppSetting", () => {
+      this.$refs.modeSetRef.openAppSetting();
+    });
   },
   computed: {
     ...mapWritableState(appStore, ["userInfo", "settings", "lvInfo", "simple"]),
@@ -535,6 +542,7 @@ export default {
       "removeFootNavigationList",
     ]),
     ...mapActions(useNavigationStore, ["toggleEdit", "toggleTaskBox"]),
+    ...mapActions(communityStore,['getMyCommunity']),
     mergeData,
     listenMouse(e) {
       if (
@@ -634,6 +642,10 @@ export default {
       this.controlVisible = !this.controlVisible;
       this.controlLeft = event.clientX - 274 < 0 ? 0 : event.clientX - 274;
     },
+    // 开启设置
+    settingModal(){
+      this.$refs.modeSetRef.openAppSetting();
+    }
   },
 };
 </script>

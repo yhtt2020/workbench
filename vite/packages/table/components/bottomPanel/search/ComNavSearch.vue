@@ -5,7 +5,7 @@
       v-model:value="search"
       placeholder="搜索"
       class="w-full xt-bg-t-2"
-      @pressEnter="getSearchResult"
+      @change="getSearchResult"
       style="border-radius: 8px !important; height: 40px"
     >
       <template #suffix>

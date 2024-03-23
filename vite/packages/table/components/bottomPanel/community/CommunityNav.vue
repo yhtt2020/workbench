@@ -137,10 +137,6 @@ const openNav = (event) =>{
   }
 }
 
-
-onMounted(()=>{
-  communityNav.getRecommendCommunityList();
-})
 </script>
 
 <style lang="scss" scoped>

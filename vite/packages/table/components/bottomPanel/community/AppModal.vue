@@ -96,7 +96,7 @@
     @addIcon="addAppFile"
   />
 
-  <Setting ref="appSetting"/>
+  <!-- <Setting ref="appSetting"/> -->
 </template>
 
 <script setup>
@@ -110,7 +110,7 @@ import CreateFolder from "./CreateFolder.vue";
 import Search from "../search/ComModalSearch.vue";
 import RightListDeatil from "./RightListDeatil.vue";
 import EditNewNavigation from "../../desk/addIcon/EditNewNavigation.vue";
-import Setting from "../setting/CommunitySetting.vue";
+// import Setting from "../setting/CommunitySetting.vue";
 // import LinkDrop from "../drop/LinkDrop.vue";
 
 const { proxy } = getCurrentInstance();
@@ -185,7 +185,8 @@ const selectFolder = (data) => {
 };
 // 设置
 const enterSetting = () => {
-  appSetting.value.openAppSetting();
+  // appSetting.value.openAppSetting();
+  proxy.$bus.emit("openAppSetting");
 };
 
 onMounted(() => {

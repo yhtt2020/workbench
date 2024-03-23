@@ -28,7 +28,7 @@ import { message } from "ant-design-vue";
 import Folder from "../../../apps/folder/src/Folder.vue";
 import TeamEmpty from "../empty/TeamEmpty.vue";
 
-const emit = defineEmits(["close"]);
+const emit = defineEmits(["close","openSet"]);
 
 const communityNav = communityNavStore();
 const { layOut, settingType, appModalList,settingEnable } = storeToRefs(communityNav);
@@ -95,10 +95,10 @@ const teamNavData = computed(() => {
         fn: () => {
           if(settingEnable.value){
             closeNav(); 
-            proxy.$bus.emit("openAppSetting")
+            emit("openSet");
           }
           else {
-            proxy.$bus.emit("openAppSetting");
+            emit("openSet");
           }
         },
       },

@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { ref, getCurrentInstance, watch, onMounted } from "vue";
+import { ref, getCurrentInstance, watch, onMounted, watchEffect } from "vue";
 import { storeToRefs } from "pinia";
 import { communityNavStore } from "../store/communityNavStore";
 
@@ -70,13 +70,12 @@ watch(
         "切换到组件模式后，所有网站和应用都会合并到一个分组中。",
         {
           ok: () => {
+            communitySetVisible.value = false;
             settingType.value = "component";
             proxy.$bus.emit("closeModal");
-            communitySetVisible.value = false;
           },
           no: () => {
-            settingType.value = "app";
-            communitySetVisible.value = false;
+            // settingType.value = "app";
           },
           noText: "取消",
           okText: "确定",
@@ -89,26 +88,20 @@ watch(
         {
           type: "warning",
           ok: () => {
+            communitySetVisible.value = false;
             proxy.$bus.emit("openAppVisible");
             settingType.value = "app";
-            communitySetVisible.value = false;
           },
           no: () => {
-            settingType.value = "component";
-            communitySetVisible.value = false;
+            // settingType.value = "component";
           },
           noText: "取消",
+          okText: "确定",
         }
       );
     }
   }
 );
-
-onMounted(() => {
-  proxy.$bus.on("openAppSetting", () => {
-    communitySetVisible.value = true;
-  });
-});
 
 defineExpose({
   openAppSetting,
