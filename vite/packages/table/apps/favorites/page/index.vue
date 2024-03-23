@@ -15,10 +15,17 @@
     </xt-modal>
     <!-- 添加分组预览 -->
     
-    <xt-modal v-model="previewFlag" :index="99999999" :maskIndex="9999999" title="添加到分组"  boxClass="rounded-xl p-4" :mask="true" :header="true" :footer="true"  v-if="previewFlag" @ok="addHandle" >
+    <!-- <xt-modal v-model="previewFlag" :index="99999999" :maskIndex="9999999" title="添加到分组"  boxClass="rounded-xl p-4" :mask="true" :header="true" :footer="true"  v-if="previewFlag" @ok="addHandle" >
       <xt-preview v-if="previewFlag" :previewFlag="previewFlag" ref="preview"></xt-preview>
       
-    </xt-modal>
+    </xt-modal> -->
+    <xt-preview 
+      v-if="previewFlag" 
+      v-model="previewFlag" 
+      ref="preview"
+      :list="folderIcons"
+      @ok="addHandle">
+    </xt-preview>
     <!-- 修改网址名称 -->
     <xt-modal title="编辑名称" :maskIndex="1001" :index="1002" boxClass="rounded-xl p-4" :mask="true" :header="true" :footer="true" v-model="renameFlag" v-if="renameFlag" @ok="changeName" >
       <div class="relative flex items-center xt-modal rounded-xl" style="width: 466px; height: 50px;" >
@@ -262,25 +269,26 @@ export default {
   methods: {
     // 
     addHandle(){
-      const preview = this.$refs.preview
-      // 如果是新建文件夹 需要直接传数据 
-      if(preview.chooseIndex?.value == 0){
-        registerFolder(this.desks[preview.deskIndex], this.folderIcons)
-        message.success('添加图标成功！')
-      }else{
-        // 直接将数据添加进去 
-        this.desks.forEach(item=>{
-          if(item.id == preview.cardTmp?.deskId){
-            item.cards.forEach(card=>{
-              if(card.id == preview.cardTmp?.id) {
-                card.customData.list.push(...this.folderIcons)
-                message.success('添加图标成功！')
-              }
-            })
-          }
-        })
-      }
+      // const preview = this.$refs.preview
+      // // 如果是新建文件夹 需要直接传数据 
+      // if(preview.chooseIndex?.value == 0){
+      //   registerFolder(this.desks[preview.deskIndex], this.folderIcons)
+      //   message.success('添加图标成功！')
+      // }else{
+      //   // 直接将数据添加进去 
+      //   this.desks.forEach(item=>{
+      //     if(item.id == preview.cardTmp?.deskId){
+      //       item.cards.forEach(card=>{
+      //         if(card.id == preview.cardTmp?.id) {
+      //           card.customData.list.push(...this.folderIcons)
+      //           message.success('添加图标成功！')
+      //         }
+      //       })
+      //     }
+      //   })
+      // }
       // 
+      this.previewFlag = false
       this.checkFlag = false
       this.clearCheck()
     },
@@ -424,10 +432,13 @@ export default {
         newFolder.push({
           ...this.defaultFolderIcon,
           ...item, 
+          type:'default',
+          value:item.url
         })
       })
       this.deskIcons = newIcon
       this.folderIcons = newFolder
+      console.log(this.deskIcons, this.folderIcons)
     },
 
     // 排序算法

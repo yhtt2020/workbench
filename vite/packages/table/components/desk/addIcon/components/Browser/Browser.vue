@@ -301,12 +301,13 @@ const changeIcon = (item) => {
 
         newFolder.push({
             ...defaultFolderIcon, 
-            ...i
+            ...i,
+            type:'default',
+            value:i.url
         })
     })
     folderIcons.value = newFolder
     multipleList.value.push(...newIcon)
-    // console.log(multipleList.value)
 }
 
 // 重命名

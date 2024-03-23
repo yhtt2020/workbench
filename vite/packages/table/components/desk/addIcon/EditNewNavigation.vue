@@ -67,8 +67,8 @@
             <teleport to='body'>
               <CustomIcon v-if="iconIndex === 'CustomIcon'" @addIcon="addIcon"></CustomIcon>
               <!-- 以文件夹形式添加,预览 -->
-              <!-- <xt-preview v-if="previewFlag" v-model="previewFlag" @ok="addFolderIcon"></xt-preview> -->
-              <Preview v-if="previewFlag" v-model="previewFlag" @ok="addFolderIcon" :list="multipleList"></Preview>
+              <xt-preview v-if="previewFlag" v-model="previewFlag" @ok="addFolderIcon" :list="multipleList"></xt-preview>
+              <!-- <Preview v-if="previewFlag" v-model="previewFlag" @ok="addFolderIcon" :list="multipleList"></Preview> -->
               <!-- 添加到桌面 -->
               <AddDesk v-if="deskFlag" :list="multipleList" @close="deskFlag=false"></AddDesk>
             </teleport>
@@ -116,7 +116,7 @@ import { storeToRefs } from 'pinia';
 import {position} from './hook/defaultData'
 import { completeTask } from '../../../apps/task/task'
 import _ from 'lodash-es'
-import { useFileConversionIcon } from '../../../ui/hooks/useDataConversion'
+import { useFileConversionIcon,mergeData } from '../../../ui/hooks/useDataConversion'
 import { nanoid } from 'nanoid';
 import {refresh} from './hook/useRefresh'
 
@@ -278,6 +278,11 @@ const menus = ref([
 // 用于在多选情况下收藏夹内容，兼容 ---- 只用于收藏夹
 const filterCheck = () => {
   const list = allList.value.filter((item) => item.check)
+  list.forEach((item) => {
+    item.type = 'default'
+    item.value = item.url
+    item = mergeData(item)
+  })
   multipleList.value = [...list]
 }
 
@@ -293,12 +298,18 @@ const unCheck = () => {
 // 右键菜单导航栏添加图标
 const addMoreIcon = (bar:String,tip:String) => {
   const _addIcon = () => {
+    // 兼容收藏夹
+    if(iconIndex.value === 'Browser' && isMultiple.value){
+      filterCheck()
+    }
     multipleList.value.forEach((item) => {
       navMap.value[bar].unshift(item)
     })
     message.success('添加成功')
     isMultiple.value = false
     multipleList.value = []
+    // 兼容收藏夹
+    unCheck()
   }
   if(!nav.value[bar]){
     window.$ui.confirm(
