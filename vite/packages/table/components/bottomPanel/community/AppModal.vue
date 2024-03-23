@@ -7,84 +7,82 @@
     :index="850"
   >
     <!-- 外部网页链接拖拽 -->
-    <!-- <LinkDrop>
-      
-    </LinkDrop> -->
-
-    <div
-      style="width: 1000px; height: 720px"
-      class="xt-modal flex rounded-xl relative overflow-hidden"
-    >
-      <LeftMenu
-        :list="appModalList"
-        @change="selectFolder"
-        :currentIndex="appFolderIndex"
+    <LinkDrop @createApp="addAppFile">
+      <div
+        style="width: 1000px; height: 720px"
+        class="xt-modal flex rounded-xl relative overflow-hidden"
       >
-        <template #leftMenuBottom>
-          <div class="flex items-center h-10">
-            <a-tooltip title="添加">
-              <xt-dropdown
-                newIcon="fluent:add-16-regular"
-                :placement="'topLeft'"
-                :iconSize="24"
-                :w="32"
-                :h="32"
-              >
-                <div
-                  style="min-width: 200px; border: 1px solid var(--divider)"
-                  class="rounded-xl flex flex-col xt-bg-2 p-2"
+        <LeftMenu
+          :list="appModalList"
+          @change="selectFolder"
+          :currentIndex="appFolderIndex"
+        >
+          <template #leftMenuBottom>
+            <div class="flex items-center h-10">
+              <a-tooltip title="添加">
+                <xt-dropdown
+                  newIcon="fluent:add-16-regular"
+                  :placement="'topLeft'"
+                  :iconSize="24"
+                  :w="32"
+                  :h="32"
                 >
                   <div
-                    v-for="item in editList"
-                    class="flex items-center rounded-xl p-3 xt-hover"
-                    @click="item.fn"
+                    style="min-width: 200px; border: 1px solid var(--divider)"
+                    class="rounded-xl flex flex-col xt-bg-2 p-2"
                   >
-                    <xt-ify-icon
-                      :icon="item.icon"
-                      size="20"
-                      class="mr-3"
-                    ></xt-ify-icon>
-                    <span>{{ item.name }}</span>
+                    <div
+                      v-for="item in editList"
+                      class="flex items-center rounded-xl p-3 xt-hover"
+                      @click="item.fn"
+                    >
+                      <xt-ify-icon
+                        :icon="item.icon"
+                        size="20"
+                        class="mr-3"
+                      ></xt-ify-icon>
+                      <span>{{ item.name }}</span>
+                    </div>
                   </div>
-                </div>
-              </xt-dropdown>
-            </a-tooltip>
+                </xt-dropdown>
+              </a-tooltip>
 
-            <xt-button class="mx-3" w="32" h="32" style="border-radius: 8px">
-              <div class="flex items-center justify-center">
-                <xt-ify-icon
-                  icon="fluent:cloud-checkmark-16-regular"
-                  size="20"
-                ></xt-ify-icon>
-              </div>
-            </xt-button>
-            <a-tooltip title="设置">
-              <xt-button
-                w="32"
-                h="32"
-                style="border-radius: 8px"
-                @click="enterSetting"
-              >
+              <xt-button class="mx-3" w="32" h="32" style="border-radius: 8px">
                 <div class="flex items-center justify-center">
                   <xt-ify-icon
-                    icon="fluent:settings-16-regular"
+                    icon="fluent:cloud-checkmark-16-regular"
                     size="20"
                   ></xt-ify-icon>
                 </div>
               </xt-button>
-            </a-tooltip>
+              <a-tooltip title="设置">
+                <xt-button
+                  w="32"
+                  h="32"
+                  style="border-radius: 8px"
+                  @click="enterSetting"
+                >
+                  <div class="flex items-center justify-center">
+                    <xt-ify-icon
+                      icon="fluent:settings-16-regular"
+                      size="20"
+                    ></xt-ify-icon>
+                  </div>
+                </xt-button>
+              </a-tooltip>
+            </div>
+          </template>
+        </LeftMenu>
+        <div class="w-full h-full flex flex-col">
+          <Search @close="appModelVisible = false"></Search>
+          <div class="grow">
+            <xt-scrollbar :y="true" class="w-full p-3" style="height: 650px">
+              <RightListDeatil :detailIndex="appFolderIndex" />
+            </xt-scrollbar>
           </div>
-        </template>
-      </LeftMenu>
-      <div class="w-full h-full flex flex-col">
-        <Search @close="appModelVisible = false"></Search>
-        <div class="grow">
-          <xt-scrollbar :y="true" class="w-full p-3" style="height: 650px">
-            <RightListDeatil :detailIndex="appFolderIndex" />
-          </xt-scrollbar>
         </div>
       </div>
-    </div>
+    </LinkDrop>
   </xt-modal>
 
   <CreateFolder ref="appCreateFolder" />
@@ -95,8 +93,6 @@
     @setQuick="editVisible = false"
     @addIcon="addAppFile"
   />
-
-  <!-- <Setting ref="appSetting"/> -->
 </template>
 
 <script setup>
@@ -110,14 +106,12 @@ import CreateFolder from "./CreateFolder.vue";
 import Search from "../search/ComModalSearch.vue";
 import RightListDeatil from "./RightListDeatil.vue";
 import EditNewNavigation from "../../desk/addIcon/EditNewNavigation.vue";
-// import Setting from "../setting/CommunitySetting.vue";
-// import LinkDrop from "../drop/LinkDrop.vue";
+import LinkDrop from "../drop/LinkDrop.vue";
 
 const { proxy } = getCurrentInstance();
 
 const communityNav = communityNavStore();
-const { appModalList, appFolderIndex } =
-  storeToRefs(communityNav);
+const { appModalList, appFolderIndex } = storeToRefs(communityNav);
 
 const appModelVisible = ref(false);
 const editVisible = ref(false);
@@ -134,11 +128,11 @@ const editList = ref([
     },
   },
   {
-    name:'从桌面、导航和分组中选择',
-    icon:'fluent:app-folder-16-regular',
-    fn:()=>{
-      proxy.$bus.emit('openDeskAppModal');
-    }
+    name: "从桌面、导航和分组中选择",
+    icon: "fluent:app-folder-16-regular",
+    fn: () => {
+      proxy.$bus.emit("openDeskAppModal");
+    },
   },
   {
     icon: "fluent:folder-16-regular",
@@ -181,6 +175,7 @@ const addAppFile = (data) => {
     message.success("应用添加成功");
   }
 };
+
 // 选择切换文件数据
 const selectFolder = (data) => {
   appFolderIndex.value = data;
