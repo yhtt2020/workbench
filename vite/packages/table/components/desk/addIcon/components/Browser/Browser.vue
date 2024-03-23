@@ -247,39 +247,39 @@ const mergeArraysByGuid = (arr1, arr2) => {
 
 // 展示数据
 const showList = computed(() => {
-    const folder = folderList.value[folderIndex.value]
-    if (folder.type === 'all') {
-        let nn = []
-        nn = allList.value.reduce((acc, item) => {
-            if (item.browser === folder.browser && (value.value.indexOf(value.value) > -1 || item.url.indexOf(value.value) > -1)) {
-                acc.push(item)
-            }
-            return acc
-        }, [])
-        return nn
-    } else if (folder?.type == 'folder') {
+      const folder = folderList.value[folderIndex.value];
+      const name = item => item.rename ? item.rename : item.name;
+
+      if (folder?.type === 'all') {
         return allList.value.reduce((acc, item) => {
-            if (item.parent == folder.guid && (value.value.indexOf(value.value) > -1 || item.url.indexOf(value.value) > -1)) {
-                acc.push(item)
-            }
-            return acc
-        }, [])
-    } else if (folder?.type == 'favo') {
+          if (item.browser === folder.browser && (name(item).includes(value.value) || item.url?.includes(value.value))) {
+            acc.push(item);
+          }
+          return acc;
+        }, []);
+      } else if (folder?.type === 'folder') {
         return allList.value.reduce((acc, item) => {
-            if (item.favo && (value.value.indexOf(value.value) > -1 || item.url.indexOf(value.value) > -1)) {
-                acc.push(item)
-            }
-            return sortByFavoTime(acc)
-        }, [])
-    } else if (folder?.type == 'recent') {
+          if (item.parent === folder.guid && (name(item).includes(value.value) || item.url?.includes(value.value))) {
+            acc.push(item);
+          }
+          return acc;
+        }, []);
+      } else if (folder?.type === 'favo') {
         return allList.value.reduce((acc, item) => {
-            if (item.browser === folder.browser && item.recent && (value.value.indexOf(value.value) > -1 || item.url.indexOf(value.value) > -1)) {
-                acc.push(item)
-            }
-            return acc
-        }, [])
-    }
-})
+          if (item.favo && (name(item).includes(value.value) || item.url?.includes(value.value))) {
+            acc.push(item);
+          }
+          return sortByFavoTime(acc);
+        }, []);
+      } else if (folder?.type === 'recent') {
+        return allList.value.reduce((acc, item) => {
+          if (item.browser === folder.browser && item.recent && (name(item).includes(value.value) || item.url?.includes(value.value))) {
+            acc.push(item);
+          }
+          return acc;
+        }, []);
+      }
+    });
 
 // 根据收藏时间进行排序
 const sortByFavoTime = (arr) => {
