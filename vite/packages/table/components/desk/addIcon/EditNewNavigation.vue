@@ -67,8 +67,8 @@
             <teleport to='body'>
               <CustomIcon v-if="iconIndex === 'CustomIcon'" @addIcon="addIcon"></CustomIcon>
               <!-- 以文件夹形式添加,预览 -->
-              <xt-preview v-if="previewFlag" v-model="previewFlag" @ok="addFolderIcon"></xt-preview>
-              <!-- <Preview v-if="previewFlag" v-model="previewFlag" @ok="addFolderIcon"></Preview> -->
+              <!-- <xt-preview v-if="previewFlag" v-model="previewFlag" @ok="addFolderIcon"></xt-preview> -->
+              <Preview v-if="previewFlag" v-model="previewFlag" @ok="addFolderIcon" :list="multipleList"></Preview>
               <!-- 添加到桌面 -->
               <AddDesk v-if="deskFlag" :list="multipleList" @close="deskFlag=false"></AddDesk>
             </teleport>
