@@ -68,8 +68,18 @@
           <TeamNav @close="teamNavVisible = false" />
         </div>
 
-        <!-- 社群搜索 -->
-
+        <!-- 加入的社群搜索 -->
+        <div
+          v-if="comSearchVisible"
+          class="absolute"
+          :style="{
+            left: `${comSearchLeft}px`,
+            bottom: `${(navAttribute.navSize / 100) * 100}px`,
+          }"
+          style="z-index: 600"
+        >
+          <ComNavSearch @close="comSearchVisible = false"/>
+        </div>
       </div>
     </AutoHide>
   </xtMixMenu>
@@ -132,13 +142,10 @@ import TeamNav from "./bottomPanel/community/TeamNav.vue";
 import AppModal from "./bottomPanel/community/AppModal.vue";
 import { controlStore } from "./desk/navigationBar/hook/controlStore";
 import Setting from "./bottomPanel/setting/CommunitySetting.vue";
+import ComNavSearch from "./bottomPanel/search/ComNavSearch.vue";
 
-const {
-  //是否全屏状态
-  isFullscreen,
-  //切换全屏
-  toggle,
-} = useFullscreen();
+// 是否全屏状态 切换全屏
+const { isFullscreen, toggle } = useFullscreen();
 
 export default {
   name: "BottomPanel",
@@ -160,6 +167,8 @@ export default {
     CommunityNav,
     TeamNav,
     AppModal,
+    Setting,
+    ComNavSearch,
   },
   data() {
     return {
@@ -276,8 +285,8 @@ export default {
       teamNavVisible: false,
       teamNavLeft: 100,
       // 社群搜索
-      comSearchVisible:false,
-      comSearchLeft:100,
+      comSearchVisible: false,
+      comSearchLeft: 100,
     };
   },
   props: {},
@@ -338,10 +347,10 @@ export default {
       this.teamNavLeft = evt.clientX - 274 < 0 ? 0 : evt.clientX - 274;
     });
     // 触发社群搜索弹窗
-    this.$bus.on("openComSearch",(evt)=>{
-      this.comSearchVisible = true;
-      // this.comSearchLeft
-    })
+    this.$bus.on("openComSearch", (evt) => {
+      this.comSearchVisible = !this.comSearchVisible;
+      this.comSearchLeft = evt.clientX - 274 < 0 ? 0 : evt.clientX - 50;
+    });
   },
   computed: {
     ...mapWritableState(appStore, ["userInfo", "settings", "lvInfo", "simple"]),
@@ -540,7 +549,6 @@ export default {
         }, 800);
       }
     },
-
     /**
      * 清空当前导航栏
      */
@@ -567,12 +575,10 @@ export default {
         this.quick = true;
       }
     },
-
     edit(value) {
       this.componentId = value;
       this.quick = true;
     },
-
     getDelIcon(value) {
       this.delZone = value;
     },
@@ -621,7 +627,6 @@ export default {
     hoverRealItemId,
     useWindowSize,
     useMergeFolder,
-
     //  点击头像框打开控制中心
     openControl(event) {
       // 触发工作台首次进入小红点,进行关闭
@@ -691,4 +696,3 @@ export default {
   opacity: 0.5;
 }
 </style>
-./bottomPanel/Dock.vue/index.ts./desk/addIcon/EditNewNavigation.vue/index.ts

@@ -20,7 +20,7 @@
 
 <script setup>
 import { storeToRefs } from "pinia";
-import { computed, ref, getCurrentInstance } from "vue";
+import { computed, ref, getCurrentInstance,onMounted } from "vue";
 import { nanoid } from "nanoid";
 import { communityStore } from "../../../page/chat/store/communityStore";
 import { useRouter } from "vue-router";
@@ -32,7 +32,7 @@ const communityNav = communityStore();
 const { community } = storeToRefs(communityNav);
 const router = useRouter();
 const comNav = communityNavStore();
-const { settingType } = storeToRefs(comNav);
+const { settingType,currentCommunity } = storeToRefs(comNav);
 
 const { proxy } = getCurrentInstance();
 
@@ -45,15 +45,10 @@ const communityNavList = computed(() => {
   if (communityNum.value) {
     return [
       {
-        value: "task",
-        name: "想天官方社群",
-        icon: "/icons/logo128.png",
-        bg: "",
-        isBg: false,
-        mode: "app",
-        type: "systemApp",
-        id: nanoid(11),
-        fn:()=>{}
+        ...currentCommunity.value.item,
+        fn:(event)=>{
+          proxy.$bus.emit("openComSearch",event);
+        }
       },
       {
         icon: "/logo/community.svg",
@@ -142,6 +137,10 @@ const openNav = (event) =>{
   }
 }
 
+
+onMounted(()=>{
+  communityNav.getRecommendCommunityList();
+})
 </script>
 
 <style lang="scss" scoped>
