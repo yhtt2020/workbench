@@ -47,7 +47,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed,getCurrentInstance } from "vue";
 import { storeToRefs } from "pinia";
 import { communityNavStore } from "../store/communityNavStore";
 
@@ -56,6 +56,7 @@ import { message } from "ant-design-vue";
 
 const communityNav = communityNavStore();
 const { appFolderIndex, appModalList } = storeToRefs(communityNav);
+const { proxy } = getCurrentInstance();
 
 const editVisible = ref(false);
 const list = ref([
@@ -77,6 +78,9 @@ const list = ref([
     title: "从你的桌面、导航栏、分组中选择添加",
     btnText: "选择添加",
     disableBtnText: "",
+    fn:()=>{
+      proxy.$bus.emit('openDeskAppModal')
+    }
   },
   {
     icon: ["fluent:hard-drive-16-regular"],

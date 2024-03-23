@@ -92,9 +92,15 @@
       <component :is="componentId" @setQuick="setQuick"></component>
     </div>
   </transition>
+
+  <!-- 应用模式弹窗 -->
   <AppModal />
 
+  <!-- 应用模式中设置弹窗 -->
   <Setting ref="modeSetRef"/>
+
+  <!-- 桌面、导航、分支数据分类弹窗 -->
+  <DeskAppModal  ref="deskAppModalRef" />
 </template>
 
 <script>
@@ -144,6 +150,7 @@ import { controlStore } from "./desk/navigationBar/hook/controlStore";
 import Setting from "./bottomPanel/setting/CommunitySetting.vue";
 import ComNavSearch from "./bottomPanel/search/ComNavSearch.vue";
 import { communityStore } from "../page/chat/store/communityStore";
+import DeskAppModal from "./bottomPanel/desk/DeskAppList.vue";
 
 // 是否全屏状态 切换全屏
 const { isFullscreen, toggle } = useFullscreen();
@@ -170,6 +177,7 @@ export default {
     AppModal,
     Setting,
     ComNavSearch,
+    DeskAppModal,
   },
   data() {
     return {
@@ -357,6 +365,10 @@ export default {
     // 开启应用模式
     this.$bus.on("openAppSetting", () => {
       this.$refs.modeSetRef.openAppSetting();
+    });
+    // 开启桌面、导航、分组数据分类弹窗
+    this.$bus.on("openDeskAppModal", () => {
+      this.$refs.deskAppModalRef.openDeskApp();
     });
   },
   computed: {

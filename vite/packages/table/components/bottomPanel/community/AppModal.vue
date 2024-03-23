@@ -136,7 +136,9 @@ const editList = ref([
   {
     name:'从桌面、导航和分组中选择',
     icon:'fluent:app-folder-16-regular',
-    fn:()=>{}
+    fn:()=>{
+      proxy.$bus.emit('openDeskAppModal');
+    }
   },
   {
     icon: "fluent:folder-16-regular",
