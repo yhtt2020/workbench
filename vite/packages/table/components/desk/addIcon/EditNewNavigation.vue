@@ -470,6 +470,11 @@ onMounted(() => {
     const target = position.find(item => item.value === tag)
     defaultTitle.value = target
   }
+  // 如果收藏夹未创建，则进行刷新
+  if(allList.value.length === 0){
+    refresh()
+  }
+  
 })
 
 // 下拉框改变标题
