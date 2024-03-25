@@ -4,25 +4,21 @@ import { ref, onMounted, computed } from "vue";
 import TTApp from "../../ttApp";
 import { useParserCard } from "../../parser";
 import { useSelect } from "../../hooks";
-const data: any = ref({});
+import WuJie from "../wujie/WuJie.vue";
 const loading = ref(true);
-
-const wujieHeader: any = ref({});
-// const wujie: any = ref({});
+const cardHeader: any = ref({});
+const customSize = ref("8x8");
+const wujie: any = ref({});
 onMounted(async () => {
-  console.log("props.customData :>> ", props.customData);
   loading.value = false;
-
   if (!props.customData?.id) return;
   // 查询数据
   let res = await useSelect(props.customData.id);
-  console.log("----------------------- :>> ");
-  console.log("res :>> ", res);
-  let config = useParserCard(res);
-  console.log("config :>> ", config);
-  wujieHeader.value = config?.header;
-  // wujie.value = config?.wujie;
-  data.value = config;
+  // 解析数据
+  let data = useParserCard(res);
+  customSize.value = data.customSize;
+  cardHeader.value = data.header;
+  wujie.value = data.wujie;
   loading.value = false;
 });
 const props = defineProps({
@@ -50,7 +46,7 @@ const refresh = ref({
 
 const header = computed(() => {
   return {
-    ...wujieHeader.value,
+    ...cardHeader.value,
     refresh: refresh.value,
   };
 });
@@ -63,7 +59,7 @@ const header = computed(() => {
     :header="header"
     :menuList="[refresh]"
     :options="options"
-    customSize="8x8"
+    :customSize="customSize"
     class="xt-theme-b"
   >
     <div
@@ -72,7 +68,9 @@ const header = computed(() => {
     >
       <!-- <TTApp v-if="visible" @close="visible = false" />
       <xt-button @click="visible = true">打开控制中心</xt-button> -->
-      <Wujie />
+      <template v-if="!loading">
+        <WuJie v-bind="wujie" />
+      </template>
     </div>
   </xt-container>
 </template>

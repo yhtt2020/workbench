@@ -6,7 +6,6 @@ const Base = require("./base");
 // const appModel = require("../../model/appModel");
 
 const {
-  useInstall,
   installJson,
   installV2
 } = require("../ttApps/useInstall");

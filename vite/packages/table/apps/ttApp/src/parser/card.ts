@@ -1,3 +1,7 @@
+const parse = (props) => {
+  const data = JSON.parse(props.data);
+  return data;
+};
 /**
  * 小组件解析器 ttapp.js
  */
@@ -6,10 +10,11 @@ export const useParserCard = (props: any) => {
    * 边界处理
    */
   // 解析modules
-  const modules = JSON.parse(props.modules);
-  const oldCardData = modules?.card;
+  const data = parse(props);
+  console.log("data :>> ", data);
+  const card = data.modules?.card;
   // 数据不存在card对象
-  if (!oldCardData) return;
+  if (!card) return;
   /**
    * 解析数据
    */
@@ -17,43 +22,44 @@ export const useParserCard = (props: any) => {
 
   // 解析卡片头部
 
-  cardData.header = parserHeader(props, oldCardData);
+  cardData.header = parserHeader(data, card);
   // 解析无界配置
-  cardData.wujie = parserWuJie(props.data, oldCardData);
+  cardData.wujie = parserWuJie(data, card);
+
+  if (card.customSize) {
+    cardData.customSize = card.customSize;
+  } else {
+    cardData.customSize = "2x2";
+  }
+
   return cardData;
 };
 
-const parserHeader = (props: any, data: any) => {
-  let headerObj: any = {};
+const parserHeader = (props: any, card: any) => {
+  let obj: any = {};
   // 解析卡片标题
   if (props?.name) {
-    headerObj.title = props.name;
+    obj.title = props.name;
   } else {
-    headerObj.title = "小组件";
+    obj.title = "小组件";
   }
   // 解析卡片图标
-  if (props?.showIcon) {
-    headerObj.showIcon = props.icon;
-  } else if (props?.ifyIcon) {
-    headerObj.ifyIcon = props.ifyIcon;
+  if (card?.showIcon) {
+    obj.showIcon = card.icon;
+  } else if (card?.ifyIcon) {
+    obj.ifyIcon = card.ifyIcon;
   } else {
-    headerObj.ifyIcon = "fluent:grid-20-regular";
+    obj.ifyIcon = "fluent:grid-20-regular";
   }
+  // 解析卡片大小
 
-  return headerObj;
+  return obj;
 };
 
-const parserWuJie = (props: any, oldCardData) => {
-  // let wujie: any = {};
-  // wujie.name = props.id;
-  // wujie.entry = "ttapp://" + props.id + "/" + oldCardData.entry;
+const parserWuJie = (props: any, card: any) => {
+  let wujie: any = {};
+  wujie.name = props.id;
+  wujie.entry = "ttapp://" + props.id + "/" + card.entry;
 
-  // // 解析卡片大小
-  // if (props.size) {
-  //   wujie.customSize = props.size;
-  // } else {
-  //   wujie.customSize = "2x2";
-  // }
-
-  // return wujie;
+  return wujie;
 };

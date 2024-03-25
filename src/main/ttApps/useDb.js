@@ -15,7 +15,7 @@ const ttAppModel = {
     if (!exists) {
       await sqlDb.knex.schema.createTable("ttApp", function (t) {
         t.string("id").primary().unique(); // 唯一ID
-        t.string("modules"); // 模块
+        t.string("data"); // 模块
       });
     }
     // let sql = `INSERT INTO ttApp VALUES ('${id}')`;
@@ -26,17 +26,17 @@ const ttAppModel = {
   /**
    * 插入数据
    */
-  async insert(data) {
+  async insert(options) {
     try {
       // let { id, modules } = ttAppData;
       // let sql = `INSERT INTO ttApp VALUES ('${id}', '${modules}')`;
       // let res = await sqlDb.knex.raw(sql);
       await ttAppModel.initDb();
 
-      const { id, modules } = data;
+      const { id, data } = options;
       return sqlDb
         .knex("ttApp")
-        .insert({ id, modules })
+        .insert({ id, data })
         .then(() => {
           return true;
         })

@@ -157,9 +157,18 @@ const checkV2 = async (id) => {
   }
 
   // 6 保存数据
+  // 过滤不需要的数据
+  // manifestRes
+  const { data } = checkManifestRes;
+  console.log('data :>> ', data);
+  const obj = {
+    id,
+    name: data.name,
+    modules: data.modules,
+  };
   const saveRes = await saveData({
     id,
-    modules: checkManifestRes.data.modules,
+    data: obj,
   });
   if (saveRes) {
     return {
@@ -194,43 +203,7 @@ const installJson = async (data) => {
   console.log("res :>> ", res);
   return res;
 };
-const useInstall = async (filePath) => {
-  // 5 判断文件是否缺少
-  console.log("5、判断文件是否缺少 :>> ");
-  let checkFilePath = ["manifest.json"];
-  let checkFileRes = [];
-  for (let path of checkFilePath) {
-    let res = await existsFolder([...folderName, path]);
-    if (!res) checkFileRes.push(path);
-  }
-  if (checkFileRes.length > 0) {
-    console.log("5.1、缺少文件了 开始删除 :>> ");
-    await deleteFile(folderName);
-    return {
-      status: 1,
-      code: 400,
-      data: "缺失 " + checkFileRes.join(" , ") + " 文件",
-      info: "缺失 " + checkFileRes.join(" , ") + " 文件",
-    };
-  }
-  // // 6 判断manifest.json
-  // console.log("6、判断manifest.json文件 :>> ");
-  // let pathManifest = pathJoin([...folderName, "manifest.json"]);
-
-  // 7
-  // let modules = {};
-  // console.log("7、获取modules配置 :>> ", modules);
-  // let modulesJson = JSON.stringify(manifestRes.modules);
-
-  // if (res) {
-  return id;
-  // } else {
-  //   return false;
-  // }
-};
-
 module.exports = {
-  useInstall,
   installJson,
   installV2,
 };
