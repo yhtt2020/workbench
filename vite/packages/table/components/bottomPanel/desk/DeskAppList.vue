@@ -12,7 +12,7 @@
         :list="deskList"
         last="3"
         class="w-full"
-        leftClass="xt-bg-m rounded-xl"
+        leftClass="xt-bg-m rounded-tl-xl rounded-tr-xl"
         leftMargin="mr-0 py-3"
         model="id"
         w="64"
