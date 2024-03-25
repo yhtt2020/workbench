@@ -16,7 +16,7 @@ export default [{
       }
     },
     {
-      path: "/add",
+      path: "/add&gid=:gridId&id=:id?",
       name: 'deckAdd',
       component: DeckAdd
     }

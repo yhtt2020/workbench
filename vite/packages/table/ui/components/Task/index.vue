@@ -48,7 +48,8 @@ export default defineComponent({
     },
     currentStep() {
       let length = this.taskID ? guide[this.taskID]?.length - 2 : 0;
-      let next = this.step == length ? "完成" : this.task?.next || "下一步";
+      let next = this.step == length ? "OK" : this.task?.next || "下一步";
+      return `${next}`;
       return `${next} ${this.step} / ${length}`;
     },
     //

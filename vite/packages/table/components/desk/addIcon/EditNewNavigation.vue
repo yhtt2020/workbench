@@ -67,8 +67,8 @@
             <teleport to='body'>
               <CustomIcon v-if="iconIndex === 'CustomIcon'" @addIcon="addIcon"></CustomIcon>
               <!-- 以文件夹形式添加,预览 -->
-              <xt-preview v-if="previewFlag" v-model="previewFlag" @ok="addFolderIcon"></xt-preview>
-              <!-- <Preview v-if="previewFlag" v-model="previewFlag" @ok="addFolderIcon"></Preview> -->
+              <xt-preview v-if="previewFlag" v-model="previewFlag" @ok="addFolderIcon" :list="multipleList"></xt-preview>
+              <!-- <Preview v-if="previewFlag" v-model="previewFlag" @ok="addFolderIcon" :list="multipleList"></Preview> -->
               <!-- 添加到桌面 -->
               <AddDesk v-if="deskFlag" :list="multipleList" @close="deskFlag=false"></AddDesk>
             </teleport>
@@ -116,8 +116,9 @@ import { storeToRefs } from 'pinia';
 import {position} from './hook/defaultData'
 import { completeTask } from '../../../apps/task/task'
 import _ from 'lodash-es'
-import { useFileConversionIcon } from '../../../ui/hooks/useDataConversion'
+import { useFileConversionIcon,mergeData } from '../../../ui/hooks/useDataConversion'
 import { nanoid } from 'nanoid';
+import {refresh} from './hook/useRefresh'
 
 import AddDesk from './components/AddDesk.vue'
 import DropDown from './components/DropDown.vue'
@@ -195,7 +196,8 @@ const nav = computed(() => {
     'foot':navigationToggle.value[2],
     'left':navigationToggle.value[0],
     'right':navigationToggle.value[1],
-    "desktop": true,
+    "desktop": true, // 兼容老版本桌面选择
+    '':true,  // 未传值情况
   }
 })
 // 提示是否开启导航栏
@@ -207,11 +209,11 @@ const obj = computed(() => {
   }
 })
 
-// export interface EditType {
-//   isFolder: boolean
-// }
+export interface EditType {
+  isFolder: boolean
+}
 
-const props = defineProps({
+const props = withDefaults(defineProps<EditType>(), {
   isFolder: false
 })
 
@@ -276,6 +278,11 @@ const menus = ref([
 // 用于在多选情况下收藏夹内容，兼容 ---- 只用于收藏夹
 const filterCheck = () => {
   const list = allList.value.filter((item) => item.check)
+  list.forEach((item) => {
+    item.type = 'default'
+    item.value = item.url
+    item = mergeData(item)
+  })
   multipleList.value = [...list]
 }
 
@@ -291,12 +298,18 @@ const unCheck = () => {
 // 右键菜单导航栏添加图标
 const addMoreIcon = (bar:String,tip:String) => {
   const _addIcon = () => {
+    // 兼容收藏夹
+    if(iconIndex.value === 'Browser' && isMultiple.value){
+      filterCheck()
+    }
     multipleList.value.forEach((item) => {
       navMap.value[bar].unshift(item)
     })
     message.success('添加成功')
     isMultiple.value = false
     multipleList.value = []
+    // 兼容收藏夹
+    unCheck()
   }
   if(!nav.value[bar]){
     window.$ui.confirm(
@@ -457,6 +470,11 @@ onMounted(() => {
     const target = position.find(item => item.value === tag)
     defaultTitle.value = target
   }
+  // 如果收藏夹未创建，则进行刷新
+  if(allList.value.length === 0){
+    refresh()
+  }
+  
 })
 
 // 下拉框改变标题

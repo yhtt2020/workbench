@@ -1,47 +1,74 @@
 const { SqlDb } = require("../util/sqldb");
-const { nanoid } = require('nanoid')
+const { nanoid } = require("nanoid");
 
 const sqlDb = new SqlDb();
 const ttAppModel = {
   /**
    * 初始化数据库
    */
-  async initDb() {
+  async initDb(id) {
     // 是否存在ttApp表
-    console.log("----------- ttAppModel 我执行啦 -----------");
-
     let exists = await sqlDb.knex.schema.hasTable("ttApp");
-
     // 不存在则创建
     if (!exists) {
-      console.log("object :>> ", object);
       await sqlDb.knex.schema.createTable("ttApp", function (t) {
         t.string("nanoid").primary().unique(); //本地id
       });
     }
-    console.log("来了老弟 :>> ");
-    // sqlDb.knex.raw("INSERT INTO ttApp VALUES ('wanan123')").then((resp) => {
-    //   console.log("resp :>> ", resp);
-    //   console.log("resp :>> ", resp);
-    //   console.log("resp :>> ", resp);
-    //   console.log("resp :>> ", resp);
-    //   console.log("resp :>> ", resp);
-    //   console.log("resp :>> ", resp);
+    // let sql = `INSERT INTO ttApp VALUES ('${id}')`;
+    // sqlDb.knex.raw(sql).then((resp) => {
     //   console.log("resp :>> ", resp);
     // });
-    sqlDb
+    return sqlDb
       .knex("ttApp")
-      .insert({ nanoid: nanoid()})
+      .insert({ nanoid: id })
       .then(() => {
         console.log("Inserted");
-        console.log("Inserted");
-        console.log("Inserted");
-        console.log("Inserted");
-        console.log("Inserted");
+        return true;
       })
       .catch((err) => {
         console.log(err);
       });
+  },
+  /**
+   * 删除ttApp
+   */
+  async del(id) {
+    // return sqlDb
+    //   .knex("ttApp")
+    //   .where({ nanoid: id })
+    //   .del()
+    //   .then(() => {
+    //     console.log("Deleted");
+    //     return true;
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+    try {
+      await sqlDb.knex("ttApp").where({ nanoid: id }).del();
+      return true;
+    } catch (err) {
+      console.error("Error deleting directory:", err);
+      return false;
+    }
+  },
+  /**
+   * 查询所有
+   */
+  async selectAll() {
+    // let sql = `INSERT INTO ttApp VALUES ('${id}')`;
+    let sql = `SELECT * FROM ttApp`;
+    let res = await sqlDb.knex.raw(sql);
+    return res;
+  },
+  /**
+   * 查询
+   */
+  async select(id) {
+    let sql = `SELECT * FROM ttApp WHERE nanoid='${id}'`;
+    let res = await await sqlDb.knex.raw(sql);
+    return res;
   },
 
   // 增删改查

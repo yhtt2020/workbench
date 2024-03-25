@@ -75,7 +75,7 @@
   />
 
   <Expand
-    :data="props"
+    :data="expandList"
     :auto="false"
     v-if="expandVisible"
     @close="expandClose"
@@ -110,6 +110,10 @@ import { startApp } from "../../../ui/hooks/useStartApp";
 import { useNavigationStore } from "../../../components/desk/navigationBar/navigationStore";
 import { useMouseInElement } from "@vueuse/core";
 import { mergeData } from "../../../ui/hooks/useDataConversion";
+import {expandData} from './hooks/expandCom'
+
+import { useFolderStore } from "./store";
+import { storeToRefs } from "pinia";
 
 const Null = defineAsyncComponent(() => import("./components/Null.vue"));
 const Expand = defineAsyncComponent(() => import("./expand/Expand.vue"));
@@ -122,6 +126,9 @@ const EditNewNavigation = defineAsyncComponent(() =>
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
+
+const folderStore = useFolderStore();
+const { focusClose } = storeToRefs(folderStore)
 
 /**
  * 拖拽位置
@@ -198,6 +205,8 @@ const props = defineProps({
       close: Boolean,
       // 是否开启外部右键菜单
       isOut: false,
+      // 禁用头部
+      disableHeader: false,
     }),
   },
   // 自动设置大小
@@ -220,6 +229,7 @@ const refreshState = ref(false);
 const header = computed(() => {
   if (!navBar.value.isOut) {
     return {
+    // disabled: navBar.value.disableHeader,
       showIcon: customData.value.icon,
       title: customData.value.name,
       // refresh: {
@@ -228,13 +238,25 @@ const header = computed(() => {
       //   state: refreshState.value,
       //   fn: refreshDeskApp,
       // },
-      leftHover: true,
+      leftHover: !navBar.value.disableHeader,  // 当为社区图标时，隐藏hover功能
       leftHoverName: secondary.value ? "编辑文件夹" : "点击打开",
       leftHoverIcon: secondary.value
         ? "fluent:settings-16-regular"
         : "fluent:open-16-regular",
       //
-      rightIcon: [
+      rightIcon: rightIcons.value,
+    };
+  } else {
+    return customData.value.header;
+  }
+});
+
+// 处理社区中心图标隐藏部分功能，社区中心图标不显示右侧图标
+const rightIcons = computed(() => {
+  if(navBar.value.disableHeader){
+    return []
+  } else {
+    return [
         {
           ifyIcon: "fluent:open-16-regular",
           tip: "打开全部",
@@ -248,12 +270,9 @@ const header = computed(() => {
           ifyIcon: layout.value,
           fn: layoutClick,
         },
-      ],
-    };
-  } else {
-    return customData.value.header;
-  }
-});
+      ]
+    }
+})
 // 打开所有文件
 const openAllFile = () => {
   if (customData.value.list.length > 10) {
@@ -346,10 +365,21 @@ const autoSize = computed(() => {
   }
 });
 
+const expandList = ref(props)
+
 /**
  *点击组件关闭
  */
 const clickFile = (data) => {
+  // 当为社区中心时
+  if(data.value === 'commun'){
+    expandVisible.value = true
+    // 文件夹参数
+    expandList.value = expandData()
+    // 保留原来的大小
+    oldCardSize.value = customData.value.customSize
+    return
+  }
   startApp(data.type, data.value, router);
   emit("clickFile", data);
 };
@@ -362,7 +392,7 @@ watch(
     console.log(newV, oldV, "newV,oldV");
     emit("update:customSize", newV);
   },
-  { deep: true }
+  { deep : true }
 );
 
 /**
@@ -436,6 +466,7 @@ const layoutClick = () => {
 
 // 增
 const createFile = (data) => {
+  focusClose.value = true
   if(!navBar.value.isOut){
     customData.value.list.push(data);
   }
@@ -448,6 +479,7 @@ const createFile = (data) => {
 const deleteFile = (data) => {
   if (!navBar.value.isOut) {
     customData.value.list.splice(customData.value.list.indexOf(data), 1);
+  focusClose.value = false
   } else {
     emit("deleteNavApp", data);
   }
@@ -513,6 +545,7 @@ const updateList = (data) => {
   setTimeout(() => {
     customData.value.list = data;
     dragSortState.value = false;
+    focusClose.value = false   // 编辑完后，恢复失焦自动关闭
   }, 10);
 };
 
@@ -578,8 +611,11 @@ const refreshDeskApp = async () => {
 };
 function handleClick(e) {
   if (e.target?.closest(".tt-folder-container") == null) {
+    // 当二级菜单打开时，失焦了也无法关闭文件夹
+    if(focusClose.value){
+      return
+    }
     emit("close");
-    // console.log("123 :>> ", 123);
   }
 }
 onUnmounted(() => {
@@ -601,6 +637,33 @@ onMounted(async () => {
     customData.value.customSize = customData.value.size;
   }
   // 冒泡排序
+
+  // 监听文件夹当打开编辑时，阻止失焦自动关闭
+  watch(() => editVisible.value, (val) => {
+    if(val){
+      focusClose.value = true
+      return
+    }
+    focusClose.value = false
+  })
+
+  // 监听文件夹当打开设置时，阻止失焦自动关闭
+  watch(() => setVisible.value, (val) => {
+    if(val){
+      focusClose.value = true
+      return
+    }
+    focusClose.value = false
+  })
+
+  // 监听文件夹当打开展开时，阻止失焦自动关闭
+  watch(() => expandVisible.value, (val) => {
+    if(val){
+      focusClose.value = true
+      return
+    }
+    focusClose.value = false
+  })
 
   // 开启导航添加
   proxy.$bus.on("openEditNav",()=>{

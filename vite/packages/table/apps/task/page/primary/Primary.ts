@@ -133,7 +133,7 @@ export const tasks = [
         repeatable: true,
         frequency: 1,
         intro: "你可以自由修改工作台的主题颜色和文字颜色，来搭配你的桌面壁纸。",
-        description:"在工作台设置（你可以从导航栏图标或导航栏右键菜单中找到设置入口）中，选择「主题」，即可在出现的弹窗中选择你喜欢的主题配色。",
+        description:"在工作台设置（你可以从导航栏图标或导航栏右键菜单中找到设置入口）中，选择「主题外观」，即可在出现的弹窗中选择你喜欢的主题配色。",
         index:1,
         open: [
           {
@@ -167,7 +167,7 @@ export const tasks = [
         repeatable: true,
         frequency: 1,
         intro: "是时候和其他人见面了，开启弹幕功能吧！",
-        description: "在设置中心或社群应用的弹幕设置界面开启弹幕。",
+        description: "在设置中心、社群应用、控制中心的弹幕设置界面开启弹幕。",
         open: [
           {
             type: "router",

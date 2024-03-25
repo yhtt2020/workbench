@@ -1,6 +1,5 @@
 <template>
-  <div class="px-5 m-2 rounded-md s-bg xt-bg xt-text" style="height: calc(100% - 20px);">
-    <back-btn class="xt-bg-2 xt-text"></back-btn>
+  <div class="px-5 m-2 rounded-md  xt-text w-full" style="height: calc(100% - 20px);">
     <div  style="font-size: 18px;display: flex;flex-direction: column;height: 100%">
       <h3 class="mt-3" style="text-align: center;">
       <span v-if="!this.id">
@@ -72,11 +71,11 @@
               </div>
               <div class="line">
                 文字颜色：
-                <colorPicker v-model:hex="color"/>
+                <color-picker v-model:pureColor="color"/>
               </div>
               <div class="line">
                 背景颜色：
-                <colorPicker v-model:hex="bgColor"/>
+                <color-picker v-model:pureColor="bgColor"/>
               </div>
 
             </div>

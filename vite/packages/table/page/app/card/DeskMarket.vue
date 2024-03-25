@@ -1,8 +1,8 @@
 <template>
   <!-- 方案列表 -->
-  <div class="flex flex-row w-full item-wrapper" style="height: 100%">
+  <div class="flex flex-row w-full item-wrapper justify-center" style="height: 100%">
     <div class="item-content px-8" :style="wrapperStyle">
-      <div class="text-center w-full" v-if="displayItems.length == 0">
+      <div class="text-center flex items-center h-full" v-if="displayItems.length == 0">
         <a-empty image="/img/test/load-ail.png" description="暂无分享"></a-empty>
       </div>
       <template v-else v-for="(item, index) in displayItems" :key="item.id">

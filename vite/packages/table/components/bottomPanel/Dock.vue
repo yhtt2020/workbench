@@ -151,6 +151,9 @@
                         v-if="item.value === 'commun'"
                         :item="item"
                         :placement="'top'"
+                        :x='this.realXY.x'
+                        :y="navAttribute.navSize"
+                        :visible="this.comVisible"
                       ></Team>
                       <FolderVue
                         v-else-if="item.type === 'folder'"
@@ -315,6 +318,9 @@ export default {
       left: 0,
       parentSize: 0,
       parentHeight: 0,
+
+      
+      comVisible:false
     };
   },
   props: {
@@ -536,7 +542,6 @@ export default {
         default: i.default ? i.default : { name: i.name, icon: i.icon },
       }));
       this.folderName = item.name;
-      this.resetElementPosition();
       if (!this.folderVisible) {
         this.folderVisible = true;
       } else if (
@@ -621,6 +626,8 @@ export default {
      */
     async newOpenApp(item, e) {
       const { type, value } = item;
+      type !== 'folder' ? this.folderVisible = false : ''
+      this.resetElementPosition();
       if (value === "control") {
         this.$emit("control", e);
         return;
@@ -633,6 +640,10 @@ export default {
           this.$bus.emit("openSystemSet");
         }, 500);
         return;
+      }
+      if(value === 'commun'){
+        this.comVisible = ! this.comVisible
+        return 
       }
       if (type === "folder") {
         this.openFolder(item);
@@ -656,7 +667,7 @@ export default {
           key: "tipRun",
         });
       }
-      type !== "folder" ? (this.folderVisible = false) : "";
+      this.comVisible = false
     },
     /**
      * 解散文件夹和切换文件夹
@@ -942,7 +953,6 @@ export default {
       let posX = Number(this.defaultPosition.x.toFixed(0));
       // 元素大小
       let menuW = draggableSize[0] * 140;
-      // console.log(menuW, 'menuW', vW, 'vW', posX, 'posX')
       posX =
         posX > vW - menuW / 2
           ? vW - menuW

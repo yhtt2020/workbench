@@ -5,21 +5,7 @@
     class="flex justify-center items-center menu-item relative"
     style=""
   >
-    <!-- <div
-      class="rounded-full flex items-center justify-center font-400 xt-active-text"
-      v-if="unreadStatus"
-      style="
-        width: 18px;
-        height: 18px;
-        position: absolute;
-        font-size: 10px;
-        z-index: 100;
-        top: -4px;
-        right: -4px;
-      "
-    >
-      {{ item.unread }}
-    </div> -->
+
     <div
       class="absolute flex items-center justify-center font-400 xt-active-text z-10"
       style="width: 20px; height: 20px; font-size: 10px"
@@ -155,6 +141,7 @@ const infoBg = computed(() => {
   height: 18px;
   background: red;
 }
+// 1
 .tt-info-warn {
   background: #fa7b14;
   border: 2px solid rgba(255, 255, 255, 0.85);

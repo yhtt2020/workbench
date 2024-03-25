@@ -1,18 +1,25 @@
 import { defineStore } from "pinia";
 import { tasks } from "./page/primary/Primary";
 import { tasks as branchTasks } from "./page/branch/Branch";
-import { getAllTask,getTaskScore,getPointProduct,getPointProductDetail} from "./api";
+import {
+  getAllTask,
+  getTaskScore,
+  getPointProduct,
+  getPointProductDetail,
+} from "./api";
 import { teamStore } from "../../store/team";
 
 // @ts-ignore
 export const taskStore = defineStore("taskStore", {
   state: () => ({
     firstTask: false, //首次任务
-    firstShop:true, // 首次积分商店
+    firstShop: true, // 首次积分商店
     isTask: true, // 首页展示任务中心
     isTaskDrawer: false, // 打开任务中心
-    taskID: "M0101", // 任务ID
+
     success: false,
+    taskID: "M0101", // 任务ID
+    taskTmp: "", // 暂存任务ID
     step: -1, // 任务步骤
     list: [], // 已完成主线
     deskID: 0,
@@ -31,18 +38,21 @@ export const taskStore = defineStore("taskStore", {
     currentId: "",
     currentType: "",
     taskAudio: "",
-    smallMize:true, // 任务中心最小化
-    taskUserMedal:{ // 用户勋章数据
-      grade:{},
-      medals:[],
-      score:{}
+    smallMize: true, // 任务中心最小化
+    taskUserMedal: {
+      // 用户勋章数据
+      grade: {},
+      medals: [],
+      score: {},
     },
     // 临时存储主线任务完成后的状态
-    temporaryStatus:false,
+    temporaryStatus: false,
     // 积分商品
-    pointGoods:[],
+    pointGoods: [],
     // 积分商品详情
-    pointGoodsDetail:{},
+    pointGoodsDetail: {},
+    // 当前完成的任务Id
+    currentCompleteTaskId: "",
   }),
   getters: {},
   actions: {
@@ -88,10 +98,10 @@ export const taskStore = defineStore("taskStore", {
       }
     },
     // 初始化任务
-    async initTask (){
+    async initTask() {
       let res = await getAllTask();
 
-       let { code, data } = res
+      let { code, data } = res;
 
       if (code !== 200) return;
       this.currentTaskList = data;
@@ -116,45 +126,45 @@ export const taskStore = defineStore("taskStore", {
       this.currentId = currentTask.name;
     },
     // 获取用户勋章
-    async getTaskUserMedal(uid:any){
-      const taskTeam:any = teamStore();
+    async getTaskUserMedal(uid: any) {
+      const taskTeam: any = teamStore();
       const grade = await taskTeam.getMemberGrade(uid);
       const medal = await taskTeam.getUserMedal(uid);
-      Promise.all([grade,medal]).then((res)=>{
+      Promise.all([grade, medal]).then((res) => {
         // console.log("res",res);
         this.taskUserMedal.grade = res[0];
         this.taskUserMedal.medals = res[1];
-      })
+      });
     },
     // 获取积分
-    getUserScore(){
-      getTaskScore().then((res:any)=>{
-        if(res.status === 1){
+    getUserScore() {
+      getTaskScore().then((res: any) => {
+        if (res.status === 1) {
           this.taskUserMedal.score = res.data[1].value;
         }
-      })
+      });
     },
     // 获取商品
-    getPointGoods(){
-      getPointProduct().then(res=>{
-        if(res){
-          const goodList:any = [];
-          for(const item of res){
-            for(const childrenItem of item.product_list){
+    getPointGoods() {
+      getPointProduct().then((res) => {
+        if (res) {
+          const goodList: any = [];
+          for (const item of res) {
+            for (const childrenItem of item.product_list) {
               goodList.push(childrenItem);
-            };
-          };
+            }
+          }
           this.pointGoods = goodList;
         }
-      })
+      });
     },
     // 获取商品详情
-    getPointGoodsDetail(id:any){
-      getPointProductDetail(id).then(res=>{
-        if(res){
-         this.pointGoodsDetail = res.storeInfo;
+    getPointGoodsDetail(id: any) {
+      getPointProductDetail(id).then((res) => {
+        if (res) {
+          this.pointGoodsDetail = res.storeInfo;
         }
-      })
+      });
     },
   },
   persist: {

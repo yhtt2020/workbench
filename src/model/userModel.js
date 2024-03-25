@@ -232,6 +232,21 @@ const userModel = {
       await userModel.setCurrent(user)
     }
     return result
+  },
+  /**
+   * 使用token登录
+   * @param token
+   * @returns {Promise<*>}
+   */
+  async loginWithToken (token) {
+    let result = await require('../api/authApi').loginBrowserWithToken({ token })
+    let responseData = result.data
+    if (result.code === 1000) {
+      let user = userModel.convertUserData(responseData)
+      user.expired=false
+      await userModel.setCurrent(user)
+    }
+    return result
   }
 }
 userModel.initialize()

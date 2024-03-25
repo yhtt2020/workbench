@@ -4,7 +4,10 @@
       <div class="flex justify-end mb-3" v-if="item.role === 'user'">
         <div class="flex flex-col">
           <div class="flex">
-            <div class="block text-base xt-bg-2 rounded-xl ml-10 mr-2">
+            <div
+              class="block text-base xt-bg-2 rounded-xl ml-10 mr-2"
+              style="border-radius: 0.75rem"
+            >
               <GPT :content="item.content"></GPT>
             </div>
             <img
@@ -32,7 +35,10 @@
         <div class="flex">
           <img src="/img/gpt.png" alt="" style="width: 32px; height: 32px" />
           <div class="flex-1 w-0">
-            <div class="ml-2  inline-block text-base xt-bg-2 rounded-xl mr-10" style="max-width: calc(100% - 20px)">
+            <div
+              class="ml-2 inline-block text-base xt-bg-2 rounded-xl mr-10"
+              style="max-width: calc(100% - 20px); border-radius: 0.75rem"
+            >
               <GPT :content="item.content"></GPT>
             </div>
           </div>

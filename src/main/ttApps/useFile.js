@@ -1,8 +1,14 @@
+/**
+ * ttapp.js
+ * @description 处理文件相关操作
+ */
 // const extractZip = require("../../../js/main/crx");
 const extractZip = require("../../../js/main/zip.js");
 const { join } = require("path");
 const { promises } = require("fs");
 const fs = require("fs-extra");
+
+const fse = require("fs-extra");
 const electron = require("electron");
 
 const file = {
@@ -59,15 +65,13 @@ const file = {
    * 删除文件
    */
   async deleteFile(filePath) {
-    // let res = file.pathJoin(filePath);
-    fs.rmdir(filePath, (err) => {
-      if (err) {
-        console.log(`File ${res} xxxxxxxxxx`);
-
-        throw err;
-      }
-      console.log(`File ${res} has been deleted`);
-    });
+    try {
+     await fse.removeSync(file.pathJoin(filePath));
+      return true;
+    } catch (err) {
+      console.error("Error deleting directory:", err);
+      return false;
+    }
   },
   /**
    * 文件解压
@@ -96,9 +100,6 @@ const file = {
   /**
    * 路径拼接
    */
-  // const tempPath = function (p) {
-  //   return require("path").join(require("electron").app.getPath("userData"), p);
-  // };
   pathJoin(paths) {
     if (typeof paths == "string") {
       return join(file.getCurrentDir(), paths);

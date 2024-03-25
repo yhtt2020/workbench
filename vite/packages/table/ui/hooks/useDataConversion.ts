@@ -30,7 +30,7 @@ export const defaultData = {
    * tableApp 桌面应用
    * default 系统默认浏览器
    * inner 内置浏览器
-   * xt 想天浏览器
+   * thisky 想天浏览器
    * fixed
    */
   type: "",

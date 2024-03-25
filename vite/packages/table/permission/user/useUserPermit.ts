@@ -23,7 +23,11 @@ export const useUpdateUserInfo = async () => {
   const userStore: any = appStore();
   let res = await getUserInfo();
   // 旧版本用户信息处理逻辑
-  setLV(res.data);
+  let res1 = setLV(res.data);
+  if (!res1) {
+    useLogout();
+    return;
+  }
 
   let userData = res.data.data;
   // 获取头像框信息
