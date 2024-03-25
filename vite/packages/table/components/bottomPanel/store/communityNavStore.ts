@@ -42,8 +42,12 @@ export const communityNavStore = defineStore("communityNav", {
         type: "systemApp",
         id: nanoid(11),
       },
+      defaultItem: {
+        icon: "/logo/community.svg",
+      },
       index: null,
     },
+    // 选中当前桌面的id,来获取当前桌面的数据
     currentDesk:{
       id: null,
     },

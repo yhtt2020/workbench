@@ -348,7 +348,6 @@ export default {
     }
   }
 }
-
 .new-message-tag::after {
   content: "";
   display: block;
@@ -360,27 +359,6 @@ export default {
   top: 0px;
   right: 0px;
 }
-
-
-.notification {
-  //禁用闪烁特效，减少gpu占用
-  //animation: blink 1s infinite;
-  //
-  //@keyframes blink {
-  //  0% {
-  //    opacity: 0;
-  //  }
-  //
-  //  50% {
-  //    opacity: 1;
-  //  }
-  //
-  //  100% {
-  //    opacity: 0;
-  //  }
-  //}
-}
-
 .top-state {
   display: flex;
   // position: relative;
@@ -390,7 +368,6 @@ export default {
   align-items: center;
   height: 25px;
 }
-
 .btn-hover{
   &:hover{
    background: var(--secondary-transp-bg) !important;

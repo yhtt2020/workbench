@@ -71,6 +71,8 @@ const { currentCommunity } = storeToRefs(comNav);
 const search = ref("");
 const communityList = ref([]);
 
+const emit = defineEmits(['close']);
+
 // 获取当前已经加入的社群列表
 const getCurrentCommunityList = () =>{
   if (community.value.communityList.length !== 0) {
@@ -106,6 +108,8 @@ const getSearchResult = () => {
 // 选择社群
 const selectCommunity = (item, index) => {
   comNav.setCurrentCommunity(item, index);
+  // 选择后进行弹窗关闭
+  emit('close');
 };
 </script>
 

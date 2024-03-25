@@ -12,7 +12,7 @@
         :list="deskList"
         last="3"
         class="w-full"
-        leftClass="xt-bg-m rounded-xl"
+        leftClass="xt-bg-m rounded-tl-xl rounded-tr-xl"
         leftMargin="mr-0 py-3"
         model="id"
         w="64"
@@ -27,7 +27,7 @@
 </template>
 
 <script setup>
-import { ref, getCurrentInstance, computed } from "vue";
+import { ref, getCurrentInstance, computed, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { cardStore } from "../../../store/card";
 import { navStore } from "../../../store/nav";
@@ -79,20 +79,32 @@ const deskSelect = (type) => {
       deskItemList.value.nav = getFolder(false);
       break;
     case "folder":
-      const folderList = getFolder(true);
       const getDeskFolder = []
+      const folderList = getFolder(true);
+      // 解构desks文件夹中的所有数据
       for(const item of desks.value){
-        for(const children of item.cards){
+        for(const children of item?.cards){
           if(children.name === "folder"){
-            const index = _.findIndex(getDeskFolder,function(item){ return String(item.id) === String(children.id)});
-            if(index === -1){
-              getDeskFolder.push(children);
+            const list = children?.customData?.list;
+            for(const listItem of list){
+              const index = _.findIndex(getDeskFolder,function(item){ return String(item?.id) === String(listItem?.id)});
+              if(index === -1){
+                getDeskFolder.push(listItem);
+              }
             }
           }
         }
       }
-
-      console.log("文件夹",folderList,getDeskFolder);
+      // 解构folderList
+      for(const item of folderList){
+        for(const children of item?.children){
+          const index = _.findIndex(getDeskFolder,function(folder){ return String(folder?.id) === String(children?.id)});
+          if(index === -1){
+            getDeskFolder.push(children);
+          }
+        }
+      }
+      deskItemList.value.folder = getDeskFolder;
       break;
   }
 };
@@ -130,6 +142,12 @@ const deskList = ref([
 const openDeskApp = () => {
   deskAppVisible.value = true;
 };
+
+onMounted(()=>{
+  proxy.$bus.on("closeDeskAppModal",()=>{
+    deskAppVisible.value = false
+  })
+})
 
 defineExpose({
   openDeskApp,
