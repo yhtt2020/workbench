@@ -232,12 +232,10 @@ const openApp = (data) => {
     } else if (browserType.value == "work") {
       browser.openInTable(data.url);
     }
-    // proxy.$bus.emit("closeModal");
   } else if (type === "coolApp" || type === "lightApp") {
     router.push({ name: "app", params: { ...data } });
   } else {
     startApp(data.type, data.value);
-    // proxy.$bus.emit("closeModal");
   }
 };
 // 删除数据
