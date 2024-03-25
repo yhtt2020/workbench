@@ -97,7 +97,7 @@ watch(()=>rightDetail.value.type,(newV)=>{
       currentList.value = rightDetail.value.nav;
       break;
     case "folder":
-      console.log("文件夹");
+      currentList.value = rightDetail.value.folder;
       break;
   }
 },{immediate:true,deep:true});
