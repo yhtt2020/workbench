@@ -65,7 +65,20 @@
           }"
           style="z-index: 800"
         >
-          <TeamNav @close="teamNavVisible = false" />
+          <TeamNav @close="teamNavVisible = false" @openSet="settingModal"/>
+        </div>
+
+        <!-- 加入的社群搜索 -->
+        <div
+          v-if="comSearchVisible"
+          class="absolute"
+          :style="{
+            left: `${comSearchLeft}px`,
+            bottom: `${(navAttribute.navSize / 100) * 100}px`,
+          }"
+          style="z-index: 600"
+        >
+          <ComNavSearch @close="comSearchVisible = false"/>
         </div>
       </div>
     </AutoHide>
@@ -79,7 +92,15 @@
       <component :is="componentId" @setQuick="setQuick"></component>
     </div>
   </transition>
+
+  <!-- 应用模式弹窗 -->
   <AppModal />
+
+  <!-- 应用模式中设置弹窗 -->
+  <Setting ref="modeSetRef"/>
+
+  <!-- 桌面、导航、分支数据分类弹窗 -->
+  <DeskAppModal  ref="deskAppModalRef" />
 </template>
 
 <script>
@@ -126,13 +147,13 @@ import CommunityNav from "./bottomPanel/community/CommunityNav.vue";
 import TeamNav from "./bottomPanel/community/TeamNav.vue";
 import AppModal from "./bottomPanel/community/AppModal.vue";
 import { controlStore } from "./desk/navigationBar/hook/controlStore";
+import Setting from "./bottomPanel/setting/CommunitySetting.vue";
+import ComNavSearch from "./bottomPanel/search/ComNavSearch.vue";
+import { communityStore } from "../page/chat/store/communityStore";
+import DeskAppModal from "./bottomPanel/desk/DeskAppList.vue";
 
-const {
-  //是否全屏状态
-  isFullscreen,
-  //切换全屏
-  toggle,
-} = useFullscreen();
+// 是否全屏状态 切换全屏
+const { isFullscreen, toggle } = useFullscreen();
 
 export default {
   name: "BottomPanel",
@@ -154,6 +175,9 @@ export default {
     CommunityNav,
     TeamNav,
     AppModal,
+    Setting,
+    ComNavSearch,
+    DeskAppModal,
   },
   data() {
     return {
@@ -269,6 +293,9 @@ export default {
       // 团队导航
       teamNavVisible: false,
       teamNavLeft: 100,
+      // 社群搜索
+      comSearchVisible: false,
+      comSearchLeft: 100,
     };
   },
   props: {},
@@ -327,6 +354,21 @@ export default {
     this.$bus.on("openTeamNav", (evt) => {
       this.teamNavVisible = !this.teamNavVisible;
       this.teamNavLeft = evt.clientX - 274 < 0 ? 0 : evt.clientX - 274;
+    });
+    // 触发社群搜索弹窗
+    this.$bus.on("openComSearch", (evt) => {
+      this.comSearchVisible = !this.comSearchVisible;
+      this.comSearchLeft = evt.clientX - 274 < 0 ? 0 : evt.clientX - 50;
+    });
+    // 获取社群列表
+    this.getMyCommunity();
+    // 开启应用模式
+    this.$bus.on("openAppSetting", () => {
+      this.$refs.modeSetRef.openAppSetting();
+    });
+    // 开启桌面、导航、分组数据分类弹窗
+    this.$bus.on("openDeskAppModal", () => {
+      this.$refs.deskAppModalRef.openDeskApp();
     });
   },
   computed: {
@@ -512,6 +554,7 @@ export default {
       "removeFootNavigationList",
     ]),
     ...mapActions(useNavigationStore, ["toggleEdit", "toggleTaskBox"]),
+    ...mapActions(communityStore,['getMyCommunity']),
     mergeData,
     listenMouse(e) {
       if (
@@ -526,7 +569,6 @@ export default {
         }, 800);
       }
     },
-
     /**
      * 清空当前导航栏
      */
@@ -553,12 +595,10 @@ export default {
         this.quick = true;
       }
     },
-
     edit(value) {
       this.componentId = value;
       this.quick = true;
     },
-
     getDelIcon(value) {
       this.delZone = value;
     },
@@ -607,7 +647,6 @@ export default {
     hoverRealItemId,
     useWindowSize,
     useMergeFolder,
-
     //  点击头像框打开控制中心
     openControl(event) {
       // 触发工作台首次进入小红点,进行关闭
@@ -615,6 +654,10 @@ export default {
       this.controlVisible = !this.controlVisible;
       this.controlLeft = event.clientX - 274 < 0 ? 0 : event.clientX - 274;
     },
+    // 开启设置
+    settingModal(){
+      this.$refs.modeSetRef.openAppSetting();
+    }
   },
 };
 </script>
@@ -677,4 +720,3 @@ export default {
   opacity: 0.5;
 }
 </style>
-./bottomPanel/Dock.vue/index.ts./desk/addIcon/EditNewNavigation.vue/index.ts
