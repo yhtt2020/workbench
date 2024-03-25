@@ -69,9 +69,7 @@ const file = {
         encoding: encoding,
       });
       return {
-        status: 0,
         code: 200,
-        info: "读取成功",
         data: res,
       };
     } catch (err) {
@@ -80,7 +78,7 @@ const file = {
         status: 0,
         code: 400,
         info: "读取失败",
-        data: "读取失败",
+        data: err,
       };
     }
   },
@@ -105,19 +103,12 @@ const file = {
       const zipBuf = await promises.readFile(filePath);
       // const crxInfo = parseCrx(crxBuf);
       let res = await extractZip(zipBuf, destPath);
+      console.log("res :>> ", res);
       return {
-        status: 1,
         code: 200,
-        data: "success",
-        info: "成功",
       };
     } catch (error) {
-      return {
-        status: 0,
-        code: 400,
-        info: "文件无法解压",
-        data: error,
-      };
+      return error;
     }
   },
   /**
@@ -134,11 +125,18 @@ const file = {
    */
   async writeFile(filePath, data) {
     try {
-      fse.writeFileSync(file.pathJoin(filePath), data);
-      return true;
+      let res = fse.writeFileSync(file.pathJoin(filePath), data);
+      return {
+        code: 200,
+        data: res,
+      };
     } catch (err) {
-      console.error("Error writing file:", err);
-      return false;
+      return {
+        status: 0,
+        code: 400,
+        info: "写入失败",
+        data: err,
+      }
     }
   },
   /**

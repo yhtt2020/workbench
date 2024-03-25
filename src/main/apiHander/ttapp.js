@@ -7,7 +7,7 @@ const Base = require("./base");
 
 const {
   useInstall,
-  useWriteJson,
+  installJson,
   installV2
 } = require("../ttApps/useInstall");
 const useUninstall = require("../ttApps/useUninstall");
@@ -26,11 +26,12 @@ class TTApp extends Base {
     // 安装
     this.on("install", async (event, args) => {
       let res = await installV2(args.zipPath);
+      console.log('res :>> ', res);
       event.reply(args.cbId, res);
     });
     // 写入json
-    this.on("writeJson", async (event, args) => {
-      let res = await useWriteJson(args.id, args.data);
+    this.on("installJson", async (event, args) => {
+      let res = await installJson(args.data);
       event.reply(args.cbId, res);
     });
     // 卸载

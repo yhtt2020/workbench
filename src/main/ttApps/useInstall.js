@@ -14,10 +14,19 @@ const {
 } = require("./useFile.js");
 
 const fse = require("fs-extra");
-
+const ERROR_CODE = {
+  11: "文件类型错误",
+  12: "文件解压失败",
+  21: "manifest.json文件不存在",
+  22: "manifest.json文件不是合格的数据",
+  22: "manifest.json文件缺少数据",
+  31: "文件写入失败",
+};
 const { nanoid } = require("nanoid");
 
 const ttAppModel = require("./useDb.js");
+
+let currentId = "";
 
 // 检测manifest.json
 const checkMainFest = async (id) => {
@@ -28,9 +37,10 @@ const checkMainFest = async (id) => {
   if (manifestRes.code !== 200) {
     return {
       status: 1,
-      code: 400,
+      code: 21,
       data: "manifest.json文件不存在",
-      info: "manifest.json文件不存在",
+      info: ERROR_CODE[21],
+      id,
     };
   }
 
@@ -39,8 +49,9 @@ const checkMainFest = async (id) => {
   if (typeof manifestRes !== "object") {
     return {
       status: 1,
-      code: 400,
-      data: "manifest.json文件不是合格的数据",
+      code: 22,
+      data: ERROR_CODE[22],
+      id,
     };
   }
   // 检测manifest.json数据
@@ -54,7 +65,7 @@ const checkMainFest = async (id) => {
   if (manifestCheckRes.length > 0) {
     return {
       status: 1,
-      code: 400,
+      code: 23,
       data: "manifest.json文件缺少 " + manifestCheckRes.join(" , ") + " 数据",
       info: "manifest.json文件缺少 " + manifestCheckRes.join(" , ") + " 数据",
     };
@@ -77,15 +88,6 @@ const useMoveFolder = async (id) => {
   await checkDir(["apps", id]);
   let res = await moveFolder(["apps_test", id], ["apps", id]);
   return res;
-
-  // return res;
-
-  // const ttAppData = {
-  //   id,
-  //   modules: manifestRes.modules,
-  // };
-  // let installDbRes = await ttAppModel.initDb(ttAppData);
-  // if (installDbRes) return true;
 };
 
 // 保存数据
@@ -104,14 +106,16 @@ const installV2 = async (filePath) => {
     console.log("1、文件类型错误 :>> ");
     return {
       status: 1,
-      code: 400,
+      code: 11,
       data: "上传的文件类型错误",
-      info: "上传的文件类型错误",
+      info: ERROR_CODE[11],
     };
   }
 
   // 2 处理解压文件路径
   const id = nanoid(4);
+  currentId = id;
+  console.log("抛出的 id :>> ", id);
   const folderType = "apps_test";
   const folderName = [folderType, id];
   await checkDir(folderName);
@@ -120,13 +124,25 @@ const installV2 = async (filePath) => {
   let unzipRes = await unzipFile(filePath, folderName);
   if (unzipRes.code !== 200) {
     console.log("3、解压失败 :>> ");
-    return unzipRes;
+    return {
+      status: 0,
+      code: 12,
+      info: ERROR_CODE[12],
+      data: unzipRes,
+    };
   }
 
+  let res = await checkV2(id);
+  return res;
+};
+const checkV2 = async (id) => {
   // 4 检测manifest.json
   const checkManifestRes = await checkMainFest(id);
   if (checkManifestRes.code !== 200) {
-    return checkManifestRes;
+    return {
+      id,
+      ...checkManifestRes,
+    };
   }
 
   // 5 移动文件夹
@@ -145,10 +161,39 @@ const installV2 = async (filePath) => {
     id,
     modules: checkManifestRes.data.modules,
   });
-
-  console.log("saveRes :>> ", saveRes);
+  if (saveRes) {
+    return {
+      status: 0,
+      code: 200,
+      data: id,
+      info: "成功",
+    };
+  } else {
+    return {
+      status: 1,
+      code: 400,
+      data: "数据保存失败",
+      info: "数据保存失败",
+    };
+  }
 };
+const installJson = async (data) => {
+  const folderType = "apps_test"; // 临时文件夹名称
+  const folderName = [folderType, currentId, "manifest.json"];
+  let writeRes = await writeFile(folderName, data);
 
+  console.log("writeRes :>> ", writeRes);
+  if (writeRes.code !== 200) {
+    return {
+      ...writeRes,
+      code: 31,
+      info: ERROR_CODE[31],
+    };
+  }
+  let res = await checkV2(currentId);
+  console.log("res :>> ", res);
+  return res;
+};
 const useInstall = async (filePath) => {
   // 5 判断文件是否缺少
   console.log("5、判断文件是否缺少 :>> ");
@@ -183,17 +228,9 @@ const useInstall = async (filePath) => {
   //   return false;
   // }
 };
-const useWriteJson = async (id, data) => {
-  const folderType = "apps_test"; // 临时文件夹名称
-  const folderName = [folderType, id, "manifest.json"];
-  let res = await writeFile(folderName, data);
-
-  console.log("res :>> ", res);
-  return res;
-};
 
 module.exports = {
   useInstall,
-  useWriteJson,
+  installJson,
   installV2,
 };

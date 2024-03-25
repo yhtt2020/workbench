@@ -5,36 +5,29 @@ export const useParserCard = (props: any) => {
   /**
    * 边界处理
    */
-  // 请求失败
-  if (props?.code !== 200) {
-    return;
-  }
   // 解析modules
-  const modules = JSON.parse(props.data.modules);
+  const modules = JSON.parse(props.modules);
+  const oldCardData = modules?.card;
   // 数据不存在card对象
-  if (!modules?.card) {
-    return;
-  }
+  if (!oldCardData) return;
   /**
    * 解析数据
    */
-  const oldCardData = modules.card;
   let cardData: any = {};
 
   // 解析卡片头部
-  if (oldCardData?.header) {
-    cardData.header = parserHeader(oldCardData.header);
-  }
+
+  cardData.header = parserHeader(props, oldCardData);
   // 解析无界配置
   cardData.wujie = parserWuJie(props.data, oldCardData);
   return cardData;
 };
 
-const parserHeader = (props: any) => {
+const parserHeader = (props: any, data: any) => {
   let headerObj: any = {};
   // 解析卡片标题
-  if (props?.title) {
-    headerObj.title = props.title;
+  if (props?.name) {
+    headerObj.title = props.name;
   } else {
     headerObj.title = "小组件";
   }
@@ -51,16 +44,16 @@ const parserHeader = (props: any) => {
 };
 
 const parserWuJie = (props: any, oldCardData) => {
-  let wujie: any = {};
-  wujie.name = props.id;
-  wujie.url = "ttapp://" + props.id + "/" + oldCardData.entry;
+  // let wujie: any = {};
+  // wujie.name = props.id;
+  // wujie.entry = "ttapp://" + props.id + "/" + oldCardData.entry;
 
-  // 解析卡片大小
-  if (props.size) {
-    wujie.customSize = props.size;
-  } else {
-    wujie.customSize = "2x2";
-  }
+  // // 解析卡片大小
+  // if (props.size) {
+  //   wujie.customSize = props.size;
+  // } else {
+  //   wujie.customSize = "2x2";
+  // }
 
-  return wujie;
+  // return wujie;
 };

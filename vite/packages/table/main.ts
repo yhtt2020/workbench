@@ -96,7 +96,6 @@ import { tt, Mit } from "./permission/global/global";
 import type { TT } from "./permission/global/type";
 
 import hevueImgPreview from "hevue-img-preview";
-const { bus, setupApp, preloadApp, destroyApp } = Wujie;
 
 // Your SDKAppID
 // init TUIKit

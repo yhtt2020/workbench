@@ -21,13 +21,12 @@ const ttapp = {
       cbId,
     });
   },
-  writeJson(id, data, cb) {
+  installJson( data, cb) {
     let cbId = require("nanoid").nanoid();
     ipc.once(cbId, (event, args) => {
       cb && cb(args);
     });
-    return send("writeJson", {
-      id,
+    return send("installJson", {
       data,
       cbId,
     });

@@ -10,7 +10,7 @@ export const useInstallTTApp = async () => {
 
   const res: any = await new Promise((resolve) => {
     tsbApi.ttapp.install(path[0], (data) => {
-      console.log("useInstallTTApp data", data);
+      console.log('data :>> ', data);
       resolve(data);
     });
   });

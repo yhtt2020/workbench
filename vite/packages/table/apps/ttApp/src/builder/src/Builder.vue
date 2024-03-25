@@ -1,12 +1,18 @@
 <script lang="ts" setup>
 import { reactive, ref } from "vue";
 import Item from "./component/Item.vue";
-import { useInstallTTApp } from "../../hooks";
+import { message } from "ant-design-vue";
+import { useInstallTTApp, useSelectAll } from "../../hooks";
+import { useTTAppStore } from "../../store";
+import { storeToRefs } from "pinia";
+const ttappStore: any = useTTAppStore();
+
+const { ttappList } = storeToRefs(ttappStore);
 interface FormData {
   name: string;
   description: string;
   card: {
-    main: string;
+    entry: string;
     customSize: string;
   };
 }
@@ -15,12 +21,12 @@ const formData = reactive<FormData>({
   name: "",
   description: "",
   card: {
-    main: "",
+    entry: "",
     customSize: "2x2",
   },
 });
-const onFinish = (values: any) => {
-  console.log("Success:", values);
+const onFinish = async (values: any) => {
+  console.log("Succes11111111111s:", values);
   let data = {
     name: formData.name,
     description: formData.description,
@@ -29,25 +35,43 @@ const onFinish = (values: any) => {
     },
   };
   let dataJson = JSON.stringify(data);
-  console.log("data.value :>> ", dataJson);
-  tsbApi.ttapp.writeJson(id.value, data);
+  tsbApi.ttapp.installJson(dataJson, (data) => {
+    if (data.code === 200) {
+      message.success("安装成功");
+      ttappStore.selectAll();
+    } else {
+      message.error("安装失败");
+    }
+  });
 };
 
 const onFinishFailed = (errorInfo: any) => {
   // console.log("Failed:", errorInfo);
 };
 const id = ref("");
+
+// 表单显示状态
+const formVisible = ref(false);
+
 const installTTApp = async () => {
   let res = await useInstallTTApp();
-  id.value = res;
+  // 安装成功
+  if (res.code === 200) {
+    message.success("安装成功");
+    ttappStore.selectAll();
+  }
+  // manifest.json失败
+  else if (res.code > 20 && res.code < 30) {
+    formVisible.value = true;
+    message.error("manifest.json错误，请重新配置");
+  }
+  // 其他失败
+  else {
+    message.error("文件上传失败请重试");
+  }
   console.log("res :>> ", res);
 };
 
-const a = () => {
-  tsbApi.ttapp.completeInstall(id.value, (res) => {
-    console.log("res :>> ", res);
-  });
-};
 const config = [
   {
     type: "input",
@@ -67,7 +91,7 @@ const config = [
       {
         type: "input",
         label: "入口",
-        key: "main",
+        key: "entry",
         rules: [{ required: true, message: "必填!" }],
       },
       {
@@ -81,8 +105,8 @@ const config = [
 ];
 </script>
 <template>
-  {{ formData }}
   <a-form
+    v-if="formVisible"
     :model="formData"
     name="basic"
     :label-col="{ span: 8 }"
@@ -125,9 +149,7 @@ const config = [
     </a-form-item>
   </a-form>
 
-  {{ id }}
-  <xt-button @click="a()" :w="140" :h="40" type="theme">合并</xt-button>
   <xt-button @click="installTTApp()" :w="140" :h="40" type="theme"
-    >安装TTApp</xt-button
+    >安装TTApp1</xt-button
   >
 </template>
