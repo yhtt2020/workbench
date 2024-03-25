@@ -274,7 +274,7 @@ export default [
                 }
               },
               {
-                path: '/chatMain',
+                path: '/chatMain/:no?/:action?',
                 name: 'chatMain',
                 component: ChatMain,
                 meta: {
