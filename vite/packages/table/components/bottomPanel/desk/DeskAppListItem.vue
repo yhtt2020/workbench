@@ -1,7 +1,7 @@
 <template>
  <template v-if="list.length !== 0">
   <div class="grid-container">
-   <div v-for="(item, index) in list"  class="grid-item xt-bg-2 py-4 rounded-xl pointer relative">
+   <div v-for="(item, index) in list"  class="grid-item xt-bg-2 py-4 rounded-xl pointer relative" @click="selectItem(item)">
      <div class="w-full h-full flex-col flex items-center justify-center">
       <a-avatar :size="64" :src="item.icon" shape="square"></a-avatar>
       <span class="font-16 xt-font  xt-text mt-2 truncate" style="max-width: 100px" >
@@ -25,9 +25,16 @@
 </template>
 
 <script setup>
-import { ref, toRefs } from "vue";
-
+import { ref, toRefs,getCurrentInstance } from "vue";
 import { fileTypeClass } from "../hooks/getFileType";
+import { communityNavStore } from "../store/communityNavStore";
+import { storeToRefs } from "pinia";
+import { message } from "ant-design-vue";
+
+const communityNav = communityNavStore();
+const { appModalList,appFolderIndex } = storeToRefs(communityNav);
+
+const { proxy } = getCurrentInstance();
 
 const props = defineProps({
   list: {
@@ -41,6 +48,33 @@ const { list } = toRefs(props);
 const getFileTypeName = (data) => {
   return fileTypeClass.fileType(data);
 };
+
+// 选中当前项
+const selectItem = (item) =>{
+  const type = appModalList.value[appFolderIndex.value].type;
+  if(type === undefined){
+    const n_id = appModalList.value[appFolderIndex.value].id;
+    const pullItem = {
+      ...item,
+      n_id: n_id,
+      favo:false,
+      url:item.type === 'default' ? item.value : undefined,
+    }
+    console.log('pullItem',pullItem);
+    appModalList.value[1].list.push(pullItem);
+  }
+  else {
+    const pullItem = {
+      ...item,
+      favo:false,
+      url:item.type === 'default' ? item.value : undefined,
+    }
+    appModalList.value[1].list.push(pullItem);
+  }
+  message.success('添加成功');
+  proxy.$bus.emit('closeDeskAppModal')
+}
+
 </script>
 
 <style lang="scss" scoped>

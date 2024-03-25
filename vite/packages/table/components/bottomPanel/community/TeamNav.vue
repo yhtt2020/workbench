@@ -94,13 +94,8 @@ const teamNavData = computed(() => {
         newIcon: "fluent:app-folder-16-regular",
         title: "导航设置",
         fn: () => {
-          if(settingEnable.value){
-            closeNav(); 
-            emit("openSet");
-          }
-          else {
-            emit("openSet");
-          }
+          closeNav(); 
+          emit("openSet");
         },
       },
       {

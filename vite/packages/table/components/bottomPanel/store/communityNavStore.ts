@@ -44,6 +44,7 @@ export const communityNavStore = defineStore("communityNav", {
       },
       index: null,
     },
+    // 选中当前桌面的id,来获取当前桌面的数据
     currentDesk:{
       id: null,
     },

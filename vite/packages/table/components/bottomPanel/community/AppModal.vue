@@ -184,7 +184,6 @@ const selectFolder = (data) => {
 };
 // 设置
 const enterSetting = () => {
-  // appSetting.value.openAppSetting();
   proxy.$bus.emit("openAppSetting");
 };
 
