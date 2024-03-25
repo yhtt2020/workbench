@@ -81,7 +81,7 @@
     "vue3-seamless-scroll": "^2.0.1",
     "vue3-selecto": "^1.12.2",
     "vuex": "^4.0.2",
-    "wujie-vue3": "^1.0.18",
+    "wujie-vue3": "^1.0.22",
     "xgplayer": "^2.32.2"
   },
   "devDependencies": {

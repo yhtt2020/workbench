@@ -381,6 +381,7 @@ const props = defineProps({
    *    newIcon: '新版图标',
    *    fn: 点击回调,
    *    disabled: 禁用 true为禁用 false为不禁用
+   *    title: '提示文字'
    * }
    */
   menuList: {

@@ -1,41 +1,60 @@
+/**
+ * 二次封装db ttapp.js
+ */
 const { SqlDb } = require("../../util/sqldb");
-const { nanoid } = require("nanoid");
 
 const sqlDb = new SqlDb();
 const ttAppModel = {
   /**
    * 初始化数据库
    */
-  async initDb(id) {
+  async initDb() {
     // 是否存在ttApp表
     let exists = await sqlDb.knex.schema.hasTable("ttApp");
     // 不存在则创建
     if (!exists) {
       await sqlDb.knex.schema.createTable("ttApp", function (t) {
-        t.string("nanoid").primary().unique(); //本地id
+        t.string("id").primary().unique(); // 唯一ID
+        t.string("data"); // 模块
       });
     }
     // let sql = `INSERT INTO ttApp VALUES ('${id}')`;
     // sqlDb.knex.raw(sql).then((resp) => {
     //   console.log("resp :>> ", resp);
     // });
-    return sqlDb
-      .knex("ttApp")
-      .insert({ nanoid: id })
-      .then(() => {
-        console.log("Inserted");
-        return true;
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  },
+  /**
+   * 插入数据
+   */
+  async insert(options) {
+    try {
+      // let { id, modules } = ttAppData;
+      // let sql = `INSERT INTO ttApp VALUES ('${id}', '${modules}')`;
+      // let res = await sqlDb.knex.raw(sql);
+      await ttAppModel.initDb();
+
+      const { id, data } = options;
+      return sqlDb
+        .knex("ttApp")
+        .insert({ id, data })
+        .then(() => {
+          return true;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      return res;
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
   },
   /**
    * 删除
    */
   async del(id) {
     try {
-      await sqlDb.knex("ttApp").where({ nanoid: id }).del();
+      await sqlDb.knex("ttApp").where({ id: id }).del();
       return true;
     } catch (err) {
       console.log(err);
@@ -54,7 +73,7 @@ const ttAppModel = {
    * 查询
    */
   async select(id) {
-    let sql = `SELECT * FROM ttApp WHERE nanoid='${id}'`;
+    let sql = `SELECT * FROM ttApp WHERE id='${id}'`;
     let res = await await sqlDb.knex.raw(sql);
     return res;
   },
