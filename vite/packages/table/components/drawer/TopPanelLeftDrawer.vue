@@ -7,7 +7,6 @@
 <script>
 export default {
  name:'TopPanelLeftDrawer',
-
  data(){
   return{
    leftVisible:false,
@@ -16,7 +15,6 @@ export default {
 
  methods:{
   openLeftDrawer(){
-   console.log('执行.....触发');
    this.leftVisible = true
   }
  }
