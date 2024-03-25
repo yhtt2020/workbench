@@ -195,6 +195,10 @@ onMounted(() => {
   proxy.$bus.on("closeModal", () => {
     appModelVisible.value = false;
   });
+
+  proxy.$bus.on('openIconAdd',()=>{
+    editVisible.value = true;
+  });
 });
 </script>
 

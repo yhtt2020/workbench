@@ -37,28 +37,12 @@
       </div>
     </div>
   </div>
-
-  <EditNavigation
-    v-if="editVisible"
-    @setQuick="editVisible = false"
-    :isFolder="true"
-    @addIcon="addFolderApp"
-  />
 </template>
 
 <script setup>
 import { ref, computed,getCurrentInstance } from "vue";
-import { storeToRefs } from "pinia";
-import { communityNavStore } from "../store/communityNavStore";
 
-import EditNavigation from "../../desk/addIcon/EditNewNavigation.vue";
-import { message } from "ant-design-vue";
-
-const communityNav = communityNavStore();
-const { appFolderIndex, appModalList } = storeToRefs(communityNav);
 const { proxy } = getCurrentInstance();
-
-const editVisible = ref(false);
 const list = ref([
   {
     icon: ["fluent:apps-add-in-16-regular"],
@@ -66,7 +50,7 @@ const list = ref([
     btnText: "选择添加",
     disableBtnText: "",
     fn: () => {
-      editVisible.value = true;
+      proxy.$bus.emit('openIconAdd');
     },
   },
   {
@@ -96,29 +80,6 @@ const list = ref([
   },
 ]);
 
-const addFolderApp = (data) => {
-  if (data.value === "commun" || data.value === "control") {
-    message.warning("该应用不支持添加");
-  } else {
-    const type = appModalList.value[appFolderIndex.value]?.type;
-    if (type === undefined) {
-      const id = appModalList.value[appFolderIndex.value]?.id;
-      const option = {
-        n_id: id,
-        ...data,
-        favo:false,
-      };
-      if (!appModalList.value[1].list.includes(data)) {
-        appModalList.value[1].list.push(option);
-      }
-    } else {
-      if (appModalList.value[1].list.includes(data)) {
-        appModalList.value[1].list.push({...data,favo:false,});
-      }
-    }
-    message.success('应用添加成功');
-  }
-};
 </script>
 
 <style lang="scss" scoped>
