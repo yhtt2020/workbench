@@ -69,11 +69,11 @@
     <teleport to="body" :disabled="false">
         <Msg :modelValue="modalVisible" :title="defaultTitle.title" :text='msgText' @no="this.modalVisible = false"
             @ok="onOk"></Msg>
-        <customLink 
-            v-if="linkVisible" 
-            v-model="linkVisible" 
-            @save="saveIcon" 
-            ref="customLink" 
+        <customLink
+            v-if="linkVisible"
+            v-model="linkVisible"
+            @save="saveIcon"
+            ref="customLink"
             :linkLimit="{hideTab:false,hideIcon:false}">
         </customLink>
     </teleport>
@@ -284,12 +284,27 @@ export default {
                 lightApps[i].type = 'lightApp'
             }
             const desktopApps = await ipc.sendSync('getDeskApps')
+            //直接在最前端插入两个默认内置的
+            desktopApps.unshift({
+              ext:".exe",
+              icon:"/img/mycomputer.png",
+              name:"我的电脑",
+              path:"我的电脑",
+              type:"tableApp"
+            },{
+              ext:".exe",
+              icon:"/img/trash.png",
+              name:"回收站",
+              path:"回收站",
+              type:"tableApp"
+            })
             // console.log(desktopApps, lightApps, 'desktopApps');
             for (let i = 0; i < desktopApps.length; i++) {
                 desktopApps[i].type = 'tableApp'
             }
             this.ClassifyData.push(...desktopApps, ...lightApps)
             this.ClassifyData = this.replace(this.ClassifyData)
+
             // console.log(this.ClassifyData,lightApps, 'ClassifyData');
         },
         // 更换图标格式
@@ -547,6 +562,9 @@ export default {
         })
         window.addEventListener("resize", this.handleResize)
         this.handleResize()
+        this.$bus.on('closeEdit',()=>{
+            this.modelValue = false;
+        })
     },
     beforeUnmount() {
         window.removeEventListener("resize", this.handleResize)

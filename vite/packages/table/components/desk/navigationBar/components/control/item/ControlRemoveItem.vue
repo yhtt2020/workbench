@@ -67,7 +67,6 @@ onMounted(()=>{
   });
 
 })
-console.log('更新',updateList.value);
 
 </script>
 

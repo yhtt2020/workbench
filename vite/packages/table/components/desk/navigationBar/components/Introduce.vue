@@ -114,7 +114,9 @@ export default {
     // 添加图标函数
     clickListItem(item,index){
       if (this.selectNav !== 'desktop') {
-        completeTask('m0105')
+        completeTask('m0105',()=>{
+          this.$bus.emit('closeEdit');
+        })
       }
       switch (this.selectNav) {
         case 'foot':
@@ -154,7 +156,9 @@ export default {
             return this.filterIcon(this.selectList);
             break;
           case 'software':
-            return this.filterIcon(this.selectList.filter((item) => item.value.endsWith('.exe')));
+            return this.filterIcon(this.selectList.filter((item) => {
+              return  item.value.endsWith('.exe') || item.ext==='.exe'
+            }));
             break;
           case 'docx':
             return this.filterIcon(this.selectList.filter((item) => doc.includes(item.ext)));

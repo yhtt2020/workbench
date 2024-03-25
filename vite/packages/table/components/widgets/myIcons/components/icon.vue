@@ -39,7 +39,7 @@
     </div> -->
     <div
       v-if="isTitle"
-      class="h-5 mx-auto text-center truncate xt-text"
+      class="h-6 mx-auto text-center truncate xt-text"
       :style="[textSize]"
       :data-index="index"
     >
@@ -107,7 +107,7 @@ export default {
       };
     },
     r() {
-      if (this.isRadius) return this.radius + '%';
+      if (this.isRadius) return this.radius + "%";
     },
     bg() {
       if (this.isBackground) return this.backgroundColor;
@@ -209,7 +209,7 @@ export default {
         // 本地应用
         case "tableApp":
           console.log("object :>> ", this.open.value);
-          startApp('localApp',this.open.value)
+          startApp("localApp", this.open.value);
           // require("electron").shell.openPath(
           //   require("path").normalize(this.open.value)
           // );
@@ -242,25 +242,16 @@ export default {
       }
 
       if (this.edit) return;
-      // 先检测是不是web端
-      // if (!this.$isXT) {
-      //   let arr = ["default", "internal", "thinksky"];
-      //   if (this.link == "link" && arr.includes(this.open.type)) {
-      //     window.open(this.open.value);
-      //   } else {
-      //     this.visible = true;
-      //   }
-      //   return;
-      // }
-
-      if (this.newIcon) {
+ if (this.newIcon) {
         console.log(this.newIcon, "open");
+        console.log("this.open.type :>> ", this.open.type);
+        console.log("this.open.type :>> ", this.open.value);
         this.startApp(this.open.type, this.open.value, this.$router);
       } else if (this.open !== undefined && this.open.value !== "") {
         // 链接
         console.log("lianjie :>> ");
         // this.newOpenApp();
-        this.startApp(this.open.type, this.open.value, this.$router)
+        this.startApp(this.open.type, this.open.value, this.$router);
       } else if (this.link !== "") {
         // 其他应用
         this.openApp(this.linkValue);
@@ -287,7 +278,7 @@ export default {
             this.$router.push({ name: "app", params: this.linkValue.data });
             break;
           case "localApp":
-            startApp('localApp',this.linkValue.path)//require("electron").shell.openPath(this.linkValue.path);
+            startApp("localApp", this.linkValue.path); //require("electron").shell.openPath(this.linkValue.path);
             break;
           case "lightApp":
             ipc.send("executeAppByPackage", {
@@ -295,12 +286,12 @@ export default {
             });
             break;
           default:
-            startApp('localApp',this.linkValue.path)// require("electron").shell.openPath(this.linkValue.path);
+            startApp("localApp", this.linkValue.path); // require("electron").shell.openPath(this.linkValue.path);
         }
       } else if (this.linkValue) {
         this.linkValue.path
-          ?startApp('localApp',this.linkValue.path)
-          :startApp('localApp',require("path").normalize(this.linkValue))
+          ? startApp("localApp", this.linkValue.path)
+          : startApp("localApp", require("path").normalize(this.linkValue));
       }
     },
   },

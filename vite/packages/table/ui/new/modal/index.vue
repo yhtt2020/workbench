@@ -7,7 +7,7 @@
         v-if="modelValue"
         :class="[
           boxClass,
-          isFull ? ' rounded-none w-full h-full' : 'rounded-xl',
+          isFull ? 'rounded-none w-full h-full' : 'rounded-xl',
         ]"
         ref="modal"
         class="no-drag fixed flex flex-col text-base -translate-x-1/2 left-1/2 rounded-xl xt-modal xt-shadow xt-text"
@@ -27,7 +27,9 @@
             <nav v-if="nav">
               <slot name="nav"> </slot>
             </nav>
+            <!-- 主体区域 -->
             <main class="flex flex-col flex-1 h-full">
+              <!-- 主体头部 -->
               <header class="relative flex items-center mb-4" v-if="header">
                 <!-- 标题左侧 -->
                 <div class="z-20 flex items-center flex-1">
@@ -77,7 +79,7 @@
                   </xt-button>
                 </div>
               </header>
-              <!-- 内容区 -->
+              <!-- 主体内容区 -->
               <vue-custom-scrollbar
                 :settings="{
                   swipeEasing: true,
@@ -133,12 +135,14 @@ import {
   toRefs,
   onMounted,
   onBeforeUnmount,
+  onBeforeMount,
   nextTick,
   computed,
+  getCurrentInstance,
 } from "vue";
 import { useWindowSize } from "../drag/src/hooks/useWindowSize";
 import { useElementSize, vElementSize } from "../drag/src/hooks/useElementSize";
-
+// import type { ModalProps } from "./types";
 export interface ModalProps {
   // 控制弹窗是否显示
   modelValue?: boolean;
@@ -169,8 +173,16 @@ export interface ModalProps {
   custom?: boolean;
   // 开启全屏功能
   full?: boolean;
-  scrollbarPadding: { paddingRight: "8px"; paddingLeft: "8px" };
+  scrollbarPadding?: {
+    [key: string]: string;
+    paddingRight: string;
+    paddingLeft: string;
+  };
+  type: string | null;
 }
+
+const { proxy }: any = getCurrentInstance();
+
 const props = withDefaults(defineProps<ModalProps>(), {
   modelValue: false,
   title: "",
@@ -188,8 +200,10 @@ const props = withDefaults(defineProps<ModalProps>(), {
   beforeUnmount: () => true,
   custom: false,
   full: false,
+  scrollbarPadding: { paddingRight: "0px", paddingLeft: "0px" },
+  type: null,
 });
-const { esc, modelValue, beforeMount, beforeUnmount } = toRefs(props);
+const { esc, modelValue, beforeMount, beforeUnmount, type } = toRefs(props);
 const isFull = ref(false);
 
 const emits = defineEmits(["ok", "no", "update:modelValue", "close", ""]);
@@ -200,24 +214,10 @@ let topUtilBarHeight = 0;
 let bottomBarHeight = 0;
 const windowHeight = ref(2);
 const modelHeight = ref(2);
-onMounted(() => {
-  if (esc.value) {
-    window.addEventListener("keydown", handleEscKeyPressed, {
-      capture: true,
-    });
-  }
-  useWindowSize((size) => {
-    windowHeight.value = size.height.value;
-  });
 
-  const bottomBar = document.getElementsByClassName("xt-main-bottom-bar")[0];
-  if (bottomBar) bottomBarHeight = bottomBar.clientHeight;
-  return;
-});
 const top = computed(() => {
   if (isFull.value) return 0;
-  if (windowHeight.value <= 0 || bottomBarHeight <= 0 || modelHeight.value <= 0)
-    return -9999;
+
   let a = (windowHeight.value - bottomBarHeight - modelHeight.value) / 2;
   return a >= 0 ? a : 0;
 });
@@ -245,14 +245,48 @@ const handleEscKeyPressed = (event) => {
     onNo();
   }
 };
-
 /**
  * 全屏状态切换
  * */
 const updateFullState = () => {
   isFull.value = !isFull.value;
 };
+// 挂载前
+onBeforeMount(() => {});
+// 挂载后
+onMounted(() => {
+  // 注册单例弹窗监听
+  console.log("props.type :>> ", props.type);
+  if (props.type) {
+    proxy.$bus.emit("modalClose", props.type);
+    setTimeout(() => {
+      proxy.$bus.on("modalClose", (currentType) => {
+        if (type.value == currentType) {
+          close();
+        }
+      });
+    }, 1);
+  }
+
+  // 注册esc键监听
+  if (esc.value) {
+    window.addEventListener("keydown", handleEscKeyPressed, {
+      capture: true,
+    });
+  }
+  useWindowSize((size) => {
+    windowHeight.value = size.height.value;
+  });
+
+  const bottomBar = document.getElementsByClassName("xt-main-bottom-bar")[0];
+  if (bottomBar) bottomBarHeight = bottomBar.clientHeight;
+});
+// 卸载前
 onBeforeUnmount(() => {
+  if (props.type) {
+    proxy.$bus.off("modalClose");
+  }
+  // 注销esc键监听
   if (esc.value) {
     window.removeEventListener("keydown", handleEscKeyPressed, {
       capture: true,

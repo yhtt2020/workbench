@@ -286,7 +286,9 @@ export default {
     setAppPaper(img) {
       message.info('正在为您设置壁纸')
       this.setBackgroundImage(img)
-      completeTask('m0201')
+      completeTask('m0201',()=>{
+        this.$bus.emit('closePaperModal')
+      })
     },
 
     // 设置系统桌面壁纸

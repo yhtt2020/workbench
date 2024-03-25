@@ -74,7 +74,7 @@
       <span class="drawer-title">包含以下小组件（{{ template.cards.length }}）</span>
       <div v-for="item in template.cards" :key="item" class="drawer-item">
         <Icon :icon="item.icon" class="mr-2"></Icon>
-        <span>{{ item.name }}</span>
+        <span>{{ getName(item.name) }}</span>
       </div>
     </div>
   </a-drawer>
@@ -91,6 +91,8 @@ import { marketStore } from '../../store/market'
 import { taskStore } from '../../apps/task/store'
 import { completeTask } from '../../apps/task/task'
 import Muuri from "muuri";
+import { NavList } from '../../page/app/card/navList'
+import _ from 'lodash-es'
 export default {
   name: 'DeskPreview',
   components: {
@@ -145,6 +147,7 @@ export default {
           minBounceBackAngle: Math.PI / 2,
         },
       },
+      baseNavList: [],
     }
   },
   props: {
@@ -182,6 +185,13 @@ export default {
       return JSON.parse(this.scheme.layoutSize)
     },
     template () {
+      // // 卡片数据去重
+      let items = []
+      NavList.map(li => {
+        return items.push(...li.children)
+      })
+      items = _.uniqBy(items, (li) => { return li.name })
+      this.baseNavList = items
       return JSON.parse(this.scheme.template)
     }
   },
@@ -225,6 +235,17 @@ export default {
   methods: {
     ...mapActions(cardStore, ['addShareDesk', 'setDeskSize', 'getCurrentId']),
     ...mapActions(marketStore,['incSupport']),
+    // 获取组件名称
+    getName(name){
+      let nameTmp = ''
+      this.baseNavList.forEach(item=>{
+        item.option.forEach(card=>{
+          if(card.name==name) nameTmp = item.cname
+          if(name=='folder') nameTmp = '文件夹'
+        })
+      })
+      return nameTmp?nameTmp:name
+    },
     async doIncSupport(){
       const rs=await this.incSupport(this.displayScheme.dataNanoid)
       if(rs && rs.msg.includes('取消')){

@@ -40,7 +40,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, toRefs, onMounted, onBeforeUnmount, onUnmounted } from "vue";
+import {
+  ref,
+  computed,
+  toRefs,
+  onMounted,
+  onBeforeUnmount,
+  onUnmounted,
+} from "vue";
 import useWindowViewport from "./useWindowViewport";
 import { reSize as vResize } from "./useElementResize";
 import Menus from "./Menus.vue";
@@ -97,11 +104,19 @@ const { model, lock, stopPropagation, beforeCreate, beforeUnmount } =
   toRefs(props);
 /**
  * 菜单回调
+ * @onBeforeCreate 菜单展开前
+ * @onMounted 菜单展开后
  * @mounted 菜单打开后
  * @selected 菜单项中时
  * @unmounted  菜单关闭后
  */
-const emits = defineEmits(["mounted", "selected", "unmounted"]);
+const emits = defineEmits([
+  "onBeforeCreate",
+  "onMounted",
+  "mounted", // 兼容旧版本
+  "selected",
+  "unmounted",
+]);
 
 /**
  * 2023年12月06新增
@@ -123,7 +138,6 @@ const menuX = ref(0);
 const menuY = ref(0);
 
 function handleOpenMenu(e: any, currentModel: string) {
-
   if (!beforeCreate.value()) return;
 
   if (stopPropagation.value) {
@@ -132,11 +146,12 @@ function handleOpenMenu(e: any, currentModel: string) {
   }
 
   if (model.value != currentModel && model.value != "all") return;
-
+  emits("onBeforeCreate");
   menuX.value = e.clientX;
   menuY.value = e.clientY;
   show.value = true;
 
+  emits("onMounted");
   emits("mounted");
 }
 
@@ -225,7 +240,6 @@ onMounted(() => {
   window.addEventListener("click", handleCloseMenu, { capture: true });
   window.addEventListener("contextmenu", handleCloseMenu, { capture: true });
 });
-
 
 onUnmounted(() => {
   window.removeEventListener("click", handleCloseMenu, { capture: true });

@@ -36,15 +36,13 @@
       </div>
     </div>
   </xt-option-box>
-
-  <xt-option-box v-if="currentScreen.key !== 'main'" :key="currentScreen.title">
+  <xt-option-box v-if="currentScreen.key !== 'main'" :key="currentKey">
     <xt-option-info
       title="运行"
       isSwitch
       v-model:switch="currentScreen.running"
     />
-
-    <template v-if="currentScreen.settings">
+    <template v-if="currentScreen.settings" >
       <hr />
       <xt-option-info
         title="自动运行（跟随工作台启动）"
@@ -125,6 +123,7 @@ export default {
       newTitle: "",
       setFullscreen: false,
       chooseScreenVisible: false,
+      currentKey:"0"
     };
   },
   components: { ChooseScreen, EditOutlined },
@@ -179,6 +178,7 @@ export default {
     },
     dblclick(screen) {
       if (screen.key !== "main") this.startupScreen(screen.key);
+
     },
     restore() {
       mainIPC.sendToSub(this.currentScreen.key, "restore");
@@ -219,6 +219,7 @@ export default {
         "此操作不可恢复，将丢失分屏全部的设置，请谨慎操作。",
         {
           ok: () => {
+            this.currentKey=0
             this.screens.splice(
               this.screens.findIndex((s) => {
                 return s.key === this.currentScreen.key;
@@ -231,6 +232,8 @@ export default {
       );
     },
     click(screen) {
+      console.log('screen :>> ', screen);
+      this.currentKey = screen.key
       this.currentScreen = screen;
       this.newTitle = screen.title;
       //

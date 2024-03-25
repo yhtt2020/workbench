@@ -90,9 +90,13 @@ export function getBgColorFromEntry (entry) {
   return color
 }
 
+// 导出一个函数，用于处理时间戳
 export function timeStamp (time) {
+  // 创建一个新的日期对象
   let date = new Date(time)
+  // 创建一个日期时间对象
   let dateTime = {}
+  // 创建一个星期数组
   let weeks = [
     '星期一',
     '星期二',
@@ -102,31 +106,45 @@ export function timeStamp (time) {
     '星期六',
     '星期日',
   ]
+  // 获取年份
   dateTime.year = date.getFullYear()
+  // 获取月份
   dateTime.month = date.getMonth() + 1
+  // 获取日期
   dateTime.day = date.getDate()
+  // 获取小时
   dateTime.hours = date.getHours()
-
+  // 获取分钟
   let minutes = date.getMinutes()
-
+  // 获取秒
   let seconds = date.getSeconds()
-
+  // 判断分钟是否小于10
   if (minutes < 10) {
+    // 小于，则添加0
     dateTime.minutes = '0' + String(minutes)
   } else {
+    // 大于等于，则直接赋值
     dateTime.minutes = minutes
   }
+  // 判断秒是否小于10
   if (seconds < 10) {
+    // 小于，则添加0
     dateTime.seconds = '0' + String(seconds)
   } else {
+    // 大于等于，则直接赋值
     dateTime.seconds = seconds
   }
+  // 获取星期
   dateTime.week = weeks[date.getDay() - 1]
+  // 返回日期时间对象
   return dateTime
 }
 
+// 导出一个函数，用于获取当前日期和时间
 export function getDateTime (date = new Date()) {
+  // 创建一个日期时间对象
   let dateTime = {}
+  // 定义一个星期数组
   let weeks = [
     '星期一',
     '星期二',
@@ -136,37 +154,50 @@ export function getDateTime (date = new Date()) {
     '星期六',
     '星期日',
   ]
+  // 获取当前年份
   dateTime.year = date.getFullYear()
+  // 获取当前月份
   dateTime.month = date.getMonth() + 1
+  // 获取当前日期
   dateTime.day = date.getDate()
+  // 获取当前小时
   dateTime.hours = date.getHours()
-
+  // 获取当前分钟
   let minutes = date.getMinutes()
-
+  // 获取当前秒数
   let seconds = date.getSeconds()
-
+  // 如果分钟数小于10，则将分钟数转换为两位数
   if (minutes < 10) {
     dateTime.minutes = '0' + String(minutes)
   } else {
     dateTime.minutes = minutes
   }
+  // 如果秒数小于10，则将秒数转换为两位数
   if (seconds < 10) {
     dateTime.seconds = '0' + String(seconds)
   } else {
     dateTime.seconds = seconds
   }
+  // 获取当前星期
   dateTime.week = weeks[date.getDay() - 1]
+  // 返回日期时间对象
   return dateTime
 }
 
+// 导出一个函数，用于转换日期
 export function transDate (s, e) {
+  // 将输入的日期转换为时间戳
   let start = new Date(s).getTime()
   let end = new Date(e).getTime()
+  // 计算两个日期之间的差值
   var result = Math.abs(end - start)
+  // 将差值转换为分钟
   var minute = result / 1000 / 60
+  // 如果没有分钟，或者结果是NaN，或者结果是null，则返回0
   if (minute == 0 || isNaN(minute) || minute == null) {
     return 0
   }
+  // 将差值转换为天
   return Math.floor(result / (24 * 3600 * 1000))
 }
 
@@ -266,17 +297,30 @@ export function formatTimestamp (timestamp, type) {
 
 }
 
+// 导出一个函数，用于格式化时间
 export function formatTime(dateTimeStamp:any){
+  // 创建一个当前时间的新对象
   const currentTime:any = new Date();
+  // 将时间戳转换为日期对象
   const dateStr = new Date(dateTimeStamp * 1000);
+  // 计算时间差，单位为秒
   const seconds = Math.floor((currentTime.getTime() - dateStr) / 1000);
+  // 计算时间差，单位为月
   const interval = Math.floor(seconds / 31536000);
+  // 如果间隔大于一个月，则返回日期字符串
   if (interval > 1) return dateStr.toLocaleString();
+  // 如果间隔等于一个月，则返回日期字符串
   if (interval === 1)  return dateStr.toLocaleDateString();
+  // 如果间隔小于一分钟，则返回“刚刚”
   if (seconds < 60) return "刚刚";
+  // 如果间隔小于一个小时，则返回“xx 分钟前”
   if (seconds < 3600) return Math.floor(seconds / 60) + " 分钟前";
+  // 如果间隔小于一个天，则返回“xx 小时前”
   if (seconds < 86400) return Math.floor(seconds / 3600) + " 小时前";
+  // 如果间隔小于一个星期，则返回“xx 天前”
   if (seconds < 604800)  return Math.floor(seconds / 86400) + " 天前";
+  // 如果间隔小于一个月，则返回“xx 周前”
   if (seconds < 2419200) return Math.floor(seconds / 604800) + " 周前";
 }
+
 

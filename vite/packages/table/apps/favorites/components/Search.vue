@@ -12,6 +12,7 @@
         placeholder="搜索"
         :maxlength="10"
         :allow-clear="false"
+        spellcheck="false"
         v-model:value="searchValue"
         @change="changeSearchValue"
       >

@@ -64,6 +64,13 @@ onMounted(() => {
   proxy.$bus.on("openFile", (cb) => {
     openFile(cb);
   });
+
+  // setTimeout(() => {
+  //   proxy.$bus.emit("openSystemSet");
+  //   setTimeout(() => {
+  //     proxy.$bus.emit("selectSystemNav", 7);
+  //   }, 1000);
+  // }, 3000);
   // window.tt.
 });
 
@@ -79,7 +86,6 @@ const test = () => {
 </script>
 
 <template>
-  <!-- <xt-button @click="test">test</xt-button> -->
   <!-- 领取任务奖励 -->
   <ClaimReward v-if="rewardVisible" />
   <!-- 系统设置 -->

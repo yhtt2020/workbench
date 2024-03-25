@@ -50,7 +50,7 @@ import TaskGuide from "./TaskGuide.vue";
 
 const store = taskStore();
 const visible = ref(false);
-const { taskID, currentTaskList, rewardVisible, currentId, isTaskDrawer,smallMize} = storeToRefs(store);
+const { taskID, currentTaskList, rewardVisible, currentId, isTaskDrawer,smallMize,currentCompleteTaskId} = storeToRefs(store);
 const { proxy  } = getCurrentInstance();
 
 const props = defineProps({
@@ -147,6 +147,7 @@ const goTask = () => {
     rewardVisible.value = false;
     isTaskDrawer.value = true;
     smallMize.value = true;
+    currentCompleteTaskId.value = currentId.value;
   }
 };
 

@@ -96,7 +96,9 @@ export default{
     if(!newV) return;
     setBgColor(newV);
     setSecondaryBgColor(newV);
-    completeTask('M0202');
+    completeTask('M0202',()=>{ 
+      this.$bus.emit('closeSystemSet');
+    });
    },
   },
 }

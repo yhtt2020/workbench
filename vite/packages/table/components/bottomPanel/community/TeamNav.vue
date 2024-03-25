@@ -42,6 +42,7 @@ const navBar = ref({
   hierarchy: true,
   close: true,
   customRight: false,
+  
 });
 const headerTitle = ref("网址导航");
 const teamFolderRef = ref(null);

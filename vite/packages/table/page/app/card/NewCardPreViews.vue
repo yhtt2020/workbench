@@ -430,7 +430,7 @@ export default {
       );
       this.$emit("addSuccess");
       message.success("添加成功！");
-      completeTask("m0101");
+      completeTask("m0101",()=>{ this.closeCardDetails() });
 
       if (item.name == "yuanCommunity") {
         completeTask("m0302");
