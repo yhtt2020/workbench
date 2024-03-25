@@ -256,7 +256,6 @@ onBeforeMount(() => {});
 // 挂载后
 onMounted(() => {
   // 注册单例弹窗监听
-  console.log("props.type :>> ", props.type);
   if (props.type) {
     proxy.$bus.emit("modalClose", props.type);
     setTimeout(() => {

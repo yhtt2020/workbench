@@ -6,6 +6,7 @@ import { cardStore } from "../../store/card";
 export const useAddCard = (name, customData = {}, id: any = Date.now()) => {
   const freeLayoutStore = useFreeLayoutStore();
   const { getCurrentDesk }: any = storeToRefs(freeLayoutStore);
+  console.log('customData :>> ', customData);
   const card: any = cardStore();
   card.addCard(
     {

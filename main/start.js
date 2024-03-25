@@ -37,6 +37,7 @@ app.on('session-created',async (ses)=>{
     render.regDefaultProtocol(request, response)
 
   })
+  // ttapp.js
   ses.protocol.registerBufferProtocol('ttapp', (request, response) => {
     render.regTTAppProtocol(request, response)
   })

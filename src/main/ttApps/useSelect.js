@@ -33,7 +33,7 @@ const useSelect = async (id) => {
     info: "获取失败",
   };
 };
-const useSelectAll = async (id) => {
+const useSelectAll = async () => {
   let res = await ttAppModel.selectAll();
 
   return {

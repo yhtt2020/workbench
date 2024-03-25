@@ -1,19 +1,19 @@
 <template>
   <div>
     <xt-modal title="分组设置" v-model="setVisible" @close="setVisible = false" full :footer="false" boxClass="px-4 pt-4">
-      <xt-option-from :options="nameOptions" :data="data">
+      <xt-option-form :options="nameOptions" :data="data">
         <template #name>
           <xt-option-icon class="mb-3" v-model:icon="data.icon" v-model:input="data.name" />
         </template>
-      </xt-option-from>
-      <xt-option-from :options="filesOptions" :data="data" style="width: 542px">
+      </xt-option-form>
+      <xt-option-form :options="filesOptions" :data="data" style="width: 542px">
         <template #model>
           <xt-option-info title="分组模式" :info="modelInfo" />
         </template>
         <template #custom>
           <div class="mb-3">正在火速开发中</div>
         </template>
-      </xt-option-from>
+      </xt-option-form>
     </xt-modal>
   </div>
 </template>

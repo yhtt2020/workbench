@@ -409,7 +409,7 @@ global.render = {
 
   },
   /**
-   * 注册工作台应用协议
+   * 注册工作台应用协议 ttapp.js
    * @param request
    * @param response
    */

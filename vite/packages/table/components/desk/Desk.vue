@@ -16,14 +16,20 @@
       v-model:zoom="globalSettings.cardZoom" v-model:aloneZoom="settings.cardZoom" :alone="settings.enableZoom"
       :hide="hide" />
     <Drop>
+      <!-- <WujieVue
+      width="100%"
+      height="100%"
+      name="vue2-demo"
+      url="https://www.yinaor.com/docs/front/micro/micro-wujie/"
+    ></WujieVue> -->
       <!-- <xt-wu-jie
         ref="xxx"
         width="100%"
         height="100%"
         name="xxx"
         url="http://localhost:5173/"
-      ></xt-wu-jie> -->
-      <!-- <Wujie width="100%" height="100%" name="xxx" url="http://localhost:5173/" ></Wujie> -->
+      ></xt-wu-jie>
+      <Wujie width="100%" height="100%" name="xxx" url="http://localhost:5173/" ></Wujie> -->
       <!-- 自由布局 -->
       <template v-if="freeLayout">
         <FreeLayoutScrollbar ref="freeLayoutScrollbar" class="flex-1">
