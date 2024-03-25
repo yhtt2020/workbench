@@ -51,7 +51,10 @@ const { token } = storeToRefs(permissionStore);
 const loginVisible = ref(true);
 const router = useRouter();
 const { proxy } = getCurrentInstance();
+import axios from 'axios'
 import { useGlobalStore } from "../../apps/global/store";
+import { sUrl } from '../../consts'
+import { useEnv } from '../useEnv'
 
 const globalStore = useGlobalStore();
 const props = defineProps({
@@ -70,6 +73,11 @@ onMounted(() => {
         cache.set("ttUserToken", currentToken);
         token.value = currentToken;
         await useUserPermit();
+        if(!useEnv('web')){
+          //如果是客户端，则执行同步主线程的操作
+          syncMainUserInfo(currentToken)
+        }
+
         loginVisible.value = false;
         props.cb && props.cb();
         globalStore.loginVisible = false;
@@ -80,6 +88,14 @@ onMounted(() => {
   );
 });
 const emits = defineEmits(["close"]);
+
+async function syncMainUserInfo (token) {
+  // let rs = await axios.post(sUrl('/app/loginBrowserWithToken'), {
+  //   token: token
+  // })
+  require('electron').ipcRenderer.send('loginBrowserWithToken',token)
+
+}
 
 const loginClose = () => {
   loginVisible.value = false;

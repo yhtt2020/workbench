@@ -1,17 +1,12 @@
-const parse = (props) => {
-  const data = JSON.parse(props.data);
-  return data;
-};
+
 /**
  * 小组件解析器 ttapp.js
  */
-export const useParserCard = (props: any) => {
+export const useParserCard = (data: any) => {
   /**
    * 边界处理
    */
   // 解析modules
-  const data = parse(props);
-  console.log("data :>> ", data);
   const card = data.modules?.card;
   // 数据不存在card对象
   if (!card) return;

@@ -285,18 +285,20 @@ export default {
         return lastList
       }
     })
-
+    
+    // 等级限制，3级才可以创建一个社群，10级后可以创建五个社群
     const limitClick = computed(()=>{
       let lv = lvInfo.lv
-      if(lv < 3 && filterList.value.length >= 0){
+      if(lv < 3 && filterList.value.length >= 7){
         return '最多创建一个社群'
-      }else if(lv < 5 && filterList.value.length >= 1){
+      }else if(lv < 10 && filterList.value.length >= 8){
         return '最多创建五个社群'
       }
     })
 
     /**初始化挂载**/
     onMounted(()=>{
+      console.log('挂载了',limitClick.value)
       com.getMyCommunity();
       com.getCommunityTree();
       // 游客模式下 隐藏 聊天对话 和 通讯录

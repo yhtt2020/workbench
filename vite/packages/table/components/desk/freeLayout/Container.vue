@@ -379,13 +379,15 @@ const dragStart = () => {
 
 // 元素拖拽结束
 const dragStop = (item) => {
-  console.log("dragStop item :>> ", item);
+  console.log("dragStop item :>> ", isSelectAll.value);
   cutCanvas({ id: item.data.id, item: item.data });
 
-  if (!isSelectAll.value) return;
-  snowDrag.value.forEach((item) => {
-    item.snowDragEnd();
-  });
+  if (!isSelectAll.value) {
+    return;
+  }
+  // snowDrag.value.forEach((item) => {
+  //   item.snowDragEnd();
+  // });
 };
 
 const disabledInfo = (data) => {

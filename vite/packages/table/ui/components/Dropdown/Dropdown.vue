@@ -2,7 +2,7 @@
   <a-dropdown :disabled="disabled"  :trigger="[`${trigger}`]" :placement="placement">
     <div class="flex items-center justify-center">
       <div class="flex items-center justify-center" v-if="!buttonVisible">
-        <slot></slot>
+        <slot name="sendIcon"></slot>
       </div>
       <xt-button v-else :disabled="disabled" :style="{width:`${w}px`,height:`${h}px`}" :class="buttonClass" style="border-radius: 8px;padding: 4px;">
         <div class="flex items-center justify-center" v-if="title === ''">

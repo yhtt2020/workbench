@@ -7,7 +7,7 @@ import { useTTAppStore } from "../store";
 import { storeToRefs } from "pinia";
 const ttappStore: any = useTTAppStore();
 
-const { ttappList } = storeToRefs(ttappStore);
+const { ttappList }: any = storeToRefs(ttappStore);
 
 const test = ref(true);
 const emits = defineEmits(["close"]);
@@ -29,7 +29,7 @@ const uninstallTTApp = async (id: string) => {
   ttappStore.uninstall(id);
 };
 const selectTTApp = async (id: string) => {
-  const res = await useSelect(id);
+  const res = await ttappStore.select(id);
   console.log("res :>> ", res);
 };
 const selectAllTTApp = async () => {
@@ -42,7 +42,6 @@ const selectAllTTApp = async () => {
   <xt-modal v-model="test" @close="onClose">
     <Builder />
     <div class="line">
-
       <xt-button @click="selectAllTTApp()" :w="140" :h="40" type="theme"
         >查询所有TTApp</xt-button
       >

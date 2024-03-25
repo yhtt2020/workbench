@@ -3,7 +3,12 @@
         <div class="w-full h-full mt-3 mb-2 xt-bg-2 reply-textarea" >
             <div class="w-full h-full text-base xt-bg ">
                 <div class="w-full h-full xt-bg-2 " ref="dynamicWidth">
-                    <a-textarea v-model:value="postValue" placeholder="请输入" :rows="textWidth" :bordered="false" />
+                    <a-textarea 
+                        v-model:value="postValue" 
+                        placeholder="请输入" 
+                        :rows="textWidth" 
+                        :bordered="false"
+                        class="xt-text" />
                 </div>
             </div>
 
@@ -69,7 +74,6 @@ watch(() => useYuanCommunityStore.dynamicContent.content, (val) => {
 
     textarea {
         border-radius: 12px;
-
         &:deep(.ant-input) {
             &::-webkit-scrollbar {
                 display: none;

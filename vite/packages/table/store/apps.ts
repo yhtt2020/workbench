@@ -1,6 +1,7 @@
 import {defineStore} from "pinia";
 import {myStore} from '../util'
 import dbStorage from "./dbStorage";
+import { useRouter } from 'vue-router'
 // @ts-ignore
 export const appsStore = defineStore('apps', {
   state: () => ({
@@ -9,7 +10,8 @@ export const appsStore = defineStore('apps', {
     runningApps:[],//运行中的apps
     runningAppsInfo:{},
     runningTableApps:[],//运行中的工作台应用
-    runningTableAppsInfo:{}
+    runningTableAppsInfo:{},
+    preparingAppInfo:null,//准备打开的应用
   }),
   actions:{
     loadData(){
@@ -19,6 +21,15 @@ export const appsStore = defineStore('apps', {
       }))
     },
 
+    openApp(info){
+      this.preparingAppInfo=info
+      window.$app.$router.push({
+        name:'app'
+      })
+    },
+    getPreparingAppInfo(){
+      return this.preparingAppInfo
+    },
     /**
      * 添加应用
      * @param apps

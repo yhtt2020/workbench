@@ -5,15 +5,26 @@ import TTApp from "../../ttApp";
 import { useParserCard } from "../../parser";
 import { useSelect } from "../../hooks";
 import WuJie from "../wujie/WuJie.vue";
+import { useTTAppStore } from "../../store";
+const ttappStore: any = useTTAppStore();
 const loading = ref(true);
+// 卡片头部
 const cardHeader: any = ref({});
-const customSize = ref("8x8");
+// 卡片大小
+const customSize = ref("2x2");
 const wujie: any = ref({});
+
+// 卡片状态 无数据、加载中、正常 对应的值分别为 noData、loading、normal
+
+const status = ref("loading");
 onMounted(async () => {
   loading.value = false;
+  // 无数据情况
   if (!props.customData?.id) return;
   // 查询数据
-  let res = await useSelect(props.customData.id);
+  let res = ttappStore.select(props.customData.id);
+
+  if (!res) return;
   // 解析数据
   let data = useParserCard(res);
   customSize.value = data.customSize;
@@ -27,9 +38,11 @@ const props = defineProps({
     type: Object,
   },
 });
+
 const options = ref({
   bg: "pink",
 });
+
 const visible = ref(false);
 
 const refresh = ref({
@@ -66,10 +79,10 @@ const header = computed(() => {
       class="w-full flex flex-col h-full"
       style="overflow: hidden !important"
     >
-      <!-- <TTApp v-if="visible" @close="visible = false" />
-      <xt-button @click="visible = true">打开控制中心</xt-button> -->
+      <TTApp v-if="visible" @close="visible = false" />
+      <xt-button @click="visible = true">打开控制中心</xt-button>
       <template v-if="!loading">
-        <WuJie v-bind="wujie" />
+        <WuJie v-bind="wujie" :id="customData.id" />
       </template>
     </div>
   </xt-container>

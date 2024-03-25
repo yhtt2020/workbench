@@ -111,8 +111,7 @@ import routerTab from '../js/common/routerTab'
 import { Icon as navIcon } from '@iconify/vue';
 import { renderIcon } from '../js/common/common'
 import { moreMenus, extraRightMenu, rightMenus, iconMenus, mergeIconFolder } from '../components/desk/navigationBar/index'
-import navigationSetting from './desk/navigationBar/navigationSetting.vue'
-import EditNewNavigation from './desk/navigationBar/EditNewNavigation.vue'
+import EditNewNavigation from './desk/addIcon/EditNewNavigation.vue'
 import { useNavBarStore } from './desk/navigationBar/navBar'
 import { Notifications } from '../js/common/sessionNotice'
 import Common from './desk/navigationBar/components/Common.vue'
@@ -137,7 +136,6 @@ export default {
   name: 'SidePanel',
   components: {
     navIcon,
-    navigationSetting,
     EditNewNavigation,
     Common,
     xtMenu,
@@ -204,7 +202,10 @@ export default {
           id: 7,
           label: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          callBack: () => { this.editNavigation(this.drawerMenus[1]) }
+          callBack: () => { this.$bus.emit("openSystemSet");
+              setTimeout(() => {
+                this.$bus.emit("selectSystemNav", 3);
+              }, 10); }
         }
       ],
       mainMenus: [
@@ -218,7 +219,10 @@ export default {
           id: 2,
           name: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          fn: () => { this.editNavigation(this.drawerMenus[1]) },
+          fn: () => { this.$bus.emit("openSystemSet");
+              setTimeout(() => {
+                this.$bus.emit("selectSystemNav", 3);
+              }, 10); },
         },
         {
           id: 3,
@@ -402,12 +406,12 @@ export default {
           newIcon: "fluent:task-list-square-16-regular",
           fn: () => { this.bottomToggle[2] = !this.bottomToggle[2] }
         },
-        {
-          id: 4,
-          name: this.settings.enableChat ? '隐藏社群沟通' : '显示社群沟通',
-          newIcon: "fluent:chat-16-regular",
-          fn: () => { this.settings.enableChat = !this.settings.enableChat }
-        },
+        // {
+        //   id: 4,
+        //   name: this.settings.enableChat ? '隐藏社群沟通' : '显示社群沟通',
+        //   newIcon: "fluent:chat-16-regular",
+        //   fn: () => { this.settings.enableChat = !this.settings.enableChat }
+        // },
       ]
 
     },

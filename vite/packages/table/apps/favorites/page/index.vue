@@ -1,10 +1,10 @@
 <template>
   <teleport to='body' >
     <xt-modal custom  boxClass="rounded-xl" :mask="false" v-model="isFavorites" v-if="isFavorites" >
-      <div class="xt-modal flex rounded-xl relative overflow-hidden" style="width: 1000px; height: 720px;" >
+      <div class="relative flex overflow-hidden xt-modal rounded-xl" style="width: 1000px; height: 720px;" >
         <!-- 左侧列表 -->
         <LeftMenu @changeFolder="changeFolder" @refresh="refresh"></LeftMenu>
-        <div class="w-full flex-1">
+        <div class="flex-1 w-full">
           <Search></Search>
           <WebList @refresh="refresh" @changeIcon="changeIcon" @countFavo="countFavo" @showRenameModal="showRenameModal" :checkFlag="checkFlag" :showList="showList" :menus="menus" :rightMenu="rightMenu"></WebList>
         </div>
@@ -15,31 +15,39 @@
     </xt-modal>
     <!-- 添加分组预览 -->
     
-    <xt-modal v-model="previewFlag" :index="99999999" :maskIndex="9999999" title="添加到分组"  boxClass="rounded-xl p-4" :mask="true" :header="true" :footer="true"  v-if="previewFlag" @ok="addHandle" >
+    <!-- <xt-modal v-model="previewFlag" :index="99999999" :maskIndex="9999999" title="添加到分组"  boxClass="rounded-xl p-4" :mask="true" :header="true" :footer="true"  v-if="previewFlag" @ok="addHandle" >
       <xt-preview v-if="previewFlag" :previewFlag="previewFlag" ref="preview"></xt-preview>
-    </xt-modal>
+      
+    </xt-modal> -->
+    <xt-preview 
+      v-if="previewFlag" 
+      v-model="previewFlag" 
+      ref="preview"
+      :list="folderIcons"
+      @ok="addHandle">
+    </xt-preview>
     <!-- 修改网址名称 -->
     <xt-modal title="编辑名称" :maskIndex="1001" :index="1002" boxClass="rounded-xl p-4" :mask="true" :header="true" :footer="true" v-model="renameFlag" v-if="renameFlag" @ok="changeName" >
-      <div class="xt-modal flex rounded-xl relative items-center" style="width: 466px; height: 50px;" >
-        <!-- <xt-input style="height: 40px;width: 400px;" v-model="rename" placeholder="请输入网站名称" class="h-10 rounded-lg xt-text ml-2 xt-main-bg"></xt-input> -->
+      <div class="relative flex items-center xt-modal rounded-xl" style="width: 466px; height: 50px;" >
+        <!-- <xt-input style="height: 40px;width: 400px;" v-model="rename" placeholder="请输入网站名称" class="h-10 ml-2 rounded-lg xt-text xt-main-bg"></xt-input> -->
         <a-input
-          class="h-10 xt-mask xt-text w-full"
+          class="w-full h-10 xt-mask xt-text"
           style="border: 1px solid rgba(255,255,255,0.1);
           border-radius: 10px;"
           placeholder="请输入网站名称"
           allow-clear
           v-model:value="rename">
         </a-input>
-        <xt-button @click="rename = tmpName" :radius="10" :w="40" :h="40" class="xt-main-bg ml-3">
+        <xt-button @click="rename = tmpName" :radius="10" :w="40" :h="40" class="ml-3 xt-main-bg">
             <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="20" />
         </xt-button>
       </div>
     </xt-modal>
     <!-- 添加到桌面 -->
     <xt-modal title="添加到桌面" :maskIndex="1001" :index="1002" boxClass="rounded-xl p-4" :mask="true" :header="true" :footer="true" v-model="deskFlag" v-if="deskFlag" @ok="addDeskIcon" >
-      <div class="xt-modal flex rounded-xl relative" style="width: 466px; height: 50px;" >
-        <!-- <xt-input style="height: 40px;width: 400px;" v-model="rename" placeholder="请输入网站名称" class="h-10 rounded-lg xt-text ml-2 xt-main-bg"></xt-input> -->
-        <xt-select v-model="deskIndex" :zIndex="1200" style="width: 100%;height: 40px;" :list="deskList" :bordered="false"></xt-select>
+      <div class="relative flex xt-modal rounded-xl" style="width: 466px; height: 50px;" >
+        <!-- <xt-input style="height: 40px;width: 400px;" v-model="rename" placeholder="请输入网站名称" class="h-10 ml-2 rounded-lg xt-text xt-main-bg"></xt-input> -->
+        <xt-select v-model="deskIndex" :zIndex="1200" style="width: 100%;" :list="deskList" :bordered="false"></xt-select>
       </div>
     </xt-modal>
   </teleport>
@@ -99,6 +107,7 @@ export default {
           newIcon:'fluent:copy-20-regular',
           callBack: async () => {
             require('electron').clipboard.writeText(this.itemTmp.url)
+            console.log(this.itemTmp.url)
             message.success('复制内容成功')
           }
         },
@@ -180,7 +189,15 @@ export default {
   },
 
   computed:{
-    ...mapWritableState(favoStore, ['isFavorites', 'allList', 'folderList', 'folderIndex', 'browserList', 'updateTime', 'searchValue', 'folderIcons']),
+    ...mapWritableState(favoStore, 
+      ['isFavorites', 
+        'allList', 
+        'folderList', 
+        'folderIndex', 
+        'browserList', 
+        'updateTime', 
+        'searchValue', 
+        'folderIcons']),
     ...mapWritableState(useWidgetStore, ['edit']),
     ...mapWritableState(cardStore, ['desks', 'addCard', 'currentDesk']),
     // 过滤出制定数组
@@ -189,7 +206,8 @@ export default {
       if(folder?.type == 'all'){
         let nn = []
         nn = this.allList.reduce((acc, item) => {
-          if (item.browser === folder.browser && (name?.indexOf(this.searchValue) > -1 || item.url?.indexOf(this.searchValue) > -1)) {
+          name = item.rename?item.rename:item.name
+          if (item.browser === folder.browser && (name.indexOf(this.searchValue)> -1  || item.url?.indexOf(this.searchValue) > -1)) {
             acc.push(item);
           }
           return acc;
@@ -198,6 +216,7 @@ export default {
 
       }else if(folder?.type == 'folder'){
         return this.allList.reduce((acc, item) => {
+          name = item.rename?item.rename:item.name
           if (item.parent == folder.guid && (name?.indexOf(this.searchValue) > -1 || item.url?.indexOf(this.searchValue) > -1)) {
             acc.push(item);
           }
@@ -205,12 +224,14 @@ export default {
         }, []);
       }else if(folder?.type == 'favo'){
         return this.allList.reduce((acc, item) => {
+          name = item.rename?item.rename:item.name
           if (item.favo && (name?.indexOf(this.searchValue) > -1 || item.url?.indexOf(this.searchValue) > -1)) {
             acc.push(item);
           }
           return this.sortByFavoTime(acc);
         }, []);
       }else if(folder?.type == 'recent'){
+          name = item.rename?item.rename:item.name
         return this.allList.reduce((acc, item) => {
           if (item.browser === folder.browser && item.recent && (name?.indexOf(this.searchValue) > -1 || item.url?.indexOf(this.searchValue) > -1)) {
             acc.push(item);
@@ -248,25 +269,26 @@ export default {
   methods: {
     // 
     addHandle(){
-      const preview = this.$refs.preview
-      // 如果是新建文件夹 需要直接传数据 
-      if(preview.chooseIndex?.value == 0){
-        registerFolder(this.desks[preview.deskIndex], this.folderIcons)
-        message.success('添加图标成功！')
-      }else{
-        // 直接将数据添加进去 
-        this.desks.forEach(item=>{
-          if(item.id == preview.cardTmp?.deskId){
-            item.cards.forEach(card=>{
-              if(card.id == preview.cardTmp?.id) {
-                card.customData.list.push(...this.folderIcons)
-                message.success('添加图标成功！')
-              }
-            })
-          }
-        })
-      }
+      // const preview = this.$refs.preview
+      // // 如果是新建文件夹 需要直接传数据 
+      // if(preview.chooseIndex?.value == 0){
+      //   registerFolder(this.desks[preview.deskIndex], this.folderIcons)
+      //   message.success('添加图标成功！')
+      // }else{
+      //   // 直接将数据添加进去 
+      //   this.desks.forEach(item=>{
+      //     if(item.id == preview.cardTmp?.deskId){
+      //       item.cards.forEach(card=>{
+      //         if(card.id == preview.cardTmp?.id) {
+      //           card.customData.list.push(...this.folderIcons)
+      //           message.success('添加图标成功！')
+      //         }
+      //       })
+      //     }
+      //   })
+      // }
       // 
+      this.previewFlag = false
       this.checkFlag = false
       this.clearCheck()
     },
@@ -307,7 +329,6 @@ export default {
       for(let n in this.browserList){
         arrTmp.push(n)
       }
-
       await tsbApi.system.getBrowserBookmark(arrTmp, (data)=>{
         this.updateTime = new Date().getTime()
         this.folderList = []
@@ -411,10 +432,13 @@ export default {
         newFolder.push({
           ...this.defaultFolderIcon,
           ...item, 
+          type:'default',
+          value:item.url
         })
       })
       this.deskIcons = newIcon
       this.folderIcons = newFolder
+      console.log(this.deskIcons, this.folderIcons)
     },
 
     // 排序算法
@@ -462,6 +486,7 @@ export default {
         if(item.check) item.check = false
       })
     },
+    
     // 清楚数据的最近添加状态
     clearRecent(){
       this.allList.forEach(item=>{

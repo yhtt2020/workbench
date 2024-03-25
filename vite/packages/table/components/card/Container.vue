@@ -139,6 +139,7 @@
             v-model:size="currentSize"
             :disableHierarchy="options.hierarchy"
             :sizeList="sizeList"
+            v-if="!options.rightMenuVisible"
           >
             <div class="header-right-icon">
               <xt-ify-icon
@@ -147,6 +148,7 @@
               />
             </div>
           </RightMenu>
+          <slot name="customRightMenu" v-else></slot>
         </div>
       </div>
       <!-- 小组件头部结束 -->
@@ -304,6 +306,8 @@ const props = defineProps({
         customDel: false,
         // 开启后所有事件相关提示信息会进行输出
         debug: false,
+        // 是否开启下拉菜单右侧还是左侧显示
+        rightMenuVisible:false,
         // 是否禁用标题拖拽
         disabledDrag: false,
       };

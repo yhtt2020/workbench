@@ -78,6 +78,20 @@ class TableManager {
             '--app-path=' + app.getPath('exe'),
             '--app-dir_name=' + __dirname,
           ]
+        },
+        onReadyToShow:()=>{
+          if (tableWinSetting) {
+            //通过多次设置来规避缩放率的问题
+            if (!tableWinSetting.isMaximized) {
+            setTimeout(() => {
+              this.window.setSize(10,10)
+              this.window.setPosition(tableWinSetting.bounds.x, tableWinSetting.bounds.y)
+                setTimeout(()=>{
+                  this.window.setSize(tableWinSetting.bounds.width, tableWinSetting.bounds.height)
+                },1000)
+            }, 1000)
+            }
+          }
         }
       })
       require("@electron/remote/main").enable(tableWin.window.webContents)
@@ -108,14 +122,13 @@ class TableManager {
         // }
       })
       this.window = tableWin.window
-      if (tableWinSetting) {
-        this.window.setBounds(tableWinSetting.bounds)
-        setTimeout(() => {
-          if (tableWinSetting.isMaximized) {
-            this.window.maximize()
-          }
-        }, 1000)
-      }
+      // if (tableWinSetting.isMaximized) {
+      //   this.window.setSize(10,10)
+      //   this.window.setPosition(tableWinSetting.bounds.x,tableWinSetting.bounds.y)
+      //   setTimeout(() => {
+      //       this.window.maximize()
+      //   }, 1000)
+      // }
       // tableWin.window.webContents.on('select-bluetooth-device',(event, deviceList, callback)=>{
       //   event.preventDefault();
       //   console.log('Device list:', deviceList);
@@ -213,6 +226,7 @@ class TableManager {
       bounds: this.window.getBounds(),
       isMaximized: this.window.isMaximized()
     }
+    console.log('记录下位置和大小',tableWinSetting)
     settings.set('tableWinSetting', tableWinSetting)
   }
 

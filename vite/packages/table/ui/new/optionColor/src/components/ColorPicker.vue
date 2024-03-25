@@ -150,7 +150,20 @@ const chooseLinear = (item) => {
  * 取色器
  */
 const updateBackground = () => {
-    emit('change', defaultColor.value)
+    // 由于新的取色器返回的是rgb格式，需要转为16进制
+    const regex = /rgb\((\d+),\s*(\d+),\s*(\d+)\)/
+    const match = defaultColor.value.match(regex)
+    if (match) {
+        const r = parseInt(match[1])
+        const g = parseInt(match[2])
+        const b = parseInt(match[3])
+        const hex = rgbToHex(r, g, b)
+        emit('change', hex)
+    }
+    // 转为16进制格式
+    function rgbToHex(r, g, b) {
+        return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+    }
 }
 
 // 容错处理，防止没有获取到tippyRef，导致页面卡死

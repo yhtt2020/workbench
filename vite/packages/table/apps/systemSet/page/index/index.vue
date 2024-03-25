@@ -24,20 +24,21 @@
         </template>
       </div>
       <!-- 右侧功能区 -->
-      <div class="p-3 xt-modal h-full flex flex-col" style="width: 520px">
+      <div class="flex flex-col h-full p-3 xt-modal" style="width: 520px">
         <!-- 头部 -->
-        <div class="flex items-center mb-3 w-full" style="height: 34px">
+        <div class="flex items-center w-full mb-3">
           <div
             class="flex justify-center w-full"
-            v-if="navList[activeIndex].component == 'Desk'"
+            v-if="navList[activeIndex].tab"
           >
             <xt-tab
+              :key="activeIndex"
               style="height: 34px; width: 300px"
               boxClass="p-1 xt-bg-2"
               :boxStyle="{ 'border-radius': '10px' }"
               :itemStyle="{ 'border-radius': '6px' }"
               v-model="deskTab"
-              :list="settingsTab"
+              :list="navList[activeIndex].settingsTab"
             />
           </div>
           <div v-else class="flex items-center">
@@ -79,6 +80,7 @@ import {
   defineAsyncComponent,
   onMounted,
   getCurrentInstance,
+  watch,
   onUnmounted,
 } from "vue";
 import { useGlobalStore } from "../../../Global/store";
@@ -93,6 +95,7 @@ const Key = defineAsyncComponent(() => import("../key/Key.vue"));
 const Screen = defineAsyncComponent(() => import("../Screen/Screen.vue"));
 const Barrage = defineAsyncComponent(() => import("../barrage/Barrage.vue"));
 const Desk = defineAsyncComponent(() => import("../desk/Desk.vue"));
+const Navigation = defineAsyncComponent(() => import("../navigation/Navigation.vue"));
 
 const { proxy }: any = getCurrentInstance();
 
@@ -110,12 +113,15 @@ const components = shallowReactive({
   Screen,
   Barrage,
   Desk,
+  Navigation,
 });
 type SetItem = {
   name: string;
   icon: string;
   component: string;
   disabled: boolean;
+  settingsTab?: { name: string; value: string }[]; // tab列表
+  tab?: boolean; // 是否需要tab
 };
 const navList = <SetItem[]>[
   {
@@ -131,6 +137,22 @@ const navList = <SetItem[]>[
     icon: "fluent:desktop-16-regular",
     component: "Desk",
     disabled: false,
+    settingsTab: [
+      { name: "通用设置", value: "all" },
+      { name: "当前桌面", value: "current" },
+    ],
+    tab:true,
+  },
+  {
+    name: "导航设置",
+    icon: "fluent:tablet-16-regular",
+    component: "Navigation",
+    disabled:false,
+    settingsTab:[
+      { name: "属性", value: "property" },
+      { name: "外观", value: "appearance" },
+    ],
+    tab:true,
   },
   {
     name: "设备设置",
@@ -161,10 +183,10 @@ const navList = <SetItem[]>[
 ];
 
 const deskTab = ref("all");
-const settingsTab = [
-  { name: "通用设置", value: "all" },
-  { name: "当前桌面", value: "current" },
-];
+// const settingsTab = [
+//   { name: "通用设置", value: "all" },
+//   { name: "当前桌面", value: "current" },
+// ];
 
 const emits = defineEmits(["close"]);
 
@@ -183,6 +205,21 @@ const switchNav = (nav: string) => {
   let res = navList.findIndex((item) => item.component === nav);
   selectNav(res);
 };
+
+watch(
+  () => navList[activeIndex.value].component,
+  (val) => {
+    const isDesk = val === "Desk";
+    const isLayout = isFreeLayout.value || getCurrentDesk.value.settings.enableZoom;
+
+    const tabMap = {
+      "Desk": isLayout ? "current" : "all",
+      "Navigation": "property"
+    };
+
+    deskTab.value = tabMap[val] || deskTab.value;
+  }
+)
 
 onMounted(() => {
   if (isFreeLayout.value || getCurrentDesk.value.settings.enableZoom) {

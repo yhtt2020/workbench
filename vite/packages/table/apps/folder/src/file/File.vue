@@ -25,7 +25,7 @@
             @deleteFile="dragDeleteFile"
             :data="item"
           >
-            <Files :item="item"></Files>
+            <Files :item="item" :layout="layout"></Files>
           </Drag>
         </xt-mix-menu>
       </div>

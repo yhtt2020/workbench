@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import WujieVue from "wujie-vue3";
+import { useTTAppStore } from "../../store";
+const ttappStore: any = useTTAppStore();
+
 const props = defineProps({
   name: {
     default: "wujie",
   },
   url: {
+    type: String,
+  },
+  id: {
     type: String,
   },
 });

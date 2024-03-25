@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { useSelectAll ,useUninstall} from "./hooks";
+import { useSelectAll, useUninstall } from "./hooks";
 import { message } from "ant-design-vue";
 
 // @ts-ignore
@@ -21,7 +21,16 @@ export const useTTAppStore = defineStore("useTTAppStore", {
      */
     async selectAll() {
       let res: any = await useSelectAll();
-      this.ttappList = res;
+      this.ttappList = res.map((item) => {
+        let data = JSON.parse(item.data);
+        return data;
+      });
+    },
+    /**
+     * 查询一条数据
+     */
+    select(id: string) {
+      return this.ttappList.find((item) => item.id === id);
     },
     /**
      * 卸载一条数据

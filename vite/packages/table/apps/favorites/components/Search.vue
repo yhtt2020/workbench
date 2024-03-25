@@ -10,6 +10,7 @@
             placeholder="搜索"
             :maxlength="10"
             allow-clear
+            spellcheck="false"
             v-model:value="searchValue">
                 <xt-new-icon class="absolute" icon="fluent:search-20-filled" size="20" />
             </a-input>
