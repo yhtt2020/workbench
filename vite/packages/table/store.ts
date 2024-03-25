@@ -189,9 +189,12 @@ export const appStore = defineStore('appStore', {
       if (this.aided) {
         this.aided = false
       }
-      tsbApi.window.setFocusable(true)
-      tsbApi.window.setSkipTaskbar(false)
-      tsbApi.window.focus()
+   // 设置窗口可获取焦点
+   tsbApi.window.setFocusable(true)
+   // 设置窗口不在任务栏中
+   tsbApi.window.setSkipTaskbar(false)
+   // 获取窗口焦点
+   tsbApi.window.focus()
     },
 
 
@@ -206,11 +209,17 @@ export const appStore = defineStore('appStore', {
       if (response.code === 200) {
         const data = response.data
         this.userCardUserInfo = {
+           // 用户ID
           uid: uid,
+          // 用户昵称
           nickname: data.user.nickname,
+          // 用户头像
           avatar: data.user.avatar_128,
+          // 用户头像框
           frame: data.user.frame,
+          // 用户签名
           signature: data.user.signature,
+          // 用户所有认证实体
           certification: data.user.all_certification_entity_pc || []
         }
         this.userCardVisible = true
@@ -235,15 +244,19 @@ export const appStore = defineStore('appStore', {
 
 
 
+    // 设置同意测试属性为false
     setAgreeTest() {
       this.agreeTest = false
     },
+    // 设置信息可见性，值为传入的参数
     setInfoVisible(value) {
       this.infoVisible = value
     },
+    // 设置次要可见性，值为传入的参数
     setSecondaryVisible(value) {
       this.secondaryVisible = value
     },
+    // 重置全屏模式
     reset() {
       this.fullScreen = false
     },
@@ -254,7 +267,7 @@ export const appStore = defineStore('appStore', {
      */
     finishWizard() {
       this.init = true;
-      localStorage.setItem('wizarded', String(true))
+      localStorage.setItem('wizarded', '1')
       this.agreeTest = true
 
     },
@@ -450,7 +463,7 @@ export const appStore = defineStore('appStore', {
               'windowFullScreen', 'windowOriginBounds', 'aided', 'currentRoute',
               'status', 'settings', 'init', 'agreeTest', 'backgroundSettings', 'infoVisible',
               'backgroundImage', 'saving', 'simple', 'styles', 'stylesIndex', 'style', 'windowFullScreen',
-              'aggList', 'deskInit','backgroundName','backgroundColor',
+              'aggList', 'deskInit','backgroundName','backgroundColor','showWindowController'
             ],
       storage: dbStorage,
       // state 中的字段名，按组打包储存
