@@ -20,16 +20,19 @@
 
 <script setup>
 import { storeToRefs } from "pinia";
-import { computed, ref, getCurrentInstance } from "vue";
+import { computed, ref, getCurrentInstance,onMounted } from "vue";
 import { nanoid } from "nanoid";
 import { communityStore } from "../../../page/chat/store/communityStore";
 import { useRouter } from "vue-router";
+import { communityNavStore } from "../store/communityNavStore"; 
 
 import Avatar from "../../desk/navigationBar/components/Avatar.vue";
 
 const communityNav = communityStore();
 const { community } = storeToRefs(communityNav);
 const router = useRouter();
+const comNav = communityNavStore();
+const { settingType,currentCommunity } = storeToRefs(comNav);
 
 const { proxy } = getCurrentInstance();
 
@@ -42,15 +45,10 @@ const communityNavList = computed(() => {
   if (communityNum.value) {
     return [
       {
-        value: "task",
-        name: "想天官方社群",
-        icon: "/icons/logo128.png",
-        bg: "",
-        isBg: false,
-        mode: "app",
-        type: "systemApp",
-        id: nanoid(11),
-        fn:()=>{}
+        ...currentCommunity.value.item,
+        fn:(event)=>{
+          proxy.$bus.emit("openComSearch",event);
+        }
       },
       {
         icon: "/logo/community.svg",
@@ -73,7 +71,7 @@ const communityNavList = computed(() => {
         type: "systemApp",
         id: nanoid(12),
         fn: (event) => {
-          proxy.$bus.emit("openTeamNav", event);
+          openNav(event);
         },
       },
       {
@@ -113,7 +111,7 @@ const communityNavList = computed(() => {
         type: "systemApp",
         id: nanoid(12),
         fn: (event) => {
-          proxy.$bus.emit("openTeamNav", event);
+          openNav(event);
         },
       },
       {
@@ -130,6 +128,14 @@ const communityNavList = computed(() => {
   }
 });
 
+const openNav = (event) =>{
+  if(settingType.value === 'app'){
+    proxy.$bus.emit("openAppVisible");
+  }
+  else {
+    proxy.$bus.emit("openTeamNav", event);
+  }
+}
 
 </script>
 

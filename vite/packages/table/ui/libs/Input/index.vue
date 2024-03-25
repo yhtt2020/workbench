@@ -13,6 +13,7 @@
       @blur="handleBlur"
       @change="handleChange"
       @keyup="handleKeyUp"
+      :maxlength="maxlength"
     >
       <template #addonBefore> <slot name="addonBefore"></slot></template>
       <template #addonAfter> <slot name="addonAfter"></slot> </template>
@@ -60,6 +61,10 @@ export default {
         };
       },
     },
+    // 最大长度
+    maxlength:{
+      type:Number,
+    }
   },
   mounted() {
     if (this.focus) {
