@@ -27,11 +27,11 @@
           <xt-text class="mb-3" center> 当前图标为「系统功能」类型。 </xt-text>
         </xt-option-box>
         <template v-else>
-          <xt-option-from :options="attributeOptions" :data="edit">
+          <xt-option-form :options="attributeOptions" :data="edit">
             <template #custom>
               <LocalApp @click="" @onLocalApp="updateApp"></LocalApp>
             </template>
-          </xt-option-from>
+          </xt-option-form>
         </template>
       </div>
       <div v-else style="width: 452px">

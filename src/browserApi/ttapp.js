@@ -1,5 +1,5 @@
 /**
- * ttapp.js
+ * 主进程回调 ipcHelper ttapp.js
  * @description 应该是主进程的回调处理
  */
 const ipcHelper = require("./ipcHelper");
@@ -14,20 +14,27 @@ const ttapp = {
   install(zipPath, cb) {
     let cbId = require("nanoid").nanoid();
     ipc.once(cbId, (event, args) => {
-      if (cb) {
-        console.log("安装回调", args);
-        cb(args);
-      }
+      cb && cb(args);
     });
     return send("install", {
       zipPath,
       cbId,
     });
   },
+  installJson( data, cb) {
+    let cbId = require("nanoid").nanoid();
+    ipc.once(cbId, (event, args) => {
+      cb && cb(args);
+    });
+    return send("installJson", {
+      data,
+      cbId,
+    });
+  },
   uninstall(id, cb) {
     let cbId = require("nanoid").nanoid();
     ipc.once(cbId, (event, args) => {
-     cb && cb(args);
+      cb && cb(args);
     });
     return send("uninstall", {
       id,
@@ -44,13 +51,13 @@ const ttapp = {
       cbId,
     });
   },
-  selectAll(id, cb) {
+  selectAll(cb) {
     let cbId = require("nanoid").nanoid();
     ipc.once(cbId, (event, args) => {
+      console.log("args :>> ", args);
       cb && cb(args);
     });
     return send("selectAll", {
-      id,
       cbId,
     });
   },

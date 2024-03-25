@@ -1,11 +1,14 @@
 /**
- * ttapp.js
+ * 主进程消息 on ttapp.js
  * @description 应该是接收主进程的消息
  */
 const Base = require("./base");
 // const appModel = require("../../model/appModel");
 
-const useInstall = require("../ttApps/useInstall");
+const {
+  installJson,
+  installV2
+} = require("../ttApps/useInstall");
 const useUninstall = require("../ttApps/useUninstall");
 
 const { useSelect, useSelectAll } = require("../ttApps/useSelect");
@@ -21,7 +24,13 @@ class TTApp extends Base {
   bindIPC() {
     // 安装
     this.on("install", async (event, args) => {
-      let res = await useInstall(args.zipPath);
+      let res = await installV2(args.zipPath);
+      console.log('res :>> ', res);
+      event.reply(args.cbId, res);
+    });
+    // 写入json
+    this.on("installJson", async (event, args) => {
+      let res = await installJson(args.data);
       event.reply(args.cbId, res);
     });
     // 卸载

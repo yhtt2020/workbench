@@ -11,11 +11,11 @@
         <Icon v-if="visible" v-bind="edit" :edit="true"></Icon>
       </div>
       <div style="width: 452px" v-if="currentTab == 'attribute'">
-        <xt-option-from :options="attributeOptions" :data="edit">
+        <xt-option-form :options="attributeOptions" :data="edit">
           <template #custom>
             <LocalApp @click="" @onLocalApp="updateApp"></LocalApp>
           </template>
-        </xt-option-from>
+        </xt-option-form>
         <div></div>
       </div>
       <div v-else style="width: 452px">
@@ -24,9 +24,9 @@
             @onIconClick="refreshIcon" />
           <xt-option-icon v-model:icon="edit.src" v-model:input="edit.titleValue" />
         </div>
-        <xt-option-from :options="appearanceNameOptions" :data="edit" />
-        <xt-option-from :options="appearanceOptions" :data="edit" />
-        <xt-option-from :options="appearanceColorOptions" :data="edit" />
+        <xt-option-form :options="appearanceNameOptions" :data="edit" />
+        <xt-option-form :options="appearanceOptions" :data="edit" />
+        <xt-option-form :options="appearanceColorOptions" :data="edit" />
       </div>
     </div>
   </xt-modal>
