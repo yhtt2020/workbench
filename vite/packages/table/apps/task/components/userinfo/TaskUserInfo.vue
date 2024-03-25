@@ -17,15 +17,15 @@
     <div class="w-1/2 flex flex-col">
       <!-- 等级信息 -->
       <div class="flex justify-between w-full mb-1">
-        <xt-text class="xt-text font-14 xt-font font-400">我的社区等级</xt-text>
-        <span class="font-18 xt-font  xt-text" style="font-weight: 900;">Lv{{ userInfo?.grade?.grade }}</span>
+        <xt-text class="font-14 xt-font font-400" style="color: rgba(255,255,255,0.85) !important;">我的社区等级</xt-text>
+        <span class="font-18 xt-font" style="font-weight: 900;color: rgba(255,255,255,0.85);">Lv{{ userInfo?.grade?.grade }}</span>
       </div>
       <!-- 经验升级进度条 -->
-      <a-progress :percent="myLv.currentLv"  :strokeColor="'var(--primary-text)'"/>
+      <a-progress :percent="myLv.currentLv"  :strokeColor="'rgba(255,255,255,0.85)'"/>
       <!-- 下一级升级经验 -->
       <div class="flex justify-between w-full pt-2">
-        <xt-text class="xt-text-2 font-12 xt-font font-400">升级所需经验</xt-text>
-        <span class="xt-text-2 font-12 xt-font font-400">{{ userInfo?.grade?.diff }}</span>
+        <xt-text class="font-12 xt-font font-400" style="color: rgba(255,255,255,0.85) !important;">升级所需经验</xt-text>
+        <span class="font-12 xt-font font-400" style="color: rgba(255,255,255,0.65);">{{ userInfo?.grade?.diff }}</span>
       </div>
     </div>
 
@@ -33,27 +33,27 @@
 
     <div class="w-1/2 flex flex-col">
       <div class="flex justify-between items-center">
-        <xt-text class="xt-text font-14 xt-font font-400">社区积分</xt-text>
+        <xt-text class="font-14 xt-font font-400" style="color: rgba(255,255,255,0.85) !important;">社区积分</xt-text>
         <div class="flex" @click="showProp">
           <xt-button :w="72" :h="32"  class="xt-bg-t-2" style="border-radius: 8px;">
             <div class="flex items-center justify-center ">
               <img style="width: 20px;height:20px;"  src="/img/bottomPanel/prop.png" class="mr-1 object-cover">
-              <span class="font-14 xt-font xt-text">道具</span>
+              <span class="font-14 xt-font" style="color: rgba(255,255,255,0.65);">道具</span>
             </div>
           </xt-button>
         </div>
       </div>
       <div class="w-full flex items-center">
         <a-avatar :size="24" shape="circle" src="/img/task/communityPoints.svg"></a-avatar>
-        <span class="xt-text font-18 xt-font " style="font-weight: 900;">{{ infoMedal.score  }}</span>
+        <span class="font-18 xt-font " style="font-weight: 900;color: rgba(255,255,255,0.85);">{{ infoMedal.score  }}</span>
       </div>
       <div class="flex justify-between">
-        <xt-text class="xt-text-2 font-12 xt-font font-400">
+        <xt-text class="font-12 xt-font font-400" style="color: rgba(255,255,255,0.65) !important;">
           可兑换的商品
         </xt-text>
         <xt-button v-if="showPointGood" class="relative" w="120" h="0" @click="goShop">
           <div v-for="item in goodImage" class="absolute rounded-md flex items-center justify-end good-image" 
-            style="border: 2px solid rgba(255,255,255,0.85);width: 24px;height: 24px;box-shadow: 0 0 4px #333;">
+            style="border: 2px solid rgba(255,255,255,0.85);width: 24px;height: 24px;">
             <img :src="item.image"  class="w-full h-full object-cover" style="" alt="">
           </div>
         </xt-button>
@@ -194,4 +194,5 @@ onMounted(()=>{
     right: 3px;
   }
 }
+
 </style>

@@ -62,6 +62,18 @@ app.whenReady().then(async () => {
       dlog.error(err)
     }
   })
+
+  ipc.on('loginBrowserWithToken', async (event, arg) => {
+    let result = {}
+    try {
+      const token = arg
+      result = await userModel.loginWithToken(token)
+      event.reply('callback-loginBrowser', result)
+    } catch (err) {
+      console.error('登录报错', err)
+      dlog.error(err)
+    }
+  })
   // 游览器登出
   ipc.on('logoutBrowser', async () => {
     // 1是往lumen发消息，让lumen退出

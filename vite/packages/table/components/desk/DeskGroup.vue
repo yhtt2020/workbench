@@ -89,45 +89,47 @@
       @mouseenter = 'handleMouseEnter'
       @mouseleave = 'handleMouseLeave'
     >
-      <!-- tabs   -->
-      <div class="panel s-bg">
-        <div class="flex flex-row tabs" v-if="showTabs">
-          <!--      <div @click="setCurrentDeskId('0')" :class="{'tab-active':currentDeskId==='0'}" class="pr-3 home game-tab game-bg">-->
-          <!--        <icon class="icon" style="font-size: 22px;" icon="desktop"></icon>-->
-          <!--        主桌面-->
-          <!--      </div>-->
-          <div
-            :class="{ 'tab-active': currentDeskId === item.id }"
-            @click="setCurrentDeskId(item.id)"
-            class="pr-3 truncate tab s-bg xt-text"
-            v-for="(item, index) in displayDesks"
-          >
-            <a-avatar
-              v-if="item.iconUrl"
-              shape="square"
-              class="mr-2 icon"
-              :size="22"
-              :src="item.iconUrl"
-            ></a-avatar>
-            <icon
-              v-else
-              :icon="item.icon || 'desktop'"
-              style="font-size: 18px; vertical-align: middle"
-              class="mr-2"
-            ></icon>
-            <span class="">{{ item.name }}</span>
+      <xt-task id="D0001" no="1" @cb="clickDesk">
+        <!-- tabs   -->
+        <div class="panel s-bg">
+          <div class="flex flex-row tabs" v-if="showTabs">
+            <!--      <div @click="setCurrentDeskId('0')" :class="{'tab-active':currentDeskId==='0'}" class="pr-3 home game-tab game-bg">-->
+            <!--        <icon class="icon" style="font-size: 22px;" icon="desktop"></icon>-->
+            <!--        主桌面-->
+            <!--      </div>-->
+            <div
+              :class="{ 'tab-active': currentDeskId === item.id }"
+              @click="setCurrentDeskId(item.id)"
+              class="pr-3 truncate tab s-bg xt-text"
+              v-for="(item, index) in displayDesks"
+            >
+              <a-avatar
+                v-if="item.iconUrl"
+                shape="square"
+                class="mr-2 icon"
+                :size="22"
+                :src="item.iconUrl"
+              ></a-avatar>
+              <icon
+                v-else
+                :icon="item.icon || 'desktop'"
+                style="font-size: 18px; vertical-align: middle"
+                class="mr-2"
+              ></icon>
+              <span class="">{{ item.name }}</span>
+            </div>
           </div>
         </div>
-      </div>
-      <div class="flex dots item-content">
-        <div
-          :class="{ active: currentDeskId === item.id }"
-          class="dot"
-          v-for="(item, index) in displayDesks"
-        >
-          &nbsp;
+        <div class="flex dots item-content">
+          <div
+            :class="{ active: currentDeskId === item.id }"
+            class="dot"
+            v-for="(item, index) in displayDesks"
+          >
+            &nbsp;
+          </div>
         </div>
-      </div>
+      </xt-task>
 
       <div v-if="false">
         <div class="flex flex-row ml-1">
@@ -602,7 +604,7 @@ import NewGuidePage from "../../page/app/grade/NewGuidePage.vue";
   computed: {
     ...mapWritableState(deskStore, ["apiList"]),
     ...mapWritableState(appStore, ["fullScreen", "showGuide", "guideList"]),
-    ...mapWritableState(taskStore, ["taskID", "step"]),
+    ...mapWritableState(taskStore, ["taskID", "step", 'taskTmp']),
     ...mapWritableState(useDeskStore, ["menus"]),
 
     ...mapWritableState(useFreeLayoutStore, [
@@ -639,6 +641,12 @@ import NewGuidePage from "../../page/app/grade/NewGuidePage.vue";
       });
       this.key = Date.now();
       return currentDesk;
+    },
+
+    clickDesk(){
+      this.step = -1
+      this.taskID = this.taskTmp
+      this.taskTmp = ''
     },
 
     displayDesks() {
@@ -884,6 +892,8 @@ import NewGuidePage from "../../page/app/grade/NewGuidePage.vue";
           });
           this.addDeskVisible = false;
           message.success("为您成功导入" + desk.length + "个桌面。");
+          this.setCurrentDeskId(needImportDesk.desk[0].id);
+          // 1
         // } catch (e) {
         //   console.warn(e);
         //   message.error("导入失败，请检查代码。");

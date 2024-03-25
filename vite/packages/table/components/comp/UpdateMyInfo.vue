@@ -62,6 +62,7 @@ import browser from '../../js/common/browser';
 import { avatarNumber } from '../../js/common/teamAvatar';
 import { frameStore } from '../../store/avatarFrame';
 import {completeTask} from '../../apps/task/task';
+import { useUpdateUserInfo } from '../../permission/user/useUserPermit'
 
 import UploadImage from '../UploadImage.vue';
 
@@ -149,19 +150,20 @@ const saveMyInfo = async() =>{
       nickname:data.value.randomNick,
       signature:data.value.sign,
       avatar:infoAvatar.value,
-      sex:selectSexItem.value,
+      sex:Number(selectSexItem.value),
     }
     console.log('infoOption',infoOption);
     let result = await frame.updateMyinfo(infoOption);
     console.log("result",result);
     if(result.code === 200){
       message.success('修改成功');
+      useUpdateUserInfo();
       data.value.myInfoVisible = false;
       completeTask('m0301');
-      setTimeout(()=>{
-        app.getUserInfo();
-      },3 * 1000);
-      console.log('数据更新',userInfo.value);
+      // setTimeout(()=>{
+      //   app.getUserInfo();
+      // },3 * 1000);
+      // console.log('数据更新',userInfo.value);
     }
     else{
       message.error('修改失败');
@@ -183,10 +185,13 @@ const selectPresetAvatar = (item) =>{
 
 
 onMounted(()=>{
-  console.log('测试',userInfo.value,data.value);
   data.value.randomNick = userInfo.value.nickname;
   data.value.sign = userInfo.value.signature;
   infoAvatar.value = userInfo.value.avatar;
+  app.getUserCard(userInfo.value.uid).then((res)=>{
+    const result = res.data.user;
+    selectSexItem.value = String(result.sex);
+  })
 })
 
 defineExpose({

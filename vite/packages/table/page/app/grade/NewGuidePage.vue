@@ -129,6 +129,7 @@ import { FreeLayoutStore } from "./components/FreeLayout";
 import { useFreeLayoutStore } from "../../../components/desk/freeLayout/store";
 import { useWidgetStore } from "../../../components/card/store";
 import { useCustomLayout } from "../../../components/desk/freeLayout/useCustomLayout";
+import { taskStore } from "../../../apps/task/store";
 
 export default {
   components: {
@@ -204,9 +205,14 @@ export default {
   },
   computed: {
     ...mapWritableState(cardStore, ['desks', 'addCard', 'removeCard']),
-    ...mapWritableState(appStore, ['backgroundSettings', 'backgroundImage', 'styles', 'backgroundName', 'guideList']),
+    ...mapWritableState(appStore, ['backgroundSettings', 'backgroundImage', 'styles', 'backgroundName', 'guideList', 'firstGuide']),
     ...mapWritableState(navStore, ['copyFootNav']),
     ...mapWritableState(FreeLayoutStore, ["assistDesk", "gameDesk"]),
+    ...mapWritableState(taskStore, {
+      taskID: "taskID",
+      taskTmp: "taskTmp",
+      taskStep: "step",
+    }),
     ...mapWritableState(useFreeLayoutStore, [
       "isFreeLayout",
       "getFreeLayoutState",
@@ -233,6 +239,20 @@ export default {
 
   },
   mounted() {
+    // 引导提示弹窗
+    if(!this.firstGuide){
+      // 提示框
+      this.taskTmp = this.taskID
+      this.taskID = 'D0001'
+      this.taskStep = 1
+      setTimeout(() => {
+        this.taskTmp = this.taskID
+        this.taskID = 'D0001'
+        this.taskStep = 1
+      }, 500);
+      this.firstGuide = true
+    }
+
     // 卡片数据去重
     this.NavbarList = [...NavListTmp]
     let items = []
@@ -768,7 +788,7 @@ export default {
 // 右上角 定制主题
 .theme {
   width: 400px;
-  height: 660px;
+  height: 680px;
   position: fixed;
   top: 60px;
   right: 20px;

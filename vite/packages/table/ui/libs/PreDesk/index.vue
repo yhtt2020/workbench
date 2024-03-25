@@ -2,24 +2,24 @@
     <div style="width: 452px;height: 320px;" class="preview flex justify-center items-center" :style="{'background': bg}" >
         <div :style="{'transform': `scale(${scale})`}">
           <component
-            :desk="currentDesk"
-            :is="chooseIndex?.cardName"
-            :customIndex="chooseIndex?.id"
+            :desk="desks[0]"
+            :is="cardName"
+            :customIndex="customIndex"
             :customSize="customSize"
             :customData="customData"
-            />
+          />
         </div>
     </div>
   </template>
   
   <script>
-  import componentsMinis from "../../../../table/components/desk/components.ts";
+  import previewMinis from "../../../../table/components/desk/preview.ts";
   import { mapActions, mapWritableState } from 'pinia'
   import { cardStore } from '../../../store/card';
-  import { useWidgetStore } from '../../../../table/components/card/store';
   import { appStore } from "../../../store"; 
   export default {
     props:['chooseIndex'],
+    mixins: [previewMinis],
     computed: {
       ...mapWritableState(cardStore, ['desks', 'currentDesk']),
       ...mapWritableState(appStore, ['backgroundImage']),
@@ -31,35 +31,51 @@
         if(this.chooseIndex){
           return this.chooseIndex.customData
         }
-        return 
-        return this.chooseIndex.customData?this.chooseIndex.customData:this.desks[0].cards[0].customData
+        return {
+          customSize: '2x2',
+          list: [],
+          icon: "https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#ffffff",
+          model: "custom",
+          name: '文件夹',
+        }
+      },
+      cardName(){
+        if(this.chooseIndex){
+          return this.chooseIndex?this.chooseIndex.cardName:''
+        }
+        return 'folder'
       },
       customSize(){
         if(this.chooseIndex){
-          let str = this.chooseIndex.customData.customSize.split(/x|\*/);
-          let scaleW = (380 / ( 135 * str[0])).toFixed(4)
-          let scaleH = (260 / ( 100 * str[1])).toFixed(4)
-          this.scale = scaleW > scaleH?scaleH:scaleW
-          this.scale = this.scale > 1?1:this.scale
           return this.chooseIndex.customData.customSize
         }
         return '2x2'
+      },
+      customIndex(){
+        return this.chooseIndex?this.chooseIndex.id:new Date().getTime()
+      },
+      scale(){
+        if(this.chooseIndex){
+          let scale = 1;
+          let str = this.chooseIndex.customData.customSize.split(/x|\*/);
+          let scaleW = (380 / ( 135 * str[0])).toFixed(4)
+          let scaleH = (260 / ( 100 * str[1])).toFixed(4)
+          scale = scaleW > scaleH?scaleH:scaleW
+          scale = scale > 1?1:scale
+          return scale
+        }
+        return 1
       }
     },
     data() {
       return {
-        cardName: true,
-        scale: 1,
       }
     },
-    mixins: [componentsMinis],
     mounted() {
       
     },
 
     components: {
-      // Desk,
-      // component,
     },
     methods: {
     ...mapActions(cardStore, ['getCurrentDesk']),

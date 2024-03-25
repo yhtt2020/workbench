@@ -21,7 +21,7 @@
       </div>
       <UserInfoDetail :userinfo="userInfo"/>
     </div>
-    <div  class="rounded-xl xt-bg-t-2 flex pointer category-button flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-else>
+    <div  class="rounded-xl xt-bg-t-2 flex pointer category-button flex-col items-center justify-center relative" style="height:120px;width: 252px;" v-else @click="triggerControl()">
       <UserInfoDetail :userinfo="userInfo"/>
     </div>
   </template>
@@ -83,10 +83,11 @@ import { controlStore } from '../../../hook/controlStore';
 import { setThemeSwitch } from '../../../../../card/hooks/themeSwitch';
 import { message,notification } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
-// import
+import { completeTask } from '../../../../../../apps/task/task'
 import UserInfoDetail from '../userControl/UserInfoDetail.vue';
 import SystemControlDetail from '../systemControl/SystemControlDetail.vue';
 import UnLogin from '../userControl/UnLogin.vue';
+import { navStore } from "../../../../../../store/nav";
 
 const props = defineProps({
  controlIndex:{
@@ -113,6 +114,8 @@ const { control,firstVisible } = storeToRefs(controls);
 const { proxy } = getCurrentInstance()
 const router = useRouter();
 const controlID = ref(props.controlIndex);
+const nav = navStore();
+const { copyFootNav } = storeToRefs(nav);
 
 
 // 通过计算属性来判断控制中心是否开启的状态
@@ -143,6 +146,7 @@ const controlStatus = computed(()=>{
     case 'game-mode':
       return {status:false};
     case 'barrage':
+      if(settings.value.enableBarrage){  window.$manager.test() }
       return {status:settings.value.enableBarrage}; 
     default:
       break;
@@ -163,7 +167,29 @@ const triggerControl = () =>{
       break;
     // 极简模式
     case 'min-mode':
-      simple.value = !simple.value
+      simple.value = !simple.value;
+      if(simple.value){
+        const isControl = copyFootNav.value.some((item)=>{ return item.value === 'control' });
+        const controlOption = {
+          addNav:true,
+          bg:"",
+          ext:"",
+          icon:"/logo/control.svg",
+          id:"CaWUiH",
+          isBg:false,
+          mode:"app",
+          name:"控制中心",
+          slot:"control",
+          summary: "",
+          type: "systemApp",
+          value:"control",
+        }
+        if(!isControl){  copyFootNav.value.unshift({...controlOption});}
+      }
+      else {
+        const index =  copyFootNav.value.findIndex((item)=>{ return item.value === 'control' });
+        if(index !== -1){ copyFootNav.value.splice(index,1) }
+      }
       break;
     // 节能模式
     case 'energy-save-mode':
@@ -190,7 +216,7 @@ const triggerControl = () =>{
       break;
     // 摇一摇
     case 'shake':
-      settings.value.shake.enable = !settings.value.shake.enable
+      settings.value.shake.enable = !settings.value.shake.enable;
       if(settings.value.shake.enable){
         app.enableShake(()=>{
           router.push({
@@ -218,6 +244,11 @@ const triggerControl = () =>{
         window.$manager.hidden();
         message.info('已为关闭弹幕模式');
       }
+      completeTask('M0204');
+      break;
+    case 'user-info':
+      router.push({ name: 'socialMy' });
+      proxy.$bus.emit('closeControl');
       break;
     default:
       break;

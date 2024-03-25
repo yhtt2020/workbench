@@ -114,7 +114,9 @@ export default {
     // 添加图标函数
     clickListItem(item,index){
       if (this.selectNav !== 'desktop') {
-        completeTask('m0105')
+        completeTask('m0105',()=>{
+          this.$bus.emit('closeEdit');
+        })
       }
       switch (this.selectNav) {
         case 'foot':

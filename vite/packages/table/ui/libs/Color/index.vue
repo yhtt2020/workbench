@@ -63,7 +63,7 @@ export default {
       this.$emit("onBtnClick", this.color);
     },
     colorClick(i) {
-      completeTask("M0202");
+      completeTask("M0202",);
       console.log('222 :>> ', 222);
       if (!i) return;
       this.colorData = this.colorList[`${"color" + i}`];

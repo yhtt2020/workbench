@@ -7,7 +7,7 @@
         <!-- 游客模式时屏蔽签到 -->
         <div v-if="envGuest" class="mr-3" style="width: 300px;display: inline-block;white-space: pre-wrap;vertical-align: top">
           <div style="width: 280px" class="mr-3">
-            <SingIn :customIndex="1" :customData="{}" :rightIcon="false"></SingIn>
+            <SingIn :customIndex="1" :customData="{customSize:'2x4'}" :rightIcon="false"></SingIn>
           </div>
         </div>
 

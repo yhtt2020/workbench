@@ -43,14 +43,14 @@
                   :color="'var(--link)'"
                 >
                 </xt-new-icon>
-                <span class="xt-font font-14 xt-theme-text tt-container-box-1234">重置</span>
+                <span class="xt-font font-14 tt-container-box-1234" style="color:var(--link)">重置</span>
               </div>
             </xt-button>
           </div>
           <div class="flex items-center pointer pr-4" @click="finshEdit">
             <xt-button style="width: auto !important" h="0">
               <div class="flex items-center justify-center tt-container-box-1234" >
-                <span class="xt-font xt-theme-text font-14">完成编辑</span>
+                <span class="xt-font font-14" style="color:var(--link)">完成编辑</span>
               </div>
             </xt-button>
           </div>
@@ -132,18 +132,27 @@ const editClick = () => {
 
 // 完成编辑
 const finshEdit = () => {
-  const updateListItem = updateList.value.map((item)=>{
-    const index = control.value.oldList.findIndex((findItem)=>{ return String(item.id) === String(findItem.id) });
-    return {...control.value.oldList[index]};
-  })
-  control.value.oldList = [...updateListItem];
-  editVisible.value = false; 
+  if(updateList.value.length !== 0){
+    const updateListItem = updateList.value.map((item)=>{
+      const index = control.value.oldList.findIndex((findItem)=>{ return String(item.id) === String(findItem.id) });
+      return {...control.value.oldList[index]};
+    });
+    control.value.oldList = [...updateListItem];
+    editVisible.value = false; 
+    updateList.value = [];
+  }
+  else {
+    control.value.oldList = [...initList.value];
+    editVisible.value = false; 
+  }
 };
 
 // 重置
 const restList = () => {
-  control.value.oldList = [...initList.value];
   control.value.newList = [];
+  control.value.oldList = [];
+  control.value.oldList = JSON.parse(JSON.stringify(initList.value));
+  editVisible.value = false; 
 };
 
 const bottomButton = ref([
@@ -220,9 +229,6 @@ function handleClick(e) {
 };
 
 onMounted(() => {
-  proxy.$bus.on("closeControl", () => {
-    emit("close");
-  });
   proxy.$bus.on("closeControl", () => {
     emit("close");
   });

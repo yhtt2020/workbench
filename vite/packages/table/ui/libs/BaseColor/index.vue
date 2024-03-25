@@ -1,14 +1,11 @@
 <template>
   <XtTitle v-if="text">{{ text }}</XtTitle>
-  <colorPicker v-model:hex="colorData" @click="colorClick()" />
+  <color-picker :shape="shape" v-model:pureColor="colorData" @pureColorChange="colorClick()" zIndex="9999999"/>
 </template>
 
 <script>
-import ColorPicker from "colorpicker-v3";
-import "colorpicker-v3/style.css";
 export default {
   components: {
-    ColorPicker,
   },
   data() {
     return {
@@ -20,10 +17,10 @@ export default {
       type: String,
       default: "",
     },
-    data: {
-      type: String,
-      default: "",
-    },
+    shape:{
+      type:String,
+      default:'square'
+    }
   },
   watch: {
     colorData(newV) {
@@ -42,15 +39,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-:deep(.zs-color-picker-btn) {
-  border: none !important;
-  background-image: none;
-}
-
-:deep(.zs-color-picker-btn .zs-color-picker-btn-color) {
-  border: none !important;
-}
-:deep(.zs-color-picker-panel__visible) {
-  z-index: 99999 !important;
-}
 </style>

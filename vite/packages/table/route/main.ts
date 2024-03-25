@@ -539,7 +539,7 @@ export default [
         redirect: '/ai',
         children: [
           {
-            path: '/Note',
+            path: '/Note/:customIndex?',
             name: 'note',
             component: Note,
             meta:{
