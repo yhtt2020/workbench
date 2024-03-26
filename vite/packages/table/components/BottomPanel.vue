@@ -1241,6 +1241,7 @@ export default {
         this.comVisible = !this.comVisible
         return
       }
+      console.log('item :>> ', item);
       // 新版设置打开方式
       if (value === 'setting') {
           this.$bus.emit("openSystemSet")

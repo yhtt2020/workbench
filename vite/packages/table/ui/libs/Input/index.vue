@@ -13,6 +13,7 @@
       @blur="handleBlur"
       @change="handleChange"
       @keyup="handleKeyUp"
+      :readonly="readonly"
     >
       <template #addonBefore> <slot name="addonBefore"></slot></template>
       <template #addonAfter> <slot name="addonAfter"></slot> </template>
@@ -38,6 +39,9 @@ export default {
     };
   },
   props: {
+    readonly: {
+      default: false,
+    },
     type: {
       default: "default",
     },

@@ -5,6 +5,7 @@
     v-model="currentInput"
     @blur="updateInput"
     @keyup.enter="enterInput"
+    :readonly="readonly"
   />
   <div class="pb-4"></div>
 </template>
@@ -13,6 +14,7 @@
 import { ref, watch } from "vue";
 interface inputProps {
   input: any;
+  readonly: boolean;
 }
 
 const props = withDefaults(defineProps<inputProps>(), {});
@@ -28,7 +30,7 @@ const enterInput = () => {
   emits("enter", currentInput.value);
 };
 const currentInput = ref(props.input);
-const emits = defineEmits(["update:input", "enter",'cb']);
+const emits = defineEmits(["update:input", "enter", "cb"]);
 const updateInput = () => {
   emits("update:input", currentInput.value);
   emits("cb", currentInput.value);
