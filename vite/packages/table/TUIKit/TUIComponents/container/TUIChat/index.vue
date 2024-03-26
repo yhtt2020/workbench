@@ -330,16 +330,15 @@ import { Message } from "./interface";
 import { Conversation } from "../TUIConversation/interface";
 
 import MessageInput from "./message-input";
-import UpdateGroupName from "../TUIChat/updateMange/updateGroupName.vue";
-import UpdateMemeber from "../TUIChat/updateMange/updateGroupMember.vue";
-import UpdateGroupManage from "./updateMange/updateGroupManage.vue";
-import UpdateGroupNotice from "./updateMange/updateGroupNotice.vue";
-import UpdateJoinGroupWay from "./updateMange/updateJoinGroupWay.vue";
-import UpdateInviteWay from "./updateMange/updateInviteWay.vue";
+import UpdateGroupName from "../../../../apps/chat/components/manager/GroupName.vue";
+import UpdateMemeber from "../../../../apps/chat/components/manager/GroupMemeber.vue";
+import UpdateGroupManage from "../../../../apps/chat/components/manager/GroupManage.vue";
+import UpdateGroupNotice from "../../../../apps/chat/components/manager/GroupNotice.vue";
+import UpdateJoinGroupWay from "../../../../apps/chat/components/manager/JoinVerfiate.vue";
+import UpdateInviteWay from "../../../../apps/chat/components/manager/InviteVerfiacte.vue";
 import Modal from "../../../../components/Modal.vue";
-import ForwardModal from "./components/forwardModal.vue";
+import ForwardModal from "../../../../apps/chat/components/manager/ForwardModal.vue";
 // import { Icon } from '@iconify/vue'
-//
 
 const TUIChat: any = defineComponent({
   name: "TUIChat",

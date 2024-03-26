@@ -37,7 +37,7 @@ import { defineComponent, reactive, ref, toRefs } from 'vue';
 import CreateGroup from './components/createGroup';
 import Modal from '../../../../components/Modal.vue';
 import Transfer from '../../components/transfer/index.vue';
-import AddFriend from '../../components/transfer/addFriend.vue';
+// import AddFriend from '../../../../../';
 
 // import Dialog from '../../components/dialog/index.vue';
 
@@ -52,7 +52,8 @@ const TUISearch = defineComponent({
 
   components: {
     Transfer,Modal,
-    CreateGroup,AddFriend
+    CreateGroup,
+    // AddFriend
 
     // Dialog,
 
