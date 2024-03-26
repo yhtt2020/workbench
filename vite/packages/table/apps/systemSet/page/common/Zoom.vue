@@ -29,22 +29,30 @@
       @onIconClick="reset"
       @cb="inputEnter"
     />
-    <xt-text type="2">
-      <div class="flex flex-col">
-        调节桌面的缩放比例，默认为100%。分辨率：<span
-          :class="{ unfit: fitWidth.status !== 0 }"
-        >
-          <Icon icon="kuandu" />宽 {{ currentWidth }}
-          <template v-if="fitWidth.status !== 0"
-            >（
-            <Icon icon="tishi-xianxing" />
 
-            <span v-if="fitWidth.status === -1">低</span
-            ><span v-if="fitWidth.status === 1">高</span>于推荐值）
-          </template>
-        </span>
+    <div class="xt-text-2 text-sm">
+      <div>调节桌面的缩放比例，默认为100%。分辨率：</div>
+      <div class="flex items-center">
+        <div class="flex">
+          <div
+            class="flex items-center"
+            :class="{ unfit: fitWidth.status !== 0 }"
+          >
+            <Icon icon="kuandu" />宽 {{ currentWidth }}
+            <template v-if="fitWidth.status !== 0"
+              >（
+              <Icon icon="tishi-xianxing" />
+
+              <span v-if="fitWidth.status === -1">低</span
+              ><span v-if="fitWidth.status === 1">高</span>于推荐值）
+            </template>
+          </div>
+        </div>
         <Icon icon="guanbi1" />
-        <span :class="{ unfit: fitHeight.status !== 0 }">
+        <div
+          class="flex items-center"
+          :class="{ unfit: fitHeight.status !== 0 }"
+        >
           <Icon icon="gaodu" />
           高 {{ currentHeight }}
           <template v-if="fitHeight.status !== 0"
@@ -56,10 +64,10 @@
               fitHeight.suggest
             }}）
           </template>
-        </span>
-        <div>还原分辨率快捷键（ctrl + alt + shift + r）</div>
+        </div>
       </div>
-    </xt-text>
+      <div>还原分辨率快捷键（ctrl + alt + shift + r）</div>
+    </div>
     <xt-option-slider
       v-model:slider="inputZoom"
       :min="30"
