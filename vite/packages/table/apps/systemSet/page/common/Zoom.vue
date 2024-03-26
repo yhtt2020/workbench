@@ -30,7 +30,7 @@
       @cb="inputEnter"
     />
     <xt-text type="2">
-      <div>
+      <div class="flex flex-col">
         调节桌面的缩放比例，默认为100%。分辨率：<span
           :class="{ unfit: fitWidth.status !== 0 }"
         >

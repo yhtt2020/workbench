@@ -1,105 +1,115 @@
 <template>
-  <xt-mix-menu
-    name="title"
-    :menus="menus"
-  >
-    <div id="windowController" style="overflow: hidden">
-      <div @click="fixed" :class="{active:alwaysTop}"
+  <xt-mix-menu name="title" :menus="menus">
+    <div id="windowController" style="overflow: hidden" class="flex h-10">
+      <div @click="fixed" :class="{ active: alwaysTop }" style="border-bottom-left-radius: 8px" class="  btn-top-active  w-10 h-10 flex justify-center items-center">
+        <Icon icon="Pushpin" style="font-size: 1.2em; zoom: 1.1"></Icon>
+      </div>
+      <!-- <div @click="fixed" :class="{active:alwaysTop}"
            class="flex pointer   btn-top btn-top-active  items-center no-drag" style="border-bottom-left-radius: 8px">
         <Icon icon="Pushpin" style="font-size: 1.2em;zoom:1.1"></Icon>
-      </div>
-      <div @click="minimize" class="flex  items-center btn-top btn-top-active pointer no-drag">
+      </div> -->
+      <!-- <div @click="minimize" class="flex  items-center btn-top btn-top-active pointer no-drag">
+        <MinusOutlined style="font-size: 1.2em;"></MinusOutlined>
+      </div> -->
+      <div @click="minimize"  class="  btn-top-active  w-10 h-10 flex justify-center items-center">
         <MinusOutlined style="font-size: 1.2em;"></MinusOutlined>
       </div>
-
-      <div @click="maximize" class="flex pointer btn-top  btn-top-active  items-center no-drag">
-        <BorderOutlined style="font-size: 1.2em;zoom:0.9"></BorderOutlined>
+      <div @click="maximize"  class="  btn-top-active  w-10 h-10 flex justify-center items-center">
+        <BorderOutlined style="font-size: 1.2em;"></BorderOutlined>
       </div>
-      <div @click="close" class="flex btn-top-active btn-top  pointer items-center no-drag">
+      <div @click="close"  class="  btn-top-active  w-10 h-10 flex justify-center items-center">
         <Icon icon="guanbi" style="font-size: 1.2em;"></Icon>
       </div>
+      <!-- <div @click="maximize" class="flex pointer  btn-top-active  items-center no-drag py-2" >
+        <BorderOutlined style="font-size: 1.2em;"></BorderOutlined>
+      </div> -->
+      <!-- <div @click="close" class="lex pointer   btn-top-active  items-center no-drag ">
+        <Icon icon="guanbi" style="font-size: 1.2em;"></Icon>
+      </div> -->
     </div>
   </xt-mix-menu>
 </template>
 
 <script>
-import { getSign, isMain } from '../js/common/screenUtils'
+import { getSign, isMain } from "../js/common/screenUtils";
 
-import { MinusOutlined, BorderOutlined } from '@ant-design/icons-vue'
-import RightMenu from './card/RightMenu.vue'
-import { mapWritableState } from 'pinia'
-import { appStore } from '../store'
-import { Modal } from 'ant-design-vue'
+import { MinusOutlined, BorderOutlined } from "@ant-design/icons-vue";
+import RightMenu from "./card/RightMenu.vue";
+import { mapWritableState } from "pinia";
+import { appStore } from "../store";
+import { Modal } from "ant-design-vue";
 
 export default {
-  name: 'WindowController',
+  name: "WindowController",
   components: {
     RightMenu,
     MinusOutlined,
-    BorderOutlined
+    BorderOutlined,
   },
-  data () {
+  data() {
     return {
-      menus: [{
-        newIcon: 'fluent:eye-off-16-regular',
-        title: '隐藏按钮',
-        fn: () => {
-          Modal.confirm({
-            centered: true,
-            content: '隐藏窗口控制按钮后，可在设置中重新开启。',
-            onOk: () => {
-              this.showWindowController = false
-            },
-            okText: '确认'
-          })
+      menus: [
+        {
+          newIcon: "fluent:eye-off-16-regular",
+          title: "隐藏按钮",
+          fn: () => {
+            Modal.confirm({
+              centered: true,
+              content: "隐藏窗口控制按钮后，可在设置中重新开启。",
+              onOk: () => {
+                this.showWindowController = false;
+              },
+              okText: "确认",
+            });
+          },
         },
-      },],
+      ],
       alwaysTop: false,
-    }
+    };
   },
   computed: {
-    ...mapWritableState(appStore, ['showWindowController']),
+    ...mapWritableState(appStore, ["showWindowController"]),
   },
-  async mounted () {
-    if (window.$useEnv()) return
+  async mounted() {
+    if (window.$useEnv()) return;
 
-    this.alwaysTop = await tsbApi.window.isAlwaysOnTop()
+    this.alwaysTop = await tsbApi.window.isAlwaysOnTop();
   },
   methods: {
     // 关闭按钮
-    close () {
+    close() {
       if (isMain()) {
-        ipc.send('exitTable')
+        ipc.send("exitTable");
       } else {
-        ipc.send('closeScreen', { fullDomain: getSign() })
+        ipc.send("closeScreen", { fullDomain: getSign() });
       }
     },
     // 窗口放大
-    async maximize () {
+    async maximize() {
       if (await tsbApi.window.isMaximized()) {
-        tsbApi.window.unMaximize()
+        tsbApi.window.unMaximize();
         setTimeout(() => {
-          document.body.classList.add('window')
-        }, 200)
+          document.body.classList.add("window");
+        }, 200);
       } else {
         setTimeout(() => {
-          document.body.classList.remove('window')
-        }, 200)
+          document.body.classList.remove("window");
+        }, 200);
 
-        tsbApi.window.maximize()
+        tsbApi.window.maximize();
       }
     },
     // 关闭窗口放大
-    minimize () {
-      tsbApi.window.minimize()
+    minimize() {
+      tsbApi.window.minimize();
     },
     // 固定
-    fixed () {
-      this.alwaysTop = !this.alwaysTop
-      tsbApi.window.setAlwaysOnTop(this.alwaysTop)
+    fixed() {
+      this.alwaysTop = !this.alwaysTop;
+      tsbApi.window.setAlwaysOnTop(this.alwaysTop);
     },
-  }
-}
+  },
+};
 </script>
 
 <style scoped lang="scss">
@@ -108,20 +118,19 @@ export default {
   & svg {
     color: var(--primary-text) !important;
   }
-
 }
 
 .anticon {
   color: var(--primary-text) !important;
 }
-.btn-top{
-  line-height: 22px;
+.btn-top {
+ height: 40px;
 }
 .btn-top-active {
-  text-align: center;
-  width: 40px;
-  display: inline-block;
-  padding: 8px;
+  // text-align: center;
+  // width: 40px;
+  // display: inline-block;
+  // padding: 8px;
   // background: var(--active-bg) ;
 
   &:hover {
