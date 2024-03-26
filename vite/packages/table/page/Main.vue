@@ -63,9 +63,9 @@
       <!-- </AutoHide> -->
     </div>
     <div style="flex: 0;">
-      <!-- <BottomPanel v-if="!fullScreen && loaded" :delZone="delZone" @getDelIcon="getDelIcon" @hiedNavBar="hiedNavBar">
-      </BottomPanel> -->
-      <WindowPanel></WindowPanel>
+      <BottomPanel v-if="!fullScreen && loaded" :delZone="delZone" @getDelIcon="getDelIcon" @hiedNavBar="hiedNavBar">
+      </BottomPanel>
+      <!-- <WindowPanel></WindowPanel> -->
     </div>
   </div>
 </template>
