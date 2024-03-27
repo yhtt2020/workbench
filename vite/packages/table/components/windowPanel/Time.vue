@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col items-center ">
+    <div class="flex flex-col items-center time" @click="openRightDrawer">
         <div v-if="settings.showTopbarTime">
             <span class="xt-text font-14 xt-font">{{ dateTime.month }}月{{ dateTime.day }}日</span>
             <span class="mx-1 xt-text font-14 xt-font">{{ dateTime.week }}</span>
@@ -27,6 +27,8 @@ import { cardStore } from '../../store/card';
 
 import { getDateTime } from '../../../../src/util/dateTime';
 
+const emit = defineEmits(['openRightDrawer'])
+
 // 控制是否显示天气和日期
 const useAppStore = appStore()
 const { settings } = storeToRefs(useAppStore)
@@ -39,6 +41,7 @@ const { cities } = storeToRefs(useWeather)
 const useCard = cardStore()
 
 const dateTime = ref({})
+
 
 /**
  * 天气相关操作
@@ -75,5 +78,17 @@ onMounted(() => {
     }, 1000)
 })
 
+// 开启右侧抽屉 -- 查看通知和发布通知等操作
+const openRightDrawer = () => {
+    emit('openRightDrawer')
+}
+
 </script>
-<style lang='scss' scoped></style>
+<style lang='scss' scoped>
+.time {
+    &:hover{
+        background:var(--primary-bg);
+        border-radius: 6px;
+    }
+}
+</style>

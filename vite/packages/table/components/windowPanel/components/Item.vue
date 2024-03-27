@@ -4,8 +4,20 @@
             @contextmenu="item.rightFn"
             @click="item.fn"
             class="h-[28px] flex justify-center items-center xt-bg rounded-md max-w-[164px] p-2">
-            <xt-new-Icon :icon="item.icon" size="14" class="mr-1" v-if="item.icon"></xt-new-Icon>
-            <a-avatar :size="14" :src="item.avatar" v-else-if="item.avatar" class="mr-1"></a-avatar>
+            <xt-new-Icon 
+                :icon="item.icon" 
+                size="14" 
+                class="flex-shrink-0" 
+                v-if="item.icon" 
+                :class="item.name !== '' ? 'mr-1': ''">
+            </xt-new-Icon>
+            <a-avatar 
+                :size="14" 
+                :src="item.avatar" 
+                v-else-if="item.avatar" 
+                class="flex-shrink-0" 
+                :class="item.name !== '' ? 'mr-1': ''">
+            </a-avatar>
             <div class="omit">
                 {{ item.name }}
             </div>

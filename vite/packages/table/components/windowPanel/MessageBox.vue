@@ -1,13 +1,39 @@
 <template>
     <div :class="boxClass">
         <Box 
-            :main-class="'bottom-20 right-4'"
-            :list="list"
-            >
+            @closeAll="closeAll"
+            :main-class="'bottom-20 right-6'"
+            :list="list">
         </Box>
     </div>
-    <TopCourier v-if='courierVisible'></TopCourier>
-    <LeftDrawer ref="leftDrawerRef" :status="status" :hasEnable="clipboard.enable"></LeftDrawer>
+    <!-- 快递 -->
+    <TopCourier 
+        :position="pos" 
+        v-if='courierVisible' 
+        :topCourierVisible="courierVisible" 
+        @close="courierVisible = false">
+    </TopCourier>
+    <!-- 番茄 -->
+    <TopTomato
+        v-if="tomatoVisible"
+        :tomatoVisible="tomatoVisible"
+        @close="tomatoVisible = false"
+        :position="pos"
+    ></TopTomato>
+    <!-- 时钟 -->
+    <TopClockTimer
+        :position="pos"
+        :clockVisible="clockVisible"
+        @close="clockVisible = false"
+        v-if="clockVisible">
+    </TopClockTimer>
+    <!-- 左侧抽屉 -->
+    <LeftDrawer 
+        v-if="drawerVisible"
+        ref="leftDrawerRef" 
+        :status="status" 
+        :hasEnable="clipboard.enable">
+    </LeftDrawer>
 </template>
 
 <script setup lang='ts'>
@@ -16,27 +42,33 @@ import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 
 import { getClientIcon,getCover,getIcon } from '../../js/common/game';
+import { usePosition } from './hook/usePosition.ts';
 
 import TopCourier from '../widgets/courier/TopCourier.vue';
+import TopTomato from '../../apps/tomato/widget/TopTomato.vue';
 import Box from './components/Box.vue';
-import TopPanelLeftDrawer from '../drawer/TopPanelLeftDrawer.vue';
 import LeftDrawer from './components/LeftDrawer.vue';
+import TopClockTimer from '../widgets/TopClockTimer.vue';
 
 import { courierStore } from '../../apps/ecommerce/courier';
 import { appStore } from '../../store';
 import { clipboardStore } from '../../apps/clipboard/store';
 import { steamUserStore } from '../../store/steamUser';
+import { tomatoStore } from '../../apps/tomato/store';
+import { cardStore } from '../../store/card';
+import { countDownStore } from '../../store/countDown';
+import { topClockSettingStore } from '../../store/topClockSetting';
 
 // 路由
 const router = useRouter()
 
 // 快递数据
 const useCourier = courierStore()
-const { settings } = storeToRefs(useCourier)
+const { settings , courierList } = storeToRefs(useCourier)
 
 // 音乐数据
 const useAppStore = appStore()
-const { status } = storeToRefs(useAppStore)
+const { status,aided } = storeToRefs(useAppStore)
 
 // 剪切板数据
 const useClipboard = clipboardStore()
@@ -46,12 +78,61 @@ const { settings: clipboard } = storeToRefs(useClipboard)
 const useSteamUser = steamUserStore()
 const { runningGame } = storeToRefs(useSteamUser)
 
+// 番茄钟数据
+const useTomato = tomatoStore()
+const { 
+    isFullState,
+    minutes,
+    seconds,
+    isState,
+    running,
+} = storeToRefs(useTomato)
+
+// 时钟数据
+const useTopClockSetting = topClockSettingStore()
+const { checkTopClock } = storeToRefs(useTopClockSetting)
+const useCard = cardStore()
+const { filterClockEvent } = storeToRefs(useCard)
+const useCountDown = countDownStore()
+const { countDowntime } = storeToRefs(useCountDown)
+
 type propsType = {
     boxClass:string,
 }
 const props = withDefaults(defineProps<propsType>(), {
     boxClass:''
 })
+
+const displayNum = (num:number) => {
+    return num < 10 ? '0' + num : num
+}
+
+// 判断状态栏时钟是否显示
+const topClockVisible = computed( () => {
+    // 设置中顶部栏是否显示
+    const check = checkTopClock.value
+    // 闹钟列表
+    const eventList = filterClockEvent.value
+    // 是否有倒计时
+    const countDown = countDowntime.value.seconds
+    return check && (eventList.length > 0 || countDown )
+})
+
+// 闹钟的图标和名称
+const clockBaseMsg = computed(() => {
+    const hasCountDown = countDowntime.value.hours !== undefined
+    const firstClock = filterClockEvent.value ? filterClockEvent.value[0]?.dateValue : {hours:0,minutes:0} 
+    if(hasCountDown){
+        return {
+            icon:'fluent:clock-16-regular',
+            name:`${countDowntime.value.hours}:${countDowntime.value.minutes}:${countDowntime.value.seconds}`,
+        }
+    }
+    return {
+        icon:'fluent:clock-alarm-16-regular',
+        name:`${firstClock.hours}:${firstClock.minutes}`,
+    }
+}) 
 
 type queueType = {
     icon: string;    // 工作台新图标ifyIcon
@@ -65,16 +146,28 @@ type queueType = {
 const queue : Array<queueType> = ref([
     {
         icon:'fluent:box-16-regular',
-        name:'2',
+        name:computed(() => courierList.value.length),
         tip:'',
-        fn:() => {
-            console.log('2',list.value.length, clipboard.value.enable)
+        fn:(e) => {
+            const itemPosition = {
+                x:572,
+                y:420
+            }
+            const position = {
+                x: e.clientX,
+                y: e.clientY
+            }
+            pos.value = usePosition(position,itemPosition)
+            courierVisible.value = ! courierVisible.value
+            console.log('2',e,courierList.value.length)
         },
         disabled:computed(() => settings.value.courierStatus.statusBar)
     },
     {
-        avatar:status.value?.music?.cover,
-        name:`${status.value?.music?.title} - ${status.value?.music?.singer}`,
+        avatar:computed(() => status.value?.music?.cover),
+        name:computed(() => {
+            return `${status.value?.music?.title} - ${status.value?.music?.singer}`
+        }),
         fn:() => {
             router.push({ name: 'music' })
         },
@@ -111,17 +204,76 @@ const queue : Array<queueType> = ref([
                 }
             })
         }
+    },
+    {
+        icon:'fluent-emoji:tomato',
+        disabled:computed(() => isState.value && running.value),
+        name: computed(() => {
+            return displayNum(minutes.value) + ':' + displayNum(seconds.value)
+        }),
+        fn:(e) => {
+            const itemPosition = {
+                x:280,
+                y:204
+            }
+            const position = {
+                x: e.clientX,
+                y: e.clientY
+            }
+            pos.value = usePosition(position,itemPosition)
+            tomatoVisible.value = ! tomatoVisible.value
+        }
+    },
+    {
+        disabled:computed(() => topClockVisible.value),
+        name: computed(() => {
+            return clockBaseMsg.value.name
+        }),
+        icon: computed(() => clockBaseMsg.value.icon),
+        fn:(e) => {
+            console.log('3',e)
+            const itemPosition = {
+                x:300,
+                y:300
+            }
+            const position = {
+                x: e.clientX,
+                y: e.clientY
+            }
+            pos.value = usePosition(position,itemPosition)
+            clockVisible.value = ! clockVisible.value
+        }
+    },
+    {
+        name:"辅助模式",
+        icon:'fluent:accessibility-16-regular',
+        disabled:computed(() => aided.value),
     }
 ])
 
 const list = computed(() => {
-    return queue.value.filter(item => item.disabled)
+    const arr = []
+    queue.value.forEach((item) => {
+        if (item.disabled) {
+            arr.unshift(item)
+        }
+    })
+    return arr
+    // return queue.value.filter(item => item.disabled)
 })
 
 const courierVisible = ref(false)
+const tomatoVisible = ref(false)
+const clockVisible = ref(false)
 const drawerVisible = ref(false)
 const leftDrawerRef = ref(null)
-provide('courierVisible', courierVisible)
+const pos = ref({})
 provide('drawerVisible', drawerVisible)
+
+const closeAll = () => {
+    clockVisible.value = false
+    tomatoVisible.value = false
+    courierVisible.value = false
+}
 </script>
 <style lang='scss' scoped></style>
