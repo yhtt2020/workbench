@@ -65,6 +65,7 @@
     <div style="flex: 0;">
       <BottomPanel v-if="!fullScreen && loaded" :delZone="delZone" @getDelIcon="getDelIcon" @hiedNavBar="hiedNavBar">
       </BottomPanel>
+      <!-- <WindowPanel></WindowPanel> -->
     </div>
   </div>
 </template>
@@ -73,6 +74,7 @@
 import SidePanel from '../components/SidePanel.vue'
 import TopPanel from '../components/TopPanel.vue'
 import BottomPanel from '../components/BottomPanel.vue'
+import WindowPanel from '../components/WindowPanel.vue'
 import { mapActions, mapWritableState } from 'pinia'
 import { appStore } from '../store'
 import TeamPanel from '../components/team/TeamPanel.vue'
@@ -86,7 +88,7 @@ import AutoHide from '../components/desk/navigationBar/components/folder/AutoHid
 import { Icon as ifyIcon } from '@iconify/vue';
 export default {
   name: 'Main',
-  components: { TeamPanel, BottomPanel, TopPanel, SidePanel,AutoHide },
+  components: { TeamPanel, BottomPanel, TopPanel, SidePanel,AutoHide,WindowPanel },
   mounted() {
     this.$router.afterEach((to, from) => {
       this.routeUpdateTime = Date.now()
