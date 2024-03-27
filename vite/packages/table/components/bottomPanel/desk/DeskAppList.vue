@@ -18,7 +18,7 @@
         w="64"
       >  
         <div class="flex flex-col p-4 w-full">
-          <DeskAppSearch @close="deskAppVisible = false" class="mb-4"/>
+          <DeskAppSearch @close="deskAppVisible = false" @search="getSearchResult" class="mb-4"/>
           <DeskAppRight :rightDetail="deskItemList"/>
         </div>
       </xt-left-menu>
@@ -47,6 +47,7 @@ const deskItemList = ref({
   desk: desks.value,
   nav: [],
   folder: [],
+  search: [],
   type:'desk',
 });
 
@@ -67,7 +68,6 @@ const getFolder = (folderVisible) =>{
     return [...footList, ...sideList, ...rightList];
   }
 };
-
 // 点击切换事件
 const deskSelect = (type) => {
   deskItemList.value.type = type;
@@ -108,7 +108,6 @@ const deskSelect = (type) => {
       break;
   }
 };
-
 // 桌面、导航栏、文件夹左侧栏切换列表
 const deskList = ref([
   {
@@ -137,11 +136,61 @@ const deskList = ref([
     name: "",
   },
 ]);
-
 // 开启桌面、导航栏、文件夹选择弹窗
 const openDeskApp = () => {
   deskAppVisible.value = true;
 };
+
+
+// 获取desk中的folder和单图标数据
+const getDeskFolder = () => {
+  const getDeskFolder = []
+  const folderList = getFolder(true);
+  // 解构desks文件夹中的所有数据
+  for(const item of desks.value){
+    for(const children of item?.cards){
+      if(children.name === "folder"){
+        const list = children?.customData?.list;
+        for(const listItem of list){
+          const index = _.findIndex(getDeskFolder,function(item){ return String(item?.id) === String(listItem?.id)});
+          if(index === -1){
+            getDeskFolder.push(listItem);
+          }
+        }
+      }
+    }
+  }
+  // 解构folderList
+  for(const item of folderList){
+    for(const children of item?.children){
+      const index = _.findIndex(getDeskFolder,function(folder){ return String(folder?.id) === String(children?.id)});
+      if(index === -1){
+        getDeskFolder.push(children);
+      }
+    }
+  }
+  return getDeskFolder;
+}
+// 获取搜索结果
+const getSearchResult = (data) =>{
+  const allData = [...getDeskFolder(),...getFolder(false),];
+  for(const item of getFolder(true)){
+    for(const children of item?.children){
+      const index = _.findIndex(allData,function(folder){ return String(folder?.id) === String(children?.id)});
+      if(index === -1){
+        allData.push(children);
+      }
+    }
+  }
+  // 根据data搜索结果全局匹配allData的name是否包含data
+  const result = allData.filter((item) => item.name.includes(data));
+  if(data !== ''){
+    deskItemList.value.search = result;
+  }
+  else {
+    deskItemList.value.search = [];
+  }
+}
 
 onMounted(()=>{
   proxy.$bus.on("closeDeskAppModal",()=>{

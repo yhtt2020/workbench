@@ -66,8 +66,7 @@ const communityNavList = computed(() => {
         },
       },
       {
-        icon: currentCommunity.value.item?.role
-          ? `${currentCommunity.value.item.icon}` : `${currentCommunity.value.defaultItem.icon}`,
+        icon: currentCommunity.value.defaultItem.icon,
         name: "社群主应用",
         bg: "",
         isBg: false,
