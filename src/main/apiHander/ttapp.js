@@ -5,10 +5,7 @@
 const Base = require("./base");
 // const appModel = require("../../model/appModel");
 
-const {
-  installJson,
-  installV2
-} = require("../ttApps/useInstall");
+const { installJson, installV2, checkFile } = require("../ttApps/useInstall");
 const useUninstall = require("../ttApps/useUninstall");
 
 const { useSelect, useSelectAll } = require("../ttApps/useSelect");
@@ -25,12 +22,17 @@ class TTApp extends Base {
     // 安装
     this.on("install", async (event, args) => {
       let res = await installV2(args.zipPath);
-      console.log('res :>> ', res);
+      console.log("res :>> ", res);
       event.reply(args.cbId, res);
     });
     // 写入json
     this.on("installJson", async (event, args) => {
       let res = await installJson(args.data);
+      event.reply(args.cbId, res);
+    });
+    // 检查文件
+    this.on("checkFile", async (event, args) => {
+      let res = await checkFile(args.path);
       event.reply(args.cbId, res);
     });
     // 卸载

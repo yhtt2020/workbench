@@ -28,9 +28,13 @@ const file = {
    * @returns 如果文件夹存在则返回 true，否则返回 false
    */
   async existsFolder(folderName) {
-    let fileDir = file.pathJoin(folderName);
-    let res = await fse.pathExists(fileDir);
-    return res;
+    try {
+      let fileDir = file.pathJoin(folderName);
+      let res = await fse.pathExists(fileDir);
+      return res;
+    } catch (error) {
+      return false;
+    }
   },
   /**
    * 创建文件夹
@@ -103,9 +107,9 @@ const file = {
       const zipBuf = await promises.readFile(filePath);
       // const crxInfo = parseCrx(crxBuf);
       let res = await extractZip(zipBuf, destPath);
-      console.log("res :>> ", res);
       return {
         code: 200,
+        data: res,
       };
     } catch (error) {
       return error;
@@ -136,7 +140,7 @@ const file = {
         code: 400,
         info: "写入失败",
         data: err,
-      }
+      };
     }
   },
   /**
