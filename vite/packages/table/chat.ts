@@ -1,53 +1,52 @@
-import {TUIComponents,TUICore,genTestUserSig} from './TUIKit'
-import {TUICallKit} from '@tencentcloud/call-uikit-vue'
-import {SDKAppID} from "./js/chat/chat";
-import {TUIComponents, TUICore} from "./TUIKit";
-import {SDKAppID} from "./js/chat/chat";
-import {TUICallKit} from "@tencentcloud/call-uikit-vue";
-import TUINotification from "./TUIKit/TUIPlugin/TUINotification/index";
-const TUIKit = TUICore.init({
-  SDKAppID,
-});
-function loadChat(){
-  try{
-    TUIKit.tim.setLogLevel(0);//关闭日志，如果需要调试，改为4
-// TUIKit add TUIComponents
-    TUIKit.use(TUIComponents);
-// TUIKit add TUICallKit
-    //TUIKit.use(TUICallKit);
+import { TUIComponents, genTestUserSig, TUIChatKit } from "./apps/TUIKit";
 
+// import { SDKAppID } from "./js/chat/chat";
+// import { TUICallKit } from "@tencentcloud/call-uikit-vue";
+// import { SDKAppID } from "./js/chat/chat";
+// import { TUIComponents, TUICore } from "./TUIKit";
+// import { TUICallKit } from "@tencentcloud/call-uikit-vue";
+// import TUINotification from "./TUIKit/TUIPlugin/TUINotification/index";
+// const TUIKit = TUICore.init({
+//   SDKAppID,
+// });
 
-    window.$TUIKit=TUIKit
-    window.$chat=TUIKit.tim
-    //关闭系统弹窗提示
-    TUINotification.setNotificationConfiguration({
-      // 是否显示预览信息
-      showPreviews: true,
-      // 是否允许通知
-      allowNotifications: false,
-      // 通知标题
-      notificationTitle: "天天工作台",
+const TUIKit = TUIChatKit;
 
+function loadChat(app:any) {
+  try {
+    // TUIChatKit add TUIComponents
+    TUIChatKit.components(TUIComponents, app);
+    // TUIChatKit init
+    TUIChatKit.init();
+    (window as any).$TUIKit = TUIKit;
 
-      notificationIcon: "/icons/IM.png",
-    });
-
-
-
-    window.$chat.on(window.$TUIKit.TIM.EVENT.MESSAGE_RECEIVED,(event) =>{  // 全局监听团队聊天消息
-      // console.log('检测重复问题',event);
-      window.$notice.receiveNotification(event)
-    })
-  }catch (e) {
-    console.log(e)
-    console.error('聊天载入失败')
+    // TUIKit.tim.setLogLevel(0); //关闭日志，如果需要调试，改为4
+    // // TUIKit add TUIComponents
+    // TUIKit.use(TUIComponents);
+    // // TUIKit add TUICallKit
+    // //TUIKit.use(TUICallKit);
+    // window.$chat = TUIKit.tim;
+    // //关闭系统弹窗提示
+    // TUINotification.setNotificationConfiguration({
+    //   // 是否显示预览信息
+    //   showPreviews: true,
+    //   // 是否允许通知
+    //   allowNotifications: false,
+    //   // 通知标题
+    //   notificationTitle: "天天工作台",
+    //   notificationIcon: "/icons/IM.png",
+    // });
+    // window.$chat.on(window.$TUIKit.TIM.EVENT.MESSAGE_RECEIVED, (event) => {
+    //   // 全局监听团队聊天消息
+    //   // console.log('检测重复问题',event);
+    //   window.$notice.receiveNotification(event);
+    // });
+  } catch (e) {
+    console.error("聊天载入失败", e);
   }
-
 }
 
-
-
-export   {
+export {
   loadChat,
-  TUIKit
-}
+  //  TUIKit
+};

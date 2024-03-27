@@ -82,7 +82,7 @@ export default {
       chatVisible:false,
       addIndex:'',
       index: 'chat',
-      env: TUIServer.TUIEnv,
+      env: TUIServer?.TUIEnv,
       settingsScroller: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -134,7 +134,7 @@ export default {
 
     // 获取总的消息未读数据
     const unreadTotal = computed(()=>{
-      const list = window.$TUIKit.store.store.TUIConversation.conversationList;
+      const list = window.$TUIKit?.store?.store?.TUIConversation?.conversationList;
       if(!list){
         return 0
       }
@@ -308,7 +308,7 @@ export default {
         headList.value[1].disabled = true
       }
       nextTick(()=>{
-        window.$chat.on(window.$TUIKit.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, async(e) => {
+        window.$chat?.on(window.$TUIKit?.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, async(e) => {
           // headList.value[0].unread = e.data === 0 ? 0 : e.data > 99 ? 99 : e.data;
           headList.value[0].info = e.data === 0 ? [] :  e.data > 99 ? ['tr','red','99'] : ['tr','red',`${e.data}`];
           const list = community.value.communityList;

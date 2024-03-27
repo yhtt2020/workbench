@@ -1,32 +1,111 @@
 <!-- 聊天页面 -->
 <template>
+  <div :class="['TUIKit', isH5 && 'TUIKit-h5']">
+    <div v-if="!(isH5 && currentConversationID)" class="TUIKit-navbar">
+      <div
+        v-for="item of navbarList"
+        :key="item.id"
+        :class="['TUIKit-navbar-item', currentNavbar === item.id && 'TUIKit-navbar-item-active']"
+        @click="currentNavbar = item.id"
+      >
+        {{ item.label }}
+      </div>
+    </div>
+    <div class="TUIKit-main-container">
+      <div v-if="currentNavbar === 'conversation'" class="TUIKit-main">
+        <div v-if="!(isH5 && currentConversationID)" class="TUIKit-main-aside">
+          <TUISearch searchType="global"></TUISearch>
+          <TUIConversation></TUIConversation>
+        </div>
+        <div v-if="!isH5 || currentConversationID" class="TUIKit-main-main">
+          <TUIChat>
+            <h1>欢迎使用腾讯云即时通信IM</h1>
+          </TUIChat>
+          <TUIGroup :class="isH5 ? 'chat-popup' : 'chat-aside'" />
+          <TUISearch :class="isH5 ? 'chat-popup' : 'chat-aside'" searchType="conversation" />
+        </div>
+        <TUIGroup v-if="isH5 && !currentConversationID" class="chat-popup" />
+        <TUIContact displayType="selectFriend" />
+      </div>
+      <div v-else-if="currentNavbar === 'contact'" class="TUIKit-main">
+        <TUIContact
+          displayType="contactList"
+          @switchConversation="currentNavbar = 'conversation'"
+        />
+      </div>
+      <!-- <TUICallKit class="callkit-container" :allowedMinimized="true" :allowedFullScreen="false" /> -->
+    </div>
+  </div>
+</template>
+<script setup>
+import { ref } from "vue";
+import { TUIStore, StoreName } from "@tencentcloud/chat-uikit-engine";
+// import { TUICallKit } from "@tencentcloud/call-uikit-vue";
+// import { TUISearch, TUIConversation, TUIChat, TUIContact, TUIGroup } from "../../../apps/TUIKit";
+import { isH5 } from "../../../apps/TUIKit/utils/env";
+const currentConversationID = ref("");
+const currentNavbar = ref("conversation");
+const navbarList = [
+  {
+    id: "conversation",
+    label: "会话",
+  },
+  {
+    id: "contact",
+    label: "通讯录",
+  },
+];
+console.log('查看Store',TUIStore);
+TUIStore.watch(StoreName.CONV, {
+  currentConversationID: (id) => {
+    currentConversationID.value = id;
+  },
+});
+</script>
+<style scoped lang="scss">
+@import "../../../apps/TUIKit/assets/styles/common.scss";
+@import "../../../apps//TUIKit/assets/styles/sample.scss";
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <template>
  <div class="home-TUIKit-main w-full">
    <div :class="env?.isH5 ? 'conversation-h5' : 'conversation'" v-show="!env?.isH5 || currentModel === 'conversation'">
     <TUIConversation  @current="handleCurrentConversation"/>
-    <!-- <TUISearch class="search"/> -->
+    <TUISearch class="search"/>
    </div>
 
    <div class="chat" v-show="!env?.isH5 || currentModel === 'message'">
     <TUIChat></TUIChat>
-     <!-- <TUIChat :isNeedEmojiReact="true">
+     <TUIChat :isNeedEmojiReact="true">
        <h1 style="font-size: 42px;margin: auto;text-align: center;margin-top: 20px">欢迎使用天天工作台</h1>
-     </TUIChat> -->
+     </TUIChat>
    </div>
 
    <Drag :show="showCall" class="callkit-drag-container" domClassName="callkit-drag-container">
-     <!-- TUICallKit 组件：通话 UI 组件主体 -->
+     TUICallKit 组件：通话 UI 组件主体
      <TUICallKit :allowedMinimized="true" :allowedFullScreen="false" :beforeCalling="beforeCalling"
                  :afterCalling="afterCalling" :onMinimized="onMinimized" :onMessageSentByMe="onMessageSentByMe"
      />
    </Drag>
 
    <Drag :show="showCallMini" class="callkit-drag-container-mini" domClassName="callkit-drag-container-mini">
-     <!-- TUICallKitMini 组件：通话 UI 悬浮窗组件，提供最小化功能 -->
+     TUICallKitMini 组件：通话 UI 悬浮窗组件，提供最小化功能
      <TUICallKitMini style="position: static"/>
    </Drag>
  </div>
 </template>
-
 
 <script lang="ts">
 import {defineComponent, reactive, toRefs, onMounted,ref,nextTick} from 'vue';
@@ -174,4 +253,4 @@ export default defineComponent({
 :deep(.conversation) {
  border-right-color: var(--divider) !important;
 }
-</style>
+</style> -->
