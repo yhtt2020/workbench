@@ -4,7 +4,7 @@ import {SDKAppID} from "./js/chat/chat";
 import {TUIComponents, TUICore} from "./TUIKit";
 import {SDKAppID} from "./js/chat/chat";
 import {TUICallKit} from "@tencentcloud/call-uikit-vue";
-import {TUINotification} from "./TUIKit/TUIPlugin";
+// import {TUINotification} from "./TUIKit/TUIPlugin";
 const TUIKit = TUICore.init({
   SDKAppID,
 });
@@ -20,17 +20,17 @@ function loadChat(){
     window.$TUIKit=TUIKit
     window.$chat=TUIKit.tim
     //关闭系统弹窗提示
-    TUINotification.setNotificationConfiguration({
-      // 是否显示预览信息
-      showPreviews: true,
-      // 是否允许通知
-      allowNotifications: false,
-      // 通知标题
-      notificationTitle: "天天工作台",
+    // TUINotification.setNotificationConfiguration({
+    //   // 是否显示预览信息
+    //   showPreviews: true,
+    //   // 是否允许通知
+    //   allowNotifications: false,
+    //   // 通知标题
+    //   notificationTitle: "天天工作台",
 
 
-      notificationIcon: "/icons/IM.png",
-    });
+    //   notificationIcon: "/icons/IM.png",
+    // });
 
 
 

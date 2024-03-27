@@ -55,6 +55,7 @@ const formVisible = ref(false);
 
 const installTTApp = async () => {
   let res = await useInstallTTApp();
+  console.log('res :>> ', res);
   // 安装成功
   if (res.code === 200) {
     message.success("安装成功");

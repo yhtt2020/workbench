@@ -41,6 +41,19 @@ const selectAllTTApp = async () => {
 <template>
   <xt-modal v-model="test" @close="onClose">
     <Builder />
+    <div class="xt-theme-b w-[542px] flex h-[184px]" style="">
+      <div class="flex relative h-full w-[180px] ">
+        <div class="xt-theme-b w-[180px] h-[126px]" style=""></div>
+        <div class="flex absolute" style="bottom: 4px; left: 4px">
+          <div class="" style="width: 20px; height: 20px"></div>
+          <div class="">应用名称</div>
+        </div>
+      </div>
+      <div class="px-4 py-3.5" style="">
+        <div>123312</div>
+        <div>describe</div>
+      </div>
+    </div>
     <div class="line">
       <xt-button @click="selectAllTTApp()" :w="140" :h="40" type="theme"
         >查询所有TTApp</xt-button
