@@ -29,7 +29,16 @@
         <template v-else>
           <xt-option-form :options="attributeOptions" :data="edit">
             <template #custom>
-              <LocalApp @click="" @onLocalApp="updateApp"></LocalApp>
+              <div @click="openLocalApp()">
+                <xt-option-input
+                  v-model:input="edit.value"
+                  readonly
+                  v-if="edit.value"
+                />
+              </div>
+              <div v-show="!edit.value">
+                <LocalApp ref="localApp" @click="" @onLocalApp="updateApp" />
+              </div>
             </template>
           </xt-option-form>
         </template>
@@ -203,6 +212,13 @@ const save = () => {
   // fileSetVisible
   message.success("保存成功");
   visible.value = false;
+};
+
+const localApp = ref(null);
+const openLocalApp = () => {
+  console.log("localApp.value :>> ", localApp.value);
+
+  localApp.value.localAppClick();
 };
 </script>
 

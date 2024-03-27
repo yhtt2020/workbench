@@ -22,6 +22,7 @@
       v-model="previewFlag"
       ref="preview"
       :list="folderIcons"
+      :isFavorite="true"
       @ok="addHandle">
     </xt-preview>
     <!-- 修改网址名称 -->

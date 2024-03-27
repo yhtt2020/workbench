@@ -13,12 +13,12 @@
       @close="modelValue = false"
       @ok="addHandle" >
       <div class="relative px-2 xt-modal rounded-xl" style="width: 466px; height: 380px;">
-          <div class="flex justify-between">
-              <xt-select v-model="defaultDesk" :zIndex="2001" class="w-1/3" :list="chooseList"></xt-select>
-              <xt-select v-model="defaultFolder" :zIndex="2001" class="w-1/3" :list="folderList"></xt-select>
+          <div class="flex justify-between w-full">
+              <xt-select v-model="defaultDesk" :zIndex="2001" borderClass="w-[200px]" :list="chooseList"></xt-select>
+              <xt-select v-model="defaultFolder" :zIndex="2001" borderClass="w-[200px]" :list="folderList"></xt-select>
           </div>
           <!-- 预览组件 -->
-          <xt-preDesk :chooseIndex="card" class="mt-4 overflow-hidden" :key="defaultFolder"></xt-preDesk>
+          <xt-preDesk :chooseIndex="cardData" class="mt-4 overflow-hidden" :key="defaultFolder"></xt-preDesk>
       </div>
   </xt-modal>
 </template>
@@ -64,6 +64,9 @@ export interface previewType {
   index: number,    // 层级
   maskIndex:number,  // 遮罩层层级
   isMask: boolean,    // 是否显示遮罩层
+  card?:object,  // 卡片数据
+  navDisabled?:boolean // 导航栏是否禁止选择
+  isFavorite?:boolean // 是否是收藏夹（包括添加图标），如果不是，则自己传入card的数据内容
 }
 
 const props = withDefaults(defineProps<previewType>(), {
@@ -71,10 +74,24 @@ const props = withDefaults(defineProps<previewType>(), {
   previewFlag: false,
   index:2000,
   maskIndex:1999,
-  isMask: true
+  isMask: true,
+  card:{
+    icon: "https://a.apps.vip/icons/iconSelect/icon/folder.svg?color=#ffffff",
+    name: '文件夹',
+    id: '170000000',
+    cardName: 'folder',
+    customData:{
+      customSize: '2x2',
+      list: [],
+      model: "custom",
+      
+    }
+  },
+  navDisabled:false,
+  isFavorite:false
 })
 
-const { list , previewFlag } = toRefs(props)
+const { list , previewFlag,index,maskIndex,isMask,card,navDisabled,isFavorite } = toRefs(props)
 
 // 默认数据
 const defaultDesk : any = ref('')   // 默认桌面
@@ -101,19 +118,19 @@ const navList = ref([
   {
       name:"底部导航栏",
       value:"foot",
-      disabled:navigationToggle.value[2],
+      disabled: navDisabled.value ? false : navigationToggle.value[2],
       list:copyFootNav.value
   },
   {
       name:"左侧导航栏",
       value:"left",
-      disabled:navigationToggle.value[0],
+      disabled:navDisabled.value ? false : navigationToggle.value[0],
       list:sideNavigationList.value
   } ,
   {
       name:"右侧导航栏",
       value:"right",
-      disabled:navigationToggle.value[1],
+      disabled:navDisabled.value ? false : navigationToggle.value[1],
       list:rightNavigationList.value
   }
 ])
@@ -217,8 +234,16 @@ const folderList = computed(() => {
   }
 })
 
+// 
+const cardData = computed(() => {
+  if( isFavorite.value){
+    return defaultData.value
+  } 
+  return card.value
+})
+
 // 获取当前选中的文件夹
-const card = computed(() => {
+const defaultData = computed(() => {
   if(folderList.value) {
       const folder = folderList.value.findIndex((item) => {
           let tag = isStart(defaultFolder.value)

@@ -609,6 +609,124 @@ export default {
       this.quick = false;
       this.editToggle = false;
     },
+    /**
+     * 删除图标判断
+     * @param {*} currentIndex 当前删除图标索引
+     * @param {*} currentItem 当前删除图标
+     */
+    delCurrentIcon(currentIndex, currentItem) {
+      if (!this.mainNavigationList.find(f => f.value === currentItem.value)) {
+        this.removeFootNavigationList(currentIndex)
+        return
+      }
+      let arr = []
+      if (this.navigationToggle[0] && this.navigationToggle[1]) {
+        arr = this.sideNavigationList.concat(this.rightNavigationList)
+      } else if (this.navigationToggle[0] && !this.navigationToggle[1]) {
+        arr = this.sideNavigationList
+      } else if (!this.navigationToggle[0] && this.navigationToggle[1]) {
+        arr = this.rightNavigationList
+      } else {
+        message.info(`导航栏中至少保留一个「${currentItem.name}」`)
+        return
+      }
+      this.delNavigation(arr, currentItem, currentIndex, this.removeFootNavigationList)
+    },
+    /**
+     * 打开桌面应用提示
+     * @param {*} item 当前图标
+     */
+    msgNotice(item) {
+      if (item.type === 'tableApp') {
+        message.loading({
+          content: `打开「${item.name}」...`
+          , key: 'tipRun'
+        })
+      }
+    },
+    /**
+     * 打开应用
+     * @param {*} type 图标类型
+     * @param {*} value 打开路径
+     * @param {*} item 图标详细信息
+     */
+    async newOpenApp(type, value, item) {
+      type !== 'folder' ? this.folderVisible = false : ''
+      this.resetElementPosition()
+      if(value === 'control' && !this.controlVisible){
+        this.controlVisible = true
+        return
+      }
+      if(value === 'commun'){
+        this.comVisible = !this.comVisible
+        return
+      }
+      console.log('item :>> ', item);
+      // 新版设置打开方式
+      if (value === 'setting') {
+          this.$bus.emit("openSystemSet")
+      }
+      if(type === 'folder'){
+        this.openFolder(item)
+      }
+      if (value == 'fullscreen' && window.$useEnv()) {
+        toggle()
+        return
+      }
+      if (window.$useEnvLimit('web',value)) return
+
+
+      if (item) this.msgNotice(item)
+      if (value === 'home' && item.home) {
+        this.jumpDesk = item.home
+      }
+      let rs = await startApp(type, value, this.$router)
+      if (!rs) {
+        message.error({
+          content: `打开「${item.name}」失败`
+          , key: 'tipRun'
+        })
+      }
+      this.controlVisible = false;
+      this.comVisible = false
+    },
+    completeEdit() {
+      this.toggleEdit()
+      this.setQuick()
+    },
+    disableDrag() {
+      // if (this.sortable) {
+      document.removeEventListener('click', this.disableDrag)
+      // this.sortable.destroy()
+      this.sortable = null
+    },
+    /**
+     * 解散文件夹和切换文件夹
+     * @param {*} item
+     * @param {*} index
+     */
+    resetFolder(item, index) {
+      if (item.children.length > 0) {
+        if (item.children.length + this.copyFootNav.length > this.maxItemNum) {
+          window.$ui.confirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
+            ok: () => {
+              this.copyFootNav.splice(index, 1, ...item.children)
+            },
+            no: () => {
+              return this.copyFootNav
+            }
+          })
+        }else{
+          this.copyFootNav.splice(index, 1, ...item.children)
+        }
+        // this.copyFootNav.splice(index, 1, ...item.children)
+
+        if (this.folderId == item.id) {
+          this.closeFolder()
+        }
+
+      }
+    },
     createFile(item, x) {
       const bottom = document.querySelector("#bottomPanel");
       const rect = bottom.getBoundingClientRect();

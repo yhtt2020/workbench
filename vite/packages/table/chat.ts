@@ -4,7 +4,7 @@ import {SDKAppID} from "./js/chat/chat";
 import {TUIComponents, TUICore} from "./TUIKit";
 import {SDKAppID} from "./js/chat/chat";
 import {TUICallKit} from "@tencentcloud/call-uikit-vue";
-// import TUINotification from "./TUIKit/components/TUINotification/index";
+// import {TUINotification} from "./TUIKit/TUIPlugin";
 const TUIKit = TUICore.init({
   SDKAppID,
 });

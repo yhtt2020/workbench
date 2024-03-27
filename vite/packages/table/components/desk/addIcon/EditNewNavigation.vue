@@ -67,7 +67,13 @@
             <teleport to='body'>
               <CustomIcon v-if="iconIndex === 'CustomIcon'" @addIcon="addIcon"></CustomIcon>
               <!-- 以文件夹形式添加,预览 -->
-              <xt-preview v-if="previewFlag" v-model="previewFlag" @ok="addFolderIcon" :list="multipleList"></xt-preview>
+              <xt-preview 
+                v-if="previewFlag" 
+                v-model="previewFlag" 
+                @ok="addFolderIcon" 
+                :list="multipleList"
+                :isFavorite="true">
+              </xt-preview>
               <!-- <Preview v-if="previewFlag" v-model="previewFlag" @ok="addFolderIcon" :list="multipleList"></Preview> -->
               <!-- 添加到桌面 -->
               <AddDesk v-if="deskFlag" :list="multipleList" @close="deskFlag=false"></AddDesk>
@@ -182,6 +188,12 @@ const previewFlag = ref(false)  // 是否显示预览
 const deskFlag = ref(false)  // 是否显示添加到桌面
 const isStart = ref(true)  // 是否显示开始页
 const defaultTitle = ref({})  // 下拉框默认值
+
+// 禁止添加的图标
+const disabledAdd = ref([
+  'commun',
+  'control',
+])  
 
 // 导航栏数据
 const navMap = ref({
@@ -411,6 +423,11 @@ const addIcon = (item: object | undefined) => {
       message.success('添加成功');
     }
   } else {
+    // 图标禁止被添加到桌面
+    if (disabledAdd.value.includes(item.value)) {
+      message.error(`${item.name} 已被禁止添加到桌面`);
+      return;
+    }
     if(currentDeskId.value === defaultTitle.value.id){
       emit('addIcon', item);
     } else {
