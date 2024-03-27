@@ -1,7 +1,7 @@
 <template>
   <div :class="[(isShowCreateGroup || isShowManageGroup || isShowSelectMember) && 'tui-group']">
     <CreateGroup v-if="isShowCreateGroup" />
-    <ManageGroup v-if="isShowManageGroup" />
+    <ManageGroup v-if="isShowManageGroup"/>
     <SelectMember v-if="isShowSelectMember" />
   </div>
 </template>

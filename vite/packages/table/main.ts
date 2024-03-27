@@ -105,8 +105,11 @@ dayjs.locale("zh-cn");
 const app = createApp(App);
 
 //腾讯IM部分
-import { loadChat,  } from "./chat";
-loadChat(app);
+import { loadChat,TUIKit } from "./chat";
+TUIKit.TUIChatKit.components(TUIKit.TUIComponents,app);
+loadChat();
+// 导入IM的UI覆写样式文件
+import "./apps/chat/assets/chat.scss";
 // TUIKit
 
 app.use(Wujie);
@@ -174,6 +177,7 @@ const $app = app
     }
   )
   .use(Toast, options)
+  // 旧版使用TUIKit组件挂载
   // .use(TUIKit)
   // .use(WujieVue)
   .use(hevueImgPreview)

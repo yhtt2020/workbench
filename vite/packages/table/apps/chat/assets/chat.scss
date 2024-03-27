@@ -1,0 +1,104 @@
+// 新版IM样式表(覆盖版)
+.callkit-container,
+.TUIKit-navbar,
+.tui-search-main-global,
+.tui-chat-safe-tips,
+.tui-contact-search {
+ display: none !important;
+}
+
+.TUIKit {
+ width: 100% !important;
+ height: 100% !important;
+}
+
+.tui-conversation {
+ background: transparent !important;
+
+ &-list {
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  &::-webkit-scrollbar {
+   display: none !important;
+  }
+ }
+
+ &-content {
+  cursor: pointer !important;
+  margin-bottom: 6px !important;
+
+  &:hover {
+   cursor: pointer !important;
+   background: rgba(80, 139, 254, 0.2) !important;
+  }
+ }
+
+ &-item {
+  cursor: pointer !important;
+  .content {
+   &-header-label .name {
+    color: var(--primary-text) !important;
+    font-size: 16px !important;
+   }
+   .middle-box .middle-box-content {
+    color: var(--secondary-text) !important;
+    font-size: 14px !important;
+    font-family: "PuHuiTi400" !important;
+   }
+   &-footer{
+    .time{
+      color: var( --disable-text) !important;
+      font-size: 12px !important;
+    }
+    .muted-icon{
+      padding-top: 12px !important;
+    }
+   }
+  }
+ }
+
+ &-item-pinned {
+  background: transparent !important;
+ }
+}
+
+.actions-menu {
+ background-color: transparent !important;
+ background: var(--secondary-bg) !important;
+ border: none !important;
+
+ &-item {
+  &:hover {
+   background-color: transparent !important;
+   background: var(--divider) !important;
+  }
+ }
+}
+
+
+.TUIKit-main-aside {
+ border-right: 1px solid var(--divider) !important;
+}
+
+.chat-header-content {
+ color: var(--primary-text) !important;
+}
+
+.chat-header-setting {
+ .common-icon-container {
+  color: var(--primary-text) !important;
+ }
+}
+
+.message-input-toolbar{
+  border-top: 1px solid var(--divider) !important;
+}
+
+.message-body-nick-name{
+  display: none !important;
+}
+
+.toolbar-item-container-dialog{
+  background: var(--secondary-bg) !important;
+}
