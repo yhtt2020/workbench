@@ -1,11 +1,12 @@
 <template>
-    <div class="flex flex-col items-center time" @click="openRightDrawer">
-        <div v-if="settings.showTopbarTime">
+    <div class="flex flex-col items-center time">
+        <div v-if="settings.showTopbarTime"  @click="enterTime">
             <span class="xt-text font-14 xt-font">{{ dateTime.month }}月{{ dateTime.day }}日</span>
             <span class="mx-1 xt-text font-14 xt-font">{{ dateTime.week }}</span>
             <span class="pr-1 xt-text font-14 xt-font">{{ dateTime.hours }}:{{ dateTime.minutes }}</span>
         </div>
         <div v-if="hasWeather && city.now && settings.showTopbarWeather" 
+            @click="enterWeather"
             class="w-full xt-text font-14 xt-font ">
             {{ city.now.text }} {{ city.now.temp }}℃
         </div>
@@ -18,8 +19,10 @@ import {
     computed,
     onBeforeMount,
     onMounted,
+    getCurrentInstance
 } from 'vue'
 import { storeToRefs } from 'pinia';
+import { useRouter } from 'vue-router';
 
 import { appStore } from '../../store';
 import { weatherStore } from '../../store/weather';
@@ -27,7 +30,11 @@ import { cardStore } from '../../store/card';
 
 import { getDateTime } from '../../../../src/util/dateTime';
 
+const { proxy } = getCurrentInstance()
+
 const emit = defineEmits(['openRightDrawer'])
+
+const router = useRouter()
 
 // 控制是否显示天气和日期
 const useAppStore = appStore()
@@ -60,12 +67,21 @@ const city = computed(() => {
     return {}
 })
 
+// 点击进入天气的主应用
+const enterWeather = () => {
+    router.push({ name: "weather" })
+}
 /**
  * 时间相关操作
  */
 const initTime = () => {
     dateTime.value = getDateTime()
     useCard.setAppDate(dateTime.value)
+}
+
+const enterTime = () => {
+    console.log('进入时钟全屏')
+    proxy.$bus.emit('openClockFullScreen',true)
 }
 
 onBeforeMount(() => {
@@ -77,11 +93,6 @@ onMounted(() => {
         initTime()
     }, 1000)
 })
-
-// 开启右侧抽屉 -- 查看通知和发布通知等操作
-const openRightDrawer = () => {
-    emit('openRightDrawer')
-}
 
 </script>
 <style lang='scss' scoped>

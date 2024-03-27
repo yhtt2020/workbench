@@ -626,49 +626,46 @@ export default {
      */
     async newOpenApp(item, e) {
       const { type, value } = item;
-      type !== 'folder' ? this.folderVisible = false : ''
       this.resetElementPosition();
-      if (value === "control") {
-        this.$emit("control", e);
-        return;
-      }
-      if (value === "setting") {
-        this.$router.push({
-          name: "home",
-        });
-        setTimeout(() => {
-          this.$bus.emit("openSystemSet");
-        }, 500);
-        return;
-      }
-      if(value === 'commun'){
-        this.comVisible = ! this.comVisible
-        return 
-      }
-      if (type === "folder") {
-        this.openFolder(item);
-      }
-      this.resetElementPosition();
-      if (value == "fullscreen" && window.$useEnv()) {
-        toggle();
-        // console.log('isFullscreen :>> ', isFullscreen);
-        return;
-      }
       if (window.$useEnvLimit("web", value)) return;
-
       this.msgNotice(item);
-      if (value === "home" && item.home) {
-        this.jumpDesk = item.home;
-      }
-      let rs = await startApp(type, value, this.$router);
-      if (!rs) {
-        message.error({
-          content: `打开「${item.name}」失败`,
-          key: "tipRun",
-        });
-      }
-      this.comVisible = false
+      const valueHandlers = {
+        control: () => this.$emit("control", e),
+        setting: () => {
+            this.$router.push({ name: "home" });
+            setTimeout(() => {
+                this.$bus.emit("openSystemSet");
+            }, 500);
+        },
+        commun: () => {
+            this.comVisible = !this.comVisible;
+        },
+        default: async () => {
+            if (type === "folder") {
+                this.openFolder(item);
+            }
+            if (value === "fullscreen" && window.$useEnv()) {
+                toggle();
+                return;
+            }
+            if (value === "home" && item.home) {
+                this.jumpDesk = item.home;
+            }
+            let rs = await startApp(type, value, this.$router);
+            if (!rs) {
+                message.error({
+                    content: `打开「${item.name}」失败`,
+                    key: "tipRun",
+                });
+            }
+            this.comVisible = false;
+        }
+      };
+
+      const handler = valueHandlers[value] || valueHandlers.default;
+      await handler();
     },
+
     /**
      * 解散文件夹和切换文件夹
      * @param {*} item

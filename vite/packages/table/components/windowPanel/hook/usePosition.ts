@@ -10,7 +10,7 @@ export const usePosition = (e,i) => {
     // console.log(windowWidth, windowHeight, eWidth, eHeight, iWidth, iHeight)
 
     return {
-        x: eWidth > windowWidth - (iWidth / 2) ? windowWidth - iWidth : (eWidth - (iWidth / 2) < 0 ? 0 : eWidth - (iWidth / 2)),
+        x: eWidth > windowWidth - (iWidth / 2) ? windowWidth - iWidth : (eWidth - (iWidth / 2) < 0 ? 20 : eWidth - (iWidth / 2)),
         y: eHeight + iHeight > windowHeight ? eHeight + 30 : windowHeight - iHeight - eHeight - 30,
     }
 }

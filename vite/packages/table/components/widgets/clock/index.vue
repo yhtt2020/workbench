@@ -76,6 +76,10 @@ export default {
   }
  },
  mounted () {
+  // 当底部导航栏为windows模式时，点击导航栏中的时间，进入时间全屏
+  this.$bus.on("openClockFullScreen",(data)=>{
+    this.isClockFullScreen = data
+  })
   if(typeof this.customData.enableSecond==='undefined'){
     this.customData.enableSecond=false
   }
