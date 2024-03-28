@@ -8,21 +8,16 @@ import { storeToRefs } from "pinia";
 const ttappStore: any = useTTAppStore();
 
 const { ttappList } = storeToRefs(ttappStore);
-interface FormData {
-  name: string;
-  description: string;
-  card: {
-    entry: string;
-    customSize: string;
-  };
-}
 
-const formData = reactive<FormData>({
+const formData = reactive<any>({
   name: "",
   description: "",
+  logo: "",
+  preview: "",
   card: {
     entry: "",
     customSize: "2x2",
+    name: "",
   },
 });
 const onFinish = async (values: any) => {
@@ -30,6 +25,8 @@ const onFinish = async (values: any) => {
   let data = {
     name: formData.name,
     description: formData.description,
+    logo: formData.logo,
+    preview: formData.preview,
     modules: {
       card: formData.card,
     },
@@ -55,7 +52,7 @@ const formVisible = ref(false);
 
 const installTTApp = async () => {
   let res = await useInstallTTApp();
-  console.log('res :>> ', res);
+  console.log("res :>> ", res);
   // 安装成功
   if (res.code === 200) {
     message.success("安装成功");
@@ -84,11 +81,30 @@ const config = [
     type: "input",
     label: "描述",
     key: "description",
+    rules: [{ required: true, message: "必填!" }],
+  },
+  {
+    type: "input",
+    label: "logo",
+    key: "logo",
+    rules: [{ required: true, message: "必填!" }],
+  },
+  {
+    type: "input",
+    label: "预览图",
+    key: "preview",
+    rules: [{ required: true, message: "必填!" }],
   },
   {
     type: "object",
     key: "card",
     children: [
+      {
+        type: "input",
+        label: "组件名",
+        key: "name",
+        rules: [{ required: true, message: "必填!" }],
+      },
       {
         type: "input",
         label: "入口",
