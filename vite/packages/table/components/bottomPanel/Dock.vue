@@ -33,16 +33,15 @@
     <div
       v-if="
         hoverIndex > -1 &&
-        !skipSort &&
         hoverRealItemId('bottomContent', this.hoverIndex) !== dragItem?.id
       "
       style="
         position: absolute;
         z-index: 99999999999;
-        top: -8px;
         left: 50%;
         transform: translateX(-50%) translateY(-100%);
       "
+      :style="[this.iconSize === 44 ? { bottom : '30px'} : { top : '-8px'}]"
       class="px-10 py-3 rounded-lg s-bg xt-text"
     >
       松开鼠标合并
@@ -231,7 +230,7 @@ const {
 
 export default {
   name: "BottomPanel",
-  emits: ["getDelIcon", "hiedNavBar", "edit", "control"],
+  emits: ["getDelIcon", "hiedNavBar", "edit", "control",'getHoverIndex'],
   components: {
     EditIcon,
     Avatar,
@@ -377,7 +376,10 @@ export default {
     ]),
     ...mapWritableState(useNavBarStore, ["isEnterDesk"]),
     ...mapWritableState(controlStore, ["firstNavVisible"]),
-
+    // 当前图标的大小
+    realSize() {
+      return this.iconSize + this.gap
+    },
     // 社区图标需要传递的相关参数
     community(){
       return {
@@ -429,7 +431,7 @@ export default {
       handler(newVal, oldVal) {
         // 获取最大可添加图标个数
         const windowWidth = window.innerWidth;
-        this.maxItemNum = Math.round((windowWidth - 240) / 72);
+        this.maxItemNum = Math.round((windowWidth - 240) / this.realSize);
         if (
           this.copyFootNav.length > this.maxItemNum &&
           this.maxItemNum !== null
@@ -441,7 +443,7 @@ export default {
               {
                 ok: () => {
                   const width =
-                    window.innerWidth / (240 + this.copyFootNav.length * 72);
+                    window.innerWidth / (240 + this.copyFootNav.length * this.realSize);
                   this.navAttribute.navSize = width.toFixed(2) * 100;
                   this.noticeFlag = false;
                 },
@@ -451,7 +453,7 @@ export default {
           }
           if (this.noticeFlag) return;
           const width =
-            window.innerWidth / (240 + this.copyFootNav.length * 72);
+            window.innerWidth / (240 + this.copyFootNav.length * this.realSize);
           this.navAttribute.navSize = width.toFixed(2) * 100;
         }
         this.syncBottomPanel();
@@ -505,6 +507,11 @@ export default {
       },
       deep: true,
     },
+    
+    // 获取当前鼠标悬浮的索引
+    hoverIndex(val){
+      this.$emit('getHoverIndex',val)
+    }
   },
   methods: {
     ...mapActions(navStore, [
@@ -657,9 +664,12 @@ export default {
      */
     async newOpenApp(item, e) {
       const { type, value } = item;
+      // 更新鼠标定位
       this.resetElementPosition();
       if (window.$useEnvLimit("web", value)) return;
+      // 桌面图标打开提示
       this.msgNotice(item);
+      // 特殊图标处理
       const valueHandlers = {
         control: () => this.$emit("control", e),
         setting: () => {
@@ -837,7 +847,7 @@ export default {
           that.isDelete = false;
           const moveLeft = event.originalEvent.clientX;
           const panelLeft = that.defaultPosition.x;
-          const relativePos = (moveLeft - panelLeft) % 72;
+          const relativePos = (moveLeft - panelLeft) % this.realSize;
           const isGap = relativePos <= 20 && relativePos >= 0;
           // console.log('isGap=', isGap, relativePos)
           return true;
@@ -916,14 +926,14 @@ export default {
         document.getElementById("bottomContent").getBoundingClientRect().left *
         (this.navAttribute.navSize / 100);
       const relativePos =
-        (currentLeft - panelLeft) % ((72 * this.navAttribute.navSize) / 100);
+        (currentLeft - panelLeft) % ((this.realSize * this.navAttribute.navSize) / 100);
       const isGap = !(
-        relativePos <= (42 * this.navAttribute.navSize) / 100 &&
+        relativePos <= ((this.realSize - 30) * this.navAttribute.navSize) / 100 &&
         relativePos >= (10 * this.navAttribute.navSize) / 100
       );
       let nIndex = Math.floor(
-        (currentLeft - panelLeft + 20) /
-          ((72 * this.navAttribute.navSize) / 100)
+        (currentLeft - panelLeft + this.gap) /
+          ((this.realSize * this.navAttribute.navSize) / 100)
       );
       if (nIndex > this.copyFootNav.length - 1) {
         //超出
@@ -948,7 +958,6 @@ export default {
       this.bottomKey = Date.now();
       this.$nextTick(() => {
         this.enableDrag();
-        this.skipSort = false;
       });
     },
     hoverRealItemId,
