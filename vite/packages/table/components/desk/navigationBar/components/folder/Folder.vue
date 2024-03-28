@@ -39,9 +39,5 @@ const list = computed(() => {
 const size = computed(() => {
     return iconSize.value / 3
 })
-
-onMounted(() => {
-    console.log(props.iconSize,'iconSize',item.value)
-})
 </script>
 <style lang='scss' scoped></style>

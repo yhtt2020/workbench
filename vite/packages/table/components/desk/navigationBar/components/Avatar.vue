@@ -1,8 +1,18 @@
 <template>
   <div v-if="!item?.isBg"
-    :style="{ borderRadius: navigationBar.iconRadius + 'px', background: item?.bg || '',width:size + 'px',height:size + 'px' }"
+    :style="{ 
+      borderRadius: navigationBar.iconRadius + 'px',
+       background: item?.bg || '',
+       width:size + 'px',
+       height:size + 'px' }"
     class="relative flex items-center justify-center ">
-    <a-avatar  :size="size" shape="square" :src="item?.icon" :style="{ borderRadius: navigationBar.iconRadius + 'px' }"></a-avatar>
+    <a-avatar  
+      :size="size" 
+      shape="square" 
+      :src="item?.icon" 
+      :style="{ 
+        borderRadius: navigationBar.iconRadius + 'px' }">
+    </a-avatar>
     <slot :name="item?.slot"></slot>
   </div>
   <div v-else :style="{width:size + 'px',height:size + 'px'}">

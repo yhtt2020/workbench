@@ -1,15 +1,23 @@
 <template>
-    <div>
-        <!-- <Dock></Dock>    -->
-        <FootNav></FootNav>
-    </div>
+    <Dock
+        :iconSize="44"
+        :customClass="'h-[64px]'"
+        :gap="16"
+        @edit="editIcon">
+    </Dock> 
+    
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive } from 'vue'
+import { ref, defineAsyncComponent } from 'vue'
 
 import Dock from '../bottomPanel/Dock.vue';
-import FootNav from '../windowPanel/components/FootNav.vue';
+
+const emit = defineEmits(['edit'])
+
+const editIcon = (id) => {
+    emit('edit',id)
+}
 
 
 

@@ -50,12 +50,11 @@
   </transition>
   <div
     id="bottomPanel"
-    class="flex flex-row items-center justify-center s-bg h-[80px] max-w-full overflow-hidden xt-bg xt-text-1"
+    :class="customClass"
+    class="flex flex-row items-center justify-center max-w-full overflow-hidden xt-text"
     style="
-      margin-right: 10px;
       z-index: 99;
       min-width: 80px;
-      border: 1px solid var(--divider);
     "
     :style="{ borderRadius: navAttribute.navRadius + 'px' }"
   >
@@ -91,8 +90,8 @@
                 white-space: nowrap;
                 display: flex;
                 align-items: center;
-                gap: 20px;
               "
+              :style="{ gap : gap + 'px'}"
               class="w-full"
               id="bottomContent"
             >
@@ -147,7 +146,7 @@
                       currentId="bottom"
                       @deleteFile="deleteFile"
                     >
-                      <Team
+                      <!-- <Team
                         v-if="item.value === 'commun'"
                         :item="item"
                         :placement="'top'"
@@ -173,7 +172,12 @@
                             ></div>
                           </template>
                         </Avatar>
-                      </template>
+                      </template> -->
+                      <NavIcon
+                        :item="item"
+                        :size="iconSize"
+                        :community="community">
+                      </NavIcon>
                     </Drag>
                   </div>
                 </xt-menu>
@@ -190,31 +194,33 @@
 import { navStore } from "../../store/nav";
 import { useNavBarStore } from "../desk/navigationBar/navBar.ts";
 import { useNavigationStore } from "../desk/navigationBar/navigationStore";
+import { controlStore } from "../desk/navigationBar/hook/controlStore";
+import { offlineStore } from "../../js/common/offline";
+
 import { mapWritableState, mapActions } from "pinia";
-import Team from "./Team.vue";
 import Sortable from "sortablejs";
 import { message } from "ant-design-vue";
-import { offlineStore } from "../../js/common/offline";
-import {
-  moreMenus,
-  extraRightMenu,
-} from "../../components/desk/navigationBar/index";
+import _ from "lodash-es";
+import "animate.css";
+import { useFullscreen } from "@vueuse/core";
+import { nanoid } from "nanoid";
+
+import {moreMenus,extraRightMenu} from "../../components/desk/navigationBar/index";
 import { useMergeFolder } from "../../components/desk/navigationBar/hook/mergeFolder.ts";
 import { Notifications } from "../../js/common/sessionNotice";
-import EditIcon from "../desk/navigationBar/components/EditIcon/EditIcon.vue";
 import { startApp } from "../../ui/hooks/useStartApp";
-import _ from "lodash-es";
-import Avatar from "../desk/navigationBar/components/Avatar.vue";
+import { defaultFolderData } from "../../apps/folder/src/components/options";
+import { hoverRealItemId } from "../desk/navigationBar/hook/hoverRealItemId";
+import { mergeData } from "../../ui/hooks/useDataConversion";
+
+import NavIcon from '../windowPanel/components/NavIcon.vue'
+import EditIcon from "../desk/navigationBar/components/EditIcon/EditIcon.vue";
 import FolderVue from "../desk/navigationBar/components/folder/Folder.vue";
 import Folder from "../../apps/folder";
-import { defaultFolderData } from "../../apps/folder/src/components/options";
-import { nanoid } from "nanoid";
 import Drag from "../desk/navigationBar/components/folder/Drag.vue";
-import { hoverRealItemId } from "../desk/navigationBar/hook/hoverRealItemId";
-import "animate.css";
-import { mergeData } from "../../ui/hooks/useDataConversion";
-import { useFullscreen } from "@vueuse/core";
-import { controlStore } from "../desk/navigationBar/hook/controlStore";
+import Avatar from "../desk/navigationBar/components/Avatar.vue";
+import Team from "./Team.vue";
+
 
 const {
   //是否全屏状态
@@ -233,6 +239,7 @@ export default {
     Folder,
     Drag,
     Team,
+    NavIcon,
   },
   data() {
     return {
@@ -319,7 +326,6 @@ export default {
       parentSize: 0,
       parentHeight: 0,
 
-      
       comVisible:false
     };
   },
@@ -328,6 +334,21 @@ export default {
       type: Boolean,
       default: () => false,
     },
+    // 图标大小
+    iconSize:{
+      type:Number,
+      default:() => 54
+    },
+    // 自定义类
+    customClass: {
+      type: String,
+      default: () => "h-[80px] xt-bg border-[var(--divider)] mr-3 s-bg",
+    },
+    // 图标间距
+    gap:{
+      type:Number,
+      default:() => 20
+    }
   },
   mounted() {
     this.enableDrag();

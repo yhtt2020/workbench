@@ -22,29 +22,41 @@
         :src="item.icon"
         shape="square"
         :size="size"
+        :style="{ borderRadius: navigationBar.iconRadius + 'px' }"
         >
     </a-avatar>
 
-    <!-- 自定义图标 -->
+    <!-- 自定义图标 :style="{ borderRadius: navigationBar.iconRadius + 'px', background: item?.bg || '',width:size + 'px',height:size + 'px' }"-->
     <div
         v-else-if="item.isBg"
-        :style="{width:size + 'px',height:size + 'px'}"
+        :style="{
+            width:size + 'px',
+            height:size + 'px',
+            borderRadius: navigationBar.iconRadius + 'px', 
+            background: item?.bg || ''}"
         class="relative flex items-center justify-center overflow-hidden">
         <a-avatar
             :size="32"
             shape="square"
-            :src="renderIcon(item.icon)">
+            :src="renderIcon(item.icon)"
+            :style="[{ borderRadius: navigationBar.iconRadius + 'px' }, item?.color]">
         </a-avatar>
     </div>
 </template>
 
 <script setup lang='ts'>
 import { ref, toRefs } from 'vue'
+import { storeToRefs } from 'pinia';
 
 import { renderIcon } from '../../../js/common/common';
 
 import Folder from '../../desk/navigationBar/components/folder/Folder.vue';
 import Team from '../../bottomPanel/Team.vue';
+
+import { useNavigationStore } from '../../desk/navigationBar/navigationStore';
+
+const navigationBar = useNavigationStore();
+const { iconRadius, navSize } = storeToRefs(navigationBar);
 
 type AvatarType = {
     // 图标大小

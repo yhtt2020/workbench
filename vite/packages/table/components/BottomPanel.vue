@@ -1,8 +1,10 @@
 <template>
   <xtMixMenu :menus="mainOption" name="name" class="flex max-w-full">
     <!-- xt-main-bottom-bar 定位类不可删 -->
-
-    <!-- 控制中心弹窗 -->
+    
+    <!-- mac版导航栏 -->
+    <template v-if="currentNavFormat === 'mac'">
+      <!-- 控制中心弹窗 -->
     <div
       class="absolute"
       v-if="controlVisible"
@@ -69,6 +71,15 @@
         </div>
       </div>
     </AutoHide>
+    </template>
+    <!-- window版导航栏 -->
+    <template v-else>
+      <Drop @createFile="createFile" currentId="bottom">
+        <WindowPanel @edit="edit"></WindowPanel>
+      </Drop>
+    </template>
+    
+    
   </xtMixMenu>
 
   <transition name="fade">
@@ -126,7 +137,7 @@ import CommunityNav from "./bottomPanel/community/CommunityNav.vue";
 import TeamNav from "./bottomPanel/community/TeamNav.vue";
 import AppModal from "./bottomPanel/community/AppModal.vue";
 import { controlStore } from "./desk/navigationBar/hook/controlStore";
-
+import WindowPanel from "./WindowPanel.vue";
 const {
   //是否全屏状态
   isFullscreen,
@@ -154,6 +165,7 @@ export default {
     CommunityNav,
     TeamNav,
     AppModal,
+    WindowPanel,
   },
   data() {
     return {
@@ -364,6 +376,7 @@ export default {
       "isEdge",
       "bottomInit",
       "communityNavVisible",
+      "currentNavFormat"
     ]),
     ...mapWritableState(taskStore, ["isTask", "isTaskDrawer"]),
     ...mapWritableState(useDeskStore, ["isEnterBar"]),

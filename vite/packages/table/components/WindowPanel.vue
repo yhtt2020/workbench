@@ -9,7 +9,7 @@
             <!-- 用户头像以及控制中心 -->
             <User></User>
             <!-- 导航栏图标 -->
-            <Panel></Panel>
+            <Panel @edit="edit"></Panel>
             <!-- 右侧时间天气和消息通知 -->
             <div class="flex">
                 <Time></Time>
@@ -50,6 +50,8 @@ import { appStore } from '../store';
 const useAppStore = appStore()
 const { showGuide } = storeToRefs(useAppStore)
 
+const emit = defineEmits(['edit'])
+
 const rightDrawer = ref<InstanceType<typeof TopPanelRightDrawer> | null>(null)
 
 provide('iconSize',44)
@@ -64,5 +66,8 @@ const openRightDrawer = () => {
     }
 }
 
+const edit = (value) => {
+    emit('edit',value)
+}
 </script>
 <style lang='scss' scoped></style>

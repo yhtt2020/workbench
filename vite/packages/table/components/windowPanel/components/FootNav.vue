@@ -5,7 +5,7 @@
                 <a-tooltip 
                     :title="item.name" 
                     :placement="placement">
-                    <Avatar
+                    <NavIcon
                         :size="44"
                         :item="item" />
                 </a-tooltip> 
@@ -23,7 +23,7 @@ import { storeToRefs } from 'pinia';
 import { startApp } from '../../../ui/hooks/useStartApp';
 
 import { navStore } from '../../../store/nav';
-import Avatar from './Avatar.vue';
+import NavIcon from './NavIcon.vue';
 import Drag from '../../desk/navigationBar/components/folder/Drag.vue';
 
 type PropsType = {
