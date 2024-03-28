@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import {nanoid} from "nanoid";
 import archiveHelper from "../../../js/lib/archiveHelper";
 import {message} from "ant-design-vue";
+import {appStore} from "../../../store";
 
 const communityNavAppId = 'c100001'
 // @ts-ignore
@@ -60,7 +61,9 @@ export const communityNavStore = defineStore("communityNav", {
     // 将当前选中的社群数据和选中的下标进行解构存储到store
     setCurrentCommunity(item: any, index: any) {
       const {communityInfo} = item;
+      console.log('社群信息',communityInfo)
       const optionItem = {
+        ...communityInfo,
         value: "task",
         name: communityInfo?.name,
         icon: communityInfo?.icon,
@@ -75,7 +78,19 @@ export const communityNavStore = defineStore("communityNav", {
       this.currentCommunity.item = optionItem;
       this.currentCommunity.index = index;
     },
-    async saveCommunityNav(force=0) {
+    /**
+     * 检查权限，目前只查是否是群主
+     * @param communityInfo
+     */
+    checkWriteAuth(){
+      console.log(this.currentCommunity,'当前社群',this.currentCommunity.item.ownerUid,appStore().userInfo?.uid)
+      return this.currentCommunity.item.ownerUid===appStore().userInfo?.uid
+    },
+    checkSettingAuth(){
+      return this.currentCommunity.item.ownerUid===appStore().userInfo?.uid
+    },
+
+    async saveCommunityNav(force = 0) {
       console.log('社群尝试存档')
       let rs = await archiveHelper.saveToCommunity(
         this.currentCommunity.item.no,
@@ -89,21 +104,27 @@ export const communityNavStore = defineStore("communityNav", {
         force,
         'main'
       )
-      if(rs.status){
+      if (rs.status) {
         message.success('应用添加成功，并已为您自动同步至云端。')
-      }else{
-        window.$ui.confirm({
-          title:'同步助手',
-          content:'应用添加成功，但由于 '+rs.data?.userInfo?.nickname+' 正在编辑存档，故无法同步，是否强制同步？此操作将强制写入数据，可能导致存储内容丢失。',
-          ok:async ()=>{
-            let rs=await this.saveCommunityNav(1)
-            if(rs.status) {
-              message.success('数据强制保存成功。')
-            }else{
-              message.error('强制保存失败。')
+      } else if (rs.code === 401) {
+        message.error('保存失败，原因：' + rs.info)
+      } else if (rs.code === 404) {
+        message.error('保存失败，原因：' + rs.info)
+      } else {
+        window.$ui.confirm(
+          '同步助手',
+          '应用添加成功，但由于 ' + rs.data?.userInfo?.nickname + ' 正在编辑存档，故无法同步，是否强制同步？此操作将强制写入数据，可能导致存储内容丢失。',
+          {
+            ok: async () => {
+              let rs = await this.saveCommunityNav(1)
+              if (rs.status) {
+                message.success('数据强制保存成功。')
+              } else {
+                message.error('强制保存失败。')
+              }
             }
           }
-        })
+        )
       }
       return rs
     },
@@ -115,7 +136,7 @@ export const communityNavStore = defineStore("communityNav", {
       if (rs.status) {
         //
         let settings = rs.data.settings
-        let archiveData=rs.data.data
+        let archiveData = rs.data.data
         if (archiveData.navData) {
           this.appModalList =
             [
@@ -133,7 +154,19 @@ export const communityNavStore = defineStore("communityNav", {
       } else {
         if (rs.code === 404) {
           //还未初始化存档
-          this.appModalList[1].list = []
+          this.appModalList = [
+            {
+              name: "我的收藏",
+              type: "like",
+              rename: null,
+            },
+            {
+              name: "全部",
+              type: "all",
+              rename: null,
+              list: [],
+            },
+          ]
         }
         return rs
       }

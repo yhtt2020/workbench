@@ -18,8 +18,8 @@
           :currentIndex="appFolderIndex"
         >
           <template #leftMenuBottom>
-            <div class="flex items-center h-10">
-              <a-tooltip title="添加">
+            <div class="flex gap-2 items-center h-10 ">
+              <a-tooltip title="添加" v-if="checkEditAuth">
                 <xt-dropdown
                   newIcon="fluent:add-16-regular"
                   :placement="'topLeft'"
@@ -29,7 +29,7 @@
                 >
                   <div
                     style="min-width: 200px; border: 1px solid var(--divider)"
-                    class="rounded-xl flex flex-col xt-bg-2 p-2"
+                    class="rounded-xl flex flex-col xt-bg-2 p-2 "
                   >
                     <div
                       v-for="item in editList"
@@ -47,15 +47,15 @@
                 </xt-dropdown>
               </a-tooltip>
 
-              <xt-button class="mx-3" w="32" h="32" style="border-radius: 8px">
-                <div class="flex items-center justify-center">
-                  <xt-ify-icon
-                    icon="fluent:cloud-checkmark-16-regular"
-                    size="20"
-                  ></xt-ify-icon>
-                </div>
-              </xt-button>
-              <a-tooltip title="设置">
+              <!--              <xt-button class="mx-3" w="32" h="32" style="border-radius: 8px">-->
+              <!--                <div class="flex items-center justify-center">-->
+              <!--                  <xt-ify-icon-->
+              <!--                    icon="fluent:cloud-checkmark-16-regular"-->
+              <!--                    size="20"-->
+              <!--                  ></xt-ify-icon>-->
+              <!--                </div>-->
+              <!--              </xt-button>-->
+              <a-tooltip title="设置" v-if="checkSettingAuth">
                 <xt-button
                   w="32"
                   h="32"
@@ -77,7 +77,7 @@
           <Search @close="appModelVisible = false"></Search>
           <div class="grow">
             <xt-scrollbar :y="true" class="w-full p-3" style="height: 650px">
-              <RightListDeatil :detailIndex="appFolderIndex" />
+              <RightListDeatil :detailIndex="appFolderIndex"/>
             </xt-scrollbar>
           </div>
         </div>
@@ -86,7 +86,7 @@
   </xt-modal>
 
   <!-- 应用模式中文件创建弹窗 -->
-  <CreateFolder ref="appCreateFolder" />
+  <CreateFolder ref="appCreateFolder"/>
 
   <!-- 选择应用弹窗 -->
   <EditNewNavigation
@@ -98,110 +98,107 @@
 </template>
 
 <script setup>
-import { ref, computed, getCurrentInstance, onMounted } from "vue";
-import { storeToRefs } from "pinia";
-import { communityNavStore } from "../store/communityNavStore";
-import { message } from "ant-design-vue";
+import { ref, computed, getCurrentInstance, onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
+import { communityNavStore } from '../store/communityNavStore'
+import { message } from 'ant-design-vue'
 
-import LeftMenu from "../left/LeftMenu.vue";
-import CreateFolder from "./CreateFolder.vue";
-import Search from "../search/ComModalSearch.vue";
-import RightListDeatil from "./RightListDeatil.vue";
-import EditNewNavigation from "../../desk/addIcon/EditNewNavigation.vue";
-import LinkDrop from "../drop/LinkDrop.vue";
+import LeftMenu from '../left/LeftMenu.vue'
+import CreateFolder from './CreateFolder.vue'
+import Search from '../search/ComModalSearch.vue'
+import RightListDeatil from './RightListDeatil.vue'
+import EditNewNavigation from '../../desk/addIcon/EditNewNavigation.vue'
+import LinkDrop from '../drop/LinkDrop.vue'
 
-const { proxy } = getCurrentInstance();
+const { proxy } = getCurrentInstance()
 
-const communityNav = communityNavStore();
-const { appModalList, appFolderIndex } = storeToRefs(communityNav);
+const communityNav = communityNavStore()
+const { appModalList, appFolderIndex } = storeToRefs(communityNav)
 
-const appModelVisible = ref(false);
-const editVisible = ref(false);
-const appCreateFolder = ref(null);
-const appSetting = ref(null);
+const appModelVisible = ref(false)
+const editVisible = ref(false)
+const appCreateFolder = ref(null)
+const appSetting = ref(null)
 
 // 编辑操作列表
 const editList = ref([
   {
-    icon: "fluent:add-16-regular",
-    name: "添加应用",
+    icon: 'fluent:add-16-regular',
+    name: '添加应用',
     fn: () => {
-      editVisible.value = true;
-    },
+      editVisible.value = true
+    }
   },
   {
-    name: "从桌面、导航和分组中选择",
-    icon: "fluent:app-folder-16-regular",
+    name: '从桌面、导航和分组中选择',
+    icon: 'fluent:app-folder-16-regular',
     fn: () => {
-      proxy.$bus.emit("openDeskAppModal");
-    },
-  },
-  {
-    icon: "fluent:folder-16-regular",
-    name: "添加文件夹",
-    fn: () => {
-      appCreateFolder.value.openCreateFolder();
-    },
-  },
-]);
+      proxy.$bus.emit('openDeskAppModal')
+    }
+  }
+])
 
 // 添加数据
 const addAppFile = async (data) => {
-  if (data.value === "commun" || data.value === "control") {
-    message.warning("该应用不支持添加");
+  if (data.value === 'commun' || data.value === 'control') {
+    message.warning('该应用不支持添加')
   } else {
     // 添加类型、 全部 、收藏
-    const type = appModalList.value[appFolderIndex.value].type;
+    const type = appModalList.value[appFolderIndex.value].type
     if (type === undefined) {
       const option = {
         n_id: appModalList.value[appFolderIndex.value].id,
         ...data,
         favo: false,
-      };
-      appModalList.value[1].list.push(option);
-      editVisible.value = false;
-    } else if (type === "all") {
+      }
+      appModalList.value[1].list.push(option)
+      editVisible.value = false
+    } else if (type === 'all') {
       const index = appModalList.value[appFolderIndex.value].list.findIndex(
         (item) => {
-          return String(item.name) === String(data.name);
+          return String(item.name) === String(data.name)
         }
-      );
+      )
       if (index === -1) {
         appModalList.value[appFolderIndex.value].list.push({
           ...data,
           favo: false,
-        });
+        })
       }
-      editVisible.value = false;
+      editVisible.value = false
     }
     console.log(appModalList.value)
     //todo 同步存入
     await communityNavStore().saveCommunityNav()
   }
-};
+}
 
 // 选择切换文件数据
 const selectFolder = (data) => {
-  appFolderIndex.value = data;
-};
+  appFolderIndex.value = data
+}
 // 设置
 const enterSetting = () => {
-  proxy.$bus.emit("openAppSetting");
-};
+  proxy.$bus.emit('openAppSetting')
+}
+
+const checkEditAuth = computed(() =>
+  communityNavStore().checkWriteAuth())
+const checkSettingAuth = computed(() => communityNavStore().checkSettingAuth())
 
 onMounted(() => {
-  proxy.$bus.on("openAppVisible", () => {
+  proxy.$bus.on('openAppVisible', () => {
     communityNavStore().loadCommunityNav()
-    appModelVisible.value = true;
-  });
-  proxy.$bus.on("closeModal", () => {
-    appModelVisible.value = false;
-  });
+    appModelVisible.value = true
+  })
+  proxy.$bus.on('closeModal', () => {
+    appModelVisible.value = false
+  })
+  proxy.$bus.on('openIconAdd', () => {
+    editVisible.value = true
+  })
 
-  proxy.$bus.on('openIconAdd',()=>{
-    editVisible.value = true;
-  });
-});
+})
 </script>
 
 <style lang="scss" scoped>
