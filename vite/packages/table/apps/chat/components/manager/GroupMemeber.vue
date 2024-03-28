@@ -1,21 +1,18 @@
 <template>
  <div class="flex flex-col rounded-lg" style="background: var(--secondary-bg);">
-   <div v-for="item in memberInfo.memberList" class="flex justify-between" style="padding: 16px;color: var(--primary-text);margin-bottom: ;">
+   <div v-for="item in memberInfo.memberList" class="flex justify-between" style="padding: 16px;color: var(--primary-text);">
     <div class="flex items-center ">
      <a-avatar :src="item.avatar" :size="32"></a-avatar>
      <span style="margin-left: 12px;">{{item.nick}}</span>
     </div>
-
-
     <div class="font-14" style="color: var(--secondary-text);">{{ handleRoleName(item) }}</div>
-
    </div>
  </div>
 </template>
 
 <script>
 import { defineComponent,ref,reactive,toRefs, onMounted } from 'vue'
-import { appStore } from '../../../../../store'
+import { appStore } from '../../../../store';
 
 export default defineComponent({
  props:['memberInfo','server'],

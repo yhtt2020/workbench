@@ -44,7 +44,7 @@
 <script setup>
 import { ref } from 'vue';
 
-const emit = defineEmits(["close"]);
+const emit = defineEmits(["close","search"]);
 
 const keyWord = ref("");
 
@@ -54,7 +54,7 @@ const close = () => {
 
 // 搜索事件
 const changeSearchValue = () => {
- // keyWord.value = e.target.value;
+  emit("search", keyWord.value);
 };
 </script>
 

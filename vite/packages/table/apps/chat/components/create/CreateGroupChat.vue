@@ -1,3 +1,4 @@
+<!-- 创建群聊页面 -->
 <template>
  <div class="flex flex-col mb-3" style="padding: 12px; width: 650px; height: 530px;">
   <ModalTop title="发起群聊" back="true" @close="closeCreate" @back="backButton"/>

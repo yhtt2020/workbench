@@ -59,8 +59,8 @@ import { appStore } from '../../../../store';
 import { handleErrorPrompts, isArrayEqual } from '../utils';
 import { chatStore }  from '../../../../store/chat'
 
-import Group from './addressbook/group.vue'
-import Friend from './addressbook/friend.vue';
+import Group from '../../../../apps/chat/components/manager/Group.vue';
+import Friend from '../../../../apps/chat/components/manager/Friend.vue';
 import MessageSystem from './components/message-system.vue';
 
 const TUIContact = defineComponent({

@@ -1,17 +1,17 @@
 <template>
- <RadioTab :navList="dataType" v-model:selectType="defaultType"></RadioTab>
+ <!-- <RadioTab :navList="dataType" v-model:selectType="defaultType"></RadioTab> -->
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, reactive,toRefs,watch } from 'vue'
-import RadioTab from "../../../../../components/RadioTab.vue";
+// import RadioTab from "../../../../../components/RadioTab.vue";
 import { message } from "ant-design-vue";
 
 export default defineComponent({
  props:['updateInviteInfo'],
 
  components:{
-  RadioTab
+  // RadioTab
  },
 
  setup (props,ctx) {
@@ -34,7 +34,7 @@ export default defineComponent({
    updateGroupInvite(newVal)
   })
 
-  const updateGroupInvite = (newVal:any) =>{
+  const updateGroupInvite = (newVal) =>{
    const options = {
     groupID:props.updateInviteInfo.groupID,
     inviteOption:newVal.name,
