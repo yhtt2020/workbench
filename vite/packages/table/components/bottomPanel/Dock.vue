@@ -3,7 +3,7 @@
     style="position: absolute; z-index: 500 !important"
     :style="{
       left: `${this.left}px`,
-      bottom: `${(navAttribute.navSize / 100) * 100}px`,
+      bottom: `${(navAttribute.navSize / 100) * 90}px`,
     }"
     class="rounded-xl pointer"
     id="folder"
@@ -377,6 +377,16 @@ export default {
     ]),
     ...mapWritableState(useNavBarStore, ["isEnterDesk"]),
     ...mapWritableState(controlStore, ["firstNavVisible"]),
+
+    // 社区图标需要传递的相关参数
+    community(){
+      return {
+        x: this.realXY.x,
+        y: this.navAttribute.navSize * 0.9,
+        placement:'top',
+        visible:this.comVisible
+      }
+    },
     folderOptions() {
       if (this.currentItem && this.currentItem.type === "folder") {
         const reset = {

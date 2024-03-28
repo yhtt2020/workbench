@@ -46,14 +46,6 @@
           >
           </Dock>
         </Drop>
-        <keep-alive>
-          <TaskBox v-if="true"></TaskBox>
-        </keep-alive>
-        <keep-alive>
-          <Favorites v-if="true"></Favorites>
-        </keep-alive>
-        <Common ref="common"></Common>
-
         <!-- 社群开关开启后,用户头像信息放底部导航栏右侧 -->
         <UserNavBar v-if="communityNavVisible" @openControl="openControl" />
 
@@ -78,6 +70,13 @@
         <WindowPanel @edit="edit"></WindowPanel>
       </Drop>
     </template>
+    <keep-alive>
+      <TaskBox v-if="true"></TaskBox>
+    </keep-alive>
+    <keep-alive>
+      <Favorites v-if="true"></Favorites>
+    </keep-alive>
+    <Common ref="common"></Common>
     
     
   </xtMixMenu>
