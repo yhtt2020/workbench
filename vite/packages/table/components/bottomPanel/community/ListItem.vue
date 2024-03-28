@@ -242,7 +242,8 @@ const openApp = (data) => {
 const removeItem = (data) => {
   const index = appModalList.value[1]?.list?.indexOf(data);
   appModalList.value[1]?.list?.splice(index, 1);
-  message.success("应用移除成功");
+  communityNav.saveCommunityNav()
+
 };
 // 取消收藏
 const removeFolder = (data) => {

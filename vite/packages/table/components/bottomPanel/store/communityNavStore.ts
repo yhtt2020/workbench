@@ -91,7 +91,6 @@ export const communityNavStore = defineStore("communityNav", {
     },
 
     async saveCommunityNav(force = 0) {
-      console.log('社群尝试存档')
       let rs = await archiveHelper.saveToCommunity(
         this.currentCommunity.item.no,
         communityNavAppId,
@@ -105,7 +104,7 @@ export const communityNavStore = defineStore("communityNav", {
         'main'
       )
       if (rs.status) {
-        message.success('应用添加成功，并已为您自动同步至云端。')
+        message.success('保存成功，并已为您自动同步至云端。')
       } else if (rs.code === 401) {
         message.error('保存失败，原因：' + rs.info)
       } else if (rs.code === 404) {
@@ -113,7 +112,7 @@ export const communityNavStore = defineStore("communityNav", {
       } else {
         window.$ui.confirm(
           '同步助手',
-          '应用添加成功，但由于 ' + rs.data?.userInfo?.nickname + ' 正在编辑存档，故无法同步，是否强制同步？此操作将强制写入数据，可能导致存储内容丢失。',
+          '保存失败，由于 ' + rs.data?.userInfo?.nickname + ' 正在编辑存档，故无法同步，是否强制同步？此操作将强制写入数据，可能导致存储内容丢失。',
           {
             ok: async () => {
               let rs = await this.saveCommunityNav(1)

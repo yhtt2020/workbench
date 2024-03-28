@@ -33,7 +33,7 @@
                   >
                     <div
                       v-for="item in editList"
-                      class="flex items-center rounded-xl p-3 xt-hover"
+                      class="flex items-center rounded-xl p-3 xt-hover pointer"
                       @click="item.fn"
                     >
                       <xt-ify-icon
@@ -135,7 +135,14 @@ const editList = ref([
     fn: () => {
       proxy.$bus.emit('openDeskAppModal')
     }
-  }
+  },
+  {
+    icon: "fluent:folder-16-regular",
+    name: "添加文件夹",
+    fn: () => {
+      appCreateFolder.value.openCreateFolder();
+    },
+  },
 ])
 
 // 添加数据

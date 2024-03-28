@@ -19,7 +19,7 @@
     </div>
   </xt-modal>
 </template>
-         
+
 <script setup>
 import { ref, computed, getCurrentInstance, onMounted, toRefs } from "vue";
 import { storeToRefs } from "pinia";
@@ -60,7 +60,7 @@ const addFolder = (evt) => {
     });
     appModalList.value = updateList;
     folderVisible.value = false;
-    message.success("文件夹名称更新成功");
+    communityNav.saveCommunityNav()
     folderName.value = "";
   } else {
     if (folderName.value !== "") {
@@ -77,7 +77,7 @@ const addFolder = (evt) => {
         appModalList.value.push(data);
       }
       folderVisible.value = false;
-      message.success("文件夹创建成功");
+      communityNav.saveCommunityNav()
       folderName.value = "";
     } else {
       message.warning("文件名称不能为空");

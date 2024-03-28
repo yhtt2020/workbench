@@ -143,7 +143,7 @@ const teamNavData = computed(() => {
 const deleteNav = (data) => {
   const index = appModalList.value[1]?.list?.indexOf(data);
   appModalList.value[1]?.list?.splice(index, 1);
-  message.success('应用移除成功')
+  communityNav.saveCommunityNav()
 };
 // 添加
 const createNav =async (data) => {
