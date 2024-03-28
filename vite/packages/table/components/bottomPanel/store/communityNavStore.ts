@@ -26,8 +26,8 @@ export const communityNavStore = defineStore("communityNav", {
     ],
     // 应用模式下的下标
     appFolderIndex: 1,
-    // 开启设置模式
-    settingEnable: false,
+    // 自动关闭窗口
+    autoClose: false,
     // 社群导航-应用模式-设置模式-模式选择 (默认选中应用模式)
     settingType: "component",
     // 开启自定义图标背景色
@@ -61,7 +61,7 @@ export const communityNavStore = defineStore("communityNav", {
     // 将当前选中的社群数据和选中的下标进行解构存储到store
     setCurrentCommunity(item: any, index: any) {
       const {communityInfo} = item;
-      console.log('社群信息',communityInfo)
+      console.log('社群信息', communityInfo)
       const optionItem = {
         ...communityInfo,
         value: "task",
@@ -82,12 +82,12 @@ export const communityNavStore = defineStore("communityNav", {
      * 检查权限，目前只查是否是群主
      * @param communityInfo
      */
-    checkWriteAuth(){
-      console.log(this.currentCommunity,'当前社群',this.currentCommunity.item.ownerUid,appStore().userInfo?.uid)
-      return this.currentCommunity.item.ownerUid===appStore().userInfo?.uid
+    checkWriteAuth() {
+      console.log(this.currentCommunity, '当前社群', this.currentCommunity.item.ownerUid, appStore().userInfo?.uid)
+      return this.currentCommunity.item.ownerUid === appStore().userInfo?.uid
     },
-    checkSettingAuth(){
-      return this.currentCommunity.item.ownerUid===appStore().userInfo?.uid
+    checkSettingAuth() {
+      return this.currentCommunity.item.ownerUid === appStore().userInfo?.uid
     },
 
     async saveCommunityNav(force = 0) {
@@ -97,8 +97,15 @@ export const communityNavStore = defineStore("communityNav", {
         {
           navData: this.appModalList.filter((item, index) => {
               return index > 0
-            }
-          )
+            },
+
+          ),
+          settings: {
+            layOut: this.layOut,
+            settingType: this.settingType,
+            autoClose: this.autoClose
+          },
+          _v:Date.now()
         },
         force,
         'main'
@@ -134,7 +141,6 @@ export const communityNavStore = defineStore("communityNav", {
       console.log('获取到的社群导航', rs)
       if (rs.status) {
         //
-        let settings = rs.data.settings
         let archiveData = rs.data.data
         if (archiveData.navData) {
           this.appModalList =
@@ -148,6 +154,12 @@ export const communityNavStore = defineStore("communityNav", {
             ]
         } else {
           this.appModalList[1].list = []
+        }
+
+        if (archiveData.settings) {
+          this.layOut = archiveData.settings.layOut
+          this.settingType = archiveData.settings.settingType
+          this.autoClose = archiveData.settings.autoClose
         }
 
       } else {

@@ -146,7 +146,8 @@ const communityNavList = computed(() => {
   }
 });
 
-const openNav = (event) => {
+const openNav = async (event) => {
+  await communityNavStore().loadCommunityNav()
   if (settingType.value === "app") {
     proxy.$bus.emit("openAppVisible");
   } else {

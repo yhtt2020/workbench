@@ -74,11 +74,11 @@ const teamNavData = computed(() => {
           teamFolderRef.value.editVisible = true;
         },
       },
-      {
-        newIcon: "fluent:cloud-checkmark-16-regular",
-        title: "同步状态",
-        fn: () => {},
-      },
+      // {
+      //   newIcon: "fluent:cloud-checkmark-16-regular",
+      //   title: "同步状态",
+      //   fn: () => {},
+      // },
       {
         newIcon: layOutIcon.value,
         title: "排列方式",

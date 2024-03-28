@@ -152,7 +152,6 @@ import Setting from "./bottomPanel/setting/CommunitySetting.vue";
 import ComNavSearch from "./bottomPanel/search/ComNavSearch.vue";
 import { communityStore } from "../page/chat/store/communityStore";
 import DeskAppModal from "./bottomPanel/desk/DeskAppList.vue";
-import { getCurrentInstance } from 'vue'
 
 
 // 是否全屏状态 切换全屏

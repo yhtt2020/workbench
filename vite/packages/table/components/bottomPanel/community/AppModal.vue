@@ -195,7 +195,7 @@ const checkSettingAuth = computed(() => communityNavStore().checkSettingAuth())
 
 onMounted(() => {
   proxy.$bus.on('openAppVisible', () => {
-    communityNavStore().loadCommunityNav()
+
     appModelVisible.value = true
   })
   proxy.$bus.on('closeModal', () => {
