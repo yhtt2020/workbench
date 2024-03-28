@@ -1,9 +1,11 @@
 // 新版IM样式表(覆盖版)
+/**屏蔽不想要的UI**/ 
 .callkit-container,
 .TUIKit-navbar,
 .tui-search-main-global,
 .tui-chat-safe-tips,
-.tui-contact-search {
+.tui-contact-search,
+.manage,.message-input-toolbar-list-end{
  display: none !important;
 }
 
@@ -14,7 +16,6 @@
 
 .tui-conversation {
  background: transparent !important;
-
  &-list {
   overflow-y: auto;
   overflow-x: hidden;
@@ -23,7 +24,6 @@
    display: none !important;
   }
  }
-
  &-content {
   cursor: pointer !important;
   margin-bottom: 6px !important;
@@ -33,7 +33,6 @@
    background: rgba(80, 139, 254, 0.2) !important;
   }
  }
-
  &-item {
   cursor: pointer !important;
   .content {
@@ -57,7 +56,6 @@
    }
   }
  }
-
  &-item-pinned {
   background: transparent !important;
  }
@@ -67,7 +65,6 @@
  background-color: transparent !important;
  background: var(--secondary-bg) !important;
  border: none !important;
-
  &-item {
   &:hover {
    background-color: transparent !important;
@@ -75,7 +72,6 @@
   }
  }
 }
-
 
 .TUIKit-main-aside {
  border-right: 1px solid var(--divider) !important;
@@ -101,4 +97,22 @@
 
 .toolbar-item-container-dialog{
   background: var(--secondary-bg) !important;
+}
+
+.toolbar-item-container{
+  &:nth-of-type(2n){
+    .toolbar-item-container-icon{
+      padding: 8px 8px 8px 0 !important;
+    } 
+  }
+  &:nth-of-type(3){
+    .toolbar-item-container-icon{
+      padding: 8px 8px 8px 0 !important;
+    } 
+  }
+  &:last-of-type{
+    .toolbar-item-container-icon{
+      padding: 8px 8px 8px 0 !important;
+    } 
+  }
 }

@@ -1,6 +1,6 @@
 <template>
   <ToolbarItemContainer
-    :iconFile="fileIcon"
+    :iconFile="'fluent:folder-16-regular'"
     title="文件"
     :iconWidth="isUniFrameWork ? '32px' : '21px'"
     :iconHeight="isUniFrameWork ? '25px' : '18px'"
@@ -29,7 +29,8 @@ import {
 } from '@tencentcloud/chat-uikit-engine';
 import { ref } from '../../../../adapter-vue';
 import ToolbarItemContainer from '../toolbar-item-container/index.vue';
-import fileIcon from '../../../../assets/icon/files.png';
+// 新增 屏蔽
+// import fileIcon from '../../../../assets/icon/files.png';
 import { isPC, isUniFrameWork } from '../../../../utils/env';
 import { isEnabledMessageReadReceiptGlobal } from '../../utils/utils';
 

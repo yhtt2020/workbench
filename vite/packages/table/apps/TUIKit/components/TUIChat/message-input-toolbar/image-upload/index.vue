@@ -53,7 +53,9 @@ const inputRef = ref();
 const currentConversation = ref<IConversationModel>();
 const IMAGE_TOOLBAR_SHOW_MAP = {
   web_album: {
-    icon: imageIcon,
+    // 新增调整 icon
+    // icon: imageIcon,
+    icon:'fluent:image-sparkle-16-regular',
     title: '图片',
   },
   uni_album: {

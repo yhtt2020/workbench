@@ -1,7 +1,7 @@
 <template>
   <ToolbarItemContainer
     ref="container"
-    :iconFile="faceIcon"
+    :iconFile="'fluent:emoji-smile-slight-24-regular'"
     title="表情"
     @onIconClick="onIconClick"
     @onDialogClose="onDialogClose"
@@ -24,7 +24,8 @@ import { isH5 } from '../../../../utils/env';
 import ToolbarItemContainer from '../toolbar-item-container/index.vue';
 import EmojiPickerDialog from './emoji-picker-dialog.vue';
 
-import faceIcon from '../../../../assets/icon/face.png';
+// 新增,抛弃原有图标
+// import faceIcon from '../../../../assets/icon/face.png';
 
 const emits = defineEmits([
   'insertEmoji',

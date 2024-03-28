@@ -3,7 +3,7 @@
     ref="emojiPickerDialog"
     :class="{
       'emoji-picker': true,
-      'emoji-picker-h5': !isPC
+      'emoji-picker-h5': !isPC,
     }"
   >
     <ul
@@ -20,17 +20,17 @@
           v-if="currentTabItem.type === EMOJI_TYPE.BASIC"
           class="emoji"
           :src="currentTabItem.url + basicEmojiMap[childrenItem]"
-        >
+        />
         <img
           v-else-if="currentTabItem.type === EMOJI_TYPE.BIG"
           class="emoji-big"
           :src="currentTabItem.url + childrenItem + '@2x.png'"
-        >
+        />
         <img
           v-else
           class="emoji-custom"
           :src="currentTabItem.url + childrenItem"
-        >
+        />
       </li>
     </ul>
     <ul class="emoji-picker-tab">
@@ -40,29 +40,28 @@
         class="emoji-picker-tab-item"
         @click="toggleEmojiTab(index)"
       >
-        <Icon
+        <!-- 修改 原有icon -->
+        <!-- <Icon
           v-if="item.type === EMOJI_TYPE.BASIC"
           class="icon"
           :file="faceIcon"
+        /> -->
+        
+        <xt-ify-icon
+          icon="fluent-emoji:grinning-face-with-smiling-eyes"
+          size="26"
+          class="xt-text"
+          v-if="item.type === EMOJI_TYPE.BASIC"
         />
+
         <img
           v-else-if="item.type === EMOJI_TYPE.BIG"
           class="icon-big"
           :src="item.url + item.list[0] + '@2x.png'"
-        >
-        <img
-          v-else
-          class="icon-custom"
-          :src="item.url + item.list[0]"
-        >
+        />
+        <img v-else class="icon-custom" :src="item.url + item.list[0]" />
       </li>
-      <li
-        v-if="isUniFrameWork"
-        class="send-btn"
-        @click="sendMessage"
-      >
-        发送
-      </li>
+      <li v-if="isUniFrameWork" class="send-btn" @click="sendMessage">发送</li>
     </ul>
   </div>
 </template>
@@ -73,17 +72,21 @@ import {
   StoreName,
   IConversationModel,
   SendMessageParams,
-} from '@tencentcloud/chat-uikit-engine';
-import { ref } from '../../../../adapter-vue';
-import { emojiList, basicEmojiMap, basicEmojiList } from '../../utils/emojiList';
-import { IEmojiList, IEmojiListItem } from '../../../../interface';
-import { EMOJI_TYPE } from '.././../../../constant';
-import Icon from '../../../common/Icon.vue';
-import faceIcon from '../../../../assets/icon/face.png';
-import { isPC, isUniFrameWork } from '../../../../utils/env';
-import { isEnabledMessageReadReceiptGlobal } from '../../utils/utils';
+} from "@tencentcloud/chat-uikit-engine";
+import { ref } from "../../../../adapter-vue";
+import {
+  emojiList,
+  basicEmojiMap,
+  basicEmojiList,
+} from "../../utils/emojiList";
+import { IEmojiList, IEmojiListItem } from "../../../../interface";
+import { EMOJI_TYPE } from ".././../../../constant";
+import Icon from "../../../common/Icon.vue";
+import faceIcon from "../../../../assets/icon/face.png";
+import { isPC, isUniFrameWork } from "../../../../utils/env";
+import { isEnabledMessageReadReceiptGlobal } from "../../utils/utils";
 
-const emits = defineEmits(['insertEmoji', 'onClose', 'sendMessage']);
+const emits = defineEmits(["insertEmoji", "onClose", "sendMessage"]);
 const list = ref<IEmojiList>(emojiList);
 const currentTabIndex = ref<number>(0);
 const currentTabItem = ref<IEmojiListItem>(list?.value[0]);
@@ -117,7 +120,7 @@ const select = (item: any, index: number) => {
   switch (currentTabItem?.value?.type) {
     case EMOJI_TYPE.BASIC:
       options.url = currentTabItem?.value?.url + basicEmojiMap[item];
-      emits('insertEmoji', options);
+      emits("insertEmoji", options);
       break;
     case EMOJI_TYPE.BIG:
       sendFaceMessage(index, currentTabItem.value);
@@ -128,14 +131,14 @@ const select = (item: any, index: number) => {
     default:
       break;
   }
-  isPC && emits('onClose');
+  isPC && emits("onClose");
 };
 
 const sendFaceMessage = (index: number, listItem: IEmojiListItem) => {
   const options = {
     to:
-      currentConversation?.value?.groupProfile?.groupID
-      || currentConversation?.value?.userProfile?.userID,
+      currentConversation?.value?.groupProfile?.groupID ||
+      currentConversation?.value?.userProfile?.userID,
     conversationType: currentConversation?.value?.type,
     payload: {
       index: listItem.index,
@@ -147,7 +150,7 @@ const sendFaceMessage = (index: number, listItem: IEmojiListItem) => {
 };
 
 const sendMessage = () => {
-  emits('sendMessage');
+  emits("sendMessage");
 };
 </script>
 <style lang="scss" scoped src="./style/index.scss"></style>

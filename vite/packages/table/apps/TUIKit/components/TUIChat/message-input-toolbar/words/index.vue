@@ -1,6 +1,6 @@
 <template>
   <ToolbarItemContainer
-    :iconFile="wordsIcon"
+    :iconFile="'fluent:chat-16-regular'"
     title="常用语"
     :needBottomPopup="true"
     :iconWidth="isUniFrameWork ? '26px' : '20px'"
@@ -46,7 +46,8 @@ import {
 } from "@tencentcloud/chat-uikit-engine";
 import { ref } from "../../../../adapter-vue";
 import ToolbarItemContainer from "../toolbar-item-container/index.vue";
-import wordsIcon from "../../../../assets/icon/words.svg";
+// 新增调整
+// import wordsIcon from "../../../../assets/icon/words.svg";
 import { wordsList } from "../../utils/wordsList";
 import { isEnabledMessageReadReceiptGlobal } from "../../utils/utils";
 import { isPC, isUniFrameWork } from "../../../../utils/env";

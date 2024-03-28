@@ -15,12 +15,14 @@
       ]"
       @click="toggleToolbarItem"
     >
-      <Icon
+      <!-- 新增 屏蔽原有 -->
+      <!-- <Icon
         :file="props.iconFile"
         class="icon"
         :width="props.iconWidth"
         :height="props.iconHeight"
-      />
+      /> -->
+      <xt-ify-icon :icon="props.iconFile" size="20" class="xt-text-2"/>
     </div>
     <div
       v-if="isUniFrameWork"

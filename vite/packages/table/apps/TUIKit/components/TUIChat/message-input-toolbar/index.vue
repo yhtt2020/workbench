@@ -30,7 +30,8 @@
         v-if="isUniFrameWork"
         videoSourceType="camera"
       />
-      <Evaluate />
+      <!-- 新增 当前项目不需要,暂时屏蔽 -->
+      <!-- <Evaluate /> -->
       <Words />
       <template v-if="extensionListShowInStart[0]">
         <ToolbarItemContainer

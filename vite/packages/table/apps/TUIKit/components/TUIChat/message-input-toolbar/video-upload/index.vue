@@ -72,7 +72,9 @@ const handleIcon = (): string => {
         return videoUniIcon;
     }
   } else {
-    return videoIcon;
+    // 新增调整 图标
+    // return videoIcon;
+    return 'fluent:video-clip-48-regular';
   }
 };
 
