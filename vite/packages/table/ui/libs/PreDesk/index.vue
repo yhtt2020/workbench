@@ -11,12 +11,12 @@
         </div>
     </div>
   </template>
-  
+
   <script>
   import previewMinis from "../../../../table/components/desk/preview.ts";
   import { mapActions, mapWritableState } from 'pinia'
   import { cardStore } from '../../../store/card';
-  import { appStore } from "../../../store"; 
+  import { appStore } from "../../../store";
   export default {
     props:['chooseIndex'],
     mixins: [previewMinis],
@@ -72,7 +72,7 @@
       }
     },
     mounted() {
-      
+
     },
 
     components: {
@@ -82,15 +82,13 @@
     },
   };
   </script>
-  
+
   <style lang="scss" scoped>
     .preview{
       border-radius: 10px;
-      background: url('https://p.ananas.chaoxing.com/star3/origin/ca96f7dba8b0957fee9206f68e01f1f4.jpg') ; 
+      background: url('https://p.ananas.chaoxing.com/star3/origin/ca96f7dba8b0957fee9206f68e01f1f4.jpg') ;
       background-size: cover !important;
       background-repeat: no-repeat !important;
       background-position: center !important;
-
     }
   </style>
-  

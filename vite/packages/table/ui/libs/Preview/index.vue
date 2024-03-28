@@ -1,14 +1,14 @@
 <template>
-  <xt-modal 
-      v-model="modelValue" 
-      title="添加到分组"  
-      boxClass="rounded-xl p-4" 
-      :mask="isMask" 
+  <xt-modal
+      v-model="modelValue"
+      title="添加到分组"
+      boxClass="rounded-xl p-4"
+      :mask="isMask"
       :maskIndex='maskIndex'
       :index="index"
-      :header="true" 
-      :footer="true"  
-      v-if="modelValue" 
+      :header="true"
+      :footer="true"
+      v-if="modelValue"
       @no="modelValue = false"
       @close="modelValue = false"
       @ok="addHandle" >
@@ -96,11 +96,11 @@ const { list , previewFlag,index,maskIndex,isMask,card,navDisabled,isFavorite } 
 // 默认数据
 const defaultDesk : any = ref('')   // 默认桌面
 const defaultFolder = ref('')  // 默认文件夹
-const createNew = ref({ 
-  name: '新建文件夹', 
+const createNew = ref({
+  name: '新建文件夹',
   value: 'create',
-  id: '170000000', 
-  cardName: 'folder', 
+  id: '170000000',
+  cardName: 'folder',
   customData:{
     customSize: '2x2',
     list: [],
@@ -133,7 +133,7 @@ const navList = ref([
       disabled:navDisabled.value ? false : navigationToggle.value[1],
       list:rightNavigationList.value
   }
-]) 
+])
 
 // 获取导航栏数据
 const navObj = ref({
@@ -162,7 +162,7 @@ const chooseList = computed(() => {
       ...desksList.value,
       ...list
   ]
-  
+
 })
 
 // 获取每个桌面文件夹列表
@@ -196,10 +196,10 @@ const obj = navList.value.reduce((acc, item) => {
     navList.forEach((i : any ) => {
       if (i.type === 'folder') {
         list.push({
-          name: i.name, 
+          name: i.name,
           value: i.id,
-          id: i.id, 
-          cardName: 'folder', 
+          id: i.id,
+          cardName: 'folder',
           customData:{
             customSize: '2x2',
             list: [],
@@ -315,7 +315,7 @@ watch(() => defaultDesk.value, () => {
 onMounted(() => {
   desksList.value = resetDesk()
   defaultDesk.value = desksList.value.find(item => item.value === currentDeskId.value)
-  defaultFolder.value = folderList.value[0] 
+  defaultFolder.value = folderList.value[0]
 })
 
 </script>
