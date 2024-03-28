@@ -235,7 +235,7 @@ const openApp = (data) => {
   } else if (type === "coolApp" || type === "lightApp") {
     router.push({ name: "app", params: { ...data } });
   } else {
-    startApp(data.type, data.value);
+    startApp(data.type, data.value,router);
   }
 };
 // 删除数据
