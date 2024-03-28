@@ -146,7 +146,7 @@ const editList = ref([
 ]);
 
 // 添加数据
-const addAppFile = (data) => {
+const addAppFile = async (data) => {
   if (data.value === "commun" || data.value === "control") {
     message.warning("该应用不支持添加");
   } else {
@@ -174,7 +174,9 @@ const addAppFile = (data) => {
       }
       editVisible.value = false;
     }
-    message.success("应用添加成功");
+    console.log(appModalList.value)
+    //todo 同步存入
+    await communityNavStore().saveCommunityNav()
   }
 };
 
@@ -189,6 +191,7 @@ const enterSetting = () => {
 
 onMounted(() => {
   proxy.$bus.on("openAppVisible", () => {
+    communityNavStore().loadCommunityNav()
     appModelVisible.value = true;
   });
   proxy.$bus.on("closeModal", () => {

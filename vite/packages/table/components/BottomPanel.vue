@@ -58,7 +58,7 @@
         <!-- 团队导航弹窗 -->
         <div
           v-if="teamNavVisible"
-          class="absolute"
+          class="absolute tuanduidaohang"
           :style="{
             left: `${teamNavLeft}px`,
             bottom: `${(navAttribute.navSize / 100) * 100}px`,
@@ -120,6 +120,7 @@ import TaskBox from "../apps/task/page/TaskBox.vue";
 import Favorites from "../apps/favorites/page/index.vue";
 import navigationData from "../js/data/tableData";
 import { offlineStore } from "../js/common/offline";
+
 import {
   moreMenus,
   extraRightMenu,
@@ -151,6 +152,8 @@ import Setting from "./bottomPanel/setting/CommunitySetting.vue";
 import ComNavSearch from "./bottomPanel/search/ComNavSearch.vue";
 import { communityStore } from "../page/chat/store/communityStore";
 import DeskAppModal from "./bottomPanel/desk/DeskAppList.vue";
+import { getCurrentInstance } from 'vue'
+
 
 // 是否全屏状态 切换全屏
 const { isFullscreen, toggle } = useFullscreen();
@@ -352,11 +355,15 @@ export default {
     window.addEventListener("mousemove", this.listenMouse);
     // 点击团队导航打开团队组件
     this.$bus.on("openTeamNav", (evt) => {
-      this.teamNavVisible = !this.teamNavVisible;
+      console.log('打开团队导航的小组件')
+      this.openTeamNav = !this.teamNavVisible;
+      this.teamNavVisible=!this.teamNavVisible
       this.teamNavLeft = evt.clientX - 274 < 0 ? 0 : evt.clientX - 274;
     });
     // 触发社群搜索弹窗
     this.$bus.on("openComSearch", (evt) => {
+      this.$bus.emit("closeModal");
+      this.teamNavVisible=false
       this.comSearchVisible = !this.comSearchVisible;
       this.comSearchLeft = evt.clientX - 274 < 0 ? 0 : evt.clientX - 50;
     });

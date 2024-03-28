@@ -22,15 +22,16 @@ const emit = defineEmits(['createApp']);
 const handleDrop = async (dragEvent) =>{
   let link = dragEvent.dataTransfer.getData('text/plain');
   if(link && link !== ''){
-    const http = link.includes('http');
-    const https = link.includes('https');
+    const http = link.startsWith('http');
+    const https = link.startsWith('https');
     if(!http && !https){
       link = 'http://' + link;
       console.log('link',link);
-    }else{  
+    }else{
       const linkIcon = await getFavicon(link);
-      const target = {name:linkIcon.pageTitle,icon:linkIcon.faviconURL,value:link}; 
+      const target = {name:linkIcon.pageTitle,icon:linkIcon.faviconURL,value:link};
       const file = useLinkConversionNav(target);
+      console.log('file=',file,target)
       emit('createApp',file);
     }
   }

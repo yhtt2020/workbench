@@ -42,7 +42,7 @@ const navBar = ref({
   hierarchy: true,
   close: true,
   customRight: false,
-  
+
 });
 const headerTitle = ref("网址导航");
 const teamFolderRef = ref(null);
@@ -94,7 +94,7 @@ const teamNavData = computed(() => {
         newIcon: "fluent:app-folder-16-regular",
         title: "导航设置",
         fn: () => {
-          closeNav(); 
+          closeNav();
           emit("openSet");
         },
       },
@@ -146,7 +146,7 @@ const deleteNav = (data) => {
   message.success('应用移除成功')
 };
 // 添加
-const createNav = (data) => {
+const createNav =async (data) => {
   if (
     data.value === "commun" ||
     data.value === "control" ||
@@ -157,7 +157,8 @@ const createNav = (data) => {
     const index = appModalList.value[1]?.list?.indexOf(data);
     if (index === -1) {
       appModalList.value[1]?.list?.push({...data,favo:false,});
-      message.success('应用添加成功');
+      await communityNavStore().saveCommunityNav()
+      // message.success('应用添加成功');
     }
   }
 };
@@ -171,7 +172,7 @@ onMounted(() => {
     createNav(data);
     proxy.$bus.emit("closeNav");
   });
-  
+
 });
 </script>
 

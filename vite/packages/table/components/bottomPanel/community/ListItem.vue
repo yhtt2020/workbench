@@ -226,11 +226,11 @@ const openApp = (data) => {
   // 默认通过浏览器方式打开
   if (type === "default") {
     if (browserType.value === "system") {
-      browser.openInUserSelect(data.url);
+      browser.openInUserSelect(data.value);
     } else if (browserType.value == "thisky") {
-      browser.openInInner(data.url);
+      browser.openInInner(data.value);
     } else if (browserType.value == "work") {
-      browser.openInTable(data.url);
+      browser.openInTable(data.value);
     }
   } else if (type === "coolApp" || type === "lightApp") {
     router.push({ name: "app", params: { ...data } });
