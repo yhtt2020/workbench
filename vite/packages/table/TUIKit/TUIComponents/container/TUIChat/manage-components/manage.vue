@@ -180,8 +180,8 @@ import { defineComponent, watchEffect, reactive, toRefs, computed, watch, ref, o
 import useClipboard from 'vue-clipboard3';
 import { message,Modal } from 'ant-design-vue'
 import ChangeModal from '../../../../../components/Modal.vue';
-import UserSelect from '../../../components/userselect/index.vue'
-import AddMemeber from '../../../components/userselect/addMemeber.vue'
+import UserSelect from '../../../../../apps/chat/components/userselect/UserSelectIndex.vue';
+import AddMemeber from '../../../../../apps/chat/components/userselect/AddMemeber.vue';
 import _ from 'lodash-es'
 import {appStore} from '../../../../../store'
 

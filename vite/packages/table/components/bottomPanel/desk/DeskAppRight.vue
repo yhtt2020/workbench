@@ -17,7 +17,8 @@
         class="w-full"
         :style="rightDetail.type === 'desk' ? {height:'600px'} : { height: '650px' }"
       >
-        <DeskAppListItem :list="currentList"/>
+        <DeskAppListItem :list="currentList" v-if="rightDetail.search.length === 0"/>
+        <DeskAppListItem :list="rightDetail.search" v-else/>
         <div style="height: 16px;"></div>
       </xt-scrollbar>
     </div>
