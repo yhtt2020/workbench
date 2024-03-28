@@ -1,7 +1,18 @@
 <script setup lang="ts">
-defineProps<{
+import { ref } from "vue";
+const props = defineProps<{
   data: any;
 }>();
+const addVisible = ref(false);
+const data = ref({});
+const addPreview = (item: any) => {
+  addVisible.value = true;
+  data.value = {
+    name: "TTAppCard",
+    data: props.data,
+    size: props.data?.modules?.card?.size,
+  };
+};
 </script>
 
 <template>
@@ -18,7 +29,7 @@ defineProps<{
       <!-- 图片说明 -->
       <div
         class="flex absolute items-center w-[84px] h-[32px] xt-theme-b bottom-2 left-2 xt-bg-t-2 z-10"
-        style="border-radius:8px"
+        style="border-radius: 8px"
       >
         <div class="m-1.5 xt-theme-b" style="width: 20px; height: 20px"></div>
         <div class="text-xs xt-title-font">{{ data?.name || "应用名称" }}</div>
@@ -26,12 +37,14 @@ defineProps<{
     </div>
     <!-- 右侧 -->
     <div class="px-4 py-3.5 relative flex-1" style="">
+      <!-- 添加按钮 -->
       <xt-button
         w="48"
         h="48"
         class="no-drag absolute top-1/2 -translate-y-1/2"
         style="right: 24px"
         type="theme"
+        @click="addPreview()"
       >
         <div class="flex items-center justify-center">
           <xt-ify-icon
@@ -69,5 +82,12 @@ defineProps<{
       </div>
     </div>
   </div>
+  <!-- 预览组件 -->
+  <xt-preview-v2
+    v-if="addVisible"
+    v-model="addVisible"
+    v-bind="data"
+    title="推荐添加应用小组件"
+  />
 </template>
 <style lang="scss" scoped></style>

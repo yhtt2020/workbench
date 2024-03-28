@@ -51,6 +51,9 @@ const addPreview = () => {
 </script>
 
 <template>
+  <Teleport to="body">
+    <xt-drag-modal x="0" y="0" index="9999999999">123</xt-drag-modal>
+  </Teleport>
   <!-- 添加时预览组件 -->
   {{ item }}
   <xt-preview-v2

@@ -65,6 +65,7 @@ const switchCurrentCom = (name: string) => {
 </script>
 
 <template>
+
   <xt-modal v-model="visible" index="999999">
     <div class="xt-theme-b" style="width: 1000px; height: 720px">
       <!-- 左侧菜单容器 -->

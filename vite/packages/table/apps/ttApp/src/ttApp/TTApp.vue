@@ -6,6 +6,7 @@ import Builder from "../builder";
 import { useTTAppStore } from "../store";
 import { storeToRefs } from "pinia";
 import AppInfo from "./AppInfo.vue";
+import AppCenter from '../../../appCenter'
 const ttappStore: any = useTTAppStore();
 
 const { ttappList }: any = storeToRefs(ttappStore);
@@ -37,27 +38,21 @@ const selectAllTTApp = async () => {
   const res = await useSelectAll();
   console.log("res :>> ", res);
 };
-const previewFlag = ref(true);
-const list = [];
+
 const data = {
   name: "TTAppCard",
   data: {
     id: "mx08",
+    customSize: "4x4",
   },
 };
 </script>
 
 <template>
+  <AppCenter />
   <xt-modal v-model="test" @close="onClose">
     <Builder />
-    <!-- <xt-preview
-      v-if="previewFlag"
-      v-model="previewFlag"
-      ref="preview"
-      :list="list"
-      @ok="addHandle"
-    /> -->
-    <xt-preview-v2 v-bind="data" />
+
     <div class="line">
       <xt-button @click="selectAllTTApp()" :w="140" :h="40" type="theme"
         >查询所有TTApp</xt-button

@@ -17,7 +17,6 @@ const formData = reactive<any>({
   card: {
     entry: "",
     customSize: "2x2",
-
     name: "",
   },
 });
