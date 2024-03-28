@@ -4,10 +4,12 @@
     <div
       class="message-bubble-main-content"
       :class="[message.flow === 'in' ? '' : 'reverse']"
-    >
+    > 
+      <!-- 新加修改触发用户卡片 -->
       <Avatar
         useSkeletonAnimation
         :url="message.avatar || ''"
+        @click="openUserCard"
       />
       <main class="message-body">
         <div
@@ -90,10 +92,15 @@
       />
     </div>
   </div>
+  
+  <!-- 使用xt-modal开启用户卡片 -->
+  <xt-modal v-model="userCardVisible" :header="false">
+    <UserCard :key="messageItem.from" :uid="messageItem.from" :userInfo="userCardUserInfo"/>
+  </xt-modal>
 </template>
 
 <script lang="ts" setup>
-import { computed, toRefs } from '../../../../adapter-vue';
+import { computed, toRefs,ref } from '../../../../adapter-vue';
 import TUIChatEngine, { TUITranslateService, IMessageModel } from '@tencentcloud/chat-uikit-engine';
 import Icon from '../../../common/Icon.vue';
 import ReadStatus from './read-status/index.vue';
@@ -102,6 +109,13 @@ import Avatar from '../../../common/Avatar/index.vue';
 import loadingIcon from '../../../../assets/icon/loading.png';
 import { shallowCopyMessage } from '../../utils/utils';
 import { isPC } from '../../../../utils/env';
+
+// 导入用户卡片组件
+import UserCard from '../../../../../../components/small/UserCard.vue';
+import { storeToRefs } from 'pinia';
+import { appStore } from '../../../../../../store';
+const app  = appStore();
+const { userInfo,userCardUserInfo } = storeToRefs(app);
 
 interface IProps {
   messageItem: IMessageModel;
@@ -126,6 +140,7 @@ const props = withDefaults(defineProps<IProps>(), {
   blinkMessageIDList: () => [],
   classNameList: () => [],
 });
+
 
 const TYPES = TUIChatEngine.TYPES;
 const riskImageReplaceUrl = 'https://web.sdk.qcloud.com/component/TUIKit/assets/has_risk_default.png';
@@ -171,6 +186,8 @@ const isBlink = computed(() => {
   return false;
 });
 
+const userCardVisible = ref(false);
+
 function resendMessage() {
   if (!message.value?.hasRiskContent) {
     emits('resendMessage');
@@ -187,6 +204,12 @@ function scrollTo(scrollHeight: number) {
 
 function openReadUserPanel() {
   emits('setReadReceiptPanelVisible', true, message.value);
+}
+
+// 打开用户卡片事件
+const openUserCard = () =>{
+  console.log('开启用户卡片');
+  userCardVisible.value = true;
 }
 </script>
 
