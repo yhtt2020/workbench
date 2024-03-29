@@ -58,23 +58,6 @@ const mainVisible = ref(false)
 const pos = ref({})
 const openMain = (e) => {
     mainVisible.value = !mainVisible.value
-    if(mainVisible.value) {
-        setTimeout(() => {
-            const item = document.querySelector('.message-box')
-            console.log(item)
-            const box = item?.getBoundingClientRect()
-            const itemPos = {
-                x:box.width,
-                y:box.height
-            }
-            const position = {
-                x: e.clientX,
-                y: e.clientY
-            }
-            pos.value = usePosition(position,itemPos)
-            console.log(pos.value)
-        },0)
-    }
 }
 
 watch(() => mainVisible.value, (val) => {

@@ -1,9 +1,13 @@
 <template>
   <!-- xt-main-top-bar 元素定位类 不可删 -->
-  <div id="topBar" class="xt-main-top-bar flex items-center justify-between w-full top-shadow drag pt-1">
+  <div id="topBar" class="flex items-center justify-between w-full pt-1 xt-main-top-bar top-shadow drag">
 
       <div v-if="isMain || (appSettings.showTopPanel)" id="topLeftPart" @contextmenu.stop="toggleAppStats" class="flex min-h flex-1 pl-2.5 drag  items-center">
-        <div class="no-drag flex">
+        <!-- <div class="w-full no-drag">
+          <MessageBox :isTop="true" />
+        </div> -->
+        
+        <div class="flex no-drag">
           <a-tooltip>
             <QueueWidget></QueueWidget>
           </a-tooltip>
@@ -21,7 +25,7 @@
             >
               <div class="flex items-center justify-center">
                 <a-avatar style="margin-right: 0.5em" :size="20" :src="status.music.cover"></a-avatar>
-                <span class="xt-text font-14 truncate xt-font" style="max-width:165px;">
+                <span class="truncate xt-text font-14 xt-font" style="max-width:165px;">
              {{ status.music.title }} {{ status.music.singer }}
            </span>
               </div>
@@ -33,7 +37,7 @@
           >
             <div class="flex items-center justify-center">
               <a-avatar :size="20" style="margin-right: 0.25rem" :src="getClientIcon(this.runningGame.appid, this.runningGame.clientIcon)"></a-avatar>
-              <span class="xt-text font-14 truncate xt-font" style="max-width:165px;">{{ runningGame.chineseName }}</span>
+              <span class="truncate xt-text font-14 xt-font" style="max-width:165px;">{{ runningGame.chineseName }}</span>
             </div>
           </xt-button>
 
@@ -52,39 +56,29 @@
         </div>
       </div>
 
-      <div v-if="isMain || (appSettings.showTopPanel)" id="topRightPart" class="flex min-h items-center drag justify-end relative ">
+      <div v-if="isMain || (appSettings.showTopPanel)" id="topRightPart" class="relative flex items-center justify-end min-h drag ">
         <PaperLock></PaperLock>
         <TopPanelButton/>
 
         <div  style="width:auto !important;"   @click="toggleRightDrawer" :style="showWindowController ? {margin:'0 170px 0 0 !important'} : {margin:'0 16px 0 0 !important'} "
-              class="no-drag btn-hover category-button p-1 rounded-md pointer"
+              class="p-1 rounded-md no-drag btn-hover category-button pointer"
         >
         <div class="flex items-center">
           <template v-if="hasChat">
-            <span class="pl-1 primary-title pointer xt-text font-14  xt-font">新消息</span>
-            <span class="xt-text font-14  xt-font px-1">·</span>
+            <span class="pl-1 primary-title pointer xt-text font-14 xt-font">新消息</span>
+            <span class="px-1 xt-text font-14 xt-font">·</span>
           </template>
           <template v-if="appSettings.showTopbarTime">
-            <span class="xt-text font-14  xt-font">{{ dateTime.month }}月{{ dateTime.day }}日</span>
-            <span class="xt-text font-14  xt-font mx-1">{{ dateTime.week }}</span>
-            <span class="xt-text font-14  xt-font pr-1">{{ dateTime.hours }}:{{ dateTime.minutes }}</span>
+            <span class="xt-text font-14 xt-font">{{ dateTime.month }}月{{ dateTime.day }}日</span>
+            <span class="mx-1 xt-text font-14 xt-font">{{ dateTime.week }}</span>
+            <span class="pr-1 xt-text font-14 xt-font">{{ dateTime.hours }}:{{ dateTime.minutes }}</span>
           </template>
-          <span v-if="hasWeather && city.now && appSettings.showTopbarWeather" class=" xt-text font-14  xt-font">{{ city.now.text }} {{ city.now.temp }}℃</span>
+          <span v-if="hasWeather && city.now && appSettings.showTopbarWeather" class=" xt-text font-14 xt-font">{{ city.now.text }} {{ city.now.temp }}℃</span>
         </div>
-          <!-- <div class="flex items-center" style="max-width:270px;">
-
-            <div class="pl-1 primary-title pointer xt-text font-14  xt-font pr-0.5" v-if="hasChat">新消息·</div>
-            <div class="xt-text font-14  xt-font">
-              <span  v-if="appSettings.showTopbarTime">{{ dateTime.month }}月{{ dateTime.day }}日 {{ dateTime.week }} {{ dateTime.hours }}:{{ dateTime.minutes }}</span>
-              <span v-if="hasWeather && city.now && appSettings.showTopbarWeather"> · {{ city.now.text }} {{ city.now.temp }}℃
-                <i style="" :class="'qi-' + city.now.icon + '-fill'"></i>
-           </span>
-            </div>
-          </div> -->
         </div>
       </div>
 
-    <div class="xt-bg rounded-bl-xl  h-9 absolute top-0 right-0 no-drag" style="z-index: 1000;" v-if="showWindowController && !$useEnv()"  id="windowController" >
+    <div class="absolute top-0 right-0 xt-bg rounded-bl-xl h-9 no-drag" style="z-index: 1000;" v-if="showWindowController && !$useEnv()"  id="windowController" >
       <WindowController></WindowController>
 
     </div>
@@ -123,7 +117,7 @@
           </a-col>
         </a-row>
       </div>
-      <div class="app flex">
+      <div class="flex app">
         <div>应用状态</div>
         <QueueWidget :show="true"></QueueWidget>
       </div>
@@ -134,6 +128,7 @@
 </template>
 
 <script>
+import MessageBox from './windowPanel/MessageBox.vue'
 import { countDownStore } from '../store/countDown'
 import { getDateTime } from '../../../src/util/dateTime'
 import { appStore } from '../store'
@@ -171,7 +166,7 @@ export default {
     TopTomato,
     TopClockTimer,
     TopCourier,
-    QueueWidget,TopPanelLeftDrawer,TopPanelRightDrawer,TopIcon,TopPanelButton
+    QueueWidget,TopPanelLeftDrawer,TopPanelRightDrawer,TopIcon,TopPanelButton,MessageBox
   },
 
   data() {

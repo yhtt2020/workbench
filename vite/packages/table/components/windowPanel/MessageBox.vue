@@ -1,10 +1,14 @@
 <template>
-    <div :class="boxClass">
+    <div :class="boxClass" v-if="!isTop">
         <Box 
             @closeAll="closeAll"
-            :main-class="'bottom-20 right-6'"
+            :main-class="mainClass"
             :list="list">
         </Box>
+    </div>
+    <div v-else-if="isTop" class="w-full h-[28px]">
+        <!-- {{ list }} -->
+        <Item v-for="item in list" :key="item.name" :item="item"></Item>
     </div>
     <!-- 快递 -->
     <TopCourier 
@@ -37,7 +41,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, provide,computed } from 'vue'
+import { ref, provide,computed,toRefs } from 'vue'
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 
@@ -97,12 +101,19 @@ const useCountDown = countDownStore()
 const { countDowntime } = storeToRefs(useCountDown)
 
 type propsType = {
-    boxClass:string,
+    boxClass:string, // 在底部时，状态框的类样式
+    isTop:boolean, // 是否在顶部，当在顶部时，便不再使用状态框，而是直接显示里面的状态块
+    mainClass:string // 状态框中查看状态块的定位样式
 }
 const props = withDefaults(defineProps<propsType>(), {
-    boxClass:''
+    boxClass:'',
+    isTop:false,
+    mainClass:''
 })
 
+const { boxClass,isTop } = toRefs(props)
+
+// 番茄钟时间填充
 const displayNum = (num:number) => {
     return num < 10 ? '0' + num : num
 }
@@ -143,6 +154,8 @@ type queueType = {
     rightFn: () => void;  // 右键点击函数
     disabled: boolean;  // 是否禁用
 }
+
+// 全部状态的队列
 const queue : Array<queueType> = ref([
     {
         icon:'fluent:box-16-regular',
@@ -251,6 +264,7 @@ const queue : Array<queueType> = ref([
     }
 ])
 
+// 当前显示的状态列表
 const list = computed(() => {
     const arr = []
     queue.value.forEach((item) => {
@@ -259,17 +273,24 @@ const list = computed(() => {
         }
     })
     return arr
-    // return queue.value.filter(item => item.disabled)
 })
 
+// 快递
 const courierVisible = ref(false)
+// 番茄钟
 const tomatoVisible = ref(false)
+// 时钟
 const clockVisible = ref(false)
+// 右边抽屉
 const drawerVisible = ref(false)
+// 左边抽屉
 const leftDrawerRef = ref(null)
+// 定位
 const pos = ref({})
+// 左边抽屉
 provide('drawerVisible', drawerVisible)
 
+// 关闭所有弹窗
 const closeAll = () => {
     clockVisible.value = false
     tomatoVisible.value = false

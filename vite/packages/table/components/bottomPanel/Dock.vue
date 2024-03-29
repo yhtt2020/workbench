@@ -145,33 +145,6 @@
                       currentId="bottom"
                       @deleteFile="deleteFile"
                     >
-                      <!-- <Team
-                        v-if="item.value === 'commun'"
-                        :item="item"
-                        :placement="'top'"
-                        :x='this.realXY.x'
-                        :y="navAttribute.navSize"
-                        :visible="this.comVisible"
-                      ></Team>
-                      <FolderVue
-                        v-else-if="item.type === 'folder'"
-                        :iconList="item.children"
-                        :item="item"
-                      ></FolderVue>
-                      <template v-else>
-                        <Avatar :item="item">
-                          <template #control>
-                            <div
-                              style="
-                                background-color: #ff4d4f;
-                                border: 2px solid;
-                              "
-                              v-if="firstNavVisible"
-                              class="absolute top-0 flex items-center justify-center flex-shrink-0 w-4 h-4 translate-x-6 rounded-full -translate-y-1/3 pointer"
-                            ></div>
-                          </template>
-                        </Avatar>
-                      </template> -->
                       <NavIcon
                         :item="item"
                         :size="iconSize"
@@ -673,7 +646,7 @@ export default {
       const valueHandlers = {
         control: () => this.$emit("control", e),
         setting: () => {
-            this.$router.push({ name: "home" });
+            // this.$router.push({ name: "home" });
             setTimeout(() => {
                 this.$bus.emit("openSystemSet");
             }, 500);

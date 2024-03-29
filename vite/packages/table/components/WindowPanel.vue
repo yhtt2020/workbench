@@ -1,6 +1,5 @@
 <template>
     <div 
-        
         class="
             w-full h-[64px]  pointer 
             flex items-center 
@@ -18,7 +17,7 @@
         <!-- 右侧时间天气和消息通知 -->
         <div class="flex">
             <Time></Time>
-            <MessageBox :boxClass="'ml-3'"></MessageBox>  
+            <MessageBox :boxClass="'ml-3'" :mainClass="'bottom-20 right-6'"></MessageBox>  
             <!-- <Tip name="inform" > -->
                 <xt-new-icon 
                     @click="openRightDrawer"
