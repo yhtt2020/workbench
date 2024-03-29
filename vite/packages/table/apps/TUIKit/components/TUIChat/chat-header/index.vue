@@ -11,15 +11,40 @@
       {{ currentConversationName }}
     </div>
     <div :class="['chat-header-setting', !isPC && 'chat-header-h5-setting']">
-      <div
+      <!-- 新增 调整群管理页面 -->
+      <!-- <div
         v-for="(item, index) in extensions"
         :key="index"
         @click.stop="handleExtensions(item)"
       >
         <Icon :file="item.icon" />
+      </div> -->
+
+      <div class="flex items-center justify-center">
+        <!-- 新增 修改群公告弹窗 -->
+        <xt-button style="width: auto !important; margin-right: 12px" h="0" @click="openManageNotice">
+          <div class="flex items-center justify-center">
+            <xt-ify-icon
+              icon="ant-design:sound-outlined"
+              size="16"
+              class="xt-text-2"
+            />
+          </div>
+        </xt-button>
+        <!-- 新增 开启群管理页面 -->
+        <xt-button style="width: auto !important" h="0" @click="openGroupDrawer">
+          <div class="flex items-center justify-center">
+            <xt-ify-icon
+              icon="fluent:more-horizontal-16-regular"
+              class="xt-text-2"
+              size="24"
+            />
+          </div>
+        </xt-button>
       </div>
     </div>
   </div>
+
 </template>
 <script lang="ts" setup>
 import TUIChatEngine, {
@@ -27,19 +52,21 @@ import TUIChatEngine, {
   StoreName,
   TUITranslateService,
   IConversationModel,
-} from '@tencentcloud/chat-uikit-engine';
-import TUICore, { TUIConstants, ExtensionInfo } from '@tencentcloud/tui-core';
-import { ref, onMounted, onUnmounted } from '../../../adapter-vue';
-import Icon from '../../common/Icon.vue';
-import backSVG from '../../../assets/icon/back.svg';
-import { isPC } from '../../../utils/env';
-
-const emits = defineEmits(['closeChat']);
+} from "@tencentcloud/chat-uikit-engine";
+import TUICore, { TUIConstants, ExtensionInfo } from "@tencentcloud/tui-core";
+import { ref, onMounted, onUnmounted } from "../../../adapter-vue";
+import Icon from "../../common/Icon.vue";
+import backSVG from "../../../assets/icon/back.svg";
+import { isPC } from "../../../utils/env";
+import { emit } from "process";
+//  新增 clickNotice clickGroup
+const emits = defineEmits(["closeChat","clickNotice","clickGroup"]);
 const currentConversation = ref<IConversationModel>();
-const currentConversationName = ref('');
+const currentConversationName = ref("");
 const typingStatus = ref(false);
-const groupID = ref('');
+const groupID = ref("");
 const extensions = ref<ExtensionInfo[]>([]);
+
 
 onMounted(() => {
   TUIStore.watch(StoreName.CONV, {
@@ -62,7 +89,7 @@ onUnmounted(() => {
 });
 
 const closeChat = (conversationID: string | undefined) => {
-  emits('closeChat', conversationID);
+  emits("closeChat", conversationID);
 };
 
 const handleExtensions = (item: ExtensionInfo) => {
@@ -71,8 +98,14 @@ const handleExtensions = (item: ExtensionInfo) => {
 
 function onCurrentConversationUpdated(conversation: IConversationModel) {
   const isGroup = conversation?.type === TUIChatEngine.TYPES.CONV_GROUP;
-  if (isGroup && currentConversation.value?.conversationID !== conversation?.conversationID) {
-    extensions.value = TUICore.getExtensionList(TUIConstants.TUIChat.EXTENSION.CHAT_HEADER.EXT_ID, { filterManageGroup: !isGroup });
+  if (
+    isGroup &&
+    currentConversation.value?.conversationID !== conversation?.conversationID
+  ) {
+    extensions.value = TUICore.getExtensionList(
+      TUIConstants.TUIChat.EXTENSION.CHAT_HEADER.EXT_ID,
+      { filterManageGroup: !isGroup }
+    );
   }
   if (!isGroup) {
     extensions.value = [];
@@ -85,10 +118,21 @@ function onCurrentConversationUpdated(conversation: IConversationModel) {
 function onTypingStatusUpdated(status: boolean) {
   typingStatus.value = status;
   if (typingStatus.value) {
-    currentConversationName.value = TUITranslateService.t('TUIChat.对方正在输入');
+    currentConversationName.value =
+      TUITranslateService.t("TUIChat.对方正在输入");
   } else {
-    currentConversationName.value = currentConversation.value?.getShowName() || '';
+    currentConversationName.value =
+      currentConversation.value?.getShowName() || "";
   }
+}
+
+// 新增 开启群公告弹窗
+const openManageNotice = () =>{
+  emits('clickNotice');
+};
+// 新增 开启群管理
+const openGroupDrawer = () =>{
+  emits("clickGroup");
 }
 
 </script>
@@ -133,7 +177,7 @@ function onTypingStatusUpdated(status: boolean) {
     align-items: center;
   }
 
-  &-content{
+  &-content {
     margin: 0 20%;
     text-align: center;
   }

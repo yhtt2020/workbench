@@ -174,3 +174,14 @@
 .message-more{
   color: var(--secondary-text) !important;
 }
+.revoke{
+  .edit{
+    color: #006eff !important;
+  }
+  & span:first-child{
+    color: var(--secondary-text) !important;
+  }
+  & span:nth-child(2){
+    color: var(--secondary-text) !important;
+  }
+} 

@@ -17,7 +17,8 @@
             !isPC && 'tui-chat-H5-header',
             isUniFrameWork && 'tui-chat-uniapp-header',
           ]"
-          @closeChat="closeChat"
+          @closeChat="closeChat" @clickNotice="openDrawer"
+          @clickGroup="handleManageGroup"
         />
         <Forward />
         <MessageList
@@ -55,6 +56,11 @@
         {{ groupManageExt.text }}
         <!-- 更多 -->
       </div>
+
+      <!-- 新增 群公告抽屉弹窗页面 -->
+      <NoticeDrawer ref="noticeRef" :groupID="groupID" />
+      <!-- 新增 群管理抽屉弹窗页面 -->
+      <ManageDrawer ref="groupRef" :groupID="groupID"/>
     </div>
   </div>
 </template>
@@ -77,6 +83,10 @@ import MessageInputToolbar from './message-input-toolbar/index.vue';
 import { isPC, isWeChat, isUniFrameWork } from '../../utils/env';
 import TUIChatConfig from './config';
 
+// 新增
+import NoticeDrawer from "../../../chat/components/managerDrawer/NoticeDrawer.vue"
+import ManageDrawer from "../../../chat/components/managerDrawer/ManageDrawer.vue";
+
 const emits = defineEmits(['closeChat']);
 const isToolbarShow = ref<boolean>(!isUniFrameWork);
 const messageInputRef = ref();
@@ -85,6 +95,10 @@ const currentConversationID = ref();
 const isGroup = ref(false);
 const groupID = ref('');
 const groupManageExt = ref<ExtensionInfo | undefined>(undefined);
+
+// 新增
+const noticeRef = ref(null);
+const groupRef = ref(null);
 
 TUIStore.watch(StoreName.CONV, {
   currentConversation: (conversation: IConversationModel) => {
@@ -162,5 +176,13 @@ const handleEditor = (message: IMessageModel, type: string) => {
 const handleGroup = () => {
   groupManageExt.value.listener.onClicked({ groupID: groupID.value });
 };
+
+// 新增 开启公告弹窗
+const openDrawer = () =>{
+  noticeRef.value.openNoticeDrawer();
+}
+const handleManageGroup = () =>{
+  groupRef.value.openManageDrawer();
+}
 </script>
 <style scoped lang="scss" src="./style/index.scss"></style>
