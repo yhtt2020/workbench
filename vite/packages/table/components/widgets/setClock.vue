@@ -259,6 +259,7 @@ export default {
         },
         onClockMenuClick(e, index) {
             this.removeClock(index, 1);
+            console.log(this.clockEvent,this.filterClockEvent)
         },
         changeSwitchStatus(value) {
             console.log(this.checked);

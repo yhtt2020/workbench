@@ -9,10 +9,7 @@
     ref="cardSlot">
     <!-- <div class="flex flex-col items-center"> -->
     <div v-if="countDowntime.hours" style="display: flex;flex-direction: column;justify-content: space-between; "
-      class="mt-4">
-      <!-- <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
-        <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
-      </div> -->
+      class="-mt-2">
       <div style="text-align: center;color: var(--primary-text);font-size:16px  ;" class="font-14">
         <clockIcon icon="fluent:clock-12-regular" class="mr-2 title-icon"
           style="cursor:pointer ;font-size: 20px;text-align: center; vertical-align: sub;">
@@ -20,7 +17,7 @@
         计时器
       </div>
       <div style="color: #FBAE17;font-size: 40px;font-weight:600;text-align: center; font-family: Oswald-SemiBold;"
-        class="mt-4 mb-4">
+        class="mt-2 mb-2">
         {{ countDowntime.hours + ':' + countDowntime.minutes + ':' + countDowntime.seconds }}
       </div>
       <div style="display: flex;align-items: center;justify-content: space-between;padding: 0 6em;">
@@ -44,7 +41,7 @@
       </div>
 
     </div>
-    <div @click="onSetup" class="flex flex-col  text-center cursor-pointer" v-else>
+    <div @click="onSetup" class="flex flex-col text-center cursor-pointer" v-else>
       <!-- <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
 
       </div> -->
@@ -209,7 +206,7 @@ export default {
           this.custom = true
           break
       }
-      this.$refs.cardSlot.hideMenu()
+      // this.$refs.cardSlot.hideMenu()
       this.countDownBtn = false
     }, closeCountDown() {
 

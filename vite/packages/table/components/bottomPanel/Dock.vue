@@ -3,7 +3,7 @@
     style="position: absolute; z-index: 500 !important"
     :style="{
       left: `${this.left}px`,
-      bottom: `${(navAttribute.navSize / 100) * 100}px`,
+      bottom: `${(navAttribute.navSize / 100) * 90}px`,
     }"
     class="rounded-xl pointer"
     id="folder"
@@ -33,16 +33,15 @@
     <div
       v-if="
         hoverIndex > -1 &&
-        !skipSort &&
         hoverRealItemId('bottomContent', this.hoverIndex) !== dragItem?.id
       "
       style="
         position: absolute;
         z-index: 99999999999;
-        top: -8px;
         left: 50%;
         transform: translateX(-50%) translateY(-100%);
       "
+      :style="[this.iconSize === 44 ? { bottom : '30px'} : { top : '-8px'}]"
       class="px-10 py-3 rounded-lg s-bg xt-text"
     >
       松开鼠标合并
@@ -50,12 +49,11 @@
   </transition>
   <div
     id="bottomPanel"
-    class="flex flex-row items-center justify-center s-bg h-[80px] max-w-full overflow-hidden xt-bg xt-text-1"
+    :class="customClass"
+    class="flex flex-row items-center justify-center max-w-full overflow-hidden xt-text"
     style="
-      margin-right: 10px;
       z-index: 99;
       min-width: 80px;
-      border: 1px solid var(--divider);
     "
     :style="{ borderRadius: navAttribute.navRadius + 'px' }"
   >
@@ -91,8 +89,8 @@
                 white-space: nowrap;
                 display: flex;
                 align-items: center;
-                gap: 20px;
               "
+              :style="{ gap : gap + 'px'}"
               class="w-full"
               id="bottomContent"
             >
@@ -147,33 +145,11 @@
                       currentId="bottom"
                       @deleteFile="deleteFile"
                     >
-                      <Team
-                        v-if="item.value === 'commun'"
+                      <NavIcon
                         :item="item"
-                        :placement="'top'"
-                        :x='this.realXY.x'
-                        :y="navAttribute.navSize"
-                        :visible="this.comVisible"
-                      ></Team>
-                      <FolderVue
-                        v-else-if="item.type === 'folder'"
-                        :iconList="item.children"
-                        :item="item"
-                      ></FolderVue>
-                      <template v-else>
-                        <Avatar :item="item">
-                          <template #control>
-                            <div
-                              style="
-                                background-color: #ff4d4f;
-                                border: 2px solid;
-                              "
-                              v-if="firstNavVisible"
-                              class="absolute top-0 flex items-center justify-center flex-shrink-0 w-4 h-4 translate-x-6 rounded-full -translate-y-1/3 pointer"
-                            ></div>
-                          </template>
-                        </Avatar>
-                      </template>
+                        :size="iconSize"
+                        :community="community">
+                      </NavIcon>
                     </Drag>
                   </div>
                 </xt-menu>
@@ -190,31 +166,33 @@
 import { navStore } from "../../store/nav";
 import { useNavBarStore } from "../desk/navigationBar/navBar.ts";
 import { useNavigationStore } from "../desk/navigationBar/navigationStore";
+import { controlStore } from "../desk/navigationBar/hook/controlStore";
+import { offlineStore } from "../../js/common/offline";
+
 import { mapWritableState, mapActions } from "pinia";
-import Team from "./Team.vue";
 import Sortable from "sortablejs";
 import { message } from "ant-design-vue";
-import { offlineStore } from "../../js/common/offline";
-import {
-  moreMenus,
-  extraRightMenu,
-} from "../../components/desk/navigationBar/index";
+import _ from "lodash-es";
+import "animate.css";
+import { useFullscreen } from "@vueuse/core";
+import { nanoid } from "nanoid";
+
+import {moreMenus,extraRightMenu} from "../../components/desk/navigationBar/index";
 import { useMergeFolder } from "../../components/desk/navigationBar/hook/mergeFolder.ts";
 import { Notifications } from "../../js/common/sessionNotice";
-import EditIcon from "../desk/navigationBar/components/EditIcon/EditIcon.vue";
 import { startApp } from "../../ui/hooks/useStartApp";
-import _ from "lodash-es";
-import Avatar from "../desk/navigationBar/components/Avatar.vue";
+import { defaultFolderData } from "../../apps/folder/src/components/options";
+import { hoverRealItemId } from "../desk/navigationBar/hook/hoverRealItemId";
+import { mergeData } from "../../ui/hooks/useDataConversion";
+
+import NavIcon from '../windowPanel/components/NavIcon.vue'
+import EditIcon from "../desk/navigationBar/components/EditIcon/EditIcon.vue";
 import FolderVue from "../desk/navigationBar/components/folder/Folder.vue";
 import Folder from "../../apps/folder";
-import { defaultFolderData } from "../../apps/folder/src/components/options";
-import { nanoid } from "nanoid";
 import Drag from "../desk/navigationBar/components/folder/Drag.vue";
-import { hoverRealItemId } from "../desk/navigationBar/hook/hoverRealItemId";
-import "animate.css";
-import { mergeData } from "../../ui/hooks/useDataConversion";
-import { useFullscreen } from "@vueuse/core";
-import { controlStore } from "../desk/navigationBar/hook/controlStore";
+import Avatar from "../desk/navigationBar/components/Avatar.vue";
+import Team from "./Team.vue";
+
 
 const {
   //是否全屏状态
@@ -225,7 +203,7 @@ const {
 
 export default {
   name: "BottomPanel",
-  emits: ["getDelIcon", "hiedNavBar", "edit", "control"],
+  emits: ["getDelIcon", "hiedNavBar", "edit", "control",'getHoverIndex'],
   components: {
     EditIcon,
     Avatar,
@@ -233,6 +211,7 @@ export default {
     Folder,
     Drag,
     Team,
+    NavIcon,
   },
   data() {
     return {
@@ -319,7 +298,6 @@ export default {
       parentSize: 0,
       parentHeight: 0,
 
-      
       comVisible:false
     };
   },
@@ -328,6 +306,21 @@ export default {
       type: Boolean,
       default: () => false,
     },
+    // 图标大小
+    iconSize:{
+      type:Number,
+      default:() => 54
+    },
+    // 自定义类
+    customClass: {
+      type: String,
+      default: () => "h-[80px] xt-bg border-[var(--divider)] mr-3 s-bg",
+    },
+    // 图标间距
+    gap:{
+      type:Number,
+      default:() => 20
+    }
   },
   mounted() {
     this.enableDrag();
@@ -356,6 +349,19 @@ export default {
     ]),
     ...mapWritableState(useNavBarStore, ["isEnterDesk"]),
     ...mapWritableState(controlStore, ["firstNavVisible"]),
+    // 当前图标的大小
+    realSize() {
+      return this.iconSize + this.gap
+    },
+    // 社区图标需要传递的相关参数
+    community(){
+      return {
+        x: this.realXY.x,
+        y: this.navAttribute.navSize * 0.9,
+        placement:'top',
+        visible:this.comVisible
+      }
+    },
     folderOptions() {
       if (this.currentItem && this.currentItem.type === "folder") {
         const reset = {
@@ -398,7 +404,7 @@ export default {
       handler(newVal, oldVal) {
         // 获取最大可添加图标个数
         const windowWidth = window.innerWidth;
-        this.maxItemNum = Math.round((windowWidth - 240) / 72);
+        this.maxItemNum = Math.round((windowWidth - 240) / this.realSize);
         if (
           this.copyFootNav.length > this.maxItemNum &&
           this.maxItemNum !== null
@@ -410,7 +416,7 @@ export default {
               {
                 ok: () => {
                   const width =
-                    window.innerWidth / (240 + this.copyFootNav.length * 72);
+                    window.innerWidth / (240 + this.copyFootNav.length * this.realSize);
                   this.navAttribute.navSize = width.toFixed(2) * 100;
                   this.noticeFlag = false;
                 },
@@ -420,7 +426,7 @@ export default {
           }
           if (this.noticeFlag) return;
           const width =
-            window.innerWidth / (240 + this.copyFootNav.length * 72);
+            window.innerWidth / (240 + this.copyFootNav.length * this.realSize);
           this.navAttribute.navSize = width.toFixed(2) * 100;
         }
         this.syncBottomPanel();
@@ -474,6 +480,11 @@ export default {
       },
       deep: true,
     },
+    
+    // 获取当前鼠标悬浮的索引
+    hoverIndex(val){
+      this.$emit('getHoverIndex',val)
+    }
   },
   methods: {
     ...mapActions(navStore, [
@@ -626,49 +637,49 @@ export default {
      */
     async newOpenApp(item, e) {
       const { type, value } = item;
-      type !== 'folder' ? this.folderVisible = false : ''
+      // 更新鼠标定位
       this.resetElementPosition();
-      if (value === "control") {
-        this.$emit("control", e);
-        return;
-      }
-      if (value === "setting") {
-        this.$router.push({
-          name: "home",
-        });
-        setTimeout(() => {
-          this.$bus.emit("openSystemSet");
-        }, 500);
-        return;
-      }
-      if(value === 'commun'){
-        this.comVisible = ! this.comVisible
-        return 
-      }
-      if (type === "folder") {
-        this.openFolder(item);
-      }
-      this.resetElementPosition();
-      if (value == "fullscreen" && window.$useEnv()) {
-        toggle();
-        // console.log('isFullscreen :>> ', isFullscreen);
-        return;
-      }
       if (window.$useEnvLimit("web", value)) return;
-
+      // 桌面图标打开提示
       this.msgNotice(item);
-      if (value === "home" && item.home) {
-        this.jumpDesk = item.home;
-      }
-      let rs = await startApp(type, value, this.$router);
-      if (!rs) {
-        message.error({
-          content: `打开「${item.name}」失败`,
-          key: "tipRun",
-        });
-      }
-      this.comVisible = false
+      // 特殊图标处理
+      const valueHandlers = {
+        control: () => this.$emit("control", e),
+        setting: () => {
+            // this.$router.push({ name: "home" });
+            setTimeout(() => {
+                this.$bus.emit("openSystemSet");
+            }, 500);
+        },
+        commun: () => {
+            this.comVisible = !this.comVisible;
+        },
+        default: async () => {
+            if (type === "folder") {
+                this.openFolder(item);
+            }
+            if (value === "fullscreen" && window.$useEnv()) {
+                toggle();
+                return;
+            }
+            if (value === "home" && item.home) {
+                this.jumpDesk = item.home;
+            }
+            let rs = await startApp(type, value, this.$router);
+            if (!rs) {
+                message.error({
+                    content: `打开「${item.name}」失败`,
+                    key: "tipRun",
+                });
+            }
+            this.comVisible = false;
+        }
+      };
+
+      const handler = valueHandlers[value] || valueHandlers.default;
+      await handler();
     },
+
     /**
      * 解散文件夹和切换文件夹
      * @param {*} item
@@ -809,7 +820,7 @@ export default {
           that.isDelete = false;
           const moveLeft = event.originalEvent.clientX;
           const panelLeft = that.defaultPosition.x;
-          const relativePos = (moveLeft - panelLeft) % 72;
+          const relativePos = (moveLeft - panelLeft) % this.realSize;
           const isGap = relativePos <= 20 && relativePos >= 0;
           // console.log('isGap=', isGap, relativePos)
           return true;
@@ -888,14 +899,14 @@ export default {
         document.getElementById("bottomContent").getBoundingClientRect().left *
         (this.navAttribute.navSize / 100);
       const relativePos =
-        (currentLeft - panelLeft) % ((72 * this.navAttribute.navSize) / 100);
+        (currentLeft - panelLeft) % ((this.realSize * this.navAttribute.navSize) / 100);
       const isGap = !(
-        relativePos <= (42 * this.navAttribute.navSize) / 100 &&
+        relativePos <= ((this.realSize - 30) * this.navAttribute.navSize) / 100 &&
         relativePos >= (10 * this.navAttribute.navSize) / 100
       );
       let nIndex = Math.floor(
-        (currentLeft - panelLeft + 20) /
-          ((72 * this.navAttribute.navSize) / 100)
+        (currentLeft - panelLeft + this.gap) /
+          ((this.realSize * this.navAttribute.navSize) / 100)
       );
       if (nIndex > this.copyFootNav.length - 1) {
         //超出
@@ -920,7 +931,6 @@ export default {
       this.bottomKey = Date.now();
       this.$nextTick(() => {
         this.enableDrag();
-        this.skipSort = false;
       });
     },
     hoverRealItemId,
