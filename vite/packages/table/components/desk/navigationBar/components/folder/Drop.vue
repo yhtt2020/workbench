@@ -225,7 +225,6 @@ const handleLinkDrop = async (dragEvent, currentX) => {
 const handleFolderIconDrop = (currentX) => {
   move.value = true;
   const item = _.cloneDeep(currentData.value);
-  console.log(item, 'item');
   const data = useIconConversionNav(item);
   emit('createFile', data, currentX);
   currentData.value = '';

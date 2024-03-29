@@ -1,5 +1,5 @@
 <template>
-  <div v-if="topCourierVisible" style="position: absolute; top: 40px;z-index: 500;left: 10px;">
+  <div v-if="topCourierVisible" style="position: absolute;z-index: 500;" :style="{ top:`${position.y}px`,left:`${position.x}px`}">
     <div class="w-[572px] h-[420px] rounded-xl p-4 " style="background-color: var(--secondary-bg);">
       <div class="flex justify-between h-[32px]">
         <div class="flex mt-2">
@@ -66,7 +66,7 @@
 
     </div>
   </div>
-  <xt-button  h="28" v-if="this.settings.courierStatus.statusBar" class="xt-bg-t-2"
+  <!-- <xt-button  h="28" v-if="this.settings.courierStatus.statusBar" class="xt-bg-t-2"
     style="margin-right:10px;position: relative;color: var(--primary-text); border-radius: 6px !important; padding: 0 4px !important;"
     @click="showTopCourier" :style=" list.length !== 0 ? { width:'auto !important' } : { width:'28px !important' }"
   >
@@ -76,7 +76,7 @@
       {{ list.length }}
     </span>
    </div>
-  </xt-button>
+  </xt-button> -->
   <teleport to='body'>
     <AddCourierModal ref="addCourierRef"/>
   </teleport>
@@ -127,6 +127,22 @@ export default {
     SmallCourierModal,
     DropIndex
   },
+  emits: ['close'],
+  props: {
+    topCourierVisible:{
+      type: Boolean,
+      default: false
+    },
+    position: {
+      type: Object,
+      default: () => {
+        return {
+          x: 0,
+          y: 0
+        }
+      }
+    }
+  },
   data () {
     return {
       list: [],
@@ -138,7 +154,7 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true,
       },
-      topCourierVisible: false,
+      // topCourierVisible: false,
       couriersList: [],
       isLoading: false,
       showCourierDetail: false,
@@ -193,14 +209,16 @@ export default {
       'getDbCourier', 'refreshCouriers'
     ]),
     async showTopCourier () {
-      this.topCourierVisible = !this.topCourierVisible
+      // this.topCourierVisible = !this.topCourierVisible
+      this.$emit('close', false)
       // if (this.topCourierVisible == true) {
       //     this.couriersList = await this.couriersDetailMsg
       // }
     },
     addCourier () {
-      this.topCourierVisible = false
+      // this.topCourierVisible = false
       this.$refs.addCourierRef.openCourierModel()
+      this.$emit('close', false)
     },
     // async refreshExpress() {
     //     this.isLoading=true
@@ -260,7 +278,7 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(courierStore, ['orderList', 'couriersDetailMsg', 'storeInfo', 'settings', 'currentDetail']),
+    ...mapWritableState(courierStore, ['orderList', 'couriersDetailMsg', 'storeInfo', 'settings', 'currentDetail','courierList']),
     config () {
       return {
         jdOrder: this.storeInfo.jd.order && this.storeInfo.jd.order.orders !== undefined,
@@ -335,7 +353,12 @@ export default {
       handler (newVal) {
         this.reload(this.orderList)
       }
+    },
+    list(val){
+      console.log(val)
+      this.couriersList = val
     }
+    
 
   }
 }

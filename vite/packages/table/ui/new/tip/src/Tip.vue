@@ -8,15 +8,22 @@ import {
   getCurrentInstance,
   watch,
 } from "vue";
+import { storeToRefs } from "pinia";
+
+import { useTipStore } from "./store/index";
 
 import cache from "../../../../components/card/hooks/cache";
 const { proxy }: any = getCurrentInstance();
+
+// 获取缓存对象
+const tipStore = useTipStore();
+const { tipObj } = storeToRefs(tipStore);
 
 interface TipProps {
   // 提示的key值 作为缓存查询使用
   name: string;
   // 校验值 作为key的校验 用于判断内容是否已更新
-  check?: string;
+  check?: string | boolean;
   // 提示距离顶部的距离
   top?: number;
   // 提示距离 的距离
@@ -29,6 +36,8 @@ interface TipProps {
   color?: string;
   // 开启边框
   border?: boolean;
+  // 自定义样式
+  tipClass:string
 }
 
 const props = withDefaults(defineProps<TipProps>(), {
@@ -41,12 +50,13 @@ const props = withDefaults(defineProps<TipProps>(), {
   check: "1",
   name: "tip",
   border: true,
+  tipClass: ''
 });
 const { color, top, right, name, check, type, border } = toRefs(props);
 watch(
   () => check.value,
   (val) => {
-    console.log('val :>> ', val);
+    console.log('val check.value :>> ', val);
     checkVal.value = val;
     updateTipData(true);
     updateTipVisible();
@@ -78,15 +88,16 @@ const tipStyle = computed(() => {
 const tipVisible = ref(false);
 const tip = ref<HTMLDivElement | null>(null);
 onMounted(() => {
-  let tipObj = cache.get("ttTip");
+  // let tipObj = cache.get("ttTip");
 
-  // tipObj不存在
-  if (!tipObj) {
-    tipObj = {};
-  }
+  // // tipObj不存在
+  // if (!tipObj) {
+  //   tipObj = {};
+  //   cache.set("ttTip", tipObj);
+  // }
 
   // tipObj中name不存在 或者 check不一致
-  if (!tipObj[name.value] || tipObj[name.value].check !=  checkVal.value) {
+  if (!tipObj.value[name.value] || tipObj.value[name.value].check != checkVal.value) {
     updateTipData(true);
   }
 
@@ -103,18 +114,18 @@ onMounted(() => {
 
 // 保存提示
 const updateTipData = (disabled: boolean) => {
-  let tipObj = cache.get("ttTip");
+  // let tipObj = cache.get("ttTip");
   let obj = {
     disabled,
     check: checkVal.value,
   };
   console.log('obj :>> ', obj);
-  tipObj[name.value] = obj;
-  cache.set("ttTip", tipObj);
+  tipObj.value[name.value] = obj;
+  // cache.set("ttTip", tipObj);
 };
 const updateTipVisible = () => {
-  let tipObj = cache.get("ttTip");
-  tipVisible.value = tipObj[name.value].disabled;
+  // let tipObj = cache.get("ttTip");
+  tipVisible.value = tipObj.value[name.value].disabled;
 };
 
 const disabledTip = () => {
@@ -141,21 +152,18 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div
-    @click="onClick"
-    @mouseleave="onMousedown"
-    ref="tip"
-    class="relative"
-    style="overflow: visible !important"
-  >
+  <div 
+    @click="onClick" 
+    @mouseleave="onMousedown" 
+    @mouseenter="onMousedown" 
+    ref="tip" 
+    class="relative" 
+    :class="[tipClass]"
+    style="overflow: visible !important">
     <!-- 提示 -->
     <div v-if="tipVisible" class="absolute" :style="[tipPos]">
       <!-- 默认 -->
-      <div
-        v-if="mode === 'default'"
-        class="rounded-full"
-        :style="[tipStyle]"
-      ></div>
+      <div v-if="mode === 'default'" class="rounded-full" :style="[tipStyle]"></div>
       <!-- 自定义 -->
       <slot v-else name="custom"></slot>
     </div>
