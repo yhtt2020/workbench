@@ -88,16 +88,16 @@ const tipStyle = computed(() => {
 const tipVisible = ref(false);
 const tip = ref<HTMLDivElement | null>(null);
 onMounted(() => {
-  let tipObj = cache.get("ttTip");
+  // let tipObj = cache.get("ttTip");
 
-  // tipObj不存在
-  if (!tipObj) {
-    tipObj = {};
-    cache.set("ttTip", tipObj);
-  }
+  // // tipObj不存在
+  // if (!tipObj) {
+  //   tipObj = {};
+  //   cache.set("ttTip", tipObj);
+  // }
 
   // tipObj中name不存在 或者 check不一致
-  if (!tipObj[name.value] || tipObj[name.value].check != checkVal.value) {
+  if (!tipObj.value[name.value] || tipObj.value[name.value].check != checkVal.value) {
     updateTipData(true);
   }
 
@@ -114,18 +114,18 @@ onMounted(() => {
 
 // 保存提示
 const updateTipData = (disabled: boolean) => {
-  let tipObj = cache.get("ttTip");
+  // let tipObj = cache.get("ttTip");
   let obj = {
     disabled,
     check: checkVal.value,
   };
   console.log('obj :>> ', obj);
-  tipObj[name.value] = obj;
-  cache.set("ttTip", tipObj);
+  tipObj.value[name.value] = obj;
+  // cache.set("ttTip", tipObj);
 };
 const updateTipVisible = () => {
-  let tipObj = cache.get("ttTip");
-  tipVisible.value = tipObj[name.value].disabled;
+  // let tipObj = cache.get("ttTip");
+  tipVisible.value = tipObj.value[name.value].disabled;
 };
 
 const disabledTip = () => {
