@@ -16,11 +16,13 @@
           class="list-item"
           @click="getFunction(index)"
         >
-          <Icon
+          <!-- 新增 使用xt-ify-icon替换图标 -->
+          <!-- <Icon
             :file="item.iconUrl"
             width="15px"
             height="15px"
-          />
+          /> -->
+          <xt-ify-icon :icon="item.iconUrl" size="20" class="xt-text" />
           <span class="list-item-text">{{ item.text }}</span>
         </div>
       </template>
@@ -34,20 +36,20 @@ import TUIChatEngine, {
   StoreName,
   TUITranslateService,
   IMessageModel,
-} from '@tencentcloud/chat-uikit-engine';
-import { TUIGlobal } from '@tencentcloud/universal-api';
-import { ref, watchEffect, computed } from '../../../../adapter-vue';
-import { isPC, isUniFrameWork } from '../../../../utils/env';
-import Icon from '../../../common/Icon.vue';
-import { Toast, TOAST_TYPE } from '../../../common/Toast/index';
-import delIcon from '../../../../assets/icon/msg-del.svg';
-import copyIcon from '../../../../assets/icon/msg-copy.svg';
-import quoteIcon from '../../../../assets/icon/msg-quote.svg';
-import revokeIcon from '../../../../assets/icon/msg-revoke.svg';
-import forwardIcon from '../../../../assets/icon/msg-forward.svg';
-import { enableSampleTaskStatus } from '../../../../utils/enableSampleTaskStatus';
-import { decodeTextMessage } from '../../utils/emojiList';
-import { copyText } from '../../utils/utils';
+} from "@tencentcloud/chat-uikit-engine";
+import { TUIGlobal } from "@tencentcloud/universal-api";
+import { ref, watchEffect, computed } from "../../../../adapter-vue";
+import { isPC, isUniFrameWork } from "../../../../utils/env";
+import Icon from "../../../common/Icon.vue";
+import { Toast, TOAST_TYPE } from "../../../common/Toast/index";
+import delIcon from "../../../../assets/icon/msg-del.svg";
+import copyIcon from "../../../../assets/icon/msg-copy.svg";
+import quoteIcon from "../../../../assets/icon/msg-quote.svg";
+import revokeIcon from "../../../../assets/icon/msg-revoke.svg";
+import forwardIcon from "../../../../assets/icon/msg-forward.svg";
+import { enableSampleTaskStatus } from "../../../../utils/enableSampleTaskStatus";
+import { decodeTextMessage } from "../../utils/emojiList";
+import { copyText } from "../../utils/utils";
 
 const props = defineProps({
   messageItem: {
@@ -62,21 +64,28 @@ const props = defineProps({
 
 const TYPES = TUIChatEngine.TYPES;
 const messageToolDom = ref<HTMLElement>();
+
+//新增 替换图标iconUrl
 const actionItems = [
   {
-    text: TUITranslateService.t('TUIChat.打开'),
-    iconUrl: copyIcon,
+    text: TUITranslateService.t("TUIChat.打开"),
+    // iconUrl: copyIcon,
+    iconUrl:'fluent:copy-16-regular',
     renderCondition() {
       if (!message.value) return false;
-      return isPC && (message.value?.type === TYPES.MSG_FILE
-        || message.value?.type === TYPES.MSG_VIDEO
-        || message.value?.type === TYPES.MSG_IMAGE);
+      return (
+        isPC &&
+        (message.value?.type === TYPES.MSG_FILE ||
+          message.value?.type === TYPES.MSG_VIDEO ||
+          message.value?.type === TYPES.MSG_IMAGE)
+      );
     },
     clickEvent: openMessage,
   },
   {
-    text: TUITranslateService.t('TUIChat.复制'),
-    iconUrl: copyIcon,
+    text: TUITranslateService.t("TUIChat.复制"),
+    // iconUrl: copyIcon,
+    iconUrl:'fluent:copy-16-regular',
     renderCondition() {
       if (!message.value) return false;
       return message.value?.type === TYPES.MSG_TEXT;
@@ -84,39 +93,47 @@ const actionItems = [
     clickEvent: copyMessage,
   },
   {
-    text: TUITranslateService.t('TUIChat.撤回'),
-    iconUrl: revokeIcon,
+    text: TUITranslateService.t("TUIChat.撤回"),
+    // iconUrl: revokeIcon,
+    iconUrl:'icon-park-outline:return',
     renderCondition() {
       if (!message.value) return false;
-      return message.value?.flow === 'out' && message.value?.status === 'success';
+      return (
+        message.value?.flow === "out" && message.value?.status === "success"
+      );
     },
     clickEvent: revokeMessage,
   },
   {
-    text: TUITranslateService.t('TUIChat.删除'),
-    iconUrl: delIcon,
+    text: TUITranslateService.t("TUIChat.删除"),
+    // iconUrl: delIcon,
+    iconUrl: "fluent:delete-16-regular",
     renderCondition() {
       if (!message.value) return false;
-      return message.value?.status === 'success';
+      return message.value?.status === "success";
     },
     clickEvent: deleteMessage,
   },
   {
-    text: TUITranslateService.t('TUIChat.转发'),
-    iconUrl: forwardIcon,
+    text: TUITranslateService.t("TUIChat.转发"),
+    // iconUrl: forwardIcon,
+    iconUrl:'mdi:forward-outline',
     renderCondition() {
       if (!message.value) return false;
-      return message.value?.status === 'success';
+      return message.value?.status === "success";
     },
     clickEvent: forwardSingleMessage,
   },
   {
-    text: TUITranslateService.t('TUIChat.引用'),
-    iconUrl: quoteIcon,
+    text: TUITranslateService.t("TUIChat.引用"),
+    // iconUrl: quoteIcon,
+    iconUrl:'mi:message-alt',
     renderCondition() {
       if (!message.value) return false;
       const _message = TUIStore.getMessageModel(message.value.ID);
-      return message.value?.status === 'success' && !_message?.getSignalingInfo();
+      return (
+        message.value?.status === "success" && !_message?.getSignalingInfo()
+      );
     },
     clickEvent: quoteMessage,
   },
@@ -143,7 +160,7 @@ function getFunction(index: number) {
 }
 
 function openMessage() {
-  let url = '';
+  let url = "";
   switch (message.value?.type) {
     case TUIChatEngine.TYPES.MSG_FILE:
       url = message.value.payload.fileUrl;
@@ -155,7 +172,7 @@ function openMessage() {
       url = message.value.payload.imageInfoArray[0].url;
       break;
   }
-  window?.open(url, '_blank');
+  window?.open(url, "_blank");
 }
 
 function revokeMessage() {
@@ -165,12 +182,12 @@ function revokeMessage() {
   messageModel
     .revokeMessage()
     .then(() => {
-      enableSampleTaskStatus('revokeMessage');
+      enableSampleTaskStatus("revokeMessage");
     })
     .catch((error: any) => {
-    // 调用异常时业务侧可以通过 promise.catch 捕获异常进行错误处理
+      // 调用异常时业务侧可以通过 promise.catch 捕获异常进行错误处理
       if (error.code === 20016) {
-        const message = TUITranslateService.t('TUIChat.已过撤回时限');
+        const message = TUITranslateService.t("TUIChat.已过撤回时限");
         Toast({
           message,
           type: TOAST_TYPE.ERROR,
@@ -199,7 +216,7 @@ async function copyMessage() {
 
 function forwardSingleMessage() {
   if (!message.value) return;
-  TUIStore.update(StoreName.CUSTOM, 'singleForwardMessageID', message.value.ID);
+  TUIStore.update(StoreName.CUSTOM, "singleForwardMessageID", message.value.ID);
 }
 
 function quoteMessage() {

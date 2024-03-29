@@ -16,7 +16,9 @@
           v-if="message.flow === 'in' && message.conversationType === 'GROUP'"
           class="message-body-nick-name"
         >
-          {{ props.content.showName }}
+          <!-- 新增 修改将通过好友列表添加的字样换成昵称 -->
+          <!-- {{ props.content.showName }} -->
+          {{ props.messageItem.nick ? props.messageItem.nick : props.content.showName }}
         </div>
         <div :class="['message-body-main', message.flow === 'out' && 'message-body-main-reverse']">
           <div

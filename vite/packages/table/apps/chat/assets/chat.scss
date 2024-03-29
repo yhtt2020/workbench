@@ -9,11 +9,13 @@
  display: none !important;
 }
 
+// 容器宽高
 .TUIKit {
  width: 100% !important;
  height: 100% !important;
 }
 
+// 会话样式
 .tui-conversation {
  background: transparent !important;
  &-list {
@@ -47,7 +49,7 @@
    }
    &-footer{
     .time{
-      color: var( --disable-text) !important;
+      color: var(--secondary-text) !important;
       font-size: 12px !important;
     }
     .muted-icon{
@@ -60,7 +62,6 @@
   background: transparent !important;
  }
 }
-
 .actions-menu {
  background-color: transparent !important;
  background: var(--secondary-bg) !important;
@@ -72,33 +73,38 @@
   }
  }
 }
-
 .TUIKit-main-aside {
  border-right: 1px solid var(--divider) !important;
 }
-
 .chat-header-content {
  color: var(--primary-text) !important;
 }
-
 .chat-header-setting {
  .common-icon-container {
   color: var(--primary-text) !important;
  }
 }
-
 .message-input-toolbar{
   border-top: 1px solid var(--divider) !important;
 }
-
-.message-body-nick-name{
-  display: none !important;
-}
-
 .toolbar-item-container-dialog{
   background: var(--secondary-bg) !important;
+  .words{
+    background-color: transparent !important;
+    &::-webkit-scrollbar{
+      width: 2px !important;
+    }
+    &::-webkit-scrollbar-thumb{
+      background: #d9d9d9 !important;
+    }
+    &-list-item{
+      color: var(--secondary-text) !important;
+      &:hover{
+        color: #006eff !important;
+      }
+    }
+  }
 }
-
 .toolbar-item-container{
   &:nth-of-type(2n){
     .toolbar-item-container-icon{
@@ -116,7 +122,55 @@
     } 
   }
 }
-
 .message-item{
   cursor: pointer !important;
+}
+// 右键操作弹窗
+.dialog-item-web{
+  background: rgba(255,255,255, 1) !important;
+  border: none !important;
+  .list-item{
+    & div{
+      color: rgba(00,00,00, 0.65) !important;
+    }
+    &-text{
+      color: rgba(00,00,00, 0.65) !important;
+    }
+    &:nth-of-type(4){
+      padding: 4px 0 4px 12px !important;
+    }
+    &:nth-of-type(2n){
+      padding: 4px 0 4px 12px !important;
+    }
+    &:nth-of-type(3){
+      padding: 4px 0 4px 12px !important;
+    }
+    &:first-of-type{
+      padding: 4px 0 4px 12px !important;
+    }
+  }
+}
+.input-quote{
+  &-content{
+    background-color: rgba(255,255,255, 1) !important;
+    .max-one-line{
+      color: rgba(00,00,00, 0.65) !important;
+    }
+  }
+}
+
+// 昵称
+.message-body-nick-name{
+  color: var(--secondary-text) !important;
+}
+.message-timestamp{
+  color: var(--secondary-text) !important;
+}
+.message-tip{
+  span{
+    color: var(--secondary-text) !important;
+  }
+}
+.message-more{
+  color: var(--secondary-text) !important;
 }
