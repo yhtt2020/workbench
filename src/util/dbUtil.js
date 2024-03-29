@@ -21,6 +21,17 @@ const dbUtil={
       }
     }
     return filename
+  },
+  getDbDir(){
+    let dirName
+    const isDevelopmentMode = process.argv.some(arg => arg === '--development-mode')
+    if (isDevelopmentMode && app.getPath('userData').indexOf('-development')===-1) {
+      //是调试模式，且还未添加development
+      dirName = path.join(app.getPath('userData') + '-development', 'db')
+    }else{
+      dirName = path.join(app.getPath('userData'), 'db')
+    }
+    return dirName
   }
 }
 
