@@ -1,5 +1,6 @@
 <template>
   <xt-modal
+    v-if="visible"
     v-model="visible"
     :title="title"
     :footer="true"
@@ -29,7 +30,6 @@
         :custom-size="customSize"
       />
     </div>
-
   </xt-modal>
 </template>
 

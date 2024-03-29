@@ -1,5 +1,5 @@
 <template>
- <xt-modal v-model="appointVisible" title="选择用户" :boxClass="'px-6 py-4'" >
+ <xt-modal v-model="appointVisible"  v-if="appointVisible"  title="选择用户" :boxClass="'px-6 py-4'" >
   <div style="width: 600px;" class="flex justify-between">
    <div style="width: 300px;" class="flex flex-col">
     <span class="xt-font xt-text-2 font-14 font-400 mb-4">我的好友</span>

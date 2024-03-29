@@ -185,7 +185,9 @@ const emits = defineEmits([
   "onDrag",
   "onDragStop",
   "auxLine",
+  "update:data",
 ]);
+
 const draggable: any = ref({}); // 可拖拽元素
 const elementSize: any = ref({});
 // const parentNode: any = ref(null)
@@ -283,6 +285,7 @@ function getElementSize(size: any) {
     width: newWidth,
     height: newHeight,
   };
+  emits("update:data", dragData.value);
 }
 
 watch([() => parentSize.value, () => draggableSize.value], () => {
@@ -434,6 +437,8 @@ onMounted(() => {
       immediate: true,
     }
   );
+
+  emits("update:data", dragData.value);
 });
 
 // 拖拽开始

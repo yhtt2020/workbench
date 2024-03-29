@@ -185,7 +185,7 @@
     </xt-task>
   </div>
 </template>
-  
+
   <script>
 import { navStore } from "../../store/nav";
 import { useNavBarStore } from "../desk/navigationBar/navBar.ts";
@@ -319,7 +319,7 @@ export default {
       parentSize: 0,
       parentHeight: 0,
 
-      
+
       comVisible:false
     };
   },
@@ -632,18 +632,14 @@ export default {
         this.$emit("control", e);
         return;
       }
+      console.log('item :>> ', item);
       if (value === "setting") {
-        this.$router.push({
-          name: "home",
-        });
-        setTimeout(() => {
           this.$bus.emit("openSystemSet");
-        }, 500);
         return;
       }
       if(value === 'commun'){
         this.comVisible = ! this.comVisible
-        return 
+        return
       }
       if (type === "folder") {
         this.openFolder(item);
@@ -973,4 +969,3 @@ export default {
 };
 </script>
 <style lang="scss" scoped></style>
-  

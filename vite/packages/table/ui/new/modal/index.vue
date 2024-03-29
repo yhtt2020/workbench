@@ -1,24 +1,31 @@
 <template>
   <Teleport to="body">
     <!-- 弹窗 -->
-    <Transition name="up">
+    <xt-drag
+      v-model:x="x"
+      v-model:y="y"
+      :index="index"
+      :collision="false"
+      v-if="modelValue"
+      @update:data="resizeModel"
+      handle=".xt-modal-header"
+    >
+      <!--  -->
       <div
-        v-element-size="resizeModel"
-        v-if="modelValue"
-        :class="[
-          boxClass,
-          isFull ? 'rounded-none w-full h-full' : 'rounded-xl',
-        ]"
+        :class="[boxClass, isFull ? 'rounded-none' : 'rounded-xl']"
         ref="modal"
-        class="no-drag fixed flex flex-col text-base -translate-x-1/2 left-1/2 rounded-xl xt-modal xt-shadow xt-text"
+        class="no-drag flex flex-col text-base rounded-xl xt-modal xt-shadow xt-text"
         style="
           border: 1px solid rgba(255, 255, 255, 0.1);
           box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+          transition: 'all 0.3s ease-in-out';
         "
-        :style="{
-          'z-index': index,
-          top: `${top}px`,
-        }"
+        :style="[
+          isFullStyle,
+          {
+            opacity: show ? '1' : '0',
+          },
+        ]"
       >
         <slot v-if="custom"></slot>
         <template v-else>
@@ -30,7 +37,10 @@
             <!-- 主体区域 -->
             <main class="flex flex-col flex-1 h-full">
               <!-- 主体头部 -->
-              <header class="relative flex items-center mb-4" v-if="header">
+              <header
+                class="relative flex items-center mb-4 xt-modal-header"
+                v-if="header"
+              >
                 <!-- 标题左侧 -->
                 <div class="z-20 flex items-center flex-1">
                   <slot name="header-left"> </slot>
@@ -46,14 +56,16 @@
                 <!-- 标题右侧 -->
                 <div class="right-0 z-20 flex items-center">
                   <slot name="header-right"> </slot>
+                  <xt-ify-icon @click="minimize" />
                   <xt-button
                     class="ml-3"
                     w="32"
                     h="32"
                     radius="8"
-                    v-if="full"
                     @click="isFull = !isFull"
                   >
+                    <!-- v-if="full" -->
+
                     <xt-new-icon
                       :icon="
                         isFull
@@ -114,7 +126,7 @@
           </slot>
         </template>
       </div>
-    </Transition>
+    </xt-drag>
     <!-- 遮罩 -->
     <div
       v-if="modelValue && mask"
@@ -124,10 +136,21 @@
         'z-index': maskIndex,
       }"
     ></div>
+    <!-- 最小化 -->
+    <div
+      :style="minimizeStyle"
+      class="fixed xt-theme-b xt-theme-bg rounded-xl"
+      :class="minimizeState ? '' : 'pop'"
+      @click="restore"
+    >
+      1111211111
+    </div>
   </Teleport>
 </template>
 
 <script setup lang="ts">
+const x = ref(-1000);
+const y = ref(-1000);
 import McDonalds from "./McDonalds.vue";
 import {
   ref,
@@ -141,7 +164,7 @@ import {
   getCurrentInstance,
 } from "vue";
 import { useWindowSize } from "../drag/src/hooks/useWindowSize";
-import { useElementSize, vElementSize } from "../drag/src/hooks/useElementSize";
+import { vElementSize } from "../drag/src/hooks/useElementSize";
 export interface ModalProps {
   // 控制弹窗是否显示
   modelValue?: boolean;
@@ -204,7 +227,7 @@ const props = withDefaults(defineProps<ModalProps>(), {
 });
 const { esc, modelValue, beforeMount, beforeUnmount, type } = toRefs(props);
 const isFull = ref(false);
-
+const show = ref(false);
 const emits = defineEmits(["ok", "no", "update:modelValue", "close", ""]);
 
 const modal: any = ref(null);
@@ -212,18 +235,97 @@ let topBarHeight = 0;
 let topUtilBarHeight = 0;
 let bottomBarHeight = 0;
 const windowHeight = ref(0);
-const modelHeight = ref(0);
+const windowWidth = ref(0);
+let intervalId;
+function initPos() {
+  intervalId = setInterval(() => {
+    // 数据未加载完成时
+    if (windowHeight.value <= 0 || modalHeight.value <= 0) return;
+    let top;
+    let left;
+    if (props.mask) {
+      top = (windowHeight.value - modalHeight.value) / 2;
+      left = (windowWidth.value - modalWidth.value) / 2;
+    } else {
+      top = (windowHeight.value - bottomBarHeight - modalHeight.value) / 2;
+      left = (windowWidth.value - modalWidth.value) / 2;
+    }
 
-const top = computed(() => {
-  if (isFull.value) return 0;
-  if (windowHeight.value <= 0 || modelHeight.value <= 0) return -99999;
-  let a = (windowHeight.value - bottomBarHeight - modelHeight.value) / 2;
-  return a >= 0 ? a : 0;
+    y.value = top;
+    x.value = left;
+    oldX.value = left;
+    oldY.value = top;
+    oldHeight.value = modalHeight.value;
+    oldWidth.value = modalWidth.value;
+    show.value = true;
+    clearInterval(intervalId); // 数据加载完成后取消定时器
+  }, 100);
+}
+const oldX = ref(0);
+const oldY = ref(0);
+const isFullStyle = computed(() => {
+  if (isFull.value) {
+    oldX.value = x.value;
+    oldY.value = y.value;
+    x.value = 0;
+    y.value = 0;
+    return {
+      width: "100vw",
+      height: "100vh",
+    };
+  }
+
+  x.value = oldX.value;
+  y.value = oldY.value;
+  return {
+    width: "auto",
+  };
 });
-
-const resizeModel = (size) => {
-  modelHeight.value = size.height;
+const modalWidth = ref(0);
+const modalHeight = ref(0);
+const oldWidth = ref(0);
+const oldHeight = ref(0);
+const resizeModel = (data) => {
+  modalWidth.value = data.width;
+  modalHeight.value = data.height;
 };
+const minimizeState = ref(false);
+const minimizeStyle = computed(() => {
+  if (minimizeState.value) {
+    setTimeout(() => {
+      show.value = true;
+    }, 1000);
+    return {
+      transition: "all 0.15s linear",
+      top: `${y.value}px`,
+      left: `${x.value}px`,
+      width: `${oldWidth.value}px`,
+      height: `${oldHeight.value}px`,
+      zIndex: props.index - 1,
+    };
+  }
+
+  return {
+    transition: "all 0.15s linear",
+    bottom: "16%",
+    right: "5%",
+    width: " 200px",
+    height: "60px",
+    zIndex: props.index - 1,
+  };
+});
+const restore = () => {
+  // isFull.value = false;
+  show.value = true;
+  minimizeState.value = false;
+};
+
+/** 最小化实现 */
+const minimize = () => {
+  show.value = false;
+  minimizeState.value = true;
+};
+
 const close = () => {
   emits("update:modelValue", false);
   emits("close");
@@ -254,6 +356,9 @@ const updateFullState = () => {
 onBeforeMount(() => {});
 // 挂载后
 onMounted(() => {
+  const bottomBar = document.getElementsByClassName("xt-main-bottom-bar")[0];
+  if (bottomBar) bottomBarHeight = bottomBar.clientHeight;
+  initPos();
   // 注册单例弹窗监听
   if (props.type) {
     proxy.$bus.emit("modalClose", props.type);
@@ -274,10 +379,8 @@ onMounted(() => {
   }
   useWindowSize((size) => {
     windowHeight.value = size.height.value;
+    windowWidth.value = size.width.value;
   });
-
-  const bottomBar = document.getElementsByClassName("xt-main-bottom-bar")[0];
-  if (bottomBar) bottomBarHeight = bottomBar.clientHeight;
 });
 // 卸载前
 onBeforeUnmount(() => {
@@ -298,14 +401,10 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-.up-enter-active,
-.up-leave-active {
-  transition: all .3s;
-}
-.up-enter-from,
-.up-leave-to {
-  opacity: 0;
-  transform: translate3D(-50%, 20px, 0);
-  // transform: translateY(v-bind(top));
+.pop {
+  bottom: 16%;
+  right: 5%;
+  width: 200px;
+  height: 60px;
 }
 </style>

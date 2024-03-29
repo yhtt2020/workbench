@@ -54,7 +54,8 @@ const openFile = (cb?: Function) => {
 onMounted(() => {
   // 打开系统设置
   proxy.$bus.on("openSystemSet", () => {
-    systemVisible.value = true;
+    console.log('systemVisible.value :>> ', systemVisible.value);
+    systemVisible.value = !systemVisible.value
   });
   // 打开登录
   proxy.$bus.on("openLogin", (cb) => {
