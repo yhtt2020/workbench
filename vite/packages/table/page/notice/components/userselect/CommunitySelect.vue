@@ -1,5 +1,5 @@
 <template>
- <xt-modal v-model="communityVisible" title="选择社群" :boxClass="'px-6 py-4'" >
+ <xt-modal v-model="communityVisible" v-if="communityVisible" title="选择社群" :boxClass="'px-6 py-4'" >
   <div style="width: 600px;" class="flex  justify-between">
    <div style="width: 300px;" class="flex flex-col">
     <span class="xt-text-2 xt-font font-14 font-400 mb-4">我的社群</span>

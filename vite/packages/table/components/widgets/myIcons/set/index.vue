@@ -1,7 +1,7 @@
 <template>
   <xt-modal
     v-model="visible"
-    :footer="0"
+    v-if="visible" :footer="0"
     @close="close"
     :index="index"
     :maskIndex="maskIndex"

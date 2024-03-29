@@ -1,5 +1,5 @@
 <template>
- <xt-modal v-model="timeVisible" title="选择发布时间" :boxClass="'px-6 py-4'">
+ <xt-modal v-model="timeVisible" v-if="timeVisible" title="选择发布时间" :boxClass="'px-6 py-4'">
   <div class="flex flex-col" style="width: 500px;">
    <span class="mb-6">发送时间</span>
    <a-date-picker :show-time="{ format: 'HH:mm' }" v-model:value="currentTime" :format="dateFormat" class="xt-bg-2" style="border-radius: 8px;"/>

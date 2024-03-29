@@ -1,5 +1,5 @@
 <template>
-  <xt-modal ref="modalRef" v-model="galleryVisible" :custom="true" :mask="false" boxClass="p-0" :maskIndex="1010" :index="1010">
+  <xt-modal ref="modalRef" v-if="galleryVisible" v-model="galleryVisible" :custom="true" :mask="false" boxClass="p-0" :maskIndex="1010" :index="1010">
     <xt-left-menu model="id" leftClass="xt-bg-m rounded-l-xl" leftMargin="mr-0 py-3" w="64"
     style=" margin: 0 !important;border-radius: 12px !important;" :style="!isFull ? {width:'976px',height:'600px'}:{ width:'100%',height:'100%' }"
     :list="leftUpdateList" :index="galleryIndex" last="5" end="2"

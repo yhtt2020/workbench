@@ -194,7 +194,7 @@
 
   <!-- 添加桌面 弹窗 -->
 
-  <xt-modal v-model="addDeskVisible" :mask="false" :index="100" :header="true" :footer="false">
+  <xt-modal v-model="addDeskVisible" v-if="addDeskVisible" :mask="false" :index="100" :header="true" :footer="false">
     <div style="width: 800px;height:518px">
       <div class="font-semibold text-center font-16 xt-text">添加桌面</div>
       <div class="flex justify-center mt-6">
