@@ -1,40 +1,40 @@
 <template>
-    <div 
-        class="
+    <div class="
             w-full h-[64px]  pointer 
             flex items-center 
-            justify-between p-3 " 
-        style="border: 1px solid var(--divider);background: rgba(26,26,26,0.65);;">
+            justify-between p-3 " style="border: 1px solid var(--divider);background: rgba(26,26,26,0.65);;">
         <!-- 用户头像以及控制中心 -->
         <User></User>
         <!-- 导航栏图标 -->
-        <Panel 
-            @edit="edit" 
-            id="bottomPanel" 
-            @getDelIcon="getDelIcon"
-            @control="control">
+        <Panel @edit="edit" id="bottomPanel" @getDelIcon="getDelIcon" @control="control">
         </Panel>
         <!-- 右侧时间天气和消息通知 -->
         <div class="flex">
             <Time></Time>
-            <MessageBox :boxClass="'ml-3'" :mainClass="'bottom-20 right-6'"></MessageBox>  
-            <!-- <Tip name="inform" > -->
+            <MessageBox :boxClass="'ml-3'" :mainClass="'bottom-20 right-6'"></MessageBox>
+            <Tip 
+                :top="6"
+                name="inform" 
+                :check="status.show" 
+                type='click' 
+                :tipClass="'flex justify-center items-center'">
                 <xt-new-icon 
-                    @click="openRightDrawer"
+                    @click="openRightDrawer" 
                     icon="fluent:alert-16-regular" 
                     size="24" 
-                    class="ml-3"/>
-            <!-- </Tip>    -->
+                    class="flex items-center justify-center ml-3" />
+            </Tip>
         </div>
-        
+
     </div>
     <teleport to='body'>
         <TopPanelRightDrawer ref="rightDrawer"></TopPanelRightDrawer>
     </teleport>
-    
+
 </template>
 
 <script setup lang='ts'>
+const a = ref(false)
 import { ref, provide } from 'vue'
 import { storeToRefs } from 'pinia';
 import { message } from 'ant-design-vue';
@@ -50,13 +50,13 @@ import TopPanelRightDrawer from './drawer/TopPanelRightDrawer.vue';
 import { appStore } from '../store';
 
 const useAppStore = appStore()
-const { showGuide } = storeToRefs(useAppStore)
+const { showGuide , status } = storeToRefs(useAppStore)
 
-const emit = defineEmits(['edit','getDelIcon','control'])
+const emit = defineEmits(['edit', 'getDelIcon', 'control'])
 
 const rightDrawer = ref<InstanceType<typeof TopPanelRightDrawer> | null>(null)
 
-provide('iconSize',44)
+provide('iconSize', 44)
 
 // 打开右侧抽屉
 const openRightDrawer = () => {
@@ -69,15 +69,15 @@ const openRightDrawer = () => {
 }
 
 const edit = (value) => {
-    emit('edit',value)
+    emit('edit', value)
 }
 
 const getDelIcon = (value) => {
-    emit('getDelIcon',value)
+    emit('getDelIcon', value)
 }
 
 const control = (value) => {
-    emit('control',value)
+    emit('control', value)
 }
 </script>
 <style lang='scss' scoped></style>
