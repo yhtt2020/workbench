@@ -1,11 +1,41 @@
+<!-- 群公告修改弹窗页 -->
 <template>
   <teleport to="body">
     <a-drawer
       v-model:visible="noticeVisible"
-      title="群公告"
+      :closable="false"
       width="500"
-      :bodyStyle="{padding:'0 24px'}"
+      :bodyStyle="{ padding: '0 24px' }"
+      zIndex="1500"
+      @close="closeNameDrawer"
     >
+      <template #title>
+        <div class="w-full flex items-center">
+          <xt-button
+            w="40"
+            h="40"
+            @click="closeNameDrawer"
+            style="margin-right: 12px; border-radius: 8px"
+          >
+            <div class="flex items-center justify-center">
+              <xt-ify-icon
+                icon="fluent:chevron-left-16-regular"
+                class="xt-text-2"
+                size="30"
+                v-if="isBack"
+              />
+              <xt-ify-icon
+                icon="fluent:dismiss-16-regular"
+                class="xt-text-2"
+                size="30"
+                v-else
+              />
+            </div>
+          </xt-button>
+          <span class="xt-text-2 xt-font font-16">群公告</span>
+        </div>
+      </template>
+
       <div class="flex flex-col">
         <div class="textarea-container">
           <a-textarea
@@ -39,13 +69,19 @@
 import { nextTick, ref, toRefs, computed } from "vue";
 import { TUIStore, StoreName } from "@tencentcloud/chat-uikit-engine";
 
+const emit = defineEmits(["closeNotice"]);
+
 const props = defineProps({
   groupID: {
     type: String,
     required: true,
   },
+  isBack: {
+    type: Boolean,
+    default: false,
+  },
 });
-const { groupID } = toRefs(props);
+const { groupID, isBack } = toRefs(props);
 
 // 群公告内容
 const currentContent = ref({});
@@ -53,7 +89,7 @@ const noticeValue = ref("");
 const noticeRole = ref("");
 const maxLength = ref(300);
 
-// 开启公修改弹窗
+// 开启公告修改弹窗
 const noticeVisible = ref(false);
 const openNoticeDrawer = () => {
   noticeVisible.value = true;
@@ -66,6 +102,16 @@ const openNoticeDrawer = () => {
       },
     });
   });
+};
+
+// 弹窗关闭
+const closeNameDrawer = () => {
+  if (isBack.value) {
+    noticeVisible.value = false;
+    emit('closeNotice');
+  } else {
+    noticeVisible.value = false;
+  }
 };
 
 // 计算当前文本输入框的字数
