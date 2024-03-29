@@ -1,9 +1,8 @@
 <template>
-    <div class="flex flex-col items-center time">
-        <div v-if="settings.showTopbarTime"  @click="enterTime">
-            <span class="xt-text font-14 xt-font">{{ dateTime.month }}月{{ dateTime.day }}日</span>
-            <span class="mx-1 xt-text font-14 xt-font">{{ dateTime.week }}</span>
-            <span class="pr-1 xt-text font-14 xt-font">{{ dateTime.hours }}:{{ dateTime.minutes }}</span>
+    <div class="flex flex-col justify-end w-full text-right time">
+        <div v-if="settings.showTopbarTime"  @click="enterTime" class="flex">
+            <div class="mr-1 xt-text font-14 xt-font"> {{ dateTime.month }}/{{ dateTime.day }} </div>
+            <div class="xt-text font-14 xt-font"> {{ dateTime.hours }}:{{ dateTime.minutes }} </div>
         </div>
         <div v-if="hasWeather && city.now && settings.showTopbarWeather" 
             @click="enterWeather"
