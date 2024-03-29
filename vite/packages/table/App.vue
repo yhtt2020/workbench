@@ -174,7 +174,7 @@ export default {
     })
     setTimeout(() => {
       this.ensureFullScreen()
-    }, 1000)
+    }, 3000) //从1s延长至3s，以确保前期的位置调整已经完成
     initTheme()
     initStyle()
     window.toggleFrameStore = () => {

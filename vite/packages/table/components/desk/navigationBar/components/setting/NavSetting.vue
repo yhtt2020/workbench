@@ -52,8 +52,8 @@ const navigationFunction=ref([
         switch:navigationStore.bottomToggle[0]
     },
     {
-        title:'社区助手',
-        description:'在工作台底部显示社区助手',
+        title:'社区中心',
+        description:'在工作台底部显示社区中心',
         tag:'community',
         switch:navigationStore.bottomToggle[1]
     },

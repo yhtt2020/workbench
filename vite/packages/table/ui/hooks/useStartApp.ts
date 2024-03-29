@@ -8,12 +8,16 @@ import { favoStore } from "../../apps/favorites/store";
 import { useComStore } from "../../components/bottomPanel/comStore";
 import fs from "fs";
 async function runApp(uri) {
+  console.log('打开uri',uri)
   try {
     var cp = require("child_process");
     let realPath = uri;
     let isDir = false;
     if (uri.endsWith(".url") || uri.endsWith(".lnk")) {
-      realPath = await tsbApi.system.getRealPath(uri);
+      realPath = await tsbApi.system.getRealPath(uri) ;
+      if(!realPath){
+        realPath=uri
+      }
     }
     if (uri.endsWith(".url") || uri.endsWith(".lnk")) {
       if (realPath.startsWith("steam://")) {
@@ -40,7 +44,17 @@ async function runApp(uri) {
       }
     } else {
       var fs = require("fs");
+      if(realPath==='我的电脑' ){
+        window.$models.win32.openApp('explorer', 'shell:MyComputerFolder', "", false, true);
+        return true
+      }
+      if(realPath==='回收站'){
+        window.$models.win32.openApp('explorer', 'shell:RecycleBinFolder', "", false, true);
+        return true
+      }
+
       var stat = fs.lstatSync(realPath);
+
       console.log(
         "执行路径B,普通文件",
         "cwd",
@@ -65,6 +79,7 @@ async function runApp(uri) {
 
     return true;
   } catch (e) {
+    console.log(e)
     return false;
   }
 }

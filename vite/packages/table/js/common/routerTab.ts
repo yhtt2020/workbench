@@ -9,7 +9,7 @@ const routerTab = {
    */
   isActive(tab,level,params) {
     const route = useRoute()
-    if(route.meta){
+    if(route?.meta){
       if(params){
         let matched=String(route.meta['tab'+String(level)]).replace(/\{([^}]+)\}/g, function(match, key) {
           return params[key.trim()] || match;

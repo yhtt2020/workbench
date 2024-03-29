@@ -142,7 +142,6 @@ import {
 } from "vue";
 import { useWindowSize } from "../drag/src/hooks/useWindowSize";
 import { useElementSize, vElementSize } from "../drag/src/hooks/useElementSize";
-// import type { ModalProps } from "./types";
 export interface ModalProps {
   // 控制弹窗是否显示
   modelValue?: boolean;
@@ -212,13 +211,12 @@ const modal: any = ref(null);
 let topBarHeight = 0;
 let topUtilBarHeight = 0;
 let bottomBarHeight = 0;
-const windowHeight = ref(2);
-const modelHeight = ref(2);
+const windowHeight = ref(0);
+const modelHeight = ref(0);
 
 const top = computed(() => {
   if (isFull.value) return 0;
-  if (windowHeight.value <= 0 || bottomBarHeight <= 0 || modelHeight.value <= 0)
-    return -9999;
+  if (windowHeight.value <= 0 || modelHeight.value <= 0) return -99999;
   let a = (windowHeight.value - bottomBarHeight - modelHeight.value) / 2;
   return a >= 0 ? a : 0;
 });
@@ -257,7 +255,7 @@ onBeforeMount(() => {});
 // 挂载后
 onMounted(() => {
   // 注册单例弹窗监听
-  console.log('props.type :>> ', props.type);
+  console.log("props.type :>> ", props.type);
   if (props.type) {
     proxy.$bus.emit("modalClose", props.type);
     setTimeout(() => {
@@ -303,7 +301,7 @@ defineExpose({
 <style lang="scss" scoped>
 .up-enter-active,
 .up-leave-active {
-  transition: all 0.3s;
+  transition: all .3s;
 }
 .up-enter-from,
 .up-leave-to {

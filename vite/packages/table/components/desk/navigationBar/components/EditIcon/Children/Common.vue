@@ -1,16 +1,16 @@
 <template>
-    <div class="w-full">
+    <div class="w-full min-w-[425px]">
         <div class="w-full h-[40px] mb-4">
             <div class="flex items-center justify-center w-full h-full xt-bg-2 rounded-xl">{{ props.title }}</div>
         </div>
-        <EditName :editItem="props.editItem"></EditName>
+        <!-- <EditName :editItem="props.editItem"></EditName> -->
         <SelectHome v-if="props.editItem.value === 'home'" :editItem="props.editItem"></SelectHome>
     </div>
 </template>
 
 <script setup lang='ts'>
 import { ref, reactive } from 'vue'
-import EditName from './EditName.vue';
+// import EditName from './EditName.vue';
 import SelectHome from './SelectHome.vue'
 export interface titleProps {
     title: string

@@ -33,15 +33,16 @@ export const attributeOptions = [
       },
     ],
   },
-  {
-    type: "input",
-    inputKey: "value",
-  },
+
   {
     type: "children",
     flag: "link",
     flagKey: "mode",
     children: [
+      {
+        type: "input",
+        inputKey: "value",
+      },
       {
         type: "info",
         title: "打开方式",

@@ -271,12 +271,12 @@
                             style="white-space: nowrap; display: inline-block;border-radius: 18px;"
                             @click.stop="newOpenApp(item.type, item.value, item)">
                             <Drag :data="item" currentId="bottom" @deleteFile="deleteFile">
-                              <Team 
+                              <Team
                                 @close="this.comVisible = false"
-                                v-if="item.value === 'commun'" 
-                                :item="item" 
-                                :placement="'top'" 
-                                :x="this.realXY.x" 
+                                v-if="item.value === 'commun'"
+                                :item="item"
+                                :placement="'top'"
+                                :x="this.realXY.x"
                                 :y="this.navAttribute.navSize"
                                 :visible = "this.comVisible"
                               ></Team>
@@ -290,7 +290,7 @@
                               <template v-else>
                                 <Avatar :item="item">
                                   <template #control>
-                                    <div
+                                    <div  v-if="false"
                                       style="background-color: #ff4d4f;border: 2px solid ;"
                                       class="absolute top-0 flex items-center justify-center flex-shrink-0 w-4 h-4 translate-x-6 rounded-full -translate-y-1/3 pointer" >
                                     </div>
@@ -1019,6 +1019,7 @@ export default {
     ...mapActions(teamStore, ['updateMy']),
     ...mapActions(messageStore, ['getMessageIndex']),
     ...mapActions(appStore, ['toggleFullScreen', 'settings']),
+    ...mapActions(appsStore, ['openApp']),
     ...mapActions(navStore, [
       'fixData',
       'setFootNavigationList',
@@ -1066,7 +1067,7 @@ export default {
       this.quick = true
       this.componentId = 'EditIcon'
       this.editItem = item
-      if (item.default.name) return
+      if (item.default?.name) return
       item.default = {
         name: item.name,
         icon: item.icon,
@@ -1143,7 +1144,8 @@ export default {
     closeChangeApp() {
       this.routeParams.url &&
         setTimeout(() => {
-          this.$router.push({ name: 'app', params: this.routeParams })
+          this.openApp(this.routeParams)
+            // this.$router.push({ name: 'app', params: this.routeParams })
         }, 400)
       this.changeFlag = false
     },
@@ -1159,7 +1161,7 @@ export default {
     },
     onClose() {
       this.routeParams.url &&
-        this.$router.push({ name: 'app', params: this.routeParams })
+        this.openApp(this.routeParams) //this.$router.push({ name: 'app', params:  })
       this.menuVisible = false
     },
     /**
@@ -1239,6 +1241,7 @@ export default {
         this.comVisible = !this.comVisible
         return
       }
+      console.log('item :>> ', item);
       // 新版设置打开方式
       if (value === 'setting') {
           this.$bus.emit("openSystemSet")

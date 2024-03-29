@@ -69,6 +69,7 @@
 <script>
 import { mapWritableState, mapActions } from "pinia";
 import { appStore } from "../store";
+import { appsStore } from "../store/apps";
 import SecondPanel from "../components/SecondPanel.vue";
 import { SystemApps } from "../consts";
 import { message } from "ant-design-vue";
@@ -134,6 +135,7 @@ export default {
     },
   },
   methods: {
+    ...mapActions(appsStore,['openApp']),
     togglePrompt() {
       if (!this.showPrompt) {
         this.doAction("prompt");
@@ -141,10 +143,7 @@ export default {
       this.showPrompt = !this.showPrompt;
     },
     enterMusic() {
-      this.$router.push({
-        name: "app",
-        params: SystemApps.wyyMusic,
-      });
+      this.openApp(SystemApps.wyyMusic)
     },
     doAction(action) {
       require("electron").ipcRenderer.send("wyyAction", { action });

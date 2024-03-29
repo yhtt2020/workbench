@@ -105,7 +105,7 @@ const finshCreateCommunity = async() =>{
     if(res.status === 1){
       message.success(`${res.info}`);
       com.getMyCommunity();
-      emits('close');
+      createVisible.value = false;
     }
     else {
       message.warning(`${res.info}`);
