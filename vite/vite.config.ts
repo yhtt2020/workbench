@@ -34,8 +34,8 @@ export default defineConfig({
         defineModel: true,
       },
     }),
-    require("tailwindcss"),
-    require("autoprefixer"),
+    // require("tailwindcss"),
+    // require("autoprefixer"),
   ],
   base: "./",
   build: {

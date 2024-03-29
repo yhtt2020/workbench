@@ -15,7 +15,7 @@
           </div>
           <a-divider style="height: 2px; background-color: var(--divider);margin: 16px 0;"/>
           <xt-button h="40" v-if="isJoin(item)" style="width:100%;" @click="closeJoinCom">已加入</xt-button>
-          <xt-button h="40" v-else style="width:100%;" @click="nowJoin(item)">立即加入</xt-button>
+          <xt-button h="40" v-else style="width:100%;" @click="joinNow(item)">立即加入</xt-button>
         </div>
       </div>
     </vue-custom-scrollbar>
@@ -64,8 +64,12 @@ export default {
     async joinNow (item) {
       const option = { no: item.no }
       const result = await this.joinRecommendCommunity(option)
-      message.success(`${result.info}`)
-      ctx.emit('close')
+      if(result.status){
+        message.success('加入成功')
+        this.$emit('close')
+      }else{
+        message.error(result.info)
+      }
     },
   },
 }

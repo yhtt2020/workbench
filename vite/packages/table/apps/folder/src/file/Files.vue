@@ -113,7 +113,7 @@ const currentLayout = computed(() => {
     return rowOption;
   } else {
     boxClass.value = "pl-3  mb-1";
-    textClass.value = "ml-3";
+    textClass.value = "ml-3 text-left";
     return columnOption;
   }
 });

@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import dbStorage from "../../../store/dbStorage";
 import {sUrl} from "../../../consts";
-import {post} from "../../../js/axios/request";
+import {apiPost, post} from "../../../js/axios/request";
 import { chatList } from '../../../js/data/chatList';
 import _ from 'lodash-es';
 import { updateTree ,communityTotal} from '../libs/utils';
@@ -9,7 +9,7 @@ import { updateTree ,communityTotal} from '../libs/utils';
 const createCommunity = sUrl("/app/community/create"); // 创建社群
 const getMyCommunity = sUrl("/app/community/my")  // 我的社群
 const getRecommendCommunity = sUrl("/app/community/getRecommendList") // 获取推荐社群
-const applyJoin = sUrl("/app/community/join") // 申请加入社群
+const applyJoin = "/app/community/join"// 申请加入社群
 const searchRecommendCommunity = sUrl("/app/community/searchCommunity") // 搜索
 const getChannelList = sUrl("/app/community/channel/getList") // 获取频道列表
 const getChannelTree = sUrl("/app/community/channel/getTreeList") // 获取树状频道
@@ -86,10 +86,8 @@ export const communityStore = defineStore('communityStore',{
     },
     // 加入推荐群聊
     async joinRecommendCommunity(option:any){
-      const res = await post(applyJoin,option);
-      if(res.status === 1){
-        return res.data;
-      }
+      const res = await apiPost(applyJoin,option);
+      return res
     },
     // 获取社群左侧初始数据
     getMyCommunity(){
@@ -211,7 +209,7 @@ export const communityStore = defineStore('communityStore',{
     // 更新社群父级目录
     async updateCategoryData(data:any,no:any){
       const res = await post(updateChannel,data);
-      if(res.status === 1){ this.updateCommunityTree(no) } 
+      if(res.status === 1){ this.updateCommunityTree(no) }
       return res;
     }
 

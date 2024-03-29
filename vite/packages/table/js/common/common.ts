@@ -1,9 +1,9 @@
-import { notification } from "ant-design-vue";
+import {notification} from "ant-design-vue";
 import {appStore} from "../../store";
 
 export async function toggleFullScreen() {
-  const isFullScreen=await tsbApi.window.isFullScreen()
-  if(!isFullScreen){
+  const isFullScreen = await tsbApi.window.isFullScreen()
+  if (!isFullScreen) {
     tsbApi.window.setFullScreen(true)
     appStore().showWindowController = false
     notification.info({
@@ -14,7 +14,7 @@ export async function toggleFullScreen() {
         console.log('Notification Clicked!');
       },
     });
-  }else{
+  } else {
     tsbApi.window.setFullScreen(false)
     appStore().showWindowController = true
   }
@@ -27,15 +27,16 @@ export async function toggleFullScreen() {
  * 渲染图标地址，自动修正协议
  * @param uri
  */
-export function renderIcon(uri){
-  try{
-    if(uri.startsWith('http://') || uri.startsWith('https://'))
-    {
+export function renderIcon(uri) {
+  try {
+    if (uri.startsWith('http://') || uri.startsWith('https://')) {
       return uri
-    }else{
-      return 'file://'+uri
+    } else if (uri.startsWith('/')) {
+      return uri
+    } else {
+      return 'file://' + uri
     }
-  }catch (e) {
+  } catch (e) {
     return ''
   }
 }

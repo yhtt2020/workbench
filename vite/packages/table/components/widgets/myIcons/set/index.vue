@@ -27,11 +27,20 @@
           <xt-text class="mb-3" center> 当前图标为「系统功能」类型。 </xt-text>
         </xt-option-box>
         <template v-else>
-          <xt-option-from :options="attributeOptions" :data="edit">
+          <xt-option-form :options="attributeOptions" :data="edit">
             <template #custom>
-              <LocalApp @click="" @onLocalApp="updateApp"></LocalApp>
+              <div @click="openLocalApp()">
+                <xt-option-input
+                  v-model:input="edit.value"
+                  readonly
+                  v-if="edit.value"
+                />
+              </div>
+              <div v-show="!edit.value">
+                <LocalApp ref="localApp" @click="" @onLocalApp="updateApp" />
+              </div>
             </template>
-          </xt-option-from>
+          </xt-option-form>
         </template>
       </div>
       <div v-else style="width: 452px">
@@ -203,6 +212,13 @@ const save = () => {
   // fileSetVisible
   message.success("保存成功");
   visible.value = false;
+};
+
+const localApp = ref(null);
+const openLocalApp = () => {
+  console.log("localApp.value :>> ", localApp.value);
+
+  localApp.value.localAppClick();
 };
 </script>
 

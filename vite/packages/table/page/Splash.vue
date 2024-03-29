@@ -254,7 +254,7 @@ export default {
         return;
       }
       this.$router.replace({ name: "wizard" });
-      localStorage.setItem("wizarded", 1);
+      localStorage.setItem("wizarded", '1');
     },
     enter() {
       clearTimeout(this.timeoutHandler); //清理掉超时提示

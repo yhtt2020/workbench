@@ -1,75 +1,65 @@
 <template>
-  <!-- 全部详情 -->
-  <template v-if="type === 'all'">
-    <ListItem :list="allDetailList"/>
+  <template v-if="searchList.length === 0">
+    <ListItem :list="list" :listType="type" />
   </template>
-
-  <!-- 收藏详情 -->
-  <template v-else-if="type === 'like'">
-    <ListItem :list="likeDetailList" :listType="'like'"/>
-  </template>
-
-  <!-- 指定的详情 -->
-  <template v-else-if="type === 'other'">
-    <ListItem :list="appointDetail"/>
+  <template v-else>
+    <ListItem :list="searchList" />
   </template>
 </template>
 
 <script setup>
-import { toRefs,ref,computed,getCurrentInstance } from "vue";
-import { storeToRefs } from 'pinia';
-import { communityNavStore } from '../store/communityNavStore';
+import { toRefs, ref, computed, getCurrentInstance, onMounted } from "vue";
+import { storeToRefs } from "pinia";
+import { communityNavStore } from "../store/communityNavStore";
 
 import ListItem from "./ListItem.vue";
 
 const { proxy } = getCurrentInstance();
-
 const communityNav = communityNavStore();
-const { appModalList }  = storeToRefs(communityNav);
+const { appModalList } = storeToRefs(communityNav);
 
 const props = defineProps({
-  detailIndex:{
-    type:Number,
-  }
+  detailIndex: {
+    type: Number,
+  },
 });
-
 const { detailIndex } = toRefs(props);
-// 获取全部详情
-const allDetailList = computed(()=>{
-  const list = appModalList.value.reduce((acc,item)=>{
-    if(item.list && Array.isArray(item.list)){
-      return [...acc,...item.list]
-    }
-    else{
-      return [];
-    }
-  },[]);
-  return list;
-});
-// 指定的详情
-const appointDetail = computed(()=>{
-  if(Array.isArray(appModalList.value[detailIndex.value].list)){
-    return appModalList.value[detailIndex.value].list;
-  }
-});
+const list = ref([]);
+const searchList = ref([]);
+
 // 获取type
-const type = computed(()=>{
-  if(appModalList.value[detailIndex.value].type){
-    return appModalList.value[detailIndex.value].type;
+const type = computed(() => {
+  const type = appModalList.value[detailIndex.value]?.type;
+  // 全部详情
+  if(type === 'all'){
+    list.value = appModalList.value[1].list;
+    return 'all';
   }
-  else {
+  // 我的收藏数据
+  else if(type === 'like'){
+    const likeList = appModalList.value[1].list?.filter((item)=>{ return item.favo === true });
+    list.value = likeList;
+    return 'like';
+  }
+  // 指定的详情
+  else if(type === undefined){
+    const n_id = appModalList.value[detailIndex.value]?.id;
+    const detailList = appModalList.value[1].list.filter((item) => {
+      return item.n_id === n_id;
+    });
+    list.value = detailList;
     return 'other';
   }
 });
-// 获取我的收藏数据
-const likeDetailList = computed(()=>{
-  if(type.value === 'like'){
-    return appModalList.value[0].list;
-  }
+
+onMounted(() => {
+  proxy.$bus.on("getSearchList", (data) => {
+    searchList.value = data;
+  });
+  proxy.$bus.on("getSelectList", (data) => {
+    list.value = data;
+  });
 });
-
-
-
 </script>
 
 <style lang="scss" scoped>

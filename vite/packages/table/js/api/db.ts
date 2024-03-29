@@ -1,7 +1,6 @@
 //此模块暂时不用
 import {isWeb} from "../../ui/hooks/env";
 
-console.log('导入模块')
 import * as PouchDB from 'pouchdb'
 import * as PouchDBFind from 'pouchdb-find'
 const initDb=function (){
@@ -56,5 +55,8 @@ const initDb=function (){
   }
 
 }
+
+
+
 
 export  {initDb}

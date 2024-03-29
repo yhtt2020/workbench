@@ -156,7 +156,9 @@ export default {
             return this.filterIcon(this.selectList);
             break;
           case 'software':
-            return this.filterIcon(this.selectList.filter((item) => item.value.endsWith('.exe')));
+            return this.filterIcon(this.selectList.filter((item) => {
+              return  item.value.endsWith('.exe') || item.ext==='.exe'
+            }));
             break;
           case 'docx':
             return this.filterIcon(this.selectList.filter((item) => doc.includes(item.ext)));

@@ -38,7 +38,7 @@
             name="name"
             :menus="rightMenu"
             v-else
-            @contextmenu="currentDel = index"
+            @contextmenu="(currentDel = index), (currentItem = item)"
           >
             <div
               class="flex left-menu-container flex-col w-full"
@@ -81,6 +81,12 @@
       <slot name="leftMenuBottom"></slot>
     </div>
   </div>
+
+  <CreateFolder
+    ref="leftEditFolder"
+    :updateFolder="{ item: currentItem, index: currentDel }"
+    :isEdit="true"
+  />
 </template>
 
 <script setup>
@@ -88,8 +94,11 @@ import { ref, computed, toRefs, getCurrentInstance, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { communityNavStore } from "../store/communityNavStore";
 
+import CreateFolder from "../community/CreateFolder.vue";
+import { message } from "ant-design-vue";
+
 const { proxy } = getCurrentInstance();
-const emit = defineEmits(["change"]);
+const emit = defineEmits(["change", "close"]);
 const props = defineProps({
   // 列表
   list: {
@@ -105,12 +114,17 @@ const { list, listMenu, currentIndex } = toRefs(props);
 const communityNav = communityNavStore();
 const { appModalList } = storeToRefs(communityNav);
 const currentDel = ref(null);
+const currentItem = ref(null);
+const leftEditFolder = ref(null);
 
 // 右键菜单列表
 const rightMenu = ref([
   {
     newIcon: "fluent:compose-16-regular",
     name: "编辑文件夹",
+    callBack: () => {
+      leftEditFolder.value.openCreateFolder();
+    },
   },
   {
     newIcon: "fluent:delete-16-regular",
@@ -124,6 +138,8 @@ const rightMenu = ref([
           noText: "取消",
           ok: () => {
             appModalList.value.splice(currentDel.value, 1);
+            message.success("应用移除成功");
+            communityNav.saveCommunityNav()
           },
           type: "warning",
         }
@@ -134,20 +150,22 @@ const rightMenu = ref([
 
 // 获取数量
 const getNum = (item) => {
-  return item?.list?.length;
+  if (item.type === "like") {
+    const list = appModalList.value[1]?.list?.filter((filterItem) => {
+      return filterItem?.favo === true;
+    });
+    return list?.length;
+  } else {
+    const list = appModalList.value[1]?.list?.filter((filterItem) => {
+      return filterItem?.n_id === item.id;
+    });
+    return list?.length;
+  }
 };
 // 全部的数量
-const allNum = computed(()=>{
-  const num = appModalList.value.reduce((total,item) =>{
-    if(item.list && Array.isArray(item.list)){
-      return total + item?.list?.length;
-    }
-    else {
-      return total;
-    }
-  },0);
-  return num;
-})
+const allNum = computed(() => {
+  return appModalList.value[1].list?.length;
+});
 // 修改状态
 const updateIndex = (data) => {
   emit("change", data);

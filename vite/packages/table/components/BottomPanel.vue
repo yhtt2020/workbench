@@ -53,14 +53,27 @@
         <!-- 团队导航弹窗 -->
         <div
           v-if="teamNavVisible"
-          class="absolute"
+          class="absolute tuanduidaohang"
           :style="{
             left: `${teamNavLeft}px`,
             bottom: `${(navAttribute.navSize / 100) * 100}px`,
           }"
           style="z-index: 800"
         >
-          <TeamNav @close="teamNavVisible = false" />
+          <TeamNav @close="teamNavVisible = false" @openSet="settingModal"/>
+        </div>
+
+        <!-- 加入的社群搜索 -->
+        <div
+          v-if="comSearchVisible"
+          class="absolute"
+          :style="{
+            left: `${comSearchLeft}px`,
+            bottom: `${(navAttribute.navSize / 100) * 100}px`,
+          }"
+          style="z-index: 600"
+        >
+          <ComNavSearch @close="comSearchVisible = false"/>
         </div>
       </div>
     </AutoHide>
@@ -94,7 +107,15 @@
       <component :is="componentId" @setQuick="setQuick"></component>
     </div>
   </transition>
+
+  <!-- 应用模式弹窗 -->
   <AppModal />
+
+  <!-- 应用模式中设置弹窗 -->
+  <Setting ref="modeSetRef"/>
+
+  <!-- 桌面、导航、分支数据分类弹窗 -->
+  <DeskAppModal  ref="deskAppModalRef" />
 </template>
 
 <script>
@@ -114,6 +135,7 @@ import TaskBox from "../apps/task/page/TaskBox.vue";
 import Favorites from "../apps/favorites/page/index.vue";
 import navigationData from "../js/data/tableData";
 import { offlineStore } from "../js/common/offline";
+
 import {
   moreMenus,
   extraRightMenu,
@@ -142,12 +164,14 @@ import TeamNav from "./bottomPanel/community/TeamNav.vue";
 import AppModal from "./bottomPanel/community/AppModal.vue";
 import { controlStore } from "./desk/navigationBar/hook/controlStore";
 import WindowPanel from "./WindowPanel.vue";
-const {
-  //是否全屏状态
-  isFullscreen,
-  //切换全屏
-  toggle,
-} = useFullscreen();
+import Setting from "./bottomPanel/setting/CommunitySetting.vue";
+import ComNavSearch from "./bottomPanel/search/ComNavSearch.vue";
+import { communityStore } from "../page/chat/store/communityStore";
+import DeskAppModal from "./bottomPanel/desk/DeskAppList.vue";
+
+
+// 是否全屏状态 切换全屏
+const { isFullscreen, toggle } = useFullscreen();
 
 export default {
   name: "BottomPanel",
@@ -170,6 +194,9 @@ export default {
     TeamNav,
     AppModal,
     WindowPanel,
+    Setting,
+    ComNavSearch,
+    DeskAppModal,
   },
   data() {
     return {
@@ -285,6 +312,9 @@ export default {
       // 团队导航
       teamNavVisible: false,
       teamNavLeft: 100,
+      // 社群搜索
+      comSearchVisible: false,
+      comSearchLeft: 100,
     };
   },
   props: {},
@@ -341,8 +371,27 @@ export default {
     window.addEventListener("mousemove", this.listenMouse);
     // 点击团队导航打开团队组件
     this.$bus.on("openTeamNav", (evt) => {
-      this.teamNavVisible = !this.teamNavVisible;
+      console.log('打开团队导航的小组件')
+      this.openTeamNav = !this.teamNavVisible;
+      this.teamNavVisible=!this.teamNavVisible
       this.teamNavLeft = evt.clientX - 274 < 0 ? 0 : evt.clientX - 274;
+    });
+    // 触发社群搜索弹窗
+    this.$bus.on("openComSearch", (evt) => {
+      this.$bus.emit("closeModal");
+      this.teamNavVisible=false
+      this.comSearchVisible = !this.comSearchVisible;
+      this.comSearchLeft = evt.clientX - 274 < 0 ? 0 : evt.clientX - 50;
+    });
+    // 获取社群列表
+    this.getMyCommunity();
+    // 开启应用模式
+    this.$bus.on("openAppSetting", () => {
+      this.$refs.modeSetRef.openAppSetting();
+    });
+    // 开启桌面、导航、分组数据分类弹窗
+    this.$bus.on("openDeskAppModal", () => {
+      this.$refs.deskAppModalRef.openDeskApp();
     });
   },
   computed: {
@@ -533,6 +582,7 @@ export default {
       "removeFootNavigationList",
     ]),
     ...mapActions(useNavigationStore, ["toggleEdit", "toggleTaskBox"]),
+    ...mapActions(communityStore,['getMyCommunity']),
     mergeData,
     listenMouse(e) {
       if (
@@ -577,12 +627,10 @@ export default {
         this.quick = true;
       }
     },
-
     edit(value) {
       this.componentId = value;
       this.quick = true;
     },
-
     getDelIcon(value) {
       this.delZone = value;
     },
@@ -592,6 +640,124 @@ export default {
     setQuick() {
       this.quick = false;
       this.editToggle = false;
+    },
+    /**
+     * 删除图标判断
+     * @param {*} currentIndex 当前删除图标索引
+     * @param {*} currentItem 当前删除图标
+     */
+    delCurrentIcon(currentIndex, currentItem) {
+      if (!this.mainNavigationList.find(f => f.value === currentItem.value)) {
+        this.removeFootNavigationList(currentIndex)
+        return
+      }
+      let arr = []
+      if (this.navigationToggle[0] && this.navigationToggle[1]) {
+        arr = this.sideNavigationList.concat(this.rightNavigationList)
+      } else if (this.navigationToggle[0] && !this.navigationToggle[1]) {
+        arr = this.sideNavigationList
+      } else if (!this.navigationToggle[0] && this.navigationToggle[1]) {
+        arr = this.rightNavigationList
+      } else {
+        message.info(`导航栏中至少保留一个「${currentItem.name}」`)
+        return
+      }
+      this.delNavigation(arr, currentItem, currentIndex, this.removeFootNavigationList)
+    },
+    /**
+     * 打开桌面应用提示
+     * @param {*} item 当前图标
+     */
+    msgNotice(item) {
+      if (item.type === 'tableApp') {
+        message.loading({
+          content: `打开「${item.name}」...`
+          , key: 'tipRun'
+        })
+      }
+    },
+    /**
+     * 打开应用
+     * @param {*} type 图标类型
+     * @param {*} value 打开路径
+     * @param {*} item 图标详细信息
+     */
+    async newOpenApp(type, value, item) {
+      type !== 'folder' ? this.folderVisible = false : ''
+      this.resetElementPosition()
+      if(value === 'control' && !this.controlVisible){
+        this.controlVisible = true
+        return
+      }
+      if(value === 'commun'){
+        this.comVisible = !this.comVisible
+        return
+      }
+      console.log('item :>> ', item);
+      // 新版设置打开方式
+      if (value === 'setting') {
+          this.$bus.emit("openSystemSet")
+      }
+      if(type === 'folder'){
+        this.openFolder(item)
+      }
+      if (value == 'fullscreen' && window.$useEnv()) {
+        toggle()
+        return
+      }
+      if (window.$useEnvLimit('web',value)) return
+
+
+      if (item) this.msgNotice(item)
+      if (value === 'home' && item.home) {
+        this.jumpDesk = item.home
+      }
+      let rs = await startApp(type, value, this.$router)
+      if (!rs) {
+        message.error({
+          content: `打开「${item.name}」失败`
+          , key: 'tipRun'
+        })
+      }
+      this.controlVisible = false;
+      this.comVisible = false
+    },
+    completeEdit() {
+      this.toggleEdit()
+      this.setQuick()
+    },
+    disableDrag() {
+      // if (this.sortable) {
+      document.removeEventListener('click', this.disableDrag)
+      // this.sortable.destroy()
+      this.sortable = null
+    },
+    /**
+     * 解散文件夹和切换文件夹
+     * @param {*} item
+     * @param {*} index
+     */
+    resetFolder(item, index) {
+      if (item.children.length > 0) {
+        if (item.children.length + this.copyFootNav.length > this.maxItemNum) {
+          window.$ui.confirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
+            ok: () => {
+              this.copyFootNav.splice(index, 1, ...item.children)
+            },
+            no: () => {
+              return this.copyFootNav
+            }
+          })
+        }else{
+          this.copyFootNav.splice(index, 1, ...item.children)
+        }
+        // this.copyFootNav.splice(index, 1, ...item.children)
+
+        if (this.folderId == item.id) {
+          this.closeFolder()
+        }
+
+      }
     },
     createFile(item, x) {
       const bottom = document.querySelector("#bottomPanel");
@@ -632,7 +798,6 @@ export default {
     hoverRealItemId,
     useWindowSize,
     useMergeFolder,
-
     //  点击头像框打开控制中心
     openControl(event) {
       // 触发工作台首次进入小红点,进行关闭
@@ -640,6 +805,10 @@ export default {
       this.controlVisible = !this.controlVisible;
       this.controlLeft = event.clientX - 274 < 0 ? 0 : event.clientX - 274;
     },
+    // 开启设置
+    settingModal(){
+      this.$refs.modeSetRef.openAppSetting();
+    }
   },
 };
 </script>
@@ -702,4 +871,3 @@ export default {
   opacity: 0.5;
 }
 </style>
-./bottomPanel/Dock.vue/index.ts./desk/addIcon/EditNewNavigation.vue/index.ts

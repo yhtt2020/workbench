@@ -1,6 +1,7 @@
 <template>
   <div class="main-box">
     <template v-for="(item, index) in displayList" :key="item.name">
+      <!-- {{ item }} -->
       <template v-if="item.name == 'clocks' && M01013">
         <xt-task :modelValue="M01013" to="" @cb="addNewCard(item)">
           <div>

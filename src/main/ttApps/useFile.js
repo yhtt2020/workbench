@@ -1,13 +1,11 @@
 /**
- * ttapp.js
+ * 处理文件相关操作 ttapp.js
  * @description 处理文件相关操作
  */
 // const extractZip = require("../../../js/main/crx");
 const extractZip = require("../../../js/main/zip.js");
 const { join } = require("path");
 const { promises } = require("fs");
-const fs = require("fs-extra");
-
 const fse = require("fs-extra");
 const electron = require("electron");
 
@@ -30,16 +28,20 @@ const file = {
    * @returns 如果文件夹存在则返回 true，否则返回 false
    */
   async existsFolder(folderName) {
-    let fileDir = file.pathJoin(folderName);
-    let res = await fs.pathExists(fileDir);
-    return res;
+    try {
+      let fileDir = file.pathJoin(folderName);
+      let res = await fse.pathExists(fileDir);
+      return res;
+    } catch (error) {
+      return false;
+    }
   },
   /**
    * 创建文件夹
    * @param folderName 要创建的文件夹名称
    */
   async createFolder(folderName) {
-    await fs.mkdirp(file.pathJoin(folderName));
+    await fse.mkdirp(file.pathJoin(folderName));
   },
   /**
    * 获取当前工作目录
@@ -56,17 +58,40 @@ const file = {
    * @param encoding 编码格式
    * @return string
    */
-  readFile(fileName, encoding = "utf-8") {
-    return fs.readFileSync(fileName, {
-      encoding: encoding,
-    });
+  async readFile(fileName, encoding = "utf-8") {
+    let folderExistsRes = await file.existsFolder(fileName);
+    if (!folderExistsRes) {
+      return {
+        status: 0,
+        code: 400,
+        info: "文件不存在",
+        data: "文件不存在",
+      };
+    }
+    try {
+      let res = await fse.readFileSync(file.pathJoin(fileName), {
+        encoding: encoding,
+      });
+      return {
+        code: 200,
+        data: res,
+      };
+    } catch (err) {
+      console.error("Error deleting directory:", err);
+      return {
+        status: 0,
+        code: 400,
+        info: "读取失败",
+        data: err,
+      };
+    }
   },
   /**
    * 删除文件
    */
   async deleteFile(filePath) {
     try {
-     await fse.removeSync(file.pathJoin(filePath));
+      await fse.removeSync(file.pathJoin(filePath));
       return true;
     } catch (err) {
       console.error("Error deleting directory:", err);
@@ -83,18 +108,11 @@ const file = {
       // const crxInfo = parseCrx(crxBuf);
       let res = await extractZip(zipBuf, destPath);
       return {
-        status: 1,
         code: 200,
-        data: "success",
-        info: "成功",
+        data: res,
       };
     } catch (error) {
-      return {
-        status: 0,
-        code: 400,
-        info: "文件无法解压",
-        data: error,
-      };
+      return error;
     }
   },
   /**
@@ -106,15 +124,60 @@ const file = {
     }
     return join(file.getCurrentDir(), ...paths);
   },
+  /**
+   * 写入文件
+   */
+  async writeFile(filePath, data) {
+    try {
+      let res = fse.writeFileSync(file.pathJoin(filePath), data);
+      return {
+        code: 200,
+        data: res,
+      };
+    } catch (err) {
+      return {
+        status: 0,
+        code: 400,
+        info: "写入失败",
+        data: err,
+      };
+    }
+  },
+  /**
+   * 移动文件夹
+   */
+  async moveFolder(source, dest) {
+    try {
+      console.log("----------------------------);:>> ");
+      console.log("file.pathJoin(source) :>> ", file.pathJoin(source));
+      console.log("file.pathJoin(dest) :>> ", file.pathJoin(dest));
+      console.log("----------------------------);:>> ");
+      await fse.move(file.pathJoin(source), file.pathJoin(dest), {
+        overwrite: true,
+      });
+      return true;
+    } catch (err) {
+      console.error("Error moving folder:", err);
+      return false;
+    }
+  },
+  /**
+   * 复制文件夹 没生效
+   */
+  async copyFolder(source, dest) {
+    try {
+      console.log("file.pathJoin(source) :>> ", file.pathJoin(source));
+      console.log("file.pathJoin(dest) :>> ", file.pathJoin(dest));
+      fse.copySync(file.pathJoin(source), file.pathJoin(dest), {
+        overwrite: true,
+      });
+      console.log("Folder copied successfully!");
+      return true;
+    } catch (error) {
+      console.error("Error copying folder:", error);
+      return false;
+    }
+  },
 };
 
-/**
- * 路径拼接
- */
-function pathJoin(paths) {
-  if (typeof paths == "string") {
-    return join(file.getCurrentDir(), paths);
-  }
-  return join(file.getCurrentDir(), ...paths);
-}
 module.exports = file;

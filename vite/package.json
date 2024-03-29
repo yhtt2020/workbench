@@ -21,7 +21,6 @@
     "@wangeditor/editor-for-vue": "^5.1.12",
     "animate.css": "^4.1.1",
     "ant-design-vue": "3.2.20",
-    "autoprefixer": "^10.4.14",
     "axios": "^1.6.1",
     "cheerio": "^1.0.0-rc.12",
     "codemirror": "5.65.13",
@@ -49,7 +48,7 @@
     "perfect-scrollbar": "^1.5.5",
     "pinia": "^2.0.23",
     "pinyin-pro": "^3.17.0",
-    "postcss": "^8.4.21",
+
     "pouchdb": "^8.0.1",
     "pouchdb-find": "^8.0.1",
     "qrcode": "^1.5.3",
@@ -60,7 +59,6 @@
     "sortablejs": "^1.15.0",
     "spotlight.js": "^0.7.8",
     "swiper": "^9.2.3",
-    "tailwindcss": "^3.2.7",
     "tim-js-sdk": "^2.27.5",
     "tinycolor2": "^1.6.0",
     "tui-image-editor": "^3.15.3",
@@ -81,7 +79,7 @@
     "vue3-seamless-scroll": "^2.0.1",
     "vue3-selecto": "^1.12.2",
     "vuex": "^4.0.2",
-    "wujie-vue3": "^1.0.18",
+    "wujie-vue3": "^1.0.22",
     "xgplayer": "^2.32.2"
   },
   "devDependencies": {
@@ -92,6 +90,9 @@
     "@vitejs/plugin-vue": "^2.3.3",
     "typescript": "^4.5.4",
     "vite": "^2.9.16",
-    "vue-tsc": "^0.34.7"
+    "vue-tsc": "^0.34.7",
+    "tailwindcss": "^3.2.7",
+    "postcss": "^8.4.35",
+    "autoprefixer": "^10.4.17"
   }
 }

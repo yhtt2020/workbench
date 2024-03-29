@@ -57,7 +57,7 @@ const isChatMain = computed(() => {
     text-align: center;
     line-height: 20px;
     font-weight: 400;
-    background: var(--active-bg);
+    background:var(--active-bg);
     color: #ffffff;
     letter-spacing: 0;
     cursor: pointer;

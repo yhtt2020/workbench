@@ -46,14 +46,15 @@ import { completeTask } from '../../apps/task/page/branch/task';
 
 import CreateCommunity from './components/CreateCommunitys.vue';
 import Modal from '../../components/Modal.vue';
-import AddFriend from '../../TUIKit/TUIComponents/components/transfer/addFriend.vue';
+import AddFriend from '../../apps/chat/components/add/AddFriend.vue';
 import Transfer from '../../TUIKit/TUIComponents/components/transfer/index.vue';
-import CreateGroup from '../../TUIKit/TUIComponents/container/TUISearch/components/createGroup/index.vue';
+import CreateGroup from '../../apps/chat/components/create/CreateGroupChat.vue';
 import CategoryFloat from './components/float/CategorysFloat.vue';
 import DefaultFloat from './components/float/DefaultsFloat.vue';
 import JoinCommunitys from './components/communityJoin/JoinCommunitys.vue';
 import GradeSmallTip from "../../components/GradeSmallTip.vue";
 import {useGlobalStore} from '../../apps/Global/store';
+
 export default {
   name: "chat",
   components: {
@@ -62,7 +63,6 @@ export default {
     JoinCommunitys,GradeSmallTip,
     CreateCommunity,
   },
-
   setup(props, ctx) {
     const com = communityStore();
     const chat = chatStore();
@@ -288,7 +288,7 @@ export default {
     
     // 等级限制，3级才可以创建一个社群，10级后可以创建五个社群
     const limitClick = computed(()=>{
-      let lv = 3
+      let lv = lvInfo.lv
       if(lv < 3 && filterList.value.length >= 7){
         return '最多创建一个社群'
       }else if(lv < 10 && filterList.value.length >= 8){
@@ -298,6 +298,7 @@ export default {
 
     /**初始化挂载**/
     onMounted(()=>{
+      console.log('挂载了',limitClick.value)
       com.getMyCommunity();
       com.getCommunityTree();
       // 游客模式下 隐藏 聊天对话 和 通讯录
@@ -328,7 +329,6 @@ export default {
       selectTab,triggerAddModal,limitClick
     }
   }
-
 };
 </script>
 

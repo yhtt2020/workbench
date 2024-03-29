@@ -142,12 +142,12 @@ const finshEdit = () => {
       return {...control.value.oldList[index]};
     });
     control.value.oldList = [...updateListItem];
-    editVisible.value = false; 
+    editVisible.value = false;
     updateList.value = [];
   }
   else {
     control.value.oldList = [...initList.value];
-    editVisible.value = false; 
+    editVisible.value = false;
   }
 };
 
@@ -156,7 +156,7 @@ const restList = () => {
   control.value.newList = [];
   control.value.oldList = [];
   control.value.oldList = JSON.parse(JSON.stringify(initList.value));
-  editVisible.value = false; 
+  editVisible.value = false;
 };
 
 const bottomButton = ref([
@@ -195,12 +195,7 @@ const bottomButton = ref([
     newIcon: "fluent:settings-16-regular",
     name: "设置",
     fn: () => {
-      router.push({
-          name:'home'
-        })
-        setTimeout(() => {
-          proxy.$bus.emit("openSystemSet")
-        }, 500);
+      proxy.$bus.emit("openSystemSet")
       emit("close");
     },
   },
@@ -238,7 +233,7 @@ onMounted(() => {
   });
   window.addEventListener("click",handleClick);
 });
-onUnmounted(()=>{ 
+onUnmounted(()=>{
   window.removeEventListener("click",handleClick);
 });
 </script>
