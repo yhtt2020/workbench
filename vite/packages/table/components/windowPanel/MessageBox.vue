@@ -6,8 +6,7 @@
             :list="list">
         </Box>
     </div>
-    <div v-else-if="isTop" class="w-full h-[28px]">
-        <!-- {{ list }} -->
+    <div v-else-if="isTop" class="w-full h-[28px] flex gap-3">
         <Item v-for="item in list" :key="item.name" :item="item"></Item>
     </div>
     <!-- 快递 -->
@@ -51,6 +50,7 @@ import { usePosition } from './hook/usePosition.ts';
 import TopCourier from '../widgets/courier/TopCourier.vue';
 import TopTomato from '../../apps/tomato/widget/TopTomato.vue';
 import Box from './components/Box.vue';
+import Item from './components/Item.vue';
 import LeftDrawer from './components/LeftDrawer.vue';
 import TopClockTimer from '../widgets/TopClockTimer.vue';
 
@@ -172,7 +172,7 @@ const queue : Array<queueType> = ref([
             }
             pos.value = usePosition(position,itemPosition)
             courierVisible.value = ! courierVisible.value
-            console.log('2',e,courierList.value.length)
+            console.log('2',e, pos.value)
         },
         disabled:computed(() => settings.value.courierStatus.statusBar)
     },

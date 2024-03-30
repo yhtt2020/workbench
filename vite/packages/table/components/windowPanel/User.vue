@@ -2,7 +2,8 @@
     <MyAvatar @click="openControl"></MyAvatar>
     <div class="absolute" v-if="isControl" :style="{left: pos.x + 'px', top: pos.y + 'px'}" style="z-index: 500;">
         <ControlModal 
-            :title="title">
+            :title="title"
+            @close="isControl = false">
         </ControlModal>
     </div>
 </template>

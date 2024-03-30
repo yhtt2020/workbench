@@ -1,13 +1,13 @@
 <template>
   <!-- xt-main-top-bar 元素定位类 不可删 -->
   <div id="topBar" class="flex items-center justify-between w-full pt-1 xt-main-top-bar top-shadow drag">
-
-      <div v-if="isMain || (appSettings.showTopPanel)" id="topLeftPart" @contextmenu.stop="toggleAppStats" class="flex min-h flex-1 pl-2.5 drag  items-center">
-        <!-- <div class="w-full no-drag">
+      <!-- @contextmenu.stop="toggleAppStats" -->
+      <div v-if="isMain || (appSettings.showTopPanel)" id="topLeftPart"  class="flex min-h flex-1 pl-2.5 drag  items-center">
+        <div class="no-drag">
           <MessageBox :isTop="true" />
-        </div> -->
+        </div>
         
-        <div class="flex no-drag">
+        <!-- <div class="flex no-drag">
           <a-tooltip>
             <QueueWidget></QueueWidget>
           </a-tooltip>
@@ -46,7 +46,7 @@
           <TopClockTimer/>
 
           <TopTomato />
-        </div>
+        </div> -->
       </div>
 
       <div v-if="isMain || (appSettings.showTopPanel)" id="topCenterPart" class="flex max-search drag min-h" hidden="">
@@ -84,7 +84,7 @@
     </div>
   </div>
 
-  <TopPanelLeftDrawer ref="leftDrawerRef">
+  <!-- <TopPanelLeftDrawer ref="leftDrawerRef">
     <div class="app-stats">
       <div @click="enterClipboard" class="cursor-pointer app" v-if="hasEnable">
         <a-row>
@@ -122,7 +122,7 @@
         <QueueWidget :show="true"></QueueWidget>
       </div>
     </div>
-  </TopPanelLeftDrawer>
+  </TopPanelLeftDrawer> -->
 
   <TopPanelRightDrawer ref="rightDrawerRef" />
 </template>
@@ -257,32 +257,6 @@ export default {
         message.info("定制过程中无法操作");
       }
     },
-
-    // topClockTimerVisibleSetting(){
-    //   this.filterClock(this.clockTag,this.chooseType);
-    //   if(this.checkTopClock===true){
-    //     if (this.filterClockEvent.length > 0){
-    //       // console.log(this.filterClockEvent.length);
-    //       this.topClockTimerVisible = true;
-    //     }
-    //     else if (this.countDowntime.seconds !== undefined){
-    //       // console.log(this.countDowndate);
-    //       this.topClockTimerVisible = true;
-    //     }
-    //     else {
-    //       // console.log(this.countDowndate,this.clockEvent);
-    //       this.topClockTimerVisible = false;
-    //     }
-    //   }
-    //   else{
-    //     this.topClockTimerVisible=false;
-    //   }
-    //   // console.log(this.clockTag);
-    // }
-  },
-
-  beforeUpdate() {
-    // this.topClockTimerVisibleSetting();
   }
 }
 </script>

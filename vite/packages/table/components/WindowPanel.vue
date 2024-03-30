@@ -68,6 +68,14 @@ const openRightDrawer = () => {
     }
 }
 
+/**
+ * 导航栏图标的回调函数 
+ * @edit 编辑图标的回调
+ * @getDelIcon 托起图标后传入的删除区域显示的回调
+ * @control 导航栏控制中心的回调
+ * @param value 
+ */
+
 const edit = (value) => {
     emit('edit', value)
 }
