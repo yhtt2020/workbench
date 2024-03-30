@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, onUnmounted, ref } from '../../../adapter-vue';
+import { onMounted, onUnmounted, ref ,getCurrentInstance} from '../../../adapter-vue';
 import {
   TUIStore,
   StoreName,
@@ -26,6 +26,9 @@ import Transfer from '../../common/Transfer/index.vue';
 import { Toast, TOAST_TYPE } from '../../../components/common/Toast';
 import { isUniFrameWork } from '../../../utils/env';
 import { isEnabledMessageReadReceiptGlobal } from '../utils/utils';
+
+// 新增 开启新版的转发弹窗
+const { proxy } = getCurrentInstance();
 
 const isShowForwardPanel = ref(false);
 const customConversationList = ref();
@@ -63,7 +66,10 @@ function closeForwardPanel(): void {
 }
 
 function openForwardPanel(): void {
-  isShowForwardPanel.value = true;
+  // isShowForwardPanel.value = true;
+
+  // 修改 转发面板的显示状态 
+  proxy.$bus.emit('openForwardModal');
 }
 
 function finishSelected(selectedConvIDWrapperList: Array<{ userID: string }>): void {

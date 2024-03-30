@@ -61,6 +61,8 @@
       <NoticeDrawer ref="noticeRef" :groupID="groupID" />
       <!-- 新增 群管理抽屉弹窗页面 -->
       <ManageDrawer ref="groupRef" :groupID="groupID"/>
+      <!-- 新增 群消息转发页面 -->
+      <ForwardModal />
     </div>
   </div>
 </template>
@@ -86,6 +88,7 @@ import TUIChatConfig from './config';
 // 新增
 import NoticeDrawer from "../../../chat/components/managerDrawer/NoticeDrawer.vue"
 import ManageDrawer from "../../../chat/components/managerDrawer/ManageDrawer.vue";
+import ForwardModal from "../../../chat/components/manager/ForwardModal.vue";
 
 const emits = defineEmits(['closeChat']);
 const isToolbarShow = ref<boolean>(!isUniFrameWork);
