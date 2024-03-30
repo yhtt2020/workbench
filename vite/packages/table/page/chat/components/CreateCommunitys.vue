@@ -1,5 +1,5 @@
 <template>
-  <xt-modal v-model="createVisible" title="创建社群" :index="500">
+  <xt-modal v-model="createVisible" v-if="createVisible" title="创建社群" :index="500">
     <template #nav>
       <xt-button v-if="id === 'chat'"  @click="backCreate" w="40" h="40" style="border-radius: 8px;">
         <div class="flex items-center justify-center">

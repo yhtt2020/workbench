@@ -49,8 +49,8 @@ const data = {
 </script>
 
 <template>
-  <AppCenter />
-  <xt-modal v-model="test" @close="onClose">
+  <AppCenter  v-if="0"/>
+  <xt-modal v-model="test" @close="onClose" v-if='test' :mask="false">
     <Builder />
 
     <div class="line">

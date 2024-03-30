@@ -1,5 +1,5 @@
 <template>
-  <xt-modal v-model="clockVisible" title="时钟设置" :index="zIndex">
+  <xt-modal v-model="clockVisible" v-if="clockVisible" title="时钟设置" :index="zIndex">
     <div style="height: calc(66vh);width: 500px;">
       <xt-scrollbar  :y="true" style="height: 100%;">
         <div class="flex flex-col xt-bg-2 p-4 rounded-lg mb-4">

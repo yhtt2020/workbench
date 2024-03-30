@@ -1,11 +1,5 @@
 <template>
-  <xt-modal
-    v-model="visible"
-    :footer="0"
-    @close="close"
-    :index="index"
-    :maskIndex="maskIndex"
-  >
+  <xt-modal v-model="visible" v-if="visible" :footer="0" @close="close" :index="index" :maskIndex="maskIndex">
     <template #header-right>
       <xt-button @click="save" w="60" h="32" radius="8" type="theme"
         >保存</xt-button

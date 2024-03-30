@@ -1,5 +1,5 @@
 <template>
-  <xt-modal v-model="linkVisible" title="自定义网页链接">
+  <xt-modal v-model="linkVisible" v-if="linkVisible" title="自定义网页链接">
     <div class="flex flex-col" style="width:500px;">
       <div class="p-4 flex rounded-lg flex-col mb-4 xt-bg-2">
         <span class="font-16 font-400 xt-font  xt-text mb-2.5">操作指南</span>
