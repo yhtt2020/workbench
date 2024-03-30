@@ -82,6 +82,7 @@
     <template v-else>
       <Drop @createFile="createFile" currentId="bottom">
         <WindowPanel 
+          :mainClass="mainClass"
           @edit="edit" 
           @getDelIcon="getDelIcon"
           @control="openControl">
@@ -317,7 +318,12 @@ export default {
       comSearchLeft: 100,
     };
   },
-  props: {},
+  props: {
+    mainClass:{
+      type:String,
+      default:() => ""
+    }
+  },
   unmounted() {
     window.removeEventListener("mousemove", this.listenMouse);
   },

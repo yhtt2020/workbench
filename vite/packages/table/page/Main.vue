@@ -3,7 +3,14 @@
     style="display: flex;flex-direction: column;height: 100vh;flex-wrap: nowrap;align-content: stretch;align-items: stretch;gap:10px">
     <div v-if="!fullScreen" style="height: auto;flex: 0">
       <!--顶部状态栏      -->
-      <TopPanel isHidden="true"></TopPanel>
+      <TopPanel isHidden="true" v-if="currentNavPosition !== 'top'"></TopPanel>
+      <BottomPanel 
+        v-if="currentNavPosition === 'top' && loaded" 
+        :delZone="delZone" 
+        @getDelIcon="getDelIcon" 
+        @hiedNavBar="hiedNavBar"
+        :mainClass="'top-20 right-6'">
+      </BottomPanel>
     </div>
     <div :style="{ margin: fullScreen ? 0 : '-3px', padding: fullScreen ? 0 : '8px' }"
       style="display: flex;flex-grow: 1;flex-shrink: 1;flex-basis: fit-content;overflow: hidden;height: 100%;">
@@ -63,9 +70,13 @@
       <!-- </AutoHide> -->
     </div>
     <div style="flex: 0;">
-      <BottomPanel v-if="!fullScreen && loaded" :delZone="delZone" @getDelIcon="getDelIcon" @hiedNavBar="hiedNavBar">
+      <BottomPanel 
+        v-if="!fullScreen && loaded && currentNavPosition === 'bottom'" 
+        :delZone="delZone" 
+        @getDelIcon="getDelIcon" 
+        @hiedNavBar="hiedNavBar"
+        :mainClass="'bottom-20 right-6'">
       </BottomPanel>
-      <!-- <WindowPanel v-if="!fullScreen && loaded"></WindowPanel> -->
     </div>
   </div>
 </template>
@@ -102,7 +113,7 @@ export default {
     ...mapWritableState(appStore, ['routeUpdateTime', 'fullScreen', 'settings', 'init']),
     ...mapWritableState(teamStore, ['teamVisible']),
     ...mapWritableState(navStore, ['sideNavigationList', 'rightNavigationList', 'navigationToggle', 'footNavigationList', 'copyRightNav', 'copySideNav', 'loaded', 'copyFootNav']),
-    ...mapWritableState(useNavigationStore, ['customOpenNav', 'isLeaveBar','isEdge']),
+    ...mapWritableState(useNavigationStore, ['customOpenNav', 'isLeaveBar','isEdge','currentNavPosition']),
     isMain,
     sideVisible() {
       if (this.customOpenNav) {

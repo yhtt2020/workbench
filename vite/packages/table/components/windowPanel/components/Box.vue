@@ -1,7 +1,7 @@
 <template>
     <div 
-        @click="openMain"
-        class="w-[40px] h-[40px] xt-bg rounded-lg flex flex-wrap relative" 
+        @click.stop.prevent="openMain"
+        class="w-[40px] h-[40px] xt-main-bg rounded-lg flex flex-wrap relative" 
         style="gap: 4px;padding: 6px">
         <template v-for="(item,index) in list.slice(0,3)" :key="index" >
             <xt-new-icon :icon="item.icon" size="12" v-if="item.icon"></xt-new-icon>
@@ -14,14 +14,15 @@
         </xt-new-icon>
         
     </div>
-    <div 
-        :class="mainClass"
-        v-if="mainVisible"
-        style="border: 1px solid var(--divider);gap: 12px;"
-        
-        class="absolute h-[52px] xt-bg flex p-3 rounded-lg message-box">
-        <Item v-for="item in list" :key="item.name" :item="item"></Item>
-    </div>
+    <Teleport to="body">
+        <div 
+            :class="mainClass"
+            v-if="mainVisible"
+            style="border: 1px solid var(--divider);gap: 12px;z-index: 500;"
+            class="absolute h-[52px] xt-bg flex p-3 rounded-lg message-box">
+            <Item v-for="item in list" :key="item.name" :item="item"></Item>
+        </div>
+    </Teleport>
 </template>
 
 <script setup lang='ts'>

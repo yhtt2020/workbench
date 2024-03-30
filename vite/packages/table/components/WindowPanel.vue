@@ -1,8 +1,13 @@
 <template>
-    <div class="
+    <div 
+        class="
             w-full h-[64px]  pointer 
             flex items-center 
-            justify-between p-3 " style="border: 1px solid var(--divider);background: rgba(26,26,26,0.65);;">
+            justify-between p-3 " 
+        style="
+            border: 1px solid var(--divider);
+            background: rgba(26,26,26,0.65);
+            backdrop-filter: blur(50px);">
         <!-- 用户头像以及控制中心 -->
         <User></User>
         <!-- 导航栏图标 -->
@@ -11,7 +16,7 @@
         <!-- 右侧时间天气和消息通知 -->
         <div class="flex">
             <Time></Time>
-            <MessageBox :boxClass="'ml-3'" :mainClass="'bottom-20 right-6'"></MessageBox>
+            <MessageBox :boxClass="'ml-3'" :mainClass="mainClass"></MessageBox>
             <Tip 
                 :top="6"
                 name="inform" 
@@ -53,6 +58,13 @@ const useAppStore = appStore()
 const { showGuide , status } = storeToRefs(useAppStore)
 
 const emit = defineEmits(['edit', 'getDelIcon', 'control'])
+
+const props = defineProps({
+    mainClass: {
+        type: String,
+        default: 'bottom-20 right-6'
+    }
+})
 
 const rightDrawer = ref<InstanceType<typeof TopPanelRightDrawer> | null>(null)
 

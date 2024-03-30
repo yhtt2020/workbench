@@ -1,11 +1,13 @@
 <template>
     <MyAvatar @click="openControl"></MyAvatar>
-    <div class="absolute" v-if="isControl" :style="{left: pos.x + 'px', top: pos.y + 'px'}" style="z-index: 500;">
-        <ControlModal 
-            :title="title"
-            @close="isControl = false">
-        </ControlModal>
-    </div>
+    <Teleport to="body">
+        <div class="absolute" v-if="isControl" :style="{left: pos.x + 'px', top: pos.y + 'px'}" style="z-index: 500;">
+            <ControlModal 
+                :title="title"
+                @close="isControl = false">
+            </ControlModal>
+        </div>
+    </Teleport>
 </template>
 
 <script setup lang='ts'>
