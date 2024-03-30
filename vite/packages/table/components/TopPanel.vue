@@ -3,158 +3,77 @@
   <div id="topBar" class="flex items-center justify-between w-full pt-1 xt-main-top-bar top-shadow drag">
       <!-- @contextmenu.stop="toggleAppStats" -->
       <div v-if="isMain || (appSettings.showTopPanel)" id="topLeftPart"  class="flex min-h flex-1 pl-2.5 drag  items-center">
-        <div class="no-drag">
+        <div class="no-drag" v-if="isMain && navFormat">
           <MessageBox :isTop="true" />
         </div>
-        
-        <!-- <div class="flex no-drag">
-          <a-tooltip>
-            <QueueWidget></QueueWidget>
-          </a-tooltip>
-          <a-tooltip title="剪切板监听中，点击进入应用，右键查看全部" v-if="hasEnable">
-            <xt-button w="28" h="28" class="xt-bg-t-2 mr-2.5" style="border-radius:6px !important;"  @click="enterClipboard">
-              <div class="flex items-center justify-center">
-                <TopIcon style="font-size:20px;" class="xt-text" icon="fluent:clipboard-bullet-list-16-regular"/>
-              </div>
-            </xt-button>
-          </a-tooltip>
-
-          <a-tooltip title="音乐播放中，点击进入应用，右键查看全部">
-            <xt-button h="28"  class="xt-bg-t-2 mr-2.5"  v-if="status.music.playing && status.music.title && status.music" style="border-radius: 6px !important;width:auto !important;padding:4px 8px 4px 4px  !important;"
-                       @click="enterMusic"
-            >
-              <div class="flex items-center justify-center">
-                <a-avatar style="margin-right: 0.5em" :size="20" :src="status.music.cover"></a-avatar>
-                <span class="truncate xt-text font-14 xt-font" style="max-width:165px;">
-             {{ status.music.title }} {{ status.music.singer }}
-           </span>
-              </div>
-            </xt-button>
-          </a-tooltip>
-
-          <xt-button h="28" class="xt-bg-t-2 mr-2.5"  v-if="runningGame.appid" @click="enterGameDesk(runningGame.appid)"
-                     style="border-radius: 6px !important;width:auto !important;padding:4px 8px 4px 4px  !important;"
-          >
-            <div class="flex items-center justify-center">
-              <a-avatar :size="20" style="margin-right: 0.25rem" :src="getClientIcon(this.runningGame.appid, this.runningGame.clientIcon)"></a-avatar>
-              <span class="truncate xt-text font-14 xt-font" style="max-width:165px;">{{ runningGame.chineseName }}</span>
-            </div>
-          </xt-button>
-
-          <TopCourier v-if="!isHidden" />
-
-          <TopClockTimer/>
-
-          <TopTomato />
-        </div> -->
       </div>
 
-      <div v-if="isMain || (appSettings.showTopPanel)" id="topCenterPart" class="flex max-search drag min-h" hidden="">
+      <div v-if="(isMain || (appSettings.showTopPanel)) && navFormat" id="topCenterPart" class="flex max-search drag min-h" hidden="">
         <div hidden="" @click="openGlobalSearch" class="inline-block input-box no-drag pointer"
              style=" background: var( --primary-bg); color: var(--secondary-text);width: 320px">
           <Icon icon="sousuo"></Icon>
         </div>
       </div>
 
-      <div v-if="isMain || (appSettings.showTopPanel)" id="topRightPart" class="relative flex items-center justify-end min-h drag ">
+      <div v-if="(isMain || (appSettings.showTopPanel)) && navFormat" id="topRightPart" class="relative flex items-center justify-end min-h drag ">
         <PaperLock></PaperLock>
         <TopPanelButton/>
 
-        <div  style="width:auto !important;"   @click="toggleRightDrawer" :style="showWindowController ? {margin:'0 170px 0 0 !important'} : {margin:'0 16px 0 0 !important'} "
-              class="p-1 rounded-md no-drag btn-hover category-button pointer"
-        >
-        <div class="flex items-center">
-          <template v-if="hasChat">
-            <span class="pl-1 primary-title pointer xt-text font-14 xt-font">新消息</span>
-            <span class="px-1 xt-text font-14 xt-font">·</span>
-          </template>
-          <template v-if="appSettings.showTopbarTime">
-            <span class="xt-text font-14 xt-font">{{ dateTime.month }}月{{ dateTime.day }}日</span>
-            <span class="mx-1 xt-text font-14 xt-font">{{ dateTime.week }}</span>
-            <span class="pr-1 xt-text font-14 xt-font">{{ dateTime.hours }}:{{ dateTime.minutes }}</span>
-          </template>
-          <span v-if="hasWeather && city.now && appSettings.showTopbarWeather" class=" xt-text font-14 xt-font">{{ city.now.text }} {{ city.now.temp }}℃</span>
-        </div>
+        <div 
+          v-if="isMain && navFormat"
+          style="width:auto !important;"   
+          @click="toggleRightDrawer" 
+          :style="showWindowController ? {margin:'0 170px 0 0 !important'} : {margin:'0 16px 0 0 !important'} "
+          class="p-1 rounded-md no-drag btn-hover category-button pointer">
+          <div class="flex items-center">
+            <template v-if="hasChat">
+              <span class="pl-1 primary-title pointer xt-text font-14 xt-font">新消息</span>
+              <span class="px-1 xt-text font-14 xt-font">·</span>
+            </template>
+            <template v-if="appSettings.showTopbarTime">
+              <span class="xt-text font-14 xt-font">{{ dateTime.month }}月{{ dateTime.day }}日</span>
+              <span class="mx-1 xt-text font-14 xt-font">{{ dateTime.week }}</span>
+              <span class="pr-1 xt-text font-14 xt-font">{{ dateTime.hours }}:{{ dateTime.minutes }}</span>
+            </template>
+            <span 
+              v-if="hasWeather && city.now && appSettings.showTopbarWeather" 
+              class=" xt-text font-14 xt-font">{{ city.now.text }} {{ city.now.temp }}℃</span>
+          </div>
         </div>
       </div>
 
-    <div class="absolute top-0 right-0 xt-bg rounded-bl-xl h-9 no-drag" style="z-index: 1000;" v-if="showWindowController && !$useEnv()"  id="windowController" >
+    <div 
+      class="absolute top-0 right-0 xt-bg rounded-bl-xl h-9 no-drag" 
+      style="z-index: 1000;" 
+      v-if="showWindowController && !$useEnv()"  
+      id="windowController" >
       <WindowController></WindowController>
-
     </div>
   </div>
-
-  <!-- <TopPanelLeftDrawer ref="leftDrawerRef">
-    <div class="app-stats">
-      <div @click="enterClipboard" class="cursor-pointer app" v-if="hasEnable">
-        <a-row>
-          <a-col :span="5">
-            <icon style="font-size: 48px;vertical-align: text-top" icon="xiangmu"></icon>
-          </a-col>
-          <a-col>
-            <div class="font-bold app-title">
-              剪切板
-            </div>
-            <div class="app-des xt-text-2">
-              剪切板监听中…
-            </div>
-          </a-col>
-        </a-row>
-
-      </div>
-      <div @click="enterMusic" class="app" v-if="status.music.playing && status.music.title && status.music">
-        <a-row>
-          <a-col :span="5">
-            <a-avatar style="margin-right: 0.5em" :size="48" :src="status.music.cover"></a-avatar>
-          </a-col>
-          <a-col>
-            <div class="font-bold app-title">
-              网易云音乐
-            </div>
-            <div class="app-des xt-text-2">
-              {{ status.music.title }} {{ status.music.singer }}
-            </div>
-          </a-col>
-        </a-row>
-      </div>
-      <div class="flex app">
-        <div>应用状态</div>
-        <QueueWidget :show="true"></QueueWidget>
-      </div>
-    </div>
-  </TopPanelLeftDrawer> -->
 
   <TopPanelRightDrawer ref="rightDrawerRef" />
 </template>
 
 <script>
-import MessageBox from './windowPanel/MessageBox.vue'
-import { countDownStore } from '../store/countDown'
+import { mapWritableState, mapState, mapActions } from 'pinia'
+
+import { isMain } from '../js/common/screenUtils'
+import { getClientIcon, getCover, getIcon } from '../js/common/game'
 import { getDateTime } from '../../../src/util/dateTime'
+
 import { appStore } from '../store'
 import { cardStore } from '../store/card'
-import { topClockSettingStore } from '../store/topClockSetting'
-import { mapWritableState, mapState, mapActions } from 'pinia'
 import { paperStore } from '../store/paper'
 import { weatherStore } from '../store/weather'
-import { getSign, isMain } from '../js/common/screenUtils'
-import { timerStore } from '../store/timer'
-import { steamUserStore } from '../store/steamUser'
-import { getClientIcon, getCover, getIcon } from '../js/common/game'
-import { clipboardStore } from '../apps/clipboard/store'
-import { Icon as TopIcon } from '@iconify/vue'
+import { useNavigationStore } from './desk/navigationBar/navigationStore'
 
 import WindowController from './WindowController.vue'
-import MessagePopup from '../page/notice/noticeIndex.vue'
-import TopTomato from '../../table/apps/tomato/widget/TopTomato.vue'
-import TopClockTimer from './widgets/TopClockTimer.vue'
-import TopCourier from './widgets/courier/TopCourier.vue'
 import QueueWidget from '../apps/queue/topWidget/index.vue'
 import TopPanelLeftDrawer from './drawer/TopPanelLeftDrawer.vue'
 import TopPanelRightDrawer from './drawer/TopPanelRightDrawer.vue'
 import TopPanelButton from './drawer/TopPanelButton.vue'
 import PaperLock from './topPanel/PaperLock.vue'
-import { message } from "ant-design-vue";
+import MessageBox from './windowPanel/MessageBox.vue'
 
 export default {
   name: 'TopPanel',
@@ -162,11 +81,11 @@ export default {
   components: {
     PaperLock,
     WindowController,
-    MessagePopup,
-    TopTomato,
-    TopClockTimer,
-    TopCourier,
-    QueueWidget,TopPanelLeftDrawer,TopPanelRightDrawer,TopIcon,TopPanelButton,MessageBox
+    QueueWidget,
+    TopPanelLeftDrawer,
+    TopPanelRightDrawer,
+    TopPanelButton,
+    MessageBox
   },
 
   data() {
@@ -181,15 +100,14 @@ export default {
   },
   props:['isHidden'],
   computed:{
-    ...mapWritableState(countDownStore, ['countDowndate', 'countDowntime']),
     ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent","filterClockEvent","clockTag",'chooseType']),
     ...mapWritableState(appStore,['status','showWindowController', 'showGuide']),
     ...mapState(weatherStore, ['cities']),
     ...mapWritableState(paperStore, ['settings']),
-    ...mapWritableState(steamUserStore, ['runningGame']),
-    ...mapState(clipboardStore, ['settings']),
-    ...mapWritableState(topClockSettingStore, ['checkTopClock']),
     ...mapWritableState(appStore,{appSettings: 'settings'}),
+    ...mapState(useNavigationStore, ['currentNavFormat']),
+    // 判断当前的导航栏模式
+    navFormat(){ return this.currentNavFormat === 'mac' },
     isMain,
     city(){
       if (this.cities[0]) { return this.cities[0]; }
@@ -221,10 +139,6 @@ export default {
     toggleAppStats(){
       this.$refs.leftDrawerRef.openLeftDrawer();
     },
-    // 进入剪贴板应用
-    enterClipboard(){
-      this.$router.push({  name: 'clipboard'});
-    },
 
     // 顶部栏搜索
     openGlobalSearch(){
@@ -233,29 +147,6 @@ export default {
     getTime(){
       this.dateTime = getDateTime();
       this.setAppDate(this.dateTime);
-    },
-    // 进入网易云音乐应用
-    enterMusic(){
-      this.$router.push({ name: 'music', });
-    },
-    // 进入Steam游戏应用
-    enterGameDesk(appid){
-      this.$router.push({
-        name: 'gameIndex',
-        params: {
-          appid: appid
-        }
-      });
-    },
-    // 打开右侧抽屉菜单
-    toggleRightDrawer(){
-      // 定制桌面过程中需要屏蔽一下
-      if(!this.showGuide){
-        this.$refs.rightDrawerRef.openRightDrawer();
-        this.hideNoticeEntry();
-      }else{
-        message.info("定制过程中无法操作");
-      }
     },
   }
 }

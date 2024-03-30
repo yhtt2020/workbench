@@ -3,7 +3,7 @@
         <div 
             @contextmenu="item.rightFn"
             @click="item.fn"
-            class="h-[28px] flex justify-center items-center xt-bg rounded-md max-w-[164px] p-2">
+            class="h-[28px] flex justify-center items-center xt-bg rounded-md max-w-[164px] p-2 pointer">
             <xt-new-Icon 
                 :icon="item.icon" 
                 size="14" 
