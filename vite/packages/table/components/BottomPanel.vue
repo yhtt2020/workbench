@@ -80,7 +80,7 @@
     </template>
     <!-- window版导航栏 -->
     <template v-else>
-      <AutoHide>
+      <AutoHide :enter="enter" :leave="leave">
           <Drop @createFile="createFile" currentId="bottom" v-show="autoVisible">
             <WindowPanel 
               :mainClass="mainClass"
@@ -322,6 +322,14 @@ export default {
   },
   props: {
     mainClass:{
+      type:String,
+      default:() => ""
+    },
+    enter:{
+      type:String,
+      default:() => ""
+    },
+    leave:{
       type:String,
       default:() => ""
     }
