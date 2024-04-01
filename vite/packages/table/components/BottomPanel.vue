@@ -80,14 +80,16 @@
     </template>
     <!-- window版导航栏 -->
     <template v-else>
-      <Drop @createFile="createFile" currentId="bottom">
-        <WindowPanel 
-          :mainClass="mainClass"
-          @edit="edit" 
-          @getDelIcon="getDelIcon"
-          @control="openControl">
-        </WindowPanel>
-      </Drop>
+      <AutoHide>
+          <Drop @createFile="createFile" currentId="bottom" v-show="autoVisible">
+            <WindowPanel 
+              :mainClass="mainClass"
+              @edit="edit" 
+              @getDelIcon="getDelIcon"
+              @control="openControl">
+            </WindowPanel>
+          </Drop>
+      </AutoHide>
     </template>
     <keep-alive>
       <TaskBox v-if="true"></TaskBox>

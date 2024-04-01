@@ -16,6 +16,7 @@
     </div>
     <Teleport to="body">
         <div 
+            ref="message"
             :class="mainClass"
             v-if="mainVisible"
             style="border: 1px solid var(--divider);gap: 12px;z-index: 500;"
@@ -26,11 +27,10 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, watch , nextTick } from 'vue'
+import { ref, watch , nextTick, onMounted } from 'vue'
+import { onClickOutside } from '@vueuse/core'
 
 import Item from './Item.vue'
-
-import { usePosition } from '../hook/usePosition';
 
 const emit = defineEmits(['closeAll'])
 
@@ -57,6 +57,8 @@ const props = withDefaults(defineProps<propsType>(), {
 
 const mainVisible = ref(false)
 const pos = ref({})
+const message = ref(null)
+
 const openMain = (e) => {
     mainVisible.value = !mainVisible.value
 }
@@ -66,5 +68,12 @@ watch(() => mainVisible.value, (val) => {
         emit('closeAll')
     }
 })
+
+// 点击外部关闭
+// onMounted(() => {
+//     onClickOutside(message, () => {
+//         mainVisible.value = false
+//     })
+// })
 </script>
 <style lang='scss' scoped></style>

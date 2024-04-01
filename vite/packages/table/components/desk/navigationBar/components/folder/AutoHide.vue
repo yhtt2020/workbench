@@ -1,8 +1,8 @@
 <template>
     <Transition
         name="animate__animated animate__bounce animate__delay-1s"  
-        enter-active-class="animate__fadeInUp" 
-        leave-active-class="animate__fadeOutDown"
+        :enter-active-class="enter" 
+        :leave-active-class="leave"
         @before-enter="handleBeforeEnter"
         @enter="handleEnter"
         @after-enter="handleAfterEnter"
@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive,Transition } from 'vue'
+import { ref, toRefs,Transition } from 'vue'
 import { storeToRefs } from 'pinia'
 import 'animate.css'
 import { useNavigationStore } from '../../navigationStore';
@@ -24,6 +24,19 @@ import { useNavigationStore } from '../../navigationStore';
 // 导航栏数据
 const useNavStore = useNavigationStore()
 const { isLeaveBar,customOpenNav } = storeToRefs(useNavStore)
+
+const props = defineProps({
+    enter:{
+        type: String,
+        default: () => 'animate__fadeInUp'
+    },
+    leave:{
+        type: String,
+        default: () => 'animate__fadeOutDown'
+    }
+})
+
+const { enter,leave } = toRefs(props)
 
 // 鼠标移入
 const handleMouseEnter = () => {
