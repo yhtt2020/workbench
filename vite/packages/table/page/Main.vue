@@ -16,7 +16,7 @@
     <div :style="{ margin: fullScreen ? 0 : '-3px', padding: fullScreen ? 0 : '8px' }"
       style="display: flex;flex-grow: 1;flex-shrink: 1;flex-basis: fit-content;overflow: hidden;height: 100%;">
       <AutoHide :enter="'animate__fadeInLeft'" :leave="'animate__fadeOutLeft'">
-        <div v-if="this.navigationToggle[0] && !this.fullScreen"
+        <div v-if="sideVisible"
           style="display: flex;align-content: center;align-items: center;height: 100%">
           <!--左侧栏区域        -->
           <SidePanel sortId="left" :navigationList="sideNavigationList" :sortNavigationList="sortSideNavigationList"
@@ -56,7 +56,7 @@
         </div>
       </Transition>
       <AutoHide :enter="'animate__fadeInRight'" :leave="'animate__fadeOutRight'">
-      <div v-if="this.navigationToggle[1] && !this.fullScreen"
+      <div v-if="rightVisible"
         style="display: flex;align-content: center;align-items: center">
         <!--右侧栏区域        -->
         <SidePanel sortId="right" :navigationList="rightNavigationList" :sortNavigationList="sortRightNavigationList"
@@ -102,6 +102,7 @@ export default {
       this.routeUpdateTime = Date.now()
     })
     this.loadNav()
+    window.addEventListener('mousemove', this.listenMouse)
   },
   computed: {
     fullScreen() {
@@ -114,7 +115,7 @@ export default {
     isMain,
     sideVisible() {
       if (this.customOpenNav) {
-        if (this.isEdge) {
+        if (this.isLeftEdge) {
           return true
         }
         if (this.isLeaveBar && !this.sideIsOpenFolder) {
@@ -128,7 +129,7 @@ export default {
     },
     rightVisible() {
       if (this.customOpenNav) {
-        if (this.isEdge) {
+        if (this.isRightEdge) {
           return true
         }
         if (this.isLeaveBar && !this.rightIsOpenFolder) {
@@ -154,13 +155,34 @@ export default {
       sideIsOpenFolder: false,
       // 右边栏是否打开文件夹
       rightIsOpenFolder: false,
+      // 左边是否接触到边界
+      isLeftEdge:false,
+      // 右边是否接触到边界
+      isRightEdge:false
     }
   },
   methods: {
+    listenMouse(e) {
+      const { clientX, clientY } = e
+      if ( clientX < 50) {
+        this.isLeftEdge = true
+      } else if ( clientX > window.innerWidth - 50) {
+        this.isRightEdge = true
+      } else {
+        this.isLeftEdge = false
+        this.isRightEdge = false
+      }
+    },
     marginLeft() {
       return marginLeft
     },
-    ...mapActions(navStore, ['sortSideNavigationList', 'removeSideNavigationList', 'sortRightNavigationList', 'removeRightNavigationList', 'loadNav']),
+    ...mapActions(navStore, [
+      'sortSideNavigationList', 
+      'removeSideNavigationList', 
+      'sortRightNavigationList', 
+      'removeRightNavigationList', 
+      'loadNav'
+    ]),
     getDelIcon(val) {
       this.delZone = val
     },

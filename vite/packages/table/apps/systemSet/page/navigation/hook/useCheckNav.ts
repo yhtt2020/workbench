@@ -12,7 +12,6 @@ export const useCheckNav = (value: string): void => {
     const right = store.navigationToggle[1] ? store.rightNavigationList : [];
 
     const checkAndToggle = (listToCheck: Array<object>, toggleIndex: number): void => {
-        // console.log(checkList(listToCheck));
         if (checkList(listToCheck)) {
             store.navigationToggle[toggleIndex] = false;
             return;

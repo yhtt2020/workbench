@@ -381,6 +381,7 @@ export default {
       // 获取最多可以添加的个数
       let maxWidth
       let extraWidth
+      // 不同导航栏设置不同的可添加的最大宽度，以及其他需要的宽度
       if(this.currentNavFormat === 'mac'){
         maxWidth = windowWidth - 240
         extraWidth = 240
@@ -388,10 +389,10 @@ export default {
         maxWidth = windowWidth * 0.6
         extraWidth = windowWidth * 0.3
       }
+      // 当前可添加的最多图标个数
       this.maxItemNum = Math.round(maxWidth / this.realSize);
       // 获取导航栏缩放比例
       const width = windowWidth / (extraWidth + this.copyFootNav.length * this.realSize);
-      console.log("width :>> ", width,extraWidth + this.copyFootNav.length * this.realSize);
       this.navAttribute.navSize = width.toFixed(2) * 100;
       this.navAttribute.navSize =
         this.navAttribute.navSize < 100 ? this.navAttribute.navSize : 100;
@@ -458,6 +459,7 @@ export default {
       "bottomInit",
       "communityNavVisible",
       "currentNavFormat",
+      "currentNavPosition",
     ]),
     ...mapWritableState(taskStore, ["isTask", "isTaskDrawer"]),
     ...mapWritableState(useDeskStore, ["isEnterBar"]),
@@ -613,11 +615,9 @@ export default {
     ...mapActions(communityStore,['getMyCommunity']),
     mergeData,
     listenMouse(e) {
-      if (
-        e.x < 50 ||
-        e.x > this.parentSize - 50 ||
-        e.y > this.parentHeight - 50
-      ) {
+      // 导航栏位置不同，判断条件不同
+      const tag = this.currentNavPosition === 'top' ? e.y < 50 : e.x < 50  
+      if ( tag ) {
         this.isEdge = true;
       } else {
         setTimeout(() => {
