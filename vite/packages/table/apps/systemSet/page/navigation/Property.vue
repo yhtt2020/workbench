@@ -15,6 +15,7 @@
         </xt-option-box>
         <xt-option-box>
             <xt-option-info 
+                :key="date"
                 title="主导航"
                 isSwitch="true"
                 v-model:switch="navigationToggle[2]">
@@ -42,7 +43,7 @@
             <xt-option-info 
                 title="右侧副导航"
                 isSwitch="true"
-                v-model:switch="navigationToggle[1]" />
+                v-model:switch="navigationToggle[1]"/>
         </xt-option-box>
         <xt-option-box>
             <xt-option-info 
@@ -61,10 +62,13 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, Ref } from 'vue'
+import { storeToRefs } from 'pinia';
+
+import { useCheckNav } from "./hook/useCheckNav"
+
 import { navStore } from '../../../../store/nav';
 import { useNavigationStore } from '../../../../components/desk/navigationBar/navigationStore';
-import { storeToRefs } from 'pinia';
 
 // 导航栏开关
 const useNavStore = navStore()
@@ -89,11 +93,14 @@ const mainList = ref([
 const navPosition = ref('bottom')
 
 const navStyle = ref('windows')
+const date : Ref<number> = ref(0)
+const rightDate : Ref<number> = ref(0)
 
 // 初始化
 onMounted(() => {
     navStyle.value = currentNavFormat.value
     navPosition.value = currentNavPosition.value
+    date.value = Date.now()
 })
 
 // 监听导航栏风格
@@ -112,6 +119,35 @@ watch(
     () => navPosition.value,
     (newVal,oldVal) => {
         currentNavPosition.value = newVal
+    }
+)
+
+watch(
+    () => navigationToggle.value[2],
+    (val) => {
+        if(!val){
+            useCheckNav('foot')
+            date.value = Date.now()
+        }
+    }
+)
+
+watch(
+    () => navigationToggle.value[0],
+    (val) => {
+        if(!val){
+            // useCheckNav('left')
+            console.log('left',val)
+        }
+    }
+)
+
+watch(
+    () => navigationToggle.value[1],
+    (val) => {
+        if(!val){
+            useCheckNav('right')
+        }
     }
 )
 </script>
