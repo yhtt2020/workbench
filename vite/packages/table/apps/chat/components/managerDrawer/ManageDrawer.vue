@@ -6,6 +6,7 @@
       title="群管理"
       width="500"
       :zIndex="1500"
+      @close="manageVisible = false"
     >
       <!-- 群基本信息 -->
       <div
@@ -37,7 +38,10 @@
         class="xt-bg-2 rounded-xl flex flex-col p-4 my-4"
         @click="openManageNotice"
       >
-        <div class="flex items-center justify-between pointer mb-3" @click="openManageNotice">
+        <div
+          class="flex items-center justify-between pointer mb-3"
+          @click="openManageNotice"
+        >
           <span class="xt-text font-16 xt-font">群公告</span>
           <xt-ify-icon
             icon="fluent:chevron-right-28-regular"
@@ -52,7 +56,10 @@
 
       <!-- 群成员 -->
       <div class="xt-bg-2 rounded-lg flex flex-col p-4 mb-4">
-        <div class="flex items-center justify-between pointer mb-3">
+        <div
+          class="flex items-center justify-between pointer mb-3"
+          @click="openManageMember"
+        >
           <span class="xt-text font-16 xt-font">群成员</span>
           <xt-ify-icon
             icon="fluent:chevron-right-28-regular"
@@ -60,19 +67,201 @@
             size="20"
           ></xt-ify-icon>
         </div>
+        <div class="flex w-full">
+          <!-- 不具备管理员权限 -->
+          <template v-if="manageInfo.role === 'Member'">
+            <template v-for="item in currentMemberList.slice(0, 7)">
+              <div class="flex flex-col items-center justify-center mr-2.5">
+                <a-avatar :src="item.avatar" size="32"></a-avatar>
+                <span
+                  class="xt-text truncate xt-font font-12"
+                  style="max-width: 48px"
+                >
+                  {{ item.nick }}
+                </span>
+              </div>
+            </template>
+          </template>
+
+          <!-- 具备管理员权限 -->
+          <template v-else>
+            <div class="flex items-center">
+              <template v-for="item in currentMemberList.slice(0, 5)">
+                <div class="flex flex-col items-center justify-center mr-2.5">
+                  <a-avatar :src="item.avatar" size="32"></a-avatar>
+                  <span
+                    class="xt-text truncate xt-font font-12"
+                    style="max-width: 48px"
+                  >
+                    {{ item.nick }}
+                  </span>
+                </div>
+              </template>
+
+              <!-- 添加群成员 -->
+              <xt-button
+                w="32"
+                h="32"
+                style="
+                  background: rgba(80, 139, 254, 0.2);
+                  border-radius: 8px;
+                  margin-right: 10px;
+                "
+                @click="addManagerMember"
+              >
+                <div class="flex items-center justify-center">
+                  <xt-ify-icon
+                    icon="fluent:add-circle-12-filled"
+                    class="link"
+                    size="20"
+                  />
+                </div>
+              </xt-button>
+
+              <!-- 踢出群成员 -->
+              <xt-button
+                w="32"
+                h="32"
+                style="background: rgba(255, 77, 79, 0.2); border-radius: 8px"
+                @click="deleteManagerMember"
+              >
+                <div class="flex items-center justify-center">
+                  <xt-ify-icon
+                    icon="akar-icons:circle-minus-fill"
+                    class="error"
+                    size="20"
+                  />
+                </div>
+              </xt-button>
+            </div>
+          </template>
+        </div>
       </div>
 
       <!-- 群类型展示区域 -->
-      <div class="xt-bg-2 rounded-lg flex flex-col p-4">
-        <div class="flex items-center justify-between pointer mb-3">
+      <div class="xt-bg-2 rounded-lg flex flex-col p-4 mb-4">
+        <!-- 群管理入口 -->
+        <div
+          class="flex items-center justify-between pointer mb-4"
+          v-if="manageInfo.role !== 'Member'"
+        >
           <span class="xt-text font-16 xt-font">群管理</span>
           <xt-ify-icon
             icon="fluent:chevron-right-28-regular"
             class="xt-text-2"
-            size="20"
-          ></xt-ify-icon>
+            size="24"
+          />
+        </div>
+
+        <div class="flex flex-col w-full">
+          <!-- 群ID -->
+          <div class="flex justify-between">
+            <span class="xt-text xt-font font-16">群ID</span>
+            <div class="flex items-center justify-center">
+              <span class="xt-text-2 xt-font font-14">{{
+                manageInfo.groupID
+              }}</span>
+              <xt-button
+                h="0"
+                style="width: auto !important"
+                @click="copyGroupID"
+              >
+                <div class="flex items-center justify-center">
+                  <xt-ify-icon
+                    icon="fluent:copy-16-regular"
+                    size="24"
+                    class="xt-text-2"
+                  />
+                </div>
+              </xt-button>
+            </div>
+          </div>
+
+          <!-- 群类型 -->
+          <div class="flex justify-between my-4">
+            <span class="xt-text xt-font font-16">群类型</span>
+            <span class="xt-text-2 xt-font font-14">
+              {{ getTypeName(manageInfo.type) }}
+            </span>
+          </div>
+
+          <!-- 入群方式 -->
+          <div class="flex justify-between mb-4">
+            <span class="xt-text xt-font font-16">加群方式</span>
+            <div class="flex items-center justify-center">
+              <span class="xt-text-2 xt-font font-14">
+                {{ joinName(manageInfo.join) }}
+              </span>
+              <xt-button
+                h="0"
+                style="width: auto !important"
+                v-if="manageInfo.role !== 'Member'"
+              >
+                <div class="flex items-center justify-center">
+                  <xt-ify-icon
+                    icon="fluent:chevron-right-28-regular"
+                    class="xt-text-2"
+                    size="24"
+                  />
+                </div>
+              </xt-button>
+            </div>
+          </div>
+
+          <!-- 邀请方式 -->
+          <div class="flex justify-between">
+            <span class="xt-text xt-font font-16">邀请方式</span>
+            <div class="flex items-center justify-center">
+              <span class="xt-text-2 xt-font font-14">
+                {{ inviteName(manageInfo.join) }}
+              </span>
+              <xt-button
+                h="0"
+                style="width: auto !important"
+                v-if="manageInfo.role !== 'Member'"
+              >
+                <div class="flex items-center justify-center">
+                  <xt-ify-icon
+                    icon="fluent:chevron-right-28-regular"
+                    class="xt-text-2"
+                    size="24"
+                  />
+                </div>
+              </xt-button>
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- 底部群聊退出、解散群聊、转让群聊按钮 -->
+      <template v-if="manageInfo.role === 'Member'">
+        <div class="flex items-center justify-center w-full">
+          <xt-button
+            h="48"
+            w="190"
+            style="border-radius: 8px; background: var(--error) !important"
+            >退出群聊</xt-button
+          >
+        </div>
+      </template>
+      <template v-else>
+        <div class="flex items-center justify-center w-full">
+          <xt-button
+            style="border-radius: 8px; margin-right: 12px"
+            h="48"
+            w="190"
+          >
+            转让群聊
+          </xt-button>
+          <xt-button
+            style="border-radius: 8px; background: var(--error) !important"
+            h="48"
+            w="190"
+          >
+            解散群聊
+          </xt-button>
+        </div>
+      </template>
     </a-drawer>
   </teleport>
 
@@ -82,6 +271,7 @@
     :info="manageInfo"
     @closeName="manageVisible = true"
   />
+
   <!-- 修改公告弹窗 -->
   <NoticeDrawer
     :groupID="manageInfo.groupID"
@@ -89,14 +279,36 @@
     :isBack="true"
     @closeNotice="manageVisible = true"
   />
+
+  <!-- 修改群管理员弹窗 -->
+
+  <!-- 修改群成员弹窗 -->
+  <MemberDrawer ref="memberRef" @closeMember="manageVisible = true" />
+
+  <!-- 添加群成员 -->
+  <UserSelect ref="userSelectRef" :userList="addMemberList"/>
+
+  <!-- 删除群成员 -->
+  <DeleteUserSelect ref="deleteUserSelectRef" :userList="currentMemberList"/>
 </template>
 
 <script setup>
 import { nextTick, ref, toRefs } from "vue";
-import { TUIStore, StoreName } from "@tencentcloud/chat-uikit-engine";
+import { TUIStore, StoreName,TUIFriendService } from "@tencentcloud/chat-uikit-engine";
+import useClipboard from "vue-clipboard3";
+import { message } from "ant-design-vue";
+import {
+  getTypeName,
+  joinName,
+  inviteName,
+  sortMembers,
+} from "../../hooks/groupType";
 
 import GroupName from "../manager/GroupName.vue";
 import NoticeDrawer from "./NoticeDrawer.vue";
+import MemberDrawer from "../manager/GroupMemeber.vue";
+import UserSelect from "../userselect/UserSelect.vue";
+import DeleteUserSelect from "../userselect/DeleteMember.vue";
 
 const props = defineProps({
   groupID: {
@@ -110,6 +322,13 @@ const { groupID } = toRefs(props);
 const manageInfo = ref({});
 const nameRef = ref(null);
 const noticeRef = ref(null);
+const memberRef = ref(null);
+const userSelectRef = ref(null);
+const deleteUserSelectRef = ref(null);
+// 当前群成员列表
+const currentMemberList = ref([]);
+// 好友添加成为群成员列表
+const addMemberList = ref([]);
 
 // 开启群基础信息修改弹窗
 const manageVisible = ref(false);
@@ -125,6 +344,14 @@ const openManageDrawer = () => {
         manageInfo.value.groupID = groupProfile?.groupID;
         manageInfo.value.role = groupProfile?.selfInfo?.role;
         manageInfo.value.notification = groupProfile?.notification;
+        manageInfo.value.type = groupProfile?.type;
+        manageInfo.value.join = groupProfile?.joinOption;
+        manageInfo.value.invite = groupProfile?.inviteOption;
+      },
+    });
+    TUIStore.watch(StoreName.GRP, {
+      currentGroupMemberList: (data) => {
+        currentMemberList.value = sortMembers(data);
       },
     });
   });
@@ -139,6 +366,32 @@ const openManageName = () => {
 const openManageNotice = () => {
   manageVisible.value = false;
   noticeRef.value.openNoticeDrawer();
+};
+// 开启群成员管理弹窗
+const openManageMember = () => {
+  manageVisible.value = false;
+  memberRef.value.openManageMember();
+};
+
+// 复制群ID
+const copyGroupID = async () => {
+  const { toClipboard } = useClipboard();
+  const res = await toClipboard(manageInfo.value.groupID);
+  if (res.text !== "") {
+    message.success("群聊ID成功复制");
+  }
+};
+
+// 群成员踢出群
+const deleteManagerMember = async() => {
+  deleteUserSelectRef.value.openDeleteUserSelect();
+};
+// 群成员添加
+const addManagerMember = async () => {
+  userSelectRef.value.openUserSelect();
+  const imResponse = await TUIFriendService.getFriendList();
+  const friendList = imResponse.data.map((item) => item?.profile);
+  addMemberList.value = friendList;
 };
 
 defineExpose({

@@ -37,3 +37,28 @@ export const inviteName = (type:any) =>{
    return '禁止邀请';
  }
 }
+
+// 根据当前用户的角色，进行排序, 群主在前，管理员在后，普通成员在最后
+export const sortMembers = (members: any) =>{
+   // 根据当前用户的角色，进行排序, 群主在前，管理员在后，普通成员在最后
+   const sortList =  members.sort((a:any, b:any) => {
+    if (a.role === "Owner") {
+      return -1;
+    } else if (a.role === "Admin" && b.role === "Member") {
+      return -1;
+    } else if (a.role === "Member") {
+      return 1;
+    }
+    return 0;
+  });
+  // 过滤掉不需要的字段
+  const newList = sortList.map((item:any) => {
+    return {
+      role: item.role,
+      avatar: item.avatar,
+      nick: item.nick,
+      userID: item.userID,
+    };
+  });
+  return newList;
+}
