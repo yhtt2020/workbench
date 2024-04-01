@@ -280,21 +280,33 @@
     @closeNotice="manageVisible = true"
   />
 
-  <!-- 修改群管理员弹窗 -->
-
   <!-- 修改群成员弹窗 -->
   <MemberDrawer ref="memberRef" @closeMember="manageVisible = true" />
 
-  <!-- 添加群成员 -->
-  <UserSelect ref="userSelectRef" :userList="addMemberList"/>
+  <!-- 添加群成员弹窗 -->
+  <AddMember
+    ref="userSelectRef"
+    :userList="addMemberList"
+    :groupID="groupID"
+    @update="updateMemeber"
+  />
 
-  <!-- 删除群成员 -->
-  <DeleteUserSelect ref="deleteUserSelectRef" :userList="currentMemberList"/>
+  <!-- 移除群成员弹窗 -->
+  <DeleteUserSelect
+    ref="deleteUserSelectRef"
+    :userList="currentMemberList"
+    @update="updateMemeber"
+    :groupID="groupID"
+  />
 </template>
 
 <script setup>
 import { nextTick, ref, toRefs } from "vue";
-import { TUIStore, StoreName,TUIFriendService } from "@tencentcloud/chat-uikit-engine";
+import {
+  TUIStore,
+  StoreName,
+  TUIFriendService,
+} from "@tencentcloud/chat-uikit-engine";
 import useClipboard from "vue-clipboard3";
 import { message } from "ant-design-vue";
 import {
@@ -307,8 +319,8 @@ import {
 import GroupName from "../manager/GroupName.vue";
 import NoticeDrawer from "./NoticeDrawer.vue";
 import MemberDrawer from "../manager/GroupMemeber.vue";
-import UserSelect from "../userselect/UserSelect.vue";
-import DeleteUserSelect from "../userselect/DeleteMember.vue";
+import AddMember from "../manager/AddMember.vue";
+import DeleteUserSelect from "../manager/DeleteMember.vue";
 
 const props = defineProps({
   groupID: {
@@ -383,15 +395,24 @@ const copyGroupID = async () => {
 };
 
 // 群成员踢出群
-const deleteManagerMember = async() => {
-  deleteUserSelectRef.value.openDeleteUserSelect();
+const deleteManagerMember = async () => {
+  deleteUserSelectRef.value.handleDeleteMember();
 };
 // 群成员添加
 const addManagerMember = async () => {
-  userSelectRef.value.openUserSelect();
+  userSelectRef.value.openMemberModal();
   const imResponse = await TUIFriendService.getFriendList();
-  const friendList = imResponse.data.map((item) => item?.profile);
+  const friendList = imResponse.data.map((item) => {
+    return {
+      ...item?.profile,
+    };
+  });
   addMemberList.value = friendList;
+};
+
+// 更新当前群成员数据
+const updateMemeber = (data) => {
+  currentMemberList.value = data;
 };
 
 defineExpose({

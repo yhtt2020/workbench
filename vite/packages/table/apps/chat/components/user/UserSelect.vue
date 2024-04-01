@@ -172,7 +172,13 @@ const currentChecked = ref(false);
 // 监听全选
 watch(
   () => currentChecked.value,
-  (newVal) => {}
+  (newVal) => {
+    if(newVal){
+      currentRightList.value = currentList.value;
+    }else {
+      currentRightList.value  = []
+    }
+  }
 );
 
 watchEffect(() => {
