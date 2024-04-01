@@ -151,14 +151,14 @@
                     :messageItem="item"
                   />
                 </template>
-                <template #TUIEmojiPlugin>
+                <!-- <template #TUIEmojiPlugin>
                   <TUIEmojiPlugin
                     v-if="isShowEmojiPlugin && item.reactionList.length > 0"
                     type="reaction-detail"
                     :emojiConfig="emojiConfig"
                     :message="shallowCopyMessage(item)"
                   />
-                </template>
+                </template> -->
               </MessageBubble>
             </div>
             <MessageTool
@@ -171,13 +171,13 @@
               :messageItem="item"
             >
               <!-- 必须加 template, 否则不生效 -->
-              <template #TUIEmojiPlugin>
+              <!-- <template #TUIEmojiPlugin>
                 <TUIEmojiPlugin
                   v-if="isShowEmojiPlugin"
                   :message="item"
                   :emojiConfig="emojiConfig"
                 />
-              </template>
+              </template> -->
             </MessageTool>
           </div>
         </li>
@@ -238,7 +238,7 @@ import TUIChatEngine, {
 } from '@tencentcloud/chat-uikit-engine';
 import TUICore, { TUIConstants } from '@tencentcloud/tui-core';
 import { outsideClick, getBoundingClientRect, getScrollInfo } from '@tencentcloud/universal-api';
-import { TUIEmojiPlugin } from '@tencentcloud/tui-emoji-plugin';
+// import { TUIEmojiPlugin } from '@tencentcloud/tui-emoji-plugin';
 import throttle from 'lodash/throttle';
 import Link from './link';
 import MessageText from './message-elements/message-text.vue';
@@ -262,7 +262,7 @@ import MessageGroupSystem from './message-elements/message-group-system.vue';
 import Dialog from '../../common/Dialog/index.vue';
 import ImagePreviewer from '../../common/ImagePreviewer/index.vue';
 import ProgressMessage from '../../common/ProgressMessage/index.vue';
-import { emojiConfig } from '../utils/emoji-config';
+// import { emojiConfig } from '../utils/emoji-config';
 import { isPC, isH5 } from '../../../utils/env';
 import { isEnabledMessageReadReceiptGlobal, shallowCopyMessage, isCreateGroupCustomMessage, deepCopy } from '../utils/utils';
 
@@ -334,12 +334,12 @@ const reSendDialogShow = ref(false);
 const resendMessageData = ref();
 
 const isShowEmojiPlugin = computed(() => {
-  const msgPopMenuExtensionList = TUICore.getExtensionList(TUIConstants.TUIChat.EXTENSION.MSG_POP_MENU.EXT_ID, {
-    enabledEmojiPlugin,
-  });
-  return msgPopMenuExtensionList.some((item) => {
-    return item.text === 'TUIEmojiPlugin';
-  });
+  // const msgPopMenuExtensionList = TUICore.getExtensionList(TUIConstants.TUIChat.EXTENSION.MSG_POP_MENU.EXT_ID, {
+  //   enabledEmojiPlugin,
+  // });
+  // return msgPopMenuExtensionList.some((item) => {
+  //   return item.text === 'TUIEmojiPlugin';
+  // });
 });
 // 事件监听
 onMounted(() => {
