@@ -57,6 +57,9 @@ import { useIconStore } from '../../store'
 
 import WebList from './WebList.vue';
 
+import { refresh } from '../../hook/useRefresh'
+
+
 const favo = favoStore()
 const { isFavorites, allList, folderList, folderIndex, browserList, updateTime, folderIcons } = storeToRefs(favo)
 
@@ -148,47 +151,47 @@ const addIcon = (item) => {
 }
 
 // 加载数据
-const refresh = async () => {
-    let arrTmp = Object.keys(browserList.value)
-    updateTime.value = new Date().getTime()
-    folderList.value = []
-    let res : any = []
-    try {
-        for (const browser of arrTmp) {
-            const data = await tsbApi.system.getBrowserBookmark(browser)
-            if (data.result) {
-                for (const bookmark of Object.values(data.result)) {
-                    resTmp.value = []
-                    res.push(...flattenChildrenArray(bookmark, browser, 0))
-                    folderList.value.unshift({
-                        name: '最近添加',
-                        type: 'recent',
-                        browser: browser,
-                        rename: null,
-                        time: new Date().getTime()
-                    })
-                    folderList.value.unshift({
-                        name: '全部',
-                        type: 'all',
-                        browser: browser,
-                        rename: null,
-                    })
-                }
-                folderList.value.unshift({
-                    name: '我的收藏',
-                    type: 'favo',
-                    rename: null,
-                    unRead: false,
-                })
-                allList.value = mergeArraysByGuid(allList.value, res)
-            } else {
-                throw new Error('浏览器收藏夹读取失败！')
-            }
-        }
-    } catch (error) {
-        message.error(error.message);
-    }
-}
+// const refresh = async () => {
+//     let arrTmp = Object.keys(browserList.value)
+//     updateTime.value = new Date().getTime()
+//     folderList.value = []
+//     let res : any = []
+//     try {
+//         for (const browser of arrTmp) {
+//             const data = await tsbApi.system.getBrowserBookmark(browser)
+//             if (data.result) {
+//                 for (const bookmark of Object.values(data.result)) {
+//                     resTmp.value = []
+//                     res.push(...flattenChildrenArray(bookmark, browser, 0))
+//                     folderList.value.unshift({
+//                         name: '最近添加',
+//                         type: 'recent',
+//                         browser: browser,
+//                         rename: null,
+//                         time: new Date().getTime()
+//                     })
+//                     folderList.value.unshift({
+//                         name: '全部',
+//                         type: 'all',
+//                         browser: browser,
+//                         rename: null,
+//                     })
+//                 }
+//                 folderList.value.unshift({
+//                     name: '我的收藏',
+//                     type: 'favo',
+//                     rename: null,
+//                     unRead: false,
+//                 })
+//                 allList.value = mergeArraysByGuid(allList.value, res)
+//             } else {
+//                 throw new Error('浏览器收藏夹读取失败！')
+//             }
+//         }
+//     } catch (error) {
+//         message.error(error.message);
+//     }
+// }
 
 // 分解数据，将数据展开
 const flattenChildrenArray = (obj, browser, level, parent) => {

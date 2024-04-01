@@ -18,6 +18,7 @@
         last="6" 
         end="1" 
         v-mode:index="iconIndex" 
+        @update:index="changeIcon"
         leftMargin="mr-0 py-3"
         w="64" 
         leftClass="xt-main-bg"
@@ -189,6 +190,11 @@ const deskFlag = ref(false)  // 是否显示添加到桌面
 const isStart = ref(true)  // 是否显示开始页
 const defaultTitle = ref({})  // 下拉框默认值
 
+const changeIcon = (val) => {
+  console.log(val)
+  iconIndex.value = val
+  console.log(iconIndex.value)
+}
 // 禁止添加的图标
 const disabledAdd = ref([
   'commun',
@@ -356,14 +362,16 @@ const closeNav = () => {
 type LeftMenuType = {
   newIcon: string,  // 新版图标
   callBack: (item: any) => void,  // 回调
-  component: string  // 加载的组件
+  component: string,  // 加载的组件
+  name?: string // 名称
 }
 // 左侧导航栏
 const leftMenu = ref<LeftMenuType[]>([
   {
     newIcon: 'mingcute:windows-line',
     callBack: (item) => { chooseItem(item) },
-    component: 'Windows'
+    component: 'Windows',
+    name:"Win",
   },
   // 功能暂未开发,暂时隐藏
   // {
@@ -374,27 +382,32 @@ const leftMenu = ref<LeftMenuType[]>([
   {
     newIcon: 'fluent:settings-16-regular',
     callBack: (item) => { chooseItem(item) },
-    component: 'System'
+    component: 'System',
+    name:"系统",
   },
   {
     newIcon: 'fluent:globe-16-regular',
     callBack: (item) => { chooseItem(item) },
-    component: 'WebSite'
+    component: 'WebSite',
+    name:"网址",
   },
   {
     newIcon: 'fluent:star-16-regular',
     callBack: (item) => { chooseItem(item) },
-    component: 'Browser'
+    component: 'Browser',
+    name:'收藏夹',
   },
   {
     newIcon: 'fluent:grid-16-regular',
     callBack: (item) => { chooseItem(item) },
-    component: 'CoolApp'
+    component: 'CoolApp',
+    name:'酷应用'
   },
   {
     newIcon: 'fluent:window-multiple-16-regular',
     callBack: (item) => { chooseItem(item) },
-    component: 'LightApp'
+    component: 'LightApp',
+    name:'轻应用'
   },
   {
     newIcon: 'fluent:add-16-regular',
