@@ -2,6 +2,7 @@
     <div class="flex w-full h-full " style="overflow:hidden;" @wheel.stop>
         <WebList 
             class="w-full h-full" 
+            @addIcon="addIcon"
             @refresh="refresh" 
             @changeIcon="changeIcon" 
             @countFavo="countFavo"
@@ -61,6 +62,8 @@ const { isFavorites, allList, folderList, folderIndex, browserList, updateTime, 
 
 const store = useIconStore()
 const { isMultiple,multipleList } = storeToRefs(store)
+
+const emit = defineEmits(['addIcon'])
 
 const resTmp : any = ref([])
 const itemTmp = ref({})
@@ -139,6 +142,10 @@ const rightMenu = computed(() => {
         ...menus.value
     ]
 })
+
+const addIcon = (item) => {
+    emit('addIcon', item)
+}
 
 // 加载数据
 const refresh = async () => {
