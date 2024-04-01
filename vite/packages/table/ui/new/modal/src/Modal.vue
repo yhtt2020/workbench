@@ -2,20 +2,20 @@
   <Teleport to="body">
     <!-- 弹窗 -->
     <xt-drag
+      :test="false"
       v-model:x="x"
       v-model:y="y"
-      :index="index"
+      :index="currentIndex"
       :collision="false"
       v-if="modelValue"
       @update:data="resizeModel"
       :handle="handle"
       :disabled="handle ? false : true"
     >
-      <!--  -->
       <div
         :class="[custom ? '' : boxClass]"
         ref="modal"
-        class="no-drag flex flex-col text-base rounded-xl xt-modal xt-shadow xt-text"
+        class="no-drag flex flex-col text-base rounded-xl xt-modal xt-shadow xt-text overflow-hidden"
         style="
           border: 1px solid rgba(255, 255, 255, 0.1);
           box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
@@ -31,14 +31,15 @@
         <template v-else>
           <div class="flex flex-1 w-full">
             <!-- 左侧 -->
-            <nav v-if="nav">
+            <nav>
               <slot name="nav"> </slot>
             </nav>
             <!-- 主体区域 -->
             <main class="flex flex-col flex-1 h-full">
               <!-- 主体头部 -->
               <header
-                class="relative flex items-center mb-4 xt-modal-header"
+                class="relative flex items-center xt-modal-header"
+                :class="headerClass"
                 v-if="header"
               >
                 <!-- 标题左侧 -->
@@ -113,6 +114,7 @@
                 style="position: relative"
                 :style="scrollbarPadding"
                 class="flex-1"
+                :class="mainClass"
               >
                 <slot>
                   <McDonalds />
@@ -152,16 +154,18 @@
       v-if="transitionVisible"
       :style="transitionStyle"
       style="transition: all 0.1s"
-      class="fixed xt-modal rounded-xl flex justify-center items-center"
+      class="fixed xt-modal rounded-xl flex justify-center items-center px-2 cursor-pointer"
       @click="minimize"
     >
-      <xt-button w="32" h="32" radius="8">
+      <slot name="minimize-left"></slot>
+      <xt-button w="32" h="32" radius="8" v-if="isMinimize" class="px-2">
         <xt-new-icon
           icon="fluent:full-screen-maximize-16-regular"
           size="16"
           class="xt-text-2"
         />
       </xt-button>
+      <slot name="minimize-right"></slot>
     </div>
   </Teleport>
 </template>
@@ -204,6 +208,11 @@ export interface ModalProps {
   esc?: boolean;
   // 弹窗样式
   boxClass?: string;
+  // 头部区样式
+  headerClass?: string;
+  // 内容区样式
+  mainClass?: string;
+
   // 挂载前
   beforeMount?: () => boolean;
   // 卸载前
@@ -215,7 +224,7 @@ export interface ModalProps {
   // 最大化
   max?: boolean;
 
-  type: string | null;
+  type?: string | null;
   // 自定义拖拽区域
   handle?: string;
   // 用于记录保存拖拽位置的key
@@ -244,6 +253,8 @@ const props = withDefaults(defineProps<ModalProps>(), {
   footer: false,
   esc: false,
   boxClass: "p-4",
+  headerClass: "",
+  mainClass: "",
   beforeMount: () => true,
   beforeUnmount: () => true,
   custom: false,
@@ -268,6 +279,13 @@ const oldY = ref(0);
 // 弹窗大小
 const modalWidth = ref(0);
 const modalHeight = ref(0);
+// 当前弹窗层级
+const currentIndex = computed(() => {
+  if (isMinimize.value) {
+    return -999;
+  }
+  return props.index;
+});
 // 旧弹窗大小
 const oldWidth = ref(0);
 const oldHeight = ref(0);
@@ -285,13 +303,29 @@ const windowWidth = ref(0);
 
 // 底部导航高度
 let bottomBarHeight = 0;
+// 弹窗样式
+const modalStyle = computed(() => {
+  if (isMaximize.value) {
+    return {
+      borderRadius: "0px",
+      width: "100vw",
+      height: "100vh",
+    };
+  }
 
+  // x.value = oldX.value;
+  // y.value = oldY.value;
+  return {
+    borderRadius: "12px",
+    height: "auto",
+  };
+});
 let intervalId;
 // 初始化位置
 function initPos() {
   intervalId = setInterval(() => {
-    if (name.value) {
-    }
+    // if (name.value) {
+    // }
     // 数据未加载完成时
     if (windowHeight.value <= 0 || modalHeight.value <= 0) return;
     let top;
@@ -315,27 +349,6 @@ function initPos() {
   }, 100);
 }
 
-// 弹窗样式
-const modalStyle = computed(() => {
-  if (isMaximize.value) {
-    oldX.value = x.value;
-    oldY.value = y.value;
-    x.value = 0;
-    y.value = 0;
-    return {
-      borderRadius: "0px",
-      width: "100vw",
-      height: "100vh",
-    };
-  }
-
-  x.value = oldX.value;
-  y.value = oldY.value;
-  return {
-    borderRadius: "12px",
-    height: "auto",
-  };
-});
 // 更新弹窗大小
 const resizeModel = (data) => {
   modalWidth.value = data.width;
@@ -347,9 +360,9 @@ const transitionStyle = computed(() => {
   // 最小化
   if (isMinimize.value) {
     return {
-      top: "90%",
-      left: windowWidth.value - 100 + "px",
-      width: "50px",
+      top: "80%",
+      left: windowWidth.value - 200 + "px",
+      minWidth: "50px",
       height: "50px",
       zIndex: props.index + 1,
     };
@@ -390,12 +403,29 @@ const minimize = () => {
   }, 1);
 };
 
+//   x.value = oldX.value;
+//   y.value = oldY.value;
+//   return {
+//     borderRadius: "12px",
+//     height: "auto",
+//   };
 /** 最大化 */
 const maximize = () => {
   transitionVisible.value = true;
   modalVisible.value = false;
+
   setTimeout(() => {
     isMaximize.value = !isMaximize.value;
+    if (isMaximize.value) {
+      oldX.value = x.value;
+      oldY.value = y.value;
+      x.value = 0;
+      y.value = 0;
+    }
+    if (!isMaximize.value) {
+      x.value = oldX.value;
+      y.value = oldY.value;
+    }
     setTimeout(() => {
       modalVisible.value = true;
       transitionVisible.value = false;

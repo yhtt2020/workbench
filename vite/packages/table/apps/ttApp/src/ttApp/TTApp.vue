@@ -6,7 +6,6 @@ import Builder from "../builder";
 import { useTTAppStore } from "../store";
 import { storeToRefs } from "pinia";
 import AppInfo from "./AppInfo.vue";
-import AppCenter from '../../../appCenter'
 const ttappStore: any = useTTAppStore();
 
 const { ttappList }: any = storeToRefs(ttappStore);
@@ -49,7 +48,7 @@ const data = {
 </script>
 
 <template>
-  <AppCenter  v-if="0"/>
+
   <xt-modal v-model="test" @close="onClose" v-if='test' :mask="false">
     <Builder />
 

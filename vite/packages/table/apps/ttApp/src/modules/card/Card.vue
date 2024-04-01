@@ -5,7 +5,9 @@ import TTApp from "../../ttApp";
 import { useParserCard } from "../../parser";
 import { useSelect } from "../../hooks";
 import WuJie from "../wujie/WuJie.vue";
+import TTAppCenter from "../../../../appCenter";
 import { useTTAppStore } from "../../store";
+
 const ttappStore: any = useTTAppStore();
 const loading = ref(true);
 // 卡片头部
@@ -63,6 +65,8 @@ const header = computed(() => {
     refresh: refresh.value,
   };
 });
+
+const appCenter = ref(false);
 </script>
 
 <template>
@@ -79,8 +83,11 @@ const header = computed(() => {
       class="w-full flex flex-col h-full"
       style="overflow: hidden !important"
     >
+      <xt-button @click="ttappStore.modal.visible = true">go modal</xt-button>
+      <xt-button @click="visible = true">go oldInstall</xt-button>
       <TTApp v-if="visible" @close="visible = false" />
-      <xt-button @click="visible = true">打开控制中心</xt-button>
+      <xt-button @click="appCenter = true">go appCenter</xt-button>
+      <TTAppCenter v-if="appCenter" />
       <template v-if="!loading">
         <WuJie v-bind="wujie" :id="customData.id" />
       </template>

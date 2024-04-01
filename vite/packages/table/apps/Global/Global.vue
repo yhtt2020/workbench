@@ -13,7 +13,7 @@ import {
 import { storeToRefs } from "pinia";
 import { taskStore as useTaskStore } from "../task/store";
 import { useGlobalStore } from "./store";
-// components 非首次加载请使用defineAsyncComponent包裹
+// components
 const ClaimReward = defineAsyncComponent(
   () => import("../task/components/ClaimReward.vue")
 );
@@ -21,6 +21,10 @@ const SystemSet = defineAsyncComponent(() => import("../systemSet"));
 const Login = defineAsyncComponent(
   () => import("../../permission/user/Login.vue")
 );
+import WujieModal from "../ttApp/src/modules/modal";
+import { useTTAppStore } from "../ttApp/src/store";
+const ttappStore: any = useTTAppStore();
+const { modal } = storeToRefs(ttappStore);
 // hooks
 import { useLogin } from "../../permission/user/useLogin";
 const tt: any = inject("tt");
@@ -54,8 +58,8 @@ const openFile = (cb?: Function) => {
 onMounted(() => {
   // 打开系统设置
   proxy.$bus.on("openSystemSet", () => {
-    console.log('systemVisible.value :>> ', systemVisible.value);
-    systemVisible.value = !systemVisible.value
+    console.log("systemVisible.value :>> ", systemVisible.value);
+    systemVisible.value = !systemVisible.value;
   });
   // 打开登录
   proxy.$bus.on("openLogin", (cb) => {
@@ -65,22 +69,12 @@ onMounted(() => {
   proxy.$bus.on("openFile", (cb) => {
     openFile(cb);
   });
-
-
 });
-
-const test = () => {
-  // window.tt.runTime
-  // window.tt
-  // console.log('proxy :>> ',);
-  // console.log("test",t);
-  // tt.api.
-  // console.log('tt.runTime.env :>> ', tt.env(""));
-  // tt
-};
 </script>
 
 <template>
+  <!-- 无界应用 -->
+  <WujieModal v-if="modal.visible" />
   <!-- 领取任务奖励 -->
   <ClaimReward v-if="rewardVisible" />
   <!-- 系统设置 -->

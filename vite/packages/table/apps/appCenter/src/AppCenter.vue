@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import Developer from "./views/Developer.vue";
+import Developer from "./views/developer/Developer.vue";
 
 defineProps<{
   modelValue: boolean;
@@ -65,9 +65,8 @@ const switchCurrentCom = (name: string) => {
 </script>
 
 <template>
-
-  <xt-modal v-model="visible" index="999999">
-    <div class="xt-theme-b" style="width: 1000px; height: 720px">
+  <xt-modal v-model="visible" index="200" custom>
+    <div style="width: 1000px; height: 720px">
       <!-- 左侧菜单容器 -->
       <xt-left-menu
         :list="leftMenuList"
@@ -76,7 +75,7 @@ const switchCurrentCom = (name: string) => {
         fn="fn"
         leftBg="red"
       >
-        <div class="w-full h-full xt-theme-b">
+        <div class="w-full h-full xt-theme-b py-4 pr-4">
           <component :is="components[currentCom]" />
         </div>
       </xt-left-menu>
@@ -84,3 +83,4 @@ const switchCurrentCom = (name: string) => {
   </xt-modal>
 </template>
 <style lang="scss" scoped></style>
+./views/developer/Developer.vue
