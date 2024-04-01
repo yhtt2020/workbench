@@ -1,3 +1,4 @@
+<!-- 群聊内容转发弹窗页面 -->
 <template>
   <xt-modal v-if="forwardVisible" v-model="forwardVisible" title="转发消息">
     <UserSelect

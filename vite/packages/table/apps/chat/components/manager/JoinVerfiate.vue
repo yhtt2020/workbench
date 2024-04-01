@@ -1,3 +1,4 @@
+<!-- 群聊加入方式修改页面 -->
 <template>
  <!-- <RadioTab :navList="dataType" v-model:selectType="defaultType"></RadioTab> -->
 </template>
