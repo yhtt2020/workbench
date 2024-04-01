@@ -86,7 +86,7 @@
           <!-- 具备管理员权限 -->
           <template v-else>
             <div class="flex items-center">
-              <template v-for="item in currentMemberList.slice(0, 5)">
+              <template v-for="item in currentMemberList.slice(0, 6)">
                 <div class="flex flex-col items-center justify-center mr-2.5">
                   <a-avatar :src="item.avatar" size="32"></a-avatar>
                   <span
@@ -144,6 +144,7 @@
         <div
           class="flex items-center justify-between pointer mb-4"
           v-if="manageInfo.role !== 'Member'"
+          @click="openGroupManage"
         >
           <span class="xt-text font-16 xt-font">群管理</span>
           <xt-ify-icon
@@ -152,7 +153,6 @@
             size="24"
           />
         </div>
-
         <div class="flex flex-col w-full">
           <!-- 群ID -->
           <div class="flex justify-between">
@@ -244,6 +244,7 @@
           >
         </div>
       </template>
+
       <template v-else>
         <div class="flex items-center justify-center w-full">
           <xt-button
@@ -282,7 +283,6 @@
 
   <!-- 修改群成员弹窗 -->
   <MemberDrawer ref="memberRef" @closeMember="manageVisible = true" />
-
   <!-- 添加群成员弹窗 -->
   <AddMember
     ref="userSelectRef"
@@ -290,13 +290,20 @@
     :groupID="groupID"
     @update="updateMemeber"
   />
-
   <!-- 移除群成员弹窗 -->
   <DeleteUserSelect
     ref="deleteUserSelectRef"
     :userList="currentMemberList"
     @update="updateMemeber"
     :groupID="groupID"
+  />
+
+  <!-- 修改群管理员弹窗 -->
+  <GroupManage
+    ref="updateManageRef"
+    :groupInfo="manageInfo"
+    @closeMember="manageVisible = true"
+    @updateMuteAllMembers="updateGroupManager"
   />
 </template>
 
@@ -321,6 +328,7 @@ import NoticeDrawer from "./NoticeDrawer.vue";
 import MemberDrawer from "../manager/GroupMemeber.vue";
 import AddMember from "../manager/AddMember.vue";
 import DeleteUserSelect from "../manager/DeleteMember.vue";
+import GroupManage from "../manager/GroupManage.vue";
 
 const props = defineProps({
   groupID: {
@@ -337,6 +345,7 @@ const noticeRef = ref(null);
 const memberRef = ref(null);
 const userSelectRef = ref(null);
 const deleteUserSelectRef = ref(null);
+const updateManageRef = ref(null);
 // 当前群成员列表
 const currentMemberList = ref([]);
 // 好友添加成为群成员列表
@@ -359,6 +368,7 @@ const openManageDrawer = () => {
         manageInfo.value.type = groupProfile?.type;
         manageInfo.value.join = groupProfile?.joinOption;
         manageInfo.value.invite = groupProfile?.inviteOption;
+        manageInfo.value.muteAllMembers = groupProfile?.muteAllMembers;
       },
     });
     TUIStore.watch(StoreName.GRP, {
@@ -413,6 +423,15 @@ const addManagerMember = async () => {
 // 更新当前群成员数据
 const updateMemeber = (data) => {
   currentMemberList.value = data;
+};
+// 更新当前群禁言状态
+const updateGroupManager = (data) =>{
+  manageInfo.value.muteAllMembers = data.muteAllMembers;
+}
+
+// 开启群管理入口 就是将群成员升级为群管理员
+const openGroupManage = () => {
+  updateManageRef.value.openGroupManageDrawer();
 };
 
 defineExpose({

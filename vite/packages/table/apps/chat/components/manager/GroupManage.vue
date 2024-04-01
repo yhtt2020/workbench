@@ -1,294 +1,235 @@
 <template>
-  <div class="flex flex-col">
-    <div
-      v-if="groupManageInfo.conversation.type !== 'Private'"
-      class="rounded-lg px-4 py-3 flex flex-col font-14 mb-4"
-      style="width: 468px; height: 119px; background: var(--secondary-bg)"
+  <teleport to="body">
+    <a-drawer
+      v-model:visible="manageVisible"
+      width="500"
+      zIndex="1600"
+      :closable="false"
     >
-      <span class="font-14" style="color: var(--primary-text)">群管理员</span>
-
-      <div class="flex items-center mt-3">
-        <!-- 群管理员列表 -->
-        <div class="flex items-center">
-          <div
-            v-for="item in isAdminList"
-            class="flex items-center justify-center flex-col mr-3"
+      <template #title>
+        <div class="flex items-center w-full">
+          <xt-button
+            w="40"
+            h="40"
+            style="margin-right: 16px; border-radius: 8px"
+            @click="closeManageMember"
           >
-            <a-avatar :size="32" :src="item.avatar"></a-avatar>
-            <span class="mt-1"> {{ item.nick }}</span>
-          </div>
+            <div class="flex items-center justify-center">
+              <xt-ify-icon
+                icon="fluent:chevron-left-16-regular"
+                class="xt-text-2"
+                size="30"
+              />
+            </div>
+          </xt-button>
+          <span class="xt-text font-16 xt-font">群管理员</span>
         </div>
+      </template>
 
-        <!-- 添加和删除群管理员按钮 -->
-        <div class="flex" v-if="groupManageInfo.role !== 'Member'">
-          <div
-            class="flex pointer items-center justify-center active-button rounded-lg"
+      <div class="rounded-xl xt-bg-2 p-3 flex flex-col mb-4">
+        <span class="xt-text xt-font font-16 mb-4">群管理员</span>
+        <div class="flex items-center admin-container">
+          <!-- 显示群管理员列表 -->
+          <template v-for="item in adminList">
+            <div
+              class="flex items-center admin-item justify-center flex-col mr-3"
+            >
+              <a-avatar :src="item.avatar" size="32" />
+              <span
+                class="xt-text truncate xt-font font-12"
+                style="max-width: 60px"
+              >
+                {{ item.nick }}
+              </span>
+            </div>
+          </template>
+
+          <!-- 添加 -->
+          <xt-button
+            w="32"
+            h="32"
             style="
-              width: 32px;
-              height: 32px;
               background: rgba(80, 139, 254, 0.2);
-              margin-right: 24px;
+              border-radius: 8px;
+              margin-right: 12px;
             "
-            @click="addAdmin('addAdmin')"
           >
-            <Icon
-              icon="tianjia3"
-              style="color: var(--success); font-size: 1.25em"
-            ></Icon>
-          </div>
+            <div class="flex items-center justify-center">
+              <xt-ify-icon
+                icon="fluent:add-circle-12-filled"
+                class="link"
+                size="20"
+              />
+            </div>
+          </xt-button>
 
-          <div
-            class="flex pointer items-center justify-center active-button rounded-lg"
-            style="
-              width: 32px;
-              height: 32px;
-              background: rgba(255, 77, 79, 0.2);
-            "
-            @click="addAdmin('delAdmin')"
+          <!-- 取消 -->
+          <xt-button
+            w="32"
+            h="32"
+            style="background: rgba(255, 77, 79, 0.2); border-radius: 8px"
           >
-            <Icon
-              icon="jinzhi-yin"
-              style="color: var(--error); font-size: 1.25em"
-            ></Icon>
-          </div>
+            <div class="flex items-center justify-center">
+              <xt-ify-icon
+                icon="akar-icons:circle-minus-fill"
+                class="error"
+                size="20"
+              />
+            </div>
+          </xt-button>
         </div>
       </div>
-    </div>
 
-    <div
-      class="rounded-lg px-4 flex flex-col py-3 font-14"
-      style="width: 468px; background: var(--secondary-bg)"
-    >
-      <div class="flex items-center justify-between">
-        <div class="flex flex-col">
-          <span class="font-14" style="color: var(--primary-text)"
-            >全员禁言</span
-          >
-          <span class="font-14" style="color: var(--secondary-text)"
-            >全员禁言开启后，只允许群主和管理员发言</span
-          >
+      <div class="rounded-xl xt-bg-2 p-3 flex flex-col">
+        <div class="flex items-center justify-between w-full">
+          <div class="flex flex-col">
+            <span class="xt-text xt-font font-16">全员禁言</span>
+            <span class="xt-text-2 xt-font font-14">
+              全员禁言开启后,只允许群主和管理员发言
+            </span>
+          </div>
+          <a-switch
+            v-model:checked="groupInfo.muteAllMembers"
+            @change="updateMuteAllChecked"
+          />
         </div>
+        <div class="my-3" style="background: var(--divider); height: 1px"></div>
+        <div class="flex items-center admin-container">
+          <!-- 显示群管理员列表 -->
+          <template v-for="item in muteList">
+            <div
+              class="flex items-center admin-item justify-center flex-col mr-3"
+            >
+              <a-avatar :src="item.avatar" size="32" />
+              <span
+                class="xt-text truncate xt-font font-12"
+                style="max-width: 60px"
+              >
+                {{ item.nick }}
+              </span>
+            </div>
+          </template>
 
-        <a-switch
-          v-model:checked="groupManageInfo.conversation.muteAllMembers"
-          @change="updateMute($event)"
-        ></a-switch>
-      </div>
-
-      <a-divider style="height: 2px; background-color: var(--divider)" />
-
-      <div class="flex items-center">
-        <div
-          v-for="item in muteList"
-          class="flex items-center justify-center flex-col mr-3"
-        >
-          <a-avatar :size="32" :src="item.avatar"></a-avatar>
-          <span class="mt-1"> {{ item.nick }}</span>
-        </div>
-
-        <div class="flex" v-if="groupManageInfo.role !== 'Member'">
-          <div
-            class="flex pointer items-center justify-center active-button rounded-lg"
+          <!-- 添加 -->
+          <xt-button
+            w="32"
+            h="32"
             style="
-              width: 32px;
-              height: 32px;
               background: rgba(80, 139, 254, 0.2);
-              margin-right: 24px;
+              border-radius: 8px;
+              margin-right: 12px;
             "
-            @click="addMute('addMuteUser')"
           >
-            <Icon
-              icon="tianjia3"
-              style="color: var(--success); font-size: 1.25em"
-            ></Icon>
-          </div>
+            <div class="flex items-center justify-center">
+              <xt-ify-icon
+                icon="fluent:add-circle-12-filled"
+                class="link"
+                size="20"
+              />
+            </div>
+          </xt-button>
 
-          <div
-            class="flex pointer items-center justify-center active-button rounded-lg"
-            style="
-              width: 32px;
-              height: 32px;
-              background: rgba(255, 77, 79, 0.2);
-            "
-            @click="addMute('removeMuteUser')"
+          <!-- 取消 -->
+          <xt-button
+            w="32"
+            h="32"
+            style="background: rgba(255, 77, 79, 0.2); border-radius: 8px"
           >
-            <Icon
-              icon="jinzhi-yin"
-              style="color: var(--error); font-size: 1.25em"
-            ></Icon>
-          </div>
+            <div class="flex items-center justify-center">
+              <xt-ify-icon
+                icon="akar-icons:circle-minus-fill"
+                class="error"
+                size="20"
+              />
+            </div>
+          </xt-button>
         </div>
       </div>
-    </div>
-  </div>
-
-  <Modal v-if="isMemeberShow" v-model:visible="isMemeberShow" :blurFlag="true">
-    <UserSelect
-      :list="
-        type === 'addAdmin'
-          ? addList
-          : type === 'delAdmin'
-          ? userList
-          : type === 'addMuteUser'
-          ? addList
-          : clearMute
-      "
-      :type="type"
-      :groupID="groupManageInfo.groupID"
-      :server="server"
-      @close="close"
-      @closeUser="isMemeberShow = false"
-    >
-    </UserSelect>
-  </Modal>
+    </a-drawer>
+  </teleport>
 </template>
 
-<script>
-import { computed, defineComponent, onMounted, reactive, toRefs } from "vue";
-import Modal from "../../../../components/Modal.vue";
-import UserSelect from "../userselect/UserSelectIndex.vue";
+<script setup>
+import { nextTick, ref, toRefs } from "vue";
+import {
+  TUIStore,
+  StoreName,
+  TUIGroupService,
+} from "@tencentcloud/chat-uikit-engine";
 import _ from "lodash-es";
+import { message } from "ant-design-vue";
+import { enableSampleTaskStatus } from "../../../TUIKit/utils/enableSampleTaskStatus";
 
-export default defineComponent({
-  props: ["groupManageInfo", "server"],
+const emit = defineEmits(["closeMember", "updateMuteAllMembers"]);
 
-  components: {
-    Modal,
-    UserSelect,
+const props = defineProps({
+  groupInfo: {
+    type: String,
+    default: () => {},
   },
+});
+const { groupInfo } = toRefs(props);
 
-  setup(props, ctx) {
-    const tim = props.server.TUICore.tim;
-    const TIM = props.server.TUICore.TIM;
+const adminList = ref([]);
+// 被禁言的用户列表
+const muteList = ref([]);
 
-    const data = reactive({
-      isMemeberShow: false, // 显示邀请选中用户成为管理弹窗
-      type: "", // 接收是删除类型还是添加类型
-      addList: [], // 添加管理员数据
-      userList: [], // 清除管理员数据
-      clearMute: [], // 清除禁言人员
-    });
+const getGroupAdminList = () => {
+  TUIStore.watch(StoreName.GRP, {
+    currentGroupMemberList: (data) => {
+      console.log("currentGroupMemberList", data);
+      const adminArr = _.filter(data, function (item) {
+        return item?.role === "Admin";
+      });
+      adminList.value = adminArr;
+    },
+  });
+};
 
-    const addAdmin = (type) => {
-      // 添加和删除群聊管理员
-      switch (type) {
-        case "addAdmin":
-          data.isMemeberShow = true;
-          data.type = type;
-          data.addList = props.groupManageInfo.list;
-          break;
-        case "delAdmin":
-          if (isAdminList.value.length !== 0) {
-            data.isMemeberShow = true;
-            data.type = type;
-            data.userList = isAdminList;
-          } else {
-            data.isMemeberShow = false;
-          }
+// 开启群管理员修改功能
+const manageVisible = ref(false);
+const openGroupManageDrawer = () => {
+  manageVisible.value = true;
+  nextTick(() => {
+    // 获取群管理员列表
+    getGroupAdminList();
+  });
+};
 
-          break;
-        default:
-          break;
-      }
-    };
+// 关闭群管理员修改功能
+const closeManageMember = () => {
+  manageVisible.value = false;
+  emit("closeMember");
+};
 
-    const addMute = (type) => {
-      // 新增禁言用户
-      if (type === "addMuteUser") {
-        data.isMemeberShow = true;
-        data.type = type;
-        data.addList = props.groupManageInfo.list;
-      } else {
-        if (muteList.value.length !== 0) {
-          data.isMemeberShow = true;
-          data.type = type;
-          data.clearMute = muteList;
-        } else {
-          data.isMemeberShow = false;
-        }
-      }
-    };
+// 修改禁言开启状态
+const updateMuteAllChecked = () => {
+  const options = {
+    groupID: groupInfo.value?.groupID,
+    muteAllMembers: groupInfo.value?.muteAllMembers,
+  };
+  TUIGroupService.updateGroupProfile(options).then((res) => {
+    if (res.code === 0) {
+      enableSampleTaskStatus("muteGroup");
+      message.success("设置全员禁言成功");
+    }
+  });
+};
 
-    const close = () => {
-      // 关闭群聊管理弹窗
-      data.isMemeberShow = false;
-      ctx.emit("close");
-    };
-
-    const isAdminList = computed(() => {
-      const list = [];
-      for (let i = 0; i < props.groupManageInfo.list.length; i++) {
-        if (props.groupManageInfo.list[i].role === "Admin") {
-          list.push(props.groupManageInfo.list[i]);
-        }
-      }
-      return list;
-    });
-
-    const muteList = computed(() => {
-      const time = new Date().getTime();
-      const list = props.groupManageInfo.list.filter(
-        (item) => item?.muteUntil * 1000 - time > 0
-      );
-      return list;
-    });
-
-    const updateMute = async (evt) => {
-      // 设置全体禁言
-      const options = {
-        groupID: props.groupManageInfo.groupID,
-        muteAllMembers: evt,
-      };
-      await tim.updateGroupProfile(options);
-      ctx.emit("close");
-    };
-
-    return {
-      isAdminList,
-      muteList,
-
-      addAdmin,
-      ...toRefs(data),
-      close,
-      updateMute,
-      addMute,
-    };
-  },
+defineExpose({
+  openGroupManageDrawer,
 });
 </script>
 
 <style lang="scss" scoped>
-.font-14 {
-  font-size: 14px;
-  font-weight: 400;
-}
-
-.font-16 {
-  font-size: 16px;
-  font-weight: 400;
-}
-
-.font-12 {
-  font-size: 12px;
-  font-weight: 400;
-}
-
-:deep(.ant-divider-horizontal) {
-  margin: 12px 0 !important;
-}
-
-.active-button {
-  &:active {
-    filter: brightness(0.8);
-    opacity: 0.8;
+.admin {
+  &-container {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-gap: 4px; // 元素之间的间距
   }
-  &:hover {
-    opacity: 0.8;
+  .item {
+    width: 100%; // 元素宽度占满父容器
   }
-}
-
-:deep(.dialog-main-content) {
-  width: 650px;
-  height: 534px;
 }
 </style>

@@ -39,7 +39,7 @@
       <!-- 列表 -->
       <div class="flex flex-col mt-4">
         <div class="flex items-center justify-between w-full mb-4">
-          <span class="font-14 xt-text-2">最近聊天</span>
+          <span class="font-14 xt-text">最近聊天</span>
           <a-checkbox v-model:checked="currentChecked">全选</a-checkbox>
         </div>
         <xt-scrollbar :y="true" style="height: 304px">
