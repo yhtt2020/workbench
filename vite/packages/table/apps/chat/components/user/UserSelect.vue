@@ -46,7 +46,7 @@
           <div class="flex flex-col">
             <template v-for="(item, index) in currentList">
               <div
-                class="flex p-3 w-full rounded-lg pointer mb-4"
+                class="flex p-3 w-full items-center rounded-lg pointer mb-4"
                 :class="{ 'select-bg': isSelect(index) }"
                 @click="selectForward(item)"
               >
@@ -82,7 +82,7 @@
             <div
               class="flex p-3 w-full rounded-lg justify-between items-center pointer"
             >
-              <div class="flex">
+              <div class="flex items-center">
                 <a-avatar
                   shape="square"
                   v-if="item.type === 'GROUP'"
