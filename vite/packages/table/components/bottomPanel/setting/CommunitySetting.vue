@@ -1,5 +1,5 @@
 <template>
-  <xt-modal v-model="communitySetVisible" title="团队导航设置" :maskIndex="900">
+  <xt-modal v-if="communitySetVisible" v-model="communitySetVisible" title="团队导航设置" :maskIndex="900">
     <div class="flex flex-col px-2" style="width: 500px">
       <div class="w-full xt-bg-2 flex flex-col rounded-xl p-4">
         <span class="xt-font xt-text font-16">团队空间容量</span>
@@ -28,7 +28,7 @@
       </div>
       <div class="w-full xt-bg-2 flex justify-between rounded-xl p-4">
         <span>打开图标后自动关闭团队导航窗口</span>
-        <a-switch v-model:checked="settingEnable"></a-switch>
+        <a-switch v-model:checked="autoClose"></a-switch>
       </div>
     </div>
   </xt-modal>
@@ -42,7 +42,7 @@ import { communityNavStore } from "../store/communityNavStore";
 const { proxy } = getCurrentInstance();
 
 const communityNav = communityNavStore();
-const { settingType, settingEnable } = storeToRefs(communityNav);
+const { settingType, autoClose } = storeToRefs(communityNav);
 
 const communitySetVisible = ref(false);
 const selectList = ref([
@@ -60,10 +60,17 @@ const selectList = ref([
 const openAppSetting = () => {
   communitySetVisible.value = true;
 };
-
+watch(()=>communitySetVisible.value,(newVal)=>{
+  if(newVal===false){
+    communityNav.saveCommunityNav()
+  }
+})
 watch(
   () => settingType.value,
   (newVal) => {
+    if(!communitySetVisible.value){
+      return
+    }
     if (newVal === "component") {
       window.$ui.confirm(
         "使用「组件模式」",

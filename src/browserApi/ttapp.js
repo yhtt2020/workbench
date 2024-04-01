@@ -14,27 +14,37 @@ const ttapp = {
   install(zipPath, cb) {
     let cbId = require("nanoid").nanoid();
     ipc.once(cbId, (event, args) => {
-      cb && cb(args);
+      cb?.(args);
     });
     return send("install", {
       zipPath,
       cbId,
     });
   },
-  installJson( data, cb) {
+  installJson(data, cb) {
     let cbId = require("nanoid").nanoid();
     ipc.once(cbId, (event, args) => {
-      cb && cb(args);
+      cb?.(args);
     });
     return send("installJson", {
       data,
       cbId,
     });
   },
+  checkFile(path, cb) {
+    let cbId = require("nanoid").nanoid();
+    ipc.once(cbId, (event, args) => {
+      cb?.(args);
+    });
+    return send("checkFile", {
+      path,
+      cbId,
+    });
+  },
   uninstall(id, cb) {
     let cbId = require("nanoid").nanoid();
     ipc.once(cbId, (event, args) => {
-      cb && cb(args);
+      cb?.(args);
     });
     return send("uninstall", {
       id,
@@ -44,7 +54,7 @@ const ttapp = {
   select(id, cb) {
     let cbId = require("nanoid").nanoid();
     ipc.once(cbId, (event, args) => {
-      cb && cb(args);
+      cb?.(args);
     });
     return send("select", {
       id,
@@ -55,7 +65,7 @@ const ttapp = {
     let cbId = require("nanoid").nanoid();
     ipc.once(cbId, (event, args) => {
       console.log("args :>> ", args);
-      cb && cb(args);
+      cb?.(args);
     });
     return send("selectAll", {
       cbId,

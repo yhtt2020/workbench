@@ -256,6 +256,7 @@ export default {
     ...mapWritableState(courierStore, ['courierMsgList',
       'orderList',
       'couriersDetailMsg',
+      'couriersList',
       'storeInfo', 'currentDetail', 'settings']),
 
     // 判断尺寸大小
@@ -332,12 +333,14 @@ export default {
       handler (newVal) {
         this.displayList = preHandle(this.orderList)
         this.displayList = this.displayList.slice(0, 10)
+        this.courierList = this.orderList
+        console.log(this.courierList.length)
       },
       immediate: true
     },
     customSize (newVal, oldVal) {
       this.customData.customSize = newVal
-    }
+    },
   },
   async mounted () {
     // console.log(this.courierDetailList)

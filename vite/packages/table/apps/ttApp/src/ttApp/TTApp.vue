@@ -5,6 +5,8 @@ import { useInstallTTApp, useSelect, useSelectAll } from "../hooks";
 import Builder from "../builder";
 import { useTTAppStore } from "../store";
 import { storeToRefs } from "pinia";
+import AppInfo from "./AppInfo.vue";
+import AppCenter from '../../../appCenter'
 const ttappStore: any = useTTAppStore();
 
 const { ttappList }: any = storeToRefs(ttappStore);
@@ -36,17 +38,28 @@ const selectAllTTApp = async () => {
   const res = await useSelectAll();
   console.log("res :>> ", res);
 };
+
+const data = {
+  name: "TTAppCard",
+  data: {
+    id: "mx08",
+    customSize: "4x4",
+  },
+};
 </script>
 
 <template>
+  <AppCenter />
   <xt-modal v-model="test" @close="onClose">
     <Builder />
+
     <div class="line">
       <xt-button @click="selectAllTTApp()" :w="140" :h="40" type="theme"
         >查询所有TTApp</xt-button
       >
     </div>
     <div v-for="item in ttappList" :key="item.id">
+      <AppInfo :data="item" />
       <div @click="registerCard(item.id)">
         {{ item }}
       </div>

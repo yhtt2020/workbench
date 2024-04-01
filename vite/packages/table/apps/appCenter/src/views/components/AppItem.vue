@@ -1,0 +1,104 @@
+<script setup lang="ts">
+import { ref, computed } from "vue";
+import { useTTAppStore } from "../../../../ttApp/src/store";
+import { storeToRefs } from "pinia";
+
+const { item } = defineProps<{ item: any }>();
+
+// ttapp数据
+const ttappStore: any = useTTAppStore();
+
+const menus = computed(() => {
+  return [
+    {
+      name: "添加小组件",
+      newIcon: "fluent:add-16-regular",
+      cb: () => {
+        console.log("222 :>> ", 222);
+        addPreview();
+      },
+    },
+    {
+      name: "编辑信息",
+      newIcon: "fluent:compose-16-regular",
+      cb: () => {
+        console.log("编辑");
+      },
+    },
+    {
+      name: "卸载",
+      newIcon: "fluent:delete-16-regular",
+      color: "#FF4D4F",
+      cb: () => {
+        ttappStore.uninstall(item.id);
+      },
+    },
+  ];
+});
+
+const previewVisible = ref(false);
+const previewData = {
+  name: "TTAppCard",
+  data: {
+    id: "mx08",
+    customSize: "4x4",
+  },
+};
+const addPreview = () => {
+  previewVisible.value = true;
+  console.log("222 :>> ", 222);
+};
+</script>
+
+<template>
+  <Teleport to="body">
+    <xt-drag-modal x="0" y="0" index="9999999999">123</xt-drag-modal>
+  </Teleport>
+  <!-- 添加时预览组件 -->
+  {{ item }}
+  <xt-preview-v2
+    v-if="previewVisible"
+    v-model="previewVisible"
+    v-bind="previewData"
+    title="推荐添加应用小组件"
+  />
+  <!-- 渲染样式 -->
+  <div
+    class="xt-bg-2 rounded-xl flex items-center justify-between p-4 mb-4"
+    style="height: 102px"
+  >
+    <!-- 左侧 -->
+    <div class="flex">
+      <div class="rounded-xl xt-theme-b mr-4" style="width: 70px; height: 70px">
+        logo
+      </div>
+      <div class="flex flex-col justify-center">
+        <div>{{ item.name }}</div>
+        <div class="xt-text-2 text-sm mt-2">
+          一键开启计时器，方便在会议时提示每个成员的发言时间。
+        </div>
+      </div>
+    </div>
+    <!-- 右侧 -->
+    <div class="flex">
+      <!-- 打开按钮 -->
+      <div
+        class="flex justify-center items-center xt-modal rounded-lg mr-2"
+        style="width: 72px; height: 32px"
+      >
+        <xt-ify-icon icon="fluent:open-16-regular" size="16" class="mr-1" />
+        <span class="text-sm">打开 </span>
+      </div>
+      <!-- 更多功能 -->
+      <xt-menu :menus="menus" name="name" fn="cb" model="click">
+        <div
+          class="xt-modal flex justify-center items-center rounded-lg"
+          style="width: 32px; height: 32px"
+        >
+          <xt-ify-icon icon="fluent:more-horizontal-16-regular" />
+        </div>
+      </xt-menu>
+    </div>
+  </div>
+</template>
+<style lang="scss" scoped></style>

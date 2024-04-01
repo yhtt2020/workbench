@@ -1,6 +1,6 @@
 <template>
   <div
-    class="rounded-xl flex flex-col justify-between control-container xt-shadow pl-4 pt-4 tt-container-box-1234"
+    class="flex flex-col justify-between pt-4 pl-4 rounded-xl control-container xt-shadow tt-container-box-1234"
     id="controlId"
     ref="modalRef"
   >
@@ -11,7 +11,7 @@
           size="20"
           class="mr-2"
         ></xt-new-icon>
-        <span class="xt-text font-14 xt-font">控制中心</span>
+        <span class="xt-text font-14 xt-font">{{ props.title }}</span>
       </div>
       <template v-if="!editVisible">
         <div
@@ -31,7 +31,7 @@
       <template v-else>
         <div class="flex items-center">
           <div
-            class="mr-3 flex items-center pointer justify-center"
+            class="flex items-center justify-center mr-3 pointer"
             @click="restList"
           >
             <xt-button style="width: auto !important" h="0">
@@ -47,7 +47,7 @@
               </div>
             </xt-button>
           </div>
-          <div class="flex items-center pointer pr-4" @click="finshEdit">
+          <div class="flex items-center pr-4 pointer" @click="finshEdit">
             <xt-button style="width: auto !important" h="0">
               <div class="flex items-center justify-center tt-container-box-1234" >
                 <span class="xt-font font-14" style="color:var(--link)">完成编辑</span>
@@ -65,7 +65,7 @@
     </template>
 
     <div class="mt-2 mb-4" style="width: 520px">
-      <div class="mx-auto xt-bb w-full"></div>
+      <div class="w-full mx-auto xt-bb"></div>
     </div>
 
     <div class="flex items-center justify-center mb-4">
@@ -115,6 +115,10 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  title:{
+    type:String,
+    default:'控制中心'
+  }
 });
 
 const app = appStore();
@@ -138,12 +142,12 @@ const finshEdit = () => {
       return {...control.value.oldList[index]};
     });
     control.value.oldList = [...updateListItem];
-    editVisible.value = false; 
+    editVisible.value = false;
     updateList.value = [];
   }
   else {
     control.value.oldList = [...initList.value];
-    editVisible.value = false; 
+    editVisible.value = false;
   }
 };
 
@@ -152,7 +156,7 @@ const restList = () => {
   control.value.newList = [];
   control.value.oldList = [];
   control.value.oldList = JSON.parse(JSON.stringify(initList.value));
-  editVisible.value = false; 
+  editVisible.value = false;
 };
 
 const bottomButton = ref([
@@ -191,12 +195,7 @@ const bottomButton = ref([
     newIcon: "fluent:settings-16-regular",
     name: "设置",
     fn: () => {
-      router.push({
-          name:'home'
-        })
-        setTimeout(() => {
-          proxy.$bus.emit("openSystemSet")
-        }, 500);
+      proxy.$bus.emit("openSystemSet")
       emit("close");
     },
   },
@@ -234,7 +233,7 @@ onMounted(() => {
   });
   window.addEventListener("click",handleClick);
 });
-onUnmounted(()=>{ 
+onUnmounted(()=>{
   window.removeEventListener("click",handleClick);
 });
 </script>

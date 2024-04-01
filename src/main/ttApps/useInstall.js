@@ -2,9 +2,9 @@
  * 安装ttapp ttapp.js
  * @description 安装ttapp
  */
+// 辅助函数
 const {
   existsFolder,
-  createFolder,
   unzipFile,
   deleteFile,
   writeFile,
@@ -12,41 +12,58 @@ const {
   readFile,
   checkDir,
 } = require("./useFile.js");
+// 生成唯一id 贯穿整个安装流程
+const { nanoid } = require("nanoid");
+// 数据库操作
+const ttAppModel = require("./useDb.js");
 
-const fse = require("fs-extra");
+// 错误编码 方便前端做判断 预留10位做扩展
 const ERROR_CODE = {
-  11: "文件类型错误",
-  12: "文件解压失败",
+  // 文件操作
+  1: "文件类型错误",
+  2: "文件解压失败",
+  // manifest.json 相关
   21: "manifest.json文件不存在",
   22: "manifest.json文件不是合格的数据",
   22: "manifest.json文件缺少数据",
-  31: "文件写入失败",
+  23: "manifest.json文件缺少指定文件",
+  // 数据库相关
+  41: "文件写入失败",
 };
-const { nanoid } = require("nanoid");
-
-const ttAppModel = require("./useDb.js");
-
-let currentId = "";
-
+// 当前id
+let id = "";
+// 获取文件类型
+const getFileExtension = (filePath) => {
+  const compressedTypes = ["zip", "rar", "7z", "json"];
+  const fileExtension = filePath.split(".").pop() || "";
+  return compressedTypes.includes(fileExtension);
+};
+// 自定义校验文件是否存在
+const checkFile = async (filePath) => {
+  const folderType = "apps_test";
+  const folderName = [folderType, id, filePath];
+  let res = await existsFolder(folderName);
+  return res;
+};
 // 检测manifest.json
-const checkMainFest = async (id) => {
+const checkMainFest = async () => {
   let manifestPath = ["apps_test", id, "manifest.json"];
-  let manifestRes = await readFile(manifestPath);
+  let res = await readFile(manifestPath);
 
-  // 检测manifest.json文件是否存在
-  if (manifestRes.code !== 200) {
+  // 1、检测manifest.json文件是否存在
+  if (res.code !== 200) {
     return {
       status: 1,
       code: 21,
       data: "manifest.json文件不存在",
       info: ERROR_CODE[21],
-      id,
+      id: id,
     };
   }
 
-  // 检测manifest.json是否为json
-  manifestRes = JSON.parse(manifestRes.data);
-  if (typeof manifestRes !== "object") {
+  // 2、检测manifest.json是否为json
+  res = JSON.parse(res.data);
+  if (typeof res !== "object") {
     return {
       status: 1,
       code: 22,
@@ -54,11 +71,13 @@ const checkMainFest = async (id) => {
       id,
     };
   }
-  // 检测manifest.json数据
+
+  // 3、弱检查 只需要检测是否有参数
+  //  "description",
   let manifestCheck = ["name", "modules"];
   let manifestCheckRes = [];
   manifestCheck.forEach((key) => {
-    if (manifestRes[key] == undefined) {
+    if (res[key] == undefined) {
       manifestCheckRes.push(key);
     }
   });
@@ -70,21 +89,62 @@ const checkMainFest = async (id) => {
       info: "manifest.json文件缺少 " + manifestCheckRes.join(" , ") + " 数据",
     };
   }
+  // 4 强检查 检查文件是否存在
+console.log('res :>> ', res);
+  // 基础数据
+  let manifestList = [
+    {
+      path: res?.preview,
+      info: "预览图",
+    },
+    {
+      path: res?.logo,
+      info: "logo",
+    },
+  ];
+  // card数据
+  const card = res?.modules?.card;
+  let cardList;
+  if (card) {
+    cardList = [
+      {
+        path: card?.entry,
+        info: "card入口",
+      },
+    ];
+  }
+  // 合并数据
+  let checkList = [...manifestList, ...cardList];
+  let checkRes = [];
+
+  console.log("checkList :>> ", checkList);
+
+  for (data of checkList) {
+    let currentRes = data?.path && (await checkFile(data?.path));
+    if (!currentRes) {
+      checkRes.push(data?.info);
+    }
+  }
+  console.log("checkRes :>> ", checkRes);
+  if (checkRes.length > 0) {
+    return {
+      status: 1,
+      code: 24,
+      data: checkRes.join(" , ") + " 不存在",
+      info: ERROR_CODE[24],
+    };
+  }
+  // 5、返回数据
   return {
     status: 0,
     code: 200,
-    data: manifestRes,
+    data: res,
     info: "成功",
   };
 };
-// 获取文件类型
-const getFileExtension = (filePath) => {
-  const compressedTypes = ["zip", "rar", "7z", "json"];
-  const fileExtension = filePath.split(".").pop() || "";
-  return compressedTypes.includes(fileExtension);
-};
+
 // 从测试文件夹复制到正式文件夹
-const useMoveFolder = async (id) => {
+const useMoveFolder = async () => {
   await checkDir(["apps", id]);
   let res = await moveFolder(["apps_test", id], ["apps", id]);
   return res;
@@ -93,11 +153,27 @@ const useMoveFolder = async (id) => {
 // 保存数据
 const saveData = async (options) => {
   let installDbRes = await ttAppModel.insert(options);
-  if (installDbRes) return true;
+
+  if (installDbRes) {
+    return {
+      status: 0,
+      code: 200,
+      data: id,
+      info: "成功",
+    };
+  } else {
+    return {
+      status: 1,
+      code: 400,
+      data: id,
+      info: "数据保存失败",
+    };
+  }
 };
 
 /**
  * 安装ttapp v2
+ * 负责解压文件
  */
 const installV2 = async (filePath) => {
   console.log("开始注册ttApp :>> ");
@@ -106,16 +182,15 @@ const installV2 = async (filePath) => {
     console.log("1、文件类型错误 :>> ");
     return {
       status: 1,
-      code: 11,
+      code: 1,
       data: "上传的文件类型错误",
-      info: ERROR_CODE[11],
+      info: ERROR_CODE[1],
     };
   }
 
   // 2 处理解压文件路径
-  const id = nanoid(4);
-  currentId = id;
-  console.log("抛出的 id :>> ", id);
+
+  id = nanoid(4);
   const folderType = "apps_test";
   const folderName = [folderType, id];
   await checkDir(folderName);
@@ -126,16 +201,22 @@ const installV2 = async (filePath) => {
     console.log("3、解压失败 :>> ");
     return {
       status: 0,
-      code: 12,
-      info: ERROR_CODE[12],
+      code: 2,
+      info: ERROR_CODE[2],
       data: unzipRes,
     };
   }
 
+  console.log("成功完成解压 :>> ");
+
   let res = await checkV2(id);
   return res;
 };
-const checkV2 = async (id) => {
+/**
+ * 检测v2
+ * 负责检测manifest.json 和最后的处理
+ */
+const checkV2 = async () => {
   // 4 检测manifest.json
   const checkManifestRes = await checkMainFest(id);
   if (checkManifestRes.code !== 200) {
@@ -144,9 +225,8 @@ const checkV2 = async (id) => {
       ...checkManifestRes,
     };
   }
-
   // 5 移动文件夹
-  const moveRes = await useMoveFolder(id);
+  const moveRes = await useMoveFolder();
   if (!moveRes) {
     return {
       status: 1,
@@ -160,50 +240,36 @@ const checkV2 = async (id) => {
   // 过滤不需要的数据
   // manifestRes
   const { data } = checkManifestRes;
-  console.log('data :>> ', data);
+  console.log("data :>> ", data);
   const obj = {
-    id,
+    id: id,
     name: data.name,
     modules: data.modules,
   };
   const saveRes = await saveData({
-    id,
+    id: id,
     data: obj,
   });
-  if (saveRes) {
-    return {
-      status: 0,
-      code: 200,
-      data: id,
-      info: "成功",
-    };
-  } else {
-    return {
-      status: 1,
-      code: 400,
-      data: "数据保存失败",
-      info: "数据保存失败",
-    };
-  }
+  return saveRes;
 };
+// 安装json
 const installJson = async (data) => {
   const folderType = "apps_test"; // 临时文件夹名称
-  const folderName = [folderType, currentId, "manifest.json"];
+  const folderName = [folderType, id, "manifest.json"];
   let writeRes = await writeFile(folderName, data);
 
-  console.log("writeRes :>> ", writeRes);
   if (writeRes.code !== 200) {
     return {
       ...writeRes,
-      code: 31,
-      info: ERROR_CODE[31],
+      code: 41,
+      info: ERROR_CODE[41],
     };
   }
-  let res = await checkV2(currentId);
-  console.log("res :>> ", res);
+  let res = await checkV2(id);
   return res;
 };
 module.exports = {
   installJson,
   installV2,
+  checkFile,
 };

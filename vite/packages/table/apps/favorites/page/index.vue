@@ -10,20 +10,19 @@
         </div>
 
         <Labor @changeIcon="changeIcon" :menus="menus" :checkFlag="checkFlag" @changeCheck="changeCheck" @countFavo="countFavo"></Labor>
-        
+
       </div>
     </xt-modal>
     <!-- 添加分组预览 -->
-    
     <!-- <xt-modal v-model="previewFlag" :index="99999999" :maskIndex="9999999" title="添加到分组"  boxClass="rounded-xl p-4" :mask="true" :header="true" :footer="true"  v-if="previewFlag" @ok="addHandle" >
       <xt-preview v-if="previewFlag" :previewFlag="previewFlag" ref="preview"></xt-preview>
-      
     </xt-modal> -->
-    <xt-preview 
-      v-if="previewFlag" 
-      v-model="previewFlag" 
+    <xt-preview
+      v-if="previewFlag"
+      v-model="previewFlag"
       ref="preview"
       :list="folderIcons"
+      :isFavorite="true"
       @ok="addHandle">
     </xt-preview>
     <!-- 修改网址名称 -->
@@ -53,11 +52,11 @@
   </teleport>
 </template>
 
-<script> 
+<script>
 import { Icon } from '@iconify/vue';
 import { mapActions, mapState, mapWritableState } from 'pinia'
 import { favoStore } from '../store'
-import { useWidgetStore } from '../../../components/card/store'; 
+import { useWidgetStore } from '../../../components/card/store';
 import LeftMenu from '../components/LeftMenu.vue'
 import Search from '../components/Search.vue'
 import Labor from '../components/Labor.vue'
@@ -126,7 +125,7 @@ export default {
             this.edit = true
           },
         },
-        
+
       ],
       deskIcons: [],
       // 文件夹默认数据
@@ -180,7 +179,7 @@ export default {
 
     }
   },
-  components: { 
+  components: {
     Icon,
     LeftMenu,
     Search,
@@ -189,14 +188,14 @@ export default {
   },
 
   computed:{
-    ...mapWritableState(favoStore, 
-      ['isFavorites', 
-        'allList', 
-        'folderList', 
-        'folderIndex', 
-        'browserList', 
-        'updateTime', 
-        'searchValue', 
+    ...mapWritableState(favoStore,
+      ['isFavorites',
+        'allList',
+        'folderList',
+        'folderIndex',
+        'browserList',
+        'updateTime',
+        'searchValue',
         'folderIcons']),
     ...mapWritableState(useWidgetStore, ['edit']),
     ...mapWritableState(cardStore, ['desks', 'addCard', 'currentDesk']),
@@ -249,7 +248,7 @@ export default {
         this.deskIndex = 0
       }
       return arr
-    
+
     },
   },
 
@@ -267,15 +266,15 @@ export default {
   mounted(){
   },
   methods: {
-    // 
+    //
     addHandle(){
       // const preview = this.$refs.preview
-      // // 如果是新建文件夹 需要直接传数据 
+      // // 如果是新建文件夹 需要直接传数据
       // if(preview.chooseIndex?.value == 0){
       //   registerFolder(this.desks[preview.deskIndex], this.folderIcons)
       //   message.success('添加图标成功！')
       // }else{
-      //   // 直接将数据添加进去 
+      //   // 直接将数据添加进去
       //   this.desks.forEach(item=>{
       //     if(item.id == preview.cardTmp?.deskId){
       //       item.cards.forEach(card=>{
@@ -287,7 +286,7 @@ export default {
       //     }
       //   })
       // }
-      // 
+      //
       this.previewFlag = false
       this.checkFlag = false
       this.clearCheck()
@@ -431,13 +430,14 @@ export default {
         })
         newFolder.push({
           ...this.defaultFolderIcon,
-          ...item, 
+          ...item,
           type:'default',
           value:item.url
         })
       })
       this.deskIcons = newIcon
       this.folderIcons = newFolder
+
       console.log(this.deskIcons, this.folderIcons)
     },
 
@@ -486,7 +486,7 @@ export default {
         if(item.check) item.check = false
       })
     },
-    
+
     // 清楚数据的最近添加状态
     clearRecent(){
       this.allList.forEach(item=>{
@@ -501,7 +501,7 @@ export default {
       if(newObjects.length > 0){
         this.clearRecent()
         newObjects.forEach(item=>{
-          item.recent = true          
+          item.recent = true
           item.unRead = true
           this.folderList.forEach(folder=>{
             if(folder.guid == item.parent && item.parent){

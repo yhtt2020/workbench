@@ -226,23 +226,24 @@ const openApp = (data) => {
   // 默认通过浏览器方式打开
   if (type === "default") {
     if (browserType.value === "system") {
-      browser.openInUserSelect(data.url);
+      browser.openInUserSelect(data.value);
     } else if (browserType.value == "thisky") {
-      browser.openInInner(data.url);
+      browser.openInInner(data.value);
     } else if (browserType.value == "work") {
-      browser.openInTable(data.url);
+      browser.openInTable(data.value);
     }
   } else if (type === "coolApp" || type === "lightApp") {
     router.push({ name: "app", params: { ...data } });
   } else {
-    startApp(data.type, data.value);
+    startApp(data.type, data.value,router);
   }
 };
 // 删除数据
 const removeItem = (data) => {
   const index = appModalList.value[1]?.list?.indexOf(data);
   appModalList.value[1]?.list?.splice(index, 1);
-  message.success("应用移除成功");
+  communityNav.saveCommunityNav()
+
 };
 // 取消收藏
 const removeFolder = (data) => {
