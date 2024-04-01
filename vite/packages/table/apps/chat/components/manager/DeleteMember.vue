@@ -5,6 +5,7 @@
     v-model="deleteVisible"
     title="移除群成员"
     :index="1700"
+    :maskIndex="1669"
   >
     <UserSelect
       :currentLeftList="userList"

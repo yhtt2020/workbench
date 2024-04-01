@@ -5,6 +5,7 @@
     v-model="memberVisible"
     title="添加群成员"
     :index="1700"
+    :maskIndex="1669"
   >
     <UserSelect
       :currentLeftList="userList"
