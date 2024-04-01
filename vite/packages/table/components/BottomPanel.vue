@@ -378,8 +378,20 @@ export default {
       const windowHeight = size.height.value;
       this.parentSize = windowWidth;
       this.parentHeight = windowHeight;
-      this.maxItemNum = Math.round((windowWidth - 240) / this.realSize);
-      const width = windowWidth / (240 + this.copyFootNav.length * this.realSize);
+      // 获取最多可以添加的个数
+      let maxWidth
+      let extraWidth
+      if(this.currentNavFormat === 'mac'){
+        maxWidth = windowWidth - 240
+        extraWidth = 240
+      } else {
+        maxWidth = windowWidth * 0.6
+        extraWidth = windowWidth * 0.3
+      }
+      this.maxItemNum = Math.round(maxWidth / this.realSize);
+      // 获取导航栏缩放比例
+      const width = windowWidth / (extraWidth + this.copyFootNav.length * this.realSize);
+      console.log("width :>> ", width,extraWidth + this.copyFootNav.length * this.realSize);
       this.navAttribute.navSize = width.toFixed(2) * 100;
       this.navAttribute.navSize =
         this.navAttribute.navSize < 100 ? this.navAttribute.navSize : 100;
@@ -445,7 +457,7 @@ export default {
       "isEdge",
       "bottomInit",
       "communityNavVisible",
-      "currentNavFormat"
+      "currentNavFormat",
     ]),
     ...mapWritableState(taskStore, ["isTask", "isTaskDrawer"]),
     ...mapWritableState(useDeskStore, ["isEnterBar"]),

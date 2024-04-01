@@ -7,7 +7,8 @@
         style="
             border: 1px solid var(--divider);
             background: rgba(26,26,26,0.65);
-            backdrop-filter: blur(50px);">
+            backdrop-filter: blur(50px);"
+        :style="{zoom: `${navAttribute.navSize / 100}`}">
         <!-- 用户头像以及控制中心 -->
         <User></User>
         <!-- 导航栏图标 -->
@@ -53,9 +54,13 @@ import Panel from './windowPanel/Panel.vue';
 import TopPanelRightDrawer from './drawer/TopPanelRightDrawer.vue';
 
 import { appStore } from '../store';
+import { useNavigationStore } from './desk/navigationBar/navigationStore';
 
 const useAppStore = appStore()
 const { showGuide , status } = storeToRefs(useAppStore)
+
+const useNav = useNavigationStore()
+const { navAttribute } = storeToRefs(useNav)
 
 const emit = defineEmits(['edit', 'getDelIcon', 'control'])
 

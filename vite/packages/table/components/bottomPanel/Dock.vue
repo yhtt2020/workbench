@@ -351,7 +351,9 @@ export default {
       "navAttribute",
       "jumpDesk",
       "currentNavPosition",
+      "currentNavFormat",
     ]),
+    
     ...mapWritableState(useNavBarStore, ["isEnterDesk"]),
     ...mapWritableState(controlStore, ["firstNavVisible"]),
     // 当前图标的大小
@@ -419,7 +421,15 @@ export default {
       handler(newVal, oldVal) {
         // 获取最大可添加图标个数
         const windowWidth = window.innerWidth;
-        this.maxItemNum = Math.round((windowWidth - 240) / this.realSize);
+        let maxWidth
+        let extraWidth
+        if(this.currentNavFormat === 'mac'){
+          maxWidth = windowWidth - 240
+          extraWidth = 240
+        } else {
+          maxWidth = windowWidth * 0.6
+          extraWidth = windowWidth * 0.3
+        }
         if (
           this.copyFootNav.length > this.maxItemNum &&
           this.maxItemNum !== null
@@ -431,7 +441,7 @@ export default {
               {
                 ok: () => {
                   const width =
-                    window.innerWidth / (240 + this.copyFootNav.length * this.realSize);
+                  windowWidth / (extraWidth + this.copyFootNav.length * this.realSize);
                   this.navAttribute.navSize = width.toFixed(2) * 100;
                   this.noticeFlag = false;
                 },
@@ -441,7 +451,7 @@ export default {
           }
           if (this.noticeFlag) return;
           const width =
-            window.innerWidth / (240 + this.copyFootNav.length * this.realSize);
+          windowWidth / (extraWidth + this.copyFootNav.length * this.realSize);
           this.navAttribute.navSize = width.toFixed(2) * 100;
         }
         this.syncBottomPanel();
