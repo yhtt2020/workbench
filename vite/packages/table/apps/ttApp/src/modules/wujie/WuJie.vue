@@ -10,9 +10,6 @@ const props = defineProps({
   url: {
     type: String,
   },
-  id: {
-    type: String,
-  },
 });
 const { bus, setupApp, preloadApp, destroyApp } = WujieVue;
 
@@ -31,7 +28,6 @@ const plugins = (iframeWindow: any) => {
 </script>
 
 <template>
-  <!-- {{ url }} -->
   <!-- || 'http://localhost:5173/' -->
   <WujieVue
     height="100%"

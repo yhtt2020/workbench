@@ -108,8 +108,10 @@ const installV2 = async (filePath) => {
  * 负责检测manifest.json 和最后的处理
  */
 const checkV2 = async () => {
+  console.log('111111 :>> ', 111111);
   // 4 检测manifest.json
   const checkManifestRes = await checkMainFest(id);
+  console.log('checkManifestRes :>> ', checkManifestRes);
   if (checkManifestRes.code !== 200) {
     return {
       id,

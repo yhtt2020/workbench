@@ -1,13 +1,16 @@
 /**
  * ttapp.js
  */
-const { readFile } = require("../useFile.js");
+let currentId;
+const { readFile, existsFolder } = require("../useFile.js");
 const ERROR_CODE = require("./constant.js");
 const checkMainFest = async (id) => {
+  currentId = id;
   let manifestPath = ["apps_test", id, "manifest.json"];
   let res = await readFile(manifestPath);
 
   // 1、检测manifest.json文件是否存在
+  console.log("1、检测manifest.json文件是否存在 :>> ");
   if (res.code !== 200) {
     return {
       status: 1,
@@ -19,6 +22,7 @@ const checkMainFest = async (id) => {
   }
 
   // 2、检测manifest.json是否为json
+  console.log("2、检测manifest.json是否为json :>> ");
   res = JSON.parse(res.data);
   if (typeof res !== "object") {
     return {
@@ -29,25 +33,28 @@ const checkMainFest = async (id) => {
     };
   }
   // 3、数据检查
+  console.log("3、数据检查 :>> ");
   // 基础数据
-  let baseCheck = ["name", "description", "modules"];
-  let baseRes = weakCheck(baseCheck, res);
-  if (baseRes.code !== 200) {
-    return baseRes;
-  }
-  let baseList = [
+  console.log("基础数据 :>> ");
+  let baseWeak = ["name", "description", "modules"];
+  let baseStrong = [
     {
       path: res?.logo,
       info: "logo",
     },
   ];
-  let baseStrongRes = await strongCheck(baseList);
-  if (baseStrongRes.code !== 200) {
-    return baseStrongRes;
+  let base = {
+    weak: baseWeak,
+    strong: baseStrong,
+    data: res,
+  };
+  let baseRes = await check(base);
+  if (baseRes.code !== 200) {
+    return baseRes;
   }
   const modules = res?.modules;
-
-  // 主应用数据检查
+  // 主应用数据
+  console.log("主应用数据 :>> ");
   if (!modules?.main) {
     return {
       status: 1,
@@ -71,9 +78,10 @@ const checkMainFest = async (id) => {
   if (mainRes.code !== 200) {
     return mainRes;
   }
-  // 卡片数据检查
+  // 卡片数据
+  console.log("卡片数据 :>> ");
   if (modules?.card) {
-    const card = mzodules?.card;
+    const card = modules?.card;
     let weak = ["size"];
 
     let strong = [
@@ -98,6 +106,7 @@ const checkMainFest = async (id) => {
   }
 
   // 5、返回数据
+  console.log("没走到结尾是吧栓q :>> ");
   return {
     status: 0,
     code: 200,
@@ -131,11 +140,20 @@ const check = async (options) => {
   };
 };
 /** 强检查 */
+// 自定义校验文件是否存在
+const checkFile = async (filePath) => {
+  const folderType = "apps_test";
+  const folderName = [folderType, currentId, filePath];
+  let res = await existsFolder(folderName);
+  return res;
+};
 const strongCheck = async (array) => {
+  let checkRes = [];
   for (data of array) {
     let currentRes = data?.value && (await checkFile(data?.value));
     if (!currentRes) {
       checkRes.push(data?.info);
+      return;
     }
   }
   if (checkRes.length > 0) {
