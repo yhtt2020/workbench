@@ -135,7 +135,7 @@ const checkV2 = async () => {
   const { data } = checkManifestRes;
   const obj = {
     id: id,
-    data,
+    ...data
   };
   const saveRes = await saveData({
     id: id,
