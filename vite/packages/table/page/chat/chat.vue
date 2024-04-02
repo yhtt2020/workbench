@@ -22,8 +22,10 @@
   <teleport to='body'>
     <Modal v-if="chatVisible" v-model:visible="chatVisible" :blurFlag="true">
       <AddFriend v-if="addIndex === 'launch'" @close="chatVisible = false"></AddFriend>
-      <CreateGroup v-if="addIndex === 'addGroup'" @close="chatVisible = false" :isH5="env.isH5"/>
-      <Transfer v-if="addIndex === 'addFriend'" @close="chatVisible = false" :isH5="env.isH5"></Transfer>
+      <CreateGroup v-if="addIndex === 'addGroup'" @close="chatVisible = false" />
+      <!-- :isH5="env.isH5" -->
+      <Transfer v-if="addIndex === 'addFriend'" @close="chatVisible = false" ></Transfer>
+      <!-- :isH5="env.isH5" -->
       <JoinCommunitys v-if="addIndex === 'joinCom'" @close="chatVisible = false"></JoinCommunitys>
     </Modal>
     <CreateCommunity />
@@ -47,7 +49,7 @@ import { completeTask } from '../../apps/task/page/branch/task';
 import CreateCommunity from './components/CreateCommunitys.vue';
 import Modal from '../../components/Modal.vue';
 import AddFriend from '../../apps/chat/components/add/AddFriend.vue';
-import Transfer from '../../TUIKit/TUIComponents/components/transfer/index.vue';
+// import Transfer from '../../TUIKit/TUIComponents/components/transfer/index.vue';
 import CreateGroup from '../../apps/chat/components/create/CreateGroupChat.vue';
 import CategoryFloat from './components/float/CategorysFloat.vue';
 import DefaultFloat from './components/float/DefaultsFloat.vue';
@@ -59,7 +61,8 @@ export default {
   name: "chat",
   components: {
     ChatIcon,Modal,AddFriend,
-    Transfer,CreateGroup,CategoryFloat,DefaultFloat,
+    // Transfer,
+    CreateGroup,CategoryFloat,DefaultFloat,
     JoinCommunitys,GradeSmallTip,
     CreateCommunity,
   },
@@ -73,7 +76,7 @@ export default {
     const { userInfo,lvInfo } = appS;
     const router = useRouter()
     const route = useRoute()
-    const TUIServer = window.$TUIKit
+    // const TUIServer = window.$TUIKit
     const { proxy } = getCurrentInstance();
     const globalStore = useGlobalStore();
     const { loginVisible } = storeToRefs(globalStore);
@@ -82,7 +85,7 @@ export default {
       chatVisible:false,
       addIndex:'',
       index: 'chat',
-      env: TUIServer?.TUIEnv,
+      // env: TUIServer?.TUIEnv,
       settingsScroller: {
         useBothWheelAxes: true,
         swipeEasing: true,
@@ -308,17 +311,17 @@ export default {
         headList.value[1].disabled = true
       }
       nextTick(()=>{
-        window.$chat?.on(window.$TUIKit?.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, async(e) => {
-          // headList.value[0].unread = e.data === 0 ? 0 : e.data > 99 ? 99 : e.data;
-          headList.value[0].info = e.data === 0 ? [] :  e.data > 99 ? ['tr','red','99'] : ['tr','red',`${e.data}`];
-          const list = community.value.communityList;
-          if(list.length !== 0){
-            for(const item of list){
-             const no = item.communityInfo.no;
-             com.updateCommunityTree(no);
-            }
-          }
-        });
+        // window.$chat?.on(window.$TUIKit?.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, async(e) => {
+        //   // headList.value[0].unread = e.data === 0 ? 0 : e.data > 99 ? 99 : e.data;
+        //   headList.value[0].info = e.data === 0 ? [] :  e.data > 99 ? ['tr','red','99'] : ['tr','red',`${e.data}`];
+        //   const list = community.value.communityList;
+        //   if(list.length !== 0){
+        //     for(const item of list){
+        //      const no = item.communityInfo.no;
+        //      com.updateCommunityTree(no);
+        //     }
+        //   }
+        // });
       })
     })
 

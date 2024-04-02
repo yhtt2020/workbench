@@ -45,7 +45,7 @@ export default {
         {title:'群聊和用户',name:'user',}
       ],
       communityDefault:{title:'社群',name:'community'},
-      isListEmpty:window.$TUIKit.store.store.TUIConversation.conversationList,
+      // isListEmpty:window.$TUIKit.store.store.TUIConversation.conversationList,
       searchList:[],
       searchKeyWord:''
     }

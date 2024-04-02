@@ -23,7 +23,7 @@ function loadChat() {
   try {
     // IM组件初始化
     TUIChatKit.init();
-    /**后期版本升级后修改当前window.$TUIKit和window.$chat**/ 
+    /**如果后期IM需要升级的话,此处只需要修改当前window.$TUIKit和window.$chat即可**/ 
     // 将TUIChatEngine挂载在window.$TUIKit,
     (window as any).$TUIKit = TUIChatEngine;
     // 将TUIChatEngine中的chat挂载在window.$chat
@@ -31,15 +31,15 @@ function loadChat() {
     //关闭日志，如果需要调试，改为4
     TUIChatEngine.setLogLevel(0);
     //关闭系统弹窗提示
-    // TUINotification.setNotificationConfiguration({
-    //   // 是否显示预览信息
-    //   showPreviews: true,
-    //   // 是否允许通知
-    //   allowNotifications: false,
-    //   // 通知标题
-    //   notificationTitle: "天天工作台",
-    //   notificationIcon: "/icons/IM.png",
-    // });
+    TUINotification.setNotificationConfiguration({
+      // 是否显示预览信息
+      showPreviews: true,
+      // 是否允许通知
+      allowNotifications: false,
+      // 通知标题
+      notificationTitle: "天天工作台",
+      notificationIcon: "/icons/IM.png",
+    });
 
 
     // TUIKit.tim.setLogLevel(0); //关闭日志，如果需要调试，改为4

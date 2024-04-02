@@ -432,6 +432,7 @@ export default {
         // C2C代表好友之间的切换ID
         const conversationID = `C2C${this.uid}`
         TUIConversationService.switchConversation(conversationID);
+        this.$emit("close");
       }
     },
     async checkFriendship() {
