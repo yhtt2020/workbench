@@ -10,36 +10,25 @@ const { modal, ttappList } = storeToRefs(ttappStore);
 // 窗口弹窗
 const modalRef: any = ref(null);
 
-/** 窗口关闭 */
-const close = () => {
-  modalRef.value.close();
-};
-
-const id = ref();
+const data: any = ref();
 const url = ref();
-const name = ref();
 onBeforeMount(() => {
   // 开始加载
-  id.value = modal.value.id;
-
-  console.log(" id.value :>> ", id.value);
-  console.log(" id.value :>> ", ttappList.value);
-  //  let res =  ttappList.value.find((item) => item.id === id.value);
-  let res = ttappStore.select(id.value);
-  console.log("res :>> ", res);
+  let res = ttappStore.select(modal.value.id);
 
   if (!res) {
     return;
   }
-  name.value = res.name;
+  data.value = {
+    ...res,
+    modal: res.modules.main,
+  };
   const main = res?.modules?.main;
+  console.log("res :>> ", data.value);
 
-  url.value = `ttapp://${id.value}/${main.entry}`;
-
-  console.log("  url.value :>> ", url.value);
+  url.value = `ttapp://${data.value.id}/${main.entry}`;
   // 加载完成
   loading.value = false;
-  if (!id) return;
 });
 
 /** 刷新 */
@@ -50,10 +39,33 @@ const refresh = () => {
     loading.value = false;
   }, 1);
 };
+const index = ref(1000);
+const isTop = ref(false);
 /** 右键菜单 */
 const menuList = computed(() => {
-  let res = [{ name: "刷新", fn: refresh }];
+  let res = [
+    { name: "刷新", fn: refresh },
+    {
+      name: isTop.value ? "取消置顶" : "置顶",
+      fn: () => {
+        isTop.value = !isTop.value;
+        if (isTop.value) {
+          index.value = 999999;
+        } else {
+          index.value = 1000;
+        }
+      },
+    },
+  ];
   return res;
+});
+
+/** 窗口关闭 */
+const close = () => {
+  modalRef.value.close();
+};
+const headerImg = computed(() => {
+  return getAppImg(data.value.id, data.value.logo);
 });
 </script>
 
@@ -63,6 +75,7 @@ const menuList = computed(() => {
     handle=".xt-modal-header"
     boxClass=""
     headerClass="p-2"
+    :index="index"
     min
     max
     ref="modalRef"
@@ -71,8 +84,10 @@ const menuList = computed(() => {
   >
     <!-- 头部左侧区域 -->
     <template #header-left>
-      <xt-ify-icon class="mr-2" />
-      {{ name }}
+      <div class="mr-2 rounded-lg overflow-hidden">
+        <a-avatar shape="square" class="" :size="20" :src="headerImg" />
+      </div>
+      {{ data.name }}
     </template>
     <!-- 头部右侧区域 -->
     <template #header-right>
@@ -93,13 +108,15 @@ const menuList = computed(() => {
       >
         <!-- 数据 -->
         <!-- <div style="height: 400px; width: 700px; background: pink"></div> -->
-        {{ url }}2
-        <WuJie :url="url" :name="id" />
+        <WuJie :url="url" :name="data.id" />
       </div>
     </xt-mix-menu>
     <!-- 最小化左侧 -->
     <template #minimize-left>
-      <div class="mr-2 xt-text">{{ name }}</div>
+      <div class="mr-2 rounded-lg overflow-hidden">
+        <a-avatar shape="square" class="" :size="28" :src="headerImg" />
+      </div>
+      <!-- <div class="mr-2 xt-text">{{ data.name }}</div> -->
     </template>
     <!-- 最小化右侧 -->
     <template #minimize-right>

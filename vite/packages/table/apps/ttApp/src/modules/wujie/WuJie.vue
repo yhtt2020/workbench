@@ -28,12 +28,14 @@ const plugins = (iframeWindow: any) => {
 </script>
 
 <template>
-  <!-- || 'http://localhost:5173/' -->
   <WujieVue
     height="100%"
     ref="wujie"
     :name="name"
     :url="url"
+    :attrs="{
+      src: url,
+    }"
     :plugins="[
       {
         jsBeforeLoaders: [
