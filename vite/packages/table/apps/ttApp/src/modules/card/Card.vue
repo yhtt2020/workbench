@@ -29,8 +29,9 @@ onMounted(async () => {
   // 无数据情况
   if (!props.customData?.id) return;
   // 查询数据
+  console.log('props.customData.id :>> ', props.customData.id);
   let res = ttappStore.select(props.customData.id);
-console.log('res :>> ', res);
+console.log('res 22222 :>> ', res);
   if (!res) return;
   // 解析数据
   let data = useParserCard(res);

@@ -4,6 +4,7 @@ import { storeToRefs } from "pinia";
 import WuJie from "../wujie/WuJie.vue";
 
 import { useTTAppStore } from "../../store";
+import { getAppImg } from "../../hooks/getAppImg";
 const ttappStore: any = useTTAppStore();
 const { modal, ttappList } = storeToRefs(ttappStore);
 // 窗口弹窗
@@ -23,7 +24,7 @@ onBeforeMount(() => {
 
   console.log(" id.value :>> ", id.value);
   console.log(" id.value :>> ", ttappList.value);
-//  let res =  ttappList.value.find((item) => item.id === id.value);
+  //  let res =  ttappList.value.find((item) => item.id === id.value);
   let res = ttappStore.select(id.value);
   console.log("res :>> ", res);
 
@@ -35,7 +36,7 @@ onBeforeMount(() => {
 
   url.value = `ttapp://${id.value}/${main.entry}`;
 
-  console.log('  url.value :>> ',   url.value);
+  console.log("  url.value :>> ", url.value);
   // 加载完成
   loading.value = false;
   if (!id) return;
