@@ -7,6 +7,11 @@ import { useSelect } from "../../hooks";
 import WuJie from "../wujie/WuJie.vue";
 import TTAppCenter from "../../../../appCenter";
 import { useTTAppStore } from "../../store";
+import { useAppCenterStore } from "../../../../appCenter/src/store";
+import { storeToRefs } from "pinia";
+
+const appCenterStore = useAppCenterStore();
+const { visible : appCenterVisible } = storeToRefs(appCenterStore);
 
 const ttappStore: any = useTTAppStore();
 const loading = ref(true);
@@ -15,6 +20,7 @@ const cardHeader: any = ref({});
 // 卡片大小
 const customSize = ref("2x2");
 const wujie: any = ref({});
+
 
 // 卡片状态 无数据、加载中、正常 对应的值分别为 noData、loading、normal
 
@@ -86,8 +92,8 @@ const appCenter = ref(false);
       <xt-button @click="ttappStore.modal.visible = true">go modal</xt-button>
       <xt-button @click="visible = true">go oldInstall</xt-button>
       <TTApp v-if="visible" @close="visible = false" />
-      <xt-button @click="appCenter = true">go appCenter</xt-button>
-      <TTAppCenter v-if="appCenter" />
+      <xt-button @click="appCenterVisible = true">go appCenter</xt-button>
+      <TTAppCenter v-if="appCenterVisible" />
       <template v-if="!loading">
         <WuJie v-bind="wujie" :id="customData.id" />
       </template>

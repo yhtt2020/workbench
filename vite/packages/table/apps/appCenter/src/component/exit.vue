@@ -1,6 +1,10 @@
 <script setup lang="ts">
+import { useAppCenterStore } from "../store";
+import { storeToRefs } from "pinia";
+const appCenterStore = useAppCenterStore();
+const { visible } = storeToRefs(appCenterStore);
 const close = () => {
-  console.log("close");
+  visible.value = false
 };
 </script>
 
