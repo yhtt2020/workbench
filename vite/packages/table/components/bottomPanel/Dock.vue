@@ -1,9 +1,10 @@
 <template>
+  <teleport to="body">
   <div
     style="position: absolute; z-index: 500 !important"
     :style="{
-      left: `${this.left}px`,
-      bottom: `${(navAttribute.navSize / 100) * 90}px`,
+      left: `${this.position.x}px`,
+      top: `${(navAttribute.navSize / 100) * this.position.y}px`,
     }"
     class="rounded-xl pointer"
     id="folder"
@@ -28,6 +29,7 @@
       :auto="true"
     />
   </div>
+  </teleport>
   <!-- 快速搜索 底部栏区域 -->
   <transition>
     <div
@@ -41,7 +43,7 @@
         left: 50%;
         transform: translateX(-50%) translateY(-100%);
       "
-      :style="[this.iconSize === 44 ? { bottom : '30px'} : { top : '-8px'}]"
+      :style="[mergeTip]"
       class="px-10 py-3 rounded-lg s-bg xt-text"
     >
       松开鼠标合并
@@ -184,6 +186,7 @@ import { startApp } from "../../ui/hooks/useStartApp";
 import { defaultFolderData } from "../../apps/folder/src/components/options";
 import { hoverRealItemId } from "../desk/navigationBar/hook/hoverRealItemId";
 import { mergeData } from "../../ui/hooks/useDataConversion";
+import { usePosition } from "../windowPanel/hook/usePosition";
 
 import NavIcon from '../windowPanel/components/NavIcon.vue'
 import EditIcon from "../desk/navigationBar/components/EditIcon/EditIcon.vue";
@@ -295,6 +298,7 @@ export default {
       noticeFlag: true,
       addIconFlag: false,
       left: 0,
+      position:{},
       parentSize: 0,
       parentHeight: 0,
 
@@ -346,7 +350,10 @@ export default {
       "editItem",
       "navAttribute",
       "jumpDesk",
+      "currentNavPosition",
+      "currentNavFormat",
     ]),
+    
     ...mapWritableState(useNavBarStore, ["isEnterDesk"]),
     ...mapWritableState(controlStore, ["firstNavVisible"]),
     // 当前图标的大小
@@ -356,8 +363,8 @@ export default {
     // 社区图标需要传递的相关参数
     community(){
       return {
-        x: this.realXY.x,
-        y: this.navAttribute.navSize * 0.9,
+        x: this.position.x,
+        y: (this.navAttribute.navSize * this.position.y) / 100,
         placement:'top',
         visible:this.comVisible
       }
@@ -398,13 +405,31 @@ export default {
         y: this.parentHeight - (this.navAttribute.navSize / 100) * 100 - 175,
       };
     },
+    // 合并提示位置
+    mergeTip() {
+      if(this.iconSize == '44'){
+        if(this.currentNavPosition === 'bottom'){
+          return 'bottom:30px'
+        } 
+        return 'top:120px'
+      }
+      return 'top:-8px'
+    }
   },
   watch: {
     copyFootNav: {
       handler(newVal, oldVal) {
         // 获取最大可添加图标个数
         const windowWidth = window.innerWidth;
-        this.maxItemNum = Math.round((windowWidth - 240) / this.realSize);
+        let maxWidth
+        let extraWidth
+        if(this.currentNavFormat === 'mac'){
+          maxWidth = windowWidth - 240
+          extraWidth = 240
+        } else {
+          maxWidth = windowWidth * 0.6
+          extraWidth = windowWidth * 0.3
+        }
         if (
           this.copyFootNav.length > this.maxItemNum &&
           this.maxItemNum !== null
@@ -416,7 +441,7 @@ export default {
               {
                 ok: () => {
                   const width =
-                    window.innerWidth / (240 + this.copyFootNav.length * this.realSize);
+                  windowWidth / (extraWidth + this.copyFootNav.length * this.realSize);
                   this.navAttribute.navSize = width.toFixed(2) * 100;
                   this.noticeFlag = false;
                 },
@@ -426,7 +451,7 @@ export default {
           }
           if (this.noticeFlag) return;
           const width =
-            window.innerWidth / (240 + this.copyFootNav.length * this.realSize);
+          windowWidth / (extraWidth + this.copyFootNav.length * this.realSize);
           this.navAttribute.navSize = width.toFixed(2) * 100;
         }
         this.syncBottomPanel();
@@ -494,6 +519,7 @@ export default {
       "removeFootNavigationList",
     ]),
     mergeData,
+    usePosition,
     deleteFile(data) {
       const index = this.copyFootNav.findIndex((item) => item.id === data.id);
       this.copyFootNav.splice(index, 1);
@@ -745,7 +771,14 @@ export default {
           if (that.popVisible) {
             that.notifications.NoticeToast();
           }
-          let delIcon = document.getElementById("delIcon2");
+
+          // 当处于window版导航栏时，删除区域的id获取
+          let delIcon
+          if(that.currentNavPosition === 'top'){
+            delIcon = document.getElementById("delIconTop");
+          } else {
+            delIcon = document.getElementById("delIcon2");
+          }
           that.delItemIcon = true;
           that.$emit("getDelIcon", true);
           that.delNav = true;
@@ -960,16 +993,16 @@ export default {
       // 视图大小
       let vW = window.innerWidth;
       // 元素坐标
-      let posX = Number(this.defaultPosition.x.toFixed(0));
+      let pos = {
+        x:this.defaultPosition.x,
+        y:this.defaultPosition.y
+      };
       // 元素大小
-      let menuW = draggableSize[0] * 140;
-      posX =
-        posX > vW - menuW / 2
-          ? vW - menuW
-          : posX - menuW / 2 < 0
-          ? 0
-          : posX - menuW / 2;
-      this.left = posX;
+      let menu = {
+        x:draggableSize[0] * 140,
+        y:draggableSize[1] * 100
+      };
+      this.position = this.usePosition(pos,menu)
     },
     onDrag: function (e) {
       let hoverRs = this.getHoverIndex(e.x);

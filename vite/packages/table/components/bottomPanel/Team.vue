@@ -1,12 +1,12 @@
 <template>
   <Avatar :item="item" :size="size"/>
-
+    <!-- 文件夹 -->
     <teleport to='body'>
     <div
     style="position: absolute; z-index: 500 !important"
       :style="{
         left: `${x}px`,
-        bottom: `${y}px`,
+        top: `${y}px`,
       }"
       class="rounded-xl pointer"
       id="folder"
@@ -61,6 +61,12 @@ const props = defineProps<{
 }>()
 
 const { item, x, y,visible } = toRefs(props)
+
+// watch(() => visible.value, (val) => {
+//   if (val) {
+//     console.log('item', item.value, x.value, y.value,visible.value);
+//   }
+// })
 
 const emit = defineEmits(['close'])
 

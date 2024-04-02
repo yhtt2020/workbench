@@ -23,8 +23,8 @@ import Item from './Item.vue';
 const emit = defineEmits(['choose'])
 
 // 选择图标类型回调
-const chooseIcon = (item) => {
-    emit('choose',item)
+const chooseIcon = (item,index) => {
+    emit('choose',item,index)
 }
 
 // 选择团队图标类型回调

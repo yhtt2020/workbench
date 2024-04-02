@@ -1,6 +1,7 @@
 <template>
     <div v-show="countDownVisible"
-        style="position: absolute; left:-330px;top: -1px;"
+        style="position: absolute; "
+        :style="[position]"
         class="p-3 rounded-lg xt-main-bg">
         <vue-custom-scrollbar :settings="outerSettings"
             style="position: relative; height: 400px;color: var(--primary-text);width: 300px; " class="scroll">
@@ -32,14 +33,17 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive } from 'vue'
+import { ref, computed,toRefs } from 'vue'
 import { countDownData } from '../Data';
 import { storeToRefs } from 'pinia';
 import dayjs from 'dayjs'
 
 import { countDownStore } from '../../../../store/countDown';
+import { useNavigationStore } from '../../../desk/navigationBar/navigationStore';
 
 const useCountDownStore = countDownStore()
+const useNav = useNavigationStore()
+const { currentNavPosition , currentNavFormat } = storeToRefs(useNav)
 
 const emit = defineEmits(['closeCountDown'])
 
@@ -74,6 +78,17 @@ const value1 = ref(dayjs('00:00:00', 'HH:mm'))
 const settingCountDown = () => {
     emit('closeCountDown')
 }
+
+// 设置定位
+const position = computed(() => {
+    if(currentNavFormat.value === 'windows'){
+        if(currentNavPosition.value === 'top'){
+            return 'left:-330px;top: -10px;'
+        }
+        return 'left:-330px;top: -50px;'
+    }
+    return 'left:330px;top: 60px;'
+})
 
 // 设置倒计时
 const onCountDown = (item) => {

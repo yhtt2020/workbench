@@ -7,7 +7,7 @@
       </div>
       <span class="xt-text xt-font font-14 ">{{ displayNum(minutes) }}:{{ displayNum(seconds) }}</span>
     </div> -->
-    <div style="position: absolute;" v-if="tomatoVisible" :style="{left:position.x+'px',top:position.y+'px'}">
+    <div style="position: absolute;z-index: 500;" v-if="tomatoVisible" :style="{left:position.x+'px',top:position.y+'px'}">
       <TomatoTimer :isTop="true"/>
     </div>
   <!-- </xt-button> -->
@@ -44,9 +44,6 @@ export default {
   },
   data () {
     return {}
-  },
-  mounted () {
-    console.log(this.position)
   },
   watch: {},
   methods: {

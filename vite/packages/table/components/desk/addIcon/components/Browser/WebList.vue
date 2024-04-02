@@ -27,11 +27,11 @@
                 <xt-new-icon icon="fluent:compose-16-regular" size="16" />
               </div>
               <!-- 添加 -->
-              <xt-menu :menus="menus" model="click" @mounted="changeMenu(item, index)">
-                <div class="flex items-center justify-center w-8 h-8 ml-2 rounded-lg xt-main-bg">
+              <!-- <xt-menu :menus="menus" model="click" @mounted="changeMenu(item, index)"> -->
+                <div class="flex items-center justify-center w-8 h-8 ml-2 rounded-lg xt-main-bg" @click.stop="change(index,item)">
                   <xt-new-icon icon="fluent:add-16-regular" size="16" />
                 </div>
-              </xt-menu>
+              <!-- </xt-menu> -->
               <!-- 收藏 -->
               <div class="flex items-center justify-center w-8 h-8 ml-2 rounded-lg xt-main-bg" @click.stop="changeFavo(item)">
                 <xt-new-icon v-if="item.favo" icon="fluent:star-16-filled" color="#faad14" size="16" />
@@ -60,11 +60,13 @@
   import WebItem from '../../../../../apps/favorites/components/WebItem.vue'
   import { message } from 'ant-design-vue';
   import browser from '../../../../../js/common/browser'
+  import { useReplace } from '../../hook/useReplace'
   
   
   export default {
     name: 'WebList',
     props: ['showList', 'checkFlag', 'menus', 'rightMenu'],
+    emits:['addIcon'],
     data() {
       return {
         show: [],
@@ -107,6 +109,7 @@
       },
     },
     methods: {
+      useReplace,
       // 清楚定时器
       clear(){
         clearInterval(this.timer)
@@ -121,13 +124,20 @@
         if(this.checkFlag){
           item.check = !item.check
         }else{
-          if(this.browserType == 'system'){
-            browser.openInUserSelect(item.url)
-          }else if(this.browserType == 'thisky'){
-            browser.openInInner(item.url)
-          }else if(this.browserType == 'work'){
-            browser.openInTable(item.url)
+          // if(this.browserType == 'system'){
+          //   browser.openInUserSelect(item.url)
+          // }else if(this.browserType == 'thisky'){
+          //   browser.openInInner(item.url)
+          // }else if(this.browserType == 'work'){
+          //   browser.openInTable(item.url)
+          // }
+          // console.log(item)
+          if(item.rename){
+            item.name = item.rename
           }
+          item.type = 'default'
+          const icon = this.useReplace([item])
+          this.$emit('addIcon',...icon)
         }
       },
       // 修改名称
