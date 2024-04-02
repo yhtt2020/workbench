@@ -38,20 +38,13 @@ function loadChat() {
       allowNotifications: false,
       // 通知标题
       notificationTitle: "天天工作台",
+
+
       notificationIcon: "/icons/IM.png",
     });
 
 
-    // TUIKit.tim.setLogLevel(0); //关闭日志，如果需要调试，改为4
-    // TUIKit add TUIComponents
-    // TUIKit.use(TUIComponents);
-    // // TUIKit add TUICallKit
-    // //TUIKit.use(TUICallKit);
-    // window.$chat = TUIKit.tim;
-    // window.$chat.on(window.$TUIKit.TIM.EVENT.MESSAGE_RECEIVED, (event) => {
-    //   // 全局监听团队聊天消息
-    //   // console.log('检测重复问题',event);
-    //   window.$notice.receiveNotification(event);
+    //   notificationIcon: "/icons/IM.png",
     // });
   } catch (e) {
     console.error("聊天载入失败", e);
