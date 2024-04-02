@@ -6,13 +6,6 @@
      border: 1px solid var(--secondary-bg);box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
      border-radius: 10px;z-index: 1000;' 
      class="float-icon fixed top-1/2 left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2">
-        <xt-modal>
-            <div>
-                <div>登录体验更多功能</div>
-
-            </div>
-
-        </xt-modal>
     </div>
     <!-- 遮罩层 -->
     <div

@@ -66,7 +66,7 @@
         <XtButton type="theme" @click="translate()">翻译</XtButton>
       </div>
     </div>
-    <div class="flex flex-grow justify-between">
+    <div class="flex flex-grow justify-between gap-2">
       <XtTextarea
         class="h-full"
         style="width: 49%"

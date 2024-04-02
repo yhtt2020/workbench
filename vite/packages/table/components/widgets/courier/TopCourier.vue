@@ -355,7 +355,7 @@ export default {
       }
     },
     list(val){
-      console.log(val)
+      // console.log(val)
       this.couriersList = val
     }
     

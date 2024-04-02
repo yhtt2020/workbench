@@ -1,5 +1,5 @@
 <template>
-    <xt-modal :full="true" v-model="visible" title="" @close="handleOk">
+    <xt-modal :full="true" v-model="visible" v-if="visible" title="" @close="handleOk">
         <template #header-center>
             <xt-option-select 
                 style="width: 110px;background-color: transparent !important;" 

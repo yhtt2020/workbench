@@ -167,7 +167,7 @@ export const openSysApp = (value, router) => {
     // 社区中心
   } else if (value === "favorites") {
     // 收藏夹
-    usefavoStore.isFavorites = true;
+    usefavoStore.isFavorites = !usefavoStore.isFavorites;
   } else if (value === "control") {
     // 控制中心
   } else if (value === "setting") {

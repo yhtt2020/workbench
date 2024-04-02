@@ -1,5 +1,5 @@
 <template>
- <xt-modal v-model="biliVideoVisible" :title="title" full ref="modelRef">
+ <xt-modal v-model="biliVideoVisible" v-if="biliVideoVisible" :title="title" full ref="modelRef">
   <div :style="isFull ? {width:'100%',height:'100%'} : {width: '800px',height: '600px'}">
    <iframe :src="url" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" class="w-full h-full"></iframe>
   </div>

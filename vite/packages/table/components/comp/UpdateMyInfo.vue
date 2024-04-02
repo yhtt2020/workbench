@@ -1,5 +1,5 @@
 <template>
-  <xt-modal v-model="data.myInfoVisible" title="我的信息">
+  <xt-modal v-if="data.myInfoVisible" v-model="data.myInfoVisible" title="我的信息">
     <div class="myinfo-container flex flex-col">
       <xt-scrollbar :y="true" class="h-full flex justify-between w-full">
         <div class="w-1/2 flex grow flex-col">

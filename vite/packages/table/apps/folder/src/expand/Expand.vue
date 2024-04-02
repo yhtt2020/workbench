@@ -1,5 +1,5 @@
 <template>
-  <xt-modal custom v-model="expandVisible" boxClass="" @close="expandClose">
+  <xt-modal v-if="expandVisible" custom v-model="expandVisible" boxClass="" @close="expandClose">
     <Folder
       v-bind="newData"
       :expand="{

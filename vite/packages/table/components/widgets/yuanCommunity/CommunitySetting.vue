@@ -1,5 +1,5 @@
 <template>
-    <xt-modal v-model="settingVisible" title="元社区小组件设置" @close="close" :full="true" :footer="false" :mask="0">
+    <xt-modal v-if="settingVisible" v-model="settingVisible" title="元社区小组件设置" @close="close" :full="true" :footer="false" :mask="0">
         <div style="min-width: 452px;max-width: 1000px;">
             <div class="w-full h-full p-4 rounded-xl xt-bg-2" >
                 <div class="text-base xt-text">数据源</div>

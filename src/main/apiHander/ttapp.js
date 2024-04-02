@@ -5,7 +5,7 @@
 const Base = require("./base");
 // const appModel = require("../../model/appModel");
 
-const { installJson, installV2, checkFile } = require("../ttApps/useInstall");
+const { installJson, installV2, checkFile } = require("../ttApps/install/install.js");
 const useUninstall = require("../ttApps/useUninstall");
 
 const { useSelect, useSelectAll } = require("../ttApps/useSelect");

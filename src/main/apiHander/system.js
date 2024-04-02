@@ -26,6 +26,11 @@ class system extends Base {
       }
     })
 
+    this.on('restart',async(event,args)=>{
+      require('electron').app.relaunch()
+      require('electron').app.exit(0)
+    })
+
     this.on('getBookmarks', async (event, args) => {
       let query = []
       if (typeof args.browser === 'string') {
