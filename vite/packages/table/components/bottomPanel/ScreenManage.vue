@@ -147,7 +147,7 @@
       </template>
     </div>
   </div>
-  <xt-modal v-model="chooseScreenVisible">
+  <xt-modal v-model="chooseScreenVisible" v-if="chooseScreenVisible">
     <div style="width: 500px; height: 400px">
       <ChooseScreen
         :customCallback="true"

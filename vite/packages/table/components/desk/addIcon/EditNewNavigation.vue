@@ -1,6 +1,6 @@
 <template>
   <xt-modal v-model="editVisible" :footer="false" boxClass="" :mask="0" :header="false">
-    <div class="flex overflow-hidden rounded-xl" style="height: 75vh;width: 65vw;">
+    <div class="flex overflow-hidden rounded-xl" style="height: 75vh;width: 63.6vw;">
       <xt-button 
         class="absolute right-3 top-3" 
         @click="closeNav" 
@@ -17,7 +17,8 @@
         model="id" 
         last="6" 
         end="1" 
-        v-mode:index="iconIndex" 
+        v-model:index="index" 
+        @index="changeIcon"
         leftMargin="mr-0 py-3"
         w="64" 
         leftClass="xt-main-bg"
@@ -115,7 +116,9 @@ import {
   defineAsyncComponent,
   onBeforeUnmount,
   onMounted, 
-  computed } from 'vue'
+  computed ,
+  getCurrentInstance,
+} from 'vue'
 import {message} from 'ant-design-vue'
 import 'animate.css'
 import { storeToRefs } from 'pinia';
@@ -124,7 +127,7 @@ import { completeTask } from '../../../apps/task/task'
 import _ from 'lodash-es'
 import { useFileConversionIcon,mergeData } from '../../../ui/hooks/useDataConversion'
 import { nanoid } from 'nanoid';
-import {refresh} from './hook/useRefresh'
+// import {refresh} from './hook/useRefresh'
 
 import AddDesk from './components/AddDesk.vue'
 import DropDown from './components/DropDown.vue'
@@ -137,6 +140,8 @@ import {cardStore} from '../../../store/card'
 import {homeStore} from '../../../store/home'
 import { useIconStore } from './store';
 import { favoStore } from '../../../apps/favorites/store'
+
+const { proxy } = getCurrentInstance()
 
 // 获取到当前多选的图标
 const iconStore = useIconStore()
@@ -188,7 +193,13 @@ const previewFlag = ref(false)  // 是否显示预览
 const deskFlag = ref(false)  // 是否显示添加到桌面
 const isStart = ref(true)  // 是否显示开始页
 const defaultTitle = ref({})  // 下拉框默认值
+const index = ref(0)
 
+const changeIcon = (val) => {
+  console.log(val)
+  iconIndex.value = val
+  console.log(iconIndex.value)
+}
 // 禁止添加的图标
 const disabledAdd = ref([
   'commun',
@@ -356,14 +367,18 @@ const closeNav = () => {
 type LeftMenuType = {
   newIcon: string,  // 新版图标
   callBack: (item: any) => void,  // 回调
-  component: string  // 加载的组件
+  component: string,  // 加载的组件
+  id:number, // 
+  name?: string // 名称
 }
 // 左侧导航栏
 const leftMenu = ref<LeftMenuType[]>([
   {
     newIcon: 'mingcute:windows-line',
     callBack: (item) => { chooseItem(item) },
-    component: 'Windows'
+    component: 'Windows',
+    id:0,
+    name:"Win",
   },
   // 功能暂未开发,暂时隐藏
   // {
@@ -374,41 +389,53 @@ const leftMenu = ref<LeftMenuType[]>([
   {
     newIcon: 'fluent:settings-16-regular',
     callBack: (item) => { chooseItem(item) },
-    component: 'System'
+    component: 'System',
+    id:1,
+    name:"系统",
   },
   {
     newIcon: 'fluent:globe-16-regular',
     callBack: (item) => { chooseItem(item) },
-    component: 'WebSite'
+    component: 'WebSite',
+    id:2,
+    name:"网址",
   },
   {
     newIcon: 'fluent:star-16-regular',
     callBack: (item) => { chooseItem(item) },
-    component: 'Browser'
+    component: 'Browser',
+    id:3,
+    name:'收藏夹',
   },
   {
     newIcon: 'fluent:grid-16-regular',
     callBack: (item) => { chooseItem(item) },
-    component: 'CoolApp'
+    component: 'CoolApp',
+    id:4,
+    name:'酷应用'
   },
   {
     newIcon: 'fluent:window-multiple-16-regular',
     callBack: (item) => { chooseItem(item) },
-    component: 'LightApp'
+    component: 'LightApp',
+    id:5,
+    name:'轻应用'
   },
   {
     newIcon: 'fluent:add-16-regular',
     callBack: (item) => { chooseItem(item) },
-    component: 'CustomIcon'
+    component: 'CustomIcon',
+    id:6,
   }
 ])
 
 
 
 // 选择左侧导航栏
-const chooseItem = (item) => {
+const chooseItem = (item,i?) => {
   isStart.value = false
   iconIndex.value = item.component
+  i ? index.value = i : index.value = item.id
 }
 
 // 添加图标
@@ -489,7 +516,7 @@ onMounted(() => {
   }
   // 如果收藏夹未创建，则进行刷新
   if(allList.value.length === 0){
-    refresh()
+    proxy.$bus.emit('refreshBrowser')
   }
   
 })

@@ -3,20 +3,28 @@
     style="display: flex;flex-direction: column;height: 100vh;flex-wrap: nowrap;align-content: stretch;align-items: stretch;gap:10px">
     <div v-if="!fullScreen" style="height: auto;flex: 0">
       <!--顶部状态栏      -->
-      <TopPanel isHidden="true"></TopPanel>
+      <TopPanel isHidden="true" v-if="currentNavPosition !== 'top'"></TopPanel>
+      <BottomPanel 
+        enter="animate__fadeInUp"
+        leave="animate__fadeOutUp"
+        v-if="currentNavPosition === 'top' && loaded" 
+        :delZone="delZone" @getDelIcon="getDelIcon"
+        @hiedNavBar="hiedNavBar" 
+        :mainClass="'top-20 right-6'">
+      </BottomPanel>
     </div>
     <div :style="{ margin: fullScreen ? 0 : '-3px', padding: fullScreen ? 0 : '8px' }"
       style="display: flex;flex-grow: 1;flex-shrink: 1;flex-basis: fit-content;overflow: hidden;height: 100%;">
-      <!-- <AutoHide> -->
-      <div v-if="this.navigationToggle[0] && !this.fullScreen"
-        style="display: flex;align-content: center;align-items: center;height: 100%">
-        <!--左侧栏区域        -->
-        <SidePanel sortId="left" :navigationList="sideNavigationList" :sortNavigationList="sortSideNavigationList"
-          :delNavList="removeSideNavigationList" :otherSwitch1="navigationToggle[1]" :otherSwitch2="navigationToggle[2]"
-          :otherNavList1="rightNavigationList" :otherNavList2="footNavigationList" @getDelIcon="getDelIcon"
-          @hiedNavBar="hiedNavBar" @openFolder="openFolder"></SidePanel>
-      </div>
-      <!-- </AutoHide> -->
+      <AutoHide :enter="'animate__fadeInLeft'" :leave="'animate__fadeOutLeft'">
+        <div v-if="sideVisible"
+          style="display: flex;align-content: center;align-items: center;height: 100%">
+          <!--左侧栏区域        -->
+          <SidePanel sortId="left" :navigationList="sideNavigationList" :sortNavigationList="sortSideNavigationList"
+            :delNavList="removeSideNavigationList" :otherSwitch1="navigationToggle[1]"
+            :otherSwitch2="navigationToggle[2]" :otherNavList1="rightNavigationList" :otherNavList2="footNavigationList"
+            @getDelIcon="getDelIcon" @hiedNavBar="hiedNavBar" @openFolder="openFolder"></SidePanel>
+        </div>
+      </AutoHide>
       <div :style="{ margin: fullScreen ? 0 : '-8px', padding: fullScreen ? 0 : '8px' }"
         style="flex-shrink: 1;flex-grow: 1;align-items: center;align-content: center;flex-direction: column;position: relative;overflow: hidden;">
         <!--主题区域，自动滚动条        -->
@@ -24,24 +32,19 @@
           <router-view></router-view>
         </keep-alive>
         <!-- 删除区域 -->
-        <div
-          class="del-icon"
-          id="delIcon2"
-          v-show="delZone && this.navigationToggle[2]"
+        <div class="del-icon" id="delIcon2" v-show="delZone && this.navigationToggle[2] && currentNavPosition === 'bottom'"
           style="z-index:500;bottom: 0;right: 50%;transform: translateX(50%);width: 400px;height: 120px;">
           <xt-new-icon icon="fluent:delete-16-regular" size="32" color="red"></xt-new-icon>
         </div>
-        <div
-          class="del-icon"
-          id="delIcon3"
-          v-show="delZone && this.navigationToggle[0]"
+        <div class="del-icon" id="delIconTop" v-show="delZone && this.navigationToggle[2] && currentNavPosition === 'top'"
+          style="z-index:500;top: 0;right: 50%;transform: translateX(50%);width: 400px;height: 120px;">
+          <xt-new-icon icon="fluent:delete-16-regular" size="32" color="red"></xt-new-icon>
+        </div>
+        <div class="del-icon" id="delIcon3" v-show="delZone && this.navigationToggle[0]"
           style="z-index:500;bottom: 50%;left: 0;transform: translateY(50%);width: 120px;height: 400px;">
           <xt-new-icon icon="fluent:delete-16-regular" size="32" color="red"></xt-new-icon>
         </div>
-        <div
-          class="del-icon"
-          id="delIcon3"
-          v-show="delZone && this.navigationToggle[1]"
+        <div class="del-icon" id="delIcon3" v-show="delZone && this.navigationToggle[1]"
           style="z-index:500;bottom: 50%;right: 0;transform: translateY(50%);width: 120px;height: 400px;">
           <xt-new-icon icon="fluent:delete-16-regular" size="32" color="red"></xt-new-icon>
         </div>
@@ -52,20 +55,25 @@
           <TeamPanel></TeamPanel>
         </div>
       </Transition>
-      <!-- <AutoHide> -->
-      <div v-if="this.navigationToggle[1] && !this.fullScreen" style="display: flex;align-content: center;align-items: center">
+      <AutoHide :enter="'animate__fadeInRight'" :leave="'animate__fadeOutRight'">
+      <div v-if="rightVisible"
+        style="display: flex;align-content: center;align-items: center">
         <!--右侧栏区域        -->
         <SidePanel sortId="right" :navigationList="rightNavigationList" :sortNavigationList="sortRightNavigationList"
-          :delNavList="removeRightNavigationList" :otherSwitch1="navigationToggle[0]" :otherSwitch2="navigationToggle[2]"
-          :otherNavList1="leftNavigationList" :otherNavList2="footNavigationList" @getDelIcon="getDelIcon"
-          @hiedNavBar="hiedNavBar"></SidePanel>
+          :delNavList="removeRightNavigationList" :otherSwitch1="navigationToggle[0]"
+          :otherSwitch2="navigationToggle[2]" :otherNavList1="leftNavigationList" :otherNavList2="footNavigationList"
+          @getDelIcon="getDelIcon" @hiedNavBar="hiedNavBar"></SidePanel>
       </div>
-      <!-- </AutoHide> -->
+      </AutoHide>
     </div>
     <div style="flex: 0;">
-      <BottomPanel v-if="!fullScreen && loaded" :delZone="delZone" @getDelIcon="getDelIcon" @hiedNavBar="hiedNavBar">
+      <BottomPanel 
+        v-if="!fullScreen && loaded && currentNavPosition === 'bottom'" 
+        :delZone="delZone"
+        @getDelIcon="getDelIcon" 
+        @hiedNavBar="hiedNavBar" 
+        :mainClass="'bottom-20 right-6'">
       </BottomPanel>
-      <!-- <WindowPanel v-if="!fullScreen && loaded"></WindowPanel> -->
     </div>
   </div>
 </template>
@@ -88,12 +96,13 @@ import AutoHide from '../components/desk/navigationBar/components/folder/AutoHid
 import { Icon as ifyIcon } from '@iconify/vue';
 export default {
   name: 'Main',
-  components: { TeamPanel, BottomPanel, TopPanel, SidePanel,AutoHide,WindowPanel },
+  components: { TeamPanel, BottomPanel, TopPanel, SidePanel, AutoHide, WindowPanel },
   mounted() {
     this.$router.afterEach((to, from) => {
       this.routeUpdateTime = Date.now()
     })
     this.loadNav()
+    window.addEventListener('mousemove', this.listenMouse)
   },
   computed: {
     fullScreen() {
@@ -102,14 +111,14 @@ export default {
     ...mapWritableState(appStore, ['routeUpdateTime', 'fullScreen', 'settings', 'init']),
     ...mapWritableState(teamStore, ['teamVisible']),
     ...mapWritableState(navStore, ['sideNavigationList', 'rightNavigationList', 'navigationToggle', 'footNavigationList', 'copyRightNav', 'copySideNav', 'loaded', 'copyFootNav']),
-    ...mapWritableState(useNavigationStore, ['customOpenNav', 'isLeaveBar','isEdge']),
+    ...mapWritableState(useNavigationStore, ['customOpenNav', 'isLeaveBar', 'isEdge', 'currentNavPosition']),
     isMain,
     sideVisible() {
       if (this.customOpenNav) {
-        if (this.isEdge) {
+        if (this.isLeftEdge) {
           return true
         }
-        if (this.isLeaveBar  && !this.sideIsOpenFolder) {
+        if (this.isLeaveBar && !this.sideIsOpenFolder) {
           return false
         }
         return true
@@ -120,10 +129,10 @@ export default {
     },
     rightVisible() {
       if (this.customOpenNav) {
-        if (this.isEdge) {
+        if (this.isRightEdge) {
           return true
         }
-        if (this.isLeaveBar  && !this.rightIsOpenFolder) {
+        if (this.isLeaveBar && !this.rightIsOpenFolder) {
           return false
         }
         return true
@@ -146,13 +155,34 @@ export default {
       sideIsOpenFolder: false,
       // 右边栏是否打开文件夹
       rightIsOpenFolder: false,
+      // 左边是否接触到边界
+      isLeftEdge:false,
+      // 右边是否接触到边界
+      isRightEdge:false
     }
   },
   methods: {
+    listenMouse(e) {
+      const { clientX, clientY } = e
+      if ( clientX < 50) {
+        this.isLeftEdge = true
+      } else if ( clientX > window.innerWidth - 50) {
+        this.isRightEdge = true
+      } else {
+        this.isLeftEdge = false
+        this.isRightEdge = false
+      }
+    },
     marginLeft() {
       return marginLeft
     },
-    ...mapActions(navStore, ['sortSideNavigationList', 'removeSideNavigationList', 'sortRightNavigationList', 'removeRightNavigationList', 'loadNav']),
+    ...mapActions(navStore, [
+      'sortSideNavigationList', 
+      'removeSideNavigationList', 
+      'sortRightNavigationList', 
+      'removeRightNavigationList', 
+      'loadNav'
+    ]),
     getDelIcon(val) {
       this.delZone = val
     },
@@ -177,7 +207,7 @@ export default {
         checkAndToggle([...left, ...foot], 1);
       }
     },
-    openFolder(value,id) {
+    openFolder(value, id) {
       id === 'left' ? this.sideIsOpenFolder = value : this.rightIsOpenFolder = value
     },
   }
@@ -196,7 +226,7 @@ export default {
   font-weight: 500;
   position: absolute;
   z-index: 9;
-  background-color:rgba(244, 58, 58, 0.5) ;
-  color:red !important;
+  background-color: rgba(244, 58, 58, 0.5);
+  color: red !important;
 }
 </style>

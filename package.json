@@ -1,8 +1,8 @@
 {
-  "name": "ttworkbench",
-  "productName": "天天工作台",
+  "name": "ttworkbench_dev",
+  "productName": "天天工作台开发版",
   "author": "Thisky",
-  "version": "10.0.0",
+  "version": "10.0.3",
   "description": "一款针对工作场景的优化的效率工具，帮助你提升效率，保持专注",
   "electronVersion": "22.3.27",
   "main": "main.build.js",
@@ -148,7 +148,7 @@
     "postinstall": "./node_modules/.bin/electron-builder install-app-deps",
     "postinstallArm": "./node_modules/.bin/electron-builder install-app-deps --arch arm64",
     "packagePrdMacAll": "yarn run packagePrd --macos --x64 && yarn run packagePrd --macos --arm64",
-    "packageb": "npm run build && ./node_modules/.bin/electron-builder --config electron-builder-config-brave.yml --publish never",
+    "packageb": "npm run buildVite && npm run build && ./node_modules/.bin/electron-builder --config electron-builder-config-dev.yml --publish never",
     "gongzheng": "node ./scripts/justNotarize.js",
     "packageCom": "node ./scripts/packageCom.js"
   },

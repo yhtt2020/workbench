@@ -24,9 +24,6 @@ export const refresh = async () => {
       arrTmp.push(browser);
     }
   }
-  // await tsbApi.system.getBrowserBookmark(arrTmp.value, (data) => {
-  //   console.log(data);
-  // });
   await tsbApi.system.getBrowserBookmark(arrTmp, (data) => {
     console.log(data);
     updateTime.value = new Date().getTime();
@@ -86,6 +83,8 @@ const mergeArraysByGuid = (arr1, arr2, folderList) => {
 };
 
 const flattenChildrenArray = (obj, browser, level, parent?) => {
+  const favo = favoStore();
+  const { folderList } = storeToRefs(favo);
   let num = 0;
   const time = new Date().getTime();
   obj?.children?.forEach((item) => {
@@ -122,5 +121,6 @@ const flattenChildrenArray = (obj, browser, level, parent?) => {
       unRead: false,
     });
   }
+  console.log("resTmp.value :>> ", resTmp.value,folderList.value);
   return resTmp.value;
 };

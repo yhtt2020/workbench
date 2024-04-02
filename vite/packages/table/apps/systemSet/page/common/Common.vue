@@ -65,6 +65,13 @@
       isSwitch
       v-model:switch="isAutoRun"
     />
+    <hr />
+    <xt-option-info
+      title="显卡硬件加速"
+      info="关闭显卡硬件加速可以减少显卡占用，但会提升处理器占用，重启生效"
+      isSwitch
+      v-model:switch="hardware"
+    />
   </xt-option-box>
   <!-- 4 -->
   <xt-option-box v-if="!$useEnv()">
@@ -199,6 +206,8 @@ watch(
  * 开机自启动
  */
 const isAutoRun = ref(false);
+
+
 // 监听是否开机自启动
 watch(
   () => isAutoRun.value,
@@ -206,6 +215,10 @@ watch(
     await tsbApi.settings.setAutoRun(value);
   }
 );
+
+const hardware=ref(true)
+// 监听是否硬件加速
+
 onMounted(async () => {
   if (proxy.$useEnv()) return;
   // 获取窗口缩放
@@ -217,6 +230,44 @@ onMounted(async () => {
   browserMode.value = (await tsbApi.settings.get("openUrlBrowser")) || "system";
   // 获取开机自启动
   isAutoRun.value = await tsbApi.settings.get("autoRun");
+  //硬件加速
+  hardware.value=await tsbApi.settings.get('hardware')
+  if(hardware.value===undefined)
+  {
+    hardware.value=true
+  }
+  watch(
+    () => hardware.value,
+    async (value) => {
+      await tsbApi.settings.set('hardware',value);
+      if(value){
+        window.$ui.confirm('提示','开启硬件加速需要重启后方可生效。',
+          {
+            type:'warning',
+            noText:'立即重启软件',
+            okText:'稍后手动重启',
+            noButtonWidth:120,
+            no: () => {
+              tsbApi.system.restart()
+            },
+            okButtonWidth:120},
+
+        )
+      }else{
+        window.$ui.confirm('提示','关闭硬件加速后，会将显卡的负载转移到处理器，且需重启软件生效。',
+          {
+            type:'warning',
+            okButtonWidth:120,
+            noText:'立即重启软件',
+            okText:'稍后手动重启',
+            noButtonWidth:120,
+            no: () => {
+              tsbApi.system.restart()
+            }}
+        )
+      }
+    }
+  );
 });
 </script>
 

@@ -3,6 +3,8 @@ const electron = require('electron')
 const fs = require('fs-extra')
 const path = require('path')
 global.settings=require('./js/util/settings/settingsMain.js')
+
+
 const {
   app, // Module to control application life.
   protocol, // Module to control protocol handling
@@ -30,7 +32,12 @@ var clipboardContent=''
 var spaceManager
 var sessions=[]
 
-
+const hardware=require('fs').existsSync(require('path').join(require(__dirname+'/src/util/dbUtil.js').getDbDir(),'hardware'))
+console.log(require('path').join(require(__dirname+'/src/util/dbUtil.js').getDbDir(),'hardware'))
+if(hardware){
+  app.disableHardwareAcceleration()
+}else{
+}
 app.on('session-created',async (ses)=>{
   sessions.push(ses)
   ses.protocol.registerBufferProtocol('tsbapp', (request, response) => {
@@ -93,6 +100,8 @@ global.settings.initSetting(async ()=>{
     clientId=require('nanoid').nanoid(8)
     settings.set('clientID',clientId)
   }
+
+
 
 
 

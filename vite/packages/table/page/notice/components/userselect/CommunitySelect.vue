@@ -1,5 +1,5 @@
 <template>
- <xt-modal v-model="communityVisible" title="选择社群" :boxClass="'px-6 py-4'" >
+ <xt-modal v-model="communityVisible" v-if="communityVisible" title="选择社群" :boxClass="'px-6 py-4'" >
   <div style="width: 600px;" class="flex  justify-between">
    <div style="width: 300px;" class="flex flex-col">
     <span class="xt-text-2 xt-font font-14 font-400 mb-4">我的社群</span>
@@ -8,7 +8,7 @@
       <template v-for="(item,index) in getMyCommunity">
        <div class="flex mb-3 items-center p-3 xt-bg-2 pointer rounded-lg" :class="{'select-bg':isSelected(index)}" @click="selectCommunity(item)">
         <a-avatar shape="square" :size="40" :src="item.communityInfo.icon" ></a-avatar>
-        <span class="ml-3">{{ item.communityInfo.name }}</span> 
+        <span class="ml-3">{{ item.communityInfo.name }}</span>
        </div>
       </template>
       <div style="height: 16px;"></div>
@@ -25,7 +25,7 @@
       <template v-for="item in selectList">
        <div class="flex mb-3 items-center p-3 xt-bg-2 pointer rounded-lg" >
         <a-avatar shape="square" :size="40" :src="item.communityInfo.icon" ></a-avatar>
-        <span class="ml-3">{{ item.communityInfo.name }}</span> 
+        <span class="ml-3">{{ item.communityInfo.name }}</span>
        </div>
        <!-- @click="selectCommunity(item)" -->
       </template>
@@ -87,12 +87,12 @@ const isSelected = (index) =>{
 
 // 保存选中数据
 const save  = () =>{
- const mapSelect = selectList.value.map((item)=>{ 
+ const mapSelect = selectList.value.map((item)=>{
   return {
     no:item.communityInfo.no,
     nick:item.communityInfo.name,
     avatar:item.communityInfo.icon
-  } 
+  }
  });
  msgSetting.value.targetList = mapSelect;
  communityVisible.value = false;

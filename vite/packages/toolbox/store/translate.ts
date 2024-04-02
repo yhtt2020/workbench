@@ -20,10 +20,16 @@ export const translate = defineStore("translate", {
         fromLang: this.fromLang.lang,
         toLang: this.toLang.lang,
         queryStr: this.inputValue,
+        platform: 'worktable',
       });
       let { data, code } = res;
       if (code === 1000) {
-        this.resultValue = data.trans_result[0].dst;
+        console.log(data,'返回的数据')
+        if(data.status){
+          this.resultValue =data.data.trans_result[0].dst
+        }else{
+          return console.log('error :>> ', res);
+        }
       }else {
         console.log('res :>> ', res);
       }

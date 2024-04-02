@@ -230,8 +230,8 @@ export default {
           return this.sortByFavoTime(acc);
         }, []);
       }else if(folder?.type == 'recent'){
+      return this.allList.reduce((acc, item) => {
           name = item.rename?item.rename:item.name
-        return this.allList.reduce((acc, item) => {
           if (item.browser === folder.browser && item.recent && (name?.indexOf(this.searchValue) > -1 || item.url?.indexOf(this.searchValue) > -1)) {
             acc.push(item);
           }
@@ -264,6 +264,8 @@ export default {
     },
   },
   mounted(){
+    // 添加图标的刷新
+    this.$bus.on('refreshBrowser', this.refresh)
   },
   methods: {
     //

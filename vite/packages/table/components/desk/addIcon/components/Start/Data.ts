@@ -20,7 +20,7 @@ export const menu = {
     {
       newIcon: "fluent:star-16-regular",
       name: "浏览器收藏夹",
-      component:"WebSite"
+      component:"Browser"
     },
     {
       newIcon: "fluent:grid-16-regular",
@@ -41,7 +41,7 @@ export const menu = {
 };
 
 export const teamMenu = {
-  title: "团队资源",
+  title: "团队资源（开发中）",
   info: "由你的社群团队创建的资源",
   list: [
     {
