@@ -63,6 +63,19 @@ class ApiHandler {
       event.returnValue = settings.get(args.key)
     })
     ApiHandler.on('settings', 'set', (event, args, instance) => {
+      if(args.key==='hardware'){
+        const hardwarePath=require('path').join(require('../util/dbUtil.js').getDbDir(),'hardware')
+        if(args.value===false){
+          require('fs').writeFileSync(hardwarePath,'1','utf-8')
+        }else{
+          try{
+            require('fs').rmSync(hardwarePath)
+          }catch (e) {
+
+          }
+        }
+
+      }
       event.returnValue = settings.set(args.key, args.value)
     })
 

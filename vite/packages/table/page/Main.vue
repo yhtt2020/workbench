@@ -65,7 +65,7 @@
     <div style="flex: 0;">
       <BottomPanel v-if="!fullScreen && loaded" :delZone="delZone" @getDelIcon="getDelIcon" @hiedNavBar="hiedNavBar">
       </BottomPanel>
-      <!-- <WindowPanel></WindowPanel> -->
+      <!-- <WindowPanel v-if="!fullScreen && loaded"></WindowPanel> -->
     </div>
   </div>
 </template>

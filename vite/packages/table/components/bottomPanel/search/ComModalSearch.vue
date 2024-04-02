@@ -105,7 +105,7 @@ const changeSearchValue = () => {
     const textRegex = new RegExp(searchValue.value, "i");
     const mList = appModalList.value[1].list;
     const result = mList.filter((item) => {
-      return textRegex.test(item.name) || textRegex.test(item.url);
+      return textRegex.test(item.name) || textRegex.test(item.value);
     });
     proxy.$bus.emit("getSearchList", result);
   } else {

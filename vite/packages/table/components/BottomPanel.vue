@@ -1,8 +1,10 @@
 <template>
   <xtMixMenu :menus="mainOption" name="name" class="flex max-w-full">
     <!-- xt-main-bottom-bar 定位类不可删 -->
-
-    <!-- 控制中心弹窗 -->
+    
+    <!-- mac版导航栏 -->
+    <template v-if="currentNavFormat === 'mac'">
+      <!-- 控制中心弹窗 -->
     <div
       class="absolute"
       v-if="controlVisible"
@@ -41,24 +43,17 @@
             @control="openControl"
             @getDelIcon="getDelIcon"
             ref="dock"
+            @getHoverIndex="getHoverIndex"
           >
           </Dock>
         </Drop>
-        <keep-alive>
-          <TaskBox v-if="true"></TaskBox>
-        </keep-alive>
-        <keep-alive>
-          <Favorites v-if="true"></Favorites>
-        </keep-alive>
-        <Common ref="common"></Common>
-
         <!-- 社群开关开启后,用户头像信息放底部导航栏右侧 -->
         <UserNavBar v-if="communityNavVisible" @openControl="openControl" />
 
         <!-- 团队导航弹窗 -->
         <div
           v-if="teamNavVisible"
-          class="absolute"
+          class="absolute tuanduidaohang"
           :style="{
             left: `${teamNavLeft}px`,
             bottom: `${(navAttribute.navSize / 100) * 100}px`,
@@ -82,6 +77,26 @@
         </div>
       </div>
     </AutoHide>
+    </template>
+    <!-- window版导航栏 -->
+    <template v-else>
+      <Drop @createFile="createFile" currentId="bottom">
+        <WindowPanel 
+          @edit="edit" 
+          @getDelIcon="getDelIcon"
+          @control="openControl">
+        </WindowPanel>
+      </Drop>
+    </template>
+    <keep-alive>
+      <TaskBox v-if="true"></TaskBox>
+    </keep-alive>
+    <keep-alive>
+      <Favorites v-if="true"></Favorites>
+    </keep-alive>
+    <Common ref="common"></Common>
+    
+    
   </xtMixMenu>
 
   <transition name="fade">
@@ -120,6 +135,7 @@ import TaskBox from "../apps/task/page/TaskBox.vue";
 import Favorites from "../apps/favorites/page/index.vue";
 import navigationData from "../js/data/tableData";
 import { offlineStore } from "../js/common/offline";
+
 import {
   moreMenus,
   extraRightMenu,
@@ -147,10 +163,12 @@ import CommunityNav from "./bottomPanel/community/CommunityNav.vue";
 import TeamNav from "./bottomPanel/community/TeamNav.vue";
 import AppModal from "./bottomPanel/community/AppModal.vue";
 import { controlStore } from "./desk/navigationBar/hook/controlStore";
+import WindowPanel from "./WindowPanel.vue";
 import Setting from "./bottomPanel/setting/CommunitySetting.vue";
 import ComNavSearch from "./bottomPanel/search/ComNavSearch.vue";
 import { communityStore } from "../page/chat/store/communityStore";
 import DeskAppModal from "./bottomPanel/desk/DeskAppList.vue";
+
 
 // 是否全屏状态 切换全屏
 const { isFullscreen, toggle } = useFullscreen();
@@ -175,6 +193,7 @@ export default {
     CommunityNav,
     TeamNav,
     AppModal,
+    WindowPanel,
     Setting,
     ComNavSearch,
     DeskAppModal,
@@ -343,8 +362,8 @@ export default {
       const windowHeight = size.height.value;
       this.parentSize = windowWidth;
       this.parentHeight = windowHeight;
-      this.maxItemNum = Math.round((windowWidth - 240) / 72);
-      const width = windowWidth / (240 + this.copyFootNav.length * 72);
+      this.maxItemNum = Math.round((windowWidth - 240) / this.realSize);
+      const width = windowWidth / (240 + this.copyFootNav.length * this.realSize);
       this.navAttribute.navSize = width.toFixed(2) * 100;
       this.navAttribute.navSize =
         this.navAttribute.navSize < 100 ? this.navAttribute.navSize : 100;
@@ -352,11 +371,15 @@ export default {
     window.addEventListener("mousemove", this.listenMouse);
     // 点击团队导航打开团队组件
     this.$bus.on("openTeamNav", (evt) => {
-      this.teamNavVisible = !this.teamNavVisible;
+      console.log('打开团队导航的小组件')
+      this.openTeamNav = !this.teamNavVisible;
+      this.teamNavVisible=!this.teamNavVisible
       this.teamNavLeft = evt.clientX - 274 < 0 ? 0 : evt.clientX - 274;
     });
     // 触发社群搜索弹窗
     this.$bus.on("openComSearch", (evt) => {
+      this.$bus.emit("closeModal");
+      this.teamNavVisible=false
       this.comSearchVisible = !this.comSearchVisible;
       this.comSearchLeft = evt.clientX - 274 < 0 ? 0 : evt.clientX - 50;
     });
@@ -406,12 +429,17 @@ export default {
       "isEdge",
       "bottomInit",
       "communityNavVisible",
+      "currentNavFormat"
     ]),
     ...mapWritableState(taskStore, ["isTask", "isTaskDrawer"]),
     ...mapWritableState(useDeskStore, ["isEnterBar"]),
 
     ...mapWritableState(useNavBarStore, ["isEnterDesk"]),
     ...mapWritableState(controlStore, ["firstNavVisible"]),
+    // 判断当前导航栏格式，来确定图标大小
+    realSize(){
+      return this.currentNavFormat === 'mac' ? 72 : 60
+    },
 
     isMain() {
       return isMain();
@@ -568,6 +596,10 @@ export default {
           this.isEdge = false;
         }, 800);
       }
+    },
+    // 获取当前停留的图标索引
+    getHoverIndex(val){
+      this.hoverIndex = val
     },
     /**
      * 清空当前导航栏
@@ -731,8 +763,9 @@ export default {
       const bottom = document.querySelector("#bottomPanel");
       const rect = bottom.getBoundingClientRect();
       const index = Math.round(
-        (x.x - rect.x) / ((72 * this.navAttribute.navSize) / 100)
+        (x.x - rect.x) / ((this.realSize * this.navAttribute.navSize) / 100)
       );
+      console.log(index,x.x,rect.x,rect.width)
       this.dragItem = null;
       if (this.copyFootNav[this.hoverIndex]?.type === "folder") {
         const merged = this.useMergeFolder(

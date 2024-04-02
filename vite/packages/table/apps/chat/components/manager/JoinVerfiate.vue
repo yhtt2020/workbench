@@ -1,15 +1,17 @@
 <template>
- <RadioTab :navList="dataType" v-model:selectType="defaultType"></RadioTab>
+ <!-- <RadioTab :navList="dataType" v-model:selectType="defaultType"></RadioTab> -->
 </template>
 
 <script>
 import { defineComponent,watch,reactive,toRefs } from 'vue'
-import RadioTab from "../../../../../components/RadioTab.vue";
+// import RadioTab from "../../../../../components/RadioTab.vue";
 import _ from "lodash-es";
 import { message } from "ant-design-vue";
 
 export default defineComponent({
- components:{RadioTab},
+ components:{
+  // RadioTab
+ },
  props: ["updateGroupInfo"],
 
  setup(props,ctx){

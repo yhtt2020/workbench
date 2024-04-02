@@ -46,14 +46,15 @@ import { completeTask } from '../../apps/task/page/branch/task';
 
 import CreateCommunity from './components/CreateCommunitys.vue';
 import Modal from '../../components/Modal.vue';
-import AddFriend from '../../TUIKit/TUIComponents/components/transfer/addFriend.vue';
+import AddFriend from '../../apps/chat/components/add/AddFriend.vue';
 import Transfer from '../../TUIKit/TUIComponents/components/transfer/index.vue';
-import CreateGroup from '../../TUIKit/TUIComponents/container/TUISearch/components/createGroup/index.vue';
+import CreateGroup from '../../apps/chat/components/create/CreateGroupChat.vue';
 import CategoryFloat from './components/float/CategorysFloat.vue';
 import DefaultFloat from './components/float/DefaultsFloat.vue';
 import JoinCommunitys from './components/communityJoin/JoinCommunitys.vue';
 import GradeSmallTip from "../../components/GradeSmallTip.vue";
 import {useGlobalStore} from '../../apps/Global/store';
+
 export default {
   name: "chat",
   components: {
@@ -62,7 +63,6 @@ export default {
     JoinCommunitys,GradeSmallTip,
     CreateCommunity,
   },
-
   setup(props, ctx) {
     const com = communityStore();
     const chat = chatStore();
@@ -329,7 +329,6 @@ export default {
       selectTab,triggerAddModal,limitClick
     }
   }
-
 };
 </script>
 

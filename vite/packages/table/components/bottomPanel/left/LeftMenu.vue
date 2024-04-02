@@ -139,6 +139,7 @@ const rightMenu = ref([
           ok: () => {
             appModalList.value.splice(currentDel.value, 1);
             message.success("应用移除成功");
+            communityNav.saveCommunityNav()
           },
           type: "warning",
         }

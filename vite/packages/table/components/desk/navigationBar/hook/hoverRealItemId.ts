@@ -5,7 +5,6 @@
  * @returns {string}
  */
 export const hoverRealItemId = (id, index) => {
-  // if (this.isEnterBar) return
   let parent = document.getElementById(id);
   if (!parent) {
     return "";

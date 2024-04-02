@@ -53,6 +53,8 @@ export const useNavigationStore = defineStore("useNavigationStore", {
       bottomInit: false,
       // 社群导航
       communityNavVisible: false,
+      // 当前导航栏格式
+      currentNavFormat:'mac',
     };
   },
   actions: {
@@ -65,7 +67,7 @@ export const useNavigationStore = defineStore("useNavigationStore", {
     strategies: [
       {
         // storage: dbStorage,
-        path: ["communityNavVisible"],
+        path: ["communityNavVisible",'currentNavFormat'],
         storage: localStorage,
       },
     ],

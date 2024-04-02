@@ -76,9 +76,9 @@
 import { defineComponent, onMounted, reactive, toRefs } from 'vue'
 import useClipboard from 'vue-clipboard3';
 import { message,Modal as antdModal } from 'ant-design-vue'
-import { router } from '../../../../../router'
-import Modal from '../../../../../components/Modal.vue';
-import UserSelect from '../../../components/userselect/index.vue'
+import { router } from '../../../../router';
+import Modal from '../../../../components/Modal.vue';
+import UserSelect from '../userselect/UserSelectIndex.vue';
 
 export default defineComponent({
  props:['group','memeber'],

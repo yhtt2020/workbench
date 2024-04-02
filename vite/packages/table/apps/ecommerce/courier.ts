@@ -27,6 +27,7 @@ export const courierStore = defineStore("courier", {
         }
       }
     },
+    courierList: [], // 当前的快递列表 ---- 仅用于在顶部导航栏中展示数据
     currentDetail: {},//当前定位到的详情订单
     orderList: [],//快递列表
     // 大尺寸下查看内容详情，传递快递单号
@@ -586,7 +587,7 @@ export const courierStore = defineStore("courier", {
     strategies: [
       {
         storage: localStorage,
-        paths: ['courierMsgList', 'storeInfo', 'currentDetail', 'orderList', 'settings'],
+        paths: ['courierMsgList', 'storeInfo', 'currentDetail', 'orderList', 'settings','courierList'],
       }
     ]
   }

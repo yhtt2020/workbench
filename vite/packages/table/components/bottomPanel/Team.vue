@@ -1,5 +1,5 @@
 <template>
-  <Avatar :item="item" />
+  <Avatar :item="item" :size="size"/>
 
     <teleport to='body'>
     <div
@@ -53,7 +53,11 @@ const props = defineProps<{
   item: any,
   x: number,
   y: number,
-  visible: boolean
+  visible: boolean,
+  size:{
+    type:Number,
+    default:52
+  }
 }>()
 
 const { item, x, y,visible } = toRefs(props)

@@ -1110,6 +1110,9 @@ import NewGuidePage from "../../page/app/grade/NewGuidePage.vue";
 }
 
 .desk-group-switcher {
+  svg{
+    display: inline-block;
+  }
   min-width: 100px;
   min-height: 20px;
   z-index: 99;

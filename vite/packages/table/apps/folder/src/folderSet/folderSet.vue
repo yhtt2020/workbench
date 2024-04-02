@@ -1,7 +1,7 @@
 <template>
   <div>
     <xt-modal title="分组设置" v-if="setVisible" v-model="setVisible" @close="setVisible = false" full :footer="false" boxClass="px-4 pt-4">
-      <xt-option-from :options="nameOptions" :data="data">
+      <xt-option-form :options="nameOptions" :data="data">
         <template #name>
           <xt-option-icon class="mb-3" v-model:icon="data.icon" v-model:input="data.name" />
         </template>
