@@ -55,7 +55,8 @@ const openModal = () => {
   modal.value.id = item.id;
   modal.value.visible = true;
 };
-// console.log("window?.globalArgs :>> ", window?.globalArgs["user-data-path"]);
+
+console.log('22222222 :>> ', 22222222);
 const getImgPath = () => {
   const { join } = require("path");
   let dataPath = window?.globalArgs["user-data-path"];
@@ -63,12 +64,10 @@ const getImgPath = () => {
   console.log("imgPath :>> ", imgPath);
   return imgPath;
 };
-getImgPath();
 </script>
 
 <template>
   <!-- 添加时预览组件 -->
-  {{ item }}
   <xt-preview-v2
     v-if="previewVisible"
     v-model="previewVisible"
@@ -80,6 +79,7 @@ getImgPath();
     class="xt-bg-2 rounded-xl flex items-center justify-between p-4 mb-4"
     style="height: 102px"
   >
+  {{ item }}
     <!-- 左侧 -->
     <div class="flex">
       <div

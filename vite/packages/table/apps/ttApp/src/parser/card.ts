@@ -1,4 +1,3 @@
-
 /**
  * 小组件解析器 ttapp.js
  */
@@ -54,7 +53,7 @@ const parserHeader = (props: any, card: any) => {
 const parserWuJie = (props: any, card: any) => {
   let wujie: any = {};
   wujie.name = props.id;
-  wujie.entry = "ttapp://" + props.id + "/" + card.entry;
+  wujie.url = "ttapp://" + props.id + "/" + card.entry;
 
   return wujie;
 };

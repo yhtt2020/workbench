@@ -10,7 +10,7 @@ import { useAppCenterStore } from "../../../../appCenter/src/store";
 import { storeToRefs } from "pinia";
 
 const appCenterStore = useAppCenterStore();
-const { visible : appCenterVisible } = storeToRefs(appCenterStore);
+const { visible: appCenterVisible } = storeToRefs(appCenterStore);
 
 const ttappStore: any = useTTAppStore();
 const loading = ref(true);
@@ -20,7 +20,6 @@ const cardHeader: any = ref({});
 const customSize = ref("2x2");
 const wujie: any = ref({});
 
-
 // 卡片状态 无数据、加载中、正常 对应的值分别为 noData、loading、normal
 
 const status = ref("loading");
@@ -29,9 +28,9 @@ onMounted(async () => {
   // 无数据情况
   if (!props.customData?.id) return;
   // 查询数据
-  console.log('props.customData.id :>> ', props.customData.id);
+  console.log("props.customData.id :>> ", props.customData.id);
   let res = ttappStore.select(props.customData.id);
-console.log('res 22222 :>> ', res);
+  console.log("res 22222 :>> ", res);
   if (!res) return;
   // 解析数据
   let data = useParserCard(res);
@@ -83,19 +82,20 @@ const appCenter = ref(false);
     :menuList="[refresh]"
     :options="options"
     :customSize="customSize"
-    class="xt-theme-b"
   >
+    <!-- <WuJie v-bind="wujie" :id="customData.id" /> -->
+
     <div
-      class="w-full flex flex-col h-full"
+      class="w-full flex flex-col h-full xt-theme-b"
       style="overflow: hidden !important"
     >
-      <xt-button @click="ttappStore.modal.visible = true">go modal</xt-button>
+      <!-- <xt-button @click="ttappStore.modal.visible = true">go modal</xt-button>
       <xt-button @click="visible = true">go oldInstall</xt-button>
       <TTApp v-if="visible" @close="visible = false" />
       <xt-button @click="appCenterVisible = true">go appCenter</xt-button>
-      <TTAppCenter v-if="appCenterVisible" />
+      <TTAppCenter v-if="appCenterVisible" /> -->
       <template v-if="!loading">
-        <WuJie v-bind="wujie" :id="customData.id" />
+        <WuJie v-bind="wujie" :id="customData.id" class="" />
       </template>
     </div>
   </xt-container>
