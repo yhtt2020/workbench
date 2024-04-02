@@ -663,6 +663,12 @@ export default {
      */
     async newOpenApp(item, e) {
       const { type, value } = item;
+      if (type !== "folder") {
+        this.folderVisible = false;
+      }
+      if ( value !== 'commun') {
+        this.comVisible = false
+      }
       // 更新鼠标定位
       this.resetElementPosition();
       if (window.$useEnvLimit("web", value)) return;
