@@ -1,6 +1,6 @@
 <template>
   <xt-modal v-model="editVisible" :footer="false" boxClass="" :mask="0" :header="false">
-    <div class="flex overflow-hidden rounded-xl" style="height: 75vh;width: 65vw;">
+    <div class="flex overflow-hidden rounded-xl" style="height: 75vh;width: 63.6vw;">
       <xt-button 
         class="absolute right-3 top-3" 
         @click="closeNav" 
@@ -428,10 +428,10 @@ const leftMenu = ref<LeftMenuType[]>([
 
 
 // 选择左侧导航栏
-const chooseItem = (item,i) => {
+const chooseItem = (item,i?) => {
   isStart.value = false
   iconIndex.value = item.component
-  i ? index.value = i : index.value = 0
+  i ? index.value = i : index.value = item.id
 }
 
 // 添加图标
