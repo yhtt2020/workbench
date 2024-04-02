@@ -31,12 +31,13 @@ const plugins = (iframeWindow: any) => {
 </script>
 
 <template>
+  <!-- {{ url }} -->
+  <!-- || 'http://localhost:5173/' -->
   <WujieVue
-    class="xt-theme-b"
     height="100%"
     ref="wujie"
     :name="name"
-    :url="url || 'http://localhost:5173/'"
+    :url="url "
     :plugins="[
       {
         jsBeforeLoaders: [

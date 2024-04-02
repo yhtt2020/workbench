@@ -1,30 +1,31 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { useTTAppStore } from "../../../../ttApp/src/store";
+import { useTTAppStore } from "../../../../../ttApp/src/store";
 import { storeToRefs } from "pinia";
+import { openApp } from "hmc-win32";
 
 const { item } = defineProps<{ item: any }>();
 
 // ttapp数据
 const ttappStore: any = useTTAppStore();
-
+const { modal } = storeToRefs(ttappStore);
 const menus = computed(() => {
   return [
     {
       name: "添加小组件",
       newIcon: "fluent:add-16-regular",
       cb: () => {
-        console.log("222 :>> ", 222);
         addPreview();
       },
+      disabled: false,
     },
-    {
-      name: "编辑信息",
-      newIcon: "fluent:compose-16-regular",
-      cb: () => {
-        console.log("编辑");
-      },
-    },
+    // {
+    //   name: "编辑信息",
+    //   newIcon: "fluent:compose-16-regular",
+    //   cb: () => {
+    //     console.log("编辑");
+    //   },
+    // },
     {
       name: "卸载",
       newIcon: "fluent:delete-16-regular",
@@ -46,14 +47,15 @@ const previewData = {
 };
 const addPreview = () => {
   previewVisible.value = true;
-  console.log("222 :>> ", 222);
+};
+/** 打开主应用弹窗 */
+const openModal = () => {
+  modal.value.id = item.id;
+  modal.value.visible = true;
 };
 </script>
 
 <template>
-  <Teleport to="body">
-    <xt-drag-modal x="0" y="0" index="9999999999">123</xt-drag-modal>
-  </Teleport>
   <!-- 添加时预览组件 -->
   {{ item }}
   <xt-preview-v2
@@ -83,8 +85,9 @@ const addPreview = () => {
     <div class="flex">
       <!-- 打开按钮 -->
       <div
-        class="flex justify-center items-center xt-modal rounded-lg mr-2"
+        class="flex justify-center items-center xt-modal rounded-lg mr-2 cursor-pointer"
         style="width: 72px; height: 32px"
+        @click="openModal"
       >
         <xt-ify-icon icon="fluent:open-16-regular" size="16" class="mr-1" />
         <span class="text-sm">打开 </span>

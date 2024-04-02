@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full w-full flex flex-col">
+  <div class="h-full w-full flex flex-col xt-task-1">
     <template v-if="!temporaryStatus">
      <xt-option-tab
       v-model="currentTab"
@@ -11,7 +11,7 @@
      <xt-scrollbar class="h-full w-full" :x="false" :y="true">
       <Primary v-if="currentTab == 'Primary'" />
       <Complete v-else />
-     </xt-scrollbar> 
+     </xt-scrollbar>
     </template>
 
     <template v-else>
@@ -35,7 +35,7 @@
               </div>
             </xt-button>
           </div>
-        </div> 
+        </div>
       </div>
     </template>
   </div>
@@ -52,7 +52,7 @@ import Exit from "../../components/Exit.vue";
 
 const currentTab = ref("Primary");
 const task = taskStore();
-const { temporaryStatus } = storeToRefs(task); 
+const { temporaryStatus } = storeToRefs(task);
 
 const list = ref([
   {

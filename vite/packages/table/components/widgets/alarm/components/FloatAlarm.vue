@@ -1,6 +1,7 @@
 <template>
     <div v-if="clockSettingVisible"
-        style="position: absolute;left:-330px;top: -180px;"
+        style="position: absolute;"
+        :style="[position]"
         class="p-3 rounded-lg xt-main-bg box">
         <vue-custom-scrollbar :settings="outerSettings"
             style="position: relative; height: 520px;color: var(--primary-text);width: 300px; " class="scroll">
@@ -66,7 +67,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, toRefs } from 'vue'
+import { ref, toRefs , computed } from 'vue'
 import { storeToRefs } from 'pinia';
 import { message } from 'ant-design-vue'
 import dayjs from 'dayjs';
@@ -77,8 +78,11 @@ import RadioTab from '../../../RadioTab.vue';
 import { timeStamp } from '../../../../util';
 
 import { cardStore } from '../../../../store/card';
+import { useNavigationStore } from '../../../desk/navigationBar/navigationStore';
 
 const useCard = cardStore()
+const useNav = useNavigationStore()
+const { currentNavPosition , currentNavFormat } = storeToRefs(useNav)
 
 const emit = defineEmits(['closeClock'])
 
@@ -119,6 +123,16 @@ const timeHour = ref(0)
 const timeMinute = ref(0)
 
 const flag = ref(true)
+
+const position = computed(() => {
+    if(currentNavFormat.value === 'windows'){
+        if(currentNavPosition.value === 'top'){
+            return 'left:-330px;top: -10px;'
+        }
+        return 'left:-330px;top: -180px;'
+    }
+    return 'left:330px;top: 60px;'
+})
 
 // 关闭闹钟设置界面
 const settingClock = () => {

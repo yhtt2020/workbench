@@ -1,6 +1,6 @@
 <template>
     <div :style="{width:iconSize + 'px',height:iconSize + 'px'}">
-        <Avatar v-if="item?.icon !== ''" :item="item"></Avatar>
+        <Avatar v-if="item?.icon !== ''" :item="item" :size="iconSize"></Avatar>
         <div class="flex flex-wrap items-center justify-center p-1" v-else
             :style="{ borderRadius: navigationStore.iconRadius + 'px',width:iconSize + 'px',height:iconSize + 'px' }" 
             style="border: 1px solid var(--divider);">

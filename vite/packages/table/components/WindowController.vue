@@ -1,7 +1,7 @@
 <template>
   <xt-mix-menu name="title" :menus="menus">
     <div id="windowController" style="overflow: hidden" class="flex h-10">
-      <div @click="fixed" :class="{ active: alwaysTop }" style="border-bottom-left-radius: 8px" class="  btn-top-active  w-10 h-10 flex justify-center items-center">
+      <div @click="fixed" :class="{ active: alwaysTop }" style="border-bottom-left-radius: 8px" class=" xt-text btn-top-active  w-10 h-10 flex justify-center items-center">
         <Icon icon="Pushpin" style="font-size: 1.2em; zoom: 1.1"></Icon>
       </div>
       <!-- <div @click="fixed" :class="{active:alwaysTop}"
@@ -17,7 +17,7 @@
       <div @click="maximize"  class="  btn-top-active  w-10 h-10 flex justify-center items-center">
         <BorderOutlined style="font-size: 1.2em;"></BorderOutlined>
       </div>
-      <div @click="close"  class="  btn-top-active  w-10 h-10 flex justify-center items-center">
+      <div @click="close"  class=" xt-text  btn-top-active  w-10 h-10 flex justify-center items-center">
         <Icon icon="guanbi" style="font-size: 1.2em;"></Icon>
       </div>
       <!-- <div @click="maximize" class="flex pointer  btn-top-active  items-center no-drag py-2" >
