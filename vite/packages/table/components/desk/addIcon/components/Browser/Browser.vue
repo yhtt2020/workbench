@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref , computed , toRefs , onBeforeMount } from 'vue'
+import { ref , computed , toRefs , getCurrentInstance } from 'vue'
 import { message } from 'ant-design-vue'
 import { storeToRefs } from 'pinia';
 
@@ -57,8 +57,10 @@ import { useIconStore } from '../../store'
 
 import WebList from './WebList.vue';
 
-import { refresh } from '../../hook/useRefresh'
+// import { refresh } from '../../hook/useRefresh'
 
+// 获取当前组件实例
+const { proxy } = getCurrentInstance()
 
 const favo = favoStore()
 const { isFavorites, allList, folderList, folderIndex, browserList, updateTime, folderIcons } = storeToRefs(favo)
@@ -148,6 +150,10 @@ const rightMenu = computed(() => {
 
 const addIcon = (item) => {
     emit('addIcon', item)
+}
+
+const refresh = () => {
+    proxy.$bus.emit('refreshBrowser')
 }
 
 // 加载数据

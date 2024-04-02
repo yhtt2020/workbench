@@ -116,7 +116,9 @@ import {
   defineAsyncComponent,
   onBeforeUnmount,
   onMounted, 
-  computed } from 'vue'
+  computed ,
+  getCurrentInstance,
+} from 'vue'
 import {message} from 'ant-design-vue'
 import 'animate.css'
 import { storeToRefs } from 'pinia';
@@ -125,7 +127,7 @@ import { completeTask } from '../../../apps/task/task'
 import _ from 'lodash-es'
 import { useFileConversionIcon,mergeData } from '../../../ui/hooks/useDataConversion'
 import { nanoid } from 'nanoid';
-import {refresh} from './hook/useRefresh'
+// import {refresh} from './hook/useRefresh'
 
 import AddDesk from './components/AddDesk.vue'
 import DropDown from './components/DropDown.vue'
@@ -138,6 +140,8 @@ import {cardStore} from '../../../store/card'
 import {homeStore} from '../../../store/home'
 import { useIconStore } from './store';
 import { favoStore } from '../../../apps/favorites/store'
+
+const { proxy } = getCurrentInstance()
 
 // 获取到当前多选的图标
 const iconStore = useIconStore()
@@ -512,7 +516,7 @@ onMounted(() => {
   }
   // 如果收藏夹未创建，则进行刷新
   if(allList.value.length === 0){
-    refresh()
+    proxy.$bus.emit('refreshBrowser')
   }
   
 })
