@@ -8,7 +8,7 @@
     <div class="flex flex-wrap" style="gap: 24px;" :class="classItem">
         <Icon 
             :item="item" 
-            @click="choose(item)" 
+            @click="choose(item,index)" 
             v-for="(item,index) in menu.list" 
             :key="index">
         </Icon>
@@ -31,8 +31,8 @@ const { menu,className } = toRefs(props)
 
 const emit = defineEmits(['choose'])
 
-const choose = (item) => {
-    emit('choose',item)
+const choose = (item,index) => {
+    emit('choose',item,index)
 }
 
 </script>
