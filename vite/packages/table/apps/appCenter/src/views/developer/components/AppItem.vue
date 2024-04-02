@@ -77,7 +77,7 @@ const openModal = () => {
       <div class="flex flex-col justify-center">
         <div>{{ item.name }}</div>
         <div class="xt-text-2 text-sm mt-2">
-          一键开启计时器，方便在会议时提示每个成员的发言时间。
+         {{ item.description }}
         </div>
       </div>
     </div>

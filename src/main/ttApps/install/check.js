@@ -99,7 +99,7 @@ const checkMainFest = async (id) => {
       strong,
       data: card,
     };
-    let res = check(ojb);
+    let res = await check(ojb);
     if (res.code !== 200) {
       return res;
     }

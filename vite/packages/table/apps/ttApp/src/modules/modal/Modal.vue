@@ -20,15 +20,22 @@ const name = ref();
 onBeforeMount(() => {
   // 开始加载
   id.value = modal.value.id;
-  let res = ttappStore.select(id);
+
+  console.log(" id.value :>> ", id.value);
+  console.log(" id.value :>> ", ttappList.value);
+//  let res =  ttappList.value.find((item) => item.id === id.value);
+  let res = ttappStore.select(id.value);
+  console.log("res :>> ", res);
+
   if (!res) {
     return;
   }
-  // name.value = res.name;
-  console.log("res :>> ", res);
+  name.value = res.name;
   const main = res?.modules?.main;
-  url.value = `ttapp://${id}/${main.entry}`;
 
+  url.value = `ttapp://${id.value}/${main.entry}`;
+
+  console.log('  url.value :>> ',   url.value);
   // 加载完成
   loading.value = false;
   if (!id) return;
@@ -85,6 +92,7 @@ const menuList = computed(() => {
       >
         <!-- 数据 -->
         <!-- <div style="height: 400px; width: 700px; background: pink"></div> -->
+        {{ url }}2
         <WuJie :url="url" :name="id" />
       </div>
     </xt-mix-menu>

@@ -41,7 +41,7 @@
         left: 50%;
         transform: translateX(-50%) translateY(-100%);
       "
-      :style="[this.iconSize === 44 ? { bottom : '30px'} : { top : '-8px'}]"
+      :style="[this.iconSize === 44 ? { bottom: '30px' } : { top: '-8px' }]"
       class="px-10 py-3 rounded-lg s-bg xt-text"
     >
       松开鼠标合并
@@ -51,10 +51,7 @@
     id="bottomPanel"
     :class="customClass"
     class="flex flex-row items-center justify-center max-w-full overflow-hidden xt-text"
-    style="
-      z-index: 99;
-      min-width: 80px;
-    "
+    style="z-index: 99; min-width: 80px"
     :style="{ borderRadius: navAttribute.navRadius + 'px' }"
   >
     <xt-task id="M0104" no="1" :mask="false" class="w-full">
@@ -85,12 +82,8 @@
           >
             <div
               :key="bottomKey"
-              style="
-                white-space: nowrap;
-                display: flex;
-                align-items: center;
-              "
-              :style="{ gap : gap + 'px'}"
+              style="white-space: nowrap; display: flex; align-items: center"
+              :style="{ gap: gap + 'px' }"
               class="w-full"
               id="bottomContent"
             >
@@ -148,7 +141,8 @@
                       <NavIcon
                         :item="item"
                         :size="iconSize"
-                        :community="community">
+                        :community="community"
+                      >
                       </NavIcon>
                     </Drag>
                   </div>
@@ -162,7 +156,7 @@
   </div>
 </template>
 
-  <script>
+<script>
 import { navStore } from "../../store/nav";
 import { useNavBarStore } from "../desk/navigationBar/navBar.ts";
 import { useNavigationStore } from "../desk/navigationBar/navigationStore";
@@ -177,7 +171,10 @@ import "animate.css";
 import { useFullscreen } from "@vueuse/core";
 import { nanoid } from "nanoid";
 
-import {moreMenus,extraRightMenu} from "../../components/desk/navigationBar/index";
+import {
+  moreMenus,
+  extraRightMenu,
+} from "../../components/desk/navigationBar/index";
 import { useMergeFolder } from "../../components/desk/navigationBar/hook/mergeFolder.ts";
 import { Notifications } from "../../js/common/sessionNotice";
 import { startApp } from "../../ui/hooks/useStartApp";
@@ -185,14 +182,13 @@ import { defaultFolderData } from "../../apps/folder/src/components/options";
 import { hoverRealItemId } from "../desk/navigationBar/hook/hoverRealItemId";
 import { mergeData } from "../../ui/hooks/useDataConversion";
 
-import NavIcon from '../windowPanel/components/NavIcon.vue'
+import NavIcon from "../windowPanel/components/NavIcon.vue";
 import EditIcon from "../desk/navigationBar/components/EditIcon/EditIcon.vue";
 import FolderVue from "../desk/navigationBar/components/folder/Folder.vue";
 import Folder from "../../apps/folder";
 import Drag from "../desk/navigationBar/components/folder/Drag.vue";
 import Avatar from "../desk/navigationBar/components/Avatar.vue";
 import Team from "./Team.vue";
-
 
 const {
   //是否全屏状态
@@ -203,7 +199,7 @@ const {
 
 export default {
   name: "BottomPanel",
-  emits: ["getDelIcon", "hiedNavBar", "edit", "control",'getHoverIndex'],
+  emits: ["getDelIcon", "hiedNavBar", "edit", "control", "getHoverIndex"],
   components: {
     EditIcon,
     Avatar,
@@ -298,8 +294,7 @@ export default {
       parentSize: 0,
       parentHeight: 0,
 
-
-      comVisible:false
+      comVisible: false,
     };
   },
   props: {
@@ -308,9 +303,9 @@ export default {
       default: () => false,
     },
     // 图标大小
-    iconSize:{
-      type:Number,
-      default:() => 54
+    iconSize: {
+      type: Number,
+      default: () => 54,
     },
     // 自定义类
     customClass: {
@@ -318,10 +313,10 @@ export default {
       default: () => "h-[80px] xt-bg border-[var(--divider)] mr-3 s-bg",
     },
     // 图标间距
-    gap:{
-      type:Number,
-      default:() => 20
-    }
+    gap: {
+      type: Number,
+      default: () => 20,
+    },
   },
   mounted() {
     this.enableDrag();
@@ -352,16 +347,16 @@ export default {
     ...mapWritableState(controlStore, ["firstNavVisible"]),
     // 当前图标的大小
     realSize() {
-      return this.iconSize + this.gap
+      return this.iconSize + this.gap;
     },
     // 社区图标需要传递的相关参数
-    community(){
+    community() {
       return {
         x: this.realXY.x,
         y: this.navAttribute.navSize * 0.9,
-        placement:'top',
-        visible:this.comVisible
-      }
+        placement: "top",
+        visible: this.comVisible,
+      };
     },
     folderOptions() {
       if (this.currentItem && this.currentItem.type === "folder") {
@@ -417,7 +412,8 @@ export default {
               {
                 ok: () => {
                   const width =
-                    window.innerWidth / (240 + this.copyFootNav.length * this.realSize);
+                    window.innerWidth /
+                    (240 + this.copyFootNav.length * this.realSize);
                   this.navAttribute.navSize = width.toFixed(2) * 100;
                   this.noticeFlag = false;
                 },
@@ -483,9 +479,9 @@ export default {
     },
 
     // 获取当前鼠标悬浮的索引
-    hoverIndex(val){
-      this.$emit('getHoverIndex',val)
-    }
+    hoverIndex(val) {
+      this.$emit("getHoverIndex", val);
+    },
   },
   methods: {
     ...mapActions(navStore, [
@@ -645,17 +641,12 @@ export default {
         return;
       }
       if (value === "setting") {
-        this.$router.push({
-          name: "home",
-        });
-        setTimeout(() => {
-          this.$bus.emit("openSystemSet");
-        }, 500);
+        this.$bus.emit("openSystemSet");
         return;
       }
-      if(value === 'commun'){
-        this.comVisible = ! this.comVisible
-        return
+      if (value === "commun") {
+        this.comVisible = !this.comVisible;
+        return;
       }
       if (type === "folder") {
         this.openFolder(item);
@@ -679,7 +670,7 @@ export default {
           key: "tipRun",
         });
       }
-      this.comVisible = false
+      this.comVisible = false;
     },
 
     /**
@@ -901,9 +892,11 @@ export default {
         document.getElementById("bottomContent").getBoundingClientRect().left *
         (this.navAttribute.navSize / 100);
       const relativePos =
-        (currentLeft - panelLeft) % ((this.realSize * this.navAttribute.navSize) / 100);
+        (currentLeft - panelLeft) %
+        ((this.realSize * this.navAttribute.navSize) / 100);
       const isGap = !(
-        relativePos <= ((this.realSize - 30) * this.navAttribute.navSize) / 100 &&
+        relativePos <=
+          ((this.realSize - 30) * this.navAttribute.navSize) / 100 &&
         relativePos >= (10 * this.navAttribute.navSize) / 100
       );
       let nIndex = Math.floor(
