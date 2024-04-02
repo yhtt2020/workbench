@@ -36,7 +36,7 @@
     <!-- 右侧对应数据显示区域,由于页面较少,暂时没有走路由 -->
     <div class="flex-1 w-auto h-full">
       <template v-if="currentContact === 'notice'">
-        {{ noticeList }}
+        <Notice :list="noticeList"/>
       </template>
       <template v-else-if="currentContact === 'group'">
         <Group :list="groupList"/>
@@ -63,6 +63,7 @@ import _ from "lodash-es";
 
 import Group from "./page/Group.vue";
 import Friend from "./page/Friend.vue";
+import Notice from "./page/Notice.vue";
 
 const chat = window.$chat.chat;
 

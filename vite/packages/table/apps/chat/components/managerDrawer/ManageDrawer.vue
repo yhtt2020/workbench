@@ -240,8 +240,10 @@
             h="48"
             w="190"
             style="border-radius: 8px; background: var(--error) !important"
-            >退出群聊</xt-button
+            @click="quitGroup"
           >
+          退出群聊
+          </xt-button>
         </div>
       </template>
 
@@ -251,6 +253,7 @@
             style="border-radius: 8px; margin-right: 12px"
             h="48"
             w="190"
+            @click="transferGroup"
           >
             转让群聊
           </xt-button>
@@ -258,6 +261,7 @@
             style="border-radius: 8px; background: var(--error) !important"
             h="48"
             w="190"
+            @click="dissolveGroup"
           >
             解散群聊
           </xt-button>
@@ -283,6 +287,7 @@
 
   <!-- 修改群成员弹窗 -->
   <MemberDrawer ref="memberRef" @closeMember="manageVisible = true" />
+
   <!-- 添加群成员弹窗 -->
   <AddMember
     ref="userSelectRef"
@@ -290,6 +295,7 @@
     :groupID="groupID"
     @update="updateMemeber"
   />
+
   <!-- 移除群成员弹窗 -->
   <DeleteUserSelect
     ref="deleteUserSelectRef"
@@ -305,6 +311,8 @@
     @closeMember="manageVisible = true"
     @updateMuteAllMembers="updateGroupManager"
   />
+
+
 </template>
 
 <script setup>
@@ -313,6 +321,7 @@ import {
   TUIStore,
   StoreName,
   TUIFriendService,
+  TUIGroupService,
 } from "@tencentcloud/chat-uikit-engine";
 import useClipboard from "vue-clipboard3";
 import { message } from "ant-design-vue";
@@ -425,14 +434,32 @@ const updateMemeber = (data) => {
   currentMemberList.value = data;
 };
 // 更新当前群禁言状态
-const updateGroupManager = (data) =>{
+const updateGroupManager = (data) => {
   manageInfo.value.muteAllMembers = data.muteAllMembers;
-}
+};
 
 // 开启群管理入口 就是将群成员升级为群管理员
 const openGroupManage = () => {
   updateManageRef.value.openGroupManageDrawer();
 };
+
+// 解散群聊
+const dissolveGroup = async() =>{
+  const res = await TUIGroupService.dismissGroup(manageInfo.value.groupID)
+  if(res.code === 0){
+    message.success("解散群聊成功");
+    manageVisible.value = false;
+  }
+};
+// 退出群聊
+const quitGroup = async() =>{
+  const res = await TUIGroupService.quitGroup(manageInfo.value.groupID)
+  if(res.code === 0){
+    message.success("群聊退出成功");
+    manageVisible.value = false;
+  }
+};
+
 
 defineExpose({
   openManageDrawer,

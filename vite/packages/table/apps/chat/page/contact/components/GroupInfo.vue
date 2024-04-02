@@ -1,6 +1,6 @@
 <template>
   <xt-modal v-if="infoVisible" v-model="infoVisible" title="群信息">
-    <div style="width: 500px" class="flex flex-col">
+    <div style="width: 500px" class="flex flex-col mt-4">
       <!-- 头像昵称 -->
       <div class="flex items-center xt-bg-2 rounded-lg px-4 py-2 mb-4">
         <a-avatar
@@ -114,8 +114,8 @@ import { ref, toRefs } from "vue";
 import useClipboard from "vue-clipboard3";
 import { message } from "ant-design-vue";
 import { getTypeName, joinName } from "../../../hooks/groupType";
-import { TUIConversationService } from "@tencentcloud/chat-uikit-engine";
-import { useRouter } from 'vue-router';
+import { TUIConversationService,TUIGroupService } from "@tencentcloud/chat-uikit-engine";
+import { useRouter } from "vue-router";
 
 const router = useRouter();
 
@@ -143,16 +143,28 @@ const copyCurrentID = async () => {
 // 进入群聊
 const enterGroup = () => {
   const conversationID = `GROUP${info.value.groupID}`;
-  router.push({name:'chatMain'});
+  router.push({ name: "chatMain" });
   TUIConversationService.switchConversation(conversationID);
   infoVisible.value = false;
 };
 // 退出群聊
-const exitGroup = () => {};
+const exitGroup = async () => {
+  const res = await TUIGroupService.quitGroup(info.value.groupID);
+  if (res.code === 0) {
+    message.success("群聊退出成功");
+    infoVisible.value = false;
+  }
+};
 // 转让群聊
 const transferGroup = () => {};
 // 解散群聊
-const dissolveGroup = () => {};
+const dissolveGroup = async() => {
+  const res = await TUIGroupService.dismissGroup(info.value.groupID)
+  if(res.code === 0){
+    message.success("解散群聊成功");
+    infoVisible.value = false;
+  }
+};
 
 defineExpose({
   openGroupInfo,
