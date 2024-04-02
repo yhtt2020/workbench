@@ -6,31 +6,32 @@
             :list="list">
         </Box>
     </div>
-    <div v-else-if="isTop" class="w-full h-[28px]">
-        <!-- {{ list }} -->
+    <div v-else-if="isTop" class="w-full h-[28px] flex gap-3">
         <Item v-for="item in list" :key="item.name" :item="item"></Item>
     </div>
     <!-- 快递 -->
-    <TopCourier 
-        :position="pos" 
-        v-if='courierVisible' 
-        :topCourierVisible="courierVisible" 
-        @close="courierVisible = false">
-    </TopCourier>
-    <!-- 番茄 -->
-    <TopTomato
-        v-if="tomatoVisible"
-        :tomatoVisible="tomatoVisible"
-        @close="tomatoVisible = false"
-        :position="pos"
-    ></TopTomato>
-    <!-- 时钟 -->
-    <TopClockTimer
-        :position="pos"
-        :clockVisible="clockVisible"
-        @close="clockVisible = false"
-        v-if="clockVisible">
-    </TopClockTimer>
+    <Teleport to="body">
+        <TopCourier 
+            :position="pos" 
+            v-if='courierVisible' 
+            :topCourierVisible="courierVisible" 
+            @close="courierVisible = false">
+        </TopCourier>
+        <!-- 番茄 -->
+        <TopTomato
+            v-if="tomatoVisible"
+            :tomatoVisible="tomatoVisible"
+            @close="tomatoVisible = false"
+            :position="pos"
+        ></TopTomato>
+        <!-- 时钟 -->
+        <TopClockTimer
+            :position="pos"
+            :clockVisible="clockVisible"
+            @close="clockVisible = false"
+            v-if="clockVisible">
+        </TopClockTimer>
+    </Teleport>
     <!-- 左侧抽屉 -->
     <LeftDrawer 
         v-if="drawerVisible"
@@ -53,6 +54,7 @@ import TopTomato from '../../apps/tomato/widget/TopTomato.vue';
 import Box from './components/Box.vue';
 import LeftDrawer from './components/LeftDrawer.vue';
 import TopClockTimer from '../widgets/TopClockTimer.vue';
+import Item from './components/Item.vue'
 
 import { courierStore } from '../../apps/ecommerce/courier';
 import { appStore } from '../../store';
@@ -172,7 +174,6 @@ const queue : Array<queueType> = ref([
             }
             pos.value = usePosition(position,itemPosition)
             courierVisible.value = ! courierVisible.value
-            console.log('2',e,courierList.value.length)
         },
         disabled:computed(() => settings.value.courierStatus.statusBar)
     },
@@ -185,7 +186,7 @@ const queue : Array<queueType> = ref([
             router.push({ name: 'music' })
         },
         rightFn:() => {
-            console.log('音乐')
+            // console.log('音乐')
             drawerVisible.value = true
         },
         disabled:computed(() => status.value?.music?.playing && status.value?.music?.title && status.value?.music),
@@ -198,7 +199,7 @@ const queue : Array<queueType> = ref([
             router.push({ name: 'clipboard' })
         },
         rightFn:() => {
-            console.log('剪切板')
+            // console.log('剪切板')
             // leftDrawerRef.value.openLeftDrawer()
             drawerVisible.value = true
         },

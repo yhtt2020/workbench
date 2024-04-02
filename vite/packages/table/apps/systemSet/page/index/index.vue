@@ -1,6 +1,7 @@
 <template>
   <xt-modal
     v-model="systemVisible"
+    v-if="systemVisible"
     :footer="false"
     boxClass=""
     :mask="0"

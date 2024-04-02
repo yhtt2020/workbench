@@ -1,5 +1,5 @@
 <template>
- <xt-modal v-model="themeVisible" :footer="0" title="主题颜色"   ref="themeFullRef">
+ <xt-modal v-model="themeVisible" v-if="themeVisible" :footer="0" title="主题颜色"   ref="themeFullRef">
   <div class="flex flex-col xt-bg-2 mx-2 rounded-lg p-3 " style="width: 500px;">
    <div class="flex flex-col">
     <div class="flex items-center w-full mb-3">

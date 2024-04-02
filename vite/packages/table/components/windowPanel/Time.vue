@@ -1,7 +1,7 @@
 <template>
-    <div class="flex flex-col justify-end w-full text-right time">
+    <div class="flex flex-col justify-center w-full text-right time">
         <div v-if="settings.showTopbarTime"  @click="enterTime" class="flex">
-            <div class="mr-1 xt-text font-14 xt-font"> {{ dateTime.month }}/{{ dateTime.day }} </div>
+            <div class="mr-1 xt-text font-14 xt-font">{{ dateTime.year }}/{{ dateTime.month }}/{{ dateTime.day }} </div>
             <div class="xt-text font-14 xt-font"> {{ dateTime.hours }}:{{ dateTime.minutes }} </div>
         </div>
         <div v-if="hasWeather && city.now && settings.showTopbarWeather" 

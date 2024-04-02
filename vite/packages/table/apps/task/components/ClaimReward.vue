@@ -1,5 +1,5 @@
 <template>
-  <xt-modal :footer="0" v-model="rewardVisible" index="9999">
+  <xt-modal :footer="0" v-model="rewardVisible" index="9999" v-if="rewardVisible">
     <div
       class=" flex justify-center items-center flex-col"
       style="width: 500px"

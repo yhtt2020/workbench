@@ -1,8 +1,14 @@
 <template>
-    <div class="
+    <div 
+        class="
             w-full h-[64px]  pointer 
             flex items-center 
-            justify-between p-3 " style="border: 1px solid var(--divider);background: rgba(26,26,26,0.65);;">
+            justify-between p-3 " 
+        style="
+            border: 1px solid var(--divider);
+            background: rgba(26,26,26,0.65);
+            backdrop-filter: blur(50px);"
+        :style="{zoom: `${navAttribute.navSize / 100}`}">
         <!-- 用户头像以及控制中心 -->
         <User></User>
         <!-- 导航栏图标 -->
@@ -11,7 +17,7 @@
         <!-- 右侧时间天气和消息通知 -->
         <div class="flex">
             <Time></Time>
-            <MessageBox :boxClass="'ml-3'" :mainClass="'bottom-20 right-6'"></MessageBox>
+            <MessageBox :boxClass="'ml-3'" :mainClass="mainClass"></MessageBox>
             <Tip 
                 :top="6"
                 name="inform" 
@@ -48,11 +54,22 @@ import Panel from './windowPanel/Panel.vue';
 import TopPanelRightDrawer from './drawer/TopPanelRightDrawer.vue';
 
 import { appStore } from '../store';
+import { useNavigationStore } from './desk/navigationBar/navigationStore';
 
 const useAppStore = appStore()
 const { showGuide , status } = storeToRefs(useAppStore)
 
+const useNav = useNavigationStore()
+const { navAttribute } = storeToRefs(useNav)
+
 const emit = defineEmits(['edit', 'getDelIcon', 'control'])
+
+const props = defineProps({
+    mainClass: {
+        type: String,
+        default: 'bottom-20 right-6'
+    }
+})
 
 const rightDrawer = ref<InstanceType<typeof TopPanelRightDrawer> | null>(null)
 
@@ -67,6 +84,14 @@ const openRightDrawer = () => {
         message.info('定制过程中无法操作')
     }
 }
+
+/**
+ * 导航栏图标的回调函数 
+ * @edit 编辑图标的回调
+ * @getDelIcon 托起图标后传入的删除区域显示的回调
+ * @control 导航栏控制中心的回调
+ * @param value 
+ */
 
 const edit = (value) => {
     emit('edit', value)

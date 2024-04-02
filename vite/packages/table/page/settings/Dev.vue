@@ -15,7 +15,10 @@
         >
       </div>
       <div class="line">
-        <TTApp />
+        <AppCenter  v-if="visible"/>
+        <xt-button @click="openAppCenter" :w="140" :h="40" type="theme"
+          >打开新版应用中心</xt-button
+        >
       </div>
       <div class="line">
         <xt-button @click="exit" :w="140" :h="40" type="theme"
@@ -104,10 +107,11 @@ import { useWidgetStore } from "../../components/card/store.ts";
 import { message } from "ant-design-vue";
 import { prettyDisplayBytes } from "../../js/action/supervisory";
 import { useLogout } from "../../permission/user/useLogout";
-import TTApp from "../../apps/ttApp";
+import AppCenter from "../../apps/appCenter";
+import { useAppCenterStore } from "../../apps/appCenter/src/store";
 export default {
   name: "Common",
-  components: { Template, ZoomUI, TTApp },
+  components: { Template, ZoomUI, AppCenter },
   data() {
     return {
       trayOpen: "",
@@ -128,9 +132,13 @@ export default {
   computed: {
     ...mapWritableState(appStore, ["settings"]),
     ...mapWritableState(useWidgetStore, ["rightModel"]),
+    ...mapWritableState(useAppCenterStore, ["visible"]),
     isMain,
   },
   methods: {
+    openAppCenter() {
+      this.visible = true;
+    },
     exit() {
       useLogout();
     },
