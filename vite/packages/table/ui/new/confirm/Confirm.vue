@@ -28,7 +28,8 @@
         <!-- 标题 -->
         <div class="flex items-center">
           <div class="mr-4">
-            <xt-new-icon icon="fluent:info-12-filled" :style="[typeStyle]" />
+
+            <XtIfyIcon icon="fluent:info-12-filled" size="24" :style="[typeStyle]" />
           </div>
           <span>{{ title }}</span>
         </div>
@@ -65,7 +66,9 @@
 // confirm 是可以通过方法调用来展示的 需要手动导入组件
 import { ref, toRefs, onMounted, computed } from "vue";
 import XtButton from "../../libs/Button/index.vue";
+// import XtNewIcon from "../../libs/NewIcon/index.vue";
 import XtNewIcon from "../../libs/NewIcon/index.vue";
+import XtIfyIcon from "../IfyIcon";
 export interface ConfirmProps {
   // 标题
   title?: string | undefined;
@@ -134,7 +137,7 @@ onMounted(() => {
  * 关闭事件
  */
 const onCloseClick = () => {
-  console.log('关闭事件 :>> ', );
+  console.log("关闭事件 :>> ");
   isVisible.value = false;
   // 等待动画完全关闭后触发关闭回调
   setTimeout(() => {

@@ -6,7 +6,7 @@
 
    <span class="my-6">消息有效期至</span>
    <a-date-picker :show-time="{ format: 'HH:mm' }" v-model:value="cutOffDate" :format="dateFormat" class="xt-bg-2" style="border-radius: 8px;"/>
-   
+
    <div class="flex justify-end items-center mt-6">
     <xt-button w="64" h="40"  class="mr-3" @click="timeVisible = false">取消</xt-button>
     <xt-button w="64" h="40" type="theme" @click="saveTime">确定</xt-button>
@@ -40,11 +40,11 @@ const saveTime = () =>{
   // 当前发布时间
   const currentTimeValue = new Date(currentTime.value.$d);
   // const changeCurrentTime = new Date(currentTimeValue.getTime() - (currentTimeValue.getTimezoneOffset() * 60000));
-  
+
   // 发布后截止时间
   const postReleaseTime = new Date(cutOffDate.value.$d);
   // const changePostReleaseTime = new Date(postReleaseTime.getTime() - (postReleaseTime.getTimezoneOffset() * 60000))
-  
+
   const time = {
     startTime:currentTimeValue.getTime(),
     endTime:postReleaseTime.getTime()

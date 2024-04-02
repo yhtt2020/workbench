@@ -163,7 +163,7 @@
     </xt-task>
   </div>
 </template>
-  
+
   <script>
 import { navStore } from "../../store/nav";
 import { useNavBarStore } from "../desk/navigationBar/navBar.ts";
@@ -301,6 +301,7 @@ export default {
       position:{},
       parentSize: 0,
       parentHeight: 0,
+
 
       comVisible:false
     };
@@ -505,7 +506,7 @@ export default {
       },
       deep: true,
     },
-    
+
     // 获取当前鼠标悬浮的索引
     hoverIndex(val){
       this.$emit('getHoverIndex',val)
@@ -665,45 +666,46 @@ export default {
       const { type, value } = item;
       // 更新鼠标定位
       this.resetElementPosition();
+      if (value === "control") {
+        this.$emit("control", e);
+        return;
+      }
+      if (value === "setting") {
+        this.$router.push({
+          name: "home",
+        });
+        setTimeout(() => {
+          this.$bus.emit("openSystemSet");
+        }, 500);
+        return;
+      }
+      if(value === 'commun'){
+        this.comVisible = ! this.comVisible
+        return
+      }
+      if (type === "folder") {
+        this.openFolder(item);
+      }
+      this.resetElementPosition();
+      if (value == "fullscreen" && window.$useEnv()) {
+        toggle();
+        // console.log('isFullscreen :>> ', isFullscreen);
+        return;
+      }
       if (window.$useEnvLimit("web", value)) return;
-      // 桌面图标打开提示
-      this.msgNotice(item);
-      // 特殊图标处理
-      const valueHandlers = {
-        control: () => this.$emit("control", e),
-        setting: () => {
-            // this.$router.push({ name: "home" });
-            setTimeout(() => {
-                this.$bus.emit("openSystemSet");
-            }, 500);
-        },
-        commun: () => {
-            this.comVisible = !this.comVisible;
-        },
-        default: async () => {
-            if (type === "folder") {
-                this.openFolder(item);
-            }
-            if (value === "fullscreen" && window.$useEnv()) {
-                toggle();
-                return;
-            }
-            if (value === "home" && item.home) {
-                this.jumpDesk = item.home;
-            }
-            let rs = await startApp(type, value, this.$router);
-            if (!rs) {
-                message.error({
-                    content: `打开「${item.name}」失败`,
-                    key: "tipRun",
-                });
-            }
-            this.comVisible = false;
-        }
-      };
 
-      const handler = valueHandlers[value] || valueHandlers.default;
-      await handler();
+      this.msgNotice(item);
+      if (value === "home" && item.home) {
+        this.jumpDesk = item.home;
+      }
+      let rs = await startApp(type, value, this.$router);
+      if (!rs) {
+        message.error({
+          content: `打开「${item.name}」失败`,
+          key: "tipRun",
+        });
+      }
+      this.comVisible = false
     },
 
     /**
@@ -1016,4 +1018,3 @@ export default {
 };
 </script>
 <style lang="scss" scoped></style>
-  

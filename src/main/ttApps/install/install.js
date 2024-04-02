@@ -11,25 +11,13 @@ const {
   moveFolder,
   readFile,
   checkDir,
-} = require("./useFile.js");
+} = require("../useFile.js");
 // 生成唯一id 贯穿整个安装流程
 const { nanoid } = require("nanoid");
 // 数据库操作
-const ttAppModel = require("./useDb.js");
-
-// 错误编码 方便前端做判断 预留10位做扩展
-const ERROR_CODE = {
-  // 文件操作
-  1: "文件类型错误",
-  2: "文件解压失败",
-  // manifest.json 相关
-  21: "manifest.json文件不存在",
-  22: "manifest.json文件不是合格的数据",
-  22: "manifest.json文件缺少数据",
-  23: "manifest.json文件缺少指定文件",
-  // 数据库相关
-  41: "文件写入失败",
-};
+const ttAppModel = require("../useDb.js");
+const ERROR_CODE = require("./constant.js");
+const checkMainFest = require("./check.js");
 // 当前id
 let id = "";
 // 获取文件类型
@@ -44,103 +32,6 @@ const checkFile = async (filePath) => {
   const folderName = [folderType, id, filePath];
   let res = await existsFolder(folderName);
   return res;
-};
-// 检测manifest.json
-const checkMainFest = async () => {
-  let manifestPath = ["apps_test", id, "manifest.json"];
-  let res = await readFile(manifestPath);
-
-  // 1、检测manifest.json文件是否存在
-  if (res.code !== 200) {
-    return {
-      status: 1,
-      code: 21,
-      data: "manifest.json文件不存在",
-      info: ERROR_CODE[21],
-      id: id,
-    };
-  }
-
-  // 2、检测manifest.json是否为json
-  res = JSON.parse(res.data);
-  if (typeof res !== "object") {
-    return {
-      status: 1,
-      code: 22,
-      data: ERROR_CODE[22],
-      id,
-    };
-  }
-
-  // 3、弱检查 只需要检测是否有参数
-  //  "description",
-  let manifestCheck = ["name", "modules"];
-  let manifestCheckRes = [];
-  manifestCheck.forEach((key) => {
-    if (res[key] == undefined) {
-      manifestCheckRes.push(key);
-    }
-  });
-  if (manifestCheckRes.length > 0) {
-    return {
-      status: 1,
-      code: 23,
-      data: "manifest.json文件缺少 " + manifestCheckRes.join(" , ") + " 数据",
-      info: "manifest.json文件缺少 " + manifestCheckRes.join(" , ") + " 数据",
-    };
-  }
-  // 4 强检查 检查文件是否存在
-console.log('res :>> ', res);
-  // 基础数据
-  let manifestList = [
-    {
-      path: res?.preview,
-      info: "预览图",
-    },
-    {
-      path: res?.logo,
-      info: "logo",
-    },
-  ];
-  // card数据
-  const card = res?.modules?.card;
-  let cardList;
-  if (card) {
-    cardList = [
-      {
-        path: card?.entry,
-        info: "card入口",
-      },
-    ];
-  }
-  // 合并数据
-  let checkList = [...manifestList, ...cardList];
-  let checkRes = [];
-
-  console.log("checkList :>> ", checkList);
-
-  for (data of checkList) {
-    let currentRes = data?.path && (await checkFile(data?.path));
-    if (!currentRes) {
-      checkRes.push(data?.info);
-    }
-  }
-  console.log("checkRes :>> ", checkRes);
-  if (checkRes.length > 0) {
-    return {
-      status: 1,
-      code: 24,
-      data: checkRes.join(" , ") + " 不存在",
-      info: ERROR_CODE[24],
-    };
-  }
-  // 5、返回数据
-  return {
-    status: 0,
-    code: 200,
-    data: res,
-    info: "成功",
-  };
 };
 
 // 从测试文件夹复制到正式文件夹

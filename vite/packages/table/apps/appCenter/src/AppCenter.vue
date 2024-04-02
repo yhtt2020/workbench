@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import Developer from "./views/Developer.vue";
-
+import Developer from "./views/developer/Developer.vue";
+import { useAppCenterStore } from "./store";
+import { storeToRefs } from "pinia";
+const appCenterStore = useAppCenterStore();
+const { visible } = storeToRefs(appCenterStore);
 defineProps<{
   modelValue: boolean;
 }>();
@@ -13,7 +16,6 @@ const components = ref({
 const currentCom = ref("Developer");
 
 // 显示应用中心
-const visible = ref(true);
 // 左侧菜单列表
 const leftMenuList = computed(() => {
   const list = [
@@ -65,9 +67,8 @@ const switchCurrentCom = (name: string) => {
 </script>
 
 <template>
-
-  <xt-modal v-model="visible" index="999999">
-    <div class="xt-theme-b" style="width: 1000px; height: 720px">
+  <xt-modal v-model="visible" index="200" custom>
+    <div style="width: 1000px; height: 720px">
       <!-- 左侧菜单容器 -->
       <xt-left-menu
         :list="leftMenuList"
@@ -76,7 +77,7 @@ const switchCurrentCom = (name: string) => {
         fn="fn"
         leftBg="red"
       >
-        <div class="w-full h-full xt-theme-b">
+        <div class="w-full h-full xt-theme-b py-4 pr-4">
           <component :is="components[currentCom]" />
         </div>
       </xt-left-menu>
