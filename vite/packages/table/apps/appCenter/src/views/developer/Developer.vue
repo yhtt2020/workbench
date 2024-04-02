@@ -6,7 +6,7 @@ import { storeToRefs } from "pinia";
 import Exit from "../../component/exit.vue";
 import Install from "./components/Install.vue";
 const ttappStore: any = useTTAppStore();
-const { ttappList } = storeToRefs(ttappStore);
+const { ttappList,  } = storeToRefs(ttappStore);
 </script>
 
 <template>

@@ -14,16 +14,28 @@ const close = () => {
   modalRef.value.close();
 };
 
+const id = ref();
 const url = ref();
+const name = ref();
 onBeforeMount(() => {
   // 开始加载
-  const id = modal.value.id;
-  console.log("modal.value.id :>> ", modal.value.id);
-  let res = ttappStore.select("SzLA");
+  id.value = modal.value.id;
+
+  console.log(" id.value :>> ", id.value);
+  console.log(" id.value :>> ", ttappList.value);
+//  let res =  ttappList.value.find((item) => item.id === id.value);
+  let res = ttappStore.select(id.value);
   console.log("res :>> ", res);
+
+  if (!res) {
+    return;
+  }
+  name.value = res.name;
   const main = res?.modules?.main;
-  console.log("main :>> ", main);
-  url.value = main?.entry;
+
+  url.value = `ttapp://${id.value}/${main.entry}`;
+
+  console.log('  url.value :>> ',   url.value);
   // 加载完成
   loading.value = false;
   if (!id) return;
@@ -42,40 +54,6 @@ const menuList = computed(() => {
   let res = [{ name: "刷新", fn: refresh }];
   return res;
 });
-
-// 测试内容
-/**
- * 如何解决挂载多应用不注销情况
- * 1 通过 keep-alive 解决缓存问题
- * 2 通过 遍历应用生成对象
- */
-const list = [
-  {
-    id: "SzLA",
-    url: "tsbapp://SzLA/index.html",
-    component: WuJie,
-  },
-  {
-    id: "23334",
-    url: "",
-    component: WuJie,
-  },
-];
-
-const currentCom = ref(WuJie);
-const currentComKey = ref("");
-const currentUrl = ref("");
-const a = ref(true);
-const test = () => {
-  a.value = !a.value;
-  if (a.value) {
-    currentComKey.value = "SzLA";
-    currentUrl.value = "http://localhost:5173/resume";
-  } else {
-    currentComKey.value = "ddd";
-    currentUrl.value = "ttapp://SzLA/index.html";
-  }
-};
 </script>
 
 <template>
@@ -93,7 +71,7 @@ const test = () => {
     <!-- 头部左侧区域 -->
     <template #header-left>
       <xt-ify-icon class="mr-2" />
-      xxxx
+      {{ name }}
     </template>
     <!-- 头部右侧区域 -->
     <template #header-right>
@@ -103,7 +81,7 @@ const test = () => {
     </template>
     <!-- 左侧导航 -->
     <!-- <template #nav>
-      <div>放着玩</div>
+      <div></div>
       <xt-left-menu />
     </template> -->
     <xt-mix-menu :menus="menuList">
@@ -114,24 +92,13 @@ const test = () => {
       >
         <!-- 数据 -->
         <!-- <div style="height: 400px; width: 700px; background: pink"></div> -->
-        <!-- <WuJie :url="url" /> -->
-        <xt-button @click="test">test {{ a }}</xt-button>
-        {{ currentUrl }}
-        <keep-alive>
-          <WuJie
-            :url="currentUrl"
-            :key="currentComKey"
-          ></WuJie>
-        </keep-alive>
-        <!-- <component :is="list[modal.id]?.component" /> -->
-        <!-- list -->
-
-        <!--  -->
+        {{ url }}2
+        <WuJie :url="url" :name="id" />
       </div>
     </xt-mix-menu>
     <!-- 最小化左侧 -->
     <template #minimize-left>
-      <div class="mr-2 xt-text">xxxx</div>
+      <div class="mr-2 xt-text">{{ name }}</div>
     </template>
     <!-- 最小化右侧 -->
     <template #minimize-right>

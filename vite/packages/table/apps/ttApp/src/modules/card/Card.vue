@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import dbStorage from "../../../../../store/dbStorage";
+// import dbStorage from "../../../../../store/dbStorage";
 import { ref, onMounted, computed } from "vue";
 import TTApp from "../../ttApp";
 import { useParserCard } from "../../parser";
-import { useSelect } from "../../hooks";
 import WuJie from "../wujie/WuJie.vue";
 import TTAppCenter from "../../../../appCenter";
 import { useTTAppStore } from "../../store";
@@ -31,7 +30,7 @@ onMounted(async () => {
   if (!props.customData?.id) return;
   // 查询数据
   let res = ttappStore.select(props.customData.id);
-
+console.log('res :>> ', res);
   if (!res) return;
   // 解析数据
   let data = useParserCard(res);
