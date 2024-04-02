@@ -1,187 +1,228 @@
 // 新版IM样式表(覆盖版)
-/**屏蔽不想要的UI**/ 
+/**屏蔽不想要的UI**/
 .callkit-container,
 .TUIKit-navbar,
 .tui-search-main-global,
 .tui-chat-safe-tips,
 .tui-contact-search,
-.manage,.message-input-toolbar-list-end{
- display: none !important;
+.manage,
+.message-input-toolbar-list-end,
+.message-input-button-hover {
+  display: none !important;
 }
 
 // 容器宽高
 .TUIKit {
- width: 100% !important;
- height: 100% !important;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 // 会话样式
 .tui-conversation {
- background: transparent !important;
- &-list {
-  overflow-y: auto;
-  overflow-x: hidden;
-
-  &::-webkit-scrollbar {
-   display: none !important;
-  }
- }
- &-content {
-  cursor: pointer !important;
-  margin-bottom: 6px !important;
-
-  &:hover {
-   cursor: pointer !important;
-   background: rgba(80, 139, 254, 0.2) !important;
-  }
- }
- &-item {
-  cursor: pointer !important;
-  .content {
-   &-header-label .name {
-    color: var(--primary-text) !important;
-    font-size: 16px !important;
-   }
-   .middle-box .middle-box-content {
-    color: var(--secondary-text) !important;
-    font-size: 14px !important;
-    font-family: "PuHuiTi400" !important;
-   }
-   &-footer{
-    .time{
-      color: var(--secondary-text) !important;
-      font-size: 12px !important;
-    }
-    .muted-icon{
-      padding-top: 12px !important;
-    }
-   }
-  }
- }
- &-item-pinned {
   background: transparent !important;
- }
-}
-.actions-menu {
- background-color: transparent !important;
- background: var(--secondary-bg) !important;
- border: none !important;
- &-item {
-  &:hover {
-   background-color: transparent !important;
-   background: var(--divider) !important;
+
+  &-list {
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+      display: none !important;
+    }
   }
- }
+
+  &-content {
+    cursor: pointer !important;
+    margin-bottom: 6px !important;
+
+    &:hover {
+      cursor: pointer !important;
+      background: rgba(80, 139, 254, 0.2) !important;
+    }
+  }
+
+  &-item {
+    cursor: pointer !important;
+
+    .content {
+      &-header-label .name {
+        color: var(--primary-text) !important;
+        font-size: 16px !important;
+      }
+
+      .middle-box .middle-box-content {
+        color: var(--secondary-text) !important;
+        font-size: 14px !important;
+        font-family: "PuHuiTi400" !important;
+      }
+
+      &-footer {
+        .time {
+          color: var(--secondary-text) !important;
+          font-size: 12px !important;
+        }
+
+        .muted-icon {
+          padding-top: 12px !important;
+        }
+      }
+    }
+  }
+
+  &-item-pinned {
+    background: transparent !important;
+  }
 }
+
+.actions-menu {
+  background-color: transparent !important;
+  background: var(--secondary-bg) !important;
+  border: none !important;
+
+  &-item {
+    &:hover {
+      background-color: transparent !important;
+      background: var(--divider) !important;
+    }
+  }
+}
+
 .TUIKit-main-aside {
- border-right: 1px solid var(--divider) !important;
+  border-right: 1px solid var(--divider) !important;
 }
+
 .chat-header-content {
- color: var(--primary-text) !important;
-}
-.chat-header-setting {
- .common-icon-container {
   color: var(--primary-text) !important;
- }
 }
-.message-input-toolbar{
+
+.chat-header-setting {
+  .common-icon-container {
+    color: var(--primary-text) !important;
+  }
+}
+
+.message-input-toolbar {
   border-top: 1px solid var(--divider) !important;
 }
-.toolbar-item-container-dialog{
+
+.toolbar-item-container-dialog {
   background: var(--secondary-bg) !important;
-  .words{
+
+  .words {
     background-color: transparent !important;
-    &::-webkit-scrollbar{
+
+    &::-webkit-scrollbar {
       width: 2px !important;
     }
-    &::-webkit-scrollbar-thumb{
+
+    &::-webkit-scrollbar-thumb {
       background: #d9d9d9 !important;
     }
-    &-list-item{
+
+    &-list-item {
       color: var(--secondary-text) !important;
-      &:hover{
+
+      &:hover {
         color: #006eff !important;
       }
     }
   }
 }
-.toolbar-item-container{
-  &:nth-of-type(2n){
-    .toolbar-item-container-icon{
+
+.toolbar-item-container {
+  &:nth-of-type(2n) {
+    .toolbar-item-container-icon {
       padding: 8px 8px 8px 0 !important;
-    } 
+    }
   }
-  &:nth-of-type(3){
-    .toolbar-item-container-icon{
+
+  &:nth-of-type(3) {
+    .toolbar-item-container-icon {
       padding: 8px 8px 8px 0 !important;
-    } 
+    }
   }
-  &:last-of-type{
-    .toolbar-item-container-icon{
+
+  &:last-of-type {
+    .toolbar-item-container-icon {
       padding: 8px 8px 8px 0 !important;
-    } 
+    }
   }
 }
-.message-item{
+
+.message-item {
   cursor: pointer !important;
 }
+
 // 右键操作弹窗
-.dialog-item-web{
-  background: rgba(255,255,255, 1) !important;
+.dialog-item-web {
+  background: rgba(255, 255, 255, 1) !important;
   border: none !important;
-  .list-item{
-    & div{
-      color: rgba(00,00,00, 0.65) !important;
+
+  .list-item {
+    & div {
+      color: rgba(00, 00, 00, 0.65) !important;
     }
-    &-text{
-      color: rgba(00,00,00, 0.65) !important;
+
+    &-text {
+      color: rgba(00, 00, 00, 0.65) !important;
     }
-    &:nth-of-type(4){
+
+    &:nth-of-type(4) {
       padding: 4px 0 4px 12px !important;
     }
-    &:nth-of-type(2n){
+
+    &:nth-of-type(2n) {
       padding: 4px 0 4px 12px !important;
     }
-    &:nth-of-type(3){
+
+    &:nth-of-type(3) {
       padding: 4px 0 4px 12px !important;
     }
-    &:first-of-type{
+
+    &:first-of-type {
       padding: 4px 0 4px 12px !important;
     }
   }
 }
-.input-quote{
-  &-content{
-    background-color: rgba(255,255,255, 1) !important;
-    .max-one-line{
-      color: rgba(00,00,00, 0.65) !important;
+
+.input-quote {
+  &-content {
+    background-color: rgba(255, 255, 255, 1) !important;
+
+    .max-one-line {
+      color: rgba(00, 00, 00, 0.65) !important;
     }
   }
 }
 
 // 昵称
-.message-body-nick-name{
+.message-body-nick-name {
   color: var(--secondary-text) !important;
 }
-.message-timestamp{
+
+.message-timestamp {
   color: var(--secondary-text) !important;
 }
-.message-tip{
-  span{
+
+.message-tip {
+  span {
     color: var(--secondary-text) !important;
   }
 }
-.message-more{
+
+.message-more {
   color: var(--secondary-text) !important;
 }
-.revoke{
-  .edit{
+
+.revoke {
+  .edit {
     color: #006eff !important;
   }
-  & span:first-child{
+
+  & span:first-child {
     color: var(--secondary-text) !important;
   }
-  & span:nth-child(2){
+
+  & span:nth-child(2) {
     color: var(--secondary-text) !important;
   }
-} 
+}

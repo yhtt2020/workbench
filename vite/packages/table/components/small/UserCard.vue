@@ -211,6 +211,7 @@ import TencentCloudChat from "tim-js-sdk";
 import { message } from "ant-design-vue";
 import { useLogout } from "../../permission/user/useLogout";
 import { useEnv } from "../../permission/useEnv";
+import { TUIConversationService } from "@tencentcloud/chat-uikit-engine";
 
 export default {
   name: "UserCard",
@@ -427,6 +428,10 @@ export default {
             uid: String(this.uid),
           },
         });
+        // 通过当前TUIConversationService.switchConversation方法来实现用户切换
+        // C2C代表好友之间的切换ID
+        const conversationID = `C2C${this.uid}`
+        TUIConversationService.switchConversation(conversationID);
       }
     },
     async checkFriendship() {
