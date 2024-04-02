@@ -2,7 +2,6 @@
 import { ref, computed } from "vue";
 import { useTTAppStore } from "../../../../../ttApp/src/store";
 import { storeToRefs } from "pinia";
-import { openApp } from "hmc-win32";
 
 const { item } = defineProps<{ item: any }>();
 
@@ -17,7 +16,7 @@ const menus = computed(() => {
       cb: () => {
         addPreview();
       },
-      disabled: false,
+      disabled: item.modules?.card ? false : true,
     },
     // {
     //   name: "编辑信息",
@@ -41,18 +40,30 @@ const previewVisible = ref(false);
 const previewData = {
   name: "TTAppCard",
   data: {
-    id: "mx08",
-    customSize: "4x4",
+    id: item.id,
+    customSize: item.modules?.card?.size,
   },
 };
 const addPreview = () => {
   previewVisible.value = true;
+  //  obj =
+  const card = item.modules?.card;
+  console.log("card :>> ", card);
 };
 /** 打开主应用弹窗 */
 const openModal = () => {
   modal.value.id = item.id;
   modal.value.visible = true;
 };
+// console.log("window?.globalArgs :>> ", window?.globalArgs["user-data-path"]);
+const getImgPath = () => {
+  const { join } = require("path");
+  let dataPath = window?.globalArgs["user-data-path"];
+  let imgPath = join(dataPath, "apps", item.id, item.logo);
+  console.log("imgPath :>> ", imgPath);
+  return imgPath;
+};
+getImgPath();
 </script>
 
 <template>
@@ -71,13 +82,16 @@ const openModal = () => {
   >
     <!-- 左侧 -->
     <div class="flex">
-      <div class="rounded-xl xt-theme-b mr-4" style="width: 70px; height: 70px">
-        logo
+      <div
+        class="rounded-xl mr-4 overflow-hidden"
+        style="width: 70px; height: 70px"
+      >
+        <a-avatar shape="square" :size="70" :src="getImgPath()"> </a-avatar>
       </div>
       <div class="flex flex-col justify-center">
         <div>{{ item.name }}</div>
         <div class="xt-text-2 text-sm mt-2">
-         {{ item.description }}
+          {{ item.description }}
         </div>
       </div>
     </div>
