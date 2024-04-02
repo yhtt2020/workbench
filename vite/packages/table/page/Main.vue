@@ -5,8 +5,7 @@
       <!--顶部状态栏      -->
       <TopPanel isHidden="true" v-if="currentNavPosition !== 'top'"></TopPanel>
       <BottomPanel 
-        enter="animate__fadeInUp"
-        leave="animate__fadeOutUp"
+
         v-if="currentNavPosition === 'top' && loaded" 
         :delZone="delZone" @getDelIcon="getDelIcon"
         @hiedNavBar="hiedNavBar" 
@@ -16,7 +15,7 @@
     <div :style="{ margin: fullScreen ? 0 : '-3px', padding: fullScreen ? 0 : '8px' }"
       style="display: flex;flex-grow: 1;flex-shrink: 1;flex-basis: fit-content;overflow: hidden;height: 100%;">
       <AutoHide :enter="'animate__fadeInLeft'" :leave="'animate__fadeOutLeft'">
-        <div v-if="sideVisible"
+        <div v-show="sideVisible"
           style="display: flex;align-content: center;align-items: center;height: 100%">
           <!--左侧栏区域        -->
           <SidePanel sortId="left" :navigationList="sideNavigationList" :sortNavigationList="sortSideNavigationList"
@@ -56,7 +55,7 @@
         </div>
       </Transition>
       <AutoHide :enter="'animate__fadeInRight'" :leave="'animate__fadeOutRight'">
-      <div v-if="rightVisible"
+      <div v-show="rightVisible"
         style="display: flex;align-content: center;align-items: center">
         <!--右侧栏区域        -->
         <SidePanel sortId="right" :navigationList="rightNavigationList" :sortNavigationList="sortRightNavigationList"
