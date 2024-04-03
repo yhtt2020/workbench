@@ -33,6 +33,7 @@ const data = ref({
     },
     defaultIcon:"",
     src:"https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/jmPD-I__T-SMyc-LMzn",
+    value:""
   })
 const emit = defineEmits(['addIcon'])
 
