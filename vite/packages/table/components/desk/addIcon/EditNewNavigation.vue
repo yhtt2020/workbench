@@ -193,8 +193,11 @@ const index = ref(0)
 
 // 禁止添加到桌面以及文件夹中的图标
 const disabledAdd = ref([
-  'commun',
-  'control',
+  // 'commun',
+  // 'control',
+  "效率助手",
+  "控制中心",
+  "社区中心",
 ])  
 
 // 导航栏数据
@@ -447,7 +450,7 @@ const addIcon = (item: object | undefined) => {
     }
   } else {
     // 图标禁止被添加到桌面
-    if (disabledAdd.value.includes(item.value)) {
+    if (disabledAdd.value.includes(item.name)) {
       message.error(`${item.name} 已被禁止添加到桌面`);
       return;
     }
