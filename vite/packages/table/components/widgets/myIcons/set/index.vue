@@ -50,7 +50,7 @@
         <div class="p-4 mb-4 xt-bg-2 rounded-xl">
           <xt-option-info
             title="图标和名称"
-            info="支持自定图标和名称。"
+            info="支持自定义图标和名称。"
             icon="fluent:arrow-clockwise-16-regular"
             @onIconClick="refreshIcon"
           />

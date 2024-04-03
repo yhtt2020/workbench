@@ -20,7 +20,7 @@
       </div>
       <div v-else style="width: 452px">
         <div class="p-4 mb-4 xt-bg-2 rounded-xl">
-          <xt-option-info title="图标和名称" info="支持自定图标和名称。" icon="fluent:arrow-clockwise-16-regular"
+          <xt-option-info title="图标和名称" info="支持自定义图标和名称。" icon="fluent:arrow-clockwise-16-regular"
             @onIconClick="refreshIcon" />
           <xt-option-icon v-model:icon="edit.src" v-model:input="edit.titleValue" />
         </div>
@@ -61,6 +61,9 @@
     mode:'link',
     type:'default',
     radius: 6,
+    imgState:'cover',
+    imgShape:'square',
+    size:'mini',
   })
   const emits = defineEmits(["close", "update:modelValue", "save"]);
   const props = defineProps({
