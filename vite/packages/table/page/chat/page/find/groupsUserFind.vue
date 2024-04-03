@@ -47,7 +47,7 @@
                     <SendMessageButton
                       :uid="item.uid"
                       @send="enterGroup(item)"
-                      style="background: var(--secondary-transp-bg) !important;"
+                      style="background: rgba(80, 139, 254, 0.2) !important;"
                       v-show="item.relationship === 'yes'"
                     />
                   </a-col>

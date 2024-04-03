@@ -22,9 +22,16 @@
     </div> -->
 
     <!-- 通过currentConversation?.type过滤掉好友 -->
-    <div class="flex items-center justify-center" v-if="currentConversation?.type === 'GROUP'">
+    <div
+      class="flex items-center justify-center"
+      v-if="currentConversation?.type === 'GROUP'"
+    >
       <!-- 新增 修改群公告弹窗 -->
-      <xt-button style="width: auto !important; margin-right: 12px" h="0" @click="openManageNotice">
+      <xt-button
+        style="width: auto !important; margin-right: 12px"
+        h="0"
+        @click="openManageNotice"
+      >
         <div class="flex items-center justify-center">
           <xt-ify-icon
             icon="ant-design:sound-outlined"
@@ -45,7 +52,6 @@
       </xt-button>
     </div>
   </div>
-
 </template>
 <script lang="ts" setup>
 import TUIChatEngine, {
@@ -61,13 +67,12 @@ import backSVG from "../../../assets/icon/back.svg";
 import { isPC } from "../../../utils/env";
 import { emit } from "process";
 //  新增 clickNotice clickGroup
-const emits = defineEmits(["closeChat","clickNotice","clickGroup"]);
+const emits = defineEmits(["closeChat", "clickNotice", "clickGroup"]);
 const currentConversation = ref<IConversationModel>();
 const currentConversationName = ref("");
 const typingStatus = ref(false);
 const groupID = ref("");
 const extensions = ref<ExtensionInfo[]>([]);
-
 
 onMounted(() => {
   TUIStore.watch(StoreName.CONV, {
@@ -113,7 +118,13 @@ function onCurrentConversationUpdated(conversation: IConversationModel) {
   }
   currentConversation.value = conversation;
   groupID.value = currentConversation.value?.groupProfile?.groupID;
-  currentConversationName.value = currentConversation?.value?.getShowName();
+  // 清除通过好友列表添加的字样
+  // currentConversationName.value = currentConversation?.value?.getShowName();
+  if (currentConversation?.value?.type === "GROUP") {
+    currentConversationName.value = currentConversation?.value?.groupProfile?.name;
+  } else {
+    currentConversationName.value = currentConversation?.value?.userProfile?.nick;
+  }
 }
 
 function onTypingStatusUpdated(status: boolean) {
@@ -122,20 +133,24 @@ function onTypingStatusUpdated(status: boolean) {
     currentConversationName.value =
       TUITranslateService.t("TUIChat.对方正在输入");
   } else {
-    currentConversationName.value =
-      currentConversation.value?.getShowName() || "";
+    // 清除通过好友列表添加的字样
+    // currentConversationName.value = currentConversation?.value?.getShowName();
+    if (currentConversation?.value?.type === "GROUP") {
+      currentConversationName.value =  currentConversation?.value?.groupProfile?.name;
+    } else {
+      currentConversationName.value = currentConversation?.value?.userProfile?.nick;
+    }
   }
 }
 
 // 新增 开启群公告弹窗
-const openManageNotice = () =>{
-  emits('clickNotice');
+const openManageNotice = () => {
+  emits("clickNotice");
 };
 // 新增 开启群管理
-const openGroupDrawer = () =>{
+const openGroupDrawer = () => {
   emits("clickGroup");
-}
-
+};
 </script>
 <style lang="scss" scoped>
 .chat-header {

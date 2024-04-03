@@ -32,9 +32,19 @@
       >
         <aside class="left">
           <!-- 将conversation.getAvatar()替换成conversation.groupProfile.avatar来实现真实图片展示,从而达到demo图片的替换  -->
+          <!-- 
+            conversation?.type === 'GROUP'是否为群聊,
+            群聊走conversation?.groupProfile?.avatar
+            好友走conversation?.userProfile?.avatar
+            来处理IM自定义的头像
+          -->
           <Avatar
             useSkeletonAnimation
-            :url="conversation?.groupProfile?.avatar"
+            :url="
+              conversation?.type === 'GROUP'
+                ? conversation?.groupProfile?.avatar
+                : conversation?.userProfile?.avatar
+            "
             size="30px"
           />
           <div
@@ -67,7 +77,15 @@
         <div class="content">
           <div class="content-header">
             <label class="content-header-label">
-              <p class="name">{{ conversation.getShowName() }}</p>
+              <!-- 将当前conversation.getShowName()替换好友昵称,群聊昵称 -->
+              <!-- 理由是:会显示出通过好友列表添加这样的字样 -->
+              <p class="name">
+                {{
+                  conversation?.type === "GROUP"
+                    ? conversation?.groupProfile?.name
+                    : conversation?.userProfile?.nick
+                }}
+              </p>
             </label>
             <div class="middle-box">
               <span
