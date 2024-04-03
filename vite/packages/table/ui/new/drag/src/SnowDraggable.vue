@@ -1,7 +1,7 @@
 <template>
   <div
     ref="draggable"
-    style="border: 0px solid red;"
+    style="border: 0px solid red"
     :style="[draggableMode, draggablePos]"
     @mousedown="snowDragStart"
     @touchstart="snowDragStart"
@@ -227,6 +227,7 @@ const draggablePos: any = computed(() => {
   return {
     left: left.value + "px",
     top: top.value + "px",
+    // transform: `translate3d(${left.value}px, ${top.value}px, 0)`,
     zIndex: zIndex.value,
   };
 });

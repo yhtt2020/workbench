@@ -79,7 +79,6 @@ const getImgPath = () => {
     class="xt-bg-2 rounded-xl flex items-center justify-between p-4 mb-4"
     style="height: 102px"
   >
-  {{ item }}
     <!-- 左侧 -->
     <div class="flex">
       <div
