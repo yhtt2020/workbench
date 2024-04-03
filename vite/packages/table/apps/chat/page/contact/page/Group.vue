@@ -62,7 +62,7 @@ import {
   TUIGroupService,
 } from "@tencentcloud/chat-uikit-engine";
 
-import GroupUserSelect from "../components/GroupUserSelect.vue";
+import GroupUserSelect from "../../../components/create/CreateGroupSession.vue";
 import GroupInfo from "../components/GroupInfo.vue";
 
 const chat = window.$chat.chat;
@@ -82,7 +82,7 @@ const groupInfoRef = ref(null);
 const currentGroupInfo = ref({});
 // 创建群聊
 const createGroup = () => {
-  groupCreateRef.value.openGroupCreate();
+  groupCreateRef.value.openCreateGroupSession();
 };
 // 查看当前群聊信息
 const handleCheckInfo = async(item) => {
