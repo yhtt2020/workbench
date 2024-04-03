@@ -48,12 +48,13 @@
       >
         <!-- 头部左侧 -->
         <div class="flex items-center flex-1" style="height: 28px">
-          <div
-            class="flex items-center h-full"
-            @click="leftClick"
-            @mouseenter="leftMouseEnter"
-            @mouseleave="leftMouseLeave"
-            :class="[
+          <slot name="header-left">
+            <div
+              class="flex items-center h-full"
+              @click="leftClick"
+              @mouseenter="leftMouseEnter"
+              @mouseleave="leftMouseLeave"
+              :class="[
               leftHover ? 'header-open cursor-pointer' : 'header-default',
             ]"
           >
@@ -95,12 +96,13 @@
               @mouseleave="titleMouseLeave"
               style="z-index: 999;"
               :class="{ 'header-title': titleHover ,'pointer':true}"
-            >
-              <slot name="title"> {{ title }} </slot>
+              >
+                <slot name="title"> {{ title }} </slot>
+              </div>
+              <!-- 头部左侧扩展区域 -->
+              <slot name="left-extend"></slot>
             </div>
-            <!-- 头部左侧扩展区域 -->
-            <slot name="left-extend"></slot>
-          </div>
+          </slot>
         </div>
         <!-- 头部右侧 -->
         <div class="flex items-center header-right" style="padding-right: 14px">
@@ -307,7 +309,7 @@ const props = defineProps({
         // 开启后所有事件相关提示信息会进行输出
         debug: false,
         // 是否开启下拉菜单右侧还是左侧显示
-        rightMenuVisible:false,
+        rightMenuVisible: false,
         // 是否禁用标题拖拽
         disabledDrag: false,
       };

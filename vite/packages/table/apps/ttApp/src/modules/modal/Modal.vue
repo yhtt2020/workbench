@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onBeforeMount, computed } from "vue";
+import { ref, onBeforeMount, computed, watch } from "vue";
 import { storeToRefs } from "pinia";
 import WuJie from "../wujie/WuJie.vue";
 
@@ -12,8 +12,11 @@ const modalRef: any = ref(null);
 
 const data: any = ref();
 const url = ref();
-onBeforeMount(() => {
-  // 开始加载
+
+/** 初始化方法 */
+const init = () => {
+  // 开始
+  loading.value = true;
   let res = ttappStore.select(modal.value.id);
 
   if (!res) {
@@ -24,12 +27,11 @@ onBeforeMount(() => {
     modal: res.modules.main,
   };
   const main = res?.modules?.main;
-  console.log("res :>> ", data.value);
 
   url.value = `tsbapp://${data.value.id}/${main.entry}`;
-  // 加载完成
+  // 完成
   loading.value = false;
-});
+};
 
 /** 刷新 */
 const loading = ref(true);
@@ -66,6 +68,21 @@ const close = () => {
 };
 const headerImg = computed(() => {
   return getAppImg(data.value.id, data.value.logo);
+});
+
+watch(
+  () => modal.value?.id,
+  () => {
+    // console.log("123231 :>> ", 123231);
+    console.log('modal.value?.id, :>> ', 2222);
+    init()
+  },{
+    deep:true
+  }
+);
+onBeforeMount(() => {
+  console.log("222 :>> ", 222);
+  init();
 });
 </script>
 
