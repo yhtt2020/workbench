@@ -53,7 +53,6 @@
             @click="leftClick"
             @mouseenter="leftMouseEnter"
             @mouseleave="leftMouseLeave"
-            style=""
             :class="[
               leftHover ? 'header-open cursor-pointer' : 'header-default',
             ]"
@@ -94,7 +93,8 @@
               @click="titleClick"
               @mouseenter="titleMouseEnter"
               @mouseleave="titleMouseLeave"
-              :class="{ 'header-title': titleHover }"
+              style="z-index: 999;"
+              :class="{ 'header-title': titleHover ,'pointer':true}"
             >
               <slot name="title"> {{ title }} </slot>
             </div>
