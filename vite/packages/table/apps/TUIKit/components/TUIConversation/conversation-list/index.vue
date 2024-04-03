@@ -31,9 +31,10 @@
         "
       >
         <aside class="left">
+          <!-- 将conversation.getAvatar()替换成conversation.groupProfile.avatar来实现真实图片展示,从而达到demo图片的替换  -->
           <Avatar
             useSkeletonAnimation
-            :url="conversation.getAvatar()"
+            :url="conversation?.groupProfile?.avatar"
             size="30px"
           />
           <div

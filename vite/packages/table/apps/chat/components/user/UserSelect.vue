@@ -40,7 +40,7 @@
       <div class="flex flex-col mt-4">
         <div class="flex items-center justify-between w-full mb-4">
           <span class="font-14 xt-text">最近聊天</span>
-          <a-checkbox v-model:checked="currentChecked">全选</a-checkbox>
+          <a-checkbox v-model:checked="currentChecked" v-if="isRadio">全选</a-checkbox>
         </div>
         <xt-scrollbar :y="true" style="height: 304px">
           <div class="flex flex-col">
@@ -144,8 +144,13 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  // 区分单选多选
+  isRadio:{
+    type: Boolean,
+    default: true,
+  }
 });
-const { currentLeftList } = toRefs(props);
+const { currentLeftList,isRadio } = toRefs(props);
 
 const currentList = ref([]);
 // 右侧选中列表
@@ -189,13 +194,23 @@ watchEffect(() => {
 
 // 实现选中功能
 const selectForward = (item) => {
-  const index = _.findIndex(currentRightList.value, function (findItem) {
-    return findItem?.userID === item?.userID;
-  });
-  if (index > -1) {
-    currentRightList.value.splice(index, 1);
-  } else {
-    currentRightList.value.push(item);
+  if(isRadio.value){
+    const index = _.findIndex(currentRightList.value, function (findItem) {
+      return findItem?.userID === item?.userID;
+    });
+    if (index > -1) {
+      currentRightList.value.splice(index, 1);
+    } else {
+      currentRightList.value.push(item);
+    }
+  }
+  else {
+    const index = _.findIndex(currentRightList.value, function (findItem) {
+      return findItem?.userID === item?.userID;
+    });
+    if (index === -1 && currentRightList.value.length < 1) {
+      currentRightList.value.push(item);
+    }
   }
 };
 const isSelect = (index) => {
@@ -219,7 +234,13 @@ const handleClose = () => {
 };
 // 确定转发
 const handleForward = () => {
-  emit("forward", currentRightList.value);
+  // emit("forward", currentRightList.value);
+  if(isRadio.value){
+    emit("forward", currentRightList.value);
+  }
+  else {
+    emit("forward", currentRightList.value[0]);
+  }
 };
 </script>
 

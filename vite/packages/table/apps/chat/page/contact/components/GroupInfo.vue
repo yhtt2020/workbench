@@ -17,9 +17,9 @@
         <div class="flex justify-between">
           <span class="xt-font xt-text font-16">群ID</span>
           <div class="flex items-center">
-            <span class="xt-text-2 xt-font font-14 mr-2">{{
-              info.groupID
-            }}</span>
+            <span class="xt-text-2 xt-font font-14 mr-2">
+              {{  info.groupID }}
+            </span>
             <xt-button
               h="0"
               style="width: auto !important"
@@ -37,15 +37,15 @@
         </div>
         <div class="flex justify-between my-3">
           <span class="xt-font xt-text font-16">群类型</span>
-          <span class="xt-text-2 xt-font font-14">{{
-            getTypeName(info.type)
-          }}</span>
+          <span class="xt-text-2 xt-font font-14">
+            {{ getTypeName(info.type) }}
+          </span>
         </div>
         <div class="flex justify-between mb-3">
           <span class="xt-font xt-text font-16">加群方式</span>
-          <span class="xt-text-2 xt-font font-14">{{
-            joinName(info.joinOption)
-          }}</span>
+          <span class="xt-text-2 xt-font font-14">
+            {{  joinName(info.joinOption)}}
+          </span>
         </div>
         <div class="flex justify-between">
           <span class="xt-font xt-text font-16">群人数</span>
@@ -107,6 +107,8 @@
       </div>
     </div>
   </xt-modal>
+
+  <TransferGroupAdmin ref="transferRef" :groupID="info.groupID" @close="infoVisible =  false"/>
 </template>
 
 <script setup>
@@ -117,6 +119,8 @@ import { getTypeName, joinName } from "../../../hooks/groupType";
 import { TUIConversationService,TUIGroupService } from "@tencentcloud/chat-uikit-engine";
 import { useRouter } from "vue-router";
 
+import TransferGroupAdmin from "./TransferGroupAdmin.vue";
+
 const router = useRouter();
 
 const props = defineProps({
@@ -126,6 +130,8 @@ const props = defineProps({
   },
 });
 const { info } = toRefs(props);
+
+const transferRef = ref(null);
 
 // 开启群基础信息查看弹窗
 const infoVisible = ref(false);
@@ -156,7 +162,9 @@ const exitGroup = async () => {
   }
 };
 // 转让群聊
-const transferGroup = () => {};
+const transferGroup = () => {
+  transferRef.value.openTransfer();
+};
 // 解散群聊
 const dissolveGroup = async() => {
   const res = await TUIGroupService.dismissGroup(info.value.groupID)
