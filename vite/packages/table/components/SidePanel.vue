@@ -8,52 +8,80 @@
       <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:customSize="updateSize"
         @close="folderVisible = false" :customData="customData" :customIndex="sideKey" :secondary="true"
         v-if="folderVisible" :expand="{ disabled: true }" :navBar="{
-    resize: false,
-    sizeOption: false,
-    isDel: true,
-    hierarchy: true,
-    close: true
-  }" :auto="true" />
+          resize: false,
+          sizeOption: false,
+          isDel: true,
+          hierarchy: true,
+          close: true
+        }" :auto="true" />
     </div>
     <!-- <AutoHide> -->
-    <Drop @createFile="createFile" :currentId="sortId" :dropClass="'w-full max-h-full'">
-      <div v-if="false"
-        style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:150px">
-        <div>选中的id{{ hoverIndex }}</div>
-        <div v-for="( item, index) in navigationList" style="margin-bottom: 5px;border-bottom: 4px solid white">
-          {{ index }} {{ item.name }} {{ item.id }} {{ item.children?.length }}
-        </div>
-      </div>
+    <Drop 
+      @createFile="createFile" 
+      :currentId="sortId" 
+      :dropClass="'w-full max-h-full'">
       <transition>
         <div v-if="hoverIndex > -1 && hoverRealItemId(this.sortId, this.hoverIndex) !== dragItem?.id" :style="mergeTag"
           style="position: absolute;z-index:99999999999;top:50%;transform: translateY(-50%) translateX(-100%);writing-mode: vertical-rl;"
           class="px-3 py-10 rounded-lg s-bg xt-text">松开鼠标合并</div>
       </transition>
-      <div @click.stop :id="currentId" style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
+      <div 
+        @click.stop 
+        :id="currentId" 
+        style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
         class="flex flex-row justify-center box common-panel s-bg w-[80px]  xt-bg pt-0 pb-0 relative max-h-full side-bar"
-        ref="sideContent" @contextmenu="showMenu"
-        :style="{ zoom: `${(this.navAttribute.navSize / 100)}`, borderRadius: this.navAttribute.navRadius + 'px' }">
-        <div style="width: 52px;margin-top: 20px;margin-bottom: 20px;" class="w-full">
+        ref="sideContent" 
+        @contextmenu="showMenu"
+        :style="[
+          { 
+            zoom: `${(this.navAttribute.navSize / 100)}`,
+             borderRadius: this.navAttribute.navRadius + 'px'
+          },
+          this.state ? this.fixedPosition : '']"
+        >
+        <div 
+          style="width: 52px;margin-top: 20px;margin-bottom: 20px;" 
+          class="w-full">
           <div :id="sortId" :key="sideKey"
-            class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container" style="
+            class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container" 
+            style="
               width: 56px;
               display: flex;
               flex-direction: column;
               overflow: hidden;
               align-items: flex-start;
               gap: 20px;">
-            <a-tooltip v-for="(item, index) in navigationList" :key="item.id" :title="item.name"
-              :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }" @mouseenter="showElement(item, index)"
+            <a-tooltip 
+              v-for="(item, index) in navigationList" 
+              :key="item.id" 
+              :title="item.name"
+              :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }" 
+              @mouseenter="showElement(item, index)"
               :placement="sortId === 'left' ? 'right' : 'left'">
               <!-- 左右导航栏隐藏入口 -->
               <xt-menu :menus="folderOptions" :id="item.id" class="relative flex-shrink-0 item-content">
-                <div v-if="!(this.isOffline && this.navList.includes(item.event))" class="item-content item-nav"
-                  @click="newOpenApp(item)" @dragover="onDrag" @dragend="hoverIndex = -1" :class="{
-    'active-back': current(item),
-    hover: (dragItem && item.id === hoverRealItemId(this.sortId, this.hoverIndex) && dragItem?.id !== hoverRealItemId(this.sortId, this.hoverIndex))
-  }" :style="{ borderRadius: this.iconRadius + 'px' }">
-                  <Drag :data="item" :currentId="sortId" @deleteFile="deleteFile">
-                    <NavIcon :size="54" :item="item" :community="community"></NavIcon>
+                <div 
+                  v-if="!(this.isOffline && this.navList.includes(item.event))" 
+                  class="item-content item-nav"
+                  @click="newOpenApp(item)" 
+                  @dragover="onDrag" 
+                  @dragend="hoverIndex = -1" 
+                  :class="{
+                    'active-back': current(item),
+                    hover: 
+                    (dragItem && item.id === hoverRealItemId(this.sortId, this.hoverIndex) && 
+                    dragItem?.id !== hoverRealItemId(this.sortId, this.hoverIndex))
+                  }" 
+                  :style="{ borderRadius: this.iconRadius + 'px' }">
+                  <Drag 
+                    :data="item" 
+                    :currentId="sortId" 
+                    @deleteFile="deleteFile">
+                    <NavIcon 
+                      :size="54" 
+                      :item="item" 
+                      :community="community">
+                    </NavIcon>
                   </Drag>
                 </div>
               </xt-menu>
@@ -393,6 +421,12 @@ export default {
         },
       ]
 
+    },
+    fixedPosition() {
+      if(this.sortId === 'left'){
+        return 'position: fixed;left: 10px;top: 50%;transform: translateY(-50%);z-index:999;'
+      }
+      return 'position: fixed;right: 10px;top: 50%;transform: translateY(-50%);z-index:999;'
     },
     // 社区中心参数
     community() {

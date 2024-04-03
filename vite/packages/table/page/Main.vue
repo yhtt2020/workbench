@@ -4,8 +4,11 @@
     <div v-if="!fullScreen" style="height: auto;flex: 0">
       <!--顶部状态栏      -->
       <TopPanel isHidden="true" v-if="currentNavPosition !== 'top'"></TopPanel>
-      <BottomPanel v-if="currentNavPosition === 'top' && loaded" :delZone="delZone" @getDelIcon="getDelIcon"
-        @hiedNavBar="hiedNavBar" :mainClass="'top-20 right-6'">
+      <BottomPanel 
+        v-if="currentNavPosition === 'top' && loaded" :delZone="delZone" 
+        @getDelIcon="getDelIcon"
+        @hiedNavBar="hiedNavBar" 
+        :mainClass="'top-20 right-6'">
       </BottomPanel>
     </div>
     <div :style="{ margin: fullScreen ? 0 : '-3px', padding: fullScreen ? 0 : '8px' }"
@@ -14,7 +17,11 @@
         :enter="'animate__fadeInLeft'" 
         :leave="'animate__fadeOutLeft'" 
         :auto-hide-nav="this.autoHideNav.left.state">
-        <div ref="leftPanel" v-show="sideVisible" style="display: flex;align-content: center;align-items: center;height: 100%">
+        <div 
+          ref="leftPanel" 
+          v-show="sideVisible" 
+          style="display: flex;align-content: center;align-items: center;height: 100%"
+          >
           <!--左侧栏区域        -->
           <SidePanel 
             sortId="left" 
@@ -67,7 +74,14 @@
         :enter="'animate__fadeInRight'" 
         :leave="'animate__fadeOutRight'" 
         :auto-hide-nav="this.autoHideNav.right.state">
-        <div ref="rightPanel" v-show="rightVisible" style="display: flex;align-content: center;align-items: center">
+        <div 
+          ref="rightPanel" 
+          v-show="rightVisible" 
+          style="
+            display: flex;
+            align-content: center;
+            align-items: center"
+          >
           <!--右侧栏区域        -->
           <SidePanel 
             sortId="right" 
@@ -84,9 +98,13 @@
         </div>
       </AutoHide>
     </div>
-    <div style="flex: 0;">
-      <BottomPanel v-if="!fullScreen && loaded && currentNavPosition === 'bottom'" :delZone="delZone"
-        @getDelIcon="getDelIcon" @hiedNavBar="hiedNavBar" :mainClass="'bottom-20 right-6'">
+    <div style="flex: 0;" id="bottom-panel">
+      <BottomPanel 
+        v-if="!fullScreen && loaded && currentNavPosition === 'bottom'" 
+        :delZone="delZone"
+        @getDelIcon="getDelIcon" 
+        @hiedNavBar="hiedNavBar" 
+        :mainClass="'bottom-20 right-6'">
       </BottomPanel>
     </div>
   </div>
