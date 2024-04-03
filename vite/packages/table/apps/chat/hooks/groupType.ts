@@ -29,11 +29,11 @@ export const joinName = (type:any) =>{
 // 邀请方式名称
 export const inviteName = (type:any) =>{
  switch (type) {
-  case TUIChatEngine.TYPES.JOIN_OPTIONS_FREE_ACCESS:
+  case TUIChatEngine.TYPES.INVITE_OPTIONS_FREE_ACCESS:
    return '自由邀请';
-  case TUIChatEngine.TYPES.JOIN_OPTIONS_NEED_PERMISSION:
+  case TUIChatEngine.TYPES.INVITE_OPTIONS_NEED_PERMISSION:
    return '需要验证';
-  case TUIChatEngine.TYPES.JOIN_OPTIONS_DISABLE_APPLY:
+  case TUIChatEngine.TYPES.INVITE_OPTIONS_DISABLE_INVITE:
    return '禁止邀请';
  }
 }

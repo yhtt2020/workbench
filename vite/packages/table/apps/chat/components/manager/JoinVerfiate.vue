@@ -1,97 +1,62 @@
-<!-- 群聊加入方式修改页面 -->
 <template>
- <!-- <RadioTab :navList="dataType" v-model:selectType="defaultType"></RadioTab> -->
+  <xt-modal v-if="joinVisible" v-model="joinVisible" title="加群方式" :index="1650" :maskIndex="1640">
+    <div style="width: 500px;" class="mt-4">
+      <xt-option-tab  :list="joinTab" v-model="join" circle style="height: 40px;" />
+    </div>
+  </xt-modal>
 </template>
 
-<script>
-import { defineComponent,watch,reactive,toRefs } from 'vue'
-// import RadioTab from "../../../../../components/RadioTab.vue";
-import _ from "lodash-es";
-import { message } from "ant-design-vue";
+<script setup>
+import { nextTick, onMounted, ref, toRefs,watch } from "vue";
+import TUIChatEngine from "@tencentcloud/chat-uikit-engine";
 
-export default defineComponent({
- components:{
-  // RadioTab
- },
- props: ["updateGroupInfo"],
+const emit = defineEmits(['update']);
 
- setup(props,ctx){
-  const types = window.$TUIKit.TIM.TYPES
-
-  const data = reactive({
-   dataType:[
-    {title:'需要验证',name:types.JOIN_OPTIONS_NEED_PERMISSION},
-    {title:'自由邀请',name:types.JOIN_OPTIONS_FREE_ACCESS},
-    {title:'禁止加群',name:types.JOIN_OPTIONS_DISABLE_APPLY}
-   ],
-   defaultType:{title:props.updateGroupInfo.title,name:props.updateGroupInfo.conversation.joinOption}
-  })
-
-  watch(()=>data.defaultType,(newVal)=>{
-   data.defaultType = newVal
-   updateGroupJoin(newVal)
-  })
-
-  const updateGroupJoin = (newVal) =>{
-   const options = {
-    groupID:props.updateGroupInfo.groupID,
-    joinOption:newVal.name,
-   }
-   
-   window.$chat.updateGroupProfile(options).then(res=>{
-    try {
-     if(res.code === 0){
-      message.success('加群方式修改成功')
-      ctx.emit('updateGroupInfo')
-      ctx.emit('close')
-     }
-    } catch (error) {
-     console.warn(error)
-    }
-    
-   })
-
+const props = defineProps({
+  currentJoin:{
+    type:String,
+    required: true,
   }
-
-  return{
-   ...toRefs(data),updateGroupJoin,
-  }
- }
-
 })
-// export default {
-//  
+const {currentJoin} = toRefs(props);
 
-//  
+const joinTab  = ref([
+  {
+    value:TUIChatEngine.TYPES.JOIN_OPTIONS_FREE_ACCESS,
+    name:'自由加入',
+  },
+  {
+    value:TUIChatEngine.TYPES.JOIN_OPTIONS_NEED_PERMISSION,
+    name:'需要验证',
+  },
+  {
+    value:TUIChatEngine.TYPES.JOIN_OPTIONS_DISABLE_APPLY,
+    name:'禁止加入'
+  },
+])
+const join = ref('');
 
-//  data() {
-//   return {
-   
-//   };
-//  },
+// 开启加群方式设置弹窗
+const joinVisible = ref(false);
+const openJoinModal = () => {
+  joinVisible.value = true;
+  nextTick(()=>{
+    join.value = currentJoin.value;
+  })
+};
 
-//  watch:{
-//   'defaultType':{
-//    async handler(newVal){
-//     this.defaultType = newVal
-//     const options = { 
-//     
-//      inviteOption:this.defaultType.name,
-//      joinOption:this.defaultType.name,
-//     }
+// 监听当前加入方式修改状态
+watch(()=>join.value,(newVal)=>{
+  // console.log('测试',newVal);
+  emit('update',newVal);
+})
 
-//     const res = await window.$chat.updateGroupProfile(options)
+defineExpose({
+ openJoinModal,
+ joinVisible,
+})
 
-//     if(res.code === 0){
-//      message.success('群聊加群方式已修改')
-//     }
-//    },
-//    immediate:true,
-//   }
-//  }
-
-// }
 </script>
 
-<style lang="sass" scoped>
+<style lang="scss" scoped>
 </style>

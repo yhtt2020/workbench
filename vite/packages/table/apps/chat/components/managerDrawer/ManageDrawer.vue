@@ -196,6 +196,7 @@
                 h="0"
                 style="width: auto !important"
                 v-if="manageInfo.role !== 'Member'"
+                @click="joinDrawer"
               >
                 <div class="flex items-center justify-center">
                   <xt-ify-icon
@@ -213,12 +214,13 @@
             <span class="xt-text xt-font font-16">邀请方式</span>
             <div class="flex items-center justify-center">
               <span class="xt-text-2 xt-font font-14">
-                {{ inviteName(manageInfo.join) }}
+                {{ inviteName(manageInfo.invite) }}
               </span>
               <xt-button
                 h="0"
                 style="width: auto !important"
                 v-if="manageInfo.role !== 'Member'"
+                @click="inviteDrawer"
               >
                 <div class="flex items-center justify-center">
                   <xt-ify-icon
@@ -242,7 +244,7 @@
             style="border-radius: 8px; background: var(--error) !important"
             @click="quitGroup"
           >
-          退出群聊
+            退出群聊
           </xt-button>
         </div>
       </template>
@@ -312,7 +314,16 @@
     @updateMuteAllMembers="updateGroupManager"
   />
 
+  <!-- 修改加群方式 -->
+  <JoinVerfiate
+    ref="joinRef"
+    :currentJoin="manageInfo.join"
+    @update="updateJoin"
+  />
 
+  <!-- 修改邀请方式 -->
+  <InviteVerfiacte ref="inviteRef" :currentInvite="manageInfo.invite" @update="updateInvite"/>
+  <!-- invite -->
 </template>
 
 <script setup>
@@ -338,6 +349,10 @@ import MemberDrawer from "../manager/GroupMemeber.vue";
 import AddMember from "../manager/AddMember.vue";
 import DeleteUserSelect from "../manager/DeleteMember.vue";
 import GroupManage from "../manager/GroupManage.vue";
+import JoinVerfiate from "../manager/JoinVerfiate.vue";
+import InviteVerfiacte from "../manager/InviteVerfiacte.vue";
+
+const chat = window.$chat.chat;
 
 const props = defineProps({
   groupID: {
@@ -355,36 +370,44 @@ const memberRef = ref(null);
 const userSelectRef = ref(null);
 const deleteUserSelectRef = ref(null);
 const updateManageRef = ref(null);
+const joinRef = ref(null);
+const inviteRef = ref(null);
+
 // 当前群成员列表
 const currentMemberList = ref([]);
 // 好友添加成为群成员列表
 const addMemberList = ref([]);
+
+// 初始化数据
+const initManageData = () => {
+  TUIStore.watch(StoreName.CONV, {
+    currentConversation: (data) => {
+      const { groupProfile } = data;
+      console.log("groupProfile", groupProfile);
+      manageInfo.value.avatar = groupProfile?.avatar;
+      manageInfo.value.groupName = groupProfile?.name;
+      manageInfo.value.groupID = groupProfile?.groupID;
+      manageInfo.value.role = groupProfile?.selfInfo?.role;
+      manageInfo.value.notification = groupProfile?.notification;
+      manageInfo.value.type = groupProfile?.type;
+      manageInfo.value.join = groupProfile?.joinOption;
+      manageInfo.value.invite = groupProfile?.inviteOption;
+      manageInfo.value.muteAllMembers = groupProfile?.muteAllMembers;
+    },
+  });
+  TUIStore.watch(StoreName.GRP, {
+    currentGroupMemberList: (data) => {
+      currentMemberList.value = sortMembers(data);
+    },
+  });
+};
 
 // 开启群基础信息修改弹窗
 const manageVisible = ref(false);
 const openManageDrawer = () => {
   manageVisible.value = true;
   nextTick(() => {
-    TUIStore.watch(StoreName.CONV, {
-      currentConversation: (data) => {
-        const { groupProfile } = data;
-        console.log("groupProfile", groupProfile);
-        manageInfo.value.avatar = groupProfile?.avatar;
-        manageInfo.value.groupName = groupProfile?.name;
-        manageInfo.value.groupID = groupProfile?.groupID;
-        manageInfo.value.role = groupProfile?.selfInfo?.role;
-        manageInfo.value.notification = groupProfile?.notification;
-        manageInfo.value.type = groupProfile?.type;
-        manageInfo.value.join = groupProfile?.joinOption;
-        manageInfo.value.invite = groupProfile?.inviteOption;
-        manageInfo.value.muteAllMembers = groupProfile?.muteAllMembers;
-      },
-    });
-    TUIStore.watch(StoreName.GRP, {
-      currentGroupMemberList: (data) => {
-        currentMemberList.value = sortMembers(data);
-      },
-    });
+    initManageData();
   });
 };
 
@@ -444,22 +467,62 @@ const openGroupManage = () => {
 };
 
 // 解散群聊
-const dissolveGroup = async() =>{
-  const res = await TUIGroupService.dismissGroup(manageInfo.value.groupID)
-  if(res.code === 0){
+const dissolveGroup = async () => {
+  const res = await TUIGroupService.dismissGroup(manageInfo.value.groupID);
+  if (res.code === 0) {
     message.success("解散群聊成功");
     manageVisible.value = false;
   }
 };
 // 退出群聊
-const quitGroup = async() =>{
-  const res = await TUIGroupService.quitGroup(manageInfo.value.groupID)
-  if(res.code === 0){
+const quitGroup = async () => {
+  const res = await TUIGroupService.quitGroup(manageInfo.value.groupID);
+  if (res.code === 0) {
     message.success("群聊退出成功");
     manageVisible.value = false;
   }
 };
 
+// 开启修改加群验证方式的弹窗
+const joinDrawer = () => {
+  joinRef.value.openJoinModal();
+};
+// 开启修改群邀请方式的弹窗
+const inviteDrawer = () =>{
+  inviteRef.value.openInviteModal()
+}
+
+
+// 更新加入方式
+const updateJoin = async (data) => {
+  const options = {
+    groupID: manageInfo.value.groupID,
+    joinOption: data,
+  };
+  const res = await chat.updateGroupProfile(options);
+  // console.log("更新", res);
+  if (res.code === 0) {
+    const { group } = res.data
+    manageInfo.value.join = group.joinOption;
+    message.success("加群方式修改成功");
+    joinRef.value.joinVisible = false;
+  }
+};
+
+// 更新邀请方式
+const updateInvite = async (data) =>{
+  const options = {
+    groupID: manageInfo.value.groupID,
+    inviteOption: data,
+  };
+  const res = await chat.updateGroupProfile(options);
+  if (res.code === 0) {
+    const { group } = res.data
+    manageInfo.value.invite = group.inviteOption;
+    message.success("邀请方式修改成功");
+    inviteRef.value.inviteVisible = false;
+  }
+}
 
 defineExpose({
   openManageDrawer,
