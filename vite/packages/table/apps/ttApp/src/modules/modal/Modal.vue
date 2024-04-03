@@ -26,7 +26,7 @@ onBeforeMount(() => {
   const main = res?.modules?.main;
   console.log("res :>> ", data.value);
 
-  url.value = `ttapp://${data.value.id}/${main.entry}`;
+  url.value = `tsbapp://${data.value.id}/${main.entry}`;
   // 加载完成
   loading.value = false;
 });

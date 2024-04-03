@@ -33,9 +33,6 @@ const plugins = (iframeWindow: any) => {
     ref="wujie"
     :name="name"
     :url="url"
-    :attrs="{
-      src: url,
-    }"
     :plugins="[
       {
         jsBeforeLoaders: [
