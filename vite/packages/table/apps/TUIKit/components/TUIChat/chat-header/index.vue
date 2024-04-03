@@ -10,38 +10,39 @@
     <div :class="['chat-header-content', !isPC && 'chat-header-h5-content']">
       {{ currentConversationName }}
     </div>
-    <div :class="['chat-header-setting', !isPC && 'chat-header-h5-setting']">
-      <!-- 新增 调整群管理页面 -->
-      <!-- <div
+    <!-- <div :class="['chat-header-setting', !isPC && 'chat-header-h5-setting']">
+      新增 调整群管理页面
+      <div
         v-for="(item, index) in extensions"
         :key="index"
         @click.stop="handleExtensions(item)"
       >
         <Icon :file="item.icon" />
-      </div> -->
-
-      <div class="flex items-center justify-center">
-        <!-- 新增 修改群公告弹窗 -->
-        <xt-button style="width: auto !important; margin-right: 12px" h="0" @click="openManageNotice">
-          <div class="flex items-center justify-center">
-            <xt-ify-icon
-              icon="ant-design:sound-outlined"
-              size="16"
-              class="xt-text-2"
-            />
-          </div>
-        </xt-button>
-        <!-- 新增 开启群管理页面 -->
-        <xt-button style="width: auto !important" h="0" @click="openGroupDrawer">
-          <div class="flex items-center justify-center">
-            <xt-ify-icon
-              icon="fluent:more-horizontal-16-regular"
-              class="xt-text-2"
-              size="24"
-            />
-          </div>
-        </xt-button>
       </div>
+    </div> -->
+
+    <!-- 通过currentConversation?.type过滤掉好友 -->
+    <div class="flex items-center justify-center" v-if="currentConversation?.type === 'GROUP'">
+      <!-- 新增 修改群公告弹窗 -->
+      <xt-button style="width: auto !important; margin-right: 12px" h="0" @click="openManageNotice">
+        <div class="flex items-center justify-center">
+          <xt-ify-icon
+            icon="ant-design:sound-outlined"
+            size="16"
+            class="xt-text-2"
+          />
+        </div>
+      </xt-button>
+      <!-- 新增 开启群管理页面 -->
+      <xt-button style="width: auto !important" h="0" @click="openGroupDrawer">
+        <div class="flex items-center justify-center">
+          <xt-ify-icon
+            icon="fluent:more-horizontal-16-regular"
+            class="xt-text-2"
+            size="24"
+          />
+        </div>
+      </xt-button>
     </div>
   </div>
 
