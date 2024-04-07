@@ -50,7 +50,7 @@
           ></xt-ify-icon>
         </div>
         <span class="w-full xt-text-2 xt-font font-14">
-          {{ manageInfo.notification }}
+          {{ manageInfo.notification !== '' ? manageInfo.notification : '暂无群公告' }}
         </span>
       </div>
 
@@ -61,11 +61,14 @@
           @click="openManageMember"
         >
           <span class="xt-text font-16 xt-font">群成员</span>
-          <xt-ify-icon
-            icon="fluent:chevron-right-28-regular"
-            class="xt-text-2"
-            size="20"
-          ></xt-ify-icon>
+          <div class="flex">
+            <span class="xt-text-2 xt-font font-14">{{ currentMemberList.length }}人</span>
+            <xt-ify-icon
+              icon="fluent:chevron-right-28-regular"
+              class="xt-text-2"
+              size="20"
+            />
+          </div>
         </div>
         <div class="flex w-full">
           <!-- 不具备管理员权限 -->
@@ -322,8 +325,11 @@
   />
 
   <!-- 修改邀请方式 -->
-  <InviteVerfiacte ref="inviteRef" :currentInvite="manageInfo.invite" @update="updateInvite"/>
-  <!-- invite -->
+  <InviteVerfiacte
+    ref="inviteRef"
+    :currentInvite="manageInfo.invite"
+    @update="updateInvite"
+  />
 </template>
 
 <script setup>
@@ -382,17 +388,16 @@ const addMemberList = ref([]);
 const initManageData = () => {
   TUIStore.watch(StoreName.CONV, {
     currentConversation: (data) => {
-      const { groupProfile } = data;
-      console.log("groupProfile", groupProfile);
-      manageInfo.value.avatar = groupProfile?.avatar;
-      manageInfo.value.groupName = groupProfile?.name;
-      manageInfo.value.groupID = groupProfile?.groupID;
-      manageInfo.value.role = groupProfile?.selfInfo?.role;
-      manageInfo.value.notification = groupProfile?.notification;
-      manageInfo.value.type = groupProfile?.type;
-      manageInfo.value.join = groupProfile?.joinOption;
-      manageInfo.value.invite = groupProfile?.inviteOption;
-      manageInfo.value.muteAllMembers = groupProfile?.muteAllMembers;
+      const groupProfile = data?.groupProfile;
+      manageInfo.value.avatar = groupProfile.avatar;
+      manageInfo.value.groupName = groupProfile.name;
+      manageInfo.value.groupID = groupProfile.groupID;
+      manageInfo.value.role = groupProfile.selfInfo?.role;
+      manageInfo.value.notification = groupProfile.notification;
+      manageInfo.value.type = groupProfile.type;
+      manageInfo.value.join = groupProfile.joinOption;
+      manageInfo.value.invite = groupProfile.inviteOption;
+      manageInfo.value.muteAllMembers = groupProfile.muteAllMembers;
     },
   });
   TUIStore.watch(StoreName.GRP, {
@@ -488,10 +493,9 @@ const joinDrawer = () => {
   joinRef.value.openJoinModal();
 };
 // 开启修改群邀请方式的弹窗
-const inviteDrawer = () =>{
-  inviteRef.value.openInviteModal()
-}
-
+const inviteDrawer = () => {
+  inviteRef.value.openInviteModal();
+};
 
 // 更新加入方式
 const updateJoin = async (data) => {
@@ -502,7 +506,7 @@ const updateJoin = async (data) => {
   const res = await chat.updateGroupProfile(options);
   // console.log("更新", res);
   if (res.code === 0) {
-    const { group } = res.data
+    const { group } = res.data;
     manageInfo.value.join = group.joinOption;
     message.success("加群方式修改成功");
     joinRef.value.joinVisible = false;
@@ -510,19 +514,19 @@ const updateJoin = async (data) => {
 };
 
 // 更新邀请方式
-const updateInvite = async (data) =>{
+const updateInvite = async (data) => {
   const options = {
     groupID: manageInfo.value.groupID,
     inviteOption: data,
   };
   const res = await chat.updateGroupProfile(options);
   if (res.code === 0) {
-    const { group } = res.data
+    const { group } = res.data;
     manageInfo.value.invite = group.inviteOption;
     message.success("邀请方式修改成功");
     inviteRef.value.inviteVisible = false;
   }
-}
+};
 
 defineExpose({
   openManageDrawer,

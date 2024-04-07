@@ -48,22 +48,25 @@ const openMemberModal = () => {
 };
 
 // 添加成员
-const addMember = async (list) => {
+const addMember = (list) => {
   const userIDList = list.map((item) => item.userID);
   const option = {
     groupID: groupID.value,
     userIDList,
   };
-  const res = await TUIGroupService.addGroupMember(option);
-  if (res.code === 0) {
-    memberVisible.value = false;
-    message.success("添加成功");
-    TUIStore.watch(StoreName.GRP, {
-      currentGroupMemberList: (data) => {
-        emit("update", sortMembers(data));
-      },
-    });
-  }
+  TUIGroupService.addGroupMember(option).then((res) => {
+    if (res.code === 0) {
+      memberVisible.value = false;
+      message.success("添加成员成功");
+      TUIStore.watch(StoreName.GRP, {
+        currentGroupMemberList: (data) => {
+          emit("update", sortMembers(data));
+        },
+      });
+    }
+  }).catch((err)=>{
+    message.error('添加成员失败,邀请方式或入群方式被禁止');
+  });
 };
 
 defineExpose({

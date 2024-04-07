@@ -39,7 +39,7 @@ const props = defineProps({
     required: true,
   },
 });
-const { userList,groupID } = toRefs(props);
+const { userList, groupID } = toRefs(props);
 
 // 开启删除成员弹窗
 const deleteVisible = ref(false);
@@ -48,22 +48,25 @@ const handleDeleteMember = () => {
 };
 
 // 删除成员
-const deleteMember = async (list) => {
+const deleteMember = (list) => {
   const userIDList = list.map((item) => item.userID);
   const option = {
     groupID: groupID.value,
     userIDList,
   };
-  const res = await TUIGroupService.deleteGroupMember(option);
-  if (res.code === 0) {
-    deleteVisible.value = false;
-    message.success("删除成功");
-    TUIStore.watch(StoreName.GRP, {
-      currentGroupMemberList: (data) => {
-        emit("update", sortMembers(data));
-      },
-    });
-  }
+  TUIGroupService.deleteGroupMember(option).then((res) => {
+    if (res.code === 0) {
+      deleteVisible.value = false;
+      message.success("删除成功");
+      TUIStore.watch(StoreName.GRP, {
+        currentGroupMemberList: (data) => {
+          emit("update", sortMembers(data));
+        },
+      });
+    }
+  }).catch((err)=>{
+    message.error('群成员删除失败');
+  });
 };
 
 defineExpose({
