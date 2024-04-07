@@ -53,16 +53,20 @@ export const attributeOptions = [
         tabKey: "type",
         list: [
           {
-            name: "系统默认浏览器",
+            name: "默认浏览器",
             value: "default",
           },
           {
-            name: "内置浏览器",
+            name: "工作台浏览器",
             value: "internal",
           },
           {
             name: "想天浏览器",
             value: "thinksky",
+          },
+          {
+            name: "手机模式",
+            value: "mob",
           },
         ],
       },

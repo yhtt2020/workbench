@@ -28,7 +28,6 @@ const browser={
       window.open(url,'_blank')
       return
     }
-    console.log('在系统默认浏览器打开',url)
     require('electron').shell.openExternal(url)
   },
   /**
@@ -40,7 +39,6 @@ const browser={
       window.open(url,'_blank')
       return
     }
-    console.log('在想天浏览器打开',url)
     ipc.send('addTab',{url:url})
   },
   /**
@@ -59,6 +57,13 @@ const browser={
       }
     })
   },
+  openInMobMod(url:string,options:{partition:string,newName:string}){
+    ipc.send('enableEmulation',{
+      url: url,
+      partition: options.partition,
+      newName:options.newName
+    })
+  }
 }
 
 export default browser
