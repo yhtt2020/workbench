@@ -1,36 +1,58 @@
 <template>
-  <div class="mx-4" style="height:466px;width:452px;">
-    <vue-custom-scrollbar :settings="settingsScroller" style="height:466px;">
-      <div class="flex grid grid-cols-2 gap-3">
-        <div v-for="item in searchList" class="flex flex-col rounded-lg p-4 xt-bg-2">
+  <xt-scrollbar :y="true" style="height: 266px">
+    <div class="grid grid-cols-2 gap-3">
+      <template v-for="item in searchList">
+        <div class="flex flex-col rounded-lg p-4 xt-bg-2">
           <div class="flex items-center mb-3">
             <a-avatar :size="40" :src="item.icon" shape="square"></a-avatar>
-            <span class="font-16-500 pl-3 truncate" style="color:var(--primary-text);">{{ item.name }}</span>
+            <span
+              class="font-16-500 pl-3 truncate"
+              style="color: var(--primary-text)"
+            >
+              {{ item.name }}
+            </span>
           </div>
           <div class="flex justify-between">
-            <span class="font-12-400" style="color:var(--secondary-text);">{{ item.memberNum }}人</span>
-            <span class="font-12-400" style="color:var(--secondary-text);">{{
-                item.joinOption === 'freeAccess' ? '公开加入' : '审核加入'
-              }}</span>
+            <span class="font-12-400" style="color: var(--secondary-text)">
+              {{ item.memberNum }}人
+            </span>
+            <span class="font-12-400" style="color: var(--secondary-text)">
+              {{ item.joinOption === "freeAccess" ? "公开加入" : "审核加入" }}
+            </span>
           </div>
-          <a-divider style="height: 2px; background-color: var(--divider);margin: 16px 0;"/>
-          <xt-button h="40" v-if="isJoin(item)" style="width:100%;" @click="closeJoinCom">已加入</xt-button>
-          <xt-button h="40" v-else style="width:100%;" @click="joinNow(item)">立即加入</xt-button>
+          <a-divider
+            style="
+              height: 2px;
+              background-color: var(--divider);
+              margin: 16px 0;
+            "
+          />
+          <xt-button
+            h="40"
+            v-if="isJoin(item)"
+            style="width: 100%;pointer-events: none"
+            @click="closeJoinCom"
+          >
+            已加入
+          </xt-button>
+          <xt-button h="40" v-else style="width: 100%;" @click="joinNow(item)">
+            立即加入
+          </xt-button>
         </div>
-      </div>
-    </vue-custom-scrollbar>
-  </div>
+      </template>
+    </div>
+  </xt-scrollbar>
 </template>
 
 <script>
-import { mapActions, mapState } from 'pinia'
-import { communityStore } from '../../store/communityStore'
-import { message } from 'ant-design-vue'
+import { mapActions, mapState } from "pinia";
+import { communityStore } from "../../store/communityStore";
+import { message } from "ant-design-vue";
 
 export default {
-  props: ['list'],
+  props: ["list"],
 
-  data () {
+  data() {
     return {
       settingsScroller: {
         useBothWheelAxes: true,
@@ -39,40 +61,44 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true,
       },
-    }
+    };
   },
 
   computed: {
-    ...mapState(communityStore, ['community']),
-    searchList () {
-      const listNull = this.list !== undefined && this.list !== null && this.list.length !== 0
+    ...mapState(communityStore, ["community"]),
+    searchList() {
+      const listNull =
+        this.list !== undefined && this.list !== null && this.list.length !== 0;
       if (listNull) {
-        return this.list
+        return this.list;
       }
     },
   },
 
   methods: {
-    ...mapActions(communityStore, ['joinRecommendCommunity']),
+    ...mapActions(communityStore, ["joinRecommendCommunity","getMyCommunity"]),
     // 判断是否已经进入推荐社群
-    isJoin (data) {
-      return this.community.communityList.some(item => {
-        return item.no === data.no
-      })
+    isJoin(data) {
+      const result = this.community.communityList.some((item) => {
+        const { no } = item.communityInfo;
+        return Number(no) === Number(data.no);
+      });
+      return result;
     },
     // 立即加入
-    async joinNow (item) {
-      const option = { no: item.no }
-      const result = await this.joinRecommendCommunity(option)
-      if(result.status){
-        message.success('加入成功')
-        this.$emit('close')
-      }else{
-        message.error(result.info)
+    async joinNow(item) {
+      const option = { no: item.no };
+      const result = await this.joinRecommendCommunity(option);
+      if (result.status) {
+        message.success("加入成功");
+        this.$emit("close");
+        this.getMyCommunity();
+      } else {
+        message.error(result.info);
       }
     },
   },
-}
+};
 </script>
 
 <style lang="scss" scoped>
