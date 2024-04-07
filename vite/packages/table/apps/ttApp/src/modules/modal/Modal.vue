@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, onBeforeMount, computed, watch } from "vue";
+import { ref, onBeforeMount, computed, watch, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import WuJie from "../wujie/WuJie.vue";
+// import
 
 import { useTTAppStore } from "../../store";
 import { getAppImg } from "../../hooks/getAppImg";
@@ -74,15 +75,46 @@ watch(
   () => modal.value?.id,
   () => {
     // console.log("123231 :>> ", 123231);
-    console.log('modal.value?.id, :>> ', 2222);
-    init()
-  },{
-    deep:true
+    console.log("modal.value?.id, :>> ", 2222);
+    init();
+  },
+  {
+    deep: true,
   }
 );
 onBeforeMount(() => {
   console.log("222 :>> ", 222);
   init();
+});
+
+
+/** 最大化 */
+const isMax = ref(false);
+const modalSize = computed(() => {
+  if (isMax.value) {
+    return {
+      width: "100%",
+      height: "100%",
+    };
+  } else {
+    return {
+      width: data.value.modal.width,
+      height: data.value.modal.height,
+    };
+  }
+});
+
+const max = (value: boolean) => {
+  isMax.value = value;
+};
+
+import PerfectScrollbar from "perfect-scrollbar";
+const scrollbar: any = ref(null);
+const perfectScrollbar: any = ref(null);
+onMounted(() => {
+setTimeout(() => {
+    perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
+}, 1);
 });
 </script>
 
@@ -95,6 +127,7 @@ onBeforeMount(() => {
     :index="index"
     min
     max
+    @max="max"
     ref="modalRef"
     :mask="false"
     class="xt-text"
@@ -119,13 +152,17 @@ onBeforeMount(() => {
     </template> -->
     <xt-mix-menu :menus="menuList">
       <div
-        class="overflow-hidden h-full"
-        v-if="!loading"
+        class="relative"
         style="background: #fff"
+        ref="scrollbar"
+        :style="modalSize"
       >
+        <xt-button>
+          {{ isMax }}
+        </xt-button>
+
+        <WuJie v-if="!loading" :url="url" :name="data.id" />
         <!-- 数据 -->
-        <!-- <div style="height: 400px; width: 700px; background: pink"></div> -->
-        <WuJie :url="url" :name="data.id" />
       </div>
     </xt-mix-menu>
     <!-- 最小化左侧 -->

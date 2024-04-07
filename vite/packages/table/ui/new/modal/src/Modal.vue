@@ -267,7 +267,7 @@ const props = withDefaults(defineProps<ModalProps>(), {
 });
 const { esc, modelValue, beforeMount, beforeUnmount, type } = toRefs(props);
 
-const emits = defineEmits(["ok", "no", "update:modelValue", "close", ""]);
+const emits = defineEmits(["ok", "no", "update:modelValue", "close", "max"]);
 
 // 弹窗元素
 const modal: any = ref(null);
@@ -416,6 +416,7 @@ const maximize = () => {
 
   setTimeout(() => {
     isMaximize.value = !isMaximize.value;
+    emits('max', isMaximize.value);
     if (isMaximize.value) {
       oldX.value = x.value;
       oldY.value = y.value;

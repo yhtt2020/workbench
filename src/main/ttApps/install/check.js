@@ -64,6 +64,7 @@ const checkMainFest = async (id) => {
     };
   }
   const main = modules?.main;
+  let weak = ["width", "height"];
   let strong = [
     {
       value: main?.entry,
@@ -71,6 +72,7 @@ const checkMainFest = async (id) => {
     },
   ];
   let obj = {
+    weak,
     strong,
     data: main,
   };
@@ -139,7 +141,7 @@ const check = async (options) => {
     info: "成功",
   };
 };
-/** 强检查 */
+
 // 自定义校验文件是否存在
 const checkFile = async (filePath) => {
   const folderType = "apps_test";
@@ -147,6 +149,7 @@ const checkFile = async (filePath) => {
   let res = await existsFolder(folderName);
   return res;
 };
+/** 强检查 */
 const strongCheck = async (array) => {
   let checkRes = [];
   for (data of array) {
