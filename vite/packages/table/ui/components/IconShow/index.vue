@@ -7,6 +7,7 @@
     v-model="visible"
     v-if="visible"
     @getAvatar="getAvatar"
+    ref="icon"
   ></xt-selectIcon>
   <div
     class="flex items-center justify-center overflow-hidden pointer"
@@ -35,8 +36,15 @@
 </template>
 
 <script setup>
-import { ref, toRefs, onMounted, onBeforeUnmount, computed, watch } from "vue";
-//解析出来的颜色
+import {
+  ref,
+  toRefs,
+  onMounted,
+  onBeforeUnmount,
+  computed,
+  watch,
+  nextTick,
+} from "vue";
 const visible = ref("");
 
 const props = defineProps({
@@ -115,6 +123,22 @@ watch(
     avatarUrl.value = newV;
   }
 );
+
+const icon = ref(null);
+const randomIcon = () => {
+  visible.value = true;
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      let res = icon.value.onRandom();
+      resolve(res);
+    }, 1);
+  });
+};
+
+defineExpose({
+  randomIcon,
+});
+onMounted(() => {});
 </script>
 
 <style lang="scss" scoped></style>

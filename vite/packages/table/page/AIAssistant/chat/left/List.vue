@@ -25,6 +25,7 @@
     <XtTitle type="text">过去</XtTitle>
     <Topic v-for="data in previousList" :data="data"></Topic>
   </template>
+
 </template>
 
 <script>

@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { iconList } from "../page/AIAssistant/chat/components/config";
 // @ts-ignore
 export const aiStore = defineStore("aiStore", {
   state: () => ({
@@ -59,14 +60,54 @@ export const aiStore = defineStore("aiStore", {
     },
   },
   actions: {
+    init() {
+      // 获取当前聊天列表
+      let keys = Object.keys(this.topicList);
+      if (keys.length) return;
+      // 初始化一个对话
+      let id = Date.now();
+      this.topicList[id] = {
+        icon: {
+          name: "message",
+          id: 0,
+        },
+        id,
+        time: id,
+        name: "Ai助手",
+        top: false,
+      };
+      this.chatList[id] = [
+        {
+          content: "Hello，你可以问我任何问题。",
+          role: "assistant",
+          time: id,
+          id,
+        },
+      ];
+    },
     addTopic() {
       // 解构一份初始状态
       let obj = { ...this.defaultData };
-      obj.id = Date.now();
-      obj.time = Date.now();
+      // iconList
+      const r = Math.floor(Math.random() * (iconList.length - 1 + 1)) + 1;
+      obj.icon = iconList[r - 1];
+      let id = Date.now();
+      obj.id = id;
+      obj.time = id;
+      obj.name = "Ai助手";
       this.selectTopicIndex = obj.id;
       this.topicList[obj.id] = obj;
-      this.chatList[obj.id] = [];
+      console.log("      this.topicList[obj.id]  :>> ", this.topicList[obj.id]);
+      this.chatList[obj.id] = [
+        {
+          content: "Hello，你可以问我任何问题。",
+          role: "assistant",
+          time: id,
+          id: id,
+        },
+      ];
+      console.log("  this.chatList[obj.id]  :>> ", this.chatList[obj.id]);
+
       // tsbApi.db.put({
       //   _id: "item:1",
       //   category: "cat1",
