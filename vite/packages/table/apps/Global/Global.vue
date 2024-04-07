@@ -13,28 +13,37 @@ import {
 import { storeToRefs } from "pinia";
 import { taskStore as useTaskStore } from "../task/store";
 import { useGlobalStore } from "./store";
-// components
+// 领取任务奖励
 const ClaimReward = defineAsyncComponent(
   () => import("../task/components/ClaimReward.vue")
 );
+const taskStore: any = useTaskStore();
+const { rewardVisible } = storeToRefs(taskStore);
+import { aiStore } from "../../store/ai";
+const ai: any = aiStore();
+ai.init();
+// 系统设置弹窗
 const SystemSet = defineAsyncComponent(() => import("../systemSet"));
-const Login = defineAsyncComponent(
-  () => import("../../permission/user/Login.vue")
-);
+
+// 无界应用弹窗
 import WujieModal from "../ttApp/src/modules/modal";
 import { useTTAppStore } from "../ttApp/src/store";
 const ttappStore: any = useTTAppStore();
 const { modal } = storeToRefs(ttappStore);
-// hooks
+
+// 登录弹窗
+const Login = defineAsyncComponent(
+  () => import("../../permission/user/Login.vue")
+);
 import { useLogin } from "../../permission/user/useLogin";
+
 const tt: any = inject("tt");
 const { proxy }: any = getCurrentInstance();
 
-const taskStore: any = useTaskStore();
-const { rewardVisible } = storeToRefs(taskStore);
 const globalStore: any = useGlobalStore();
 const { systemVisible, loginVisible, loginCb } = storeToRefs(globalStore);
 
+// 文件弹窗
 const fileVisible = ref(true);
 const file: any = ref(null);
 
