@@ -288,17 +288,27 @@ export default {
     
     // 等级限制，3级才可以创建一个社群，10级后可以创建五个社群
     const limitClick = computed(()=>{
+      const list = filterList.value.filter((item)=>{
+          return item?.role && item?.role === 'owner'
+      })
       let lv = lvInfo.lv
-      if(lv < 3 && filterList.value.length >= 7){
+      if(lv < 3 && list.length >= 0){
         return '最多创建一个社群'
-      }else if(lv < 10 && filterList.value.length >= 8){
+      }else if(lv < 10 && list.length >= 1){
         return '最多创建五个社群'
       }
     })
 
     /**初始化挂载**/
     onMounted(()=>{
-      console.log('挂载了',limitClick.value)
+      // setTimeout(() => {
+      //   console.log('挂载了',limitClick.value)
+      //   const list = filterList.value.filter((item)=>{
+      //     return item?.role && item?.role === 'owner'
+      //   })
+      //   console.log(list)
+      // },2000)
+      
       com.getMyCommunity();
       com.getCommunityTree();
       // 游客模式下 隐藏 聊天对话 和 通讯录

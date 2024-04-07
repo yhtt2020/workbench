@@ -10,7 +10,7 @@
       <div class="">
         <slot name="icon">
           <xt-new-icon
-            class="xt-text-2 ml-1"
+            class="ml-1 xt-text-2"
             v-if="icon"
             :icon="icon"
             size="20"
@@ -25,7 +25,7 @@
       <div class="mr-3"><slot name="right"> </slot></div>
       <div
         v-if="isState"
-        class="xt-bg-t-2 h-6 rounded-md xt-text-2 text-sm flex justify-center items-center px-1"
+        class="flex items-center justify-center h-6 px-1 text-sm rounded-md xt-bg-t-2 xt-text-2"
       >
         {{ state }}
       </div>
@@ -36,7 +36,11 @@
       />
     </div>
   </div>
-  <div class="text-sm xt-text-2 mb-4" v-if="info">{{ info }}</div>
+  <div class="mb-4 text-sm xt-text-2" v-if="info">{{ info }}</div>
+  <!-- 插槽 -- 额外内容 -->
+  <div class="mt-4">
+    <slot name="extra"></slot>
+  </div>
 </template>
 
 <script setup lang="ts">

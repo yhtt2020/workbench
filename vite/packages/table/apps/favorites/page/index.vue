@@ -264,6 +264,8 @@ export default {
     },
   },
   mounted(){
+    // 添加图标的刷新
+    this.$bus.on('refreshBrowser', this.refresh)
   },
   methods: {
     //
