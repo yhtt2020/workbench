@@ -18,8 +18,13 @@
       </div>
 
       <AutoHide :autoHideNav="this.state">
-        <div @click.stop class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
-          id="bottom-bar" style="text-align: center; position: relative" @contextmenu="showMenu" v-show="autoVisible"
+        <div 
+          @click.stop 
+          class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
+          id="bottom-bar" 
+          style="text-align: center; position: relative" 
+          @contextmenu="showMenu" 
+          v-show="autoVisible"
           :style="{ zoom: `${this.navAttribute.navSize / 100}` }">
           <!-- 快速搜索 底部 用户栏 -->
           <template v-if="!communityNavVisible">
@@ -31,7 +36,11 @@
 
           <!-- 快速搜索 底部栏区域 -->
           <Drop @createFile="createFile" currentId="bottom">
-            <Dock @edit="edit" @control="openControl" @getDelIcon="getDelIcon" ref="dock"
+            <Dock 
+              @edit="edit" 
+              @control="openControl" 
+              @getDelIcon="getDelIcon" 
+              ref="dock"
               @getHoverIndex="getHoverIndex">
             </Dock>
           </Drop>

@@ -148,6 +148,16 @@ export default {
       this.dateTime = getDateTime();
       this.setAppDate(this.dateTime);
     },
+    // 打开右侧抽屉菜单
+    toggleRightDrawer(){
+    // 定制桌面过程中需要屏蔽一下
+    if(!this.showGuide){
+      this.$refs.rightDrawerRef.openRightDrawer();
+      this.hideNoticeEntry();
+    }else{
+      message.info("定制过程中无法操作");
+    }
+    },
   }
 }
 </script>

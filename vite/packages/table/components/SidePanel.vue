@@ -424,9 +424,9 @@ export default {
     },
     fixedPosition() {
       if(this.sortId === 'left'){
-        return 'position: fixed;left: 10px;top: 50%;transform: translateY(-50%);z-index:999;'
+        return 'position: fixed;top: 50% - 32px;transform: translateY(-50%);'
       }
-      return 'position: fixed;right: 10px;top: 50%;transform: translateY(-50%);z-index:999;'
+      return 'position: fixed;top: 50% - 32px;transform: translateY(-50%);'
     },
     // 社区中心参数
     community() {
