@@ -1,5 +1,5 @@
 <template>
-  <xt-scrollbar :y="true" style="height: 266px">
+  <xt-scrollbar :y="true" style="height: 330px">
     <div class="grid grid-cols-2 gap-3">
       <template v-for="item in searchList">
         <div class="flex flex-col rounded-lg p-4 xt-bg-2">
@@ -102,4 +102,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+:deep(.ps__rail-y){
+  display: none !important;
+}
 </style>

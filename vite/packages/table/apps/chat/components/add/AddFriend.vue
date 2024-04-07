@@ -41,7 +41,7 @@
           </xt-button>
         </template>
       </a-input>
-      <span class="xt-text font-14 xt-font my-4">搜索结果</span>
+      <span class="xt-text font-14 xt-font my-4" v-if="friendResult.length !== 0">搜索结果</span>
       <template v-if="friendResult.length === 0">
         <div class="flex items-center justify-center flex-col h-full">
           <xt-ify-icon icon="fluent-emoji:sleeping-face" size="64" />
