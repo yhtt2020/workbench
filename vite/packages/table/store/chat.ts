@@ -48,7 +48,7 @@ export const chatStore = defineStore("chatStore", {
     },
     // 存储上一次会话记录
     conversations: {
-      // conversationID: (window as any).$TUIKit?.TUIServer?.TUIConversation.currentStore?.currentConversationID,
+      conversationID: null,
     },
     //  开关设置
     settings: {
