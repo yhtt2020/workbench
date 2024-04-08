@@ -1,8 +1,7 @@
 <script setup lang="ts">
 // import dbStorage from "../../../../../store/dbStorage";
 import { ref, onMounted, computed } from "vue";
-import TTApp from "../../ttApp";
-import { useParserCard } from "../../parser";
+import { useParserCard } from "./parser";
 import WuJie from "../wujie/WuJie.vue";
 import TTAppCenter from "../../../../appCenter";
 import { useTTAppStore } from "../../store";
@@ -119,11 +118,6 @@ const headerImg = () => {
       >
         <xt-button @click="appCenterVisible = true">go appCenter</xt-button>
         <TTAppCenter v-if="appCenterVisible" />
-        <!--
-      <xt-button @click="visible = true">go oldInstall</xt-button>
-      <TTApp v-if="visible" @close="visible = false" />
--->
-
         <WuJie v-bind="wujie" :id="customData.id" class="" />
       </div>
     </template>

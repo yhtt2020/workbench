@@ -32,6 +32,7 @@ const plugins = (iframeWindow: any) => {
 <template>
   <WujieVue
     height="100%"
+    width="100%"
     ref="wujie"
     :name="name"
     :url="url"

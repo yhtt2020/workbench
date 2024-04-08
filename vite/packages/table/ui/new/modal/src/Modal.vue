@@ -483,7 +483,7 @@ onMounted(() => {
   useWindowSize((size) => {
     windowHeight.value = size.height.value;
     windowWidth.value = size.width.value;
-  });
+  },0);
 });
 // 卸载前
 onBeforeUnmount(() => {

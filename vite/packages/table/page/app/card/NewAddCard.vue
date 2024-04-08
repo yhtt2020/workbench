@@ -108,7 +108,7 @@ import DeskPreview from '../../../components/desk/DeskPreview.vue'
 import { marketStore } from '../../../store/market'
 import { offlineStore } from "../../../js/common/offline";
 import { taskStore } from "../../../apps/task/store";
-
+import { useTTAppStore } from '../../../apps/ttApp/src/store'
 
 export default {
   name: 'AddCard',
@@ -234,6 +234,7 @@ this.updateNavIndex(7)
     ...mapWritableState(offlineStore, ['isOffline','offlineList']),
     ...mapWritableState(deskStore, ['apiList']),
     ...mapWritableState(taskStore, ["currentId", "step", "success"]),
+    ...mapWritableState(useTTAppStore, ["", "step", ""]),
 
     displayList () {
       // return this.apiList.filter

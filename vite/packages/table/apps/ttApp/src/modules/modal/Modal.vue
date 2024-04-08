@@ -2,7 +2,6 @@
 import { ref, onBeforeMount, computed, watch, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import WuJie from "../wujie/WuJie.vue";
-// import
 
 import { useTTAppStore } from "../../store";
 import { getAppImg } from "../../hooks/getAppImg";
@@ -74,8 +73,6 @@ const headerImg = computed(() => {
 watch(
   () => modal.value?.id,
   () => {
-    // console.log("123231 :>> ", 123231);
-    console.log("modal.value?.id, :>> ", 2222);
     init();
   },
   {
@@ -83,10 +80,8 @@ watch(
   }
 );
 onBeforeMount(() => {
-  console.log("222 :>> ", 222);
   init();
 });
-
 
 /** 最大化 */
 const isMax = ref(false);
@@ -103,7 +98,7 @@ const modalSize = computed(() => {
     };
   }
 });
-
+//
 const max = (value: boolean) => {
   isMax.value = value;
 };
@@ -112,9 +107,9 @@ import PerfectScrollbar from "perfect-scrollbar";
 const scrollbar: any = ref(null);
 const perfectScrollbar: any = ref(null);
 onMounted(() => {
-setTimeout(() => {
+  setTimeout(() => {
     perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
-}, 1);
+  }, 1);
 });
 </script>
 
@@ -152,17 +147,13 @@ setTimeout(() => {
     </template> -->
     <xt-mix-menu :menus="menuList">
       <div
-        class="relative"
+        class="relative w-full h-full overflow-hidden"
         style="background: #fff"
         ref="scrollbar"
         :style="modalSize"
       >
-        <xt-button>
-          {{ isMax }}
-        </xt-button>
-
+        <xt-button block> {{ isMax }}————{{ url + "/resume" }} </xt-button>
         <WuJie v-if="!loading" :url="url" :name="data.id" />
-        <!-- 数据 -->
       </div>
     </xt-mix-menu>
     <!-- 最小化左侧 -->
