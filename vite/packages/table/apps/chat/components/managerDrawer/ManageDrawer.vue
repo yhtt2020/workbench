@@ -389,15 +389,15 @@ const initManageData = () => {
   TUIStore.watch(StoreName.CONV, {
     currentConversation: (data) => {
       const groupProfile = data?.groupProfile;
-      manageInfo.value.avatar = groupProfile.avatar;
-      manageInfo.value.groupName = groupProfile.name;
-      manageInfo.value.groupID = groupProfile.groupID;
-      manageInfo.value.role = groupProfile.selfInfo?.role;
-      manageInfo.value.notification = groupProfile.notification;
-      manageInfo.value.type = groupProfile.type;
-      manageInfo.value.join = groupProfile.joinOption;
-      manageInfo.value.invite = groupProfile.inviteOption;
-      manageInfo.value.muteAllMembers = groupProfile.muteAllMembers;
+      manageInfo.value.avatar = groupProfile?.avatar;
+      manageInfo.value.groupName = groupProfile?.name;
+      manageInfo.value.groupID = groupProfile?.groupID;
+      manageInfo.value.role = groupProfile?.selfInfo?.role;
+      manageInfo.value.notification = groupProfile?.notification;
+      manageInfo.value.type = groupProfile?.type;
+      manageInfo.value.join = groupProfile?.joinOption;
+      manageInfo.value.invite = groupProfile?.inviteOption;
+      manageInfo.value.muteAllMembers = groupProfile?.muteAllMembers;
     },
   });
   TUIStore.watch(StoreName.GRP, {

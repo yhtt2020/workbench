@@ -93,7 +93,7 @@
           </div>
           <a-switch
             v-model:checked="groupInfo.muteAllMembers"
-            @change="updateMuteAllChecked"
+            @change="updateMuteAllChecked($event)"
           />
         </div>
         <div class="my-3" style="background: var(--divider); height: 1px"></div>
@@ -122,6 +122,7 @@
               border-radius: 8px;
               margin-right: 12px;
             "
+            @click="setMemberMute"
           >
             <div class="flex items-center justify-center">
               <xt-ify-icon
@@ -136,7 +137,8 @@
           <xt-button
             w="32"
             h="32"
-            style="background: rgba(255, 77, 79, 0.2); border-radius: 8px"
+            style="background: rgba(255, 77, 79, 0.2); border-radius: 8px;"
+            @click="deleteMemberMute"
           >
             <div class="flex items-center justify-center">
               <xt-ify-icon
@@ -154,6 +156,10 @@
   <!-- 修改群管理员角色 -->
   <UpdateGroupRole ref="updateRoleRef" @updateRole="updateRoleData" />
   <DeleteGroupManage ref="deleteRoleRef" @update="deleteRoleData" />
+
+  <!-- 设置群成员禁言 -->
+  <AddMemberMute ref="addMuteRef" @updateMute="setMuteList"/>
+  <DeleteMemberMute ref="deleteMuteRef" @deleteMute="delMuteList" :muteList="muteList"/>
 </template>
 
 <script setup>
@@ -169,6 +175,8 @@ import { enableSampleTaskStatus } from "../../../TUIKit/utils/enableSampleTaskSt
 
 import UpdateGroupRole from "./UpdateGroupRole.vue";
 import DeleteGroupManage from "./DeleteGroupManage.vue";
+import AddMemberMute from "./AddMemberMute.vue";
+import DeleteMemberMute from "./DeleteMemberMute.vue";
 
 // 限制message提示框最大显示数量
 message.config({
@@ -191,15 +199,23 @@ const adminList = ref([]);
 const muteList = ref([]);
 const updateRoleRef = ref(null);
 const deleteRoleRef = ref(null);
+const addMuteRef = ref(null);
+const deleteMuteRef = ref(null);
 
 const getGroupAdminList = () => {
   TUIStore.watch(StoreName.GRP, {
     currentGroupMemberList: (data) => {
-      console.log("currentGroupMemberList", data);
+      // console.log('data',data);
+      // 群管理员列表
       const adminArr = _.filter(data, function (item) {
         return item?.role === "Admin";
       });
       adminList.value = adminArr;
+      // 被禁言的成员列表
+      const muteArr = _.filter(data, function (item) {
+        return item?.muteUntil !== 0;
+      });
+      muteList.value = muteArr;
     },
   });
 };
@@ -220,7 +236,7 @@ const closeManageMember = () => {
   emit("closeMember");
 };
 
-// 添加群管理员
+// 设置群管理员
 const addRole = () => {
   updateRoleRef.value.openRoleModal();
 };
@@ -245,7 +261,7 @@ const updateRoleData = (data) => {
   }
 };
 
-// 删除群管理员
+// 解除群管理员
 const deleteRole = () => {
   deleteRoleRef.value.openDeleteRole();
 };
@@ -271,18 +287,63 @@ const deleteRoleData = (data) => {
 };
 
 // 修改禁言开启状态
-const updateMuteAllChecked = () => {
-  // const options = {
-  //   groupID: groupInfo.value?.groupID,
-  //   muteAllMembers: groupInfo.value?.muteAllMembers,
-  // };
-  // TUIGroupService.updateGroupProfile(options).then((res) => {
-  //   if (res.code === 0) {
-  //     enableSampleTaskStatus("muteGroup");
-  //     message.success("设置全员禁言成功");
-  //   }
-  // });
+const updateMuteAllChecked = (evt) => {
+  const options = {
+    groupID: groupInfo.value?.groupID,
+    muteAllMembers: evt,
+  };
+  chat.updateGroupProfile(options).then((res) => {
+    if (res.code === 0) {
+      enableSampleTaskStatus("muteGroup");
+      message.success("设置全员禁言成功");
+    }
+  });
 };
+
+// 设置群成员禁言
+const setMemberMute = () =>{
+  addMuteRef.value.openMuteModal();
+};
+const setMuteList = (list) =>{
+  for(const item of list){
+    const option = {
+      groupID: groupInfo.value?.groupID,
+      userID: item.userID,
+      muteTime: 600,
+    }
+    chat.setGroupMemberMuteTime(option).then((res) => {
+      if(res.code === 0){
+        message.success("设置禁言成功");
+      }
+    }).catch((err) => {
+      message.error("你不是群主,只有群主才有权限操作");
+    })
+  }
+  addMuteRef.value.muteVisible = false;
+}
+
+// 解除群成员禁言
+const deleteMemberMute = () => {
+  deleteMuteRef.value.openDeleteMuteModal();
+};
+const delMuteList = (list) =>{
+  for(const item of list){
+    const option = {
+      groupID: groupInfo.value?.groupID,
+      userID: item.userID,
+      muteTime: 0,
+    }
+    chat.setGroupMemberMuteTime(option).then((res) => {
+      console.log('测试',res);
+      if(res.code === 0){
+        message.success("解除禁言成功");
+      }
+    }).catch((err) => {
+      message.error("你不是群主,只有群主才有权限操作");
+    })
+  }
+  deleteMuteRef.value.deleteMuteVisible = false;
+}
 
 defineExpose({
   openGroupManageDrawer,
