@@ -6,7 +6,6 @@ import WuJie from "../wujie/WuJie.vue";
 import TTAppCenter from "../../../../appCenter";
 import { useTTAppStore } from "../../store";
 import { useAppCenterStore } from "../../../../appCenter/src/store";
-import { getAppImg } from "../../hooks/getAppImg";
 import { storeToRefs } from "pinia";
 
 const appCenterStore = useAppCenterStore();
@@ -87,11 +86,7 @@ const menus = computed(() => {
   console.log("list :>> ", list);
   return list;
 });
-const headerImg = () => {
-  console.log("12323123 :>> ", 12323123);
-  console.log("data.value :>> ", data.value);
-  return getAppImg(data.value?.id, data.value?.logo);
-};
+
 </script>
 
 <template>

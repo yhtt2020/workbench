@@ -27,12 +27,12 @@ const install = async () => {
     // 如果有main模块
     if (currentData.main) {
       // 处理main路径
-      currentData.main._url = `ttapp://${data.id}/${currentData.main.entry}`;
+      currentData.main._entry = `ttapp://${data.id}/${currentData.main.entry}`;
     }
     // 如果有card模块
     if (currentData.card) {
       // 处理card路径
-      currentData.card._url = `ttapp://${data.id}/${currentData.card.entry}`;
+      currentData.card._entry = `ttapp://${data.id}/${currentData.card.entry}`;
       // 处理card预览图路径
       currentData.card._preview = getAppImg(
         currentData.id,
@@ -44,8 +44,9 @@ const install = async () => {
     ttappList.value.push(currentData);
   }
   // manifest.json失败
-  else if (res.code > 20 && res.code < 30) {
-    message.error("manifest.json错误，请重新配置");
+  else if (code > 20 && code < 30) {
+    console.log('data :>> ', data);
+    message.error(data);
   }
   // 其他失败
   else {

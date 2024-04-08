@@ -79,7 +79,7 @@ const switchCurrentCom = (name: string) => {
         fn="fn"
         leftBg="red"
       >
-        <div class="w-full h-full xt-theme-b py-4 pr-4">
+        <div class="w-full h-full  py-4 pr-4">
           <component :is="components[currentCom]" />
         </div>
       </xt-left-menu>

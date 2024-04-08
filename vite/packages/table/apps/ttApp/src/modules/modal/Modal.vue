@@ -4,7 +4,6 @@ import { storeToRefs } from "pinia";
 import WuJie from "../wujie/WuJie.vue";
 
 import { useTTAppStore } from "../../store";
-import { getAppImg } from "../../hooks/getAppImg";
 const ttappStore: any = useTTAppStore();
 const { modal, ttappList } = storeToRefs(ttappStore);
 // 窗口弹窗
@@ -121,7 +120,7 @@ onMounted(() => {
     :mask="false"
     class="xt-text"
   >
-    {{ ttappList }}
+    {{ data }}
     <!-- 头部左侧区域 -->
     <template #header-left>
       <div class="mr-2 rounded-lg overflow-hidden">
@@ -147,8 +146,8 @@ onMounted(() => {
         ref="scrollbar"
         :style="modalSize"
       >
-        <xt-button block> {{ isMax }}————{{ data.main._url + "/resume" }} </xt-button>
-        <WuJie v-if="!loading" :url="data.main._url" :name="data.id" />
+        <xt-button block> {{ isMax }}————{{ data.main._entry + "/resume" }} </xt-button>
+        <WuJie v-if="!loading" :url="data.main._entry" :name="data.id" />
       </div>
     </xt-mix-menu>
     <!-- 最小化左侧 -->

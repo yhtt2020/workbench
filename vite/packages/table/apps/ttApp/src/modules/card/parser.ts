@@ -53,7 +53,7 @@ const parserHeader = (props: any, card: any) => {
 const parserWuJie = (props: any, card: any) => {
   let wujie: any = {};
   wujie.name = props.id;
-  wujie.url = "ttapp://" + props.id + "/" + card.entry;
+  wujie.url = card._entry;
 
   return wujie;
 };

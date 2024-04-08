@@ -40,6 +40,7 @@ import { appStore } from "../../../../store";
 import componentsMinis from "../../../../../table/components/desk/components";
 import { homeStore } from "../../../../store/home";
 import { message } from "ant-design-vue";
+import { useAddCardV2 } from "../../../hooks/useAddCardV2";
 
 export default {
   mixins: [componentsMinis],
@@ -133,15 +134,12 @@ export default {
       return list;
     },
     add() {
-      let res = this.desks.find((item) => {
-        if (item.id == this.currentDesk) return item;
-      });
-      console.log("res :>> ", res);
-      res.cards.push({
-        id: Date.now(),
-        name: this.name,
-        customData: this.data,
-      });
+      useAddCardV2({
+        name:this.name,
+        data:this.data,
+        id:Date.now(),
+        deskId:this.currentDesk
+      })
       message.success("添加成功");
       this.close();
     },
