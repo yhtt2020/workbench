@@ -14,7 +14,8 @@
                 <div class="w-full h-[1px] mt-4 mb-4" style="background: var(--divider);"></div>
                 <div class="text-base xt-text">打开方式</div>
                 <div class="mt-2 mb-2 text-sm xt-text-2">选择链接打开方式。</div>
-                <RadioTab :navList="openWay" v-model:selectType="defaultWay" :bgColor="'xt-bg'" :height="60" />
+                <!-- <RadioTab :navList="openWay" v-model:selectType="defaultWay" :bgColor="'xt-bg'" :height="60" /> -->
+                <dropDown :list="data" v-model:mode="defaultWay"></dropDown>
             </div>
 
         </div>
@@ -22,9 +23,11 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, onMounted, watch } from 'vue'
-import RadioTab from '../../../../../RadioTab.vue';
+import { ref, defineAsyncComponent, onMounted, watch } from 'vue'
+// import RadioTab from '../../../../../RadioTab.vue';
 // import EditName from './EditName.vue';
+const dropDown = defineAsyncComponent(() => import('../../dropDown/DropDown.vue'))
+import {data} from '../../dropDown/Data'
 const iconLink = ref([{ title: '网站链接', name: 'link' }, { title: '系统程序或文件', name: 'tableApp' }])
 const openWay = ref([
   { title: "系统默认", name: "default" },
@@ -34,14 +37,14 @@ const openWay = ref([
     title:'手机模式',name:'mob'
   }])
 const defaultLink = ref({ title: '网站链接', name: "link" })
-const defaultWay = ref({ title: '默认浏览器', name: "default" })
+const defaultWay = ref("default")
 const linkValue = ref('')
 const props = defineProps({
     editItem: Object
 })
 onMounted(() => {
     linkValue.value = props.editItem.value
-    defaultWay.value = openWay.value.find((item) => item.name === props.editItem.type) || defaultWay.value
+    defaultWay.value = data.find((item) => item.value === props.editItem.type)?.value || defaultWay.value
     defaultLink.value = iconLink.value.find((item) => item.name === props.editItem.type) || defaultLink.value
 
 })
@@ -49,7 +52,7 @@ watch(() => defaultWay.value, () => {
     if (props.editItem.type === 'tableApp') {
         return
     }
-    props.editItem.type = defaultWay.value.name
+    props.editItem.type = defaultWay.value
 })
 watch(() => linkValue.value, () => {
     if (props.editItem.type === 'tableApp') {
