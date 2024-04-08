@@ -11,7 +11,6 @@ const { modal, ttappList } = storeToRefs(ttappStore);
 const modalRef: any = ref(null);
 
 const data: any = ref();
-const url = ref();
 
 /** 初始化方法 */
 const init = () => {
@@ -19,16 +18,13 @@ const init = () => {
   loading.value = true;
   let res = ttappStore.select(modal.value.id);
 
+  console.log('res :>> ', res);
   if (!res) {
     return;
   }
-  data.value = {
-    ...res,
-    modal: res.modules.main,
-  };
-  const main = res?.modules?.main;
+  data.value =res
+  const main = res.main;
 
-  url.value = `ttapp://${data.value.id}/${main.entry}`;
   // 完成
   loading.value = false;
 };
@@ -66,9 +62,6 @@ const menuList = computed(() => {
 const close = () => {
   modalRef.value.close();
 };
-const headerImg = computed(() => {
-  return getAppImg(data.value.id, data.value.logo);
-});
 
 watch(
   () => modal.value?.id,
@@ -93,8 +86,8 @@ const modalSize = computed(() => {
     };
   } else {
     return {
-      width: data.value.modal.width,
-      height: data.value.modal.height,
+      width: data.value.main.width,
+      height: data.value.main.height,
     };
   }
 });
@@ -115,6 +108,7 @@ onMounted(() => {
 
 <template>
   <xt-modal
+    v-if="data"
     v-model="modal.visible"
     handle=".xt-modal-header"
     boxClass=""
@@ -127,10 +121,11 @@ onMounted(() => {
     :mask="false"
     class="xt-text"
   >
+    {{ ttappList }}
     <!-- 头部左侧区域 -->
     <template #header-left>
       <div class="mr-2 rounded-lg overflow-hidden">
-        <a-avatar shape="square" class="" :size="20" :src="headerImg" />
+        <a-avatar shape="square" class="" :size="20" :src="data._logo" />
       </div>
       {{ data.name }}
     </template>
@@ -152,14 +147,14 @@ onMounted(() => {
         ref="scrollbar"
         :style="modalSize"
       >
-        <xt-button block> {{ isMax }}————{{ url + "/resume" }} </xt-button>
-        <WuJie v-if="!loading" :url="url" :name="data.id" />
+        <xt-button block> {{ isMax }}————{{ data.main._url + "/resume" }} </xt-button>
+        <WuJie v-if="!loading" :url="data.main._url" :name="data.id" />
       </div>
     </xt-mix-menu>
     <!-- 最小化左侧 -->
     <template #minimize-left>
       <div class="mr-2 rounded-lg overflow-hidden">
-        <a-avatar shape="square" class="" :size="28" :src="headerImg" />
+        <a-avatar shape="square" class="" :size="28" :src="data.logoPath" />
       </div>
       <!-- <div class="mr-2 xt-text">{{ data.name }}</div> -->
     </template>

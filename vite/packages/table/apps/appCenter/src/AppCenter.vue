@@ -5,7 +5,7 @@ import { useAppCenterStore } from "./store";
 import { useTTAppStore } from "../../ttApp/src/store";
 import { storeToRefs } from "pinia";
 const ttappStore = useTTAppStore()
-ttappStore.init()
+// ttappStore.init()
 const appCenterStore = useAppCenterStore();
 const { visible } = storeToRefs(appCenterStore);
 defineProps<{

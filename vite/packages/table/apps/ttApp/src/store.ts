@@ -48,7 +48,6 @@ export const useTTAppStore = defineStore("useTTAppStore", {
       let res = await useUninstall(id);
       if (res) {
         message.success("卸载成功");
-        this.selectAll();
       } else {
         message.error("卸载失败");
       }

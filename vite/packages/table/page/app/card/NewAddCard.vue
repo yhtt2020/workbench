@@ -61,6 +61,7 @@
           </div>
         </div>
         <div class="right no-drag">
+          <AddWuJieCard />
           <div class="warn xt-bg-2" v-if="navIndex === 10">
             <div class="icon">i</div>
             以下组件正在奋力💪开发中，部分功能还不完善或有明显Bug🐞，可以尝鲜试用～
@@ -109,10 +110,11 @@ import { marketStore } from '../../../store/market'
 import { offlineStore } from "../../../js/common/offline";
 import { taskStore } from "../../../apps/task/store";
 import { useTTAppStore } from '../../../apps/ttApp/src/store'
+import AddWuJieCard from '../../../apps/ttApp/src/modules/addCard/AddCard.vue'
 
 export default {
   name: 'AddCard',
-  components: { NewCardPreViews, HorizontalPanel, Search, NavMenu, DeskMarket, ShareDesk, DeskPreview },
+  components: { NewCardPreViews, HorizontalPanel, Search, NavMenu, DeskMarket, ShareDesk, DeskPreview,AddWuJieCard },
   emits: ['onClose'],
   props: {
     desk: {

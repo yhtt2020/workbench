@@ -39,7 +39,7 @@ const checkMainFest = async (id) => {
   let baseWeak = ["name", "description", "modules"];
   let baseStrong = [
     {
-      path: res?.logo,
+      value: res?.logo,
       info: "logo",
     },
   ];
@@ -121,14 +121,15 @@ const check = async (options) => {
   const { weak, data, strong } = options;
 
   if (weak) {
-    let weakRes = weakCheck(weak, data);
+    let weakRes = await weakCheck(weak, data);
     if (weakRes.code !== 200) {
       return weakRes;
     }
   }
 
   if (strong) {
-    let strongRes = strongCheck(strong);
+    let strongRes = await strongCheck(strong);
+    console.log("strongRes :>> ", strongRes);
     if (strongRes.code !== 200) {
       return strongRes;
     }
@@ -151,12 +152,14 @@ const checkFile = async (filePath) => {
 };
 /** 强检查 */
 const strongCheck = async (array) => {
+  console.log("拿到的 强检查array :>> ", array);
   let checkRes = [];
   for (data of array) {
     let currentRes = data?.value && (await checkFile(data?.value));
+
     if (!currentRes) {
       checkRes.push(data?.info);
-      return;
+      break;
     }
   }
   if (checkRes.length > 0) {

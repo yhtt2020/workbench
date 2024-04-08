@@ -84,7 +84,7 @@ const menus = computed(() => {
       },
     },
   ];
-console.log('list :>> ', list);
+  console.log("list :>> ", list);
   return list;
 });
 const headerImg = () => {
@@ -102,13 +102,14 @@ const headerImg = () => {
     :menuList="menus"
     :options="options"
     :customSize="customSize"
+    v-if="data"
   >
     <template #header-left v-if="!loading">
       <div class="flex ml-3">
         <div class="mr-2 rounded-lg overflow-hidden">
-          <a-avatar shape="square" class="" :size="20" :src="headerImg()" />
+          <a-avatar shape="square" class="" :size="20" :src="data?._logo" />
         </div>
-        {{ data.name }}
+        {{ data?.name }}
       </div>
     </template>
     <template v-if="!loading">

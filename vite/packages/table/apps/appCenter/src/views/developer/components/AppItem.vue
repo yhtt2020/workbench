@@ -16,7 +16,7 @@ const menus = computed(() => {
       cb: () => {
         addPreview();
       },
-      disabled: item.modules?.card ? false : true,
+      disabled: item?.card ? false : true,
     },
     // {
     //   name: "编辑信息",
@@ -41,7 +41,7 @@ const previewData = {
   name: "TTAppCard",
   data: {
     id: item.id,
-    customSize: item.modules?.card?.size,
+    customSize: item.card?.size,
   },
 };
 const addPreview = () => {
@@ -56,14 +56,6 @@ const openModal = () => {
   modal.value.visible = true;
 };
 
-console.log('22222222 :>> ', 22222222);
-const getImgPath = () => {
-  const { join } = require("path");
-  let dataPath = window?.globalArgs["user-data-path"];
-  let imgPath = join(dataPath, "apps", item.id, item.logo);
-  console.log("imgPath :>> ", imgPath);
-  return imgPath;
-};
 </script>
 
 <template>
@@ -85,7 +77,7 @@ const getImgPath = () => {
         class="rounded-xl mr-4 overflow-hidden"
         style="width: 70px; height: 70px"
       >
-        <a-avatar shape="square" :size="70" :src="getImgPath()"> </a-avatar>
+        <a-avatar shape="square" :size="70" :src="item?._logo"> </a-avatar>
       </div>
       <div class="flex flex-col justify-center">
         <div>{{ item.name }}</div>
