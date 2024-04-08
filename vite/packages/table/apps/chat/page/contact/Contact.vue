@@ -36,7 +36,7 @@
     <!-- 右侧对应数据显示区域,由于页面较少,暂时没有走路由 -->
     <div class="flex-1 w-auto h-full">
       <template v-if="currentContact === 'notice'">
-        <Notice :list="noticeList"/>
+        <Notice/>
       </template>
       <template v-else-if="currentContact === 'group'">
         <Group :list="groupList"/>
@@ -113,15 +113,6 @@ const getContact = () => {
       const filterData = _.filter(data,function(item){ return String(item.userID) !== String(userInfo.value.uid) });
       currentFriendList.value = filterData;
     },
-    friendApplicationUnreadCount: (data) => {
-      console.log("好友申请未读数", data);
-    },
-    friendApplicationList: (data) => {
-      console.log("好友申请列表", data);
-    },
-  });
-  TUIGroupService.getGroupApplicationList().then((res) => {
-    console.log("获取群聊申请列表", res);
   });
 };
 
