@@ -11,6 +11,7 @@ const props = defineProps({
     type: String,
   },
 });
+
 const { bus, setupApp, preloadApp, destroyApp } = WujieVue;
 
 const plugins = (iframeWindow: any) => {
@@ -25,10 +26,10 @@ const plugins = (iframeWindow: any) => {
   };
   return res;
 };
+// location.href='tsbapp://table.com/table.html'
 </script>
 
 <template>
-  <!-- || 'http://localhost:5173/' -->
   <WujieVue
     height="100%"
     ref="wujie"

@@ -59,7 +59,8 @@
   // const { edit } = storeToRefs(iconStore);
   const edit = ref({
     mode:'link',
-    type:'default'
+    type:'default',
+    radius: 6,
   })
   const emits = defineEmits(["close", "update:modelValue", "save"]);
   const props = defineProps({

@@ -48,59 +48,61 @@
       >
         <!-- 头部左侧 -->
         <div class="flex items-center flex-1" style="height: 28px">
-          <div
-            class="flex items-center h-full"
-            @click="leftClick"
-            @mouseenter="leftMouseEnter"
-            @mouseleave="leftMouseLeave"
-            style=""
-            :class="[
-              leftHover ? 'header-open cursor-pointer' : 'header-default',
-            ]"
-          >
-            <!-- 图标区域 -->
+          <slot name="header-left">
             <div
               class="flex items-center h-full"
-              @click="leftIconClick"
-              @mouseenter="iconMouseEnter"
-              @mouseleave="iconMouseLeave"
+              @click="leftClick"
+              @mouseenter="leftMouseEnter"
+              @mouseleave="leftMouseLeave"
+              style=""
+              :class="[
+                leftHover ? 'header-open cursor-pointer' : 'header-default',
+              ]"
             >
-              <xt-ify-icon v-if="leftHover" :icon="header.leftHoverIcon" />
-              <template v-else>
-                <xt-icon
-                  v-if="header.icon"
-                  :icon="header.icon"
-                  type=""
-                  size="19"
-                  w="20"
-                />
-                <xt-ify-icon
-                  v-else-if="header.ifyIcon"
-                  :icon="header.ifyIcon"
-                />
-                <xt-icon-show
-                  v-else-if="header.showIcon"
-                  boxW="20"
-                  boxH="20"
-                  w="18"
-                  h="18"
-                  :modelValue="header.showIcon"
-                />
-              </template>
+              <!-- 图标区域 -->
+              <div
+                class="flex items-center h-full"
+                @click="leftIconClick"
+                @mouseenter="iconMouseEnter"
+                @mouseleave="iconMouseLeave"
+              >
+                <xt-ify-icon v-if="leftHover" :icon="header.leftHoverIcon" />
+                <template v-else>
+                  <xt-icon
+                    v-if="header.icon"
+                    :icon="header.icon"
+                    type=""
+                    size="19"
+                    w="20"
+                  />
+                  <xt-ify-icon
+                    v-else-if="header.ifyIcon"
+                    :icon="header.ifyIcon"
+                  />
+                  <xt-icon-show
+                    v-else-if="header.showIcon"
+                    boxW="20"
+                    boxH="20"
+                    w="18"
+                    h="18"
+                    :modelValue="header.showIcon"
+                  />
+                </template>
+              </div>
+              <!-- 标题区域 -->
+              <div
+                class="flex items-center h-full px-2 ml-1"
+                @click="titleClick"
+                @mouseenter="titleMouseEnter"
+                @mouseleave="titleMouseLeave"
+                :class="{ 'header-title': titleHover }"
+              >
+                <slot name="title"> {{ title }} </slot>
+              </div>
+              <!-- 头部左侧扩展区域 -->
+              <slot name="left-extend"></slot>
             </div>
-            <!-- 标题区域 -->
-            <div
-              class="flex items-center h-full px-2 ml-1"
-              @click="titleClick"
-              @mouseenter="titleMouseEnter"
-              @mouseleave="titleMouseLeave"
-              :class="{ 'header-title': titleHover }"
-            >
-              <slot name="title"> {{ title }} </slot>
-            </div>
-            <!-- 头部左侧扩展区域 -->
-            <slot name="left-extend"></slot>
-          </div>
+          </slot>
         </div>
         <!-- 头部右侧 -->
         <div class="flex items-center header-right" style="padding-right: 14px">
@@ -307,7 +309,7 @@ const props = defineProps({
         // 开启后所有事件相关提示信息会进行输出
         debug: false,
         // 是否开启下拉菜单右侧还是左侧显示
-        rightMenuVisible:false,
+        rightMenuVisible: false,
         // 是否禁用标题拖拽
         disabledDrag: false,
       };

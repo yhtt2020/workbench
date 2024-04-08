@@ -2,7 +2,10 @@
 import { ref, computed } from "vue";
 import Developer from "./views/developer/Developer.vue";
 import { useAppCenterStore } from "./store";
+import { useTTAppStore } from "../../ttApp/src/store";
 import { storeToRefs } from "pinia";
+const ttappStore = useTTAppStore()
+ttappStore.init()
 const appCenterStore = useAppCenterStore();
 const { visible } = storeToRefs(appCenterStore);
 defineProps<{
@@ -22,7 +25,6 @@ const leftMenuList = computed(() => {
     {
       newIcon: "fluent:grid-20-regular",
       callBack: () => {
-        console.log("123 :>> ", 123);
         switchCurrentCom("");
       },
     },
@@ -67,7 +69,7 @@ const switchCurrentCom = (name: string) => {
 </script>
 
 <template>
-  <xt-modal v-model="visible" index="200" custom>
+  <xt-modal v-model="visible" index="1200" custom>
     <div style="width: 1000px; height: 720px">
       <!-- 左侧菜单容器 -->
       <xt-left-menu
