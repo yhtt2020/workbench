@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col justify-center w-full text-right time">
+    <div class="flex flex-col justify-center w-full text-right time pointer">
         <div v-if="settings.showTopbarTime"  @click="enterTime" class="flex">
             <div class="mr-1 xt-text font-14 xt-font">{{ dateTime.year }}/{{ dateTime.month }}/{{ dateTime.day }} </div>
             <div class="xt-text font-14 xt-font"> {{ dateTime.hours }}:{{ dateTime.minutes }} </div>

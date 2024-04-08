@@ -58,19 +58,13 @@
                   class="item-content item-nav"
                   @click="newOpenApp(item)"
                   @dragover="onDrag"
-                  @dragend="hoverIndex = -1" :class="{
+                  @dragend="hoverIndex = -1" 
+                  :class="{
                     'active-back': current(item),
                     hover: (dragItem && item.id === hoverRealItemId(this.sortId,this.hoverIndex) && dragItem?.id !== hoverRealItemId(this.sortId,this.hoverIndex))
                   }" :style="{ borderRadius: this.iconRadius + 'px' }">
                   <Drag :data="item" :currentId="sortId" @deleteFile="deleteFile">
-                    <Team v-if="item.value === 'commun'" :item="item" :shakeElement="shakeElement"
-                      :placement="sortId === 'left' ? 'right' : 'left'"></Team>
-                    <FolderVue v-else-if="item.type === 'folder'" :iconList="item.children" :item="item"
-                      @click.stop="openFolder(item)">
-                    </FolderVue>
-                    <template v-else>
-                      <Avatar :item="item" :shakeElement="shakeElement"></Avatar>
-                    </template>
+                    <NavIcon :size="54" :item="item" :community="community"></NavIcon>
                   </Drag>
                 </div>
               </xt-menu>
@@ -97,6 +91,12 @@
 </template>
 
 <script>
+import Sortable from 'sortablejs';
+import { message } from 'ant-design-vue';
+import { Icon as navIcon } from '@iconify/vue';
+import _ from 'lodash-es'
+import { nanoid } from 'nanoid'
+
 import { useDeskStore } from '../components/desk/store'
 import { mapActions, mapState, mapWritableState } from "pinia";
 import { useNavigationStore } from './desk/navigationBar/navigationStore'
@@ -105,33 +105,29 @@ import { appStore } from '../store'
 import { cardStore } from '../store/card';
 import { offlineStore } from '../js/common/offline';
 import { useWidgetStore } from '../components/card/store'
-import Sortable from 'sortablejs';
-import { message } from 'ant-design-vue';
-import routerTab from '../js/common/routerTab'
-import { Icon as navIcon } from '@iconify/vue';
-import { renderIcon } from '../js/common/common'
-import { moreMenus, extraRightMenu, rightMenus, iconMenus, mergeIconFolder } from '../components/desk/navigationBar/index'
-import EditNewNavigation from './desk/addIcon/EditNewNavigation.vue'
 import { useNavBarStore } from './desk/navigationBar/navBar'
-import { Notifications } from '../js/common/sessionNotice'
+
+import routerTab from '../js/common/routerTab'
+import EditNewNavigation from './desk/addIcon/EditNewNavigation.vue'
 import Common from './desk/navigationBar/components/Common.vue'
 import xtMenu from '../ui/components/Menu/index.vue'
 import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
-import _ from 'lodash-es'
 import EditIcon from './desk/navigationBar/components/EditIcon/EditIcon.vue'
-import { startApp } from '../ui/hooks/useStartApp'
-import Avatar from "./desk/navigationBar/components/Avatar.vue";
-import Team from './bottomPanel/Team.vue'
-import FolderVue from './desk/navigationBar/components/folder/Folder.vue'
 import Folder from '../apps/folder'
-import { defaultFolderData } from '../apps/folder/src/components/options'
-import { nanoid } from 'nanoid'
 import Drop from './desk/navigationBar/components/folder/Drop.vue'
-import { useWindowSize, } from '../ui/new/drag/src/hooks/useWindowSize'
-import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
-import {hoverRealItemId} from '../components/desk/navigationBar/hook/hoverRealItemId'
 import Drag from './desk/navigationBar/components/folder/Drag.vue'
 import AutoHide from './desk/navigationBar/components/folder/AutoHide.vue';
+import NavIcon from './windowPanel/components/NavIcon.vue';
+
+import { renderIcon } from '../js/common/common'
+import { moreMenus, extraRightMenu, mergeIconFolder } from '../components/desk/navigationBar/index'
+import { Notifications } from '../js/common/sessionNotice'
+import { startApp } from '../ui/hooks/useStartApp'
+import { defaultFolderData } from '../apps/folder/src/components/options'
+import { useWindowSize } from '../ui/new/drag/src/hooks/useWindowSize'
+import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
+import {hoverRealItemId} from '../components/desk/navigationBar/hook/hoverRealItemId'
+
 export default {
   name: 'SidePanel',
   components: {
@@ -141,13 +137,11 @@ export default {
     xtMenu,
     xtMixMenu,
     EditIcon,
-    Avatar,
-    Team,
-    FolderVue,
     Drop,
     Folder,
     Drag,
-    AutoHide
+    AutoHide,
+    NavIcon
   },
   emits: ['getDelIcon', 'hiedNavBar','openFolder'],
   data() {
@@ -280,7 +274,6 @@ export default {
           fn: () => { this.newOpenApp(this.builtInFeatures[3]) }
         }
       ],
-      shakeElement: false,
       currentItem: null,
       currentIndex: null,
       currentNav: 'left',
@@ -302,7 +295,6 @@ export default {
       parentSize: 0,
       sideList: [],
       maxItemNum:0
-
     }
   },
   props: {
@@ -406,14 +398,23 @@ export default {
           newIcon: "fluent:task-list-square-16-regular",
           fn: () => { this.bottomToggle[2] = !this.bottomToggle[2] }
         },
-        // {
-        //   id: 4,
-        //   name: this.settings.enableChat ? '隐藏社群沟通' : '显示社群沟通',
-        //   newIcon: "fluent:chat-16-regular",
-        //   fn: () => { this.settings.enableChat = !this.settings.enableChat }
-        // },
       ]
 
+    },
+    // 社区中心参数
+    community() {
+      if( this.sortId === 'left'){
+        return {
+          x: this.navAttribute.navSize / 100 * 100,
+          y: this.top,
+          visible: this.comVisible
+        }
+      }
+      return {
+        x: window.innerWidth - this.navAttribute.navSize / 100 * 100,
+        y: this.top,
+        visible: this.comVisible
+      }
     },
     /**
      * 主菜单
@@ -457,7 +458,7 @@ export default {
         return '6x4'
       }
     },
-    // \
+    // 合并提示位置
     mergeTag() {
       if (this.sortId === 'left') {
         return { left: 145 + 'px' }
@@ -511,9 +512,7 @@ export default {
     editToggle() {
       if (this.editToggle) {
         this.enableDrag()
-        this.shakeElement = true
         setTimeout(() => {
-          this.shakeElement = false
         }, 2000)
       }
     },
@@ -587,7 +586,14 @@ export default {
 
   },
   methods: {
-    ...mapActions(navStore, ['removeSideNavigationList', 'removeRightNavigationList', 'setSideNavigationList', 'setRightNavigationList', 'setRightNavigationList', 'loadNav']),
+    ...mapActions(navStore,
+       ['removeSideNavigationList', 
+        'removeRightNavigationList', 
+        'setSideNavigationList', 
+        'setRightNavigationList', 
+        'setRightNavigationList', 
+        'loadNav'
+      ]),
     ...mapActions(useNavigationStore, ['toggleEdit']),
     ...mapActions(appStore, ['toggleFullScreen']),
     renderIcon,
@@ -658,15 +664,12 @@ export default {
         //
         onStart: function (event) {
           that.cancelUpdate = false
-          // console.log('onStart')
           that.dragItem = that.navigationList[event.oldIndex]
           // console.log('启动拖拽的元素', that.dragItem)
           if (that.popVisible) {
             that.notifications.NoticeToast()
           }
           let del = document.querySelectorAll('#delIcon3')
-          // let delIcon = document.getElementById('delIcon3')
-          // console.log('delIcon', del)
           that.delItemIcon = true
           that.$emit('getDelIcon', true)
           that.delNav = true
@@ -709,9 +712,6 @@ export default {
             //如果执行过合并，这里就不需要刷新顺序了。
             return
           }
-          // console.log('onUpdate')
-          //拖拽排序后，更新数据
-          // console.log('移动event=', event)
           let cur = this.sideList.splice(event.oldIndex, 1)[0]
           if (!cur) {
             // console.error('移动失败，无法获取到元素')
@@ -722,8 +722,6 @@ export default {
           return
         }, 100),
         onEnd: function (event) {
-          // console.log('onEnd')
-          // console.log(event.originalEvent.clientX, event, 'to end X Y ');
           that.$emit('getDelIcon', false)
           //
           that.popVisible = false
@@ -732,13 +730,8 @@ export default {
           index = null
           that.isBorder = false
           isDrag = false
-          // console.log('isDelete', that.footNavigationList);
-          // console.log(that.copyFootNav,'copyFootNav');
-
         },
         onMove: function (event, originalEvent) {
-          // console.log(event, originalEvent, 'move');
-          // console.log('onMove')
           isDrag = true
           that.isDelete = false
           const moveLeft = event.originalEvent.clientY
@@ -755,17 +748,7 @@ export default {
             x: event.originalEvent.clientX,
             y: event.originalEvent.clientY,
           }
-          // console.log(that.defaultPosition)
         },
-        // onSort: function (event) {
-        //   console.log('onSort', event)
-        //   console.log('item', that.navigationList[event.newIndex])
-        // },
-        // // 触发替换中发生的事件
-        // onChange(event) {
-        //   console.log('onChange', event, that.navigationList[event.newIndex])
-        //   console.log('item')
-        // },
         /**
          * 合并文件夹操作
          * @param event
@@ -970,31 +953,55 @@ export default {
      * 打开应用
      * @param {*} item 图标详细信息
      */
-    async newOpenApp(item) {
-      let { type, value } = item
-      if (item.name === '设置中心') {
-          this.$bus.emit("openSystemSet")
+     async newOpenApp(item, e) {
+      const { type, value } = item;
+      if (type !== "folder") {
+        this.folderVisible = false;
       }
-      this.sideKey = Date.now()
+      if ( value !== 'commun') {
+        this.comVisible = false
+      }
+      // 更新鼠标定位
+      this.resetElementPosition();
+      if (window.$useEnvLimit("web", value)) return;
+      // 桌面图标打开提示
+      this.msgNotice(item);
+      // 特殊图标处理
+      const valueHandlers = {
+        control: () => this.$emit("control", e),
+        setting: () => {
+            // this.$router.push({ name: "home" });
+            setTimeout(() => {
+                this.$bus.emit("openSystemSet");
+            }, 500);
+        },
+        commun: () => {
+            this.comVisible = !this.comVisible;
+        },
+        default: async () => {
+            if (type === "folder") {
+                this.openFolder(item);
+            }
+            if (value === "fullscreen" && window.$useEnv()) {
+                toggle();
+                return;
+            }
+            if (value === "home" && item.home) {
+                this.jumpDesk = item.home;
+            }
+            let rs = await startApp(type, value, this.$router);
+            if (!rs) {
+                message.error({
+                    content: `打开「${item.name}」失败`,
+                    key: "tipRun",
+                });
+            }
+            this.comVisible = false;
+        }
+      };
 
-
-      if (value === 'control') {
-        this.controlVisible = !this.controlVisible;
-        this.resetElementPosition()
-      }
-      if (item) this.msgNotice(item)
-      if (value === 'home' && item.home) {
-        this.jumpDesk = item.home
-      }
-      let rs = await startApp(type, value, this.$router)
-      if (!rs) {
-        message.error({
-          content: `打开「${item.name}」失败`
-          , key: 'tipRun'
-        })
-      }
-      type !== 'folder' ? this.folderVisible = false : ''
-
+      const handler = valueHandlers[value] || valueHandlers.default;
+      await handler();
     },
     /**
  * 点击文件夹子图标
@@ -1115,42 +1122,10 @@ export default {
 
 .item:hover {
   background: var(--active-bg) !important;
-
-  // :deep(.icon) {
-  //   // fill: var(--primary-text) !important
-  // }
 }
-
-// .active-back {
-//   :deep(.icon) {
-//     // fill: var(--active-bg) !important
-//   }
-// }
 .shaking-element {
   // animation: shake 0.5s infinite;
   animation: shake 1s ease-in-out;
-}
-
-@keyframes shake {
-  0% {
-    transform: translateY(0);
-  }
-
-  25% {
-    transform: rotate3d(0, 0, 1, -15deg);
-  }
-
-  50% {
-    transform: rotate3d(0, 0, 1, 15deg);
-  }
-
-  75% {
-    transform: rotate3d(0, 0, 1, -15deg);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
 }
 
 .item {
@@ -1160,28 +1135,11 @@ export default {
 .item-nav {
   width: 52px;
   height: 52px;
-  // margin: 6px auto;
-  // margin-top: 20px;
   display: flex;
   align-items: center;
   cursor: pointer;
-  // border-radius: 12px;
-  // background-color: var(--secondary-transp-bg);
 
 }
-
-// .item-nav:last-child{
-//   margin-bottom: 12px;
-// }
-
-// .item-nav:hover {
-//   background: var(--active-bg);
-//   .icon-color {
-//     :deep(.icon) {
-//       fill: rgba(255,255,255,0.9) !important;
-//     }
-//   }
-// }
 .icon-color {
   height: 52px;
   width: 52px;
@@ -1190,23 +1148,10 @@ export default {
 .icon-color:hover {
   color: rgba(255, 255, 255, 0.8) !important;
 }
-
-//.dark-model .active-back{
-//  background: var(--active-secondary-bg) !important;
-//}
 .active-back {
-  // border: 1px solid red;
-
-  // color: var(--primary-text) !important;
-  // background: var(--active-bg);
-
   :deep(.icon) {
     fill: rgba(255, 255, 255, 0.9) !important;
   }
-
-  //:deep(.icon) {
-  //  fill: var(white) !important;
-  //}
 }
 
 .active-color {

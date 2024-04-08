@@ -228,13 +228,19 @@
         selectIcon.value = randomNum;
         if (type == 'icon') {
           const color = props.bgColor[selBgColor.value]
-          emits('getAvatar',`https://a.apps.vip/icons/iconSelect/${type}/${name}.svg?color=${color}`)
+          let res = `https://a.apps.vip/icons/iconSelect/${type}/${name}.svg?color=${color}`
+          emits('getAvatar',res)
+          return res
         }else{
-          emits('getAvatar',`https://a.apps.vip/icons/iconSelect/${type}/${name}.svg`)
+          let res = `https://a.apps.vip/icons/iconSelect/${type}/${name}.svg`
+          emits('getAvatar',res)
+          return res
         }
     }
 
-
+defineExpose({
+  onRandom
+})
     // 改变颜色
     const changeBgColor = (n) => {
         selBgColor.value = n

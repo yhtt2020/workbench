@@ -1,7 +1,7 @@
 <template>
     <div 
         class="
-            w-full h-[64px]  pointer 
+            w-full h-[64px]  
             flex items-center 
             justify-between p-3 " 
         style="
