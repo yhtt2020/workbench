@@ -54,6 +54,7 @@
               border-radius: 8px;
               margin-right: 12px;
             "
+            @click="addRole"
           >
             <div class="flex items-center justify-center">
               <xt-ify-icon
@@ -69,6 +70,7 @@
             w="32"
             h="32"
             style="background: rgba(255, 77, 79, 0.2); border-radius: 8px"
+            @click="deleteRole"
           >
             <div class="flex items-center justify-center">
               <xt-ify-icon
@@ -148,11 +150,15 @@
       </div>
     </a-drawer>
   </teleport>
+
+  <!-- 修改群管理员角色 -->
+  <UpdateGroupRole ref="updateRoleRef" @updateRole="updateRoleData" />
+  <DeleteGroupManage ref="deleteRoleRef" @update="deleteRoleData" />
 </template>
 
 <script setup>
 import { nextTick, ref, toRefs } from "vue";
-import {
+import TUIChatEngine, {
   TUIStore,
   StoreName,
   TUIGroupService,
@@ -161,6 +167,15 @@ import _ from "lodash-es";
 import { message } from "ant-design-vue";
 import { enableSampleTaskStatus } from "../../../TUIKit/utils/enableSampleTaskStatus";
 
+import UpdateGroupRole from "./UpdateGroupRole.vue";
+import DeleteGroupManage from "./DeleteGroupManage.vue";
+
+// 限制message提示框最大显示数量
+message.config({
+  maxCount: 1,
+});
+
+const chat = window.$chat.chat;
 const emit = defineEmits(["closeMember", "updateMuteAllMembers"]);
 
 const props = defineProps({
@@ -174,6 +189,8 @@ const { groupInfo } = toRefs(props);
 const adminList = ref([]);
 // 被禁言的用户列表
 const muteList = ref([]);
+const updateRoleRef = ref(null);
+const deleteRoleRef = ref(null);
 
 const getGroupAdminList = () => {
   TUIStore.watch(StoreName.GRP, {
@@ -203,18 +220,68 @@ const closeManageMember = () => {
   emit("closeMember");
 };
 
+// 添加群管理员
+const addRole = () => {
+  updateRoleRef.value.openRoleModal();
+};
+const updateRoleData = (data) => {
+  for (const item of data) {
+    const option = {
+      groupID: groupInfo.value?.groupID,
+      userID: item.userID,
+      role: TUIChatEngine.TYPES.GRP_MBR_ROLE_ADMIN,
+    };
+    chat
+      .setGroupMemberRole(option)
+      .then((res) => {
+        if (res.code === 0) {
+          message.success("添加群管理员成功");
+          updateRoleRef.value.roleVisible = false;
+        }
+      })
+      .catch((err) => {
+        message.error("你不是群主,只有群主才有权限操作");
+      });
+  }
+};
+
+// 删除群管理员
+const deleteRole = () => {
+  deleteRoleRef.value.openDeleteRole();
+};
+const deleteRoleData = (data) => {
+  for (const item of data) {
+    const option = {
+      groupID: groupInfo.value?.groupID,
+      userID: item.userID,
+      role: TUIChatEngine.TYPES.GRP_MBR_ROLE_MEMBER,
+    };
+    chat
+      .setGroupMemberRole(option)
+      .then((res) => {
+        if (res.code === 0) {
+          message.success("群管理员移除成功");
+          deleteRoleRef.value.deleteRoleVisible = false;
+        }
+      })
+      .catch((err) => {
+        message.error("你不是群主,只有群主才有权限操作");
+      });
+  }
+};
+
 // 修改禁言开启状态
 const updateMuteAllChecked = () => {
-  const options = {
-    groupID: groupInfo.value?.groupID,
-    muteAllMembers: groupInfo.value?.muteAllMembers,
-  };
-  TUIGroupService.updateGroupProfile(options).then((res) => {
-    if (res.code === 0) {
-      enableSampleTaskStatus("muteGroup");
-      message.success("设置全员禁言成功");
-    }
-  });
+  // const options = {
+  //   groupID: groupInfo.value?.groupID,
+  //   muteAllMembers: groupInfo.value?.muteAllMembers,
+  // };
+  // TUIGroupService.updateGroupProfile(options).then((res) => {
+  //   if (res.code === 0) {
+  //     enableSampleTaskStatus("muteGroup");
+  //     message.success("设置全员禁言成功");
+  //   }
+  // });
 };
 
 defineExpose({

@@ -71,6 +71,9 @@
   &-item-pinned {
     background: transparent !important;
   }
+  &-item-selected {
+    background: rgba(80, 139, 254, 0.2) !important;
+  }
 }
 
 .actions-menu {

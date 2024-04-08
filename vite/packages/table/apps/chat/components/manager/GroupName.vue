@@ -175,8 +175,8 @@ const openNameDrawer = () => {
         data.value.isManager = groupProfile?.selfInfo?.role !== "Member";
       },
     });
-    groupRef.value.focus();
-    groupRef.value.select();
+    groupRef.value?.focus();
+    groupRef.value?.select();
   });
 };
 // 关闭修改群名称抽屉弹窗

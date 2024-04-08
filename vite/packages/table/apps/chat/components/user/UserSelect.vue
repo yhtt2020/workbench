@@ -6,7 +6,7 @@
       <a-input
         class="h-10 xt-bg-2"
         v-model:value="forwardText"
-        placeholder="搜索好友、群聊"
+        placeholder="搜索好友"
         style="color: var(--secondary-text); border-radius: 8px"
         @change="search"
       >
@@ -42,8 +42,8 @@
           <span class="font-14 xt-text">最近聊天</span>
           <a-checkbox v-model:checked="currentChecked" v-if="isRadio">全选</a-checkbox>
         </div>
-        <xt-scrollbar :y="true" style="height: 304px">
-          <div class="flex flex-col">
+        <xt-scrollbar :y="true" style="height: 304px" >
+          <div class="flex flex-col" v-if="currentList.length !== 0">
             <template v-for="(item, index) in currentList">
               <div
                 class="flex p-3 w-full items-center rounded-lg pointer mb-4"
@@ -60,6 +60,10 @@
                 <span class="ml-4 xt-text">{{ item.nick }}</span>
               </div>
             </template>
+          </div>
+          <div v-else class="flex items-center justify-center flex-col">
+            <xt-ify-icon icon="fluent-emoji:sleeping-face" size="64" />
+            <span class="xt-text-2">暂无数据</span>
           </div>
         </xt-scrollbar>
       </div>
