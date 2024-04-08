@@ -10,7 +10,6 @@ import {
   useElementSize,
 } from "../../../ui/hooks/useCardSize";
 import { useFreeLayoutStore } from "../freeLayout/store";
-import {useCutLayout } from './useCutLayout'
 
 const defaultOptions = {
   mainList: [],

@@ -7,7 +7,6 @@ export const getCardData = () => {
   // 判断是否有数据
   if (ttappList.value.length == 0) return;
   // 数据转换
-  // return true;
   let data: any = {
     cname: "应用组件",
     children: [],
@@ -20,15 +19,9 @@ export const getCardData = () => {
       sizes: [item.card.size],
       time: "2024/6/28",
       img: item.card._preview,
-      // zoom: "14",
-      // option: item.option,
-      option: [
-        {
-          customData: {
-            id: item.id,
-          },
-        },
-      ],
+      data: { id: item.id },
+      // 伪数据 只是防止报错
+      option: [{}],
     });
   });
 

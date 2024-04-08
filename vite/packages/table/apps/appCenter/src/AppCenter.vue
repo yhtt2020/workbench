@@ -8,9 +8,6 @@ const ttappStore = useTTAppStore()
 // ttappStore.init()
 const appCenterStore = useAppCenterStore();
 const { visible } = storeToRefs(appCenterStore);
-defineProps<{
-  modelValue: boolean;
-}>();
 // 左侧对应组件
 const components = ref({
   Developer,

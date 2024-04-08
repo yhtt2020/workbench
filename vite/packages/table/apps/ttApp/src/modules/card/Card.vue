@@ -3,13 +3,9 @@
 import { ref, onMounted, computed } from "vue";
 import { useParserCard } from "./parser";
 import WuJie from "../wujie/WuJie.vue";
-import TTAppCenter from "../../../../appCenter";
 import { useTTAppStore } from "../../store";
-import { useAppCenterStore } from "../../../../appCenter/src/store";
 import { storeToRefs } from "pinia";
 
-const appCenterStore = useAppCenterStore();
-const { visible: appCenterVisible } = storeToRefs(appCenterStore);
 
 const ttappStore: any = useTTAppStore();
 const { modal } = storeToRefs(ttappStore);
@@ -86,7 +82,6 @@ const menus = computed(() => {
   console.log("list :>> ", list);
   return list;
 });
-
 </script>
 
 <template>
@@ -112,8 +107,6 @@ const menus = computed(() => {
         class="w-full flex flex-col h-full xt-theme-b"
         style="overflow: hidden !important"
       >
-        <xt-button @click="appCenterVisible = true">go appCenter</xt-button>
-        <TTAppCenter v-if="appCenterVisible" />
         <WuJie v-bind="wujie" :id="customData.id" class="" />
       </div>
     </template>

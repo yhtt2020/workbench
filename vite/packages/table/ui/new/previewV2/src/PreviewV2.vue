@@ -40,7 +40,7 @@ import { appStore } from "../../../../store";
 import componentsMinis from "../../../../../table/components/desk/components";
 import { homeStore } from "../../../../store/home";
 import { message } from "ant-design-vue";
-import { useAddCardV2 } from "../../../hooks/useAddCardV2";
+import { useAddCard } from "../../../../hooks";
 
 export default {
   mixins: [componentsMinis],
@@ -134,7 +134,7 @@ export default {
       return list;
     },
     add() {
-      useAddCardV2({
+      useAddCard({
         name:this.name,
         data:this.data,
         id:Date.now(),

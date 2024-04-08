@@ -155,7 +155,7 @@ import _ from "lodash-es";
 import { taskStore } from "../../../apps/task/store";
 import { completeTask } from "../../../apps/task/task";
 // import IconSet from "../../../components/widgets/myIcons/set/index.vue";
-
+import { useAddCard } from "../../../hooks";
 export default {
   emits: ["close", "addSuccess"],
   props: {
@@ -285,8 +285,13 @@ export default {
     addNewCard(item) {
       // 无界应用
       if (item?.type == "ttapp") {
-        console.log("222 :>> ", 222);
-        this.$emit("addSuccess");
+        useAddCard({
+          name: "TTAppCard",
+          data: item.data,
+        });
+
+        console.log("customData :>> ", item);
+        // this.$emit("addSuccess");
         message.success("添加成功！");
         return;
       }
