@@ -45,7 +45,17 @@ export const useNavigationStore = defineStore("useNavigationStore", {
       // 跳转桌面,
       jumpDesk: "",
       // 开启自动隐藏导航栏
-      customOpenNav: false,
+      autoHideNav: {
+        foot: {
+          state: false,
+        },
+        left: {
+          state: false,
+        },
+        right: {
+          state: false,
+        },
+      },
       // 离开导航栏
       isLeaveBar: false,
       // 鼠标移动到屏幕边缘
@@ -54,9 +64,9 @@ export const useNavigationStore = defineStore("useNavigationStore", {
       // 社群导航
       communityNavVisible: false,
       // 当前导航栏格式
-      currentNavFormat:'mac',
+      currentNavFormat: "mac",
       // 当前导航栏位置
-      currentNavPosition:'bottom',
+      currentNavPosition: "bottom",
     };
   },
   actions: {
@@ -69,7 +79,7 @@ export const useNavigationStore = defineStore("useNavigationStore", {
     strategies: [
       {
         // storage: dbStorage,
-        path: ["communityNavVisible",'currentNavFormat','currentNavPosition'],
+        path: ["communityNavVisible", "currentNavFormat", "currentNavPosition"],
         storage: localStorage,
       },
     ],

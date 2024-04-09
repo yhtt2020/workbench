@@ -116,8 +116,8 @@ const onBeforeCreate = () => {
 function defaultListClick(event) {
   if (rightModel.value == "default" && model.value == "all") {
     onBeforeCreate();
-    event.preventDefault();
-    event.stopPropagation();
+    // event.preventDefault();
+    // event.stopPropagation();
     drawerVisible.value = true;
     onMounted();
   }
@@ -132,8 +132,8 @@ function defaultListContextmenu(event) {
 
   if (rightModel.value == "default") {
     onBeforeCreate();
-    event.preventDefault();
-    event.stopPropagation();
+    // event.preventDefault();
+    // event.stopPropagation();
     drawerVisible.value = true;
     onMounted();
   }

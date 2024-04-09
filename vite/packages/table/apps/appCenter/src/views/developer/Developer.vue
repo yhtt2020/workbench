@@ -6,7 +6,7 @@ import { storeToRefs } from "pinia";
 import Exit from "../../component/exit.vue";
 import Install from "./components/Install.vue";
 const ttappStore: any = useTTAppStore();
-const { ttappList,  } = storeToRefs(ttappStore);
+const { ttappList } = storeToRefs(ttappStore);
 </script>
 
 <template>
@@ -19,11 +19,8 @@ const { ttappList,  } = storeToRefs(ttappStore);
       <div class="flex items-center"><Install class="mr-3" /><Exit /></div>
     </div>
     <!-- 内容 -->
-{{
-    ttappList.length
- }}
     <xt-scrollbar v-if="ttappList.length" class="h-full" :x="false" :y="true">
-      <AppItem v-for="(item,index) in ttappList" :item="item" :key="index" />
+      <AppItem v-for="item in ttappList" :item="item" :key="item.id" />
     </xt-scrollbar>
     <NullState v-else />
   </div>

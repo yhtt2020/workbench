@@ -1,5 +1,6 @@
 import { teamStore } from "./../../store/team";
-import { tt, Mit } from "./../../permission/global/global";
+import { tt } from "./../../permission/global/global";
+import { useMit } from "./../../hooks";
 import { isObject } from "./../../TUIKit/TUICore/utils/index";
 import browser from "../../js/common/browser";
 import { appStore } from "../../store";
@@ -8,15 +9,15 @@ import { favoStore } from "../../apps/favorites/store";
 import { useComStore } from "../../components/bottomPanel/comStore";
 import fs from "fs";
 async function runApp(uri) {
-  console.log('打开uri',uri)
+  console.log("打开uri", uri);
   try {
     var cp = require("child_process");
     let realPath = uri;
     let isDir = false;
     if (uri.endsWith(".url") || uri.endsWith(".lnk")) {
-      realPath = await tsbApi.system.getRealPath(uri) ;
-      if(!realPath){
-        realPath=uri
+      realPath = await tsbApi.system.getRealPath(uri);
+      if (!realPath) {
+        realPath = uri;
       }
     }
     if (uri.endsWith(".url") || uri.endsWith(".lnk")) {
@@ -44,13 +45,25 @@ async function runApp(uri) {
       }
     } else {
       var fs = require("fs");
-      if(realPath==='我的电脑' ){
-        window.$models.win32.openApp('explorer', 'shell:MyComputerFolder', "", false, true);
-        return true
+      if (realPath === "我的电脑") {
+        window.$models.win32.openApp(
+          "explorer",
+          "shell:MyComputerFolder",
+          "",
+          false,
+          true
+        );
+        return true;
       }
-      if(realPath==='回收站'){
-        window.$models.win32.openApp('explorer', 'shell:RecycleBinFolder', "", false, true);
-        return true
+      if (realPath === "回收站") {
+        window.$models.win32.openApp(
+          "explorer",
+          "shell:RecycleBinFolder",
+          "",
+          false,
+          true
+        );
+        return true;
       }
 
       var stat = fs.lstatSync(realPath);
@@ -79,7 +92,7 @@ async function runApp(uri) {
 
     return true;
   } catch (e) {
-    console.log(e)
+    console.log(e);
     return false;
   }
 }
@@ -172,11 +185,11 @@ export const openSysApp = (value, router) => {
     // 控制中心
   } else if (value === "setting") {
     // 设置
-    Mit.emit("openSystemSet");
+    useMit.emit("openSystemSet");
   } else if (value === "status") {
-    Mit.emit("openSystemSet");
+    useMit.emit("openSystemSet");
     setTimeout(() => {
-      Mit.emit("selectSystemNav", 3);
+      useMit.emit("selectSystemNav", 3);
     }, 100);
   } else {
     // 通过路由打开

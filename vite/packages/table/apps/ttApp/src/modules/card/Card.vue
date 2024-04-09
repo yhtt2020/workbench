@@ -1,17 +1,11 @@
 <script setup lang="ts">
 // import dbStorage from "../../../../../store/dbStorage";
 import { ref, onMounted, computed } from "vue";
-import TTApp from "../../ttApp";
-import { useParserCard } from "../../parser";
+import { useParserCard } from "./parser";
 import WuJie from "../wujie/WuJie.vue";
-import TTAppCenter from "../../../../appCenter";
 import { useTTAppStore } from "../../store";
-import { useAppCenterStore } from "../../../../appCenter/src/store";
-import { getAppImg } from "../../hooks/getAppImg";
 import { storeToRefs } from "pinia";
 
-const appCenterStore = useAppCenterStore();
-const { visible: appCenterVisible } = storeToRefs(appCenterStore);
 
 const ttappStore: any = useTTAppStore();
 const { modal } = storeToRefs(ttappStore);
@@ -85,14 +79,9 @@ const menus = computed(() => {
       },
     },
   ];
-console.log('list :>> ', list);
+  console.log("list :>> ", list);
   return list;
 });
-const headerImg = () => {
-  console.log("12323123 :>> ", 12323123);
-  console.log("data.value :>> ", data.value);
-  return getAppImg(data.value?.id, data.value?.logo);
-};
 </script>
 
 <template>
@@ -103,13 +92,14 @@ const headerImg = () => {
     :menuList="menus"
     :options="options"
     :customSize="customSize"
+    v-if="data"
   >
     <template #header-left v-if="!loading">
       <div class="flex ml-3">
         <div class="mr-2 rounded-lg overflow-hidden">
-          <a-avatar shape="square" class="" :size="20" :src="headerImg()" />
+          <a-avatar shape="square" class="" :size="20" :src="data?._logo" />
         </div>
-        {{ data.name }}
+        {{ data?.name }}
       </div>
     </template>
     <template v-if="!loading">
@@ -117,13 +107,6 @@ const headerImg = () => {
         class="w-full flex flex-col h-full xt-theme-b"
         style="overflow: hidden !important"
       >
-        <xt-button @click="appCenterVisible = true">go appCenter</xt-button>
-        <TTAppCenter v-if="appCenterVisible" />
-        <!--
-      <xt-button @click="visible = true">go oldInstall</xt-button>
-      <TTApp v-if="visible" @close="visible = false" />
--->
-
         <WuJie v-bind="wujie" :id="customData.id" class="" />
       </div>
     </template>

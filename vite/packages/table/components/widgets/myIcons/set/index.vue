@@ -50,7 +50,7 @@
         <div class="p-4 mb-4 xt-bg-2 rounded-xl">
           <xt-option-info
             title="图标和名称"
-            info="支持自定图标和名称。"
+            info="支持自定义图标和名称。"
             icon="fluent:arrow-clockwise-16-regular"
             @onIconClick="refreshIcon"
           />
@@ -110,7 +110,6 @@ edit.value.type = edit.value.open.type;
 
 edit.value["mode"] = res ? "link" : "app";
 edit.value["value"] = edit.value.open.value;
-
 if (!edit.value["defaultIcon"]) {
   edit.value["defaultIcon"] = edit.value.src;
 }
@@ -192,6 +191,7 @@ watch(
   (newV, oldV) => {
     if (newV && edit.value.mode == "link") {
       edit.value.src = getHostAddress(edit.value.value) + "/favicon.ico";
+      edit.value.open.value = newV;
     }
   }
 );

@@ -40,12 +40,14 @@ const plugins = (iframeWindow: any) => {
 <!--          }"-->
 
 <template>
+  {{ url }}
+
   <WujieVue
     height="100%"
+    width="100%"
     ref="wujie"
     :name="name"
     :url="url"
-
     :plugins="[
       {
         jsBeforeLoaders: [

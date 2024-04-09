@@ -40,7 +40,7 @@ export const courierStore = defineStore("courier", {
       },
 
       courierStatus: { // 状态图标显示
-        statusBar: true,
+        statusBar: false,
         currentStatus: 'unFinished',//followed,unFinished     //,'未完成快递'
       },
 

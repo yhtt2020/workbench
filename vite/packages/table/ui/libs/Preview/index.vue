@@ -14,8 +14,12 @@
       @ok="addHandle" >
       <div class="relative px-2 xt-modal rounded-xl" style="width: 466px; height: 380px;">
           <div class="flex justify-between w-full">
-              <xt-select v-model="defaultDesk" :zIndex="2001" borderClass="w-[200px]" :list="chooseList"></xt-select>
-              <xt-select v-model="defaultFolder" :zIndex="2001" borderClass="w-[200px]" :list="folderList"></xt-select>
+              <div class="w-[215px]">
+                <xt-select v-model="defaultDesk" :zIndex="2001" borderClass="extra" :list="chooseList"></xt-select>
+              </div>
+              <div class="w-[215px]">
+                <xt-select v-model="defaultFolder" :zIndex="2001" borderClass="extra" :list="folderList"></xt-select>
+              </div>
           </div>
           <!-- 预览组件 -->
           <xt-preDesk :chooseIndex="cardData" class="mt-4 overflow-hidden" :key="defaultFolder"></xt-preDesk>
@@ -320,4 +324,8 @@ onMounted(() => {
 
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.extra{
+  width: 215px !important;
+}
+</style>

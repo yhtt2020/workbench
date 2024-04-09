@@ -1,5 +1,5 @@
 <template>
-    <div :class="boxClass" v-if="!isTop">
+    <div :class="boxClass" v-if="!isTop && list.length > 0">
         <Box 
             @closeAll="closeAll"
             :main-class="mainClass"

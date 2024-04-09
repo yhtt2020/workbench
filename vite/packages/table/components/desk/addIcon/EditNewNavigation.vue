@@ -18,7 +18,6 @@
         last="6" 
         end="1" 
         v-model:index="index" 
-        @index="changeIcon"
         leftMargin="mr-0 py-3"
         w="64" 
         leftClass="xt-main-bg"
@@ -75,7 +74,6 @@
                 :list="multipleList"
                 :isFavorite="true">
               </xt-preview>
-              <!-- <Preview v-if="previewFlag" v-model="previewFlag" @ok="addFolderIcon" :list="multipleList"></Preview> -->
               <!-- 添加到桌面 -->
               <AddDesk v-if="deskFlag" :list="multipleList" @close="deskFlag=false"></AddDesk>
             </teleport>
@@ -127,12 +125,10 @@ import { completeTask } from '../../../apps/task/task'
 import _ from 'lodash-es'
 import { useFileConversionIcon,mergeData } from '../../../ui/hooks/useDataConversion'
 import { nanoid } from 'nanoid';
-// import {refresh} from './hook/useRefresh'
 
 import AddDesk from './components/AddDesk.vue'
 import DropDown from './components/DropDown.vue'
 import LeftMenu from '../../../apps/favorites/components/LeftMenu.vue';
-import Preview from './components/Preview.vue';
 
 import { useNavigationStore } from '../navigationBar/navigationStore';
 import { navStore } from '../../../store/nav';
@@ -195,15 +191,13 @@ const isStart = ref(true)  // 是否显示开始页
 const defaultTitle = ref({})  // 下拉框默认值
 const index = ref(0)
 
-const changeIcon = (val) => {
-  console.log(val)
-  iconIndex.value = val
-  console.log(iconIndex.value)
-}
-// 禁止添加的图标
+// 禁止添加到桌面以及文件夹中的图标
 const disabledAdd = ref([
-  'commun',
-  'control',
+  // 'commun',
+  // 'control',
+  "效率助手",
+  "控制中心",
+  "社区中心",
 ])  
 
 // 导航栏数据
@@ -316,6 +310,11 @@ const unCheck = () => {
       item.check = false
     }
   })
+}
+
+// 收藏夹刷新 --- 只用于收藏夹
+const refresh = () => {
+  proxy.$bus.emit('refreshBrowser')
 }
 
 // 右键菜单导航栏添加图标
@@ -451,13 +450,14 @@ const addIcon = (item: object | undefined) => {
     }
   } else {
     // 图标禁止被添加到桌面
-    if (disabledAdd.value.includes(item.value)) {
+    if (disabledAdd.value.includes(item.name)) {
       message.error(`${item.name} 已被禁止添加到桌面`);
       return;
     }
     if(currentDeskId.value === defaultTitle.value.id){
       emit('addIcon', item);
     } else {
+      // 添加图标到其他桌面
       const target = desks.value.find((i) => i.id === defaultTitle.value.id);
       if (target) {
         const card = _.cloneDeep(item);
@@ -544,7 +544,7 @@ const dropArr = computed(() => {
   }
 })
 
-// 进行切换时，数据清空
+// 左侧导航栏进行切换时，多选图标数据清空
 watch(
   () => iconIndex.value,
   (val) => {
@@ -552,7 +552,7 @@ watch(
   }
 )
 
-// 当导航栏未创建时，提示是否创建
+// 切换选择导航栏时，如果没有开启，提示是否开启
 watch(
   () => selectNav.value,
   (newVal,oldVal) => {
@@ -576,9 +576,9 @@ watch(
 
 // 防止退出后再次打开，还是多选状态
 onBeforeUnmount(() => {
-  isMultiple.value = false
-  selectNav.value = '' // 重置导航栏
-  multipleList.value = [] // 重置多选 
+  isMultiple.value = false // 关闭多选
+  selectNav.value = '' // 重置导航栏，防止后续再次打开添加到错误位置
+  multipleList.value = [] // 重置多选数据
 })
 </script>
 <style lang='scss' scoped></style>
