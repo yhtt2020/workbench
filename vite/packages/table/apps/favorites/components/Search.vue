@@ -1,6 +1,6 @@
 <template>
     <div class="w-full">
-        <div class="h-16 flex items-center justify-between px-4">
+        <div class="flex items-center justify-between h-16 px-4">
             <!-- 搜索 -->
             <a-input
             class="h-8 xt-mask xt-text"
@@ -15,7 +15,7 @@
                 <xt-new-icon class="absolute" icon="fluent:search-20-filled" size="20" />
             </a-input>
             <!-- <div @click="test">测试</div> -->
-            <div class="font-14 flex items-center">
+            <div class="flex items-center font-14">
                 <div>打开方式：</div> 
                 <!-- <xt-select
                 v-model="test" h="32"
@@ -33,7 +33,7 @@
                 ></a-select>
 
 
-                <div class="xt-bg-2 h-8 w-8 flex justify-center items-center rounded-lg ml-3 pointer" @click="isFavorites = false">
+                <div class="flex items-center justify-center w-8 h-8 ml-3 rounded-lg xt-bg-2 pointer" @click="isFavorites = false">
                     <xt-new-icon icon="fluent:dismiss-16-regular" size="16" />
                 </div>
                 
@@ -57,6 +57,7 @@
             { label: '系统默认浏览器', value: 'system' },
             { label: '想天浏览器', value: 'thisky' },
             { label: '工作台内打开', value: 'work' },
+            { label: '手机模式', value:'mob'}
         ],
         folderIndex: -2,
 
