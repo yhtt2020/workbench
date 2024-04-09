@@ -29,7 +29,7 @@ const browser={
       return
     }
     console.log('在系统默认浏览器打开',url)
-    require('electron').shell.openExternal(url)
+    win32.openURL(url)
   },
   /**
    * 在想天浏览器内打开
