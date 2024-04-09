@@ -11,9 +11,9 @@
       @update:data="resizeModel"
       :handle="handle"
       :disabled="handle ? false : true"
-      @click="modalClick"
     >
       <div
+        @click="modalClick"
         :class="[custom ? '' : boxClass]"
         ref="modal"
         class="no-drag flex flex-col text-base rounded-xl xt-modal xt-shadow xt-text overflow-hidden"
@@ -30,12 +30,13 @@
       >
         <slot v-if="custom"></slot>
         <template v-else>
+          <!-- 标题和左右内容 -->
           <div class="flex flex-1 w-full">
             <!-- 左侧 -->
             <nav>
               <slot name="nav"> </slot>
             </nav>
-            <!-- 主体区域 -->
+            <!-- 右侧 -->
             <main class="flex flex-col flex-1 h-full">
               <!-- 主体头部 -->
               <header
@@ -123,6 +124,7 @@
               </vue-custom-scrollbar>
             </main>
           </div>
+          <!-- 底部 -->
           <slot name="footer">
             <footer class="flex items-center justify-end mt-4" v-if="footer">
               <xt-button w="64" h="40" @click="onNo()">
@@ -188,8 +190,6 @@ import { useWindowSize } from "../../drag/src/hooks/useWindowSize";
 // import { vElementSize } from "../../drag/src/hooks/useElementSize";
 
 import { ModalProps } from "./types";
-import { drawHeaderImage } from "../../../../js/common/avatar";
-import { debouncedWatch } from "@vueuse/core";
 const { proxy }: any = getCurrentInstance();
 
 const props = withDefaults(defineProps<ModalProps>(), {
@@ -232,7 +232,8 @@ const oldY = ref(0);
 const modalWidth = ref(0);
 const modalHeight = ref(0);
 // 弹窗层级
-const currentModalIndex = ref(props.index);
+const INDEX = 99999999999999999;
+const currentModalIndex = ref(INDEX);
 // 当前弹窗层级
 const modalIndex = computed(() => {
   if (isMinimize.value) {
@@ -255,8 +256,8 @@ const isMaximize = ref(false);
 const windowHeight = ref(0);
 const windowWidth = ref(0);
 
-// 底部导航高度
-let bottomBarHeight = 0;
+// 导航高度
+let barHeight = 0;
 // 弹窗样式
 const modalStyle = computed(() => {
   if (isMaximize.value) {
@@ -278,8 +279,6 @@ let intervalId;
 // 初始化位置
 function initPos() {
   intervalId = setInterval(() => {
-    // if (name.value) {
-    // }
     // 数据未加载完成时
     if (windowHeight.value <= 0 || modalHeight.value <= 0) return;
     let top;
@@ -288,7 +287,7 @@ function initPos() {
       top = (windowHeight.value - modalHeight.value) / 2;
       left = (windowWidth.value - modalWidth.value) / 2;
     } else {
-      top = (windowHeight.value - bottomBarHeight - modalHeight.value) / 2;
+      top = (windowHeight.value - barHeight - modalHeight.value) / 2;
       left = (windowWidth.value - modalWidth.value) / 2;
     }
 
@@ -357,12 +356,6 @@ const minimize = () => {
   }, 1);
 };
 
-//   x.value = oldX.value;
-//   y.value = oldY.value;
-//   return {
-//     borderRadius: "12px",
-//     height: "auto",
-//   };
 /** 最大化 */
 const maximize = () => {
   transitionVisible.value = true;
@@ -387,10 +380,25 @@ const maximize = () => {
     }, 100);
   }, 1);
 };
-/** modalClick */
+/** 模态框点击事件 */
 const modalClick = () => {
-  currentModalIndex.value = 999999999999;
+  modalFouls();
+};
+
+/** 模态框获取焦点 */
+const modalFouls = () => {
+  // 先通知所有弹窗移除焦点
   proxy.$bus.emit("modalFocus", false);
+
+  // 提升当前弹窗层级
+  currentModalIndex.value = INDEX;
+
+  console.log('2222222222 :>> ', 2222222222);
+};
+
+/** 失去焦点 */
+const modalBlur = () => {
+  currentModalIndex.value = props.index;
 };
 /** 通用默认底部按钮事件 */
 // 关闭 or 取消
@@ -417,27 +425,25 @@ const onEsc = (event) => {
 onBeforeMount(() => {});
 // 挂载后
 onMounted(() => {
-  // 先发送失去弹窗焦点
-  proxy.$bus.emit("modalFocus", false);
+  modalFouls();
   // 然后挂载监听弹窗焦点
   proxy.$bus.on("modalFocus", (isFocus: boolean) => {
-    currentModalIndex.value = isFocus ? 999999999999 : props.index;
+    currentModalIndex.value = isFocus ? INDEX : props.index;
   });
 
   // 获取底部菜单
   const bottomBar = document.getElementsByClassName("xt-main-bottom-bar")[0];
-  if (bottomBar) bottomBarHeight = bottomBar.clientHeight;
+  if (bottomBar) barHeight = bottomBar.clientHeight;
   initPos();
   // 注册单例弹窗监听
   if (props.type) {
     proxy.$bus.emit("modalClose", props.type);
-    setTimeout(() => {
-      proxy.$bus.on("modalClose", (currentType) => {
-        if (type.value == currentType) {
-          close();
-        }
-      });
-    }, 1);
+
+    proxy.$bus.on("modalClose", (currentType) => {
+      if (type.value == currentType) {
+        close();
+      }
+    });
   }
 
   // 注册esc键监听
@@ -453,7 +459,9 @@ onMounted(() => {
 });
 // 卸载前
 onBeforeUnmount(() => {
-  //
+  // 注销弹窗焦点监听
+  proxy.$bus.off("modalFocus");
+  // 注销单例弹窗监听
   if (props.type) {
     proxy.$bus.off("modalClose");
   }
