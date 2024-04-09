@@ -10,10 +10,8 @@ const props = defineProps({
   url: {
     type: String,
   },
-  id: {
-    type: String,
-  },
 });
+
 const { bus, setupApp, preloadApp, destroyApp } = WujieVue;
 
 const plugins = (iframeWindow: any) => {
@@ -28,15 +26,15 @@ const plugins = (iframeWindow: any) => {
   };
   return res;
 };
+// location.href='tsbapp://table.com/table.html'
 </script>
 
 <template>
   <WujieVue
-    class="xt-theme-b"
     height="100%"
     ref="wujie"
     :name="name"
-    :url="url || 'http://localhost:5173/'"
+    :url="url"
     :plugins="[
       {
         jsBeforeLoaders: [

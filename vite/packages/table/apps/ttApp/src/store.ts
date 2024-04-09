@@ -5,7 +5,16 @@ import { message } from "ant-design-vue";
 // @ts-ignore
 export const useTTAppStore = defineStore("useTTAppStore", {
   state: () => ({
+    // 代理的ttapp已存在数据
     ttappList: [],
+    // 封装好的无界配置
+    modal: {
+      // 弹窗是否显示
+      visible: false,
+      id: "",
+      // 弹窗任务
+      list: [],
+    },
   }),
   getters: {},
   actions: {
@@ -49,7 +58,7 @@ export const useTTAppStore = defineStore("useTTAppStore", {
     enabled: true,
     strategies: [
       {
-        paths: ["aapList"],
+        paths: ["ttappList"],
         storage: localStorage,
       },
     ],

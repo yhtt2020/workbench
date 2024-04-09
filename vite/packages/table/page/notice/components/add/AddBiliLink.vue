@@ -1,5 +1,5 @@
 <template>
- <xt-modal v-model="addBiliVisible" title="添加b站视频链接" :scrollbarPadding="{paddingRight:'0px',paddingLeft:'0px'}">
+ <xt-modal v-model="addBiliVisible" v-if="addBiliVisible" title="添加b站视频链接" :scrollbarPadding="{paddingRight:'0px',paddingLeft:'0px'}">
   <div style="width: 500px;" class="flex items-center flex-col justify-center">
    <a-input class="h-10" spellcheck="false" v-model:value="biliLinkValue" style=" min-width: 452px; margin-bottom: 16px;border-radius: 10px;" placeholder="请输入链接地址"></a-input>
   </div>

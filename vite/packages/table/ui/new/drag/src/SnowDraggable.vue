@@ -185,7 +185,9 @@ const emits = defineEmits([
   "onDrag",
   "onDragStop",
   "auxLine",
+  "update:data",
 ]);
+
 const draggable: any = ref({}); // 可拖拽元素
 const elementSize: any = ref({});
 // const parentNode: any = ref(null)
@@ -225,6 +227,7 @@ const draggablePos: any = computed(() => {
   return {
     left: left.value + "px",
     top: top.value + "px",
+    // transform: `translate3d(${left.value}px, ${top.value}px, 0)`,
     zIndex: zIndex.value,
   };
 });
@@ -283,6 +286,7 @@ function getElementSize(size: any) {
     width: newWidth,
     height: newHeight,
   };
+  emits("update:data", dragData.value);
 }
 
 watch([() => parentSize.value, () => draggableSize.value], () => {
@@ -434,6 +438,8 @@ onMounted(() => {
       immediate: true,
     }
   );
+
+  emits("update:data", dragData.value);
 });
 
 // 拖拽开始

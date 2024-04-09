@@ -13,24 +13,37 @@ import {
 import { storeToRefs } from "pinia";
 import { taskStore as useTaskStore } from "../task/store";
 import { useGlobalStore } from "./store";
-// components 非首次加载请使用defineAsyncComponent包裹
+// 领取任务奖励
 const ClaimReward = defineAsyncComponent(
   () => import("../task/components/ClaimReward.vue")
 );
+const taskStore: any = useTaskStore();
+const { rewardVisible } = storeToRefs(taskStore);
+import { aiStore } from "../../store/ai";
+const ai: any = aiStore();
+ai.init();
+// 系统设置弹窗
 const SystemSet = defineAsyncComponent(() => import("../systemSet"));
+
+// 无界应用弹窗
+import WujieModal from "../ttApp/src/modules/modal";
+import { useTTAppStore } from "../ttApp/src/store";
+const ttappStore: any = useTTAppStore();
+const { modal } = storeToRefs(ttappStore);
+
+// 登录弹窗
 const Login = defineAsyncComponent(
   () => import("../../permission/user/Login.vue")
 );
-// hooks
 import { useLogin } from "../../permission/user/useLogin";
+
 const tt: any = inject("tt");
 const { proxy }: any = getCurrentInstance();
 
-const taskStore: any = useTaskStore();
-const { rewardVisible } = storeToRefs(taskStore);
 const globalStore: any = useGlobalStore();
 const { systemVisible, loginVisible, loginCb } = storeToRefs(globalStore);
 
+// 文件弹窗
 const fileVisible = ref(true);
 const file: any = ref(null);
 
@@ -54,7 +67,8 @@ const openFile = (cb?: Function) => {
 onMounted(() => {
   // 打开系统设置
   proxy.$bus.on("openSystemSet", () => {
-    systemVisible.value = true;
+    console.log("systemVisible.value :>> ", systemVisible.value);
+    systemVisible.value = !systemVisible.value;
   });
   // 打开登录
   proxy.$bus.on("openLogin", (cb) => {
@@ -64,22 +78,12 @@ onMounted(() => {
   proxy.$bus.on("openFile", (cb) => {
     openFile(cb);
   });
-
-
 });
-
-const test = () => {
-  // window.tt.runTime
-  // window.tt
-  // console.log('proxy :>> ',);
-  // console.log("test",t);
-  // tt.api.
-  // console.log('tt.runTime.env :>> ', tt.env(""));
-  // tt
-};
 </script>
 
 <template>
+  <!-- 无界应用 -->
+  <WujieModal v-if="modal.visible" />
   <!-- 领取任务奖励 -->
   <ClaimReward v-if="rewardVisible" />
   <!-- 系统设置 -->

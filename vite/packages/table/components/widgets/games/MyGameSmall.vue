@@ -42,7 +42,7 @@
       <div v-if="defaultGame.name === 'steam'"  class="w-full h-full">
         <div class="flex items-center justify-center w-full h-full" v-if="detailShow === false">
           <a-spin v-if="displaySteamGame.length !== displaySteamGame.length" style="margin: 0 auto;"/>
-          <div class="my-game" v-else>
+          <div class="flex flex-wrap flex-shrink-0 w-full my-game" v-else style="gap: 16px;">
             <XtState  v-if="displaySteamGame.length ==0" :state="'null'" style="width: 538px;height: 352px;" bg=""></XtState>
             <div v-for="item in displaySteamGame.slice(0,4)" @click="enterMyGameDetail(item)"  class="flex flex-col mb-3 rounded-lg my-game-item s-item pointer">
               <div style="height:118px;">
@@ -254,10 +254,10 @@ export default {
 }
 .my-game{
   // display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-gap: 15px;
-  justify-content: center;
-  align-items: center;
+  // grid-template-columns: repeat(2, 1fr);
+  // grid-gap: 15px;
+  // justify-content: center;
+  // align-items: center;
   margin: 12px auto 0 auto;
 }
 .my-game-item{

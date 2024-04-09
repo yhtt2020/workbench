@@ -38,6 +38,9 @@ const system = {
       browser
     },cb)
 
+  },
+  restart(){
+    send('restart')
   }
 }
 module.exports = system
