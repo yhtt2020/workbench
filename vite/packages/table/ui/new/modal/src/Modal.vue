@@ -43,6 +43,7 @@
                 class="relative flex items-center xt-modal-header"
                 :class="headerClass"
                 v-if="header"
+                @dblclick="doubleClick"
               >
                 <!-- 标题左侧 -->
                 <div class="z-20 flex items-center flex-1">
@@ -62,7 +63,7 @@
                   <!-- 最小化 -->
                   <xt-button
                     v-if="min"
-                    class="ml-3"
+                    class="ml-3 tt-modal-button"
                     w="32"
                     h="32"
                     radius="8"
@@ -72,7 +73,7 @@
                   </xt-button>
                   <!-- 最大化 -->
                   <xt-button
-                    class="ml-3"
+                    class="ml-3 tt-modal-button"
                     w="32"
                     h="32"
                     radius="8"
@@ -91,7 +92,7 @@
                   </xt-button>
                   <!-- 关闭按钮 -->
                   <xt-button
-                    class="ml-3"
+                    class="ml-3 tt-modal-button"
                     w="32"
                     h="32"
                     radius="8"
@@ -188,8 +189,10 @@ import {
 } from "vue";
 import { useWindowSize } from "../../drag/src/hooks/useWindowSize";
 // import { vElementSize } from "../../drag/src/hooks/useElementSize";
-
+import { nanoid } from "nanoid";
+import { useDoubleClick } from "../../../../hooks";
 import { ModalProps } from "./types";
+
 const { proxy }: any = getCurrentInstance();
 
 const props = withDefaults(defineProps<ModalProps>(), {
@@ -205,7 +208,7 @@ const props = withDefaults(defineProps<ModalProps>(), {
   footer: false,
   esc: false,
   boxClass: "p-4",
-  headerClass: "",
+  headerClass: "pb-4",
   mainClass: "",
   beforeMount: () => true,
   beforeUnmount: () => true,
@@ -232,8 +235,8 @@ const oldY = ref(0);
 const modalWidth = ref(0);
 const modalHeight = ref(0);
 // 弹窗层级
-const INDEX = 99999999999999999;
-const currentModalIndex = ref(INDEX);
+const INDEX = 999999999;
+const currentModalIndex = ref(0);
 // 当前弹窗层级
 const modalIndex = computed(() => {
   if (isMinimize.value) {
@@ -255,7 +258,8 @@ const isMaximize = ref(false);
 // 视图大小
 const windowHeight = ref(0);
 const windowWidth = ref(0);
-
+// 弹窗名称
+const modalName = ref(nanoid(4));
 // 导航高度
 let barHeight = 0;
 // 弹窗样式
@@ -277,7 +281,7 @@ const modalStyle = computed(() => {
 });
 let intervalId;
 // 初始化位置
-function initPos() {
+function initPosition() {
   intervalId = setInterval(() => {
     // 数据未加载完成时
     if (windowHeight.value <= 0 || modalHeight.value <= 0) return;
@@ -299,7 +303,7 @@ function initPos() {
     oldWidth.value = modalWidth.value;
     modalVisible.value = true;
     clearInterval(intervalId); // 数据加载完成后取消定时器
-  }, 100);
+  }, 1);
 }
 
 // 更新弹窗大小
@@ -382,24 +386,29 @@ const maximize = () => {
 };
 /** 模态框点击事件 */
 const modalClick = () => {
-  modalFouls();
+  getModalFouls();
 };
+const doubleClick = (event: any) => {
+  if (!props.max) return;
+  let res = event.target?.closest(".tt-modal-button");
+  if (res) return;
+  maximize();
+}
+// 头部框双击事件
+// const { doubleClick } = useDoubleClick(d);
 
 /** 模态框获取焦点 */
-const modalFouls = () => {
+const getModalFouls = () => {
+  // 如果当前弹窗已经是焦点弹窗则不处理
+  if (currentModalIndex.value == INDEX) return;
+  console.log("2222 :>> ", 2222);
   // 先通知所有弹窗移除焦点
-  proxy.$bus.emit("modalFocus", false);
+  proxy.$bus.emit("modalBlur");
 
   // 提升当前弹窗层级
   currentModalIndex.value = INDEX;
-
-  console.log('2222222222 :>> ', 2222222222);
 };
 
-/** 失去焦点 */
-const modalBlur = () => {
-  currentModalIndex.value = props.index;
-};
 /** 通用默认底部按钮事件 */
 // 关闭 or 取消
 const onNo = () => {
@@ -423,44 +432,63 @@ const onEsc = (event) => {
 
 // 挂载前
 onBeforeMount(() => {});
-// 挂载后
-onMounted(() => {
-  modalFouls();
-  // 然后挂载监听弹窗焦点
-  proxy.$bus.on("modalFocus", (isFocus: boolean) => {
-    currentModalIndex.value = isFocus ? INDEX : props.index;
-  });
 
-  // 获取底部菜单
+// 初始化
+const init = () => {
+  // 获取菜单高度
   const bottomBar = document.getElementsByClassName("xt-main-bottom-bar")[0];
   if (bottomBar) barHeight = bottomBar.clientHeight;
-  initPos();
-  // 注册单例弹窗监听
-  if (props.type) {
-    proxy.$bus.emit("modalClose", props.type);
 
-    proxy.$bus.on("modalClose", (currentType) => {
-      if (type.value == currentType) {
-        close();
-      }
-    });
+  // 初始化弹窗位置
+  initPosition();
+
+  // 监听弹窗失去焦点事件
+  proxy.$bus.on("modalBlur", () => {
+    currentModalIndex.value = props.index;
+  });
+
+  setTimeout(() => {
+    // 获取弹窗焦点
+    getModalFouls();
+  }, 1);
+
+  // 属于单例弹窗
+  if (props.type) {
+    // 关闭单例弹窗
+    proxy.$bus.emit("modalClose", props.type, modalName.value);
+
+    setTimeout(() => {
+      // 监听关闭单例弹窗
+      proxy.$bus.on("modalClose", (currentType, currentName) => {
+        if (type.value == currentType && modalName.value != currentName) {
+          close();
+        }
+      });
+    }, 1);
   }
 
-  // 注册esc键监听
+  // 需要esc键
   if (esc.value) {
+    // esc键监听
     window.addEventListener("keydown", onEsc, {
       capture: true,
     });
   }
+};
+
+// 挂载后
+onMounted(() => {
   useWindowSize((size) => {
     windowHeight.value = size.height.value;
     windowWidth.value = size.width.value;
   }, 0);
+
+  init();
 });
 // 卸载前
 onBeforeUnmount(() => {
-  // 注销弹窗焦点监听
-  proxy.$bus.off("modalFocus");
+  // 注销弹窗失去焦点监听
+  proxy.$bus.off("modalBlur");
   // 注销单例弹窗监听
   if (props.type) {
     proxy.$bus.off("modalClose");

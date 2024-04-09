@@ -129,7 +129,7 @@ onMounted(() => {
     </template>
     <!-- 头部右侧区域 -->
     <template #header-right>
-      <xt-button class="ml-3" w="32" h="32" radius="8" @click="refresh">
+      <xt-button class="ml-3 tt-modal-button" w="32" h="32" radius="8" @click="refresh">
         <xt-ify-icon icon="fluent:arrow-clockwise-16-regular" />
       </xt-button>
     </template>

@@ -30,13 +30,17 @@ const plugins = (iframeWindow: any) => {
 </script>
 
 <template>
+  {{ url }}
+
   <WujieVue
     height="100%"
     width="100%"
     ref="wujie"
     :name="name"
     :url="url"
-
+    :attrs="{
+      // src: `tsbapp://table.com/index.html`,
+    }"
     :plugins="[
       {
         jsBeforeLoaders: [

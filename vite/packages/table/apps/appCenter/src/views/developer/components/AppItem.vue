@@ -60,6 +60,7 @@ const openModal = () => {
 
 <template>
   <!-- 添加时预览组件 -->
+  {{ item }}
   <xt-preview-v2
     v-if="previewVisible"
     v-model="previewVisible"
