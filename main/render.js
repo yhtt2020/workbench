@@ -60,7 +60,7 @@ class Pop {
     let config = {}
     config.frame = false
     config.show = false
-    config.resizable=false
+    config.resizable = false
     config.skipTaskbar = true
     config.webPreferences = {
       nodeIntegration: true,
@@ -105,7 +105,7 @@ class Pop {
     this.width = param.width
     this.callerId = callerId
     this.args = param.args || {}
-    this.blurClose=typeof param.blurClose ==='undefined'? true:param.blurClose
+    this.blurClose = typeof param.blurClose === 'undefined' ? true : param.blurClose
     this.x = param.x
     this.y = param.y
     this.height = param.height
@@ -115,14 +115,14 @@ class Pop {
     this.win.loadURL(this.url)
     this.win.setResizable(param.resizable)
     this.win.setSize(this.width, this.height)
-    if(this.x || this.y)
-    this.win.setPosition(this.x, this.y)
+    if (this.x || this.y)
+      this.win.setPosition(this.x, this.y)
     this.win.setAlwaysOnTop(!!this.alwaysTop)
     this.win.show()
-    this.win.once('focus',()=>{
+    this.win.once('focus', () => {
       //首次显示后再挂在失焦事件，防止首次无法打开
       this.win.on('blur', () => {
-        if(this.blurClose){
+        if (this.blurClose) {
           this.win.hide()
           //缓存10秒再自动关闭
           setTimeout(() => {
@@ -183,20 +183,20 @@ class Pool {
   }
 
   async usePop (param, callerId = -1) {
-    if(param.bounds){
-      param=Object.assign(param,param.bounds)
+    if (param.bounds) {
+      param = Object.assign(param, param.bounds)
     }
     let oldObj = this.pop.find(v => v.url === param.url)
     if (oldObj) {
-      oldObj.args=param.args
+      oldObj.args = param.args
       oldObj.callerId = callerId
-      oldObj.blurClose=typeof param.blurClose ==='undefined'? true:param.blurClose
-      if(param.x){
-        oldObj.x=param.x
-        oldObj.y=param.y
-        oldObj.win.setPosition(param.x,param.y)
+      oldObj.blurClose = typeof param.blurClose === 'undefined' ? true : param.blurClose
+      if (param.x) {
+        oldObj.x = param.x
+        oldObj.y = param.y
+        oldObj.win.setPosition(param.x, param.y)
       }
-      if(oldObj.win.isVisible())
+      if (oldObj.win.isVisible())
         oldObj.win.webContents.send('show')
       oldObj.win.show()
       oldObj.win.moveTop()
@@ -214,7 +214,7 @@ let pool = new Pool()
 app.whenReady().then(() => {
   pool.init()
 })
-ipc.on('closeSelf',(event,args)=>{
+ipc.on('closeSelf', (event, args) => {
   BrowserWindow.fromWebContents(event.sender).close()
 })
 // const renderPopManager={
@@ -344,24 +344,24 @@ global.render = {
    * @param forcePrd 强制使用prd路径，用于测试
    * @returns {string}
    */
-  getUrl (url,params,domain='.',forcePrd=false) {
+  getUrl (url, params, domain = '.', forcePrd = false) {
     let protocolUrl
     protocolUrl = `tsbapp://${domain}/${url}` //todo 需要验证正式环境的协议情况
-    if (isDevelopmentMode && forcePrd===false) {
-      if(domain==='.'){
+    if (isDevelopmentMode && forcePrd === false) {
+      if (domain === '.') {
         protocolUrl = `http://localhost:1600/html/${url}`
-      }else{
+      } else {
         protocolUrl = `http://${domain}:1600/html/${url}`
       }
     }
-    if(params){
-      let url= new URL(protocolUrl)
+    if (params) {
+      let url = new URL(protocolUrl)
       //拼装参数
-      Object.keys(params).forEach(key=>{
-        url.searchParams.set(key,params[key])
+      Object.keys(params).forEach(key => {
+        url.searchParams.set(key, params[key])
       })
 
-      protocolUrl=url.toString()
+      protocolUrl = url.toString()
     }
     return protocolUrl
   },
@@ -370,10 +370,10 @@ global.render = {
    * @param url
    * @returns {*}
    */
-  isRenderUrl(url){
-    if(isDevelopmentMode){
+  isRenderUrl (url) {
+    if (isDevelopmentMode) {
       return url.startsWith('http://localhost:1600')
-    }else{
+    } else {
       return url.startsWith('tsbapp://')
     }
   },
@@ -408,30 +408,14 @@ global.render = {
     })
 
   },
-  /**
-   * 注册工作台应用协议 ttapp.js
-   * @param request
-   * @param response
-   */
-  regTTAppProtocol (request, response) {
-    let url=new URL(request.url)
-    let pathName = url.pathname
-    let domain=url.domain
-    console.log(url)
-    let extension = path.extname(pathName).toLowerCase()
-    if (!extension) return
-    pathName = decodeURI(pathName)
-    let filePath
-    let root= require('electron').app.getPath('userData')
-    let appsPath=require('path').join(root,'apps',url.hostname)
-    if(extension==='.html'){
-      filePath=path.join(appsPath, pathName)
-    }else{
-      filePath=path.join(appsPath, pathName)
-    }
-
-    fs.readFile(filePath, (error, data) => {
-      if (error) return
+  readFile(filePath,callback){
+    let extension = path.extname(filePath).toLowerCase()
+    fs.readFile(filePath.replace('//','/'), (error, data) => {
+      if (error)
+      {
+        console.log(error,'报错了')
+        return
+      }
       let mimeType = ''
       if (extension === '.js') {
         mimeType = 'text/javascript'
@@ -443,49 +427,74 @@ global.render = {
         mimeType = 'image/svg+xml'
       } else if (extension === '.json') {
         mimeType = 'application/json'
-      }else if(extension==='.mp3'){
+      } else if (extension === '.mp3') {
         mimeType = 'audio/mpeg'
-      }else if(extension==='.png'){
+      } else if (extension === '.png') {
         mimeType = 'image/png'
-      }else if(extension==='.jpg'){
+      } else if (extension === '.jpg') {
         mimeType = 'image/jpeg'
       }
-      response({ mimeType, data })
+      callback(error,mimeType,data)
     })
   },
-  regDefaultProtocol (request, response) {
-    let pathName = new URL(request.url).pathname
-    let extension = path.extname(pathName).toLowerCase()
-    if (!extension) return
-    pathName = decodeURI(pathName)
+
+  /**
+   * 查找文件，优先查找apps
+   * @param requestUrl
+   * @param pathName
+   * @returns {*}
+   */
+  findFile(requestUrl,pathName){
     let filePath
-    if(extension==='.html'){
-      filePath=path.join(__dirname, 'vite', 'dist','html', pathName)
-    }else{
-      filePath=path.join(__dirname, 'vite', 'dist', pathName)
+    let extension = path.extname(pathName).toLowerCase()
+    let url=new URL(requestUrl)
+    //检查应用文件夹
+    let root = require('electron').app.getPath('userData')
+    let appsPath = path.join(root, 'apps', url.hostname)
+    if(fs.existsSync(appsPath)){
+      //存在应用文件夹，则直接从应用文件夹返回文件
+      filePath = path.join(appsPath, pathName)
+      return this.fixPath(filePath)
     }
 
-    fs.readFile(filePath, (error, data) => {
-      if (error) return
-      let mimeType = ''
-      if (extension === '.js') {
-        mimeType = 'text/javascript'
-      } else if (extension === '.html') {
-        mimeType = 'text/html'
-      } else if (extension === '.css') {
-        mimeType = 'text/css'
-      } else if (extension === '.svg') {
-        mimeType = 'image/svg+xml'
-      } else if (extension === '.json') {
-        mimeType = 'application/json'
-      }else if(extension==='.mp3'){
-        mimeType = 'audio/mpeg'
-      }else if(extension==='.png'){
-        mimeType = 'image/png'
-      }else if(extension==='.jpg'){
-        mimeType = 'image/jpeg'
+    //不存在应用文件夹，则返回vite目录下的文件夹路径
+    if (extension === '.html' || extension==='') {
+      //对html文件特殊处理，返回html文件夹下的文件
+      filePath = path.join(__dirname, 'vite', 'dist', 'html', pathName)
+    } else {
+      filePath = path.join(__dirname, 'vite', 'dist', pathName)
+    }
+    return this.fixPath(filePath)
+  },
+
+  //修正路径
+  fixPath(filePath){
+    let fixed=filePath
+    if(fixed.endsWith('\\')){
+      let tested=['index.html','default.html'].find((file)=>{
+        return fs.existsSync(path.join(filePath,file))
+      })
+      if(tested){
+        fixed=path.join(filePath,tested)
       }
-      response({ mimeType, data })
+    }
+
+    return fixed
+  },
+
+  regDefaultProtocol (request, response) {
+    let pathName = new URL(request.url).pathname
+    pathName = decodeURI(pathName)
+    let filePath = this.findFile(request.url, pathName)
+    //todo 对/默认路径要做index.html default.html等的缺省判断
+    if (!filePath) return
+    console.log('filePath',filePath)
+    render.readFile(filePath,(error,mimeType, data)=>{
+      response({
+        headers: {
+          'Access-Control-Allow-Origin': '*'
+        }, mimeType, data
+      })
     })
   },
   /**
@@ -531,38 +540,37 @@ global.render = {
 global.renderPage = {
   iconSelector: null, //图标选择器
   installExtension: null, //安装插件
-  extensionList:null,//扩展列表
+  extensionList: null,//扩展列表
   init () {
 
   },
-  sendIPC(page,event,args){
-    if(this[page] && this[page].win.isDestroyed()===false){
-      this[page].win.webContents.send(event,args)
+  sendIPC (page, event, args) {
+    if (this[page] && this[page].win.isDestroyed() === false) {
+      this[page].win.webContents.send(event, args)
     }
   },
   /*
   打开弹出任务贮存
    */
-  openPopTaskStash(){
-    let bounds={
-      width:1000,
-      height:670
+  openPopTaskStash () {
+    let bounds = {
+      width: 1000,
+      height: 670
     }
-   let pos= renderPage.getMainWindowCenterBounds(bounds.width,bounds.height)
+    let pos = renderPage.getMainWindowCenterBounds(bounds.width, bounds.height)
     pool.usePop(
       {
-        url:render.getUrl('task.html#/popStash'),
-        width:pos.width,
-        height:pos.height,
-        resizable:true,
-        x:pos.x,
-        y:pos.y,
-        blurClose:true
+        url: render.getUrl('task.html#/popStash'),
+        width: pos.width,
+        height: pos.height,
+        resizable: true,
+        x: pos.x,
+        y: pos.y,
+        blurClose: true
       },
       sidePanel.get().webContents.id
     )
   },
-
 
   /**
    * 启动图片选择器
@@ -570,35 +578,35 @@ global.renderPage = {
    * @param args
    * @param windowId 启动者的WebContents的id，用于渲染进程获取交互句柄
    */
-  openIconSelector (pos,args, windowId) {
-    let bounds={
-      width:390,
-      height:320,
-      x:pos.x,
-      y:pos.y
+  openIconSelector (pos, args, windowId) {
+    let bounds = {
+      width: 390,
+      height: 320,
+      x: pos.x,
+      y: pos.y
     }
-    if(args.text){
-      bounds={
+    if (args.text) {
+      bounds = {
         width: 390,
         height: 380,
-        x:pos.x,
-        y:pos.y
+        x: pos.x,
+        y: pos.y
       }
     }
-    bounds= this.getInAreaPos(bounds)
+    bounds = this.getInAreaPos(bounds)
     pool.usePop({
       url: render.getUrl('icon.html'),
       width: bounds.width,
       height: bounds.height,
       x: bounds.x,
       y: bounds.y,
-      args:args,
-    }, windowId).then((pop)=>{
+      args: args,
+    }, windowId).then((pop) => {
       pop.win.setParentWindow(mainWindow)
       //父窗体改变会导致失焦隐藏
-      setTimeout(()=>{
+      setTimeout(() => {
         pop.win.show()
-      },500)
+      }, 500)
 
     })
   },
@@ -613,8 +621,8 @@ global.renderPage = {
       args: {
         manifest: { ...args.manifest },
         id: args.crxInfo.id,
-        crxInfo:args.crxInfo,
-        manifestPath:args.manifestPath
+        crxInfo: args.crxInfo,
+        manifestPath: args.manifestPath
       }
     }).then()
   },
@@ -623,15 +631,15 @@ global.renderPage = {
    * @param bounds
    * @returns {*}
    */
-  getInAreaPos(bounds){
+  getInAreaPos (bounds) {
     const { screen } = require('electron')
-    const maxWidth=screen.getPrimaryDisplay().workAreaSize.width
-    const maxHeight=screen.getPrimaryDisplay().workAreaSize.height
-    if(bounds.x+bounds.width>maxWidth){
-      bounds.x=maxWidth-bounds.width
+    const maxWidth = screen.getPrimaryDisplay().workAreaSize.width
+    const maxHeight = screen.getPrimaryDisplay().workAreaSize.height
+    if (bounds.x + bounds.width > maxWidth) {
+      bounds.x = maxWidth - bounds.width
     }
-    if(bounds.y+bounds.height>maxHeight){
-      bounds.y=maxHeight-bounds.height
+    if (bounds.y + bounds.height > maxHeight) {
+      bounds.y = maxHeight - bounds.height
     }
     return bounds
   },
@@ -651,10 +659,10 @@ global.renderPage = {
   },
 
   async openAllApps () {
-    return await appManager.openAppVite('/list',[],{
+    return await appManager.openAppVite('/list', [], {
       width: 600,
       height: 600,
-      maximizable:false,
+      maximizable: false,
     })
   }
 }
