@@ -236,6 +236,10 @@ export default {
     let navList = _.cloneDeep(this.baseNavList);
 
     let items = [];
+    let res = getCardData();
+    if (res) {
+      navList.splice(1, 0, res);
+    }
     navList.map((li) => {
       return items.push(...li.children);
     });
@@ -244,14 +248,12 @@ export default {
     items = _.uniqBy(items, (li) => {
       return li.name;
     });
+
     navList.splice(1, 0, {
       cname: "全部",
       children: items,
     });
-    let res = getCardData();
-    if (res) {
-      navList.splice(2, 0, res);
-    }
+
 
     navList.forEach((li) => {
       // 离线模式时 隐藏卡片添加
