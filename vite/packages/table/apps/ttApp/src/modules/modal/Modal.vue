@@ -113,6 +113,7 @@ onMounted(() => {
     :index="index"
     min
     max
+    esc
     @max="max"
     ref="modalRef"
     :mask="false"

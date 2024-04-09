@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import WujieVue from "wujie-vue3";
+import { ref } from "vue";
 import { useTTAppStore } from "../../store";
 import {ref} from "vue";
 const ttappStore: any = useTTAppStore();
@@ -28,26 +29,25 @@ const plugins = (iframeWindow: any) => {
   return res;
 };
 //这段代码是修改默认虚拟iframe的地址的，在某种情况下需要指定src
-// const attrs=ref({})
+const attrs=ref({})
 // if(location.href.startsWith('tsbapp://')){
 //   attrs.value.src='tsbapp://table.com/index.html'
 // }
 // location.href='tsbapp://table.com/table.html'
-//   :attrs="attrs"
+
 </script>
 <!--    :attrs="{-->
 <!--            src: 'tsbapp://table.com/index.html'-->
 <!--          }"-->
 
 <template>
-  {{ url }}
-
   <WujieVue
     height="100%"
     width="100%"
     ref="wujie"
     :name="name"
     :url="url"
+    :attrs="attrs"
     :plugins="[
       {
         jsBeforeLoaders: [
