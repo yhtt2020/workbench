@@ -63,6 +63,7 @@ export const useIconConversionFile = (data) => {
     isRadius: data.isRadius,
     iconState: data.imgState,
     iconShape: data.imgShape,
+    mode: data.mode || "app",
   };
   return file;
 };

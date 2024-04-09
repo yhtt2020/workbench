@@ -41,7 +41,7 @@ watch(()=>isNavBar.value.isOutside,(newV,oldV)=>{
 const navBarStore = useNavBarStore()
 const { navBarId, navBarItem,isEnterDesk } = storeToRefs(navBarStore)
 const navigationStore = useNavigationStore()
-const { customOpenNav, isLeaveBar } = storeToRefs(navigationStore)
+const { autoHideNav, isLeaveBar } = storeToRefs(navigationStore)
 
 // 桌面数据
 const deskStore = useDeskStore();

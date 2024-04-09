@@ -7,7 +7,8 @@
                 s-bg xt-text-1 
                 h-[80px] mt-0" 
             style="
-                border-radius: 18px;border: 1px solid var(--divider);" >
+                border: 1px solid var(--divider);"
+            :style="{borderRadius: props.navSize + 'px'}" >
         <div class="flex items-center justify-between">
             <div @click="openControl($event)">
                 <MyAvatar :chat="true" :level="false" :limit="false"></MyAvatar>
@@ -20,7 +21,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 import MyAvatar from '../small/MyAvatar.vue'
 import { storeToRefs} from 'pinia'
 
@@ -36,6 +37,13 @@ const { isOffline } = storeToRefs(useOfflineStore)
 
 const navigationStore = useNavigationStore()
 const { bottomToggle } = storeToRefs(navigationStore)
+
+const props = defineProps({
+    navSize: {
+        type: Number,
+        default: 0
+    }
+})
 
 const emit = defineEmits(['openControl'])
 
