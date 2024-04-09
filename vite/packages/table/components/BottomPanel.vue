@@ -548,6 +548,9 @@ export default {
     },
   },
   watch: {
+    isLeaveBar(val) {
+      this.isFootBar = val;
+    },
     delZone(val) {
       this.delNav = val;
       this.$emit("getDelIcon", val);

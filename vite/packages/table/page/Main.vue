@@ -1,7 +1,7 @@
 <template>
   <div
     style="display: flex;flex-direction: column;height: 100vh;flex-wrap: nowrap;align-content: stretch;align-items: stretch;gap:10px">
-    <div v-if="!fullScreen" style="height: auto;flex: 0">
+    <div v-if="!fullScreen" style="height: auto;flex: 0" ref="topPanel">
       <!--顶部状态栏      -->
       <TopPanel isHidden="true" v-if="currentNavPosition !== 'top'"></TopPanel>
       <BottomPanel 
@@ -14,13 +14,14 @@
         @hiedNavBar="hiedNavBar"
         :mainClass="'top-20 right-6'">
       </BottomPanel>
+      <div v-if="autoHideNav.foot.state && currentNavPosition === 'top'" class="w-full h-[70px]"></div>
     </div>
     <div :style="{ margin: fullScreen ? 0 : '-3px', padding: fullScreen ? 0 : '8px' }"
       style="display: flex;flex-grow: 1;flex-shrink: 1;flex-basis: fit-content;overflow: hidden;height: 100%;">
       <AutoHide 
         :enter="'animate__fadeInLeft'" 
         :leave="'animate__fadeOutLeft'" 
-        :autoHideNav="this.autoHideNav.left.state"
+        :autoHideNav="autoHideNav.left.state"
         v-model:isLeaveBar="isEnterLeft">
         <div 
           style="z-index: 9;"
@@ -29,15 +30,15 @@
           <!--左侧栏区域        -->
           <SidePanel 
             sortId="left" 
-            :state="this.autoHideNav.left.state"
+            :state="autoHideNav.left.state"
             fixedPosition="position: fixed;top: 50% - 32px;transform: translateY(-50%);"
             :navigationList="sideNavigationList" 
-            :sortNavigationList="sortSideNavigationList"
-            :delNavList="removeSideNavigationList" 
+            :sortNavigationList="useNav.sortSideNavigationList"
+            :delNavList="useNav.removeSideNavigationList" 
             :otherSwitch1="navigationToggle[1]" 
             :otherSwitch2="navigationToggle[2]"
             :otherNavList1="rightNavigationList" 
-            :otherNavList2="footNavigationList" 
+            :otherNavList2="copyFootNav" 
             @getDelIcon="getDelIcon"
             @hiedNavBar="hiedNavBar" 
             @openFolder="openFolder">
@@ -51,19 +52,19 @@
           <router-view></router-view>
         </keep-alive>
         <!-- 删除区域 -->
-        <div class="del-icon" id="delIcon2" v-show="delZone && this.navigationToggle[2] && currentNavPosition === 'bottom'"
+        <div class="del-icon" id="delIcon2" v-show="delZone && navigationToggle[2] && currentNavPosition === 'bottom'"
           style="z-index:500;bottom: 0;right: 50%;transform: translateX(50%);width: 400px;height: 120px;">
           <xt-new-icon icon="fluent:delete-16-regular" size="32" color="red"></xt-new-icon>
         </div>
-        <div class="del-icon" id="delIconTop" v-show="delZone && this.navigationToggle[2] && currentNavPosition === 'top'"
+        <div class="del-icon" id="delIconTop" v-show="delZone && navigationToggle[2] && currentNavPosition === 'top'"
           style="z-index:500;top: 0;right: 50%;transform: translateX(50%);width: 400px;height: 120px;">
           <xt-new-icon icon="fluent:delete-16-regular" size="32" color="red"></xt-new-icon>
         </div>
-        <div class="del-icon" id="delIcon3" v-show="delZone && this.navigationToggle[0]"
+        <div class="del-icon" id="delIcon3" v-show="delZone && navigationToggle[0]"
           style="z-index:500;bottom: 50%;left: 0;transform: translateY(50%);width: 120px;height: 400px;">
           <xt-new-icon icon="fluent:delete-16-regular" size="32" color="red"></xt-new-icon>
         </div>
-        <div class="del-icon" id="delIcon3" v-show="delZone && this.navigationToggle[1]"
+        <div class="del-icon" id="delIcon3" v-show="delZone && navigationToggle[1]"
           style="z-index:500;bottom: 50%;right: 0;transform: translateY(50%);width: 120px;height: 400px;">
           <xt-new-icon icon="fluent:delete-16-regular" size="32" color="red"></xt-new-icon>
         </div>
@@ -78,7 +79,7 @@
       <AutoHide 
         :enter="'animate__fadeInRight'" 
         :leave="'animate__fadeOutRight'" 
-        :autoHideNav="this.autoHideNav.right.state"
+        :autoHideNav="autoHideNav.right.state"
         v-model:isLeaveBar="isEnterRight">
         <div 
           style="z-index: 9;"
@@ -90,22 +91,21 @@
             sortId="right" 
             fixedPosition="position: fixed;top: 50% - 32px;transform: translateY(-50%);right: 5px;"
             :navigationList="rightNavigationList" 
-            :sortNavigationList="sortRightNavigationList"
-            :delNavList="removeRightNavigationList" 
+            :sortNavigationList="useNav.sortRightNavigationList"
+            :delNavList="useNav.removeRightNavigationList" 
             :otherSwitch1="navigationToggle[0]" 
             :otherSwitch2="navigationToggle[2]"
-            :otherNavList1="leftNavigationList" 
-            :otherNavList2="footNavigationList" 
-            :state="this.autoHideNav.right.state"
+            :otherNavList1="sideNavigationList" 
+            :otherNavList2="copyFootNav" 
+            :state="autoHideNav.right.state"
             @getDelIcon="getDelIcon"
             @hiedNavBar="hiedNavBar"
             @openFolder="openFolder">
           </SidePanel>
-          
         </div>
       </AutoHide>
     </div>
-    <div style="flex: 0;">
+    <div style="flex: 0;" ref="isBottom">
       <BottomPanel 
         winPosition="position:fixed;width: 100%;bottom: 0;z-index: 10;"
         enter="animate__fadeInUp"
@@ -116,150 +116,180 @@
         @hiedNavBar="hiedNavBar"
         :mainClass="'bottom-20 right-6'">
       </BottomPanel>
+      <div v-if="autoHideNav.foot.state" class="w-full" :class="[currentNavFormat === 'mac' ? 'h-[90px]' : 'h-[70px]' ]"></div>
     </div>
   </div>
 </template>
 
-<script>
-import SidePanel from '../components/SidePanel.vue'
-import TopPanel from '../components/TopPanel.vue'
-import BottomPanel from '../components/BottomPanel.vue'
-import WindowPanel from '../components/WindowPanel.vue'
-import { mapActions, mapWritableState } from 'pinia'
+<script setup lang="ts">
 import { appStore } from '../store'
-import TeamPanel from '../components/team/TeamPanel.vue'
 import { teamStore } from '../store/team'
 import { isMain } from '../js/common/screenUtils'
 import { navStore } from '../store/nav'
-// import fullScreen from '../components/widgets/myIcons/icons/fullScreen.vue'
 import { message } from 'ant-design-vue'
 import { useNavigationStore } from '../components/desk/navigationBar/navigationStore'
-import AutoHide from '../components/desk/navigationBar/components/folder/AutoHide.vue'
-// import { Icon as ifyIcon } from '@iconify/vue';
-export default {
-  name: 'Main',
-  components: { TeamPanel, BottomPanel, TopPanel, SidePanel,AutoHide,WindowPanel },
-  mounted() {
-    this.$router.afterEach((to, from) => {
-      this.routeUpdateTime = Date.now()
-    })
-    this.loadNav()
-  },
-  computed: {
-    fullScreen() {
-      return fullScreen
-    },
-    ...mapWritableState(appStore, ['routeUpdateTime', 'fullScreen', 'settings', 'init']),
-    ...mapWritableState(teamStore, ['teamVisible']),
-    ...mapWritableState(navStore, ['sideNavigationList', 'rightNavigationList', 'navigationToggle', 'footNavigationList', 'copyRightNav', 'copySideNav', 'loaded', 'copyFootNav']),
-    ...mapWritableState(useNavigationStore, ['autoHideNav', 'isLeaveBar','isEdge','currentNavPosition']),
-    isMain,
-    sideVisible() {
-      if (this.autoHideNav.left.state) {
-        if (this.isLeftEdge) {
-          return true
-        }
-        if (this.isLeaveBar  && !this.sideIsOpenFolder) {
-          return false
-        }
-        return true
-      } else {
-        return this.navigationToggle[0] && !this.fullScreen
-      }
 
-    },
-    rightVisible() {
-      if (this.autoHideNav.right.state) {
-        if (this.isRightEdge) {
-          return true
-        }
-        if (this.isLeaveBar  && !this.rightIsOpenFolder) {
-          return false
-        }
-        return true
-      } else {
-        return this.navigationToggle[1] && !this.fullScreen
-      }
-    },
-  },
-  data() {
-    return {
-      fixedLeftPosition:'position:fixed;transform:translateY(50%);top:50%;left:0px',
-      fixedRightPosition:'position:fixed;transform:translateY(-50%);top: 50%;right:0px',
-      scrollbarSettings: {
-        useBothWheelAxes: true,
-        swipeEasing: true,
-        suppressScrollY: true,
-        suppressScrollX: false,
-        wheelPropagation: true
-      },
-      delZone: false,
-      // 侧边栏是否打开文件夹
-      sideIsOpenFolder: false,
-      // 右边栏是否打开文件夹
-      rightIsOpenFolder: false,
-      // 左边是否接触到边界
-      isLeftEdge: false,
-      // 右边是否接触到边界
-      isRightEdge: false,
-      // 是否进入到左侧导航栏
-      isEnterLeft: false,
-      // 是否进入到右侧导航栏
-      isEnterRight: false
+import { ref, onMounted, watch, computed, onBeforeUnmount, defineAsyncComponent } from 'vue'
+import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
+import { useMouseInElement } from '@vueuse/core'
+
+// 按需加载组件
+const SidePanel = defineAsyncComponent(() => import('../components/SidePanel.vue'))
+const TopPanel = defineAsyncComponent(() => import('../components/TopPanel.vue'))
+const BottomPanel = defineAsyncComponent(() => import('../components/BottomPanel.vue'))
+const TeamPanel = defineAsyncComponent(() => import('../components/team/TeamPanel.vue'))
+const AutoHide = defineAsyncComponent(() => import('../components/desk/navigationBar/components/folder/AutoHide.vue'))
+
+// 路由
+const router = useRouter()
+
+// pinia数据
+const useApp = appStore()
+const { routeUpdateTime, fullScreen, settings, init } = storeToRefs(useApp)
+
+const useTeam = teamStore()
+const { teamVisible } = storeToRefs(useTeam)
+
+const useNav = navStore()
+const { 
+  sideNavigationList, 
+  rightNavigationList, 
+  navigationToggle, 
+  loaded, 
+  copyFootNav 
+} = storeToRefs(useNav)
+
+const useNavigation = useNavigationStore()
+const {
+  autoHideNav,
+  isLeaveBar,
+  isEdge,
+  currentNavPosition,
+  currentNavFormat
+} = storeToRefs(useNavigation)
+
+const delZone = ref(false)
+const isLeftEdge = ref(false)
+const isRightEdge = ref(false)
+const isEnterLeft = ref(false)
+const isEnterRight = ref(false)
+const sideIsOpenFolder = ref(false)
+const rightIsOpenFolder = ref(false)
+const fixedLeftPosition = ref('position:fixed;transform:translateY(50%);top:50%;left:0px')
+const fixedRightPosition = ref('position:fixed;transform:translateY(-50%);top: 50%;right:0px')
+
+// 底部导航栏开启自动隐藏后，当鼠标移入导航栏区域时，显示导航栏
+const isBottom = ref(null)
+const { isOutside : isOutBottom } = useMouseInElement(isBottom)
+
+const topPanel = ref(null)
+const { isOutside : isOutTop } = useMouseInElement(topPanel)
+
+watch(
+  () => isOutTop.value,
+  (val) => {
+    if(currentNavPosition.value === 'top') {
+      isLeaveBar.value = val
     }
-  },
-  methods: {
-    listenMouse(e) {
-      const { clientX, clientY } = e
-      if (clientX < 50) {
-        this.isLeftEdge = true
-      } else if (clientX > window.innerWidth - 50) {
-        this.isRightEdge = true
-      } else {
-        this.isLeftEdge = false
-        this.isRightEdge = false
-      }
-    },
-    marginLeft() {
-      return marginLeft
-    },
-    ...mapActions(navStore, ['sortSideNavigationList', 'removeSideNavigationList', 'sortRightNavigationList', 'removeRightNavigationList', 'loadNav']),
-    getDelIcon(val) {
-      this.delZone = val
-    },
-    hiedNavBar(value) {
-      const foot = this.navigationToggle[2] ? this.copyFootNav : [];
-      const left = this.navigationToggle[0] ? this.sideNavigationList : [];
-      const right = this.navigationToggle[1] ? this.rightNavigationList : [];
-      const checkAndToggle = (listToCheck, toggleIndex) => {
-        if (listToCheck.some((item) => item.value === 'home')) {
-          this.navigationToggle[toggleIndex] = false;
-          return;
-        }
-        this.navigationToggle[toggleIndex] = true;
-        message.info('至少保留一个主页图标');
-      };
+  }
+)
 
-      if (value === 'foot') {
-        checkAndToggle([...left, ...right], 2);
-      } else if (value === 'left') {
-        checkAndToggle([...right, ...foot], 0);
-      } else if (value === 'right') {
-        checkAndToggle([...left, ...foot], 1);
-      }
-    },
-    openFolder(value,id) {
-      id === 'left' ? this.sideIsOpenFolder = value : this.rightIsOpenFolder = value
-    },
-  },
-  mounted() {
-    window.addEventListener('mousemove', this.listenMouse)
-    this.autoHideNav.right.state = false
-  },
-  beforeDestroy() {
-    window.removeEventListener('mousemove', this.listenMouse)
+watch(
+  () => isOutBottom.value,
+  (val) => {
+    isLeaveBar.value = val
+  }
+)
+
+// 左侧栏
+const sideVisible = computed(() => {
+  if (autoHideNav.value.left.state) {
+    if (isLeftEdge.value) {
+      return true
+    }
+    if (isEnterLeft.value  && !sideIsOpenFolder.value) {
+      return false
+    }
+    return true
+  } else {
+    return navigationToggle.value[0] && !fullScreen.value
+  }
+})
+
+// 右侧栏
+const rightVisible = computed(() => {
+  if (autoHideNav.value.right.state) {
+    if (isRightEdge.value) {
+      return true
+    }
+    if (isEnterRight.value  && !rightIsOpenFolder.value) {
+      return false
+    }
+    return true
+  } else {
+    return navigationToggle.value[1] && !fullScreen.value
+  }
+})
+
+// 监听鼠标，当数据移入到边界时，显示导航栏
+const listenMouse = (e) => {
+  const { clientX } = e
+  if (clientX < 50) {
+    isLeftEdge.value = true
+  } else if (clientX > window.innerWidth - 50) {
+    isRightEdge.value = true
+  } else {
+    isLeftEdge.value = false
+    isRightEdge.value = false
   }
 }
+
+// 删除图标时，回调，显示删除区域
+const getDelIcon = (value) => {
+  delZone.value = value
+}
+
+// 隐藏导航栏时，判断是否至少保留一个图标
+const hiedNavBar = (value) => {
+  const foot = navigationToggle.value[2] ? copyFootNav.value : []
+  const left = navigationToggle.value[0] ? sideNavigationList.value : []
+  const right = navigationToggle.value[1] ? rightNavigationList.value : []
+  // 
+  const checkAndToggle = (listToCheck, toggleIndex) => {
+    if(listToCheck.some((item) => item.value === 'home')) {
+      navigationToggle.value[toggleIndex] = false
+      return;
+    }
+    navigationToggle.value[toggleIndex] = true
+    message.info('至少保留一个主页图标')
+  }
+  
+  if (value === 'foot') {
+    checkAndToggle([...left, ...right], 2)
+  } else if (value === 'left') {
+    checkAndToggle([...right, ...foot], 0)
+  } else if (value === 'right') {
+    checkAndToggle([...left, ...foot], 1)
+  }
+}
+
+// 当在自动隐藏模式下，打开文件时，取消自动隐藏
+const openFolder = (value,id) => {
+  id === 'left' ? sideIsOpenFolder.value = value : rightIsOpenFolder.value = value
+}
+
+onMounted(() => {
+  router.afterEach((to, from) => {
+    routeUpdateTime.value = Date.now()
+  })
+  useNav.loadNav()
+  window.addEventListener('mousemove', listenMouse)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('mousemove', listenMouse)
+})
 </script>
 <style lang="scss" scoped>
 .del-icon {

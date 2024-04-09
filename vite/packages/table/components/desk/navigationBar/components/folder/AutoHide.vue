@@ -57,7 +57,7 @@ const emit = defineEmits(['update:isLeaveBar'])
 const handleMouseEnter = () => {
     if (autoHideNav.value) {
         //    if(!isEnter.value) return
-        isLeaveBar.value = false
+        // isLeaveBar.value = false
         emit('update:isLeaveBar', false)
     }
 
@@ -68,7 +68,7 @@ const handleMouseLeave = () => {
     if (autoHideNav.value) {
         //    if(!isLeave.value) return
         setTimeout(() => {
-            isLeaveBar.value = true
+            // isLeaveBar.value = true
             emit('update:isLeaveBar', true)
         }, 800);
 
