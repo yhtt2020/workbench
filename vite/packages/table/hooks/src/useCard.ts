@@ -1,6 +1,6 @@
 import { storeToRefs } from "pinia";
 import { useFreeLayoutStore } from "../../components/desk/freeLayout/store";
-import { useFindDesk, useGetDesk } from "./useDesk";
+import { useGetDesk } from "./useDesk";
 // 定义参数接口
 interface AddCardParams {
   name: string; // 假设name是必传的字符串类型
@@ -9,14 +9,13 @@ interface AddCardParams {
   deskId?: string; // deskId，可选的字符串类型
 }
 /**
+ * 添加桌面卡片的 API 函数。
  *
- * @description 添加桌面卡片api
- *
- * @param name 卡片名称  必填
- * @param data 卡片数据 可选
- * @param id 卡片ID 可选
- * @param deskId 指定桌面ID 可选
- * @return id
+ * @param name 卡片名称（必填）
+ * @param data 卡片数据（可选）
+ * @param id 卡片ID（可选），如果提供，则更新指定ID的卡片
+ * @param deskId 指定桌面ID（可选），用于将卡片添加到特定的桌面
+ * @returns 添加或更新后的卡片ID
  */
 export const useAddCard = (option: AddCardParams): number | string => {
   // 解构属性，并使用默认值
@@ -27,20 +26,12 @@ export const useAddCard = (option: AddCardParams): number | string => {
     return -1;
   }
 
-  // 如果有桌面id，添加到指定桌面
-  if (deskId) {
-    useFindDesk(deskId).cards.push({
-      id,
-      name,
-      customData: data,
-    });
-  } else {
-    useGetDesk().cards.push({
-      name,
-      id,
-      customData: data,
-    });
-  }
+  // 添加到桌面
+  useGetDesk(deskId).cards.push({
+    id,
+    name,
+    customData: data,
+  });
 
   return id;
 };
@@ -51,25 +42,21 @@ export const useAddCard = (option: AddCardParams): number | string => {
  * @param cardId 卡片id 必传
  * @param deskId 桌面id 不传默认为当前桌面
  */
-export const useDelCard = (cardId, deskId = null) => {
+export const useDelCard = (cardId, deskId?) => {
   const freeLayoutStore = useFreeLayoutStore();
   const { getCurrentDeskId, freeLayoutData }: any =
     storeToRefs(freeLayoutStore);
 
   // 删除自由布局数据
-  delete freeLayoutData.value[getCurrentDeskId.value].cardId;
+  if (deskId) {
+    delete freeLayoutData.value[deskId].cardId;
+  } else {
+    delete freeLayoutData.value[getCurrentDeskId.value].cardId;
+  }
 
   // 删除卡片数据
-  if (deskId) {
-    const desk = useFindDesk(deskId);
-    desk.cards = desk.cards.filter((item) => {
-      return String(item.id) !== String(cardId);
-    });
-  } else {
-    const desk = useGetDesk();
-
-    desk.cards = desk.cards.filter((item) => {
-      return String(item.id) != String(cardId);
-    });
-  }
+  const desk = useGetDesk(deskId);
+  desk.cards = desk.cards.filter((item) => {
+    return String(item.id) !== String(cardId);
+  });
 };

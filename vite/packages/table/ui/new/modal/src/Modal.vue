@@ -5,12 +5,13 @@
       :test="false"
       v-model:x="x"
       v-model:y="y"
-      :index="currentIndex"
+      :index="modalIndex"
       :collision="false"
       v-if="modelValue"
       @update:data="resizeModel"
       :handle="handle"
       :disabled="handle ? false : true"
+      @click="modalClick"
     >
       <div
         :class="[custom ? '' : boxClass]"
@@ -185,59 +186,10 @@ import {
 } from "vue";
 import { useWindowSize } from "../../drag/src/hooks/useWindowSize";
 // import { vElementSize } from "../../drag/src/hooks/useElementSize";
-export interface ModalProps {
-  // 控制弹窗是否显示
-  modelValue?: boolean;
-  // 弹窗标题
-  title?: string;
-  // 底部默认样式
-  noName?: string;
-  okName?: string;
-  // 弹窗层级
-  index?: number;
-  // 遮罩层级
-  maskIndex?: number;
-  // 是否使用遮罩
-  mask?: boolean;
-  nav?: boolean;
-  // 头部插槽是否开启
-  header?: boolean;
-  // 底部插槽是否开启
-  footer?: boolean;
-  // esc 关闭弹窗
-  esc?: boolean;
-  // 弹窗样式
-  boxClass?: string;
-  // 头部区样式
-  headerClass?: string;
-  // 内容区样式
-  mainClass?: string;
 
-  // 挂载前
-  beforeMount?: () => boolean;
-  // 卸载前
-  beforeUnmount?: () => boolean;
-  // 自定义插槽
-  custom?: boolean;
-  // 最小化
-  min?: boolean;
-  // 最大化
-  max?: boolean;
-
-  type?: string | null;
-  // 自定义拖拽区域
-  handle?: string;
-  // 用于记录保存拖拽位置的key
-  name?: string | null;
-
-  // 栓q我也不知道啊
-  scrollbarPadding?: {
-    [key: string]: string;
-    paddingRight: string;
-    paddingLeft: string;
-  };
-}
-
+import { ModalProps } from "./types";
+import { drawHeaderImage } from "../../../../js/common/avatar";
+import { debouncedWatch } from "@vueuse/core";
 const { proxy }: any = getCurrentInstance();
 
 const props = withDefaults(defineProps<ModalProps>(), {
@@ -279,12 +231,14 @@ const oldY = ref(0);
 // 弹窗大小
 const modalWidth = ref(0);
 const modalHeight = ref(0);
+// 弹窗层级
+const currentModalIndex = ref(props.index);
 // 当前弹窗层级
-const currentIndex = computed(() => {
+const modalIndex = computed(() => {
   if (isMinimize.value) {
     return -999;
   }
-  return props.index;
+  return currentModalIndex.value;
 });
 // 旧弹窗大小
 const oldWidth = ref(0);
@@ -416,7 +370,7 @@ const maximize = () => {
 
   setTimeout(() => {
     isMaximize.value = !isMaximize.value;
-    emits('max', isMaximize.value);
+    emits("max", isMaximize.value);
     if (isMaximize.value) {
       oldX.value = x.value;
       oldY.value = y.value;
@@ -433,7 +387,11 @@ const maximize = () => {
     }, 100);
   }, 1);
 };
-
+/** modalClick */
+const modalClick = () => {
+  currentModalIndex.value = 999999999999;
+  proxy.$bus.emit("modalFocus", false);
+};
 /** 通用默认底部按钮事件 */
 // 关闭 or 取消
 const onNo = () => {
@@ -459,6 +417,14 @@ const onEsc = (event) => {
 onBeforeMount(() => {});
 // 挂载后
 onMounted(() => {
+  // 先发送失去弹窗焦点
+  proxy.$bus.emit("modalFocus", false);
+  // 然后挂载监听弹窗焦点
+  proxy.$bus.on("modalFocus", (isFocus: boolean) => {
+    currentModalIndex.value = isFocus ? 999999999999 : props.index;
+  });
+
+  // 获取底部菜单
   const bottomBar = document.getElementsByClassName("xt-main-bottom-bar")[0];
   if (bottomBar) bottomBarHeight = bottomBar.clientHeight;
   initPos();
@@ -483,10 +449,11 @@ onMounted(() => {
   useWindowSize((size) => {
     windowHeight.value = size.height.value;
     windowWidth.value = size.width.value;
-  },0);
+  }, 0);
 });
 // 卸载前
 onBeforeUnmount(() => {
+  //
   if (props.type) {
     proxy.$bus.off("modalClose");
   }

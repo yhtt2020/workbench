@@ -15,7 +15,10 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   console.log("to,from :>> ", to.params, from);
   // 用户信息判断 优先级1
+  console.time("Run Time");
   let userRes = await useUserPermit();
+  console.timeEnd("Run Time");
+
   console.log("to.name  :>> ", to.name);
   if (to.name === "splash" && userRes) {
     // next({

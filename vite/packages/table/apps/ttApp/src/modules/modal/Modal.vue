@@ -17,11 +17,11 @@ const init = () => {
   loading.value = true;
   let res = ttappStore.select(modal.value.id);
 
-  console.log('res :>> ', res);
+  console.log("res :>> ", res);
   if (!res) {
     return;
   }
-  data.value =res
+  data.value = res;
   const main = res.main;
 
   // 完成
@@ -120,7 +120,6 @@ onMounted(() => {
     :mask="false"
     class="xt-text"
   >
-    {{ data }}
     <!-- 头部左侧区域 -->
     <template #header-left>
       <div class="mr-2 rounded-lg overflow-hidden">
@@ -139,21 +138,20 @@ onMounted(() => {
       <div></div>
       <xt-left-menu />
     </template> -->
-    <xt-mix-menu :menus="menuList">
+    <xt-mix-menu :menus="menuList" :stopPropagation="false">
       <div
         class="relative w-full h-full overflow-hidden"
-        style="background: #fff"
+        style="background: pink"
         ref="scrollbar"
         :style="modalSize"
       >
-        <xt-button block> {{ isMax }}————{{ data.main._entry + "/resume" }} </xt-button>
         <WuJie v-if="!loading" :url="data.main._entry" :name="data.id" />
       </div>
     </xt-mix-menu>
     <!-- 最小化左侧 -->
     <template #minimize-left>
       <div class="mr-2 rounded-lg overflow-hidden">
-        <a-avatar shape="square" class="" :size="28" :src="data.logoPath" />
+        <a-avatar shape="square" class="" :size="28" :src="data._logo" />
       </div>
       <!-- <div class="mr-2 xt-text">{{ data.name }}</div> -->
     </template>

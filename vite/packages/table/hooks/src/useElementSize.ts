@@ -23,7 +23,7 @@ const clear = (el: Element) => {
   elementObserver.unobserve(el) // 取消监听
   elementMap.delete(el) // 从映射表中删除元素和回调之间的关系
 }
-export const useResize = (el: any, cb: any) => {
+export const useElementSize = (el: any, cb: any) => {
   onMounted(() => {
     start(el, cb)
   })
@@ -33,7 +33,7 @@ export const useResize = (el: any, cb: any) => {
 }
 
 // 局部注册
-export const reSize = {
+export const vElementSize = {
   mounted: (el: Element, binding: any) => {
     start(el, binding.value)
   },
@@ -44,5 +44,5 @@ export const reSize = {
 
 // 全局注册
 export const install = (app: App): void => {
-  app.directive('resize', reSize)
+  app.directive('resize', vElementSize)
 }

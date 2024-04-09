@@ -8,10 +8,11 @@ import {
   useGridToHeight,
 } from "./src/useCardSize";
 import { useFindDesk, useGetDesk } from "./src/useDesk";
-import { useElementSize, vElementSize } from "../ui/hooks/useElementSize";
+import { useElementSize, vElementSize } from "./src/useElementSize";
 import { useWindowSize } from "./src/useWindowSize";
 import { useMit } from "./src/useMit";
-
+import { useTT } from "./src/useTT";
+import { useDoubleClick } from "./src/useDoubleClick";
 export {
   // useCard
   useAddCard,
@@ -33,4 +34,9 @@ export {
   useWindowSize,
   // useMit
   useMit,
+  // useTT
+  useTT,
+  // useDoubleClick
+  useDoubleClick,
 };
+

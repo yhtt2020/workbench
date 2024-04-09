@@ -19,12 +19,12 @@ export const useFindDesk = (deskId: string) => {
   return res;
 };
 /**
- * @description 获取当前桌面数据
+ * @description 获取桌面数据
  *
- * @param deskId 桌面id 可选
+ * @param deskId 桌面id 不传时获取当前桌面
  */
 export const useGetDesk = (deskId?) => {
-  // 获取当前桌面数据
+  // 获取桌面数据
   if (deskId) {
     return useFindDesk(deskId);
   } else {
