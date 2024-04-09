@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import WujieVue from "wujie-vue3";
+import { ref } from "vue";
 import { useTTAppStore } from "../../store";
 const ttappStore: any = useTTAppStore();
 
@@ -27,6 +28,10 @@ const plugins = (iframeWindow: any) => {
   return res;
 };
 // location.href='tsbapp://table.com/table.html'
+const attrs = ref({});
+if (location.href.startsWith("tsbapp://")) {
+  attrs.value.src = "tsbapp://table.com/index.html";
+}
 </script>
 
 <template>
@@ -36,9 +41,7 @@ const plugins = (iframeWindow: any) => {
     ref="wujie"
     :name="name"
     :url="url"
-    :attrs="{
-      src: `tsbapp://table.com/index.html`,
-    }"
+    :attrs="attrs"
     :plugins="[
       {
         jsBeforeLoaders: [
