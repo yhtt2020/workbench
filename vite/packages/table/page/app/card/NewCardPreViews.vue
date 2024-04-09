@@ -290,8 +290,7 @@ export default {
           data: item.data,
         });
 
-        console.log("customData :>> ", item);
-        // this.$emit("addSuccess");
+        this.$emit("addSuccess");
         message.success("添加成功！");
         return;
       }
