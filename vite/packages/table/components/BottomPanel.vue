@@ -69,15 +69,25 @@
     </template>
     <!-- window版导航栏 -->
     <template v-else>
-      <AutoHide :enter="enter" :leave="leave" :autoHideNav="this.state">
-        <Drop @createFile="createFile" currentId="bottom" v-show="autoVisible">
-          <WindowPanel 
-            :mainClass="mainClass" 
-            @edit="edit"
-            @getDelIcon="getDelIcon" 
-            @control="openControl">
-          </WindowPanel>
-        </Drop>
+      <AutoHide 
+        :enter="enter" 
+        :leave="leave" 
+        :autoHideNav="this.state" 
+        v-model:isLeaveBar="isFootBar">
+        <div v-show="autoVisible" :style="[this.state ? this.winPosition : '']">
+          <Drop 
+          @createFile="createFile" 
+          currentId="bottom" 
+          >
+            <WindowPanel 
+              :mainClass="mainClass" 
+              @edit="edit"
+              @getDelIcon="getDelIcon" 
+              @control="openControl">
+            </WindowPanel>
+          </Drop>
+        </div>
+        
       </AutoHide>
     </template>
     <keep-alive>
@@ -321,6 +331,10 @@ export default {
       default: () => ""
     },
     leave: {
+      type: String,
+      default: () => ""
+    },
+    winPosition: {
       type: String,
       default: () => ""
     }

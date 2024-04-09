@@ -5,6 +5,9 @@
       <!--顶部状态栏      -->
       <TopPanel isHidden="true" v-if="currentNavPosition !== 'top'"></TopPanel>
       <BottomPanel 
+        enter="animate__fadeInDown"
+        leave="animate__fadeOutUp"
+        winPosition="position:fixed;top:0;width:100%;z-index: 10;"
         v-if="currentNavPosition === 'top' && loaded" 
         :delZone="delZone" 
         @getDelIcon="getDelIcon" 
@@ -104,6 +107,9 @@
     </div>
     <div style="flex: 0;">
       <BottomPanel 
+        winPosition="position:fixed;width: 100%;bottom: 0;z-index: 10;"
+        enter="animate__fadeInUp"
+        leave="animate__fadeOutDown"
         v-if="!fullScreen && loaded && currentNavPosition === 'bottom'" 
         :delZone="delZone" 
         @getDelIcon="getDelIcon" 
