@@ -454,23 +454,41 @@ global.render = {
     if(fs.existsSync(appsPath)){
       //存在应用文件夹，则直接从应用文件夹返回文件
       filePath = path.join(appsPath, pathName)
-      return filePath
+      return this.fixPath(filePath)
     }
+
     //不存在应用文件夹，则返回vite目录下的文件夹路径
-    if (extension === '.html') {
+    if (extension === '.html' || extension==='') {
       //对html文件特殊处理，返回html文件夹下的文件
       filePath = path.join(__dirname, 'vite', 'dist', 'html', pathName)
     } else {
       filePath = path.join(__dirname, 'vite', 'dist', pathName)
     }
-    return filePath
+    return this.fixPath(filePath)
+  },
+
+  //修正路径
+  fixPath(filePath){
+    let fixed=filePath
+    if(fixed.endsWith('\\')){
+      let tested=['index.html','default.html'].find((file)=>{
+        return fs.existsSync(path.join(filePath,file))
+      })
+      if(tested){
+        fixed=path.join(filePath,tested)
+      }
+    }
+
+    return fixed
   },
 
   regDefaultProtocol (request, response) {
     let pathName = new URL(request.url).pathname
     pathName = decodeURI(pathName)
     let filePath = this.findFile(request.url, pathName)
+    //todo 对/默认路径要做index.html default.html等的缺省判断
     if (!filePath) return
+    console.log('filePath',filePath)
     render.readFile(filePath,(error,mimeType, data)=>{
       response({
         headers: {
