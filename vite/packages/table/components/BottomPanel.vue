@@ -17,7 +17,9 @@
         <ControlModal @close="controlVisible = false"></ControlModal>
       </div>
 
-      <AutoHide :autoHideNav="this.state">
+      <AutoHide 
+        v-model:isLeaveBar="isFootBar"
+        :autoHideNav="this.state">
         <div 
           @click.stop 
           class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
@@ -25,10 +27,10 @@
           style="text-align: center; position: relative" 
           @contextmenu="showMenu" 
           v-show="autoVisible"
-          :style="{ zoom: `${this.navAttribute.navSize / 100}` }">
+          :style="[{ zoom: `${this.navAttribute.navSize / 100}` }, this.state ? this.fixedPosition : '']">
           <!-- 快速搜索 底部 用户栏 -->
           <template v-if="!communityNavVisible">
-            <UserBar @openControl="openControl"></UserBar>
+            <UserBar @openControl="openControl" :navSize="navAttribute.navRadius"></UserBar>
           </template>
 
           <!-- 社群导航栏 -->
@@ -45,7 +47,7 @@
             </Dock>
           </Drop>
           <!-- 社群开关开启后,用户头像信息放底部导航栏右侧 -->
-          <UserNavBar v-if="communityNavVisible" @openControl="openControl" />
+          <UserNavBar v-if="communityNavVisible" @openControl="openControl" :navSize="navAttribute.navRadius" />
 
           <!-- 团队导航弹窗 -->
           <div v-if="teamNavVisible" class="absolute tuanduidaohang" :style="{
@@ -69,7 +71,11 @@
     <template v-else>
       <AutoHide :enter="enter" :leave="leave" :autoHideNav="this.state">
         <Drop @createFile="createFile" currentId="bottom" v-show="autoVisible">
-          <WindowPanel :mainClass="mainClass" @edit="edit" @getDelIcon="getDelIcon" @control="openControl">
+          <WindowPanel 
+            :mainClass="mainClass" 
+            @edit="edit"
+            @getDelIcon="getDelIcon" 
+            @control="openControl">
           </WindowPanel>
         </Drop>
       </AutoHide>
@@ -183,6 +189,8 @@ export default {
   },
   data() {
     return {
+      isFootBar:false,
+      fixedPosition:'position:fixed;bottom:10px;z-index:9;',
       dragItem: null,
       hoverIndex: -1, //当前选中的项目（排除gap）
       debug: false,
@@ -283,14 +291,17 @@ export default {
       // 弹窗显示
       noticeFlag: true,
       addIconFlag: false,
+      // 弹出框x位置
       left: 0,
-      parentSize: 0,
       // 控制中心弹窗
       controlVisible: false,
       controlLeft: 100,
       skipSimple: false,
+      // window高宽
+      parentWidth: 0,
       parentHeight: 0,
       hoverTabs: false,
+      // 删除导航区域显示
       delZone: false,
       // 团队导航
       teamNavVisible: false,
@@ -318,9 +329,11 @@ export default {
     window.removeEventListener("mousemove", this.listenMouse);
   },
   mounted() {
+    // 当自动隐藏时，切换桌面时，关闭自动隐藏
     this.$bus.on("stopHide", () => {
       this.hoverTabs = true;
     });
+    // 当自动隐藏时，切换桌面时，关闭自动隐藏
     this.$bus.on("startHide", () => {
       this.hoverTabs = false;
     });
@@ -353,30 +366,24 @@ export default {
     });
     this.noticeFlag = true;
     this.useWindowSize((size) => {
-      // 获取最大可添加图标个数
-      const windowWidth = size.width.value;
-      const windowHeight = size.height.value;
-      this.parentSize = windowWidth;
+      const { width: windowWidth, height: windowHeight } = { width: size.width.value, height: size.height.value };
+        
+      // 更新父级尺寸状态
+      this.parentWidth = windowWidth;
       this.parentHeight = windowHeight;
-      // 获取最多可以添加的个数
-      let maxWidth
-      let extraWidth
-      // 不同导航栏设置不同的可添加的最大宽度，以及其他需要的宽度
-      if (this.currentNavFormat === 'mac') {
-        maxWidth = windowWidth - 240
-        extraWidth = 240
-      } else {
-        maxWidth = windowWidth * 0.6
-        extraWidth = windowWidth * 0.3
-      }
-      // 当前可添加的最多图标个数
+        
+      // 根据当前导航格式计算最大宽度和额外宽度
+      let maxWidth = this.currentNavFormat === 'mac' ? windowWidth - 240 : windowWidth * 0.6;
+      let extraWidth = this.currentNavFormat === 'mac' ? 240 : windowWidth * 0.3;
+        
+      // 计算当前可添加的最多图标个数
       this.maxItemNum = Math.round(maxWidth / this.realSize);
-      // 获取导航栏缩放比例
-      const width = windowWidth / (extraWidth + this.copyFootNav.length * this.realSize);
-      this.navAttribute.navSize = width.toFixed(2) * 100;
-      this.navAttribute.navSize =
-        this.navAttribute.navSize < 100 ? this.navAttribute.navSize : 100;
+        
+      // 计算导航栏缩放比例
+      const scale = windowWidth / (extraWidth + this.copyFootNav.length * this.realSize);
+      this.navAttribute.navSize = Math.min(100, Math.round(scale * 100));
     }, 200);
+
     window.addEventListener("mousemove", this.listenMouse);
     // 点击团队导航打开团队组件
     this.$bus.on("openTeamNav", (evt) => {
@@ -517,7 +524,7 @@ export default {
         if (this.isEdge || this.hoverTabs) {
           return true;
         }
-        if (this.isLeaveBar && !this.controlVisible && !this.folderVisible) {
+        if (this.isFootBar && !this.controlVisible && !this.folderVisible) {
           return false;
         }
         return true;

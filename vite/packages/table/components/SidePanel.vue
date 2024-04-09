@@ -363,6 +363,16 @@ export default {
     delZone: {
       type: Boolean,
       default: () => false
+    },
+    // 自动隐藏状态
+    state: {
+      type: Boolean,
+      default: () => false
+    },
+    // 开启自动隐藏后定位
+    fixedPosition: {
+      type:String,
+      default: () => ''
     }
   },
   computed: {
@@ -422,12 +432,12 @@ export default {
       ]
 
     },
-    fixedPosition() {
-      if(this.sortId === 'left'){
-        return 'position: fixed;top: 50% - 32px;transform: translateY(-50%);'
-      }
-      return 'position: fixed;top: 50% - 32px;transform: translateY(-50%);'
-    },
+    // fixedPosition() {
+    //   if(this.sortId === 'left'){
+    //     return 'position: fixed;top: 50% - 32px;transform: translateY(-50%);'
+    //   }
+    //   return 'position: fixed;top: 50% - 32px;transform: translateY(-50%);'
+    // },
     // 社区中心参数
     community() {
       if (this.sortId === 'left') {
@@ -498,9 +508,6 @@ export default {
         return { left: `${this.navAttribute.navSize / 100 * 100}px`, top: `${this.top}px` }
       }
       return { right: `${this.navAttribute.navSize / 100 * 100}px`, top: `${this.top}px` }
-    },
-    state(){
-      return this.autoHideNav[this.sortId].state
     },
     mainOption() {
       const custom = {
@@ -718,6 +725,7 @@ export default {
                 that.$emit('getDelIcon', false)
                 that.hoverIndex = -1
                 return
+                
               }
               let sumList = []
               // 判断其他导航栏是否是打开状态，是则获取功能列表
@@ -952,7 +960,6 @@ export default {
       } else if (this.folderVisible && this.currentItem.id && this.folderId === this.currentItem.id) {
         this.folderVisible = false
       } else {
-        console.log(this.currentItem.id, this.folderId, 'this.currentItem.id, this.folderId')
         this.customData = {
           ...this.defaultFolderData,
           list: this.folderList,

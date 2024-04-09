@@ -24,8 +24,8 @@ import { useMouseInElement } from "@vueuse/core";
 import { useNavigationStore } from '../../navigationStore';
 
 // 导航栏数据
-const useNavStore = useNavigationStore()
-const { isLeaveBar } = storeToRefs(useNavStore)
+// const useNavStore = useNavigationStore()
+// const { isLeaveBar } = storeToRefs(useNavStore)
 
 const hide = ref(null)
 const { isOutSide } = useMouseInElement(hide)
@@ -42,16 +42,23 @@ const props = defineProps({
     autoHideNav: {
         type: Boolean,
         default: () => false
+    },
+    isLeaveBar:{
+        type:Boolean,
+        default:true
     }
 })
 
-const { enter, leave , autoHideNav } = toRefs(props)
+const { enter, leave, autoHideNav, isLeaveBar } = toRefs(props)
+
+const emit = defineEmits(['update:isLeaveBar'])
 
 // 鼠标移入
 const handleMouseEnter = () => {
     if (autoHideNav.value) {
         //    if(!isEnter.value) return
         isLeaveBar.value = false
+        emit('update:isLeaveBar', false)
     }
 
 }
@@ -62,6 +69,7 @@ const handleMouseLeave = () => {
         //    if(!isLeave.value) return
         setTimeout(() => {
             isLeaveBar.value = true
+            emit('update:isLeaveBar', true)
         }, 800);
 
     }

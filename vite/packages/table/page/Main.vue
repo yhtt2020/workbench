@@ -18,14 +18,16 @@
         :enter="'animate__fadeInLeft'" 
         :leave="'animate__fadeOutLeft'" 
         :autoHideNav="this.autoHideNav.left.state"
-        v-model="isEnterLeft">
+        v-model:isLeaveBar="isEnterLeft">
         <div 
-          style="z-index: 999;"
+          style="z-index: 9;"
           v-show="sideVisible"
           class="flex items-center justify-center max-h-full">
           <!--左侧栏区域        -->
           <SidePanel 
             sortId="left" 
+            :state="this.autoHideNav.left.state"
+            fixedPosition="position: fixed;top: 50% - 32px;transform: translateY(-50%);"
             :navigationList="sideNavigationList" 
             :sortNavigationList="sortSideNavigationList"
             :delNavList="removeSideNavigationList" 
@@ -46,27 +48,23 @@
           <router-view></router-view>
         </keep-alive>
         <!-- 删除区域 -->
-        <div
-          class="del-icon"
-          id="delIcon2"
-          v-show="delZone && this.navigationToggle[2]"
+        <div class="del-icon" id="delIcon2" v-show="delZone && this.navigationToggle[2] && currentNavPosition === 'bottom'"
           style="z-index:500;bottom: 0;right: 50%;transform: translateX(50%);width: 400px;height: 120px;">
           <xt-new-icon icon="fluent:delete-16-regular" size="32" color="red"></xt-new-icon>
         </div>
-        <div
-          class="del-icon"
-          id="delIcon3"
-          v-show="delZone && this.navigationToggle[0]"
+        <div class="del-icon" id="delIconTop" v-show="delZone && this.navigationToggle[2] && currentNavPosition === 'top'"
+          style="z-index:500;top: 0;right: 50%;transform: translateX(50%);width: 400px;height: 120px;">
+          <xt-new-icon icon="fluent:delete-16-regular" size="32" color="red"></xt-new-icon>
+        </div>
+        <div class="del-icon" id="delIcon3" v-show="delZone && this.navigationToggle[0]"
           style="z-index:500;bottom: 50%;left: 0;transform: translateY(50%);width: 120px;height: 400px;">
           <xt-new-icon icon="fluent:delete-16-regular" size="32" color="red"></xt-new-icon>
         </div>
-        <div
-          class="del-icon"
-          id="delIcon3"
-          v-show="delZone && this.navigationToggle[1]"
+        <div class="del-icon" id="delIcon3" v-show="delZone && this.navigationToggle[1]"
           style="z-index:500;bottom: 50%;right: 0;transform: translateY(50%);width: 120px;height: 400px;">
           <xt-new-icon icon="fluent:delete-16-regular" size="32" color="red"></xt-new-icon>
         </div>
+
       </div>
       <Transition name="bounce">
         <div v-if="teamVisible && !fullScreen" class="h-100 "
@@ -78,14 +76,16 @@
         :enter="'animate__fadeInRight'" 
         :leave="'animate__fadeOutRight'" 
         :autoHideNav="this.autoHideNav.right.state"
-        v-model="isEnterRight">
+        v-model:isLeaveBar="isEnterRight">
         <div 
-          style="z-index: 999;"
+          style="z-index: 9;"
           class="flex items-center justify-center"
-          v-show="rightVisible">
+          v-show="rightVisible"
+          >
           <!--右侧栏区域        -->
           <SidePanel 
             sortId="right" 
+            fixedPosition="position: fixed;top: 50% - 32px;transform: translateY(-50%);right: 5px;"
             :navigationList="rightNavigationList" 
             :sortNavigationList="sortRightNavigationList"
             :delNavList="removeRightNavigationList" 
@@ -93,10 +93,12 @@
             :otherSwitch2="navigationToggle[2]"
             :otherNavList1="leftNavigationList" 
             :otherNavList2="footNavigationList" 
+            :state="this.autoHideNav.right.state"
             @getDelIcon="getDelIcon"
             @hiedNavBar="hiedNavBar"
             @openFolder="openFolder">
           </SidePanel>
+          
         </div>
       </AutoHide>
     </div>
@@ -176,6 +178,8 @@ export default {
   },
   data() {
     return {
+      fixedLeftPosition:'position:fixed;transform:translateY(50%);top:50%;left:0px',
+      fixedRightPosition:'position:fixed;transform:translateY(-50%);top: 50%;right:0px',
       scrollbarSettings: {
         useBothWheelAxes: true,
         swipeEasing: true,
