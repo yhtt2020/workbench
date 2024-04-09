@@ -30,8 +30,6 @@ const plugins = (iframeWindow: any) => {
 </script>
 
 <template>
-  {{ url }}
-
   <WujieVue
     height="100%"
     width="100%"
@@ -39,7 +37,7 @@ const plugins = (iframeWindow: any) => {
     :name="name"
     :url="url"
     :attrs="{
-      // src: `tsbapp://table.com/index.html`,
+      src: `tsbapp://table.com/index.html`,
     }"
     :plugins="[
       {
