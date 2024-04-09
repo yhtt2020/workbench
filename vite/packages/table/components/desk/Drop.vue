@@ -43,7 +43,7 @@ mouseInElement.value = useMouseInElement(target);
 const iconStore = myIcons();
 const { iconOption } = storeToRefs(iconStore);
 
-// 
+//
 const navBar = useNavBarStore()
 const { proxy } = getCurrentInstance()
 
@@ -83,6 +83,7 @@ const handleDrop = async (dragEvent) => {
         );
       };
 
+      console.log('2222 :>> ', 2222);
       if (isFreeLayout.value) {
         getFreeLayoutData.value[id] = {
           left: offsetX,

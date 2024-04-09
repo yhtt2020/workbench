@@ -189,7 +189,6 @@
 </template>
 <script setup>
 import _ from "lodash-es";
-import { useToast } from "vue-toastification";
 import {
   watch,
   computed,
@@ -206,11 +205,11 @@ import { useWidgetStore } from "./store";
 import { useFreeLayoutStore } from "../desk/freeLayout/store";
 import { useMouseInElement } from "@vueuse/core";
 
-import vueCustomScrollbar from "../../../../src/components/vue-scrollbar.vue";
 import Resize from "./Resize.vue";
 import RightMenu from "./RightMenu.vue";
 import { useEnv } from "../../ui/hooks/useEnv";
 import { trigger } from "mousetrap";
+import { useDelCard } from "../../hooks";
 
 const container = ref(0);
 const { isOutside } = useMouseInElement(container);
@@ -599,7 +598,7 @@ const removeCard = () => {
 };
 // 实际删除事件
 const customDelete = () => {
-  cardStore.removeCard(props.customIndex, props.desk);
+  useDelCard(props.customIndex);
 };
 
 // 设置自定义数据

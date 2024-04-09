@@ -93,7 +93,6 @@ const handleDrop = async (dragEvent) => {
     return;
   }
 
-  // console.log("handleDrop :>> ",dragEvent.dataTransfer.getData('text/plain'));
   // 处理系统拖拽进入的文件和链接
   let files = dragEvent.dataTransfer.files;
   let link = dragEvent.dataTransfer.getData("text/plain");

@@ -5,7 +5,7 @@
       :test="false"
       v-model:x="x"
       v-model:y="y"
-      :index="currentIndex"
+      :index="modalIndex"
       :collision="false"
       v-if="modelValue"
       @update:data="resizeModel"
@@ -13,6 +13,7 @@
       :disabled="handle ? false : true"
     >
       <div
+        @click="modalClick"
         :class="[custom ? '' : boxClass]"
         ref="modal"
         class="no-drag flex flex-col text-base rounded-xl xt-modal xt-shadow xt-text overflow-hidden"
@@ -29,18 +30,20 @@
       >
         <slot v-if="custom"></slot>
         <template v-else>
+          <!-- 标题和左右内容 -->
           <div class="flex flex-1 w-full">
             <!-- 左侧 -->
             <nav>
               <slot name="nav"> </slot>
             </nav>
-            <!-- 主体区域 -->
+            <!-- 右侧 -->
             <main class="flex flex-col flex-1 h-full">
               <!-- 主体头部 -->
               <header
                 class="relative flex items-center xt-modal-header"
                 :class="headerClass"
                 v-if="header"
+                @dblclick="doubleClick"
               >
                 <!-- 标题左侧 -->
                 <div class="z-20 flex items-center flex-1">
@@ -60,7 +63,7 @@
                   <!-- 最小化 -->
                   <xt-button
                     v-if="min"
-                    class="ml-3"
+                    class="ml-3 tt-modal-button"
                     w="32"
                     h="32"
                     radius="8"
@@ -70,7 +73,7 @@
                   </xt-button>
                   <!-- 最大化 -->
                   <xt-button
-                    class="ml-3"
+                    class="ml-3 tt-modal-button"
                     w="32"
                     h="32"
                     radius="8"
@@ -89,7 +92,7 @@
                   </xt-button>
                   <!-- 关闭按钮 -->
                   <xt-button
-                    class="ml-3"
+                    class="ml-3 tt-modal-button"
                     w="32"
                     h="32"
                     radius="8"
@@ -122,6 +125,7 @@
               </vue-custom-scrollbar>
             </main>
           </div>
+          <!-- 底部 -->
           <slot name="footer">
             <footer class="flex items-center justify-end mt-4" v-if="footer">
               <xt-button w="64" h="40" @click="onNo()">
@@ -185,58 +189,9 @@ import {
 } from "vue";
 import { useWindowSize } from "../../drag/src/hooks/useWindowSize";
 // import { vElementSize } from "../../drag/src/hooks/useElementSize";
-export interface ModalProps {
-  // 控制弹窗是否显示
-  modelValue?: boolean;
-  // 弹窗标题
-  title?: string;
-  // 底部默认样式
-  noName?: string;
-  okName?: string;
-  // 弹窗层级
-  index?: number;
-  // 遮罩层级
-  maskIndex?: number;
-  // 是否使用遮罩
-  mask?: boolean;
-  nav?: boolean;
-  // 头部插槽是否开启
-  header?: boolean;
-  // 底部插槽是否开启
-  footer?: boolean;
-  // esc 关闭弹窗
-  esc?: boolean;
-  // 弹窗样式
-  boxClass?: string;
-  // 头部区样式
-  headerClass?: string;
-  // 内容区样式
-  mainClass?: string;
-
-  // 挂载前
-  beforeMount?: () => boolean;
-  // 卸载前
-  beforeUnmount?: () => boolean;
-  // 自定义插槽
-  custom?: boolean;
-  // 最小化
-  min?: boolean;
-  // 最大化
-  max?: boolean;
-
-  type?: string | null;
-  // 自定义拖拽区域
-  handle?: string;
-  // 用于记录保存拖拽位置的key
-  name?: string | null;
-
-  // 栓q我也不知道啊
-  scrollbarPadding?: {
-    [key: string]: string;
-    paddingRight: string;
-    paddingLeft: string;
-  };
-}
+import { nanoid } from "nanoid";
+import { useDoubleClick } from "../../../../hooks";
+import { ModalProps } from "./types";
 
 const { proxy }: any = getCurrentInstance();
 
@@ -253,7 +208,7 @@ const props = withDefaults(defineProps<ModalProps>(), {
   footer: false,
   esc: false,
   boxClass: "p-4",
-  headerClass: "",
+  headerClass: "pb-4",
   mainClass: "",
   beforeMount: () => true,
   beforeUnmount: () => true,
@@ -267,7 +222,7 @@ const props = withDefaults(defineProps<ModalProps>(), {
 });
 const { esc, modelValue, beforeMount, beforeUnmount, type } = toRefs(props);
 
-const emits = defineEmits(["ok", "no", "update:modelValue", "close", ""]);
+const emits = defineEmits(["ok", "no", "update:modelValue", "close", "max"]);
 
 // 弹窗元素
 const modal: any = ref(null);
@@ -279,12 +234,15 @@ const oldY = ref(0);
 // 弹窗大小
 const modalWidth = ref(0);
 const modalHeight = ref(0);
+// 弹窗层级
+const INDEX = 999999999;
+const currentModalIndex = ref(0);
 // 当前弹窗层级
-const currentIndex = computed(() => {
+const modalIndex = computed(() => {
   if (isMinimize.value) {
     return -999;
   }
-  return props.index;
+  return currentModalIndex.value;
 });
 // 旧弹窗大小
 const oldWidth = ref(0);
@@ -300,9 +258,10 @@ const isMaximize = ref(false);
 // 视图大小
 const windowHeight = ref(0);
 const windowWidth = ref(0);
-
-// 底部导航高度
-let bottomBarHeight = 0;
+// 弹窗名称
+const modalName = ref(nanoid(4));
+// 导航高度
+let barHeight = 0;
 // 弹窗样式
 const modalStyle = computed(() => {
   if (isMaximize.value) {
@@ -322,10 +281,8 @@ const modalStyle = computed(() => {
 });
 let intervalId;
 // 初始化位置
-function initPos() {
+function initPosition() {
   intervalId = setInterval(() => {
-    // if (name.value) {
-    // }
     // 数据未加载完成时
     if (windowHeight.value <= 0 || modalHeight.value <= 0) return;
     let top;
@@ -334,7 +291,7 @@ function initPos() {
       top = (windowHeight.value - modalHeight.value) / 2;
       left = (windowWidth.value - modalWidth.value) / 2;
     } else {
-      top = (windowHeight.value - bottomBarHeight - modalHeight.value) / 2;
+      top = (windowHeight.value - barHeight - modalHeight.value) / 2;
       left = (windowWidth.value - modalWidth.value) / 2;
     }
 
@@ -346,7 +303,7 @@ function initPos() {
     oldWidth.value = modalWidth.value;
     modalVisible.value = true;
     clearInterval(intervalId); // 数据加载完成后取消定时器
-  }, 100);
+  }, 1);
 }
 
 // 更新弹窗大小
@@ -403,12 +360,6 @@ const minimize = () => {
   }, 1);
 };
 
-//   x.value = oldX.value;
-//   y.value = oldY.value;
-//   return {
-//     borderRadius: "12px",
-//     height: "auto",
-//   };
 /** 最大化 */
 const maximize = () => {
   transitionVisible.value = true;
@@ -416,6 +367,7 @@ const maximize = () => {
 
   setTimeout(() => {
     isMaximize.value = !isMaximize.value;
+    emits("max", isMaximize.value);
     if (isMaximize.value) {
       oldX.value = x.value;
       oldY.value = y.value;
@@ -431,6 +383,30 @@ const maximize = () => {
       transitionVisible.value = false;
     }, 100);
   }, 1);
+};
+/** 模态框点击事件 */
+const modalClick = () => {
+  getModalFouls();
+};
+const doubleClick = (event: any) => {
+  if (!props.max) return;
+  let res = event.target?.closest(".tt-modal-button");
+  if (res) return;
+  maximize();
+}
+// 头部框双击事件
+// const { doubleClick } = useDoubleClick(d);
+
+/** 模态框获取焦点 */
+const getModalFouls = () => {
+  // 如果当前弹窗已经是焦点弹窗则不处理
+  if (currentModalIndex.value == INDEX) return;
+  console.log("2222 :>> ", 2222);
+  // 先通知所有弹窗移除焦点
+  proxy.$bus.emit("modalBlur");
+
+  // 提升当前弹窗层级
+  currentModalIndex.value = INDEX;
 };
 
 /** 通用默认底部按钮事件 */
@@ -456,36 +432,64 @@ const onEsc = (event) => {
 
 // 挂载前
 onBeforeMount(() => {});
-// 挂载后
-onMounted(() => {
+
+// 初始化
+const init = () => {
+  // 获取菜单高度
   const bottomBar = document.getElementsByClassName("xt-main-bottom-bar")[0];
-  if (bottomBar) bottomBarHeight = bottomBar.clientHeight;
-  initPos();
-  // 注册单例弹窗监听
+  if (bottomBar) barHeight = bottomBar.clientHeight;
+
+  // 初始化弹窗位置
+  initPosition();
+
+  // 监听弹窗失去焦点事件
+  proxy.$bus.on("modalBlur", () => {
+    currentModalIndex.value = props.index;
+  });
+
+  setTimeout(() => {
+    // 获取弹窗焦点
+    getModalFouls();
+  }, 1);
+
+  // 属于单例弹窗
   if (props.type) {
-    proxy.$bus.emit("modalClose", props.type);
+    // 关闭单例弹窗
+    proxy.$bus.emit("modalClose", props.type, modalName.value);
+
     setTimeout(() => {
-      proxy.$bus.on("modalClose", (currentType) => {
-        if (type.value == currentType) {
+      // 监听关闭单例弹窗
+      proxy.$bus.on("modalClose", (currentType, currentName) => {
+        if (type.value == currentType && modalName.value != currentName) {
           close();
         }
       });
     }, 1);
   }
 
-  // 注册esc键监听
+  // 需要esc键
   if (esc.value) {
+    // esc键监听
     window.addEventListener("keydown", onEsc, {
       capture: true,
     });
   }
+};
+
+// 挂载后
+onMounted(() => {
   useWindowSize((size) => {
     windowHeight.value = size.height.value;
     windowWidth.value = size.width.value;
-  });
+  }, 0);
+
+  init();
 });
 // 卸载前
 onBeforeUnmount(() => {
+  // 注销弹窗失去焦点监听
+  proxy.$bus.off("modalBlur");
+  // 注销单例弹窗监听
   if (props.type) {
     proxy.$bus.off("modalClose");
   }
