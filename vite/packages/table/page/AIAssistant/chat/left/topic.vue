@@ -6,7 +6,7 @@
       :class="{ 'xt-active-bg-2': selectTopicIndex === data.id }"
       @click="handleIndex()"
     >
-      <Icon :icon="data.icon.name" style="font-size: 17.5px"></Icon>
+      <Icon :icon="data.icon?.name" style="font-size: 17.5px"></Icon>
       <div class="ml-2 flex flex-col">
         <div class="flex justify-between">
           <div class="truncate" style="width: 120px">{{ data.name }}</div>
