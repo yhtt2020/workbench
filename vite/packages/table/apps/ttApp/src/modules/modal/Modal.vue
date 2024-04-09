@@ -10,8 +10,8 @@ const { modal, ttappList } = storeToRefs(ttappStore);
 // 窗口弹窗
 const modalRef: any = ref(null);
 
-const data: any = ref();
-const url = ref();
+const data: any = ref({});
+const url = ref('');
 
 /** 初始化方法 */
 const init = () => {
