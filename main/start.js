@@ -43,10 +43,9 @@ app.on('session-created',async (ses)=>{
   ses.protocol.registerBufferProtocol('tsbapp', (request, response) => {
     render.regDefaultProtocol(request, response)
   })
-  // ttapp.js
-  // ses.protocol.registerBufferProtocol('ttapp', (request, response) => {
-  //   render.regTTAppProtocol(request, response)
-  // })
+  ses.protocol.registerBufferProtocol('ttapp', (request, response) => {
+    render.regDefaultProtocol(request, response)
+  })
 
   // console.log(ses.serviceWorkers)
   // ses.serviceWorkers.on('console-message', (event, messageDetails) => {

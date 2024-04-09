@@ -8,7 +8,7 @@ import {
   currentEnv,
 } from "./permission/useEnv";
 import type { UseEnv, baseEnv } from "./permission/useEnv";
-
+import archiveHelper from "./js/lib/archiveHelper";
 window.$isOffline = isOffline;
 window.$isGuest = isGuest;
 window.$useEnv = useEnv;
@@ -191,5 +191,6 @@ if (!useEnv()) {
 
 window.$app = $app;
 initStores();
+
 // devtools.connect()
 export { router };
