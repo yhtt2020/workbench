@@ -1,7 +1,7 @@
 <!-- 控制中心底部栏 -->
 <template>
   <div class="w-full flex items-center justify-center pb-4 px-4">
-    <template v-for="item in bottomButton">
+    <template v-for="item in buttonList">
       <a-tooltip placement="top" :title="item.name">
         <xt-button
           w="54"
@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, getCurrentInstance } from "vue";
+import { ref,  getCurrentInstance,computed } from "vue";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { appStore } from "../../../store";
@@ -30,8 +30,9 @@ const emit = defineEmits(["close"]);
 const router = useRouter();
 
 const app = appStore();
+const { windowFullScreen }  = storeToRefs(app);
 
-const bottomButton = reactive([
+const bottomButton = ref([
   {
     newIcon: "fluent:person-16-regular",
     name: "用户中心",
@@ -72,6 +73,27 @@ const bottomButton = reactive([
     },
   },
 ]);
+
+// 全屏图标的切换
+const buttonList = computed(()=>{
+  if(windowFullScreen.value){
+    const mapBottomButton = bottomButton.value.map((item)=>{
+      if(item.name === '全屏'){
+        return {
+          ...item,
+          newIcon:"fluent:full-screen-minimize-16-regular"
+        }
+      }
+      else {
+        return {...item}
+      }
+    });
+    return mapBottomButton;
+  }
+  else {
+    return bottomButton.value;
+  }
+})
 </script>
 
 <style lang="scss" scoped>

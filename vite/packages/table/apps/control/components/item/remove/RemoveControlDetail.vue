@@ -96,7 +96,7 @@ import UserUnLogin from "../user/UserUnLogin.vue";
 const app = appStore();
 const { userInfo } = storeToRefs(app);
 const control = controlStore();
-const { updateList,currentControlList,currentAdd } = storeToRefs(control);
+const { updateList, currentControlList, currentAdd } = storeToRefs(control);
 
 const props = defineProps({
   controlIndex: {
@@ -125,19 +125,26 @@ const isUserLogin = computed(() => {
 
 // 删除当前选中
 const removeControlItem = () => {
-  // 添加当前选中的项,添加到currentAdd中
-  const addIndex = _.findIndex(currentAdd,function(item){ return String(item.id) === String(controlIndex.value) });
-  if(addIndex === -1){
-    currentAdd.value.push(controlItem.value);
-  };
-
-  // 剔除updateList中的项
-  const index = _.findIndex(updateList.value,function(item){ return String(item.id) === String(controlIndex.value) });
-  updateList.value.splice(index,1);
-  
-  // 剔除currentControlList中的项
-  const currentIndex = _.findIndex(currentControlList.value,function(item){ return String(item.id) === String(controlIndex.value) });
-  currentControlList.value.splice(currentIndex,1);
+  // 固定一个不能被删除的项
+  if (currentControlList.value.length > 1 && updateList.value.length > 1) {
+    // 添加当前选中的项,添加到currentAdd中
+    const addIndex = _.findIndex(currentAdd, function (item) {
+      return String(item.id) === String(controlIndex.value);
+    });
+    if (addIndex === -1) {
+      currentAdd.value.push(controlItem.value);
+    }
+    // 剔除updateList中的项
+    const index = _.findIndex(updateList.value, function (item) {
+      return String(item.id) === String(controlIndex.value);
+    });
+    updateList.value.splice(index, 1);
+    // 剔除currentControlList中的项
+    const currentIndex = _.findIndex(currentControlList.value, function (item) {
+      return String(item.id) === String(controlIndex.value);
+    });
+    currentControlList.value.splice(currentIndex, 1);
+  }
 };
 </script>
 

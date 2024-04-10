@@ -2,7 +2,7 @@
 <template>
   <div
     class="w-full pl-4"
-    :style="setting.isEdit ? { height: '500px' } : { height: '400px' }"
+    :style="setting.isEdit ? { height: '450px' } : { height: '400px' }"
   >
     <!-- 没有开启编辑 -->
     <template v-if="!setting.isEdit">
@@ -34,4 +34,7 @@ const { setting } = storeToRefs(control);
 </script>
 
 <style lang="scss" scoped>
+:deep(.ps__rail-y){
+  display: none !important;
+}
 </style>

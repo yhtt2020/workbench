@@ -58,10 +58,24 @@ import { useControlList } from "../hooks/controlList";
 import _ from "lodash-es";
 
 const control = controlStore();
-const { setting, updateList,currentControlList } = storeToRefs(control);
+const { setting, updateList,currentControlList,currentAdd } = storeToRefs(control);
 
 // 重置控制中心
-const resetControl = () => {};
+const resetControl = () => {
+  const newArr = [];
+  updateList.value = [];
+  currentAdd.value = [];
+  for(const item of useControlList){
+    const index = _.findIndex(newArr,function(findItem){
+      return String(findItem.id) === String(item.id);
+    });
+    if(index === -1){
+      newArr.push(item);
+    }
+  }
+  setting.value.isEdit = false;
+  currentControlList.value = newArr;
+};
 // 完成控制中心编辑
 const finshControl = () => {
   const filterList = [];
