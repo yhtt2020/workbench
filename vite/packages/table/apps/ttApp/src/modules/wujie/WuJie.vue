@@ -2,7 +2,6 @@
 import WujieVue from "wujie-vue3";
 import { ref } from "vue";
 import { useTTAppStore } from "../../store";
-import {ref} from "vue";
 const ttappStore: any = useTTAppStore();
 
 const props = defineProps({
