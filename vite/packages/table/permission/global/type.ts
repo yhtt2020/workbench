@@ -1,5 +1,4 @@
 import { Confirm } from "../../ui/new/confirm";
-import { UseEnv, baseEnv } from "../useEnv";
 
 /**
  * @description: 天天工作台全局对象
@@ -45,12 +44,12 @@ export type TT = {
     login: (cb?: Function) => void;
   };
   // 系统相关指令
-  sys:{
+  sys: {
     /**
      * 打开系统设置
      */
     openSystemSet: () => void;
-  }
+  };
 };
 
 declare global {
@@ -65,7 +64,7 @@ declare global {
 /**
  * @description: 天天工作台全局对象
  */
-export interface TTS = {
+export interface TTS {
   /**
    * 运行时相关指令
    */
@@ -105,13 +104,10 @@ export interface TTS = {
      */
     login: (cb?: Function) => void;
   };
-};
+}
 
 declare global {
   interface Window {
-    /**
-     * @description: 天天工作台全局对象
-     */
     tt: TT;
   }
 }

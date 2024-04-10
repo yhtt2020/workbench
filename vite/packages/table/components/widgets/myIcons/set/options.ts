@@ -133,8 +133,8 @@ export const appearanceOptions = [
 
   {
     type: "info",
-    title: "图标形状",
-    info: "选择图标形状",
+    title: "图标状态",
+    info: "选择图标状态",
   },
   {
     type: "tab",

@@ -88,33 +88,13 @@ export const aiStore = defineStore("aiStore", {
     addTopic() {
       // 解构一份初始状态
       let obj = { ...this.defaultData };
-      // iconList
-      const r = Math.floor(Math.random() * (iconList.length - 1 + 1)) + 1;
-      obj.icon = iconList[r - 1];
       let id = Date.now();
       obj.id = id;
       obj.time = id;
-      obj.name = "Ai助手";
       this.selectTopicIndex = obj.id;
       this.topicList[obj.id] = obj;
-      console.log("      this.topicList[obj.id]  :>> ", this.topicList[obj.id]);
       this.chatList[obj.id] = [
-        {
-          content: "Hello，你可以问我任何问题。",
-          role: "assistant",
-          time: id,
-          id: id,
-        },
       ];
-      console.log("  this.chatList[obj.id]  :>> ", this.chatList[obj.id]);
-
-      // tsbApi.db.put({
-      //   _id: "item:1",
-      //   category: "cat1",
-      //   content: "content",
-      //   createTime: Date.now(),
-      //   updateTime: Date.now(),
-      // });
     },
     delTopic() {
       for (let key in this.topicList) {

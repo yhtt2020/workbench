@@ -380,7 +380,9 @@ const dragStart = () => {
 // 元素拖拽结束
 const dragStop = (item) => {
   console.log("dragStop item :>> ", isSelectAll.value);
-  cutCanvas({ id: item.data.id, item: item.data });
+  setTimeout(() => {
+    cutCanvas({ id: item.data.id, item: item.data });
+  }, 1);
 
   if (!isSelectAll.value) {
     return;

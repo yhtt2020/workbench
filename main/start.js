@@ -42,11 +42,9 @@ app.on('session-created',async (ses)=>{
   sessions.push(ses)
   ses.protocol.registerBufferProtocol('tsbapp', (request, response) => {
     render.regDefaultProtocol(request, response)
-
   })
-  // ttapp.js
   ses.protocol.registerBufferProtocol('ttapp', (request, response) => {
-    render.regTTAppProtocol(request, response)
+    render.regDefaultProtocol(request, response)
   })
 
   // console.log(ses.serviceWorkers)

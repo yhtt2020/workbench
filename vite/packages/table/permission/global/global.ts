@@ -1,7 +1,6 @@
 import { currentEnv, useEnv } from "../useEnv";
 import { TT } from "./type";
-import mitt from "mitt";
-const Mit = mitt();
+import { useMit } from "../../hooks";
 
 export const tt: TT = {
   runTime: {
@@ -10,19 +9,19 @@ export const tt: TT = {
   },
   ui: {
     chooseFile: (cb?: Function) => {
-      Mit.emit("openFile", cb);
+      useMit.emit("openFile", cb);
     },
     confirm,
   },
   user: {
     login: (cb) => {
-      Mit.emit("openLogin", cb);
+      useMit.emit("openLogin", cb);
     },
   },
   sys: {
     openSystemSet: () => {
-      Mit.emit("openSystemSet");
+      useMit.emit("openSystemSet");
     },
   },
 };
-export { Mit };
+export { useMit };

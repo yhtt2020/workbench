@@ -5,12 +5,9 @@ import { useAppCenterStore } from "./store";
 import { useTTAppStore } from "../../ttApp/src/store";
 import { storeToRefs } from "pinia";
 const ttappStore = useTTAppStore()
-ttappStore.init()
+// ttappStore.init()
 const appCenterStore = useAppCenterStore();
 const { visible } = storeToRefs(appCenterStore);
-defineProps<{
-  modelValue: boolean;
-}>();
 // 左侧对应组件
 const components = ref({
   Developer,
@@ -79,7 +76,7 @@ const switchCurrentCom = (name: string) => {
         fn="fn"
         leftBg="red"
       >
-        <div class="w-full h-full xt-theme-b py-4 pr-4">
+        <div class="w-full h-full  py-4 pr-4">
           <component :is="components[currentCom]" />
         </div>
       </xt-left-menu>

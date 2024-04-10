@@ -8,7 +8,7 @@ import {
   currentEnv,
 } from "./permission/useEnv";
 import type { UseEnv, baseEnv } from "./permission/useEnv";
-
+import archiveHelper from "./js/lib/archiveHelper";
 window.$isOffline = isOffline;
 window.$isGuest = isGuest;
 window.$useEnv = useEnv;
@@ -87,9 +87,10 @@ import initStores from "./initStores";
 
 import { Notifications } from "./js/common/sessionNotice";
 
-import Wujie from 'wujie-vue3'
+import Wujie from "wujie-vue3";
 
-import { tt, Mit } from "./permission/global/global";
+import { tt } from "./permission/global/global";
+import { useMit } from "./hooks";
 import type { TT } from "./permission/global/type";
 
 import hevueImgPreview from "hevue-img-preview";
@@ -130,14 +131,13 @@ app.config.globalProperties.$isClient = isClient;
 app.config.globalProperties.$isMac = isMac;
 app.config.globalProperties.$isOffline = isOffline;
 app.config.globalProperties.$isGuest = isGuest;
-app.config.globalProperties.$bus = Mit;
+app.config.globalProperties.$bus = useMit;
 app.config.globalProperties.$useEnv = useEnv;
 window.$ui = {
   confirm,
   router,
 };
 const newTT: TT = tt;
-
 
 declare global {
   interface Window {
@@ -196,7 +196,7 @@ if (!useEnv()) {
 }
 
 window.$app = $app;
-// window.$bus = Mit.emit;
 initStores();
+
 // devtools.connect()
 export { router };

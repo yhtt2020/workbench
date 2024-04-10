@@ -46,9 +46,9 @@ export const useTTAppStore = defineStore("useTTAppStore", {
      */
     async uninstall(id: string) {
       let res = await useUninstall(id);
+      this.ttappList = this.ttappList.filter((item) => item.id !== id);
       if (res) {
         message.success("卸载成功");
-        this.selectAll();
       } else {
         message.error("卸载失败");
       }

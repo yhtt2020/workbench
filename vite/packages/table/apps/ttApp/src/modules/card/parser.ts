@@ -6,7 +6,7 @@ export const useParserCard = (data: any) => {
    * 边界处理
    */
   // 解析modules
-  const card = data.modules?.card;
+  const card = data?.card;
   // 数据不存在card对象
   if (!card) return;
   /**
@@ -20,8 +20,8 @@ export const useParserCard = (data: any) => {
   // 解析无界配置
   cardData.wujie = parserWuJie(data, card);
 
-  if (card.customSize) {
-    cardData.customSize = card.customSize;
+  if (card.size) {
+    cardData.customSize = card.size;
   } else {
     cardData.customSize = "2x2";
   }
@@ -53,7 +53,7 @@ const parserHeader = (props: any, card: any) => {
 const parserWuJie = (props: any, card: any) => {
   let wujie: any = {};
   wujie.name = props.id;
-  wujie.url = "ttapp://" + props.id + "/" + card.entry;
+  wujie.url = card._entry;
 
   return wujie;
 };

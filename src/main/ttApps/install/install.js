@@ -135,13 +135,17 @@ const checkV2 = async () => {
   const { data } = checkManifestRes;
   const obj = {
     id: id,
-    ...data
+    ...data,
   };
   const saveRes = await saveData({
     id: id,
     data: obj,
   });
-  return saveRes;
+  if (saveRes.code !== 200) return saveRes;
+  return {
+    code: 200,
+    data: obj,
+  };
 };
 // 安装json
 const installJson = async (data) => {

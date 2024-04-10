@@ -3,10 +3,11 @@
     <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-h-full" :beforeCreate="beforeCreate"> -->
     <!-- style="z-index: 99" -->
     <!-- 文件夹弹窗 -->
-    <div style="position: absolute; z-index: 500 !important;" :style="folderPos" class="rounded-xl pointer " id="folder">
-      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:customSize="updateSize" @close="folderVisible = false"
-        :customData="customData" :customIndex="sideKey" :secondary="true" v-if="folderVisible"
-        :expand="{ disabled: true }" :navBar="{
+    <div style="position: absolute; z-index: 500 !important;" :style="folderPos" class="rounded-xl pointer "
+      id="folder">
+      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:customSize="updateSize"
+        @close="folderVisible = false" :customData="customData" :customIndex="sideKey" :secondary="true"
+        v-if="folderVisible" :expand="{ disabled: true }" :navBar="{
           resize: false,
           sizeOption: false,
           isDel: true,
@@ -15,29 +16,34 @@
         }" :auto="true" />
     </div>
     <!-- <AutoHide> -->
-    <Drop @createFile="createFile" :currentId="sortId" :dropClass="'w-full max-h-full'">
-      <div v-if="false"
-        style="position: fixed;top: 10px;background: black;color:white;z-index:99999;line-height: 14px;text-align: left;max-width: 100vw;left:150px">
-        <div>选中的id{{ hoverIndex }}</div>
-        <div v-for="( item, index) in navigationList" style="margin-bottom: 5px;border-bottom: 4px solid white">
-          {{ index }} {{ item.name }} {{ item.id }} {{ item.children?.length }}
-        </div>
-      </div>
+    <Drop 
+      @createFile="createFile" 
+      :currentId="sortId" 
+      :dropClass="'w-full max-h-full'">
       <transition>
-        <div v-if="hoverIndex > -1 && hoverRealItemId(this.sortId,this.hoverIndex) !== dragItem?.id" :style="mergeTag"
+        <div v-if="hoverIndex > -1 && hoverRealItemId(this.sortId, this.hoverIndex) !== dragItem?.id" :style="mergeTag"
           style="position: absolute;z-index:99999999999;top:50%;transform: translateY(-50%) translateX(-100%);writing-mode: vertical-rl;"
           class="px-3 py-10 rounded-lg s-bg xt-text">松开鼠标合并</div>
       </transition>
-      <div
-        @click.stop
-        :id="currentId"
+      <div 
+        @click.stop 
+        :id="currentId" 
         style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
         class="flex flex-row justify-center box common-panel s-bg w-[80px]  xt-bg pt-0 pb-0 relative max-h-full side-bar"
-        ref="sideContent" @contextmenu="showMenu"
-        :style="{ zoom: `${(this.navAttribute.navSize / 100)}`, borderRadius: this.navAttribute.navRadius + 'px' }">
-        <div style="width: 52px;margin-top: 20px;margin-bottom: 20px;" class="w-full">
+        ref="sideContent" 
+        @contextmenu="showMenu"
+        :style="[
+          { 
+            zoom: `${(this.navAttribute.navSize / 100)}`,
+             borderRadius: this.navAttribute.navRadius + 'px'
+          },
+          this.state ? this.fixedPosition : '']"
+        >
+        <div 
+          style="width: 52px;margin-top: 20px;margin-bottom: 20px;" 
+          class="w-full">
           <div :id="sortId" :key="sideKey"
-            class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container"
+            class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container" 
             style="
               width: 56px;
               display: flex;
@@ -45,26 +51,37 @@
               overflow: hidden;
               align-items: flex-start;
               gap: 20px;">
-            <a-tooltip v-for="(item, index) in navigationList"
-              :key="item.id"
+            <a-tooltip 
+              v-for="(item, index) in navigationList" 
+              :key="item.id" 
               :title="item.name"
-              :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }"
+              :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }" 
               @mouseenter="showElement(item, index)"
               :placement="sortId === 'left' ? 'right' : 'left'">
               <!-- 左右导航栏隐藏入口 -->
               <xt-menu :menus="folderOptions" :id="item.id" class="relative flex-shrink-0 item-content">
-                <div
-                  v-if="!(this.isOffline && this.navList.includes(item.event))"
+                <div 
+                  v-if="!(this.isOffline && this.navList.includes(item.event))" 
                   class="item-content item-nav"
-                  @click="newOpenApp(item)"
-                  @dragover="onDrag"
+                  @click="newOpenApp(item)" 
+                  @dragover="onDrag" 
                   @dragend="hoverIndex = -1" 
                   :class="{
                     'active-back': current(item),
-                    hover: (dragItem && item.id === hoverRealItemId(this.sortId,this.hoverIndex) && dragItem?.id !== hoverRealItemId(this.sortId,this.hoverIndex))
-                  }" :style="{ borderRadius: this.iconRadius + 'px' }">
-                  <Drag :data="item" :currentId="sortId" @deleteFile="deleteFile">
-                    <NavIcon :size="54" :item="item" :community="community"></NavIcon>
+                    hover: 
+                    (dragItem && item.id === hoverRealItemId(this.sortId, this.hoverIndex) && 
+                    dragItem?.id !== hoverRealItemId(this.sortId, this.hoverIndex))
+                  }" 
+                  :style="{ borderRadius: this.iconRadius + 'px' }">
+                  <Drag 
+                    :data="item" 
+                    :currentId="sortId" 
+                    @deleteFile="deleteFile">
+                    <NavIcon 
+                      :size="54" 
+                      :item="item" 
+                      :community="community">
+                    </NavIcon>
                   </Drag>
                 </div>
               </xt-menu>
@@ -126,7 +143,7 @@ import { startApp } from '../ui/hooks/useStartApp'
 import { defaultFolderData } from '../apps/folder/src/components/options'
 import { useWindowSize } from '../ui/new/drag/src/hooks/useWindowSize'
 import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
-import {hoverRealItemId} from '../components/desk/navigationBar/hook/hoverRealItemId'
+import { hoverRealItemId } from '../components/desk/navigationBar/hook/hoverRealItemId'
 
 export default {
   name: 'SidePanel',
@@ -143,7 +160,7 @@ export default {
     AutoHide,
     NavIcon
   },
-  emits: ['getDelIcon', 'hiedNavBar','openFolder'],
+  emits: ['getDelIcon', 'hiedNavBar', 'openFolder'],
   data() {
     return {
       dragItem: null,
@@ -196,10 +213,12 @@ export default {
           id: 7,
           label: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          callBack: () => { this.$bus.emit("openSystemSet");
-              setTimeout(() => {
-                this.$bus.emit("selectSystemNav", 3);
-              }, 10); }
+          callBack: () => {
+            this.$bus.emit("openSystemSet");
+            setTimeout(() => {
+              this.$bus.emit("selectSystemNav", 3);
+            }, 10);
+          }
         }
       ],
       mainMenus: [
@@ -213,10 +232,12 @@ export default {
           id: 2,
           name: '导航栏设置',
           newIcon: 'fluent:settings-16-regular',
-          fn: () => { this.$bus.emit("openSystemSet");
-              setTimeout(() => {
-                this.$bus.emit("selectSystemNav", 3);
-              }, 10); },
+          fn: () => {
+            this.$bus.emit("openSystemSet");
+            setTimeout(() => {
+              this.$bus.emit("selectSystemNav", 3);
+            }, 10);
+          },
         },
         {
           id: 3,
@@ -228,7 +249,7 @@ export default {
           id: 4,
           name: '清空当前导航栏',
           newIcon: 'fluent:circle-off-16-regular',
-          fn: () => { this.clearAll();},
+          fn: () => { this.clearAll(); },
         },
         {
           id: 9,
@@ -242,7 +263,7 @@ export default {
           id: 10
         },
         {
-          id:11,
+          id: 11,
           type: 'systemApp',
           newIcon: 'fluent:lock-closed-16-regular',
           name: '锁定屏幕',
@@ -250,7 +271,7 @@ export default {
           fn: () => { this.newOpenApp(this.builtInFeatures[0]) }
         },
         {
-          id:15,
+          id: 15,
           type: 'systemApp',
           newIcon: 'fluent:settings-16-regular',
           name: '基础设置',
@@ -258,7 +279,7 @@ export default {
           fn: () => { this.newOpenApp(this.builtInFeatures[1]) }
         },
         {
-          id:20,
+          id: 20,
           type: 'systemApp',
           newIcon: 'fluent:full-screen-maximize-16-filled',
           name: '全屏显示',
@@ -266,7 +287,7 @@ export default {
           fn: () => { this.newOpenApp(this.builtInFeatures[2]) }
         },
         {
-          id:25,
+          id: 25,
           type: 'systemApp',
           newIcon: 'fluent:slide-settings-24-regular',
           name: '设备设置',
@@ -294,7 +315,7 @@ export default {
       top: 0,
       parentSize: 0,
       sideList: [],
-      maxItemNum:0
+      maxItemNum: 0
     }
   },
   props: {
@@ -342,6 +363,16 @@ export default {
     delZone: {
       type: Boolean,
       default: () => false
+    },
+    // 自动隐藏状态
+    state: {
+      type: Boolean,
+      default: () => false
+    },
+    // 开启自动隐藏后定位
+    fixedPosition: {
+      type:String,
+      default: () => ''
     }
   },
   computed: {
@@ -362,7 +393,7 @@ export default {
       'editToggle', 'taskBoxVisible',
       'selectNav', 'bottomToggle',
       'popVisible', 'currentList',
-      'editItem', 'navAttribute', 'iconRadius', 'jumpDesk','customOpenNav','isLeaveBar'
+      'editItem', 'navAttribute', 'iconRadius', 'jumpDesk', 'autoHideNav', 'isLeaveBar'
     ]),
     ...mapWritableState(appStore, ['settings']),
     ...mapWritableState(useDeskStore, ['isEnterBar']),
@@ -401,9 +432,15 @@ export default {
       ]
 
     },
+    // fixedPosition() {
+    //   if(this.sortId === 'left'){
+    //     return 'position: fixed;top: 50% - 32px;transform: translateY(-50%);'
+    //   }
+    //   return 'position: fixed;top: 50% - 32px;transform: translateY(-50%);'
+    // },
     // 社区中心参数
     community() {
-      if( this.sortId === 'left'){
+      if (this.sortId === 'left') {
         return {
           x: this.navAttribute.navSize / 100 * 100,
           y: this.top,
@@ -475,9 +512,9 @@ export default {
     mainOption() {
       const custom = {
         id: 5,
-        name: this.customOpenNav ? '关闭自动隐藏' : '开启自动隐藏',
+        name: this.state ? '关闭自动隐藏' : '开启自动隐藏',
         newIcon: 'fluent:eye-off-16-regular',
-        fn: () => { this.customOpenNav = !this.customOpenNav }
+        fn: () => { this.autoHideNav[this.sortId].state = !this.autoHideNav[this.sortId].state }
       }
       let arr = [...this.rightMenus, custom]
       return arr.sort((a, b) => a.id - b.id)
@@ -529,10 +566,10 @@ export default {
                 this.navAttribute.navSize = width.toFixed(2) * 100
                 this.noticeFlag = false
               },
-              noText:false,
+              noText: false,
             })
           }
-          if(this.noticeFlag) return
+          if (this.noticeFlag) return
           const width = this.parentSize / (this.navigationList.length * 72)
           this.navAttribute.navSize = width.toFixed(2) * 100
         }
@@ -542,7 +579,7 @@ export default {
     },
     'navigationList.length': {
       handler(newV, oldV) {
-        if(oldV !== undefined && newV !== oldV){
+        if (oldV !== undefined && newV !== oldV) {
           this.limitFlag = true
         }
       }
@@ -587,11 +624,11 @@ export default {
   },
   methods: {
     ...mapActions(navStore,
-       ['removeSideNavigationList', 
-        'removeRightNavigationList', 
-        'setSideNavigationList', 
-        'setRightNavigationList', 
-        'setRightNavigationList', 
+      ['removeSideNavigationList',
+        'removeRightNavigationList',
+        'setSideNavigationList',
+        'setRightNavigationList',
+        'setRightNavigationList',
         'loadNav'
       ]),
     ...mapActions(useNavigationStore, ['toggleEdit']),
@@ -607,11 +644,11 @@ export default {
       item.default = {
         name: item.name,
         icon: item.icon,
-        bg:item.bg,
-        color:item.color,
+        bg: item.bg,
+        color: item.color,
       }
     },
-    deleteFile(data){
+    deleteFile(data) {
       const index = this.sideList.findIndex((item) => item.id === data.id)
       this.sideList.splice(index, 1)
       this.syncSidePanel()
@@ -675,35 +712,36 @@ export default {
           that.delNav = true
           del.forEach((delIcon) => {
             if (that.delNav) {
-            delIcon.ondragover = function (ev) {
-              ev.preventDefault()
+              delIcon.ondragover = function (ev) {
+                ev.preventDefault()
+              }
             }
-          }
-          delIcon.ondrop = function (ev) {
-            let oneNav = that.navigationList[event.oldIndex]
-            that.isEnterDesk = false
-            //将要删除的是否是主要功能
-            if (!that.mainNavigationList.find(f => f.name === oneNav.name)) {
-              that.delNavList(event.oldIndex)
-              that.$emit('getDelIcon', false)
-              that.hoverIndex = -1
-              return
+            delIcon.ondrop = function (ev) {
+              let oneNav = that.navigationList[event.oldIndex]
+              that.isEnterDesk = false
+              //将要删除的是否是主要功能
+              if (!that.mainNavigationList.find(f => f.name === oneNav.name)) {
+                that.delNavList(event.oldIndex)
+                that.$emit('getDelIcon', false)
+                that.hoverIndex = -1
+                return
+                
+              }
+              let sumList = []
+              // 判断其他导航栏是否是打开状态，是则获取功能列表
+              if (that.otherSwitch1 && that.otherSwitch2) {
+                sumList = that.otherNavList1.concat(that.otherNavList2)
+              } else if (that.otherSwitch1 && !that.otherSwitch2) {
+                sumList = that.otherNavList1
+              } else if (!that.otherSwitch1 && that.otherSwitch2) {
+                sumList = that.otherNavList2
+              } else {
+                message.info(`导航栏中至少保留一个「${oneNav.name}」`)
+                // console.log('不可删除')
+                return
+              }
+              that.delNavigation(sumList, oneNav, event.oldIndex, that.delNavList)
             }
-            let sumList = []
-            // 判断其他导航栏是否是打开状态，是则获取功能列表
-            if (that.otherSwitch1 && that.otherSwitch2) {
-              sumList = that.otherNavList1.concat(that.otherNavList2)
-            } else if (that.otherSwitch1 && !that.otherSwitch2) {
-              sumList = that.otherNavList1
-            } else if (!that.otherSwitch1 && that.otherSwitch2) {
-              sumList = that.otherNavList2
-            } else {
-              message.info(`导航栏中至少保留一个「${oneNav.name}」`)
-              // console.log('不可删除')
-              return
-            }
-            that.delNavigation(sumList, oneNav, event.oldIndex, that.delNavList)
-          }
           })
 
         },
@@ -755,13 +793,13 @@ export default {
          * @returns {number}
          */
         onUnchoose: function (event) {
-          if (that.hoverRealItemId(that.sortId,that.hoverIndex) && that.hoverRealItemId(that.sortId,that.hoverIndex) !== that.dragItem?.id) {
+          if (that.hoverRealItemId(that.sortId, that.hoverIndex) && that.hoverRealItemId(that.sortId, that.hoverIndex) !== that.dragItem?.id) {
             //存在目标，且不等于自身，符合合并条件，则执行合并
             const merged = that.mergeIconFolder(that.sideList, that.dragItem, that.sideList.find(item => {
-              return item.id === that.hoverRealItemId(that.sortId,that.hoverIndex)
+              return item.id === that.hoverRealItemId(that.sortId, that.hoverIndex)
             }))
             that.sideList.splice(that.sideList.findIndex(item => {
-              return item.id === that.hoverRealItemId(that.sortId,that.hoverIndex)
+              return item.id === that.hoverRealItemId(that.sortId, that.hoverIndex)
             }), 1, merged)
             that.sideList = that.sideList.filter(item => {
               return item.id !== that.dragItem.id
@@ -847,10 +885,10 @@ export default {
       this.dragItem = null
       if (this.sideList[this.hoverIndex]?.type === 'folder') {
         const merged = this.mergeIconFolder(this.sideList, item, this.sideList.find(i => {
-          return i.id === this.hoverRealItemId(this.sortId,this.hoverIndex)
+          return i.id === this.hoverRealItemId(this.sortId, this.hoverIndex)
         }))
         this.sideList.splice(this.sideList.findIndex(i => {
-          return i.id === this.hoverRealItemId(this.sortId,this.hoverIndex)
+          return i.id === this.hoverRealItemId(this.sortId, this.hoverIndex)
         }), 1, merged)
         this.sideList = this.sideList.filter(i => {
           return i.id !== item.id
@@ -882,7 +920,7 @@ export default {
               return this.sideList
             }
           })
-        }else{
+        } else {
           this.sideList.splice(index, 1, ...item.children)
           this.updateList(this.sideList)
         }
@@ -922,7 +960,6 @@ export default {
       } else if (this.folderVisible && this.currentItem.id && this.folderId === this.currentItem.id) {
         this.folderVisible = false
       } else {
-        console.log(this.currentItem.id, this.folderId, 'this.currentItem.id, this.folderId')
         this.customData = {
           ...this.defaultFolderData,
           list: this.folderList,
@@ -932,7 +969,7 @@ export default {
         }
       }
       this.folderId = item.id
-      this.$emit('openFolder', this.folderVisible,this.sortId)
+      this.$emit('openFolder', this.folderVisible, this.sortId)
     },
     /**
      * 更新大小尺寸
@@ -953,12 +990,12 @@ export default {
      * 打开应用
      * @param {*} item 图标详细信息
      */
-     async newOpenApp(item, e) {
+    async newOpenApp(item, e) {
       const { type, value } = item;
       if (type !== "folder") {
         this.folderVisible = false;
       }
-      if ( value !== 'commun') {
+      if (value !== 'commun') {
         this.comVisible = false
       }
       // 更新鼠标定位
@@ -970,33 +1007,33 @@ export default {
       const valueHandlers = {
         control: () => this.$emit("control", e),
         setting: () => {
-            // this.$router.push({ name: "home" });
-            setTimeout(() => {
-                this.$bus.emit("openSystemSet");
-            }, 500);
+          // this.$router.push({ name: "home" });
+          setTimeout(() => {
+            this.$bus.emit("openSystemSet");
+          }, 500);
         },
         commun: () => {
-            this.comVisible = !this.comVisible;
+          this.comVisible = !this.comVisible;
         },
         default: async () => {
-            if (type === "folder") {
-                this.openFolder(item);
-            }
-            if (value === "fullscreen" && window.$useEnv()) {
-                toggle();
-                return;
-            }
-            if (value === "home" && item.home) {
-                this.jumpDesk = item.home;
-            }
-            let rs = await startApp(type, value, this.$router);
-            if (!rs) {
-                message.error({
-                    content: `打开「${item.name}」失败`,
-                    key: "tipRun",
-                });
-            }
-            this.comVisible = false;
+          if (type === "folder") {
+            this.openFolder(item);
+          }
+          if (value === "fullscreen" && window.$useEnv()) {
+            toggle();
+            return;
+          }
+          if (value === "home" && item.home) {
+            this.jumpDesk = item.home;
+          }
+          let rs = await startApp(type, value, this.$router);
+          if (!rs) {
+            message.error({
+              content: `打开「${item.name}」失败`,
+              key: "tipRun",
+            });
+          }
+          this.comVisible = false;
         }
       };
 
@@ -1123,6 +1160,7 @@ export default {
 .item:hover {
   background: var(--active-bg) !important;
 }
+
 .shaking-element {
   // animation: shake 0.5s infinite;
   animation: shake 1s ease-in-out;
@@ -1140,6 +1178,7 @@ export default {
   cursor: pointer;
 
 }
+
 .icon-color {
   height: 52px;
   width: 52px;
@@ -1148,6 +1187,7 @@ export default {
 .icon-color:hover {
   color: rgba(255, 255, 255, 0.8) !important;
 }
+
 .active-back {
   :deep(.icon) {
     fill: rgba(255, 255, 255, 0.9) !important;
