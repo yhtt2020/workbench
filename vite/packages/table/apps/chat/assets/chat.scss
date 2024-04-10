@@ -1,4 +1,33 @@
-// 新版IM样式表(覆盖版)
+/**新版IM样式表(覆盖版)**/ 
+
+// 容器宽高
+.TUIKit {
+  display: flex !important;
+  flex: 1 !important;
+  width: 100% !important;
+  &-main-container{
+    display: flex !important;
+    flex: 1 !important;
+  }
+  &-main{
+    display: flex !important;
+    flex: 1 !important;
+    width: 100% !important;
+  }
+  &-main-main{
+    width: 100% !important;
+    display: flex !important;
+    flex: 1 !important;
+    .chat{
+      width: 100% !important;
+      flex: 1 !important;
+    }
+  }
+  &-main-aside{
+    width: 320px !important;
+  }
+}
+
 /**屏蔽不想要的UI**/
 .callkit-container,
 .TUIKit-navbar,
@@ -10,15 +39,6 @@
 .message-input-button-hover,
 .tui-chat-application-tips {
   display: none !important;
-}
-
-
-// 
-
-// 容器宽高
-.TUIKit {
-  width: 100% !important;
-  height: 100% !important;
 }
 
 // 会话样式
@@ -79,7 +99,6 @@
     background: rgba(80, 139, 254, 0.2) !important;
   }
 }
-
 .actions-menu {
   background-color: transparent !important;
   background: var(--secondary-bg) !important;
@@ -92,25 +111,20 @@
     }
   }
 }
-
 .TUIKit-main-aside {
   border-right: 1px solid var(--divider) !important;
 }
-
 .chat-header-content {
   color: var(--primary-text) !important;
 }
-
 .chat-header-setting {
   .common-icon-container {
     color: var(--primary-text) !important;
   }
 }
-
 .message-input-toolbar {
   border-top: 1px solid var(--divider) !important;
 }
-
 .toolbar-item-container-dialog {
   background: var(--secondary-bg) !important;
 
@@ -134,7 +148,6 @@
     }
   }
 }
-
 .toolbar-item-container {
   &:nth-of-type(2n) {
     .toolbar-item-container-icon {
@@ -154,7 +167,6 @@
     }
   }
 }
-
 .message-item {
   cursor: pointer !important;
 }
@@ -190,7 +202,6 @@
     }
   }
 }
-
 .input-quote {
   &-content {
     background-color: rgba(255, 255, 255, 1) !important;
@@ -200,26 +211,21 @@
     }
   }
 }
-
 // 昵称
 .message-body-nick-name {
   color: var(--secondary-text) !important;
 }
-
 .message-timestamp {
   color: var(--secondary-text) !important;
 }
-
 .message-tip {
   span {
     color: var(--secondary-text) !important;
   }
 }
-
 .message-more {
   color: var(--secondary-text) !important;
 }
-
 .revoke {
   .edit {
     color: #006eff !important;
@@ -233,9 +239,24 @@
     color: var(--secondary-text) !important;
   }
 }
-
 .tui-chat-default{
   h1{
     display: none !important;
+  }
+}
+
+// 置顶三角图标
+.isPined-icon{
+  &::after{
+    width: 12px;
+    height: 12px;
+    position: relative;
+    top: -27px;
+    right: -12px;
+    display: block;
+    content: '';
+    border-left: 12px solid transparent;
+    border-right: 12px solid #508bfe;
+    border-bottom: 12px solid transparent;
   }
 }
