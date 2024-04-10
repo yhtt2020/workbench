@@ -2,13 +2,13 @@ import _ from 'lodash-es';
 
 // 根据群聊id获取unreadCount
 function getUnReadCount(groupID:any){
-  const server = (window as any).$TUIKit.TUIServer.TUIConversation;
-  const list =server.store.conversationList;
-  if(list){
-    const find = _.find(list,function(item:any){ const itemInfo = item.groupProfile; return String(itemInfo?.groupID) === String(groupID); });
-    if(find){ return { unreadCount:find?.unreadCount }; }
-    else { return { unreadCount:0 }; }
-  }
+  // const server = (window as any).$TUIKit.TUIServer.TUIConversation;
+  // const list =server.store.conversationList;
+  // if(list){
+  //   const find = _.find(list,function(item:any){ const itemInfo = item.groupProfile; return String(itemInfo?.groupID) === String(groupID); });
+  //   if(find){ return { unreadCount:find?.unreadCount }; }
+  //   else { return { unreadCount:0 }; }
+  // }
 }
 
 // 将社群频道目录进行更换

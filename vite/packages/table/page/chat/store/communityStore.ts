@@ -81,7 +81,10 @@ export const communityStore = defineStore('communityStore',{
       const res = await post(searchRecommendCommunity,{keywords:data});
       if(res.status === 1){
         const list = res?.data?.list;
-        return list;
+        return {
+          status:1,
+          list:list
+        };
       }
     },
     // 加入推荐群聊

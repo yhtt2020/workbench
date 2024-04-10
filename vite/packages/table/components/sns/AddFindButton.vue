@@ -28,7 +28,7 @@ export default {
   },
   methods: {
     addFriend() {
-      let promise = window.$chat.addFriend({
+      let promise = window.$chat.chat.addFriend({
         to: String(this.uid),
         source: 'AddSource_Type_UserCard',
         remark: '通过好友列表添加',
