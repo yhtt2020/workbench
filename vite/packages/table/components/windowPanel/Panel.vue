@@ -1,5 +1,6 @@
 <template>
     <Dock
+        v-model:isOpen="folderVisible"
         :iconSize="44"
         :customClass="'h-[64px]'"
         :gap="16"
@@ -11,12 +12,15 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, defineAsyncComponent } from 'vue'
+import { ref, watch } from 'vue'
 
 import Dock from '../bottomPanel/Dock.vue';
 
-const emit = defineEmits(['edit','getDelIcon'])
+const emit = defineEmits(['edit','getDelIcon','update:folderVisible'])
 
+const folderVisible = ref(false)
+
+// 编辑图标状态
 const editIcon = (id) => {
     emit('edit',id)
 }
@@ -30,6 +34,14 @@ const getDelIcon = (val) => {
 const control = (val) => {
     emit('edit',val)
 }
+
+// 更新文件夹打开状态
+watch(
+    () => folderVisible.value, 
+    (val) => {
+        emit('update:folderVisible', val)
+    }
+)
 
 
 </script>

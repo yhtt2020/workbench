@@ -16,7 +16,6 @@
         }">
         <ControlModal @close="controlVisible = false"></ControlModal>
       </div>
-
       <AutoHide 
         v-model:isLeaveBar="isFootBar"
         :autoHideNav="this.state">
@@ -39,6 +38,7 @@
           <!-- 快速搜索 底部栏区域 -->
           <Drop @createFile="createFile" currentId="bottom">
             <Dock 
+              v-model:isOpen="folderVisible"
               @edit="edit" 
               @control="openControl" 
               @getDelIcon="getDelIcon" 
@@ -80,6 +80,7 @@
           currentId="bottom" 
           >
             <WindowPanel 
+              v-model:folderVisible="folderVisible"
               :mainClass="mainClass" 
               @edit="edit"
               @getDelIcon="getDelIcon" 
@@ -319,6 +320,9 @@ export default {
       // 社群搜索
       comSearchVisible: false,
       comSearchLeft: 100,
+
+      // 文件夹打开状态
+      folderVisible: false,
     };
   },
   props: {
@@ -379,6 +383,7 @@ export default {
       }
     });
     this.noticeFlag = true;
+    // 当窗口尺寸发生变化时，更新父级尺寸，并更新导航栏相关数据
     this.useWindowSize((size) => {
       const { width: windowWidth, height: windowHeight } = { width: size.width.value, height: size.height.value };
         
@@ -538,7 +543,7 @@ export default {
         if (this.isEdge || this.hoverTabs) {
           return true;
         }
-        if (this.isFootBar && !this.controlVisible && !this.folderVisible) {
+        if (this.isLeaveBar && !this.controlVisible && !this.folderVisible) {
           return false;
         }
         return true;

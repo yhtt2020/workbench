@@ -202,7 +202,7 @@ const {
 
 export default {
   name: "BottomPanel",
-  emits: ["getDelIcon", "hiedNavBar", "edit", "control", "getHoverIndex"],
+  emits: ["getDelIcon", "hiedNavBar", "edit", "control", "getHoverIndex", "update:isOpen"],
   components: {
     EditIcon,
     Avatar,
@@ -321,6 +321,11 @@ export default {
       type: Number,
       default: () => 20,
     },
+    // 文件夹是否打开
+    isOpen: {
+      type: Boolean,
+      default: () => false,
+    }
   },
   mounted() {
     this.enableDrag();
@@ -506,6 +511,11 @@ export default {
     hoverIndex(val) {
       this.$emit("getHoverIndex", val);
     },
+
+    // 文件夹打开状态
+    folderVisible(val) {
+      this.$emit("update:isOpen", val);
+    }
   },
   methods: {
     ...mapActions(navStore, [
