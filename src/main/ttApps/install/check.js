@@ -65,12 +65,16 @@ const checkMainFest = async (id) => {
   }
   const main = modules?.main;
   let weak = ["width", "height"];
-  let strong = [
-    {
+  let strong = [];
+  let entry = main?.entry;
+  if (!entry || entry.charAt(0) == "/") {
+    strong.push({
       value: main?.entry,
       info: "主应用入口",
-    },
-  ];
+    });
+  }
+  console.log("main strong :>> ", strong);
+
   let obj = {
     weak,
     strong,
@@ -88,14 +92,19 @@ const checkMainFest = async (id) => {
 
     let strong = [
       {
-        value: card?.entry,
-        info: "card入口",
-      },
-      {
         value: card?.preview,
         info: "预览图",
       },
     ];
+
+    let entry = card?.entry;
+    if (!entry || entry.charAt(0) == "/") {
+      strong.push({
+        value: card?.entry,
+        info: "card入口",
+      });
+    }
+    console.log("card strong :>> ", strong);
     let ojb = {
       weak,
       strong,

@@ -28,13 +28,12 @@ const plugins = (iframeWindow: any) => {
   };
   return res;
 };
-//这段代码是修改默认虚拟iframe的地址的，在某种情况下需要指定src
-const attrs=ref({})
-// if(location.href.startsWith('tsbapp://')){
-//   attrs.value.src='tsbapp://table.com/index.html'
-// }
 // location.href='tsbapp://table.com/table.html'
-
+//这段代码是修改默认虚拟iframe的地址的，在某种情况下需要指定src
+const attrs = ref({});
+if (location.href.startsWith("tsbapp://")) {
+  attrs.value.src = "tsbapp://table.com/index.html";
+}
 </script>
 <!--    :attrs="{-->
 <!--            src: 'tsbapp://table.com/index.html'-->
