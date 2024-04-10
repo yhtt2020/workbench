@@ -79,9 +79,6 @@ import "../../public/css/category.scss";
 
 import { router } from "./router";
 
-//腾讯IM部分
-import { loadChat, TUIKit } from "./chat";
-loadChat();
 //initDb()
 //socket部分
 import { initSocket } from "./js/socket/socket";
@@ -107,6 +104,14 @@ window.$notice = notice;
 dayjs.locale("zh-cn");
 
 const app = createApp(App);
+
+//腾讯IM部分
+import { loadChat,TUIKit } from "./chat";
+TUIKit.TUIChatKit.components(TUIKit.TUIComponents,app);
+loadChat();
+// 导入IM的UI覆写样式文件
+import "./apps/chat/assets/chat.scss";
+// TUIKit
 
 app.use(Wujie);
 // app.use(hevueImgPreview)
@@ -172,7 +177,8 @@ const $app = app
     }
   )
   .use(Toast, options)
-  .use(TUIKit)
+  // 旧版使用TUIKit组件挂载
+  // .use(TUIKit)
   // .use(WujieVue)
   .use(hevueImgPreview)
   .use(VueShepherdPlugin)
