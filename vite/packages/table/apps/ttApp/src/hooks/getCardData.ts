@@ -12,6 +12,7 @@ export const getCardData = () => {
     children: [],
   };
   ttappList.value.forEach((item: any) => {
+    if(!item.card) return
     data.children.push({
       type: "ttapp",
       cname: item.name,

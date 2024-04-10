@@ -27,7 +27,7 @@ const plugins = (iframeWindow: any) => {
   };
   return res;
 };
-// location.href='tsbapp://table.com/table.html'
+
 const attrs = ref({});
 if (location.href.startsWith("tsbapp://")) {
   attrs.value.src = "tsbapp://table.com/index.html";
