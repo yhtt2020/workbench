@@ -82,8 +82,8 @@ import { CloseOutlined, SearchOutlined, MinusCircleOutlined } from '@ant-design/
 import _ from 'lodash-es'
 import { message } from 'ant-design-vue'
 import Modal from '../../components/Modal.vue'
-import TIM from '../../TUIKit/TUICore/tim'
-import TencentCloudChat from 'tim-js-sdk'
+// import TIM from '../../TUIKit/TUICore/tim'
+// import TencentCloudChat from 'tim-js-sdk'
 // import { pinyin,match,toRaw } from 'pinyin-pro'
 export default defineComponent({
   components: {
@@ -95,9 +95,9 @@ export default defineComponent({
   props: ['content', 'type', 'visible','alias'],
 
   setup (props, ctx) {
-    const C2CType=TencentCloudChat.TYPES.CONV_C2C
-    const GroupType=TencentCloudChat.TYPES.CONV_GROUP
-    console.log(C2CType,GroupType)
+    // const C2CType=TencentCloudChat.TYPES.CONV_C2C
+    // const GroupType=TencentCloudChat.TYPES.CONV_GROUP
+    // console.log(C2CType,GroupType)
 
     const data = reactive({
       list: [],
@@ -115,13 +115,13 @@ export default defineComponent({
 
     // 获取会话列表
     const getForwardList = async () => {
-      const list = window.$TUIKit.TUIServer.TUIConversation.store.conversationList
-      const sortList = list.sort((a, b) => {
-        return b.lastMessage?.lastTime - a.lastMessage?.lastTime
-      })
-      data.allList = sortList // 将所有的数据进行获取
-      console.log('获取20条', sortList.slice(0, 20).length)
-      data.list = sortList.slice(0, 20)  // 只获取20条
+      // const list = window.$TUIKit.TUIServer.TUIConversation.store.conversationList
+      // const sortList = list.sort((a, b) => {
+      //   return b.lastMessage?.lastTime - a.lastMessage?.lastTime
+      // })
+      // data.allList = sortList // 将所有的数据进行获取
+      // console.log('获取20条', sortList.slice(0, 20).length)
+      // data.list = sortList.slice(0, 20)  // 只获取20条
     }
 
     // 关闭转发对话框
@@ -180,32 +180,32 @@ export default defineComponent({
     }
 
     const shareContent=async (target)=>{
-      console.log('触发分享',props.content,target)
-      const messageContent={
-        to: target.type === 'C2C' ? target.userProfile.userID : target.groupProfile.groupID,
-        conversationType: `${target.type}`,
-        payload:props.content
-      }
-      console.log('需要发送的消息',messageContent)
-     let msg=  await window.$chat.createCustomMessage(messageContent)
-      let promise =  window.$chat.sendMessage(msg);
-      promise.then(function(imResponse) {
-        // 发送成功
-        message.success('转发成功')
-      }).catch(function(imError) {
-        // 发送失败
-        message.error('转发失败')
-      });
+    //   console.log('触发分享',props.content,target)
+    //   const messageContent={
+    //     to: target.type === 'C2C' ? target.userProfile.userID : target.groupProfile.groupID,
+    //     conversationType: `${target.type}`,
+    //     payload:props.content
+    //   }
+    //   console.log('需要发送的消息',messageContent)
+    //  let msg=  await window.$chat.createCustomMessage(messageContent)
+    //   let promise =  window.$chat.sendMessage(msg);
+    //   promise.then(function(imResponse) {
+    //     // 发送成功
+    //     message.success('转发成功')
+    //   }).catch(function(imError) {
+    //     // 发送失败
+    //     message.error('转发失败')
+    //   });
     }
     // 创建转发消息
     const forwardMessage = async (data) => {
-      const option = {
-        to: data.type === 'C2C' ? data.userProfile.userID : data.groupProfile.groupID,
-        conversationType: `${data.type}`,
-        payload: props.content
-      }
-      const r = await window.$chat.createForwardMessage(option)
-      await window.$chat.sendMessage(r)
+      // const option = {
+      //   to: data.type === 'C2C' ? data.userProfile.userID : data.groupProfile.groupID,
+      //   conversationType: `${data.type}`,
+      //   payload: props.content
+      // }
+      // const r = await window.$chat.createForwardMessage(option)
+      // await window.$chat.sendMessage(r)
     }
 
     // 搜索

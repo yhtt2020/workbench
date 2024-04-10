@@ -28,7 +28,7 @@ export default {
   },
   methods: {
     addFriend() {
-      let promise = window.$chat.addFriend({
+      let promise = (window as any).$chat.chat.addFriend({
         to: String(this.uid),
         source: 'AddSource_Type_UserCard',
         remark: '通过好友列表添加',
@@ -50,7 +50,7 @@ export default {
       })
     },
     deleteFriend() {
-      let promise = window.$chat.deleteFriend({
+      let promise = (window as any).$chat.chat.deleteFriend({
         userIDList: [String(this.uid)],
         type: TencentCloudChat.TYPES.SNS_DELETE_TYPE_BOTH
       })
