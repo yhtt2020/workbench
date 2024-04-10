@@ -162,7 +162,7 @@
 import { navStore } from "../../store/nav";
 import { useNavBarStore } from "../desk/navigationBar/navBar.ts";
 import { useNavigationStore } from "../desk/navigationBar/navigationStore";
-import { controlStore } from "../desk/navigationBar/hook/controlStore";
+import { controlStore } from "../../apps/control/hooks/controlStore";
 import { offlineStore } from "../../js/common/offline";
 
 import { mapWritableState, mapActions } from "pinia";

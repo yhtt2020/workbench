@@ -1,5 +1,6 @@
+<!-- 在没有编辑情况的控制中心列表页 -->
 <template>
-  <div class="flex mt-3" style="height: auto">
+  <div class="flex mt-3 h-full w-full">
     <XtScrollbar :y="true" style="height: 100%; width: 100%">
       <Vuuri
         v-model="controlList"
@@ -10,12 +11,10 @@
         :get-item-height="getHeight"
       >
         <template #item="{ item }">
-          <!--   v-if="limit(item.id)" -->
-          <ControlRemoveDetail
-            :control-index="item.id"
-            :control-item="item"
-            :status="'null'"
+          <CommonDetail
             class="tt-container-box-1234"
+            :controlIndex="item.id"
+            :controlItem="item"
           />
         </template>
       </Vuuri>
@@ -26,14 +25,15 @@
 <script setup>
 import { ref, computed } from "vue";
 import { storeToRefs } from "pinia";
-import { controlStore } from "../../hook/controlStore";
+import { controlStore } from "../../../hooks/controlStore";
 
-import Vuuri from "../../../../vuuriHome/Vuuri.vue";
-import ControlRemoveDetail from "./item/ControlRemoveDetail.vue";
+import Vuuri from "../../../../../components/vuuri/Vuuri.vue";
+import CommonDetail from "./CommonDetail.vue";
 
-const controls = controlStore();
-const { control } = storeToRefs(controls);
+const control = controlStore();
+const { currentControlList } = storeToRefs(control);
 
+// 配置项
 const option = ref({
   layout: { horizontal: false },
 });
@@ -43,24 +43,22 @@ const getHeight = () => {
   return 120 + "px";
 };
 
-const controlList = computed(()=>{
-  if (!window.$useEnv()) return control.value.oldList;
-  const arr = ["window-control", "assist-mode", "audio",'energy-save-mode','shake'];
-  let filterList = control.value.oldList.filter(item => !arr.includes(item.id));
+// 过滤控制中心列表在web端显示
+const controlList = computed(() => {
+  console.log('测试',currentControlList.value);
+  if (!window.$useEnv()) return currentControlList.value;
+  const arr = [
+    "window-control",
+    "assist-mode",
+    "audio",
+    "energy-save-mode",
+    "shake",
+  ];
+  let filterList = currentControlList.value.filter(
+    (item) => !arr.includes(item.id)
+  );
   return filterList;
-})
-
-// const
-// 传入数组然后判断是否存在
-// const limit = (id) => {
-//   if (!window.$useEnv()) return true;
-//   const arr = ["window-control", "assist-mode", "audio",'energy-save-mode','shake'];
-
-//   if (arr.includes(id)) {
-//     return false;
-//   }
-//   return true;
-// };
+});
 </script>
 
 <style lang="scss" scoped>
@@ -75,6 +73,7 @@ const controlList = computed(()=>{
 
 :deep(.muuri-grid) {
   background: transparent !important;
+  height: 400px !important;
 }
 
 :deep(.muuri-item-content) {
@@ -84,5 +83,9 @@ const controlList = computed(()=>{
 :deep(.muuri-item) {
   width: auto !important;
   margin: 0 12px 12px 0 !important;
+}
+
+:deep(.ps__rail-y){
+  display: none !important;
 }
 </style>

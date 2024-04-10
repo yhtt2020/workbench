@@ -10,7 +10,7 @@
     </Teleport>
 </template>
 
-<script setup lang='ts'>
+<script setup >
 import { ref, computed } from 'vue'
 import { storeToRefs } from 'pinia';
 
@@ -19,7 +19,7 @@ import { weatherStore } from '../../store/weather';
 
 
 import MyAvatar from '../small/MyAvatar.vue';
-import ControlModal from '../desk/navigationBar/components/control/ControlModal.vue';
+import ControlModal from '../../apps/control/page/Control.vue';
 
 import { usePosition } from './hook/usePosition';
 
