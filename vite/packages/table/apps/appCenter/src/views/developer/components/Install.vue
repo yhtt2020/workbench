@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import { message } from "ant-design-vue";
-import { useInstallTTApp, useSelectAll } from "../../../../../ttApp/src/hooks";
+import { useInstallTTApp } from "../../../../../ttApp/src/hooks";
 import { useTTAppStore } from "../../../../../ttApp/src/store";
 import { storeToRefs } from "pinia";
 import { getAppImg } from "../../../../../ttApp/src/hooks/getAppImg";
-import { da } from "date-fns/locale";
-import { de } from "date-fns/locale";
-import { clone } from "lodash";
 
 const ttappStore: any = useTTAppStore();
 const { ttappList } = storeToRefs(ttappStore);
@@ -27,12 +24,22 @@ const install = async () => {
     // 如果有main模块
     if (currentData.main) {
       // 处理main路径
-      currentData.main._entry = `ttapp://${data.id}/${currentData.main.entry}`;
+      let entry = currentData.main.entry;
+      if (entry.charAt(0) == "/") {
+        currentData.main._entry = `ttapp://${data.id}/${currentData.main.entry}`;
+      } else {
+        currentData.main._entry = entry;
+      }
     }
     // 如果有card模块
     if (currentData.card) {
       // 处理card路径
-      currentData.card._entry = `ttapp://${data.id}/${currentData.card.entry}`;
+      let entry = currentData.card.entry;
+      if (entry.charAt(0) == "/") {
+        currentData.card._entry = `ttapp://${data.id}/${currentData.card.entry}`;
+      } else {
+        currentData.card._entry = entry;
+      }
       // 处理card预览图路径
       currentData.card._preview = getAppImg(
         currentData.id,
@@ -45,13 +52,14 @@ const install = async () => {
   }
   // manifest.json失败
   else if (code > 20 && code < 30) {
-    console.log('data :>> ', data);
+    console.log("data :>> ", data);
     message.error(data);
   }
   // 其他失败
   else {
     message.error("文件上传失败请重试");
   }
+  console.log('data :>> ', data);
 };
 </script>
 
