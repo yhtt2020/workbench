@@ -17,8 +17,15 @@
   </div>
   <div v-else :style="{width:size + 'px',height:size + 'px'}">
     <div class="relative flex items-center justify-center overflow-hidden"
-      :style="{ borderRadius: navigationBar.iconRadius + 'px', background: item?.bg || '',width:size + 'px',height:size + 'px' }">
-      <a-avatar :size="32" shape="square" :src="renderIcon(item?.icon)"
+      :style="{ 
+        borderRadius: navigationBar.iconRadius + 'px', 
+        background: item?.bg || '',
+        width:size + 'px',
+        height:size + 'px' }">
+      <a-avatar 
+        :size="32" 
+        shape="square" 
+        :src="renderIcon(item?.icon)"
         :style="[{ borderRadius: navigationBar.iconRadius + 'px' }, item?.color]"></a-avatar>
     </div>
   </div>
