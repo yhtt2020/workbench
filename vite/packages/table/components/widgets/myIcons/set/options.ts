@@ -49,20 +49,32 @@ export const attributeOptions = [
         info: "选择链接打开方式。",
       },
       {
-        type: "tab",
-        tabKey: "type",
+        type: "drop",
+        dropKey: "type",
         list: [
           {
+            icon: "mingcute:windows-line",
             name: "系统默认浏览器",
             value: "default",
+            info: "使用Windows系统默认浏览器打开",
           },
           {
-            name: "内置浏览器",
+            icon: "fluent:globe-16-regular",
+            name: "工作台内置浏览器",
             value: "internal",
+            info: "在工作台内直接打开，不会跳转到外部应用软件。",
           },
           {
+            icon: "fluent:globe-16-regular",
             name: "想天浏览器",
             value: "thinksky",
+            info: "使用想天浏览器打开",
+          },
+          {
+            icon: "fluent:phone-16-regular",
+            name: "手机模式",
+            value: "mob",
+            info: "使用想天浏览器内置的「手机模式」打开，可以模拟手机端的浏览状态。",
           },
         ],
       },

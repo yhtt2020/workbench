@@ -83,6 +83,10 @@ let ActionGroups = [
               {
                 name: '工作台',
                 value: 'table'
+              },
+              {
+                name:'手机模式',
+                value:'mob'
               }
             ]
           }, {

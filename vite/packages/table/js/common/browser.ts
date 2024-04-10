@@ -40,7 +40,6 @@ const browser={
       window.open(url,'_blank')
       return
     }
-    console.log('在想天浏览器打开',url)
     ipc.send('addTab',{url:url})
   },
   /**
@@ -59,6 +58,13 @@ const browser={
       }
     })
   },
+  openInMobMod(url:string,options:{partition:string,newName:string}){
+    ipc.send('enableEmulation',{
+      url: url,
+      partition: options.partition,
+      newName:options.newName
+    })
+  }
 }
 
 export default browser

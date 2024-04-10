@@ -79,7 +79,7 @@
       hideIcon:false,
     }
   });
-  const arr = ["internal", "default", "thinksky"];
+  const arr = ["internal", "default", "thinksky",'mob'];
 
   onMounted(() => {});
   /**
