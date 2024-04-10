@@ -146,7 +146,7 @@ onMounted(() => {
     <xt-mix-menu :menus="menuList" :stopPropagation="false">
       <div
         class="relative w-full h-full overflow-hidden"
-        style="background: pink"
+
         ref="scrollbar"
         :style="modalSize"
       >

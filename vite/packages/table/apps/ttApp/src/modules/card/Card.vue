@@ -44,7 +44,7 @@ const props = defineProps({
 });
 
 const options = ref({
-  bg: "pink",
+  // bg: "pink",
 });
 
 const visible = ref(false);
@@ -104,7 +104,7 @@ const menus = computed(() => {
     </template>
     <template v-if="!loading">
       <div
-        class="w-full flex flex-col h-full xt-theme-b"
+        class="w-full flex flex-col h-full"
         style="overflow: hidden !important"
       >
         <WuJie v-bind="wujie" :id="customData.id" class="" />
