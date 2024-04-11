@@ -1,197 +1,266 @@
 <template>
- <div class="flex justify-center mt-4" style="height:89%;">
-   <vue-custom-scrollbar :settings="settingsScroller">
-     <template v-if="isLoading">
-       <a-spin/>
-     </template>
+  <div class="flex justify-center mt-4" style="height: 89%">
+    <vue-custom-scrollbar :settings="settingsScroller">
+      <template v-if="isLoading">
+        <a-spin />
+      </template>
 
-     <template v-else>
-       <div class="flex flex-col">
-
-         <span class="font-16 mb-3" style="color:var(--primary-text);">推荐用户</span>
-         <div class="content-list">
-           <div v-for="item in recommendData.users" class="flex items-center content-item px-4 justify-between py-5 rounded-xl mb-3"
-                style="width:400px;background: var(--secondary-bg);">
-             <div class="flex items-center pointer w-full" @click="openUserCard(item.uid)">
-               <a-row :gutter="10" class="flex w-full">
-                 <a-col flex="50px">
-                   <a-avatar :src="item.avatar" :size="48"></a-avatar>
-                 </a-col>
-                 <a-col flex="auto">
-                   <div class=" font-16" style="color:var(--primary-text)">{{ item.nickname }}</div>
-                   <div>{{ item.reason }}</div>
-                 </a-col>
-                 <a-col @click.stop  flex="100px" v-if="item.uid!=userInfo.uid && item.relationship!==undefined">
-                   <AddFindButton v-show="item.relationship==='not'" @relationshipChanged="updateRelationship($event,item)" :key="item.uid"
-                                  :uid="item.uid"></AddFindButton>
-                   <SendMessageButton :uid="item.uid" :enable="false" @send="enterGroup(item)"
-                                      v-show="item.relationship==='yes'"></SendMessageButton>
-                 </a-col>
-               </a-row>
-
-             </div>
-
-
-           </div>
-         </div>
-
-         <span class="font-16 mb-3" style="color:var(--primary-text);">推荐群聊</span>
-         <div class="content-list">
-           <div v-for="item in recommendData.groups " class="flex items-center content-item justify-between px-4 py-5 rounded-xl mb-3"
-           style="background: var(--secondary-bg);width: 400px;">
-             <div class="flex items-center">
-             <a-avatar :src="item.avatar" shape="square" :size="48"></a-avatar>
-             <div class="flex flex-col justify-center">
-               <span class="pl-4 font-16" style="color:var(--primary-text)">{{ item.name }}</span>
-               <span class="pl-4 font-16" style="color:var(--primary-text)">{{ limitTotal }}人</span>
-             </div>
-             </div>
-             <xt-button w="96" h="48" v-show="item.relationShip ==='yes'" class="xt-theme-bg-2" @click="enterGroup(item)">
-              <div class="flex items-center justify-center" >
-                <FindIcon icon="fluent:chat-16-regular" class="mr-2" style="font-size: 1.25rem;"/>
-                <span class="xt-text xt-font font-16 font-400">进入群聊</span>
+      <template v-else>
+        <div class="flex flex-col">
+          <span class="font-16 mb-3" style="color: var(--primary-text)"
+            >推荐用户</span
+          >
+          <div class="content-list">
+            <div
+              v-for="item in recommendData.users"
+              class="flex items-center content-item px-4 justify-between py-5 rounded-xl mb-3"
+              style="width: 400px; background: var(--secondary-bg)"
+            >
+              <div
+                class="flex items-center pointer w-full"
+                @click="openUserCard(item.uid)"
+              >
+                <a-row :gutter="10" class="flex w-full">
+                  <a-col flex="50px">
+                    <a-avatar :src="item.avatar" :size="48"></a-avatar>
+                  </a-col>
+                  <a-col flex="auto">
+                    <div class="font-16" style="color: var(--primary-text)">
+                      {{ item.nickname }}
+                    </div>
+                    <div>{{ item.reason }}</div>
+                  </a-col>
+                  <a-col
+                    @click.stop
+                    flex="100px"
+                    v-if="
+                      item.uid != userInfo.uid &&
+                      item.relationship !== undefined
+                    "
+                  >
+                    <AddFindButton
+                      v-show="item.relationship === 'not'"
+                      @relationshipChanged="updateRelationship($event, item)"
+                      :key="item.uid"
+                      :uid="item.uid"
+                    />
+                    <SendMessageButton
+                      :uid="item.uid"
+                      @send="enterGroup(item)"
+                      style="background: rgba(80, 139, 254, 0.2) !important;"
+                      v-show="item.relationship === 'yes'"
+                    />
+                  </a-col>
+                </a-row>
               </div>
-             </xt-button>
-             <xt-button w="96" h="48" v-show="item.relationShip ==='not'" type="theme" @click="addGroup(item.groupID)">
-               加入
-             </xt-button>
-           </div>
-         </div>
-       </div>
-     </template>
-   </vue-custom-scrollbar>
- </div>
+            </div>
+          </div>
 
- <teleport to='body'>
-   <Modal v-model:visible="cardVisible" v-if="cardVisible" :blurFlag="true">
-     <UserCard :key="userCardUid" :uid="userCardUid" :userInfo="userCardUserInfo"></UserCard>
-   </Modal>
- </teleport>
+          <span class="font-16 mb-3" style="color: var(--primary-text)"
+            >推荐群聊</span
+          >
+          <div class="content-list">
+            <div
+              v-for="item in recommendData.groups"
+              class="flex items-center content-item justify-between px-4 py-5 rounded-xl mb-3"
+              style="background: var(--secondary-bg); width: 400px"
+            >
+              <div class="flex items-center">
+                <a-avatar
+                  :src="item.avatar"
+                  shape="square"
+                  :size="48"
+                ></a-avatar>
+                <div class="flex flex-col justify-center">
+                  <span
+                    class="pl-4 font-16"
+                    style="color: var(--primary-text)"
+                    >{{ item.name }}</span
+                  >
+                  <span class="pl-4 font-16" style="color: var(--primary-text)"
+                    >{{ limitTotal }}人</span
+                  >
+                </div>
+              </div>
+              <xt-button
+                w="96"
+                h="48"
+                v-show="item.relationShip === 'yes'"
+                class="xt-theme-bg-2"
+                @click="enterGroup(item)"
+              >
+                <div class="flex items-center justify-center">
+                  <FindIcon
+                    icon="fluent:chat-16-regular"
+                    class="mr-2"
+                    style="font-size: 1.25rem"
+                  />
+                  <span class="xt-text xt-font font-16 font-400">进入群聊</span>
+                </div>
+              </xt-button>
+              <xt-button
+                w="96"
+                h="48"
+                v-show="item.relationShip === 'not'"
+                type="theme"
+                @click="addGroup(item.groupID)"
+              >
+                加入群聊
+              </xt-button>
+            </div>
+          </div>
+        </div>
+      </template>
+    </vue-custom-scrollbar>
+  </div>
+
+  <teleport to="body">
+    <Modal v-model:visible="cardVisible" v-if="cardVisible" :blurFlag="true">
+      <UserCard
+        :key="userCardUid"
+        :uid="userCardUid"
+        :userInfo="userCardUserInfo"
+      ></UserCard>
+    </Modal>
+  </teleport>
 </template>
 
 <script>
-import { mapWritableState, mapActions } from 'pinia'
-import { chatStore } from '../../../../store/chat'
-import { appStore } from '../../../../store'
+import { mapWritableState, mapActions } from "pinia";
+import { chatStore } from "../../../../store/chat";
+import { appStore } from "../../../../store";
 // import { useRouter, useRoute } from 'vue-router'
-import AddFindButton from '../../../../components/sns/AddFindButton.vue'
-import SendMessageButton from '../../../../components/sns/SendMessageButton.vue'
-import Modal from '../../../../components/Modal.vue'
-import UserCard from '../../../../components/small/UserCard.vue'
-import { Icon as FindIcon } from '@iconify/vue';
-import {completeTask} from '../../../../apps/task/task'
+import AddFindButton from "../../../../components/sns/AddFindButton.vue";
+import SendMessageButton from "../../../../components/sns/SendMessageButton.vue";
+import Modal from "../../../../components/Modal.vue";
+import UserCard from "../../../../components/small/UserCard.vue";
+import { Icon as FindIcon } from "@iconify/vue";
+import { completeTask } from "../../../../apps/task/task";
+import {
+  TUIConversationService,
+  TUIGroupService,
+} from "@tencentcloud/chat-uikit-engine";
 // import * as sns from '../../../js/common/sns'
 
 // const router = useRouter()
 export default {
- components: {
-   AddFindButton,
-   SendMessageButton,
-   Modal,FindIcon,
-   UserCard
- },
-
- data () {
-   return {
-     cardVisible: false,
-     userCardUid: '',
-     relationship: 'unload',
-     settingsScroller: {
-       useBothWheelAxes: true,
-       swipeEasing: true,
-       suppressScrollY: false,
-       suppressScrollX: true,
-       wheelPropagation: true
-     },
-     server:window.$TUIKit,
-   }
- },
-
- computed: {
-   ...mapWritableState(chatStore, ['groupList', 'refUser', 'settings', 'memberList', 'limitTotal','isLoading','recommendData']),
-   ...mapWritableState(appStore, ['userCardUserInfo', 'userInfo']),
-   isGroup () {
-     const uid = this.userInfo.uid
-     return this.memberList.some(member => parseInt(member.userID) === uid)
-   }
- },
-
- async mounted () {
-   await this.getReferData()
-   // await this.getMember()
- },
- methods: {
-   ...mapActions(chatStore, ['getReferData','loadGroupRelationship','updateConversation']),
-   openUserCard (uid) {
-     this.cardVisible = true
-     this.userCardUid = uid
-   },
-
-   updateRelationship (e,item) {
-     item.relationship = e.relationship
-   },
-
-
-
-   // 加入推荐群聊
-   async addGroup (id) {
-    this.$router.push({name:'chatMain'})
-    const option = {  groupID: id }
-    completeTask('Z0601')
-    await window.$chat.joinGroup(option)
-    this.loadGroupRelationship()
-   },
-
-  // 进入群聊
-  async enterGroup (item){
-    if(item.uid){
-      const name = `C2C${item.uid}`;
-      this.handlerConversationList(name);
-    }
-    else {
-      const conversationID = `GROUP${item.groupID}`
-      this.handlerConversationList(conversationID);
-    }
+  components: {
+    AddFindButton,
+    SendMessageButton,
+    Modal,
+    FindIcon,
+    UserCard,
   },
 
-
-  handlerConversationList(conversationID){
-    this.updateConversation(conversationID);
-    this.$router.push({name:'chatMain'});
-    window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(conversationID).then((imResponse) => {
-      // 通知 TUIConversation 添加当前会话   Notify TUIConversation to toggle the current conversation
-      window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation)
-    })
+  data() {
+    return {
+      cardVisible: false,
+      userCardUid: "",
+      relationship: "unload",
+      settingsScroller: {
+        useBothWheelAxes: true,
+        swipeEasing: true,
+        suppressScrollY: false,
+        suppressScrollX: true,
+        wheelPropagation: true,
+      },
+      server: window.$TUIKit,
+    };
   },
- }
-}
+
+  computed: {
+    ...mapWritableState(chatStore, [
+      "groupList",
+      "refUser",
+      "settings",
+      "memberList",
+      "limitTotal",
+      "isLoading",
+      "recommendData",
+    ]),
+    ...mapWritableState(appStore, ["userCardUserInfo", "userInfo"]),
+    isGroup() {
+      const uid = this.userInfo.uid;
+      return this.memberList.some((member) => parseInt(member.userID) === uid);
+    },
+  },
+
+  async mounted() {
+    await this.getReferData();
+    // await this.getMember()
+  },
+  methods: {
+    ...mapActions(chatStore, [
+      "getReferData",
+      "loadGroupRelationship",
+      "updateConversation",
+    ]),
+    openUserCard(uid) {
+      this.cardVisible = true;
+      this.userCardUid = uid;
+    },
+
+    updateRelationship(e, item) {
+      item.relationship = e.relationship;
+    },
+
+    // 加入推荐群聊
+    async addGroup(id) {
+      this.$router.push({ name: "chatMain" });
+      const option = { groupID: id };
+      completeTask("Z0601");
+      await window.$chat.chat.joinGroup(option);
+      this.loadGroupRelationship();
+    },
+
+    // 进入群聊
+    async enterGroup(item) {
+      if (item.uid) {
+        const name = `C2C${item.uid}`;
+        this.handlerConversationList(name);
+      } else {
+        const conversationID = `GROUP${item.groupID}`;
+        this.handlerConversationList(conversationID);
+      }
+    },
+
+    handlerConversationList(conversationID) {
+      this.updateConversation(conversationID);
+      this.$router.push({ name: "chatMain" });
+      TUIConversationService.switchConversation(conversationID);
+      // window.$TUIKit.TUIServer.TUIConversation.getConversationProfile(conversationID).then((imResponse) => {
+      //   // 通知 TUIConversation 添加当前会话   Notify TUIConversation to toggle the current conversation
+      //   window.$TUIKit.TUIServer.TUIConversation.handleCurrentConversation(imResponse.data.conversation)
+      // })
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-
 :deep(.xt-active) {
- width: 115px !important;
+  width: 115px !important;
 }
 
 @media screen and (max-width: 800px) and (min-width: 1000px) {
- .content-list {
-   width: 100%;
-   display: flex !important;
-   flex-direction: column !important;
-   justify-content: space-between;
- }
+  .content-list {
+    width: 100%;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between;
+  }
 }
 
 @media screen and (min-width: 1001px) {
- .content-list {
-   width: 100%;
-   display: grid !important;
-   grid-template-columns: 1.1fr 1fr;
-   justify-content: space-between;
- }
+  .content-list {
+    width: 100%;
+    display: grid !important;
+    grid-template-columns: 1.1fr 1fr;
+    justify-content: space-between;
+  }
 }
 
-:deep(.xt-base-btn){
- background: var(--active-secondary-bg);
+:deep(.xt-base-btn) {
+  background: var(--active-secondary-bg);
 }
 </style>

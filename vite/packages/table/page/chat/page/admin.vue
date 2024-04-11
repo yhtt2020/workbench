@@ -67,95 +67,95 @@ export default {
               <a-statistic title="登录人数" :value="stats.LoginUserNum">
               </a-statistic>
             </div>
-            <div class="xt-bg rounded-lg p-2 p-2" :span="4">
+            <div class="xt-bg rounded-lg p-2 " :span="4">
               <a-statistic title="上行消息数" :value="stats.UpMsgNum">
               </a-statistic>
             </div>
-            <div class="xt-bg rounded-lg p-2 p-2" :span="4">
+            <div class="xt-bg rounded-lg p-2 " :span="4">
               <a-statistic title="发消息人数" :value="stats.SendMsgUserNum">
               </a-statistic>
             </div>
-            <div class="xt-bg rounded-lg p-2 p-2" :span="4">
+            <div class="xt-bg rounded-lg p-2 " :span="4">
               <a-statistic title="APNs 推送数" :value="stats.APNSMsgNum">
               </a-statistic>
             </div>
-            <div class="xt-bg rounded-lg p-2 p-2" :span="4">
+            <div class="xt-bg rounded-lg p-2 " :span="4">
               <a-statistic title="上行消息数（C2C）" :value="stats.C2CUpMsgNum">
               </a-statistic>
             </div>
-            <div class="xt-bg rounded-lg p-2 p-2" :span="4">
+            <div class="xt-bg rounded-lg p-2 " :span="4">
               <a-statistic title="下行消息数（C2C）" :value="stats.C2CDownMsgNum">
               </a-statistic>
             </div>
-            <div class="xt-bg rounded-lg p-2 p-2" :span="4">
+            <div class="xt-bg rounded-lg p-2 " :span="4">
               <a-statistic title="发消息人数（C2C）" :value="stats.C2CSendMsgUserNum">
               </a-statistic>
             </div>
-            <div class="xt-bg rounded-lg p-2 p-2" :span="4">
+            <div class="xt-bg rounded-lg p-2 " :span="4">
               <a-statistic title="APNs 推送数（C2C）" :value="stats.C2CAPNSMsgNum">
               </a-statistic>
             </div>
-            <div class="xt-bg rounded-lg p-2 p-2" :span="4">
+            <div class="xt-bg rounded-lg p-2 " :span="4">
               <a-statistic title="最高在线人数" :value="stats.MaxOnlineNum">
               </a-statistic>
             </div>
-            <div class="xt-bg rounded-lg p-2 p-2" :span="4">
+            <div class="xt-bg rounded-lg p-2 " :span="4">
               <a-statistic title="下行消息总数（C2C和群）" :value="stats.DownMsgNum">
               </a-statistic>
             </div>
-            <div class="xt-bg rounded-lg p-2 p-2" :span="4">
+            <div class="xt-bg rounded-lg p-2 " :span="4">
               <a-statistic title="关系链对数增加量" :value="stats.ChainIncrease">
               </a-statistic>
             </div>
-            <div class="xt-bg rounded-lg p-2 p-2" :span="4">
+            <div class="xt-bg rounded-lg p-2" :span="4">
               <a-statistic title="关系链对数删除量" :value="stats.ChainDecrease">
               </a-statistic>
             </div>
-            <div class="xt-bg rounded-lg p-2 p-2" :span="4">
+            <div class="xt-bg rounded-lg p-2 " :span="4">
               <a-statistic title="上行消息数（群）" :value="stats.GroupUpMsgNum">
               </a-statistic>
             </div>
-            <div class="xt-bg rounded-lg p-2 p-2" :span="4">
+            <div class="xt-bg rounded-lg p-2" :span="4">
               <a-statistic title="上下行消息数（群）" :value="stats.GroupDownMsgNum">
               </a-statistic>
             </div>
-            <div class="xt-bg rounded-lg p-2 p-2" :span="4">
+            <div class="xt-bg rounded-lg p-2" :span="4">
               <a-statistic title="发消息人数（群）" :value="stats.GroupSendMsgUserNum">
               </a-statistic>
             </div>
-            <div class="xt-bg rounded-lg p-2 p-2" :span="4">
+            <div class="xt-bg rounded-lg p-2" :span="4">
               <a-statistic title="APNs 推送数（群）" :value="stats.GroupAPNSMsgNum">
               </a-statistic>
             </div>
-            <div class="xt-bg rounded-lg p-2 p-2" :span="4">
+            <div class="xt-bg rounded-lg p-2" :span="4">
               <a-statistic title="发消息群组数" :value="stats.GroupSendMsgGroupNum">
               </a-statistic>
             </div>
-            <div class="xt-bg rounded-lg p-2 p-2" :span="4">
+            <div class="xt-bg rounded-lg p-2" :span="4">
               <a-statistic title="入群总数" :value="stats.GroupJoinGroupTimes">
               </a-statistic>
             </div>
-            <div class="xt-bg rounded-lg p-2 p-2" :span="4">
+            <div class="xt-bg rounded-lg p-2" :span="4">
               <a-statistic title="退群总数" :value="stats.GroupQuitGroupTimes">
               </a-statistic>
             </div>
-            <div class="xt-bg rounded-lg p-2 p-2" :span="4">
+            <div class="xt-bg rounded-lg p-2" :span="4">
               <a-statistic title="新增群组数" :value="stats.GroupNewGroupNum">
               </a-statistic>
             </div>
-            <div class="xt-bg rounded-lg p-2 p-2" :span="4">
+            <div class="xt-bg rounded-lg p-2" :span="4">
               <a-statistic title="累计群组数" :value="stats.GroupAllGroupNum">
               </a-statistic>
             </div>
-            <div class="xt-bg rounded-lg p-2 p-2" :span="4">
+            <div class="xt-bg rounded-lg p-2" :span="4">
               <a-statistic title="解散群个数" :value="stats.GroupDestroyGroupNum">
               </a-statistic>
             </div>
-            <div class="xt-bg rounded-lg p-2 p-2" :span="4">
+            <div class="xt-bg rounded-lg p-2" :span="4">
               <a-statistic title="回调请求数" :value="stats.CallBackReq">
               </a-statistic>
             </div>
-            <div class="xt-bg rounded-lg p-2 p-2" :span="4">
+            <div class="xt-bg rounded-lg p-2" :span="4">
               <a-statistic title="回调应答数" :value="stats.CallBackRsp">
               </a-statistic>
             </div>

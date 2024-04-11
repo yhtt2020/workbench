@@ -70,9 +70,10 @@ import Clipboard from "../apps/clipboard/page/Clipboard.vue"
 import WorkDesk from '../page/work/Desk.vue'
 /*便签*/
 import Note from '../apps/note/index.vue'
+
 /**聊天团队模式开始**/
 import ChatDesk from '../page/chat/chatDesk.vue'
-import Contact from '../page/chat/contact.vue'
+import Contact from '../apps/chat/page/contact/Contact.vue'
 import Chat from '../page/chat/chat.vue'
 import ChatIndex from '../page/chat/index.vue'
 // import ImTeam from '../page/chat/team.vue'
@@ -89,6 +90,7 @@ import MemberManage from '../page/chat/page/setting/memberManage.vue'
 import MoreSetting from '../page/chat/page/setting/moreSetting.vue'
 import RoleAuthority from '../page/chat/page/setting/roleAuthority.vue'
 /**聊天团队模式结束**/
+
 import Device from '../apps/console/pages/Device.vue'
 import FileTransfer from '../apps/console/pages/FileTransfer.vue'
 //导入应用路由

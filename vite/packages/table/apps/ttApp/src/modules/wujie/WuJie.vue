@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import WujieVue from "wujie-vue3";
 import { useTTAppStore } from "../../store";
+import { ref, onUnmounted } from "vue";
+import browser from "../../../../../js/common/browser";
 const ttappStore: any = useTTAppStore();
 
 const props = defineProps({
@@ -13,6 +15,9 @@ const props = defineProps({
 });
 
 const { bus, setupApp, preloadApp, destroyApp } = WujieVue;
+onUnmounted(() => {
+  destroyApp(props.name);
+});
 
 const plugins = (iframeWindow: any) => {
   let res = {
@@ -21,20 +26,38 @@ const plugins = (iframeWindow: any) => {
       iframeWindow.parent = {};
       // 屏蔽子应用$wujie对象
       iframeWindow.$wujie = {};
+      // 代理open方法
+      iframeWindow.open = function (url, target, features, replace) {
+        console.log("URL:", url);
+        console.log("Target:", target);
+        console.log("Features:", features);
+        console.log("Replace:", replace);
+        browser.openInUserSelect(url);
+      };
       return iframeWindow;
     },
   };
   return res;
 };
 // location.href='tsbapp://table.com/table.html'
+//这段代码是修改默认虚拟iframe的地址的，在某种情况下需要指定src
+const attrs = ref({});
+if (location.href.startsWith("tsbapp://")) {
+  attrs.value.src = "tsbapp://table.com/index.html";
+}
 </script>
+<!--    :attrs="{-->
+<!--            src: 'tsbapp://table.com/index.html'-->
+<!--          }"-->
 
 <template>
   <WujieVue
     height="100%"
+    width="100%"
     ref="wujie"
     :name="name"
     :url="url"
+    :attrs="attrs"
     :plugins="[
       {
         jsBeforeLoaders: [

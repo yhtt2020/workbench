@@ -20,6 +20,7 @@ const ClaimReward = defineAsyncComponent(
 const taskStore: any = useTaskStore();
 const { rewardVisible } = storeToRefs(taskStore);
 import { aiStore } from "../../store/ai";
+// ai初始化
 const ai: any = aiStore();
 ai.init();
 // 系统设置弹窗

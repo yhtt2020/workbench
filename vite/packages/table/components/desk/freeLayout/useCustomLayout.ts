@@ -10,7 +10,6 @@ import {
   useElementSize,
 } from "../../../ui/hooks/useCardSize";
 import { useFreeLayoutStore } from "../freeLayout/store";
-import {useCutLayout } from './useCutLayout'
 
 const defaultOptions = {
   mainList: [],
@@ -168,7 +167,7 @@ export const useCustomLayout = async (options) => {
     fillHeight = 0;
     top += currentHeight + 12;
   };
-  // 获取元素宽度                                                
+  // 获取元素宽度
   // 缩放算法
   const scaleAlgorithm = () => {
     let currentZoom = getFreeLayoutState.value.canvas.zoom;
@@ -392,10 +391,6 @@ const addCard = (top, left, item) => {
     storeToRefs(freeLayoutStore);
 
   let id = item?.id || nanoid(4);
-
-  if (item.name == "news" || item.name == "HotSearch") {
-    console.log("Item.name :>> ", item);
-  }
 
   if (item.name == "notes") {
     id = item?.id || Date.now();

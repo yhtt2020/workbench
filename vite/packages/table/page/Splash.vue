@@ -133,7 +133,6 @@ import { captureStore } from "../store/capture";
 import { navStore } from "../store/nav";
 import { clipboardStore } from "../apps/clipboard/store";
 import { browserStore } from "../store/browser";
-import { controlStore } from "../components/desk/navigationBar/hook/controlStore";
 // import { chatStore } from "../store/chat";
 import taskStore from "../page/app/todo/stores/task";
 import cache from "../components/card/hooks/cache";
@@ -163,7 +162,6 @@ export default {
   async mounted() {
     Promise.all([
       // 这个没走db 单独处理
-      controlStore(),
       browserStore().bindIPC(),
       this.bindIPC(),
       //启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成

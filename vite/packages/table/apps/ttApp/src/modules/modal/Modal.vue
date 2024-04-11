@@ -1,17 +1,15 @@
 <script setup lang="ts">
-import { ref, onBeforeMount, computed, watch } from "vue";
+import { ref, onBeforeMount, computed, watch, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import WuJie from "../wujie/WuJie.vue";
 
 import { useTTAppStore } from "../../store";
-import { getAppImg } from "../../hooks/getAppImg";
 const ttappStore: any = useTTAppStore();
 const { modal, ttappList } = storeToRefs(ttappStore);
 // 窗口弹窗
 const modalRef: any = ref(null);
 
-const data: any = ref();
-const url = ref();
+const data: any = ref({});
 
 /** 初始化方法 */
 const init = () => {
@@ -22,13 +20,8 @@ const init = () => {
   if (!res) {
     return;
   }
-  data.value = {
-    ...res,
-    modal: res.modules.main,
-  };
-  const main = res?.modules?.main;
+  data.value = res;
 
-  url.value = `ttapp://${data.value.id}/${main.entry}`;
   // 完成
   loading.value = false;
 };
@@ -66,28 +59,53 @@ const menuList = computed(() => {
 const close = () => {
   modalRef.value.close();
 };
-const headerImg = computed(() => {
-  return getAppImg(data.value.id, data.value.logo);
-});
 
 watch(
   () => modal.value?.id,
   () => {
-    // console.log("123231 :>> ", 123231);
-    console.log('modal.value?.id, :>> ', 2222);
-    init()
-  },{
-    deep:true
+    init();
+  },
+  {
+    deep: true,
   }
 );
 onBeforeMount(() => {
-  console.log("222 :>> ", 222);
   init();
+});
+
+/** 最大化 */
+const isMax = ref(false);
+const modalSize = computed(() => {
+  if (isMax.value) {
+    return {
+      width: "100%",
+      height: "100%",
+    };
+  } else {
+    return {
+      width: data.value.main.width,
+      height: data.value.main.height,
+    };
+  }
+});
+//
+const max = (value: boolean) => {
+  isMax.value = value;
+};
+
+import PerfectScrollbar from "perfect-scrollbar";
+const scrollbar: any = ref(null);
+const perfectScrollbar: any = ref(null);
+onMounted(() => {
+  setTimeout(() => {
+    perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
+  }, 1);
 });
 </script>
 
 <template>
   <xt-modal
+    v-if="data"
     v-model="modal.visible"
     handle=".xt-modal-header"
     boxClass=""
@@ -95,6 +113,8 @@ onBeforeMount(() => {
     :index="index"
     min
     max
+    esc
+    @max="max"
     ref="modalRef"
     :mask="false"
     class="xt-text"
@@ -102,13 +122,19 @@ onBeforeMount(() => {
     <!-- 头部左侧区域 -->
     <template #header-left>
       <div class="mr-2 rounded-lg overflow-hidden">
-        <a-avatar shape="square" class="" :size="20" :src="headerImg" />
+        <a-avatar shape="square" class="" :size="20" :src="data._logo" />
       </div>
       {{ data.name }}
     </template>
     <!-- 头部右侧区域 -->
     <template #header-right>
-      <xt-button class="ml-3" w="32" h="32" radius="8" @click="refresh">
+      <xt-button
+        class="ml-3 tt-modal-button"
+        w="32"
+        h="32"
+        radius="8"
+        @click="refresh"
+      >
         <xt-ify-icon icon="fluent:arrow-clockwise-16-regular" />
       </xt-button>
     </template>
@@ -117,21 +143,20 @@ onBeforeMount(() => {
       <div></div>
       <xt-left-menu />
     </template> -->
-    <xt-mix-menu :menus="menuList">
+    <xt-mix-menu :menus="menuList" :stopPropagation="false">
       <div
-        class="overflow-hidden h-full"
-        v-if="!loading"
-        style="background: #fff"
+        class="relative w-full h-full overflow-hidden"
+
+        ref="scrollbar"
+        :style="modalSize"
       >
-        <!-- 数据 -->
-        <!-- <div style="height: 400px; width: 700px; background: pink"></div> -->
-        <WuJie :url="url" :name="data.id" />
+        <WuJie v-if="!loading" :url="data.main._entry" :name="data.id" />
       </div>
     </xt-mix-menu>
     <!-- 最小化左侧 -->
     <template #minimize-left>
       <div class="mr-2 rounded-lg overflow-hidden">
-        <a-avatar shape="square" class="" :size="28" :src="headerImg" />
+        <a-avatar shape="square" class="" :size="28" :src="data._logo" />
       </div>
       <!-- <div class="mr-2 xt-text">{{ data.name }}</div> -->
     </template>

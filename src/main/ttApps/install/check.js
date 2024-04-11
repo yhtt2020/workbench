@@ -39,7 +39,7 @@ const checkMainFest = async (id) => {
   let baseWeak = ["name", "description", "modules"];
   let baseStrong = [
     {
-      path: res?.logo,
+      value: res?.logo,
       info: "logo",
     },
   ];
@@ -64,13 +64,19 @@ const checkMainFest = async (id) => {
     };
   }
   const main = modules?.main;
-  let strong = [
-    {
+  let weak = ["width", "height"];
+  let strong = [];
+  let entry = main?.entry;
+  if (!entry || entry.charAt(0) == "/") {
+    strong.push({
       value: main?.entry,
       info: "主应用入口",
-    },
-  ];
+    });
+  }
+  console.log("main strong :>> ", strong);
+
   let obj = {
+    weak,
     strong,
     data: main,
   };
@@ -86,14 +92,19 @@ const checkMainFest = async (id) => {
 
     let strong = [
       {
-        value: card?.entry,
-        info: "card入口",
-      },
-      {
         value: card?.preview,
         info: "预览图",
       },
     ];
+
+    let entry = card?.entry;
+    if (!entry || entry.charAt(0) == "/") {
+      strong.push({
+        value: card?.entry,
+        info: "card入口",
+      });
+    }
+    console.log("card strong :>> ", strong);
     let ojb = {
       weak,
       strong,
@@ -119,14 +130,15 @@ const check = async (options) => {
   const { weak, data, strong } = options;
 
   if (weak) {
-    let weakRes = weakCheck(weak, data);
+    let weakRes = await weakCheck(weak, data);
     if (weakRes.code !== 200) {
       return weakRes;
     }
   }
 
   if (strong) {
-    let strongRes = strongCheck(strong);
+    let strongRes = await strongCheck(strong);
+    console.log("strongRes :>> ", strongRes);
     if (strongRes.code !== 200) {
       return strongRes;
     }
@@ -139,7 +151,7 @@ const check = async (options) => {
     info: "成功",
   };
 };
-/** 强检查 */
+
 // 自定义校验文件是否存在
 const checkFile = async (filePath) => {
   const folderType = "apps_test";
@@ -147,13 +159,16 @@ const checkFile = async (filePath) => {
   let res = await existsFolder(folderName);
   return res;
 };
+/** 强检查 */
 const strongCheck = async (array) => {
+  console.log("拿到的 强检查array :>> ", array);
   let checkRes = [];
   for (data of array) {
     let currentRes = data?.value && (await checkFile(data?.value));
+
     if (!currentRes) {
       checkRes.push(data?.info);
-      return;
+      break;
     }
   }
   if (checkRes.length > 0) {

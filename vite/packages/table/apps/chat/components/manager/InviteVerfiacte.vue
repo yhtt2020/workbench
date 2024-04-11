@@ -1,66 +1,58 @@
 <template>
- <!-- <RadioTab :navList="dataType" v-model:selectType="defaultType"></RadioTab> -->
+  <xt-modal v-if="inviteVisible" v-model="inviteVisible" title="邀请方式" :index="1650" :maskIndex="1640">
+   <div style="width: 500px;" class="mt-4">
+    <xt-option-tab  :list="inviteTab" v-model="invite" circle style="height: 40px;" />
+   </div>
+  </xt-modal>
 </template>
 
-<script>
-import { defineComponent, reactive,toRefs,watch } from 'vue'
-// import RadioTab from "../../../../../components/RadioTab.vue";
-import { message } from "ant-design-vue";
+<script setup>
+import {ref,watch,toRefs, nextTick} from "vue";
+import TUIChatEngine from "@tencentcloud/chat-uikit-engine";
 
-export default defineComponent({
- props:['updateInviteInfo'],
+const emit = defineEmits(['update']);
 
- components:{
-  // RadioTab
- },
-
- setup (props,ctx) {
-  const types = window.$TUIKit.TIM.TYPES
-
-  const data = reactive({
-   dataType:[
-    {title:'需要验证',name:types.JOIN_OPTIONS_NEED_PERMISSION},
-    {title:'自由邀请',name:types.JOIN_OPTIONS_FREE_ACCESS},
-    {title:'禁止邀请',name:types.JOIN_OPTIONS_DISABLE_APPLY}
-   ],
-   defaultType:{
-    title:props.updateInviteInfo.title,
-    name:props.updateInviteInfo?.conversation?.inviteOption
-   }
-  })  
-  
-  watch(()=>data.defaultType,(newVal)=>{
-   data.defaultType = newVal
-   updateGroupInvite(newVal)
+const props = defineProps({
+  currentInvite:{
+    type:String,
+    required: true,
+  }
+});
+const {currentInvite} = toRefs(props);
+const inviteTab  = ref([
+  {
+    value:TUIChatEngine.TYPES.JOIN_OPTIONS_FREE_ACCESS,
+    name:'自由加入',
+  },
+  {
+    value:TUIChatEngine.TYPES.JOIN_OPTIONS_NEED_PERMISSION,
+    name:'需要验证',
+  },
+  {
+    value:TUIChatEngine.TYPES.JOIN_OPTIONS_DISABLE_APPLY,
+    name:'禁止加入'
+  },
+])
+const invite = ref('');
+const inviteVisible = ref(false);
+// 开启邀请方式修改
+const openInviteModal = () =>{
+  inviteVisible.value  = true;
+  nextTick(()=>{
+    invite.value = currentInvite.value;
   })
+};
 
-  const updateGroupInvite = (newVal) =>{
-   const options = {
-    groupID:props.updateInviteInfo.groupID,
-    inviteOption:newVal.name,
-   }
-   console.log(options)
-   window.$chat.updateGroupProfile(options).then(res=>{
-    try {
-     if(res.code === 0){
-      message.success('邀请方式修改成功')
-      ctx.emit('updateGroupInfo')
-      ctx.emit('close')
-     }
-    } catch (error) {
-     console.warn(error)
-    }
-   })
+// 监听更新
+watch(()=>invite.value,(newVal)=>{
+  emit('update',newVal);
+})
 
-  }
-
-  return {
-   ...toRefs(data),updateGroupInvite
-  }
- }
+defineExpose({
+  inviteVisible,
+  openInviteModal,
 })
 </script>
 
 <style lang="scss" scoped>
-
 </style>

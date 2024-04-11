@@ -104,7 +104,7 @@ const props = defineProps({
     default: "999",
   },
 });
-const arr = ["internal", "default", "thinksky"];
+const arr = ["internal", "default", "thinksky",'mob'];
 const res = arr.includes(edit.value.open.type);
 edit.value.type = edit.value.open.type;
 

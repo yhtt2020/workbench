@@ -8,7 +8,7 @@ import {
   currentEnv,
 } from "./permission/useEnv";
 import type { UseEnv, baseEnv } from "./permission/useEnv";
-
+import archiveHelper from "./js/lib/archiveHelper";
 window.$isOffline = isOffline;
 window.$isGuest = isGuest;
 window.$useEnv = useEnv;
@@ -79,9 +79,6 @@ import "../../public/css/category.scss";
 
 import { router } from "./router";
 
-//腾讯IM部分
-import { loadChat, TUIKit } from "./chat";
-loadChat();
 //initDb()
 //socket部分
 import { initSocket } from "./js/socket/socket";
@@ -90,9 +87,10 @@ import initStores from "./initStores";
 
 import { Notifications } from "./js/common/sessionNotice";
 
-import Wujie from 'wujie-vue3'
+import Wujie from "wujie-vue3";
 
-import { tt, Mit } from "./permission/global/global";
+import { tt } from "./permission/global/global";
+import { useMit } from "./hooks";
 import type { TT } from "./permission/global/type";
 
 import hevueImgPreview from "hevue-img-preview";
@@ -106,6 +104,14 @@ window.$notice = notice;
 dayjs.locale("zh-cn");
 
 const app = createApp(App);
+
+//腾讯IM部分
+import { loadChat,TUIKit } from "./chat";
+TUIKit.TUIChatKit.components(TUIKit.TUIComponents,app);
+loadChat();
+// 导入IM的UI覆写样式文件
+import "./apps/chat/assets/chat.scss";
+// TUIKit
 
 app.use(Wujie);
 // app.use(hevueImgPreview)
@@ -125,14 +131,13 @@ app.config.globalProperties.$isClient = isClient;
 app.config.globalProperties.$isMac = isMac;
 app.config.globalProperties.$isOffline = isOffline;
 app.config.globalProperties.$isGuest = isGuest;
-app.config.globalProperties.$bus = Mit;
+app.config.globalProperties.$bus = useMit;
 app.config.globalProperties.$useEnv = useEnv;
 window.$ui = {
   confirm,
   router,
 };
 const newTT: TT = tt;
-
 
 declare global {
   interface Window {
@@ -172,7 +177,8 @@ const $app = app
     }
   )
   .use(Toast, options)
-  .use(TUIKit)
+  // 旧版使用TUIKit组件挂载
+  // .use(TUIKit)
   // .use(WujieVue)
   .use(hevueImgPreview)
   .use(VueShepherdPlugin)
@@ -190,7 +196,7 @@ if (!useEnv()) {
 }
 
 window.$app = $app;
-// window.$bus = Mit.emit;
 initStores();
+
 // devtools.connect()
 export { router };

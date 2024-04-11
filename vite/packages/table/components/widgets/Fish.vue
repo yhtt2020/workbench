@@ -1,9 +1,11 @@
 <template>
   <xt-container
-    v-model:customSize="customData.customSize"  
-    :options="options"  
-    :customIndex="customIndex" 
-    :desk="desk"  
+    v-model:customSize="customData.customSize"
+    :options="options"
+    :customIndex="customIndex"
+    :desk="desk"
+    @titleHover="openTaobao"
+    :header="header"
     :custom-data="customData">
     <div style="display: flex;flex-direction: column" class="-mt-6">
       <div style="flex:1;margin-right: 20px;margin-left: 20px">
@@ -11,7 +13,7 @@
              style="display: flex;align-items: center;align-content: center;height: 205px;width: 100%;justify-content: center;position: relative;cursor: pointer;">
           <img ref="wooden" class="wooden" :src="fish" style="width: 120px;height:120px;margin-top: -30px">
           <img ref="bing" class="bing " :src="bing"
-               style="width: 80px;height: 80px;position: absolute;margin-top: -20px">
+               style="width: 120px;position: absolute;margin-top: 10px;margin-left: -50px">
           <span class="tip" style="color: var(--primary-text);"> 功德 +1</span>
           <div style="position: absolute;bottom:35px">
             <div style="color: var(--primary-text);"><span class="mr-4">今日 {{ getToday }}</span> 总 {{ getTotal }}</div>
@@ -25,10 +27,11 @@
 
 <script>
 import Widget from '../card/Widget.vue'
-import fish from '../../assets/img/fish/muyu.svg'
-import bing from '../../assets/img/fish/bing.svg'
+import fish from '../../assets/img/fish/muyu.png'
+import bing from '../../assets/img/fish/bing.png'
 import { fishStore } from '../../store/fish'
 import { mapWritableState } from 'pinia'
+import {message} from 'ant-design-vue'
 
 export default {
   name: 'Fish',
@@ -57,6 +60,12 @@ export default {
       },
       fish: fish,
       bing: bing,
+      header: {
+        ifyIcon:"fluent:shopping-bag-20-regular",
+        title:"小木鱼",
+        titleHover:true,
+        titleHoverName:'买同款',
+      },
     }
   },
   computed: {
@@ -80,6 +89,10 @@ export default {
     Widget
   },
   methods: {
+    openTaobao(){
+      browser.openInSystem('https://item.taobao.com/item.htm?ft=t&id=772409985539')
+      message.success('正在为您打开商品页面')
+    },
     addToday () {
       let now = new Date()
       if(!this.days[now.getFullYear() + '-' + now.getMonth() + '-' + now.getDay()])
@@ -117,7 +130,7 @@ export default {
 .bing {
   left: 50px;
   top: 20px;
-  rotate: -20deg;
+  rotate: -30deg;
   transition: rotate 0.05s;
 }
 
