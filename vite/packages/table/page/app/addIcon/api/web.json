@@ -202,6 +202,13 @@
   ],
   "effect": [
     {
+      "id": 8,
+      "name": "嘀嗒清单",
+      "summary": "任务清单应用。",
+      "icon": "https://cncdn.dida365.com/static/img/apple-touch-icon-180x180.png",
+      "url": "https://www.dida365.com/webapp"
+    },
+    {
       "id": 6,
       "name": "百度网盘",
       "summary": "为您提供文件的网络备份、同步和分享服务。空间大、速度快、安全稳固。",

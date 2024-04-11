@@ -1,6 +1,6 @@
 <template>
   <a-row class="w-full h-full">
-    <a-col  class="flex flex-col h-full  find-left" v-if="isFloat === false" style=" border-right:1px solid var(--divider);">
+    <a-col  class="flex flex-col h-full find-left" v-if="isFloat === false" style=" border-right:1px solid var(--divider);">
       <CategoryFloat :float="false" :no="routeData"  @createCategory="clickEmptyButton" />
     </a-col>
     <a-col flex=" 1 1 200px" v-if="currentChannel" class="flex flex-col h-full">
@@ -11,11 +11,11 @@
       <div style="height: 0;flex:1;position:relative;" v-else>
         <template v-if="!currentChannel.name && channelList.length>0">
           <div class="flex flex-col items-center justify-center h-full">
-            <div style="width:64px;height:64px;" class="rounded-full mb-6">
-              <img src="/icons/logo128.png" class="w-full h-full object-cover rounded-full"/>
+            <div style="width:64px;height:64px;" class="mb-6 rounded-full">
+              <img src="/icons/logo128.png" class="object-cover w-full h-full rounded-full"/>
             </div>
             <span class="font-24-500" style="color:var(--primary-text);">欢迎加入，天天工作台官方社群</span>
-            <div class="mt-4 flex justify-center items-center" style="width:362px;">
+            <div class="flex items-center justify-center mt-4" style="width:362px;">
               <div class="flex items-center">
                 <div class="w-2.5 h-2.5 rounded-full mr-2.5" style="background:var(--success);"></div>
                 <span>2,874人在线</span>
@@ -49,9 +49,9 @@
         <template v-else-if="currentChannel.type === 'communitySet'">
           <CommunitySetting :no="currentChannel.data.no"/>
         </template>
-        <a-col v-else flex=" 1 1 200px" class="h-full flex flex-col">
+        <a-col v-else flex=" 1 1 200px" class="flex flex-col h-full">
            <!-- 空状态，取文章 -->
-          <div class="community-article h-full">
+          <div class="h-full community-article">
             <Article :artName="artName"></Article>
           </div>
         </a-col>
@@ -151,6 +151,7 @@ export default {
       this.setCommunityChannel(item.id)
       // 链接
       if(item.type === 'link' && item.name !== 'Roadmap'){
+        
         const method = item.props.openMethod;
         const url = item.props.url;
         // 想天浏览器打开
@@ -160,6 +161,10 @@ export default {
         // 系统浏览器打开
         else if(method === 'systemSelect' ){
           browser.openInSystem(url)
+        } else if( method === 'thinksky'){
+          browser.openInInner(url);
+        } else if( method === 'mob'){
+          browser.openInMobMod(url,{partition:'persist:webcontent',newName:'手机模式'})
         }
       }
       // 群聊

@@ -2,6 +2,7 @@
 import WujieVue from "wujie-vue3";
 import { ref } from "vue";
 import { useTTAppStore } from "../../store";
+import {ref} from "vue";
 const ttappStore: any = useTTAppStore();
 
 const props = defineProps({
@@ -28,11 +29,15 @@ const plugins = (iframeWindow: any) => {
   return res;
 };
 // location.href='tsbapp://table.com/table.html'
+//这段代码是修改默认虚拟iframe的地址的，在某种情况下需要指定src
 const attrs = ref({});
 if (location.href.startsWith("tsbapp://")) {
   attrs.value.src = "tsbapp://table.com/index.html";
 }
 </script>
+<!--    :attrs="{-->
+<!--            src: 'tsbapp://table.com/index.html'-->
+<!--          }"-->
 
 <template>
   <WujieVue
@@ -49,7 +54,7 @@ if (location.href.startsWith("tsbapp://")) {
             // 子应用可以通过 window.tt 访问父应用的 tt 对象
             content: 'window.tt = window.parent.tt',
           },
-        ],
+        ]
       },
       plugins(),
     ]"
