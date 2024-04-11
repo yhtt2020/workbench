@@ -79,13 +79,13 @@
           @createFile="createFile" 
           currentId="bottom" 
           >
-            <WindowPanel 
+            <WinPanel 
               v-model:folderVisible="folderVisible"
               :mainClass="mainClass" 
               @edit="edit"
               @getDelIcon="getDelIcon" 
               @control="openControl">
-            </WindowPanel>
+            </WinPanel>
           </Drop>
         </div>
         
@@ -163,7 +163,7 @@ import CommunityNav from "./bottomPanel/community/CommunityNav.vue";
 import TeamNav from "./bottomPanel/community/TeamNav.vue";
 import AppModal from "./bottomPanel/community/AppModal.vue";
 import { controlStore } from "./desk/navigationBar/hook/controlStore";
-import WindowPanel from "./WindowPanel.vue";
+import WinPanel from "./WindowPanel/WinPanel.vue";
 import Setting from "./bottomPanel/setting/CommunitySetting.vue";
 import ComNavSearch from "./bottomPanel/search/ComNavSearch.vue";
 import { communityStore } from "../page/chat/store/communityStore";
@@ -193,7 +193,7 @@ export default {
     CommunityNav,
     TeamNav,
     AppModal,
-    WindowPanel,
+    WinPanel,
     Setting,
     ComNavSearch,
     DeskAppModal,

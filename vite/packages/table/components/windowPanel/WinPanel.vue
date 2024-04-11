@@ -48,16 +48,16 @@ import { ref, provide, watch } from 'vue'
 import { storeToRefs } from 'pinia';
 import { message } from 'ant-design-vue';
 
-import Tip from '../ui/new/tip/src/Tip.vue';
+import Tip from '../../ui/new/tip/src/Tip.vue';
 
-import User from './windowPanel/User.vue';
-import Time from './windowPanel/Time.vue';
-import MessageBox from './windowPanel/MessageBox.vue';
-import Panel from './windowPanel/Panel.vue';
-import TopPanelRightDrawer from './drawer/TopPanelRightDrawer.vue';
+import User from './User.vue';
+import Time from './Time.vue';
+import MessageBox from './MessageBox.vue';
+import Panel from './Panel.vue';
+import TopPanelRightDrawer from '../drawer/TopPanelRightDrawer.vue';
 
-import { appStore } from '../store';
-import { useNavigationStore } from './desk/navigationBar/navigationStore';
+import { appStore } from '../../store';
+import { useNavigationStore } from '../desk/navigationBar/navigationStore';
 
 const useAppStore = appStore()
 const { showGuide , status } = storeToRefs(useAppStore)
