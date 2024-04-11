@@ -100,7 +100,6 @@
           <Drop @createFile="createFile" currentId="bottom">
             <WindowPanel
               v-model:folderVisible="folderVisible"
-              v-model:folderVisible="folderVisible"
               :mainClass="mainClass"
               @edit="edit"
               @getDelIcon="getDelIcon"
