@@ -1,8 +1,8 @@
 <template>
     <div class="w-full pl-4 xt-scrollbar scroll-color " style="height: 640px;">
         <div v-if="show?.length" >
-          <xt-menu :menus="rightMenu" @mounted="changeMenu(item, index)" class="h-16 mb-1 flex items-center p-4 pointer rounded-lg font-16 xt-text list-hover justify-between tran" @mouseover="read(item)" style="width: 728px;" @click="change(index, item)" v-for="(item,index) in show" :class="item.check?'xt-bg-2':''" >
-            <div class='flex h-full items-center'>
+          <xt-menu :menus="rightMenu" @mounted="changeMenu(item, index)" class="flex items-center justify-between h-16 p-4 mb-1 rounded-lg pointer font-16 xt-text list-hover tran" @mouseover="read(item)" style="width: 728px;" @click="change(index, item)" v-for="(item,index) in show" :class="item.check?'xt-bg-2':''" >
+            <div class='flex items-center h-full'>
               <WebItem class="" :item="item" :checkFlag="checkFlag"></WebItem>
               <!-- style="width: 530px;" -->
               <div class="flex flex-col ml-3 font-16 xt-text" style="max-width: 520px;">
@@ -10,22 +10,22 @@
                 <div class="xt-text-2 url-hover font-14 text-overflow">{{ item.url }}</div>
               </div>
             </div>
-            <div v-if="item.favo" class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg ml-2 hover-right-2">
+            <div v-if="item.favo" class="flex items-center justify-center w-8 h-8 ml-2 rounded-lg xt-main-bg hover-right-2">
               <xt-new-icon icon="fluent:star-16-filled" color="#faad14" size="16" />
             </div>
             <div class="flex hover-right">
               <!-- 修改 -->
-              <div @click.stop="showRenameModal(item)" class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg">
+              <div @click.stop="showRenameModal(item)" class="flex items-center justify-center w-8 h-8 rounded-lg xt-main-bg">
                 <xt-new-icon icon="fluent:compose-16-regular" size="16" />
               </div>
               <!-- 添加 -->
               <xt-menu :menus="menus" model="click" @mounted="changeMenu(item, index)">
-                <div class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg ml-2">
+                <div class="flex items-center justify-center w-8 h-8 ml-2 rounded-lg xt-main-bg">
                   <xt-new-icon icon="fluent:add-16-regular" size="16" />
                 </div>
               </xt-menu>
               <!-- 收藏 -->
-              <div class="xt-main-bg flex items-center justify-center h-8 w-8 rounded-lg ml-2" @click.stop="changeFavo(item)">
+              <div class="flex items-center justify-center w-8 h-8 ml-2 rounded-lg xt-main-bg" @click.stop="changeFavo(item)">
                 <xt-new-icon v-if="item.favo" icon="fluent:star-16-filled" color="#faad14" size="16" />
                 <xt-new-icon v-else icon="fluent:star-16-regular" size="16" />
               </div>
@@ -35,11 +35,11 @@
         <div v-else class="flex items-center justify-center h-full">
           <div style="width: 452px;height: 200px;" class="flex flex-col items-center">
             <xt-new-icon icon="fluent-emoji-flat:globe-with-meridians" color="#faad14" size="56" />
-            <div class="xt-text font-14 xt-mask rounded-xl p-3 px-4 mt-4">暂无数据，请在你使用的浏览器中管理收藏夹，工作台会同步读取收藏夹数据。</div>
+            <div class="p-3 px-4 mt-4 xt-text font-14 xt-mask rounded-xl">暂无数据，请在你使用的浏览器中管理收藏夹，工作台会同步读取收藏夹数据。</div>
             <xt-button @click="refresh" type="theme" :radius="8" :w="72" :h="32" class="mt-4">
               <div class="flex items-center">
                 <xt-new-icon icon="fluent:arrow-clockwise-16-regular" size="16" />
-                <div class="xt-text font-14 ml-2">刷新</div>
+                <div class="ml-2 xt-text font-14">刷新</div>
               </div>
             </xt-button>
           </div>
@@ -116,13 +116,25 @@
         if(this.checkFlag){
           item.check = !item.check
         }else{
-          if(this.browserType == 'system'){
-            browser.openInUserSelect(item.url)
-          }else if(this.browserType == 'thisky'){
-            browser.openInInner(item.url)
-          }else if(this.browserType == 'work'){
-            browser.openInTable(item.url)
+          // if(this.browserType == 'system'){
+          //   browser.openInUserSelect(item.url)
+          // }else if(this.browserType == 'thisky'){
+          //   browser.openInInner(item.url)
+          // }else if(this.browserType == 'work'){
+          //   browser.openInTable(item.url)
+          // } else if(this.browserType === 'mob'){
+          //   browser.openInMobMod(item.url,{
+          //     partition:'persist:webcontent',
+          //     newName:'手机模式'
+          //   })
+          // }
+          const open = {
+            'system' : () => { browser.openInUserSelect(item.url) },
+            'thisky' : () => { browser.openInInner(item.url) },
+            'work' : () => { browser.openInTable(item.url) },
+            'mob' : () => { browser.openInMobMod(item.url,{partition:'persist:webcontent',newName:'手机模式'}) },
           }
+          open[this.browserType]()
         }
       },
       // 修改名称

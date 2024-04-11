@@ -1,9 +1,9 @@
 <template>
-  <div class="flex flex-col my-3 justify-between" style="width:500px;"  v-if="classShow === false">
+  <div class="flex flex-col justify-between my-3" style="width:500px;"  v-if="classShow === false">
     <ModalTop title="自定义网页链接" back="true" @close="closeClick" @back="backClick"/>
 
     <div class="flex flex-col px-6">
-      <div class="p-4 flex xt-bg-2 rounded-lg flex-col mb-4">
+      <div class="flex flex-col p-4 mb-4 rounded-lg xt-bg-2">
         <span class="font-16 font-400 mb-2.5 xt-text xt-font">操作指南</span>
         <span class="font-14 font-400 xt-text-2 xt-font">
           输入带有“https://”或“http://”前缀的，完整的网页地址。支持选择点击链接后的打开方式，默认使用工作台设置。
@@ -20,10 +20,11 @@
         <a-input v-model:value="link" ref="linkRef" placeholder="请输入" spellcheck="false" style="width: 80%;height:40px !important;border-top-right-radius: 8px !important;border-bottom-right-radius:8px;" />
       </a-input-group>
 
-      <span class="font-16 font-400 xt-font my-4 xt-text">链接打开方式</span>
+      <span class="my-4 font-16 font-400 xt-font xt-text">链接打开方式</span>
       <RadioTab :navList="openType" class="mb-3" v-model:selectType="defaultOpen"></RadioTab>
       <template v-if="defaultOpen.openMethod === 'outerOpen'">
-        <RadioTab class="mb-3" :navList="linkType" v-model:selectType="defaultType"></RadioTab>
+        <!-- <RadioTab class="mb-3" :navList="linkType" v-model:selectType="defaultType"></RadioTab> -->
+        <dropDown :list="linkType" v-model:mode="mode"></dropDown>
       </template>
 
       <div class="flex items-center justify-end mb-3">
@@ -36,16 +37,22 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from 'vue'
 import { Icon as LinkIcon } from '@iconify/vue'
 import {message} from 'ant-design-vue'
+
+import { data } from '../../../../../table/components/desk/navigationBar/components/dropDown/Data'
 
 import ModalTop from '../ModalTop.vue';
 import RadioTab from '../../../../components/RadioTab.vue'
 import ChannelClassification from './ChannelClassification.vue';
 
+const dropDown = defineAsyncComponent(
+  () => import('../../../../../table/components/desk/navigationBar/components/dropDown/DropDown.vue'));
+
 export default {
  components:{
-  LinkIcon,ModalTop,RadioTab,ChannelClassification
+  LinkIcon,ModalTop,RadioTab,ChannelClassification,dropDown
  },
 
  props:['no'],
@@ -59,10 +66,32 @@ export default {
     requestProtocol:'https',
     defaultType:{ title:'内部浏览器',name:'inter',openMethod:'userSelect' },
     defaultOpen:{title:'当前页面直接打开',name:'current',openMethod:'currentPage'},
-
+    mode:'systemSelect',
     linkType:[
-     { title:'内部浏览器',name:'inter',openMethod:'userSelect' },
-     { title:'系统浏览器',name:'system',openMethod:'systemSelect'}
+        {
+            icon:'mingcute:windows-line',
+            name:'系统默认浏览器',
+            value:'systemSelect',
+            info:'使用Windows系统默认浏览器打开'
+        },
+        {
+            icon:'fluent:globe-16-regular',
+            name:'工作台内置浏览器',
+            value:'userSelect',
+            info:'在工作台内直接打开，不会跳转到外部应用软件。'
+        },
+        {
+            icon:'fluent:globe-16-regular',
+            name:'想天浏览器',
+            value:'thinksky',
+            info:'使用想天浏览器打开'
+        },
+        {
+            icon:'fluent:phone-16-regular',
+            name:'手机模式',
+            value:'mob',
+            info:'使用想天浏览器内置的「手机模式」打开，可以模拟手机端的浏览状态。'
+        }
     ],
     openType:[
      {title:'当前页面直接打开',name:'current',openMethod:'currentPage'},
@@ -96,6 +125,12 @@ export default {
     }
   }
 
+ },
+ watch:{
+  mode(newV){
+    console.log(newV)
+    this.defaultType.openMethod = newV
+  }
  }
 };
 </script>

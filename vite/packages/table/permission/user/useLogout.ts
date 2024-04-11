@@ -14,4 +14,6 @@ export const useLogout = () => {
   permissionStore.token = "";
   // 清空本地 token
   cache.set("ttUserToken", "");
+  // 清除群聊登录
+  (window as any).$chat?.chat?.logout();
 };

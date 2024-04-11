@@ -655,10 +655,19 @@ var emulationViews = []
 var oldAgent = ''
 // 当前view打开emulation
 ipc.on('enableEmulation', function (e, data) {
-  if (viewMap[data.id].webContents.getURL().startsWith('file://') || viewMap[data.id].webContents.getURL().startsWith('ts://')) { return }
-  mobileMod.add({
-    url: viewMap[data.id].webContents.getURL(),
-    partition: data.partition,
-    newName: data.newName
-  })
+  if(data.url){
+    mobileMod.add({
+      url:data.url,
+      partition: data.partition,
+      newName: data.newName
+    })
+  }else{
+    if (viewMap[data.id].webContents.getURL().startsWith('file://') || viewMap[data.id].webContents.getURL().startsWith('ts://')) { return }
+    mobileMod.add({
+      url: viewMap[data.id].webContents.getURL(),
+      partition: data.partition,
+      newName: data.newName
+    })
+  }
+
 })

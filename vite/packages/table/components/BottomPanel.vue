@@ -5,32 +5,37 @@
     <!-- mac版导航栏 -->
     <template v-if="currentNavFormat === 'mac'">
       <!-- 控制中心弹窗 -->
-      <div 
-        class="absolute" 
-        v-if="controlVisible" 
-        style="z-index: 888" 
-        id="control" 
+      <div
+        class="absolute"
+        v-if="controlVisible"
+        style="z-index: 888"
+        id="control"
         :style="{
           left: `${controlLeft}px`,
           bottom: `${(navAttribute.navSize / 100) * 100}px`,
-        }">
+        }"
+      >
         <ControlModal @close="controlVisible = false"></ControlModal>
       </div>
-
-      <AutoHide 
-        v-model:isLeaveBar="isFootBar"
-        :autoHideNav="this.state">
-        <div 
-          @click.stop 
+      <AutoHide v-model:isLeaveBar="isFootBar" :autoHideNav="this.state">
+        <div
+          @click.stop
           class="flex flex-row items-center justify-center w-full mb-3 xt-main-bottom-bar bottom-panel"
-          id="bottom-bar" 
-          style="text-align: center; position: relative" 
-          @contextmenu="showMenu" 
+          id="bottom-bar"
+          style="text-align: center; position: relative"
+          @contextmenu="showMenu"
           v-show="autoVisible"
-          :style="[{ zoom: `${this.navAttribute.navSize / 100}` }, this.state ? this.fixedPosition : '']">
+          :style="[
+            { zoom: `${this.navAttribute.navSize / 100}` },
+            this.state ? this.fixedPosition : '',
+          ]"
+        >
           <!-- 快速搜索 底部 用户栏 -->
           <template v-if="!communityNavVisible">
-            <UserBar @openControl="openControl" :navSize="navAttribute.navRadius"></UserBar>
+            <UserBar
+              @openControl="openControl"
+              :navSize="navAttribute.navRadius"
+            ></UserBar>
           </template>
 
           <!-- 社群导航栏 -->
@@ -38,30 +43,46 @@
 
           <!-- 快速搜索 底部栏区域 -->
           <Drop @createFile="createFile" currentId="bottom">
-            <Dock 
-              @edit="edit" 
-              @control="openControl" 
-              @getDelIcon="getDelIcon" 
+            <Dock
+              v-model:isOpen="folderVisible"
+              @edit="edit"
+              @control="openControl"
+              @getDelIcon="getDelIcon"
               ref="dock"
-              @getHoverIndex="getHoverIndex">
+              @getHoverIndex="getHoverIndex"
+            >
             </Dock>
           </Drop>
           <!-- 社群开关开启后,用户头像信息放底部导航栏右侧 -->
-          <UserNavBar v-if="communityNavVisible" @openControl="openControl" :navSize="navAttribute.navRadius" />
+          <UserNavBar
+            v-if="communityNavVisible"
+            @openControl="openControl"
+            :navSize="navAttribute.navRadius"
+          />
 
           <!-- 团队导航弹窗 -->
-          <div v-if="teamNavVisible" class="absolute tuanduidaohang" :style="{
+          <div
+            v-if="teamNavVisible"
+            class="absolute tuanduidaohang"
+            :style="{
               left: `${teamNavLeft}px`,
               bottom: `${(navAttribute.navSize / 100) * 100}px`,
-            }" style="z-index: 800">
+            }"
+            style="z-index: 800"
+          >
             <TeamNav @close="teamNavVisible = false" @openSet="settingModal" />
           </div>
 
           <!-- 加入的社群搜索 -->
-          <div v-if="comSearchVisible" class="absolute" :style="{
-            left: `${comSearchLeft}px`,
-            bottom: `${(navAttribute.navSize / 100) * 100}px`,
-          }" style="z-index: 600">
+          <div
+            v-if="comSearchVisible"
+            class="absolute"
+            :style="{
+              left: `${comSearchLeft}px`,
+              bottom: `${(navAttribute.navSize / 100) * 100}px`,
+            }"
+            style="z-index: 600"
+          >
             <ComNavSearch @close="comSearchVisible = false" />
           </div>
         </div>
@@ -69,25 +90,24 @@
     </template>
     <!-- window版导航栏 -->
     <template v-else>
-      <AutoHide 
-        :enter="enter" 
-        :leave="leave" 
-        :autoHideNav="this.state" 
-        v-model:isLeaveBar="isFootBar">
+      <AutoHide
+        :enter="enter"
+        :leave="leave"
+        :autoHideNav="this.state"
+        v-model:isLeaveBar="isFootBar"
+      >
         <div v-show="autoVisible" :style="[this.state ? this.winPosition : '']">
-          <Drop 
-          @createFile="createFile" 
-          currentId="bottom" 
-          >
-            <WindowPanel 
-              :mainClass="mainClass" 
+          <Drop @createFile="createFile" currentId="bottom">
+            <WindowPanel
+              v-model:folderVisible="folderVisible"
+              :mainClass="mainClass"
               @edit="edit"
-              @getDelIcon="getDelIcon" 
-              @control="openControl">
+              @getDelIcon="getDelIcon"
+              @control="openControl"
+            >
             </WindowPanel>
           </Drop>
         </div>
-        
       </AutoHide>
     </template>
     <keep-alive>
@@ -97,12 +117,13 @@
       <Favorites v-if="true"></Favorites>
     </keep-alive>
     <Common ref="common"></Common>
-
-
   </xtMixMenu>
 
   <transition name="fade">
-    <div :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }" v-if="quick">
+    <div
+      :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }"
+      v-if="quick"
+    >
       <component :is="componentId" @setQuick="setQuick"></component>
     </div>
   </transition>
@@ -150,7 +171,7 @@ import Drop from "./desk/navigationBar/components/folder/Drop.vue";
 import { useWindowSize } from "../ui/new/drag/src/hooks/useWindowSize";
 import Common from "./desk/navigationBar/components/Common.vue";
 import { useElementSize } from "../ui/new/drag/src/hooks/useElementSize";
-import ControlModal from "./desk/navigationBar/components/control/ControlModal.vue";
+import ControlModal from "../apps/control/page/Control.vue";
 import { hoverRealItemId } from "./desk/navigationBar/hook/hoverRealItemId";
 import AutoHide from "./desk/navigationBar/components/folder/AutoHide.vue";
 import { mergeData } from "../ui/hooks/useDataConversion";
@@ -161,13 +182,12 @@ import UserNavBar from "./bottomPanel/community/UserNavBar.vue";
 import CommunityNav from "./bottomPanel/community/CommunityNav.vue";
 import TeamNav from "./bottomPanel/community/TeamNav.vue";
 import AppModal from "./bottomPanel/community/AppModal.vue";
-import { controlStore } from "./desk/navigationBar/hook/controlStore";
+import { controlStore } from "../apps/control/hooks/controlStore";
 import WindowPanel from "./WindowPanel.vue";
 import Setting from "./bottomPanel/setting/CommunitySetting.vue";
 import ComNavSearch from "./bottomPanel/search/ComNavSearch.vue";
 import { communityStore } from "../page/chat/store/communityStore";
 import DeskAppModal from "./bottomPanel/desk/DeskAppList.vue";
-
 
 // 是否全屏状态 切换全屏
 const { isFullscreen, toggle } = useFullscreen();
@@ -199,8 +219,8 @@ export default {
   },
   data() {
     return {
-      isFootBar:false,
-      fixedPosition:'position:fixed;bottom:10px;z-index:9;',
+      isFootBar: false,
+      fixedPosition: "position:fixed;bottom:10px;z-index:9;",
       dragItem: null,
       hoverIndex: -1, //当前选中的项目（排除gap）
       debug: false,
@@ -319,25 +339,28 @@ export default {
       // 社群搜索
       comSearchVisible: false,
       comSearchLeft: 100,
+
+      // 文件夹打开状态
+      folderVisible: false,
     };
   },
   props: {
     mainClass: {
       type: String,
-      default: () => ""
+      default: () => "",
     },
     enter: {
       type: String,
-      default: () => ""
+      default: () => "",
     },
     leave: {
       type: String,
-      default: () => ""
+      default: () => "",
     },
     winPosition: {
       type: String,
-      default: () => ""
-    }
+      default: () => "",
+    },
   },
   unmounted() {
     window.removeEventListener("mousemove", this.listenMouse);
@@ -379,37 +402,44 @@ export default {
       }
     });
     this.noticeFlag = true;
+    // 当窗口尺寸发生变化时，更新父级尺寸，并更新导航栏相关数据
     this.useWindowSize((size) => {
-      const { width: windowWidth, height: windowHeight } = { width: size.width.value, height: size.height.value };
-        
+      const { width: windowWidth, height: windowHeight } = {
+        width: size.width.value,
+        height: size.height.value,
+      };
+
       // 更新父级尺寸状态
       this.parentWidth = windowWidth;
       this.parentHeight = windowHeight;
-        
+
       // 根据当前导航格式计算最大宽度和额外宽度
-      let maxWidth = this.currentNavFormat === 'mac' ? windowWidth - 240 : windowWidth * 0.6;
-      let extraWidth = this.currentNavFormat === 'mac' ? 240 : windowWidth * 0.3;
-        
+      let maxWidth =
+        this.currentNavFormat === "mac" ? windowWidth - 240 : windowWidth * 0.6;
+      let extraWidth =
+        this.currentNavFormat === "mac" ? 240 : windowWidth * 0.3;
+
       // 计算当前可添加的最多图标个数
       this.maxItemNum = Math.round(maxWidth / this.realSize);
-        
+
       // 计算导航栏缩放比例
-      const scale = windowWidth / (extraWidth + this.copyFootNav.length * this.realSize);
+      const scale =
+        windowWidth / (extraWidth + this.copyFootNav.length * this.realSize);
       this.navAttribute.navSize = Math.min(100, Math.round(scale * 100));
     }, 200);
 
     window.addEventListener("mousemove", this.listenMouse);
     // 点击团队导航打开团队组件
     this.$bus.on("openTeamNav", (evt) => {
-      console.log('打开团队导航的小组件')
+      console.log("打开团队导航的小组件");
       this.openTeamNav = !this.teamNavVisible;
-      this.teamNavVisible = !this.teamNavVisible
+      this.teamNavVisible = !this.teamNavVisible;
       this.teamNavLeft = evt.clientX - 274 < 0 ? 0 : evt.clientX - 274;
     });
     // 触发社群搜索弹窗
     this.$bus.on("openComSearch", (evt) => {
       this.$bus.emit("closeModal");
-      this.teamNavVisible = false
+      this.teamNavVisible = false;
       this.comSearchVisible = !this.comSearchVisible;
       this.comSearchLeft = evt.clientX - 274 < 0 ? 0 : evt.clientX - 50;
     });
@@ -469,7 +499,7 @@ export default {
     ...mapWritableState(controlStore, ["firstNavVisible"]),
     // 判断当前导航栏格式，来确定图标大小
     realSize() {
-      return this.currentNavFormat === 'mac' ? 72 : 60
+      return this.currentNavFormat === "mac" ? 72 : 60;
     },
 
     isMain() {
@@ -517,8 +547,8 @@ export default {
       return this.mainMenus;
     },
     // 自动隐藏状态
-    state(){
-      return this.autoHideNav.foot.state
+    state() {
+      return this.autoHideNav.foot.state;
     },
     mainOption() {
       const custom = {
@@ -526,7 +556,7 @@ export default {
         name: this.state ? "关闭自动隐藏" : "开启自动隐藏",
         newIcon: "fluent:eye-off-16-regular",
         fn: () => {
-          this.autoHideNav.foot.state = !this.autoHideNav.foot.state
+          this.autoHideNav.foot.state = !this.autoHideNav.foot.state;
         },
       };
       let arr = [...this.rightMenus, custom];
@@ -538,7 +568,7 @@ export default {
         if (this.isEdge || this.hoverTabs) {
           return true;
         }
-        if (this.isFootBar && !this.controlVisible && !this.folderVisible) {
+        if (this.isLeaveBar && !this.controlVisible && !this.folderVisible) {
           return false;
         }
         return true;
@@ -620,11 +650,14 @@ export default {
       "removeFootNavigationList",
     ]),
     ...mapActions(useNavigationStore, ["toggleEdit", "toggleTaskBox"]),
-    ...mapActions(communityStore, ['getMyCommunity']),
+    ...mapActions(communityStore, ["getMyCommunity"]),
     mergeData,
     listenMouse(e) {
       // 导航栏位置不同，判断条件不同
-      const tag = this.currentNavPosition === 'top' ? e.y < 50 : e.y > window.innerHeight - 50
+      const tag =
+        this.currentNavPosition === "top"
+          ? e.y < 50
+          : e.y > window.innerHeight - 50;
       if (tag) {
         this.isEdge = true;
       } else {
@@ -635,7 +668,7 @@ export default {
     },
     // 获取当前停留的图标索引
     getHoverIndex(val) {
-      this.hoverIndex = val
+      this.hoverIndex = val;
     },
     /**
      * 清空当前导航栏
@@ -683,33 +716,38 @@ export default {
      * @param {*} currentItem 当前删除图标
      */
     delCurrentIcon(currentIndex, currentItem) {
-      if (!this.mainNavigationList.find(f => f.value === currentItem.value)) {
-        this.removeFootNavigationList(currentIndex)
-        return
+      if (!this.mainNavigationList.find((f) => f.value === currentItem.value)) {
+        this.removeFootNavigationList(currentIndex);
+        return;
       }
-      let arr = []
+      let arr = [];
       if (this.navigationToggle[0] && this.navigationToggle[1]) {
-        arr = this.sideNavigationList.concat(this.rightNavigationList)
+        arr = this.sideNavigationList.concat(this.rightNavigationList);
       } else if (this.navigationToggle[0] && !this.navigationToggle[1]) {
-        arr = this.sideNavigationList
+        arr = this.sideNavigationList;
       } else if (!this.navigationToggle[0] && this.navigationToggle[1]) {
-        arr = this.rightNavigationList
+        arr = this.rightNavigationList;
       } else {
-        message.info(`导航栏中至少保留一个「${currentItem.name}」`)
-        return
+        message.info(`导航栏中至少保留一个「${currentItem.name}」`);
+        return;
       }
-      this.delNavigation(arr, currentItem, currentIndex, this.removeFootNavigationList)
+      this.delNavigation(
+        arr,
+        currentItem,
+        currentIndex,
+        this.removeFootNavigationList
+      );
     },
     /**
      * 打开桌面应用提示
      * @param {*} item 当前图标
      */
     msgNotice(item) {
-      if (item.type === 'tableApp') {
+      if (item.type === "tableApp") {
         message.loading({
-          content: `打开「${item.name}」...`
-          , key: 'tipRun'
-        })
+          content: `打开「${item.name}」...`,
+          key: "tipRun",
+        });
       }
     },
     /**
@@ -719,54 +757,53 @@ export default {
      * @param {*} item 图标详细信息
      */
     async newOpenApp(type, value, item) {
-      type !== 'folder' ? this.folderVisible = false : ''
-      this.resetElementPosition()
-      if (value === 'control' && !this.controlVisible) {
-        this.controlVisible = true
-        return
+      type !== "folder" ? (this.folderVisible = false) : "";
+      this.resetElementPosition();
+      if (value === "control" && !this.controlVisible) {
+        this.controlVisible = true;
+        return;
       }
-      if (value === 'commun') {
-        this.comVisible = !this.comVisible
-        return
+      if (value === "commun") {
+        this.comVisible = !this.comVisible;
+        return;
       }
-      console.log('item :>> ', item);
+      console.log("item :>> ", item);
       // 新版设置打开方式
-      if (value === 'setting') {
-        this.$bus.emit("openSystemSet")
+      if (value === "setting") {
+        this.$bus.emit("openSystemSet");
       }
-      if (type === 'folder') {
-        this.openFolder(item)
+      if (type === "folder") {
+        this.openFolder(item);
       }
-      if (value == 'fullscreen' && window.$useEnv()) {
-        toggle()
-        return
+      if (value == "fullscreen" && window.$useEnv()) {
+        toggle();
+        return;
       }
-      if (window.$useEnvLimit('web', value)) return
+      if (window.$useEnvLimit("web", value)) return;
 
-
-      if (item) this.msgNotice(item)
-      if (value === 'home' && item.home) {
-        this.jumpDesk = item.home
+      if (item) this.msgNotice(item);
+      if (value === "home" && item.home) {
+        this.jumpDesk = item.home;
       }
-      let rs = await startApp(type, value, this.$router)
+      let rs = await startApp(type, value, this.$router);
       if (!rs) {
         message.error({
-          content: `打开「${item.name}」失败`
-          , key: 'tipRun'
-        })
+          content: `打开「${item.name}」失败`,
+          key: "tipRun",
+        });
       }
       this.controlVisible = false;
-      this.comVisible = false
+      this.comVisible = false;
     },
     completeEdit() {
-      this.toggleEdit()
-      this.setQuick()
+      this.toggleEdit();
+      this.setQuick();
     },
     disableDrag() {
       // if (this.sortable) {
-      document.removeEventListener('click', this.disableDrag)
+      document.removeEventListener("click", this.disableDrag);
       // this.sortable.destroy()
-      this.sortable = null
+      this.sortable = null;
     },
     /**
      * 解散文件夹和切换文件夹
@@ -776,23 +813,26 @@ export default {
     resetFolder(item, index) {
       if (item.children.length > 0) {
         if (item.children.length + this.copyFootNav.length > this.maxItemNum) {
-          window.$ui.confirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
-            ok: () => {
-              this.copyFootNav.splice(index, 1, ...item.children)
-            },
-            no: () => {
-              return this.copyFootNav
+          window.$ui.confirm(
+            "最多只能添加" + this.maxItemNum + "个",
+            "若继续添加将缩小导航栏",
+            {
+              ok: () => {
+                this.copyFootNav.splice(index, 1, ...item.children);
+              },
+              no: () => {
+                return this.copyFootNav;
+              },
             }
-          })
+          );
         } else {
-          this.copyFootNav.splice(index, 1, ...item.children)
+          this.copyFootNav.splice(index, 1, ...item.children);
         }
         // this.copyFootNav.splice(index, 1, ...item.children)
 
         if (this.folderId == item.id) {
-          this.closeFolder()
+          this.closeFolder();
         }
-
       }
     },
     createFile(item, x) {
@@ -801,7 +841,7 @@ export default {
       const index = Math.round(
         (x.x - rect.x) / ((this.realSize * this.navAttribute.navSize) / 100)
       );
-      console.log(index, x.x, rect.x, rect.width)
+      console.log(index, x.x, rect.x, rect.width);
       this.dragItem = null;
       if (this.copyFootNav[this.hoverIndex]?.type === "folder") {
         const merged = this.useMergeFolder(
@@ -844,7 +884,7 @@ export default {
     // 开启设置
     settingModal() {
       this.$refs.modeSetRef.openAppSetting();
-    }
+    },
   },
 };
 </script>

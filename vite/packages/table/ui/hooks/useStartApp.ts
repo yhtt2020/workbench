@@ -122,6 +122,12 @@ export const startApp = async (type, value, router?) => {
     case "thinksky":
       browser.openInInner(value);
       break;
+    case "mob":
+      browser.openInMobMod(value,{
+        partition:'persist:webcontent',
+        newName:'手机模式'
+      });
+      break;
     // 轻应用
     case "lightApp":
       // let isObject = typeof value == 'object'

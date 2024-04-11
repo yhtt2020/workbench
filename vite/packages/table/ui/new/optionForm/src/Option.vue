@@ -49,12 +49,24 @@
     v-model:slider="data[option.sliderKey]"
     :style="lineSpaceStyle"
   />
+  <dropDown
+    v-else-if="option.type === 'drop'"
+    v-bind="option"
+    v-model:mode="data[option.dropKey]"
+    :style="lineSpaceStyle"
+  >
+    
+  </dropDown>
   <!-- 自定义插槽 -->
   <slot v-else-if="option.type === 'slot'" :name="option.slot"> </slot>
   <div v-if="option?.border" class="tt-divider"></div>
 </template>
 
 <script setup lang="ts">
+import { defineAsyncComponent } from 'vue'
+
+const dropDown = defineAsyncComponent(
+  () => import('../../../../../table/components/desk/navigationBar/components/dropDown/DropDown.vue'));
 export interface fromProps {
   option?: any;
   data?: any;

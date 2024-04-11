@@ -82,14 +82,20 @@ class TableManager {
         onReadyToShow:()=>{
           if (tableWinSetting) {
             //通过多次设置来规避缩放率的问题
-            if (!tableWinSetting.isMaximized) {
-            setTimeout(() => {
-              this.window.setSize(10,10)
-              this.window.setPosition(tableWinSetting.bounds.x, tableWinSetting.bounds.y)
+            if(tableWinSetting.isFullScreen){
+              setTimeout(()=>{
+                this.window.setSize(10,10)
+                this.window.setPosition(tableWinSetting.bounds.x, tableWinSetting.bounds.y)
+                this.window.setFullScreen(true)
+              },2000)
+            }else if (!tableWinSetting.isMaximized) {
+              setTimeout(() => {
+                this.window.setSize(10,10)
+                this.window.setPosition(tableWinSetting.bounds.x, tableWinSetting.bounds.y)
                 setTimeout(()=>{
                   this.window.setSize(tableWinSetting.bounds.width, tableWinSetting.bounds.height)
                 },1000)
-            }, 1000)
+              }, 1000)
             }
           }
         }
@@ -175,10 +181,10 @@ class TableManager {
         this.saveBounds()
       })
       tableWin.window.on('leave-full-screen', () => {
-        this.saveBounds()
+        this.saveBounds(false)
       })
       tableWin.window.on('enter-full-screen', () => {
-        this.saveBounds()
+        this.saveBounds(true)
       })
       tableWin.window.on('ready-to-show', () => {
         tableWin.window.show()
@@ -221,12 +227,19 @@ class TableManager {
     }
 
   }
-  saveBounds () {
-    let tableWinSetting = {
-      bounds: this.window.getBounds(),
-      isMaximized: this.window.isMaximized()
+  saveBounds (fullscreen) {
+    let savedWinSetting = settings.get('tableWinSetting')
+    if(!savedWinSetting){
+      savedWinSetting={}//防止对象无法被序列化
     }
-    console.log('记录下位置和大小',tableWinSetting)
+    let tableWinSetting = {
+      ...savedWinSetting,
+      bounds: this.window.getBounds(),
+      isMaximized: this.window.isMaximized(),
+    }
+    if(fullscreen!==undefined){
+      tableWinSetting.isFullScreen=fullscreen
+    }
     settings.set('tableWinSetting', tableWinSetting)
   }
 

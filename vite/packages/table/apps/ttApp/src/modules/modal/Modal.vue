@@ -9,7 +9,7 @@ const { modal, ttappList } = storeToRefs(ttappStore);
 // 窗口弹窗
 const modalRef: any = ref(null);
 
-const data: any = ref();
+const data: any = ref({});
 
 /** 初始化方法 */
 const init = () => {
@@ -146,7 +146,7 @@ onMounted(() => {
     <xt-mix-menu :menus="menuList" :stopPropagation="false">
       <div
         class="relative w-full h-full overflow-hidden"
-        style="background: pink"
+
         ref="scrollbar"
         :style="modalSize"
       >

@@ -36,9 +36,14 @@ const mobileMod = {
     const space = 10
     const { screen } = require('electron')
     const maxWidth = screen.getPrimaryDisplay().workAreaSize.width
+    let targetWindow=mainWindow
+    if(!(mainWindow && !mainWindow.isDestroyed())){
+      //如果存在浏览器主窗口，否则使用工作台
+      targetWindow=global.tableWin.window
+    }
     const sourcePoint = {
-      x: mainWindow.getBounds().x + 300,
-      y: mainWindow.getBounds().y + 300
+      x: targetWindow.getBounds().x + 300,
+      y: targetWindow.getBounds().y + 300
     }
     if (sourcePoint.x + (mobileCount + 1) * initSize.width < maxWidth) {
       return { x: sourcePoint.x + mobileCount * (initSize.width + space), y: sourcePoint.y }
