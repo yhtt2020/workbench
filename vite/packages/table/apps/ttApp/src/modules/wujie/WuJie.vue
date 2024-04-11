@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import WujieVue from "wujie-vue3";
-import { ref } from "vue";
 import { useTTAppStore } from "../../store";
+import { ref, onUnmounted } from "vue";
 import browser from "../../../../../js/common/browser";
 const ttappStore: any = useTTAppStore();
 
@@ -15,6 +15,9 @@ const props = defineProps({
 });
 
 const { bus, setupApp, preloadApp, destroyApp } = WujieVue;
+onUnmounted(() => {
+  destroyApp(props.name);
+});
 
 const plugins = (iframeWindow: any) => {
   let res = {
@@ -36,12 +39,16 @@ const plugins = (iframeWindow: any) => {
   };
   return res;
 };
-
+// location.href='tsbapp://table.com/table.html'
+//这段代码是修改默认虚拟iframe的地址的，在某种情况下需要指定src
 const attrs = ref({});
 if (location.href.startsWith("tsbapp://")) {
   attrs.value.src = "tsbapp://table.com/index.html";
 }
 </script>
+<!--    :attrs="{-->
+<!--            src: 'tsbapp://table.com/index.html'-->
+<!--          }"-->
 
 <template>
   <WujieVue
