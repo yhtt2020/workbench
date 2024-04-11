@@ -201,7 +201,7 @@ export default {
   data() {
     return {
       isFootBar:false,
-      fixedPosition:'position:fixed;bottom:10px;z-index:9;',
+      fixedPosition:'position:fixed;bottom:0px;z-index:9;',
       dragItem: null,
       hoverIndex: -1, //当前选中的项目（排除gap）
       debug: false,
