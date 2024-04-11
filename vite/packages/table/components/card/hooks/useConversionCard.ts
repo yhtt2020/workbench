@@ -8,9 +8,9 @@ export const useConversionCard = (data) => {
     const cardData = {
         ...defaultData,
         type:'card',
-        name:title,
-        value:name,
-        icon:icon,
+        name:title || name,  // 卡片名称
+        value:name,  // 卡片组件名
+        icon:icon || 'fluent:cloud-16-regular',
         isBg:true,
         bg:getRandomColor(),
         cardData:{

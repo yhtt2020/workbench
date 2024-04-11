@@ -21,9 +21,14 @@ export const usePosition = (e,i) => {
 
     // console.log(windowWidth, windowHeight, eWidth, eHeight, iWidth, iHeight,eHeight + iHeight > windowHeight )
     // const target = windowHeight - ( windowHeight - eHeight + iHeight )
+    // const target = windowHeight - iHeight - 80
+    // console.log(target,iHeight,iWidth)
     
     return{
         x: eWidth > windowWidth - (iWidth / 2) ? windowWidth - iWidth : (eWidth - (iWidth / 2) < 0 ? 20 : eWidth - (iWidth / 2)),
-        y: eHeight + iHeight > windowHeight ?  (- iHeight + eHeight - 40) / (navAttribute.value.navSize / 100) : (eHeight + 30 ) * (navAttribute.value.navSize / 100),
+        y: 
+            eHeight + iHeight > windowHeight ?  
+            (- iHeight + eHeight - 60) / (navAttribute.value.navSize / 100) : 
+            (eHeight + 45 ) * (navAttribute.value.navSize / 100),
     }
 }

@@ -29,6 +29,12 @@
       :auto="true"
     />
   </div>
+  <FloatCard
+    v-if="floatCardVisible"
+    :cardData="floatCard.cardData"
+    :currentComponent="floatCard.value"
+    :position="position">
+  </FloatCard>
   </teleport>
   <!-- 快速搜索 底部栏区域 -->
   <transition>
@@ -191,6 +197,7 @@ import Folder from "../../apps/folder";
 import Drag from "../desk/navigationBar/components/folder/Drag.vue";
 import Avatar from "../desk/navigationBar/components/Avatar.vue";
 import Team from "./Team.vue";
+import FloatCard from "../windowPanel/components/FloatCard.vue";
 
 const {
   //是否全屏状态
@@ -210,6 +217,7 @@ export default {
     Drag,
     Team,
     NavIcon,
+    FloatCard
   },
   data() {
     return {
@@ -298,6 +306,8 @@ export default {
       parentHeight: 0,
 
       comVisible: false,
+      floatCardVisible:false,
+      floatCard:{}
     };
   },
   props: {
@@ -667,12 +677,22 @@ export default {
         });
       }
     },
+    openCard() {
+      this.floatCardVisible = !this.floatCardVisible
+      this.floatCard = this.currentItem
+    },
     /**
      * 打开应用
      * @param {*} item 图标详细信息
      */
     async newOpenApp(item, e) {
       const { type, value } = item;
+      if (type === "card") {
+        this.openCard()
+      }
+      if (type !== "card") {
+        this.floatCardVisible = false
+      }
       if (type !== "folder") {
         this.folderVisible = false;
       }
@@ -696,10 +716,8 @@ export default {
       if (type === "folder") {
         this.openFolder(item);
       }
-      this.resetElementPosition();
       if (value == "fullscreen" && window.$useEnv()) {
         toggle();
-        // console.log('isFullscreen :>> ', isFullscreen);
         return;
       }
       if (window.$useEnvLimit("web", value)) return;
@@ -1001,9 +1019,8 @@ export default {
      * 重置元素位置
      */
     resetElementPosition() {
-      const draggableSize = this.currentItem.customSize
-        ? this.currentItem.customSize.split("x")
-        : this.resize.split("x");
+      const draggableSize = (this.currentItem?.cardData?.customSize || this.currentItem?.customSize || this.resize || '1x1').split("x");
+      // console.log(draggableSize)
       // 视图大小
       let vW = window.innerWidth;
       // 元素坐标
