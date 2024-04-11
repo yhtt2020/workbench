@@ -86,34 +86,9 @@ const checkMainFest = async (id) => {
   }
   // 卡片数据
   console.log("卡片数据 :>> ");
-  if (modules?.card) {
-    const card = modules?.card;
-    let weak = ["size"];
-
-    let strong = [
-      {
-        value: card?.preview,
-        info: "预览图",
-      },
-    ];
-
-    let entry = card?.entry;
-    if (!entry || entry.charAt(0) == "/") {
-      strong.push({
-        value: card?.entry,
-        info: "card入口",
-      });
-    }
-    console.log("card strong :>> ", strong);
-    let ojb = {
-      weak,
-      strong,
-      data: card,
-    };
-    let res = await check(ojb);
-    if (res.code !== 200) {
-      return res;
-    }
+  let cardRes = await checkCard(modules?.card);
+  if (cardRes.code !== 200) {
+    return cardRes;
   }
 
   // 5、返回数据
@@ -125,6 +100,55 @@ const checkMainFest = async (id) => {
     info: "成功",
   };
 };
+/**
+ * 负责检查card配置
+ */
+const checkCard = async (card) => {
+  // 数据不存在直接判定为正
+  if (!card) {
+    return {
+      code: 200,
+    };
+  }
+  // 如果数据不是对象则转为数组
+  if (typeof card !== "object") {
+    card = [card];
+  }
+  // 遍历card
+  for (const item of card) {
+    let weak = ["size"];
+
+    let strong = [
+      {
+        value: item?.preview,
+        info: "预览图",
+      },
+    ];
+
+    let entry = item?.entry;
+    if (!entry || entry.charAt(0) == "/") {
+      strong.push({
+        value: item?.entry,
+        info: "card入口",
+      });
+    }
+
+    let ojb = {
+      weak,
+      strong,
+      data: item,
+    };
+    let res = await check(ojb);
+    if (res.code !== 200) {
+      return res;
+    }
+  }
+
+  return {
+    code: 200,
+  };
+};
+
 /** 实现检查 */
 const check = async (options) => {
   const { weak, data, strong } = options;

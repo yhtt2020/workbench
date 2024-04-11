@@ -13,6 +13,7 @@ import { useFreeLayoutStore } from "./store";
 import { message } from "ant-design-vue";
 import "animate.css";
 import { useDebounceFn } from "@vueuse/core";
+
 import {
   useGridToWidth,
   useHeightToGrid,
@@ -352,14 +353,20 @@ async function updateCard(data) {
 }
 
 let updateCardTimer: any;
-watch(currentDesk.value?.cards, (card) => {
-  if (firstLoading.value) return;
-  clearTimeout(updateCardTimer);
-  updateCardTimer = setTimeout(() => {
-    updateCard(card);
-  }, 10);
-  console.log("watch数据更新了 :>> ");
-});
+watch(
+  currentDesk.value?.cards,
+  (card) => {
+    if (firstLoading.value) return;
+    clearTimeout(updateCardTimer);
+    updateCardTimer = setTimeout(() => {
+      updateCard(card);
+    }, 10);
+    console.log("watch数据更新了 :>> ");
+  },
+  {
+    immediate: true,
+  }
+);
 
 const test: any = ref(null);
 const drag = (obj) => {
