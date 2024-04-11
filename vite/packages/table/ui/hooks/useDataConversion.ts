@@ -31,7 +31,8 @@ export const defaultData = {
    * default 系统默认浏览器
    * inner 内置浏览器
    * thisky 想天浏览器
-   * fixed
+   * fixed  固定图标 --- 
+   * card  桌面卡片
    */
   type: "",
   bg: "", // 背景颜色

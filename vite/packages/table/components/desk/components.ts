@@ -202,7 +202,7 @@ const OilPrices = defineAsyncComponent(
   () => import("../widgets/OilPrices.vue")
 );
 // import yuanCommunity from '../widgets/yuanCommunity/YuanCommunity.vue'
-const yuanCommunity = defineAsyncComponent(
+const YuanCommunity = defineAsyncComponent(
   () => import("../widgets/yuanCommunity/YuanCommunity.vue")
 );
 // import Courier from '../widgets/courier/Courier.vue'
@@ -301,7 +301,7 @@ export default {
     HotSearch,
     AIaides,
     OilPrices,
-    yuanCommunity,
+    YuanCommunity,
     Courier,
   },
 };
