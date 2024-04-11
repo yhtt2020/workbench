@@ -2,6 +2,7 @@
 import WujieVue from "wujie-vue3";
 import { ref } from "vue";
 import { useTTAppStore } from "../../store";
+import browser from "../../../../../js/common/browser";
 const ttappStore: any = useTTAppStore();
 
 const props = defineProps({
@@ -22,6 +23,14 @@ const plugins = (iframeWindow: any) => {
       iframeWindow.parent = {};
       // 屏蔽子应用$wujie对象
       iframeWindow.$wujie = {};
+      // 代理open方法
+      iframeWindow.open = function (url, target, features, replace) {
+        console.log("URL:", url);
+        console.log("Target:", target);
+        console.log("Features:", features);
+        console.log("Replace:", replace);
+        browser.openInUserSelect(url);
+      };
       return iframeWindow;
     },
   };
