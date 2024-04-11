@@ -39,7 +39,7 @@
           </template>
 
           <!-- 社群导航栏 -->
-          <CommunityNav v-else />
+          <CommunityNav v-else :boxStyle="'border:1px solid var(--divider); backdropFilter: blur(50px);'" />
 
           <!-- 快速搜索 底部栏区域 -->
           <Drop @createFile="createFile" currentId="bottom">

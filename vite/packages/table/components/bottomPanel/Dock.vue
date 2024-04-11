@@ -54,7 +54,7 @@
     :class="customClass"
     class="flex flex-row items-center justify-center max-w-full overflow-hidden xt-text"
     style="z-index: 99; min-width: 80px"
-    :style="{ borderRadius: navAttribute.navRadius + 'px' }"
+    :style="[{ borderRadius: navAttribute.navRadius + 'px' },boxStyle]"
   >
     <xt-task id="M0104" no="1" :mask="false" class="w-full">
       <div
@@ -77,9 +77,8 @@
             style="
               flex: 1;
               display: flex;
-              margin-left: 20px;
-              margin-right: 20px;
             "
+            :style="[this.currentNavFormat === 'mac' ? { marginLeft:'20px' ,marginRight:'20px' } : '']"
             ref="content"
           >
             <div
@@ -202,7 +201,7 @@ const {
 
 export default {
   name: "BottomPanel",
-  emits: ["getDelIcon", "hiedNavBar", "edit", "control", "getHoverIndex"],
+  emits: ["getDelIcon", "hiedNavBar", "edit", "control", "getHoverIndex", "update:isOpen"],
   components: {
     EditIcon,
     Avatar,
@@ -321,6 +320,15 @@ export default {
       type: Number,
       default: () => 20,
     },
+    // 文件夹是否打开
+    isOpen: {
+      type: Boolean,
+      default: () => false,
+    },
+    boxStyle: {
+      type: String,
+      default: () => "border:1px solid var(--divider)",
+    }
   },
   mounted() {
     this.enableDrag();
@@ -506,6 +514,11 @@ export default {
     hoverIndex(val) {
       this.$emit("getHoverIndex", val);
     },
+
+    // 文件夹打开状态
+    folderVisible(val) {
+      this.$emit("update:isOpen", val);
+    }
   },
   methods: {
     ...mapActions(navStore, [

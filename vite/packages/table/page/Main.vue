@@ -14,7 +14,11 @@
         @hiedNavBar="hiedNavBar"
         :mainClass="'top-20 right-6'">
       </BottomPanel>
-      <div v-if="autoHideNav.foot.state && currentNavPosition === 'top'" class="w-full h-[70px]"></div>
+      <!-- 当顶部window版导航栏开启自动隐藏后，用于占位，通过vueuse中的方法，来检测鼠标是否移入，防止导航栏闪烁 -->
+      <div 
+        v-if="autoHideNav.foot.state && currentNavPosition === 'top'" 
+        class="w-full h-[70px]">
+      </div>
     </div>
     <div :style="{ margin: fullScreen ? 0 : '-3px', padding: fullScreen ? 0 : '8px' }"
       style="display: flex;flex-grow: 1;flex-shrink: 1;flex-basis: fit-content;overflow: hidden;height: 100%;">
@@ -116,7 +120,11 @@
         @hiedNavBar="hiedNavBar"
         :mainClass="'bottom-20 right-6'">
       </BottomPanel>
-      <div v-if="autoHideNav.foot.state" class="w-full" :class="[currentNavFormat === 'mac' ? 'h-[90px]' : 'h-[70px]' ]"></div>
+      <!-- 当底部开启自动隐藏时，通过一个div来占位，防止桌面切换过于靠下，导致自动隐藏和桌面切换发生冲突 -->
+      <div 
+        v-if="autoHideNav.foot.state" class="w-full" 
+        :class="[currentNavFormat === 'mac' ? 'h-[90px]' : 'h-[70px]' ]">
+      </div>
     </div>
   </div>
 </template>

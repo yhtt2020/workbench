@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import WujieVue from "wujie-vue3";
-import { ref } from "vue";
 import { useTTAppStore } from "../../store";
-import {ref} from "vue";
+import { ref, onUnmounted } from "vue";
+import browser from "../../../../../js/common/browser";
 const ttappStore: any = useTTAppStore();
 
 const props = defineProps({
@@ -15,6 +15,9 @@ const props = defineProps({
 });
 
 const { bus, setupApp, preloadApp, destroyApp } = WujieVue;
+onUnmounted(() => {
+  destroyApp(props.name);
+});
 
 const plugins = (iframeWindow: any) => {
   let res = {
@@ -23,6 +26,14 @@ const plugins = (iframeWindow: any) => {
       iframeWindow.parent = {};
       // 屏蔽子应用$wujie对象
       iframeWindow.$wujie = {};
+      // 代理open方法
+      iframeWindow.open = function (url, target, features, replace) {
+        console.log("URL:", url);
+        console.log("Target:", target);
+        console.log("Features:", features);
+        console.log("Replace:", replace);
+        browser.openInUserSelect(url);
+      };
       return iframeWindow;
     },
   };
@@ -54,7 +65,7 @@ if (location.href.startsWith("tsbapp://")) {
             // 子应用可以通过 window.tt 访问父应用的 tt 对象
             content: 'window.tt = window.parent.tt',
           },
-        ]
+        ],
       },
       plugins(),
     ]"
