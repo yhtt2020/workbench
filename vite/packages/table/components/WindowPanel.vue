@@ -12,14 +12,19 @@
         <!-- 用户头像以及控制中心 -->
         <User></User>
         <!-- 导航栏图标 -->
-        <Panel @edit="edit" id="bottomPanel" @getDelIcon="getDelIcon" @control="control">
+        <Panel 
+            v-model:folderVisible="folderVisible"
+            @edit="edit" 
+            id="bottomPanel" 
+            @getDelIcon="getDelIcon" 
+            @control="control">
         </Panel>
         <!-- 右侧时间天气和消息通知 -->
         <div class="flex">
             <Time></Time>
             <MessageBox :boxClass="'ml-3'" :mainClass="mainClass"></MessageBox>
             <Tip 
-                :top="6"
+                :top="0"
                 name="inform" 
                 :check="status.show" 
                 type='click' 
@@ -31,7 +36,6 @@
                     class="flex items-center justify-center ml-3" />
             </Tip>
         </div>
-
     </div>
     <teleport to='body'>
         <TopPanelRightDrawer ref="rightDrawer"></TopPanelRightDrawer>
@@ -40,8 +44,7 @@
 </template>
 
 <script setup lang='ts'>
-const a = ref(false)
-import { ref, provide } from 'vue'
+import { ref, provide, watch } from 'vue'
 import { storeToRefs } from 'pinia';
 import { message } from 'ant-design-vue';
 
@@ -62,7 +65,7 @@ const { showGuide , status } = storeToRefs(useAppStore)
 const useNav = useNavigationStore()
 const { navAttribute } = storeToRefs(useNav)
 
-const emit = defineEmits(['edit', 'getDelIcon', 'control'])
+const emit = defineEmits(['edit', 'getDelIcon', 'control', 'update:folderVisible'])
 
 const props = defineProps({
     mainClass: {
@@ -70,6 +73,9 @@ const props = defineProps({
         default: 'bottom-20 right-6'
     }
 })
+
+// 文件更新状态
+const folderVisible = ref(false)
 
 const rightDrawer = ref<InstanceType<typeof TopPanelRightDrawer> | null>(null)
 
@@ -104,5 +110,13 @@ const getDelIcon = (value) => {
 const control = (value) => {
     emit('control', value)
 }
+
+// 更新文件夹打开状态
+watch(
+    () => folderVisible.value,
+    (val) => {
+        emit('update:folderVisible', val)
+    }
+)
 </script>
 <style lang='scss' scoped></style>
