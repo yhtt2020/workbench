@@ -392,8 +392,10 @@ export default {
       this.parentHeight = windowHeight;
         
       // 根据当前导航格式计算最大宽度和额外宽度
-      let maxWidth = this.currentNavFormat === 'mac' ? windowWidth - 240 : windowWidth * 0.6;
-      let extraWidth = this.currentNavFormat === 'mac' ? 240 : windowWidth * 0.3;
+      let macWidth = this.communityNavVisible ? windowWidth - 540 : windowWidth - 200;
+      let macExtraWidth = this.communityNavVisible ? 540 : 200;
+      let maxWidth = this.currentNavFormat === 'mac' ? macWidth : windowWidth * 0.6;
+      let extraWidth = this.currentNavFormat === 'mac' ? macExtraWidth : windowWidth * 0.3;
         
       // 计算当前可添加的最多图标个数
       this.maxItemNum = Math.round(maxWidth / this.realSize);

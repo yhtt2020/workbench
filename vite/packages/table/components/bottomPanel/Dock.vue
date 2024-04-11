@@ -356,6 +356,7 @@ export default {
       "jumpDesk",
       "currentNavPosition",
       "currentNavFormat",
+      "communityNavVisible",
     ]),
 
     ...mapWritableState(useNavBarStore, ["isEnterDesk"]),
@@ -428,8 +429,8 @@ export default {
         let maxWidth
         let extraWidth
         if(this.currentNavFormat === 'mac'){
-          maxWidth = windowWidth - 240
-          extraWidth = 240
+          maxWidth = this.communityNavVisible ? windowWidth - 540 : windowWidth - 200
+          extraWidth = this.communityNavVisible ? 540 : 200
         } else {
           maxWidth = windowWidth * 0.6
           extraWidth = windowWidth * 0.3
