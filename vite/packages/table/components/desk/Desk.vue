@@ -6,38 +6,53 @@
       </xt-button>
     </div>
   </div>
-  <div style="width: calc(100% + 8px); margin: -8px; height: calc(100% + 8px)" v-if="currentDesk.cards">
-    <div style="width: 100%; height: 100%" :class="notTrigger ? 'trigger' : ''" class="m-auto"
-      v-if="currentDesk.cards.length === 0">
+  <div
+    style="width: calc(100% + 8px); margin: -8px; height: calc(100% + 8px)"
+    v-if="currentDesk.cards"
+  >
+    <div
+      style="width: 100%; height: 100%"
+      :class="notTrigger ? 'trigger' : ''"
+      class="m-auto"
+      v-if="currentDesk.cards.length === 0"
+    >
       暂无卡片
     </div>
-    <FloatMenu v-if="editing" @addIcon="newAddIcon" @addFolder="addFolder" @add="newAddCard" @set="showSetting"
-      @hide="showDesk" @scrollbarRedirect="freeLayoutScrollbarRedirect" @exit="toggleEditing" @resetLayout="resetLayout"
-      v-model:zoom="globalSettings.cardZoom" v-model:aloneZoom="settings.cardZoom" :alone="settings.enableZoom"
-      :hide="hide" />
+    <FloatMenu
+      v-if="editing"
+      @addIcon="newAddIcon"
+      @addFolder="addFolder"
+      @add="newAddCard"
+      @set="showSetting"
+      @hide="showDesk"
+      @scrollbarRedirect="freeLayoutScrollbarRedirect"
+      @exit="toggleEditing"
+      @resetLayout="resetLayout"
+      v-model:zoom="globalSettings.cardZoom"
+      v-model:aloneZoom="settings.cardZoom"
+      :alone="settings.enableZoom"
+      :hide="hide"
+    />
     <Drop>
-      <!-- <WujieVue
-      width="100%"
-      height="100%"
-      name="vue2-demo"
-      url="https://www.yinaor.com/docs/front/micro/micro-wujie/"
-    ></WujieVue> -->
-      <!-- <xt-wu-jie
-        ref="xxx"
-        width="100%"
-        height="100%"
-        name="xxx"
-        url="http://localhost:5173/"
-      ></xt-wu-jie>
-      <Wujie width="100%" height="100%" name="xxx" url="http://localhost:5173/" ></Wujie> -->
       <!-- 自由布局 -->
       <template v-if="freeLayout">
         <FreeLayoutScrollbar ref="freeLayoutScrollbar" class="flex-1">
-          <FreeLayoutCanvas class="home-widgets" v-if="isFreeLayout == true && $route.path == '/main' && freeLayout">
-            <FreeLayoutContainer :currentDesk="currentDesk" :currentID="currentDesk.id" :isDrag="editing">
+          <FreeLayoutCanvas
+            class="home-widgets"
+            v-if="isFreeLayout == true && $route.path == '/main' && freeLayout"
+          >
+            <FreeLayoutContainer
+              :currentDesk="currentDesk"
+              :currentID="currentDesk.id"
+              :isDrag="editing"
+            >
               <template #box="{ data }">
-                <component :desk="currentDesk" :is="data?.name" :customIndex="data?.id"
-                  :customData="data?.customData" />
+                <component
+                  :desk="currentDesk"
+                  :is="data?.name"
+                  :customIndex="data?.id"
+                  :customData="data?.customData"
+                />
               </template>
             </FreeLayoutContainer>
           </FreeLayoutCanvas>
@@ -45,12 +60,18 @@
       </template>
 
       <!-- 默认布局 -->
-      <vue-custom-scrollbar v-show="!isFreeLayout" :class="previewFlag ? 'z-50' : ''" class="no-drag" key="scrollbar"
-        id="scrollerBar" :settings="{
-    ...scrollbarSettings,
-    suppressScrollY: settings.vDirection ? false : true,
-    suppressScrollX: settings.vDirection ? true : false,
-  }" style="
+      <vue-custom-scrollbar
+        v-show="!isFreeLayout"
+        :class="previewFlag ? 'z-50' : ''"
+        class="no-drag"
+        key="scrollbar"
+        id="scrollerBar"
+        :settings="{
+          ...scrollbarSettings,
+          suppressScrollY: settings.vDirection ? false : true,
+          suppressScrollX: settings.vDirection ? true : false,
+        }"
+        style="
           position: relative;
           width: calc(100% + 4px);
           height: 100%;
@@ -59,40 +80,72 @@
           padding-right: 4px;
           display: flex;
           flex-direction: row;
-        ">
-        <div id="cardContent" ref="deskContainer" style="
+        "
+      >
+        <div
+          id="cardContent"
+          ref="deskContainer"
+          style="
             /*display: flex;*/
             /*align-items: center;*/
             /*align-content: center;*/
-          " :style="{
-    // 'flex-direction': settings.vDirection?'row':'column',
-    'padding-top': this.usingSettings.marginTop + 'px',
-    width: settings.vDirection ? '100%' : 'auto',
-    height: settings.vDirection ? 'auto' : '100%',
-  }" :class="notTrigger ? 'trigger' : ''">
-          <vuuri v-show="showGrid" :key="key" v-if="(currentDesk.cards.length > 0 && !hide && !isFreeLayout) ||
-    !freeLayout
-    " item-key="id" :get-item-margin="() => {
-      return usingSettings.cardMargin * this.adjustZoom + 'px';
-    }
-    " group-id="grid.id" :drag-enabled="editing" v-model="currentDesk.cards" :style="{
-    width: settings.vDirection ? '100%' : 'auto',
-    height: settings.vDirection ? 'auto' : '100%',
-  }" class="grid home-widgets" ref="grid" :options="muuriOptions">
+          "
+          :style="{
+            // 'flex-direction': settings.vDirection?'row':'column',
+            'padding-top': this.usingSettings.marginTop + 'px',
+            width: settings.vDirection ? '100%' : 'auto',
+            height: settings.vDirection ? 'auto' : '100%',
+          }"
+          :class="notTrigger ? 'trigger' : ''"
+        >
+          <vuuri
+            v-show="showGrid"
+            :key="key"
+            v-if="
+              (currentDesk.cards.length > 0 && !hide && !isFreeLayout) ||
+              !freeLayout
+            "
+            item-key="id"
+            :get-item-margin="
+              () => {
+                return usingSettings.cardMargin * this.adjustZoom + 'px';
+              }
+            "
+            group-id="grid.id"
+            :drag-enabled="editing"
+            v-model="currentDesk.cards"
+            :style="{
+              width: settings.vDirection ? '100%' : 'auto',
+              height: settings.vDirection ? 'auto' : '100%',
+            }"
+            class="grid home-widgets"
+            ref="grid"
+            :options="muuriOptions"
+          >
             <template #item="{ item }">
-              <div :style="{
-    zoom: (
-      (usingSettings.cardZoom * this.adjustZoom) /
-      100
-    ).toFixed(2),
-  }">
-                <component :desk="currentDesk" :is="item.name" :customIndex="item.id" :customData="item.customData">
+              <div
+                :style="{
+                  zoom: (
+                    (usingSettings.cardZoom * this.adjustZoom) /
+                    100
+                  ).toFixed(2),
+                }"
+              >
+                <component
+                  :desk="currentDesk"
+                  :is="item.name"
+                  :customIndex="item.id"
+                  :customData="item.customData"
+                >
                 </component>
               </div>
             </template>
           </vuuri>
           <!-- 加载状态 -->
-          <div class="xt-text" v-show="!showGrid" style="
+          <div
+            class="xt-text"
+            v-show="!showGrid"
+            style="
               text-align: center;
               font-size: 32px;
               margin: auto;
@@ -100,7 +153,8 @@
               top: 50%;
               transform: translateY(-50%) translateX(-50%);
               left: 50%;
-            ">
+            "
+          >
             <LoadingOutlined />
           </div>
         </div>
@@ -109,22 +163,37 @@
   </div>
   <!-- 添加小组件 -->
   <transition name="fade">
-    <div class="home-blur" style="
+    <div
+      class="home-blur"
+      style="
         position: fixed;
         top: 0;
         right: 0;
         left: 0;
         bottom: 0;
         z-index: 999;
-      " v-if="addCardVisible">
-      <NewAddCard v-if="addCardVisible" @close="hideAddCard" @addSuccess="hideAddCard" :desk="currentDesk" @onBack="() => {
-      this.addCardVisible = false;
-    }
-    "></NewAddCard>
+      "
+      v-if="addCardVisible"
+    >
+      <NewAddCard
+        v-if="addCardVisible"
+        @close="hideAddCard"
+        @addSuccess="hideAddCard"
+        :desk="currentDesk"
+        @onBack="
+          () => {
+            this.addCardVisible = false;
+          }
+        "
+      ></NewAddCard>
     </div>
   </transition>
   <!-- 添加图标 -->
-  <EditNewNavigation v-if="editVisible" @setQuick="editVisible = false" @addIcon="addIcon"></EditNewNavigation>
+  <EditNewNavigation
+    v-if="editVisible"
+    @setQuick="editVisible = false"
+    @addIcon="addIcon"
+  ></EditNewNavigation>
   <GalleryModal ref="galleryRef" />
 </template>
 
@@ -157,7 +226,7 @@ export default {
   name: "Desk",
   emits: ["changeEditing"],
   mixins: [componentsMinis, menuMinis],
-  components: { EditNewNavigation, GalleryModal, Drop ,LoadingOutlined},
+  components: { EditNewNavigation, GalleryModal, Drop, LoadingOutlined },
   props: {
     keepAddIcon: {
       default: false,
@@ -826,5 +895,6 @@ export default {
 //      height: 438px;
 //    }
 //  }
-//}</style>
+//}
+</style>
 ./addIcon/EditNewNavigation.vue/index.ts
