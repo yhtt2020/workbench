@@ -6,7 +6,6 @@ import WuJie from "../wujie/WuJie.vue";
 import { useTTAppStore } from "../../store";
 import { storeToRefs } from "pinia";
 
-
 const ttappStore: any = useTTAppStore();
 const { modal } = storeToRefs(ttappStore);
 const loading = ref(true);
@@ -33,7 +32,6 @@ onMounted(async () => {
   data.value = res;
   customSize.value = options.customSize;
   cardHeader.value = options.header;
-  wujie.value = options.wujie;
   loading.value = false;
 });
 const props = defineProps({
@@ -46,8 +44,6 @@ const props = defineProps({
 const options = ref({
   // bg: "pink",
 });
-
-const visible = ref(false);
 
 const refresh = ref({
   fn: () => {
@@ -91,7 +87,7 @@ const menus = computed(() => {
     :header="header"
     :menuList="menus"
     :options="options"
-    :customSize="customSize"
+    :customSize="customData.size"
     v-if="data"
   >
     <template #header-left v-if="!loading">
@@ -107,7 +103,7 @@ const menus = computed(() => {
         class="w-full flex flex-col h-full"
         style="overflow: hidden !important"
       >
-        <WuJie v-bind="wujie" :id="customData.id" class="" />
+        <WuJie :url="customData._entry" :id="customIndex" class="" />
       </div>
     </template>
   </xt-container>

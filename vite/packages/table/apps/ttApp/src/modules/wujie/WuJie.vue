@@ -36,19 +36,20 @@ const plugins = (iframeWindow: any) => {
       };
       return iframeWindow;
     },
+    // 在子应用所有的css之前
+    cssBeforeLoaders: [
+      // 强制使子应用body定位是relative
+      { content: "body{position: relative !important}" },
+    ],
   };
   return res;
 };
-// location.href='tsbapp://table.com/table.html'
 //这段代码是修改默认虚拟iframe的地址的，在某种情况下需要指定src
-const attrs = ref({});
+const attrs: any = ref({});
 if (location.href.startsWith("tsbapp://")) {
   attrs.value.src = "tsbapp://table.com/index.html";
 }
 </script>
-<!--    :attrs="{-->
-<!--            src: 'tsbapp://table.com/index.html'-->
-<!--          }"-->
 
 <template>
   <WujieVue
