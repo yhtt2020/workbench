@@ -232,7 +232,7 @@ export const openSysApp = (value, router) => {
       // 设置
       useMit.emit("openSystemSet");
       setTimeout(() => {
-        useMit.emit("selectSystemNav", 3);
+        useMit.emit("selectSystemNav", 4);
       }, 100);
       break;
     default:

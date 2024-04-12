@@ -190,6 +190,7 @@ import Setting from "./bottomPanel/setting/CommunitySetting.vue";
 import ComNavSearch from "./bottomPanel/search/ComNavSearch.vue";
 import { communityStore } from "../page/chat/store/communityStore";
 import DeskAppModal from "./bottomPanel/desk/DeskAppList.vue";
+import { startApp } from "../ui/hooks/useStartApp";
 
 // 是否全屏状态 切换全屏
 const { isFullscreen, toggle } = useFullscreen();
@@ -286,7 +287,7 @@ export default {
           name: "锁定屏幕",
           event: "lock",
           fn: () => {
-            this.$refs.dock.newOpenApp(this.builtInFeatures[0]);
+            this.newOpenApp(this.builtInFeatures[0]);
           },
         },
         {
@@ -296,7 +297,7 @@ export default {
           name: "基础设置",
           event: "setting",
           fn: () => {
-            this.$refs.dock.newOpenApp(this.builtInFeatures[1]);
+            this.newOpenApp(this.builtInFeatures[1]);
           },
         },
         {
@@ -306,7 +307,7 @@ export default {
           name: "全屏显示",
           event: "fullscreen",
           fn: () => {
-            this.$refs.dock.newOpenApp(this.builtInFeatures[2]);
+            this.newOpenApp(this.builtInFeatures[2]);
           },
         },
         {
@@ -316,7 +317,7 @@ export default {
           name: "设备设置",
           event: "status",
           fn: () => {
-            this.$refs.dock.newOpenApp(this.builtInFeatures[3]);
+            this.newOpenApp(this.builtInFeatures[3]);
           },
         },
       ],
@@ -758,35 +759,9 @@ export default {
      * @param {*} value 打开路径
      * @param {*} item 图标详细信息
      */
-    async newOpenApp(type, value, item) {
-      type !== "folder" ? (this.folderVisible = false) : "";
-      this.resetElementPosition();
-      if (value === "control" && !this.controlVisible) {
-        this.controlVisible = true;
-        return;
-      }
-      if (value === "commun") {
-        this.comVisible = !this.comVisible;
-        return;
-      }
-      console.log("item :>> ", item);
-      // 新版设置打开方式
-      if (value === "setting") {
-        this.$bus.emit("openSystemSet");
-      }
-      if (type === "folder") {
-        this.openFolder(item);
-      }
-      if (value == "fullscreen" && window.$useEnv()) {
-        toggle();
-        return;
-      }
-      if (window.$useEnvLimit("web", value)) return;
-
-      if (item) this.msgNotice(item);
-      if (value === "home" && item.home) {
-        this.jumpDesk = item.home;
-      }
+    async newOpenApp(item) {
+      const { type, value } = item;
+      console.log("item :>> ", type, value);
       let rs = await startApp(type, value, this.$router);
       if (!rs) {
         message.error({
@@ -794,8 +769,6 @@ export default {
           key: "tipRun",
         });
       }
-      this.controlVisible = false;
-      this.comVisible = false;
     },
     completeEdit() {
       this.toggleEdit();

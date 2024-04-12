@@ -37,7 +37,7 @@
         >
     </a-avatar>
 
-    <!-- 自定义图标 :style="{ borderRadius: navigationBar.iconRadius + 'px', background: item?.bg || '',width:size + 'px',height:size + 'px' }"-->
+    <!-- 自定义图标 -->
     <div
         v-else-if="item.isBg"
         :style="{
@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, toRefs, computed } from 'vue'
+import { ref, toRefs, computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia';
 
 import { renderIcon } from '../../../js/common/common';
@@ -89,6 +89,10 @@ const { size , item , community } = toRefs(props)
 const isIfyIcon = computed(() => {
     const regex = /^[a-z]+:[a-z]+(?:-\d+)?(?:-[a-z\d]+)?.*$/
     return regex.test(item.value.icon)
+})
+
+onMounted(() => {
+    console.log(item.value.icon,"isIfyIcon :>> ", isIfyIcon.value);
 })
 
 </script>

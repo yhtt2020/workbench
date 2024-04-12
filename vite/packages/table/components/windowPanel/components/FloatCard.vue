@@ -1,6 +1,7 @@
 <template>
     <div 
-        class="absolute z-10" 
+        class="absolute"
+        style="z-index:500" 
         :style="{ left: `${position.x}px`, top: `${position.y}px`}">
         <component
             :desk="cardData.desks"
