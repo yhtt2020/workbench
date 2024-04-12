@@ -565,7 +565,7 @@ export default {
       let arr = [...this.rightMenus, custom];
       return arr.sort((a, b) => a.id - b.id);
     },
-
+    // 自动隐藏
     autoVisible() {
       if (this.state) {
         if (this.isEdge || this.hoverTabs) {
@@ -581,13 +581,16 @@ export default {
     },
   },
   watch: {
+    // 自动隐藏状态下，鼠标是否在导航栏区域
     isLeaveBar(val) {
       this.isFootBar = val;
     },
+    // 删除区域显示
     delZone(val) {
       this.delNav = val;
       this.$emit("getDelIcon", val);
     },
+    // 
     navigationToggle: {
       immediate: true,
       deep: true,
@@ -596,6 +599,7 @@ export default {
         this.rightNav = val[1];
       },
     },
+    // 极简模式状态以及用户中心和社区以及任务间
     simple(newVal, oldVal) {
       if (newVal && !oldVal) {
         // 当 simple 从关闭变为开启时，关闭所有 bottomToggle
@@ -633,6 +637,7 @@ export default {
         }
       },
     },
+    // 任务弹窗显示与隐藏与导航栏选择同步
     isTask() {
       if (this.isTask) {
         this.bottomToggle[2] = true;
@@ -655,6 +660,7 @@ export default {
     ...mapActions(useNavigationStore, ["toggleEdit", "toggleTaskBox"]),
     ...mapActions(communityStore, ["getMyCommunity"]),
     mergeData,
+    // 监听鼠标位置
     listenMouse(e) {
       // 导航栏位置不同，判断条件不同
       const tag =
@@ -699,10 +705,12 @@ export default {
         this.quick = true;
       }
     },
+    // 打开图标编辑
     edit(value) {
       this.componentId = value;
       this.quick = true;
     },
+    // 更新删除区域状态
     getDelIcon(value) {
       this.delZone = value;
     },
@@ -712,34 +720,6 @@ export default {
     setQuick() {
       this.quick = false;
       this.editToggle = false;
-    },
-    /**
-     * 删除图标判断
-     * @param {*} currentIndex 当前删除图标索引
-     * @param {*} currentItem 当前删除图标
-     */
-    delCurrentIcon(currentIndex, currentItem) {
-      if (!this.mainNavigationList.find((f) => f.value === currentItem.value)) {
-        this.removeFootNavigationList(currentIndex);
-        return;
-      }
-      let arr = [];
-      if (this.navigationToggle[0] && this.navigationToggle[1]) {
-        arr = this.sideNavigationList.concat(this.rightNavigationList);
-      } else if (this.navigationToggle[0] && !this.navigationToggle[1]) {
-        arr = this.sideNavigationList;
-      } else if (!this.navigationToggle[0] && this.navigationToggle[1]) {
-        arr = this.rightNavigationList;
-      } else {
-        message.info(`导航栏中至少保留一个「${currentItem.name}」`);
-        return;
-      }
-      this.delNavigation(
-        arr,
-        currentItem,
-        currentIndex,
-        this.removeFootNavigationList
-      );
     },
     /**
      * 打开桌面应用提示
@@ -754,7 +734,7 @@ export default {
       }
     },
     /**
-     * 打开应用
+     * 打开应用 -- 简化版
      * @param {*} type 图标类型
      * @param {*} value 打开路径
      * @param {*} item 图标详细信息
@@ -770,46 +750,7 @@ export default {
         });
       }
     },
-    completeEdit() {
-      this.toggleEdit();
-      this.setQuick();
-    },
-    disableDrag() {
-      // if (this.sortable) {
-      document.removeEventListener("click", this.disableDrag);
-      // this.sortable.destroy()
-      this.sortable = null;
-    },
-    /**
-     * 解散文件夹和切换文件夹
-     * @param {*} item
-     * @param {*} index
-     */
-    resetFolder(item, index) {
-      if (item.children.length > 0) {
-        if (item.children.length + this.copyFootNav.length > this.maxItemNum) {
-          window.$ui.confirm(
-            "最多只能添加" + this.maxItemNum + "个",
-            "若继续添加将缩小导航栏",
-            {
-              ok: () => {
-                this.copyFootNav.splice(index, 1, ...item.children);
-              },
-              no: () => {
-                return this.copyFootNav;
-              },
-            }
-          );
-        } else {
-          this.copyFootNav.splice(index, 1, ...item.children);
-        }
-        // this.copyFootNav.splice(index, 1, ...item.children)
-
-        if (this.folderId == item.id) {
-          this.closeFolder();
-        }
-      }
-    },
+    // 图标拖入导航栏，创建图标并添加到导航栏
     createFile(item, x) {
       const bottom = document.querySelector("#bottomPanel");
       const rect = bottom.getBoundingClientRect();

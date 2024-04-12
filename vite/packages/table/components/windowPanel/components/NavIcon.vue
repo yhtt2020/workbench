@@ -91,9 +91,9 @@ const isIfyIcon = computed(() => {
     return regex.test(item.value.icon)
 })
 
-onMounted(() => {
-    console.log(item.value.icon,"isIfyIcon :>> ", isIfyIcon.value);
-})
+// onMounted(() => {
+//     console.log(item.value.icon,"isIfyIcon :>> ", isIfyIcon.value);
+// })
 
 </script>
 <style lang='scss' scoped></style>

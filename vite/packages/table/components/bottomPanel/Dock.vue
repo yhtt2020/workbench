@@ -189,6 +189,7 @@ import { defaultFolderData } from "../../apps/folder/src/components/options";
 import { hoverRealItemId } from "../desk/navigationBar/hook/hoverRealItemId";
 import { mergeData } from "../../ui/hooks/useDataConversion";
 import { usePosition } from "../windowPanel/hook/usePosition";
+import { deleteIcon } from '../../components/card/hooks/addCardToNav'
 
 import NavIcon from "../windowPanel/components/NavIcon.vue";
 import EditIcon from "../desk/navigationBar/components/EditIcon/EditIcon.vue";
@@ -257,7 +258,7 @@ export default {
           newIcon: "fluent:delete-16-regular",
           color: "#FF4D4F",
           callBack: () => {
-            this.delCurrentIcon(this.currentIndex, this.currentItem);
+            this.deleteIcon(this.currentItem,'foot');
           },
         },
         {
@@ -637,34 +638,7 @@ export default {
       this.currentItem = item;
       this.currentIndex = index;
     },
-    /**
-     * 删除图标判断
-     * @param {*} currentIndex 当前删除图标索引
-     * @param {*} currentItem 当前删除图标
-     */
-    delCurrentIcon(currentIndex, currentItem) {
-      if (!this.mainNavigationList.find((f) => f.value === currentItem.value)) {
-        this.removeFootNavigationList(currentIndex);
-        return;
-      }
-      let arr = [];
-      if (this.navigationToggle[0] && this.navigationToggle[1]) {
-        arr = this.sideNavigationList.concat(this.rightNavigationList);
-      } else if (this.navigationToggle[0] && !this.navigationToggle[1]) {
-        arr = this.sideNavigationList;
-      } else if (!this.navigationToggle[0] && this.navigationToggle[1]) {
-        arr = this.rightNavigationList;
-      } else {
-        message.info(`导航栏中至少保留一个「${currentItem.name}」`);
-        return;
-      }
-      this.delNavigation(
-        arr,
-        currentItem,
-        currentIndex,
-        this.removeFootNavigationList
-      );
-    },
+    deleteIcon,
     /**
      * 打开桌面应用提示
      * @param {*} item 当前图标
@@ -821,35 +795,12 @@ export default {
             that.delItemIcon = false;
             that.isEnterDesk = false;
             let oneNav = that.copyFootNav[event.oldIndex];
-            //将要删除的是否是主要功能
-            if (!that.mainNavigationList.find((f) => f.name === oneNav.name)) {
-              that.removeFootNavigationList(event.oldIndex);
-              console.log("删除成功");
-              that.$emit("getDelIcon", false);
-              that.hoverIndex = -1;
-              return;
-            }
-            let sumList = [];
-            // 判断其他导航栏是否是打开状态，是则获取功能列表
-            if (that.leftNav && that.rightNav) {
-              sumList = that.sideNavigationList.concat(
-                that.rightNavigationList
-              );
-            } else if (that.leftNav && !that.rightNav) {
-              sumList = that.sideNavigationList;
-            } else if (!that.leftNav && that.rightNav) {
-              sumList = that.rightNavigationList;
-            } else {
-              message.info(`导航栏中至少保留一个「${oneNav.name}」`);
-              // console.log('不可删除')
-              return;
-            }
-            that.delNavigation(
-              sumList,
-              oneNav,
-              event.oldIndex,
-              that.removeFootNavigationList
-            );
+            // 删除图标
+            that.deleteIcon(oneNav,'foot')
+            // 更新删除区域状态
+            that.$emit("getDelIcon", false);
+            // 更新导航栏
+            that.hoverIndex = -1;
           };
         },
         onUpdate: _.debounce((event) => {
@@ -1000,20 +951,6 @@ export default {
     },
     hoverRealItemId,
     useMergeFolder,
-    delNavigation(sumList, oneNav, index, delMethod) {
-      if (!this.mainNavigationList.find((item) => item.name === oneNav.name)) {
-        //如果不是必须的
-        delMethod(index);
-      } else {
-        if (sumList.find((item) => item.name === oneNav.name)) {
-          //正常移除
-          delMethod(index);
-        } else {
-          //不可移除
-          message.info(`导航栏中至少保留一个「${oneNav.name}」`);
-        }
-      }
-    },
 
     /**
      * 重置元素位置

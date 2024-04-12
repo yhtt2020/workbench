@@ -161,6 +161,7 @@ import { defaultFolderData } from '../apps/folder/src/components/options'
 import { useWindowSize } from '../ui/new/drag/src/hooks/useWindowSize'
 import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
 import { hoverRealItemId } from '../components/desk/navigationBar/hook/hoverRealItemId'
+import { deleteIcon } from '../components/card/hooks/addCardToNav'
 
 export default {
   name: 'SidePanel',
@@ -214,7 +215,7 @@ export default {
           label: '删除',
           newIcon: 'fluent:delete-16-regular',
           color: '#FF4D4F',
-          callBack: () => { this.delCurrentIcon(this.currentIndex, this.currentItem) }
+          callBack: () => { this.deleteIcon(this.currentItem,this.sortId) }
         },
         {
           id: 5,
@@ -566,13 +567,6 @@ export default {
     delZone(val) {
       this.delNav = val
     },
-    // editToggle() {
-    //   if (this.editToggle) {
-    //     this.enableDrag()
-    //     setTimeout(() => {
-    //     }, 2000)
-    //   }
-    // },
     navigationList: {
       handler(newVal, oldVal) {
         // 获取最大可添加图标个数
@@ -690,6 +684,7 @@ export default {
     hiedNav(value) {
       this.$emit('hiedNavBar', value)
     },
+    deleteIcon,
     /**
      * sortable拖拽函数
      */
@@ -737,27 +732,12 @@ export default {
             delIcon.ondrop = function (ev) {
               let oneNav = that.navigationList[event.oldIndex]
               that.isEnterDesk = false
-              //将要删除的是否是主要功能
-              if (!that.mainNavigationList.find(f => f.name === oneNav.name)) {
-                that.delNavList(event.oldIndex)
-                that.$emit('getDelIcon', false)
-                that.hoverIndex = -1
-                return
-              }
-              let sumList = []
-              // 判断其他导航栏是否是打开状态，是则获取功能列表
-              if (that.otherSwitch1 && that.otherSwitch2) {
-                sumList = that.otherNavList1.concat(that.otherNavList2)
-              } else if (that.otherSwitch1 && !that.otherSwitch2) {
-                sumList = that.otherNavList1
-              } else if (!that.otherSwitch1 && that.otherSwitch2) {
-                sumList = that.otherNavList2
-              } else {
-                message.info(`导航栏中至少保留一个「${oneNav.name}」`)
-                // console.log('不可删除')
-                return
-              }
-              that.delNavigation(sumList, oneNav, event.oldIndex, that.delNavList)
+              // 删除图标
+              that.deleteIcon(oneNav,that.sortId)
+              // 更新删除区域状态
+              that.$emit('getDelIcon', false)
+              // 更新导航栏
+              that.hoverIndex = -1
             }
           })
 
@@ -1102,24 +1082,6 @@ export default {
       }
     },
     useWindowSize,
-    delCurrentIcon(currentIndex, currentItem) {
-      if (!this.mainNavigationList.find(f => f.name === currentItem.name)) {
-        this.delNavList(currentIndex)
-        return
-      }
-      let arr = []
-      if (this.otherSwitch1 && this.otherSwitch2) {
-        arr = this.otherNavList1.concat(this.otherNavList2)
-      } else if (this.otherSwitch1 && !this.otherSwitch2) {
-        arr = this.otherNavList1
-      } else if (!this.otherSwitch1 && this.otherSwitch2) {
-        arr = this.otherNavList2
-      } else {
-        message.info(`导航栏中至少保留一个「${currentItem.name}」`)
-        return
-      }
-      this.delNavigation(arr, currentItem, currentIndex, this.delNavList)
-    },
     // 添加导航图标
     editNavigation(item) {
       if (item.component) {
@@ -1133,20 +1095,6 @@ export default {
     },
     setQuick() {
       this.quick = false
-    },
-    delNavigation(sumList, oneNav, index, delMethod) {
-      if (!this.mainNavigationList.find(item => item.name === oneNav.name)) {
-        //如果不是必须的
-        delMethod(index)
-      } else {
-        if (sumList.find(item => item.name === oneNav.name)) {
-          //正常移除
-          delMethod(index)
-        } else {
-          //不可移除
-          message.info(`导航栏中至少保留一个「${oneNav.name}」`)
-        }
-      }
     },
     showElement(item, index) {
       this.currentItem = item
