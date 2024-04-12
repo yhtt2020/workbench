@@ -5,16 +5,32 @@
     <!-- 文件夹弹窗 -->
     <div style="position: absolute; z-index: 500 !important;" :style="folderPos" class="rounded-xl pointer "
       id="folder">
-      <Folder @clickFile="clickFile" @update:layout="updateLayout" @update:customSize="updateSize"
-        @close="folderVisible = false" :customData="customData" :customIndex="sideKey" :secondary="true"
-        v-if="folderVisible" :expand="{ disabled: true }" :navBar="{
+      <Folder 
+        @clickFile="clickFile" 
+        @update:layout="updateLayout" 
+        @update:customSize="updateSize"
+        @close="folderVisible = false" 
+        :customData="customData" 
+        :customIndex="sideKey" 
+        :secondary="true"
+        v-if="folderVisible" 
+        :expand="{ disabled: true }" 
+        :navBar="{
           resize: false,
           sizeOption: false,
           isDel: true,
           hierarchy: true,
           close: true
-        }" :auto="true" />
+        }" 
+        :auto="true" />
     </div>
+    <!-- 卡片弹窗 -->
+    <FloatCard 
+      :position="cardPos"
+      v-if="floatCardVisible" 
+      :cardData="floatCard.cardData" 
+      :currentComponent="floatCard.value">
+    </FloatCard>
     <!-- <AutoHide> -->
     <Drop 
       @createFile="createFile" 
@@ -135,6 +151,7 @@ import Drop from './desk/navigationBar/components/folder/Drop.vue'
 import Drag from './desk/navigationBar/components/folder/Drag.vue'
 import AutoHide from './desk/navigationBar/components/folder/AutoHide.vue';
 import NavIcon from './windowPanel/components/NavIcon.vue';
+import FloatCard from './windowPanel/components/FloatCard.vue';
 
 import { renderIcon } from '../js/common/common'
 import { moreMenus, extraRightMenu, mergeIconFolder } from '../components/desk/navigationBar/index'
@@ -158,7 +175,8 @@ export default {
     Folder,
     Drag,
     AutoHide,
-    NavIcon
+    NavIcon,
+    FloatCard
   },
   emits: ['getDelIcon', 'hiedNavBar', 'openFolder'],
   data() {
@@ -172,7 +190,6 @@ export default {
       debug: false,
       tab: 'screen',
 
-      menuVisible: false,
       quick: false,
       delNav: false,
       dragEnable: false,
@@ -315,7 +332,9 @@ export default {
       top: 0,
       parentSize: 0,
       sideList: [],
-      maxItemNum: 0
+      maxItemNum: 0,
+      floatCard:{},
+      floatCardVisible: false,
     }
   },
   props: {
@@ -390,7 +409,7 @@ export default {
     ...mapWritableState(offlineStore, ['isOffline', 'navList']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
     ...mapWritableState(useNavigationStore, [
-      'editToggle', 'taskBoxVisible',
+       'taskBoxVisible',
       'selectNav', 'bottomToggle',
       'popVisible', 'currentList',
       'editItem', 'navAttribute', 'iconRadius', 'jumpDesk', 'autoHideNav', 'isLeaveBar'
@@ -432,12 +451,6 @@ export default {
       ]
 
     },
-    // fixedPosition() {
-    //   if(this.sortId === 'left'){
-    //     return 'position: fixed;top: 50% - 32px;transform: translateY(-50%);'
-    //   }
-    //   return 'position: fixed;top: 50% - 32px;transform: translateY(-50%);'
-    // },
     // 社区中心参数
     community() {
       if (this.sortId === 'left') {
@@ -505,9 +518,16 @@ export default {
     },
     folderPos() {
       if (this.sortId === 'left') {
-        return { left: `${this.navAttribute.navSize / 100 * 100}px`, top: `${this.top}px` }
+        return { left: `${this.navAttribute.navSize}px`, top: `${this.top}px` }
       }
-      return { right: `${this.navAttribute.navSize / 100 * 100}px`, top: `${this.top}px` }
+      return { right: `${this.navAttribute.navSize}px`, top: `${this.top}px` }
+    },
+    // 卡片定位
+    cardPos() {
+      return {
+        x: this.sortId === 'left' ? this.navAttribute.navSize : this.left,
+        y: this.top
+      }
     },
     mainOption() {
       const custom = {
@@ -546,13 +566,13 @@ export default {
     delZone(val) {
       this.delNav = val
     },
-    editToggle() {
-      if (this.editToggle) {
-        this.enableDrag()
-        setTimeout(() => {
-        }, 2000)
-      }
-    },
+    // editToggle() {
+    //   if (this.editToggle) {
+    //     this.enableDrag()
+    //     setTimeout(() => {
+    //     }, 2000)
+    //   }
+    // },
     navigationList: {
       handler(newVal, oldVal) {
         // 获取最大可添加图标个数
@@ -665,7 +685,6 @@ export default {
       })
     },
     /**
-     *
      * @param {*} value 导航栏设置中关闭的导航
      */
     hiedNav(value) {
@@ -677,7 +696,6 @@ export default {
     enableDrag() {
       // console.log('触发一次重置 ')
       if (this.sortable) {
-        // console.log('先清理 ')
         this.sortable.destroy()
       }
       let that = this
@@ -725,7 +743,6 @@ export default {
                 that.$emit('getDelIcon', false)
                 that.hoverIndex = -1
                 return
-                
               }
               let sumList = []
               // 判断其他导航栏是否是打开状态，是则获取功能列表
@@ -853,15 +870,20 @@ export default {
     * 重置元素位置
     */
     resetElementPosition() {
-      const draggableSize = this.currentItem.size ? this.currentItem.size.split('x') : this.resize.split('x')
+      const draggableSize = (this.currentItem?.cardData?.customSize || this.currentItem?.customSize || this.resize || '1x1').split("x");
       // 视图大小
-      let vW = this.parentSize
+      let vH = this.parentSize
+      let vW = window.innerWidth
       // 元素坐标
       let posY = Number((this.defaultPosition.y).toFixed(0))
+      let posX = Number((this.defaultPosition.x).toFixed(0))
       // 元素大小
       let menuW = draggableSize[1] * 100
-      posY = posY > vW - (menuW / 2) ? vW - menuW : (posY - menuW / 2 < 0 ? 0 : posY - menuW / 2);
+      let menuX = draggableSize[0] * 140
+      posY = posY > vH - (menuW / 2) ? vH - menuW : (posY - menuW / 2 < 0 ? 0 : posY - menuW / 2);
+      posX = posX > vW - (menuX / 2) ? vW - menuX - 100 : (posX - menuX / 2 < 0 ? 0 : posX - menuX / 2);
       this.top = posY
+      this.left = posX
     },
     /**
      * 获取当前拖拽元素的坐标
@@ -951,7 +973,6 @@ export default {
       this.folderList = item.children.map((i) => ({
         ...i,
         id: nanoid(6),
-        default: i.default ? i.default : { name: i.name, icon: i.icon }
       }))
       this.folderName = item.name
       this.resetElementPosition()
@@ -970,6 +991,11 @@ export default {
       }
       this.folderId = item.id
       this.$emit('openFolder', this.folderVisible, this.sortId)
+    },
+
+    openCard() {
+      this.floatCardVisible = ! this.floatCardVisible
+      this.floatCard = this.currentItem
     },
     /**
      * 更新大小尺寸
@@ -998,6 +1024,9 @@ export default {
       if (value !== 'commun') {
         this.comVisible = false
       }
+      if(type !== 'card') {
+        this.floatCardVisible = false
+      }
       // 更新鼠标定位
       this.resetElementPosition();
       if (window.$useEnvLimit("web", value)) return;
@@ -1016,6 +1045,9 @@ export default {
           this.comVisible = !this.comVisible;
         },
         default: async () => {
+          if (type === "card") {
+            this.openCard()
+          }
           if (type === "folder") {
             this.openFolder(item);
           }
@@ -1041,9 +1073,9 @@ export default {
       await handler();
     },
     /**
- * 点击文件夹子图标
- * @param {*} item
- */
+    * 点击文件夹子图标
+    * @param {*} item
+    */
     clickFile(item) {
       this.folderVisible = false
       this.msgNotice(item)
@@ -1088,45 +1120,19 @@ export default {
       }
       this.delNavigation(arr, currentItem, currentIndex, this.delNavList)
     },
-    navVisible() {
-      if (this.currentNav === 'left') {
-        this.navigationToggle[0] = false
-      } else {
-        this.navigationToggle[1] = false
-      }
-    },
-    closeDrawer() {
-      this.menuVisible = false
-    },
     // 添加导航图标
     editNavigation(item) {
       if (item.component) {
         this.componentId = item.component
-        // console.log(this.componentId,'===>>1');
         if (item.component === 'EditNewNavigation') {
-          this.editToggle = true
           this.selectNav = this.sortId
           message.success('进入编辑模式')
         }
         this.quick = true
       }
-
-      this.menuVisible = false
-    },
-    showMenu() {
-      if (this.rightModel === 'follow') {
-        return
-      }
-      this.routeParams.url && ipc.send('hideTableApp', { app: JSON.parse(JSON.stringify(this.routeParams)) })
-      // if(this.rightModel !=='follow'){
-      this.menuVisible = true
-      // this.editToggle=true
-      // }
-
     },
     setQuick() {
       this.quick = false
-      this.editToggle = false
     },
     delNavigation(sumList, oneNav, index, delMethod) {
       if (!this.mainNavigationList.find(item => item.name === oneNav.name)) {
@@ -1155,15 +1161,8 @@ export default {
   fill: var(--secondary-text);
 }
 
-
-
 .item:hover {
   background: var(--active-bg) !important;
-}
-
-.shaking-element {
-  // animation: shake 0.5s infinite;
-  animation: shake 1s ease-in-out;
 }
 
 .item {
@@ -1176,7 +1175,6 @@ export default {
   display: flex;
   align-items: center;
   cursor: pointer;
-
 }
 
 .icon-color {
@@ -1232,7 +1230,6 @@ export default {
 .hide-scrollbar {
   &::-webkit-scrollbar {
     display: none;
-    /* Chrome Safari */
   }
 }
 </style>

@@ -97,15 +97,17 @@
         v-model:isLeaveBar="isFootBar"
       >
         <div v-show="autoVisible" :style="[this.state ? this.winPosition : '']">
-          <Drop @createFile="createFile" currentId="bottom">
-            <WindowPanel
+          <Drop 
+          @createFile="createFile" 
+          currentId="bottom" 
+          >
+            <WinPanel 
               v-model:folderVisible="folderVisible"
               :mainClass="mainClass"
               @edit="edit"
-              @getDelIcon="getDelIcon"
-              @control="openControl"
-            >
-            </WindowPanel>
+              @getDelIcon="getDelIcon" 
+              @control="openControl">
+            </WinPanel>
           </Drop>
         </div>
       </AutoHide>
@@ -183,11 +185,12 @@ import CommunityNav from "./bottomPanel/community/CommunityNav.vue";
 import TeamNav from "./bottomPanel/community/TeamNav.vue";
 import AppModal from "./bottomPanel/community/AppModal.vue";
 import { controlStore } from "../apps/control/hooks/controlStore";
-import WindowPanel from "./WindowPanel.vue";
+import WinPanel from "./WindowPanel/WinPanel.vue";
 import Setting from "./bottomPanel/setting/CommunitySetting.vue";
 import ComNavSearch from "./bottomPanel/search/ComNavSearch.vue";
 import { communityStore } from "../page/chat/store/communityStore";
 import DeskAppModal from "./bottomPanel/desk/DeskAppList.vue";
+import { startApp } from "../ui/hooks/useStartApp";
 
 // 是否全屏状态 切换全屏
 const { isFullscreen, toggle } = useFullscreen();
@@ -212,15 +215,15 @@ export default {
     CommunityNav,
     TeamNav,
     AppModal,
-    WindowPanel,
+    WinPanel,
     Setting,
     ComNavSearch,
     DeskAppModal,
   },
   data() {
     return {
-      isFootBar: false,
-      fixedPosition: "position:fixed;bottom:10px;z-index:9;",
+      isFootBar:false,
+      fixedPosition:'position:fixed;bottom:0px;z-index:9;',
       dragItem: null,
       hoverIndex: -1, //当前选中的项目（排除gap）
       debug: false,
@@ -284,7 +287,7 @@ export default {
           name: "锁定屏幕",
           event: "lock",
           fn: () => {
-            this.$refs.dock.newOpenApp(this.builtInFeatures[0]);
+            this.newOpenApp(this.builtInFeatures[0]);
           },
         },
         {
@@ -294,7 +297,7 @@ export default {
           name: "基础设置",
           event: "setting",
           fn: () => {
-            this.$refs.dock.newOpenApp(this.builtInFeatures[1]);
+            this.newOpenApp(this.builtInFeatures[1]);
           },
         },
         {
@@ -304,7 +307,7 @@ export default {
           name: "全屏显示",
           event: "fullscreen",
           fn: () => {
-            this.$refs.dock.newOpenApp(this.builtInFeatures[2]);
+            this.newOpenApp(this.builtInFeatures[2]);
           },
         },
         {
@@ -314,7 +317,7 @@ export default {
           name: "设备设置",
           event: "status",
           fn: () => {
-            this.$refs.dock.newOpenApp(this.builtInFeatures[3]);
+            this.newOpenApp(this.builtInFeatures[3]);
           },
         },
       ],
@@ -414,11 +417,11 @@ export default {
       this.parentHeight = windowHeight;
 
       // 根据当前导航格式计算最大宽度和额外宽度
-      let maxWidth =
-        this.currentNavFormat === "mac" ? windowWidth - 240 : windowWidth * 0.6;
-      let extraWidth =
-        this.currentNavFormat === "mac" ? 240 : windowWidth * 0.3;
-
+      let macWidth = this.communityNavVisible ? windowWidth - 540 : windowWidth - 200;
+      let macExtraWidth = this.communityNavVisible ? 540 : 200;
+      let maxWidth = this.currentNavFormat === 'mac' ? macWidth : windowWidth * 0.6;
+      let extraWidth = this.currentNavFormat === 'mac' ? macExtraWidth : windowWidth * 0.3;
+        
       // 计算当前可添加的最多图标个数
       this.maxItemNum = Math.round(maxWidth / this.realSize);
 
@@ -756,35 +759,9 @@ export default {
      * @param {*} value 打开路径
      * @param {*} item 图标详细信息
      */
-    async newOpenApp(type, value, item) {
-      type !== "folder" ? (this.folderVisible = false) : "";
-      this.resetElementPosition();
-      if (value === "control" && !this.controlVisible) {
-        this.controlVisible = true;
-        return;
-      }
-      if (value === "commun") {
-        this.comVisible = !this.comVisible;
-        return;
-      }
-      console.log("item :>> ", item);
-      // 新版设置打开方式
-      if (value === "setting") {
-        this.$bus.emit("openSystemSet");
-      }
-      if (type === "folder") {
-        this.openFolder(item);
-      }
-      if (value == "fullscreen" && window.$useEnv()) {
-        toggle();
-        return;
-      }
-      if (window.$useEnvLimit("web", value)) return;
-
-      if (item) this.msgNotice(item);
-      if (value === "home" && item.home) {
-        this.jumpDesk = item.home;
-      }
+    async newOpenApp(item) {
+      const { type, value } = item;
+      console.log("item :>> ", type, value);
       let rs = await startApp(type, value, this.$router);
       if (!rs) {
         message.error({
@@ -792,8 +769,6 @@ export default {
           key: "tipRun",
         });
       }
-      this.controlVisible = false;
-      this.comVisible = false;
     },
     completeEdit() {
       this.toggleEdit();

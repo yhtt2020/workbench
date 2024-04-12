@@ -36,11 +36,13 @@
             </xt-option-info>
             <hr />
             <xt-option-info 
+                :key="date"
                 title="左侧副导航"
                 isSwitch="true"
                 v-model:switch="navigationToggle[0]" />
             <hr />
             <xt-option-info 
+                :key="date"
                 title="右侧副导航"
                 isSwitch="true"
                 v-model:switch="navigationToggle[1]"/>
@@ -136,8 +138,9 @@ watch(
     () => navigationToggle.value[0],
     (val) => {
         if(!val){
-            // useCheckNav('left')
-            console.log('left',val)
+            // console.log('left',val)
+            useCheckNav('left')
+            date.value = Date.now()
         }
     }
 )
@@ -147,6 +150,7 @@ watch(
     (val) => {
         if(!val){
             useCheckNav('right')
+            date.value = Date.now()
         }
     }
 )
