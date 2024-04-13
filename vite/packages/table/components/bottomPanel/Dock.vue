@@ -16,7 +16,8 @@
       v-if="floatCardVisible"
       :cardData="floatCard.cardData"
       :currentComponent="floatCard.value"
-      :position="position">
+      :position="position"
+      @close="floatCardVisible = false">
     </FloatCard>
   </teleport>
   <!-- 快速搜索 底部栏区域 -->
@@ -286,7 +287,8 @@ export default {
 
       comVisible: false,
       floatCardVisible:false,
-      floatCard:{}
+      floatCard:{},
+      clickOutside:false,
     };
   },
   props: {

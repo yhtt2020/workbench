@@ -1,6 +1,7 @@
 <template>
     <div 
-        class="absolute"
+        ref="cardRef"
+        class="absolute tt-card-container"
         style="z-index:500" 
         :style="{ left: `${position.x}px`, top: `${position.y}px`}">
         <component
@@ -14,57 +15,54 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue';
 import componentsMinis from '../../../../table/components/desk/components';
 
-export default {
-    name: 'FloatCard',
-    mixins: [componentsMinis],
-    data() {
-        return {
-        }
-    },
-    props: {
-        cardData: {
-            type: Object,
-            default: () => {}
-        },
-        currentComponent: {
-            type: String,
-            default: ''
-        },
-        position: {
-            type:Object,
-            default: () => {
-                return {
-                    x:100,
-                    y:90
-                }
-            }
-        }
-    },
+export default defineComponent({
+    mixins: [componentsMinis]
+});
+</script>
 
-    methods: {
+<script setup>
+import { computed, ref, onMounted, onUnmounted } from 'vue';
+import { onClickOutside } from '@vueuse/core';
 
-    },
+const cardRef = ref(null)
 
-    watch: {
+const props = defineProps({
+    cardData: {
+        type: Object,
+        default: () => ({})
     },
-    computed: {
-        zoom() {
-            if (this.zoom) {
-                return this.zoom;
-            }
-            let scale = 1;
-            let str = this.cardData.customSize.split(/x|\*/);
-            let scaleW = (380 / (135 * str[0])).toFixed(4);
-            let scaleH = (260 / (100 * str[1])).toFixed(4);
-            scale = scaleW > scaleH ? scaleH : scaleW;
-            scale = scale > 1 ? 1 : scale;
-            return scale;
-        }
+    currentComponent: {
+        type: String,
+        default: ''
     },
+    position: {
+        type: Object,
+        default: () => ({
+            x: 0,
+            y: 0
+        })
+    }
+})
 
+const emit = defineEmits(['close'])
+
+const close = (e) => {
+    if(e.target.closest('.tt-card-container') == null) {
+        emit('close')
+    }
 }
 
+// onClickOutside(cardRef, close)
+onMounted(() => {
+    window.addEventListener('click', close)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('click', close)
+})
 </script>
+
 <style lang='scss' scoped></style>

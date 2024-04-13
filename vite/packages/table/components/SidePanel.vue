@@ -17,7 +17,8 @@
       :position="cardPos"
       v-if="floatCardVisible" 
       :cardData="floatCard.cardData" 
-      :currentComponent="floatCard.value">
+      :currentComponent="floatCard.value"
+      @close="floatCardVisible = false">
     </FloatCard>
     <Drop 
       @createFile="createFile" 
