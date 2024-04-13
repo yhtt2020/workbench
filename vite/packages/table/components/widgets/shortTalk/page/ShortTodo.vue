@@ -115,7 +115,7 @@ export default {
             customSize:'2x4',
             header:{
                 title:'社区待办',
-                ifyIcon:'akar-icons:check-box',
+                ifyIcon:'fluent:checkbox-checked-16-regular',
                 rightIcon:[
                     {
                         ifyIcon:'fluent:open-20-filled',
