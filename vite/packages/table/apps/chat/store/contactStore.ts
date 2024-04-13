@@ -1,3 +1,4 @@
+// 联系人的store缓存文件
 import { defineStore } from "pinia";
 
 // @ts-ignore

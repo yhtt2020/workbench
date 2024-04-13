@@ -12,14 +12,16 @@
                         v-if="store.communityPostDetail.user.uid === replyCom.user.uid">作者</div>
                 </div>
             </div>
-            <div class="mt-2 font-16 xt-text" style="user-select: text;text-align: left; " :innerHTML="content">
+            <div class="mt-2 font-16 xt-text" style="user-select: text; text-align: left;" :innerHTML="content">
                 <!-- {{ replyCom.content }} -->
             </div>
             <div class="flex w-full p-0 mt-3 -mb-1 whitespace-pre-wrap cover-wrapper" v-if="replyCom.image">
+                <!-- <img :src="item" alt="" v-for="(item, index) in replyCom.image_pc"
+                    class="object-cover mr-2 rounded-md cover-sm" :key="index"> -->
                 <!-- <viewer :images="replyCom.image_pc" :options="options" class="items-center p-0 mb-0 "> -->
                     <a-row :gutter="[20, 20]" style="margin-right: 1em" wrap="'true">
-                        <a-col class="flex flex-wrap mr-2 image-wrapper" v-for="(img, index) in replyCom.image_pc" :span="7"
-                            style="">
+                        <a-col class="flex flex-wrap mr-2 image-wrapper" v-for="(img, index) in replyCom.image_pc"
+                            :span="7" style="">
                             <xt-preview-img
                                 :imgList="replyCom.image_pc"
                                 :multiple="true"
@@ -32,8 +34,7 @@
                                 :index="index"
                             >
                             <img class="mb-2 mr-2 rounded-md image-item pointer cover-sm" :src="img"
-                                :data-source="replyCom.image_artwork_master[index]"
-                                style="position: relative object-fit: fill;">
+                                :data-source="replyCom.image_artwork_master[index]" style="position: relative object-fit: fill;">
                             </xt-preview-img>
                         </a-col>
                     </a-row>
@@ -49,9 +50,9 @@
                         <replyIcon icon="fluent:chat-16-regular" style="font-size: 20px;" class="mr-1 "></replyIcon>
                         <!-- <div>回复</div> -->
                     </div>
-                    <div class="flex justify-center ml-1" v-if="useUserStore.userInfo.uid=== replyCom.user.uid">
-                        <a-dropdown trigger="click">
-                            <template #overlay overlayStyle="background-color: var(--primary-bg); padding-left:3px ;padding-right:3px;">
+                    <div class="flex justify-center ml-1" v-if="useUserStore.userInfo.uid === replyCom.user.uid">
+                        <a-dropdown trigger="click" overlayStyle="background-color: var(--primary-bg); padding-left:3px ;padding-right:3px;">
+                            <template #overlay >
                                 <a-menu @click="handleMenuClick" class="xt-bg">
                                     <a-menu-item key="1" class="xt-text">删除</a-menu-item>
                                 </a-menu>
@@ -66,13 +67,13 @@
                     </div>
                 </div>
                 <div>
-                    <span class="local-city">{{ replyCom.user_home.region }}</span>
+                    <span class="local-city">{{ replyCom.user_home?.region }}</span>
                     <span class="mr-1">{{ createTime[0] }}</span>
                     <span>{{ createTime[1] }}</span>
                 </div>
             </div>
             <replyComments v-if="replyVisible" @changeStatus="getReplyFlag" @addComment="getReplyText"
-                :userName="replyCom.user.nickname" />
+                :replyCom="props.replyCom" />
         </div>
         <ReplyCommentLite v-for="item in replyCmmentList" :key="item" :replyCom="item" :replyVisible="replyVisible">
         </ReplyCommentLite>
@@ -80,19 +81,19 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, computed ,onMounted} from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { MessageOutlined, LikeOutlined } from '@ant-design/icons-vue'
 import ReplyCommentLite from './ReplyCommentLite.vue';
 import replyComments from './ReplyComments.vue';
-import { appStore } from '../../../../table/store'
-import emojiReplace from '../../../js/chat/emoji'
-import { Icon as replyIcon } from '@iconify/vue'
+import { appStore } from '../../../../store'
+import emojiReplace from '../../../../js/chat/emoji'
+import {Icon as replyIcon} from '@iconify/vue'
 import {message} from 'ant-design-vue'
-import {useCommunityStore} from '../commun'
+import {useCommunityStore} from '../../store/commun'
 const store=useCommunityStore()
 const useUserStore = appStore()
-const options = reactive({
-    url: 'data-source'
+const options=reactive({
+    url:'data-source'
 })
 const isLike = computed(() => {
     return props.replyCom.is_support
@@ -101,11 +102,13 @@ const replyVisible = ref(false)
 const replyCmmentList = computed(() => {
     return props.replyCom.comment
 })
+// const userName=ref('我是皮克斯呀')
 const props = defineProps({
     replyCom: {
         type: Object,
         default: () => []
-    }
+    },
+    uid: Number
 })
 let uid = props.replyCom.user.uid
 let userInfo = {
@@ -116,10 +119,6 @@ let userInfo = {
 const showCard = (uid, userInfo) => {
     useUserStore.showUserCard(uid, userInfo)
 }
-const createTime = computed(() => {
-    let [date, time] = props.replyCom.time.split(' ')
-    return [date, time]
-})
 const clickLike =async () => {
     // isLike.value = !isLike.value
     await store.getCommunityLike('reply',props.replyCom.user.uid)
@@ -133,6 +132,10 @@ const getReplyFlag = (val) => {
     replyVisible.value = val
 
 }
+const createTime = computed(() => {
+    let [date, time] = props.replyCom.time.split(' ')
+    return [date, time]
+})
 const getReplyText = (val) => {
     // console.log(val);
     replyCmmentList.value = val.value
@@ -142,10 +145,9 @@ const getReplyText = (val) => {
 // str.replace(/\[([^(\]|\[)]*)\]/g,(item,index) => {})
 // https://sad.apps.vip/public/static/emoji/emojistatic/
 const content = computed(() => {
-
     return emojiReplace(props.replyCom.content)
 });
-onMounted(()=>{
+onMounted(() => {
     useUserStore.getUserInfo()
 })
 </script>

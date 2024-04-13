@@ -6,23 +6,18 @@
         class="flex items-center xt-bg-t-2 content-item px-4 justify-between py-5 rounded-xl mb-3"
         style="width: 400px"
       >
-        <div class="flex items-center pointer w-full">
-          <a-row :gutter="10" class="flex w-full">
-            <a-col flex="50px">
-              <a-avatar :src="item.avatar" :size="48"></a-avatar>
-            </a-col>
-            <a-col flex="auto">
+        <div class="flex items-center pointer w-full justify-between">
+          <div class="flex items-center">
+            <a-avatar :src="item.avatar" :size="48"></a-avatar>
+            <div class="flex flex-col pl-4">
               <div class="font-16 xt-text xt-font">
                 {{ item.nickname }}
               </div>
               <div class="xt-text-2 font-14 xt-font">{{ item.reason }}</div>
-            </a-col>
-            <a-col
-              @click.stop
-              flex="100px"
-              v-if="item.uid != userInfo.uid && item.relationship !== undefined"
-            >
-              <AddFindButton
+            </div>
+          </div>
+          <div style="width: 120px;"  v-if="item.uid != userInfo.uid && item.relationship !== undefined">
+            <AddFindButton
                 v-show="item.relationship === 'not'"
                 @relationshipChanged="updateRelationship($event, item)"
                 :key="item.uid"
@@ -34,8 +29,7 @@
                 style="background: rgba(80, 139, 254, 0.2) !important"
                 v-show="item.relationship === 'yes'"
               />
-            </a-col>
-          </a-row>
+          </div>
         </div>
       </div>
     </template>

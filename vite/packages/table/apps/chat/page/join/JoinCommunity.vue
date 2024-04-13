@@ -1,3 +1,4 @@
+<!-- 社群加入页面 -->
 <template>
   <xt-modal
     v-if="joinComVisible"
@@ -5,7 +6,7 @@
     title="加入社群"
     @close="closeJoinCom"
   >
-    <div style="width: 500px; height: 400px;" class="flex flex-col mt-4">
+    <div style="width: 500px; height: 400px" class="flex flex-col mt-4">
       <a-input
         placeholder="搜索"
         :spellcheck="false"
@@ -45,12 +46,12 @@
       </div>
 
       <template v-if="joinData.searchKeyword === ''">
-        <RecommendDetail :list="getCommunity" @close="closeJoinCom"/>
+        <RecommendDetail :list="getCommunity" @close="closeJoinCom" />
       </template>
 
       <template v-else>
-        <SearchDetail :list="joinData.searchResult" @close="closeJoinCom"/>
-      </template>    
+        <SearchDetail :list="joinData.searchResult" @close="closeJoinCom" />
+      </template>
     </div>
   </xt-modal>
 </template>
@@ -58,15 +59,15 @@
 <script setup>
 import { ref, nextTick, computed } from "vue";
 import { storeToRefs } from "pinia";
-import { communityStore } from "../../store/communityStore";
+import { chatCommunityStore } from "../../store/chatCommunity";
 import { message } from "ant-design-vue";
 import _ from "lodash-es";
 
-import RecommendDetail from "./RecommendDetail.vue";
-import SearchDetail from './SearchDetail.vue';
+import RecommendDetail from "../../components/join/RecommendDetail.vue";
+import SearchDetail from "../../components/join/SearchDetail.vue";
 
-const com = communityStore();
-const { community } = storeToRefs(com);
+const chatCommunity = chatCommunityStore();
+const { officialList } = storeToRefs(chatCommunity);
 
 const joinData = ref({
   searchKeyword: "",
@@ -78,49 +79,36 @@ const joinComVisible = ref(false);
 const openJoinCom = () => {
   joinComVisible.value = true;
   nextTick(() => {
-    com.getRecommendCommunityList();
+    chatCommunity.getRecommendCommunity();
   });
 };
 
 // 关闭加入社区弹窗
 const closeJoinCom = () => {
   joinComVisible.value = false;
-  joinData.value.searchKeyword = '';
+  joinData.value.searchKeyword = "";
 };
 
 // 通过计算属性获取推荐社区列表
 const getCommunity = computed(() => {
-  const data = community.value.recommendList;
-  const recommendNull = data !== undefined && data.length !== 0;
-  if (recommendNull) {
-    const filterList = [];
-    for (const item of data) {
-      const index = _.findIndex(filterList, function (find) {
-        return find.id === item.id;
-      });
-      if (index === -1) {
-        filterList.push(item);
-      }
-    }
-    return filterList;
-  }
+  return officialList.value;
 });
 
 // 搜索
-const searchCommunity = async(evt) =>{
-  if(joinData.value.searchKeyword !== ''){
-    const result = await com.searchRecommendCommunity(joinData.value.searchKeyword);
-    if(result.status === 1){
-      joinData.value.searchResult = result.list;
-    }
-    else{
-      joinData.value.searchResult = [];
-    }
-  }
-  else{
-    joinData.searchResult = [];
-  }
-}
+const searchCommunity = async (evt) => {
+  // if (joinData.value.searchKeyword !== "") {
+  //   const result = await com.searchRecommendCommunity(
+  //     joinData.value.searchKeyword
+  //   );
+  //   if (result.status === 1) {
+  //     joinData.value.searchResult = result.list;
+  //   } else {
+  //     joinData.value.searchResult = [];
+  //   }
+  // } else {
+  //   joinData.searchResult = [];
+  // }
+};
 
 // 暴露给父组件的方法
 defineExpose({

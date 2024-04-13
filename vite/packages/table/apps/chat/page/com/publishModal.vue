@@ -1,4 +1,3 @@
-
 <template>
     <Modal :maskNoClose="true" class="" :animationName="t-b-close">
         <div class="w-[500px] pl-4 pr-4">
@@ -87,17 +86,17 @@
 
     </Modal>
 </template>
-<script setup lang='ts'>
+<script setup lang="ts">
 import { ref, reactive, onMounted, computed } from 'vue'
 import { SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-vue'
 import type { UploadProps } from 'ant-design-vue';
-import browser from '../../../js/common/browser';
-import Modal from '../../../components/Modal.vue'
+import browser from '../../../../js/common/browser';
+import Modal from '../../../../components/Modal.vue'
 import { Icon as newIcon } from '@iconify/vue';
-import { fileUpload } from '../../../components/card/hooks/imageProcessing'
-import { useCommunityStore } from '../commun'
+import { fileUpload } from '../../../../components/card/hooks/imageProcessing'
+import { useCommunityStore } from '../../store/commun'
 import type { CascaderProps } from 'ant-design-vue';
-import fulentEmojis from '../../../js/chat/fulentEmojis'
+import fulentEmojis from '../../../../js/chat/fulentEmojis'
 import { message } from 'ant-design-vue'
 const useCommunStore = useCommunityStore()
 // const imageLoadVisible = ref(true)

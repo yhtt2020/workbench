@@ -1,17 +1,15 @@
 <template>
-    <div class="flex items-center justify-between w-full">
-        <!-- {{ userUid}} -->
-        <a-avatar :src="userInfo.avatar" :size="32" class="pointer" @click.stop="showCard(userUid, Info)"></a-avatar>
+    <div class="flex items-center justify-between w-full mt-2">
+        <a-avatar :src="userInfo.avatar" :size="32" class="pointer" @click.stop="showCard(uid, Info)"></a-avatar>
         <!-- <div class="w-full ml-3 "> -->
-        <!-- <a-input v-model:value="value" placeholder="评论" class=" xt-bg comment-input btn" bordered="false"
-            style="cursor: default;" @keyup.enter="addComment" /> -->
-        <a-textarea @keyup.enter="addComment" v-model:value="value" placeholder="评论" :auto-size="{minRows:1,maxRows:5}" class=" xt-bg comment-input btn" bordered="false"/>
+        <a-input v-model:value="value" :placeholder="replyPlaceholder" class=" xt-bg comment-input btn" bordered="false"
+            style="cursor: default;" @keyup.enter="addComment" />
         <!-- </div> -->
     </div>
     <div class="clearfix mt-3 ml-11" v-if="imageVis">
         <a-upload v-model:file-list="fileList" list-type="picture-card" @preview="handlePreview" multiple>
             <div v-if="fileList.length < 3">
-                <plus-outlined style="font-size: 20px;color: var(--secondary-text);" />
+                <plus-outlined style="font-size: 20px;" />
             </div>
         </a-upload>
         <a-modal v-model:visible="previewVisible" :title="previewTitle" :footer="null" @cancel="handleCancel">
@@ -32,106 +30,103 @@
                     </vue-custom-scrollbar>
                     <!-- </div> -->
                 </template>
-                <xt-button class="rounded-lg xt-text-2 ml-9 active-btn"
-                    style="color: var(--secondary-text) !important; text-align: center !important; border: none;width: 68px; height: 32px;">
-                    <!-- <SmileOutlined style="font-size: 16px !important; margin-right: 4px;" /> 表情 -->
-                    <replyIcon icon="fluent:emoji-smile-slight-24-regular"
-                        style="font-size: 20px; margin-right: 4px;vertical-align: sub;"></replyIcon>表情
-                </xt-button>
+                <a-tooltip title="添加表情" placement="bottom">
+                    <xt-button class="rounded-lg xt-text-2 ml-9 active-btn"
+                        style="color: var(--secondary-text) !important; text-align: center !important; border: none;width: 50px;height: 32px;">
+                        <replyIcon icon="fluent:emoji-smile-slight-24-regular"
+                            style="font-size: 20px !important; margin-right: 4px; vertical-align: sub;"></replyIcon>
+                    </xt-button>
+                </a-tooltip>
             </tippy>
             <a-upload v-model:file-list="fileList"  @preview="handlePreview" multiple>
+            <a-tooltip title="添加图片" placement="bottom">
                 <xt-button class="ml-1 rounded-lg xt-text-2 active-btn"
-                    style="color: var(--secondary-text) !important; text-align: center !important; border: none;width: 68px; height: 32px;">
+                    style="color: var(--secondary-text) !important; text-align: center !important; border: none;width: 50px;height: 32px;">
                     <replyIcon icon="fluent:image-sparkle-16-regular"
-                        style="font-size: 20px !important; margin-right: 4px;vertical-align: sub;"></replyIcon>图片
+                        style="font-size: 20px !important; margin-right: 4px; vertical-align: sub;"></replyIcon>
                 </xt-button>
-            </a-upload>
+            </a-tooltip>
+        </a-upload>
         </div>
         <xt-button type="primary" class=" reply" :radius="8" :w="68" :h="32"
-            style="color:rgba(255,255,255,0.85) !important; background: var(--active-bg) !important;"
+            style="color: rgba(255,255,255,0.85) !important; background: var(--active-bg) !important;"
             @click="addComment">回复</xt-button>
     </div>
+    <!-- <tippy trigger="mouseenter click" placement="bottom">
+
+    </tippy> -->
 </template>
 
 <script setup lang='ts'>
 import { ref, reactive, computed, onMounted } from 'vue'
-import { SmileOutlined, PictureOutlined, PlusOutlined } from '@ant-design/icons-vue'
-import { appStore } from '../../../../table/store'
-import { fileUpload } from '../../../components/card/hooks/imageProcessing'
-import { useCommunityStore } from '../commun'
+import {  PlusOutlined } from '@ant-design/icons-vue'
+import { appStore } from '../../../../store'
+import { fileUpload } from '../../../../components/card/hooks/imageProcessing'
+import { useCommunityStore } from '../../store/commun'
 import { Icon as replyIcon } from '@iconify/vue'
-import fluentEmojis from '../../../js/chat/fulentEmojis'
-import {message} from 'ant-design-vue'
+import fluentEmojis from '../../../../js/chat/fulentEmojis'
 const useCommunStore = useCommunityStore()
 const userStore = appStore()
 const value = ref('')
 const commentList = ref([])
-const isReply = ref(false)
+const props = defineProps({
+    replyCom: {
+        type: Object,
+        default: () => []
+    }
+})
 // const emojiVis = ref(false)
+const replyPlaceholder = computed(() => {
+    return `回复${props.replyCom.user.nickname}`
+})
 // const imageVis = ref(false)
 // 添加表情
 const addEmoji = (item) => {
     const lastSlashIndex = item.lastIndexOf('/');
     const emoiiValue = item.substring(lastSlashIndex + 1);
+    // console.log(emoiiValue);
+
     const key = Object.entries(fluentEmojis).find(([k, v]) => v === (emoiiValue))[0]
     value.value += `${key}`
 
 }
-
+const fileList = ref<UploadProps['fileList']>([]);
 const emit = defineEmits(['addComment'])
 const addComment = async () => {
-    if(isReply.value) return
-    isReply.value = true
-    message.info('评论正在后台发送中，请稍候……')
-    try {
-        if (value.value || fileList.value.length > 0) {
+    if (value.value || fileList.value.length > 0) {
         const imageUrlList = await Promise.all(fileList.value.map(async (item) => {
             const url = await fileUpload(item.originFileObj);
             return url;
         }));
+        // console.log(imageUrlList.value, 'imageurl')
+        // console.log(props.replyCom,'props');
 
-        let authorid = useCommunStore.communityPostDetail.author_uid;
-        let content = value.value;
-        let threadId = useCommunStore.communityPostDetail.pay_set.tid || useCommunStore.communityPostDetail.id;
-        
-        // setTimeout(async () => {
-        const imageList = JSON.stringify(imageUrlList);
-        await useCommunStore.getCommunitythreadReply(authorid, content, threadId, imageList);
-        await useCommunStore.getCommunityPostDetail(threadId);
-        await useCommunStore.getCommunityPostReply(threadId);
-            
-        // });
-        setTimeout(() => {
-            message.success('评论成功')
-            value.value = '';
-            fileList.value = [];
-        }, 1000);
-    }
-    } catch (error) {
-        message.error('评论失败')
-    } finally{
-        isReply.value = false
-        emit('addComment', commentList);
-    }
-    
+        let authorid: number = props.replyCom.to_reply_uid === 0 ? props.replyCom.author_uid : props.replyCom.to_reply_uid
+        let content: string = value.value
+        let threadId: number = useCommunStore.communityPostDetail.pay_set.tid ? useCommunStore.communityPostDetail.pay_set.tid : useCommunStore.communityPostDetail.id
+        // let imageList:Array<string>=imageUrlList.value
+        let to_reply_id = props.replyCom.to_reply_id === 0 ? props.replyCom.id : props.replyCom.to_reply_id
+        let to_reply_second_id = props.replyCom.to_reply_second_id === 0 ? props.replyCom.id : props.replyCom.to_reply_id
+        // console.log(JSON.stringify(imageUrlList.value), 'image');
+        // console.log(props.replyCom.to_reply_id,props.replyCom.id);
+        setTimeout(async () => {
+            const imageList = JSON.stringify(imageUrlList);
+            await useCommunStore.getCommunitythreadReply(authorid, content, threadId, imageList, to_reply_id, to_reply_second_id)
+            await useCommunStore.getCommunityPostDetail(threadId)
+            await useCommunStore.getCommunityPostReply(threadId)
+            value.value = ''
+            fileList.value = []
+        })
 
-    
+        // console.log(props.replyCom);
+
+
+    }
+    emit('addComment', commentList)
 }
-const fileList = ref<UploadProps['fileList']>([
-]);
-// const imageVisible = () => {
-//     // if(fileList.value?.length>0){
-//     //     imageVis.value=true
-//     // }
-//     imageVis.value = true
-//     console.log(fileList.value?.length, 'fileList');
-
-// }
 const imageVis=computed(()=>{
     return fileList.value?.length>0
 })
-
-
 import type { UploadProps } from 'ant-design-vue';
 
 function getBase64(file: File) {
@@ -180,15 +175,14 @@ const handlePreview = async (file: UploadProps['fileList'][number]) => {
 const userInfo = computed(() => {
     return userStore.userInfo
 })
-let userUid = userInfo.value.uid
+let uid = userInfo.value.uid
 let Info = {
-    uid: userInfo.uid,
+    uid: uid,
     nickname: userInfo.nickname,
     avatar: userInfo.avatar
 }
-const showCard = (userUid, Info) => {
-    userStore.showUserCard(userUid, Info)
-
+const showCard = (uid, Info) => {
+    userStore.showUserCard(uid, Info)
 }
 onMounted(async () => {
     await userStore.getUserInfo()
@@ -210,28 +204,8 @@ onMounted(async () => {
     font-size: 8px;
 }
 
-:deep(.tippy-box) {
-    width: 51%;
-    margin-left: 10%;
-}
-:deep(.ant-upload-list-text-container){
-    display: none;
-}
 .btn {
     border: 1px solid var(--divider);
-}
-
-.comment-input {
-    border-radius: 8px;
-    // height: 40px !important;
-    line-height: 30px;
-    // width: 300px;
-    width: calc(100% - 45px);
-    // cursor: cursor;
-    &::-webkit-scrollbar{
-        display: none;
-    }
-    
 }
 
 .active-btn {
@@ -241,13 +215,28 @@ onMounted(async () => {
         background-color: var(--secondary-bg);
     }
 }
+:deep(.ant-upload-list-text-container){
+    display: none;
+}
+.comment-input {
+    border-radius: 8px;
+    height: 40px;
+    // width: 300px;
+    width: calc(100% - 45px);
+}
 
 :deep(.ant-input) {
-    color: var(--secondary-text) !important;
+    color: var(--secondary-text);
 
     &::placeholder {
         font-weight: 400;
         font-size: 16px;
-        color: var(--disable-text) !important;
+        color: var(--disable-text);
     }
-}</style>
+}
+
+:deep(.tippy-box) {
+    width: 51%;
+    margin-left: 15%;
+}
+</style>

@@ -89,8 +89,8 @@ import { Icon as YuanIcon } from '@iconify/vue'
 import communItem from './CommunItem.vue'
 import RadioTab from '../../RadioTab.vue';
 import { mapWritableState, mapActions } from 'pinia';
-import { useCommunityStore } from '../../../page/chat/commun'
-import { yuanCommunityStore } from '../../../store/yuanCommunity.ts'
+import { useCommunityStore } from '../../../apps/chat/store/commun'
+import { yuanCommunityStore } from '../../../store/yuanCommunity'
 import Unusual from '../Unusual.vue'
 import detailModal from './DetailModal.vue'
 import MinDetailModal from './MinDetailModal.vue';

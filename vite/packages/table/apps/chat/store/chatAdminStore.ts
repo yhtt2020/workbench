@@ -1,6 +1,6 @@
 import {defineStore} from "pinia";
-import {sUrl} from "../../consts";
-import {get} from "../../js/axios/request";
+import {sUrl} from "../../../consts";
+import {get} from "../../../js/axios/request";
 
 export const chatAdminStore = defineStore('chatAdminStore', {
   state: () => ({

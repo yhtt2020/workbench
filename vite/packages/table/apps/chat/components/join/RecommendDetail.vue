@@ -1,3 +1,4 @@
+<!-- 加入群聊入口的推荐详情页 -->
 <template>
   <xt-scrollbar :y="true" style="height: 330px" class="w-full">
     <div class="grid grid-cols-2 gap-3">
@@ -28,7 +29,7 @@
             "
           />
           <xt-button
-            v-if="isJoin(item)"
+            v-if="currentJoin(item)"
             h="40"
             style="width: 100% !important"
             @click="closeJoinCom"
@@ -40,7 +41,7 @@
             h="40"
             type="theme"
             style="width: 100% !important"
-            @click="joinNow(item)"
+            @click="currentNow(item)"
           >
             立即加入
           </xt-button>
@@ -50,63 +51,58 @@
   </xt-scrollbar>
 </template>
 
-<script>
-import { mapActions } from "pinia";
+<script setup>
+import { storeToRefs } from "pinia";
 import _ from "lodash-es";
-import { communityStore } from "../../store/communityStore";
+import { chatCommunityStore } from "../../store/chatCommunity";
 import { message } from "ant-design-vue";
+import { toRefs, computed } from "vue";
+import { CommunityAPI } from "../../api/communityAPI";
 
-export default {
-  props: ["list"],
+const emit = defineEmits(["close"]);
 
-  data() {
-    return {
-      settingsScroller: {
-        useBothWheelAxes: true,
-        swipeEasing: true,
-        suppressScrollY: false,
-        suppressScrollX: true,
-        wheelPropagation: true,
-      },
-    };
+const props = defineProps({
+  list: {
+    type: Array,
+    default: () => [],
   },
+});
+const { list } = toRefs(props);
 
-  computed: {
-    recommendList() {
-      const listNull =
-        this.list !== undefined && this.list !== null && this.list.length !== 0;
-      if (listNull) {
-        return this.list;
-      }
-    },
-  },
+const chatCommunity = chatCommunityStore();
+const { officialList } = storeToRefs(chatCommunity);
+const comAPI = new CommunityAPI();
 
-  methods: {
-    ...mapActions(communityStore, ["joinRecommendCommunity","getMyCommunity"]),
-    // 判断是否已经进入推荐社群
-    isJoin(data) {
-      const findData = _.find(this.list, function (item) {
-        return item.id === data.id;
-      });
-      const findDataNull = findData !== undefined;
-      if (findDataNull) {
-        return findData.status === 1;
-      }
-    },
-    // 立即加入
-    async joinNow(item) {
-      const option = { no: item.no };
-      const result = await this.joinRecommendCommunity(option);
-      message.success(`${result.info}`);
-      this.getMyCommunity();
-      ctx.emit("close");
-    },
-  },
+const recommendList = computed(() => {
+  const listNull =
+    list.value !== undefined && list.value !== null && list.value.length !== 0;
+  if (listNull) {
+    return list.value;
+  }
+});
+
+// 判断是否已经进入推荐社群
+const currentJoin = (data) => {
+  const findData = _.find(officialList.value, function (item) {
+    return item.id === data.id;
+  });
+  const findDataNull = findData !== undefined;
+  if (findDataNull) {
+    return findData.status === 1;
+  }
+};
+// 立即加入
+const currentNow = async (item) => {
+  const option = { no: item.no };
+  const result = await comAPI.joinRecommendCommunity(option);
+  message.success(`${result.info}`);
+  this.getMyCommunity();
+  emit("close");
 };
 </script>
 
 <style lang="scss" scoped>
-:deep(.ps__rail-y){
+:deep(.ps__rail-y) {
   display: none !important;
 }
 </style>
