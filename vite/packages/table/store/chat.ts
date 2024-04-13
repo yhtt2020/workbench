@@ -104,7 +104,7 @@ export const chatStore = defineStore("chatStore", {
     async updateUserInfo() {
       const app: any = appStore();
       let { userInfo } = storeToRefs(app);
-      await (window as any).$chat.chat.updateMyProfile({
+      await (window as any).$chat?.chat?.updateMyProfile({
         nick: userInfo.value.nickname,
         avatar: userInfo.value.avatar,
         selfSignature: String(userInfo.value.signature),

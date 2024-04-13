@@ -3,6 +3,11 @@ import { navStore } from "../../../store/nav";
 import { computed } from "vue";
 import { message } from "ant-design-vue";
 
+interface ListItem {
+    id: string;
+    type: string;
+}
+
 /**
  * 导航栏相关信息和函数
  * @state {Boolean} state 导航栏是否显示
@@ -139,10 +144,19 @@ export const deleteIcon = (data: any, nav: string) => {
  * @param dragId 拖拽图标的id
  * @returns Boolean
  */
-export const checkItems = (list : Array<object>, id : string, dragId : string) => {
-    const item = list.find((item) => item.id === id)
-    const dragItem = list.find((item) => item.id === dragId)
-    console.log(item, dragItem)
-    const isCard = item.type === 'card' || dragItem.type === 'card'
-    return isCard
-}
+export const checkItems = (list: Array<ListItem>, id: string, dragId: string): boolean => {
+
+    let item: ListItem | undefined = undefined;
+    let dragItem: ListItem | undefined = undefined;
+
+    for (const listItem of list) {
+        if (listItem.id === id) item = listItem;
+        if (listItem.id === dragId) dragItem = listItem;
+        if (item && dragItem) break; // 当两者都找到提前退出循环
+    }
+
+    // console.log(item, dragItem);
+    
+    return item?.type === 'card' || dragItem?.type === 'card';
+};
+
