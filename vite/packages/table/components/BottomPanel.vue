@@ -151,8 +151,6 @@ import { isMain } from "../js/common/screenUtils";
 import TeamTip from "./TeamTip.vue";
 import { teamStore } from "../store/team";
 import { messageStore } from "../store/message";
-import { appsStore } from "../store/apps";
-import { screenStore } from "../store/screen";
 import TaskBox from "../apps/task/page/TaskBox.vue";
 import Favorites from "../apps/favorites/page/index.vue";
 import navigationData from "../js/data/tableData";
@@ -164,7 +162,6 @@ import {
 } from "../components/desk/navigationBar/index";
 import { useMergeFolder } from "../components/desk/navigationBar/hook/mergeFolder.ts";
 import EditNewNavigation from "./desk/addIcon/EditNewNavigation.vue";
-import { useNavBarStore } from "./desk/navigationBar/navBar";
 import xtMixMenu from "../ui/new/mixMenu/FunMenu.vue";
 import EditIcon from "./desk/navigationBar/components/EditIcon/EditIcon.vue";
 import _ from "lodash-es";
@@ -458,35 +455,20 @@ export default {
     });
   },
   computed: {
-    ...mapWritableState(appStore, ["userInfo", "settings", "lvInfo", "simple"]),
-    ...mapWritableState(appsStore, ["runningApps", "runningTableApps"]),
-    ...mapWritableState(teamStore, ["team", "teamVisible"]),
-    ...mapWritableState(screenStore, ["screens"]),
+    ...mapWritableState(appStore, [ "settings", "simple"]),
+    ...mapWritableState(teamStore, ["team"]),
     ...mapWritableState(navStore, [
-      "footNavigationList",
       "builtInFeatures",
-      "sideNavigationList",
-      "rightNavigationList",
-      "mainNavigationList",
       "navigationToggle",
       "maxItemNum",
       "init",
       "copyFootNav",
-      "copySideNav",
-      "copyRightNav",
     ]),
-    ...mapWritableState(offlineStore, ["isOffline", "navList"]),
+    ...mapWritableState(offlineStore, ["isOffline"]),
     ...mapWritableState(useNavigationStore, [
-      "editToggle",
-      "taskBoxVisible",
       "selectNav",
       "bottomToggle",
-      "popVisible",
-      "currentList",
-      "editItem",
       "navAttribute",
-      "iconRadius",
-      "jumpDesk",
       "autoHideNav",
       "isLeaveBar",
       "isEdge",
@@ -495,10 +477,8 @@ export default {
       "currentNavFormat",
       "currentNavPosition",
     ]),
-    ...mapWritableState(taskStore, ["isTask", "isTaskDrawer"]),
+    ...mapWritableState(taskStore, ["isTask"]),
     ...mapWritableState(useDeskStore, ["isEnterBar"]),
-
-    ...mapWritableState(useNavBarStore, ["isEnterDesk"]),
     ...mapWritableState(controlStore, ["firstNavVisible"]),
     // 判断当前导航栏格式，来确定图标大小
     realSize() {
@@ -699,7 +679,6 @@ export default {
       if (item.component) {
         this.componentId = item.component;
         if (item.component === "EditNewNavigation") {
-          this.editToggle = true;
           this.selectNav = "foot";
         }
         this.quick = true;
@@ -719,7 +698,6 @@ export default {
      */
     setQuick() {
       this.quick = false;
-      this.editToggle = false;
     },
     /**
      * 打开桌面应用提示

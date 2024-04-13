@@ -1,40 +1,23 @@
 <template>
   <teleport to="body">
-  <div
-    style="position: absolute; z-index: 500 !important"
-    :style="{
-      left: `${this.position.x}px`,
-      top: `${(navAttribute.navSize / 100) * this.position.y}px`,
-    }"
-    class="rounded-xl pointer"
-    id="folder"
-  >
-    <Folder
+    <!-- 文件夹弹窗 -->
+    <FloatFolder 
+      v-if="folderVisible"
+      :folderPos="position"
+      :customData="customData"
+      :sideKey="bottomKey"
+      @close="folderVisible = false"
       @clickFile="clickFile"
       @update:layout="updateLayout"
       @update:customSize="updateSize"
-      @close="folderVisible = false"
-      :customData="customData"
-      :customIndex="bottomKey"
-      :secondary="true"
-      v-if="folderVisible"
-      :expand="{ disabled: true }"
-      :navBar="{
-        resize: false,
-        sizeOption: false,
-        isDel: true,
-        hierarchy: true,
-        close: true,
-      }"
-      :auto="true"
     />
-  </div>
-  <FloatCard
-    v-if="floatCardVisible"
-    :cardData="floatCard.cardData"
-    :currentComponent="floatCard.value"
-    :position="position">
-  </FloatCard>
+    <!-- 卡片弹窗 -->
+    <FloatCard
+      v-if="floatCardVisible"
+      :cardData="floatCard.cardData"
+      :currentComponent="floatCard.value"
+      :position="position">
+    </FloatCard>
   </teleport>
   <!-- 快速搜索 底部栏区域 -->
   <transition>
@@ -193,12 +176,11 @@ import { deleteIcon } from '../../components/card/hooks/addCardToNav'
 
 import NavIcon from "../windowPanel/components/NavIcon.vue";
 import EditIcon from "../desk/navigationBar/components/EditIcon/EditIcon.vue";
-import FolderVue from "../desk/navigationBar/components/folder/Folder.vue";
-import Folder from "../../apps/folder";
 import Drag from "../desk/navigationBar/components/folder/Drag.vue";
 import Avatar from "../desk/navigationBar/components/Avatar.vue";
 import Team from "./Team.vue";
 import FloatCard from "../windowPanel/components/FloatCard.vue";
+import FloatFolder from "../windowPanel/components/FloatFolder.vue";
 
 const {
   //是否全屏状态
@@ -213,12 +195,11 @@ export default {
   components: {
     EditIcon,
     Avatar,
-    FolderVue,
-    Folder,
     Drag,
     Team,
     NavIcon,
-    FloatCard
+    FloatCard,
+    FloatFolder
   },
   data() {
     return {
@@ -229,9 +210,6 @@ export default {
       bottomKey: Date.now(),
       hoverIndex: -1, //当前选中的项目（排除gap）
       debug: false,
-      tab: "screen",
-      leftNav: false,
-      rightNav: false,
       delNav: false,
       drawerMenus: [...extraRightMenu, ...moreMenus],
       componentId: "EditNavigationIcon",
@@ -358,7 +336,6 @@ export default {
     ]),
     ...mapWritableState(offlineStore, ["isOffline", "navList"]),
     ...mapWritableState(useNavigationStore, [
-      "editToggle",
       "selectNav",
       "popVisible",
       "currentList",
@@ -485,17 +462,6 @@ export default {
     delZone(val) {
       this.delNav = val;
     },
-    editToggle() {
-      if (this.editToggle) {
-        this.enableDrag();
-        this.shakeElement = true;
-        setTimeout(() => {
-          this.shakeElement = false;
-        }, 2000);
-      } else {
-        // this.disableDrag()
-      }
-    },
     folderList() {
       this.customData = {
         ...this.defaultFolderData,
@@ -579,7 +545,7 @@ export default {
       if (item.component) {
         this.componentId = item.component;
         if (item.component === "EditNewNavigation") {
-          this.editToggle = true;
+          
           this.selectNav = "foot";
         }
       } else {
@@ -651,9 +617,13 @@ export default {
         });
       }
     },
-    openCard() {
+    openCard(item) {
+      if(this.floatCard.value !== item.value && this.floatCard !== undefined) {
+        this.floatCardVisible = true
+        this.floatCard = item
+        return
+      }
       this.floatCardVisible = !this.floatCardVisible
-      this.floatCard = this.currentItem
     },
     /**
      * 打开应用
@@ -662,7 +632,7 @@ export default {
     async newOpenApp(item, e) {
       const { type, value } = item;
       if (type === "card") {
-        this.openCard()
+        this.openCard(item)
       }
       if (type !== "card") {
         this.floatCardVisible = false
@@ -847,15 +817,6 @@ export default {
             x: event.originalEvent.clientX,
             y: event.originalEvent.clientY,
           };
-        },
-        onSort: function (event) {
-          // console.log('onSort', event)
-          // console.log('item', that.copyFootNav[event.newIndex])
-        },
-        // 触发替换中发生的事件
-        onChange(event) {
-          // console.log('onChange', event)
-          // console.log('item')
         },
         /**
          * 合并文件夹操作

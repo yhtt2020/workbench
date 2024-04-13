@@ -1,37 +1,24 @@
 <template>
   <xtMixMenu :menus="mainOption" name="name" :menuHeight="'max-h-full flex'">
-    <!-- <xt-menu :menus="rightMenus" name="name" class="flex max-h-full" :beforeCreate="beforeCreate"> -->
-    <!-- style="z-index: 99" -->
     <!-- 文件夹弹窗 -->
-    <div style="position: absolute; z-index: 500 !important;" :style="folderPos" class="rounded-xl pointer "
-      id="folder">
-      <Folder 
-        @clickFile="clickFile" 
-        @update:layout="updateLayout" 
-        @update:customSize="updateSize"
-        @close="folderVisible = false" 
-        :customData="customData" 
-        :customIndex="sideKey" 
-        :secondary="true"
-        v-if="folderVisible" 
-        :expand="{ disabled: true }" 
-        :navBar="{
-          resize: false,
-          sizeOption: false,
-          isDel: true,
-          hierarchy: true,
-          close: true
-        }" 
-        :auto="true" />
-    </div>
+    <FloatFolder 
+      v-if="folderVisible"
+      :folderPos="cardPos"
+      :customData="customData"
+      :sideKey="sideKey"
+      @close="folderVisible = false"
+      @clickFile="clickFile"
+      @update:layout="updateLayout"
+      @update:customSize="updateSize"
+    />
     <!-- 卡片弹窗 -->
     <FloatCard 
+      ref="floatCard"
       :position="cardPos"
       v-if="floatCardVisible" 
       :cardData="floatCard.cardData" 
       :currentComponent="floatCard.value">
     </FloatCard>
-    <!-- <AutoHide> -->
     <Drop 
       @createFile="createFile" 
       :currentId="sortId" 
@@ -47,7 +34,6 @@
         style="min-height: 80px;z-index: 99;border: 1px solid var(--divider) !important;"
         class="flex flex-row justify-center box common-panel s-bg w-[80px]  xt-bg pt-0 pb-0 relative max-h-full side-bar"
         ref="sideContent" 
-        @contextmenu="showMenu"
         :style="[
           { 
             zoom: `${(this.navAttribute.navSize / 100)}`,
@@ -59,23 +45,20 @@
           style="width: 52px;margin-top: 20px;margin-bottom: 20px;" 
           class="w-full">
           <div :id="sortId" :key="sideKey"
-            class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container" 
-            style="
-              width: 56px;
-              display: flex;
-              flex-direction: column;
-              overflow: hidden;
-              align-items: flex-start;
-              gap: 20px;">
+            class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container w-[56px] overflow-hidden gap-5" 
+            style="align-items: flex-start;">
             <a-tooltip 
               v-for="(item, index) in navigationList" 
               :key="item.id" 
               :title="item.name"
-              :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }" 
               @mouseenter="showElement(item, index)"
+              :overlayStyle="{ zoom: `${(this.navAttribute.navSize / 100)}` }" 
               :placement="sortId === 'left' ? 'right' : 'left'">
               <!-- 左右导航栏隐藏入口 -->
-              <xt-menu :menus="folderOptions" :id="item.id" class="relative flex-shrink-0 item-content">
+              <xt-menu 
+                :menus="folderOptions" 
+                :id="item.id" 
+                class="relative flex-shrink-0 item-content" >
                 <div 
                   v-if="!(this.isOffline && this.navList.includes(item.event))" 
                   class="item-content item-nav"
@@ -112,12 +95,10 @@
 
       </div>
     </Drop>
-    <!-- </AutoHide> -->
-    <!-- </xt-menu> -->
   </xtMixMenu>
   <Common ref="common"></Common>
   <transition name="fade">
-    <div :style="{ zIndex: componentId === 'navigationSetting' ? 100 : 90 }" v-if="quick">
+    <div v-if="quick">
       <component :is="componentId" @setQuick="setQuick"></component>
     </div>
   </transition>
@@ -152,6 +133,7 @@ import Drag from './desk/navigationBar/components/folder/Drag.vue'
 import AutoHide from './desk/navigationBar/components/folder/AutoHide.vue';
 import NavIcon from './windowPanel/components/NavIcon.vue';
 import FloatCard from './windowPanel/components/FloatCard.vue';
+import FloatFolder from './windowPanel/components/FloatFolder.vue';
 
 import { renderIcon } from '../js/common/common'
 import { moreMenus, extraRightMenu, mergeIconFolder } from '../components/desk/navigationBar/index'
@@ -177,7 +159,8 @@ export default {
     Drag,
     AutoHide,
     NavIcon,
-    FloatCard
+    FloatCard,
+    FloatFolder
   },
   emits: ['getDelIcon', 'hiedNavBar', 'openFolder'],
   data() {
@@ -973,9 +956,13 @@ export default {
       this.$emit('openFolder', this.folderVisible, this.sortId)
     },
 
-    openCard() {
-      this.floatCardVisible = ! this.floatCardVisible
-      this.floatCard = this.currentItem
+    openCard(item) {
+      if(this.floatCard.value !== item.value){
+        this.floatCard = item
+        this.floatCardVisible = true
+        return
+      }
+      this.floatCardVisible = !this.floatCardVisible
     },
     /**
      * 更新大小尺寸
@@ -1026,7 +1013,7 @@ export default {
         },
         default: async () => {
           if (type === "card") {
-            this.openCard()
+            this.openCard(item)
           }
           if (type === "folder") {
             this.openFolder(item);
