@@ -172,7 +172,7 @@ import { defaultFolderData } from "../../apps/folder/src/components/options";
 import { hoverRealItemId } from "../desk/navigationBar/hook/hoverRealItemId";
 import { mergeData } from "../../ui/hooks/useDataConversion";
 import { usePosition } from "../windowPanel/hook/usePosition";
-import { deleteIcon } from '../../components/card/hooks/addCardToNav'
+import { deleteIcon, checkItems } from '../../components/card/hooks/addCardToNav'
 
 import NavIcon from "../windowPanel/components/NavIcon.vue";
 import EditIcon from "../desk/navigationBar/components/EditIcon/EditIcon.vue";
@@ -709,6 +709,7 @@ export default {
         }
       }
     },
+    checkItems,
     /**
      * sortable拖拽函数
      */
@@ -824,11 +825,17 @@ export default {
          * @returns {number}
          */
         onUnchoose: function (event) {
+          const hoverItem = that.hoverRealItemId("bottomContent", that.hoverIndex)
           if (
-            that.hoverRealItemId("bottomContent", that.hoverIndex) &&
-            that.hoverRealItemId("bottomContent", that.hoverIndex) !==
+            hoverItem &&
+            hoverItem !==
               that.dragItem?.id
           ) {
+            if(that.checkItems(that.copyFootNav,hoverItem,that.dragItem.id)){
+              message.error('卡片类图标不能合并为文件夹')
+              that.hoverIndex = -1
+              return
+            }
             //存在目标，且不等于自身，符合合并条件，则执行合并
             const merged = that.useMergeFolder(
               that.copyFootNav,
@@ -836,7 +843,7 @@ export default {
               that.copyFootNav.find((item) => {
                 return (
                   item.id ===
-                  that.hoverRealItemId("bottomContent", that.hoverIndex)
+                  hoverItem
                 );
               })
             );
@@ -844,7 +851,7 @@ export default {
               that.copyFootNav.findIndex((item) => {
                 return (
                   item.id ===
-                  that.hoverRealItemId("bottomContent", that.hoverIndex)
+                  hoverItem
                 );
               }),
               1,

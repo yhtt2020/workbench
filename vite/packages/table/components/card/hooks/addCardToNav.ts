@@ -121,7 +121,7 @@ export const deleteIcon = (data: any, nav: string) => {
   };
   if (data.value === "home") {
     if (otherList.find((item) => item.value === "home")) {
-      _del(data, otherList);
+      _del(data, list);
       return;
     } else {
       message.error("至少保留一个主页");
@@ -130,3 +130,19 @@ export const deleteIcon = (data: any, nav: string) => {
     _del(data, list);
   }
 };
+
+
+/**
+ * 判断合并的是不是卡片
+ * @param list 导航栏数据
+ * @param id 要合并的图标id
+ * @param dragId 拖拽图标的id
+ * @returns Boolean
+ */
+export const checkItems = (list : Array<object>, id : string, dragId : string) => {
+    const item = list.find((item) => item.id === id)
+    const dragItem = list.find((item) => item.id === dragId)
+    console.log(item, dragItem)
+    const isCard = item.type === 'card' || dragItem.type === 'card'
+    return isCard
+}

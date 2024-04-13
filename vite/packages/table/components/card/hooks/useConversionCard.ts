@@ -15,7 +15,7 @@ export const useConversionCard = (data) => {
         bg:getRandomColor(),
         cardData:{
             customIndex:index,
-            customData:data.customData,
+            customData:data.customData || {customSize:data.customSize},
             customSize:data.customSize,
             desk:data.desk
         }

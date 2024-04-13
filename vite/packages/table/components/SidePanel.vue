@@ -143,7 +143,7 @@ import { defaultFolderData } from '../apps/folder/src/components/options'
 import { useWindowSize } from '../ui/new/drag/src/hooks/useWindowSize'
 import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
 import { hoverRealItemId } from '../components/desk/navigationBar/hook/hoverRealItemId'
-import { deleteIcon } from '../components/card/hooks/addCardToNav'
+import { deleteIcon, checkItems } from '../components/card/hooks/addCardToNav'
 
 export default {
   name: 'SidePanel',
@@ -773,13 +773,19 @@ export default {
          * @returns {number}
          */
         onUnchoose: function (event) {
-          if (that.hoverRealItemId(that.sortId, that.hoverIndex) && that.hoverRealItemId(that.sortId, that.hoverIndex) !== that.dragItem?.id) {
+          const hoverItem = that.hoverRealItemId(that.sortId, that.hoverIndex)
+          if (hoverItem && hoverItem !== that.dragItem?.id) {
+            if(that.checkItems(that.sideList,hoverItem,that.dragItem.id)){
+              message.error('卡片类图标不能合并为文件夹')
+              that.hoverIndex = -1
+              return
+            }
             //存在目标，且不等于自身，符合合并条件，则执行合并
             const merged = that.mergeIconFolder(that.sideList, that.dragItem, that.sideList.find(item => {
-              return item.id === that.hoverRealItemId(that.sortId, that.hoverIndex)
+              return item.id === hoverItem
             }))
             that.sideList.splice(that.sideList.findIndex(item => {
-              return item.id === that.hoverRealItemId(that.sortId, that.hoverIndex)
+              return item.id === hoverItem
             }), 1, merged)
             that.sideList = that.sideList.filter(item => {
               return item.id !== that.dragItem.id
@@ -793,6 +799,7 @@ export default {
         }
       })
     },
+    checkItems,
     updateList(list) {
       if (this.sortId === 'left') {
         this.sideNavigationList = _.cloneDeep(list)
