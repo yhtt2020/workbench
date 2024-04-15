@@ -5,6 +5,7 @@
     :placement="title !== undefined ? 'bottom' : 'bottomRight'"
     :overlayStyle="{ zIndex: '10000 !important', minWidth: '0px !important' }"
     @visible-change="callBackData($event)"
+    @click.stop
   >
     <div
       v-if="enableButton === false"

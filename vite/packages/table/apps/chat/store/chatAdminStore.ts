@@ -1,3 +1,4 @@
+// 群聊管理员的store
 import {defineStore} from "pinia";
 import {sUrl} from "../../../consts";
 import {get} from "../../../js/axios/request";

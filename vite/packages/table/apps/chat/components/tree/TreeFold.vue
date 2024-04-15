@@ -1,4 +1,4 @@
-<!-- 社群频道树状列表 -->
+<!-- 社群频道树状列表组件 -->
 <template>
   <a-collapse
     ghost
@@ -44,4 +44,10 @@ const changeActiveKey = (evt) =>{
 </script>
 
 <style lang="scss" scoped>
+:deep(.ant-collapse-content-box){
+  padding: 0 !important;
+}
+:deep(.ant-collapse-header){
+  padding: 12 0 !important;
+}
 </style>

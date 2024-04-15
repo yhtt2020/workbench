@@ -1,3 +1,4 @@
+// 社群版块的store
 import { defineStore } from "pinia";
 import dbStorage from "../../../store/dbStorage";
 import { sUrl } from "../../../consts";

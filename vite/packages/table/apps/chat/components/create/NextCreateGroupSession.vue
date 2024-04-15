@@ -1,4 +1,4 @@
-<!-- 群聊创建下一步 -->
+<!-- 群聊创建下一步的弹窗页面 -->
 <template>
   <xt-modal v-if="nextVisible" v-model="nextVisible" custom :index="1000">
     <div class="create-header flex items-center pt-4 px-4 justify-between mb-4">

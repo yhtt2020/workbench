@@ -73,5 +73,11 @@ export class CommunityAPI {
     const res  = await post(sUrl("/app/community/channel/updateProfile"),data);
     return res; 
   }
+
+  // 获取社群版块
+  async getCommunityForum(data:any){
+    const res = await post(sUrl("/app/com/forum/my"),data);
+    return res;
+  }
 }
 
