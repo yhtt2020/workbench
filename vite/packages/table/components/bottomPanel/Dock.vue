@@ -17,7 +17,9 @@
       :cardData="floatCard.cardData"
       :currentComponent="floatCard.value"
       :position="position"
-      @close="floatCardVisible = false">
+      @close="floatCardVisible = false"
+      navId="foot"
+      @delete="deleteCard">
     </FloatCard>
   </teleport>
   <!-- 快速搜索 底部栏区域 -->
@@ -509,6 +511,10 @@ export default {
     ]),
     mergeData,
     usePosition,
+    deleteIcon,
+    deleteCard(val){
+      this.deleteIcon(this.currentItem,'foot')
+    },
     deleteFile(data) {
       const index = this.copyFootNav.findIndex((item) => item.id === data.id);
       this.copyFootNav.splice(index, 1);
@@ -606,7 +612,6 @@ export default {
       this.currentItem = item;
       this.currentIndex = index;
     },
-    deleteIcon,
     /**
      * 打开桌面应用提示
      * @param {*} item 当前图标

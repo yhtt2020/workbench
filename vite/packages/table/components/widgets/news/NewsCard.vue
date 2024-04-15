@@ -11,7 +11,8 @@
       :menuList="menuList"
       ref="cardSlot" 
       :customData="customData" 
-      :env="env">
+      :env="env"
+      @delete="deleteCard">
       <div class="top-bar">
         <div class="center">
           <div :class="['item', { action: currentIndex == index }]" v-for="(title, index) in showList"
@@ -86,6 +87,10 @@ export default {
     },
     desk: {
       type: Object
+    },
+    openWay:{
+      type: String,
+      default: "desk"
     }
   },
   components: {
@@ -99,6 +104,7 @@ export default {
     FileSearchOutlined,
     newIcon
   },
+  emit: ['delete'],
   data() {
     return {
       settingVisible: false,
@@ -118,11 +124,6 @@ export default {
 
       ],
       customSize:'2x4',
-      options: {
-        defaultData: {
-          customSize:this.customData.customSize ||'2x4',
-        }
-      },
       menuList: [
         {
           icon: 'shezhi1',
@@ -208,6 +209,10 @@ export default {
     }
   },
   methods: {
+    // 卡片自定义删除事件
+    deleteCard(){
+      this.$emit('delete')
+    },
     async setCurrentIndex(index) {
       this.currentIndex = index
       this.customData.index = this.currentIndex
@@ -235,6 +240,16 @@ export default {
     }
   },
   computed: {
+    // 卡片选项
+    options() {
+      return {
+        // 当卡片添加到导航栏时，阻止默认删除事件
+        customDel: this.openWay === 'nav' ? true : false,
+        defaultData: {
+          customSize:this.customData.customSize ||'2x4',
+        }
+      }
+    },
 
     aggList() {
       if (this.customData && this.customData.sortList) {

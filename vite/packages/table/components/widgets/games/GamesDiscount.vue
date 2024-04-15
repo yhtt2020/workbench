@@ -10,7 +10,8 @@
     :menuList="gameBare" 
     ref="detailSlot" 
     :customData="customData" 
-    :desk="desk">
+    :desk="desk"
+    @delete="deleteCard">
     <a-spin v-if="isLoading === true"
             style="display: flex; justify-content: center; align-items:center;margin-top: 60%"></a-spin>
     <template v-else-if="fail">
@@ -140,6 +141,10 @@ export default {
     },
     desk:{
       type:Object
+    },
+    openWay:{
+      type:String,
+      default:"desk"
     }
   },
   components: {
@@ -151,13 +156,6 @@ export default {
   data () {
     return {
       fail:false,//失败
-      options: {
-        className: 'card',
-        title: '',
-        // icon: 'steam',
-        type: 'games',
-        epicShow: true
-      },
       regionRange,
       defaultRegion: 'cn',
       randomList: [],
@@ -192,6 +190,11 @@ export default {
       return this.regionRange[0]
 
     },
+    options(){
+      return {
+        customDel:this.openWay === 'nav' ? true : false
+      }
+    },
     list () {
       if (this.key) {
 
@@ -209,7 +212,7 @@ export default {
       }
     }
   },
-
+  emit:['delete'],
   watch: {
     // data: {
     //   handler (newVal, oldVal) {
@@ -238,6 +241,9 @@ export default {
     ...mapActions(steamStore, ['setGameDetail', 'updateGameData', 'setGameData', 'getData','getRandomList']),
     ...mapActions(cardStore, ['updateCustomData']),
     currencyFormat,
+    deleteCard(){
+      this.$emit('delete')
+    },
     showRegionSelect () {
       this.$refs.regionDrawer.openDrawer()
     },

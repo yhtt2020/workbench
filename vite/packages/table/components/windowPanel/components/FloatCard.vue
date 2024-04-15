@@ -10,6 +10,8 @@
             :custom-index="cardData.customIndex"
             :custom-data="cardData.customData"
             :custom-size="cardData.customSize"
+            :openWay="'nav'"
+            @delete="deleteCard"
         />
     </div>
 </template>
@@ -25,7 +27,6 @@ export default defineComponent({
 
 <script setup>
 import { computed, ref, onMounted, onUnmounted } from 'vue';
-import { onClickOutside } from '@vueuse/core';
 import { cardStore } from '../../../store/card';
 import { storeToRefs } from 'pinia';
 
@@ -49,10 +50,14 @@ const props = defineProps({
             x: 0,
             y: 0
         })
+    },
+    navId:{
+        type: String,
+        default: 'foot'
     }
 })
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close','delete'])
 
 const close = (e) => {
     if(e.target.closest('.tt-card-container') == null) {
@@ -63,6 +68,19 @@ const close = (e) => {
 const desk = computed(() => {
     return props.cardData.desk || desks.value[0]
 })
+
+const deleteCard = (val) => {
+    // console.log(val,'<<<<',navObj.value[props.navId])
+    // const list = navObj.value[props.navId].list.filter((item) => {
+    //     return item.type === 'card'
+    // })
+    // const target = list.find(item => {
+    //     return item.cardData.customIndex === val
+    // })
+    // console.log(target)
+    // deleteIcon(target,props.navId)
+    emit('delete')
+}
 
 // onClickOutside(cardRef, close)
 onMounted(() => {

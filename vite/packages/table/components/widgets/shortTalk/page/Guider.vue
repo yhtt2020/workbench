@@ -8,7 +8,8 @@
         :customIndex="customIndex" 
         :options="options" 
         ref="homelSlotRef" 
-        :desk="desk" >
+        :desk="desk" 
+        @delete="deleteCard">
         <div class="mt-1 overflow-hidden guider-body xt-scrollbar" style="height: 360px;">
             <div class="guider-cell pointer" v-for="(item,index) in dataList" :key="index" @click="jumpUrl(item.url)">
                 <div class="flex items-center cell-icon">
@@ -52,18 +53,13 @@ export default {
         editing: {
             type: Boolean,
         },
+        openWay: {
+            type: String,
+            default: "desk"
+        }
     },
     data() {
         return {
-            options: {
-                className: "card",
-                title: "社区助手",
-                // icon: "bianji",
-                // icon: "shezhi1",
-                icon: "iconamoon:history-fill",
-                rightIcon:"fluent:open-20-filled",
-                // icon: "games-16-filled",
-            },
             dataList:[
                 // {
                 //     title:"短说社区客服",
@@ -121,10 +117,21 @@ export default {
     async mounted() {
         this.customData.customSize = '2x4'
     },
+    emits: ['delete'],
+    computed: {
+        options() {
+            return {
+                customDel:this.openWay === 'nav' ? true : false
+            }
+        }
+    },
     methods:{
         jumpUrl(url){
             browser.openInUserSelect(url)
         },
+        deleteCard(){
+            this.$emit('delete')
+        }
     }
 };
 </script>

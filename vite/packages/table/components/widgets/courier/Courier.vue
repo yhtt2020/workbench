@@ -7,11 +7,13 @@
     :sizeList="sizeList"
     :options="options"
     :customIndex="customIndex"
+    :customData="customData"
     :menuList="menuList"
     :env="env"
-    ref="cardSlot">
-    <div class="flex flex-col w-full" style="height: 100%">
-      <div class="flex-1 w-full h-0 courier" style="position:relative;">
+    ref="cardSlot"
+    @delete="deleteCard">
+    <div class="flex flex-col w-full h-full">
+      <div class="relative flex-1 w-full h-0 courier">
         <div v-if="isLoading">
           <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%"/>
         </div>
@@ -118,6 +120,10 @@ export default {
     desk: {
       type: Object,
     },
+    openWay:{
+      type: String,
+      default: "desk"
+    }
   },
   data () {
     return {
@@ -137,15 +143,6 @@ export default {
         },
 
       ],
-      options: {
-        className: 'card double',
-        title: '我的快递',
-        icon: '',
-        type: 'Courier',
-        defaultData: {
-          customSize: this.customData.customSize !== undefined ? this.customData.customSize : '4x4',
-        }
-      },
       menuList: [
         {
           newIcon: 'fluent:add-16-filled',
@@ -201,6 +198,9 @@ export default {
   },
   methods: {
     ...mapActions(courierStore, ['getDbCourier', 'refreshCouriers', 'saveJdOrders']),
+    deleteCard(){
+      this.$emit('delete')
+    },
     changeState () {
       this.allCourierVisible = false
       this.getDbCourier()
@@ -258,6 +258,15 @@ export default {
       'couriersDetailMsg',
       'couriersList',
       'storeInfo', 'currentDetail', 'settings']),
+
+    options () {
+      return {
+        defaultData: {
+          customSize: this.customData.customSize !== undefined ? this.customData.customSize : '4x4',
+        },
+        customDel: this.openWay === 'nav' ? true : false
+      }
+    },
 
     // 判断尺寸大小
     showSize () {
@@ -343,7 +352,7 @@ export default {
     },
   },
   async mounted () {
-    // console.log(this.courierDetailList)
+    // console.log(this.customData.customSize)
     if(this.customData.customSize === undefined){
       this.customData.customSize = '4x4'
     }

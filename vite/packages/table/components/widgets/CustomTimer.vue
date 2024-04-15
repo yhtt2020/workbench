@@ -4,7 +4,8 @@
     :options="options" 
     :desk="desk"
     :header="header"
-    v-model:customSize="customData.customSize">
+    v-model:customSize="customData.customSize"
+    @delete="deleteCard">
     <div class="absolute w-16 h-6 left-4 top-1 pointer"   @click="moveToday"></div>
     <div style="border-bottom: solid 1px  rgba(255, 255, 255, 0.1);color:var(--primary-text) !important" class="my-calendar">
       <Calendar style="color:var(--primary-text) !important" :is-dark="isDark" :attributes="attributes"  transparent borderless  :color="selectedColor" ref="calendar">
@@ -48,17 +49,12 @@ import 'v-calendar/style.css';
 import { Icon as newIcon } from '@iconify/vue';
 export default {
   name: 'CustomTimer',
-  props:['desk','customData'],
+  props:['desk','customData','openWay','customIndex'],
   data () {
     return {
       status: 'pause',
       value: null,
       visible: false,
-      options: {
-        defaultData: {
-          customSize: '2x4',
-        }
-      },
       attributes:[{
         highlight: true,
         dates: new Date()
@@ -79,6 +75,14 @@ export default {
     Calendar,
     newIcon
   },
+  computed:{
+    options(){
+      return {
+        customDel: this.openWay === "nav" ? true : false,
+      }
+    }
+  },
+  emit:['delete'],
   mounted() {
     this.customData.customSize = '2x4'
   },
@@ -97,6 +101,9 @@ export default {
     removeCalendar () {
       this.removeCard(this.customIndex)
       this.visible = false
+    },
+    deleteCard(){
+      this.$emit('delete')
     }
   },
 }

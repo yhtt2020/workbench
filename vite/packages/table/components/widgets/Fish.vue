@@ -6,7 +6,8 @@
     :desk="desk"
     @titleHover="openTaobao"
     :header="header"
-    :custom-data="customData">
+    :custom-data="customData"
+    @delete="deleteCard">
     <div style="display: flex;flex-direction: column" class="-mt-6">
       <div style="flex:1;margin-right: 20px;margin-left: 20px">
         <div ref="fish" @click="click" class="fish"
@@ -46,18 +47,16 @@ export default {
     },
     desk:{
       type:Object
+    },
+    openWay:{
+      type:String,
+      default:'desk'
     }
   },
+  emit:['delete'],
   data () {
     return {
       clicking: false,
-      options: {
-        className: 'card small',
-        title: '',
-        icon: '',
-        type: 'fish',
-        noTitle: true,
-      },
       fish: fish,
       bing: bing,
       header: {
@@ -83,12 +82,21 @@ export default {
         total+=this.days[key]
       })
       return total
+    },
+    options () {
+      return {
+        customDel: this.openWay === 'nav' ? true : false
+      }
     }
   },
   components: {
     Widget
   },
   methods: {
+    // 自定义删除事件
+    deleteCard () {
+      this.$emit('delete')
+    },
     openTaobao(){
       browser.openInSystem('https://item.taobao.com/item.htm?ft=t&id=772409985539')
       message.success('正在为您打开商品页面')

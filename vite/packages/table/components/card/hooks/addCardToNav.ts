@@ -122,7 +122,11 @@ export const deleteIcon = (data: any, nav: string) => {
   const list = current.list;
   const _del = (data:any, list:any) => {
     const index = list.findIndex((item) => item.id === data.id);
-    list.splice(index, 1);
+    if(index !== -1){
+      list.splice(index, 1);
+      return 
+    }
+    // message.info(`未找到${data.name}`)
   };
   if (data.value === "home") {
     if (otherList.find((item) => item.value === "home")) {

@@ -7,7 +7,8 @@
     :customIndex="customIndex" 
     :options="options" 
     :desk="desk" 
-    :menu-list="menus">
+    :menu-list="menus"
+    @delete="deleteCard">
     <HorizontalPanel style="min-width: 100%" :navList="audioTitle" v-model:selectType="audioType"  class="mt-4"></HorizontalPanel>
 
     <div  v-if="audioType.name === 'output'" class="flex flex-col mt-4 xt-text" style="">
@@ -110,11 +111,23 @@ export default {
     desk:{
       type:Object
     },
+    openWay:{
+      type:String,
+      default:'desk'
+    },
 
   },
   computed:{
     ...mapWritableState(inspectorStore,['audioTest','testingAudio']),
-    ...mapWritableState(appStore,['settings'])
+    ...mapWritableState(appStore,['settings']),
+    options(){
+      return {
+        defaultData: {
+          customSize: '2x4',
+        },
+        customDel:this.openWay === 'nav' ? true : false
+      }
+    }
   },
   watch:{
     'audioType':{
@@ -134,11 +147,6 @@ export default {
         ifyIcon:'fluent:speaker-2-16-regular'
       },
       customSize:'2x4',
-      options: {
-        defaultData: {
-          customSize: '2x4',
-        }
-      },
       devices:[],
       defaultOutput:{},
       defaultMic:{},
@@ -175,8 +183,13 @@ export default {
   unmount () {
     this.stopAudioTest()
   },
+  emit:['delete']
   methods:{
     ...mapActions(inspectorStore,['startAudioTest','stopAudioTest']),
+    // 自定义删除函数
+    deleteCard(){
+      this.$emit('delete')
+    },
     // 选中输入设备
     async init(){
       this.outputList=await listOutputs()

@@ -10,10 +10,8 @@
             :customIndex="customIndex" 
             :options="options" 
             ref="homelSlotRef" 
-            :desk="desk">
-        <!-- <div class="icon-topline">
-            <newIcon icon="fluent:clipboard-bullet-list-16-regular" style="font-size: 20px;"/>
-        </div> -->
+            :desk="desk"
+            @delete="deleteCard">
         <div class="top-col">
             <div class="col-left">
                 <span class="relative flex items-center justify-center flex-1 h-full nav-item pointer span-flex"  :class="['item', { action: actionIndex == 1 }]" @click="onChangeTopIndex(1)">
@@ -177,15 +175,15 @@ export default {
         editing: {
             type: Boolean,
         },
+        openWay:{
+            type: String,
+            default: 'desk'
+        }
     },
+    emit:['delete'],
     data() {
         return {
             settingVisible: false,
-            options: {
-                className: "card double",
-                title: "剪贴板",
-                // icon: "shezhi1",
-            },
             actionIndex:1,
             // 设置数组参数
             todoList:[
@@ -280,6 +278,16 @@ export default {
         },
         enterBoard(){
             this.$router.push("clipboard");
+        },
+        deleteCard(){
+            this.$emit('delete')
+        }
+    },
+    computed: {
+        options() {
+            return {
+                customDel:this.openWay === 'nav' ? true : false
+            }
         }
     }
 };

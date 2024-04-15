@@ -7,7 +7,8 @@
     :customData="customData"
     :options="options"
     :desk="desk"
-    :menu-list="menus">
+    :menu-list="menus"
+    @delete="deleteCard">
      <div  class="flex flex-col mt-5" v-if="inputShow === false && outputShow === false " style="color:var(--primary-text) !important">
       <div class="flex">
         <div class="flex flex-col flex-1 mr-4">
@@ -89,17 +90,17 @@ export default {
     },
     desk:{
       type:Object
-    }
+    },
+    openWay:{
+      type:String,
+      default:'desk'
+    },
   },
+  emit:['delete'],
   data(){
     return{
       defaultMic:{},
       defaultOutput:{},
-      options: {
-        defaultData: {
-          customSize: '2x4',
-        }
-      },
       audioValue:50,
       outputShow:false,
       inputShow:false,
@@ -128,7 +129,15 @@ export default {
   },
   computed:{
     ...mapWritableState(inspectorStore,['audioTest','testingAudio']),
-    ...mapWritableState(appStore,['settings'])
+    ...mapWritableState(appStore,['settings']),
+    options(){
+      return {
+        defaultData: {
+          customSize: '2x4',
+        },
+        customDel:this.openWay === 'nav' ? true : false
+      }
+    }
   },
   async mounted () {
     this.customData.customSize = '2x4'
@@ -148,6 +157,9 @@ export default {
   },
   methods:{
     ...mapActions(inspectorStore,['startAudioTest','stopAudioTest']),
+    deleteCard(){
+      this.$emit('delete')
+    },
     async init(){
       this.defaultOutput = await getDefaultVolume()
       this.defaultMic=await getDefaultMic()

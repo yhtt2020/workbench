@@ -18,7 +18,9 @@
       v-if="floatCardVisible" 
       :cardData="floatCard.cardData" 
       :currentComponent="floatCard.value"
-      @close="floatCardVisible = false">
+      @close="floatCardVisible = false"
+      :navId="sortId"
+      @delete="deleteIcon(this.currentItem,this.sortId)">
     </FloatCard>
     <Drop 
       @createFile="createFile" 
