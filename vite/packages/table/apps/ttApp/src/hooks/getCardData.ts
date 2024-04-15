@@ -20,32 +20,18 @@ export const getCardData = () => {
       detail: item.description,
       sizes: [],
       time: "2024/6/28",
-      data: { id: item.id },
+
       // 伪数据 只是防止报错
       option: [],
     };
     card.map((data: any) => {
       cardData.sizes.push(data.size);
       cardData.option.push({
-        id: item.id,
         ...data,
         originalData: data,
-        // img: data._preview,
-        // cname: data.name,
       });
     });
     data.children.push(cardData);
-    // data.children.push({
-    //   type: "ttapp",
-    //   cname: item.name,
-    //   detail: item.description,
-    //   sizes: [item.card.size],
-    //   time: "2024/6/28",
-    //   img: item.card._preview,
-    //   data: { id: item.id },
-    //   // 伪数据 只是防止报错
-    //   option: [{}],
-    // });
   });
 
   console.log("data :>> ", data);

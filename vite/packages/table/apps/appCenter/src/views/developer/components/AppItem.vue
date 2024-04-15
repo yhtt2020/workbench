@@ -54,12 +54,10 @@ const previewData = ref({
   size: "",
 });
 const addPreview = (data: any) => {
+  console.log("data :>> ", data);
   previewData.value = {
     name: "TTAppCard",
-    data: {
-      ...data,
-      id: item.id,
-    },
+    data,
     size: data.size,
   };
   console.log("previewData.value :>> ", previewData.value);
