@@ -94,7 +94,6 @@ async function syncMainUserInfo (token) {
   //   token: token
   // })
   require('electron').ipcRenderer.send('loginBrowserWithToken',token)
-
 }
 
 const loginClose = () => {

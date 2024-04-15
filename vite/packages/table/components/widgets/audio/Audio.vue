@@ -131,7 +131,7 @@ export default {
     return{
       header:{
         title:'音频',
-        ifyIcon:'akar-icons:sound-on'
+        ifyIcon:'fluent:speaker-2-16-regular'
       },
       customSize:'2x4',
       options: {

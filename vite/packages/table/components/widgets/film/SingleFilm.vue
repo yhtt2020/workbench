@@ -2,6 +2,7 @@
     <xt-container 
       :header="header"
       v-model:customSize="customData.customSize"
+      :customIndex="customIndex"
       :desk="desk" 
       :options="options" 
       v-if="!detailToggle">

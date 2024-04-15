@@ -123,7 +123,7 @@
       <!-- 当底部开启自动隐藏时，通过一个div来占位，防止桌面切换过于靠下，导致自动隐藏和桌面切换发生冲突 -->
       <div 
         v-if="autoHideNav.foot.state" class="w-full" 
-        :class="[currentNavFormat === 'mac' ? 'h-[90px]' : 'h-[70px]' ]">
+        :class="[currentNavFormat === 'mac' ? 'h-[80px]' : 'h-[60px]' ]">
       </div>
     </div>
   </div>

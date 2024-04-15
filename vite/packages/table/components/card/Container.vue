@@ -55,47 +55,47 @@
               @mouseenter="leftMouseEnter"
               @mouseleave="leftMouseLeave"
               :class="[
-              leftHover ? 'header-open cursor-pointer' : 'header-default',
-            ]"
-          >
-            <!-- 图标区域 -->
-            <div
-              class="flex items-center h-full"
-              @click="leftIconClick"
-              @mouseenter="iconMouseEnter"
-              @mouseleave="iconMouseLeave"
+                leftHover ? 'header-open cursor-pointer' : 'header-default',
+              ]"
             >
-              <xt-ify-icon v-if="leftHover" :icon="header.leftHoverIcon" />
-              <template v-else>
-                <xt-icon
-                  v-if="header.icon"
-                  :icon="header.icon"
-                  type=""
-                  size="19"
-                  w="20"
-                />
-                <xt-ify-icon
-                  v-else-if="header.ifyIcon"
-                  :icon="header.ifyIcon"
-                />
-                <xt-icon-show
-                  v-else-if="header.showIcon"
-                  boxW="20"
-                  boxH="20"
-                  w="18"
-                  h="18"
-                  :modelValue="header.showIcon"
-                />
-              </template>
-            </div>
-            <!-- 标题区域 -->
-            <div
-              class="flex items-center h-full px-2 ml-1"
-              @click="titleClick"
-              @mouseenter="titleMouseEnter"
-              @mouseleave="titleMouseLeave"
-              style="z-index: 999;"
-              :class="{ 'header-title': titleHover ,'pointer':true}"
+              <!-- 图标区域 -->
+              <div
+                class="flex items-center h-full"
+                @click="leftIconClick"
+                @mouseenter="iconMouseEnter"
+                @mouseleave="iconMouseLeave"
+              >
+                <xt-ify-icon v-if="leftHover" :icon="header.leftHoverIcon" />
+                <template v-else>
+                  <xt-icon
+                    v-if="header.icon"
+                    :icon="header.icon"
+                    type=""
+                    size="19"
+                    w="20"
+                  />
+                  <xt-ify-icon
+                    v-else-if="header.ifyIcon"
+                    :icon="header.ifyIcon"
+                  />
+                  <xt-icon-show
+                    v-else-if="header.showIcon"
+                    boxW="20"
+                    boxH="20"
+                    w="18"
+                    h="18"
+                    :modelValue="header.showIcon"
+                  />
+                </template>
+              </div>
+              <!-- 标题区域 -->
+              <div
+                class="flex items-center h-full px-2 ml-1"
+                @click="titleClick"
+                @mouseenter="titleMouseEnter"
+                @mouseleave="titleMouseLeave"
+                style="z-index: 999"
+                :class="{ 'header-title': titleHover, pointer: true }"
               >
                 <slot name="title"> {{ title }} </slot>
               </div>
@@ -204,15 +204,22 @@ import { cardStore as useCardStore } from "../../store/card";
 import { useWidgetStore } from "./store";
 import { useFreeLayoutStore } from "../desk/freeLayout/store";
 import { useMouseInElement } from "@vueuse/core";
+import { navStore } from '../../store/nav';
 
 import Resize from "./Resize.vue";
 import RightMenu from "./RightMenu.vue";
 import { useEnv } from "../../ui/hooks/useEnv";
-import { trigger } from "mousetrap";
+import { addCardToNav } from './hooks/addCardToNav'
+import { useConversionCard } from './hooks/useConversionCard'
 import { useDelCard } from "../../hooks";
+
 
 const container = ref(0);
 const { isOutside } = useMouseInElement(container);
+
+// 导航栏是否开启
+const useNav = navStore();
+const { navigationToggle } = storeToRefs(useNav);
 
 const { proxy } = getCurrentInstance();
 // const selected = ref(null);
@@ -311,6 +318,8 @@ const props = defineProps({
         rightMenuVisible: false,
         // 是否禁用标题拖拽
         disabledDrag: false,
+        // 是否允许添加到导航栏
+        disabledNav: false,
       };
     },
   },
@@ -468,11 +477,58 @@ const deleteObj = computed(() => {
     disabled: props.options?.disabledDelete ? true : false,
   };
 });
+
+//
+const cardData = computed(() => {
+  return useConversionCard(props)
+});
+
+// 添加到导航栏的数据
+const addObj = computed(() => {
+  return   {
+    title:'添加到导航栏',
+    newIcon:"fluent:tablet-16-regular",
+    disabled:props.options.disabledNav ? true : false,
+    children:[
+      {
+        title:'主导航',
+        newIcon:'fluent:tablet-16-regular',
+        color: navigationToggle.value[2] ? '#d9d9d8' : '#767574',
+        fn: () => {
+          // addMoreIcon('foot','主导航')
+          console.log('主导航')
+          addCardToNav(cardData.value,'foot')
+        }
+      },
+      {
+        title:'左侧导航栏',
+        newIcon:'fluent:panel-left-contract-16-regular',
+        color: navigationToggle.value[0] ? '#d9d9d8' : '#767574',
+        fn: () => {
+          // addMoreIcon('left','左侧导航栏')
+          console.log('左侧导航栏')
+          addCardToNav(cardData.value,'left')
+        }
+      },
+      {
+        title:'右侧导航栏',
+        newIcon:'fluent:panel-right-contract-16-regular',
+        color: navigationToggle.value[1] ? '#d9d9d8' : '#767574',
+        fn: () => {
+          // addMoreIcon('right','右侧导航栏')
+          console.log('右侧导航栏')
+          addCardToNav(cardData.value,'right')
+        }
+      }
+    ]
+  }
+})
 // 实际渲染的右键菜单
 const menus = computed(() => {
   let deleteArr = [deleteObj.value];
+  let addArr = [addObj.value];
   if (useEnv(props.envLimit)) return deleteArr;
-  let menu = [...props.menuList, ...deleteArr];
+  let menu = [...props.menuList, ...deleteArr, ...addArr];
   return menu;
 });
 // 头部左侧显示区域状态
@@ -598,7 +654,8 @@ const removeCard = () => {
 };
 // 实际删除事件
 const customDelete = () => {
-  useDelCard(props.customIndex);
+  // useDelCard(props.customIndex);
+  cardStore.removeCard(props.customIndex, props.desk);
 };
 
 // 设置自定义数据

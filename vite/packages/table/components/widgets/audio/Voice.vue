@@ -8,12 +8,6 @@
     :options="options"
     :desk="desk"
     :menu-list="menus">
-    <template #left-title-icon>
-      <div class="icon"
-        style="width: 35px;height: 24px;display: flex; justify-content: center;align-items: center;position: absolute;left: 2px;">
-        <newIcon icon="akar-icons:sound-on" class="" style="font-size: 20px;"></newIcon>
-      </div>
-    </template>
      <div  class="flex flex-col mt-5" v-if="inputShow === false && outputShow === false " style="color:var(--primary-text) !important">
       <div class="flex">
         <div class="flex flex-col flex-1 mr-4">
@@ -127,7 +121,7 @@ export default {
       ],
       header:{
         title:'音频',
-        ifyIcon:'akar-icons:sound-on'
+        ifyIcon:'fluent:speaker-2-16-regular'
       },
       customSize:'2x4',
     }

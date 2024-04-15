@@ -166,6 +166,9 @@ export const startApp = async (type, value, router?) => {
     // 导航栏文件夹
     case "folder":
       break;
+    // 桌面卡片
+    case "card":
+      break;
   }
   return true;
 };
@@ -175,31 +178,67 @@ export const openSysApp = (value, router) => {
   const useAppStore: any = appStore();
   const useTakeStore = taskStore();
   const usefavoStore = favoStore();
-  // 全屏
-  if (value === "fullscreen") {
-    useAppStore.toggleFullScreen();
-  } else if (value === "task") {
-    // 任务
-    useTakeStore.isTaskDrawer = true;
-    useTakeStore.smallMize = true;
-  } else if (value === "commun") {
-    // 社区中心
-  } else if (value === "favorites") {
-    // 收藏夹
-    usefavoStore.isFavorites = !usefavoStore.isFavorites;
-  } else if (value === "control") {
-    // 控制中心
-  } else if (value === "setting") {
-    // 设置
-    useMit.emit("openSystemSet");
-  } else if (value === "status") {
-    useMit.emit("openSystemSet");
-    setTimeout(() => {
-      useMit.emit("selectSystemNav", 3);
-    }, 100);
-  } else {
-    // 通过路由打开
-    router.push({ name: value });
+  // // 全屏
+  // if (value === "fullscreen") {
+  //   useAppStore.toggleFullScreen();
+  // } else if (value === "task") {
+  //   // 任务
+  //   useTakeStore.isTaskDrawer = true;
+  //   useTakeStore.smallMize = true;
+  // } else if (value === "commun") {
+  //   // 社区中心
+  // } else if (value === "favorites") {
+  //   // 收藏夹
+  //   usefavoStore.isFavorites = !usefavoStore.isFavorites;
+  // } else if (value === "control") {
+  //   // 控制中心
+  // } else if (value === "setting") {
+  //   // 设置
+  //   Mit.emit("openSystemSet");
+  // } else if (value === "status") {
+  //   Mit.emit("openSystemSet");
+  //   setTimeout(() => {
+  //     Mit.emit("selectSystemNav", 3);
+  //   }, 100);
+  // } else {
+  //   // 通过路由打开
+  //   router.push({ name: value });
+  // }
+  switch (value) {
+    case "fullscreen":
+      // 全屏
+      useAppStore.toggleFullScreen();
+      break;
+    case "task":
+      // 任务
+      useTakeStore.isTaskDrawer = true;
+      useTakeStore.smallMize = true;
+      break;
+    case "commun":
+      // 社区中心
+      break;
+    case "favorites":
+      // 收藏夹
+      usefavoStore.isFavorites = !usefavoStore.isFavorites;
+      break;
+    case "control":
+      // 控制中心
+      break;
+    case "setting":
+      // 设置
+      useMit.emit("openSystemSet");
+      break;
+    case "status":
+      // 设置
+      useMit.emit("openSystemSet");
+      setTimeout(() => {
+        useMit.emit("selectSystemNav", 4);
+      }, 100);
+      break;
+    default:
+      // 通过路由打开
+      router.push({ name: value });
+      break;
   }
 };
 

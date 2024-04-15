@@ -1,5 +1,5 @@
 <template>
-  <div id="app" v-cloak>
+  <div id="app" v-cloak class="overflow-hidden">
     <div class="box">
   		<div class="prize-list" ref="prizeWrap" :style="bgColor">
   			<div class="prize-item" v-for="(item, index) in eatList" :style="prizeStyle(index)">
