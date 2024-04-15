@@ -93,6 +93,16 @@ const modalSize = computed(() => {
 const max = (value: boolean) => {
   isMax.value = value;
 };
+import PerfectScrollbar from "perfect-scrollbar";
+const scrollbar: any = ref(null);
+const perfectScrollbar: any = ref(null);
+onMounted(() => {
+  setTimeout(() => {
+    perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {
+      wheelPropagation: false,
+    });
+  }, 1);
+});
 
 </script>
 
