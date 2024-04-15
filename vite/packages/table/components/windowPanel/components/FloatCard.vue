@@ -5,7 +5,7 @@
         style="z-index:500" 
         :style="{ left: `${position.x}px`, top: `${position.y}px`}">
         <component
-            :desk="cardData.desks"
+            :desk="desk"
             :is="currentComponent"
             :custom-index="cardData.customIndex"
             :custom-data="cardData.customData"
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue';
+import { defineComponent, computed } from 'vue';
 import componentsMinis from '../../../../table/components/desk/components';
 
 export default defineComponent({
@@ -26,6 +26,11 @@ export default defineComponent({
 <script setup>
 import { computed, ref, onMounted, onUnmounted } from 'vue';
 import { onClickOutside } from '@vueuse/core';
+import { cardStore } from '../../../store/card';
+import { storeToRefs } from 'pinia';
+
+const useCard = cardStore()
+const { desks } = storeToRefs(useCard)
 
 const cardRef = ref(null)
 
@@ -55,9 +60,14 @@ const close = (e) => {
     }
 }
 
+const desk = computed(() => {
+    return props.cardData.desk || desks.value[0]
+})
+
 // onClickOutside(cardRef, close)
 onMounted(() => {
     window.addEventListener('click', close)
+    // console.log(props.cardData,'<<<<<<<<<<<<<<<<')
 })
 
 onUnmounted(() => {

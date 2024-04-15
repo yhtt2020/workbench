@@ -621,8 +621,11 @@ export default {
     },
     openCard(item) {
       if(this.floatCard.value !== item.value && this.floatCard !== undefined) {
-        this.floatCardVisible = true
         this.floatCard = item
+        // console.log(this.floatCard)
+        this.$nextTick(() => {
+          this.floatCardVisible = true
+        })
         return
       }
       this.floatCardVisible = !this.floatCardVisible

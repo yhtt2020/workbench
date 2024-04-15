@@ -528,7 +528,7 @@ const menus = computed(() => {
   let deleteArr = [deleteObj.value];
   let addArr = [addObj.value];
   if (useEnv(props.envLimit)) return deleteArr;
-  let menu = [...props.menuList, ...deleteArr, ...addArr];
+  let menu = [...props.menuList, ...addArr, ...deleteArr];
   return menu;
 });
 // 头部左侧显示区域状态

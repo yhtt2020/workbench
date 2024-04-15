@@ -202,7 +202,7 @@ export default {
       countdownDays: [],
       header:{
         title:'纪念日',
-        ifyIcon:'fluent-calendar-16-regular',
+        ifyIcon:'fluent:calendar-16-regular',
       }
     }
   },

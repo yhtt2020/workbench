@@ -2,8 +2,10 @@
   <xt-container 
     :customSize="'2x2'"
     :options="{ ...this.options,bg:this.isColor}" 
-    :customIndex="customIndex" :customData="customData" 
-    :desk="desk" :showRightIcon="!this.$props.isTop" 
+    :customIndex="customIndex" 
+    :customData="customData" 
+    :desk="desk" 
+    :showRightIcon="!this.$props.isTop" 
     ref="clockSlot"   
     :menuList="menuList"  
     @delete='clearTime'>
@@ -123,6 +125,7 @@
     },
     mounted(){
       this.getTomatoNum();
+      console.log(this.desk,'tomato')
       // this.customData.customSize = '2x2';
       this.init(this.customData,this.customIndex,this.desk);
     },

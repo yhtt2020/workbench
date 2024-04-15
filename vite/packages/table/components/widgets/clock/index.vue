@@ -76,6 +76,7 @@ export default {
   }
  },
  mounted () {
+  // console.log(this.desk,'clock')
   // 当底部导航栏为windows模式时，点击导航栏中的时间，进入时间全屏
   this.$bus.on("openClockFullScreen",(data)=>{
     this.isClockFullScreen = data

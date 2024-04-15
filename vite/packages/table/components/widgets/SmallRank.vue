@@ -7,6 +7,7 @@
   :options="options" 
   :sizeList="sizeList"
   :customData="customData"
+  :customIndex="customIndex"
   :desk="desk" 
   ref="rankingSmallSlot" 
   :menuList="toggleRankingList">
