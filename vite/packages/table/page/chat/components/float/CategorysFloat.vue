@@ -115,7 +115,7 @@ import { Icon as CommunityIcon } from '@iconify/vue';
 import { Modal,message } from 'ant-design-vue';
 import _ from 'lodash-es';
 import { useRoute } from 'vue-router';
-import { isEmptyList } from '../../libs/utils'
+import { isEmptyList } from '../../../../apps/chat/hooks/utils'
 
 import ChatDropDown from './Dropdown.vue';
 import ChatFold from './ChatFolds.vue';

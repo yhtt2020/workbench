@@ -1,4 +1,4 @@
-<!--其他社群详情页 -->
+<!--非官方社群详情页 -->
 <template>
   <a-row class="w-full h-full">
     <a-col
@@ -8,21 +8,43 @@
     >
       <CategoryFloat :no="currentNo" />
     </a-col>
+    <a-col flex=" 1 1 200px" v-if="currentItem" class="flex flex-col h-full">
+      <CommunityHeader :headerContent="currentItem" />
+      <RightDetailMain :currentItem="currentItem" />
+    </a-col>
   </a-row>
 </template>
 
 <script setup>
-import { computed, ref } from "vue";
+import { computed, getCurrentInstance, onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { onBeforeRouteUpdate, useRoute } from "vue-router";
 import { chatCommunityStore } from "../../store/chatCommunity";
+import browser from "../../../../js/common/browser";
+import _ from "lodash-es";
+import { checkGroupShip } from "../../../../js/common/sns";
+import { TUIConversationService } from "@tencentcloud/chat-uikit-engine";
+import { message } from "ant-design-vue";
 
 import CategoryFloat from "../../components/suspendMode/CategoryFloat.vue";
+import RightDetailMain from "./RightDetailMain.vue";
+import CommunityHeader from "../../components/suspendMode/CommunityHeader.vue";
 
+const { proxy } = getCurrentInstance();
 const route = useRoute();
-
 const chatCommunity = chatCommunityStore();
 const { currentCommunityNo, setting } = storeToRefs(chatCommunity);
+
+const currentItem = ref(null);
+const currentData = ref({
+  group: [],
+  isChat: "yes",
+  artName: "community_after_created_empty",
+  emptyArticle: {
+    title: "",
+    content: "",
+  },
+});
 
 // 通过计算属性获取当前社群编号
 const currentNo = computed(() => {
@@ -52,6 +74,54 @@ onBeforeRouteUpdate((to, from, next) => {
     chatCommunity.setCurrentCommunityNo(to.params?.no);
   }
   next();
+});
+
+// 触发当前左侧点击事件
+const handleCurrentItem = async (data) => {
+  // 链接
+  if (data.value.type === "link") {
+    if (data.value.name !== "Roadmap") {
+      const method = data.value.props.openMethod;
+      const url = data.value.props.url;
+      // 想天浏览器打开
+      if (method === "userSelect") {
+        browser.openInInner(url);
+      }
+      // 系统浏览器打开
+      else if (method === "systemSelect") {
+        browser.openInSystem(url);
+      } else if (method === "thinksky") {
+        browser.openInInner(url);
+      } else if (method === "mob") {
+        browser.openInMobMod(url, {
+          partition: "persist:webcontent",
+          newName: "手机模式",
+        });
+      }
+    }
+  }
+  // 群聊
+  else if (data.value.type === "group") {
+    const groups = window.$TUIKit?.TUIStore?.storeMap?.group?.store?.groupList;
+    const groupProps =
+      data.value.props[0] !== undefined
+        ? data.value.props[0]
+        : data.value.props;
+    const index = _.findIndex(groups, (findItem) => {
+      return String(findItem.groupID) === String(changeData.groupID);
+    });
+    const enableGroup = await checkGroupShip([`${changeData.groupID}`]); // 有没有添加群聊
+    // console.log("群聊", groupProps);
+  }
+  // 其他
+  currentItem.value = data.value;
+};
+
+onMounted(() => {
+  proxy.$bus.on("handleCurrentCommunity", (item) => {
+    currentItem.value = item;
+    handleCurrentItem(item);
+  });
 });
 </script>
 

@@ -4,7 +4,7 @@ import {sUrl} from "../../../consts";
 import {apiPost, post} from "../../../js/axios/request";
 import { chatList } from '../../../js/data/chatList';
 import _ from 'lodash-es';
-import { updateTree ,communityTotal} from '../libs/utils';
+import { updateTree ,communityTotal} from '../../../apps/chat/hooks/utils';
 
 const createCommunity = sUrl("/app/community/create"); // 创建社群
 const getMyCommunity = sUrl("/app/community/my")  // 我的社群
