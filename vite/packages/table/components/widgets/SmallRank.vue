@@ -7,9 +7,11 @@
   :options="options" 
   :sizeList="sizeList"
   :customData="customData"
+  :customIndex="customIndex"
   :desk="desk" 
   ref="rankingSmallSlot" 
-  :menuList="toggleRankingList">
+  :menuList="toggleRankingList"
+  @delete="deleteCard">
     <!-- 总在线时长榜 -->
     <div class="content-box" v-if="rankIndex === 0">
       <!-- 列表 -->
@@ -77,11 +79,15 @@ export default {
     },
     desk:{
       type:Object
+    },
+    openWay:{
+      type:String,
+      default:'desk'
     }
   },
+  emits: ['delete'],
   data () {
     return {
-      options: {className: 'card small',title: '排行榜',type: 'smallRank'},
       sizeList:[{value:'2x2',name:'2x2'},{value:'2x4',name:'2x4'},],
       //在线时长榜
       onLineList,
@@ -115,6 +121,9 @@ export default {
   },
   methods: {
     ...mapActions(appStore,['showUserCard']),
+    deleteCard () {
+      this.$emit('delete')
+    },
     showCard(uid){
       this.showUserCard(uid)
     },
@@ -140,6 +149,11 @@ export default {
         ifyIcon:'fluent:people-community-16-regular',
         titleHover:true,
         titleHoverName:this.rankingType[this.rankIndex].title,
+      }
+    },
+    options(){
+      return {
+        customDel:this.openWay === 'nav' ? true : false
       }
     }
   }

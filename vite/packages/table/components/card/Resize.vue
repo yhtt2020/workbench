@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-full boxs no-drag"
+    class="w-full h-full overflow-hidden boxs no-drag"
     ref="textRef"
     :style="{ width: w, height: h }"
   >
@@ -14,7 +14,7 @@
     </div>
     <div
       v-if="isDrag"
-      class="xt-theme-b w-full h-full flex justify-center items-center rounded-xl text-lg xt-theme-bg-2"
+      class="flex items-center justify-center w-full h-full text-lg xt-theme-b rounded-xl xt-theme-bg-2"
     >
       正 在 拖 拽 中
     </div>

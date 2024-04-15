@@ -5,7 +5,8 @@
       :customIndex="customIndex"
       :desk="desk" 
       :options="options" 
-      v-if="!detailToggle">
+      v-if="!detailToggle"
+      @delete="deleteCard">
       <div v-if="pageToggle">
         <div v-if="isLoading">
           <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 60%"/>
@@ -62,12 +63,14 @@
         default: () => {
 
         },
+      },
+      openWay:{
+        type:String,
+        default:'desk'
       }
     },
     data() {
       return {
-        options:{
-        },
         filmList: [],
         singleFilm: {},
         detailToggle: false,
@@ -94,9 +97,18 @@
     },
     computed: {
       ...mapWritableState(filmStore, ['data']),
+      options(){
+        return {
+          customDel:this.openWay === 'nav' ? true : false
+        }
+      }
     },
+    emit:['delete'],
     methods: {
       ...mapActions(filmStore,['getData','getFilmDetail']),
+      deleteCard(){
+        this.$emit('delete')
+      },
       btnDetail(id){
         this.detailId = id
         this.detailToggle = true

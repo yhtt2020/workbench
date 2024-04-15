@@ -5,8 +5,10 @@
   :envLimit="['web']" 
   :options="options" 
   :customData="customData"
+  :customIndex="customIndex"
   :menu-list="menuList" 
-  :desk="desk"  >
+  :desk="desk" 
+  @delete="deleteCard" >
   <div @click="go"  class="top-content pointer" style="color:var(--primary-text)">
     <div><span>{{CPUGPUData.useCPU.toFixed(1)}}%</span>
       <span>
@@ -77,16 +79,19 @@ export default {
     },
     customData:{
       type:Object
+    },
+    customIndex:{
+      type:Number,
+      default:0
+    },
+    openWay:{
+      type:String,
+      default:'desk'
     }
   },
+  emit:['delete'],
   data(){
     return {
-      options:{
-        className:'card',
-        title:'性能',
-        // icon:'dashboard',
-        type:'CPUFourCard'
-      },
       CPUGPUData:{
         useCPU:0,
         useGPU:0,
@@ -136,7 +141,8 @@ export default {
   components:{
     Widget,
     newIcon
-  }, mounted () {
+  }, 
+  mounted () {
     this.startInspect()
     this.customData.customSize = '2x4'
   },
@@ -150,11 +156,19 @@ export default {
     },
     lastUp(){
       return prettyDisplayBytes(this.CPUGPUData.up)+'/s'
+    },
+    options(){
+      return {
+        customDel:this.openWay === 'nav' ? true : false
+      }
     }
 
   },
   methods:{
     ...mapActions(inspectorStore, ['startInspect', 'stopInspect']),
+    deleteCard(){
+      this.$emit('delete')
+    },
 
     go(){
       this.$router.push({name:'inspector'})

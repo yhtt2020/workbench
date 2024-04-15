@@ -1,4 +1,5 @@
 import { defaultData } from "../../../ui/hooks/useDataConversion"
+import { nanoid } from "nanoid"
 export const useConversionCard = (data) => {
     const index = data.customIndex
     let name = data.desk.cards.find((item) => item.id === index).name
@@ -18,7 +19,8 @@ export const useConversionCard = (data) => {
             customData:data.customData || {customSize:data.customSize},
             customSize:data.customSize,
             desk:data.desk
-        }
+        },
+        id:nanoid(6),
     }
     return cardData
 
