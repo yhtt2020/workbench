@@ -1,7 +1,18 @@
 <template>
+    <!-- 工作台图标 -->
+    <div
+        v-if="isIfyIcon"
+        :style="{
+            width:size + 'px',
+            height:size + 'px',
+            borderRadius: navigationBar.iconRadius + 'px', 
+            background: item?.bg || ''}"
+        class="relative flex items-center justify-center overflow-hidden">
+        <xt-new-icon :icon="item.icon" :size="32"></xt-new-icon>
+    </div>
     <!-- 文件夹图标 -->
     <Folder 
-        v-if="item.type === 'folder'"
+        v-else-if="item.type === 'folder'"
         :iconSize="size"
         :iconList="item.children"
         :item='item'>
@@ -26,7 +37,7 @@
         >
     </a-avatar>
 
-    <!-- 自定义图标 :style="{ borderRadius: navigationBar.iconRadius + 'px', background: item?.bg || '',width:size + 'px',height:size + 'px' }"-->
+    <!-- 自定义图标 -->
     <div
         v-else-if="item.isBg"
         :style="{
@@ -45,7 +56,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, toRefs } from 'vue'
+import { ref, toRefs, computed, onMounted } from 'vue'
 import { storeToRefs } from 'pinia';
 
 import { renderIcon } from '../../../js/common/common';
@@ -73,6 +84,17 @@ const props = withDefaults(defineProps<AvatarType>(), {
     community: {}
 });
 const { size , item , community } = toRefs(props)
+
+// 用于判断是不是工作台图标
+const isIfyIcon = computed(() => {
+    const regex = /^[a-z-]+:[a-z-]+(?:-\d+)?(?:-[a-z\d-]+)?.*$/
+    // const regex = /^[a-z]+:[a-z]+(?:-\d+)?(?:-[a-z\d]+)?.*$/
+    return regex.test(item.value.icon)
+})
+
+// onMounted(() => {
+//     console.log(item.value.icon,"isIfyIcon :>> ", isIfyIcon.value);
+// })
 
 </script>
 <style lang='scss' scoped></style>

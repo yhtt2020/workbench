@@ -8,6 +8,7 @@
             :isWindow="true" 
             boxClass=""/>
         <a-divider
+          v-if="communityNavVisible"
           type="vertical"
           style="
             height: 32px;

@@ -9,7 +9,7 @@
     ref="eatSlot"
     :menuList="menuList"
   >
-  <div @click="openSettings = true">
+  <div @click="openSettings = true" class="overflow-hidden">
     <Turntable :eatList="eatList"></Turntable>
   </div>
   </xt-container>
