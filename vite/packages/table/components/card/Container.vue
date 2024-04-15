@@ -204,15 +204,15 @@ import { cardStore as useCardStore } from "../../store/card";
 import { useWidgetStore } from "./store";
 import { useFreeLayoutStore } from "../desk/freeLayout/store";
 import { useMouseInElement } from "@vueuse/core";
-import { navStore } from '../../store/nav'; 
+import { navStore } from '../../store/nav';
 
 import Resize from "./Resize.vue";
 import RightMenu from "./RightMenu.vue";
 import { useEnv } from "../../ui/hooks/useEnv";
 import { addCardToNav } from './hooks/addCardToNav'
 import { useConversionCard } from './hooks/useConversionCard'
-import { trigger } from "mousetrap";
 import { useDelCard } from "../../hooks";
+
 
 const container = ref(0);
 const { isOutside } = useMouseInElement(container);

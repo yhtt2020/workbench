@@ -110,8 +110,8 @@ const checkCard = async (card) => {
       code: 200,
     };
   }
-  // 如果数据不是对象则转为数组
-  if (typeof card !== "object") {
+  // 如果数据是对象则转为数组
+  if (typeof card == "object") {
     card = [card];
   }
   // 遍历card

@@ -26,9 +26,7 @@ const menus = computed(() => {
       },
     },
   ];
-  console.log("item :>> ", item);
   if (item?.card) {
-    console.log("22222 :>> ", 22222);
     let arr: any = [];
     item.card?.map((data) => {
       arr.push({
@@ -64,6 +62,7 @@ const addPreview = (data: any) => {
     },
     size: data.size,
   };
+  console.log("previewData.value :>> ", previewData.value);
   previewVisible.value = true;
 };
 /** 打开主应用弹窗 */

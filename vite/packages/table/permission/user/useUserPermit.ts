@@ -6,6 +6,7 @@ import { useEnv } from "../useEnv";
 import { getUserInfo } from "../api/login";
 import { useLogout } from "./useLogout";
 import { setLV } from "./useUtils";
+import { useToast } from "vue-toastification";
 
 /**
  * 用户许可
@@ -53,13 +54,15 @@ export const useUpdateUserInfo = async () => {
 
   let res = await getUserInfo();
   console.timeEnd("UserInfo Run Time");
-
-  // 旧版本用户信息处理逻辑
-  let res1 = setLV(res.data);
-  if (!res1) {
-    useLogout();
+  if (!res) {
+    console.log("触发用户数据清空 :>> ");
+    const toast = useToast();
+    toast.success("用户信息丢失 触发清空操作");
     return;
   }
+  // 旧版本用户信息处理逻辑
+  setLV(res.data);
+
 
   let userData = res.data.data;
   // 获取头像框信息

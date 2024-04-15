@@ -43,21 +43,41 @@
         <div class="left no-drag" @click="fullScreen(item)">
           <!-- 图片长度大于1 -->
           <template v-if="item.option.length > 1">
-            <div class="top">
-              <img
-                :style="[{ zoom: item.option[0].zoom + '%' }]"
-                :src="getImg(item.option[0].imgName)"
-                alt=""
-              />
-            </div>
-            <div class="bottom">
-              <img
-                class="small-cover"
-                v-for="i in item.option"
-                :src="getImg(i.imgName)"
-                alt=""
-              />
-            </div>
+            <template v-if="item.type == 'ttapp'">
+              <div class="flex justify-center h-full items-center  rounded-xl">
+                <img
+                  style="width: 80px; height: 110px !important; zoom: 1"
+                  :src="item.option[0]._preview"
+                  alt=""
+                />
+              </div>
+              <div class="bottom">
+                <img
+                  class="small-cover"
+                  v-for="i in item.option"
+                  :src="i?._preview"
+                  alt=""
+                />
+              </div>
+            </template>
+
+            <template v-else>
+              <div class="top">
+                <img
+                  :style="[{ zoom: item.option[0].zoom + '%' }]"
+                  :src="getImg(item.option[0].imgName)"
+                  alt=""
+                />
+              </div>
+              <div class="bottom">
+                <img
+                  class="small-cover"
+                  v-for="i in item.option"
+                  :src="getImg(i.imgName)"
+                  alt=""
+                />
+              </div>
+            </template>
           </template>
           <!-- 图片长度等于1 -->
           <template v-else>
@@ -65,7 +85,7 @@
             <img
               v-if="item?.type == 'ttapp'"
               style="width: 80px; height: 120px"
-              :src="item?.img"
+              :src="item.option[0]._preview"
               alt=""
             />
             <img
@@ -283,18 +303,6 @@ export default {
       });
     },
     addNewCard(item) {
-      // 无界应用
-      if (item?.type == "ttapp") {
-        useAddCard({
-          name: "TTAppCard",
-          data: item.data,
-        });
-
-        this.$emit("addSuccess");
-        message.success("添加成功！");
-        return;
-      }
-
       if (item.option[1] != undefined) {
         this.fullScreen(item);
       } else {
@@ -324,6 +332,19 @@ export default {
     },
     add(item, index) {
       index = index ?? this.carouselIndex;
+
+      console.log("item :>> ", item);
+      // 无界应用
+      if (item?.type == "ttapp") {
+        useAddCard({
+          name: "TTAppCard",
+          data: item.option[index],
+        });
+
+        this.$emit("addSuccess");
+        message.success("添加成功！");
+        return;
+      }
       let res = window.$useComLimit(["web"], item.option[index].name);
       if (res) return;
       this.addCard(
