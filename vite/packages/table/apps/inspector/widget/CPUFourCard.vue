@@ -5,6 +5,7 @@
   :envLimit="['web']" 
   :options="options" 
   :customData="customData"
+  :customIndex="customIndex"
   :menu-list="menuList" 
   :desk="desk" 
   @delete="deleteCard" >

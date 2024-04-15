@@ -6,6 +6,7 @@
     :envLimit="['web']"  
     :options="options" 
     :menu-list="menuList" 
+    :customIndex="customIndex"
     :desk="desk"
     @delete="deleteCard">
     <div @click="go" class="content pointer" style="color:var(--primary-text)">

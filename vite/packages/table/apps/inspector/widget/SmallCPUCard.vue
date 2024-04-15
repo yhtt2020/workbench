@@ -6,6 +6,7 @@
     :options="options" 
     :menu-list="menuList" 
     :customData="customData"
+    :customIndex="customIndex"
     :desk="desk"
     @delete="deleteCard">
     <div @click="go" class="content pointer" style="color:var(--primary-text)">

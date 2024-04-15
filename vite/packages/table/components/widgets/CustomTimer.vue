@@ -5,6 +5,7 @@
     :desk="desk"
     :header="header"
     v-model:customSize="customData.customSize"
+    :customIndex="customIndex"
     @delete="deleteCard">
     <div class="absolute w-16 h-6 left-4 top-1 pointer"   @click="moveToday"></div>
     <div style="border-bottom: solid 1px  rgba(255, 255, 255, 0.1);color:var(--primary-text) !important" class="my-calendar">
