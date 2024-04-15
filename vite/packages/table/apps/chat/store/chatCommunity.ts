@@ -2,6 +2,8 @@
 import { defineStore } from "pinia";
 import { CommunityAPI } from "../api/communityAPI";
 import _ from "lodash-es";
+import { chatList } from "../../../js/data/chatList";
+import { currentUnreadCount } from "../hooks/groupType";
 
 const comAPI: any = new CommunityAPI();
 // @ts-ignore
@@ -25,11 +27,29 @@ export const chatCommunityStore = defineStore("chatCommunity", {
     setting: {
       // 开启单双列模式
       isColumnMode: false,
+      // 开启侧边栏悬浮模式
+      suspendVisible: {
+        enable: false,
+        no: null,
+      },
+      // 是否开启社群简介折叠
+      collapsedVisible: {
+        enable: false,
+        no: null,
+      },
     },
     // 热门社群列表
     hotList: [],
     // 官方推荐社群列表
     officialList: [],
+    // 默认官方社群数据
+    defaultOfficialList: chatList,
+    communityTreeList: {
+      // 父级树状
+      firstChannel: [],
+      // 子级树状
+      secondaryChannel: [],
+    },
   }),
 
   actions: {
@@ -63,10 +83,12 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         }
       });
     },
+
     // 设置当前社群的ID号
     setCurrentCommunityNo(no: any) {
       this.currentCommunityNo = no;
     },
+
     // 获取热门社群
     getHotCommunityList() {
       comAPI.getHotCommunity().then((res: any) => {
@@ -76,6 +98,7 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         }
       });
     },
+
     // 获取官方推荐社群
     getOfficialRecommendation() {
       comAPI.getReferralCommunity().then((res: any) => {
@@ -92,6 +115,95 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         }
       });
     },
+
+    // 设置悬浮模式
+    setSuspendVisible(data: any) {
+      this.setting.suspendVisible = data;
+    },
+
+    // 设置单双列模式
+    setColumnMode() {
+      this.setting.isColumnMode = !this.setting.isColumnMode;
+    },
+
+    // 设置社群描述折叠
+    setCollapsed(data: any) {
+      this.setting.collapsedVisible = data;
+    },
+
+    // 获取树状方法
+    getCommunityTree(no: any) {
+      const option = { communityNo: parseInt(no), cache: 1 };
+      Promise.all([
+        comAPI.getCommunityListChannel(option),
+        comAPI.getCommunityTreeListChannel(option),
+      ]).then((res) => {
+        const status = res[0].status === 1 && res[1].status === 1;
+        if (status) {
+          /**处理一级频道列表**/
+          const firstList = _.map(res[0].data.list, (item: any) => {
+            if (item.type === "group") {
+              const groupID = JSON.parse(item?.props)?.groupID;
+              return {
+                ...item,
+                props: JSON.parse(item?.props),
+                unreadCount: currentUnreadCount(groupID),
+              };
+            } else {
+              return {
+                ...item,
+                props: JSON.parse(item?.props),
+              };
+            }
+          });
+          const filterList = _.filter(firstList, function (item: any) {
+            return item.role === "channel";
+          });
+          this.communityTreeList.firstChannel = filterList;
+          /**处理二级频道列表**/
+          const secondaryList = _.map(res[1].data.treeList, (item: any) => {
+            const childrenList = _.map(item.children, (children: any) => {
+              if (item.type === "group") {
+                const groupID = JSON.parse(children.props)?.groupID;
+                return {
+                  ...item,
+                  props: JSON.parse(item?.props),
+                  unreadCount: currentUnreadCount(groupID),
+                };
+              } else {
+                return {
+                  ...children,
+                  props: JSON.parse(children.props),
+                };
+              }
+            });
+            return {
+              ...item,
+              children: childrenList,
+              /**key 开启折叠**/
+              key: ["1"],
+            };
+          });
+          const filterSecondaryList = _.filter(
+            secondaryList,
+            function (item: any) {
+              return item.role !== "channel";
+            }
+          );
+          this.communityTreeList.secondaryChannel = filterSecondaryList;
+        }
+      });
+    },
+
+    // 删除社群频道
+    async deleteChannel(id: any, no: any) {
+      const option = { id: id };
+      const res = await comAPI.deleteCommunityChannel(option);
+      if(res.status){
+        this.getCommunityTree(no);
+        return res;
+      }
+    },
   },
 
   persist: {
@@ -104,6 +216,8 @@ export const chatCommunityStore = defineStore("chatCommunity", {
           "setting",
           "hotList",
           "officialList",
+          "defaultOfficialList",
+          "communityTreeList",
         ],
         storage: localStorage,
       },

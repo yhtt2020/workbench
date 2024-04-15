@@ -31,7 +31,11 @@
           <xt-button
             v-if="currentJoin(item)"
             h="40"
-            style="width: 100% !important"
+            style="
+              width: 100% !important;
+              background: var(--secondary-transp-bg) !important;
+              pointer-events: none;
+            "
             @click="closeJoinCom"
           >
             已加入
@@ -70,7 +74,7 @@ const props = defineProps({
 const { list } = toRefs(props);
 
 const chatCommunity = chatCommunityStore();
-const { officialList } = storeToRefs(chatCommunity);
+const { myCommunity } = storeToRefs(chatCommunity);
 const comAPI = new CommunityAPI();
 
 const recommendList = computed(() => {
@@ -83,8 +87,9 @@ const recommendList = computed(() => {
 
 // 判断是否已经进入推荐社群
 const currentJoin = (data) => {
-  const findData = _.find(officialList.value, function (item) {
-    return item.id === data.id;
+  console.log('data',data);
+  const findData = _.find(myCommunity.value, function (item) {
+    return Number(item?.communityInfo?.no) === Number(data?.no);
   });
   const findDataNull = findData !== undefined;
   if (findDataNull) {

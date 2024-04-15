@@ -37,7 +37,7 @@
   <!-- 群聊添加、搜索-->
   <AddGroup ref="addGroupRef" />
   <!-- 推荐社群和搜索社群的添加 -->
-  <JoinCommunitys ref="joinComRef" />
+  <JoinCommunity ref="joinComRef" />
 </template>
 
 <script setup>
@@ -72,6 +72,8 @@ const { userInfo, lvInfo } = appS;
 const createGroupRef = ref(null);
 const addRef = ref(null);
 const addGroupRef = ref(null);
+const joinComRef = ref(null);
+
 const currentData = ref({
   // 当前左侧栏选中的下标
   currentChatIndex: "OfficialCommunity",

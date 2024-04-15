@@ -62,10 +62,12 @@ import { storeToRefs } from "pinia";
 import { chatCommunityStore } from "../../store/chatCommunity";
 import { message } from "ant-design-vue";
 import _ from "lodash-es";
+import { CommunityAPI } from "../../api/communityAPI";
 
 import RecommendDetail from "../../components/join/RecommendDetail.vue";
 import SearchDetail from "../../components/join/SearchDetail.vue";
 
+const comAPI = new CommunityAPI();
 const chatCommunity = chatCommunityStore();
 const { officialList } = storeToRefs(chatCommunity);
 
@@ -79,7 +81,7 @@ const joinComVisible = ref(false);
 const openJoinCom = () => {
   joinComVisible.value = true;
   nextTick(() => {
-    chatCommunity.getRecommendCommunity();
+    chatCommunity.getOfficialRecommendation();
   });
 };
 
@@ -96,18 +98,16 @@ const getCommunity = computed(() => {
 
 // 搜索
 const searchCommunity = async (evt) => {
-  // if (joinData.value.searchKeyword !== "") {
-  //   const result = await com.searchRecommendCommunity(
-  //     joinData.value.searchKeyword
-  //   );
-  //   if (result.status === 1) {
-  //     joinData.value.searchResult = result.list;
-  //   } else {
-  //     joinData.value.searchResult = [];
-  //   }
-  // } else {
-  //   joinData.searchResult = [];
-  // }
+  if (joinData.value.searchKeyword !== "") {
+    const result = await comAPI.communitySearch(
+      joinData.value.searchKeyword
+    );
+    if (result.status === 1) {
+      joinData.value.searchResult = result?.data?.list;
+    }
+  } else {
+    joinData.searchResult = [];
+  }
 };
 
 // 暴露给父组件的方法

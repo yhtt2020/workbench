@@ -31,7 +31,11 @@
           <xt-button
             h="40"
             v-if="isJoin(item)"
-            style="width: 100%; pointer-events: none"
+            style="
+              width: 100%;
+              pointer-events: none;
+              background: var(--secondary-transp-bg) !important;
+            "
             @click="closeJoinCom"
           >
             已加入
@@ -63,7 +67,7 @@ const props = defineProps({
 const { list } = toRefs(props);
 
 const chatCommunity = chatCommunityStore();
-const { officialList } = storeToRefs(chatCommunity);
+const { myCommunity } = storeToRefs(chatCommunity);
 
 const searchList = computed(() => {
   const listNull = list.value.length !== 0;
@@ -74,9 +78,8 @@ const searchList = computed(() => {
 
 // 判断是否已经进入推荐社群
 const isJoin = (data) => {
-  const result = officialList.value.some((item) => {
-    const { no } = item.communityInfo?.no;
-    return Number(no) === Number(data.no);
+  const result = myCommunity.value.some((item) => {
+    return Number(item?.communityInfo?.no) === Number(data?.no);
   });
   return result;
 };
