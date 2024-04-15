@@ -1,5 +1,4 @@
 import { h, render,defineAsyncComponent } from "vue";
-// import Login from "./Login.vue";
 const Login = defineAsyncComponent(() => import("./Login.vue"));
 export default Login;
 export const useLogin = (cb?) => {
