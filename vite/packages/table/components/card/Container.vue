@@ -488,7 +488,7 @@ const addObj = computed(() => {
   return   {
     title:'添加到导航栏',
     newIcon:"fluent:tablet-16-regular",
-    disabled:props.options?.disabledNav ? true : false,
+    disabled:props.options.disabledNav ? true : false,
     children:[
       {
         title:'主导航',

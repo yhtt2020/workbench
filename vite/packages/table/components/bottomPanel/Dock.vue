@@ -1,40 +1,24 @@
 <template>
   <teleport to="body">
-  <div
-    style="position: absolute; z-index: 500 !important"
-    :style="{
-      left: `${this.position.x}px`,
-      top: `${(navAttribute.navSize / 100) * this.position.y}px`,
-    }"
-    class="rounded-xl pointer"
-    id="folder"
-  >
-    <Folder
+    <!-- 文件夹弹窗 -->
+    <FloatFolder 
+      v-if="folderVisible"
+      :folderPos="position"
+      :customData="customData"
+      :sideKey="bottomKey"
+      @close="folderVisible = false"
       @clickFile="clickFile"
       @update:layout="updateLayout"
       @update:customSize="updateSize"
-      @close="folderVisible = false"
-      :customData="customData"
-      :customIndex="bottomKey"
-      :secondary="true"
-      v-if="folderVisible"
-      :expand="{ disabled: true }"
-      :navBar="{
-        resize: false,
-        sizeOption: false,
-        isDel: true,
-        hierarchy: true,
-        close: true,
-      }"
-      :auto="true"
     />
-  </div>
-  <FloatCard
-    v-if="floatCardVisible"
-    :cardData="floatCard.cardData"
-    :currentComponent="floatCard.value"
-    :position="position">
-  </FloatCard>
+    <!-- 卡片弹窗 -->
+    <FloatCard
+      v-if="floatCardVisible"
+      :cardData="floatCard.cardData"
+      :currentComponent="floatCard.value"
+      :position="position"
+      @close="floatCardVisible = false">
+    </FloatCard>
   </teleport>
   <!-- 快速搜索 底部栏区域 -->
   <transition>
@@ -189,15 +173,15 @@ import { defaultFolderData } from "../../apps/folder/src/components/options";
 import { hoverRealItemId } from "../desk/navigationBar/hook/hoverRealItemId";
 import { mergeData } from "../../ui/hooks/useDataConversion";
 import { usePosition } from "../windowPanel/hook/usePosition";
+import { deleteIcon, checkItems } from '../../components/card/hooks/addCardToNav'
 
 import NavIcon from "../windowPanel/components/NavIcon.vue";
 import EditIcon from "../desk/navigationBar/components/EditIcon/EditIcon.vue";
-import FolderVue from "../desk/navigationBar/components/folder/Folder.vue";
-import Folder from "../../apps/folder";
 import Drag from "../desk/navigationBar/components/folder/Drag.vue";
 import Avatar from "../desk/navigationBar/components/Avatar.vue";
 import Team from "./Team.vue";
 import FloatCard from "../windowPanel/components/FloatCard.vue";
+import FloatFolder from "../windowPanel/components/FloatFolder.vue";
 
 const {
   //是否全屏状态
@@ -212,12 +196,11 @@ export default {
   components: {
     EditIcon,
     Avatar,
-    FolderVue,
-    Folder,
     Drag,
     Team,
     NavIcon,
-    FloatCard
+    FloatCard,
+    FloatFolder
   },
   data() {
     return {
@@ -228,9 +211,6 @@ export default {
       bottomKey: Date.now(),
       hoverIndex: -1, //当前选中的项目（排除gap）
       debug: false,
-      tab: "screen",
-      leftNav: false,
-      rightNav: false,
       delNav: false,
       drawerMenus: [...extraRightMenu, ...moreMenus],
       componentId: "EditNavigationIcon",
@@ -257,7 +237,7 @@ export default {
           newIcon: "fluent:delete-16-regular",
           color: "#FF4D4F",
           callBack: () => {
-            this.delCurrentIcon(this.currentIndex, this.currentItem);
+            this.deleteIcon(this.currentItem,'foot');
           },
         },
         {
@@ -307,7 +287,8 @@ export default {
 
       comVisible: false,
       floatCardVisible:false,
-      floatCard:{}
+      floatCard:{},
+      clickOutside:false,
     };
   },
   props: {
@@ -357,7 +338,6 @@ export default {
     ]),
     ...mapWritableState(offlineStore, ["isOffline", "navList"]),
     ...mapWritableState(useNavigationStore, [
-      "editToggle",
       "selectNav",
       "popVisible",
       "currentList",
@@ -484,17 +464,6 @@ export default {
     delZone(val) {
       this.delNav = val;
     },
-    editToggle() {
-      if (this.editToggle) {
-        this.enableDrag();
-        this.shakeElement = true;
-        setTimeout(() => {
-          this.shakeElement = false;
-        }, 2000);
-      } else {
-        // this.disableDrag()
-      }
-    },
     folderList() {
       this.customData = {
         ...this.defaultFolderData,
@@ -578,7 +547,7 @@ export default {
       if (item.component) {
         this.componentId = item.component;
         if (item.component === "EditNewNavigation") {
-          this.editToggle = true;
+          
           this.selectNav = "foot";
         }
       } else {
@@ -637,34 +606,7 @@ export default {
       this.currentItem = item;
       this.currentIndex = index;
     },
-    /**
-     * 删除图标判断
-     * @param {*} currentIndex 当前删除图标索引
-     * @param {*} currentItem 当前删除图标
-     */
-    delCurrentIcon(currentIndex, currentItem) {
-      if (!this.mainNavigationList.find((f) => f.value === currentItem.value)) {
-        this.removeFootNavigationList(currentIndex);
-        return;
-      }
-      let arr = [];
-      if (this.navigationToggle[0] && this.navigationToggle[1]) {
-        arr = this.sideNavigationList.concat(this.rightNavigationList);
-      } else if (this.navigationToggle[0] && !this.navigationToggle[1]) {
-        arr = this.sideNavigationList;
-      } else if (!this.navigationToggle[0] && this.navigationToggle[1]) {
-        arr = this.rightNavigationList;
-      } else {
-        message.info(`导航栏中至少保留一个「${currentItem.name}」`);
-        return;
-      }
-      this.delNavigation(
-        arr,
-        currentItem,
-        currentIndex,
-        this.removeFootNavigationList
-      );
-    },
+    deleteIcon,
     /**
      * 打开桌面应用提示
      * @param {*} item 当前图标
@@ -677,9 +619,13 @@ export default {
         });
       }
     },
-    openCard() {
+    openCard(item) {
+      if(this.floatCard.value !== item.value && this.floatCard !== undefined) {
+        this.floatCardVisible = true
+        this.floatCard = item
+        return
+      }
       this.floatCardVisible = !this.floatCardVisible
-      this.floatCard = this.currentItem
     },
     /**
      * 打开应用
@@ -688,7 +634,7 @@ export default {
     async newOpenApp(item, e) {
       const { type, value } = item;
       if (type === "card") {
-        this.openCard()
+        this.openCard(item)
       }
       if (type !== "card") {
         this.floatCardVisible = false
@@ -765,6 +711,7 @@ export default {
         }
       }
     },
+    checkItems,
     /**
      * sortable拖拽函数
      */
@@ -821,35 +768,12 @@ export default {
             that.delItemIcon = false;
             that.isEnterDesk = false;
             let oneNav = that.copyFootNav[event.oldIndex];
-            //将要删除的是否是主要功能
-            if (!that.mainNavigationList.find((f) => f.name === oneNav.name)) {
-              that.removeFootNavigationList(event.oldIndex);
-              console.log("删除成功");
-              that.$emit("getDelIcon", false);
-              that.hoverIndex = -1;
-              return;
-            }
-            let sumList = [];
-            // 判断其他导航栏是否是打开状态，是则获取功能列表
-            if (that.leftNav && that.rightNav) {
-              sumList = that.sideNavigationList.concat(
-                that.rightNavigationList
-              );
-            } else if (that.leftNav && !that.rightNav) {
-              sumList = that.sideNavigationList;
-            } else if (!that.leftNav && that.rightNav) {
-              sumList = that.rightNavigationList;
-            } else {
-              message.info(`导航栏中至少保留一个「${oneNav.name}」`);
-              // console.log('不可删除')
-              return;
-            }
-            that.delNavigation(
-              sumList,
-              oneNav,
-              event.oldIndex,
-              that.removeFootNavigationList
-            );
+            // 删除图标
+            that.deleteIcon(oneNav,'foot')
+            // 更新删除区域状态
+            that.$emit("getDelIcon", false);
+            // 更新导航栏
+            that.hoverIndex = -1;
           };
         },
         onUpdate: _.debounce((event) => {
@@ -897,26 +821,23 @@ export default {
             y: event.originalEvent.clientY,
           };
         },
-        onSort: function (event) {
-          // console.log('onSort', event)
-          // console.log('item', that.copyFootNav[event.newIndex])
-        },
-        // 触发替换中发生的事件
-        onChange(event) {
-          // console.log('onChange', event)
-          // console.log('item')
-        },
         /**
          * 合并文件夹操作
          * @param event
          * @returns {number}
          */
         onUnchoose: function (event) {
+          const hoverItem = that.hoverRealItemId("bottomContent", that.hoverIndex)
           if (
-            that.hoverRealItemId("bottomContent", that.hoverIndex) &&
-            that.hoverRealItemId("bottomContent", that.hoverIndex) !==
+            hoverItem &&
+            hoverItem !==
               that.dragItem?.id
           ) {
+            if(that.checkItems(that.copyFootNav,hoverItem,that.dragItem.id)){
+              message.error('卡片类图标不能合并为文件夹')
+              that.hoverIndex = -1
+              return
+            }
             //存在目标，且不等于自身，符合合并条件，则执行合并
             const merged = that.useMergeFolder(
               that.copyFootNav,
@@ -924,7 +845,7 @@ export default {
               that.copyFootNav.find((item) => {
                 return (
                   item.id ===
-                  that.hoverRealItemId("bottomContent", that.hoverIndex)
+                  hoverItem
                 );
               })
             );
@@ -932,7 +853,7 @@ export default {
               that.copyFootNav.findIndex((item) => {
                 return (
                   item.id ===
-                  that.hoverRealItemId("bottomContent", that.hoverIndex)
+                  hoverItem
                 );
               }),
               1,
@@ -1000,20 +921,6 @@ export default {
     },
     hoverRealItemId,
     useMergeFolder,
-    delNavigation(sumList, oneNav, index, delMethod) {
-      if (!this.mainNavigationList.find((item) => item.name === oneNav.name)) {
-        //如果不是必须的
-        delMethod(index);
-      } else {
-        if (sumList.find((item) => item.name === oneNav.name)) {
-          //正常移除
-          delMethod(index);
-        } else {
-          //不可移除
-          message.info(`导航栏中至少保留一个「${oneNav.name}」`);
-        }
-      }
-    },
 
     /**
      * 重置元素位置
