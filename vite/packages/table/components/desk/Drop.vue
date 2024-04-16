@@ -25,6 +25,7 @@ import { useMouseInElement } from '@vueuse/core'
 import {useFolderStore} from '../../apps/folder/src/store'
 
 import {getFavicon,useGetUrlName} from './navigationBar/hook/getUrlName'
+import { isValidUrl } from './navigationBar/hook/useCheckUrl'
 import {useNavBarStore} from './navigationBar/navBar'
 const target = ref(null);
 
@@ -99,49 +100,50 @@ const handleDrop = async (dragEvent) => {
     }
   } else if (link && link !== '') {
     if(isDrag.value) return
-    const hasHttp = link.includes('http') || link.includes('https');
-    if (!hasHttp) {
+    if (!link.match(/^(http:\/\/|https:\/\/)/)) {
       link = 'http://' + link;
     }
-
-    // const name = await useGetUrlName(link);
-    const icon = await getFavicon(link);
-
-    const obj = {
-      ...iconOption,
-      open: {
-        type: "default",
-        value: link,
-      },
-      titleValue: icon.pageTitle || '网址链接',
-      src: icon.faviconURL || 'https://a.apps.vip/icons/iconSelect/emoji/globe-showing-asia-australia.svg',
-    };
-
-    const id = Date.now();
-
-    const { offsetX, offsetY } = dragEvent;
-    const addCard = () => {
-      useAddCard(
-        "myIcons",
-        {
-          iconList: [{ ...obj }],
+    if(isValidUrl(link)){
+      // const name = await useGetUrlName(link);
+      const icon = await getFavicon(link);
+      
+      const obj = {
+        ...iconOption,
+        open: {
+          type: "default",
+          value: link,
         },
-        id
-      );
-    };
-
-    if (isFreeLayout.value) {
-      getFreeLayoutData.value[id] = {
-        left: offsetX,
-        top: offsetY,
-        index: 1,
-        id,
+        titleValue: icon.pageTitle || '网址链接',
+        src: icon.faviconURL || 'https://a.apps.vip/icons/iconSelect/emoji/globe-showing-asia-australia.svg',
       };
-
-      setTimeout(addCard, 100);
-    } else {
-      addCard();
-    }
+    
+      const id = Date.now();
+    
+      const { offsetX, offsetY } = dragEvent;
+      const addCard = () => {
+        useAddCard(
+          "myIcons",
+          {
+            iconList: [{ ...obj }],
+          },
+          id
+        );
+      };
+    
+      if (isFreeLayout.value) {
+        getFreeLayoutData.value[id] = {
+          left: offsetX,
+          top: offsetY,
+          index: 1,
+          id,
+        };
+      
+        setTimeout(addCard, 100);
+      } else {
+        addCard();
+      }
+      }
+    
   }
 };
 
