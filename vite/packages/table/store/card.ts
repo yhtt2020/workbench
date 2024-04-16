@@ -361,6 +361,7 @@ export const cardStore = defineStore(
        * @param desk 当前的桌面
        */
       updateCustomData(customIndex, newData, desk) {
+        // console.log(desk,!desk,'<<<<<<desk',customIndex)
         if (!desk) {
           throw '未提交desk参数，此参数必须提供'
         }

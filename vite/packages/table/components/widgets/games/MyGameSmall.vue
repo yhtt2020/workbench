@@ -10,7 +10,8 @@
     :options="options" 
     ref="gameSmallSlot" 
     :menuList="gameMiddleBare" 
-    :desk="desk">
+    :desk="desk"
+    @delete="deleteCard">
     <template v-if="showSize.width == 2 && showSize.height == 4">
       <div v-if="defaultGame.name === 'steam'" class="w-full h-full">
         <div class="flex items-center justify-center w-full h-full" v-if="detailShow === false">
@@ -117,8 +118,13 @@ export default {
     },
     desk:{
       type:Object
+    },
+    openWay:{
+      type:String,
+      default:'desk'
     }
   },
+  emits:['delete'],
   computed:{
     ...mapWritableState(steamUserStore,['steamGameList']),
     showSize(){
@@ -153,23 +159,15 @@ export default {
         titleHover: !this.myDetailShow,
         titleHoverName:'点击打开'
       }
+    },
+    options(){
+      return {
+         customDel:this.openWay === 'nav' ? true : false
+      }
     }
   },
   data(){
     return{
-      options: {
-        className: 'card ',
-        title: '',
-        titleRoute:{
-          name:'myGame'
-        },
-        // icon: 'game',
-        type: 'games',
-        epicShow: true,
-        defaultData:{
-          customSize: this.customData.customSize ? this.customData.customSize : '2x4',
-        }
-      },
       myDetailShow:false,
       middleShow:false,
       openCpu:false,
@@ -210,6 +208,9 @@ export default {
   },
   methods:{
     // ...mapActions(cardStore,['increaseCustomComponents']),
+    deleteCard(){
+      this.$emit('delete')
+    },
     getGameType(item,index){
       this.customData.name = item.name
       this.steamIndex = index
@@ -240,7 +241,7 @@ export default {
     if(this.customData.customSize === undefined ){
       this.customData.customSize = '2x4'
     }
-  }
+  },
 }
 </script>
 

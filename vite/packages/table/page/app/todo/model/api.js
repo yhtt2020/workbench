@@ -18,9 +18,7 @@ const url = {
 }
 
 const getConfig = async () => {
-  let token;
-    const res = await window.tsbApi.user.get()
-    token = res.data.token
+  let token = localStorage.getItem('ttUserToken')
 
   return {
     headers: {

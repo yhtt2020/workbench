@@ -573,7 +573,7 @@ export default [
             component: Tomato,
           },
           {
-            path: "/ai",
+            path: "/ai/:value?",
             name: "ai",
             component: AIAssistant,
             meta: {

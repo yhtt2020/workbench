@@ -18,7 +18,9 @@
       v-if="floatCardVisible" 
       :cardData="floatCard.cardData" 
       :currentComponent="floatCard.value"
-      @close="floatCardVisible = false">
+      @close="floatCardVisible = false"
+      :navId="sortId"
+      @delete="deleteIcon(this.currentItem,this.sortId)">
     </FloatCard>
     <Drop 
       @createFile="createFile" 
@@ -638,7 +640,7 @@ export default {
       this.quick = true
       this.componentId = 'EditIcon'
       this.editItem = item
-      if (item.default.name) return
+      if (item.default?.name) return
       item.default = {
         name: item.name,
         icon: item.icon,

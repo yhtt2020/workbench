@@ -7,7 +7,8 @@
         :options="options" 
         ref="homelSlotRef" 
         :desk="desk" 
-        :envLimit="['offline']">
+        :envLimit="['offline']"
+        @delete="deleteCard">
         <div class="box-border">
             <div class="card-body"   v-for="(value,index) in gameData.slice(0, 3)" :key="index" @click="jump(value.url)" >
                 <div class="left-card">
@@ -61,14 +62,13 @@ export default {
         editing: {
             type: Boolean,
         },
+        openWay:{
+            type: String,
+            default: "desk"
+        }
     },
     data() {
         return {
-            options: {
-                defaultData: {
-                    customSize: '4x4',
-                }
-            },
             gameData:[],
             customSize:'4x4',
             refreshFlag:false
@@ -78,7 +78,12 @@ export default {
       this.onGetInfo()
       this.customData.customSize = '4x4'
     },
+    emit:['delete'],
     methods:{
+        // 自定义删除卡片
+        deleteCard(){
+            this.$emit('delete')
+        },
         async onGetInfo(){
             let dataList = await getGameInfo("/app/juhe/get",0);
             this.gameData = dataList;
@@ -104,6 +109,14 @@ export default {
                     tip:'刷新',
                     state:this.refreshFlag ? true : false
                 }
+            }
+        },
+        options() {
+            return {
+                defaultData:{
+                    customSize:'4x4'
+                },
+                customDel:this.openWay === 'nav' ? true : false
             }
         }
     }

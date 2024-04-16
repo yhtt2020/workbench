@@ -8,7 +8,8 @@
     :customIndex="customIndex" 
     :customData="customData" 
     :desk="desk" 
-    :envLimit="['offline']">
+    :envLimit="['offline']"
+    @delete="deleteCard">
     <!-- <div v-if="defaultCity" class="px-3 py-1 bg-mask rounded-xl pointer" @click="openWeatherDrawer" style="position: absolute;left: 45px;top:10px">
       {{ defaultCity.name }}
     </div> -->
@@ -104,17 +105,16 @@ export default {
     },
     desk:{
       type:Object
+    },
+    openWay:{
+      type:String,
+      default:'desk'
     }
   },
+  emit:['delete'],
   data() {
     return {
       today: "",
-      options:{
-        className:'card small',
-        title:'天气',
-        icon:'',
-        type:'weather',
-      },
       defaultValue:'',
       drawerTitle:'常用天气位置',
       env:{
@@ -149,6 +149,11 @@ export default {
         titleHover:true,
       }
     },
+    options(){
+      return {
+        customDel:this.openWay === 'nav' ? true : false,
+      }
+    },
     defaultCity(){
       if(this.customData && this.customData.id){
           const found = this.cities.find(el=>{
@@ -170,6 +175,10 @@ export default {
     this.customData.customSize = '2x2'
   },
   methods: {
+    // 自定义删除卡片事件
+    deleteCard() {
+      this.$emit("delete", this.customIndex);
+    },
     openWeatherDrawer(){
       this.$refs.regionDrawer.openDrawer()
     },

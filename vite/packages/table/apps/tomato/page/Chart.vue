@@ -4,7 +4,8 @@
         :customSize="'2x2'"
         :customIndex="customIndex" 
         :desk="desk" 
-        :customData="customData" >
+        :customData="customData" 
+        @delete="deleteCard">
         <div class="title">本周番茄时间</div>
         <div class="time">{{ this.weekTime }}</div>
 
@@ -45,21 +46,37 @@
             },
             desk: {
                 type: Object,
+            },
+            openWay:{
+                type:String,
+                default:'desk'
             }
         },
+        emit:['delete'],
         computed: {
             ...mapWritableState(tomatoStore, ['tomatoList','weekTime','maxTomato']),
-        },
-        data(){
-            return {
-                options:{
+            options(){
+                return {
+                    customDel:this.openWay === 'nav' ? true : false,
+                    bg:'#24B284',
                     className:'card small',
                     title:'TimerChart',
                     icon:'',
                     type:'timer',
                     noTitle:true,
-                    bg:"#24B284",
-                },
+                }
+            }
+        },
+        data(){
+            return {
+                // options:{
+                //     className:'card small',
+                //     title:'TimerChart',
+                //     icon:'',
+                //     type:'timer',
+                //     noTitle:true,
+                //     bg:"#24B284",
+                // },
                 activeIndex:0,
                 week:['日','一','二','三','四','五','六']
             }
@@ -80,6 +97,9 @@
                 let min = totalTime % 60
                 return Math.trunc(hour) + 'h' + min + 'm'
             },
+            deleteCard(){
+                this.$emit('delete')
+            }
         },
     };
 </script>

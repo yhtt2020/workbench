@@ -1,7 +1,15 @@
 <template>
- <xt-container :customIndex="customIndex" :customData="customData" :desk="desk"
- :menuList="menuList" v-model:customSize="customData.customSize"
-  :header="header" :options="options"  @leftClick="fullScreen" @resize="resize"
+ <xt-container 
+  :customIndex="customIndex" 
+  :customData="customData" 
+  :desk="desk"
+  :menuList="menuList" 
+  v-model:customSize="customData.customSize"
+  :header="header" 
+  :options="options"  
+  @leftClick="fullScreen" 
+  @resize="resize"
+  @delete="deleteCard"
  >
   <div class="box no-drag" @click="fullScreen">
     <div style="width: 100%;height: 100%;" class="flex items-center justify-center" :style="sliderScale">
@@ -47,7 +55,7 @@ export default {
  components:{
   Resize,ClockSettingModal,ClockFullScreen,
  },
-
+ emit: ["delete"],
  props:{
   customIndex: { type: Number, default: 0,},
   customData: { type: Object,default: {
@@ -55,6 +63,10 @@ export default {
       enableSecond:false,
     }},
   desk: { type: Object, },
+  openWay:{
+    type: String,
+    default: 'desk',
+  }
  },
 
  data(){
@@ -76,6 +88,7 @@ export default {
   }
  },
  mounted () {
+  // console.log(this.desk,'clock')
   // 当底部导航栏为windows模式时，点击导航栏中的时间，进入时间全屏
   this.$bus.on("openClockFullScreen",(data)=>{
     this.isClockFullScreen = data
@@ -147,6 +160,7 @@ export default {
         currentZoom:100,
         name: dateTimeStamp(Date.now()),
       },
+      customDel:this.openWay === 'nav' ? true : false,
     }
   },
   // 拖拽缩放
@@ -204,6 +218,9 @@ export default {
  methods:{
   ...mapActions(cardStore, ["updateCustomData"]),
   dateTimeStamp,
+  deleteCard(){
+    this.$emit("delete")
+  },
   // 更换时钟组件
   updateClockStyle(e){
    this.updateCustomData(this.customIndex,{ clockId:e },this.desk);

@@ -6,7 +6,9 @@
     :options="options" 
     :menu-list="menuList" 
     :customData="customData"
-    :desk="desk">
+    :customIndex="customIndex"
+    :desk="desk"
+    @delete="deleteCard">
     <template #left-title-icon>
       <div
         class="icon"
@@ -114,14 +116,9 @@ import { Icon as newIcon } from '@iconify/vue'
 import { prettyDisplayBytes } from '../../../js/action/supervisory'
 
 export default {
-  props: ['desk','customData'],
+  props: ['desk','customData','openWay','customIndex'],
   data () {
     return {
-      options: {
-        defaultData:{
-          customSize: '2x4'
-        }
-      },
       CPUOption,
       GPUOption,
       CPUData: {
@@ -152,7 +149,7 @@ export default {
       customSize:'2x4'
     }
   },
-
+  emit:['delete'],
   name: 'CPULineChart',
   components: {
     Widget,
@@ -166,7 +163,12 @@ export default {
     },
     lastUp () {
       return prettyDisplayBytes(this.CPUData.up)
-    }
+    },
+    options(){
+      return {
+         customDel:this.openWay === 'nav' ? true : false
+      }
+    },
   },
   mounted () {
     this.CPUEcharts()
@@ -287,6 +289,9 @@ export default {
   },
   methods: {
     ...mapActions(inspectorStore, ['startInspect', 'stopInspect']),
+    deleteCard () {
+      this.$emit('delete')
+    },
     go () {
       this.$router.push({ name: 'inspector' })
     },

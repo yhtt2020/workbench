@@ -4,7 +4,8 @@
       v-model:customSize="customSize"
       :options="options" 
       :customIndex="customIndex" 
-      :custom-data="customData">
+      :custom-data="customData"
+      @delete="deleteCard">
       <div class="example" v-if="isLoading">
         <a-spin />
       </div>
@@ -85,15 +86,13 @@
         type: Number,
         default: 0
       },
+      openWay:{
+        type:String,
+        default:'desk'
+      }
     },
     data() {
       return {
-        options:{
-          className:'card',
-          title:'正在热映',
-          // icon:'video',
-          type:'singleDoubanFilm'
-        },
         detailMovie: {},
         pageToggle: true,
         isLoading: false,
@@ -104,7 +103,18 @@
         }
       };
     },
+    computed: {
+      options(){
+        return {
+          customDel:this.openWay === 'nav' ? true : false
+        }
+      }
+    },
+    emit:['delete'],
     methods: {
+      deleteCard(){
+        this.$emit('delete')
+      },
       setDetail(){
         this.detailMovie.image = this.detailMovie.img.replace('2500x2500','240x354')
         this.detailMovie.members = this.detailMovie.star.replace(/,/g,' / ')
