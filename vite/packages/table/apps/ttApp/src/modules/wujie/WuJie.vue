@@ -17,6 +17,8 @@ const props = defineProps({
   },
 });
 onMounted(() => {});
+const randomName = "" + Date.now();
+console.log("randomName :>> ", randomName);
 const { bus, setupApp, preloadApp, destroyApp } = WujieVue;
 onUnmounted(() => {
   destroyApp(props.name);
@@ -30,12 +32,13 @@ if (location.href.startsWith("tsbapp://")) {
 </script>
 
 <template>
+  <!-- :alive="true" -->
+
   <WujieVue
     height="100%"
     width="100%"
     ref="wujie"
-    :name="name"
-    :alive="true"
+    :name="randomName"
     :url="url"
     :attrs="attrs"
     :plugins="[

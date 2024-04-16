@@ -36,7 +36,6 @@ const install = async () => {
     if (currentData.card) {
       let card = currentData.card;
       card.map((item) => {
-        item.id = nanoid(4);
         item.parentId = data.id;
         // 处理card路径
         let entry = item.entry;

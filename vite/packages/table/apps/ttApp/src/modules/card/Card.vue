@@ -26,18 +26,14 @@ onMounted(async () => {
   // 无数据情况
 
   if (!props.customData?.parentId) return;
-  // 双ID
-  console.log("props.customData?.parentId :>> ", props.customData?.parentId);
-  console.log("props.customData?.id :>> ", props.customData?.id);
   id.value = props.customData.id;
   // 查询数据
   let res = ttappStore.select(props.customData.parentId);
+  data.value = res;
   console.log("props.customData :>> ", props.customData);
   if (!res) return;
   // 解析数据
   let options = useParserCard(res);
-  data.value = res;
-
   cardHeader.value = options.header;
   let currentSize: any = useCardSize(props.customData.size);
 
@@ -157,8 +153,7 @@ onUnmounted(() => {
       <WuJie
         v-if="!loading"
         :url="customData._entry"
-        :name="customData.id"
-        :key="customData.parentId"
+        :name="customData.parentId"
       />
     </div>
   </xt-container>
