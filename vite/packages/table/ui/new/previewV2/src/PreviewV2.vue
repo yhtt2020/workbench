@@ -21,14 +21,16 @@
       style="width: 452px; height: 320px"
       :style="{ background: bg }"
     >
-      <component
-        :style="{ zoom: zoom }"
-        :desk="desks[0]"
-        :is="customComponent"
-        :custom-index="customIndex"
-        :custom-data="customData"
-        :custom-size="customSize"
-      />
+      <!-- 预览内容区域 -->
+      <div :style="{ zoom: zoom }">
+        <component
+          :desk="desks[0]"
+          :is="customComponent"
+          :custom-index="customIndex"
+          :custom-data="customData"
+          :custom-size="customSize"
+        />
+      </div>
     </div>
   </xt-modal>
 </template>
@@ -111,7 +113,11 @@ export default {
       let scaleW = (380 / (135 * str[0])).toFixed(4);
       let scaleH = (260 / (100 * str[1])).toFixed(4);
       scale = scaleW > scaleH ? scaleH : scaleW;
+
       scale = scale > 1 ? 1 : scale;
+
+      console.log("scale :>> ", scale);
+
       return scale;
     },
   },
@@ -134,13 +140,15 @@ export default {
       return list;
     },
     add() {
-      useAddCard({
-        name:this.name,
-        data:this.data,
-        id:Date.now(),
-        deskId:this.currentDesk
-      })
+      this.visible = false;
       message.success("添加成功");
+
+      useAddCard({
+        name: this.name,
+        data: this.data,
+        id: Date.now(),
+        deskId: this.currentDesk,
+      });
       this.close();
     },
   },

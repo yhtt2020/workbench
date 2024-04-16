@@ -4,20 +4,12 @@ import { useTTAppStore } from "../../../../../ttApp/src/store";
 import { storeToRefs } from "pinia";
 
 const { item } = defineProps<{ item: any }>();
-
+// esc dbl 循环二级
 // ttapp数据
 const ttappStore: any = useTTAppStore();
 const { modal } = storeToRefs(ttappStore);
 const menus = computed(() => {
-  return [
-    {
-      name: "添加小组件",
-      newIcon: "fluent:add-16-regular",
-      cb: () => {
-        addPreview();
-      },
-      disabled: item?.card ? false : true,
-    },
+  let res = [
     // {
     //   name: "编辑信息",
     //   newIcon: "fluent:compose-16-regular",
@@ -34,33 +26,53 @@ const menus = computed(() => {
       },
     },
   ];
+  if (item?.card) {
+    let arr: any = [];
+    item.card?.map((data) => {
+      arr.push({
+        name: `${data.name || item.name}组件`,
+        newIcon: "fluent:add-16-regular",
+
+        cb: () => {
+          addPreview(data);
+        },
+      });
+    });
+    res.unshift(...arr);
+  }
+
+  return res;
 });
 
 const previewVisible = ref(false);
-const previewData = {
+const previewData = ref({
   name: "TTAppCard",
   data: {
-    id: item.id,
-    customSize: item.card?.size,
+    id: "",
+    customSize: "",
   },
-};
-const addPreview = () => {
+  size: "",
+});
+const addPreview = (data: any) => {
+  console.log("data :>> ", data);
+  previewData.value = {
+    name: "TTAppCard",
+    data,
+    size: data.size,
+  };
+  console.log("previewData.value :>> ", previewData.value);
   previewVisible.value = true;
-  //  obj =
-  const card = item.modules?.card;
-  console.log("card :>> ", card);
 };
 /** 打开主应用弹窗 */
 const openModal = () => {
   modal.value.id = item.id;
   modal.value.visible = true;
 };
-
 </script>
 
 <template>
   <!-- 添加时预览组件 -->
-<!--  {{ item }}-->
+  <!--  {{ item }}-->
   <xt-preview-v2
     v-if="previewVisible"
     v-model="previewVisible"

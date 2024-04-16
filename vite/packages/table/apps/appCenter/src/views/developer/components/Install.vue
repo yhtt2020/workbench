@@ -4,6 +4,7 @@ import { useInstallTTApp } from "../../../../../ttApp/src/hooks";
 import { useTTAppStore } from "../../../../../ttApp/src/store";
 import { storeToRefs } from "pinia";
 import { getAppImg } from "../../../../../ttApp/src/hooks/getAppImg";
+import { nanoid } from "nanoid";
 
 const ttappStore: any = useTTAppStore();
 const { ttappList } = storeToRefs(ttappStore);
@@ -33,18 +34,21 @@ const install = async () => {
     }
     // 如果有card模块
     if (currentData.card) {
-      // 处理card路径
-      let entry = currentData.card.entry;
-      if (entry.charAt(0) == "/") {
-        currentData.card._entry = `ttapp://${data.id}/${currentData.card.entry}`;
-      } else {
-        currentData.card._entry = entry;
-      }
-      // 处理card预览图路径
-      currentData.card._preview = getAppImg(
-        currentData.id,
-        currentData.card.preview
-      );
+      let card = currentData.card;
+      card.map((item) => {
+        item.id = nanoid(4);
+        item.parentId = data.id;
+        // 处理card路径
+        let entry = item.entry;
+        if (entry.charAt(0) == "/") {
+          item._entry = `ttapp://${currentData.id}/${item.entry}`;
+        } else {
+          item._entry = entry;
+        }
+        // 处理card预览图路径
+        item._preview = getAppImg(currentData.id, item.preview);
+        return item;
+      });
     }
     console.log("currentData :>> ", currentData);
     message.success("安装成功");
@@ -59,7 +63,7 @@ const install = async () => {
   else {
     message.error("文件上传失败请重试");
   }
-  console.log('data :>> ', data);
+  console.log("data :>> ", data);
 };
 </script>
 

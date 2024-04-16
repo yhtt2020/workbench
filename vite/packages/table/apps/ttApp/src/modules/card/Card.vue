@@ -1,61 +1,85 @@
 <script setup lang="ts">
 // import dbStorage from "../../../../../store/dbStorage";
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, onUnmounted, nextTick } from "vue";
 import { useParserCard } from "./parser";
 import WuJie from "../wujie/WuJie.vue";
 import { useTTAppStore } from "../../store";
 import { storeToRefs } from "pinia";
-
+import { useCardSize } from "../../../../../hooks";
+import { useWuJieStore } from "../wujie/store";
+const wujieStore = useWuJieStore();
+const { data: wujieData }: any = storeToRefs(wujieStore);
 
 const ttappStore: any = useTTAppStore();
 const { modal } = storeToRefs(ttappStore);
 const loading = ref(true);
 // 卡片头部
 const cardHeader: any = ref({});
-// 卡片大小
-const customSize = ref("2x2");
-const wujie: any = ref({});
-
+const size = ref();
+const sizeList = ref();
 const data = ref();
 // 卡片状态 无数据、加载中、正常 对应的值分别为 noData、loading、normal
-
 const status = ref("loading");
+const id = ref();
 onMounted(async () => {
   loading.value = false;
   // 无数据情况
-  if (!props.customData?.id) return;
+
+  if (!props.customData?.parentId) return;
+  // 双ID
+  console.log("props.customData?.parentId :>> ", props.customData?.parentId);
+  console.log("props.customData?.id :>> ", props.customData?.id);
+  id.value = props.customData.id;
   // 查询数据
-  let res = ttappStore.select(props.customData.id);
-  console.log("res :>> ", res);
+  let res = ttappStore.select(props.customData.parentId);
+  console.log("props.customData :>> ", props.customData);
   if (!res) return;
   // 解析数据
   let options = useParserCard(res);
   data.value = res;
-  customSize.value = options.customSize;
+
   cardHeader.value = options.header;
-  wujie.value = options.wujie;
+  let currentSize: any = useCardSize(props.customData.size);
+
+  if (props.customData.sizeList) {
+    sizeList.value = props.customData.sizeList.map((item: any) => {
+      return {
+        value: item,
+        name: item,
+      };
+    });
+  }
+  size.value = {
+    width: currentSize.width + "px",
+    height: currentSize.height + "px",
+  };
   loading.value = false;
+  nextTick(() => {
+    perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {
+      wheelPropagation: false,
+    });
+  });
 });
 const props = defineProps({
   customIndex: {},
   customData: {
     type: Object,
+    required: true,
   },
 });
 
 const options = ref({
   // bg: "pink",
+  resize: props.customData?.resize,
 });
-
-const visible = ref(false);
-
+const refreshFn = () => {
+  loading.value = true;
+  setTimeout(() => {
+    loading.value = false;
+  }, 1);
+};
 const refresh = ref({
-  fn: () => {
-    loading.value = true;
-    setTimeout(() => {
-      loading.value = false;
-    }, 1);
-  },
+  fn: refreshFn,
   newIcon: "fluent:arrow-clockwise-16-regular",
   tip: "刷新",
   title: "刷新",
@@ -72,15 +96,36 @@ const menus = computed(() => {
     refresh.value,
     {
       newIcon: "fluent:open-16-regular",
-      title: "弹窗内打开",
+      title: "打开主应用",
       fn: () => {
         modal.value.id = data.value.id;
         modal.value.visible = true;
       },
     },
+    {
+      newIcon: "fluent:open-16-regular",
+      title: "清空缓存",
+      fn: () => {
+        wujieData.value[props.customData.id] = {};
+        refreshFn();
+      },
+    },
   ];
-  console.log("list :>> ", list);
   return list;
+});
+
+import PerfectScrollbar from "perfect-scrollbar";
+const scrollbar: any = ref(null);
+const perfectScrollbar: any = ref(null);
+
+const resize = () => {
+  // perfectScrollbar.value.update();
+  // scrollbar.value.scrollTop += 1;
+  // perfectScrollbar.value.update();
+};
+onUnmounted(() => {
+  perfectScrollbar.value?.destroy();
+  perfectScrollbar.value = null;
 });
 </script>
 
@@ -91,7 +136,9 @@ const menus = computed(() => {
     :header="header"
     :menuList="menus"
     :options="options"
-    :customSize="customSize"
+    v-model:customSize="customData.size"
+    :sizeList="sizeList"
+    @resize="resize"
     v-if="data"
   >
     <template #header-left v-if="!loading">
@@ -102,14 +149,18 @@ const menus = computed(() => {
         {{ data?.name }}
       </div>
     </template>
-    <template v-if="!loading">
-      <div
-        class="w-full flex flex-col h-full"
-        style="overflow: hidden !important"
-      >
-        <WuJie v-bind="wujie" :id="customData.id" class="" />
-      </div>
-    </template>
+    <div
+      class="relative w-full h-full overflow-hidden"
+      ref="scrollbar"
+      style="overflow: hidden !important"
+    >
+      <WuJie
+        v-if="!loading"
+        :url="customData._entry"
+        :name="customData.id"
+        :key="customData.id"
+      />
+    </div>
   </xt-container>
 </template>
 <style lang="scss"></style>

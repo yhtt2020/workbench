@@ -12,6 +12,7 @@ const modalRef: any = ref(null);
 const data: any = ref({});
 
 /** 初始化方法 */
+const id = ref();
 const init = () => {
   // 开始
   loading.value = true;
@@ -92,15 +93,17 @@ const modalSize = computed(() => {
 const max = (value: boolean) => {
   isMax.value = value;
 };
-
 import PerfectScrollbar from "perfect-scrollbar";
 const scrollbar: any = ref(null);
 const perfectScrollbar: any = ref(null);
 onMounted(() => {
   setTimeout(() => {
-    perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
+    perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {
+      wheelPropagation: false,
+    });
   }, 1);
 });
+
 </script>
 
 <template>
@@ -146,11 +149,14 @@ onMounted(() => {
     <xt-mix-menu :menus="menuList" :stopPropagation="false">
       <div
         class="relative w-full h-full overflow-hidden"
-
         ref="scrollbar"
         :style="modalSize"
       >
-        <WuJie v-if="!loading" :url="data.main._entry" :name="data.id" />
+        <WuJie
+          v-if="!loading"
+          :url="data.main._entry"
+          :name="data.id"
+        />
       </div>
     </xt-mix-menu>
     <!-- 最小化左侧 -->

@@ -55,47 +55,47 @@
               @mouseenter="leftMouseEnter"
               @mouseleave="leftMouseLeave"
               :class="[
-              leftHover ? 'header-open cursor-pointer' : 'header-default',
-            ]"
-          >
-            <!-- 图标区域 -->
-            <div
-              class="flex items-center h-full"
-              @click="leftIconClick"
-              @mouseenter="iconMouseEnter"
-              @mouseleave="iconMouseLeave"
+                leftHover ? 'header-open cursor-pointer' : 'header-default',
+              ]"
             >
-              <xt-ify-icon v-if="leftHover" :icon="header.leftHoverIcon" />
-              <template v-else>
-                <xt-icon
-                  v-if="header.icon"
-                  :icon="header.icon"
-                  type=""
-                  size="19"
-                  w="20"
-                />
-                <xt-ify-icon
-                  v-else-if="header.ifyIcon"
-                  :icon="header.ifyIcon"
-                />
-                <xt-icon-show
-                  v-else-if="header.showIcon"
-                  boxW="20"
-                  boxH="20"
-                  w="18"
-                  h="18"
-                  :modelValue="header.showIcon"
-                />
-              </template>
-            </div>
-            <!-- 标题区域 -->
-            <div
-              class="flex items-center h-full px-2 ml-1"
-              @click="titleClick"
-              @mouseenter="titleMouseEnter"
-              @mouseleave="titleMouseLeave"
-              style="z-index: 999;"
-              :class="{ 'header-title': titleHover ,'pointer':true}"
+              <!-- 图标区域 -->
+              <div
+                class="flex items-center h-full"
+                @click="leftIconClick"
+                @mouseenter="iconMouseEnter"
+                @mouseleave="iconMouseLeave"
+              >
+                <xt-ify-icon v-if="leftHover" :icon="header.leftHoverIcon" />
+                <template v-else>
+                  <xt-icon
+                    v-if="header.icon"
+                    :icon="header.icon"
+                    type=""
+                    size="19"
+                    w="20"
+                  />
+                  <xt-ify-icon
+                    v-else-if="header.ifyIcon"
+                    :icon="header.ifyIcon"
+                  />
+                  <xt-icon-show
+                    v-else-if="header.showIcon"
+                    boxW="20"
+                    boxH="20"
+                    w="18"
+                    h="18"
+                    :modelValue="header.showIcon"
+                  />
+                </template>
+              </div>
+              <!-- 标题区域 -->
+              <div
+                class="flex items-center h-full px-2 ml-1"
+                @click="titleClick"
+                @mouseenter="titleMouseEnter"
+                @mouseleave="titleMouseLeave"
+                style="z-index: 999"
+                :class="{ 'header-title': titleHover, pointer: true }"
               >
                 <slot name="title"> {{ title }} </slot>
               </div>
@@ -204,15 +204,15 @@ import { cardStore as useCardStore } from "../../store/card";
 import { useWidgetStore } from "./store";
 import { useFreeLayoutStore } from "../desk/freeLayout/store";
 import { useMouseInElement } from "@vueuse/core";
-import { navStore } from '../../store/nav'; 
+import { navStore } from '../../store/nav';
 
 import Resize from "./Resize.vue";
 import RightMenu from "./RightMenu.vue";
 import { useEnv } from "../../ui/hooks/useEnv";
 import { addCardToNav } from './hooks/addCardToNav'
 import { useConversionCard } from './hooks/useConversionCard'
-import { trigger } from "mousetrap";
 import { useDelCard } from "../../hooks";
+
 
 const container = ref(0);
 const { isOutside } = useMouseInElement(container);
@@ -654,7 +654,8 @@ const removeCard = () => {
 };
 // 实际删除事件
 const customDelete = () => {
-  useDelCard(props.customIndex);
+  // useDelCard(props.customIndex);
+  cardStore.removeCard(props.customIndex, props.desk);
 };
 
 // 设置自定义数据

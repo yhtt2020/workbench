@@ -17,15 +17,6 @@ export const useParserCard = (data: any) => {
   // 解析卡片头部
 
   cardData.header = parserHeader(data, card);
-  // 解析无界配置
-  cardData.wujie = parserWuJie(data, card);
-
-  if (card.size) {
-    cardData.customSize = card.size;
-  } else {
-    cardData.customSize = "2x2";
-  }
-
   return cardData;
 };
 
@@ -50,10 +41,4 @@ const parserHeader = (props: any, card: any) => {
   return obj;
 };
 
-const parserWuJie = (props: any, card: any) => {
-  let wujie: any = {};
-  wujie.name = props.id;
-  wujie.url = card._entry;
 
-  return wujie;
-};
