@@ -10,9 +10,10 @@ export const useWuJiePlugins = (id: string,appInfo:any) => {
   // 数据不存在
   if (!(id in data.value)) {
     data.value[id] = {};
-    return;
   }
-
+  if (!(appInfo.id in data.value)) {
+    data.value[appInfo.id] = {};
+  }
   let res = {
     jsAfterLoaders: [
       // // 插入一个外联脚本
@@ -53,6 +54,7 @@ export const useWuJiePlugins = (id: string,appInfo:any) => {
         data.value[appInfo.id] = {};
       };
 
+      console.log(iframeWindow,'传递下去的window')
       return iframeWindow;
     },
     cssAfterLoaders: [
