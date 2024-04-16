@@ -36,7 +36,7 @@ if (location.href.startsWith("tsbapp://")) {
     ref="wujie"
     :name="name"
     :alive="true"
-    :url="'http://localhost:5173/resume' || url"
+    :url="url"
     :attrs="attrs"
     :plugins="[
       {
