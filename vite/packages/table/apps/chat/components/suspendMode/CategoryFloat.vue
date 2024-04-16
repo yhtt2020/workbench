@@ -130,8 +130,15 @@
         "
       />
 
-      <div class="flex-1">
-        <xt-scrollbar :y="true" style="height: 60vh">
+      <div class="grow tree-container">
+        <template v-if="firstChannel.length === 0 && secondaryChannel.length === 0">
+          <div class="h-full flex flex-col items-center justify-center">
+            <CategoryEmpty :role="currentInfo.role"/>
+          </div>
+        </template>
+
+        <!-- 树状列表 -->
+        <xt-scrollbar :y="true" class="w-full h-full">
           <template v-if="firstChannel.length !== 0">
             <!-- 单列模式 -->
             <template v-if="columnVisible === false">
@@ -175,6 +182,7 @@
                     <RightDropdown
                       :newIcon="'fluent:more-horizontal-16-regular'"
                       :list="childrenList"
+                      :dropItem="item"
                     />
                   </div>
                 </template>
@@ -211,9 +219,10 @@
     </div>
   </div>
 
-  <!-- 添加社群新应用组件(带有频道列表分类) 第一步 -->
+  <!-- 添加社群新应用组件(带有频道列表分类) 开始 -->
+  <!-- 第一步 -->
   <AddNewApp ref="newAppRef" @next="handleFirstStep" />
-  <!-- 添加社群新应用组件(带有频道列表分类) 第二步 -->
+  <!-- 第二步 -->
   <!-- 社区版块 -->
   <AddNewForum
     ref="newForumRef"
@@ -222,8 +231,9 @@
   />
   <!-- 群聊模块 -->
   <!-- 链接模块 -->
-  <!-- 添加社群新应用组件(带有频道列表分类) 第三步 -->
+  <!--  第三步 -->
   <AddNewAppClass ref="newClassRef" @prev="handleForumThreePrev" />
+  <!-- 添加社群新应用组件(带有频道列表分类) 结束 -->
 </template>
 
 <script setup>
@@ -239,6 +249,7 @@ import RightDropdown from "../dropdown/Dropdown.vue";
 import AddNewApp from "../add/AddNewApp.vue";
 import AddNewForum from "../add/newapp/AddNewForum.vue";
 import AddNewAppClass from "../add/newapp/AddNewAppClass.vue";
+import CategoryEmpty from "../../page/empty/CategoryEmpty.vue";
 
 const { proxy } = getCurrentInstance();
 const props = defineProps({
@@ -382,18 +393,35 @@ const childrenList = ref([
   {
     newIcon: "fluent:apps-add-in-20-filled",
     title: "添加新应用",
-    callBack: () => {},
+    callBack: (item, value) => {
+      newAppRef.value.openAddNewApp();
+    },
   },
   {
     title: "应用设置",
     newIcon: "fluent:settings-16-regular",
-    callBack: () => {},
+    callBack: (currentItem, value) => {},
   },
   {
-    title: "删除应用",
+    title: "删除分组",
     newIcon: "akar-icons:trash-can",
     type: "delete",
-    callBack: () => {},
+    callBack: (currentItem, value) => {
+      window.$ui.confirm(
+        "删除应用操作不可撤销,应用被删除后，子应用将被移动到顶层。是否确定删除？",
+        "",
+        {
+          ok: async () => {
+            const res = chatCommunity.deleteChannel(value.id, no.value);
+            if (res.status === 1) {
+              message.success(`${res.info}`);
+            }
+          },
+          type: "warning",
+          noText: "取消",
+        }
+      );
+    },
   },
 ]);
 
@@ -492,9 +520,9 @@ const handleForumSecondaryNext = (data) => {
   newClassRef.value.openCategoryClassModal();
 };
 // 社区版块第三步返回第二步
-const handleForumThreePrev = () =>{
+const handleForumThreePrev = () => {
   newForumRef.value.openForumModal();
-}
+};
 
 // 处理频道点击事件
 const handleCommunity = (data) => {
@@ -553,5 +581,30 @@ const handleCommunity = (data) => {
   margin: 0 !important;
   color: var(--primary-text);
   max-width: 185px;
+}
+@media screen and(max-height:500px) {
+  .tree-container{
+    height: 20vh !important;
+  }
+}
+@media screen and(min-height:501px) and (max-height:700px){
+  .tree-container{
+    height: 40vh !important;
+  }
+}
+@media screen and(min-height:701px) and (max-height:800px){
+  .tree-container{
+    height: 48vh !important;
+  }
+}
+@media screen and(min-height:801px) and (max-height:900px){
+  .tree-container{
+    height: 50vh !important;
+  }
+}
+@media screen and(min-height:901px){
+  .tree-container{
+    height: 60vh !important;
+  }
 }
 </style>

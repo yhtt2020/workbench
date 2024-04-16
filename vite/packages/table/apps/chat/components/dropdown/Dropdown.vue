@@ -52,7 +52,7 @@
             v-if="index < list.length - 2"
             style="width: 184px; margin-bottom: 8px"
             class="rounded-lg flex items-center h-11 drop-item xt-text-2"
-            @click="item.callBack"
+            @click="item.callBack(item,dropItem)"
           >
             <xt-ify-icon :icon="item.newIcon" size="20" class="xt-text" />
             <span class="pl-4 font-16 xt-font xt-text">
@@ -73,7 +73,7 @@
             v-if="index >= list.length - 2"
             style="width: 184px; margin-bottom: 8px"
             class="rounded-lg flex items-center h-11 drop-item xt-text-2"
-            @click="item.callBack"
+            @click="item.callBack(item,dropItem)"
           >
             <xt-ify-icon :icon="item.newIcon" size="20" class="xt-text" />
             <span
@@ -126,6 +126,10 @@ const props = defineProps({
     type: Object,
     default: null,
   },
+  dropItem:{
+    type:Object,
+    default:()=>({})
+  }
 });
 const { newIcon, wVisible, enableButton, title, list, id } = toRefs(props);
 

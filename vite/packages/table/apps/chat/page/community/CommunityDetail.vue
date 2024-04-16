@@ -78,11 +78,13 @@ onBeforeRouteUpdate((to, from, next) => {
 
 // 触发当前左侧点击事件
 const handleCurrentItem = async (data) => {
+  const { type } = data.value ? data.value : data;
+  const currentData = data.value ? data.value : data;
   // 链接
-  if (data.value.type === "link") {
-    if (data.value.name !== "Roadmap") {
-      const method = data.value.props.openMethod;
-      const url = data.value.props.url;
+  if (type === "link") {
+    if (currentData.name !== "Roadmap") {
+      const method = currentData.props?.openMethod;
+      const url = currentData.props.url;
       // 想天浏览器打开
       if (method === "userSelect") {
         browser.openInInner(url);
@@ -101,20 +103,15 @@ const handleCurrentItem = async (data) => {
     }
   }
   // 群聊
-  else if (data.value.type === "group") {
-    const groups = window.$TUIKit?.TUIStore?.storeMap?.group?.store?.groupList;
-    const groupProps =
-      data.value.props[0] !== undefined
-        ? data.value.props[0]
-        : data.value.props;
-    const index = _.findIndex(groups, (findItem) => {
-      return String(findItem.groupID) === String(changeData.groupID);
+  else if (type === "group") {
+    const groupList = window.$TUIKit?.TUIStore?.storeMap?.group?.store?.groupList;
+    const groupProps =currentData.props[0] ? currentData.props[0] : currentData.props;
+    const index = _.findIndex(groupList, (findItem) => {
+      return String(findItem.groupID) === String(groupProps.groupID);
     });
-    const enableGroup = await checkGroupShip([`${changeData.groupID}`]); // 有没有添加群聊
-    // console.log("群聊", groupProps);
   }
   // 其他
-  currentItem.value = data.value;
+  currentItem.value = currentData;
 };
 
 onMounted(() => {
