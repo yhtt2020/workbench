@@ -38,8 +38,7 @@
 </template>
 
 <script setup>
-import { ref, getCurrentInstance, onMounted, toRefs } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { ref,onMounted,  } from "vue";
 import cache from "../../components/card/hooks/cache";
 import { useUserPermit } from "./useUserPermit";
 import XtButton from "../../ui/libs/Button/index.vue";
@@ -49,11 +48,7 @@ import { storeToRefs } from "pinia";
 const permissionStore = usePermissionStore();
 const { token } = storeToRefs(permissionStore);
 const loginVisible = ref(true);
-const router = useRouter();
-const { proxy } = getCurrentInstance();
-import axios from 'axios'
 import { useGlobalStore } from "../../apps/global/store";
-import { sUrl } from '../../consts'
 import { useEnv } from '../useEnv'
 
 const globalStore = useGlobalStore();
