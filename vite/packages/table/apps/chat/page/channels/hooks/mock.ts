@@ -1,4 +1,4 @@
-
+// 社区数据模拟
 const groupMsg = ([
     {
         logo:'	https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/e685acf36f7ca13d0a8fbe05f0b21aef.png?imageMogr2/crop/196x196/gravity/center',

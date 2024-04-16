@@ -22,7 +22,7 @@
     </div>
 </template>
 
-<script setup lang='ts'>
+<script setup>
 import { ref, reactive,onMounted,computed } from 'vue'
 import { useRouter,useRoute } from 'vue-router'
 import JoinModal from './JoinModal.vue'

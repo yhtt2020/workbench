@@ -170,6 +170,7 @@ const leftList = ref([
     tab: "meta",
     type: "meta",
     newIcon: "fluent:star-16-regular",
+    route: { name: "channel", params: { no: "" } },
   },
   {
     type: "more",

@@ -80,13 +80,13 @@ import MyCommunity from "../apps/chat/page/community/CommunityDetail.vue";
 import OfficialCommunity from "../apps/chat/page/community/OfficialCommunity.vue";
 import ChatAdmin from "../apps/chat/page/admin/Admin.vue";
 import Contact from "../apps/chat/page/contact/Contact.vue";
+import Channel from "../apps/chat/page/channels/channels.vue";
+import ChannelIndex from "../apps/chat/page/channels/ChannelsIndex.vue";
+import Circle from "../apps/chat/page/channels/groups.vue";
+import CircleDetail from "../apps/chat/page/channels/GroupsDetail.vue";
 
 // import ChatDesk from '../page/chat/chatDesk.vue'
 // // import ImTeam from '../page/chat/team.vue'
-// import Channel from '../page/channels/Channels.vue'
-// import ChannelIndex from '../page/channels/ChannelsIndex.vue'
-// import Circle from '../page/channels/Groups.vue'
-// import CircleDetail from '../page/channels/GroupsDetail.vue'
 // import CommunitySetting from '../page/chat/page/setting/communitySetting.vue'
 // import MemberManage from '../page/chat/page/setting/memberManage.vue'
 // import MoreSetting from '../page/chat/page/setting/moreSetting.vue'
@@ -332,23 +332,66 @@ export default [
                   tab3: "contact",
                 },
               },
-              /**小队路由**/ 
-              // {
-              //   path: "/team",
-              //   name: "team",
-              //   component: Team,
-              //   children: [
-              //     {
-              //       path: "",
-              //       name: "hall",
-              //       meta: {
-              //         tab1: "community",
-              //         tab2: "team",
-              //       },
-              //       component: Hall,
-              //     },
-              //   ],
-              // },
+              /**社区路由**/
+              {
+                path: "/channel",
+                name: "channel",
+                component: Channel,
+                meta: {
+                  tab1: "channel",
+                },
+                redirect: {
+                  name: "channelsIndex",
+                },
+                children: [
+                  {
+                    path: "",
+                    name: "channelsIndex",
+                    meta: {
+                      tab1: "community",
+                      tab2: "channel",
+                      tab3: "channelsIndex",
+                    },
+                    component: ChannelIndex,
+                  },
+                  {
+                    path: "",
+                    name: "circle",
+                    meta: {
+                      tab1: "community",
+                      tab2: "channel",
+                      tab3: "circle",
+                    },
+                    component: Circle,
+                  },
+                  {
+                    path: "",
+                    name: "circleDetail",
+                    meta: {
+                      tab1: "community",
+                      tab2: "channel",
+                    },
+                    component: CircleDetail,
+                  },
+                ],
+              },
+              /**小队路由**/
+              {
+                path: "/team",
+                name: "team",
+                component: Team,
+                children: [
+                  {
+                    path: "",
+                    name: "hall",
+                    meta: {
+                      tab1: "community",
+                      tab2: "team",
+                    },
+                    component: Hall,
+                  },
+                ],
+              },
             ],
           },
 
@@ -406,49 +449,6 @@ export default [
           //   name: 'chatDesk',
           //   component: ChatDesk
           // },
-
-          // {
-          //   path:'/channel',
-          //   name:'channel',
-          //   component:Channel,
-          //   // meta:{
-          //   //   tab1:'channel'
-          //   // },
-          //   redirect:{
-          //     name:'channelsIndex'
-          //   },
-          //   children:[
-          //     {
-          //       path:'',
-          //       name:'channelsIndex',
-          //       meta:{
-          //         tab1:'community',
-          //         tab2:'channel',
-          //         tab3:'channelsIndex'
-          //       },
-          //       component:ChannelIndex
-          //     },
-          //     {
-          //       path:"",
-          //       name:'circle',
-          //       meta:{
-          //         tab1:'community',
-          //         tab2:'channel',
-          //         tab3:'circle'
-          //       },
-          //       component:Circle
-          //     },
-          //     {
-          //       path:"",
-          //       name:'circleDetail',
-          //       meta:{
-          //         tab1:'community',
-          //         tab2:'channel'
-          //       },
-          //       component:CircleDetail
-          //     }
-          //   ]
-          // }
         ],
       },
 

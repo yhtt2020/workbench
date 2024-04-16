@@ -2,7 +2,7 @@
   <div @resize="updateScroller" class="container flex flex-col xt-text">
     <div class="top-bar">
       <div class="left shrink h-[40px] flex">
-        <!-- 当是从圈子列表进入的时候，便显示这个回退 -->
+        当是从圈子列表进入的时候，便显示这个回退
         <button class="mr-3 border-0 rounded-md xt-bg pointer w-[40px] h-[40px] "
           style="flex-shrink: 0;" @click="goBack">
           <Icon class="text-lg xt-text" style="vertical-align: sub;" icon="fluent:chevron-left-16-filled" />
@@ -12,8 +12,8 @@
             天天工作台
           </div>
           <div class="ml-1 xt-bg" style="font-size: 14px; border-radius: 4px;" >
-            <!-- {{ props.forumId }}
-             -->
+            <!-- {{ props.forumId }} -->
+            
              11111
           </div>
 
@@ -43,7 +43,7 @@
         </div>
       </div>
       <div class="flex mr-6 right">
-        <!-- <div class="flex items-center"> -->
+        <div class="flex items-center">
         <a-button type="primary" style="color: var(--primary-text);" @click="visibleModal">
           <Icon class="pr-1 text-xl xt-theme-text" style="vertical-align: sub;" icon="akar-icons:circle-plus-fill" />发布
         </a-button>
@@ -56,7 +56,7 @@
         </button>
 
 
-        <!-- </div> -->
+        </div>
 
       </div>
       <publishModal v-if="showPublishModal" :showPublishModal="showPublishModal" @handleOk="modalVisible"
@@ -91,24 +91,24 @@
         :settings="settingsScroller" style="height: 100%;" :style="{ width: detailVisible ? '55%' : '40%' }">
         <div class="h-full detail" v-if="detailVisible">
           <DetailCard :cardData="detailText" @closeDetail="closeDetail"></DetailCard>
-          <!-- <a-pagination v-model:current="detailCurrent" :total="totalReply" simple @change="changePage" /> -->
+          <a-pagination v-model:current="detailCurrent" :total="totalReply" simple @change="changePage" />
         </div>
       </vue-custom-scrollbar>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref, reactive, onBeforeMount, onMounted, computed, watch, onBeforeUpdate, onUpdated } from 'vue';
 import { DownOutlined } from '@ant-design/icons-vue';
-import ComCard from '../../../chat/com/ComList.vue';
-import DetailCard from '../../../chat/com/Detail.vue';
-import publishModal from '../../../chat/com/PublishModal.vue';
-import { useCommunityStore } from '../../../chat/commun'
+import ComCard from '../../../com/ComList.vue';
+import DetailCard from '../../../com/Detail.vue';
+import publishModal from '../../../com/publishModal.vue';
+import { useCommunityStore } from '../../../../store/commun'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import { Icon } from '@iconify/vue'
-import browser from '../../../../js/common/browser';
+import browser from '../../../../../../js/common/browser';
 import { useRouter,useRoute } from 'vue-router'
 const router=useRouter()
 const current = ref(1)
@@ -273,7 +273,8 @@ onUpdated(() => {
   // NProgress.configure({ showSpinner: false });
 })
 </script>
-<style lang='scss' scoped>
+
+<!-- <style lang='scss' scoped>
 @media screen and (max-width: 1200px) {
   .thread-list {
     width: 100% !important;
@@ -430,4 +431,4 @@ onUpdated(() => {
       display: none;
     }
   }
-}</style>
+}</style> -->

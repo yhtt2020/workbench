@@ -9,10 +9,13 @@ import AddNewApp from "../../components/add/AddNewApp.vue";
 import AddNewForum from "../../components/add/newapp/AddNewForum.vue";
 /**链接**/
 import AddCategoryLink from "../../components/link/AddCategoryLink.vue";
+/**群聊**/
+import AddNewAppChat from "../../components/add/AddNewAppChat.vue";
 
 const newAppRef = ref(null);
 const newForumRef = ref(null);
 const newLinkRef = ref(null);
+const newChatRef = ref(null);
 
 /**事件**/
 const openNewAppFirstStep = () => {
@@ -31,8 +34,8 @@ const handleFirstStep = (data) => {
     case "link":
       newLinkRef.value.openLinkModal();
       break;
-    case 'chat':
-      
+    case "chat":
+      newChatRef.value.openChatModal();
       break;
   }
 };
@@ -55,8 +58,8 @@ defineExpose({
   />
   <!-- 链接 -->
   <AddCategoryLink ref="newLinkRef" />
-
   <!-- 群聊 -->
+  <AddNewAppChat ref="newChatRef" @prev="handleForumPrev"/>
 </template>
 
 <style lang="scss" scoped>
