@@ -158,7 +158,7 @@ onUnmounted(() => {
         v-if="!loading"
         :url="customData._entry"
         :name="customData.id"
-        :key="customData.id"
+        :key="customData.parentId"
       />
     </div>
   </xt-container>
