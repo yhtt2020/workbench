@@ -536,7 +536,7 @@ export default {
     editIcon(item) {
       this.componentId = "EditIcon";
       this.editItem = item;
-      if (item.default.name) return;
+      if (item.default?.name) return;
       item.default = {
         name: item.name,
         icon: item.icon,

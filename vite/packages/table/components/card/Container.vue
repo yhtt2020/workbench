@@ -493,7 +493,7 @@ const addObj = computed(() => {
       {
         title:'主导航',
         newIcon:'fluent:tablet-16-regular',
-        color: navigationToggle.value[2] ? '#d9d9d8' : '#767574',
+        color: navigationToggle.value[2] ? 'var(--primary-text)' : 'var(--secondary-text)',
         fn: () => {
           // addMoreIcon('foot','主导航')
           console.log('主导航')
@@ -503,7 +503,7 @@ const addObj = computed(() => {
       {
         title:'左侧导航栏',
         newIcon:'fluent:panel-left-contract-16-regular',
-        color: navigationToggle.value[0] ? '#d9d9d8' : '#767574',
+        color: navigationToggle.value[0] ? 'var(--primary-text)' : 'var(--secondary-text)',
         fn: () => {
           // addMoreIcon('left','左侧导航栏')
           console.log('左侧导航栏')
@@ -513,7 +513,7 @@ const addObj = computed(() => {
       {
         title:'右侧导航栏',
         newIcon:'fluent:panel-right-contract-16-regular',
-        color: navigationToggle.value[1] ? '#d9d9d8' : '#767574',
+        color: navigationToggle.value[1] ? 'var(--primary-text)' : 'var(--secondary-text)',
         fn: () => {
           // addMoreIcon('right','右侧导航栏')
           console.log('右侧导航栏')
