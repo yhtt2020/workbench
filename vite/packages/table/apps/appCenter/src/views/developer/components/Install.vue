@@ -4,6 +4,7 @@ import { useInstallTTApp } from "../../../../../ttApp/src/hooks";
 import { useTTAppStore } from "../../../../../ttApp/src/store";
 import { storeToRefs } from "pinia";
 import { getAppImg } from "../../../../../ttApp/src/hooks/getAppImg";
+import { nanoid } from "nanoid";
 
 const ttappStore: any = useTTAppStore();
 const { ttappList } = storeToRefs(ttappStore);
@@ -35,6 +36,8 @@ const install = async () => {
     if (currentData.card) {
       let card = currentData.card;
       card.map((item) => {
+        item.id = nanoid(4);
+        item.parentId = data.id;
         // 处理card路径
         let entry = item.entry;
         if (entry.charAt(0) == "/") {
