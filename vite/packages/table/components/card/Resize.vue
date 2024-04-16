@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full h-full overflow-hidden boxs no-drag"
+    class="w-full h-full boxs no-drag"
     ref="textRef"
     :style="{ width: w, height: h }"
   >

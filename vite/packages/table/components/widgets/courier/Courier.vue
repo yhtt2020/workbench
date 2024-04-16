@@ -198,6 +198,7 @@ export default {
   },
   methods: {
     ...mapActions(courierStore, ['getDbCourier', 'refreshCouriers', 'saveJdOrders']),
+    // 自定义删除函数，当添加到导航栏时，不删除卡片
     deleteCard(){
       this.$emit('delete')
     },
@@ -258,7 +259,7 @@ export default {
       'couriersDetailMsg',
       'couriersList',
       'storeInfo', 'currentDetail', 'settings']),
-
+    // 判断当前是否在导航栏，自定义删除
     options () {
       return {
         defaultData: {
@@ -293,27 +294,6 @@ export default {
     courierMsg () {
       return this.courierMsgList
     },
-    // refreshTime() {
-    //   switch (this.settings.courierRefresh.autoTime) {
-    //     case '10分钟':
-    //       return 600000
-    //       break;
-    //     case '30分钟':
-    //       return 1800000
-    //       break;
-    //     case '1小时':
-    //       return 3600000
-
-    //       break;
-    //     case '2小时':
-    //       return 7200000
-    //       break;
-
-    //     default:
-    //       return 1800000
-    //       break;
-    //   }
-    // },
     refreshInterval () {
       return this.autoRefreshTime.find((item) => {
         return item.value === this.settings.courierRefresh.autoTime
