@@ -21,8 +21,10 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         route: { name: "officialCommunity", params: { no: 1 } },
       },
     ],
+
     // 设置当前社群详情的社群号
     currentCommunityNo: null,
+
     // 设置
     setting: {
       // 开启单双列模式
@@ -38,10 +40,13 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         no: null,
       },
     },
+
     // 热门社群列表
     hotList: [],
+
     // 官方推荐社群列表
     officialList: [],
+
     // 默认官方社群数据
     defaultOfficialList: chatList,
     communityTreeList: {
@@ -50,6 +55,10 @@ export const chatCommunityStore = defineStore("chatCommunity", {
       // 子级树状
       secondaryChannel: [],
     },
+
+    // 社群父级频道目录
+    categoryList:[],
+
   }),
 
   actions: {
@@ -204,6 +213,20 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         return res;
       }
     },
+
+    // 获取社群父级频道目录
+    getCategoryList(no:any){
+      const option = {communityNo:parseInt(no)};
+      comAPI.getCommunityCategoryList(option).then((res:any)=>{
+        if(res.status){
+          const list = res.data.list;
+          const filterCategory = _.filter(list,function(item:any){
+            return item.role === "category";
+          })
+          this.categoryList = filterCategory;
+        }
+      });
+    }
   },
 
   persist: {

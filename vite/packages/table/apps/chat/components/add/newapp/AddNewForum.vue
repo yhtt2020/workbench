@@ -103,7 +103,7 @@ const forumVisible = ref(false);
 const openForumModal = () => {
   forumVisible.value = true;
   nextTick(() => {
-    forum.getForumList();
+    forum.getForumData();
   });
 };
 // 选择社区版块

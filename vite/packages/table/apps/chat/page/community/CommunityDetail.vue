@@ -48,7 +48,6 @@ const currentData = ref({
 
 // 通过计算属性获取当前社群编号
 const currentNo = computed(() => {
-  // console.log('查看',currentCommunityNo.value === route.params.no);
   // 初始值是否为null,并且判断no是否与路由的no相同
   if (
     currentCommunityNo.value === route.params.no &&
@@ -68,8 +67,8 @@ const floatVisible = computed(() => {
   );
 });
 
+/**监听路由变化**/
 onBeforeRouteUpdate((to, from, next) => {
-  // console.log("更新当前路由", to.params.no, from);
   if (to.params?.no) {
     chatCommunity.setCurrentCommunityNo(to.params?.no);
   }
@@ -80,6 +79,7 @@ onBeforeRouteUpdate((to, from, next) => {
 const handleCurrentItem = async (data) => {
   const { type } = data.value ? data.value : data;
   const currentData = data.value ? data.value : data;
+
   // 链接
   if (type === "link") {
     if (currentData.name !== "Roadmap") {
@@ -102,14 +102,19 @@ const handleCurrentItem = async (data) => {
       }
     }
   }
+
   // 群聊
   else if (type === "group") {
-    const groupList = window.$TUIKit?.TUIStore?.storeMap?.group?.store?.groupList;
-    const groupProps =currentData.props[0] ? currentData.props[0] : currentData.props;
+    const groupList =
+      window.$TUIKit?.TUIStore?.storeMap?.group?.store?.groupList;
+    const groupProps = currentData.props[0]
+      ? currentData.props[0]
+      : currentData.props;
     const index = _.findIndex(groupList, (findItem) => {
       return String(findItem.groupID) === String(groupProps.groupID);
     });
   }
+
   // 其他
   currentItem.value = currentData;
 };

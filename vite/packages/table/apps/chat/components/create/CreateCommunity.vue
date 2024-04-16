@@ -59,6 +59,8 @@
           v-model="modelValue"
           @getAvatar="getAvatar"
           isUpload="true"
+          :maskIndex="99999999999999"
+          :zIndex="12200"
         ></xt-selectIcon>
         <div
           class="flex items-center justify-center font-16"

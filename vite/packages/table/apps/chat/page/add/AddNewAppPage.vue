@@ -1,6 +1,6 @@
 <!-- 添加新应用 -->
 <script setup>
-import { ref } from "vue";
+import { ref, toRefs } from "vue";
 
 /**第一步弹窗组件**/
 import AddNewApp from "../../components/add/AddNewApp.vue";
@@ -11,11 +11,22 @@ import AddNewForum from "../../components/add/newapp/AddNewForum.vue";
 import AddCategoryLink from "../../components/link/AddCategoryLink.vue";
 /**群聊**/
 import AddNewAppChat from "../../components/add/AddNewAppChat.vue";
+/**第三步弹窗组件**/
+import CategoryClass from "../../components/add/class/CategoryClass.vue";
+
+const props = defineProps({
+  no: {
+    type: String,
+    required: true,
+  },
+});
+const { no } = toRefs(props);
 
 const newAppRef = ref(null);
 const newForumRef = ref(null);
 const newLinkRef = ref(null);
 const newChatRef = ref(null);
+const newClassRef = ref(null);
 
 /**事件**/
 const openNewAppFirstStep = () => {
@@ -39,6 +50,17 @@ const handleFirstStep = (data) => {
       break;
   }
 };
+// 第二步进入第三步
+// 社区版块
+const handleForumSecondaryNext = (data) => {
+  console.log("社区版块", data);
+  newClassRef.value.openClassModal();
+};
+
+// 第三步的组件返回上一步
+const handleClassPrev = () =>{
+  
+}
 
 defineExpose({
   openNewAppFirstStep,
@@ -57,9 +79,12 @@ defineExpose({
     @next="handleForumSecondaryNext"
   />
   <!-- 链接 -->
-  <AddCategoryLink ref="newLinkRef" />
+  <AddCategoryLink ref="newLinkRef" @prev="handleForumPrev" />
   <!-- 群聊 -->
-  <AddNewAppChat ref="newChatRef" @prev="handleForumPrev"/>
+  <AddNewAppChat ref="newChatRef" @prev="handleForumPrev" />
+
+  <!-- 第三步 -->
+  <CategoryClass ref="newClassRef" :no="no" @prev="handleClassPrev"/>
 </template>
 
 <style lang="scss" scoped>

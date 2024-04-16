@@ -63,7 +63,8 @@
           v-model="data.modelValue"
           @getAvatar="getAvatar"
           isUpload="true"
-          :maskIndex="1010"
+          :maskIndex="1008"
+          :zIndex="1010"
         />
         <input
           type="file"

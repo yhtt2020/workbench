@@ -2,8 +2,7 @@
 <script setup>
 import { ref, toRefs } from "vue";
 
-import AddNewApp from "../../components/add/AddNewApp.vue";
-
+import AddNewAppPage from "../add/AddNewAppPage.vue";
 
 const props = defineProps({
   role: {
@@ -18,7 +17,6 @@ const props = defineProps({
 const { role } = toRefs(props);
 
 const addNewAppRef = ref(null);
-
 const emptyList = ref([
   {
     icon: "fluent:people-add-16-regular",
@@ -30,7 +28,7 @@ const emptyList = ref([
     icon: "fluent:apps-add-in-20-filled",
     name: "添加新应用",
     callBack: () => {
-      addNewAppRef.value.openAddNewApp();
+      addNewAppRef.value.openNewAppFirstStep();
     },
   },
   {
@@ -39,20 +37,6 @@ const emptyList = ref([
     callBack: () => {},
   },
 ]);
-
-// 选择下一步
-const emptyAppNext = (data) =>{
-  console.log('data',data);
-  switch (key) {
-    case value:
-      
-      break;
-  
-    default:
-      break;
-  }
-}
-
 </script>
 
 <template>
@@ -81,7 +65,7 @@ const emptyAppNext = (data) =>{
     </div>
   </template>
 
-  <AddNewApp ref="addNewAppRef" @next="emptyAppNext"/>
+  <AddNewAppPage ref="addNewAppRef" />
 </template>
 
 <style scoped>

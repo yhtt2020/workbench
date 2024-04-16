@@ -222,7 +222,9 @@
   </div>
 
   <!-- 添加新应用 -->
-  <AddNewAppPage ref="newAppRef" />
+  <AddNewAppPage ref="newAppRef" :no="no"/>
+  <!-- 添加分组 -->
+  
 </template>
 
 <script setup>

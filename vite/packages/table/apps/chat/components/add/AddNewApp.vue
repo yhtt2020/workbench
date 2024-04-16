@@ -6,7 +6,11 @@
     title="添加新应用"
     @close="newAppVisible = false"
   >
-    <AddModalBody :no="no" @enterNext="openNewAppNext" />
+    <AddModalBody
+      :no="no"
+      @enterNext="openNewAppNext"
+      @close="newAppVisible = false"
+    />
   </xt-modal>
 </template>
 
