@@ -53,7 +53,7 @@ const props = defineProps({
 const { no, currentCategoryName } = toRefs(props);
 
 //ref定义区域
-const categoryName = ref(currentCategoryName.value);
+const categoryName = ref("");
 const categoryRef = ref(null);
 
 // 开启社群频道分组创建弹窗
@@ -62,27 +62,44 @@ const openCategoryModal = () => {
   categoryVisible.value = true;
   nextTick(() => {
     categoryRef.value.focus();
+    categoryName.value = currentCategoryName.value?.name
+      ? currentCategoryName.value?.name
+      : "";
   });
 };
 
 // 创建分组
 const createCategory = async () => {
   if (categoryName.value !== "") {
-    const option = {
-      communityNo: Number(no.value),
-      name: categoryName.value,
-      type: "category",
-      role: "category",
-    };
-    const res = await comAPI.createCommunityChannel(option);
-    if (res.status === 1) {
-      message.success(`${res.info}`);
-      chatCommunity.getCategoryList(Number(no.value));
-      chatCommunity.getCommunityTree(Number(no.value));
-      categoryVisible.value = false;
+    if (currentCategoryName.value) {
+      const option = {
+        ...currentCategoryName.value,
+        name: categoryName.value,
+      };
+      const res = await comAPI.updateCommunityChannel(option);
+      if (res.status === 1) {
+        message.success(`${res.info}`);
+        chatCommunity.getCategoryList(Number(no.value));
+        chatCommunity.getCommunityTree(Number(no.value));
+        categoryVisible.value = false;
+      }
+    } else {
+      const option = {
+        communityNo: Number(no.value),
+        name: categoryName.value,
+        type: "category",
+        role: "category",
+      };
+      const res = await comAPI.createCommunityChannel(option);
+      if (res.status === 1) {
+        message.success(`${res.info}`);
+        chatCommunity.getCategoryList(Number(no.value));
+        chatCommunity.getCommunityTree(Number(no.value));
+        categoryVisible.value = false;
+      }
     }
   } else {
-    message.warning("请输入分组名称");
+    message.warning("添加分组的参数不能缺少");
   }
 };
 

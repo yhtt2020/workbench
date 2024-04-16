@@ -224,7 +224,11 @@
   <!-- 添加新应用 -->
   <AddNewAppPage ref="newAppRef" />
   <!-- 添加分组 -->
-  <CreateCategory ref="newCategoryRef" :no="currentInfo.communityInfo.no"/>
+  <CreateCategory
+    ref="newCategoryRef"
+    :no="currentInfo.communityInfo.no"
+    :currentCategoryName="currentCategorySetting"
+  />
 </template>
 
 <script setup>
@@ -242,7 +246,7 @@ import CategoryEmpty from "../../page/empty/CategoryEmpty.vue";
 /**新应用**/
 import AddNewAppPage from "../../page/add/AddNewAppPage.vue";
 /**创建分组**/
-import CreateCategory from "../../components/create/CreateCategory.vue"; 
+import CreateCategory from "../../components/create/CreateCategory.vue";
 
 const { proxy } = getCurrentInstance();
 const props = defineProps({
@@ -252,14 +256,18 @@ const props = defineProps({
   },
 });
 const { no } = toRefs(props);
-console.log('no-1',no);
+console.log("no-1", no);
 
 const chatCommunity = chatCommunityStore();
-const { setting, myCommunity, communityTreeList } = storeToRefs(chatCommunity);
+const { setting, myCommunity, currentCommunity, communityTreeList } =
+  storeToRefs(chatCommunity);
 
 /**ref组件**/
 const newAppRef = ref(null);
 const newCategoryRef = ref(null);
+
+/**当前的分组设置**/
+const currentCategorySetting = ref(null);
 
 // 社群封面,后续替换成动态url地址
 const textUrl = ref(
@@ -388,7 +396,10 @@ const childrenList = ref([
   {
     title: "应用设置",
     newIcon: "fluent:settings-16-regular",
-    callBack: (currentItem, value) => {},
+    callBack: (currentItem, value) => {
+      newCategoryRef.value.openCategoryModal();
+      currentCategorySetting.value = value;
+    },
   },
   {
     title: "删除分组",
@@ -420,6 +431,7 @@ const columnVisible = computed(() => {
 });
 // 获取当前社群信息
 const currentInfo = computed(() => {
+  // 这里需要获取到社群权限角色信息
   const index = _.findIndex(myCommunity.value, function (item) {
     if (item.communityInfo) {
       return String(item.communityInfo.no) === String(no.value);

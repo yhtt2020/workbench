@@ -70,6 +70,7 @@ const floatVisible = computed(() => {
 /**监听路由变化**/
 onBeforeRouteUpdate((to, from, next) => {
   if (to.params?.no) {
+    chatCommunity.loadCurrentCommunity(to.params?.no);
     chatCommunity.setCurrentCommunityNo(to.params?.no);
   }
   next();

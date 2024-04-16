@@ -58,10 +58,12 @@ export const chatCommunityStore = defineStore("chatCommunity", {
 
     // 社群父级频道目录
     categoryList: [],
+    // 当前社群详情
+    currentCommunity: null,
   }),
 
   actions: {
-    // 获取我的社群方法
+    // 初始化加载获取我的社群方法
     getMyCommunity() {
       comAPI.getMyCommunityList().then((res: any) => {
         if (res.status === 1) {
@@ -218,6 +220,16 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         }
       });
     },
+
+    // 获取某个社群的详细信息 
+    // 注意:当前方法只能获取社群的基本信息,不能获取社群的权限角色信息
+    async loadCurrentCommunity(no: any) {
+      const res = await comAPI.getByNoDetail({ no: no });
+      console.log("渠道详情", res);
+      if (res.status === 1) {
+        this.currentCommunity = res.data;
+      }
+    },
   },
 
   persist: {
@@ -233,6 +245,7 @@ export const chatCommunityStore = defineStore("chatCommunity", {
           "defaultOfficialList",
           "communityTreeList",
           "categoryList",
+          "currentCommunity",
         ],
         storage: localStorage,
       },

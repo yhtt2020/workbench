@@ -1,3 +1,4 @@
+<!-- 右侧顶部图标组件 -->
 <template>
   <div class="p-3 flex items-center" v-if="headerIcon !== ''">
     <div

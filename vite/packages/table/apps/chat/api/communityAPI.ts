@@ -22,7 +22,7 @@ export class CommunityAPI {
   }
 
   //获取某个社群的详细信息
-  async getDetailCommunity(data: any) {
+  async getByNoDetail(data: any) {
     const res = await post(sUrl("/app/community/getByNo"), data);
     return res;
   }
