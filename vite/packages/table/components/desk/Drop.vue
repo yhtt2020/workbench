@@ -100,9 +100,13 @@ const handleDrop = async (dragEvent) => {
     }
   } else if (link && link !== '') {
     if(isDrag.value) return
+    
+    // 判断url是否有http/https
     if (!link.match(/^(http:\/\/|https:\/\/)/)) {
       link = 'http://' + link;
     }
+    
+    // 判断添加http后，是否是一个有效的链接
     if(isValidUrl(link)){
       // const name = await useGetUrlName(link);
       const icon = await getFavicon(link);
