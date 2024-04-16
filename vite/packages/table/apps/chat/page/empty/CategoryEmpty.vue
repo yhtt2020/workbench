@@ -3,6 +3,7 @@
 import { ref, toRefs } from "vue";
 
 import AddNewAppPage from "../add/AddNewAppPage.vue";
+import AddCategory from "../../components/create/CreateCategory.vue";
 
 const props = defineProps({
   role: {
@@ -14,9 +15,10 @@ const props = defineProps({
     required: true,
   },
 });
-const { role } = toRefs(props);
+const { role,no } = toRefs(props);
 
 const addNewAppRef = ref(null);
+const newCategoryRef = ref(null);
 const emptyList = ref([
   {
     icon: "fluent:people-add-16-regular",
@@ -34,7 +36,9 @@ const emptyList = ref([
   {
     icon: "fluent:add-16-filled",
     name: "添加新分组",
-    callBack: () => {},
+    callBack: () => {
+      newCategoryRef.value.openCategoryModal();
+    },
   },
 ]);
 </script>
@@ -66,6 +70,7 @@ const emptyList = ref([
   </template>
 
   <AddNewAppPage ref="addNewAppRef" />
+  <AddCategory ref="newCategoryRef" :no="no"/>
 </template>
 
 <style scoped>

@@ -14,14 +14,6 @@ import AddNewAppChat from "../../components/add/AddNewAppChat.vue";
 /**第三步弹窗组件**/
 import CategoryClass from "../../components/add/class/CategoryClass.vue";
 
-const props = defineProps({
-  no: {
-    type: String,
-    required: true,
-  },
-});
-const { no } = toRefs(props);
-
 const newAppRef = ref(null);
 const newForumRef = ref(null);
 const newLinkRef = ref(null);
@@ -58,9 +50,7 @@ const handleForumSecondaryNext = (data) => {
 };
 
 // 第三步的组件返回上一步
-const handleClassPrev = () =>{
-  
-}
+const handleClassPrev = () => {};
 
 defineExpose({
   openNewAppFirstStep,
@@ -84,7 +74,7 @@ defineExpose({
   <AddNewAppChat ref="newChatRef" @prev="handleForumPrev" />
 
   <!-- 第三步 -->
-  <CategoryClass ref="newClassRef" :no="no" @prev="handleClassPrev"/>
+  <CategoryClass ref="newClassRef"  @prev="handleClassPrev" />
 </template>
 
 <style lang="scss" scoped>

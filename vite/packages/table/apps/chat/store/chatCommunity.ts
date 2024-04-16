@@ -57,8 +57,7 @@ export const chatCommunityStore = defineStore("chatCommunity", {
     },
 
     // 社群父级频道目录
-    categoryList:[],
-
+    categoryList: [],
   }),
 
   actions: {
@@ -92,12 +91,10 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         }
       });
     },
-
     // 设置当前社群的ID号
     setCurrentCommunityNo(no: any) {
       this.currentCommunityNo = no;
     },
-
     // 获取热门社群
     getHotCommunityList() {
       comAPI.getHotCommunity().then((res: any) => {
@@ -107,7 +104,6 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         }
       });
     },
-
     // 获取官方推荐社群
     getOfficialRecommendation() {
       comAPI.getReferralCommunity().then((res: any) => {
@@ -124,22 +120,18 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         }
       });
     },
-
     // 设置悬浮模式
     setSuspendVisible(data: any) {
       this.setting.suspendVisible = data;
     },
-
     // 设置单双列模式
     setColumnMode() {
       this.setting.isColumnMode = !this.setting.isColumnMode;
     },
-
     // 设置社群描述折叠
     setCollapsed(data: any) {
       this.setting.collapsedVisible = data;
     },
-
     // 获取树状方法
     getCommunityTree(no: any) {
       const option = { communityNo: parseInt(no), cache: 1 };
@@ -203,30 +195,29 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         }
       });
     },
-
     // 删除社群频道
     async deleteChannel(id: any, no: any) {
       const option = { id: id };
       const res = await comAPI.deleteCommunityChannel(option);
-      if(res.status){
+      if (res.status) {
         this.getCommunityTree(no);
         return res;
       }
     },
-
     // 获取社群父级频道目录
-    getCategoryList(no:any){
-      const option = {communityNo:parseInt(no)};
-      comAPI.getCommunityCategoryList(option).then((res:any)=>{
-        if(res.status){
+    getCategoryList(no: any) {
+      const option = { communityNo: parseInt(no) };
+      comAPI.getCommunityListChannel(option).then((res: any) => {
+        console.log("res", res);
+        if (res.status) {
           const list = res.data.list;
-          const filterCategory = _.filter(list,function(item:any){
+          const filterCategory = _.filter(list, function (item: any) {
             return item.role === "category";
-          })
+          });
           this.categoryList = filterCategory;
         }
       });
-    }
+    },
   },
 
   persist: {
@@ -241,6 +232,7 @@ export const chatCommunityStore = defineStore("chatCommunity", {
           "officialList",
           "defaultOfficialList",
           "communityTreeList",
+          "categoryList",
         ],
         storage: localStorage,
       },

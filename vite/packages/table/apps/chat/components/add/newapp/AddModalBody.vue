@@ -1,4 +1,4 @@
-<!-- 添加新应用组件 第一个步骤-->
+<!-- 添加新应用组件 第一个步骤的body页面 -->
 <template>
   <div class="flex flex-col" style="width: 500px">
     <div class="flex flex-col px-2">
@@ -47,7 +47,6 @@
 
 <script setup>
 import { ref, toRefs } from "vue";
-
 const emit = defineEmits(["close"]);
 const props = defineProps({
   no: {
@@ -56,7 +55,6 @@ const props = defineProps({
   },
 });
 const { no } = toRefs(props);
-
 const channelList = ref([
   // 后期再补上
   // { icon: "fluent-emoji-flat:desktop-computer", name: "桌面", type: "desk" },
@@ -72,18 +70,15 @@ const currentItem = ref({
   selectIndex: "forum",
   type: null,
 });
-
 // 关闭弹窗
 const closeModal = () => {
   emit("close");
 };
-
 // 选择频道
 const selectChannel = (item) => {
   currentItem.value.selectIndex = item.type;
   currentItem.value.type = item.type;
 };
-
 // 选择提交
 const selectSubmit = () => {
   emit("enterNext", {type:currentItem.value.selectIndex,});

@@ -222,9 +222,9 @@
   </div>
 
   <!-- 添加新应用 -->
-  <AddNewAppPage ref="newAppRef" :no="no"/>
+  <AddNewAppPage ref="newAppRef" />
   <!-- 添加分组 -->
-  
+  <CreateCategory ref="newCategoryRef" :no="currentInfo.communityInfo.no"/>
 </template>
 
 <script setup>
@@ -241,6 +241,8 @@ import RightDropdown from "../dropdown/Dropdown.vue";
 import CategoryEmpty from "../../page/empty/CategoryEmpty.vue";
 /**新应用**/
 import AddNewAppPage from "../../page/add/AddNewAppPage.vue";
+/**创建分组**/
+import CreateCategory from "../../components/create/CreateCategory.vue"; 
 
 const { proxy } = getCurrentInstance();
 const props = defineProps({
@@ -250,14 +252,15 @@ const props = defineProps({
   },
 });
 const { no } = toRefs(props);
+console.log('no-1',no);
 
 const chatCommunity = chatCommunityStore();
 const { setting, myCommunity, communityTreeList } = storeToRefs(chatCommunity);
 
 /**ref组件**/
 const newAppRef = ref(null);
-/**步骤二的数据**/
-const setpItem = ref({});
+const newCategoryRef = ref(null);
+
 // 社群封面,后续替换成动态url地址
 const textUrl = ref(
   "https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/Yzzj-zana-AI6F-jnTG"
@@ -279,7 +282,9 @@ const hideList = ref([
   {
     newIcon: "fluent:add-16-filled",
     title: "添加新分组",
-    callBack: () => {},
+    callBack: () => {
+      newCategoryRef.value.openCategoryModal();
+    },
   },
   {
     newIcon: "fluent:text-indent-decrease-16-filled",
@@ -316,7 +321,9 @@ const showList = ref([
   {
     newIcon: "fluent:add-16-filled",
     title: "添加新分组",
-    callBack: () => {},
+    callBack: () => {
+      newCategoryRef.value.openCategoryModal();
+    },
   },
   {
     newIcon: "fluent:text-indent-decrease-16-filled",
