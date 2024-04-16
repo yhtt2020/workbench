@@ -148,7 +148,7 @@ onMounted(() => {
     </template> -->
     <xt-mix-menu :menus="menuList" :stopPropagation="false">
       <div
-        class="relative w-full h-full overflow-hidden"
+        class="relative w-full h-full overflow-hidden px-4"
         ref="scrollbar"
         :style="modalSize"
       >
@@ -156,6 +156,7 @@ onMounted(() => {
           v-if="!loading"
           :url="data.main._entry"
           :name="data.id"
+          :app-info="data"
         />
       </div>
     </xt-mix-menu>

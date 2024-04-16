@@ -159,6 +159,7 @@ onUnmounted(() => {
         :url="customData._entry"
         :name="customData.id"
         :key="customData.id"
+        :app-info="data"
       />
     </div>
   </xt-container>
