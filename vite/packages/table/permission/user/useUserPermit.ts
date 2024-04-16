@@ -18,17 +18,17 @@ export const useUserPermit = async () => {
   // 1.1、获取新版token存储
   let token = cache.get("ttUserToken");
   // 1.2、新版token存在 标记已取过旧版token
-  if (token) {
-    // 标记取过旧版token
-    retrievedOldTokenFlag.value = true;
-  }
-  // 1.3、未取过旧版token 并且 不处于web端
-  if (!retrievedOldTokenFlag.value && !useEnv("web")) {
-    let res = await (window as any).tsbApi.user.get();
-    token = res?.data?.token;
-    // 标记取过旧版token
-    retrievedOldTokenFlag.value = true;
-  }
+  // if (token) {
+  //   // 标记取过旧版token
+  //   retrievedOldTokenFlag.value = true;
+  // }
+  // // 1.3、未取过旧版token 并且 不处于web端
+  // if (!retrievedOldTokenFlag.value && !useEnv("web")) {
+  //   let res = await (window as any).tsbApi.user.get();
+  //   token = res?.data?.token;
+  //   // 标记取过旧版token
+  //   retrievedOldTokenFlag.value = true;
+  // }
 
   // 2、有token
   if (token) {
