@@ -527,7 +527,7 @@ const addObj = computed(() => {
 const menus = computed(() => {
   let deleteArr = [deleteObj.value];
   let addArr = [addObj.value];
-  if (useEnv(props.envLimit)) return deleteArr;
+  if (useEnv(props.envLimit)) return [...addArr, ...deleteArr];
   let menu = [...props.menuList, ...addArr, ...deleteArr];
   return menu;
 });
