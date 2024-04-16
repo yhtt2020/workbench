@@ -1,11 +1,14 @@
 <script setup lang="ts">
 // import dbStorage from "../../../../../store/dbStorage";
-import { ref, onMounted, computed, onUnmounted } from "vue";
+import { ref, onMounted, computed, onUnmounted, nextTick } from "vue";
 import { useParserCard } from "./parser";
 import WuJie from "../wujie/WuJie.vue";
 import { useTTAppStore } from "../../store";
 import { storeToRefs } from "pinia";
 import { useCardSize } from "../../../../../hooks";
+import { useWuJieStore } from "../wujie/store";
+const wujieStore = useWuJieStore();
+const { data: wujieData }: any = storeToRefs(wujieStore);
 
 const ttappStore: any = useTTAppStore();
 const { modal } = storeToRefs(ttappStore);
@@ -22,10 +25,13 @@ onMounted(async () => {
   loading.value = false;
   // 无数据情况
 
-  if (!props.customData?.id) return;
+  if (!props.customData?.parentId) return;
+  // 双ID
+  console.log("props.customData?.parentId :>> ", props.customData?.parentId);
+  console.log("props.customData?.id :>> ", props.customData?.id);
   id.value = props.customData.id;
   // 查询数据
-  let res = ttappStore.select(props.customData.id);
+  let res = ttappStore.select(props.customData.parentId);
   console.log("props.customData :>> ", props.customData);
   if (!res) return;
   // 解析数据
@@ -48,11 +54,17 @@ onMounted(async () => {
     height: currentSize.height + "px",
   };
   loading.value = false;
+  nextTick(() => {
+    perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {
+      wheelPropagation: false,
+    });
+  });
 });
 const props = defineProps({
   customIndex: {},
   customData: {
     type: Object,
+    required: true,
   },
 });
 
@@ -60,14 +72,14 @@ const options = ref({
   // bg: "pink",
   resize: props.customData?.resize,
 });
-
+const refreshFn = () => {
+  loading.value = true;
+  setTimeout(() => {
+    loading.value = false;
+  }, 1);
+};
 const refresh = ref({
-  fn: () => {
-    loading.value = true;
-    setTimeout(() => {
-      loading.value = false;
-    }, 1);
-  },
+  fn: refreshFn,
   newIcon: "fluent:arrow-clockwise-16-regular",
   tip: "刷新",
   title: "刷新",
@@ -84,10 +96,18 @@ const menus = computed(() => {
     refresh.value,
     {
       newIcon: "fluent:open-16-regular",
-      title: "弹窗内打开",
+      title: "打开主应用",
       fn: () => {
         modal.value.id = data.value.id;
         modal.value.visible = true;
+      },
+    },
+    {
+      newIcon: "fluent:open-16-regular",
+      title: "清空缓存",
+      fn: () => {
+        wujieData.value[props.customData.id] = {};
+        refreshFn();
       },
     },
   ];
@@ -97,20 +117,14 @@ const menus = computed(() => {
 import PerfectScrollbar from "perfect-scrollbar";
 const scrollbar: any = ref(null);
 const perfectScrollbar: any = ref(null);
-onMounted(() => {
-  setTimeout(() => {
-    perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {
-      wheelPropagation: false,
-    });
-  }, 1);
-});
+
 const resize = () => {
   // perfectScrollbar.value.update();
   // scrollbar.value.scrollTop += 1;
   // perfectScrollbar.value.update();
 };
 onUnmounted(() => {
-  perfectScrollbar.value.destroy();
+  perfectScrollbar.value?.destroy();
   perfectScrollbar.value = null;
 });
 </script>
@@ -140,7 +154,12 @@ onUnmounted(() => {
       ref="scrollbar"
       style="overflow: hidden !important"
     >
-      <WuJie v-if="!loading" :url="customData._entry" :name="customData.id" />
+      <WuJie
+        v-if="!loading"
+        :url="customData._entry"
+        :name="customData.id"
+        :key="customData.id"
+      />
     </div>
   </xt-container>
 </template>

@@ -22,7 +22,7 @@
       :style="{ background: bg }"
     >
       <!-- 预览内容区域 -->
-      <div :style="{ zoom:zoom }">
+      <div :style="{ zoom: zoom }">
         <component
           :desk="desks[0]"
           :is="customComponent"
@@ -140,13 +140,15 @@ export default {
       return list;
     },
     add() {
+      this.visible = false;
+      message.success("添加成功");
+
       useAddCard({
         name: this.name,
         data: this.data,
         id: Date.now(),
         deskId: this.currentDesk,
       });
-      message.success("添加成功");
       this.close();
     },
   },

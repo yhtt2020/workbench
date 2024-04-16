@@ -35,6 +35,7 @@ if (location.href.startsWith("tsbapp://")) {
     width="100%"
     ref="wujie"
     :name="name"
+    :alive="true"
     :url="url"
     :attrs="attrs"
     :plugins="[

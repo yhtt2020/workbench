@@ -55,7 +55,9 @@ export const useWuJiePlugins = (id: string) => {
 
       return iframeWindow;
     },
-
+    cssAfterLoaders: [
+      { content: "body{position: relative}" },
+    ],
     // cssAfterLoaders: [{ src: "http://127.0.0.1:5500/base.css" }],
   };
   return res;

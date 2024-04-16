@@ -111,11 +111,15 @@ const checkCard = async (card) => {
     };
   }
   // 如果数据是对象则转为数组
-  if (typeof card == "object") {
+  console.log("typeof card :>> ", typeof card);
+  if (!Array.isArray(card)) {
     card = [card];
   }
   // 遍历card
+  console.log("card :>> ", card);
+
   for (const item of card) {
+    console.log("item :>> ", item);
     let weak = ["size"];
 
     let strong = [
@@ -214,6 +218,7 @@ const strongCheck = async (array) => {
 
 /** 弱检查 */
 const weakCheck = async (checkArray, data) => {
+  console.log("弱检查 data :>> ", data);
   let res = [];
   // 遍历检查数组
   checkArray.forEach((key) => {
