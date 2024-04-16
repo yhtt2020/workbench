@@ -56,7 +56,7 @@ import AddGroup from "../../components/add/AddGroup.vue";
 import OfficialCategoryFloat from "../../components/suspendMode/OfficialCategoryFloat.vue";
 import CategoryFloat from "../../components/suspendMode/CategoryFloat.vue";
 import GradeSmallTip from "../../../../components/GradeSmallTip.vue";
-import CreateCommunity from "../../components/create/CreateCommunitys.vue";
+import CreateCommunity from "../../components/create/CreateCommunity.vue";
 import JoinCommunity from "../join/JoinCommunity.vue";
 
 const router = useRouter();

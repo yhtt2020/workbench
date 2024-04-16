@@ -39,19 +39,15 @@
 
 <script setup>
 import { ref } from "vue";
-
 const emit = defineEmits(["prev"]);
-
 const classVisible = ref(false);
 const openCategoryClassModal = () => {
   classVisible.value = true;
 };
-
 const returnPreviousStep = () => {
   emit("prev");
   classVisible.value = false;
 };
-
 defineExpose({
   openCategoryClassModal,
 });

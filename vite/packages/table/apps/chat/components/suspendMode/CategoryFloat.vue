@@ -131,9 +131,11 @@
       />
 
       <div class="grow tree-container">
-        <template v-if="firstChannel.length === 0 && secondaryChannel.length === 0">
+        <template
+          v-if="firstChannel.length === 0 && secondaryChannel.length === 0"
+        >
           <div class="h-full flex flex-col items-center justify-center">
-            <CategoryEmpty :role="currentInfo.role"/>
+            <CategoryEmpty :role="currentInfo.role" :no="no" />
           </div>
         </template>
 
@@ -219,21 +221,8 @@
     </div>
   </div>
 
-  <!-- 添加社群新应用组件(带有频道列表分类) 开始 -->
-  <!-- 第一步 -->
-  <AddNewApp ref="newAppRef" @next="handleFirstStep" />
-  <!-- 第二步 -->
-  <!-- 社区版块 -->
-  <AddNewForum
-    ref="newForumRef"
-    @prev="handleForumPrev"
-    @next="handleForumSecondaryNext"
-  />
-  <!-- 群聊模块 -->
-  <!-- 链接模块 -->
-  <!--  第三步 -->
-  <AddNewAppClass ref="newClassRef" @prev="handleForumThreePrev" />
-  <!-- 添加社群新应用组件(带有频道列表分类) 结束 -->
+  <!-- 添加新应用 -->
+  <AddNewAppPage ref="newAppRef" />
 </template>
 
 <script setup>
@@ -246,10 +235,10 @@ import CategoryDropdown from "../dropdown/Dropdown.vue";
 import FloatItem from "./FloatItem.vue";
 import TreeFold from "../tree/TreeFold.vue";
 import RightDropdown from "../dropdown/Dropdown.vue";
-import AddNewApp from "../add/AddNewApp.vue";
-import AddNewForum from "../add/newapp/AddNewForum.vue";
-import AddNewAppClass from "../add/newapp/AddNewAppClass.vue";
+/**空状态**/
 import CategoryEmpty from "../../page/empty/CategoryEmpty.vue";
+/**新应用**/
+import AddNewAppPage from "../../page/add/AddNewAppPage.vue";
 
 const { proxy } = getCurrentInstance();
 const props = defineProps({
@@ -265,12 +254,8 @@ const { setting, myCommunity, communityTreeList } = storeToRefs(chatCommunity);
 
 /**ref组件**/
 const newAppRef = ref(null);
-const newForumRef = ref(null);
-const newClassRef = ref(null);
-
 /**步骤二的数据**/
 const setpItem = ref({});
-
 // 社群封面,后续替换成动态url地址
 const textUrl = ref(
   "https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/Yzzj-zana-AI6F-jnTG"
@@ -286,15 +271,13 @@ const hideList = ref([
     newIcon: "fluent:apps-add-in-20-filled",
     title: "添加新应用",
     callBack: () => {
-      newAppRef.value.openAddNewApp();
+      newAppRef.value.openNewAppFirstStep();
     },
   },
   {
     newIcon: "fluent:add-16-filled",
     title: "添加新分组",
-    callBack: () => {
-      // newCategory.value.openCategoryModal();
-    },
+    callBack: () => {},
   },
   {
     newIcon: "fluent:text-indent-decrease-16-filled",
@@ -325,15 +308,13 @@ const showList = ref([
     newIcon: "fluent:apps-add-in-20-filled",
     title: "添加新应用",
     callBack: () => {
-      newAppRef.value.openAddNewApp();
+      newAppRef.value.openNewAppFirstStep();
     },
   },
   {
     newIcon: "fluent:add-16-filled",
     title: "添加新分组",
-    callBack: () => {
-      // newCategory.value.openCategoryModal();
-    },
+    callBack: () => {},
   },
   {
     newIcon: "fluent:text-indent-decrease-16-filled",
@@ -393,9 +374,7 @@ const childrenList = ref([
   {
     newIcon: "fluent:apps-add-in-20-filled",
     title: "添加新应用",
-    callBack: (item, value) => {
-      newAppRef.value.openAddNewApp();
-    },
+    callBack: (item, value) => {},
   },
   {
     title: "应用设置",
@@ -492,38 +471,6 @@ const openHideContent = () => {
   chatCommunity.setCollapsed({ enable: enable, no: currentInfo.value.no });
 };
 
-/**添加新应用,是具备频道列表分类选择功能**/
-// 从第一个步骤的弹窗获取选中后触发第二步
-const handleFirstStep = (data) => {
-  switch (data.type) {
-    // 群聊
-    case "chat":
-      break;
-    // 社群版块
-    case "forum":
-      newForumRef.value.openForumModal();
-      break;
-    //  链接
-    case "link":
-      break;
-    default:
-      break;
-  }
-};
-// 社区版块返回第一步
-const handleForumPrev = () => {
-  newAppRef.value.openAddNewApp();
-};
-// 社区版块下一步
-const handleForumSecondaryNext = (data) => {
-  setpItem.value = data;
-  newClassRef.value.openCategoryClassModal();
-};
-// 社区版块第三步返回第二步
-const handleForumThreePrev = () => {
-  newForumRef.value.openForumModal();
-};
-
 // 处理频道点击事件
 const handleCommunity = (data) => {
   proxy.$bus.emit("handleCurrentCommunity", data);
@@ -583,27 +530,27 @@ const handleCommunity = (data) => {
   max-width: 185px;
 }
 @media screen and(max-height:500px) {
-  .tree-container{
+  .tree-container {
     height: 20vh !important;
   }
 }
-@media screen and(min-height:501px) and (max-height:700px){
-  .tree-container{
+@media screen and(min-height:501px) and (max-height: 700px) {
+  .tree-container {
     height: 40vh !important;
   }
 }
-@media screen and(min-height:701px) and (max-height:800px){
-  .tree-container{
+@media screen and(min-height:701px) and (max-height: 800px) {
+  .tree-container {
     height: 48vh !important;
   }
 }
-@media screen and(min-height:801px) and (max-height:900px){
-  .tree-container{
+@media screen and(min-height:801px) and (max-height: 900px) {
+  .tree-container {
     height: 50vh !important;
   }
 }
-@media screen and(min-height:901px){
-  .tree-container{
+@media screen and(min-height:901px) {
+  .tree-container {
     height: 60vh !important;
   }
 }

@@ -1,3 +1,4 @@
+<!-- 添加新应用的社群版块详情页 -->
 <template>
   <xt-modal v-if="forumVisible" v-model="forumVisible" custom>
     <div class="flex flex-col p-4" style="width: 500px">
@@ -82,11 +83,8 @@
 import { ref, toRefs, nextTick } from "vue";
 import { storeToRefs } from "pinia";
 import { forumStore } from "../../../store/forumStore";
-
 import EmptyStatus from "../../../page/empty/EmptyStatus.vue";
-
 const emit = defineEmits(["prev", "next"]);
-
 const props = defineProps({
   no: {
     type: String,
@@ -96,12 +94,10 @@ const props = defineProps({
 const { no } = toRefs(props);
 const forum = forumStore();
 const { forumList } = storeToRefs(forum);
-
 const currentForum = ref({
   selectIndex: -1,
   item: null,
 });
-
 // 开启社区版块选择弹窗
 const forumVisible = ref(false);
 const openForumModal = () => {
@@ -110,7 +106,6 @@ const openForumModal = () => {
     forum.getForumList();
   });
 };
-
 // 选择社区版块
 const selectForum = (index, item) => {
   if (currentForum.value.selectIndex === index) {
@@ -135,7 +130,6 @@ const nextClass = () => {
     forumVisible.value = false;
   }
 };
-
 defineExpose({
   openForumModal,
 });
