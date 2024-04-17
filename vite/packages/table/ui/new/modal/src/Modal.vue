@@ -1,10 +1,16 @@
 <template>
+  <!--
+    x y 改为计算属性
+    if !handle
+   -->
   <Teleport to="body">
     <!-- 弹窗 -->
     <xt-drag
       :test="false"
-      v-model:x="x"
-      v-model:y="y"
+      :x="currentX"
+      @update:x="x = $event"
+      :y="currentY"
+      @update:y="y = $event"
       :index="modalIndex"
       :collision="false"
       v-if="modelValue"
@@ -12,6 +18,9 @@
       :handle="handle"
       :disabled="handle ? false : true"
     >
+      <xt-button>
+        {{ modalIndex }}
+      </xt-button>
       <div
         @click="modalClick"
         :class="[custom ? '' : boxClass]"
@@ -235,7 +244,7 @@ const oldY = ref(0);
 const modalWidth = ref(0);
 const modalHeight = ref(0);
 // 弹窗层级
-const INDEX = 1005;
+const INDEX = 99999;
 const currentModalIndex = ref(0);
 // 当前弹窗层级
 const modalIndex = computed(() => {
@@ -262,6 +271,22 @@ const windowWidth = ref(0);
 const modalName = ref(nanoid(4));
 // 导航高度
 let barHeight = 0;
+
+const currentX = computed(() => {
+  if (props.handle) {
+    return x.value;
+  } else {
+    return getPosition.value.left;
+  }
+});
+const currentY = computed(() => {
+  if (props.handle) {
+    return y.value;
+  } else {
+    return getPosition.value.top;
+  }
+});
+
 // 弹窗样式
 const modalStyle = computed(() => {
   if (isMaximize.value) {
@@ -272,29 +297,35 @@ const modalStyle = computed(() => {
     };
   }
 
-  // x.value = oldX.value;
-  // y.value = oldY.value;
   return {
     borderRadius: "12px",
     height: "auto",
   };
 });
 let intervalId;
+
+const getPosition = computed(() => {
+  let top;
+  let left;
+  if (props.mask) {
+    top = (windowHeight.value - modalHeight.value) / 2;
+    left = (windowWidth.value - modalWidth.value) / 2;
+  } else {
+    top = (windowHeight.value - barHeight - modalHeight.value) / 2;
+    left = (windowWidth.value - modalWidth.value) / 2;
+  }
+  return {
+    top,
+    left,
+  };
+});
+
 // 初始化位置
 function initPosition() {
   intervalId = setInterval(() => {
     // 数据未加载完成时
     if (windowHeight.value <= 0 || modalHeight.value <= 0) return;
-    let top;
-    let left;
-    if (props.mask) {
-      top = (windowHeight.value - modalHeight.value) / 2;
-      left = (windowWidth.value - modalWidth.value) / 2;
-    } else {
-      top = (windowHeight.value - barHeight - modalHeight.value) / 2;
-      left = (windowWidth.value - modalWidth.value) / 2;
-    }
-
+    const { left, top } = getPosition.value;
     y.value = top;
     x.value = left;
     oldX.value = left;
@@ -393,20 +424,22 @@ const doubleClick = (event: any) => {
   let res = event.target?.closest(".tt-modal-button");
   if (res) return;
   maximize();
-}
+};
 // 头部框双击事件
 // const { doubleClick } = useDoubleClick(d);
 
 /** 模态框获取焦点 */
 const getModalFouls = () => {
   // 如果当前弹窗已经是焦点弹窗则不处理
+
   if (currentModalIndex.value == INDEX) return;
-  console.log("2222 :>> ", 2222);
   // 先通知所有弹窗移除焦点
   proxy.$bus.emit("modalBlur");
 
   // 提升当前弹窗层级
-  currentModalIndex.value = INDEX;
+  setTimeout(() => {
+    currentModalIndex.value = INDEX;
+  }, 0);
 };
 
 /** 通用默认底部按钮事件 */
@@ -438,6 +471,7 @@ const init = () => {
   // 获取菜单高度
   const bottomBar = document.getElementsByClassName("xt-main-bottom-bar")[0];
   if (bottomBar) barHeight = bottomBar.clientHeight;
+  // else if () {}
 
   // 初始化弹窗位置
   initPosition();

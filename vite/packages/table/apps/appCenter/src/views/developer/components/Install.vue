@@ -5,7 +5,9 @@ import { useTTAppStore } from "../../../../../ttApp/src/store";
 import { storeToRefs } from "pinia";
 import { getAppImg } from "../../../../../ttApp/src/hooks/getAppImg";
 import { nanoid } from "nanoid";
-
+// import {defaultData} from "../../../../../ttApp/src/hooks/useDataConversion";
+import { defaultData } from "../../../../../../ui/hooks/useDataConversion";
+import { useAddCard } from "../../../../../../hooks";
 const ttappStore: any = useTTAppStore();
 const { ttappList, ttappData } = storeToRefs(ttappStore);
 const install = async () => {
@@ -24,8 +26,6 @@ const install = async () => {
 
     // 处理logo路径
     const logo = getAppImg(currentData.id, currentData.logo);
-
-
 
     currentData._logo = logo;
     // 如果有main模块
@@ -60,7 +60,26 @@ const install = async () => {
       });
     }
     console.log("currentData :>> ", currentData);
+
+    let iconData = {
+      ...defaultData,
+      id: currentData.id,
+      value: currentData.id,
+      name: currentData.name,
+      icon: currentData._logo,
+      type: "ttapp",
+    };
+    console.log("iconData :>> ", iconData);
+    useAddCard({
+      name: "myIcon",
+      data: {
+        iconList: [iconData],
+      },
+      // id: ""
+    });
+
     message.success("安装成功");
+    return;
     ttappList.value.push(currentData);
   }
   // manifest.json失败
