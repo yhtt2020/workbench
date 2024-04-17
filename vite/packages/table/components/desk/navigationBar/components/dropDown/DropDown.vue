@@ -1,12 +1,13 @@
 <template>
-    <a-dropdown :trigger="[trigger]" overlayClassName="hover">
+    <a-dropdown :trigger="[trigger]" :overlayClassName="hover" :overlayStyle="{zIndex: 9999999 + 10}">
         <template #overlay>
             <a-menu class="rounded-xl xt-modal" 
                     style="
                         border-radius: 12px !important;
                         border: 1px solid var(--divider);
                     "
-                    :style="{width:elementWidth + 'px'}">
+                    :style="{width:elementWidth + 'px'}"
+                    :overlayStyle="{zIndex: 9999999 + 10}">
                 <a-menu-item 
                     :style="{width:elementWidth + 'px'}"
                     @click="handleMenuClick(item)" 

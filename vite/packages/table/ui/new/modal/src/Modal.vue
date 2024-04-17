@@ -16,7 +16,7 @@
         @click="modalClick"
         :class="[custom ? '' : boxClass]"
         ref="modal"
-        class="no-drag flex flex-col text-base rounded-xl xt-modal xt-shadow xt-text overflow-hidden"
+        class="flex flex-col overflow-hidden text-base no-drag rounded-xl xt-modal xt-shadow xt-text"
         style="
           border: 1px solid rgba(255, 255, 255, 0.1);
           box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
@@ -158,7 +158,7 @@
       v-if="transitionVisible"
       :style="transitionStyle"
       style="transition: all 0.1s"
-      class="fixed xt-modal rounded-xl flex justify-center items-center px-2 cursor-pointer"
+      class="fixed flex items-center justify-center px-2 cursor-pointer xt-modal rounded-xl"
       @click="minimize"
     >
       <slot name="minimize-left"></slot>
@@ -235,7 +235,7 @@ const oldY = ref(0);
 const modalWidth = ref(0);
 const modalHeight = ref(0);
 // 弹窗层级
-const INDEX = 999999999;
+const INDEX = 9999999;
 const currentModalIndex = ref(0);
 // 当前弹窗层级
 const modalIndex = computed(() => {

@@ -1,6 +1,13 @@
 <template>
     <!-- ref="tippyRef" -->
-    <tippy ref="tippyRef" trigger="click" placement="right" :interactive="true" :appendTo="body" :arrow="false">
+    <tippy 
+        :zIndex="(9999999 + 10)"
+        ref="tippyRef" 
+        trigger="click" 
+        placement="right" 
+        :interactive="true" 
+        :appendTo="body" 
+        :arrow="false">
         <xt-button 
             :w="40" 
             :h="40" 
