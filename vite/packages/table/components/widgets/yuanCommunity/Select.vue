@@ -1,5 +1,6 @@
 <template>
     <a-select 
+        :zIndex="( 9999999 + 10 )"
         v-model:value="currentMultiple" 
         mode="multiple" 
         show-search 
@@ -7,7 +8,8 @@
         class="rounded-xl"
         :options="list"
         :filter-option="filterOption"
-        @change="handleChange">
+        @change="handleChange"
+        :dropdownStyle="{zIndex: 9999999 + 10}">
     </a-select>
 </template>
 <script lang="ts" setup>
