@@ -21,10 +21,8 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         route: { name: "officialCommunity", params: { no: 1 } },
       },
     ],
-
     // 设置当前社群详情的社群号
     currentCommunityNo: null,
-
     // 设置
     setting: {
       // 开启单双列模式
@@ -40,13 +38,10 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         no: null,
       },
     },
-
     // 热门社群列表
     hotList: [],
-
     // 官方推荐社群列表
     officialList: [],
-
     // 默认官方社群数据
     defaultOfficialList: chatList,
     communityTreeList: {
@@ -55,7 +50,6 @@ export const chatCommunityStore = defineStore("chatCommunity", {
       // 子级树状
       secondaryChannel: [],
     },
-
     // 社群父级频道目录
     categoryList: [],
     // 当前社群详情
@@ -143,6 +137,8 @@ export const chatCommunityStore = defineStore("chatCommunity", {
       ]).then((res) => {
         const status = res[0].status === 1 && res[1].status === 1;
         if (status) {
+          // console.log('tree1',res[0].data.list);
+          console.log('tree',res);
           /**处理一级频道列表**/
           const firstList = _.map(res[0].data.list, (item: any) => {
             if (item.type === "group") {
@@ -160,7 +156,7 @@ export const chatCommunityStore = defineStore("chatCommunity", {
             }
           });
           const filterList = _.filter(firstList, function (item: any) {
-            return item.role === "channel";
+            return item.role === "channel" && item.parentId === 0;
           });
           this.communityTreeList.firstChannel = filterList;
           /**处理二级频道列表**/
@@ -220,7 +216,6 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         }
       });
     },
-
     // 获取某个社群的详细信息 
     // 注意:当前方法只能获取社群的基本信息,不能获取社群的权限角色信息
     async loadCurrentCommunity(no: any) {
@@ -230,6 +225,10 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         this.currentCommunity = res.data;
       }
     },
+    // 排序更新
+    sortUpdateList(list:any){
+      this.categoryList = list;
+    }
   },
 
   persist: {

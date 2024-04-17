@@ -92,7 +92,7 @@ const leftList = ref([
         callBack: (item) => {
           if (!window.$useEnv("guest")) {
             triggerAddModal(item);
-            completeTask("Z0601");
+            // completeTask("Z0601");
           } else {
             loginTip();
           }
@@ -105,7 +105,7 @@ const leftList = ref([
         callBack: (item) => {
           if (!window.$useEnv("guest")) {
             triggerAddModal(item);
-            completeTask("Z0601");
+            // completeTask("Z0601");
           } else {
             loginTip();
           }
@@ -118,7 +118,7 @@ const leftList = ref([
         callBack: (item) => {
           if (!window.$useEnv("guest")) {
             triggerAddModal(item);
-            completeTask("Z0601");
+            // completeTask("Z0601");
           } else {
             loginTip();
           }
@@ -141,7 +141,7 @@ const leftList = ref([
         callBack: (item) => {
           if (!window.$useEnv("guest")) {
             triggerAddModal(item);
-            completeTask("Z0601");
+            // completeTask("Z0601");
           } else {
             loginTip();
           }

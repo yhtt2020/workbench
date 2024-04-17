@@ -20,6 +20,11 @@ const newLinkRef = ref(null);
 const newChatRef = ref(null);
 const newClassRef = ref(null);
 
+const currentNewData = ref({
+  type:{},
+  item:{}
+});
+
 /**事件**/
 const openNewAppFirstStep = () => {
   newAppRef.value.openAddNewApp();
@@ -45,7 +50,8 @@ const handleFirstStep = (data) => {
 // 第二步进入第三步
 // 社区版块
 const handleForumSecondaryNext = (data) => {
-  console.log("社区版块", data);
+  currentNewData.value.item = data?.item;
+  currentNewData.value.type = "forum";
   newClassRef.value.openClassModal();
 };
 
@@ -74,7 +80,7 @@ defineExpose({
   <AddNewAppChat ref="newChatRef" @prev="handleForumPrev" />
 
   <!-- 第三步 -->
-  <CategoryClass ref="newClassRef"  @prev="handleClassPrev" />
+  <CategoryClass ref="newClassRef"  @prev="handleClassPrev" :currentItem="currentNewData"/>
 </template>
 
 <style lang="scss" scoped>

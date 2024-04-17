@@ -1,4 +1,17 @@
+<!-- 社群频道创建邀请 -->
 <template>
+  
+</template>
+
+<script setup>
+
+</script>
+
+<style lang="scss" scoped>
+
+</style>
+
+<!-- <template>
  <teleport to="body">
   <Modal v-model:visible="addVisible" v-if="addVisible" :blurFlag="true" style="z-index:200 !important;">
     <div class="flex flex-col my-3" style="width: 500px ;" v-if="inviteShow === false">
@@ -41,9 +54,9 @@ import { message } from 'ant-design-vue'
 
 
 import Modal from '../../../../components/Modal.vue';
-import ModalTop from '../ModalTop.vue';
-import InvitationJoin from '../invite/InvitationJoin.vue';
-import AddDirectly from '../invite/AddDirectly.vue';
+import ModalTop from '../../../../page/chat/components/ModalTop.vue';
+import InvitationJoin from '../../../../page/chat/components/invite/InvitationJoin.vue';
+import AddDirectly from '../../../../page/chat/components/invite/AddDirectly.vue';
 
 export default {
  components:{
@@ -98,4 +111,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-</style>
+</style> -->

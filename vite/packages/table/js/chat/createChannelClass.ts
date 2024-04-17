@@ -1,14 +1,25 @@
-import { communityStore } from '../../page/chat/store/communityStore'
+import { CommunityAPI } from "../../apps/chat/api/communityAPI";
 
+const comAPI: any = new CommunityAPI();
 export const channelClass = {
- async secondaryChannel(data:any){
-  const community:any = communityStore();
-  const option = {
-   communityNo:data.no, role:'channel',type:data.type,
-   parentId:data.id === undefined ? 0 : data.id,
-  };
-  const createOption = { ...option,name:data.content.name,props:JSON.stringify(data.content.props),};
-  community.createChannel(createOption,data.no) ;
- },
-}
-
+  async secondaryChannel(data: any) {
+    const { communityNo, item, parentID } = data;
+    const option = {
+      communityNo: communityNo,
+      role: "channel",
+      type: item?.type,
+      parentId: parentID,
+    };
+    const createOption = {
+      ...option,
+      name: item?.item?.name,
+      props: JSON.stringify({ type: item?.type, ...item?.item }),
+    };
+    console.log("测试", createOption);
+    const res = await comAPI.createCommunityChannel(createOption);
+    console.log("创建子级频道", res);
+    if (res.status === 1) {
+      return res;
+    }
+  },
+};

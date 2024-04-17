@@ -73,7 +73,7 @@
 import { Icon as EditorIcon } from '@iconify/vue'
 
 import Modal from '../../../../components/Modal.vue';
-import ModalTop from '../ModalTop.vue';
+import ModalTop from '../../../../page/chat/components/ModalTop.vue';
 
 export default {
  components:{
