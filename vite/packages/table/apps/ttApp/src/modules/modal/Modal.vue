@@ -148,14 +148,15 @@ onMounted(() => {
     </template> -->
     <xt-mix-menu :menus="menuList" :stopPropagation="false">
       <div
-        class="relative w-full h-full overflow-hidden"
+        class="relative w-full h-full overflow-hidden px-4"
         ref="scrollbar"
         :style="modalSize"
       >
         <WuJie
           v-if="!loading"
           :url="data.main._entry"
-          :name="data.id"
+          :id="data.id"
+          :app-info="data"
         />
       </div>
     </xt-mix-menu>

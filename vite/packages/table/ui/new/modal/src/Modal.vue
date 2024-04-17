@@ -235,7 +235,7 @@ const oldY = ref(0);
 const modalWidth = ref(0);
 const modalHeight = ref(0);
 // 弹窗层级
-const INDEX = 999999999;
+const INDEX = 1005;
 const currentModalIndex = ref(0);
 // 当前弹窗层级
 const modalIndex = computed(() => {

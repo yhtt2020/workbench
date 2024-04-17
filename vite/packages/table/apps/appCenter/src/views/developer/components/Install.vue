@@ -7,7 +7,7 @@ import { getAppImg } from "../../../../../ttApp/src/hooks/getAppImg";
 import { nanoid } from "nanoid";
 
 const ttappStore: any = useTTAppStore();
-const { ttappList } = storeToRefs(ttappStore);
+const { ttappList, ttappData } = storeToRefs(ttappStore);
 const install = async () => {
   let res = await useInstallTTApp();
   // 安装成功
@@ -19,8 +19,14 @@ const install = async () => {
       ...modules, // 单独解构modules属性
     };
 
+    // 开辟一个数据存储对象
+    ttappData.value[currentData.id] = {};
+
     // 处理logo路径
     const logo = getAppImg(currentData.id, currentData.logo);
+
+
+
     currentData._logo = logo;
     // 如果有main模块
     if (currentData.main) {
@@ -37,8 +43,12 @@ const install = async () => {
       let card = currentData.card;
       card.map((item) => {
         item.parentId = data.id;
+        // 处理card大小
+        item.customSize = item.size;
+        delete item.size;
         // 处理card路径
         let entry = item.entry;
+
         if (entry.charAt(0) == "/") {
           item._entry = `ttapp://${currentData.id}/${item.entry}`;
         } else {

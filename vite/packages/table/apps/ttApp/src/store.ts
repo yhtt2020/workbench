@@ -37,7 +37,7 @@ export const useTTAppStore = defineStore("useTTAppStore", {
       if (res) {
         // 删除数据
         this.ttappList = this.ttappList.filter((item) => item.id !== id);
-        this.removeData(id)
+        this.removeData(id);
         message.success("卸载成功");
       } else {
         message.error("卸载失败");
@@ -58,7 +58,7 @@ export const useTTAppStore = defineStore("useTTAppStore", {
     enabled: true,
     strategies: [
       {
-        paths: ["ttappList"],
+        paths: ["ttappList", "ttappData"],
         storage: localStorage,
       },
     ],

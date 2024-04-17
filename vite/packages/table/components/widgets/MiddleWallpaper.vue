@@ -9,7 +9,9 @@
       :sizeList="sizeList" 
       ref="cardSlot" 
       :customData="customData"   
-      class="cardSlot" :desk="desk">
+      class="cardSlot" 
+      :desk="desk"
+      @delete="deleteCard">
       <div 
         class="absolute inset-0" 
         style="
@@ -144,9 +146,13 @@ export default {
     customData: {
       type: Object,
       default: () => { },
+    },
+    openWay: {
+      type:String,
+      default:'desk'
     }
   },
-
+  emit:['delete'],
   data(){
     return{
       // 组件配置
@@ -228,7 +234,8 @@ export default {
       return {
         defaultData:{
           customSize:'4x4',
-        }
+        },
+        customDel:this.openWay === 'nav' ? true : false,
       }
     },
     // 组件标题
@@ -335,7 +342,9 @@ export default {
     ...mapActions(appStore, ['setBackgroundImage']),
     ...mapActions(cardStore, ['updateCustomData']),
     getFileName,
-
+    deleteCard(){
+      this.$emit('delete')
+    },
     // 初始化获取壁纸数据
     initPaperList(val){
       const paperFind = wallpaperOptions.find((find)=>{ return String(find.value) === String(val) });

@@ -9,7 +9,8 @@
         :menuList="menuList" 
         :options="options" 
         ref="dataSlot" 
-        :desk="desk" >
+        :desk="desk"
+        @delete="deleteCard" >
         <Unusual v-if='!this.access_token || !this.baseUrl' title="请完成小组件配置" buttonTitle="立即配置" @back="back" ></Unusual>
         <div v-else class="echarts" ref="myChart" :style="myChartStyle"></div>
         <!-- 设置面板 -->
@@ -110,31 +111,41 @@ export default {
         editing: {
             type: Boolean,
         },
+        openWay:{
+            type:String,
+            default:'desk'
+        }
     },
+    emit:['delete'],
     computed: {
         ...mapWritableState(shortTalkStore, ['access','interact','access_token','baseUrl','setVisible']),
+        timeOption(){
+            return {
+                customDel:this.openWay === 'nav' ? true : false
+            }
+        }
     },
     data() {
         return {
             // 设置定时刷新
-            timeOption:[
-                {
-                    value:600,
-                    label:'10分钟'
-                },
-                {
-                    value:1800,
-                    label:'30分钟'
-                },
-                {
-                    value:3600,
-                    label:'1小时（默认）'
-                },
-                {
-                    value:86400,
-                    label:'24小时'
-                },
-            ],
+            // timeOption:[
+            //     {
+            //         value:600,
+            //         label:'10分钟'
+            //     },
+            //     {
+            //         value:1800,
+            //         label:'30分钟'
+            //     },
+            //     {
+            //         value:3600,
+            //         label:'1小时（默认）'
+            //     },
+            //     {
+            //         value:86400,
+            //         label:'24小时'
+            //     },
+            // ],
             timeVal:3600,
             settings: {
                 swipeEasing: true,
@@ -207,6 +218,7 @@ export default {
 
         };
     },
+    emit:['delete'],
     async mounted() {
         this.accToken = this.access_token
         this.accUrl = this.baseUrl
@@ -230,6 +242,9 @@ export default {
     methods:{
         ...mapActions(cardStore, ['updateCustomData']),
         ...mapActions(shortTalkStore, ['getChartData','changeAccToken']),
+        deleteCard(){
+            this.$emit('delete')
+        },
         // 设置定时刷新
         handleChangeTime(value){
             this.updateCustomData(this.customIndex,{

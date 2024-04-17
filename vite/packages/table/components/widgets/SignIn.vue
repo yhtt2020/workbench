@@ -5,7 +5,8 @@
     :custom-data="customData" :custom-index="customIndex" :envLimit="['guest','offline']"
     :options="options"
     :desk="desk"
-    :showRightIcon='rightIcon'>
+    :showRightIcon='rightIcon'
+    @delete="deleteCard">
     <div></div>
     <!--    <div class="pointer" @click="activityDescription(illustrateUrl)"-->
     <!--         style="position: absolute;left: 90px;top:15px;font-size: 13px;color: rgba(255, 255, 255, 0.6);background: rgba(255, 255, 255, 0.2); padding: 3px 12px;border-radius: 4px;">-->
@@ -144,18 +145,13 @@ export default {
     UserOutlined,
     newIcon
   },
-  props: ['desk', 'rightIcon','customData','customIndex'],
+  props: ['desk', 'rightIcon','customData','customIndex','openWay'],
+  emits: ['delete'],
   data () {
     return {
       tip:'',
       modalVisible: false,
       awardItems: [],
-      options: {
-        className: 'card',
-        title: '签到',
-        // icon: 'star',
-        type: 'signIn'
-      },
       signInTitle: [{ title: '今日已签', name: 'today' },
         { title: '累签榜', name: 'accrue' }, { title: '连签榜', name: 'continued' }
       ],
@@ -206,6 +202,11 @@ export default {
   },
   computed: {
     ...mapWritableState(comStore, ['todayRank']),
+    options () {
+      return {
+        customDel: this.openWay === 'nav' ? true : false
+      }
+    }
 
   },
   methods: {
@@ -213,6 +214,9 @@ export default {
     ...mapActions(appStore, ['showUserCard']),
     showAwardModal () {
       this.modalVisible = true
+    },
+    deleteCard(){
+      this.$emit('delete')
     },
     closeModal () {
       this.modalVisible = false

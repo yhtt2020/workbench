@@ -15,13 +15,21 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  id: {
+    type: String,
+    required: true,
+  },
+  appInfo: {
+    type: Object,
+    required: true,
+  },
 });
 onMounted(() => {});
 const randomName = "" + Date.now();
 console.log("randomName :>> ", randomName);
 const { bus, setupApp, preloadApp, destroyApp } = WujieVue;
 onUnmounted(() => {
-  destroyApp(props.name);
+  destroyApp(randomName);
 });
 
 //这段代码是修改默认虚拟iframe的地址的，在某种情况下需要指定src
@@ -50,7 +58,7 @@ if (location.href.startsWith("tsbapp://")) {
           },
         ],
       },
-      useWuJiePlugins(name),
+      useWuJiePlugins(id, id),
     ]"
   />
 </template>

@@ -35,7 +35,15 @@ onMounted(async () => {
   // 解析数据
   let options = useParserCard(res);
   cardHeader.value = options.header;
-  let currentSize: any = useCardSize(props.customData.size);
+  // 不存在自定义大小
+  if (!props.customData.customSize) {
+    props.customData.customSize = props.customData.size;
+  }
+  let currentSize: any = useCardSize(props.customData.customSize);
+  size.value = {
+    width: currentSize.width + "px",
+    height: currentSize.height + "px",
+  };
 
   if (props.customData.sizeList) {
     sizeList.value = props.customData.sizeList.map((item: any) => {
@@ -45,10 +53,7 @@ onMounted(async () => {
       };
     });
   }
-  size.value = {
-    width: currentSize.width + "px",
-    height: currentSize.height + "px",
-  };
+
   loading.value = false;
   nextTick(() => {
     perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {
@@ -99,8 +104,8 @@ const menus = computed(() => {
       },
     },
     {
-      title:"设置",
-      newIcon:"fluent:settings-16-regular",
+      title: "设置",
+      newIcon: "fluent:settings-16-regular",
     },
     {
       newIcon: "fluent:open-16-regular",
@@ -136,7 +141,7 @@ onUnmounted(() => {
     :header="header"
     :menuList="menus"
     :options="options"
-    v-model:customSize="customData.size"
+    v-model:customSize="customData.customSize"
     :sizeList="sizeList"
     @resize="resize"
     v-if="data"
@@ -157,7 +162,8 @@ onUnmounted(() => {
       <WuJie
         v-if="!loading"
         :url="customData._entry"
-        :name="customData.parentId"
+        :id="customData.parentId"
+        :app-info="data"
       />
     </div>
   </xt-container>

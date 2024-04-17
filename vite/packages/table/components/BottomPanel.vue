@@ -131,7 +131,7 @@
   </transition>
 
   <!-- 应用模式弹窗 -->
-  <AppModal />
+  <AppModal v-if="currentNavFormat === 'mac'"/>
 
   <!-- 应用模式中设置弹窗 -->
   <Setting ref="modeSetRef" />

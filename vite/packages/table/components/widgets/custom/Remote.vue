@@ -10,7 +10,11 @@
     :size="customSize" 
     :options="options" 
     :menuList="menuList"
-    ref="remote" :custom-data="customData" :desk="desk" :showRightIcon="notTrigger ? false : true">
+    ref="remote" 
+    :custom-data="customData" 
+    :desk="desk" 
+    :showRightIcon="notTrigger ? false : true"
+    @delete="deleteCard">
     <div ref="cardSize" style="align-items: center;align-content: center;width: 100%;height:100%;text-align: center" :class="notTrigger ? 'trigger' : '' ">
       <div v-if="!customData.url"
         style="display: flex;flex-direction: column;align-items: center;justify-content: center;height:100%">
@@ -91,8 +95,13 @@ export default {
     notTrigger: {
       type: Boolean,
       default: false
+    },
+    openWay: {
+      type: String,
+      default: "desk"
     }
   },
+  emits: ['delete'],
   data() {
     return {
       url: '',
@@ -175,6 +184,9 @@ export default {
     },
     setUA() {
       //暂时没有办法实现此处展现为移动端的界面
+    },
+    deleteCard() {
+      this.$emit('delete')
     }
     //   let contentWindow=this.$refs.myIframe.contentWindow
     //   console.log('当前的contentwindow-',contentWindow)
@@ -218,7 +230,8 @@ export default {
     options(){
       return {
         bg:this.customData.hideFrame ? 'transparent' : '',
-        shadow: this.customData.hideFrame
+        shadow: this.customData.hideFrame,
+        customDel: this.openWay === 'nav' ? true : false
       }
     },
     header(){

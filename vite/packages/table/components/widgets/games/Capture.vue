@@ -9,7 +9,8 @@
     :customIndex="customIndex"
     @titleHover="goCapture"
     @leftClick="goCapture"
-    :desk="desk">
+    :desk="desk"
+    @delete="deleteCard">
      <CaptureCore @selectSource="visibleSource=true"></CaptureCore>
    </xt-container>
   <teleport to="#app">
@@ -46,8 +47,13 @@ export default {
     desk:{
       type:Object
     },
+    openWay:{
+      type:String,
+      default:'desk'
+    }
 
   },
+  emit:['delete'],
   data(){
     return{
       visibleSettings:false,
@@ -66,12 +72,6 @@ export default {
           this.visibleSettings=true
         }
       }],
-      options: {
-        className: 'card small',
-        title: '捕获',
-        // icon: 'video',
-        type: 'games',
-      },
       header:{
         titleHover:true,
         title:'捕获',
@@ -83,6 +83,13 @@ export default {
 
     }
   },
+  computed:{
+    options(){
+      return {
+        customDel:this.openWay === 'nav' ? true : false
+      }
+    }
+  },
   methods:{
     choosenSource(){
       this.visibleSource=false
@@ -91,7 +98,10 @@ export default {
       this.$router.push({
         name:'GameCapture'
       })
-    }
+    },
+    deleteCard(){
+      this.$emit('delete')
+    },
 
   },
   mounted(){

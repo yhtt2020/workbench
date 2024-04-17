@@ -198,6 +198,7 @@ export const tomatoStore = defineStore("tomatoStore", {
 
     //初始化状态
     init(customData,customIndex,desk){
+      // console.log(desk,'<<<tomato desk');
       // 新创建时
       if (customData) {
         if(customData.length){

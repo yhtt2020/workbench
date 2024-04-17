@@ -9,7 +9,8 @@
       :menuList="menuList" 
       :options="options" 
       ref="cardSlot"    
-      :desk="desk">
+      :desk="desk"
+      @delete="deleteCard">
       <!-- 快捷键列表 更多快捷键 -->
       <div v-show="defaultType.name === 'recent'" class="top-list">
 
@@ -157,7 +158,12 @@ export default {
     editing: {
       type: Boolean,
     },
+    openWay: {
+      type: String,
+      default: "desk"
+    }
   },
+  emit:['delete'],
   data () {
     return {
       selectedScheme: null,
@@ -172,10 +178,6 @@ export default {
         { title: '指定快捷键详情', name: 'showDetail' }
       ],
       defaultType: { title: '最近使用列表', name: 'recent' },
-      options: {
-        className: 'card double',
-        title: '快捷键',
-      },
       // 控制面板显示
       // showMore 查看更多
       // showDetail 查看详情
@@ -499,6 +501,11 @@ export default {
   },
   computed: {
     ...mapState(keyStore, ['recentlyUsedList']),
+    options () {
+      return {
+        customDel: this.openWay === 'nav' ? true : false
+      }
+    },
     displayList () {
       if (this.recentlyUsedList) {
         return this.recentlyUsedList.slice(0, 6)
@@ -548,6 +555,9 @@ export default {
   methods: {
     getColor,
     ...mapActions(keyStore, ['setRecentlyUsedList']),
+    deleteCard(){
+      this.$emit('delete')
+    },
     openMainApp () {
       this.$router.push({ name: 'shortcutIndex' })
     },
