@@ -188,6 +188,7 @@
       ></NewAddCard>
     </div>
   </transition>
+  <AppCenter  v-if="visible"/>
   <!-- 添加图标 -->
   <EditNewNavigation
     v-if="editVisible"
@@ -222,11 +223,13 @@ import { useFileConversionIcon } from "../../apps/folder/src/hooks/useDataConver
 import { taskStore } from "../../../table/apps/task/store";
 
 import Drop from "./Drop.vue";
+import AppCenter from '../../apps/appCenter'
+import { useAppCenterStore } from '../../apps/appCenter/src/store'
 export default {
   name: "Desk",
   emits: ["changeEditing"],
   mixins: [componentsMinis, menuMinis],
-  components: { EditNewNavigation, GalleryModal, Drop, LoadingOutlined },
+  components: { AppCenter, EditNewNavigation, GalleryModal, Drop, LoadingOutlined },
   props: {
     keepAddIcon: {
       default: false,
@@ -417,6 +420,7 @@ export default {
     ...mapWritableState(useFloatMenuStore, ["menus", "newMenus"]),
     ...mapWritableState(useNavigationStore, ["selectNav", "isDesk"]),
     ...mapWritableState(useDeskStore, ["autoOpenEdit", "adjustLayout"]),
+    ...mapWritableState(useAppCenterStore, ["visible"]),
     // 根据当前桌面配置确定展示的对应桌面设置
     currentDeskEnv() {
       if (this.isFreeLayout || 0) {
@@ -656,6 +660,9 @@ export default {
       } else {
         message.info("定制过程中无法操作");
       }
+    },
+    newAppCenter(){
+      this.visible=true
     },
     newAddCard() {
       if (!this.showGuide) {

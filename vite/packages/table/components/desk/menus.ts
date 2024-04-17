@@ -41,6 +41,12 @@ function deskMenus() {
       fn: this.newAddCard,
     },
     {
+      id: 2.1,
+      newIcon: "fluent:window-apps-16-regular",
+      name: "应用中心",
+      fn: this.newAppCenter,
+    },
+    {
       id: 3,
       newIcon: "fluent:apps-add-in-20-filled",
       name: "添加更多",
