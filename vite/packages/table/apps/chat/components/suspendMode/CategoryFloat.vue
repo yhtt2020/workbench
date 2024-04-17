@@ -229,6 +229,8 @@
     :no="currentInfo.communityInfo.no"
     :currentCategoryName="currentCategorySetting"
   />
+  <!-- 子级频道添加新应用 -->
+  <AddNewUnClassApp ref="newUnClassRef" :currentAppSet="currentAppSet" />
 </template>
 
 <script setup>
@@ -243,8 +245,10 @@ import TreeFold from "../tree/TreeFold.vue";
 import RightDropdown from "../dropdown/Dropdown.vue";
 /**空状态**/
 import CategoryEmpty from "../../page/empty/CategoryEmpty.vue";
-/**新应用**/
+/**新应用(有频道分类选择)**/
 import AddNewAppPage from "../../page/add/AddNewAppPage.vue";
+/**新应用(没有频道分类选择)**/
+import AddNewUnClassApp from "../../page/add/AddNewUnclassApp.vue"; 
 /**创建分组**/
 import CreateCategory from "../../components/create/CreateCategory.vue";
 
@@ -265,9 +269,12 @@ const { setting, myCommunity, currentCommunity, communityTreeList } =
 /**ref组件**/
 const newAppRef = ref(null);
 const newCategoryRef = ref(null);
+const newUnClassRef = ref(null);
 
 /**当前的分组设置**/
 const currentCategorySetting = ref(null);
+/**当前的应用设置**/
+const currentAppSet = ref({}); 
 
 // 社群封面,后续替换成动态url地址
 const textUrl = ref(
@@ -275,11 +282,6 @@ const textUrl = ref(
 );
 // 开启悬浮模式下拉菜单
 const hideList = ref([
-  {
-    newIcon: "fluent:people-add-16-regular",
-    title: "邀请其他人",
-    callBack: () => {},
-  },
   {
     newIcon: "fluent:apps-add-in-20-filled",
     title: "添加新应用",
@@ -310,12 +312,17 @@ const hideList = ref([
     type: "manage",
     callBack: () => {},
   },
-  {
-    newIcon: "ant-design:team-outlined",
-    title: "成员管理",
-    type: "manage",
-    callBack: () => {},
-  },
+  // {
+  //   newIcon: "fluent:people-add-16-regular",
+  //   title: "邀请其他人",
+  //   callBack: () => {},
+  // },
+  // {
+  //   newIcon: "ant-design:team-outlined",
+  //   title: "成员管理",
+  //   type: "manage",
+  //   callBack: () => {},
+  // },
 ]);
 // 关闭悬浮模式下拉菜单
 const showList = ref([
@@ -350,23 +357,23 @@ const showList = ref([
       chatCommunity.setColumnMode();
     },
   },
-  {
-    newIcon: "fluent:people-add-16-regular",
-    title: "邀请其他人",
-    callBack: () => {},
-  },
+  // {
+  //   newIcon: "fluent:people-add-16-regular",
+  //   title: "邀请其他人",
+  //   callBack: () => {},
+  // },
   {
     newIcon: "fluent:settings-16-regular",
     title: "社群设置",
     type: "manage",
     callBack: () => {},
   },
-  {
-    newIcon: "ant-design:team-outlined",
-    title: "成员管理",
-    type: "manage",
-    callBack: () => {},
-  },
+  // {
+  //   newIcon: "ant-design:team-outlined",
+  //   title: "成员管理",
+  //   type: "manage",
+  //   callBack: () => {},
+  // },
 ]);
 // 根据权限显示下拉菜单
 const adminList = ref([
@@ -391,10 +398,13 @@ const childrenList = ref([
   {
     newIcon: "fluent:apps-add-in-20-filled",
     title: "添加新应用",
-    callBack: (item, value) => {},
+    callBack: (item, value) => {
+      currentAppSet.value = value;
+      newUnClassRef.value.openNewUnClassApp()
+    },
   },
   {
-    title: "应用设置",
+    title: "分组设置",
     newIcon: "fluent:settings-16-regular",
     callBack: (currentItem, value) => {
       newCategoryRef.value.openCategoryModal();

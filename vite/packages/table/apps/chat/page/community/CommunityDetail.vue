@@ -80,7 +80,6 @@ onBeforeRouteUpdate((to, from, next) => {
 const handleCurrentItem = async (data) => {
   const { type } = data.value ? data.value : data;
   const currentData = data.value ? data.value : data;
-
   // 链接
   if (type === "link") {
     if (currentData.name !== "Roadmap") {
@@ -103,7 +102,6 @@ const handleCurrentItem = async (data) => {
       }
     }
   }
-
   // 群聊
   else if (type === "group") {
     const groupList =

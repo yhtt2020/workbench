@@ -72,7 +72,7 @@
           type="theme"
           @click="nextClass"
         >
-          选择
+          {{ title }}
         </xt-button>
       </div>
     </div>
@@ -90,8 +90,16 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  title:{
+    type:String,
+    default:'选择'
+  },
+  isClose:{
+    type:Boolean,
+    default:false,
+  }
 });
-const { no } = toRefs(props);
+const { no,title,isClose } = toRefs(props);
 const forum = forumStore();
 const { forumList } = storeToRefs(forum);
 const currentForum = ref({
@@ -126,12 +134,18 @@ const nextClass = () => {
   if (currentForum.value.selectIndex === -1) {
     return;
   } else {
-    emit("next", currentForum.value);
-    forumVisible.value = false;
+    if(!isClose.value){
+      emit("next", currentForum.value);
+      forumVisible.value = false;
+    }
+    else {
+      emit("next", currentForum.value);
+    }
   }
 };
 defineExpose({
   openForumModal,
+  forumVisible
 });
 </script>
 
