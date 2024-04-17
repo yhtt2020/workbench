@@ -44,9 +44,5 @@ export type ModalProps = {
   name?: string | null;
 
   // 栓q我也不知道啊
-  scrollbarPadding?: {
-    [key: string]: string;
-    paddingRight: string;
-    paddingLeft: string;
-  };
+  scrollbarStyle?: any;
 };

@@ -52,6 +52,7 @@
                   :is="data?.name"
                   :customIndex="data?.id"
                   :customData="data?.customData"
+                  :key="data?.id"
                 />
               </template>
             </FreeLayoutContainer>
@@ -857,14 +858,14 @@ export default {
 </style>
 <style scoped lang="scss">
 .grid {
-  position: relative;
+  // position: relative;
   //display: inline-block;
   //width: 43em;
-  border-radius: 4px;
-  vertical-align: top;
+  // border-radius: 4px;
+  // vertical-align: top;
 
-  margin-left: 10px;
-  margin-right: 10px;
+  // margin-left: 10px;
+  // margin-right: 10px;
 
   .editing {
     pointer-events: none;
@@ -904,4 +905,3 @@ export default {
 //  }
 //}
 </style>
-./addIcon/EditNewNavigation.vue/index.ts

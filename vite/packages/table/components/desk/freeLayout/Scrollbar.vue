@@ -25,14 +25,15 @@ import {
   getCurrentInstance,
 } from "vue";
 import { storeToRefs } from "pinia";
-// import { useElementSize } from "@vueuse/core";
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 import { useElementBounding } from "@vueuse/core";
 import { useFreeLayoutStore } from "./store";
 import { useElementSize } from "../../../ui/new/drag/src/hooks/useElementSize";
 import { useWindowSize } from "../../../ui/new/drag/src/hooks/useWindowSize";
-import { useThrottleFn } from "@vueuse/core";
+import { useWidgetStore } from "../../card/store";
+const widgetStore = useWidgetStore();
+const { edit } = storeToRefs(widgetStore);
 const { proxy } = getCurrentInstance();
 const dragStyle = computed(() => {
   if (isKey.value && isDragging.value) {
@@ -96,7 +97,7 @@ onMounted(() => {
   window.addEventListener("mousemove", handleMouseMove);
   // 监听鼠标抬起事件;
   window.addEventListener("mouseup", handleMouseUp);
-  document.body.addEventListener("keydown", ignoreSpace);
+  // document.body.addEventListener("keydown", ignoreSpace);
   // 监听用于更新滚动条X轴滚动事件
   // proxy.$bus.on("updateFreeLayoutScrollX", (x) => {
   //   scrollbar.value.scrollLeft = x;
@@ -132,14 +133,14 @@ watch([isFreeLayout, () => scrollSize.value], ([state, size]) => {
 });
 
 function ignoreSpace(event) {
-  var e = window.event || event;
-  if (e.keyCode === 32) {
-    if (e.preventDefault) {
-      e.preventDefault();
-    } else {
-      window.event.returnValue = false;
-    }
-  }
+  // var e = window.event || event;
+  // if (e.keyCode === 32) {
+  //   if (e.preventDefault) {
+  //     // e.preventDefault();
+  //   } else {
+  //     window.event.returnValue = false;
+  //   }
+  // }
 }
 
 // 鼠标滚动
@@ -189,7 +190,6 @@ async function redirect() {
   scrollbar.value.scrollTop = h;
   freeLayoutEnv.value.scrollLeft = w;
   freeLayoutEnv.value.scrollTop = h;
-
 }
 
 // 鼠标按下
@@ -237,7 +237,7 @@ function handleKeyDown(event) {
     event.preventDefault();
     event.stopPropagation();
   }
-  if (event.ctrlKey && (event.key === "A" || event.key === "a")) {
+  if (edit.value && event.ctrlKey && (event.key === "A" || event.key === "a")) {
     isSelectAll.value = !isSelectAll.value;
   }
 }
@@ -269,7 +269,7 @@ onBeforeUnmount(() => {
   window.removeEventListener("mousedown", handleMouseDown);
   window.removeEventListener("mousemove", handleMouseMove);
   window.removeEventListener("mouseup", handleMouseUp);
-  document.body.removeEventListener("keydown", ignoreSpace);
+  // document.body.removeEventListener("keydown", ignoreSpace);
 
   proxy.$bus.off("updateFreeLayoutScroll");
 });

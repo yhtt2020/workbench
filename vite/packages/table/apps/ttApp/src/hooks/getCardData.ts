@@ -34,6 +34,5 @@ export const getCardData = () => {
     data.children.push(cardData);
   });
 
-  console.log("data :>> ", data);
   return data;
 };

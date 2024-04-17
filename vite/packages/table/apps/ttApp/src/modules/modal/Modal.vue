@@ -174,7 +174,7 @@ onMounted(() => {
         <WuJie
           v-if="!loading"
           :url="data.main._entry"
-          :name="data.id"
+          :id="data.id"
           :app-info="{...data}"
         />
       </div>

@@ -1,15 +1,15 @@
 import { message } from "ant-design-vue";
 import browser from "../../../../../js/common/browser";
-import { useWuJieStore } from "./store";
+import { useTTAppStore } from "../../store";
 import { useTheme } from "./useTheme";
 import { storeToRefs } from "pinia";
-export const useWuJiePlugins = (id: string,appInfo:any) => {
-  console.log("id 和appInfo:>> ", id,appInfo);
-  const wuJieStore = useWuJieStore();
-  const { data } = storeToRefs(wuJieStore);
+export const useWuJiePlugins = (id: string) => {
+  console.log("id :>> ", id);
+  const wuJieStore = useTTAppStore();
+  const { ttappData } = storeToRefs(wuJieStore);
   // 数据不存在
-  if (!(id in data.value)) {
-    data.value[id] = {};
+  if (!(id in ttappData.value)) {
+    ttappData.value[id] = {};
   }
   if (!(appInfo.id in data.value)) {
     data.value[appInfo.id] = {};
@@ -42,16 +42,16 @@ export const useWuJiePlugins = (id: string,appInfo:any) => {
       };
       // 代理localStorage
       iframeWindow.localStorage.getItem = (key) => {
-        return data.value[appInfo.id][key];
+        return ttappData.value[id][key];
       };
       iframeWindow.localStorage.setItem = (key, value) => {
-        data.value[appInfo.id][key] = value;
+        ttappData.value[id][key] = value;
       };
       iframeWindow.localStorage.removeItem = (key) => {
-        delete data.value[appInfo.id][key];
+        delete ttappData.value[id][key];
       };
       iframeWindow.localStorage.clear = () => {
-        data.value[appInfo.id] = {};
+        ttappData.value[id] = {};
       };
 
       console.log(iframeWindow,'传递下去的window')
