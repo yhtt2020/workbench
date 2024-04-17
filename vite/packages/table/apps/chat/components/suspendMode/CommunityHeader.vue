@@ -48,7 +48,7 @@ const headerIcon = computed(() => {
       return type === item.type;
     });
     // console.log('查看',findItem);
-    return findItem.icon;
+    return findItem?.icon;
   } else {
     return "";
   }

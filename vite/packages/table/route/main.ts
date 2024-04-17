@@ -380,6 +380,9 @@ export default [
                 path: "/team",
                 name: "team",
                 component: Team,
+                redirect: {
+                  name: "hall",
+                },
                 children: [
                   {
                     path: "",
@@ -387,6 +390,8 @@ export default [
                     meta: {
                       tab1: "community",
                       tab2: "team",
+                      type: "team",
+                      tab: "team",
                     },
                     component: Hall,
                   },

@@ -36,7 +36,7 @@ const chatCommunity = chatCommunityStore();
 const { currentCommunityNo, setting } = storeToRefs(chatCommunity);
 
 const currentItem = ref(null);
-const currentData = ref({
+const currentItemData = ref({
   group: [],
   isChat: "yes",
   artName: "community_after_created_empty",
@@ -78,8 +78,10 @@ onBeforeRouteUpdate((to, from, next) => {
 
 // 触发当前左侧点击事件
 const handleCurrentItem = async (data) => {
-  const { type } = data.value ? data.value : data;
   const currentData = data.value ? data.value : data;
+  // 其他
+  currentItem.value = currentData;
+  const type = currentData.type;
   // 链接
   if (type === "link") {
     if (currentData.name !== "Roadmap") {
@@ -103,7 +105,7 @@ const handleCurrentItem = async (data) => {
     }
   }
   // 群聊
-  else if (type === "group") {
+  if (type === "group") {
     const groupList =
       window.$TUIKit?.TUIStore?.storeMap?.group?.store?.groupList;
     const groupProps = currentData.props[0]
@@ -112,15 +114,51 @@ const handleCurrentItem = async (data) => {
     const index = _.findIndex(groupList, (findItem) => {
       return String(findItem.groupID) === String(groupProps.groupID);
     });
+    // 当前群聊是否已经创建
+    if (index > -1) {
+      // 当前群聊为公开群
+      const type = groupList[index]?.type;
+      if (type === "Private") {
+        const enableGroup = await checkGroupShip([`${groupProps.groupID}`]); // 有没有添加群聊
+        currentData.value.isChat = enableGroup[0];
+        const isDisable = groupList[index]?.joinOption === "DisableApply";
+        if (enableGroup[0] === "yes") {
+          const name = `GROUP${groupProps.groupID}`;
+          TUIConversationService.switchConversation(name);
+        } else {
+          if (isDisable) {
+            currentData.value.group = groups[index];
+          } else {
+            message.warn("该群禁止加入");
+          }
+        }
+      }
+      // 当前群聊为公开群
+      else {
+        const res = await window.$chat?.chat?.searchGroupByID(
+          groupProps.groupID
+        );
+        const isDisable = res.data.group.joinOption !== "DisableApply";
+        const enableGroup = await checkGroupShip([`${groupProps.groupID}`]); // 有没有添加群聊
+        // 判断有没有加入社群, yes表示已经加入, not表示没有加入
+        if (enableGroup[0] === "yes") {
+          const name = `GROUP${groupProps.groupID}`;
+          TUIConversationService.switchConversation(name);
+        } else {
+          // isDisable判断群聊是否禁止加入
+          if (isDisable) {
+            currentData.value.group = res.data.group;
+          } else {
+            message.warn("该群禁止加入");
+          }
+        }
+      }
+    }
   }
-
-  // 其他
-  currentItem.value = currentData;
 };
 
 onMounted(() => {
   proxy.$bus.on("handleCurrentCommunity", (item) => {
-    currentItem.value = item;
     handleCurrentItem(item);
   });
 });
