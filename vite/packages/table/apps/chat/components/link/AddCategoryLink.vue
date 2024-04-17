@@ -1,10 +1,18 @@
 <!-- 频道链接添加 具备频道分类添加选择 -->
 <script setup>
-import { ref } from "vue";
+import { ref, toRefs } from "vue";
 
 import Dropdown from "../../../../components/desk/navigationBar/components/dropDown/DropDown.vue";
 
 const emit = defineEmits(["prev"]);
+
+const props = defineProps({
+  title: {
+    type: String,
+    default: "选择",
+  },
+});
+const { title } = toRefs(props);
 
 const openType = ref([
   { name: "当前页面直接打开", value: "current", openMethod: "currentPage" },
@@ -93,7 +101,7 @@ const selectNext = () => {
 // 返回上一步
 const returnPreviousStep = () => {
   linkVisible.value = false;
-  emit("prev",);
+  emit("prev");
 };
 
 const clearLink = () => {
@@ -219,7 +227,7 @@ defineExpose({
           class="category-button"
           @click="selectNext"
         >
-          选择
+          {{ title }}
         </xt-button>
       </div>
     </div>

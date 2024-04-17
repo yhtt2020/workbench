@@ -44,16 +44,22 @@
 </template>
 
 <script setup>
-import { nextTick, ref } from "vue";
+import { nextTick, ref, toRefs } from "vue";
 import { TUIStore, StoreName } from "@tencentcloud/chat-uikit-engine";
 import _ from "lodash-es";
 
-import GroupSelect from "../../user/GroupSelect.vue"
+import GroupSelect from "../../user/GroupSelect.vue";
 
 const emit = defineEmits(["prev"]);
 
 const customGroupList = ref([]);
-
+const props = defineProps({
+  isClose: {
+    type: Boolean,
+    default: false,
+  },
+});
+const { isClose } = toRefs(props);
 // 开启自定义群聊选择弹窗
 const customVisible = ref(false);
 const openCustomGroupModal = () => {
@@ -66,7 +72,7 @@ const openCustomGroupModal = () => {
           return role === "Owner";
         });
         customGroupList.value = filterList;
-        console.log('filterList',filterList);
+        console.log("filterList", filterList);
       },
     });
   });
@@ -80,12 +86,17 @@ const returnPreviousStep = () => {
 
 // 选择后的回调函数
 const getCreateList = (list) => {
-  customVisible.value = false;
-  emit("next", list);
+  if (!isClose.value) {
+    customVisible.value = false;
+    emit("next", list);
+  } else {
+    emit("next", list);
+  }
 };
 
 defineExpose({
   openCustomGroupModal,
+  customVisible,
 });
 </script>
 
