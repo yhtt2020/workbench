@@ -21,26 +21,36 @@ const ttapp = {
       cbId,
     });
   },
-  installJson(data, cb) {
+  renew(id, cb) {
     let cbId = require("nanoid").nanoid();
     ipc.once(cbId, (event, args) => {
       cb?.(args);
     });
-    return send("installJson", {
-      data,
+    return send("renew", {
+      id,
       cbId,
     });
   },
-  checkFile(path, cb) {
-    let cbId = require("nanoid").nanoid();
-    ipc.once(cbId, (event, args) => {
-      cb?.(args);
-    });
-    return send("checkFile", {
-      path,
-      cbId,
-    });
-  },
+  // installJson(data, cb) {
+  //   let cbId = require("nanoid").nanoid();
+  //   ipc.once(cbId, (event, args) => {
+  //     cb?.(args);
+  //   });
+  //   return send("installJson", {
+  //     data,
+  //     cbId,
+  //   });
+  // },
+  // checkFile(path, cb) {
+  //   let cbId = require("nanoid").nanoid();
+  //   ipc.once(cbId, (event, args) => {
+  //     cb?.(args);
+  //   });
+  //   return send("checkFile", {
+  //     path,
+  //     cbId,
+  //   });
+  // },
   uninstall(id, cb) {
     let cbId = require("nanoid").nanoid();
     ipc.once(cbId, (event, args) => {

@@ -99,6 +99,10 @@ const menus = computed(() => {
       },
     },
     {
+      title:"设置",
+      newIcon:"fluent:settings-16-regular",
+    },
+    {
       newIcon: "fluent:open-16-regular",
       title: "清空缓存",
       fn: () => {

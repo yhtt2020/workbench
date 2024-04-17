@@ -52,6 +52,7 @@
                   :is="data?.name"
                   :customIndex="data?.id"
                   :customData="data?.customData"
+                  :key="data?.id"
                 />
               </template>
             </FreeLayoutContainer>

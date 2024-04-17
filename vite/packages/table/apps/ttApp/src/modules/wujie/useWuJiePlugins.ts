@@ -1,16 +1,15 @@
 import { message } from "ant-design-vue";
 import browser from "../../../../../js/common/browser";
-import { useWuJieStore } from "./store";
+import { useTTAppStore } from "../../store";
 import { useTheme } from "./useTheme";
 import { storeToRefs } from "pinia";
 export const useWuJiePlugins = (id: string) => {
   console.log("id :>> ", id);
-  const wuJieStore = useWuJieStore();
-  const { data } = storeToRefs(wuJieStore);
+  const wuJieStore = useTTAppStore();
+  const { ttappData } = storeToRefs(wuJieStore);
   // 数据不存在
-  if (!(id in data.value)) {
-    data.value[id] = {};
-    return;
+  if (!(id in ttappData.value)) {
+    ttappData.value[id] = {};
   }
 
   let res = {
@@ -41,16 +40,16 @@ export const useWuJiePlugins = (id: string) => {
       };
       // 代理localStorage
       iframeWindow.localStorage.getItem = (key) => {
-        return data.value[id][key];
+        return ttappData.value[id][key];
       };
       iframeWindow.localStorage.setItem = (key, value) => {
-        data.value[id][key] = value;
+        ttappData.value[id][key] = value;
       };
       iframeWindow.localStorage.removeItem = (key) => {
-        delete data.value[id][key];
+        delete ttappData.value[id][key];
       };
       iframeWindow.localStorage.clear = () => {
-        data.value[id] = {};
+        ttappData.value[id] = {};
       };
 
       return iframeWindow;
