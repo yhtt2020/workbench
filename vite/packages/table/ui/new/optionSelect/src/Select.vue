@@ -1,7 +1,7 @@
 <template>
   <xt-select
     h="40"
-    zIndex="99999"
+    :zIndex="99999999"
     v-model="currentSelect"
     :list="list"
     class="xt-bg-t-2"

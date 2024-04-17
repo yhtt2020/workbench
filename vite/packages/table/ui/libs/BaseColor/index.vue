@@ -1,6 +1,6 @@
 <template>
   <XtTitle v-if="text">{{ text }}</XtTitle>
-  <color-picker :shape="shape" v-model:pureColor="colorData" @pureColorChange="colorClick()" zIndex="9999999"/>
+  <color-picker :shape="shape" v-model:pureColor="colorData" @pureColorChange="colorClick()" :zIndex="99999999"/>
 </template>
 
 <script>

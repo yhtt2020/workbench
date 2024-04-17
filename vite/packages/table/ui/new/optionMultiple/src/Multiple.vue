@@ -5,8 +5,14 @@
     class="rounded-xl"
     style="width: 100%; padding: 0 !important"
     @change="handleChange"
+    :zIndex="(9999999 + 10)"
+    :dropdownStyle="{zIndex: 9999999 + 10}"
   >
-    <a-select-option class="no-drag" v-for="item in list" :value="item.value"
+    <a-select-option 
+      class="no-drag" 
+      v-for="item in list" 
+      :value="item.value" 
+      :zIndex="(9999999 + 10)"
       >{{ item.name }}
     </a-select-option>
   </a-select>
