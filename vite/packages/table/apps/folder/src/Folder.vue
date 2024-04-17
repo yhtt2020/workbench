@@ -80,6 +80,13 @@
     v-if="expandVisible"
     @close="expandClose"
   ></Expand>
+  
+  <ModelCard 
+    v-if="modelVisible"
+    :cardData="cardData"
+    :currentComponent="cardName"
+    v-model:model-visible="modelVisible"
+  />
 </template>
 
 <script setup>
@@ -122,6 +129,9 @@ const FolderSet = defineAsyncComponent(() =>
 );
 const EditNewNavigation = defineAsyncComponent(() =>
   import("../../../components/desk/addIcon/EditNewNavigation.vue")
+);
+const ModelCard = defineAsyncComponent(() =>
+  import("../../../components/windowPanel/components/ModelCard.vue")
 );
 
 const { proxy } = getCurrentInstance();
@@ -367,6 +377,14 @@ const autoSize = computed(() => {
 
 const expandList = ref(props)
 
+// 卡片类图标相关常量
+// 模态框是否可见
+const modelVisible = ref(false)
+// 当前卡片数据
+const cardData = ref({})
+// 当前卡片的name
+const cardName = ref('')
+
 /**
  *点击组件关闭
  */
@@ -379,7 +397,13 @@ const clickFile = (data) => {
     // 保留原来的大小
     oldCardSize.value = customData.value.customSize
     return
-  }
+  } else if (data.type === 'card'){
+    modelVisible.value = true
+    cardData.value = data.cardData
+    cardName.value = data.value
+    console.log('1111111111',cardData.value,data)
+    return 
+  } 
   startApp(data.type, data.value, router);
   emit("clickFile", data);
 };

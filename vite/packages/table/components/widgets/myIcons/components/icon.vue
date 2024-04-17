@@ -6,6 +6,7 @@
     :style="[iconSize]"
   >
     <xt-icon-show
+      v-if="!isIfy"
       v-model="src"
       :h="imgH"
       :w="imgW"
@@ -16,6 +17,11 @@
       boxR="12px"
       :click="false"
       :fit="fit"
+    />
+    <xt-newIcon 
+      v-else
+      :icon="src"
+      :size="imgW"
     />
     <!-- <div
       class="flex items-center justify-center w-full overflow-hidden xt-text no-drag rounded-xl"
@@ -36,6 +42,7 @@
         :style="[imgSize, radiusState, imgStateStyle]"
         :data-index="index"
       />
+      
     </div> -->
     <div
       v-if="isTitle"
@@ -56,6 +63,7 @@ import editProps from "../hooks/editProps";
 import { sizeValues } from "./iconConfig";
 import { renderIcon } from "../../../../js/common/common";
 import { startApp } from "../../../../ui/hooks/useStartApp";
+import { checkIsIfyIcon } from "../../../card/hooks/addCardToNav";
 export default {
   mixins: [editProps],
   props: {
@@ -138,11 +146,15 @@ export default {
     fit() {
       return this.imgState;
     },
+    isIfy(){
+      return checkIsIfyIcon(this.src).value
+    }
   },
   watch: {
     imgShape(newV) {},
   },
   methods: {
+    checkIsIfyIcon,
     renderIcon,
     getSizeValues(size) {
       if (this.isReSize) {

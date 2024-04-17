@@ -114,6 +114,8 @@ import {
 import { nanoid } from "nanoid";
 import { useFreeLayoutStore } from "../../desk/freeLayout/store";
 
+import ModelCard from "../../windowPanel/components/ModelCard.vue";
+
 export default {
   props: {
     customIndex: {
@@ -134,6 +136,7 @@ export default {
     icon,
     DragAndFollow,
     DroppableArea,
+    ModelCard,
   },
   data() {
     return {

@@ -48,6 +48,7 @@ export const defaultData = {
   summary:'',   // 酷应用，轻应用，网址导航等图标的简介
   default:{},   // 数据用于重置图标
   slot:'' ,     // 插槽
+  cardData:{}, // 卡片数据 -- 用于卡片类型图标
 };
 export const useIconConversionFile = (data) => {
   const file = {
