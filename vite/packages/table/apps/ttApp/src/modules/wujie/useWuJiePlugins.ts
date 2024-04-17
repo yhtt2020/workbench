@@ -3,8 +3,8 @@ import browser from "../../../../../js/common/browser";
 import { useWuJieStore } from "./store";
 import { useTheme } from "./useTheme";
 import { storeToRefs } from "pinia";
-export const useWuJiePlugins = (id: string) => {
-  console.log("id :>> ", id);
+export const useWuJiePlugins = (id: string,appInfo:any) => {
+  console.log("id 和appInfo:>> ", id,appInfo);
   const wuJieStore = useWuJieStore();
   const { data } = storeToRefs(wuJieStore);
   // 数据不存在
@@ -41,16 +41,16 @@ export const useWuJiePlugins = (id: string) => {
       };
       // 代理localStorage
       iframeWindow.localStorage.getItem = (key) => {
-        return data.value[id][key];
+        return data.value[appInfo.id][key];
       };
       iframeWindow.localStorage.setItem = (key, value) => {
-        data.value[id][key] = value;
+        data.value[appInfo.id][key] = value;
       };
       iframeWindow.localStorage.removeItem = (key) => {
-        delete data.value[id][key];
+        delete data.value[appInfo.id][key];
       };
       iframeWindow.localStorage.clear = () => {
-        data.value[id] = {};
+        data.value[appInfo.id] = {};
       };
 
       return iframeWindow;

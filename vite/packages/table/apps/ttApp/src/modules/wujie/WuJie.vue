@@ -15,6 +15,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  appInfo:{
+    type:Object,
+    required:true
+  }
 });
 onMounted(() => {});
 const { bus, setupApp, preloadApp, destroyApp } = WujieVue;
@@ -47,7 +51,7 @@ if (location.href.startsWith("tsbapp://")) {
           },
         ],
       },
-      useWuJiePlugins(name),
+      useWuJiePlugins(name,appInfo),
     ]"
   />
 </template>
