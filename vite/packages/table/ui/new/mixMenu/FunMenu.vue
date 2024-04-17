@@ -62,7 +62,7 @@ const props = defineProps({
   },
 });
 const menu = ref(null);
-const { menus, model, height } = toRefs(props);
+const { menus, model, height, stopPropagation } = toRefs(props);
 
 const widgetStore = useWidgetStore();
 const { rightModel } = storeToRefs(widgetStore);
@@ -119,6 +119,11 @@ function defaultListClick(event) {
     // event.preventDefault();
     // event.stopPropagation();
     drawerVisible.value = true;
+    // 阻止默认事件
+    if(stopPropagation.value){
+      event.stopPropagation();
+      event.preventDefault();
+    }
     onMounted();
   }
 }
@@ -135,6 +140,11 @@ function defaultListContextmenu(event) {
     // event.preventDefault();
     // event.stopPropagation();
     drawerVisible.value = true;
+    // 阻止默认事件
+    if(stopPropagation.value){
+      event.stopPropagation();
+      event.preventDefault();
+    }
     onMounted();
   }
 }
