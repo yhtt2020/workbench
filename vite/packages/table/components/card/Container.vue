@@ -318,7 +318,7 @@ const props = defineProps({
         rightMenuVisible: false,
         // 是否禁用标题拖拽
         disabledDrag: false,
-        // 是否允许添加到导航栏
+        // 是否允许卡片添加到导航栏
         disabledNav: false,
       };
     },
@@ -478,7 +478,7 @@ const deleteObj = computed(() => {
   };
 });
 
-//
+// 卡片数据转为图标数据格式
 const cardData = computed(() => {
   return useConversionCard(props)
 });
