@@ -1,8 +1,4 @@
 <template>
-  <!--
-    x y 改为计算属性
-    if !handle
-   -->
   <Teleport to="body">
     <!-- 弹窗 -->
     <xt-drag
@@ -18,9 +14,6 @@
       :handle="handle"
       :disabled="handle ? false : true"
     >
-      <xt-button>
-        {{ modalIndex }}
-      </xt-button>
       <div
         @click="modalClick"
         :class="[custom ? '' : boxClass]"
@@ -124,7 +117,7 @@
                   wheelPropagation: false,
                 }"
                 style="position: relative"
-                :style="scrollbarPadding"
+                :style="scrollbarStyle"
                 class="flex-1"
                 :class="mainClass"
               >
@@ -199,7 +192,7 @@ import {
 import { useWindowSize } from "../../drag/src/hooks/useWindowSize";
 // import { vElementSize } from "../../drag/src/hooks/useElementSize";
 import { nanoid } from "nanoid";
-import { useDoubleClick } from "../../../../hooks";
+
 import { ModalProps } from "./types";
 
 const { proxy }: any = getCurrentInstance();
@@ -222,7 +215,7 @@ const props = withDefaults(defineProps<ModalProps>(), {
   beforeMount: () => true,
   beforeUnmount: () => true,
   custom: false,
-  scrollbarPadding: { paddingRight: "0px", paddingLeft: "0px" },
+  scrollbarStyle: { paddingRight: "0px", paddingLeft: "0px" },
   type: null,
   min: false,
   max: false,

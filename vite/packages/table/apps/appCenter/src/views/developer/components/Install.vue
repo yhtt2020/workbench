@@ -69,17 +69,21 @@ const install = async () => {
       icon: currentData._logo,
       type: "ttapp",
     };
-    console.log("iconData :>> ", iconData);
-    useAddCard({
-      name: "myIcon",
-      data: {
-        iconList: [iconData],
-      },
-      // id: ""
-    });
+    // console.log("iconData :>> ", iconData);
+    // useAddCard({
+    //   name: "myIcons",
+    //   data: {
+    //     iconList: [
+    //       {
+    //         ...iconData,
+    //       },
+    //     ],
+    //   },
+    //   // id: ""
+    // });
 
     message.success("安装成功");
-    return;
+    // return;
     ttappList.value.push(currentData);
   }
   // manifest.json失败
