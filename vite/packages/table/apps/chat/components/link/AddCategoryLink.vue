@@ -54,11 +54,52 @@ const openLinkModal = () => {
   linkVisible.value = true;
 };
 // 选择下一步
-const selectNext = () => {};
+const selectNext = () => {
+  const pattern = /^(https?|http):\/\//;
+  const currentResult = {};
+  // 存在https、http
+  if (pattern.test(currentLink.value.url)) {
+    // 当前打开
+    if (defaultType.value === "current") {
+      currentResult.name = currentLink.value.name;
+      currentResult.url = currentLink.value.url;
+      currentResult.openMethod = "currentPage";
+    }
+    // 非当前打开
+    else {
+      currentResult.name = currentLink.value.name;
+      currentResult.url = currentLink.value.url;
+      currentResult.openMethod = mode.value;
+    }
+  }
+  // 不存在https、http
+  else {
+    // 当前打开
+    if (defaultType.value === "current") {
+      currentResult.name = currentLink.value.name;
+      currentResult.url = `${currentLink.value.header}://${currentLink.value.url}`;
+      currentResult.openMethod = "currentPage";
+    }
+    // 非当前打开
+    else {
+      currentResult.name = currentLink.value.name;
+      currentResult.url = `${currentLink.value.header}://${currentLink.value.url}`;
+      currentResult.openMethod = mode.value;
+    }
+  }
+  emit("next", currentResult);
+  clearLink();
+};
 // 返回上一步
 const returnPreviousStep = () => {
   linkVisible.value = false;
-  emit("prev");
+  emit("prev",);
+};
+
+const clearLink = () => {
+  currentLink.value.url = "";
+  currentLink.value.name = "";
+  linkVisible.value = false;
 };
 
 defineExpose({

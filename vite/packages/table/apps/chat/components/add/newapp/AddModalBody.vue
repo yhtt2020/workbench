@@ -59,7 +59,7 @@ const channelList = ref([
   // 后期再补上
   // { icon: "fluent-emoji-flat:desktop-computer", name: "桌面", type: "desk" },
   { icon: "fluent-emoji-flat:placard", name: "社区", type: "forum" },
-  { icon: "fluent-emoji-flat:thought-balloon", name: "群聊", type: "chat" },
+  { icon: "fluent-emoji-flat:thought-balloon", name: "群聊", type: "group" },
   {
     icon: "fluent-emoji-flat:globe-with-meridians",
     name: "网页链接",

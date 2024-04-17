@@ -161,6 +161,11 @@ import { useRoute } from "vue-router";
 import { message } from "ant-design-vue";
 import { channelClass } from "../../../../../js/chat/createChannelClass";
 
+// 限制message提示框最大显示数量
+message.config({
+  maxCount: 1,
+});
+
 const comAPI = new CommunityAPI();
 const chatCommunity = chatCommunityStore();
 const { categoryList } = storeToRefs(chatCommunity);
@@ -206,7 +211,7 @@ const openClassModal = () => {
 // 返回上一步
 const returnPreviousStep = () => {
   classVisible.value = false;
-  emit("prev");
+  emit("prev",currentItem.value);
 };
 // 添加分类
 const addClassItem = () => {
@@ -324,17 +329,26 @@ const deleted = (item) => {
     categoryList.value.splice(index, 1);
   }
 };
-
 // 创建最后一步
 const createUltimateStep = async () => {
-  console.log("测试", currentParams.value.classItem);
-  console.log("数据", currentItem.value);
-
   switch (currentItem.value?.type) {
     case "link":
+      const option = {
+        parentID: currentParams.value.classItem?.id
+          ? currentParams.value.classItem?.id
+          : 0,
+        item: currentItem.value,
+        communityNo: route.params.no,
+      };
+      const rs = await channelClass.secondaryChannel(option);
+      if (rs.status === 1) {
+        message.success(`${rs.info}`);
+        chatCommunity.getCommunityTree(route.params.no);
+        classVisible.value = false;
+      }
       break;
     case "forum":
-      const res= await channelClass.secondaryChannel({
+      const res = await channelClass.secondaryChannel({
         parentID: currentParams.value.classItem?.id
           ? currentParams.value.classItem?.id
           : 0,
@@ -347,9 +361,41 @@ const createUltimateStep = async () => {
         classVisible.value = false;
       }
       break;
-    case "chat":
-      
-
+    case "group":
+      // 多个群聊
+      if (Array.isArray(currentItem.value.item)) {
+        console.log("是数组");
+        for (const item of currentItem.value.item) {
+          const option = {
+            parentID: currentParams.value.classItem?.id
+              ? currentParams.value.classItem?.id
+              : 0,
+            item: { type: currentItem.value.type, item: item },
+            communityNo: route.params.no,
+          };
+          const res = await channelClass.secondaryChannel(option);
+          if (res.status === 1) {
+            message.success(`${res.info}`);
+            chatCommunity.getCommunityTree(route.params.no);
+            classVisible.value = false;
+          }
+        }
+      }
+      // 单个群聊
+      else {
+        const res = await channelClass.secondaryChannel({
+          parentID: currentParams.value.classItem?.id
+            ? currentParams.value.classItem?.id
+            : 0,
+          item: currentItem.value,
+          communityNo: route.params.no,
+        });
+        if (res.status === 1) {
+          message.success(`${res.info}`);
+          chatCommunity.getCommunityTree(route.params.no);
+          classVisible.value = false;
+        }
+      }
       break;
   }
 };

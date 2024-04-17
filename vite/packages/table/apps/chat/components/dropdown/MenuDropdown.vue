@@ -103,11 +103,11 @@ const linkMenu = ref([
   },
 ]);
 const otherMenu = ref([
-  {
-    name: "应用设置",
-    newIcon: "fluent:settings-16-regular",
-    callBack: () => {},
-  },
+  // {
+  //   name: "应用设置",
+  //   newIcon: "fluent:settings-16-regular",
+  //   callBack: () => {},
+  // },
   {
     name: "删除应用",
     newIcon: "akar-icons:trash-can",

@@ -1,4 +1,4 @@
-<!-- 用户选择 -->
+<!-- 用户选择器 -->
 <template>
   <div class="forward-container flex">
     <div class="flex-1 forward-left flex flex-col">

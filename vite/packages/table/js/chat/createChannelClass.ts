@@ -15,9 +15,7 @@ export const channelClass = {
       name: item?.item?.name,
       props: JSON.stringify({ type: item?.type, ...item?.item }),
     };
-    console.log("测试", createOption);
     const res = await comAPI.createCommunityChannel(createOption);
-    console.log("创建子级频道", res);
     if (res.status === 1) {
       return res;
     }

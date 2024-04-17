@@ -33,8 +33,9 @@ const returnPreviousStep = () => {
 };
 // 下一步
 const nextClass = () => {
-  // chatVisible.value = false;
-  // emit("next");
+  console.log('测试',currentChat.value);
+  chatVisible.value = false;
+  emit("next",currentChat.value.listIndex);
 };
 
 // 选择加入方式
