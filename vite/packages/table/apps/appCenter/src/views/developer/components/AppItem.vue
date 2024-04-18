@@ -3,6 +3,7 @@ import { ref, computed } from "vue";
 import { useTTAppStore } from "../../../../../ttApp/src/store";
 import { storeToRefs } from "pinia";
 import { updateConfig } from "./updateConfig";
+import { installV2 } from "./installV2";
 
 const { item } = defineProps<{ item: any }>();
 // esc dbl 循环二级
@@ -19,12 +20,12 @@ const menus = computed(() => {
     //   },
     // },
     {
-      name: "更新配置文件(测试中)",
+      name: "更新文件",
       newIcon: "fluent:delete-16-regular",
-      cb: () => {
-        console.log('2222 :>> ', 2222);
-        // ttappStore.uninstall(item.id);
-        updateConfig(item.id);
+      cb: async () => {
+        let res: any = await installV2(item.id);
+        const { code, data } = res;
+        console.log("object :>> ", code, data);
       },
     },
     {
@@ -82,7 +83,6 @@ const openModal = () => {
 
 <template>
   <!-- 添加时预览组件 -->
-  <!--  {{ item }}-->
   <xt-preview-v2
     v-if="previewVisible"
     v-model="previewVisible"

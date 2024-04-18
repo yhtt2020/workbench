@@ -337,7 +337,7 @@ export default {
         window.loadedStore = {};
       }
 
-      console.log("name :>> ", name);
+      // console.log("name :>> ", name);
       // console.log('window.loadedStore[name] :>> ', window.loadedStore[name]);
 
       if (typeof window.loadedStore[name] === "undefined") {

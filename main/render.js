@@ -488,7 +488,6 @@ global.render = {
     let filePath = this.findFile(request.url, pathName)
     //todo 对/默认路径要做index.html default.html等的缺省判断
     if (!filePath) return
-    console.log('filePath',filePath)
     render.readFile(filePath,(error,mimeType, data)=>{
       response({
         headers: {

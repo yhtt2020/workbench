@@ -149,7 +149,6 @@ function handleOpenMenu(e: any, currentModel: string) {
   emits("onBeforeCreate");
   menuX.value = e.clientX;
   menuY.value = e.clientY;
-  console.log('ttapp x :>> ', e.clientX);
   show.value = true;
 
   emits("onMounted");

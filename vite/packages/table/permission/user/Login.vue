@@ -38,7 +38,7 @@
 </template>
 
 <script setup>
-import { ref,onMounted,  } from "vue";
+import { ref, onMounted } from "vue";
 import cache from "../../components/card/hooks/cache";
 import { useUserPermit } from "./useUserPermit";
 import XtButton from "../../ui/libs/Button/index.vue";
@@ -46,10 +46,10 @@ import XtIfyIcon from "../../ui/new/IfyIcon/index";
 import { usePermissionStore } from "../store";
 import { storeToRefs } from "pinia";
 const permissionStore = usePermissionStore();
-const { token } = storeToRefs(permissionStore);
+const { token, userInfo } = storeToRefs(permissionStore);
 const loginVisible = ref(true);
 import { useGlobalStore } from "../../apps/global/store";
-import { useEnv } from '../useEnv'
+import { useEnv } from "../useEnv";
 
 const globalStore = useGlobalStore();
 const props = defineProps({
@@ -67,10 +67,10 @@ onMounted(() => {
         console.log("token :>> ", currentToken);
         cache.set("ttUserToken", currentToken);
         token.value = currentToken;
-        await useUserPermit();
-        if(!useEnv('web')){
+   await useUserPermit();
+        if (!useEnv("web")) {
           //如果是客户端，则执行同步主线程的操作
-          syncMainUserInfo(currentToken)
+          syncMainUserInfo(currentToken);
         }
 
         loginVisible.value = false;
@@ -84,11 +84,11 @@ onMounted(() => {
 });
 const emits = defineEmits(["close"]);
 
-async function syncMainUserInfo (token) {
+async function syncMainUserInfo(token) {
   // let rs = await axios.post(sUrl('/app/loginBrowserWithToken'), {
   //   token: token
   // })
-  require('electron').ipcRenderer.send('loginBrowserWithToken',token)
+  require("electron").ipcRenderer.send("loginBrowserWithToken", token);
 }
 
 const loginClose = () => {

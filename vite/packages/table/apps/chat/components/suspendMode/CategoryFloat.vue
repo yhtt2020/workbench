@@ -248,7 +248,7 @@ import CategoryEmpty from "../../page/empty/CategoryEmpty.vue";
 /**新应用(有频道分类选择)**/
 import AddNewAppPage from "../../page/add/AddNewAppPage.vue";
 /**新应用(没有频道分类选择)**/
-import AddNewUnClassApp from "../../page/add/AddNewUnclassApp.vue"; 
+import AddNewUnClassApp from "../../page/add/AddNewUnclassApp.vue";
 /**创建分组**/
 import CreateCategory from "../../components/create/CreateCategory.vue";
 
@@ -260,7 +260,7 @@ const props = defineProps({
   },
 });
 const { no } = toRefs(props);
-console.log("no-1", no);
+console.log("no-1", no.value);
 
 const chatCommunity = chatCommunityStore();
 const { setting, myCommunity, currentCommunity, communityTreeList } =
@@ -274,7 +274,7 @@ const newUnClassRef = ref(null);
 /**当前的分组设置**/
 const currentCategorySetting = ref(null);
 /**当前的应用设置**/
-const currentAppSet = ref({}); 
+const currentAppSet = ref({});
 
 // 社群封面,后续替换成动态url地址
 const textUrl = ref(
@@ -447,6 +447,9 @@ const currentInfo = computed(() => {
       return String(item.communityInfo.no) === String(no.value);
     }
   });
+  console.log('需要查找的no',no.value)
+  console.log('查找结果',index)
+  console.log('便利的数据',myCommunity.value)
   chatCommunity.getCommunityTree(no.value);
   return myCommunity.value[index];
 });

@@ -418,10 +418,8 @@ export const appStore = defineStore('appStore', {
     },
     ensureFullScreen() {
       if (this.windowFullScreen) {
-        console.log('确认了全屏，是')
         this.enterFullScreen(false, false)
       } else {
-        console.log('确认了全屏，否')
       }
 
     },

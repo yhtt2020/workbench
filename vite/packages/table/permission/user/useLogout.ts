@@ -12,6 +12,7 @@ export const useLogout = () => {
   userStore.userInfo = "";
   // 清空pinia token
   permissionStore.token = "";
+  permissionStore.userInfo = "";
   // 清空本地 token
   cache.set("ttUserToken", "");
   // 清除群聊登录
@@ -19,8 +20,6 @@ export const useLogout = () => {
 };
 
 export const useClearUserInfo = () => {
-  useLogout();
-  console.log("触发用户数据清空 :>> ");
   const toast = useToast();
   toast.success("用户信息丢失 触发清空操作");
 };

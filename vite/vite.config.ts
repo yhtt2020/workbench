@@ -28,6 +28,9 @@ htmls.forEach((html) => {
   inputs[html] = getPath(html);
 });
 export default defineConfig({
+  optimizeDeps:{
+    exclude:['wujie','wujie-vue3']
+  },
   plugins: [
     vue({
       script: {
