@@ -148,7 +148,7 @@
               {{ cardData.support_count }}
             </button>
             <img
-              src="../../../../../public/icons/like.png"
+              src="/icons/like.png"
               alt=""
               class="w-[20px] h-[20px]"
               style="position: absolute; left: 34px"
@@ -167,7 +167,7 @@
               {{ cardData.collect_count }}
             </button>
             <img
-              src="../../../../../public/icons/collect.png"
+              src="/icons/collect.png"
               alt=""
               class="w-[20px] h-[20px]"
               style="position: absolute; left: 102px"

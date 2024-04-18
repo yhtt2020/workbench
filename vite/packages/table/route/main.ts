@@ -80,9 +80,9 @@ import MyCommunity from "../apps/chat/page/community/CommunityDetail.vue";
 import OfficialCommunity from "../apps/chat/page/community/OfficialCommunity.vue";
 import ChatAdmin from "../apps/chat/page/admin/Admin.vue";
 import Contact from "../apps/chat/page/contact/Contact.vue";
-import Channel from "../apps/chat/page/channels/channels.vue";
+import Channel from "../apps/chat/page/channels/Channel.vue";
 import ChannelIndex from "../apps/chat/page/channels/ChannelsIndex.vue";
-import Circle from "../apps/chat/page/channels/groups.vue";
+import Circle from "../apps/chat/page/channels/Group.vue";
 import CircleDetail from "../apps/chat/page/channels/GroupsDetail.vue";
 
 // import ChatDesk from '../page/chat/chatDesk.vue'
