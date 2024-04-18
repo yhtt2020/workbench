@@ -12,7 +12,6 @@ import { storeToRefs } from "pinia";
  * 用户许可
  */
 export const useUserPermit = async () => {
-  const permissionStore = usePermissionStore();
   // 1、 获取token
   let token = cache.get("ttUserToken");
 
@@ -36,10 +35,17 @@ export const useUserPermit = async () => {
  */
 const setUserInfo = async () => {
   const userStore: any = appStore();
-
+  const permissionStore = usePermissionStore();
   // 先判断用户信息是否存在，不存在进行赋值
-  if (userStore.userInfo) return userStore.userInfo;
+  console.log("permissionStore.userInfo :>> ", permissionStore.userInfo);
+  console.log('userStore.userInfo :>> ', userStore.userInfo);
+  if (permissionStore.userInfo) {
+    return permissionStore.userInfo;
+  } else if (userStore.userInfo) {
+    return userStore.userInfo;
+  }
 
+  console.log('useUpdateUserInfo :>> ', useUpdateUserInfo);
   return await useUpdateUserInfo();
 };
 
@@ -47,22 +53,31 @@ const setUserInfo = async () => {
  * 更新用户信息
  */
 export const useUpdateUserInfo = async () => {
+  // 1 获取用户信息
   console.time("UserInfo Run Time");
-  // 数据请求
+
   let res = await getUserInfo();
 
   console.timeEnd("UserInfo Run Time");
 
-  // 验证状态
+  // 2 验证状态
   const { code, data } = res || {};
+  console.log("res11111111111111111111111111111111 :>> ", res);
+  // 3 请求失败
   if (res.code !== 1000 && code !== 200) {
     useClearUserInfo();
-    // 修改为离线 后续重新请求
+    // 修改为离线
+    // cache.set("isOffline", true);
     console.log("登录时错误信息 :>> ", res);
     return;
   }
-  let userData = data.data;
+  // 4 请求成功
+  console.log("请求成功 :>> ");
+  // cache.set("isOffline", false);
 
+  let userData = data.data;
+  const permissionStore = usePermissionStore();
+  permissionStore.userInfo = userData;
   // 旧版本用户信息处理逻辑
   setLV(userData);
 

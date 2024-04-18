@@ -19,6 +19,9 @@
     width="100%"
     :footer="null"
     wrap-class-name="full-modal"
+    :bodyStyle="{
+      zIndex: 99999,
+    }"
     @ok="
       () => {
         this.visibleChooseScreen = false;
@@ -207,7 +210,6 @@ watch(
  */
 const isAutoRun = ref(false);
 
-
 // 监听是否开机自启动
 watch(
   () => isAutoRun.value,
@@ -216,7 +218,7 @@ watch(
   }
 );
 
-const hardware=ref(true)
+const hardware = ref(true);
 // 监听是否硬件加速
 
 onMounted(async () => {
@@ -231,40 +233,40 @@ onMounted(async () => {
   // 获取开机自启动
   isAutoRun.value = await tsbApi.settings.get("autoRun");
   //硬件加速
-  hardware.value=await tsbApi.settings.get('hardware')
-  if(hardware.value===undefined)
-  {
-    hardware.value=true
+  hardware.value = await tsbApi.settings.get("hardware");
+  if (hardware.value === undefined) {
+    hardware.value = true;
   }
   watch(
     () => hardware.value,
     async (value) => {
-      await tsbApi.settings.set('hardware',value);
-      if(value){
-        window.$ui.confirm('提示','开启硬件加速需要重启后方可生效。',
+      await tsbApi.settings.set("hardware", value);
+      if (value) {
+        window.$ui.confirm("提示", "开启硬件加速需要重启后方可生效。", {
+          type: "warning",
+          noText: "立即重启软件",
+          okText: "稍后手动重启",
+          noButtonWidth: 120,
+          no: () => {
+            tsbApi.system.restart();
+          },
+          okButtonWidth: 120,
+        });
+      } else {
+        window.$ui.confirm(
+          "提示",
+          "关闭硬件加速后，会将显卡的负载转移到处理器，且需重启软件生效。",
           {
-            type:'warning',
-            noText:'立即重启软件',
-            okText:'稍后手动重启',
-            noButtonWidth:120,
+            type: "warning",
+            okButtonWidth: 120,
+            noText: "立即重启软件",
+            okText: "稍后手动重启",
+            noButtonWidth: 120,
             no: () => {
-              tsbApi.system.restart()
+              tsbApi.system.restart();
             },
-            okButtonWidth:120},
-
-        )
-      }else{
-        window.$ui.confirm('提示','关闭硬件加速后，会将显卡的负载转移到处理器，且需重启软件生效。',
-          {
-            type:'warning',
-            okButtonWidth:120,
-            noText:'立即重启软件',
-            okText:'稍后手动重启',
-            noButtonWidth:120,
-            no: () => {
-              tsbApi.system.restart()
-            }}
-        )
+          }
+        );
       }
     }
   );

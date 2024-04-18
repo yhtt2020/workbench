@@ -339,7 +339,7 @@ const deleteObj = computed(() => {
   };
 });
 
-//
+// 卡片数据转为图标数据格式
 const cardData = computed(() => {
   return useConversionCard(props);
 });

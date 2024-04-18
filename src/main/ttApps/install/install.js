@@ -18,26 +18,27 @@ const { nanoid } = require("nanoid");
 const ttAppModel = require("../useDb.js");
 const ERROR_CODE = require("./constant.js");
 const checkMainFest = require("./check.js");
+
 // 当前id
-let id = "";
+let currentId = "";
 // 获取文件类型
 const getFileExtension = (filePath) => {
-  const compressedTypes = ["zip", "rar", "7z", "json"];
+  const compressedTypes = ["zip", "rar", "7z"];
   const fileExtension = filePath.split(".").pop() || "";
   return compressedTypes.includes(fileExtension);
 };
 // 自定义校验文件是否存在
 const checkFile = async (filePath) => {
   const folderType = "apps_test";
-  const folderName = [folderType, id, filePath];
+  const folderName = [folderType, currentId, filePath];
   let res = await existsFolder(folderName);
   return res;
 };
 
 // 从测试文件夹复制到正式文件夹
 const useMoveFolder = async () => {
-  await checkDir(["apps", id]);
-  let res = await moveFolder(["apps_test", id], ["apps", id]);
+  await checkDir(["apps", currentId]);
+  let res = await moveFolder(["apps_test", currentId], ["apps", currentId]);
   return res;
 };
 
@@ -49,25 +50,20 @@ const saveData = async (options) => {
     return {
       status: 0,
       code: 200,
-      data: id,
+      data: currentId,
       info: "成功",
     };
   } else {
     return {
       status: 1,
       code: 400,
-      data: id,
+      data: currentId,
       info: "数据保存失败",
     };
   }
 };
-
-/**
- * 安装ttapp v2
- * 负责解压文件
- */
-const installV2 = async (filePath) => {
-  console.log("开始注册ttApp :>> ");
+/** 解压文件 */
+const unzip = async (filePath) => {
   // 1 判断文件类型
   if (!getFileExtension(filePath)) {
     console.log("1、文件类型错误 :>> ");
@@ -80,10 +76,8 @@ const installV2 = async (filePath) => {
   }
 
   // 2 处理解压文件路径
-
-  id = nanoid(4);
   const folderType = "apps_test";
-  const folderName = [folderType, id];
+  const folderName = [folderType, currentId];
   await checkDir(folderName);
 
   // 3 解压到临时目录
@@ -99,20 +93,36 @@ const installV2 = async (filePath) => {
   }
 
   console.log("成功完成解压 :>> ");
-
-  let res = await checkV2(id);
-  return res;
+  return unzipRes;
+};
+/**
+ * 安装ttapp v2
+ * 负责解压文件
+ */
+const installV2 = async (options) => {
+  const { id = nanoid(4), path } = options;
+  let renew = false;
+  if (id) {
+    renew = true;
+  }
+  currentId = id;
+  console.log("开始注册ttApp :>> ");
+  let unzipRes = await unzip(path);
+  if (unzipRes.code !== 200) {
+    return unzipRes;
+  }
+  return await checkV2(renew);
 };
 /**
  * 检测v2
  * 负责检测manifest.json 和最后的处理
  */
-const checkV2 = async () => {
+const checkV2 = async (flag) => {
   // 4 检测manifest.json
-  const checkManifestRes = await checkMainFest(id);
+  const checkManifestRes = await checkMainFest(currentId);
   if (checkManifestRes.code !== 200) {
     return {
-      id,
+      id: currentId,
       ...checkManifestRes,
     };
   }
@@ -132,14 +142,17 @@ const checkV2 = async () => {
   // manifestRes
   const { data } = checkManifestRes;
   const obj = {
-    id: id,
+    id: currentId,
     ...data,
   };
-  const saveRes = await saveData({
-    id: id,
-    data: obj,
-  });
-  if (saveRes.code !== 200) return saveRes;
+  if (!flag) {
+    const saveRes = await saveData({
+      id: currentId,
+      data: obj,
+    });
+    if (saveRes.code !== 200) return saveRes;
+  }
+  console.log("installV2 流程已走完 :>> ");
   return {
     code: 200,
     data: obj,
@@ -148,7 +161,7 @@ const checkV2 = async () => {
 // 安装json
 const installJson = async (data) => {
   const folderType = "apps_test"; // 临时文件夹名称
-  const folderName = [folderType, id, "manifest.json"];
+  const folderName = [folderType, currentId, "manifest.json"];
   let writeRes = await writeFile(folderName, data);
 
   if (writeRes.code !== 200) {
@@ -158,7 +171,7 @@ const installJson = async (data) => {
       info: ERROR_CODE[41],
     };
   }
-  let res = await checkV2(id);
+  let res = await checkV2(currentId);
   return res;
 };
 module.exports = {

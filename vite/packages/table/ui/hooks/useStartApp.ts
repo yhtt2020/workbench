@@ -7,6 +7,8 @@ import { appStore } from "../../store";
 import { taskStore } from "../../apps/task/store";
 import { favoStore } from "../../apps/favorites/store";
 import { useComStore } from "../../components/bottomPanel/comStore";
+import { useTTAppStore } from "../../apps/ttApp/src/store";
+import { storeToRefs } from "pinia";
 import fs from "fs";
 async function runApp(uri) {
   console.log("打开uri", uri);
@@ -107,6 +109,12 @@ export const startApp = async (type, value, router?) => {
     console.warn("startApp :>> type or value 不能为空");
   }
   switch (type) {
+    case "ttapp":
+      const ttappStore = useTTAppStore();
+      const { modal } = storeToRefs(ttappStore);
+      modal.value.id = value;
+      modal.value.visible = true;
+      break;
     case "fixed":
       openFixedApp[value]();
       break;
@@ -123,9 +131,9 @@ export const startApp = async (type, value, router?) => {
       browser.openInInner(value);
       break;
     case "mob":
-      browser.openInMobMod(value,{
-        partition:'persist:webcontent',
-        newName:'手机模式'
+      browser.openInMobMod(value, {
+        partition: "persist:webcontent",
+        newName: "手机模式",
       });
       break;
     // 轻应用
@@ -168,6 +176,7 @@ export const startApp = async (type, value, router?) => {
       break;
     // 桌面卡片
     case "card":
+      useMit.emit("openCard");
       break;
   }
   return true;
