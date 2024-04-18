@@ -108,7 +108,7 @@
         </div>
         <div class="">
           <span class="local-city font-14 xt-text-2">{{
-            commentList.user.ip_home.region
+            commentList.user.ip_home?.region
           }}</span>
           <span class="mr-1 font-14 xt-text-2">{{ createTime[0] }}</span>
           <span class="font-14 xt-text-2">{{ createTime[1] }}</span>

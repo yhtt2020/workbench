@@ -80,6 +80,13 @@
     v-if="expandVisible"
     @close="expandClose"
   ></Expand>
+  
+  <ModelCard 
+    v-if="modelVisible"
+    :cardData="cardData"
+    v-model:model-visible="modelVisible"
+    @delete="deleteFile"
+  />
 </template>
 
 <script setup>
@@ -122,6 +129,9 @@ const FolderSet = defineAsyncComponent(() =>
 );
 const EditNewNavigation = defineAsyncComponent(() =>
   import("../../../components/desk/addIcon/EditNewNavigation.vue")
+);
+const ModelCard = defineAsyncComponent(() =>
+  import("../../../components/windowPanel/components/ModelCard.vue")
 );
 
 const { proxy } = getCurrentInstance();
@@ -368,6 +378,14 @@ const autoSize = computed(() => {
 const expandList = ref(props)
 
 /**
+ * 卡片类图标的相关数据
+ */
+// 模态框是否可见
+const modelVisible = ref(false)
+// 当前卡片的详细数据
+const cardData = ref({})
+
+/**
  *点击组件关闭
  */
 const clickFile = (data) => {
@@ -379,7 +397,12 @@ const clickFile = (data) => {
     // 保留原来的大小
     oldCardSize.value = customData.value.customSize
     return
-  }
+  } else if (data.type === 'card'){
+    // 打开卡片
+    modelVisible.value = true
+    cardData.value = data
+    return 
+  } 
   startApp(data.type, data.value, router);
   emit("clickFile", data);
 };
@@ -477,9 +500,10 @@ const createFile = (data) => {
 };
 // 删
 const deleteFile = (data) => {
+  console.log(data,'<<<<<<<<<<')
   if (!navBar.value.isOut) {
     customData.value.list.splice(customData.value.list.indexOf(data), 1);
-  focusClose.value = false
+    focusClose.value = false
   } else {
     emit("deleteNavApp", data);
   }

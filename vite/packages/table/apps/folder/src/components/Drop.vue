@@ -172,6 +172,7 @@ const handleMouseUp = (e) => {
     file.isRadius = item.isRadius;
     file.iconState = item.imgState;
     file.iconShape = item.imgShape;
+    file.cardData = item.cardData
     emits("createFile", file);
   });
 
