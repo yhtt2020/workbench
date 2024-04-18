@@ -17,7 +17,6 @@ router.beforeEach(async (to, from, next) => {
   console.time("Run Time");
   let userRes = await useUserPermit();
   console.timeEnd("Run Time");
-
   if (to.name === "splash" && userRes) {
     // next({
     //   name: "home",

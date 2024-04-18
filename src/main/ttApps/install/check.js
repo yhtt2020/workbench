@@ -4,30 +4,11 @@
 let currentId;
 const { readFile, existsFolder } = require("../useFile.js");
 const ERROR_CODE = require("./constant.js");
-/**
- * 基础数据检测
- */
-const isExistMainFest = async (id) => {
-  currentId = id;
-  let manifestPath = ["apps_test", id, "manifest.json"];
-  let res = await readFile(manifestPath);
 
-  // 1、检测manifest.json文件是否存在
-  console.log("1、检测manifest.json文件是否存在 :>> ");
-  if (res.code !== 200) {
-    return {
-      status: 1,
-      code: 21,
-      data: "manifest.json文件不存在",
-      info: ERROR_CODE[21],
-      id: id,
-    };
-  }
-  res = JSON.parse(res.data);
-};
 const checkMainFest = async (id) => {
   currentId = id;
   let manifestPath = ["apps_test", id, "manifest.json"];
+  console.log("id :>> ", id);
   let res = await readFile(manifestPath);
 
   // 1、检测manifest.json文件是否存在
@@ -56,7 +37,6 @@ const checkMainFest = async (id) => {
   // 3、数据检查
   console.log("3、数据检查 :>> ");
   // 基础数据
-  console.log("基础数据 :>> ");
   let baseWeak = ["name", "description", "modules"];
   let baseStrong = [
     {
@@ -75,7 +55,6 @@ const checkMainFest = async (id) => {
   }
   const modules = res?.modules;
   // 主应用数据
-  console.log("主应用数据 :>> ");
   if (!modules?.main) {
     return {
       status: 1,
@@ -94,7 +73,6 @@ const checkMainFest = async (id) => {
       info: "主应用入口",
     });
   }
-  console.log("main strong :>> ", strong);
 
   let obj = {
     weak,
@@ -106,7 +84,6 @@ const checkMainFest = async (id) => {
     return mainRes;
   }
   // 卡片数据
-  console.log("卡片数据 :>> ");
   let cardRes = await checkCard(modules?.card);
   if (cardRes.code !== 200) {
     return cardRes;
@@ -135,7 +112,6 @@ const checkCard = async (card) => {
     card = [card];
   }
   // 遍历card
-  console.log("card :>> ", card);
 
   for (const item of card) {
     let weak = ["size"];
@@ -206,7 +182,6 @@ const checkFile = async (filePath) => {
 };
 /** 强检查 */
 const strongCheck = async (array) => {
-  console.log("拿到的 强检查array :>> ", array);
   let checkRes = [];
   for (data of array) {
     let currentRes = data?.value && (await checkFile(data?.value));
@@ -235,7 +210,6 @@ const strongCheck = async (array) => {
 
 /** 弱检查 */
 const weakCheck = async (checkArray, data) => {
-  console.log("弱检查 data :>> ", data);
   let res = [];
   // 遍历检查数组
   checkArray.forEach((key) => {

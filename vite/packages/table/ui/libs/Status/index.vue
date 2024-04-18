@@ -39,9 +39,6 @@ export default {
       handler(val) {
         setTimeout(() => {
           let res = this.$useEnv(this.status);
-          console.log("watch token :>> ", this.token);
-          console.log("res :>> ", res);
-          console.log('this.status :>> ', this.status);
           this.plat = res;
           if (val) {
             cache.set("isGuest", "");
