@@ -3,6 +3,7 @@ import { ref, computed } from "vue";
 import { useTTAppStore } from "../../../../../ttApp/src/store";
 import { storeToRefs } from "pinia";
 import { updateConfig } from "./updateConfig";
+import { installV2 } from "./installV2";
 
 const { item } = defineProps<{ item: any }>();
 // esc dbl 循环二级
@@ -22,8 +23,9 @@ const menus = computed(() => {
       name: "更新文件",
       newIcon: "fluent:delete-16-regular",
       cb: async () => {
-        let res = await updateConfig(item.id);
-        console.log("res :>> ", res);
+        let res: any = await installV2(item.id);
+        const { code, data } = res;
+        console.log("object :>> ", code, data);
       },
     },
     {
