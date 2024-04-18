@@ -84,8 +84,8 @@
   <ModelCard 
     v-if="modelVisible"
     :cardData="cardData"
-    :currentComponent="cardName"
     v-model:model-visible="modelVisible"
+    @delete="deleteFile"
   />
 </template>
 
@@ -377,13 +377,13 @@ const autoSize = computed(() => {
 
 const expandList = ref(props)
 
-// 卡片类图标相关常量
+/**
+ * 卡片类图标的相关数据
+ */
 // 模态框是否可见
 const modelVisible = ref(false)
-// 当前卡片数据
+// 当前卡片的详细数据
 const cardData = ref({})
-// 当前卡片的name
-const cardName = ref('')
 
 /**
  *点击组件关闭
@@ -398,10 +398,9 @@ const clickFile = (data) => {
     oldCardSize.value = customData.value.customSize
     return
   } else if (data.type === 'card'){
+    // 打开卡片
     modelVisible.value = true
-    cardData.value = data.cardData
-    cardName.value = data.value
-    console.log('1111111111',cardData.value,data)
+    cardData.value = data
     return 
   } 
   startApp(data.type, data.value, router);
@@ -501,9 +500,10 @@ const createFile = (data) => {
 };
 // 删
 const deleteFile = (data) => {
+  console.log(data,'<<<<<<<<<<')
   if (!navBar.value.isOut) {
     customData.value.list.splice(customData.value.list.indexOf(data), 1);
-  focusClose.value = false
+    focusClose.value = false
   } else {
     emit("deleteNavApp", data);
   }
