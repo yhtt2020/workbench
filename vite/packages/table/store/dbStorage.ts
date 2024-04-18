@@ -65,7 +65,6 @@ const dbStorage: Storage = {
     if(debug){
       record.useTime=Date.now()-time+'ms'
       record.value=value
-      console.log('加载',key,'完成')
     }
     return value;
   },

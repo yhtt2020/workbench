@@ -60,6 +60,7 @@
               :newIcon="customData.newIcon"
               v-bind="customData?.iconList[0]"
               @custom-event="handleCustomEvent"
+              @openCard="openCard"
             ></icon>
             <!-- </template> -->
           </drag-and-follow>
@@ -76,6 +77,12 @@
     @save="closeSet"
     :mask="0"
   ></Set>
+  <!-- 卡片弹窗 -->
+  <ModelCard
+    v-if="modelVisible"
+    v-model:modelVisible="modelVisible"
+    :cardData="cardData"
+  />
   <!-- 多图标组件设置 -->
   <!-- <XtDrawer v-model="iconsSetVisible" placement="right">
     <div class="p-4 xt-bg-2 rounded-xl">
@@ -97,6 +104,7 @@ import icon from "./components/icon.vue";
 import DragAndFollow from "./components/DragAndFollow.vue";
 import DroppableArea from "./components/DroppableArea.vue";
 const Set = defineAsyncComponent(() => import("./set/index.vue"));
+const ModelCard = defineAsyncComponent(() => import("../../windowPanel/components/ModelCard.vue"));
 // pinia
 import { mapActions, mapWritableState } from "pinia";
 import { cardStore } from "../../../store/card.ts";
@@ -134,6 +142,7 @@ export default {
     icon,
     DragAndFollow,
     DroppableArea,
+    ModelCard,
   },
   data() {
     return {
@@ -144,6 +153,9 @@ export default {
       settingVisible: false, // 编辑状态
       iconsSetVisible: false,
       options: { hide: true, disabled: true }, // 卡片核心配置
+      // 卡片类相关数据
+      modelVisible: false,  // 卡片弹窗是否可见
+      cardData: {}, // 卡片详细数据
     };
   },
   beforeMount() {
@@ -356,7 +368,10 @@ export default {
   },
   methods: {
     ...mapActions(cardStore, ["updateCustomData", "addCard"]),
-
+    openCard(){
+      this.cardData = this.customData.iconList[0]
+      this.modelVisible = true
+    },
     openIconsSet() {
       this.iconsSetVisible = true;
     },

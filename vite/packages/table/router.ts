@@ -13,15 +13,10 @@ const router = createRouter({
   routes,
 });
 router.beforeEach(async (to, from, next) => {
-
-  console.log("beforeEach beforeEach :>> ", to.params, from);
-  console.log("to,from :>> ", to.params, from);
   // 用户信息判断 优先级1
   console.time("Run Time");
   let userRes = await useUserPermit();
   console.timeEnd("Run Time");
-
-  console.log("to.name  :>> ", to.name);
   if (to.name === "splash" && userRes) {
     // next({
     //   name: "home",
@@ -89,7 +84,6 @@ router.beforeEach(async (to, from, next) => {
   }
 });
 router.afterEach((to, from) => {
-  console.log('要跳转的路由参数params=',to.params)
   appStore().currentRoute = {
     name: to.name,
     params: to.params,

@@ -5,10 +5,11 @@
     :class="boxClass"
     :style="getLayoutSize"
   >
-    <div  :style="[getImgSize,{background: item.bg}]" class="overflow-hidden rounded-lg">
-      <!-- item?.linkIcon" 获取链接中无法获取到链接的图标使用默认图标 -->
-      <!-- <xt-new-icon :icon="item.icon" size="40" v-if="item?.linkIcon"></xt-new-icon> -->
-      <img ref="img" :src="src" class="w-full h-full " :style="[item.color]"/>
+    <div  :style="[getImgSize,{background: item.bg}]" class="flex items-center justify-center overflow-hidden rounded-lg">
+      <!-- 兼容卡片类图标 -->
+      <xt-new-icon :icon="item.icon" v-if="isIfyIcon" class="w-full h-full"></xt-new-icon>
+      
+      <img ref="img" :src="src" class="w-full h-full " v-else :style="[item.color]"/>
     </div>
     <div
       class="text-xs truncate xt-text-2"
@@ -34,6 +35,12 @@ const img = ref();
 const src = ref(props.item.icon);
 const data = inject("data", "");
 const mode = ref("default");
+
+// 查看图标是否是工作台图标
+const isIfyIcon = computed(() => {
+    const regex = /^[a-z-]+:[a-z-]+(?:-\d+)?(?:-[a-z\d-]+)?.*$/
+    return regex.test(props.item.icon)
+})
 // 获取文件后缀
 const getExtension = (filePath) => {
   // 轻应用打开方式修改后，容错
