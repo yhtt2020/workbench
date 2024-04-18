@@ -7,7 +7,7 @@
     class="w-full"
   >
     <div
-      class="flex items-center rounded-lg px-3.5 py-2.5 pointer"
+      class="flex items-center rounded-lg px-3.5 py-2.5 pointer dropdown-hover"
       @click="handleCurrentMenu"
     >
       <div class="flex items-center">
@@ -161,11 +161,6 @@ const handleCurrentMenu = () => {
   emit("currentClick", item);
 };
 
-// export default {
-//   setup(props,ctx){
-//     const community = communityStore()
-//     const chat = chatStore()
-
 //     const unread = computed(()=>{
 //       const jsonProp = props.item.props;
 //       if(jsonProp.hasOwnProperty('unread')){
@@ -175,13 +170,12 @@ const handleCurrentMenu = () => {
 //       }
 //     })
 
-//     return{
-//       linkRef,menus,linkMenus,menuList,unread,
-//       ...toRefs(data),
-//     }
-//   }
-// };
 </script>
 
 <style lang="scss" scoped>
+.dropdown-hover{
+  &:hover{
+    background: var(--active-secondary-bg);
+  }
+}
 </style>
