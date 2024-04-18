@@ -7,7 +7,8 @@
     :options="options" 
     :customData="customData" 
     :customIndex="customIndex" 
-    :desk="desk">
+    :desk="desk"
+    @delete="deleteCard">
     <div class="flex w-full mb-3">
       <HorizontalPanel style="width: 23.5rem;height: 44px;"
        :navList="strategyType" v-model:selectType="strategy">
@@ -92,7 +93,7 @@ import BiliVideoDetail from './strategy/BiliVideoDetail.vue';
 import GraphicDetail from './strategy/GraphicDetail.vue';
 
 export default {
-  props:['customIndex','customData','desk'],
+  props:['customIndex','customData','desk','openWay'],
 
   components:{
     StrategyIcon,HorizontalDrawer,HorizontalPanel,Widget,
@@ -101,13 +102,6 @@ export default {
 
   data(){
     return{
-      options: {
-        className: 'card double',
-        title: '',
-        // icon: 'trophy',
-        // rightIcon:'',
-        type: 'strategy',
-      },
 
       strategyType: [
         { title: '视频攻略', name: 'video' },
@@ -128,7 +122,7 @@ export default {
       customSize:'4x4',
     }
   },
-
+  emit:['delete'],
   computed:{
     ...mapWritableState(steamUserStore, ['recentGameList']),
     ...mapWritableState(gameStrategyStore,['biliVideoList','graphicList']),
@@ -138,6 +132,11 @@ export default {
         ifyIcon:'fluent:games-16-regular',
         titleHover:true,
         titleHoverName:"点击打开",
+      }
+    },
+    options(){
+      return {
+        customDel: this.openWay === "nav" ? true : false,
       }
     },
 
@@ -177,6 +176,9 @@ export default {
 
   methods:{
     ...mapActions(gameStrategyStore,['getBiliData','getGraphicData']),
+    deleteCard(){
+      this.$emit('delete')
+    },
     // 打开右侧弹窗进行选择
     openGuideDrawer(){
       this.$refs.strategyDrawer.openDrawer()

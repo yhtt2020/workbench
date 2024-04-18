@@ -12,7 +12,9 @@ B站开源相关介绍视频：
 
 本项目官方主页：[想天浏览器官方主页](https://www.apps.vip)
 
-文档项目：[XtUI项目主页](https://gitee.com/tsbrowser/xtui) （持续更新中）
+文档站在线页面：[文档站](https://a.apps.vip/ttdoc/)
+
+文档站项目：[XtUI项目主页](https://gitee.com/tsbrowser/xtui) （持续更新中）
 
 ## 开源项目引用说明
 

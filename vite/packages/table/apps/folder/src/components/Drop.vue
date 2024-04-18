@@ -34,6 +34,7 @@ import {
   useGetUrlName,
   getFavicon,
 } from "../../../../components/desk/navigationBar/hook/getUrlName";
+import { linkDrop } from '../../../../components/desk/navigationBar/hook/useCheckUrl'
 import { useNavBarStore } from "../../../../components/desk/navigationBar/navBar";
 
 // 获取桌面数据
@@ -111,22 +112,10 @@ const handleDrop = async (dragEvent) => {
     }
   } else if (link && link !== "") {
     if (isDrag.value) return; // 文件夹内部拖拽时阻止事件触发
-    const http = link.includes("http");
-    const https = link.includes("https");
-    if (!http && !https) {
-      link = "http://" + link;
-      console.log(link, "linkData");
+    const file = await linkDrop(link);
+    if(file){
+      emits("createFile", file)
     }
-
-    const linkIcon = await getFavicon(link);
-    const target = {
-      name: linkIcon.pageTitle,
-      icon: linkIcon.faviconURL,
-      value: link,
-    };
-
-    const file = useLinkConversionNav(target);
-    emits("createFile", file);
   }
 };
 

@@ -13,7 +13,7 @@
 
 <script>
 import browser from '../../../../js/common/browser';
-import EmptyStatus from '../../../../page/chat/components/empty/EmptyStatus.vue';
+import EmptyStatus from '../../../../apps/chat/page/empty/EmptyStatus.vue';
 
 
 export default {

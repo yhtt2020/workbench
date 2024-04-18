@@ -11,7 +11,8 @@
             ref="cardSlot" 
             :env="env"
             :sizeList="sizeList" 
-            :customData="customData">
+            :customData="customData"
+            @delete="deleteCard">
             <div v-if="showForumList.length > 0" class="flex flex-col flex-1 " style="height: calc(100%);">
             <xt-option-tab 
                 v-if="showForumList.length > 1" 
@@ -89,8 +90,8 @@ import { Icon as YuanIcon } from '@iconify/vue'
 import communItem from './CommunItem.vue'
 import RadioTab from '../../RadioTab.vue';
 import { mapWritableState, mapActions } from 'pinia';
-import { useCommunityStore } from '../../../page/chat/commun'
-import { yuanCommunityStore } from '../../../store/yuanCommunity.ts'
+import { useCommunityStore } from '../../../apps/chat/store/commun'
+import { yuanCommunityStore } from '../../../store/yuanCommunity'
 import Unusual from '../Unusual.vue'
 import detailModal from './DetailModal.vue'
 import MinDetailModal from './MinDetailModal.vue';
@@ -120,8 +121,13 @@ export default {
         },
         desk: {
             type: Object
+        },
+        openWay: {
+            type: String,
+            default: "desk"
         }
     },
+    emits: ['delete'],
     data() {
         return {
             sizeList: [
@@ -135,16 +141,6 @@ export default {
                 },
 
             ],
-            options: {
-                className: 'card double ',
-                title: '元社区',
-                rightIcon: ' fluent:arrow-counterclockwise-20-filled',
-                type: 'community',
-                // isEdit: true
-                defaultData: {
-                    customSize: this.customData.customSize ? this.customData.customSize : '4x4',
-                }
-            },
             menuList: [
                 {
                     icon: 'shezhi1',
@@ -187,6 +183,9 @@ export default {
             'getMyForumList',
             'getCommunityPost',
         ]),
+        deleteCard() {
+            this.$emit('delete')
+        },
         // 刷新圈子
         async refreshPost() {
             this.isLoading = true
@@ -277,6 +276,11 @@ export default {
                 width: 4,
                 height: 4
               }
+            }
+        },
+        options(){
+            return {
+                customDel: this.openWay === 'nav' ? true : false,
             }
         },
         showItem() {

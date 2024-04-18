@@ -183,10 +183,6 @@ const cutCanvas = async (config) => {
       bottomItem = item;
     }
   });
-  console.log("left :>> ", left);
-  console.log("top :>> ", top);
-  console.log("right :>> ", right);
-  console.log("bottom :>> ", bottom);
   // 获取画布大小
   let { width: canvasWidth, height: canvasHeight } =
     getFreeLayoutState.value.canvas;
@@ -200,8 +196,6 @@ const cutCanvas = async (config) => {
   const viewHeight = scrollHeight * HEIGHT_PROPORTION;
   let msgArr: any = [];
 
-  console.log("原始宽度 :>> ", getFreeLayoutState.value.canvas.width);
-  console.log("原始高度 :>> ", getFreeLayoutState.value.canvas.height);
   // 左边
 
   if (redirect || currentLeft == left) {
@@ -213,7 +207,7 @@ const cutCanvas = async (config) => {
           return item;
         }
       );
-      console.log("触发左边扩展 :>> ");
+      // console.log("触发左边扩展 :>> ");
       msgArr.push("左边");
       getFreeLayoutState.value.canvas.width += diff;
     }
@@ -226,7 +220,7 @@ const cutCanvas = async (config) => {
         }
       );
       msgArr.push("左边");
-      console.log("触发左边收缩 :>> ");
+      // console.log("触发左边收缩 :>> ");
       getFreeLayoutState.value.canvas.width -= diff;
     }
   }
@@ -234,7 +228,7 @@ const cutCanvas = async (config) => {
   if (redirect || currentTop == top) {
     if (top < viewHeight) {
       let diff = viewHeight - top;
-      console.log("触发上边扩展 :>> ");
+      // console.log("触发上边扩展 :>> ");
       getFreeLayoutData.value = Object.values(getFreeLayoutData.value).map(
         (item: any) => {
           item.top += diff;
@@ -242,13 +236,13 @@ const cutCanvas = async (config) => {
         }
       );
       msgArr.push("上边");
-      console.log("触发上边收缩 :>> ");
+      // console.log("触发上边收缩 :>> ");
 
       getFreeLayoutState.value.canvas.height += diff;
     }
     if (top > viewHeight) {
       let diff = top - viewHeight;
-      console.log("触发上边收缩 :>> ");
+      // console.log("触发上边收缩 :>> ");
       getFreeLayoutData.value = Object.values(getFreeLayoutData.value).map(
         (item: any) => {
           item.top -= diff;
@@ -260,23 +254,18 @@ const cutCanvas = async (config) => {
     }
   }
   // 右边
-  console.log("right :>> ", right);
   if (redirect || currentRight == right) {
     console.log("触发右边扩展 :>> ");
     msgArr.push("右边");
-    console.log("right :>> ", right);
-    console.log("canvasWidth :>> ", canvasWidth);
     getFreeLayoutState.value.canvas.width = right + viewWidth;
   }
   // 下边
   if (redirect || currentBottom == bottom) {
-    console.log("触发下边扩展 :>> ");
+    // console.log("触发下边扩展 :>> ");
     msgArr.push("下边");
     getFreeLayoutState.value.canvas.height = bottom + viewHeight;
   }
 
-  console.log("实际宽度 :>> ", getFreeLayoutState.value.canvas.width);
-  console.log("实际高度 :>> ", getFreeLayoutState.value.canvas.height);
   if (msgArr.length > 0) {
     message.success("已为您更新画布");
   }
@@ -289,7 +278,6 @@ const cutCanvas = async (config) => {
       });
     }
   }, 2);
-  console.log("redirect :>> ", redirect);
   if (!redirect) return;
   let x = Infinity;
   let y = Infinity;
@@ -325,9 +313,9 @@ const cutCanvas = async (config) => {
  */
 const currentData: any = ref({});
 async function updateCard(data) {
-  console.log("--------------- 自由布局数据更新开始 ---------------");
-  console.time("Free Layout Run Time");
-  console.log("当前配置项 :>> \n", `桌面ID ${currentID.value}`);
+  // console.log("--------------- 自由布局数据更新开始 ---------------");
+  // console.time("Free Layout Run Time");
+  // console.log("当前配置项 :>> \n", `桌面ID ${currentID.value}`);
   currentData.value = {};
   data.forEach((item) => {
     const { id, customData } = item;
@@ -347,8 +335,8 @@ async function updateCard(data) {
       delete freeLayout[id];
     }
   }
-  console.timeEnd("Free Layout Run Time");
-  console.log("--------------- 自由布局数据更新结束 ---------------");
+  // console.timeEnd("Free Layout Run Time");
+  // console.log("--------------- 自由布局数据更新结束 ---------------");
   firstLoading.value = false;
 }
 
@@ -361,7 +349,7 @@ watch(
     updateCardTimer = setTimeout(() => {
       updateCard(card);
     }, 10);
-    console.log("watch数据更新了 :>> ");
+    // console.log("watch数据更新了 :>> ");
   },
   {
     immediate: true,
@@ -386,7 +374,6 @@ const dragStart = () => {
 
 // 元素拖拽结束
 const dragStop = (item) => {
-  console.log("dragStop item :>> ", isSelectAll.value);
   setTimeout(() => {
     cutCanvas({ id: item.data.id, item: item.data });
   }, 1);

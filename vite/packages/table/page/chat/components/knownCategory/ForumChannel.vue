@@ -5,7 +5,7 @@
       <span class="px-4 font-16 font-400 mb-4 xt-text">我创建的版块({{forumList.length}})</span>
 
       <template v-if="forumList.length === 0" >
-        <EmptyStatus />
+        <!-- <EmptyStatus /> -->
       </template>
 
       <vue-custom-scrollbar :settings="settingsScroller" style="height: 300px;" v-else>
@@ -33,7 +33,7 @@ import { channelClass } from "../../../../js/chat/createChannelClass";
 import { message } from "ant-design-vue";
 
 import ModalTop from '../ModalTop.vue';
-import EmptyStatus from "../empty/EmptyStatus.vue";
+// import EmptyStatus from "../empty/EmptyStatus.vue";
 import {completeTask} from '../../../../apps/task/task'
 
 export default {

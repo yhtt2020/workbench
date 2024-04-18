@@ -1,5 +1,5 @@
 <template>
-    <div class="flex w-full gap-2 p-2 hover-style" :style="{width: `${elementWidth}px`}">
+    <div class="flex w-full items-center justify-center gap-2 p-2 hover-style" :style="{width: `${elementWidth}px`}">
         <div>
             <xt-new-icon :icon="item.icon" size="20"></xt-new-icon>
         </div>

@@ -1,4 +1,4 @@
-<!-- 群聊创建下一步 -->
+<!-- 群聊创建下一步的弹窗页面 -->
 <template>
   <xt-modal v-if="nextVisible" v-model="nextVisible" custom :index="1000">
     <div class="create-header flex items-center pt-4 px-4 justify-between mb-4">
@@ -63,7 +63,8 @@
           v-model="data.modelValue"
           @getAvatar="getAvatar"
           isUpload="true"
-          :maskIndex="1010"
+          :maskIndex="(1000000000 + 2)"
+          :zIndex="(1000000000 + 1)"
         />
         <input
           type="file"
@@ -123,7 +124,7 @@
       <!-- 下拉选择群聊类型 公共、私密群、 临时-->
       <xt-select
         v-model="currentType"
-        :zIndex="2001"
+        :zIndex="(1000000000 + 1)"
         style="width: 320px"
         :list="typeList"
       ></xt-select>

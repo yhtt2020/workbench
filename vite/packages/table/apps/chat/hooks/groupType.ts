@@ -1,4 +1,5 @@
 import TUIChatEngine from "@tencentcloud/chat-uikit-engine";
+import _ from "lodash-es";
 
 // 群类型名称
 export const getTypeName = (type: any) => {
@@ -93,3 +94,22 @@ export const currentGroupType = [
     src: "产品文档",
   },
 ];
+
+/**当前群聊的未读数据**/
+export const currentUnreadCount = (no: any) => {
+  const list = (window as any).$TUIKit?.TUIStore?.storeMap?.conversation?.store
+    ?.conversationList;
+  if (!list) {
+    return 0;
+  } else {
+    const unreadCount = list.find(
+      (item: any) => String(item.groupProfile?.group) === String(no)
+    );
+    if(unreadCount){
+      return unreadCount?.unreadCount;
+    }
+    else {
+      return 0;
+    }
+  }
+};

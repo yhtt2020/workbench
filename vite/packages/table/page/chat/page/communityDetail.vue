@@ -1,7 +1,7 @@
 <template>
   <a-row class="w-full h-full">
     <a-col  class="flex flex-col h-full find-left" v-if="isFloat === false" style=" border-right:1px solid var(--divider);">
-      <CategoryFloat :float="false" :no="routeData"  @createCategory="clickEmptyButton" />
+      <!-- <CategoryFloat :float="false" :no="routeData"  @createCategory="clickEmptyButton" /> -->
     </a-col>
     <a-col flex=" 1 1 200px" v-if="currentChannel" class="flex flex-col h-full">
       <CommunityHeader :headerContent="currentChannel"/>
@@ -73,13 +73,14 @@ import { Icon as CommunityIcon } from '@iconify/vue'
 import Modal from '../../../components/Modal.vue';
 import VueCustomScrollbar from '../../../../../src/components/vue-scrollbar.vue';
 import Article from '../../../components/Article.vue';
-import CategoryFloat from '../components/float/CategorysFloat.vue';
+// import CategoryFloat from '../components/float/CategorysFloat.vue';
 import Commun from '../Commun.vue';
 import CommunitySetting from './setting/index.vue';
 import CommunityHeader from '../components/float/CommunityHeader.vue'
 export default {
   components:{
-    CategoryFloat,Modal,
+    // CategoryFloat,
+    Modal,
     VueCustomScrollbar,CommunityIcon,Article,
     Commun,
     CommunitySetting,

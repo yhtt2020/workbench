@@ -28,7 +28,7 @@ export const usePosition = (e,i) => {
         x: eWidth > windowWidth - (iWidth / 2) ? windowWidth - iWidth : (eWidth - (iWidth / 2) < 0 ? 20 : eWidth - (iWidth / 2)),
         y: 
             eHeight + iHeight > windowHeight ?  
-            (- iHeight + eHeight - 60) / (navAttribute.value.navSize / 100) : 
+            (- iHeight + eHeight - 45) / (navAttribute.value.navSize / 100) : 
             (eHeight + 45 ) * (navAttribute.value.navSize / 100),
     }
 }

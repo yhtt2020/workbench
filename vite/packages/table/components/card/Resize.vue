@@ -4,10 +4,17 @@
     ref="textRef"
     :style="{ width: w, height: h }"
   >
-    <slot v-if="!isDrag">333</slot>
     <div
-      v-else
-      class="xt-theme-b w-full h-full flex justify-center items-center rounded-xl text-lg xt-theme-bg-2"
+      class="w-full h-full"
+      :style="{
+        display: isDrag ? 'none' : 'block',
+      }"
+    >
+      <slot>333</slot>
+    </div>
+    <div
+      v-if="isDrag"
+      class="flex items-center justify-center w-full h-full text-lg xt-theme-b rounded-xl xt-theme-bg-2"
     >
       正 在 拖 拽 中
     </div>

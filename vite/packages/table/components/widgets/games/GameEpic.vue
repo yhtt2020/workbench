@@ -6,7 +6,8 @@
     :envLimit="['web']"  
     :options="options" 
     :customIndex="customIndex" 
-    :desk="desk">
+    :desk="desk"
+    @delete="deleteCard">
 
     <HorizontalPanel style="min-width: 100%" :navList="epicTips"  v-model:selectType="epicType"  class=" drawer-item-bg" >
     </HorizontalPanel>
@@ -73,7 +74,7 @@ export default {
     newIcon,
   },
 
-  props: ["desk", "customIndex",'customData'],
+  props: ["desk", "customIndex",'customData','openWay'],
 
   data() {
     return {
@@ -81,12 +82,6 @@ export default {
         { title: "本周免费", name: "week" },
         { title: "下周预告", name: "next" },
       ],
-      options: {
-        className: "card",
-        title: "Epic喜加一",
-        // icon: 'epicgames',
-        type: "games",
-      },
 
       epicType: { title: "本周免费", name: "week" },
       simpleImage: "/public/img/test/not-data.png", // 空状态
@@ -120,6 +115,11 @@ export default {
           state:this.refreshFlag ? true : false
         }
       }
+    },
+    options(){
+      return {
+        customDel:this.openWay === 'nav' ? true : false
+      }
     }
   },
 
@@ -131,9 +131,12 @@ export default {
     }
     this.customData.customSize = '2x4'
   },
-
+  emit:['delete'],
   methods: {
     ...mapActions(epicStore,['getEpicData','refresh']),
+    deleteCard(){
+      this.$emit('delete')
+    },
     // 点击刷新
     refreshNow(){
       this.refreshFlag = true

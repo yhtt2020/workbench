@@ -3,8 +3,10 @@
     <!-- 弹窗 -->
     <xt-drag
       :test="false"
-      v-model:x="x"
-      v-model:y="y"
+      :x="currentX"
+      @update:x="x = $event"
+      :y="currentY"
+      @update:y="y = $event"
       :index="modalIndex"
       :collision="false"
       v-if="modelValue"
@@ -16,7 +18,7 @@
         @click="modalClick"
         :class="[custom ? '' : boxClass]"
         ref="modal"
-        class="no-drag flex flex-col text-base rounded-xl xt-modal xt-shadow xt-text overflow-hidden"
+        class="flex flex-col overflow-hidden text-base no-drag rounded-xl xt-modal xt-shadow xt-text"
         style="
           border: 1px solid rgba(255, 255, 255, 0.1);
           box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
@@ -115,7 +117,7 @@
                   wheelPropagation: false,
                 }"
                 style="position: relative"
-                :style="scrollbarPadding"
+                :style="scrollbarStyle"
                 class="flex-1"
                 :class="mainClass"
               >
@@ -158,7 +160,7 @@
       v-if="transitionVisible"
       :style="transitionStyle"
       style="transition: all 0.1s"
-      class="fixed xt-modal rounded-xl flex justify-center items-center px-2 cursor-pointer"
+      class="fixed flex items-center justify-center px-2 cursor-pointer xt-modal rounded-xl"
       @click="minimize"
     >
       <slot name="minimize-left"></slot>
@@ -190,7 +192,7 @@ import {
 import { useWindowSize } from "../../drag/src/hooks/useWindowSize";
 // import { vElementSize } from "../../drag/src/hooks/useElementSize";
 import { nanoid } from "nanoid";
-import { useDoubleClick } from "../../../../hooks";
+
 import { ModalProps } from "./types";
 
 const { proxy }: any = getCurrentInstance();
@@ -213,7 +215,7 @@ const props = withDefaults(defineProps<ModalProps>(), {
   beforeMount: () => true,
   beforeUnmount: () => true,
   custom: false,
-  scrollbarPadding: { paddingRight: "0px", paddingLeft: "0px" },
+  scrollbarStyle: { paddingRight: "0px", paddingLeft: "0px" },
   type: null,
   min: false,
   max: false,
@@ -235,7 +237,7 @@ const oldY = ref(0);
 const modalWidth = ref(0);
 const modalHeight = ref(0);
 // 弹窗层级
-const INDEX = 999999999;
+const INDEX = 99999;
 const currentModalIndex = ref(0);
 // 当前弹窗层级
 const modalIndex = computed(() => {
@@ -262,6 +264,22 @@ const windowWidth = ref(0);
 const modalName = ref(nanoid(4));
 // 导航高度
 let barHeight = 0;
+
+const currentX = computed(() => {
+  if (props.handle) {
+    return x.value;
+  } else {
+    return getPosition.value.left;
+  }
+});
+const currentY = computed(() => {
+  if (props.handle) {
+    return y.value;
+  } else {
+    return getPosition.value.top;
+  }
+});
+
 // 弹窗样式
 const modalStyle = computed(() => {
   if (isMaximize.value) {
@@ -272,29 +290,35 @@ const modalStyle = computed(() => {
     };
   }
 
-  // x.value = oldX.value;
-  // y.value = oldY.value;
   return {
     borderRadius: "12px",
     height: "auto",
   };
 });
 let intervalId;
+
+const getPosition = computed(() => {
+  let top;
+  let left;
+  if (props.mask) {
+    top = (windowHeight.value - modalHeight.value) / 2;
+    left = (windowWidth.value - modalWidth.value) / 2;
+  } else {
+    top = (windowHeight.value - barHeight - modalHeight.value) / 2;
+    left = (windowWidth.value - modalWidth.value) / 2;
+  }
+  return {
+    top,
+    left,
+  };
+});
+
 // 初始化位置
 function initPosition() {
   intervalId = setInterval(() => {
     // 数据未加载完成时
     if (windowHeight.value <= 0 || modalHeight.value <= 0) return;
-    let top;
-    let left;
-    if (props.mask) {
-      top = (windowHeight.value - modalHeight.value) / 2;
-      left = (windowWidth.value - modalWidth.value) / 2;
-    } else {
-      top = (windowHeight.value - barHeight - modalHeight.value) / 2;
-      left = (windowWidth.value - modalWidth.value) / 2;
-    }
-
+    const { left, top } = getPosition.value;
     y.value = top;
     x.value = left;
     oldX.value = left;
@@ -393,20 +417,22 @@ const doubleClick = (event: any) => {
   let res = event.target?.closest(".tt-modal-button");
   if (res) return;
   maximize();
-}
+};
 // 头部框双击事件
 // const { doubleClick } = useDoubleClick(d);
 
 /** 模态框获取焦点 */
 const getModalFouls = () => {
   // 如果当前弹窗已经是焦点弹窗则不处理
+
   if (currentModalIndex.value == INDEX) return;
-  console.log("2222 :>> ", 2222);
   // 先通知所有弹窗移除焦点
   proxy.$bus.emit("modalBlur");
 
   // 提升当前弹窗层级
-  currentModalIndex.value = INDEX;
+  setTimeout(() => {
+    currentModalIndex.value = INDEX;
+  }, 0);
 };
 
 /** 通用默认底部按钮事件 */
@@ -438,6 +464,7 @@ const init = () => {
   // 获取菜单高度
   const bottomBar = document.getElementsByClassName("xt-main-bottom-bar")[0];
   if (bottomBar) barHeight = bottomBar.clientHeight;
+  // else if () {}
 
   // 初始化弹窗位置
   initPosition();

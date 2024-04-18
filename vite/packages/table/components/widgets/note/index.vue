@@ -11,6 +11,7 @@
     ref="homelSlotRef"
     :desk="desk"
     style="background: #191919; !important"
+    :delete="deleteCard"
   >
     <!-- {{ customData.customSize }} -->
       <teleport to="body">                                                       
@@ -170,6 +171,10 @@ export default {
     editing: {
       type: Boolean,
     },
+    openWay:{
+      type:String,
+      default:'desk'
+    }
   },
   directives: {
     // reSize,
@@ -182,7 +187,7 @@ export default {
     header(){
       return {
         title: this.customData.title,
-        ifyIcon: this.icons.notepad12Regular,
+        ifyIcon: 'fluent:notepad-16-regular',
         titleHover: true,
         titleHoverName: '打开应用',
       }
@@ -195,8 +200,14 @@ export default {
         resize:true,
         customDel:this.customDel
       }
+    },
+    options(){
+      return {
+        customDel:this.openWay === 'nav' ? true : false,
+      }
     }
   },
+  emit:['delete'],
   data () {
     return {
       api:{},
@@ -207,24 +218,6 @@ export default {
       fontColors: ['white', 'black', 'red', 'green', 'blue'],
       fontColor: 'white',
       tmpTitle: '桌面标签',
-      options: {
-        className: 'card',
-        title: '桌面便签',
-        icon: '',
-        // 用于窗口化
-        // isCopy: true,
-        // copyContent: () => {
-        //   require('electron').clipboard.writeText(this.customData.text)
-        //   message.success('已成功复制到剪切板')
-        // },
-        type: 'note',
-        showColor:true,
-        removeCard:()=>{
-          this.removeValue = true
-          this.isRemove = false
-        }
-
-      },
       settingVisible: false,
       menuList: [
         {
@@ -351,6 +344,10 @@ export default {
   methods: {
 
     ...mapActions(noteStore, ['changeDeskBg', 'saveDeskTitle']),
+    // 自定义删除卡片
+    deleteCard() {
+      this.$emit('deleteCard')
+    },
     removeNote(){          
       this.removeValue = true
       this.isRemove = false

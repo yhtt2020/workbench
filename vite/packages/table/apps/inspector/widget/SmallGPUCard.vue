@@ -6,7 +6,9 @@
     :envLimit="['web']"  
     :options="options" 
     :menu-list="menuList" 
-    :desk="desk">
+    :customIndex="customIndex"
+    :desk="desk"
+    @delete="deleteCard">
     <div @click="go" class="content pointer" style="color:var(--primary-text)">
       <div><a-progress type="circle"  stroke-color="#FF9C00" :percent="GPUData.useGPU" :strokeWidth="10" :width="105" style="margin-top: 28px">
         <template #format="percent">
@@ -50,15 +52,9 @@ import { message } from 'ant-design-vue'
 import { Icon as newIcon } from '@iconify/vue';
 export default {
   name: "SmallGPUCard",
-  props:['desk','customData'],
+  props:['desk','customData','openWay','customIndex'],
   data(){
     return {
-      options:{
-        className:'card small',
-        title:'GPU',
-        // icon:'cpu',
-        type:'smallGPUCard'
-      },
       GPUData:{
         useGPU:0,
         warmGPU:0,
@@ -81,6 +77,7 @@ export default {
       }
     }
   },
+  emit:['delete'],
   components:{
     Widget,
     newIcon
@@ -89,6 +86,11 @@ export default {
     ...mapWritableState(inspectorStore,['displayData','aidaData']),
     GPUStorage() {
       return this.GPUData.videoStorage>0?(this.GPUData.videoStorage / 1000).toFixed(2):this.GPUData.videoStorage
+    },
+    options() {
+      return {
+        customDel:this.openWay === 'nav' ? true : false
+      }
     }
   }, mounted () {
     this.startInspect()
@@ -121,6 +123,9 @@ export default {
     initCanvas,
     go(){
       this.$router.push({name:'inspector'})
+    },
+    deleteCard(){
+      this.$emit('delete')
     }
   }
 }

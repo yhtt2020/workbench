@@ -116,7 +116,6 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 获取当前自由布局是否开启
     isFreeLayout() {
-      console.log("开始加载自由布局:>>\n 当前桌面id ", this.getCurrentDeskId);
       if (this.freeLayoutState.hasOwnProperty(this.getCurrentDeskId)) {
         return this.freeLayoutState[this.getCurrentDeskId].system?.isFreeLayout;
       }
@@ -163,7 +162,6 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         // console.log("res :>> ", res);
         // props.options.defaultData =  _.merge(props.customData, props.options.defaultData);
       }
-      console.log("自由布局状态初始化成功 :>> ", this.getFreeLayoutState);
     },
     // 更新自由布局数据
     renewFreeLayout() {

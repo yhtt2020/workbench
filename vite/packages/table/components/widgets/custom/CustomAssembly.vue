@@ -7,7 +7,8 @@
     :menuList="menuList"
     ref="customAssembly"
     :custom-data="customData"
-    :desk="desk">
+    :desk="desk"
+    @delete="deleteCard">
     <div 
       v-if="Object.keys(myData.img).length > 0" 
       class="absolute inset-0" 
@@ -139,6 +140,10 @@ export default {
     },
     desk:{
       type:Object
+    },
+    openWay:{
+      type:String,
+      default:'desk'
     }
   },
   data() {
@@ -186,6 +191,7 @@ export default {
       }
     };
   },
+  emits: ["delete"],
   computed: {
     ...mapWritableState(paperStore, ["settings", "myPapers"]),
     // filterList() {
@@ -206,11 +212,15 @@ export default {
         bg:this.customData.hideFrame ? 'transparent' : '',
         shadow: this.customData.hideFrame,
         resize: true,
+        customDel: this.openWay === 'nav' ? true : false
       }
     },
   },
   methods: {
     ...mapActions(cardStore, ["updateCustomData"]),
+    deleteCard() {
+      this.$emit("delete");
+    },
     async importFile() {
       let openPath = await tsbApi.dialog.showOpenDialog({
         title: "选择导入的代码",

@@ -4,8 +4,7 @@ import Developer from "./views/developer/Developer.vue";
 import { useAppCenterStore } from "./store";
 import { useTTAppStore } from "../../ttApp/src/store";
 import { storeToRefs } from "pinia";
-const ttappStore = useTTAppStore()
-// ttappStore.init()
+const ttappStore = useTTAppStore();
 const appCenterStore = useAppCenterStore();
 const { visible } = storeToRefs(appCenterStore);
 // 左侧对应组件
@@ -76,8 +75,9 @@ const switchCurrentCom = (name: string) => {
         fn="fn"
         leftBg="red"
       >
-        <div class="w-full h-full  py-4 pr-4">
-          <component :is="components[currentCom]" />
+        <div class="w-full h-full py-4 pr-4">
+          <div v-if="currentCom !== 'Developer'">无暂未开发</div>
+          <component v-else :is="components[currentCom]" />
         </div>
       </xt-left-menu>
     </div>

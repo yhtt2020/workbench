@@ -87,13 +87,14 @@ const { size , item , community } = toRefs(props)
 
 // 用于判断是不是工作台图标
 const isIfyIcon = computed(() => {
-    const regex = /^[a-z]+:[a-z]+(?:-\d+)?(?:-[a-z\d]+)?.*$/
+    const regex = /^[a-z-]+:[a-z-]+(?:-\d+)?(?:-[a-z\d-]+)?.*$/
+    // const regex = /^[a-z]+:[a-z]+(?:-\d+)?(?:-[a-z\d]+)?.*$/
     return regex.test(item.value.icon)
 })
 
-onMounted(() => {
-    console.log(item.value.icon,"isIfyIcon :>> ", isIfyIcon.value);
-})
+// onMounted(() => {
+//     console.log(item.value.icon,"isIfyIcon :>> ", isIfyIcon.value);
+// })
 
 </script>
 <style lang='scss' scoped></style>

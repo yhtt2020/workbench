@@ -2,7 +2,8 @@
 import { ref, onBeforeMount, computed, watch, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import WuJie from "../wujie/WuJie.vue";
-
+import PerfectScrollbar from "perfect-scrollbar";
+import {useRouter} from "vue-router";
 import { useTTAppStore } from "../../store";
 const ttappStore: any = useTTAppStore();
 const { modal, ttappList } = storeToRefs(ttappStore);
@@ -12,6 +13,7 @@ const modalRef: any = ref(null);
 const data: any = ref({});
 
 /** 初始化方法 */
+const id = ref();
 const init = () => {
   // 开始
   loading.value = true;
@@ -88,19 +90,30 @@ const modalSize = computed(() => {
     };
   }
 });
+const openCommunity=()=>{
+  $app.$router.push({
+    name:'myCommunity',
+    params:{
+      no:data.value.community
+    }
+  })
+  close()
+}
 //
 const max = (value: boolean) => {
   isMax.value = value;
 };
 
-import PerfectScrollbar from "perfect-scrollbar";
 const scrollbar: any = ref(null);
 const perfectScrollbar: any = ref(null);
 onMounted(() => {
   setTimeout(() => {
-    perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
+    perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {
+      wheelPropagation: false,
+    });
   }, 1);
 });
+
 </script>
 
 <template>
@@ -137,6 +150,15 @@ onMounted(() => {
       >
         <xt-ify-icon icon="fluent:arrow-clockwise-16-regular" />
       </xt-button>
+      <xt-button title="打开社群" v-if="data.community"
+        class="ml-3 tt-modal-button"
+        w="32"
+        h="32"
+        radius="8"
+        @click="openCommunity"
+      >
+        <xt-ify-icon icon="fluent:comment-multiple-16-regular" />
+      </xt-button>
     </template>
     <!-- 左侧导航 -->
     <!-- <template #nav>
@@ -145,12 +167,16 @@ onMounted(() => {
     </template> -->
     <xt-mix-menu :menus="menuList" :stopPropagation="false">
       <div
-        class="relative w-full h-full overflow-hidden"
-
+        class="relative w-full h-full overflow-hidden px-4"
         ref="scrollbar"
         :style="modalSize"
       >
-        <WuJie v-if="!loading" :url="data.main._entry" :name="data.id" />
+        <WuJie
+          v-if="!loading"
+          :url="data.main._entry"
+          :id="data.id"
+          :app-info="{...data}"
+        />
       </div>
     </xt-mix-menu>
     <!-- 最小化左侧 -->

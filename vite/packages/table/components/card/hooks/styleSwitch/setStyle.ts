@@ -46,6 +46,7 @@ export const setWallpaperColor = (color) => {
  */
 export const setStyleName = (styleName, color, opacity?) => {
   const StyleColor = setColor(styleName, color, opacity);
+  console.log('styleName :>> ', styleName);
   cache.set(styleName, StyleColor);
 };
 

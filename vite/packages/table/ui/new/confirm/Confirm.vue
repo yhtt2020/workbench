@@ -5,7 +5,7 @@
       <div
         v-if="isVisible && mask"
         @click="onCloseClick"
-        class="w-full h-full fixed top-0 left-0 xt-mask"
+        class="fixed top-0 left-0 w-full h-full xt-mask"
         :style="{
           'z-index': maskIndex,
         }"
@@ -15,7 +15,7 @@
     <Transition name="up">
       <div
         v-if="isVisible"
-        class="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 rounded-xl xt-modal xt-shadow p-4 xt-text text-base"
+        class="fixed p-4 text-base -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 rounded-xl xt-modal xt-shadow xt-text"
         style="
           border: 1px solid rgba(255, 255, 255, 0.1);
           box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
@@ -34,11 +34,11 @@
           <span>{{ title }}</span>
         </div>
         <!-- 内容 -->
-        <div class="xt-text-2 my-4" style="margin-left: 40px; max-width: 316px">
+        <div class="my-4 xt-text-2" style="margin-left: 40px; max-width: 316px">
           {{ content }}
         </div>
         <!-- 按钮 -->
-        <div class="flex justify-end items-center">
+        <div class="flex items-center justify-end">
           <xt-button
             v-if="noText"
             :w="noButtonWidth"
@@ -105,7 +105,7 @@ const props = withDefaults(defineProps<ConfirmProps>(), {
   noText: "取消",
   okText: "确定",
   duration: "0.3s",
-  index: 1001,
+  index: 99999999,
   mask: false,
   maskIndex: 1000,
   no: () => {},

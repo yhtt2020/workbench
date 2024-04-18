@@ -10,7 +10,8 @@
         :menuList="menuList" 
         :options="options" 
         ref="dataSlot" 
-        :desk="desk">
+        :desk="desk"
+        @delete="deleteCard">
 
         <Unusual v-if='!this.access_token || !this.baseUrl' title="请完成小组件配置" buttonTitle="立即配置" @back="back" ></Unusual>
         <div v-else class="dash-board">
@@ -77,6 +78,10 @@ export default {
         editing: {
             type: Boolean,
         },
+        openWay:{
+            type: String,
+            default:'desk'
+        }
     },
     computed: {
         ...mapWritableState(shortTalkStore, ['todoList','access_token','baseUrl','admin_url']),
@@ -90,13 +95,6 @@ export default {
                 wheelPropagation: false,
             },
             // 标题样式
-            options: {
-                className: "card",
-                title: "社区待办",
-                // icon: "iconamoon:history-fill",
-                rightIcon:"fluent:open-20-filled",
-                // icon: "games-16-filled",
-            },
             // 设置
             menuList: [
                 {
@@ -115,7 +113,7 @@ export default {
             customSize:'2x4',
             header:{
                 title:'社区待办',
-                ifyIcon:'akar-icons:check-box',
+                ifyIcon:'fluent:checkbox-checked-16-regular',
                 rightIcon:[
                     {
                         ifyIcon:'fluent:open-20-filled',
@@ -123,6 +121,14 @@ export default {
                 ]
             }
         };
+    },
+    emit:['delete'],
+    computed: {
+        options () {
+            return {
+                customDel: this.openWay === 'nav' ? true : false,
+            }
+        }
     },
     mounted() {
         // 初始化
@@ -143,6 +149,9 @@ export default {
         },
         back(){
             this.settingVisible = true
+        },
+        deleteCard(){
+            this.$emit('delete')
         }
     },
     watch:{

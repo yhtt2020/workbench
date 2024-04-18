@@ -39,6 +39,9 @@ const componentId=computed(()=>{
         case 'folder':
             title.value = '当前图标为「文件夹」类型。'
             return Common
+        case 'card':
+            title.value = '当前图标为「卡片」类型。'
+            return Common
         default:
             return Custom
     }

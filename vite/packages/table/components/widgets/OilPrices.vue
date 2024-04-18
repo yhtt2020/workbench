@@ -11,7 +11,8 @@
       ref="cardSlot"
       :desk="desk" 
       :size="size" 
-      :envLimit="['offline']">
+      :envLimit="['offline']"
+      @delete="deleteCard">
       <div v-if="isLoading">
         <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 60%" />
       </div>
@@ -99,16 +100,15 @@ export default {
     },
     desk: {
       type: Object
+    },
+    openWay: {
+      type: String,
+      default: "desk"
     }
   },
   data() {
     return {
       fail: false,
-      options: {
-        defaultData: {
-          customSize: '2x4',
-        }
-      },
       menuList: [
         {
           icon: 'shezhi1',
@@ -147,7 +147,11 @@ export default {
       }
     }
   },
+  emit:['delete'],
   methods: {
+    deleteCard(){
+      this.$emit('delete')
+    },
     selectedAreaSuit(item) {
       this.defaultCityIndex = (item.id - 1)
       this.settingVisible = false
@@ -186,6 +190,14 @@ export default {
         return item.city == this.customData.city
       })
       return cityMsg
+    },
+    options() {
+      return {
+        customDel: this.openWay === 'nav' ? true : false,
+        defaultData: {
+          customSize: '2x4'
+        }
+      }
     }
   },
   async mounted() {

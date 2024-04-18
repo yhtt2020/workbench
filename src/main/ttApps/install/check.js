@@ -4,6 +4,27 @@
 let currentId;
 const { readFile, existsFolder } = require("../useFile.js");
 const ERROR_CODE = require("./constant.js");
+/**
+ * 基础数据检测
+ */
+const isExistMainFest = async (id) => {
+  currentId = id;
+  let manifestPath = ["apps_test", id, "manifest.json"];
+  let res = await readFile(manifestPath);
+
+  // 1、检测manifest.json文件是否存在
+  console.log("1、检测manifest.json文件是否存在 :>> ");
+  if (res.code !== 200) {
+    return {
+      status: 1,
+      code: 21,
+      data: "manifest.json文件不存在",
+      info: ERROR_CODE[21],
+      id: id,
+    };
+  }
+  res = JSON.parse(res.data);
+};
 const checkMainFest = async (id) => {
   currentId = id;
   let manifestPath = ["apps_test", id, "manifest.json"];
@@ -92,7 +113,6 @@ const checkMainFest = async (id) => {
   }
 
   // 5、返回数据
-  console.log("没走到结尾是吧栓q :>> ");
   return {
     status: 0,
     code: 200,
@@ -110,11 +130,13 @@ const checkCard = async (card) => {
       code: 200,
     };
   }
-  // 如果数据不是对象则转为数组
-  if (typeof card !== "object") {
+  // 如果数据是对象则转为数组
+  if (!Array.isArray(card)) {
     card = [card];
   }
   // 遍历card
+  console.log("card :>> ", card);
+
   for (const item of card) {
     let weak = ["size"];
 
@@ -162,7 +184,6 @@ const check = async (options) => {
 
   if (strong) {
     let strongRes = await strongCheck(strong);
-    console.log("strongRes :>> ", strongRes);
     if (strongRes.code !== 200) {
       return strongRes;
     }
@@ -214,6 +235,7 @@ const strongCheck = async (array) => {
 
 /** 弱检查 */
 const weakCheck = async (checkArray, data) => {
+  console.log("弱检查 data :>> ", data);
   let res = [];
   // 遍历检查数组
   checkArray.forEach((key) => {

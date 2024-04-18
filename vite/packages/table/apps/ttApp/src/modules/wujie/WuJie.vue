@@ -1,49 +1,37 @@
 <script setup lang="ts">
 import WujieVue from "wujie-vue3";
 import { useTTAppStore } from "../../store";
-import { ref, onUnmounted } from "vue";
-import browser from "../../../../../js/common/browser";
+import { ref, onUnmounted, onMounted } from "vue";
+
+import { useWuJiePlugins } from "./useWuJiePlugins";
 const ttappStore: any = useTTAppStore();
 
 const props = defineProps({
   name: {
     default: "wujie",
+    required: true,
   },
   url: {
     type: String,
+    required: true,
+  },
+  id: {
+    type: String,
+    required: true,
+  },
+  appInfo: {
+    type: Object,
+    required: true,
   },
 });
-
+onMounted(() => {});
+const randomName = "" + Date.now();
+console.log("randomName :>> ", randomName);
 const { bus, setupApp, preloadApp, destroyApp } = WujieVue;
 onUnmounted(() => {
-  destroyApp(props.name);
+  destroyApp(randomName);
 });
 
-const plugins = (iframeWindow: any) => {
-  let res = {
-    windowPropertyOverride: (iframeWindow) => {
-      // 屏蔽子应用parent对象 指向主应用window
-      iframeWindow.parent = {};
-      // 屏蔽子应用$wujie对象
-      iframeWindow.$wujie = {};
-      // 代理open方法
-      iframeWindow.open = function (url, target, features, replace) {
-        console.log("URL:", url);
-        console.log("Target:", target);
-        console.log("Features:", features);
-        console.log("Replace:", replace);
-        browser.openInUserSelect(url);
-      };
-      return iframeWindow;
-    },
-    // 在子应用所有的css之前
-    cssBeforeLoaders: [
-      // 强制使子应用body定位是relative
-      { content: "body{position: relative !important}" },
-    ],
-  };
-  return res;
-};
 //这段代码是修改默认虚拟iframe的地址的，在某种情况下需要指定src
 const attrs: any = ref({});
 if (location.href.startsWith("tsbapp://")) {
@@ -52,11 +40,13 @@ if (location.href.startsWith("tsbapp://")) {
 </script>
 
 <template>
+  <!-- :alive="true" -->
+
   <WujieVue
     height="100%"
     width="100%"
     ref="wujie"
-    :name="name"
+    :name="randomName"
     :url="url"
     :attrs="attrs"
     :plugins="[
@@ -68,7 +58,7 @@ if (location.href.startsWith("tsbapp://")) {
           },
         ],
       },
-      plugins(),
+      useWuJiePlugins(id, id),
     ]"
   />
 </template>

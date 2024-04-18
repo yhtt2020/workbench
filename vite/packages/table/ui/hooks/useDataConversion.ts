@@ -28,10 +28,11 @@ export const defaultData = {
    * folder 文件夹
    * lightApp 轻应用
    * tableApp 桌面应用
+   * ttapp 桌面应用
    * default 系统默认浏览器
    * inner 内置浏览器
    * thisky 想天浏览器
-   * fixed  固定图标 --- 
+   * fixed  固定图标 ---
    * card  桌面卡片
    */
   type: "",

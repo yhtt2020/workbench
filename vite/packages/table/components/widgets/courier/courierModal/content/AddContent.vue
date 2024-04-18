@@ -61,7 +61,7 @@ import { commonExpress, expressList } from '../modalMock';
 import { getCourierName } from '../utils/courierUtils';
 import { message } from 'ant-design-vue';
 
-import ModalTop from '../../../../../page/chat/components/ModalTop.vue';
+import ModalTop from '../../component/ModalTop.vue';
 
 const emits = defineEmits(['close']);
 

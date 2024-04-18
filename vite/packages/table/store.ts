@@ -418,10 +418,8 @@ export const appStore = defineStore('appStore', {
     },
     ensureFullScreen() {
       if (this.windowFullScreen) {
-        console.log('确认了全屏，是')
         this.enterFullScreen(false, false)
       } else {
-        console.log('确认了全屏，否')
       }
 
     },
@@ -463,7 +461,7 @@ export const appStore = defineStore('appStore', {
               'windowFullScreen', 'windowOriginBounds', 'aided', 'currentRoute',
               'status', 'settings', 'init', 'agreeTest', 'backgroundSettings', 'infoVisible',
               'backgroundImage', 'saving', 'simple', 'styles', 'stylesIndex', 'style', 'windowFullScreen',
-              'aggList', 'deskInit','backgroundName','backgroundColor','showWindowController'
+              'aggList', 'deskInit','backgroundName','backgroundColor','showWindowController' ,'userInfo'
             ],
       storage: dbStorage,
       // state 中的字段名，按组打包储存

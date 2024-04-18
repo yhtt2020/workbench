@@ -32,6 +32,9 @@ import { useTTAppStore } from "../ttApp/src/store";
 const ttappStore: any = useTTAppStore();
 const { modal } = storeToRefs(ttappStore);
 
+import { useWuJieBus } from "../ttApp/src/modules/wujie/useWuJieBus";
+useWuJieBus()
+
 // 登录弹窗
 const Login = defineAsyncComponent(
   () => import("../../permission/user/Login.vue")

@@ -30,6 +30,7 @@ import { myIcons } from "../../../../../store/myIcons";
 import _ from 'lodash-es'
 import { getFavicon } from "../../hook/getUrlName";
 import { useMouseInElement } from '@vueuse/core'
+import { isValidUrl, linkDrop } from '../../hook/useCheckUrl'
 
 const target = ref(null);
 const isNavBar = ref(false)
@@ -151,21 +152,6 @@ const handleMouseEnter = (e) => {
 // 防止桌面图标移动时，触发其他事件
 let isDragIcon = ref(false)
 
-// 处理拖拽进入的图标名字
-const getFileName = (name) => {
-  if (typeof name === 'string') {
-    const lastDotIndex = name.lastIndexOf('.');
-    if (lastDotIndex !== -1) {
-      const fileName = name.substring(0, lastDotIndex);
-      return fileName;
-    } else {
-      return name;
-    }
-  } else {
-    return null;
-  }
-};
-
 /**
  * 拖拽文件
  */
@@ -199,22 +185,10 @@ const handleFileDrop = async (dragEvent, currentX) => {
  * @param {*} dragEvent
  * @param {*} currentX
  */
-const handleLinkDrop = async (dragEvent, currentX) => {
+ const handleLinkDrop = async (dragEvent, currentX) => {
   let link = dragEvent.dataTransfer.getData('text/plain');
-
-  if (link && link !== '') {
-    const http = link.includes('http');
-    const https = link.includes('https');
-
-    if (!http && !https) {
-      link = 'http://' + link;
-    }
-
-    const linkIcon = await getFavicon(link);
-    // const name = useGetUrlName(link);
-    const target = { name:linkIcon.pageTitle, icon: linkIcon.faviconURL, value: link };
-
-    const file = useLinkConversionNav(target);
+  const file = await linkDrop(link)
+  if(file){
     emit('createFile', file, currentX);
   }
 };

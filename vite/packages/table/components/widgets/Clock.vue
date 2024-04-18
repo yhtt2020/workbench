@@ -6,7 +6,8 @@
     :options="options" 
     :customIndex="customIndex" 
     :menuList="menuList" 
-    ref="cardSlot">
+    ref="cardSlot"
+    @delete="deleteCard">
     <!-- <div class="flex flex-col items-center"> -->
     <div v-if="countDowntime.hours" style="display: flex;flex-direction: column;justify-content: space-between; "
       class="-mt-2">
@@ -105,6 +106,10 @@ export default {
     },
     customData: {
       type: Object,
+    },
+    openWay:{
+      type: String,
+      default:'desk'
     }
   },
   data() {
@@ -113,11 +118,6 @@ export default {
       visible: false,
       value1: dayjs('00:00:00', 'HH:mm'),
       custom: false,
-      options: {
-        className: 'card small',
-        title: '闹钟',
-        noTitle: true
-      },
       menuList: [
         {
           newIcon: 'fluent:clock-12-regular',
@@ -154,17 +154,23 @@ export default {
   computed: {
     ...mapWritableState(cardStore, ['appDate', 'clockEvent']),
     ...mapWritableState(countDownStore, ['countDowndate', 'countDowntime', 'countDownBtn']),
-    ...mapWritableState(topClockSettingStore, ['topClockSettingVisible'])
+    ...mapWritableState(topClockSettingStore, ['topClockSettingVisible']),
+    options(){
+      return {
+        customDel:this.openWay === 'nav' ? true : false
+      }
+    }
   },
   mounted() {
     this.customData.customSize = '2x2' 
   },
+  emit:['delete'],
   methods: {
     ...mapActions(cardStore, ['removeCard']),
     ...mapActions(countDownStore, ['setCountDown', 'stopCountDown', 'openCountDown', 'dCountDown']),
     ...mapActions(topClockSettingStore, ['changeSettingStatus']),
-    onContextMenuClick(e) {
-
+    deleteCard() {
+      this.$emit('delete')
     },
     onSetCountDown() {
       this.$refs.cardSlot.menuVisible=true
