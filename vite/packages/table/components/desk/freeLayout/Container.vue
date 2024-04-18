@@ -313,9 +313,9 @@ const cutCanvas = async (config) => {
  */
 const currentData: any = ref({});
 async function updateCard(data) {
-  console.log("--------------- 自由布局数据更新开始 ---------------");
-  console.time("Free Layout Run Time");
-  console.log("当前配置项 :>> \n", `桌面ID ${currentID.value}`);
+  // console.log("--------------- 自由布局数据更新开始 ---------------");
+  // console.time("Free Layout Run Time");
+  // console.log("当前配置项 :>> \n", `桌面ID ${currentID.value}`);
   currentData.value = {};
   data.forEach((item) => {
     const { id, customData } = item;
@@ -335,8 +335,8 @@ async function updateCard(data) {
       delete freeLayout[id];
     }
   }
-  console.timeEnd("Free Layout Run Time");
-  console.log("--------------- 自由布局数据更新结束 ---------------");
+  // console.timeEnd("Free Layout Run Time");
+  // console.log("--------------- 自由布局数据更新结束 ---------------");
   firstLoading.value = false;
 }
 
@@ -349,7 +349,7 @@ watch(
     updateCardTimer = setTimeout(() => {
       updateCard(card);
     }, 10);
-    console.log("watch数据更新了 :>> ");
+    // console.log("watch数据更新了 :>> ");
   },
   {
     immediate: true,

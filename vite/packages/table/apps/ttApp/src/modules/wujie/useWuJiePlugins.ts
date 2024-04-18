@@ -11,9 +11,6 @@ export const useWuJiePlugins = (id: string) => {
   if (!(id in ttappData.value)) {
     ttappData.value[id] = {};
   }
-  if (!(appInfo.id in data.value)) {
-    data.value[appInfo.id] = {};
-  }
   let res = {
     jsAfterLoaders: [
       // // 插入一个外联脚本

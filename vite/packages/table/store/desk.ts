@@ -131,8 +131,6 @@ export const deskStore = defineStore("desk", {
               "marginTop": 0,
               "cardMargin": 5
             },
-            blurb: '一键快速打开系统性能监控面板、一键启动游戏模式、一键退出当前所有打开的应用等等游戏玩家专用的小组件集合。',
-            labelList: ['效率','产品经理'],
             cardList: [
               {
                 icon: 'dianzan',
