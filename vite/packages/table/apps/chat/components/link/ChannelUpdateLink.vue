@@ -1,8 +1,14 @@
 <!-- 社群子频道 链接修改 -->
 <script setup>
 import { nextTick, ref, toRefs } from "vue";
+import { CommunityAPI } from "../../api/communityAPI";
+import { chatCommunityStore } from "../../store/chatCommunity";
 
 import DropDown from "../../../../components/desk/navigationBar/components/dropDown/DropDown.vue";
+import { message } from "ant-design-vue";
+
+const comAPI = new CommunityAPI();
+const chatCommunity = chatCommunityStore();
 
 const props = defineProps({
   currentLink: {
@@ -78,10 +84,61 @@ const openUpdateLink = () => {
 };
 
 // 确定更新
-const selectNext = () => {
-  console.log('更新-1',currentItemLink.value);
-  console.log('更新-2',mode.value);
-  
+const selectNext = async () => {
+  const pattern = /^(https?|http):\/\//;
+  const updateResult = {};
+  console.log("更新调试", pattern.test(currentItemLink.value.url));
+  // 存在https、http
+  if (pattern.test(currentItemLink.value.url)) {
+    // 当前打开
+    if (defaultType.value === "current") {
+      updateResult.name = currentItemLink.value.name;
+      updateResult.url = currentItemLink.value.url;
+      updateResult.openMethod = "currentPage";
+    }
+    // 非当前打开
+    else {
+      updateResult.name = currentItemLink.value.name;
+      updateResult.url = currentItemLink.value.url;
+      updateResult.openMethod = mode.value;
+    }
+  }
+  // 不存在https、http
+  else {
+    // 当前打开
+    if (defaultType.value === "current") {
+      updateResult.name = currentItemLink.value.name;
+      updateResult.url = `${currentItemLink.value.header}://${currentItemLink.value.url}`;
+      updateResult.openMethod = "currentPage";
+    }
+    // 非当前打开
+    else {
+      updateResult.name = currentItemLink.value.name;
+      updateResult.url = `${currentItemLink.value.header}://${currentItemLink.value.url}`;
+      updateResult.openMethod = mode.value;
+    }
+  }
+  const option = {
+    ...currentLink.value,
+    name: currentItemLink.value.name,
+    props: JSON.stringify({ type: "link", ...updateResult }),
+  };
+  const res = await comAPI.updateCommunityChannel(option);
+  if (res.status === 1) {
+    message.success(`${res.info}`);
+    chatCommunity.getCommunityTree(currentLink.value.communityNo);
+    updateLinkVisible.value = false;
+    clearParams();
+  }
+};
+
+// 将链接设置中的参数进行重置
+const clearParams = () => {
+  currentItemLink.value.name = "";
+  currentItemLink.value.url = "";
+  currentItemLink.value.header = "https";
+  defaultType.value = "current";
+  mode.value = "systemSelect";
 };
 
 defineExpose({
@@ -110,7 +167,7 @@ defineExpose({
 
         <!-- 链接名称输入框 -->
         <a-input
-          class="h-10 xt-bg-2"
+          class="h-10 xt-modal"
           v-model:value="currentItemLink.name"
           ref="updateLinkNameRef"
           spellcheck="false"
@@ -126,7 +183,7 @@ defineExpose({
             :list="linkHeader"
             v-model="currentItemLink.header"
             style="width: 20%"
-            :borderClass="'rounded-tl-lg rounded-bl-lg'"
+            :borderClass="'rounded-tl-lg rounded-bl-lg xt-modal'"
             :zIndex="99999999"
             :border="false"
           />
@@ -142,7 +199,7 @@ defineExpose({
               border-bottom-right-radius: 8px;
             "
             :bordered="false"
-            class="xt-bg-2"
+            class="xt-modal"
           />
         </div>
 
