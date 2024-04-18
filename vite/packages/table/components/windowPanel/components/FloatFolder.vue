@@ -70,8 +70,8 @@ const close = () => {
 }
 
 
-onMounted(() => {
-    console.log('folderVisible', folderPos.value, customData.value, sideKey.value)
-})
+// onMounted(() => {
+//     console.log('folderVisible', folderPos.value, customData.value, sideKey.value)
+// })
 </script>
 <style lang='scss' scoped></style>

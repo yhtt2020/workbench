@@ -55,6 +55,7 @@ export const useIconConversionNav = (data) => {
     bg: data.bg,
     type: data.type,
     id: data.id || nanoid(6),
+    cardData: data.cardData,
   };
   return icon;
 };
