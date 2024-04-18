@@ -5,11 +5,12 @@
     :class="boxClass"
     :style="getLayoutSize"
   >
-    <div  :style="[getImgSize,{background: item.bg}]" class="flex items-center justify-center overflow-hidden rounded-lg">
+    <div  :style="[getImgSize,{background: item.bg}]" class="relative flex items-center justify-center overflow-hidden rounded-lg">
       <!-- 兼容卡片类图标 -->
       <xt-new-icon :icon="item.icon" v-if="isIfyIcon" class="w-full h-full"></xt-new-icon>
       
       <img ref="img" :src="src" class="w-full h-full " v-else :style="[item.color]"/>
+      <img src="/public/icons/tag.png" alt="" class="absolute w-[25px]" style="top:-2px;right:-3px" v-if="isIfyIcon">
     </div>
     <div
       class="text-xs truncate xt-text-2"
