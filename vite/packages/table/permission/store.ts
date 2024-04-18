@@ -4,21 +4,29 @@ export const usePermissionStore = defineStore("usePermissionStore", {
   state: () => ({
     // 实际使用的token
     token: "",
-    /**
-     * 这个变量不会记录token 只作为标记
-     * 如果取过旧版token，就不再取了
-     */
-    retrievedOldTokenFlag: false,
     // 用户信息
-    userInfo: {},
+    userInfo: null,
+
+    isOffline: false,
+    isLogin: false,
+    isGuest: false,
+    platform: "web",
+    env: "dev",
+    //平台
+    // env
+    // dev window mac web ，     登录 离线 游客
   }),
-  getters: {},
+  getters: {
+
+
+
+  },
   actions: {},
   persist: {
     enabled: true,
     strategies: [
       {
-        paths: ["token", "retrievedOldTokenFlag"],
+        paths: ["token", "userInfo"],
         storage: localStorage,
       },
     ],

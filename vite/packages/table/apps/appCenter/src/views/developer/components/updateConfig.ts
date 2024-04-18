@@ -17,7 +17,7 @@ export const updateConfig = async (id: any) => {
 
   if (!path[0]) return;
 
-  retrun = await new Promise((resolve) => {
+  return await new Promise((resolve) => {
     tsbApi.ttapp.installV2(
       {
         path: path[0],

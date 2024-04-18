@@ -13,6 +13,8 @@ const router = createRouter({
   routes,
 });
 router.beforeEach(async (to, from, next) => {
+
+  console.log("beforeEach beforeEach :>> ", to.params, from);
   console.log("to,from :>> ", to.params, from);
   // 用户信息判断 优先级1
   console.time("Run Time");
