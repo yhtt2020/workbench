@@ -75,6 +75,7 @@ export default {
       default: false,
     },
   },
+  emits: ["openCard"],
   data() {
     return {
       visible: false,
@@ -262,6 +263,11 @@ export default {
       } else if (this.open !== undefined && this.open.value !== "") {
         // 链接
         console.log("lianjie :>> ");
+        if(this.open.type === 'card'){
+          console.log("this.open.value :>> ", this.open.value);
+          this.$emit('openCard')
+          return;
+        }
         // this.newOpenApp();
         this.startApp(this.open.type, this.open.value, this.$router);
       } else if (this.link !== "") {

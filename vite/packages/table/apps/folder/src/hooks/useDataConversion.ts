@@ -70,6 +70,7 @@ export const useFileConversionNav = (data) => {
     bg: data.backgroundColor,
     type: data.open.type,
     id: nanoid(6),
+    cardData: data.cardData,
   };
   return icon;
 };

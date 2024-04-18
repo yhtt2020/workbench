@@ -56,8 +56,7 @@ const { proxy } = getCurrentInstance()
 // 特殊图标阻止拖拽添加到桌面
 const isSpecial = computed(() => {
   const value = ['commun' , 'control'].includes(props.data.value)
-  const type = props.data.type === 'card'
-  return value || type
+  return value
 })
 
 // 是否按下ctrl键

@@ -27,7 +27,12 @@ export default defineComponent({
 });
 </script>
 <script setup>
-import { ref, toRefs} from 'vue'
+import { ref, toRefs, onMounted} from 'vue'
+import { cardStore } from '../../../store/card';
+import { storeToRefs } from 'pinia';
+
+const useCard = cardStore()
+const { desks } = storeToRefs(useCard)
 
 const emit = defineEmits(['update:modelVisible','delete'])
 
@@ -53,7 +58,7 @@ const desk = computed(() => {
 
 // 当前卡片组件 --- 组件名
 const currentComponent = computed(() => {
-    return cardData.value.value
+    return cardData.value.value || cardData.value.open.value
 })
 
 // 卡片的详细数据 -- 卡片索引，卡片数据，卡片尺寸
@@ -67,5 +72,9 @@ const deleteCard = () => {
     emit('update:modelVisible', false)
     emit('delete', cardData.value)
 }
+
+// onMounted(() => {
+//     console.log('cardData', cardData.value,data.value)
+// })
 </script>
 <style lang='scss' scoped></style>

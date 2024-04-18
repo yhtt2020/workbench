@@ -94,6 +94,7 @@ const handleDragEnd = (event) => {
       isBackground: currentData.value.isBg,
       backgroundColor: currentData.value.bg,
       backgroundIndex: 0,
+      cardData: currentData.value.cardData || {},
     };
 
     let id = Date.now();

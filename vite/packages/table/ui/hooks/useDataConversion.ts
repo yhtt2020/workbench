@@ -88,6 +88,7 @@ export const useFileConversionIcon = (data) => {
     isBackground: data.isBg,
     backgroundColor: data.bg,
     backgroundIndex: 0,
+    cardData:data.cardData,
   };
 
   return icon;
@@ -119,6 +120,7 @@ export const useFileConversionNav = (data) => {
     bg: data.backgroundColor,
     type: data.open.type,
     id: data.iconIndex || nanoid(6),
+    cardData:data.cardData
   };
   return icon;
 };
