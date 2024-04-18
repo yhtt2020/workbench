@@ -1,6 +1,6 @@
 <!-- 频道链接添加 具备频道分类添加选择 -->
 <script setup>
-import { ref, toRefs } from "vue";
+import { nextTick, ref, toRefs } from "vue";
 
 import Dropdown from "../../../../components/desk/navigationBar/components/dropDown/DropDown.vue";
 
@@ -56,10 +56,16 @@ const currentLink = ref({
   url: "",
   header: "https",
 });
+
+const linkNameRef = ref(null);
+
 // 开启链接弹窗
 const linkVisible = ref(false);
 const openLinkModal = () => {
   linkVisible.value = true;
+  nextTick(()=>{
+    linkNameRef.value.focus()
+  })
 };
 // 选择下一步
 const selectNext = () => {
