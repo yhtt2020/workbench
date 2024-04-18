@@ -26,20 +26,24 @@ onMounted(async () => {
   // 无数据情况
 
   if (!props.customData?.parentId) return;
-  // 双ID
-  console.log("props.customData?.parentId :>> ", props.customData?.parentId);
-  console.log("props.customData?.id :>> ", props.customData?.id);
   id.value = props.customData.id;
   // 查询数据
   let res = ttappStore.select(props.customData.parentId);
+  data.value = res;
   console.log("props.customData :>> ", props.customData);
   if (!res) return;
   // 解析数据
   let options = useParserCard(res);
-  data.value = res;
-
   cardHeader.value = options.header;
-  let currentSize: any = useCardSize(props.customData.size);
+  // 不存在自定义大小
+  if (!props.customData.customSize) {
+    props.customData.customSize = props.customData.size;
+  }
+  let currentSize: any = useCardSize(props.customData.customSize);
+  size.value = {
+    width: currentSize.width + "px",
+    height: currentSize.height + "px",
+  };
 
   if (props.customData.sizeList) {
     sizeList.value = props.customData.sizeList.map((item: any) => {
@@ -49,10 +53,7 @@ onMounted(async () => {
       };
     });
   }
-  size.value = {
-    width: currentSize.width + "px",
-    height: currentSize.height + "px",
-  };
+
   loading.value = false;
   nextTick(() => {
     perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {
@@ -103,10 +104,14 @@ const menus = computed(() => {
       },
     },
     {
+      title: "设置",
+      newIcon: "fluent:settings-16-regular",
+    },
+    {
       newIcon: "fluent:open-16-regular",
       title: "清空缓存",
       fn: () => {
-        wujieData.value[props.customData.id] = {};
+        wujieData.value[data.value.id] = {};
         refreshFn();
       },
     },
@@ -136,7 +141,7 @@ onUnmounted(() => {
     :header="header"
     :menuList="menus"
     :options="options"
-    v-model:customSize="customData.size"
+    v-model:customSize="customData.customSize"
     :sizeList="sizeList"
     @resize="resize"
     v-if="data"
@@ -157,8 +162,8 @@ onUnmounted(() => {
       <WuJie
         v-if="!loading"
         :url="customData._entry"
-        :name="customData.id"
-        :key="customData.id"
+        :id="customData.parentId"
+        :app-info="data"
       />
     </div>
   </xt-container>

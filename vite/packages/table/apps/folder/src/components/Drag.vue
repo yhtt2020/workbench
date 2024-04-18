@@ -109,6 +109,7 @@ const handleDragEnd = (event) => {
         id,
       };
     }
+    console.log('file  :>> ', file );
     useAddCard(
       "myIcons",
       {
@@ -116,7 +117,7 @@ const handleDragEnd = (event) => {
       },
       id
     );
-    
+
     if(!isCtrl){
       emits("deleteFile", props.data);
     }

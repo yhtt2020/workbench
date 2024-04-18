@@ -1,4 +1,4 @@
-<!-- 添加好友页面 -->
+<!-- 添加好友弹窗组件 -->
 <template>
   <xt-modal
     v-if="addVisible"

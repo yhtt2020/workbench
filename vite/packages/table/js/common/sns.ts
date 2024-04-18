@@ -71,7 +71,7 @@ export async function checkGroupShip(groupID: any) {
   try {
     for (let i = 0; i < groupID.length; i++) {
       const id = await groupID[i];
-      const index = _.findIndex(allGroupList, function (u) {
+      const index = _.findIndex(allGroupList, function (u:any) {
         return u.groupID === id;
       });
       if (index !== -1) {

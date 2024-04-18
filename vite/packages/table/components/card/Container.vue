@@ -20,6 +20,7 @@
       v-if="!options?.custom"
       class="flex flex-col widget rounded-xl"
       :class="[edit ? 'editing' : '', options.shadow ? '' : 'shadow xt-shadow']"
+      @touchmove="handleTouchStart"
       style=""
       :style="[
         getSize,
@@ -204,220 +205,60 @@ import { cardStore as useCardStore } from "../../store/card";
 import { useWidgetStore } from "./store";
 import { useFreeLayoutStore } from "../desk/freeLayout/store";
 import { useMouseInElement } from "@vueuse/core";
-import { navStore } from '../../store/nav';
+import { navStore } from "../../store/nav";
 
 import Resize from "./Resize.vue";
 import RightMenu from "./RightMenu.vue";
 import { useEnv } from "../../ui/hooks/useEnv";
-import { addCardToNav } from './hooks/addCardToNav'
-import { useConversionCard } from './hooks/useConversionCard'
+import { addCardToNav } from "./hooks/addCardToNav";
+import { useConversionCard } from "./hooks/useConversionCard";
 import { useDelCard } from "../../hooks";
-
-
-const container = ref(0);
+import { defaultProps } from "./props";
+const container = ref(null);
 const { isOutside } = useMouseInElement(container);
 
-// 导航栏是否开启
-const useNav = navStore();
-const { navigationToggle } = storeToRefs(useNav);
-
 const { proxy } = getCurrentInstance();
-// const selected = ref(null);
-const status = computed(() => {
-  return {
-    outside: isOutside.value,
-    // selected: selected.value,
-  };
-});
-onMounted(() => {
-  // onClickOutside(container, (event) => {
-  //   console.log("event :>> ", event);
-  //   console.log("selected.value :>> ", selected.value);
-  //   if (selected.value == 0) {
-  //     selected.value = true;
-  //   } else {
-  //     selected.value = false;
-  //   }
-  // });
-});
+
 /**
  * pinia
  */
 // 卡片数据
 const cardStore = useCardStore();
+
+// 导航栏是否开启
+const useNav = navStore();
+const { navigationToggle } = storeToRefs(useNav);
 //
 const widgetStore = useWidgetStore();
 const { edit } = storeToRefs(widgetStore);
 // 自由布局
 // const freeLayoutStore = useFreeLayoutStore();
+
 // props
 /**
  * 均为重构后新的数据结构 和旧版有差异 需要阅读源码
  * 所有参数默认值请都设置为false 请勿随意修改默认值
  * 新增参数请先商谈
  */
-const props = defineProps({
-  // ----------下面都属于必填选参数----------
-  /**
-   * 小组件索引
-   */
-  customIndex: {
-    type: Number,
-    default: 0,
-  },
-  /**
-   * 小组件数据
-   */
-  customData: {
-    type: Object,
-    default: () => {},
-  },
-  /**
-   * 小组件所属桌面
-   */
-  desk: {
-    type: Object,
-    required: true,
-  },
-  /**
-   * 小组件大小 默认 2x2
-   */
-  customSize: {
-    type: String,
-    default: "2x2",
-  },
-  // ----------下面都属于可选参数----------
-  /**
-   * 控制全部小组件区域
-   */
-  options: {
-    type: Object,
-    default: () => {
-      return {
-        // 自定义区域 开启后只保留全局右键功能
-        custom: false,
-        // 自定义全局背景色
-        bg: "",
-        // 自定义全局字体颜色
-        color: "",
-        // 是否允许删除组件
-        disabledDelete: false,
-        // 开启后，可拖拽小组件
-        resize: false,
-        // 作为弹窗时的尺寸
-        modalSize: "",
-        // 阴影开关 开启会关闭阴影
-        shadow: false,
-        // 卡片默认数据 传递后每次都会帮你校验数据，不存在的key会进行赋值
-        defaultData: {},
-        // 自定义删除打开后默认删除事件不执行，再删除回调上提供原删除事件
-        customDel: false,
-        // 开启后所有事件相关提示信息会进行输出
-        debug: false,
-        // 是否开启下拉菜单右侧还是左侧显示
-        rightMenuVisible: false,
-        // 是否禁用标题拖拽
-        disabledDrag: false,
-        // 是否允许卡片添加到导航栏
-        disabledNav: false,
-      };
-    },
-  },
-  // 控制小组件头部区域
-  header: {
-    type: Object,
-    default: () => {
-      return {
-        // 禁用头部区域
-        disabled: false,
-        // 左侧图标 适配旧版icon 适配新版newIcon
-        icon: "",
-        ifyIcon: "",
-        /**
-         * 右侧图标
-         * {
-         *    icon: '旧版图标',
-         *    ifyIcon: '新版图标',
-         *    showIcon: '图标选择器的图标 小庄定义的命名规范'
-         *    fn: 点击回调,
-         *    tip：'提示文字',
-         *    disabled: 禁用 true为禁用 false为不禁用
-         * }
-         */
-        rightIcon: [],
-        /**
-         * 右侧刷新图标
-         * {
-         *    fn: lockClick,
-         *    tip：'提示文字',
-         *    disabled: 禁用 true为禁用 false为不禁用
-         * }
-         */
-        refresh: false,
-        // 标题背景色 true为打开 false为关闭
-        bg: false,
-        // 标题颜色
-        color: "",
-        // 鼠标经过显示 整个左侧可操作区域 左侧图标 + 标题区域  true为打开 false为关闭
-        leftHover: false,
-        // 鼠标经过显示 左侧图标 true为打开 false为关闭
-        iconHover: false,
-        // leftHover iconHover同用 leftHoverName leftHoverIcon 两个参数
-        leftHoverName: "",
-        leftHoverIcon: "",
-        // 鼠标经过显示 标题区域  true为打开 false为关闭
-        titleHover: false,
-        titleHoverName: "",
-      };
-    },
-  },
-  // 控制小组件主体区域
-  body: {
-    default: () => {
-      return {
-        // 是否开启滚动条边距
-        scroll: false,
-        // 自定义背景色
-        bg: "",
-        // 自定义字体颜色
-        color: "",
-      };
-    },
-  },
-  /**
-   * 小组件菜单列表
-   * {
-   *    icon: '旧版图标',
-   *    newIcon: '新版图标',
-   *    fn: 点击回调,
-   *    disabled: 禁用 true为禁用 false为不禁用
-   *    title: '提示文字'
-   * }
-   */
-  menuList: {
-    type: Array,
-    default: () => [],
-  },
-  /**
-   * 小组件大小列表
-   * 参考格式 [{ name: '4x2'value: '4x2' }]
-   */
-  sizeList: {
-    type: Array,
-    default: () => [],
-  },
-  /**
-   * 小组件不可用环境
-   * 参数可选 ["web", "offline", "guest", "mac", "client"]
-   */
-  envLimit: { type: Array, default: () => [] },
-  /**
-   * 返回小组件控制器所有信息
-   * outside 鼠标是否悬浮与小组件
-   */
-  status: {},
-});
+const props = defineProps(defaultProps);
 const { header } = toRefs(props);
+
+// 键盘事件
+const handleKeyDown = (event) => {
+  if (event.code === "Space") {
+    event.stopPropagation();
+  }
+  if (event.ctrlKey && (event.key === "A" || event.key === "a")) {
+    event.stopPropagation();
+  }
+};
+
+//
+const handleTouchStart = (e) => {
+  e.stopPropagation();
+  console.log("handleTouchStart :>> ", 2222);
+};
+
 onBeforeMount(async () => {
   // 处理默认数据
   if (props.options.defaultData) {
@@ -428,7 +269,22 @@ onBeforeMount(async () => {
     );
   }
 });
-onBeforeUnmount(() => {});
+onMounted(() => {
+  container.value.addEventListener("keydown", handleKeyDown, {
+    capture: true,
+  });
+  container.value.addEventListener("keydown", handleTouchStart, {
+    capture: true,
+  });
+});
+onBeforeUnmount(() => {
+  container.value.removeEventListener("keydown", handleKeyDown, {
+    capture: true,
+  });
+  container.value.removeEventListener("keydown", handleTouchStart, {
+    capture: true,
+  });
+});
 // emits 小组件事件回调
 /**
  * update:customSize 双向数据绑定customSize
@@ -467,6 +323,11 @@ const currentSize = ref(props.customSize);
 /**
  * 计算属性
  */
+const status = computed(() => {
+  return {
+    outside: isOutside.value,
+  };
+});
 // 删除小组件的数据
 const deleteObj = computed(() => {
   return {
@@ -480,55 +341,59 @@ const deleteObj = computed(() => {
 
 // 卡片数据转为图标数据格式
 const cardData = computed(() => {
-  return useConversionCard(props)
+  return useConversionCard(props);
 });
 
 // 添加到导航栏的数据
 const addObj = computed(() => {
-  return   {
-    title:'添加到导航栏',
-    newIcon:"fluent:tablet-16-regular",
-    disabled:props.options.disabledNav ? true : false,
-    children:[
+  return {
+    title: "添加到导航栏",
+    newIcon: "fluent:tablet-16-regular",
+    disabled: props.options.disabledNav ? true : false,
+    children: [
       {
-        title:'主导航',
-        newIcon:'fluent:tablet-16-regular',
-        color: navigationToggle.value[2] ? 'var(--primary-text)' : 'var(--secondary-text)',
+        title: "主导航",
+        newIcon: "fluent:tablet-16-regular",
+        color: navigationToggle.value[2]
+          ? "var(--primary-text)"
+          : "var(--secondary-text)",
         fn: () => {
           // addMoreIcon('foot','主导航')
-          console.log('主导航')
-          addCardToNav(cardData.value,'foot')
-        }
+          console.log("主导航");
+          addCardToNav(cardData.value, "foot");
+        },
       },
       {
-        title:'左侧导航栏',
-        newIcon:'fluent:panel-left-contract-16-regular',
-        color: navigationToggle.value[0] ? 'var(--primary-text)' : 'var(--secondary-text)',
+        title: "左侧导航栏",
+        newIcon: "fluent:panel-left-contract-16-regular",
+        color: navigationToggle.value[0]
+          ? "var(--primary-text)"
+          : "var(--secondary-text)",
         fn: () => {
           // addMoreIcon('left','左侧导航栏')
-          console.log('左侧导航栏')
-          addCardToNav(cardData.value,'left')
-        }
+          console.log("左侧导航栏");
+          addCardToNav(cardData.value, "left");
+        },
       },
       {
-        title:'右侧导航栏',
-        newIcon:'fluent:panel-right-contract-16-regular',
-        color: navigationToggle.value[1] ? 'var(--primary-text)' : 'var(--secondary-text)',
+        title: "右侧导航栏",
+        newIcon: "fluent:panel-right-contract-16-regular",
+        color: navigationToggle.value[1]
+          ? "var(--primary-text)"
+          : "var(--secondary-text)",
         fn: () => {
           // addMoreIcon('right','右侧导航栏')
-          console.log('右侧导航栏')
-          addCardToNav(cardData.value,'right')
-        }
-      }
-    ]
-  }
-})
+          console.log("右侧导航栏");
+          addCardToNav(cardData.value, "right");
+        },
+      },
+    ],
+  };
+});
 // 实际渲染的右键菜单
 const menus = computed(() => {
-  let deleteArr = [deleteObj.value];
-  let addArr = [addObj.value];
-  if (useEnv(props.envLimit)) return [...addArr, ...deleteArr];
-  let menu = [...props.menuList, ...addArr, ...deleteArr];
+  if (useEnv(props.envLimit)) return [addObj.value, deleteObj.value];
+  let menu = [...props.menuList, addObj.value, deleteObj.value];
   return menu;
 });
 // 头部左侧显示区域状态

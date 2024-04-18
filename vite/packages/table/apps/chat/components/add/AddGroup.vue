@@ -1,3 +1,4 @@
+<!-- 添加群聊弹窗组件 -->
 <template>
   <xt-modal
     v-if="addGroupVisible"

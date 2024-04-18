@@ -5,7 +5,6 @@ import { useAppCenterStore } from "./store";
 import { useTTAppStore } from "../../ttApp/src/store";
 import { storeToRefs } from "pinia";
 const ttappStore = useTTAppStore();
-// ttappStore.init()
 const appCenterStore = useAppCenterStore();
 const { visible } = storeToRefs(appCenterStore);
 // 左侧对应组件

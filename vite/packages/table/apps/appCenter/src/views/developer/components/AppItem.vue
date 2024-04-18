@@ -2,6 +2,7 @@
 import { ref, computed } from "vue";
 import { useTTAppStore } from "../../../../../ttApp/src/store";
 import { storeToRefs } from "pinia";
+import { updateConfig } from "./updateConfig";
 
 const { item } = defineProps<{ item: any }>();
 // esc dbl 循环二级
@@ -17,6 +18,15 @@ const menus = computed(() => {
     //     console.log("编辑");
     //   },
     // },
+    {
+      name: "更新配置文件(测试中)",
+      newIcon: "fluent:delete-16-regular",
+      cb: () => {
+        console.log('2222 :>> ', 2222);
+        // ttappStore.uninstall(item.id);
+        updateConfig(item.id);
+      },
+    },
     {
       name: "卸载",
       newIcon: "fluent:delete-16-regular",

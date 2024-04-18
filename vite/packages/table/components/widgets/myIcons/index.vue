@@ -198,19 +198,13 @@ export default {
     // console.log("this.customData :>> ", this.customData);
     // console.log("window.globalArgs :>> ", window.globalArgs);
 
-    console.log(
-      "this.customData.iconList?.length 111:>> ",
-      this.customData.iconList?.length
-    );
+
     if (
       this.customData.iconList?.length <= 1 ||
       this.customData.iconList?.length == undefined
     )
       return;
-    console.log(
-      "this.customData.iconList?.length 222:>> ",
-      this.customData.iconList?.length
-    );
+
 
     let index = this.desk.cards.findIndex(
       (item) => item.id == this.customIndex

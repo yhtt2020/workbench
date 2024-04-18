@@ -3,7 +3,7 @@
     <a-col  class="flex flex-col h-full  find-left" v-if="isFloat === false"
       style=" border-right:1px solid var(--divider);"
     >
-      <DefaultFloat :communityID="routeData"  :float="false" @updateColumn="updateColumn" @createCategory="clickEmptyButton" @clickItem="currentItem"></DefaultFloat>
+      <!-- <DefaultFloat :communityID="routeData"  :float="false" @updateColumn="updateColumn" @createCategory="clickEmptyButton" @clickItem="currentItem"></DefaultFloat> -->
     </a-col>
     <a-col flex=" 1 1 200px" class="flex flex-col h-full">
       <div class="flex items-center px-4 mb-0 line-title">
@@ -69,14 +69,15 @@ import { checkGroupShip } from '../../../js/common/sns'
 import Modal from '../../../components/Modal.vue'
 import { message } from 'ant-design-vue'
 import { Icon as communityIcon } from '@iconify/vue'
-import DefaultFloat from '../components/float/DefaultsFloat.vue'
+// import DefaultFloat from '../components/float/DefaultsFloat.vue'
 import ValidateModal from '../components/empty/ValidationPrompt.vue';
 
 
 export default defineComponent({
   components: {
     Emoji,ChatFold, Commun, Modal, ValidateModal,
-    DefaultFloat,communityIcon
+    // DefaultFloat,
+    communityIcon
   },
 
   setup () {

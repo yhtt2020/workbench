@@ -3,12 +3,12 @@ import { defineStore } from "pinia";
 // @ts-ignore
 export const useWuJieStore = defineStore("useWuJieStore", {
   state: () => ({
-    data: {
-
-    },
+    data: {},
   }),
   getters: {},
-  actions: {},
+  actions: {
+
+  },
   persist: {
     enabled: true,
     strategies: [
