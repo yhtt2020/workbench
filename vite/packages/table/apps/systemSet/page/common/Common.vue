@@ -19,9 +19,6 @@
     width="100%"
     :footer="null"
     wrap-class-name="full-modal"
-    :bodyStyle="{
-      zIndex: 99999,
-    }"
     @ok="
       () => {
         this.visibleChooseScreen = false;
@@ -29,7 +26,13 @@
     "
   >
     <div
-      style="zoom: 1.5; font-size: 16px; padding-top: 5em; text-align: center"
+      style="
+        zoom: 1.5;
+        font-size: 16px;
+        padding-top: 5em;
+        text-align: center;
+        z-index: 9999999999999999999;
+      "
     >
       <div style="width: 500px; overflow: visible; display: inline-block">
         <ChooseScreen />
@@ -273,4 +276,11 @@ onMounted(async () => {
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+:deep(.ant-modal-wrap) {
+  z-index: 99999999 !important;
+}
+.ant-modal-wrap {
+  z-index: 99999999 !important;
+}
+</style>
