@@ -80,6 +80,7 @@
                 v-model="data.modelValue"
                 @getAvatar="getAvatar"
                 :maskIndex="2000"
+                :zIndex="2001"
                 isUpload="true"
               />
               <input

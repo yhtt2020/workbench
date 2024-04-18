@@ -62,7 +62,7 @@ import type { CascaderProps } from 'ant-design-vue';
 import { message } from 'ant-design-vue'
 import fluentEmojis from '../../../../js/chat/fulentEmojis'
 import { yuanCommunityStore } from '../../../../store/yuanCommunity'
-import { useCommunityStore } from '../../../../page/chat/commun'
+import { useCommunityStore } from '../../../../apps/chat/store/commun'
 import MarkDown from './MarkDown.vue';
 const useCommunStore = useCommunityStore()
 const useYuanCommunityStore = yuanCommunityStore()

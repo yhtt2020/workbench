@@ -8,6 +8,7 @@
       :overlayInnerStyle="{
         'padding-left': '20px',
       }"
+      :overlayStyle="{zIndex: 9999999 + 10}"
     >
       <template #content >
         <slot name="content"></slot>
@@ -17,7 +18,8 @@
     </a-popover>
   </div>
 </template>
-<script setup></script>
+<script setup>
+</script>
 
 <style lang="scss">
 .bgg {

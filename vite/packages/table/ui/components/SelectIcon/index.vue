@@ -98,7 +98,7 @@
         @click.stop.self="closeClick()"
         class="fixed top-0 bottom-0 left-0 w-full h-full xt-mask ring-0"
         :style="{
-          'z-index': maskIndex,
+          'z-index': zIndex,
         }"
       ></div>
     </Teleport>
@@ -175,6 +175,9 @@
         default:'推荐尺寸：256*256px，最大不超过2MB'
       },
       maskIndex:{
+        default:900
+      },
+      zIndex:{
         default:900
       }
 

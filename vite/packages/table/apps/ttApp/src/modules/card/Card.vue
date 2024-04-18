@@ -111,7 +111,7 @@ const menus = computed(() => {
       newIcon: "fluent:open-16-regular",
       title: "清空缓存",
       fn: () => {
-        wujieData.value[props.customData.id] = {};
+        wujieData.value[data.value.id] = {};
         refreshFn();
       },
     },

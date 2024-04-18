@@ -60,7 +60,7 @@ const props = defineProps({
       "https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/jmPD-I__T-SMyc-LMzn",
   },
   maskIndex: {
-    default: 900,
+    default: 9999999,
   },
   // 是否支持点击打开选择器
   click: {

@@ -57,6 +57,7 @@ export const useWuJiePlugins = (id: string) => {
         ttappData.value[id] = {};
       };
 
+      console.log(iframeWindow,'传递下去的window')
       return iframeWindow;
     },
     cssAfterLoaders: [{ content: "body{position: relative}" }],

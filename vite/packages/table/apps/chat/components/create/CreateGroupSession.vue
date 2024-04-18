@@ -1,4 +1,4 @@
-<!-- 创建群聊会话 -->
+<!-- 创建群聊会话弹窗页面 -->
 <template>
   <xt-modal
     v-if="createGroupVisible"

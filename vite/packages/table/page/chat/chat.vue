@@ -36,16 +36,7 @@
       </div>
     </template>
   </xt-left-menu>
-  <!-- 社群创建 -->
-  <CreateCommunity />
-  <!-- 群聊创建 -->
-  <CreateGroup ref="createGroupRef" />
-  <!-- 好友添加、搜索 -->
-  <AddFriend ref="addRef"/>
-  <!-- 推荐社群和搜索社群的添加 -->
-  <JoinCommunitys ref="joinComRef"/>
-  <!-- 群聊添加、搜索-->
-  <AddGroup  ref="addGroupRef"/>
+  
 </template>
 
 <script>
@@ -63,35 +54,24 @@ import { useRouter, useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { Icon as ChatIcon } from "@iconify/vue";
 import { communityStore } from "./store/communityStore";
-import config from "./config";
 import { appStore } from "../../store";
 import { chatStore } from "../../store/chat";
 import _ from "lodash-es";
-import { communityTotal } from "./libs/utils";
+import { communityTotal } from "../../apps/chat/hooks/utils";
 import { completeTask } from "../../apps/task/page/branch/task";
 import { useGlobalStore } from "../../apps/Global/store";
 
-import CreateCommunity from "./components/CreateCommunitys.vue";
-import AddFriend from '../../apps/chat/components/add/AddFriend.vue';
-import CreateGroup from "../../apps/chat/components/create/CreateGroupSession.vue";
 import CategoryFloat from "./components/float/CategorysFloat.vue";
 import DefaultFloat from "./components/float/DefaultsFloat.vue";
-import JoinCommunitys from './components/communityJoin/JoinCommunitys.vue';
-import GradeSmallTip from "../../components/GradeSmallTip.vue";
-import AddGroup from "../../apps/chat/components/add/AddGroup.vue";
 
 export default {
   name: "chat",
   components: {
     ChatIcon,
-    AddFriend,
-    CreateGroup,
     CategoryFloat,
     DefaultFloat,
     JoinCommunitys,
-    GradeSmallTip,
-    CreateCommunity,
-    AddGroup,
+
   },
   setup(props, ctx) {
     const com = communityStore();
@@ -222,29 +202,20 @@ export default {
           selectTab(item);
         },
       },
-      ...(config.adminUids.includes(userInfo.uid)
-        ? [
-            {
-              icon: "diannao",
-              type: "admin",
-              tab: "admin",
-              title: "管理面板(仅管理员可见)",
-              route: { name: "chatAdmin", params: { no: "" } },
-              callBack: (item) => {
-                selectTab(item);
-              },
-            },
-          ]
-        : []),
-      {
-        tab: "find",
-        type: "find",
-        newIcon: "eva:compass-outline",
-        route: { name: "chatFind", params: { no: "" } },
-        callBack: (item) => {
-          selectTab(item);
-        },
-      },
+      // ...(config.adminUids.includes(userInfo.uid)
+      //   ? [
+      //       {
+      //         icon: "diannao",
+      //         type: "admin",
+      //         tab: "admin",
+      //         title: "管理面板(仅管理员可见)",
+      //         route: { name: "chatAdmin", params: { no: "" } },
+      //         callBack: (item) => {
+      //           selectTab(item);
+      //         },
+      //       },
+      //     ]
+      //   : []),
     ]);
     const bodyList = ref([
       // 写社群相关静态内容时临时打开的路由
