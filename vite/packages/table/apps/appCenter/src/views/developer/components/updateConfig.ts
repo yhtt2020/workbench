@@ -9,21 +9,23 @@ export const updateConfig = async (id: any) => {
     properties: ["openFile", "multiSelections"],
     filters: [
       {
-        name: "配置文件",
-        extensions: ["json"],
+        name: "压缩文件",
+        extensions: ["zip"],
       },
     ],
   });
 
   if (!path[0]) return;
-  // 拿到配置文件
-  tsbApi.ttapp.renew(id, (data) => {
-    console.log("拿到 data :>> ", data);
-  });
 
-  const res: any = await new Promise((resolve) => {
-    // tsbApi.ttapp.install(path[0], (data) => {
-    //   resolve(data);
-    // });
+  retrun = await new Promise((resolve) => {
+    tsbApi.ttapp.installV2(
+      {
+        path: path[0],
+        id,
+      },
+      (data) => {
+        resolve(data);
+      }
+    );
   });
 };

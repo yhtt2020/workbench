@@ -19,12 +19,11 @@ const menus = computed(() => {
     //   },
     // },
     {
-      name: "更新配置文件(测试中)",
+      name: "更新文件",
       newIcon: "fluent:delete-16-regular",
-      cb: () => {
-        console.log('2222 :>> ', 2222);
-        // ttappStore.uninstall(item.id);
-        updateConfig(item.id);
+      cb: async () => {
+        let res = await updateConfig(item.id);
+        console.log("res :>> ", res);
       },
     },
     {
@@ -82,7 +81,6 @@ const openModal = () => {
 
 <template>
   <!-- 添加时预览组件 -->
-  <!--  {{ item }}-->
   <xt-preview-v2
     v-if="previewVisible"
     v-model="previewVisible"

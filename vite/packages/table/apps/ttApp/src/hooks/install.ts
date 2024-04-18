@@ -15,11 +15,16 @@ export const useInstallTTApp = async () => {
   if (!path[0]) return;
 
   const res: any = await new Promise((resolve) => {
-    tsbApi.ttapp.install(path[0], (data) => {
+  tsbApi.ttapp.installV2(
+    {
+      path: path[0],
+    },
+    (data) => {
+      console.log("installV2 data :>> ", data);
       resolve(data);
-    });
+    }
+  );
   });
-  console.log('useInstallTTApp res :>> ', res);
 
   return res;
 };

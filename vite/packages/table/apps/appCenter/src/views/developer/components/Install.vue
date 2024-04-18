@@ -6,12 +6,16 @@ import { storeToRefs } from "pinia";
 import { getAppImg } from "../../../../../ttApp/src/hooks/getAppImg";
 import { nanoid } from "nanoid";
 // import {defaultData} from "../../../../../ttApp/src/hooks/useDataConversion";
-import { defaultData } from "../../../../../../ui/hooks/useDataConversion";
+import {
+  defaultData,
+  useFileConversionIcon,
+} from "../../../../../../ui/hooks/useDataConversion";
 import { useAddCard } from "../../../../../../hooks";
 const ttappStore: any = useTTAppStore();
 const { ttappList, ttappData } = storeToRefs(ttappStore);
 const install = async () => {
   let res = await useInstallTTApp();
+  console.log('res :>> ', res);
   // 安装成功
   const { data, code } = res;
   if (code === 200) {
@@ -69,21 +73,15 @@ const install = async () => {
       icon: currentData._logo,
       type: "ttapp",
     };
-    // console.log("iconData :>> ", iconData);
-    // useAddCard({
-    //   name: "myIcons",
-    //   data: {
-    //     iconList: [
-    //       {
-    //         ...iconData,
-    //       },
-    //     ],
-    //   },
-    //   // id: ""
-    // });
+    useAddCard({
+      name: "myIcons",
+      data: {
+        iconList: [useFileConversionIcon(iconData)],
+      },
+      // id: ""
+    });
 
     message.success("安装成功");
-    // return;
     ttappList.value.push(currentData);
   }
   // manifest.json失败
