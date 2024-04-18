@@ -341,7 +341,7 @@ export const navStore = defineStore("nav", {
       }
     },
     loadNav(){
-      console.log('执行loadNav')
+      // console.log('执行loadNav')
       if(!this.init){
         this.copyFootNav=[...arrData]
         this.init=true
@@ -363,7 +363,6 @@ export const navStore = defineStore("nav", {
       list.forEach(element => {
         element.id = element.id || nanoid(6)
       });
-      console.log(list,'list')
     },
     removeFootNavigationList(index) {
         this.copyFootNav.splice(index, 1)

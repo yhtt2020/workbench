@@ -1,12 +1,12 @@
 <template>
-  <xt-container 
+  <xt-container
     :header="header"
     v-model:customSize="customData.customSize"
-    :customData="customData" 
-    :envLimit="['web']" 
-    :customIndex="customIndex" 
-    :options="options" 
-    :desk="desk" 
+    :customData="customData"
+    :envLimit="['web']"
+    :customIndex="customIndex"
+    :options="options"
+    :desk="desk"
     :menu-list="menus"
     @delete="deleteCard">
     <HorizontalPanel style="min-width: 100%" :navList="audioTitle" v-model:selectType="audioType"  class="mt-4"></HorizontalPanel>
@@ -183,7 +183,7 @@ export default {
   unmount () {
     this.stopAudioTest()
   },
-  emit:['delete']
+  emit:['delete'],
   methods:{
     ...mapActions(inspectorStore,['startAudioTest','stopAudioTest']),
     // 自定义删除函数

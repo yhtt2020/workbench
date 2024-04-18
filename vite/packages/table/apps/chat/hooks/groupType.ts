@@ -103,7 +103,7 @@ export const currentUnreadCount = (no: any) => {
     return 0;
   } else {
     const unreadCount = list.find(
-      (item: any) => String(item.groupProfile.group) === String(no)
+      (item: any) => String(item.groupProfile?.group) === String(no)
     );
     if(unreadCount){
       return unreadCount?.unreadCount;
