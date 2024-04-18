@@ -15,6 +15,7 @@
         'tui-conversation-content',
         !isPC && 'tui-conversation-content-h5',
       ]"
+      class="relative"
     >
       <div
         :class="[
@@ -119,6 +120,9 @@
             />
           </div>
         </div>
+
+        <!-- 新增置顶标记图标 -->
+        <div class="isPined-icon" v-if="conversation.isPinned"></div>
       </div>
     </div>
   </div>

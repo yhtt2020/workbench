@@ -40,7 +40,7 @@ import {publishList} from './options'
 import ShowImage from './ShowImage.vue'
 import {message} from 'ant-design-vue'
 import { storeToRefs } from 'pinia';
-import { useCommunityStore } from '../../../../page/chat/commun'
+import { useCommunityStore } from '../../../../apps/chat/store/commun'
 import { yuanCommunityStore } from '../../../../store/yuanCommunity'
 
 const useCommunStore = useCommunityStore()

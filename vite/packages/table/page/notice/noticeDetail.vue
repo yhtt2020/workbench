@@ -45,7 +45,7 @@ import { Icon as DetailIcon } from '@iconify/vue'
 import { chatStore } from '../../store/chat'
 import { noticeStore } from './store/noticeStore'
 
-import EmptyStatus from '../chat/components/empty/EmptyStatus.vue';
+import EmptyStatus from '../../apps/chat/page/empty/EmptyStatus.vue';
 import UrlButtons from './part/UrlButtons.vue'
 import NoticeBody from './part/NoticeBody.vue'
 

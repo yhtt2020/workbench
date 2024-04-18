@@ -42,7 +42,7 @@ import { mapActions, mapState,mapWritableState } from 'pinia'
 import { communityStore } from '../../store/communityStore'
 import { Icon as SettingIcon } from '@iconify/vue'
 
-import CommunityEditor from '../../components/contact/CommunityEditor.vue'
+import CommunityEditor from '../../../../apps/chat/page/edit/CommunityEditor.vue'
 import Dropdown from '../../components/float/Dropdown.vue'
 import { appStore } from '../../../../store'
 
