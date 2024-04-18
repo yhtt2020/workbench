@@ -44,7 +44,7 @@ const linkType = ref([
   {
     icon: "fluent:globe-16-regular",
     name: "想天浏览器",
-    value: "thinksky",
+    value: "thisky",
     info: "使用想天浏览器打开",
   },
   {

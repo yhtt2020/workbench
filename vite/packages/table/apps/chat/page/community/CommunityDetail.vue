@@ -85,22 +85,27 @@ const handleCurrentItem = async (data) => {
   // 链接
   if (type === "link") {
     if (currentData.name !== "Roadmap") {
-      const method = currentData.props?.openMethod;
       const url = currentData.props.url;
-      // 想天浏览器打开
-      if (method === "userSelect") {
-        browser.openInInner(url);
-      }
-      // 系统浏览器打开
-      else if (method === "systemSelect") {
-        browser.openInSystem(url);
-      } else if (method === "thinksky") {
-        browser.openInInner(url);
-      } else if (method === "mob") {
-        browser.openInMobMod(url, {
-          partition: "persist:webcontent",
-          newName: "手机模式",
-        });
+      switch (currentData.props?.openMethod) {
+        case "userSelect":
+          // 工作台内置
+          browser.openInTable(url);
+          break;
+        case "systemSelect":
+          // 系统浏览器打开
+          browser.openInSystem(url);
+          break;
+        case "thisky":
+          // 想天浏览器
+          browser.openInInner(url);
+          break;
+        case "mob":
+          // 手机模式
+          browser.openInMobMod(url, {
+            partition: "persist:webcontent",
+            newName: "手机模式",
+          });
+          break;
       }
     }
   }
