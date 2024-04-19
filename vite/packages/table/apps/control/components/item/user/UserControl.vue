@@ -33,7 +33,7 @@
         />
       </a-tooltip>
     </div>
-    <div class="flex flex-col" :class="rankList.length === 0 ? 'w-32' : ''">
+    <div class="flex flex-col" :class="rankList.length === 0 ? 'w-32' : ''"  @click="goMy">
       <span class="xt-text font-16 xt-font ml-3">{{ userinfo?.nickname }}</span>
       <div class="flex xt-text">
         <OnlineMedal :rank="userinfo?.onlineGradeExtra.rank" />
