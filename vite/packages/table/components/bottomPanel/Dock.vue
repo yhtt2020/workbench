@@ -185,6 +185,8 @@ import Team from "./Team.vue";
 import FloatCard from "../windowPanel/components/FloatCard.vue";
 import FloatFolder from "../windowPanel/components/FloatFolder.vue";
 
+import menuMin from "../windowPanel/hook/menu";
+
 const {
   //是否全屏状态
   isFullscreen,
@@ -195,6 +197,7 @@ const {
 export default {
   name: "BottomPanel",
   emits: ["getDelIcon", "hiedNavBar", "edit", "control", "getHoverIndex", "update:isOpen"],
+  mixins: [menuMin],
   components: {
     EditIcon,
     Avatar,
@@ -216,56 +219,6 @@ export default {
       delNav: false,
       drawerMenus: [...extraRightMenu, ...moreMenus],
       componentId: "EditNavigationIcon",
-      iconMenus: [
-        {
-          id: 1,
-          newIcon: "fluent:open-16-regular",
-          label: "打开",
-          callBack: () => {
-            this.newOpenApp(this.currentItem);
-          },
-        },
-        {
-          id: 2,
-          label: "编辑",
-          newIcon: "fluent:compose-16-regular",
-          callBack: () => {
-            this.editNavigation(this.currentItem);
-          },
-        },
-        {
-          id: 3,
-          label: "删除",
-          newIcon: "fluent:delete-16-regular",
-          color: "#FF4D4F",
-          callBack: () => {
-            this.deleteIcon(this.currentItem,'foot');
-          },
-        },
-        {
-          id: 5,
-          divider: true,
-        },
-        {
-          id: 6,
-          label: "添加导航图标",
-          newIcon: "fluent:add-16-regular",
-          callBack: () => {
-            this.editNavigation(this.drawerMenus[0]);
-          },
-        },
-        {
-          id: 7,
-          label: "导航栏设置",
-          newIcon: "fluent:settings-16-regular",
-          callBack: () => {
-            this.$bus.emit("openSystemSet");
-            setTimeout(() => {
-              this.$bus.emit("selectSystemNav", 3);
-            }, 10);
-          },
-        },
-      ],
       currentIndex: null,
       currentItem: null,
       delItemIcon: false,
@@ -291,6 +244,7 @@ export default {
       floatCardVisible:false,
       floatCard:{},
       clickOutside:false,
+      sortId:'foot',
     };
   },
   props: {
@@ -380,21 +334,6 @@ export default {
         return arr.sort((a, b) => a.id - b.id);
       }
       return this.iconMenus;
-    },
-    /**
-     * 通过文件夹中数据的多少来自定义大小
-     */
-    resize() {
-      const length = this.folderList.length;
-      if (length <= 6) {
-        return "2x2";
-      } else if (length <= 12 && length > 6) {
-        return "3x3";
-      } else if (length <= 18 && length > 12) {
-        return "4x4";
-      } else {
-        return "6x4";
-      }
     },
     realXY() {
       return {
@@ -625,9 +564,9 @@ export default {
       }
     },
     openCard(item) {
-      if(this.floatCard.value !== item.value && this.floatCard !== undefined) {
+      if(this.floatCard.cardData?.customIndex !== item.cardData?.customIndex && this.floatCard !== undefined) {
         this.floatCard = item
-        // console.log(this.floatCard)
+        console.log(this.floatCard)
         this.$nextTick(() => {
           this.floatCardVisible = true
         })
