@@ -64,16 +64,8 @@ const checkMainFest = async (id) => {
     };
   }
   const main = modules?.main;
-  let weak = ["width", "height"];
+  let weak = ["width", "height",'entry'];
   let strong = [];
-  let entry = main?.entry;
-  if (!entry || entry.charAt(0) == "/") {
-    strong.push({
-      value: main?.entry,
-      info: "主应用入口",
-    });
-  }
-
   let obj = {
     weak,
     strong,
@@ -114,7 +106,7 @@ const checkCard = async (card) => {
   // 遍历card
 
   for (const item of card) {
-    let weak = ["size"];
+    let weak = ["size",entry];
 
     let strong = [
       {
@@ -122,14 +114,6 @@ const checkCard = async (card) => {
         info: "预览图",
       },
     ];
-
-    let entry = item?.entry;
-    if (!entry || entry.charAt(0) == "/") {
-      strong.push({
-        value: item?.entry,
-        info: "card入口",
-      });
-    }
 
     let ojb = {
       weak,
