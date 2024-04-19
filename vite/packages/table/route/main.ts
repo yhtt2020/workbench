@@ -238,7 +238,7 @@ export default [
         ],
       },
       {
-        path: "/chat",
+        path: "/chat/:no?/:action?",
         component: ChatIndex,
         name: "chatIndex",
         rememberChildrenPosition: true,
@@ -260,7 +260,7 @@ export default [
             children: [
               {
                 /**群聊会话列表路由**/
-                path: "/chatMain/:no?/:action?",
+                path: "/chatMain",
                 name: "chatMain",
                 component: ChatMain,
                 meta: {
