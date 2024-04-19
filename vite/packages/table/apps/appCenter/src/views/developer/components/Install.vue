@@ -1,13 +1,4 @@
 <script setup lang="ts">
-
-import { useTTAppStore } from "../../../../../ttApp/src/store";
-import { storeToRefs } from "pinia";
-import {
-  defaultData,
-  useFileConversionIcon,
-} from "../../../../../../ui/hooks/useDataConversion";
-// const ttappStore: any = useTTAppStore(); 
-// const { ttappList, ttappData } = storeToRefs(ttappStore);
 import { installV2 } from "./installV2";
 </script>
 

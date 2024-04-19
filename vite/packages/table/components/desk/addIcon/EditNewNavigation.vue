@@ -462,6 +462,7 @@ const addIcon = (item: object | undefined) => {
       if (target) {
         const card = _.cloneDeep(item);
         const i = useFileConversionIcon(card)
+        // console.log(i,'<<<<<<<<')
         const id = nanoid(6)
         target.cards.push({
           name:"myIcons",

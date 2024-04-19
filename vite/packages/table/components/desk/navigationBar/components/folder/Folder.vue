@@ -8,7 +8,7 @@
                 height:iconSize + 'px' 
                 }" 
             style="border: 1px solid var(--divider);">
-            <div class="flex flex-wrap items-center justify-center overflow-hidden " 
+            <div class="relative flex flex-wrap items-center justify-center overflow-hidden" 
                 v-for="(item, index) in list?.slice(0, 4)"
                 :key="index"
                 :style="{ 
@@ -29,6 +29,13 @@
                     :icon="item.icon"
                     :style="[item.color]">
                 </xt-new-icon>
+                <img 
+                    v-if="checkIsIfyIcon(item.icon).value"
+                    src="/public/icons/tag.png" 
+                    alt="" 
+                    class="absolute w-[8px]" 
+                    style="top:-1px;right:-1px"
+                >
                 
             </div>
         </div>

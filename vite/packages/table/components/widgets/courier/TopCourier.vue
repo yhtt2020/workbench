@@ -228,15 +228,18 @@ export default {
     //     });
 
     // }
+    // 查看快递详情
     viewDeliveryDetails (item) {
       this.currentDetail = item
       this.topCourierVisible = false
       this.showCourierDetail = true
       // console.log(this.currentDetail)
     },
+    // 关闭快递详情
     closeCourierDetail () {
       this.showCourierDetail = false
     },
+    // 刷新快递
     refreshCourier () {
       ui.refreshAll()
     },
@@ -245,13 +248,16 @@ export default {
     openCourierSetting () {
       this.$refs.courierSettingRef.openSettingModal()
     },
+    // 关闭全部快递页面
     backAllCoutiers () {
       this.showSmallDetail = true,
         this.showCourierDetail = false
     },
+    // 小详情关闭
     smallDetailsVisible () {
       this.showSmallDetail = false
     },
+    // 检测屏幕宽度，控制详情打开方式
     handleResize () {
       let windoWidth = window.innerWidth
       // console.log(windoWidth);
@@ -264,6 +270,7 @@ export default {
       }
       // console.log(windoWidth,'windoWidth')
     },
+    // 加载快递列表
     reload (list) {
       this.list = preHandle(list)
       if (this.settings.courierStatus.currentStatus === 'followed') {
@@ -278,7 +285,7 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(courierStore, ['orderList', 'couriersDetailMsg', 'storeInfo', 'settings', 'currentDetail','courierList']),
+    ...mapWritableState(courierStore, ['orderList', 'couriersDetailMsg', 'storeInfo', 'settings', 'currentDetail','couriersList']),
     config () {
       return {
         jdOrder: this.storeInfo.jd.order && this.storeInfo.jd.order.orders !== undefined,
@@ -324,7 +331,6 @@ export default {
       })
 
       return list
-
     }
 
   },
@@ -335,7 +341,7 @@ export default {
     setTimeout(() => {
       this.defaultType = this.currentType
     }, 2000)
-
+    
   },
   beforeDestroy () {
     window.addEventListener('resize', this.handleResize)
@@ -354,10 +360,10 @@ export default {
         this.reload(this.orderList)
       }
     },
-    list(val){
-      // console.log(val)
-      this.couriersList = val
-    }
+    // list(val){
+    //   // console.log(val)
+    //   this.couriersList = val
+    // }
     
 
   }

@@ -1,5 +1,5 @@
 <template>
- <a-drawer width="500" :closable="false" style="z-index:1000;" placement="right" class="no-drag"
+ <a-drawer width="500" :closable="false" style="z-index:99000;" placement="right" class="no-drag"
   v-model:visible="rightVisible" :bodyStyle="{ padding: '0', overflow: 'hidden !important', }"
   @closeMessage="rightVisible = false"
  >
