@@ -447,11 +447,17 @@ const currentInfo = computed(() => {
       return String(item?.communityInfo?.no) === String(no.value);
     }
   });
-  console.log('需要查找的no',no.value)
-  console.log('查找结果',index)
-  console.log('便利的数据',myCommunity.value)
-  chatCommunity.getCommunityTree(no.value);
-  return myCommunity.value[index];
+  if(index > -1){
+    chatCommunity.getCommunityTree(no.value);
+    return myCommunity.value[index];
+  }
+  else {
+    return {};
+  }
+  // console.log('需要查找的no',no.value)
+  // console.log('查找结果',index)
+  // console.log('便利的数据',myCommunity.value)
+  // return myCommunity.value[index];
 });
 // 是否开启悬浮模式
 const sildVisible = computed(() => {

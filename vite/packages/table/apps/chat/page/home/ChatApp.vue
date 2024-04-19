@@ -414,6 +414,7 @@ const loginTip = () => {
     },
     okText: "立即登录",
     noText: "暂不登录",
+    type:'warning',
     okButtonWidth: "95",
     noButtonWidth: "95",
   });
