@@ -34,7 +34,9 @@
       :r="r"
       :style="{ borderRadius: '12px', background: bg }"
       :iconStyle="{ borderRadius: r }"
+      :class="'relative'"
     />
+    <img src="/public/icons/tag.png" alt="" class="absolute w-[30px]" style="top:-2px;right:-3px" v-if="isIfy === 'ify'">
     <!-- <div
       class="flex items-center justify-center w-full overflow-hidden xt-text no-drag rounded-xl"
       :style="[bgSize, backgroundState]"
