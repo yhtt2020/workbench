@@ -20,12 +20,13 @@ export const getCardData = () => {
       detail: item.description,
       sizes: [],
       time: "2024/6/28",
+      logo: item._logo,
 
       // 伪数据 只是防止报错
       option: [],
     };
     card.map((data: any) => {
-      cardData.sizes.push(data.size);
+      cardData.sizes.push(data.customSize);
       cardData.option.push({
         ...data,
         originalData: data,

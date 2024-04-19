@@ -708,6 +708,7 @@ export default {
     useAddCard,
     addIcon(item, index) {
       const file = this.useFileConversionIcon(item);
+      // console.log(file,'<<<<<<<<<<<<')
       this.useAddCard("myIcons", {
         iconList: [{ ...file }],
         newIcon: true,
