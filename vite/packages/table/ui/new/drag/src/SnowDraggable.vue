@@ -107,7 +107,6 @@ export interface DragProps {
   // 测试模式
   test: boolean;
 }
-
 const props = withDefaults(defineProps<DragProps>(), {
   mode: "all",
   disabled: false,
