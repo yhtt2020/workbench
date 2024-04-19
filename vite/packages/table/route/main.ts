@@ -284,7 +284,7 @@ export default [
               },
               {
                 /**其他社群路由**/
-                path: "/myCommunity/:no",
+                path: "/com/:no",
                 name: "myCommunity",
                 component: MyCommunity,
                 props: true,
