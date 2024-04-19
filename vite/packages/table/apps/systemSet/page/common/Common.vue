@@ -185,6 +185,7 @@ const trayMode = ref("table");
 watch(
   () => trayMode.value,
   async (value) => {
+
     await tsbApi.settings.set("trayOpen", value);
   }
 );
@@ -277,10 +278,4 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-:deep(.ant-modal-wrap) {
-  z-index: 99999999 !important;
-}
-.ant-modal-wrap {
-  z-index: 99999999 !important;
-}
 </style>

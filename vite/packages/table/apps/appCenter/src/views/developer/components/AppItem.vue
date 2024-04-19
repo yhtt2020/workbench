@@ -83,14 +83,6 @@ const openModal = () => {
 
 <template>
   <!-- 添加时预览组件 -->
-  <xt-mix-icon
-    icon="https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/jmPD-I__T-SMyc-LMzn"
-    type="select"
-    boxSize="32"
-    boxR="6"
-    @cb=''
-    class="xt-theme-bg"
-  />1
   <xt-preview-v2
     v-if="previewVisible"
     v-model="previewVisible"
