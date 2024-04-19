@@ -16,7 +16,7 @@
         class="absolute inset-0" 
         style="
           border-radius: 8px; 
-          z-index:0;
+          z-index:1100;
           left:-14px;
           top: -45px;">
         <template v-if="imgList.length <= 0">

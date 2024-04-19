@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import Install from "./Install.vue";
+import browser from "../../../../../../js/common/browser";
+import DevHelp from "./DevHelp.vue";
+
 </script>
 
 <template>
@@ -8,6 +11,7 @@ import Install from "./Install.vue";
       <xt-ify-icon icon="fluent-emoji:alembic" size="56" class=" mb-4"/>
       天天工作台提供了供开发者使用调试的开放平台，你可以导入自己开发的应用，在此处进行调试运行，后续我们将开放应用市场功能，届时所有工作台用户都可以使用你的应用，
     </div>
+    <DevHelp></DevHelp>
     <Install />
   </div>
 </template>
