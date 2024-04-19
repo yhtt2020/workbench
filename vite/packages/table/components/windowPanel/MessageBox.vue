@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, provide,computed,toRefs } from 'vue'
+import { ref, provide,computed,toRefs, onMounted } from 'vue'
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 
@@ -70,7 +70,7 @@ const router = useRouter()
 
 // 快递数据
 const useCourier = courierStore()
-const { settings , courierList } = storeToRefs(useCourier)
+const { settings , couriersList } = storeToRefs(useCourier)
 
 // 音乐数据
 const useAppStore = appStore()
@@ -161,7 +161,7 @@ type queueType = {
 const queue : Array<queueType> = ref([
     {
         icon:'fluent:box-16-regular',
-        name:computed(() => courierList.value.length),
+        name:computed(() => couriersList.value.length === 0 ? '' : couriersList.value.length),
         tip:'',
         fn:(e) => {
             const itemPosition = {
@@ -297,5 +297,9 @@ const closeAll = () => {
     tomatoVisible.value = false
     courierVisible.value = false
 }
+
+// onMounted(() => {
+//     console.log(couriersList.value,'快递列表')
+// })
 </script>
 <style lang='scss' scoped></style>

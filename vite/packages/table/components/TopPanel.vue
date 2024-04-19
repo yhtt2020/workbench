@@ -2,20 +2,34 @@
   <!-- xt-main-top-bar 元素定位类 不可删 -->
   <div id="topBar" class="flex items-center justify-between w-full pt-1 xt-main-top-bar top-shadow drag">
       <!-- @contextmenu.stop="toggleAppStats" -->
-      <div v-if="isMain || (appSettings.showTopPanel)" id="topLeftPart"  class="flex min-h flex-1 pl-2.5 drag  items-center">
-        <div class="no-drag" v-if="isMain && navFormat">
+      <div 
+        v-if="isMain || (appSettings.showTopPanel)" 
+        id="topLeftPart"  
+        class="flex min-h flex-1 pl-2.5 drag  items-center">
+        <div 
+          class="no-drag" 
+          v-if="isMain && navFormat">
           <MessageBox :isTop="true" />
         </div>
       </div>
 
-      <div v-if="(isMain || (appSettings.showTopPanel)) && navFormat" id="topCenterPart" class="flex max-search drag min-h" hidden="">
-        <div hidden="" @click="openGlobalSearch" class="inline-block input-box no-drag pointer"
-             style=" background: var( --primary-bg); color: var(--secondary-text);width: 320px">
+      <div 
+        v-if="(isMain || (appSettings.showTopPanel)) && navFormat" 
+        id="topCenterPart" 
+        class="flex max-search drag min-h" hidden="">
+        <div 
+          hidden="" 
+          @click="openGlobalSearch" 
+          class="inline-block input-box no-drag pointer"
+          style=" background: var( --primary-bg); color: var(--secondary-text);width: 320px">
           <Icon icon="sousuo"></Icon>
         </div>
       </div>
 
-      <div v-if="(isMain || (appSettings.showTopPanel)) && navFormat" id="topRightPart" class="relative flex items-center justify-end min-h drag ">
+      <div 
+        v-if="(isMain || (appSettings.showTopPanel)) && navFormat" 
+        id="topRightPart" 
+        class="relative flex items-center justify-end min-h drag ">
         <PaperLock></PaperLock>
         <TopPanelButton/>
 
