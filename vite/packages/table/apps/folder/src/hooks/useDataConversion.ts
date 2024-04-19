@@ -24,7 +24,7 @@ export const useIconConversionFile = (data) => {
 export const useFileConversionIcon = (data) => {
   const icon = {
     model: "file",
-    size: "mini",
+    size: data.size ||  "mini",
     open: {
       type: data.type,
       value: data.value,
