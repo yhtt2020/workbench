@@ -56,7 +56,7 @@ img {
 }
 // 字体次要色
 .xt-text-2 {
-  color: var(--secondary-text) !important;
+  color: var(--secondary-text);
 }
 // 字体禁用色 处于零使用场景
 .xt-text-3 {
@@ -68,7 +68,7 @@ img {
 */
 // 主要背景色
 .xt-bg {
-  background: var(--primary-bg) !important;
+  background: var(--primary-bg);
 }
 // 次要背景色
 .xt-bg-2 {
@@ -171,7 +171,6 @@ hr {
 .xt-enable-bg {
   background: var(--disable-text) !important;
 }
-
 
 /* 亮色主题 */
 /* .light-model {

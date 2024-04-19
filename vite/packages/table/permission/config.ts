@@ -1,5 +1,5 @@
 // 权限匹配优先级
-export const PRIORITY = ["web", "offline", "guest", "mac", "window"];
+export const PRIORITY = ["web", "single","offline", "guest", "mac", "window"];
 // 环境名称
 export const ENV_MAP = {
   web: "网页端",

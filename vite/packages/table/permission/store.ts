@@ -10,17 +10,12 @@ export const usePermissionStore = defineStore("usePermissionStore", {
     isOffline: false,
     isLogin: false,
     isGuest: false,
-    platform: "web",
-    env: "dev",
+    dev: " web mac ",
     //平台
     // env
     // dev window mac web ，     登录 离线 游客
   }),
-  getters: {
-
-
-
-  },
+  getters: {},
   actions: {},
   persist: {
     enabled: true,
