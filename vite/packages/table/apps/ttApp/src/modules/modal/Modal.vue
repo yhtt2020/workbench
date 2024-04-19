@@ -3,7 +3,7 @@ import { ref, onBeforeMount, computed, watch, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import WuJie from "../wujie/WuJie.vue";
 import PerfectScrollbar from "perfect-scrollbar";
-import {useRouter} from "vue-router";
+import { useRouter } from "vue-router";
 import { useTTAppStore } from "../../store";
 const ttappStore: any = useTTAppStore();
 const { modal, ttappList } = storeToRefs(ttappStore);
@@ -90,15 +90,15 @@ const modalSize = computed(() => {
     };
   }
 });
-const openCommunity=()=>{
+const openCommunity = () => {
   $app.$router.push({
-    name:'myCommunity',
-    params:{
-      no:data.value.community
-    }
-  })
-  close()
-}
+    name: "myCommunity",
+    params: {
+      no: data.value.community,
+    },
+  });
+  close();
+};
 //
 const max = (value: boolean) => {
   isMax.value = value;
@@ -113,10 +113,41 @@ onMounted(() => {
     });
   }, 1);
 });
-
+/** 打开应用市场 */
+// const aboutVisible = ref(false);
+const openAppStore = () => {
+};
+/** 打开关于 */
+const aboutVisible = ref(false);
+const openAboutModal = () => {
+  aboutVisible.value = true;
+};
+/** 打开应用 */
+const settingVisible = ref(false);
+const openSettingModal = () => {
+  settingVisible.value = true;
+};
 </script>
 
 <template>
+  <!-- 关于弹窗 -->
+  <xt-modal v-if="aboutVisible" v-model="aboutVisible" :mask="false">
+    <div class="w-[280px] flex justify-center items-center flex-col">
+      <a-avatar shape="square" :size="48" :src="data._logo" />
+      <div class="my-3">{{ data?.name }}</div>
+      <div class="tt-text-2">版本 {{ data?.version }}</div>
+      <div class="my-3">{{ data?.description }}</div>
+    </div>
+  </xt-modal>
+  <!-- 关于弹窗 -->
+  <!-- <xt-modal v-if="aboutVisible" v-model="aboutVisible" :mask="false">
+    <div class="w-[280px] flex justify-center items-center flex-col">
+      <a-avatar shape="square" :size="48" :src="data._logo" />
+      <div class="my-3">{{ data?.name }}</div>
+      <div class="tt-text-2">版本 {{ data?.version }}</div>
+      <div class="my-3">{{ data?.description }}</div>
+    </div>
+  </xt-modal> -->
   <xt-modal
     v-if="data"
     v-model="modal.visible"
@@ -134,10 +165,29 @@ onMounted(() => {
   >
     <!-- 头部左侧区域 -->
     <template #header-left>
-      <div class="mr-2 rounded-lg overflow-hidden">
-        <a-avatar shape="square" class="" :size="20" :src="data._logo" />
+      <div
+        class="group hover:tt-theme-bg-2 relative pl-2 rounded-lg title min-w-[86px] h-[32px] flex items-center text-sm cursor-pointer"
+      >
+        <a-avatar shape="square" class="" :size="16" :src="data._logo" />
+        <span class="mx-2">{{ data.name }}</span>
+
+        <div
+          class="tt-shadow rounded-xl tt-modal-bg p-2 absolute bottom-[-423px] left-0 z-[999999] w-[240px] h-[423px]"
+        >
+          <div class="flex" @click="openAppStore">
+            <xt-mix-icon class="mr-2" icon="fluent:building-shop-16-regular" />
+            应用市场
+          </div>
+          <div class="flex" @click="openAboutModal">
+            <xt-mix-icon class="mr-2" icon="fluent:info-16-regular" />
+            关于{{ data.name }}
+          </div>
+          <div class="flex" @click="openSettingModal">
+            <xt-mix-icon class="mr-2" icon="fluent:settings-16-regular" />
+            设置
+          </div>
+        </div>
       </div>
-      {{ data.name }}
     </template>
     <!-- 头部右侧区域 -->
     <template #header-right>
@@ -150,7 +200,9 @@ onMounted(() => {
       >
         <xt-ify-icon icon="fluent:arrow-clockwise-16-regular" />
       </xt-button>
-      <xt-button title="打开社群" v-if="data.community"
+      <xt-button
+        title="打开社群"
+        v-if="data.community"
         class="ml-3 tt-modal-button"
         w="32"
         h="32"
@@ -175,7 +227,7 @@ onMounted(() => {
           v-if="!loading"
           :url="data.main._entry"
           :id="data.id"
-          :app-info="{...data}"
+          :app-info="{ ...data }"
         />
       </div>
     </xt-mix-menu>
@@ -198,4 +250,10 @@ onMounted(() => {
     </template>
   </xt-modal>
 </template>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.title {
+  &:hover {
+    // background: red;
+  }
+}
+</style>
