@@ -43,8 +43,11 @@ const envDetection = (type) => {
     return isMac ? "mac" : "";
   } else if (type == "offline") {
     return cache.get("isOffline") ? "offline" : "";
+  } else if (type == "single") {
+    return cache.get("isSingle") ? "single" : "";
   } else if (type == "guest") {
-    return !cache.get("ttUserToken") ? "guest" : "";
+    // return !cache.get("ttUserToken") ? "guest" : "";
+    return cache.get("isGuest") ? "guest" : "";
   } else if (type == "window") {
     return isWindow ? "window" : "";
   }
@@ -61,10 +64,10 @@ const checkLimit = (env, name, options) => {
 };
 /*
  * 环境检测
- * 参数: web, client, mac, offline, guest
+ * 参数: web, client, mac, offline, guest, single
  * 返回: 环境名称
  */
-export type baseEnv = "web" | "client" | "mac" | "offline" | "guest";
+export type baseEnv = "web" | "client" | "mac" | "offline" | "guest" | "single";
 export type useEnvType = baseEnv | any;
 
 export type UseEnv = (arr: useEnvType) => baseEnv;
@@ -102,5 +105,5 @@ export const useRouterLimit = (env, name, options = {}) => {
 };
 
 export const currentEnv = () => {
-  return useEnv(["web", "offline", "guest", "mac", "window"]);
+  return useEnv(["web", "offline", "guest", "mac", "window", "single"]);
 };

@@ -12,6 +12,7 @@ import { storeToRefs } from "pinia";
  * 用户许可
  */
 export const useUserPermit = async () => {
+  const permissionStore = usePermissionStore();
   // 1、 获取token
   let token = cache.get("ttUserToken");
 
@@ -24,9 +25,14 @@ export const useUserPermit = async () => {
     if (res) {
       return res;
     }
+    // 离线模式
+    if(permissionStore.isOffline) {
+      return;
+    }else{
+      // 没token 或者 没用户信息
+      useLogout();
+    }
   }
-  // 没token 或者 没用户信息
-  useLogout();
   return false;
 };
 
@@ -66,14 +72,14 @@ export const useUpdateUserInfo = async () => {
   // 3 请求失败
   if (res.code !== 1000 && code !== 200) {
     useClearUserInfo();
-    // 修改为离线
-    // cache.set("isOffline", true);
+    // 修改为离线状态
+    cache.set("isOffline", true);
     console.log("登录时错误信息 :>> ", res);
     return;
   }
   // 4 请求成功
   console.log("请求成功 :>> ");
-  // cache.set("isOffline", false);
+  cache.set("isOffline", false);
 
   let userData = data.data;
   const permissionStore = usePermissionStore();
