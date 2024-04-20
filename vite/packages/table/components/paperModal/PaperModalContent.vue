@@ -22,28 +22,34 @@
       :class="currentParams.maxVisible ? 'w-full h-full' : 'small-w'"
     >
       <div class="w-full xt-modal rounded-r-xl px-4 pt-4 pb-0">
+        <!-- 我的收藏 -->
         <template v-if="currentStatus === 'm'">
           <My :isModal="true" />
         </template>
 
-        <template v-if="currentStatus === 'w'">
+        <!-- 精选壁纸 -->
+        <template v-else-if="currentStatus === 'w'">
           <SiftPaper :isModal="true" />
         </template>
 
-        <template v-if="currentStatus === 'b'">
+        <!-- 必应壁纸 -->
+        <template v-else-if="currentStatus === 'b'">
           <Bing :isModal="true" />
         </template>
 
-        <template v-if="currentStatus === 's'">
-          <Setting :isModal="true" />
-        </template>
-
-        <template v-if="currentIndex === 'p'">
+        <!-- 拾光壁纸 -->
+        <template v-else-if="currentStatus === 'p'">
           <Picking :isModal="true" />
         </template>
 
-        <template v-if="currentStatus === 'l'">
+        <!-- 动态壁纸 -->
+        <template v-else-if="currentStatus === 'l'">
           <Lively :isModal="true" />
+        </template>
+
+        <!-- 设置 -->
+        <template v-else-if="currentStatus === 's'">
+          <Setting :isModal="true" />
         </template>
       </div>
     </xt-left-menu>
@@ -63,9 +69,8 @@ import Picking from "../../page/gallery/Picking.vue";
 import Setting from "../../page/gallery/Setting.vue";
 import SiftPaper from "../../page/gallery/SiftPaper.vue";
 
-const pickPaper =  pickPaperStore();
+const pickPaper = pickPaperStore();
 const { currentID } = storeToRefs(pickPaper);
-
 
 /**判断是否最大化**/
 const currentParams = ref({
@@ -117,26 +122,26 @@ const paperLeftList = ref([
     },
   },
   {
-    id: "l",
     newIcon: "fluent:image-sparkle-16-regular",
+    id: "l",
     bg: "var(--secondary-bg)",
     callBack: (item) => {
       currentPaperTab(item);
     },
   },
   {
-    id: "f",
     newIcon: "fluent:full-screen-maximize-16-filled",
+    id: "f",
     callBack: (item) => {
       openMaxScreen();
     },
   },
   {
-    id: "s",
     newIcon: "fluent:settings-16-regular",
+    id: "s",
     route: { name: "papersSetting" },
     callBack: (item) => {
-      // currentPaperTab(item);
+      currentPaperTab(item);
     },
   },
 ]);
@@ -172,14 +177,14 @@ const openMaxScreen = () => {
 };
 
 /**计算当前状态**/
-const currentStatus = computed(()=>{
-  if(currentID.value){
+const currentStatus = computed(() => {
+  console.log("排查", currentID.value);
+  if (currentID.value) {
     return currentID.value;
+  } else {
+    return "m";
   }
-  else{
-    return 'm';
-  }
-}) 
+});
 
 onMounted(() => {
   proxy.$bus.on("closePaper", () => {
