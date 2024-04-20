@@ -8,7 +8,7 @@
     :customIndex="customIndex" 
     :customData="customData" 
     :desk="desk" 
-    :envLimit="['offline']"
+    :envLimit="['single']"
     @delete="deleteCard">
     <!-- <div v-if="defaultCity" class="px-3 py-1 bg-mask rounded-xl pointer" @click="openWeatherDrawer" style="position: absolute;left: 45px;top:10px">
       {{ defaultCity.name }}
@@ -121,7 +121,7 @@ export default {
         web: false,
         mobile: false,
         client: false,
-        offline:true
+        single:true
       },
     };
   },

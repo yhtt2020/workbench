@@ -484,8 +484,8 @@ export default {
             return this.ClassifyData.filter(i => {
                 const sideBarTag = this.navList[this.currentIndex].tag
                 // console.log(i)
-                // 离线模式下隐藏 创意市场
-                if (window.$isOffline) {
+                // 单机模式下隐藏 创意市场
+                if (window.$isSingle) {
                     return i.type === sideBarTag && i.name.includes(this.selectContent) && i.name != '创意市场'
                 } else {
                     return i.type === sideBarTag && i.name.includes(this.selectContent)

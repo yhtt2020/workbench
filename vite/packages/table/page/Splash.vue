@@ -136,7 +136,6 @@ import { browserStore } from "../store/browser";
 // import { chatStore } from "../store/chat";
 import taskStore from "../page/app/todo/stores/task";
 import cache from "../components/card/hooks/cache";
-import { offlineStore } from "../js/common/offline";
 import { useWidgetStore } from "../components/card/store";
 // import { clockStore } from '../components/widgets/clock/hooks/clockStore';
 import { useLogin } from "../permission/user/useLogin";
@@ -178,7 +177,6 @@ export default {
       await this.initStore(navStore, "nav"),
       await this.initStore(taskStore, "task"),
       await this.initStore(useWidgetStore, "useWidgetStore"),
-      await this.initStore(offlineStore, "offlineStore"),
       await this.initStore(clipboardStore, "clipboardStore"),
     ]);
     // 新增一个定时器 用于异常情况清空loading
@@ -222,7 +220,6 @@ export default {
       "footNavigationList",
       "rightNavigationList",
     ]),
-    // ...mapWritableState(offlineStore, ['isOffline']),
   },
   methods: {
     ...mapActions(cardStore, ["sortClock", "sortCountdown"]),

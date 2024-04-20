@@ -2,7 +2,7 @@
   <xt-container
     v-model:customSize="customData.customSize"
     :header="header"
-    :custom-data="customData" :custom-index="customIndex" :envLimit="['guest','offline']"
+    :custom-data="customData" :custom-index="customIndex" :envLimit="['guest','single']"
     :options="options"
     :desk="desk"
     :showRightIcon='rightIcon'

@@ -42,7 +42,7 @@
             </div>
           </a-col>
 
-          <a-col :span="12" v-if="!this.isOffline">
+          <a-col :span="12" v-if="!this.isSingle">
             <div class="relative btn">
               社群沟通<br />
               <a-switch v-model:checked="settings.enableChat"></a-switch>
@@ -54,16 +54,16 @@
               <a-switch v-model:checked="settings.noticeEnable"></a-switch>
             </div>
           </a-col>
-          <a-col :span="12" v-if="!this.isOffline">
+          <a-col :span="12" v-if="!this.isSingle">
             <div style="cursor: help" @click="tipSimple" class="relative btn">
               极简模式<br />
               <a-switch @click.stop="() => { }" v-model:checked="simple"></a-switch>
             </div>
           </a-col>
           <!-- <a-col :span="12">
-              <div  @click="tipOffline" class="relative btn">
+              <div  @click="tipSingle" class="relative btn">
                 离线模式<br />
-                <a-switch @click="changeOffline"  v-model:checked="isOffline"></a-switch>
+                <a-switch @click="setSingle(!isSingle)"  v-model:checked="isSingle"></a-switch>
               </div>
             </a-col> -->
           <a-col :span="12" v-if="!$useEnv()">
@@ -117,7 +117,7 @@
                 <div> 分屏设置</div>
               </div>
             </a-col>
-            <a-col v-if="simple && !this.isOffline" :span="6">
+            <a-col v-if="simple && !this.isSingle" :span="6">
               <MyAvatar :size="37" :limit="true"></MyAvatar>
             </a-col>
           </a-row>
@@ -172,14 +172,14 @@
                 <div>主题颜色</div>
               </div>
             </a-col>
-            <a-col v-if="isMain() && !this.isOffline" :span="6">
+            <a-col v-if="isMain() && !this.isSingle" :span="6">
               <div @click="invite" class="btn">
                 <!-- <Icon icon="tianjiachengyuan" style="font-size: 2em"></Icon> -->
                 <Iconify icon="fluent:people-add-16-regular" style="font-size: 2em" />
                 <div>邀请</div>
               </div>
             </a-col>
-            <a-col v-if="isMain() && !this.isOffline" :span="6">
+            <a-col v-if="isMain() && !this.isSingle" :span="6">
               <div @click="verify" class="btn">
                 <!-- <Icon icon="team" style="font-size: 2em"></Icon> -->
                 <Iconify icon="fluent:people-16-regular" style="font-size: 2em" />
@@ -266,7 +266,7 @@ import EditNewNavigation from "../components/desk/addIcon/EditNewNavigation.vue"
 import ThemeSettingModal from "../components/setting/ThemeSettingModal.vue";
 
 import { taskStore } from "../apps/task/store";
-import { offlineStore } from "../js/common/offline";
+import { usePermissionStore } from "../permission/store";
 import { completeTask } from '../apps/task/task';
 import {Icon as Iconify} from '@iconify/vue';
 
@@ -345,14 +345,14 @@ export default {
     ]),
     ...mapWritableState(appStore, ["userInfo","backgroundColor"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
-    ...mapWritableState(offlineStore, ["isOffline"]),
+    ...mapWritableState(usePermissionStore, ["isSingle"]),
     ...mapWritableState(useNavigationStore,['oldToggle','editToggle']),
 
   },
 
   methods: {
     ...mapActions(codeStore, ["verify", "create", "myCode"]),
-    ...mapActions(offlineStore, ["changeOffline"]),
+    ...mapActions(usePermissionStore, ["setSingle"]),
     ...mapActions(appStore, ['enterAided', 'leaveAided','enableShake','disableShake']),
     isMain: isMain, isWin,
     goShake(){
@@ -410,7 +410,7 @@ export default {
       // });
       this.simpleVisible=true
     },
-    tipOffline() {
+    tipSingle() {
       Modal.info({
         content:
           "使用离线模式后，将隐藏部分娱乐、社交类的功能，例如游戏、天气等。",
@@ -541,4 +541,4 @@ export default {
   color: var(--primary-text);
   background: var(--primary-bg);
 }
-</style>../components/desk/addIcon/EditNewNavigation.vue
+</style>

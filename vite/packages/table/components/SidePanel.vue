@@ -63,7 +63,7 @@
                 :id="item.id" 
                 class="relative flex-shrink-0 item-content" >
                 <div 
-                  v-if="!(this.isOffline && this.navList.includes(item.event))" 
+                  v-if="!(isSingle && this.navList.includes(item.event))" 
                   class="item-content item-nav"
                   @click="newOpenApp(item)" 
                   @dragover="onDrag" 
@@ -120,7 +120,8 @@ import { useNavigationStore } from './desk/navigationBar/navigationStore'
 import { navStore } from "../store/nav";
 import { appStore } from '../store'
 import { cardStore } from '../store/card';
-import { offlineStore } from '../js/common/offline';
+import { singleStore } from '../js/common/single';
+import { usePermissionStore } from '../permission/store';
 import { useWidgetStore } from '../components/card/store'
 import { useNavBarStore } from './desk/navigationBar/navBar'
 
@@ -393,7 +394,8 @@ export default {
       'copyFootNav', 'copySideNav', 'copyRightNav'
     ]),
     ...mapWritableState(cardStore, ['routeParams']),
-    ...mapWritableState(offlineStore, ['isOffline', 'navList']),
+    ...mapWritableState(singleStore, ['navList']),
+    ...mapWritableState(usePermissionStore, ['isSingle']),
     ...mapWritableState(useWidgetStore, ['rightModel']),
     ...mapWritableState(useNavigationStore, [
        'taskBoxVisible',
@@ -1178,3 +1180,4 @@ export default {
   }
 }
 </style>
+../js/common/single

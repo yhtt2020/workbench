@@ -109,7 +109,7 @@
                   <div
                     @dragover="onDrag"
                     @dragend="hoverIndex = -1"
-                    v-if="!(navList.includes(item.event) && isOffline)"
+                    v-if="!(navList.includes(item.event) && isSingle)"
                     class="flex items-center justify-center pointer"
                     :class="{
                       hover:
@@ -154,7 +154,8 @@ import { navStore } from "../../store/nav";
 import { useNavBarStore } from "../desk/navigationBar/navBar.ts";
 import { useNavigationStore } from "../desk/navigationBar/navigationStore";
 import { controlStore } from "../../apps/control/hooks/controlStore";
-import { offlineStore } from "../../js/common/offline";
+import { singleStore } from "../../js/common/single";
+import { usePermissionStore } from "../../permission/store";
 
 import { mapWritableState, mapActions } from "pinia";
 import Sortable from "sortablejs";
@@ -338,7 +339,8 @@ export default {
       "init",
       "copyFootNav",
     ]),
-    ...mapWritableState(offlineStore, ["isOffline", "navList"]),
+    ...mapWritableState(singleStore, ["navList"]),
+    ...mapWritableState(usePermissionStore, ["isSingle"]),
     ...mapWritableState(useNavigationStore, [
       "selectNav",
       "popVisible",
