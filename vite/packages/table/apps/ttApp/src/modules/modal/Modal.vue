@@ -5,6 +5,8 @@ import WuJie from "../wujie/WuJie.vue";
 import PerfectScrollbar from "perfect-scrollbar";
 import { useRouter } from "vue-router";
 import { useTTAppStore } from "../../store";
+import { useWindowSize } from "@vueuse/core";
+const { width: windowWidth, height: windowHeight } = useWindowSize();
 
 const ttappStore: any = useTTAppStore();
 const { modal, ttappList } = storeToRefs(ttappStore);
@@ -77,17 +79,32 @@ onBeforeMount(() => {
 });
 
 /** 最大化 */
+
 // 弹窗大小
 const modalSize = computed(() => {
+  // 最大弹窗尺寸
+  const maxModalHeight = windowHeight.value - 48;
+  const maxModalWidth = windowWidth.value;
+  // 弹窗尺寸
+  const mainWidth = data.value.main.width;
+  const mainHeight = data.value.main.height;
+  const width = mainWidth.replace(/\D/g, "");
+  const height = mainHeight.replace(/\D/g, "");
+  // 当前弹窗尺寸
+  const currentWidth = width > maxModalWidth ? maxModalWidth + "px" : mainWidth;
+  const currentHeight =
+    height > maxModalHeight ? maxModalHeight + "px" : mainHeight;
   if (isMax.value) {
     return {
       width: "100%",
       height: "100%",
     };
-  } else {
+  }
+  // else if ( ) {}
+  else {
     return {
-      width: data.value.main.width,
-      height: data.value.main.height,
+      width: currentWidth,
+      height: currentHeight,
     };
   }
 });
