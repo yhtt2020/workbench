@@ -8,7 +8,8 @@
             border: 1px solid var(--divider);
             background: rgba(26,26,26,0.65);
             backdrop-filter: blur(50px);"
-        :style="{zoom: `${navAttribute.navSize / 100}`}">
+        :style="{zoom: `${navAttribute.navSize / 100}`}"
+        :class="radius">
         <!-- 用户头像以及控制中心 -->
         <User></User>
         <!-- 导航栏图标 -->
@@ -44,7 +45,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, provide, watch } from 'vue'
+import { ref, provide, watch, computed } from 'vue'
 import { storeToRefs } from 'pinia';
 import { message } from 'ant-design-vue';
 
@@ -63,7 +64,7 @@ const useAppStore = appStore()
 const { showGuide , status } = storeToRefs(useAppStore)
 
 const useNav = useNavigationStore()
-const { navAttribute } = storeToRefs(useNav)
+const { navAttribute, currentNavPosition } = storeToRefs(useNav)
 
 const emit = defineEmits(['edit', 'getDelIcon', 'control', 'update:folderVisible'])
 
@@ -118,5 +119,10 @@ watch(
         emit('update:folderVisible', val)
     }
 )
+
+// 边框圆角
+const radius = computed(() => {
+   return currentNavPosition.value === 'top' ? 'rounded-t-lg' : 'rounded-b-lg'
+})
 </script>
 <style lang='scss' scoped></style>
