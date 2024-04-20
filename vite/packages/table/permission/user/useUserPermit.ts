@@ -39,9 +39,13 @@ const setUserInfo = async () => {
   // 先判断用户信息是否存在，不存在进行赋值
   console.log("permissionStore.userInfo :>> ", permissionStore.userInfo);
   console.log("userStore.userInfo :>> ", userStore.userInfo);
-  if (userStore.userInfo) {
+  if (permissionStore.userInfo) {
+    setLV(permissionStore.userInfo);
+    return;
+  } else if (userStore.userInfo) {
     return userStore.userInfo;
   }
+
   console.log("useUpdateUserInfo :>> ", useUpdateUserInfo);
   return await useUpdateUserInfo();
 };

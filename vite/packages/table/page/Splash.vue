@@ -182,25 +182,22 @@ export default {
       this.initStore(clipboardStore, "clipboardStore"),
     ]);
     // 新增一个定时器 用于异常情况清空loading
-    this.timeout = setTimeout(() => {
-      this.launching = false;
-    }, 5000);
-
-   setTimeout(() => {
-      this.storeReadyTimer = setInterval(() => {
-        let haventOk = Object.keys(window.loadedStore).filter((key) => {
-          let check = !window.loadedStore[key];
-          if (window.loadedStore[key] === false) return check;
-        });
-        //已经全部搞定
-        if (haventOk.length <= 0) {
-          console.log("确认完成加载 :>> ");
-          clearInterval(this.storeReadyTimer);
-          this.afterLaunch();
-        }
-      }, 500);
-    }, 100);
-    // this.bindUserInfoResponse();
+    // this.timeout = setTimeout(() => {
+    //   this.loading = false;
+    // }, 1000);
+    this.storeReadyTimer = setInterval(() => {
+      let haventOk = Object.keys(window.loadedStore).filter((key) => {
+        let check = !window.loadedStore[key];
+        if (window.loadedStore[key] === false) return check;
+      });
+      console.log('haventOk :>> ', haventOk);
+      //已经全部搞定
+      if (haventOk.length <= 0) {
+        console.log("确认完成加载 :>> ");
+        clearInterval(this.storeReadyTimer);
+        this.afterLaunch();
+      }
+    }, 500);
     // this.getUserInfo();
     this.sortClock();
   },
@@ -252,9 +249,10 @@ export default {
         return;
       }
       this.$router.replace({ name: "wizard" });
-      localStorage.setItem("wizarded", '1');
+      localStorage.setItem("wizarded", "1");
     },
     enter() {
+      console.log('1111 :>> ', 1111);
       clearTimeout(this.timeoutHandler); //清理掉超时提示
       // chatStore().login();
       if (localStorage.getItem("wizarded")) {
@@ -283,54 +281,13 @@ export default {
           } else {
             this.$router.replace(currentRoute);
           }
+        }else {
+          console.log('2222 :>> ', 2222);
+          this.$router.replace({ name: "home" });
         }
       }
     },
-    // 大概不需要了
-    bindUserInfoResponse() {
-      if (window.$useEnv()) return;
 
-      ipc.removeAllListeners("userInfo");
-      ipc.on("userInfo", async (event, args) => {
-        if (args.data.uid === -2) {
-          this.netError = true;
-          message.error({
-            content: "网络错误，请重试",
-            key: "net",
-          });
-        }
-        this.tipped = false;
-        this.loading = false;
-        if (args.data.uid <= 0) {
-          // 网络异常 或者 游客模式 下 会卡在当前状态
-          window.loadedStore["userInfo"] = true;
-          return;
-        }
-
-        const userInfo = args.data;
-        console.log("ipc", userInfo);
-        let lvInfo = this.lvInfo;
-        lvInfo.lv = userInfo.onlineGradeExtra.lv;
-        // 当前等级的区间
-        let current = this.gradeTableGenerate(64)[lvInfo.lv];
-        // 下一等级的区间
-        let section = this.gradeTableGenerate(64)[lvInfo.lv + 1];
-        let remain = section[0] * 60 - userInfo.onlineGradeExtra.minutes;
-        lvInfo.remainHour = Math.floor(remain / 60);
-        lvInfo.remainMinute = remain - Math.floor(remain / 60) * 60;
-        lvInfo.minute = userInfo.onlineGradeExtra.minutes;
-        lvInfo.percentage =
-          ((lvInfo.minute - current[0] * 60) /
-            ((current[1] - current[0]) * 60)) *
-          100;
-        //this.lvInfo = lvInfo
-        window.loadedStore["userInfo"] = true;
-        this.setUser(userInfo);
-        if (this.$route.name === "splash") {
-          this.enter();
-        }
-      });
-    },
     async initStore(store, name) {
       // loadedStore 不存在初始化对象
       if (!window.loadedStore) {
@@ -366,7 +323,7 @@ export default {
       }
       this.bindCaptureIPC();
 
-      this.bindClientEvents();
+      // this.bindClientEvents();
 
       clipboardStore().prepare();
       clipboardStore().start();
@@ -385,19 +342,8 @@ export default {
        */
       this.loginOk();
     },
-    login() {
-      useLogin(() => {
-        this.loginOk();
-      });
-    },
 
     loginOk() {
-      // 完成引导并登录
-      console.log("this.userInfo  :>> ", this.userInfo);
-      if (this.userInfo && this.init) {
-        this.enter();
-        return;
-      }
       // 首次web端引导
       if (!this.init && this.$useEnv("web")) {
         this.finishWizard();
@@ -409,9 +355,7 @@ export default {
         this.$router.replace({ name: "wizard" });
         return;
       }
-
-      // 未登录
-      this.launching = false;
+      this.enter();
     },
     onGuest() {
       this.$router.replace({ name: "home" });
