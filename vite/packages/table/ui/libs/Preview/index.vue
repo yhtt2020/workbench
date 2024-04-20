@@ -15,10 +15,10 @@
       <div class="relative px-2 xt-modal rounded-xl" style="width: 466px; height: 380px;">
           <div class="flex justify-between w-full">
               <div class="w-[215px]">
-                <xt-select v-model="defaultDesk" :zIndex="2001" borderClass="extra" :list="chooseList"></xt-select>
+                <xt-option-select v-model="defaultDesk" borderClass="extra" :list="chooseList"></xt-option-select>
               </div>
               <div class="w-[215px]">
-                <xt-select v-model="defaultFolder" :zIndex="2001" borderClass="extra" :list="folderList"></xt-select>
+                <xt-option-select v-model="defaultFolder" borderClass="extra" :list="folderList"></xt-option-select>
               </div>
           </div>
           <!-- 预览组件 -->

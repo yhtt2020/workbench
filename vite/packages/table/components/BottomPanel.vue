@@ -181,7 +181,7 @@ import CommunityNav from "./bottomPanel/community/CommunityNav.vue";
 import TeamNav from "./bottomPanel/community/TeamNav.vue";
 import AppModal from "./bottomPanel/community/AppModal.vue";
 import { controlStore } from "../apps/control/hooks/controlStore";
-import WinPanel from "./WindowPanel/WinPanel.vue";
+import WinPanel from "./windowPanel/WinPanel.vue";
 import Setting from "./bottomPanel/setting/CommunitySetting.vue";
 import ComNavSearch from "./bottomPanel/search/ComNavSearch.vue";
 import { communityStore } from "../page/chat/store/communityStore";
