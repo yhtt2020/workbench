@@ -92,7 +92,7 @@
 
         </div>
         <div class="flex items-center justify-center -ml-12" v-if="this.navigationList.length <= 0"
-          @click="this.editNavigation(this.drawerMenus[0])">
+          @click="this.editNav(this.drawerMenus[0])">
           <xt-new-icon icon="fluent:add-16-regular" size="28"></xt-new-icon>
         </div>
 
@@ -455,16 +455,24 @@ export default {
     renderIcon,
     replaceType,
     hoverRealItemId,
-    editIcon(item) {
+    editNav(item) {
       this.quick = true
-      this.componentId = 'EditIcon'
-      this.editItem = item
-      if (item.default?.name) return
-      item.default = {
-        name: item.name,
-        icon: item.icon,
-        bg: item.bg,
-        color: item.color,
+      if (item.component) {
+        this.componentId = item.component
+        if (item.component === 'EditNewNavigation') {
+          this.selectNav = this.sortId
+          message.success('进入编辑模式')
+        }
+      } else {
+        this.componentId = 'EditIcon'
+        this.editItem = item
+        if (item.default?.name) return
+        item.default = {
+          name: item.name,
+          icon: item.icon,
+          bg: item.bg,
+          color: item.color,
+        }
       }
     },
     deleteFile(data) {
@@ -809,66 +817,6 @@ export default {
       this.currentItem.layout = value
     },
     /**
-     * 打开应用
-     * @param {*} item 图标详细信息
-     */
-    async newOpenApp(item, e) {
-      const { type, value } = item;
-      if (type !== "folder") {
-        this.folderVisible = false;
-      }
-      if (value !== 'commun') {
-        this.comVisible = false
-      }
-      if(type !== 'card') {
-        this.floatCardVisible = false
-      }
-      // 更新鼠标定位
-      this.resetElementPosition();
-      if (window.$useEnvLimit("web", value)) return;
-      // 桌面图标打开提示
-      this.msgNotice(item);
-      // 特殊图标处理
-      const valueHandlers = {
-        control: () => this.$emit("control", e),
-        setting: () => {
-          // this.$router.push({ name: "home" });
-          setTimeout(() => {
-            this.$bus.emit("openSystemSet");
-          }, 500);
-        },
-        commun: () => {
-          this.comVisible = !this.comVisible;
-        },
-        default: async () => {
-          if (type === "card") {
-            this.openCard(item)
-          }
-          if (type === "folder") {
-            this.openFolder(item);
-          }
-          if (value === "fullscreen" && window.$useEnv()) {
-            toggle();
-            return;
-          }
-          if (value === "home" && item.home) {
-            this.jumpDesk = item.home;
-          }
-          let rs = await startApp(type, value, this.$router);
-          if (!rs) {
-            message.error({
-              content: `打开「${item.name}」失败`,
-              key: "tipRun",
-            });
-          }
-          this.comVisible = false;
-        }
-      };
-
-      const handler = valueHandlers[value] || valueHandlers.default;
-      await handler();
-    },
-    /**
     * 点击文件夹子图标
     * @param {*} item
     */
@@ -885,37 +833,22 @@ export default {
     closeFolder() {
       this.folderVisible = false
     },
-    /**
-     * 打开桌面应用提示
-     * @param {*} item 当前图标
-     */
-    msgNotice(item) {
-      if (item.type === 'tableApp') {
-        message.loading({
-          content: `打开「${item.name}」...`
-          , key: 'tipRun'
-        })
-      }
-    },
     useWindowSize,
     // 添加导航图标
-    editNavigation(item) {
-      if (item.component) {
-        this.componentId = item.component
-        if (item.component === 'EditNewNavigation') {
-          this.selectNav = this.sortId
-          message.success('进入编辑模式')
-        }
-        this.quick = true
-      }
-    },
+    // editNavigation(item) {
+    //   if (item.component) {
+    //     this.componentId = item.component
+    //     if (item.component === 'EditNewNavigation') {
+    //       this.selectNav = this.sortId
+    //       message.success('进入编辑模式')
+    //     }
+    //     this.quick = true
+    //   }
+    // },
     setQuick() {
       this.quick = false
     },
-    showElement(item, index) {
-      this.currentItem = item
-      this.currentIndex = index
-    },
+
   }
 }
 </script>

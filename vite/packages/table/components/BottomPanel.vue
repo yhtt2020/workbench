@@ -176,7 +176,6 @@ import AutoHide from "./desk/navigationBar/components/folder/AutoHide.vue";
 import { mergeData } from "../ui/hooks/useDataConversion";
 import UserBar from "./bottomPanel/UserBar.vue";
 import Dock from "./bottomPanel/Dock.vue";
-import { useFullscreen } from "@vueuse/core";
 import UserNavBar from "./bottomPanel/community/UserNavBar.vue";
 import CommunityNav from "./bottomPanel/community/CommunityNav.vue";
 import TeamNav from "./bottomPanel/community/TeamNav.vue";
@@ -190,9 +189,6 @@ import DeskAppModal from "./bottomPanel/desk/DeskAppList.vue";
 import { startApp } from "../ui/hooks/useStartApp";
 
 import mainMin from './windowPanel/hook/mainMenu'
-
-// 是否全屏状态 切换全屏
-const { isFullscreen, toggle } = useFullscreen();
 
 export default {
   name: "BottomPanel",
@@ -258,6 +254,8 @@ export default {
 
       // 文件夹打开状态
       folderVisible: false,
+
+      sortId:'foot',
     };
   },
   props: {
@@ -497,12 +495,8 @@ export default {
       },
     },
     // 任务弹窗显示与隐藏与导航栏选择同步
-    isTask() {
-      if (this.isTask) {
-        this.bottomToggle[2] = true;
-      } else {
-        this.bottomToggle[2] = false;
-      }
+    isTask(newV) {
+      this.bottomToggle[2] = newV;
     },
   },
   methods: {
@@ -554,7 +548,7 @@ export default {
      * 打开菜单选项
      * @param {*} item
      */
-    editNavigation(item) {
+    editNav(item) {
       if (item.component) {
         this.componentId = item.component;
         if (item.component === "EditNewNavigation") {
@@ -577,18 +571,6 @@ export default {
      */
     setQuick() {
       this.quick = false;
-    },
-    /**
-     * 打开桌面应用提示
-     * @param {*} item 当前图标
-     */
-    msgNotice(item) {
-      if (item.type === "tableApp") {
-        message.loading({
-          content: `打开「${item.name}」...`,
-          key: "tipRun",
-        });
-      }
     },
     /**
      * 打开应用 -- 简化版

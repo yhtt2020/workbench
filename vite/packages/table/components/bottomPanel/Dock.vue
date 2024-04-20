@@ -84,7 +84,7 @@
                 v-if="copyFootNav.length <= 0"
                 style=""
                 class="flex items-center justify-center w-[52px] h-[52px]"
-                @click="editNavigation(drawerMenus[0])"
+                @click="editNav(drawerMenus[0])"
               >
                 <xt-new-icon
                   icon="fluent:add-16-regular"
@@ -170,7 +170,6 @@ import {
 } from "../../components/desk/navigationBar/index";
 import { useMergeFolder } from "../../components/desk/navigationBar/hook/mergeFolder.ts";
 import { Notifications } from "../../js/common/sessionNotice";
-import { startApp } from "../../ui/hooks/useStartApp";
 import { defaultFolderData } from "../../apps/folder/src/components/options";
 import { hoverRealItemId } from "../desk/navigationBar/hook/hoverRealItemId";
 import { mergeData } from "../../ui/hooks/useDataConversion";
@@ -488,7 +487,7 @@ export default {
      * 打开菜单选项
      * @param {*} item
      */
-    editNavigation(item) {
+    editNav(item) {
       if (item.component) {
         this.componentId = item.component;
         if (item.component === "EditNewNavigation") {
@@ -547,22 +546,10 @@ export default {
     updateLayout(value) {
       this.currentItem.layout = value;
     },
-    showElement(item, index) {
-      this.currentItem = item;
-      this.currentIndex = index;
-    },
-    /**
-     * 打开桌面应用提示
-     * @param {*} item 当前图标
-     */
-    msgNotice(item) {
-      if (item.type === "tableApp") {
-        message.loading({
-          content: `打开「${item.name}」...`,
-          key: "tipRun",
-        });
-      }
-    },
+    // showElement(item, index) {
+    //   this.currentItem = item;
+    //   this.currentIndex = index;
+    // },
     openCard(item) {
       if(this.floatCard.cardData?.customIndex !== item.cardData?.customIndex && this.floatCard !== undefined) {
         this.floatCard = item
@@ -574,60 +561,7 @@ export default {
       }
       this.floatCardVisible = !this.floatCardVisible
     },
-    /**
-     * 打开应用
-     * @param {*} item 图标详细信息
-     */
-    async newOpenApp(item, e) {
-      const { type, value } = item;
-      if (type === "card") {
-        this.openCard(item)
-      }
-      if (type !== "card") {
-        this.floatCardVisible = false
-      }
-      if (type !== "folder") {
-        this.folderVisible = false;
-      }
-      if ( value !== 'commun') {
-        this.comVisible = false
-      }
-      // 更新鼠标定位
-      this.resetElementPosition();
-      if (value === "control") {
-        this.$emit("control", e);
-        return;
-      }
-      if (value === "setting") {
-        this.$bus.emit("openSystemSet");
-        return;
-      }
-      if (value === "commun") {
-        this.comVisible = !this.comVisible;
-        return;
-      }
-      if (type === "folder") {
-        this.openFolder(item);
-      }
-      if (value == "fullscreen" && window.$useEnv()) {
-        toggle();
-        return;
-      }
-      if (window.$useEnvLimit("web", value)) return;
 
-      this.msgNotice(item);
-      if (value === "home" && item.home) {
-        this.jumpDesk = item.home;
-      }
-      let rs = await startApp(type, value, this.$router);
-      if (!rs) {
-        message.error({
-          content: `打开「${item.name}」失败`,
-          key: "tipRun",
-        });
-      }
-      this.comVisible = false;
-    },
 
     /**
      * 解散文件夹和切换文件夹

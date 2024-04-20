@@ -5,7 +5,7 @@ function mainMenus() {
       newIcon: "fluent:add-16-regular",
       name: "添加导航图标",
       fn: () => {
-        this.editNavigation(this.drawerMenus[0]);
+        this.editNav(this.drawerMenus[0]);
       },
     },
     {

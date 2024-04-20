@@ -1,3 +1,7 @@
+import { message } from "ant-design-vue";
+import { useFullscreen } from "@vueuse/core";
+import { startApp } from "../../../ui/hooks/useStartApp";
+const { isFullscreen, toggle } = useFullscreen();
 function iconMenus() {
   return [
     {
@@ -13,7 +17,7 @@ function iconMenus() {
       label: "编辑",
       newIcon: "fluent:compose-16-regular",
       callBack: () => {
-        this.editIcon(this.currentItem);
+        this.editNav(this.currentItem);
       },
     },
     {
@@ -34,7 +38,7 @@ function iconMenus() {
       label: "添加导航图标",
       newIcon: "fluent:add-16-regular",
       callBack: () => {
-        this.editNavigation(this.drawerMenus[0]);
+        this.editNav(this.drawerMenus[0]);
       },
     },
     {
@@ -66,6 +70,82 @@ export default {
         return "6x4";
       }
     },
+  },
+  methods: {
+    /**
+     * 打开桌面应用提示
+     * @param {*} item 当前图标
+     */
+    msgNotice(item) {
+      if (item.type === "tableApp") {
+        message.loading({
+          content: `打开「${item.name}」...`,
+          key: "tipRun",
+        });
+      }
+    },
+    /**
+     * 打开应用
+     * @param {*} item 图标详细信息
+     */
+    async newOpenApp(item, e) {
+      const { type, value } = item;
+      if (type === "card") {
+        this.openCard(item);
+      }
+      if (type !== "card") {
+        this.floatCardVisible = false;
+      }
+      if (type !== "folder") {
+        this.folderVisible = false;
+      }
+      if (value !== "commun") {
+        this.comVisible = false;
+      }
+      // 更新鼠标定位
+      this.resetElementPosition();
+      if (value === "control") {
+        this.$emit("control", e);
+        return;
+      }
+      if (value === "setting") {
+        this.$bus.emit("openSystemSet");
+        return;
+      }
+      if (value === "commun") {
+        this.comVisible = !this.comVisible;
+        return;
+      }
+      if (type === "folder") {
+        this.openFolder(item);
+      }
+      if (value == "fullscreen" && window.$useEnv()) {
+        toggle();
+        return;
+      }
+      if (window.$useEnvLimit("web", value)) return;
 
+      this.msgNotice(item);
+      if (value === "home" && item.home) {
+        this.jumpDesk = item.home;
+      }
+      let rs = await startApp(type, value, this.$router);
+      if (!rs) {
+        message.error({
+          content: `打开「${item.name}」失败`,
+          key: "tipRun",
+        });
+      }
+      this.comVisible = false;
+    },
+    /**
+     * 当前选中的元素
+     * @param item 元素
+     * @param index 索引
+     */
+    showElement(item, index) {
+      this.currentItem = item;
+      this.currentIndex = index;
+    },
   },
 };
