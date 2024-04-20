@@ -64,7 +64,7 @@ const checkMainFest = async (id) => {
     };
   }
   const main = modules?.main;
-  let weak = ["width", "height",'entry'];
+  let weak = ["width", "height", "entry"];
   let strong = [];
   let obj = {
     weak,
@@ -106,7 +106,7 @@ const checkCard = async (card) => {
   // 遍历card
 
   for (const item of card) {
-    let weak = ["size",entry];
+    let weak = ["size", "entry"];
 
     let strong = [
       {
