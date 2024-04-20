@@ -73,7 +73,7 @@ import ScalePanel from "./ScalePanel.vue";
 import GuidePanel from "./GuidePanel.vue";
 
 import WebLogin from "./WebLogin.vue";
-import GalleryModal from "../components/paperModal/GalleryModal.vue";
+import GalleryModal from "../components/paperModal/PaperApp.vue";
 import { taskStore } from "../apps/task/store";
 import navigationData from "../js/data/tableData";
 import { navStore } from "../store/nav";
