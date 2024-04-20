@@ -160,6 +160,7 @@ export default {
     };
   },
   async mounted() {
+
     Promise.all([
       // 这个没走db 单独处理
       browserStore().bindIPC(),
@@ -190,7 +191,7 @@ export default {
         let check = !window.loadedStore[key];
         if (window.loadedStore[key] === false) return check;
       });
-      console.log('haventOk :>> ', haventOk);
+      console.log("haventOk :>> ", haventOk);
       //已经全部搞定
       if (haventOk.length <= 0) {
         console.log("确认完成加载 :>> ");
@@ -252,7 +253,7 @@ export default {
       localStorage.setItem("wizarded", "1");
     },
     enter() {
-      console.log('1111 :>> ', 1111);
+      console.log("1111 :>> ", 1111);
       clearTimeout(this.timeoutHandler); //清理掉超时提示
       // chatStore().login();
       if (localStorage.getItem("wizarded")) {
@@ -281,8 +282,8 @@ export default {
           } else {
             this.$router.replace(currentRoute);
           }
-        }else {
-          console.log('2222 :>> ', 2222);
+        } else {
+          console.log("2222 :>> ", 2222);
           this.$router.replace({ name: "home" });
         }
       }
@@ -344,12 +345,13 @@ export default {
     },
 
     loginOk() {
-      // 首次web端引导
-      if (!this.init && this.$useEnv("web")) {
-        this.finishWizard();
-        this.visibleWeb = true;
-        return;
-      }
+      // // 首次web端引导
+      // if (!this.init && this.$useEnv("web")) {
+      //   console.log("2222 :>> ", 2222);
+      //   this.finishWizard();
+      //   this.visibleWeb = true;
+      //   return;
+      // }
       // 首次客户端引导
       if (!this.init && isMain()) {
         this.$router.replace({ name: "wizard" });

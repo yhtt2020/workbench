@@ -30,7 +30,7 @@ const routes = [
   },
   {
     path:'/splash',
-    name:'splash1',
+    name:'splash',
     component: Splash
   },
 
