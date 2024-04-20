@@ -198,10 +198,11 @@ const props = defineProps({
     },
   },
   secondary: {},
+  // 导航栏特定设置
   navBar: {
     type: Object,
     default: () => ({
-      // 右下角图标显示
+      // 右下角自定义大小图标显示
       resize: true,
       // 设置中尺寸大小选择
       sizeOption: true,
@@ -209,7 +210,7 @@ const props = defineProps({
       bg: true,
       // 隐藏删除小组件选项
       isDel: false,
-      // 隐藏层级选择
+      // 隐藏当桌面为自由桌面时，上置下置层级选择
       hierarchy: false,
       // 点击文件夹外部关闭
       close: Boolean,
@@ -308,9 +309,9 @@ const options = computed(() => {
   return {
     defaultData: defaultFolderData,
     bg: isDrag.value ? "var(--active-secondary-bg) " : "",
-    // 隐藏删除
+    // 当位于导航栏时，隐藏删除选项
     disabledDelete: navBar.value.isDel,
-    // 隐藏层级
+    // 当位于导航栏时，且桌面为自由桌面时，隐藏上置下置层级
     hierarchy: navBar.value.hierarchy,
     // 二级
     secondary: {
@@ -320,6 +321,8 @@ const options = computed(() => {
     modalSize: modalSize.value,
     customDel: true,
     rightMenuVisible: navBar.value.customRight,
+    // 隐藏菜单中添加到导航栏的选项
+    disabledNav: true,
   };
 });
 
