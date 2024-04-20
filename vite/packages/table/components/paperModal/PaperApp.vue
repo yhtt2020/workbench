@@ -1,17 +1,22 @@
-<!-- 壁纸应用弹窗 -->
+<!-- 壁纸应用弹窗外壳 -->
 <template>
-  <div></div>
+  <PaperModalContent ref="paperContentRef" />
 </template>
 
 <script setup>
+import { ref } from "vue";
 
-const openPaperAppModal = () =>{}
+import PaperModalContent from "./PaperModalContent.vue";
 
+const paperContentRef = ref(null);
+
+const openPaperAppModal = () => {
+  paperContentRef.value.openContentModal();
+};
 
 defineExpose({
-  openPaperAppModal
-})
-
+  openPaperAppModal,
+});
 </script>
 
 <style lang="scss" scoped>
