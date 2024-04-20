@@ -107,7 +107,7 @@
             type="primary"
             size="large"
             class="m-3"
-            @click="goDirect"
+            @click="loginOk"
             >开始使用</a-button
           >
         </div>
@@ -166,27 +166,27 @@ export default {
       this.bindIPC(),
       //启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成
       //注意，此处的第二个参数，必须和此store同名，尤其注意有些命名里带了store的
-      await captureStore(),
-      await this.initStore(appStore, "appStore"),
-      await this.initStore(codeStore, "code"),
-      await this.initStore(cardStore, "cardStore"),
-      await this.initStore(weatherStore, "weather"),
-      await this.initStore(paperStore, "paper"),
-      await this.initStore(deckStore, "deck"),
-      await this.initStore(screenStore, "screen"),
-      await this.initStore(teamStore, "teamStore"),
-      await this.initStore(navStore, "nav"),
-      await this.initStore(taskStore, "task"),
-      await this.initStore(useWidgetStore, "useWidgetStore"),
-      await this.initStore(offlineStore, "offlineStore"),
-      await this.initStore(clipboardStore, "clipboardStore"),
+      captureStore(),
+      this.initStore(appStore, "appStore"),
+      this.initStore(codeStore, "code"),
+      this.initStore(cardStore, "cardStore"),
+      this.initStore(weatherStore, "weather"),
+      this.initStore(paperStore, "paper"),
+      this.initStore(deckStore, "deck"),
+      this.initStore(screenStore, "screen"),
+      this.initStore(teamStore, "teamStore"),
+      this.initStore(navStore, "nav"),
+      this.initStore(taskStore, "task"),
+      this.initStore(useWidgetStore, "useWidgetStore"),
+      this.initStore(offlineStore, "offlineStore"),
+      this.initStore(clipboardStore, "clipboardStore"),
     ]);
     // 新增一个定时器 用于异常情况清空loading
     this.timeout = setTimeout(() => {
       this.launching = false;
     }, 5000);
 
-    setTimeout(() => {
+   setTimeout(() => {
       this.storeReadyTimer = setInterval(() => {
         let haventOk = Object.keys(window.loadedStore).filter((key) => {
           let check = !window.loadedStore[key];
