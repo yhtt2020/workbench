@@ -89,6 +89,7 @@ import { mergeData } from "../ui/hooks/useDataConversion";
 import { useEnv } from "../ui/hooks/useEnv";
 import { usePermissionStore } from "../permission/store";
 import cache from "../components/card/hooks/cache";
+import { isMain } from "../js/common/screenUtils";
 let steamUser,
   steamSession,
   path,
@@ -187,7 +188,7 @@ export default {
       "footNavigationList",
       "rightNavigationList",
       "copyFootNav",
-      "init",
+      // "init",
       "leftNavInit",
       "rightNavInit",
       "footNavInit",
@@ -215,6 +216,8 @@ export default {
       "visibleGuide",
       "showGuide",
       "guideList",
+      "userInfo",
+      "init",
     ]),
 
     ...mapWritableState(appStore, {
@@ -268,13 +271,17 @@ export default {
     },
   },
   async mounted() {
-    // 覆写当前工作台状态
-    this.isOffline = cache.get('isOffline')
-    this.isSingle = cache.get('isSingle')
-    this.isGuest = cache.get('isGuest')
-    this.replaceIcon(this.sideNavigationList, this.leftNavInit);
-    this.replaceIcon(this.rightNavigationList, this.rightNavInit);
-    this.replaceIcon(this.copyFootNav, this.footNavInit);
+    // 每次进来需要设置工作台目前处于状态
+    this.setStatus()
+
+    // 用于桌面初始化 组件 
+    this.componentInit()
+
+    // 首次客户端引导
+    if (!this.init && isMain()) {
+      this.$router.replace({ name: "wizard" });
+    }
+
     let n = 0;
     let timer = setInterval(() => {
       if (n > 3) {
@@ -289,18 +296,6 @@ export default {
       this.replaceIcon(this.copyFootNav, this.footNavInit);
       n++;
     }, 2000);
-    // 判断是否是第一次加载
-    if (this.deskInit) {
-      this.deskInit = false;
-      this.initTask();
-      // 配置向导 之后的行为
-      this.addFreeLayoutDesk();
-      if (!useEnv("web")) {
-        this.visibleScale = true;
-      } else {
-        this.visibleWeb = true;
-      }
-    }
 
     this.$bus.on("customDesk", () => {
       console.log("定制桌面", this.visibleGuide);
@@ -429,6 +424,36 @@ export default {
         };
       }
     },
+
+    // 覆写当前工作台状态
+    setStatus(){
+      this.isOffline = cache.get('isOffline')
+      this.isSingle = cache.get('isSingle')
+      this.isGuest = cache.get('isGuest')
+      this.replaceIcon(this.sideNavigationList, this.leftNavInit);
+      this.replaceIcon(this.rightNavigationList, this.rightNavInit);
+      this.replaceIcon(this.copyFootNav, this.footNavInit);
+    },
+
+    // 
+    componentInit(){
+      // 判断是否是第一次加载
+      if (this.deskInit) {
+        this.deskInit = false;
+        // 初始化任务
+        this.initTask();
+        // 初始化桌面
+        this.addFreeLayoutDesk();
+        if (!useEnv("web")) {
+          // 非web端打开缩放提示弹窗
+          this.visibleScale = true;
+        } else {
+          // web端打开功能介绍提示弹窗
+          this.visibleWeb = true;
+        }
+      }
+    },
+
     doAddDesk() {
       if (this.deskTitle.trim() === "") {
         message.error("请输入新桌面名称");

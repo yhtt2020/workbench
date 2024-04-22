@@ -6,7 +6,7 @@ import { chatStore } from "../../store/chat";
 import { getUserInfo } from "../api/login";
 import { useLogout, useClearUserInfo } from "./useLogout";
 import { setLV } from "./useUtils";
-// import { usePermissionStore } from "../store";
+import { usePermissionStore } from "../store";
 // import { storeToRefs } from "pinia";
 /**
  * 用户许可
