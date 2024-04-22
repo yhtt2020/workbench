@@ -60,12 +60,12 @@ const router = useRouter();
 
 const currentChatType = computed(() => {
   console.log('计算属性判断',currentContact.value.type === 'group');
-  /**判断当前是否选中会话列表**/ 
+  /**有状态就以状态为准进行会话切换**/ 
   if(currentContact.value.type === 'group' && currentContact.value.groupID !== ""){
     const name = currentContact.value.groupID;
     TUIConversationService?.switchConversation(name);
   }
-  /**默认选择第一个会话列表**/ 
+  /**没有状态就默认选择会话列表中的第一个会话**/ 
   else if(currentContact.value.type === 'group' && currentContact.value.groupID === ""){
     // 当前list是获取所有群聊会话列表
     const list = TUIStore?.storeMap?.conversation?.store?.conversationList;
