@@ -8,13 +8,17 @@ export const contactStore = defineStore("contact", {
       type: 'group',
       groupID:""
     },
+    /**设置通讯录模块的折叠**/
+    setting:{
+      isCollapse:false,
+    } 
   }),
   actions: {},
   persist: {
     enabled: true,
     strategies: [
       {
-        paths: ['currentContact'],
+        paths: ['currentContact','setting'],
         storage: localStorage,
       },
     ],

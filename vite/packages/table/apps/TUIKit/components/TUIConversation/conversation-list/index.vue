@@ -38,6 +38,8 @@
             群聊走conversation?.groupProfile?.avatar
             好友走conversation?.userProfile?.avatar
             来处理IM自定义的头像
+             :borderRadius="conversation?.type === 'GROUP' ? '5px':'50%'"
+             群聊是正方形,好友是圆形
           -->
           <Avatar
             useSkeletonAnimation
@@ -47,6 +49,7 @@
                 : conversation?.userProfile?.avatar
             "
             size="30px"
+            :borderRadius="conversation?.type === 'GROUP' ? '5px':'50%'"
           />
           <div
             v-if="userOnlineStatusMap && isShowUserOnlineStatus(conversation)"

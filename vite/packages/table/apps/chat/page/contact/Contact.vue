@@ -2,41 +2,62 @@
 <template>
   <!-- 这部分是最新调整 -->
   <div class="flex w-full justify-between flex-col">
-    <span class="w-full xt-font xt-text font-14 mb-3">通讯录</span>
-    <template v-for="item in leftTab">
-      <div
-        class="w-full flex pl-2 pr-2 pt-2.5 pb-2.5 mb-2 items-center pointer rounded-lg justify-between contact-item"
-        :class="{ select: currentContact.type === item.type }"
-        @click="changeContact(item)"
-      >
-        <div class="mr-3 rounded-lg flex items-center justify-center">
-          <xt-ify-icon :icon="item.icon" size="16" class="xt-text-2 mr-2" />
-          <span class="xt-text-2 xt-font font-14"> {{ item.title }}</span>
+    <div class="flex w-full justify-between items-center">
+      <span class="w-full xt-font xt-text font-14 mb-3">通讯录</span>
+      <xt-button style="width: auto !important" h="0" @click="clickCollapse">
+        <div class="flex items-center justify-center">
+          <xt-ify-icon
+            icon="fluent:caret-down-16-filled"
+            v-if="!setting.isCollapse"
+            size="20"
+            class="xt-text"
+          />
+          <xt-ify-icon
+            icon="fluent:caret-up-16-filled"
+            size="20"
+            class="xt-text"
+            v-else
+          />
         </div>
-        <template v-if="item.type === 'contact-group'">
-          <span class="xt-text-2 xt-font font-14">
-            {{ groupList?.length }}
-          </span>
-        </template>
+      </xt-button>
+    </div>
 
-        <template v-else-if="item.type === 'contact-friend'">
-          <span class="xt-text-2 xt-font font-14">
-            {{ currentFriendList?.length }}
-          </span>
-        </template>
-
-        <template v-else-if="item.type === 'contact-notice'">
-          <span class="xt-text-2 xt-font font-14">
-            {{ noticeList?.length }}
-          </span>
-        </template>
-
-        <template v-else-if="item.type === 'contact-community'">
-          <span class="xt-text-2 xt-font font-14">
-            {{ community?.length }}
-          </span>
-        </template>
-      </div>
+    <template v-if="!setting.isCollapse">
+      <template v-for="item in leftTab">
+        <div
+          class="w-full flex pl-2 pr-2 pt-2.5 pb-2.5 mb-2 items-center pointer rounded-lg justify-between contact-item"
+          :class="{ select: currentContact.type === item.type }"
+          @click="changeContact(item)"
+        >
+          <div class="mr-3 rounded-lg flex items-center justify-center">
+            <xt-ify-icon :icon="item.icon" size="16" class="xt-text-2 mr-2" />
+            <span class="xt-text-2 xt-font font-14"> {{ item.title }}</span>
+          </div>
+          <template v-if="item.type === 'contact-group'">
+            <span class="xt-text-2 xt-font font-14">
+              {{ groupList?.length }}
+            </span>
+          </template>
+  
+          <template v-else-if="item.type === 'contact-friend'">
+            <span class="xt-text-2 xt-font font-14">
+              {{ currentFriendList?.length }}
+            </span>
+          </template>
+  
+          <template v-else-if="item.type === 'contact-notice'">
+            <span class="xt-text-2 xt-font font-14">
+              {{ noticeList?.length }}
+            </span>
+          </template>
+  
+          <template v-else-if="item.type === 'contact-community'">
+            <span class="xt-text-2 xt-font font-14">
+              {{ community?.length }}
+            </span>
+          </template>
+        </div>
+      </template>
     </template>
   </div>
 
@@ -89,7 +110,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import {
   TUIStore,
   StoreName,
@@ -108,7 +129,7 @@ const chat = window.$chat.chat;
 
 const contact = contactStore();
 const app = appStore();
-const { currentContact } = storeToRefs(contact);
+const { currentContact, setting } = storeToRefs(contact);
 const { userInfo } = storeToRefs(app);
 
 const groupList = ref([]);
@@ -133,11 +154,12 @@ const leftTab = ref([
     icon: "fluent:emoji-smile-slight-24-regular",
     type: "contact-friend",
   },
-  {
-    title: "组织",
-    type: "contact-community",
-    icon: "fluent:people-community-16-regular",
-  },
+  /**后期开发再放开**/
+  // {
+  //   title: "组织",
+  //   type: "contact-community",
+  //   icon: "fluent:people-community-16-regular",
+  // },
 ]);
 
 const changeContact = (item) => {
@@ -162,6 +184,11 @@ const getContact = () => {
       currentFriendList.value = filterData;
     },
   });
+};
+
+/**隐藏通讯录**/
+const clickCollapse = () => {
+  setting.value.isCollapse = !setting.value.isCollapse;
 };
 
 onMounted(() => {
