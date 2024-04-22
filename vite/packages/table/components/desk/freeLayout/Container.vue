@@ -8,7 +8,6 @@ import {
   onBeforeUnmount,
   getCurrentInstance,
 } from "vue";
-import { vIntersection } from "./useIntersection";
 import { storeToRefs } from "pinia";
 import { useFreeLayoutStore } from "./store";
 import { message } from "ant-design-vue";
