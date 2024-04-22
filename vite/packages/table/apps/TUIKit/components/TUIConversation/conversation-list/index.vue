@@ -99,7 +99,10 @@
                 >{{ conversation.getGroupAtInfo() }}</span
               >
               <p class="middle-box-content">
-                {{ conversation.getLastMessage("text") }}
+                <!-- 新代码将通过好友列表添加的字样进行清除 -->
+                {{ text(conversation) }}
+                <!-- 旧代码 -->
+                <!-- {{ conversation.getLastMessage("text") }} -->
               </p>
             </div>
           </div>
@@ -129,6 +132,8 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from "vue";
+
 interface IUserStatus {
   statusType: number;
   customStatus: string;
@@ -272,6 +277,27 @@ const getActionsMenuPosition = (event: Event, index: number) => {
 const enterConversationChat = (conversationID: string) => {
   emits("handleSwitchConversation", conversationID);
   TUIConversationService.switchConversation(conversationID);
+};
+
+const text = (conversation: any) => {
+  if(conversation.type === 'GROUP'){
+    return `${
+      conversation.lastMessage?.nick
+        ? conversation.lastMessage?.nick
+        : conversation.lastMessage?.fromAccount
+    }:${
+      conversation.lastMessage?.payload?.text
+        ? conversation.lastMessage?.payload?.text
+        : conversation.lastMessage?.messageForShow
+    }`;
+  }
+  else {
+    return  `${ conversation.userProfile?.nick }: ${
+      conversation.lastMessage?.payload?.text
+        ? conversation.lastMessage?.payload?.text
+        : conversation.lastMessage?.messageForShow
+    }`;
+  }
 };
 
 // 暴露给父组件，当监听到滑动事件时关闭actionsMenu
