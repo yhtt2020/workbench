@@ -163,6 +163,7 @@
 import { ref, computed, getCurrentInstance } from "vue";
 import { storeToRefs } from "pinia";
 import { chatCommunityStore } from "../../store/chatCommunity";
+import { useGlobalStore } from "../../../Global/store";
 
 import OfficialDropdown from "../dropdown/Dropdown.vue";
 import TreeFold from "../tree/TreeFold.vue";
@@ -171,6 +172,8 @@ import FloatItem from "./FloatItem.vue";
 const { proxy } = getCurrentInstance();
 const chatCommunity = chatCommunityStore();
 const { setting, defaultOfficialList } = storeToRefs(chatCommunity);
+const globalStore = useGlobalStore();
+const { loginVisible } = storeToRefs(globalStore);
 
 // ref定义区域
 const textUrl = ref(
@@ -280,10 +283,28 @@ const handleUpdateCollapse = (data) => {
     },
   ];
 };
+/**提示登录弹窗**/ 
+const loginTip = () => {
+  window.$ui.confirm("登录提示", "目前处于游客模式，请登录后体验完整功能。", {
+    ok: () => {
+      loginVisible.value = true;
+    },
+    okText: "立即登录",
+    noText: "暂不登录",
+    type:'warning',
+    okButtonWidth: "95",
+    noButtonWidth: "95",
+  });
+};
 
 // 点击当前左侧列表
 const officialClick = (data) => {
-  proxy.$bus.emit("handleOfficalClick", data);
+  if(!window.$useEnv("guest")){
+    proxy.$bus.emit("handleOfficalClick", data);
+  }
+  else {
+    loginTip();
+  }
 };
 </script>
 

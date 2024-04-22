@@ -183,6 +183,12 @@ const joinGroup = async (group) => {
     if (res.data.status === "WaitAdminApproval") {
       message.success("入群申请已发出,等待群主和管理员审核");
     }
+    else if(res.data.status === "JoinedSuccess"){
+      message.success("群聊添加成功")
+    }
+    else if(res.data.status === "AlreadyInGroup"){
+      message.success("已经在群聊中")
+    }
     completeTask("Z0601");
     closeAdd();
   }

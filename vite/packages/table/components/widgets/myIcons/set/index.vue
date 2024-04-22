@@ -60,9 +60,9 @@
           />
         </div>
         <!-- systemApp -->
-        <xt-option-from :options="appearanceNameOptions" :data="edit" />
-        <xt-option-from :options="appearanceOptions" :data="edit" />
-        <xt-option-from :options="appearanceColorOptions" :data="edit" />
+        <Form :options="appearanceNameOptions" :data="edit" />
+        <Form :options="appearanceOptions" :data="edit" />
+        <Form :options="appearanceColorOptions" :data="edit" />
       </div>
     </div>
   </xt-modal>
@@ -79,6 +79,7 @@ import {
   onMounted,
   onBeforeUnmount,
   getCurrentInstance,
+  defineAsyncComponent
 } from "vue";
 import { myIcons } from "../../../../store/myIcons";
 import Icon from "../components/icon.vue";
@@ -90,6 +91,9 @@ import {
   appearanceColorOptions,
 } from "./options";
 import { getHostAddress } from "../edit/hooks/getHostAddress";
+
+// 手动引入通用表单组件
+const Form = defineAsyncComponent(() => import("../../../../ui/new/optionForm/src/Form.vue"))
 const { proxy } = getCurrentInstance();
 
 const iconStore = myIcons();
@@ -186,6 +190,7 @@ watch(
 ),
   onBeforeUnmount(() => {});
 
+// 监听图标路径
 watch(
   () => edit.value.value,
   (newV, oldV) => {
@@ -195,6 +200,15 @@ watch(
     }
   }
 );
+
+// 监听图标打开方式
+watch(
+  () => edit.value.type,
+  (newV, oldV) => {
+    edit.value.open.type = newV
+    console.log(newV,edit.value.open.type)
+  }
+)
 /**
  * 恢复默认图标
  */

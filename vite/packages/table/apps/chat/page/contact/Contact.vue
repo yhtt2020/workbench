@@ -17,14 +17,14 @@
           </div>
           <span class="xt-text xt-font font-16">
             {{ item.title }}
-            <template v-if="item.type === 'group' &&  groupList.length !== 0">
-              ({{ groupList.length }})
+            <template v-if="item.type === 'group' &&  groupList?.length !== 0">
+              ({{ groupList?.length }})
             </template>
-            <template v-else-if="item.type === 'friend' &&  currentFriendList.length  !== 0">
-              ({{ currentFriendList.length }})
+            <template v-else-if="item.type === 'friend' &&  currentFriendList?.length  !== 0">
+              ({{ currentFriendList?.length }})
             </template>
-            <template v-else-if="item.type === 'notice' && noticeList.length !== 0">
-              ({{ noticeList.length }})
+            <template v-else-if="item.type === 'notice' && noticeList?.length !== 0">
+              ({{ noticeList?.length }})
             </template>
           </span>
         </div>

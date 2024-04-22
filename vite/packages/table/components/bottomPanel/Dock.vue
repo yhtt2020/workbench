@@ -84,7 +84,7 @@
                 v-if="copyFootNav.length <= 0"
                 style=""
                 class="flex items-center justify-center w-[52px] h-[52px]"
-                @click="editNavigation(drawerMenus[0])"
+                @click="editNav(drawerMenus[0])"
               >
                 <xt-new-icon
                   icon="fluent:add-16-regular"
@@ -171,7 +171,6 @@ import {
 } from "../../components/desk/navigationBar/index";
 import { useMergeFolder } from "../../components/desk/navigationBar/hook/mergeFolder.ts";
 import { Notifications } from "../../js/common/sessionNotice";
-import { startApp } from "../../ui/hooks/useStartApp";
 import { defaultFolderData } from "../../apps/folder/src/components/options";
 import { hoverRealItemId } from "../desk/navigationBar/hook/hoverRealItemId";
 import { mergeData } from "../../ui/hooks/useDataConversion";
@@ -186,6 +185,8 @@ import Team from "./Team.vue";
 import FloatCard from "../windowPanel/components/FloatCard.vue";
 import FloatFolder from "../windowPanel/components/FloatFolder.vue";
 
+import menuMin from "../windowPanel/hook/menu";
+
 const {
   //是否全屏状态
   isFullscreen,
@@ -196,6 +197,7 @@ const {
 export default {
   name: "BottomPanel",
   emits: ["getDelIcon", "hiedNavBar", "edit", "control", "getHoverIndex", "update:isOpen"],
+  mixins: [menuMin],
   components: {
     EditIcon,
     Avatar,
@@ -217,56 +219,6 @@ export default {
       delNav: false,
       drawerMenus: [...extraRightMenu, ...moreMenus],
       componentId: "EditNavigationIcon",
-      iconMenus: [
-        {
-          id: 1,
-          newIcon: "fluent:open-16-regular",
-          label: "打开",
-          callBack: () => {
-            this.newOpenApp(this.currentItem);
-          },
-        },
-        {
-          id: 2,
-          label: "编辑",
-          newIcon: "fluent:compose-16-regular",
-          callBack: () => {
-            this.editNavigation(this.currentItem);
-          },
-        },
-        {
-          id: 3,
-          label: "删除",
-          newIcon: "fluent:delete-16-regular",
-          color: "#FF4D4F",
-          callBack: () => {
-            this.deleteIcon(this.currentItem,'foot');
-          },
-        },
-        {
-          id: 5,
-          divider: true,
-        },
-        {
-          id: 6,
-          label: "添加导航图标",
-          newIcon: "fluent:add-16-regular",
-          callBack: () => {
-            this.editNavigation(this.drawerMenus[0]);
-          },
-        },
-        {
-          id: 7,
-          label: "导航栏设置",
-          newIcon: "fluent:settings-16-regular",
-          callBack: () => {
-            this.$bus.emit("openSystemSet");
-            setTimeout(() => {
-              this.$bus.emit("selectSystemNav", 3);
-            }, 10);
-          },
-        },
-      ],
       currentIndex: null,
       currentItem: null,
       delItemIcon: false,
@@ -292,6 +244,7 @@ export default {
       floatCardVisible:false,
       floatCard:{},
       clickOutside:false,
+      sortId:'foot',
     };
   },
   props: {
@@ -382,21 +335,6 @@ export default {
         return arr.sort((a, b) => a.id - b.id);
       }
       return this.iconMenus;
-    },
-    /**
-     * 通过文件夹中数据的多少来自定义大小
-     */
-    resize() {
-      const length = this.folderList.length;
-      if (length <= 6) {
-        return "2x2";
-      } else if (length <= 12 && length > 6) {
-        return "3x3";
-      } else if (length <= 18 && length > 12) {
-        return "4x4";
-      } else {
-        return "6x4";
-      }
     },
     realXY() {
       return {
@@ -551,7 +489,7 @@ export default {
      * 打开菜单选项
      * @param {*} item
      */
-    editNavigation(item) {
+    editNav(item) {
       if (item.component) {
         this.componentId = item.component;
         if (item.component === "EditNewNavigation") {
@@ -610,26 +548,14 @@ export default {
     updateLayout(value) {
       this.currentItem.layout = value;
     },
-    showElement(item, index) {
-      this.currentItem = item;
-      this.currentIndex = index;
-    },
-    /**
-     * 打开桌面应用提示
-     * @param {*} item 当前图标
-     */
-    msgNotice(item) {
-      if (item.type === "tableApp") {
-        message.loading({
-          content: `打开「${item.name}」...`,
-          key: "tipRun",
-        });
-      }
-    },
+    // showElement(item, index) {
+    //   this.currentItem = item;
+    //   this.currentIndex = index;
+    // },
     openCard(item) {
-      if(this.floatCard.value !== item.value && this.floatCard !== undefined) {
+      if(this.floatCard.cardData?.customIndex !== item.cardData?.customIndex && this.floatCard !== undefined) {
         this.floatCard = item
-        // console.log(this.floatCard)
+        console.log(this.floatCard)
         this.$nextTick(() => {
           this.floatCardVisible = true
         })
@@ -637,60 +563,7 @@ export default {
       }
       this.floatCardVisible = !this.floatCardVisible
     },
-    /**
-     * 打开应用
-     * @param {*} item 图标详细信息
-     */
-    async newOpenApp(item, e) {
-      const { type, value } = item;
-      if (type === "card") {
-        this.openCard(item)
-      }
-      if (type !== "card") {
-        this.floatCardVisible = false
-      }
-      if (type !== "folder") {
-        this.folderVisible = false;
-      }
-      if ( value !== 'commun') {
-        this.comVisible = false
-      }
-      // 更新鼠标定位
-      this.resetElementPosition();
-      if (value === "control") {
-        this.$emit("control", e);
-        return;
-      }
-      if (value === "setting") {
-        this.$bus.emit("openSystemSet");
-        return;
-      }
-      if (value === "commun") {
-        this.comVisible = !this.comVisible;
-        return;
-      }
-      if (type === "folder") {
-        this.openFolder(item);
-      }
-      if (value == "fullscreen" && window.$useEnv()) {
-        toggle();
-        return;
-      }
-      if (window.$useEnvLimit("web", value)) return;
 
-      this.msgNotice(item);
-      if (value === "home" && item.home) {
-        this.jumpDesk = item.home;
-      }
-      let rs = await startApp(type, value, this.$router);
-      if (!rs) {
-        message.error({
-          content: `打开「${item.name}」失败`,
-          key: "tipRun",
-        });
-      }
-      this.comVisible = false;
-    },
 
     /**
      * 解散文件夹和切换文件夹

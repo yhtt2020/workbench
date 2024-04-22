@@ -5,7 +5,7 @@
     @click.stop="iconClick($event)"
     :style="[iconSize]"
   >
-    <xt-icon-show
+    <!-- <xt-icon-show
       v-if="!isIfy"
       v-model="src"
       :h="imgH"
@@ -22,7 +22,26 @@
       v-else
       :icon="src"
       :size="imgW"
+    /> -->
+    <xt-mix-icon
+      :type="isIfy"
+      v-model:icon="src"
+      :w="imgW"
+      :h="imgH"
+      :boxW="bgW"
+      :boxH="bgH"
+      :bg="bg"
+      :r="r"
+      :style="{ borderRadius: '12px', background: bg }"
+      :iconStyle="{ borderRadius: r }"
+      :class="'relative'"
     />
+    <img 
+      src="/public/icons/tag.png" 
+      alt="" 
+      class="absolute w-[30px]" 
+      style="top:-2px;right:-3px" 
+      v-if="isIfy === 'ify'">
     <!-- <div
       class="flex items-center justify-center w-full overflow-hidden xt-text no-drag rounded-xl"
       :style="[bgSize, backgroundState]"
@@ -148,7 +167,7 @@ export default {
       return this.imgState;
     },
     isIfy(){
-      return checkIsIfyIcon(this.src).value
+      return checkIsIfyIcon(this.src).value ? 'ify' : 'select'
     }
   },
   watch: {

@@ -8,14 +8,13 @@ import {
   defaultData,
 } from "../../../../../../ui/hooks/useDataConversion";
 import { useAddCard } from "../../../../../../hooks";
-import { tt } from "../../../../../../permission/global/global";
 export const installV2 = async (id?: string) => {
   const ttappStore = useTTAppStore();
   const { ttappData, ttappList }: any = storeToRefs(ttappStore);
   let res = await useInstallTTApp(id);
-  console.log("res :>> ", res);
+
+  let { data, code } = res;
   // 安装成功
-  const { data, code } = res;
   if (code === 200) {
     const { modules, ...restData } = data; // 使用解构赋值取出modules和其他属性
     let currentData: any = {
@@ -25,12 +24,9 @@ export const installV2 = async (id?: string) => {
 
     // 开辟一个数据存储对象
     ttappData.value[currentData.id] = {};
-
     // 处理logo路径
-    const logo = getAppImg(currentData.id, currentData.logo);
-
-    currentData._logo = logo;
-    // 如果有main模块
+    currentData._logo = getAppImg(currentData.id, currentData.logo);
+    // main模块
     if (currentData.main) {
       // 处理main路径
       let entry = currentData.main.entry;
@@ -40,7 +36,7 @@ export const installV2 = async (id?: string) => {
         currentData.main._entry = entry;
       }
     }
-    // 如果有card模块
+    // card模块
     if (currentData.card) {
       let card = currentData.card;
       card.map((item) => {
@@ -92,7 +88,7 @@ export const installV2 = async (id?: string) => {
       });
     }
   }
-  // 其他失败
+  // 安装失败
   else {
     message.error(data);
   }

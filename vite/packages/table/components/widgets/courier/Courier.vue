@@ -10,6 +10,7 @@
     :customData="customData"
     :menuList="menuList"
     :env="env"
+    
     ref="cardSlot"
     @delete="deleteCard">
     <div class="flex flex-col w-full h-full">
@@ -89,7 +90,7 @@ import CourierSetting from './courierModal/CourierSetting.vue'
 
 import { autoRefreshTime } from './courierModal/modalMock'
 import ui from './lib/courierUI'
-import { preHandle } from './lib/courierTool'
+import { preHandle, getOrderState } from './lib/courierTool'
 
 export default {
   name: '我的快递',
@@ -251,6 +252,19 @@ export default {
           ui.refreshAll(false)
         }, this.refreshInterval?.type)//this.refreshTimes[0].type)
       }
+    },
+    // 用于处理状态栏中快递数量的显示
+    reload (list) {
+      if (this.settings.courierStatus.currentStatus === 'followed') {
+        list = list.filter(li => {
+          return li.followed
+        })
+      } else {
+        list = list.filter(li => {
+          return getOrderState(li) !== 'signed' && getOrderState(li) !== 'canceled'
+        })
+      }
+      return list
     }
   },
   computed: {
@@ -322,8 +336,7 @@ export default {
       handler (newVal) {
         this.displayList = preHandle(this.orderList)
         this.displayList = this.displayList.slice(0, 10)
-        this.courierList = this.orderList
-        // console.log(this.courierList.length)
+        this.couriersList = this.reload(this.orderList)
       },
       immediate: true
     },
