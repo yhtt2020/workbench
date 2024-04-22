@@ -45,8 +45,8 @@ import XtButton from "../../ui/libs/Button/index.vue";
 import XtIfyIcon from "../../ui/new/IfyIcon/index";
 import { usePermissionStore } from "../store";
 import { storeToRefs } from "pinia";
-const permissionStore = usePermissionStore();
-const { token, userInfo } = storeToRefs(permissionStore);
+// const permissionStore = usePermissionStore();
+// const { token, userInfo } = storeToRefs(permissionStore);
 const loginVisible = ref(true);
 import { useGlobalStore } from "../../apps/global/store";
 import { useEnv } from "../useEnv";
@@ -66,7 +66,7 @@ onMounted(() => {
       if (currentToken) {
         console.log("token :>> ", currentToken);
         cache.set("ttUserToken", currentToken);
-        token.value = currentToken;
+        // token.value = currentToken;
    await useUserPermit();
         if (!useEnv("web")) {
           //如果是客户端，则执行同步主线程的操作
