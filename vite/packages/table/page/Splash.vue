@@ -82,7 +82,14 @@ export default {
       // timeout: null,
     };
   },
+  created() {
+    if (this.$useEnv("web")) {
+      this.$router.replace({ name: "home" });
+      return;
+    }
+  },
   async mounted() {
+    console.log('2222222 :>> ', 2222222);
     Promise.all([
       // 这个没走db 单独处理
       browserStore().bindIPC(),
@@ -273,14 +280,8 @@ export default {
     //   cache.set("isGuest", true);
     // },
   },
-  beforeDestroy() {
-    // clearTimeout(this.timeout);
-  },
+  beforeDestroy() {},
 };
 </script>
 
-<style>
-/* .ant-modal-body {
-  -webkit-app-region: no-drag;
-} */
-</style>
+<style></style>
