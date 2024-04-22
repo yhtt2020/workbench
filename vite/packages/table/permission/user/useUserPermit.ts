@@ -59,6 +59,7 @@ const setUserInfo = async () => {
  * 更新用户信息
  */
 export const useUpdateUserInfo = async () => {
+  const permissionStore = usePermissionStore();
   // 1 获取用户信息
   console.time("UserInfo Run Time");
 
@@ -73,13 +74,14 @@ export const useUpdateUserInfo = async () => {
   if (res.code !== 1000 && code !== 200) {
     useClearUserInfo();
     // 修改为离线状态
-    cache.set("isOffline", true);
+    permissionStore.setOffline(true);
     console.log("登录时错误信息 :>> ", res);
     return;
   }
   // 4 请求成功
   console.log("请求成功 :>> ");
-  cache.set("isOffline", false);
+  permissionStore.setOffline(false);
+  permissionStore.setGuest(false);
 
   let userData = data.data;
   // const permissionStore = usePermissionStore();
