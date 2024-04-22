@@ -164,11 +164,7 @@ export default {
             <!--              <xt-button type="theme">登记入库</xt-button>-->
             <!--            </div>-->
             <!--          </div>-->
-
-            <keep-alive>
               <RouterView></RouterView>
-            </keep-alive>
-
           </div>
           <div class=" flex-1 h-0" v-else>
             <RouterView :key="key"></RouterView>
