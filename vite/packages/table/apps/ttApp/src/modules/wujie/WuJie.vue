@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import WujieVue from "wujie-vue3";
 import { useTTAppStore } from "../../store";
-import { ref, onUnmounted, onMounted } from "vue";
+import { ref, onUnmounted, onMounted, watch } from "vue";
 
 import { useWuJiePlugins } from "./useWuJiePlugins";
 const ttappStore: any = useTTAppStore();
 
 const props = defineProps({
+  cardContainer: {},
   name: {
     default: "wujie",
     required: true,
@@ -24,11 +25,17 @@ const props = defineProps({
     required: true,
   },
 });
+const emit = defineEmits(["cardContainer"]);
 onMounted(() => {});
 const randomName = "" + Date.now();
-console.log("randomName :>> ", randomName);
+
 const { bus, setupApp, preloadApp, destroyApp } = WujieVue;
+bus.$on("card-data-change", () => {
+  console.log("数据更新 :>> ");
+  emit("cardContainer");
+});
 onUnmounted(() => {
+  bus.$clear();
   destroyApp(randomName);
 });
 
@@ -41,7 +48,6 @@ if (location.href.startsWith("tsbapp://")) {
 
 <template>
   <!-- :alive="true" -->
-
   <WujieVue
     height="100%"
     width="100%"
@@ -49,9 +55,8 @@ if (location.href.startsWith("tsbapp://")) {
     :name="randomName"
     :url="url"
     :attrs="attrs"
-    :plugins="[
-      useWuJiePlugins(id, id),
-    ]"
+    :props="{ cardContainer: cardContainer }"
+    :plugins="[useWuJiePlugins(id, id)]"
   />
 </template>
 <style lang="scss" scoped></style>

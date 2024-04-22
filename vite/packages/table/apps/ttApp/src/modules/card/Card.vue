@@ -15,11 +15,10 @@ const { modal } = storeToRefs(ttappStore);
 const loading = ref(true);
 // 卡片头部
 const cardHeader: any = ref({});
-const size = ref();
 const sizeList = ref();
 const data = ref();
 // 卡片状态 无数据、加载中、正常 对应的值分别为 noData、loading、normal
-const status = ref("loading");
+
 const id = ref();
 onMounted(async () => {
   loading.value = false;
@@ -35,15 +34,11 @@ onMounted(async () => {
   // 解析数据
   let options = useParserCard(res);
   cardHeader.value = options.header;
-  // 不存在自定义大小
-  if (!props.customData.customSize) {
-    props.customData.customSize = props.customData.size;
-  }
   let currentSize: any = useCardSize(props.customData.customSize);
-  size.value = {
-    width: currentSize.width + "px",
-    height: currentSize.height + "px",
-  };
+  // size.value = {
+  //   width: currentSize.width + "px",
+  //   height: currentSize.height + "px",
+  // };
 
   if (props.customData.sizeList) {
     sizeList.value = props.customData.sizeList.map((item: any) => {
@@ -55,7 +50,10 @@ onMounted(async () => {
   }
 
   loading.value = false;
+  // 是否加载滚动条
   nextTick(() => {
+    const scroll = props.customData.scroll;
+    if (scroll === false) return;
     perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {
       wheelPropagation: false,
     });
@@ -119,6 +117,16 @@ const menus = computed(() => {
   return list;
 });
 
+const container = ref({
+  // 头部
+  header: header.value,
+  // 右键菜单
+  menus: menus.value,
+  // 配置对象
+  options: options.value,
+  // 卡片尺寸
+});
+
 import PerfectScrollbar from "perfect-scrollbar";
 const scrollbar: any = ref(null);
 const perfectScrollbar: any = ref(null);
@@ -138,12 +146,12 @@ onUnmounted(() => {
   <xt-container
     :customIndex="customIndex"
     :customData="customData"
-    :header="header"
-    :menuList="menus"
-    :options="options"
-    v-model:customSize="customData.customSize"
+    :header="container.header"
+    :menuList="container.menus"
+    :options="container.options"
     :sizeList="sizeList"
     @resize="resize"
+    v-model:customSize="customData.customSize"
     v-if="data"
   >
     <template #header-left v-if="!loading">
@@ -161,6 +169,7 @@ onUnmounted(() => {
     >
       <WuJie
         v-if="!loading"
+        v-model:cardConfig="cardContainer"
         :url="customData._entry"
         :id="customData.parentId"
         :app-info="data"

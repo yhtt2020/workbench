@@ -168,10 +168,14 @@ export default {
       }
     },
     enter() {
+      console.log('enter :>> ', );
       // chatStore().login();
       if (localStorage.getItem("wizarded")) {
+        console.log('分支1 :>> ', );
         const currentRoute = appStore().currentRoute;
         if (currentRoute) {
+          console.log('分支1 - 1 :>> ', );
+
           if (["lock", "power", "splash"].includes(currentRoute.name) || true) {
             //阻止lock、power页面的自动跳转
             this.$router.replace({ name: "home" });
@@ -184,11 +188,14 @@ export default {
             }
           }
         } else {
+          console.log('分支1 - 2 :>> ', );
           this.$router.replace({ name: "home" });
         }
       } else {
+        console.log('分支2 :>> ', );
         // 处理分屏情况下默认读取不到存储的问题
         if (!isMain()) {
+          console.log('分支2 - 1 :>> ', );
           const currentRoute = appStore().currentRoute;
           if (currentRoute.name == "wizard" || currentRoute.name == "splash") {
             this.$router.replace({ name: "home" });
@@ -196,6 +203,7 @@ export default {
             this.$router.replace(currentRoute);
           }
         } else {
+          console.log('分支2 - 2 :>> ', );
           this.$router.replace({ name: "home" });
         }
       }
