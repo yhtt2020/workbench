@@ -50,14 +50,6 @@ if (location.href.startsWith("tsbapp://")) {
     :url="url"
     :attrs="attrs"
     :plugins="[
-      {
-        jsBeforeLoaders: [
-          {
-            // 子应用可以通过 window.tt 访问父应用的 tt 对象
-            content: 'window.tt = window.parent.tt',
-          },
-        ],
-      },
       useWuJiePlugins(id),
     ]"
   />

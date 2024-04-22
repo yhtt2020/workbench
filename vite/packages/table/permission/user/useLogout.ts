@@ -7,12 +7,12 @@ import { useToast } from "vue-toastification";
  */
 export const useLogout = () => {
   const userStore: any = appStore();
-  const permissionStore = usePermissionStore();
+  // const permissionStore = usePermissionStore();
   // 清空用户信息
   userStore.userInfo = "";
   // 清空pinia token
-  permissionStore.token = "";
-  permissionStore.userInfo = "";
+  // permissionStore.token = "";
+  // permissionStore.userInfo = "";
   // 清空本地 token
   cache.set("ttUserToken", "");
   // 清除群聊登录

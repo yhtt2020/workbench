@@ -667,9 +667,9 @@ export default {
     },
     newAddCard() {
       if (!this.showGuide) {
-        if (this.autoOpenEdit) {
-          this.toggleEditing();
-        }
+        // if (this.autoOpenEdit) {
+        //   this.toggleEditing();
+        // }
         this.addCardVisible = true;
         this.menuVisible = false;
       } else {
