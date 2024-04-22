@@ -43,7 +43,7 @@ const props = defineProps({
   },
   zIndex:{
     type:Number,
-    default:99,
+    default:99999999,
   },
   disabled:{
     type:Boolean,

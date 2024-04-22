@@ -22,7 +22,7 @@
     <div class="flex flex-col mb-4">
       <div class="bg-mask rounded-lg py-3 px-2 m-3 mx-5 mt-2 mb-2 "
            style="min-height: 24px;background: var(--primary-bg);color:var(--primary-text);">
-        个性签名：
+        个性签11名：
         {{ displayUserInfo.signature || '暂无签名' }}
       </div>
       <div class="bg-mask rounded-lg p-3 mx-5 m-3 mt-2 mb-0 "

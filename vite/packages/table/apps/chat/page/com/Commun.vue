@@ -325,6 +325,8 @@ const showDetail = async (index) => {
   await store.getCommunityPostDetail(tid);
   await store.getCommunityPostReply(tid);
 };
+
+// 详情页数据
 const detailText = computed(() => {
   if (store.communityPostDetail.pay_set === undefined) {
     detailVisible.value = false;
@@ -342,6 +344,8 @@ const closeDetail = (value) => {
   }
   updateScroller();
 };
+
+// 进度条相关操作
 onBeforeMount(async () => {
   NProgress.configure({ showSpinner: false });
   await NProgress.configure({ parent: ".container" });

@@ -41,20 +41,6 @@ export const yuanCommunityStore = defineStore("yuanCommunity", {
       }
       const res = await post(myForum)
       if (res.code === 200) {
-        // this.myForumList = this.getData(res.data.joined)
-        // const create=res.data.create.map((item)=>{
-        //   return {
-        //     id:item.id,
-        //     name:item.name
-        //   }
-        // })
-        // const joined=res.data.joined.map((item)=>{
-        //   return {
-        //     id:item.id,
-        //     name:item.name
-        //   }
-        // })
-        // [...joined,...create]
         this.myForumList = [...this.getData(res.data.joined),...this.getData(res.data.create)]
       }
 
@@ -84,6 +70,39 @@ export const yuanCommunityStore = defineStore("yuanCommunity", {
       }
       return data
     },
+    // 处理帖子数据
+    refreshData(data){
+      return {
+        fid: data.fid,  //版块id
+        author_id: data.author_id,  // 发帖人id
+        create_time: data.create_time,  // 发帖时间
+        id: data.id,  // 帖子id
+        forum:{
+          id:data.forum.id,  //版块id
+          name:data.forum.name,  //版块名称
+          logo:data.forum.logo  //版块logo
+        },
+        title:data.title,  //帖子标题
+        time:data.time,  //发帖时间
+        image_170_170:data.image_170_170,  //帖子图片*（缩略图）
+        image:data.image,  //帖子图片
+        is_collect:data.is_collect,  //是否收藏
+        is_support:data.is_support,  //是否点赞
+        reply_count:data.reply_count,  //回复数
+        summary:data.summary,  //帖子摘要
+        pc_summary:data.pc_summary,  //pc端帖子摘要
+        user:{
+          uid:data.user.uid,  //发帖人id
+          nickname:data.user.nickname,  //发帖人昵称
+          ip_home:data.user.ip_home,  //发帖人ip
+          avatar_64:data.user.avatar_64,  //发帖人头像
+          avatar:data.user.avatar  //发帖人头像
+        },
+        pay_set:{
+          tid:data.pay_set.tid  //帖子id
+        }  
+      }
+    },
     getData(data){
       const list=data.map((item)=>{
         return {
@@ -109,9 +128,14 @@ export const yuanCommunityStore = defineStore("yuanCommunity", {
       })
       if (res.code === 200) {
         // console.log(res.data,'返回数据')
-        this.communityPost = res.data.list
+        // this.communityPost = res.data.list
         // console.log(this.communityPost,'this.communityPost');
-        localCache.set(`communityPost_${id}-${page}-${type}`, this.communityPost, 60 * 60 * 12)
+        const list = res.data.list.map((item) => {
+          return this.refreshData(item)
+        })
+        this.communityPost = list
+        // console.log(this.communityPost,'this.communityPost');
+        localCache.set(`communityPost_${id}-${page}-${type}`, this.communityPost, 60 * 60 * 1)
       }
 
     },
