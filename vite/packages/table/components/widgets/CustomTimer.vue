@@ -8,7 +8,7 @@
     :customIndex="customIndex"
     @delete="deleteCard">
     <div class="absolute w-16 h-6 left-4 top-1 pointer"   @click="moveToday"></div>
-    <div style="border-bottom: solid 1px  rgba(255, 255, 255, 0.1);color:var(--primary-text) !important" class="my-calendar">
+    <div style="color:var(--primary-text) !important" class="my-calendar">
       <Calendar style="color:var(--primary-text) !important" :is-dark="isDark" :attributes="attributes"  transparent borderless  :color="selectedColor" ref="calendar">
       </Calendar>
     </div>
