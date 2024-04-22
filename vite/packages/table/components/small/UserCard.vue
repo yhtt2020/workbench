@@ -102,7 +102,7 @@
           color: var(--primary-text);
         "
       >
-        个性签名：
+        个性签22名：
         <div class="px-2" style="word-break: break-all; white-space: pre-wrap">
           {{ displayUserInfo.signature || "暂无签名" }}
         </div>
@@ -441,7 +441,7 @@ export default {
         console.log("需要检查");
         try {
           // 升级后调用IM的api方法
-          const chat = window.$chat.chat; 
+          const chat = window.$chat.chat;
           console.log([String(this.uid)]);
           let rs = await chat.checkFriend({
             userIDList: [String(this.uid)],
