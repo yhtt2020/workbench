@@ -3,7 +3,7 @@
   <!-- 这部分是最新调整 -->
   <div class="flex w-full justify-between flex-col">
     <div class="flex w-full justify-between items-center">
-      <span class="w-full xt-font xt-text font-14 mb-3">通讯录</span>
+      <span class="w-full xt-font xt-text font-14">通讯录</span>
       <xt-button style="width: auto !important" h="0" @click="clickCollapse">
         <div class="flex items-center justify-center">
           <xt-ify-icon
