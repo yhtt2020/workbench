@@ -2,12 +2,12 @@ import cache from "../../components/card/hooks/cache";
 import { appStore } from "../../store";
 import { chatStore } from "../../store/chat";
 
-import { useEnv } from "../useEnv";
+// import { useEnv } from "../useEnv";
 import { getUserInfo } from "../api/login";
 import { useLogout, useClearUserInfo } from "./useLogout";
 import { setLV } from "./useUtils";
-import { usePermissionStore } from "../store";
-import { storeToRefs } from "pinia";
+// import { usePermissionStore } from "../store";
+// import { storeToRefs } from "pinia";
 /**
  * 用户许可
  */
@@ -35,14 +35,13 @@ export const useUserPermit = async () => {
  */
 const setUserInfo = async () => {
   const userStore: any = appStore();
-  const permissionStore = usePermissionStore();
+  // const permissionStore = usePermissionStore();
   // 先判断用户信息是否存在，不存在进行赋值
-  console.log("permissionStore.userInfo :>> ", permissionStore.userInfo);
-  console.log("userStore.userInfo :>> ", userStore.userInfo);
-  if (permissionStore.userInfo) {
-    setLV(permissionStore.userInfo);
-    return;
-  } else if (userStore.userInfo) {
+  // if (permissionStore.userInfo) {
+  //   setLV(permissionStore.userInfo);
+  //   return;
+  // } else
+   if (userStore.userInfo) {
     return userStore.userInfo;
   }
 
@@ -77,8 +76,8 @@ export const useUpdateUserInfo = async () => {
   // cache.set("isOffline", false);
 
   let userData = data.data;
-  const permissionStore = usePermissionStore();
-  permissionStore.userInfo = userData;
+  // const permissionStore = usePermissionStore();
+  // permissionStore.userInfo = userData;
   // 旧版本用户信息处理逻辑
   setLV(userData);
 
