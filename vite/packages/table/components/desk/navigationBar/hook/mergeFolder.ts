@@ -53,17 +53,22 @@ export const childrenFolder = (list) => {
     }
   });
   return deduplicateArray(arr);
+  // console.log("arr :>> ", deduplicateArray(arr));
+  // return arr
 };
 
+// 合并后的数组进行去重，防止过多重复数据
 export const deduplicateArray = (arr) => {
   return arr.reduce((uniqueArray, item) => {
     // 检查是否已经存在于 uniqueArray 中
     const exists = uniqueArray.some((i) => {
-      if (i.type === "coolApp") {
-        return i.value.url === item.value.url;
-      } else {
-        return i.value === item.value;
+      // 特殊判断条件对象
+      const checkObj = {
+        'coolApp':() => i.value.url === item.value.url,
+        'card':() => i.cardData.customIndex === item.cardData.customIndex,
+        'default':() => i.value === item.value
       }
+      return checkObj.hasOwnProperty(i.type) ? checkObj[i.type]() : checkObj['default']()
     });
 
     // 如果不存在，则将当前元素添加到 uniqueArray

@@ -1,25 +1,4 @@
 <template>
-    <!-- <div class="w-[542px] h-[84px] pl-3  pt-3 pb-2 mb-4 pointer ">
-        <div class="flex items-center justify-between w-full h-full" >
-            <div class="flex flex-col justify-between h-[84px] mr-3">
-                <div class="flex items-center h-[24px]" >
-                    <a-avatar :src="detailPost.user.avatar" :size="24" ></a-avatar>
-                    <div class="ml-2 text-sm xt-text-2 nickname" style="text-align: left;">
-                        {{ detailPost.user.nickname }}
-                    </div>
-                    <div class="xt-text-2 font-14">
-                        {{ detailPost.create_time }}
-                    </div>
-                </div>
-
-                <div class="mt-1 text-base xt-text content-text" :style="{height:showImg?'54px':'100%'}" style="text-align: left;" :innerHTML="contentText">
-
-                </div>
-            </div>
-            <div class="right " :style="{ backgroundImage: img ? `url(${img})` : '' }" v-if="showImg">
-            </div>
-        </div>
-    </div> -->
     <div class="flex justify-between pt-2 pb-1 pl-3 pr-3 mb-2 w-[544px] h-full active-item">
         <div class="flex flex-col ">
             <div class="flex items-center" style="position: relative;">

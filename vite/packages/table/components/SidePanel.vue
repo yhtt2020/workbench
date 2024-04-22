@@ -92,7 +92,7 @@
 
         </div>
         <div class="flex items-center justify-center -ml-12" v-if="this.navigationList.length <= 0"
-          @click="this.editNavigation(this.drawerMenus[0])">
+          @click="this.editNav(this.drawerMenus[0])">
           <xt-new-icon icon="fluent:add-16-regular" size="28"></xt-new-icon>
         </div>
 
@@ -148,8 +148,14 @@ import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
 import { hoverRealItemId } from '../components/desk/navigationBar/hook/hoverRealItemId'
 import { deleteIcon, checkItems } from '../components/card/hooks/addCardToNav'
 
+// 子菜单混入
+import menuMin from './windowPanel/hook/menu'
+// 主菜单混入
+import mainMin from './windowPanel/hook/mainMenu'
+
 export default {
   name: 'SidePanel',
+  mixins: [menuMin,mainMin],
   components: {
     navIcon,
     EditNewNavigation,
@@ -183,122 +189,6 @@ export default {
       dragEvent: null,
       drawerMenus: [...extraRightMenu, ...moreMenus],
       componentId: 'EditNavigation',
-      iconMenus: [
-        {
-          id: 1,
-          newIcon: 'fluent:open-16-regular',
-          label: '打开',
-          callBack: () => { this.newOpenApp(this.currentItem) },
-        },
-        {
-          id: 2,
-          label: '编辑',
-          newIcon: 'fluent:compose-16-regular',
-          callBack: () => { this.editIcon(this.currentItem) },
-        },
-        {
-          id: 3,
-          label: '删除',
-          newIcon: 'fluent:delete-16-regular',
-          color: '#FF4D4F',
-          callBack: () => { this.deleteIcon(this.currentItem,this.sortId) }
-        },
-        {
-          id: 5,
-          divider: true
-        },
-        {
-          id: 6,
-          label: '添加导航图标',
-          newIcon: 'fluent:add-16-regular',
-          callBack: () => { this.editNavigation(this.drawerMenus[0]) },
-        },
-        {
-          id: 7,
-          label: '导航栏设置',
-          newIcon: 'fluent:settings-16-regular',
-          callBack: () => {
-            this.$bus.emit("openSystemSet");
-            setTimeout(() => {
-              this.$bus.emit("selectSystemNav", 3);
-            }, 10);
-          }
-        }
-      ],
-      mainMenus: [
-        {
-          id: 1,
-          newIcon: 'fluent:add-16-regular',
-          name: '添加导航图标',
-          fn: () => { this.editNavigation(this.drawerMenus[0]) },
-        },
-        {
-          id: 2,
-          name: '导航栏设置',
-          newIcon: 'fluent:settings-16-regular',
-          fn: () => {
-            this.$bus.emit("openSystemSet");
-            setTimeout(() => {
-              this.$bus.emit("selectSystemNav", 3);
-            }, 10);
-          },
-        },
-        {
-          id: 3,
-          name: '关闭当前导航',
-          newIcon: 'fluent:eye-off-16-regular',
-          fn: () => { this.$emit('hiedNavBar', this.sortId) },
-        },
-        {
-          id: 4,
-          name: '清空当前导航栏',
-          newIcon: 'fluent:circle-off-16-regular',
-          fn: () => { this.clearAll(); },
-        },
-        {
-          id: 9,
-          name: '更多',
-          newIcon: 'fluent:more-horizontal-16-filled',
-          children: []
-
-        },
-        {
-          divider: true,
-          id: 10
-        },
-        {
-          id: 11,
-          type: 'systemApp',
-          newIcon: 'fluent:lock-closed-16-regular',
-          name: '锁定屏幕',
-          event: 'lock',
-          fn: () => { this.newOpenApp(this.builtInFeatures[0]) }
-        },
-        {
-          id: 15,
-          type: 'systemApp',
-          newIcon: 'fluent:settings-16-regular',
-          name: '基础设置',
-          event: 'setting',
-          fn: () => { this.newOpenApp(this.builtInFeatures[1]) }
-        },
-        {
-          id: 20,
-          type: 'systemApp',
-          newIcon: 'fluent:full-screen-maximize-16-filled',
-          name: '全屏显示',
-          event: 'fullscreen',
-          fn: () => { this.newOpenApp(this.builtInFeatures[2]) }
-        },
-        {
-          id: 25,
-          type: 'systemApp',
-          newIcon: 'fluent:slide-settings-24-regular',
-          name: '设备设置',
-          event: 'status',
-          fn: () => { this.newOpenApp(this.builtInFeatures[3]) }
-        }
-      ],
       currentItem: null,
       currentIndex: null,
       currentNav: 'left',
@@ -330,40 +220,10 @@ export default {
       type: Array,
       default: () => []
     },
-    // 排序的方法
-    sortNavigationList: {
-      type: Function,
-      default: () => { }
-    },
     //要排序的容器id
     sortId: {
       type: Function,
       default: () => { }
-    },
-    //删除的方法
-    delNavList: {
-      type: Function,
-      default: () => { }
-    },
-    // 其他开关1
-    otherSwitch1: {
-      type: Boolean,
-      default: () => false
-    },
-    // 其他开关2
-    otherSwitch2: {
-      type: Boolean,
-      default: () => false
-    },
-    // 其他导航列表1
-    otherNavList1: {
-      type: Array,
-      default: () => []
-    },
-    // 其他导航列表2
-    otherNavList2: {
-      type: Array,
-      default: () => []
     },
     // 删除区域的开关
     delZone: {
@@ -412,32 +272,6 @@ export default {
         return 'right-bar'
       }
     },
-    /**
-     * 动态子菜单
-     */
-    childrenMenu() {
-      return [
-        {
-          id: 1,
-          name: this.bottomToggle[0] ? '隐藏用户中心' : '显示用户中心',
-          newIcon: "fluent:person-16-regular",
-          fn: () => { this.bottomToggle[0] = !this.bottomToggle[0] }
-        },
-        {
-          id: 2,
-          name: this.bottomToggle[1] ? '隐藏社区助手' : '显示社区助手',
-          newIcon: "fluent:people-community-16-regular",
-          fn: () => { this.bottomToggle[1] = !this.bottomToggle[1] }
-        },
-        {
-          id: 3,
-          name: this.bottomToggle[2] ? '隐藏任务中心' : '显示任务中心',
-          newIcon: "fluent:task-list-square-16-regular",
-          fn: () => { this.bottomToggle[2] = !this.bottomToggle[2] }
-        },
-      ]
-
-    },
     // 社区中心参数
     community() {
       if (this.sortId === 'left') {
@@ -479,21 +313,6 @@ export default {
         return arr.sort((a, b) => a.id - b.id)
       }
       return this.iconMenus
-    },
-    /**
-     * 通过文件夹中数据的多少来自定义大小
-     */
-    resize() {
-      const length = this.folderList.length
-      if (length <= 6) {
-        return '2x2'
-      } else if (length <= 12 && length > 6) {
-        return '3x3'
-      } else if (length <= 18 && length > 12) {
-        return '4x4'
-      } else {
-        return '6x4'
-      }
     },
     // 合并提示位置
     mergeTag() {
@@ -636,16 +455,24 @@ export default {
     renderIcon,
     replaceType,
     hoverRealItemId,
-    editIcon(item) {
+    editNav(item) {
       this.quick = true
-      this.componentId = 'EditIcon'
-      this.editItem = item
-      if (item.default?.name) return
-      item.default = {
-        name: item.name,
-        icon: item.icon,
-        bg: item.bg,
-        color: item.color,
+      if (item.component) {
+        this.componentId = item.component
+        if (item.component === 'EditNewNavigation') {
+          this.selectNav = this.sortId
+          message.success('进入编辑模式')
+        }
+      } else {
+        this.componentId = 'EditIcon'
+        this.editItem = item
+        if (item.default?.name) return
+        item.default = {
+          name: item.name,
+          icon: item.icon,
+          bg: item.bg,
+          color: item.color,
+        }
       }
     },
     deleteFile(data) {
@@ -967,7 +794,7 @@ export default {
     },
 
     openCard(item) {
-      if(this.floatCard.value !== item.value){
+      if(this.floatCard.cardData?.customIndex !== item.cardData?.customIndex ){
         this.floatCard = item
         this.floatCardVisible = true
         return
@@ -990,66 +817,6 @@ export default {
       this.currentItem.layout = value
     },
     /**
-     * 打开应用
-     * @param {*} item 图标详细信息
-     */
-    async newOpenApp(item, e) {
-      const { type, value } = item;
-      if (type !== "folder") {
-        this.folderVisible = false;
-      }
-      if (value !== 'commun') {
-        this.comVisible = false
-      }
-      if(type !== 'card') {
-        this.floatCardVisible = false
-      }
-      // 更新鼠标定位
-      this.resetElementPosition();
-      if (window.$useEnvLimit("web", value)) return;
-      // 桌面图标打开提示
-      this.msgNotice(item);
-      // 特殊图标处理
-      const valueHandlers = {
-        control: () => this.$emit("control", e),
-        setting: () => {
-          // this.$router.push({ name: "home" });
-          setTimeout(() => {
-            this.$bus.emit("openSystemSet");
-          }, 500);
-        },
-        commun: () => {
-          this.comVisible = !this.comVisible;
-        },
-        default: async () => {
-          if (type === "card") {
-            this.openCard(item)
-          }
-          if (type === "folder") {
-            this.openFolder(item);
-          }
-          if (value === "fullscreen" && window.$useEnv()) {
-            toggle();
-            return;
-          }
-          if (value === "home" && item.home) {
-            this.jumpDesk = item.home;
-          }
-          let rs = await startApp(type, value, this.$router);
-          if (!rs) {
-            message.error({
-              content: `打开「${item.name}」失败`,
-              key: "tipRun",
-            });
-          }
-          this.comVisible = false;
-        }
-      };
-
-      const handler = valueHandlers[value] || valueHandlers.default;
-      await handler();
-    },
-    /**
     * 点击文件夹子图标
     * @param {*} item
     */
@@ -1066,37 +833,22 @@ export default {
     closeFolder() {
       this.folderVisible = false
     },
-    /**
-     * 打开桌面应用提示
-     * @param {*} item 当前图标
-     */
-    msgNotice(item) {
-      if (item.type === 'tableApp') {
-        message.loading({
-          content: `打开「${item.name}」...`
-          , key: 'tipRun'
-        })
-      }
-    },
     useWindowSize,
     // 添加导航图标
-    editNavigation(item) {
-      if (item.component) {
-        this.componentId = item.component
-        if (item.component === 'EditNewNavigation') {
-          this.selectNav = this.sortId
-          message.success('进入编辑模式')
-        }
-        this.quick = true
-      }
-    },
+    // editNavigation(item) {
+    //   if (item.component) {
+    //     this.componentId = item.component
+    //     if (item.component === 'EditNewNavigation') {
+    //       this.selectNav = this.sortId
+    //       message.success('进入编辑模式')
+    //     }
+    //     this.quick = true
+    //   }
+    // },
     setQuick() {
       this.quick = false
     },
-    showElement(item, index) {
-      this.currentItem = item
-      this.currentIndex = index
-    },
+
   }
 }
 </script>

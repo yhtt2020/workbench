@@ -241,20 +241,22 @@ export default {
         updateForumList(list){
             this.customData.selectList = list
         },
+        // 记忆帖子，当切换页面时记忆帖子，如果没有操作10S后更新帖子列表
         memoryPost(){
             const cachePost = JSON.parse(localStorage.getItem('communityContent'))
             // console.log(cachePost,'cachePost');
             if(cachePost){
                 this.showForumPost = cachePost
-                    setTimeout(() => {
-                        if(this.isClick){
-                            // console.log('22222222222222')
-                            this.isLoading = true
-                            this.refreshPost().then(()=>{
-                                this.isLoading = false
-                            })
-                        }
-                    }, 10000);
+                setTimeout(() => {
+                    if(this.isClick){
+                        this.isLoading = true
+                        this.refreshPost().then(()=>{
+                            this.isLoading = false
+                        })
+                    }
+                }, 10000);
+                // 当获取到帖子内容后，清除缓存
+                localStorage.removeItem('communityContent')
             }else{
                 this.showForumPost = this.communityPost
             }
@@ -281,6 +283,7 @@ export default {
         options(){
             return {
                 customDel: this.openWay === 'nav' ? true : false,
+                title:'元社区'
             }
         },
         showItem() {
