@@ -80,7 +80,7 @@ import {
 import _ from "lodash-es";
 import { message } from "ant-design-vue";
 
-const chat = window.$chat.chat;
+const chat = window.$chat?.chat;
 const currentNoticeList = ref([]);
 const userProFile = ref([]);
 
@@ -126,7 +126,7 @@ const handleApplication = async (item, type) => {
 
 // 获取通知列表
 const getNoticeList = () => {
-  chat.getGroupApplicationList().then((res) => {
+  chat?.getGroupApplicationList().then((res) => {
     const { applicationList } = res.data;
     const list = [];
     for (const item of applicationList) {
@@ -137,7 +137,7 @@ const getNoticeList = () => {
         list.push(item.applicant);
       }
     }
-    chat.getUserProfile({ userIDList: list }).then((res) => {
+    chat?.getUserProfile({ userIDList: list }).then((res) => {
       const list = res.data;
       for (const item of list) {
         const index = _.findIndex(userProFile, function (userItem) {

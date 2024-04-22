@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, getCurrentInstance } from "vue";
+import { ref, computed, onMounted, getCurrentInstance, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { chatCommunityStore } from "../../store/chatCommunity";
 import _ from "lodash-es";
@@ -92,7 +92,7 @@ const leftList = ref([
         callBack: (item) => {
           if (!window.$useEnv("guest")) {
             triggerAddModal(item);
-            // completeTask("Z0601");
+            completeTask("Z0601");
           } else {
             loginTip();
           }
@@ -105,7 +105,7 @@ const leftList = ref([
         callBack: (item) => {
           if (!window.$useEnv("guest")) {
             triggerAddModal(item);
-            // completeTask("Z0601");
+            completeTask("Z0601");
           } else {
             loginTip();
           }
@@ -118,7 +118,7 @@ const leftList = ref([
         callBack: (item) => {
           if (!window.$useEnv("guest")) {
             triggerAddModal(item);
-            // completeTask("Z0601");
+            completeTask("Z0601");
           } else {
             loginTip();
           }
@@ -141,7 +141,7 @@ const leftList = ref([
         callBack: (item) => {
           if (!window.$useEnv("guest")) {
             triggerAddModal(item);
-            // completeTask("Z0601");
+            completeTask("Z0601");
           } else {
             loginTip();
           }
@@ -173,7 +173,7 @@ const leftList = ref([
     route: { name: "contact", params: { no: "" } },
   },
   {
-    type:"team",
+    type: "team",
     tab: "team",
     newIcon: "fluent:people-16-regular",
     route: { name: "team", params: { no: "" } },

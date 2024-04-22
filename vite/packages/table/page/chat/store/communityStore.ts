@@ -219,11 +219,11 @@ export const communityStore = defineStore('communityStore',{
   },
 
   persist:{
-    enabled: true,
+    enabled: false,
     strategies:[
       {
-        storage:localStorage,
-        paths:['community','settingCommunity','currentCommunity','selectedChannelId'],
+        // storage:localStorage,
+        // paths:[],
       }
     ]
   }

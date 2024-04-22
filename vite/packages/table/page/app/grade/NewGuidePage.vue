@@ -116,7 +116,7 @@ import { nanoid } from 'nanoid'
 import { NavList } from '../card/navList'
 import { navStore } from '../../../store/nav';
 import { message } from "ant-design-vue";
-import GalleryModal from "../../../components/paperModal/GalleryModal.vue";
+import GalleryModal from "../../../components/paperModal/PaperApp.vue";
 import DeskType from "./components/DeskType.vue";
 import DeskIcon from "./components/DeskIcon.vue";
 import CardList from "./components/CardList.vue";
@@ -326,11 +326,9 @@ export default {
     },
     // 触发打开壁纸弹窗
     openPaperModal() {
-      this.$refs.paperModal.openGalleryModal()
+      this.$refs.paperModal.openPaperAppModal()
     },
-
-    //
-
+    
     // 调整类型
     setDeskType(type) {
       this.deskTypeObj['game'] = false

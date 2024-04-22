@@ -135,7 +135,7 @@
 import { ref, reactive } from "vue";
 import { Icon as newIcon } from "@iconify/vue";
 import ComList from "../com/ComList.vue";
-import PublishModal from "../com/PublishModal.vue";
+import PublishModal from "../com/PublishModals.vue";
 import { comCards } from "./hooks/mock";
 const selectList = ref([
   {

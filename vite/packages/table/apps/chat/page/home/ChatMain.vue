@@ -56,6 +56,8 @@ import { isH5 } from "../../../TUIKit/utils/env";
 //导入pinia缓存将当前会话进行存储
 import { storeToRefs } from "pinia";
 import { chatStore } from "../../../../store/chat";
+import { useRouter } from "vue-router";
+import { message } from "ant-design-vue";
 
 const chat = chatStore();
 const { conversations } = storeToRefs(chat);
@@ -73,6 +75,7 @@ const navbarList = [
   },
 ];
 const currentConversationList = ref([]);
+const router = useRouter();
 
 // 触发当前的群聊会话
 const handleSwitch = (data) => {
@@ -89,7 +92,7 @@ TUIStore.watch(StoreName.CONV, {
   },
 });
 
-// 监听缓存中的会话ID
+/**监听缓存中的会话ID**/ 
 watch(
   () => conversations.value.conversationID,
   (value) => {
@@ -104,6 +107,18 @@ watch(
     }
   },
   { immediate: true }
+);
+
+/**监听当前群聊会话是否为空,如果为空回自接跳转到发现页**/ 
+watch(
+  () => TUIStore?.storeMap?.conversation?.store?.conversationList,
+  (newVal) => {
+    if (newVal.length === 0) {
+      message.warning("当前聊天页没有会话列表,会默认自动进入发现页进行聊天会话的创建或者是点击左侧栏底部添加按钮创建")
+      router.push({ path: "/chatFind" });
+    }
+  },
+  { deep: true, immediate: true }
 );
 </script>
 <style scoped lang="scss">

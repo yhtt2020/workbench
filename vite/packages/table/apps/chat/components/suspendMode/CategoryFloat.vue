@@ -16,7 +16,7 @@
         <CategoryDropdown
           :newIcon="'fluent:line-horizontal-3-20-filled'"
           class="w-full"
-          :title="currentInfo.communityInfo?.name"
+          :title="currentInfo?.communityInfo?.name"
           :list="cateList"
         />
       </div>
@@ -39,7 +39,7 @@
             class="px-2 py-1 font-12 rounded-md font-400 xt-font xt-text-2 mb-2"
             :class="sildVisible ? '' : 'xt-bg'"
           >
-            社群号：{{ currentInfo.communityInfo.no }}
+            社群号：{{ currentInfo?.communityInfo?.no }}
           </div>
         </div>
 
@@ -47,14 +47,14 @@
           <a-row :gutter="10">
             <a-col flex="55px" class="mt-1 text-right">
               <span class="px-2 rounded-full xt-active-bg xt-active-text">
-                {{ currentInfo.communityInfo.level }} 级
+                {{ currentInfo?.communityInfo?.level }} 级
               </span>
             </a-col>
             <a-col flex="auto" style="padding-top: 3px">
               <a-progress
                 :show-info="false"
                 strokeColor="var(--active-bg)"
-                :percent="currentInfo.communityInfo.level"
+                :percent="currentInfo?.communityInfo?.level"
               />
             </a-col>
           </a-row>
@@ -68,7 +68,7 @@
             class="font-14 summary font-400 mb-3 xt-font xt-text-2"
             :class="isCollapsed ? 'summary-3' : 'summary-1'"
           >
-            {{ currentInfo.communityInfo?.summary }}
+            {{ currentInfo?.communityInfo?.summary }}
           </div>
           <xt-button
             w="32"
@@ -88,17 +88,17 @@
               class="px-2 py-1 font-12 rounded-md font-400 xt-font xt-text-2 mr-3"
               :class="sildVisible ? '' : 'xt-bg'"
             >
-              社群号：{{ currentInfo.communityInfo.no }}
+              社群号：{{ currentInfo?.communityInfo?.no }}
             </span>
             <span class="px-2 rounded-md xt-active-bg xt-active-text">
-              {{ currentInfo.communityInfo.level }} 级
+              {{ currentInfo?.communityInfo?.level }} 级
             </span>
           </div>
           <a-progress
             :show-info="false"
             strokeColor="var(--active-bg)"
             v-if="isCollapsed"
-            :percent="currentInfo.communityInfo.level"
+            :percent="currentInfo?.communityInfo?.level"
           />
         </div>
 
@@ -107,10 +107,10 @@
             class="px-2 py-1 font-12 rounded-md font-400 xt-font xt-text-2 mr-3"
             :class="sildVisible ? '' : 'xt-bg'"
           >
-            社群号：{{ currentInfo.communityInfo.no }}
+            社群号：{{ currentInfo?.communityInfo?.no }}
           </span>
           <span class="px-2 rounded-md xt-active-bg xt-active-text">
-            {{ currentInfo.communityInfo.level }} 级
+            {{ currentInfo?.communityInfo?.level }} 级
           </span>
         </div>
 
@@ -118,7 +118,7 @@
           :show-info="false"
           strokeColor="var(--active-bg)"
           v-if="isCollapsed"
-          :percent="currentInfo.communityInfo.level"
+          :percent="currentInfo?.communityInfo?.level"
         />
       </template>
 
@@ -135,7 +135,7 @@
           v-if="firstChannel.length === 0 && secondaryChannel.length === 0"
         >
           <div class="h-full flex flex-col items-center justify-center">
-            <CategoryEmpty :role="currentInfo.role" :no="no" />
+            <CategoryEmpty :role="currentInfo?.role" :no="no" />
           </div>
         </template>
 
@@ -149,7 +149,7 @@
                   :list="firstChannel"
                   @currentClick="handleCommunity"
                   :menusVisible="true"
-                  :role="currentInfo.role"
+                  :role="currentInfo?.role"
                   :no="no"
                 />
               </div>
@@ -161,7 +161,7 @@
                   :list="firstChannel"
                   @currentClick="handleCommunity"
                   :menusVisible="true"
-                  :role="currentInfo.role"
+                  :role="currentInfo?.role"
                   :no="no"
                 />
               </div>
@@ -196,7 +196,7 @@
                         :list="item.children"
                         @currentClick="handleCommunity"
                         :menusVisible="true"
-                        :role="currentInfo.role"
+                        :role="currentInfo?.role"
                         :no="no"
                       />
                     </div>
@@ -207,7 +207,7 @@
                         :list="item.children"
                         @currentClick="handleCommunity"
                         :menusVisible="true"
-                        :role="currentInfo.role"
+                        :role="currentInfo?.role"
                         :no="no"
                       />
                     </div>
@@ -226,7 +226,7 @@
   <!-- 添加分组 -->
   <CreateCategory
     ref="newCategoryRef"
-    :no="currentInfo.communityInfo.no"
+    :no="currentInfo?.communityInfo?.no"
     :currentCategoryName="currentCategorySetting"
   />
   <!-- 子级频道添加新应用 -->
@@ -443,15 +443,21 @@ const columnVisible = computed(() => {
 const currentInfo = computed(() => {
   // 这里需要获取到社群权限角色信息
   const index = _.findIndex(myCommunity.value, function (item) {
-    if (item.communityInfo) {
-      return String(item.communityInfo.no) === String(no.value);
+    if (item?.communityInfo) {
+      return String(item?.communityInfo?.no) === String(no.value);
     }
   });
-  console.log('需要查找的no',no.value)
-  console.log('查找结果',index)
-  console.log('便利的数据',myCommunity.value)
-  chatCommunity.getCommunityTree(no.value);
-  return myCommunity.value[index];
+  if(index > -1){
+    chatCommunity.getCommunityTree(no.value);
+    return myCommunity.value[index];
+  }
+  else {
+    return {};
+  }
+  // console.log('需要查找的no',no.value)
+  // console.log('查找结果',index)
+  // console.log('便利的数据',myCommunity.value)
+  // return myCommunity.value[index];
 });
 // 是否开启悬浮模式
 const sildVisible = computed(() => {
@@ -459,13 +465,13 @@ const sildVisible = computed(() => {
     setting.value.suspendVisible.enable &&
     setting.value.suspendVisible.no !== null &&
     Number(setting.value.suspendVisible.no) ===
-      Number(currentInfo.value.communityInfo.no)
+      Number(currentInfo.value?.communityInfo?.no)
   );
 });
 // 下拉菜单列表
 const cateList = computed(() => {
   /**社群权限**/
-  const role = currentInfo.value.role;
+  const role = currentInfo?.value?.role;
   if (role !== "member") {
     /**开启悬浮模式并且社群ID一致**/
     if (sildVisible.value) {
@@ -481,7 +487,7 @@ const cateList = computed(() => {
 const isCollapsed = computed(() => {
   const visible = setting.value.collapsedVisible.enable;
   const isNo =
-    Number(setting.value.collapsedVisible.no) === Number(currentInfo.value.no);
+    Number(setting.value.collapsedVisible.no) === Number(currentInfo.value?.no);
   if (visible && isNo) {
     return false;
   } else {
@@ -490,11 +496,11 @@ const isCollapsed = computed(() => {
 });
 // 一级channel
 const firstChannel = computed(() => {
-  return communityTreeList.value.firstChannel;
+  return communityTreeList.value?.firstChannel;
 });
 // 二级channel
 const secondaryChannel = computed(() => {
-  return communityTreeList.value.secondaryChannel;
+  return communityTreeList.value?.secondaryChannel;
 });
 
 /**事件**/
@@ -502,7 +508,7 @@ const secondaryChannel = computed(() => {
 const openHideContent = () => {
   const enable = (setting.value.collapsedVisible.enable =
     !setting.value.collapsedVisible.enable);
-  chatCommunity.setCollapsed({ enable: enable, no: currentInfo.value.no });
+  chatCommunity.setCollapsed({ enable: enable, no: currentInfo.value?.no });
 };
 
 // 处理频道点击事件

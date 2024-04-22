@@ -2,7 +2,14 @@
 <template>
   <div style="height: 0; flex: 1" class="relative">
     <!-- 群聊 -->
-    <TUIChat v-if="currentType === 'group'"></TUIChat>
+    <template v-if="currentType === 'group'">
+      <CurrentGroupJoin
+        v-if="isGroupJoin === 'not'"
+        :groupInfo="currentProps"
+      />
+      <TUIChat v-else />
+    </template>
+
     <!-- 链接 -->
     <template v-else-if="currentType === 'link'">
       <div
@@ -40,16 +47,22 @@
         <xt-button @click="openLink" :w="120" :h="40"> 浏览器打开 </xt-button>
       </div>
     </template>
+
     <!-- 版块 -->
-    <Commun v-else-if="currentType === 'forum'" :forum-id="currentProps.id" />
+    <template v-else-if="currentType === 'forum'">
+      <Commun :forum-id="currentProps.id" />
+    </template>
   </div>
 </template>
 
 <script setup>
-import { computed, toRefs } from "vue";
+import { computed, toRefs, ref } from "vue";
 import browser from "../../../../js/common/browser";
+import { checkGroupShip } from "../../../../js/common/sns";
 
+/**导入页面**/
 import Commun from "../com/Commun.vue";
+import CurrentGroupJoin from "../join/CurrentGroupJoin.vue";
 
 const props = defineProps({
   currentItem: {
@@ -59,6 +72,21 @@ const props = defineProps({
 });
 const { currentItem } = toRefs(props);
 
+/**根据当前群聊是否已经加入**/
+const groupJoinRes = ref("");
+const isGroupJoin = computed(() => {
+  groupJoin();
+  return groupJoinRes.value;
+});
+const groupJoin = async () => {
+  const groupID = currentItem.value?.props?.groupID
+    ? currentItem.value?.props?.groupID
+    : currentItem.value?.props?.id;
+  const res = await checkGroupShip([`${groupID}`]);
+  groupJoinRes.value = res[0];
+};
+
+/**当前类型为群聊、链接、社区版块、内容、名称等等**/
 const currentType = computed(() => {
   return currentItem.value?.type;
 });
@@ -69,6 +97,7 @@ const currentName = computed(() => {
   return currentItem.value?.name;
 });
 
+/**其他链接通过外部按钮进行打开**/
 const openLink = () => {
   // 系统默认浏览器打开
   if (currentItem.value.props?.url) {

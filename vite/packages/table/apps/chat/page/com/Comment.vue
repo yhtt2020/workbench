@@ -31,7 +31,7 @@
 <script setup>
 import { ref, computed, onMounted, watch } from "vue";
 import MainReplyComment from "./MainReplyComment.vue";
-import reply from "./Reply.vue";
+import reply from "./Replys.vue";
 import { useCommunityStore } from "../../store/commun";
 import DataStatu from "../../../../components/widgets/DataStatu.vue";
 const current = ref(1);

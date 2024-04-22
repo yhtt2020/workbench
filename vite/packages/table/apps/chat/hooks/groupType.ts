@@ -113,3 +113,6 @@ export const currentUnreadCount = (no: any) => {
     }
   }
 };
+
+/**群聊添加状态**/
+

@@ -182,7 +182,7 @@ import {
 import { DownOutlined } from "@ant-design/icons-vue";
 import ComCard from "./ComList.vue";
 import DetailCard from "./Detail.vue";
-import publishModal from "./PublishModal.vue";
+import publishModal from "./PublishModals.vue";
 import { useCommunityStore } from "../../store/commun";
 import NProgress from "nprogress";
 import "nprogress/nprogress.css";
