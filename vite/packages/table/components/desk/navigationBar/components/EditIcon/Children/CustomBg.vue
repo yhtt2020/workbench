@@ -5,7 +5,14 @@
             <div class="flex flex-col items-center justify-center">
                 <div class="relative overflow-hidden rounded-lg w-[72px] h-[72px] flex items-center justify-center pointer"
                     :style="{background:editItem.isBg ? editItem.bg : 'var(--primary-bg)'}">
+                    <xt-newIcon 
+                        v-if="isIfy"
+                        :size="52"
+                        :icon="editItem.icon"
+                        :style="[editItem.color]"
+                    />
                     <a-avatar 
+                        v-else
                         :size="52" 
                         shape="square" 
                         :src="editItem.icon" 
@@ -44,11 +51,16 @@
 </template>
 
 <script setup lang='ts'>
-import { ref,watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useNavigationStore } from '../../../navigationStore'
+import { checkIsIfyIcon } from '../../../../../card/hooks/addCardToNav';
 const navigationStore = useNavigationStore()
 const props=defineProps({
     editItem:Object
+})
+
+const isIfy = computed(() => {
+    return checkIsIfyIcon(props.editItem.icon).value
 })
 // 回调改变背景颜色
 const changeBg = (value) => {

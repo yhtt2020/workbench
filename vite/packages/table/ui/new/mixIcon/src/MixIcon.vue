@@ -10,7 +10,7 @@
   />
   <div class="inline-block">
     <div
-      class="flex items-center justify-center cursor-pointer xt-bg xt-text-2"
+      class="flex items-center justify-center cursor-pointer xt-text-2"
       :class="class"
       :style="[style, boxStyle]"
       @click="visible = select"
@@ -61,7 +61,10 @@ const boxStyle = computed(() => {
 });
 
 const props = defineProps({
-  class: {},
+  class: {
+    type: String,
+    default: "xt-bg",
+  },
   style: {},
   iconClass: {},
   iconStyle: {},
@@ -150,7 +153,6 @@ watch(
 // defineExpose({
 //   randomIcon,
 // });
-onMounted(() => {});
 </script>
 
 <style lang="scss" scoped></style>
