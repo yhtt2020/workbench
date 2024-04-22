@@ -58,7 +58,7 @@ if (location.href.startsWith("tsbapp://")) {
           },
         ],
       },
-      useWuJiePlugins(id, id),
+      useWuJiePlugins(id),
     ]"
   />
 </template>
