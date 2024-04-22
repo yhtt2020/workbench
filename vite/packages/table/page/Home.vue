@@ -1,5 +1,7 @@
 <template>
   <div style="height: 100%">
+    <!-- <div @click="test1">测试isOffline{{isOffline}}</div>
+    <div @click="test2">测试isGuest{{isGuest}}</div> -->
     <desk-group
       @changeDesk="changeDesk"
       ref="deskGroupRef"
@@ -85,6 +87,8 @@ import { defaultFreeLayoutStore } from "./defaultFreeLayout";
 import { useFreeLayoutStore } from "../components/desk/freeLayout/store";
 import { mergeData } from "../ui/hooks/useDataConversion";
 import { useEnv } from "../ui/hooks/useEnv";
+import { usePermissionStore } from "../permission/store";
+import cache from "../components/card/hooks/cache";
 let steamUser,
   steamSession,
   path,
@@ -107,8 +111,6 @@ if (!useEnv("web")) {
     });
   }
 }
-
-let List = [];
 
 export default {
   name: "Home",
@@ -233,6 +235,7 @@ export default {
       "freeLayoutDataTmp",
       "freeLayoutStateTmp",
     ]),
+    ...mapWritableState(usePermissionStore, ["isOffline", "isSingle", "isGuest", "getGuest"]),
     deskGroupRef() {
       return this.$refs.deskGroupRef;
     },
@@ -265,6 +268,10 @@ export default {
     },
   },
   async mounted() {
+    // 覆写当前工作台状态
+    this.isOffline = cache.get('isOffline')
+    this.isSingle = cache.get('isSingle')
+    this.isGuest = cache.get('isGuest')
     this.replaceIcon(this.sideNavigationList, this.leftNavInit);
     this.replaceIcon(this.rightNavigationList, this.rightNavInit);
     this.replaceIcon(this.copyFootNav, this.footNavInit);
@@ -398,6 +405,7 @@ export default {
     ...mapActions(weatherStore, ["fixData"]),
     // ...mapActions(deskStore, ["setDeskSize"]),
     ...mapActions(taskStore, ["initTask"]),
+    ...mapActions(usePermissionStore, ["setOffline", "setGuest"]),
     initGrids() {
       this.currentDesk.cards = this.cleanMuuriData(deskTemplate["daily"]);
     },
@@ -554,6 +562,12 @@ export default {
     closeScale() {
       this.visibleScale = false;
       this.visibleGuide = true;
+    },
+    test1(){
+      this.setOffline(!this.isOffline)
+    },
+    test2(){
+      this.setGuest(!this.isGuest)
     },
     // 关闭缩放弹窗
     closeWebLogin() {
