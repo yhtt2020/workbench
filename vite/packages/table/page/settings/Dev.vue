@@ -92,12 +92,16 @@
             </tr>
           </tbody>
         </table>
+        <div>
+          <StorageStats></StorageStats>
+        </div>
       </div>
     </template>
   </xt-scrollbar>
 </template>
 
 <script>
+import StorageStats from '../../apps/systemSet/page/develop/StorageStats.vue';
 import ZoomUI from "../../components/comp/ZoomUI.vue";
 import { appStore } from "../../store";
 import { mapWritableState } from "pinia";
@@ -111,7 +115,7 @@ import AppCenter from "../../apps/appCenter";
 import { useAppCenterStore } from "../../apps/appCenter/src/store";
 export default {
   name: "Common",
-  components: { Template, ZoomUI, AppCenter },
+  components: { Template, ZoomUI, AppCenter ,StorageStats},
   data() {
     return {
       trayOpen: "",
