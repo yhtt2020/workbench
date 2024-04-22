@@ -238,7 +238,7 @@ export default [
         ],
       },
       {
-        path: "/chat/:no?/:action?",
+        path: "/chat",
         component: ChatIndex,
         name: "chatIndex",
         rememberChildrenPosition: true,
@@ -255,12 +255,12 @@ export default [
               rememberChildrenPosition: true,
             },
             redirect: {
-              name: "officialCommunity",
+              name: "chatMain",
             },
             children: [
               {
                 /**群聊会话列表路由**/
-                path: "/chatMain",
+                path: "/chatMain/:no?/:action?",
                 name: "chatMain",
                 component: ChatMain,
                 meta: {
@@ -321,17 +321,17 @@ export default [
                 },
               },
               /**群聊通讯录路由**/
-              {
-                path: "/contact",
-                name: "contact",
-                component: Contact,
-                meta: {
-                  type: "contact",
-                  tab1: "community",
-                  tab2: "chat",
-                  tab3: "contact",
-                },
-              },
+              // {
+              //   path: "/contact",
+              //   name: "contact",
+              //   component: Contact,
+              //   meta: {
+              //     type: "contact",
+              //     tab1: "community",
+              //     tab2: "chat",
+              //     tab3: "contact",
+              //   },
+              // },
               /**社区路由**/
               {
                 path: "/channel",

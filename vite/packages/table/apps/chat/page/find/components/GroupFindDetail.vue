@@ -51,7 +51,7 @@ import { completeTask } from "../../../../task/task";
 import { chatStore } from "../../../../../store/chat";
 import { TUIConversationService } from "@tencentcloud/chat-uikit-engine";
 
-const chatServer = window.$chat.chat;
+const chatServer = window?.$chat?.chat;
 const router = useRouter();
 const chat = chatStore();
 
@@ -66,12 +66,13 @@ const { groupList } = toRefs(props);
 // 添加群聊
 const addGroup = async (id) => {
   const option = { groupID: id };
+  console.log('测试',option);
   const res =  await chatServer.joinGroup(option);
   if(res.code === 0){
     const conversationID =  `GROUP${id}`;
     handlerConversationList(conversationID)
     completeTask("Z0601");
-    chat.loadGroupRelationship();
+    chat.updateGroupRelationship();
   }
 };
 

@@ -2,7 +2,7 @@
 <template>
   <div class="w-full h-full flex flex-col px-4">
     <div class="flex w-full items-center justify-between pt-1">
-      <span class="xt-text xt-font font-16">群聊({{ list.length }}个)</span>
+      <span class="xt-text xt-font font-16">群聊({{ currentGroupList.length }}个)</span>
       <xt-button
         w="32"
         h="32"
@@ -17,7 +17,7 @@
     </div>
 
     <!-- 空状态 -->
-    <template v-if="list.length === 0">
+    <template v-if="currentGroupList.length === 0">
       <div class="flex flex-col items-center justify-center h-full">
         <xt-ify-icon
           icon="fluent-emoji:sleeping-face"
@@ -32,7 +32,7 @@
 
     <xt-scrollbar :y="true" style="height: 100%" v-else>
       <div style="height: 16px"></div>
-      <template v-for="item in list">
+      <template v-for="item in currentGroupList">
         <div
           class="flex items-center pointer rounded-lg p-4 group-item"
           @click="handleCheckInfo(item)"
@@ -67,19 +67,31 @@ import GroupInfo from "../components/GroupInfo.vue";
 
 const chat = window.$chat.chat;
 
-const props = defineProps({
-  list: {
-    type: Array,
-    default: () => [],
-  },
-});
-const { list } = toRefs(props);
-
+/**当前群聊列表**/ 
+const currentGroupList = ref([]);
+/**当前社群的创建和群信息**/
 const groupCreateRef = ref(null);
 const groupInfoRef = ref(null);
-
-// 获取当前群信息
+/**获取当前群信息**/ 
 const currentGroupInfo = ref({});
+
+TUIStore.watch(StoreName.GRP, {
+  groupList: (data) => {
+    currentGroupList.value = data;
+  },
+});
+
+/**旧版代码**/ 
+// const props = defineProps({
+//   list: {
+//     type: Array,
+//     default: () => [],
+//   },
+// });
+// const { list } = toRefs(props);
+
+
+
 // 创建群聊
 const createGroup = () => {
   groupCreateRef.value.openCreateGroupSession();

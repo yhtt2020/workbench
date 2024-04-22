@@ -4,7 +4,10 @@ import { defineStore } from "pinia";
 // @ts-ignore
 export const contactStore = defineStore("contact", {
   state: () => ({
-    currentContact: 'notice',
+    currentContact:{
+      type: 'group',
+      groupID:""
+    },
   }),
   actions: {},
   persist: {

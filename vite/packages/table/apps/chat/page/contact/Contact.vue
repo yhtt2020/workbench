@@ -1,7 +1,48 @@
 <!-- 群聊联系人页面 -->
 <template>
-  <div class="w-full h-full flex">
-    <!-- 左侧tab切换 -->
+  <!-- 这部分是最新调整 -->
+  <div class="flex w-full justify-between flex-col">
+    <span class="w-full xt-font xt-text font-14 mb-3">通讯录</span>
+    <template v-for="item in leftTab">
+      <div
+        class="w-full flex pl-2 pr-2 pt-2.5 pb-2.5 mb-2 items-center pointer rounded-lg justify-between contact-item"
+        :class="{ select: currentContact.type === item.type }"
+        @click="changeContact(item)"
+      >
+        <div class="mr-3 rounded-lg flex items-center justify-center">
+          <xt-ify-icon :icon="item.icon" size="16" class="xt-text-2 mr-2" />
+          <span class="xt-text-2 xt-font font-14"> {{ item.title }}</span>
+        </div>
+        <template v-if="item.type === 'contact-group'">
+          <span class="xt-text-2 xt-font font-14">
+            {{ groupList?.length }}
+          </span>
+        </template>
+
+        <template v-else-if="item.type === 'contact-friend'">
+          <span class="xt-text-2 xt-font font-14">
+            {{ currentFriendList?.length }}
+          </span>
+        </template>
+
+        <template v-else-if="item.type === 'contact-notice'">
+          <span class="xt-text-2 xt-font font-14">
+            {{ noticeList?.length }}
+          </span>
+        </template>
+
+        <template v-else-if="item.type === 'contact-community'">
+          <span class="xt-text-2 xt-font font-14">
+            {{ community?.length }}
+          </span>
+        </template>
+      </div>
+    </template>
+  </div>
+
+  <!-- 旧版通讯录UI代码 -->
+  <!-- <div class="w-full h-full flex">
+    左侧tab切换
     <div style="width: 285px" class="flex flex-col">
       <template v-for="item in leftTab">
         <div
@@ -30,10 +71,9 @@
         </div>
       </template>
     </div>
-    <!-- 分割线 -->
+    分割线
     <div class="h-full" style="background: var(--divider); width: 1px"></div>
-
-    <!-- 右侧对应数据显示区域,由于页面较少,暂时没有走路由 -->
+    右侧对应数据显示区域,由于页面较少,暂时没有走路由
     <div class="flex-1 w-auto h-full">
       <template v-if="currentContact === 'notice'">
         <Notice/>
@@ -45,8 +85,7 @@
         <Friend :list="currentFriendList"/>
       </template>
     </div>
-
-  </div>
+  </div> -->
 </template>
 
 <script setup>
@@ -61,9 +100,9 @@ import { contactStore } from "../../store/contactStore";
 import { appStore } from "../../../../store";
 import _ from "lodash-es";
 
-import Group from "./page/Group.vue";
-import Friend from "./page/Friend.vue";
-import Notice from "./page/Notice.vue";
+// import Group from "./page/Group.vue";
+// import Friend from "./page/Friend.vue";
+// import Notice from "./page/Notice.vue";
 
 const chat = window.$chat.chat;
 
@@ -75,30 +114,37 @@ const { userInfo } = storeToRefs(app);
 const groupList = ref([]);
 const currentFriendList = ref([]);
 const noticeList = ref([]);
+/**组织**/
+const community = ref([]);
 
 const leftTab = ref([
   {
     title: "通知",
     icon: "fluent:alert-16-regular",
-    color: "var(--warning)",
-    type: "notice",
+    type: "contact-notice",
   },
   {
     title: "群聊",
     icon: "ant-design:message-outlined",
-    color: "var(--link)",
-    type: "group",
+    type: "contact-group",
   },
   {
     title: "好友",
     icon: "fluent:emoji-smile-slight-24-regular",
-    color: "var(--success)",
-    type: "friend",
+    type: "contact-friend",
+  },
+  {
+    title: "组织",
+    type: "contact-community",
+    icon: "fluent:people-community-16-regular",
   },
 ]);
 
 const changeContact = (item) => {
-  currentContact.value = item.type;
+  currentContact.value = {
+    type: item.type,
+    groupID: "",
+  };
 };
 
 // 获取联系人数据
@@ -110,7 +156,9 @@ const getContact = () => {
   });
   TUIStore.watch(StoreName.FRIEND, {
     friendList: (data) => {
-      const filterData = _.filter(data,function(item){ return String(item.userID) !== String(userInfo.value.uid) });
+      const filterData = _.filter(data, function (item) {
+        return String(item.userID) !== String(userInfo.value.uid);
+      });
       currentFriendList.value = filterData;
     },
   });
