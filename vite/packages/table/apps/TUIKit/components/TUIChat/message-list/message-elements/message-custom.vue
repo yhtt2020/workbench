@@ -73,7 +73,9 @@
       </div>
     </template>
     <template v-else>
-      <span v-html="content.custom" />
+      <!-- 最新修改渲染游戏分享的自定义组件 -->
+      <MessageGameCustom v-if="isCustom?.type === 'game'" :content="isCustom?.game"/>
+      <span v-html="content.custom" v-else/>
     </template>
   </div>
 </template>
@@ -86,6 +88,9 @@ import { CHAT_MSG_CUSTOM_TYPE } from '../../../../constant';
 import { ICustomMessagePayload } from '../../../../interface';
 import Icon from '../../../common/Icon.vue';
 import star from '../../../../assets/icon/star-light.png';
+/**最新修改导入游戏分享页面**/
+import MessageGameCustom from "../../../../../chat/components/message/MessageCustom.vue"; 
+
 interface Props {
   messageItem: IMessageModel;
   content: any;

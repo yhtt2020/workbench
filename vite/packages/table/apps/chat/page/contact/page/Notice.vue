@@ -2,13 +2,7 @@
 <template>
   <div class="w-full h-full flex flex-col px-4">
     <div class="flex w-full items-center justify-between pt-1">
-      <span
-        class="xt-text xt-font font-16"
-        v-if="currentNoticeArr.length === 0"
-      >
-        通知
-      </span>
-      <span class="xt-text xt-font font-16" v-else>
+      <span class="xt-text xt-font font-16" >
         通知({{ currentNoticeArr.length }}个)
       </span>
     </div>
