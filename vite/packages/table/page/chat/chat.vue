@@ -146,7 +146,7 @@ export default {
     };
 
     // 提示登录弹窗
-    const loginTip = (item) => {
+    const loginTip = () => {
       window.$ui.confirm(
         "登录提示",
         "目前处于游客模式，请登录后体验完整功能。",

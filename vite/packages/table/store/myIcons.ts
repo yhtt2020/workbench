@@ -31,7 +31,9 @@ export const myIcons = defineStore("myIcons", {
       backgroundColor: "", // 背景颜色
       backgroundIndex: 0, // 背景下标
       // 新增默认图标
-      defaultIcon:""
+      defaultIcon:"",
+      // 卡片数据
+      cardData:{},
     },
     edit: {},
     iconSelect: false, // 图标多选情况

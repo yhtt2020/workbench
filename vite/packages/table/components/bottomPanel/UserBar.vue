@@ -1,5 +1,5 @@
 <template>
-    <div v-if="(!simple) && !isOffline && bottomToggle[0]"
+    <div v-if="(!simple) && !usePermission.isSingle && bottomToggle[0]"
             class="
                 relative flex flex-row 
                 items-center justify-between 
@@ -26,14 +26,13 @@ import MyAvatar from '../small/MyAvatar.vue'
 import { storeToRefs} from 'pinia'
 
 import { appStore } from '../../store'
-import { offlineStore } from '../../js/common/offline'
+import { usePermissionStore } from '../../permission/store'
 import {useNavigationStore} from '../desk/navigationBar/navigationStore';
 
 const useAppStore = appStore()
 const { simple } = storeToRefs(useAppStore)
 
-const useOfflineStore = offlineStore()
-const { isOffline } = storeToRefs(useOfflineStore)
+const usePermission = usePermissionStore()
 
 const navigationStore = useNavigationStore()
 const { bottomToggle } = storeToRefs(navigationStore)

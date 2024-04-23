@@ -104,7 +104,7 @@
           web: false,
           mobile: false,
           client: false,
-          offline:false
+          single:false
         },
         header:{
           ifyIcon:"fluent:movies-and-tv-16-regular",

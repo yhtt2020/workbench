@@ -41,13 +41,17 @@ const getGuest = () => {
   return cache.get('isGuest') ? true : false;
 }
 
+const getSingle = () => {
+  return cache.get('isSingle') ? true : false;
+}
 const currentEnv = getCurrentEnv();
 const isWeb = getWebEnv();
 const isClient = getClientEnv();
 const isMac = getMacEnv();
 const isOffline = getOffline();
 const isGuest = getGuest();
+const isSingle = getSingle();
 
 export default currentEnv;
 
-export { isWeb, isClient, isMac, isOffline, isGuest };
+export { isWeb, isClient, isMac, isOffline, isGuest, isSingle };

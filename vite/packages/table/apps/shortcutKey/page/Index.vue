@@ -57,7 +57,7 @@ export default {
         },
       ]
       // 离线模式隐藏 创意市场
-      if (window.$isOffline) {
+      if (window.$isSingle) {
         startMenu = startMenu.filter(i=>{
           return i.tab != 'store'
         })

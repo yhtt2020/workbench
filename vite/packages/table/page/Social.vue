@@ -108,7 +108,7 @@ export default {
   },
   async mounted () {
     // 离线模式下隐藏弹幕入口
-    if (window.$isOffline) {
+    if (window.$isSingle) {
       this.tabs = this.tabs.filter(i=>{
         return i.index != "invite"
       })
