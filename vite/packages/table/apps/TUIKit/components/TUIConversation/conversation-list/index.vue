@@ -298,9 +298,9 @@ const text = (conversation: any) => {
   } 
   /**好友**/ 
   else {
-    if(isUserName && isText) return `${isUserName}:${isText}`;
-    if(isUserName && isMessageForShow) return `${isUserName}:${isMessageForShow}`;
-    return "";
+    if(isUserName && isText) return `${isUserName}:${isText}`
+    else if(isUserName && isMessageForShow) return `${isUserName}:${isMessageForShow}`
+    return ""
   }
 };
 
