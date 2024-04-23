@@ -1,7 +1,8 @@
 <template>
     <div 
         @click.stop.prevent="openMain"
-        class="w-[40px] h-[40px] xt-main-bg rounded-lg flex flex-wrap relative" 
+        class="w-[40px] h-[40px] xt-main-bg rounded-lg flex flex-wrap relative"
+        :class="[list.length === 1 ? 'items-center justify-center' : '']" 
         style="gap: 4px;padding: 6px">
         <template v-for="(item,index) in list.slice(0,3)" :key="index" >
             <xt-new-icon :icon="item.icon" size="12" v-if="item.icon"></xt-new-icon>
