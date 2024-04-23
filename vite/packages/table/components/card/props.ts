@@ -150,7 +150,7 @@ export const defaultProps = {
   },
   /**
    * 小组件不可用环境
-   * 参数可选 ["web", "offline", "guest", "mac", "client"]
+   * 参数可选 ["web", "offline", "guest", "mac", "client", "single"]
    */
   envLimit: { type: Array, default: () => [] },
   /**

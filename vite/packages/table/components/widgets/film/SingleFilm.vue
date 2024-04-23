@@ -81,7 +81,7 @@
           web: false,
           mobile: false,
           client: false,
-          offline:false
+          single:false
         },
         customSize:'2x4',
         header:{

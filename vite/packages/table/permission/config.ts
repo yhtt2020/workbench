@@ -3,6 +3,7 @@ export const PRIORITY = ["web", "single","offline", "guest", "mac", "window"];
 // 环境名称
 export const ENV_MAP = {
   web: "网页端",
+  single: "单机模式",
   mac: "mac",
   window: "window",
   offline: "离线模式",

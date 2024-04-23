@@ -56,7 +56,7 @@ export const confirm: Confirm = (
     index: 1001,
     mask: false,
     maskIndex: 1000,
-    type: "link",
+    type: "warning",
     // 按钮宽
     okButtonWidth: "64",
     noButtonWidth: "64",

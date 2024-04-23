@@ -12,6 +12,7 @@
         class="w-full flex justify-center h-full pb-2 object-fill"
         :frame="displayUserInfo?.equippedItems?.frameDetail"
         @close="close"
+        :class="usePermission.isOffline ? 'gray' : ''"
       />
       <a-tooltip
         v-if="
@@ -58,15 +59,15 @@ import { useRouter } from "vue-router";
 import FrameAvatar from "../../../../../components/avatar/FrameAvatar.vue";
 import Medal from "../../../../../components/team/Medal.vue";
 import OnlineMedal from "../../../../../components/team/OnlineMedal.vue";
-
+import { usePermissionStore } from "../../../../../permission/store";
 const props = defineProps({
   userinfo: {
     type: Object,
     default: () => {},
   },
 });
-
 const { proxy } = getCurrentInstance();
+const usePermission = usePermissionStore()
 const router = useRouter();
 
 const team = teamStore();
@@ -131,6 +132,9 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.gray{
+  filter: grayscale(100%);
+}
 :deep(.badge-box) {
   padding: 0 !important;
   & div > img {

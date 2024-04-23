@@ -155,7 +155,7 @@ import DeskMarket from "./DeskMarket.vue";
 import ShareDesk from "../../../components/desk/ShareDesk.vue";
 import DeskPreview from "../../../components/desk/DeskPreview.vue";
 import { marketStore } from "../../../store/market";
-import { offlineStore } from "../../../js/common/offline";
+import { singleStore } from "../../../js/common/single";
 import { taskStore } from "../../../apps/task/store";
 import { getCardData } from "../../../apps/ttApp/src/hooks/getCardData";
 export default {
@@ -257,9 +257,9 @@ export default {
 
     navList.forEach((li) => {
       // 离线模式时 隐藏卡片添加
-      if (this.getIsOffline()) {
+      if (window.$isSingle) {
         li.children = li.children.filter((ele) => {
-          if (this.offlineList.indexOf(ele.name) < 0) {
+          if (this.singleList.indexOf(ele.name) < 0) {
             return ele;
           }
         });
@@ -292,7 +292,7 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(offlineStore, ["isOffline", "offlineList"]),
+    ...mapWritableState(singleStore, ["singleList"]),
     ...mapWritableState(deskStore, ["apiList"]),
     ...mapWritableState(taskStore, ["currentId", "step", "success"]),
 
@@ -341,7 +341,6 @@ export default {
     ...mapActions(marketStore, ["getCategories", "getDesks", "getRecommend"]),
     // ...mapActions(deskStore,['setDeskSize']),
     ...mapActions(cardStore, ["setDeskSize"]),
-    ...mapActions(offlineStore, ["getIsOffline"]),
     doSearch() {
       if (this.selectNav.name === "small") {
         this.keyword = this.search.keywords;

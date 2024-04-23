@@ -150,7 +150,6 @@ import { messageStore } from "../store/message";
 import TaskBox from "../apps/task/page/TaskBox.vue";
 import Favorites from "../apps/favorites/page/index.vue";
 import navigationData from "../js/data/tableData";
-import { offlineStore } from "../js/common/offline";
 
 import {
   moreMenus,
@@ -374,7 +373,6 @@ export default {
       "init",
       "copyFootNav",
     ]),
-    ...mapWritableState(offlineStore, ["isOffline"]),
     ...mapWritableState(useNavigationStore, [
       "selectNav",
       "bottomToggle",
