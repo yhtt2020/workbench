@@ -56,7 +56,7 @@ const setUserInfo = async () => {
 };
 
 /**
- * 更新用户信息
+ * 更新用户信息 重连
  */
 export const useUpdateUserInfo = async () => {
   const permissionStore = usePermissionStore();

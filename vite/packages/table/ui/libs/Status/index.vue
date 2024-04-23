@@ -35,7 +35,9 @@ export default {
     ...mapWritableState(usePermissionStore, ["token", "isGuest", "isSingle", "isSingle"]),
   },
   mounted() {
-    this.plat = this.$useEnv(this.status);
+    // 离线模式不需要进行屏蔽 过滤掉
+    let status = this.status.filter(item => item !== "offline")
+    this.plat = this.$useEnv(status);
   },
   watch: {
     token: {
