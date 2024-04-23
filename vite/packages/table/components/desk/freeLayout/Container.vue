@@ -12,7 +12,6 @@ import { storeToRefs } from "pinia";
 import { useFreeLayoutStore } from "./store";
 import { message } from "ant-design-vue";
 import "animate.css";
-import { useDebounceFn } from "@vueuse/core";
 
 import {
   useGridToWidth,
@@ -21,7 +20,6 @@ import {
 } from "../../../ui/hooks/useCardSize";
 import _, { iteratee } from "lodash";
 import { useCutLayout } from "./useCutLayout";
-import { display } from "html2canvas/dist/types/css/property-descriptors/display";
 // 初始化操作
 const freeLayoutStore: any = useFreeLayoutStore();
 const props = defineProps({

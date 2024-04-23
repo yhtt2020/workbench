@@ -26,6 +26,8 @@ export const installV2 = async (id?: string) => {
     ttappData.value[currentData.id] = {};
     // 处理logo路径
     currentData._logo = getAppImg(currentData.id, currentData.logo);
+   
+
     // main模块
     if (currentData.main) {
       // 处理main路径

@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { useSelectAll, useUninstall } from "./hooks";
 import { message } from "ant-design-vue";
-
+import { appStore as useAppStore } from "../../../store";
 // @ts-ignore
 export const useTTAppStore = defineStore("useTTAppStore", {
   state: () => ({
@@ -16,6 +16,8 @@ export const useTTAppStore = defineStore("useTTAppStore", {
       id: "",
       // 弹窗任务
       list: [],
+      userId: "",
+      userInfo: "",
     },
   }),
   getters: {},
@@ -52,6 +54,30 @@ export const useTTAppStore = defineStore("useTTAppStore", {
     // 删除数据
     removeData(id: string) {
       delete this.ttappData[id];
+    },
+    /** 获取作者信息 */
+    async getUserInfo(id: string) {
+      if (!id) {
+        console.log("ID不能为空 :>> ");
+        return;
+      }
+      //
+      if (this.modal.userId == id) {
+        return this.modal.userInfo;
+      }
+      //
+      const appStore: any = useAppStore();
+      let res = await appStore.getUserCard(2469);
+      const { code, data } = res;
+      if (code !== 200) {
+        return;
+      }
+      const userInfo = {
+        avatar: data.user.avatar,
+        name: data.user.nickname,
+      };
+      this.modal.userId = id;
+      this.modal.userInfo = userInfo;
     },
   },
   persist: {

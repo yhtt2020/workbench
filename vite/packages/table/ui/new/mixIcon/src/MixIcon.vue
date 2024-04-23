@@ -10,10 +10,10 @@
   />
   <div class="inline-block">
     <div
-      class="flex items-center justify-center cursor-pointer xt-bg xt-text-2"
-      :class="class"
+      class="flex items-center justify-center cursor-pointer xt-text-2"
+      :class="[props.class]"
       :style="[style, boxStyle]"
-      @click="visible = select"
+      @click="onClick"
     >
       <IfyIcon
         v-if="type == 'ify'"
@@ -116,8 +116,14 @@ const props = defineProps({
     default: 6,
   },
 });
+const emits = defineEmits(["update:icon", "cb", "click"]);
+
+const onClick = () => {
+  visible.value = props.select;
+  emits("click");
+};
+
 const iconUrl = ref(props.icon);
-const emits = defineEmits(["update:icon", "cb"]);
 const color = computed(() => {
   if (iconUrl.value.indexOf("color=") >= 0) {
     let colors = iconUrl.value.substr(iconUrl.value.indexOf("color=") + 7);

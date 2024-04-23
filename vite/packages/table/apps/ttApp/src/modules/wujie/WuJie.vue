@@ -2,6 +2,7 @@
 import WujieVue from "wujie-vue3";
 import { useTTAppStore } from "../../store";
 import { ref, onUnmounted, onMounted, watch } from "vue";
+import { EventTargetPlugin, SelectionPlugin } from "wujie-polyfill";
 
 import { useWuJiePlugins } from "./useWuJiePlugins";
 const ttappStore: any = useTTAppStore();
@@ -56,7 +57,23 @@ if (location.href.startsWith("tsbapp://")) {
     :url="url"
     :attrs="attrs"
     :props="{ cardContainer: cardContainer }"
-    :plugins="[useWuJiePlugins(id, id)]"
+    :plugins="[
+      {
+        jsBeforeLoaders: [
+          {
+            content: `window.Selection = window.parent.Selection`,
+          },
+        ],
+        jsLoader: (code) => {
+          return code
+            .replace('n.isCollapsed', 'n.baseOffset === n.focusOffset')
+            .replace('n.collapsed', 'n.startOffset === n.endOffset');
+        },
+      },
+      EventTargetPlugin(),
+      SelectionPlugin(),
+      useWuJiePlugins(id, id),
+    ]"
   />
 </template>
 <style lang="scss" scoped></style>
