@@ -18,7 +18,6 @@ import { storeToRefs } from 'pinia';
 import { timerStore } from '../../store/timer';
 import { weatherStore } from '../../store/weather';
 import { appStore } from '../../store';
-import { offlineStore } from '../../js/common/offline';
 import { useNavigationStore } from '../desk/navigationBar/navigationStore';
 
 
@@ -31,7 +30,6 @@ import { usePosition } from './hook/usePosition';
 const useAppStore = appStore()
 const { simple } = storeToRefs(useAppStore)
 
-const useOfflineStore = offlineStore()
 const { isOffline } = storeToRefs(useOfflineStore)
 
 const useNav = useNavigationStore()

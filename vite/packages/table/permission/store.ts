@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import cache from "../components/card/hooks/cache";
 // @ts-ignore
 export const usePermissionStore = defineStore("usePermissionStore", {
   state: () => ({
@@ -6,17 +7,33 @@ export const usePermissionStore = defineStore("usePermissionStore", {
     token: "",
     // 用户信息
     userInfo: null,
-
+    // 工作台特殊状态
     isOffline: false,
-    isLogin: false,
+    isSingle: false,
     isGuest: false,
-    dev: " web mac ",
+    isLogin: false,
+    platform: "web",
+    env: "dev",
     //平台
     // env
     // dev window mac web ，     登录 离线 游客
   }),
-  getters: {},
-  actions: {},
+  getters: {
+  },
+  actions: {
+    setGuest(boolean){
+      this.isGuest = boolean
+      cache.set('isGuest',boolean)
+    },
+    setSingle(boolean){
+      this.isSingle = boolean
+      cache.set('isSingle',boolean)
+    },
+    setOffline(boolean){
+      this.isOffline = boolean
+      cache.set('isOffline',boolean)
+    },
+  },
   persist: {
     enabled: true,
     strategies: [

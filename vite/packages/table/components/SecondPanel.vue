@@ -28,7 +28,6 @@ import GradeSmallTip from "./GradeSmallTip.vue";
 import { taskStore } from "../apps/task/store";
 import routerTab from '../js/common/routerTab'
 import {mapActions, mapState,mapWritableState} from "pinia";
-import { offlineStore } from "../js/common/offline";
 
 import { Icon as SecondPanelIcon } from '@iconify/vue';
 
@@ -84,7 +83,6 @@ export default {
     },
   },
   methods: {
-    ...mapActions(offlineStore, ["getIsOffline"]),
     isActive:routerTab.isActive,
     current(menu) {
       if(menu.tab){

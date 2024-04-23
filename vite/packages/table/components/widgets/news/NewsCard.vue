@@ -203,7 +203,7 @@ export default {
         web: false,
         mobile: false,
         client: false,
-        offline: true
+        single: true
       },
       refreshFlag: false
     }
