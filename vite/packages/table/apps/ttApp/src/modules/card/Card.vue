@@ -4,9 +4,13 @@ import { ref, onMounted, computed, onUnmounted, nextTick } from "vue";
 import { useParserCard } from "./parser";
 import WuJie from "../wujie/WuJie.vue";
 import { useTTAppStore } from "../../store";
-import { storeToRefs } from "pinia";
+import {mapActions, storeToRefs} from "pinia";
 import { useCardSize } from "../../../../../hooks";
 import { useWuJieStore } from "../wujie/store";
+import PerfectScrollbar from "perfect-scrollbar";
+import {appsStore} from "../../../../../store/apps";
+const scrollbar: any = ref(null);
+const perfectScrollbar: any = ref(null);
 const wujieStore = useWuJieStore();
 const { data: wujieData }: any = storeToRefs(wujieStore);
 
@@ -92,14 +96,35 @@ const header = computed(() => {
     refresh: refresh.value,
   };
 });
+
+const methods=mapActions(appsStore, ['openApp'])
 const menus = computed(() => {
   let list = [
     refresh.value,
     {
       newIcon: "fluent:open-16-regular",
-      title: "打开主应用",
+      title: "进入主应用",
+      fn: () => {
+        let appInfo=data.value
+        let app={
+          theme:appInfo.theme_color,
+          name: appInfo.name,
+          url:'ttapp://'+appInfo.id+ appInfo.main.entry,
+          preload: '',
+          background: false,
+          node: true,
+          security: true
+        }
+
+        methods.openApp(app)
+      },
+    },
+    {
+      newIcon: "fluent:open-16-regular",
+      title: "弹窗打开",
       fn: () => {
         modal.value.id = data.value.id;
+        modal.value.url='ttapp://'+data.value.id+ props.customData.entry
         modal.value.visible = true;
       },
     },
@@ -119,9 +144,7 @@ const menus = computed(() => {
   return list;
 });
 
-import PerfectScrollbar from "perfect-scrollbar";
-const scrollbar: any = ref(null);
-const perfectScrollbar: any = ref(null);
+
 
 const resize = () => {
   // perfectScrollbar.value.update();

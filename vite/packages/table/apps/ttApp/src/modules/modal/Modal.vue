@@ -420,7 +420,7 @@ const settingMenu = [
       >
         <WuJie
           v-if="!loading"
-          :url="data.main._entry"
+          :url="modal.url"
           :id="data.id"
           :app-info="data"
         />

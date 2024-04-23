@@ -4,6 +4,7 @@ import { useTTAppStore } from "../../../../../ttApp/src/store";
 import { storeToRefs } from "pinia";
 import { updateConfig } from "./updateConfig";
 import { installV2 } from "./installV2";
+import {appsStore} from '../../../../../../store/apps'
 
 const { item } = defineProps<{ item: any }>();
 // esc dbl 循环二级
@@ -75,9 +76,18 @@ const addPreview = (data: any) => {
   previewVisible.value = true;
 };
 /** 打开主应用弹窗 */
-const openModal = () => {
-  modal.value.id = item.id;
-  modal.value.visible = true;
+const entry = () => {
+  let appInfo=item
+  let app={
+    theme:appInfo.theme_color,
+    name: appInfo.name,
+    url:'ttapp://'+appInfo.id+ appInfo.main.entry,
+    preload: '',
+    background: false,
+    node: true,
+    security: true
+  }
+  appsStore().openApp(app)
 };
 </script>
 
@@ -115,10 +125,10 @@ const openModal = () => {
       <div
         class="flex justify-center items-center xt-modal rounded-lg mr-2 cursor-pointer"
         style="width: 72px; height: 32px"
-        @click="openModal"
+        @click="entry"
       >
         <xt-ify-icon icon="fluent:open-16-regular" size="16" class="mr-1" />
-        <span class="text-sm">打开 </span>
+        <span class="text-sm">进入 </span>
       </div>
       <!-- 更多功能 -->
       <xt-menu :menus="menus" name="name" fn="cb" model="click">
