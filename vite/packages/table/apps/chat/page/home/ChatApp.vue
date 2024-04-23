@@ -1,7 +1,12 @@
 <!-- 群聊应用 -->
 <template>
   <div class="w-full h-full">
-    <xt-left-menu :list="updateChatAppList" last="1" end="4" :index="currentChatIndex">
+    <xt-left-menu
+      :list="updateChatAppList"
+      last="1"
+      :end="leftList.length"
+      :index="currentChatIndex"
+    >
       <div class="w-full h-full">
         <router-view></router-view>
       </div>
@@ -49,6 +54,7 @@ import { useRouter, useRoute } from "vue-router";
 import { completeTask } from "../../../task/task";
 import { useGlobalStore } from "../../../Global/store";
 import { appStore } from "../../../../store";
+import config from "../../hooks/config";
 
 import CreateGroup from "../../components/create/CreateGroupSession.vue";
 import AddFriend from "../../components/add/AddFriend.vue";
@@ -169,6 +175,17 @@ const leftList = ref([
     newIcon: "eva:compass-outline",
     route: { name: "chatFind", params: { no: "" } },
   },
+  ...(config.adminUids.includes(userInfo.uid)
+    ? [
+        {
+          icon: "diannao",
+          type: "admin",
+          tab: "admin",
+          title: "管理面板(仅管理员可见)",
+          route: { name: "chatAdmin", params: { no: "" } },
+        },
+      ]
+    : []),
   {
     type: "team",
     tab: "team",
@@ -179,10 +196,12 @@ const leftList = ref([
     full: true,
   },
 ]);
+
 const chatAppList = computed(() => {
   const newList = leftHeader.value.concat(
     myCommunity.value.concat(leftList.value)
   );
+  console.log("测试", newList);
   const mapList = _.map(newList, function (item) {
     return {
       ...item,
@@ -315,7 +334,7 @@ onMounted(() => {
   z-index: 90 !important;
 }
 
-:deep(.xt-br){
+:deep(.xt-br) {
   margin-right: 0 !important;
 }
 

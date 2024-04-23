@@ -4,13 +4,22 @@ import { onMounted, ref } from "vue";
 import { chatAdminStore } from "../../store/chatAdminStore";
 import { storeToRefs } from "pinia";
 
-const chatAdmin = storeToRefs(chatAdminStore);
+const chatAdmin = chatAdminStore();
 const { stats } = storeToRefs(chatAdmin);
 
+/**滚动组件的dom**/
+const scrollerBar = ref(null);
+
+/**隐藏显示**/
 const showDetail = ref(false);
 
+const checkAll = () => {
+  showDetail.value = !showDetail.value;
+  scrollerBar.value.update();
+};
+
 onMounted(() => {
-  chatAdminStore.refreshStats();
+  chatAdmin.refreshStats();
 });
 </script>
 
@@ -19,7 +28,7 @@ onMounted(() => {
     <div class="p-2 m-2 h-full">
       <xt-scrollbar
         class="w-full"
-        ref="scrollerbar"
+        ref="scrollerBar"
         style="height: calc(100%)"
         :y="true"
       >
@@ -28,24 +37,10 @@ onMounted(() => {
           昨日IM大盘数据 —— {{ stats.AppName }}（AppId:{{ stats.AppId }}
           {{ stats.Company }}） 报告期数：{{ stats.Date }}
           <div style="float: right">
-            <xt-button
-              @click="
-                showDetail = true;
-                $refs.scrollerbar.update();
-              "
-              type="theme"
-              v-if="!showDetail"
-              >查看全部
+            <xt-button @click="checkAll" type="theme" v-if="!showDetail">
+              查看全部
             </xt-button>
-            <xt-button
-              @click="
-                showDetail = false;
-                $refs.scrollerbar.update();
-              "
-              type="theme"
-              v-else
-              >隐藏</xt-button
-            >
+            <xt-button @click="checkAll" type="theme" v-else> 隐藏 </xt-button>
           </div>
         </div>
         <div class="pd-2">
@@ -199,16 +194,13 @@ onMounted(() => {
               <a-statistic
                 title="解散群个数"
                 :value="stats.GroupDestroyGroupNum"
-              >
-              </a-statistic>
+              />
             </div>
             <div class="xt-bg rounded-lg p-2" :span="4">
-              <a-statistic title="回调请求数" :value="stats.CallBackReq">
-              </a-statistic>
+              <a-statistic title="回调请求数" :value="stats.CallBackReq" />
             </div>
             <div class="xt-bg rounded-lg p-2" :span="4">
-              <a-statistic title="回调应答数" :value="stats.CallBackRsp">
-              </a-statistic>
+              <a-statistic title="回调应答数" :value="stats.CallBackRsp" />
             </div>
           </div>
         </div>
