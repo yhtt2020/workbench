@@ -171,7 +171,7 @@
             <template v-for="item in secondaryChannel">
               <TreeFold :item="item">
                 <template #title>
-                  <div class="xt-text xt-font font-14">
+                  <div class="xt-text-2 xt-font font-14">
                     {{ item.name }}
                   </div>
                 </template>

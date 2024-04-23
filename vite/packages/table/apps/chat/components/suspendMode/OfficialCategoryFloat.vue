@@ -135,7 +135,7 @@
               <TreeFold :item="item" @update="handleUpdateCollapse">
                 <!-- 标题文字描述 -->
                 <template #title>
-                  <div class="xt-text xt-font font-14">
+                  <div class="xt-text-2 xt-font font-14">
                     {{ item.name }}
                   </div>
                 </template>
@@ -311,10 +311,15 @@ const loginTip = () => {
 
 // 点击当前左侧列表
 const officialClick = (data) => {
-  if (!window.$useEnv("guest")) {
+  if (data.type === "group") {
+    if (!window.$useEnv("guest")) {
+      proxy.$bus.emit("handleOfficalClick", data);
+    } else {
+      loginTip();
+    }
+  }
+  else {
     proxy.$bus.emit("handleOfficalClick", data);
-  } else {
-    loginTip();
   }
 };
 </script>
