@@ -49,7 +49,7 @@
                 : conversation?.userProfile?.avatar
             "
             size="30px"
-            :borderRadius="conversation?.type === 'GROUP' ? '5px':'50%'"
+            :borderRadius="conversation?.type === 'GROUP' ? '5px' : '50%'"
           />
           <div
             v-if="userOnlineStatusMap && isShowUserOnlineStatus(conversation)"
@@ -283,23 +283,24 @@ const enterConversationChat = (conversationID: string) => {
 };
 
 const text = (conversation: any) => {
-  if(conversation.type === 'GROUP'){
-    return `${
-      conversation.lastMessage?.nick
-        ? conversation.lastMessage?.nick
-        : conversation.lastMessage?.fromAccount
-    }:${
-      conversation.lastMessage?.payload?.text
-        ? conversation.lastMessage?.payload?.text
-        : conversation.lastMessage?.messageForShow
-    }`;
-  }
+  const isUserName = conversation.userProfile?.nick;
+  const isGroupName = conversation.lastMessage?.nick;
+  const isText = conversation.lastMessage?.payload?.text;
+  const isMessageForShow = conversation.lastMessage?.messageForShow;
+  const isFromAccount = conversation.lastMessage?.fromAccount;
+  
+  /**群聊**/ 
+  if (conversation.type === "GROUP") {
+    if(isGroupName && isText) return `${isGroupName}:${isText}`
+    else if(isGroupName && isMessageForShow) return `${isGroupName}:${isMessageForShow}`
+    else if(isFromAccount && isText) return `${isFromAccount}:${isText}`
+    else return ''
+  } 
+  /**好友**/ 
   else {
-    return  `${ conversation.userProfile?.nick }: ${
-      conversation.lastMessage?.payload?.text
-        ? conversation.lastMessage?.payload?.text
-        : conversation.lastMessage?.messageForShow
-    }`;
+    if(isUserName && isText) return `${isUserName}:${isText}`;
+    if(isUserName && isMessageForShow) return `${isUserName}:${isMessageForShow}`;
+    return "";
   }
 };
 
