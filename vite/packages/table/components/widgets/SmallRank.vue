@@ -1,7 +1,7 @@
 <template>
   <xt-container 
   :header="header"
-  :envLimit="['offline']"
+  :envLimit="['single']"
   @titleHover="showDrawer"
   v-model:customSize="customData.customSize"
   :options="options" 

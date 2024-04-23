@@ -55,8 +55,9 @@ if (location.href.startsWith("tsbapp://")) {
     :name="randomName"
     :url="url"
     :attrs="attrs"
-    :props="{ cardContainer: cardContainer }"
-    :plugins="[useWuJiePlugins(id, id)]"
+    :plugins="[
+      useWuJiePlugins(id),
+    ]"
   />
 </template>
 <style lang="scss" scoped></style>

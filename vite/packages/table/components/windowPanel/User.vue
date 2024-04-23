@@ -1,5 +1,6 @@
 <template>
-    <MyAvatar @click="openControl"></MyAvatar>
+    <MyAvatar @click="openControl" v-if="(!simple) && !isOffline && bottomToggle[0]"></MyAvatar>
+    <div v-else class="w-16 h-16"></div>
     <Teleport to="body">
         <div class="absolute" v-if="isControl" :style="{left: pos.x + 'px', top: pos.y + 'px'}" style="z-index: 500;">
             <ControlModal 
@@ -16,12 +17,23 @@ import { storeToRefs } from 'pinia';
 
 import { timerStore } from '../../store/timer';
 import { weatherStore } from '../../store/weather';
+import { appStore } from '../../store';
+import { useNavigationStore } from '../desk/navigationBar/navigationStore';
 
 
 import MyAvatar from '../small/MyAvatar.vue';
 import ControlModal from '../../apps/control/page/Control.vue';
 
 import { usePosition } from './hook/usePosition';
+
+
+const useAppStore = appStore()
+const { simple } = storeToRefs(useAppStore)
+
+const { isOffline } = storeToRefs(useOfflineStore)
+
+const useNav = useNavigationStore()
+const { bottomToggle } = storeToRefs(useNav)
 
 
 const useTimer = timerStore()

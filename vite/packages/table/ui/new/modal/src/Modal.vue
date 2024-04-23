@@ -266,6 +266,7 @@ const modalName = ref(nanoid(4));
 let barHeight = 0;
 
 const currentX = computed(() => {
+  // 如果是手动拖拽
   if (props.handle) {
     return x.value;
   } else {
@@ -273,6 +274,7 @@ const currentX = computed(() => {
   }
 });
 const currentY = computed(() => {
+  // 如果是手动拖拽
   if (props.handle) {
     return y.value;
   } else {
@@ -300,10 +302,19 @@ let intervalId;
 const getPosition = computed(() => {
   let top;
   let left;
+  // 有遮罩层的情况
   if (props.mask) {
     top = (windowHeight.value - modalHeight.value) / 2;
     left = (windowWidth.value - modalWidth.value) / 2;
-  } else {
+  } 
+  // 全屏时
+  else if (isMaximize.value) {
+    top = 0
+    left = 0
+  }
+  // 无遮罩层的情况
+  
+  else {
     top = (windowHeight.value - barHeight - modalHeight.value) / 2;
     left = (windowWidth.value - modalWidth.value) / 2;
   }
@@ -531,10 +542,14 @@ onBeforeUnmount(() => {
 defineExpose({
   // 手动关闭
   close: onNo,
-  // 手动最小化
-  maximize,
   // 手动最大化
+  maximize,
+  // 手动最小化
   minimize,
+  // 判断最大化变量
+  isMaximize,
+  // 判断最小化变量
+  isMinimize
 });
 </script>
 

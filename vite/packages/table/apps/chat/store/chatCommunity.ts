@@ -37,6 +37,8 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         enable: false,
         no: null,
       },
+      // 存储当前社群子频道目录中的选中状态
+      selectCurrentChannel:null,
     },
     // 热门社群列表
     hotList: [],

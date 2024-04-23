@@ -66,7 +66,7 @@ import { clipboardStore } from "../apps/clipboard/store";
 import { browserStore } from "../store/browser";
 // import { chatStore } from "../store/chat";
 import taskStore from "../page/app/todo/stores/task";
-import { offlineStore } from "../js/common/offline";
+import cache from "../components/card/hooks/cache";
 import { useWidgetStore } from "../components/card/store";
 // import { clockStore } from '../components/widgets/clock/hooks/clockStore';
 export default {
@@ -96,20 +96,19 @@ export default {
       this.bindIPC(),
       //启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成
       //注意，此处的第二个参数，必须和此store同名，尤其注意有些命名里带了store的
-      captureStore(),
-      this.initStore(appStore, "appStore"),
-      this.initStore(codeStore, "code"),
-      this.initStore(cardStore, "cardStore"),
-      this.initStore(weatherStore, "weather"),
-      this.initStore(paperStore, "paper"),
-      this.initStore(deckStore, "deck"),
-      this.initStore(screenStore, "screen"),
-      this.initStore(teamStore, "teamStore"),
-      this.initStore(navStore, "nav"),
-      this.initStore(taskStore, "task"),
-      this.initStore(useWidgetStore, "useWidgetStore"),
-      this.initStore(offlineStore, "offlineStore"),
-      this.initStore(clipboardStore, "clipboardStore"),
+      await captureStore(),
+      await this.initStore(appStore, "appStore"),
+      await this.initStore(codeStore, "code"),
+      await this.initStore(cardStore, "cardStore"),
+      await this.initStore(weatherStore, "weather"),
+      await this.initStore(paperStore, "paper"),
+      await this.initStore(deckStore, "deck"),
+      await this.initStore(screenStore, "screen"),
+      await this.initStore(teamStore, "teamStore"),
+      await this.initStore(navStore, "nav"),
+      await this.initStore(taskStore, "task"),
+      await this.initStore(useWidgetStore, "useWidgetStore"),
+      await this.initStore(clipboardStore, "clipboardStore"),
     ]);
 
     this.storeReadyTimer = setInterval(() => {
@@ -145,7 +144,6 @@ export default {
       "footNavigationList",
       "rightNavigationList",
     ]),
-    // ...mapWritableState(offlineStore, ['isOffline']),
   },
   methods: {
     ...mapActions(cardStore, ["sortClock", "sortCountdown"]),

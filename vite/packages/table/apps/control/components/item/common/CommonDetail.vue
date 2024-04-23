@@ -4,7 +4,7 @@
   <template v-if="controlIndex === 'audio' && !$useEnv()">
     <div
       style="width: 252px; height: 120px"
-      class="xt-text flex flex-col xt-bg-t-2 rounded-xl"
+      class="xt-text flex flex-col rounded-xl"
     >
       <SystemAudio />
     </div>

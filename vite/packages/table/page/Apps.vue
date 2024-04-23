@@ -498,7 +498,7 @@ export default {
     }
   },
   mounted(){
-    if(window.$isOffline){
+    if(window.$isSingle){
       this.menus = this.menus.filter(i=>{
         return i.index != 'store'
       })

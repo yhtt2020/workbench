@@ -111,7 +111,7 @@ const props = withDefaults(defineProps<ConfirmProps>(), {
   no: () => {},
   ok: () => {},
   close: () => {},
-  type: "success",
+  type: "link",
   okButtonWidth: "64",
   noButtonWidth: "64",
 });

@@ -103,7 +103,7 @@ import { ref, reactive, onBeforeMount, onMounted, computed, watch, onBeforeUpdat
 import { DownOutlined } from '@ant-design/icons-vue';
 import ComCard from '../../../com/ComList.vue';
 import DetailCard from '../../../com/Detail.vue';
-import publishModal from '../../../com/publishModal.vue';
+import publishModal from '../../../com/PublishModals.vue';
 import { useCommunityStore } from '../../../../store/commun'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'

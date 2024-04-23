@@ -6,31 +6,30 @@
   >
     <div class="flex items-center">
       <div
-      v-for="item in communityNavList.slice(0, 1)"
-      class="communityNav-more pointer"
-      @click="item.fn"
-    >
-      <a-tooltip :title="item.name">
-        <Avatar :item="item" :size="size"/>
-      </a-tooltip>
+        v-for="item in communityNavList.slice(0, 1)"
+        class="communityNav-more pointer"
+        @click="item.fn"
+      >
+        <a-tooltip :title="item.name">
+          <Avatar :item="item" :size="size" />
+        </a-tooltip>
+      </div>
+      <a-divider
+        type="vertical"
+        style="
+          height: 32px;
+          margin: 0 14px;
+          border-top: 1px solid var(--divider) !important;
+        "
+      />
     </div>
-    <a-divider
-      type="vertical"
-      style="
-        height: 32px;
-        margin: 0 14px;
-        border-top: 1px solid var(--divider) !important;
-      "
-    />
-    </div>
-    <div
-      class="flex pointer"
-      :style="{gap: gap + 'px'}">
-      <a-tooltip 
-        :title="item.name" 
-        v-for="item in communityNavList.slice(1)" 
-        @click="item.fn">
-        <Avatar :item="item" :size="size"/>
+    <div class="flex pointer" :style="{ gap: gap + 'px' }">
+      <a-tooltip
+        :title="item.name"
+        v-for="item in communityNavList.slice(1)"
+        @click="item.fn"
+      >
+        <Avatar :item="item" :size="size" />
       </a-tooltip>
     </div>
   </div>
@@ -38,11 +37,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { 
-  computed, 
-  getCurrentInstance, 
-  toRefs,
-} from "vue";
+import { computed, getCurrentInstance, toRefs } from "vue";
 import { nanoid } from "nanoid";
 import { useRouter } from "vue-router";
 
@@ -65,21 +60,20 @@ const { settingType, currentCommunity } = storeToRefs(comNav);
 const { proxy } = getCurrentInstance();
 
 type PropsType = {
-  boxClass: string;  // 自定义类样式
-  boxStyle: string;  // 自定义样式
-  size: number;   // 图标大小
-  gap: number;  // 图标布局间隔
-}
+  boxClass: string; // 自定义类样式
+  boxStyle: string; // 自定义样式
+  size: number; // 图标大小
+  gap: number; // 图标布局间隔
+};
 
 const props = withDefaults(defineProps<PropsType>(), {
   boxClass: "xt-bg xt-shadow mr-3 rounded-2xl p-3 ",
   boxStyle: "",
   size: 54,
-  gap: 20
+  gap: 20,
 });
 
 const { boxClass, boxStyle, size, gap } = toRefs(props);
-
 
 // 根据社群数量进行调整
 const communityNum = computed(() => {
@@ -125,13 +119,17 @@ const communityNavList = computed(() => {
         name: "社群主应用",
         fn: () => {
           if (currentCommunity.value.item.role) {
-            router.push({ name: "myCommunity", params: { ...currentCommunity.value.item } });
+            router.push({
+              name: "myCommunity",
+              params: { ...currentCommunity.value.item },
+            });
           } else {
-            router.push({ name: "defaultCommunity", params: { no: 1 } });
+            /**调整路由名称**/ 
+            router.push({ name: "officialCommunity", params: { no: 1 } });
           }
         },
       }),
-      ...baseItems.map(item => createNavEntry(item)),
+      ...baseItems.map((item) => createNavEntry(item)),
     ];
   } else {
     return [
@@ -140,16 +138,17 @@ const communityNavList = computed(() => {
         name: "想天社群",
         icon: "/icons/logo128.png",
         fn: () => {
-          router.push({ name: "defaultCommunity", params: { no: 1 } });
+          /**调整路由名称**/ 
+          router.push({ name: "officialCommunity", params: { no: 1 } });
         },
       }),
-      ...baseItems.map(item => createNavEntry(item)),
+      ...baseItems.map((item) => createNavEntry(item)),
     ];
   }
 });
 
 const openNav = async (event) => {
-  await communityNavStore().loadCommunityNav()
+  await communityNavStore().loadCommunityNav();
   if (settingType.value === "app") {
     proxy.$bus.emit("openAppVisible");
   } else {

@@ -1,5 +1,5 @@
 <template>
- <xt-select :list="list" zIndex="1250" style="width: 140px;margin-right: 12px;text-align: left;" 
+ <xt-select :list="list" zIndex="100001" style="width: 140px;margin-right: 12px;text-align: left;" 
  :border="false" :borderClass="'rounded-md '" v-model="pickParams.setting.paperValue" @change="updateValue($event)">
  </xt-select>
 </template>

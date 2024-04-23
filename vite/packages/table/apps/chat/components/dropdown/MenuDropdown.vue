@@ -7,7 +7,7 @@
     class="w-full"
   >
     <div
-      class="flex items-center rounded-lg px-3.5 py-2.5 pointer"
+      class="flex items-center rounded-lg px-3.5 py-2.5 pointer dropdown-hover"
       @click="handleCurrentMenu"
     >
       <div class="flex items-center">
@@ -37,6 +37,8 @@
       </div>
     </div>
   </xt-menu>
+
+  <ChannelUpdateLink ref="updateLinkRef" :currentLink="currentMenu.revID" />
 </template>
 
 <script setup>
@@ -44,6 +46,9 @@ import { ref, reactive, computed, nextTick, toRefs, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { message } from "ant-design-vue";
 import { chatCommunityStore } from "../../store/chatCommunity";
+
+/**子频道链接修改设置**/
+import ChannelUpdateLink from "../link/ChannelUpdateLink.vue";
 
 const emit = defineEmits(["currentClick"]);
 const chatCommunity = chatCommunityStore();
@@ -68,6 +73,7 @@ const props = defineProps({
 const { item, role, no } = toRefs(props);
 
 /**ref定义区域**/
+const updateLinkRef = ref(null);
 const currentMenu = ref({
   revID: null,
 });
@@ -75,7 +81,10 @@ const linkMenu = ref([
   {
     name: "链接设置",
     newIcon: "fluent:settings-16-regular",
-    callBack: () => {},
+    callBack: () => {
+      // console.log("更新", currentMenu.value.revID);
+      updateLinkRef.value.openUpdateLink();
+    },
   },
   {
     name: "删除应用",
@@ -152,11 +161,6 @@ const handleCurrentMenu = () => {
   emit("currentClick", item);
 };
 
-// export default {
-//   setup(props,ctx){
-//     const community = communityStore()
-//     const chat = chatStore()
-
 //     const unread = computed(()=>{
 //       const jsonProp = props.item.props;
 //       if(jsonProp.hasOwnProperty('unread')){
@@ -166,13 +170,12 @@ const handleCurrentMenu = () => {
 //       }
 //     })
 
-//     return{
-//       linkRef,menus,linkMenus,menuList,unread,
-//       ...toRefs(data),
-//     }
-//   }
-// };
 </script>
 
 <style lang="scss" scoped>
+.dropdown-hover{
+  &:hover{
+    background: var(--active-secondary-bg);
+  }
+}
 </style>

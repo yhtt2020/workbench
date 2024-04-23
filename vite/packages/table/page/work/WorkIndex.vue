@@ -6,9 +6,7 @@
   <div
     :class="{'ml-2':!fullScreen,'height':fullScreen?'100%':'99%','padding-top':fullScreen?'0':'1em'}"
     class="flex-1 content-view " style="display: flex;flex-direction: column;width: 0">
-    <keep-alive>
     <router-view></router-view>
-    </keep-alive>
   </div>
   </div>
 </template>

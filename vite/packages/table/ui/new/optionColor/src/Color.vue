@@ -81,9 +81,10 @@ const { colorNum,color} = toRefs(props);
 // 按钮回调
 const emit = defineEmits(["update:color", "cb"]);
 const chooseBg = (item) => {
-  colorIndex.value = item;
-  emit("update:color", props.colorList[`${"color" + item}`]);
-  emit("cb", props.colorList[`${"color" + item}`]);
+  // 双击取消
+  colorIndex.value === item ? colorIndex.value = 0 : colorIndex.value = item
+  emit("update:color", props.colorList[`${"color" + colorIndex.value}`]);
+  emit("cb", props.colorList[`${"color" + colorIndex.value}`]);
 };
 const updateBackground = (item) => {
   console.log("item :>> ", item);
@@ -92,22 +93,6 @@ const updateBackground = (item) => {
   emit("update:color", item);
 };
 const colorIndex = ref(0);
-// /**
-//  * 防止渲染的数据超过颜色列表
-//  * @param num 页面显示的数目
-//  * @param list 颜色列表
-//  */
-// const limitNum = (num:number,list:Array<string>):number | undefined | any=>{
-//   const length = list.length
-//   let res
-//   num > length ? res = length : res = num
-//   return res
-// }
-// onMounted(()=>{
-//   colorNum.value = limitNum(colorNum.value, Object.keys(props.colorList))
-//   console.log(typeof(colorNum.value),colorNum.value,'colorNum.value')
-//   console.log(typeof(Number(colorNum.value)),'colorNum.value')
-// })
 </script>
 
 <style lang="scss" scoped>
