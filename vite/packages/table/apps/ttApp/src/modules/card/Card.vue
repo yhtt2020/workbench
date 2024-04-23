@@ -120,7 +120,7 @@ const menus = computed(() => {
       },
     },
     {
-      newIcon: "fluent:open-16-regular",
+      newIcon: "fluent:window-16-regular",
       title: "弹窗打开",
       fn: () => {
         modal.value.id = data.value.id;
