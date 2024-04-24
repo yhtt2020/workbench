@@ -2,11 +2,9 @@
 import { ref, computed } from "vue";
 import { useTTAppStore } from "../../../../../ttApp/src/store";
 import { storeToRefs } from "pinia";
-import { installV2 } from "./installV2";
-import { appsStore } from "../../../../../../store/apps";
-
+import { installV2 } from "../hooks/installV2";
+import { uninstall } from "../hooks/uninstall";
 const { item } = defineProps<{ item: any }>();
-// esc dbl 循环二级
 // ttapp数据
 const ttappStore: any = useTTAppStore();
 const { modal } = storeToRefs(ttappStore);
@@ -24,8 +22,6 @@ const menus = computed(() => {
       newIcon: "fluent:delete-16-regular",
       cb: async () => {
         let res: any = await installV2(item.id);
-        const { code, data } = res;
-        console.log("object :>> ", code, data);
       },
     },
     {
@@ -33,7 +29,16 @@ const menus = computed(() => {
       newIcon: "fluent:delete-16-regular",
       color: "#FF4D4F",
       cb: () => {
-        // ttappStore.uninstall(item.id);
+        window.$ui.confirm(
+          "卸载会将桌面导航相关该应用的快捷方式删除，是否继续？",
+          "",
+          {
+            ok: async () => {
+              uninstall(item.id);
+            },
+            type: "warning",
+          }
+        );
       },
     },
   ];
@@ -76,7 +81,7 @@ const addPreview = (data: any) => {
 };
 /** 打开主应用弹窗 */
 const entry = () => {
-  ttappStore.enterApp(item.id)
+  ttappStore.enterApp(item.id);
 };
 </script>
 
@@ -131,4 +136,4 @@ const entry = () => {
     </div>
   </div>
 </template>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped></style>../hooks/installV2

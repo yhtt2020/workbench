@@ -273,8 +273,13 @@ const settingClose = () => {
   >
     <!-- 头部左侧区域 -->
     <template #header-left>
-      <tippy :z-index="99999999999" trigger="mouseenter" placement="bottom">
-        <!-- :interactive="true" -->
+      <tippy
+        :z-index="99999999999"
+        trigger="mouseenter"
+        placement="bottom"
+        :interactive="true"
+      >
+        <!-- -->
         <div
           class="group header-left hover:tt-theme-bg-2 relative pl-2 rounded-lg title h-[32px] flex items-center text-sm cursor-pointer"
         >
@@ -282,12 +287,12 @@ const settingClose = () => {
           <span class="mx-2">{{ data.name }}</span>
         </div>
         <template #content>
-          <!-- <div
-            class="transition-all tt-shadow rounded-xl tt-modal-bg px-2 pt-2 w-[240px] ml-[200px]"
+          <div
+            class="transition-all tt-shadow rounded-xl tt-modal-bg px-2 pt-2 w-[240px] ml-[70px]"
             @click.stop.prevent=""
-          > -->
-          <!-- class="header-left-menu transition-all tt-shadow rounded-xl tt-modal-bg px-2 pt-2 absolute top-[35px] left-0 z-[999999] w-[240px]" -->
-          <!-- <div class="flex text-sm mb-2 p-2">
+          >
+            <!-- class="header-left-menu transition-all tt-shadow rounded-xl tt-modal-bg px-2 pt-2 absolute top-[35px] left-0 z-[999999] w-[240px]" -->
+            <div class="flex text-sm mb-2 p-2">
               <a-avatar
                 shape="circular"
                 :size="36"
@@ -297,9 +302,9 @@ const settingClose = () => {
                 <div class="text-sm">{{ modal.userInfo?.name }}</div>
                 <div class="tt-text-2 mt-1 text-xs">开发者</div>
               </div>
-            </div> -->
-          <!-- 社交功能 -->
-          <!-- <hr
+            </div>
+            <!-- 社交功能 -->
+            <hr
               style="margin-bottom: 8px !important"
               v-if="socializeList.length"
             />
@@ -314,10 +319,10 @@ const settingClose = () => {
                 :icon="item?.icon"
               />
               {{ item.name }}
-            </div> -->
+            </div>
 
-          <!-- 基础功能 -->
-          <!-- <hr style="margin-bottom: 8px !important" />
+            <!-- 基础功能 -->
+            <hr style="margin-bottom: 8px !important" />
             <div
               class="flex h-[40px] items-center mb-2 hover:tt-theme-bg-2 rounded-xl pl-3"
               @click.stop.prevent="item.fn"
@@ -326,7 +331,7 @@ const settingClose = () => {
               <xt-mix-icon class="mr-2 tt-modal-bg" :icon="item.icon" />
               {{ item.name }}
             </div>
-          </div> -->
+          </div>
         </template>
       </tippy>
     </template>
