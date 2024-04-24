@@ -4,9 +4,15 @@ import { ref, onMounted, computed, onUnmounted, nextTick } from "vue";
 import { useParserCard } from "./parser";
 import WuJie from "../wujie/WuJie.vue";
 import { useTTAppStore } from "../../store";
-import { storeToRefs } from "pinia";
+import { mapActions, storeToRefs } from "pinia";
 import { useCardSize } from "../../../../../hooks";
 import { useWuJieStore } from "../wujie/store";
+import PerfectScrollbar from "perfect-scrollbar";
+import { appsStore as useAppStore } from "../../../../../store/apps";
+const appsStore: any = useAppStore();
+const scrollbar: any = ref(null);
+const perfectScrollbar: any = ref(null);
+
 const wujieStore = useWuJieStore();
 const { data: wujieData }: any = storeToRefs(wujieStore);
 
@@ -15,11 +21,10 @@ const { modal } = storeToRefs(ttappStore);
 const loading = ref(true);
 // 卡片头部
 const cardHeader: any = ref({});
-const size = ref();
 const sizeList = ref();
 const data = ref();
 // 卡片状态 无数据、加载中、正常 对应的值分别为 noData、loading、normal
-const status = ref("loading");
+
 const id = ref();
 onMounted(async () => {
   loading.value = false;
@@ -35,15 +40,11 @@ onMounted(async () => {
   // 解析数据
   let options = useParserCard(res);
   cardHeader.value = options.header;
-  // 不存在自定义大小
-  if (!props.customData.customSize) {
-    props.customData.customSize = props.customData.size;
-  }
   let currentSize: any = useCardSize(props.customData.customSize);
-  size.value = {
-    width: currentSize.width + "px",
-    height: currentSize.height + "px",
-  };
+  // size.value = {
+  //   width: currentSize.width + "px",
+  //   height: currentSize.height + "px",
+  // };
 
   if (props.customData.sizeList) {
     sizeList.value = props.customData.sizeList.map((item: any) => {
@@ -55,7 +56,10 @@ onMounted(async () => {
   }
 
   loading.value = false;
+  // 是否加载滚动条
   nextTick(() => {
+    const scroll = props.customData.scroll;
+    if (scroll === false) return;
     perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {
       wheelPropagation: false,
     });
@@ -92,14 +96,24 @@ const header = computed(() => {
     refresh: refresh.value,
   };
 });
+
+
 const menus = computed(() => {
   let list = [
     refresh.value,
     {
       newIcon: "fluent:open-16-regular",
-      title: "打开主应用",
+      title: "进入主应用",
+      fn: () => {
+        ttappStore.enterApp(data.value.id)
+      },
+    },
+    {
+      newIcon: "fluent:window-16-regular",
+      title: "弹窗打开",
       fn: () => {
         modal.value.id = data.value.id;
+        modal.value.url = "ttapp://" + data.value.id + props.customData.entry;
         modal.value.visible = true;
       },
     },
@@ -119,9 +133,15 @@ const menus = computed(() => {
   return list;
 });
 
-import PerfectScrollbar from "perfect-scrollbar";
-const scrollbar: any = ref(null);
-const perfectScrollbar: any = ref(null);
+const container = ref({
+  // 头部
+  header: header.value,
+  // 右键菜单
+  menus: menus.value,
+  // 配置对象
+  options: options.value,
+  // 卡片尺寸
+});
 
 const resize = () => {
   // perfectScrollbar.value.update();
@@ -138,12 +158,12 @@ onUnmounted(() => {
   <xt-container
     :customIndex="customIndex"
     :customData="customData"
-    :header="header"
-    :menuList="menus"
-    :options="options"
-    v-model:customSize="customData.customSize"
+    :header="container.header"
+    :menuList="container.menus"
+    :options="container.options"
     :sizeList="sizeList"
     @resize="resize"
+    v-model:customSize="customData.customSize"
     v-if="data"
   >
     <template #header-left v-if="!loading">
@@ -161,6 +181,7 @@ onUnmounted(() => {
     >
       <WuJie
         v-if="!loading"
+        v-model:cardConfig="cardContainer"
         :url="customData._entry"
         :id="customData.parentId"
         :app-info="data"
