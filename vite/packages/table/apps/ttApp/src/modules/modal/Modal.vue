@@ -15,7 +15,7 @@ import { useRouter } from "vue-router";
 import { useTTAppStore } from "../../store";
 import { useWindowSize } from "@vueuse/core";
 const { width: windowWidth, height: windowHeight } = useWindowSize();
-import WuJieSetting from "../wujieSetting/WuJieSetting.vue";
+import ModalSetting from "../modalSetting/ModalSetting.vue";
 const ttappStore: any = useTTAppStore();
 const { modal, ttappList } = storeToRefs(ttappStore);
 // 窗口弹窗
@@ -245,7 +245,7 @@ const settingClose = () => {
   </xt-modal>
   <!-- 设置弹窗 -->
   <xt-modal v-if="settingVisible" v-model="settingVisible" :mask="false" custom>
-    <WuJieSetting v-if="settingVisible" @close="settingClose" :data="data" />
+    <ModalSetting v-if="settingVisible" @close="settingClose" :data="data" />
   </xt-modal>
   <!-- 主应用弹窗 -->
   <xt-modal
@@ -373,4 +373,4 @@ const settingClose = () => {
     </template>
   </xt-modal>
 </template>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped></style>../wujieSetting/ModalSetting.vue

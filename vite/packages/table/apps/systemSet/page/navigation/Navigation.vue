@@ -6,10 +6,10 @@
 </template>
 
 <script setup lang='ts'>
-import { ref,defineAsyncComponent,onMounted } from 'vue'
+import { ref,onMounted } from 'vue'
 
-const Property = defineAsyncComponent(() => import('./Property.vue'))
-const Appearance = defineAsyncComponent(() => import('./Appearance.vue'))
+import  Property from './Property.vue'
+import Appearance from './Appearance.vue'
 
 const props = defineProps({
     deskTab: String
