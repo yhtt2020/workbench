@@ -31,17 +31,3 @@ export const useSelectAll = async () => {
   }
   return res.data;
 };
-/**
- * 删除一条数据
- */
-export const useUninstall = async (id: string) => {
-  const res: Res = await new Promise((reject) => {
-    tsbApi.ttapp.uninstall(id, (data) => {
-      reject(data);
-    });
-  });
-  if (res.code !== 200) {
-    return false;
-  }
-  return true;
-};

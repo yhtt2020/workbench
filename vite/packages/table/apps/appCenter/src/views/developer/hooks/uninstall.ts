@@ -1,11 +1,22 @@
 import { storeToRefs } from "pinia";
 import { cardStore as useCardSize } from "../../../../../../store/card";
 import { navStore as useNavStore } from "../../../../../../store/nav";
+import { useTTAppStore } from "../../../../../ttApp/src/store";
+import { message } from "ant-design-vue";
 
 export const uninstall = (id: string) => {
+  clearStore(id);
   clearDesk(id);
   clearNav(id);
+  clearDb(id);
 };
+/** 删除store数据 */
+const clearStore = (id: string) => {
+  const ttappStore: any = useTTAppStore();
+  ttappStore.removeList(id);
+  ttappStore.removeData(id);
+};
+/** 删除桌面数据 */
 const clearDesk = (id: string) => {
   const cardStore = useCardSize();
   const { desks }: any = storeToRefs(cardStore);
@@ -47,6 +58,7 @@ const clearDesk = (id: string) => {
     return desk;
   });
 };
+/** 删除导航栏数据 */
 const clearNav = (id: string) => {
   // 获取导航数据
   const navStore = useNavStore();
@@ -149,4 +161,17 @@ const clearNav = (id: string) => {
     }
     return true;
   });
+};
+/** 删除db数据 */
+export const clearDb = async (id: string) => {
+  const res: any = await new Promise((reject) => {
+    tsbApi.ttapp.uninstall(id, (data) => {
+      reject(data);
+    });
+  });
+  if (res.code !== 200) {
+    message.error("卸载失败");
+    return;
+  }
+  message.success("卸载成功");
 };
