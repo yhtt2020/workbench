@@ -1,6 +1,6 @@
 // import devtools from '@vue/devtools'//注释此行无法连接vue调试工具
 // 注册想天客户端状态
-import { isWeb, isClient, isMac, isOffline, isGuest } from "./ui/hooks/env";
+import { isWeb, isClient, isMac, isOffline, isGuest, isSingle } from "./ui/hooks/env";
 import {
   useEnv,
   useEnvLimit,
@@ -11,6 +11,7 @@ import type { UseEnv, baseEnv } from "./permission/useEnv";
 import archiveHelper from "./js/lib/archiveHelper";
 window.$isOffline = isOffline;
 window.$isGuest = isGuest;
+window.$isSingle = isSingle;
 window.$useEnv = useEnv;
 window.$useEnvLimit = useEnvLimit;
 window.$useComLimit = useComLimit;
@@ -108,8 +109,8 @@ const app = createApp(App);
 
 //腾讯IM部分
 import { loadChat,TUIKit } from "./chat";
-TUIKit.TUIChatKit.components(TUIKit.TUIComponents,app);
 loadChat();
+TUIKit.TUIChatKit.components(TUIKit.TUIComponents,app);
 // 导入IM的UI覆写样式文件
 import "./apps/chat/assets/chat.scss";
 // TUIKit
@@ -122,6 +123,7 @@ app.provide("isWeb", isWeb);
 app.provide("isClient", isClient);
 app.provide("isMac", isMac);
 app.provide("isOffline", isOffline);
+app.provide("isSingle", isSingle);
 app.provide("isGuest", isGuest);
 app.provide("$useEnv", useEnv);
 
@@ -131,6 +133,7 @@ app.config.globalProperties.$isWeb = isWeb;
 app.config.globalProperties.$isClient = isClient;
 app.config.globalProperties.$isMac = isMac;
 app.config.globalProperties.$isOffline = isOffline;
+app.config.globalProperties.$isSingle = isSingle;
 app.config.globalProperties.$isGuest = isGuest;
 app.config.globalProperties.$bus = useMit;
 app.config.globalProperties.$useEnv = useEnv;

@@ -14,8 +14,12 @@ import PerfectScrollbar from "perfect-scrollbar";
 import { useRouter } from "vue-router";
 import { useTTAppStore } from "../../store";
 import { useWindowSize } from "@vueuse/core";
-const { width: windowWidth, height: windowHeight } = useWindowSize();
+import { useAppCenterStore } from "../../../../appCenter/src/store";
 import ModalSetting from "../modalSetting/ModalSetting.vue";
+
+const appCenterStore = useAppCenterStore();
+const { visible } = storeToRefs(appCenterStore);
+const { width: windowWidth, height: windowHeight } = useWindowSize();
 const ttappStore: any = useTTAppStore();
 const { modal, ttappList } = storeToRefs(ttappStore);
 // 窗口弹窗
@@ -39,6 +43,7 @@ const init = async () => {
   if (community) {
     let obj = {
       name: data.value?.name + "官方社群",
+      typeName: "官方社群",
       fn: () => {},
     };
     socializeList.value.push(obj);
@@ -48,6 +53,7 @@ const init = async () => {
   if (yuanCommunity) {
     let obj = {
       name: data.value?.name + "元社区圈子",
+      typeName: "元社区圈子",
       fn: () => {},
     };
     socializeList.value.push(obj);
@@ -57,11 +63,12 @@ const init = async () => {
   if (group) {
     let obj = {
       name: data.value?.name + "开发者交流群",
+      typeName: "开发者交流群",
       fn: () => {},
     };
     socializeList.value.push(obj);
   }
-
+  res.socializeList = socializeList;
   // 获取用户信息 没写完
   await ttappStore.getUserInfo(res.uid || 1);
 
@@ -196,7 +203,9 @@ watch(
 );
 
 /** 打开应用市场 */
-const openAppStore = () => {};
+const openAppStore = () => {
+  visible.value = true;
+};
 /** 打开关于 */
 const aboutVisible = ref(false);
 const openAboutModal = () => {
@@ -264,53 +273,21 @@ const settingClose = () => {
   >
     <!-- 头部左侧区域 -->
     <template #header-left>
-      <div
-        class="group hover:tt-theme-bg-2 relative pl-2 rounded-lg title h-[32px] flex items-center text-sm cursor-pointer"
+      <tippy
+        :z-index="99999999999"
+        trigger="mouseenter"
+        placement="bottom"
       >
-        <a-avatar shape="square" class="" :size="16" :src="data._logo" />
-        <span class="mx-2">{{ data.name }}</span>
+      <!-- :interactive="true" -->
 
         <div
-          @click.stop.prevent=""
-          class="group-hover:opacity-100 transition-all opacity-100 tt-shadow rounded-xl tt-modal-bg px-2 pt-2 absolute top-[35px] left-0 z-[999999] w-[240px]"
+          class="group header-left hover:tt-theme-bg-2 relative pl-2 rounded-lg title h-[32px] flex items-center text-sm cursor-pointer"
         >
-          <div class="flex text-sm mb-2 p-2">
-            <a-avatar
-              shape="circular"
-              :size="36"
-              :src="modal.userInfo?.avatar"
-            />
-            <div class="ml-2">
-              <div class="text-sm">{{ modal.userInfo?.name }}</div>
-              <div class="tt-text-2 mt-1 text-xs">开发者</div>
-            </div>
-          </div>
-          <!-- 社交功能 -->
-          <hr
-            style="margin-bottom: 8px !important"
-            v-if="socializeList.length"
-          />
-          <div
-            v-for="item in socializeList"
-            class="flex h-[40px] items-center mb-2 hover:tt-theme-bg-2 rounded-xl pl-3"
-            @click.stop.prevent="item.fn"
-          >
-            <xt-mix-icon class="mr-2 tt-modal-bg" type="select" :icon="item?.icon" />
-            {{ item.name }}
-          </div>
-
-          <!-- 基础功能 -->
-          <hr style="margin-bottom: 8px !important" />
-          <div
-            class="flex h-[40px] items-center mb-2 hover:tt-theme-bg-2 rounded-xl pl-3"
-            @click.stop.prevent="item.fn"
-            v-for="item in leftBaseMenu"
-          >
-            <xt-mix-icon class="mr-2  tt-modal-bg" :icon="item.icon" />
-            {{ item.name }}
-          </div>
+          <a-avatar shape="square" class="" :size="16" :src="data._logo" />
+          <span class="mx-2">{{ data.name }}</span>
         </div>
-      </div>
+
+      </tippy>
     </template>
     <!-- 头部右侧区域 -->
     <template #header-right>
@@ -348,7 +325,7 @@ const settingClose = () => {
       >
         <WuJie
           v-if="!loading"
-          :url="data.main._entry"
+          :url="modal.url"
           :id="data.id"
           :app-info="data"
         />
@@ -373,4 +350,15 @@ const settingClose = () => {
     </template>
   </xt-modal>
 </template>
-<style lang="scss" scoped></style>../wujieSetting/ModalSetting.vue
+<style lang="scss" scoped>
+.header-left {
+  transition: all 0.3s;
+
+  .header-left-menu {
+    display: none;
+  }
+  &:hover .header-left-menu {
+    display: block !important;
+  }
+}
+</style>

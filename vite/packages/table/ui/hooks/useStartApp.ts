@@ -10,6 +10,7 @@ import { useComStore } from "../../components/bottomPanel/comStore";
 import { useTTAppStore } from "../../apps/ttApp/src/store";
 import { storeToRefs } from "pinia";
 import fs from "fs";
+import { appsStore } from "../../store/apps";
 async function runApp(uri) {
   console.log("打开uri", uri);
   try {
@@ -112,8 +113,17 @@ export const startApp = async (type, value, router?) => {
     case "ttapp":
       const ttappStore = useTTAppStore();
       const { modal } = storeToRefs(ttappStore);
-      modal.value.id = value;
-      modal.value.visible = true;
+      let appInfo=ttappStore.select(value)
+      let app={
+        theme:appInfo.theme_color,
+        name: appInfo.name,
+        url:'ttapp://'+appInfo.id+ appInfo.main.entry,
+        preload: '',
+        background: false,
+        node: true,
+        security: true
+      }
+      appsStore().openApp(app)
       break;
     case "fixed":
       openFixedApp[value]();

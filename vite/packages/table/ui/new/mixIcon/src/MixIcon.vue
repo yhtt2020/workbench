@@ -11,7 +11,7 @@
   <div class="inline-block">
     <div
       class="flex items-center justify-center cursor-pointer xt-text-2"
-      :class="[props.class]"
+      :class="class"
       :style="[style, boxStyle]"
       @click="onClick"
     >
@@ -61,7 +61,10 @@ const boxStyle = computed(() => {
 });
 
 const props = defineProps({
-  class: {},
+  class: {
+    type: String,
+    default: "xt-bg",
+  },
   style: {},
   iconClass: {},
   iconStyle: {},
@@ -156,7 +159,6 @@ watch(
 // defineExpose({
 //   randomIcon,
 // });
-onMounted(() => {});
 </script>
 
 <style lang="scss" scoped></style>

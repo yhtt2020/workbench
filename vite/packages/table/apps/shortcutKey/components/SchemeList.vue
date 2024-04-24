@@ -113,6 +113,9 @@ export default {
       this.selecting = false
     },
     goEdit(app) {
+      if(Array.isArray(app.exeName)){
+        app.exeName=app.exeName[0]
+      }
       this.$router.push({
         name: 'editApp',
         params: {

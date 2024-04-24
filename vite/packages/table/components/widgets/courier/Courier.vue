@@ -2,7 +2,7 @@
   <xt-container
     :header="header"
     v-model:customSize="customData.customSize "
-    :envLimit="['guest','offline']"
+    :envLimit="['guest','single']"
     :desk="desk"
     :sizeList="sizeList"
     :options="options"
@@ -190,7 +190,7 @@ export default {
         web: false,
         mobile: false,
         client: false,
-        offline: true
+        single: true
       },
       displayList: [],//显示列表
       autoRefreshTime,

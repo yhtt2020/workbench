@@ -1,12 +1,12 @@
 <template>
   <div
-    class="flex-col justify-around cursor-pointer box rounded-xl xt-hover black xt-base-btn"
+    class="relative flex-col items-center justify-around cursor-pointer box rounded-xl xt-hover black xt-base-btn"
     :data-index="index"
     @click.stop="iconClick($event)"
     :style="[iconSize]"
   >
     <!-- <xt-icon-show
-      v-if="!isIfy"
+      v-if="isIfy === 'select'"
       v-model="src"
       :h="imgH"
       :w="imgW"
@@ -33,10 +33,15 @@
       :bg="bg"
       :r="r"
       :style="{ borderRadius: '12px', background: bg }"
-      :iconStyle="{ borderRadius: r }"
-      :class="'relative'"
+      :iconStyle="{ borderRadius: r  }"
+      :class="''"
     />
-    <img src="/public/icons/tag.png" alt="" class="absolute w-[30px]" style="top:-2px;right:-3px" v-if="isIfy === 'ify'">
+    <img 
+      src="/public/icons/tag.png" 
+      alt="" 
+      class="absolute w-[30px]" 
+      style="top:1px;right:-2px" 
+      v-if="isIfy === 'ify'">
     <!-- <div
       class="flex items-center justify-center w-full overflow-hidden xt-text no-drag rounded-xl"
       :style="[bgSize, backgroundState]"
@@ -89,6 +94,7 @@ export default {
       default: false,
     },
   },
+  // 卡片类图标打开其卡片弹窗
   emits: ["openCard"],
   data() {
     return {
@@ -111,8 +117,16 @@ export default {
       if (this.isBackground) return { background: this.backgroundColor };
       else return { background: "none" };
     },
+    // 单图标大小 -- 当为ify图标时，控制宽度
     iconSize() {
-      return this.getSizeValues(this.size).iconSize;
+      // return this.isIfy == "ify" ? this.getSizeValues(this.size).imgSize : this.getSizeValues(this.size).iconSize;
+      if(this.isIfy == "ify"){
+        return {
+          width: this.getSizeValues(this.size).imgSize.width,
+          height: this.getSizeValues(this.size).iconSize.height
+        }
+      } 
+      return this.getSizeValues(this.size).iconSize
     },
     textSize() {
       let textSize = this.getSizeValues(this.size).textSize;
@@ -130,7 +144,7 @@ export default {
       };
     },
     r() {
-      if (this.isRadius) return this.radius + "%";
+      if (this.isRadius) return this.radius + "px";
     },
     bg() {
       if (this.isBackground) return this.backgroundColor;
@@ -144,18 +158,20 @@ export default {
     // 为了适配新版
     imgH() {
       let h = parseInt(this.getSizeValues(this.size).imgSize.height);
+      h = this.isIfy == "ify" ? h / 2 : h;
       return h;
     },
     imgW() {
       let w = parseInt(this.getSizeValues(this.size).imgSize.width);
+      w = this.isIfy == "ify" ? w / 2 : w; 
       return w;
     },
     bgW() {
-      let w = parseInt(this.getSizeValues(this.size).bgSize.width);
+      let w = this.isIfy == "ify" ? parseInt(this.getSizeValues(this.size).imgSize.width) : parseInt(this.getSizeValues(this.size).bgSize.width);
       return w;
     },
     bgH() {
-      let h = parseInt(this.getSizeValues(this.size).bgSize.height);
+      let h = this.isIfy == "ify" ? parseInt(this.getSizeValues(this.size).imgSize.height) : parseInt(this.getSizeValues(this.size).bgSize.height);
       return h;
     },
     fit() {
@@ -200,7 +216,7 @@ export default {
           height: `${h}px`,
         },
         textSize: {
-          width: `${w - 20}px`,
+          width: this.isIfy == "ify" ? '' : `${w - 20}px`,
           "font-size": "1px",
         },
         imgSize: {

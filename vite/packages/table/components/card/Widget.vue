@@ -103,7 +103,6 @@ import { MenuOutlined } from "@ant-design/icons-vue";
 import _ from "lodash-es";
 
 import { cardStore } from "../../store/card";
-import { offlineStore } from "../../js/common/offline";
 
 import RightMenu from "./RightMenu.vue";
 import PageState from "./PageState.vue";
@@ -300,7 +299,6 @@ export default {
 
   methods: {
     ...mapActions(cardStore, ["removeCard", "updateCustomData"]),
-    ...mapActions(offlineStore, ["getIsOffline"]),
     useEnv,
     // 右键删除
     doRemoveCard() {

@@ -1,6 +1,10 @@
 <!--群聊会话列表页面 -->
 <template>
-  <div :class="['TUIKit', isH5 && 'TUIKit-h5']">
+  <!-- 最新UI页面 -->
+  <ChatDetail />
+
+  <!-- 以下是IM的群聊的旧UI代码 -->
+  <!-- <div :class="['TUIKit', isH5 && 'TUIKit-h5']">
     <div v-if="!(isH5 && currentConversationID)" class="TUIKit-navbar">
       <div
         v-for="item of navbarList"
@@ -41,70 +45,70 @@
           @switchConversation="currentNavbar = 'conversation'"
         />
       </div>
-      <!-- <TUICallKit class="callkit-container" :allowedMinimized="true" :allowedFullScreen="false" /> -->
+      <TUICallKit class="callkit-container" :allowedMinimized="true" :allowedFullScreen="false" />
     </div>
-  </div>
+  </div> -->
 </template>
 <script setup>
-import { nextTick, onMounted, ref, watch } from "vue";
-import {
-  TUIStore,
-  StoreName,
-  TUIConversationService,
-} from "@tencentcloud/chat-uikit-engine";
-import { isH5 } from "../../../TUIKit/utils/env";
-//导入pinia缓存将当前会话进行存储
-import { storeToRefs } from "pinia";
-import { chatStore } from "../../../../store/chat";
+import ChatDetail from "../community/ChatDetail.vue";
 
-const chat = chatStore();
-const { conversations } = storeToRefs(chat);
+// import { isH5 } from "../../../TUIKit/utils/env";
+// import { chatStore } from "../../../../store/chat";
+// import { useRouter } from "vue-router";
+// import { message } from "ant-design-vue";
 
-const currentConversationID = ref("");
-const currentNavbar = ref("conversation");
-const navbarList = [
-  {
-    id: "conversation",
-    label: "会话",
-  },
-  {
-    id: "contact",
-    label: "通讯录",
-  },
-];
-const currentConversationList = ref([]);
+// const chat = chatStore();
+// const { conversations } = storeToRefs(chat);
 
-// 触发当前的群聊会话
-const handleSwitch = (data) => {
-  //  console.log('查看data',data);
-  conversations.value.conversationID = data;
-};
+// const currentConversationID = ref("");
+// const currentNavbar = ref("conversation");
+// const navbarList = [
+//   {
+//     id: "conversation",
+//     label: "会话",
+//   },
+//   {
+//     id: "contact",
+//     label: "通讯录",
+//   },
+// ];
+// const currentConversationList = ref([]);
+// const router = useRouter();
 
-TUIStore.watch(StoreName.CONV, {
-  currentConversationID: (id) => {
-    currentConversationID.value = id;
-  },
-  currentConversationList: (list) => {
-    currentConversationList.value = list;
-  },
-});
+// // 触发当前的群聊会话
+// const handleSwitch = (data) => {
+//   //  console.log('查看data',data);
+//   conversations.value.conversationID = data;
+// };
 
-// 监听缓存中的会话ID
-watch(
-  () => conversations.value.conversationID,
-  (value) => {
-    if (value) {
-      TUIConversationService.switchConversation(value);
-    } else {
-      // 当前list是获取所有群聊会话列表
-      const list = TUIStore?.storeMap?.conversation?.store?.conversationList;
-      // 如果缓存中的会话是空的,就从会话列表中获取第一个会话;
-      const currentID = list[0]?.conversationID;
-      TUIConversationService.switchConversation(currentID);
-    }
-  },
-  { immediate: true }
-);
+// /**监听缓存中的会话ID**/ 
+// watch(
+//   () => conversations.value.conversationID,
+//   (value) => {
+//     if (value) {
+//       TUIConversationService.switchConversation(value);
+//     } else {
+//       // 当前list是获取所有群聊会话列表
+//       const list = TUIStore?.storeMap?.conversation?.store?.conversationList;
+//       // 如果缓存中的会话是空的,就从会话列表中获取第一个会话;
+//       const currentID = list[0]?.conversationID;
+//       TUIConversationService.switchConversation(currentID);
+//     }
+//   },
+//   { immediate: true }
+// );
+
+// /**监听当前群聊会话是否为空,如果为空回自接跳转到发现页**/ 
+// watch(
+//   () => TUIStore?.storeMap?.conversation?.store?.conversationList,
+//   (newVal) => {
+//     if (newVal.length === 0) {
+//       message.warning("当前聊天页没有会话列表,会默认自动进入发现页进行聊天会话的创建或者是点击左侧栏底部添加按钮创建")
+//       router.push({ path: "/chatFind" });
+//     }
+//   },
+//   { deep: true, immediate: true }
+// );
 </script>
 <style scoped lang="scss">
 @import "../../../TUIKit/assets/styles/common.scss";

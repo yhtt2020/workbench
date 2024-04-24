@@ -38,28 +38,23 @@ const data = inject("data");
       <div>版本</div>
       <div class="tt-text-2">{{ data?.version }}</div>
     </div>
-    <hr />
-    <div class="flex text-sm mb-4 justify-between">
-      <div>官网</div>
-      <div class="tt-link">立即访问</div>
-    </div>
-  </xt-option-box>
+    <template v-if="data.projectUrl">
+      <hr />
 
-  <xt-option-box>
-    <div class="flex text-sm mb-4 justify-between">
-      <div>社群</div>
-      <div class="tt-text-2">{{ data?.name }}官方社群</div>
-    </div>
-    <hr />
-    <div class="flex text-sm mb-4 justify-between">
-      <div>群聊</div>
-      <div class="tt-text-2">{{ data?.name }}开发者交流群</div>
-    </div>
-    <hr />
-    <div class="flex text-sm mb-4 justify-between">
-      <div>圈子</div>
-      <div class="tt-text-2">{{ data?.name }}元社区圈子</div>
-    </div>
+      <div class="flex text-sm mb-4 justify-between">
+        <div>官网</div>
+        <div class="tt-link">立即访问</div>
+      </div>
+    </template>
+  </xt-option-box>
+  <xt-option-box v-if="data.socializeList.length">
+    <template v-for="(item, index) in data.socializeList">
+      <div class="flex text-sm mb-4 justify-between">
+        <div>{{ data?.typeName }}</div>
+        <div class="tt-text-2">{{ data?.name }}</div>
+      </div>
+      <hr v-if="index !== data.socializeList.length - 1" />
+    </template>
   </xt-option-box>
 </template>
 <style lang="scss" scoped></style>

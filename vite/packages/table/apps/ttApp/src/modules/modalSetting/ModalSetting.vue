@@ -57,7 +57,7 @@ const close = () => {
   <div class="w-[700px] h-[634px] flex">
     <div class="w-[200px] tt-main-bg p-3">
       <div
-        class="flex items-center h-[44px] rounded-[10px] mb-2"
+        class="flex items-center h-[44px] rounded-[10px] mb-2 cursor-pointer"
         v-for="(item, index) in settingMenu"
         :class="{
           'tt-theme-bg-2': currentIndex == index,

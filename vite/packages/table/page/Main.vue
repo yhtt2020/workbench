@@ -4,47 +4,42 @@
     <div v-if="!fullScreen" style="height: auto;flex: 0" ref="topPanel">
       <!--顶部状态栏      -->
       <TopPanel isHidden="true" v-if="currentNavPosition !== 'top'"></TopPanel>
-      <BottomPanel 
+      <BottomPanel
         enter="animate__fadeInDown"
         leave="animate__fadeOutUp"
         winPosition="position:fixed;top:0;width:100%;z-index: 10;"
-        v-if="currentNavPosition === 'top' && loaded" 
-        :delZone="delZone" 
-        @getDelIcon="getDelIcon" 
+        v-if="currentNavPosition === 'top' && loaded"
+        :delZone="delZone"
+        @getDelIcon="getDelIcon"
         @hiedNavBar="hiedNavBar"
         :mainClass="'top-20 right-6'">
       </BottomPanel>
       <!-- 当顶部window版导航栏开启自动隐藏后，用于占位，通过vueuse中的方法，来检测鼠标是否移入，防止导航栏闪烁 -->
-      <div 
-        v-if="autoHideNav.foot.state && currentNavPosition === 'top'" 
+      <div
+        v-if="autoHideNav.foot.state && currentNavPosition === 'top'"
         class="w-full h-[70px]">
       </div>
     </div>
     <div :style="{ margin: fullScreen ? 0 : '-3px', padding: fullScreen ? 0 : '8px' }"
       style="display: flex;flex-grow: 1;flex-shrink: 1;flex-basis: fit-content;overflow: hidden;height: 100%;">
-      <AutoHide 
-        :enter="'animate__fadeInLeft'" 
-        :leave="'animate__fadeOutLeft'" 
+      <AutoHide
+        :enter="'animate__fadeInLeft'"
+        :leave="'animate__fadeOutLeft'"
         :autoHideNav="autoHideNav.left.state"
         v-model:isLeaveBar="isEnterLeft">
-        <div 
+        <div
           style="z-index: 9;"
           v-show="sideVisible"
           class="flex items-center justify-center max-h-full">
           <!--左侧栏区域        -->
-          <SidePanel 
-            sortId="left" 
+          <SidePanel
+            sortId="left"
             :state="autoHideNav.left.state"
             fixedPosition="position: fixed;top: 50% - 32px;transform: translateY(-50%);"
-            :navigationList="sideNavigationList" 
-            :sortNavigationList="useNav.sortSideNavigationList"
-            :delNavList="useNav.removeSideNavigationList" 
-            :otherSwitch1="navigationToggle[1]" 
-            :otherSwitch2="navigationToggle[2]"
-            :otherNavList1="rightNavigationList" 
-            :otherNavList2="copyFootNav" 
+            :navigationList="sideNavigationList"
+            :delZone="delZone"
             @getDelIcon="getDelIcon"
-            @hiedNavBar="hiedNavBar" 
+            @hiedNavBar="hiedNavBar"
             @openFolder="openFolder">
           </SidePanel>
         </div>
@@ -52,9 +47,7 @@
       <div :style="{ margin: fullScreen ? 0 : '-8px', padding: fullScreen ? 0 : '8px' }"
         style="flex-shrink: 1;flex-grow: 1;align-items: center;align-content: center;flex-direction: column;position: relative;overflow: hidden;">
         <!--主题区域，自动滚动条        -->
-        <keep-alive>
-          <router-view></router-view>
-        </keep-alive>
+         <router-view></router-view>
         <!-- 删除区域 -->
         <div class="del-icon" id="delIcon2" v-show="delZone && navigationToggle[2] && currentNavPosition === 'bottom'"
           style="z-index:500;bottom: 0;right: 50%;transform: translateX(50%);width: 400px;height: 120px;">
@@ -80,28 +73,23 @@
           <TeamPanel></TeamPanel>
         </div>
       </Transition>
-      <AutoHide 
-        :enter="'animate__fadeInRight'" 
-        :leave="'animate__fadeOutRight'" 
+      <AutoHide
+        :enter="'animate__fadeInRight'"
+        :leave="'animate__fadeOutRight'"
         :autoHideNav="autoHideNav.right.state"
         v-model:isLeaveBar="isEnterRight">
-        <div 
+        <div
           style="z-index: 9;"
           class="flex items-center justify-center"
           v-show="rightVisible"
           >
           <!--右侧栏区域        -->
-          <SidePanel 
-            sortId="right" 
+          <SidePanel
+            sortId="right"
             fixedPosition="position: fixed;top: 50% - 32px;transform: translateY(-50%);right: 5px;"
-            :navigationList="rightNavigationList" 
-            :sortNavigationList="useNav.sortRightNavigationList"
-            :delNavList="useNav.removeRightNavigationList" 
-            :otherSwitch1="navigationToggle[0]" 
-            :otherSwitch2="navigationToggle[2]"
-            :otherNavList1="sideNavigationList" 
-            :otherNavList2="copyFootNav" 
+            :navigationList="rightNavigationList"
             :state="autoHideNav.right.state"
+            :delZone="delZone"
             @getDelIcon="getDelIcon"
             @hiedNavBar="hiedNavBar"
             @openFolder="openFolder">
@@ -110,19 +98,19 @@
       </AutoHide>
     </div>
     <div style="flex: 0;" ref="isBottom">
-      <BottomPanel 
+      <BottomPanel
         winPosition="position:fixed;width: 100%;bottom: 0;z-index: 10;"
         enter="animate__fadeInUp"
         leave="animate__fadeOutDown"
-        v-if="!fullScreen && loaded && currentNavPosition === 'bottom'" 
-        :delZone="delZone" 
-        @getDelIcon="getDelIcon" 
+        v-if="!fullScreen && loaded && currentNavPosition === 'bottom'"
+        :delZone="delZone"
+        @getDelIcon="getDelIcon"
         @hiedNavBar="hiedNavBar"
         :mainClass="'bottom-20 right-6'">
       </BottomPanel>
       <!-- 当底部开启自动隐藏时，通过一个div来占位，防止桌面切换过于靠下，导致自动隐藏和桌面切换发生冲突 -->
-      <div 
-        v-if="autoHideNav.foot.state" class="w-full" 
+      <div
+        v-if="autoHideNav.foot.state" class="w-full"
         :class="[currentNavFormat === 'mac' ? 'h-[80px]' : 'h-[60px]' ]">
       </div>
     </div>
@@ -160,12 +148,12 @@ const useTeam = teamStore()
 const { teamVisible } = storeToRefs(useTeam)
 
 const useNav = navStore()
-const { 
-  sideNavigationList, 
-  rightNavigationList, 
-  navigationToggle, 
-  loaded, 
-  copyFootNav 
+const {
+  sideNavigationList,
+  rightNavigationList,
+  navigationToggle,
+  loaded,
+  copyFootNav
 } = storeToRefs(useNav)
 
 const useNavigation = useNavigationStore()
@@ -263,7 +251,7 @@ const hiedNavBar = (value) => {
   const foot = navigationToggle.value[2] ? copyFootNav.value : []
   const left = navigationToggle.value[0] ? sideNavigationList.value : []
   const right = navigationToggle.value[1] ? rightNavigationList.value : []
-  // 
+  //
   const checkAndToggle = (listToCheck, toggleIndex) => {
     if(listToCheck.some((item) => item.value === 'home')) {
       navigationToggle.value[toggleIndex] = false
@@ -272,7 +260,7 @@ const hiedNavBar = (value) => {
     navigationToggle.value[toggleIndex] = true
     message.info('至少保留一个主页图标')
   }
-  
+
   if (value === 'foot') {
     checkAndToggle([...left, ...right], 2)
   } else if (value === 'left') {

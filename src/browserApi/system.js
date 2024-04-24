@@ -41,6 +41,18 @@ const system = {
   },
   restart(){
     send('restart')
+  },
+  setDarkMode(darkMode){
+    send('setDarkMode',{
+      mode:darkMode
+    })
+  },
+  async isDarkMode(){
+    return ipcHelper.sendSync('system', 'isDarkMode')
+  },
+
+  async shouldUseDarkMode(){
+    return ipcHelper.sendSync('system', 'shouldUseDarkMode')
   }
 }
 module.exports = system

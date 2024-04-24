@@ -2,12 +2,13 @@ import cache from "../../components/card/hooks/cache";
 import { appStore } from "../../store";
 import { usePermissionStore } from "../store";
 import { useToast } from "vue-toastification";
+import { ChatLogout } from "../../apps/chat/hooks/chat";
 /**
  * 退出登录
  */
 export const useLogout = () => {
   const userStore: any = appStore();
-  // const permissionStore = usePermissionStore();
+  // const permissionStore:any = usePermissionStore();
   // 清空用户信息
   userStore.userInfo = "";
   // 清空pinia token
@@ -15,8 +16,8 @@ export const useLogout = () => {
   // permissionStore.userInfo = "";
   // 清空本地 token
   cache.set("ttUserToken", "");
-  // 清除群聊登录
-  (window as any).$chat?.chat?.logout();
+  // 退出群聊
+  new ChatLogout().logout();
 };
 
 export const useClearUserInfo = () => {

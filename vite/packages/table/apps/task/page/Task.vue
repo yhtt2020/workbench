@@ -38,7 +38,6 @@
 import { ref, watch, onMounted, computed, getCurrentInstance } from "vue";
 import { storeToRefs } from "pinia";
 import { taskStore } from "../store";
-import { offlineStore } from "../../../js/common/offline";
 import Primary from "./primary/index.vue";
 import Branch from "./branch/index.vue";
 import Activity from "./activity/index.vue";
@@ -63,8 +62,6 @@ const {
 } = storeToRefs(store);
 
 const { proxy } = getCurrentInstance();
-
-let Offline = offlineStore();
 let currentTask = ref("Primary");
 let task = ref([]);
 let icon = ref("");
@@ -90,7 +87,7 @@ const selectBranchTab = (item) => {
 };
 const menusList = computed(() => {
   const isDone = getUnFinishTaskStatus()?.done;
-  if (Offline.isOffline) {
+  if (window.$isSingle) {
     let tmp = ref([]);
     tmp.value = menus.value.filter((i) => {
       return i.value != "chats" && i.value != "Activity";

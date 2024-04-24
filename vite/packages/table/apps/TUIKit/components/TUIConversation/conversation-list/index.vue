@@ -38,6 +38,8 @@
             群聊走conversation?.groupProfile?.avatar
             好友走conversation?.userProfile?.avatar
             来处理IM自定义的头像
+             :borderRadius="conversation?.type === 'GROUP' ? '5px':'50%'"
+             群聊是正方形,好友是圆形
           -->
           <Avatar
             useSkeletonAnimation
@@ -47,6 +49,7 @@
                 : conversation?.userProfile?.avatar
             "
             size="30px"
+            :borderRadius="conversation?.type === 'GROUP' ? '5px' : '50%'"
           />
           <div
             v-if="userOnlineStatusMap && isShowUserOnlineStatus(conversation)"
@@ -99,7 +102,10 @@
                 >{{ conversation.getGroupAtInfo() }}</span
               >
               <p class="middle-box-content">
-                {{ conversation.getLastMessage("text") }}
+                <!-- 新代码将通过好友列表添加的字样进行清除 -->
+                {{ text(conversation) }}
+                <!-- 旧代码 -->
+                <!-- {{ conversation.getLastMessage("text") }} -->
               </p>
             </div>
           </div>
@@ -129,6 +135,8 @@
 </template>
 
 <script lang="ts" setup>
+import { computed } from "vue";
+
 interface IUserStatus {
   statusType: number;
   customStatus: string;
@@ -272,6 +280,28 @@ const getActionsMenuPosition = (event: Event, index: number) => {
 const enterConversationChat = (conversationID: string) => {
   emits("handleSwitchConversation", conversationID);
   TUIConversationService.switchConversation(conversationID);
+};
+
+const text = (conversation: any) => {
+  const isUserName = conversation.userProfile?.nick;
+  const isGroupName = conversation.lastMessage?.nick;
+  const isText = conversation.lastMessage?.payload?.text;
+  const isMessageForShow = conversation.lastMessage?.messageForShow;
+  const isFromAccount = conversation.lastMessage?.fromAccount;
+  
+  /**群聊**/ 
+  if (conversation.type === "GROUP") {
+    if(isGroupName && isText) return `${isGroupName}:${isText}`
+    else if(isGroupName && isMessageForShow) return `${isGroupName}:${isMessageForShow}`
+    else if(isFromAccount && isText) return `${isFromAccount}:${isText}`
+    else return ''
+  } 
+  /**好友**/ 
+  else {
+    if(isUserName && isText) return `${isUserName}:${isText}`
+    else if(isUserName && isMessageForShow) return `${isUserName}:${isMessageForShow}`
+    return ""
+  }
 };
 
 // 暴露给父组件，当监听到滑动事件时关闭actionsMenu
