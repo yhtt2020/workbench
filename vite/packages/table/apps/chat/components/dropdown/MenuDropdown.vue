@@ -7,7 +7,7 @@
     class="w-full"
   >
     <div
-      class="flex items-center rounded-lg px-3.5 py-2.5 pointer dropdown-hover"
+      class="flex items-center rounded-lg px-6 py-2.5 pointer dropdown-hover"
       @click="handleCurrentMenu"
     >
       <div class="flex items-center">
