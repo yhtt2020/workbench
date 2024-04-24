@@ -56,7 +56,6 @@ if (location.href.startsWith("tsbapp://")) {
     :name="randomName"
     :url="url"
     :attrs="attrs"
-    :props="{ cardContainer: cardContainer }"
     :plugins="[
       {
         jsBeforeLoaders: [
