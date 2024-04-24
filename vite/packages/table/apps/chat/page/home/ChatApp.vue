@@ -187,12 +187,6 @@ const leftList = ref([
       ]
     : []),
   {
-    type: "team",
-    tab: "team",
-    newIcon: "fluent:people-16-regular",
-    route: { name: "team", params: { no: "" } },
-  },
-  {
     full: true,
   },
 ]);
