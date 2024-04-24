@@ -1,6 +1,7 @@
-import { defineStore } from "pinia";
+import {defineStore, mapActions} from "pinia";
 import { useSelectAll, useUninstall } from "./hooks";
 import { message } from "ant-design-vue";
+import {appsStore} from "../../../store/apps";
 
 // @ts-ignore
 export const useTTAppStore = defineStore("useTTAppStore", {
@@ -20,6 +21,26 @@ export const useTTAppStore = defineStore("useTTAppStore", {
   }),
   getters: {},
   actions: {
+    enterApp(id: string){
+      let appInfo=this.select(id)
+      if(!appInfo){
+        console.error('应用不存在',id)
+        return
+      }
+      let url='ttapp://'+appInfo.id+ appInfo.main.entry
+      if(appInfo.main.entry.startsWith('http://')||appInfo.main.entry.startsWith('https://')){
+        url=appInfo.main.entry
+      }
+      let app={
+        theme:appInfo.theme_color,
+        name: appInfo.name,
+        url:url,
+        background: false,
+        node: true,
+        security: false,
+      }
+      appsStore().openApp(app)
+    },
     /**
      * 查询应用
      */

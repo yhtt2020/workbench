@@ -113,17 +113,7 @@ export const startApp = async (type, value, router?) => {
     case "ttapp":
       const ttappStore = useTTAppStore();
       const { modal } = storeToRefs(ttappStore);
-      let appInfo=ttappStore.select(value)
-      let app={
-        theme:appInfo.theme_color,
-        name: appInfo.name,
-        url:'ttapp://'+appInfo.id+ appInfo.main.entry,
-        preload: '',
-        background: false,
-        node: true,
-        security: true
-      }
-      appsStore().openApp(app)
+      ttappStore.enterApp(value)
       break;
     case "fixed":
       openFixedApp[value]();

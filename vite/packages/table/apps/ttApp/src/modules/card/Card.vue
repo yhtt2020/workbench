@@ -97,7 +97,7 @@ const header = computed(() => {
   };
 });
 
-const methods=mapActions(appsStore, ['openApp'])
+
 const menus = computed(() => {
   let list = [
     refresh.value,
@@ -105,18 +105,7 @@ const menus = computed(() => {
       newIcon: "fluent:open-16-regular",
       title: "进入主应用",
       fn: () => {
-        let appInfo=data.value
-        let app={
-          theme:appInfo.theme_color,
-          name: appInfo.name,
-          url:'ttapp://'+appInfo.id+ appInfo.main.entry,
-          preload: '',
-          background: false,
-          node: true,
-          security: true
-        }
-
-        methods.openApp(app)
+        ttappStore.enterApp(data.value.id)
       },
     },
     {

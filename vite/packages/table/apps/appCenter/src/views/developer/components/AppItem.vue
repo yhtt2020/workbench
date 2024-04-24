@@ -77,17 +77,7 @@ const addPreview = (data: any) => {
 };
 /** 打开主应用弹窗 */
 const entry = () => {
-  let appInfo=item
-  let app={
-    theme:appInfo.theme_color,
-    name: appInfo.name,
-    url:'ttapp://'+appInfo.id+ appInfo.main.entry,
-    preload: '',
-    background: false,
-    node: true,
-    security: true
-  }
-  appsStore().openApp(app)
+  ttappStore.enterApp(item.id)
 };
 </script>
 
