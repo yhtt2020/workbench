@@ -94,6 +94,7 @@ const leftHeader = ref([
     type: "session",
     route: { name: "chatMain", params: { no: "" } },
     disabled: false,
+    menuVisible: false,
     // info:
     //   currentData.value.unread !== 0
     //     ? ["tr", "red", `${unreadTotal.value}`]
@@ -104,6 +105,7 @@ const leftList = ref([
   {
     newIcon: "fluent:add-16-filled",
     icon: "tianjia2",
+    menuVisible: false,
     children: [
       {
         newIcon: "fluent:chat-16-regular",
@@ -173,6 +175,7 @@ const leftList = ref([
     tab: "find",
     type: "find",
     newIcon: "eva:compass-outline",
+    menuVisible: true,
     route: { name: "chatFind", params: { no: "" } },
   },
   ...(config.adminUids.includes(userInfo.uid)
@@ -182,27 +185,74 @@ const leftList = ref([
           type: "admin",
           tab: "admin",
           title: "管理面板(仅管理员可见)",
+          menuVisible: true,
           route: { name: "chatAdmin", params: { no: "" } },
         },
       ]
     : []),
   {
-    full: true,
+    full: false,
   },
 ]);
-
+/**社群右键菜单**/
+const menuList = ref([
+  {
+    newIcon: "fluent:arrow-upload-16-regular",
+    label: "置顶",
+    callBack: () => {
+      const no = router.currentRoute.value?.params?.no;
+      chatCommunity.topSort(no);
+    },
+  },
+  // {
+  //   newIcon:'fluent:add-16-regular',
+  //   label:'添加到...',
+  //   children:[],
+  // }
+]);
+// /**取消置顶列表**/
+const unMenuList = ref([
+  {
+    newIcon: "fluent:arrow-download-16-regular",
+    label: "取消置顶",
+    callBack: () => {
+      const no = router.currentRoute.value?.params?.no;
+      chatCommunity.unSetTopSort(no);
+    },
+  },
+]);
 const chatAppList = computed(() => {
   const newList = leftHeader.value.concat(
     myCommunity.value.concat(leftList.value)
   );
-  console.log("测试", newList);
   const mapList = _.map(newList, function (item) {
-    return {
-      ...item,
-      callBack: (item) => {
-        switchTab(item);
-      },
-    };
+    if (!item.menuVisible) {
+      return {
+        ...item,
+        callBack: (item) => {
+          switchTab(item);
+        },
+      };
+    } else {
+      /**是否置顶**/
+      if (item.top && item.top[3] === 0) {
+        return {
+          ...item,
+          menu: menuList.value,
+          callBack: (item) => {
+            switchTab(item);
+          },
+        };
+      } else {
+        return {
+          ...item,
+          menu: unMenuList.value,
+          callBack: (item) => {
+            switchTab(item);
+          },
+        };
+      }
+    }
   });
   return mapList;
 });

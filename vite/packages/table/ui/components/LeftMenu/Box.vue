@@ -3,9 +3,7 @@
   <div
     :class="[activeState ? 'active' : ' active-unread', boxClass]"
     class="flex justify-center items-center menu-item relative"
-    style=""
   >
-
     <div
       class="absolute flex items-center justify-center font-400 xt-active-text z-10"
       style="width: 20px; height: 20px; font-size: 10px"
@@ -26,7 +24,22 @@
         {{ item.info[2] }}
       </div>
     </div>
-    <!--  -->
+
+    <!-- 置顶 -->
+    <div
+      class="absolute flex items-center justify-center font-400 xt-active-text z-10"
+      style="width: 16px; height: 16px; font-size: 10px"
+      :style="[topPosition]"
+      v-if="topState"
+    >
+      <div
+        class="rounded-tr-lg rounded-bl-md flex items-center justify-center font-400 xt-active-text w-4 h-4"
+        style="position: absolute; font-size: 10px; z-index: 50"
+        :class="[topBg]"  v-if="topState.state"
+      >
+        <xt-ify-icon size="12" :icon="topState.icon" class="xt-text" />
+      </div>
+    </div>
 
     <slot></slot>
   </div>
@@ -63,6 +76,7 @@ const activeState = computed(() => {
     return props.item.id == props.id;
   }
 });
+
 /**
  * 2023-12-22
  * 定位信息
@@ -76,7 +90,6 @@ const infoState = computed(() => {
     return 2;
   }
 });
-
 const infoPosition = computed(() => {
   if (!item.value.info) return;
   const position = item.value.info[0];
@@ -109,6 +122,61 @@ const infoBg = computed(() => {
   if (bg === "red") return "tt-info-red";
   else if (bg === "warn") return "tt-info-warn";
   else if (bg === "success") return "success";
+});
+
+/**置顶标记
+ * topPosition 记录位置
+ * topState 记录状态 0 没有置顶, 置顶
+ * topBg 记录颜色
+ * **/
+const topPosition = computed(() => {
+  if (!item.value.top) return;
+  const position = item.value.top[0];
+  const bg = item.value.top[1];
+  if (position === "tr") {
+    return {
+      top: "2px",
+      right: "2px",
+    };
+  } else if (position === "br") {
+    return {
+      bottom: "1px",
+      right: "1px",
+    };
+  } else if (position === "tl") {
+    return {
+      left: "-6px",
+      top: "-6px",
+    };
+  } else if (position === "bl") {
+    return {
+      left: "-4px",
+      bottom: "-4px",
+    };
+  }
+});
+const topState = computed(() => {
+  if (!item.value.top) return;
+  if (item.value.top[2] && typeof item.value.top[2] === "object") {
+    if (item.value.top[3] && typeof item.value.top[3] === "number") {
+      /**判断有没有置顶**/
+      if (item.value.top[3] === 0) return;
+      return {
+        icon: item.value.top[2].icon,
+        state: true,
+      };
+    }
+  } else if (item.value.top[2]) {
+    return 2;
+  }
+});
+const topBg = computed(() => {
+  if (!item.value.top) return;
+  const bg = item.value.top[1];
+  if (bg === "red") return "tt-info-red";
+  else if (bg === "warn") return "tt-info-warn";
+  else if (bg === "success") return "success";
+  else if (bg === "blue") return "xt-theme-bg";
 });
 
 // 下个版本删除

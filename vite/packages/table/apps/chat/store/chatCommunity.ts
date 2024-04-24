@@ -18,7 +18,9 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         noBg: true,
         tab: "OfficialCommunity",
         type: "OfficialCommunity",
+        menuVisible: true,
         route: { name: "officialCommunity", params: { no: 1 } },
+        top: ["tr", "blue", { icon: "fluent:pin-16-regular" }, 0],
       },
     ],
     // 设置当前社群详情的社群号
@@ -38,7 +40,7 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         no: null,
       },
       // 存储当前社群子频道目录中的选中状态
-      selectCurrentChannel:null,
+      selectCurrentChannel: null,
     },
     // 热门社群列表
     hotList: [],
@@ -81,6 +83,8 @@ export const chatCommunityStore = defineStore("chatCommunity", {
                     name: "myCommunity",
                     params: { no: item.communityInfo?.no },
                   },
+                  menuVisible: true,
+                  top: ["tr", "blue", { icon: "fluent:pin-16-regular" }, 0],
                 };
                 this.myCommunity.push(options);
               }
@@ -140,7 +144,7 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         const status = res[0].status === 1 && res[1].status === 1;
         if (status) {
           // console.log('tree1',res[0].data.list);
-          console.log('tree',res);
+          console.log("tree", res);
           /**处理一级频道列表**/
           const firstList = _.map(res[0].data.list, (item: any) => {
             if (item.type === "group") {
@@ -218,7 +222,7 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         }
       });
     },
-    // 获取某个社群的详细信息 
+    // 获取某个社群的详细信息
     // 注意:当前方法只能获取社群的基本信息,不能获取社群的权限角色信息
     async loadCurrentCommunity(no: any) {
       const res = await comAPI.getByNoDetail({ no: no });
@@ -228,9 +232,59 @@ export const chatCommunityStore = defineStore("chatCommunity", {
       }
     },
     // 排序更新
-    sortUpdateList(list:any){
+    sortUpdateList(list: any) {
       this.categoryList = list;
-    }
+    },
+
+    // 置顶排序
+    topSort(no: any) {
+      const mapTop = _.map(this.myCommunity, (item: any) => {
+        if (Number(item.cno) === Number(no)) {
+          return {
+            ...item,
+            top: ["tr", "blue", { icon: "fluent:pin-16-regular" }, 1],
+          };
+        } else {
+          return item;
+        }
+      });
+      mapTop.sort((a: any, b: any) => {
+        if (Number(a.route.params.no) === Number(no)) {
+          /**将id为指定值的元素置顶**/ 
+          return -1; 
+        } else if (Number(b.route.params.no) === Number(no)) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+      this.myCommunity = mapTop;
+    },
+
+    // 取消置顶排序
+    unSetTopSort(no: any) {
+      const mapUnSetTop = _.map(this.myCommunity, (item: any) => {
+        if (Number(item.cno) === Number(no)) {
+          return {
+            ...item,
+            top: null,
+          };
+        } else {
+          return item;
+        }
+      });
+      mapUnSetTop.sort((a:any, b:any) => {
+        if (Number(a.route.params.no) === Number(no)) {
+          /**将id为指定值的元素放到末尾**/ 
+          return 1; 
+        } else if (Number(b.route.params.no) === Number(no)) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
+      this.myCommunity = mapUnSetTop;
+    },
   },
 
   persist: {
