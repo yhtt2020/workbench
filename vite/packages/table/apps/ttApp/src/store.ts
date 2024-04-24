@@ -2,6 +2,7 @@ import {defineStore, mapActions} from "pinia";
 import { useSelectAll, useUninstall } from "./hooks";
 import { message } from "ant-design-vue";
 import { appStore as useAppStore } from "../../../store";
+import {appsStore} from "../../../store/apps";
 
 // @ts-ignore
 export const useTTAppStore = defineStore("useTTAppStore", {
@@ -41,8 +42,7 @@ export const useTTAppStore = defineStore("useTTAppStore", {
         node: true,
         security: false,
       }
-      const appStore: any = useAppStore();
-      appStore.openApp(app)
+      appsStore().openApp(app)
     },
     /**
      * 查询应用
