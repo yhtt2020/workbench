@@ -12,7 +12,6 @@ import { storeToRefs } from "pinia";
 import { useFreeLayoutStore } from "./store";
 import { message } from "ant-design-vue";
 import "animate.css";
-
 import {
   useGridToWidth,
   useHeightToGrid,
@@ -31,6 +30,7 @@ const { proxy }: any = getCurrentInstance();
 
 const { currentDesk, currentID }: any = toRefs(props);
 const {
+  getCurrentDesk,
   freeLayoutData,
   getCurrentDeskId,
   getFreeLayoutData,
@@ -340,6 +340,7 @@ async function updateCard(data) {
 }
 
 let updateCardTimer: any;
+
 watch(
   currentDesk.value?.cards,
   (card) => {
@@ -352,6 +353,7 @@ watch(
   },
   {
     immediate: true,
+    deep: true,
   }
 );
 
@@ -396,7 +398,6 @@ onBeforeUnmount(() => {
   let data = {
     ...currentData.value,
   };
-  // const freeLayout = freeLayoutStore.getOneFreeLayoutData(currentID.value);
 
   // for (const id in freeLayout) {
   //   if (data[id]?.id.toString() != id.toString()) {
@@ -492,7 +493,7 @@ const handleIntersection = (visible, item) => {
         enter-active-class="animate__bounceIn"
         leave-active-class="animate__bounceIn"
       >
-      <!-- v-intersection="(visible) => handleIntersection(visible, item)" -->
+        <!-- v-intersection="(visible) => handleIntersection(visible, item)" -->
 
         <div
           class="rounded-xl"
@@ -508,10 +509,7 @@ const handleIntersection = (visible, item) => {
           <!-- <xt-button  w="280" h="400">  {{ freeLayoutEnv.scrollData }} </xt-button> -->
           <!-- <xt-button w="280">top {{ item.top }}</xt-button> -->
           <!-- <xt-button w="280">left {{ item.left }}</xt-button> -->
-          <slot
-            name="box"
-            :data="currentData[item?.id]"
-          ></slot>
+          <slot name="box" :data="currentData[item?.id]"></slot>
         </div>
       </transition>
     </xt-drag>

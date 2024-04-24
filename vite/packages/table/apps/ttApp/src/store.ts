@@ -57,6 +57,7 @@ export const useTTAppStore = defineStore("useTTAppStore", {
      */
     async uninstall(id: string) {
       let res = await useUninstall(id);
+      console.log('uninstall res :>> ', res);
 
       if (res) {
         // 删除数据

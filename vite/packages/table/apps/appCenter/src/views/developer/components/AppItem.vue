@@ -3,8 +3,27 @@ import { ref, computed } from "vue";
 import { useTTAppStore } from "../../../../../ttApp/src/store";
 import { storeToRefs } from "pinia";
 import { installV2 } from "./installV2";
+import { uninstall } from "../hooks/uninstall";
 import { appsStore } from "../../../../../../store/apps";
-
+import { cardStore as useCardSize } from "../../../../../../store/card";
+//
+// import { cardStore as useCardSize } from "../../../../../../store/na
+import { navStore as useNavStore } from "../../../../../../store/nav";
+const navStore = useNavStore();
+const {
+  copyFootNav,
+  copySideNav,
+  copyRightNav,
+  sideNavigationList,
+  rightNavigationList,
+}: any = storeToRefs(navStore);
+// console.log('copySideNav.value :>> ', copySideNav.value);
+// console.log("copyRightNav.value :>> ", copyRightNav.value);
+// console.log("sideNavigationList.value :>> ", sideNavigationList.value);
+// console.log("rightNavigationList.value :>> ", rightNavigationList.value);
+const cardStore = useCardSize();
+const { desks }: any = storeToRefs(cardStore);
+// import { cardStore } from "../../../../../../store/card"
 const { item } = defineProps<{ item: any }>();
 // esc dbl 循环二级
 // ttapp数据
@@ -33,7 +52,9 @@ const menus = computed(() => {
       newIcon: "fluent:delete-16-regular",
       color: "#FF4D4F",
       cb: () => {
-        // ttappStore.uninstall(item.id);
+        uninstall(item.id);
+        // 删除应用数据
+        ttappStore.uninstall(item.id);
       },
     },
   ];
@@ -76,7 +97,7 @@ const addPreview = (data: any) => {
 };
 /** 打开主应用弹窗 */
 const entry = () => {
-  ttappStore.enterApp(item.id)
+  ttappStore.enterApp(item.id);
 };
 </script>
 
