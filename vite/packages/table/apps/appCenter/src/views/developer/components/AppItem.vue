@@ -4,11 +4,7 @@ import { useTTAppStore } from "../../../../../ttApp/src/store";
 import { storeToRefs } from "pinia";
 import { installV2 } from "../hooks/installV2";
 import { uninstall } from "../hooks/uninstall";
-import { appsStore } from "../../../../../../store/apps";
-
-// import { cardStore } from "../../../../../../store/card"
 const { item } = defineProps<{ item: any }>();
-// esc dbl 循环二级
 // ttapp数据
 const ttappStore: any = useTTAppStore();
 const { modal } = storeToRefs(ttappStore);
@@ -26,8 +22,6 @@ const menus = computed(() => {
       newIcon: "fluent:delete-16-regular",
       cb: async () => {
         let res: any = await installV2(item.id);
-        const { code, data } = res;
-        console.log("object :>> ", code, data);
       },
     },
     {
@@ -41,8 +35,6 @@ const menus = computed(() => {
           {
             ok: async () => {
               uninstall(item.id);
-              // 删除应用数据
-              ttappStore.uninstall(item.id);
             },
             type: "warning",
           }

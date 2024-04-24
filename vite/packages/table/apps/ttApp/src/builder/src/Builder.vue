@@ -2,7 +2,7 @@
 import { reactive, ref } from "vue";
 import Item from "./component/Item.vue";
 import { message } from "ant-design-vue";
-import { useInstallTTApp, useSelectAll } from "../../hooks";
+import {  useSelectAll } from "../../hooks";
 import { useTTAppStore } from "../../store";
 import { storeToRefs } from "pinia";
 const ttappStore: any = useTTAppStore();
@@ -51,7 +51,7 @@ const id = ref("");
 const formVisible = ref(false);
 
 const installTTApp = async () => {
-  let res = await useInstallTTApp();
+  // let res = await useInstallTTApp();
   console.log("res :>> ", res);
   // 安装成功
   if (res.code === 200) {
