@@ -1,4 +1,6 @@
 <template>
+  <!-- 新增3D模型显示组件 -->
+  
   <div
     class="file-message-montainer"
     :title="TUITranslateService.t('TUIChat.单击下载')"
