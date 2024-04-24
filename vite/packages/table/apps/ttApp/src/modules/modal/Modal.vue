@@ -1,61 +1,109 @@
 <script setup lang="ts">
-import { ref, onBeforeMount, computed, watch, onMounted } from "vue";
+import {
+  ref,
+  onBeforeMount,
+  computed,
+  watch,
+  onMounted,
+  provide,
+  nextTick,
+} from "vue";
 import { storeToRefs } from "pinia";
 import WuJie from "../wujie/WuJie.vue";
 import PerfectScrollbar from "perfect-scrollbar";
 import { useRouter } from "vue-router";
 import { useTTAppStore } from "../../store";
 import { useWindowSize } from "@vueuse/core";
-const { width: windowWidth, height: windowHeight } = useWindowSize();
+import { useAppCenterStore } from "../../../../appCenter/src/store";
+import ModalSetting from "../modalSetting/ModalSetting.vue";
 
+const appCenterStore = useAppCenterStore();
+const { visible } = storeToRefs(appCenterStore);
+const { width: windowWidth, height: windowHeight } = useWindowSize();
 const ttappStore: any = useTTAppStore();
 const { modal, ttappList } = storeToRefs(ttappStore);
 // 窗口弹窗
 const modalRef: any = ref(null);
 
-const data: any = ref({});
-
+// 主应用数据
+const data: any = ref(null);
+// 加载状态
+const loading = ref(true);
+// 社交列表
+const socializeList: any = ref([]);
 /** 初始化方法 */
-const id = ref();
-const init = () => {
-  // 开始
-  loading.value = true;
+const init = async () => {
   let res = ttappStore.select(modal.value.id);
 
   if (!res) {
     return;
   }
-  data.value = res;
+  // 有社区
+  const community = data?.community;
+  if (community) {
+    let obj = {
+      name: data.value?.name + "官方社群",
+      typeName: "官方社群",
+      fn: () => {},
+    };
+    socializeList.value.push(obj);
+  }
+  // 有元社区
+  const yuanCommunity = data?.yuanCommunity;
+  if (yuanCommunity) {
+    let obj = {
+      name: data.value?.name + "元社区圈子",
+      typeName: "元社区圈子",
+      fn: () => {},
+    };
+    socializeList.value.push(obj);
+  }
+  // 有群
+  const group = data?.group;
+  if (group) {
+    let obj = {
+      name: data.value?.name + "开发者交流群",
+      typeName: "开发者交流群",
+      fn: () => {},
+    };
+    socializeList.value.push(obj);
+  }
+  res.socializeList = socializeList;
+  // 获取用户信息 没写完
+  await ttappStore.getUserInfo(res.uid || 1);
 
   // 完成
+  data.value = res;
   loading.value = false;
 };
 
 /** 刷新 */
-const loading = ref(true);
+
 const refresh = () => {
   loading.value = true;
   setTimeout(() => {
     loading.value = false;
   }, 1);
 };
-const index = ref(1000);
-const isTop = ref(false);
+
+// const index = ref(1000);
+// const isTop = ref(false);
+
 /** 右键菜单 */
 const menuList = computed(() => {
   let res = [
     { name: "刷新", fn: refresh },
-    {
-      name: isTop.value ? "取消置顶" : "置顶",
-      fn: () => {
-        isTop.value = !isTop.value;
-        if (isTop.value) {
-          index.value = 999999;
-        } else {
-          index.value = 1000;
-        }
-      },
-    },
+    // {
+    //   name: isTop.value ? "取消置顶" : "置顶",
+    //   fn: () => {
+    //     isTop.value = !isTop.value;
+    //     if (isTop.value) {
+    //       index.value = 999999;
+    //     } else {
+    //       index.value = 1000;
+    //     }
+    //   },
+    // },
   ];
   return res;
 });
@@ -82,12 +130,13 @@ onBeforeMount(() => {
 
 // 弹窗大小
 const modalSize = computed(() => {
+  if (!data.value) return;
   // 最大弹窗尺寸
   const maxModalHeight = windowHeight.value - 48;
   const maxModalWidth = windowWidth.value;
   // 弹窗尺寸
-  const mainWidth = data.value.main.width;
-  const mainHeight = data.value.main.height;
+  const mainWidth = data.value.main.width || 0;
+  const mainHeight = data.value.main.height || 0;
   const width = mainWidth.replace(/\D/g, "");
   const height = mainHeight.replace(/\D/g, "");
   // 当前弹窗尺寸
@@ -99,9 +148,7 @@ const modalSize = computed(() => {
       width: "100%",
       height: "100%",
     };
-  }
-  // else if ( ) {}
-  else {
+  } else {
     return {
       width: currentWidth,
       height: currentHeight,
@@ -115,8 +162,6 @@ const max = (value: boolean) => {
   isMax.value = value;
 };
 
-// groupid
-
 const openCommunity = () => {
   $app.$router.push({
     name: "myCommunity",
@@ -126,8 +171,6 @@ const openCommunity = () => {
   });
   close();
 };
-// timingSafeEqual,$ROUTER,XXXX
-
 // 打开群聊 获取群头像 社群头像
 const router = useRouter();
 const openGroup = () => {
@@ -142,20 +185,30 @@ const openGroup = () => {
 
 const scrollbar: any = ref(null);
 const perfectScrollbar: any = ref(null);
-onMounted(() => {
-  setTimeout(() => {
-    perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {
-      wheelPropagation: false,
+watch(
+  () => data.value,
+  (val) => {
+    console.log("val :>> ", val);
+    // 数据没加载时不执行
+    if (!val) return;
+    nextTick(() => {
+      perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {
+        wheelPropagation: false,
+      });
     });
-  }, 1);
-});
+  },
+  {
+    immediate: true,
+  }
+);
+
 /** 打开应用市场 */
-// const aboutVisible = ref(false);
-const openAppStore = () => {};
+const openAppStore = () => {
+  visible.value = true;
+};
 /** 打开关于 */
 const aboutVisible = ref(false);
 const openAboutModal = () => {
-  openGroup();
   aboutVisible.value = true;
 };
 /** 打开应用 */
@@ -164,15 +217,15 @@ const openSettingModal = () => {
   settingVisible.value = true;
 };
 /** 左侧菜单 */
-const leftMenu = computed(() => {
+const leftBaseMenu = computed(() => {
   return [
-    // {
-    //   name: "应用市场",
-    //   fn: openAppStore,
-    //   icon: "fluent:building-shop-16-regular",
-    // },
     {
-      name: "关于",
+      name: "应用市场",
+      fn: openAppStore,
+      icon: "fluent:building-shop-16-regular",
+    },
+    {
+      name: "关于" + data.value.name,
       fn: openAboutModal,
       icon: "fluent:info-16-regular",
     },
@@ -183,29 +236,9 @@ const leftMenu = computed(() => {
     },
   ];
 });
-
-const settingMenu = [
-  {
-    name: "应用信息",
-    icon: "fluent:info-16-regular",
-    fn: () => {},
-  },
-  {
-    name: "消息通知",
-    icon: "fluent:alert-16-regular",
-    fn: () => {},
-  },
-  {
-    name: "数据存储",
-    icon: "fluent:hard-drive-16-regular",
-    fn: () => {},
-  },
-  {
-    name: "隐私权限",
-    icon: "",
-    fn: () => {},
-  },
-];
+const settingClose = () => {
+  settingVisible.value = false;
+};
 </script>
 
 <template>
@@ -215,126 +248,13 @@ const settingMenu = [
       <a-avatar shape="square" :size="48" :src="data._logo" />
       <div class="my-3">{{ data?.name }}</div>
       <div class="tt-text-2">版本 {{ data?.version }}</div>
-      <div class="my-3">{{ data?.description }}</div>
+      <div class="my-3 text-sm">{{ data?.description }}</div>
+      <div class="tt-link cursor-pointer" v-if="data?.projectUrl">访问官网</div>
     </div>
   </xt-modal>
   <!-- 设置弹窗 -->
   <xt-modal v-if="settingVisible" v-model="settingVisible" :mask="false" custom>
-    <div class="w-[700px] h-[634px] flex">
-      <div class="w-[200px] tt-main-bg p-3">
-        <div
-          class="flex items-center tt-theme-bg-2 h-[44px] rounded-[10px] mb-2"
-          v-for="item in settingMenu"
-        >
-          <xt-mix-icon class="mx-2" :icon="item.icon" /> {{ item.name }}
-        </div>
-      </div>
-      <div class="flex-1 p-4">
-        <xt-scrollbar :y="true" class="h-full">
-          <xt-option-box>
-            <div class="flex text-sm mb-4">
-              <div>
-                <a-avatar shape="square" :size="48" :src="data._logo" />
-              </div>
-              <div class="ml-4">
-                <div class="">{{ data?.name }}</div>
-                <div class="tt-text-2 mt-1">版本 {{ data?.description }}</div>
-              </div>
-            </div>
-          </xt-option-box>
-
-          <xt-option-box>
-            <div class="flex text-sm mb-4">
-              <div>
-                <a-avatar shape="square" :size="48" :src="data._logo" />
-              </div>
-              <div class="ml-4">
-                <div class="">开发者名字</div>
-                <div class="tt-text-2 mt-1">开发者</div>
-              </div>
-            </div>
-          </xt-option-box>
-
-          <xt-option-box>
-            <div class="flex text-sm mb-4 justify-between">
-              <div>版本</div>
-              <div class="tt-text-2">{{ data?.version }}</div>
-            </div>
-            <hr />
-            <div class="flex text-sm mb-4 justify-between">
-              <div>官网</div>
-              <div class="tt-link">立即访问</div>
-            </div>
-          </xt-option-box>
-
-          <xt-option-box>
-            <div class="flex text-sm mb-4 justify-between">
-              <div>社群</div>
-              <div class="tt-text-2">{{ data.name }}官方社群</div>
-            </div>
-            <hr />
-            <div class="flex text-sm mb-4 justify-between">
-              <div>群聊</div>
-              <div class="tt-text-2">{{ data.name }}开发者交流群</div>
-            </div>
-            <hr />
-            <div class="flex text-sm mb-4 justify-between">
-              <div>圈子</div>
-              <div class="tt-text-2">{{ data.name }}元社区圈子</div>
-            </div>
-          </xt-option-box>
-
-          <xt-option-box>
-            <div class="flex text-sm mb-[15px] justify-between">
-              <div>允许消息通知</div>
-              <a-switch />
-            </div>
-          </xt-option-box>
-
-          <xt-option-box>
-            <div class="flex text-sm mb-[15px] justify-between">
-              <div>应用数据</div>
-              <div class="tt-text-2"></div>
-            </div>
-          </xt-option-box>
-          <xt-button class="xt-main-bg" h="32" block>
-            <div class="tt-text-2 text-sm">清除应用数据</div>
-          </xt-button>
-          <div class="tt-text-2 text-xs mt-1 mb-3">
-            这将会删除应用保存的数据，如个人设置偏好等，将应用恢复为初始安装状态。
-          </div>
-          <xt-button class="xt-main-bg" h="32" block>
-            <div class="tt-error text-sm">完全删除应用</div></xt-button
-          >
-          <div class="tt-text-2 text-xs mt-1">
-            这将会完全卸载应用，同时会删除所有相关删除，此操作不可撤销。
-          </div>
-
-          <xt-option-box>
-            <div class="flex text-sm mb-[15px] justify-between items-center">
-              <div>允许应用获取地理位置信息</div>
-              <a-switch />
-            </div>
-          </xt-option-box>
-          <xt-option-box>
-            <div class="flex text-sm mb-4 justify-between">
-              <div>允许应用读取和写入「备忘录应用」数据</div>
-              <a-switch />
-            </div>
-            <hr />
-            <div class="flex text-sm mb-4 justify-between">
-              <div>允许应用读取和写入「待办应用」数据</div>
-              <a-switch />
-            </div>
-            <hr />
-            <div class="flex text-sm mb-4 justify-between">
-              <div>允许应用读取和写入「快捷指令」数据</div>
-              <a-switch />
-            </div>
-          </xt-option-box>
-        </xt-scrollbar>
-      </div>
-    </div>
+    <ModalSetting v-if="settingVisible" @close="settingClose" :data="data" />
   </xt-modal>
   <!-- 主应用弹窗 -->
   <xt-modal
@@ -343,7 +263,6 @@ const settingMenu = [
     handle=".xt-modal-header"
     boxClass=""
     headerClass="p-2"
-    :index="index"
     min
     max
     esc
@@ -354,35 +273,62 @@ const settingMenu = [
   >
     <!-- 头部左侧区域 -->
     <template #header-left>
-      <div
-        class="group hover:tt-theme-bg-2 relative pl-2 rounded-lg title h-[32px] flex items-center text-sm cursor-pointer"
-      >
-        <a-avatar shape="square" class="" :size="16" :src="data._logo" />
-        <span class="mx-2">{{ data.name }}</span>
-
+      <tippy :z-index="99999999999" trigger="mouseenter" placement="bottom">
+        <!-- :interactive="true" -->
         <div
-          @click.stop.prevent=""
-          style="display: none"
-          class="group-hover:opacity-000 transition-all opacity-0 tt-shadow rounded-xl tt-modal-bg p-2 absolute top-[35px] left-0 z-[999999] w-[240px]"
+          class="group header-left hover:tt-theme-bg-2 relative pl-2 rounded-lg title h-[32px] flex items-center text-sm cursor-pointer"
         >
-          <div
-            class="flex h-[40px] items-center mt-2 hover:tt-theme-bg-2 rounded-xl pl-3"
-            @click.stop.prevent="item.fn"
-            v-for="item in leftMenu"
-          >
-            <xt-mix-icon class="mr-2" :icon="item.icon" />
-            {{ item.name }}
-          </div>
-          <div
-            class="flex h-[40px] items-center mt-2 hover:tt-theme-bg-2 rounded-xl pl-3"
-            @click.stop.prevent="item.fn"
-            v-for="item in leftMenu"
-          >
-            <xt-mix-icon class="mr-2" :icon="item.icon" />
-            {{ item.name }}
-          </div>
+          <a-avatar shape="square" class="" :size="16" :src="data._logo" />
+          <span class="mx-2">{{ data.name }}</span>
         </div>
-      </div>
+        <template #content>
+          <!-- <div
+            class="transition-all tt-shadow rounded-xl tt-modal-bg px-2 pt-2 w-[240px] ml-[200px]"
+            @click.stop.prevent=""
+          > -->
+          <!-- class="header-left-menu transition-all tt-shadow rounded-xl tt-modal-bg px-2 pt-2 absolute top-[35px] left-0 z-[999999] w-[240px]" -->
+          <!-- <div class="flex text-sm mb-2 p-2">
+              <a-avatar
+                shape="circular"
+                :size="36"
+                :src="modal.userInfo?.avatar"
+              />
+              <div class="ml-2">
+                <div class="text-sm">{{ modal.userInfo?.name }}</div>
+                <div class="tt-text-2 mt-1 text-xs">开发者</div>
+              </div>
+            </div> -->
+          <!-- 社交功能 -->
+          <!-- <hr
+              style="margin-bottom: 8px !important"
+              v-if="socializeList.length"
+            />
+            <div
+              v-for="item in socializeList"
+              class="flex h-[40px] items-center mb-2 hover:tt-theme-bg-2 rounded-xl pl-3"
+              @click.stop.prevent="item.fn"
+            >
+              <xt-mix-icon
+                class="mr-2 tt-modal-bg"
+                type="select"
+                :icon="item?.icon"
+              />
+              {{ item.name }}
+            </div> -->
+
+          <!-- 基础功能 -->
+          <!-- <hr style="margin-bottom: 8px !important" />
+            <div
+              class="flex h-[40px] items-center mb-2 hover:tt-theme-bg-2 rounded-xl pl-3"
+              @click.stop.prevent="item.fn"
+              v-for="item in leftBaseMenu"
+            >
+              <xt-mix-icon class="mr-2 tt-modal-bg" :icon="item.icon" />
+              {{ item.name }}
+            </div>
+          </div> -->
+        </template>
+      </tippy>
     </template>
     <!-- 头部右侧区域 -->
     <template #header-right>
@@ -445,4 +391,15 @@ const settingMenu = [
     </template>
   </xt-modal>
 </template>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.header-left {
+  transition: all 0.3s;
+
+  .header-left-menu {
+    display: none;
+  }
+  &:hover .header-left-menu {
+    display: block !important;
+  }
+}
+</style>

@@ -7,7 +7,6 @@
     :mask="0"
     :header="false"
   >
-
     <div class="flex overflow-hidden rounded-xl" style="height: 70vh">
       <!-- 左侧导航栏 -->
       <div class="flex flex-col p-3 xt-main-bg" style="width: 200px">
@@ -61,13 +60,11 @@
           :x="false"
           :y="true"
         >
-          <KeepAlive>
-            <Component
-              :is="components[navList[activeIndex].component]"
-              :deskTab="deskTab"
-              @switchNav="switchNav"
-            />
-          </KeepAlive>
+          <Component
+            :is="components[navList[activeIndex].component]"
+            :deskTab="deskTab"
+            @switchNav="switchNav"
+          />
         </xt-scrollbar>
       </div>
     </div>
@@ -96,7 +93,9 @@ const Key = defineAsyncComponent(() => import("../key/Key.vue"));
 const Screen = defineAsyncComponent(() => import("../Screen/Screen.vue"));
 const Barrage = defineAsyncComponent(() => import("../barrage/Barrage.vue"));
 const Desk = defineAsyncComponent(() => import("../desk/Desk.vue"));
-const Navigation = defineAsyncComponent(() => import("../navigation/Navigation.vue"));
+const Navigation = defineAsyncComponent(
+  () => import("../navigation/Navigation.vue")
+);
 
 const { proxy }: any = getCurrentInstance();
 
@@ -142,18 +141,18 @@ const navList = <SetItem[]>[
       { name: "通用设置", value: "all" },
       { name: "当前桌面", value: "current" },
     ],
-    tab:true,
+    tab: true,
   },
   {
     name: "导航设置",
     icon: "fluent:tablet-16-regular",
     component: "Navigation",
-    disabled:false,
-    settingsTab:[
+    disabled: false,
+    settingsTab: [
       { name: "属性", value: "property" },
       { name: "外观", value: "appearance" },
     ],
-    tab:true,
+    tab: true,
   },
   {
     name: "设备设置",
@@ -211,16 +210,17 @@ watch(
   () => navList[activeIndex.value].component,
   (val) => {
     const isDesk = val === "Desk";
-    const isLayout = isFreeLayout.value || getCurrentDesk.value.settings.enableZoom;
+    const isLayout =
+      isFreeLayout.value || getCurrentDesk.value.settings.enableZoom;
 
     const tabMap = {
-      "Desk": isLayout ? "current" : "all",
-      "Navigation": "property"
+      Desk: isLayout ? "current" : "all",
+      Navigation: "property",
     };
 
     deskTab.value = tabMap[val] || deskTab.value;
   }
-)
+);
 
 onMounted(() => {
   if (isFreeLayout.value || getCurrentDesk.value.settings.enableZoom) {

@@ -2,9 +2,8 @@
 import { ref, computed } from "vue";
 import { useTTAppStore } from "../../../../../ttApp/src/store";
 import { storeToRefs } from "pinia";
-import { updateConfig } from "./updateConfig";
 import { installV2 } from "./installV2";
-import {appsStore} from '../../../../../../store/apps'
+import { appsStore } from "../../../../../../store/apps";
 
 const { item } = defineProps<{ item: any }>();
 // esc dbl 循环二级
@@ -34,7 +33,7 @@ const menus = computed(() => {
       newIcon: "fluent:delete-16-regular",
       color: "#FF4D4F",
       cb: () => {
-        ttappStore.uninstall(item.id);
+        // ttappStore.uninstall(item.id);
       },
     },
   ];
