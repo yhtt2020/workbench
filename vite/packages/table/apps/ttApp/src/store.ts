@@ -1,6 +1,8 @@
-import { defineStore } from "pinia";
+import {defineStore, mapActions} from "pinia";
 import { useSelectAll, useUninstall } from "./hooks";
 import { message } from "ant-design-vue";
+import { appStore as useAppStore } from "../../../store";
+import {appsStore} from "../../../store/apps";
 
 // @ts-ignore
 export const useTTAppStore = defineStore("useTTAppStore", {
@@ -16,10 +18,32 @@ export const useTTAppStore = defineStore("useTTAppStore", {
       id: "",
       // 弹窗任务
       list: [],
+      userId: "",
+      userInfo: "",
     },
   }),
   getters: {},
   actions: {
+    enterApp(id: string){
+      let appInfo=this.select(id)
+      if(!appInfo){
+        console.error('应用不存在',id)
+        return
+      }
+      let url='ttapp://'+appInfo.id+ appInfo.main.entry
+      if(appInfo.main.entry.startsWith('http://')||appInfo.main.entry.startsWith('https://')){
+        url=appInfo.main.entry
+      }
+      let app={
+        theme:appInfo.theme_color,
+        name: appInfo.name,
+        url:url,
+        background: false,
+        node: true,
+        security: false,
+      }
+      appsStore().openApp(app)
+    },
     /**
      * 查询应用
      */
@@ -52,6 +76,30 @@ export const useTTAppStore = defineStore("useTTAppStore", {
     // 删除数据
     removeData(id: string) {
       delete this.ttappData[id];
+    },
+    /** 获取作者信息 */
+    async getUserInfo(id: string) {
+      if (!id) {
+        console.log("ID不能为空 :>> ");
+        return;
+      }
+      //
+      if (this.modal.userId == id) {
+        return this.modal.userInfo;
+      }
+      //
+      const appStore: any = useAppStore();
+      let res = await appStore.getUserCard(2469);
+      const { code, data } = res;
+      if (code !== 200) {
+        return;
+      }
+      const userInfo = {
+        avatar: data.user.avatar,
+        name: data.user.nickname,
+      };
+      this.modal.userId = id;
+      this.modal.userInfo = userInfo;
     },
   },
   persist: {

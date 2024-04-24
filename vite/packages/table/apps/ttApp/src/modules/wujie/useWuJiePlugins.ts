@@ -13,6 +13,7 @@ export const useWuJiePlugins = (id: string) => {
       {
         content: "window.tt = window.parent.tt; window.parent = {}",
       },
+
     ],
     jsAfterLoaders: [
       {

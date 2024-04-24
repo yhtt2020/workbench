@@ -1,7 +1,12 @@
 <!-- 群聊应用 -->
 <template>
   <div class="w-full h-full">
-    <xt-left-menu :list="updateChatAppList" end="6" :index="currentChatIndex">
+    <xt-left-menu
+      :list="updateChatAppList"
+      last="1"
+      :end="leftList.length"
+      :index="currentChatIndex"
+    >
       <div class="w-full h-full">
         <router-view></router-view>
       </div>
@@ -49,6 +54,7 @@ import { useRouter, useRoute } from "vue-router";
 import { completeTask } from "../../../task/task";
 import { useGlobalStore } from "../../../Global/store";
 import { appStore } from "../../../../store";
+import config from "../../hooks/config";
 
 import CreateGroup from "../../components/create/CreateGroupSession.vue";
 import AddFriend from "../../components/add/AddFriend.vue";
@@ -79,7 +85,21 @@ const currentData = ref({
   currentChatIndex: "OfficialCommunity",
   unread: 0,
 });
-// 左侧底部列表
+
+// 左侧栏数据
+const leftHeader = ref([
+  {
+    newIcon: "fluent:chat-16-regular",
+    tab: "session",
+    type: "session",
+    route: { name: "chatMain", params: { no: "" } },
+    disabled: false,
+    // info:
+    //   currentData.value.unread !== 0
+    //     ? ["tr", "red", `${unreadTotal.value}`]
+    //     : ["tr", "", ""],
+  },
+]);
 const leftList = ref([
   {
     newIcon: "fluent:add-16-filled",
@@ -150,28 +170,22 @@ const leftList = ref([
     ],
   },
   {
-    newIcon: "fluent:chat-16-regular",
-    tab: "session",
-    type: "session",
-    route: { name: "chatMain", params: { no: "" } },
-    disabled: false,
-    info:
-      currentData.value.unread !== 0
-        ? ["tr", "red", `${unreadTotal.value}`]
-        : ["tr", "", ""],
-  },
-  {
     tab: "find",
     type: "find",
     newIcon: "eva:compass-outline",
     route: { name: "chatFind", params: { no: "" } },
   },
-  {
-    tab: "contact",
-    type: "contact",
-    newIcon: "fluent:people-community-16-regular",
-    route: { name: "contact", params: { no: "" } },
-  },
+  ...(config.adminUids.includes(userInfo.uid)
+    ? [
+        {
+          icon: "diannao",
+          type: "admin",
+          tab: "admin",
+          title: "管理面板(仅管理员可见)",
+          route: { name: "chatAdmin", params: { no: "" } },
+        },
+      ]
+    : []),
   {
     type: "team",
     tab: "team",
@@ -184,7 +198,10 @@ const leftList = ref([
 ]);
 
 const chatAppList = computed(() => {
-  const newList = myCommunity.value.concat(leftList.value);
+  const newList = leftHeader.value.concat(
+    myCommunity.value.concat(leftList.value)
+  );
+  console.log("测试", newList);
   const mapList = _.map(newList, function (item) {
     return {
       ...item,
@@ -195,6 +212,7 @@ const chatAppList = computed(() => {
   });
   return mapList;
 });
+
 // 更新左侧列表的悬浮模式
 const updateChatAppList = computed(() => {
   const isHide =
@@ -221,10 +239,12 @@ const updateChatAppList = computed(() => {
     return chatAppList.value;
   }
 });
+
 // 当前悬浮模式设置中的社群ID号
 const currentNo = computed(() => {
   return setting.value.suspendVisible.no;
 });
+
 // 等级限制，3级才可以创建一个社群，10级后可以创建五个社群
 const limitClick = computed(() => {
   const list = updateChatAppList.value.filter((item) => {
@@ -313,6 +333,12 @@ onMounted(() => {
 :deep(.menu-item) + div {
   z-index: 90 !important;
 }
+
+:deep(.xt-br) {
+  margin-right: 0 !important;
+}
+
+/**
 :deep(.xt-br) {
   margin: 0 !important;
   & div:nth-of-type(1) {
@@ -337,4 +363,5 @@ onMounted(() => {
 :deep(.xt-bt) {
   border: none !important;
 }
+**/
 </style>

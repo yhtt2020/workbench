@@ -79,7 +79,6 @@ import ChatFind from "../apps/chat/page/find/ChatFind.vue";
 import MyCommunity from "../apps/chat/page/community/CommunityDetail.vue";
 import OfficialCommunity from "../apps/chat/page/community/OfficialCommunity.vue";
 import ChatAdmin from "../apps/chat/page/admin/Admin.vue";
-import Contact from "../apps/chat/page/contact/Contact.vue";
 import Channel from "../apps/chat/page/channels/Channel.vue";
 import ChannelIndex from "../apps/chat/page/channels/ChannelsIndex.vue";
 import Circle from "../apps/chat/page/channels/Group.vue";
@@ -238,7 +237,7 @@ export default [
         ],
       },
       {
-        path: "/chat/:no?/:action?",
+        path: "/chat",
         component: ChatIndex,
         name: "chatIndex",
         rememberChildrenPosition: true,
@@ -255,12 +254,12 @@ export default [
               rememberChildrenPosition: true,
             },
             redirect: {
-              name: "officialCommunity",
+              name: "chatMain",
             },
             children: [
               {
                 /**群聊会话列表路由**/
-                path: "/chatMain",
+                path: "/chatMain/:no?/:action?",
                 name: "chatMain",
                 component: ChatMain,
                 meta: {
@@ -321,17 +320,17 @@ export default [
                 },
               },
               /**群聊通讯录路由**/
-              {
-                path: "/contact",
-                name: "contact",
-                component: Contact,
-                meta: {
-                  type: "contact",
-                  tab1: "community",
-                  tab2: "chat",
-                  tab3: "contact",
-                },
-              },
+              // {
+              //   path: "/contact",
+              //   name: "contact",
+              //   component: Contact,
+              //   meta: {
+              //     type: "contact",
+              //     tab1: "community",
+              //     tab2: "chat",
+              //     tab3: "contact",
+              //   },
+              // },
               /**社区路由**/
               {
                 path: "/channel",
