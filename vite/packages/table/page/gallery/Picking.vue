@@ -188,10 +188,10 @@ import PickDropDetail from "./components/content/PickDropDetail.vue";
 import GradeSmallTip from "../../components/GradeSmallTip.vue";
 import MinSelect from "./components/select/MinSelect.vue";
 import { completeTask } from "../../apps/task/task";
-import { useDev } from "../../ui/hooks/useDev";
+import { usePlat } from "../../ui/hooks/usePlat";
 
 let fs, path;
-if (!useDev("h5")) {
+if (!usePlat("web")) {
   fs = window.$models.fs;
   path = require("path");
 }

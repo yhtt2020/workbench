@@ -29,7 +29,7 @@ export default defineComponent({
     ...mapWritableState(captureStore, ['recordedSeconds','sources', 'settings', 'images', 'videos','currentSource','recording']),
   },
   mounted () {
-    if (this.$useDev()) return
+    if (this.$usePlat()) return
     this.reloadMic()
   },
   methods:{

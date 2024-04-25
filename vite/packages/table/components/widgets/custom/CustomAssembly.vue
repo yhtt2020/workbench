@@ -111,10 +111,10 @@ import { cardStore } from "../../../store/card";
 import { message } from "ant-design-vue";
 import { startApp } from '../../../ui/hooks/useStartApp'
 
-import {useDev} from '../../../ui/hooks/useDev'
+import {usePlat} from '../../../ui/hooks/usePlat'
 import CustomModal from './components/CustomModal.vue'
 let appModel
-if (!useDev()) {
+if (!usePlat()) {
   appModel = window.$models.appModel
 
 }

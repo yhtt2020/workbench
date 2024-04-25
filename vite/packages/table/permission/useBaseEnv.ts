@@ -18,11 +18,11 @@ export const getCurrentEnv = () => {
   } else if (userAgent.indexOf("Mac") > -1) {
     return "mac";
   }
-  return "h5";
+  return "web";
 };
 
-const getH5Env = () => {
-  return currentEnv === "h5" ? true : false;
+const getEnv = () => {
+  return currentEnv === "web" ? true : false;
 };
 
 const getWindowEnv = () => {
@@ -45,7 +45,7 @@ const getMobileEnv = () => {
 };
 
 const currentEnv = getCurrentEnv();
-const isH5 = getH5Env();
+const isWeb = getEnv();
 const isWindow = getWindowEnv();
 const isMac = getMacEnv();
 const isMobile = getMobileEnv();
@@ -54,4 +54,4 @@ const isGuest = getGuest();
 // const xttoken
 export default currentEnv;
 
-export { isH5, isWindow, isMac, isMobile, isOffline, isGuest };
+export { isWeb, isWindow, isMac, isMobile, isOffline, isGuest };

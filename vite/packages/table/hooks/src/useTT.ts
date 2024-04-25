@@ -1,5 +1,5 @@
 import { currentEnv, useEnv } from "../../permission/useEnv";
-import { currentDev, useDev } from "../../permission/useDev";
+import { currentPlat, usePlat } from "../../permission/usePlat";
 import { Confirm } from "../../ui/new/confirm";
 import { useMit } from "./useMit";
 
@@ -59,9 +59,9 @@ type TT = {
 export const useTT: TT = {
   runtime: {
     isEnv: useEnv,
-    isDev: useDev,
+    isDev: usePlat,
     env: currentEnv(),
-    dev: currentDev(),
+    dev: currentPlat(),
   },
   ui: {
     chooseFile: (cb?: Function) => {

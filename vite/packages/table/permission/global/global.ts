@@ -1,5 +1,5 @@
 import { currentEnv, useEnv } from "../useEnv";
-import { currentDev, useDev } from "../useDev";
+import { currentPlat, usePlat } from "../usePlat";
 
 import { TT } from "./type";
 import { useMit } from "../../hooks";
@@ -7,10 +7,10 @@ import { useMit } from "../../hooks";
 export const tt: TT = {
   runTime: {
     isEnv: useEnv,
-    isDev: useDev,
+    isPlat: usePlat,
     // isDev
     env: currentEnv(),
-    dev: currentDev(),
+    plat: currentPlat(),
   },
   ui: {
     chooseFile: (cb?: Function) => {

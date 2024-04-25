@@ -242,11 +242,11 @@ import { setThemeSwitch } from "../components/card/hooks/themeSwitch";
 import { chatStore } from '../store/chat'
 // 顶部状态
 import TopPanel from '../components/TopPanel.vue'
-import {useDev} from '../ui/hooks/useDev'
+import {usePlat} from '../ui/hooks/usePlat'
 import cache from "../components/card/hooks/cache";
 import { useLogin } from '../permission/user/useLogin'
 let settings
-if ( !useDev('h5')) {
+if ( !usePlat('web')) {
   settings= window.$models.settings
 
 }

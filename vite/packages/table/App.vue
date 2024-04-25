@@ -135,7 +135,7 @@ import ModalNotice from './page/notice/ModalNotice.vue'
 // import ClaimReward from './apps/task/components/ClaimReward.vue'
 import Global from './apps/global/Global.vue'
 // import { taskStore } from './apps/task/store'
-import { useDev } from './ui/hooks/useDev'
+import { usePlat } from './ui/hooks/usePlat'
 import { useLogin } from '../table/permission/user/useLogin'
 
 notification.config({
@@ -144,7 +144,7 @@ notification.config({
 })
 window.browser = browser
 let appModel
-if (!useDev('h5')) {
+if (!usePlat('web')) {
   appModel = window.$models.appModel
 }
 let startX,
@@ -194,7 +194,7 @@ export default {
       this.settings.zoomFactor = 100
       tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100).then()
     }
-    if (!window.$useDev()) {
+    if (!usePlat('web')) {
       ipc.on('updateRunningApps', async (event, args) => {
         this.runningApps = args.runningApps
         this.runningAppsInfo = {}
@@ -422,7 +422,9 @@ export default {
     },
     'styles': {
       handler () {
-        tsbApi.system.setDarkMode(!this.styles)
+        if(!usePlat('web')){
+          tsbApi.system.setDarkMode(!this.styles)
+        }
       },
       immediate: true,
       deep:true

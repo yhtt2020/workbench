@@ -39,9 +39,9 @@ import MyIcon from "../components/icon.vue";
 import Edit from "./edit.vue";
 // 123
 import mixins from "./hooks/mixins";
-import {useDev} from '../../../../ui/hooks/useDev'
+import {usePlat} from '../../../../ui/hooks/usePlat'
 let fs
-if (!useDev('h5')) {
+if (!usePlat('web')) {
   fs = window.$models.fs
 }
 
