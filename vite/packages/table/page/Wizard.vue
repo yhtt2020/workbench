@@ -414,6 +414,11 @@ export default {
     }
   },
   async mounted () {
+    if(useDev('h5')){
+      localStorage.setItem('wizarded','1')
+      this.$router.push({name:'home'})
+      return
+    }
     let keyMap = await tsbApi.settings.get('keyMap')
     if (keyMap?.table) {
       this.shortKeysTable = keyMap.table

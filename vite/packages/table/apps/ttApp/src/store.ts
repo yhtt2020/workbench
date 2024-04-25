@@ -3,8 +3,8 @@ import { useSelectAll } from "./hooks";
 import { message } from "ant-design-vue";
 import { appStore as useAppStore } from "../../../store";
 import { appsStore } from "../../../store/apps";
-import { useEnv } from "../../../permission/useEnv";
-if(useEnv('client')){
+import { useDev } from "../../../permission/useDev";
+if(useDev('client')){
   const Db= window.$models.Db
 }
 

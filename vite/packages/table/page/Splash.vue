@@ -85,6 +85,7 @@ export default {
   created() {
     if (this.$useDev("h5")) {
       this.$router.replace({ name: "home" });
+      localStorage.setItem('wizarded',1)
       return;
     }
   },

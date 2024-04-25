@@ -172,7 +172,7 @@ export default {
   },
 
   async mounted () {
-    if(useEnv('web')){
+    if(useDev('h5')){
       document.body.classList.add('web')
     }
     this.$router.push({
@@ -425,7 +425,7 @@ export default {
     },
     'styles': {
       handler () {
-        if(useEnv('client')){
+        if(useDev('client')){
           tsbApi.system.setDarkMode(!this.styles)
         }
       },
