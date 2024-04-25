@@ -75,6 +75,7 @@ export const useUpdateUserInfo = async () => {
     useClearUserInfo();
     // 修改为离线状态
     permissionStore.setOffline(true);
+    permissionStore.setGuest(false)
     console.log("登录时错误信息 :>> ", res);
     return;
   }
