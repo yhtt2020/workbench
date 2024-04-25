@@ -1,6 +1,12 @@
 <script setup lang="ts">
-// import dbStorage from "../../../../../store/dbStorage";
-import { ref, onMounted, computed, onUnmounted, nextTick } from "vue";
+import {
+  ref,
+  onMounted,
+  computed,
+  onUnmounted,
+  nextTick,
+  getCurrentInstance,
+} from "vue";
 import { useParserCard } from "./parser";
 import WuJie from "../wujie/WuJie.vue";
 import { useTTAppStore } from "../../store";
@@ -9,12 +15,12 @@ import { useCardSize } from "../../../../../hooks";
 import { useWuJieStore } from "../wujie/store";
 import PerfectScrollbar from "perfect-scrollbar";
 import { appsStore as useAppStore } from "../../../../../store/apps";
+
+const { proxy }: any = getCurrentInstance();
+
 const appsStore: any = useAppStore();
 const scrollbar: any = ref(null);
 const perfectScrollbar: any = ref(null);
-
-const wujieStore = useWuJieStore();
-const { data: wujieData }: any = storeToRefs(wujieStore);
 
 const ttappStore: any = useTTAppStore();
 const { modal } = storeToRefs(ttappStore);
@@ -24,27 +30,20 @@ const cardHeader: any = ref({});
 const sizeList = ref();
 const data = ref();
 // 卡片状态 无数据、加载中、正常 对应的值分别为 noData、loading、normal
-
-const id = ref();
-onMounted(async () => {
-  loading.value = false;
-  // 无数据情况
-
+/** 卡片数据初始化 */
+const init = () => {
+  data.value = false;
+  // 开始加载
+  loading.value = true;
+  // 存储ID
   if (!props.customData?.parentId) return;
-  id.value = props.customData.id;
   // 查询数据
   let res = ttappStore.select(props.customData.parentId);
-  data.value = res;
-  console.log("props.customData :>> ", props.customData);
   if (!res) return;
+  data.value = res;
   // 解析数据
   let options = useParserCard(res);
   cardHeader.value = options.header;
-  let currentSize: any = useCardSize(props.customData.customSize);
-  // size.value = {
-  //   width: currentSize.width + "px",
-  //   height: currentSize.height + "px",
-  // };
 
   if (props.customData.sizeList) {
     sizeList.value = props.customData.sizeList.map((item: any) => {
@@ -54,8 +53,23 @@ onMounted(async () => {
       };
     });
   }
-
+  // 加载完成
   loading.value = false;
+};
+
+onMounted(async () => {
+  proxy.$bus.on("updateTTApp", (id: string) => {
+    const parentId = props.customData?.parentId;
+    // 非自己更新无需操作
+    if (parentId != id) {
+      return;
+    }
+
+    console.log("updateTTApp id :>> ", id);
+    init();
+  });
+  init();
+
   // 是否加载滚动条
   nextTick(() => {
     const scroll = props.customData.scroll;
@@ -97,7 +111,6 @@ const header = computed(() => {
   };
 });
 
-
 const menus = computed(() => {
   let list = [
     refresh.value,
@@ -105,15 +118,15 @@ const menus = computed(() => {
       newIcon: "fluent:open-16-regular",
       title: "进入主应用",
       fn: () => {
-        ttappStore.enterApp(data.value.id)
+        ttappStore.enterApp(data.value.parentId);
       },
     },
     {
       newIcon: "fluent:window-16-regular",
       title: "弹窗打开",
       fn: () => {
-        modal.value.id = data.value.id;
-        modal.value.url = "ttapp://" + data.value.id + props.customData.entry;
+        modal.value.id = data.value.parentId;
+        modal.value.url = "ttapp://" + data.value.parentId + props.customData.entry;
         modal.value.visible = true;
       },
     },
@@ -125,7 +138,7 @@ const menus = computed(() => {
       newIcon: "fluent:open-16-regular",
       title: "清空缓存",
       fn: () => {
-        wujieData.value[data.value.id] = {};
+        ttappStore.clearData(data.value.parentId);
         refreshFn();
       },
     },
