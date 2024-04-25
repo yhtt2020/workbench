@@ -1,7 +1,7 @@
 <!-- 添加控制中心详情页 -->
 <template>
   <!-- 音频 -->
-  <template v-if="controlIndex === 'audio' && !$useEnv()">
+  <template v-if="controlIndex === 'audio' && !$useDev()">
     <div
       style="width: 252px; height: 120px;"
       class="xt-text flex flex-col xt-bg-t-2 rounded-xl relative"

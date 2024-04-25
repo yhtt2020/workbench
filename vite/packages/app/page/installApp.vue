@@ -60,9 +60,9 @@
 </template>
 
 <script>
-import {useEnv} from '../../table/ui/hooks/useEnv'
+import {useDev} from '../../table/ui/hooks/useDev'
 let appModel
-if (!useEnv('web')) {
+if (!useDev('h5')) {
   appModel = window.$models.appModel
 
 }
