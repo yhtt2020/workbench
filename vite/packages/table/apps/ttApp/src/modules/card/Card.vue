@@ -130,7 +130,7 @@ const menus = computed(() => {
       fn: () => {
         modal.value.id = data.value.id;
         // modal.value.url = "ttapp://" + data.value.id + props.customData.entry;
-        modal.value.url =props.customData._entry;
+        modal.value.url = props.customData._entry;
         modal.value.visible = true;
       },
     },
@@ -166,6 +166,7 @@ const resize = () => {
   // perfectScrollbar.value.update();
 };
 onUnmounted(() => {
+  proxy.$bus.off("updateTTApp");
   perfectScrollbar.value?.destroy();
   perfectScrollbar.value = null;
 });

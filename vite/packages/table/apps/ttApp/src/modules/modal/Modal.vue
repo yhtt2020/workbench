@@ -3,6 +3,7 @@ import {
   ref,
   onBeforeMount,
   computed,
+  onUnmounted,
   watch,
   onMounted,
   provide,
@@ -18,6 +19,9 @@ import { useWindowSize } from "@vueuse/core";
 import { useAppCenterStore } from "../../../../appCenter/src/store";
 import ModalSetting from "../modalSetting/ModalSetting.vue";
 const { proxy }: any = getCurrentInstance();
+onUnmounted(() => {
+  proxy.$bus.off("updateTTApp");
+});
 
 onMounted(() => {
   proxy.$bus.on("updateTTApp", (id: string) => {
