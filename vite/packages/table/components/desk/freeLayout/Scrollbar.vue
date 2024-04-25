@@ -233,7 +233,6 @@ function handleMouseUp(event) {
 // 键盘按下
 function handleKeyDown(event) {
   if (event.code === "Space") {
-    console.log('event.code === "Space" :>> ', event.code === "Space");
     isKey.value = true;
     event.preventDefault();
     event.stopPropagation();

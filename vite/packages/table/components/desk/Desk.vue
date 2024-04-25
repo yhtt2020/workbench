@@ -217,7 +217,7 @@ import { useFloatMenuStore } from "./floatMenu/store";
 import EditNewNavigation from "./addIcon/EditNewNavigation.vue";
 import _ from "lodash-es";
 import { registerFolder } from "../../apps/folder/src/hooks/register";
-import GalleryModal from "../paperModal/GalleryModal.vue";
+import GalleryModal from "../paperModal/PaperApp.vue";
 import { useAddCard } from "../../ui/hooks/useAddCard";
 import { useDeskStore } from "./store";
 import { useFileConversionIcon } from "../../apps/folder/src/hooks/useDataConversion";
@@ -526,7 +526,7 @@ export default {
     //   }, 100);
     // });
     this.$bus.on("lockScreen", () => {
-      this.$refs.galleryRef.openGalleryModal();
+      this.$refs.galleryRef.openPaperAppModal();
       setTimeout(() => {
         this.$bus.emit("lockScreenSet");
       }, 300);
@@ -667,9 +667,9 @@ export default {
     },
     newAddCard() {
       if (!this.showGuide) {
-        if (this.autoOpenEdit) {
-          this.toggleEditing();
-        }
+        // if (this.autoOpenEdit) {
+        //   this.toggleEditing();
+        // }
         this.addCardVisible = true;
         this.menuVisible = false;
       } else {

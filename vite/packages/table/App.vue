@@ -3,12 +3,14 @@
   <!-- <xt-task-reward/> -->
   <!-- 登录引导弹窗 -->
   <!-- {{loginVisible}} -->
-  <xt-confirm v-if="loginVisible" noText="暂不登录" okText="立即登录" okButtonWidth="95" noButtonWidth="95" title="登录提示" content="目前处于游客模式，请登录后体验完整功能。" :no="unLoginModal" :ok="loginModal"></xt-confirm>
+  <xt-confirm v-if="loginVisible" noText="暂不登录" okText="立即登录" okButtonWidth="95" noButtonWidth="95"
+              title="登录提示" content="目前处于游客模式，请登录后体验完整功能。" :no="unLoginModal"
+              :ok="loginModal"></xt-confirm>
 
-    <!-- 领取任务奖励弹窗 -->
+  <!-- 领取任务奖励弹窗 -->
   <!-- <ClaimReward v-if="rewardVisible"/> -->
 
-<Global/>
+  <Global/>
 
   <div style="z-index:9999" v-if="settings.down.enable" v-for="item of settings.down.count" :key="item"
        :class="settings.down.type + 'flake'"></div>
@@ -133,8 +135,9 @@ import ModalNotice from './page/notice/ModalNotice.vue'
 // import ClaimReward from './apps/task/components/ClaimReward.vue'
 import Global from './apps/global/Global.vue'
 // import { taskStore } from './apps/task/store'
-import { useEnv } from "./ui/hooks/useEnv";
-import {useLogin} from '../table/permission/user/useLogin'
+import { useEnv } from './ui/hooks/useEnv'
+import { useLogin } from '../table/permission/user/useLogin'
+
 notification.config({
   top: '70px',//设置notification默认距离顶部位置
   rtl: false,
@@ -142,7 +145,7 @@ notification.config({
 window.browser = browser
 let appModel
 if (!useEnv('web')) {
-   appModel  = window.$models.appModel
+  appModel = window.$models.appModel
 }
 let startX,
   startY,
@@ -153,7 +156,7 @@ let startX,
 const distX = 80 //滑动感知最小距离
 const distY = 80 //滑动感知最小距离
 export default {
-  components: { Global,ModalNotice, FrameStoreWidget, Modal, UserCard, Barrage, DndProvider,  },
+  components: { Global, ModalNotice, FrameStoreWidget, Modal, UserCard, Barrage, DndProvider, },
   data () {
     return {
       HTML5Backend,
@@ -169,6 +172,9 @@ export default {
   },
 
   async mounted () {
+    this.$router.push({
+      name:'splash'
+    })
     window.addEventListener('resize', () => {
       document.body.classList.add('window')
     })
@@ -188,29 +194,28 @@ export default {
       this.settings.zoomFactor = 100
       tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100).then()
     }
-if (!window.$useEnv()) {
-    ipc.on('updateRunningApps', async (event, args) => {
-      this.runningApps = args.runningApps
-      this.runningAppsInfo = {}
-      for (const app of args.runningApps) {
-        this.runningAppsInfo[app] = await appModel.get({ nanoid: app })
-        this.runningAppsInfo[app].windowId = args.windows[args.runningApps.indexOf(app)]
-        ipc.send('getAppRunningInfo', { nanoid: app })
-      }
-    })
+    if (!window.$useEnv()) {
+      ipc.on('updateRunningApps', async (event, args) => {
+        this.runningApps = args.runningApps
+        this.runningAppsInfo = {}
+        for (const app of args.runningApps) {
+          this.runningAppsInfo[app] = await appModel.get({ nanoid: app })
+          this.runningAppsInfo[app].windowId = args.windows[args.runningApps.indexOf(app)]
+          ipc.send('getAppRunningInfo', { nanoid: app })
+        }
+      })
 
-    ipc.on('updateRunningTableApps', async (event, args) => {
-      this.runningTableApps = args.apps
-      console.log(args.apps)
-    })
+      ipc.on('updateRunningTableApps', async (event, args) => {
+        this.runningTableApps = args.apps
+        console.log(args.apps)
+      })
 
-    ipc.on('updateRunningInfo', (event, args) => {
-      let app = this.runningAppsInfo[args.nanoid]
-      app.capture = args.info.capture + '?t=' + Date.now()
-      app.memoryUsage = args.info.memoryUsage
-    })
-}
-
+      ipc.on('updateRunningInfo', (event, args) => {
+        let app = this.runningAppsInfo[args.nanoid]
+        app.capture = args.info.capture + '?t=' + Date.now()
+        app.memoryUsage = args.info.memoryUsage
+      })
+    }
 
     document.body.classList.add('lg')
     this.reset()//重置部分状态
@@ -241,7 +246,7 @@ if (!window.$useEnv()) {
   computed: {
     ...mapWritableState(cardStore, ['customComponents', 'clockEvent', 'clockFlag']),
     ...mapWritableState(timerStore, ['appDate']),
-    ...mapWritableState(appStore, ['userCardVisible', 'fullScreen', 'userCardUid', 'userCardUserInfo', 'settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage', 'backgroundColor', 'backgroundName', 'loginVisible']),
+    ...mapWritableState(appStore, ['styles','userCardVisible', 'fullScreen', 'userCardUid', 'userCardUserInfo', 'settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage', 'backgroundColor', 'backgroundName', 'loginVisible']),
     ...mapWritableState(codeStore, ['myCode']),
     ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo', 'runningTableApps']),
     ...mapWritableState(screenStore, ['taggingScreen', 'screenDetail']),
@@ -414,6 +419,13 @@ if (!window.$useEnv()) {
       },
       immediate: true,
       deep: true
+    },
+    'styles': {
+      handler () {
+        tsbApi.system.setDarkMode(!this.styles)
+      },
+      immediate: true,
+      deep:true
     },
     'steamLoginData.refreshToken': {
       handler () {

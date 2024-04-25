@@ -330,6 +330,9 @@
     :currentInvite="manageInfo.invite"
     @update="updateInvite"
   />
+
+  <!-- 群聊转让 -->
+  <GroupTransfer ref="groupTransferRef" :currentGroupID="manageInfo?.groupID"/>
 </template>
 
 <script setup>
@@ -357,6 +360,7 @@ import DeleteUserSelect from "../manager/DeleteMember.vue";
 import GroupManage from "../manager/GroupManage.vue";
 import JoinVerfiate from "../manager/JoinVerfiate.vue";
 import InviteVerfiacte from "../manager/InviteVerfiacte.vue";
+import GroupTransfer from "../manager/GroupTransfer.vue";
 
 const chat = window.$chat.chat;
 
@@ -378,6 +382,7 @@ const deleteUserSelectRef = ref(null);
 const updateManageRef = ref(null);
 const joinRef = ref(null);
 const inviteRef = ref(null);
+const groupTransferRef = ref(null);
 
 // 当前群成员列表
 const currentMemberList = ref([]);
@@ -527,6 +532,11 @@ const updateInvite = async (data) => {
     inviteRef.value.inviteVisible = false;
   }
 };
+
+// 转让群聊
+const transferGroup = () =>{
+  groupTransferRef.value.openTransferModal();
+}
 
 defineExpose({
   openManageDrawer,

@@ -11,6 +11,7 @@
         "
       >
         <FrameAvatar
+          :class="isOffline?'gray':''"
           :frame="displayUserInfo?.equippedItems?.frameDetail"
           :avatarSize="60"
           :avatarUrl="displayUserInfo.avatar"
@@ -102,7 +103,7 @@
           color: var(--primary-text);
         "
       >
-        个性签名：
+        个性签22名：
         <div class="px-2" style="word-break: break-all; white-space: pre-wrap">
           {{ displayUserInfo.signature || "暂无签名" }}
         </div>
@@ -211,6 +212,7 @@ import TencentCloudChat from "tim-js-sdk";
 import { message } from "ant-design-vue";
 import { useLogout } from "../../permission/user/useLogout";
 import { useEnv } from "../../permission/useEnv";
+import { usePermissionStore } from "../../permission/store";
 import { TUIConversationService } from "@tencentcloud/chat-uikit-engine";
 
 export default {
@@ -252,6 +254,7 @@ export default {
       myUserInfo: "userInfo",
     }),
     ...mapWritableState(appStore, ["userCardVisible"]),
+    ...mapWritableState(usePermissionStore, ["isOffline"]),
     displayUserInfo() {
       if (this.userCardUserInfo) {
         return {
@@ -441,7 +444,7 @@ export default {
         console.log("需要检查");
         try {
           // 升级后调用IM的api方法
-          const chat = window.$chat.chat; 
+          const chat = window.$chat.chat;
           console.log([String(this.uid)]);
           let rs = await chat.checkFriend({
             userIDList: [String(this.uid)],
@@ -483,5 +486,9 @@ export default {
   top: 28%;
   left: 27%;
   z-index: 0;
+}
+
+.gray{
+  filter: grayscale(100%);
 }
 </style>

@@ -1,6 +1,6 @@
 <!-- 频道链接添加 具备频道分类添加选择 -->
 <script setup>
-import { ref, toRefs } from "vue";
+import { nextTick, ref, toRefs } from "vue";
 
 import Dropdown from "../../../../components/desk/navigationBar/components/dropDown/DropDown.vue";
 
@@ -39,7 +39,7 @@ const linkType = ref([
   {
     icon: "fluent:globe-16-regular",
     name: "想天浏览器",
-    value: "thinksky",
+    value: "thisky",
     info: "使用想天浏览器打开",
   },
   {
@@ -56,10 +56,20 @@ const currentLink = ref({
   url: "",
   header: "https",
 });
+const linkHeader = ref([
+  { name: "https", value: "https" },
+  { name: "http", value: "http" },
+]);
+
+const linkNameRef = ref(null);
+
 // 开启链接弹窗
 const linkVisible = ref(false);
 const openLinkModal = () => {
   linkVisible.value = true;
+  nextTick(() => {
+    linkNameRef.value.focus();
+  });
 };
 // 选择下一步
 const selectNext = () => {
@@ -171,7 +181,35 @@ defineExpose({
           placeholder="链接名称"
         />
 
-        <a-input-group compact>
+        <div
+          class="flex items-center justify-center w-full rounded-lg"
+          style="border: 1px solid var(--divider)"
+        >
+          <xt-select
+            :list="linkHeader"
+            v-model="currentLink.header"
+            style="width: 20%"
+            :borderClass="'rounded-tl-lg rounded-bl-lg'"
+            :zIndex="99999999"
+            :border="false"
+          />
+          <a-input
+            v-model:value="currentLink.url"
+            ref="updateLinkUrlRef"
+            placeholder="请输入"
+            spellcheck="false"
+            style="
+              width: 80%;
+              height: 40px !important;
+              border-top-right-radius: 8px;
+              border-bottom-right-radius: 8px;
+            "
+            :bordered="false"
+            class="xt-bg-2"
+          />
+        </div>
+
+        <!-- <a-input-group compact>
           <a-select
             v-model:value="currentLink.header"
             style="
@@ -195,7 +233,7 @@ defineExpose({
               border-bottom-right-radius: 8px;
             "
           />
-        </a-input-group>
+        </a-input-group> -->
 
         <span class="my-4 font-16 xt-font xt-text"> 链接打开方式 </span>
 
@@ -244,8 +282,6 @@ defineExpose({
 }
 :deep(.ant-select .ant-select-selector) {
   height: 40px !important;
-  border-top-left-radius: 8px !important;
-  border-bottom-left-radius: 8px !important;
 }
 :deep(.ant-select-selection-item) {
   line-height: 40px !important;

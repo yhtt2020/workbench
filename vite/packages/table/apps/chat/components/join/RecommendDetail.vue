@@ -99,9 +99,9 @@ const currentJoin = (data) => {
 // 立即加入
 const currentNow = async (item) => {
   const option = { no: item.no };
-  const result = await comAPI.joinRecommendCommunity(option);
+  const result = await comAPI.applyJoinCommunity(option);
   message.success(`${result.info}`);
-  this.getMyCommunity();
+  chatCommunity.getMyCommunity();
   emit("close");
 };
 </script>

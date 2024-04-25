@@ -100,10 +100,12 @@ const unzip = async (filePath) => {
  * 负责解压文件
  */
 const installV2 = async (options) => {
-  const { id = nanoid(4), path } = options;
+  let { id, path } = options;
   let renew = false;
-  if (id) {
+  if (options.id) {
     renew = true;
+  } else {
+    id = nanoid(4);
   }
   currentId = id;
   console.log("开始注册ttApp :>> ");
@@ -145,6 +147,7 @@ const checkV2 = async (flag) => {
     id: currentId,
     ...data,
   };
+  console.log("flag :>> ", flag);
   if (!flag) {
     const saveRes = await saveData({
       id: currentId,

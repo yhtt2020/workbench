@@ -1,14 +1,16 @@
 <!-- 官方社群的悬浮组件 -->
 <template>
+  <!-- 顶部背景图以及社群昵称 -->
   <div
-    :style="columnVisible ? { width: '336px' } : { width: '240px' }"
     class="relative"
+    :style="columnVisible ? { width: '336px' } : { width: '240px' }"
   >
     <img
       :src="textUrl"
       class="w-full h-full object-cover"
       :class="sildVisible ? 'rounded-t-xl' : ''"
     />
+    <!-- 下拉菜单 -->
     <div class="community-name h-11 w-full com-line-bg">
       <div
         class="m-1.5 px-3 items-center rounded-lg drop-hover flex justify-between h-8"
@@ -23,13 +25,15 @@
     </div>
   </div>
 
-  <div :style="sildVisible ? { height: '450px' } : { height: '100%' }">
+  <!-- 底部列表 -->
+  <div :class="sildVisible ? 'float-container' : 'h-full'">
     <div
       class="px-3 h-full flex flex-col my-2"
       :style="columnVisible ? { width: '336px' } : { width: '240px' }"
     >
+      <!-- 单列 -->
       <template v-if="columnVisible">
-        <div class="flex flex-col" style="height: 100px">
+        <div class="flex flex-col">
           <div
             class="font-14 summary font-400 mb-3 xt-font xt-text-2 summary-2"
           >
@@ -62,8 +66,9 @@
         </div>
       </template>
 
+      <!-- 双列 -->
       <template v-else>
-        <div class="flex flex-col" style="height: 100px">
+        <div class="flex flex-col">
           <div class="flex items-center">
             <div
               class="font-14 summary font-400 mb-3 xt-font xt-text-2"
@@ -113,6 +118,7 @@
         </div>
       </template>
 
+      <!-- 分割线 -->
       <a-divider
         style="
           height: 2px;
@@ -121,39 +127,45 @@
         "
       />
 
-      <div class="flex-1">
-        <xt-scrollbar :y="true" class="w-full" :style="calcHeight">
-          <template v-for="item in officialInfo.channelList">
-            <TreeFold :item="item" @update="handleUpdateCollapse">
-              <template #title>
-                <div class="xt-text xt-font font-14">
-                  {{ item.name }}
-                </div>
-              </template>
-
-              <template #panelContent>
-                <template v-if="columnVisible === false">
-                  <div class="flex flex-col">
-                    <FloatItem
-                      :list="item.children"
-                      @currentClick="officialClick"
-                      :menusVisible="false"
-                    />
+      <!-- 树状列表 -->
+      <div class="flex-1 h-0">
+        <div class="float-h">
+          <xt-scrollbar :y="true" class="w-full h-full">
+            <template v-for="item in officialInfo.channelList">
+              <TreeFold :item="item" @update="handleUpdateCollapse">
+                <!-- 标题文字描述 -->
+                <template #title>
+                  <div class="xt-text-2 xt-font font-14">
+                    {{ item.name }}
                   </div>
                 </template>
-                <template v-else>
-                  <div class="grid grid-cols-2 gap-1">
-                    <FloatItem
-                      :list="item.children"
-                      @currentClick="officialClick"
-                      :menusVisible="false"
-                    />
-                  </div>
+                <!-- 树状折叠区域 -->
+                <template #panelContent>
+                  <!-- 单列 -->
+                  <template v-if="columnVisible === false">
+                    <div class="flex flex-col">
+                      <FloatItem
+                        :list="item.children"
+                        @currentClick="officialClick"
+                        :menusVisible="false"
+                      />
+                    </div>
+                  </template>
+                  <!-- 双列 -->
+                  <template v-else>
+                    <div class="grid grid-cols-2 gap-1">
+                      <FloatItem
+                        :list="item.children"
+                        @currentClick="officialClick"
+                        :menusVisible="false"
+                      />
+                    </div>
+                  </template>
                 </template>
-              </template>
-            </TreeFold>
-          </template>
-        </xt-scrollbar>
+              </TreeFold>
+            </template>
+          </xt-scrollbar>
+        </div>
       </div>
     </div>
   </div>
@@ -163,6 +175,7 @@
 import { ref, computed, getCurrentInstance } from "vue";
 import { storeToRefs } from "pinia";
 import { chatCommunityStore } from "../../store/chatCommunity";
+import { useGlobalStore } from "../../../Global/store";
 
 import OfficialDropdown from "../dropdown/Dropdown.vue";
 import TreeFold from "../tree/TreeFold.vue";
@@ -171,6 +184,8 @@ import FloatItem from "./FloatItem.vue";
 const { proxy } = getCurrentInstance();
 const chatCommunity = chatCommunityStore();
 const { setting, defaultOfficialList } = storeToRefs(chatCommunity);
+const globalStore = useGlobalStore();
+const { loginVisible } = storeToRefs(globalStore);
 
 // ref定义区域
 const textUrl = ref(
@@ -280,10 +295,32 @@ const handleUpdateCollapse = (data) => {
     },
   ];
 };
+/**提示登录弹窗**/
+const loginTip = () => {
+  window.$ui.confirm("登录提示", "目前处于游客模式，请登录后体验完整功能。", {
+    ok: () => {
+      loginVisible.value = true;
+    },
+    okText: "立即登录",
+    noText: "暂不登录",
+    type: "warning",
+    okButtonWidth: "95",
+    noButtonWidth: "95",
+  });
+};
 
 // 点击当前左侧列表
 const officialClick = (data) => {
-  proxy.$bus.emit("handleOfficalClick", data);
+  if (data.type === "group") {
+    if (!window.$useEnv("guest")) {
+      proxy.$bus.emit("handleOfficalClick", data);
+    } else {
+      loginTip();
+    }
+  }
+  else {
+    proxy.$bus.emit("handleOfficalClick", data);
+  }
 };
 </script>
 
@@ -291,6 +328,9 @@ const officialClick = (data) => {
 .community-name {
   position: absolute;
   bottom: 0;
+}
+.float-container {
+  height: 450px;
 }
 .com-line-bg {
   background: linear-gradient(

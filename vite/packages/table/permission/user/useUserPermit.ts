@@ -2,16 +2,17 @@ import cache from "../../components/card/hooks/cache";
 import { appStore } from "../../store";
 import { chatStore } from "../../store/chat";
 
-import { useEnv } from "../useEnv";
+// import { useEnv } from "../useEnv";
 import { getUserInfo } from "../api/login";
 import { useLogout, useClearUserInfo } from "./useLogout";
 import { setLV } from "./useUtils";
 import { usePermissionStore } from "../store";
-import { storeToRefs } from "pinia";
+// import { storeToRefs } from "pinia";
 /**
  * 用户许可
  */
 export const useUserPermit = async () => {
+  const permissionStore = usePermissionStore();
   // 1、 获取token
   let token = cache.get("ttUserToken");
 
@@ -24,9 +25,14 @@ export const useUserPermit = async () => {
     if (res) {
       return res;
     }
+    // 离线模式
+    if(permissionStore.isOffline) {
+      return;
+    }else{
+      // 没token 或者 没用户信息
+      useLogout();
+    }
   }
-  // 没token 或者 没用户信息
-  useLogout();
   return false;
 };
 
@@ -35,17 +41,17 @@ export const useUserPermit = async () => {
  */
 const setUserInfo = async () => {
   const userStore: any = appStore();
-  const permissionStore = usePermissionStore();
+  // const permissionStore = usePermissionStore();
   // 先判断用户信息是否存在，不存在进行赋值
-  console.log("permissionStore.userInfo :>> ", permissionStore.userInfo);
-  console.log('userStore.userInfo :>> ', userStore.userInfo);
-  if (permissionStore.userInfo) {
-    return permissionStore.userInfo;
-  } else if (userStore.userInfo) {
+  // if (permissionStore.userInfo) {
+  //   setLV(permissionStore.userInfo);
+  //   return;
+  // } else
+   if (userStore.userInfo) {
     return userStore.userInfo;
   }
 
-  console.log('useUpdateUserInfo :>> ', useUpdateUserInfo);
+  console.log("useUpdateUserInfo :>> ", useUpdateUserInfo);
   return await useUpdateUserInfo();
 };
 
@@ -53,6 +59,7 @@ const setUserInfo = async () => {
  * 更新用户信息
  */
 export const useUpdateUserInfo = async () => {
+  const permissionStore = usePermissionStore();
   // 1 获取用户信息
   console.time("UserInfo Run Time");
 
@@ -66,18 +73,19 @@ export const useUpdateUserInfo = async () => {
   // 3 请求失败
   if (res.code !== 1000 && code !== 200) {
     useClearUserInfo();
-    // 修改为离线
-    // cache.set("isOffline", true);
+    // 修改为离线状态
+    permissionStore.setOffline(true);
     console.log("登录时错误信息 :>> ", res);
     return;
   }
   // 4 请求成功
   console.log("请求成功 :>> ");
-  // cache.set("isOffline", false);
+  permissionStore.setOffline(false);
+  permissionStore.setGuest(false);
 
   let userData = data.data;
-  const permissionStore = usePermissionStore();
-  permissionStore.userInfo = userData;
+  // const permissionStore = usePermissionStore();
+  // permissionStore.userInfo = userData;
   // 旧版本用户信息处理逻辑
   setLV(userData);
 

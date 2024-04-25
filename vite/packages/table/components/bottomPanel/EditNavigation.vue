@@ -366,7 +366,7 @@ export default {
     filterList () {
       return this.ClassifyData.filter(i => {
         // 离线模式下隐藏 创意市场
-        if(window.$isOffline){
+        if(window.$isSingle){
           return i.type === this.nowClassify && i.name.includes(this.selectContent) && i.name != '创意市场'
         }else{
           return i.type === this.nowClassify && i.name.includes(this.selectContent)
@@ -608,7 +608,7 @@ export default {
     },
     updateSuggestNav (addItem, type) {
       this.suggestNavList = suggestNavigationList
-      if (window.$isOffline) {
+      if (window.$isSingle) {
         this.suggestNavList = this.suggestNavList.filter(i=>{
           return i.tab != 'community'
         })

@@ -9,12 +9,13 @@ export const useWuJiePlugins = (id: string) => {
   const { ttappData } = storeToRefs(wuJieStore);
 
   let res = {
+    jsBeforeLoaders: [
+      {
+        content: "window.tt = window.parent.tt; window.parent = {}",
+      },
+
+    ],
     jsAfterLoaders: [
-      // // 插入一个外联脚本
-      // { src: "http://xxxx.js" },
-      // // 插入一个内联监本
-      // { content: 'console.log("test")' },
-      // 执行一个回调，打印子应用名字
       {
         callback(appWindow) {
           useTheme(appWindow);
@@ -22,10 +23,6 @@ export const useWuJiePlugins = (id: string) => {
       },
     ],
     windowPropertyOverride: (iframeWindow: any) => {
-      // 屏蔽子应用parent对象 指向主应用window
-      iframeWindow.parent = {};
-      // 屏蔽子应用$wujie对象
-      // iframeWindow.$wujie = {};
       // 代理open
       iframeWindow.open = (url, target, features, replace) => {
         browser.openInUserSelect(url);
@@ -57,7 +54,7 @@ export const useWuJiePlugins = (id: string) => {
         ttappData.value[id] = {};
       };
 
-      console.log(iframeWindow,'传递下去的window')
+      console.log(iframeWindow, "传递下去的window");
       return iframeWindow;
     },
     cssAfterLoaders: [{ content: "body{position: relative}" }],

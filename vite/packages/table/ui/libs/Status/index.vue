@@ -20,7 +20,7 @@
 <script>
 import { ENV_MAP } from "../../../permission/config";
 import { usePermissionStore } from "../../../permission/store";
-import { mapWritableState } from "pinia";
+import { mapWritableState, mapActions } from "pinia";
 import cache from "../../../components/card/hooks/cache";
 export default {
   name: "XtStatus",
@@ -31,6 +31,9 @@ export default {
     };
   },
   components: {},
+  computed: {
+    ...mapWritableState(usePermissionStore, ["token", "isGuest", "isSingle", "isSingle"]),
+  },
   mounted() {
     this.plat = this.$useEnv(this.status);
   },
@@ -46,6 +49,26 @@ export default {
         }, 1000);
       },
     },
+    isGuest: {
+      handler(val) {
+        let res = this.$useEnv(this.status);
+        this.plat = res;
+      },
+    },
+    isGuest: {
+      handler(val) {
+        let res = this.$useEnv(this.status);
+        this.plat = res;
+      },
+    },
+    isGuest: {
+      handler(val) {
+        let res = this.$useEnv(this.status);
+        this.plat = res;
+      },
+    },
+  },
+  methods: {
   },
   props: {
     // 元素名称
@@ -67,9 +90,6 @@ export default {
       type: Array,
       default: "",
     },
-  },
-  computed: {
-    ...mapWritableState(usePermissionStore, ["token"]),
   },
 };
 </script>

@@ -44,7 +44,7 @@
           <!-- 图片长度大于1 -->
           <template v-if="item.option.length > 1">
             <template v-if="item.type == 'ttapp'">
-              <div class="flex justify-center h-full items-center  rounded-xl">
+              <div class="flex justify-center h-full items-center rounded-xl">
                 <img
                   style="width: 80px; height: 110px !important; zoom: 1"
                   :src="item.option[0]._preview"
@@ -176,6 +176,7 @@ import { taskStore } from "../../../apps/task/store";
 import { completeTask } from "../../../apps/task/task";
 // import IconSet from "../../../components/widgets/myIcons/set/index.vue";
 import { useAddCard } from "../../../hooks";
+import { useDeskStore } from "../../../components/desk/store.ts";
 export default {
   emits: ["close", "addSuccess"],
   props: {
@@ -202,6 +203,8 @@ export default {
   computed: {
     ...mapWritableState(myIcons, ["iconOption", "edit"]),
     ...mapWritableState(taskStore, ["taskID", "step", "success"]),
+    ...mapWritableState(useDeskStore, ["autoOpenEdit", ""]),
+
     M01013() {
       return this.taskID == "M0101" && this.step == 3;
     },
@@ -333,7 +336,9 @@ export default {
     add(item, index) {
       index = index ?? this.carouselIndex;
 
-      console.log("item :>> ", item);
+      if (this.autoOpenEdit) {
+        this.$bus.emit("startAdjust");
+      }
       // 无界应用
       if (item?.type == "ttapp") {
         useAddCard({

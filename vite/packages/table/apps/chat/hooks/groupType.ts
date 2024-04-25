@@ -113,3 +113,28 @@ export const currentUnreadCount = (no: any) => {
     }
   }
 };
+
+/**群聊添加状态**/
+
+
+/**判断3D文件的后缀名**/
+export const fileSuffix = [
+  ".stl",
+  ".obj",
+  ".3ds",
+  ".ply",
+  ".gltf",
+  ".off",
+  ".3dm",
+  ".fbx",
+  ".dae",
+  ".wrl",
+  ".3mf",
+  ".amf",
+  ".ifc",
+  ".brep",
+  ".step",
+  ".iges",
+  ".fcstd",
+  ".bim",
+];

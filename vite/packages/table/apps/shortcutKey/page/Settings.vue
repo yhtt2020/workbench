@@ -23,6 +23,9 @@ export default defineComponent({
       console.log('当前的会话', this.sessionList)
     },
     enterEdit(app){
+      if(Array.isArray(app.exeName)){
+        app.exeName=app.exeName[0]
+      }
       this.$router.push({
         name:'editApp',
         params:{

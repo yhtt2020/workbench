@@ -1,7 +1,12 @@
 <!-- 群聊应用 -->
 <template>
   <div class="w-full h-full">
-    <xt-left-menu :list="updateChatAppList" end="6" :index="currentChatIndex">
+    <xt-left-menu
+      :list="updateChatAppList"
+      last="1"
+      :end="leftList.length"
+      :index="currentChatIndex"
+    >
       <div class="w-full h-full">
         <router-view></router-view>
       </div>
@@ -41,7 +46,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, getCurrentInstance } from "vue";
+import { ref, computed, onMounted, getCurrentInstance, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { chatCommunityStore } from "../../store/chatCommunity";
 import _ from "lodash-es";
@@ -49,6 +54,7 @@ import { useRouter, useRoute } from "vue-router";
 import { completeTask } from "../../../task/task";
 import { useGlobalStore } from "../../../Global/store";
 import { appStore } from "../../../../store";
+import config from "../../hooks/config";
 
 import CreateGroup from "../../components/create/CreateGroupSession.vue";
 import AddFriend from "../../components/add/AddFriend.vue";
@@ -79,11 +85,27 @@ const currentData = ref({
   currentChatIndex: "OfficialCommunity",
   unread: 0,
 });
-// 左侧底部列表
+
+// 左侧栏数据
+const leftHeader = ref([
+  {
+    newIcon: "fluent:chat-16-regular",
+    tab: "session",
+    type: "session",
+    route: { name: "chatMain", params: { no: "" } },
+    disabled: false,
+    menuVisible: false,
+    // info:
+    //   currentData.value.unread !== 0
+    //     ? ["tr", "red", `${unreadTotal.value}`]
+    //     : ["tr", "", ""],
+  },
+]);
 const leftList = ref([
   {
     newIcon: "fluent:add-16-filled",
     icon: "tianjia2",
+    menuVisible: false,
     children: [
       {
         newIcon: "fluent:chat-16-regular",
@@ -92,7 +114,7 @@ const leftList = ref([
         callBack: (item) => {
           if (!window.$useEnv("guest")) {
             triggerAddModal(item);
-            // completeTask("Z0601");
+            completeTask("Z0601");
           } else {
             loginTip();
           }
@@ -105,7 +127,7 @@ const leftList = ref([
         callBack: (item) => {
           if (!window.$useEnv("guest")) {
             triggerAddModal(item);
-            // completeTask("Z0601");
+            completeTask("Z0601");
           } else {
             loginTip();
           }
@@ -118,7 +140,7 @@ const leftList = ref([
         callBack: (item) => {
           if (!window.$useEnv("guest")) {
             triggerAddModal(item);
-            // completeTask("Z0601");
+            completeTask("Z0601");
           } else {
             loginTip();
           }
@@ -141,7 +163,7 @@ const leftList = ref([
         callBack: (item) => {
           if (!window.$useEnv("guest")) {
             triggerAddModal(item);
-            // completeTask("Z0601");
+            completeTask("Z0601");
           } else {
             loginTip();
           }
@@ -150,51 +172,91 @@ const leftList = ref([
     ],
   },
   {
-    newIcon: "fluent:chat-16-regular",
-    tab: "session",
-    type: "session",
-    route: { name: "chatMain", params: { no: "" } },
-    disabled: false,
-    info:
-      currentData.value.unread !== 0
-        ? ["tr", "red", `${unreadTotal.value}`]
-        : ["tr", "", ""],
-  },
-  {
     tab: "find",
     type: "find",
     newIcon: "eva:compass-outline",
+    menuVisible: true,
     route: { name: "chatFind", params: { no: "" } },
   },
+  ...(config.adminUids.includes(userInfo.uid)
+    ? [
+        {
+          icon: "diannao",
+          type: "admin",
+          tab: "admin",
+          title: "管理面板(仅管理员可见)",
+          menuVisible: true,
+          route: { name: "chatAdmin", params: { no: "" } },
+        },
+      ]
+    : []),
   {
-    tab: "contact",
-    type: "contact",
-    newIcon: "fluent:people-community-16-regular",
-    route: { name: "contact", params: { no: "" } },
-  },
-  {
-    type:"team",
-    tab: "team",
-    newIcon: "fluent:people-16-regular",
-    route: { name: "team", params: { no: "" } },
-  },
-  {
-    full: true,
+    full: false,
   },
 ]);
-
+/**社群右键菜单**/
+const menuList = ref([
+  {
+    newIcon: "fluent:arrow-upload-16-regular",
+    label: "置顶",
+    callBack: () => {
+      const no = router.currentRoute.value?.params?.no;
+      chatCommunity.topSort(no);
+    },
+  },
+  // {
+  //   newIcon:'fluent:add-16-regular',
+  //   label:'添加到...',
+  //   children:[],
+  // }
+]);
+// /**取消置顶列表**/
+const unMenuList = ref([
+  {
+    newIcon: "fluent:arrow-download-16-regular",
+    label: "取消置顶",
+    callBack: () => {
+      const no = router.currentRoute.value?.params?.no;
+      chatCommunity.unSetTopSort(no);
+    },
+  },
+]);
 const chatAppList = computed(() => {
-  const newList = myCommunity.value.concat(leftList.value);
+  const newList = leftHeader.value.concat(
+    myCommunity.value.concat(leftList.value)
+  );
   const mapList = _.map(newList, function (item) {
-    return {
-      ...item,
-      callBack: (item) => {
-        switchTab(item);
-      },
-    };
+    if (!item.menuVisible) {
+      return {
+        ...item,
+        callBack: (item) => {
+          switchTab(item);
+        },
+      };
+    } else {
+      /**是否置顶**/
+      if (item.top && item.top[3] === 0) {
+        return {
+          ...item,
+          menu: menuList.value,
+          callBack: (item) => {
+            switchTab(item);
+          },
+        };
+      } else {
+        return {
+          ...item,
+          menu: unMenuList.value,
+          callBack: (item) => {
+            switchTab(item);
+          },
+        };
+      }
+    }
   });
   return mapList;
 });
+
 // 更新左侧列表的悬浮模式
 const updateChatAppList = computed(() => {
   const isHide =
@@ -221,10 +283,12 @@ const updateChatAppList = computed(() => {
     return chatAppList.value;
   }
 });
+
 // 当前悬浮模式设置中的社群ID号
 const currentNo = computed(() => {
   return setting.value.suspendVisible.no;
 });
+
 // 等级限制，3级才可以创建一个社群，10级后可以创建五个社群
 const limitClick = computed(() => {
   const list = updateChatAppList.value.filter((item) => {
@@ -313,6 +377,12 @@ onMounted(() => {
 :deep(.menu-item) + div {
   z-index: 90 !important;
 }
+
+:deep(.xt-br) {
+  margin-right: 0 !important;
+}
+
+/**
 :deep(.xt-br) {
   margin: 0 !important;
   & div:nth-of-type(1) {
@@ -337,4 +407,5 @@ onMounted(() => {
 :deep(.xt-bt) {
   border: none !important;
 }
+**/
 </style>

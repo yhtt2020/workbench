@@ -114,7 +114,7 @@ function deskMenus() {
       newIcon: "fluent:image-multiple-16-regular",
       name: "更换壁纸",
       fn: () => {
-        this.$refs.galleryRef.openGalleryModal();
+        this.$refs.galleryRef.openPaperAppModal();
       },
     },
     // {

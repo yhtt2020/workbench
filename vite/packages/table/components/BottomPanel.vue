@@ -97,27 +97,23 @@
         v-model:isLeaveBar="isFootBar"
       >
         <div v-show="autoVisible" :style="[this.state ? this.winPosition : '']">
-          <Drop 
-          @createFile="createFile" 
-          currentId="bottom" 
+          <Drop
+          @createFile="createFile"
+          currentId="bottom"
           >
-            <WinPanel 
+            <WinPanel
               v-model:folderVisible="folderVisible"
               :mainClass="mainClass"
               @edit="edit"
-              @getDelIcon="getDelIcon" 
+              @getDelIcon="getDelIcon"
               @control="openControl">
             </WinPanel>
           </Drop>
         </div>
       </AutoHide>
     </template>
-    <keep-alive>
       <TaskBox v-if="true"></TaskBox>
-    </keep-alive>
-    <keep-alive>
       <Favorites v-if="true"></Favorites>
-    </keep-alive>
     <Common ref="common"></Common>
   </xtMixMenu>
 
@@ -154,7 +150,6 @@ import { messageStore } from "../store/message";
 import TaskBox from "../apps/task/page/TaskBox.vue";
 import Favorites from "../apps/favorites/page/index.vue";
 import navigationData from "../js/data/tableData";
-import { offlineStore } from "../js/common/offline";
 
 import {
   moreMenus,
@@ -332,7 +327,7 @@ export default {
       let macExtraWidth = this.communityNavVisible ? 540 : 200;
       let maxWidth = this.currentNavFormat === 'mac' ? macWidth : windowWidth * 0.6;
       let extraWidth = this.currentNavFormat === 'mac' ? macExtraWidth : windowWidth * 0.3;
-        
+
       // 计算当前可添加的最多图标个数
       this.maxItemNum = Math.round(maxWidth / this.realSize);
 
@@ -378,7 +373,6 @@ export default {
       "init",
       "copyFootNav",
     ]),
-    ...mapWritableState(offlineStore, ["isOffline"]),
     ...mapWritableState(useNavigationStore, [
       "selectNav",
       "bottomToggle",
@@ -447,7 +441,7 @@ export default {
       this.delNav = val;
       this.$emit("getDelIcon", val);
     },
-    // 
+    //
     navigationToggle: {
       immediate: true,
       deep: true,

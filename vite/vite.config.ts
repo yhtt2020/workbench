@@ -32,10 +32,11 @@ export default defineConfig({
     exclude:['wujie','wujie-vue3']
   },
   plugins: [
+
     vue({
       script: {
-        defineModel: true,
-      },
+        defineModel: true
+      }
     }),
     // require("tailwindcss"),
     // require("autoprefixer"),

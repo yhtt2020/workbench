@@ -121,7 +121,7 @@ export default {
       this.showModal = val
     },
     goDownload(){
-      if(window.$isOffline){
+      if(window.$$isSingle){
         this.$message.error('离线模式暂无法使用')
       }else{
         this.$router.push({
