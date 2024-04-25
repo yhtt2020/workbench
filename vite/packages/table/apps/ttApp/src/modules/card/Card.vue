@@ -15,7 +15,7 @@ import { useCardSize } from "../../../../../hooks";
 import { useWuJieStore } from "../wujie/store";
 import PerfectScrollbar from "perfect-scrollbar";
 import { appsStore as useAppStore } from "../../../../../store/apps";
-
+import { cardValidate } from "../../../../appCenter/src/views/developer/hooks/validate";
 const { proxy }: any = getCurrentInstance();
 
 const appsStore: any = useAppStore();
@@ -31,16 +31,15 @@ const sizeList = ref();
 const data = ref();
 // 卡片状态 无数据、加载中、正常 对应的值分别为 noData、loading、normal
 /** 卡片数据初始化 */
-const init = () => {
+const init = (): any => {
   data.value = false;
   // 开始加载
   loading.value = true;
   // 存储ID
   if (!props.customData?.parentId) return;
   // 查询数据
-  let res = ttappStore.select(props.customData.parentId);
+  let res = cardValidate(props.customIndex, props.customData?.parentId);
   if (!res) return;
-
   console.log("res :>> ", res);
   data.value = res;
   // 解析数据
@@ -66,11 +65,11 @@ onMounted(async () => {
     if (parentId != id) {
       return;
     }
-
-    console.log("updateTTApp id :>> ", id);
-    init();
+    let res = init();
+    if (!res) return;
   });
-  init();
+  let res = init();
+  if (!res) return;
 
   // 是否加载滚动条
   nextTick(() => {
@@ -143,7 +142,7 @@ const menus = computed(() => {
       newIcon: "fluent:open-16-regular",
       title: "清空缓存",
       fn: () => {
-        ttappStore.clearData(data.value.parentId);
+        ttappStore.clearData(data.value.id);
         refreshFn();
       },
     },
@@ -214,3 +213,4 @@ const injectProps=ref({})
   </xt-container>
 </template>
 <style lang="scss"></style>
+../../../../appCenter/src/views/developer/hooks/validate

@@ -55,10 +55,12 @@ export const useDelCard = (cardId, deskId?) => {
   }
 
   // 删除卡片数据
-  let card = useGetDesk(deskId).cards;
+  let desk = useGetDesk(deskId);
 
-  card = card.filter((item) => {
+  console.log('1desk :>> ', desk);
+  desk.cards = desk.cards.filter((item) => {
     return String(item.id) !== String(cardId);
   });
-  console.log("card :>> ", card);
+  console.log('2desk :>> ', desk);
+
 };

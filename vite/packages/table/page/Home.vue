@@ -258,6 +258,7 @@ export default {
         return desk.id === this.currentDeskId;
       });
       if (find) {
+        console.log('find :>> ', find);
         find.cards.forEach((e) => {
           if (!e.data) {
             e.data = {};

@@ -33,6 +33,7 @@ onMounted(() => {
     init();
   });
 });
+
 const appCenterStore = useAppCenterStore();
 const { visible } = storeToRefs(appCenterStore);
 const { width: windowWidth, height: windowHeight } = useWindowSize();
@@ -52,6 +53,7 @@ const init = async () => {
   let res = ttappStore.select(modal.value.id);
 
   if (!res) {
+    modal.value.visible = false;
     return;
   }
   // 有社区

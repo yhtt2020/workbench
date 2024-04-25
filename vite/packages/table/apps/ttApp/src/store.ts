@@ -69,9 +69,7 @@ export const useTTAppStore = defineStore("useTTAppStore", {
      * 查询应用
      */
     select(id?: string) {
-      if (id) {
-        return this.ttappList.find((item) => item.id === id);
-      }
+      return this.ttappList.find((item) => item.id === id);
     },
     /** 校验文件是否存在 */
     // checkFile(id: string) {
