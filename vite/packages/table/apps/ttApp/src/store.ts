@@ -3,6 +3,10 @@ import { useSelectAll, useUninstall } from "./hooks";
 import { message } from "ant-design-vue";
 import { appStore as useAppStore } from "../../../store";
 import {appsStore} from "../../../store/apps";
+import { useEnv } from "../../../permission/useEnv";
+if(useEnv('client')){
+  const Db= window.$models.Db
+}
 
 // @ts-ignore
 export const useTTAppStore = defineStore("useTTAppStore", {
@@ -43,6 +47,17 @@ export const useTTAppStore = defineStore("useTTAppStore", {
         security: false,
       }
       appsStore().openApp(app)
+    },
+    async injectApi(id: string) {
+      let appInfo = this.select(id)
+
+      let db = new Db(id, appInfo)
+      const tb = {
+        db: db
+      }
+      return {
+        tb
+      }
     },
     /**
      * 查询应用

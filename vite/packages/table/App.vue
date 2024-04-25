@@ -172,6 +172,9 @@ export default {
   },
 
   async mounted () {
+    if(useEnv('web')){
+      document.body.classList.add('web')
+    }
     this.$router.push({
       name:'splash'
     })
@@ -422,7 +425,9 @@ export default {
     },
     'styles': {
       handler () {
-        tsbApi.system.setDarkMode(!this.styles)
+        if(useEnv('client')){
+          tsbApi.system.setDarkMode(!this.styles)
+        }
       },
       immediate: true,
       deep:true

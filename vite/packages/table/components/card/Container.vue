@@ -332,7 +332,7 @@ const deleteObj = computed(() => {
   return {
     newIcon: "akar-icons:trash-can",
     fn: removeCard,
-    title: "删除小组件",
+    title: "删除",
     color: "#FF4D4F",
     disabled: props.options?.disabledDelete ? true : false,
   };

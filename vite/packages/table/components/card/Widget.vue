@@ -195,7 +195,7 @@ export default {
             this.options?.removeCard();
           }
         },
-        title: "删除小组件",
+        title: "删除",
         color: "#FF4D4F",
         disabled: this.options?.disabled || false,
       };
