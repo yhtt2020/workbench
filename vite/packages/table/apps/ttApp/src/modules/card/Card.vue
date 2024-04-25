@@ -40,6 +40,8 @@ const init = () => {
   // 查询数据
   let res = ttappStore.select(props.customData.parentId);
   if (!res) return;
+
+  console.log("res :>> ", res);
   data.value = res;
   // 解析数据
   let options = useParserCard(res);
@@ -79,6 +81,7 @@ onMounted(async () => {
     });
   });
 });
+
 const props = defineProps({
   customIndex: {},
   customData: {
@@ -118,15 +121,16 @@ const menus = computed(() => {
       newIcon: "fluent:open-16-regular",
       title: "进入主应用",
       fn: () => {
-        ttappStore.enterApp(data.value.parentId);
+        ttappStore.enterApp(data.value.id);
       },
     },
     {
       newIcon: "fluent:window-16-regular",
       title: "弹窗打开",
       fn: () => {
-        modal.value.id = data.value.parentId;
-        modal.value.url = "ttapp://" + data.value.parentId + props.customData.entry;
+        modal.value.id = data.value.id;
+        // modal.value.url = "ttapp://" + data.value.id + props.customData.entry;
+        modal.value.url =props.customData._entry;
         modal.value.visible = true;
       },
     },

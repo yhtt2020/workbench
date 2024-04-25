@@ -7,6 +7,7 @@ import {
   onMounted,
   provide,
   nextTick,
+  getCurrentInstance,
 } from "vue";
 import { storeToRefs } from "pinia";
 import WuJie from "../wujie/WuJie.vue";
@@ -16,7 +17,18 @@ import { useTTAppStore } from "../../store";
 import { useWindowSize } from "@vueuse/core";
 import { useAppCenterStore } from "../../../../appCenter/src/store";
 import ModalSetting from "../modalSetting/ModalSetting.vue";
+const { proxy }: any = getCurrentInstance();
 
+onMounted(() => {
+  proxy.$bus.on("updateTTApp", (id: string) => {
+    const parentId = modal.value.id;
+    // 非自己更新无需操作
+    if (parentId != id) {
+      return;
+    }
+    init();
+  });
+});
 const appCenterStore = useAppCenterStore();
 const { visible } = storeToRefs(appCenterStore);
 const { width: windowWidth, height: windowHeight } = useWindowSize();
