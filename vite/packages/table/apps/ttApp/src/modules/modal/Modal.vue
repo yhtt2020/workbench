@@ -3,10 +3,12 @@ import {
   ref,
   onBeforeMount,
   computed,
+  onUnmounted,
   watch,
   onMounted,
   provide,
   nextTick,
+  getCurrentInstance,
 } from "vue";
 import { storeToRefs } from "pinia";
 import WuJie from "../wujie/WuJie.vue";
@@ -16,7 +18,21 @@ import { useTTAppStore } from "../../store";
 import { useWindowSize } from "@vueuse/core";
 import { useAppCenterStore } from "../../../../appCenter/src/store";
 import ModalSetting from "../modalSetting/ModalSetting.vue";
+const { proxy }: any = getCurrentInstance();
+onUnmounted(() => {
+  proxy.$bus.off("updateTTApp");
+});
 
+onMounted(() => {
+  proxy.$bus.on("updateTTApp", (id: string) => {
+    const parentId = modal.value.id;
+    // 非自己更新无需操作
+    if (parentId != id) {
+      return;
+    }
+    init();
+  });
+});
 const appCenterStore = useAppCenterStore();
 const { visible } = storeToRefs(appCenterStore);
 const { width: windowWidth, height: windowHeight } = useWindowSize();
@@ -275,11 +291,11 @@ const settingClose = () => {
     <template #header-left>
       <tippy
         :z-index="99999999999"
-        trigger="mouseenter"
+        trigger="click"
         placement="bottom"
         :interactive="true"
       >
-        <!-- -->
+        <!-- mouseenter -->
         <div
           class="group header-left hover:tt-theme-bg-2 relative pl-2 rounded-lg title h-[32px] flex items-center text-sm cursor-pointer"
         >
@@ -288,7 +304,7 @@ const settingClose = () => {
         </div>
         <template #content>
           <div
-            class="transition-all tt-shadow rounded-xl tt-modal-bg px-2 pt-2 w-[240px] ml-[70px]"
+            class="transition-all tt-shadow rounded-xl tt-modal-bg px-2 pt-2 mb-[1px] w-[240px] ml-[120px]"
             @click.stop.prevent=""
           >
             <!-- class="header-left-menu transition-all tt-shadow rounded-xl tt-modal-bg px-2 pt-2 absolute top-[35px] left-0 z-[999999] w-[240px]" -->
@@ -397,14 +413,20 @@ const settingClose = () => {
   </xt-modal>
 </template>
 <style lang="scss" scoped>
-.header-left {
-  transition: all 0.3s;
+:deep(.tippy-box) {
+  background-color: none !important;
+}
+.tippy-box {
+  background-color: none !important;
+}
 
-  .header-left-menu {
-    display: none;
-  }
-  &:hover .header-left-menu {
-    display: block !important;
-  }
+:deep(.tippy-content) {
+  background-color: none !important;
+}
+:deep(.tippy-arrow) {
+  color: none !important;
+}
+.tippy-arrow {
+  color: none !important;
 }
 </style>
