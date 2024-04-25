@@ -72,6 +72,7 @@ const waterfallFlow: any = ref(null);
 async function getPosition(item) {
   cards.value.push(item);
   const nodes = await waterfallFlow.value?.getElementsByTagName("div");
+  if (!nodes) return;
   for (let node of nodes) {
     if (
       !(node instanceof HTMLDivElement) ||

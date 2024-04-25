@@ -15,7 +15,7 @@ import { useCardSize } from "../../../../../hooks";
 import { useWuJieStore } from "../wujie/store";
 import PerfectScrollbar from "perfect-scrollbar";
 import { appsStore as useAppStore } from "../../../../../store/apps";
-
+import { cardValidate } from "../../../../appCenter/src/views/developer/hooks/validate";
 const { proxy }: any = getCurrentInstance();
 
 const appsStore: any = useAppStore();
@@ -66,10 +66,10 @@ onMounted(async () => {
     if (parentId != id) {
       return;
     }
-
-    console.log("updateTTApp id :>> ", id);
     init();
   });
+  let res = cardValidate(props.customIndex, props.customData?.parentId);
+  if (!res) return;
   init();
 
   // 是否加载滚动条
@@ -142,7 +142,7 @@ const menus = computed(() => {
       newIcon: "fluent:open-16-regular",
       title: "清空缓存",
       fn: () => {
-        ttappStore.clearData(data.value.parentId);
+        ttappStore.clearData(data.value.id);
         refreshFn();
       },
     },
@@ -208,3 +208,4 @@ onUnmounted(() => {
   </xt-container>
 </template>
 <style lang="scss"></style>
+../../../../appCenter/src/views/developer/hooks/validate

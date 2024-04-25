@@ -33,6 +33,7 @@ onMounted(() => {
     init();
   });
 });
+
 const appCenterStore = useAppCenterStore();
 const { visible } = storeToRefs(appCenterStore);
 const { width: windowWidth, height: windowHeight } = useWindowSize();
@@ -421,7 +422,7 @@ const settingClose = () => {
 }
 
 :deep(.tippy-content) {
-  background-color: none !important;
+  background-color: none !important;    
 }
 :deep(.tippy-arrow) {
   color: none !important;

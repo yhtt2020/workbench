@@ -60,5 +60,4 @@ export const useDelCard = (cardId, deskId?) => {
   card = card.filter((item) => {
     return String(item.id) !== String(cardId);
   });
-  console.log("card :>> ", card);
 };

@@ -6,7 +6,7 @@ import { message } from "ant-design-vue";
 
 export const uninstall = (id: string) => {
   clearStore(id);
-  clearDesk(id);
+  // clearDesk(id);
   clearNav(id);
   clearDb(id);
 };
@@ -62,6 +62,7 @@ const clearDesk = (id: string) => {
 const clearNav = (id: string) => {
   // 获取导航数据
   const navStore = useNavStore();
+  //
   const { copyFootNav, sideNavigationList, rightNavigationList }: any =
     storeToRefs(navStore);
 
@@ -78,6 +79,7 @@ const clearNav = (id: string) => {
     if (data.type == "ttapp" && data.value == id) {
       return false;
     }
+    // type: value ,id:
     // 过滤文件夹
     if (data.type == "folder") {
       data.children = data.children.filter((data) => {
@@ -97,7 +99,7 @@ const clearNav = (id: string) => {
     }
     return true;
   });
-  // 过滤侧边导航栏
+  // 过滤左边导航栏
   sideNavigationList.value = sideNavigationList.value.filter((data: any) => {
     // 过滤应用卡片
     if (data.type == "card") {
