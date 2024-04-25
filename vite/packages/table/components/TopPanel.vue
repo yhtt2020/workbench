@@ -88,7 +88,7 @@ import TopPanelRightDrawer from './drawer/TopPanelRightDrawer.vue'
 import TopPanelButton from './drawer/TopPanelButton.vue'
 import PaperLock from './topPanel/PaperLock.vue'
 import MessageBox from './windowPanel/MessageBox.vue'
-import { useDev } from '../ui/hooks/useDev'
+import { usePlat } from '../ui/hooks/usePlat'
 
 export default {
   name: 'TopPanel',
@@ -137,7 +137,7 @@ export default {
 
   mounted(){
     this.loading = false;
-    this.isWeb=useDev('web')
+    this.isWeb=usePlat('web')
     if (!this.timer){  setInterval(this.getTime, 1000); };
     this.filterClock(this.clockTag);
   },

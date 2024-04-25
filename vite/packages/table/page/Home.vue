@@ -280,7 +280,7 @@ export default {
     this.componentInit()
 
     // 首次客户端引导
-    if (!this.init && isMain() && !useDev('h5')) {
+    if (!this.init && isMain() && !usePlat('web')) {
       this.$router.replace({ name: "wizard" });
     }
 

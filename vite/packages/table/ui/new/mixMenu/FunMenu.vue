@@ -40,7 +40,7 @@ import { storeToRefs } from "pinia";
 import { useWidgetStore } from "../../../components/card/store";
 import DefaultItem from "./DefaultItem.vue";
 import ChooseModal from "./ChooseModal.vue";
-import { useDev } from '../../hooks/useDev'
+import { usePlat } from '../../hooks/usePlat'
 const props = defineProps({
   menus: {},
   model: {
@@ -132,7 +132,7 @@ function defaultListContextmenu(event) {
   // 第一次触发后出现弹窗让用户选择
 
   if (!firstOpen.value) {
-    if(useDev('h5')){
+    if(usePlat('web')){
       rightModel.value='follow'
       firstOpen.value = true;
     }else{
