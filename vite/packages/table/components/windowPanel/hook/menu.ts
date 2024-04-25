@@ -1,7 +1,7 @@
 import { message } from "ant-design-vue";
 import { useFullscreen } from "@vueuse/core";
 import { startApp } from "../../../ui/hooks/useStartApp";
-import { navValidate } from "../../../apps/appCenter/src/views/developer/hooks/validateate";
+import { navValidate } from "../../../apps/appCenter/src/views/developer/hooks/validate";
 const { isFullscreen, toggle } = useFullscreen();
 function iconMenus() {
   return [

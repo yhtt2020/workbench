@@ -31,16 +31,15 @@ const sizeList = ref();
 const data = ref();
 // 卡片状态 无数据、加载中、正常 对应的值分别为 noData、loading、normal
 /** 卡片数据初始化 */
-const init = () => {
+const init = (): any => {
   data.value = false;
   // 开始加载
   loading.value = true;
   // 存储ID
   if (!props.customData?.parentId) return;
   // 查询数据
-  let res = ttappStore.select(props.customData.parentId);
+  let res = cardValidate(props.customIndex, props.customData?.parentId);
   if (!res) return;
-
   console.log("res :>> ", res);
   data.value = res;
   // 解析数据
@@ -66,11 +65,11 @@ onMounted(async () => {
     if (parentId != id) {
       return;
     }
-    init();
+    let res = init();
+    if (!res) return;
   });
-  let res = cardValidate(props.customIndex, props.customData?.parentId);
+  let res = init();
   if (!res) return;
-  init();
 
   // 是否加载滚动条
   nextTick(() => {

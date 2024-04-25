@@ -6,7 +6,7 @@ import { message } from "ant-design-vue";
 
 export const uninstall = (id: string) => {
   clearStore(id);
-  // clearDesk(id);
+  clearDesk(id);
   clearNav(id);
   clearDb(id);
 };

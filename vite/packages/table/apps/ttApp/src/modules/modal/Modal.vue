@@ -53,6 +53,7 @@ const init = async () => {
   let res = ttappStore.select(modal.value.id);
 
   if (!res) {
+    modal.value.visible = false;
     return;
   }
   // 有社区
@@ -422,7 +423,7 @@ const settingClose = () => {
 }
 
 :deep(.tippy-content) {
-  background-color: none !important;    
+  background-color: none !important;
 }
 :deep(.tippy-arrow) {
   color: none !important;
