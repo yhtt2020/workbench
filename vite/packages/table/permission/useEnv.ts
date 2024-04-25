@@ -2,7 +2,7 @@ import { confirm } from "../ui/new/confirm";
 import cache from "../components/card/hooks/cache";
 
 import { ALL_LIMITS, COMPONENT_LIMIT, PRIORITY, ROUTER_LIMIT } from "./config";
-import { isWeb, isWindow, isMac, isOffline, isGuest } from "./useBaseEnv";
+import { isWeb, isWin, isMac, isOffline, isGuest } from "./useBaseEnv";
 
 // 提示
 const showConfirm = (name) => {

@@ -1,6 +1,6 @@
 // import devtools from '@vue/devtools'//注释此行无法连接vue调试工具
 // 注册想天客户端状态
-import { isWeb, isWindows, isMacOS, isOffline, isGuest, isSingle } from "./ui/hooks/env";
+import { isWeb, isWin, isMac, isOffline, isGuest, isSingle } from "./ui/hooks/env";
 import {
   useEnv,
   useEnvLimit,
@@ -128,8 +128,8 @@ app.use(Wujie);
 // 使用 provide 将全局变量作为响应式对象
 app.provide("currentEnv", currentEnv);
 app.provide("isWeb", isWeb);
-app.provide("isWindows", isWindows);
-app.provide("isMacOS", isMacOS);
+app.provide("isWin", isWin);
+app.provide("isMac", isMac);
 app.provide("isOffline", isOffline);
 app.provide("isSingle", isSingle);
 app.provide("isGuest", isGuest);
@@ -139,8 +139,8 @@ app.provide("$usePlat", usePlat);
 // 使用 globalProperties 将全局变量附加到 Vue 实例上
 app.config.globalProperties.$currentEnv = currentEnv;
 app.config.globalProperties.$isWeb = isWeb;
-app.config.globalProperties.$isWindows = isWindows;
-app.config.globalProperties.$isMacOS = isMacOS;
+app.config.globalProperties.$isWin = isWin;
+app.config.globalProperties.$isMac = isMac;
 app.config.globalProperties.$isOffline = isOffline;
 app.config.globalProperties.$isSingle = isSingle;
 app.config.globalProperties.$isGuest = isGuest;
