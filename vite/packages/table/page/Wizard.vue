@@ -242,11 +242,11 @@ import { setThemeSwitch } from "../components/card/hooks/themeSwitch";
 import { chatStore } from '../store/chat'
 // 顶部状态
 import TopPanel from '../components/TopPanel.vue'
-import {useEnv} from '../ui/hooks/useEnv'
+import {usePlat} from '../ui/hooks/usePlat'
 import cache from "../components/card/hooks/cache";
 import { useLogin } from '../permission/user/useLogin'
 let settings
-if ( !useEnv('web')) {
+if ( !usePlat('web')) {
   settings= window.$models.settings
 
 }
@@ -414,6 +414,11 @@ export default {
     }
   },
   async mounted () {
+    if(useDev('h5')){
+      localStorage.setItem('wizarded','1')
+      this.$router.push({name:'home'})
+      return
+    }
     let keyMap = await tsbApi.settings.get('keyMap')
     if (keyMap?.table) {
       this.shortKeysTable = keyMap.table

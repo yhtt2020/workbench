@@ -1,7 +1,7 @@
 import {defineStore} from "pinia";
 import dbStorage from "./store/dbStorage";
 import {sUrl} from './consts'
-import { useEnv} from './ui/hooks/useEnv'
+import { usePlat} from './ui/hooks/usePlat'
  const userCardUrl = sUrl('/app/com/userCard')
 import cache from '../table/components/card/hooks/cache'
 import {post} from "./js/axios/request";
@@ -78,7 +78,7 @@ export const appStore = defineStore('appStore', {
         sensitive: 4,
         pos: {x: 0, y: 0},
         sound: true,//播放音频提示
-        audio: 'chua.mp3',
+        audio: 'chua.wav',
         init: false
       },
 
@@ -278,7 +278,7 @@ export const appStore = defineStore('appStore', {
     },
 
    async getUserInfo() {
-      if (useEnv()) return
+      if (usePlat()) return
       ipc.send('getDetailUserInfo')
       // getUserInfo
       //  let res= await useGetUserInfo()
@@ -310,7 +310,7 @@ export const appStore = defineStore('appStore', {
 
       function handleGrade(name) {
         // 拦截用户信息加载报错
-        if (window.$useEnv()) return
+        if (window.$usePlat()) return
         for (let i = 0; i < userInfo.onlineGrade[name]; i++) {
           userInfo.onlineGradeIcons[name].push({
             // icon: 'file://' + window.globalArgs['app-dir_name'] + `/../../icons/grade/${name}.svg`

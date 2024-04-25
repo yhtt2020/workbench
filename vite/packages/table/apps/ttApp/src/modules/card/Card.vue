@@ -79,6 +79,7 @@ onMounted(async () => {
       wheelPropagation: false,
     });
   });
+  injectProps.value.api=await ttappStore.injectApi(data.value.id)
 });
 
 const props = defineProps({
@@ -169,6 +170,10 @@ onUnmounted(() => {
   perfectScrollbar.value?.destroy();
   perfectScrollbar.value = null;
 });
+
+
+const injectProps=ref({})
+
 </script>
 
 <template>
@@ -199,6 +204,7 @@ onUnmounted(() => {
       <WuJie
         v-if="!loading"
         v-model:cardConfig="cardContainer"
+        :props="injectProps"
         :url="customData._entry"
         :id="customData.parentId"
         :app-info="data"

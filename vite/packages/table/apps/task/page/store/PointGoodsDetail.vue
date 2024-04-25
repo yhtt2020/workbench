@@ -87,13 +87,6 @@ const backGoodPage = () =>{
 const useQRcodeScan = () =>{
   scanVisible.value = true
 };
-
-const isGuest = computed(()=>{
-  return window.$useEnv('guest');
-});
-
-
-
 </script>
 
 <style lang="scss" scoped>

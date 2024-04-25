@@ -1,9 +1,9 @@
 <template>
-  <div
+  <div class="main-container"
     style="display: flex;flex-direction: column;height: 100vh;flex-wrap: nowrap;align-content: stretch;align-items: stretch;gap:10px">
     <div v-if="!fullScreen" style="height: auto;flex: 0" ref="topPanel">
       <!--顶部状态栏      -->
-      <TopPanel isHidden="true" v-if="currentNavPosition !== 'top'"></TopPanel>
+      <TopPanel isHidden="true" v-if="currentNavPosition !== 'top' && !isWeb"></TopPanel>
       <BottomPanel
         enter="animate__fadeInDown"
         leave="animate__fadeOutUp"
@@ -129,6 +129,7 @@ import { ref, onMounted, watch, computed, onBeforeUnmount, defineAsyncComponent 
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { useMouseInElement } from '@vueuse/core'
+import {useDev} from "../ui/hooks/useDev";
 
 // 按需加载组件
 const SidePanel = defineAsyncComponent(() => import('../components/SidePanel.vue'))
@@ -146,7 +147,7 @@ const { routeUpdateTime, fullScreen, settings, init } = storeToRefs(useApp)
 
 const useTeam = teamStore()
 const { teamVisible } = storeToRefs(useTeam)
-
+const isWeb=ref(useDev('h5'))
 const useNav = navStore()
 const {
   sideNavigationList,
@@ -276,6 +277,7 @@ const openFolder = (value,id) => {
 }
 
 onMounted(() => {
+
   router.afterEach((to, from) => {
     routeUpdateTime.value = Date.now()
   })

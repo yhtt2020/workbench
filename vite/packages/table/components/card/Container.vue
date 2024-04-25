@@ -14,176 +14,194 @@
     :sizeList="sizeList"
     :disableHierarchy="options.hierarchy"
   >
-    <!-- 小组件控制器开始 -->
-    <div
-      ref="container"
-      v-if="!options?.custom"
-      class="flex flex-col widget rounded-xl"
-      :class="[edit ? 'editing' : '', options.shadow ? '' : 'shadow xt-shadow']"
-      @touchmove="handleTouchStart"
-      style=""
-      :style="[
-        getSize,
-        {
-          background: options.bg || 'var( --primary-bg)',
-          color: options.color || 'var(--primary-text)',
-        },
-      ]"
-    >
-      <!-- 小组件头部开始 -->
+    <div class="menu-box">
+      <!-- 遮罩层 离线模式遮罩 -->
+      <div class="mask rounded-xl" v-if="envLimit.includes('offline') && courierStatus">
+        <div class="mask-box">
+          <p class="flex justify-center">
+            <xt-new-icon  class="mr-2" :size="cardH<=2?'60':'100'" icon="fluent-emoji:airplane"></xt-new-icon>
+          </p>
+          <p>处于离线模式，暂无法使用</p>
+          <p>
+            <xt-button :w="145" :h="40" @click="useUpdateUserInfo" class="ml-3 xt-bg-2" key="console" type="theme">
+              <div class="flex">
+                <xt-new-icon  class="mr-2" size="20" icon="fluent:arrow-clockwise-16-regular"></xt-new-icon>
+                尝试重连</div>
+            </xt-button>
+          </p>
+        </div>
+      </div>
+      <!-- 小组件控制器开始 -->
       <div
-        v-if="!header.disabled"
-        @dragstart.stop="titleDragStart"
-        draggable="true"
-        class="flex items-center justify-between w-full"
-        style="
-          height: 46px;
-          min-height: 46px;
-          border-radius: 12px 12px 0 0;
-          cursor: grab;
-        "
-        :style="{
-          background: header.bg || '',
-          color: header.color || '',
-        }"
+        ref="container"
+        v-if="!options?.custom"
+        class="flex flex-col widget rounded-xl"
+        :class="[edit ? 'editing' : '', options.shadow ? '' : 'shadow xt-shadow']"
+        @touchmove="handleTouchStart"
+        style=""
+        :style="[
+          getSize,
+          {
+            background: options.bg || 'var( --primary-bg)',
+            color: options.color || 'var(--primary-text)',
+          },
+        ]"
       >
-        <!-- 头部左侧 -->
-        <div class="flex items-center flex-1" style="height: 28px">
-          <slot name="header-left">
-            <div
-              class="flex items-center h-full"
-              @click="leftClick"
-              @mouseenter="leftMouseEnter"
-              @mouseleave="leftMouseLeave"
-              :class="[
-                leftHover ? 'header-open cursor-pointer' : 'header-default',
-              ]"
-            >
-              <!-- 图标区域 -->
+        <!-- 小组件头部开始 -->
+        <div
+          v-if="!header.disabled"
+          @dragstart.stop="titleDragStart"
+          draggable="true"
+          class="flex items-center justify-between w-full"
+          style="
+            height: 46px;
+            min-height: 46px;
+            border-radius: 12px 12px 0 0;
+            cursor: grab;
+          "
+          :style="{
+            background: header.bg || '',
+            color: header.color || '',
+          }"
+        >
+          <!-- 头部左侧 -->
+          <div class="flex items-center flex-1" style="height: 28px">
+            <slot name="header-left">
               <div
                 class="flex items-center h-full"
-                @click="leftIconClick"
-                @mouseenter="iconMouseEnter"
-                @mouseleave="iconMouseLeave"
+                @click="leftClick"
+                @mouseenter="leftMouseEnter"
+                @mouseleave="leftMouseLeave"
+                :class="[
+                  leftHover ? 'header-open cursor-pointer' : 'header-default',
+                ]"
               >
-                <xt-ify-icon v-if="leftHover" :icon="header.leftHoverIcon" />
-                <template v-else>
+                <!-- 图标区域 -->
+                <div
+                  class="flex items-center h-full"
+                  @click="leftIconClick"
+                  @mouseenter="iconMouseEnter"
+                  @mouseleave="iconMouseLeave"
+                >
+                  <xt-ify-icon v-if="leftHover" :icon="header.leftHoverIcon" />
+                  <template v-else>
+                    <xt-icon
+                      v-if="header.icon"
+                      :icon="header.icon"
+                      type=""
+                      size="19"
+                      w="20"
+                    />
+                    <xt-ify-icon
+                      v-else-if="header.ifyIcon"
+                      :icon="header.ifyIcon"
+                    />
+                    <xt-icon-show
+                      v-else-if="header.showIcon"
+                      boxW="20"
+                      boxH="20"
+                      w="18"
+                      h="18"
+                      :modelValue="header.showIcon"
+                    />
+                  </template>
+                </div>
+                <!-- 标题区域 -->
+                <div
+                  class="flex items-center h-full px-2 ml-1"
+                  @click="titleClick"
+                  @mouseenter="titleMouseEnter"
+                  @mouseleave="titleMouseLeave"
+                  style="z-index: 999"
+                  :class="{ 'header-title': titleHover, pointer: true }"
+                >
+                  <slot name="title"> {{ title }} </slot>
+                </div>
+                <!-- 头部左侧扩展区域 -->
+                <slot name="left-extend"></slot>
+              </div>
+            </slot>
+          </div>
+          <!-- 头部右侧 -->
+          <div class="flex items-center header-right" style="padding-right: 14px">
+            <!-- 右侧扩展区域 -->
+            <slot name="right-extend"></slot>
+            <template
+              v-if="rightIcons && rightIcons.length"
+              v-for="item in rightIcons"
+            >
+              <div v-if="!item.disabled" class="mr-1 header-right-icon">
+                <!-- 右侧图标悬浮提示 -->
+                <a-tooltip
+                  :title="item.tip"
+                  :get-popup-container="getPopupContainer"
+                >
+                  <xt-ify-icon
+                    v-if="item.ifyIcon"
+                    :icon="item.ifyIcon"
+                    @click="item.fn"
+                    :class="item.class"
+                    size="20" />
                   <xt-icon
-                    v-if="header.icon"
-                    :icon="header.icon"
+                    v-else-if="item.icon"
+                    :icon="item.icon"
+                    @click="item.fn"
                     type=""
                     size="19"
                     w="20"
-                  />
-                  <xt-ify-icon
-                    v-else-if="header.ifyIcon"
-                    :icon="header.ifyIcon"
-                  />
-                  <xt-icon-show
-                    v-else-if="header.showIcon"
-                    boxW="20"
-                    boxH="20"
-                    w="18"
-                    h="18"
-                    :modelValue="header.showIcon"
-                  />
-                </template>
+                /></a-tooltip>
               </div>
-              <!-- 标题区域 -->
-              <div
-                class="flex items-center h-full px-2 ml-1"
-                @click="titleClick"
-                @mouseenter="titleMouseEnter"
-                @mouseleave="titleMouseLeave"
-                style="z-index: 999"
-                :class="{ 'header-title': titleHover, pointer: true }"
-              >
-                <slot name="title"> {{ title }} </slot>
-              </div>
-              <!-- 头部左侧扩展区域 -->
-              <slot name="left-extend"></slot>
-            </div>
-          </slot>
-        </div>
-        <!-- 头部右侧 -->
-        <div class="flex items-center header-right" style="padding-right: 14px">
-          <!-- 右侧扩展区域 -->
-          <slot name="right-extend"></slot>
-          <template
-            v-if="rightIcons && rightIcons.length"
-            v-for="item in rightIcons"
-          >
-            <div v-if="!item.disabled" class="mr-1 header-right-icon">
-              <!-- 右侧图标悬浮提示 -->
-              <a-tooltip
-                :title="item.tip"
-                :get-popup-container="getPopupContainer"
-              >
+            </template>
+            <RightMenu
+              :menus="menus"
+              :customIndex="customIndex"
+              model="all"
+              v-model:size="currentSize"
+              :disableHierarchy="options.hierarchy"
+              :sizeList="sizeList"
+              v-if="!options.rightMenuVisible"
+            >
+              <div class="header-right-icon">
                 <xt-ify-icon
-                  v-if="item.ifyIcon"
-                  :icon="item.ifyIcon"
-                  @click="item.fn"
-                  :class="item.class"
-                  size="20" />
-                <xt-icon
-                  v-else-if="item.icon"
-                  :icon="item.icon"
-                  @click="item.fn"
-                  type=""
-                  size="19"
-                  w="20"
-              /></a-tooltip>
-            </div>
-          </template>
-          <RightMenu
-            :menus="menus"
-            :customIndex="customIndex"
-            model="all"
-            v-model:size="currentSize"
-            :disableHierarchy="options.hierarchy"
-            :sizeList="sizeList"
-            v-if="!options.rightMenuVisible"
-          >
-            <div class="header-right-icon">
-              <xt-ify-icon
-                icon="fluent:line-horizontal-3-20-filled"
-                size="20"
-              />
-            </div>
-          </RightMenu>
-          <slot name="customRightMenu" v-else></slot>
+                  icon="fluent:line-horizontal-3-20-filled"
+                  size="20"
+                />
+              </div>
+            </RightMenu>
+            <slot name="customRightMenu" v-else></slot>
+          </div>
         </div>
+        <!-- 小组件头部结束 -->
+        <!-- 小组件主体开始 -->
+        <xt-status :name="header.title" :status="envLimit" imgSize="75">
+          <div
+            class="flex-1 h-full rounded-b-lg"
+            :style="[
+              {
+                background: body.bg,
+                color: body.color,
+                padding: body.scroll ? '0 14px' : '0 14px 14px 14px',
+              },
+            ]"
+          >
+            <Resize
+              v-model:size="currentSize"
+              :modalSize="options.modalSize"
+              :resize="options.resize"
+              @resize="resize"
+            >
+              <slot></slot>
+            </Resize>
+          </div>
+        </xt-status>
+  
+        <!-- 小组件主体结束 -->
       </div>
-      <!-- 小组件头部结束 -->
-      <!-- 小组件主体开始 -->
-      <xt-status :name="header.title" :status="envLimit" imgSize="75">
-        <div
-          class="flex-1 h-full rounded-b-lg"
-          :style="[
-            {
-              background: body.bg,
-              color: body.color,
-              padding: body.scroll ? '0 14px' : '0 14px 14px 14px',
-            },
-          ]"
-        >
-          <Resize
-            v-model:size="currentSize"
-            :modalSize="options.modalSize"
-            :resize="options.resize"
-            @resize="resize"
-          >
-            <slot></slot>
-          </Resize>
-        </div>
-      </xt-status>
-
-      <!-- 小组件主体结束 -->
-    </div>
-    <div v-else :class="[edit ? 'editing' : '']">
-      <slot>
-        <!--  主体内容插槽2  -->
-      </slot>
+      <div v-else :class="[edit ? 'editing' : '']">
+        <slot>
+          <!--  主体内容插槽2  -->
+        </slot>
+      </div>
     </div>
     <!-- 小组件控制器结束 -->
   </RightMenu>
@@ -209,11 +227,13 @@ import { navStore } from "../../store/nav";
 
 import Resize from "./Resize.vue";
 import RightMenu from "./RightMenu.vue";
-import { useEnv } from "../../ui/hooks/useEnv";
+import { usePlat } from "../../ui/hooks/usePlat";
 import { addCardToNav } from "./hooks/addCardToNav";
 import { useConversionCard } from "./hooks/useConversionCard";
 import { useDelCard } from "../../hooks";
 import { defaultProps } from "./props";
+import { useUpdateUserInfo } from "../../permission/user/useUserPermit";
+import { usePermissionStore } from "../../permission/store";
 const container = ref(null);
 const { isOutside } = useMouseInElement(container);
 
@@ -230,18 +250,17 @@ const useNav = navStore();
 const { navigationToggle } = storeToRefs(useNav);
 //
 const widgetStore = useWidgetStore();
+const usePermission = usePermissionStore();
 const { edit } = storeToRefs(widgetStore);
 // 自由布局
 // const freeLayoutStore = useFreeLayoutStore();
 
-// props
-/**
- * 均为重构后新的数据结构 和旧版有差异 需要阅读源码
- * 所有参数默认值请都设置为false 请勿随意修改默认值
- * 新增参数请先商谈
- */
+
 const props = defineProps(defaultProps);
 const { header } = toRefs(props);
+const courierStatus = computed(() => {
+  return window.$usePlat()
+});
 
 // 键盘事件
 const handleKeyDown = (event) => {
@@ -318,7 +337,8 @@ const showIconHover = ref(false);
 const showTitleHover = ref(false);
 // 当前卡片尺寸
 const currentSize = ref(props.customSize);
-
+// 当前卡片高度
+const cardH = ref('1');
 /**
  * 计算属性
  */
@@ -332,7 +352,7 @@ const deleteObj = computed(() => {
   return {
     newIcon: "akar-icons:trash-can",
     fn: removeCard,
-    title: "删除小组件",
+    title: "删除",
     color: "#FF4D4F",
     disabled: props.options?.disabledDelete ? true : false,
   };
@@ -391,7 +411,7 @@ const addObj = computed(() => {
 });
 // 实际渲染的右键菜单
 const menus = computed(() => {
-  if (useEnv(props.envLimit)) return [addObj.value, deleteObj.value];
+  if (usePlat(props.envLimit)) return [addObj.value, deleteObj.value];
   let menu = [...props.menuList, addObj.value, deleteObj.value];
   return menu;
 });
@@ -450,6 +470,7 @@ const getSize = computed(() => {
   }
   w = str[0];
   h = str[1];
+  cardH.value = str[1];
   return {
     width: w * 134 + (w - 1) * 12 + "px",
     height: h * 96 + (h - 1) * 12 + "px",
@@ -665,5 +686,28 @@ defineExpose({
 .shadow {
   backdrop-filter: blur(50px);
   -webkit-backdrop-filter: blur(50px);
+}
+
+.menu-box{
+  z-index:9;
+}
+.mask{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+  z-index: 10;
+  display: none;
+  // display: flex;
+  justify-content: center;
+  align-items: center;
+  .mask-box{
+    text-align: center;
+  }
+}
+.menu-box:hover .mask{
+  display: flex;
+  
 }
 </style>

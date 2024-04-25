@@ -24,9 +24,9 @@
 import { mapWritableState } from 'pinia'
 import { Modal } from 'ant-design-vue'
 import { singleStore } from "../js/common/single";
-import {useEnv} from '../ui/hooks/useEnv'
+import {usePlat} from '../ui/hooks/usePlat'
 let appModel
-if (!useEnv('web')) {
+if (!usePlat('web')) {
   appModel= window.$models.appModel
 
 }

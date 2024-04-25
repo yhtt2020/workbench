@@ -3,6 +3,12 @@ import { useSelectAll } from "./hooks";
 import { message } from "ant-design-vue";
 import { appStore as useAppStore } from "../../../store";
 import { appsStore } from "../../../store/apps";
+import { useDev } from "../../../permission/useDev";
+let Db
+if(!useDev('h5')){
+  console.log('客户端情况')
+   Db= window.$models.Db
+}
 
 // @ts-ignore
 export const useTTAppStore = defineStore("useTTAppStore", {
@@ -47,6 +53,17 @@ export const useTTAppStore = defineStore("useTTAppStore", {
         security: false,
       };
       appsStore().openApp(app);
+    },
+    async injectApi(id: string) {
+      let appInfo = this.select(id)
+
+      let db = new Db(id, appInfo)
+      const tb = {
+        db: db
+      }
+      return {
+        tb
+      }
     },
     /**
      * 查询应用

@@ -15,8 +15,6 @@ export const usePermissionStore = defineStore("usePermissionStore", {
     platform: "web",
     env: "dev",
     //平台
-    // env
-    // dev window mac web ，     登录 离线 游客
   }),
   getters: {
   },

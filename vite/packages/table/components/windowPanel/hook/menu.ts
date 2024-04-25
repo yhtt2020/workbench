@@ -121,11 +121,11 @@ export default {
       if (type === "folder") {
         this.openFolder(item);
       }
-      if (value == "fullscreen" && window.$useEnv()) {
+      if (value == "fullscreen" && window.$usePlat()) {
         toggle();
         return;
       }
-      if (window.$useEnvLimit("web", value)) return;
+      if (window.$usePlatLimit("web", value)) return;
 
       this.msgNotice(item);
       if (value === "home" && item.home) {

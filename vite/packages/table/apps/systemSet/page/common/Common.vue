@@ -40,7 +40,7 @@
     </div>
   </a-modal>
 
-  <Zoom v-if="!$useEnv('web')" />
+  <Zoom v-if="!$usePlat('web')" />
   <!-- 2 -->
   <xt-option-box>
     <xt-option-info
@@ -58,7 +58,7 @@
     />
   </xt-option-box>
   <!-- 3 -->
-  <xt-option-box v-if="!$useEnv()">
+  <xt-option-box v-if="!$usePlat()">
     <xt-option-info
       title="在系统任务栏中显示工作台窗口"
       isSwitch
@@ -80,7 +80,7 @@
     />
   </xt-option-box>
   <!-- 4 -->
-  <xt-option-box v-if="!$useEnv()">
+  <xt-option-box v-if="!$usePlat()">
     <xt-option-info title="双击托盘菜单默认打开" />
     <xt-option-tab
       v-model="trayMode"
@@ -147,7 +147,7 @@ const itemList = computed(() => {
           await tsbApi.window.setAlwaysOnTop(true);
         });
       },
-      disabled: proxy.$useEnv(),
+      disabled: proxy.$usePlat(),
     },
     {
       name: "选择屏幕",
@@ -155,7 +155,7 @@ const itemList = computed(() => {
       fn: () => {
         visibleChooseScreen.value = true;
       },
-      disabled: proxy.$useEnv(),
+      disabled: proxy.$usePlat(),
     },
     {
       name: "鼠标穿梭",
@@ -163,7 +163,7 @@ const itemList = computed(() => {
       fn: () => {
         emits("switchNav", "Key");
       },
-      disabled: proxy.$useEnv(),
+      disabled: proxy.$usePlat(),
     },
     {
       name: "锁屏设置",
@@ -226,7 +226,7 @@ const hardware = ref(true);
 // 监听是否硬件加速
 
 onMounted(async () => {
-  if (proxy.$useEnv()) return;
+  if (proxy.$usePlat()) return;
   // 获取窗口缩放
   // windowZoom.value = (await tsbApi.window.getZoomFactor()) * 100 || 100;
   // oldWindowZoom.value = windowZoom.value;

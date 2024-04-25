@@ -21,7 +21,7 @@ export const getCurrentEnv = () => {
   return "web";
 };
 
-const getWebEnv = () => {
+const getEnv = () => {
   return currentEnv === "web" ? true : false;
 };
 
@@ -45,7 +45,7 @@ const getMobileEnv = () => {
 };
 
 const currentEnv = getCurrentEnv();
-const isWeb = getWebEnv();
+const isWeb = getEnv();
 const isWindow = getWindowEnv();
 const isMac = getMacEnv();
 const isMobile = getMobileEnv();

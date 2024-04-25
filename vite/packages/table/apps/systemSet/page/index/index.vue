@@ -158,26 +158,26 @@ const navList = <SetItem[]>[
     name: "设备设置",
     icon: "fluent:slide-settings-24-regular",
     component: "Device",
-    disabled: proxy.$useEnv("web") ? true : false,
+    disabled: proxy.$usePlat("web") ? true : false,
   },
 
   {
     name: "分屏设置",
     icon: "fluent:window-multiple-16-filled",
     component: "Screen",
-    disabled: proxy.$useEnv("web") ? true : false,
+    disabled: proxy.$usePlat("web") ? true : false,
   },
   {
     name: "弹幕设置",
     icon: "fluent:code-text-16-regular",
     component: "Barrage",
-    disabled: proxy.$useEnv("web") ? true : false,
+    disabled: proxy.$usePlat("web") ? true : false,
   },
   {
     name: "按键设置",
     icon: "fluent:keyboard-16-regular",
     component: "Key",
-    disabled: proxy.$useEnv("web") ? true : false,
+    disabled: proxy.$usePlat("web") ? true : false,
   },
   { name: "开发模式", icon: "fluent:code-16-regular", component: "Develop" },
 ];

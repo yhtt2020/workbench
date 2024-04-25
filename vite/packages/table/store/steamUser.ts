@@ -2,11 +2,11 @@ import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
 import {steamProtocol} from "../js/common/game";
 import cache from "../components/card/hooks/cache";
-import { useEnv } from "../ui/hooks/useEnv";
+import { usePlat } from "../ui/hooks/usePlat";
 
 let steamUser, steamSession, path, https, steamFs, client
 
-if (!useEnv('web')) {
+if (!usePlat()) {
   steamUser = $models.steamUser
   path = $models.path
   steamSession = $models.steamSession

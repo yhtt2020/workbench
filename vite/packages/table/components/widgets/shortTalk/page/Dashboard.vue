@@ -2,7 +2,7 @@
     <xt-container 
         :header="header"
         v-model:customSize="customData.customSize"
-        :envLimit="['guest']" 
+        :envLimit="['guest', 'offline']" 
         @click="onHistoryMessage" 
         :sizeList="sizeList" 
         :customData="customData" 

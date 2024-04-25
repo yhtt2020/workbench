@@ -2,7 +2,7 @@
   <xt-container
     :header="header"
     v-model:customSize="customData.customSize "
-    :envLimit="['guest','single']"
+    :envLimit="['guest', 'single', 'offline']"
     :desk="desk"
     :sizeList="sizeList"
     :options="options"

@@ -32,10 +32,12 @@ export default {
   },
   components: {},
   computed: {
-    ...mapWritableState(usePermissionStore, ["token", "isGuest", "isSingle", "isSingle"]),
+    ...mapWritableState(usePermissionStore, ["token", "isGuest", "isSingle", "isOffline"]),
   },
   mounted() {
-    this.plat = this.$useEnv(this.status);
+    // 离线模式不需要进行屏蔽 过滤掉
+    let status = this.status.filter(item => item !== "offline")
+    this.plat = this.$useEnv(status);
   },
   watch: {
     token: {
@@ -55,13 +57,13 @@ export default {
         this.plat = res;
       },
     },
-    isGuest: {
+    isSingle: {
       handler(val) {
         let res = this.$useEnv(this.status);
         this.plat = res;
       },
     },
-    isGuest: {
+    isOffline: {
       handler(val) {
         let res = this.$useEnv(this.status);
         this.plat = res;

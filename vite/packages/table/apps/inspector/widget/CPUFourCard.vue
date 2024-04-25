@@ -2,7 +2,7 @@
 <xt-container  
   :header="header"
   v-model:customSize="customData.customSize"
-  :envLimit="['web']" 
+  :devLimit="['h5']" 
   :options="options" 
   :customData="customData"
   :customIndex="customIndex"
@@ -64,9 +64,9 @@ import { inspectorStore } from '../../../store/inspector'
 import {message} from 'ant-design-vue'
 import {Icon as newIcon} from '@iconify/vue'
 import { prettyDisplayBytes } from '../../../js/action/supervisory'
-import { useEnv } from "../../../ui/hooks/useEnv";
+import { usePlat } from "../../../ui/hooks/usePlat";
 let rpc
-if (!useEnv()) {
+if (!usePlat()) {
   rpc=window.$models.rpc
 
 }
