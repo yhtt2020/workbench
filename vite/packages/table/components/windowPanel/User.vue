@@ -30,8 +30,6 @@ import { usePosition } from './hook/usePosition';
 const useAppStore = appStore()
 const { simple } = storeToRefs(useAppStore)
 
-// const { isOffline } = storeToRefs(useOfflineStore)
-
 const useNav = useNavigationStore()
 const { bottomToggle } = storeToRefs(useNav)
 

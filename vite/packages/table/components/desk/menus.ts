@@ -62,7 +62,7 @@ function deskMenus() {
           newIcon: "mingcute:windows-line",
           name: "导入系统桌面图标",
           fn: this.arrange,
-          disabled: window.$useEnv(),
+          disabled: window.$usePlat(),
         },
       ],
     },

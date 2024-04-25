@@ -162,7 +162,7 @@ export default {
     },
   },
   async mounted() {
-    if (this.$useEnv()) return;
+    if (this.$usePlat()) return;
     this.trayOpen = (await tsbApi.settings.get("trayOpen")) || "table";
     let showInTaskBar = await tsbApi.settings.get("showInTaskBar");
     if (showInTaskBar === undefined) {

@@ -5,7 +5,7 @@ import { useTTAppStore } from "../../../apps/ttApp/src/store"
 /**
  * 统一添加到到导航栏的卡片数据
  * @param data - 卡片数据
- * @returns 
+ * @returns
  */
 export const useConversionCard = (data) => {
     console.log(data,'>>>>>卡片数据')
@@ -49,7 +49,7 @@ export const useConversionCard = (data) => {
 /**
  * 首字母大写
  * @param string - 需要首字母大写的字符串
- * @returns 
+ * @returns
  */
 const capitalizeFirstLetter = (string) => {
     if (!string) return '';
@@ -95,7 +95,7 @@ const nameObj = {
 /**
  * 替换卡片英文名称
  * @param name 名字
- * @returns 
+ * @returns
  */
 const changeName = (name) => {
     if(nameObj[name]){

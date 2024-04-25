@@ -119,7 +119,6 @@ const installSuccess = (data: any, id?: string) => {
     ttappList.value.push(currentData);
   } else {
     message.success("更新成功");
-    useMit.on("updateTTApp", currentData.id);
     ttappList.value = ttappList.value.map((item) => {
       if (item.id === currentData.id) {
         return currentData;
@@ -130,7 +129,8 @@ const installSuccess = (data: any, id?: string) => {
     setTimeout(() => {
       updateNav(currentData.id)
       // useMit.emit("updateNav", currentData.id);
-    }, 0);
+      useMit.emit("updateTTApp", currentData.id);
+  }, 0);
   }
 };
 

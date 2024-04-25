@@ -2,251 +2,251 @@ import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
 import {nanoid} from "nanoid";
 import _ from 'lodash-es'
+import {usePlat} from "../ui/hooks/usePlat";
 // @ts-ignore
-let arrData = [
+let clientNav = [
   // 旧版底部数据
-    // {
-    //   icon: 'http://a.apps.vip/icons/flappy.jpg',
-    //   type:'coolApp',
-    //   name: 'Mlappy Bird',
-    //   summary: '和小伙伴们一起飞。',
-    //   needInstall: false,
-    //   data: {
-    //     theme: '#030c13',
-    //     name: 'mlappyBird',
-    //     url: 'http://bird.apps.vip/?',
-    //     background: false,
-    //     type:'game',
-    //     scale:160
-    //   }
-    // },
-    // {
-    //   "icon": "https://res.wx.qq.com/a/wx_fed/assets/res/OTE0YTAw.png",
-    //   "name": "微信",
-    //   "type": "coolApp",
-    //   "summary": "在副屏上使用网页版微信聊天。（已适配小屏）",
-    //   "needInstall": false,
-    //   "data": {
-    //     "theme": "#2e3238",
-    //     "name": "weixin",
-    //     "url": "https://wx.qq.com",
-    //     "preload": "weixin",
-    //     "background": true,
-    //     "node": false,
-    //     "security": true
-    //   }
-    // },
-    // {
-    //   "icon": "https://s1.hdslb.com/bfs/static/jinkela/popular/assets/icon_popular.png",
-    //   "name": "网页数据监控小助手",
-    //   "type": "coolApp",
-    //   "summary": "一个用于检测网页数据的工具，可以实时监测一个网页数据动态，并组织成可视化的报表，目前支持B站视频数据追踪。",
-    //   "needInstall": false,
-    //   "data": {
-    //     "fullScreen": false,
-    //     "theme": "#030c13",
-    //     "name": "watch",
-    //     "type": "system",
-    //     "route": "{\"name\":\"watch\"}"
-    //   }
-    // },
-    // {
-    //   "nanoid": "2GpOXkUi",
-    //   "appid": "MiXNpK",
-    //   "name": "应用市场",
-    //   "author": null,
-    //   "package": "com.thisky.appStore",
-    //   "preload": "/pages/appStore/preload.js",
-    //   "logo": "https://up.apps.vip/logo/favicon.svg",
-    //   "summary": "应用市场，助您发现更大的世界。",
-    //   "site": null,
-    //   "type": "lightApp",
-    //   "url": "https://a.apps.vip/d.appStore/index.html",
-    //   "circle": null,
-    //   "theme_color": "#3c78d8",
-    //   "user_theme_color": "#3c78d8",
-    //   "create_time": 1680576621883,
-    //   "update_time": 1680576621883,
-    //   "account_avatar": "",
-    //   "order": 0,
-    //   "use_count": 0,
-    //   "last_execute_time": 1680576621883,
-    //   "settings": {
-    //     "bounds": {
-    //       "width": 1180,
-    //       "height": 864
-    //     },
-    //     "showInSideBar": true
-    //   },
-    //   "unread_count": 0,
-    //   "file_assign": null,
-    //   "auth": null,
-    //   "is_new": false,
-    //   "attribute": {
-    //     "isOfficial": 1,
-    //     "integration": 2
-    //   },
-    //   "window": {
-    //     "defaultType": "frameWindow",
-    //     "frameWindow": {
-    //       "enable": true,
-    //       "width": 1180,
-    //       "height": 864,
-    //       "controllers": {
-    //         "goBack": false,
-    //         "goForward": false,
-    //         "refresh": true,
-    //         "home": false
-    //       }
-    //     },
-    //     "window": {},
-    //     "attach": {}
-    //   },
-    //   "open_source": null,
-    //   "csv_url": null,
-    //   "os_summary": null,
-    //   "is_debug": null,
-    //   "is_fav": null,
-    //   "capture": "",
-    //   "isSystemApp": true,
-    //   "userSettings": {
-    //     "auth": {
-    //       "base": {
-    //         "webSecure": false,
-    //         "node": false
-    //       },
-    //       "api": {},
-    //       "ability": {}
-    //     },
-    //     "window": "{\"defaultType\":\"frameWindow\",\"frameWindow\":{\"enable\":true,\"width\":1180,\"height\":864,\"controllers\":{\"goBack\":false,\"goForward\":false,\"refresh\":true,\"home\":false}},\"window\":{},\"attach\":{}}",
-    //     "optimize": {
-    //       "autoRun": false,
-    //       "keepRunning": false,
-    //       "showInSideBar": false
-    //     }
-    //   },
-    //   "origin": {
-    //     "nanoid": "2GpOXkUi",
-    //     "appid": "MiXNpK",
-    //     "name": "应用市场",
-    //     "author": null,
-    //     "package": "com.thisky.appStore",
-    //     "preload": "/pages/appStore/preload.js",
-    //     "logo": "https://up.apps.vip/logo/favicon.svg",
-    //     "summary": "应用市场，助您发现更大的世界。",
-    //     "site": null,
-    //     "type": "web",
-    //     "url": "https://a.apps.vip/d.appStore/index.html",
-    //     "circle": null,
-    //     "theme_color": "#3c78d8",
-    //     "user_theme_color": "",
-    //     "create_time": 1680576621883,
-    //     "update_time": 1680576621883,
-    //     "account_avatar": "",
-    //     "order": 0,
-    //     "use_count": 0,
-    //     "last_execute_time": 1680576621883,
-    //     "settings": {
-    //       "bounds": {
-    //         "width": 1180,
-    //         "height": 864
-    //       },
-    //       "showInSideBar": true
-    //     },
-    //     "unread_count": 0,
-    //     "file_assign": null,
-    //     "auth": null,
-    //     "is_new": false,
-    //     "attribute": {
-    //       "isOfficial": 1,
-    //       "integration": 2
-    //     },
-    //     "window": {
-    //       "defaultType": "frameWindow",
-    //       "frameWindow": {
-    //         "enable": true,
-    //         "width": 1180,
-    //         "height": 864,
-    //         "controllers": {
-    //           "goBack": false,
-    //           "goForward": false,
-    //           "refresh": true,
-    //           "home": false
-    //         }
-    //       },
-    //       "window": {},
-    //       "attach": {}
-    //     },
-    //     "open_source": null,
-    //     "csv_url": null,
-    //     "os_summary": null,
-    //     "is_debug": null,
-    //     "is_fav": null,
-    //     "capture": "",
-    //     "isSystemApp": true,
-    //     "userSettings": {
-    //       "auth": {
-    //         "base": {
-    //           "webSecure": false,
-    //           "node": false
-    //         },
-    //         "api": {},
-    //         "ability": {}
-    //       },
-    //       "window": "{\"defaultType\":\"frameWindow\",\"frameWindow\":{\"enable\":true,\"width\":1180,\"height\":864,\"controllers\":{\"goBack\":false,\"goForward\":false,\"refresh\":true,\"home\":false}},\"window\":{},\"attach\":{}}",
-    //       "optimize": {
-    //         "autoRun": false,
-    //         "keepRunning": false,
-    //         "showInSideBar": false
-    //       }
-    //     }
-    //   },
-    //   "icon": "https://up.apps.vip/logo/favicon.svg"
-    // },
-    // {
-    //   "type": "systemApp",
-    //   "icon": "fluent:lock-closed-16-regular",
-    //   "name": "锁定屏幕",
-    //   "event": "lock"
-    // },
-    // {
-    //   "type": "systemApp",
-    //   "icon": "fluent:settings-16-regular",
-    //   "name": "基础设置",
-    //   "event": "setting"
-    // },
-    // {
-    //   "type": "systemApp",
-    //   "icon": "fluent:full-screen-maximize-16-filled",
-    //   "name": "全屏显示",
-    //   "event": "fullscreen"
-    // },
-    // {
-    //   "type": "systemApp",
-    //   "icon": "fluent:slide-settings-24-regular",
-    //   "name": "设备设置",
-    //   "event": "status"
-    // },
-    // {
-    //   "type": "systemApp",
-    //   "icon": "fluent:power-20-filled",
-    //   "name": "电源",
-    //   "event": "power"
-    // },
-    // 新版默认底部数据
-    { 'type': 'systemApp', id: '1705025376', 'icon': 'shouye1', 'name': '桌面主页', 'event': 'home' },
-    { 'type': 'systemApp', id: '1705025377', 'icon': 'yingyongzhongxin', 'name': '应用中心', 'event': 'apps' },
-    { 'type': 'systemApp', id: '1705025378', 'icon': 'fluent:chat-16-regular', 'name': '社群', 'event': 'chat' },
-    // { 'type': 'systemApp', 'icon': 'kuaijie1', 'name': '快捷指令', 'event': 'deck' },
-    { 'type': 'systemApp', id: '1705025379', 'icon': 'fluent:document-bullet-list-multiple-24-regular', 'name': '办公助手', 'event': 'work' },
-    { 'type': 'systemApp', id: '1705025380', 'icon': 'youxishoubing', 'name': '游戏助手', 'event': 'gameIndex' },
-    { 'type': 'systemApp', id: '1705025381', 'icon': 'yinle1', 'name': '网易云音乐', 'event': 'music' },
-    // { 'type': 'systemApp', 'icon': 'lock', 'name': '锁屏', 'event': 'lock' },
-    { 'type': 'systemApp', id: '1705025382', 'icon': 'fluent:settings-16-regular', 'name': '任务中心', 'event': 'task' },
-    { 'type': 'systemApp', id: '1705025383', 'icon': 'fluent:settings-16-regular', 'name': '社区中心', 'event': 'commun' },
-    { 'type': 'systemApp', id: '1705025384', 'icon': 'fullscreen', 'name': '全屏', 'event': 'fullscreen' },
-    { 'type': 'systemApp', id: '1705025385', 'icon': 'setting', 'name': '设置中心', 'event': 'setting' },
+  // 新版默认底部数据
+  {'type': 'systemApp', id: '1705025376', 'icon': 'shouye1', 'name': '桌面主页', 'event': 'home'},
+  {'type': 'systemApp', id: '1705025377', 'icon': 'yingyongzhongxin', 'name': '应用中心', 'event': 'apps'},
+  {'type': 'systemApp', id: '1705025378', 'icon': 'fluent:chat-16-regular', 'name': '社群', 'event': 'chat'},
+  // { 'type': 'systemApp', 'icon': 'kuaijie1', 'name': '快捷指令', 'event': 'deck' },
+  {
+    'type': 'systemApp',
+    id: '1705025379',
+    'icon': 'fluent:document-bullet-list-multiple-24-regular',
+    'name': '办公助手',
+    'event': 'work'
+  },
+  {'type': 'systemApp', id: '1705025380', 'icon': 'youxishoubing', 'name': '游戏助手', 'event': 'gameIndex'},
+  {'type': 'systemApp', id: '1705025381', 'icon': 'yinle1', 'name': '网易云音乐', 'event': 'music'},
+  // { 'type': 'systemApp', 'icon': 'lock', 'name': '锁屏', 'event': 'lock' },
+  {'type': 'systemApp', id: '1705025382', 'icon': 'fluent:settings-16-regular', 'name': '任务中心', 'event': 'task'},
+  {'type': 'systemApp', id: '1705025383', 'icon': 'fluent:settings-16-regular', 'name': '社区中心', 'event': 'commun'},
+  {'type': 'systemApp', id: '1705025384', 'icon': 'fullscreen', 'name': '全屏', 'event': 'fullscreen'},
+  {'type': 'systemApp', id: '1705025385', 'icon': 'setting', 'name': '设置中心', 'event': 'setting'},
 ]
+let webNav = [
+  // web端默认
+
+  {
+    "renewTime": 20240302,
+    "id": "xqBvS8",
+    "icon": "/logo/home.svg",
+    "iconType": "",
+    "name": "桌面主页",
+    "isName": true,
+    "value": "home",
+    "mode": "app",
+    "attributeEdit": true,
+    "type": "systemApp",
+    "bg": "",
+    "isBg": false,
+    "radius": 0,
+    "isRadius": true,
+    "useCount": 0,
+    "lastUseTime": "",
+    "iconState": "cover",
+    "iconShape": "square",
+    "size": "1x1",
+    "summary": "",
+    "default": {},
+    "slot": "",
+    "cardData": {},
+    "event": "home"
+  },
+  {
+    "renewTime": 20240302,
+    "id": "ltL7sy",
+    "icon": "/logo/community.svg",
+    "iconType": "",
+    "name": "社群",
+    "isName": true,
+    "value": "chat",
+    "mode": "app",
+    "attributeEdit": true,
+    "type": "systemApp",
+    "bg": "",
+    "isBg": false,
+    "radius": 0,
+    "isRadius": true,
+    "useCount": 0,
+    "lastUseTime": "",
+    "iconState": "cover",
+    "iconShape": "square",
+    "size": "1x1",
+    "summary": "",
+    "default": {},
+    "slot": "",
+    "cardData": {},
+    "event": "chat"
+  },
+  {
+    "renewTime": 20240302,
+    "id": "aBU0Te",
+    "icon": "/logo/wallpaper.svg",
+    "iconType": "",
+    "name": "壁纸",
+    "isName": true,
+    "value": "my",
+    "mode": "app",
+    "attributeEdit": true,
+    "type": "systemApp",
+    "bg": "",
+    "isBg": false,
+    "radius": 0,
+    "isRadius": true,
+    "useCount": 0,
+    "lastUseTime": "",
+    "iconState": "cover",
+    "iconShape": "square",
+    "size": "1x1",
+    "summary": "",
+    "default": {},
+    "slot": "",
+    "cardData": {},
+    "tab": "paper",
+    "event": "my",
+    "ext": ""
+  },
+  {
+    "renewTime": 20240302,
+    "id": "A6WLok",
+    "icon": "/logo/todo.svg",
+    "iconType": "",
+    "name": "待办事项",
+    "isName": true,
+    "value": "todo",
+    "mode": "app",
+    "attributeEdit": true,
+    "type": "systemApp",
+    "bg": "",
+    "isBg": false,
+    "radius": 0,
+    "isRadius": true,
+    "useCount": 0,
+    "lastUseTime": "",
+    "iconState": "cover",
+    "iconShape": "square",
+    "size": "1x1",
+    "summary": "",
+    "default": {},
+    "slot": "",
+    "cardData": {},
+    "event": "todo",
+    "ext": ""
+  },
+  {
+    "renewTime": 20240302,
+    "id": "z_lWwa",
+    "icon": "/logo/ai.svg",
+    "iconType": "",
+    "name": "AI助手",
+    "isName": true,
+    "value": "ai",
+    "mode": "app",
+    "attributeEdit": true,
+    "type": "systemApp",
+    "bg": "",
+    "isBg": false,
+    "radius": 0,
+    "isRadius": true,
+    "useCount": 0,
+    "lastUseTime": "",
+    "iconState": "cover",
+    "iconShape": "square",
+    "size": "1x1",
+    "summary": "",
+    "default": {},
+    "slot": "",
+    "cardData": {},
+    "event": "ai",
+    "ext": ""
+  },
+  {
+    "renewTime": 20240302,
+    "id": "mJFnsZ",
+    "icon": "/logo/memorandum.svg",
+    "iconType": "",
+    "name": "备忘录",
+    "isName": true,
+    "value": "note",
+    "mode": "app",
+    "attributeEdit": true,
+    "type": "systemApp",
+    "bg": "",
+    "isBg": false,
+    "radius": 0,
+    "isRadius": true,
+    "useCount": 0,
+    "lastUseTime": "",
+    "iconState": "cover",
+    "iconShape": "square",
+    "size": "1x1",
+    "summary": "",
+    "default": {},
+    "slot": "",
+    "cardData": {},
+    "event": "note",
+    "ext": ""
+  },
+  {
+    "renewTime": 20240302,
+    "id": "4XwMvr",
+    "icon": "/logo/task.svg",
+    "iconType": "",
+    "name": "任务中心",
+    "isName": true,
+    "value": "task",
+    "mode": "app",
+    "attributeEdit": true,
+    "type": "systemApp",
+    "bg": "",
+    "isBg": false,
+    "radius": 0,
+    "isRadius": true,
+    "useCount": 0,
+    "lastUseTime": "",
+    "iconState": "cover",
+    "iconShape": "square",
+    "size": "1x1",
+    "summary": "",
+    "default": {},
+    "slot": "",
+    "cardData": {},
+    "event": "task"
+  },
+  {
+    "id": "o2gD2n",
+    "name": "哔哩哔哩",
+    "summary": "干杯！",
+    "icon": "https://up.apps.vip/yyscIcon/bilibili.jpg",
+    "url": "https://www.bilibili.com/",
+    "type": "default",
+    "bg": "",
+    "isBg": false,
+    "mode": "app",
+    "ext": "",
+    "slot": "",
+    "value": "https://www.bilibili.com/"
+  },
+  {
+    "id": "mBdGYN",
+    "name": "QQ邮箱",
+    "summary": "为亿万用户提供高效稳定便捷的电子邮件服务。",
+    "icon": "https://mail.qq.com/zh_CN/htmledition/images/favicon/qqmail_favicon_96h.png",
+    "url": "https://mail.qq.com",
+    "type": "default",
+    "bg": "",
+    "isBg": false,
+    "mode": "app",
+    "ext": "",
+    "slot": "",
+    "value": "https://mail.qq.com"
+  }
+]
+
+
 // @ts-ignore
 export const navStore = defineStore("nav", {
   state: () => ({
@@ -256,7 +256,7 @@ export const navStore = defineStore("nav", {
         icon: '/logo/home.svg',
         name: '桌面主页',
         value: 'home',
-        tab:'home'
+        tab: 'home'
       },
       // {
       //   type:'systemApp',
@@ -269,9 +269,9 @@ export const navStore = defineStore("nav", {
     footNavigationList: [],
     sideNavigationList: [],
     rightNavigationList: [],
-    copyFootNav:[],
-    copySideNav:[],
-    copyRightNav:[],
+    copyFootNav: [],
+    copySideNav: [],
+    copyRightNav: [],
     builtInFeatures: [
       {
         "type": "systemApp",
@@ -299,57 +299,63 @@ export const navStore = defineStore("nav", {
       }
     ],
     // navigationToggle: [true,false,true]
-    navigationToggle: [false,false,true],
-    loaded:false,
-    init:false,//是否初始化过了
+    navigationToggle: [false, false, true],
+    loaded: false,
+    init: false,//是否初始化过了
     // 底部导航栏最多图标数
-    maxItemNum:null,
+    maxItemNum: null,
     // 导航栏初始化
-    leftNavInit:false,
-    rightNavInit:false,
-    footNavInit:false,
+    leftNavInit: false,
+    rightNavInit: false,
+    footNavInit: false,
   }),
   actions: {
-    fixData(nav){
-      const newNav=_.cloneDeep(nav)
-      let isFixed=false
-      let fixedArray=[]
-      for(const icon of newNav){
-        if(!icon) {
+    fixData(nav) {
+      const newNav = _.cloneDeep(nav)
+      let isFixed = false
+      let fixedArray = []
+      for (const icon of newNav) {
+        if (!icon) {
           //自身已经出问题了
-          isFixed=true
+          isFixed = true
           continue
         }
-        if(!icon.id){
-          isFixed=true
-          icon.id=nanoid(6)
+        if (!icon.id) {
+          isFixed = true
+          icon.id = nanoid(6)
           fixedArray.push(icon)
           continue
         }
-        if(nav.some(n=>{
-          return n.id===icon.id
-        })){
+        if (nav.some(n => {
+          return n.id === icon.id
+        })) {
           //存在同id，则重新更新id
-          isFixed=true
-          icon.id=nanoid(6)
+          isFixed = true
+          icon.id = nanoid(6)
         }
         fixedArray.push(icon)
       }
       return {
-        fixed:isFixed,
+        fixed: isFixed,
         fixedArray
       }
     },
-    loadNav(){
+    loadNav() {
       // console.log('执行loadNav')
-      if(!this.init){
-        this.copyFootNav=[...arrData]
-        this.init=true
+      if (!this.init) {
+        console.log('检测到未初始化')
+        if (usePlat('web')) {
+          this.copyFootNav = [...webNav]
+        } else {
+          this.copyFootNav = [...clientNav]
+        }
+
+        this.init = true
       }
-      if(!this.loaded){
-        let fixedRs=this.fixData(this.copyFootNav)
-        if(fixedRs.fixed){
-          this.copyFootNav=fixedRs.fixedArray
+      if (!this.loaded) {
+        let fixedRs = this.fixData(this.copyFootNav)
+        if (fixedRs.fixed) {
+          this.copyFootNav = fixedRs.fixedArray
         }
         //this.copyFootNav = []//JSON.parse(JSON.stringify(this.footNavigationList))
         // this.copySideNav = JSON.parse(JSON.stringify(this.sideNavigationList))
@@ -359,36 +365,40 @@ export const navStore = defineStore("nav", {
         this.loaded = true
       }
     },
-    updateType(list){
+    updateType(list) {
       list.forEach(element => {
         element.id = element.id || nanoid(6)
       });
     },
     removeFootNavigationList(index) {
-        this.copyFootNav.splice(index, 1)
+      this.copyFootNav.splice(index, 1)
     },
     sortFootNavigationList(evt) {
-        let temp = this.copyFootNav[evt.oldIndex]
-        this.copyFootNav.splice(evt.oldIndex, 1)
-        this.copyFootNav.splice(evt.newIndex, 0, temp)
+      let temp = this.copyFootNav[evt.oldIndex]
+      this.copyFootNav.splice(evt.oldIndex, 1)
+      this.copyFootNav.splice(evt.newIndex, 0, temp)
     },
     setFootNavigationList(item) {
       // 当元素个数大于限制数时，将无法添加
-        // if(this.maxItemNum >= this.footNavigationList.length){
-      if(!item.id) { item.id=nanoid(6)}
-          this.copyFootNav.unshift(item)
-        // }
+      // if(this.maxItemNum >= this.footNavigationList.length){
+      if (!item.id) {
+        item.id = nanoid(6)
+      }
+      this.copyFootNav.unshift(item)
+      // }
     },
     removeSideNavigationList(index) {
-        this.sideNavigationList.splice(index, 1)
+      this.sideNavigationList.splice(index, 1)
     },
     sortSideNavigationList(evt) {
-        let temp = this.sideNavigationList[evt.oldIndex]
-        this.sideNavigationList.splice(evt.oldIndex, 1)
-        this.sideNavigationList.splice(evt.newIndex, 0, temp)
+      let temp = this.sideNavigationList[evt.oldIndex]
+      this.sideNavigationList.splice(evt.oldIndex, 1)
+      this.sideNavigationList.splice(evt.newIndex, 0, temp)
     },
     setSideNavigationList(item) {
-      if(!item.id) { item.id=nanoid(6)}
+      if (!item.id) {
+        item.id = nanoid(6)
+      }
       let itemNav = {...item}
       // if(itemNav.name === '主页'){
       //   itemNav.icon = 'shouye1'
@@ -398,15 +408,17 @@ export const navStore = defineStore("nav", {
       this.sideNavigationList.unshift(itemNav)
     },
     removeRightNavigationList(index) {
-        this.rightNavigationList.splice(index, 1)
+      this.rightNavigationList.splice(index, 1)
     },
     sortRightNavigationList(evt) {
-        let temp = this.rightNavigationList[evt.oldIndex]
-        this.rightNavigationList.splice(evt.oldIndex, 1)
-        this.rightNavigationList.splice(evt.newIndex, 0, temp)
+      let temp = this.rightNavigationList[evt.oldIndex]
+      this.rightNavigationList.splice(evt.oldIndex, 1)
+      this.rightNavigationList.splice(evt.newIndex, 0, temp)
     },
     setRightNavigationList(item) {
-      if(!item.id) { item.id=nanoid(6)}
+      if (!item.id) {
+        item.id = nanoid(6)
+      }
       let itemNav = {...item}
       // if(itemNav.name === '主页'){
       //   itemNav.icon = 'shouye'
@@ -415,25 +427,25 @@ export const navStore = defineStore("nav", {
       // }
       this.rightNavigationList.unshift(itemNav)
     },
-    setNavigationToggle(type,val){
+    setNavigationToggle(type, val) {
       switch (type) {
         case 'left':
           this.navigationToggle[0] = val
           break;
         case 'right':
-            this.navigationToggle[1] = val
-            break;
+          this.navigationToggle[1] = val
+          break;
         case 'foot':
           this.navigationToggle[2] = val
           break;
       }
     },
     // 替换左侧导航数据
-    updateLeftNavData(val){
+    updateLeftNavData(val) {
       // console.log('更新左侧导航数据',val);
       this.sideNavigationList = val
     },
-    updateBottomNavData(val){
+    updateBottomNavData(val) {
       // console.log('更新底部导航数据',val);
       this.footNavigationList = val
     }
@@ -449,7 +461,7 @@ export const navStore = defineStore("nav", {
       {
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-      paths: ['sideNavigationList','footNavigationList','rightNavigationList','navigationToggle','copyFootNav','copySideNav','copyRightNav','copyFlag','init','leftNavInit','rightNavInit','footNavInit'],
+        paths: ['sideNavigationList', 'footNavigationList', 'rightNavigationList', 'navigationToggle', 'copyFootNav', 'copySideNav', 'copyRightNav', 'copyFlag', 'init', 'leftNavInit', 'rightNavInit', 'footNavInit'],
         storage: dbStorage,
         // state 中的字段名，按组打包储存
       },

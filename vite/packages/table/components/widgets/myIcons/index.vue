@@ -98,13 +98,17 @@
 </template>
 <script>
 import { defineAsyncComponent } from "vue";
+
+import { cardValidate } from "../../../apps/appCenter/src/views/developer/hooks/validate.ts";
 // components
 import Widget from "../../card/Widget.vue";
 import icon from "./components/icon.vue";
 import DragAndFollow from "./components/DragAndFollow.vue";
 import DroppableArea from "./components/DroppableArea.vue";
 const Set = defineAsyncComponent(() => import("./set/index.vue"));
-const ModelCard = defineAsyncComponent(() => import("../../windowPanel/components/ModelCard.vue"));
+const ModelCard = defineAsyncComponent(() =>
+  import("../../windowPanel/components/ModelCard.vue")
+);
 // pinia
 import { mapActions, mapWritableState } from "pinia";
 import { cardStore } from "../../../store/card.ts";
@@ -154,7 +158,7 @@ export default {
       iconsSetVisible: false,
       options: { hide: true, disabled: true }, // 卡片核心配置
       // 卡片类相关数据
-      modelVisible: false,  // 卡片弹窗是否可见
+      modelVisible: false, // 卡片弹窗是否可见
       cardData: {}, // 卡片详细数据
     };
   },
@@ -194,17 +198,20 @@ export default {
     }
   },
   mounted() {
+    let res = this.customData.iconList[0];
+
+    console.log('myicon  res :>> ', res);
+
+    // if (cardValidate())
     // console.log("this.customData :>> ", this.customData.iconList[0].src);
     // console.log("this.customData :>> ", this.customData);
     // console.log("window.globalArgs :>> ", window.globalArgs);
-
 
     if (
       this.customData.iconList?.length <= 1 ||
       this.customData.iconList?.length == undefined
     )
       return;
-
 
     let index = this.desk.cards.findIndex(
       (item) => item.id == this.customIndex
@@ -311,7 +318,7 @@ export default {
         },
         {
           newIcon: "akar-icons:trash-can",
-          title: "删除小组件",
+          title: "删除",
           color: "#FF4D4F",
           fn: () => {
             this.deleteIcon();
@@ -368,9 +375,9 @@ export default {
   },
   methods: {
     ...mapActions(cardStore, ["updateCustomData", "addCard"]),
-    openCard(){
-      this.cardData = this.customData.iconList[0]
-      this.modelVisible = true
+    openCard() {
+      this.cardData = this.customData.iconList[0];
+      this.modelVisible = true;
     },
     openIconsSet() {
       this.iconsSetVisible = true;
@@ -587,7 +594,7 @@ export default {
     },
     // 适配新版保存图标
     closeSet() {
-      console.log('22222 :>> ', this.edit);
+      console.log("22222 :>> ", this.edit);
       this.customData.iconList[this.index] = {
         ...this.edit,
         open: {

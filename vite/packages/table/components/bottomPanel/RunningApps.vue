@@ -58,9 +58,9 @@ import { mapWritableState } from 'pinia'
 import { appsStore } from '../../store/apps'
 import navigationData from '../../js/data/tableData'
 
-import {useEnv} from '../../ui/hooks/useEnv'
+import {usePlat} from '../../ui/hooks/usePlat'
 let appModel
-if (!useEnv()) {
+if (!usePlat()) {
   appModel= window.$models.appModel
 }
 

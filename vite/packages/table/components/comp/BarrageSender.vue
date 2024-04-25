@@ -45,7 +45,7 @@ export default {
   mounted () {
     console.log('this.currentChannel.name :>> ', this.currentChannel.name);
 
-if (!this.$useEnv()) {
+if (!this.$usePlat()) {
   this.CONST = tsbApi.barrage.CONST
 }
   },

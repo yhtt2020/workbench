@@ -4,10 +4,10 @@ import dbStorage from "./dbStorage";
 import audio from "../js/common/audio";
 import { completeTask } from "../apps/task/task"
 import {message} from "ant-design-vue";
-import { useEnv } from "../ui/hooks/useEnv";
+import { usePlat } from "../ui/hooks/usePlat";
 
 let rpc
-if (!useEnv()) {
+if (!usePlat()) {
   rpc=window.$models.rpc
 
 }

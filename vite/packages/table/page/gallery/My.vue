@@ -84,10 +84,10 @@ import MyEmptyStatus from './components/empty/MyEmptyStatus.vue';
 import MyContent from './components/content/MyContent.vue';
 import PaperRightDrawer from './components/drawer/PaperRightDrawer.vue';
 import ClosePaperButton from './components/close/ClosePaperButton.vue';
-import { useEnv } from '../../ui/hooks/useEnv';
+import { usePlat } from '../../ui/hooks/usePlat';
 
 let fs,path
- if (!useEnv('web')) {
+ if (!usePlat('web')) {
    fs = window.$models.fs
     path = require('path')
  }

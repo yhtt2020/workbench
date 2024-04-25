@@ -1,8 +1,8 @@
 import {message} from "ant-design-vue";
 import {courierStore} from "../../../../apps/ecommerce/courier";
-import { useEnv } from "../../../../ui/hooks/useEnv";
+import { usePlat } from "../../../../ui/hooks/usePlat";
 let appDirName
-if ( !useEnv('web')) {
+if ( !usePlat('web')) {
    appDirName = window.globalArgs['app-dir_name']
 }
 const grab = {

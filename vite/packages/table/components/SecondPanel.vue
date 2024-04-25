@@ -102,7 +102,7 @@ export default {
       let name = menu.name || menu.index || menu.route.name
 
       console.log('name :>> ', name);
-      let res = window.$useEnvLimit('web',name)
+      let res = window.$usePlatLimit('web',name)
       if (res) return
       this.activeIndex = menu.index
       this.$emit('changeTab', {

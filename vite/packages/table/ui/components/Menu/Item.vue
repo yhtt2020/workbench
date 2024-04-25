@@ -62,7 +62,7 @@
             color: data.color ? data.color : color,
           }"
         >
-          {{ data[`${name}`] == "设置" ? "设置小组件" : data[`${name}`] }}
+          {{ data[`${name}`] == "设置" ? "设置" : data[`${name}`] }}
         </div>
       </div>
     </xt-task>
