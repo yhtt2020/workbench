@@ -92,6 +92,7 @@ import { usePlat } from "../ui/hooks/usePlat";
 import { usePermissionStore } from "../permission/store";
 import cache from "../components/card/hooks/cache";
 import { isMain } from "../js/common/screenUtils";
+import { useUpdateUserInfo } from "../permission/user/useUserPermit";
 let steamUser,
   steamSession,
   path,
@@ -432,6 +433,9 @@ export default {
       this.isOffline = cache.get('isOffline')
       this.isSingle = cache.get('isSingle')
       this.isGuest = cache.get('isGuest')
+      // 进行一次重连操作
+      useUpdateUserInfo()
+      
       this.replaceIcon(this.sideNavigationList, this.leftNavInit);
       this.replaceIcon(this.rightNavigationList, this.rightNavInit);
       this.replaceIcon(this.copyFootNav, this.footNavInit);

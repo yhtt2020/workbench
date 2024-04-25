@@ -2,7 +2,7 @@ import { confirm } from "../ui/new/confirm";
 import cache from "../components/card/hooks/cache";
 
 import { ALL_LIMITS, COMPONENT_LIMIT, PRIORITY, ROUTER_LIMIT } from "./config";
-import { isWeb, isWindow, isMac } from "./useBaseEnv";
+import { isWeb, isWin, isMac } from "./useBaseEnv";
 
 // 提示
 const showConfirm = (name) => {
@@ -41,8 +41,8 @@ const platDetection = (type) => {
     return isWeb ? "web" : "";
   } else if (type == "mac") {
     return isMac ? "mac" : "";
-  } else if (type == "window") {
-    return isWindow ? "window" : "";
+  } else if (type == "win") {
+    return isWin ? "win" : "";
   }
 };
 // 条件判断
@@ -60,7 +60,7 @@ const checkLimit = (plat, name, options) => {
  * 参数: web, client, mac
  * 返回: 环境名称
  */
-export type basePlat = "web" | "client" | "macOS";
+export type basePlat = "web" | "client" | "mac";
 export type usePlatType = basePlat | any;
 
 export type usePlat = (arr: usePlatType) => basePlat;
@@ -98,5 +98,5 @@ export const useRouterLimit = (plat, name, options = {}) => {
 };
 
 export const currentPlat = () => {
-  return usePlat(["web", "mac", "window"]);
+  return usePlat(["web", "mac", "win"]);
 };
