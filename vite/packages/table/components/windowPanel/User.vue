@@ -1,5 +1,5 @@
 <template>
-    <MyAvatar @click="openControl" v-if="(!simple) && !isOffline && bottomToggle[0]"></MyAvatar>
+    <MyAvatar @click="openControl" v-if="(!simple) && bottomToggle[0]"></MyAvatar>
     <div v-else class="w-16 h-16"></div>
     <Teleport to="body">
         <div class="absolute" v-if="isControl" :style="{left: pos.x + 'px', top: pos.y + 'px'}" style="z-index: 500;">
@@ -30,7 +30,7 @@ import { usePosition } from './hook/usePosition';
 const useAppStore = appStore()
 const { simple } = storeToRefs(useAppStore)
 
-const { isOffline } = storeToRefs(useOfflineStore)
+// const { isOffline } = storeToRefs(useOfflineStore)
 
 const useNav = useNavigationStore()
 const { bottomToggle } = storeToRefs(useNav)

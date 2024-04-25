@@ -8,6 +8,7 @@ import {
 } from "../../../../../../ui/hooks/useDataConversion";
 import { useAddCard } from "../../../../../../hooks";
 import { useMit } from "../../../../../../hooks";
+import { navStore } from "../../../../../../store/nav";
 
 // 安装实现
 export const installV2 = async (id?: string) => {
@@ -125,5 +126,35 @@ const installSuccess = (data: any, id?: string) => {
       }
       return item;
     });
+    // 更新导航栏
+    setTimeout(() => {
+      updateNav(currentData.id)
+      // useMit.emit("updateNav", currentData.id);
+    }, 0);
   }
 };
+
+// 更新导航栏图标
+const updateNav = (id) => {
+  const nav = navStore();
+  const ttApp = useTTAppStore();
+  // 定义一个更新导航元素的辅助函数
+  const updateNavItem = (navItem) => {
+    if (navItem) {
+      const item = ttApp.select(id);
+      navItem.name = item.name;
+      navItem.icon = item._logo; 
+    }
+  };
+
+  // 查找各个导航列表中的对应元素
+  const footIcon = nav.copyFootNav.find(item => item.cardData?.id === id);
+  const leftIcon = nav.sideNavigationList.find(item => item.cardData?.id === id);
+  const rightIcon = nav.rightNavigationList.find(item => item.cardData?.id === id);
+
+  // 更新导航元素
+  updateNavItem(footIcon);
+  updateNavItem(leftIcon);
+  updateNavItem(rightIcon);
+};
+
