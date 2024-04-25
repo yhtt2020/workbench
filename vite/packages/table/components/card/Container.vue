@@ -275,7 +275,6 @@ const handleKeyDown = (event) => {
 //
 const handleTouchStart = (e) => {
   e.stopPropagation();
-  console.log("handleTouchStart :>> ", 2222);
 };
 
 onBeforeMount(async () => {

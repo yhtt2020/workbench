@@ -12,8 +12,6 @@ import { storeToRefs } from "pinia";
 import { useFreeLayoutStore } from "./store";
 import { message } from "ant-design-vue";
 import "animate.css";
-import { useDebounceFn } from "@vueuse/core";
-
 import {
   useGridToWidth,
   useHeightToGrid,
@@ -32,6 +30,7 @@ const { proxy }: any = getCurrentInstance();
 
 const { currentDesk, currentID }: any = toRefs(props);
 const {
+  getCurrentDesk,
   freeLayoutData,
   getCurrentDeskId,
   getFreeLayoutData,
@@ -341,6 +340,7 @@ async function updateCard(data) {
 }
 
 let updateCardTimer: any;
+
 watch(
   currentDesk.value?.cards,
   (card) => {
@@ -353,6 +353,7 @@ watch(
   },
   {
     immediate: true,
+    deep: true,
   }
 );
 
@@ -397,7 +398,6 @@ onBeforeUnmount(() => {
   let data = {
     ...currentData.value,
   };
-  // const freeLayout = freeLayoutStore.getOneFreeLayoutData(currentID.value);
 
   // for (const id in freeLayout) {
   //   if (data[id]?.id.toString() != id.toString()) {
@@ -407,6 +407,19 @@ onBeforeUnmount(() => {
   // }
   // console.log("自由布局销毁操作 :>> ", getFreeLayoutData.value);
 });
+
+const handleIntersection = (visible, item) => {
+  console.log(`Element is intersecting: ${visible}`);
+  console.log("item :>> ", item);
+  if (visible) {
+    item.visible = true;
+    console.log("object :>> ", 111);
+    // Do something when element is intersecting
+  } else {
+    item.visible = false;
+    // Do something when element is not intersecting
+  }
+};
 </script>
 
 <template>
@@ -443,7 +456,7 @@ onBeforeUnmount(() => {
   </div>
   <template v-for="item in getFreeLayoutData">
     <xt-drag
-      v-if="!getFreeLayoutState.system.hide && item?.id"
+      v-if="item?.id"
       :test="false"
       @onDisabled="disabledInfo"
       mode="all"
@@ -480,15 +493,18 @@ onBeforeUnmount(() => {
         enter-active-class="animate__bounceIn"
         leave-active-class="animate__bounceIn"
       >
+        <!-- v-intersection="(visible) => handleIntersection(visible, item)" -->
+
         <div
-          v-if="item.id"
           class="rounded-xl"
           :style="{
+            display: getFreeLayoutState.system.hide ? 'none' : 'block',
             border: isSelectAll ? '3px solid var(--active-bg) ' : '',
           }"
           :key="item.id"
           ref="test"
         >
+          <!-- <xt-button>{{ item.visible }}</xt-button> -->
           <!-- <xt-button>id： {{ item.id }}</xt-button> -->
           <!-- <xt-button  w="280" h="400">  {{ freeLayoutEnv.scrollData }} </xt-button> -->
           <!-- <xt-button w="280">top {{ item.top }}</xt-button> -->

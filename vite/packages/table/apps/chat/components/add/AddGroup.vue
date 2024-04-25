@@ -79,7 +79,7 @@
                 h="32"
                 type="theme"
                 v-if="!isJoinGroup(item)"
-                @click="joinGroup(item)"
+                @click="joinCurrentGroup(item)"
                 >加入</xt-button
               >
               <xt-button
@@ -108,8 +108,6 @@ import TUIChatEngine, {
 import { message } from "ant-design-vue";
 import _ from "lodash-es";
 import { completeTask } from "../../../task/task";
-
-const chat = window.$chat.chat;
 
 const data = ref({
   searchId: "",
@@ -140,8 +138,8 @@ const closeAdd = () => {
 // 搜索群聊
 const searchGroup = () => {
   if (data.value.searchId !== "") {
-    chat
-      .searchGroupByID(data.value.searchId)
+    window.$chat?.chat
+      ?.searchGroupByID(data.value.searchId)
       .then((res) => {
         console.log("res", res);
         if (res.code === 0) {
@@ -166,7 +164,7 @@ const searchGroup = () => {
 };
 
 // 点击加入群聊
-const joinGroup = async (group) => {
+const joinCurrentGroup = async (group) => {
   const disabledJoin =
     group.joinOption === TUIChatEngine.TYPES.JOIN_OPTIONS_DISABLE_APPLY;
   if (disabledJoin) {
@@ -179,15 +177,13 @@ const joinGroup = async (group) => {
         group.applyMessage || TUITranslateService.t("TUIContact.加群"),
       type: group?.type,
     };
-    const res = await chat.joinGroup(options);
+    const res = await window.$chat?.chat?.joinGroup(options);
     if (res.data.status === "WaitAdminApproval") {
       message.success("入群申请已发出,等待群主和管理员审核");
-    }
-    else if(res.data.status === "JoinedSuccess"){
-      message.success("群聊添加成功")
-    }
-    else if(res.data.status === "AlreadyInGroup"){
-      message.success("已经在群聊中")
+    } else if (res.data.status === "JoinedSuccess") {
+      message.success("群聊添加成功");
+    } else if (res.data.status === "AlreadyInGroup") {
+      message.success("已经在群聊中");
     }
     completeTask("Z0601");
     closeAdd();

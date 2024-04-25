@@ -13,6 +13,7 @@ import {
 import { storeToRefs } from "pinia";
 import { taskStore as useTaskStore } from "../task/store";
 import { useGlobalStore } from "./store";
+
 // 领取任务奖励
 const ClaimReward = defineAsyncComponent(
   () => import("../task/components/ClaimReward.vue")
@@ -33,8 +34,12 @@ const ttappStore: any = useTTAppStore();
 const { modal } = storeToRefs(ttappStore);
 
 import { useWuJieBus } from "../ttApp/src/modules/wujie/useWuJieBus";
-useWuJieBus()
-
+useWuJieBus();
+// 新应用中心
+import AppCenter from "../appCenter";
+import { useAppCenterStore } from "../appCenter/src/store";
+const appCenterStore: any = useAppCenterStore();
+const { visible } = storeToRefs(appCenterStore);
 // 登录弹窗
 const Login = defineAsyncComponent(
   () => import("../../permission/user/Login.vue")
@@ -88,6 +93,8 @@ onMounted(() => {
 </script>
 
 <template>
+  <!-- 新应用中心 -->
+  <AppCenter v-if="visible" />
   <!-- 无界应用 -->
   <WujieModal v-if="modal.visible" />
   <!-- 领取任务奖励 -->

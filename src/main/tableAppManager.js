@@ -44,21 +44,24 @@ class TableAppManager {
     } else {
       //初始化一下
       let appPreload = ___dirname + '/src/tsApi/ts.js'
+      console.log(args,'qidongcanshu=')
+      const webPreferences={
+        preload: app.preload ? ___dirname + '/src/appPreload/' + app.preload + '.js' : appPreload, //默认使用tsApi
+        sandbox: false,
+        partition: 'persist:webcontent',
+        nodeIntegration: app.node === true,
+        webSecurity: app.webSecurity === true,
+        contextIsolation: app.node !== true,
+        additionalArguments: [
+          '--app-type=table'//添加控制台参数
+        ]
+      }
       appInstance = await global.windowManager.createView({
         name: this.getName(app.name),
-        webPreferences: {
-          preload: app.preload ? ___dirname + '/src/appPreload/' + app.preload + '.js' : appPreload, //默认使用tsApi
-          sandbox: false,
-          partition: 'persist:webcontent',
-          nodeIntegration: app.node === 'true',
-          webSecurity: app.webSecurity === 'true',
-          contextIsolation: app.node !== 'true',
-          additionalArguments: [
-            '--app-type=table'//添加控制台参数
-          ]
-        },
+        webPreferences: webPreferences,
         url: app.url
       })
+      console.log(webPreferences,'启动参数')
       view = appInstance.view
       view.webContents.on('before-input-event', (event, input) => {
         if (input.key.toLowerCase() === 'f12') {

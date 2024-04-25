@@ -3,7 +3,7 @@
   <template v-for="item in list">
     <!-- 官方群聊的树状 -->
     <div
-      class="flex items-center rounded-lg px-3.5 py-2.5 pointer currentItem-hover"
+      class="flex items-center rounded-lg px-6 py-2.5 pointer currentItem-hover"
       v-if="!menusVisible"
       @click="handleClick(item)"
     >
@@ -36,7 +36,7 @@
 
     <!-- 管理权限为社群成员 -->
     <div
-      class="flex items-center rounded-lg px-3.5 py-2.5 pointer currentItem-hover"
+      class="flex items-center rounded-lg px-6 py-2.5 pointer currentItem-hover"
       v-else-if="role === 'member'"
       @click="handleClick(item)"
     >

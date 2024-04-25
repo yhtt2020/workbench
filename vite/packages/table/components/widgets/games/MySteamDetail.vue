@@ -1,6 +1,6 @@
 <template>
   <div class="mt-3">
-    <div class="flex justify-center justify-between" v-if="size.width === 2 && size.height === 2">
+    <div class="flex  justify-between" v-if="size.width === 2 && size.height === 2">
       <div class="flex flex-col" style="width:73.53%;">
         <div class="relative " style="width:400px;height:188px;">
           <img class="rounded-lg" style="width: 100%;height: 100%; object-fit: cover;" :src="`https://cdn.cloudflare.steamstatic.com/steam/apps/${steamDetail.appid}/header.jpg`" alt="">

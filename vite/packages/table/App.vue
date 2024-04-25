@@ -172,6 +172,9 @@ export default {
   },
 
   async mounted () {
+    this.$router.push({
+      name:'splash'
+    })
     window.addEventListener('resize', () => {
       document.body.classList.add('window')
     })
