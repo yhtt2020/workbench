@@ -1,11 +1,11 @@
 // 权限匹配优先级
-export const PRIORITY = ["web", "single","offline", "guest", "mac", "window"];
+export const PRIORITY = ["web", "single","offline", "guest", "mac", "win"];
 // 环境名称
 export const ENV_MAP = {
   web: "网页端",
   single: "单机模式",
   mac: "mac",
-  window: "window",
+  win: "win",
   offline: "离线模式",
   guest: "游客模式",
 };
@@ -58,7 +58,7 @@ export const COMPONENT_LIMIT = {
 export const ALL_LIMITS = {
   web: [...ROUTER_LIMIT.web, ...COMPONENT_LIMIT.web],
   mac: [""],
-  window: [""],
+  win: [""],
   offline: [""],
   guest: [""],
 };
