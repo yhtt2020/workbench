@@ -10,7 +10,6 @@ import shake from "./js/common/shake";
 
 import { getUserInfo as useGetUserInfo } from "./permission/api/login";
 // @ts-ignore
-// @ts-ignore
 export const appStore = defineStore('appStore', {
   state: () => ({
     currentRoute: undefined,//当前路由

@@ -129,7 +129,7 @@ import { ref, onMounted, watch, computed, onBeforeUnmount, defineAsyncComponent 
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { useMouseInElement } from '@vueuse/core'
-import {useDev} from "../ui/hooks/useDev";
+import {usePlat} from "../ui/hooks/usePlat";
 
 // 按需加载组件
 const SidePanel = defineAsyncComponent(() => import('../components/SidePanel.vue'))
@@ -147,7 +147,7 @@ const { routeUpdateTime, fullScreen, settings, init } = storeToRefs(useApp)
 
 const useTeam = teamStore()
 const { teamVisible } = storeToRefs(useTeam)
-const isWeb=ref(useDev('h5'))
+const isWeb=ref(usePlat('web'))
 const useNav = navStore()
 const {
   sideNavigationList,

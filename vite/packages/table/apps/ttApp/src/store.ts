@@ -3,9 +3,9 @@ import { useSelectAll } from "./hooks";
 import { message } from "ant-design-vue";
 import { appStore as useAppStore } from "../../../store";
 import { appsStore } from "../../../store/apps";
-import { useDev } from "../../../permission/useDev";
+import { usePlat } from "../../../permission/usePlat";
 let Db
-if(!useDev('h5')){
+if(!usePlat('web')){
   console.log('客户端情况')
    Db= window.$models.Db
 }

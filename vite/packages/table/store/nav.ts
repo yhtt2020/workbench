@@ -2,7 +2,7 @@ import {defineStore} from "pinia";
 import dbStorage from "./dbStorage";
 import {nanoid} from "nanoid";
 import _ from 'lodash-es'
-import {useDev} from "../ui/hooks/useDev";
+import {usePlat} from "../ui/hooks/usePlat";
 // @ts-ignore
 let clientNav = [
   // 旧版底部数据
@@ -344,11 +344,9 @@ export const navStore = defineStore("nav", {
       // console.log('执行loadNav')
       if (!this.init) {
         console.log('检测到未初始化')
-        if (useDev('h5')) {
-          console.log('检测到h5')
+        if (usePlat('web')) {
           this.copyFootNav = [...webNav]
         } else {
-          console.log('检测到client')
           this.copyFootNav = [...clientNav]
         }
 

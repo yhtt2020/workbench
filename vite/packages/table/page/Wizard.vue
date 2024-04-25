@@ -414,7 +414,7 @@ export default {
     }
   },
   async mounted () {
-    if(useDev('h5')){
+    if(usePlat('web')){
       localStorage.setItem('wizarded','1')
       this.$router.push({name:'home'})
       return
