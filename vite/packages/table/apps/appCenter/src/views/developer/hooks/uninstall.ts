@@ -2,7 +2,9 @@ import { storeToRefs } from "pinia";
 import { cardStore as useCardSize } from "../../../../../../store/card";
 import { navStore as useNavStore } from "../../../../../../store/nav";
 import { useTTAppStore } from "../../../../../ttApp/src/store";
+import { useFreeLayoutStore } from "../../../../../../components/desk/freeLayout/store";
 import { message } from "ant-design-vue";
+import { useDelCard } from "../../../../../../hooks";
 
 export const uninstall = (id: string) => {
   clearStore(id);
@@ -20,19 +22,26 @@ const clearStore = (id: string) => {
 const clearDesk = (id: string) => {
   const cardStore = useCardSize();
   const { desks }: any = storeToRefs(cardStore);
+  const freeLayoutStore = useFreeLayoutStore();
+  const { freeLayoutData }: any = storeToRefs(freeLayoutStore);
   // 过滤所有桌面
   desks.value = desks.value.map((desk) => {
+    const deskId = desk.id;
+
     // 过滤当前桌面
     desk.cards = desk.cards.filter((obj) => {
       const customData = obj.customData;
+      const customIndex = obj.id;
       // 过滤小组件
       if (obj.name == "TTAppCard" && customData.parentId == id) {
+        delete freeLayoutData.value[deskId][customIndex];
         return false;
       }
       // 过滤单图标
       if (obj.name == "myIcons") {
         let res = customData.iconList[0].open;
         if (res.type == "ttapp" || res.value == id) {
+          delete freeLayoutData.value[deskId][customIndex];
           return false;
         }
       }
@@ -41,12 +50,14 @@ const clearDesk = (id: string) => {
         customData.list = customData.list.filter((data) => {
           // 过滤ttapp
           if (data.type == "ttapp" && data.value == id) {
+            delete freeLayoutData.value[deskId][customIndex];
             return false;
           }
           // 过滤应用卡片
           if (data.type == "card") {
             const currentId = data?.cardData?.customData?.parentId;
             if (currentId === id) {
+              delete freeLayoutData.value[deskId][customIndex];
               return false;
             }
           }
@@ -60,6 +71,7 @@ const clearDesk = (id: string) => {
 };
 /** 删除导航栏数据 */
 const clearNav = (id: string) => {
+  // 7for 24if
   // 获取导航数据
   const navStore = useNavStore();
   //
