@@ -1,5 +1,5 @@
 <template>
-  <div
+  <div class="main-container"
     style="display: flex;flex-direction: column;height: 100vh;flex-wrap: nowrap;align-content: stretch;align-items: stretch;gap:10px">
     <div v-if="!fullScreen" style="height: auto;flex: 0" ref="topPanel">
       <!--顶部状态栏      -->
