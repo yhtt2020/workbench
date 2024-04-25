@@ -633,7 +633,7 @@ export default {
             ok: () => {
               desk?.cards?.forEach((item) => {
                 //移除桌面相关的便签卡片
-                if (item.name === "notes" && !this.$useEnv()) {
+                if (item.name === "notes" && !this.$usePlat()) {
                   tsbApi.db
                     .find({
                       selector: {

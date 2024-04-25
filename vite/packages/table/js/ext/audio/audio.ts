@@ -1,9 +1,9 @@
 import {getResPath, getResPathJoin} from "../../common/exec";
 import {setMuted} from "loudness";
-import { useEnv } from "../../../ui/hooks/useEnv";
+import { usePlat } from "../../../ui/hooks/usePlat";
 
 let path,exec, ChildProcess
-if (!useEnv()) {
+if (!usePlat()) {
   path = require('path');
   exec = require('child_process').exec
   ChildProcess = require('child_process').ChildProcess

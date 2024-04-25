@@ -3,7 +3,7 @@
     :header="header"
     v-model:customSize="customData.customSize"
     :customData="customData"
-    :envLimit="['web']"
+    :devLimit="['h5']"
     :customIndex="customIndex"
     :options="options"
     :desk="desk"
@@ -136,7 +136,7 @@ export default {
     }
   },
   mounted () {
-    if (this.$useEnv()) return
+    if (this.$usePlat()) return
     this.init()
     this.customData.customSize = '2x4'
   },

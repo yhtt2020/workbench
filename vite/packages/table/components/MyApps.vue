@@ -52,9 +52,9 @@ import { appsStore } from '../store/apps'
 
 import {renderIcon} from '../js/common/common'
 import { startApp } from '../ui/hooks/useStartApp'
-import { useEnv } from '../ui/hooks/useEnv'
+import { usePlat } from '../ui/hooks/usePlat'
 let fs
-if (! useEnv('web')) {
+if (!usePlat('web')) {
 fs = window.$models.fs
 }
 export default {

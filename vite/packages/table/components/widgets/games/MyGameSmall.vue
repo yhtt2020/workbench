@@ -3,7 +3,7 @@
     @titleHover="goRoute"
     :header="header"
     v-model:customSize="customData.customSize"
-    :envLimit="['web']"  
+    :devLimit="['h5']"  
     :sizeList="sizeList" 
     :customData="customData" 
     :customIndex="customIndex" 

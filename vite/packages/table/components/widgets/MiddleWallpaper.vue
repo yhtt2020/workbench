@@ -235,11 +235,11 @@ import { paperGet, bingGet } from "../../js/axios/request";
 import Widget from "../card/Widget.vue";
 import WallpaperWidgetModal from "../paperModal/WallpaperWidgetModal.vue";
 import GalleryModal from "../paperModal/PaperApp.vue";
-import { useEnv } from "../../ui/hooks/useEnv";
+import { usePlat } from "../../ui/hooks/usePlat";
 
 let fs;
 let path;
-if (!useEnv()) {
+if (!usePlat()) {
   fs = require("fs");
   path = require("path");
 }

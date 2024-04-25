@@ -2,7 +2,7 @@ import cache from "../../components/card/hooks/cache";
 import { appStore } from "../../store";
 import { chatStore } from "../../store/chat";
 
-// import { useEnv } from "../useEnv";
+
 import { getUserInfo } from "../api/login";
 import { useLogout, useClearUserInfo } from "./useLogout";
 import { setLV } from "./useUtils";
@@ -25,6 +25,10 @@ export const useUserPermit = async () => {
     if (res) {
       return res;
     }
+
+    // 清楚游客模式
+    permissionStore.setGuest(false)
+
     // 离线模式
     if(permissionStore.isOffline) {
       return;
@@ -47,16 +51,18 @@ const setUserInfo = async () => {
   //   setLV(permissionStore.userInfo);
   //   return;
   // } else
+
+  // 有用户信息
    if (userStore.userInfo) {
     return userStore.userInfo;
   }
-
+  // 无用户信息发送请求
   console.log("useUpdateUserInfo :>> ", useUpdateUserInfo);
   return await useUpdateUserInfo();
 };
 
 /**
- * 更新用户信息
+ * 更新用户信息 重连
  */
 export const useUpdateUserInfo = async () => {
   const permissionStore = usePermissionStore();
@@ -81,7 +87,6 @@ export const useUpdateUserInfo = async () => {
   // 4 请求成功
   console.log("请求成功 :>> ");
   permissionStore.setOffline(false);
-  permissionStore.setGuest(false);
 
   let userData = data.data;
   // const permissionStore = usePermissionStore();

@@ -141,9 +141,9 @@ import browser from '../js/common/browser'
 import AddIcon from '../page/app/addIcon/index.vue'
 import Desktop from '../page/app/addIcon/modules/Desktop.vue'
 import pathLib from 'path'
-import {useEnv} from '../ui/hooks/useEnv'
+import {usePlat} from '../ui/hooks/usePlat'
 let fs
-if (!useEnv('web') ) {
+if (!usePlat('web') ) {
 fs= window.$models.fs
 
 }

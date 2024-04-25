@@ -42,12 +42,13 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, provide,computed,toRefs, onMounted } from 'vue'
+import { ref, provide,computed,toRefs, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 
 import { getClientIcon,getCover,getIcon } from '../../js/common/game';
 import { usePosition } from './hook/usePosition.ts';
+import { Notifications } from '../../js/common/sessionNotice';
 
 import TopCourier from '../widgets/courier/TopCourier.vue';
 import TopTomato from '../../apps/tomato/widget/TopTomato.vue';
@@ -64,6 +65,10 @@ import { tomatoStore } from '../../apps/tomato/store';
 import { cardStore } from '../../store/card';
 import { countDownStore } from '../../store/countDown';
 import { topClockSettingStore } from '../../store/topClockSetting';
+import { timerStore } from '../../store/timer';
+
+// 闹钟弹窗
+const notifications = new Notifications()
 
 // 路由
 const router = useRouter()
@@ -98,9 +103,10 @@ const {
 const useTopClockSetting = topClockSettingStore()
 const { checkTopClock } = storeToRefs(useTopClockSetting)
 const useCard = cardStore()
-const { filterClockEvent } = storeToRefs(useCard)
+const { filterClockEvent, clockEvent } = storeToRefs(useCard)
 const useCountDown = countDownStore()
 const { countDowntime } = storeToRefs(useCountDown)
+const useTimer = timerStore()
 
 type propsType = {
     boxClass:string, // 在底部时，状态框的类样式
@@ -125,10 +131,10 @@ const topClockVisible = computed( () => {
     // 设置中顶部栏是否显示
     const check = checkTopClock.value
     // 闹钟列表
-    const eventList = filterClockEvent.value
+    const eventList = clockEvent.value.length === 0 ? [] : filterClockEvent.value
     // 是否有倒计时
     const countDown = countDowntime.value.seconds
-    return check && (eventList.length > 0 || countDown )
+    return check && ((eventList.length > 0 || countDown !== undefined) ? (eventList.length > 0 || countDown) : false);
 })
 
 // 闹钟的图标和名称
@@ -298,8 +304,55 @@ const closeAll = () => {
     courierVisible.value = false
 }
 
-// onMounted(() => {
-//     console.log(couriersList.value,'快递列表')
-// })
+// 
+const countDownDate = computed(() => useCountDown.countDowndate)
+const firstClockTime = computed(() => clockEvent.value[0]?.dateValue)
+
+// 当倒计时完成时弹出弹窗
+watch(countDownDate, (newVal, oldVal) => {
+    const countDownTotalTime = computed(() => {
+        let [hour, minute, second] = useCountDown.selectValue
+        let totalTime = ''
+        if (hour && hour !== 0) {
+            totalTime += `${hour}小时`
+        }
+        if (minute && minute !== 0) {
+            totalTime += `${minute}分钟`
+        }
+        if (second && second !== 0) {
+            totalTime += `${second}秒`
+        }
+        return totalTime.trim()
+    })
+    if (newVal < 0 && countDownTotalTime.value !== '') {
+        // const key = `open${Date.now()}`
+        let message = `${countDownTotalTime.value}到了`
+        notifications.clockToast(message, '计时器', false)
+        useCountDown.dCountDown()
+    }
+
+})
+// 闹钟完成时弹出
+watch(() => useTimer.appDate.minutes, (newVal, oldVal) => {
+    const firstClock = computed(() => {
+        return `${useTimer.appDate.hours}:${useTimer.appDate.minutes}`
+    })
+    useCard.sortClock()
+    if (useTimer.appDate.minutes === firstClockTime.value?.minutes &&
+        useTimer.appDate.hours == firstClockTime.value?.hours) {
+        // const key = `open${Date.now()}`
+        let message = `${firstClock.value}到了,${clockEvent.value[0].eventValue}`
+        notifications.clockToast(message, '闹钟', true)
+        if (clockEvent.value[0].clockType === '不重复') {
+            // console.log(1111);
+            useCard.removeClock(0, 1)
+        }
+    }
+
+})
+
+onMounted(() => {
+    console.log(topClockVisible.value,'快递列表')
+})
 </script>
 <style lang='scss' scoped></style>

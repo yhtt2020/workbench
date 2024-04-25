@@ -39,9 +39,9 @@ import MyIcon from "../components/icon.vue";
 import Edit from "./edit.vue";
 // 123
 import mixins from "./hooks/mixins";
-import {useEnv} from '../../../../ui/hooks/useEnv'
+import {usePlat} from '../../../../ui/hooks/usePlat'
 let fs
-if (! useEnv('web')) {
+if (!usePlat('web')) {
   fs = window.$models.fs
 }
 

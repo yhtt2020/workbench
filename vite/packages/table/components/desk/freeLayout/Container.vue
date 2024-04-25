@@ -11,6 +11,11 @@ import {
 import { storeToRefs } from "pinia";
 import { useFreeLayoutStore } from "./store";
 import { message } from "ant-design-vue";
+import { useGetDesk } from "../../../hooks";
+const deskData = useGetDesk();
+// watch(deskData, () => {
+//   console.log("更新啦啦啦 :>> ");
+// });
 import "animate.css";
 import {
   useGridToWidth,
@@ -72,6 +77,7 @@ const waterfallFlow: any = ref(null);
 async function getPosition(item) {
   cards.value.push(item);
   const nodes = await waterfallFlow.value?.getElementsByTagName("div");
+  if (!nodes) return;
   for (let node of nodes) {
     if (
       !(node instanceof HTMLDivElement) ||
@@ -342,7 +348,7 @@ async function updateCard(data) {
 let updateCardTimer: any;
 
 watch(
-  currentDesk.value?.cards,
+  () => currentDesk.value?.cards,
   (card) => {
     if (firstLoading.value) return;
     clearTimeout(updateCardTimer);

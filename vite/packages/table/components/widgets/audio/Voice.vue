@@ -2,7 +2,7 @@
   <xt-container
     :header="header"
     v-model:customSize="customData.customSize"
-    :envLimit="['web']"
+    :devLimit="['h5']"
     :customIndex="customIndex"
     :customData="customData"
     :options="options"
@@ -141,7 +141,7 @@ export default {
   },
   async mounted () {
     this.customData.customSize = '2x4'
-    if (this.$useEnv()) return
+    if (this.$usePlat()) return
     this.init()
     //
     // const device = await navigator.bluetooth.requestDevice({
