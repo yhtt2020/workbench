@@ -5,11 +5,11 @@ import {mapActions, mapWritableState} from "pinia";
 import {keyStore} from "../store";
 import {appStore} from "../../../store";
 
-import {useEnv} from '../../../ui/hooks/useEnv'
+import {useDev} from '../../../ui/hooks/useDev'
 import '../static/style.scss'
 
 let win32
-if (!useEnv()) {
+if (!useDev()) {
    win32 = window.$models.win32
 }
 

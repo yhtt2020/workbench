@@ -59,7 +59,7 @@
     <div 
       class="absolute top-0 right-0 xt-bg rounded-bl-xl h-9 no-drag" 
       style="z-index: 10000;" 
-      v-if="showWindowController && !$useEnv()"  
+      v-if="showWindowController && !$useDev()"  
       id="windowController" >
       <WindowController></WindowController>
     </div>

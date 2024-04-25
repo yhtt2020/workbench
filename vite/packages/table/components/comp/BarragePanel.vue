@@ -49,7 +49,7 @@ export default {
 //   }
 // })
     this.loading=true
-if (!this.$useEnv()) {
+if (!this.$useDev()) {
   this.CONST = tsbApi.barrage.CONST
 }
     if(this.defaultChannel==='team'){
