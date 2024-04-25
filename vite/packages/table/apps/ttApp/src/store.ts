@@ -4,8 +4,10 @@ import { message } from "ant-design-vue";
 import { appStore as useAppStore } from "../../../store";
 import { appsStore } from "../../../store/apps";
 import { useDev } from "../../../permission/useDev";
-if(useDev('client')){
-  const Db= window.$models.Db
+let Db
+if(!useDev('h5')){
+  console.log('客户端情况')
+   Db= window.$models.Db
 }
 
 // @ts-ignore
@@ -67,8 +69,6 @@ export const useTTAppStore = defineStore("useTTAppStore", {
      * 查询应用
      */
     select(id?: string) {
-      console.log("拿到了 id :>> ", id);
-      console.log(" this.ttappList :>> ", this.ttappList);
       if (id) {
         return this.ttappList.find((item) => item.id === id);
       }
