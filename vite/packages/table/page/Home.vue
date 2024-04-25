@@ -1,7 +1,9 @@
 <template>
   <div style="height: 100%">
-    <!-- <div @click="test1">测试isOffline{{isOffline}}</div>
-    <div @click="test2">测试isGuest{{isGuest}}</div> -->
+    <!-- <div style="position:fixed;z-index:9999999999;">
+      <div @click="test1">测试isOffline{{isOffline}}</div>
+      <div @click="test2">测试isGuest{{isGuest}}</div>
+    </div> -->
     <desk-group
       @changeDesk="changeDesk"
       ref="deskGroupRef"
@@ -86,7 +88,7 @@ import { replaceType } from "../components/desk/navigationBar/hook/replaceType";
 import { defaultFreeLayoutStore } from "./defaultFreeLayout";
 import { useFreeLayoutStore } from "../components/desk/freeLayout/store";
 import { mergeData } from "../ui/hooks/useDataConversion";
-import { useEnv } from "../ui/hooks/useEnv";
+import { useDev } from "../ui/hooks/useDev";
 import { usePermissionStore } from "../permission/store";
 import cache from "../components/card/hooks/cache";
 import { isMain } from "../js/common/screenUtils";
@@ -97,7 +99,7 @@ let steamUser,
   steamFs,
   LoginSession,
   EAuthTokenPlatformType;
-if (!useEnv("web")) {
+if (!useDev("h5")) {
   steamUser = $models.steamUser;
   steamSession = $models.steamSession;
   path = $models.path;
@@ -444,7 +446,7 @@ export default {
         this.initTask();
         // 初始化桌面
         this.addFreeLayoutDesk();
-        if (!useEnv("web")) {
+        if (!useDev("h5")) {
           // 非web端打开缩放提示弹窗
           this.visibleScale = true;
         } else {

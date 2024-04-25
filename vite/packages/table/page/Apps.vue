@@ -141,9 +141,9 @@ import browser from '../js/common/browser'
 import AddIcon from '../page/app/addIcon/index.vue'
 import Desktop from '../page/app/addIcon/modules/Desktop.vue'
 import pathLib from 'path'
-import {useEnv} from '../ui/hooks/useEnv'
+import {useDev} from '../ui/hooks/useDev'
 let fs
-if (!useEnv('web') ) {
+if (!useDev('h5') ) {
 fs= window.$models.fs
 
 }
