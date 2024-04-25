@@ -1,9 +1,8 @@
 <template>
     <div 
         @click.stop.prevent="openMain"
-        class="w-[40px] h-[40px] xt-main-bg rounded-lg flex flex-wrap relative"
-        :class="[list.length === 1 ? 'items-center justify-center' : '']" 
-        style="gap: 4px;padding: 6px">
+        class="w-[40px] h-[40px] xt-main-bg rounded-lg flex flex-wrap relative gap-1 p-1.5"
+        :class="[list.length === 1 ? 'items-center justify-center' : '']">
         <template v-for="(item,index) in list.slice(0,3)" :key="index" >
             <xt-new-icon :icon="item.icon" size="12" v-if="item.icon"></xt-new-icon>
             <a-avatar :size="12" :src="item.avatar" v-else-if="item.avatar"></a-avatar>

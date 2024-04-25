@@ -13,19 +13,6 @@
 
                         <div class="mb-4 font-16 xt-text">小时</div>
                         <div>
-                            <!-- <a-radio-group button-style="solid " v-model:value="timeHour" class="flex ml-1 rounded-lg xt-bg-2" style="1px solid var(--secondary-text);"
-                                option-type="button">
-                                <template
-                                    v-for="(i, index) in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]">
-                                    <a-radio-button :value="i" class="mb-2 text-center xt-text" style="width: 58px;">{{ index }}</a-radio-button>
-                                </template>
-                            </a-radio-group> -->
-                            <!-- <a-radio-group v-model:value="timeHour" button-style="solid"
-                                class="flex ml-1 rounded-lg xt-bg-2">
-                                <a-radio-button :value="i"
-                                    v-for="(i, index) in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]"
-                                    style="width: 58px;" class="mb-2 text-center xt-text">{{ index }}</a-radio-button>
-                            </a-radio-group> -->
                             <div class="flex flex-wrap w-[232px] h-[240px] xt-bg-2 rounded-lg " style="">
                                 <div v-for="(i, index) in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]"
                                 style="width: 58px;height: 40px;line-height: 40px;text-align: center;flex-shrink: 0;font-size: 16px;"
@@ -70,28 +57,20 @@
                         <div class="w-full h-[160px] xt-bg-2 mb-2 p-4 rounded-xl">
                             <div class="flex justify-between">
                                 <div class="font-16 xt-text-2">显示在状态栏</div>
-                                <a-switch v-model:checked="checked" @change="changeSwitchStatus(checked)" />
+                                <a-switch v-model:checked="checkTopClock"  />
                             </div>
                             <div class="font-14 xt-text-2 " style="margin-top: 10px;margin-bottom: 10px;">
                                 在顶部状态栏显示最近闹钟时间。
                             </div>
-                            <div>
-                                <a-select v-model:value="defaultDataType" dropdownSyle=""
-                                    @select="changeDataType(defaultDataType)" :bordered="false"
-                                    style="width:100%;  height: 40px; border-radius: 10px;background-color: var(--primary-bg);">
-                                    <a-select-option :value="index" v-for="(item, index) in selectDataType"
-                                        class="xt-bg xt-text-2 selsect-options">
-                                        {{ item.title }}
-                                    </a-select-option>
-                                </a-select>
-                            </div>
-
-
+                            <xt-option-select :list="selectDataType" v-model="defaultDataType" />
                         </div>
                         <div style="color:var(--primary-text)"> 我的闹钟</div>
-                        <a-empty v-if="clockEvent.length === 0" description="暂无闹钟" image="/img/test/load-ail.png"
-                            style="margin-top: 40%;"></a-empty>
-                        <!-- <a-row> -->
+                        <a-empty 
+                            v-if="clockEvent.length === 0" 
+                            description="暂无闹钟" 
+                            image="/img/test/load-ail.png"
+                            style="margin-top: 40%;">
+                        </a-empty>
                         <div class="flex items-center" v-for="(item, index) in clockEvent" style="margin-top: 0.5em;">
                             <div class="rounded-lg event-list "
                                 style="background: var(--secondary-bg);color: var(--primary-text);width: calc(100% - 20px);height: 56px; ">
@@ -104,7 +83,7 @@
                                     <span class="font-20">{{ item.dateValue.hours }}:{{ item.dateValue.minutes }}</span>
                                 </div>
                             </div>
-                            <clockIcon icon="akar-icons:circle-x-fill" @click="onClockMenuClick"
+                            <clockIcon icon="akar-icons:circle-x-fill" @click="onClockMenuClick(index)"
                                 class="ml-2 xt-bg xt-text-2 pointer" style="font-size: 18px;">
                             </clockIcon>
                         </div>
@@ -125,13 +104,12 @@ import { topClockSettingStore } from '../../store/topClockSetting'
 import { timeStamp, transDate } from "../../util";
 import { message } from "ant-design-vue";
 import dayjs from "dayjs";
-import BackBtn from '../../components/comp/BackBtn.vue'
 import { getDateTime } from '../../../../src/util/dateTime'
 import { Icon as clockIcon } from '@iconify/vue'
 import RadioTab from '../../components/RadioTab.vue'
 export default {
     name: "SetupClock",
-    components: { BackBtn, clockIcon, RadioTab },
+    components: { clockIcon, RadioTab },
 
     data() {
         return {
@@ -163,12 +141,11 @@ export default {
             ],
             defaultType: { title: '不重复', name: '不重复' },
             selectDataType: [
-                { title: '始终显示', tag: 'always', type: '0' },
-                { title: '显示30分钟内的闹钟', tag: 'within30min', type: '1' },
-                { title: '显示1小时内的闹钟', tag: 'within1hour', type: '2' },
+                { name: "始终显示",value:'always'},
+                { name: "显示30分钟内的闹钟",value:'within30min'},
+                { name: "显示1小时内的闹钟",value:'within1hour'},
             ],
-            defaultDataType: '显示30分钟内的闹钟',
-            checked: true,
+            
         };
     },
 
@@ -189,7 +166,7 @@ export default {
     },
     computed: {
         ...mapWritableState(cardStore, ["countdownDay", "appDate", "clockEvent", 'chooseType']),
-        ...mapWritableState(topClockSettingStore, ['checkTopClock'])
+        ...mapWritableState(topClockSettingStore, ['checkTopClock','defaultDataType'])
     },
     methods: {
         dayjs,
@@ -252,67 +229,29 @@ export default {
                 dateValue: timeSpan,
                 clockTimeStamp: timeSpan
             });
+            this.$nextTick(() => {
+                // console.log(111111111111111)
+                this.filterClock(this.defaultDataType)
+            })
             message.success("添加成功！");
         },
         onContextMenuClick(e, index) {
             this.removeCountdownDay(index);
         },
-        onClockMenuClick(e, index) {
+        onClockMenuClick(index) {
             this.removeClock(index, 1);
-            console.log(this.clockEvent,this.filterClockEvent)
+            // console.log(this.clockEvent,this.filterClockEvent)
+            this.filterClock(this.defaultDataType)
         },
-        changeSwitchStatus(value) {
-            console.log(this.checked);
-            this.changeTopClockStatus(value)
-        },
-        changeDataType(value) {
-            let tag = this.selectDataType[value].tag
-
-            let temp = this.selectDataType[value].type
-            this.filterClock(tag, temp)
-        }
-    },
-    mounted() {
-        this.checked = this.checkTopClock
-        if (this.chooseType == undefined) {
-            this.defaultDataType = '显示30分钟内的闹钟'
-        } else {
-            let data
-            for (let i = 0; i < this.selectDataType.length; i++) {
-                if (this.selectDataType[i].type == this.chooseType) {
-                    data = this.selectDataType[i].title
-                }
-            }
-            // console.log(data, 'beforeMount');
-            this.defaultDataType = data
-        }
-
     },
     watch: {
-        checkTopClock: {
-            handler(value) {
-                this.checked = value
-            }
-        },
-        chooseType: {
-            handler(value) {
-                if (value == undefined) {
-                    this.defaultDataType = '显示30分钟内的闹钟'
-                }
-                else {
-                    // let data=this.selectDataType.filter(item=>item.type==value)
-                    let data
-                    for (let i = 0; i < this.selectDataType.length; i++) {
-                        if (this.selectDataType[i].type == value) {
-                            data = this.selectDataType[i].title
-                        }
-                    }
-                    // console.log(data, 'clock-value-change');
-                    this.defaultDataType = data
-                }
+        defaultDataType:{
+            handler(val){
+                // console.log(val,'<<<<<<')
+                this.filterClock(val)
             },
-            deep: true
-        }
+            immediate: true  
+        },
     }
 };
 </script>
@@ -343,31 +282,6 @@ export default {
     &:nth-child(24) {
         border-radius: 0 0 10px 0;
     }
-    // &:nth-child(2),
-    // &:nth-child(6),
-    // &:nth-child(10),
-    // &:nth-child(14),
-    // &:nth-child(18),
-    // &:nth-child(22){
-    //     border-right:1px solid var(--divider);
-    //     border-left:1px solid var(--divider);
-    // }
-    // &:nth-child(3),
-    // &:nth-child(7),
-    // &:nth-child(11),
-    // &:nth-child(15),
-    // &:nth-child(19),
-    // &:nth-child(23){
-    //     border-right:1px solid var(--divider);
-    // }
-    // &:not(:nth-child(21),
-    // :nth-child(22),
-    // :nth-child(23),
-    // :nth-child(24)){
-    //     border-bottom:1px solid var(--divider);
-    // }
-
-
 }
 .event-list {
     padding: 0.2em 0.5em;
