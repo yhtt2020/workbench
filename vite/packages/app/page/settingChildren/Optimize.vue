@@ -43,9 +43,9 @@ import {mapWritableState,mapActions} from 'pinia'
 import {appStore} from '../../store'
 import DebugTip from '../../components/DebugTip.vue'
 import _ from 'lodash-es'
-import { useDev } from '../../../table/ui/hooks/useDev'
+import { usePlat } from '../../../table/ui/hooks/usePlat'
 let appModel
-if (!useDev()) {
+if (!usePlat()) {
 
   appModel = window.$models.appModel
 }

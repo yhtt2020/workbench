@@ -1,10 +1,10 @@
 
-import { useDev} from '../../../ui/hooks/useDev'
+import { usePlat} from '../../../ui/hooks/usePlat'
 import { myIcons } from "../../../store/myIcons";
 
 import { SHA256 } from "crypto-js";
 let fs,json
-if (!useDev('h5')) {
+if (!usePlat('web')) {
   fs= window.$models.fs
   json = require("path").json
 

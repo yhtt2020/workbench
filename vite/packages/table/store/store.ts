@@ -6,9 +6,9 @@ import {localCache} from '../js/axios/serverCache'
 import axios from "axios";
 const juheGet = sUrl('/app/juhe/get')
 
-import { useDev } from "../ui/hooks/useDev";
+import { usePlat } from "../ui/hooks/usePlat";
 let https,agent
-if(!useDev()) {
+if(!usePlat()) {
   https=require('https')
 
   // 跳过检验证书

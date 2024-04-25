@@ -2,7 +2,7 @@ import { confirm } from "../ui/new/confirm";
 import cache from "../components/card/hooks/cache";
 
 import { ALL_LIMITS, COMPONENT_LIMIT, PRIORITY, ROUTER_LIMIT } from "./config";
-import { isH5, isWindow, isMac } from "./useBaseEnv";
+import { isWeb, isWindow, isMac } from "./useBaseEnv";
 
 // 提示
 const showConfirm = (name) => {
@@ -17,7 +17,7 @@ const showConfirm = (name) => {
   });
 };
 // 环境优先级排序
-const devSort = (arr) => {
+const platSort = (arr) => {
   arr.sort((a, b) => {
     const indexA = PRIORITY.indexOf(a);
     const indexB = PRIORITY.indexOf(b);
@@ -36,9 +36,9 @@ const devSort = (arr) => {
   return arr;
 };
 // 环境判断
-const devDetection = (type) => {
-  if (type == "h5") {
-    return isH5 ? "h5" : "";
+const platDetection = (type) => {
+  if (type == "web") {
+    return isWeb ? "web" : "";
   } else if (type == "mac") {
     return isMac ? "mac" : "";
   } else if (type == "window") {
@@ -46,9 +46,9 @@ const devDetection = (type) => {
   }
 };
 // 条件判断
-const checkLimit = (dev, name, options) => {
+const checkLimit = (plat, name, options) => {
   let { msg = true, limitArr } = options;
-  let res = useDev(dev);
+  let res = usePlat(plat);
   let limit = limitArr[res]?.includes(name);
   if (limit && msg) {
     showConfirm(res);
@@ -57,16 +57,16 @@ const checkLimit = (dev, name, options) => {
 };
 /*
  * 环境检测
- * 参数: h5, client, mac
+ * 参数: web, client, mac
  * 返回: 环境名称
  */
-export type baseDev = "h5" | "client" | "macOS";
-export type useDevType = baseDev | any;
+export type basePlat = "web" | "client" | "macOS";
+export type usePlatType = basePlat | any;
 
-export type UseDev = (arr: useDevType) => baseDev;
-export const useDev: UseDev = (arr = "h5") => {
+export type usePlat = (arr: usePlatType) => basePlat;
+export const usePlat: usePlat = (arr = "web") => {
   if (typeof arr == "string") {
-    return devDetection(arr);
+    return platDetection(arr);
   }
 
   if (!Array.isArray(arr)) {
@@ -74,29 +74,29 @@ export const useDev: UseDev = (arr = "h5") => {
     return false;
   }
 
-  arr = devSort(arr);
+  arr = platSort(arr);
 
   let flag: any = false;
 
   for (const iterator of arr) {
-    flag = devDetection(iterator);
+    flag = platDetection(iterator);
     if (flag) return flag;
   }
 };
 
 // 全局限制实现
-export const useDevLimit = (dev, name, options = {}) => {
-  return checkLimit(dev, name, { options, limitArr: ALL_LIMITS });
+export const usePlatLimit = (plat, name, options = {}) => {
+  return checkLimit(plat, name, { options, limitArr: ALL_LIMITS });
 };
 // 组件限制实现
-export const useComLimit = (dev, name, options = {}) => {
-  return checkLimit(dev, name, { options, limitArr: COMPONENT_LIMIT });
+export const useComLimit = (plat, name, options = {}) => {
+  return checkLimit(plat, name, { options, limitArr: COMPONENT_LIMIT });
 };
 // 路由限制实现
-export const useRouterLimit = (dev, name, options = {}) => {
-  return checkLimit(dev, name, { options, limitArr: ROUTER_LIMIT });
+export const useRouterLimit = (plat, name, options = {}) => {
+  return checkLimit(plat, name, { options, limitArr: ROUTER_LIMIT });
 };
 
-export const currentDev = () => {
-  return useDev(["h5", "mac", "window"]);
+export const currentPlat = () => {
+  return usePlat(["web", "mac", "window"]);
 };

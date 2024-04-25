@@ -64,9 +64,9 @@ import { inspectorStore } from '../../../store/inspector'
 import {message} from 'ant-design-vue'
 import {Icon as newIcon} from '@iconify/vue'
 import { prettyDisplayBytes } from '../../../js/action/supervisory'
-import { useDev } from "../../../ui/hooks/useDev";
+import { usePlat } from "../../../ui/hooks/usePlat";
 let rpc
-if (!useDev()) {
+if (!usePlat()) {
   rpc=window.$models.rpc
 
 }

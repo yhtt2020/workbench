@@ -137,7 +137,7 @@ export default {
     }
   },
   mounted () {
-    if (!this.$useDev()) {
+    if (!this.$usePlat()) {
       this.appVersion = tsbApi.runtime.appVersion
     }
     axios.get('https://a.apps.vip/download/updateLog.json?t=' + Date.now()).then(data => {

@@ -18,11 +18,11 @@ const getCurrentEnv = () => {
   } else if (userAgent.indexOf("Mac") > -1) {
     return "macOS";
   }
-  return "h5";
+  return "web";
 };
 
-const getH5Env = () => {
-  return currentEnv === "h5" ? true : false;
+const getEnv = () => {
+  return currentEnv === "web" ? true : false;
 };
 
 const getWindowsEnv = () => {
@@ -45,7 +45,7 @@ const getSingle = () => {
   return cache.get('isSingle') ? true : false;
 }
 const currentEnv = getCurrentEnv();
-const isH5 = getH5Env();
+const isWeb = getEnv();
 const isWindows = getWindowsEnv();
 const isMacOS = getMacOSEnv();
 const isOffline = getOffline();
@@ -54,4 +54,4 @@ const isSingle = getSingle();
 
 export default currentEnv;
 
-export { isH5, isWindows, isMacOS, isOffline, isGuest, isSingle };
+export { isWeb, isWindows, isMacOS, isOffline, isGuest, isSingle };

@@ -141,7 +141,7 @@ export default {
   },
   async mounted () {
     this.customData.customSize = '2x4'
-    if (this.$useDev()) return
+    if (this.$usePlat()) return
     this.init()
     //
     // const device = await navigator.bluetooth.requestDevice({

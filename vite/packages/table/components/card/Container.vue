@@ -227,7 +227,7 @@ import { navStore } from "../../store/nav";
 
 import Resize from "./Resize.vue";
 import RightMenu from "./RightMenu.vue";
-import { useDev } from "../../ui/hooks/useDev";
+import { usePlat } from "../../ui/hooks/usePlat";
 import { addCardToNav } from "./hooks/addCardToNav";
 import { useConversionCard } from "./hooks/useConversionCard";
 import { useDelCard } from "../../hooks";
@@ -259,7 +259,7 @@ const { edit } = storeToRefs(widgetStore);
 const props = defineProps(defaultProps);
 const { header } = toRefs(props);
 const courierStatus = computed(() => {
-  return window.$useDev()
+  return window.$usePlat()
 });
 
 // 键盘事件
@@ -411,7 +411,7 @@ const addObj = computed(() => {
 });
 // 实际渲染的右键菜单
 const menus = computed(() => {
-  if (useDev(props.envLimit)) return [addObj.value, deleteObj.value];
+  if (usePlat(props.envLimit)) return [addObj.value, deleteObj.value];
   let menu = [...props.menuList, addObj.value, deleteObj.value];
   return menu;
 });

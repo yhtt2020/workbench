@@ -1,8 +1,8 @@
 import {arch} from "process";
 import {completeTask} from '../../apps/task/task'
-import {useDev} from '../../ui/hooks/useDev'
+import {usePlat} from '../../ui/hooks/usePlat'
 let exec,path
-if (!useDev('h5')) {
+if (!usePlat('web')) {
   const {exec : newExec} = require('child_process')
   exec = newExec
    path=require('path')

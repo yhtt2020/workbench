@@ -1,12 +1,12 @@
 <template>
-  <div v-if="isGuide &&!$useDev()" class="w-full "  >
+  <div v-if="isGuide &&!$usePlat()" class="w-full "  >
     <div class="flex justify-between ">
       <span class="xt-text">开机自启动：</span>
       <a-switch  @change="setAutoRun" v-model:checked="isAutoRun"></a-switch>
     </div>
     <span class="xt-text-2 font-14 ">可能会被安全软件拦截，请允许</span>
   </div>
-  <div v-else-if="!$useDev()">
+  <div v-else-if="!$usePlat()">
     <span class="xt-text" style="font-weight: bold;">开机自启动：</span>
     <a-switch  @change="setAutoRun" v-model:checked="isAutoRun"></a-switch>
     <span class="ml-2">可能会被安全软件拦截，请允许</span>
@@ -23,7 +23,7 @@ export default {
     }
   },
   async mounted() {
-    if (this.$useDev()) return
+    if (this.$usePlat()) return
     this.isAutoRun = await tsbApi.settings.get('autoRun')
     if(this.isGuide){
       //向导页面直接设置为自启动

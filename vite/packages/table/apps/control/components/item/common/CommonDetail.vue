@@ -1,7 +1,7 @@
 <!-- 没有开启编辑情况下的详情页 -->
 <template>
   <!-- 音乐播放器和音量调节按钮 -->
-  <template v-if="controlIndex === 'audio' && !$useDev()">
+  <template v-if="controlIndex === 'audio' && !$usePlat()">
     <div
       style="width: 252px; height: 120px"
       class="xt-text flex flex-col rounded-xl"
