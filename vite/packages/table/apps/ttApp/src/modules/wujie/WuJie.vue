@@ -60,7 +60,9 @@ if (location.href.startsWith("tsbapp://")) {
       {
         jsBeforeLoaders: [
           {
-            content: `window.Selection = window.parent.Selection`,
+            content: `window.Selection = window.parent.Selection;
+            window.tb=$wujie?.props?.api?.tb
+            `,
           },
         ],
         jsLoader: (code) => {

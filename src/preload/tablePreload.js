@@ -39,6 +39,7 @@ setTimeout(()=>{
     electron: require('electron'),
     osUtils: require('node-os-utils'),
     shake:shake,
+    Db:require('./table/db'),
     win32
   }
   try {

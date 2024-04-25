@@ -311,7 +311,7 @@ export default {
         },
         {
           newIcon: "akar-icons:trash-can",
-          title: "删除小组件",
+          title: "删除",
           color: "#FF4D4F",
           fn: () => {
             this.deleteIcon();
