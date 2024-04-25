@@ -4,10 +4,10 @@ import {message} from "ant-design-vue";
 import filenamify from "filenamify";
 
 import {timeStamp} from '../util'
-import { useEnv } from "../ui/hooks/useEnv";
+import { useDev } from "../ui/hooks/useDev";
 
 let fs
-if (!useEnv()) {
+if (!useDev()) {
   fs = require('fs')
 
 }

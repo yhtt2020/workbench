@@ -5,7 +5,7 @@
             @titleHover="enterBoard"
             :header="header"
             v-model:customSize="customData.customSize"
-            :envLimit="['web']"  
+            :devLimit="['h5']"  
             :customData="customData" 
             :customIndex="customIndex" 
             :options="options" 

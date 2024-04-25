@@ -77,13 +77,13 @@ export default {
       launching: true,
       storeReadyTimer: null,
       // launched: false,
-      // version: window.$useEnv() ? "" : tsbApi.runtime.appVersion,
+      // version: window.$useDev() ? "" : tsbApi.runtime.appVersion,
       // 超时定时器
       // timeout: null,
     };
   },
   created() {
-    if (this.$useEnv("web")) {
+    if (this.$useDev("h5")) {
       this.$router.replace({ name: "home" });
       return;
     }
@@ -225,7 +225,7 @@ export default {
 
     async afterLaunch() {
       // web端登录拦截
-      if (this.$useEnv("web")) {
+      if (this.$useDev("h5")) {
         this.loginOk();
         return;
       }
@@ -264,7 +264,7 @@ export default {
 
     loginOk() {
       // // 首次web端引导
-      // if (!this.init && this.$useEnv("web")) {
+      // if (!this.init && this.$useDev("h5")) {
       //   console.log("2222 :>> ", 2222);
       //   this.finishWizard();
       //   this.visibleWeb = true;
@@ -279,7 +279,7 @@ export default {
     },
     // onGuest() {
     //   this.$router.replace({ name: "home" });
-    //   if (!this.init && this.$useEnv("web")) {
+    //   if (!this.init && this.$useDev("h5")) {
     //     this.finishWizard();
     //     this.visibleWeb = true;
     //   }

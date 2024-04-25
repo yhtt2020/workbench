@@ -119,9 +119,9 @@ import browser from '../../../js/common/browser'
 import _ from 'lodash-es'
 import { mapActions,mapWritableState } from "pinia";
 import {clipboardStore} from '../../../apps/clipboard/store'
-import { useEnv } from "../../../ui/hooks/useEnv";
+import { useDev } from "../../../ui/hooks/useDev";
 let clipboard
-if (!useEnv()) {
+if (!useDev()) {
   clipboard = require('electron').clipboard
 
 }
@@ -184,7 +184,7 @@ export default {
       return index
     },
     getClipBoardData(){  // 获取剪切板数据
-      if (this.$useEnv()) {
+      if (this.$useDev()) {
         return []
       }
       const clipBoardText = clipboard.readText()

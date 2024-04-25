@@ -67,8 +67,8 @@
   import peopleCommunity16Regular from '@iconify-icons/fluent/people-community-16-regular';
   import money16Regular from '@iconify-icons/fluent/money-16-regular';
 let appModel
-import {useEnv} from '../../../ui/hooks/useEnv'
-  if (!useEnv()) {
+import {useDev} from '../../../ui/hooks/useDev'
+  if (!useDev()) {
     appModel= window.$models.appModel
 
   }

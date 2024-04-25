@@ -1,10 +1,10 @@
 
-import { useEnv} from '../../../ui/hooks/useEnv'
+import { useDev} from '../../../ui/hooks/useDev'
 import { myIcons } from "../../../store/myIcons";
 
 import { SHA256 } from "crypto-js";
 let fs,json
-if (!useEnv('web')) {
+if (!useDev('h5')) {
   fs= window.$models.fs
   json = require("path").json
 

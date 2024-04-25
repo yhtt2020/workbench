@@ -7,7 +7,7 @@
         :options="options" 
         ref="homelSlotRef" 
         :desk="desk"
-        :envLimit="['offline']"
+        :envLimit="['guest', 'offline', 'single']"
         @delete="deleteCard">
         <div class="box-flex">
             <div>{{ this.history?.date }}</div>

@@ -3,7 +3,7 @@
     @titleHover="showRegionSelect"
     v-model:customSize="customData.customSize"
     :header="header" 
-    :envLimit="['web']"  
+    :devLimit="['h5']"  
     :options="options" 
     :confirmCCData="confirmCCData" 
     :customIndex="customIndex" 

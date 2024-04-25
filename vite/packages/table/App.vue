@@ -135,7 +135,7 @@ import ModalNotice from './page/notice/ModalNotice.vue'
 // import ClaimReward from './apps/task/components/ClaimReward.vue'
 import Global from './apps/global/Global.vue'
 // import { taskStore } from './apps/task/store'
-import { useEnv } from './ui/hooks/useEnv'
+import { useDev } from './ui/hooks/useDev'
 import { useLogin } from '../table/permission/user/useLogin'
 
 notification.config({
@@ -144,7 +144,7 @@ notification.config({
 })
 window.browser = browser
 let appModel
-if (!useEnv('web')) {
+if (!useDev('h5')) {
   appModel = window.$models.appModel
 }
 let startX,
@@ -194,7 +194,7 @@ export default {
       this.settings.zoomFactor = 100
       tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100).then()
     }
-    if (!window.$useEnv()) {
+    if (!window.$useDev()) {
       ipc.on('updateRunningApps', async (event, args) => {
         this.runningApps = args.runningApps
         this.runningAppsInfo = {}

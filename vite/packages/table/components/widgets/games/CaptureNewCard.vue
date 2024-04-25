@@ -3,7 +3,7 @@
     @titleHover="enterCapture"
     v-model:customSize="customData.customSize"
     :header="header"
-    :envLimit="['web']" 
+    :devLimit="['h5']" 
     :menuList="menuList"  
     :options="options" 
     :customData="customData" 
@@ -97,7 +97,7 @@ export default {
     }
   },
   mounted () {
-    if (this.$useEnv()) return
+    if (this.$useDev()) return
     this.reloadAll()
     this.customData.customSize = '2x4'
   },

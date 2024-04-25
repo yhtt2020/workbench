@@ -1,8 +1,8 @@
 // 权限匹配优先级
-export const PRIORITY = ["web", "single","offline", "guest", "mac", "window"];
+export const PRIORITY = ["h5", "single","offline", "guest", "mac", "window"];
 // 环境名称
 export const ENV_MAP = {
-  web: "网页端",
+  h5: "网页端",
   single: "单机模式",
   mac: "mac",
   window: "window",
@@ -11,7 +11,7 @@ export const ENV_MAP = {
 };
 // 路由限制
 export const ROUTER_LIMIT = {
-  web: [
+  h5: [
     "screen",
     "apps",
     "browser",
@@ -30,7 +30,7 @@ export const ROUTER_LIMIT = {
 };
 // 组件限制
 export const COMPONENT_LIMIT = {
-  web: [
+  h5: [
     "audio",
     "voice",
     "capture",
@@ -56,7 +56,7 @@ export const COMPONENT_LIMIT = {
 };
 // 汇总所有限制
 export const ALL_LIMITS = {
-  web: [...ROUTER_LIMIT.web, ...COMPONENT_LIMIT.web],
+  h5: [...ROUTER_LIMIT.h5, ...COMPONENT_LIMIT.h5],
   mac: [""],
   window: [""],
   offline: [""],

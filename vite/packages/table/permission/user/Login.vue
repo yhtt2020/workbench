@@ -49,7 +49,7 @@ import { storeToRefs } from "pinia";
 // const { token, userInfo } = storeToRefs(permissionStore);
 const loginVisible = ref(true);
 import { useGlobalStore } from "../../apps/global/store";
-import { useEnv } from "../useEnv";
+import { useDev } from "../useDev";
 
 const globalStore = useGlobalStore();
 const props = defineProps({
@@ -68,7 +68,7 @@ onMounted(() => {
         cache.set("ttUserToken", currentToken);
         // token.value = currentToken;
    await useUserPermit();
-        if (!useEnv("web")) {
+        if (!useDev("h5")) {
           //如果是客户端，则执行同步主线程的操作
           syncMainUserInfo(currentToken);
         }

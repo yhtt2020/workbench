@@ -1,6 +1,6 @@
-import { useEnv } from "./ui/hooks/useEnv"
+import { useDev } from "./ui/hooks/useDev"
 let path
-if (!useEnv('web')) {
+if (!useDev('h5')) {
  path = require('path')
 }
 
