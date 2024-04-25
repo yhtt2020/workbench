@@ -257,7 +257,7 @@ export default {
       this.showUserCard(uid, userInfo)
     },
     friendlyDate: ()=>{
-      if (!window.$useEnv('web')) tsbApi.util.friendlyDate()
+      if (!window.$useEnv('h5')) tsbApi.util.friendlyDate()
     },
     copy (text) {
       require('electron').clipboard.writeText(text)

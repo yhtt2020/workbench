@@ -185,10 +185,10 @@ import { cardStore } from '../../store/card'
 import { steamUserStore } from '../../store/steamUser'
 import { ExclamationCircleFilled } from '@ant-design/icons-vue'
 
-import {useEnv} from '../../ui/hooks/useEnv'
+import {useDev} from '../../ui/hooks/useDev'
 import {completeTask} from "../../apps/task/task"
 let steamUser, steamSession, path, https, steamFs
-if (!useEnv()) {
+if (!useDev()) {
   steamUser= $models.steamUser
   steamSession= $models.steamSession
   path= $models.path

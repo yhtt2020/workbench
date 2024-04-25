@@ -48,9 +48,9 @@
 import {mapActions, mapWritableState} from 'pinia'
 import {paperStore} from '../../store/paper'
 import {message, Modal} from 'ant-design-vue'
-import { useEnv } from '../../ui/hooks/useEnv'
+import { useDev } from '../../ui/hooks/useDev'
 let fs,path
- if (!useEnv('web')) {
+ if (!useDev('h5')) {
    fs = window.$models.fs
     path = require('path')
  }

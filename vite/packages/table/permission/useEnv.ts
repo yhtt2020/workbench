@@ -2,7 +2,7 @@ import { confirm } from "../ui/new/confirm";
 import cache from "../components/card/hooks/cache";
 
 import { ALL_LIMITS, COMPONENT_LIMIT, PRIORITY, ROUTER_LIMIT } from "./config";
-import { isWeb, isWindow, isMac, isOffline, isGuest } from "./useBaseEnv";
+import { isH5, isWindow, isMac, isOffline, isGuest } from "./useBaseEnv";
 
 // 提示
 const showConfirm = (name) => {
@@ -37,19 +37,16 @@ const envSort = (arr) => {
 };
 // 环境判断
 const envDetection = (type) => {
-  if (type == "web") {
-    return isWeb ? "web" : "";
-  } else if (type == "mac") {
-    return isMac ? "mac" : "";
+  if (type == "single") {
+    return cache.get("isSingle") ? "single" : "";
   } else if (type == "offline") {
     return cache.get("isOffline") ? "offline" : "";
-  } else if (type == "single") {
-    return cache.get("isSingle") ? "single" : "";
   } else if (type == "guest") {
-    // return !cache.get("ttUserToken") ? "guest" : "";
+    return !cache.get("ttUserToken") ? "guest" : "";
     return cache.get("isGuest") ? "guest" : "";
-  } else if (type == "window") {
-    return isWindow ? "window" : "";
+  } else {
+    // online
+    return "online"
   }
 };
 // 条件判断
@@ -64,14 +61,14 @@ const checkLimit = (env, name, options) => {
 };
 /*
  * 环境检测
- * 参数: web, client, mac, offline, guest, single
+ * 参数: offline, guest, single, online
  * 返回: 环境名称
  */
-export type baseEnv = "web" | "client" | "mac" | "offline" | "guest" | "single";
+export type baseEnv = "offline" | "guest" | "single" | "online";
 export type useEnvType = baseEnv | any;
 
 export type UseEnv = (arr: useEnvType) => baseEnv;
-export const useEnv: UseEnv = (arr = "web") => {
+export const useEnv: UseEnv = (arr = "h5") => {
   if (typeof arr == "string") {
     return envDetection(arr);
   }
@@ -105,5 +102,5 @@ export const useRouterLimit = (env, name, options = {}) => {
 };
 
 export const currentEnv = () => {
-  return useEnv(["web", "offline", "guest", "mac", "window", "single"]);
+  return useEnv(["offline", "guest", "single", "online"]);
 };

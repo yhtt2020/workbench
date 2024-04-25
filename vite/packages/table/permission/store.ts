@@ -12,11 +12,9 @@ export const usePermissionStore = defineStore("usePermissionStore", {
     isSingle: false,
     isGuest: false,
     isLogin: false,
-    platform: "web",
+    platform: "h5",
     env: "dev",
     //平台
-    // env
-    // dev window mac web ，     登录 离线 游客
   }),
   getters: {
   },
