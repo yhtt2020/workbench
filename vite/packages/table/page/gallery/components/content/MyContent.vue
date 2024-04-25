@@ -60,9 +60,9 @@
 
  import GradeSmallTip from '../../../../components/GradeSmallTip.vue';
  import {completeTask} from '../../../../apps/task/task'
-import { useEnv } from '../../../../ui/hooks/useEnv';
+import { useDev } from '../../../../ui/hooks/useDev';
 let fs,path
- if (!useEnv('web')) {
+ if (!useDev('h5')) {
    fs = window.$models.fs
     path = require('path')
  }

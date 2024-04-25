@@ -1,8 +1,8 @@
 <template>
   <div
   >
-    <div class="line-title"  v-if="!$useEnv()">界面缩放</div>
-    <ZoomUI  v-if="!$useEnv()"></ZoomUI>
+    <div class="line-title"  v-if="!$useDev()">界面缩放</div>
+    <ZoomUI  v-if="!$useDev()"></ZoomUI>
     <div class="line-title">工作台界面</div>
     <div v-if="!isMain" class="line">
       显示顶部栏：
@@ -20,7 +20,7 @@
     </template>
 
     <div class="line-title">使用习惯</div>
-    <div class="line" v-if="!$useEnv()">
+    <div class="line" v-if="!$useDev()">
       在系统任务栏显示窗口：
       <a-switch v-model:checked="settings.showInTaskBar"></a-switch>
     </div>
@@ -28,7 +28,7 @@
       <div class="line">
         <AutoRun/>
       </div>
-      <div class="line"  v-if="!$useEnv()">
+      <div class="line"  v-if="!$useDev()">
         双击托盘菜单默认打开：
         <a-radio-group v-model:value="trayOpen">
           <!-- 后期可删 -->
@@ -102,7 +102,7 @@ export default {
     }
   },
   async mounted () {
-    if (this.$useEnv()) return
+    if (this.$useDev()) return
     this.trayOpen = await tsbApi.settings.get('trayOpen') || 'table'
     tsbApi.web.getCacheSize((data)=>{
       console.log('获取到了',data)

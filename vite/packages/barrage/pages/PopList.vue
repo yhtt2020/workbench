@@ -147,7 +147,7 @@ export default {
     //   container:document.getElementById('danmuWrapper'),
     //   limit:50
     // })
-    if (!window.$useEnv()) {
+    if (!window.$useDev()) {
       tsbApi.barrage.init()
     tsbApi.barrage.onUrlChanged(this.changeUrl) //挂载url变化事件
     this.pageUrl = (await tsbApi.tabs.current()).sourceUrl
@@ -218,7 +218,7 @@ export default {
 
     },
     async getList() {
-      if (this.$useEnv()) {
+      if (this.$useDev()) {
         this.CONST = tsbApi.barrage.CONST
       }
       try {

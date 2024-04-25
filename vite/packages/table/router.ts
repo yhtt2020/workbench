@@ -3,7 +3,7 @@ import routes from "./route/route";
 import { cardStore } from "./store/card";
 import { appStore } from "./store";
 import { message } from "ant-design-vue";
-import { useEnvLimit, useEnv } from "../table/ui/hooks/useEnv";
+import { useDevLimit, useDev } from "../table/ui/hooks/useDev";
 import { useUserPermit } from "../table/permission/user/useUserPermit";
 // import cache from "../"
 import cache from "../table/components/card/hooks/cache";
@@ -15,7 +15,7 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   console.log('to.name :>> ', to.name);
   console.log("to, from :>> ", to, from);
-  // if (to.name === "splash" && useEnv("web")) {
+  // if (to.name === "splash" && useDev("h5")) {
   //   next({
   //     name: "home",
   //   });
@@ -27,7 +27,7 @@ router.beforeEach(async (to, from, next) => {
 
   // 用户环境判断 优先级2
   if (
-    useEnvLimit("web", to.name, {
+    useDevLimit("h5", to.name, {
       msg: false,
     })
   ) {

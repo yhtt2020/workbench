@@ -8,7 +8,7 @@ const getCurrentEnv = () => {
     userAgent.indexOf("天天工作台") > -1 &&
     userAgent.indexOf("Windows") > -1
   ) {
-    return "client";
+    return "windows";
   } else if (
     userAgent.match(
       /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
@@ -16,21 +16,21 @@ const getCurrentEnv = () => {
   ) {
     return "mobile";
   } else if (userAgent.indexOf("Mac") > -1) {
-    return "mac";
+    return "macOS";
   }
-  return "web";
+  return "h5";
 };
 
-const getWebEnv = () => {
-  return currentEnv === "web" ? true : false;
+const getH5Env = () => {
+  return currentEnv === "h5" ? true : false;
 };
 
-const getClientEnv = () => {
-  return currentEnv === "client" ? true : false;
+const getWindowsEnv = () => {
+  return currentEnv === "windows" ? true : false;
 };
 
-const getMacEnv = () => {
-  return currentEnv === "mac" ? true : false;
+const getMacOSEnv = () => {
+  return currentEnv === "macOS" ? true : false;
 };
 
 const getOffline = () => {
@@ -45,13 +45,13 @@ const getSingle = () => {
   return cache.get('isSingle') ? true : false;
 }
 const currentEnv = getCurrentEnv();
-const isWeb = getWebEnv();
-const isClient = getClientEnv();
-const isMac = getMacEnv();
+const isH5 = getH5Env();
+const isWindows = getWindowsEnv();
+const isMacOS = getMacOSEnv();
 const isOffline = getOffline();
 const isGuest = getGuest();
 const isSingle = getSingle();
 
 export default currentEnv;
 
-export { isWeb, isClient, isMac, isOffline, isGuest, isSingle };
+export { isH5, isWindows, isMacOS, isOffline, isGuest, isSingle };

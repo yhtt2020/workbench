@@ -2,7 +2,7 @@
 <template>
   <!-- 这部分是最新调整 -->
   <div class="flex w-full justify-between flex-col">
-    <div class="flex w-full justify-between items-center">
+    <div class="flex w-full justify-between items-center mb-4">
       <span class="w-full xt-font xt-text font-14">通讯录</span>
       <xt-button style="width: auto !important" h="0" @click="clickCollapse">
         <div class="flex items-center justify-center">

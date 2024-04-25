@@ -52,9 +52,9 @@ import { appsStore } from '../store/apps'
 
 import {renderIcon} from '../js/common/common'
 import { startApp } from '../ui/hooks/useStartApp'
-import { useEnv } from '../ui/hooks/useEnv'
+import { useDev } from '../ui/hooks/useDev'
 let fs
-if (! useEnv('web')) {
+if (! useDev('h5')) {
 fs = window.$models.fs
 }
 export default {

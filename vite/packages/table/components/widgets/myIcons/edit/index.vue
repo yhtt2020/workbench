@@ -39,9 +39,9 @@ import MyIcon from "../components/icon.vue";
 import Edit from "./edit.vue";
 // 123
 import mixins from "./hooks/mixins";
-import {useEnv} from '../../../../ui/hooks/useEnv'
+import {useDev} from '../../../../ui/hooks/useDev'
 let fs
-if (! useEnv('web')) {
+if (!useDev('h5')) {
   fs = window.$models.fs
 }
 

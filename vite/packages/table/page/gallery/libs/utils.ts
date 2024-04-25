@@ -1,12 +1,12 @@
 import { storeToRefs  } from 'pinia';
 import { paperStore } from '../../../store/paper';
 import _ from 'lodash-es';
-import { useEnv } from '../../../ui/hooks/useEnv';
+import { useDev } from '../../../ui/hooks/useDev';
 
 // let fs = require('fs')
 let fs
 let path
-if (!useEnv('web')) {
+if (!useDev('h5')) {
   fs= (window as any).$models.fs;
   path = require('path')
 }

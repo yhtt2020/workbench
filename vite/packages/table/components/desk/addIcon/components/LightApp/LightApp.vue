@@ -6,7 +6,7 @@
 <script setup lang='ts'>
 import { ref, onMounted,computed } from 'vue'
 import Empty from '../Empty.vue';
-import {useEnv} from '../../../../../ui/hooks/useEnv'
+import {useDev} from '../../../../../ui/hooks/useDev'
 import IconList from '../IconList.vue';
 import { mergeData } from '../../../../../ui/hooks/useDataConversion';
 import { useReplace } from '../../hook/useReplace';
@@ -23,7 +23,7 @@ const props = defineProps({
 })
 
 onMounted( async() => {
-    if(!useEnv('web')){
+    if(!useDev('h5')){
       lightApp.value =await appModel.getAllApps() 
     } else {
       lightApp.value = []

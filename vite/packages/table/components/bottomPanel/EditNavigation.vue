@@ -255,9 +255,9 @@ import Classification from '../comp/Classification.vue'
 import { Icon as navIcon } from '@iconify/vue'
 import { message } from 'ant-design-vue'
 import {renderIcon} from '../../js/common/common'
-import { useEnv } from '../../ui/hooks/useEnv'
+import { useDev } from '../../ui/hooks/useDev'
 let appModel
-if (!useEnv('web')) {
+if (!useDev('h5')) {
   appModel  = window.$models.appModel
 }
 

@@ -177,7 +177,7 @@ export default {
         return
       }
       this.dataInit()
-      if (this.$useEnv()) {
+      if (this.$useDev()) {
         console.log('this.getShareJson() :>> ', this.getShareJson());
         const blob = new Blob([JSON.stringify(this.getShareJson())], { type: 'application/json' });
         const url = URL.createObjectURL(blob);

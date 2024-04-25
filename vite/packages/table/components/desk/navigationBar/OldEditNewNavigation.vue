@@ -96,10 +96,10 @@ import { message } from 'ant-design-vue'
 import Msg from '../../../ui/new/msg/index.vue'
 // import customLink from './components/CustomLink.vue'
 const customLink = defineAsyncComponent(() => import('./components/CustomLink.vue'))
-import {useEnv} from '../../../ui/hooks/useEnv'
+import {useDev} from '../../../ui/hooks/useDev'
 import {replaceIcon} from './hook/useReplace'
 let appModel
-if ( !useEnv('web')) {
+if ( !useDev('h5')) {
   appModel = window.$models.appModel
 
 }
@@ -276,7 +276,7 @@ export default {
         async loadDeskIconApps() {
             const web = await getNavList()
             this.webList = [web]
-          if (this.$useEnv()) return
+          if (this.$useDev()) return
             const lightApps = await appModel.getAllApps()
             // console.log(lightApps, 'lightApps');
             for (let i = 0; i < lightApps.length; i++) {

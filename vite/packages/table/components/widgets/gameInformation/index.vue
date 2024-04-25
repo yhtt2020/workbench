@@ -7,7 +7,7 @@
         :options="options" 
         ref="homelSlotRef" 
         :desk="desk" 
-        :envLimit="['offline']"
+        :envLimit="['guest', 'offline', 'single']"
         @delete="deleteCard">
         <div class="box-border">
             <div class="card-body"   v-for="(value,index) in gameData.slice(0, 3)" :key="index" @click="jump(value.url)" >

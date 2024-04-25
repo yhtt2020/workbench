@@ -1,8 +1,8 @@
-import {defineStore, mapActions} from "pinia";
-import { useSelectAll, useUninstall } from "./hooks";
+import { defineStore, mapActions } from "pinia";
+import { useSelectAll } from "./hooks";
 import { message } from "ant-design-vue";
 import { appStore as useAppStore } from "../../../store";
-import {appsStore} from "../../../store/apps";
+import { appsStore } from "../../../store/apps";
 import { useEnv } from "../../../permission/useEnv";
 if(useEnv('client')){
   const Db= window.$models.Db
@@ -28,25 +28,29 @@ export const useTTAppStore = defineStore("useTTAppStore", {
   }),
   getters: {},
   actions: {
-    enterApp(id: string){
-      let appInfo=this.select(id)
-      if(!appInfo){
-        console.error('应用不存在',id)
-        return
+    enterApp(id: string) {
+      let appInfo = this.select(id);
+      if (!appInfo) {
+        console.error("应用不存在", id);
+        // 开始删除数据
+        return;
       }
-      let url='ttapp://'+appInfo.id+ appInfo.main.entry
-      if(appInfo.main.entry.startsWith('http://')||appInfo.main.entry.startsWith('https://')){
-        url=appInfo.main.entry
+      let url = "ttapp://" + appInfo.id + appInfo.main.entry;
+      if (
+        appInfo.main.entry.startsWith("http://") ||
+        appInfo.main.entry.startsWith("https://")
+      ) {
+        url = appInfo.main.entry;
       }
-      let app={
-        theme:appInfo.theme_color,
+      let app = {
+        theme: appInfo.theme_color,
         name: appInfo.name,
-        url:url,
+        url: url,
         background: false,
         node: true,
         security: false,
-      }
-      appsStore().openApp(app)
+      };
+      appsStore().openApp(app);
     },
     async injectApi(id: string) {
       let appInfo = this.select(id)
@@ -67,20 +71,15 @@ export const useTTAppStore = defineStore("useTTAppStore", {
         return this.ttappList.find((item) => item.id === id);
       }
     },
+    /** 校验文件是否存在 */
+    // checkFile(id: string) {
+    //   return this.ttappData[id];
+    // },
     /**
-     * 卸载应用
+     * 删除列表
      */
-    async uninstall(id: string) {
-      let res = await useUninstall(id);
-
-      if (res) {
-        // 删除数据
-        this.ttappList = this.ttappList.filter((item) => item.id !== id);
-        this.removeData(id);
-        message.success("卸载成功");
-      } else {
-        message.error("卸载失败");
-      }
+    async removeList(id: string) {
+      this.ttappList = this.ttappList.filter((item) => item.id !== id);
     },
     /**
      * 清除数据
