@@ -12,7 +12,7 @@ export const usePermissionStore = defineStore("usePermissionStore", {
     isSingle: false,
     isGuest: false,
     isLogin: false,
-    platform: "h5",
+    platform: "web",
     env: "dev",
     //平台
   }),

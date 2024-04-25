@@ -1,6 +1,6 @@
 // import devtools from '@vue/devtools'//注释此行无法连接vue调试工具
 // 注册想天客户端状态
-import { isH5, isWindows, isMacOS, isOffline, isGuest, isSingle } from "./ui/hooks/env";
+import { isWeb, isWindows, isMacOS, isOffline, isGuest, isSingle } from "./ui/hooks/env";
 import {
   useEnv,
   useEnvLimit,
@@ -8,20 +8,20 @@ import {
   currentEnv,
 } from "./permission/useEnv";
 import {
-  useDev,
-  useDevLimit,
+  usePlat,
+  usePlatLimit,
   useComLimit,
-  currentDev,
-} from "./permission/useDev.ts";
+  currentPlat,
+} from "./permission/usePlat.ts";
 import type { UseEnv, baseEnv } from "./permission/useEnv";
 import archiveHelper from "./js/lib/archiveHelper";
 window.$isOffline = isOffline;
 window.$isGuest = isGuest;
 window.$isSingle = isSingle;
 window.$useEnv = useEnv;
-window.$useDev = useDev;
+window.$usePlat = usePlat;
 window.$useEnvLimit = useEnvLimit;
-window.$useDevLimit = useDevLimit;
+window.$usePlatLimit = usePlatLimit;
 window.$useComLimit = useComLimit;
 //import {initDb} from './js/api/db'
 import { createApp } from "vue";
@@ -127,18 +127,18 @@ app.use(Wujie);
 // app.use(hevueImgPreview)
 // 使用 provide 将全局变量作为响应式对象
 app.provide("currentEnv", currentEnv);
-app.provide("isH5", isH5);
+app.provide("isWeb", isWeb);
 app.provide("isWindows", isWindows);
 app.provide("isMacOS", isMacOS);
 app.provide("isOffline", isOffline);
 app.provide("isSingle", isSingle);
 app.provide("isGuest", isGuest);
 app.provide("$useEnv", useEnv);
-app.provide("$useDev", useDev);
+app.provide("$usePlat", usePlat);
 
 // 使用 globalProperties 将全局变量附加到 Vue 实例上
 app.config.globalProperties.$currentEnv = currentEnv;
-app.config.globalProperties.$isH5 = isH5;
+app.config.globalProperties.$isWeb = isWeb;
 app.config.globalProperties.$isWindows = isWindows;
 app.config.globalProperties.$isMacOS = isMacOS;
 app.config.globalProperties.$isOffline = isOffline;
@@ -146,7 +146,7 @@ app.config.globalProperties.$isSingle = isSingle;
 app.config.globalProperties.$isGuest = isGuest;
 app.config.globalProperties.$bus = useMit;
 app.config.globalProperties.$useEnv = useEnv;
-app.config.globalProperties.$useDev = useDev;
+app.config.globalProperties.$usePlat = usePlat;
 window.$ui = {
   confirm,
   router,
@@ -205,7 +205,7 @@ app.component("PanelButton", PanelButton);
 app.component("BackBtn", BackBtn);
 app.component("vueCustomScrollbar", vueCustomScrollbar);
 
-if (!useDev()) {
+if (!usePlat()) {
   window.USER_DATA_PATH = window.globalArgs["user-data-dir"]; //挂载一个用户数据目录的常量，方便后续开发
 }
 

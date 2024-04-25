@@ -63,7 +63,7 @@
         </slot>
         <!-- 标题栏end   -->
         <xt-status
-          v-if="useDev(limitEnv)"
+          v-if="usePlat(limitEnv)"
           :name="options.title"
           :status="limitEnv"
         />
@@ -108,7 +108,7 @@ import RightMenu from "./RightMenu.vue";
 import PageState from "./PageState.vue";
 import { useWidgetStore } from "./store";
 import { useFreeLayoutStore } from "../desk/freeLayout/store";
-import { useDev } from "../../ui/hooks/useDev";
+import { usePlat } from "../../ui/hooks/usePlat";
 
 import GetSize from "./GetSize.vue";
 
@@ -201,7 +201,7 @@ export default {
       };
     },
     menus() {
-      if (this.useDev(this.envLimit)) {
+      if (this.usePlat(this.envLimit)) {
         return [this.del];
       }
       return [...this.menuList, this.del];
@@ -299,7 +299,7 @@ export default {
 
   methods: {
     ...mapActions(cardStore, ["removeCard", "updateCustomData"]),
-    useDev,
+    usePlat,
     // 右键删除
     doRemoveCard() {
       this.options.beforeDelete && this.$emit("delete");

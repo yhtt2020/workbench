@@ -114,7 +114,7 @@ export default {
     manager.setOptions({
       height: 100
     })
-    if (!window.$useDev()) {
+    if (!window.$usePlat()) {
       tsbApi.barrage.init()
 
 tsbApi.barrage.setOnUrlChanged((url) => {
@@ -164,7 +164,7 @@ tsbApi.barrage.setOnUrlChanged((url) => {
     },
 
     async getTeamBarrage(){
-      if (this.myTeamNo && !this.$useDev()) {
+      if (this.myTeamNo && !this.$usePlat()) {
         tsbApi.barrage.getList(tsbApi.barrage.CONST.CHANNEL.TEAM, this.myTeamNo).then(rs => {
           if (rs.status) {
             rs.data.forEach(item => {

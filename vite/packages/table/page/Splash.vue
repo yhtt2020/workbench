@@ -77,13 +77,13 @@ export default {
       launching: true,
       storeReadyTimer: null,
       // launched: false,
-      // version: window.$useDev() ? "" : tsbApi.runtime.appVersion,
+      // version: window.$usePlat() ? "" : tsbApi.runtime.appVersion,
       // 超时定时器
       // timeout: null,
     };
   },
   created() {
-    if (this.$useDev("h5")) {
+    if (this.$usePlat("web")) {
       this.$router.replace({ name: "home" });
       localStorage.setItem('wizarded',1)
       return;
@@ -226,7 +226,7 @@ export default {
 
     async afterLaunch() {
       // web端登录拦截
-      if (this.$useDev("h5")) {
+      if (this.$usePlat("web")) {
         this.loginOk();
         return;
       }
@@ -265,7 +265,7 @@ export default {
 
     loginOk() {
       // // 首次web端引导
-      // if (!this.init && this.$useDev("h5")) {
+      // if (!this.init && this.$usePlat()) {
       //   console.log("2222 :>> ", 2222);
       //   this.finishWizard();
       //   this.visibleWeb = true;
@@ -280,7 +280,7 @@ export default {
     },
     // onGuest() {
     //   this.$router.replace({ name: "home" });
-    //   if (!this.init && this.$useDev("h5")) {
+    //   if (!this.init && this.$usePlat()) {
     //     this.finishWizard();
     //     this.visibleWeb = true;
     //   }

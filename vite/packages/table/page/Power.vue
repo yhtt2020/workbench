@@ -31,9 +31,9 @@ import BackBtn from '../components/comp/BackBtn.vue'
 import { Modal, message } from 'ant-design-vue'
 import { runNir } from '../js/common/exec'
 import { getSign, isMain } from '../js/common/screenUtils'
-import { useDev } from '../ui/hooks/useDev'
+import { usePlat } from '../ui/hooks/usePlat'
 let execShell
-if (!useDev()) {
+if (!usePlat()) {
   execShell = require('child_process').exec
 
 }

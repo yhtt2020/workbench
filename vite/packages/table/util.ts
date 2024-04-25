@@ -1,6 +1,6 @@
-import { useDev } from "./ui/hooks/useDev"
+import { usePlat } from "./ui/hooks/usePlat"
 let path
-if (!useDev('h5')) {
+if (!usePlat('web')) {
  path = require('path')
 }
 

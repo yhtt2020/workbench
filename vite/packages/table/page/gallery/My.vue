@@ -84,10 +84,10 @@ import MyEmptyStatus from './components/empty/MyEmptyStatus.vue';
 import MyContent from './components/content/MyContent.vue';
 import PaperRightDrawer from './components/drawer/PaperRightDrawer.vue';
 import ClosePaperButton from './components/close/ClosePaperButton.vue';
-import { useDev } from '../../ui/hooks/useDev';
+import { usePlat } from '../../ui/hooks/usePlat';
 
 let fs,path
- if (!useDev('h5')) {
+ if (!usePlat('web')) {
    fs = window.$models.fs
     path = require('path')
  }

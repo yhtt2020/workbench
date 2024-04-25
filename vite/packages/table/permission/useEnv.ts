@@ -2,7 +2,7 @@ import { confirm } from "../ui/new/confirm";
 import cache from "../components/card/hooks/cache";
 
 import { ALL_LIMITS, COMPONENT_LIMIT, PRIORITY, ROUTER_LIMIT } from "./config";
-import { isH5, isWindow, isMac, isOffline, isGuest } from "./useBaseEnv";
+import { isWeb, isWindow, isMac, isOffline, isGuest } from "./useBaseEnv";
 
 // 提示
 const showConfirm = (name) => {
@@ -68,7 +68,7 @@ export type baseEnv = "offline" | "guest" | "single" | "online";
 export type useEnvType = baseEnv | any;
 
 export type UseEnv = (arr: useEnvType) => baseEnv;
-export const useEnv: UseEnv = (arr = "h5") => {
+export const useEnv: UseEnv = (arr = "web") => {
   if (typeof arr == "string") {
     return envDetection(arr);
   }

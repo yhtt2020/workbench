@@ -12,12 +12,12 @@ export type TT = {
      * 判断所属环境
      */
     isEnv: (arr?: string | string[]) => string;
-    isDev: (arr?: string | string[]) => string;
+    isPlat: (arr?: string | string[]) => string;
     /**
      * 获取当前环境
      */
     env: string;
-    dev: string;
+    plat: string;
   };
   /**
    * UI相关指令
@@ -75,12 +75,12 @@ export interface TTS {
      * 判断所属环境
      */
     isEnv: (arr?: string | string[]) => string;
-    isDev: (arr?: string | string[]) => string;
+    isPlat: (arr?: string | string[]) => string;
     /**
      * 获取当前环境
      */
     env: string;
-    dev: string;
+    plat: string;
   };
   /**
    * UI相关指令

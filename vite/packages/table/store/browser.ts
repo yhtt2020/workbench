@@ -21,7 +21,7 @@ export const browserStore = defineStore("browserStore", {
       }
     },
     bindIPC(){
-      if (window.$useDev()) return
+      if (window.$usePlat()) return
       ipc.on('updateRunningTableTabs',(event,args)=>{
           console.log(args)
         this.runningTabs=args.tabs

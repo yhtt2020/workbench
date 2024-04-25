@@ -13,7 +13,7 @@
           ">
         <h3 style="color: var(--primary-text)">快速开关功能</h3>
         <a-row :gutter="[20, 20]" style="font-size: 1.2em; text-align: center">
-          <a-col :span="12" v-if="!$useEnv(['guest', 'offline']) || !useDev('h5')">
+          <a-col :span="12" v-if="!$useEnv(['guest', 'offline']) || !usePlat()">
             <div class="relative btn">
               弹幕
               <br />
@@ -28,7 +28,7 @@
             </div>
           </a-col>
 
-          <a-col :span="12" v-if="!$useDev()">
+          <a-col :span="12" v-if="!$usePlat()">
             <div class="relative btn">
               窗口控制<br />
               <a-switch @click.stop="() => { }" v-model:checked="showWindowController"></a-switch>
@@ -66,13 +66,13 @@
                 <a-switch @click="setSingle(!isSingle)"  v-model:checked="isSingle"></a-switch>
               </div>
             </a-col> -->
-          <a-col :span="12" v-if="!$useDev()">
+          <a-col :span="12" v-if="!$usePlat()">
             <div class="relative btn">
               辅助模式<br />
               <a-switch @click="this.toggleAided" v-model:checked="aided"></a-switch>
             </div>
           </a-col>
-          <a-col :span="12" v-if="!$useDev()">
+          <a-col :span="12" v-if="!$usePlat()">
             <div class="relative btn" @click="goShake">
               摇一摇<br />
               <div @click.stop>
@@ -86,7 +86,7 @@
         <div></div>
       </div>
       <div class="" style="display: inline-block; vertical-align: top">
-        <div class="p-4 ml-4 s-bg menu-block" v-if="!$useDev()">
+        <div class="p-4 ml-4 s-bg menu-block" v-if="!$usePlat()">
           <h3 style="color: var(--primary-text)">常用</h3>
           <a-row style="font-size: 1.2em; text-align: center">
             <a-col v-if="isMain() && isWin()" :span="6">
@@ -141,7 +141,7 @@
                 <div>通用设置</div>
               </div>
             </a-col>
-            <a-col v-if="isMain() && !$useDev()" :span="6">
+            <a-col v-if="isMain() && !$usePlat()" :span="6">
               <div @click="goApps()" class="btn">
                 <Iconify icon="fluent:grid-16-regular" style="font-size: 2em"></Iconify>
                 <div>应用管理</div>
@@ -192,7 +192,7 @@
                 <div>生成激活码</div>
               </div>
             </a-col>
-            <a-col :span="6" v-if="!$useDev()">
+            <a-col :span="6" v-if="!$usePlat()">
               <div @click="power" class="btn">
                 <!-- <Icon icon="tuichu" style="font-size: 2em"></Icon> -->
                 <Iconify icon="fluent:power-20-filled" style="font-size: 2em" />

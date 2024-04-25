@@ -80,9 +80,9 @@
 import Classification from "../../../../comp/Classification.vue";
 import navigationData from "../../../../../js/data/tableData";
 import listItem from "../../../../bottomPanel/listItem.vue";
-import { useDev } from "../../../../../ui/hooks/useDev";
+import { usePlat } from "../../../../../ui/hooks/usePlat";
 let appModel
-if (!useDev()) {
+if (!usePlat()) {
   appModel = window.$models.appModel
 
 }

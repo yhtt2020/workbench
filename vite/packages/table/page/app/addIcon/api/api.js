@@ -1,11 +1,11 @@
-import { useDev } from "../../../../ui/hooks/useDev";
+import { usePlat } from "../../../../ui/hooks/usePlat";
 import service from "./request";
 const homeRecommend = "/app/good/getGoodRecommend"; //首页推荐接口
 const select = "/app/good/app/selectApp";
 import web from './web.json'
 // import isXT from "../../../../components/card/hooks/mode";
 let appModel;
-if (!useDev('h5')) {
+if (!usePlat('web')) {
   appModel  = window.$models.appModel
 }
 // 首页推荐

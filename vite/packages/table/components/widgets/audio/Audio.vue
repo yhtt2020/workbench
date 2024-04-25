@@ -136,7 +136,7 @@ export default {
     }
   },
   mounted () {
-    if (this.$useDev()) return
+    if (this.$usePlat()) return
     this.init()
     this.customData.customSize = '2x4'
   },

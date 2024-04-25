@@ -82,7 +82,7 @@
 <script>
 import { mapWritableState } from "pinia";
 import { appStore } from "../../../../store";
-import { useDev } from "../../../../ui/hooks/useDev";
+import { usePlat } from "../../../../ui/hooks/usePlat";
 
 export default {
   name: "ZoomUI",
@@ -112,7 +112,7 @@ export default {
     });
   },
   methods: {
-    useDev,
+    usePlat,
     inputEnter() {
       if (!this.inputZoom) {
         this.inputZoom = 30;

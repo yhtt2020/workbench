@@ -1,12 +1,12 @@
 import { storeToRefs  } from 'pinia';
 import { paperStore } from '../../../store/paper';
 import _ from 'lodash-es';
-import { useDev } from '../../../ui/hooks/useDev';
+import { usePlat } from '../../../ui/hooks/usePlat';
 
 // let fs = require('fs')
 let fs
 let path
-if (!useDev('h5')) {
+if (!usePlat()) {
   fs= (window as any).$models.fs;
   path = require('path')
 }
