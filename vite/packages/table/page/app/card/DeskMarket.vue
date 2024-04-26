@@ -1,22 +1,18 @@
 <template>
   <!-- 方案列表 -->
-  <div class="flex flex-row w-full item-wrapper justify-center" style="height: 100%">
+  <div class="flex flex-row w-full item-wrapper justify-between" style="height: 100%">
     <div class="item-content px-8" :style="wrapperStyle">
       <div class="text-center flex items-center h-full" v-if="displayItems.length == 0">
         <a-empty image="/img/test/load-ail.png" description="暂无分享"></a-empty>
       </div>
-      <template v-else v-for="(item, index) in displayItems" :key="item.id">
-        <xt-task v-if="index == 0" :modelValue="m03025" @cb="previewKay(item)">
+      <template v-else v-for="item in displayItems" :key="item.id">
+        <!-- <xt-task v-if="index == 0" :modelValue="m03025" @cb="previewKay(item)">
           <div class="pointer recommend mb-2" :style="deskItemStyle" @click="previewKay(item)">
             <div class=" cover-wrapper xt-main-bg" style="">
-              <!-- <a-image :width="328" :height="185" :preview="false" src="../../../../../public/img/test/deckImg.jpg" /> -->
               <img class="cover-preview" :src="item.cover" />
             </div>
             <div style="padding: 0 12px 14px">
               <div class="title">{{ item.alias || item.title }}
-                <!-- <span class="label" v-if="item.tags"
-                      v-for="x in item.tags?.split(',')"
-                      :key="x">{{ x }}</span> -->
               </div>
               <div class="flex justify-between items-center mt-3" style="font-size: 14px;color: var(--secondary-text);">
                 <span class="flex items-center">
@@ -26,10 +22,6 @@
                   <span class="ml-2 xt-text-2 font-14">{{ item.userInfo?.nickname }}</span>
                 </span>
                 <span style="color: var(--secondary-text);">
-                  <!-- <span>
-                    <Icon icon="dianzan" class="mr-2"></Icon>
-                    <span>{{ item.support }}</span>
-                  </span> -->
                   <span class="ml-3 xt-text-3">
                     <Icon icon="xiazai" class="mr-2"></Icon>
                     <span>{{ item.count }}</span>
@@ -38,9 +30,9 @@
               </div>
             </div>
           </div>
-        </xt-task>
-
-        <div v-else class="pointer recommend mb-2" :style="deskItemStyle" @click="previewKay(item)">
+        </xt-task> -->
+        <!-- v-else -->
+        <div  class="pointer recommend mb-2" :style="deskItemStyle" @click="previewKay(item)">
           <div class=" cover-wrapper xt-main-bg" style="">
             <!-- <a-image :width="328" :height="185" :preview="false" src="../../../../../public/img/test/deckImg.jpg" /> -->
             <img class="cover-preview" :src="item.cover" />
