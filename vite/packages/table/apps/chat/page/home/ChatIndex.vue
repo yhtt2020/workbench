@@ -15,10 +15,10 @@ const chatServer = window.$chat.chat;
 const chat = chatStore();
 
 onMounted(() => {
-  // chat.login();
-  // chatServer?.on(TUIChatEngine.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, (e) => {
-  //   proxy.$bus.emit("getChatUnread", e?.data);
-  // });
+  chat.login();
+  chatServer?.on(TUIChatEngine.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, (e) => {
+    proxy.$bus.emit("getChatUnread", e?.data);
+  });
 });
 </script>
 
