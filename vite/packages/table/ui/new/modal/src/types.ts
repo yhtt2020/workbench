@@ -43,6 +43,5 @@ export type ModalProps = {
   // 用于记录保存拖拽位置的key
   name?: string | null;
 
-  // 栓q我也不知道啊
   scrollbarStyle?: any;
 };
