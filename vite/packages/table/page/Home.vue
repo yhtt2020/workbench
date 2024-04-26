@@ -258,6 +258,7 @@ export default {
         return desk.id === this.currentDeskId;
       });
       if (find) {
+        console.log('find :>> ', find);
         find.cards.forEach((e) => {
           if (!e.data) {
             e.data = {};
@@ -277,11 +278,11 @@ export default {
     // 每次进来需要设置工作台目前处于状态
     this.setStatus()
 
-    // 用于桌面初始化 组件 
+    // 用于桌面初始化 组件
     this.componentInit()
 
     // 首次客户端引导
-    if (!this.init && isMain()) {
+    if (!this.init && isMain() && !usePlat('web')) {
       this.$router.replace({ name: "wizard" });
     }
 
@@ -441,7 +442,7 @@ export default {
       this.replaceIcon(this.copyFootNav, this.footNavInit);
     },
 
-    // 
+    //
     componentInit(){
       // 判断是否是第一次加载
       if (this.deskInit) {

@@ -62,6 +62,10 @@
 
 <script setup>
 import { toRefs } from "vue";
+import { storeToRefs } from "pinia";
+import { chatCommunityStore } from "../../../store/chatCommunity";
+import _ from "lodash-es";
+import { useRouter } from "vue-router";
 
 const props = defineProps({
   detailList: {
@@ -71,9 +75,42 @@ const props = defineProps({
 });
 const { detailList } = toRefs(props);
 
+const router = useRouter();
+
+const chatCommunity  = chatCommunityStore();
+const { myCommunity } = storeToRefs(chatCommunity);
+
 // 进入相对应社群
 const enterCommunity = (data) =>{
-  console.log(data,'data');
+  const no = data.no;
+  const index  = _.findIndex(myCommunity.value,(item)=>{
+    return Number(item.route?.params?.no) === Number(no);
+  })
+  if(index > -1){
+    router.push({ name: "myCommunity", params: { no: no } });
+  }
+  else {
+    console.log('当前社群没有加入',myCommunity.value);
+    // console.log('当前数据',data);
+    const index  = _.findIndex(myCommunity.value,(item)=>{
+      return Number(item.route?.params?.no) === Number(no)
+    })
+    if(index === -1){
+      const option = {
+        float:'',
+        id:data.id,
+        img:data.icon,
+        menuVisible:true,
+        noBg:true,
+        route:{ name:'myCommunity',params:{no:data.no} },
+        tab:`community_${data.no}`,
+        type:`community${data.no}`,
+        communityInfo:data.detail,
+      }
+      myCommunity.value.push(option);
+      router.push({ name: "myCommunity", params: { no: no } });
+    }
+  }
 }
 // enterCommunity(item) {
 //       const list = this.community.communityList.map((item) => {

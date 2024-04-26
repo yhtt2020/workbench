@@ -3,6 +3,12 @@ import { useSelectAll } from "./hooks";
 import { message } from "ant-design-vue";
 import { appStore as useAppStore } from "../../../store";
 import { appsStore } from "../../../store/apps";
+import { usePlat } from "../../../permission/usePlat";
+let Db
+if(!usePlat('web')){
+  console.log('客户端情况')
+   Db= window.$models.Db
+}
 
 // @ts-ignore
 export const useTTAppStore = defineStore("useTTAppStore", {
@@ -48,13 +54,22 @@ export const useTTAppStore = defineStore("useTTAppStore", {
       };
       appsStore().openApp(app);
     },
+    async injectApi(id: string) {
+      let appInfo = this.select(id)
+
+      let db = new Db(id, appInfo)
+      const tb = {
+        db: db
+      }
+      return {
+        tb
+      }
+    },
     /**
      * 查询应用
      */
     select(id?: string) {
-      if (id) {
-        return this.ttappList.find((item) => item.id === id);
-      }
+      return this.ttappList.find((item) => item.id === id);
     },
     /** 校验文件是否存在 */
     // checkFile(id: string) {

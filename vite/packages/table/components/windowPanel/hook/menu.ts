@@ -1,6 +1,7 @@
 import { message } from "ant-design-vue";
 import { useFullscreen } from "@vueuse/core";
 import { startApp } from "../../../ui/hooks/useStartApp";
+import { navValidate } from "../../../apps/appCenter/src/views/developer/hooks/validate";
 const { isFullscreen, toggle } = useFullscreen();
 function iconMenus() {
   return [
@@ -90,6 +91,7 @@ export default {
      */
     async newOpenApp(item, e) {
       const { type, value } = item;
+
       if (type === "card") {
         this.openCard(item);
       }
@@ -128,6 +130,10 @@ export default {
       this.msgNotice(item);
       if (value === "home" && item.home) {
         this.jumpDesk = item.home;
+      }
+      if (type === "ttapp") {
+        let res = navValidate(item.id, item.value);
+        if (!res) return;
       }
       let rs = await startApp(type, value, this.$router);
       if (!rs) {

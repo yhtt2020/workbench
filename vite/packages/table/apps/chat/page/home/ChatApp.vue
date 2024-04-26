@@ -191,7 +191,8 @@ const leftList = ref([
       ]
     : []),
   {
-    full: false,
+    full: true,
+    menuVisible: false,
   },
 ]);
 /**社群右键菜单**/

@@ -11,14 +11,14 @@
 
     <template v-if="currentItem">
       <a-col flex=" 1 1 200px"  class="flex flex-col h-full">
-        <CommunityHeader :headerContent="currentItem"/>
+        <!-- <CommunityHeader :headerContent="currentItem"/> -->
         <RightDetailMain :currentItem="currentItem"/>
       </a-col>
     </template>
 
     <template v-else>
       <a-col flex=" 1 1 200px"  class="flex flex-col h-full">
-        <CommunityDetailEmpty />
+        <CommunityDetailEmpty :no="1"/>
       </a-col>
     </template>
 
@@ -39,7 +39,7 @@ import { checkGroupShip } from "../../../../js/common/sns";
 
 import OfficialCategoryFloat from "../../components/suspendMode/OfficialCategoryFloat.vue";
 import RightDetailMain from "./RightDetailMain.vue";
-import CommunityHeader from "../../components/suspendMode/CommunityHeader.vue";
+// import CommunityHeader from "../../components/suspendMode/CommunityHeader.vue";
 import CommunityDetailEmpty from "../empty/CommunityDetailEmpty.vue"
 
 const chatCommunity = chatCommunityStore();

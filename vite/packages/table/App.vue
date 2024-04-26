@@ -172,6 +172,9 @@ export default {
   },
 
   async mounted () {
+    if(usePlat('web')){
+      document.body.classList.add('web')
+    }
     this.$router.push({
       name:'splash'
     })

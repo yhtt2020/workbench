@@ -1,42 +1,42 @@
 <template>
   <!-- xt-main-top-bar 元素定位类 不可删 -->
-  <div id="topBar" class="flex items-center justify-between w-full pt-1 xt-main-top-bar top-shadow drag">
+  <div  id="topBar" class="flex items-center justify-between w-full pt-1 xt-main-top-bar top-shadow drag">
       <!-- @contextmenu.stop="toggleAppStats" -->
-      <div 
-        v-if="isMain || (appSettings.showTopPanel)" 
-        id="topLeftPart"  
+      <div
+        v-if="isMain || (appSettings.showTopPanel)"
+        id="topLeftPart"
         class="flex min-h flex-1 pl-2.5 drag  items-center">
-        <div 
-          class="no-drag" 
+        <div
+          class="no-drag"
           v-if="isMain && navFormat">
           <MessageBox :isTop="true" />
         </div>
       </div>
 
-      <div 
-        v-if="(isMain || (appSettings.showTopPanel)) && navFormat" 
-        id="topCenterPart" 
+      <div
+        v-if="(isMain || (appSettings.showTopPanel)) && navFormat"
+        id="topCenterPart"
         class="flex max-search drag min-h" hidden="">
-        <div 
-          hidden="" 
-          @click="openGlobalSearch" 
+        <div
+          hidden=""
+          @click="openGlobalSearch"
           class="inline-block input-box no-drag pointer"
           style=" background: var( --primary-bg); color: var(--secondary-text);width: 320px">
           <Icon icon="sousuo"></Icon>
         </div>
       </div>
 
-      <div 
-        v-if="(isMain || (appSettings.showTopPanel)) && navFormat" 
-        id="topRightPart" 
+      <div
+        v-if="(isMain || (appSettings.showTopPanel)) && navFormat"
+        id="topRightPart"
         class="relative flex items-center justify-end min-h drag ">
         <PaperLock></PaperLock>
         <TopPanelButton/>
 
-        <div 
+        <div
           v-if="isMain && navFormat"
-          style="width:auto !important;"   
-          @click="toggleRightDrawer" 
+          style="width:auto !important;"
+          @click="toggleRightDrawer"
           :style="showWindowController ? {margin:'0 170px 0 0 !important'} : {margin:'0 16px 0 0 !important'} "
           class="p-1 rounded-md no-drag btn-hover category-button pointer">
           <div class="flex items-center">
@@ -49,17 +49,17 @@
               <span class="mx-1 xt-text font-14 xt-font">{{ dateTime.week }}</span>
               <span class="pr-1 xt-text font-14 xt-font">{{ dateTime.hours }}:{{ dateTime.minutes }}</span>
             </template>
-            <span 
-              v-if="hasWeather && city.now && appSettings.showTopbarWeather" 
+            <span
+              v-if="hasWeather && city.now && appSettings.showTopbarWeather"
               class=" xt-text font-14 xt-font">{{ city.now.text }} {{ city.now.temp }}℃</span>
           </div>
         </div>
       </div>
 
-    <div 
-      class="absolute top-0 right-0 xt-bg rounded-bl-xl h-9 no-drag" 
-      style="z-index: 10000;" 
-      v-if="showWindowController && !$usePlat()"  
+    <div
+      class="absolute top-0 right-0 xt-bg rounded-bl-xl h-9 no-drag"
+      style="z-index: 10000;"
+      v-if="showWindowController && !$usePlat()"
       id="windowController" >
       <WindowController></WindowController>
     </div>
@@ -88,6 +88,7 @@ import TopPanelRightDrawer from './drawer/TopPanelRightDrawer.vue'
 import TopPanelButton from './drawer/TopPanelButton.vue'
 import PaperLock from './topPanel/PaperLock.vue'
 import MessageBox from './windowPanel/MessageBox.vue'
+import { usePlat } from '../ui/hooks/usePlat'
 
 export default {
   name: 'TopPanel',
@@ -104,6 +105,7 @@ export default {
 
   data() {
     return {
+      isWeb:false,
       loading: true,
       dateTime: {},
       timer: null,
@@ -135,6 +137,7 @@ export default {
 
   mounted(){
     this.loading = false;
+    this.isWeb=usePlat('web')
     if (!this.timer){  setInterval(this.getTime, 1000); };
     this.filterClock(this.clockTag);
   },
