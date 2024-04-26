@@ -8,4 +8,3 @@ import { installV2 } from "../hooks/installV2";
   </xt-button>
 </template>
 <style lang="scss" scoped></style>
-../hooks/installV2

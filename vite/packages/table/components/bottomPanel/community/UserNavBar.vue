@@ -1,9 +1,8 @@
 <template>
  <div
   v-if="!simple && !usePermission.isSingle && bottomToggle[0]"
-  :class="isFrame ? 's-bg' : ''"
-  class="relative flex flex-row items-center justify-between common-panel  xt-text-1 h-[80px] ml-0.5 mt-0 mr-0 mb-0"
-  :style="isFrame ? { borderRadius:'12px',border:'1px solid var(--divider)' }:{}"
+  class="relative flex flex-row items-center justify-between common-panel  xt-text-1 h-[80px] ml-0.5 mt-0 mr-0 mb-0 s-bg"
+  :style="{ borderRadius:'12px',border:'1px solid var(--divider)' }"
   style="padding: 6px !important;"
  >
   <div class="flex items-center justify-between">

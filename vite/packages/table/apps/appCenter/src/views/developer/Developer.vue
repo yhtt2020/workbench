@@ -13,7 +13,7 @@ const { ttappList } = storeToRefs(ttappStore);
   <div class="flex flex-col h-full">
     <div class="flex justify-between pb-4">
       <div class="flex items-center">
-        <xt-ify-icon icon="fluent:code-16-regular" />
+        <xt-ify-icon icon="fluent:code-16-regular"  class="mr-2" />
         开发者
       </div>
       <div class="flex items-center"><Install class="mr-3" /><Exit /></div>

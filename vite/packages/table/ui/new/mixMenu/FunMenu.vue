@@ -18,6 +18,9 @@
     <template #cardSize>
       <slot name="follow"></slot>
     </template>
+    <template #extraMenu>
+      <slot name="extraMenu"></slot>
+    </template>
   </xt-menu>
 
   <xt-drawer v-if="drawerVisible" v-model="drawerVisible" :height="h">

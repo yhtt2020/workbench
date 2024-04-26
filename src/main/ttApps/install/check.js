@@ -37,7 +37,7 @@ const checkMainFest = async (id) => {
   // 3、数据检查
   console.log("3、数据检查 :>> ");
   // 基础数据
-  let baseWeak = ["name", "description", "modules"];
+  let baseWeak = ["name", "description", "modules", "version"];
   let baseStrong = [
     {
       value: res?.logo,
@@ -55,26 +55,21 @@ const checkMainFest = async (id) => {
   }
   const modules = res?.modules;
   // 主应用数据
-  if (!modules?.main) {
-    return {
-      status: 1,
-      code: 24,
-      data: "缺少主应用数据",
-      info: ERROR_CODE[24],
+  if (modules?.main) {
+    const main = modules?.main;
+    let weak = ["width", "height", "entry"];
+    let strong = [];
+    let obj = {
+      weak,
+      strong,
+      data: main,
     };
+    let mainRes = await check(obj);
+    if (mainRes.code !== 200) {
+      return mainRes;
+    }
   }
-  const main = modules?.main;
-  let weak = ["width", "height", "entry"];
-  let strong = [];
-  let obj = {
-    weak,
-    strong,
-    data: main,
-  };
-  let mainRes = await check(obj);
-  if (mainRes.code !== 200) {
-    return mainRes;
-  }
+
   // 卡片数据
   let cardRes = await checkCard(modules?.card);
   if (cardRes.code !== 200) {

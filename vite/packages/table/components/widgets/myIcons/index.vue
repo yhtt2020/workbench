@@ -99,7 +99,7 @@
 <script>
 import { defineAsyncComponent } from "vue";
 
-import { cardValidate } from "../../../apps/appCenter/src/views/developer/hooks/validate.ts";
+import { iconValidate } from "../../../apps/appCenter/src/views/developer/hooks/validate.ts";
 // components
 import Widget from "../../card/Widget.vue";
 import icon from "./components/icon.vue";
@@ -198,9 +198,9 @@ export default {
     }
   },
   mounted() {
-    let res = this.customData.iconList[0];
-
-    console.log('myicon  res :>> ', res);
+    // 还差判断是否为ttapp的后续操作
+    let res = iconValidate(this.customIndex, this.customData.iconList[0]);
+    if (!res) return;
 
     // if (cardValidate())
     // console.log("this.customData :>> ", this.customData.iconList[0].src);
