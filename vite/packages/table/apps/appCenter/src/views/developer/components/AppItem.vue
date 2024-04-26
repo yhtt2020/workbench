@@ -4,6 +4,7 @@ import { useTTAppStore } from "../../../../../ttApp/src/store";
 import { storeToRefs } from "pinia";
 import { installV2 } from "../hooks/installV2";
 import { uninstall } from "../hooks/uninstall";
+import { addIcon, addNav } from "../hooks/add";
 const { item } = defineProps<{ item: any }>();
 // ttapp数据
 const ttappStore: any = useTTAppStore();
@@ -18,10 +19,44 @@ const menus = computed(() => {
     //   },
     // },
     {
+      name: "添加应用到",
+      newIcon: "fluent:add-16-regular",
+      children: [
+        {
+          name: "桌面",
+          newIcon: "fluent:desktop-16-regular",
+          cb: () => {
+            addIcon(item);
+          },
+        },
+        {
+          name: "底部导航栏",
+          newIcon: "fluent:desktop-16-regular",
+          cb: () => {
+            addNav(item, "bottom");
+          },
+        },
+        {
+          name: "左侧导航栏",
+          newIcon: "fluent:desktop-16-regular",
+          cb: () => {
+            addNav(item, "left");
+          },
+        },
+        {
+          name: "右侧导航栏",
+          newIcon: "fluent:desktop-16-regular",
+          cb: () => {
+            addNav(item, "right");
+          },
+        },
+      ],
+    },
+    {
       name: "更新文件",
-      newIcon: "fluent:delete-16-regular",
+      newIcon: "fluent:arrow-sync-16-regular",
       cb: async () => {
-        let res: any = await installV2(item.id);
+        await installV2(item.id);
       },
     },
     {
@@ -47,8 +82,7 @@ const menus = computed(() => {
     item.card?.map((data) => {
       arr.push({
         name: `${data.name || item.name}组件`,
-        newIcon: "fluent:add-16-regular",
-
+        newIcon: "fluent:collections-add-24-regular",
         cb: () => {
           addPreview(data);
         },
@@ -70,13 +104,11 @@ const previewData = ref({
   size: "",
 });
 const addPreview = (data: any) => {
-  console.log("data :>> ", data);
   previewData.value = {
     name: "TTAppCard",
     data,
     size: data.size,
   };
-  console.log("previewData.value :>> ", previewData.value);
   previewVisible.value = true;
 };
 /** 打开主应用弹窗 */
@@ -107,7 +139,14 @@ const entry = () => {
         <a-avatar shape="square" :size="70" :src="item?._logo"> </a-avatar>
       </div>
       <div class="flex flex-col justify-center">
-        <div>{{ item.name }}</div>
+        <div class="flex">
+          {{ item.name }}
+          <div
+            class="tt-text-2 h-[22px] tt-main-bg ml-1 rounded-md text-xs px-1 flex items-center justify-center"
+          >
+            {{ item.version }}
+          </div>
+        </div>
         <div class="xt-text-2 text-sm mt-2">
           {{ item.description }}
         </div>
@@ -136,4 +175,4 @@ const entry = () => {
     </div>
   </div>
 </template>
-<style lang="scss" scoped></style>../hooks/installV2
+<style lang="scss" scoped></style>

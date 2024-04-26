@@ -4,8 +4,8 @@ import { navStore as useNavStore } from "../../../../../../store/nav";
 import { useTTAppStore } from "../../../../../ttApp/src/store";
 import { useFreeLayoutStore } from "../../../../../../components/desk/freeLayout/store";
 import { message } from "ant-design-vue";
-import { useDelCard } from "../../../../../../hooks";
 
+/** 卸载应用 */
 export const uninstall = (id: string) => {
   clearStore(id);
   clearDesk(id);
@@ -91,7 +91,6 @@ const clearNav = (id: string) => {
     if (data.type == "ttapp" && data.value == id) {
       return false;
     }
-    // type: value ,id:
     // 过滤文件夹
     if (data.type == "folder") {
       data.children = data.children.filter((data) => {
@@ -189,3 +188,4 @@ export const clearDb = async (id: string) => {
   }
   message.success("卸载成功");
 };
+
