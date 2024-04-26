@@ -9,7 +9,9 @@ import {
 import { useAddCard } from "../../../../../../hooks";
 import { useMit } from "../../../../../../hooks";
 import { navStore } from "../../../../../../store/nav";
+import { addIcon, addNav } from "./add";
 
+import { useIconConversionNav } from "../../../../../../ui/hooks/useDataConversion";
 // 安装实现
 export const installV2 = async (id?: string) => {
   // 获取文件
@@ -108,12 +110,36 @@ const installSuccess = (data: any, id?: string) => {
       icon: currentData._logo,
       type: "ttapp",
     };
+    let data = useFileConversionIcon(iconData);
     useAddCard({
       name: "myIcons",
       data: {
-        iconList: [useFileConversionIcon(iconData)],
+        iconList: [data],
       },
     });
+    // addIcon(currentData);
+    // addNav(currentData);
+    // 添加导航栏图标
+    let navData = useIconConversionNav(iconData);
+    const nav = navStore();
+    const {
+      navigationToggle,
+      copyFootNav,
+      sideNavigationList,
+      rightNavigationList,
+    }: any = storeToRefs(nav);
+    // 添加到底部导航栏
+    if (navigationToggle.value[0]) {
+      copyFootNav.value.push(navData);
+    }
+    // 添加到左侧导航栏
+    else if (navigationToggle.value[1]) {
+      sideNavigationList.value.push(navData);
+    }
+    // 添加到右侧导航栏
+    else if (navigationToggle.value[2]) {
+      rightNavigationList.value.push(navData);
+    }
 
     message.success("安装成功");
     ttappList.value.push(currentData);
@@ -127,10 +153,10 @@ const installSuccess = (data: any, id?: string) => {
     });
     // 更新导航栏
     setTimeout(() => {
-      updateNav(currentData.id)
+      updateNav(currentData.id);
       // useMit.emit("updateNav", currentData.id);
       useMit.emit("updateTTApp", currentData.id);
-  }, 0);
+    }, 0);
   }
 };
 
@@ -143,18 +169,23 @@ const updateNav = (id) => {
     if (navItem) {
       const item = ttApp.select(id);
       navItem.name = item.name;
-      navItem.icon = item._logo; 
+      navItem.icon = item._logo;
     }
   };
 
   // 查找各个导航列表中的对应元素
-  const footIcon = nav.copyFootNav.find(item => item.cardData?.id === id);
-  const leftIcon = nav.sideNavigationList.find(item => item.cardData?.id === id);
-  const rightIcon = nav.rightNavigationList.find(item => item.cardData?.id === id);
+  const footIcon = nav.copyFootNav.find(
+    (item: any) => item.cardData?.id === id
+  );
+  const leftIcon = nav.sideNavigationList.find(
+    (item) => item.cardData?.id === id
+  );
+  const rightIcon = nav.rightNavigationList.find(
+    (item) => item.cardData?.id === id
+  );
 
   // 更新导航元素
   updateNavItem(footIcon);
   updateNavItem(leftIcon);
   updateNavItem(rightIcon);
 };
-
