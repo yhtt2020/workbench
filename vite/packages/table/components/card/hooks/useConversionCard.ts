@@ -11,10 +11,8 @@ export const useConversionCard = (data) => {
     console.log(data,'>>>>>卡片数据')
     const index = data.customIndex
     let name = data.desk.cards.find((item) => item.id === index).name
-    let icon = resetIcon(data)
-    console.log(icon,'<<<<<<<<')
-    let title = resetName(data) || name
-    console.log(title,'>>>>>>>>')
+    let icon = data.header.ifyIcon || data.header.icon || 'fluent:cloud-16-regular'
+    let title = data.header.title || name
     if(updateState(data)){
         title = updateState(data).title
         icon = updateState(data).icon
@@ -102,25 +100,6 @@ const changeName = (name) => {
         name = nameObj[name]
     } 
     return name
-}
-
-// 优化获取图标，兼容卡片类图标
-const resetIcon = (data : any) => {
-    if(data.customData?.preview){
-        console.log(data.customData?._preview,'data.customData?.preview')
-        return data.customData?._preview || 'fluent:cloud-16-regular'
-    } else {
-        return data.header.ifyIcon || data.header.icon || 'fluent:cloud-16-regular'
-    }
-}
-
-
-const resetName = (data : any) => {
-    if(data.customData?.name){
-        return data.customData?.name
-    } else {
-        return data.header.title
-    }
 }
 
 const updateState = ( data: any ) => {

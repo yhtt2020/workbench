@@ -138,12 +138,12 @@ const installSuccess = (data: any, id?: string) => {
 const updateNav = (id) => {
   const nav = navStore();
   const ttApp = useTTAppStore();
-  // 定义一个更新导航元素的辅助函数
+  // 更新导航元素的辅助函数
   const updateNavItem = (navItem) => {
     if (navItem) {
       const item = ttApp.select(id);
       navItem.name = item.name;
-      navItem.icon = item._logo; 
+      navItem.icon = item._logo;
     }
   };
 

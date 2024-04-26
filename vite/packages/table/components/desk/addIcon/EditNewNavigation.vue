@@ -10,6 +10,7 @@
         radius="8" 
         iconSize="16">
       </xt-button>
+      <!-- 起始页 -->
       <StartPage @choose="chooseItem" v-if="isStart"></StartPage>
       <!-- 左侧导航栏 -->
       <xt-left-menu v-else  

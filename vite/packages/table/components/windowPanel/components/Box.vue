@@ -47,12 +47,14 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, watch , nextTick, onMounted } from 'vue'
+import { ref, watch , nextTick, onMounted, getCurrentInstance, onUnmounted } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 
 import Item from './Item.vue'
 
 const emit = defineEmits(['closeAll'])
+
+const { proxy } = getCurrentInstance()
 
 type propsType = {
     list: Array<any>,
@@ -90,10 +92,15 @@ watch(() => mainVisible.value, (val) => {
 })
 
 // 点击外部关闭
-// onMounted(() => {
-//     onClickOutside(message, () => {
-//         mainVisible.value = false
-//     })
-// })
+onMounted(() => {
+    proxy.$bus.on("closeControl", () => {
+        mainVisible.value = false
+    })
+})
+
+// 卸载
+onUnmounted(() => {
+    proxy.$bus.off("closeControl")
+})
 </script>
 <style lang='scss' scoped></style>
