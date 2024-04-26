@@ -7,7 +7,7 @@
         class="object-cover w-full h-full rounded-full"
       />
     </div>
-    <span class="xt-text xt-font font-24"> 欢迎加入，天天工作台官方社群 </span>
+    <span class="xt-text xt-font font-24"> 欢迎加入，{{ communityName }}</span>
     <div class="flex items-center justify-center mt-4" style="width: 362px">
       <div class="flex items-center">
         <div
@@ -28,6 +28,35 @@
 </template>
 
 <script setup>
+import { computed, toRefs } from "vue"
+import { storeToRefs } from "pinia";
+import { chatCommunityStore } from "../../store/chatCommunity";
+import _ from "lodash-es";
+
+const chatCommunity = chatCommunityStore();
+const { myCommunity } = storeToRefs(chatCommunity);
+
+const props = defineProps({
+  no:{
+    type:String,
+    required:true,
+  }
+})
+const { no } = toRefs(props);
+
+
+const communityName = computed(()=>{
+  if(no.value === 1){
+    return '天天工作台官方社群';
+  }
+  else {
+    const index = _.findIndex(myCommunity.value,(item)=>{ return Number(no.value) === Number(item.cno) });
+    if(index > -1){
+      return myCommunity.value[index]?.communityInfo?.name;
+    }
+  }
+})
+
 </script>
 
 <style lang="scss" scoped>

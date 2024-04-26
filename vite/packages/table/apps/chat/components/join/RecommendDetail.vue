@@ -87,7 +87,6 @@ const recommendList = computed(() => {
 
 // 判断是否已经进入推荐社群
 const currentJoin = (data) => {
-  console.log('data',data);
   const findData = _.find(myCommunity.value, function (item) {
     return Number(item?.communityInfo?.no) === Number(data?.no);
   });

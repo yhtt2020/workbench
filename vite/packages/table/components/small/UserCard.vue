@@ -146,8 +146,13 @@
         </div>
       </div>
       <div class="mx-5 mb-4" v-if="uid == myUserInfo.uid">
-        <xt-button block class="" @click="exit">
+        <xt-button v-if="!$useEnv('offline')" block class="" @click="exit">
           <div class="error">退出登录</div>
+        </xt-button>
+        <xt-button v-else block :h="40" @click="reconnect" class="w-full xt-bg-2" key="console" type="theme">
+          <div class="flex">
+          <xt-new-icon  class="mr-2" size="20" icon="fluent:arrow-clockwise-16-regular"></xt-new-icon>
+          尝试重连</div>
         </xt-button>
       </div>
     </div>
@@ -214,6 +219,7 @@ import { useLogout } from "../../permission/user/useLogout";
 import { useEnv } from "../../permission/useEnv";
 import { usePermissionStore } from "../../permission/store";
 import { TUIConversationService } from "@tencentcloud/chat-uikit-engine";
+import { useUpdateUserInfo } from "../../permission/user/useUserPermit";
 
 export default {
   name: "UserCard",
@@ -283,6 +289,9 @@ export default {
   methods: {
     ...mapActions(teamStore, ["getMemberGrade", "getUserMedal"]),
     ...mapActions(appStore, ["getUserCard"]),
+    reconnect() {
+      useUpdateUserInfo()
+    },
     exit() {
       window.$ui.confirm("确定退出登录吗？", "", {
         okText: "确定",

@@ -33,7 +33,6 @@ const returnPreviousStep = () => {
 };
 // 下一步
 const nextClass = () => {
-  console.log('测试',currentChat.value);
   chatVisible.value = false;
   emit("next",currentChat.value.listIndex);
 };

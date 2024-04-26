@@ -71,7 +71,6 @@ const submitForward = (list) => {
     "singleForwardMessageID"
   );
   const message = TUIStore.getMessageModel(singleForwardMessageID);
-  console.log('测试',selectedConversationList,message);
   TUIChatService.sendForwardMessage(selectedConversationList, [message], {
     needReadReceipt: isEnabledMessageReadReceiptGlobal(),
   })
