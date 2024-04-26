@@ -1,5 +1,6 @@
 import { defaultData } from "../../../ui/hooks/useDataConversion"
 import { nanoid } from "nanoid"
+import { useTTAppStore } from "../../../apps/ttApp/src/store"
 
 /**
  * 统一添加到到导航栏的卡片数据
@@ -7,10 +8,18 @@ import { nanoid } from "nanoid"
  * @returns
  */
 export const useConversionCard = (data) => {
+    console.log(data,'>>>>>卡片数据')
     const index = data.customIndex
     let name = data.desk.cards.find((item) => item.id === index).name
-    const icon = data.header.ifyIcon || data.header.icon || 'fluent:cloud-16-regular'
-    let title = data.header.title || name
+    let icon = resetIcon(data)
+    console.log(icon,'<<<<<<<<')
+    let title = resetName(data) || name
+    console.log(title,'>>>>>>>>')
+    if(updateState(data)){
+        title = updateState(data).title
+        icon = updateState(data).icon
+    }
+    
     // 替换英文名称
     title = changeName(title)
     // 首字母强制大写
@@ -27,7 +36,8 @@ export const useConversionCard = (data) => {
             customIndex:index,  // 卡片在导航栏中的索引
             customData:data.customData || {customSize:data.customSize}, // 卡片自定义数据
             customSize:data.customSize, // 卡片自定义尺寸
-            desk:data.desk // 卡片所在的桌面
+            desk:data.desk, // 卡片所在的桌面
+            id:data.customData.parentId
         },
         id:nanoid(6),
     }
@@ -90,8 +100,39 @@ const nameObj = {
 const changeName = (name) => {
     if(nameObj[name]){
         name = nameObj[name]
-        // console.log(nameObj[name],name,'nameObj[name]')
-    }
+    } 
     return name
 }
 
+// 优化获取图标，兼容卡片类图标
+const resetIcon = (data : any) => {
+    if(data.customData?.preview){
+        console.log(data.customData?._preview,'data.customData?.preview')
+        return data.customData?._preview || 'fluent:cloud-16-regular'
+    } else {
+        return data.header.ifyIcon || data.header.icon || 'fluent:cloud-16-regular'
+    }
+}
+
+
+const resetName = (data : any) => {
+    if(data.customData?.name){
+        return data.customData?.name
+    } else {
+        return data.header.title
+    }
+}
+
+const updateState = ( data: any ) => {
+    const ttApp = useTTAppStore()
+    if(data.customData?.parentId){
+        const id = data.customData.parentId
+        const item = ttApp.select(id)
+        console.log(item,'item')
+        return {
+            title : item.name,
+            icon : item._logo
+        }
+    } 
+    return false
+}
