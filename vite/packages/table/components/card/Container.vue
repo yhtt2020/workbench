@@ -16,7 +16,7 @@
   >
     <div class="menu-box">
       <!-- 遮罩层 离线模式遮罩 -->
-      <div class="mask rounded-xl" v-if="envLimit.includes('offline') && courierStatus">
+      <div class="mask rounded-xl" v-if="envLimit.includes('offline') && usePermission.isOffline && !$usePlat()">
         <div class="mask-box">
           <p class="flex justify-center">
             <xt-new-icon  class="mr-2" :size="cardH<=2?'60':'100'" icon="fluent-emoji:airplane"></xt-new-icon>
@@ -173,7 +173,7 @@
         </div>
         <!-- 小组件头部结束 -->
         <!-- 小组件主体开始 -->
-        <xt-status :name="header.title" :status="envLimit" imgSize="75">
+        <xt-status :name="header.title" :status="envLimitStatus" imgSize="75">
           <div
             class="flex-1 h-full rounded-b-lg"
             :style="[
@@ -260,6 +260,9 @@ const props = defineProps(defaultProps);
 const { header } = toRefs(props);
 const courierStatus = computed(() => {
   return window.$usePlat()
+});
+const envLimitStatus = computed(() => {
+  return props.envLimit.filter(item => item != 'offline')
 });
 
 // 键盘事件
