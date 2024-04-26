@@ -1,5 +1,8 @@
 <template>
   <xtMixMenu :menus="mainOption" name="name" class="flex max-w-full">
+    <template #extraMenu>
+      <ExtraMenu />
+    </template>
     <!-- xt-main-bottom-bar 定位类不可删 -->
 
     <!-- mac版导航栏 -->
@@ -183,6 +186,7 @@ import DeskAppModal from "./bottomPanel/desk/DeskAppList.vue";
 import { startApp } from "../ui/hooks/useStartApp";
 
 import mainMin from './windowPanel/hook/mainMenu'
+import ExtraMenu from './windowPanel/components/ExtraMenu.vue';
 
 export default {
   name: "BottomPanel",
@@ -208,6 +212,7 @@ export default {
     Setting,
     ComNavSearch,
     DeskAppModal,
+    ExtraMenu
   },
   data() {
     return {

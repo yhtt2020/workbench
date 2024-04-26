@@ -8,7 +8,6 @@ import { useTTAppStore } from "../../../apps/ttApp/src/store"
  * @returns
  */
 export const useConversionCard = (data) => {
-    console.log(data,'>>>>>卡片数据')
     const index = data.customIndex
     let name = data.desk.cards.find((item) => item.id === index).name
     let icon = data.header.ifyIcon || data.header.icon || 'fluent:cloud-16-regular'
@@ -102,6 +101,7 @@ const changeName = (name) => {
     return name
 }
 
+// 获取第三方卡片自定义数据
 const updateState = ( data: any ) => {
     const ttApp = useTTAppStore()
     if(data.customData?.parentId){
