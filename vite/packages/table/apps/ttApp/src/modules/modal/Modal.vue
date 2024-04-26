@@ -23,15 +23,17 @@ onUnmounted(() => {
   proxy.$bus.off("updateTTApp");
 });
 
-onMounted(() => {
-  proxy.$bus.on("updateTTApp", (id: string) => {
+onBeforeMount(async () => {
+  proxy.$bus.on("updateTTApp", async (id: string) => {
     const parentId = modal.value.id;
     // 非自己更新无需操作
     if (parentId != id) {
       return;
     }
-    init();
+    await init();
   });
+
+  await init();
 });
 
 const appCenterStore = useAppCenterStore();
@@ -51,11 +53,14 @@ const socializeList: any = ref([]);
 /** 初始化方法 */
 const init = async () => {
   let res = ttappStore.select(modal.value.id);
-
+  console.log("modal.value.id :>> ", modal.value.id);
+  console.log("res :>> ", res);
+  console.log("modal.value :>> ", modal.value);
   if (!res) {
-    modal.value.visible = false;
-    return;
+    // modal.value.visible = false;
+    // return;
   }
+  console.log("2222 :>> ", 2222);
   // 有社区
   const community = data?.community;
   if (community) {
@@ -87,11 +92,13 @@ const init = async () => {
     socializeList.value.push(obj);
   }
   res.socializeList = socializeList;
+  console.log("初始化到这里了 :>> ", 222222);
   // 获取用户信息 没写完
-  await ttappStore.getUserInfo(res.uid || 1);
+  // await ttappStore.getUserInfo(res.uid || 1);
 
   // 完成
   data.value = res;
+  console.log("初始化完成 :>> ", 222222);
   loading.value = false;
 };
 
@@ -140,9 +147,6 @@ watch(
     deep: true,
   }
 );
-onBeforeMount(() => {
-  init();
-});
 
 /** 最大化 */
 
@@ -208,12 +212,12 @@ watch(
   (val) => {
     console.log("val :>> ", val);
     // 数据没加载时不执行
-    if (!val) return;
-    nextTick(() => {
-      perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {
-        wheelPropagation: false,
-      });
-    });
+    // if (!val) return;
+    // nextTick(() => {
+    //   perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {
+    //     wheelPropagation: false,
+    //   });
+    // });
   },
   {
     immediate: true,
@@ -291,67 +295,69 @@ const settingClose = () => {
   >
     <!-- 头部左侧区域 -->
     <template #header-left>
-      <tippy
-        :z-index="99999999999"
-        trigger="click"
-        placement="bottom"
-        :interactive="true"
-      >
-        <!-- mouseenter -->
-        <div
-          class="group header-left hover:tt-theme-bg-2 relative pl-2 rounded-lg title h-[32px] flex items-center text-sm cursor-pointer"
+      <div class="box">
+        <tippy
+          :z-index="99999999999"
+          trigger="click"
+          placement="bottom"
+          :interactive="true"
         >
-          <a-avatar shape="square" class="" :size="16" :src="data._logo" />
-          <span class="mx-2">{{ data.name }}</span>
-        </div>
-        <template #content>
+          <!-- mouseenter -->
           <div
-            class="transition-all tt-shadow rounded-xl tt-modal-bg px-2 pt-2 mb-[1px] w-[240px] ml-[120px]"
-            @click.stop.prevent=""
+            class="group header-left hover:tt-theme-bg-2 relative pl-2 rounded-lg title h-[32px] flex items-center text-sm cursor-pointer"
           >
-            <!-- class="header-left-menu transition-all tt-shadow rounded-xl tt-modal-bg px-2 pt-2 absolute top-[35px] left-0 z-[999999] w-[240px]" -->
-            <div class="flex text-sm mb-2 p-2">
-              <a-avatar
-                shape="circular"
-                :size="36"
-                :src="modal.userInfo?.avatar"
+            <a-avatar shape="square" class="" :size="16" :src="data._logo" />
+            <span class="mx-2">{{ data.name }}</span>
+          </div>
+          <template #content>
+            <div
+              class="transition-all tt-shadow rounded-xl tt-modal-bg px-2 pt-2 mb-[1px] w-[240px] ml-[120px]"
+              @click.stop.prevent=""
+            >
+              <!-- class="header-left-menu transition-all tt-shadow rounded-xl tt-modal-bg px-2 pt-2 absolute top-[35px] left-0 z-[999999] w-[240px]" -->
+              <div class="flex text-sm mb-2 p-2">
+                <a-avatar
+                  shape="circular"
+                  :size="36"
+                  :src="modal.userInfo?.avatar"
+                />
+                <div class="ml-2">
+                  <div class="text-sm">{{ modal.userInfo?.name }}</div>
+                  <div class="tt-text-2 mt-1 text-xs">开发者</div>
+                </div>
+              </div>
+              <!-- 社交功能 -->
+              <hr
+                style="margin-bottom: 8px !important"
+                v-if="socializeList.length"
               />
-              <div class="ml-2">
-                <div class="text-sm">{{ modal.userInfo?.name }}</div>
-                <div class="tt-text-2 mt-1 text-xs">开发者</div>
+              <div
+                v-for="item in socializeList"
+                class="flex h-[40px] items-center mb-2 hover:tt-theme-bg-2 rounded-xl pl-3"
+                @click.stop.prevent="item.fn"
+              >
+                <xt-mix-icon
+                  class="mr-2 tt-modal-bg"
+                  type="select"
+                  :icon="item?.icon"
+                />
+                {{ item.name }}
+              </div>
+
+              <!-- 基础功能 -->
+              <hr style="margin-bottom: 8px !important" />
+              <div
+                class="flex h-[40px] items-center mb-2 hover:tt-theme-bg-2 rounded-xl pl-3"
+                @click.stop.prevent="item.fn"
+                v-for="item in leftBaseMenu"
+              >
+                <xt-mix-icon class="mr-2 tt-modal-bg" :icon="item.icon" />
+                {{ item.name }}
               </div>
             </div>
-            <!-- 社交功能 -->
-            <hr
-              style="margin-bottom: 8px !important"
-              v-if="socializeList.length"
-            />
-            <div
-              v-for="item in socializeList"
-              class="flex h-[40px] items-center mb-2 hover:tt-theme-bg-2 rounded-xl pl-3"
-              @click.stop.prevent="item.fn"
-            >
-              <xt-mix-icon
-                class="mr-2 tt-modal-bg"
-                type="select"
-                :icon="item?.icon"
-              />
-              {{ item.name }}
-            </div>
-
-            <!-- 基础功能 -->
-            <hr style="margin-bottom: 8px !important" />
-            <div
-              class="flex h-[40px] items-center mb-2 hover:tt-theme-bg-2 rounded-xl pl-3"
-              @click.stop.prevent="item.fn"
-              v-for="item in leftBaseMenu"
-            >
-              <xt-mix-icon class="mr-2 tt-modal-bg" :icon="item.icon" />
-              {{ item.name }}
-            </div>
-          </div>
-        </template>
-      </tippy>
+          </template>
+        </tippy>
+      </div>
     </template>
     <!-- 头部右侧区域 -->
     <template #header-right>
@@ -366,7 +372,7 @@ const settingClose = () => {
       </xt-button>
       <xt-button
         title="打开社群"
-        v-if="data.community"
+        v-if="data?.community"
         class="ml-3 tt-modal-button"
         w="32"
         h="32"
@@ -415,11 +421,13 @@ const settingClose = () => {
   </xt-modal>
 </template>
 <style lang="scss" scoped>
-:deep(.tippy-box) {
-  background-color: none !important;
-}
-.tippy-box {
-  background-color: none !important;
+.box {
+  :deep(.tippy-box) {
+    background-color: none !important;
+  }
+  .tippy-box {
+    background-color: none !important;
+  }
 }
 
 :deep(.tippy-content) {

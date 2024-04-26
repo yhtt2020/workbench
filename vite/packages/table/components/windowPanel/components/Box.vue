@@ -1,5 +1,25 @@
 <template>
+    <!-- 单个 -->
     <div 
+        v-if="list.length == 1" 
+        class="flex items-center justify-center h-full" 
+        @click.stop.prevent="openMain">
+        <xt-new-Icon 
+            :icon="list[0].icon" 
+            size="24" 
+            class="flex-shrink-0" 
+            v-if="list[0].icon" >
+        </xt-new-Icon>
+        <a-avatar 
+            :size="24" 
+            :src="list[0].avatar" 
+            v-else-if="list[0].avatar" 
+            class="flex-shrink-0" >
+        </a-avatar>
+    </div>
+    <!-- 多个 -->
+    <div 
+        v-else
         @click.stop.prevent="openMain"
         class="w-[40px] h-[40px] xt-main-bg rounded-lg flex flex-wrap relative gap-1 p-1.5"
         :class="[list.length === 1 ? 'items-center justify-center' : '']">
@@ -12,8 +32,8 @@
             size="12" 
             v-if="list.length > 3">
         </xt-new-icon>
-        
     </div>
+    <!-- 弹窗显示粗略信息-->
     <Teleport to="body">
         <div 
             ref="message"
@@ -27,12 +47,14 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, watch , nextTick, onMounted } from 'vue'
+import { ref, watch , nextTick, onMounted, getCurrentInstance, onUnmounted } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 
 import Item from './Item.vue'
 
 const emit = defineEmits(['closeAll'])
+
+const { proxy } = getCurrentInstance()
 
 type propsType = {
     list: Array<any>,
@@ -70,10 +92,15 @@ watch(() => mainVisible.value, (val) => {
 })
 
 // 点击外部关闭
-// onMounted(() => {
-//     onClickOutside(message, () => {
-//         mainVisible.value = false
-//     })
-// })
+onMounted(() => {
+    proxy.$bus.on("closeControl", () => {
+        mainVisible.value = false
+    })
+})
+
+// 卸载
+onUnmounted(() => {
+    proxy.$bus.off("closeControl")
+})
 </script>
 <style lang='scss' scoped></style>

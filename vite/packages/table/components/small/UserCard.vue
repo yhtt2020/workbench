@@ -1,6 +1,6 @@
 <template>
   <div style="max-width: 100%; width: 360px" class="flex-col">
-    <div class="flex items-center my-3 mx-3">
+    <div class="flex items-center mx-3 my-3">
       <div
         class="pt-2 ml-2"
         style="
@@ -39,12 +39,12 @@
         </a-tooltip>
       </div>
       <div class="flex flex-col ml-2" style="flex: 1">
-        <div class="mb-1 xt-text font-bold truncate">
+        <div class="mb-1 font-bold truncate xt-text">
           {{ displayUserInfo.nickname }}
         </div>
         <div>
           <div
-            class="rounded-md px-2 bg-mask inline-block font-bold"
+            class="inline-block px-2 font-bold rounded-md bg-mask"
             style="background: var(--primary-bg); width: auto"
           >
             UID: {{ uid }}
@@ -56,7 +56,7 @@
           overlayClassName="xt-text "
           overlayStyle="background:var(--primary-bg-solid)"
         >
-          <div class="xt-text p-3 cursor-pointer">
+          <div class="p-3 cursor-pointer xt-text">
             <icon icon="gengduo2"></icon>
           </div>
 
@@ -96,20 +96,20 @@
     </div>
     <div class="flex flex-col mb-4">
       <div
-        class="bg-mask rounded-lg py-3 px-2 m-3 mx-5 mt-2 mb-2"
+        class="px-2 py-3 m-3 mx-5 mt-2 mb-2 rounded-lg bg-mask"
         style="
           min-height: 24px;
           background: var(--primary-bg);
           color: var(--primary-text);
         "
       >
-        个性签22名：
+        个性签名：
         <div class="px-2" style="word-break: break-all; white-space: pre-wrap">
           {{ displayUserInfo.signature || "暂无签名" }}
         </div>
       </div>
       <div
-        class="bg-mask rounded-lg p-3 mx-5 m-3 mt-2 mb-0"
+        class="p-3 m-3 mx-5 mt-2 mb-0 rounded-lg bg-mask"
         style="
           min-height: 77px;
           background: var(--primary-bg);
@@ -129,25 +129,30 @@
     </div>
     <div class="flex flex-col">
       <div
-        class="mb-4 pd-0 m-3 p-1 mx-5 mt-0"
+        class="p-1 m-3 mx-5 mt-0 mb-4 pd-0"
         style="color: var(--primary-text)"
       >
         成就勋章
       </div>
       <div
-        class="bg-mask rounded-lg p-2 m-3 mx-5 mt-0"
+        class="p-2 m-3 mx-5 mt-0 rounded-lg bg-mask"
         style="background: var(--primary-bg); color: var(--primary-text)"
       >
         <div
-          class="flex flex-wrap justify-start justify-items-center items-center w-full"
+          class="flex flex-wrap items-center justify-start w-full justify-items-center"
         >
           <Medal :size="50" :medal="medal" v-for="medal in medals"></Medal>
           <div class="text-center" v-if="medals.length === 0">空空如也</div>
         </div>
       </div>
       <div class="mx-5 mb-4" v-if="uid == myUserInfo.uid">
-        <xt-button block class="" @click="exit">
+        <xt-button v-if="!$useEnv('offline')" block class="" @click="exit">
           <div class="error">退出登录</div>
+        </xt-button>
+        <xt-button v-else block :h="40" @click="reconnect" class="w-full xt-bg-2" key="console" type="theme">
+          <div class="flex">
+          <xt-new-icon  class="mr-2" size="20" icon="fluent:arrow-clockwise-16-regular"></xt-new-icon>
+          尝试重连</div>
         </xt-button>
       </div>
     </div>
@@ -162,7 +167,7 @@
             @click="addFriend"
             v-if="relationship === 'not'"
             style="width: 100%"
-            class="rounded-full w-full"
+            class="w-full rounded-full"
           >
             <icon style="font-size: 16px" class="mr-1" icon="tianjia1"></icon>
             加为好友
@@ -171,7 +176,7 @@
             @click="deleteFriend"
             v-else-if="relationship === 'yes'"
             style="width: 100%"
-            class="rounded-full w-full"
+            class="w-full rounded-full"
           >
             <icon style="font-size: 16px" class="mr-1" icon="guanbi2"></icon>
             解除好友
@@ -214,6 +219,7 @@ import { useLogout } from "../../permission/user/useLogout";
 import { useEnv } from "../../permission/useEnv";
 import { usePermissionStore } from "../../permission/store";
 import { TUIConversationService } from "@tencentcloud/chat-uikit-engine";
+import { useUpdateUserInfo } from "../../permission/user/useUserPermit";
 
 export default {
   name: "UserCard",
@@ -283,6 +289,9 @@ export default {
   methods: {
     ...mapActions(teamStore, ["getMemberGrade", "getUserMedal"]),
     ...mapActions(appStore, ["getUserCard"]),
+    reconnect() {
+      useUpdateUserInfo()
+    },
     exit() {
       window.$ui.confirm("确定退出登录吗？", "", {
         okText: "确定",
