@@ -70,13 +70,12 @@ const previewData = ref({
   size: "",
 });
 const addPreview = (data: any) => {
-  console.log("data :>> ", data);
+
   previewData.value = {
     name: "TTAppCard",
     data,
     size: data.size,
   };
-  console.log("previewData.value :>> ", previewData.value);
   previewVisible.value = true;
 };
 /** 打开主应用弹窗 */
