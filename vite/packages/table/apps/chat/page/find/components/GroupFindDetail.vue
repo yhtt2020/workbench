@@ -66,7 +66,6 @@ const { groupList } = toRefs(props);
 // 添加群聊
 const addGroup = async (id) => {
   const option = { groupID: id };
-  console.log('测试',option);
   const res =  await chatServer.joinGroup(option);
   if(res.code === 0){
     const conversationID =  `GROUP${id}`;
