@@ -54,7 +54,7 @@
             </Dock>
           </Drop>
           <!-- 社群开关开启后,用户头像信息放底部导航栏右侧 -->
-          <UserNavBar
+          <UserBar
             v-if="communityNavVisible"
             @openControl="openControl"
             :navSize="navAttribute.navRadius"
@@ -171,7 +171,6 @@ import AutoHide from "./desk/navigationBar/components/folder/AutoHide.vue";
 import { mergeData } from "../ui/hooks/useDataConversion";
 import UserBar from "./bottomPanel/UserBar.vue";
 import Dock from "./bottomPanel/Dock.vue";
-import UserNavBar from "./bottomPanel/community/UserNavBar.vue";
 import CommunityNav from "./bottomPanel/community/CommunityNav.vue";
 import TeamNav from "./bottomPanel/community/TeamNav.vue";
 import AppModal from "./bottomPanel/community/AppModal.vue";
@@ -202,7 +201,6 @@ export default {
     AutoHide,
     Favorites,
     UserBar,
-    UserNavBar,
     CommunityNav,
     TeamNav,
     AppModal,
