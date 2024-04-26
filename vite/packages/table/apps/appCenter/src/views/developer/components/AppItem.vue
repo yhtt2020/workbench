@@ -5,6 +5,9 @@ import { storeToRefs } from "pinia";
 import { installV2 } from "../hooks/installV2";
 import { uninstall } from "../hooks/uninstall";
 import { addIcon, addNav } from "../hooks/add";
+import { navStore as useNavStore } from "../../../../../../store/nav";
+const navStore = useNavStore();
+const { navigationToggle } = storeToRefs(navStore);
 const { item } = defineProps<{ item: any }>();
 // ttapp数据
 const ttappStore: any = useTTAppStore();
@@ -32,11 +35,13 @@ const menus = computed(() => {
         {
           name: "底部导航栏",
           newIcon: "fluent:desktop-16-regular",
+          disabled: !navigationToggle.value[2],
           cb: () => {
             addNav(item, "bottom");
           },
         },
         {
+          disabled: !navigationToggle.value[0],
           name: "左侧导航栏",
           newIcon: "fluent:desktop-16-regular",
           cb: () => {
@@ -44,6 +49,7 @@ const menus = computed(() => {
           },
         },
         {
+          disabled: !navigationToggle.value[1],
           name: "右侧导航栏",
           newIcon: "fluent:desktop-16-regular",
           cb: () => {
@@ -118,6 +124,7 @@ const entry = () => {
 </script>
 
 <template>
+
   <!-- 添加时预览组件 -->
   <xt-preview-v2
     v-if="previewVisible"
