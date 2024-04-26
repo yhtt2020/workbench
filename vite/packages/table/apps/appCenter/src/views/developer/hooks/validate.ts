@@ -56,7 +56,7 @@ export const navValidate = (navId: any, id: string) => {
 };
 /** 图标验证 */
 export const iconValidate = (iconId: any, data: any) => {
-  if (data.type !== "ttapp") {
+  if (data?.type !== "ttapp") {
     return true;
   }
   return cardValidate(iconId, data.value);
