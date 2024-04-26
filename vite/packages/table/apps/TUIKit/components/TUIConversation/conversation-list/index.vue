@@ -13,7 +13,7 @@
       :key="index"
       :class="[
         'tui-conversation-content',
-        !isPC && 'tui-conversation-content-h5',
+        isMobile && 'tui-conversation-content-h5 disable-select',
       ]"
       class="relative"
     >
@@ -135,7 +135,6 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
 
 interface IUserStatus {
   statusType: number;
@@ -146,19 +145,19 @@ interface IUserStatusMap {
   [userID: string]: IUserStatus;
 }
 
-import { ref } from "../../../adapter-vue";
+import { ref,computed,onMounted,onUnmounted } from "../../../adapter-vue";
 import TUIChatEngine, {
   TUIStore,
   StoreName,
   TUIConversationService,
   IConversationModel,
-} from "@tencentcloud/chat-uikit-engine";
-import { TUIGlobal } from "@tencentcloud/universal-api";
-import Icon from "../../common/Icon.vue";
-import Avatar from "../../common/Avatar/index.vue";
-import ActionsMenu from "../actions-menu/index.vue";
-import muteIcon from "../../../assets/icon/mute.svg";
-import { isPC, isH5, isUniFrameWork } from "../../../utils/env";
+} from '@tencentcloud/chat-uikit-engine';
+import { TUIGlobal, isIOS, addLongPressListener } from '@tencentcloud/universal-api';
+import Icon from '../../common/Icon.vue';
+import Avatar from '../../common/Avatar/index.vue';
+import ActionsMenu from '../actions-menu/index.vue';
+import muteIcon from '../../../assets/icon/mute.svg';
+import { isPC, isH5, isUniFrameWork, isMobile } from '../../../utils/env';
 
 const emits = defineEmits(["handleSwitchConversation", "getPassingRef"]);
 const currentConversation = ref<IConversationModel>();
@@ -167,52 +166,57 @@ const currentConversationDomRect = ref<DOMRect>();
 const isShowOverlay = ref<boolean>(false);
 const conversationList = ref<IConversationModel[]>([]);
 const conversationListDomRef = ref<HTMLElement | undefined>();
+const conversationListInnerDomRef = ref<HTMLElement | undefined>();
 const actionsMenuPosition = ref<{
   top: number;
-  left?: number;
-  conversationHeight?: number;
+  left: number | undefined;
+  conversationHeight: number | undefined;
 }>({
   top: 0,
+  left: undefined,
+  conversationHeight: undefined,
 });
 const displayOnlineStatus = ref(false); // 在线状态 默认关闭
 const userOnlineStatusMap = ref<IUserStatusMap>();
 
 let lastestOpenActionsMenuTime: number | null = null;
 
-TUIStore.watch(StoreName.CONV, {
-  currentConversationID: (id: string) => {
-    currentConversationID.value = id;
-  },
-  conversationList: (list: Array<IConversationModel>) => {
-    conversationList.value = list;
-  },
-  currentConversation: (conversation: IConversationModel) => {
-    currentConversation.value = conversation;
-  },
+onMounted(() => {
+  TUIStore.watch(StoreName.CONV, {
+    currentConversationID: onCurrentConversationIDUpdated,
+    conversationList: onConversationListUpdated,
+    currentConversation: onCurrentConversationUpdated,
+  });
+
+  // 初始状态
+  TUIStore.watch(StoreName.USER, {
+    displayOnlineStatus: onDisplayOnlineStatusUpdated,
+    userStatusList: onUserStatusListUpdated,
+  });
+
+  if (!isUniFrameWork && isIOS && !isPC) {
+    addLongPressHandler();
+  }
 });
 
-// 初始状态
-TUIStore.watch(StoreName.USER, {
-  displayOnlineStatus: (status: boolean) => {
-    displayOnlineStatus.value = status;
-  },
-  userStatusList: (list: Map<string, IUserStatus>) => {
-    if (list.size !== 0) {
-      userOnlineStatusMap.value = [...list.entries()].reduce(
-        (obj, [key, value]) => {
-          obj[key] = value;
-          return obj;
-        },
-        {} as IUserStatusMap
-      );
-    }
-  },
+onUnmounted(() => {
+  TUIStore.unwatch(StoreName.CONV, {
+    currentConversationID: onCurrentConversationIDUpdated,
+    conversationList: onConversationListUpdated,
+    currentConversation: onCurrentConversationUpdated,
+  });
+
+  // 初始状态
+  TUIStore.unwatch(StoreName.USER, {
+    displayOnlineStatus: onDisplayOnlineStatusUpdated,
+    userStatusList: onUserStatusListUpdated,
+  });
 });
 
 const isShowUserOnlineStatus = (conversation: IConversationModel): boolean => {
   return (
-    displayOnlineStatus.value &&
-    conversation.type === TUIChatEngine.TYPES.CONV_C2C
+    displayOnlineStatus.value
+    && conversation.type === TUIChatEngine.TYPES.CONV_C2C
   );
 };
 
@@ -220,10 +224,13 @@ const showConversationActionMenu = (
   event: Event,
   conversation: IConversationModel,
   index: number,
-  isContextMenuEvent?: boolean
+  isContextMenuEvent?: boolean,
 ) => {
-  if (isContextMenuEvent && isUniFrameWork) {
-    return;
+  if (isContextMenuEvent) {
+    event.preventDefault();
+    if (isUniFrameWork) {
+      return;
+    }
   }
   currentConversation.value = conversation;
   lastestOpenActionsMenuTime = Date.now();
@@ -233,8 +240,8 @@ const showConversationActionMenu = (
 const closeConversationActionMenu = () => {
   // 防止连续触发overlay的tap事件
   if (
-    lastestOpenActionsMenuTime &&
-    Date.now() - lastestOpenActionsMenuTime > 300
+    lastestOpenActionsMenuTime
+    && Date.now() - lastestOpenActionsMenuTime > 300
   ) {
     currentConversation.value = undefined;
     isShowOverlay.value = false;
@@ -243,33 +250,29 @@ const closeConversationActionMenu = () => {
 
 const getActionsMenuPosition = (event: Event, index: number) => {
   if (isUniFrameWork) {
-    if (typeof conversationListDomRef.value === "undefined") {
-      emits("getPassingRef", conversationListDomRef);
+    if (typeof conversationListDomRef.value === 'undefined') {
+      emits('getPassingRef', conversationListDomRef);
     }
-    const query = TUIGlobal?.createSelectorQuery().in(
-      conversationListDomRef.value
-    );
-    query
-      .select(`#convlistitem-${index}`)
-      .boundingClientRect((data) => {
-        if (data) {
-          actionsMenuPosition.value = {
-            // uni-h5的uni-page-head不被认为是视窗中的成员，因此手动上head的高度
-            top: data.bottom + (isH5 ? 44 : 0),
-            left: event.touches[0].pageX,
-            conversationHeight: data.height,
-          };
-          isShowOverlay.value = true;
-        }
-      })
-      .exec();
+    const query = TUIGlobal?.createSelectorQuery().in(conversationListDomRef.value);
+    query.select(`#convlistitem-${index}`).boundingClientRect((data) => {
+      if (data) {
+        actionsMenuPosition.value = {
+          // uni-h5的uni-page-head不被认为是视窗中的成员，因此手动上head的高度
+          top: data.bottom + (isH5 ? 44 : 0),
+          // @ts-expect-error in uniapp event has touches property
+          left: event.touches[0].pageX,
+          conversationHeight: data.height,
+        };
+        isShowOverlay.value = true;
+      }
+    }).exec();
   } else {
     // 处理Vue原生
-    const rect = (event.currentTarget as HTMLElement)?.getBoundingClientRect();
+    const rect = ((event.currentTarget || event.target) as HTMLElement)?.getBoundingClientRect() || {};
     if (rect) {
       actionsMenuPosition.value = {
         top: rect.bottom,
-        left: isPC ? event.clientX : undefined,
+        left: isPC ? (event as MouseEvent).clientX : undefined,
         conversationHeight: rect.height,
       };
     }
@@ -282,6 +285,53 @@ const enterConversationChat = (conversationID: string) => {
   TUIConversationService.switchConversation(conversationID);
 };
 
+function addLongPressHandler() {
+  if (!conversationListInnerDomRef.value) {
+    return;
+  }
+  addLongPressListener({
+    element: conversationListInnerDomRef.value,
+    onLongPress: (event, target) => {
+      const index = (Array.from(conversationListInnerDomRef.value!.children) as HTMLElement[]).indexOf(target!);
+      showConversationActionMenu(event, conversationList.value[index], index);
+    },
+    options: {
+      eventDelegation: {
+        subSelector: '.tui-conversation-content',
+      },
+    },
+  });
+}
+
+function onCurrentConversationUpdated(conversation: IConversationModel) {
+  currentConversation.value = conversation;
+}
+
+function onConversationListUpdated(list: IConversationModel[]) {
+  conversationList.value = list;
+}
+
+function onCurrentConversationIDUpdated(id: string) {
+  currentConversationID.value = id;
+}
+
+function onDisplayOnlineStatusUpdated(status: boolean) {
+  displayOnlineStatus.value = status;
+}
+
+function onUserStatusListUpdated(list: Map<string, IUserStatus>) {
+  if (list.size !== 0) {
+    userOnlineStatusMap.value = [...list.entries()].reduce(
+      (obj, [key, value]) => {
+        obj[key] = value;
+        return obj;
+      },
+      {} as IUserStatusMap,
+    );
+  }
+}
+
+/**新增修改**/ 
 const text = (conversation: any) => {
   const isUserName = conversation.userProfile?.nick;
   const isGroupName = conversation.lastMessage?.nick;
@@ -309,3 +359,13 @@ defineExpose({ closeChildren: closeConversationActionMenu });
 </script>
 
 <style lang="scss" scoped src="./style/index.scss"></style>
+<style lang="scss" scoped>
+.disable-select {
+  -webkit-touch-callout:none;
+  -webkit-user-select:none;
+  -khtml-user-select:none;
+  -moz-user-select:none;
+  -ms-user-select:none;
+  user-select:none;
+}
+</style>

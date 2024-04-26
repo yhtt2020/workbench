@@ -141,7 +141,6 @@ const searchGroup = () => {
     window.$chat?.chat
       ?.searchGroupByID(data.value.searchId)
       .then((res) => {
-        console.log("res", res);
         if (res.code === 0) {
           const { group } = res.data;
           const isSome = data.value.searchResult.some(
