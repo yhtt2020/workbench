@@ -26,17 +26,14 @@ export const useUserPermit = async () => {
       return res;
     }
 
-    // 清楚游客模式
-    permissionStore.setGuest(false)
-
     // 离线模式
     if(permissionStore.isOffline) {
       return;
-    }else{
-      // 没token 或者 没用户信息
-      useLogout();
     }
   }
+  // 清楚游客模式
+  permissionStore.setGuest(false)
+  useLogout();
   return false;
 };
 

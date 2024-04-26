@@ -37,13 +37,20 @@
     <div class="flex flex-col" :class="rankList.length === 0 ? 'w-32' : ''"  @click="goMy">
       <span class="xt-text font-16 xt-font ml-3">{{ userinfo?.nickname }}</span>
       <div class="flex xt-text">
-        <OnlineMedal :rank="userinfo?.onlineGradeExtra.rank" />
-        <Medal
-          :zoom="0.5"
-          style="margin-top: 5px; margin-right: 5px"
-          v-for="medal of rankList"
-          :medal="medal"
-        />
+        <template v-if="!$useEnv('offline')">
+          <OnlineMedal :rank="userinfo?.onlineGradeExtra.rank" />
+          <Medal
+            :zoom="0.5"
+            style="margin-top: 5px; margin-right: 5px"
+            v-for="medal of rankList"
+            :medal="medal"
+          />
+        </template>
+        <xt-button v-else block :h="40" @click="useUpdateUserInfo" class="ml-3 xt-bg-2" key="console" type="theme">
+          <div class="flex">
+          <xt-new-icon  class="mr-2" size="20" icon="fluent:arrow-clockwise-16-regular"></xt-new-icon>
+          尝试重连</div>
+        </xt-button>
       </div>
     </div>
   </div>
@@ -60,6 +67,7 @@ import FrameAvatar from "../../../../../components/avatar/FrameAvatar.vue";
 import Medal from "../../../../../components/team/Medal.vue";
 import OnlineMedal from "../../../../../components/team/OnlineMedal.vue";
 import { usePermissionStore } from "../../../../../permission/store";
+import { useUpdateUserInfo } from "../../../../../permission/user/useUserPermit";
 const props = defineProps({
   userinfo: {
     type: Object,
