@@ -105,7 +105,7 @@ export const chatStore = defineStore("chatStore", {
     async updateUserInfo() {
       const app: any = appStore();
       let { userInfo } = storeToRefs(app);
-      await (window as any).$chat?.chat?.updateMyProfile({
+      await (window as any).$chat?.updateMyProfile({
         nick: userInfo.value.nickname,
         avatar: userInfo.value.avatar,
         selfSignature: String(userInfo.value.signature),
@@ -144,7 +144,7 @@ export const chatStore = defineStore("chatStore", {
       for (let i = 0; i < this.group.length; i++) {
         try {
           const option = this.group[i].groupID;
-          const result = await (window as any).$chat.chat.searchGroupByID(
+          const result = await (window as any).$chat.searchGroupByID(
             option
           );
           const group = { ...result.data.group, relationShip: "" };
