@@ -295,7 +295,7 @@ const settingClose = () => {
   >
     <!-- 头部左侧区域 -->
     <template #header-left>
-      <div class="aaa">
+      <div class="header-left">
         <div
           class="group header-left hover:tt-theme-bg-2 relative pl-2 rounded-lg title h-[32px] flex items-center text-sm cursor-pointer"
         >
@@ -303,7 +303,7 @@ const settingClose = () => {
           <span class="mx-2">{{ data.name }}</span>
         </div>
 
-        <div class="bbb">
+        <div class="header-left-hover">
           <div
             class="transition-all tt-shadow rounded-xl tt-modal-bg px-2 pt-2 mb-[1px] w-[240px]"
             @click.stop.prevent=""
@@ -348,8 +348,7 @@ const settingClose = () => {
               <xt-mix-icon class="mr-2 tt-modal-bg" :icon="item.icon" />
               {{ item.name }}
             </div>
-            <div class="pb-1"></div>
-            <div class="mb-1"></div>
+            <div class="pb-[2px]"></div>
           </div>
         </div>
       </div>
@@ -416,35 +415,16 @@ const settingClose = () => {
   </xt-modal>
 </template>
 <style lang="scss" scoped>
-.box {
-  :deep(.tippy-box) {
-    background-color: none !important;
-  }
-  .tippy-box {
-    background-color: none !important;
-  }
-}
-
-:deep(.tippy-content) {
-  background-color: none !important;
-}
-:deep(.tippy-arrow) {
-  color: none !important;
-}
-.tippy-arrow {
-  color: none !important;
-}
-.aaa {
+.header-left {
   position: relative;
-  width: 100px;
-  height: 40px;
   &:hover {
-    .bbb {
+    .header-left-hover {
       display: block !important;
     }
   }
 }
-.bbb {
+.header-left-hover {
+
   display: none;
   position: absolute;
 }
