@@ -120,26 +120,29 @@ const installSuccess = (data: any, id?: string) => {
     // addIcon(currentData);
     // addNav(currentData);
     // 添加导航栏图标
-    let navData = useIconConversionNav(iconData);
-    const nav = navStore();
-    const {
-      navigationToggle,
-      copyFootNav,
-      sideNavigationList,
-      rightNavigationList,
-    }: any = storeToRefs(nav);
-    // 添加到底部导航栏
-    if (navigationToggle.value[0]) {
-      copyFootNav.value.push(navData);
-    }
-    // 添加到左侧导航栏
-    else if (navigationToggle.value[1]) {
-      sideNavigationList.value.push(navData);
-    }
-    // 添加到右侧导航栏
-    else if (navigationToggle.value[2]) {
-      rightNavigationList.value.push(navData);
-    }
+    // console.log( "currentData :>> ", iconData);
+    // let navData = useIconConversionNav(iconData);
+    // console.log("navData :>> ", navData);
+    addNav(currentData);
+    // const nav = navStore();
+    // const {
+    //   navigationToggle,
+    //   copyFootNav,
+    //   sideNavigationList,
+    //   rightNavigationList,
+    // }: any = storeToRefs(nav);
+    // // 添加到底部导航栏
+    // if (navigationToggle.value[0]) {
+    //   copyFootNav.value.push(navData);
+    // }
+    // // 添加到左侧导航栏
+    // else if (navigationToggle.value[1]) {
+    //   sideNavigationList.value.push(navData);
+    // }
+    // // 添加到右侧导航栏
+    // else if (navigationToggle.value[2]) {
+    //   rightNavigationList.value.push(navData);
+    // }
 
     message.success("安装成功");
     ttappList.value.push(currentData);

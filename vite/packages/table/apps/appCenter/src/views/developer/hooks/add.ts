@@ -5,7 +5,7 @@ import { validate } from "./validate";
 import {
   defaultData,
   useFileConversionIcon,
-  useIconConversionNav,
+  useFileConversionNav,
 } from "../../../../../../ui/hooks/useDataConversion";
 import { useAddCard } from "../../../../../../hooks";
 export const addNav = (data: any, position?: string) => {
@@ -18,12 +18,12 @@ export const addNav = (data: any, position?: string) => {
   }: any = storeToRefs(nav);
 
   const iconData = conversionIcon(data);
-  console.log("iconData :>> ", iconData);
-  const navData = useIconConversionNav(iconData);
+  // console.log("iconData :>> ", iconData);
+  const navData = useFileConversionNav(iconData);
 
-  console.log("navData :>> ", navData);
+  // console.log("navData :>> ", navData,position);
   // 有指定位置
-  if (position) {
+  if (position != undefined) {
     // 添加到底部导航栏
     if (position == "bottom") {
       copyFootNav.value.push(navData);
@@ -40,15 +40,15 @@ export const addNav = (data: any, position?: string) => {
   // 没有指定位置
   else {
     // 添加到底部导航栏
-    if (navigationToggle.value[0]) {
+    if (navigationToggle.value[2]) {
       copyFootNav.value.push(navData);
     }
     // 添加到左侧导航栏
-    else if (navigationToggle.value[1]) {
+    else if (navigationToggle.value[0]) {
       sideNavigationList.value.push(navData);
     }
     // 添加到右侧导航栏
-    else if (navigationToggle.value[2]) {
+    else if (navigationToggle.value[1]) {
       rightNavigationList.value.push(navData);
     }
   }
