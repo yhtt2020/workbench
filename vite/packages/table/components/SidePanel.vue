@@ -1,5 +1,9 @@
 <template>
   <xtMixMenu :menus="mainOption" name="name" :menuHeight="'max-h-full flex'">
+    <!-- 扩展插槽 -->
+    <template #extraMenu>
+      <ExtraMenu />
+    </template>
     <!-- 文件夹弹窗 -->
     <FloatFolder
       v-if="folderVisible"
@@ -128,7 +132,6 @@ import { useNavBarStore } from './desk/navigationBar/navBar'
 import routerTab from '../js/common/routerTab'
 import EditNewNavigation from './desk/addIcon/EditNewNavigation.vue'
 import Common from './desk/navigationBar/components/Common.vue'
-import xtMenu from '../ui/components/Menu/index.vue'
 import xtMixMenu from '../ui/new/mixMenu/FunMenu.vue'
 import EditIcon from './desk/navigationBar/components/EditIcon/EditIcon.vue'
 import Folder from '../apps/folder'
@@ -138,6 +141,7 @@ import AutoHide from './desk/navigationBar/components/folder/AutoHide.vue';
 import NavIcon from './windowPanel/components/NavIcon.vue';
 import FloatCard from './windowPanel/components/FloatCard.vue';
 import FloatFolder from './windowPanel/components/FloatFolder.vue';
+import ExtraMenu from './windowPanel/components/ExtraMenu.vue';
 
 import { renderIcon } from '../js/common/common'
 import { moreMenus, extraRightMenu, mergeIconFolder } from '../components/desk/navigationBar/index'
@@ -161,7 +165,6 @@ export default {
     navIcon,
     EditNewNavigation,
     Common,
-    xtMenu,
     xtMixMenu,
     EditIcon,
     Drop,
@@ -170,7 +173,8 @@ export default {
     AutoHide,
     NavIcon,
     FloatCard,
-    FloatFolder
+    FloatFolder,
+    ExtraMenu,
   },
   emits: ['getDelIcon', 'hiedNavBar', 'openFolder'],
   data() {

@@ -2,6 +2,10 @@
   <div class="relative flex flex-col h-full">
     <!--  工具栏 xt-main-top-util-bar 元素定位类不可删-->
     <xt-mix-menu :menus="menus" class="w-full h-full" ref="mixMenu">
+      <!-- 导航栏 -->
+      <template #extraMenu>
+        <ExtraMenu />
+      </template>
       <Desk
         v-if="currentDesk && currentDesk?.cards?.length > 0"
         @changeEditing="editing = !editing"
@@ -399,6 +403,7 @@ import { useFloatMenuStore } from "./floatMenu/store";
 import { useDeskStore } from "./store";
 import { completeTask } from "../../apps/task/task";
 import NewGuidePage from "../../page/app/grade/NewGuidePage.vue";
+import ExtraMenu from '../../components/windowPanel/components/ExtraMenu.vue';
  export default {
   name: "DeskGroup",
   components: {
@@ -416,6 +421,7 @@ import NewGuidePage from "../../page/app/grade/NewGuidePage.vue";
     // GameListDrawer,
     Desk,
     NewGuidePage,
+    ExtraMenu,
   },
   emits: ["update:currentDeskId", "showMore"],
   props: {
