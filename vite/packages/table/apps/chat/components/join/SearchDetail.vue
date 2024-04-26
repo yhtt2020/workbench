@@ -57,6 +57,7 @@ import { toRefs, computed } from "vue";
 import { CommunityAPI } from "../../api/communityAPI";
 
 const comAPI = new CommunityAPI();
+const emit = defineEmits(['close']);
 
 const props = defineProps({
   list: {
@@ -89,7 +90,7 @@ const joinNow = async (item) => {
   const result = await comAPI.applyJoinCommunity(option);
   if (result.status) {
     message.success("加入成功");
-    this.$emit("close");
+    emit("close");
     chatCommunity.getMyCommunity();
   } else {
     message.error(result.info);

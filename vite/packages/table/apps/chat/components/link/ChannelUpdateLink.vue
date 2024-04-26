@@ -87,7 +87,6 @@ const openUpdateLink = () => {
 const selectNext = async () => {
   const pattern = /^(https?|http):\/\//;
   const updateResult = {};
-  console.log("更新调试", pattern.test(currentItemLink.value.url));
   // 存在https、http
   if (pattern.test(currentItemLink.value.url)) {
     // 当前打开

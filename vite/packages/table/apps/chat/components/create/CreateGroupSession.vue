@@ -52,7 +52,6 @@ const openCreateGroupSession = () => {
         const mapList = _.map(filterData, function (item) {
           return item.profile;
         });
-        console.log("测试", mapList);
         currentFriendList.value = mapList;
       },
     });

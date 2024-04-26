@@ -334,7 +334,6 @@ const delMuteList = (list) =>{
       muteTime: 0,
     }
     chat.setGroupMemberMuteTime(option).then((res) => {
-      console.log('测试',res);
       if(res.code === 0){
         message.success("解除禁言成功");
       }
