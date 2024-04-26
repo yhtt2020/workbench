@@ -97,8 +97,9 @@ export const useFileConversionIcon = (data) => {
   return icon;
 };
 
-// 文件夹图标转为导航栏图标格式
+// 单图标组件转为导航栏图标格式
 export const useIconConversionNav = (data) => {
+  console.log(data,'<<<<<<<<<<')
   const icon = {
     icon: data.icon,
     name: data.name,
@@ -112,7 +113,7 @@ export const useIconConversionNav = (data) => {
   return icon;
 };
 
-// 单图标组件转为导航栏图标格式
+// 文件夹图标转为导航栏图标格式
 export const useFileConversionNav = (data) => {
   const icon = {
     icon: data.src,

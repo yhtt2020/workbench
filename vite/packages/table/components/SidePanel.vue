@@ -45,7 +45,7 @@
           this.state ? this.fixedPosition : '']"
         >
         <div
-          style="width: 52px;margin-top: 20px;margin-bottom: 20px;"
+          style="width: 56px;margin-top: 20px;margin-bottom: 20px;"
           class="w-full">
           <div :id="sortId" :key="sideKey"
             class="flex flex-col items-center flex-1 max-h-full scroller-wrapper hide-scrollbar xt-container w-[56px] overflow-hidden gap-5"
