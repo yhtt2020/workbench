@@ -2,16 +2,11 @@ import { message } from "ant-design-vue";
 import { getAppImg } from "../../../../../ttApp/src/hooks/getAppImg";
 import { useTTAppStore } from "../../../../../ttApp/src/store";
 import { storeToRefs } from "pinia";
-import {
-  useFileConversionIcon,
-  defaultData,
-} from "../../../../../../ui/hooks/useDataConversion";
-import { useAddCard } from "../../../../../../hooks";
+
 import { useMit } from "../../../../../../hooks";
 import { navStore } from "../../../../../../store/nav";
 import { addIcon, addNav } from "./add";
 
-import { useIconConversionNav } from "../../../../../../ui/hooks/useDataConversion";
 // 安装实现
 export const installV2 = async (id?: string) => {
   // 获取文件
@@ -102,47 +97,8 @@ const installSuccess = (data: any, id?: string) => {
 
   // 没ID为安装
   if (!id) {
-    let iconData = {
-      ...defaultData,
-      id: currentData.id,
-      value: currentData.id,
-      name: currentData.name,
-      icon: currentData._logo,
-      type: "ttapp",
-    };
-    let data = useFileConversionIcon(iconData);
-    useAddCard({
-      name: "myIcons",
-      data: {
-        iconList: [data],
-      },
-    });
-    // addIcon(currentData);
-    // addNav(currentData);
-    // 添加导航栏图标
-    // console.log( "currentData :>> ", iconData);
-    // let navData = useIconConversionNav(iconData);
-    // console.log("navData :>> ", navData);
+    addIcon(currentData);
     addNav(currentData);
-    // const nav = navStore();
-    // const {
-    //   navigationToggle,
-    //   copyFootNav,
-    //   sideNavigationList,
-    //   rightNavigationList,
-    // }: any = storeToRefs(nav);
-    // // 添加到底部导航栏
-    // if (navigationToggle.value[0]) {
-    //   copyFootNav.value.push(navData);
-    // }
-    // // 添加到左侧导航栏
-    // else if (navigationToggle.value[1]) {
-    //   sideNavigationList.value.push(navData);
-    // }
-    // // 添加到右侧导航栏
-    // else if (navigationToggle.value[2]) {
-    //   rightNavigationList.value.push(navData);
-    // }
 
     message.success("安装成功");
     ttappList.value.push(currentData);
@@ -166,7 +122,7 @@ const installSuccess = (data: any, id?: string) => {
 // 更新导航栏图标
 const updateNav = (id) => {
   const nav = navStore();
-  const ttApp = useTTAppStore();
+  const ttApp: any = useTTAppStore();
   // 更新导航元素的辅助函数
   const updateNavItem = (navItem) => {
     if (navItem) {
@@ -181,10 +137,10 @@ const updateNav = (id) => {
     (item: any) => item.cardData?.id === id
   );
   const leftIcon = nav.sideNavigationList.find(
-    (item) => item.cardData?.id === id
+    (item: any) => item.cardData?.id === id
   );
   const rightIcon = nav.rightNavigationList.find(
-    (item) => item.cardData?.id === id
+    (item: any) => item.cardData?.id === id
   );
 
   // 更新导航元素

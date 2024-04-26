@@ -1,6 +1,5 @@
 import { storeToRefs } from "pinia";
 import { navStore } from "../../../../../../store/nav";
-import { validate } from "./validate";
 
 import {
   defaultData,
@@ -18,10 +17,8 @@ export const addNav = (data: any, position?: string) => {
   }: any = storeToRefs(nav);
 
   const iconData = conversionIcon(data);
-  // console.log("iconData :>> ", iconData);
   const navData = useFileConversionNav(iconData);
 
-  // console.log("navData :>> ", navData,position);
   // 有指定位置
   if (position != undefined) {
     // 添加到底部导航栏
