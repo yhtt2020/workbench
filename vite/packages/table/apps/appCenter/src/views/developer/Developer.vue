@@ -22,7 +22,7 @@ const { ttappList } = storeToRefs(ttappStore);
     <xt-scrollbar v-if="ttappList.length" class="h-full" :x="false" :y="true">
       <xt-option-box>
         <div class="flex flex-col mb-4">
-          <div class="flex">
+          <div class="flex mb-[5px]">
             <span class="">🎉</span>
             你可以在这里快速导入并测试应用，验证你的应用在工作台内的使用效果。
           </div>

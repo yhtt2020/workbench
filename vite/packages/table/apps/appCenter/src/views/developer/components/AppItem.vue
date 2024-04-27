@@ -66,6 +66,10 @@ const menus = computed(() => {
       },
     },
     {
+      name: "上传应用",
+      newIcon: "fluent:cloud-arrow-up-16-regular",
+    },
+    {
       name: "卸载",
       newIcon: "fluent:delete-16-regular",
       color: "#FF4D4F",
@@ -124,7 +128,6 @@ const entry = () => {
 </script>
 
 <template>
-
   <!-- 添加时预览组件 -->
   <xt-preview-v2
     v-if="previewVisible"
