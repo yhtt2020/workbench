@@ -1,3 +1,4 @@
+<!-- 社群导航搜索页 -->
 <template>
   <div class="com-nav-bg flex flex-col">
     <!-- 搜索 -->
@@ -60,11 +61,11 @@
 <script setup>
 import { ref, computed, watch, watchEffect, getCurrentInstance } from 'vue'
 import { storeToRefs } from "pinia";
-import { communityStore } from "../../../page/chat/store/communityStore";
+import { chatCommunityStore } from "../../../apps/chat/store/chatCommunity";
 import { communityNavStore } from "../store/communityNavStore";
 
-const com = communityStore();
-const { community } = storeToRefs(com);
+const com = chatCommunityStore();
+const { myCommunity } = storeToRefs(com);
 const comNav = communityNavStore();
 const { currentCommunity } = storeToRefs(comNav);
 
@@ -74,8 +75,8 @@ const communityList = ref([]);
 const emit = defineEmits(['close']);
 // 获取当前已经加入的社群列表
 const getCurrentCommunityList = () =>{
-  if (community.value.communityList.length !== 0) {
-    const filterList = community.value.communityList.filter((item) => {
+  if (myCommunity.value.length !== 0) {
+    const filterList = myCommunity.value.filter((item) => {
       if (item.communityInfo) {
         return item;
       }
@@ -92,7 +93,7 @@ watchEffect(() => {
 // 搜索社群
 const getSearchResult = () => {
   if(search.value !== ''){
-    const searchList = community.value.communityList.filter((item) => {
+    const searchList = myCommunity.value.communityList.filter((item) => {
       if (item.communityInfo) {
         return item.communityInfo.name.includes(search.value);
       }
