@@ -33,7 +33,7 @@
       >
         <aside class="left">
           <!-- 将conversation.getAvatar()替换成conversation.groupProfile.avatar来实现真实图片展示,从而达到demo图片的替换  -->
-          <!-- 
+          <!--
             conversation?.type === 'GROUP'是否为群聊,
             群聊走conversation?.groupProfile?.avatar
             好友走conversation?.userProfile?.avatar
@@ -152,7 +152,7 @@ import TUIChatEngine, {
   TUIConversationService,
   IConversationModel,
 } from '@tencentcloud/chat-uikit-engine';
-import { TUIGlobal, isIOS, addLongPressListener } from '@tencentcloud/universal-api';
+// import { TUIGlobal, isIOS, addLongPressListener } from '@tencentcloud/universal-api';
 import Icon from '../../common/Icon.vue';
 import Avatar from '../../common/Avatar/index.vue';
 import ActionsMenu from '../actions-menu/index.vue';
@@ -331,22 +331,22 @@ function onUserStatusListUpdated(list: Map<string, IUserStatus>) {
   }
 }
 
-/**新增修改**/ 
+/**新增修改**/
 const text = (conversation: any) => {
   const isUserName = conversation.userProfile?.nick;
   const isGroupName = conversation.lastMessage?.nick;
   const isText = conversation.lastMessage?.payload?.text;
   const isMessageForShow = conversation.lastMessage?.messageForShow;
   const isFromAccount = conversation.lastMessage?.fromAccount;
-  
-  /**群聊**/ 
+
+  /**群聊**/
   if (conversation.type === "GROUP") {
     if(isGroupName && isText) return `${isGroupName}:${isText}`
     else if(isGroupName && isMessageForShow) return `${isGroupName}:${isMessageForShow}`
     else if(isFromAccount && isText) return `${isFromAccount}:${isText}`
     else return ''
-  } 
-  /**好友**/ 
+  }
+  /**好友**/
   else {
     if(isUserName && isText) return `${isUserName}:${isText}`
     else if(isUserName && isMessageForShow) return `${isUserName}:${isMessageForShow}`
