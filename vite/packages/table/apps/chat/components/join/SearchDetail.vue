@@ -55,6 +55,7 @@ import { chatCommunityStore } from "../../store/chatCommunity";
 import { message } from "ant-design-vue";
 import { toRefs, computed } from "vue";
 import { CommunityAPI } from "../../api/communityAPI";
+import { useNavigationStore } from "../../../../components/desk/navigationBar/navigationStore";
 
 const comAPI = new CommunityAPI();
 const emit = defineEmits(['close']);
@@ -67,8 +68,11 @@ const props = defineProps({
 });
 const { list } = toRefs(props);
 
+/**解构store缓存数据**/ 
 const chatCommunity = chatCommunityStore();
 const { myCommunity } = storeToRefs(chatCommunity);
+const useNavigation = useNavigationStore();
+const { communityNavVisible } = storeToRefs(useNavigation);
 
 const searchList = computed(() => {
   const listNull = list.value.length !== 0;
@@ -85,8 +89,24 @@ const isJoin = (data) => {
   return result;
 };
 // 立即加入
-const joinNow = async (item) => {
+const joinNow = (item) => {
   const option = { no: item.no };
+  if(communityNavVisible.value){
+    addJoin(option)
+  }
+  else {
+    window.$ui.confirm('是否需要开启社群导航','',{
+      ok:() => {
+        communityNavVisible.value = true;
+        addJoin(option);
+      },
+      type: "warning",
+    })
+  }
+  
+};
+/**触发加入函数**/
+const addJoin = async(option) =>{
   const result = await comAPI.applyJoinCommunity(option);
   if (result.status) {
     message.success("加入成功");
@@ -95,7 +115,7 @@ const joinNow = async (item) => {
   } else {
     message.error(result.info);
   }
-};
+} 
 </script>
 
 <style lang="scss" scoped>

@@ -3,7 +3,7 @@
     <template v-for="item in detailList">
       <div
         class="xt-bg-2 pointer content-item rounded-xl pb-4 mb-4"
-        style="position: relative;"
+        style="position: relative"
         @click="enterCommunity(item)"
       >
         <div style="height: 150px; margin-bottom: 30px">
@@ -66,6 +66,7 @@ import { storeToRefs } from "pinia";
 import { chatCommunityStore } from "../../../store/chatCommunity";
 import _ from "lodash-es";
 import { useRouter } from "vue-router";
+import { useNavigationStore } from "../../../../../components/desk/navigationBar/navigationStore";
 
 const props = defineProps({
   detailList: {
@@ -77,41 +78,43 @@ const { detailList } = toRefs(props);
 
 const router = useRouter();
 
-const chatCommunity  = chatCommunityStore();
+/**解构store数据**/
+const chatCommunity = chatCommunityStore();
 const { myCommunity } = storeToRefs(chatCommunity);
+const useNavigation = useNavigationStore();
+const { communityNavVisible } = storeToRefs(useNavigation);
 
 // 进入相对应社群
-const enterCommunity = (data) =>{
+const enterCommunity = (data) => {
   const no = data.no;
-  const index  = _.findIndex(myCommunity.value,(item)=>{
-    return Number(item.route?.params?.no) === Number(no);
-  })
-  if(index > -1){
-    router.push({ name: "myCommunity", params: { no: no } });
+  if (communityNavVisible.value) {
+    addCommunity(no);
+  } else {
+    window.$ui.confirm("是否需要开启社群导航", "", {
+      ok: () => {
+        communityNavVisible.value = true;
+        addCommunity(no);
+      },
+      type: "warning",
+    });
   }
-  else {
-    console.log('当前社群没有加入',myCommunity.value);
-    // console.log('当前数据',data);
-    const index  = _.findIndex(myCommunity.value,(item)=>{
-      return Number(item.route?.params?.no) === Number(no)
-    })
-    if(index === -1){
+};
+
+const addCommunity = (no) => {
+  const index = _.findIndex(myCommunity.value, (item) => {
+    return Number(item.route?.params?.no) === Number(no);
+  });
+  if (index > -1) {
+    router.push({ name: "myCommunity", params: { no: no } });
+  } else {
+    const index = _.findIndex(myCommunity.value, (item) => {
+      return Number(item.route?.params?.no) === Number(no);
+    });
+    if (index === -1) {
       router.push({ name: "myCommunity", params: { no: no } });
     }
   }
-}
-// enterCommunity(item) {
-//       const list = this.community.communityList.map((item) => {
-//         return item.communityInfo.no;
-//       });
-//       const isJoin = list.some((findItem) => {
-//         return Number(findItem) === Number(item.no);
-//       });
-//       // console.log("item",isJoin);
-//       if (isJoin) {
-//         this.$router.push({ name: "myCommunity", params: { no: item.no } });
-//       }
-//     },
+};
 </script>
 
 <style lang="scss" scoped>
