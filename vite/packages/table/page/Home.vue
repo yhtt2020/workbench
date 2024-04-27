@@ -258,7 +258,6 @@ export default {
         return desk.id === this.currentDeskId;
       });
       if (find) {
-        console.log('find :>> ', find);
         find.cards.forEach((e) => {
           if (!e.data) {
             e.data = {};
@@ -436,7 +435,7 @@ export default {
       this.isGuest = cache.get('isGuest')
       // 进行一次重连操作
       useUpdateUserInfo()
-      
+
       this.replaceIcon(this.sideNavigationList, this.leftNavInit);
       this.replaceIcon(this.rightNavigationList, this.rightNavInit);
       this.replaceIcon(this.copyFootNav, this.footNavInit);

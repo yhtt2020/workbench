@@ -127,6 +127,8 @@ import { Modal, message } from 'ant-design-vue'
 import { codeStore } from '../../store/code'
 import HorizontalPanel from '../../components/HorizontalCaptrue.vue'
 import RayMedal from '../../components/small/RayMedal.vue'
+import { usePermissionStore } from '../../permission/store'
+import { useUpdateUserInfo } from '../../permission/user/useUserPermit'
 
 export default {
   name: 'Invite',
@@ -201,6 +203,7 @@ export default {
   computed: {
     ...mapState(appStore, ['userInfo']),
     ...mapWritableState(codeStore,['verified']),
+    ...mapWritableState(usePermissionStore,['isOffline']),
     envGuest(){
       return !window.$useEnv('guest')
     },
@@ -236,6 +239,20 @@ export default {
       })
     },
     async activeCode () {
+      if(this.isOffline){
+        /**提示重连弹窗**/
+        window.$ui.confirm("提示", "目前处于离线模式，请重连后体验完整功能。", {
+          ok: () => {
+            useUpdateUserInfo()
+          },
+          okText: "立即重连",
+          noText: "暂不连接",
+          type: "warning",
+          okButtonWidth: "95",
+          noButtonWidth: "95",
+        });
+        return
+      }
       if(!this.code){
         message.error('请输入邀请码')
         return
@@ -300,19 +317,33 @@ export default {
       return this.marked.indexOf(key) > -1
     },
     confirmExchange () {
-      window.$ui.confirm('兑换确认','确认使用200小时在线时长兑换1枚邀请码？此操作无法撤回。兑换并不会减少你的在线时长以及影响你的在线等级，请放心。',{
-        ok: async () => {
-          let rs = await this.exchange()
-          if (rs.status) {
-            rs.data.forEach(item => {
-              this.codes.unshift(item)
-            })
-            message.success('兑换成功。')
-          } else {
-            message.error('兑换失败，您已无法兑换邀请码。')
+      if(this.isOffline){
+        /**提示重连弹窗**/
+        window.$ui.confirm("提示", "目前处于离线模式，请重连后体验完整功能。", {
+          ok: () => {
+            useUpdateUserInfo()
+          },
+          okText: "立即重连",
+          noText: "暂不连接",
+          type: "warning",
+          okButtonWidth: "95",
+          noButtonWidth: "95",
+        });
+      }else {
+        window.$ui.confirm('兑换确认','确认使用200小时在线时长兑换1枚邀请码？此操作无法撤回。兑换并不会减少你的在线时长以及影响你的在线等级，请放心。',{
+          ok: async () => {
+            let rs = await this.exchange()
+            if (rs.status) {
+              rs.data.forEach(item => {
+                this.codes.unshift(item)
+              })
+              message.success('兑换成功。')
+            } else {
+              message.error('兑换失败，您已无法兑换邀请码。')
+            }
           }
-        }
-      })
+        })
+      }
     }
   }
 }

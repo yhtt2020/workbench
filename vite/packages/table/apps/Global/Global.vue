@@ -90,6 +90,8 @@ onMounted(() => {
 });
 
 // 补充尝试登录
+// 添加重连定时器
+
 </script>
 
 <template>

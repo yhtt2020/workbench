@@ -3,11 +3,13 @@ import { useTTAppStore } from "../../../../../ttApp/src/store";
 import { useDelCard } from "../../../../../../hooks";
 import { navStore as useNavStore } from "../../../../../../store/nav";
 import { message } from "ant-design-vue";
+/** 验证应用是否存在 */
 export const validate = (id: string) => {
   const ttappStore: any = useTTAppStore();
   return ttappStore.select(id);
 };
 
+/** 卡片验证 */
 export const cardValidate = (cardId: any, id: string) => {
   let res = validate(id);
   if (res) {
@@ -17,6 +19,7 @@ export const cardValidate = (cardId: any, id: string) => {
   useDelCard(cardId);
   return false;
 };
+/** 导航栏验证 */
 export const navValidate = (navId: any, id: string) => {
   let res = validate(id);
   if (res) {
@@ -50,4 +53,11 @@ export const navValidate = (navId: any, id: string) => {
   });
   message.success("应用不存在，已帮您删除");
   return false;
+};
+/** 图标验证 */
+export const iconValidate = (iconId: any, data: any) => {
+  if (data?.type !== "ttapp") {
+    return true;
+  }
+  return cardValidate(iconId, data.value);
 };

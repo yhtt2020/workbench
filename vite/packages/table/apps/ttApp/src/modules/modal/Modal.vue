@@ -23,15 +23,17 @@ onUnmounted(() => {
   proxy.$bus.off("updateTTApp");
 });
 
-onMounted(() => {
-  proxy.$bus.on("updateTTApp", (id: string) => {
+onBeforeMount(async () => {
+  proxy.$bus.on("updateTTApp", async (id: string) => {
     const parentId = modal.value.id;
     // 非自己更新无需操作
     if (parentId != id) {
       return;
     }
-    init();
+    await init();
   });
+
+  await init();
 });
 
 const appCenterStore = useAppCenterStore();
@@ -51,11 +53,14 @@ const socializeList: any = ref([]);
 /** 初始化方法 */
 const init = async () => {
   let res = ttappStore.select(modal.value.id);
-
+  console.log("modal.value.id :>> ", modal.value.id);
+  console.log("res :>> ", res);
+  console.log("modal.value :>> ", modal.value);
   if (!res) {
-    modal.value.visible = false;
-    return;
+    // modal.value.visible = false;
+    // return;
   }
+  console.log("2222 :>> ", 2222);
   // 有社区
   const community = data?.community;
   if (community) {
@@ -87,11 +92,13 @@ const init = async () => {
     socializeList.value.push(obj);
   }
   res.socializeList = socializeList;
+  console.log("初始化到这里了 :>> ", 222222);
   // 获取用户信息 没写完
-  await ttappStore.getUserInfo(res.uid || 1);
+  // await ttappStore.getUserInfo(res.uid || 1);
 
   // 完成
   data.value = res;
+  console.log("初始化完成 :>> ", 222222);
   loading.value = false;
 };
 
@@ -140,9 +147,6 @@ watch(
     deep: true,
   }
 );
-onBeforeMount(() => {
-  init();
-});
 
 /** 最大化 */
 
@@ -208,12 +212,12 @@ watch(
   (val) => {
     console.log("val :>> ", val);
     // 数据没加载时不执行
-    if (!val) return;
-    nextTick(() => {
-      perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {
-        wheelPropagation: false,
-      });
-    });
+    // if (!val) return;
+    // nextTick(() => {
+    //   perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {
+    //     wheelPropagation: false,
+    //   });
+    // });
   },
   {
     immediate: true,
@@ -291,22 +295,17 @@ const settingClose = () => {
   >
     <!-- 头部左侧区域 -->
     <template #header-left>
-      <tippy
-        :z-index="99999999999"
-        trigger="click"
-        placement="bottom"
-        :interactive="true"
-      >
-        <!-- mouseenter -->
+      <div class="header-left">
         <div
           class="group header-left hover:tt-theme-bg-2 relative pl-2 rounded-lg title h-[32px] flex items-center text-sm cursor-pointer"
         >
           <a-avatar shape="square" class="" :size="16" :src="data._logo" />
           <span class="mx-2">{{ data.name }}</span>
         </div>
-        <template #content>
+
+        <div class="header-left-hover">
           <div
-            class="transition-all tt-shadow rounded-xl tt-modal-bg px-2 pt-2 mb-[1px] w-[240px] ml-[120px]"
+            class="transition-all tt-shadow rounded-xl tt-modal-bg px-2 pt-2 mb-[1px] w-[240px]"
             @click.stop.prevent=""
           >
             <!-- class="header-left-menu transition-all tt-shadow rounded-xl tt-modal-bg px-2 pt-2 absolute top-[35px] left-0 z-[999999] w-[240px]" -->
@@ -349,9 +348,10 @@ const settingClose = () => {
               <xt-mix-icon class="mr-2 tt-modal-bg" :icon="item.icon" />
               {{ item.name }}
             </div>
+            <div class="pb-[2px]"></div>
           </div>
-        </template>
-      </tippy>
+        </div>
+      </div>
     </template>
     <!-- 头部右侧区域 -->
     <template #header-right>
@@ -366,7 +366,7 @@ const settingClose = () => {
       </xt-button>
       <xt-button
         title="打开社群"
-        v-if="data.community"
+        v-if="data?.community"
         class="ml-3 tt-modal-button"
         w="32"
         h="32"
@@ -415,20 +415,17 @@ const settingClose = () => {
   </xt-modal>
 </template>
 <style lang="scss" scoped>
-:deep(.tippy-box) {
-  background-color: none !important;
+.header-left {
+  position: relative;
+  &:hover {
+    .header-left-hover {
+      display: block !important;
+    }
+  }
 }
-.tippy-box {
-  background-color: none !important;
-}
+.header-left-hover {
 
-:deep(.tippy-content) {
-  background-color: none !important;
-}
-:deep(.tippy-arrow) {
-  color: none !important;
-}
-.tippy-arrow {
-  color: none !important;
+  display: none;
+  position: absolute;
 }
 </style>

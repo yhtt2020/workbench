@@ -569,27 +569,27 @@ const handleCommunity = (data) => {
   color: var(--primary-text);
   max-width: 185px;
 }
-@media screen and(max-height:500px) {
+@media screen and (max-height:500px) {
   .tree-container {
     height: 20vh !important;
   }
 }
-@media screen and(min-height:501px) and (max-height: 700px) {
+@media screen and (min-height:501px) and (max-height: 700px) {
   .tree-container {
     height: 40vh !important;
   }
 }
-@media screen and(min-height:701px) and (max-height: 800px) {
+@media screen and (min-height:701px) and (max-height: 800px) {
   .tree-container {
     height: 48vh !important;
   }
 }
-@media screen and(min-height:801px) and (max-height: 900px) {
+@media screen and (min-height:801px) and (max-height: 900px) {
   .tree-container {
     height: 50vh !important;
   }
 }
-@media screen and(min-height:901px) {
+@media screen and (min-height:901px) {
   .tree-container {
     height: 60vh !important;
   }

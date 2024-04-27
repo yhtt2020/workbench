@@ -67,7 +67,7 @@ const { proxy } = getCurrentInstance();
 
 /**store缓存数据**/
 const chatCommunity = chatCommunityStore();
-const { currentCommunityNo, setting, communityTreeList } =
+const { currentCommunityNo, setting, communityTreeList, myCommunity } =
   storeToRefs(chatCommunity);
 
 /**用于判断当前的社群是否存在**/
@@ -83,11 +83,47 @@ router.beforeEach((to) => {
   const no = to.params?.no;
   if (no) {
     /**查询社群是否存在**/
-    currentAPI.getByNoDetail({ no: no }).then((res) => {
+    currentAPI.getByNoDetail({ no: no }).then(async (res) => {
       if (res?.status === 1) {
+        /**获取已经加入的我的社群列表**/ 
+        const list = await getMy();
+
+        /**
+         * 检测是否加入我的社群,
+         * 如果加入直接跳过,
+         * 如果没有加入就将模拟添加,
+         * 但是在右侧会显示未添加入口
+         * **/
+        const index = _.findIndex(list, (item) => {
+          return Number(item?.communityInfo?.no) === Number(no);
+        });
+        const myIndex = _.findIndex(myCommunity.value,(item)=>{
+          return Number(item?.route?.params?.no) === Number(no);
+        })
+        if (index === -1 && myIndex === -1) {
+          const data = res?.data;
+          /**添加的参数**/
+          const option = {
+            id:data.id,
+            cno:data.no,
+            float: "",
+            img: data.icon,
+            menuVisible: true,
+            noBg: true,
+            route: { name: "myCommunity", params: { no: data.no } },
+            tab: `community_${data.no}`,
+            type: `community${data.no}`,
+            communityInfo:data,
+          };
+          console.log('测试',option);
+          myCommunity.value.push(option);
+        } else {
+          chatCommunity.setCurrentCommunityNo(to.params?.no);
+          chatCommunity.loadCurrentCommunity(to.params?.no);
+        }
+
+        /**状态**/
         currentPageExist.value = true;
-        chatCommunity.setCurrentCommunityNo(to.params?.no);
-        chatCommunity.loadCurrentCommunity(to.params?.no);
       } else if (res?.code === 404) {
         currentPageExist.value = false;
       }
@@ -209,6 +245,16 @@ const handleCurrentItem = async (data) => {
       }
     }
   }
+};
+
+/**获取我的社群列表**/
+const getMy = async () => {
+  /**请求我的社群接口**/
+  const myList = await currentAPI.getMyCommunityList();
+  const filerMyList = _.filter(myList?.data?.list, (item) => {
+    return item.hasOwnProperty("communityInfo");
+  });
+  return filerMyList
 };
 
 onMounted(() => {
