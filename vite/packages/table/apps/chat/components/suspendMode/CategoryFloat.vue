@@ -39,7 +39,7 @@
           </div>
         </template>
 
-        <xt-scrollbar :y="true" style="height: calc(100% - 18%);" v-else>
+        <xt-scrollbar :y="true" class="flex-1" style="height: calc(100% - 10%);" v-else>
           <!-- 一级频道目录 -->
           <template v-if="firstChannel.length !== 0">
             <!-- 单列模式 -->
@@ -265,8 +265,6 @@ const currentInfoDetail = computed(() => {
 
 /**一级频道目录**/
 const firstChannel = computed(() => {
-  console.log("测试", communityTreeList.value?.firstChannel);
-  console.log("测试", communityTreeList.value?.firstChannel.length);
   const emptyArr = communityTreeList.value?.firstChannel.length !== 0;
   if (emptyArr) return communityTreeList.value?.firstChannel;
   return [];
