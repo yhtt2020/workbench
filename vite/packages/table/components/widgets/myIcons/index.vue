@@ -202,12 +202,6 @@ export default {
     let res = this.customData.iconList[0];
     // 是ttapp
     if (res?.type !== "ttapp") {
-      this.$bus.on("updateTTApp", (id) => {
-        // if (res.value !== id) return;
-        console.log("222 myicons:>> ", id);
-        update(this.customIndex);
-      });
-
       // 校验
       let res = iconValidate(this.customIndex, this.customData.iconList[0]);
       if (!res) return;

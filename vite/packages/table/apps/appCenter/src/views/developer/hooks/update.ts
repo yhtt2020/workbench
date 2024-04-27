@@ -18,7 +18,6 @@ export const update = (id: string) => {
     // 过滤当前桌面
     desk.cards = desk.cards.map((obj) => {
       const customData = obj.customData;
-
       // 过滤单图标
       if (obj.name == "myIcons") {
         let res = customData.iconList[0].open;
@@ -37,15 +36,16 @@ export const update = (id: string) => {
             data.name = ttappData.name;
             return data;
           }
+          // 过滤应用卡片
+          if (data.type == "card") {
+            const currentId = data?.cardData?.customData?.parentId;
+            if (currentId !== id) return data;
+            let ttappData = validate(id);
+            data.cardData.customData = ttappData;
+            data.icon = ttappData._logo;
+            data.name = ttappData.name;
+          }
           return data;
-          //     // 过滤应用卡片
-          //     if (data.type == "card") {
-          //       const currentId = data?.cardData?.customData?.parentId;
-          //       if (currentId === id) {
-          //         return false;
-          //       }
-          //     }
-          //     return true;
         });
       }
       return obj;
