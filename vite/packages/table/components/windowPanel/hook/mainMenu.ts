@@ -41,50 +41,6 @@ function mainMenus() {
       newIcon: "fluent:more-horizontal-16-filled",
       children: [],
     },
-    {
-      divider: true,
-      id: 10,
-    },
-    {
-      id: 11,
-      type: "systemApp",
-      newIcon: "fluent:lock-closed-16-regular",
-      name: "锁定屏幕",
-      event: "lock",
-      fn: () => {
-        this.newOpenApp(this.builtInFeatures[0]);
-      },
-    },
-    {
-      id: 15,
-      type: "systemApp",
-      newIcon: "fluent:settings-16-regular",
-      name: "基础设置",
-      event: "setting",
-      fn: () => {
-        this.newOpenApp(this.builtInFeatures[1]);
-      },
-    },
-    {
-      id: 20,
-      type: "systemApp",
-      newIcon: "fluent:full-screen-maximize-16-filled",
-      name: "全屏显示",
-      event: "fullscreen",
-      fn: () => {
-        this.newOpenApp(this.builtInFeatures[2]);
-      },
-    },
-    {
-      id: 25,
-      type: "systemApp",
-      newIcon: "fluent:slide-settings-24-regular",
-      name: "设备设置",
-      event: "status",
-      fn: () => {
-        this.newOpenApp(this.builtInFeatures[3]);
-      },
-    },
   ];
 }
 

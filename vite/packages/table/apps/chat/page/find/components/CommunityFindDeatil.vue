@@ -96,18 +96,6 @@ const enterCommunity = (data) =>{
       return Number(item.route?.params?.no) === Number(no)
     })
     if(index === -1){
-      const option = {
-        float:'',
-        id:data.id,
-        img:data.icon,
-        menuVisible:true,
-        noBg:true,
-        route:{ name:'myCommunity',params:{no:data.no} },
-        tab:`community_${data.no}`,
-        type:`community${data.no}`,
-        communityInfo:data.detail,
-      }
-      myCommunity.value.push(option);
       router.push({ name: "myCommunity", params: { no: no } });
     }
   }

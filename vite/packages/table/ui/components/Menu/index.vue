@@ -20,7 +20,7 @@
           @mouseover="handleStartLock()"
         >
           <slot name="menu">
-            <div class="list w-full h-full px-2">
+            <div class="w-full h-full px-2 list">
               <Menus
                 @handleClick="handleItemCallBack"
                 :menus="menus"
@@ -31,6 +31,8 @@
                   <slot name="cardSize"></slot>
                 </template>
               </Menus>
+              <!-- 扩展插槽 -->
+              <slot name="extraMenu"></slot>
             </div>
           </slot>
         </div>

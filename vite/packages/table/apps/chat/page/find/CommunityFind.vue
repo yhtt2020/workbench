@@ -75,6 +75,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 @media screen and (max-width: 964px) {
+@media screen and (max-width: 964px) {
   .find-container {
     display: flex !important;
     flex-direction: column !important;
@@ -94,4 +95,5 @@ onMounted(() => {
     max-width: 1000px;
   }
 }
+
 </style>

@@ -304,7 +304,7 @@ const closeAll = () => {
     courierVisible.value = false
 }
 
-// 
+// 倒计时以及闹钟的相关数据
 const countDownDate = computed(() => useCountDown.countDowndate)
 const firstClockTime = computed(() => clockEvent.value[0]?.dateValue)
 
@@ -351,8 +351,8 @@ watch(() => useTimer.appDate.minutes, (newVal, oldVal) => {
 
 })
 
-onMounted(() => {
-    console.log(topClockVisible.value,'快递列表')
-})
+// onMounted(() => {
+//     console.log(topClockVisible.value,'快递列表')
+// })
 </script>
 <style lang='scss' scoped></style>
