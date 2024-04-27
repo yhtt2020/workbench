@@ -7,12 +7,25 @@ import { getUserInfo } from "../api/login";
 import { useLogout, useClearUserInfo } from "./useLogout";
 import { setLV } from "./useUtils";
 import { usePermissionStore } from "../store";
+
+// 检查当前网络状态
+import { useNetwork } from '@vueuse/core'
+
+const { isOnline, offlineAt, downlink, downlinkMax, effectiveType, saveData, type } = useNetwork()
+
+console.log('isOnline.value', isOnline.value)
+
 // import { storeToRefs } from "pinia";
 /**
  * 用户许可
  */
 export const useUserPermit = async () => {
   const permissionStore = usePermissionStore();
+  // 0
+  if(!isOnline.value) {
+    permissionStore.setOffline(true);
+    return
+  }
   // 1、 获取token
   let token = cache.get("ttUserToken");
 
@@ -23,16 +36,11 @@ export const useUserPermit = async () => {
 
     // 2.2、设置成功
     if (res) {
+      // 清楚游客模式
+      permissionStore.setGuest(false)
       return res;
     }
-
-    // 离线模式
-    if(permissionStore.isOffline) {
-      return;
-    }
   }
-  // 清楚游客模式
-  permissionStore.setGuest(false)
   useLogout();
   return false;
 };

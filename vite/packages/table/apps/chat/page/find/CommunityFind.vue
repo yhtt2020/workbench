@@ -74,7 +74,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
-@media screen and(max-width: 964px) {
+@media screen and (max-width: 964px) {
   .find-container {
     display: flex !important;
     flex-direction: column !important;
@@ -84,7 +84,7 @@ onMounted(() => {
   }
 }
 /**屏幕响应式定宽度**/
-@media screen and(min-width: 965px) {
+@media screen and (min-width: 965px) {
   .find-container {
     display: flex !important;
     flex-direction: column !important;
