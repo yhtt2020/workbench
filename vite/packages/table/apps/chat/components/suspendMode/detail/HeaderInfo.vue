@@ -55,6 +55,8 @@ import _ from "lodash-es";
 
 import CategoryDropdown from "../../dropdown/Dropdown.vue";
 
+const emit = defineEmits(['currentApp'])
+
 const props = defineProps({
   no: {
     type: String,
@@ -104,14 +106,14 @@ const hideList = ref([
     newIcon: "fluent:apps-add-in-20-filled",
     title: "添加新应用",
     callBack: () => {
-      // newAppRef.value.openNewAppFirstStep();
+      emit('currentApp','newApp');
     },
   },
   {
     newIcon: "fluent:add-16-filled",
     title: "添加新分组",
     callBack: () => {
-      // newCategoryRef.value.openCategoryModal();
+      emit('currentApp','newCategory');
     },
   },
   {
@@ -148,14 +150,14 @@ const showList = ref([
     newIcon: "fluent:apps-add-in-20-filled",
     title: "添加新应用",
     callBack: () => {
-      // newAppRef.value.openNewAppFirstStep();
+      emit('currentApp','newApp');
     },
   },
   {
     newIcon: "fluent:add-16-filled",
     title: "添加新分组",
     callBack: () => {
-      // newCategoryRef.value.openCategoryModal();
+      emit('currentApp','newCategory');
     },
   },
   {
@@ -214,7 +216,7 @@ const communityName = computed(() => {
   const currentFind = _.find(myCommunity.value, (item) => {
     return Number(item?.route?.params?.no) === Number(no.value);
   });
-  console.log("currentFind", currentFind);
+  chatCommunity.getCommunityTree(no.value);
   return currentFind?.communityInfo?.name;
 });
 
@@ -231,7 +233,7 @@ const isOwner = computed(() => {
 /**下拉菜单列表**/
 const cateList = computed(() => {
   /**社群权限**/
-  if (isOwner !== "member") {
+  if (isOwner.value !== "member") {
     /**开启悬浮模式并且社群ID一致**/
     if (sildVisible.value) {
       return hideList.value;
