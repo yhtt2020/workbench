@@ -6,7 +6,7 @@ import { storeToRefs } from "pinia";
 import { useMit } from "../../../../../../hooks";
 
 import { addIcon, addNav } from "./add";
-import { update, updateNav } from "./update";
+import { update } from "./update";
 
 // 安装实现
 export const installV2 = async (id?: string) => {
@@ -112,11 +112,7 @@ const installSuccess = (data: any, id?: string) => {
       return item;
     });
     // 更新导航栏
-    setTimeout(() => {
-      updateNav(currentData.id);
-      update(currentData.id);
-      useMit.emit("updateTTApp", currentData.id);
-    }, 0);
+    useMit.emit("updateTTApp", currentData.id);
+    update(currentData.id);
   }
 };
-
