@@ -35,8 +35,8 @@ const menus = computed(() => {
           },
         },
         {
-          name: "底部导航栏",
-          newIcon: "fluent:desktop-16-regular",
+          newIcon: "fluent:tablet-16-regular",
+        name: "底部导航",
           disabled: !navigationToggle.value[2],
           cb: () => {
             const data = validate(item.id);
@@ -45,8 +45,8 @@ const menus = computed(() => {
         },
         {
           disabled: !navigationToggle.value[0],
-          name: "左侧导航栏",
-          newIcon: "fluent:desktop-16-regular",
+          newIcon: "fluent:panel-left-contract-16-regular",
+        name: "左侧导航",
           cb: () => {
             const data = validate(item.id);
             addNav(data, "left");
@@ -54,8 +54,8 @@ const menus = computed(() => {
         },
         {
           disabled: !navigationToggle.value[1],
-          name: "右侧导航栏",
-          newIcon: "fluent:desktop-16-regular",
+          newIcon: "fluent:panel-right-contract-16-regular",
+        name: "右侧导航",
           cb: () => {
             const data = validate(item.id);
             addNav(data, "right");
