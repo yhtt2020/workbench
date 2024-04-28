@@ -7,9 +7,8 @@ import {message} from "ant-design-vue";
 import { usePlat } from "../ui/hooks/usePlat";
 
 let rpc
-if (!usePlat()) {
+if (usePlat('client')) {
   rpc=window.$models.rpc
-
 }
 const readAida64 = window.readAida64
 // @ts-ignore
@@ -69,7 +68,7 @@ export const inspectorStore = defineStore(
         this.displayData[key] = value
       },
       startInspect() {
-        if(this.running){
+        if(this.running || usePlat('web')){
           return
         }
         this.running=true

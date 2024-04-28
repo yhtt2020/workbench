@@ -62,6 +62,9 @@ import { chatCommunityStore } from "../../store/chatCommunity";
 import { message } from "ant-design-vue";
 import { toRefs, computed } from "vue";
 import { CommunityAPI } from "../../api/communityAPI";
+import { useNavigationStore } from "../../../../components/desk/navigationBar/navigationStore";
+
+const comAPI = new CommunityAPI();
 
 const emit = defineEmits(["close"]);
 
@@ -73,9 +76,11 @@ const props = defineProps({
 });
 const { list } = toRefs(props);
 
+/**解构store数据**/
 const chatCommunity = chatCommunityStore();
 const { myCommunity } = storeToRefs(chatCommunity);
-const comAPI = new CommunityAPI();
+const useNavigation = useNavigationStore();
+const { communityNavVisible } = storeToRefs(useNavigation);
 
 const recommendList = computed(() => {
   const listNull =
@@ -96,8 +101,22 @@ const currentJoin = (data) => {
   }
 };
 // 立即加入
-const currentNow = async (item) => {
+const currentNow =  (item) => {
   const option = { no: item.no };
+  if (communityNavVisible.value) {
+    addJoin(option);
+  } else {
+    window.$ui.confirm("是否需要开启社群导航", "", {
+      ok: () => {
+        communityNavVisible.value = true;
+        addJoin(option);
+      },
+      type: "warning",
+    });
+  }
+};
+/**触发加入社群的方法**/ 
+const addJoin = async (option) => {
   const result = await comAPI.applyJoinCommunity(option);
   message.success(`${result.info}`);
   chatCommunity.getMyCommunity();

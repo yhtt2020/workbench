@@ -1,3 +1,5 @@
+<!-- 社群设置 -->
+<!-- 
 <template>
   <div v-if="currentCommunity" class="w-full rounded-xl xt-bg-2 p-4">
     <div class="flex">
@@ -24,12 +26,12 @@
         <span class="xt-font xt-text-2 font-16 font-400 mb-2">加入方式</span>
         <span class="xt-font xt-text-2 font-14 font-400"
               v-if="currentCommunity.type==='public'">当前社群为公开，支持外部用户自由加入。</span>
-        <!-- 提交申请审核加入，或者管理员手动邀请直接加入 -->
+        提交申请审核加入，或者管理员手动邀请直接加入
       </div>
       <div style="width: 160px;" class="flex items-center justify-center">
         <a-select class="w-full custom-select" v-model:value="setValue" :bordered="false" style="height: 40px;">
           <a-select-option value="public">公开,自由加入</a-select-option>
-          <!-- <a-select-option value="">私密,邀请加入</a-select-option> -->
+          <a-select-option value="">私密,邀请加入</a-select-option>
         </a-select>
       </div>
     </div>
@@ -121,3 +123,8 @@ export default {
   color: var(--secondary-text) !important;
 }
 </style>
+
+
+
+
+ -->

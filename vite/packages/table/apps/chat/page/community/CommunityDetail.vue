@@ -1,6 +1,12 @@
 <!--非官方社群详情页 -->
 <template>
+  <!-- 页面不存在 -->
   <template v-if="currentPageExist">
+    <PageDoesNotExist />
+  </template>
+
+  <!-- 页面存在 -->
+  <template v-else>
     <a-row class="w-full h-full">
       <a-col
         class="flex flex-col h-full find-left"
@@ -16,7 +22,7 @@
           v-if="currentItem"
           class="flex flex-col h-full"
         >
-          <!-- <CommunityHeader :headerContent="currentItem" /> -->
+          <CommunityHeader :headerContent="currentItem" />
           <RightDetailMain :currentItem="currentItem" />
         </a-col>
         <a-col flex=" 1 1 200px" v-else class="flex flex-col h-full">
@@ -36,14 +42,16 @@
       </template>
     </a-row>
   </template>
-
-  <template v-else>
-    <PageDoesNotExist />
-  </template>
 </template>
 
-<script setup>
-import { ref, computed, getCurrentInstance, onMounted } from "vue";
+<script setup lang="ts">
+import {
+  ref,
+  computed,
+  getCurrentInstance,
+  onMounted,
+  ComponentPublicInstance,
+} from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { CommunityAPI } from "../../api/communityAPI";
 import { storeToRefs } from "pinia";
@@ -62,50 +70,71 @@ import Article from "../../../../components/Article.vue";
 import CommunityDetailEmpty from "../empty/CommunityDetailEmpty.vue";
 
 /*调用API***/
-const currentAPI = new CommunityAPI();
+const currentAPI: any = new CommunityAPI();
 const { proxy } = getCurrentInstance();
 
+/**路由**/
+const router = useRouter();
+const route = useRoute();
+
 /**store缓存数据**/
-const chatCommunity = chatCommunityStore();
+const chatCommunity: any = chatCommunityStore();
 const { currentCommunityNo, setting, communityTreeList, myCommunity } =
   storeToRefs(chatCommunity);
 
 /**用于判断当前的社群是否存在**/
-const currentPageExist = ref(true);
+const currentPageExist = ref(false);
 /**当前选中的数据**/
 const currentItem = ref(null);
 const artName = ref("community_after_created_empty");
 
-/**根据路由变化查询当前社群是否存在**/
-const router = useRouter();
-const route = useRoute();
-router.beforeEach((to) => {
-  const no = to.params?.no;
-  if (no) {
-    /**查询社群是否存在**/
-    currentAPI.getByNoDetail({ no: no }).then(async (res) => {
-      if (res?.status === 1) {
-        /**获取已经加入的我的社群列表**/ 
-        const list = await getMy();
+/** defineExpose暴露出来的方法，接口实现 **/
+interface IInstance extends ComponentPublicInstance {
+  getCommunityByNo(no: any): void;
+}
 
+/**监听路由进入的方法**/ 
+defineOptions({
+  name: "CommunityDetail",
+  beforeRouteEnter(_to: any, _from: any, next) {
+    const no = _to?.params?.no;
+    next((vm) => {
+      const instance = vm as IInstance;
+      instance.getCommunityByNo(no); // 刷新列表数据（不缓存）
+    });
+  },
+});
+
+/**检测社群是否存在的方法**/
+const getCommunityByNo = (no: any) => {
+  if (no) {
+    currentAPI.getByNoDetail({ no: no }).then(async (res: any) => {
+      console.log("路由进入", res);
+      /**社群不存在**/
+      if (res.status === 0 && res.code === 404) {
+        currentPageExist.value = true;
+      } else if (res.status === 1) {
+        /**社群存在**/
+        currentPageExist.value = false;
+        /**获取已经加入的我的社群列表**/
+        const list = await getMy();
         /**
-         * 检测是否加入我的社群,
-         * 如果加入直接跳过,
-         * 如果没有加入就将模拟添加,
-         * 但是在右侧会显示未添加入口
+         * 检测是否加入我的社群。
+         * 如果加入直接跳过,  如果没有加入就将模拟添加。
+         * 但是在右侧会显示未添加入口。
          * **/
-        const index = _.findIndex(list, (item) => {
+        const index = _.findIndex(list, (item: any) => {
           return Number(item?.communityInfo?.no) === Number(no);
         });
-        const myIndex = _.findIndex(myCommunity.value,(item)=>{
+        const myIndex = _.findIndex(myCommunity.value, (item: any) => {
           return Number(item?.route?.params?.no) === Number(no);
-        })
+        });
         if (index === -1 && myIndex === -1) {
           const data = res?.data;
           /**添加的参数**/
           const option = {
-            id:data.id,
-            cno:data.no,
+            id: data.id,
+            cno: data.no,
             float: "",
             img: data.icon,
             menuVisible: true,
@@ -113,23 +142,25 @@ router.beforeEach((to) => {
             route: { name: "myCommunity", params: { no: data.no } },
             tab: `community_${data.no}`,
             type: `community${data.no}`,
-            communityInfo:data,
+            communityInfo: data,
           };
-          console.log('测试',option);
+          console.log("测试", option);
           myCommunity.value.push(option);
         } else {
-          chatCommunity.setCurrentCommunityNo(to.params?.no);
-          chatCommunity.loadCurrentCommunity(to.params?.no);
+          chatCommunity.setCurrentCommunityNo(no);
+          chatCommunity.loadCurrentCommunity(no);
         }
-
-        /**状态**/
-        currentPageExist.value = true;
-      } else if (res?.code === 404) {
-        currentPageExist.value = false;
       }
     });
   }
-});
+};
+
+/**监听路由更新过程**/
+router.beforeEach((to,from,next)=>{
+  const no = to?.params?.no;
+  getCommunityByNo(no)
+  next();
+}) 
 
 /**通过计算属性获取当前社群编号**/
 const currentNo = computed(() => {
@@ -162,7 +193,7 @@ const childrenEmpty = computed(() => {
 });
 
 /**触发当前左侧点击事件**/
-const handleCurrentItem = async (data) => {
+const handleCurrentItem = async (data: any) => {
   const currentData = data.value ? data.value : data;
   /**其他**/
   currentItem.value = currentData;
@@ -254,16 +285,20 @@ const getMy = async () => {
   const filerMyList = _.filter(myList?.data?.list, (item) => {
     return item.hasOwnProperty("communityInfo");
   });
-  return filerMyList
+  return filerMyList;
 };
 
 onMounted(() => {
-  proxy.$bus.on("handleCurrentCommunity", (item) => {
+  proxy.$bus.on("handleCurrentCommunity", (item: any) => {
     handleCurrentItem(item);
   });
   proxy.$bus.on("cancelJoin", () => {
     currentItem.value = null;
   });
+});
+
+defineExpose({
+  getCommunityByNo,
 });
 </script>
 

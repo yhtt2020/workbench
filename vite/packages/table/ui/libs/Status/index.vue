@@ -52,13 +52,13 @@ export default {
       },
     },
     isGuest: {
-      handler(val) {
+      handler() {
         let res = this.$useEnv(this.status);
         this.plat = res;
       },
     },
     isSingle: {
-      handler(val) {
+      handler() {
         let res = this.$useEnv(this.status);
         this.plat = res;
       },

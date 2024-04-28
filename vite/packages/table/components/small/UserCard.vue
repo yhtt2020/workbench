@@ -11,7 +11,7 @@
         "
       >
         <FrameAvatar
-          :class="isOffline?'gray':''"
+          :class="$currentEnv() == 'offline'?'gray':''"
           :frame="displayUserInfo?.equippedItems?.frameDetail"
           :avatarSize="60"
           :avatarUrl="displayUserInfo.avatar"
@@ -217,7 +217,6 @@ import TencentCloudChat from "tim-js-sdk";
 import { message } from "ant-design-vue";
 import { useLogout } from "../../permission/user/useLogout";
 import { useEnv } from "../../permission/useEnv";
-import { usePermissionStore } from "../../permission/store";
 import { TUIConversationService } from "@tencentcloud/chat-uikit-engine";
 import { useUpdateUserInfo } from "../../permission/user/useUserPermit";
 
@@ -260,7 +259,6 @@ export default {
       myUserInfo: "userInfo",
     }),
     ...mapWritableState(appStore, ["userCardVisible"]),
-    ...mapWritableState(usePermissionStore, ["isOffline"]),
     displayUserInfo() {
       if (this.userCardUserInfo) {
         return {

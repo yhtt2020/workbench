@@ -41,7 +41,7 @@ import { computed, getCurrentInstance, toRefs } from "vue";
 import { nanoid } from "nanoid";
 import { useRouter } from "vue-router";
 
-import { communityStore } from "../../../page/chat/store/communityStore";
+import { chatCommunityStore } from "../../../apps/chat/store/chatCommunity";
 import { communityNavStore } from "../store/communityNavStore";
 
 import Avatar from "../../desk/navigationBar/components/Avatar.vue";
@@ -50,8 +50,8 @@ import Avatar from "../../desk/navigationBar/components/Avatar.vue";
 const router = useRouter();
 
 // pinia数据
-const communityNav = communityStore();
-const { community } = storeToRefs(communityNav);
+const communityNav = chatCommunityStore();
+const { myCommunity } = storeToRefs(communityNav);
 
 const comNav = communityNavStore();
 const { settingType, currentCommunity } = storeToRefs(comNav);
@@ -77,11 +77,11 @@ const { boxClass, boxStyle, size, gap } = toRefs(props);
 
 // 根据社群数量进行调整
 const communityNum = computed(() => {
-  return community.value.communityList.length !== 0;
+  return myCommunity.value.length !== 0;
 });
 
 // 团队导航图标公共数据
-const createNavEntry = (options) => ({
+const createNavEntry = (options:any) => ({
   bg: "",
   isBg: false,
   mode: "app",
