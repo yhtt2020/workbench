@@ -247,7 +247,7 @@ const cateList = computed(() => {
   /**社群权限**/
   if (isOwner.value !== "member") {
     /**开启悬浮模式并且社群ID一致**/
-    if (sildVisible.value) {
+    if (sideVisible.value) {
       return hideList.value;
     } else {
       return showList.value;
