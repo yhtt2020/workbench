@@ -36,7 +36,7 @@ const menus = computed(() => {
         },
         {
           newIcon: "fluent:tablet-16-regular",
-        name: "底部导航",
+          name: "底部导航",
           disabled: !navigationToggle.value[2],
           cb: () => {
             const data = validate(item.id);
@@ -46,7 +46,7 @@ const menus = computed(() => {
         {
           disabled: !navigationToggle.value[0],
           newIcon: "fluent:panel-left-contract-16-regular",
-        name: "左侧导航",
+          name: "左侧导航",
           cb: () => {
             const data = validate(item.id);
             addNav(data, "left");
@@ -55,13 +55,18 @@ const menus = computed(() => {
         {
           disabled: !navigationToggle.value[1],
           newIcon: "fluent:panel-right-contract-16-regular",
-        name: "右侧导航",
+          name: "右侧导航",
           cb: () => {
             const data = validate(item.id);
             addNav(data, "right");
           },
         },
       ],
+    },
+    {
+      name: "应用设置",
+      newIcon: "fluent:settings-16-regular",
+      cb: () => {},
     },
     {
       name: "更新文件",
