@@ -87,34 +87,21 @@ const { communityNavVisible } = storeToRefs(useNavigation);
 // 进入相对应社群
 const enterCommunity = (data) => {
   const no = data.no;
-  if (communityNavVisible.value) {
-    addCommunity(no);
-  } else {
-    window.$ui.confirm("是否需要开启社群导航", "", {
-      ok: () => {
-        communityNavVisible.value = true;
-        addCommunity(no);
-      },
-      type: "warning",
-    });
-  }
-};
-
-const addCommunity = (no) => {
   const index = _.findIndex(myCommunity.value, (item) => {
     return Number(item.route?.params?.no) === Number(no);
   });
-  if (index > -1) {
-    router.push({ name: "myCommunity", params: { no: no } });
-  } else {
-    const index = _.findIndex(myCommunity.value, (item) => {
-      return Number(item.route?.params?.no) === Number(no);
-    });
-    if (index === -1) {
-      router.push({ name: "myCommunity", params: { no: no } });
+  if(index > -1){
+    if (!communityNavVisible.value){
+      
     }
+    // addCommunity(no)
   }
+  else {}
 };
+
+// const addCommunity = (no) => {
+  
+// };
 </script>
 
 <style lang="scss" scoped>

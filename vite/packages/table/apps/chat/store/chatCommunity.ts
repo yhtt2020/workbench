@@ -63,6 +63,7 @@ export const chatCommunityStore = defineStore("chatCommunity", {
   actions: {
     // 初始化加载获取我的社群方法
     getMyCommunity() {
+      console.log('测试当前状态',(window as any).$currentEnv());
       comAPI.getMyCommunityList().then((res: any) => {
         if (res.status === 1) {
           const list = res.data?.list;

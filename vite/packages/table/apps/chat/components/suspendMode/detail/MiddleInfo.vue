@@ -196,29 +196,36 @@ const currentInfo = computed(() => {
 // };
 
 /**立即加入**/
-const joinNow = () => {
-  /**开启社群导航**/
-  if (communityNavVisible.value) {
-    joinCurrentCommunity();
-  } else {
-    window.$ui.confirm("是否需要开启社群导航", "", {
-      ok: async () => {
-        communityNavVisible.value = true;
-        joinCurrentCommunity();
-      },
-      type: "warning",
-    });
+const joinNow = async () => {
+  const option = { no: no.value };
+  const res = await comAPI.applyJoinCommunity(option);
+  if (res.status === 1) {
+    message.success(`${res.info}`);
+    /**没有开启社群导航**/
+    if (!communityNavVisible.value) {
+      window.$ui.confirm("为你添加「社群导航栏」", "", {
+        ok: async () => {
+          communityNavVisible.value = true;
+          chatCommunity.getMyCommunity();
+          chatCommunity.getCommunityTree(no.value);
+        },
+        no: () => {
+          window.$ui.confirm("稍后可以在「系统设置/导航设置」中开启", "", {
+            ok: () => {},
+            okText: "好的",
+          });
+        },
+        noText: "稍后再说",
+        okText: "立即添加",
+        type: "link",
+      });
+    } 
+    /**开启后直接跳过执行以下方法更新**/ 
+    else {
+      chatCommunity.getMyCommunity();
+      chatCommunity.getCommunityTree(no.value);
+    }
   }
-};
-/**触发加入社群方法**/ 
-const joinCurrentCommunity = async() => {
- const option = {no:no.value};
- const res  = await comAPI.applyJoinCommunity(option);
- if(res.status === 1){
-  message.success(`${res.info}`);
-  chatCommunity.getMyCommunity();
-  chatCommunity.getCommunityTree(no.value);
- }
 };
 </script>
 
