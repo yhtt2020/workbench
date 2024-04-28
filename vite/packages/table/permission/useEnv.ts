@@ -68,7 +68,7 @@ export type baseEnv = "offline" | "guest" | "single" | "online";
 export type useEnvType = baseEnv | any;
 
 export type UseEnv = (arr: useEnvType) => baseEnv;
-export const useEnv: UseEnv = (arr = "web") => {
+export const useEnv: UseEnv = (arr = "online") => {
   if (typeof arr == "string") {
     return envDetection(arr);
   }

@@ -29,7 +29,6 @@ import {completeTask} from "../../apps/task/task"
 import { appStore } from '../../store'
 import GradeSmallTipVue from '../GradeSmallTip.vue'
 import {useGlobalStore} from '../../apps/Global/store'
-import { usePermissionStore } from '../../permission/store'
 import { useUpdateUserInfo } from '../../permission/user/useUserPermit'
 export default {
   name: 'BarrageSender',
@@ -55,7 +54,6 @@ if (!this.$usePlat()) {
     ...mapState(teamStore, ['my','myTeamNo','myTeam']),
     ...mapWritableState(appStore,['userInfo','lvInfo']),
     ...mapWritableState(useGlobalStore,['loginVisible']),
-    ...mapWritableState(usePermissionStore,['isOffline']),
   },
   methods:{
     ...mapActions(teamStore,['updateMy']),
@@ -70,7 +68,7 @@ if (!this.$usePlat()) {
           okButtonWidth: '95',
           noButtonWidth: '95',
         });
-      }else if(this.isOffline){
+      }else if(window.$currentEnv() == 'offline'){
         /**提示重连弹窗**/
         window.$ui.confirm("提示", "目前处于离线模式，请重连后体验完整功能。", {
           ok: () => {

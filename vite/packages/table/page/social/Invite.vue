@@ -127,7 +127,6 @@ import { Modal, message } from 'ant-design-vue'
 import { codeStore } from '../../store/code'
 import HorizontalPanel from '../../components/HorizontalCaptrue.vue'
 import RayMedal from '../../components/small/RayMedal.vue'
-import { usePermissionStore } from '../../permission/store'
 import { useUpdateUserInfo } from '../../permission/user/useUserPermit'
 
 export default {
@@ -203,7 +202,6 @@ export default {
   computed: {
     ...mapState(appStore, ['userInfo']),
     ...mapWritableState(codeStore,['verified']),
-    ...mapWritableState(usePermissionStore,['isOffline']),
     envGuest(){
       return !window.$useEnv('guest')
     },
@@ -239,7 +237,7 @@ export default {
       })
     },
     async activeCode () {
-      if(this.isOffline){
+      if(window.$currentEnv() == 'offline'){
         /**提示重连弹窗**/
         window.$ui.confirm("提示", "目前处于离线模式，请重连后体验完整功能。", {
           ok: () => {
@@ -317,7 +315,7 @@ export default {
       return this.marked.indexOf(key) > -1
     },
     confirmExchange () {
-      if(this.isOffline){
+      if(window.$currentEnv() == 'offline'){
         /**提示重连弹窗**/
         window.$ui.confirm("提示", "目前处于离线模式，请重连后体验完整功能。", {
           ok: () => {

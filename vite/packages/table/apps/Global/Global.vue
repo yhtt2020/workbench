@@ -51,6 +51,7 @@ const { proxy }: any = getCurrentInstance();
 
 const globalStore: any = useGlobalStore();
 const { systemVisible, loginVisible, loginCb } = storeToRefs(globalStore);
+import { useUpdateUserInfo } from "../../permission/user/useUserPermit"
 
 // 文件弹窗
 const fileVisible = ref(true);
@@ -73,6 +74,7 @@ const openFile = (cb?: Function) => {
     // proxy.tt
   }, 10);
 };
+let timer
 onMounted(() => {
   // 打开系统设置
   proxy.$bus.on("openSystemSet", () => {
@@ -87,10 +89,18 @@ onMounted(() => {
   proxy.$bus.on("openFile", (cb) => {
     openFile(cb);
   });
-});
-
+  if(window.$currentEnv() == 'offline'){
 // 补充尝试登录
-// 添加重连定时器
+// 添加重连定时器 目前 五分钟重连一次
+    timer = setInterval(()=>{
+      if(window.$currentEnv() != 'offline'){
+        clearInterval(timer)
+        timer = null
+      }
+      useUpdateUserInfo()
+    }, 300000)
+  }
+});
 
 </script>
 
