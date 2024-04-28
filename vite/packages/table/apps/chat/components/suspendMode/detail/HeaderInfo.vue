@@ -5,7 +5,7 @@
     <img
       :src="placeholderData.bgURL"
       class="w-full h-full object-cover"
-      :class="sildVisible ? 'rounded-t-xl' : ''"
+      :class="sideVisible ? 'rounded-t-xl' : ''"
     />
 
     <!-- 返回按钮 -->
