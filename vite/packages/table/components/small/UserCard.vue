@@ -11,7 +11,7 @@
         "
       >
         <FrameAvatar
-          :class="window.$currentEnv() == 'offline'?'gray':''"
+          :class="$currentEnv() == 'offline'?'gray':''"
           :frame="displayUserInfo?.equippedItems?.frameDetail"
           :avatarSize="60"
           :avatarUrl="displayUserInfo.avatar"
