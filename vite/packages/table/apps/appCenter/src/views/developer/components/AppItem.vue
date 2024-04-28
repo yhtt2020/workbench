@@ -6,6 +6,7 @@ import { installV2 } from "../hooks/installV2";
 import { uninstall } from "../hooks/uninstall";
 import { addIcon, addNav } from "../hooks/add";
 import { navStore as useNavStore } from "../../../../../../store/nav";
+import { validate } from "../hooks/validate";
 const navStore = useNavStore();
 const { navigationToggle } = storeToRefs(navStore);
 const { item } = defineProps<{ item: any }>();
@@ -29,34 +30,43 @@ const menus = computed(() => {
           name: "桌面",
           newIcon: "fluent:desktop-16-regular",
           cb: () => {
-            addIcon(item);
+            const data = validate(item.id);
+            addIcon(data);
           },
         },
         {
-          name: "底部导航栏",
-          newIcon: "fluent:desktop-16-regular",
+          newIcon: "fluent:tablet-16-regular",
+          name: "底部导航",
           disabled: !navigationToggle.value[2],
           cb: () => {
-            addNav(item, "bottom");
+            const data = validate(item.id);
+            addNav(data, "bottom");
           },
         },
         {
           disabled: !navigationToggle.value[0],
-          name: "左侧导航栏",
-          newIcon: "fluent:desktop-16-regular",
+          newIcon: "fluent:panel-left-contract-16-regular",
+          name: "左侧导航",
           cb: () => {
-            addNav(item, "left");
+            const data = validate(item.id);
+            addNav(data, "left");
           },
         },
         {
           disabled: !navigationToggle.value[1],
-          name: "右侧导航栏",
-          newIcon: "fluent:desktop-16-regular",
+          newIcon: "fluent:panel-right-contract-16-regular",
+          name: "右侧导航",
           cb: () => {
-            addNav(item, "right");
+            const data = validate(item.id);
+            addNav(data, "right");
           },
         },
       ],
+    },
+    {
+      name: "应用设置",
+      newIcon: "fluent:settings-16-regular",
+      cb: () => {},
     },
     {
       name: "更新文件",
@@ -64,6 +74,10 @@ const menus = computed(() => {
       cb: async () => {
         await installV2(item.id);
       },
+    },
+    {
+      name: "上传应用",
+      newIcon: "fluent:cloud-arrow-up-16-regular",
     },
     {
       name: "卸载",
@@ -124,7 +138,6 @@ const entry = () => {
 </script>
 
 <template>
-
   <!-- 添加时预览组件 -->
   <xt-preview-v2
     v-if="previewVisible"

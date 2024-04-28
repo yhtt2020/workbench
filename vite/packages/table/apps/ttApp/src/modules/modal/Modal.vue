@@ -299,7 +299,7 @@ const settingClose = () => {
         <div
           class="group header-left hover:tt-theme-bg-2 relative pl-2 rounded-lg title h-[32px] flex items-center text-sm cursor-pointer"
         >
-          <a-avatar shape="square" class="" :size="16" :src="data._logo" />
+        <a-avatar shape="square" class="" :size="16" :src="data._logo" />
           <span class="mx-2">{{ data.name }}</span>
         </div>
 

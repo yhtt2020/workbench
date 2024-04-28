@@ -1,13 +1,16 @@
-<template>
- <div class="w-full p-4 h-full xt-text-2">
+<!-- 社群设置页面主入口 -->
+ <template>
+  <div>社群设置</div>
+ <!-- <div class="w-full p-4 h-full xt-text-2">
   <xt-select-nav :navList="classNav" lw="128" v-model:selectItem="classItem" :enableRoute="true">
     <div class="w-full px-4">
       <router-view />
     </div>
   </xt-select-nav>
- </div>
+ </div> -->
 </template>
 
+<!--
 <script>
 export default {
  props:['no'],
@@ -69,4 +72,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-</style>
+</style> -->

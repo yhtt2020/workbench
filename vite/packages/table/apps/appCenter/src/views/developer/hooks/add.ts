@@ -16,7 +16,7 @@ export const addNav = (data: any, position?: string) => {
     rightNavigationList,
   }: any = storeToRefs(nav);
 
-  const iconData = conversionIcon(data);
+  const iconData = ttappConversionIcon(data);
   // console.log("iconData :>> ", iconData,data);
   let navData = useFileConversionNav(iconData);
   // 添加第三方卡片id做标识
@@ -55,7 +55,7 @@ export const addNav = (data: any, position?: string) => {
     }
   }
 };
-const conversionIcon = (data: any) => {
+export const ttappConversionIcon = (data: any) => {
   return useFileConversionIcon({
     ...defaultData,
     id: data.id,
@@ -66,7 +66,7 @@ const conversionIcon = (data: any) => {
   });
 };
 export const addIcon = (data: any) => {
-  data = conversionIcon(data);
+  data = ttappConversionIcon(data);
   useAddCard({
     name: "myIcons",
     data: {

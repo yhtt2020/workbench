@@ -1,4 +1,4 @@
-<!-- 当前群聊未加入的页面 -->
+<!-- 当前群聊未加入的状态页面 -->
 <template>
   <div class="w-full flex h-full flex-col items-center justify-center">
     <div style="width: 452px" class="flex flex-col items-center justify-center">
@@ -78,8 +78,13 @@
 
 <script setup>
 import { ref, toRefs, watchEffect, getCurrentInstance } from "vue";
-import { TUIConversationService } from "@tencentcloud/chat-uikit-engine";
+import {
+  TUIConversationService,
+  TUIStore,
+  StoreName,
+} from "@tencentcloud/chat-uikit-engine";
 import { message } from "ant-design-vue";
+import _ from "lodash-es";
 
 const { proxy } = getCurrentInstance();
 
@@ -93,6 +98,9 @@ const { groupInfo } = toRefs(props);
 
 /**社群信息**/
 const currentUnGroupInfo = ref({});
+/**当前加入的群聊**/
+const currentGroupList = ref([]);
+
 watchEffect(async () => {
   try {
     if (groupInfo.value.hasOwnProperty("id")) {
@@ -103,11 +111,22 @@ watchEffect(async () => {
         currentUnGroupInfo.value = currentGroup;
       }
     } else {
-      currentUnGroupInfo.value = groupInfo.value[0];
+      if (groupInfo.value[0]) {
+        currentUnGroupInfo.value = groupInfo.value[0];
+      } else {
+        currentUnGroupInfo.value = groupInfo.value;
+      }
     }
   } catch (error) {
     console.warn("异常错误", error);
   }
+});
+
+/**当前加入的群聊**/
+TUIStore.watch(StoreName.GRP, {
+  groupList: (data) => {
+    currentGroupList.value = data;
+  },
 });
 
 /**取消加入**/
@@ -116,19 +135,26 @@ const cancelJoin = () => {
 };
 /**立即加入**/
 const joinNow = async () => {
-  console.log("加入", currentUnGroupInfo.value.groupID);
-  const currentID = currentUnGroupInfo.value.groupID;
-  // const currentGroupID = `GROUP${currentUnGroupInfo.value.groupID}`;
-  const option = { groupID: currentID };
-  const res = await window.$chat?.chat?.joinGroup(option);
-  if (res.code === 0) {
-    if (res.data.status === "WaitAdminApproval") {
-      message.success("入群申请已发出,等待群主和管理员审核");
-    } else if (res.data.status === "JoinedSuccess") {
-      message.success("群聊添加成功");
-    } else if (res.data.status === "AlreadyInGroup") {
-      message.success("已经在群聊中");
+  const currentID = currentUnGroupInfo.value?.groupID;
+  /**是否存在**/ 
+  const index = _.findIndex(currentGroupList.value, (item) => {
+    return String(item?.groupID) === String(currentID);
+  });
+  if (index === -1) {
+    const option = { groupID: currentID };
+    const res = await window.$chat?.chat?.joinGroup(option);
+    if (res.code === 0) {
+      if (res.data.status === "WaitAdminApproval") {
+        message.success("入群申请已发出,等待群主和管理员审核");
+      } else if (res.data.status === "JoinedSuccess") {
+        message.success("群聊添加成功");
+      } else if (res.data.status === "AlreadyInGroup") {
+        message.success("已经在群聊中");
+      }
+      cancelJoin();
     }
+  }
+  else {
     cancelJoin();
   }
 };

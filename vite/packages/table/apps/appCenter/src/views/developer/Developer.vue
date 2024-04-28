@@ -16,13 +16,19 @@ const { ttappList } = storeToRefs(ttappStore);
         <xt-ify-icon icon="fluent:code-16-regular" class="mr-2" />
         开发者
       </div>
-      <div class="flex items-center"><Install class="mr-3" /><Exit /></div>
+      <div class="flex items-center">
+        <xt-button w="95" h="32" radius="8" class="text-sm"
+          >开发者中心
+        </xt-button>
+        <Install class="mr-3" />
+        <Exit />
+      </div>
     </div>
     <!-- 内容 -->
     <xt-scrollbar v-if="ttappList.length" class="h-full" :x="false" :y="true">
       <xt-option-box>
         <div class="flex flex-col mb-4">
-          <div class="flex">
+          <div class="flex mb-[5px]">
             <span class="">🎉</span>
             你可以在这里快速导入并测试应用，验证你的应用在工作台内的使用效果。
           </div>

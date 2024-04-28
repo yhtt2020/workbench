@@ -71,7 +71,7 @@ export const chatCommunityStore = defineStore("chatCommunity", {
               const index = _.findIndex(this.myCommunity, function (find: any) {
                 return String(item.id) === String(find.id);
               });
-              if (index === -1) {
+              if (index === -1 && item.role) {
                 const options = {
                   ...item,
                   img: item.communityInfo?.icon,
@@ -212,7 +212,6 @@ export const chatCommunityStore = defineStore("chatCommunity", {
     getCategoryList(no: any) {
       const option = { communityNo: parseInt(no) };
       comAPI.getCommunityListChannel(option).then((res: any) => {
-        console.log("res", res);
         if (res.status) {
           const list = res.data.list;
           const filterCategory = _.filter(list, function (item: any) {

@@ -181,7 +181,7 @@ import { controlStore } from "../apps/control/hooks/controlStore";
 import WinPanel from "./windowPanel/WinPanel.vue";
 import Setting from "./bottomPanel/setting/CommunitySetting.vue";
 import ComNavSearch from "./bottomPanel/search/ComNavSearch.vue";
-import { communityStore } from "../page/chat/store/communityStore";
+import { chatCommunityStore } from "../apps/chat/store/chatCommunity";
 import DeskAppModal from "./bottomPanel/desk/DeskAppList.vue";
 import { startApp } from "../ui/hooks/useStartApp";
 
@@ -508,7 +508,7 @@ export default {
       "removeFootNavigationList",
     ]),
     ...mapActions(useNavigationStore, ["toggleEdit", "toggleTaskBox"]),
-    ...mapActions(communityStore, ["getMyCommunity"]),
+    ...mapActions(chatCommunityStore, ["getMyCommunity"]),
     mergeData,
     // 监听鼠标位置
     listenMouse(e) {
