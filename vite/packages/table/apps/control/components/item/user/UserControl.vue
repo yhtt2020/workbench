@@ -12,7 +12,7 @@
         class="w-full flex justify-center h-full pb-2 object-fill"
         :frame="displayUserInfo?.equippedItems?.frameDetail"
         @close="close"
-        :class="usePermission.isOffline ? 'gray' : ''"
+        :class="window.$currentEnv() == 'offline' ? 'gray' : ''"
       />
       <a-tooltip
         v-if="
@@ -66,7 +66,6 @@ import { useRouter } from "vue-router";
 import FrameAvatar from "../../../../../components/avatar/FrameAvatar.vue";
 import Medal from "../../../../../components/team/Medal.vue";
 import OnlineMedal from "../../../../../components/team/OnlineMedal.vue";
-import { usePermissionStore } from "../../../../../permission/store";
 import { useUpdateUserInfo } from "../../../../../permission/user/useUserPermit";
 const props = defineProps({
   userinfo: {
@@ -75,7 +74,6 @@ const props = defineProps({
   },
 });
 const { proxy } = getCurrentInstance();
-const usePermission = usePermissionStore()
 const router = useRouter();
 
 const team = teamStore();

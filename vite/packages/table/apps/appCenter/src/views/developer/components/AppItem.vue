@@ -6,6 +6,7 @@ import { installV2 } from "../hooks/installV2";
 import { uninstall } from "../hooks/uninstall";
 import { addIcon, addNav } from "../hooks/add";
 import { navStore as useNavStore } from "../../../../../../store/nav";
+import { validate } from "../hooks/validate";
 const navStore = useNavStore();
 const { navigationToggle } = storeToRefs(navStore);
 const { item } = defineProps<{ item: any }>();
@@ -29,7 +30,8 @@ const menus = computed(() => {
           name: "桌面",
           newIcon: "fluent:desktop-16-regular",
           cb: () => {
-            addIcon(item);
+            const data = validate(item.id);
+            addIcon(data);
           },
         },
         {
@@ -37,7 +39,8 @@ const menus = computed(() => {
           newIcon: "fluent:desktop-16-regular",
           disabled: !navigationToggle.value[2],
           cb: () => {
-            addNav(item, "bottom");
+            const data = validate(item.id);
+            addNav(data, "bottom");
           },
         },
         {
@@ -45,7 +48,8 @@ const menus = computed(() => {
           name: "左侧导航栏",
           newIcon: "fluent:desktop-16-regular",
           cb: () => {
-            addNav(item, "left");
+            const data = validate(item.id);
+            addNav(data, "left");
           },
         },
         {
@@ -53,7 +57,8 @@ const menus = computed(() => {
           name: "右侧导航栏",
           newIcon: "fluent:desktop-16-regular",
           cb: () => {
-            addNav(item, "right");
+            const data = validate(item.id);
+            addNav(data, "right");
           },
         },
       ],
@@ -64,6 +69,10 @@ const menus = computed(() => {
       cb: async () => {
         await installV2(item.id);
       },
+    },
+    {
+      name: "上传应用",
+      newIcon: "fluent:cloud-arrow-up-16-regular",
     },
     {
       name: "卸载",
@@ -124,7 +133,6 @@ const entry = () => {
 </script>
 
 <template>
-
   <!-- 添加时预览组件 -->
   <xt-preview-v2
     v-if="previewVisible"

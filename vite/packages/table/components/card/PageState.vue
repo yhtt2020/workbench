@@ -24,11 +24,11 @@ const props = defineProps({
 })
 
 const isShow = computed(() => {
-  return props.env[window.$currentEnv] || (props.env.offline && window.$isOffline)
+  return props.env[window.$currentEnv] || (props.env.offline && window.$currentEnv() == 'offline')
 });
 
 const platform = computed(()=>{
-  if (props.env.offline && window.$isOffline) {
+  if (props.env.offline && window.$currentEnv() == 'offline') {
     return '离线模式'
   }else if (props.env.offline && window.$isGuest){
     return '游客模式'

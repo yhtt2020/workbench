@@ -4,8 +4,9 @@ import { useTTAppStore } from "../../../../../ttApp/src/store";
 import { storeToRefs } from "pinia";
 
 import { useMit } from "../../../../../../hooks";
-import { navStore } from "../../../../../../store/nav";
+
 import { addIcon, addNav } from "./add";
+import { update } from "./update";
 
 // 安装实现
 export const installV2 = async (id?: string) => {
@@ -111,40 +112,7 @@ const installSuccess = (data: any, id?: string) => {
       return item;
     });
     // 更新导航栏
-    setTimeout(() => {
-      updateNav(currentData.id);
-      // useMit.emit("updateNav", currentData.id);
-      useMit.emit("updateTTApp", currentData.id);
-    }, 0);
+    useMit.emit("updateTTApp", currentData.id);
+    update(currentData.id);
   }
-};
-
-// 更新导航栏图标
-const updateNav = (id) => {
-  const nav = navStore();
-  const ttApp: any = useTTAppStore();
-  // 更新导航元素的辅助函数
-  const updateNavItem = (navItem) => {
-    if (navItem) {
-      const item = ttApp.select(id);
-      navItem.name = item.name;
-      navItem.icon = item._logo;
-    }
-  };
-
-  // 查找各个导航列表中的对应元素
-  const footIcon = nav.copyFootNav.find(
-    (item: any) => item.cardData?.id === id
-  );
-  const leftIcon = nav.sideNavigationList.find(
-    (item: any) => item.cardData?.id === id
-  );
-  const rightIcon = nav.rightNavigationList.find(
-    (item: any) => item.cardData?.id === id
-  );
-
-  // 更新导航元素
-  updateNavItem(footIcon);
-  updateNavItem(leftIcon);
-  updateNavItem(rightIcon);
 };

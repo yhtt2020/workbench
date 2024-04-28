@@ -3,6 +3,12 @@
     <!-- <div style="position:fixed;z-index:9999999999;">
       <div @click="test1">测试isOffline{{isOffline}}</div>
       <div @click="test2">测试isGuest{{isGuest}}</div>
+      <div @click="test3">测试isSingle{{isSingle}}</div>
+      <div @click="test4">测试currentEnv{{ $useEnv(["offline", "guest", "single", "online"]) }}</div>
+      <div @click="test4">测试currentEnv{{ $currentEnv() }}</div>
+      <div @click="test5">mac{{ $usePlat(["mac", "web", "win"]) }}</div>
+      <div @click="test6">web{{ $usePlat(["mac", "web", "win"]) }}</div>
+      <div @click="test7">win{{ $usePlat(["mac", "web", "win"]) }}</div>
     </div> -->
     <desk-group
       @changeDesk="changeDesk"
@@ -241,7 +247,7 @@ export default {
       "freeLayoutDataTmp",
       "freeLayoutStateTmp",
     ]),
-    ...mapWritableState(usePermissionStore, ["isOffline", "isSingle", "isGuest", "getGuest"]),
+    ...mapWritableState(usePermissionStore, ["isOffline", "isSingle", "isGuest", "getGuest", "isSingle"]),
     deskGroupRef() {
       return this.$refs.deskGroupRef;
     },
@@ -403,7 +409,7 @@ export default {
     ...mapActions(weatherStore, ["fixData"]),
     // ...mapActions(deskStore, ["setDeskSize"]),
     ...mapActions(taskStore, ["initTask"]),
-    ...mapActions(usePermissionStore, ["setOffline", "setGuest"]),
+    ...mapActions(usePermissionStore, ["setOffline", "setGuest", "setSingle"]),
     initGrids() {
       this.currentDesk.cards = this.cleanMuuriData(deskTemplate["daily"]);
     },
@@ -594,11 +600,22 @@ export default {
       this.visibleScale = false;
       this.visibleGuide = true;
     },
+    // 调试用 后续删除
     test1(){
       this.setOffline(!this.isOffline)
     },
     test2(){
       this.setGuest(!this.isGuest)
+    },
+    test3(){
+      this.setSingle(!this.isSingle)
+    },
+    test4(){
+      // this.setSingle(!this.isSingle)
+      console.log('current1', window.$currentEnv())
+      console.log('current2', window.$useEnv(["offline", "guest", "single", "online"]))
+      console.log('current3', window.$currentPlat())
+      console.log('current4', window.$usePlat(["win", "mac", "web"]))
     },
     // 关闭缩放弹窗
     closeWebLogin() {
