@@ -71,12 +71,9 @@ const setUserInfo = async () => {
  * 更新用户信息 重连
  */
 export const useUpdateUserInfo = async () => {
-  const userStore: any = appStore();
   const permissionStore = usePermissionStore();
   // 1 获取用户信息
   console.time("UserInfo Run Time");
-
-  // if (!userStore.userInfo) return 
 
   let res = await getUserInfo();
 
