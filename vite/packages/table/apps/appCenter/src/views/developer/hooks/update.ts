@@ -43,8 +43,16 @@ export const updateDesk = (id: string) => {
           }
           // 过滤应用卡片
           if (data.type == "card") {
-            const currentId = data?.cardData?.customData?.parentId;
+            console.log("data :>> ", data);
+            const currentId = data?.cardData?.id
+            console.log(
+              "currentId !==id,currentId,id :>> ",
+              currentId !== id,
+              currentId,
+              id
+            );
             if (currentId !== id) return data;
+            console.log("2222222 :>> ", 2222222);
             let ttappData = validate(id);
             data.cardData.customData = ttappData;
             data.icon = ttappData._logo;
