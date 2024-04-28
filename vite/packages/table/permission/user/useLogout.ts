@@ -2,7 +2,7 @@ import cache from "../../components/card/hooks/cache";
 import { appStore } from "../../store";
 import { usePermissionStore } from "../store";
 import { useToast } from "vue-toastification";
-import { ChatLogout } from "../../apps/chat/hooks/chat";
+import { chatLogout } from "../../apps/chat/hooks/chat";
 /**
  * 退出登录
  */
@@ -17,7 +17,7 @@ export const useLogout = () => {
   // 清空本地 token
   cache.set("ttUserToken", "");
   // 退出群聊
-  new ChatLogout().logout();
+  chatLogout();
 };
 
 export const useClearUserInfo = () => {
