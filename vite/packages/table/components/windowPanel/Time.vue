@@ -13,7 +13,7 @@
                 {{ city.now.text }} {{ city.now.temp }}℃
             </div>
         </div>
-        <div v-if="settings.showTopbarTime"  @click="enterTime" class="flex">
+        <div v-if="settings.showTopbarTime"  @click="enterTime" class="flex justify-end">
             <div class="xt-text font-14 xt-font">{{ dateTime.year }}/{{ dateTime.month }}/{{ dateTime.day }} </div>
         </div>
     </div>
