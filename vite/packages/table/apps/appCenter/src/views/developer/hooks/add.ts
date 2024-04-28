@@ -28,30 +28,30 @@ export const addNav = (data: any, position?: string) => {
   if (position != undefined) {
     // 添加到底部导航栏
     if (position == "bottom") {
-      copyFootNav.value.push(navData);
+      copyFootNav.value.unshift(navData);
     }
     // 添加到左侧导航栏
     else if (position == "left") {
-      sideNavigationList.value.push(navData);
+      sideNavigationList.value.unshift(navData);
     }
     // 添加到右侧导航栏
     else if (position == "right") {
-      rightNavigationList.value.push(navData);
+      rightNavigationList.value.unshift(navData);
     }
   }
   // 没有指定位置
   else {
     // 添加到底部导航栏
     if (navigationToggle.value[2]) {
-      copyFootNav.value.push(navData);
+      copyFootNav.value.unshift(navData);
     }
     // 添加到左侧导航栏
     else if (navigationToggle.value[0]) {
-      sideNavigationList.value.push(navData);
+      sideNavigationList.value.unshift(navData);
     }
     // 添加到右侧导航栏
     else if (navigationToggle.value[1]) {
-      rightNavigationList.value.push(navData);
+      rightNavigationList.value.unshift(navData);
     }
   }
 };
