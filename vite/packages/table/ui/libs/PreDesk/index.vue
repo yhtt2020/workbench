@@ -17,6 +17,7 @@
   import { mapActions, mapWritableState } from 'pinia'
   import { cardStore } from '../../../store/card';
   import { appStore } from "../../../store";
+  import {DEFAULT} from '../../../js/const/default'
   export default {
     props:['chooseIndex'],
     mixins: [previewMinis],
@@ -25,7 +26,7 @@
       ...mapWritableState(appStore, ['backgroundImage']),
       bg(){
         let background = 'url('+ this.backgroundImage.path +')'
-        return this.backgroundImage.path?background:"url('https://a.apps.vip/icons/defaultBackground.jpg')"
+        return this.backgroundImage.path?background:`url('${DEFAULT.WALLPAPER}')`
       },
       customData(){
         if(this.chooseIndex){
