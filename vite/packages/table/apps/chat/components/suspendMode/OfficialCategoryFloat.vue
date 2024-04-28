@@ -8,7 +8,7 @@
     <img
       :src="textUrl"
       class="w-full h-full object-cover"
-      :class="sildVisible ? 'rounded-t-xl' : ''"
+      :class="sideVisible ? 'rounded-t-xl' : ''"
     />
     <!-- 下拉菜单 -->
     <div class="community-name h-11 w-full com-line-bg">
@@ -26,7 +26,7 @@
   </div>
 
   <!-- 底部列表 -->
-  <div :class="sildVisible ? 'float-container' : 'h-full'">
+  <div :class="sideVisible ? 'float-container' : 'h-full'">
     <div
       class="px-3 h-full flex flex-col my-2"
       :style="columnVisible ? { width: '336px' } : { width: '240px' }"
@@ -42,7 +42,7 @@
           <div class="w-full flex items-center justify-start">
             <div
               class="px-2 py-1 font-12 rounded-md font-400 xt-font xt-text-2 mb-2"
-              :class="sildVisible ? '' : 'xt-bg'"
+              :class="sideVisible ? '' : 'xt-bg'"
             >
               社群号：{{ officialInfo.no }}
             </div>
@@ -101,7 +101,7 @@
           <div class="flex items-center">
             <span
               class="px-2 py-1 font-12 rounded-md font-400 xt-font xt-text-2 mr-3"
-              :class="sildVisible ? '' : 'xt-bg'"
+              :class="sideVisible ? '' : 'xt-bg'"
             >
               社群号：{{ officialInfo?.no }}
             </span>
@@ -230,7 +230,7 @@ const columnVisible = computed(() => {
   return setting.value.isColumnMode;
 });
 // 侧边栏隐藏模式
-const sildVisible = computed(() => {
+const sideVisible = computed(() => {
   return (
     setting.value.suspendVisible.enable &&
     setting.value.suspendVisible.no !== null &&
@@ -239,7 +239,7 @@ const sildVisible = computed(() => {
 });
 // 下拉菜单列表
 const dropdownList = computed(() => {
-  if (sildVisible.value) {
+  if (sideVisible.value) {
     return showList.value;
   } else {
     return hideList.value;
@@ -258,7 +258,7 @@ const isCollapsed = computed(() => {
 });
 // 计算折叠面板的高度
 const calcHeight = computed(() => {
-  if (sildVisible.value) {
+  if (sideVisible.value) {
     return {
       height: "300px",
     };
