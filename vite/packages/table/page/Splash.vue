@@ -82,15 +82,14 @@ export default {
       // timeout: null,
     }
   },
-  created () {
+  async mounted () {
     if (this.$usePlat('web')) {
       //如果是web端，则直接跳过splash界面，状态类的在后面进行判断
       this.$router.replace({ name: 'home' })
       //直接跳过wizarde引导
       localStorage.setItem('wizarded', '1')
+      return
     }
-  },
-  async mounted () {
     // 初始化Stores，读入相关的配置
     this.initStores()
     //设置计时器等待全部的store初始化完成
