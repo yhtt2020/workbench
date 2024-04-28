@@ -31,7 +31,7 @@
                   <slot name="cardSize"></slot>
                 </template>
               </Menus>
-              
+              <!-- 扩展插槽 -->
               <slot name="extraMenu"></slot>
             </div>
           </slot>

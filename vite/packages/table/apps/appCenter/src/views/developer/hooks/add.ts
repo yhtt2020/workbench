@@ -16,8 +16,13 @@ export const addNav = (data: any, position?: string) => {
     rightNavigationList,
   }: any = storeToRefs(nav);
 
-  const iconData = ttappConversionIcon(data);
-  const navData = useFileConversionNav(iconData);
+  const iconData = conversionIcon(data);
+  // console.log("iconData :>> ", iconData,data);
+  let navData = useFileConversionNav(iconData);
+  // 添加第三方卡片id做标识
+  navData.cardData = {
+    id:data.id
+  }
 
   // 有指定位置
   if (position != undefined) {

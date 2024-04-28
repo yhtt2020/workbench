@@ -2,57 +2,72 @@
     <div>
         <xt-divider class="mx-auto" style="width: 90%" />
         <div class="w-full h-full text-sm text-center xt-text-2 items">工作台常用功能</div>
+        <div class="flex items-center justify-center gap-6 mx-auto mb-2" style="width: 90%">
+            <xt-new-icon 
+                v-for="(item, index) in iconList" 
+                :key="index" 
+                :icon="item.icon" 
+                size="18" 
+                class="pointer xt-text"
+                @click="item.cb()"
+            />
+        </div>
     </div>
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive } from 'vue'
+import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router';
+import { startApp } from '../../../ui/hooks/useStartApp';
 
+const router = useRouter()
 
-// {
-//       divider: true,
-//       id: 10,
-//     },
-//     {
-//       id: 11,
-//       type: "systemApp",
-//       newIcon: "fluent:lock-closed-16-regular",
-//       name: "锁定屏幕",
-//       event: "lock",
-//       fn: () => {
-//         this.newOpenApp(this.builtInFeatures[0]);
-//       },
-//     },
-//     {
-//       id: 15,
-//       type: "systemApp",
-//       newIcon: "fluent:settings-16-regular",
-//       name: "基础设置",
-//       event: "setting",
-//       fn: () => {
-//         this.newOpenApp(this.builtInFeatures[1]);
-//       },
-//     },
-//     {
-//       id: 20,
-//       type: "systemApp",
-//       newIcon: "fluent:full-screen-maximize-16-filled",
-//       name: "全屏显示",
-//       event: "fullscreen",
-//       fn: () => {
-//         this.newOpenApp(this.builtInFeatures[2]);
-//       },
-//     },
-//     {
-//       id: 25,
-//       type: "systemApp",
-//       newIcon: "fluent:slide-settings-24-regular",
-//       name: "设备设置",
-//       event: "status",
-//       fn: () => {
-//         this.newOpenApp(this.builtInFeatures[3]);
-//       },
-//     },
+// const emit = defineEmits(['click'])
+
+const list = ref([
+    {
+        icon:'fluent:full-screen-maximize-16-filled',
+        name:'全屏显示',
+        disabled:'client',
+        cb:()=>{
+            startApp('systemApp', 'fullscreen', router)
+            console.log('全屏显示',iconList.value)
+        }
+    },
+    {
+        icon:'fluent:settings-16-regular',
+        name:'系统设置',
+        disabled:'web',
+        cb:()=>{
+            startApp('systemApp', 'setting', router)
+        }
+    },
+    {
+        icon:'fluent:lock-closed-16-regular',
+        name:'锁定屏幕',
+        disabled:'client',
+        cb:()=>{
+            startApp('systemApp', 'lock', router)
+        }
+    },
+    {
+        icon:'fluent:power-24-regular',
+        name:'电源控制',
+        disabled:'client',
+        cb:()=>{
+            startApp('systemApp', 'power', router)
+        }
+    }
+])
+
+// 当为web端时，只保留系统设置
+const iconList = computed(() => {
+    if(window.$usePlat()){
+        return list.value.filter(item => item.disabled !== 'client')
+    } else {
+        return list.value
+    }
+})
 </script>
 <style lang='scss' scoped>
 .items {
