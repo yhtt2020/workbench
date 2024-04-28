@@ -71,111 +71,36 @@ const clearDesk = (id: string) => {
 };
 /** 删除导航栏数据 */
 const clearNav = (id: string) => {
-  // 7for 24if
-  // 获取导航数据
   const navStore = useNavStore();
-  //
-  const { copyFootNav, sideNavigationList, rightNavigationList }: any =
-    storeToRefs(navStore);
+  const { copyFootNav, sideNavigationList, rightNavigationList } = storeToRefs(navStore);
 
-  // 过滤底部导航栏
-  copyFootNav.value = copyFootNav.value.filter((data: any) => {
-    // 过滤应用卡片
-    if (data.type == "card") {
-      const currentId = data?.cardData?.customData?.parentId;
-      if (currentId === id) {
-        return false;
+  // 主要的导航栏删除函数
+  const filterNavItem = (items) => items.filter(item => {
+    if (item.type === "folder") {
+      item.children = item.children.filter(child => filterByType(child, id));
+      if (item.children.length === 0) {
+        return false; // 当文件夹为空时，删除该文件夹
       }
     }
-    // 过滤单图标
-    if (data.type == "ttapp" && data.value == id) {
-      return false;
-    }
-    // 过滤文件夹
-    if (data.type == "folder") {
-      
-      data.children = data.children.filter((data) => {
-        // 过滤ttapp
-        if (data.type == "ttapp" && data.value == id) {
-          return false;
-        }
-        // 过滤应用卡片
-        if (data.type == "card") {
-          const currentId = data?.cardData?.customData?.parentId;
-          if (currentId === id) {
-            return false;
-          }
-        }
-        return true;
-      });
-    }
-    return true;
+    return filterByType(item, id);
   });
-  // 过滤左边导航栏
-  sideNavigationList.value = sideNavigationList.value.filter((data: any) => {
-    // 过滤应用卡片
-    if (data.type == "card") {
-      const currentId = data?.cardData?.customData?.parentId;
-      if (currentId === id) {
-        return false;
-      }
+
+  // 根据类型和id过滤条目
+  const filterByType = (item, id) => {
+    if (item.type === "card" || item.type === "ttapp") {
+      return item.cardData?.id !== id;
     }
-    // 过滤单图标
-    if (data.type == "ttapp" && data.value == id) {
-      return false;
-    }
-    // 过滤文件夹
-    if (data.type == "folder") {
-      data.children = data.children.filter((data) => {
-        // 过滤ttapp
-        if (data.type == "ttapp" && data.value == id) {
-          return false;
-        }
-        // 过滤应用卡片
-        if (data.type == "card") {
-          const currentId = data?.cardData?.customData?.parentId;
-          if (currentId === id) {
-            return false;
-          }
-        }
-        return true;
-      });
-    }
-    return true;
-  });
-  // 过滤右边导航栏
-  rightNavigationList.value = rightNavigationList.value.filter((data: any) => {
-    // 过滤应用卡片
-    if (data.type == "card") {
-      const currentId = data?.cardData?.customData?.parentId;
-      if (currentId === id) {
-        return false;
-      }
-    }
-    // 过滤单图标
-    if (data.type == "ttapp" && data.value == id) {
-      return false;
-    }
-    // 过滤文件夹
-    if (data.type == "folder") {
-      data.children = data.children.filter((data) => {
-        // 过滤ttapp
-        if (data.type == "ttapp" && data.value == id) {
-          return false;
-        }
-        // 过滤应用卡片
-        if (data.type == "card") {
-          const currentId = data?.cardData?.customData?.parentId;
-          if (currentId === id) {
-            return false;
-          }
-        }
-        return true;
-      });
-    }
-    return true;
-  });
+    return true; // 默认保留该项
+  };
+
+  // 底部导航栏
+  copyFootNav.value = filterNavItem(copyFootNav.value);
+  // 左侧导航栏
+  sideNavigationList.value = filterNavItem(sideNavigationList.value);
+  // 右侧导航栏
+  rightNavigationList.value = filterNavItem(rightNavigationList.value);
 };
+
 /** 删除db数据 */
 export const clearDb = async (id: string) => {
   const res: any = await new Promise((reject) => {
