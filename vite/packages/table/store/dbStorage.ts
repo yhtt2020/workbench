@@ -4,7 +4,7 @@ const userAgent = window.navigator.userAgent;
 const isXT = userAgent.indexOf("天天工作台") > -1;
 const debug=false//开启这里的调试，会输出调试信息
 let model: any = localStorage
-if (!usePlat()) {
+if (usePlat('client')) {
   model= window.$models.storageModel;
 }
 

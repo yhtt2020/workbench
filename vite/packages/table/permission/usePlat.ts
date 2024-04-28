@@ -37,13 +37,24 @@ const platSort = (arr) => {
 };
 // 环境判断
 const platDetection = (type) => {
-  if (type == "web") {
-    return isWeb ? "web" : "";
-  } else if (type == "mac") {
-    return isMac ? "mac" : "";
-  } else if (type == "win") {
-    return isWin ? "win" : "";
+  console.log(type,'类型',isWin,isMac,isWeb)
+  switch (type){
+    case 'client':
+      return isWin || isMac
+    case 'web':
+      return isWeb
+    case 'win':
+      return isWin
+    case 'mac':
+      return isMac
   }
+  // if (type == "web") {
+  //   return isWeb ? "web" : "";
+  // } else if (type == "mac") {
+  //   return isMac ? "mac" : "";
+  // } else if (type == "win") {
+  //   return isWin ? "win" : "";
+  // }
 };
 // 条件判断
 const checkLimit = (plat, name, options) => {
@@ -64,7 +75,7 @@ export type basePlat = "web" | "client" | "mac";
 export type usePlatType = basePlat | any;
 
 export type usePlat = (arr: usePlatType) => basePlat;
-export const usePlat: usePlat = (arr = "web") => {
+export const usePlat: usePlat = (arr:string|[] = "web") => {
   if (typeof arr == "string") {
     return platDetection(arr);
   }
