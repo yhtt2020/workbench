@@ -247,7 +247,7 @@ export default {
       "freeLayoutDataTmp",
       "freeLayoutStateTmp",
     ]),
-    ...mapWritableState(usePermissionStore, ["isOffline", "isSingle", "isGuest", "getGuest", "isSingle"]),
+    ...mapWritableState(usePermissionStore, ["isOffline", "isSingle", "isGuest"]),
     deskGroupRef() {
       return this.$refs.deskGroupRef;
     },
@@ -612,10 +612,10 @@ export default {
     },
     test4(){
       // this.setSingle(!this.isSingle)
-      console.log('current1', window.$currentEnv())
-      console.log('current2', window.$useEnv(["offline", "guest", "single", "online"]))
-      console.log('current3', window.$currentPlat())
-      console.log('current4', window.$usePlat(["win", "mac", "web"]))
+      // console.log('current1', window.$currentEnv())
+      // console.log('current2', window.$useEnv(["offline", "guest", "single", "online"]))
+      // console.log('current3', window.$currentPlat())
+      // console.log('current4', window.$usePlat(["win", "mac", "web"]))
     },
     // 关闭缩放弹窗
     closeWebLogin() {

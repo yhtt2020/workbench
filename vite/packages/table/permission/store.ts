@@ -12,9 +12,8 @@ export const usePermissionStore = defineStore("usePermissionStore", {
     isSingle: false,
     isGuest: false,
     isLogin: false,
-    platform: "web",
-    env: "dev",
     //平台
+    currentEnv:""
   }),
   getters: {
   },

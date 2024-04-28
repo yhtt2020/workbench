@@ -29,7 +29,7 @@ import {completeTask} from "../../apps/task/task"
 import { appStore } from '../../store'
 import GradeSmallTipVue from '../GradeSmallTip.vue'
 import {useGlobalStore} from '../../apps/Global/store'
-import { useUpdateUserInfo } from '../../permission/user/useUserPermit'
+import { reconnect } from '../../permission/user/useUserPermit'
 export default {
   name: 'BarrageSender',
   components:{
@@ -69,17 +69,7 @@ if (!this.$usePlat()) {
           noButtonWidth: '95',
         });
       }else if(window.$currentEnv() == 'offline'){
-        /**提示重连弹窗**/
-        window.$ui.confirm("提示", "目前处于离线模式，请重连后体验完整功能。", {
-          ok: () => {
-            useUpdateUserInfo()
-          },
-          okText: "立即重连",
-          noText: "暂不连接",
-          type: "warning",
-          okButtonWidth: "95",
-          noButtonWidth: "95",
-        });
+        reconnect()
       }else{
         if(this.lvInfo.lv < 1){
           this.checkLevel()
