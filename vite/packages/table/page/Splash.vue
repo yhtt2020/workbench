@@ -155,7 +155,13 @@ export default {
         this.bindSubIPC()
       }
     },
+    /**
+     * 初始化各个store,因为客户端走的是clientStore，这些store载入是异步的，需要我们等待载入完成之后才能正式进入业务逻辑
+     * @returns {Promise<void>}
+     */
     async initStores () {
+      //启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成
+      //注意，此处的第二个参数，必须和此store同名，尤其注意有些命名里带了store的
       this.initStore(appStore, 'appStore')
       this.initStore(codeStore, 'code')
       this.initStore(cardStore, 'cardStore')
@@ -169,6 +175,9 @@ export default {
       this.initStore(useWidgetStore, 'useWidgetStore')
       this.initStore(clipboardStore, 'clipboardStore')
     },
+    /**
+     * 进入逻辑，暂时废弃!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+     */
     enter () {
       // chatStore().login();
       if (localStorage.getItem('wizarded')) {
@@ -206,6 +215,13 @@ export default {
       }
     },
 
+    /**
+     * 初始化一个store
+     * 用于初始化store对象，并设置到window.loadedStore中
+     * @param store
+     * @param name
+     * @returns {Promise<*>}
+     */
     async initStore (store, name) {
       // loadedStore 不存在初始化对象
       if (!window.loadedStore) {
@@ -238,8 +254,7 @@ export default {
       browserStore().bindIPC()
       //绑定客户端的ipc
       this.bindIPC()
-      //启动检测项的store，必须已经载入的项目，如果这边不写，就不确保必须载入完成
-      //注意，此处的第二个参数，必须和此store同名，尤其注意有些命名里带了store的
+
       captureStore()
       clipboardStore().prepare()
       clipboardStore().start()
