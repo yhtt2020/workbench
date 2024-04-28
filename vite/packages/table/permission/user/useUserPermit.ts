@@ -76,7 +76,7 @@ export const useUpdateUserInfo = async () => {
   // 1 获取用户信息
   console.time("UserInfo Run Time");
 
-  if (!userStore.userInfo) return 
+  // if (!userStore.userInfo) return 
 
   let res = await getUserInfo();
 
