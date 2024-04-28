@@ -12,7 +12,7 @@
         class="w-full flex justify-center h-full pb-2 object-fill"
         :frame="displayUserInfo?.equippedItems?.frameDetail"
         @close="close"
-        :class="window.$currentEnv() == 'offline' ? 'gray' : ''"
+        :class="$currentEnv() == 'offline' ? 'gray' : ''"
       />
       <a-tooltip
         v-if="
