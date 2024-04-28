@@ -91,24 +91,29 @@ export default {
     }
   },
   async mounted () {
-    // 这个没走db 单独处理
-
+    // 初始化Stores，读入相关的配置
     this.initStores()
-
     //设置计时器等待全部的store初始化完成
-    this.storeReadyTimer = setInterval(() => {
-      let haventOk = Object.keys(window.loadedStore).filter((key) => {
+    this.storeReadyTimer = setInterval(async () => {
+      let loadQueue = Object.keys(window.loadedStore).filter((key) => {
         let check = !window.loadedStore[key]
         if (window.loadedStore[key] === false) return check
       })
-      console.log('haventOk :>> ', haventOk)
       //已经全部搞定
-      if (haventOk.length <= 0) {
-        console.log('确认完成加载 :>> ')
+      if (loadQueue.length <= 0) {
         clearInterval(this.storeReadyTimer)
-        this.afterLaunch()
+        await this.clientInit()
+        if (!this.init && isMain()) {
+          //进入客户端首次设置界面
+          this.$router.replace({ name: 'wizard' })
+        }else {
+          this.$router.replace({ name: 'home' })
+          //结束整个splash，直接进入home
+        }
+        //this.enter()
       }
     }, 500)
+    //闹钟事件
     this.sortClock()
   },
   computed: {
@@ -165,13 +170,11 @@ export default {
       this.initStore(clipboardStore, 'clipboardStore')
     },
     enter () {
-      console.log('enter :>> ',)
       // chatStore().login();
       if (localStorage.getItem('wizarded')) {
-        console.log('分支1 :>> ',)
+        //已经进过引导了
         const currentRoute = appStore().currentRoute
         if (currentRoute) {
-          console.log('分支1 - 1 :>> ',)
           if (['lock', 'power', 'splash'].includes(currentRoute.name) || true) {
             //阻止lock、power页面的自动跳转
             this.$router.replace({ name: 'home' })
@@ -184,11 +187,9 @@ export default {
             }
           }
         } else {
-          console.log('分支1 - 2 :>> ',)
           this.$router.replace({ name: 'home' })
         }
       } else {
-        console.log('分支2 :>> ',)
         // 处理分屏情况下默认读取不到存储的问题
         if (!isMain()) {
           console.log('分支2 - 1 :>> ',)
@@ -257,31 +258,8 @@ export default {
       tsbApi.window.setSkipTaskbar(!this.settings.showInTaskBar)
     },
 
-    /**
-     * 启动事件
-     * @returns {Promise<void>}
-     */
-    async afterLaunch () {
-      //进行初始化
-      await this.clientInit()
-      this.loginOk()
-    },
 
-    loginOk () {
-      // // 首次web端引导
-      // if (!this.init && this.$usePlat()) {
-      //   console.log("2222 :>> ", 2222);
-      //   this.finishWizard();
-      //   this.visibleWeb = true;
-      //   return;
-      // }
-      // 首次客户端引导
-      if (!this.init && isMain()) {
-        this.$router.replace({ name: 'wizard' })
-        return
-      }
-      this.enter()
-    },
+
     // onGuest() {
     //   this.$router.replace({ name: "home" });
     //   if (!this.init && this.$usePlat()) {
