@@ -66,7 +66,6 @@ import { storeToRefs } from "pinia";
 import { chatCommunityStore } from "../../../store/chatCommunity";
 import _ from "lodash-es";
 import { useRouter } from "vue-router";
-import { useNavigationStore } from "../../../../../components/desk/navigationBar/navigationStore";
 
 const props = defineProps({
   detailList: {
@@ -81,27 +80,12 @@ const router = useRouter();
 /**解构store数据**/
 const chatCommunity = chatCommunityStore();
 const { myCommunity } = storeToRefs(chatCommunity);
-const useNavigation = useNavigationStore();
-const { communityNavVisible } = storeToRefs(useNavigation);
 
 // 进入相对应社群
 const enterCommunity = (data) => {
   const no = data.no;
-  const index = _.findIndex(myCommunity.value, (item) => {
-    return Number(item.route?.params?.no) === Number(no);
-  });
-  if(index > -1){
-    if (!communityNavVisible.value){
-      
-    }
-    // addCommunity(no)
-  }
-  else {}
+  router.push({ name: "myCommunity", params: { no: no } });
 };
-
-// const addCommunity = (no) => {
-  
-// };
 </script>
 
 <style lang="scss" scoped>
@@ -124,7 +108,6 @@ const enterCommunity = (data) => {
     width: calc(100% / 1);
   }
 }
-
 @media screen and (min-width: 965px) {
   .content-list {
     width: 100%;

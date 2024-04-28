@@ -256,6 +256,8 @@ const cateList = computed(() => {
     return adminList.value;
   }
 });
+
+
 </script>
 
 <style lang="scss" scoped>
