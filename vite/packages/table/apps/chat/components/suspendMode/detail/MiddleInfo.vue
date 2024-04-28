@@ -143,12 +143,12 @@ const props = defineProps({
     type: String,
     required: true,
   },
-  sildVisible: {
+  sideVisible: {
     type: Boolean,
     default: false,
   },
 });
-const { columnVisible, no, sildVisible } = toRefs(props);
+const { columnVisible, no, sideVisible } = toRefs(props);
 
 /**解构store数据缓存**/
 const chatCommunity = chatCommunityStore();

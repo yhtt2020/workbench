@@ -38,8 +38,10 @@
     </template>
 
     <template v-else>
-      <div class="h-11 community-name  w-full com-line-bg  ">
-        <div class="px-3 drop-hover flex items-center justify-start rounded-lg m-1.5 h-8">
+      <div class="h-11 community-name w-full com-line-bg">
+        <div
+          class="px-3 drop-hover flex items-center justify-start rounded-lg m-1.5 h-8"
+        >
           <span class="xt-text font-14 xt-font">{{ communityName }}</span>
         </div>
       </div>
@@ -52,22 +54,24 @@ import { toRefs, ref, computed } from "vue";
 import { storeToRefs } from "pinia";
 import { chatCommunityStore } from "../../../store/chatCommunity";
 import _ from "lodash-es";
+import { useRouter } from "vue-router";
 
 import CategoryDropdown from "../../dropdown/Dropdown.vue";
 
-const emit = defineEmits(['currentApp'])
+const emit = defineEmits(["currentApp"]);
+const router = useRouter();
 
 const props = defineProps({
   no: {
     type: String,
     required: true,
   },
-  sildVisible: {
+  sideVisible: {
     type: Boolean,
     default: false,
   },
 });
-const { no, sildVisible } = toRefs(props);
+const { no, sideVisible } = toRefs(props);
 
 /**解构store存储数据**/
 const chatCommunity = chatCommunityStore();
@@ -106,14 +110,14 @@ const hideList = ref([
     newIcon: "fluent:apps-add-in-20-filled",
     title: "添加新应用",
     callBack: () => {
-      emit('currentApp','newApp');
+      emit("currentApp", "newApp");
     },
   },
   {
     newIcon: "fluent:add-16-filled",
     title: "添加新分组",
     callBack: () => {
-      emit('currentApp','newCategory');
+      emit("currentApp", "newCategory");
     },
   },
   {
@@ -150,14 +154,14 @@ const showList = ref([
     newIcon: "fluent:apps-add-in-20-filled",
     title: "添加新应用",
     callBack: () => {
-      emit('currentApp','newApp');
+      emit("currentApp", "newApp");
     },
   },
   {
     newIcon: "fluent:add-16-filled",
     title: "添加新分组",
     callBack: () => {
-      emit('currentApp','newCategory');
+      emit("currentApp", "newCategory");
     },
   },
   {
@@ -209,7 +213,15 @@ const hasRole = computed(() => {
 });
 
 /**如果当前社群用户没有添加的意向,就点击返回按钮返回上一个页面**/
-const prevPage = () => {};
+const prevPage = () => {
+  const index = _.findIndex(myCommunity.value, (item) => {
+    return Number(item?.route?.params?.no) === Number(no.value);
+  });
+  if(index > -1){
+    myCommunity.value.splice(index, 1);
+    router.go(-1);
+  }
+};
 
 /**获取社群名称**/
 const communityName = computed(() => {

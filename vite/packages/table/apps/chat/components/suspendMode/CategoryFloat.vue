@@ -4,10 +4,10 @@
     :style="columnVisible ? { width: '336px' } : { width: '240px' }"
     class="relative"
   >
-    <HeaderInfo :no="no" :sildVisible="sildVisible" @currentApp="currentOpen" />
+    <HeaderInfo :no="no" :sideVisible="sideVisible" @currentApp="currentOpen" />
   </div>
 
-  <div :style="sildVisible ? { height: '450px' } : {}">
+  <div :style="sideVisible ? { height: '450px' } : {}">
     <div
       class="px-3 h-full flex flex-col justify-between my-2"
       :style="columnVisible ? { width: '336px' } : { width: '240px' }"
@@ -16,7 +16,7 @@
       <MiddleInfo
         :columnVisible="columnVisible"
         :no="no"
-        :sildVisible="sildVisible"
+        :sideVisible="sideVisible"
       />
 
       <!-- 分割线 -->
@@ -237,7 +237,7 @@ const columnVisible = computed(() => {
 });
 
 /**是否开启悬浮模式**/
-const sildVisible = computed(() => {
+const sideVisible = computed(() => {
   const currentInfo = _.find(myCommunity.value, function (item) {
     if (item?.communityInfo) {
       return String(item?.communityInfo?.no) === String(no.value);
