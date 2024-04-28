@@ -129,6 +129,7 @@ const detailMenus = ref([
     newIcon: "fluent:tablet-16-regular",
     children: [
       {
+
         newIcon: "fluent:panel-left-contract-16-regular",
         name: "左侧导航",
       },
