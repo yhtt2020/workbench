@@ -243,6 +243,27 @@ let webNav = [
     "ext": "",
     "slot": "",
     "value": "https://mail.qq.com"
+  },
+  {
+    "renewTime": 20240302,
+    "id": "IFeomd",
+    "icon": "https://gitee.com/favicon.ico",
+    "iconType": "",
+    "name": "开源地址",
+    "value": "https://gitee.com/tsbrowser/xiangtian-workbench",
+    "mode": "link",
+    "attributeEdit": true,
+    "type": "default",
+    "radius": 6,
+    "useCount": 0,
+    "lastUseTime": "",
+    "iconState": "cover",
+    "iconShape": "square",
+    "size": "mini",
+    "summary": "",
+    "default": {},
+    "slot": "",
+    "cardData": {}
   }
 ]
 
