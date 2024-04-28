@@ -10,6 +10,7 @@ import { usePermissionStore } from "../store";
 
 // 检查当前网络状态
 import { useNetwork } from '@vueuse/core'
+import { message } from "ant-design-vue";
 
 const { isOnline, offlineAt, downlink, downlinkMax, effectiveType, saveData, type } = useNetwork()
 
@@ -26,6 +27,10 @@ export const useUserPermit = async () => {
     return
   }else{
     permissionStore.setOffline(false);
+    if(window.$useEnv('offline')) {
+      message.warning('当前网络不佳，请稍后重试！')
+      return 
+    }
   }
   // 1、 获取token
   let token = cache.get("ttUserToken");
@@ -87,6 +92,7 @@ export const useUpdateUserInfo = async () => {
     useClearUserInfo();
     // 修改为离线状态
     // permissionStore.setOffline(true);
+    message.warning('当前网络不佳，请稍后重试！')
     console.log("登录时错误信息 :>> ", res);
     return;
   }
@@ -109,4 +115,23 @@ export const useUpdateUserInfo = async () => {
   (chatStore() as any)?.login();
 
   return userData;
+};
+
+
+/**
+ * 打开重连弹窗
+ */
+export const reconnect = async () => {
+  /**提示重连弹窗**/
+  window.$ui.confirm("提示", "目前处于离线模式，请重连后体验完整功能。", {
+    ok: () => {
+      useUpdateUserInfo()
+    },
+    okText: "立即重连",
+    noText: "暂不连接",
+    type: "warning",
+    okButtonWidth: "95",
+    noButtonWidth: "95",
+  });
+
 };
