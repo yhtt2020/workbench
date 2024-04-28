@@ -198,20 +198,13 @@ export default {
     }
   },
   mounted() {
-
-    let res = this.customData.iconList[0];
+    let res = this.customData?.iconList;
     // 是ttapp
-    if (res?.type !== "ttapp") {
+    if (res.length > 0 && res[0].type !== "ttapp") {
       // 校验
       let res = iconValidate(this.customIndex, this.customData.iconList[0]);
       if (!res) return;
     }
-
-    // if (cardValidate())
-    // console.log("this.customData :>> ", this.customData.iconList[0].src);
-    // console.log("this.customData :>> ", this.customData);
-    // console.log("window.globalArgs :>> ", window.globalArgs);
-
     if (
       this.customData.iconList?.length <= 1 ||
       this.customData.iconList?.length == undefined
