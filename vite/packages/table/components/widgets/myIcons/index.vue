@@ -200,7 +200,7 @@ export default {
   mounted() {
     let res = this.customData?.iconList;
     // 是ttapp
-    if (res.length > 0 && res[0].type !== "ttapp") {
+    if (res?.length > 0 && res[0].type !== "ttapp") {
       // 校验
       let res = iconValidate(this.customIndex, this.customData.iconList[0]);
       if (!res) return;
