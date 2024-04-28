@@ -93,6 +93,7 @@ const clearNav = (id: string) => {
     }
     // 过滤文件夹
     if (data.type == "folder") {
+      
       data.children = data.children.filter((data) => {
         // 过滤ttapp
         if (data.type == "ttapp" && data.value == id) {

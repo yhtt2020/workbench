@@ -125,7 +125,7 @@ import {
 
 import { nanoid } from "nanoid";
 import { useFreeLayoutStore } from "../../desk/freeLayout/store";
-
+import { update } from "../../../apps/appCenter/src/views/developer/hooks/update";
 export default {
   props: {
     customIndex: {
@@ -198,9 +198,14 @@ export default {
     }
   },
   mounted() {
-    // 还差判断是否为ttapp的后续操作
-    let res = iconValidate(this.customIndex, this.customData.iconList[0]);
-    if (!res) return;
+
+    let res = this.customData.iconList[0];
+    // 是ttapp
+    if (res?.type !== "ttapp") {
+      // 校验
+      let res = iconValidate(this.customIndex, this.customData.iconList[0]);
+      if (!res) return;
+    }
 
     // if (cardValidate())
     // console.log("this.customData :>> ", this.customData.iconList[0].src);
