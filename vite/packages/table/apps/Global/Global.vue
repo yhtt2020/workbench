@@ -90,8 +90,8 @@ onMounted(() => {
     openFile(cb);
   });
   if(window.$currentEnv() == 'offline'){
-// 补充尝试登录
-// 添加重连定时器 目前 五分钟重连一次
+    // 补充尝试登录
+    // 添加重连定时器 目前 五分钟重连一次
     timer = setInterval(()=>{
       if(window.$currentEnv() != 'offline'){
         clearInterval(timer)
