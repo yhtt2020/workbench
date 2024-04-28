@@ -52,6 +52,8 @@ B站账号：
 
 8.在目录 vite\packages\table\permission\store.ts 下，将文件的 isSingle 属性改为 true ，启动单机模式
 
+9.相关技术文档可查看http://gitlab.xiangtian.ren/pd/worktable/apps/xtui-doc
+
 ## 【关于离线模式】
 
 离线模式下，我们尽可能减少与服务器的交互，以确保客户端可以独立运行。此模式适合大家自行研究，也可以自行把需要用到的部分封包起来。
