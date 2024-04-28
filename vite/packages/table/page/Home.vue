@@ -440,7 +440,7 @@ export default {
       this.isSingle = cache.get('isSingle')
       this.isGuest = cache.get('isGuest')
       // 进行一次重连操作
-      useUpdateUserInfo()
+      // useUpdateUserInfo()
 
       this.replaceIcon(this.sideNavigationList, this.leftNavInit);
       this.replaceIcon(this.rightNavigationList, this.rightNavInit);

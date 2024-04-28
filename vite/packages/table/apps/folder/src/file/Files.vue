@@ -7,7 +7,7 @@
     >
       <!-- 兼容卡片类图标 -->
       <a-avatar
-        v-if="item.type === 'ttapp'"
+        v-if="item.type === 'ttapp' || item.type == 'card'"
         :src="item.icon"
         shape="square"
         :size="40"

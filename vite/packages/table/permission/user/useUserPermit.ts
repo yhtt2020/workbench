@@ -13,7 +13,6 @@ import { useNetwork } from '@vueuse/core'
 
 const { isOnline, offlineAt, downlink, downlinkMax, effectiveType, saveData, type } = useNetwork()
 
-console.log('isOnline.value', isOnline.value)
 
 // import { storeToRefs } from "pinia";
 /**
@@ -25,6 +24,8 @@ export const useUserPermit = async () => {
   if(!isOnline.value) {
     permissionStore.setOffline(true);
     return
+  }else{
+    permissionStore.setOffline(false);
   }
   // 1、 获取token
   let token = cache.get("ttUserToken");
@@ -70,9 +71,12 @@ const setUserInfo = async () => {
  * 更新用户信息 重连
  */
 export const useUpdateUserInfo = async () => {
+  const userStore: any = appStore();
   const permissionStore = usePermissionStore();
   // 1 获取用户信息
   console.time("UserInfo Run Time");
+
+  // if (!userStore.userInfo) return 
 
   let res = await getUserInfo();
 
@@ -85,7 +89,7 @@ export const useUpdateUserInfo = async () => {
   if (res.code !== 1000 && code !== 200) {
     useClearUserInfo();
     // 修改为离线状态
-    permissionStore.setOffline(true);
+    // permissionStore.setOffline(true);
     console.log("登录时错误信息 :>> ", res);
     return;
   }

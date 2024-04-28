@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { useTTAppStore } from "../../../../../ttApp/src/store";
 import { storeToRefs } from "pinia";
 import { installV2 } from "../hooks/installV2";
@@ -10,9 +10,15 @@ import { validate } from "../hooks/validate";
 const navStore = useNavStore();
 const { navigationToggle } = storeToRefs(navStore);
 const { item } = defineProps<{ item: any }>();
+watch(
+  () => item.value,
+  () => {
+    console.log("更新了 :>> ");
+  }
+);
 // ttapp数据
 const ttappStore: any = useTTAppStore();
-const { modal } = storeToRefs(ttappStore);
+const { modal, ttappList } = storeToRefs(ttappStore);
 const menus = computed(() => {
   let res = [
     // {
@@ -146,6 +152,7 @@ const entry = () => {
     title="推荐添加应用小组件"
   />
   <!-- 渲染样式 -->
+  <!-- v-for="item in ttappList" :item="item" :key="item.id" -->
   <div
     class="xt-bg-2 rounded-xl flex items-center justify-between p-4 mb-4"
     style="height: 102px"
