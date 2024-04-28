@@ -83,7 +83,7 @@ onMounted(() => {
     width: 100% !important;
   }
 }
-/**屏幕响应式定宽度***/
+/**屏幕响应式定宽度**/
 @media screen and (min-width: 965px) {
   .find-container {
     display: flex !important;

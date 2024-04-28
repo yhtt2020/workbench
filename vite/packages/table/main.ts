@@ -20,6 +20,8 @@ window.$isGuest = isGuest;
 window.$isSingle = isSingle;
 window.$useEnv = useEnv;
 window.$usePlat = usePlat;
+window.$currentEnv = currentEnv;
+window.$currentPlat = currentPlat;
 window.$useEnvLimit = useEnvLimit;
 window.$usePlatLimit = usePlatLimit;
 window.$useComLimit = useComLimit;
@@ -127,6 +129,7 @@ app.use(Wujie);
 // app.use(hevueImgPreview)
 // 使用 provide 将全局变量作为响应式对象
 app.provide("currentEnv", currentEnv);
+app.provide("currentPlat", currentPlat);
 app.provide("isWeb", isWeb);
 app.provide("isWin", isWin);
 app.provide("isMac", isMac);
@@ -138,6 +141,7 @@ app.provide("$usePlat", usePlat);
 
 // 使用 globalProperties 将全局变量附加到 Vue 实例上
 app.config.globalProperties.$currentEnv = currentEnv;
+app.config.globalProperties.$currentPlat = currentPlat;
 app.config.globalProperties.$isWeb = isWeb;
 app.config.globalProperties.$isWin = isWin;
 app.config.globalProperties.$isMac = isMac;

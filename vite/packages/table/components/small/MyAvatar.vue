@@ -9,7 +9,6 @@ import { appStore } from '../../store'
 import { Modal } from 'ant-design-vue'
 import Emoji from '../comp/Emoji.vue'
 import {isMain} from '../../js/common/screenUtils'
-import {usePermissionStore} from '../../permission/store'
 import {useNavigationStore} from '../desk/navigationBar/navigationStore'
 
 export default {
@@ -29,7 +28,6 @@ export default {
   computed: {
     ...mapWritableState(messageStore, ['messageIndex', 'totalCount']),
     ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
-    ...mapWritableState(usePermissionStore, ['isOffline']),
   },
   mounted () {
     console.log('this.userInfo :>> ', this.userInfo);
@@ -146,9 +144,9 @@ export default {
           <a-col class="text-center" :span="12">
             <!-- <BorderAavtar :avatarUrl="userInfo.avatar" :rarity="1" :borderSize="4" :avatarSize="size || 50"></BorderAavtar> -->
          <!-- 头像框 -->
-            <FrameAvatar  v-if="userInfo.frame" class="frame" :class="isOffline?'gray':''" :avatarUrl="userInfo.avatar" :avatarSize="size || 50"
+            <FrameAvatar  v-if="userInfo.frame" class="frame" :class="window.$currentEnv() == 'offline'?'gray':''" :avatarUrl="userInfo.avatar" :avatarSize="size || 50"
                          :frameUrl="userInfo.frame"></FrameAvatar>
-            <a-avatar v-else :class="isOffline?'gray':''" :src="userInfo.avatar" :size="size || 50"></a-avatar>
+            <a-avatar v-else :class="window.$currentEnv() == 'offline'?'gray':''" :src="userInfo.avatar" :size="size || 50"></a-avatar>
             <!-- <a-badge style="border:none;" :count="totalCount">
               <a-avatar :src="userInfo.avatar" :size="size || 50">{{ userInfo.nickname }}</a-avatar>
             </a-badge> -->
