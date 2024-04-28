@@ -102,7 +102,7 @@ export default {
       let background = "url(" + this.backgroundImage.path + ")";
       return this.backgroundImage.path
         ? background
-        : "url('https://a.apps.vip/icons/defaultBackground.jpg')";
+        : "url('"+DEFAULT.WALLPAPER+"')";
     },
     zoom() {
       if (this.zoom) {

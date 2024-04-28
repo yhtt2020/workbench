@@ -28,7 +28,7 @@ export const ROUTER_LIMIT = {
     "note",
   ],
 };
-// 组件限制
+// 组件限制，这里的是组件名不是列表中的name
 export const COMPONENT_LIMIT = {
   web: [
     "audio",
@@ -49,11 +49,18 @@ export const COMPONENT_LIMIT = {
     "Courier",
     "GamesDiscount",
     "DiscountPercentage",
-    "AggregateSearch",
-    "customAssembly",
-    "remote",
+    "customAssembly"
   ],
 };
+/**
+ * 补充的组件添加列表内的元素名称，和组件名不统一
+ */
+export const COMPONENT_LIMIT_NAME={
+  web:[
+   "supervisory",
+    'myfriends'
+  ]
+}
 // 汇总所有限制
 export const ALL_LIMITS = {
   web: [...ROUTER_LIMIT.web, ...COMPONENT_LIMIT.web],

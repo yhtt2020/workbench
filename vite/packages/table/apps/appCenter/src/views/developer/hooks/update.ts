@@ -43,8 +43,16 @@ export const updateDesk = (id: string) => {
           }
           // 过滤应用卡片
           if (data.type == "card") {
-            const currentId = data?.cardData?.customData?.parentId;
+            console.log("data :>> ", data);
+            const currentId = data?.cardData?.id
+            console.log(
+              "currentId !==id,currentId,id :>> ",
+              currentId !== id,
+              currentId,
+              id
+            );
             if (currentId !== id) return data;
+            console.log("2222222 :>> ", 2222222);
             let ttappData = validate(id);
             data.cardData.customData = ttappData;
             data.icon = ttappData._logo;
@@ -67,8 +75,8 @@ export const updateNav = (id) => {
 
   // 查找各个导航列表中的对应元素
   copyFootNav.value = copyFootNav.value.map((item: any) => {
-    if (item.type === "ttapp") {
-      const data = validate(id);
+    const data = validate(id);
+    if (item.type === "ttapp" && item.cardData?.id === data.id) {
       item.name = data.name;
       item.icon = data._logo;
       return item;
@@ -109,7 +117,7 @@ export const updateNav = (id) => {
   });
 
   sideNavigationList.value = sideNavigationList.value.map((item) => {
-    if (item.type === "ttapp") {
+    if (item.type === "ttapp" && item.cardData?.id === id) {
       const data = validate(id);
       item.name = data.name;
       item.icon = data._logo;
@@ -150,7 +158,7 @@ export const updateNav = (id) => {
     return item;
   });
   rightNavigationList.value = rightNavigationList.value.map((item: any) => {
-    if (item.type === "ttapp") {
+    if (item.type === "ttapp" && item.cardData?.id === id) {
       const data = validate(id);
       item.name = data.name;
       item.icon = data._logo;
