@@ -50,7 +50,7 @@ B站账号：
 
 7.复制一个/node_modules下的dragula/dist/dragula.css 到 dragula/dist/dragula.min.css，不然会报这个库缺文件
 
-8.在目录 vite\packages\table\js\common\offline.ts 下，将文件的 isOffline 属性改为 true ，启动离线模式
+8.在目录 vite\packages\table\permission\store.ts 下，将文件的 isSingle 属性改为 true ，启动单机模式
 
 ## 【关于离线模式】
 
