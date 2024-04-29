@@ -27,7 +27,7 @@
                 v-for="data in menu.children"
                 :name="name"
               >
-                <Item :data="data" :name="name" :fn="fn" />
+                <Item :data="data" :name="name" :fn="fn" v-if="!data.disabled" />
               </div>
             </div>
           </template>
