@@ -55,9 +55,11 @@ export default {
         return !this.appList.includes(i.name)
       })
     }
+    console.log('this.apps :>> ', this.apps);
   },
   methods: {
     executeApp (app) {
+    console.log('app :>> ', app);
       ipc.send('executeApp', { app: JSON.parse(JSON.stringify(app)) })
     },
     uninstall (app) {

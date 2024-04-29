@@ -8,7 +8,7 @@ import { storeToRefs } from 'pinia'
  */
 export const usePosition = (e,i) => {
     const useNav = useNavigationStore();
-    const { navAttribute } = storeToRefs(useNav);
+    const { navAttribute, currentNavFormat } = storeToRefs(useNav);
     // 系统宽高
     const windowWidth = window.innerWidth
     const windowHeight = window.innerHeight
@@ -19,16 +19,19 @@ export const usePosition = (e,i) => {
     const iWidth = i.x
     const iHeight = i.y 
 
+    // 调整元素的定位
+    const num = currentNavFormat.value === 'mac' ? 65 : 55
+
     // console.log(windowWidth, windowHeight, eWidth, eHeight, iWidth, iHeight,eHeight + iHeight > windowHeight )
     // const target = windowHeight - ( windowHeight - eHeight + iHeight )
     // const target = windowHeight - iHeight - 80
     // console.log(target,iHeight,iWidth)
     
-    return{
+    return {
         x: eWidth > windowWidth - (iWidth / 2) ? windowWidth - iWidth : (eWidth - (iWidth / 2) < 0 ? 20 : eWidth - (iWidth / 2)),
         y: 
             eHeight + iHeight > windowHeight ?  
-            (- iHeight + eHeight - 45) / (navAttribute.value.navSize / 100) : 
-            (eHeight + 45 ) * (navAttribute.value.navSize / 100),
+            (- iHeight + eHeight - num) / (navAttribute.value.navSize / 100) : 
+            (eHeight + num ) * (navAttribute.value.navSize / 100),
     }
 }

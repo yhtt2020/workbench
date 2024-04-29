@@ -12,7 +12,7 @@
         class="w-full flex justify-center h-full pb-2 object-fill"
         :frame="displayUserInfo?.equippedItems?.frameDetail"
         @close="close"
-        :class="$currentEnv() == 'offline' ? 'gray' : ''"
+        :class="currentEnv == 'offline' ? 'gray' : ''"
       />
       <a-tooltip
         v-if="
@@ -67,6 +67,7 @@ import FrameAvatar from "../../../../../components/avatar/FrameAvatar.vue";
 import Medal from "../../../../../components/team/Medal.vue";
 import OnlineMedal from "../../../../../components/team/OnlineMedal.vue";
 import { useUpdateUserInfo } from "../../../../../permission/user/useUserPermit";
+import { usePermissionStore } from "../../../../../permission/store";
 const props = defineProps({
   userinfo: {
     type: Object,
@@ -79,6 +80,7 @@ const router = useRouter();
 const team = teamStore();
 const app = appStore();
 const { userCardUserInfo } = storeToRefs(app);
+const { currentEnv } = storeToRefs(usePermissionStore());
 
 const rankList = ref([]);
 
