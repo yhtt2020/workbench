@@ -1,4 +1,20 @@
+<!-- 社群成员管理页面 -->
 <template>
+ <div>
+   成员管理
+ </div>
+</template>
+
+<script setup>
+
+</script>
+
+<style lang="scss" scoped>
+
+</style>
+
+<!-- 
+ <template>
   <div class="w-full h-full flex flex-col">
    <div style="width: 572px" class="flex mb-3 items-center h-10 justify-between">
     <HorizontalPanel style="width: 304px;" :height="40" :navList="memberTab" v-model:selectType="tabType"/>
@@ -52,3 +68,4 @@ export default {
  border-radius: 8px !important;
 }
 </style>
+ -->

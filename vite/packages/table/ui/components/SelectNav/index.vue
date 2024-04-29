@@ -12,7 +12,7 @@
    </div>
   </div>
   <div class="right-content h-full">
-   <slot></slot>
+   <slot name="rightContent"></slot>
   </div>
  </div>
 </template>
