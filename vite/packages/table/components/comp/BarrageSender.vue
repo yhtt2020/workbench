@@ -30,6 +30,7 @@ import { appStore } from '../../store'
 import GradeSmallTipVue from '../GradeSmallTip.vue'
 import {useGlobalStore} from '../../apps/Global/store'
 import { reconnect } from '../../permission/user/useUserPermit'
+import { usePermissionStore } from '../../permission/store'
 export default {
   name: 'BarrageSender',
   components:{
@@ -54,6 +55,7 @@ if (!this.$usePlat()) {
     ...mapState(teamStore, ['my','myTeamNo','myTeam']),
     ...mapWritableState(appStore,['userInfo','lvInfo']),
     ...mapWritableState(useGlobalStore,['loginVisible']),
+    ...mapWritableState(usePermissionStore,['currentEnv']),
   },
   methods:{
     ...mapActions(teamStore,['updateMy']),
@@ -68,7 +70,7 @@ if (!this.$usePlat()) {
           okButtonWidth: '95',
           noButtonWidth: '95',
         });
-      }else if(window.$currentEnv() == 'offline'){
+      }else if(currentEnv == 'offline'){
         reconnect()
       }else{
         if(this.lvInfo.lv < 1){

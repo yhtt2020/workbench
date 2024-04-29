@@ -56,6 +56,9 @@ const { proxy }: any = getCurrentInstance();
 const globalStore: any = useGlobalStore();
 const { systemVisible, loginVisible, loginCb } = storeToRefs(globalStore);
 import { useUpdateUserInfo } from "../../permission/user/useUserPermit"
+import { usePermissionStore } from "../../permission/store";  
+
+const { currentEnv } = storeToRefs(usePermissionStore);
 
 // 文件弹窗
 const fileVisible = ref(true);
@@ -97,7 +100,7 @@ onMounted(() => {
     // 补充尝试登录
     // 添加重连定时器 目前 五分钟重连一次
     timer = setInterval(()=>{
-      if(window.$currentEnv() != 'offline'){
+      if(currentEnv != 'offline'){
         clearInterval(timer)
         timer = null
       }
