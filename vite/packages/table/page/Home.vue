@@ -1,6 +1,6 @@
 <template>
   <div style="height: 100%">
-    <!-- <div style="position:fixed;z-index:9999999999;">
+    <div style="position:fixed;z-index:9999999999;">
       <div @click="test1">测试isOffline{{isOffline}}</div>
       <div @click="test2">测试isGuest{{isGuest}}</div>
       <div @click="test3">测试isSingle{{isSingle}}</div>
@@ -9,7 +9,7 @@
       <div @click="test5">mac{{ $usePlat(["mac", "web", "win"]) }}</div>
       <div @click="test6">web{{ $usePlat(["mac", "web", "win"]) }}</div>
       <div @click="test7">win{{ $usePlat(["mac", "web", "win"]) }}</div>
-    </div> -->
+    </div>
     <desk-group
       @changeDesk="changeDesk"
       ref="deskGroupRef"

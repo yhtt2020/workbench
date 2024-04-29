@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useStatus } from "../../hooks";
+const status = useStatus();
 // 这个文件存放是所有场景都需要弹出的组件
 // 记得写注释
 import {
@@ -15,8 +17,16 @@ import { taskStore as useTaskStore } from "../task/store";
 import { useGlobalStore } from "./store";
 
 // 检查当前网络状态
-import { useNetwork } from '@vueuse/core'
-const { isOnline, offlineAt, downlink, downlinkMax, effectiveType, saveData, type } = useNetwork()
+import { useNetwork } from "@vueuse/core";
+const {
+  isOnline,
+  offlineAt,
+  downlink,
+  downlinkMax,
+  effectiveType,
+  saveData,
+  type,
+} = useNetwork();
 
 // 领取任务奖励
 const ClaimReward = defineAsyncComponent(
@@ -55,7 +65,7 @@ const { proxy }: any = getCurrentInstance();
 
 const globalStore: any = useGlobalStore();
 const { systemVisible, loginVisible, loginCb } = storeToRefs(globalStore);
-import { useUpdateUserInfo } from "../../permission/user/useUserPermit"
+import { useUpdateUserInfo } from "../../permission/user/useUserPermit";
 
 // 文件弹窗
 const fileVisible = ref(true);
@@ -78,7 +88,7 @@ const openFile = (cb?: Function) => {
     // proxy.tt
   }, 10);
 };
-let timer
+let timer;
 onMounted(() => {
   // 打开系统设置
   proxy.$bus.on("openSystemSet", () => {
@@ -93,22 +103,23 @@ onMounted(() => {
   proxy.$bus.on("openFile", (cb) => {
     openFile(cb);
   });
-  if(isOnline && !window.$useEnv('guest')){
+  if (isOnline && !window.$useEnv("guest")) {
     // 补充尝试登录
     // 添加重连定时器 目前 五分钟重连一次
-    timer = setInterval(()=>{
-      if(window.$currentEnv() != 'offline'){
-        clearInterval(timer)
-        timer = null
+    timer = setInterval(() => {
+      if (window.$currentEnv() != "offline") {
+        clearInterval(timer);
+        timer = null;
       }
-      useUpdateUserInfo()
-    }, 300000)
+      useUpdateUserInfo();
+    }, 300000);
   }
 });
-
 </script>
 
 <template>
+  123
+  <xt-button>{{ status }}</xt-button>
   <!-- 新应用中心 -->
   <AppCenter v-if="visible" />
   <!-- 无界应用 -->

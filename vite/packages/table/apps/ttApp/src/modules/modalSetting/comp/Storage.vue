@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import { inject } from "vue";
 import { storeToRefs } from "pinia";
+import { uninstall } from "../../../../../appCenter/src/views/developer/hooks/uninstall";
 
 import { useTTAppStore } from "../../../store";
 const ttappStore: any = useTTAppStore();
-const data = inject("data");
+const data: any = inject("data");
 const clearData = () => {
   window.$ui.confirm("确定清除应用数据？", "清除后将恢复为初始安装状态", {
     type: "warning",
     ok() {
-      console.log("data :>> ", data);
+      ttappStore.clearData(data.id);
     },
   });
 };
@@ -17,7 +18,7 @@ const deleteData = () => {
   window.$ui.confirm("确定删除应用？", "删除后将无法恢复", {
     type: "warning",
     ok() {
-      console.log("data :>> ", data);
+      uninstall(data.id);
     },
   });
 };
