@@ -132,16 +132,16 @@ const hideList = ref([
       });
     },
   },
-  {
-    newIcon: "fluent:settings-16-regular",
-    title: "社群设置",
-    type: "manage",
-    callBack: () => {
-      console.log("社群设置", { props: { type: "setting" } });
-      router.push({ name: "communitySettings", params: { no: no.value } });
-      proxy.$bus.emit("handleCurrentCommunity",{ props: { type: "setting" } });
-    },
-  },
+  // {
+  //   newIcon: "fluent:settings-16-regular",
+  //   title: "社群设置",
+  //   type: "manage",
+  //   callBack: () => {
+  //     console.log("社群设置", { props: { type: "setting" } });
+  //     router.push({ name: "communitySettings", params: { no: no.value } });
+  //     proxy.$bus.emit("handleCurrentCommunity",{ props: { type: "setting" } });
+  //   },
+  // },
   // {
   //   newIcon: "fluent:people-add-16-regular",
   //   title: "邀请其他人",
@@ -193,16 +193,16 @@ const showList = ref([
   //   title: "邀请其他人",
   //   callBack: () => {},
   // },
-  {
-    newIcon: "fluent:settings-16-regular",
-    title: "社群设置",
-    type: "manage",
-    callBack: () => {
-      console.log("社群设置", { type: "setting" });
-      router.push({ name: "SettingIndex", params: { no: no.value } });
-      proxy.$bus.emit("handleCurrentCommunity", { type: "setting" });
-    },
-  },
+  // {
+  //   newIcon: "fluent:settings-16-regular",
+  //   title: "社群设置",
+  //   type: "manage",
+  //   callBack: () => {
+  //     console.log("社群设置", { type: "setting" });
+  //     router.push({ name: "SettingIndex", params: { no: no.value } });
+  //     proxy.$bus.emit("handleCurrentCommunity", { type: "setting" });
+  //   },
+  // },
   // {
   //   newIcon: "ant-design:team-outlined",
   //   title: "成员管理",
