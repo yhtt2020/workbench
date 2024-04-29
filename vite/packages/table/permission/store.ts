@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import cache from "../components/card/hooks/cache";
+import { useLogout } from "./user/useLogout";
 // @ts-ignore
 export const usePermissionStore = defineStore("usePermissionStore", {
   state: () => ({
@@ -15,8 +16,7 @@ export const usePermissionStore = defineStore("usePermissionStore", {
     //平台
     currentEnv:""
   }),
-  getters: {
-  },
+  getters: {},
   actions: {
     setGuest(boolean){
       this.isGuest = boolean

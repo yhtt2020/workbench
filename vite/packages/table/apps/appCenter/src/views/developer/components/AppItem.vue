@@ -21,13 +21,6 @@ const ttappStore: any = useTTAppStore();
 const { modal, ttappList } = storeToRefs(ttappStore);
 const menus = computed(() => {
   let res = [
-    // {
-    //   name: "编辑信息",
-    //   newIcon: "fluent:compose-16-regular",
-    //   cb: () => {
-    //     console.log("编辑");
-    //   },
-    // },
     {
       name: "添加应用到",
       newIcon: "fluent:add-16-regular",

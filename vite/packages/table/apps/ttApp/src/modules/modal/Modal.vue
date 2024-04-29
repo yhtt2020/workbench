@@ -10,6 +10,7 @@ import {
   nextTick,
   getCurrentInstance,
 } from "vue";
+import { useStatus } from "../../../../../hooks";
 import { storeToRefs } from "pinia";
 import WuJie from "../wujie/WuJie.vue";
 import PerfectScrollbar from "perfect-scrollbar";
@@ -50,6 +51,7 @@ const data: any = ref(null);
 const loading = ref(true);
 // 社交列表
 const socializeList: any = ref([]);
+const { status } = useStatus();
 /** 初始化方法 */
 const init = async () => {
   let res = ttappStore.select(modal.value.id);
@@ -80,7 +82,7 @@ const init = async () => {
       fn: () => {},
     };
     socializeList.value.push(obj);
-  }
+  } 
   // 有群
   const group = data?.group;
   if (group) {
@@ -94,7 +96,9 @@ const init = async () => {
   res.socializeList = socializeList;
   console.log("初始化到这里了 :>> ", 222222);
   // 获取用户信息 没写完
-  // await ttappStore.getUserInfo(res.uid || 1);
+  if (res?.uid && status.value != "single") {
+    await ttappStore.getUserInfo(res.uid);
+  }
 
   // 完成
   data.value = res;
@@ -299,7 +303,7 @@ const settingClose = () => {
         <div
           class="group header-left hover:tt-theme-bg-2 relative pl-2 rounded-lg title h-[32px] flex items-center text-sm cursor-pointer"
         >
-        <a-avatar shape="square" class="" :size="16" :src="data._logo" />
+          <a-avatar shape="square" class="" :size="16" :src="data._logo" />
           <span class="mx-2">{{ data.name }}</span>
         </div>
 
@@ -424,7 +428,6 @@ const settingClose = () => {
   }
 }
 .header-left-hover {
-
   display: none;
   position: absolute;
 }

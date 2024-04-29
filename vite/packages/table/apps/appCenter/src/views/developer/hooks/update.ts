@@ -34,6 +34,7 @@ export const updateDesk = (id: string) => {
       // // 过滤文件夹
       if (obj.name == "folder") {
         customData.list = customData.list.map((data) => {
+          console.log("data :>> ", data);
           // 过滤ttapp
           if (data.type == "ttapp" && data.value == id) {
             let ttappData = validate(id);
@@ -43,18 +44,12 @@ export const updateDesk = (id: string) => {
           }
           // 过滤应用卡片
           if (data.type == "card") {
-            console.log("data :>> ", data);
+
             const currentId = data?.cardData?.id
-            console.log(
-              "currentId !==id,currentId,id :>> ",
-              currentId !== id,
-              currentId,
-              id
-            );
+
             if (currentId !== id) return data;
-            console.log("2222222 :>> ", 2222222);
             let ttappData = validate(id);
-            data.cardData.customData = ttappData;
+            //
             data.icon = ttappData._logo;
             data.name = ttappData.name;
           }
@@ -105,7 +100,6 @@ export const updateNav = (id) => {
           const currentId = data?.cardData?.id;
           if (currentId !== id) return data;
           let ttappData = validate(id);
-          data.cardData.customData = ttappData;
           data.icon = ttappData._logo;
           data.name = ttappData.name;
         }
@@ -147,7 +141,7 @@ export const updateNav = (id) => {
           const currentId = data?.cardData?.id;
           if (currentId !== id) return data;
           let ttappData = validate(id);
-          data.cardData.customData = ttappData;
+
           data.icon = ttappData._logo;
           data.name = ttappData.name;
         }
@@ -188,7 +182,7 @@ export const updateNav = (id) => {
           const currentId = data?.cardData?.id;
           if (currentId !== id) return data;
           let ttappData = validate(id);
-          data.cardData.customData = ttappData;
+
           data.icon = ttappData._logo;
           data.name = ttappData.name;
         }
