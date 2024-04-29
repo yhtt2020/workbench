@@ -356,7 +356,9 @@ const createCommunity = () => {
 };
 
 onMounted(() => {
-  chatCommunity.getMyCommunity();
+  if(window.$currentEnv() === 'online'){
+    chatCommunity.getMyCommunity();
+  }
   proxy.$bus.on("getChatUnread", (data) => {
     console.log("获取未读消息数", data);
     currentData.value.unread = data;
