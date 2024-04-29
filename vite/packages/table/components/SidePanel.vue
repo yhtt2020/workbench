@@ -509,9 +509,10 @@ export default {
      */
     enableDrag() {
       // console.log('触发一次重置 ')
-      if (this.sortable) {
-        this.sortable.destroy()
-      }
+      // 暂时隐藏,第一次打开应用时,由于执行多次，导致sortable被卸载,导致原始H5的拖拽失效
+      // if (this.sortable) {
+      //   this.sortable.destroy()
+      // }
       let that = this
       let drop = document.getElementById(this.sortId)
       if (!drop) {

@@ -246,6 +246,7 @@ export default {
       floatCard:{},
       clickOutside:false,
       sortId:'foot',
+      isFirst:true,
     };
   },
   props: {
@@ -601,10 +602,11 @@ export default {
      */
     enableDrag() {
       // console.log('触发一次重置 ')
-      if (this.sortable) {
-        // console.log('先清理 ')
-        this.sortable.destroy();
-      }
+      // 暂时隐藏,第一次打开应用时,由于执行多次，导致sortable被卸载,导致原始H5的拖拽失效
+      // if (this.sortable) {
+      //   console.log('先清理 ')
+      //   this.sortable.destroy();
+      // }
       let that = this;
       let drop = document.getElementById("bottomContent");
       if (!drop) {
@@ -677,7 +679,7 @@ export default {
           return;
         }, 100),
         onEnd: function (event) {
-          // console.log('onEnd')
+          console.log('onEnd')
           that.$emit("getDelIcon", false);
           that.popVisible = false;
           // 删除
@@ -685,6 +687,7 @@ export default {
           index = null;
           that.isBorder = false;
           isDrag = false;
+          that.isFirst = false
         },
         onMove: function (event, originalEvent) {
           isDrag = true;
@@ -799,7 +802,12 @@ export default {
      */
     syncBottomPanel() {
       this.bottomKey = Date.now();
+      // if(this.sortable){
+      //   console.log('update <<< from')
+      //   this.sortable.destroy();
+      // }
       this.$nextTick(() => {
+        // console.log(this.sortable,'<<<<<<<<<<,')
         this.enableDrag();
       });
     },
