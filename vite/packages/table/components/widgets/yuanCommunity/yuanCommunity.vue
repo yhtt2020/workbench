@@ -14,13 +14,13 @@
             :customData="customData"
             @delete="deleteCard">
             <div v-if="showForumList.length > 0" class="flex flex-col flex-1 " style="height: calc(100%);">
-            <xt-option-tab 
-                v-if="showForumList.length > 1" 
-                :list="showForumList" 
-                :circle="true" 
-                v-model="defaultForum" 
-                style="height: 40px;">
-            </xt-option-tab>
+                <xt-option-tab 
+                    v-if="showForumList.length > 1" 
+                    :list="showForumList" 
+                    :circle="true" 
+                    v-model="defaultForum" 
+                    style="height: 40px;">
+                </xt-option-tab>
             <div  v-if="showForumPost.length > 0" class="flex flex-col flex-1 w-full h-0">
                 <vue-custom-scrollbar ref="threadListRef"  :settings="outerSettings"
                     style="overflow: hidden;width: 100%;" class="flex-1">
@@ -156,7 +156,8 @@ export default {
             browserUrl: 'https://s.apps.vip/post/',
             showPublishModal: false,
             selectList: [],
-            defaultForum:  { name: '版本更新', value: 100304 } ,
+            defaultForum:  100304 ,
+            // defaultForum:  { name: '版本更新', value: 100304 } ,
             outerSettings: {
                 useBothWheelAxes: true,
                 swipeEasing: true,
@@ -265,32 +266,12 @@ export default {
     computed: {
         ...mapWritableState(yuanCommunityStore, ['communityPost', 'myForumList', 'forumsList', 'defaultSection']),
         ...mapWritableState(useCommunityStore, ['communityReply', 'communityPostDetail']),
-        // 判断尺寸大小
-        showSize() {
-            if (this.customData.customSize) {
-                let arr = this.customData.customSize.split('x')
-                return {
-                  width: arr[0],
-                  height: arr[1]
-                }
-            }else{
-              return {
-                width: 4,
-                height: 4
-              }
-            }
-        },
+        // 卡片选项
         options(){
             return {
                 customDel: this.openWay === 'nav' ? true : false,
-                title:'元社区'
+                title:this.customData.selectList.length === 1 ? this.customData.selectList[0].name || '元社区' : '元社区'
             }
-        },
-        showItem() {
-            if (this.customData && this.customData.height) {
-                return this.customData.height == 2 ? '392px' : '600px'
-            }
-            return '392px'
         },
         forumList() {
             if (this.customData && this.customData.forumList) {
@@ -326,8 +307,9 @@ export default {
         },
     },
     async beforeMount() {
-        await this.getMyForumList()
-        this.customData.forumList = this.myForumList
+        this.getMyForumList().then(() => {
+           this.customData.forumList = this.myForumList 
+        })
         // console.log(this.myForumList,'this.myForumList');
         // 判断是否刷新加载内容
         if (this.customData && this.customData.defaultForum) {
@@ -343,9 +325,9 @@ export default {
     async mounted() {
         // this.isLoading = true
         // 判断组件名称
-        if (this.customData.selectList && this.customData.selectList.length === 1) {
-            this.options.title = this.customData.selectList[0].name
-        }
+        // if (this.customData.selectList && this.customData.selectList.length === 1) {
+        //     this.options.title = this.customData.selectList[0].name
+        // }
         // this.isLoading = false
         window.addEventListener("resize", this.handleResize)
         // this.showForumPost = this.communityPost
@@ -399,15 +381,16 @@ export default {
                 return
             }
         },
-        'customData.selectList': {
-            handler(newValue, oldValue) {
-                if (newValue.length === 1) {
-                    this.options.title = newValue[0].name
-                } else if (newValue.length > 1 || newValue.length < 1) {
-                    this.options.title = '元社区'
-                }
-            }
-        },
+        // 'customData.selectList': {
+        //     handler(newValue, oldValue) {
+        //         if (newValue.length === 1) {
+        //             console.log(newValue);
+        //             this.options.title = newValue[0].name
+        //         } else if (newValue.length > 1 || newValue.length < 1) {
+        //             this.options.title = '元社区'
+        //         }
+        //     }
+        // },
         settingVisible() {
             // 加载已选择的模块
             this.isClick = false
