@@ -10,7 +10,7 @@ export const useLogout = () => {
   const userStore: any = appStore();
   // 清空用户信息
   userStore.userInfo = "";
-  usePermissionStore().isGuest = false;
+  usePermissionStore().isGuest = true;
   // 清空本地 token
   cache.set("ttUserToken", "");
   // 退出群聊
