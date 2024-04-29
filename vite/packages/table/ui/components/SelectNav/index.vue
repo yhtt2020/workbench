@@ -4,8 +4,8 @@
    <div class="flex items-center pointer justify-center mb-3"
     v-for="(navItem,index) in navList" :class="{'select-border':selectItem.name === navItem.name}"
    >
-    <div :style="{width:`${cw}px`,height:`${h}px`}" :class="{'xt-bg-2 xt-text':selectItem.name === navItem.name}" 
-     class="flex items-center justify-center rounded-md font-16 font-400" @click="callback(navItem)" style="color:var(--secondary-text);"
+    <div :style="{width:`${cw}px`,height:`${h}px`}" :class="{'xt-bg-t-2 xt-text':selectItem.name === navItem.name}" 
+     class="flex items-center hover-bg justify-center rounded-md font-16 font-400" @click="callback(navItem)" style="color:var(--secondary-text);"
     >
      {{ navItem.cname }}
     </div>
@@ -58,10 +58,16 @@
 
 <style lang="scss" scoped>
 .left-content{
- border-right: 1px solid rgba(255, 255, 255, 0.1);
+ border-right: 1px solid var(--divider);
  height: 100%;
 }
 .select-border{
- border-right: 1px rgba(22, 119, 255, 1) solid !important;
+ border-right: 1px var(--active-bg) solid !important;
+}
+
+.hover-bg{
+ &:hover{
+  background: var(--active-secondary-bg) !important;
+ }
 }
 </style>

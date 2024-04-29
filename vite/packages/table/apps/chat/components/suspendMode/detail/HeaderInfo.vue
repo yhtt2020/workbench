@@ -50,13 +50,15 @@
 </template>
 
 <script setup>
-import { toRefs, ref, computed } from "vue";
+import { toRefs, ref, computed, getCurrentInstance } from "vue";
 import { storeToRefs } from "pinia";
 import { chatCommunityStore } from "../../../store/chatCommunity";
 import _ from "lodash-es";
 import { useRouter } from "vue-router";
 
 import CategoryDropdown from "../../dropdown/Dropdown.vue";
+
+const { proxy } = getCurrentInstance();
 
 const emit = defineEmits(["currentApp"]);
 const router = useRouter();
@@ -134,7 +136,11 @@ const hideList = ref([
     newIcon: "fluent:settings-16-regular",
     title: "社群设置",
     type: "manage",
-    callBack: () => {},
+    callBack: () => {
+      console.log("社群设置", { props: { type: "setting" } });
+      router.push({ name: "communitySettings", params: { no: no.value } });
+      proxy.$bus.emit("handleCurrentCommunity",{ props: { type: "setting" } });
+    },
   },
   // {
   //   newIcon: "fluent:people-add-16-regular",
@@ -148,6 +154,7 @@ const hideList = ref([
   //   callBack: () => {},
   // },
 ]);
+
 /**关闭悬浮模式下拉菜单**/
 const showList = ref([
   {
@@ -190,7 +197,11 @@ const showList = ref([
     newIcon: "fluent:settings-16-regular",
     title: "社群设置",
     type: "manage",
-    callBack: () => {},
+    callBack: () => {
+      console.log("社群设置", { type: "setting" });
+      router.push({ name: "SettingIndex", params: { no: no.value } });
+      proxy.$bus.emit("handleCurrentCommunity", { type: "setting" });
+    },
   },
   // {
   //   newIcon: "ant-design:team-outlined",
@@ -217,7 +228,7 @@ const prevPage = () => {
   const index = _.findIndex(myCommunity.value, (item) => {
     return Number(item?.route?.params?.no) === Number(no.value);
   });
-  if(index > -1){
+  if (index > -1) {
     myCommunity.value.splice(index, 1);
     router.go(-1);
   }
@@ -256,8 +267,6 @@ const cateList = computed(() => {
     return adminList.value;
   }
 });
-
-
 </script>
 
 <style lang="scss" scoped>
