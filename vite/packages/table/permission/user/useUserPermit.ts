@@ -12,10 +12,8 @@ import { usePermissionStore } from "../store";
 import { useNetwork } from '@vueuse/core'
 import { message } from "ant-design-vue";
 
-const { isOnline, offlineAt, downlink, downlinkMax, effectiveType, saveData, type } = useNetwork()
+const { isOnline } = useNetwork()
 
-
-// import { storeToRefs } from "pinia";
 /**
  * 用户许可
  */
@@ -56,12 +54,6 @@ export const useUserPermit = async () => {
  */
 const setUserInfo = async () => {
   const userStore: any = appStore();
-  // const permissionStore = usePermissionStore();
-  // 先判断用户信息是否存在，不存在进行赋值
-  // if (permissionStore.userInfo) {
-  //   setLV(permissionStore.userInfo);
-  //   return;
-  // } else
 
   // 有用户信息
    if (userStore.userInfo) {
@@ -98,11 +90,14 @@ export const useUpdateUserInfo = async () => {
   }
   // 4 请求成功
   console.log("请求成功 :>> ");
+
+  if(permissionStore.currentEnv == 'offline'){
+    message.success('重新上线成功！')
+  }
+
   permissionStore.setOffline(false);
 
   let userData = data.data;
-  // const permissionStore = usePermissionStore();
-  // permissionStore.userInfo = userData;
   // 旧版本用户信息处理逻辑
   setLV(userData);
 

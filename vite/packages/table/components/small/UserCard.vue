@@ -11,7 +11,7 @@
         "
       >
         <FrameAvatar
-          :class="$currentEnv() == 'offline'?'gray':''"
+          :class="currentEnv == 'offline'?'gray':''"
           :frame="displayUserInfo?.equippedItems?.frameDetail"
           :avatarSize="60"
           :avatarUrl="displayUserInfo.avatar"
@@ -219,6 +219,7 @@ import { useLogout } from "../../permission/user/useLogout";
 import { useEnv } from "../../permission/useEnv";
 import { TUIConversationService } from "@tencentcloud/chat-uikit-engine";
 import { useUpdateUserInfo } from "../../permission/user/useUserPermit";
+import { usePermissionStore } from "../../permission/store";
 
 export default {
   name: "UserCard",
@@ -259,6 +260,7 @@ export default {
       myUserInfo: "userInfo",
     }),
     ...mapWritableState(appStore, ["userCardVisible"]),
+    ...mapWritableState(usePermissionStore, ["currentEnv"]),
     displayUserInfo() {
       if (this.userCardUserInfo) {
         return {
