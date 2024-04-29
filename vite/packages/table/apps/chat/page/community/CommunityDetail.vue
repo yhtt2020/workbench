@@ -110,79 +110,81 @@ defineOptions({
 
 /**检测社群是否存在的方法**/
 const getCommunityByNo = (no: any) => {
-  /**在线状态**/
+  /**对当前社群编号进行容错处理**/
+  if (!no) return;
+
+  /**工作台在线模式**/
   if ((window as any).$currentEnv() === "online") {
-    /**这一步是预防no出现undefined导致程序不能执行**/
-    if (no) {
-      /**根据当前社群ID检测是否存在**/
-      currentAPI.getByNoDetail({ no: no }).then(async (res: any) => {
-        /**当前社群不存在逻辑**/
-        if (res.status === 0 && res.code === 404) {
-          currentPageExist.value = true;
+    /**调用社群排查是否存在的接口**/
+    currentAPI.getByNoDetail({ no: no }).then(async (res: any) => {
+      /**当前社群不存在逻辑**/
+      if (res.status === 0 && res.code === 404) {
+        return (currentPageExist.value = true);
+      } else {
+        /**当前社群存在逻辑**/
+        currentPageExist.value = false;
+        /**获取老的我的社群列表进行排查是否存在**/
+        const oldIndex = _.findIndex(myCommunity.value, (item: any) => {
+          return Number(item?.cno) === Number(no);
+        });
+        /**不存在添加当前社群模拟添加,并且显示社群加入入口**/
+        if (oldIndex === -1) {
+          const data = res?.data;
+          /**添加的参数**/
+          const option = {
+            id: data.id,
+            cno: data.no,
+            float: "",
+            img: data.icon,
+            menuVisible: true,
+            noBg: true,
+            route: { name: "myCommunity", params: { no: data.no } },
+            tab: `community_${data.no}`,
+            type: `community${data.no}`,
+            communityInfo: data,
+          };
+          myCommunity.value.push(option);
+          return;
         } else {
-          /**当前社群存在逻辑**/
-          currentPageExist.value = false;
-          const myList = await getMy();
-          const myIndex = _.findIndex(myList, (item: any) => {
-            return Number(item?.communityInfo?.no) === Number(no);
-          });
-          /**检测当前社群是否在我的社群当中**/
-          if (myIndex > -1) {
-            chatCommunity.setCurrentCommunityNo(no);
-            chatCommunity.loadCurrentCommunity(no);
-          } else {
-            const data = res?.data;
-            /**添加的参数**/
-            const option = {
-              id: data.id,
-              cno: data.no,
-              float: "",
-              img: data.icon,
-              menuVisible: true,
-              noBg: true,
-              route: { name: "myCommunity", params: { no: data.no } },
-              tab: `community_${data.no}`,
-              type: `community${data.no}`,
-              communityInfo: data,
-            };
-            myCommunity.value.push(option);
-          }
+          chatCommunity.setCurrentCommunityNo(no);
+          chatCommunity.loadCurrentCommunity(no);
         }
-      });
-    }
-  } else {
-    /**离线状态或者是其他状态**/
-    if (no) {
-      currentAPI.getApiPostByNo({ no: no }).then((res: any) => {
-        /**当前社群不存在逻辑**/
-        if (res.status === 0 && res.code === 404) {
-          currentPageExist.value = true;
-        } else {
-          /**当前社群存在逻辑**/
-          currentPageExist.value = false;
-          const myIndex = _.findIndex(myCommunity.value, (item: any) => {
-            return Number(item?.communityInfo?.no) === Number(no);
-          });
-          if (myIndex === -1) {
-            const data = res?.data;
-            /**添加的参数**/
-            const option = {
-              id: data.id,
-              cno: data.no,
-              float: "",
-              img: data.icon,
-              menuVisible: true,
-              noBg: true,
-              route: { name: "myCommunity", params: { no: data.no } },
-              tab: `community_${data.no}`,
-              type: `community${data.no}`,
-              communityInfo: data,
-            };
-            myCommunity.value.push(option);
-          }
+      }
+    });
+  } 
+  
+  else {
+    /**工作台离线模式或者是其他模式  这里走的是不想要token情况下的接口**/
+    currentAPI.getApiPostByNo({ no: no }).then((rs: any) => {
+      /**当前社群不存在逻辑**/
+      if (rs.status === 0 && rs.code === 404) {
+        currentPageExist.value = true;
+        return;
+      } else {
+        /**当前社群存在逻辑**/
+        currentPageExist.value = false;
+        const myIndex = _.findIndex(myCommunity.value, (item: any) => {
+          return Number(item?.communityInfo?.no) === Number(no);
+        });
+        if (myIndex === -1) {
+          const data = rs?.data;
+          /**添加的参数**/
+          const option = {
+            id: data.id,
+            cno: data.no,
+            float: "",
+            img: data.icon,
+            menuVisible: true,
+            noBg: true,
+            route: { name: "myCommunity", params: { no: data.no } },
+            tab: `community_${data.no}`,
+            type: `community${data.no}`,
+            communityInfo: data,
+          };
+          myCommunity.value.push(option);
         }
-      });
-    }
+      }
+    });
   }
 };
 
@@ -307,16 +309,6 @@ const handleCurrentItem = async (data: any) => {
       }
     }
   }
-};
-
-/**获取我的社群列表**/
-const getMy = async () => {
-  /**请求我的社群接口**/
-  const myList = await currentAPI.getMyCommunityList();
-  const filerMyList = _.filter(myList?.data?.list, (item: any) => {
-    return item.hasOwnProperty("communityInfo");
-  });
-  return filerMyList;
 };
 
 onMounted(() => {
