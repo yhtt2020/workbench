@@ -47,15 +47,6 @@
             <Unusual  :title="'暂无数据'" :buttonTitle="'设置'" v-else @back="backSetting"></Unusual>
         </div>
         <Unusual :title="'暂无数据'" :buttonTitle="'设置'" v-else @back="backSetting"></Unusual>
-            <!-- <xt-button 
-                :w="40" 
-                :h="40"
-                type="theme"  
-                @click="publishModalVisible" 
-                :icon="'fluent:add-16-filled'"
-                style="position: absolute;right: 24px;bottom: 24px;color:rgba(255,255,255,0.85) !important;">
-
-            </xt-button> -->
         </xt-container>
         <teleport to="body" :disabled="false">
             <PublishModal 
@@ -67,9 +58,17 @@
                 :defaultSection="defaultForum">
             </PublishModal>
             <div v-if="showDetailModal">
-                <detailModal v-if="toggleDetail" :cardData="cardData" :showDetailModal="showDetailModal"
-                    @closeDetail="closeDetail" />
-                <MinDetailModal v-else :cardData="cardData" :showDetailModal="showDetailModal" @closeDetail="closeDetail" />
+                <detailModal 
+                    v-if="toggleDetail" 
+                    :cardData="cardData" 
+                    :showDetailModal="showDetailModal"
+                    @closeDetail="closeDetail" 
+                />
+                <MinDetailModal 
+                    v-else :cardData="cardData" 
+                    :showDetailModal="showDetailModal" 
+                    @closeDetail="closeDetail" 
+                />
             </div>
         </teleport>
         <CommunitySetting 
@@ -80,8 +79,6 @@
             @forumList="updateForumList"
             @close="this.settingVisible = false">
         </CommunitySetting>
-
-
     </div>
 </template>
 <script>
@@ -149,10 +146,7 @@ export default {
                 },
             ],
             settingVisible: false,
-            currentIndex: 0,
             isLoading: false,
-            pageToggle: true,
-            selectForumList: [],
             browserUrl: 'https://s.apps.vip/post/',
             showPublishModal: false,
             selectList: [],
@@ -323,14 +317,7 @@ export default {
         }
     },
     async mounted() {
-        // this.isLoading = true
-        // 判断组件名称
-        // if (this.customData.selectList && this.customData.selectList.length === 1) {
-        //     this.options.title = this.customData.selectList[0].name
-        // }
-        // this.isLoading = false
         window.addEventListener("resize", this.handleResize)
-        // this.showForumPost = this.communityPost
         this.memoryPost()
         if(this.customData.customSize === undefined){
             this.customData.customSize = '4x4'
@@ -356,7 +343,7 @@ export default {
         defaultForum(newValue) {
             this.customData.defaultForum = newValue
             this.defaultSection = this.customData.defaultForum
-            // this.isLoading=true
+            this.isLoading=true
             let target = ''
             if(this.customData.defaultForum.index){
                 target = this.customData.defaultForum.value.id
@@ -367,9 +354,9 @@ export default {
             }
             this.getCommunityPost(target).then(() => {
                 this.showForumPost = this.communityPost;
-                // this.isLoading=false
+                this.isLoading=false
             })
-            // this.isClick = false
+            this.isClick = false
 
         },
         // 切换频道和圈子时触发获取
@@ -381,16 +368,6 @@ export default {
                 return
             }
         },
-        // 'customData.selectList': {
-        //     handler(newValue, oldValue) {
-        //         if (newValue.length === 1) {
-        //             console.log(newValue);
-        //             this.options.title = newValue[0].name
-        //         } else if (newValue.length > 1 || newValue.length < 1) {
-        //             this.options.title = '元社区'
-        //         }
-        //     }
-        // },
         settingVisible() {
             // 加载已选择的模块
             this.isClick = false
@@ -402,7 +379,6 @@ export default {
         }
     },
     unmounted() {
-        // console.log('222222222222<<<<<<<<<<<<<',this.showForumPost)
         localStorage.setItem('communityContent', JSON.stringify(this.showForumPost));
     },
 }
