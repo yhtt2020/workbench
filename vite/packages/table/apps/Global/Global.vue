@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { useStatus } from "../../hooks";
-const status = useStatus();
+
 // 这个文件存放是所有场景都需要弹出的组件
 // 记得写注释
 import {
@@ -118,8 +117,6 @@ onMounted(() => {
 </script>
 
 <template>
-  123
-  <xt-button>{{ status }}</xt-button>
   <!-- 新应用中心 -->
   <AppCenter v-if="visible" />
   <!-- 无界应用 -->
