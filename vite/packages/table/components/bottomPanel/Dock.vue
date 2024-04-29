@@ -21,9 +21,7 @@
       navId="foot"
       @delete="deleteCard">
     </FloatCard>
-  </teleport>
-  <!-- 快速搜索 底部栏区域 -->
-  <transition>
+    <transition>
     <div
       v-if="
         hoverIndex > -1 &&
@@ -41,6 +39,9 @@
       松开鼠标合并
     </div>
   </transition>
+  </teleport>
+  
+  <!-- 快速搜索 底部栏区域 -->
   <div
     id="bottomPanel"
     :class="customClass"
