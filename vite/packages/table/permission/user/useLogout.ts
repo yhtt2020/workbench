@@ -8,10 +8,10 @@ import { usePermissionStore } from "../store";
  */
 export const useLogout = () => {
   const userStore: any = appStore();
+  const permissionStore: any = usePermissionStore();
   // 清空用户信息
   userStore.userInfo = "";
-  usePermissionStore().isGuest = true;
-  cache.set("isGuest", true);
+  permissionStore.setGuest(true);
   // 清空本地 token
   cache.set("ttUserToken", "");
   // 退出群聊
