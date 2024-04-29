@@ -82,7 +82,7 @@ const init = async () => {
       fn: () => {},
     };
     socializeList.value.push(obj);
-  }
+  } 
   // 有群
   const group = data?.group;
   if (group) {
@@ -96,7 +96,7 @@ const init = async () => {
   res.socializeList = socializeList;
   console.log("初始化到这里了 :>> ", 222222);
   // 获取用户信息 没写完
-  if (res?.uid && status.value == "online") {
+  if (res?.uid && status.value != "single") {
     await ttappStore.getUserInfo(res.uid);
   }
 
