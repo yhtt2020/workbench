@@ -7,7 +7,7 @@ import cache from '../table/components/card/hooks/cache'
 import {post} from "./js/axios/request";
 import {message, notification} from "ant-design-vue";
 import shake from "./js/common/shake";
-
+import {DEFAULT} from'./js/const/default'
 import { getUserInfo as useGetUserInfo } from "./permission/api/login";
 // @ts-ignore
 export const appStore = defineStore('appStore', {
@@ -116,7 +116,7 @@ export const appStore = defineStore('appStore', {
       backGroundImgLight: 0.3,
     },
     backgroundImage: {
-      path: '',
+      path:DEFAULT.WALLPAPER,
     },
     backgroundName:{
       name:'img',

@@ -158,6 +158,7 @@ import { marketStore } from "../../../store/market";
 import { singleStore } from "../../../js/common/single";
 import { taskStore } from "../../../apps/task/store";
 import { getCardData } from "../../../apps/ttApp/src/hooks/getCardData";
+import { comCanUse } from '../../../permission/usePlat'
 export default {
   name: "AddCard",
   components: {
@@ -265,7 +266,7 @@ export default {
         });
       }
 
-      li.cname = li.cname + `（${li.children.length}）`;
+      li.cname = li.cname + `（${li.children.filter(item=>{return comCanUse(item.name)}).length}）`;
     });
 
     this.baseNavList = navList.map((item) => {
