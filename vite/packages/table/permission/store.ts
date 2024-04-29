@@ -22,7 +22,7 @@ export const usePermissionStore = defineStore("usePermissionStore", {
     setGuest(boolean) {
       this.isGuest = boolean;
       cache.set("isGuest", boolean);
-      if (!boolean) {
+      if (boolean) {
         useLogout();
       }
     },
