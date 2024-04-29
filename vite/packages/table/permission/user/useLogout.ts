@@ -11,6 +11,7 @@ export const useLogout = () => {
   // 清空用户信息
   userStore.userInfo = "";
   usePermissionStore().isGuest = true;
+  cache.set("isGuest", true);
   // 清空本地 token
   cache.set("ttUserToken", "");
   // 退出群聊
