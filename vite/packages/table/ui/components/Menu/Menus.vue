@@ -1,18 +1,12 @@
 <template>
   <template v-for="menu in props.menus">
-    <!--  disabled 为true时隐藏该列 -->
+    <!-- disabled 为 true 时隐藏该列 -->
     <div v-if="!menu.disabled" class="my-2">
       <template v-if="menu.slot">
         <div class="w-full rounded-lg">
           <Item :data="menu" :name="name" :fn="fn" />
         </div>
-        <div
-          @click="
-            handleClick({
-              lock: false,
-            })
-          "
-        >
+        <div @click="handleClick({ lock: false })">
           <slot :name="menu.slot"></slot>
         </div>
       </template>
@@ -21,17 +15,46 @@
         <xt-popover>
           <template #content>
             <div class="w-full h-full px-2 rounded-lg xt-b">
-              <div
-                class="my-2"
-                @click="handleClick(data, true)"
-                v-for="data in menu.children"
-                :name="name"
-              >
-                <Item :data="data" :name="name" :fn="fn" />
-              </div>
+              <template v-for="child in menu.children">
+                <!-- 检查子菜单是否还有自己的子菜单 -->
+                <div v-if="child.children" class="my-2">
+                  <xt-popover :index="99999999990">
+                    <template #content>
+                      <!-- 递归渲染子菜单的子菜单 -->
+                      <div class="w-full h-full px-2 rounded-lg xt-b">
+                        <div
+                          class="my-2"
+                          @click="handleClick(data, true)"
+                          v-for="data in child.children"
+                          :name="name"
+                        >
+                          <Item :data="data" :name="name" :fn="fn" />
+                        </div>
+                      </div>
+                    </template>
+                    <xt-text class="w-full h-full items">
+                      <Item :data="child" :name="name" :isBg="false" :fn="fn" />
+                      <template #right>
+                        <xt-new-icon
+                          size="20"
+                          class="mr-3"
+                          icon="fluent:chevron-left-16-filled"
+                          style="transform: rotate(180deg); color: var(--secondary-text) !important;"
+                        />
+                      </template>
+                    </xt-text>
+                  </xt-popover>
+                </div>
+                <!-- 如果没有更深层的子菜单，正常渲染当前子菜单 -->
+                <div v-else class="my-2 rounded-lg" @click="handleClick(child)">
+                  <xt-text class="w-full h-full items">
+                    <Item :data="child" :name="name" :fn="fn" />
+                  </xt-text>
+                </div>
+              </template>
             </div>
           </template>
-
+        
           <xt-text class="w-full h-full items">
             <Item :data="menu" :name="name" :isBg="false" :fn="fn" />
             <template #right>
@@ -39,10 +62,7 @@
                 size="20"
                 class="mr-3"
                 icon="fluent:chevron-left-16-filled"
-                style="
-                  transform: rotate(180deg);
-                  color: var(--secondary-text) !important;
-                "
+                style="transform: rotate(180deg); color: var(--secondary-text) !important;"
               />
             </template>
           </xt-text>
@@ -55,6 +75,7 @@
       </div>
     </div>
   </template>
+
 </template>
 
 <script setup>
