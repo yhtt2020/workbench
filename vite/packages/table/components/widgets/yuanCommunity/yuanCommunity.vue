@@ -14,13 +14,13 @@
             :customData="customData"
             @delete="deleteCard">
             <div v-if="showForumList.length > 0" class="flex flex-col flex-1 " style="height: calc(100%);">
-            <xt-option-tab 
-                v-if="showForumList.length > 1" 
-                :list="showForumList" 
-                :circle="true" 
-                v-model="defaultForum" 
-                style="height: 40px;">
-            </xt-option-tab>
+                <xt-option-tab 
+                    v-if="showForumList.length > 1" 
+                    :list="showForumList" 
+                    :circle="true" 
+                    v-model="defaultForum" 
+                    style="height: 40px;">
+                </xt-option-tab>
             <div  v-if="showForumPost.length > 0" class="flex flex-col flex-1 w-full h-0">
                 <vue-custom-scrollbar ref="threadListRef"  :settings="outerSettings"
                     style="overflow: hidden;width: 100%;" class="flex-1">
@@ -47,15 +47,6 @@
             <Unusual  :title="'暂无数据'" :buttonTitle="'设置'" v-else @back="backSetting"></Unusual>
         </div>
         <Unusual :title="'暂无数据'" :buttonTitle="'设置'" v-else @back="backSetting"></Unusual>
-            <!-- <xt-button 
-                :w="40" 
-                :h="40"
-                type="theme"  
-                @click="publishModalVisible" 
-                :icon="'fluent:add-16-filled'"
-                style="position: absolute;right: 24px;bottom: 24px;color:rgba(255,255,255,0.85) !important;">
-
-            </xt-button> -->
         </xt-container>
         <teleport to="body" :disabled="false">
             <PublishModal 
@@ -67,9 +58,17 @@
                 :defaultSection="defaultForum">
             </PublishModal>
             <div v-if="showDetailModal">
-                <detailModal v-if="toggleDetail" :cardData="cardData" :showDetailModal="showDetailModal"
-                    @closeDetail="closeDetail" />
-                <MinDetailModal v-else :cardData="cardData" :showDetailModal="showDetailModal" @closeDetail="closeDetail" />
+                <detailModal 
+                    v-if="toggleDetail" 
+                    :cardData="cardData" 
+                    :showDetailModal="showDetailModal"
+                    @closeDetail="closeDetail" 
+                />
+                <MinDetailModal 
+                    v-else :cardData="cardData" 
+                    :showDetailModal="showDetailModal" 
+                    @closeDetail="closeDetail" 
+                />
             </div>
         </teleport>
         <CommunitySetting 
@@ -80,8 +79,6 @@
             @forumList="updateForumList"
             @close="this.settingVisible = false">
         </CommunitySetting>
-
-
     </div>
 </template>
 <script>
@@ -149,14 +146,12 @@ export default {
                 },
             ],
             settingVisible: false,
-            currentIndex: 0,
             isLoading: false,
-            pageToggle: true,
-            selectForumList: [],
             browserUrl: 'https://s.apps.vip/post/',
             showPublishModal: false,
             selectList: [],
-            defaultForum:  { name: '版本更新', value: 100304 } ,
+            defaultForum:  100304 ,
+            // defaultForum:  { name: '版本更新', value: 100304 } ,
             outerSettings: {
                 useBothWheelAxes: true,
                 swipeEasing: true,
@@ -265,32 +260,12 @@ export default {
     computed: {
         ...mapWritableState(yuanCommunityStore, ['communityPost', 'myForumList', 'forumsList', 'defaultSection']),
         ...mapWritableState(useCommunityStore, ['communityReply', 'communityPostDetail']),
-        // 判断尺寸大小
-        showSize() {
-            if (this.customData.customSize) {
-                let arr = this.customData.customSize.split('x')
-                return {
-                  width: arr[0],
-                  height: arr[1]
-                }
-            }else{
-              return {
-                width: 4,
-                height: 4
-              }
-            }
-        },
+        // 卡片选项
         options(){
             return {
                 customDel: this.openWay === 'nav' ? true : false,
-                title:'元社区'
+                title:this.customData.selectList.length === 1 ? this.customData.selectList[0].name || '元社区' : '元社区'
             }
-        },
-        showItem() {
-            if (this.customData && this.customData.height) {
-                return this.customData.height == 2 ? '392px' : '600px'
-            }
-            return '392px'
         },
         forumList() {
             if (this.customData && this.customData.forumList) {
@@ -326,8 +301,9 @@ export default {
         },
     },
     async beforeMount() {
-        await this.getMyForumList()
-        this.customData.forumList = this.myForumList
+        this.getMyForumList().then(() => {
+           this.customData.forumList = this.myForumList 
+        })
         // console.log(this.myForumList,'this.myForumList');
         // 判断是否刷新加载内容
         if (this.customData && this.customData.defaultForum) {
@@ -341,14 +317,7 @@ export default {
         }
     },
     async mounted() {
-        // this.isLoading = true
-        // 判断组件名称
-        if (this.customData.selectList && this.customData.selectList.length === 1) {
-            this.options.title = this.customData.selectList[0].name
-        }
-        // this.isLoading = false
         window.addEventListener("resize", this.handleResize)
-        // this.showForumPost = this.communityPost
         this.memoryPost()
         if(this.customData.customSize === undefined){
             this.customData.customSize = '4x4'
@@ -374,7 +343,7 @@ export default {
         defaultForum(newValue) {
             this.customData.defaultForum = newValue
             this.defaultSection = this.customData.defaultForum
-            // this.isLoading=true
+            this.isLoading=true
             let target = ''
             if(this.customData.defaultForum.index){
                 target = this.customData.defaultForum.value.id
@@ -385,9 +354,9 @@ export default {
             }
             this.getCommunityPost(target).then(() => {
                 this.showForumPost = this.communityPost;
-                // this.isLoading=false
+                this.isLoading=false
             })
-            // this.isClick = false
+            this.isClick = false
 
         },
         // 切换频道和圈子时触发获取
@@ -397,15 +366,6 @@ export default {
                 this.getMyForumList()
             } else {
                 return
-            }
-        },
-        'customData.selectList': {
-            handler(newValue, oldValue) {
-                if (newValue.length === 1) {
-                    this.options.title = newValue[0].name
-                } else if (newValue.length > 1 || newValue.length < 1) {
-                    this.options.title = '元社区'
-                }
             }
         },
         settingVisible() {
@@ -419,7 +379,6 @@ export default {
         }
     },
     unmounted() {
-        // console.log('222222222222<<<<<<<<<<<<<',this.showForumPost)
         localStorage.setItem('communityContent', JSON.stringify(this.showForumPost));
     },
 }
