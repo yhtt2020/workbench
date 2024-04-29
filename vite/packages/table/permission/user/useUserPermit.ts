@@ -90,6 +90,11 @@ export const useUpdateUserInfo = async () => {
   }
   // 4 请求成功
   console.log("请求成功 :>> ");
+
+  if(permissionStore.currentEnv == 'offline'){
+    message.success('重新上线成功！')
+  }
+
   permissionStore.setOffline(false);
 
   let userData = data.data;
