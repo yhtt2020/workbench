@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import cache from "../components/card/hooks/cache";
+import { useLogout } from "./user/useLogout";
 // @ts-ignore
 export const usePermissionStore = defineStore("usePermissionStore", {
   state: () => ({
@@ -16,20 +17,22 @@ export const usePermissionStore = defineStore("usePermissionStore", {
     env: "dev",
     //平台
   }),
-  getters: {
-  },
+  getters: {},
   actions: {
-    setGuest(boolean){
-      this.isGuest = boolean
-      cache.set('isGuest',boolean)
+    setGuest(boolean) {
+      this.isGuest = boolean;
+      cache.set("isGuest", boolean);
+      if (!boolean) {
+        useLogout();
+      }
     },
-    setSingle(boolean){
-      this.isSingle = boolean
-      cache.set('isSingle',boolean)
+    setSingle(boolean) {
+      this.isSingle = boolean;
+      cache.set("isSingle", boolean);
     },
-    setOffline(boolean){
-      this.isOffline = boolean
-      cache.set('isOffline',boolean)
+    setOffline(boolean) {
+      this.isOffline = boolean;
+      cache.set("isOffline", boolean);
     },
   },
   persist: {

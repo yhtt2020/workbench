@@ -37,7 +37,6 @@ const platSort = (arr) => {
 };
 // 环境判断
 const platDetection = (type) => {
-  console.log(type,'类型',isWin,isMac,isWeb)
   switch (type){
     case 'client':
       return isWin || isMac
