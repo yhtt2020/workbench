@@ -13,26 +13,25 @@ export const usePermissionStore = defineStore("usePermissionStore", {
     isSingle: false,
     isGuest: false,
     isLogin: false,
-    platform: "web",
-    env: "dev",
     //平台
+    currentEnv:""
   }),
   getters: {},
   actions: {
-    setGuest(boolean) {
-      this.isGuest = boolean;
-      cache.set("isGuest", boolean);
-      // if (boolean) {
-      //   useLogout();
-      // }
+    setGuest(boolean){
+      this.isGuest = boolean
+      cache.set('isGuest',boolean)
+      this.currentEnv = window.$currentEnv()
     },
-    setSingle(boolean) {
-      this.isSingle = boolean;
-      cache.set("isSingle", boolean);
+    setSingle(boolean){
+      this.isSingle = boolean
+      cache.set('isSingle',boolean)
+      this.currentEnv = window.$currentEnv()
     },
-    setOffline(boolean) {
-      this.isOffline = boolean;
-      cache.set("isOffline", boolean);
+    setOffline(boolean){
+      this.isOffline = boolean
+      cache.set('isOffline',boolean)
+      this.currentEnv = window.$currentEnv()
     },
   },
   persist: {

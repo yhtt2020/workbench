@@ -1,6 +1,7 @@
 import { defaultData } from "../../../ui/hooks/useDataConversion"
 import { nanoid } from "nanoid"
 import { useTTAppStore } from "../../../apps/ttApp/src/store"
+import { checkIsIfyIcon } from "./addCardToNav"
 
 /**
  * 统一添加到到导航栏的卡片数据
@@ -27,7 +28,7 @@ export const useConversionCard = (data) => {
         name:title,  // 卡片名称
         value:name,  // 卡片组件名
         icon:icon,   // 卡片图标
-        isBg: data.customData.parentId ? false : true,   // 可以修改卡片背景颜色
+        isBg: checkIsIfyIcon(icon).value ? true : false,   // 可以修改卡片背景颜色
         bg:getRandomColor(),  // 卡片随机背景颜色
         cardData:{
             customIndex:index,  // 卡片在导航栏中的索引
@@ -107,7 +108,6 @@ const updateState = ( data: any ) => {
     if(data.customData?.parentId){
         const id = data.customData.parentId
         const item = ttApp.select(id)
-        console.log(item,'item')
         return {
             title : item.name,
             icon : item._logo

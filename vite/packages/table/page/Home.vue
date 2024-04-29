@@ -5,7 +5,7 @@
       <div @click="test2">测试isGuest{{isGuest}}</div>
       <div @click="test3">测试isSingle{{isSingle}}</div>
       <div @click="test4">测试currentEnv{{ $useEnv(["offline", "guest", "single", "online"]) }}</div>
-      <div @click="test4">测试currentEnv{{ $currentEnv() }}</div>
+      <div @click="test4">测试currentEnv{{ currentEnv }}</div>
       <div @click="test5">mac{{ $usePlat(["mac", "web", "win"]) }}</div>
       <div @click="test6">web{{ $usePlat(["mac", "web", "win"]) }}</div>
       <div @click="test7">win{{ $usePlat(["mac", "web", "win"]) }}</div>
@@ -98,7 +98,6 @@ import { usePlat } from "../ui/hooks/usePlat";
 import { usePermissionStore } from "../permission/store";
 import cache from "../components/card/hooks/cache";
 import { isMain } from "../js/common/screenUtils";
-import { useUpdateUserInfo } from "../permission/user/useUserPermit";
 let steamUser,
   steamSession,
   path,
@@ -247,7 +246,7 @@ export default {
       "freeLayoutDataTmp",
       "freeLayoutStateTmp",
     ]),
-    ...mapWritableState(usePermissionStore, ["isOffline", "isSingle", "isGuest", "getGuest", "isSingle"]),
+    ...mapWritableState(usePermissionStore, ["isOffline", "isSingle", "isGuest", "currentEnv"]),
     deskGroupRef() {
       return this.$refs.deskGroupRef;
     },
@@ -439,6 +438,7 @@ export default {
       this.isOffline = cache.get('isOffline')
       this.isSingle = cache.get('isSingle')
       this.isGuest = cache.get('isGuest')
+      this.currentEnv = window.$currentEnv()
       // 进行一次重连操作
       // useUpdateUserInfo()
 
@@ -612,10 +612,10 @@ export default {
     },
     test4(){
       // this.setSingle(!this.isSingle)
-      console.log('current1', window.$currentEnv())
-      console.log('current2', window.$useEnv(["offline", "guest", "single", "online"]))
-      console.log('current3', window.$currentPlat())
-      console.log('current4', window.$usePlat(["win", "mac", "web"]))
+      // console.log('current1', window.$currentEnv())
+      // console.log('current2', window.$useEnv(["offline", "guest", "single", "online"]))
+      // console.log('current3', window.$currentPlat())
+      // console.log('current4', window.$usePlat(["win", "mac", "web"]))
     },
     // 关闭缩放弹窗
     closeWebLogin() {

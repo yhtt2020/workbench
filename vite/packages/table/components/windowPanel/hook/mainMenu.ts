@@ -29,10 +29,17 @@ function mainMenus() {
     },
     {
       id: 4,
-      name: "清空当前导航栏",
+      name: "重置当前导航栏",
       newIcon: "fluent:circle-off-16-regular",
       fn: () => {
-        this.clearAll();
+        window.$ui.confirm('是否重置当前导航栏', '重置将清空当前导航栏，只保留主页和设置图标，是否继续？', 
+          {
+            ok: () => {
+              this.clearAll()
+            }
+          }
+
+        )
       },
     },
     {

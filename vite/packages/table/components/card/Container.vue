@@ -16,8 +16,7 @@
   >
     <div class="menu-box">
       <!-- 遮罩层 离线模式遮罩 -->
-      <div class="mask rounded-xl" v-if="envLimit.includes('offline') && $currentEnv() == 'offline'">
-      <!-- <div class="mask rounded-xl" v-if="envLimit.includes('offline') && $currentEnv() == 'offline' && !$usePlat()"> -->
+      <div class="mask rounded-xl" v-if="envLimit.includes('offline') && currentEnv == 'offline'">
         <div class="mask-box">
           <p class="flex justify-center">
             <xt-new-icon  class="mr-2" :size="cardH<=2?'60':'100'" icon="fluent-emoji:airplane"></xt-new-icon>
@@ -252,6 +251,7 @@ const { navigationToggle } = storeToRefs(useNav);
 //
 const widgetStore = useWidgetStore();
 const usePermission = usePermissionStore();
+const { currentEnv } = storeToRefs(usePermission);
 const { edit } = storeToRefs(widgetStore);
 // 自由布局
 // const freeLayoutStore = useFreeLayoutStore();
