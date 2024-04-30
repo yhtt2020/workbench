@@ -176,7 +176,7 @@ export const startApp = async (type, value, router?) => {
       break;
     // 桌面卡片
     case "card":
-      useMit.emit("openCard");
+      // useMit.emit("openCard");
       break;
   }
   return true;

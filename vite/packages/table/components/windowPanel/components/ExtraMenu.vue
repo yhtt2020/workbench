@@ -16,11 +16,13 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, computed } from 'vue'
+import { ref, computed, getCurrentInstance, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router';
 import { startApp } from '../../../ui/hooks/useStartApp';
 
 const router = useRouter()
+
+const { proxy } = getCurrentInstance()
 
 // const emit = defineEmits(['click'])
 
@@ -32,6 +34,7 @@ const list = ref([
         cb:()=>{
             startApp('systemApp', 'fullscreen', router)
             console.log('全屏显示',iconList.value)
+            proxy.$bus.emit('closeMenus')
         }
     },
     {
@@ -40,6 +43,7 @@ const list = ref([
         disabled:'web',
         cb:()=>{
             startApp('systemApp', 'setting', router)
+            proxy.$bus.emit('closeMenus')
         }
     },
     {
@@ -48,6 +52,7 @@ const list = ref([
         disabled:'client',
         cb:()=>{
             startApp('systemApp', 'lock', router)
+            proxy.$bus.emit('closeMenus')
         }
     },
     {
@@ -56,6 +61,7 @@ const list = ref([
         disabled:'client',
         cb:()=>{
             startApp('systemApp', 'power', router)
+            proxy.$bus.emit('closeMenus')
         }
     }
 ])
@@ -68,6 +74,11 @@ const iconList = computed(() => {
         return list.value
     }
 })
+
+// onUnmounted(() => {
+//     console.log('onBeforeUnmount关闭了')
+//     proxy.$bus.off('closeMenus')
+// })
 </script>
 <style lang='scss' scoped>
 .items {
