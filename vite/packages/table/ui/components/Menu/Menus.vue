@@ -46,7 +46,7 @@
                   </xt-popover>
                 </div>
                 <!-- 如果没有更深层的子菜单，正常渲染当前子菜单 -->
-                <div v-else class="my-2 rounded-lg" @click="handleClick(child)">
+                <div v-else class="my-2 rounded-lg" @click="handleClick(child, true)">
                   <xt-text class="w-full h-full items">
                     <Item :data="child" :name="name" :fn="fn" />
                   </xt-text>
