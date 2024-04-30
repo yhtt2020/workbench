@@ -45,8 +45,9 @@
 
     <div class="flex items-center mt-2">
       <span
-        class="px-2 py-1 font-12 rounded-md font-400 xt-font xt-text-2 mr-3"
-        :class="sildVisible ? '' : 'xt-bg'"
+        class="px-2 py-1 font-12 rounded-md pointer font-400 xt-font xt-text-2 mr-3"
+        :class="sideVisible ? '' : 'xt-bg'"
+        @click="copyCommunityNo"
       >
         社群号：{{ currentInfo?.communityInfo?.no }}
       </span>
@@ -84,8 +85,9 @@
 
     <div class="w-full flex items-center justify-start">
       <div
-        class="px-2 py-1 font-12 rounded-md font-400 xt-font xt-text-2 mb-2"
-        :class="sildVisible ? '' : 'xt-bg'"
+        class="px-2 py-1 font-12 rounded-md font-400 pointer xt-font xt-text-2 mb-2"
+        :class="sideVisible ? '' : 'xt-bg'"
+        @click="copyCommunityNo"
       >
         社群号：{{ currentInfo?.communityInfo?.no }}
       </div>
@@ -131,6 +133,7 @@ import _ from "lodash-es";
 import { useNavigationStore } from "../../../../../components/desk/navigationBar/navigationStore";
 import { CommunityAPI } from "../../../api/communityAPI";
 import { message } from "ant-design-vue";
+import { useGlobalStore } from "../../../../Global/store";
 
 const comAPI = new CommunityAPI();
 
@@ -155,6 +158,8 @@ const chatCommunity = chatCommunityStore();
 const { myCommunity, setting } = storeToRefs(chatCommunity);
 const useNavigation = useNavigationStore();
 const { communityNavVisible } = storeToRefs(useNavigation);
+const globalStore = useGlobalStore();
+const { loginVisible } = storeToRefs(globalStore);
 
 /**加入社群条件**/
 const hasRole = computed(() => {
@@ -196,29 +201,73 @@ const currentInfo = computed(() => {
 // };
 
 /**立即加入**/
-const joinNow = () => {
-  /**开启社群导航**/
-  if (communityNavVisible.value) {
-    joinCurrentCommunity();
+const joinNow = async () => {
+  /**在线模式**/
+  if (window.$currentEnv() === "online") {
+    const option = { no: no.value };
+    const res = await comAPI.applyJoinCommunity(option);
+    if (res.status === 1) {
+      message.success(`${res.info}`);
+      chatCommunity.updateMyCommunity(no.value);
+      chatCommunity.getCommunityTree(no.value);
+      /**是否开启社群导航**/
+      if (communityNavVisible.value) {
+        return;
+      } else {
+        setTimeout(() => {
+          window.$ui.confirm(
+            "为你添加「社群导航栏」",
+            "已经加入了一个社群，可以选择开启社群导航栏，在导航栏种快速访问社群；如果你的社群管理员创建了网址导航或社群桌面，你可以在导航栏中快速打开。",
+            {
+              ok: async () => {
+                communityNavVisible.value = true;
+              },
+              no: () => {
+                setTimeout(() => {
+                  window.$ui.confirm(
+                    "稍后可以在「系统设置/导航设置」中开启",
+                    "",
+                    {
+                      ok: () => {},
+                      okText: "好的",
+                      noText: null,
+                    }
+                  );
+                }, 500);
+              },
+              noText: "稍后再说",
+              okText: "立即添加",
+              type: "link",
+              okButtonWidth: "95",
+              noButtonWidth: "95",
+            }
+          );
+        }, 1000);
+      }
+    }
   } else {
-    window.$ui.confirm("是否需要开启社群导航", "", {
-      ok: async () => {
-        communityNavVisible.value = true;
-        joinCurrentCommunity();
-      },
-      type: "warning",
-    });
+    /**离线模式则需要提示登录**/
+    loginTip();
   }
 };
-/**触发加入社群方法**/ 
-const joinCurrentCommunity = async() => {
- const option = {no:no.value};
- const res  = await comAPI.applyJoinCommunity(option);
- if(res.status === 1){
-  message.success(`${res.info}`);
-  chatCommunity.getMyCommunity();
-  chatCommunity.getCommunityTree(no.value);
- }
+
+// 提示登录弹窗
+const loginTip = () => {
+  window.$ui.confirm("登录提示", "目前处于游客模式，请登录后体验完整功能。", {
+    ok: () => {
+      loginVisible.value = true;
+    },
+    okText: "立即登录",
+    noText: "暂不登录",
+    okButtonWidth: "95",
+    noButtonWidth: "95",
+  });
+};
+
+/**复制社群号**/
+const copyCommunityNo = async () => {
+  require('electron').clipboard?.writeText(`${currentInfo.value?.communityInfo?.no}`)
+  message.success("当前社群ID复制成功");
 };
 </script>
 

@@ -73,7 +73,7 @@
 
     <div v-else>
       <!-- 修改默认壁纸 -->
-      <div class="fixed inset-0  none-bg default-bg" style="z-index: -1">
+      <div class="fixed inset-0  none-bg default-bg"  :style="{'z-index':-1}">
       </div>
     </div>
   </template>
@@ -450,7 +450,6 @@ export default {
 }
 
 .default-bg {
-  background-image: url('https://a.apps.vip/icons/defaultBackground.jpg') !important;
   background-size: cover !important;
   background-repeat: no-repeat !important;
   background-position: center !important;

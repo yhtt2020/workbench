@@ -2,14 +2,13 @@ import cache from "../../components/card/hooks/cache";
 import { appStore } from "../../store";
 import { chatStore } from "../../store/chat";
 
-
 import { getUserInfo } from "../api/login";
 import { useLogout, useClearUserInfo } from "./useLogout";
 import { setLV } from "./useUtils";
 import { usePermissionStore } from "../store";
 
 // 检查当前网络状态
-import { useNetwork } from '@vueuse/core'
+import { useNetwork } from "@vueuse/core";
 import { message } from "ant-design-vue";
 
 const { isOnline } = useNetwork()
@@ -18,16 +17,16 @@ const { isOnline } = useNetwork()
  * 用户许可
  */
 export const useUserPermit = async () => {
-  const permissionStore = usePermissionStore();
+  const permissionStore: any = usePermissionStore();
   // 0
-  if(!isOnline.value) {
+  if (!isOnline.value) {
     permissionStore.setOffline(true);
-    return
-  }else{
+    return;
+  } else {
     permissionStore.setOffline(false);
-    if(window.$useEnv('offline')) {
-      message.warning('当前网络不佳，请稍后重试！')
-      return 
+    if (window.$useEnv("offline")) {
+      message.warning("当前网络不佳，请稍后重试！");
+      return;
     }
   }
   // 1、 获取token
@@ -41,10 +40,12 @@ export const useUserPermit = async () => {
     // 2.2、设置成功
     if (res) {
       // 清楚游客模式
-      permissionStore.setGuest(false)
+      permissionStore.setGuest(false);
+      console.log("2.2、设置成功 :>> ", 2222);
       return res;
     }
   }
+  // console.log('object :>> ', object);
   useLogout();
   return false;
 };
@@ -56,7 +57,7 @@ const setUserInfo = async () => {
   const userStore: any = appStore();
 
   // 有用户信息
-   if (userStore.userInfo) {
+  if (userStore.userInfo) {
     return userStore.userInfo;
   }
   // 无用户信息发送请求
@@ -84,7 +85,7 @@ export const useUpdateUserInfo = async () => {
     useClearUserInfo();
     // 修改为离线状态
     // permissionStore.setOffline(true);
-    message.warning('当前网络不佳，请稍后重试！')
+    message.warning("当前网络不佳，请稍后重试！");
     console.log("登录时错误信息 :>> ", res);
     return;
   }
@@ -112,7 +113,6 @@ export const useUpdateUserInfo = async () => {
   return userData;
 };
 
-
 /**
  * 打开重连弹窗
  */
@@ -120,7 +120,7 @@ export const reconnect = async () => {
   /**提示重连弹窗**/
   window.$ui.confirm("提示", "目前处于离线模式，请重连后体验完整功能。", {
     ok: () => {
-      useUpdateUserInfo()
+      useUpdateUserInfo();
     },
     okText: "立即重连",
     noText: "暂不连接",
@@ -128,5 +128,4 @@ export const reconnect = async () => {
     okButtonWidth: "95",
     noButtonWidth: "95",
   });
-
 };

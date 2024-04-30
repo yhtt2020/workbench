@@ -62,11 +62,21 @@ const leftMenuList = computed(() => {
 const switchCurrentCom = (name: string) => {
   currentCom.value = name;
 };
+
+// import { useStatus } from "../../../hooks";
+// const { status, validate, setGuest } = useStatus();
+// const a = validate(["guest", "offline"]);
 </script>
 
 <template>
   <xt-modal v-model="visible" index="1200" custom :mask="false">
     <div style="width: 1000px; height: 720px">
+      <!-- <xt-button>{{ status }}</xt-button>
+      <div v-if="status == 'guest' || status == 'offline'">非在线模式</div>
+      <div v-else>在线模式</div>
+      {{ a }}
+      <div v-if="a">数组形式非在线模式</div>
+      <div v-else>数组形式在线模式</div> -->
       <!-- 左侧菜单容器 -->
       <xt-left-menu
         :list="leftMenuList"

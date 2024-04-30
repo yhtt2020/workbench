@@ -18,6 +18,8 @@ const useAppStore = appStore()
 const { proxy } = getCurrentInstance();
 const {copyFootNav,sideNavigationList,rightNavigationList,navigationToggle} = storeToRefs(useNavStore)
 
+const { navAttribute } = storeToRefs(navigationStore)
+
 // 导航栏重置图标
 const resetIconList = ref([
     {
@@ -113,7 +115,9 @@ watch(() => navigationStore.bottomToggle[2], (newValue, oldValue) => {
 
 const clearAll = (list)=>{
     list = [...resetIconList.value]
-    console.log(list, 'list from bottom---clearAll')
+    // console.log(list, 'list from bottom---clearAll')
+    // 还原导航栏到原始比例
+    navAttribute.value.navSize = 100
     return list
 }
 

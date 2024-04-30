@@ -73,6 +73,7 @@ class TableManager {
           nodeIntegration: true,
           enableBlinkFeatures: ['unsafely-treat-insecure-origin-as-secure'],
           sandbox: false,
+          partition:'persist:tableWin',
           contextIsolation: false,
           additionalArguments: [
             '--app-path=' + app.getPath('exe'),

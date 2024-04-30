@@ -50,6 +50,7 @@ import { storeToRefs } from "pinia";
 import { completeTask } from "../../../../task/task";
 import { chatStore } from "../../../../../store/chat";
 import { TUIConversationService } from "@tencentcloud/chat-uikit-engine";
+import { useGlobalStore } from "../../../../Global/store";
 
 const chatServer = window?.$chat?.chat;
 const router = useRouter();
@@ -63,15 +64,23 @@ const props = defineProps({
 });
 const { groupList } = toRefs(props);
 
+/**解构store数据**/
+const global = useGlobalStore();
+const { loginVisible } = storeToRefs(global);
+
 // 添加群聊
 const addGroup = async (id) => {
-  const option = { groupID: id };
-  const res =  await chatServer.joinGroup(option);
-  if(res.code === 0){
-    const conversationID =  `GROUP${id}`;
-    handlerConversationList(conversationID)
-    completeTask("Z0601");
-    chat.updateGroupRelationship();
+  if (window.$currentEnv() === "online") {
+    const option = { groupID: id };
+    const res = await chatServer.joinGroup(option);
+    if (res.code === 0) {
+      const conversationID = `GROUP${id}`;
+      handlerConversationList(conversationID);
+      completeTask("Z0601");
+      chat.updateGroupRelationship();
+    }
+  } else {
+    loginTip();
   }
 };
 
@@ -84,6 +93,19 @@ const handlerConversationList = (conversationID) => {
   chat.updateConversation(conversationID);
   router.push({ name: "chatMain" });
   TUIConversationService.switchConversation(conversationID);
+};
+
+/**提示登录**/
+const loginTip = () => {
+  window.$ui.confirm("登录提示", "目前处于游客模式，请登录后体验完整功能。", {
+    ok: () => {
+      loginVisible.value = true;
+    },
+    okText: "立即登录",
+    noText: "暂不登录",
+    okButtonWidth: "95",
+    noButtonWidth: "95",
+  });
 };
 </script>
 

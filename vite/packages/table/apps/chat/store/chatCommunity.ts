@@ -69,23 +69,23 @@ export const chatCommunityStore = defineStore("chatCommunity", {
           for (const item of list) {
             if (item.hasOwnProperty("communityInfo")) {
               const index = _.findIndex(this.myCommunity, function (find: any) {
-                return String(item.id) === String(find.id);
+                return String(item.cno) === String(find.cno);
               });
+              const options = {
+                ...item,
+                img: item.communityInfo?.icon,
+                float: "",
+                tab: `community_${item.communityInfo?.no}`,
+                noBg: true,
+                type: `community${item.cno}`,
+                route: {
+                  name: "myCommunity",
+                  params: { no: item.communityInfo?.no },
+                },
+                menuVisible: true,
+                top: ["tr", "blue", { icon: "fluent:pin-16-regular" }, 0],
+              };
               if (index === -1 && item.role) {
-                const options = {
-                  ...item,
-                  img: item.communityInfo?.icon,
-                  float: "",
-                  tab: `community_${item.communityInfo?.no}`,
-                  noBg: true,
-                  type: `community${item.cno}`,
-                  route: {
-                    name: "myCommunity",
-                    params: { no: item.communityInfo?.no },
-                  },
-                  menuVisible: true,
-                  top: ["tr", "blue", { icon: "fluent:pin-16-regular" }, 0],
-                };
                 this.myCommunity.push(options);
               }
             }
@@ -93,6 +93,44 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         }
       });
     },
+
+    /**更新当前我的社群**/
+    async updateMyCommunity(no: any) {
+      const res = await comAPI.getMyCommunityList();
+      if (res.status === 1) {
+        const newList = _.filter(res?.data?.list, (item: any) => {
+          return item.hasOwnProperty("communityInfo");
+        });
+        /**这一步是从this.myCommunity提取模拟添加的数据**/
+        const oldIndex = _.findIndex(this.myCommunity, (item: any) => {
+          return Number(item.cno) === Number(no);
+        });
+        /**获取新的数据进行替换**/
+        const newIndex = _.findIndex(newList, (item: any) => {
+          return Number(item.cno) === Number(no);
+        });
+        if (oldIndex > -1) {
+          this.myCommunity.splice(oldIndex, 1);
+          const data  = newList[newIndex];
+          const options = {
+            ...data,
+            img: data.communityInfo?.icon,
+            float: "",
+            tab: `community_${data.communityInfo?.no}`,
+            noBg: true,
+            type: `community${data.cno}`,
+            route: {
+              name: "myCommunity",
+              params: { no: data.communityInfo?.no },
+            },
+            menuVisible: true,
+            top: ["tr", "blue", { icon: "fluent:pin-16-regular" }, 0],
+          };
+          this.myCommunity.push(options);
+        }
+      }
+    },
+
     // 设置当前社群的ID号
     setCurrentCommunityNo(no: any) {
       this.currentCommunityNo = no;
@@ -249,8 +287,8 @@ export const chatCommunityStore = defineStore("chatCommunity", {
       });
       mapTop.sort((a: any, b: any) => {
         if (Number(a.route.params.no) === Number(no)) {
-          /**将id为指定值的元素置顶**/ 
-          return -1; 
+          /**将id为指定值的元素置顶**/
+          return -1;
         } else if (Number(b.route.params.no) === Number(no)) {
           return 1;
         } else {
@@ -272,10 +310,10 @@ export const chatCommunityStore = defineStore("chatCommunity", {
           return item;
         }
       });
-      mapUnSetTop.sort((a:any, b:any) => {
+      mapUnSetTop.sort((a: any, b: any) => {
         if (Number(a.route.params.no) === Number(no)) {
-          /**将id为指定值的元素放到末尾**/ 
-          return 1; 
+          /**将id为指定值的元素放到末尾**/
+          return 1;
         } else if (Number(b.route.params.no) === Number(no)) {
           return -1;
         } else {

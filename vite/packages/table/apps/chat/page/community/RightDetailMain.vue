@@ -52,6 +52,11 @@
     <template v-else-if="currentType === 'forum'">
       <Commun :forum-id="currentProps.id" />
     </template>
+
+    <!-- 社群设置 -->
+    <template v-else-if="currentType === 'setting'">
+      <router-view></router-view>
+    </template>
   </div>
 </template>
 
@@ -63,6 +68,7 @@ import { checkGroupShip } from "../../../../js/common/sns";
 /**导入页面**/
 import Commun from "../com/Commun.vue";
 import CurrentGroupJoin from "../join/CurrentGroupJoin.vue";
+// import SettingIndex from "../setting/SettingIndex.vue";
 
 const props = defineProps({
   currentItem: {

@@ -64,7 +64,7 @@ const emptyList = ref([
 
   <template v-else>
     <div class="flex items-center justify-center flex-col">
-      <xt-ify-icon icon="fluent-emoji:sleeping-face" size="64" class="mb-4" />
+      <xt-ify-icon icon="fluent-emoji:knocked-out-face" size="64" class="mb-4" />
       <span class="xt-text xt-font font-16">暂无社群内容</span>
     </div>
   </template>
