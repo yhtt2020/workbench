@@ -4,6 +4,7 @@
     :header="header"
     v-model:customSize="customData.customSize"
     :devLimit="['h5']"  
+    :envLimit="['guest', 'offline', 'single']"
     :sizeList="sizeList" 
     :customData="customData" 
     :customIndex="customIndex" 

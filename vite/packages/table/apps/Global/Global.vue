@@ -16,7 +16,7 @@ import { useGlobalStore } from "./store";
 
 // 检查当前网络状态
 import { useNetwork } from '@vueuse/core'
-const { isOnline, offlineAt, downlink, downlinkMax, effectiveType, saveData, type } = useNetwork()
+const { isOnline } = useNetwork()
 
 // 领取任务奖励
 const ClaimReward = defineAsyncComponent(

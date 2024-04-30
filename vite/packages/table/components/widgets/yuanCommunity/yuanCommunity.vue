@@ -7,6 +7,7 @@
             :desk="desk" 
             :options="options" 
             :customIndex="customIndex" 
+            :envLimit="['guest', 'offline', 'single']"
             :menuList="menuList" 
             ref="cardSlot" 
             :env="env"
