@@ -16,7 +16,7 @@
         </div>
       </div>
 
-      <!-- <div style="display: none" class="right-dropdown">
+      <div class="right-dropdown" style="display: none">
         <xt-dropdown
           newIcon="fluent:more-horizontal-16-regular"
           :placement="'bottomRight'"
@@ -24,24 +24,34 @@
           :h="40"
         >
           <div
-            style="width: 184px; margin-bottom: 8px"
-            class="rounded-lg flex items-center h-11 drop-item xt-text-2 xt-bg-2 px-4 py-3 pointer"
-            @click="item.callBack"
+            style="width: 180px"
+            class="flex flex-col xt-main-bg rounded-lg px-3 pt-3"
           >
-            <xt-ify-icon :icon="item.newIcon" size="20" class="xt-text mr-3" />
-            <div
-              class="font-16 xt-font flex items-center justify-center"
-              :style="
-                item.type === 'delete'
-                  ? { color: 'var(--error)' }
-                  : { color: 'var(--primary-text)' }
-              "
-            >
-              {{ item.title }}
-            </div>
+            <template v-for="item in memberDropList">
+              <div
+                class="rounded-lg flex items-center h-11 w-full mb-3 drop-item xt-text-2 px-4 py-3 pointer"
+                @click="item.callBack"
+              >
+                <xt-ify-icon
+                  :icon="item.newIcon"
+                  size="20"
+                  class="xt-text mr-3"
+                />
+                <div
+                  class="font-16 xt-font flex items-center justify-center"
+                  :style="
+                    item.type === 'delete'
+                      ? { color: 'var(--error)' }
+                      : { color: 'var(--primary-text)' }
+                  "
+                >
+                  {{ item.title }}
+                </div>
+              </div>
+            </template>
           </div>
         </xt-dropdown>
-      </div> -->
+      </div>
     </div>
   </template>
 </template>
@@ -86,6 +96,12 @@ const callbackParams = (args) => {
     .right-dropdown {
       display: block !important;
     }
+  }
+}
+
+.drop-item{
+  &:hover {
+    background: var(--active-secondary-bg) !important;
   }
 }
 </style>
