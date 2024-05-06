@@ -213,7 +213,6 @@ function openReadUserPanel() {
 
 // 打开用户卡片事件
 const openUserCard = () =>{
-  console.log('开启用户卡片');
   userCardVisible.value = true;
 }
 </script>
