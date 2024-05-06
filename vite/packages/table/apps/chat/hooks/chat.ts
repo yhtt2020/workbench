@@ -5,7 +5,6 @@ import _ from "lodash-es";
 
 export const chatLogout = () => {
   (window as any).$TUIKit.logout();
-  (window as any).$TUIKit.destroy();
   (window as any).$TUIKit.TUIStore.storeMap.conversation.store.conversationList = [];
   (window as any).$TUIKit.TUIStore.storeMap.group.store.conversationList = [];
   (window as any).$TUIKit.TUIStore.storeMap.friend.store.conversationList = [];

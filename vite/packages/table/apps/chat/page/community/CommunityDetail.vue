@@ -143,7 +143,9 @@ const getCommunityByNo = (no: any) => {
             type: `community${data.no}`,
             communityInfo: data,
           };
-          myCommunity.value.push(option);
+          // console.log('在线状态',option);
+          chatCommunity.loadCurrentCommunity(option)
+          // myCommunity.value.push(option);
           return;
         } else {
           chatCommunity.setCurrentCommunityNo(no);
@@ -181,7 +183,9 @@ const getCommunityByNo = (no: any) => {
             type: `community${data.no}`,
             communityInfo: data,
           };
-          myCommunity.value.push(option);
+          // console.log('离线状态',option);
+          chatCommunity.loadCurrentCommunity(option)
+          // myCommunity.value.push(option);
         }
       }
     });

@@ -155,7 +155,7 @@ const { columnVisible, no, sideVisible } = toRefs(props);
 
 /**解构store数据缓存**/
 const chatCommunity = chatCommunityStore();
-const { myCommunity, setting } = storeToRefs(chatCommunity);
+const { myCommunity, setting,currentCommunity } = storeToRefs(chatCommunity);
 const useNavigation = useNavigationStore();
 const { communityNavVisible } = storeToRefs(useNavigation);
 const globalStore = useGlobalStore();
@@ -178,7 +178,13 @@ const currentInfo = computed(() => {
   const currentFind = _.find(myCommunity.value, (item) => {
     return Number(item?.route?.params?.no) === Number(no.value);
   });
-  return currentFind;
+  if(currentFind){
+    return currentFind
+  }
+  else {
+    // console.log('测试',currentCommunity.value?.communityInfo);
+    return currentCommunity.value;
+  }
 });
 
 /**是否折叠**/
