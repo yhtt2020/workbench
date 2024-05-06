@@ -53,7 +53,6 @@ onMounted(() => {
   }, 2);
   proxy.$bus.on("cutCanvas", (position) => {
     loading.value = true;
-    console.log("整理桌面回调触发了 :>> ");
     setTimeout(() => {
       cutCanvas({
         redirect: true,
