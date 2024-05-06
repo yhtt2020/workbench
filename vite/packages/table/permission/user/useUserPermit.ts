@@ -2,29 +2,32 @@ import cache from "../../components/card/hooks/cache";
 import { appStore } from "../../store";
 import { chatStore } from "../../store/chat";
 
-
 import { getUserInfo } from "../api/login";
 import { useLogout, useClearUserInfo } from "./useLogout";
 import { setLV } from "./useUtils";
 import { usePermissionStore } from "../store";
 
 // 检查当前网络状态
-import { useNetwork } from '@vueuse/core'
+import { useNetwork } from "@vueuse/core";
+import { message } from "ant-design-vue";
 
-const { isOnline, offlineAt, downlink, downlinkMax, effectiveType, saveData, type } = useNetwork()
+const { isOnline } = useNetwork()
 
-console.log('isOnline.value', isOnline.value)
-
-// import { storeToRefs } from "pinia";
 /**
  * 用户许可
  */
 export const useUserPermit = async () => {
-  const permissionStore = usePermissionStore();
+  const permissionStore: any = usePermissionStore();
   // 0
-  if(!isOnline.value) {
+  if (!isOnline.value) {
     permissionStore.setOffline(true);
-    return
+    return;
+  } else {
+    permissionStore.setOffline(false);
+    if (window.$useEnv("offline")) {
+      message.warning("当前网络不佳，请稍后重试！");
+      return;
+    }
   }
   // 1、 获取token
   let token = cache.get("ttUserToken");
@@ -37,10 +40,12 @@ export const useUserPermit = async () => {
     // 2.2、设置成功
     if (res) {
       // 清楚游客模式
-      permissionStore.setGuest(false)
+      permissionStore.setGuest(false);
+      console.log("2.2、设置成功 :>> ", 2222);
       return res;
     }
   }
+  // console.log('object :>> ', object);
   useLogout();
   return false;
 };
@@ -50,15 +55,9 @@ export const useUserPermit = async () => {
  */
 const setUserInfo = async () => {
   const userStore: any = appStore();
-  // const permissionStore = usePermissionStore();
-  // 先判断用户信息是否存在，不存在进行赋值
-  // if (permissionStore.userInfo) {
-  //   setLV(permissionStore.userInfo);
-  //   return;
-  // } else
 
   // 有用户信息
-   if (userStore.userInfo) {
+  if (userStore.userInfo) {
     return userStore.userInfo;
   }
   // 无用户信息发送请求
@@ -85,17 +84,21 @@ export const useUpdateUserInfo = async () => {
   if (res.code !== 1000 && code !== 200) {
     useClearUserInfo();
     // 修改为离线状态
-    permissionStore.setOffline(true);
+    // permissionStore.setOffline(true);
+    message.warning("当前网络不佳，请稍后重试！");
     console.log("登录时错误信息 :>> ", res);
     return;
   }
   // 4 请求成功
   console.log("请求成功 :>> ");
+
+  if(permissionStore.currentEnv == 'offline'){
+    message.success('重新上线成功！')
+  }
+
   permissionStore.setOffline(false);
 
   let userData = data.data;
-  // const permissionStore = usePermissionStore();
-  // permissionStore.userInfo = userData;
   // 旧版本用户信息处理逻辑
   setLV(userData);
 
@@ -108,4 +111,21 @@ export const useUpdateUserInfo = async () => {
   (chatStore() as any)?.login();
 
   return userData;
+};
+
+/**
+ * 打开重连弹窗
+ */
+export const reconnect = async () => {
+  /**提示重连弹窗**/
+  window.$ui.confirm("提示", "目前处于离线模式，请重连后体验完整功能。", {
+    ok: () => {
+      useUpdateUserInfo();
+    },
+    okText: "立即重连",
+    noText: "暂不连接",
+    type: "warning",
+    okButtonWidth: "95",
+    noButtonWidth: "95",
+  });
 };

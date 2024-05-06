@@ -128,8 +128,6 @@ import "./apps/chat/assets/chat.scss";
 app.use(Wujie);
 // app.use(hevueImgPreview)
 // 使用 provide 将全局变量作为响应式对象
-app.provide("currentEnv", currentEnv);
-app.provide("currentPlat", currentPlat);
 app.provide("isWeb", isWeb);
 app.provide("isWin", isWin);
 app.provide("isMac", isMac);
@@ -138,6 +136,8 @@ app.provide("isSingle", isSingle);
 app.provide("isGuest", isGuest);
 app.provide("$useEnv", useEnv);
 app.provide("$usePlat", usePlat);
+app.provide("currentEnv", currentEnv);
+app.provide("currentPlat", currentPlat);
 
 // 使用 globalProperties 将全局变量附加到 Vue 实例上
 app.config.globalProperties.$currentEnv = currentEnv;

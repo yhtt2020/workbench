@@ -81,6 +81,7 @@ export const setLV = (userInfo) => {
 
   // 更新或设置用户的整体信息
   userStore.setUser(userInfo);
+  console.log('走到了这里 :>> ', );
 
   return true;
 };

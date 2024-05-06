@@ -6,7 +6,7 @@ import { isWeb, isWin, isMac, isOffline, isGuest } from "./useBaseEnv";
 
 // 提示
 const showConfirm = (name) => {
-  confirm(name + "无法使用", "下载客户端体验完整内容。", {
+  confirm("平台限制", "请下载客户端体验完整内容。", {
     noText: "稍后再说",
     okText: "立即下载",
     ok: () => {

@@ -16,8 +16,7 @@
   >
     <div class="menu-box">
       <!-- 遮罩层 离线模式遮罩 -->
-      <div class="mask rounded-xl" v-if="envLimit.includes('offline') && $currentEnv() == 'offline'">
-      <!-- <div class="mask rounded-xl" v-if="envLimit.includes('offline') && $currentEnv() == 'offline' && !$usePlat()"> -->
+      <div class="mask rounded-xl" v-if="envLimit.includes('offline') && currentEnv == 'offline'">
         <div class="mask-box">
           <p class="flex justify-center">
             <xt-new-icon  class="mr-2" :size="cardH<=2?'60':'100'" icon="fluent-emoji:airplane"></xt-new-icon>
@@ -174,7 +173,7 @@
         </div>
         <!-- 小组件头部结束 -->
         <!-- 小组件主体开始 -->
-        <xt-status :name="header.title" :status="envLimitStatus" imgSize="75">
+        <xt-status :name="header.title" :status="envLimitStatus" :plat="platLimit" imgSize="75">
           <div
             class="flex-1 h-full rounded-b-lg"
             :style="[
@@ -252,6 +251,7 @@ const { navigationToggle } = storeToRefs(useNav);
 //
 const widgetStore = useWidgetStore();
 const usePermission = usePermissionStore();
+const { currentEnv } = storeToRefs(usePermission);
 const { edit } = storeToRefs(widgetStore);
 // 自由布局
 // const freeLayoutStore = useFreeLayoutStore();
@@ -415,7 +415,7 @@ const addObj = computed(() => {
 });
 // 实际渲染的右键菜单
 const menus = computed(() => {
-  if (usePlat(props.envLimit)) return [addObj.value, deleteObj.value];
+  if (usePlat(props.platLimit)) return [addObj.value, deleteObj.value];
   let menu = [...props.menuList, addObj.value, deleteObj.value];
   return menu;
 });

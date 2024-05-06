@@ -139,22 +139,27 @@ export const chatStore = defineStore("chatStore", {
 
     // 遍历获取推荐群聊数据
     async loadRecommendGroups() {
-      let groups: any = [];
-      // 遍历获取推荐群聊
-      for (let i = 0; i < this.group.length; i++) {
-        try {
-          const option = this.group[i].groupID;
-          const result = await (window as any).$chat?.chat?.searchGroupByID(
-            option
-          );
-          const group = { ...result.data.group, relationShip: "" };
-          groups.push(group);
-        } catch (error) {
-          console.warn(this.group[i].groupID, error);
+      if((window as any).$currentEnv() === 'online'){
+        let groups: any = [];
+        // 遍历获取推荐群聊
+        for (let i = 0; i < this.group.length; i++) {
+          try {
+            const option = this.group[i].groupID;
+            const result = await (window as any).$chat?.chat?.searchGroupByID(
+              option
+            );
+            const group = { ...result.data.group, relationShip: "" };
+            groups.push(group);
+          } catch (error) {
+            console.warn(this.group[i].groupID, error);
+          }
         }
+        this.recommendData.groups = groups;
+        return groups; 
       }
-      this.recommendData.groups = groups;
-      return groups;
+      else {
+        this.recommendData.groups = []
+      }
     },
 
     // 判断推荐用户好友关系

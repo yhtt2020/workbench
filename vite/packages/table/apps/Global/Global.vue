@@ -14,6 +14,18 @@ import { storeToRefs } from "pinia";
 import { taskStore as useTaskStore } from "../task/store";
 import { useGlobalStore } from "./store";
 
+// 检查当前网络状态
+import { useNetwork } from "@vueuse/core";
+const {
+  isOnline,
+  offlineAt,
+  downlink,
+  downlinkMax,
+  effectiveType,
+  saveData,
+  type,
+} = useNetwork();
+
 // 领取任务奖励
 const ClaimReward = defineAsyncComponent(
   () => import("../task/components/ClaimReward.vue")
@@ -51,7 +63,10 @@ const { proxy }: any = getCurrentInstance();
 
 const globalStore: any = useGlobalStore();
 const { systemVisible, loginVisible, loginCb } = storeToRefs(globalStore);
-import { useUpdateUserInfo } from "../../permission/user/useUserPermit"
+import { useUpdateUserInfo } from "../../permission/user/useUserPermit";
+import { usePermissionStore } from "../../permission/store";
+
+const { currentEnv } = storeToRefs(usePermissionStore);
 
 // 文件弹窗
 const fileVisible = ref(true);
@@ -74,7 +89,7 @@ const openFile = (cb?: Function) => {
     // proxy.tt
   }, 10);
 };
-let timer
+let timer;
 onMounted(() => {
   // 打开系统设置
   proxy.$bus.on("openSystemSet", () => {
@@ -89,16 +104,16 @@ onMounted(() => {
   proxy.$bus.on("openFile", (cb) => {
     openFile(cb);
   });
-  if(window.$currentEnv() == 'offline'){
-// 补充尝试登录
-// 添加重连定时器 目前 五分钟重连一次
-    timer = setInterval(()=>{
-      if(window.$currentEnv() != 'offline'){
-        clearInterval(timer)
-        timer = null
+  if (isOnline && !window.$useEnv("guest")) {
+    // 补充尝试登录
+    // 添加重连定时器 目前 五分钟重连一次
+    timer = setInterval(() => {
+      if (currentEnv != "offline") {
+        clearInterval(timer);
+        timer = null;
       }
-      useUpdateUserInfo()
-    }, 300000)
+      useUpdateUserInfo();
+    }, 300000);
   }
 });
 

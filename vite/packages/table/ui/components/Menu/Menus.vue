@@ -15,43 +15,14 @@
         <xt-popover>
           <template #content>
             <div class="w-full h-full px-2 rounded-lg xt-b">
-              <template v-for="child in menu.children">
-                <!-- 检查子菜单是否还有自己的子菜单 -->
-                <div v-if="child.children" class="my-2">
-                  <xt-popover :index="99999999990">
-                    <template #content>
-                      <!-- 递归渲染子菜单的子菜单 -->
-                      <div class="w-full h-full px-2 rounded-lg xt-b">
-                        <div
-                          class="my-2"
-                          @click="handleClick(data, true)"
-                          v-for="data in child.children"
-                          :name="name"
-                        >
-                          <Item :data="data" :name="name" :fn="fn" />
-                        </div>
-                      </div>
-                    </template>
-                    <xt-text class="w-full h-full items">
-                      <Item :data="child" :name="name" :isBg="false" :fn="fn" />
-                      <template #right>
-                        <xt-new-icon
-                          size="20"
-                          class="mr-3"
-                          icon="fluent:chevron-left-16-filled"
-                          style="transform: rotate(180deg); color: var(--secondary-text) !important;"
-                        />
-                      </template>
-                    </xt-text>
-                  </xt-popover>
-                </div>
-                <!-- 如果没有更深层的子菜单，正常渲染当前子菜单 -->
-                <div v-else class="my-2 rounded-lg" @click="handleClick(child, true)">
-                  <xt-text class="w-full h-full items">
-                    <Item :data="child" :name="name" :fn="fn" />
-                  </xt-text>
-                </div>
-              </template>
+              <div
+                class="my-2"
+                @click="handleClick(data, true)"
+                v-for="data in menu.children"
+                :name="name"
+              >
+                <Item :data="data" :name="name" :fn="fn" />
+              </div>
             </div>
           </template>
         

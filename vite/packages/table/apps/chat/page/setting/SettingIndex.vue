@@ -1,75 +1,65 @@
 <!-- 社群设置页面主入口 -->
- <template>
-  <div>社群设置</div>
- <!-- <div class="w-full p-4 h-full xt-text-2">
-  <xt-select-nav :navList="classNav" lw="128" v-model:selectItem="classItem" :enableRoute="true">
-    <div class="w-full px-4">
-      <router-view />
-    </div>
-  </xt-select-nav>
- </div> -->
+<template>
+  <div class="w-full h-full px-4 pt-4">
+    <xt-select-nav
+      :navList="settingNavList"
+      lw="128"
+      v-model:selectItem="classItem"
+      :enableRoute="true"
+    >
+      <template #rightContent>
+        <div class="w-full px-4">
+          <router-view />
+        </div>
+      </template>
+    </xt-select-nav>
+  </div>
 </template>
 
-<!--
-<script>
-export default {
- props:['no'],
+<script setup>
+import { ref } from "vue";
 
- data(){
-  return{
-    classNav:[
-     {
-      name:'community',cname:'社群设置',
-      route:{
-        name:'communitySettings',
-      }
-     },
-     {
-      name:'member',cname:'成员管理',
-      route:{
-       name:'member',
-      }
-     },
-    //  {
-    //   name:'role',cname:'角色权限',
-    //   route:{
-    //    name:'role'
-    //   }
-    //  },
-     {
-      name:'more',cname:'更多设置',
-      route:{
-       name:'more',
-      }
-     },
-    ],
-    classItem:{
-      name:'community',cname:'社群设置',
-      route:{
-        name:'communitySettings',
-      }
-    }
-  }
- },
+/**当前设置导航列表**/
+const settingNavList = ref([
+  {
+    name: "community",
+    cname: "社群设置",
+    route: {
+      name: "CommunitySetting",
+    },
+  },
+  {
+    name: "member",
+    cname: "成员管理",
+    route: {
+      name: "CommunityMember",
+    },
+  },
+  {
+    name: "role",
+    cname: "角色权限",
+    route: {
+      name: "RoleAuthority",
+    },
+  },
+  {
+    name: "more",
+    cname: "更多设置",
+    route: {
+      name: "MoreSetting",
+    },
+  },
+]);
 
- mounted() {
-  // this.$nextTick(()=>{
-  //   if(this.$route.meta.tab4 === undefined){
-  //     const data = this.classNav[0]
-  //     const route = data.route
-  //     this.$router.push(route)
-  //   }else{
-  //     const routeName = this.$route.name
-  //     const findRoute = this.classNav.find((item)=>{
-  //       return item.route.name === routeName
-  //     })
-  //     this.classItem = findRoute
-  //     this.$router.push(findRoute.route)
-  //   }
-  // })
- },
-};
+/**当前选中状态**/
+const classItem = ref({
+  name: "community",
+  cname: "社群设置",
+  route: {
+    name: "CommunitySetting",
+  },
+});
 </script>
 
 <style lang="scss" scoped>
-</style> -->
+</style>

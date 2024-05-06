@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed ,watch} from "vue";
 import Developer from "./views/developer/Developer.vue";
 import { useAppCenterStore } from "./store";
 import { useTTAppStore } from "../../ttApp/src/store";

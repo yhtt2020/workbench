@@ -5,10 +5,11 @@
       <div @click="test2">测试isGuest{{isGuest}}</div>
       <div @click="test3">测试isSingle{{isSingle}}</div>
       <div @click="test4">测试currentEnv{{ $useEnv(["offline", "guest", "single", "online"]) }}</div>
-      <div @click="test4">测试currentEnv{{ $currentEnv() }}</div>
+      <div @click="useUpdateUserInfo">测试currentEnv{{ currentEnv }}</div>
       <div @click="test5">mac{{ $usePlat(["mac", "web", "win"]) }}</div>
       <div @click="test6">web{{ $usePlat(["mac", "web", "win"]) }}</div>
       <div @click="test7">win{{ $usePlat(["mac", "web", "win"]) }}</div>
+      <div @click="test7">isOnline{{ isOnline?.value }}</div>
     </div> -->
     <desk-group
       @changeDesk="changeDesk"
@@ -96,9 +97,13 @@ import { useFreeLayoutStore } from "../components/desk/freeLayout/store";
 import { mergeData } from "../ui/hooks/useDataConversion";
 import { usePlat } from "../ui/hooks/usePlat";
 import { usePermissionStore } from "../permission/store";
+import { useUpdateUserInfo } from "../permission/user/useUserPermit";
 import cache from "../components/card/hooks/cache";
 import { isMain } from "../js/common/screenUtils";
-import { useUpdateUserInfo } from "../permission/user/useUserPermit";
+// 检查当前网络状态
+import { useNetwork } from '@vueuse/core'
+const { isOnline } = useNetwork()
+
 let steamUser,
   steamSession,
   path,
@@ -247,7 +252,7 @@ export default {
       "freeLayoutDataTmp",
       "freeLayoutStateTmp",
     ]),
-    ...mapWritableState(usePermissionStore, ["isOffline", "isSingle", "isGuest", "getGuest", "isSingle"]),
+    ...mapWritableState(usePermissionStore, ["isOffline", "isSingle", "isGuest", "currentEnv"]),
     deskGroupRef() {
       return this.$refs.deskGroupRef;
     },
@@ -439,8 +444,12 @@ export default {
       this.isOffline = cache.get('isOffline')
       this.isSingle = cache.get('isSingle')
       this.isGuest = cache.get('isGuest')
+
+      if(!isOnline.value) setOffline(true)
+
+      this.currentEnv = window.$currentEnv()
       // 进行一次重连操作
-      useUpdateUserInfo()
+      // useUpdateUserInfo()
 
       this.replaceIcon(this.sideNavigationList, this.leftNavInit);
       this.replaceIcon(this.rightNavigationList, this.rightNavInit);
@@ -611,11 +620,13 @@ export default {
       this.setSingle(!this.isSingle)
     },
     test4(){
+      console.log('isOnline', isOnline)
+      // useUpdateUserInfo()
       // this.setSingle(!this.isSingle)
-      console.log('current1', window.$currentEnv())
-      console.log('current2', window.$useEnv(["offline", "guest", "single", "online"]))
-      console.log('current3', window.$currentPlat())
-      console.log('current4', window.$usePlat(["win", "mac", "web"]))
+      // console.log('current1', window.$currentEnv())
+      // console.log('current2', window.$useEnv(["offline", "guest", "single", "online"]))
+      // console.log('current3', window.$currentPlat())
+      // console.log('current4', window.$usePlat(["win", "mac", "web"]))
     },
     // 关闭缩放弹窗
     closeWebLogin() {
@@ -649,7 +660,6 @@ export default {
     //     this.updateLayout();
     //   },
     // },
-
     backgroundSettings: {
       handler() {
         document.body.style.setProperty(

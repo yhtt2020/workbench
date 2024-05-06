@@ -64,6 +64,8 @@ import CategoryFloat from "../../components/suspendMode/CategoryFloat.vue";
 import GradeSmallTip from "../../../../components/GradeSmallTip.vue";
 import CreateCommunity from "../../components/create/CreateCommunity.vue";
 import JoinCommunity from "../join/JoinCommunity.vue";
+import { usePermissionStore } from "../../../../permission/store";
+import { reconnect } from "../../../../permission/user/useUserPermit";
 
 const router = useRouter();
 const chatCommunity = chatCommunityStore();
@@ -71,6 +73,7 @@ const globalStore = useGlobalStore();
 const appS = appStore();
 const { proxy } = getCurrentInstance();
 
+const usePermission = usePermissionStore()
 const { loginVisible } = storeToRefs(globalStore);
 const { myCommunity, setting } = storeToRefs(chatCommunity);
 const { userInfo, lvInfo } = appS;
@@ -112,11 +115,13 @@ const leftList = ref([
         name: "发起群聊",
         index: "launch",
         callBack: (item) => {
-          if (!window.$useEnv("guest")) {
-            triggerAddModal(item);
-            completeTask("Z0601");
-          } else {
+          if (usePermission.currentEnv === 'guest') {
             loginTip();
+          }else if(usePermission.currentEnv === 'offline'){
+            reconnect();
+          } else {
+            triggerAddModal(item);
+            completeTask("Z0601");              
           }
         },
       },
@@ -125,11 +130,13 @@ const leftList = ref([
         name: "加入群聊",
         index: "addGroup",
         callBack: (item) => {
-          if (!window.$useEnv("guest")) {
-            triggerAddModal(item);
-            completeTask("Z0601");
-          } else {
+          if (usePermission.currentEnv === 'guest') {
             loginTip();
+          }else if(usePermission.currentEnv === 'offline'){
+            reconnect();
+          } else {
+            triggerAddModal(item);
+            completeTask("Z0601");          
           }
         },
       },
@@ -138,11 +145,13 @@ const leftList = ref([
         name: "添加好友",
         index: "addFriend",
         callBack: (item) => {
-          if (!window.$useEnv("guest")) {
-            triggerAddModal(item);
-            completeTask("Z0601");
-          } else {
+          if (usePermission.currentEnv === 'guest') {
             loginTip();
+          }else if(usePermission.currentEnv === 'offline'){
+            reconnect();
+          } else {
+            triggerAddModal(item);
+            completeTask("Z0601");          
           }
         },
       },
@@ -161,11 +170,13 @@ const leftList = ref([
         index: "joinCom",
         name: "加入社群",
         callBack: (item) => {
-          if (!window.$useEnv("guest")) {
-            triggerAddModal(item);
-            completeTask("Z0601");
-          } else {
+          if (usePermission.currentEnv === 'guest') {
             loginTip();
+          }else if(usePermission.currentEnv === 'offline'){
+            reconnect();
+          } else {
+            triggerAddModal(item);
+            completeTask("Z0601");          
           }
         },
       },
@@ -348,15 +359,19 @@ const triggerAddModal = (item) => {
 
 //触发社群创建入口
 const createCommunity = () => {
-  if (!window.$useEnv("guest")) {
-    proxy.$bus.emit("createModal");
-  } else {
+  if (usePermission.currentEnv === 'guest') {
     loginTip();
+  }else if(usePermission.currentEnv === 'offline'){
+    reconnect();
+  } else {
+    proxy.$bus.emit("createModal");        
   }
 };
 
 onMounted(() => {
-  chatCommunity.getMyCommunity();
+  if(window.$currentEnv() === 'online'){
+    chatCommunity.getMyCommunity();
+  }
   proxy.$bus.on("getChatUnread", (data) => {
     console.log("获取未读消息数", data);
     currentData.value.unread = data;
