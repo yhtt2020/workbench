@@ -35,9 +35,14 @@ export default {
     ...mapWritableState(usePermissionStore, ["token", "isGuest", "isSingle", "isOffline"]),
   },
   mounted() {
-    // 离线模式不需要进行屏蔽 过滤掉
-    let status = this.status.filter(item => item !== "offline")
-    this.plat = this.$useEnv(status);
+    if(this.plat) {
+      // 平台的屏蔽状态优先级大于工作台登录状态 
+      this.plat = this.$usePlat(this.plat);
+    }else{
+      // 离线模式不需要进行屏蔽 过滤掉
+      let status = this.status.filter(item => item !== "offline")
+      this.plat = this.$useEnv(status);
+    }
   },
   watch: {
     token: {
@@ -89,6 +94,10 @@ export default {
       default: 100,
     },
     status: {
+      type: Array,
+      default: "",
+    },
+    plat: {
       type: Array,
       default: "",
     },

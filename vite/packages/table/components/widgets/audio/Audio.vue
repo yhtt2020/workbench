@@ -3,7 +3,7 @@
     :header="header"
     v-model:customSize="customData.customSize"
     :customData="customData"
-    :devLimit="['h5']"
+    :platLimit="['web']"
     :customIndex="customIndex"
     :options="options"
     :desk="desk"

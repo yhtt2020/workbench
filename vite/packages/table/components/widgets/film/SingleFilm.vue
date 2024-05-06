@@ -3,6 +3,7 @@
       :header="header"
       v-model:customSize="customData.customSize"
       :customIndex="customIndex"
+      :envLimit="['guest', 'offline', 'single']"
       :desk="desk" 
       :options="options" 
       v-if="!detailToggle"
