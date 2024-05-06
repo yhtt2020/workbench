@@ -1,43 +1,94 @@
 <!-- 社群设置中更多设置页面 -->
 <template>
- <div>
-
- </div>
-</template>
-
-<script setup>
-
-</script>
-
-<style lang="scss" scoped>
-
-</style>
-
-<!-- 
- <template>
   <div class="xt-font xt-text font-16 font-400 mb-4">更多设置</div>
+
   <div class="xt-bg p-4 flex flex-col rounded-xl" style="width: 452px">
     <span class="xt-font xt-text font-16 font-400 mb-2.5">默认加入群聊</span>
-    <span class="xt-font xt-text-2 font-14 font-400 mb-4">可以设置社群新用户加入后，默认加入以下设置的群聊</span>
-    <a-select class="w-full rounded-xl custom-select" v-model:value="tagValue" :bordered="false"  mode="tags" style="height: 40px;">
-     <a-select-option v-for="item in joinChatList" :key="item.id" :value="item.id" class="z-auto">
-       {{ item.name }}
-     </a-select-option>
-    </a-select>
+    <span class="xt-font xt-text-2 font-14 font-400 mb-4">
+      可以设置社群新用户加入后，默认加入以下设置的群聊
+    </span>
+
+    <!-- <a-select
+      class="w-full rounded-xl custom-select"
+      v-model:value="tagValue"
+      :bordered="false"
+      mode="tags"
+      style="height: 40px"
+    >
+      <a-select-option
+        v-for="item in joinChatList"
+        :key="item.id"
+        :value="item.id"
+        class="z-auto"
+      >
+        {{ item.name }}
+      </a-select-option>
+    </a-select> -->
   </div>
 </template>
 
+<script setup>
+import { storeToRefs } from "pinia";
+import { computed, onMounted, ref } from "vue";
+import { chatCommunityStore } from "../../store/chatCommunity";
+import { useRouter } from "vue-router";
+
+/**路由**/
+const router = useRouter();
+
+/**解构store缓存数据**/
+const chatCommunity = chatCommunityStore();
+// const {} = storeToRefs(chatCommunity);
+
+const tagValue = ref([]);
+
+/**根据路由获取当前社群号**/ 
+const currentNo = computed(() => {
+  const no = router.currentRoute.value?.params?.no;
+  if (no) {
+    return no;
+  } else {
+    return null;
+  }
+});
+
+onMounted(()=>{
+
+})
+</script>
+
+<style lang="scss" scoped>
+:deep(.ant-select-selection-item) {
+  border: none !important;
+  background: var(--active-secondary-bg) !important;
+  border-radius: 6px !important;
+  height: 28px !important;
+  line-height: 28px !important;
+}
+:deep(.custom-select) {
+  & .ant-select-selector {
+    border-radius: 8px !important;
+    display: flex;
+    align-items: center;
+    height: 40px !important;
+  }
+
+  & .ant-select-item {
+    color: var(--secondary-text) !important;
+  }
+}
+:deep(.ant-select-multiple .ant-select-selection-item) {
+  line-height: 26px !important;
+  height: 28px !important;
+  background: var(--active-secondary-bg) !important;
+  border-radius: 6px !important;
+  border: none !important;
+}
+</style>
+
+<!-- 
 <script>
-import { mapActions,mapWritableState } from 'pinia';
-import { communityStore } from '../../store/communityStore'
-
 export default {
-
-  data(){
-    return{
-      tagValue:[],
-    }
-  },
 
   computed:{
     ...mapWritableState(communityStore,['getCommunityDetail','getChannelList']),
@@ -91,45 +142,5 @@ export default {
       this.tagValue = mapName
     })
   },
-
-  methods:{
-
-  }
 };
-</script>
-
-<style lang="scss" scoped>
-
-/**
-:deep(.ant-select-selection-item){
-  border: none !important;
-  background: var(--active-secondary-bg) !important;
-  border-radius: 6px !important;
-  height: 28px !important;
-  line-height: 28px !important;
-}
-**/
-
-:deep(.custom-select) {
-  & .ant-select-selector {
-    border-radius: 8px !important;
-    display: flex;
-    align-items: center;
-    height: 40px !important;
-  }
-
-  & .ant-select-item {
-    color: var(--secondary-text) !important;
-  }
-}
-
-:deep(.ant-select-multiple .ant-select-selection-item){
-  line-height: 26px !important;
-  height: 28px !important;
-  background: var(--active-secondary-bg) !important;
-  border-radius: 6px !important;
-  border: none !important;
-}
-</style>
-
- -->
+</script>-->
