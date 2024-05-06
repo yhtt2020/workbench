@@ -50,7 +50,8 @@ export default {
       summary: '一款开源桌面看板娘，让你不再孤单。',
       needInstall: true,
       data: {
-        security: true
+        security: true,
+        url:"https://github.com/zenghongtu/PPet"
       }
     },
     {
