@@ -1,21 +1,21 @@
 <template>
     <a-tooltip :title="item.tip">
-        <div 
+        <div
             @contextmenu="item.rightFn"
             @click="item.fn"
             class="h-[28px] flex justify-center items-center xt-bg rounded-md max-w-[164px] p-2 pointer">
-            <xt-new-Icon 
-                :icon="item.icon" 
-                size="14" 
-                class="flex-shrink-0" 
-                v-if="item.icon" 
+            <xt-new-Icon
+                :icon="item.icon"
+                size="14"
+                class="flex-shrink-0"
+                v-if="item.icon"
                 :class="item.name !== '' ? 'mr-1': ''">
             </xt-new-Icon>
-            <a-avatar 
-                :size="14" 
-                :src="item.avatar" 
-                v-else-if="item.avatar" 
-                class="flex-shrink-0" 
+            <a-avatar
+                :size="14"
+                :src="item.avatar"
+                v-else-if="item.avatar"
+                class="flex-shrink-0"
                 :class="item.name !== '' ? 'mr-1': ''">
             </a-avatar>
             <div class="omit">
@@ -23,11 +23,15 @@
             </div>
         </div>
     </a-tooltip>
+
+  <RecentClipboard v-if="item.key=='clipboard'">
+
+  </RecentClipboard>
 </template>
 
 <script setup lang='ts'>
 import { ref, onMounted } from 'vue'
-
+import RecentClipboard from '../../../apps/clipboard/topPanel/RecentClipboard.vue'
 interface PropsType {
     item: {
         icon: string;
