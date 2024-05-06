@@ -8,6 +8,7 @@
       :customIndex="customIndex" 
       ref="cardSlot"
       :customData="customData"
+      :envLimit="['guest', 'offline']"
       :header="header"
       v-model:customSize="customData.customSize"
       @delete="doRemoveCard">

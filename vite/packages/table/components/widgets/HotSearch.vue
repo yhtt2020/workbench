@@ -6,6 +6,7 @@
     :sizeList="sizeList"
     :customData="customData"
     :customIndex="customIndex"
+    :envLimit="['guest', 'offline']"
     :desk="desk"
     @delete="deleteCard">
   <div class="flex flex-col mt-1 overflow hot-box" style="height: 95%;">

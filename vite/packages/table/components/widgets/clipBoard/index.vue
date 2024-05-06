@@ -1,11 +1,10 @@
 <template>
     <div>
-
         <xt-container 
             @titleHover="enterBoard"
             :header="header"
             v-model:customSize="customData.customSize"
-            :devLimit="['h5']"  
+            :platLimit="['web']"  
             :customData="customData" 
             :customIndex="customIndex" 
             :options="options" 

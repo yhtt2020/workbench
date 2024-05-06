@@ -5,6 +5,7 @@
     :customData = "customData"
     :header="header"
     :options="options" 
+    :envLimit="['guest', 'offline']"
     :customIndex="customIndex" 
     :desk="desk"
     @delete="deleteCard">

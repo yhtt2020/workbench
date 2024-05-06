@@ -11,7 +11,7 @@
       ref="cardSlot"
       :desk="desk" 
       :size="size" 
-      :envLimit="['single']"
+      :envLimit="['guest', 'offline', 'single']"
       @delete="deleteCard">
       <div v-if="isLoading">
         <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 60%" />

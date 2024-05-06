@@ -11,6 +11,7 @@
       :menuList="menuList"
       ref="cardSlot" 
       :customData="customData" 
+      :envLimit="['guest', 'offline']"
       :env="env"
       @delete="deleteCard">
       <div class="top-bar">

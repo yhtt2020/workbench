@@ -5,6 +5,7 @@
       :options="options" 
       :customIndex="customIndex" 
       :custom-data="customData"
+      :envLimit="['guest', 'offline', 'single']"
       @delete="deleteCard">
       <div class="example" v-if="isLoading">
         <a-spin />
