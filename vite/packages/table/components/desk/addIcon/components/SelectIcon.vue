@@ -1,7 +1,7 @@
 <template>
     <div @click="clickRightListItem(item)"
-        class="w-[168px] h-[168px] rounded-xl flex justify-center items-center flex-col relative pointer"
-        :style="checked">
+        class="relative flex flex-col items-center justify-center rounded-xl pointer"
+        :style="[checked, { width: size + 'px', height: size + 'px'}]">
         <xt-button v-if="item.type === 'folder'" w="48" h="22" radius="6" type="theme" style="font-size: 12px;"
             class="absolute z-50 top-2 left-2">
             图标组
@@ -40,9 +40,17 @@ const { multipleList, isMultiple } = storeToRefs(iconStore)
 
 const props = defineProps({
     item: Object,  // 图标对象
-    info: String,  // 图标提示  
+    info: String,  // 图标提示
+    size:{
+        type: Number,
+        default: 168
+    },
+    isApp:{
+        type: Boolean,
+        default: false
+    }  
 })
-const { item, info } = toRefs(props)
+const { item, info, size, isApp } = toRefs(props)
 
 const emit = defineEmits(['clickRightListItem'])
 
@@ -57,7 +65,7 @@ const checked = computed(() => {
         };
     } else {
         return {
-            background: 'var(--secondary-bg)'
+            background: isApp.value ? '' : 'var(--secondary-bg)'
         };
     }
 });

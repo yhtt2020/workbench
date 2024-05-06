@@ -1,15 +1,25 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, defineAsyncComponent } from "vue";
 import Developer from "./views/developer/Developer.vue";
 import { useAppCenterStore } from "./store";
 import { useTTAppStore } from "../../ttApp/src/store";
 import { storeToRefs } from "pinia";
+
+const Setting = defineAsyncComponent(() => import('./views/setting/Setting.vue'))
+const MyApps = defineAsyncComponent(() => import('./views/myApps/MyApps.vue'))
+const Apps = defineAsyncComponent(() => import('./views/apps/Apps.vue'))
+const Market = defineAsyncComponent(() => import('./views/market/Market.vue'))
+
 const ttappStore = useTTAppStore();
 const appCenterStore = useAppCenterStore();
 const { visible } = storeToRefs(appCenterStore);
 // 左侧对应组件
 const components = ref({
   Developer,
+  Setting,
+  MyApps,
+  Apps,
+  Market,
 });
 // 当前渲染组件
 const currentCom = ref("Developer");
@@ -21,19 +31,19 @@ const leftMenuList = computed(() => {
     {
       newIcon: "fluent:grid-20-regular",
       callBack: () => {
-        switchCurrentCom("");
+        switchCurrentCom("MyApps");
       },
     },
     {
       newIcon: "fluent:building-shop-16-regular",
       callBack: () => {
-        switchCurrentCom("");
+        switchCurrentCom("Market");
       },
     },
     {
       newIcon: "fluent:desktop-16-regular",
       callBack: () => {
-        switchCurrentCom("");
+        switchCurrentCom("Apps");
       },
     },
     {
@@ -52,7 +62,7 @@ const leftMenuList = computed(() => {
     {
       newIcon: "fluent:settings-16-regular",
       callBack: () => {
-        switchCurrentCom("");
+        switchCurrentCom("Setting");
       },
     },
   ];
@@ -76,8 +86,8 @@ const switchCurrentCom = (name: string) => {
         leftBg="red"
       >
         <div class="w-full h-full py-4 pr-4">
-          <div v-if="currentCom !== 'Developer'">无暂未开发</div>
-          <component v-else :is="components[currentCom]" />
+          <!-- <div v-if="currentCom !== 'Developer'">无暂未开发</div> -->
+          <component :is="components[currentCom]" />
         </div>
       </xt-left-menu>
     </div>
