@@ -91,59 +91,70 @@ export default {
      */
     async newOpenApp(item, e) {
       const { type, value } = item;
-
-      if (type === "card") {
-        this.openCard(item);
+    
+      // 首先处理与 type 相关的
+      switch (type) {
+        // 卡片类图标
+        case "card":
+          this.openCard(item);
+          break;
+        // 文件夹图标
+        case "folder":
+          this.openFolder(item);
+          break;
+        // 第三方应用图标
+        case "ttapp":
+          const res = await navValidate(item.id, item.value);
+          if (!res) return;
+          break;
+        default:
+          this.floatCardVisible = false;
+          this.folderVisible = false;
       }
-      if (type !== "card") {
-        this.floatCardVisible = false;
+    
+      // 然后处理与 value 相关的
+      switch (value) {
+        // 社区中心
+        case "commun":
+          this.comVisible = !this.comVisible;
+          break;
+        // 控制中心
+        case "control":
+          this.$emit("control", e);
+          break;
+        // 设置中心
+        case "setting":
+          this.$bus.emit("openSystemSet");
+          break;
+        // 全屏
+        case "fullscreen":
+          if (window.$usePlat()) {
+            toggle();
+            return;
+          }
+          break;
+        default:
+          if (window.$usePlatLimit("web", value)) return;
+          // 如果为桌面应用，提示
+          this.msgNotice(item);
+          // 主页
+          if (value === "home" && item.home) {
+            this.jumpDesk = item.home;
+          }
       }
-      if (type !== "folder") {
-        this.folderVisible = false;
-      }
-      if (value !== "commun") {
-        this.comVisible = false;
-      }
-      // 更新鼠标定位
+    
+      // 更新定位
       this.resetElementPosition();
-      if (value === "control") {
-        this.$emit("control", e);
-        return;
-      }
-      if (value === "setting") {
-        this.$bus.emit("openSystemSet");
-        return;
-      }
-      if (value === "commun") {
-        this.comVisible = !this.comVisible;
-        return;
-      }
-      if (type === "folder") {
-        this.openFolder(item);
-      }
-      if (value == "fullscreen" && window.$usePlat()) {
-        toggle();
-        return;
-      }
-      if (window.$usePlatLimit("web", value)) return;
-
-      this.msgNotice(item);
-      if (value === "home" && item.home) {
-        this.jumpDesk = item.home;
-      }
-      if (type === "ttapp") {
-        let res = navValidate(item.id, item.value);
-        if (!res) return;
-      }
-      let rs = await startApp(type, value, this.$router);
+      // 统一的打开函数
+      const rs = await startApp(type, value, this.$router);
       if (!rs) {
         message.error({
           content: `打开「${item.name}」失败`,
           key: "tipRun",
         });
       }
-      this.comVisible = false;
     },
+    
     /**
      * 当前选中的元素
      * @param item 元素
