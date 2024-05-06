@@ -2,7 +2,9 @@
   <xt-container
     v-model:customSize="customData.customSize"
     :header="header"
-    :custom-data="customData" :custom-index="customIndex" :envLimit="['guest', 'single', 'offline']"
+    :custom-data="customData" 
+    :custom-index="customIndex" 
+    :envLimit="['offline']"
     :options="options"
     :desk="desk"
     :showRightIcon='rightIcon'
@@ -134,7 +136,8 @@ import _ from 'lodash-es'
 import FrameAvatar from '../avatar/FrameAvatar.vue'
 import { Icon as newIcon } from '@iconify/vue'
 import AwardModal from '../modal/AwardModal.vue'
-
+import { useGlobalStore } from "../../apps/Global/store";
+import { usePermissionStore } from "../../permission/store";
 export default {
   name: 'SingIn',
   components: {
@@ -202,6 +205,8 @@ export default {
   },
   computed: {
     ...mapWritableState(comStore, ['todayRank']),
+    ...mapWritableState(useGlobalStore, ['loginVisible']),
+    ...mapWritableState(usePermissionStore, ['currentEnv']),
     options () {
       return {
         customDel: this.openWay === 'nav' ? true : false
@@ -279,147 +284,163 @@ export default {
     showCard (uid, userInfo) {
       this.showUserCard(uid, userInfo)
     },
+    // 提示登录弹窗
+    loginTip(){
+      window.$ui.confirm("登录提示", "目前处于游客模式，请登录后体验完整功能。", {
+        ok: () => {
+          this.loginVisible = true;
+        },
+        okText: "立即登录",
+        noText: "暂不登录",
+        okButtonWidth: "95",
+        noButtonWidth: "95",
+      });
+    },
     async signIn () {
-      if (!this.signedIn) {
-        let rs = await this.doSign()
-        // let rs = {
-        //   'status': 1,
-        //   'info': '工作台签到成功，社区签到也成功。',
-        //   'data':
-        //     {
-        //       'comResult':
-        //         {
-        //           'code':
-        //             200,
-        //           'msg':
-        //             'ok',
-        //           'data':
-        //             {
-        //               'msg':
-        //                 '签到成功',
-        //               'jifen':
-        //                 [
-        //                   {
-        //                     'one': 1,
-        //                     'max': 1,
-        //                     'name': '经验值'
-        //                   },
-        //                   {
-        //                     'one': 1,
-        //                     'max': 1,
-        //                     'name': '社区积分'
-        //                   },
-        //                   {
-        //                     'one': 1,
-        //                     'max': 1,
-        //                     'name': '购物积分'
-        //                   },
-        //                   {
-        //                     'one': 0,
-        //                     'max': 0,
-        //                     'name': '贡献值'
-        //                   },
-        //                   {
-        //                     'one': 2,
-        //                     'max': 2,
-        //                     'name': '金豆'
-        //                   }
-        //                 ],
-        //               'scores':
-        //                 [
-        //                   {
-        //                     'flag': 'exp',
-        //                     'name': '经验值',
-        //                     'num': 1
-        //                   },
-        //                   {
-        //                     'flag': 'fly',
-        //                     'name': '社区积分',
-        //                     'num': 1
-        //                   },
-        //                   {
-        //                     'flag': 'buy',
-        //                     'name': '购物积分',
-        //                     'num': 1
-        //                   },
-        //                   {
-        //                     'flag': 'two',
-        //                     'name': '金豆',
-        //                     'num': 2
-        //                   }
-        //                 ],
-        //               'status':
-        //                 1
-        //             }
-        //           ,
-        //           'count':
-        //             0
-        //         }
-        //       ,
-        //       'itemRewards':
-        //         {
-        //           'status':
-        //             1,
-        //           'info':
-        //             '抽中概率，随机数：0.5724386867473654',
-        //           'data':
-        //             [
-        //               {
-        //                 'id': 16,
-        //                 'createTime': '2023-08-10 17:19:34',
-        //                 'updateTime': '2024-02-02 15:56:59',
-        //                 'nanoid': 'PEg8jCkZ',
-        //                 'icon': 'http://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/app/base/19197b88f4484a348577941eef685ba4_cat2.png',
-        //                 'image': 'http://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/app/base/19197b88f4484a348577941eef685ba4_cat2.png',
-        //                 'summary': 'cat',
-        //                 'name': 'bcat',
-        //                 'type': 'frame',
-        //                 'alias': '黑猫',
-        //                 'gainMethod': 'store,sign',
-        //                 'unique': 1
-        //               }
-        //             ]
-        //         }
-        //     }
-        // }
-        if (rs.status) {
-          this.updateTodayRank().then()
-          //提示奖励
-            this.awardItems=[]
-          rs.data?.itemRewards?.data?.forEach(item=>{
+      if (this.currentEnv === 'guest') {
+        this.loginTip();
+      }else {            
+        if (!this.signedIn) {
+          let rs = await this.doSign()
+          // let rs = {
+          //   'status': 1,
+          //   'info': '工作台签到成功，社区签到也成功。',
+          //   'data':
+          //     {
+          //       'comResult':
+          //         {
+          //           'code':
+          //             200,
+          //           'msg':
+          //             'ok',
+          //           'data':
+          //             {
+          //               'msg':
+          //                 '签到成功',
+          //               'jifen':
+          //                 [
+          //                   {
+          //                     'one': 1,
+          //                     'max': 1,
+          //                     'name': '经验值'
+          //                   },
+          //                   {
+          //                     'one': 1,
+          //                     'max': 1,
+          //                     'name': '社区积分'
+          //                   },
+          //                   {
+          //                     'one': 1,
+          //                     'max': 1,
+          //                     'name': '购物积分'
+          //                   },
+          //                   {
+          //                     'one': 0,
+          //                     'max': 0,
+          //                     'name': '贡献值'
+          //                   },
+          //                   {
+          //                     'one': 2,
+          //                     'max': 2,
+          //                     'name': '金豆'
+          //                   }
+          //                 ],
+          //               'scores':
+          //                 [
+          //                   {
+          //                     'flag': 'exp',
+          //                     'name': '经验值',
+          //                     'num': 1
+          //                   },
+          //                   {
+          //                     'flag': 'fly',
+          //                     'name': '社区积分',
+          //                     'num': 1
+          //                   },
+          //                   {
+          //                     'flag': 'buy',
+          //                     'name': '购物积分',
+          //                     'num': 1
+          //                   },
+          //                   {
+          //                     'flag': 'two',
+          //                     'name': '金豆',
+          //                     'num': 2
+          //                   }
+          //                 ],
+          //               'status':
+          //                 1
+          //             }
+          //           ,
+          //           'count':
+          //             0
+          //         }
+          //       ,
+          //       'itemRewards':
+          //         {
+          //           'status':
+          //             1,
+          //           'info':
+          //             '抽中概率，随机数：0.5724386867473654',
+          //           'data':
+          //             [
+          //               {
+          //                 'id': 16,
+          //                 'createTime': '2023-08-10 17:19:34',
+          //                 'updateTime': '2024-02-02 15:56:59',
+          //                 'nanoid': 'PEg8jCkZ',
+          //                 'icon': 'http://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/app/base/19197b88f4484a348577941eef685ba4_cat2.png',
+          //                 'image': 'http://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/app/base/19197b88f4484a348577941eef685ba4_cat2.png',
+          //                 'summary': 'cat',
+          //                 'name': 'bcat',
+          //                 'type': 'frame',
+          //                 'alias': '黑猫',
+          //                 'gainMethod': 'store,sign',
+          //                 'unique': 1
+          //               }
+          //             ]
+          //         }
+          //     }
+          // }
+          if (rs.status) {
+            this.updateTodayRank().then()
+            //提示奖励
+              this.awardItems=[]
+            rs.data?.itemRewards?.data?.forEach(item=>{
+                this.awardItems.push({
+                  type:'item',
+                  name:item.name,
+                  data:{
+                    ...item,
+                    detail:item
+                  },
+  
+                })
+              }
+            )
+            rs.data?.comResult?.data?.scores?.forEach(item=>{
               this.awardItems.push({
-                type:'item',
+                type:'score',
                 name:item.name,
-                data:{
-                  ...item,
-                  detail:item
-                },
-
+                value:item.num,
+                flag:item.flag,
               })
-            }
-          )
-          rs.data?.comResult?.data?.scores?.forEach(item=>{
-            this.awardItems.push({
-              type:'score',
-              name:item.name,
-              value:item.num,
-              flag:item.flag,
             })
-          })
-          this.tip='签到成功。每天签到有概率获得<strong class=\'active-bg\'><img style=\'width: 20px\' src=\'/img/bottomPanel/prop.png\'>珍贵道具</strong>哦！'
-          if(this.awardItems.length>0){
-            this.tip=this.tip+'<br>注意：如果您已在社区完成签到，将无法重复获得积分奖励。仅支持通过工作台签到获得道具奖励。'
+            this.tip='签到成功。每天签到有概率获得<strong class=\'active-bg\'><img style=\'width: 20px\' src=\'/img/bottomPanel/prop.png\'>珍贵道具</strong>哦！'
+            if(this.awardItems.length>0){
+              this.tip=this.tip+'<br>注意：如果您已在社区完成签到，将无法重复获得积分奖励。仅支持通过工作台签到获得道具奖励。'
+            }
+  
+            console.log(this.awardItems,'奖品')
+              this.showAwardModal()
+              this.signedIn = true
+          } else {
+            message.error('签到失败。')
           }
-
-          console.log(this.awardItems,'奖品')
-            this.showAwardModal()
-            this.signedIn = true
+  
         } else {
-          message.error('签到失败。')
+          this.newPeoplePage = true
         }
-
-      } else {
-        this.newPeoplePage = true
       }
     },
     signInBack () {
