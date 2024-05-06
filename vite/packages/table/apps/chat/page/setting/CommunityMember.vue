@@ -68,18 +68,19 @@
       </template>
     </div>
 
-    <div
-      class="flex flex-1 flex-col"
-      style="width: 572px; height: calc(100vh - 100px / 1.25)"
-    >
-      <template v-if="currentTab === 'apply'"></template>
-      <template v-else>
-        <xt-scrollbar :y="true">
-          <div v-for="item in 100">
-            {{ item }}
-          </div>
+    <div class="flex flex-1 flex-col" style="width: 572px">
+      <!-- 成员申请列表 -->
+      <template v-if="currentTab === 'apply'">
+        <xt-scrollbar :y="true" style="height: calc(100vh - 250px)">
+           <CommunityMemeberApply />
         </xt-scrollbar>
-        <!-- <CommunityMemberManage /> -->
+      </template>
+
+      <!-- 成员管理详情列表 -->
+      <template v-else>
+        <xt-scrollbar :y="true" style="height: calc(100vh - 250px)">
+          <CommunityMemberManage />
+        </xt-scrollbar>
       </template>
     </div>
   </div>
@@ -89,6 +90,7 @@
 import { ref } from "vue";
 
 import CommunityMemberManage from "./components/CommunityMemberManage.vue";
+import CommunityMemeberApply from "./components/CommunityMemeberApply.vue";
 
 const memberTab = ref([
   {
@@ -113,6 +115,7 @@ const memberSearch = () => {
 const handlerAllReject = () => {};
 /**成员管理全部拒绝处理事件**/
 const handlerAllAccept = () => {};
+
 </script>
 
 <style lang="scss" scoped>
