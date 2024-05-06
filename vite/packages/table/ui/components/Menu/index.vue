@@ -49,10 +49,14 @@ import {
   onMounted,
   onBeforeUnmount,
   onUnmounted,
+  getCurrentInstance,
 } from "vue";
 import useWindowViewport from "./useWindowViewport";
 import { reSize as vResize } from "./useElementResize";
 import Menus from "./Menus.vue";
+
+const { proxy } = getCurrentInstance();
+
 interface Menus {
   name: string;
   fn?: () => void;
@@ -241,6 +245,8 @@ const pos = computed(() => {
 onMounted(() => {
   window.addEventListener("click", handleCloseMenu, { capture: true });
   window.addEventListener("contextmenu", handleCloseMenu, { capture: true });
+  // 扩展插槽隐藏右键菜单
+  proxy.$bus.on('closeMenus',() => { show.value = false })
 });
 
 onUnmounted(() => {

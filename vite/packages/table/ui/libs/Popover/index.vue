@@ -1,14 +1,14 @@
 <template>
   <div class="box">
     <a-popover
-      trigger="hover"
+      :trigger="mode"
       overlayClassName="bgg"
       placement="right"
       :mouseLeaveDelay="0.1"
       :overlayInnerStyle="{
         'padding-left': '20px',
       }"
-      :overlayStyle="{zIndex: 9999999 + 10}"
+      :overlayStyle="{zIndex: index}"
     >
       <template #content >
         <slot name="content"></slot>
@@ -18,7 +18,18 @@
     </a-popover>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
+import { toRefs } from "vue";
+
+type PropsType = {
+  // 层级
+  index?: number;
+}
+const props = withDefaults(defineProps<PropsType>(), {
+  index: 9999999 + 10,
+});
+
+const { index, mode } = toRefs(props);
 </script>
 
 <style lang="scss">
