@@ -25,7 +25,7 @@
             {{ item.name || item.title }}
           </span>
           <xt-ify-icon
-            icon="fluent:open-16-regular"
+            icon="fluent:open-16-filled"
             size="20"
             class="xt-text-2"
             v-if="item.type === 'link' && item.name !== 'Roadmap'"
@@ -58,7 +58,7 @@
             {{ item.name || item.title }}
           </span>
           <xt-ify-icon
-            icon="fluent:open-16-regular"
+            icon="fluent:open-16-filled"
             size="20"
             class="xt-text-2"
             v-if="item.type === 'link' && item.name !== 'Roadmap'"

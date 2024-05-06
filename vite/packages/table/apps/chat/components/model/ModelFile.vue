@@ -51,14 +51,14 @@ onMounted(() => {
     >
       <div class="flex items-center justify-center">
         <xt-ify-icon
-          icon="fluent:full-screen-maximize-16-regular"
+          icon="fluent:full-screen-maximize-16-filled"
           size="20"
           class="xt-text-2"
           v-if="!fullScreen"
         />
         <xt-ify-icon
           v-else
-          icon="fluent:full-screen-minimize-16-regular"
+          icon="fluent:full-screen-minimize-16-filled"
           size="20"
           class="xt-text-2"
         />

@@ -10,13 +10,13 @@
         <xt-update-desk-bg></xt-update-desk-bg>
       </div>
       <hr />
-      <xt-option-info title="桌面壁纸模糊度" info="调节桌面壁纸的模糊程度。" icon="fluent:arrow-clockwise-16-regular"
+      <xt-option-info title="桌面壁纸模糊度" info="调节桌面壁纸的模糊程度。" icon="fluent:arrow-clockwise-16-filled"
         @onIconClick="backgroundSettings.backGroundImgBlur = 0" />
       <xt-option-slider v-model:slider="backgroundSettings.backGroundImgBlur" :min="0" :max="100" />
     </div>
   </div>
 </template>
-  
+
 <script>
 import { Icon } from '@iconify/vue';
 import { setBgColor, setSecondaryBgColor } from "../../../../components/card/hooks/styleSwitch/setStyle";
@@ -52,6 +52,5 @@ export default {
   }
 }
 </script>
-  
+
 <style scoped lang="scss"></style>
-  

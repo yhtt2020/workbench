@@ -88,7 +88,7 @@
                     v-if="currentInfoDetail?.role !== 'member'"
                   >
                     <RightDropdown
-                      :newIcon="'fluent:more-horizontal-16-regular'"
+                      :newIcon="'fluent:more-horizontal-16-filled'"
                       :list="childrenList"
                       :dropItem="item"
                     />
@@ -204,7 +204,7 @@ const childrenList = ref([
   },
   {
     title: "分组设置",
-    newIcon: "fluent:settings-16-regular",
+    newIcon: "fluent:settings-16-filled",
     callBack: (currentItem, value) => {
       newCategoryRef.value.openCategoryModal();
       currentCategorySetting.value = value;

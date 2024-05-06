@@ -217,7 +217,7 @@ const hideList = ref([
     },
   },
   {
-    newIcon: "fluent:apps-list-detail-24-regular",
+    newIcon: "fluent:apps-list-detail-24-filled",
     title: "切换双/单列",
     callBack: () => {
       chatCommunity.setColumnMode();

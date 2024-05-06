@@ -1,7 +1,7 @@
 <template>
   <xt-button @click="close" w="32" h="32" style="border-radius:8px; margin-right: 0 !important;" class="xt-bg-2" >
    <div class="flex items-center justify-center">
-     <CloseIcon icon="fluent:dismiss-16-regular" style="font-size: 1rem;"/>
+     <CloseIcon icon="fluent:dismiss-16-filled" style="font-size: 1rem;"/>
    </div>
   </xt-button>
 </template>

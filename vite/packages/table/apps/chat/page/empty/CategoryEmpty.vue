@@ -21,7 +21,7 @@ const addNewAppRef = ref(null);
 const newCategoryRef = ref(null);
 const emptyList = ref([
   {
-    icon: "fluent:people-add-16-regular",
+    icon: "fluent:people-add-16-filled",
     name: "邀请其他人",
     callBack: () => {},
   },

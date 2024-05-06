@@ -49,14 +49,14 @@
                                 <a-button type="text" size="small" class="ml-2 xt-text emojiVis"
                                     style="color: var(--secondary-text) !important;"><template #icon>
                                         <!-- <SmileOutlined style="" /> -->
-                                        <newIcon icon="fluent:emoji-smile-slight-24-regular" class="text-xl xt-text-2" style="vertical-align: sub;margin-right: 4px;"/>
+                                        <newIcon icon="fluent:emoji-smile-slight-24-filled" class="text-xl xt-text-2" style="vertical-align: sub;margin-right: 4px;"/>
                                     </template> 表情</a-button>
                             </tippy>
 
                             <a-upload v-model:file-list="fileList"  @preview="handlePreview" multiple>
                             <a-button type="text" size="small" class="xt-text"
                                 style="color: var(--secondary-text) !important;"><template #icon>
-                                    <newIcon icon="fluent:image-sparkle-16-regular" class="text-xl xt-text-2" style="vertical-align: sub;margin-right: 4px;"/>
+                                    <newIcon icon="fluent:image-sparkle-16-filled" class="text-xl xt-text-2" style="vertical-align: sub;margin-right: 4px;"/>
                                 </template> 图片</a-button>
                             </a-upload>
                         </div>

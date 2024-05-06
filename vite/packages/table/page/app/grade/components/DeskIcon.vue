@@ -8,8 +8,8 @@
             <!-- 标题 -->
             <div class="pt-2 h-8 px-3 leading-8 xt-text-2 font-14">{{ item.name }} ( {{ item.list?.length }} )
                 <div class="flex items-center float-right">
-                <Icon class="pointer" @click="item.type = 'rows'" v-if="item.type == 'columns'" icon="fluent:apps-list-detail-24-regular" width="20" height="20" />
-                <Icon class="pointer" @click="item.type = 'columns'" v-else icon="fluent:grid-20-regular" width="20" height="20" />
+                <Icon class="pointer" @click="item.type = 'rows'" v-if="item.type == 'columns'" icon="fluent:apps-list-detail-24-filled" width="20" height="20" />
+                <Icon class="pointer" @click="item.type = 'columns'" v-else icon="fluent:grid-20-filled" width="20" height="20" />
                 <div class="flex items-center justify-center w-8 h-8 ml-2 rounded-lg xt-bg">
                     <a-checkbox :disabled="!item.list.length" v-model:checked="item.isCheck"></a-checkbox>
                 </div>

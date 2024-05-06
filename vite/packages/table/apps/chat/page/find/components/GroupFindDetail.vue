@@ -25,7 +25,7 @@
           @click="enterGroup(item)"
         >
           <div class="flex items-center justify-center">
-            <xt-ify-icon icon="fluent:chat-16-regular" class="mr-2" size="20" />
+            <xt-ify-icon icon="fluent:chat-16-filled" class="mr-2" size="20" />
             <span class="xt-text xt-font font-16 font-400">进入群聊</span>
           </div>
         </xt-button>

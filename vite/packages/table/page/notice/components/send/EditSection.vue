@@ -9,7 +9,7 @@
           <div  v-for="item in msgSetting.targetList.slice(0,4)" class="flex items-center pointer justify-center mr-3 h-10 item-bg" @click="openUserSelect">
             <a-avatar :size="20" :src="item.avatar" ></a-avatar>
             <span class="ml-3">{{ item.nick }}</span>
-          </div> 
+          </div>
         </template>
         <div v-else  v-for="item in msgSetting.targetList" class="flex items-center pointer justify-center mr-3 h-10 item-bg" @click="openUserSelect">
           <a-avatar :size="20" :src="item.avatar" ></a-avatar>
@@ -19,7 +19,7 @@
           <div class="flex items-center justify-center">+12</div>
         </xt-button>
       </div>
-    </div>      
+    </div>
    </template>
 
    <a-input class="h-10 xt-bg-t-2 " v-model:value="msgSetting.title" :bordered="true" placeholder="标题" :maxlength="50"
@@ -40,10 +40,10 @@
               <div class="absolute " style="top:50%;left:50%;transform: translate(-50% ,-50%);">
                 <xt-button style="width: auto !important; opacity: 0;" class="send-img" h="0" @click="removeImg(index)">
                   <div class="flex items-center justify-center">
-                    <xt-new-icon icon="fluent:delete-16-regular" size="20" :color="'var(--active-text)'"></xt-new-icon>
+                    <xt-new-icon icon="fluent:delete-16-filled" size="20" :color="'var(--active-text)'"></xt-new-icon>
                   </div>
                 </xt-button>
-              </div> 
+              </div>
             </div>
           </a-col>
         </a-row>
@@ -65,7 +65,7 @@
     <span class="xt-font xt-text-2 font-400 font-14 mb-3">b站视频链接</span>
     <BiliLinkDetail :list="msgSetting.videos"/>
    </div>
-   
+
   </XtScrollbar>
  </div>
 </template>

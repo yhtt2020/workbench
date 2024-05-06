@@ -28,7 +28,7 @@
             {{ item.name || item.title }}
           </span>
           <xt-ify-icon
-            icon="fluent:open-16-regular"
+            icon="fluent:open-16-filled"
             size="20"
             class="xt-text-2"
             v-if="item.type === 'link' && item.name !== 'Roadmap'"
@@ -80,7 +80,7 @@ const currentMenu = ref({
 const linkMenu = ref([
   {
     name: "链接设置",
-    newIcon: "fluent:settings-16-regular",
+    newIcon: "fluent:settings-16-filled",
     callBack: () => {
       // console.log("更新", currentMenu.value.revID);
       updateLinkRef.value.openUpdateLink();
@@ -114,7 +114,7 @@ const linkMenu = ref([
 const otherMenu = ref([
   // {
   //   name: "应用设置",
-  //   newIcon: "fluent:settings-16-regular",
+  //   newIcon: "fluent:settings-16-filled",
   //   callBack: () => {},
   // },
   {

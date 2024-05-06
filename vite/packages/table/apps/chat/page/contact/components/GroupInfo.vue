@@ -27,7 +27,7 @@
             >
               <div class="flex items-center justify-center">
                 <xt-ify-icon
-                  icon="fluent:copy-16-regular"
+                  icon="fluent:copy-16-filled"
                   size="16"
                   class="xt-text-2"
                 />

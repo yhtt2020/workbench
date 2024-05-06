@@ -93,7 +93,7 @@ const adminList = ref([
     callBack: () => {},
   },
   {
-    newIcon: "fluent:apps-list-detail-24-regular",
+    newIcon: "fluent:apps-list-detail-24-filled",
     title: "切换双/单列",
     callBack: () => {
       chatCommunity.setColumnMode();
@@ -133,7 +133,7 @@ const hideList = ref([
     },
   },
   // {
-  //   newIcon: "fluent:settings-16-regular",
+  //   newIcon: "fluent:settings-16-filled",
   //   title: "社群设置",
   //   type: "manage",
   //   callBack: () => {
@@ -143,7 +143,7 @@ const hideList = ref([
   //   },
   // },
   // {
-  //   newIcon: "fluent:people-add-16-regular",
+  //   newIcon: "fluent:people-add-16-filled",
   //   title: "邀请其他人",
   //   callBack: () => {},
   // },
@@ -182,19 +182,19 @@ const showList = ref([
     },
   },
   {
-    newIcon: "fluent:apps-list-detail-24-regular",
+    newIcon: "fluent:apps-list-detail-24-filled",
     title: "切换双/单列",
     callBack: () => {
       chatCommunity.setColumnMode();
     },
   },
   // {
-  //   newIcon: "fluent:people-add-16-regular",
+  //   newIcon: "fluent:people-add-16-filled",
   //   title: "邀请其他人",
   //   callBack: () => {},
   // },
   // {
-  //   newIcon: "fluent:settings-16-regular",
+  //   newIcon: "fluent:settings-16-filled",
   //   title: "社群设置",
   //   type: "manage",
   //   callBack: () => {

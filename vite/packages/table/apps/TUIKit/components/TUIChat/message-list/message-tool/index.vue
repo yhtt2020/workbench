@@ -67,7 +67,7 @@ const actionItems = ref([
   {
     text: TUITranslateService.t("TUIChat.打开"),
     // iconUrl: copyIcon,
-    iconUrl:'fluent:copy-16-regular',
+    iconUrl:'fluent:copy-16-filled',
     renderCondition() {
       if (!message.value) return false;
       return (
@@ -82,7 +82,7 @@ const actionItems = ref([
   {
     text: TUITranslateService.t("TUIChat.复制"),
     // iconUrl: copyIcon,
-    iconUrl:'fluent:copy-16-regular',
+    iconUrl:'fluent:copy-16-filled',
     renderCondition() {
       if (!message.value) return false;
       return message.value?.type === TYPES.MSG_TEXT;
@@ -104,7 +104,7 @@ const actionItems = ref([
   {
     text: TUITranslateService.t("TUIChat.删除"),
     // iconUrl: delIcon,
-    iconUrl: "fluent:delete-16-regular",
+    iconUrl: "fluent:delete-16-filled",
     renderCondition() {
       if (!message.value) return false;
       return message.value?.status === "success";
