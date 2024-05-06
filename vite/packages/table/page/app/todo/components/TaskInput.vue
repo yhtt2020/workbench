@@ -86,7 +86,7 @@ export default {
 
     addNewTask() {
 
-      if(!window.$useEnv('guest')){
+      // if(!window.$useEnv('guest')){
         let task = this.newTask;
         if (this.currentList) {
           task.listNanoid = [this.currentList.nanoid]
@@ -111,18 +111,18 @@ export default {
         }else{
           message.error('数据库写入失败')
         }
-      }else{
-        window.$ui.confirm("登录提示", '目前处于游客模式，请登录后体验完整功能。', {
-          ok: () => {
-            this.loginVisible = true
-          },
-          index: 999999,
-          okText: "立即登录",
-          noText: "暂不登录",
-          okButtonWidth: '95',
-          noButtonWidth: '95',
-        });
-      }
+      // }else{
+      //   window.$ui.confirm("登录提示", '目前处于游客模式，请登录后体验完整功能。', {
+      //     ok: () => {
+      //       this.loginVisible = true
+      //     },
+      //     index: 999999,
+      //     okText: "立即登录",
+      //     noText: "暂不登录",
+      //     okButtonWidth: '95',
+      //     noButtonWidth: '95',
+      //   });
+      // }
 
 
     },
