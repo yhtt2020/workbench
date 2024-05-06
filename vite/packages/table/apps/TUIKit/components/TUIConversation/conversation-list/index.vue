@@ -33,14 +33,14 @@
       >
         <aside class="left">
           <!-- 将conversation.getAvatar()替换成conversation.groupProfile.avatar来实现真实图片展示,从而达到demo图片的替换  -->
-          <!--
-            conversation?.type === 'GROUP'是否为群聊,
+
+          <!-- conversation?.type === 'GROUP'是否为群聊,
             群聊走conversation?.groupProfile?.avatar
             好友走conversation?.userProfile?.avatar
             来处理IM自定义的头像
              :borderRadius="conversation?.type === 'GROUP' ? '5px':'50%'"
-             群聊是正方形,好友是圆形
-          -->
+             群聊是正方形,好友是圆形 -->
+
           <Avatar
             useSkeletonAnimation
             :url="
@@ -112,10 +112,7 @@
           <div class="content-footer">
             <span class="time">{{ conversation.getLastMessage("time") }}</span>
             <!-- IM的UI图标组件 -->
-            <!-- <Icon
-              v-if="conversation.isMuted"
-              :file="muteIcon"
-            /> -->
+            <Icon v-if="conversation.isMuted" :file="muteIcon" />
 
             <!-- 新版替换的图标组件 -->
             <xt-ify-icon
@@ -135,6 +132,23 @@
 </template>
 
 <script lang="ts" setup>
+import { ref, computed, onMounted, onUnmounted } from "../../../adapter-vue";
+import TUIChatEngine, {
+  TUIStore,
+  StoreName,
+  TUIConversationService,
+  IConversationModel,
+} from "@tencentcloud/chat-uikit-engine";
+import {
+  TUIGlobal,
+  isIOS,
+  addLongPressListener,
+} from "@tencentcloud/universal-api";
+import Icon from "../../common/Icon.vue";
+import Avatar from "../../common/Avatar/index.vue";
+import ActionsMenu from "../actions-menu/index.vue";
+import muteIcon from "../../../assets/icon/mute.svg";
+import { isPC, isH5, isUniFrameWork, isMobile } from "../../../utils/env";
 
 interface IUserStatus {
   statusType: number;
@@ -144,20 +158,6 @@ interface IUserStatus {
 interface IUserStatusMap {
   [userID: string]: IUserStatus;
 }
-
-import { ref,computed,onMounted,onUnmounted } from "../../../adapter-vue";
-import TUIChatEngine, {
-  TUIStore,
-  StoreName,
-  TUIConversationService,
-  IConversationModel,
-} from '@tencentcloud/chat-uikit-engine';
-import { TUIGlobal, isIOS, addLongPressListener } from '@tencentcloud/universal-api';
-import Icon from '../../common/Icon.vue';
-import Avatar from '../../common/Avatar/index.vue';
-import ActionsMenu from '../actions-menu/index.vue';
-import muteIcon from '../../../assets/icon/mute.svg';
-import { isPC, isH5, isUniFrameWork, isMobile } from '../../../utils/env';
 
 const emits = defineEmits(["handleSwitchConversation", "getPassingRef"]);
 const currentConversation = ref<IConversationModel>();
@@ -215,8 +215,8 @@ onUnmounted(() => {
 
 const isShowUserOnlineStatus = (conversation: IConversationModel): boolean => {
   return (
-    displayOnlineStatus.value
-    && conversation.type === TUIChatEngine.TYPES.CONV_C2C
+    displayOnlineStatus.value &&
+    conversation.type === TUIChatEngine.TYPES.CONV_C2C
   );
 };
 
@@ -224,7 +224,7 @@ const showConversationActionMenu = (
   event: Event,
   conversation: IConversationModel,
   index: number,
-  isContextMenuEvent?: boolean,
+  isContextMenuEvent?: boolean
 ) => {
   if (isContextMenuEvent) {
     event.preventDefault();
@@ -240,8 +240,8 @@ const showConversationActionMenu = (
 const closeConversationActionMenu = () => {
   // 防止连续触发overlay的tap事件
   if (
-    lastestOpenActionsMenuTime
-    && Date.now() - lastestOpenActionsMenuTime > 300
+    lastestOpenActionsMenuTime &&
+    Date.now() - lastestOpenActionsMenuTime > 300
   ) {
     currentConversation.value = undefined;
     isShowOverlay.value = false;
@@ -250,25 +250,33 @@ const closeConversationActionMenu = () => {
 
 const getActionsMenuPosition = (event: Event, index: number) => {
   if (isUniFrameWork) {
-    if (typeof conversationListDomRef.value === 'undefined') {
-      emits('getPassingRef', conversationListDomRef);
+    if (typeof conversationListDomRef.value === "undefined") {
+      emits("getPassingRef", conversationListDomRef);
     }
-    const query = TUIGlobal?.createSelectorQuery().in(conversationListDomRef.value);
-    query.select(`#convlistitem-${index}`).boundingClientRect((data) => {
-      if (data) {
-        actionsMenuPosition.value = {
-          // uni-h5的uni-page-head不被认为是视窗中的成员，因此手动上head的高度
-          top: data.bottom + (isH5 ? 44 : 0),
-          // @ts-expect-error in uniapp event has touches property
-          left: event.touches[0].pageX,
-          conversationHeight: data.height,
-        };
-        isShowOverlay.value = true;
-      }
-    }).exec();
+    const query = TUIGlobal?.createSelectorQuery().in(
+      conversationListDomRef.value
+    );
+    query
+      .select(`#convlistitem-${index}`)
+      .boundingClientRect((data) => {
+        if (data) {
+          actionsMenuPosition.value = {
+            // uni-h5的uni-page-head不被认为是视窗中的成员，因此手动上head的高度
+            top: data.bottom + (isH5 ? 44 : 0),
+            // @ts-expect-error in uniapp event has touches property
+            left: event.touches[0].pageX,
+            conversationHeight: data.height,
+          };
+          isShowOverlay.value = true;
+        }
+      })
+      .exec();
   } else {
     // 处理Vue原生
-    const rect = ((event.currentTarget || event.target) as HTMLElement)?.getBoundingClientRect() || {};
+    const rect =
+      (
+        (event.currentTarget || event.target) as HTMLElement
+      )?.getBoundingClientRect() || {};
     if (rect) {
       actionsMenuPosition.value = {
         top: rect.bottom,
@@ -292,12 +300,14 @@ function addLongPressHandler() {
   addLongPressListener({
     element: conversationListInnerDomRef.value,
     onLongPress: (event, target) => {
-      const index = (Array.from(conversationListInnerDomRef.value!.children) as HTMLElement[]).indexOf(target!);
+      const index = (
+        Array.from(conversationListInnerDomRef.value!.children) as HTMLElement[]
+      ).indexOf(target!);
       showConversationActionMenu(event, conversationList.value[index], index);
     },
     options: {
       eventDelegation: {
-        subSelector: '.tui-conversation-content',
+        subSelector: ".tui-conversation-content",
       },
     },
   });
@@ -326,7 +336,7 @@ function onUserStatusListUpdated(list: Map<string, IUserStatus>) {
         obj[key] = value;
         return obj;
       },
-      {} as IUserStatusMap,
+      {} as IUserStatusMap
     );
   }
 }
@@ -341,16 +351,17 @@ const text = (conversation: any) => {
 
   /**群聊**/
   if (conversation.type === "GROUP") {
-    if(isGroupName && isText) return `${isGroupName}:${isText}`
-    else if(isGroupName && isMessageForShow) return `${isGroupName}:${isMessageForShow}`
-    else if(isFromAccount && isText) return `${isFromAccount}:${isText}`
-    else return ''
-  }
+    if (isGroupName && isText) return `${isGroupName}:${isText}`;
+    else if (isGroupName && isMessageForShow)
+      return `${isGroupName}:${isMessageForShow}`;
+    else if (isFromAccount && isText) return `${isFromAccount}:${isText}`;
+    else return "";
+  } else {
   /**好友**/
-  else {
-    if(isUserName && isText) return `${isUserName}:${isText}`
-    else if(isUserName && isMessageForShow) return `${isUserName}:${isMessageForShow}`
-    return ""
+    if (isUserName && isText) return `${isUserName}:${isText}`;
+    else if (isUserName && isMessageForShow)
+      return `${isUserName}:${isMessageForShow}`;
+    return "";
   }
 };
 
@@ -361,11 +372,11 @@ defineExpose({ closeChildren: closeConversationActionMenu });
 <style lang="scss" scoped src="./style/index.scss"></style>
 <style lang="scss" scoped>
 .disable-select {
-  -webkit-touch-callout:none;
-  -webkit-user-select:none;
-  -khtml-user-select:none;
-  -moz-user-select:none;
-  -ms-user-select:none;
-  user-select:none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 </style>
