@@ -70,7 +70,7 @@ if (!this.$usePlat()) {
           okButtonWidth: '95',
           noButtonWidth: '95',
         });
-      }else if(currentEnv == 'offline'){
+      }else if(this.currentEnv == 'offline'){
         reconnect()
       }else{
         if(this.lvInfo.lv < 1){
