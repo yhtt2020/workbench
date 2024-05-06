@@ -17,6 +17,7 @@
         :columnVisible="columnVisible"
         :no="no"
         :sideVisible="sideVisible"
+        class="flex-none"
       />
 
       <!-- 分割线 -->
@@ -26,22 +27,15 @@
           margin: 8px 0;
           border-top: 1px solid var(--divider) !important;
         "
+        class="flex-none"
       />
 
-      <!-- 空状态 -->
-      <template
-        v-if="firstChannel.length === 0 && secondaryChannel.length === 0"
+      <!-- 底部 -->
+      <div
+        class="grow"
+        :class="columnVisible ? 'column-scrollbar' : 'category-scrollbar'"
       >
-        <div style="height: 60vh" class="flex items-center justify-center">
-          <div class="flex flex-col">
-            <CategoryEmpty :role="currentInfoDetail?.role" :no="no" />
-          </div>
-        </div>
-      </template>
-
-      <!-- 底部树状 -->
-      <div class="flex-1 h-4/5">
-        <xt-scrollbar :y="true" class="flex-1" style="height: calc(100% - 10%)">
+        <xt-scrollbar :y="true" class="h-full">
           <!-- 一级频道目录 -->
           <template v-if="firstChannel.length !== 0">
             <!-- 单列模式 -->
@@ -56,6 +50,7 @@
                 />
               </div>
             </template>
+
             <!-- 双列模式 -->
             <template v-else>
               <div class="grid grid-cols-2 gap-1">
@@ -71,7 +66,7 @@
           </template>
 
           <!-- 二级频道目录 -->
-          <template v-if="secondaryChannel.length !== 0">
+          <template v-if="secondaryChannel.length !== 0"> 
             <template v-for="item in secondaryChannel">
               <TreeFold :item="item">
                 <!-- 标题 -->
@@ -109,6 +104,7 @@
                       />
                     </div>
                   </template>
+
                   <!-- 双列 -->
                   <template v-else>
                     <div class="grid grid-cols-2 gap-1">
@@ -132,12 +128,14 @@
 
   <!-- 添加新应用 -->
   <AddNewAppPage ref="newAppRef" />
+
   <!-- 添加分组 -->
   <CreateCategory
     ref="newCategoryRef"
     :no="currentInfoDetail?.communityInfo?.no"
     :currentCategoryName="currentCategorySetting"
   />
+
   <!-- 子级频道添加新应用 -->
   <AddNewUnClassApp ref="newUnClassRef" :currentAppSet="currentAppSet" />
 </template>
@@ -298,4 +296,92 @@ const handleCommunity = (data) => {
 </script>
 
 <style lang="scss" scoped>
+@media screen and (max-height: 500px) {
+  .category-scrollbar {
+    height: 15vh !important;
+  }
+  .column-scrollbar {
+    height: 4vh !important;
+  }
+}
+@media screen and (min-height: 501px) and (max-height: 512px) {
+  .category-scrollbar {
+    height: 22vh !important;
+  }
+  .column-scrollbar {
+    height: 10vh !important;
+  }
+}
+@media screen and (min-height: 513px) and (max-height: 550px) {
+  .category-scrollbar {
+    height: 27vh !important;
+  }
+  .column-scrollbar {
+    height: 15vh !important;
+  }
+}
+@media screen and (min-height: 551px) and (max-height: 600px) {
+  .category-scrollbar {
+    height: 34vh !important;
+  }
+  .column-scrollbar {
+    height: 24vh !important;
+  }
+}
+@media screen and (min-height: 601px) and (max-height: 650px) {
+  .category-scrollbar {
+    height: 38vh !important;
+  }
+  .column-scrollbar {
+    height: 30vh !important;
+  }
+}
+@media screen and (min-height: 651px) and (max-height: 700px) {
+  .category-scrollbar {
+    height: 42vh !important;
+  }
+  .column-scrollbar {
+    height: 34vh !important;
+  }
+}
+@media screen and (min-height: 701px) and (max-height: 750px) {
+  .category-scrollbar {
+    height: 45vh !important;
+  }
+  .column-scrollbar {
+    height: 38vh !important;
+  }
+}
+@media screen and (min-height: 751px) and (max-height: 800px) {
+  .category-scrollbar {
+    height: 50vh !important;
+  }
+  .column-scrollbar {
+    height: 42.5vh !important;
+  }
+}
+@media screen and (min-height: 801px) and (max-height: 850px) {
+  .category-scrollbar {
+    height: 53vh !important;
+  }
+  .column-scrollbar {
+    height: 47vh !important;
+  }
+}
+@media screen and (min-height: 851px) and (max-height:1000px){
+  .category-scrollbar {
+    height: 59vh !important;
+  }
+  .column-scrollbar {
+    height: 54vh !important;
+  }
+}
+@media screen and (min-height: 1001px){
+  .category-scrollbar {
+    height: 61vh !important;
+  }
+  .column-scrollbar {
+    height: 56vh !important;
+  }
+}
 </style>
