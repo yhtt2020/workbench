@@ -28,18 +28,20 @@
         "
       />
 
-      <!-- 底部树状 -->
-      <div class="flex-1 h-4/5">
-        <!-- 空状态 -->
-        <template
-          v-if="firstChannel.length === 0 && secondaryChannel.length === 0"
-        >
-          <div class="h-full flex flex-col items-center justify-center">
+      <!-- 空状态 -->
+      <template
+        v-if="firstChannel.length === 0 && secondaryChannel.length === 0"
+      >
+        <div style="height: 60vh" class="flex items-center justify-center">
+          <div class="flex flex-col">
             <CategoryEmpty :role="currentInfoDetail?.role" :no="no" />
           </div>
-        </template>
+        </div>
+      </template>
 
-        <xt-scrollbar :y="true" class="flex-1" style="height: calc(100% - 10%);" v-else>
+      <!-- 底部树状 -->
+      <div class="flex-1 h-4/5">
+        <xt-scrollbar :y="true" class="flex-1" style="height: calc(100% - 10%)">
           <!-- 一级频道目录 -->
           <template v-if="firstChannel.length !== 0">
             <!-- 单列模式 -->

@@ -1,4 +1,20 @@
+<!-- 社群设置中更多设置页面 -->
 <template>
+ <div>
+
+ </div>
+</template>
+
+<script setup>
+
+</script>
+
+<style lang="scss" scoped>
+
+</style>
+
+<!-- 
+ <template>
   <div class="xt-font xt-text font-16 font-400 mb-4">更多设置</div>
   <div class="xt-bg p-4 flex flex-col rounded-xl" style="width: 452px">
     <span class="xt-font xt-text font-16 font-400 mb-2.5">默认加入群聊</span>
@@ -115,3 +131,5 @@ export default {
   border: none !important;
 }
 </style>
+
+ -->

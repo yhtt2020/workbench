@@ -1,13 +1,12 @@
+<!-- 社群设置中成员申请页面 -->
 <template>
  <div>
-   角色权限
+   
  </div>
 </template>
 
-<script>
- export default {
-  
- }
+<script setup>
+
 </script>
 
 <style lang="scss" scoped>
