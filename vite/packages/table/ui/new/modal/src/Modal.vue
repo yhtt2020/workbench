@@ -270,7 +270,7 @@ const currentX = computed(() => {
   if (props.handle) {
     return x.value;
   } else {
-    return getPosition.value.left;
+    return getModalPosition.value.left;
   }
 });
 const currentY = computed(() => {
@@ -278,10 +278,17 @@ const currentY = computed(() => {
   if (props.handle) {
     return y.value;
   } else {
-    return getPosition.value.top;
+    return getModalPosition.value.top;
   }
 });
-
+const sizeDiff = computed(() => {
+  const heightDiff = modalHeight.value - windowHeight.value > 0;
+  const widthDiff = modalWidth.value - windowWidth.value > 0;
+  return {
+    heightDiff,
+    widthDiff,
+  };
+});
 // 弹窗样式
 const modalStyle = computed(() => {
   if (isMaximize.value) {
@@ -297,39 +304,41 @@ const modalStyle = computed(() => {
     height: "auto",
   };
 });
-let intervalId;
 
-const getPosition = computed(() => {
+/** 获取弹窗位置 */
+const getModalPosition = computed(() => {
   let top;
   let left;
-  // 有遮罩层的情况
-  if (props.mask) {
+
+  // 全屏时
+  if (isMaximize.value) {
+    top = 0;
+    left = 0;
+  }
+  // 有遮罩层时
+  else if (props.mask) {
     top = (windowHeight.value - modalHeight.value) / 2;
     left = (windowWidth.value - modalWidth.value) / 2;
-  } 
-  // 全屏时
-  else if (isMaximize.value) {
-    top = 0
-    left = 0
   }
   // 无遮罩层的情况
-  
   else {
     top = (windowHeight.value - barHeight - modalHeight.value) / 2;
     left = (windowWidth.value - modalWidth.value) / 2;
   }
+
   return {
     top,
     left,
   };
 });
 
+let intervalId;
 // 初始化位置
-function initPosition() {
+const initPosition = () => {
   intervalId = setInterval(() => {
     // 数据未加载完成时
     if (windowHeight.value <= 0 || modalHeight.value <= 0) return;
-    const { left, top } = getPosition.value;
+    const { left, top } = getModalPosition.value;
     y.value = top;
     x.value = left;
     oldX.value = left;
@@ -339,7 +348,7 @@ function initPosition() {
     modalVisible.value = true;
     clearInterval(intervalId); // 数据加载完成后取消定时器
   }, 1);
-}
+};
 
 // 更新弹窗大小
 const resizeModel = (data) => {
@@ -429,13 +438,10 @@ const doubleClick = (event: any) => {
   if (res) return;
   maximize();
 };
-// 头部框双击事件
-// const { doubleClick } = useDoubleClick(d);
 
 /** 模态框获取焦点 */
 const getModalFouls = () => {
   // 如果当前弹窗已经是焦点弹窗则不处理
-
   if (currentModalIndex.value == INDEX) return;
   // 先通知所有弹窗移除焦点
   proxy.$bus.emit("modalBlur");
@@ -546,10 +552,10 @@ defineExpose({
   maximize,
   // 手动最小化
   minimize,
-  // 判断最大化变量
+  // 是否最大化
   isMaximize,
-  // 判断最小化变量
-  isMinimize
+  // 是否最小化
+  isMinimize,
 });
 </script>
 

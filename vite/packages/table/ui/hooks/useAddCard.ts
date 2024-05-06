@@ -24,9 +24,8 @@ export const useDelCard = (id, desk = null) => {
   const { getCurrentDeskId, freeLayoutData }: any =
     storeToRefs(freeLayoutStore);
 
-    console.log('freeLayoutData.value[getCurrentDeskId.value].id111 :>> ', freeLayoutData.value[getCurrentDeskId.value].id);
+
   delete freeLayoutData.value[getCurrentDeskId.value].id;
-  console.log('freeLayoutData.value[getCurrentDeskId.value].id222 :>> ', freeLayoutData.value[getCurrentDeskId.value].id);
   const card: any = cardStore();
   card.removeCard(id, desk);
 };

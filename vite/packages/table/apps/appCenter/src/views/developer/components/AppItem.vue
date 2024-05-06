@@ -22,6 +22,9 @@ const { modal, ttappList } = storeToRefs(ttappStore);
 const menus = computed(() => {
   let res = [
     {
+      divider: true,
+    },
+    {
       name: "添加应用到",
       newIcon: "fluent:add-16-regular",
       children: [
