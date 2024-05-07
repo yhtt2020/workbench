@@ -21,8 +21,5 @@ export const chatLogout = () => {
 /**登录刷新**/
 export const updateLogin = async() =>{
   const chatCommunity: any = chatCommunityStore();
-  await (window as any).$chat?.chat?.getGroupList();
-  await (window as any).$chat?.chat?.getFriendList();
-  await (window as any).$chat?.chat?.getConversationList();
   chatCommunity.getMyCommunity();
 }

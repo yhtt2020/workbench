@@ -36,14 +36,14 @@ function loadChat() {
     (window as any).$TUIKit = TUIChatEngine;
 
     /**将TUIChatEngine中的chat挂载在window.$chat  这里继承原先的sdk**/ 
-    (window as any).$chat = TUILogin;
+    (window as any).$chat = TUIChatEngine;
 
     /**
      * 关闭日志，如果需要调试，改为4。
      * release 级别，SDK 输出关键信息，生产环境时建议使用
      * (window as any).$chat?.chat?.setLogLevel(1);
      * **/
-    (window as any).$chat?.chat?.setLogLevel(0);
+    (window as any).$chat.chat.setLogLevel(0);
 
     /**关闭系统弹窗提示**/ 
     TUINotification.setNotificationConfiguration({
@@ -56,8 +56,6 @@ function loadChat() {
       notificationIcon: "/icons/IM.png",
     });
 
-    /**注册腾讯云即时通信 IM 上传插件**/
-    // chat.registerPlugin({'tim-upload-plugin': TIMUploadPlugin});
 
   } catch (e) {
     console.error("聊天载入失败", e);
