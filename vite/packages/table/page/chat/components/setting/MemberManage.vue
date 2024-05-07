@@ -17,7 +17,7 @@
         </div>
       </div>
       <div style="display: none;" class="right-dropdown">
-        <Dropdown :enableButton="true" :unbutton="false" :id="22" newIcon="fluent:more-horizontal-16-regular" :list="memberList" @callbackParams="callbackParams"/>
+        <Dropdown :enableButton="true" :unbutton="false" :id="22" newIcon="fluent:more-horizontal-16-filled" :list="memberList" @callbackParams="callbackParams"/>
       </div>
     </div>
   </vue-custom-scrollbar>
@@ -58,7 +58,7 @@ export default {
         }
       },
       {
-        title:'移出社群',newIcon:'fluent:delete-16-regular',color:'var(--error)',type:'deletePacket',
+        title:'移出社群',newIcon:'fluent:delete-16-filled',color:'var(--error)',type:'deletePacket',
         callBack:()=>{
           // console.log('查看id',data.dropID);
         }

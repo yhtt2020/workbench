@@ -3,7 +3,7 @@
     <div class="flex items-center justify-between mb-2">
       <div class="flex items-center justify-center">
         <xt-new-icon
-          icon="fluent:image-multiple-16-regular"
+          icon="fluent:image-multiple-16-filled"
           size="20"
           class="mr-2 xt-text"
         ></xt-new-icon>
@@ -39,7 +39,7 @@
           :iconSize="isModal ? 20 : 24"
           :placement="'bottomRight'"
           :buttonClass="'xt-active-bg'"
-          :newIcon="'fluent:filter-16-regular'"
+          :newIcon="'fluent:filter-16-filled'"
           :iconBg="'var(--active-text)'"
           :class="isModal ? 'mr-3' : ''"
           :zIndex="100001"
@@ -100,7 +100,7 @@
                   >
                     <div class="flex items-center justify-center">
                       <xt-new-icon
-                        icon="fluent:arrow-download-16-regular"
+                        icon="fluent:arrow-download-16-filled"
                         :size="isModal ? 16 : 20"
                         :color="'var(--active-text)'"
                       ></xt-new-icon>
@@ -124,7 +124,7 @@
                         :color="'var(--warning)'"
                       ></xt-new-icon>
                       <xt-new-icon
-                        icon="fluent:star-16-regular"
+                        icon="fluent:star-16-filled"
                         v-else
                         :size="isModal ? 16 : 20"
                         :color="'var(--active-text)'"
@@ -223,7 +223,7 @@ export default {
       },
       pickPaperMenu: [
         {
-          newIcon: "fluent:desktop-16-regular",
+          newIcon: "fluent:desktop-16-filled",
           name: "设为工作台背景",
           callBack: () => {
             this.setAppPaper(this.currentPaper);
@@ -237,7 +237,7 @@ export default {
           },
         },
         {
-          newIcon: "fluent:arrow-download-16-regular",
+          newIcon: "fluent:arrow-download-16-filled",
           name: "下载壁纸",
           callBack: () => {
             this.download(this.currentPaper);

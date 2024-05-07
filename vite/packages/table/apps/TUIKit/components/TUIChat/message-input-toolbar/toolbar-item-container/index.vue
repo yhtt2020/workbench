@@ -22,7 +22,7 @@
         :width="props.iconWidth"
         :height="props.iconHeight"
       /> -->
-      <xt-ify-icon :icon="props.iconFile" size="20" class="xt-text-2"/>
+      <xt-ify-icon :icon="props.iconFile" size="24" class="xt-text-2"/>
     </div>
     <div
       v-if="isUniFrameWork"

@@ -47,7 +47,7 @@
                         <div class="mr-4 text-center">{{ replyCom.support_count }} </div>
                     </div>
                     <div class="flex items-center pointer" @click="replyStatus">
-                        <replyIcon icon="fluent:chat-16-regular" style="font-size: 20px;" class="mr-1 "></replyIcon>
+                        <replyIcon icon="fluent:chat-16-filled" style="font-size: 20px;" class="mr-1 "></replyIcon>
                         <!-- <div>回复</div> -->
                     </div>
                     <div class="flex justify-center ml-1" v-if="useUserStore.userInfo.uid === replyCom.user.uid">

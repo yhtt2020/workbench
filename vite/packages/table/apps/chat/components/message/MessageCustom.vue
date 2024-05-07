@@ -40,7 +40,7 @@
         >
           <div class="flex items-center justify-center">
             <xt-ify-icon
-              icon="fluent:share-android-24-regular"
+              icon="fluent:share-android-24-filled"
               size="20"
               class="mr-3 xt-text"
             />

@@ -9,7 +9,7 @@
           </div>
           <xt-button style="width: auto !important;" h="0" @click="clearAll">
             <div class="flex items-center justify-center">
-              <xt-new-icon icon="fluent:delete-16-regular" size="20"></xt-new-icon>
+              <xt-new-icon icon="fluent:delete-16-filled" size="20"></xt-new-icon>
             </div>
           </xt-button>
           <!-- <NoticeIcon icon="ant-design:clear-outlined" class="pointer category-button" style="font-size: 1.3rem;color: var(--secondary-text);" /> -->
@@ -47,14 +47,14 @@ import { message } from 'ant-design-vue'
 
 const app = appStore()
 const notice = noticeStore()
-const { settings } = storeToRefs(app) 
-const { loginVisible } = storeToRefs(app) 
+const { settings } = storeToRefs(app)
+const { loginVisible } = storeToRefs(app)
 const { detailList } = storeToRefs(notice)
 
 const emits = defineEmits(["closeMessage"])
 
 const top = ref({
-  newIcon:"fluent:alert-16-regular",
+  newIcon:"fluent:alert-16-filled",
   id: "all",
   newName:'全部消息',
   type:'system'
@@ -91,7 +91,7 @@ const close = () =>{
 const leftList = ref([
   {
     id: "all",
-    newIcon:"fluent:grid-16-regular",
+    newIcon:"fluent:grid-16-filled",
     alias: "all",
     newName: "全部消息",
     name:'全部',bg:'var(--secondary-bg)',
@@ -100,13 +100,13 @@ const leftList = ref([
     },
   },
   {
-    newIcon:'fluent:alert-16-regular',  name:'系统',
+    newIcon:'fluent:alert-16-filled',  name:'系统',
     newName:'系统消息',id:'system',bg:'var(--secondary-bg)',
     callBack: (item)=>{ selectTab(item)},
   },
   {
     id: "IM",
-    newIcon:"fluent:chat-16-regular",
+    newIcon:"fluent:chat-16-filled",
     alias: "teamChat",
     newName: "社群沟通",
     name:'社群',bg:'var(--secondary-bg)',
@@ -116,17 +116,17 @@ const leftList = ref([
     },
   },
   {
-    newIcon:'fluent:mail-16-regular', name:'推送',
+    newIcon:'fluent:mail-16-filled', name:'推送',
     newName:'推送消息 ',id:'push',bg:'var(--secondary-bg)',
     callBack: (item)=>{ selectTab(item)},
   },
   {
-    newIcon:'fluent:emoji-smile-slight-24-regular',name:'助手', id:'IA',newName:'智能助手',bg:'var(--secondary-bg)',
+    newIcon:'fluent:emoji-smile-slight-24-filled',name:'助手', id:'IA',newName:'智能助手',bg:'var(--secondary-bg)',
     callBack: (item)=>{ selectTab(item)},
   },
 
   {
-    newIcon:'fluent:send-32-regular', flag: true,
+    newIcon:'fluent:send-32-filled', flag: true,
     callBack:()=>{
       // 游客模式下不能打开编辑窗
       if(window.$useEnv('guest')){
@@ -140,7 +140,7 @@ const leftList = ref([
   },
   {
     id: "notice",
-    newIcon:"fluent:alert-16-regular",
+    newIcon:"fluent:alert-16-filled",
     title: "通知",
     flag: true,
     callBack:()=>{
@@ -148,7 +148,7 @@ const leftList = ref([
     },
   },
   {
-    newIcon:"fluent:settings-16-regular",
+    newIcon:"fluent:settings-16-filled",
     alias: "setting",
     title: "设置",
     type:'setting',
@@ -163,12 +163,12 @@ const filterList = computed(() => {
 
   if(settings.value.noticeEnable){
     const openList = copyList.map((item)=>{
-      return {...item,newIcon:item.id === 'notice' ? 'fluent:alert-off-16-regular' : item.newIcon}
+      return {...item,newIcon:item.id === 'notice' ? 'fluent:alert-off-16-filled' : item.newIcon}
     })
     return openList
   }else{
     const closeList = copyList.map((item)=>{
-      return {...item,newIcon:item.id === 'notice' ? 'fluent:alert-16-regular' : item.newIcon}
+      return {...item,newIcon:item.id === 'notice' ? 'fluent:alert-16-filled' : item.newIcon}
     })
     return closeList
   }

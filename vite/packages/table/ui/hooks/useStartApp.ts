@@ -147,7 +147,15 @@ export const startApp = async (type, value, router?) => {
       break;
     // 酷应用
     case "coolApp":
-      router.push({ name: "app", params: value });
+      // router.push({ name: "app", params: value });
+      // console.log('value = ;' ,value)
+      // 新版打开方式,详细细节可以在vite\packages\table\page\AppFrame.vue中查看
+      const useAppStore = appsStore();
+      const info = {
+        type,
+        ...value,
+      }
+      useAppStore.openApp(info)
       break;
     // 本地应用
     case "tableApp":
@@ -176,7 +184,7 @@ export const startApp = async (type, value, router?) => {
       break;
     // 桌面卡片
     case "card":
-      useMit.emit("openCard");
+      // useMit.emit("openCard");
       break;
   }
   return true;

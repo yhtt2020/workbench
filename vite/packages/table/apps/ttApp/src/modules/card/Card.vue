@@ -213,4 +213,3 @@ const injectProps=ref({})
   </xt-container>
 </template>
 <style lang="scss"></style>
-../../../../appCenter/src/views/developer/hooks/validate

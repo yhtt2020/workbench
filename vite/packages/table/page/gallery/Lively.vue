@@ -2,7 +2,7 @@
   <div class="flex w-full flex-col h-full">
    <div class="flex w-full justify-between mb-2">
     <div class="flex items-center justify-center">
-      <xt-new-icon icon="fluent:settings-16-regular" size="20"  class="mr-2"></xt-new-icon>
+      <xt-new-icon icon="fluent:settings-16-filled" size="20"  class="mr-2"></xt-new-icon>
       <span class="xt-font xt-text font-400" :class="isModal ? 'font-14':'font-16'">动态壁纸</span>
     </div>
 
@@ -27,7 +27,7 @@
               <div class="absolute top-1 right-3" style="z-index: 50;">
                 <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-3 lively-download" style="border-radius: 8px; opacity: 0;" @click="clickDownload(item)" v-if="getWidth(item)===100 && item.percent===undefined ">
                   <div class="flex items-center justify-center">
-                    <xt-new-icon icon="fluent:arrow-download-16-regular" :size="isModal ? 20 : 24" :color="'var(--active-text)'" ></xt-new-icon>
+                    <xt-new-icon icon="fluent:arrow-download-16-filled" :size="isModal ? 20 : 24" :color="'var(--active-text)'" ></xt-new-icon>
                   </div>
                 </xt-button>
                 <div v-if="item.percent && item.percent!==100" style="padding: 10px;">
@@ -84,12 +84,12 @@
       <div id="actions" class="no-drag flex " style="position: fixed;right: 2em;top: 2em;z-index: 9999999999;">
         <xt-button w="40" h="40" class="xt-bg mr-4"  @click="startDownload()" style="border-radius: 8px;">
           <div class="flex items-center justify-center">
-            <xt-new-icon icon="fluent:arrow-download-16-regular" size="24"></xt-new-icon>
+            <xt-new-icon icon="fluent:arrow-download-16-filled" size="24"></xt-new-icon>
           </div>
         </xt-button>
         <xt-button w="40" h="40" class="xt-bg"  @click="closePreview" style="border-radius: 8px;">
           <div class="flex items-center justify-center">
-            <xt-new-icon icon="fluent:dismiss-16-regular" size="24"></xt-new-icon>
+            <xt-new-icon icon="fluent:dismiss-16-filled" size="24"></xt-new-icon>
           </div>
         </xt-button>
 
@@ -190,11 +190,11 @@ export default {
 
       menuList:[
        {
-        newIcon:'fluent:arrow-download-16-regular',name:'下载壁纸',
+        newIcon:'fluent:arrow-download-16-filled',name:'下载壁纸',
         callBack:()=>{ this.clickDownload(this.currentItem) }
        },
        {
-        newIcon:'fluent:delete-16-regular',name:'删除该壁纸',color: 'var(--error)',
+        newIcon:'fluent:delete-16-filled',name:'删除该壁纸',color: 'var(--error)',
         callBack:()=>{ this.delDownLoad(this.currentItem,this.currentIndex) }
        },
       ]

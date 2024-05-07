@@ -1,7 +1,7 @@
 <template>
   <ToolbarItemContainer
     ref="container"
-    :iconFile="'fluent:emoji-smile-slight-24-regular'"
+    :iconFile="'fluent:emoji-smile-slight-24-filled'"
     title="表情"
     @onIconClick="onIconClick"
     @onDialogClose="onDialogClose"
