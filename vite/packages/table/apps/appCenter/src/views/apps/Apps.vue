@@ -92,7 +92,7 @@ const install = (app) => {
     runExec('start /wait ' + path + ' /S', require('path').dirname(path)).then(rs => {
       message.success({ content: '安装成功，并为您运行此软件', key: 'install' })
       executeLocalApp(app)
-      myApps.value.push(app)
+      myApps.value.unshift(app)
       app.installed = true
     }, (rs) => {
       message.error({ content: '安装失败', key: 'install' })
@@ -105,7 +105,7 @@ const install = (app) => {
     runExec('start /wait ' + path, require('path').dirname(path)).then(rs => {
       message.success({ content: '安装成功，并为您运行此软件', key: 'install' })
       executeLocalApp(app)
-      myApps.value.push(app)
+      myApps.value.unshift(app)
       app.installed = true
     }, (rs) => {
       message.error({ content: '安装失败', key: 'install' })

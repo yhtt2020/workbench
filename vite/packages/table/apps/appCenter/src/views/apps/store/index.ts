@@ -18,6 +18,7 @@ export const useAppStateStore = defineStore("useAppStateStore", {
           installing: false,
           percent: 0,
           done: null,
+          type:'localApp',
         },
         {
           icon: "https://a.apps.vip/icons/debugtron.svg",
@@ -33,6 +34,7 @@ export const useAppStateStore = defineStore("useAppStateStore", {
           installing: false,
           percent: 0,
           done: null,
+          type:'localApp',
         },
         {
           icon: "https://a.apps.vip/download/aida64.jpg",
@@ -50,6 +52,7 @@ export const useAppStateStore = defineStore("useAppStateStore", {
           installing: false,
           percent: 0,
           done: null,
+          type:'localApp',
         },
         {
           icon: "https://a.apps.vip/download/rtss.png",
@@ -66,6 +69,7 @@ export const useAppStateStore = defineStore("useAppStateStore", {
           installing: false,
           percent: 0,
           done: null,
+          type:'localApp',
         },
         {
           icon: "https://a.apps.vip/download/dsf.svg",
@@ -83,6 +87,7 @@ export const useAppStateStore = defineStore("useAppStateStore", {
           installing: false,
           percent: 0,
           done: null,
+          type:'localApp',
         },
       ],
     };
