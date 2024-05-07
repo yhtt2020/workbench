@@ -41,13 +41,13 @@ export const installV2 = async (id?: string) => {
 
   // 安装成功
   if (code === 200) {
+    console.log("200 :>> ", 200);
     installSuccess(data, id);
     // 安装失败
   } else {
     message.error(data);
   }
 };
-
 // 安装成功
 const installSuccess = (data: any, id?: string) => {
   const ttappStore = useTTAppStore();
@@ -58,18 +58,27 @@ const installSuccess = (data: any, id?: string) => {
     ...restData, // 剩余的属性（除了modules）
     ...modules, // 单独解构modules属性
   };
+  const packageName = currentData.package;
+  currentData.id = packageName;
 
-  // 开辟一个数据存储对象
-  ttappData.value[currentData.id] = {};
+  // ttappData.value[currentData.id] = {};
+  // 判断数据存储是否存在
+  if (!ttappData.value[packageName]) {
+    // 开辟一个数据存储对象
+    ttappData.value[packageName] = {};
+  }
+
   // 处理logo路径
-  currentData._logo = getAppImg(currentData.id, currentData.logo);
+  // currentData._logo = getAppImg(currentData.id, currentData.logo);
+  currentData._logo = getAppImg(packageName, currentData.logo);
 
   // main模块
   if (currentData.main) {
     // 处理main路径
     let entry = currentData.main.entry;
     if (entry.charAt(0) == "/") {
-      currentData.main._entry = `ttapp://${data.id}/${currentData.main.entry}`;
+      // currentData.main._entry = `ttapp://${data.id}/${currentData.main.entry}`;
+      currentData.main._entry = `ttapp://${packageName}/${currentData.main.entry}`;
     } else {
       currentData.main._entry = entry;
     }
@@ -78,7 +87,8 @@ const installSuccess = (data: any, id?: string) => {
   if (currentData.card) {
     let card = currentData.card;
     card.map((item) => {
-      item.parentId = data.id;
+      // item.parentId = data.id;
+      item.parentId = packageName;
       // 处理card大小
       item.customSize = item.size;
       delete item.size;
@@ -86,12 +96,14 @@ const installSuccess = (data: any, id?: string) => {
       let entry = item.entry;
 
       if (entry.charAt(0) == "/") {
-        item._entry = `ttapp://${currentData.id}/${item.entry}`;
+        // item._entry = `ttapp://${currentData.id}/${item.entry}`;
+        item._entry = `ttapp://${packageName}/${item.entry}`;
       } else {
         item._entry = entry;
       }
       // 处理card预览图路径
-      item._preview = getAppImg(currentData.id, item.preview);
+      // item._preview = getAppImg(currentData.id, item.preview);
+      item._preview = getAppImg(packageName, item.preview);
       return item;
     });
   }
@@ -106,13 +118,17 @@ const installSuccess = (data: any, id?: string) => {
   } else {
     message.success("更新成功");
     ttappList.value = ttappList.value.map((item) => {
+      // if (item.id === currentData.id) {
       if (item.id === currentData.id) {
         return currentData;
       }
       return item;
     });
     // 更新导航栏
-    useMit.emit("updateTTApp", currentData.id);
-    update(currentData.id);
+    // useMit.emit("updateTTApp", currentData.id);
+    // update(currentData.id);
+
+    useMit.emit("updateTTApp", packageName);
+    update(packageName);
   }
 };
