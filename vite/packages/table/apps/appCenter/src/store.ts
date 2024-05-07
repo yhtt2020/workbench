@@ -5,7 +5,9 @@ export const useAppCenterStore = defineStore("useAppCenterStore", {
   state: () => ({
     visible: false,
     // 登录回调
-    loginCb:()=>{}
+    loginCb:()=>{},
+    // 我的应用列表
+    myApps: [],
   }),
   getters: {},
   actions: {},

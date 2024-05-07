@@ -4,7 +4,7 @@
             <template #right>
                 <DropDown 
                     :list="dropList"
-                    :defaultTitle="defaultData"
+                    v-model:defaultTitle="defaultData"
                 />
                 <xt-button 
                     w="32" 
@@ -14,25 +14,50 @@
                 />
             </template>
         </Header>
-        <Item :size="140" :isApp="true" :item="item"/>
+        <div class="flex flex-wrap gap-2 mt-4" v-if="list.length > 0">
+            <Item :size="140" :isApp="true" :item="item" v-for="item in list" :info="getInfo(item)"/>
+        </div>
+        <Empty v-else />
+        
     </div>
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, defineAsyncComponent } from 'vue'
+import { ref, computed, defineAsyncComponent } from 'vue'
+import { storeToRefs } from 'pinia';
+import { useAppCenterStore } from "../../store";
 
-import { dropList, defaultData } from './data'
+import { dropList, appsList } from './data'
 
 const Header = defineAsyncComponent(() => import('../../component/Header.vue'))
 const DropDown = defineAsyncComponent(() => import('../../../../../components/desk/addIcon/components/DropDown.vue'))
 const Item = defineAsyncComponent(() => import('../../../../../components/desk/addIcon/components/SelectIcon.vue'))
+const Empty = defineAsyncComponent( () => import('../../../../../components/desk/addIcon/components/Empty.vue'))
 
-const item = ref({
-    type:'app',
-    name:'测试应用',
-    icon:'/logo.png',
-    value:'team'
+const store = useAppCenterStore()
+const { myApps } = storeToRefs(store)
+
+// 
+const list = computed(() => {
+    return [
+        ...myApps.value,
+        ...appsList
+    ]
+}) 
+
+const defaultData = ref({
+    id: "1",
+    name:'系统应用',
+    value:'systemApp'
 })
+
+const getInfo = (item) => {
+    if(item.data?.type){
+        return '系统应用'
+    } else {
+        return '酷应用'
+    }
+}
 
 </script>
 <style lang='scss' scoped></style>
