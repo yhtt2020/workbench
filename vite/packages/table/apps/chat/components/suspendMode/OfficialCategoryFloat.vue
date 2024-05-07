@@ -128,44 +128,45 @@
       />
 
       <!-- 树状列表 -->
-      <div class="flex-1 h-0">
-        <div class="float-h">
-          <xt-scrollbar :y="true" class="w-full h-full">
-            <template v-for="item in officialInfo.channelList">
-              <TreeFold :item="item" @update="handleUpdateCollapse">
-                <!-- 标题文字描述 -->
-                <template #title>
-                  <div class="xt-text-2 xt-font font-14">
-                    {{ item.name }}
+      <div
+        class="grow"
+        :class="columnVisible ? 'official-scrollbar' : 'official-scroll'"
+      >
+        <xt-scrollbar :y="true" class="h-full">
+          <template v-for="item in officialInfo.channelList">
+            <TreeFold :item="item" @update="handleUpdateCollapse">
+              <!-- 标题文字描述 -->
+              <template #title>
+                <div class="xt-text-2 xt-font font-14">
+                  {{ item.name }}
+                </div>
+              </template>
+              <!-- 树状折叠区域 -->
+              <template #panelContent>
+                <!-- 单列 -->
+                <template v-if="columnVisible === false">
+                  <div class="flex flex-col">
+                    <FloatItem
+                      :list="item.children"
+                      @currentClick="officialClick"
+                      :menusVisible="false"
+                    />
                   </div>
                 </template>
-                <!-- 树状折叠区域 -->
-                <template #panelContent>
-                  <!-- 单列 -->
-                  <template v-if="columnVisible === false">
-                    <div class="flex flex-col">
-                      <FloatItem
-                        :list="item.children"
-                        @currentClick="officialClick"
-                        :menusVisible="false"
-                      />
-                    </div>
-                  </template>
-                  <!-- 双列 -->
-                  <template v-else>
-                    <div class="grid grid-cols-2 gap-1">
-                      <FloatItem
-                        :list="item.children"
-                        @currentClick="officialClick"
-                        :menusVisible="false"
-                      />
-                    </div>
-                  </template>
+                <!-- 双列 -->
+                <template v-else>
+                  <div class="grid grid-cols-2 gap-1">
+                    <FloatItem
+                      :list="item.children"
+                      @currentClick="officialClick"
+                      :menusVisible="false"
+                    />
+                  </div>
                 </template>
-              </TreeFold>
-            </template>
-          </xt-scrollbar>
-        </div>
+              </template>
+            </TreeFold>
+          </template>
+        </xt-scrollbar>
       </div>
     </div>
   </div>
@@ -302,10 +303,9 @@ const officialClick = (data) => {
       proxy.$bus.emit("handleOfficalClick", data);
     } else {
       // 打开登录提示弹窗
-      app.loginVisible = true
+      app.loginVisible = true;
     }
-  }
-  else {
+  } else {
     proxy.$bus.emit("handleOfficalClick", data);
   }
 };
@@ -365,5 +365,14 @@ const officialClick = (data) => {
   margin: 0 !important;
   color: var(--primary-text);
   max-width: 185px;
+}
+
+:deep(.px-6){
+  padding-left:12px !important;
+  padding-right: 12px !important;
+}
+
+:deep(.ant-collapse-content-box){
+  padding: 0 24px !important;
 }
 </style>

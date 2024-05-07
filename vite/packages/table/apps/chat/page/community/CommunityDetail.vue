@@ -22,7 +22,7 @@
           v-if="currentItem"
           class="flex flex-col h-full"
         >
-          <CommunityHeader :headerContent="currentItem" />
+          <!-- <CommunityHeader :headerContent="currentItem" /> -->
           <RightDetailMain :currentItem="currentItem" />
         </a-col>
         <a-col flex=" 1 1 200px" v-else class="flex flex-col h-full">
