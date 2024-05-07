@@ -266,7 +266,7 @@ const chatAppList = computed(() => {
       }
     }
   });
-  if(window.$useEnv(['single', 'guest'])){
+  if(usePermission.currentEnv === 'guest' || usePermission.currentEnv === 'single'){
     const find = mapList.length - 2
     mapList[0] = mapList[find]
     mapList.splice(find - 1, 2)
@@ -308,7 +308,7 @@ const currentNo = computed(() => {
 
 // 底部按钮数量
 const endList = computed(() => {
-  if(window.$useEnv(['single', 'guest'])){
+  if(usePermission.currentEnv === 'guest' || usePermission.currentEnv === 'single'){
     return leftList.value.length - 2;
   }else{
     return leftList.value.length;
