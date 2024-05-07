@@ -59,7 +59,6 @@ const { currentContact } = storeToRefs(contact);
 const router = useRouter();
 
 const currentChatType = computed(() => {
-  console.log('计算属性判断',currentContact.value.type === 'group');
   /**有状态就以状态为准进行会话切换**/ 
   if(currentContact.value.type === 'group' && currentContact.value.groupID !== ""){
     const name = currentContact.value.groupID;
@@ -77,23 +76,23 @@ const currentChatType = computed(() => {
 });
 
 /**监听当前工作台的状态**/
-watchEffect(() => {
- if(window.$currentEnv() === "online"){return;}
- else {
-  router.push({ path: "/chatFind" });
- }
+// watchEffect(() => {
+//  if(window.$currentEnv() === "online"){return;}
+//  else {
+//   router.push({ path: "/chatFind" });
+//  }
 
-  // const watchList = TUIStore?.storeMap?.conversation?.store?.conversationList;
-  // // console.log("测试", watchList?.length);
-  // if (watchList?.length === 0) {
-  //   message.warning(
-  //     "当前聊天页没有会话列表,会默认自动进入发现页进行聊天会话的创建或者是点击左侧栏底部添加按钮创建"
-  //   );
-  //   router.push({ path: "/chatFind" });
-  // } else {
-  //   return;
-  // }
-});
+//   // const watchList = TUIStore?.storeMap?.conversation?.store?.conversationList;
+//   // // console.log("测试", watchList?.length);
+//   // if (watchList?.length === 0) {
+//   //   message.warning(
+//   //     "当前聊天页没有会话列表,会默认自动进入发现页进行聊天会话的创建或者是点击左侧栏底部添加按钮创建"
+//   //   );
+//   //   router.push({ path: "/chatFind" });
+//   // } else {
+//   //   return;
+//   // }
+// });
 
 
 </script>
