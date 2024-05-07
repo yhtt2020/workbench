@@ -133,8 +133,7 @@ import _ from "lodash-es";
 import { useNavigationStore } from "../../../../../components/desk/navigationBar/navigationStore";
 import { CommunityAPI } from "../../../api/communityAPI";
 import { message } from "ant-design-vue";
-import { useGlobalStore } from "../../../../Global/store";
-
+import { appStore } from "../../../../../store";
 const comAPI = new CommunityAPI();
 
 const props = defineProps({
@@ -158,9 +157,7 @@ const chatCommunity = chatCommunityStore();
 const { myCommunity, setting } = storeToRefs(chatCommunity);
 const useNavigation = useNavigationStore();
 const { communityNavVisible } = storeToRefs(useNavigation);
-const globalStore = useGlobalStore();
-const { loginVisible } = storeToRefs(globalStore);
-
+const app = appStore();
 /**加入社群条件**/
 const hasRole = computed(() => {
   const currentFind = _.find(myCommunity.value, (item) => {
@@ -247,21 +244,8 @@ const joinNow = async () => {
     }
   } else {
     /**离线模式则需要提示登录**/
-    loginTip();
+    app.loginVisible = true
   }
-};
-
-// 提示登录弹窗
-const loginTip = () => {
-  window.$ui.confirm("登录提示", "目前处于游客模式，请登录后体验完整功能。", {
-    ok: () => {
-      loginVisible.value = true;
-    },
-    okText: "立即登录",
-    noText: "暂不登录",
-    okButtonWidth: "95",
-    noButtonWidth: "95",
-  });
 };
 
 /**复制社群号**/

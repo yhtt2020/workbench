@@ -136,7 +136,6 @@ import _ from 'lodash-es'
 import FrameAvatar from '../avatar/FrameAvatar.vue'
 import { Icon as newIcon } from '@iconify/vue'
 import AwardModal from '../modal/AwardModal.vue'
-import { useGlobalStore } from "../../apps/Global/store";
 import { usePermissionStore } from "../../permission/store";
 export default {
   name: 'SingIn',
@@ -205,7 +204,7 @@ export default {
   },
   computed: {
     ...mapWritableState(comStore, ['todayRank']),
-    ...mapWritableState(useGlobalStore, ['loginVisible']),
+    ...mapWritableState(appStore, ['loginVisible']),
     ...mapWritableState(usePermissionStore, ['currentEnv']),
     options () {
       return {
@@ -284,21 +283,9 @@ export default {
     showCard (uid, userInfo) {
       this.showUserCard(uid, userInfo)
     },
-    // 提示登录弹窗
-    loginTip(){
-      window.$ui.confirm("登录提示", "目前处于游客模式，请登录后体验完整功能。", {
-        ok: () => {
-          this.loginVisible = true;
-        },
-        okText: "立即登录",
-        noText: "暂不登录",
-        okButtonWidth: "95",
-        noButtonWidth: "95",
-      });
-    },
     async signIn () {
       if (this.currentEnv === 'guest') {
-        this.loginTip();
+        this.loginVisible = true;
       }else {            
         if (!this.signedIn) {
           let rs = await this.doSign()

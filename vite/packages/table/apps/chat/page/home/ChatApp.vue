@@ -52,7 +52,6 @@ import { chatCommunityStore } from "../../store/chatCommunity";
 import _ from "lodash-es";
 import { useRouter, useRoute } from "vue-router";
 import { completeTask } from "../../../task/task";
-import { useGlobalStore } from "../../../Global/store";
 import { appStore } from "../../../../store";
 import config from "../../hooks/config";
 
@@ -66,16 +65,14 @@ import CreateCommunity from "../../components/create/CreateCommunity.vue";
 import JoinCommunity from "../join/JoinCommunity.vue";
 import { usePermissionStore } from "../../../../permission/store";
 import { reconnect } from "../../../../permission/user/useUserPermit";
-
 const router = useRouter();
 const chatCommunity = chatCommunityStore();
-const globalStore = useGlobalStore();
 const appS = appStore();
 const { proxy } = getCurrentInstance();
 
 const usePermission = usePermissionStore()
-const { loginVisible } = storeToRefs(globalStore);
 const { myCommunity, setting } = storeToRefs(chatCommunity);
+const { loginVisible } = storeToRefs(appS);
 const { userInfo, lvInfo } = appS;
 
 const createGroupRef = ref(null);
@@ -116,7 +113,7 @@ const leftList = ref([
         index: "launch",
         callBack: (item) => {
           if (usePermission.currentEnv === 'guest') {
-            loginTip();
+            loginVisible.value = true;
           }else if(usePermission.currentEnv === 'offline'){
             reconnect();
           } else {
@@ -131,7 +128,7 @@ const leftList = ref([
         index: "addGroup",
         callBack: (item) => {
           if (usePermission.currentEnv === 'guest') {
-            loginTip();
+            loginVisible.value = true;
           }else if(usePermission.currentEnv === 'offline'){
             reconnect();
           } else {
@@ -146,7 +143,7 @@ const leftList = ref([
         index: "addFriend",
         callBack: (item) => {
           if (usePermission.currentEnv === 'guest') {
-            loginTip();
+            loginVisible.value = true;
           }else if(usePermission.currentEnv === 'offline'){
             reconnect();
           } else {
@@ -170,7 +167,7 @@ const leftList = ref([
         name: "加入社群",
         callBack: (item) => {
           if (usePermission.currentEnv === 'guest') {
-            loginTip();
+            loginVisible.value = true;
           }else if(usePermission.currentEnv === 'offline'){
             reconnect();
           } else {
@@ -335,19 +332,6 @@ const switchTab = (item) => {
   }
 };
 
-// 提示登录弹窗
-const loginTip = () => {
-  window.$ui.confirm("登录提示", "目前处于游客模式，请登录后体验完整功能。", {
-    ok: () => {
-      loginVisible.value = true;
-    },
-    okText: "立即登录",
-    noText: "暂不登录",
-    okButtonWidth: "95",
-    noButtonWidth: "95",
-  });
-};
-
 // 触发添加入口
 const triggerAddModal = (item) => {
   switch (item.index) {
@@ -373,7 +357,7 @@ const triggerAddModal = (item) => {
 //触发社群创建入口
 const createCommunity = () => {
   if (usePermission.currentEnv === 'guest') {
-    loginTip();
+    loginVisible.value = true;
   }else if(usePermission.currentEnv === 'offline'){
     reconnect();
   } else {

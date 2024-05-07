@@ -10,6 +10,7 @@
       <div @click="test6">web{{ $usePlat(["mac", "web", "win"]) }}</div>
       <div @click="test7">win{{ $usePlat(["mac", "web", "win"]) }}</div>
       <div @click="test7">isOnline{{ isOnline?.value }}</div>
+      <div @click="test8">哦好</div>
     </div> -->
     <desk-group
       @changeDesk="changeDesk"
@@ -229,6 +230,7 @@ export default {
       "guideList",
       "userInfo",
       "init",
+      "loginVisible"
     ]),
 
     ...mapWritableState(appStore, {
@@ -619,7 +621,10 @@ export default {
     test4(){
       console.log('isOnline', isOnline)
     },
-    
+    test8(){
+      this.loginVisible = true
+    },
+
     // 关闭缩放弹窗
     closeWebLogin() {
       this.visibleWeb = false;
