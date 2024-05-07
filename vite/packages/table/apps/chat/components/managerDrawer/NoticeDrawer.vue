@@ -121,7 +121,7 @@ const currentLength = computed(() => {
 
 // 修改公告信息
 const saveGroupNotice = async () => {
-  const chat = window.$chat.chat;
+  const chat = window.$chat;
   const res = await chat.updateGroupProfile({
     groupID: groupID.value,
     notification: noticeValue.value,

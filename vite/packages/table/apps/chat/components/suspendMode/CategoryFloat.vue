@@ -30,6 +30,17 @@
         class="flex-none"
       />
 
+      <!-- 空状态 -->
+      <template
+        v-if="firstChannel.length === 0 && secondaryChannel.length === 0"
+      >
+        <div style="height: 60vh" class="flex items-center justify-center">
+          <div class="flex flex-col">
+            <CategoryEmpty  :no="no" />
+          </div>
+        </div>
+      </template>
+
       <!-- 底部 -->
       <div
         class="grow"
@@ -66,7 +77,7 @@
           </template>
 
           <!-- 二级频道目录 -->
-          <template v-if="secondaryChannel.length !== 0"> 
+          <template v-if="secondaryChannel.length !== 0">
             <template v-for="item in secondaryChannel">
               <TreeFold :item="item">
                 <!-- 标题 -->
@@ -368,7 +379,7 @@ const handleCommunity = (data) => {
     height: 47vh !important;
   }
 }
-@media screen and (min-height: 851px) and (max-height:1000px){
+@media screen and (min-height: 851px) and (max-height: 1000px) {
   .category-scrollbar {
     height: 59vh !important;
   }
@@ -376,7 +387,7 @@ const handleCommunity = (data) => {
     height: 54vh !important;
   }
 }
-@media screen and (min-height: 1001px){
+@media screen and (min-height: 1001px) {
   .category-scrollbar {
     height: 61vh !important;
   }

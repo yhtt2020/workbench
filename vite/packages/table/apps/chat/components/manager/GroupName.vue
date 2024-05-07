@@ -148,7 +148,7 @@ const props = defineProps({
 });
 const { info } = toRefs(props);
 
-const chat = window.$chat.chat;
+const chat = window.$chat;
 
 // ref定义数据
 const data = ref({
