@@ -91,7 +91,6 @@ export default {
      */
     async newOpenApp(item, e) {
       const { type, value } = item;
-    
       // 首先处理与 type 相关的
       switch (type) {
         // 卡片类图标
@@ -123,9 +122,9 @@ export default {
           this.$emit("control", e);
           break;
         // 设置中心
-        case "setting":
-          this.$bus.emit("openSystemSet");
-          break;
+        // case "setting":
+        //   this.$bus.emit("openSystemSet");
+        //   break;
         // 全屏
         case "fullscreen":
           if (window.$usePlat()) {

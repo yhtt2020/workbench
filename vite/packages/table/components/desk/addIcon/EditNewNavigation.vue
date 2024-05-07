@@ -25,7 +25,7 @@
         class="w-full">
         <!-- 右侧功能区 -->
         <div v-if="iconIndex === 'Browser'" class="h-full max-w-[250px] flex-shrink-0" style="overflow:hidden;" @wheel.stop>
-          <LeftMenu @changeFolder="changeFolder" @refresh="refresh"></LeftMenu>
+          <LeftMenu @changeFolder="changeFolder" @refresh="refresh" :isNav="true"></LeftMenu>
         </div>
         <div class="flex flex-col w-full h-full p-3 xt-modal">
           <!-- 头部 -->
