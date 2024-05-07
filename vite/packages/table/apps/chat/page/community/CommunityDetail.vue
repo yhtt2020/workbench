@@ -66,6 +66,7 @@ import { useNavigationStore } from "../../../../components/desk/navigationBar/na
 import CategoryFloat from "../../components/suspendMode/CategoryFloat.vue";
 import PageDoesNotExist from "../empty/PageDoesNotExist.vue";
 import RightDetailMain from "./RightDetailMain.vue";
+/**后期需要使用时再开放**/ 
 // import CommunityHeader from "../../components/suspendMode/CommunityHeader.vue";
 import Article from "../../../../components/Article.vue";
 import CommunityDetailEmpty from "../empty/CommunityDetailEmpty.vue";
@@ -292,7 +293,7 @@ const handleCurrentItem = async (data: any) => {
         }
       } else {
         /**当前群聊为公开群**/
-        const res = await window.$chat?.chat?.searchGroupByID(
+        const res = await window.$chat?.searchGroupByID(
           groupProps.groupID
         );
         const isDisable = res.data.group.joinOption !== "DisableApply";

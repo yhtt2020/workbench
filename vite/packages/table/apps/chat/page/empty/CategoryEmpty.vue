@@ -1,24 +1,28 @@
 <!-- 频道创建空状态 -->
 <script setup>
-import { ref, toRefs } from "vue";
+import { computed, ref, toRefs } from "vue";
+import _ from "lodash-es";
+import { chatCommunityStore } from "../../store/chatCommunity";
+import { storeToRefs } from "pinia";
 
 import AddNewAppPage from "../add/AddNewAppPage.vue";
 import AddCategory from "../../components/create/CreateCategory.vue";
 
+/**解构store数据**/
+const chatCommunity = chatCommunityStore();
+const { myCommunity } = storeToRefs(chatCommunity);
+
 const props = defineProps({
-  role: {
-    type: String,
-    required: true,
-  },
   no: {
     type: String,
     required: true,
   },
 });
-const { role,no } = toRefs(props);
+const { no } = toRefs(props);
 
 const addNewAppRef = ref(null);
 const newCategoryRef = ref(null);
+/**按钮列表**/
 const emptyList = ref([
   {
     icon: "fluent:people-add-16-regular",
@@ -41,10 +45,27 @@ const emptyList = ref([
     },
   },
 ]);
+
+/**通过计算属性判断角色权限是否存在,以及是否为管理员**/
+const hasRole = computed(() => {
+  const findRole = _.find(myCommunity.value, (item) => {
+    return Number(item.cno) === Number(no.value);
+  });
+  if (!findRole) return false;
+  else {
+    if (findRole.role !== "member") {
+      return true;
+    } else {
+      return false;
+    }
+  }
+});
 </script>
 
 <template>
-  <template v-if="role !== 'member'">
+
+  <!-- 管理员的权限 -->
+  <template v-if="hasRole">
     <template v-for="item in emptyList">
       <xt-button
         w="184"
@@ -62,6 +83,7 @@ const emptyList = ref([
     </template>
   </template>
 
+  <!-- 非管理员权限 -->
   <template v-else>
     <div class="flex items-center justify-center flex-col">
       <xt-ify-icon icon="fluent-emoji:knocked-out-face" size="64" class="mb-4" />
@@ -69,7 +91,9 @@ const emptyList = ref([
     </div>
   </template>
 
+  <!-- 添加新应用 -->
   <AddNewAppPage ref="addNewAppRef" />
+  <!-- 添加新频道 -->
   <AddCategory ref="newCategoryRef" :no="no"/>
 </template>
 

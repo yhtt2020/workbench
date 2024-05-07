@@ -214,7 +214,7 @@ const joinNow = async () => {
     const res = await comAPI.applyJoinCommunity(option);
     if (res.status === 1) {
       message.success(`${res.info}`);
-      chatCommunity.updateMyCommunity(no.value);
+      chatCommunity.getMyCommunity();
       chatCommunity.getCommunityTree(no.value);
       /**是否开启社群导航**/
       if (communityNavVisible.value) {

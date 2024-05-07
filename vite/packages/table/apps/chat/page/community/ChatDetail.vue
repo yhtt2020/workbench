@@ -76,18 +76,23 @@ const currentChatType = computed(() => {
   return currentContact.value.type;
 });
 
-/**监听当前群聊会话是否为空,如果为空回自接跳转到发现页**/
+/**监听当前工作台的状态**/
 watchEffect(() => {
-  const watchList = TUIStore?.storeMap?.conversation?.store?.conversationList;
-  // console.log("测试", watchList?.length);
-  if (watchList?.length === 0) {
-    message.warning(
-      "当前聊天页没有会话列表,会默认自动进入发现页进行聊天会话的创建或者是点击左侧栏底部添加按钮创建"
-    );
-    router.push({ path: "/chatFind" });
-  } else {
-    return;
-  }
+ if(window.$currentEnv() === "online"){return;}
+ else {
+  router.push({ path: "/chatFind" });
+ }
+
+  // const watchList = TUIStore?.storeMap?.conversation?.store?.conversationList;
+  // // console.log("测试", watchList?.length);
+  // if (watchList?.length === 0) {
+  //   message.warning(
+  //     "当前聊天页没有会话列表,会默认自动进入发现页进行聊天会话的创建或者是点击左侧栏底部添加按钮创建"
+  //   );
+  //   router.push({ path: "/chatFind" });
+  // } else {
+  //   return;
+  // }
 });
 
 

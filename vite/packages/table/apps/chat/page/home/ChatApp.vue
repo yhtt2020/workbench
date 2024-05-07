@@ -384,31 +384,57 @@ onMounted(() => {
 :deep(.xt-br) {
   margin-right: 0 !important;
 }
-
-/**
-:deep(.xt-br) {
-  margin: 0 !important;
-  & div:nth-of-type(1) {
-    margin: 0 !important;
-    div > div > div:nth-of-type(2) {
-      .xt-base-btn {
-        img {
-          width: 40px !important;
-          height: 40px !important;
-        }
-      }
-    }
-  }
-  & div:nth-of-type(3) div {
-    margin: 0 !important;
-    .menu-item {
-      width: 40px !important;
-      min-height: 40px !important;
-    }
-  }
-}
-:deep(.xt-bt) {
-  border: none !important;
-}
-**/
 </style>
+
+<!-- 
+
+ /**初始化挂载**/
+//  onMounted(() => {
+//       // setTimeout(() => {
+//       //   console.log("挂载了", limitClick.value);
+//       //   const list = filterList.value.filter((item)=>{
+//       //     return item?.role && item?.role === 'owner'
+//       //   })
+//       //   console.log(list)
+//       // },2000)
+      
+//       com.getMyCommunity();
+//       com.getCommunityTree();
+//       // 游客模式下 隐藏 聊天对话 和 通讯录
+//       // console.log("!window.$useEnv('guest')", !window.$useEnv('guest'))
+//       if (window.$useEnv("guest")) {
+//         headList.value[0].disabled = true;
+//         headList.value[1].disabled = true;
+//       }
+//       nextTick(() => {
+//         // window.$chat?.on(window.$TUIKit?.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, async(e) => {
+//         //   // headList.value[0].unread = e.data === 0 ? 0 : e.data > 99 ? 99 : e.data;
+//         //   headList.value[0].info = e.data === 0 ? [] :  e.data > 99 ? ['tr','red','99'] : ['tr','red',`${e.data}`];
+//         //   const list = community.value.communityList;
+//         //   if(list.length !== 0){
+//         //     for(const item of list){
+//         //      const no = item.communityInfo.no;
+//         //      com.updateCommunityTree(no);
+//         //     }
+//         //   }
+//         // });
+//       });
+//     });
+
+
+// 获取总的消息未读数据
+// const unreadTotal = computed(() => {
+//       // const list =
+//       //   window.$TUIKit?.store?.store?.TUIConversation?.conversationList;
+//       // if (!list) {
+//       //   return 0;
+//       // }
+//       // if (list.length !== undefined && list.length !== 0) {
+//       //   const total = { unread: 0 };
+//       //   for (const item of list) {
+//       //     total.unread += item.unreadCount;
+//       //   }
+//       //   return total.unread === 0 ? 0 : total.unread > 99 ? 99 : total.unread;
+//       // }
+//     });
+ -->

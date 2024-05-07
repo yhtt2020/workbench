@@ -77,7 +77,7 @@ const handleCurrentItem = async (data) => {
       break;
     /**群聊**/
     case "group":
-      const res = await window.$chat?.chat?.searchGroupByID(data.props.id);
+      const res = await window.$chat?.searchGroupByID(data.props.id);
       const enableGroup = await checkGroupShip([`${data.props.id}`]);
       const isDisable = res.data.group.joinOption !== "DisableApply";
       // 判断有没有加入社群, yes表示已经加入, not表示没有加入
