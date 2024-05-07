@@ -48,7 +48,7 @@
             <template #suffix>
               <xt-ify-icon
                 v-if="memberKeyword === ''"
-                icon="fluent:search-16-regular"
+                icon="fluent:search-16-filled"
                 size="20"
               />
               <xt-ify-icon
@@ -61,7 +61,7 @@
           </a-input>
           <xt-button w="40" h="40">
             <div class="flex items-center justify-center">
-              <xt-ify-icon icon="fluent:add-16-regular" size="20" />
+              <xt-ify-icon icon="fluent:add-16-filled" size="20" />
             </div>
           </xt-button>
         </div>

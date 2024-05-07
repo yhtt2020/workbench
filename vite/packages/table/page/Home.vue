@@ -5,10 +5,12 @@
       <div @click="test2">测试isGuest{{isGuest}}</div>
       <div @click="test3">测试isSingle{{isSingle}}</div>
       <div @click="test4">测试currentEnv{{ $useEnv(["offline", "guest", "single", "online"]) }}</div>
-      <div @click="test4">测试currentEnv{{ currentEnv }}</div>
+      <div @click="useUpdateUserInfo">测试currentEnv{{ currentEnv }}</div>
       <div @click="test5">mac{{ $usePlat(["mac", "web", "win"]) }}</div>
       <div @click="test6">web{{ $usePlat(["mac", "web", "win"]) }}</div>
       <div @click="test7">win{{ $usePlat(["mac", "web", "win"]) }}</div>
+      <div @click="test7">isOnline{{ isOnline?.value }}</div>
+      <div @click="test8">哦好</div>
     </div> -->
     <desk-group
       @changeDesk="changeDesk"
@@ -38,10 +40,8 @@
       @closeShowGuide="closeShowGuide"
       :deskId="deskId"
     ></NewGuidePage>
-    <!-- <NewGuidePage v-if="showGuide" @closeShowGuide="closeShowGuide" :deskId="deskId"></NewGuidePage> -->
     <!-- 右上方的缩放推荐 -->
     <ScalePanel v-if="visibleScale" @closeScale="closeScale"></ScalePanel>
-    <!-- <ScalePanel v-if="visibleScale" @closeScale="closeScale" ></ScalePanel> -->
     <!-- 仅限于web的登录提示弹窗 -->
     <WebLogin
       v-if="visibleWeb"
@@ -54,7 +54,6 @@
       @closeGuide="closeGuide"
       @addGuide="addGuide"
     ></GuidePanel>
-    <!-- <GuidePanel v-if="visibleGuide" @closeGuide="closeGuide" @addGuide="addGuide"></GuidePanel> -->
 
     <!-- 全屏遮罩层 -->
     <div
@@ -96,8 +95,13 @@ import { useFreeLayoutStore } from "../components/desk/freeLayout/store";
 import { mergeData } from "../ui/hooks/useDataConversion";
 import { usePlat } from "../ui/hooks/usePlat";
 import { usePermissionStore } from "../permission/store";
+import { useUpdateUserInfo } from "../permission/user/useUserPermit";
 import cache from "../components/card/hooks/cache";
 import { isMain } from "../js/common/screenUtils";
+// 检查当前网络状态
+import { useNetwork } from '@vueuse/core'
+const { isOnline } = useNetwork()
+
 let steamUser,
   steamSession,
   path,
@@ -226,6 +230,7 @@ export default {
       "guideList",
       "userInfo",
       "init",
+      "loginVisible"
     ]),
 
     ...mapWritableState(appStore, {
@@ -438,6 +443,9 @@ export default {
       this.isOffline = cache.get('isOffline')
       this.isSingle = cache.get('isSingle')
       this.isGuest = cache.get('isGuest')
+
+      if(!isOnline.value) setOffline(true)
+
       this.currentEnv = window.$currentEnv()
       // 进行一次重连操作
       // useUpdateUserInfo()
@@ -611,12 +619,12 @@ export default {
       this.setSingle(!this.isSingle)
     },
     test4(){
-      // this.setSingle(!this.isSingle)
-      // console.log('current1', window.$currentEnv())
-      // console.log('current2', window.$useEnv(["offline", "guest", "single", "online"]))
-      // console.log('current3', window.$currentPlat())
-      // console.log('current4', window.$usePlat(["win", "mac", "web"]))
+      console.log('isOnline', isOnline)
     },
+    test8(){
+      this.loginVisible = true
+    },
+
     // 关闭缩放弹窗
     closeWebLogin() {
       this.visibleWeb = false;
@@ -649,7 +657,6 @@ export default {
     //     this.updateLayout();
     //   },
     // },
-
     backgroundSettings: {
       handler() {
         document.body.style.setProperty(

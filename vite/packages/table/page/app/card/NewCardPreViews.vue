@@ -26,7 +26,7 @@
         >
           <div class="flex items-center justify-center">
             <xt-new-icon
-              icon="fluent:more-horizontal-16-regular"
+              icon="fluent:more-horizontal-16-filled"
               style="color: var(--active-text) !important"
             ></xt-new-icon>
           </div>

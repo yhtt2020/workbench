@@ -3,6 +3,7 @@ import {getConfig} from "../axios/serverApi";
 import {barrageHandler} from "./barrageHandler";
 import {kdniaoHandler} from "./kdniaoHandler";
 import {noticeHandler} from './noticeHandler'
+import { usePermissionStore } from "../../permission/store";
 const socketDevUrl='ws://localhost:9001'
 const socketPrdUrl='wss://wad.apps.vip'
 const dev=false //是否是开发环境
@@ -34,8 +35,10 @@ export const initSocket = async () => {
 
   socket.open();
   socket.on('connect', () => {
+    const usePermission = usePermissionStore()
     // 接收socket连接成功返回的消息
     socket.on('message', data => {
+      if(usePermission.isOffline) usePermission.setOffline(false)
       console.log("socket连接成功的消息", data);
     });
     socket.on('onBarrage',(data)=>{
@@ -60,7 +63,10 @@ export const initSocket = async () => {
     console.log("连接错误", error);
   });
   socket.on('connect_error', (e) => {
+    const usePermission = usePermissionStore()
     console.error(e,'连接失败，原因是')
+    // 断开网络连接的时候 设置离线状态 有问题明天改
+    usePermission.setOffline(true)
     setTimeout(() => {
       socket.connect();
     }, 1000);

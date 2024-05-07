@@ -78,7 +78,6 @@ export const confirm: Confirm = (
 
   // 3 把渲染的 vNode 移除
   const close = () => {
-    console.log("关闭事件 :>> ");
     render(null, document.body);
   };
 

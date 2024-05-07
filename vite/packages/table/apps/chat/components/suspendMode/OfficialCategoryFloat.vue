@@ -175,7 +175,7 @@
 import { ref, computed, getCurrentInstance } from "vue";
 import { storeToRefs } from "pinia";
 import { chatCommunityStore } from "../../store/chatCommunity";
-import { useGlobalStore } from "../../../Global/store";
+import { appStore } from "../../../../store";
 
 import OfficialDropdown from "../dropdown/Dropdown.vue";
 import TreeFold from "../tree/TreeFold.vue";
@@ -183,9 +183,8 @@ import FloatItem from "./FloatItem.vue";
 
 const { proxy } = getCurrentInstance();
 const chatCommunity = chatCommunityStore();
+const app = appStore();
 const { setting, defaultOfficialList } = storeToRefs(chatCommunity);
-const globalStore = useGlobalStore();
-const { loginVisible } = storeToRefs(globalStore);
 
 // ref定义区域
 const textUrl = ref(
@@ -217,7 +216,7 @@ const hideList = ref([
     },
   },
   {
-    newIcon: "fluent:apps-list-detail-24-regular",
+    newIcon: "fluent:apps-list-detail-24-filled",
     title: "切换双/单列",
     callBack: () => {
       chatCommunity.setColumnMode();
@@ -295,19 +294,6 @@ const handleUpdateCollapse = (data) => {
     },
   ];
 };
-/**提示登录弹窗**/
-const loginTip = () => {
-  window.$ui.confirm("登录提示", "目前处于游客模式，请登录后体验完整功能。", {
-    ok: () => {
-      loginVisible.value = true;
-    },
-    okText: "立即登录",
-    noText: "暂不登录",
-    type: "warning",
-    okButtonWidth: "95",
-    noButtonWidth: "95",
-  });
-};
 
 // 点击当前左侧列表
 const officialClick = (data) => {
@@ -315,7 +301,8 @@ const officialClick = (data) => {
     if (!window.$useEnv("guest")) {
       proxy.$bus.emit("handleOfficalClick", data);
     } else {
-      loginTip();
+      // 打开登录提示弹窗
+      app.loginVisible = true
     }
   }
   else {

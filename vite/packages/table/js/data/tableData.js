@@ -43,16 +43,18 @@ export default {
         })
       }
     },
-    {
-      icon: 'https://a.apps.vip/icons/ppet.png',
-      name: 'PPet桌面宠物',
-      type: 'coolApp',
-      summary: '一款开源桌面看板娘，让你不再孤单。',
-      needInstall: true,
-      data: {
-        security: true
-      }
-    },
+    // 打开方式不同，暂时隐藏
+    // {
+    //   icon: 'https://a.apps.vip/icons/ppet.png',
+    //   name: 'PPet桌面宠物',
+    //   type: 'coolApp',
+    //   summary: '一款开源桌面看板娘，让你不再孤单。',
+    //   needInstall: true,
+    //   data: {
+    //     security: true,
+    //     url:"https://github.com/zenghongtu/PPet"
+    //   }
+    // },
     {
       icon: 'https://a.apps.vip/wallpaper/favicon.png',
       name: 'OneWallheaven壁纸',

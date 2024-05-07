@@ -2,7 +2,7 @@
   <xt-container
     :header="header"
     v-model:customSize="customData.customSize"
-    :devLimit="['h5']"
+    :platLimit="['web']"
     :customIndex="customIndex"
     :customData="customData"
     :options="options"

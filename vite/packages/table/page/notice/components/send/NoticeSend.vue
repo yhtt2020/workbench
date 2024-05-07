@@ -2,13 +2,13 @@
  <div class="w-full px-4 pb-3 pt-5 h-full flex flex-col">
    <div class="flex items-center justify-between mb-4">
      <div class="flex items-center justify-center" v-if="!hide">
-       <xt-new-icon icon="fluent:send-32-regular" size="16"></xt-new-icon>
+       <xt-new-icon icon="fluent:send-32-filled" size="16"></xt-new-icon>
        <span class="xt-font xt-text font-14 ml-3">发消息</span>
      </div>
-   
+
      <xt-button v-else w="32" h="32" @click="backClick" style="border-radius: 8px;">
       <div class="flex items-center justify-center">
-        <xt-new-icon icon="fluent:chevron-left-16-regular" size="20"></xt-new-icon>
+        <xt-new-icon icon="fluent:chevron-left-16-filled" size="20"></xt-new-icon>
       </div>
      </xt-button>
 
@@ -18,13 +18,13 @@
         <xt-select style="width: 110px;" v-model="msgSetting.targetType" :list="targetList"  :border="false" zIndex="1200" :borderClass="'rounded-md'"></xt-select>
       </div>
       <xt-select style="max-width: 140px;" :list="list" v-model="msgSetting.noticeType" :border="false" zIndex="1200" :borderClass="'rounded-md'"></xt-select>
-     
+
       <xt-dropdown :buttonVisible="true" w="70" title="发送" h="32" class="mx-3" :buttonClass="'xt-active-bg'" :placement="'bottomRight'">
         <template #sendTitle>
           <div class="flex items-center justify-center" v-if="isLoading === false">
             <span class="xt-font xt-active-text font-14 font-400 mr-2">发送</span>
-            <xt-new-icon icon="fluent:chevron-down-16-regular" size="20"  :color="'var(--active-text)'"></xt-new-icon>
-          </div> 
+            <xt-new-icon icon="fluent:chevron-down-16-filled" size="20"  :color="'var(--active-text)'"></xt-new-icon>
+          </div>
           <a-spin v-else size="small" style="color: var(--active-text) !important;"></a-spin>
         </template>
 
@@ -37,10 +37,10 @@
           </template>
         </div>
       </xt-dropdown>
-     
+
       <xt-button w="32" h="32" style="border-radius: 8px;" @click="closeSend">
         <div class="flex items-center justify-center">
-          <xt-new-icon icon="fluent:dismiss-16-regular" size="16"></xt-new-icon>
+          <xt-new-icon icon="fluent:dismiss-16-filled" size="16"></xt-new-icon>
         </div>
       </xt-button>
      </div>
@@ -55,14 +55,14 @@
       <a-tooltip placement="top" title="图片">
         <xt-button w="32" h="32" class="xt-bg-t-2 mr-3" style="border-radius: 8px;" @click="uploadImage">
           <div class="flex items-center justify-center">
-            <xt-new-icon icon="fluent:image-multiple-16-regular" size="16"></xt-new-icon>
+            <xt-new-icon icon="fluent:image-multiple-16-filled" size="16"></xt-new-icon>
           </div>
-        </xt-button> 
+        </xt-button>
       </a-tooltip>
       <a-tooltip placement="top" title="附件">
         <xt-button w="32" h="32" class="xt-bg-t-2 mr-3" style="border-radius: 8px;" @click="uploadAttachment">
           <div class="flex items-center justify-center">
-            <xt-new-icon icon="fluent:attach-16-regular" size="16"></xt-new-icon>
+            <xt-new-icon icon="fluent:attach-16-filled" size="16"></xt-new-icon>
           </div>
         </xt-button>
       </a-tooltip>
@@ -149,19 +149,19 @@ const timingRef = ref(null);
 
 const sendList = ref([
   {
-    newIcon:'fluent:send-32-regular',name:'立即发送',
+    newIcon:'fluent:send-32-filled',name:'立即发送',
     callBack:()=>{
      send()
-    }, 
+    },
   },
   {
-    newIcon:'fluent:clock-16-regular',name:'定时发送',
+    newIcon:'fluent:clock-16-filled',name:'定时发送',
     callBack:()=>{
       timingRef.value.openTimeModal()
     },
   },
   {
-    newIcon:'fluent:compose-16-regular',name:'保存草稿',
+    newIcon:'fluent:compose-16-filled',name:'保存草稿',
     callBack:()=>{
       notice.createNotice()
     },
@@ -182,7 +182,7 @@ const dateFormat = 'YYYY/MM/DD';
 const value1 = ref(dayjs(`${getCurrentDay.value}`,dateFormat))
 
 
-const isLoading = ref(false); 
+const isLoading = ref(false);
 const msgEditor = ref(null);
 const buttonLink = ref(null);
 const biliLink = ref(null);
@@ -216,11 +216,11 @@ const getMessageImg = async(evt) =>{
   }
 }
 // 上传附件
-const uploadAttachment = async() =>{ document.querySelector('.attachmentRef').click();}; 
+const uploadAttachment = async() =>{ document.querySelector('.attachmentRef').click();};
 const getAttachmentFile = async(evt) =>{
   const fileList = evt.target.files;
   for(const item of fileList){
-    msgSetting.value.attachments.push({href:await fileUpload(item),title:item.name}) 
+    msgSetting.value.attachments.push({href:await fileUpload(item),title:item.name})
   }
 }
 // 链接上传
@@ -286,7 +286,7 @@ watch(()=>msgSetting.value.targetType,(newVal)=>{
   }
 },)
 </script>
- 
+
 <style lang="scss" scoped>
 :deep(.ant-spin){
   & .ant-spin-dot{

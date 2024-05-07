@@ -43,7 +43,7 @@ import componentsMinis from "../../../../../table/components/desk/components";
 import { homeStore } from "../../../../store/home";
 import { message } from "ant-design-vue";
 import { useAddCard } from "../../../../hooks";
-
+import {DEFAULT} from '../../../../js/const/default'
 export default {
   mixins: [componentsMinis],
   data() {

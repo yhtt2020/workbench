@@ -36,7 +36,7 @@
           </xt-button>
 
           <xt-dropdown
-            :newIcon="'fluent:more-horizontal-16-regular'"
+            :newIcon="'fluent:more-horizontal-16-filled'"
             :w="40"
             :h="40"
             :placement="'bottomRight'"
@@ -124,7 +124,7 @@ const router = useRouter();
 /**当前社群编号**/
 const communityNo = ref(router?.currentRoute.value?.params?.no);
 
-/**默认社群加入方式类型**/ 
+/**默认社群加入方式类型**/
 const setValue = ref('public');
 
 /**获取社群信息**/
@@ -143,7 +143,7 @@ const currentInfo = computed(() => {
 /**下拉菜单**/
 const settingDropdownMenu = ref([
   {
-    newIcon: "fluent:delete-16-regular",
+    newIcon: "fluent:delete-16-filled",
     title: "解散社群",
     type: "delete",
     callBack: () => {

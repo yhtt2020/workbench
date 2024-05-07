@@ -38,7 +38,6 @@
 import { ref, watch, getCurrentInstance } from "vue";
 import {completeTask} from '../../../../apps/task/task'
 import { appStore } from "../../../../store"; 
-import {useGlobalStore} from '../../../../apps/Global/store'
 import { storeToRefs } from "pinia";
 const { proxy } = getCurrentInstance();
 const appS = appStore();
@@ -48,8 +47,7 @@ const emits = defineEmits(["onSearch"]);
 const isScrollbar = ref(false);
 const initHeight = ref(true);
 const search = ref("");
-const globalStore = useGlobalStore();
-const { loginVisible } = storeToRefs(globalStore);
+const { loginVisible } = storeToRefs(appS);
 const props = defineProps({
   isSearch: {
     type: Boolean,
@@ -81,15 +79,7 @@ const onSearch = () => {
       search.value = "";
     }
   }else{
-    window.$ui.confirm("登录提示", '目前处于游客模式，请登录后体验完整功能。', {
-      ok: () => {
-        loginVisible.value = true
-      },
-      okText: "立即登录",
-      noText: "暂不登录",
-      okButtonWidth: '95',
-      noButtonWidth: '95',
-    });
+    loginVisible.value = true
   }
 };
 </script>

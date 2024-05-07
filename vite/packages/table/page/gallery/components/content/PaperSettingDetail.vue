@@ -22,7 +22,7 @@
         />
         <xt-button w="40" h="40" class="xt-bg-t-2 ml-2" @click="openSavePath">
          <div class="flex items-center justify-center">
-           <xt-new-icon icon="fluent:open-16-regular" size="20"></xt-new-icon>
+           <xt-new-icon icon="fluent:open-16-filled" size="20"></xt-new-icon>
          </div>
         </xt-button>
        </div>
@@ -129,7 +129,7 @@
               />
               <xt-button w="40" h="40" class=" ml-2" @click="openSavePath">
                <div class="flex items-center justify-center">
-                 <xt-new-icon icon="fluent:open-16-regular" size="20"></xt-new-icon>
+                 <xt-new-icon icon="fluent:open-16-filled" size="20"></xt-new-icon>
                </div>
               </xt-button>
             </div>

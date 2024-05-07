@@ -39,8 +39,9 @@ export const useCustomLayout = async (options) => {
   const itemStatus = (item) => {
     if (!test) return;
     const { width, height }: any = useElementSize(item.customData.customSize);
+
     console.log(
-      "\u001b[31m" +
+      "\u001b[34m" +
         "----------------数据处理开始----------------" +
         "\u001b[0m"
     );
@@ -80,28 +81,94 @@ export const useCustomLayout = async (options) => {
   const widthDetection = (width) => {
     let res =
       left - freeLayoutEnv.value.scrollLeft / scaleFactor - position + width;
-    const active = res > layoutWidth + columns;
+
+    // const active = res > layoutWidth + columns;
+    const active = res > layoutWidth;
     widthDetectionStatus(width, res, active);
 
     return active;
   };
+  // // 设置卡片数据
+  // const setData = (arr: any) => {
+  //   currentHeight = 0;
+  //   let last = true;
+  //   // 遍历每个需要渲染的元素
+  //   for (let item of arr.splice(0, arr.length)) {
+  //     // 打印元素信息
+  //     itemStatus(item);
+  //     // 获取元素大小
+  //     const { width, height }: any = useElementSize(item.customData.customSize);
+  // 宽度超出容器宽度
+  //     if (res > layoutWidth) {
+  //       console.log("宽度超出容器宽度 :>> ");
+  //       currentTop = top;
+  //       // 填充空缺的数据
+  //       fillGapAlgorithm();
+  //       resetLeft();
+  //       top += height + 12;
+  //     }
+  //     // 宽度等于容器宽度
+  //     else if (res == layoutWidth) {
+  //       console.log("宽度等于容器宽度 :>> ");
+  //       addCard(top, left, item);
+  //       resetLeft();
+  //       top += height + 12;
+  //       continue;
+  //     }
+  //     if (!last && height != currentHeight) {
+  //       console.log(
+  //         `----------------高度不相等${height - currentHeight}----------------`
+  //       );
+  //       // 先填充空缺的数据
+  //       let res =
+  //         left - freeLayoutEnv.value.scrollLeft / scaleFactor - position;
+  //       currentTop += currentHeight + 12;
+
+  //       fillHeight = currentHeight;
+  //       if (res) {
+  //         fillGapAlgorithm();
+  //       }
+  //       // 重置位置
+  //       resetLeft();
+  //     }
+  //     // 宽度小于容器宽度
+  //     addCard(top, left, item);
+  //     left += width + 12;
+  //     currentHeight = height;
+
+  //     fillHeight = currentHeight;
+  //     if (last) last = false;
+  //   }
+  //   // 循环结束
+  //   currentTop = top;
+  //   let res = left - freeLayoutEnv.value.scrollLeft / scaleFactor - position;
+  //   if (res) {
+  //     fillGapAlgorithm();
+  //   }
+  //   resetLeft();
+  //   fillHeight = 0;
+  //   top += currentHeight + 12;
+  // };
   // 设置卡片数据
   const setData = (arr: any) => {
     currentHeight = 0;
     let last = true;
-    let flag = false;
-
     for (let item of arr.splice(0, arr.length)) {
       // 处理元素位置
       const { width, height }: any = useElementSize(item.customData.customSize);
-      console.log(
-        "处理元素位置 get   item.customData.customSize :>> ",
-        item.customData.customSize
-      );
-
       itemStatus(item);
       // 元素超出
-      if (widthDetection(width)) {
+      let res =
+        left - freeLayoutEnv.value.scrollLeft / scaleFactor - position + width;
+      // 宽度等于容器宽度
+      if (res == layoutWidth) {
+        console.log("宽度等于容器宽度 :>> ");
+        addCard(top, left, item);
+        resetLeft();
+        top += height + 12;
+        // currentTop = top;
+        continue;
+      } else if (widthDetection(width)) {
         console.log(
           "\u001b[31m" +
             `----------------元素超出${
@@ -114,7 +181,6 @@ export const useCustomLayout = async (options) => {
         fillGapAlgorithm();
         // 重置位置
         resetLeft();
-        flag = true;
         // 增加高度
         top += currentHeight + 12;
       }
@@ -145,7 +211,6 @@ export const useCustomLayout = async (options) => {
         addCard(top, left, item);
         left += width + 12;
         currentHeight = height;
-        flag = false;
       }
       console.log("setData get currentHeight :>> ", currentHeight);
       fillHeight = currentHeight;
@@ -184,11 +249,14 @@ export const useCustomLayout = async (options) => {
   // 填充算法
   const fillGapAlgorithm = async () => {
     // 无余数
-    if (arr2x4.length == 0 && arr2x2.length == 0 && arr1x1.length == 0)
+    if (arr2x4.length == 0 && arr2x2.length == 0 && arr1x1.length == 0) {
       return true;
+    }
     // 无位置
     let active = widthDetection(134);
+    console.log("active :>> ", active);
     if (active) {
+      console.log("无位置 :>> ");
       return;
     }
     // 可以存放2x4
@@ -244,10 +312,6 @@ export const useCustomLayout = async (options) => {
     storeToRefs(freeLayoutStore);
   getFreeLayoutState.value.canvas.height += 20000;
   getFreeLayoutState.value.canvas.width += 20000;
-  console.log(
-    "  getFreeLayoutState.value.canvas.height :>> ",
-    getFreeLayoutState.value.canvas.height
-  );
   getFreeLayoutState.value.system.hide = true;
   if (!getFreeLayoutState.value.system.isFreeLayout)
     getFreeLayoutState.value.system.isFreeLayout = true;
@@ -275,18 +339,10 @@ export const useCustomLayout = async (options) => {
   let b = [...arr2x4];
   let c = [...arr4x4];
   let d = [...arrSpecial];
-  console.log("a :>> ", a);
-  console.log("b :>> ", b);
-  console.log("c :>> ", c);
-  console.log("d :>> ", d);
-  console.log(
-    "arr2x2, arr2x4, arr4x4, arr1x1, arrSpecial :>> ",
-    arr2x2,
-    arr2x4,
-    arr4x4,
-    arr1x1,
-    arrSpecial
-  );
+  console.log("不规则大小 :>> ", d);
+  console.log("4x4 :>> ", c);
+  console.log("2x4 :>> ", b);
+  console.log("2x2 :>> ", a);
   let array: any = [];
   // 定制头部
   if (headerList && headerList.length) {
@@ -314,11 +370,21 @@ export const useCustomLayout = async (options) => {
   }
   resetLeft();
   // mainList
-  setData(arrSpecial);
-  setData(arr4x4);
-  setData(arr2x4);
-  setData(arr2x2);
-  setData(arr1x1);
+  if (arrSpecial.length > 0) {
+    setData(arrSpecial);
+  }
+  if (arr4x4.length > 0) {
+    setData(arr4x4);
+  }
+  if (arr2x4.length > 0) {
+    setData(arr2x4);
+  }
+  if (arr2x2.length > 0) {
+    setData(arr2x2);
+  }
+  if (arr1x1.length > 0) {
+    setData(arr1x1);
+  }
 
   // 开始收尾
   useDelCard(positioningId);
@@ -339,7 +405,7 @@ const arraySplit = (arr) => {
   let arr1x1: any = [];
   let arrSpecial: any = [];
 
-  console.log("arr :>> ", arr);
+  console.log("拿到需要整理的数组 :>> ", arr);
   arr.forEach((item) => {
     if (!item.customData?.customSize) {
       console.log("无信息元素 item.customData :>> ", item.customData);
@@ -403,8 +469,6 @@ const addCard = (top, left, item) => {
     index: 1,
     id,
   };
-
-  console.log("getFreeLayoutData.value[id]", id, getFreeLayoutData.value[id]);
 
   if (item.id) return;
 

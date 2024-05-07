@@ -9,7 +9,7 @@
          <div class="w-16 h-16 relative pointer">
           <a-avatar shape="square" :size="64" :src="content.icon"></a-avatar>
           <div class="update-icon rounded-full flex items-center justify-center w-6 h-6">
-           <EditorIcon icon="fluent:camera-16-regular" style="font-size: 1.3rem;"/>
+           <EditorIcon icon="fluent:camera-16-filled" style="font-size: 1.3rem;"/>
           </div>
          </div>
        </div>

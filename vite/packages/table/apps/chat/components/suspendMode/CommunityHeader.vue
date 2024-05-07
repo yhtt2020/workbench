@@ -35,7 +35,7 @@ const data = ref({
     { type: "forum", icon: "fluent-emoji-flat:placard" },
     { type: "group", icon: "fluent-emoji-flat:thought-balloon" },
     { type: "link", icon: "fluent-emoji-flat:globe-with-meridians" },
-    { type: "communitySet", icon: "fluent:settings-16-regular" },
+    { type: "communitySet", icon: "fluent:settings-16-filled" },
     { type: "desk", icon: "" },
   ],
 });
