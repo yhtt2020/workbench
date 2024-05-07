@@ -64,7 +64,7 @@
           </div>
 
           <template #overlay>
-            <a-menu style="background: none;" @click="handleMenuClick">
+            <a-menu style="background: none" @click="handleMenuClick">
               <a-menu-item
                 class="xt-text"
                 v-show="inBlackList !== 'unload'"
@@ -232,6 +232,7 @@ import { useEnv } from "../../permission/useEnv";
 import { TUIConversationService } from "@tencentcloud/chat-uikit-engine";
 import { useUpdateUserInfo } from "../../permission/user/useUserPermit";
 import { usePermissionStore } from "../../permission/store";
+import { contactStore } from "../../apps/chat/store/contactStore";
 
 export default {
   name: "UserCard",
@@ -273,6 +274,7 @@ export default {
     }),
     ...mapWritableState(appStore, ["userCardVisible"]),
     ...mapWritableState(usePermissionStore, ["currentEnv"]),
+    ...mapWritableState(contactStore, ["currentContact"]),
     displayUserInfo() {
       if (this.userCardUserInfo) {
         return {
@@ -459,6 +461,8 @@ export default {
         // 通过当前TUIConversationService.switchConversation方法来实现用户切换
         // C2C代表好友之间的切换ID
         const conversationID = `C2C${this.uid}`;
+        /**补充当前群聊进入时的状态**/
+        this.currentContact = { type: "group", groupID: conversationID };
         TUIConversationService.switchConversation(conversationID);
         this.$emit("close");
       }
