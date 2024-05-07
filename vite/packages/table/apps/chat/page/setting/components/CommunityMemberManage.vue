@@ -18,7 +18,7 @@
 
       <!-- <div style="display: none" class="right-dropdown">
         <xt-dropdown
-          newIcon="fluent:more-horizontal-16-regular"
+          newIcon="fluent:more-horizontal-16-filled"
           :placement="'bottomRight'"
           :w="40"
           :h="40"
@@ -64,7 +64,7 @@ const memberDropList = ref([
   },
   {
     title: "移出社群",
-    newIcon: "fluent:delete-16-regular",
+    newIcon: "fluent:delete-16-filled",
     type: "delete",
     callBack: () => {
       // console.log('查看id',data.dropID);

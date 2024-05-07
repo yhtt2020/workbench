@@ -3,12 +3,12 @@
   <div class="prompt-modal xt-mask" v-if="showModal">
     <div class="head-icon">
       <div class="icon" @click="close">
-        <xt-new-icon size="20" icon="fluent:chevron-left-16-regular"></xt-new-icon>
+        <xt-new-icon size="20" icon="fluent:chevron-left-16-filled"></xt-new-icon>
         <!-- <Icon icon="guanbi" style="width: 24px;height: 24px;"></Icon> -->
       </div>
       <div class="flex">
         <div class="icon" @click="openDrawer = true">
-          <xt-new-icon size="20" icon="fluent:info-16-regular"></xt-new-icon>
+          <xt-new-icon size="20" icon="fluent:info-16-filled"></xt-new-icon>
           <!-- <Icon icon="tishi-xianxing" style="width: 24px;height: 24px;"></Icon> -->
         </div>
       </div>
@@ -24,7 +24,7 @@
     <div class="foot flex ">
       <div class="flex" style="padding: 0">
         <xt-button :w="113" :h="40" @click="addHeaderCard" class="xt-active-bg ml-3 no-drag" style="z-index:500" key="console" type="primary" >
-          <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:add-16-regular"></xt-new-icon>立即添加</div>
+          <div class="flex"><xt-new-icon class="mr-2" size="20" icon="fluent:add-16-filled"></xt-new-icon>立即添加</div>
         </xt-button>
       </div>
     </div>
@@ -33,7 +33,7 @@
   <a-drawer v-model:visible="openDrawer" style="z-index:9999999999;" width="320" placement="right">
     <template #closeIcon>
       <div class="flex justify-center items-center">
-        <xt-new-icon size="20" icon="fluent:dismiss-16-regular"></xt-new-icon>
+        <xt-new-icon size="20" icon="fluent:dismiss-16-filled"></xt-new-icon>
       </div>
     </template>
     <div class="drawer-center no-drag">

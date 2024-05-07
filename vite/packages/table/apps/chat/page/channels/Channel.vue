@@ -22,7 +22,7 @@ const route = useRoute();
 const router = useRouter();
 const leftMenu = ref([
   {
-    newIcon: "fluent:star-12-regular",
+    newIcon: "fluent:star-12-filled",
     tab: "channelsIndex",
     route: { name: "channelsIndex" },
     callBack: () => {

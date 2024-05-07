@@ -17,7 +17,7 @@
             v-if="forwardText === ''"
           >
             <xt-ify-icon
-              icon="fluent:search-16-regular"
+              icon="fluent:search-16-filled"
               size="20"
               class="xt-text-2"
             />

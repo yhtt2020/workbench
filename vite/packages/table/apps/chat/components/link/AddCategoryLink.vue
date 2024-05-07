@@ -31,19 +31,19 @@ const linkType = ref([
     info: "使用Windows系统默认浏览器打开",
   },
   {
-    icon: "fluent:globe-16-regular",
+    icon: "fluent:globe-16-filled",
     name: "工作台内置浏览器",
     value: "userSelect",
     info: "在工作台内直接打开，不会跳转到外部应用软件。",
   },
   {
-    icon: "fluent:globe-16-regular",
+    icon: "fluent:globe-16-filled",
     name: "想天浏览器",
     value: "thisky",
     info: "使用想天浏览器打开",
   },
   {
-    icon: "fluent:phone-16-regular",
+    icon: "fluent:phone-16-filled",
     name: "手机模式",
     value: "mob",
     info: "使用想天浏览器内置的「手机模式」打开，可以模拟手机端的浏览状态。",

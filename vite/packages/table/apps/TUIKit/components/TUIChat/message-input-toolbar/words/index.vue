@@ -1,6 +1,6 @@
 <template>
   <ToolbarItemContainer
-    :iconFile="'fluent:chat-16-regular'"
+    :iconFile="'fluent:chat-16-filled'"
     title="常用语"
     :needBottomPopup="true"
     :iconWidth="isUniFrameWork ? '26px' : '20px'"

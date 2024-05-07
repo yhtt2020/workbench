@@ -352,7 +352,7 @@ export default {
         }
         return 'top:120px'
       }
-      return 'top:-8px'
+      return 'bottom:60px'
     }
   },
   watch: {

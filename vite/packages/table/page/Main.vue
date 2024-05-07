@@ -51,19 +51,19 @@
         <!-- 删除区域 -->
         <div class="del-icon" id="delIcon2" v-show="delZone && navigationToggle[2] && currentNavPosition === 'bottom'"
           style="z-index:500;bottom: 0;right: 50%;transform: translateX(50%);width: 400px;height: 120px;">
-          <xt-new-icon icon="fluent:delete-16-regular" size="32" color="red"></xt-new-icon>
+          <xt-new-icon icon="fluent:delete-16-filled" size="32" color="red"></xt-new-icon>
         </div>
         <div class="del-icon" id="delIconTop" v-show="delZone && navigationToggle[2] && currentNavPosition === 'top'"
           style="z-index:500;top: 0;right: 50%;transform: translateX(50%);width: 400px;height: 120px;">
-          <xt-new-icon icon="fluent:delete-16-regular" size="32" color="red"></xt-new-icon>
+          <xt-new-icon icon="fluent:delete-16-filled" size="32" color="red"></xt-new-icon>
         </div>
         <div class="del-icon" id="delIcon3" v-show="delZone && navigationToggle[0]"
           style="z-index:500;bottom: 50%;left: 0;transform: translateY(50%);width: 120px;height: 400px;">
-          <xt-new-icon icon="fluent:delete-16-regular" size="32" color="red"></xt-new-icon>
+          <xt-new-icon icon="fluent:delete-16-filled" size="32" color="red"></xt-new-icon>
         </div>
         <div class="del-icon" id="delIcon3" v-show="delZone && navigationToggle[1]"
           style="z-index:500;bottom: 50%;right: 0;transform: translateY(50%);width: 120px;height: 400px;">
-          <xt-new-icon icon="fluent:delete-16-regular" size="32" color="red"></xt-new-icon>
+          <xt-new-icon icon="fluent:delete-16-filled" size="32" color="red"></xt-new-icon>
         </div>
 
       </div>

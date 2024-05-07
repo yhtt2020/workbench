@@ -1,6 +1,6 @@
 <template>
     <div :class="boxClass" v-if="!isTop && list.length > 0">
-        <Box 
+        <Box
             @closeAll="closeAll"
             :main-class="mainClass"
             :list="list">
@@ -11,10 +11,10 @@
     </div>
     <!-- 快递 -->
     <Teleport to="body">
-        <TopCourier 
-            :position="pos" 
-            v-if='courierVisible' 
-            :topCourierVisible="courierVisible" 
+        <TopCourier
+            :position="pos"
+            v-if='courierVisible'
+            :topCourierVisible="courierVisible"
             @close="courierVisible = false">
         </TopCourier>
         <!-- 番茄 -->
@@ -33,10 +33,10 @@
         </TopClockTimer>
     </Teleport>
     <!-- 左侧抽屉 -->
-    <LeftDrawer 
+    <LeftDrawer
         v-if="drawerVisible"
-        ref="leftDrawerRef" 
-        :status="status" 
+        ref="leftDrawerRef"
+        :status="status"
         :hasEnable="clipboard.enable">
     </LeftDrawer>
 </template>
@@ -91,7 +91,7 @@ const { runningGame } = storeToRefs(useSteamUser)
 
 // 番茄钟数据
 const useTomato = tomatoStore()
-const { 
+const {
     isFullState,
     minutes,
     seconds,
@@ -140,7 +140,7 @@ const topClockVisible = computed( () => {
 // 闹钟的图标和名称
 const clockBaseMsg = computed(() => {
     const hasCountDown = countDowntime.value.hours !== undefined
-    const firstClock = filterClockEvent.value ? filterClockEvent.value[0]?.dateValue : {hours:0,minutes:0} 
+    const firstClock = filterClockEvent.value ? filterClockEvent.value[0]?.dateValue : {hours:0,minutes:0}
     if(hasCountDown){
         return {
             icon:'fluent:clock-16-regular',
@@ -151,7 +151,7 @@ const clockBaseMsg = computed(() => {
         icon:'fluent:clock-alarm-16-regular',
         name:`${firstClock.hours}:${firstClock.minutes}`,
     }
-}) 
+})
 
 type queueType = {
     icon: string;    // 工作台新图标ifyIcon
@@ -200,7 +200,7 @@ const queue : Array<queueType> = ref([
     },
     {
         tip:'剪切板监听中，点击进入应用，右键查看全部',
-        name:'',
+        key:'clipboard',
         fn:() => {
             router.push({ name: 'clipboard' })
         },

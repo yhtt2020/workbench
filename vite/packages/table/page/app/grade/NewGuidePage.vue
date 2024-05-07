@@ -10,7 +10,7 @@
       </div>
       <!-- 主题色按钮 -->
       <div @click="themeSwitch" class="absolute mr-4 top-icon no-drag" style="right:0;">
-        <MyIcon icon="fluent:weather-moon-16-regular" width="20" height="20" />
+        <MyIcon icon="fluent:weather-moon-16-filled" width="20" height="20" />
       </div>
       <!-- 选择偏好 -->
       <div v-if="step == 0" class="w-full h-full ">
@@ -46,7 +46,7 @@
         <div class="float-left">
           <xt-button class="float-left button-bottom" @click="preview" style="width:113px !important;" size="large">
             <div class="flex items-center ">
-              <MyIcon class="mr-1" icon="fluent:desktop-16-regular" width="20" height="20" />
+              <MyIcon class="mr-1" icon="fluent:desktop-16-filled" width="20" height="20" />
               预览桌面
             </div>
           </xt-button>
@@ -328,7 +328,7 @@ export default {
     openPaperModal() {
       this.$refs.paperModal.openPaperAppModal()
     },
-    
+
     // 调整类型
     setDeskType(type) {
       this.deskTypeObj['game'] = false
