@@ -2,7 +2,6 @@
   <!-- Your Drag-and-Drop Application -->
   <!-- <xt-task-reward/> -->
   <!-- 登录引导弹窗 -->
-  <!-- {{loginVisible}} -->
   <xt-confirm v-if="loginVisible" noText="暂不登录" okText="立即登录" okButtonWidth="95" noButtonWidth="95"
               title="登录提示" content="目前处于游客模式，请登录后体验完整功能。" :no="unLoginModal"
               :ok="loginModal"></xt-confirm>

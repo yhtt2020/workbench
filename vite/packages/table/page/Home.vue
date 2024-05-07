@@ -39,10 +39,8 @@
       @closeShowGuide="closeShowGuide"
       :deskId="deskId"
     ></NewGuidePage>
-    <!-- <NewGuidePage v-if="showGuide" @closeShowGuide="closeShowGuide" :deskId="deskId"></NewGuidePage> -->
     <!-- 右上方的缩放推荐 -->
     <ScalePanel v-if="visibleScale" @closeScale="closeScale"></ScalePanel>
-    <!-- <ScalePanel v-if="visibleScale" @closeScale="closeScale" ></ScalePanel> -->
     <!-- 仅限于web的登录提示弹窗 -->
     <WebLogin
       v-if="visibleWeb"
@@ -55,7 +53,6 @@
       @closeGuide="closeGuide"
       @addGuide="addGuide"
     ></GuidePanel>
-    <!-- <GuidePanel v-if="visibleGuide" @closeGuide="closeGuide" @addGuide="addGuide"></GuidePanel> -->
 
     <!-- 全屏遮罩层 -->
     <div
@@ -621,13 +618,8 @@ export default {
     },
     test4(){
       console.log('isOnline', isOnline)
-      // useUpdateUserInfo()
-      // this.setSingle(!this.isSingle)
-      // console.log('current1', window.$currentEnv())
-      // console.log('current2', window.$useEnv(["offline", "guest", "single", "online"]))
-      // console.log('current3', window.$currentPlat())
-      // console.log('current4', window.$usePlat(["win", "mac", "web"]))
     },
+    
     // 关闭缩放弹窗
     closeWebLogin() {
       this.visibleWeb = false;
