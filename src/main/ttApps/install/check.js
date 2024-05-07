@@ -1,5 +1,5 @@
 /**
- * ttapp.js
+ * 检查manifest.json配置是否完整 ttapp.js
  */
 let currentId;
 const { readFile, existsFolder } = require("../useFile.js");
@@ -37,7 +37,7 @@ const checkMainFest = async (id) => {
   // 3、数据检查
   console.log("3、数据检查 :>> ");
   // 基础数据
-  let baseWeak = ["name", "description", "modules", "version"];
+  let baseWeak = ["name", "description", "modules", "version", "package"];
   let baseStrong = [
     {
       value: res?.logo,
