@@ -4,7 +4,7 @@
     <xt-left-menu
       :list="updateChatAppList"
       last="1"
-      :end="leftList.length"
+      :end="endList"
       :index="currentChatIndex"
     >
       <div class="w-full h-full">
@@ -266,6 +266,11 @@ const chatAppList = computed(() => {
       }
     }
   });
+  if(window.$useEnv(['single', 'guest'])){
+    const find = mapList.length - 2
+    mapList[0] = mapList[find]
+    mapList.splice(find - 1, 2)
+  }
   return mapList;
 });
 
@@ -299,6 +304,15 @@ const updateChatAppList = computed(() => {
 // 当前悬浮模式设置中的社群ID号
 const currentNo = computed(() => {
   return setting.value.suspendVisible.no;
+});
+
+// 底部按钮数量
+const endList = computed(() => {
+  if(window.$useEnv(['single', 'guest'])){
+    return leftList.value.length - 2;
+  }else{
+    return leftList.value.length;
+  }
 });
 
 // 等级限制，3级才可以创建一个社群，10级后可以创建五个社群
