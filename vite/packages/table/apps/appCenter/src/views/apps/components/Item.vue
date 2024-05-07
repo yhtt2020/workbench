@@ -25,49 +25,30 @@
                     {{ tagTitle }}
                 </xt-button>
                 <template v-else>
-                <xt-button 
-                    w="72" 
-                    h="32" 
-                    radius="8" 
-                    icon="fluent:open-16-regular"
-                    :iconSize="'16'"
-                    style="background-color: var(--primary-bg) ;"
-                    @click = 'executeLocalApp(item)'
-                >
-                    打开
-                </xt-button>
-                <xt-button 
-                    w="32"
-                    h="32"
-                    radius="8"
-                    icon="fluent:add-16-regular"
-                    :iconSize="'16'"
-                    style="background-color: var(--primary-bg) ;"
-                />
-            </template>
+                    <xt-button 
+                        w="72" 
+                        h="32" 
+                        radius="8" 
+                        icon="fluent:open-16-regular"
+                        :iconSize="'16'"
+                        style="background-color: var(--primary-bg) ;"
+                        @click = 'executeLocalApp(item)'
+                    >
+                        打开
+                    </xt-button>
+                    <xt-menu :menus="menu" model="click">
+                        <xt-button 
+                            w="32"
+                            h="32"
+                            radius="8"
+                            icon="fluent:add-16-regular"
+                            :iconSize="'16'"
+                            style="background-color: var(--primary-bg) ;"
+                        />
+                    </xt-menu>
+                    
+                </template>
                 
-            </template>
-            
-            <template v-else>
-                <xt-button 
-                    w="72" 
-                    h="32" 
-                    radius="8" 
-                    icon="fluent:open-16-regular"
-                    :iconSize="'16'"
-                    style="background-color: var(--primary-bg) ;"
-                    @click = 'executeApp(item.data)'
-                >
-                    打开
-                </xt-button>
-                <xt-button 
-                    w="32"
-                    h="32"
-                    radius="8"
-                    icon="fluent:add-16-regular"
-                    :iconSize="'16'"
-                    style="background-color: var(--primary-bg) ;"
-                />
             </template>
             
         </div>
@@ -76,14 +57,15 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, onMounted, computed, watch, toRefs } from 'vue'
-import { storeToRefs } from 'pinia';
-import { message } from 'ant-design-vue';
+import { computed, toRefs } from 'vue'
+import { message } from 'ant-design-vue'
 
 import { appsStore } from '../../../../../../store/apps';
 
 import { runExec } from '../../../../../../js/common/exec';
 import { usePlat } from '../../../../../../ui/hooks/usePlat';
+import { useMenus } from '../../../../hooks/useMenus';
+
 let fs
 if (!usePlat('web') ) {
     fs= window.$models.fs
@@ -102,6 +84,8 @@ interface PropsType {
 }
 
 const emit = defineEmits(['download'])
+
+// 下载
 const download = (app) => {
     emit('download', app)
 }
@@ -114,6 +98,7 @@ const { item } = toRefs(props)
 
 const store = appsStore()
 
+// 打开酷应用
 const executeApp = (app) => {
     store.openApp(app)
 }
@@ -126,10 +111,13 @@ const checkInstalled = (app) => {
     }
 }
 
+// 打开本地应用
 const executeLocalApp = (app) => {
+    message.info(`正在打开${app.name}, 请稍后...`)
     runExec('"' + app.installPath + '"')
 }
 
+// 状态判断
 const tagTitle = computed(() => {
     if(item.value.needInstall){
         if(item.value.downloading){
@@ -140,6 +128,11 @@ const tagTitle = computed(() => {
             return '下载运行'
         }
     }
+})
+
+const menu = computed(() => {
+    const list = useMenus(1,item.value)
+    return list
 })
 
 </script>

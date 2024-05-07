@@ -1,3 +1,4 @@
+// 暂不使用,数据保存在store中
 export const appsList = [
   {
     icon: "https://a.apps.vip/icons/ppet.png",

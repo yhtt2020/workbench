@@ -16,7 +16,7 @@ export const useAppStateStore = defineStore("useAppStateStore", {
           },
           downloading: false,
           installing: false,
-          percent: null,
+          percent: 0,
           done: null,
         },
         {
@@ -31,7 +31,7 @@ export const useAppStateStore = defineStore("useAppStateStore", {
           },
           downloading: false,
           installing: false,
-          percent: null,
+          percent: 0,
           done: null,
         },
         {
@@ -48,7 +48,7 @@ export const useAppStateStore = defineStore("useAppStateStore", {
           },
           downloading: false,
           installing: false,
-          percent: null,
+          percent: 0,
           done: null,
         },
         {
@@ -64,7 +64,7 @@ export const useAppStateStore = defineStore("useAppStateStore", {
           },
           downloading: false,
           installing: false,
-          percent: null,
+          percent: 0,
           done: null,
         },
         {
@@ -81,7 +81,7 @@ export const useAppStateStore = defineStore("useAppStateStore", {
           },
           downloading: false,
           installing: false,
-          percent: null,
+          percent: 0,
           done: null,
         },
       ],

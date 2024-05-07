@@ -46,12 +46,13 @@ const leftMenuList = computed(() => {
         switchCurrentCom("Apps");
       },
     },
-    {
-      newIcon: "fluent:hard-drive-16-regular",
-      callBack: () => {
-        switchCurrentCom("");
-      },
-    },
+    // 软件库暂时隐藏
+    // {
+    //   newIcon: "fluent:hard-drive-16-regular",
+    //   callBack: () => {
+    //     switchCurrentCom("");
+    //   },
+    // },
     {
       newIcon: "fluent:code-16-regular",
       callBack: () => {
@@ -81,7 +82,7 @@ const switchCurrentCom = (name: string) => {
       <xt-left-menu
         :list="leftMenuList"
         :end="2"
-        :last="4"
+        :last="3"
         fn="fn"
         leftBg="red"
       >

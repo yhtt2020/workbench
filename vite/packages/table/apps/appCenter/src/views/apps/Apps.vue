@@ -16,15 +16,20 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, defineAsyncComponent } from 'vue'
+import { ref, defineAsyncComponent, toRefs } from 'vue'
+import { storeToRefs } from 'pinia';
 import { message } from 'ant-design-vue';
 
 import { useAppStateStore } from './store/index';
+import { useAppCenterStore } from '../../store';
 
 import { runExec } from '../../../../../js/common/exec';
 import { usePlat } from '../../../../../ui/hooks/usePlat';
 
 const state = useAppStateStore()
+const store = useAppCenterStore()
+const { myApps } = storeToRefs(store)
+
 let fs
 if (!usePlat('web') ) {
     fs= window.$models.fs
@@ -34,6 +39,11 @@ const Item = defineAsyncComponent(() => import('./components/Item.vue'))
 const Header = defineAsyncComponent(() => import('../../component/Header.vue'))
 
 const dir = ref(require('path').join(window.globalArgs['user-data-dir'], 'download'))
+
+// 打开本地应用
+const executeLocalApp = (app) => {
+    runExec('"' + app.installPath + '"')
+}
 
 // 安装函数
 const install = (app) => {
@@ -82,6 +92,7 @@ const install = (app) => {
     runExec('start /wait ' + path + ' /S', require('path').dirname(path)).then(rs => {
       message.success({ content: '安装成功，并为您运行此软件', key: 'install' })
       executeLocalApp(app)
+      myApps.value.push(app)
       app.installed = true
     }, (rs) => {
       message.error({ content: '安装失败', key: 'install' })
@@ -94,6 +105,7 @@ const install = (app) => {
     runExec('start /wait ' + path, require('path').dirname(path)).then(rs => {
       message.success({ content: '安装成功，并为您运行此软件', key: 'install' })
       executeLocalApp(app)
+      myApps.value.push(app)
       app.installed = true
     }, (rs) => {
       message.error({ content: '安装失败', key: 'install' })
