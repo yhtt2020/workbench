@@ -122,6 +122,7 @@ const installV2 = async (options) => {
 const checkV2 = async (flag) => {
   // 4 检测manifest.json
   const checkManifestRes = await checkMainFest(currentId);
+  // 
   if (checkManifestRes.code !== 200) {
     return {
       id: currentId,
