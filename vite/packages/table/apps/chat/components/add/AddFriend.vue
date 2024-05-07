@@ -19,7 +19,7 @@
           <xt-button style="width: auto !important" h="0" v-if="keyWord === ''">
             <div class="flex items-center justify-center">
               <xt-ify-icon
-                icon="fluent:search-16-regular"
+                icon="fluent:search-16-filled"
                 size="20"
                 class="xt-text-2"
               />

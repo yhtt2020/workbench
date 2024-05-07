@@ -25,7 +25,7 @@ const newCategoryRef = ref(null);
 /**按钮列表**/
 const emptyList = ref([
   {
-    icon: "fluent:people-add-16-regular",
+    icon: "fluent:people-add-16-filled",
     name: "邀请其他人",
     callBack: () => {},
   },

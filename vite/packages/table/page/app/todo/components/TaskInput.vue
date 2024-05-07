@@ -1,15 +1,15 @@
 <template>
-  <a-input ref="inputer"
-           class="input main-input" style="background:--var(primary-bg);color:var(--active-text) !important; "
-           :size="runtime.windowWidth >= 600 ? 'normal' : 'small'"
-           v-model:value="newTask.title"
-           @pressEnter="addNewTask"
-           :placeholder="getPlaceholder()"
-  >
-    <template #suffix>
-      <TimerSelector v-model="newTask.deadTime"/>
-    </template>
-  </a-input>
+    <a-input ref="inputer"
+      class="input main-input" style="background:--var(primary-bg);color:var(--active-text) !important; "
+      :size="runtime.windowWidth >= 600 ? 'normal' : 'small'"
+      v-model:value="newTask.title"
+      @keyup.enter="addNewTask"
+      :placeholder="getPlaceholder()"
+    >
+      <template #suffix>
+        <TimerSelector v-model="newTask.deadTime"/>
+      </template>
+    </a-input>
 </template>
 
 <script lang="ts">
@@ -85,46 +85,30 @@ export default {
     }),
 
     addNewTask() {
-
-      if(!window.$useEnv('guest')){
-        let task = this.newTask;
-        if (this.currentList) {
-          task.listNanoid = [this.currentList.nanoid]
-        }else{
-          task.listNanoid=[]
-        }
-        if(this.newTask.title.trim()===''){
-          message.error('请输入待办内容')
-          return
-        }
-        // 支线任务点
-        completeTask('Z0204')
-  
-        task = Object.assign(this.newTask, {});
-        console.log('添加的任务',task)
-        let rs= this.addTask(task);
-        if(rs){
-          this.newTask.title = "";
-          this.newTask.deadTime = null;
-          this.newTask.listNanoid = [];
-          this.$emit('added')
-        }else{
-          message.error('数据库写入失败')
-        }
+      let task = this.newTask;
+      if (this.currentList) {
+        task.listNanoid = [this.currentList.nanoid]
       }else{
-        window.$ui.confirm("登录提示", '目前处于游客模式，请登录后体验完整功能。', {
-          ok: () => {
-            this.loginVisible = true
-          },
-          index: 999999,
-          okText: "立即登录",
-          noText: "暂不登录",
-          okButtonWidth: '95',
-          noButtonWidth: '95',
-        });
+        task.listNanoid=[]
       }
+      if(this.newTask.title.trim()===''){
+        message.error('请输入待办内容')
+        return
+      }
+      // 支线任务点
+      completeTask('Z0204')
 
-
+      task = Object.assign(this.newTask, {});
+      console.log('添加的任务',task)
+      let rs= this.addTask(task);
+      if(rs){
+        this.newTask.title = "";
+        this.newTask.deadTime = null;
+        this.newTask.listNanoid = [];
+        this.$emit('added')
+      }else{
+        message.error('数据库写入失败')
+      }
     },
   },
 };

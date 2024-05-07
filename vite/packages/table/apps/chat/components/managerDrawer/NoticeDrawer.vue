@@ -19,13 +19,13 @@
           >
             <div class="flex items-center justify-center">
               <xt-ify-icon
-                icon="fluent:chevron-left-16-regular"
+                icon="fluent:chevron-left-16-filled"
                 class="xt-text-2"
                 size="30"
                 v-if="isBack"
               />
               <xt-ify-icon
-                icon="fluent:dismiss-16-regular"
+                icon="fluent:dismiss-16-filled"
                 class="xt-text-2"
                 size="30"
                 v-else

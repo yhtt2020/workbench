@@ -4,7 +4,7 @@
     <xt-left-menu
       :list="updateChatAppList"
       last="1"
-      :end="leftList.length"
+      :end="endList"
       :index="currentChatIndex"
     >
       <div class="w-full h-full">
@@ -24,7 +24,7 @@
         ></GradeSmallTip>
         <div class="flex items-center">
           <xt-ify-icon
-            icon="fluent:emoji-smile-slight-24-regular"
+            icon="fluent:emoji-smile-slight-24-filled"
             class="mr-3 xt-text"
           />
           创建社群
@@ -52,7 +52,6 @@ import { chatCommunityStore } from "../../store/chatCommunity";
 import _ from "lodash-es";
 import { useRouter, useRoute } from "vue-router";
 import { completeTask } from "../../../task/task";
-import { useGlobalStore } from "../../../Global/store";
 import { appStore } from "../../../../store";
 import config from "../../hooks/config";
 
@@ -64,15 +63,16 @@ import CategoryFloat from "../../components/suspendMode/CategoryFloat.vue";
 import GradeSmallTip from "../../../../components/GradeSmallTip.vue";
 import CreateCommunity from "../../components/create/CreateCommunity.vue";
 import JoinCommunity from "../join/JoinCommunity.vue";
-
+import { usePermissionStore } from "../../../../permission/store";
+import { reconnect } from "../../../../permission/user/useUserPermit";
 const router = useRouter();
 const chatCommunity = chatCommunityStore();
-const globalStore = useGlobalStore();
 const appS = appStore();
 const { proxy } = getCurrentInstance();
 
-const { loginVisible } = storeToRefs(globalStore);
+const usePermission = usePermissionStore()
 const { myCommunity, setting } = storeToRefs(chatCommunity);
+const { loginVisible } = storeToRefs(appS);
 const { userInfo, lvInfo } = appS;
 
 const createGroupRef = ref(null);
@@ -89,7 +89,7 @@ const currentData = ref({
 // 左侧栏数据
 const leftHeader = ref([
   {
-    newIcon: "fluent:chat-16-regular",
+    newIcon: "fluent:chat-16-filled",
     tab: "session",
     type: "session",
     route: { name: "chatMain", params: { no: "" } },
@@ -108,46 +108,52 @@ const leftList = ref([
     menuVisible: false,
     children: [
       {
-        newIcon: "fluent:chat-16-regular",
+        newIcon: "fluent:chat-16-filled",
         name: "发起群聊",
         index: "launch",
         callBack: (item) => {
-          if (!window.$useEnv("guest")) {
+          if (usePermission.currentEnv === 'guest') {
+            loginVisible.value = true;
+          }else if(usePermission.currentEnv === 'offline'){
+            reconnect();
+          } else {
             triggerAddModal(item);
             completeTask("Z0601");
-          } else {
-            loginTip();
           }
         },
       },
       {
-        newIcon: "fluent:people-16-regular",
+        newIcon: "fluent:people-add-16-filled",
         name: "加入群聊",
         index: "addGroup",
         callBack: (item) => {
-          if (!window.$useEnv("guest")) {
+          if (usePermission.currentEnv === 'guest') {
+            loginVisible.value = true;
+          }else if(usePermission.currentEnv === 'offline'){
+            reconnect();
+          } else {
             triggerAddModal(item);
             completeTask("Z0601");
-          } else {
-            loginTip();
           }
         },
       },
       {
-        newIcon: "fluent:people-add-16-regular",
+        newIcon: "fluent:person-add-16-filled",
         name: "添加好友",
         index: "addFriend",
         callBack: (item) => {
-          if (!window.$useEnv("guest")) {
+          if (usePermission.currentEnv === 'guest') {
+            loginVisible.value = true;
+          }else if(usePermission.currentEnv === 'offline'){
+            reconnect();
+          } else {
             triggerAddModal(item);
             completeTask("Z0601");
-          } else {
-            loginTip();
           }
         },
       },
       {
-        newIcon: "fluent:emoji-smile-slight-24-regular",
+        newIcon: "fluent:emoji-add-16-filled",
         name: "创建社群",
         index: "createCom",
         slot: "createChat",
@@ -156,16 +162,17 @@ const leftList = ref([
         },
       },
       {
-        icon: "team",
-        newIcon: "fluent:people-16-regular",
+        newIcon: "fluent:mail-add-16-filled",
         index: "joinCom",
         name: "加入社群",
         callBack: (item) => {
-          if (!window.$useEnv("guest")) {
+          if (usePermission.currentEnv === 'guest') {
+            loginVisible.value = true;
+          }else if(usePermission.currentEnv === 'offline'){
+            reconnect();
+          } else {
             triggerAddModal(item);
             completeTask("Z0601");
-          } else {
-            loginTip();
           }
         },
       },
@@ -174,14 +181,14 @@ const leftList = ref([
   {
     tab: "find",
     type: "find",
-    newIcon: "eva:compass-outline",
+    newIcon: "fluent:compass-northwest-16-filled",
     menuVisible: true,
     route: { name: "chatFind", params: { no: "" } },
   },
   ...(config.adminUids.includes(userInfo.uid)
     ? [
         {
-          icon: "diannao",
+          newIcon: "fluent:desktop-mac-16-filled",
           type: "admin",
           tab: "admin",
           title: "管理面板(仅管理员可见)",
@@ -198,7 +205,7 @@ const leftList = ref([
 /**社群右键菜单**/
 const menuList = ref([
   {
-    newIcon: "fluent:arrow-upload-16-regular",
+    newIcon: "fluent:arrow-upload-16-filled",
     label: "置顶",
     callBack: () => {
       const no = router.currentRoute.value?.params?.no;
@@ -206,7 +213,7 @@ const menuList = ref([
     },
   },
   // {
-  //   newIcon:'fluent:add-16-regular',
+  //   newIcon:'fluent:add-16-filled',
   //   label:'添加到...',
   //   children:[],
   // }
@@ -214,7 +221,7 @@ const menuList = ref([
 // /**取消置顶列表**/
 const unMenuList = ref([
   {
-    newIcon: "fluent:arrow-download-16-regular",
+    newIcon: "fluent:arrow-download-16-filled",
     label: "取消置顶",
     callBack: () => {
       const no = router.currentRoute.value?.params?.no;
@@ -255,6 +262,11 @@ const chatAppList = computed(() => {
       }
     }
   });
+  if(usePermission.currentEnv === 'guest' || usePermission.currentEnv === 'single'){
+    const find = mapList.length - 2
+    mapList[0] = mapList[find]
+    mapList.splice(find - 1, 2)
+  }
   return mapList;
 });
 
@@ -290,6 +302,15 @@ const currentNo = computed(() => {
   return setting.value.suspendVisible.no;
 });
 
+// 底部按钮数量
+const endList = computed(() => {
+  if(usePermission.currentEnv === 'guest' || usePermission.currentEnv === 'single'){
+    return leftList.value.length - 2;
+  }else{
+    return leftList.value.length;
+  }
+});
+
 // 等级限制，3级才可以创建一个社群，10级后可以创建五个社群
 const limitClick = computed(() => {
   const list = updateChatAppList.value.filter((item) => {
@@ -309,19 +330,6 @@ const switchTab = (item) => {
   if (item.route) {
     router.push(item.route);
   }
-};
-
-// 提示登录弹窗
-const loginTip = () => {
-  window.$ui.confirm("登录提示", "目前处于游客模式，请登录后体验完整功能。", {
-    ok: () => {
-      loginVisible.value = true;
-    },
-    okText: "立即登录",
-    noText: "暂不登录",
-    okButtonWidth: "95",
-    noButtonWidth: "95",
-  });
 };
 
 // 触发添加入口
@@ -348,10 +356,12 @@ const triggerAddModal = (item) => {
 
 //触发社群创建入口
 const createCommunity = () => {
-  if (!window.$useEnv("guest")) {
-    proxy.$bus.emit("createModal");
+  if (usePermission.currentEnv === 'guest') {
+    loginVisible.value = true;
+  }else if(usePermission.currentEnv === 'offline'){
+    reconnect();
   } else {
-    loginTip();
+    proxy.$bus.emit("createModal");
   }
 };
 

@@ -16,7 +16,7 @@
         <div class="flex items-center justify-between pointer mb-3">
           <span class="xt-text font-16 xt-font">群信息</span>
           <xt-ify-icon
-            icon="fluent:chevron-right-28-regular"
+            icon="fluent:chevron-right-28-filled"
             class="xt-text-2"
             size="20"
           ></xt-ify-icon>
@@ -44,7 +44,7 @@
         >
           <span class="xt-text font-16 xt-font">群公告</span>
           <xt-ify-icon
-            icon="fluent:chevron-right-28-regular"
+            icon="fluent:chevron-right-28-filled"
             class="xt-text-2"
             size="20"
           ></xt-ify-icon>
@@ -64,7 +64,7 @@
           <div class="flex">
             <span class="xt-text-2 xt-font font-14">{{ currentMemberList.length }}人</span>
             <xt-ify-icon
-              icon="fluent:chevron-right-28-regular"
+              icon="fluent:chevron-right-28-filled"
               class="xt-text-2"
               size="20"
             />
@@ -151,7 +151,7 @@
         >
           <span class="xt-text font-16 xt-font">群管理</span>
           <xt-ify-icon
-            icon="fluent:chevron-right-28-regular"
+            icon="fluent:chevron-right-28-filled"
             class="xt-text-2"
             size="24"
           />
@@ -171,7 +171,7 @@
               >
                 <div class="flex items-center justify-center">
                   <xt-ify-icon
-                    icon="fluent:copy-16-regular"
+                    icon="fluent:copy-16-filled"
                     size="24"
                     class="xt-text-2"
                   />
@@ -203,7 +203,7 @@
               >
                 <div class="flex items-center justify-center">
                   <xt-ify-icon
-                    icon="fluent:chevron-right-28-regular"
+                    icon="fluent:chevron-right-28-filled"
                     class="xt-text-2"
                     size="24"
                   />
@@ -227,7 +227,7 @@
               >
                 <div class="flex items-center justify-center">
                   <xt-ify-icon
-                    icon="fluent:chevron-right-28-regular"
+                    icon="fluent:chevron-right-28-filled"
                     class="xt-text-2"
                     size="24"
                   />
