@@ -28,6 +28,9 @@ let runtime={
     ipc.on('api.runtime.initResponse',(event,args)=>{
       tsbApi.runtime.info=args.runtime//获取到当前窗口的状态存储下来
     })
+    ipc.once('init',(event,args)=>{
+      runtime.args=args.args
+    })
     send('init')
   },
 }
