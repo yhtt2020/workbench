@@ -1,7 +1,9 @@
 import { nanoid } from "nanoid";
+import { defaultData } from "../../../../../../ui/hooks/useDataConversion";
 
 export const useTransform = (item) => {
     return {
+        ...defaultData,
         ...item,
         icon:item.icon,
         name:item.name,

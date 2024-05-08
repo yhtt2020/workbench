@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="w-full h-full">
         <Header icon="fluent:building-shop-16-regular" title="我的应用">
             <template #right>
                 <DropDown 
@@ -32,7 +32,6 @@
             </template>
         </div>
         <Empty v-else />
-        
     </div>
 </template>
 
@@ -97,6 +96,7 @@ const arr = ref([
         callBack: (item) => {
             // console.log('固定到开始菜单',currentItem.value)
             startMenu.value.unshift(currentItem.value)
+            message.success('成功固定到开始菜单')
         }
     },
     {

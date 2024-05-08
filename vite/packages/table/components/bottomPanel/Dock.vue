@@ -1,5 +1,10 @@
 <template>
   <teleport to="body">
+    <!-- 应用弹窗 -->
+    <FloatApp 
+      :appPos="position"
+      v-if="appsVisible"
+    />
     <!-- 文件夹弹窗 -->
     <FloatFolder 
       v-if="folderVisible"
@@ -185,6 +190,7 @@ import Avatar from "../desk/navigationBar/components/Avatar.vue";
 import Team from "./Team.vue";
 import FloatCard from "../windowPanel/components/FloatCard.vue";
 import FloatFolder from "../windowPanel/components/FloatFolder.vue";
+import FloatApp from "../windowPanel/components/appCenter/FloatApp.vue";
 
 import menuMin from "../windowPanel/hook/menu";
 
@@ -206,7 +212,8 @@ export default {
     Team,
     NavIcon,
     FloatCard,
-    FloatFolder
+    FloatFolder,
+    FloatApp,
   },
   data() {
     return {
@@ -817,7 +824,7 @@ export default {
     /**
      * 重置元素位置
      */
-    resetElementPosition() {
+    resetElementPosition(custom = undefined) {
       const draggableSize = (this.currentItem?.cardData?.customSize || this.currentItem?.customSize || this.resize || '1x1').split("x");
       // console.log(draggableSize)
       // 视图大小
@@ -832,6 +839,14 @@ export default {
         x:draggableSize[0] * 140,
         y:draggableSize[1] * 100
       };
+      // 自定义元素宽高
+      if(custom){
+        menu = {
+          x:custom.x,
+          y:custom.y
+        }
+      }
+      console.log(menu,'where is menu')
       this.position = this.usePosition(pos,menu)
     },
     onDrag: function (e) {

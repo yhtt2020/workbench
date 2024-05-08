@@ -147,7 +147,7 @@ export const deleteIcon = (data: any, nav: string) => {
 
 
 /**
- * 判断合并的是不是卡片
+ * 判断合并的是不是卡片 --- 废用
  * @param list 导航栏数据
  * @param id 要合并的图标id
  * @param dragId 拖拽图标的id
@@ -178,4 +178,18 @@ export const checkIsIfyIcon = (icon : string) => {
     return regex.test(icon)
   })
   return isIfyIcon
+}
+
+/**
+ * 关闭当前导航栏
+ * @param nav 'left' | 'right' | 'foot'
+ */
+export const closeNav = (nav: string) => {
+  const current = navObj.value[nav]
+  const index = current.otherList.findIndex((item) => item.value === "home")
+  if(index === -1){
+    message.error("至少保留一个主页")
+  } else {
+    current.state = false
+  }
 }

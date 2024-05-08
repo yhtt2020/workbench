@@ -57,6 +57,11 @@ function iconMenus() {
 }
 
 export default {
+  data() {
+    return {
+      appsVisible: false,
+    };
+  },
   computed: {
     iconMenus,
     resize() {
@@ -91,7 +96,10 @@ export default {
      */
     async newOpenApp(item, e) {
       const { type, value } = item;
-    
+      // 处理是否最后执行统一的打开函数
+      let isRunApp = true; 
+      // 自定义定位
+      let custom = false;
       // 首先处理与 type 相关的
       switch (type) {
         // 卡片类图标
@@ -125,6 +133,7 @@ export default {
         // 设置中心
         case "setting":
           this.$bus.emit("openSystemSet");
+          isRunApp = false;
           break;
         // 全屏
         case "fullscreen":
@@ -133,7 +142,17 @@ export default {
             return;
           }
           break;
+        // 应用中心
+        case "apps":
+          this.appsVisible = !this.appsVisible;
+          isRunApp = false;
+          custom = true;
+          const position = { x:600,y:632}
+          this.resetElementPosition(position)
+          break;
         default:
+          this.appsVisible = false;
+          this.comVisible = false;
           if (window.$usePlatLimit("web", value)) return;
           // 如果为桌面应用，提示
           this.msgNotice(item);
@@ -142,9 +161,14 @@ export default {
             this.jumpDesk = item.home;
           }
       }
-    
-      // 更新定位
-      this.resetElementPosition();
+
+      if( !custom){
+        // 更新定位
+        this.resetElementPosition();
+        this.appsVisible = false
+      }
+      
+      if(!isRunApp) return
       // 统一的打开函数
       const rs = await startApp(type, value, this.$router);
       if (!rs) {

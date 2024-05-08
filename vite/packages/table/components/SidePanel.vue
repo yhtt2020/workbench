@@ -676,7 +676,7 @@ export default {
     /**
     * 重置元素位置
     */
-    resetElementPosition() {
+    resetElementPosition(custom = undefined) {
       const draggableSize = (this.currentItem?.cardData?.customSize || this.currentItem?.customSize || this.resize || '1x1').split("x");
       // 视图大小
       let vH = this.parentSize
@@ -687,6 +687,11 @@ export default {
       // 元素大小
       let menuW = draggableSize[1] * 100
       let menuX = draggableSize[0] * 140
+      // 自定义元素宽高
+      if(custom){
+        menuW = custom.x
+        menuX = custom.y
+      }
       posY = posY > vH - (menuW / 2) ? vH - menuW : (posY - menuW / 2 < 0 ? 0 : posY - menuW / 2);
       posX = posX > vW - (menuX / 2) ? vW - menuX - 100 : (posX - menuX / 2 < 0 ? 0 : posX - menuX / 2);
       this.top = posY
