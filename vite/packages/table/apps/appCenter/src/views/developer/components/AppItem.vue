@@ -85,18 +85,7 @@ const menus = computed(() => {
       name: "卸载",
       newIcon: "fluent:delete-16-regular",
       color: "#FF4D4F",
-      cb: () => {
-        window.$ui.confirm(
-          "卸载会将桌面导航相关该应用的快捷方式删除，是否继续？",
-          "",
-          {
-            ok: async () => {
-              uninstall(item.id);
-            },
-            type: "warning",
-          }
-        );
-      },
+      cb: uninstallApp,
     },
   ];
   if (item?.card) {
@@ -115,7 +104,19 @@ const menus = computed(() => {
 
   return res;
 });
-
+/** 删除应用 */
+const uninstallApp = () => {
+  window.$ui.confirm(
+    "卸载会将桌面导航相关该应用的快捷方式删除，是否继续？",
+    "",
+    {
+      ok: async () => {
+        uninstall(item.id);
+      },
+      type: "warning",
+    }
+  );
+};
 const previewVisible = ref(false);
 const previewData = ref({
   name: "TTAppCard",
@@ -162,7 +163,9 @@ const entry = () => {
       class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 z-10"
     >
       <div class="xt-text-2 mb-2">应用版本已过时</div>
-      <xt-button type="error" h="32">删除应用</xt-button>
+      <xt-button type="error" h="32" w="80" @click="uninstallApp"
+        >删除应用</xt-button
+      >
     </div>
     <!-- 左侧 -->
     <div class="flex">
