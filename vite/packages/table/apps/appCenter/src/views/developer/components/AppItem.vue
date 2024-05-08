@@ -70,13 +70,13 @@ const menus = computed(() => {
       newIcon: "fluent:settings-16-regular",
       cb: () => {},
     },
-    {
-      name: "更新文件",
-      newIcon: "fluent:arrow-sync-16-regular",
-      cb: async () => {
-        await installV2(item.id);
-      },
-    },
+    // {
+    //   name: "更新文件",
+    //   newIcon: "fluent:arrow-sync-16-regular",
+    //   cb: async () => {
+    //     await installV2(item.id);
+    //   },
+    // },
     {
       name: "上传应用",
       newIcon: "fluent:cloud-arrow-up-16-regular",
@@ -150,9 +150,20 @@ const entry = () => {
   <!-- 渲染样式 -->
   <!-- v-for="item in ttappList" :item="item" :key="item.id" -->
   <div
-    class="xt-bg-2 rounded-xl flex items-center justify-between p-4 mb-4"
+    class="relative xt-bg-2 rounded-xl flex items-center justify-between p-4 mb-4"
     style="height: 102px"
   >
+    <div
+      v-if="!item?.package"
+      class="absolute w-full h-full opacity-80 top-0 left-0 rounded-xl xt-bg-2 z-10"
+    ></div>
+    <div
+      v-if="!item?.package"
+      class="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 z-10"
+    >
+      <div class="xt-text-2 mb-2">应用版本已过时</div>
+      <xt-button type="error" h="32">删除应用</xt-button>
+    </div>
     <!-- 左侧 -->
     <div class="flex">
       <div
@@ -171,7 +182,8 @@ const entry = () => {
           </div>
         </div>
         <div class="xt-text-2 text-sm mt-2">
-          {{ item.description }}
+          <!-- {{ item.description }} -->
+          {{ item?.summary }}
         </div>
       </div>
     </div>

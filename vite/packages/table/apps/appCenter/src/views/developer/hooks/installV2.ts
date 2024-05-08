@@ -112,7 +112,11 @@ const installSuccess = (data: any, id?: string) => {
   const isExist = ttappList.value.find((item) => item.id === packageName);
 
   if (isExist) {
-    updateApp(currentData);
+    window.$ui.confirm("应用已存在", "是否覆盖应用？", {
+      ok: () => {
+        updateApp(currentData);
+      },
+    });
   } else {
     installApp(currentData);
   }
@@ -131,6 +135,7 @@ const installApp = (data: any) => {
 const updateApp = (data: any) => {
   const ttappStore = useTTAppStore();
   const { ttappData, ttappList }: any = storeToRefs(ttappStore);
+
   message.success("更新成功");
   ttappList.value = ttappList.value.map((item) => {
     // if (item.id === currentData.id) {
