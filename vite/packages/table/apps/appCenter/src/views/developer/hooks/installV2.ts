@@ -125,8 +125,12 @@ const installSuccess = (data: any, id?: string) => {
 const installApp = (data: any) => {
   const ttappStore = useTTAppStore();
   const { ttappData, ttappList }: any = storeToRefs(ttappStore);
-  addIcon(data);
-  addNav(data);
+
+  // 存在主应用添加图标
+  if (data.main) {
+    addIcon(data);
+    addNav(data);
+  }
 
   message.success("安装成功");
   ttappList.value.push(data);
