@@ -63,7 +63,7 @@ const installSuccess = (data: any, id?: string) => {
 
   // ttappData.value[currentData.id] = {};
   // 判断数据存储是否存在
-  if (!ttappData.value[packageName]) {
+  if (!(packageName in ttappData.value)) {
     // 开辟一个数据存储对象
     ttappData.value[packageName] = {};
   }
@@ -110,9 +110,8 @@ const installSuccess = (data: any, id?: string) => {
 
   /** 2024-05-05 新增 判断是否存在 */
   const isExist = ttappList.value.find((item) => item.id === packageName);
-  console.log("isExist :>> ", isExist);
+
   if (isExist) {
-    // 存在
     updateApp(currentData);
   } else {
     installApp(currentData);

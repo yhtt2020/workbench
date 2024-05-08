@@ -37,7 +37,7 @@ const checkMainFest = async (id) => {
   // 3、数据检查
   console.log("3、数据检查 :>> ");
   // 基础数据
-  let baseWeak = ["package", "name", "description", "modules", "version"];
+  let baseWeak = ["package", "name", "modules", "version", "summary"];
   let baseStrong = [
     {
       value: res?.logo,
