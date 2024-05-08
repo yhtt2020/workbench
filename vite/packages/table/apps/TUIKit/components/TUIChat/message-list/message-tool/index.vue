@@ -1,6 +1,7 @@
 <template>
+  <!-- 修改将v-if替换成v-show -->
   <div
-    v-if="!isAllActionItemInvalid && !messageItem.hasRiskContent"
+    v-show="!isAllActionItemInvalid && !messageItem.hasRiskContent"
     ref="messageToolDom"
     :class="['dialog-item', !isPC ? 'dialog-item-h5' : 'dialog-item-web']"
   >
@@ -38,7 +39,7 @@ import TUIChatEngine, {
   IMessageModel,
 } from '@tencentcloud/chat-uikit-engine';
 import { TUIGlobal } from '@tencentcloud/universal-api';
-import { ref, watchEffect, computed, onMounted, onUnmounted } from '../../../../adapter-vue';
+import { ref, watchEffect, computed, onMounted, onUnmounted,provide } from '../../../../adapter-vue';
 import Icon from '../../../common/Icon.vue';
 import { Toast, TOAST_TYPE } from '../../../common/Toast/index';
 import delIcon from '../../../../assets/icon/msg-del.svg';
@@ -134,21 +135,23 @@ const actionItems = ref([
     },
     clickEvent: quoteMessage,
   },
-  {
-    key: 'translate',
-    text: TUITranslateService.t('TUIChat.翻译'),
-    visible: false,
-    iconUrl: translateIcon,
-    renderCondition() {
-      if (!message.value) return false;
-      return message.value.status === 'success' && message.value.type === TYPES.MSG_TEXT;
-    },
-    clickEvent: translateMessage,
-  },
+  // {
+  //   key: 'translate',
+  //   text: TUITranslateService.t('TUIChat.翻译'),
+  //   visible: false,
+  //   iconUrl: translateIcon,
+  //   renderCondition() {
+  //     if (!message.value) return false;
+  //     return message.value.status === 'success' && message.value.type === TYPES.MSG_TEXT;
+  //   },
+  //   clickEvent: translateMessage,
+  // },
 ]);
 
 const message = ref<IMessageModel>();
 const messageToolDom = ref<HTMLElement>();
+
+provide('messageToolDom',messageToolDom.value);
 
 onMounted(() => {
   TUIStore.watch(StoreName.CHAT, {
@@ -167,8 +170,16 @@ watchEffect(() => {
 });
 
 const isAllActionItemInvalid = computed(() => {
-  for (let i = 0; i < actionItems.length; ++i) {
-    if (actionItems[i].renderCondition()) {
+  
+  // for (let i = 0; i < actionItems.value.length; ++i) {
+  //   if (actionItems[i].renderCondition()) {
+  //     return false;
+  //   }
+  // }
+
+  /**将for循环进行简化**/ 
+  for(const item of actionItems.value){
+    if (item.renderCondition()) {
       return false;
     }
   }
@@ -177,7 +188,9 @@ const isAllActionItemInvalid = computed(() => {
 
 function getFunction(index: number) {
   // 兼容 vue2 小程序的写法 不允许动态绑定
-  actionItems[index].clickEvent();
+  // actionItems[index].clickEvent();
+  /**修改成vue3写法,这里暂时不考虑vue2问题**/ 
+  actionItems.value[index].clickEvent();
 }
 
 function openMessage() {
