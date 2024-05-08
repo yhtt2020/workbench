@@ -37,12 +37,6 @@ class AppManager {
     })
   }
 
-  async executeAppByPackage (pkg, cb) {
-    let app = await appModel.get({ package: pkg })
-    if (app) {
-      appManager.openApp(app.nanoid, false, app, undefined, cb)
-    }
-  }
 
   /**
    * 朝运行中的应用发送IPC
@@ -866,6 +860,14 @@ class AppManager {
 
   }
 
+  async executeAppByPackage (pkg,background, option,cb) {
+    let app = await appModel.get({ package: pkg ,is_debug:null})
+    if (app) {
+      appManager.openApp(app.nanoid, background, app, option, cb)
+    }else{
+      console.error('尝试启动不存在的应用')
+    }
+  }
   openApp (appId, background = false, app, option = {}, cb) {
     let saApp = appManager.getSaAppByAppId(appId)
     if (!!!saApp) {
@@ -1076,14 +1078,19 @@ class AppManager {
           titleBarStyle: 'hidden',
           acceptFirstMouse: true,
           alwaysOnTop: saApp.settings.alwaysTop ? saApp.settings.alwaysTop : frameWindowConfig.alwaysOnTop,//
-        }, frameWindowConfig)), onReadyToShow: (frame) => {
-          frame.webContents.send('init', {
+        }, frameWindowConfig)),
+        onReadyToShow: (frame) => {
+          let send={
             url: saApp.url,
             nanoid: saApp.nanoid,
             title: saApp.name,
             windowId: saApp.windowId,
-            app: saApp
-          })
+            viewId:appWindow.view.webContents.id,
+            app: saApp,
+            args:option?.args
+          }
+          console.log(frame.view.webContents.id)
+          frame.webContents.send('init',send)
           if (cb) {
             cb(appWindow.window)//执行启动后的回调
             cb = undefined
@@ -1146,6 +1153,7 @@ class AppManager {
         })
       })
 
+      frame.webContents.openDevTools()
       SidePanel.send('executedAppSuccess', { app: saApp })
       saApp.windowId = appWindow.windowId
       processingAppWindows.push({
@@ -1200,7 +1208,8 @@ class AppManager {
             nanoid: saApp.nanoid,
             title: saApp.name,
             windowId: saApp.windowId,
-            app: saApp
+            app: saApp,
+            args:option?.args
           })
           if (cb) {
             cb()//执行启动后的回调
@@ -1265,7 +1274,7 @@ class AppManager {
       //通过url跳转的方式
       loadChatUrl()
     } else {
-      appManager.executeAppByPackage(GROUP_PKG, () => {
+      appManager.executeAppByPackage(GROUP_PKG, false,{},() => {
         loadChatUrl()
       })
     }
