@@ -108,27 +108,42 @@ const installSuccess = (data: any, id?: string) => {
     });
   }
 
-  // 没ID为安装
-  if (!id) {
-    addIcon(currentData);
-    addNav(currentData);
-
-    message.success("安装成功");
-    ttappList.value.push(currentData);
+  /** 2024-05-05 新增 判断是否存在 */
+  const isExist = ttappList.value.find((item) => item.id === packageName);
+  console.log("isExist :>> ", isExist);
+  if (isExist) {
+    // 存在
+    updateApp(currentData);
   } else {
-    message.success("更新成功");
-    ttappList.value = ttappList.value.map((item) => {
-      // if (item.id === currentData.id) {
-      if (item.id === currentData.id) {
-        return currentData;
-      }
-      return item;
-    });
-    // 更新导航栏
-    // useMit.emit("updateTTApp", currentData.id);
-    // update(currentData.id);
-
-    useMit.emit("updateTTApp", packageName);
-    update(packageName);
+    installApp(currentData);
   }
+};
+
+const installApp = (data: any) => {
+  const ttappStore = useTTAppStore();
+  const { ttappData, ttappList }: any = storeToRefs(ttappStore);
+  addIcon(data);
+  addNav(data);
+
+  message.success("安装成功");
+  ttappList.value.push(data);
+};
+
+const updateApp = (data: any) => {
+  const ttappStore = useTTAppStore();
+  const { ttappData, ttappList }: any = storeToRefs(ttappStore);
+  message.success("更新成功");
+  ttappList.value = ttappList.value.map((item) => {
+    // if (item.id === currentData.id) {
+    if (item.id === data.id) {
+      return data;
+    }
+    return item;
+  });
+  // 更新导航栏
+  // useMit.emit("updateTTApp", currentData.id);
+  // update(currentData.id);
+
+  useMit.emit("updateTTApp", data.package);
+  update(data.package);
 };
