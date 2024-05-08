@@ -14,7 +14,13 @@
                     icon="fluent:search-16-regular"
                     @click="openSearch"
                 />
-                <xt-input v-else v-model:value="inputValue"></xt-input> 
+                <xt-input 
+                    v-else 
+                    v-model:modelValue="inputValue" 
+                    placeholder="搜索应用" 
+                    @blur="closeSearch"
+                    @enter="search">
+                </xt-input> 
                 
             </template>
         </Header>
@@ -31,7 +37,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, computed, defineAsyncComponent, onMounted } from 'vue'
+import { ref, computed, defineAsyncComponent, onMounted, watch } from 'vue'
 import { storeToRefs } from 'pinia';
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
@@ -43,21 +49,31 @@ import { useTransform } from './hooks/useTransform'
 import { useMenus } from '../../../hooks/useMenus';
 import { startApp } from '../../../../../ui/hooks/useStartApp';
 
+// 导入组件
 const Header = defineAsyncComponent(() => import('../../component/Header.vue'))
 const DropDown = defineAsyncComponent(() => import('../../../../../components/desk/addIcon/components/DropDown.vue'))
 const Item = defineAsyncComponent(() => import('../../../../../components/desk/addIcon/components/SelectIcon.vue'))
 const Empty = defineAsyncComponent( () => import('../../../../../components/desk/addIcon/components/Empty.vue'))
 
+// 路由
 const router = useRouter()
 
+// 应用中心pinia数据
 const store = useAppCenterStore()
 const { myApps, startMenu, visible } = storeToRefs(store)
 
+// 搜索相关
 const isSearch = ref(false)
 const inputValue = ref('')
 
+// 当前选中
 const currentItem = ref('')
+// 应用列表
+const appList = ref([])
+// 分类后或者搜索后的数据
+const list = ref([])
 
+// 获取当前应用
 const getItem = (item) => {
     currentItem.value = item
 }
@@ -103,31 +119,67 @@ const menus = computed(() => {
 })
 
 // 我的应用数据
-const list = computed(() => {
-    const arr = [...myApps.value,...appsList].map((item) => {
-        return useTransform(item)
-    })
-    console.log(arr,'transform arr')
-    return arr
-    
-}) 
+// const list = computed(() => {
+//     const arr = [...myApps.value,...appsList].map((item) => {
+//         return useTransform(item)
+//     })
+//     console.log(arr,'transform arr')
+//     return arr
+// }) 
 
+// 下拉默认数据
 const defaultData = ref({
     id: "1",
-    name:'系统应用',
-    value:'systemApp'
+    name:'酷应用',
+    value:'coolApp'
 })
 
+// 监听下拉
+watch(
+    () => defaultData.value.value,
+    (val) => {
+        list.value = appList.value.filter((item) => item.type === val)
+    },
+    { immediate: true }
+)
+
+// 区分酷应用，轻应用，本地应用
 const getInfo = (item) => {
-    if(item.data?.type){
-        return '系统应用'
-    } else {
-        return '酷应用'
+    const { type } = item
+    switch (type) {
+        case 'localApp':
+            return '本地应用'
+        case 'coolApp':
+            return '酷应用'
+        case 'lightApp':
+            return '轻应用'
+        default:
+            return '酷应用'
     }
 }
 
+// 初始化全部数据
+onMounted(() => {
+    appList.value = [...myApps.value,...appsList].map((item) => {
+        return useTransform(item)
+    })
+    list.value = appList.value
+})
+
+// 打开搜索框
 const openSearch = () => {
     isSearch.value = true
+}
+
+// 关闭搜索
+const closeSearch = () => {
+    isSearch.value = false
+}
+
+// 搜索
+const search = () => {
+    console.log(inputValue.value)
+    list.value = appList.value.filter((item) => item.name.includes(inputValue.value) && item.type === defaultData.value.value)
 }
 
 // 删除

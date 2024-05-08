@@ -19,7 +19,7 @@ export const useMenus = (id?: number, item?: any) => {
         callBack: () => {
           let i = useFileConversionIcon(useTransform(item));
           let id = nanoid(4);
-          console.log(i, "添加到桌面");
+          // console.log(i, "添加到桌面");
           useAddCard(
             "myIcons",
             {
@@ -41,7 +41,7 @@ export const useMenus = (id?: number, item?: any) => {
               : "var(--secondary-text)",
             callBack: () => {
               let i = useTransform(item);
-              console.log(i, "主导航");
+              // console.log(i, "主导航");
               addCardToNav(i, "foot");
             },
           },
@@ -53,7 +53,7 @@ export const useMenus = (id?: number, item?: any) => {
               : "var(--secondary-text)",
             callBack: () => {
               let i = useTransform(item);
-              console.log("left", "左侧导航栏", i);
+              // console.log("left", "左侧导航栏", i);
               addCardToNav(i, "left");
             },
           },
@@ -65,7 +65,7 @@ export const useMenus = (id?: number, item?: any) => {
               : "var(--secondary-text)",
             callBack: () => {
               let i = useTransform(item);
-              console.log("right", "右侧导航栏", i);
+              // console.log("right", "右侧导航栏", i);
               addCardToNav(i, "right");
             },
           },

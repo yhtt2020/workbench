@@ -7,8 +7,8 @@ export const dropList = [
     },
     {
         id: "2",
-        name:'系统应用',
-        value:'systemApp'
+        name:'本地应用',
+        value:'localApp'
     },
     {
         id: "3",
