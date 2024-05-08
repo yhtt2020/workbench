@@ -80,6 +80,10 @@ const menus = computed(() => {
     {
       name: "上传应用",
       newIcon: "fluent:cloud-arrow-up-16-regular",
+      cb: () => {
+        tsbApi.app.runByPackage("com.thisky.appStore", false, { args: "gg" });
+        console.log('发送了 :>> ',tsbApi.runtime );
+      },
     },
     {
       name: "卸载",
@@ -101,7 +105,6 @@ const menus = computed(() => {
     });
     res.unshift(...arr);
   }
-
   return res;
 });
 /** 删除应用 */
