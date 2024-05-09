@@ -6,12 +6,18 @@ import {storeToRefs} from "pinia";
 import ClipItem from "../components/ClipItem.vue";
 
 const showRecent=ref(false)
-
+const recentItem=ref({})
 const {items}=storeToRefs(clipboardStore())
+const {isNew,updateLastTime}=clipboardStore()
 let timeout=null
 watch(()=>items,(newValue)=>{
   console.log('变动了',items)
+  if(!isNew(items.value[0]?.createTime)){
+    return
+  }
+  updateLastTime(items.value[0]?.createTime)
   showRecent.value=true
+  recentItem.value=items.value[0]
   if(timeout){
     clearTimeout(timeout)
   }
@@ -34,7 +40,7 @@ watch(()=>items,(newValue)=>{
         </div>
 
         <div class="s-bg"  style="border-radius: 8px;overflow: hidden;background: var(--secondary-bg)">
-          <ClipItem :clip-item="items[0]"></ClipItem>
+          <ClipItem :clip-item="recentItem"></ClipItem>
         </div>
 
       </div>
