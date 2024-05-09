@@ -3,6 +3,7 @@ import { validate } from "./validate";
 import { cardStore as useCardSize } from "../../../../../../store/card";
 import { storeToRefs } from "pinia";
 import { navStore } from "../../../../../../store/nav";
+import { useAppCenterStore } from "../../../store";
 export const updateIcon = (ttappId: string) => {
   let ttappData = validate(ttappId);
   ttappData = ttappConversionIcon(ttappData);
@@ -12,6 +13,7 @@ export const updateIcon = (ttappId: string) => {
 export const update = (id: string) => {
   updateDesk(id);
   updateNav(id);
+  updateMyApps(id);
 };
 /** 更新桌面数据 */
 export const updateDesk = (id: string) => {
@@ -191,3 +193,21 @@ export const updateNav = (id) => {
     return item;
   });
 };
+
+// 更新我的应用
+export const updateMyApps = (id) => {
+  const data = validate(id);
+  // console.log(data)
+  const appCenterStore = useAppCenterStore();
+  const { myApps, startMenu } = storeToRefs(appCenterStore);
+  const _update = (list) => {
+    list.forEach((item) => {
+      if (item.type === "ttapp" && item.cardData?.id === data.id) {
+        item.name = data.name;
+        item.icon = data._logo;
+      }
+    });
+  }
+  _update(myApps.value);
+  _update(startMenu.value);
+}

@@ -5,7 +5,7 @@ import { storeToRefs } from "pinia";
 
 import { useMit } from "../../../../../../hooks";
 
-import { addIcon, addNav } from "./add";
+import { addIcon, addNav, addMyApp } from "./add";
 import { update } from "./update";
 
 // 安装实现
@@ -100,6 +100,7 @@ const installSuccess = (data: any, id?: string) => {
   if (!id) {
     addIcon(currentData);
     addNav(currentData);
+    addMyApp(currentData);
 
     message.success("安装成功");
     ttappList.value.push(currentData);

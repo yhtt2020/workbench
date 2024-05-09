@@ -9,6 +9,6 @@ export const useTransform = (item) => {
         name:item.name,
         id:nanoid(4),
         type: item.type || 'coolApp',
-        value: item.installPath || item.data,
+        value: item.type === 'ttapp' ? item.value : item.installPath || item.data,
     };
 }

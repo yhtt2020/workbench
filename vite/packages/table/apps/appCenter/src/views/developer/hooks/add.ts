@@ -1,10 +1,12 @@
 import { storeToRefs } from "pinia";
 import { navStore } from "../../../../../../store/nav";
+import { useAppCenterStore } from "../../../store";
 
 import {
   defaultData,
   useFileConversionIcon,
   useFileConversionNav,
+  useIconConversionFile,
 } from "../../../../../../ui/hooks/useDataConversion";
 import { useAddCard } from "../../../../../../hooks";
 export const addNav = (data: any, position?: string) => {
@@ -74,3 +76,19 @@ export const addIcon = (data: any) => {
     },
   });
 };
+
+// 添加到应用中心的我的应用
+export const addMyApp = (data: any) => {
+  // console.log(data,'addMyApp <<<<');
+  const appCenterStore = useAppCenterStore();
+  const { myApps } = storeToRefs(appCenterStore);
+  const iconData = ttappConversionIcon(data);
+  // console.log(iconData,'<<<<< iconData');
+  const icon = useIconConversionFile(iconData);
+  icon.cardData = {
+    id:data.id
+  }
+  // console.log(icon,'<<<<< icon');
+  myApps.value.unshift(icon);
+  // console.log(myApps.value,'myApps.value');
+}

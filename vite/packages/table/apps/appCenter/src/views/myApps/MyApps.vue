@@ -25,7 +25,7 @@
             </template>
         </Header>
         <div class="flex flex-wrap gap-2 mt-4" v-if="list.length > 0">
-            <template v-for="(item, index) in list" :key="index">
+            <template v-for="(item, index) in list" :key="item.id">
                 <xt-menu :menus="menus" @onMounted="getItem(item)">
                     <Item :size="140" :isApp="true" :item="item" :info="getInfo(item)"/> 
                 </xt-menu>
@@ -85,6 +85,7 @@ const arr = ref([
         newIcon: "fluent:open-16-regular",
         callBack: () => {
             const { type , value } = currentItem.value
+            // console.log(type,value,currentItem.value,'打开应用')
             startApp(type, value, router)
             visible.value = false
         }
@@ -142,6 +143,8 @@ const getInfo = (item) => {
             return '酷应用'
         case 'lightApp':
             return '轻应用'
+        case 'ttapp':
+            return '开发者应用'
         default:
             return '酷应用'
     }

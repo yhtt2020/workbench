@@ -105,7 +105,7 @@ const isSearch = ref(false)
 const searchList = ref([])
 
 const search = () => {
-    console.log(inputValue.value)
+    // console.log(inputValue.value)
     isSearch.value = true
     searchList.value = startMenu.value
     searchList.value = searchList.value.filter(item => item.name.indexOf(inputValue.value) !== -1)
