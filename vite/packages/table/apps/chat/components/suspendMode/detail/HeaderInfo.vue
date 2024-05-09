@@ -77,7 +77,7 @@ const { no, sideVisible } = toRefs(props);
 
 /**解构store存储数据**/
 const chatCommunity = chatCommunityStore();
-const { myCommunity } = storeToRefs(chatCommunity);
+const { myCommunity,currentCommunity } = storeToRefs(chatCommunity);
 
 /**默认图片占位,后期需要替换成动态的图片背景**/
 const placeholderData = ref({
@@ -132,16 +132,16 @@ const hideList = ref([
       });
     },
   },
-  // {
-  //   newIcon: "fluent:settings-16-filled",
-  //   title: "社群设置",
-  //   type: "manage",
-  //   callBack: () => {
-  //     console.log("社群设置", { props: { type: "setting" } });
-  //     router.push({ name: "communitySettings", params: { no: no.value } });
-  //     proxy.$bus.emit("handleCurrentCommunity",{ props: { type: "setting" } });
-  //   },
-  // },
+  {
+    newIcon: "fluent:settings-16-filled",
+    title: "社群设置",
+    type: "manage",
+    callBack: () => {
+      console.log("社群设置", { props: { type: "setting" } });
+      router.push({ name: "communitySettings", params: { no: no.value } });
+      proxy.$bus.emit("handleCurrentCommunity",{ props: { type: "setting" } });
+    },
+  },
   // {
   //   newIcon: "fluent:people-add-16-filled",
   //   title: "邀请其他人",
@@ -193,16 +193,16 @@ const showList = ref([
   //   title: "邀请其他人",
   //   callBack: () => {},
   // },
-  // {
-  //   newIcon: "fluent:settings-16-filled",
-  //   title: "社群设置",
-  //   type: "manage",
-  //   callBack: () => {
-  //     console.log("社群设置", { type: "setting" });
-  //     router.push({ name: "SettingIndex", params: { no: no.value } });
-  //     proxy.$bus.emit("handleCurrentCommunity", { type: "setting" });
-  //   },
-  // },
+  {
+    newIcon: "fluent:settings-16-filled",
+    title: "社群设置",
+    type: "manage",
+    callBack: () => {
+      console.log("社群设置", { type: "setting" });
+      router.push({ name: "SettingIndex", params: { no: no.value } });
+      proxy.$bus.emit("handleCurrentCommunity", { type: "setting" });
+    },
+  },
   // {
   //   newIcon: "ant-design:team-outlined",
   //   title: "成员管理",
@@ -228,8 +228,8 @@ const prevPage = () => {
   const index = _.findIndex(myCommunity.value, (item) => {
     return Number(item?.route?.params?.no) === Number(no.value);
   });
-  if (index > -1) {
-    myCommunity.value.splice(index, 1);
+  if (index === -1) {
+    currentCommunity.value = null;
     router.go(-1);
   }
 };
@@ -239,8 +239,14 @@ const communityName = computed(() => {
   const currentFind = _.find(myCommunity.value, (item) => {
     return Number(item?.route?.params?.no) === Number(no.value);
   });
-  chatCommunity.getCommunityTree(no.value);
-  return currentFind?.communityInfo?.name;
+  if(currentFind){
+    chatCommunity.getCommunityTree(no.value);
+    return currentFind?.communityInfo?.name;
+  }
+  else if(currentCommunity.value){
+    console.log('社群名称',currentCommunity.value?.communityInfo?.name);
+    return currentCommunity.value?.communityInfo?.name
+  }
 });
 
 /**根据当前角色权限进行下拉菜单区分**/

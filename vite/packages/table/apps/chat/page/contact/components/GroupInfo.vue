@@ -113,11 +113,13 @@
 
 <script setup>
 import { ref, toRefs } from "vue";
+import { storeToRefs } from "pinia";
 import useClipboard from "vue-clipboard3";
 import { message } from "ant-design-vue";
 import { getTypeName, joinName } from "../../../hooks/groupType";
 import { TUIConversationService,TUIGroupService } from "@tencentcloud/chat-uikit-engine";
 import { useRouter } from "vue-router";
+import { contactStore } from "../../../store/contactStore";
 
 import TransferGroupAdmin from "./TransferGroupAdmin.vue";
 
@@ -130,6 +132,11 @@ const props = defineProps({
   },
 });
 const { info } = toRefs(props);
+
+
+/**解构store数据存储**/
+const  contact = contactStore();
+const { currentContact } = storeToRefs(contact);
 
 const transferRef = ref(null);
 
@@ -149,6 +156,11 @@ const copyCurrentID = async () => {
 // 进入群聊
 const enterGroup = () => {
   const conversationID = `GROUP${info.value.groupID}`;
+  /**补充群聊进入的状态**/ 
+  currentContact.value = {
+    type: "group",
+    groupID:conversationID,
+  }
   router.push({ name: "chatMain" });
   TUIConversationService.switchConversation(conversationID);
   infoVisible.value = false;

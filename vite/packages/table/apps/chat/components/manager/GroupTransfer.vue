@@ -18,7 +18,7 @@ import _ from "lodash-es";
 import UserSelect from "../user/UserSelect.vue";
 import { message } from "ant-design-vue";
 
-const chat = window.$chat?.chat;
+const chat = window.$chat;
 const currentTransfer = ref([]);
 
 const props = defineProps({

@@ -105,7 +105,7 @@ watchEffect(async () => {
   try {
     if (groupInfo.value.hasOwnProperty("id")) {
       const groupID = groupInfo.value?.id;
-      const res = await window.$chat?.chat?.searchGroupByID(groupID);
+      const res = await window.$chat?.searchGroupByID(groupID);
       if (res.code === 0) {
         const currentGroup = res.data?.group;
         currentUnGroupInfo.value = currentGroup;
@@ -142,7 +142,7 @@ const joinNow = async () => {
   });
   if (index === -1) {
     const option = { groupID: currentID };
-    const res = await window.$chat?.chat?.joinGroup(option);
+    const res = await window.$chat?.joinGroup(option);
     if (res.code === 0) {
       if (res.data.status === "WaitAdminApproval") {
         message.success("入群申请已发出,等待群主和管理员审核");

@@ -6,9 +6,6 @@ import { appStore } from "../../store";
 // @ts-ignore
 export const singleStore = defineStore("singleStore", {
   state: () => ({
-    // 修改打开离线模式
-    // isOffline:false,
-    
     singleList:['weather','OilPrices','news','historyInfo','smallRank','gameInformation','yuanCommunity','signIn','Courier'],
     // 屏蔽导航栏
     navList:['chat', 'market'],

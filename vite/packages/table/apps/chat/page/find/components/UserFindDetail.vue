@@ -50,11 +50,12 @@ import { TUIConversationService } from "@tencentcloud/chat-uikit-engine";
 import { chatStore } from "../../../../../store/chat";
 import { useRouter } from "vue-router";
 import { useGlobalStore } from "../../../../Global/store";
+import { contactStore } from "../../../store/contactStore";
 
 import AddFindButton from "../../../../../components/sns/AddFindButton.vue";
 import SendMessageButton from "../../../../../components/sns/SendMessageButton.vue";
 
-const chatServer = window.$chat.chat;
+const chatServer = window.$chat;
 const router = useRouter();
 const props = defineProps({
   userList: {
@@ -64,11 +65,14 @@ const props = defineProps({
 });
 const { userList } = toRefs(props);
 
+/**解构store缓存数据**/ 
 const chat = chatStore();
 const app = appStore();
 const { userInfo } = storeToRefs(app);
 const global = useGlobalStore();
 const { loginVisible } = storeToRefs(global);
+const concat = contactStore();
+const { currentContact } = storeToRefs(concat);
 
 // 更新好友关系
 const updateRelationship = (e, item) => {
@@ -77,6 +81,10 @@ const updateRelationship = (e, item) => {
 
 const enterGroup = async (item) => {
   const name = `C2C${item.uid}`;
+  currentContact.value = {
+    type: "group",
+    groupID:conversationID,
+  }
   handlerConversationList(name);
 };
 const handlerConversationList = (conversationID) => {
