@@ -61,7 +61,6 @@ export const communityNavStore = defineStore("communityNav", {
     // 将当前选中的社群数据和选中的下标进行解构存储到store
     setCurrentCommunity(item: any, index: any) {
       const {communityInfo} = item;
-      console.log('社群信息', communityInfo)
       const optionItem = {
         ...communityInfo,
         value: "task",
@@ -83,7 +82,7 @@ export const communityNavStore = defineStore("communityNav", {
      * @param communityInfo
      */
     checkWriteAuth() {
-      console.log(this.currentCommunity, '当前社群', this.currentCommunity.item.ownerUid, appStore().userInfo?.uid)
+      // console.log(this.currentCommunity, '当前社群', this.currentCommunity.item.ownerUid, appStore().userInfo?.uid)
       return this.currentCommunity.item.ownerUid === appStore().userInfo?.uid
     },
     checkSettingAuth() {
@@ -117,7 +116,7 @@ export const communityNavStore = defineStore("communityNav", {
       } else if (rs.code === 404) {
         message.error('保存失败，原因：' + rs.info)
       } else {
-        window.$ui.confirm(
+        (window as any).$ui.confirm(
           '同步助手',
           '保存失败，由于 ' + rs.data?.userInfo?.nickname + ' 正在编辑存档，故无法同步，是否强制同步？此操作将强制写入数据，可能导致存储内容丢失。',
           {
@@ -135,10 +134,10 @@ export const communityNavStore = defineStore("communityNav", {
       return rs
     },
     async loadCommunityNav() {
-      console.log('当前社群', this.currentCommunity)
+      // console.log('当前社群', this.currentCommunity)
       let rs = await archiveHelper.loadFromCommunity(this.currentCommunity.item.no, communityNavAppId, 'main')
       //{settings,navData}
-      console.log('获取到的社群导航', rs)
+      // console.log('获取到的社群导航', rs)
       if (rs.status) {
         //
         let archiveData = rs.data.data

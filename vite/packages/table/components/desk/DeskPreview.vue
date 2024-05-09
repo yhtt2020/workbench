@@ -170,7 +170,12 @@ export default {
     },
     deskList: {
       type: Array
-    }
+    },
+    /**当前社群的信息**/
+    communityInfo:{
+      type:Object,
+      default:()=>{},
+    } 
   },
   computed: {
     ...mapWritableState(appStore, ['fullScreen','userInfo']),
@@ -258,6 +263,7 @@ export default {
       }
     },
     addPlan () {
+      // console.log('当前社群数据',this.communityInfo);
       completeTask('m0203')
       this.$emit('afterAdded')
       this.openDrawer = false

@@ -252,7 +252,11 @@ export const openSysApp = (value, router) => {
         useMit.emit("selectSystemNav", 4);
       }, 100);
       break;
-    default:
+    case "home":
+      useAppStore.settings.isCommunity = true;
+      router.push({ name: value });
+      break;
+      default:
       // 通过路由打开
       router.push({ name: value });
       break;

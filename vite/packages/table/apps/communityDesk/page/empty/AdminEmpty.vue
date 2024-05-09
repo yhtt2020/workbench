@@ -1,6 +1,6 @@
 <!-- 社群管理员的空白桌面 -->
 <template>
-  <div class="flex items-center justify-center w-full pt-12 pb-3">
+  <div class="flex items-center justify-center w-full pt-6 pb-3">
     <a-avatar :src="comInfo.icon" :size="56" shape="square" />
   </div>
   <div

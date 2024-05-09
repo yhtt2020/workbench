@@ -1,18 +1,8 @@
 <template>
   <div style="height: 100%">
-    <!-- <div style="position:fixed;z-index:9999999999;">
-      <div @click="test1">测试isOffline{{isOffline}}</div>
-      <div @click="test2">测试isGuest{{isGuest}}</div>
-      <div @click="test3">测试isSingle{{isSingle}}</div>
-      <div @click="test4">测试currentEnv{{ $useEnv(["offline", "guest", "single", "online"]) }}</div>
-      <div @click="useUpdateUserInfo">测试currentEnv{{ currentEnv }}</div>
-      <div @click="test5">mac{{ $usePlat(["mac", "web", "win"]) }}</div>
-      <div @click="test6">web{{ $usePlat(["mac", "web", "win"]) }}</div>
-      <div @click="test7">win{{ $usePlat(["mac", "web", "win"]) }}</div>
-      <div @click="test7">isOnline{{ isOnline?.value }}</div>
-      <div @click="test8">哦好</div>
-    </div> -->
+    <!-- 个人桌面 -->
     <desk-group
+      v-if="communityVisible"
       @changeDesk="changeDesk"
       ref="deskGroupRef"
       :settings="settings"
@@ -21,6 +11,19 @@
     >
       <template #settingsAll> </template>
     </desk-group>
+
+    <!-- 社群桌面 -->
+    <CommunityGroupDesk
+      v-else
+      @changeDesk="changeDesk"
+      ref="deskGroupRef"
+      :settings="settings"
+      :desk-list="desks"
+      v-model:currentDeskId="this.currentDeskId"
+    >
+    <!-- :desk-list="desks" -->
+      <template #settingsAll> </template>
+    </CommunityGroupDesk>
   </div>
   <!-- 检测到用户头像为默认头像时触发用户中心个人信息修改弹窗 -->
   <div
@@ -75,14 +78,14 @@ import { appStore } from "../store";
 import { weatherStore } from "../store/weather";
 
 import NewGuidePage from "./app/grade/NewGuidePage.vue";
-
 import DeskGroup from "../components/desk/DeskGroup.vue";
 import UpdateMyInfo from "../components/comp/UpdateMyInfo.vue";
 import ScalePanel from "./ScalePanel.vue";
 import GuidePanel from "./GuidePanel.vue";
-
 import WebLogin from "./WebLogin.vue";
 import GalleryModal from "../components/paperModal/PaperApp.vue";
+import CommunityGroupDesk from "../apps/communityDesk/page/CommunityGroupDesk.vue";
+
 import { taskStore } from "../apps/task/store";
 import navigationData from "../js/data/tableData";
 import { navStore } from "../store/nav";
@@ -99,8 +102,8 @@ import { useUpdateUserInfo } from "../permission/user/useUserPermit";
 import cache from "../components/card/hooks/cache";
 import { isMain } from "../js/common/screenUtils";
 // 检查当前网络状态
-import { useNetwork } from '@vueuse/core'
-const { isOnline } = useNetwork()
+import { useNetwork } from "@vueuse/core";
+const { isOnline } = useNetwork();
 
 let steamUser,
   steamSession,
@@ -193,6 +196,7 @@ export default {
     ScalePanel,
     GuidePanel,
     WebLogin,
+    CommunityGroupDesk,
   },
   computed: {
     ...mapWritableState(navStore, [
@@ -230,7 +234,7 @@ export default {
       "guideList",
       "userInfo",
       "init",
-      "loginVisible"
+      "loginVisible",
     ]),
 
     ...mapWritableState(appStore, {
@@ -251,7 +255,12 @@ export default {
       "freeLayoutDataTmp",
       "freeLayoutStateTmp",
     ]),
-    ...mapWritableState(usePermissionStore, ["isOffline", "isSingle", "isGuest", "currentEnv"]),
+    ...mapWritableState(usePermissionStore, [
+      "isOffline",
+      "isSingle",
+      "isGuest",
+      "currentEnv",
+    ]),
     deskGroupRef() {
       return this.$refs.deskGroupRef;
     },
@@ -282,16 +291,20 @@ export default {
         return this.desks[0];
       }
     },
+    /**区分个人桌面和社群桌面**/
+    communityVisible() {
+      return this.appSettings.isCommunity;
+    },
   },
   async mounted() {
     // 每次进来需要设置工作台目前处于状态
-    this.setStatus()
+    this.setStatus();
 
     // 用于桌面初始化 组件
-    this.componentInit()
+    this.componentInit();
 
     // 首次客户端引导
-    if (!this.init && isMain() && !usePlat('web')) {
+    if (!this.init && isMain() && !usePlat("web")) {
       this.$router.replace({ name: "wizard" });
     }
 
@@ -439,14 +452,14 @@ export default {
     },
 
     // 覆写当前工作台状态
-    setStatus(){
-      this.isOffline = cache.get('isOffline')
-      this.isSingle = cache.get('isSingle')
-      this.isGuest = cache.get('isGuest')
+    setStatus() {
+      this.isOffline = cache.get("isOffline");
+      this.isSingle = cache.get("isSingle");
+      this.isGuest = cache.get("isGuest");
 
-      if(!isOnline.value) setOffline(true)
+      if (!isOnline.value) setOffline(true);
 
-      this.currentEnv = window.$currentEnv()
+      this.currentEnv = window.$currentEnv();
       // 进行一次重连操作
       // useUpdateUserInfo()
 
@@ -456,7 +469,7 @@ export default {
     },
 
     //
-    componentInit(){
+    componentInit() {
       // 判断是否是第一次加载
       if (this.deskInit) {
         this.deskInit = false;
@@ -609,20 +622,20 @@ export default {
       this.visibleGuide = true;
     },
     // 调试用 后续删除
-    test1(){
-      this.setOffline(!this.isOffline)
+    test1() {
+      this.setOffline(!this.isOffline);
     },
-    test2(){
-      this.setGuest(!this.isGuest)
+    test2() {
+      this.setGuest(!this.isGuest);
     },
-    test3(){
-      this.setSingle(!this.isSingle)
+    test3() {
+      this.setSingle(!this.isSingle);
     },
-    test4(){
-      console.log('isOnline', isOnline)
+    test4() {
+      console.log("isOnline", isOnline);
     },
-    test8(){
-      this.loginVisible = true
+    test8() {
+      this.loginVisible = true;
     },
 
     // 关闭缩放弹窗

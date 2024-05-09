@@ -643,7 +643,7 @@ import ExtraMenu from '../../components/windowPanel/components/ExtraMenu.vue';
     // },
     currentDesk() {
       let currentDesk = this.deskList.find((desk) => {
-        return desk.id === this.currentDeskId;
+        if(!desk.communityNo) return desk.id === this.currentDeskId;
       });
       this.key = Date.now();
       return currentDesk;
@@ -658,10 +658,10 @@ import ExtraMenu from '../../components/windowPanel/components/ExtraMenu.vue';
     displayDesks() {
       return [
         ...this.deskList.filter((desk) => {
-          return desk.pin;
+          if(!desk.communityNo)  return desk.pin;
         }),
         ...this.deskList.filter((desk) => {
-          return !desk.pin;
+          if(!desk.communityNo) return !desk.pin;
         }),
       ]
         .slice(0, 4)
@@ -920,8 +920,10 @@ import ExtraMenu from '../../components/windowPanel/components/ExtraMenu.vue';
     delDesk() {
       // 定制桌面时需要屏蔽删除功能
       if(!this.showGuide){
-
-        if (this.deskList.length === 1) {
+        const filterDesk = this.deskList.filter((desk)=>{
+          return !desk.communityNo
+        })
+        if (filterDesk.length === 1) {
           window.$ui.confirm("至少保留一个桌面。", "", {
             noText: null,
             type: "warning",

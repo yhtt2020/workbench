@@ -115,7 +115,7 @@ export default {
           };
           return itemNew;
         });
-        console.log(this.displayItems);
+        // console.log(this.displayItems);
       },
     },
   },
@@ -134,7 +134,7 @@ export default {
       });
     },
     previewKay(item) {
-      console.log(item);
+      // console.log(item);
       this.$emit("openPreview", {
         scheme: {
           ...item,

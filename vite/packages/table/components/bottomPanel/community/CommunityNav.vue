@@ -43,6 +43,7 @@ import { useRouter } from "vue-router";
 
 import { chatCommunityStore } from "../../../apps/chat/store/chatCommunity";
 import { communityNavStore } from "../store/communityNavStore";
+import { appStore } from "../../../store";
 
 import Avatar from "../../desk/navigationBar/components/Avatar.vue";
 
@@ -52,9 +53,10 @@ const router = useRouter();
 // pinia数据
 const communityNav = chatCommunityStore();
 const { myCommunity } = storeToRefs(communityNav);
-
 const comNav = communityNavStore();
 const { settingType, currentCommunity } = storeToRefs(comNav);
+const app = appStore();
+const { settings } = storeToRefs(app);
 
 // 获取当前实例
 const { proxy } = getCurrentInstance();
@@ -81,7 +83,7 @@ const communityNum = computed(() => {
 });
 
 // 团队导航图标公共数据
-const createNavEntry = (options:any) => ({
+const createNavEntry = (options: any) => ({
   bg: "",
   isBg: false,
   mode: "app",
@@ -102,7 +104,7 @@ const communityNavList = computed(() => {
     {
       icon: "/logo/teamNav.svg",
       name: "团队桌面",
-      fn: () => {},
+      fn: openDesk,
     },
   ];
 
@@ -124,7 +126,7 @@ const communityNavList = computed(() => {
               params: { ...currentCommunity.value.item },
             });
           } else {
-            /**调整路由名称**/ 
+            /**调整路由名称**/
             router.push({ name: "officialCommunity", params: { no: 1 } });
           }
         },
@@ -138,7 +140,7 @@ const communityNavList = computed(() => {
         name: "想天社群",
         icon: "/icons/logo128.png",
         fn: () => {
-          /**调整路由名称**/ 
+          /**调整路由名称**/
           router.push({ name: "officialCommunity", params: { no: 1 } });
         },
       }),
@@ -154,6 +156,11 @@ const openNav = async (event) => {
   } else {
     proxy.$bus.emit("openTeamNav", event);
   }
+};
+
+const openDesk = () => {
+  settings.value.isCommunity = false;
+  router.push({ name: "home", params: { no: '' } });
 };
 </script>
 
