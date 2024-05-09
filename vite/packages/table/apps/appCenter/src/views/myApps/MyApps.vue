@@ -93,10 +93,8 @@ const arr = ref([
         label:'固定到开始菜单',
         id:"2",
         newIcon: "fluent:grid-16-regular",
-        callBack: (item) => {
-            // console.log('固定到开始菜单',currentItem.value)
-            startMenu.value.unshift(currentItem.value)
-            message.success('成功固定到开始菜单')
+        callBack: () => {
+            addStartMenu(currentItem.value)
         }
     },
     {
@@ -117,15 +115,6 @@ const menus = computed(() => {
     const menu = [list, ...arr.value]
     return menu.sort((a, b) => a.id - b.id)
 })
-
-// 我的应用数据
-// const list = computed(() => {
-//     const arr = [...myApps.value,...appsList].map((item) => {
-//         return useTransform(item)
-//     })
-//     console.log(arr,'transform arr')
-//     return arr
-// }) 
 
 // 下拉默认数据
 const defaultData = ref({
@@ -185,12 +174,24 @@ const search = () => {
 // 删除
 const delItem = (item) => {
     const index = appsList.findIndex((ele) => ele.name === item.name)
-    console.log(index,'index',item,appsList)
+    // console.log(index,'index',item,appsList)
     if(index !== -1) {
         message.info(`${item.name}不能删除`)
     } else {
         myApps.value = myApps.value.filter((ele) => ele.name !== item.name)
         message.success(`${item.name}删除成功`)
+    }
+}
+
+// 添加到开始菜单
+const addStartMenu = (item) => {
+    const index = startMenu.value.findIndex((ele) => ele.name === item.name)
+    // console.log(index,'index',item,startMenu.value)
+    if(index !== -1) {
+        message.info(`${item.name}已经固定到开始菜单`)
+    } else {
+        startMenu.value.unshift(item)
+        message.success(`${item.name}成功固定到开始菜单`)
     }
 }
 

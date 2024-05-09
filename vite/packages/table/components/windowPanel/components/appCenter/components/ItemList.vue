@@ -3,6 +3,7 @@
         <template v-for="(item,index) in list" :key="index">
             <!-- <xt-menu :menus="menus" @onMounted="open(item)"> -->
                 <Item 
+                    :bg="bg"
                     :item="item" 
                     :size="100"
                     @clickItem="open"
@@ -23,7 +24,11 @@ const props = defineProps({
     list: {
         type: Array,
         default: () => []
+    },
+    bg: {
+        type: String,
     }
+    
 })
 
 const Item = defineAsyncComponent(() => import('./Item.vue'))

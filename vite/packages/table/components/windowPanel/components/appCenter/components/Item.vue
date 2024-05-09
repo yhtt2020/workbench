@@ -2,10 +2,15 @@
     <div 
         @click="clickItem(item)"
         class="flex flex-col items-center justify-center gap-2 item"
-        :style="{width: `${size}px`, height: `${size}px`, borderRadius: `${radius}px`} "
+        :style="{
+            background: bg, 
+            width: `${size}px`, 
+            height: `${size}px`, 
+            borderRadius: `${radius}px`
+        } "
     >
         <xt-mix-icon :icon="item.icon" :size="iconSize" :type="isIfy"></xt-mix-icon>
-        <div class="text-sm xt-text-2 line-clamp-1"> {{ item.name }}</div>
+        <div class="px-1 text-sm xt-text-2 line-clamp-1"> {{ item.name }}</div>
     </div>
 </template>
 

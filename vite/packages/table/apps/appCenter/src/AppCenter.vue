@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, defineAsyncComponent } from "vue";
+import { ref, computed, defineAsyncComponent, watch, onMounted, onUnmounted } from "vue";
 import Developer from "./views/developer/Developer.vue";
 import { useAppCenterStore } from "./store";
 import { useTTAppStore } from "../../ttApp/src/store";
@@ -12,7 +12,8 @@ const Market = defineAsyncComponent(() => import('./views/market/Market.vue'))
 
 const ttappStore = useTTAppStore();
 const appCenterStore = useAppCenterStore();
-const { visible } = storeToRefs(appCenterStore);
+const { visible, current } = storeToRefs(appCenterStore);
+
 // 左侧对应组件
 const components = ref({
   Developer,
@@ -22,7 +23,7 @@ const components = ref({
   Market,
 });
 // 当前渲染组件
-const currentCom = ref("Developer");
+const currentCom = ref("MyApps");
 
 // 显示应用中心
 // 左侧菜单列表
@@ -30,18 +31,24 @@ const leftMenuList = computed(() => {
   const list = [
     {
       newIcon: "fluent:grid-20-regular",
+      name:'我的应用',
+      id:'MyApps',
       callBack: () => {
         switchCurrentCom("MyApps");
       },
     },
     {
       newIcon: "fluent:building-shop-16-regular",
+      name:'应用市场',
+      id:'Market',
       callBack: () => {
         switchCurrentCom("Market");
       },
     },
     {
       newIcon: "fluent:desktop-16-regular",
+      name:'实用软件',
+      id:'Apps',
       callBack: () => {
         switchCurrentCom("Apps");
       },
@@ -55,6 +62,8 @@ const leftMenuList = computed(() => {
     // },
     {
       newIcon: "fluent:code-16-regular",
+      name:'开发者',
+      id:'Developer',
       callBack: () => {
         console.log("123 :>> ", 123);
         switchCurrentCom("Developer");
@@ -62,6 +71,8 @@ const leftMenuList = computed(() => {
     },
     {
       newIcon: "fluent:settings-16-regular",
+      name:'设置',
+      id:'Setting',
       callBack: () => {
         switchCurrentCom("Setting");
       },
@@ -73,6 +84,16 @@ const leftMenuList = computed(() => {
 const switchCurrentCom = (name: string) => {
   currentCom.value = name;
 };
+
+// 导航栏中的开始中心跳转到指定页面
+onMounted(() => {
+  switchCurrentCom(current.value);
+})
+
+// 初始化
+onUnmounted(() => {
+  current.value = "MyApps"
+})
 </script>
 
 <template>
@@ -85,6 +106,9 @@ const switchCurrentCom = (name: string) => {
         :last="3"
         fn="fn"
         leftBg="red"
+        leftMargin="mr-0 py-3"
+        model="id"
+        v-model:index="currentCom"
       >
         <div class="w-full h-full py-4 pr-4">
           <!-- <div v-if="currentCom !== 'Developer'">无暂未开发</div> -->

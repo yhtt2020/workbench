@@ -4,6 +4,7 @@
     <FloatApp 
       :appPos="position"
       v-if="appsVisible"
+      @close="appsVisible = false"
     />
     <!-- 文件夹弹窗 -->
     <FloatFolder 
@@ -846,7 +847,6 @@ export default {
           y:custom.y
         }
       }
-      console.log(menu,'where is menu')
       this.position = this.usePosition(pos,menu)
     },
     onDrag: function (e) {

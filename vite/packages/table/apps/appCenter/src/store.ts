@@ -10,6 +10,10 @@ export const useAppCenterStore = defineStore("useAppCenterStore", {
     myApps: [],
     // 开始菜单列表
     startMenu: [],
+    // 当前选中的应用
+    current:'MyApps',
+    // 最近使用
+    recentUsed: true,
   }),
   getters: {},
   actions: {},
@@ -17,7 +21,7 @@ export const useAppCenterStore = defineStore("useAppCenterStore", {
     enabled: true,
     strategies: [
       {
-        paths: ['myApps','startMenu'],
+        paths: ['myApps', 'startMenu', 'recentUsed'],
         storage: localStorage,
       },
     ],
