@@ -106,7 +106,6 @@ onUnmounted(() => {
         :last="3"
         fn="fn"
         leftBg="red"
-        leftMargin="mr-0 py-3"
         model="id"
         v-model:index="currentCom"
       >

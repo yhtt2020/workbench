@@ -34,12 +34,12 @@
                         </div>
                     </xt-button>
                 </div>
-                <ItemList :list="lastUseList"></ItemList> 
+                <ItemList :list="lastUseList.splice(0,5)" :isStartMenu="false"></ItemList> 
             </div>
             
         </div>
         <div class="w-full h-[56px] xt-bg rounded-b-2xl flex justify-between">
-            <div class="flex items-center justify-between gap-2 p-2 pointer">
+            <div class="flex items-center justify-between gap-2 p-2 pointer" @click="goApps('MyApps')">
                 <xt-new-icon icon="fluent:grid-16-regular" size="20"></xt-new-icon>
                 全部应用
             </div>
@@ -145,10 +145,8 @@ const goApps = (name:string) => {
     emit('close')
 }
 
-// 搜索
-// const searchList = computed(() => {
-//     const list = startMenu.value
-//     return list.filter(item => item.name.indexOf(inputValue.value) !== -1)
+// onMounted(() => {
+//     startMenu.value = []
 // })
 </script>
 <style lang='scss' scoped></style>

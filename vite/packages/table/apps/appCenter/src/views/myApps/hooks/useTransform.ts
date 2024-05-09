@@ -7,7 +7,7 @@ export const useTransform = (item) => {
         ...item,
         icon:item.icon,
         name:item.name,
-        id:nanoid(4),
+        id:item.id || nanoid(4),
         type: item.type || 'coolApp',
         value: item.type === 'ttapp' ? item.value : item.installPath || item.data,
     };

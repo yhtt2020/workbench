@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="flex items-center justify-between pl-4">
+        <div class="flex items-center justify-between pl-4 mb-4">
             <div class="flex items-center">
                 <xt-ify-icon icon="fluent:settings-16-regular" class="mr-2" />
                 设置

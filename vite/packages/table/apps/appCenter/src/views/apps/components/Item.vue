@@ -17,24 +17,28 @@
                     h="32" 
                     radius="8" 
                     class="xt-bg" 
-                    icon="fluent:arrow-download-16-regular"
                     :iconSize="'16'"
                     style="background-color: var(--primary-bg) ;"
                     @click = 'download(item)'
                 >
-                    {{ tagTitle }}
+                    <div class="flex items-center gap-1">
+                        <xt-new-icon icon="fluent:arrow-download-16-regular" size="16"></xt-new-icon>
+                        {{ tagTitle }}
+                    </div>
                 </xt-button>
                 <template v-else>
                     <xt-button 
                         w="72" 
                         h="32" 
                         radius="8" 
-                        icon="fluent:open-16-regular"
                         :iconSize="'16'"
                         style="background-color: var(--primary-bg) ;"
                         @click = 'executeLocalApp(item)'
                     >
-                        打开
+                        <div class="flex items-center gap-1">
+                            <xt-new-icon icon="fluent:open-16-regular" size="16"></xt-new-icon>
+                            打开
+                        </div>
                     </xt-button>
                     <xt-menu :menus="menu" model="click">
                         <xt-button 

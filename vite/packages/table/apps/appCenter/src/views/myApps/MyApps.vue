@@ -85,7 +85,6 @@ const arr = ref([
         newIcon: "fluent:open-16-regular",
         callBack: () => {
             const { type , value } = currentItem.value
-            // console.log(type,value,currentItem.value,'打开应用')
             startApp(type, value, router)
             visible.value = false
         }
