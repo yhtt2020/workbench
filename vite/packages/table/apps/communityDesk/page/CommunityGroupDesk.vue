@@ -23,6 +23,7 @@
         :key="currentDeskId"
         :keepAddIcon="keepAddIcon"
         @onArrange="onArrange"
+        :communityNo="currentComInfo.no"
       >
         <!-- 拿菜单数据 -->
         <template #settingsAllAfter>
@@ -142,6 +143,7 @@
             :currentDesk="currentDesk"
             :key="key"
             :editing="editing"
+            :communityNo="currentComInfo.no"
           >
           </Desk>
         </span>
@@ -150,9 +152,11 @@
 
     <!-- 社群成员空白桌面 -->
     <template v-else>
-      <div class="flex items-center justify-center w-full h-full">
-        <NonAdminEmpty />
-      </div>
+      <xt-mix-menu class="w-full h-full" :menus="currentMenu" ref="mixMenu">
+        <div class="flex items-center justify-center w-full h-full">
+          <NonAdminEmpty />
+        </div>
+      </xt-mix-menu>
     </template>
 
     <div
@@ -456,6 +460,11 @@
 
   <!-- 选择文件 -->
   <input style="display: none" ref="fileRef" type="file" />
+
+  <!-- 壁纸应用 -->
+  <GalleryModal ref="galleryRef" />
+  <!-- 社群成员编辑弹窗 -->
+  <!-- <MemberEdit ref="memberEditRef"/> -->
 </template>
 
 <script>
@@ -473,6 +482,7 @@ import { communityNavStore } from "../../../components/bottomPanel/store/communi
 import { useDeskStore } from "../../../components/desk/store";
 import { useFreeLayoutStore } from "../../../components/desk/freeLayout/store";
 import { useFloatMenuStore } from "../../../components/desk/floatMenu/store";
+import menuMinis from "../hooks/communityMenu";
 
 import Desk from "../../../components/desk/Desk.vue";
 import AllDeskList from "../../../components/desk/AllDeskList.vue";
@@ -486,6 +496,10 @@ import NewGuidePage from "../../../page/app/grade/NewGuidePage.vue";
 import ExtraMenu from "../../../components/windowPanel/components/ExtraMenu.vue";
 import NonAdminEmpty from "./empty/NonAdminEmpty.vue";
 import AdminEmpty from "./empty/AdminEmpty.vue";
+import GalleryModal from "../../../components/paperModal/PaperApp.vue";
+
+/**成员编辑弹窗**/
+// import MemberEdit from "../components/MemberEdit.vue";
 
 // import HorizontalPanel from "../HorizontalPanel.vue";
 // import Icon from "../Icon.vue";
@@ -494,6 +508,7 @@ import AdminEmpty from "./empty/AdminEmpty.vue";
 export default {
   name: "CommunityGroupDesk",
   emits: ["update:currentDeskId", "showMore"],
+  mixins: [menuMinis],
   components: {
     // Emoji,
     VueCustomScrollbar,
@@ -510,6 +525,8 @@ export default {
     ExtraMenu,
     NonAdminEmpty,
     AdminEmpty,
+    GalleryModal,
+    // MemberEdit
   },
 
   props: {
@@ -544,50 +561,6 @@ export default {
 
   data() {
     return {
-      /**桌面组下拉菜单**/
-      deskGroupMenu: {
-        id: 20,
-        newIcon: "fluent:more-horizontal-16-filled",
-        name: "更多",
-        lock: true,
-        children: [
-          {
-            id: 2,
-            newIcon: "fluent:full-screen-maximize-16-filled",
-            name: "全屏桌面",
-            fn: () => {
-              let a = !this.fullScreen;
-              this.setFullScreen(a);
-            },
-          },
-          {
-            id: 3,
-            newIcon: "fluent:arrow-download-20-filled",
-            name: "导入桌面",
-            fn: this.importDesk,
-          },
-          {
-            id: 4,
-            newIcon: "fluent:open-20-filled",
-            name: "导出桌面",
-            fn: this.exportDesk,
-          },
-          {
-            id: 5,
-            newIcon: "fluent:share-android-24-regular",
-            name: "分享桌面",
-            fn: this.shareDesk,
-            disabled: window.$usePlat(),
-          },
-          {
-            id: 9,
-            newIcon: "akar-icons:trash-can",
-            name: "删除桌面",
-            fn: this.delDesk,
-            color: "#FF4D4F",
-          },
-        ],
-      },
       /**滚动条配置**/
       scrollbarSettings: {
         useBothWheelAxes: true,
@@ -599,6 +572,8 @@ export default {
       },
       /**当前添加tab类型**/
       currentAddTab: { name: "market" },
+      /**隐藏桌面组件参数**/
+      comHide: false,
       /**唯一key**/
       key: Date.now(),
       /**显示更多桌面**/
@@ -657,23 +632,6 @@ export default {
       this.addDeskVisible = true;
       this.moreDesk();
     });
-    let obj = {
-      id: 3,
-      newIcon: "fluent:apps-add-in-20-filled",
-      name: "添加更多",
-      lock: true,
-      children: [
-        {
-          id: 1,
-          newIcon: "fluent:slide-add-16-regular",
-          name: "添加新桌面",
-          fn: this.showAddDeskForm,
-        },
-      ],
-    };
-    
-    this.addMenu(this.deskGroupMenu);
-    this.addMenu(obj);
     if (this.deskList.length > 0) {
       this.currentDesk = this.deskList[0];
     }
@@ -725,7 +683,7 @@ export default {
     },
     /**当前桌面数据**/
     currentDesk() {
-      console.log('当前桌面数据列表',this.deskList)
+      console.log("当前桌面数据列表", this.deskList);
       let currentDesk = this.deskList.find((desk) => {
         if (desk.communityNo) {
           return desk.id === this.currentDeskId;
@@ -766,31 +724,16 @@ export default {
           });
       }
     },
-    /**获取主页尺寸**/
-    getHomeSize() {
-      this.$nextTick(() => {
-        let height = document.getElementById("cardContent")?.offsetHeight;
-        let width = document.getElementById("cardContent")?.offsetWidth;
-        const windowHeight = document.documentElement.clientHeight; // 高
-        let windowWidth = document.documentElement.clientWidth; // 宽
-        let size = {
-          width,
-          height,
-          windowHeight,
-          windowWidth,
-        };
-        this.setDeskSize(size);
-      });
+    /**当前菜单项**/
+    currentMenu() {
+      /**当前社群具备管理员资格**/
+      if (this.currentComRole) {
+        return this.communityMenus;
+      }
+      else {
+        return this.memberMenus;
+      }
     },
-    /**当前菜单项**/ 
-    currentMenu(){
-      if(this.currentComRole){}
-      else {}
-
-      console.log('菜单项',this.menus);
-      return this.menus;
-    }
-
   },
 
   watch: {
@@ -811,6 +754,16 @@ export default {
         this.jumpDesk = "";
       }
     },
+
+    /**监听组件隐藏参数变化**/
+    "getFreeLayoutState":{
+      handler(newVal) {
+        console.log('测试',newVal?.system?.hide)
+        this.comHide = newVal?.system?.hide
+      },
+      immediate: true,
+      deep:true,
+    },
   },
 
   methods: {
@@ -818,6 +771,7 @@ export default {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayout"]),
     ...mapActions(useDeskStore, ["addMenu"]),
     ...mapActions(appStore, ["toggleFullScreen"]),
+    ...mapActions(communityNavStore, ["updateCurrentDesk", "saveCommunityNav"]),
 
     /**关闭推荐桌面预览**/
     closePreview() {
@@ -1122,14 +1076,19 @@ export default {
       completeTask("m0203");
       this.hideMarket();
     },
-    /**图标整理**/ 
+    /**图标整理**/
     onArrange() {
       this.guideList = [1];
       this.showGuide = true;
     },
-    /**关闭图标整理**/ 
+    /**关闭图标整理**/
     closeShowGuide() {
       this.showGuide = false;
+    },
+    /**同步更新当前社群桌面数据到云端**/
+    sysSaveCommunity() {
+      this.updateCurrentDesk(this.currentDesk);
+      this.saveCommunityNav();
     },
 
     // // 智能定制

@@ -5,16 +5,37 @@ import {
   mainData,
 } from "../../../components/desk/freeLayout/config";
 
+/**社群管理员模块**/ 
 function communityMenus() {
   let currentHide = null;
 
   if (this.isFreeLayout) {
     currentHide = this.getFreeLayoutState?.system?.hide;
   } else {
-    currentHide = this.hide;
+    currentHide = this.comHide;
   }
 
   return [
+    {
+      id: 0,
+      newIcon: "fluent:add-16-filled",
+      name: "导入文件测试",
+      disabled: true,
+    },
+    {
+      id: 0,
+      newIcon: "fluent:add-16-filled",
+      name: "定制桌面测试",
+      disabled: true,
+      fn: () => {
+        useCustomLayout({
+          headerList: headerData,
+          folderList: folderData,
+          mainList: mainData,
+          cb: (position: any) => {},
+        });
+      },
+    },
     {
       id: 1,
       name: "更新桌面",
@@ -26,7 +47,11 @@ function communityMenus() {
       id: 3,
       newIcon: "fluent:add-16-filled",
       name: "添加图标",
-      fn: this.addIcon,
+      fn: () => {
+        this.$nextTick(() => {
+          this.$refs.currentDeskRef.newAddIcon();
+        });
+      },
     },
     {
       id: 4,
@@ -144,33 +169,21 @@ function communityMenus() {
           id: 0,
           newIcon: "fluent:settings-16-regular",
           name: "系统设置",
-          // fn: this.showSystemSet,
+          fn: () => {
+            this.$nextTick(() => {
+              this.$refs.currentDeskRef.showSystemSet();
+            });
+          },
         },
         {
           id: 1,
           newIcon: "fluent:settings-16-regular",
           name: "桌面设置",
-          // fn: this.showSetting,
-        },
-        {
-          id: 7,
-          newIcon: this.hide
-            ? "fluent:eye-16-regular"
-            : "fluent:eye-off-16-regular",
-          name: currentHide ? "显示小组件" : "隐藏小组件",
           fn: () => {
-            if (this.isFreeLayout) {
-              this.getFreeLayoutState.system.hide =
-                !this.getFreeLayoutState?.system?.hide;
-            } else {
-              if (this.hide) {
-                this.showDesk();
-              } else {
-                this.hideDesk();
-              }
-            }
+            this.$nextTick(() => {
+              this.$refs.currentDeskRef.showSetting();
+            });
           },
-          disabled: false,
         },
         {
           id: 2,
@@ -187,7 +200,6 @@ function communityMenus() {
           name: "导入桌面",
           fn: this.importDesk,
         },
-
         {
           id: 4,
           newIcon: "fluent:open-20-filled",
@@ -202,7 +214,39 @@ function communityMenus() {
           disabled: (window as any).$usePlat(),
         },
         {
-          id: 9,
+          id: 6,
+          newIcon: "fluent:circle-off-16-regular",
+          name: "清空桌面",
+          fn: () => {
+            this.$nextTick(() => {
+              this.$refs.currentDeskRef.clear(this.currentDesk);
+            });
+          },
+        },
+        {
+          id: 7,
+          newIcon: this.comHide
+            ? "fluent:eye-16-regular"
+            : "fluent:eye-off-16-regular",
+          name: currentHide ? "显示小组件" : "隐藏小组件",
+          fn: () => {
+            this.$nextTick(() => {
+              if (this.isFreeLayout) {
+                this.getFreeLayoutState.system.hide =
+                  !this.getFreeLayoutState?.system?.hide;
+              } else {
+                if (this.comHide) {
+                  this.$refs.currentDeskRef.showDesk();
+                } else {
+                  this.$refs.currentDeskRef.hideDesk();
+                }
+              }
+            });
+          },
+          disabled: false,
+        },
+        {
+          id: 8,
           newIcon: "akar-icons:trash-can",
           name: "删除桌面",
           fn: this.delDesk,
@@ -213,8 +257,89 @@ function communityMenus() {
   ];
 }
 
+/**社群成员模块**/
+function memberMenus(){
+  return [
+    {
+      id: 1,
+      name: "更新桌面",
+      newIcon: "fluent:cloud-arrow-up-16-regular",
+      // fn: this.sysSaveCommunity,
+    },
+    { id: 2, divider: true },
+    {
+      id: 3,
+      newIcon: this.editing
+        ? "fluent:record-stop-16-regular"
+        : "fluent:window-new-16-regular",
+      name: this.editing ? "停止调整" : "调整桌面布局",
+      fn: () => {
+        this.$nextTick(() => {
+          this.$refs.currentDeskRef.toggleEditing();
+        });
+      },
+    },
+    {
+      id: 4,
+      newIcon: "fluent:resize-large-16-regular",
+      name: "复原桌面位置",
+      disabled: this.isFreeLayout ? false : true,
+      fn: () => {
+        this.$nextTick(() => {
+          this.$refs.currentDeskRef.freeLayoutScrollbarRedirect();
+        });
+      },
+    },
+    {
+      id: 5,
+      newIcon: "fluent:image-multiple-16-regular",
+      name: "更换壁纸",
+      fn: () => {
+        this.$refs.galleryRef.openPaperAppModal();
+      },
+    },
+    {
+      id: 20,
+      newIcon: "fluent:more-horizontal-16-filled",
+      name: "更多",
+      lock: true,
+      children:[
+        {
+          id: 1,
+          newIcon: "fluent:settings-16-regular",
+          name: "桌面设置",
+          fn: () => {
+            this.$nextTick(() => {
+              // this.$refs.currentDeskRef.showSetting();
+            });
+          },
+        },
+        {
+          id: 2,
+          newIcon: "fluent:full-screen-maximize-16-filled",
+          name: "全屏桌面",
+          fn: () => {
+            // let a = !this.fullScreen;
+            // this.setFullScreen(a);
+          },
+        },
+        {
+          id: 3,
+          newIcon: "fluent:tablet-16-regular",
+          name: "添加到导航栏",
+          fn: () => {
+            // let a = !this.fullScreen;
+            // this.setFullScreen(a);
+          },
+        }
+      ]
+    }
+  ]
+} 
+
 export default {
   computed: {
     communityMenus,
+    memberMenus
   },
 };
