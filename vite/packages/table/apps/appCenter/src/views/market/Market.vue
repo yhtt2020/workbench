@@ -12,7 +12,9 @@
         <ImgList :list="list"></ImgList>
         <div class="my-4 text-sm xt-text">推荐应用</div>
         <xt-scrollbar class="flex-1 w-full overflow-hidden" :x="false" :y="true">
-            
+            <div class="flex flex-wrap gap-2">
+                <Item :item="item" v-for="(item, index) in lightApp" :key="index"/>
+            </div>
         </xt-scrollbar>
     </div>
 
@@ -23,10 +25,15 @@
 import { ref, defineAsyncComponent, onMounted } from 'vue'
 import { storeToRefs } from 'pinia';
 import Header from '../../component/Header.vue';
+import { usePlat } from '../../../../../ui/hooks/usePlat';
+import { useReplace } from '../../../../../components/desk/addIcon/hook/useReplace';
+import { mergeData } from '../../../../../ui/hooks/useDataConversion';
 
-import { appsStore } from '../../../../../store/apps';
+
+const appModel = window.$models.appModel
 
 const ImgList = defineAsyncComponent(() => import('./components/ImgList.vue'))
+const Item = defineAsyncComponent(() => import('../apps/components/Item.vue'))
 
 const list = ref([
     {
@@ -41,13 +48,31 @@ const list = ref([
     },
 ])
 
-const useApp = appsStore()
-const { qingApps } = storeToRefs(useApp)
+const lightApp = ref([])
 
-onMounted(() => {
-    // useApp.loadData()
-    console.log(qingApps.value,'qingApps.value')
+onMounted( async() => {
+    if(!usePlat('web')){
+      lightApp.value =await appModel.getAllApps() 
+    } else {
+      lightApp.value = []
+    }
+    // 添加图标类型
+    addType(lightApp.value)
+    // 替换图标数据字段
+    lightApp.value = useReplace(lightApp.value)
+    // 替换统一图标数据字段
+    lightApp.value = lightApp.value.map((item) => {
+        return mergeData(item)
+    })
 })
+
+const addType = (list:string[]) => {
+    list.forEach((item) => {
+        if(item.icon) return
+        item.type = 'lightApp'
+        item.icon = item.logo
+    })
+}
 
 </script>
 <style lang='scss' scoped></style>

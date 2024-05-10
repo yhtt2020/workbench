@@ -23,13 +23,23 @@
                 @onIconClick="() => {}"
             >
                 <template #extra>
-                    <xt-button 
-                        @click="localAppClick" 
-                        class="pb-3 mb-3 xt-bg-t-2" 
-                        block 
-                        h="40"
-                    >请选择
-                    </xt-button>
+                    <div class="flex w-full gap-3">
+                        <div @click="localAppClick()" class="w-full">
+                            <xt-option-input
+                              v-model:input="inputValue"
+                              readonly
+                            />
+                        </div>
+                        <xt-button 
+                            @click="open()" 
+                            icon="fluent:open-16-regular" 
+                            :w="40" 
+                            :h="40"
+                            style="background-color: var(--primary-bg) ;"
+                        />
+                    </div>
+                    
+                    
                     <input style="display: none" ref="fileRef" type="file" multiple />
                 </template>
             </xt-option-info>
@@ -47,6 +57,37 @@ import Exit from '../../component/exit.vue'
 
 const appCenterStore = useAppCenterStore()
 const { recentUsed } = storeToRefs(appCenterStore)
+
+const inputValue = ref(require('path').join(window.globalArgs['user-data-dir'], 'download'))
+
+const emits = defineEmits(["onLocalApp"]);
+const fileRef = ref(null);
+const localAppClick = () => {
+  fileRef.value.click();
+
+  fileRef.value.onchange = async function (files) {
+    // if (files.length === 0) {
+    //   this.clear();
+    //   return;
+    // }
+    const file = this.files[0];
+    const icon = await tsbApi.system.extractFileIcon(file.path);
+    const localApp = {
+      type: "tableApp",
+      name: file.name,
+      value: file.path,
+      icon,
+    };
+    // emits("onLocalApp", localApp);
+    console.log(localApp);
+    inputValue.value = file.path
+  };
+};
+
+const open = () => {
+  console.log("123 :>> ", 123);
+  window.open(inputValue.value);
+};
 
 </script>
 <style lang='scss' scoped></style>
