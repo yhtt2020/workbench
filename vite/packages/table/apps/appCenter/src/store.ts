@@ -8,8 +8,6 @@ export const useAppCenterStore = defineStore("useAppCenterStore", {
     loginCb:()=>{},
     // 我的应用列表
     myApps: [],
-    // 开始菜单列表
-    startMenu: [],
     // 当前选中的应用
     current:'MyApps',
     // 最近使用
@@ -21,7 +19,7 @@ export const useAppCenterStore = defineStore("useAppCenterStore", {
     enabled: true,
     strategies: [
       {
-        paths: ['myApps', 'startMenu', 'recentUsed'],
+        paths: ['myApps', 'recentUsed'],
         storage: localStorage,
       },
     ],

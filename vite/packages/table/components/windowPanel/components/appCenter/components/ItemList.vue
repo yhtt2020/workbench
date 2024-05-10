@@ -16,15 +16,10 @@
 <script setup lang='ts'>
 import { ref, defineAsyncComponent, computed } from 'vue'
 import { useRouter } from 'vue-router';
-import { storeToRefs } from 'pinia';
-
-import { useAppCenterStore } from "../../../../../apps/appCenter/src/store";
 
 import { startApp } from '../../../../../ui/hooks/useStartApp';
 import { useMenus } from '../../../../../apps/appCenter/hooks/useMenus';
 
-const appCenterStore = useAppCenterStore()
-const { startMenu } = storeToRefs(appCenterStore)
 
 const props = defineProps({
     list: {
@@ -66,7 +61,7 @@ const arr = computed(() => {
             disabled:!props.isStartMenu,
             newIcon: "fluent:grid-16-regular",
             callBack: () => {
-                delStartMenu(currentItem.value)
+                currentItem.value.isStart = false
             }
         }
     ]
@@ -79,12 +74,6 @@ const open = (item) => {
     item.lastUseTime = Date.now()
     startApp(item.type,item.value,router)
     console.log(item,'open item')
-}
-
-// 取消固定
-const delStartMenu = (item) => {
-    console.log(item,'取消固定')
-    startMenu.value = startMenu.value.filter(i => i.id !== item.id)
 }
 
 // 获取当前应用

@@ -5,6 +5,7 @@ export const useTransform = (item) => {
     return {
         ...defaultData,
         ...item,
+        isStart:item.isStart || false,
         icon:item.icon,
         name:item.name,
         id:item.id || nanoid(4),

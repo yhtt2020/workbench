@@ -24,14 +24,16 @@
                 
             </template>
         </Header>
-        <div class="flex flex-wrap gap-2 mt-4" v-if="list.length > 0">
-            <template v-for="(item, index) in list" :key="item.id">
-                <xt-menu :menus="menus" @onMounted="getItem(item)">
-                    <Item :size="140" :isApp="true" :item="item" :info="getInfo(item)"/> 
-                </xt-menu>
-            </template>
-        </div>
-        <Empty v-else />
+        <xt-scrollbar class="flex-1 w-full overflow-hidden" :x="false" :y="true">
+            <div class="flex flex-wrap gap-2 mt-4" v-if="list.length > 0">
+                <template v-for="(item, index) in list" :key="item.id">
+                    <xt-menu :menus="menus" @onMounted="getItem(item)">
+                        <Item :size="140" :isApp="true" :item="item" :info="getInfo(item)"/> 
+                    </xt-menu>
+                </template>
+            </div>
+            <Empty v-else />
+        </xt-scrollbar>
     </div>
 </template>
 
@@ -67,8 +69,7 @@ const inputValue = ref('')
 
 // 当前选中
 const currentItem = ref('')
-// 应用列表
-const appList = ref([])
+
 // 分类后或者搜索后的数据
 const list = ref([])
 
@@ -86,6 +87,7 @@ const arr = ref([
         callBack: () => {
             const { type , value } = currentItem.value
             startApp(type, value, router)
+            currentItem.value.lastUseTime = Date.now()
             visible.value = false
         }
     },
@@ -94,7 +96,10 @@ const arr = ref([
         id:"2",
         newIcon: "fluent:grid-16-regular",
         callBack: () => {
-            addStartMenu(currentItem.value)
+            // addStartMenu(currentItem.value)
+            currentItem.value.isStart = true
+            // console.log(currentItem.value)
+            message.info(`${currentItem.value.name}已经固定到开始菜单`)
         }
     },
     {
@@ -127,7 +132,7 @@ const defaultData = ref({
 watch(
     () => defaultData.value.value,
     (val) => {
-        list.value = appList.value.filter((item) => item.type === val)
+        list.value = myApps.value.filter((item) => item.type === val)
     },
     { immediate: true }
 )
@@ -151,10 +156,15 @@ const getInfo = (item) => {
 
 // 初始化全部数据
 onMounted(() => {
-    appList.value = [...myApps.value,...appsList].map((item) => {
+    if(myApps.value.length === 0) {
+        myApps.value.push(...appsList)
+        
+    } 
+    myApps.value = myApps.value.map((item) => {
         return useTransform(item)
     })
-    list.value = appList.value
+    // console.log(myApps.value,'appList.value')
+    list.value = myApps.value
 })
 
 // 打开搜索框
@@ -170,7 +180,7 @@ const closeSearch = () => {
 // 搜索
 const search = () => {
     console.log(inputValue.value)
-    list.value = appList.value.filter((item) => item.name.includes(inputValue.value) && item.type === defaultData.value.value)
+    list.value = myApps.value.filter((item) => item.name.includes(inputValue.value) && item.type === defaultData.value.value)
 }
 
 // 删除
@@ -181,19 +191,8 @@ const delItem = (item) => {
         message.info(`${item.name}不能删除`)
     } else {
         myApps.value = myApps.value.filter((ele) => ele.name !== item.name)
+        list.value = myApps.value
         message.success(`${item.name}删除成功`)
-    }
-}
-
-// 添加到开始菜单
-const addStartMenu = (item) => {
-    const index = startMenu.value.findIndex((ele) => ele.name === item.name)
-    // console.log(index,'index',item,startMenu.value)
-    if(index !== -1) {
-        message.info(`${item.name}已经固定到开始菜单`)
-    } else {
-        startMenu.value.unshift(item)
-        message.success(`${item.name}成功固定到开始菜单`)
     }
 }
 

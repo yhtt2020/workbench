@@ -27,16 +27,17 @@
                     <xt-button 
                         :w="64" 
                         :h="28" 
-                        :radius="6">
+                        :radius="6"
+                        @click="getMore"
+                    >
                         <div class="flex items-center gap-1">
                             更多
                             <xt-new-icon icon="fluent:chevron-right-16-regular" size="16"></xt-new-icon> 
                         </div>
                     </xt-button>
                 </div>
-                <ItemList :list="lastUseList.splice(0,5)" :isStartMenu="false"></ItemList> 
+                <ItemList :list="lastList" :isStartMenu="false" v-if="!isMore"></ItemList> 
             </div>
-            
         </div>
         <div class="w-full h-[56px] xt-bg rounded-b-2xl flex justify-between">
             <div class="flex items-center justify-between gap-2 p-2 pointer" @click="goApps('MyApps')">
@@ -77,7 +78,7 @@ import { storeToRefs } from 'pinia';
 import { useAppCenterStore } from '../../../../apps/appCenter/src/store';
 
 const appCenterStore = useAppCenterStore()
-const { startMenu, current, visible, recentUsed } = storeToRefs(appCenterStore)
+const { current, visible, recentUsed, myApps } = storeToRefs(appCenterStore)
 
 const ItemList = defineAsyncComponent(() => import('./components/ItemList.vue'))
 const SearchList = defineAsyncComponent(() => import('./components/SearchList.vue'))
@@ -103,7 +104,9 @@ const { appPos } = toRefs(props)
 const inputValue = ref('')
 const isSearch = ref(false)
 const searchList = ref([])
+const isMore = ref(false)
 
+// 搜索
 const search = () => {
     // console.log(inputValue.value)
     isSearch.value = true
@@ -111,6 +114,7 @@ const search = () => {
     searchList.value = searchList.value.filter(item => item.name.indexOf(inputValue.value) !== -1)
 }
 
+// 恢复搜索
 watch(
     () => inputValue.value,
     (newV,oldV) => {
@@ -120,12 +124,25 @@ watch(
     }
 )
 
+// 开始菜单
+const startMenu = computed(() => {
+    const list = myApps.value.filter(item => item.isStart)
+    return list
+})
+
 // 最近使用
 const lastUseList = computed(() => {
-    let list = [...startMenu.value]
-    return list.sort((a,b) => {
+    let list : any = [...myApps.value]
+    list = list.sort((a,b) => {
         return b.lastUseTime - a.lastUseTime
     })
+    // console.log(list,'sort list')
+    return list
+})
+
+// 最近使用前五个
+const lastList = computed(() => {
+    return lastUseList.value.splice(0,5)
 })
 
 const cardZoom = computed(() => {
@@ -143,6 +160,11 @@ const goApps = (name:string) => {
     visible.value = true
     current.value = name
     emit('close')
+}
+
+// 获取更多
+const getMore = () => {
+    console.log('更多')
 }
 
 // onMounted(() => {
