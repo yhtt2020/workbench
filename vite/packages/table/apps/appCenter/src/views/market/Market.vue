@@ -6,14 +6,14 @@
         >
             <template #right>
                 <xt-button w="98" h="32" radius="8" icon="">我要上架</xt-button>
-                <xt-button w="127" h="32" radius="8" type="theme">全部应用（{{ 98 }}）</xt-button>
+                <xt-button w="127" h="32" radius="8" type="theme">全部应用（{{ recommendList.length }}）</xt-button>
             </template>
         </Header>
-        <ImgList :list="list"></ImgList>
+        <ImgList :list="adList"></ImgList>
         <div class="my-4 text-sm xt-text">推荐应用</div>
         <xt-scrollbar class="flex-1 w-full overflow-hidden" :x="false" :y="true">
             <div class="flex flex-wrap gap-2">
-                <Item :item="item" v-for="(item, index) in lightApp" :key="index"/>
+                <Item :item="item" v-for="(item, index) in recommendList" :key="index" @download="download" @open="open"/>
             </div>
         </xt-scrollbar>
     </div>
@@ -24,54 +24,66 @@
 <script setup lang='ts'>
 import { ref, defineAsyncComponent, onMounted } from 'vue'
 import { storeToRefs } from 'pinia';
-import Header from '../../component/Header.vue';
-import { usePlat } from '../../../../../ui/hooks/usePlat';
-import { useReplace } from '../../../../../components/desk/addIcon/hook/useReplace';
-import { mergeData } from '../../../../../ui/hooks/useDataConversion';
 
+import Header from '../../component/Header.vue';
+import { install } from './hooks/install';
+
+import { useMarketStore } from './store/store';
+import { message } from 'ant-design-vue';
+import { appHelper } from './hooks/appHelper';
 
 const appModel = window.$models.appModel
 
+const store = useMarketStore()
+const { recommendList, adList } = storeToRefs(store)
+
 const ImgList = defineAsyncComponent(() => import('./components/ImgList.vue'))
-const Item = defineAsyncComponent(() => import('../apps/components/Item.vue'))
-
-const list = ref([
-    {
-        img: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        tip:'DropSpace',
-        desc: 'NEW',
-    },
-    {
-        img: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
-        tip:'艺术创想-免费AI绘图软件',
-        desc: 'NEW',
-    },
-])
-
-const lightApp = ref([])
+const Item = defineAsyncComponent(() => import('./components/Item.vue'))
 
 onMounted( async() => {
-    if(!usePlat('web')){
-      lightApp.value =await appModel.getAllApps() 
-    } else {
-      lightApp.value = []
-    }
-    // 添加图标类型
-    addType(lightApp.value)
-    // 替换图标数据字段
-    lightApp.value = useReplace(lightApp.value)
-    // 替换统一图标数据字段
-    lightApp.value = lightApp.value.map((item) => {
-        return mergeData(item)
-    })
+    await store.getRecommendList()
+    await store.getAd()
+    // setTimeout(() => {
+    // }, 200);
+    check(recommendList.value)
 })
 
-const addType = (list:string[]) => {
-    list.forEach((item) => {
-        if(item.icon) return
-        item.type = 'lightApp'
-        item.icon = item.logo
+// 检查是否已经安装
+const check = async(list) => {
+    for(const item of list) {
+        // item.isInstalled = await appModel.isInstalled(item.id)
+        const allList = await appModel.getAllApps()
+        item.isInstalled = allList.some(app => app.appid === item.id) 
+        // console.log(item.isInstalled,'<<<')
+    }
+}
+
+// 下载安装
+const download = (item) => {
+    // console.log(item,'<<<<<<')
+    tsbApi.app.installAppConfirm(install(item.value.version.app.version).appJson,async(data) => {
+        console.log(data)
+        if(data.status) {
+            store.downloadCount({appNanoid:item.id})
+            // appModel.isInstalled(item.id).then(res => {
+            //     console.log(res,'<<<')
+            // })
+            // appModel.getAllApps().then(res => {
+            //     console.log(res,'<<<')
+            // })
+            message.success('安装成功')
+        } else {
+            message.error('安装失败')
+        }
     })
+}
+
+// 打开
+const open = async(val) => {
+    console.log(val)
+    const list = await appModel.getAllApps()
+    const app = list.find(app => app.appid === val.id)
+    tsbApi.app.run(app.nanoid,false,app)
 }
 
 </script>

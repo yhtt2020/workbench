@@ -38,8 +38,6 @@
                             style="background-color: var(--primary-bg) ;"
                         />
                     </div>
-                    
-                    
                     <input style="display: none" ref="fileRef" type="file" multiple />
                 </template>
             </xt-option-info>
@@ -55,6 +53,18 @@ import { useAppCenterStore } from '../../store';
 
 import Exit from '../../component/exit.vue'
 
+const { exec } = require('child_process');
+
+// 打开本地应用
+const openLocalAddress = (address) => {
+  exec(`start "" "${address}"`, (error) => {
+    if (error) {
+      console.error(`exec error: ${error}`);
+      return;
+    }
+  });
+};
+
 const appCenterStore = useAppCenterStore()
 const { recentUsed } = storeToRefs(appCenterStore)
 
@@ -64,29 +74,20 @@ const emits = defineEmits(["onLocalApp"]);
 const fileRef = ref(null);
 const localAppClick = () => {
   fileRef.value.click();
-
   fileRef.value.onchange = async function (files) {
-    // if (files.length === 0) {
-    //   this.clear();
-    //   return;
-    // }
+    if (files.length === 0) {
+      this.clear();
+      return;
+    }
     const file = this.files[0];
-    const icon = await tsbApi.system.extractFileIcon(file.path);
-    const localApp = {
-      type: "tableApp",
-      name: file.name,
-      value: file.path,
-      icon,
-    };
-    // emits("onLocalApp", localApp);
-    console.log(localApp);
+    console.log(this.files,'<<<<<<<<')
     inputValue.value = file.path
   };
 };
 
 const open = () => {
   console.log("123 :>> ", 123);
-  window.open(inputValue.value);
+  openLocalAddress(inputValue.value);
 };
 
 </script>
