@@ -8,7 +8,7 @@
             background: rgba(26,26,26,0.65);
             backdrop-filter: blur(50px);">
         <div class="flex flex-col justify-between h-full p-4">
-            <div class="flex flex-col gap-3">
+            <div class="flex flex-col gap-3" v-if="!isMore">
                 <xt-input 
                     style="height: 32px !important;"
                     v-model:modelValue="inputValue" 
@@ -23,7 +23,7 @@
             </div>
             <div v-if="recentUsed && !isSearch">
                 <div class="flex items-center justify-between mt-3 mb-3">
-                    <div class="text-sm xt-text">最近使用</div>
+                    <div class="text-sm xt-text">最近使用 {{ lastUseList.length }}</div>
                     <xt-button 
                         :w="64" 
                         :h="28" 
@@ -31,12 +31,13 @@
                         @click="getMore"
                     >
                         <div class="flex items-center gap-1">
-                            更多
+                            {{ isMore ? '收起' : '更多' }}
                             <xt-new-icon icon="fluent:chevron-right-16-regular" size="16"></xt-new-icon> 
                         </div>
                     </xt-button>
                 </div>
                 <ItemList :list="lastList" :isStartMenu="false" v-if="!isMore"></ItemList> 
+                <ItemList :list="lastUseList" :isStartMenu="false" v-else></ItemList> 
             </div>
         </div>
         <div class="w-full h-[56px] xt-bg rounded-b-2xl flex justify-between">
@@ -142,7 +143,8 @@ const lastUseList = computed(() => {
 
 // 最近使用前五个
 const lastList = computed(() => {
-    return lastUseList.value.splice(0,5)
+    const list = lastUseList.value
+    return list.splice(0,5)
 })
 
 const cardZoom = computed(() => {
@@ -165,6 +167,7 @@ const goApps = (name:string) => {
 // 获取更多
 const getMore = () => {
     console.log('更多')
+    isMore.value = ! isMore.value
 }
 
 // onMounted(() => {

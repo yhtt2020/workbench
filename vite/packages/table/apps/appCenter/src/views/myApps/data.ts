@@ -1,6 +1,11 @@
 
 export const dropList = [
     {
+        id: "0",
+        name:'全部应用',
+        value:'all'
+    },
+    {
         id: "1",
         name:'酷应用',
         value:'coolApp'
@@ -12,8 +17,8 @@ export const dropList = [
     },
     {
         id: "3",
-        name:'网址',
-        value:'web'
+        name:'开发者应用',
+        value:'ttapp'
     },
     {
         id: "4",

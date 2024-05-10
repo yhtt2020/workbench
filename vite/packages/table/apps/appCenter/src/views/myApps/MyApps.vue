@@ -61,7 +61,7 @@ const router = useRouter()
 
 // 应用中心pinia数据
 const store = useAppCenterStore()
-const { myApps, startMenu, visible } = storeToRefs(store)
+const { myApps, visible } = storeToRefs(store)
 
 // 搜索相关
 const isSearch = ref(false)
@@ -124,17 +124,33 @@ const menus = computed(() => {
 // 下拉默认数据
 const defaultData = ref({
     id: "1",
-    name:'酷应用',
-    value:'coolApp'
+    name:'全部应用',
+    value:'all'
 })
 
 // 监听下拉
 watch(
     () => defaultData.value.value,
     (val) => {
-        list.value = myApps.value.filter((item) => item.type === val)
+        if(val === 'all') {
+            list.value = myApps.value
+        } else {
+            list.value = myApps.value.filter((item) => item.type === val)
+        }
     },
     { immediate: true }
+)
+
+// 搜索
+watch(
+    () => inputValue.value,
+    (val) => {
+        if(val === '') {
+            list.value = myApps.value
+        } else {
+            list.value = myApps.value.filter((item) => item.name.includes(val))
+        }
+    }
 )
 
 // 区分酷应用，轻应用，本地应用
@@ -180,7 +196,9 @@ const closeSearch = () => {
 // 搜索
 const search = () => {
     console.log(inputValue.value)
-    list.value = myApps.value.filter((item) => item.name.includes(inputValue.value) && item.type === defaultData.value.value)
+    list.value = myApps.value.filter((item) => {
+        return item.name.includes(inputValue.value)
+    })
 }
 
 // 删除
