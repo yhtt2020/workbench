@@ -179,17 +179,3 @@ export const checkIsIfyIcon = (icon : string) => {
   })
   return isIfyIcon
 }
-
-/**
- * 关闭当前导航栏
- * @param nav 'left' | 'right' | 'foot'
- */
-export const closeNav = (nav: string) => {
-  const current = navObj.value[nav]
-  const index = current.otherList.findIndex((item) => item.value === "home")
-  if(index === -1){
-    message.error("至少保留一个主页")
-  } else {
-    current.state = false
-  }
-}

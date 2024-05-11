@@ -23,7 +23,7 @@
             </div>
             <div v-if="recentUsed && !isSearch">
                 <div class="flex items-center justify-between mt-3 mb-3">
-                    <div class="text-sm xt-text">最近使用 {{ lastUseList.length }}</div>
+                    <div class="text-sm xt-text">最近使用</div>
                     <xt-button 
                         :w="64" 
                         :h="28" 
@@ -37,7 +37,7 @@
                     </xt-button>
                 </div>
                 <ItemList :list="lastList" :isStartMenu="false" v-if="!isMore"></ItemList> 
-                <ItemList :list="lastUseList" :isStartMenu="false" v-else></ItemList> 
+                <ItemList :list="arr" :isStartMenu="false" v-else></ItemList> 
             </div>
         </div>
         <div class="w-full h-[56px] xt-bg rounded-b-2xl flex justify-between">
@@ -106,10 +106,20 @@ const props = withDefaults(defineProps<PropsType>(), {
 
 const { appPos } = toRefs(props)
 
+// 搜索 -- 搜索
 const inputValue = ref('')
+
+// 搜索状态 -- 搜索
 const isSearch = ref(false)
+
+// 搜索列表 -- 搜索
 const searchList = ref([])
+
+// 查看更多 -- 最近使用
 const isMore = ref(false)
+
+const arr =ref([])
+
 
 // 搜索
 const search = () => {
@@ -119,7 +129,7 @@ const search = () => {
     searchList.value = searchList.value.filter(item => item.name.indexOf(inputValue.value) !== -1)
 }
 
-// 恢复搜索
+// 取消搜索状态
 watch(
     () => inputValue.value,
     (newV,oldV) => {
@@ -138,6 +148,7 @@ const startMenu = computed(() => {
 // 最近使用
 const lastUseList = computed(() => {
     let list : any = [...myApps.value]
+    arr.value = [...myApps.value]
     list = list.sort((a,b) => {
         return b.lastUseTime - a.lastUseTime
     })

@@ -62,9 +62,6 @@
 
 <script setup lang='ts'>
 import { computed, toRefs, onMounted } from 'vue'
-import { message } from 'ant-design-vue'
-
-import { appsStore } from '../../../../../../store/apps';
 
 import { useMenus } from '../../../../hooks/useMenus';
 
@@ -106,6 +103,7 @@ const tagTitle = computed(() => {
     return '安装'
 })
 
+// 右键菜单
 const menu = computed(() => {
     const list = useMenus(1,item.value, cb)
     return [list]
