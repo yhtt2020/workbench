@@ -108,6 +108,7 @@ onUnmounted(() => {
         leftBg="red"
         model="id"
         v-model:index="currentCom"
+        leftClass="xt-main-bg py-3"
       >
         <div class="w-full h-full py-4 pr-4">
           <!-- <div v-if="currentCom !== 'Developer'">无暂未开发</div> -->

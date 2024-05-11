@@ -20,6 +20,7 @@
 <script setup lang='ts'>
 import { ref, toRefs } from 'vue'
 
+import browser from "../../../../../../js/common/browser";
 
 const props = defineProps({
     list: {
@@ -32,6 +33,7 @@ const { list } = toRefs(props)
 
 const open = (url: string) => {
     // window.open(url)
+    browser.openInUserSelect(url)
 }
 
 </script>

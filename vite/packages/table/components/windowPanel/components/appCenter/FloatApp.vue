@@ -72,7 +72,9 @@ import {
     toRefs, 
     defineAsyncComponent, 
     onMounted, 
-    watch 
+    onUnmounted,
+    watch,
+    getCurrentInstance
 } from 'vue'
 
 import { storeToRefs } from 'pinia';
@@ -83,6 +85,8 @@ const { current, visible, recentUsed, myApps } = storeToRefs(appCenterStore)
 
 const ItemList = defineAsyncComponent(() => import('./components/ItemList.vue'))
 const SearchList = defineAsyncComponent(() => import('./components/SearchList.vue'))
+
+const { proxy } = getCurrentInstance()
 
 const emit = defineEmits(['close'])
 
@@ -170,8 +174,15 @@ const getMore = () => {
     isMore.value = ! isMore.value
 }
 
-// onMounted(() => {
-//     startMenu.value = []
-// })
+// 点击外部关闭
+onMounted(() => {
+    proxy.$bus.on('closeControl', () => {
+        emit('close')
+    })
+})
+
+onUnmounted(() => {
+    proxy.$bus.off('closeControl')
+})
 </script>
 <style lang='scss' scoped></style>

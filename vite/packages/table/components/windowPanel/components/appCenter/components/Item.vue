@@ -1,7 +1,7 @@
 <template>
     <div 
         @click="clickItem(item)"
-        class="flex flex-col items-center justify-center gap-2 item"
+        class="flex flex-col items-center justify-center gap-2 item pointer"
         :style="{
             background: bg, 
             width: `${size}px`, 
