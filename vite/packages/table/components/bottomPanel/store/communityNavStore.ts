@@ -51,12 +51,6 @@ export const communityNavStore = defineStore("communityNav", {
       },
       index: null,
     },
-    // 选中当前桌面的id,来获取当前桌面的数据
-    currentDesk: {
-      id: null,
-      desk:null,
-      saveTime:'',
-    },
   }),
 
   actions: {
@@ -106,7 +100,6 @@ export const communityNavStore = defineStore("communityNav", {
             settingType: this.settingType,
             autoClose: this.autoClose,
           },
-          currentCommunityDesk:this.currentDesk.desk,
           _v:Date.now()
         },
         force,
@@ -184,11 +177,6 @@ export const communityNavStore = defineStore("communityNav", {
         return rs
       }
     },
-
-    /**当前社群桌面数据**/ 
-    updateCurrentDesk(data:any){
-      this.currentDesk.desk = data;
-    }
   },
 
   persist: {
@@ -203,7 +191,6 @@ export const communityNavStore = defineStore("communityNav", {
           "settingType",
           "switchColor",
           "currentCommunity",
-          "currentDesk",
         ],
         storage: localStorage,
       },
