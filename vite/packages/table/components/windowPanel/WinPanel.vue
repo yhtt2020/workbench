@@ -5,7 +5,8 @@
             flex items-center 
             justify-between p-3 relative" 
         style="
-            border: 1px solid var(--divider);
+            border-top: 1px solid var(--divider);
+            border-bottom: 1px solid var(--divider);
             background: rgba(26,26,26,0.65);
             backdrop-filter: blur(50px);"
         :style="{zoom: `${navAttribute.navSize / 100}`}"
@@ -125,7 +126,7 @@ watch(
 
 // 边框圆角
 const radius = computed(() => {
-   return currentNavPosition.value === 'top' ? 'rounded-t-lg' : 'rounded-b-lg'
+   return currentNavPosition.value === 'top' ? 'rounded-t-md' : 'rounded-b-md'
 })
 </script>
 <style lang='scss' scoped></style>
