@@ -63,11 +63,18 @@ import { ref, computed, watch, watchEffect, getCurrentInstance } from 'vue'
 import { storeToRefs } from "pinia";
 import { chatCommunityStore } from "../../../apps/chat/store/chatCommunity";
 import { communityNavStore } from "../store/communityNavStore";
+import { useRouter } from "vue-router";
+import { appStore } from "../../../store";
+
+// 路由
+const router = useRouter();
 
 const com = chatCommunityStore();
 const { myCommunity } = storeToRefs(com);
 const comNav = communityNavStore();
 const { currentCommunity } = storeToRefs(comNav);
+const app = appStore();
+const { settings } = storeToRefs(app);
 
 const search = ref("");
 const communityList = ref([]);
@@ -107,6 +114,10 @@ const getSearchResult = () => {
 };
 // 选择社群
 const selectCommunity = (item, index) => {
+  if(settings.value.isCommunity){
+    settings.value.isCommunity = false;
+  }
+  router.push({ name: "home", params: { no: item.communityInfo.no } });
   comNav.setCurrentCommunity(item, index);
   // 选择后进行弹窗关闭
   emit('close');
