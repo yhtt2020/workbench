@@ -27,6 +27,7 @@ const menus = computed(() => {
     {
       name: "添加应用到",
       newIcon: "fluent:add-16-regular",
+      disabled: item.main ? false : true,
       children: [
         {
           name: "桌面",
@@ -82,7 +83,7 @@ const menus = computed(() => {
       newIcon: "fluent:cloud-arrow-up-16-regular",
       cb: () => {
         tsbApi.app.runByPackage("com.thisky.appStore", false, { args: "gg" });
-        console.log('发送了 :>> ',tsbApi.runtime );
+        console.log("发送了 :>> ", tsbApi.runtime);
       },
     },
     {
@@ -142,7 +143,6 @@ const entry = () => {
   ttappStore.enterApp(item.id);
 };
 </script>
-
 <template>
   <!-- 添加时预览组件 -->
   <xt-preview-v2
@@ -200,6 +200,7 @@ const entry = () => {
         class="flex justify-center items-center xt-modal rounded-lg mr-2 cursor-pointer"
         style="width: 72px; height: 32px"
         @click="entry"
+        v-if="item.main"
       >
         <xt-ify-icon icon="fluent:open-16-regular" size="16" class="mr-1" />
         <span class="text-sm">进入 </span>
