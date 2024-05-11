@@ -38,7 +38,7 @@
                             style="background-color: var(--primary-bg) ;"
                         />
                     </div>
-                    <input style="display: none" ref="fileRef" type="file" multiple />
+                    <input style="display: none" ref="fileRef" type="file" webkitdirectory  multiple />
                 </template>
             </xt-option-info>
         </xt-option-box>
@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive } from 'vue'
+import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia';
 
 import { useAppCenterStore } from '../../store';
@@ -54,6 +54,7 @@ import { useAppCenterStore } from '../../store';
 import Exit from '../../component/exit.vue'
 
 const { exec } = require('child_process');
+const fs = require('fs');
 
 // 打开本地应用
 const openLocalAddress = (address) => {
@@ -85,10 +86,31 @@ const localAppClick = () => {
   };
 };
 
+
 const open = () => {
   console.log("123 :>> ", 123);
   openLocalAddress(inputValue.value);
 };
+
+// // 路径变化
+// watch(
+//   () => inputValue.value,
+//   (newV, oldV) => {
+//     if(checkIsFolder(newV)){
+//       window.$ui.confirm('确认选择此文件夹吗？','会自动将原来文件夹的内容移动到新文件夹', async () => {
+//         console.log('opdate')
+//       })
+//     } else {
+//       inputValue.value = oldV
+//     }
+//     console.log(checkIsFolder(newV), "checkIsFolder(newV)");
+//   }
+// )
+
+// // 判断是不是文件夹
+// const checkIsFolder = (path) => {
+//   return fs.lstatSync(path).isDirectory();
+// };
 
 </script>
 <style lang='scss' scoped></style>

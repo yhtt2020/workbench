@@ -2,8 +2,8 @@ import { useNavigationStore } from './../../desk/navigationBar/navigationStore';
 import { storeToRefs } from 'pinia'
 /**
  * 动态调整元素的定位
- * @param e 鼠标点击的位置
- * @param i 元素的宽高
+ * @param event 鼠标点击的位置
+ * @param itemSize 元素的宽高
  * @returns 返回元素的位置
  */
 export const usePosition = (event, itemSize) => {
@@ -20,6 +20,8 @@ export const usePosition = (event, itemSize) => {
     const mouseY = event.y;
     const itemWidth = itemSize.x;
     const itemHeight = itemSize.y;
+
+    // console.log(itemWidth, itemHeight,'<<<<<<<');
 
     // 最小差值 -- 导航栏和元素的间隙
     const min = 10;

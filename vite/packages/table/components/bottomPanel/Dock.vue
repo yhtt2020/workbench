@@ -837,8 +837,8 @@ export default {
       };
       // 元素大小
       let menu = {
-        x:draggableSize[0] * 140,
-        y:draggableSize[1] * 100
+        x:draggableSize[0] * 142,
+        y:draggableSize[1] * 105
       };
       // 自定义元素宽高
       if(custom){
