@@ -13,7 +13,14 @@
         <div class="my-4 text-sm xt-text">推荐应用</div>
         <xt-scrollbar class="flex-1 w-full overflow-hidden" :x="false" :y="true">
             <div class="flex flex-wrap gap-2">
-                <Item :item="item" v-for="(item, index) in recommendList" :key="index" @download="download" @open="open"/>
+                <Item 
+                    ref="target"
+                    :item="item" 
+                    v-for="(item, index) in recommendList" 
+                    :key="index" 
+                    @download="download" 
+                    @open="open"
+                />
             </div>
         </xt-scrollbar>
     </div>
@@ -27,8 +34,10 @@ import { storeToRefs } from 'pinia';
 
 import Header from '../../component/Header.vue';
 import { install } from './hooks/install';
+import { updateValue } from './hooks/useUpdateValue'
 
 import { useMarketStore } from './store/store';
+import { useAppCenterStore } from '../../store';
 import { message } from 'ant-design-vue';
 
 const appModel = window.$models.appModel
@@ -36,8 +45,13 @@ const appModel = window.$models.appModel
 const store = useMarketStore()
 const { recommendList, adList } = storeToRefs(store)
 
+const appCenterStore = useAppCenterStore()
+const { myApps } = storeToRefs(appCenterStore)
+
 const ImgList = defineAsyncComponent(() => import('./components/ImgList.vue'))
 const Item = defineAsyncComponent(() => import('./components/Item.vue'))
+
+const target = ref(null)
 
 onMounted( async() => {
     await store.getRecommendList()
@@ -61,7 +75,7 @@ const check = async(list) => {
 const download = (item) => {
     // console.log(item,'<<<<<<')
     tsbApi.app.installAppConfirm(install(item.value.version.app.version).appJson,async(data) => {
-        console.log(data)
+        // console.log(data)
         if(data.status) {
             store.downloadCount({appNanoid:item.id})
             // appModel.isInstalled(item.id).then(res => {
@@ -70,7 +84,13 @@ const download = (item) => {
             // appModel.getAllApps().then(res => {
             //     console.log(res,'<<<')
             // })
+            check(recommendList.value)
             message.success('安装成功')
+            setTimeout(async() => {
+                const target = await updateValue(item)
+                // console.log(target,'<<<')
+                myApps.value.unshift(target)
+            }, 50);
         } else {
             message.error('安装失败')
         }

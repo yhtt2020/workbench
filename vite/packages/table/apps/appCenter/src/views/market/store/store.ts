@@ -14,6 +14,7 @@ export const useMarketStore = defineStore("useMarketStore", {
     }),
     getters: {},
     actions: {
+        // 获取推荐应用
         async getRecommendList() {
             const url = sUrl(this.recommendUrl)
             const res = await post(url)
@@ -28,18 +29,21 @@ export const useMarketStore = defineStore("useMarketStore", {
             list = list.flat()
             this.recommendList = list
         },
+        // 获取广告位
         async getAd() {
             const res = await post(ad)
             const list = res.map(item => this.resetAdType(item))
             this.adList = list
             // console.log(res,list,'ad')
         },
+        // 重置图片
         resetAdType(data) {
             return {
                 img:data.img1,
-                url:data.link2
+                url:data.link1
             }
         },
+        // 重置格式
         resetGoodsType(data){
             return {
                 id:data.dataNanoid,
@@ -50,6 +54,7 @@ export const useMarketStore = defineStore("useMarketStore", {
                 type:'lightApp',
             }
         },
+        // 下载次数
         async downloadCount(id) {
             const res = await post(download,{id})
             console.log(res)
