@@ -9,7 +9,12 @@
             borderRadius: `${radius}px`
         } "
     >
-        <xt-mix-icon :icon="item.icon" :size="iconSize" :type="isIfy"></xt-mix-icon>
+        <xt-mix-icon 
+            :icon="item.icon" 
+            :size="iconSize" 
+            :type="isIfy" 
+            class="">
+        </xt-mix-icon>
         <div class="px-1 text-sm xt-text-2 line-clamp-1"> {{ item.name }}</div>
     </div>
 </template>

@@ -6,32 +6,44 @@ import { storeToRefs } from 'pinia'
  * @param i 元素的宽高
  * @returns 返回元素的位置
  */
-export const usePosition = (e,i) => {
+export const usePosition = (event, itemSize) => {
     const useNav = useNavigationStore();
-    const { navAttribute, currentNavFormat } = storeToRefs(useNav);
-    // 系统宽高
-    const windowWidth = window.innerWidth
-    const windowHeight = window.innerHeight
-    // 鼠标点击的坐标
-    const eWidth = e.x
-    const eHeight = e.y
-    // 元素的宽高
-    const iWidth = i.x
-    const iHeight = i.y 
+    const { navAttribute, currentNavFormat, currentNavPosition } = storeToRefs(useNav);
 
-    // 调整元素的定位
-    const num = currentNavFormat.value === 'mac' ? 65 : 55
+    // 获取窗口尺寸和缩放因子
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    const scale = navAttribute.value.navSize / 100;
 
-    // console.log(windowWidth, windowHeight, eWidth, eHeight, iWidth, iHeight,eHeight + iHeight > windowHeight )
-    // const target = windowHeight - ( windowHeight - eHeight + iHeight )
-    // const target = windowHeight - iHeight - 80
-    // console.log(target,iHeight,iWidth)
-    
-    return {
-        x: eWidth > windowWidth - (iWidth / 2) ? windowWidth - iWidth : (eWidth - (iWidth / 2) < 0 ? 20 : eWidth - (iWidth / 2)),
-        y: 
-            eHeight + iHeight > windowHeight ?  
-            (- iHeight + eHeight - num) / (navAttribute.value.navSize / 100) : 
-            (eHeight + num ) * (navAttribute.value.navSize / 100),
-    }
+    // 获取鼠标点击位置和元素尺寸
+    const mouseX = event.x;
+    const mouseY = event.y;
+    const itemWidth = itemSize.x;
+    const itemHeight = itemSize.y;
+
+    // 最小差值 -- 导航栏和元素的间隙
+    const min = 10;
+    // 导航栏高度
+    const NavH = (currentNavFormat.value === 'mac' ? 90 : 64) * scale;
+    // 导航栏当前位置
+    const isTop = currentNavPosition.value === 'top' 
+
+    // 计算 x 坐标
+    const boundaryX = windowWidth - itemWidth;
+    const centerX = mouseX - itemWidth / 2;
+    const x = Math.max(20, Math.min(boundaryX, centerX));
+
+    // 计算 y 坐标，并根据导航属性的缩放调整
+    const y = isTop ? NavH + min : windowHeight - itemHeight - min - NavH;
+
+    return { x, y: y };
 }
+
+/**
+ * min = 10
+ * mac:80 win:64
+ * elementH
+ * winH
+ * top = winH - elementH - 10 - 80
+ * 
+ */
