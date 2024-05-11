@@ -1,8 +1,8 @@
 <template>
  <xt-modal v-model="editorVisible" v-if="editorVisible" ref="modelRef" :mask="false" :boxClass="'p-0'" :custom="true">
-   <xt-left-menu style="margin: 0 !important;border-radius: 12px !important;" :list="menuList" 
+   <xt-left-menu style="margin: 0 !important;border-radius: 12px !important;" :list="menuList"
     end="1" model="id" leftClass="xt-bg-m rounded-l-xl" leftMargin="mr-0 py-3" w="64" :style="!isFull ? {width:'800px',height:'720px'}:{ width:'100%',height:'100%' }"
-   >  
+   >
      <template v-if="messageType === 'send'">
        <NoticeSend @close="editorVisible = false"/>
      </template>
@@ -25,15 +25,15 @@ const modelRef = ref(null);
 const messageType = ref('send');
 
 const list = ref([
- { 
-  newIcon:'fluent:send-32-regular', type:'send',bg:'var(--secondary-bg)',
+ {
+  newIcon:'fluent:send-32-filled', type:'send',bg:'var(--secondary-bg)',
   callBack:(item)=>{ messageType.value = item.type }
  },
- { 
-  newIcon:'fluent:clock-16-regular',type:'history',bg:'var(--secondary-bg)',
+ {
+  newIcon:'fluent:clock-16-filled',type:'history',bg:'var(--secondary-bg)',
   callBack:(item)=>{ messageType.value = item.type }
  },
- { 
+ {
   newIcon:'fluent:full-screen-maximize-16-filled',index:'full',flag:true,
   callBack:()=>{ modelRef.value.updateFullState() },
  }

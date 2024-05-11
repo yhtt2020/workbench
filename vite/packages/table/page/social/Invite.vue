@@ -239,7 +239,7 @@ export default {
       })
     },
     async activeCode () {
-      if(currentEnv == 'offline'){
+      if(this.currentEnv == 'offline'){
         reconnect()
         return
       }
@@ -307,7 +307,7 @@ export default {
       return this.marked.indexOf(key) > -1
     },
     confirmExchange () {
-      if(currentEnv == 'offline'){
+      if(this.currentEnv == 'offline'){
         reconnect()
       }else {
         window.$ui.confirm('兑换确认','确认使用200小时在线时长兑换1枚邀请码？此操作无法撤回。兑换并不会减少你的在线时长以及影响你的在线等级，请放心。',{

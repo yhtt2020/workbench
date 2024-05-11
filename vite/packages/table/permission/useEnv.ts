@@ -43,9 +43,7 @@ const envDetection = (type) => {
     return cache.get("isOffline") ? "offline" : "";
   } else if (type == "guest") {
     return !cache.get("ttUserToken") ? "guest" : "";
-    return cache.get("isGuest") ? "guest" : "";
   } else {
-    // online
     return "online"
   }
 };

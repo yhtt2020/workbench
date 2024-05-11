@@ -21,11 +21,11 @@
           <template v-if="item.type === 'forum'">
             <xt-ify-icon icon="fluent-emoji-flat:placard" size="20" />
           </template>
-          <span class="font-16 ml-2 truncate xt-text mr-1.5">
+          <span class="font-16 ml-1 truncate xt-text">
             {{ item.name || item.title }}
           </span>
           <xt-ify-icon
-            icon="fluent:open-16-regular"
+            icon="fluent:open-16-filled"
             size="20"
             class="xt-text-2"
             v-if="item.type === 'link' && item.name !== 'Roadmap'"
@@ -54,11 +54,11 @@
           <template v-if="item.type === 'forum'">
             <xt-ify-icon icon="fluent-emoji-flat:placard" size="20" />
           </template>
-          <span class="font-16 ml-2 truncate xt-text mr-1.5">
+          <span class="font-16 ml-1.5 truncate xt-text mr-1">
             {{ item.name || item.title }}
           </span>
           <xt-ify-icon
-            icon="fluent:open-16-regular"
+            icon="fluent:open-16-filled"
             size="20"
             class="xt-text-2"
             v-if="item.type === 'link' && item.name !== 'Roadmap'"

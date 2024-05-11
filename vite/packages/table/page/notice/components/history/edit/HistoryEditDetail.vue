@@ -4,7 +4,7 @@
    <div class="flex">
      <xt-button w="32" h="32" style="border-radius: 8px;" @click="prevBack">
        <div class="flex items-center justify-center">
-        <xt-new-icon icon="fluent:chevron-left-16-regular" size="20"></xt-new-icon>
+        <xt-new-icon icon="fluent:chevron-left-16-filled" size="20"></xt-new-icon>
        </div>
      </xt-button>
    </div>
@@ -19,7 +19,7 @@
     </xt-button>
     <xt-button w="32" h="32" style="border-radius: 8px;" @click="closeSend">
      <div class="flex items-center justify-center">
-      <xt-new-icon icon="fluent:dismiss-16-regular" size="16"></xt-new-icon>
+      <xt-new-icon icon="fluent:dismiss-16-filled" size="16"></xt-new-icon>
      </div>
     </xt-button>
    </div>
@@ -37,26 +37,26 @@
     <div class="flex ">
       <xt-button w="32" h="32" style="border-radius: 8px;" class="mr-3">
        <div class="flex items-center justify-center">
-         <xt-new-icon icon="fluent:image-multiple-16-regular" size="16"></xt-new-icon>
-       </div>   
+         <xt-new-icon icon="fluent:image-multiple-16-filled" size="16"></xt-new-icon>
+       </div>
       </xt-button>
 
       <xt-button w="32" h="32" style="border-radius: 8px;" class="mr-3">
         <div class="flex items-center justify-center">
-          <xt-new-icon icon="fluent:attach-16-regular" size="16"></xt-new-icon>
-        </div>   
+          <xt-new-icon icon="fluent:attach-16-filled" size="16"></xt-new-icon>
+        </div>
       </xt-button>
 
       <xt-button w="32" h="32" style="border-radius: 8px;" class="mr-3">
         <div class="flex items-center justify-center">
           <xt-new-icon icon="fluent:link-20-filled" size="16"></xt-new-icon>
-        </div>   
+        </div>
       </xt-button>
 
       <xt-button w="32" h="32" style="border-radius: 8px;">
         <div class="flex items-center justify-center">
           <xt-new-icon icon="tabler:brand-bilibili" size="16"></xt-new-icon>
-        </div>   
+        </div>
       </xt-button>
     </div>
     <div class="flex items-center">

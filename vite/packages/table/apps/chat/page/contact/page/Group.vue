@@ -11,7 +11,7 @@
         @click="createGroup"
       >
         <div class="flex items-center justify-center">
-          <xt-ify-icon icon="fluent:add-16-regular" size="20" />
+          <xt-ify-icon icon="fluent:add-16-filled" size="20" />
         </div>
       </xt-button>
     </div>
@@ -65,14 +65,14 @@ import {
 import GroupUserSelect from "../../../components/create/CreateGroupSession.vue";
 import GroupInfo from "../components/GroupInfo.vue";
 
-const chat = window.$chat.chat;
+const chat = window.$chat;
 
-/**当前群聊列表**/ 
+/**当前群聊列表**/
 const currentGroupList = ref([]);
 /**当前社群的创建和群信息**/
 const groupCreateRef = ref(null);
 const groupInfoRef = ref(null);
-/**获取当前群信息**/ 
+/**获取当前群信息**/
 const currentGroupInfo = ref({});
 
 TUIStore.watch(StoreName.GRP, {
@@ -81,7 +81,7 @@ TUIStore.watch(StoreName.GRP, {
   },
 });
 
-/**旧版代码**/ 
+/**旧版代码**/
 // const props = defineProps({
 //   list: {
 //     type: Array,

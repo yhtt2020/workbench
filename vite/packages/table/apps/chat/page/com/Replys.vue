@@ -35,14 +35,14 @@
                 <xt-button class="rounded-lg xt-text-2 ml-9 active-btn"
                     style="color: var(--secondary-text) !important; text-align: center !important; border: none;width: 68px; height: 32px;">
                     <!-- <SmileOutlined style="font-size: 16px !important; margin-right: 4px;" /> 表情 -->
-                    <replyIcon icon="fluent:emoji-smile-slight-24-regular"
+                    <replyIcon icon="fluent:emoji-smile-slight-24-filled"
                         style="font-size: 20px; margin-right: 4px;vertical-align: sub;"></replyIcon>表情
                 </xt-button>
             </tippy>
             <a-upload v-model:file-list="fileList"  @preview="handlePreview" multiple>
                 <xt-button class="ml-1 rounded-lg xt-text-2 active-btn"
                     style="color: var(--secondary-text) !important; text-align: center !important; border: none;width: 68px; height: 32px;">
-                    <replyIcon icon="fluent:image-sparkle-16-regular"
+                    <replyIcon icon="fluent:image-sparkle-16-filled"
                         style="font-size: 20px !important; margin-right: 4px;vertical-align: sub;"></replyIcon>图片
                 </xt-button>
             </a-upload>
@@ -93,13 +93,13 @@ const addComment = async () => {
         let authorid = useCommunStore.communityPostDetail.author_uid;
         let content = value.value;
         let threadId = useCommunStore.communityPostDetail.pay_set.tid || useCommunStore.communityPostDetail.id;
-        
+
         // setTimeout(async () => {
         const imageList = JSON.stringify(imageUrlList);
         await useCommunStore.getCommunitythreadReply(authorid, content, threadId, imageList);
         await useCommunStore.getCommunityPostDetail(threadId);
         await useCommunStore.getCommunityPostReply(threadId);
-            
+
         // });
         setTimeout(() => {
             message.success('评论成功')
@@ -113,9 +113,9 @@ const addComment = async () => {
         isReply.value = false
         emit('addComment', commentList);
     }
-    
 
-    
+
+
 }
 const fileList = ref<UploadProps['fileList']>([
 ]);
@@ -231,7 +231,7 @@ onMounted(async () => {
     &::-webkit-scrollbar{
         display: none;
     }
-    
+
 }
 
 .active-btn {

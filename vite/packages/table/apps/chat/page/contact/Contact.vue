@@ -38,19 +38,19 @@
               {{ groupList?.length }}
             </span>
           </template>
-  
+
           <template v-else-if="item.type === 'contact-friend'">
             <span class="xt-text-2 xt-font font-14">
               {{ currentFriendList?.length }}
             </span>
           </template>
-  
+
           <template v-else-if="item.type === 'contact-notice'">
             <span class="xt-text-2 xt-font font-14">
               {{ noticeList?.length }}
             </span>
           </template>
-  
+
           <template v-else-if="item.type === 'contact-community'">
             <span class="xt-text-2 xt-font font-14">
               {{ community?.length }}
@@ -125,7 +125,7 @@ import _ from "lodash-es";
 // import Friend from "./page/Friend.vue";
 // import Notice from "./page/Notice.vue";
 
-const chat = window.$chat.chat;
+const chat = window.$chat;
 
 const contact = contactStore();
 const app = appStore();
@@ -141,7 +141,7 @@ const community = ref([]);
 const leftTab = ref([
   {
     title: "通知",
-    icon: "fluent:alert-16-regular",
+    icon: "fluent:alert-16-filled",
     type: "contact-notice",
   },
   {
@@ -151,14 +151,14 @@ const leftTab = ref([
   },
   {
     title: "好友",
-    icon: "fluent:emoji-smile-slight-24-regular",
+    icon: "fluent:emoji-smile-slight-24-filled",
     type: "contact-friend",
   },
   /**后期开发再放开**/
   // {
   //   title: "组织",
   //   type: "contact-community",
-  //   icon: "fluent:people-community-16-regular",
+  //   icon: "fluent:people-community-16-filled",
   // },
 ]);
 

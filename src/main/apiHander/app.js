@@ -11,7 +11,10 @@ class App extends Base {
   }
   bindIPC () {
     this.on('run', (event, args, instance) => {
-      global.appManager.openApp(args.nanoid, args.background, args.app)
+      global.appManager.openApp(args.nanoid, args.background, args.app,args.option)
+    })
+    this.on('runByPackage', (event, args, instance) => {
+      global.appManager.executeAppByPackage(args.pkg, args.background, args.option)
     })
     this.on('getAll', async (event, args, instance) => {
       const all = await appModel.getAllApps()

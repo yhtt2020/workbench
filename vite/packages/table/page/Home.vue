@@ -10,6 +10,7 @@
       <div @click="test6">web{{ $usePlat(["mac", "web", "win"]) }}</div>
       <div @click="test7">win{{ $usePlat(["mac", "web", "win"]) }}</div>
       <div @click="test7">isOnline{{ isOnline?.value }}</div>
+      <div @click="test8">哦好</div>
     </div> -->
     <desk-group
       @changeDesk="changeDesk"
@@ -39,10 +40,8 @@
       @closeShowGuide="closeShowGuide"
       :deskId="deskId"
     ></NewGuidePage>
-    <!-- <NewGuidePage v-if="showGuide" @closeShowGuide="closeShowGuide" :deskId="deskId"></NewGuidePage> -->
     <!-- 右上方的缩放推荐 -->
     <ScalePanel v-if="visibleScale" @closeScale="closeScale"></ScalePanel>
-    <!-- <ScalePanel v-if="visibleScale" @closeScale="closeScale" ></ScalePanel> -->
     <!-- 仅限于web的登录提示弹窗 -->
     <WebLogin
       v-if="visibleWeb"
@@ -55,7 +54,6 @@
       @closeGuide="closeGuide"
       @addGuide="addGuide"
     ></GuidePanel>
-    <!-- <GuidePanel v-if="visibleGuide" @closeGuide="closeGuide" @addGuide="addGuide"></GuidePanel> -->
 
     <!-- 全屏遮罩层 -->
     <div
@@ -232,6 +230,7 @@ export default {
       "guideList",
       "userInfo",
       "init",
+      "loginVisible"
     ]),
 
     ...mapWritableState(appStore, {
@@ -621,13 +620,11 @@ export default {
     },
     test4(){
       console.log('isOnline', isOnline)
-      // useUpdateUserInfo()
-      // this.setSingle(!this.isSingle)
-      // console.log('current1', window.$currentEnv())
-      // console.log('current2', window.$useEnv(["offline", "guest", "single", "online"]))
-      // console.log('current3', window.$currentPlat())
-      // console.log('current4', window.$usePlat(["win", "mac", "web"]))
     },
+    test8(){
+      this.loginVisible = true
+    },
+
     // 关闭缩放弹窗
     closeWebLogin() {
       this.visibleWeb = false;

@@ -20,7 +20,7 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         type: "OfficialCommunity",
         menuVisible: true,
         route: { name: "officialCommunity", params: { no: 1 } },
-        top: ["tr", "blue", { icon: "fluent:pin-16-regular" }, 0],
+        top: ["tr", "blue", { icon: "fluent:pin-16-filled" }, 0],
       },
     ],
     // 设置当前社群详情的社群号
@@ -83,7 +83,7 @@ export const chatCommunityStore = defineStore("chatCommunity", {
                   params: { no: item.communityInfo?.no },
                 },
                 menuVisible: true,
-                top: ["tr", "blue", { icon: "fluent:pin-16-regular" }, 0],
+                top: ["tr", "blue", { icon: "fluent:pin-16-filled" }, 0],
               };
               if (index === -1 && item.role) {
                 this.myCommunity.push(options);
@@ -124,7 +124,7 @@ export const chatCommunityStore = defineStore("chatCommunity", {
               params: { no: data.communityInfo?.no },
             },
             menuVisible: true,
-            top: ["tr", "blue", { icon: "fluent:pin-16-regular" }, 0],
+            top: ["tr", "blue", { icon: "fluent:pin-16-filled" }, 0],
           };
           this.myCommunity.push(options);
         }
@@ -261,11 +261,10 @@ export const chatCommunityStore = defineStore("chatCommunity", {
     },
     // 获取某个社群的详细信息
     // 注意:当前方法只能获取社群的基本信息,不能获取社群的权限角色信息
-    async loadCurrentCommunity(no: any) {
-      const res = await comAPI.getByNoDetail({ no: no });
-      console.log("渠道详情", res);
-      if (res.status === 1) {
-        this.currentCommunity = res.data;
+    loadCurrentCommunity(data: any) {
+      console.log('加载社群详情信息',data);
+      if(data){
+        this.currentCommunity  = data;
       }
     },
     // 排序更新
@@ -279,7 +278,7 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         if (Number(item.cno) === Number(no)) {
           return {
             ...item,
-            top: ["tr", "blue", { icon: "fluent:pin-16-regular" }, 1],
+            top: ["tr", "blue", { icon: "fluent:pin-16-filled" }, 1],
           };
         } else {
           return item;

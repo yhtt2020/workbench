@@ -2,13 +2,13 @@
   <div class="w-full h-full flex flex-col">
     <div class="flex justify-between mb-2">
       <div class="flex items-center justify-center">
-        <xt-new-icon icon="fluent:settings-16-regular" :size="isModal ? 20 : 24 "  class="mr-2"></xt-new-icon>
+        <xt-new-icon icon="fluent:settings-16-filled" :size="isModal ? 20 : 24 "  class="mr-2"></xt-new-icon>
         <span class="xt-font xt-text font-400" :class="isModal ? 'font-14':'font-16'">设置</span>
       </div>
       <div class="flex items-center justify-center">
         <xt-button w="145" :h="isModal ? 32 : 40" style="border-radius: 8px;" :class="isModal ? 'mr-2':'xt-bg'"  @click="resetPapersSettings">
           <div class="flex items-center justify-center">
-            <xt-new-icon icon="fluent:arrow-clockwise-16-regular" :size="isModal ? 16 : 20" class="mr-2"></xt-new-icon>
+            <xt-new-icon icon="fluent:arrow-clockwise-16-filled" :size="isModal ? 16 : 20" class="mr-2"></xt-new-icon>
             <span  class="xt-font xt-text font-400" :class="isModal ? 'font-14':'font-16'">恢复默认设置</span>
           </div>
         </xt-button>
@@ -40,7 +40,7 @@ export default {
     ...mapWritableState(paperStore, ['settings'])
   },
 
-  components:{ 
+  components:{
     ClosePaperButton,PaperSettingDetail
   },
 

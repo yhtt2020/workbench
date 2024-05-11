@@ -2,7 +2,7 @@
   <div class="w-full h-full flex flex-col">
     <div class=" flex items-center justify-between mb-2" :class="isModal ? 'h-8' : 'h-10'">
       <div class="flex items-center justify-center">
-        <MyIcon icon="fluent:star-16-regular" style="font-size:20px;" class="mr-2 xt-text"/>
+        <MyIcon icon="fluent:star-16-filled" style="font-size:20px;" class="mr-2 xt-text"/>
         <span  class="s-text xt-text xt-font" :class="isModal ? 'font-14 ' : 'font-16 '">我的收藏 （{{ myPapers.length }}）</span>
       </div>
 
@@ -22,7 +22,7 @@
           </xt-button>
           <xt-button h="40" w="154" style="border-radius: 8px;background: rgba(0,0,0,0.2) !important;" @click="openRight"  >
             <div class="flex items-center justify-center">
-              <MyIcon icon="fluent:arrow-download-16-regular" style="font-size:1.25rem;" class="xt-active-text mr-2" />
+              <MyIcon icon="fluent:arrow-download-16-filled" style="font-size:1.25rem;" class="xt-active-text mr-2" />
               <span  class="s-text xt-active-text xt-font font-16 font-400" v-if="!isModal">导入本地图片</span>
             </div>
           </xt-button>
@@ -41,7 +41,7 @@
           </xt-dropdown>
           <xt-button w="32" h="32" class="xt-bg-2 mr-3" style="border-radius: 8px;" @click="openRight"  >
             <div class="flex items-center justify-center">
-              <MyIcon icon="fluent:arrow-download-16-regular" style="font-size:1rem" />
+              <MyIcon icon="fluent:arrow-download-16-filled" style="font-size:1rem" />
             </div>
           </xt-button>
           <ClosePaperButton />

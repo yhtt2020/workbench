@@ -34,7 +34,7 @@
       >
         <div class="flex items-center justify-center">
           <xt-ify-icon
-            icon="ant-design:sound-outlined"
+            icon="fluent:channel-16-filled"
             size="16"
             class="xt-text-2"
           />
@@ -44,7 +44,7 @@
       <xt-button style="width: auto !important" h="0" @click="openGroupDrawer">
         <div class="flex items-center justify-center">
           <xt-ify-icon
-            icon="fluent:more-horizontal-16-regular"
+            icon="fluent:more-horizontal-16-filled"
             class="xt-text-2"
             size="24"
           />

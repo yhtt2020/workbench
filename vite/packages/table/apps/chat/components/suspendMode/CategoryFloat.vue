@@ -17,6 +17,7 @@
         :columnVisible="columnVisible"
         :no="no"
         :sideVisible="sideVisible"
+        class="flex-none"
       />
 
       <!-- 分割线 -->
@@ -26,6 +27,7 @@
           margin: 8px 0;
           border-top: 1px solid var(--divider) !important;
         "
+        class="flex-none"
       />
 
       <!-- 空状态 -->
@@ -34,14 +36,17 @@
       >
         <div style="height: 60vh" class="flex items-center justify-center">
           <div class="flex flex-col">
-            <CategoryEmpty :role="currentInfoDetail?.role" :no="no" />
+            <CategoryEmpty  :no="no" />
           </div>
         </div>
       </template>
 
-      <!-- 底部树状 -->
-      <div class="flex-1 h-4/5">
-        <xt-scrollbar :y="true" class="flex-1" style="height: calc(100% - 10%)">
+      <!-- 底部 -->
+      <div
+        class="grow"
+        :class="columnVisible ? 'column-scrollbar' : 'category-scrollbar'"
+      >
+        <xt-scrollbar :y="true" class="h-full">
           <!-- 一级频道目录 -->
           <template v-if="firstChannel.length !== 0">
             <!-- 单列模式 -->
@@ -56,6 +61,7 @@
                 />
               </div>
             </template>
+
             <!-- 双列模式 -->
             <template v-else>
               <div class="grid grid-cols-2 gap-1">
@@ -88,7 +94,7 @@
                     v-if="currentInfoDetail?.role !== 'member'"
                   >
                     <RightDropdown
-                      :newIcon="'fluent:more-horizontal-16-regular'"
+                      :newIcon="'fluent:more-horizontal-16-filled'"
                       :list="childrenList"
                       :dropItem="item"
                     />
@@ -109,6 +115,7 @@
                       />
                     </div>
                   </template>
+
                   <!-- 双列 -->
                   <template v-else>
                     <div class="grid grid-cols-2 gap-1">
@@ -132,12 +139,14 @@
 
   <!-- 添加新应用 -->
   <AddNewAppPage ref="newAppRef" />
+
   <!-- 添加分组 -->
   <CreateCategory
     ref="newCategoryRef"
     :no="currentInfoDetail?.communityInfo?.no"
     :currentCategoryName="currentCategorySetting"
   />
+
   <!-- 子级频道添加新应用 -->
   <AddNewUnClassApp ref="newUnClassRef" :currentAppSet="currentAppSet" />
 </template>
@@ -204,7 +213,7 @@ const childrenList = ref([
   },
   {
     title: "分组设置",
-    newIcon: "fluent:settings-16-regular",
+    newIcon: "fluent:settings-16-filled",
     callBack: (currentItem, value) => {
       newCategoryRef.value.openCategoryModal();
       currentCategorySetting.value = value;
@@ -298,4 +307,5 @@ const handleCommunity = (data) => {
 </script>
 
 <style lang="scss" scoped>
+
 </style>

@@ -10,10 +10,10 @@
             <MyIcon icon="fluent:chevron-left-16-filled"  width="20" height="20"/>
           </div>
           <div @click="themeSwitch" v-if="styles" class="top-icon no-drag right-4">
-            <MyIcon icon="fluent:weather-sunny-16-regular"  width="20" height="20"/>
+            <MyIcon icon="fluent:weather-sunny-16-filled"  width="20" height="20"/>
           </div>
           <div @click="themeSwitch" v-else class="top-icon no-drag right-4">
-            <MyIcon icon="fluent:weather-moon-16-regular"  width="20" height="20"/>
+            <MyIcon icon="fluent:weather-moon-16-filled"  width="20" height="20"/>
           </div>
         </div>
         <div>{{ title }}</div>
@@ -49,7 +49,7 @@
             <a-col >
               <div :class="{'active':mod==='second-screen'}" @click="this.mod='second-screen'" class="panel pointer px-5 pt-6">
                 <div class="title">
-                  <MyIcon icon="fluent:tablet-16-regular" width="56px" height="56px" color="var(--primary-text)" />
+                  <MyIcon icon="fluent:tablet-16-filled" width="56px" height="56px" color="var(--primary-text)" />
                   <div class="mt-2">副屏模式</div>
                 </div>
                 <div class="content mt-3">
@@ -130,9 +130,9 @@
             <p>在非触摸屏上按下Enter键，在触摸屏上进行触摸。</p>
             <p class="flex justify-center">
               <a class="mr-10 flex items-center"  @click="startAdjust">
-                <MyIcon icon="fluent:hand-draw-16-regular" width="20" height="20" />&nbsp;触摸矫正</a>
+                <MyIcon icon="fluent:hand-draw-16-filled" width="20" height="20" />&nbsp;触摸矫正</a>
               <a class="flex items-center"  @click="adjustPen">
-                <MyIcon icon="fluent:pen-sparkle-16-regular" width="20" height="20" />&nbsp;笔矫正</a>
+                <MyIcon icon="fluent:pen-sparkle-16-filled" width="20" height="20" />&nbsp;笔矫正</a>
             </p>
           </div>
 

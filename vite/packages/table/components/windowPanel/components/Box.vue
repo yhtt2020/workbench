@@ -1,24 +1,24 @@
 <template>
     <!-- 单个 -->
-    <div 
-        v-if="list.length == 1" 
-        class="flex items-center justify-center h-full" 
+    <div
+        v-if="list.length == 1"
+        class="flex items-center justify-center h-full"
         @click.stop.prevent="openMain">
-        <xt-new-Icon 
-            :icon="list[0].icon" 
-            size="24" 
-            class="flex-shrink-0" 
+        <xt-new-Icon
+            :icon="list[0].icon"
+            size="24"
+            class="flex-shrink-0"
             v-if="list[0].icon" >
         </xt-new-Icon>
-        <a-avatar 
-            :size="24" 
-            :src="list[0].avatar" 
-            v-else-if="list[0].avatar" 
+        <a-avatar
+            :size="24"
+            :src="list[0].avatar"
+            v-else-if="list[0].avatar"
             class="flex-shrink-0" >
         </a-avatar>
     </div>
     <!-- 多个 -->
-    <div 
+    <div
         v-else
         @click.stop.prevent="openMain"
         class="w-[40px] h-[40px] xt-main-bg rounded-lg flex flex-wrap relative gap-1 p-1.5"
@@ -27,15 +27,15 @@
             <xt-new-icon :icon="item.icon" size="12" v-if="item.icon"></xt-new-icon>
             <a-avatar :size="12" :src="item.avatar" v-else-if="item.avatar"></a-avatar>
         </template>
-        <xt-new-icon 
-            icon="fluent:more-horizontal-16-regular" 
-            size="12" 
+        <xt-new-icon
+            icon="fluent:more-horizontal-16-filled"
+            size="12"
             v-if="list.length > 3">
         </xt-new-icon>
     </div>
     <!-- 弹窗显示粗略信息-->
     <Teleport to="body">
-        <div 
+        <div
             ref="message"
             :class="mainClass"
             v-if="mainVisible"
@@ -64,7 +64,7 @@ type propsType = {
 const props = withDefaults(defineProps<propsType>(), {
     list: [
         {
-            icon:'fluent:box-16-regular',
+            icon:'fluent:box-16-filled',
             tip:'',
             name:'快递',
             w:60,
