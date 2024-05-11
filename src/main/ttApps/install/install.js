@@ -3,15 +3,7 @@
  * @description 安装ttapp
  */
 // 辅助函数
-const {
-  existsFolder,
-  unzipFile,
-  deleteFile,
-  writeFile,
-  moveFolder,
-  readFile,
-  checkDir,
-} = require("../useFile.js");
+const { unzipFile, moveFolder, checkDir } = require("../useFile.js");
 // 生成唯一id 贯穿整个安装流程
 const { nanoid } = require("nanoid");
 // 数据库操作
@@ -26,13 +18,6 @@ const getFileExtension = (filePath) => {
   const compressedTypes = ["zip", "rar", "7z"];
   const fileExtension = filePath.split(".").pop() || "";
   return compressedTypes.includes(fileExtension);
-};
-// 自定义校验文件是否存在
-const checkFile = async (filePath) => {
-  const folderType = "apps_test";
-  const folderName = [folderType, currentId, filePath];
-  let res = await existsFolder(folderName);
-  return res;
 };
 
 // 从测试文件夹复制到正式文件夹
