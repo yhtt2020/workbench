@@ -66,10 +66,9 @@ import { message } from 'ant-design-vue'
 
 import { appsStore } from '../../../../../../store/apps';
 
-import { runExec } from '../../../../../../js/common/exec';
-import { usePlat } from '../../../../../../ui/hooks/usePlat';
 import { useMenus } from '../../../../hooks/useMenus';
 
+const appModel = window.$models.appModel
 
 interface PropsType {
     item: {
@@ -96,7 +95,6 @@ const props = withDefaults(defineProps<PropsType>(), {
 
 const { item } = toRefs(props)
 
-const store = appsStore()
 
 // 打开本地应用
 const executeLocalApp = (app) => {
@@ -109,9 +107,15 @@ const tagTitle = computed(() => {
 })
 
 const menu = computed(() => {
-    const list = useMenus(1,item.value)
+    const list = useMenus(1,item.value, cb)
     return [list]
 })
+
+const cb = async(item) => {
+    const list = await appModel.getAllApps()
+    const target = list.find(app => app.appid === item.id)
+    item.value = target
+}
 
 </script>
 <style lang='scss' scoped></style>

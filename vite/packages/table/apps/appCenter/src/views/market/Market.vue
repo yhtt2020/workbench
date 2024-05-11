@@ -30,7 +30,6 @@ import { install } from './hooks/install';
 
 import { useMarketStore } from './store/store';
 import { message } from 'ant-design-vue';
-import { appHelper } from './hooks/appHelper';
 
 const appModel = window.$models.appModel
 
@@ -82,6 +81,7 @@ const download = (item) => {
 const open = async(val) => {
     console.log(val)
     const list = await appModel.getAllApps()
+    // console.log(list,'value')
     const app = list.find(app => app.appid === val.id)
     tsbApi.app.run(app.nanoid,false,app)
 }

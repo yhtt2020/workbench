@@ -10,6 +10,6 @@ export const useTransform = (item) => {
         name:item.name,
         id:item.id || nanoid(4),
         type: item.type || 'coolApp',
-        value: item.type === 'ttapp' ? item.value : item.installPath || item.data,
+        value: item.type === 'ttapp' || item.type === 'lightApp' ? item.value : item.installPath || item.data,
     };
 }

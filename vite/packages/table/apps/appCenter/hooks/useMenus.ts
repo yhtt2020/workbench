@@ -7,7 +7,7 @@ import { useFileConversionIcon } from "../../../ui/hooks/useDataConversion";
 import { useAddCard } from "../../../ui/hooks/useAddCard";
 import { nanoid } from "nanoid";
 
-export const useMenus = (id?: number, item?: any) => {
+export const useMenus = (id?: number, item?: any,fn?:Function) => {
   return {
     label: "添加到",
     newIcon: "fluent:add-16-regular",
@@ -17,16 +17,23 @@ export const useMenus = (id?: number, item?: any) => {
         label: "添加到桌面",
         newIcon: "fluent:desktop-16-regular",
         callBack: () => {
-          let i = useFileConversionIcon(useTransform(item));
-          let id = nanoid(4);
-          // console.log(i, "添加到桌面");
-          useAddCard(
-            "myIcons",
-            {
-              iconList:[{...i}]
-            },
-            id
-          )
+          if(fn){
+            // console.log(item)
+            fn(item)
+          }
+          setTimeout(() => {
+            let i = useFileConversionIcon(useTransform(item));
+            let id = nanoid(4);
+            // console.log(i, useTransform(item), "添加到桌面");
+            useAddCard(
+              "myIcons",
+              {
+                iconList:[{...i}]
+              },
+              id
+            )
+          },100);
+          
         },
       },
       {
@@ -40,9 +47,16 @@ export const useMenus = (id?: number, item?: any) => {
               ? "var(--primary-text)"
               : "var(--secondary-text)",
             callBack: () => {
-              let i = useTransform(item);
-              // console.log(i, "主导航");
-              addCardToNav(i, "foot");
+              if(fn){
+                // console.log(item)
+                fn(item)
+              }
+              setTimeout(() => {
+                let i = useTransform(item);
+                // console.log(i, "主导航");
+                addCardToNav(i, "foot");
+              }, 100);
+              
             },
           },
           {
@@ -52,9 +66,16 @@ export const useMenus = (id?: number, item?: any) => {
               ? "var(--primary-text)"
               : "var(--secondary-text)",
             callBack: () => {
-              let i = useTransform(item);
-              // console.log("left", "左侧导航栏", i);
-              addCardToNav(i, "left");
+              if(fn){
+                // console.log(item)
+                fn(item)
+              }
+              setTimeout(() => {
+                let i = useTransform(item);
+                // console.log("left", "左侧导航栏", i);
+                addCardToNav(i, "left");
+              }, 100);
+              
             },
           },
           {
@@ -64,9 +85,16 @@ export const useMenus = (id?: number, item?: any) => {
               ? "var(--primary-text)"
               : "var(--secondary-text)",
             callBack: () => {
-              let i = useTransform(item);
-              // console.log("right", "右侧导航栏", i);
-              addCardToNav(i, "right");
+              if(fn){
+                // console.log(item)
+                fn(item)
+              }
+              setTimeout(() => {
+                let i = useTransform(item);
+                // console.log("right", "右侧导航栏", i);
+                addCardToNav(i, "right");
+              }, 100);
+              
             },
           },
         ],
