@@ -166,9 +166,9 @@ export const useCustomLayout = async (options) => {
         addCard(top, left, item);
         resetLeft();
         top += height + 12;
-        // currentTop = top;
+        currentTop = top;
         continue;
-      } else if (widthDetection(width)) {
+      } else if (res > layoutWidth) {
         console.log(
           "\u001b[31m" +
             `----------------元素超出${
@@ -212,7 +212,6 @@ export const useCustomLayout = async (options) => {
         left += width + 12;
         currentHeight = height;
       }
-      console.log("setData get currentHeight :>> ", currentHeight);
       fillHeight = currentHeight;
       if (last) last = false;
       console.log(

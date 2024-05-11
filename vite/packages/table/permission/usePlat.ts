@@ -108,7 +108,7 @@ export const useComLimit = (plat, name, options = {}) => {
  * @param name
  */
 export const comCanUse=(name: string)=>{
-  console.log(name,'判断')
+
   if (usePlat('client')) {
     return true
   } else {

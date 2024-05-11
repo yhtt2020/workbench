@@ -199,6 +199,7 @@ const handleMenuViewport = (size: any) => {
 
 // 菜单加载前
 const handleBeforeEnter = (el: any) => {
+  el.style.opacity = 0;
   el.style.height = 0;
 };
 // 菜单加载后
@@ -207,12 +208,11 @@ const handleEnter = (el: any) => {
   const height = el.clientHeight;
   h.value = height;
   el.style.height = 0;
-  // html5新增 告诉浏览器——你希望执行一个动画，并且要求浏览器在下次重绘之前调用指定的回调函数更新动画
-  // 该方法需要传入一个回调函数  回调函数会在页面被刷新时前调用
-  requestAnimationFrame(() => {
-    el.style.height = height + "px";
-    el.style.transition = ".03s";
-  });
+  el.style.opacity = 1;
+  // 强制重绘
+  el.getBoundingClientRect();
+  el.style.height = height + "px";
+  el.style.transition = "0.03s";
 };
 // 菜单离开时
 const handleAfterEnter = (el: any) => {
@@ -246,7 +246,9 @@ onMounted(() => {
   window.addEventListener("click", handleCloseMenu, { capture: true });
   window.addEventListener("contextmenu", handleCloseMenu, { capture: true });
   // 扩展插槽隐藏右键菜单
-  proxy.$bus.on('closeMenus',() => { show.value = false })
+  proxy.$bus.on("closeMenus", () => {
+    show.value = false;
+  });
 });
 
 onUnmounted(() => {

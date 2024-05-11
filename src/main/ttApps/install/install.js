@@ -3,15 +3,7 @@
  * @description 安装ttapp
  */
 // 辅助函数
-const {
-  existsFolder,
-  unzipFile,
-  deleteFile,
-  writeFile,
-  moveFolder,
-  readFile,
-  checkDir,
-} = require("../useFile.js");
+const { unzipFile, moveFolder, checkDir } = require("../useFile.js");
 // 生成唯一id 贯穿整个安装流程
 const { nanoid } = require("nanoid");
 // 数据库操作
@@ -27,18 +19,13 @@ const getFileExtension = (filePath) => {
   const fileExtension = filePath.split(".").pop() || "";
   return compressedTypes.includes(fileExtension);
 };
-// 自定义校验文件是否存在
-const checkFile = async (filePath) => {
-  const folderType = "apps_test";
-  const folderName = [folderType, currentId, filePath];
-  let res = await existsFolder(folderName);
-  return res;
-};
 
 // 从测试文件夹复制到正式文件夹
-const useMoveFolder = async () => {
-  await checkDir(["apps", currentId]);
-  let res = await moveFolder(["apps_test", currentId], ["apps", currentId]);
+const useMoveFolder = async (packageName) => {
+  // await checkDir(["apps", currentId]);
+  await checkDir(["apps", packageName]);
+  // let res = await moveFolder(["apps_test", currentId], ["apps", currentId]);
+  let res = await moveFolder(["apps_test", currentId], ["apps", packageName]);
   return res;
 };
 
@@ -122,14 +109,16 @@ const installV2 = async (options) => {
 const checkV2 = async (flag) => {
   // 4 检测manifest.json
   const checkManifestRes = await checkMainFest(currentId);
+  //
   if (checkManifestRes.code !== 200) {
     return {
       id: currentId,
       ...checkManifestRes,
     };
   }
+  const { data } = checkManifestRes;
   // 5 移动文件夹
-  const moveRes = await useMoveFolder();
+  const moveRes = await useMoveFolder(data.package);
   if (!moveRes) {
     return {
       status: 1,
@@ -141,13 +130,10 @@ const checkV2 = async (flag) => {
 
   // 6 保存数据
   // 过滤不需要的数据
-  // manifestRes
-  const { data } = checkManifestRes;
   const obj = {
     id: currentId,
     ...data,
   };
-  console.log("flag :>> ", flag);
   if (!flag) {
     const saveRes = await saveData({
       id: currentId,
@@ -160,22 +146,6 @@ const checkV2 = async (flag) => {
     code: 200,
     data: obj,
   };
-};
-// 安装json
-const installJson = async (data) => {
-  const folderType = "apps_test"; // 临时文件夹名称
-  const folderName = [folderType, currentId, "manifest.json"];
-  let writeRes = await writeFile(folderName, data);
-
-  if (writeRes.code !== 200) {
-    return {
-      ...writeRes,
-      code: 41,
-      info: ERROR_CODE[41],
-    };
-  }
-  let res = await checkV2(currentId);
-  return res;
 };
 module.exports = {
   installV2,
