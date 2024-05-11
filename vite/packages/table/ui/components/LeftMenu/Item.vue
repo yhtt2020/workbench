@@ -43,7 +43,7 @@
   </template>
 
   <template v-else>
-    <xt-menu :menus="item.menu" name="label">
+    <xt-menu :menus="item.menu" name="label" :stopPropagation="false">
       <div class="flex flex-col justify-center items-center cursor-pointer">
         <!-- antd插槽 -->
         <div

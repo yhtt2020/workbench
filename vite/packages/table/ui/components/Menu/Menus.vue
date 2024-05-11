@@ -15,17 +15,18 @@
         <xt-popover>
           <template #content>
             <div class="w-full h-full px-2 rounded-lg xt-b">
-              <div
-                class="my-2"
-                @click="handleClick(data, true)"
-                v-for="data in menu.children"
-                :name="name"
-              >
-                <Item :data="data" :name="name" :fn="fn" />
-              </div>
+              <template v-for="data in menu.children">
+                <div
+                  class="my-2"
+                  @click="handleClick(data, true)"
+                  v-if="!data?.disabled"
+                >
+                  <Item :data="data" :name="name" :fn="fn" />
+                </div>
+              </template>
             </div>
           </template>
-        
+
           <xt-text class="w-full h-full items">
             <Item :data="menu" :name="name" :isBg="false" :fn="fn" />
             <template #right>
@@ -33,7 +34,10 @@
                 size="20"
                 class="mr-3"
                 icon="fluent:chevron-left-16-filled"
-                style="transform: rotate(180deg); color: var(--secondary-text) !important;"
+                style="
+                  transform: rotate(180deg);
+                  color: var(--secondary-text) !important;
+                "
               />
             </template>
           </xt-text>
@@ -46,7 +50,6 @@
       </div>
     </div>
   </template>
-
 </template>
 
 <script setup>

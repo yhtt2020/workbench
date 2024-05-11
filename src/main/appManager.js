@@ -718,9 +718,6 @@ class AppManager {
         SidePanel.send('closeApp', { nanoid: nanoid })
       }
     }
-
-
-
   }
 
   closeAll () {
@@ -861,7 +858,7 @@ class AppManager {
   }
 
   async executeAppByPackage (pkg,background, option,cb) {
-    let app = await appModel.get({ package: pkg ,is_debug:null})
+    let app = await appModel.get({ package: pkg ,is_debug:1})
     if (app) {
       appManager.openApp(app.nanoid, background, app, option, cb)
     }else{
@@ -972,7 +969,6 @@ class AppManager {
       target.height=Number(source.height) || undefined
       target.alwaysOnTop=source.top//将参数转换为可识别参数
       target.resizable=source.canResize
-
     }
     return _.cloneDeep(target)//复制出去，防止引用错误
   }

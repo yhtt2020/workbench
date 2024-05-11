@@ -25,7 +25,7 @@
                 </div>
                 <div v-else class="flex items-center justify-center" >
                   <xt-ify-icon :icon="item.newIcon" class="mr-3"></xt-ify-icon>
-                  {{ item.name }} 
+                  {{ item.name }}
                 </div>
                 <!-- <xt-base-icon :icon="item.icon" class="mr-3"></xt-base-icon>
                 <xt-ify-icon :icon="item.newIcon" class="mr-3"></xt-ify-icon>

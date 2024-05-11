@@ -5,8 +5,12 @@ import { useTTAppStore } from "../../../../ttApp/src/store";
 import { storeToRefs } from "pinia";
 import Exit from "../../component/exit.vue";
 import Install from "./components/Install.vue";
+import { appData } from "./hooks/data";
 const ttappStore: any = useTTAppStore();
 const { ttappList } = storeToRefs(ttappStore);
+const openAppCenter = () => {
+  ipc.send("executeApp", { app: JSON.parse(JSON.stringify(appData)) });
+};
 </script>
 
 <template>
@@ -17,8 +21,14 @@ const { ttappList } = storeToRefs(ttappStore);
         开发者
       </div>
       <div class="flex items-center">
-        <xt-button w="95" h="32" radius="8" class="text-sm "
-          >开发者中心
+        <xt-button
+          w="95"
+          h="32"
+          radius="8"
+          class="text-sm"
+          @click="openAppCenter()"
+        >
+          开发者中心
         </xt-button>
         <Install class="ml-3 mr-3" />
         <Exit />
