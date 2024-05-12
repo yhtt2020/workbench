@@ -79,7 +79,7 @@ onMounted(async () => {
       wheelPropagation: false,
     });
   });
-  injectProps.value.api=await ttappStore.injectApi(data.value.id)
+  injectProps.value.api = await ttappStore.injectApi(data.value.id);
 });
 
 const props = defineProps({
@@ -123,6 +123,7 @@ const menus = computed(() => {
       fn: () => {
         ttappStore.enterApp(data.value.id);
       },
+      disabled: !data.value?.main,
     },
     {
       newIcon: "fluent:window-16-regular",
@@ -133,6 +134,7 @@ const menus = computed(() => {
         modal.value.url = props.customData._entry;
         modal.value.visible = true;
       },
+      disabled: data.value?.modal,
     },
     {
       title: "设置",
@@ -171,9 +173,7 @@ onUnmounted(() => {
   perfectScrollbar.value = null;
 });
 
-
-const injectProps=ref({})
-
+const injectProps = ref({});
 </script>
 
 <template>
