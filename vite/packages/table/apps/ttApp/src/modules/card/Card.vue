@@ -16,6 +16,7 @@ import { useWuJieStore } from "../wujie/store";
 import PerfectScrollbar from "perfect-scrollbar";
 import { appsStore as useAppStore } from "../../../../../store/apps";
 import { cardValidate } from "../../../../appCenter/src/views/developer/hooks/validate";
+import { useGridToWidth, useGridToHeight } from "../../../../../hooks";
 const { proxy }: any = getCurrentInstance();
 
 const appsStore: any = useAppStore();
@@ -130,8 +131,13 @@ const menus = computed(() => {
       title: "弹窗打开",
       fn: () => {
         modal.value.id = data.value.id;
-        // modal.value.url = "ttapp://" + data.value.id + props.customData.entry;
         modal.value.url = props.customData._entry;
+
+        const size = props.customData.customSize.split("x");
+        modal.value.width = useGridToWidth(size[0]);
+        modal.value.height = useGridToHeight(size[1]);
+        console.log('   modal.value.width  :>> ',    modal.value.width );
+        modal.value.size = props.customData.customSize;
         modal.value.visible = true;
       },
       disabled: data.value?.modal,
