@@ -332,7 +332,6 @@ const getModalPosition = computed(() => {
   // 无遮罩层的情况
   else {
     top = (windowHeight.value - barHeight - modalHeight.value) / 2;
-    console.log("top :>> ", top);
     left = (windowWidth.value - modalWidth.value) / 2;
   }
 
@@ -363,7 +362,6 @@ const initPosition = () => {
 // 更新弹窗大小
 const resizeModel = (data) => {
   perfectScrollbar.value?.update();
-  console.log("22222 :>> ", 22222);
   modalHeight.value = data.height;
   modalWidth.value = data.width;
 };
@@ -536,6 +534,15 @@ const init = () => {
       perfectScrollbar.value = new PerfectScrollbar(modal.value, {
         swipeEasing: true,
       });
+      if (
+        modalWidth.value >= windowWidth.value &&
+        modalHeight.value >= windowHeight.value
+      ) {
+        maximize();
+      } else if (modalWidth.value >= windowWidth.value) {
+        // x.value = 0;
+        modalWidth.value = windowWidth.value;
+      }
     }, 1);
   });
 };
