@@ -171,8 +171,8 @@ const modalSize = computed(() => {
     };
   } else {
     return {
-      width: currentWidth + "px",
-      height: currentHeight + "px",
+      width: mainWidth + "px",
+      height: mainHeight + "px",
     };
   }
 });
