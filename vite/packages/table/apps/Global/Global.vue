@@ -8,12 +8,12 @@ import {
   onUnmounted,
   inject,
   defineAsyncComponent,
+  watch,
 } from "vue";
 // store
 import { storeToRefs } from "pinia";
 import { taskStore as useTaskStore } from "../task/store";
 import { useGlobalStore } from "./store";
-
 // 检查当前网络状态
 import { useNetwork } from "@vueuse/core";
 const {
@@ -66,8 +66,18 @@ const { systemVisible, loginVisible, loginCb } = storeToRefs(globalStore);
 import { useUpdateUserInfo } from "../../permission/user/useUserPermit";
 import { usePermissionStore } from "../../permission/store";
 
+const usePermission = usePermissionStore()
 const { currentEnv } = storeToRefs(usePermissionStore);
-
+// 网络情况判断
+watch(()=>isOnline.value, (newValue, oldValue) => {
+  if(newValue){
+    // 上线
+    if(usePermission.isOffline) usePermission.setOffline(false)
+  }else{
+    // 掉线
+    usePermission.setOffline(true)
+  }
+})
 // 文件弹窗
 const fileVisible = ref(true);
 const file: any = ref(null);

@@ -33,7 +33,7 @@
       :alone="settings.enableZoom"
       :hide="hide"
     />
-    <Drop>
+    <Drop :classes="getClasses()">
       <!-- 自由布局 -->
       <template v-if="freeLayout">
         <FreeLayoutScrollbar ref="freeLayoutScrollbar" class="flex-1">
@@ -61,20 +61,21 @@
       </template>
 
       <!-- 默认布局 -->
-      <vue-custom-scrollbar
-        v-show="!isFreeLayout"
-        :class="previewFlag ? 'z-50' : ''"
-        class="no-drag"
-        key="scrollbar"
-        id="scrollerBar"
-        :settings="{
+      <div class="h-full"  v-show="!isFreeLayout" :style="{width:getWidth(),height:getHeight()}">
+        <vue-custom-scrollbar
+
+          :class="previewFlag ? 'z-50' : ''"
+          class="no-drag"
+          key="scrollbar"
+          id="scrollerBar"
+          :settings="{
           ...scrollbarSettings,
           suppressScrollY: settings.vDirection ? false : true,
           suppressScrollX: settings.vDirection ? true : false,
         }"
-        style="
+          style="
           position: relative;
-          width: calc(100% + 4px);
+          width: 100% ;
           height: 100%;
           margin-left: 0;
           padding-left: 4px;
@@ -82,71 +83,71 @@
           display: flex;
           flex-direction: row;
         "
-      >
-        <div
-          id="cardContent"
-          ref="deskContainer"
-          style="
+        >
+          <div
+            id="cardContent"
+            ref="deskContainer"
+            style="
             /*display: flex;*/
             /*align-items: center;*/
             /*align-content: center;*/
           "
-          :style="{
+            :style="{
             // 'flex-direction': settings.vDirection?'row':'column',
             'padding-top': this.usingSettings.marginTop + 'px',
             width: settings.vDirection ? '100%' : 'auto',
             height: settings.vDirection ? 'auto' : '100%',
           }"
-          :class="notTrigger ? 'trigger' : ''"
-        >
-          <vuuri
-            v-show="showGrid"
-            :key="key"
-            v-if="
+            :class="notTrigger ? 'trigger' : ''"
+          >
+            <vuuri
+              v-show="showGrid"
+              :key="key"
+              v-if="
               (currentDesk.cards.length > 0 && !hide && !isFreeLayout) ||
               !freeLayout
             "
-            item-key="id"
-            :get-item-margin="
+              item-key="id"
+              :get-item-margin="
               () => {
                 return usingSettings.cardMargin * this.adjustZoom + 'px';
               }
             "
-            group-id="grid.id"
-            :drag-enabled="editing"
-            v-model="currentDesk.cards"
-            :style="{
+              group-id="grid.id"
+              :drag-enabled="editing"
+              v-model="currentDesk.cards"
+              :style="{
               width: settings.vDirection ? '100%' : 'auto',
               height: settings.vDirection ? 'auto' : '100%',
             }"
-            class="grid home-widgets"
-            ref="grid"
-            :options="muuriOptions"
-          >
-            <template #item="{ item }">
-              <div
-                :style="{
+              class="grid home-widgets"
+              ref="grid"
+              :options="muuriOptions"
+            >
+              <template #item="{ item }">
+                <div
+                  :style="{
                   zoom: (
                     (usingSettings.cardZoom * this.adjustZoom) /
                     100
                   ).toFixed(2),
                 }"
-              >
-                <component
-                  :desk="currentDesk"
-                  :is="item.name"
-                  :customIndex="item.id"
-                  :customData="item.customData"
                 >
-                </component>
-              </div>
-            </template>
-          </vuuri>
-          <!-- 加载状态 -->
-          <div
-            class="xt-text"
-            v-show="!showGrid"
-            style="
+                  <component
+                    :desk="currentDesk"
+                    :is="item.name"
+                    :customIndex="item.id"
+                    :customData="item.customData"
+                  >
+                  </component>
+                </div>
+              </template>
+            </vuuri>
+            <!-- 加载状态 -->
+            <div
+              class="xt-text"
+              v-show="!showGrid"
+              style="
               text-align: center;
               font-size: 32px;
               margin: auto;
@@ -155,11 +156,13 @@
               transform: translateY(-50%) translateX(-50%);
               left: 50%;
             "
-          >
-            <LoadingOutlined />
+            >
+              <LoadingOutlined />
+            </div>
           </div>
-        </div>
-      </vue-custom-scrollbar>
+        </vue-custom-scrollbar>
+      </div>
+
     </Drop>
   </div>
   <!-- 添加小组件 -->
@@ -557,6 +560,38 @@ export default {
     // 打开系统设置
     showSystemSet() {
       this.$bus.emit("openSystemSet");
+    },
+    getClasses(){
+      if(this.usingSettings.vDirection){
+        if(this.usingSettings.vDirection===true){
+          return 'flex flex-row justify-center'
+        }else{
+          return  'flex flex-column  content-center'
+        }
+      }
+    },
+    getWidth(){
+      console.log(this.usingSettings.fixedLayout)
+      if(this.usingSettings.fitMod==='full'){
+        return '100%'
+      }else{
+        if(this.usingSettings.vDirection===true){
+          return (this.usingSettings.containerWidth||1024) +'px'
+        }else{
+          return '100%'
+        }
+      }
+    },
+    getHeight(){
+      if(this.settings.fitMod==='full'){
+        return '100%'
+      }else{
+        if(this.usingSettings.vDirection===true){
+          return '100%'
+        }else{
+          return (this.usingSettings.containerHeight||800) +'px'
+        }
+      }
     },
     addFolder() {
       if (!this.showGuide) {

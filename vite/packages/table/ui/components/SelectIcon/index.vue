@@ -66,13 +66,13 @@
 
         <!-- 渲染的列表 -->
         <div v-show="key == menus[selIndex]" v-for="(value,key) in handleList"  :key="key" class="flex flex-wrap pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar" style="height: 290px;">
-          <div v-show="!searchValue" v-for="(item,index) in value" :key="index" @click="onSelectIcon(item.name)" class="flex items-center justify-center mt-2 ml-2 overflow-hidden pointer" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
+          <div v-show="!searchValue" v-for="(item,index) in value" :key="index" @click="onSelectIcon(item.name)" class="flex items-center justify-center mt-2 ml-2 overflow-hidden pointer xt-bg-2" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
             <a-tooltip>
               <template #title>{{ item.alias }}</template>
               <a-avatar :src="`https://a.apps.vip/icons/iconSelect/${key}/${item.name}.svg`" :alt="item.alias" width="32" height="32" :style="{'filter': menus[selIndex] == 'icon'?`drop-shadow(${bgColor[selBgColor]} 80px 0)`:'',transform:menus[selIndex] == 'icon'?'translateX(-80px)':''}"></a-avatar>
             </a-tooltip>
           </div>
-          <div v-show="!!searchValue" v-for="(item,index) in search" :key="index" @click="onSelectIcon(item.name)" class="flex items-center justify-center mt-2 ml-2 overflow-hidden pointer" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
+          <div v-show="!!searchValue" v-for="(item,index) in search" :key="index" @click="onSelectIcon(item.name)" class="flex items-center justify-center mt-2 ml-2 overflow-hidden pointer xt-bg-2" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
             <a-tooltip>
               <template #title>{{ item.alias }}</template>
               <a-avatar :src="`https://a.apps.vip/icons/iconSelect/${key}/${item.name}.svg`" :alt="item.alias" width="32" height="32" :style="{'filter': menus[selIndex] == 'icon'?`drop-shadow(${bgColor[selBgColor]} 80px 0)`:'','transform':menus[selIndex] == 'icon'?'translateX(-80px)':''}"></a-avatar>

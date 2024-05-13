@@ -55,14 +55,9 @@ const { status } = useStatus();
 /** 初始化方法 */
 const init = async () => {
   let res = ttappStore.select(modal.value.id);
-  console.log("modal.value.id :>> ", modal.value.id);
-  console.log("res :>> ", res);
-  console.log("modal.value :>> ", modal.value);
   if (!res) {
-    // modal.value.visible = false;
-    // return;
+    return;
   }
-  console.log("2222 :>> ", 2222);
   // 有社区
   const community = data?.community;
   if (community) {
@@ -82,7 +77,7 @@ const init = async () => {
       fn: () => {},
     };
     socializeList.value.push(obj);
-  } 
+  }
   // 有群
   const group = data?.group;
   if (group) {
@@ -94,7 +89,6 @@ const init = async () => {
     socializeList.value.push(obj);
   }
   res.socializeList = socializeList;
-  console.log("初始化到这里了 :>> ", 222222);
   // 获取用户信息 没写完
   if (res?.uid && status.value != "single") {
     await ttappStore.getUserInfo(res.uid);
@@ -161,14 +155,15 @@ const modalSize = computed(() => {
   const maxModalHeight = windowHeight.value - 48;
   const maxModalWidth = windowWidth.value;
   // 弹窗尺寸
-  const mainWidth = data.value.main.width || 0;
-  const mainHeight = data.value.main.height || 0;
-  const width = mainWidth.replace(/\D/g, "");
-  const height = mainHeight.replace(/\D/g, "");
+  const mainWidth = modal.value.width || 0;
+  const mainHeight = modal.value.height || 0;
+  // const width = mainWidth.replace(/\D/g, "");
+  // const height = mainHeight.replace(/\D/g, "");
   // 当前弹窗尺寸
-  const currentWidth = width > maxModalWidth ? maxModalWidth + "px" : mainWidth;
+  const currentWidth = mainWidth > maxModalWidth ? maxModalWidth + "px" : mainWidth;
   const currentHeight =
-    height > maxModalHeight ? maxModalHeight + "px" : mainHeight;
+  mainHeight > maxModalHeight ? maxModalHeight + "px" : mainHeight;
+  console.log('currentWidth :>> ', currentWidth);
   if (isMax.value) {
     return {
       width: "100%",
@@ -176,8 +171,8 @@ const modalSize = computed(() => {
     };
   } else {
     return {
-      width: currentWidth,
-      height: currentHeight,
+      width: currentWidth + "px",
+      height: currentHeight + "px",
     };
   }
 });
