@@ -44,6 +44,10 @@ export const aiStore = defineStore("aiStore", {
     todayList: [],
     previousList: [],
     serachTopic: "",
+    openMode: "default",
+    aiMode: "default",
+    // 存储自定义数据 用户切换模式时保留数据
+    customData: {},
   }),
   getters: {
     recentList() {
@@ -93,8 +97,7 @@ export const aiStore = defineStore("aiStore", {
       obj.time = id;
       this.selectTopicIndex = obj.id;
       this.topicList[obj.id] = obj;
-      this.chatList[obj.id] = [
-      ];
+      this.chatList[obj.id] = [];
     },
     delTopic() {
       for (let key in this.topicList) {
@@ -109,7 +112,17 @@ export const aiStore = defineStore("aiStore", {
     enabled: true,
     strategies: [
       {
-        paths: ["url", "key", "temperature", "count", "topicList", "chatList"],
+        paths: [
+          "url",
+          "key",
+          "temperature",
+          "count",
+          "topicList",
+          "chatList",
+          "openMode",
+          "aiMode",
+          "customData",
+        ],
         storage: localStorage,
       },
     ],

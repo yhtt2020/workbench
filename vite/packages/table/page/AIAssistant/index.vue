@@ -1,12 +1,12 @@
 <template>
     <LeftTab>
-      <div class="h-full w-full flex" style=" min-height: 752px;" >
+      <div class="h-full w-full flex" >
         <div class="flex h-full">
           <ChatLeft v-if="selectTab == 'Chat'"></ChatLeft>
         </div>
         <div class="flex h-full flex-col flex-1 w-0" >
           <HeaderView></HeaderView>
-          <Caht></Caht>
+          <Chat></Chat>
         </div>
       </div>
     </LeftTab>
@@ -14,7 +14,7 @@
 
 <script>
 import HeaderView from "./core/HeaderView.vue";
-import Caht from "./chat/main/index.vue";
+import Chat from "./chat/main/index.vue";
 import MainView from "./core/MainView.vue";
 import ChatLeft from "./chat/left/index.vue";
 import LeftTab from "./leftTab/index.vue";
@@ -25,7 +25,7 @@ export default {
   computed: {
     ...mapWritableState(aiStore, ["isFull", "selectTab"]),
   },
-  components: { LeftTab, HeaderView, MainView, ChatLeft, Caht },
+  components: { LeftTab, HeaderView, MainView, ChatLeft, Chat },
 };
 </script>
 

@@ -164,7 +164,7 @@ const listOption = computed(() => {
     },
     {
       class:
-        "xt-scrollbar xt-container xt-bt flex flex-col items-center flex-1",
+        "xt-scrollbar xt-container flex flex-col items-center flex-1",
       boxClass: "mt-2",
       array: newList.value.slice(props.last, -1 * props.end),
       itemOption: {
