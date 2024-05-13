@@ -6,6 +6,9 @@ export default {
       'name': 'air',
       'alias': '风'
     },{
+      'name': 'download',
+      'alias': '下载'
+    },{
       'name': 'alarm',
       'alias': '闹钟'
     },{
