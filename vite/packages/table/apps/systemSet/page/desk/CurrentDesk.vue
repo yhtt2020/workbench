@@ -31,11 +31,45 @@
     <xt-option-info
       isSwitch
       v-model:switch="currentDeskSettings.enableZoom"
-      title="独立缩放"
-      info="开启独立缩放后，将不再使用「通用设置」中的相关缩放设置。"
+      title="独立设置"
+      info="开启独立设置后，将不再使用「通用设置」中的相关设置。"
     />
     <template v-if="currentDeskSettings.enableZoom">
       <hr />
+      <xt-option-info
+        title="适应模式"
+        info=""
+      />
+      <xt-option-tab
+        v-model="currentDeskSettings.fitMod"
+        :list="fitList"
+        circle
+        style="height: 40px"
+      />
+      <xt-option-info v-if="currentDeskSettings.fitMod=='center' && fixedLayout=='vertical'"
+        title="容器宽度"
+        info="调节桌面容器宽度"
+        @onIconClick="currentDeskSettings.containerWidth = 1024"
+        icon="fluent:arrow-clockwise-16-regular"
+      />
+      <xt-option-slider  v-if="currentDeskSettings.fitMod=='center' && fixedLayout=='vertical'"
+        v-model:slider="currentDeskSettings.containerWidth"
+        :min="800"
+        :max="1600"
+        style="margin: 0 !important"
+      />
+      <xt-option-info v-if="currentDeskSettings.fitMod=='center' && fixedLayout=='horizontal'"
+                      title="容器高度"
+                      info="调节桌面容器高度"
+                      @onIconClick="currentDeskSettings.containerHeight = 800"
+                      icon="fluent:arrow-clockwise-16-regular"
+      />
+      <xt-option-slider v-if="currentDeskSettings.fitMod=='center' && fixedLayout=='horizontal'"
+        v-model:slider="currentDeskSettings.containerHeight"
+        :min="480"
+        :max="1600"
+        style="margin: 0 !important"
+      />
       <xt-option-info
         title="桌面缩放"
         info="调节桌面的缩放比例，默认为100%。"
@@ -103,6 +137,16 @@ const layoutList = ref([
     name: "自由布局",
     value: "free",
   },
+]);
+const fitList = ref([
+  {
+    name: "铺满",
+    value: "full",
+  },
+  {
+    name: "居中",
+    value: "center",
+  }
 ]);
 const updateTab = (data) => {
   freeLayoutStore.renewFreeLayout();
