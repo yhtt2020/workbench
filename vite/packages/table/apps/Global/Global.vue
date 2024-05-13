@@ -52,6 +52,9 @@ import AppCenter from "../appCenter";
 import { useAppCenterStore } from "../appCenter/src/store";
 const appCenterStore: any = useAppCenterStore();
 const { visible } = storeToRefs(appCenterStore);
+import AppModal from "../appModal";
+console.log("AppModal :>> ", AppModal);
+import TTAppModal from "../appModal/src/AppModal.vue";
 // 登录弹窗
 const Login = defineAsyncComponent(
   () => import("../../permission/user/Login.vue")
@@ -116,7 +119,6 @@ onMounted(() => {
     }, 300000);
   }
 });
-
 </script>
 
 <template>
@@ -124,6 +126,8 @@ onMounted(() => {
   <AppCenter v-if="visible" />
   <!-- 无界应用 -->
   <WujieModal v-if="modal.visible" />
+  <!-- 系统弹窗应用 -->
+  <AppModal />
   <!-- 领取任务奖励 -->
   <ClaimReward v-if="rewardVisible" />
   <!-- 系统设置 -->

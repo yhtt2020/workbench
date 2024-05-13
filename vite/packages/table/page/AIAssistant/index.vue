@@ -1,7 +1,6 @@
 <template>
-  <div class="mr-3 h-full">
     <LeftTab>
-      <div class="h-full w-full flex">
+      <div class="h-full w-full flex" style=" min-height: 752px;" >
         <div class="flex h-full">
           <ChatLeft v-if="selectTab == 'Chat'"></ChatLeft>
         </div>
@@ -11,7 +10,6 @@
         </div>
       </div>
     </LeftTab>
-  </div>
 </template>
 
 <script>

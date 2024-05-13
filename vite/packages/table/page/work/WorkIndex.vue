@@ -67,22 +67,22 @@ export default defineComponent({
             name:'deck'
           }
         },
-        {
-          title:'剪切板',
-          name:'clipboard',
-          icon:'xiangmu',
-          route:{
-            name:'clipboard'
-          }
-        },
-        {
-          title:'待办',
-          name:'todo',
-          icon:'check-square',
-          route:{
-            name:'todo'
-          }
-        },
+        // {
+        //   title:'剪切板',
+        //   name:'clipboard',
+        //   icon:'xiangmu',
+        //   route:{
+        //     name:'clipboard'
+        //   }
+        // },
+        // {
+        //   title:'待办',
+        //   name:'todo',
+        //   icon:'check-square',
+        //   route:{
+        //     name:'todo'
+        //   }
+        // },
         // {
         //   title:'番茄钟',
         //   name:'tomato',

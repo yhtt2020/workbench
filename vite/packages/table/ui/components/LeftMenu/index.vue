@@ -6,7 +6,7 @@
   >
     <!-- 左侧区域开始 -->
     <div
-      class="flex flex-col items-center h-full xt-br"
+      class="flex flex-col items-center xt-br"
       style="position: relative"
       :style="[
         leftStyle,
@@ -55,7 +55,7 @@
     </div>
     <!-- 左侧区域结束 -->
     <!-- 主体区域开始 -->
-    <div class="flex flex-1 w-0 h-full">
+    <div class="flex flex-1 w-0 ">
       <slot></slot>
     </div>
     <!-- 主体区域结束 -->
