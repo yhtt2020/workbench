@@ -11,14 +11,14 @@ const communityNavAppId = "c100001";
 // @ts-ignore
 export const communityDeskStore = defineStore("communityDesk", {
   state: () => ({
-    // 指定社群中的所有桌面列表
+    // 指定社群中的所有桌面列表(云端存储)
     communityDesk: {
       communityDeskNo: "",
       // communityAllDesk是用于存档的列表  结构 {name:"桌面名称",deskId:"桌面id"}
       communityAllDesk: [],
     },
 
-    // 当前桌面数据
+    // 当前桌面数据(用于云端存储)
     currentCommunityDesk: {},
   }),
 

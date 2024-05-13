@@ -15,13 +15,12 @@
     <!-- 社群桌面 -->
     <CommunityGroupDesk
       v-else
-      @changeDesk="changeDesk"
       ref="deskGroupRef"
       :settings="settings"
       :desk-list="desks"
       v-model:currentDeskId="this.currentDeskId"
+      @changeDesk="changeDesk"
     >
-    <!-- :desk-list="desks" -->
       <template #settingsAll> </template>
     </CommunityGroupDesk>
   </div>
@@ -100,6 +99,8 @@ import { usePlat } from "../ui/hooks/usePlat";
 import { usePermissionStore } from "../permission/store";
 import { useUpdateUserInfo } from "../permission/user/useUserPermit";
 import cache from "../components/card/hooks/cache";
+import { communityDeskStore } from "../apps/communityDesk/store/communityDeskStore";
+
 import { isMain } from "../js/common/screenUtils";
 // 检查当前网络状态
 import { useNetwork } from "@vueuse/core";
@@ -236,7 +237,6 @@ export default {
       "init",
       "loginVisible",
     ]),
-
     ...mapWritableState(appStore, {
       appSettings: "settings",
     }),
@@ -261,6 +261,8 @@ export default {
       "isGuest",
       "currentEnv",
     ]),
+    ...mapWritableState(communityDeskStore, ["communityCurrentDesk"]),
+
     deskGroupRef() {
       return this.$refs.deskGroupRef;
     },

@@ -5,7 +5,7 @@ import {
   mainData,
 } from "../../../components/desk/freeLayout/config";
 
-/**社群管理员模块**/ 
+/**社群管理员模块**/
 function communityMenus() {
   let currentHide = null;
 
@@ -90,17 +90,6 @@ function communityMenus() {
             });
           },
         },
-        {
-          id: 3,
-          newIcon: "mingcute:windows-line",
-          name: "导入系统桌面图标",
-          fn: () => {
-            this.$nextTick(() => {
-              this.$refs.currentDeskRef.arrange();
-            });
-          },
-          disabled: (window as any).$usePlat(),
-        },
       ],
     },
     { id: 6, divider: true },
@@ -117,7 +106,6 @@ function communityMenus() {
             ok: () => {
               useCustomLayout({
                 mainList: this.currentDesk.cards,
-                // test: false,
                 cb: (position: any) => {
                   this.$bus.emit("cutCanvas", position);
                 },
@@ -235,6 +223,7 @@ function communityMenus() {
                 this.getFreeLayoutState.system.hide =
                   !this.getFreeLayoutState?.system?.hide;
               } else {
+                this.comHide = !this.comHide;
                 if (this.comHide) {
                   this.$refs.currentDeskRef.showDesk();
                 } else {
@@ -258,13 +247,13 @@ function communityMenus() {
 }
 
 /**社群成员模块**/
-function memberMenus(){
+function memberMenus() {
   return [
     {
       id: 1,
       name: "更新桌面",
       newIcon: "fluent:cloud-arrow-up-16-regular",
-      // fn: this.sysSaveCommunity,
+      fn: this.loadCommunityCloud,
     },
     { id: 2, divider: true },
     {
@@ -303,14 +292,14 @@ function memberMenus(){
       newIcon: "fluent:more-horizontal-16-filled",
       name: "更多",
       lock: true,
-      children:[
+      children: [
         {
           id: 1,
           newIcon: "fluent:settings-16-regular",
           name: "桌面设置",
           fn: () => {
             this.$nextTick(() => {
-              // this.$refs.currentDeskRef.showSetting();
+              this.$refs.currentDeskRef.showSetting();
             });
           },
         },
@@ -319,8 +308,8 @@ function memberMenus(){
           newIcon: "fluent:full-screen-maximize-16-filled",
           name: "全屏桌面",
           fn: () => {
-            // let a = !this.fullScreen;
-            // this.setFullScreen(a);
+            let a = !this.fullScreen;
+            this.setFullScreen(a);
           },
         },
         {
@@ -331,15 +320,30 @@ function memberMenus(){
             // let a = !this.fullScreen;
             // this.setFullScreen(a);
           },
-        }
-      ]
-    }
-  ]
-} 
+        },
+      ],
+    },
+  ];
+}
 
 export default {
   computed: {
     communityMenus,
-    memberMenus
+    memberMenus,
   },
 };
+
+
+
+/**先暂时注释,后期需要再使用**/ 
+// {
+//   id: 3,
+//   newIcon: "mingcute:windows-line",
+//   name: "导入系统桌面图标",
+//   fn: () => {
+//     this.$nextTick(() => {
+//       this.$refs.currentDeskRef.arrange();
+//     });
+//   },
+//   disabled: (window as any).$usePlat(),
+// },
