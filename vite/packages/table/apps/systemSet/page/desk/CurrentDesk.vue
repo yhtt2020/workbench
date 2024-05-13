@@ -125,6 +125,16 @@ const fixedLayoutList = ref([
 const updateFixedLayout = (data) => {
   currentDeskSettings.value.vDirection = !currentDeskSettings.value.vDirection;
 };
+
+// 获取当前社群的权限
+const communityRole = computed(()=>{
+  if(getCurrentDesk.value.communityNo){
+    // const find = 
+  }
+  else {
+    return false;
+  }
+})
 </script>
 
 <style lang="scss" scoped></style>

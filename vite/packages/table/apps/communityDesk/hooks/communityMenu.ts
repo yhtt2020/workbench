@@ -40,7 +40,7 @@ function communityMenus() {
       id: 1,
       name: "更新桌面",
       newIcon: "fluent:cloud-arrow-up-16-regular",
-      fn: this.sysSaveCommunity,
+      fn: this.syncSaveCommunity,
     },
     { id: 2, divider: true },
     {
@@ -262,22 +262,22 @@ function memberMenus() {
         ? "fluent:record-stop-16-regular"
         : "fluent:window-new-16-regular",
       name: this.editing ? "停止调整" : "调整桌面布局",
-      fn: () => {
-        this.$nextTick(() => {
-          this.$refs.currentDeskRef.toggleEditing();
-        });
-      },
+      // fn: () => {
+      //   this.$nextTick(() => {
+      //     this.$refs.currentDeskRef.toggleEditing();
+      //   });
+      // },
     },
     {
       id: 4,
       newIcon: "fluent:resize-large-16-regular",
       name: "复原桌面位置",
-      disabled: this.isFreeLayout ? false : true,
-      fn: () => {
-        this.$nextTick(() => {
-          this.$refs.currentDeskRef.freeLayoutScrollbarRedirect();
-        });
-      },
+      // disabled: this.isFreeLayout ? false : true,
+      // fn: () => {
+      //   this.$nextTick(() => {
+      //     this.$refs.currentDeskRef.freeLayoutScrollbarRedirect();
+      //   });
+      // },
     },
     {
       id: 5,

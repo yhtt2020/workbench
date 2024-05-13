@@ -235,7 +235,23 @@
   <template v-else>
     <div class="relative flex flex-col h-full">
       <xt-mix-menu class="w-full h-full" :menus="deskMenu" ref="mixMenu">
-        <Desk ref="currentDeskRef" v-if="false"></Desk>
+        <Desk
+          ref="currentDeskRef"
+          v-if="currentDesk && currentDesk?.cards?.length > 0"
+          @changeEditing="editing = !editing"
+          :global-settings="settings"
+          :editing="editing"
+          :currentDesk="currentDesk"
+          v-model:settings="currentDesk.settings"
+          :key="currentDeskId"
+          :keepAddIcon="keepAddIcon"
+          @onArrange="onArrange"
+        >
+          <!-- 拿菜单数据 -->
+          <template #settingsAllAfter>
+            <slot name="settingsAll"></slot>
+          </template>
+        </Desk>
         <template v-else>
           <slot name="empty">
             <div class="flex items-center justify-center w-full h-full">
@@ -742,6 +758,7 @@ export default {
       "selectNav",
       "jumpDesk",
     ]),
+    ...mapWritableState(communityDeskStore,["syncCommunityDesk"]),
 
     /**当前社群的角色权限**/
     currentComRole() {
@@ -816,15 +833,25 @@ export default {
   },
 
   watch: {
-    // 监听当前社群是否有桌面列表
-    communityDeskList: {
+    // 监听当前社群变化
+    currentComInfo: {
       handler(newVal) {
-        if (newVal.length === 0) {
-          if (this.currentComRole) {
+        // 加载当前社群桌面数据
+        this.loadCommunityCloud();
+
+        // 监听社群角色权限
+        if (newVal.role === "owner") {
+          console.log("管理员",this.syncCommunityDesk);
+          // 检测当前列表是否为空
+          if(this.communityDeskList.length === 0){
             this.doAddDesk("空白桌面");
           }
-          return;
+        } else {
+          console.log("成员",this.syncCommunityDesk);
         }
+
+        
+        // 检测桌面是个人桌面还是社群桌面
         const idArr = [
           this.currentDeskId?.slice(0, -4),
           this.currentDeskId?.slice(-4),
@@ -832,16 +859,21 @@ export default {
         // 匹配当前桌面id是否与当前社群相关联
         const startWithNum = /^\d/;
         if (!startWithNum.test(this.currentDeskId)) {
-          this.setCurrentDeskId(this.communityDeskList[0].id);
+          this.setCurrentDeskId(this.communityDeskList[0]?.id);
+          return;
         } else {
           if (Number(this.currentComInfo.no) !== Number(idArr[0])) {
-            this.setCurrentDeskId(this.communityDeskList[0].id);
+            this.setCurrentDeskId(this.communityDeskList[0]?.id);
+            return;
           }
+          return;
         }
+
       },
       immediate: true,
       deep: true,
     },
+
   },
 
   methods: {
@@ -853,8 +885,9 @@ export default {
       "setCurrentDeskNo",
       "setCurrentDeskAllList",
       "setCurrentDeskData",
-      "sysCommunityDesk",
-      "loadCommunityDesk",
+      "syncCommunityDesk",
+      "loadCommunityDeskAll",
+      "loadCommunityDeskDetail",
     ]),
 
     // 桌面操作
@@ -894,6 +927,7 @@ export default {
     setCurrentDeskId(id) {
       this.$emit("update:currentDeskId", id);
       this.$emit("changeDesk", { id: id });
+      this.loadCommunityDeskDetail(id);
     },
     moreDesk() {
       this.panelIndex = 1;
@@ -1158,11 +1192,11 @@ export default {
     },
 
     // 管理员桌面数据同步云端
-    sysSaveCommunity() {
+    syncSaveCommunity() {
       this.setCurrentDeskNo(this.currentComInfo.no);
       this.setCurrentDeskAllList(this.communityDeskList);
       this.setCurrentDeskData(this.currentDesk);
-      this.sysCommunityDesk();
+      this.syncCommunityDesk();
     },
 
     // 桌面全屏按钮 当前桌面全屏先保留,后期需要再调用这个方法
@@ -1173,7 +1207,8 @@ export default {
     // 加载社群云端数据
     loadCommunityCloud() {
       this.setCurrentDeskNo(this.currentComInfo.no);
-      this.loadCommunityDesk();
+      this.loadCommunityDeskAll();
+      this.loadCommunityDeskDetail(this.currentDesk.id);
     },
   },
 };
