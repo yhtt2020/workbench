@@ -103,7 +103,12 @@ export default [
   {
     path: "/main",
     name: "main",
-    component: Main,
+    // component: Main,
+    components: {
+      default: Main,
+      ai: AIAssistant,
+      note: Note,
+    },
     children: [
       ...DeckRoute,
       ShortcutKeyRoute,
@@ -588,8 +593,6 @@ export default [
           //     tab2: "ai",
           //   },
           // },
-
-
         ],
       },
 

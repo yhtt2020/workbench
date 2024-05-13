@@ -115,12 +115,12 @@
               <!-- 主体内容区 -->
               <vue-custom-scrollbar
                 :settings="{
-                  swipeEasing: true,
-                  suppressScrollY: false,
-                  suppressScrollX: true,
-                  wheelPropagation: false,
+                  // swipeEasing: true,
+                  // suppressScrollY: false,
+                  // suppressScrollX: true,
+                  // wheelPropagation: false,
                 }"
-                style="position: relative"
+                style="position: relative; overflow: hidden"
                 :style="scrollbarStyle"
                 class="flex-1"
                 :class="mainClass"
@@ -183,7 +183,7 @@
 <script setup lang="ts">
 import McDonalds from "./McDonalds.vue";
 
-import PerfectScrollbar from "perfect-scrollbar";
+// import PerfectScrollbar from "perfect-scrollbar";
 import {
   ref,
   watch,
@@ -528,23 +528,6 @@ const init = () => {
       capture: true,
     });
   }
-  nextTick(() => {
-    setTimeout(() => {
-      if (!modal.value) return;
-      perfectScrollbar.value = new PerfectScrollbar(modal.value, {
-        swipeEasing: true,
-      });
-      if (
-        modalWidth.value >= windowWidth.value &&
-        modalHeight.value >= windowHeight.value
-      ) {
-        maximize();
-      } else if (modalWidth.value >= windowWidth.value) {
-        // x.value = 0;
-        modalWidth.value = windowWidth.value;
-      }
-    }, 1);
-  });
 };
 
 // 挂载后
