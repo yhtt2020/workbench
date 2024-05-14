@@ -758,7 +758,7 @@ export default {
       "selectNav",
       "jumpDesk",
     ]),
-    ...mapWritableState(communityDeskStore,["syncCommunityDesk"]),
+    ...mapWritableState(communityDeskStore, ["syncDesk", "setting"]),
 
     /**当前社群的角色权限**/
     currentComRole() {
@@ -772,13 +772,25 @@ export default {
 
     // 当前社群桌面列表
     communityDeskList() {
-      const filterList = _.filter(this.deskList, (desk) => {
-        if (desk.communityNo) {
-          return Number(this.currentComInfo.no) === Number(desk.communityNo);
-        }
-      });
-      // console.log("当前社群桌面列表", filterList);
-      return filterList;
+      // if (this.syncDesk.desks.length > 0) {
+      //   const mapDesks = _.map(this.syncDesk.desks, (mapItem) => {
+      //     const found = _.find(this.deskList, (find) => {
+      //       return String(find.id) === String(mapItem.id);
+      //     });
+      //     return found;
+      //   });
+      //   const filterDesks = _.filter(mapDesks, (item) => {
+      //     return item !== undefined;
+      //   });
+      //   return filterDesks;
+      // } else {
+        const filterList = _.filter(this.deskList, (desk) => {
+          if (desk.communityNo) {
+            return Number(this.currentComInfo.no) === Number(desk.communityNo);
+          }
+        });
+        return filterList;
+      // }
     },
 
     // 桌面下拉菜单
@@ -805,9 +817,10 @@ export default {
 
     // 桌面置顶数据
     displayDesks() {
+      // console.log("测试", this.communityDeskList);
       const deskLists = [
         ...this.communityDeskList.filter((desk) => {
-          return desk.pin;
+          return desk?.pin;
         }),
         ...this.communityDeskList.filter((desk) => {
           return !desk.pin;
@@ -820,7 +833,6 @@ export default {
         }
         return Number(b.order || 0) - Number(a.order || 0);
       });
-      console.log("置顶排序", topArr);
       return topArr;
     },
 
@@ -841,16 +853,15 @@ export default {
 
         // 监听社群角色权限
         if (newVal.role === "owner") {
-          console.log("管理员",this.syncCommunityDesk);
+          // console.log("管理员", this.syncCommunityDesk);
           // 检测当前列表是否为空
-          if(this.communityDeskList.length === 0){
+          if (this.communityDeskList.length === 0) {
             this.doAddDesk("空白桌面");
           }
         } else {
-          console.log("成员",this.syncCommunityDesk);
+          // console.log("成员", this.syncCommunityDesk);
         }
 
-        
         // 检测桌面是个人桌面还是社群桌面
         const idArr = [
           this.currentDeskId?.slice(0, -4),
@@ -863,17 +874,16 @@ export default {
           return;
         } else {
           if (Number(this.currentComInfo.no) !== Number(idArr[0])) {
-            this.setCurrentDeskId(this.communityDeskList[0]?.id);
-            return;
+            setTimeout(() => {
+              console.log("获取默认桌面", this.communityDeskList[0]);
+              this.setCurrentDeskId(this.communityDeskList[0]?.id);
+            }, 600);
           }
-          return;
         }
-
       },
       immediate: true,
       deep: true,
     },
-
   },
 
   methods: {
@@ -885,7 +895,7 @@ export default {
       "setCurrentDeskNo",
       "setCurrentDeskAllList",
       "setCurrentDeskData",
-      "syncCommunityDesk",
+      "saveCommunityDesk",
       "loadCommunityDeskAll",
       "loadCommunityDeskDetail",
     ]),
@@ -1196,7 +1206,7 @@ export default {
       this.setCurrentDeskNo(this.currentComInfo.no);
       this.setCurrentDeskAllList(this.communityDeskList);
       this.setCurrentDeskData(this.currentDesk);
-      this.syncCommunityDesk();
+      this.saveCommunityDesk();
     },
 
     // 桌面全屏按钮 当前桌面全屏先保留,后期需要再调用这个方法
@@ -1208,7 +1218,9 @@ export default {
     loadCommunityCloud() {
       this.setCurrentDeskNo(this.currentComInfo.no);
       this.loadCommunityDeskAll();
-      this.loadCommunityDeskDetail(this.currentDesk.id);
+      if(this.currentDesk?.id){
+        this.loadCommunityDeskDetail(this.currentDesk?.id);
+      } 
     },
   },
 };

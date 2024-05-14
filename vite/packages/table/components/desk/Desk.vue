@@ -571,7 +571,7 @@ export default {
       }
     },
     getWidth(){
-      console.log(this.usingSettings.fixedLayout)
+      // console.log(this.usingSettings.fixedLayout)
       if(this.usingSettings.fitMod==='full'){
         return '100%'
       }else{

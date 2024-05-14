@@ -41,6 +41,8 @@ function communityMenus() {
       name: "更新桌面",
       newIcon: "fluent:cloud-arrow-up-16-regular",
       fn: this.syncSaveCommunity,
+      // updateTime:222222,
+
     },
     { id: 2, divider: true },
     {
