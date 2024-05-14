@@ -94,7 +94,7 @@
     </div>
 
     <!-- 进度条 -->
-    <div>
+    <div class="pb-2">
       <a-row :gutter="10">
         <a-col flex="55px" class="mt-1 text-right">
           <span class="px-2 rounded-full xt-active-bg xt-active-text">

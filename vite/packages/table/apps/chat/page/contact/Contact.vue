@@ -125,7 +125,7 @@ import _ from "lodash-es";
 // import Friend from "./page/Friend.vue";
 // import Notice from "./page/Notice.vue";
 
-const chat = window.$chat;
+const chat = window.$chat?.chat;
 
 const contact = contactStore();
 const app = appStore();

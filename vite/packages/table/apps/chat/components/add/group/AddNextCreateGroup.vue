@@ -165,7 +165,7 @@ import { currentGroupType } from "../../../hooks/groupType";
 import { message } from "ant-design-vue";
 import { useRouter } from "vue-router";
 
-const chat = window.$chat;
+const chat = window.$chat?.chat;
 const router = useRouter();
 const emit = defineEmits(["return", "close","handleGroup"]);
 

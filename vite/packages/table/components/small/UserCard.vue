@@ -339,7 +339,7 @@ export default {
     },
     addToBlacklist() {
       // 升级后调用IM的api方法
-      const chat = window.$chat;
+      const chat = window.$chat?.chat;
       let promise = chat.addToBlacklist({
         userIDList: [String(this.uid)],
       }); // 请注意：即使只添加一个用户账号到黑名单，也需要用数组类型，例如：userIDList: ['user1']
@@ -357,7 +357,7 @@ export default {
     },
     removeFromBlacklist() {
       // 升级后调用IM的api方法
-      const chat = window.$chat;
+      const chat = window.$chat?.chat;
       let promise = chat.removeFromBlacklist({
         userIDList: [String(this.uid)],
       }); // 请注意：即使只从黑名单中移除一个用户账号，也需要用数组类型，例如：userIDList: ['user1']
@@ -376,7 +376,7 @@ export default {
         return;
       }
       // 升级后调用IM的api方法
-      const chat = window.$chat;
+      const chat = window.$chat?.chat;
       let promise = chat.addFriend({
         to: String(this.uid),
         source: "AddSource_Type_UserCard",
@@ -400,7 +400,7 @@ export default {
     },
     deleteFriend() {
       // 升级后调用IM的api方法
-      const chat = window.$chat;
+      const chat = window.$chat?.chat;
       let promise = chat.deleteFriend({
         userIDList: [String(this.uid)],
         type: TencentCloudChat.TYPES.SNS_DELETE_TYPE_BOTH,
@@ -431,7 +431,7 @@ export default {
     },
     async checkBlacklist() {
       // 升级后调用IM的api方法
-      const chat = window.$chat;
+      const chat = window.$chat?.chat;
       let promise = chat.getBlacklist();
       promise
         .then((imResponse) => {
@@ -473,7 +473,7 @@ export default {
         console.log("需要检查");
         try {
           // 升级后调用IM的api方法
-          const chat = window.$chat;
+          const chat = window.$chat?.chat;
           console.log([String(this.uid)]);
           let rs = await chat.checkFriend({
             userIDList: [String(this.uid)],

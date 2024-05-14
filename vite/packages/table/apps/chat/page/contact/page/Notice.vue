@@ -74,7 +74,7 @@ import {
 import _ from "lodash-es";
 import { message } from "ant-design-vue";
 
-const chat = window.$chat;
+const chat = window.$chat?.chat;
 const currentNoticeList = ref([]);
 const userProFile = ref([]);
 
