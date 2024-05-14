@@ -379,7 +379,7 @@ export const DESKS=[
             "type": "default",
             "value": "https://www.iqiyi.com/"
           },
-          "titleValue": "爱奇异",
+          "titleValue": "爱奇艺",
           "src": "https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/sDnJ-m92Z-26Ul-FeP3",
           "radius": 5,
           "imgState": "cover",
