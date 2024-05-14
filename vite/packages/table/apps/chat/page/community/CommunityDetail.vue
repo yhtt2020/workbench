@@ -293,7 +293,7 @@ const handleCurrentItem = async (data: any) => {
         }
       } else {
         /**当前群聊为公开群**/
-        const res = await window.$chat?.searchGroupByID(
+        const res = await window.$chat?.chat.searchGroupByID(
           groupProps.groupID
         );
         const isDisable = res.data.group.joinOption !== "DisableApply";

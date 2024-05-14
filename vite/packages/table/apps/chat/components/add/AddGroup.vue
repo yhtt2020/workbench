@@ -139,7 +139,7 @@ const closeAdd = () => {
 // 搜索群聊
 const searchGroup = () => {
   if (data.value.searchId !== "") {
-    window.$chat
+    window.$chat?.chat
       .searchGroupByID(data.value.searchId)
       .then((res) => {
         if (res.code === 0) {
@@ -188,7 +188,7 @@ const joinCurrentGroup = async (group) => {
         group.applyMessage || TUITranslateService.t("TUIContact.加群"),
       type: group?.type,
     };
-    const res = await window.$chat.joinGroup(options);
+    const res = await window.$chat?.chat.joinGroup(options);
     if (res.data.status === "WaitAdminApproval") {
       message.success("入群申请已发出,等待群主和管理员审核");
     } else if (res.data.status === "JoinedSuccess") {
