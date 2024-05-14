@@ -11,7 +11,7 @@
 
   <xt-option-box>
     <div class="mb-2">余额</div>
-    <div v-if="state" class="text-sm mb-4">{{ money }}</div>
+    <div v-if="state" class="text-sm mb-4">{{ money > 0.1 ? money : '余额不足' }}</div>
     <div v-else class="xt-text-2 mb-4">完成配置后即可查看可用余量。</div>
   </xt-option-box>
 
@@ -78,7 +78,7 @@ export default {
         },
         { value: "gpt-4-32k", name: "gpt-4 稳定版" },
       ],
-      money: "",
+      money: 0.05,
     };
   },
 };

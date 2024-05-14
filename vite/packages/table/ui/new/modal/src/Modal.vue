@@ -115,12 +115,12 @@
               <!-- 主体内容区 -->
               <vue-custom-scrollbar
                 :settings="{
-                  // swipeEasing: true,
-                  // suppressScrollY: false,
-                  // suppressScrollX: true,
-                  // wheelPropagation: false,
+                  swipeEasing: true,
+                  suppressScrollY: false,
+                  suppressScrollX: true,
+                  wheelPropagation: false,
                 }"
-                style="position: relative; overflow: hidden"
+                style="position: relative"
                 :style="scrollbarStyle"
                 class="flex-1"
                 :class="mainClass"
@@ -201,7 +201,7 @@ import { nanoid } from "nanoid";
 
 import { ModalProps } from "./types";
 const scrollbar: any = ref(null);
-const perfectScrollbar: any = ref(null);
+// const perfectScrollbar: any = ref(null);
 const { proxy }: any = getCurrentInstance();
 
 const props = withDefaults(defineProps<ModalProps>(), {
@@ -361,7 +361,7 @@ const initPosition = () => {
 
 // 更新弹窗大小
 const resizeModel = (data) => {
-  perfectScrollbar.value?.update();
+  // perfectScrollbar.value?.update();
   modalHeight.value = data.height;
   modalWidth.value = data.width;
 };
@@ -528,6 +528,23 @@ const init = () => {
       capture: true,
     });
   }
+  // nextTick(() => {
+  //   setTimeout(() => {
+  //     if (!modal.value) return;
+  //     perfectScrollbar.value = new PerfectScrollbar(modal.value, {
+  //       swipeEasing: true,
+  //     });
+  //     if (
+  //       modalWidth.value >= windowWidth.value &&
+  //       modalHeight.value >= windowHeight.value
+  //     ) {
+  //       maximize();
+  //     } else if (modalWidth.value >= windowWidth.value) {
+  //       // x.value = 0;
+  //       modalWidth.value = windowWidth.value;
+  //     }
+  //   }, 1);
+  // });
 };
 
 // 挂载后
@@ -541,8 +558,8 @@ onMounted(() => {
 });
 // 卸载前
 onBeforeUnmount(() => {
-  perfectScrollbar.value?.destroy();
-  perfectScrollbar.value = null;
+  // perfectScrollbar.value?.destroy();
+  // perfectScrollbar.value = null;
 
   // 注销弹窗失去焦点监听
   proxy.$bus.off("modalBlur");
