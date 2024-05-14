@@ -10,14 +10,13 @@
     <slot></slot>
   </xt-left-menu>
 
-  <xt-old-modal
+  <xt-modal
     v-if="createChatVisible"
     v-model="createChatVisible"
     title="新建模板"
-    :isFooter="false"
   >
     <CreateTopic @close="createChatVisible = false"></CreateTopic>
-  </xt-old-modal>
+  </xt-modal>
   <!-- 系统设置 -->
   <xt-modal v-if="setVisible" v-model="setVisible" title="AI助手设置">
     <div
