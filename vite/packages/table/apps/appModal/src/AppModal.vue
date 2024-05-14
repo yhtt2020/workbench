@@ -63,9 +63,9 @@ const modalStyle = computed(() => {
     :mask="false"
     custom
   >
-    <div class="flex flex-col h-full xt-modal-header">
+    <div class="flex flex-col h-full">
       <div
-        class="h-12 flex justify-between items-center px-4 xt-main-bg"
+        class="h-12 flex justify-between items-center px-4 xt-main-bg  xt-modal-header"
         style="border-radius: 12px 12px 0 0"
       >
         <div class="flex items-center">
