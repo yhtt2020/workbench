@@ -115,12 +115,12 @@
               <!-- 主体内容区 -->
               <vue-custom-scrollbar
                 :settings="{
-                  swipeEasing: true,
-                  suppressScrollY: false,
-                  suppressScrollX: true,
-                  wheelPropagation: false,
+                  // swipeEasing: true,
+                  // suppressScrollY: false,
+                  // suppressScrollX: true,
+                  // wheelPropagation: false,
                 }"
-                style="position: relative"
+                style="position: relative; overflow: hidden"
                 :style="scrollbarStyle"
                 class="flex-1"
                 :class="mainClass"
@@ -183,7 +183,7 @@
 <script setup lang="ts">
 import McDonalds from "./McDonalds.vue";
 
-import PerfectScrollbar from "perfect-scrollbar";
+// import PerfectScrollbar from "perfect-scrollbar";
 import {
   ref,
   watch,
@@ -332,7 +332,6 @@ const getModalPosition = computed(() => {
   // 无遮罩层的情况
   else {
     top = (windowHeight.value - barHeight - modalHeight.value) / 2;
-    console.log("top :>> ", top);
     left = (windowWidth.value - modalWidth.value) / 2;
   }
 
@@ -363,7 +362,6 @@ const initPosition = () => {
 // 更新弹窗大小
 const resizeModel = (data) => {
   perfectScrollbar.value?.update();
-  console.log("22222 :>> ", 22222);
   modalHeight.value = data.height;
   modalWidth.value = data.width;
 };
@@ -530,14 +528,6 @@ const init = () => {
       capture: true,
     });
   }
-  nextTick(() => {
-    setTimeout(() => {
-      if (!modal.value) return;
-      perfectScrollbar.value = new PerfectScrollbar(modal.value, {
-        swipeEasing: true,
-      });
-    }, 1);
-  });
 };
 
 // 挂载后
