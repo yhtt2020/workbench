@@ -113,8 +113,8 @@ export const appearanceOptions = [
   },
   {
     type: "info",
-    title: "图标形状",
-    info: "选择图标形状",
+    title: "填充模式",
+    info: "图标填充模式",
   },
   {
     type: "tab",
@@ -143,10 +143,11 @@ export const appearanceOptions = [
   //   value: edit.value.open.value,
   //   src: edit.value.src,
 
+
   {
     type: "info",
-    title: "图标状态",
-    info: "选择图标状态",
+    title: "图标形状",
+    info: "选择图标形状",
   },
   {
     type: "tab",
