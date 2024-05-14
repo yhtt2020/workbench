@@ -145,12 +145,14 @@ const getCommunityByNo = (no: any) => {
             communityInfo: data,
           };
           // console.log('在线状态',option);
-          chatCommunity.loadCurrentCommunity(option)
+          chatCommunity.loadCurrentCommunity(option);
+          chatCommunity.getCommunityTree(no);
           // myCommunity.value.push(option);
           return;
         } else {
           chatCommunity.setCurrentCommunityNo(no);
           chatCommunity.loadCurrentCommunity(no);
+          chatCommunity.getCommunityTree(no);
         }
       }
     });
