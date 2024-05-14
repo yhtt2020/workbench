@@ -212,11 +212,6 @@ const menuList = ref([
       chatCommunity.topSort(no);
     },
   },
-  // {
-  //   newIcon:'fluent:add-16-filled',
-  //   label:'添加到...',
-  //   children:[],
-  // }
 ]);
 // /**取消置顶列表**/
 const unMenuList = ref([
