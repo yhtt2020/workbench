@@ -12,8 +12,8 @@ export const runList = [
     height: "752px",
     openMode: "default",
   },
-  {
-    name: "note",
-    visible: false,
-  },
+  // {
+  //   name: "note",
+  //   visible: false,
+  // },
 ];
