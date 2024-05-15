@@ -722,6 +722,17 @@ export default {
 
     this.addMenu(this.deskGroupMenu);
     this.addMenu(obj);
+
+    // 从社群桌面切换到个人桌面的操作
+    const startWithNum = /^\d/; // 检测当前桌面id是社群桌面还是个人
+    if (startWithNum.test(this.currentDeskId)) {
+      const filterList = this.deskList.filter((desk) => {
+        return !desk.communityNo;
+      });
+      this.setCurrentDeskId(filterList[0].id);
+    }
+
+    // 个人桌面正常操作
     if (this.deskList.length > 0) {
       this.currentDesk = this.deskList[0];
     }
@@ -751,23 +762,7 @@ export default {
       "selectNav",
       "jumpDesk",
     ]),
-    // getHomeSize(){
-    //   this.$nextTick(() => {
-    //     let height = document.getElementById("cardContent")?.offsetHeight;
-    //     let width= document.getElementById("cardContent")?.offsetWidth;
-    //     const windowHeight = document.documentElement.clientHeight // 高
-    //     let windowWidth = document.documentElement.clientWidth // 宽
-    //     let size = {
-    //       width,
-    //       height,
-    //       windowHeight,
-    //       windowWidth,
-    //     }
-    //     // console.log(cardsHeight)
-    //     console.log(size,'输出')
-    //     this.setDeskSize(size)
-    //   })
-    // },
+  
     currentDesk() {
       let currentDesk = this.deskList.find((desk) => {
         if (!desk.communityNo) return desk.id === this.currentDeskId;
@@ -818,22 +813,6 @@ export default {
         this.setCurrentDeskId(this.jumpDesk.id);
         this.jumpDesk = "";
       }
-    },
-
-    // 监听当前社群Id
-    currentDeskId: {
-      handler() {
-        console.log("当前桌面id", this.currentDeskId);
-        const startWithNum = /^\d/;
-        if (startWithNum.test(this.currentDeskId)) {
-          const filterList = this.deskList.filter((desk) => {
-            return !desk.communityNo;
-          });
-          this.setCurrentDeskId(filterList[0].id);
-        }
-      },
-      deep: true,
-      immediate: true,
     },
   },
   methods: {
