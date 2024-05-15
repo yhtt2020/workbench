@@ -4,7 +4,12 @@
   <template v-if="currentComRole">
     <div class="relative flex flex-col h-full">
       <!--  工具栏 xt-main-top-util-bar 元素定位类不可删-->
-      <xt-mix-menu class="w-full h-full" :menus="deskMenu" ref="mixMenu">
+      <xt-mix-menu
+        class="w-full h-full"
+        :menus="deskMenu"
+        ref="mixMenu"
+        v-if="displayDesks.length !== 0"
+      >
         <!-- 导航栏 -->
         <template #extraMenu>
           <ExtraMenu />
@@ -234,7 +239,12 @@
   <!-- 成员桌面 -->
   <template v-else>
     <div class="relative flex flex-col h-full">
-      <xt-mix-menu class="w-full h-full" :menus="deskMenu" ref="mixMenu">
+      <xt-mix-menu
+        class="w-full h-full"
+        :menus="deskMenu"
+        ref="mixMenu"
+        v-if="displayDesks.length !== 0"
+      >
         <Desk
           ref="currentDeskRef"
           v-if="currentDesk && currentDesk?.cards?.length > 0"
@@ -260,11 +270,13 @@
           </slot>
 
           <span v-show="false">
-            <Desk ref="currentDeskRef" />
-            <!--  :communityNo="currentComInfo.no"
+            <Desk
+              ref="currentDeskRef"
+              :communityNo="currentComInfo.no"
               :editing="editing"
               :key="key"
-              :currentDesk="currentDesk" -->
+              :currentDesk="currentDesk"
+            />
           </span>
         </template>
       </xt-mix-menu>
@@ -564,6 +576,13 @@
 
   <!-- 文件输入框 -->
   <input style="display: none" ref="fileRef" type="file" />
+
+  <!-- 社群桌面引导创建 -->
+  <CreateDeskModal
+    ref="createDeskRef"
+    :currentCommunityNo="currentComInfo.no"
+    @createDesk="doAddDesk('空白桌面')"
+  />
 </template>
 
 <script>
@@ -600,6 +619,7 @@ import AdminEmpty from "./empty/AdminEmpty.vue";
 import GalleryModal from "../../../components/paperModal/PaperApp.vue";
 import Icon from "../../../components/Icon.vue";
 import HorizontalPanel from "../../../components/HorizontalPanel.vue";
+import CreateDeskModal from "../components/CreateDeskModal.vue";
 
 export default {
   name: "CommunityGroupDesk",
@@ -624,6 +644,7 @@ export default {
     GalleryModal,
     Icon,
     HorizontalPanel,
+    CreateDeskModal,
   },
 
   props: {
@@ -734,6 +755,13 @@ export default {
     this.getRecommend({ goodType: "desk" }).then((rs) => {
       this.recommendList = rs;
     });
+
+    // 开启社群桌面引导创建弹窗
+    this.$bus.on("openCommunityDesk", () => {
+      this.$nextTick(() => {
+        this.$refs.createDeskRef?.openCommunityDeskModal();
+      });
+    });
   },
 
   computed: {
@@ -772,25 +800,31 @@ export default {
 
     // 当前社群桌面列表
     communityDeskList() {
-      // if (this.syncDesk.desks.length > 0) {
-      //   const mapDesks = _.map(this.syncDesk.desks, (mapItem) => {
-      //     const found = _.find(this.deskList, (find) => {
-      //       return String(find.id) === String(mapItem.id);
-      //     });
-      //     return found;
-      //   });
-      //   const filterDesks = _.filter(mapDesks, (item) => {
-      //     return item !== undefined;
-      //   });
-      //   return filterDesks;
-      // } else {
+      // 检测是不是管理员,是,就从本地桌面数据中取
+      if (this.currentComRole) {
         const filterList = _.filter(this.deskList, (desk) => {
           if (desk.communityNo) {
             return Number(this.currentComInfo.no) === Number(desk.communityNo);
           }
         });
         return filterList;
-      // }
+      } else {
+        if (this.syncDesk.desks.length > 0) {
+          const mapDesks = _.map(this.syncDesk.desks, (mapItem) => {
+            const found = _.find(this.deskList, (find) => {
+              return String(find.id) === String(mapItem.id);
+            });
+            return found;
+          });
+          const filterDesks = _.filter(mapDesks, (item) => {
+            return item !== undefined;
+          });
+          console.log("测试-filterDesks", filterDesks);
+          return filterDesks;
+        } else {
+          return [];
+        }
+      }
     },
 
     // 桌面下拉菜单
@@ -817,7 +851,6 @@ export default {
 
     // 桌面置顶数据
     displayDesks() {
-      // console.log("测试", this.communityDeskList);
       const deskLists = [
         ...this.communityDeskList.filter((desk) => {
           return desk?.pin;
@@ -845,41 +878,10 @@ export default {
   },
 
   watch: {
-    // 监听当前社群变化
+    // // 监听当前社群变化
     currentComInfo: {
       handler(newVal) {
-        // 加载当前社群桌面数据
-        this.loadCommunityCloud();
-
-        // 监听社群角色权限
-        if (newVal.role === "owner") {
-          // console.log("管理员", this.syncCommunityDesk);
-          // 检测当前列表是否为空
-          if (this.communityDeskList.length === 0) {
-            this.doAddDesk("空白桌面");
-          }
-        } else {
-          // console.log("成员", this.syncCommunityDesk);
-        }
-
-        // 检测桌面是个人桌面还是社群桌面
-        const idArr = [
-          this.currentDeskId?.slice(0, -4),
-          this.currentDeskId?.slice(-4),
-        ];
-        // 匹配当前桌面id是否与当前社群相关联
-        const startWithNum = /^\d/;
-        if (!startWithNum.test(this.currentDeskId)) {
-          this.setCurrentDeskId(this.communityDeskList[0]?.id);
-          return;
-        } else {
-          if (Number(this.currentComInfo.no) !== Number(idArr[0])) {
-            setTimeout(() => {
-              console.log("获取默认桌面", this.communityDeskList[0]);
-              this.setCurrentDeskId(this.communityDeskList[0]?.id);
-            }, 600);
-          }
-        }
+        console.log("监听当前参数", newVal);
       },
       immediate: true,
       deep: true,
@@ -928,6 +930,8 @@ export default {
       this.deskTitle = "";
       this.key = Date.now();
       this.addDeskVisible = false;
+      // 同步云端
+      // this.syncSaveCommunity();
     },
     showAddDeskForm() {
       this.$refs.currentDeskRef.hideMenu();
@@ -937,7 +941,6 @@ export default {
     setCurrentDeskId(id) {
       this.$emit("update:currentDeskId", id);
       this.$emit("changeDesk", { id: id });
-      this.loadCommunityDeskDetail(id);
     },
     moreDesk() {
       this.panelIndex = 1;
@@ -1033,28 +1036,16 @@ export default {
         okText: "删除桌面",
         okButtonWidth: "100",
         ok: () => {
-          if (filterList.length === 1) {
-            /**先创建**/
-            this.doAddDesk("空白桌面");
-            /**后移除**/
-            const index = this.deskList.findIndex((desk) => {
+          this.deskList.splice(
+            this.deskList.findIndex((desk) => {
               return desk === this.currentDesk;
-            });
-            this.deskList.splice(index, 1);
-            this.$emit("changeDesk", { id: this.deskList[0].id });
-            this.clearFreeLayout(this.currentDeskId);
-            // 删除桌面数据
-            this.key = Date.now();
-          } else {
-            const index = this.deskList.findIndex((desk) => {
-              return desk === this.currentDesk;
-            });
-            this.deskList.splice(index, 1);
-            this.$emit("changeDesk", { id: this.deskList[0].id });
-            this.clearFreeLayout(this.currentDeskId);
-            // 删除桌面数据
-            this.key = Date.now();
-          }
+            }),
+            1
+          );
+          this.$emit("changeDesk", { id: this.deskList[0].id });
+          this.clearFreeLayout(this.currentDeskId);
+          // 删除桌面数据
+          this.key = Date.now();
         },
       });
     },
@@ -1218,9 +1209,9 @@ export default {
     loadCommunityCloud() {
       this.setCurrentDeskNo(this.currentComInfo.no);
       this.loadCommunityDeskAll();
-      if(this.currentDesk?.id){
+      if (this.currentDesk?.id) {
         this.loadCommunityDeskDetail(this.currentDesk?.id);
-      } 
+      }
     },
   },
 };

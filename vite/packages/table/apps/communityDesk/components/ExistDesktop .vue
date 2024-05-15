@@ -51,7 +51,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed,toRefs } from "vue";
 import { storeToRefs } from "pinia";
 import { cardStore } from "../../../store/card";
 import _ from "lodash-es";
@@ -60,6 +60,15 @@ const emit = defineEmits(["prev"]);
 
 // 解构store缓存数据
 const { desks } = storeToRefs(cardStore());
+
+// 解构props
+const props = defineProps({
+ communityNo:{
+  type:String,
+  required:true,
+ }
+});
+const { communityNo } = toRefs(props)
 
 // 用于接收当前选中的桌面数据
 const currentDesk = ref({});

@@ -275,11 +275,11 @@ function memberMenus() {
       newIcon: "fluent:resize-large-16-regular",
       name: "复原桌面位置",
       // disabled: this.isFreeLayout ? false : true,
-      // fn: () => {
-      //   this.$nextTick(() => {
-      //     this.$refs.currentDeskRef.freeLayoutScrollbarRedirect();
-      //   });
-      // },
+      fn: () => {
+        this.$nextTick(() => {
+          this.$refs.currentDeskRef.freeLayoutScrollbarRedirect();
+        });
+      },
     },
     {
       id: 5,
@@ -300,9 +300,13 @@ function memberMenus() {
           newIcon: "fluent:settings-16-regular",
           name: "桌面设置",
           fn: () => {
-            this.$nextTick(() => {
-              this.$refs.currentDeskRef.showSetting();
-            });
+            console.log('桌面设置',this.displayDesks.length)
+            if(this.displayDesks.length !== 0){
+              this.$nextTick(() => {
+                this.$refs.currentDeskRef.showSetting();
+              });
+            }
+            
           },
         },
         {
@@ -314,15 +318,15 @@ function memberMenus() {
             this.setFullScreen(a);
           },
         },
-        {
-          id: 3,
-          newIcon: "fluent:tablet-16-regular",
-          name: "添加到导航栏",
-          fn: () => {
-            // let a = !this.fullScreen;
-            // this.setFullScreen(a);
-          },
-        },
+        // {
+        //   id: 3,
+        //   newIcon: "fluent:tablet-16-regular",
+        //   name: "添加到导航栏",
+        //   fn: () => {
+        //     // let a = !this.fullScreen;
+        //     // this.setFullScreen(a);
+        //   },
+        // },
       ],
     },
   ];
