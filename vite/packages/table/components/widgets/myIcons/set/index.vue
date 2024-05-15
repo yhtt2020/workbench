@@ -27,6 +27,7 @@
           <xt-text class="mb-3" center> 当前图标为「系统功能」类型。 </xt-text>
         </xt-option-box>
         <template v-else>
+
           <xt-option-form :options="attributeOptions" :data="edit">
             <template #custom>
               <div @click="openLocalApp()">

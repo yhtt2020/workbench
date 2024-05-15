@@ -1,3 +1,4 @@
+import { useAppModal } from "../apps/appModal/src/hook/useAppModal";
 import { useAddCard, useDelCard } from "./src/useCard";
 import {
   useCardSize,
@@ -40,4 +41,6 @@ export {
   // useDoubleClick
   useDoubleClick,
   useStatus,
+
+  useAppModal,
 };

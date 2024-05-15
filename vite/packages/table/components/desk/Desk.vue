@@ -61,7 +61,7 @@
       </template>
 
       <!-- 默认布局 -->
-      <div class="h-full"  v-show="!isFreeLayout" :style="{width:getWidth(),height:getHeight()}">
+      <div class="h-full" style="max-width: 100%;max-height: 100%"  v-show="!isFreeLayout" :style="{width:getWidth(),height:getHeight()}">
         <vue-custom-scrollbar
 
           :class="previewFlag ? 'z-50' : ''"

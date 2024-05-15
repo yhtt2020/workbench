@@ -36,7 +36,6 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import { createPinia } from "pinia";
 import "dayjs/locale/zh-cn";
 import "./index.css";
-import { cardStore } from "./store/card";
 import vueCustomScrollbar from "../../src/components/vue-scrollbar.vue";
 
 import VueTippy from "vue-tippy";
