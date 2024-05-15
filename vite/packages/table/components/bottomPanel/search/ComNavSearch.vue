@@ -50,7 +50,7 @@
           <xt-ify-icon
             icon="fluent:checkmark-circle-16-filled"
             v-if="currentCommunity.index === index"
-            style="color:rgba(80, 139, 254, 0.6);"
+            style="color: rgba(80, 139, 254, 0.6)"
           ></xt-ify-icon>
         </div>
       </div>
@@ -59,16 +59,21 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, watchEffect, getCurrentInstance } from 'vue'
+import { ref, computed, watch, watchEffect, getCurrentInstance } from "vue";
 import { storeToRefs } from "pinia";
 import { chatCommunityStore } from "../../../apps/chat/store/chatCommunity";
 import { communityNavStore } from "../store/communityNavStore";
 import { useRouter } from "vue-router";
 import { appStore } from "../../../store";
+import { getCommunityDeskList } from "../../../apps/communityDesk/hooks/deskCreateMethod";
 
 // 路由
 const router = useRouter();
 
+// 获取proxy
+const { proxy } = getCurrentInstance();
+
+// 解构store存储数据
 const com = chatCommunityStore();
 const { myCommunity } = storeToRefs(com);
 const comNav = communityNavStore();
@@ -76,12 +81,15 @@ const { currentCommunity } = storeToRefs(comNav);
 const app = appStore();
 const { settings } = storeToRefs(app);
 
+// ref定义数据
 const search = ref("");
 const communityList = ref([]);
 
-const emit = defineEmits(['close']);
+// emit触发事件
+const emit = defineEmits(["close"]);
+
 // 获取当前已经加入的社群列表
-const getCurrentCommunityList = () =>{
+const getCurrentCommunityList = () => {
   if (myCommunity.value.length !== 0) {
     const filterList = myCommunity.value.filter((item) => {
       if (item.communityInfo) {
@@ -92,36 +100,57 @@ const getCurrentCommunityList = () =>{
   } else {
     communityList.value = [];
   }
-}
+};
 watchEffect(() => {
   getCurrentCommunityList();
 });
 
 // 搜索社群
 const getSearchResult = () => {
-  if(search.value !== ''){
+  if (search.value !== "") {
     const searchList = myCommunity.value.communityList.filter((item) => {
       if (item.communityInfo) {
         return item.communityInfo.name.includes(search.value);
       }
     });
     communityList.value = searchList;
-  }
-  else {
+  } else {
     // 搜索框为空时，重置原来的数据列表
     getCurrentCommunityList();
   }
 };
+
 // 选择社群
 const selectCommunity = (item, index) => {
-  if(settings.value.isCommunity){
-    settings.value.isCommunity = false;
+  const communityDesks = getCommunityDeskList(item.communityInfo);
+  // 检测当前社群有没有创建桌面。
+  if (communityDesks.length === 0) {
+    // 管理员
+    if (item.role === "owner") {
+      comNav.setCurrentCommunity(item, index);
+      settings.value.isCommunity = false;
+      proxy.$bus.emit("openCommunityDesk");
+    }
+    // 成员
+    else {
+      window.$ui.confirm("暂无可用的社群桌面", "请联系你的社群管理员创建", {
+        ok: () => {},
+        okText: "好的",
+        noText: null,
+        type: "link",
+      });
+    }
   }
-  router.push({ name: "home", params: { no: item.communityInfo.no } });
-  comNav.setCurrentCommunity(item, index);
-  // 选择后进行弹窗关闭
-  emit('close');
-
+  // 当前社群已经有桌面数据
+  else {
+    if (settings.value.isCommunity) {
+      settings.value.isCommunity = false;
+    }
+    router.push({ name: "home", params: { no: item.communityInfo.no } });
+    comNav.setCurrentCommunity(item, index);
+  }
+  // // 选择后进行弹窗关闭
+  emit("close");
 };
 </script>
 
