@@ -44,6 +44,8 @@
 
 <script>
 import { useOpenAi } from "../../hooks/src/open/useOpenAi";
+import { useAppModal } from "../../apps/appModal/src/hook/useAppModal";
+
 import Widget from "../card/Widget.vue";
 import {
   MessageOutlined,
@@ -121,11 +123,14 @@ export default {
     // 跳转至具体会话
     goPage(index) {
       this.selectTopicIndex = this.recentList[index].id;
-      useOpenAi()
+      // useOpenAi()
+      const { openApp } = useAppModal('ai')
+      openApp()
       return
     },
     pushToMain() {
-      useOpenAi()
+      const { openApp } = useAppModal('ai')
+      openApp()
     },
   },
   computed: {

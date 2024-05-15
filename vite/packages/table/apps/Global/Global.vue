@@ -92,8 +92,11 @@ const openFile = (cb?: Function) => {
     // proxy.tt
   }, 10);
 };
+import { useAppModal } from "../../hooks";
 let timer;
 onMounted(() => {
+  const { initApp } = useAppModal("");
+  initApp()
   // 打开系统设置
   proxy.$bus.on("openSystemSet", () => {
     console.log("systemVisible.value :>> ", systemVisible.value);
