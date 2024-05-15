@@ -822,17 +822,13 @@ export default {
         const filterList = this.deskList.filter((desk)=>{
           return !desk.communityNo
         })
-        console.log('当前桌面数据',filterList)
         if(filterList.length > 0){
-          this.currentDesk = this.deskList[0];
+          this.currentDesk = filterList[0];
         }
       },
       immediate:true,
       deep:true,
     }
-    // (){
-    //   console.log('当前桌面数据',this.deskList)
-    // }
   },
   methods: {
     ...mapActions(marketStore, ["getRecommend"]),

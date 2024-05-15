@@ -751,6 +751,18 @@ export default {
       this.moreDesk();
     });
 
+    this.selectDefaultDesk();
+
+    // 个人桌面正常操作
+    if (this.deskList.length > 0) {
+      this.currentDesk = this.deskList[0];
+    }
+    this.deskList.forEach((desk) => {
+      if (!desk.id) {
+        desk.id = desk.nanoid;
+      }
+    });
+
     // 获取推荐桌面数据
     this.getRecommend({ goodType: "desk" }).then((rs) => {
       this.recommendList = rs;
@@ -878,10 +890,15 @@ export default {
   },
 
   watch: {
-    // // 监听当前社群变化
+    // 监听当前社群变化
     currentComInfo: {
       handler(newVal) {
-        console.log("监听当前参数", newVal);
+        // 默认选中桌面方法
+        this.selectDefaultDesk();
+        // 成员社群获取云端数据
+        if(newVal.role === 'member'){
+          this.loadCommunityCloud()
+        }
       },
       immediate: true,
       deep: true,
@@ -1211,6 +1228,23 @@ export default {
       this.loadCommunityDeskAll();
       if (this.currentDesk?.id) {
         this.loadCommunityDeskDetail(this.currentDesk?.id);
+      }
+    },
+
+    // 检测当前社群的桌面数据以及默认选中的方法
+    selectDefaultDesk() {
+      // 检测桌面是个人桌面还是社群桌面
+      const idArr = [
+        this.currentDeskId?.slice(0, -4),
+        this.currentDeskId?.slice(-4),
+      ];
+      // 检测个人桌面切换到社群桌面
+      if (idArr[0] !== "") {
+        // 检测指定的社群
+        if (Number(this.currentComInfo.no) === Number(idArr[0])) return;
+        this.setCurrentDeskId(this.communityDeskList[0]?.id);
+      } else {
+        this.setCurrentDeskId(this.communityDeskList[0]?.id);
       }
     },
   },

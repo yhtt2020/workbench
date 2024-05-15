@@ -1,9 +1,4 @@
 <template>
-  <div>
-    测试: {{ community }}
-    测试: {{ checkIsCommunity }}
-    测试: {{ communityRole }}
-  </div>
   <!-- 桌面设置可以编辑 -->
   <template v-if="!communityRole">
     <template v-if="checkIsCommunity">
