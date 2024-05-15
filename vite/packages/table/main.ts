@@ -117,12 +117,13 @@ dayjs.locale("zh-cn");
 const app = createApp(App);
 
 //腾讯IM部分
-import { loadChat,TUIKit } from "./chat";
+// import { loadChat,TUIKit } from "./chat";
+import { loadChat,TUIChatKit,TUIComponents} from "./chat";
 loadChat();
-TUIKit.TUIChatKit.components(TUIKit.TUIComponents,app);
+TUIChatKit.components(TUIComponents,app);
+
 // 导入IM的UI覆写样式文件
 import "./apps/chat/assets/chat.scss";
-// TUIKit
 
 app.use(Wujie);
 // app.use(hevueImgPreview)

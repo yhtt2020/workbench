@@ -212,11 +212,6 @@ const menuList = ref([
       chatCommunity.topSort(no);
     },
   },
-  // {
-  //   newIcon:'fluent:add-16-filled',
-  //   label:'添加到...',
-  //   children:[],
-  // }
 ]);
 // /**取消置顶列表**/
 const unMenuList = ref([
@@ -417,7 +412,7 @@ onMounted(() => {
 //         headList.value[1].disabled = true;
 //       }
 //       nextTick(() => {
-//         // window.$chat?.on(window.$TUIKit?.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, async(e) => {
+//         // window.$chat?.chat?.on(window.$TUIKit?.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, async(e) => {
 //         //   // headList.value[0].unread = e.data === 0 ? 0 : e.data > 99 ? 99 : e.data;
 //         //   headList.value[0].info = e.data === 0 ? [] :  e.data > 99 ? ['tr','red','99'] : ['tr','red',`${e.data}`];
 //         //   const list = community.value.communityList;

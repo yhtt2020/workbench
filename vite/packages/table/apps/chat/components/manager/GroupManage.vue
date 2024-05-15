@@ -183,7 +183,7 @@ message.config({
   maxCount: 1,
 });
 
-const chat = window.$chat;
+const chat = window.$chat?.chat;
 const emit = defineEmits(["closeMember", "updateMuteAllMembers"]);
 
 const props = defineProps({

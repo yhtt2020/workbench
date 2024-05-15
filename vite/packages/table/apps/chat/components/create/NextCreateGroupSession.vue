@@ -167,7 +167,7 @@ import { TUIConversationService } from "@tencentcloud/chat-uikit-engine";
 import { completeTask } from "../../../task/task";
 import { useRouter } from "vue-router";
 
-const chat = window.$chat;
+const chat = window.$chat?.chat;
 const router = useRouter();
 const emit = defineEmits(["return", "close"]);
 

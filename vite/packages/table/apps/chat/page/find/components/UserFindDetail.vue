@@ -55,7 +55,7 @@ import { contactStore } from "../../../store/contactStore";
 import AddFindButton from "../../../../../components/sns/AddFindButton.vue";
 import SendMessageButton from "../../../../../components/sns/SendMessageButton.vue";
 
-const chatServer = window.$chat;
+const chatServer = window.$chat?.chat;
 const router = useRouter();
 const props = defineProps({
   userList: {

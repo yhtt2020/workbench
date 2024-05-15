@@ -65,7 +65,7 @@ import {
 import GroupUserSelect from "../../../components/create/CreateGroupSession.vue";
 import GroupInfo from "../components/GroupInfo.vue";
 
-const chat = window.$chat;
+const chat = window.$chat?.chat;
 
 /**当前群聊列表**/
 const currentGroupList = ref([]);

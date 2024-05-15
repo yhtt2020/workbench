@@ -100,8 +100,8 @@ const shareContent = async (data) => {
     conversationType: `${data.type}`,
     payload: content.value,
   };
-  const resMsg = await window.$chat.createCustomMessage(messageContent);
-  let promise = window.$chat.sendMessage(resMsg);
+  const resMsg = await window.$chat?.chat.createCustomMessage(messageContent);
+  let promise = window.$chat?.chat.sendMessage(resMsg);
   promise
     .then(function (imResponse) {
       /**发送成功**/ 

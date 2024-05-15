@@ -303,7 +303,7 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         if (Number(item.cno) === Number(no)) {
           return {
             ...item,
-            top: null,
+            top: ["tr", "blue", { icon: "fluent:pin-16-filled" }, 0],
           };
         } else {
           return item;
