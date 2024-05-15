@@ -2,22 +2,21 @@
   <xt-left-menu
     :list="menuList"
     last="1"
-    end="3"
+    :end="endMenu"
     model="id"
     class="w-full"
-    style="min-height: 752px; min-width: 1000px"
+    :class="modalClass"
   >
     <slot></slot>
   </xt-left-menu>
 
-  <xt-old-modal
+  <xt-modal
     v-if="createChatVisible"
     v-model="createChatVisible"
     title="新建模板"
-    :isFooter="false"
   >
     <CreateTopic @close="createChatVisible = false"></CreateTopic>
-  </xt-old-modal>
+  </xt-modal>
   <!-- 系统设置 -->
   <xt-modal v-if="setVisible" v-model="setVisible" title="AI助手设置">
     <div
@@ -26,6 +25,17 @@
         height: aiMode == 'custom' ? '66vh' : 'auto',
       }"
     >
+      <AppOpenMode />
+      <!-- <xt-option-box>
+        <xt-option-info title="打开方式" info="修改后再下次打开后生效。" />
+        <xt-option-tab
+          v-model="useMode"
+          :list="openModeList"
+          circle
+          style="height: 40px"
+          @cb="updateAiMode"
+        />
+      </xt-option-box> -->
       <xt-option-box style="padding-bottom: 0 !important">
         <xt-option-info
           title="选择AI助手配置"
@@ -39,13 +49,16 @@
           @cb="updateAiMode"
         />
       </xt-option-box>
+
       <Edit v-if="aiMode == 'custom'"></Edit>
     </div>
   </xt-modal>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { useAppModal } from "../../../apps/appModal/src/hook/useAppModal";
+const { AppOpenMode,openApp } = useAppModal("ai");
+import { ref, computed, inject } from "vue";
 import { storeToRefs } from "pinia";
 import { aiStore } from "../../../store/ai";
 import CreateTopic from "../chat/left/createTopic.vue";
@@ -54,7 +67,6 @@ import Edit from "./edit.vue";
 
 const {
   selectTab,
-  openMode,
   gpt,
   temperature,
   count,
@@ -62,8 +74,18 @@ const {
   url,
   customData,
   aiMode,
+  useMode,
 } = storeToRefs(aiStore());
-
+const openModeList = ref([
+  {
+    name: "应用模式",
+    value: "default",
+  },
+  {
+    name: "弹窗模式",
+    value: "modal",
+  },
+]);
 // const
 const list = ref([
   {
@@ -75,31 +97,45 @@ const list = ref([
     value: "custom",
   },
 ]);
-const menuList = ref([
-  {
-    icon: "message",
-    callBack: () => {
-      selectTab.value = "Chat";
+const modalStatus = inject("modalStatus");
+const endMenu = computed(() => {
+  return modalStatus ? 2 : 3;
+});
+const modalClass = computed(() => {
+  if (modalStatus) {
+    return "py-3 pr-3";
+  }
+});
+const menuList = computed(() => {
+  let res = [
+    {
+      icon: "message",
+      callBack: () => {
+        selectTab.value = "Chat";
+      },
+      name: "聊天",
     },
-  },
-  {
-    full: true,
-  },
-  {
-    flag: true,
-    icon: "tianjia2",
-    callBack: () => {
-      createChatVisible.value = true;
+    {
+      disabled: modalStatus,
+      full: true,
     },
-  },
-  {
-    flag: true,
-    icon: "setting",
-    callBack: () => {
-      setVisible.value = true;
+    {
+      flag: true,
+      icon: "tianjia2",
+      callBack: () => {
+        createChatVisible.value = true;
+      },
     },
-  },
-]);
+    {
+      flag: true,
+      icon: "setting",
+      callBack: () => {
+        setVisible.value = true;
+      },
+    },
+  ];
+  return res;
+});
 
 const setVisible = ref(false);
 const createChatVisible = ref(false);

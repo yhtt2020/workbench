@@ -16,17 +16,36 @@
   >
     <div class="menu-box">
       <!-- 遮罩层 离线模式遮罩 -->
-      <div class="mask rounded-xl" v-if="envLimit.includes('offline') && currentEnv == 'offline'">
+      <div
+        class="mask rounded-xl"
+        v-if="envLimit.includes('offline') && currentEnv == 'offline'"
+      >
         <div class="mask-box">
           <p class="flex justify-center">
-            <xt-new-icon  class="mr-2" :size="cardH<=2?'60':'100'" icon="fluent-emoji:airplane"></xt-new-icon>
+            <xt-new-icon
+              class="mr-2"
+              :size="cardH <= 2 ? '60' : '100'"
+              icon="fluent-emoji:airplane"
+            ></xt-new-icon>
           </p>
           <p>处于离线模式，暂无法使用</p>
           <p>
-            <xt-button :w="145" :h="40" @click="useUpdateUserInfo" class="ml-3 xt-bg-2" key="console" type="theme">
+            <xt-button
+              :w="145"
+              :h="40"
+              @click="useUpdateUserInfo"
+              class="ml-3 xt-bg-2"
+              key="console"
+              type="theme"
+            >
               <div class="flex">
-                <xt-new-icon  class="mr-2" size="20" icon="fluent:arrow-clockwise-16-regular"></xt-new-icon>
-                尝试重连</div>
+                <xt-new-icon
+                  class="mr-2"
+                  size="20"
+                  icon="fluent:arrow-clockwise-16-regular"
+                ></xt-new-icon>
+                尝试重连
+              </div>
             </xt-button>
           </p>
         </div>
@@ -36,7 +55,10 @@
         ref="container"
         v-if="!options?.custom"
         class="flex flex-col widget rounded-xl"
-        :class="[edit ? 'editing' : '', options.shadow ? '' : 'shadow xt-shadow']"
+        :class="[
+          edit ? 'editing' : '',
+          options.shadow ? '' : 'shadow xt-shadow',
+        ]"
         @touchmove="handleTouchStart"
         style=""
         :style="[
@@ -123,7 +145,10 @@
             </slot>
           </div>
           <!-- 头部右侧 -->
-          <div class="flex items-center header-right" style="padding-right: 14px">
+          <div
+            class="flex items-center header-right"
+            style="padding-right: 14px"
+          >
             <!-- 右侧扩展区域 -->
             <slot name="right-extend"></slot>
             <template
@@ -173,7 +198,12 @@
         </div>
         <!-- 小组件头部结束 -->
         <!-- 小组件主体开始 -->
-        <xt-status :name="header.title" :status="envLimitStatus" :plat="platLimit" imgSize="75">
+        <xt-status
+          :name="header.title"
+          :status="envLimitStatus"
+          :plat="platLimit"
+          imgSize="75"
+        >
           <div
             class="flex-1 h-full rounded-b-lg"
             :style="[
@@ -194,7 +224,7 @@
             </Resize>
           </div>
         </xt-status>
-  
+
         <!-- 小组件主体结束 -->
       </div>
       <div v-else :class="[edit ? 'editing' : '']">
@@ -256,14 +286,13 @@ const { edit } = storeToRefs(widgetStore);
 // 自由布局
 // const freeLayoutStore = useFreeLayoutStore();
 
-
 const props = defineProps(defaultProps);
 const { header } = toRefs(props);
 const courierStatus = computed(() => {
-  return window.$usePlat()
+  return window.$usePlat();
 });
 const envLimitStatus = computed(() => {
-  return props.envLimit.filter(item => item != 'offline')
+  return props.envLimit.filter((item) => item != "offline");
 });
 
 // 键盘事件
@@ -342,7 +371,7 @@ const showTitleHover = ref(false);
 // 当前卡片尺寸
 const currentSize = ref(props.customSize);
 // 当前卡片高度
-const cardH = ref('1');
+const cardH = ref("1");
 /**
  * 计算属性
  */
@@ -415,7 +444,8 @@ const addObj = computed(() => {
 });
 // 实际渲染的右键菜单
 const menus = computed(() => {
-  if (usePlat(props.platLimit)) return [addObj.value, deleteObj.value];
+  const platLimit = props.platLimit || " ";
+  if (usePlat(platLimit)) return [addObj.value, deleteObj.value];
   let menu = [...props.menuList, addObj.value, deleteObj.value];
   return menu;
 });
@@ -610,7 +640,7 @@ defineExpose({
     right: 0;
     bottom: 0;
     background: rgba(0, 0, 0, 0);
-    z-index: 999;
+    z-index: 99999;
   }
 }
 
@@ -692,10 +722,10 @@ defineExpose({
   -webkit-backdrop-filter: blur(50px);
 }
 
-.menu-box{
-  z-index:9;
+.menu-box {
+  z-index: 9;
 }
-.mask{
+.mask {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -706,12 +736,11 @@ defineExpose({
   // display: flex;
   justify-content: center;
   align-items: center;
-  .mask-box{
+  .mask-box {
     text-align: center;
   }
 }
-.menu-box:hover .mask{
+.menu-box:hover .mask {
   display: flex;
-  
 }
 </style>

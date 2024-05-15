@@ -13,6 +13,7 @@ import { useFreeLayoutStore } from "./store";
 import { message } from "ant-design-vue";
 import { useGetDesk } from "../../../hooks";
 const deskData = useGetDesk();
+console.log('deskData :>> ', deskData);
 // watch(deskData, () => {
 //   console.log("更新啦啦啦 :>> ");
 // });
