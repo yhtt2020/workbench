@@ -26,7 +26,7 @@
       }"
     >
       <AppOpenMode />
-      <xt-option-box>
+      <!-- <xt-option-box>
         <xt-option-info title="打开方式" info="修改后再下次打开后生效。" />
         <xt-option-tab
           v-model="useMode"
@@ -35,7 +35,7 @@
           style="height: 40px"
           @cb="updateAiMode"
         />
-      </xt-option-box>
+      </xt-option-box> -->
       <xt-option-box style="padding-bottom: 0 !important">
         <xt-option-info
           title="选择AI助手配置"
@@ -57,7 +57,7 @@
 
 <script setup>
 import { useAppModal } from "../../../apps/appModal/src/hook/useAppModal";
-const { AppOpenMode } = useAppModal("ai");
+const { AppOpenMode,openApp } = useAppModal("ai");
 import { ref, computed, inject } from "vue";
 import { storeToRefs } from "pinia";
 import { aiStore } from "../../../store/ai";

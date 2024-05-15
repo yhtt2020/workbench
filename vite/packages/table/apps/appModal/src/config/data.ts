@@ -10,7 +10,7 @@ export const runList = [
     visible: false,
     width: "1000px",
     height: "752px",
-    openMode: "default",
+    openMode: "modal",
   },
   // {
   //   name: "note",
