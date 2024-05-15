@@ -6,7 +6,6 @@ import {marketStore} from "./market";
 import {noteStore} from "../apps/note/store";
 import{homeStore} from "./home"
 // @ts-ignore
-
 export const cardStore = defineStore(
   "cardStore",
   {

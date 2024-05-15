@@ -73,8 +73,12 @@ const checkLimit = (plat, name, options) => {
 export type basePlat = "web" | "client" | "mac";
 export type usePlatType = basePlat | any;
 
-export type usePlat = (arr: usePlatType) => basePlat;
-export const usePlat: usePlat = (arr:string|[] = "web") => {
+export type UsePlat = (arr: usePlatType) => basePlat;
+export const usePlat: UsePlat = (arr:string|[] = "web") => {
+
+  if (!arr) {
+    return false
+  }
   if (typeof arr == "string") {
     return platDetection(arr);
   }
@@ -114,7 +118,7 @@ export const comCanUse=(name: string)=>{
   } else {
     let webCanUse=[...COMPONENT_LIMIT.web.map(item => item.toLowerCase()),
       ...COMPONENT_LIMIT_NAME.web.map(item=>item.toLowerCase())]
-    console.log(webCanUse)
+
     return !webCanUse.includes(name.toLowerCase())
   }
 }

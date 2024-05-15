@@ -5,10 +5,10 @@
     :index="value.icon.id"
   ></Dialog>
   <div class="flex justify-evenly mt-4">
-    <XtButton w="200" @click="clear()">清空对话记录</XtButton>
+    <XtButton w="200" @click="clear()" class="mr-3">清空对话记录</XtButton>
     <XtButton w="200" @click="del()">删除对话</XtButton>
   </div>
-  
+
 </template>
 
 <script>

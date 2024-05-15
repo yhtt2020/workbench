@@ -15,7 +15,33 @@ export const useFindDesk = (deskId: string) => {
   let res = desks.value.find((item) => {
     if (item.id == deskId) return item;
   });
+  // const a = {
+  //   name: "基础桌面23213123",
+  //   nanoid: "gRxG",
+  //   cards: [
+  //     {
+  //       name: "AIaides",
+  //       id: 1715497182888,
+  //       customData: {
+  //         customSize: "2x2",
+  //       },
+  //     },
 
+  //   ],
+  //   id: "gRxG1111",
+  //   settings: {
+  //     cardZoom: 100,
+  //     marginTop: 0,
+  //     cardMargin: 5,
+  //     vDirection: true,
+  //     enableZoom: false,
+  //   },
+  //   layoutSize: {
+  //     width: 1465,
+  //     height: 1096,
+  //   },
+  // };
+  // desks.value.push(a);
   return res;
 };
 /**
@@ -34,5 +60,3 @@ export const useGetDesk = (deskId?) => {
     return useFindDesk(currentDeskId.value);
   }
 };
-
-

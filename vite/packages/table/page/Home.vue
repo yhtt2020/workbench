@@ -100,6 +100,7 @@ import cache from "../components/card/hooks/cache";
 import { isMain } from "../js/common/screenUtils";
 // 检查当前网络状态
 import { useNetwork } from '@vueuse/core'
+import { DESKS } from '../js/const/default'
 const { isOnline } = useNetwork()
 
 let steamUser,
@@ -314,11 +315,6 @@ export default {
       console.log("定制桌面", this.visibleGuide);
       this.visibleGuide = true;
     });
-    if (!this.moved) {
-      //最早的修复
-      this.desks[0].cards = this.customComponents;
-      this.moved = true;
-    }
     if (this.currentDeskId === "") {
       this.currentDeskId = this.desks[0].id;
     }
@@ -414,9 +410,9 @@ export default {
     // ...mapActions(deskStore, ["setDeskSize"]),
     ...mapActions(taskStore, ["initTask"]),
     ...mapActions(usePermissionStore, ["setOffline", "setGuest", "setSingle"]),
-    initGrids() {
-      this.currentDesk.cards = this.cleanMuuriData(deskTemplate["daily"]);
-    },
+    // initGrids() {
+    //   this.currentDesk.cards = this.cleanMuuriData(deskTemplate["daily"]);
+    // },
 
     showAddDeskForm() {
       this.menuVisible = false;
@@ -459,15 +455,29 @@ export default {
     componentInit(){
       // 判断是否是第一次加载
       if (this.deskInit) {
+        console.log('执行组件初始化')
         this.deskInit = false;
         // 初始化任务
         this.initTask();
         // 初始化桌面
-        this.addFreeLayoutDesk();
         if (!usePlat("web")) {
+          this.addFreeLayoutDesk();
           // 非web端打开缩放提示弹窗
           this.visibleScale = true;
         } else {
+          console.log(_.cloneDeep(DESKS))
+          console.log(_.cloneDeep(this.desks),'修改前的desks')
+          let desks=_.cloneDeep(DESKS)
+
+          this.desks= desks
+          this.currentDesk=this.desks[0]
+          this.currentDeskIndex={
+            name:this.desk[0].name,
+            id:this.desk[0].id
+          }
+          this.currentDeskId=this.desk[0].id
+          console.log(_.cloneDeep(this.desks),'修改后的desks')
+
           // web端打开功能介绍提示弹窗
           this.visibleWeb = true;
         }
@@ -533,25 +543,31 @@ export default {
     // 第一次登录默认数据
     addFreeLayoutDesk() {
       if (this.currentInit) {
-        // 会有一个清除数据的过程 暂时没找到原因 先用定时器延迟执行
-        setTimeout(() => {
-          let deskTmp = _.cloneDeep(this.deskDefault[0]);
-          let oldId = deskTmp.id;
-          let cardZoom = (
-            (deskTmp.settings.zoom * 10) /
-            deskTmp.deskHeight
-          ).toFixed();
-          deskTmp.settings.zoom = parseInt(cardZoom);
-          deskTmp.id = window.$models.nanoid.nanoid(8);
-          if (this.freeLayoutStateTmp[oldId]) {
-            this.freeLayoutData[deskTmp.id] = this.freeLayoutDataTmp[oldId];
-            this.freeLayoutState[deskTmp.id] = this.freeLayoutStateTmp[oldId];
-          }
-          this.desks[0] = deskTmp;
-          this.currentDeskId = deskTmp.id;
-          this.addApptoDesk();
+        if(usePlat('web')){
+          console.log('跳过自由布局初始化')
           this.currentInit = false;
-        }, 2000);
+        }else{
+          // 会有一个清除数据的过程 暂时没找到原因 先用定时器延迟执行
+          setTimeout(() => {
+            let deskTmp = _.cloneDeep(this.deskDefault[0]);
+            let oldId = deskTmp.id;
+            let cardZoom = (
+              (deskTmp.settings.zoom * 10) /
+              deskTmp.deskHeight
+            ).toFixed();
+            deskTmp.settings.zoom = parseInt(cardZoom);
+            deskTmp.id = window.$models.nanoid.nanoid(8);
+            if (this.freeLayoutStateTmp[oldId]) {
+              this.freeLayoutData[deskTmp.id] = this.freeLayoutDataTmp[oldId];
+              this.freeLayoutState[deskTmp.id] = this.freeLayoutStateTmp[oldId];
+            }
+            this.desks[0] = deskTmp;
+            this.currentDeskId = deskTmp.id;
+            this.addApptoDesk();
+            this.currentInit = false;
+          }, 2000);
+        }
+
       }
     },
 
@@ -652,6 +668,12 @@ export default {
     },
   },
   watch: {
+    desks:{
+      handler(newVal,oldVal){
+        console.log('修改桌面',newVal,oldVal)
+      },
+      deep:true
+    },
     // currentDeskIndex: {
     //   handler() {
     //     this.updateLayout();

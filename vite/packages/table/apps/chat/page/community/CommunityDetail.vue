@@ -145,12 +145,14 @@ const getCommunityByNo = (no: any) => {
             communityInfo: data,
           };
           // console.log('在线状态',option);
-          chatCommunity.loadCurrentCommunity(option)
+          chatCommunity.loadCurrentCommunity(option);
+          chatCommunity.getCommunityTree(no);
           // myCommunity.value.push(option);
           return;
         } else {
           chatCommunity.setCurrentCommunityNo(no);
           chatCommunity.loadCurrentCommunity(no);
+          chatCommunity.getCommunityTree(no);
         }
       }
     });
@@ -293,7 +295,7 @@ const handleCurrentItem = async (data: any) => {
         }
       } else {
         /**当前群聊为公开群**/
-        const res = await window.$chat?.searchGroupByID(
+        const res = await window.$chat?.chat.searchGroupByID(
           groupProps.groupID
         );
         const isDisable = res.data.group.joinOption !== "DisableApply";

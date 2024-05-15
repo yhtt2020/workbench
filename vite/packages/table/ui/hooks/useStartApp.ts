@@ -1,7 +1,9 @@
 import { teamStore } from "./../../store/team";
 import { tt } from "./../../permission/global/global";
-import { useMit } from "./../../hooks";
-import { isObject } from "./../../TUIKit/TUICore/utils/index";
+import { useMit ,useAppModal} from "./../../hooks";
+// import { isObject } from "./../../TUIKit/TUICore/utils/index";
+import { useOpenAi } from "../../hooks/src/open/useOpenAi";
+
 import browser from "../../js/common/browser";
 import { appStore } from "../../store";
 import { taskStore } from "../../apps/task/store";
@@ -113,7 +115,7 @@ export const startApp = async (type, value, router?) => {
     case "ttapp":
       const ttappStore = useTTAppStore();
       const { modal } = storeToRefs(ttappStore);
-      ttappStore.enterApp(value)
+      ttappStore.enterApp(value);
       break;
     case "fixed":
       openFixedApp[value]();
@@ -154,8 +156,8 @@ export const startApp = async (type, value, router?) => {
       const info = {
         type,
         ...value,
-      }
-      useAppStore.openApp(info)
+      };
+      useAppStore.openApp(info);
       break;
     // 本地应用
     case "tableApp":
@@ -195,6 +197,7 @@ export const openSysApp = (value, router) => {
   const useAppStore: any = appStore();
   const useTakeStore = taskStore();
   const usefavoStore = favoStore();
+  console.log("value :>> ", value);
   // // 全屏
   // if (value === "fullscreen") {
   //   useAppStore.toggleFullScreen();
@@ -251,6 +254,10 @@ export const openSysApp = (value, router) => {
       setTimeout(() => {
         useMit.emit("selectSystemNav", 4);
       }, 100);
+      break;
+    case "ai":
+      const { openApp } = useAppModal('ai')
+      openApp()
       break;
     default:
       // 通过路由打开
