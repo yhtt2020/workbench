@@ -1,6 +1,7 @@
 //系统应用变量
 const Server = {
   baseUrl: 'https://wad.apps.vip/api',
+  cdn:'https://a.apps.vip/cdn'
  //baseUrl:'http://test1.com:9001'
 }
 
@@ -10,6 +11,14 @@ const Server = {
  */
 function sUrl(url:string) {
   return Server.baseUrl+url
+}
+
+/**
+ * 获取cdn地址
+ * @param url
+ */
+function cdnUrl(url:string){
+  return Server.cdn+url
 }
 
 const SystemApps = {
@@ -302,4 +311,4 @@ let ActionGroups = [
     ]
   }
 ]
-export {SystemApps, ActionGroups, Server, sUrl}
+export {SystemApps, ActionGroups, Server, sUrl,cdnUrl}
