@@ -39,7 +39,13 @@
 
       <!-- 底部确定按钮 -->
       <div class="flex items-center justify-end">
-        <xt-button w="64" h="40" :radius="8" @click="existDeskVisible = false">
+        <xt-button
+          w="64"
+          h="40"
+          :radius="8"
+          style="margin-right: 12px"
+          @click="existDeskVisible = false"
+        >
           取消
         </xt-button>
         <xt-button w="64" h="40" :radius="8" type="theme" @click="addDesk">
@@ -51,11 +57,15 @@
 </template>
 
 <script setup>
-import { ref, computed,toRefs } from "vue";
+import { ref, computed, toRefs, getCurrentInstance } from "vue";
 import { storeToRefs } from "pinia";
 import { cardStore } from "../../../store/card";
 import _ from "lodash-es";
 
+// 获取全局事件总线程
+const { proxy } = getCurrentInstance();
+
+// emit事件触发
 const emit = defineEmits(["prev"]);
 
 // 解构store缓存数据
@@ -63,12 +73,12 @@ const { desks } = storeToRefs(cardStore());
 
 // 解构props
 const props = defineProps({
- communityNo:{
-  type:String,
-  required:true,
- }
+  communityNo: {
+    type: String,
+    required: true,
+  },
 });
-const { communityNo } = toRefs(props)
+const { communityNo } = toRefs(props);
 
 // 用于接收当前选中的桌面数据
 const currentDesk = ref({});
@@ -98,11 +108,29 @@ const selectDesk = (item) => {
   currentDesk.value = item;
 };
 
-
 // 添加桌面
-const addDesk = () =>{
-  
-}
+const addDesk = () => {
+  const isCommunity = _.some(desks.value, (desk) => {
+    return (
+      desk.communityNo && Number(desk.communityNo) === Number(communityNo.value)
+    );
+  });
+  if (!isCommunity) {
+    const option = {
+      ...currentDesk.value,
+      id: `${communityNo.value}${currentDesk.value.id}`,
+      communityNo:communityNo.value,
+    };
+    const index = _.findIndex(desks.value, (desk) => {
+      return String(desk.id) === String(option.id);
+    });
+    if (index === -1) {
+      desks.value.unshift(option);
+    }
+  }
+  existDeskVisible.value = false;
+  proxy.$bus.emit('updateSetting');
+};
 
 defineExpose({
   openExistDeskModal,

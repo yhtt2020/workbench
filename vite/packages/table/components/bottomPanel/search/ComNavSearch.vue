@@ -59,7 +59,14 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, watchEffect, getCurrentInstance } from "vue";
+import {
+  ref,
+  computed,
+  watch,
+  watchEffect,
+  getCurrentInstance,
+  onMounted,
+} from "vue";
 import { storeToRefs } from "pinia";
 import { chatCommunityStore } from "../../../apps/chat/store/chatCommunity";
 import { communityNavStore } from "../store/communityNavStore";
@@ -84,6 +91,8 @@ const { settings } = storeToRefs(app);
 // ref定义数据
 const search = ref("");
 const communityList = ref([]);
+// 存储选中的社群
+const selectCommunityItem = ref({});
 
 // emit触发事件
 const emit = defineEmits(["close"]);
@@ -127,8 +136,7 @@ const selectCommunity = (item, index) => {
   if (communityDesks.length === 0) {
     // 管理员
     if (item.role === "owner") {
-      comNav.setCurrentCommunity(item, index);
-      settings.value.isCommunity = false;
+      selectCommunityItem.value = { item, index };
       proxy.$bus.emit("openCommunityDesk");
     }
     // 成员
@@ -152,6 +160,16 @@ const selectCommunity = (item, index) => {
   // // 选择后进行弹窗关闭
   emit("close");
 };
+
+onMounted(() => {
+  proxy.$bus.on("updateSetting", () => {
+    settings.value.isCommunity = false;
+    comNav.setCurrentCommunity(
+      selectCommunityItem.value?.item,
+      selectCommunityItem.value?.index
+    );
+  });
+});
 </script>
 
 <style lang="scss" scoped>

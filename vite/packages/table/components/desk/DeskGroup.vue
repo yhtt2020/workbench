@@ -723,12 +723,13 @@ export default {
     this.addMenu(this.deskGroupMenu);
     this.addMenu(obj);
 
+    // 过滤出个人桌面数据
+    const filterList = this.deskList.filter((desk) => {
+      return !desk.communityNo;
+    });
     // 从社群桌面切换到个人桌面的操作
     const startWithNum = /^\d/; // 检测当前桌面id是社群桌面还是个人
     if (startWithNum.test(this.currentDeskId)) {
-      const filterList = this.deskList.filter((desk) => {
-        return !desk.communityNo;
-      });
       this.setCurrentDeskId(filterList[0].id);
     }
 
@@ -762,7 +763,7 @@ export default {
       "selectNav",
       "jumpDesk",
     ]),
-  
+
     currentDesk() {
       let currentDesk = this.deskList.find((desk) => {
         if (!desk.communityNo) return desk.id === this.currentDeskId;
@@ -814,6 +815,24 @@ export default {
         this.jumpDesk = "";
       }
     },
+
+    /**监听当前桌面数据的变化**/
+    deskList:{
+      handler(){
+        const filterList = this.deskList.filter((desk)=>{
+          return !desk.communityNo
+        })
+        console.log('当前桌面数据',filterList)
+        if(filterList.length > 0){
+          this.currentDesk = this.deskList[0];
+        }
+      },
+      immediate:true,
+      deep:true,
+    }
+    // (){
+    //   console.log('当前桌面数据',this.deskList)
+    // }
   },
   methods: {
     ...mapActions(marketStore, ["getRecommend"]),
