@@ -131,7 +131,7 @@ const isFull = ref(false);
 const typeClass = computed(() => {
   if (full.value) {
     return isFull.value
-      ? " fixed left-0 right-0 top-0 bottom-0 rounded-none py-3 pr-3"
+      ? " fixed left-0 right-0 top-0 bottom-0 rounded-none py-3 pr-3 xt-bg"
       : "xt-bg pr-3 py-3 rounded-xl";
   } else {
     // return "xt-bg pr-3 py-3 rounded-xl";

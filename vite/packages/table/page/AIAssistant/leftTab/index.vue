@@ -6,8 +6,10 @@
     model="id"
     class="w-full"
     :class="modalClass"
+    :leftClass="leftClass"
   >
     <slot></slot>
+
   </xt-left-menu>
 
   <xt-modal
@@ -101,9 +103,16 @@ const modalStatus = inject("modalStatus");
 const endMenu = computed(() => {
   return modalStatus ? 2 : 3;
 });
+
+
+const leftClass = computed(() => {
+  if (modalStatus) {
+    return "xt-main-bg py-3";
+  }
+});
 const modalClass = computed(() => {
   if (modalStatus) {
-    return "py-3 pr-3";
+    return "pr-3";
   }
 });
 const menuList = computed(() => {

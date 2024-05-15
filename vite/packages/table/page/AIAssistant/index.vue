@@ -1,6 +1,6 @@
 <template>
     <LeftTab>
-      <div class="h-full w-full flex" >
+      <div class="h-full w-full flex py-3" >
         <div class="flex h-full">
           <ChatLeft v-if="selectTab == 'Chat'"></ChatLeft>
         </div>
