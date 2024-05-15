@@ -80,13 +80,13 @@ export default {
 
     const { community } = storeToRefs(com);
     const { settings, contactsSet } = storeToRefs(chat);
+    const { loginVisible } = storeToRefs(appS);
     const { userInfo, lvInfo } = appS;
     const router = useRouter();
     const route = useRoute();
     // const TUIServer = window.$TUIKit
     const { proxy } = getCurrentInstance();
     const globalStore = useGlobalStore();
-    const { loginVisible } = storeToRefs(globalStore);
     const createGroupRef = ref(null);
     const addRef = ref(null);
     const joinComRef = ref(null);
@@ -113,7 +113,7 @@ export default {
       if (!window.$useEnv("guest")) {
         proxy.$bus.emit("createModal");
       } else {
-        loginTip();
+        loginVisible.value = true;
       }
     };
     // 切换左侧tab
@@ -143,23 +143,6 @@ export default {
           joinComRef.value.openJoinCom();
           break;
       }
-    };
-
-    // 提示登录弹窗
-    const loginTip = () => {
-      window.$ui.confirm(
-        "登录提示",
-        "目前处于游客模式，请登录后体验完整功能。",
-        {
-          ok: () => {
-            loginVisible.value = true;
-          },
-          okText: "立即登录",
-          noText: "暂不登录",
-          okButtonWidth: "95",
-          noButtonWidth: "95",
-        }
-      );
     };
 
     // 获取总的消息未读数据
@@ -249,7 +232,7 @@ export default {
                 triggerAddModal(item);
                 completeTask("Z0601");
               } else {
-                loginTip();
+                loginVisible.value = true;
               }
             },
           },
@@ -262,7 +245,7 @@ export default {
                 triggerAddModal(item);
                 completeTask("Z0601");
               } else {
-                loginTip();
+                loginVisible.value = true;
               }
             },
           },
@@ -275,7 +258,7 @@ export default {
                 triggerAddModal(item);
                 completeTask("Z0602");
               } else {
-                loginTip();
+                loginVisible.value = true;
               }
             },
           },
@@ -297,7 +280,7 @@ export default {
               if (!window.$useEnv("guest")) {
                 triggerAddModal(item);
               } else {
-                loginTip();
+                loginVisible.value = true;
               }
             },
           },
@@ -406,7 +389,7 @@ export default {
         headList.value[1].disabled = true;
       }
       nextTick(() => {
-        // window.$chat?.on(window.$TUIKit?.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, async(e) => {
+        // window.$chat?.chat?.on(window.$TUIKit?.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, async(e) => {
         //   // headList.value[0].unread = e.data === 0 ? 0 : e.data > 99 ? 99 : e.data;
         //   headList.value[0].info = e.data === 0 ? [] :  e.data > 99 ? ['tr','red','99'] : ['tr','red',`${e.data}`];
         //   const list = community.value.communityList;

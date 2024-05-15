@@ -94,7 +94,7 @@
     </div>
 
     <!-- 进度条 -->
-    <div>
+    <div class="pb-2">
       <a-row :gutter="10">
         <a-col flex="55px" class="mt-1 text-right">
           <span class="px-2 rounded-full xt-active-bg xt-active-text">
@@ -133,8 +133,7 @@ import _ from "lodash-es";
 import { useNavigationStore } from "../../../../../components/desk/navigationBar/navigationStore";
 import { CommunityAPI } from "../../../api/communityAPI";
 import { message } from "ant-design-vue";
-import { useGlobalStore } from "../../../../Global/store";
-
+import { appStore } from "../../../../../store";
 const comAPI = new CommunityAPI();
 
 const props = defineProps({
@@ -155,11 +154,12 @@ const { columnVisible, no, sideVisible } = toRefs(props);
 
 /**解构store数据缓存**/
 const chatCommunity = chatCommunityStore();
-const { myCommunity, setting } = storeToRefs(chatCommunity);
+const { myCommunity, setting,currentCommunity } = storeToRefs(chatCommunity);
 const useNavigation = useNavigationStore();
 const { communityNavVisible } = storeToRefs(useNavigation);
-const globalStore = useGlobalStore();
-const { loginVisible } = storeToRefs(globalStore);
+const app = appStore();
+const { settings } = storeToRefs(app);
+
 
 /**加入社群条件**/
 const hasRole = computed(() => {
@@ -178,7 +178,13 @@ const currentInfo = computed(() => {
   const currentFind = _.find(myCommunity.value, (item) => {
     return Number(item?.route?.params?.no) === Number(no.value);
   });
-  return currentFind;
+  if(currentFind){
+    return currentFind
+  }
+  else {
+    // console.log('测试',currentCommunity.value?.communityInfo);
+    return currentCommunity.value;
+  }
 });
 
 /**是否折叠**/
@@ -208,60 +214,54 @@ const joinNow = async () => {
     const res = await comAPI.applyJoinCommunity(option);
     if (res.status === 1) {
       message.success(`${res.info}`);
-      chatCommunity.updateMyCommunity(no.value);
+      chatCommunity.getMyCommunity();
       chatCommunity.getCommunityTree(no.value);
-      /**是否开启社群导航**/
-      if (communityNavVisible.value) {
-        return;
-      } else {
-        setTimeout(() => {
-          window.$ui.confirm(
-            "为你添加「社群导航栏」",
-            "已经加入了一个社群，可以选择开启社群导航栏，在导航栏种快速访问社群；如果你的社群管理员创建了网址导航或社群桌面，你可以在导航栏中快速打开。",
-            {
-              ok: async () => {
-                communityNavVisible.value = true;
-              },
-              no: () => {
-                setTimeout(() => {
-                  window.$ui.confirm(
-                    "稍后可以在「系统设置/导航设置」中开启",
-                    "",
-                    {
-                      ok: () => {},
-                      okText: "好的",
-                      noText: null,
-                    }
-                  );
-                }, 500);
-              },
-              noText: "稍后再说",
-              okText: "立即添加",
-              type: "link",
-              okButtonWidth: "95",
-              noButtonWidth: "95",
-            }
-          );
-        }, 1000);
+      /**社群导航第一次开启提示**/ 
+      if(!settings.value.comNavVisible){return;}
+      else {
+        /**开启社群导航**/
+        if (communityNavVisible.value) {
+          return;
+        } else {
+          setTimeout(() => {
+            window.$ui.confirm(
+              "为你添加「社群导航栏」",
+              "已经加入了一个社群，可以选择开启社群导航栏，在导航栏种快速访问社群；如果你的社群管理员创建了网址导航或社群桌面，你可以在导航栏中快速打开。",
+              {
+                ok: async () => {
+                  communityNavVisible.value = true;
+                  settings.value.comNavVisible = false;
+                },
+                no: () => {
+                  setTimeout(() => {
+                    window.$ui.confirm(
+                      "稍后可以在「系统设置/导航设置」中开启",
+                      "",
+                      {
+                        ok: () => {
+                          settings.value.comNavVisible = false
+                        },
+                        okText: "好的",
+                        noText: null,
+                      }
+                    );
+                  }, 500);
+                },
+                noText: "稍后再说",
+                okText: "立即添加",
+                type: "link",
+                okButtonWidth: "95",
+                noButtonWidth: "95",
+              }
+            );
+          }, 1000);
+        }
       }
     }
   } else {
     /**离线模式则需要提示登录**/
-    loginTip();
+    app.loginVisible = true
   }
-};
-
-// 提示登录弹窗
-const loginTip = () => {
-  window.$ui.confirm("登录提示", "目前处于游客模式，请登录后体验完整功能。", {
-    ok: () => {
-      loginVisible.value = true;
-    },
-    okText: "立即登录",
-    noText: "暂不登录",
-    okButtonWidth: "95",
-    noButtonWidth: "95",
-  });
 };
 
 /**复制社群号**/

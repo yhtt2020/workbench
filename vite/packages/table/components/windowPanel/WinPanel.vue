@@ -5,10 +5,11 @@
             flex items-center 
             justify-between p-3 relative" 
         style="
-            border: 1px solid var(--divider);
             background: rgba(26,26,26,0.65);
             backdrop-filter: blur(50px);"
-        :style="{zoom: `${navAttribute.navSize / 100}`}"
+        :style="[
+            {zoom: `${navAttribute.navSize / 100}`}, 
+            currentNavPosition === 'top' ? { borderBottom:'1px solid var(--divider)' } : { borderTop:'1px solid var(--divider)'}]"
         :class="radius">
         <!-- 用户头像以及控制中心 -->
         <User></User>
@@ -125,7 +126,7 @@ watch(
 
 // 边框圆角
 const radius = computed(() => {
-   return currentNavPosition.value === 'top' ? 'rounded-t-lg' : 'rounded-b-lg'
+   return currentNavPosition.value === 'top' ? 'rounded-t-md' : 'rounded-b-md'
 })
 </script>
 <style lang='scss' scoped></style>

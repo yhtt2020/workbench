@@ -64,7 +64,7 @@
           </div>
 
           <template #overlay>
-            <a-menu style="background: none;" @click="handleMenuClick">
+            <a-menu style="background: none" @click="handleMenuClick">
               <a-menu-item
                 class="xt-text"
                 v-show="inBlackList !== 'unload'"
@@ -232,6 +232,7 @@ import { useEnv } from "../../permission/useEnv";
 import { TUIConversationService } from "@tencentcloud/chat-uikit-engine";
 import { useUpdateUserInfo } from "../../permission/user/useUserPermit";
 import { usePermissionStore } from "../../permission/store";
+import { contactStore } from "../../apps/chat/store/contactStore";
 
 export default {
   name: "UserCard",
@@ -273,6 +274,7 @@ export default {
     }),
     ...mapWritableState(appStore, ["userCardVisible"]),
     ...mapWritableState(usePermissionStore, ["currentEnv"]),
+    ...mapWritableState(contactStore, ["currentContact"]),
     displayUserInfo() {
       if (this.userCardUserInfo) {
         return {
@@ -337,7 +339,7 @@ export default {
     },
     addToBlacklist() {
       // 升级后调用IM的api方法
-      const chat = window.$chat.chat;
+      const chat = window.$chat?.chat;
       let promise = chat.addToBlacklist({
         userIDList: [String(this.uid)],
       }); // 请注意：即使只添加一个用户账号到黑名单，也需要用数组类型，例如：userIDList: ['user1']
@@ -355,7 +357,7 @@ export default {
     },
     removeFromBlacklist() {
       // 升级后调用IM的api方法
-      const chat = window.$chat.chat;
+      const chat = window.$chat?.chat;
       let promise = chat.removeFromBlacklist({
         userIDList: [String(this.uid)],
       }); // 请注意：即使只从黑名单中移除一个用户账号，也需要用数组类型，例如：userIDList: ['user1']
@@ -374,7 +376,7 @@ export default {
         return;
       }
       // 升级后调用IM的api方法
-      const chat = window.$chat.chat;
+      const chat = window.$chat?.chat;
       let promise = chat.addFriend({
         to: String(this.uid),
         source: "AddSource_Type_UserCard",
@@ -398,7 +400,7 @@ export default {
     },
     deleteFriend() {
       // 升级后调用IM的api方法
-      const chat = window.$chat.chat;
+      const chat = window.$chat?.chat;
       let promise = chat.deleteFriend({
         userIDList: [String(this.uid)],
         type: TencentCloudChat.TYPES.SNS_DELETE_TYPE_BOTH,
@@ -429,7 +431,7 @@ export default {
     },
     async checkBlacklist() {
       // 升级后调用IM的api方法
-      const chat = window.$chat.chat;
+      const chat = window.$chat?.chat;
       let promise = chat.getBlacklist();
       promise
         .then((imResponse) => {
@@ -459,6 +461,8 @@ export default {
         // 通过当前TUIConversationService.switchConversation方法来实现用户切换
         // C2C代表好友之间的切换ID
         const conversationID = `C2C${this.uid}`;
+        /**补充当前群聊进入时的状态**/
+        this.currentContact = { type: "group", groupID: conversationID };
         TUIConversationService.switchConversation(conversationID);
         this.$emit("close");
       }
@@ -469,7 +473,7 @@ export default {
         console.log("需要检查");
         try {
           // 升级后调用IM的api方法
-          const chat = window.$chat.chat;
+          const chat = window.$chat?.chat;
           console.log([String(this.uid)]);
           let rs = await chat.checkFriend({
             userIDList: [String(this.uid)],

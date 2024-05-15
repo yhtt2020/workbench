@@ -232,6 +232,7 @@ export default {
       file.isRadius = item.isRadius;
       file.iconState = item.imgState;
       file.iconShape = item.imgShape;
+      file.size = item.size;
       list.push({
         ...file,
       });

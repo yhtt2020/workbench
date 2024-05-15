@@ -91,16 +91,19 @@ export default {
      */
     async newOpenApp(item, e) {
       const { type, value } = item;
-    
+      // 关闭标识
+      let closeTag = true;
       // 首先处理与 type 相关的
       switch (type) {
         // 卡片类图标
         case "card":
           this.openCard(item);
+          this.folderVisible = false;
           break;
         // 文件夹图标
         case "folder":
           this.openFolder(item);
+          this.floatCardVisible = false;
           break;
         // 第三方应用图标
         case "ttapp":
@@ -117,15 +120,16 @@ export default {
         // 社区中心
         case "commun":
           this.comVisible = !this.comVisible;
+          closeTag = false
           break;
         // 控制中心
         case "control":
           this.$emit("control", e);
           break;
         // 设置中心
-        case "setting":
-          this.$bus.emit("openSystemSet");
-          break;
+        // case "setting":
+        //   this.$bus.emit("openSystemSet");
+        //   break;
         // 全屏
         case "fullscreen":
           if (window.$usePlat()) {
@@ -141,6 +145,11 @@ export default {
           if (value === "home" && item.home) {
             this.jumpDesk = item.home;
           }
+      }
+
+      // 防止重复打开
+      if(closeTag){
+        this.comVisible = false
       }
     
       // 更新定位

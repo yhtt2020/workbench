@@ -318,7 +318,7 @@ export default {
     community() {
       return {
         x: this.position.x,
-        y: (this.navAttribute.navSize * this.position.y) / 100,
+        y: this.position.y,
         placement: "top",
         visible: this.comVisible,
       };
@@ -829,8 +829,8 @@ export default {
       };
       // 元素大小
       let menu = {
-        x:draggableSize[0] * 140,
-        y:draggableSize[1] * 100
+        x:draggableSize[0] * 142,
+        y:draggableSize[1] * 105
       };
       this.position = this.usePosition(pos,menu)
     },

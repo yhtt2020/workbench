@@ -128,44 +128,45 @@
       />
 
       <!-- 树状列表 -->
-      <div class="flex-1 h-0">
-        <div class="float-h">
-          <xt-scrollbar :y="true" class="w-full h-full">
-            <template v-for="item in officialInfo.channelList">
-              <TreeFold :item="item" @update="handleUpdateCollapse">
-                <!-- 标题文字描述 -->
-                <template #title>
-                  <div class="xt-text-2 xt-font font-14">
-                    {{ item.name }}
+      <div
+        class="grow"
+        :class="columnVisible ? 'official-scrollbar' : 'official-scroll'"
+      >
+        <xt-scrollbar :y="true" class="h-full">
+          <template v-for="item in officialInfo.channelList">
+            <TreeFold :item="item" @update="handleUpdateCollapse">
+              <!-- 标题文字描述 -->
+              <template #title>
+                <div class="xt-text-2 xt-font font-14">
+                  {{ item.name }}
+                </div>
+              </template>
+              <!-- 树状折叠区域 -->
+              <template #panelContent>
+                <!-- 单列 -->
+                <template v-if="columnVisible === false">
+                  <div class="flex flex-col">
+                    <FloatItem
+                      :list="item.children"
+                      @currentClick="officialClick"
+                      :menusVisible="false"
+                    />
                   </div>
                 </template>
-                <!-- 树状折叠区域 -->
-                <template #panelContent>
-                  <!-- 单列 -->
-                  <template v-if="columnVisible === false">
-                    <div class="flex flex-col">
-                      <FloatItem
-                        :list="item.children"
-                        @currentClick="officialClick"
-                        :menusVisible="false"
-                      />
-                    </div>
-                  </template>
-                  <!-- 双列 -->
-                  <template v-else>
-                    <div class="grid grid-cols-2 gap-1">
-                      <FloatItem
-                        :list="item.children"
-                        @currentClick="officialClick"
-                        :menusVisible="false"
-                      />
-                    </div>
-                  </template>
+                <!-- 双列 -->
+                <template v-else>
+                  <div class="grid grid-cols-2 gap-1">
+                    <FloatItem
+                      :list="item.children"
+                      @currentClick="officialClick"
+                      :menusVisible="false"
+                    />
+                  </div>
                 </template>
-              </TreeFold>
-            </template>
-          </xt-scrollbar>
-        </div>
+              </template>
+            </TreeFold>
+          </template>
+        </xt-scrollbar>
       </div>
     </div>
   </div>
@@ -175,7 +176,7 @@
 import { ref, computed, getCurrentInstance } from "vue";
 import { storeToRefs } from "pinia";
 import { chatCommunityStore } from "../../store/chatCommunity";
-import { useGlobalStore } from "../../../Global/store";
+import { appStore } from "../../../../store";
 
 import OfficialDropdown from "../dropdown/Dropdown.vue";
 import TreeFold from "../tree/TreeFold.vue";
@@ -183,9 +184,8 @@ import FloatItem from "./FloatItem.vue";
 
 const { proxy } = getCurrentInstance();
 const chatCommunity = chatCommunityStore();
+const app = appStore();
 const { setting, defaultOfficialList } = storeToRefs(chatCommunity);
-const globalStore = useGlobalStore();
-const { loginVisible } = storeToRefs(globalStore);
 
 // ref定义区域
 const textUrl = ref(
@@ -295,19 +295,6 @@ const handleUpdateCollapse = (data) => {
     },
   ];
 };
-/**提示登录弹窗**/
-const loginTip = () => {
-  window.$ui.confirm("登录提示", "目前处于游客模式，请登录后体验完整功能。", {
-    ok: () => {
-      loginVisible.value = true;
-    },
-    okText: "立即登录",
-    noText: "暂不登录",
-    type: "warning",
-    okButtonWidth: "95",
-    noButtonWidth: "95",
-  });
-};
 
 // 点击当前左侧列表
 const officialClick = (data) => {
@@ -315,10 +302,10 @@ const officialClick = (data) => {
     if (!window.$useEnv("guest")) {
       proxy.$bus.emit("handleOfficalClick", data);
     } else {
-      loginTip();
+      // 打开登录提示弹窗
+      app.loginVisible = true;
     }
-  }
-  else {
+  } else {
     proxy.$bus.emit("handleOfficalClick", data);
   }
 };
@@ -378,5 +365,14 @@ const officialClick = (data) => {
   margin: 0 !important;
   color: var(--primary-text);
   max-width: 185px;
+}
+
+:deep(.px-6){
+  padding-left:12px !important;
+  padding-right: 12px !important;
+}
+
+:deep(.ant-collapse-content-box){
+  padding: 0 24px !important;
 }
 </style>

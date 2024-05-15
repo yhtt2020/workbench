@@ -15,7 +15,10 @@
               <span v-for="(item,index) in menus" :key="index" @click="onSelChange(index)" :class="selIndex == index ? 'active':''">{{ item }}</span>
               <span @click="onSelChange(menus.length)" v-if="isUpload" :class="selIndex == menus.length ? 'active':''">自定义</span>
           </div>
-          <div class="flex items-center pointer xt-text" @click="clearAvatar">移除</div>
+          <div class="flex ">
+            <div class="flex items-center pointer xt-text mr-3" @click="clearAvatar">移除</div>
+            <div class="flex items-center pointer xt-text" @click="closeClick">关闭</div>
+          </div>
         </div>
         <!--  搜索栏 随机 颜色选择 -->
         <div class="flex pt-3 pl-3 pr-3 action-search" style="justify-content: space-between;" v-if="selIndex != menus.length">
@@ -66,13 +69,13 @@
 
         <!-- 渲染的列表 -->
         <div v-show="key == menus[selIndex]" v-for="(value,key) in handleList"  :key="key" class="flex flex-wrap pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar" style="height: 290px;">
-          <div v-show="!searchValue" v-for="(item,index) in value" :key="index" @click="onSelectIcon(item.name)" class="flex items-center justify-center mt-2 ml-2 overflow-hidden pointer" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
+          <div v-show="!searchValue" v-for="(item,index) in value" :key="index" @click="onSelectIcon(item.name)" class="flex items-center justify-center mt-2 ml-2 overflow-hidden pointer xt-bg-2" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
             <a-tooltip>
               <template #title>{{ item.alias }}</template>
               <a-avatar :src="`https://a.apps.vip/icons/iconSelect/${key}/${item.name}.svg`" :alt="item.alias" width="32" height="32" :style="{'filter': menus[selIndex] == 'icon'?`drop-shadow(${bgColor[selBgColor]} 80px 0)`:'',transform:menus[selIndex] == 'icon'?'translateX(-80px)':''}"></a-avatar>
             </a-tooltip>
           </div>
-          <div v-show="!!searchValue" v-for="(item,index) in search" :key="index" @click="onSelectIcon(item.name)" class="flex items-center justify-center mt-2 ml-2 overflow-hidden pointer" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
+          <div v-show="!!searchValue" v-for="(item,index) in search" :key="index" @click="onSelectIcon(item.name)" class="flex items-center justify-center mt-2 ml-2 overflow-hidden pointer xt-bg-2" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
             <a-tooltip>
               <template #title>{{ item.alias }}</template>
               <a-avatar :src="`https://a.apps.vip/icons/iconSelect/${key}/${item.name}.svg`" :alt="item.alias" width="32" height="32" :style="{'filter': menus[selIndex] == 'icon'?`drop-shadow(${bgColor[selBgColor]} 80px 0)`:'','transform':menus[selIndex] == 'icon'?'translateX(-80px)':''}"></a-avatar>

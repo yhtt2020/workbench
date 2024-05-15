@@ -5,7 +5,8 @@
       v-if="conversationHeaderVisible"
       ref="headerRef" 
     /> -->
-    <ConversationNetwork />
+    <!-- 当前用不到,屏蔽 -->
+    <!-- <ConversationNetwork /> -->
     <ConversationList @handleSwitchConversation="handleSwitchConversation" />
   </div>
 </template>
@@ -17,7 +18,8 @@ import ConversationList from "./conversation-list/index.vue";
 /**解决refs的报错,屏蔽不使用**/
 // import ConversationHeader from './conversation-header/index.vue';
 
-import ConversationNetwork from "./conversation-network/index.vue";
+/**屏蔽,暂时不需要使用**/ 
+// import ConversationNetwork from "./conversation-network/index.vue";
 
 const emits = defineEmits(["handleSwitchConversation"]);
 

@@ -297,37 +297,6 @@
   }
 }
 
-/**社群列表响应式高度**/
-@media screen and (max-height:500px) {
-  .float-h {
-    height: calc(100% - 60%) !important;
-  }
-}
-
-@media screen and (min-height:501px) and (max-height:650px) {
-  .float-h {
-    height: calc(100% - 35%) !important;
-  }
-}
-
-@media screen and (min-height:651px) and (max-height:750px) {
-  .float-h {
-    height: calc(100% - 30%) !important;
-  }
-}
-
-@media screen and (min-height:751px) and (max-height:850px) {
-  .float-h {
-    height: calc(100% - 25%) !important;
-  }
-}
-
-@media screen and (min-height:851px) {
-  .float-h {
-    height: calc(100% - 20%) !important;
-  }
-}
-
 .message-file {
   display: flex;
   flex-direction: column;
@@ -376,3 +345,100 @@
   margin-right: 5px;
   vertical-align: text-top
 }
+
+
+/**社群列表高度**/
+@media screen and (max-height: 500px) {
+  .category-scrollbar,.official-scrollbar {
+    height: 15vh !important;
+  }
+  .column-scrollbar,.official-scroll {
+    height: 4vh !important;
+  }
+}
+@media screen and (min-height: 501px) and (max-height: 512px) {
+  .category-scrollbar,.official-scrollbar {
+    height: 22vh !important;
+  }
+  .column-scrollbar,.official-scroll{
+    height: 10vh !important;
+  }
+}
+@media screen and (min-height: 513px) and (max-height: 550px) {
+  .category-scrollbar,.official-scrollbar {
+    height: 27vh !important;
+  }
+  .column-scrollbar,.official-scroll {
+    height: 15vh !important;
+  }
+}
+@media screen and (min-height: 551px) and (max-height: 600px) {
+  .category-scrollbar,.official-scrollbar {
+    height: 34vh !important;
+  }
+  .column-scrollbar,.official-scroll {
+    height: 24vh !important;
+  }
+}
+@media screen and (min-height: 601px) and (max-height: 650px) {
+  .category-scrollbar,.official-scrollbar {
+    height: 38vh !important;
+  }
+  .column-scrollbar,.official-scroll{
+    height: 30vh !important;
+  }
+}
+@media screen and (min-height: 651px) and (max-height: 700px) {
+  .category-scrollbar,.official-scrollbar  {
+    height: 42vh !important;
+  }
+  .column-scrollbar,.official-scroll {
+    height: 34vh !important;
+  }
+}
+@media screen and (min-height: 701px) and (max-height: 750px) {
+  .category-scrollbar,.official-scrollbar  {
+    height: 45vh !important;
+  }
+  .column-scrollbar,.official-scroll {
+    height: 38vh !important;
+  }
+}
+@media screen and (min-height: 751px) and (max-height: 800px) {
+  .category-scrollbar,.official-scrollbar {
+    height: 50vh !important;
+  }
+  .column-scrollbar,.official-scroll {
+    height: 42.5vh !important;
+  }
+}
+@media screen and (min-height: 801px) and (max-height: 850px) {
+  .category-scrollbar,.official-scrollbar{
+    height: 53vh !important;
+  }
+  .column-scrollbar,.official-scroll {
+    height: 47vh !important;
+  }
+}
+@media screen and (min-height: 851px) and (max-height: 1000px) {
+  .category-scrollbar,.official-scrollbar {
+    height: 59vh !important;
+  }
+  .column-scrollbar,.official-scroll {
+    height: 54vh !important;
+  }
+}
+@media screen and (min-height: 1001px) {
+  .category-scrollbar {
+    height: 61vh !important;
+  }
+  .official-scrollbar{
+    height: 59.5vh !important;
+  }
+  .column-scrollbar {
+    height: 56vh !important;
+  }
+  .official-scroll{
+    height: 55vh !important;
+  }
+} 

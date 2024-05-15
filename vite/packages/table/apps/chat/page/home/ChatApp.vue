@@ -4,7 +4,7 @@
     <xt-left-menu
       :list="updateChatAppList"
       last="1"
-      :end="leftList.length"
+      :end="endList"
       :index="currentChatIndex"
     >
       <div class="w-full h-full">
@@ -52,7 +52,6 @@ import { chatCommunityStore } from "../../store/chatCommunity";
 import _ from "lodash-es";
 import { useRouter, useRoute } from "vue-router";
 import { completeTask } from "../../../task/task";
-import { useGlobalStore } from "../../../Global/store";
 import { appStore } from "../../../../store";
 import config from "../../hooks/config";
 
@@ -66,16 +65,14 @@ import CreateCommunity from "../../components/create/CreateCommunity.vue";
 import JoinCommunity from "../join/JoinCommunity.vue";
 import { usePermissionStore } from "../../../../permission/store";
 import { reconnect } from "../../../../permission/user/useUserPermit";
-
 const router = useRouter();
 const chatCommunity = chatCommunityStore();
-const globalStore = useGlobalStore();
 const appS = appStore();
 const { proxy } = getCurrentInstance();
 
 const usePermission = usePermissionStore()
-const { loginVisible } = storeToRefs(globalStore);
 const { myCommunity, setting } = storeToRefs(chatCommunity);
+const { loginVisible } = storeToRefs(appS);
 const { userInfo, lvInfo } = appS;
 
 const createGroupRef = ref(null);
@@ -116,7 +113,7 @@ const leftList = ref([
         index: "launch",
         callBack: (item) => {
           if (usePermission.currentEnv === 'guest') {
-            loginTip();
+            loginVisible.value = true;
           }else if(usePermission.currentEnv === 'offline'){
             reconnect();
           } else {
@@ -131,7 +128,7 @@ const leftList = ref([
         index: "addGroup",
         callBack: (item) => {
           if (usePermission.currentEnv === 'guest') {
-            loginTip();
+            loginVisible.value = true;
           }else if(usePermission.currentEnv === 'offline'){
             reconnect();
           } else {
@@ -146,7 +143,7 @@ const leftList = ref([
         index: "addFriend",
         callBack: (item) => {
           if (usePermission.currentEnv === 'guest') {
-            loginTip();
+            loginVisible.value = true;
           }else if(usePermission.currentEnv === 'offline'){
             reconnect();
           } else {
@@ -170,7 +167,7 @@ const leftList = ref([
         name: "加入社群",
         callBack: (item) => {
           if (usePermission.currentEnv === 'guest') {
-            loginTip();
+            loginVisible.value = true;
           }else if(usePermission.currentEnv === 'offline'){
             reconnect();
           } else {
@@ -215,11 +212,6 @@ const menuList = ref([
       chatCommunity.topSort(no);
     },
   },
-  // {
-  //   newIcon:'fluent:add-16-filled',
-  //   label:'添加到...',
-  //   children:[],
-  // }
 ]);
 // /**取消置顶列表**/
 const unMenuList = ref([
@@ -265,6 +257,11 @@ const chatAppList = computed(() => {
       }
     }
   });
+  if(usePermission.currentEnv === 'guest' || usePermission.currentEnv === 'single'){
+    const find = mapList.length - 2
+    mapList[0] = mapList[find]
+    mapList.splice(find - 1, 2)
+  }
   return mapList;
 });
 
@@ -300,6 +297,15 @@ const currentNo = computed(() => {
   return setting.value.suspendVisible.no;
 });
 
+// 底部按钮数量
+const endList = computed(() => {
+  if(usePermission.currentEnv === 'guest' || usePermission.currentEnv === 'single'){
+    return leftList.value.length - 2;
+  }else{
+    return leftList.value.length;
+  }
+});
+
 // 等级限制，3级才可以创建一个社群，10级后可以创建五个社群
 const limitClick = computed(() => {
   const list = updateChatAppList.value.filter((item) => {
@@ -319,19 +325,6 @@ const switchTab = (item) => {
   if (item.route) {
     router.push(item.route);
   }
-};
-
-// 提示登录弹窗
-const loginTip = () => {
-  window.$ui.confirm("登录提示", "目前处于游客模式，请登录后体验完整功能。", {
-    ok: () => {
-      loginVisible.value = true;
-    },
-    okText: "立即登录",
-    noText: "暂不登录",
-    okButtonWidth: "95",
-    noButtonWidth: "95",
-  });
 };
 
 // 触发添加入口
@@ -359,7 +352,7 @@ const triggerAddModal = (item) => {
 //触发社群创建入口
 const createCommunity = () => {
   if (usePermission.currentEnv === 'guest') {
-    loginTip();
+    loginVisible.value = true;
   }else if(usePermission.currentEnv === 'offline'){
     reconnect();
   } else {
@@ -396,31 +389,57 @@ onMounted(() => {
 :deep(.xt-br) {
   margin-right: 0 !important;
 }
-
-/**
-:deep(.xt-br) {
-  margin: 0 !important;
-  & div:nth-of-type(1) {
-    margin: 0 !important;
-    div > div > div:nth-of-type(2) {
-      .xt-base-btn {
-        img {
-          width: 40px !important;
-          height: 40px !important;
-        }
-      }
-    }
-  }
-  & div:nth-of-type(3) div {
-    margin: 0 !important;
-    .menu-item {
-      width: 40px !important;
-      min-height: 40px !important;
-    }
-  }
-}
-:deep(.xt-bt) {
-  border: none !important;
-}
-**/
 </style>
+
+<!-- 
+
+ /**初始化挂载**/
+//  onMounted(() => {
+//       // setTimeout(() => {
+//       //   console.log("挂载了", limitClick.value);
+//       //   const list = filterList.value.filter((item)=>{
+//       //     return item?.role && item?.role === 'owner'
+//       //   })
+//       //   console.log(list)
+//       // },2000)
+      
+//       com.getMyCommunity();
+//       com.getCommunityTree();
+//       // 游客模式下 隐藏 聊天对话 和 通讯录
+//       // console.log("!window.$useEnv('guest')", !window.$useEnv('guest'))
+//       if (window.$useEnv("guest")) {
+//         headList.value[0].disabled = true;
+//         headList.value[1].disabled = true;
+//       }
+//       nextTick(() => {
+//         // window.$chat?.chat?.on(window.$TUIKit?.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, async(e) => {
+//         //   // headList.value[0].unread = e.data === 0 ? 0 : e.data > 99 ? 99 : e.data;
+//         //   headList.value[0].info = e.data === 0 ? [] :  e.data > 99 ? ['tr','red','99'] : ['tr','red',`${e.data}`];
+//         //   const list = community.value.communityList;
+//         //   if(list.length !== 0){
+//         //     for(const item of list){
+//         //      const no = item.communityInfo.no;
+//         //      com.updateCommunityTree(no);
+//         //     }
+//         //   }
+//         // });
+//       });
+//     });
+
+
+// 获取总的消息未读数据
+// const unreadTotal = computed(() => {
+//       // const list =
+//       //   window.$TUIKit?.store?.store?.TUIConversation?.conversationList;
+//       // if (!list) {
+//       //   return 0;
+//       // }
+//       // if (list.length !== undefined && list.length !== 0) {
+//       //   const total = { unread: 0 };
+//       //   for (const item of list) {
+//       //     total.unread += item.unreadCount;
+//       //   }
+//       //   return total.unread === 0 ? 0 : total.unread > 99 ? 99 : total.unread;
+//       // }
+//     });
+ -->

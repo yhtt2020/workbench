@@ -6,7 +6,6 @@ import {marketStore} from "./market";
 import {noteStore} from "../apps/note/store";
 import{homeStore} from "./home"
 // @ts-ignore
-
 export const cardStore = defineStore(
   "cardStore",
   {
@@ -23,7 +22,9 @@ export const cardStore = defineStore(
         settings: {
           cardZoom: 100,
           marginTop: 0,
-          cardMargin: 5//卡片间隙
+          cardMargin: 5,//卡片间隙
+          fitMod:"center",//'full'
+          containerWidth:1024,
         },
         aloneSettings: {
           cardZoom: 100,
@@ -279,7 +280,7 @@ export const cardStore = defineStore(
       filterClock(tag) {
         const timerData = timerStore().appDate;
         const totalTime = parseInt(timerData.hours) * 60 + parseInt(timerData.minutes);
-    
+
         const filterEvents = (timeLimit) => {
             return this.clockEvent.filter((event) => {
                 const targetTime = parseInt(event.dateValue.hours) * 60 + parseInt(event.dateValue.minutes);
@@ -287,17 +288,17 @@ export const cardStore = defineStore(
                 return timeDiff <= timeLimit && timeDiff > 0;
             });
         };
-    
+
         const filterStrategies = {
             'within30min': () => filterEvents(30),
             'within1hour': () => filterEvents(60),
             'always': () => this.clockEvent
         };
-    
+
         this.filterClockEvent = (filterStrategies[tag] || (() => this.clockEvent))() || [];
         // console.log(this.filterClockEvent,this.clockEvent);
       },
-    
+
       async addCard(card, desk, flag) {
         //if (this.customComponents.includes(value)) return;
         // let desk = this.desks.find(item => {
