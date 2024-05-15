@@ -19,6 +19,8 @@ export async function* getStreamData(messages) {
 
   try {
     // 请求
+
+    console.log('request :>> ', request);
     const response = await fetch(request);
 
     const stream = response.body;

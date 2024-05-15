@@ -12,7 +12,6 @@ import WuJie from "../wujie/WuJie.vue";
 import { useTTAppStore } from "../../store";
 import { mapActions, storeToRefs } from "pinia";
 import { useCardSize } from "../../../../../hooks";
-import { useWuJieStore } from "../wujie/store";
 import PerfectScrollbar from "perfect-scrollbar";
 import { appsStore as useAppStore } from "../../../../../store/apps";
 import { cardValidate } from "../../../../appCenter/src/views/developer/hooks/validate";

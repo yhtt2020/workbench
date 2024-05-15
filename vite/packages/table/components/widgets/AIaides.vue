@@ -2,10 +2,10 @@
   <div>
     <xt-container
       @titleHover="pushToMain"
-      :desk="desk" 
-      :sizeList="sizeList" 
-      :options="options" 
-      :customIndex="customIndex" 
+      :desk="desk"
+      :sizeList="sizeList"
+      :options="options"
+      :customIndex="customIndex"
       ref="cardSlot"
       :customData="customData"
       :envLimit="['guest', 'offline']"
@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import { useOpenAi } from "../../hooks/src/open/useOpenAi";
 import Widget from "../card/Widget.vue";
 import {
   MessageOutlined,
@@ -119,16 +120,16 @@ export default {
     },
     // 跳转至具体会话
     goPage(index) {
-      console.log(index);
       this.selectTopicIndex = this.recentList[index].id;
-      this.$router.push({ name: "ai" });
+      useOpenAi()
+      return
     },
     pushToMain() {
-      this.$router.push({ name: "ai" });
+      useOpenAi()
     },
   },
   computed: {
-    ...mapWritableState(aiStore, ["recentList", "selectTopicIndex"]),
+    ...mapWritableState(aiStore, ["recentList", "selectTopicIndex",]),
     // 判断尺寸大小
     showSize() {
       if (this.customData.customSize) {

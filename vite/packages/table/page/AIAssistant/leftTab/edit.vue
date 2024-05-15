@@ -1,48 +1,44 @@
 <template>
-  <div>
-    <div class="flex flex-col xt-bg-2 rounded-xl p-3">
-      <xt-title m="mb">OpenAI API 密钥配置</xt-title>
-      <div v-if="state" class="text-sm">余额 {{ money }}</div>
-      <div v-else class="xt-text-2">完成配置后即可查看可用余量。</div>
-    </div>
-    <xt-title spacing="5">API 域名</xt-title>
-    <xt-input style="height: 48px" v-model="url" class="xt-b"></xt-input>
-    <xt-title spacing="5">API 密钥</xt-title>
-    <xt-input style="height: 48px" v-model="key" class="xt-b"></xt-input>
-    <xt-title spacing="5">注意事项</xt-title>
-    <div class="flex flex-col xt-bg-2 rounded-xl p-3">
-      <div>
-        以下所有设置面向专业的开发者，如果您不知道这些设置的含义，请不要修改它们，否则可能会导致请求错误。在修改前，请确认您的账户可以访问被选择的模型（不管您是什么账户类型，其中一些模型都需要额外申请，否则会导致请求出现
-        404 错误）；同时，请确认 token
-        数量没有超过被选择模型的限制，否则上下文超出限制后将会直接报错。请确保您知道自己在做什么。点击下方按钮重置为默认值。
+  <div class="mt-4"></div>
+
+  <xt-option-box>
+    <xt-option-info title="API 域名" info="填入从你的服务商获取的API域名。" />
+    <xt-option-input v-model:input="url" />
+    <hr />
+    <xt-option-info title="API 密钥" info="填入从你的服务商获取的API密钥。" />
+    <xt-option-input v-model:input="key" />
+  </xt-option-box>
+
+  <xt-option-box>
+    <div class="mb-2">余额</div>
+    <div v-if="state" class="text-sm mb-4">{{ money > 0.1 ? money : '余额不足' }}</div>
+    <div v-else class="xt-text-2 mb-4">完成配置后即可查看可用余量。</div>
+  </xt-option-box>
+
+  <xt-option-box style="padding-bottom: 0 !important">
+    <div class="rounded-xl xt-bg-2-t p-4 mb-4">
+      <xt-text>注意事项</xt-text>
+      <xt-text class="my-2" type="2"
+        >以下所有设置面向专业的开发者，如果您不知道这些设置的含义，请不要修改它们。</xt-text
+      >
+      <div class="link mt-3 cursor-pointer" @click="resetting()">
+        重置为默认值
       </div>
-      <div class="link mt-3 cursor-pointer" @click="resetting()">重置为默认值</div>
     </div>
-    <xt-title spacing="5">GTP模型</xt-title>
-    <xt-select v-model="gpt" :list="gptList"> </xt-select>
-    <xt-title spacing="5">严谨与想象（Temperature）</xt-title>
-    <div class="flex">
-      <a-slider
-        class="flex-1"
-        v-model:value="temperature"
-        :min="0"
-        :max="1"
-        :step="0.1"
-        tooltipPlacement="left"
-        :tooltipOpen="true"
-      />
-      <a-input-number
-        v-model:value="temperature"
-        :min="0"
-        :max="2"
-      ></a-input-number>
-    </div>
-    <xt-title spacing="5">上下文的条数</xt-title>
-    <div class="flex">
-      <a-slider v-model:value="count" :min="1" :max="10" class="flex-1" />
-      <a-input-number v-model:value="count" :min="1" :max="10"></a-input-number>
-    </div>
-  </div>
+    <xt-option-select v-model="gpt" :list="gptList" />
+    <div class="mb-4"></div>
+    <hr />
+    <xt-option-info title="temperature" />
+    <xt-option-slider
+      v-model:slider="temperature"
+      :min="0"
+      :max="1"
+      :step="0.1"
+    />
+    <hr />
+    <xt-option-info title="上下文条数" />
+    <xt-option-slider v-model:slider="count" :min="1" :max="10" />
+  </xt-option-box>
 </template>
 
 <script>
@@ -53,6 +49,7 @@ export default {
   computed: {
     ...mapWritableState(aiStore, ["temperature", "count", "key", "url", "gpt"]),
     state() {
+      console.log("this.url && this.key :>> ", this.url && this.key);
       if (this.url && this.key) {
         this.getMoney();
         return true;
@@ -81,7 +78,7 @@ export default {
         },
         { value: "gpt-4-32k", name: "gpt-4 稳定版" },
       ],
-      money: "",
+      money: 0.05,
     };
   },
 };
