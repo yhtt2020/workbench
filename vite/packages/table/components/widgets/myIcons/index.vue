@@ -384,10 +384,11 @@ export default {
     },
     openEdit() {
       let icon = this.customData.iconList[this.index];
-
       this.edit = {};
       Object.keys(this.iconOption).forEach((k) => {
-        this.edit[k] = icon[k] || this.iconOption[k];
+        this.edit[k] =   icon[k] !== undefined
+          ? icon[k]
+          : this.iconOption[k]
       });
       this.settingVisible = true;
     },
