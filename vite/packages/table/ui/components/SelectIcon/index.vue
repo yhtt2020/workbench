@@ -91,7 +91,6 @@
           </div>
           <a-avatar style="margin-top: 98px;" v-else shape="square" :size="64" :src="avatarUrl + '?imageMogr2/crop/260x260/gravity/center'"></a-avatar>
           <div class="mt-4" style="font-size: 14px;color: var(--secondary-text)">{{ title }}</div>
-          <xt-button class="mt-4 xt-active-btn" style="width:64px;height:40px;" @click="changeAvatar">确定</xt-button>
           <a-progress v-if="percent !== 0 && percent != 100" :percent="percent" />
         </div>
       </div>

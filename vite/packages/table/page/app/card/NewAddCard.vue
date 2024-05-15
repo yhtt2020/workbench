@@ -124,7 +124,7 @@
             @openPreview="openPreview"
           ></DeskMarket>
           <!-- 预览 -->
-          <DeskPreview
+          <DeskPreview v-if="showModal"
             @afterAdded="onBack"
             :deskList="deskList"
             :scheme="scheme"
@@ -402,8 +402,8 @@ export default {
     updateNavIndex(index) {
       this.navIndex = index;
     },
-    changeCategory(category) {
-      this.updateDesks(category.id);
+    changeCategory(category,index) {
+      this.updateDesks(category.id,index);
     },
     /**
      * 更新桌面列表
@@ -412,8 +412,8 @@ export default {
      * @param order
      * @returns {Promise<void>}
      */
-    async updateDesks(categoryIndex = this.categoryIndex) {
-      this.categoryIndex = categoryIndex;
+    async updateDesks(categoryIndex = this.categoryIndex,index) {
+      this.categoryIndex = index;
       const keyWord = this.keyword;
       const order =
         this.search.order === "default" ? undefined : this.search.order;
@@ -443,9 +443,7 @@ export default {
         keyWord: keyWord,
         order: order,
       };
-      console.log("需要搜索", params);
       let rs = await this.getDesks(params);
-      console.log(rs, "搜索结果");
       this.desks = rs.list;
       this.deskPagination = rs.pagination;
     },

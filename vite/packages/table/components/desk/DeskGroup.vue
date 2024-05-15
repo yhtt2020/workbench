@@ -488,7 +488,6 @@ import ExtraMenu from '../../components/windowPanel/components/ExtraMenu.vue';
             newIcon: "fluent:share-android-24-regular",
             name: "分享桌面",
             fn: this.shareDesk,
-            disabled: window.$usePlat(),
           },
           // {
           //   id: 8,
