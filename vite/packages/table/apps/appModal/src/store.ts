@@ -8,23 +8,30 @@ export const useAppModalStore = defineStore("useAppModalStore", {
   }),
   getters: {},
   actions: {
+    /** 初始化 */
+    initApp() {
+      // runList
+    },
+    /** 获取应用 */
     getApp(name: string) {
       let res = this.runList.find((item) => item.name === name);
-      console.log("res :>> ", res);
-
       return res;
     },
     /** 切换显示状态 */
-    switchVisible(name: string) {
+    switchVisible(name: string, visible?: boolean) {
       let res = this.runList.find((item) => item.name === name);
-      res.visible = !res.visible;
+      if (typeof visible === "boolean") {
+        res.visible = visible;
+      } else {
+        res.visible = !res.visible;
+      }
     },
   },
   persist: {
     enabled: true,
     strategies: [
       {
-        paths: [],
+        paths: ['runList'],
         storage: localStorage,
       },
     ],

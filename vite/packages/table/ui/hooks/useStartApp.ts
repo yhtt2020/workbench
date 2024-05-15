@@ -1,8 +1,9 @@
 import { teamStore } from "./../../store/team";
 import { tt } from "./../../permission/global/global";
-import { useMit } from "./../../hooks";
-import { isObject } from "./../../TUIKit/TUICore/utils/index";
+import { useMit ,useAppModal} from "./../../hooks";
+// import { isObject } from "./../../TUIKit/TUICore/utils/index";
 import { useOpenAi } from "../../hooks/src/open/useOpenAi";
+
 import browser from "../../js/common/browser";
 import { appStore } from "../../store";
 import { taskStore } from "../../apps/task/store";
@@ -255,7 +256,8 @@ export const openSysApp = (value, router) => {
       }, 100);
       break;
     case "ai":
-      useOpenAi();
+      const { openApp } = useAppModal('ai')
+      openApp()
       break;
     default:
       // 通过路由打开

@@ -25,6 +25,7 @@
         height: aiMode == 'custom' ? '66vh' : 'auto',
       }"
     >
+      <AppOpenMode />
       <xt-option-box>
         <xt-option-info title="打开方式" info="修改后再下次打开后生效。" />
         <xt-option-tab
@@ -55,6 +56,8 @@
 </template>
 
 <script setup>
+import { useAppModal } from "../../../apps/appModal/src/hook/useAppModal";
+const { AppOpenMode } = useAppModal("ai");
 import { ref, computed, inject } from "vue";
 import { storeToRefs } from "pinia";
 import { aiStore } from "../../../store/ai";
@@ -110,6 +113,7 @@ const menuList = computed(() => {
       callBack: () => {
         selectTab.value = "Chat";
       },
+      name: "聊天",
     },
     {
       disabled: modalStatus,
