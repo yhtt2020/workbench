@@ -8,8 +8,9 @@
     :class="modalClass"
     :leftClass="leftClass"
   >
-    <slot></slot>
-
+    <div class="h-full w-full flex" :class="mainClass">
+      <slot></slot>
+    </div>
   </xt-left-menu>
 
   <xt-modal
@@ -59,7 +60,7 @@
 
 <script setup>
 import { useAppModal } from "../../../apps/appModal/src/hook/useAppModal";
-const { AppOpenMode,openApp } = useAppModal("ai");
+const { AppOpenMode, openApp } = useAppModal("ai");
 import { ref, computed, inject } from "vue";
 import { storeToRefs } from "pinia";
 import { aiStore } from "../../../store/ai";
@@ -104,10 +105,14 @@ const endMenu = computed(() => {
   return modalStatus ? 2 : 3;
 });
 
-
 const leftClass = computed(() => {
   if (modalStatus) {
     return "xt-main-bg py-3";
+  }
+});
+const mainClass = computed(() => {
+  if (modalStatus) {
+    return "py-3";
   }
 });
 const modalClass = computed(() => {
