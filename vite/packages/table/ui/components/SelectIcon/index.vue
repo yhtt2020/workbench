@@ -15,7 +15,10 @@
               <span v-for="(item,index) in menus" :key="index" @click="onSelChange(index)" :class="selIndex == index ? 'active':''">{{ item }}</span>
               <span @click="onSelChange(menus.length)" v-if="isUpload" :class="selIndex == menus.length ? 'active':''">自定义</span>
           </div>
-          <div class="flex items-center pointer xt-text" @click="clearAvatar">移除</div>
+          <div class="flex ">
+            <div class="flex items-center pointer xt-text mr-3" @click="clearAvatar">移除</div>
+            <div class="flex items-center pointer xt-text" @click="closeClick">关闭</div>
+          </div>
         </div>
         <!--  搜索栏 随机 颜色选择 -->
         <div class="flex pt-3 pl-3 pr-3 action-search" style="justify-content: space-between;" v-if="selIndex != menus.length">
