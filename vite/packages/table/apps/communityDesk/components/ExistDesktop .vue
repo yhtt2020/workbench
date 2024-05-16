@@ -74,8 +74,8 @@ const { desks } = storeToRefs(cardStore());
 // 解构props
 const props = defineProps({
   communityNo: {
-    type: String,
-    required: true,
+    type:Object,
+    default:()=>{}
   },
 });
 const { communityNo } = toRefs(props);
@@ -110,16 +110,18 @@ const selectDesk = (item) => {
 
 // 添加桌面
 const addDesk = () => {
+  proxy.$bus.emit('updateSetting');
+  const no = communityNo.value?.item?.no;
   const isCommunity = _.some(desks.value, (desk) => {
     return (
-      desk.communityNo && Number(desk.communityNo) === Number(communityNo.value)
+      desk.communityNo && Number(desk.communityNo) === Number(no)
     );
   });
   if (!isCommunity) {
     const option = {
       ...currentDesk.value,
-      id: `${communityNo.value}${currentDesk.value.id}`,
-      communityNo:communityNo.value,
+      id: `${no}${currentDesk.value.id}`,
+      communityNo:no,
     };
     const index = _.findIndex(desks.value, (desk) => {
       return String(desk.id) === String(option.id);
@@ -129,7 +131,6 @@ const addDesk = () => {
     }
   }
   existDeskVisible.value = false;
-  proxy.$bus.emit('updateSetting');
 };
 
 defineExpose({

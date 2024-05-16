@@ -60,8 +60,8 @@ const emit = defineEmits(['createDesk']);
 // 解构props
 const props = defineProps({
   currentCommunityNo:{
-    type:String,
-    required:true,
+    type:Object,
+    default:()=>{}
   }
 });
 const { currentCommunityNo } = toRefs(props);
@@ -97,7 +97,7 @@ const selectDeskCreateType = (item) => {
 // 确认选择
 const selectSubmit = () => {
   if(deskType.value === 'create'){
-    emit("createDesk");
+    // emit("createDesk");
   }
   else if(deskType.value === 'add'){
     nextTick(()=>{

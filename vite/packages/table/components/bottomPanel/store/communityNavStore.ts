@@ -1,10 +1,10 @@
-import {defineStore} from "pinia";
-import {nanoid} from "nanoid";
+import { defineStore } from "pinia";
+import { nanoid } from "nanoid";
 import archiveHelper from "../../../js/lib/archiveHelper";
-import {message} from "ant-design-vue";
-import {appStore} from "../../../store";
+import { message } from "ant-design-vue";
+import { appStore } from "../../../store";
 
-const communityNavAppId = 'c100001'
+const communityNavAppId = "c100001";
 // @ts-ignore
 export const communityNavStore = defineStore("communityNav", {
   state: () => ({
@@ -56,7 +56,7 @@ export const communityNavStore = defineStore("communityNav", {
   actions: {
     // 将当前选中的社群数据和选中的下标进行解构存储到store
     setCurrentCommunity(item: any, index: any) {
-      const {communityInfo} = item;
+      const communityInfo = item?.communityInfo;
       const optionItem = {
         ...communityInfo,
         value: "task",
@@ -67,7 +67,7 @@ export const communityNavStore = defineStore("communityNav", {
         mode: "app",
         type: "chat",
         id: nanoid(11),
-        role: item.role,
+        role: item?.role,
         no: communityInfo?.no,
       };
       this.currentCommunity.item = optionItem;
@@ -79,10 +79,16 @@ export const communityNavStore = defineStore("communityNav", {
      */
     checkWriteAuth() {
       // console.log(this.currentCommunity, '当前社群', this.currentCommunity.item.ownerUid, appStore().userInfo?.uid)
-      return this.currentCommunity.item.ownerUid === appStore().userInfo?.uid
+      return (
+        this.currentCommunity.item.ownerUid ===
+        (appStore() as any).userInfo?.uid
+      );
     },
     checkSettingAuth() {
-      return this.currentCommunity.item.ownerUid === appStore().userInfo?.uid
+      return (
+        this.currentCommunity.item.ownerUid ===
+        (appStore() as any).userInfo?.uid
+      );
     },
 
     async saveCommunityNav(force = 0) {
@@ -90,73 +96,75 @@ export const communityNavStore = defineStore("communityNav", {
         this.currentCommunity.item.no,
         communityNavAppId,
         {
-          navData: this.appModalList.filter((item, index) => {
-              return index > 0
-            },
-
-          ),
+          navData: this.appModalList.filter((item: any, index: any) => {
+            return index > 0;
+          }),
           settings: {
             layOut: this.layOut,
             settingType: this.settingType,
             autoClose: this.autoClose,
           },
-          _v:Date.now()
+          _v: Date.now(),
         },
         force,
-        'main'
-      )
+        "main"
+      );
       if (rs.status) {
-        message.success('保存成功，并已为您自动同步至云端。')
+        message.success("保存成功，并已为您自动同步至云端。");
       } else if (rs.code === 401) {
-        message.error('保存失败，原因：' + rs.info)
+        message.error("保存失败，原因：" + rs.info);
       } else if (rs.code === 404) {
-        message.error('保存失败，原因：' + rs.info)
+        message.error("保存失败，原因：" + rs.info);
       } else {
         (window as any).$ui.confirm(
-          '同步助手',
-          '保存失败，由于 ' + rs.data?.userInfo?.nickname + ' 正在编辑存档，故无法同步，是否强制同步？此操作将强制写入数据，可能导致存储内容丢失。',
+          "同步助手",
+          "保存失败，由于 " +
+            rs.data?.userInfo?.nickname +
+            " 正在编辑存档，故无法同步，是否强制同步？此操作将强制写入数据，可能导致存储内容丢失。",
           {
             ok: async () => {
-              let rs = await this.saveCommunityNav(1)
+              let rs = await this.saveCommunityNav(1);
               if (rs.status) {
-                message.success('数据强制保存成功。')
+                message.success("数据强制保存成功。");
               } else {
-                message.error('强制保存失败。')
+                message.error("强制保存失败。");
               }
-            }
+            },
           }
-        )
+        );
       }
-      return rs
+      return rs;
     },
     async loadCommunityNav() {
       // console.log('当前社群', this.currentCommunity)
-      let rs = await archiveHelper.loadFromCommunity(this.currentCommunity.item.no, communityNavAppId, 'main')
+      let rs = await archiveHelper.loadFromCommunity(
+        this.currentCommunity.item.no,
+        communityNavAppId,
+        "main"
+      );
       //{settings,navData}
       // console.log('获取到的社群导航', rs)
       if (rs.status) {
         //
-        let archiveData = rs.data.data
+        let archiveData = rs.data.data;
         if (archiveData.navData) {
-          this.appModalList =
-            [
-              {
-                name: "我的收藏",
-                type: "like",
-                rename: null,
-              },
-              ...archiveData.navData
-            ]
+          this.appModalList = [
+            {
+              name: "我的收藏",
+              type: "like",
+              rename: null,
+            },
+            ...archiveData.navData,
+          ];
         } else {
-          this.appModalList[1].list = []
+          this.appModalList[1].list = [];
         }
 
         if (archiveData.settings) {
-          this.layOut = archiveData.settings.layOut
-          this.settingType = archiveData.settings.settingType
-          this.autoClose = archiveData.settings.autoClose
+          this.layOut = archiveData.settings.layOut;
+          this.settingType = archiveData.settings.settingType;
+          this.autoClose = archiveData.settings.autoClose;
         }
-
       } else {
         if (rs.code === 404) {
           //还未初始化存档
@@ -172,9 +180,9 @@ export const communityNavStore = defineStore("communityNav", {
               rename: null,
               list: [],
             },
-          ]
+          ];
         }
-        return rs
+        return rs;
       }
     },
   },

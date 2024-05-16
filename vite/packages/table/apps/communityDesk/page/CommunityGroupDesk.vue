@@ -580,9 +580,9 @@
   <!-- 社群桌面引导创建 -->
   <CreateDeskModal
     ref="createDeskRef"
-    :currentCommunityNo="currentComInfo.no"
-    @createDesk="doAddDesk('空白桌面')"
+    :currentCommunityNo="currentCommunity"
   />
+  <!-- @createDesk="doAddDesk('空白桌面')" -->
 </template>
 
 <script>
@@ -896,8 +896,8 @@ export default {
         // 默认选中桌面方法
         this.selectDefaultDesk();
         // 成员社群获取云端数据
-        if(newVal.role === 'member'){
-          this.loadCommunityCloud()
+        if (newVal.role === "member") {
+          this.loadCommunityCloud();
         }
       },
       immediate: true,
@@ -944,11 +944,11 @@ export default {
       }
       this.deskList.unshift(desk);
       this.$emit("changeDesk", { id: desk.id });
+      // 同步云端
+      this.syncSaveCommunity();
       this.deskTitle = "";
       this.key = Date.now();
       this.addDeskVisible = false;
-      // 同步云端
-      // this.syncSaveCommunity();
     },
     showAddDeskForm() {
       this.$refs.currentDeskRef.hideMenu();
@@ -1053,16 +1053,31 @@ export default {
         okText: "删除桌面",
         okButtonWidth: "100",
         ok: () => {
-          this.deskList.splice(
-            this.deskList.findIndex((desk) => {
-              return desk === this.currentDesk;
-            }),
-            1
-          );
-          this.$emit("changeDesk", { id: this.deskList[0].id });
-          this.clearFreeLayout(this.currentDeskId);
-          // 删除桌面数据
-          this.key = Date.now();
+          console.log("删除", this.displayDesks.length);
+          if (this.displayDesks.length === 1) {
+            const index = this.deskList.findIndex((desk) => {
+              return String(desk?.id) === String(this.currentDesk?.id);
+            });
+            this.deskList.splice(index, 1);
+            this.doAddDesk("空白桌面");
+            this.$emit("changeDesk", { id: filterList[0].id });
+            this.clearFreeLayout(this.currentDeskId);
+            // 同步云端
+            // this.syncSaveCommunity();
+            // 删除桌面数据
+            this.key = Date.now();
+          } else {
+            const index = this.deskList.findIndex((desk) => {
+              return String(desk?.id) === String(this.currentDesk?.id);
+            });
+            this.deskList.splice(index, 1);
+            this.$emit("changeDesk", { id: filterList[0].id });
+            this.clearFreeLayout(this.currentDeskId);
+            // 同步云端
+            // this.syncSaveCommunity();
+            // 删除桌面数据
+            this.key = Date.now();
+          }
         },
       });
     },
