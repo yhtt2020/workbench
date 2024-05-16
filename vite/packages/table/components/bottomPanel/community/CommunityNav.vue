@@ -44,6 +44,7 @@ import { chatCommunityStore } from "../../../apps/chat/store/chatCommunity";
 import { communityNavStore } from "../store/communityNavStore";
 import { appStore } from "../../../store";
 import { getCommunityDeskList } from "../../../apps/communityDesk/hooks/deskCreateMethod";
+import { communityDeskStore } from "../../../apps/communityDesk/store/communityDeskStore";
 
 import Avatar from "../../desk/navigationBar/components/Avatar.vue";
 
@@ -57,6 +58,7 @@ const comNav = communityNavStore();
 const { settingType, currentCommunity } = storeToRefs(comNav);
 const app: any = appStore();
 const { settings } = storeToRefs(app);
+const communityDesk: any = communityDeskStore();
 
 // 获取当前实例
 const { proxy } = getCurrentInstance() as any;
@@ -159,21 +161,30 @@ const openNav = async (event: any) => {
 };
 
 //  进入社群桌面
-const openDesk = () => {
-  // 检测当前社群的桌面数据
-  const deskList = getCommunityDeskList(currentCommunity.value?.item);
-  if (deskList.length === 0) {
-    const currentRole = (currentCommunity.value.item as any).role;
-    // 管理员
-    if (currentRole === "owner") {
+const openDesk = async () => {
+  // 先检测当前社群是成员还是管理员
+  const currentRole = (currentCommunity.value.item as any).role;
+  if (currentRole === "owner") {
+    // 其次检测当前所在的社群桌面数据是否为空列表
+    const deskList = getCommunityDeskList(currentCommunity.value?.item);
+    if (deskList.length === 0) {
       settings.value.isCommunity = false;
       router.push({ name: "home", params: { no: "" } });
       setTimeout(() => {
         proxy.$bus.emit("openCommunityDesk");
       }, 150);
     }
-    // 成员
-    else if (currentRole === "member") {
+    // 当前社群桌面数据已经创建
+    else {
+      settings.value.isCommunity = false;
+      router.push({ name: "home", params: { no: "" } });
+    }
+  } else if (currentRole === "member") {
+    // 获取云端社群桌面数据
+    communityDesk.setCurrentDeskNo((currentCommunity.value.item as any).no);
+    const syncDeskRs = await communityDesk.loadCommunityDeskAll();
+    const syncDeskList = syncDeskRs?.data?.data?.desksAll;
+    if (syncDeskRs.code === 404 || syncDeskList.length === 0 ) {
       settings.value.isCommunity = true;
       router.go(-1);
       (window as any).$ui.confirm(
@@ -186,14 +197,12 @@ const openDesk = () => {
           type: "link",
         }
       );
-    }
-    // 其他数据测试,后期需要调整
-    else {
+    } else {
       settings.value.isCommunity = false;
       router.push({ name: "home", params: { no: "" } });
     }
   }
-  // 当前社群桌面数据已经创建
+  // 默认社群数据测试,后期需要调整 (就是写死的社群数据)
   else {
     settings.value.isCommunity = false;
     router.push({ name: "home", params: { no: "" } });

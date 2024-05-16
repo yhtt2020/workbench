@@ -73,6 +73,7 @@ import { communityNavStore } from "../store/communityNavStore";
 import { useRouter } from "vue-router";
 import { appStore } from "../../../store";
 import { getCommunityDeskList } from "../../../apps/communityDesk/hooks/deskCreateMethod";
+import { communityDeskStore } from "../../../apps/communityDesk/store/communityDeskStore";
 
 // 路由
 const router = useRouter();
@@ -87,6 +88,7 @@ const comNav = communityNavStore();
 const { currentCommunity } = storeToRefs(comNav);
 const app = appStore();
 const { settings } = storeToRefs(app);
+const communityDesk = communityDeskStore();
 
 // ref定义数据
 const search = ref("");
@@ -130,25 +132,17 @@ const getSearchResult = () => {
 };
 
 // 选择社群
-const selectCommunity = (item, index) => {
-  const communityDesks = getCommunityDeskList(item.communityInfo);
-  // 检测当前社群有没有创建桌面。
-  if (communityDesks.length === 0) {
-    // 管理员
-    if (item.role === "owner") {
+const selectCommunity = async (item, index) => {
+  const role = item?.role;
+  // 先检测当前所在社群的角色权限是管理员还是成员,
+  if (role === "owner") {
+    // 管理员,检测当前社群有没有创建桌面。
+    const communityDesks = getCommunityDeskList(item.communityInfo);
+    if (communityDesks.length === 0) {
       selectCommunityItem.value = { item, index };
       proxy.$bus.emit("openCommunityDesk");
     }
-    // 成员
-    else if (item.role === "member") {
-      window.$ui.confirm("暂无可用的社群桌面", "请联系你的社群管理员创建", {
-        ok: () => {},
-        okText: "好的",
-        noText: null,
-        type: "link",
-      });
-    }
-    // 后期需要再做调整
+    // 管理员,检测当前社群已经创建桌面。
     else {
       if (settings.value.isCommunity) {
         settings.value.isCommunity = false;
@@ -157,15 +151,27 @@ const selectCommunity = (item, index) => {
       comNav.setCurrentCommunity(item, index);
     }
   }
-  // 当前社群已经有桌面数据
-  else {
-    if (settings.value.isCommunity) {
-      settings.value.isCommunity = false;
+  // 成员
+  else if (role === "member") {
+    communityDesk.setCurrentDeskNo(item.cno);
+    const syncRs = await communityDesk.loadCommunityDeskAll();
+    const syncDesks = syncRs?.data?.data?.desks;
+    if (syncRs.code === 404 || syncDesks?.length === 0) {
+      window.$ui.confirm("暂无可用的社群桌面", "请联系你的社群管理员创建", {
+        ok: () => {},
+        okText: "好的",
+        noText: null,
+        type: "link",
+      });
+    } else {
+      if (settings.value.isCommunity) {
+        settings.value.isCommunity = false;
+      }
+      router.push({ name: "home", params: { no: item.communityInfo.no } });
+      comNav.setCurrentCommunity(item, index);
     }
-    router.push({ name: "home", params: { no: item.communityInfo.no } });
-    comNav.setCurrentCommunity(item, index);
   }
-  // // 选择后进行弹窗关闭
+  // 选择后进行弹窗关闭
   emit("close");
 };
 
