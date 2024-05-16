@@ -18,8 +18,14 @@ const props = defineProps<{
 const modal: any = ref(null);
 // 是否最大化
 const isMaximize: any = ref(false);
-
+const isFullScreen = ref(false);
+const fullScreen = () => {
+  isMaximize.value = false;
+  isFullScreen.value = !isFullScreen.value;
+  modal.value?.fullScreen();
+};
 const maximize = () => {
+  isFullScreen.value = false;
   isMaximize.value = !isMaximize.value;
   modal.value?.maximize();
 };
@@ -38,7 +44,7 @@ data.value = appModalStore.getApp(props.name);
 
 const modalStyle = computed(() => {
   if (!data.value) return;
-  if (isMaximize.value) {
+  if (isMaximize.value || isFullScreen.value) {
     return {
       "flex-grow": 1,
       height: "100%",
@@ -67,6 +73,14 @@ const modalStyle = computed(() => {
     :mask="false"
     custom
   >
+    <template #minimize-left>
+      <div class="mr-2 rounded-lg overflow-hidden">
+        <a-avatar shape="square" class="" :size="28" :src="data.icon" />
+      </div>
+      <div class="mr-2 xt-text truncate" style="max-width: 70px">
+        {{ data.cname }}
+      </div>
+    </template>
     <div class="flex flex-col h-full">
       <div
         class="h-12 flex justify-between items-center px-4 xt-main-bg xt-modal-header"
@@ -81,8 +95,32 @@ const modalStyle = computed(() => {
             icon="fluent:subtract-16-regular"
             @click="minimize"
             boxSize="32"
-            style="background: none;"
+            style="background: none"
           />
+          <!-- <a-dropdown
+            placements="bottom"
+            :overlayStyle="{
+              'z-index': '999999999 !important',
+            }"
+          >
+            <div>
+              <xt-mix-icon
+                :icon="
+                  isMaximize
+                    ? 'fluent:full-screen-minimize-16-filled'
+                    : 'fluent:full-screen-maximize-16-regular'
+                "
+                @click="maximize"
+                boxSize="32"
+                style="background: none"
+                class="mx-3"
+              />
+            </div>
+            <template #overlay>
+              <div style="width: 200px; height: 200px; background: red"></div>
+            </template>
+          </a-dropdown> -->
+
           <xt-mix-icon
             :icon="
               isMaximize
@@ -91,20 +129,29 @@ const modalStyle = computed(() => {
             "
             @click="maximize"
             boxSize="32"
+            style="background: none"
             class="mx-3"
-            style="background: none;"
+          />
 
+          <xt-mix-icon
+            :icon="
+              isFullScreen
+                ? 'fluent:arrow-minimize-16-regular'
+                : 'fluent:arrow-maximize-16-regular'
+            "
+            @click="fullScreen"
+            boxSize="32"
+            style="background: none"
+            class="mx-3"
           />
           <xt-mix-icon
             icon="fluent:dismiss-16-regular"
             @click="close"
             boxSize="32"
-            style="background: none;"
-
+            style="background: none"
           />
         </div>
       </div>
-      <!-- <div class="xt-theme-bg flex-grow"></div> -->
       <div
         class="flex flex-grow"
         style="max-height: calc(100% - 50px)"
