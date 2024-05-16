@@ -532,6 +532,7 @@ import { useDeskStore } from "./store";
 import { completeTask } from "../../apps/task/task";
 import NewGuidePage from "../../page/app/grade/NewGuidePage.vue";
 import ExtraMenu from "../../components/windowPanel/components/ExtraMenu.vue";
+
 export default {
   name: "DeskGroup",
   components: {
@@ -727,10 +728,16 @@ export default {
       return !desk.communityNo;
     });
     // 从社群桌面切换到个人桌面的操作
-    const startWithNum = /^\d/; // 检测当前桌面id是社群桌面还是个人
-    if (startWithNum.test(this.currentDeskId)) {
+    const found = this.deskList.find((desk)=>{ return String(desk.id) === String(this.currentDeskId) })
+    if(found && found?.communityNo){
       this.setCurrentDeskId(filterList[0].id);
     }
+
+
+    // const startWithNum = /^\d/; // 检测当前桌面id是社群桌面还是个人
+    // if (startWithNum.test(this.currentDeskId)) {
+    //   this.setCurrentDeskId(filterList[0].id);
+    // }
 
     // 个人桌面正常操作
     if (this.deskList.length > 0) {

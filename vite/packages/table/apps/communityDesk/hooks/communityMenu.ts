@@ -42,7 +42,6 @@ function communityMenus() {
       newIcon: "fluent:cloud-arrow-up-16-regular",
       fn: this.syncSaveCommunity,
       // updateTime:222222,
-
     },
     { id: 2, divider: true },
     {
@@ -146,7 +145,7 @@ function communityMenus() {
       newIcon: "fluent:image-multiple-16-regular",
       name: "更换壁纸",
       fn: () => {
-        this.$refs.galleryRef.openPaperAppModal();
+        this.$bus.emit("lockScreen");
       },
     },
     {
@@ -276,9 +275,9 @@ function memberMenus() {
       name: "复原桌面位置",
       // disabled: this.isFreeLayout ? false : true,
       fn: () => {
-        this.$nextTick(() => {
-          this.$refs.currentDeskRef.freeLayoutScrollbarRedirect();
-        });
+        // this.$nextTick(() => {
+        //   this.$refs.currentDeskRef.freeLayoutScrollbarRedirect();
+        // });
       },
     },
     {
@@ -286,7 +285,7 @@ function memberMenus() {
       newIcon: "fluent:image-multiple-16-regular",
       name: "更换壁纸",
       fn: () => {
-        this.$refs.galleryRef.openPaperAppModal();
+        this.$bus.emit("lockScreen");
       },
     },
     {
@@ -300,13 +299,12 @@ function memberMenus() {
           newIcon: "fluent:settings-16-regular",
           name: "桌面设置",
           fn: () => {
-            console.log('桌面设置',this.displayDesks.length)
-            if(this.displayDesks.length !== 0){
+            console.log("桌面设置", this.displayDesks.length);
+            if (this.displayDesks.length !== 0) {
               this.$nextTick(() => {
                 this.$refs.currentDeskRef.showSetting();
               });
             }
-            
           },
         },
         {
@@ -339,9 +337,7 @@ export default {
   },
 };
 
-
-
-/**先暂时注释,后期需要再使用**/ 
+/**先暂时注释,后期需要再使用**/
 // {
 //   id: 3,
 //   newIcon: "mingcute:windows-line",

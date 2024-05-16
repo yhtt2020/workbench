@@ -10,3 +10,5 @@ export const getCommunityDeskList = (communityInfo: any) => {
   });
   return currentCommunityDesks;
 };
+
+// shi

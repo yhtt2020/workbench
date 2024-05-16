@@ -32,7 +32,8 @@
         w="127"
         h="32"
         type="theme"
-        style="border-radius: 8px; margin-right: 12px"
+        style="margin-right: 12px"
+        :radius="8"
         @click="updateDeskData"
       >
         <div class="flex items-center justify-center">
@@ -44,13 +45,18 @@
           <span class="xt-font font-14 xt-text">更新桌面数据</span>
         </div>
       </xt-button>
-      <span class="xt-font font-14 xt-text-2">上次同步时间：</span>
+      <span class="xt-font font-14 xt-text-2">
+        上次同步时间：
+      </span>
     </div>
   </div>
 </template>
 
 <script setup>
 import { computed, ref, toRefs } from "vue";
+import { storeToRefs } from "pinia";
+import { communityDeskStore } from "../store/communityDeskStore";
+
 
 const props = defineProps({
   // 当前桌面信息
