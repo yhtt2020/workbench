@@ -148,6 +148,7 @@ export const communityDeskStore = defineStore("communityDesk", {
           this.setting.getSyncTime = "";
         }
       }
+      return rs;
     },
 
     // 读取当前社群名下云端存储的桌面详情
@@ -180,6 +181,8 @@ export const communityDeskStore = defineStore("communityDesk", {
           this.setting.getSyncTime = "";
         }
       }
+
+      return rs;
     },
 
     // 读取本地所有桌面列表数据

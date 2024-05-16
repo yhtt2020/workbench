@@ -3,8 +3,7 @@
   <template v-if="!communityRole">
     <template v-if="checkIsCommunity">
       <div class="rounded-lg mb-4 xt-bg-2 px-4 py-3.5 flex flex-col">
-        <SyncCommunityDesk/>
-        <!--  :deskInfo="community" -->
+        <SyncCommunityDesk :deskInfo="community"/>
       </div>
     </template>
 
@@ -134,9 +133,7 @@
   <!-- 桌面编辑禁用 -->
   <template v-else>
     <div class="rounded-lg mb-4 xt-bg-2 px-4 py-3.5 flex flex-col">
-      <SyncCommunityDesk  />
-      {{ checkIsCommunity }}
-      <!-- :deskInfo="community" -->
+      <SyncCommunityDesk  :deskInfo="community" />
     </div>
 
     <div class="disable-edit">
@@ -337,47 +334,43 @@ const updateFixedLayout = (data) => {
 
 // 检测有没有社群
 const checkIsCommunity = computed(() => {
-  console.log('检测有没有社群',getCurrentDesk.value);
-  console.log('检测有没有社群',getCurrentDesk.value.communityNo);
-  // if (getCurrentDesk.value.communityNo) {
-  //   return true;
-  // } else {
-  //   return false;
-  // }
+  if (getCurrentDesk.value.communityNo) {
+    return true;
+  } else {
+    return false;
+  }
 });
 
 // 获取社群名称
 const community = computed(() => {
-  console.log('获取社群名称',getCurrentDesk.value);
-  console.log('获取社群名称',getCurrentDesk.value.communityNo);
-  // if (getCurrentDesk.value.communityNo) {
-  //   const find = _.find(myCommunity.value, (item) => {
-  //     return Number(getCurrentDesk.value.communityNo) === Number(item.cno);
-  //   });
-  //   if (find) {
-  //     return find;
-  //   }
-  // }
+  if (getCurrentDesk.value.communityNo) {
+    const find = _.find(myCommunity.value, (item) => {
+      return Number(getCurrentDesk.value.communityNo) === Number(item?.cno);
+    });
+    if (find) {
+      return find;
+    }
+  }
 });
 
 // 获取当前社群的权限
 const communityRole = computed(() => {
-  console.log('获取当前社群的权限',getCurrentDesk.value);
-  console.log('获取当前社群的权限',getCurrentDesk.value.communityNo);
-
-  // if (getCurrentDesk.value.communityNo) {
-  //   const find = _.find(myCommunity.value, (item) => {
-  //     return Number(getCurrentDesk.value.communityNo) === Number(item.cno);
-  //   });
-  //   if (find) {
-  //     return find?.role === "member";
-  //   } else {
-  //     return false;
-  //   }
-  // } else {
-  //   return false;
-  // }
+  if (getCurrentDesk.value.communityNo) {
+    const find = _.find(myCommunity.value, (item) => {
+      return Number(getCurrentDesk.value.communityNo) === Number(item.cno);
+    });
+    if (find) {
+      return find?.role === "member";
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
 });
+
+
+
 </script>
 
 <style lang="scss" scoped>
