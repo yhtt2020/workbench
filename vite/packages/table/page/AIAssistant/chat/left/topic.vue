@@ -1,7 +1,7 @@
 <template>
   <xt-menu :menus="menus">
     <div
-      class="group cursor-pointer flex items-center text-base relative rounded-xl pl-2 mb-2 mr-3"
+      class="group cursor-pointer flex items-center text-base relative rounded-xl pl-2 mt-2 mr-3"
       style="width: 224px; height: 72px"
       :class="{ 'xt-active-bg-2': selectTopicIndex === data.id }"
       @click="handleIndex()"

@@ -29,16 +29,7 @@
       }"
     >
       <AppOpenMode />
-      <!-- <xt-option-box>
-        <xt-option-info title="打开方式" info="修改后再下次打开后生效。" />
-        <xt-option-tab
-          v-model="useMode"
-          :list="openModeList"
-          circle
-          style="height: 40px"
-          @cb="updateAiMode"
-        />
-      </xt-option-box> -->
+
       <xt-option-box style="padding-bottom: 0 !important">
         <xt-option-info
           title="选择AI助手配置"
