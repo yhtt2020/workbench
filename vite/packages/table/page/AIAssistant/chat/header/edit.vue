@@ -1,36 +1,40 @@
 <template>
-  <Dialog
-    v-model:name="value.name"
-    v-model:icon="value.icon"
-    :index="value.icon.id"
-  ></Dialog>
+  <div class="p-4 mb-4 xt-bg-2 rounded-xl">
+    <xt-option-info title="图标和名称" info="支持自定图标和名称。" />
+    <xt-option-icon
+      v-model:icon="value.icon.name"
+      v-model:input="value.name"
+      :menus="['emoji']"
+      :upload="false"
+    />
+  </div>
   <div class="flex justify-evenly mt-4">
     <XtButton w="200" @click="clear()" class="mr-3">清空对话记录</XtButton>
     <XtButton w="200" @click="del()">删除对话</XtButton>
   </div>
-
 </template>
 
 <script>
 import { mapWritableState, mapActions } from "pinia";
 import { message } from "ant-design-vue";
 import { aiStore } from "../../../../store/ai";
-
-import Dialog from "../components/Dialog.vue";
+import _ from "lodash";
 import { Modal } from "ant-design-vue";
 export default {
   computed: {
     ...mapWritableState(aiStore, ["selectTopicIndex", "chatList"]),
   },
-  components: {
-    Dialog,
-  },
   props: {
     data: {},
   },
   data() {
-    return { visible: true, value: { ...this.data } };
+    return {
+      visible: true,
+      value: _.cloneDeep(this.data),
+      icon: this.data.icon.name,
+    };
   },
+
   methods: {
     clear() {
       Modal.info({

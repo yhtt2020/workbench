@@ -1,5 +1,8 @@
 import { defineStore } from "pinia";
 import { iconList } from "../page/AIAssistant/chat/components/config";
+import {useGetEmoji} from '../hooks/src/useGetEmoji'
+import _ from 'lodash'
+import { nanoid } from "nanoid";
 // @ts-ignore
 export const aiStore = defineStore("aiStore", {
   state: () => ({
@@ -91,13 +94,18 @@ export const aiStore = defineStore("aiStore", {
     },
     addTopic() {
       // 解构一份初始状态
-      let obj = { ...this.defaultData };
+      let obj = _.cloneDeep(this.defaultData)
+
       let id = Date.now();
-      obj.id = id;
+      obj.id = nanoid();
       obj.time = id;
+      obj.icon.type = 'emoji'
+      obj.icon.name = useGetEmoji()
       this.selectTopicIndex = obj.id;
-      this.topicList[obj.id] = obj;
+      this.topicList[obj.id] = {...obj};
+      // this.topicList[obj.id].icon.name = useGetEmoji()
       this.chatList[obj.id] = [];
+      obj = null
     },
     delTopic() {
       for (let key in this.topicList) {
