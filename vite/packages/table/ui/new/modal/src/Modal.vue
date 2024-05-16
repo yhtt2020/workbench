@@ -419,34 +419,30 @@ const originY = ref(getModalPosition.value.top);
 const originX = ref(getModalPosition.value.left);
 const maximize = () => {
   if (!isMaximize.value) {
-    console.log('y.value; :>> ', y.value);
-    originY.value = y.value;
-    originX.value = x.value;
+    console.log("y.value; :>> ", y.value);
+    oldY.value = y.value;
+    oldX.value = x.value;
   }
   transitionVisible.value = true;
   modalVisible.value = false;
 
-  setTimeout(() => {
-    isMaximize.value = !isMaximize.value;
-    emits("max", isMaximize.value);
-    if (isMaximize.value) {
-      console.log("22222222 :>> ", 22222222);
-      oldX.value = x.value;
-      oldY.value = y.value;
-      // originY.value = y.value;
-      // originX.value = x.value;
-      x.value = 0;
-      y.value = 0;
-    } else {
-      x.value = originX.value;
-      y.value = originY.value;
-      console.log("11111111 :>> ", 11111111);
-    }
-    setTimeout(() => {
-      modalVisible.value = true;
-      transitionVisible.value = false;
-    }, 1);
-  }, 1);
+  // setTimeout(() => {
+  isMaximize.value = !isMaximize.value;
+  emits("max", isMaximize.value);
+  if (isMaximize.value) {
+    console.log("22222222 :>> ", 22222222);
+    x.value = 0;
+    y.value = 0;
+  } else {
+    x.value = oldX.value;
+    y.value = oldY.value;
+    console.log("11111111 :>> ", 11111111);
+  }
+  // setTimeout(() => {
+  modalVisible.value = true;
+  transitionVisible.value = false;
+  // }, 1);
+  // }, 1);
 };
 /** 模态框点击事件 */
 const modalClick = () => {
