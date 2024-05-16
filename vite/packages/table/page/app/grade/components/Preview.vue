@@ -206,7 +206,6 @@ export default {
             this.$bus.emit("cutCanvas",position);
           },
         });
-        this.$emit('analysis')
       }, 2);
       // 定位到桌面正中央
       this.close()

@@ -2,7 +2,6 @@
   <div class="fixed overflow-hidden modal-center xt-modal tran" :class="popState ? 'pop' : step == 5 ? 'theme' : 'Popup'"
     style="">
     <!--  -->
-    <!-- {{ step }} -->
     <div v-if="!popState" class="h-full">
       <!-- 返回按钮 -->
       <div v-if="step !== 0 && guideList.length > 1" @click="prevStep" class="absolute ml-4 top-icon no-drag">
@@ -95,7 +94,7 @@
       <div style="z-index: 9999">
         <!-- @afterAdded="afterAdded" -->
         <Preview :deskTypeObj="deskTypeObj" :deskList="deskList" :scheme="scheme" :showModal="showModal"
-          @closePreview="closePreview" @analysis="analysis" @addStep="addStep"></Preview>
+          @closePreview="closePreview" @addStep="nextStep"></Preview>
       </div>
     </teleport>
   </div>
@@ -394,6 +393,10 @@ export default {
         this.step = this.guideList[++this.stepIndex]
       } else {
         this.$emit('closeShowGuide')
+      }
+      // 整理图标同时进行分析
+      if (this.step == 1) {
+        this.analysis()
       }
 
     },
