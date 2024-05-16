@@ -37,28 +37,16 @@ export default {
 
   methods: {
     clear() {
-      Modal.info({
-        centered: true,
-        title: "确认删除",
-        content: "点击确认会无视保存进行清空",
-        okText: "确认",
-        maskClosable: true,
-        zIndex: 999999999999999,
-        onOk: () => {
+      window.$ui.confirm("点击确认会无视保存进行清空", "", {
+        ok: () => {
           this.chatList[this.selectTopicIndex] = [];
           message.success("已清空对话记录");
         },
       });
     },
     del() {
-      Modal.info({
-        centered: true,
-        title: "确认删除",
-        content: "点击确认删除整个对话",
-        okText: "确认",
-        maskClosable: true,
-        zIndex: 999999999999999,
-        onOk: () => {
+      window.$ui.confirm("点击确认删除整个对话", "", {
+        ok: () => {
           this.$emit("del", this.value.id);
         },
       });
