@@ -18,7 +18,7 @@
       :click="false"
       :fit="fit"
     />
-    <xt-newIcon 
+    <xt-newIcon
       v-else
       :icon="src"
       :size="imgW"
@@ -32,15 +32,15 @@
       :boxH="bgH"
       :bg="bg"
       :r="r"
-      :style="{ borderRadius: '12px', background: bg }"
-      :iconStyle="{ borderRadius: r  }"
+      :style="{ borderRadius: '12px', background: bg,}"
+      :iconStyle="{ borderRadius: r,...imgStateStyle  }"
       :class="''"
     />
-    <img 
-      src="/public/icons/tag.png" 
-      alt="" 
-      class="absolute w-[30px]" 
-      style="top:1px;right:-2px" 
+    <img
+      src="/public/icons/tag.png"
+      alt=""
+      class="absolute w-[30px]"
+      style="top:1px;right:-2px"
       v-if="isIfy === 'ify'">
     <!-- <div
       class="flex items-center justify-center w-full overflow-hidden xt-text no-drag rounded-xl"
@@ -61,7 +61,7 @@
         :style="[imgSize, radiusState, imgStateStyle]"
         :data-index="index"
       />
-      
+
     </div> -->
     <div
       v-if="isTitle"
@@ -125,7 +125,7 @@ export default {
           width: this.getSizeValues(this.size).imgSize.width,
           height: this.getSizeValues(this.size).iconSize.height
         }
-      } 
+      }
       return this.getSizeValues(this.size).iconSize
     },
     textSize() {
@@ -163,7 +163,7 @@ export default {
     },
     imgW() {
       let w = parseInt(this.getSizeValues(this.size).imgSize.width);
-      w = this.isIfy == "ify" ? w / 2 : w; 
+      w = this.isIfy == "ify" ? w / 2 : w;
       return w;
     },
     bgW() {

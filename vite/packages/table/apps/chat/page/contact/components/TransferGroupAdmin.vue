@@ -11,7 +11,7 @@ import { nextTick, ref, toRefs } from "vue";
 
 import UserSelect from "../../../components/user/UserSelect.vue";
 
-const chat = window.$chat.chat;
+const chat = window.$chat?.chat;
 const emit = defineEmits(["close"]);
 
 const props  = defineProps({
@@ -31,7 +31,7 @@ const openTransfer = () => {
     const options = {
       groupID: groupID.value,
     };
-    const res = await window.$chat.chat.getGroupMemberList(options);
+    const res = await window.$chat?.chat.getGroupMemberList(options);
     if(res.code === 0){
      const { memberList } = res.data;
      currentGroupMember.value = memberList;

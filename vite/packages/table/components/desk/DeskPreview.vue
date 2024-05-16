@@ -196,30 +196,35 @@ export default {
     }
   },
   watch: {
-    showModal (newVal) {
-      if (newVal) this.fullScreen = true
-      if (this.fullScreen) {
-        this.cardZoom = this.template.settings.cardZoom
-        this.cardMargin=this.template.settings.cardMargin
-        this.zoom = this.cardZoom / 100
-        this.getPreviewHeight()
-        this.displayScheme = {
-          ...this.scheme,
-          settings: {
-            ...this.template.settings
-          },
-          cards:[
-            ... this.template.cards
-          ],
+    showModal :{
+      handler(newVal) {
+        if (newVal) this.fullScreen = true
+        if (this.fullScreen) {
+          this.cardZoom = this.template.settings.cardZoom
+          this.cardMargin=this.template.settings.cardMargin
+          this.zoom = this.cardZoom / 100
+          this.getPreviewHeight()
+          let cards=  _.cloneDeep(this.template.cards.map(card=>{
+            card.id=nanoid(8)
+            return card
+          }))
+          this.displayScheme = {
+            ...this.scheme,
+            settings: {
+              ...this.template.settings
+            },
+            cards:cards,
+          }
+          this.deskWidth = this.layoutSize.width
+          this.deskHeight = this.layoutSize.height
+          this.cardHeight = this.layoutSize.height
+          var that = this
+          window.addEventListener('resize', () => {
+            that.getPreviewHeight()
+          })
         }
-        this.deskWidth = this.layoutSize.width
-        this.deskHeight = this.layoutSize.height
-        this.cardHeight = this.layoutSize.height
-        var that = this
-        window.addEventListener('resize', () => {
-          that.getPreviewHeight()
-        })
-      }
+      },
+      deep:true
     },
     // windowHeight(val){
     //   // let zoom = (val / this.deskHeight * 100).toFixed(2)
@@ -262,16 +267,16 @@ export default {
       this.$emit('afterAdded')
       this.openDrawer = false
       message.success('添加成功')
-      
+
       // 需要替换的桌面index
       let replace = null
       let deskId = this.getCurrentId()
-      
+
       // 当 addDesk 为false时 需要将数据进行替换
       if(!this.addDesk){
         let deskIndex = this.deskList.forEach((item, index)=>{
           if(item.id == deskId){
-            replace = index 
+            replace = index
           }
         })
       }else{
@@ -319,6 +324,32 @@ export default {
 
   },
   mounted () {
+    if (this.showModal) this.fullScreen = true
+    if (this.fullScreen) {
+      this.cardZoom = this.template.settings.cardZoom
+      this.cardMargin=this.template.settings.cardMargin
+      this.zoom = this.cardZoom / 100
+      this.getPreviewHeight()
+      console.log('template',this.template)
+      let cards=  _.cloneDeep(this.template.cards.map(card=>{
+        card.id=nanoid(8)
+        return card
+      }))
+      this.displayScheme = {
+        ...this.scheme,
+        settings: {
+          ...this.template.settings
+        },
+        cards:cards,
+      }
+      this.deskWidth = this.layoutSize.width
+      this.deskHeight = this.layoutSize.height
+      this.cardHeight = this.layoutSize.height
+      var that = this
+      window.addEventListener('resize', () => {
+        that.getPreviewHeight()
+      })
+    }
   },
 }
 </script>

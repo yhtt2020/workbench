@@ -98,13 +98,61 @@ import ShortcutKeyRoute from "../apps/shortcutKey/route";
 import BarrageRoute from "../apps/barrage/route";
 import Power from "../page/Power.vue";
 import Remote from "../apps/console/pages/Remote.vue";
-
+import SharedDesk from  '../page/SharedDesk.vue'
 export default [
   {
     path: "/main",
     name: "main",
-    component: Main,
+    // component: Main,
+    components: {
+      default: Main,
+      ai: AIAssistant,
+      note: Note,
+    },
     children: [
+      ...DeckRoute,
+      ShortcutKeyRoute,
+      {
+        path:'/s/:id',
+        name:'SharedDesk',
+        component: SharedDesk,
+      },
+      {
+        path: "/ai/:value?",
+        name: "ai",
+        component: AIAssistant,
+        meta: {
+          tab1: "work",
+          tab2: "ai",
+        },
+      },
+      {
+        path: "/Note/:customIndex?",
+        name: "note",
+        component: Note,
+        meta: {
+          tab1: "work",
+          tab2: "note",
+        },
+      },
+      {
+        path: "/clipboard",
+        name: "clipboard",
+        component: Clipboard,
+        meta: {
+          tab1: "work",
+          tab2: "clipboard",
+        },
+      },
+      {
+        path: "/todo",
+        name: "todo",
+        component: Todo,
+        meta: {
+          tab1: "work",
+          tab2: "todo",
+        },
+      },
       {
         path: "/device",
         name: "device",
@@ -531,16 +579,6 @@ export default [
           name: "ai",
         },
         children: [
-          ...DeckRoute,
-          {
-            path: "/Note/:customIndex?",
-            name: "note",
-            component: Note,
-            meta: {
-              tab1: "work",
-              tab2: "note",
-            },
-          },
           {
             path: "/TomatoStart",
             name: "tomatoStart",
@@ -551,34 +589,15 @@ export default [
             name: "tomato",
             component: Tomato,
           },
-          {
-            path: "/ai/:value?",
-            name: "ai",
-            component: AIAssistant,
-            meta: {
-              tab1: "work",
-              tab2: "ai",
-            },
-          },
-          {
-            path: "/clipboard",
-            name: "clipboard",
-            component: Clipboard,
-            meta: {
-              tab1: "work",
-              tab2: "clipboard",
-            },
-          },
-          ShortcutKeyRoute,
-          {
-            path: "/todo",
-            name: "todo",
-            component: Todo,
-            meta: {
-              tab1: "work",
-              tab2: "todo",
-            },
-          },
+          // {
+          //   path: "/ai/:value?",
+          //   name: "ai",
+          //   component: AIAssistant,
+          //   meta: {
+          //     tab1: "work",
+          //     tab2: "ai",
+          //   },
+          // },
         ],
       },
 

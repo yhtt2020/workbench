@@ -22,7 +22,7 @@
           v-if="currentItem"
           class="flex flex-col h-full"
         >
-          <CommunityHeader :headerContent="currentItem" />
+          <!-- <CommunityHeader :headerContent="currentItem" /> -->
           <RightDetailMain :currentItem="currentItem" />
         </a-col>
         <a-col flex=" 1 1 200px" v-else class="flex flex-col h-full">
@@ -66,6 +66,7 @@ import { useNavigationStore } from "../../../../components/desk/navigationBar/na
 import CategoryFloat from "../../components/suspendMode/CategoryFloat.vue";
 import PageDoesNotExist from "../empty/PageDoesNotExist.vue";
 import RightDetailMain from "./RightDetailMain.vue";
+/**后期需要使用时再开放**/ 
 // import CommunityHeader from "../../components/suspendMode/CommunityHeader.vue";
 import Article from "../../../../components/Article.vue";
 import CommunityDetailEmpty from "../empty/CommunityDetailEmpty.vue";
@@ -143,11 +144,15 @@ const getCommunityByNo = (no: any) => {
             type: `community${data.no}`,
             communityInfo: data,
           };
-          myCommunity.value.push(option);
+          // console.log('在线状态',option);
+          chatCommunity.loadCurrentCommunity(option);
+          chatCommunity.getCommunityTree(no);
+          // myCommunity.value.push(option);
           return;
         } else {
           chatCommunity.setCurrentCommunityNo(no);
           chatCommunity.loadCurrentCommunity(no);
+          chatCommunity.getCommunityTree(no);
         }
       }
     });
@@ -181,7 +186,9 @@ const getCommunityByNo = (no: any) => {
             type: `community${data.no}`,
             communityInfo: data,
           };
-          myCommunity.value.push(option);
+          // console.log('离线状态',option);
+          chatCommunity.loadCurrentCommunity(option)
+          // myCommunity.value.push(option);
         }
       }
     });
@@ -288,7 +295,7 @@ const handleCurrentItem = async (data: any) => {
         }
       } else {
         /**当前群聊为公开群**/
-        const res = await window.$chat?.chat?.searchGroupByID(
+        const res = await window.$chat?.chat.searchGroupByID(
           groupProps.groupID
         );
         const isDisable = res.data.group.joinOption !== "DisableApply";

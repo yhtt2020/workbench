@@ -1,133 +1,140 @@
 <template>
   <div class="tui-conversation-list">
-    <ActionsMenu
-      v-if="isShowOverlay"
-      :selectedConversation="currentConversation"
-      :actionsMenuPosition="actionsMenuPosition"
-      :selectedConversationDomRect="currentConversationDomRect"
-      @closeConversationActionMenu="closeConversationActionMenu"
-    />
-    <div
-      v-for="(conversation, index) in conversationList"
-      :id="`convlistitem-${index}`"
-      :key="index"
-      :class="[
-        'tui-conversation-content',
-        isMobile && 'tui-conversation-content-h5 disable-select',
-      ]"
-      class="relative"
-    >
+    <!-- 会话列表空状态 -->
+    <template v-if="conversationList.length === 0">
+      <SessionEmpty />
+    </template>
+
+    <template v-else>
+      <ActionsMenu
+        v-if="isShowOverlay"
+        :selectedConversation="currentConversation"
+        :actionsMenuPosition="actionsMenuPosition"
+        :selectedConversationDomRect="currentConversationDomRect"
+        @closeConversationActionMenu="closeConversationActionMenu"
+      />
       <div
+        v-for="(conversation, index) in conversationList"
+        :id="`convlistitem-${index}`"
+        :key="index"
         :class="[
-          isPC && 'isPC',
-          'tui-conversation-item',
-          currentConversationID === conversation.conversationID &&
-            'tui-conversation-item-selected',
-          conversation.isPinned && 'tui-conversation-item-pinned',
+          'tui-conversation-content',
+          isMobile && 'tui-conversation-content-h5 disable-select',
         ]"
-        @click="enterConversationChat(conversation.conversationID)"
-        @longpress="showConversationActionMenu($event, conversation, index)"
-        @contextmenu.prevent="
-          showConversationActionMenu($event, conversation, index, true)
-        "
+        class="relative"
       >
-        <aside class="left">
-          <!-- 将conversation.getAvatar()替换成conversation.groupProfile.avatar来实现真实图片展示,从而达到demo图片的替换  -->
-
-          <!-- conversation?.type === 'GROUP'是否为群聊,
-            群聊走conversation?.groupProfile?.avatar
-            好友走conversation?.userProfile?.avatar
-            来处理IM自定义的头像
-             :borderRadius="conversation?.type === 'GROUP' ? '5px':'50%'"
-             群聊是正方形,好友是圆形 -->
-
-          <Avatar
-            useSkeletonAnimation
-            :url="
-              conversation?.type === 'GROUP'
-                ? conversation?.groupProfile?.avatar
-                : conversation?.userProfile?.avatar
-            "
-            size="30px"
-            :borderRadius="conversation?.type === 'GROUP' ? '5px' : '50%'"
-          />
-          <div
-            v-if="userOnlineStatusMap && isShowUserOnlineStatus(conversation)"
-            :class="[
-              'online-status',
-              Object.keys(userOnlineStatusMap).length > 0 &&
-              Object.keys(userOnlineStatusMap).includes(
-                conversation.userProfile.userID
-              ) &&
-              userOnlineStatusMap[conversation.userProfile.userID]
-                .statusType === 1
-                ? 'online-status-online'
-                : 'online-status-offline',
-            ]"
-          />
-          <span
-            v-if="conversation.unreadCount > 0 && !conversation.isMuted"
-            class="num"
-          >
-            {{
-              conversation.unreadCount > 99 ? "99+" : conversation.unreadCount
-            }}
-          </span>
-          <span
-            v-if="conversation.unreadCount > 0 && conversation.isMuted"
-            class="num-notify"
-          />
-        </aside>
-        <div class="content">
-          <div class="content-header">
-            <label class="content-header-label">
-              <!-- 将当前conversation.getShowName()替换好友昵称,群聊昵称 -->
-              <!-- 理由是:会显示出通过好友列表添加这样的字样 -->
-              <p class="name">
-                {{
-                  conversation?.type === "GROUP"
-                    ? conversation?.groupProfile?.name
-                    : conversation?.userProfile?.nick
-                }}
-              </p>
-            </label>
-            <div class="middle-box">
-              <span
-                v-if="
-                  conversation.type === 'GROUP' &&
-                  conversation.groupAtInfoList &&
-                  conversation.groupAtInfoList.length > 0
-                "
-                class="middle-box-at"
-                >{{ conversation.getGroupAtInfo() }}</span
-              >
-              <p class="middle-box-content">
-                <!-- 新代码将通过好友列表添加的字样进行清除 -->
-                {{ text(conversation) }}
-                <!-- 旧代码 -->
-                <!-- {{ conversation.getLastMessage("text") }} -->
-              </p>
+        <div
+          :class="[
+            isPC && 'isPC',
+            'tui-conversation-item',
+            currentConversationID === conversation.conversationID &&
+              'tui-conversation-item-selected',
+            conversation.isPinned && 'tui-conversation-item-pinned',
+          ]"
+          @click="enterConversationChat(conversation.conversationID)"
+          @longpress="showConversationActionMenu($event, conversation, index)"
+          @contextmenu.prevent="
+            showConversationActionMenu($event, conversation, index, true)
+          "
+        >
+          <aside class="left">
+            <!-- 将conversation.getAvatar()替换成conversation.groupProfile.avatar来实现真实图片展示,从而达到demo图片的替换  -->
+  
+            <!-- conversation?.type === 'GROUP'是否为群聊,
+              群聊走conversation?.groupProfile?.avatar
+              好友走conversation?.userProfile?.avatar
+              来处理IM自定义的头像
+               :borderRadius="conversation?.type === 'GROUP' ? '5px':'50%'"
+               群聊是正方形,好友是圆形 -->
+  
+            <Avatar
+              useSkeletonAnimation
+              :url="
+                conversation?.type === 'GROUP'
+                  ? conversation?.groupProfile?.avatar
+                  : conversation?.userProfile?.avatar
+              "
+              size="30px"
+              :borderRadius="conversation?.type === 'GROUP' ? '5px' : '50%'"
+            />
+            <div
+              v-if="userOnlineStatusMap && isShowUserOnlineStatus(conversation)"
+              :class="[
+                'online-status',
+                Object.keys(userOnlineStatusMap).length > 0 &&
+                Object.keys(userOnlineStatusMap).includes(
+                  conversation.userProfile.userID
+                ) &&
+                userOnlineStatusMap[conversation.userProfile.userID]
+                  .statusType === 1
+                  ? 'online-status-online'
+                  : 'online-status-offline',
+              ]"
+            />
+            <span
+              v-if="conversation.unreadCount > 0 && !conversation.isMuted"
+              class="num"
+            >
+              {{
+                conversation.unreadCount > 99 ? "99+" : conversation.unreadCount
+              }}
+            </span>
+            <span
+              v-if="conversation.unreadCount > 0 && conversation.isMuted"
+              class="num-notify"
+            />
+          </aside>
+          <div class="content">
+            <div class="content-header">
+              <label class="content-header-label">
+                <!-- 将当前conversation.getShowName()替换好友昵称,群聊昵称 -->
+                <!-- 理由是:会显示出通过好友列表添加这样的字样 -->
+                <p class="name">
+                  {{
+                    conversation?.type === "GROUP"
+                      ? conversation?.groupProfile?.name
+                      : conversation?.userProfile?.nick
+                  }}
+                </p>
+              </label>
+              <div class="middle-box">
+                <span
+                  v-if="
+                    conversation.type === 'GROUP' &&
+                    conversation.groupAtInfoList &&
+                    conversation.groupAtInfoList.length > 0
+                  "
+                  class="middle-box-at"
+                  >{{ conversation.getGroupAtInfo() }}</span
+                >
+                <p class="middle-box-content">
+                  <!-- 新代码将通过好友列表添加的字样进行清除 -->
+                  {{ text(conversation) }}
+                  <!-- 旧代码 -->
+                  <!-- {{ conversation.getLastMessage("text") }} -->
+                </p>
+              </div>
+            </div>
+            <div class="content-footer">
+              <span class="time">{{ conversation.getLastMessage("time") }}</span>
+              <!-- IM的UI图标组件 -->
+              <Icon v-if="conversation.isMuted" :file="muteIcon" />
+  
+              <!-- 新版替换的图标组件 -->
+              <xt-ify-icon
+                v-if="conversation.isMuted"
+                icon="fluent:alert-off-16-regular"
+                size="20"
+                class="xt-text-2 muted-icon"
+              />
             </div>
           </div>
-          <div class="content-footer">
-            <span class="time">{{ conversation.getLastMessage("time") }}</span>
-            <!-- IM的UI图标组件 -->
-            <Icon v-if="conversation.isMuted" :file="muteIcon" />
-
-            <!-- 新版替换的图标组件 -->
-            <xt-ify-icon
-              v-if="conversation.isMuted"
-              icon="fluent:alert-off-16-regular"
-              size="20"
-              class="xt-text-2 muted-icon"
-            />
-          </div>
+  
+          <!-- 新增置顶标记图标 -->
+          <div class="isPined-icon" v-if="conversation.isPinned"></div>
         </div>
-
-        <!-- 新增置顶标记图标 -->
-        <div class="isPined-icon" v-if="conversation.isPinned"></div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
@@ -148,6 +155,8 @@ import Icon from "../../common/Icon.vue";
 import Avatar from "../../common/Avatar/index.vue";
 import ActionsMenu from "../actions-menu/index.vue";
 import muteIcon from "../../../assets/icon/mute.svg";
+import SessionEmpty from "../../../../chat/page/empty/SessionEmpty.vue";
+
 import { isPC, isH5, isUniFrameWork, isMobile } from "../../../utils/env";
 
 interface IUserStatus {
@@ -357,7 +366,7 @@ const text = (conversation: any) => {
     else if (isFromAccount && isText) return `${isFromAccount}:${isText}`;
     else return "";
   } else {
-  /**好友**/
+    /**好友**/
     if (isUserName && isText) return `${isUserName}:${isText}`;
     else if (isUserName && isMessageForShow)
       return `${isUserName}:${isMessageForShow}`;

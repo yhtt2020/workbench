@@ -11,6 +11,7 @@
       :collision="false"
       v-if="modelValue"
       @update:data="resizeModel"
+      :resetPosition="false"
       :handle="handle"
       :disabled="handle ? false : true"
     >
@@ -18,10 +19,13 @@
         @click="modalClick"
         :class="[custom ? '' : boxClass]"
         ref="modal"
-        class="flex flex-col overflow-hidden text-base no-drag rounded-xl xt-modal xt-shadow xt-text"
+        class="relative flex flex-col text-base no-drag rounded-xl xt-modal xt-shadow xt-text"
         style="
           border: 1px solid rgba(255, 255, 255, 0.1);
           box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+          overflow: hidden !important;
+          max-width: 100vw !important;
+          max-height: 100vh !important;
         "
         :style="[
           modalStyle,
@@ -178,6 +182,8 @@
 
 <script setup lang="ts">
 import McDonalds from "./McDonalds.vue";
+
+// import PerfectScrollbar from "perfect-scrollbar";
 import {
   ref,
   watch,
@@ -194,7 +200,8 @@ import { useWindowSize } from "../../drag/src/hooks/useWindowSize";
 import { nanoid } from "nanoid";
 
 import { ModalProps } from "./types";
-
+const scrollbar: any = ref(null);
+// const perfectScrollbar: any = ref(null);
 const { proxy }: any = getCurrentInstance();
 
 const props = withDefaults(defineProps<ModalProps>(), {
@@ -266,6 +273,9 @@ const modalName = ref(nanoid(4));
 let barHeight = 0;
 
 const currentX = computed(() => {
+  if (modalWidth.value >= windowWidth.value) {
+    return 0;
+  }
   // 如果是手动拖拽
   if (props.handle) {
     return x.value;
@@ -274,6 +284,9 @@ const currentX = computed(() => {
   }
 });
 const currentY = computed(() => {
+  if (modalHeight.value >= windowHeight.value) {
+    return 0;
+  }
   // 如果是手动拖拽
   if (props.handle) {
     return y.value;
@@ -281,28 +294,24 @@ const currentY = computed(() => {
     return getModalPosition.value.top;
   }
 });
-const sizeDiff = computed(() => {
-  const heightDiff = modalHeight.value - windowHeight.value > 0;
-  const widthDiff = modalWidth.value - windowWidth.value > 0;
-  return {
-    heightDiff,
-    widthDiff,
-  };
-});
+
 // 弹窗样式
 const modalStyle = computed(() => {
+  // if ()
+  let obj: any = {};
   if (isMaximize.value) {
-    return {
+    obj = {
       borderRadius: "0px",
       width: "100vw",
       height: "100vh",
     };
+  } else {
+    obj = {
+      borderRadius: "12px",
+      height: "auto",
+    };
   }
-
-  return {
-    borderRadius: "12px",
-    height: "auto",
-  };
+  return obj;
 });
 
 /** 获取弹窗位置 */
@@ -352,8 +361,9 @@ const initPosition = () => {
 
 // 更新弹窗大小
 const resizeModel = (data) => {
-  modalWidth.value = data.width;
+  // perfectScrollbar.value?.update();
   modalHeight.value = data.height;
+  modalWidth.value = data.width;
 };
 
 // 弹窗过渡样式
@@ -518,6 +528,23 @@ const init = () => {
       capture: true,
     });
   }
+  // nextTick(() => {
+  //   setTimeout(() => {
+  //     if (!modal.value) return;
+  //     perfectScrollbar.value = new PerfectScrollbar(modal.value, {
+  //       swipeEasing: true,
+  //     });
+  //     if (
+  //       modalWidth.value >= windowWidth.value &&
+  //       modalHeight.value >= windowHeight.value
+  //     ) {
+  //       maximize();
+  //     } else if (modalWidth.value >= windowWidth.value) {
+  //       // x.value = 0;
+  //       modalWidth.value = windowWidth.value;
+  //     }
+  //   }, 1);
+  // });
 };
 
 // 挂载后
@@ -531,6 +558,9 @@ onMounted(() => {
 });
 // 卸载前
 onBeforeUnmount(() => {
+  // perfectScrollbar.value?.destroy();
+  // perfectScrollbar.value = null;
+
   // 注销弹窗失去焦点监听
   proxy.$bus.off("modalBlur");
   // 注销单例弹窗监听

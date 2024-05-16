@@ -8,6 +8,7 @@ let pdb
 
 const db = {
   instance: pdb,
+  queue:[],
   async put (doc) {
     await db.connect()
     let rs=await pdb.put(doc)
@@ -20,9 +21,9 @@ const db = {
     await db.close()
     return rs
   },
-  async remove (doc) {
+  async remove (docId,docRev) {
     await db.connect()
-    let rs=await pdb.remove(doc)
+    let rs=await pdb.remove(docId,docRev)
     await db.close()
     return rs
   },
@@ -35,7 +36,7 @@ const db = {
   async find (options) {
     await db.connect()
     let rs=await pdb.find(options)
-    await db.connect()
+    await db.close()
     return rs
   },
   async createIndex (options) {
@@ -71,13 +72,38 @@ const db = {
     return rs
   },
   async connect () {
-    await fs.ensureDir(dbDir)
-    const name = window.globalArgs['name']
-    pdb = new PouchDB(path.join(dbDir, 'db.' + name))
-    db.instance = pdb
+    if(db.instance?._closed || !db.instance){
+      await fs.ensureDir(dbDir)
+      const name = window.globalArgs['name']
+      pdb = new PouchDB(path.join(dbDir, 'db.' + name))
+      db.instance = pdb
+      db.queue.push(Date.now())
+      console.log('执行一次连接')
+    }
   },
   async close () {
-    await db.instance.close()
+    db.queue.pop()
+    if(db.queue.length>0){
+      console.log('阻止一次关闭')
+      console.log(...db.queue)
+      return
+    }
+    console.log('执行一次关闭退出')
+    if(db.instance?._closed){
+    }else{
+      await db.instance.close()
+    }
+  },
+  async clear(){
+    await db.connect()
+    let rs=await db.allDocs()
+    console.log(rs,'茶会结果')
+    if(rs.rows){
+      rs.rows.forEach(doc=>{
+        db.remove( doc.id, doc.value.rev)
+      })
+    }
+    await db.close()
   }
 }
 

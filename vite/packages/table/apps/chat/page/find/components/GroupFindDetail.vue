@@ -51,6 +51,7 @@ import { completeTask } from "../../../../task/task";
 import { chatStore } from "../../../../../store/chat";
 import { TUIConversationService } from "@tencentcloud/chat-uikit-engine";
 import { appStore } from "../../../../../store";
+import { contactStore } from "../../../store/contactStore";
 const chatServer = window?.$chat?.chat;
 const router = useRouter();
 const chat = chatStore();
@@ -63,6 +64,8 @@ const props = defineProps({
 });
 const { groupList } = toRefs(props);
 
+const contact = contactStore();
+const { currentContact } = storeToRefs(contact);
 
 // 添加群聊
 const addGroup = async (id) => {
@@ -83,6 +86,11 @@ const addGroup = async (id) => {
 // 进入群聊
 const enterGroup = async (item) => {
   const conversationID = `GROUP${item.groupID}`;
+  /**补充群聊进入状态**/ 
+  currentContact.value = {
+    type: "group",
+    groupID:conversationID,
+  }
   handlerConversationList(conversationID);
 };
 const handlerConversationList = (conversationID) => {

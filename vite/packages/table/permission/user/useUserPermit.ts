@@ -7,11 +7,13 @@ import { useLogout, useClearUserInfo } from "./useLogout";
 import { setLV } from "./useUtils";
 import { usePermissionStore } from "../store";
 
+import { updateLogin } from "../../apps/chat/hooks/chat";
+
 // 检查当前网络状态
 import { useNetwork } from "@vueuse/core";
 import { message } from "ant-design-vue";
 
-const { isOnline } = useNetwork()
+const { isOnline } = useNetwork();
 
 /**
  * 用户许可
@@ -41,7 +43,6 @@ export const useUserPermit = async () => {
     if (res) {
       // 清楚游客模式
       permissionStore.setGuest(false);
-      console.log("2.2、设置成功 :>> ", 2222);
       return res;
     }
   }
@@ -92,8 +93,8 @@ export const useUpdateUserInfo = async () => {
   // 4 请求成功
   console.log("请求成功 :>> ");
 
-  if(permissionStore.currentEnv == 'offline'){
-    message.success('重新上线成功！')
+  if (permissionStore.currentEnv == "offline") {
+    message.success("重新上线成功！");
   }
 
   permissionStore.setOffline(false);
@@ -109,6 +110,8 @@ export const useUpdateUserInfo = async () => {
 
   // 社区登录
   (chatStore() as any)?.login();
+  /**更新社群和群聊**/
+  updateLogin();
 
   return userData;
 };

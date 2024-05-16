@@ -154,8 +154,9 @@
                 </template> -->
               </MessageBubble>
             </div>
+            <!-- 修改将v-if替换成v-show -->
             <MessageTool
-              v-if="item.ID === toggleID"
+              v-show="item.ID === toggleID"
               ref="messageToolListRef"
               :class="[
                 'message-tool',
@@ -212,7 +213,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, nextTick, computed, onMounted, onUnmounted } from '../../../adapter-vue';
+import { ref, nextTick, computed, onMounted, onUnmounted,inject } from '../../../adapter-vue';
 import TUIChatEngine, {
   IMessageModel,
   TUIStore,
@@ -301,6 +302,8 @@ const isShowReadUserStatusPanel = ref<boolean>(false);
 const readStatusMessage = ref<IMessageModel>();
 const beforeHistoryGetScrollHeight = ref<number>(0);
 const isTopMessageDom = ref<boolean>(false);
+
+const messageToolDom = inject('messageToolDom');
 
 // 图片预览相关
 const showImagePreview = ref(false);
@@ -545,18 +548,37 @@ const handleToggleMessageItem = (e: any, message: IMessageModel, isLongpress = f
 };
 
 const handleToggleMessageItemForPC = (e: MouseEvent, message: IMessageModel) => {
+  console.log('测试-右键-2');
+  
   if (isPC) {
     toggleID.value = message.ID;
+    console.log('toggleID.value',toggleID.value);
+    
     targetMessageDom.value = messageElementListRef.value?.find((dom: HTMLElement) => dom?.id === `tui-${message.ID}`);
+    console.log('targetMessageDom.value',targetMessageDom.value);
+    
     nextTick(() => {
-      const ignoreDomRefs = messageToolListRef.value && messageToolListRef.value[0]?.messageToolDom;
-      outsideClick.listen({
-        domRefs: targetMessageDom.value,
-        ignoreDomRefs: ignoreDomRefs,
-        handler: closeChatPop,
-        button: e.button,
-      });
-      filterTopMessageDom(e.target);
+      console.log('获取messageToolDom',messageToolDom);
+      
+      // const ignoreDomRef = messageToolListRef.value && messageToolListRef.value[0]?.messageToolDom;
+      // console.log('ignoreDomRefs',ignoreDomRef);
+      
+      // outsideClick.listen({
+      //   domRefs: targetMessageDom.value,
+      //   ignoreDomRefs: ignoreDomRef,
+      //   handler: closeChatPop,
+      //   button: e.button,
+      // });
+
+      // console.log('outsideClick',outsideClick.listen({
+      //   domRefs: targetMessageDom.value,
+      //   ignoreDomRefs: ignoreDomRef,
+      //   handler: closeChatPop,
+      //   button: e.button,
+      // }));
+
+      // console.log('e',e);
+      // filterTopMessageDom(e.target);
     });
   }
 };
@@ -564,7 +586,7 @@ const handleToggleMessageItemForPC = (e: MouseEvent, message: IMessageModel) => 
 // 判断 chat 可视区域顶部的 message 元素
 function filterTopMessageDom(toggleMessageElement: any) {
   // 获取元素
-  const chatElement = document.getElementById('tui-chat-main');
+  const chatElement:any = document.getElementById('tui-chat-main');
   const safeTop = 160; // 防止被安全提示遮挡
   const messageElementRect = toggleMessageElement.getBoundingClientRect(); // 当前 message 距离可视窗口的信息
   const ChatElementRect = chatElement.getBoundingClientRect();

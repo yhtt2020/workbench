@@ -1,7 +1,7 @@
 <template>
-    <div style="width: 240px;" class="xt-main-bg pt-3">
+    <div style="width: 240px;" class="pt-3 xt-main-bg">
         <!-- <div class="px-3">
-            <div class="h-12 flex justify-between pointer items-center font-16 px-3 rounded-lg" @click="change(-1)" :class="folderIndex==-1?'select':''">
+            <div class="flex items-center justify-between h-12 px-3 rounded-lg pointer font-16" @click="change(-1)" :class="folderIndex==-1?'select':''">
                 <div class="flex">
                     <xt-new-icon icon="fluent:star-16-regular" size="20" />
                     <div class="ml-4 xt-text">我的收藏</div>
@@ -11,21 +11,21 @@
             <div class="divider"></div>
         </div> -->
         <!-- 列表 -->
-        <div class="xt-scrollbar scroll-color font-16" style="height: 650px;">
+        <div class="xt-scrollbar scroll-color font-16" :style="{height:maxHeight}">
             <div v-for="(item, index) in folder" >
-                <div style="width: 215px;" class="ml-3 h-12 flex mb-2 items-center px-3 w-full justify-between pointer rounded-lg relative" @click="change(index)"  :class="index==folderIndex?'select':''" >
+                <div style="width: 215px;" class="relative flex items-center justify-between w-full h-12 px-3 mb-2 ml-3 rounded-lg pointer" @click="change(index)"  :class="index==folderIndex?'select':''" >
     
                     <div class="flex">
                         <xt-new-icon v-if="index==0" icon="fluent:star-16-regular" size="20" />
                         <div v-else class="relative w-6 h-6" >
                             <xt-new-icon class="absolute" icon="fluent-emoji:file-folder" size="20" />
-                            <img v-if="item.browser == 'chrome'" src="/img/icon/chrome.png" class="absolute right-0 w-3 bottom-0" alt="">
-                            <img v-else src="/img/icon/edge.png" class="absolute right-0 w-3 bottom-0" alt="">
+                            <img v-if="item.browser == 'chrome'" src="/img/icon/chrome.png" class="absolute bottom-0 right-0 w-3" alt="">
+                            <img v-else src="/img/icon/edge.png" class="absolute bottom-0 right-0 w-3" alt="">
                         </div>
                         <div class="ml-3 text-overflow" style="max-width: 130px;">{{ item?.name }}</div>
                     </div>
                     <div class="xt-text-2">{{ getNum(item) }}</div>
-                    <i v-if="item?.unRead" class="h-3 w-3 absolute rounded-full right-1 top-1" style="border: 2px solid var(--secondary-text);background: red;"></i>
+                    <i v-if="item?.unRead" class="absolute w-3 h-3 rounded-full right-1 top-1" style="border: 2px solid var(--secondary-text);background: red;"></i>
                 </div>
                 <div class="px-3" v-if="index==0">
                     <div class="divider"></div>
@@ -33,12 +33,12 @@
             </div>
         </div>
         <!-- 底部 -->
-        <div class="absolute bottom-3 flex justify-between px-3" style="width:240px">
+        <div class="absolute flex justify-between px-3 bottom-3" style="width:240px">
             <div class="flex">
-                <div class="flex justify-center items-center  w-8 h-8 pointer border-1" :class="browserList.chrome?'border-active':border-active" @click="browserList.chrome = !browserList.chrome">
+                <div class="flex items-center justify-center w-8 h-8 pointer border-1" :class="browserList.chrome?'border-active':border-active" @click="browserList.chrome = !browserList.chrome">
                     <a-avatar :size="26" shape="square" src="/img/icon/chrome.png" />
                 </div>
-                <div class="flex justify-center items-center  w-8 h-8 pointer ml-3 border-1" :class="browserList.edge?'border-active':border-active" @click="browserList.edge = !browserList.edge">
+                <div class="flex items-center justify-center w-8 h-8 ml-3 pointer border-1" :class="browserList.edge?'border-active':border-active" @click="browserList.edge = !browserList.edge">
                     <a-avatar :size="26" shape="square" src="/img/icon/edge.png" />
                 </div>
             </div>
@@ -63,7 +63,7 @@
   
   export default {
     name: 'LeftMenu',
-    props: ['changeFolder'],
+    props: ['changeFolder','isNav'],
     data() {
       return {
         rotation: 0,
@@ -108,6 +108,13 @@
             }else{
                 return '暂无数据更新'
             }
+        },
+        // 最大高度，兼容添加图标
+        maxHeight(){
+            if(this.isNav){
+                return '585px'
+            } 
+            return '650px'
         }
     },
     methods: {

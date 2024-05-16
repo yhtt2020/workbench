@@ -362,7 +362,7 @@ import JoinVerfiate from "../manager/JoinVerfiate.vue";
 import InviteVerfiacte from "../manager/InviteVerfiacte.vue";
 import GroupTransfer from "../manager/GroupTransfer.vue";
 
-const chat = window.$chat.chat;
+const chat = window.$chat?.chat;
 
 const props = defineProps({
   groupID: {

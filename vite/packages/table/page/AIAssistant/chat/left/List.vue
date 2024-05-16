@@ -1,18 +1,16 @@
 <template>
-  <XtTitle
-    type="text"
-    class="xt-text"
-    style="color: var(--primary-text) !important"
-    >对话
-    <template #right>
-      <xt-base-icon
-        @click="add()"
-        icon="tianjia2"
-        class="mr-3 xt-text"
-        style="font-size: 16px"
-      ></xt-base-icon>
-    </template>
-  </XtTitle>
+  <div class="flex items-center justify-between">
+    <div class="flex items-center">
+      <xt-mix-icon icon="fluent:chat-16-regular" class="mr-2" />
+      聊天
+    </div>
+    <xt-base-icon
+      @click="add()"
+      icon="tianjia2"
+      class="mr-3 xt-text"
+      style="font-size: 16px"
+    ></xt-base-icon>
+  </div>
   <template v-if="topList.length">
     <XtTitle type="text">置顶</XtTitle>
     <Topic v-for="data in topList" :data="data"></Topic>
@@ -25,7 +23,6 @@
     <XtTitle type="text">过去</XtTitle>
     <Topic v-for="data in previousList" :data="data"></Topic>
   </template>
-
 </template>
 
 <script>

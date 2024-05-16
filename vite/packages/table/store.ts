@@ -100,6 +100,8 @@ export const appStore = defineStore('appStore', {
       customCourier: false, // 自定义快递
       tagVisible: true, // 快递组件排序tag提示
 
+      /**用于社群导航是否第一次开启提示**/
+      comNavVisible:true,
     },
 
     routeUpdateTime: Date.now(),//用于更新滚动条
@@ -129,7 +131,7 @@ export const appStore = defineStore('appStore', {
       type: 'work'
     },
     // 桌面初始化
-    deskInit: false,
+    deskInit: true,
     // 桌面缩放
     visibleScale: false,
     // web端登录框

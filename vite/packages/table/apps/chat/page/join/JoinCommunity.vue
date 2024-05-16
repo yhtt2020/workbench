@@ -87,8 +87,8 @@ const openJoinCom = () => {
 
 // 关闭加入社区弹窗
 const closeJoinCom = () => {
-  joinComVisible.value = false;
   joinData.value.searchKeyword = "";
+  joinComVisible.value = false;
 };
 
 // 通过计算属性获取推荐社区列表
