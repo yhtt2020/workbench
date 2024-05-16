@@ -209,7 +209,6 @@ const perfectScrollbar: any = ref(null);
 watch(
   () => data.value,
   (val) => {
-    console.log("val :>> ", val);
     // 数据没加载时不执行
     // if (!val) return;
     // nextTick(() => {

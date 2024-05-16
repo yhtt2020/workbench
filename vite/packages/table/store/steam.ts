@@ -27,8 +27,6 @@ export const steamStore = defineStore("steam", {
       const discountList = this.data[cc]
       if (discountList) {
         if (!compareTime(discountList.expiresDate)) {   // 将对象里面的时间进行判断是否大于12小时
-          console.log('命中缓存了')
-          console.log(this.data)
           //无需做任何操作
           return
         }
@@ -79,7 +77,6 @@ export const steamStore = defineStore("steam", {
     },
     // 通过时间更新数据
     updateGameData(cc, value) {
-      console.log('更新数据=', value)
       this.data[cc] = value
     },
 

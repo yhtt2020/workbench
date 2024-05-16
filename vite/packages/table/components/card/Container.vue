@@ -525,7 +525,6 @@ watch(
 watch(
   () => currentSize.value,
   (val) => {
-    console.log("val :>> ", val);
     emits("update:customSize", val);
   }
 );

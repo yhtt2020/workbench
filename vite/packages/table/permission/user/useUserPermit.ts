@@ -43,7 +43,6 @@ export const useUserPermit = async () => {
     if (res) {
       // 清楚游客模式
       permissionStore.setGuest(false);
-      console.log("2.2、设置成功 :>> ", 2222);
       return res;
     }
   }

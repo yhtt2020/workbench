@@ -93,3 +93,19 @@ C:\Windows\System32\drivers\etc\hosts 注意这个文件不能带.txt扩展名�
 ## 打包桌面客户端
 
 在根目录运行yarn run packageWin
+
+## web版部署指南
+
+需要将根目录cdn目录下的文件放置到cdn服务器上。
+并对配置文件修改后，打包
+
+/vite/packages/table/consts.ts
+```javascript
+const Server = {
+  baseUrl: 'https://wad.apps.vip/api', //修改为api所在位置
+  cdn:'https://a.apps.vip/cdn' //修改为cdn服务器的路径
+ //baseUrl:'http://test1.com:9001'
+}
+```
+打包命令
+在/vite下终端执行yarn run build
