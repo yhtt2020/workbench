@@ -140,13 +140,21 @@ const selectCommunity = (item, index) => {
       proxy.$bus.emit("openCommunityDesk");
     }
     // 成员
-    else {
+    else if (item.role === "member") {
       window.$ui.confirm("暂无可用的社群桌面", "请联系你的社群管理员创建", {
         ok: () => {},
         okText: "好的",
         noText: null,
         type: "link",
       });
+    }
+    // 后期需要再做调整
+    else {
+      if (settings.value.isCommunity) {
+        settings.value.isCommunity = false;
+      }
+      router.push({ name: "home", params: { no: item.communityInfo.no } });
+      comNav.setCurrentCommunity(item, index);
     }
   }
   // 当前社群已经有桌面数据

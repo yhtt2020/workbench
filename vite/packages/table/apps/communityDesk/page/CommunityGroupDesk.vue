@@ -581,8 +581,8 @@
   <CreateDeskModal
     ref="createDeskRef"
     :currentCommunityNo="currentCommunity"
+    @createDesk="doAddDesk('空白桌面')"
   />
-  <!-- @createDesk="doAddDesk('空白桌面')" -->
 </template>
 
 <script>
@@ -944,8 +944,6 @@ export default {
       }
       this.deskList.unshift(desk);
       this.$emit("changeDesk", { id: desk.id });
-      // 同步云端
-      this.syncSaveCommunity();
       this.deskTitle = "";
       this.key = Date.now();
       this.addDeskVisible = false;
@@ -1053,8 +1051,7 @@ export default {
         okText: "删除桌面",
         okButtonWidth: "100",
         ok: () => {
-          console.log("删除", this.displayDesks.length);
-          if (this.displayDesks.length === 1) {
+          if (this.communityDeskList.length === 1) {
             const index = this.deskList.findIndex((desk) => {
               return String(desk?.id) === String(this.currentDesk?.id);
             });
@@ -1062,8 +1059,6 @@ export default {
             this.doAddDesk("空白桌面");
             this.$emit("changeDesk", { id: filterList[0].id });
             this.clearFreeLayout(this.currentDeskId);
-            // 同步云端
-            // this.syncSaveCommunity();
             // 删除桌面数据
             this.key = Date.now();
           } else {
@@ -1073,8 +1068,6 @@ export default {
             this.deskList.splice(index, 1);
             this.$emit("changeDesk", { id: filterList[0].id });
             this.clearFreeLayout(this.currentDeskId);
-            // 同步云端
-            // this.syncSaveCommunity();
             // 删除桌面数据
             this.key = Date.now();
           }
@@ -1253,6 +1246,7 @@ export default {
         this.currentDeskId?.slice(0, -4),
         this.currentDeskId?.slice(-4),
       ];
+      console.log('默认选中',idArr);
       // 检测个人桌面切换到社群桌面
       if (idArr[0] !== "") {
         // 检测指定的社群

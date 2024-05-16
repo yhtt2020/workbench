@@ -50,9 +50,12 @@
 </template>
 
 <script setup>
-import { ref,nextTick,toRefs } from "vue";
+import { ref,nextTick,toRefs, getCurrentInstance } from "vue";
 
 import ExistDesktop from "./ExistDesktop .vue";
+
+// 获取全局事件总线程
+const { proxy } = getCurrentInstance();
 
 // emit事件提交
 const emit = defineEmits(['createDesk']);
@@ -97,7 +100,8 @@ const selectDeskCreateType = (item) => {
 // 确认选择
 const selectSubmit = () => {
   if(deskType.value === 'create'){
-    // emit("createDesk");
+    proxy.$bus.emit('updateSetting');
+    emit("createDesk");
   }
   else if(deskType.value === 'add'){
     nextTick(()=>{

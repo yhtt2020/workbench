@@ -168,12 +168,12 @@ const openDesk = () => {
     if (currentRole === "owner") {
       settings.value.isCommunity = false;
       router.push({ name: "home", params: { no: "" } });
-      setTimeout(()=>{
+      setTimeout(() => {
         proxy.$bus.emit("openCommunityDesk");
-      },150);
-    } 
+      }, 150);
+    }
     // 成员
-    else {
+    else if (currentRole === "member") {
       settings.value.isCommunity = true;
       router.go(-1);
       (window as any).$ui.confirm(
@@ -187,7 +187,12 @@ const openDesk = () => {
         }
       );
     }
-  } 
+    // 其他数据测试,后期需要调整
+    else {
+      settings.value.isCommunity = false;
+      router.push({ name: "home", params: { no: "" } });
+    }
+  }
   // 当前社群桌面数据已经创建
   else {
     settings.value.isCommunity = false;
