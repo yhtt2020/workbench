@@ -23,6 +23,9 @@ const maximize = () => {
   isMaximize.value = !isMaximize.value;
   modal.value?.maximize();
 };
+const minimize = () => {
+  modal.value?.minimize();
+};
 const close = () => {
   appModalStore.getApp("ai").visible = false;
 };
@@ -32,12 +35,13 @@ const { runList }: any = storeToRefs(appModalStore);
 
 const data: any = ref(null);
 data.value = appModalStore.getApp(props.name);
-console.log("data.value :>> ", data.value);
+
 const modalStyle = computed(() => {
   if (!data.value) return;
   if (isMaximize.value) {
     return {
       "flex-grow": 1,
+      height: "100%",
     };
   }
   return {
@@ -65,7 +69,7 @@ const modalStyle = computed(() => {
   >
     <div class="flex flex-col h-full">
       <div
-        class="h-12 flex justify-between items-center px-4 xt-main-bg  xt-modal-header"
+        class="h-12 flex justify-between items-center px-4 xt-main-bg xt-modal-header"
         style="border-radius: 12px 12px 0 0"
       >
         <div class="flex items-center">
@@ -73,7 +77,12 @@ const modalStyle = computed(() => {
           {{ data?.cname }}
         </div>
         <div class="flex items-center">
-          <!-- <xt-mix-icon icon="fluent:subtract-16-regular" @click="" />
+          <xt-mix-icon
+            icon="fluent:subtract-16-regular"
+            @click="minimize"
+            boxSize="32"
+            style="background: none;"
+          />
           <xt-mix-icon
             :icon="
               isMaximize
@@ -81,12 +90,26 @@ const modalStyle = computed(() => {
                 : 'fluent:full-screen-maximize-16-regular'
             "
             @click="maximize"
-          /> -->
-          <xt-mix-icon icon="fluent:dismiss-16-regular" @click="close" />
+            boxSize="32"
+            class="mx-3"
+            style="background: none;"
+
+          />
+          <xt-mix-icon
+            icon="fluent:dismiss-16-regular"
+            @click="close"
+            boxSize="32"
+            style="background: none;"
+
+          />
         </div>
       </div>
       <!-- <div class="xt-theme-bg flex-grow"></div> -->
-      <div class="flex flex-grow" style="" :style="[modalStyle]">
+      <div
+        class="flex flex-grow"
+        style="max-height: calc(100% - 50px)"
+        :style="[modalStyle]"
+      >
         <router-view :name="data?.name"></router-view>
       </div>
     </div>
