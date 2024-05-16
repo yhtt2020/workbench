@@ -670,7 +670,6 @@ export default {
   watch: {
     desks:{
       handler(newVal,oldVal){
-        console.log('修改桌面',newVal,oldVal)
       },
       deep:true
     },

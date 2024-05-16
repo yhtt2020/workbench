@@ -21,13 +21,27 @@
     </div>
     <div>
       <div class="title mb-2">桌面效果图
-        <div class="float-right">
-          <a-button style="border:none" class="mb-2 xt-active-bg rounded-full " @click="getPreview">
-            {{ capture ? '重新获得效果图' : '自动获取效果图' }}
-          </a-button>
 
-        </div></div>
-      <a-image :preview="false" class="mb-2 rounded-lg" v-if="capture" :src="'file://'+capture"></a-image>
+      </div>
+      <div class="line">
+        <a-image :preview="false" class="mb-2 rounded-lg" v-if="capture" :src="capture + '?imageMogr2/crop/160x90/gravity/center'"></a-image>
+        <div v-if="isWeb">
+          <input type="file" style="display:none;" ref="uploadRef"  @change="getFileInfo($event)" />
+          <div v-if="!capture" class="flex items-center justify-center pointer" @click="updateGroupAvatar()" style="width: 160px;height: 90px;background: var(--secondary-bg);border: 1px dashed rgba(255,255,255,0.1);border-radius: 6px;">
+            <Icon icon="fluent:add-16-filled" width="20" height="20"/>
+          </div>
+          <div class="mt-4" style="font-size: 14px;color: var(--secondary-text)">推荐比例：16:9，最大不超过5MB</div>
+          <a-progress v-if="percent !== 0 && percent != 100" :percent="percent" />
+        </div>
+        <div class="float-right" v-else>
+          <xt-button style="border:none" class="mb-2 xt-active-bg rounded-full " @click="getPreview">
+            {{ capture ? '重新获得效果图' : '自动获取效果图' }}
+          </xt-button>
+
+        </div>
+      </div>
+
+
 
       <span class="title">桌面数据</span>
       <div style="font-size: 14px;" class="xt-text-2 mt-2 mb-4">
@@ -90,15 +104,20 @@ import { getCurrentInstance } from 'vue'
 import { fileUpload, pathUpload } from '../card/hooks/imageProcessing'
 
 import {completeTask } from "../../apps/task/task"
+import { Icon } from '@iconify/vue'
+import { usePlat } from '../../permission/usePlat'
 
 export default {
   name: 'ShareDesk',
   components: {
+    Icon,
     ShareModal,
     RadioTab
   },
   data () {
     return {
+      percent:0,
+      isWeb:usePlat('web'),
       oldSet :this.settings, // 原先设置
       posting:false,//正在上传中
       capture: '',
@@ -174,6 +193,28 @@ export default {
     update () {
       this.deskId = this.$parent.currentDeskId
     },
+   updateGroupAvatar (){
+      this.$refs.uploadRef.click()
+
+    },
+    async getFileInfo (evt)
+    {
+      let timer = setInterval(()=>{
+        this.percent += 1
+        if (this.percent === 99) {
+          clearInterval(timer)
+          timer = null
+        }
+      },50)
+      const files = evt.target.files[0]
+      await fileUpload(files).then(res=>{
+        // 上传结束后自动完成 并清空
+        this.percent = 0
+        clearInterval(timer)
+        timer = null
+        this.capture = res
+      })
+    },
     getPreview () {
       this.capturing=true
       return new Promise(resolve => {
@@ -184,6 +225,10 @@ export default {
           setTimeout(() => {
             parent.setFullScreen(true)
             setTimeout(async () => {
+              if(this.isWeb){
+                resolve()
+                return
+              }
               let capture = await tsbApi.window.getCapture()
               this.shareFullLayoutSize=parent.$refs.currentDeskRef.getLayoutSize()
               this.shareFullCardZoom=parent.$refs.currentDeskRef.getAdjustZoom()
@@ -224,14 +269,22 @@ export default {
       if(!this.sharingDesk.cards.length){
         return message.info('不可分享空白桌面。')
       }
-      //上传图片
-      await this.getPreview()
-      let cover= await pathUpload(this.capture)
+
+      let cover=''
+      if(this.isWeb){
+        cover=this.capture
+      }else{
+        //上传图片
+        await this.getPreview()
+         cover= await pathUpload(this.capture)
+      }
       let cloneDesk = JSON.parse(JSON.stringify(this.sharingDesk))
       if(this.defaultType.name==='notData'){
         //如果选择不保留数据，则进行清理
         cloneDesk.cards.forEach((item, index) => {
-          item.customData={}
+          if(item.name!=='folder'){
+            item.customData={}
+          }
         })
       }
       cloneDesk.cards.forEach((item, index) => {

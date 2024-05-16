@@ -98,7 +98,7 @@ import ShortcutKeyRoute from "../apps/shortcutKey/route";
 import BarrageRoute from "../apps/barrage/route";
 import Power from "../page/Power.vue";
 import Remote from "../apps/console/pages/Remote.vue";
-
+import SharedDesk from  '../page/SharedDesk.vue'
 export default [
   {
     path: "/main",
@@ -112,6 +112,11 @@ export default [
     children: [
       ...DeckRoute,
       ShortcutKeyRoute,
+      {
+        path:'/s/:id',
+        name:'SharedDesk',
+        component: SharedDesk,
+      },
       {
         path: "/ai/:value?",
         name: "ai",

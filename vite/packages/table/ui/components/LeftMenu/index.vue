@@ -196,7 +196,6 @@ const currentIndex = ref(indexs.value);
 watch(
   () => index.value,
   (val) => {
-    console.log("val :>> ", val);
     selectClick(val);
   },
   {
