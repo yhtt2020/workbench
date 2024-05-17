@@ -25,7 +25,7 @@
       id="myFrame"
       @load="newLogin"
       boxClass=""
-      src="https://s.apps.vip/login?response_type=code&client_id=10001&state=1"
+      :src="'https://s.apps.vip/login?response_type=code&client_id='+cid+'&state=1'"
       width="700"
       height="745"
     ></iframe>
@@ -50,12 +50,14 @@ import { storeToRefs } from "pinia";
 const loginVisible = ref(true);
 import { useGlobalStore } from "../../apps/global/store";
 import { usePlat } from "../usePlat";
-
+import {Server} from '../../consts'
 const globalStore = useGlobalStore();
 const props = defineProps({
   close: {},
   cb: {},
 });
+
+const cid=ref(Server.clientId)
 
 onMounted(() => {
   window.addEventListener(
@@ -68,7 +70,7 @@ onMounted(() => {
         cache.set("ttUserToken", currentToken);
         // token.value = currentToken;
    await useUserPermit();
-        if (!usePlat("web")) {
+        if (usePlat('client')) {
           //如果是客户端，则执行同步主线程的操作
           syncMainUserInfo(currentToken);
         }

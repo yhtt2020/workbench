@@ -14,7 +14,7 @@
     :delete="deleteCard"
   >
     <!-- {{ customData.customSize }} -->
-      <teleport to="body">                                                       
+      <teleport to="body">
         <xt-msg title="确定删除小组件" text="默认仅删除小组件，备忘录数据不会清除。"  :modelValue="removeValue" @no="no" @ok="ok">
           <template #checkbox>
             <div class="mr-4 font-14" style="color: var(--secondary-text) !important;">
@@ -144,7 +144,7 @@ import { DTPWeb, LPA_JobNames } from 'dtpweb'
 import RadioTab from "../../../components/RadioTab.vue"
 
 import { validateDrive, startPrint, doPreview, doJob  } from '../../card/hooks/print'
-
+import {useAppModal} from '../../../hooks'
 export default {
   name: '便签',
   components: {
@@ -271,12 +271,18 @@ export default {
           newIcon: 'fluent:open-20-filled',
           title: '跳转便签',
           fn: () => {
-            this.$router.push({
-              name: 'note',
-              params: {
+            const {openApp} = useAppModal('note')
+            openApp(
+              {
                 customIndex: this.customIndex
               }
-            })
+            )
+            // this.$router.push({
+            //   name: 'note',
+            //   params: {
+            //     customIndex: this.customIndex
+            //   }
+            // })
           }
         }
       ],
@@ -348,7 +354,7 @@ export default {
     deleteCard() {
       this.$emit('deleteCard')
     },
-    removeNote(){          
+    removeNote(){
       this.removeValue = true
       this.isRemove = false
     },

@@ -87,7 +87,7 @@ import ClosePaperButton from './components/close/ClosePaperButton.vue';
 import { usePlat } from '../../ui/hooks/usePlat';
 
 let fs,path
- if (!usePlat('web')) {
+ if (usePlat('client')) {
    fs = window.$models.fs
     path = require('path')
  }

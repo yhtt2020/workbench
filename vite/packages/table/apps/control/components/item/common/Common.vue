@@ -46,7 +46,7 @@ const getHeight = () => {
 // 过滤控制中心列表在web端显示
 const controlList = computed(() => {
   console.log('测试',currentControlList.value);
-  if (!window.$usePlat()) return currentControlList.value;
+  if (window.$usePlat('client')) return currentControlList.value;
   const arr = [
     "window-control",
     "assist-mode",

@@ -8,7 +8,7 @@ const juheGet = sUrl('/app/juhe/get')
 
 import { usePlat } from "../ui/hooks/usePlat";
 let https,agent
-if(!usePlat()) {
+if (usePlat('client')) {
   https=require('https')
 
   // 跳过检验证书

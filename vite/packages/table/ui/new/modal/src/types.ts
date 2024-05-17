@@ -44,4 +44,7 @@ export type ModalProps = {
   name?: string | null;
 
   scrollbarStyle?: any;
+  isFullScreen?: boolean;
+  isMaximize?: boolean;
 };
+

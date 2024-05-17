@@ -3,44 +3,58 @@ import { storeToRefs } from "pinia";
 import { useAppModalStore } from "../store";
 import OpenMode from "./OpenMode.vue";
 import { runList as defaultRunList } from "../config/data";
+import _ from "lodash";
 
 export const useAppModal = (name: string) => {
   const appModalStore: any = useAppModalStore();
   const { runList } = storeToRefs(appModalStore);
+  const app = appModalStore.getApp(name);
 
   const AppOpenMode = h(OpenMode, {
     name,
   });
 
   const initApp = () => {
-    // 创建一个Set来快速检查name属性是否已存在
-    const namesSet = new Set(runList.value.map((item) => item.name));
-
-    // 遍历新数组
     defaultRunList.forEach((item: any) => {
-      if (!namesSet.has(item.name)) {
+      const name = item.name;
+      const res = runList.value.find((item) => item.name === name);
+
+      if (res) {
+        item.visible =
+          typeof res.visible == "boolean" ? res.visible : item.visible;
+        item.isMaximize =
+          typeof res.isMaximize == "boolean" ? res.isMaximize : item.isMaximize;
+        item.isFullScreen =
+          typeof res.isFullScreen == "boolean"
+            ? res.isFullScreen
+            : item.isFullScreen;
+
+        Object.assign(res, item);
+      } else {
         runList.value.push(item);
       }
     });
+
+    console.log("  runList.value :>> ", runList.value);
   };
 
-  const openApp = () => {
-    const openMode = appModalStore.getApp(name).openMode;
-    if (openMode === "modal") {
+  const openApp = (params?: any) => {
+    if (app?.openMode === "modal") {
+      app.props = params;
       appModalStore.switchVisible(name);
     } else {
       (window as any).$ui.router.push({
         name,
+        params,
       });
     }
   };
 
   const switchVisible = (visible?: boolean) => {
-    let res = appModalStore.getApp(name);
     if (typeof visible === "boolean") {
-      res.visible = visible;
+      app.visible = visible;
     } else {
-      res.visible = !res.visible;
+      app.visible = !app.visible;
     }
   };
   return {

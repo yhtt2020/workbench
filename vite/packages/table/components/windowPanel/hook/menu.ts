@@ -114,7 +114,7 @@ export default {
           this.floatCardVisible = false;
           this.folderVisible = false;
       }
-    
+
       // 然后处理与 value 相关的
       switch (value) {
         // 社区中心
@@ -132,7 +132,7 @@ export default {
         //   break;
         // 全屏
         case "fullscreen":
-          if (window.$usePlat()) {
+          if (!window.$usePlat('client')) {
             toggle();
             return;
           }
@@ -151,7 +151,7 @@ export default {
       if(closeTag){
         this.comVisible = false
       }
-    
+
       // 更新定位
       this.resetElementPosition();
       // 统一的打开函数
@@ -163,7 +163,7 @@ export default {
         });
       }
     },
-    
+
     /**
      * 当前选中的元素
      * @param item 元素

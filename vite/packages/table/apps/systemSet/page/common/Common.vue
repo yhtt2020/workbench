@@ -40,7 +40,7 @@
     </div>
   </a-modal>
 
-  <Zoom v-if="!$usePlat('web')" />
+  <Zoom v-if="$usePlat('client')" />
   <!-- 2 -->
   <xt-option-box>
     <xt-option-info

@@ -9,7 +9,7 @@ import {usePlat} from '../../../ui/hooks/usePlat'
 import '../static/style.scss'
 
 let win32
-if (!usePlat()) {
+if (usePlat('client')) {
    win32 = window.$models.win32
 }
 

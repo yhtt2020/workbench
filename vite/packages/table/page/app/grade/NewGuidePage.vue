@@ -2,7 +2,6 @@
   <div class="fixed overflow-hidden modal-center xt-modal tran" :class="popState ? 'pop' : step == 5 ? 'theme' : 'Popup'"
     style="">
     <!--  -->
-    <!-- {{ step }} -->
     <div v-if="!popState" class="h-full">
       <!-- 返回按钮 -->
       <div v-if="step !== 0 && guideList.length > 1" @click="prevStep" class="absolute ml-4 top-icon no-drag">
@@ -82,7 +81,7 @@
     <!-- 预览桌面 效果 -->
     <div v-else>
       <div style="height:60px;width:200px" class="flex items-center justify-between px-4 xt-text font-16 pointer"
-        @click="popState = flase">
+        @click="popState = false">
         定制桌面
         <div class="flex items-center justify-center w-8 h-8 rounded-lg xt-bg-2">
           <MyIcon icon="fluent:full-screen-maximize-16-filled" width="20" height="20" />
@@ -94,8 +93,8 @@
     <teleport to="body">
       <div style="z-index: 9999">
         <!-- @afterAdded="afterAdded" -->
-        <Preview :deskTypeObj="deskTypeObj" :deskList="deskList" :scheme="scheme" :showModal="showModal"
-          @closePreview="closePreview" @analysis="analysis" @addStep="addStep"></Preview>
+        <Preview :deskTypeObj="deskTypeObj" :scheme="scheme" :showModal="showModal"
+          @closePreview="closePreview" @addStep="nextStep"></Preview>
       </div>
     </teleport>
   </div>
@@ -395,13 +394,12 @@ export default {
       } else {
         this.$emit('closeShowGuide')
       }
+      // 整理图标同时进行分析
+      if (this.step == 1) {
+        this.analysis()
+      }
 
     },
-
-    addStep() {
-      this.stepIndex++
-    },
-
     // 分析过程
     async analysis() {
       message.loading({

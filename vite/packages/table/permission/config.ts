@@ -26,6 +26,7 @@ export const ROUTER_LIMIT = {
     "barrage",
     "shortcut",
     "note",
+    "favorites"
   ],
 };
 // 组件限制，这里的是组件名不是列表中的name

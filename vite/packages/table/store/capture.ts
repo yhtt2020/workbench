@@ -7,7 +7,7 @@ import {timeStamp} from '../util'
 import { usePlat } from "../ui/hooks/usePlat";
 
 let fs
-if (!usePlat()) {
+if (usePlat('client')) {
   fs = require('fs')
 
 }

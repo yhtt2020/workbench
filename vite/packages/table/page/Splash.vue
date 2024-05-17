@@ -77,13 +77,13 @@ export default {
       launching: true,
       storeReadyTimer: null,
       // launched: false,
-      // version: window.$usePlat() ? "" : tsbApi.runtime.appVersion,
+      // version: !window.$usePlat('client') ? "" : tsbApi.runtime.appVersion,
       // 超时定时器
       // timeout: null,
     }
   },
   async mounted () {
-    if (this.$usePlat('web')) {
+    if (!this.$usePlat('client')) {
       //如果是web端，则直接跳过splash界面，状态类的在后面进行判断
       this.$router.replace({ name: 'home' })
       //直接跳过wizarde引导

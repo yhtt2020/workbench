@@ -41,7 +41,7 @@ import Edit from "./edit.vue";
 import mixins from "./hooks/mixins";
 import {usePlat} from '../../../../ui/hooks/usePlat'
 let fs
-if (!usePlat('web')) {
+if (usePlat('client')) {
   fs = window.$models.fs
 }
 

@@ -61,65 +61,69 @@
       </template>
 
       <!-- 默认布局 -->
-      <div class="h-full" style="max-width: 100%;max-height: 100%"  v-show="!isFreeLayout" :style="{width:getWidth(),height:getHeight()}">
+      <div
+        class="h-full"
+        style="max-width: 100%; max-height: 100%"
+        v-show="!isFreeLayout"
+        :style="{ width: getWidth(), height: getHeight() }"
+      >
         <vue-custom-scrollbar
-
           :class="previewFlag ? 'z-50' : ''"
           class="no-drag"
           key="scrollbar"
           id="scrollerBar"
           :settings="{
-          ...scrollbarSettings,
-          suppressScrollY: settings.vDirection ? false : true,
-          suppressScrollX: settings.vDirection ? true : false,
-        }"
+            ...scrollbarSettings,
+            suppressScrollY: settings.vDirection ? false : true,
+            suppressScrollX: settings.vDirection ? true : false,
+          }"
           style="
-          position: relative;
-          width: 100% ;
-          height: 100%;
-          margin-left: 0;
-          padding-left: 4px;
-          padding-right: 4px;
-          display: flex;
-          flex-direction: row;
-        "
+            position: relative;
+            width: 100%;
+            height: 100%;
+            margin-left: 0;
+            padding-left: 4px;
+            padding-right: 4px;
+            display: flex;
+            flex-direction: row;
+          "
         >
           <div
             id="cardContent"
             ref="deskContainer"
             style="
-            /*display: flex;*/
-            /*align-items: center;*/
-            /*align-content: center;*/
-          "
+              /*display: flex;*/
+              /*align-items: center;*/
+              /*align-content: center;*/
+            "
             :style="{
-            // 'flex-direction': settings.vDirection?'row':'column',
-            'padding-top': this.usingSettings.marginTop + 'px',
-            width: settings.vDirection ? '100%' : 'auto',
-            height: settings.vDirection ? 'auto' : '100%',
-          }"
+              // 'flex-direction': settings.vDirection?'row':'column',
+              'padding-top': this.usingSettings.marginTop + 'px',
+              width: settings.vDirection ? '100%' : 'auto',
+              height: settings.vDirection ? 'auto' : '100%',
+            }"
             :class="notTrigger ? 'trigger' : ''"
           >
             <vuuri
               v-show="showGrid"
               :key="key"
               v-if="
-              (currentDesk.cards.length > 0 && !hide && !isFreeLayout) ||
-              !freeLayout
-            "
+                (currentDesk.cards.length > 0 && !hide && !isFreeLayout) ||
+                !freeLayout
+              "
               item-key="id"
               :get-item-margin="
-              () => {
-                return usingSettings.cardMargin * this.adjustZoom + 'px';
-              }
-            "
+                () => {
+                  return usingSettings.cardMargin * this.adjustZoom + 'px';
+                }
+              "
               group-id="grid.id"
               :drag-enabled="editing"
               v-model="currentDesk.cards"
               :style="{
-              width: settings.vDirection ? '100%' : 'auto',
-              height: settings.vDirection ? 'auto' : '100%',
-            }"
+                width: settings.vDirection ? '100%' : 'auto',
+                height: settings.vDirection ? 'auto' : '100%',
+              }"
               class="grid home-widgets"
               ref="grid"
               :options="muuriOptions"
@@ -127,11 +131,11 @@
               <template #item="{ item }">
                 <div
                   :style="{
-                  zoom: (
-                    (usingSettings.cardZoom * this.adjustZoom) /
-                    100
-                  ).toFixed(2),
-                }"
+                    zoom: (
+                      (usingSettings.cardZoom * this.adjustZoom) /
+                      100
+                    ).toFixed(2),
+                  }"
                 >
                   <component
                     :desk="currentDesk"
@@ -148,21 +152,20 @@
               class="xt-text"
               v-show="!showGrid"
               style="
-              text-align: center;
-              font-size: 32px;
-              margin: auto;
-              position: fixed;
-              top: 50%;
-              transform: translateY(-50%) translateX(-50%);
-              left: 50%;
-            "
+                text-align: center;
+                font-size: 32px;
+                margin: auto;
+                position: fixed;
+                top: 50%;
+                transform: translateY(-50%) translateX(-50%);
+                left: 50%;
+              "
             >
               <LoadingOutlined />
             </div>
           </div>
         </vue-custom-scrollbar>
       </div>
-
     </Drop>
   </div>
   <!-- 添加小组件 -->
@@ -192,7 +195,7 @@
       ></NewAddCard>
     </div>
   </transition>
-  <AppCenter  v-if="visible"/>
+  <AppCenter v-if="visible" />
   <!-- 添加图标 -->
   <EditNewNavigation
     v-if="editVisible"
@@ -227,13 +230,19 @@ import { useFileConversionIcon } from "../../apps/folder/src/hooks/useDataConver
 import { taskStore } from "../../../table/apps/task/store";
 
 import Drop from "./Drop.vue";
-import AppCenter from '../../apps/appCenter'
-import { useAppCenterStore } from '../../apps/appCenter/src/store'
+import AppCenter from "../../apps/appCenter";
+import { useAppCenterStore } from "../../apps/appCenter/src/store";
 export default {
   name: "Desk",
   emits: ["changeEditing"],
   mixins: [componentsMinis, menuMinis],
-  components: { AppCenter, EditNewNavigation, GalleryModal, Drop, LoadingOutlined },
+  components: {
+    AppCenter,
+    EditNewNavigation,
+    GalleryModal,
+    Drop,
+    LoadingOutlined,
+  },
   props: {
     keepAddIcon: {
       default: false,
@@ -256,9 +265,6 @@ export default {
     currentDesk: {
       type: Object,
       required: true,
-      default: () => {
-        return { cards: [] };
-      },
     },
     muuriOptions: {
       type: Object,
@@ -362,6 +368,8 @@ export default {
     // 监听ID变化
     "currentDesk.id": {
       handler(newVal) {
+        // 同步更新自由布局ID
+        this.freeLayoutId = newVal;
         this.$bus.off("startAdjust");
         this.$bus.off("lockScreen");
         this.$bus.off("scrollbarUpdate");
@@ -420,6 +428,7 @@ export default {
       "isFreeLayout",
       "getFreeLayoutState",
       "previewFlag",
+      "freeLayoutId",
     ]),
     ...mapWritableState(useFloatMenuStore, ["menus", "newMenus"]),
     ...mapWritableState(useNavigationStore, ["selectNav", "isDesk"]),
@@ -561,35 +570,35 @@ export default {
     showSystemSet() {
       this.$bus.emit("openSystemSet");
     },
-    getClasses(){
-      if(this.usingSettings.vDirection){
-        if(this.usingSettings.vDirection===true){
-          return 'flex flex-row justify-center'
-        }else{
-          return  'flex flex-column  content-center'
+    getClasses() {
+      if (this.usingSettings.vDirection) {
+        if (this.usingSettings.vDirection === true) {
+          return "flex flex-row justify-center";
+        } else {
+          return "flex flex-column  content-center";
         }
       }
     },
-    getWidth(){
-      console.log(this.usingSettings.fixedLayout)
-      if(this.usingSettings.fitMod==='full'){
-        return '100%'
-      }else{
-        if(this.usingSettings.vDirection===true){
-          return (this.usingSettings.containerWidth||1024) +'px'
-        }else{
-          return '100%'
+    getWidth() {
+      console.log(this.usingSettings.fixedLayout);
+      if (this.usingSettings.fitMod === "full") {
+        return "100%";
+      } else {
+        if (this.usingSettings.vDirection === true) {
+          return (this.usingSettings.containerWidth || 1024) + "px";
+        } else {
+          return "100%";
         }
       }
     },
-    getHeight(){
-      if(this.settings.fitMod==='full'){
-        return '100%'
-      }else{
-        if(this.usingSettings.vDirection===true){
-          return '100%'
-        }else{
-          return (this.usingSettings.containerHeight||800) +'px'
+    getHeight() {
+      if (this.settings.fitMod === "full") {
+        return "100%";
+      } else {
+        if (this.usingSettings.vDirection === true) {
+          return "100%";
+        } else {
+          return (this.usingSettings.containerHeight || 800) + "px";
         }
       }
     },
@@ -697,8 +706,8 @@ export default {
         message.info("定制过程中无法操作");
       }
     },
-    newAppCenter(){
-      this.visible=true
+    newAppCenter() {
+      this.visible = true;
     },
     newAddCard() {
       if (!this.showGuide) {
@@ -894,15 +903,6 @@ export default {
 </style>
 <style scoped lang="scss">
 .grid {
-  // position: relative;
-  //display: inline-block;
-  //width: 43em;
-  // border-radius: 4px;
-  // vertical-align: top;
-
-  // margin-left: 10px;
-  // margin-right: 10px;
-
   .editing {
     pointer-events: none;
     cursor: move;
@@ -920,24 +920,4 @@ export default {
   flex-direction: column;
   align-items: center;
 }
-
-//@media screen and (min-height: 1020px) and (max-height: 1600px) {
-//  #scrollerBar {
-//    height: 880px;
-//
-//    .grid {
-//      height: 880px;
-//    }
-//  }
-//}
-//
-//@media screen and (max-height: 1021px) {
-//  #scrollerBar {
-//    height: 438px;
-//
-//    .grid {
-//      height: 438px;
-//    }
-//  }
-//}
 </style>
