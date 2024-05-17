@@ -34,8 +34,6 @@
         type="theme"
         style="margin-right: 12px"
         :radius="8"
-        style="margin-right: 12px"
-        :radius="8"
         @click="updateDeskData"
       >
         <div class="flex items-center justify-center">
