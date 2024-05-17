@@ -38,7 +38,6 @@ const { currentDesk, currentID }: any = toRefs(props);
 const {
   getCurrentDesk,
   freeLayoutData,
-  getCurrentDeskId,
   getFreeLayoutData,
   freeLayoutEnv,
   getFreeLayoutState,

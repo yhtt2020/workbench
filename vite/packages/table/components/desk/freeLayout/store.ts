@@ -99,13 +99,14 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 获取当前桌面Id
     getCurrentDeskId() {
-      const home: any = homeStore();
-      const { currentDeskId } = storeToRefs(home);
-      if (this.previewFlag) {
-        return "mj36hf6h";
-      } else {
-        return currentDeskId.value;
-      }
+      return this.freeLayoutId;
+      // const home: any = homeStore();
+      // const { currentDeskId } = storeToRefs(home);
+      // if (this.previewFlag) {
+      //   return "mj36hf6h";
+      // } else {
+      //   return currentDeskId.value;
+      // }
     },
     // 获取当前自由布局数据
     getFreeLayoutData() {
