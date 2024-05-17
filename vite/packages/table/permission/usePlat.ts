@@ -41,11 +41,11 @@ const platDetection = (type) => {
     case 'client':
       return isWin || isMac
     case 'web':
-      return isWeb
+      return isWeb?"web" : ""
     case 'win':
-      return isWin
+      return isWin?"win" : ""
     case 'mac':
-      return isMac
+      return isMac?"mac" : ""
   }
   // if (type == "web") {
   //   return isWeb ? "web" : "";
