@@ -81,7 +81,7 @@
     <!-- 预览桌面 效果 -->
     <div v-else>
       <div style="height:60px;width:200px" class="flex items-center justify-between px-4 xt-text font-16 pointer"
-        @click="popState = flase">
+        @click="popState = false">
         定制桌面
         <div class="flex items-center justify-center w-8 h-8 rounded-lg xt-bg-2">
           <MyIcon icon="fluent:full-screen-maximize-16-filled" width="20" height="20" />
@@ -93,7 +93,7 @@
     <teleport to="body">
       <div style="z-index: 9999">
         <!-- @afterAdded="afterAdded" -->
-        <Preview :deskTypeObj="deskTypeObj" :deskList="deskList" :scheme="scheme" :showModal="showModal"
+        <Preview :deskTypeObj="deskTypeObj" :scheme="scheme" :showModal="showModal"
           @closePreview="closePreview" @addStep="nextStep"></Preview>
       </div>
     </teleport>
@@ -400,11 +400,6 @@ export default {
       }
 
     },
-
-    addStep() {
-      this.stepIndex++
-    },
-
     // 分析过程
     async analysis() {
       message.loading({

@@ -148,7 +148,7 @@ export default {
             ...this.template.settings
           },
           cards:[
-            ... this.template.cards
+            ...this.template.cards
           ],
         }
         this.deskWidth = this.layoutSize.width
