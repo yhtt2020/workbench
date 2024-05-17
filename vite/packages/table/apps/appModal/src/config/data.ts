@@ -12,14 +12,14 @@ export const runList = [
     height: "752px",
     openMode: "modal",
   },
-  {
-    name: "note",
-    cname: "便签",
-    icon: "/logo/note.svg",
-    width: "1000px",
-    height: "752px",
-    visible: false,
-    openMode: "modal",
-  },
-
+  // {
+  //   name: "note",
+  //   cname: "便签",
+  //   icon: "/logo/note.svg",
+  //   iconType: "select",
+  //   width: "1000px",
+  //   height: "752px",
+  //   visible: false,
+  //   openMode: "default",
+  // },
 ];
