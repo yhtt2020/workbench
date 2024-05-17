@@ -1,12 +1,12 @@
 <template>
-  <xt-container 
+  <xt-container
     @titleHover="enterMusic"
     v-model:customSize="customData.customSize"
     :customData = "customData"
     :header="header"
-    :options="options" 
+    :options="options"
     :envLimit="['guest', 'offline']"
-    :customIndex="customIndex" 
+    :customIndex="customIndex"
     :desk="desk"
     @delete="deleteCard">
     <div
@@ -56,7 +56,9 @@ export default {
     return {
       header:{
         title:'网易云',
-        ifyIcon:'fluent:music-note-2-16-regular',
+        // ifyIcon:'fluent:music-note-2-16-regular',
+        showIcon:"/img/appLogo/music.png",
+
         titleHover:true,
         titleHoverName:'打开应用',
       }

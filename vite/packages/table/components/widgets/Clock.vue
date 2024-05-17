@@ -1,11 +1,12 @@
 <template>
-  <xt-container 
+  <xt-container
     v-model:customSize="customData.customSize"
     :customData="customData"
-    :desk="desk" 
-    :options="options" 
-    :customIndex="customIndex" 
-    :menuList="menuList" 
+    :desk="desk"
+    :options="options"
+    :header="header"
+    :customIndex="customIndex"
+    :menuList="menuList"
     ref="cardSlot"
     @delete="deleteCard">
     <!-- <div class="flex flex-col items-center"> -->
@@ -114,6 +115,11 @@ export default {
   },
   data() {
     return {
+      header:{
+        name:'闹钟',
+        showIcon:"/img/appLogo/alarmClock.png",
+
+      },
       simpleImage: '/public/img/test/load-ail.png',
       visible: false,
       value1: dayjs('00:00:00', 'HH:mm'),
@@ -162,7 +168,7 @@ export default {
     }
   },
   mounted() {
-    this.customData.customSize = '2x2' 
+    this.customData.customSize = '2x2'
   },
   emit:['delete'],
   methods: {

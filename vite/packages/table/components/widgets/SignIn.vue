@@ -2,8 +2,8 @@
   <xt-container
     v-model:customSize="customData.customSize"
     :header="header"
-    :custom-data="customData" 
-    :custom-index="customIndex" 
+    :custom-data="customData"
+    :custom-index="customIndex"
     :envLimit="['offline']"
     :options="options"
     :desk="desk"
@@ -187,7 +187,9 @@ export default {
       customSize: '2x4',
       header:{
         title:"签到",
-        ifyIcon:"fluent:calendar-16-regular",
+        // ifyIcon:"fluent:calendar-16-regular",
+        showIcon:"/img/appLogo/signIn.png",
+
       }
 
 
@@ -286,7 +288,7 @@ export default {
     async signIn () {
       if (this.currentEnv === 'guest') {
         this.loginVisible = true;
-      }else {            
+      }else {
         if (!this.signedIn) {
           let rs = await this.doSign()
           // let rs = {
@@ -401,7 +403,7 @@ export default {
                     ...item,
                     detail:item
                   },
-  
+
                 })
               }
             )
@@ -417,14 +419,14 @@ export default {
             if(this.awardItems.length>0){
               this.tip=this.tip+'<br>注意：如果您已在社区完成签到，将无法重复获得积分奖励。仅支持通过工作台签到获得道具奖励。'
             }
-  
+
             console.log(this.awardItems,'奖品')
               this.showAwardModal()
               this.signedIn = true
           } else {
             message.error('签到失败。')
           }
-  
+
         } else {
           this.newPeoplePage = true
         }

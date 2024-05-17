@@ -125,7 +125,7 @@
                       w="18"
                       h="18"
                       :modelValue="header.showIcon"
-                      :upload="false"
+                      :click="false"
                     />
                   </template>
                 </div>

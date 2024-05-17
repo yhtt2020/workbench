@@ -1,15 +1,15 @@
 <template>
-  <xt-container 
+  <xt-container
     @titleHover="aggSearchShow = true"
     :header="header"
     v-model:customSize="customData.customSize"
-    :editing="editing" 
-    :sizeList="bottomSizeList" 
-    :customData="customData" 
+    :editing="editing"
+    :sizeList="bottomSizeList"
+    :customData="customData"
     :customIndex="customIndex"
-    :desk="desk" 
+    :desk="desk"
     :options="options"
-    :menuList="gameMiddleBare" 
+    :menuList="gameMiddleBare"
     ref="aggregateSearchSlot"
     @delete="deleteCard">
     <div class="flex items-center justify-center w-full p-2 mt-4 mb-3 rounded-xl pointer"
@@ -144,7 +144,8 @@ export default {
       openId: '',  // 根据卡片外部的id进行弹窗内搜索引擎的锁定
       header:{
         title:'聚合搜索',
-        ifyIcon:'fluent:search-20-filled',
+        // ifyIcon:'fluent:search-20-filled',
+        showIcon:"/img/appLogo/aggregateSearch.png",
         titleHover:true,
         titleHoverName:'点击切换',
       }

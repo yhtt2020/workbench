@@ -14,6 +14,7 @@
             :sizeList="sizeList"
             :customData="customData"
             @delete="deleteCard">
+            ???
             <div v-if="showForumList.length > 0" class="flex flex-col flex-1 " style="height: calc(100%);">
                 <xt-option-tab
                     v-if="showForumList.length > 1"
@@ -284,7 +285,7 @@ export default {
             return {
                 title: this.options.title,
                 // ifyIcon:'fluent:chat-16-regular',
-                showIcon:"/img/appLogo/yuanCommunity.png",
+        showIcon:"/img/appLogo/yuanCommunity.png",
                 refresh:{
                     fn:this.refreshPost,
                     tip:"刷新",
