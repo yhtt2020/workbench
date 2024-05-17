@@ -1,13 +1,13 @@
 <template>
-<xt-container  
+<xt-container
   :header="header"
   v-model:customSize="customData.customSize"
-  :platLimit="['web']" 
-  :options="options" 
+  :platLimit="['web']"
+  :options="options"
   :customData="customData"
   :customIndex="customIndex"
-  :menu-list="menuList" 
-  :desk="desk" 
+  :menu-list="menuList"
+  :desk="desk"
   @delete="deleteCard" >
   <div @click="go"  class="top-content pointer" style="color:var(--primary-text)">
     <div><span>{{CPUGPUData.useCPU.toFixed(1)}}%</span>
@@ -112,7 +112,9 @@ export default {
       ],
       header:{
         title:'性能',
-        ifyIcon:"fluent:arrow-trending-lines-20-filled"
+        // ifyIcon:"fluent:arrow-trending-lines-20-filled"
+        showIcon:"/img/appLogo/performance.png",
+
       },
       customSize:'2x4'
 
@@ -141,7 +143,7 @@ export default {
   components:{
     Widget,
     newIcon
-  }, 
+  },
   mounted () {
     this.startInspect()
     this.customData.customSize = '2x4'

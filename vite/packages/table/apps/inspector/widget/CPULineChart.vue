@@ -1,10 +1,10 @@
 <template>
   <xt-container
     v-model:customSize="customData.customSize"
-    :header="header"  
-    :limit-env="['web']" 
-    :options="options" 
-    :menu-list="menuList" 
+    :header="header"
+    :limit-env="['web']"
+    :options="options"
+    :menu-list="menuList"
     :customData="customData"
     :customIndex="customIndex"
     :desk="desk"
@@ -144,7 +144,9 @@ export default {
       ],
       header:{
         title:'性能',
-        ifyIcon:'fluent:arrow-trending-lines-20-filled'
+        // ifyIcon:'fluent:arrow-trending-lines-20-filled'
+        showIcon:"/img/appLogo/performance.png",
+
       },
       customSize:'2x4'
     }
