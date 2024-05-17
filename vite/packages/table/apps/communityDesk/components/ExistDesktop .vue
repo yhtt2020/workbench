@@ -74,8 +74,8 @@ const { desks } = storeToRefs(cardStore());
 // 解构props
 const props = defineProps({
   communityNo: {
-    type:Object,
-    default:()=>{}
+    type: Object,
+    default: () => {},
   },
 });
 const { communityNo } = toRefs(props);
@@ -110,22 +110,25 @@ const selectDesk = (item) => {
 
 // 添加桌面
 const addDesk = () => {
-  proxy.$bus.emit('updateSetting');
+  proxy.$bus.emit("updateSetting");
   const no = communityNo.value?.item?.no;
   const isCommunity = _.some(desks.value, (desk) => {
-    return (
-      desk.communityNo && Number(desk.communityNo) === Number(no)
-    );
+    return desk.communityNo && Number(desk.communityNo) === Number(no);
   });
   if (!isCommunity) {
     const option = {
       ...currentDesk.value,
-      id: `${no}${currentDesk.value.id}`,
-      communityNo:no,
+      communityNo: no,
+      communityDeskId: `${no}_${currentDesk.value?.id}`,
     };
+    // console.log("确保参数", option);
     const index = _.findIndex(desks.value, (desk) => {
-      return String(desk.id) === String(option.id);
+      // console.log('Number(no) === Number(desk?.communityNo)',Number(no) === Number(desk?.communityNo))
+      if(Number(no) === Number(desk?.communityNo)){
+        return String(desk.id) === String(option.id);
+      }
     });
+    // console.log("index",index)
     if (index === -1) {
       desks.value.unshift(option);
     }
