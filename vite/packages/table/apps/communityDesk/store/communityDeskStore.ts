@@ -27,13 +27,15 @@ export const communityDeskStore = defineStore("communityDesk", {
       communityAllDeskDetail: {},
     },
 
-    // 云端读取返回的社群桌面数据
+    // 云端读取读取返回的社群桌面数据
     syncDesk: {
       desks: [],
     },
 
     setting: {
       // 云端同步时间
+      getSyncTime: "",
+      saveSyncTime: "",
       getSyncTime: "",
       saveSyncTime: "",
     },
@@ -55,6 +57,7 @@ export const communityDeskStore = defineStore("communityDesk", {
         };
       });
       this.communityDesk.currentList = list;
+      this.communityDesk.currentList = list;
       this.communityDesk.communityAllDesk = mapList;
     },
 
@@ -63,6 +66,7 @@ export const communityDeskStore = defineStore("communityDesk", {
       this.communityDesk.communityAllDeskDetail = currentDesk;
     },
 
+    // 保存当前社群名下的所有桌面列表
     // 保存当前社群名下的所有桌面列表
     async saveCommunityDesk(force = 0) {
       const communityNo = this.communityDesk.communityDeskNo;
@@ -110,6 +114,47 @@ export const communityDeskStore = defineStore("communityDesk", {
     // 保存当前社群名下所选中的桌面数据
     async saveCommunityDeskDetail(force = 0) {
       const communityNo = this.communityDesk.communityDeskNo;
+      const rs = await archiveHelper.saveToCommunity(
+        communityNo,
+        communityNavAppId,
+        {
+          desksAll: this.communityDesk.communityAllDesk,
+          _v: Date.now(),
+        },
+        force,
+        communityDeskAll
+      );
+
+      // console.log("返回社群当前所有桌面列表结果", rs);
+
+      if (rs.status) {
+        message.success("保存成功，并已为您自动同步至云端。");
+        this.setting.saveSyncTime = rs?.data?.archive?.updateTime;
+      } else if (rs.code === 401) {
+        message.error("保存失败，原因：" + rs.info);
+      } else if (rs.code === 404) {
+        message.error("保存失败，原因：" + rs.info);
+      } else {
+        (window as any).$ui.confirm(
+          "同步助手",
+          `保存失败，由于${rs.data?.userInfo?.nickname}正在编辑存档，故无法同步，是否强制同步？此操作将强制写入数据，可能导致存储内容丢失。`,
+          {
+            ok: async () => {
+              let result = await this.syncCommunityDesk(1);
+              if (result.status) {
+                message.success("数据强制保存成功。");
+              } else {
+                message.error("强制保存失败。");
+              }
+            },
+          }
+        );
+      }
+
+    },
+    // 保存当前社群名下所选中的桌面数据
+    async saveCommunityDeskDetail(force = 0) {
+      const communityNo = this.communityDesk.communityDeskNo;
       // 桌面详情的缓存key
       const saveKey = `_${communityDeskDetail}${communityNo}`;
       // 将当前社群名下选中的桌面详情进行云端存储
@@ -129,6 +174,7 @@ export const communityDeskStore = defineStore("communityDesk", {
       if (rs.status) {
         // message.success("保存成功，并已为您自动同步至云端。");
         // 获取更新时间
+        this.setting.saveSyncTime = rs?.data?.archive?.updateTime;
         this.setting.saveSyncTime = rs?.data?.archive?.updateTime;
       } else if (rs.code === 401) {
         message.error("保存失败，原因：" + rs.info);
@@ -167,6 +213,9 @@ export const communityDeskStore = defineStore("communityDesk", {
       
       // console.log('获取桌面列表结果',rs);
       
+      
+      // console.log('获取桌面详情结果',rs);
+      
       if (rs.status) {
         const archiveData = rs.data?.data;
         if (archiveData.desksAll) {
@@ -200,6 +249,9 @@ export const communityDeskStore = defineStore("communityDesk", {
         communityNavAppId,
         loadKey
       );
+      
+      // console.log('获取桌面详情结果',rs);
+
       
       // console.log('获取桌面详情结果',rs);
 

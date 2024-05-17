@@ -34,6 +34,8 @@
         type="theme"
         style="margin-right: 12px"
         :radius="8"
+        style="margin-right: 12px"
+        :radius="8"
         @click="updateDeskData"
       >
         <div class="flex items-center justify-center">
@@ -60,6 +62,9 @@ import { computed, ref, toRefs } from "vue";
 import { storeToRefs } from "pinia";
 import { communityDeskStore } from "../store/communityDeskStore";
 import { generateSearchResultTime } from "../hooks/deskCreateMethod";
+import { storeToRefs } from "pinia";
+import { communityDeskStore } from "../store/communityDeskStore";
+
 
 const props = defineProps({
   // 当前桌面信息
