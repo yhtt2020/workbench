@@ -109,6 +109,7 @@ export default [
       ai: AIAssistant,
       note: Note,
     },
+    props: true,
     children: [
       ...DeckRoute,
       ShortcutKeyRoute,

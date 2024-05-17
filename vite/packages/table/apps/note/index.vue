@@ -115,6 +115,8 @@ export default {
     }
   },
   mounted () {
+    // console.log('              :>> ', this.customIndex);
+    // console.log('              :>> ', this);
     // 重置默认数据
     this.selNote = -1
     if (this.$route.params.customIndex) {

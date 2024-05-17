@@ -226,6 +226,8 @@ const props = withDefaults(defineProps<ModalProps>(), {
   max: false,
   handle: "",
   name: null,
+  isFullScreen: false,
+  isMaximize: false,
 });
 const { esc, modelValue, beforeMount, beforeUnmount, type } = toRefs(props);
 
@@ -266,11 +268,13 @@ const modalVisible = ref(false);
 // 弹窗过渡显示
 const transitionVisible = ref(false);
 // 最小化
+// isFullScreen: false,
+// isMaximize: false,
 const isMinimize = ref(false);
 // 最大化
-const isMaximize = ref(false);
+const isMaximize = ref(props.isMaximize);
 // 全屏
-const isFullScreen = ref(false);
+const isFullScreen = ref(props.isFullScreen);
 // 视图大小
 const windowHeight = ref(0);
 const windowWidth = ref(0);
@@ -421,7 +425,6 @@ const minimize = () => {
   modalVisible.value = false;
   transitionVisible.value = true;
 
-
   if (!isMinimize.value) {
     modalVisible.value = true;
     transitionVisible.value = false;
@@ -561,6 +564,14 @@ const init = () => {
       capture: true,
     });
   }
+
+  // setTimeout(() => {
+  //   if (isFullScreen.value) {
+  //     fullScreen();
+  //   } else if (isMaximize.value) {
+  //     maximize();
+  //   }
+  // }, 10);
 };
 
 // 挂载后

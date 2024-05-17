@@ -14,37 +14,37 @@ import { useAppModalStore } from "./store";
 const props = defineProps<{
   name: any;
 }>();
+
+const appModalStore: any = useAppModalStore();
+const { runList }: any = storeToRefs(appModalStore);
+const data: any = ref(null);
+data.value = appModalStore.getApp(props.name);
+console.log("data.value.isFullScreen :>> ", data.value.isFullScreen);
 // 弹窗ref
 const modal: any = ref(null);
 // 是否最大化
-const isMaximize: any = ref(false);
-const isFullScreen = ref(false);
 const fullScreen = () => {
-  isMaximize.value = false;
-  isFullScreen.value = !isFullScreen.value;
+  data.value.isMaximize = false;
+  data.value.isFullScreen = !data.value.isFullScreen;
+  console.log("  data.value.isFullScreen  :>> ", data.value.isFullScreen);
   modal.value?.fullScreen();
 };
 const maximize = () => {
-  isFullScreen.value = false;
-  isMaximize.value = !isMaximize.value;
+  data.value.isFullScreen = false;
+  data.value.isMaximize = !data.value.isMaximize;
   modal.value?.maximize();
 };
 const minimize = () => {
   modal.value?.minimize();
 };
 const close = () => {
-  appModalStore.getApp("ai").visible = false;
+  appModalStore.getApp(data.value.name).visible = false;
 };
-
-const appModalStore: any = useAppModalStore();
-const { runList }: any = storeToRefs(appModalStore);
-
-const data: any = ref(null);
-data.value = appModalStore.getApp(props.name);
 
 const modalStyle = computed(() => {
   if (!data.value) return;
-  if (isMaximize.value || isFullScreen.value) {
+  if (data.value.isMaximize || data.value.isFullScreen) {
+    console.log("123321312321312321123 :>> ", 123321312321312321123);
     return {
       "flex-grow": 1,
       height: "100%",
@@ -71,6 +71,8 @@ const modalStyle = computed(() => {
     boxClass=""
     headerClass="p-2 xt-modal"
     :mask="false"
+    :isFullScreen="data?.isFullScreen"
+    :isMaximize="data?.isMaximize"
     custom
   >
     <template #minimize-left>
@@ -123,7 +125,7 @@ const modalStyle = computed(() => {
 
           <xt-mix-icon
             :icon="
-              isMaximize
+              data.isMaximize
                 ? 'fluent:full-screen-minimize-16-filled'
                 : 'fluent:full-screen-maximize-16-regular'
             "
@@ -135,7 +137,7 @@ const modalStyle = computed(() => {
 
           <xt-mix-icon
             :icon="
-              isFullScreen
+              data.isFullScreen
                 ? 'fluent:arrow-minimize-16-regular'
                 : 'fluent:arrow-maximize-16-regular'
             "
@@ -157,7 +159,7 @@ const modalStyle = computed(() => {
         style="max-height: calc(100% - 50px)"
         :style="[modalStyle]"
       >
-        <router-view :name="data?.name"></router-view>
+        <router-view :name="data?.name" :props="data?.props"></router-view>
       </div>
     </div>
   </xt-modal>
