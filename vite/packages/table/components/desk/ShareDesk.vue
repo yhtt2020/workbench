@@ -117,7 +117,7 @@ export default {
   data () {
     return {
       percent:0,
-      isWeb:usePlat('web'),
+      isWeb:!usePlat('client'),
       oldSet :this.settings, // 原先设置
       posting:false,//正在上传中
       capture: '',

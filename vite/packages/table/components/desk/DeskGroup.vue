@@ -854,7 +854,11 @@ export default {
     },
     // 智能定制
     aiCustom() {
-      this.guideList = [0, 1, 2];
+      if(window.$usePlat()){
+        this.guideList = [0, 2]
+      }else{
+        this.guideList = [0, 1, 2];
+      }
       this.showGuide = true;
       message.info("开始桌面定制");
       this.addDeskVisible = false;

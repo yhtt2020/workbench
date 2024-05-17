@@ -114,7 +114,7 @@ let steamUser,
   steamFs,
   LoginSession,
   EAuthTokenPlatformType;
-if (!usePlat("web")) {
+if (usePlat('client')) {
   steamUser = $models.steamUser;
   steamSession = $models.steamSession;
   path = $models.path;
@@ -307,7 +307,7 @@ export default {
     this.componentInit();
 
     // 首次客户端引导
-    if (!this.init && isMain() && !usePlat("web")) {
+    if (!this.init && isMain() && usePlat("client")) {
       this.$router.replace({ name: "wizard" });
     }
 
@@ -475,7 +475,7 @@ export default {
         // 初始化任务
         this.initTask();
         // 初始化桌面
-        if (!usePlat("web")) {
+        if (usePlat('client')) {
           this.addFreeLayoutDesk();
           // 非web端打开缩放提示弹窗
           this.visibleScale = true;

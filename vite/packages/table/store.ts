@@ -312,7 +312,7 @@ export const appStore = defineStore('appStore', {
 
       function handleGrade(name) {
         // 拦截用户信息加载报错
-        if (window.$usePlat()) return
+        if (!window.$usePlat('client')) return
         for (let i = 0; i < userInfo.onlineGrade[name]; i++) {
           userInfo.onlineGradeIcons[name].push({
             // icon: 'file://' + window.globalArgs['app-dir_name'] + `/../../icons/grade/${name}.svg`
