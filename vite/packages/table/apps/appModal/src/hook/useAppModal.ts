@@ -24,13 +24,14 @@ export const useAppModal = (name: string) => {
     });
   };
 
-  const openApp = () => {
-    const openMode = appModalStore.getApp(name).openMode;
+  const openApp = (params?: any) => {
+    const openMode = appModalStore.getApp(name)?.openMode;
     if (openMode === "modal") {
       appModalStore.switchVisible(name);
     } else {
       (window as any).$ui.router.push({
         name,
+        params,
       });
     }
   };

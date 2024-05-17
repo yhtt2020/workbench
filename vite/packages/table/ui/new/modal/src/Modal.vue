@@ -417,9 +417,11 @@ const transitionStyle = computed(() => {
 
 /** 最小化实现 */
 const minimize = () => {
-  transitionVisible.value = true;
   isMinimize.value = !isMinimize.value;
   modalVisible.value = false;
+  transitionVisible.value = true;
+
+
   if (!isMinimize.value) {
     modalVisible.value = true;
     transitionVisible.value = false;
