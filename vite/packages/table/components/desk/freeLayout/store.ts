@@ -11,6 +11,7 @@ import { message } from "ant-design-vue";
 // @ts-ignore
 export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
   state: () => ({
+    freeLayoutId: null,
     // 自由布局数据
     freeLayoutData: {},
     // 自由布局状态
@@ -116,9 +117,16 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 获取当前自由布局是否开启
     isFreeLayout() {
-      if (this.freeLayoutState.hasOwnProperty(this.getCurrentDeskId)) {
-        return this.freeLayoutState[this.getCurrentDeskId].system?.isFreeLayout;
-      }
+      // 不存在自由布局ID
+      if (!this.freeLayoutId) return;
+      // 不存在自由布局数据
+      if (!this.freeLayoutState.hasOwnProperty(this.freeLayoutId)) return;
+
+      return this.freeLayoutState[this.getCurrentDeskId]?.system?.isFreeLayout;
+
+      // if (this.freeLayoutState.hasOwnProperty(this.getCurrentDeskId)) {
+      //   return this.freeLayoutState[this.getCurrentDeskId].system?.isFreeLayout;
+      // }
     },
     // 获取当前自由布局边距状态
     getFreeLayoutMargin() {
