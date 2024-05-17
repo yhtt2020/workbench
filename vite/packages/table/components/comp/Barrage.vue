@@ -114,7 +114,7 @@ export default {
     manager.setOptions({
       height: 100
     })
-    if (!window.$usePlat()) {
+    if (window.$usePlat('client')) {
       tsbApi.barrage.init()
 
 tsbApi.barrage.setOnUrlChanged((url) => {

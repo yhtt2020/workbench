@@ -50,7 +50,6 @@ const {
   dragData,
   freeLayoutEnv,
   getFreeLayoutData,
-  getCurrentDeskId,
   isSelectAll,
   isFreeLayout,
 } = storeToRefs(freeLayoutStore);

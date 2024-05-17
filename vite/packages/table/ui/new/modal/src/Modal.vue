@@ -183,7 +183,6 @@
 <script setup lang="ts">
 import McDonalds from "./McDonalds.vue";
 
-// import PerfectScrollbar from "perfect-scrollbar";
 import {
   ref,
   watch,
@@ -201,7 +200,6 @@ import { nanoid } from "nanoid";
 
 import { ModalProps } from "./types";
 const scrollbar: any = ref(null);
-// const perfectScrollbar: any = ref(null);
 const { proxy }: any = getCurrentInstance();
 
 const props = withDefaults(defineProps<ModalProps>(), {
@@ -228,10 +226,19 @@ const props = withDefaults(defineProps<ModalProps>(), {
   max: false,
   handle: "",
   name: null,
+  isFullScreen: false,
+  isMaximize: false,
 });
 const { esc, modelValue, beforeMount, beforeUnmount, type } = toRefs(props);
 
-const emits = defineEmits(["ok", "no", "update:modelValue", "close", "max"]);
+const emits = defineEmits([
+  "ok",
+  "no",
+  "update:modelValue",
+  "close",
+  "max",
+  "full",
+]);
 
 // 弹窗元素
 const modal: any = ref(null);
@@ -261,9 +268,13 @@ const modalVisible = ref(false);
 // 弹窗过渡显示
 const transitionVisible = ref(false);
 // 最小化
+// isFullScreen: false,
+// isMaximize: false,
 const isMinimize = ref(false);
 // 最大化
-const isMaximize = ref(false);
+const isMaximize = ref(props.isMaximize);
+// 全屏
+const isFullScreen = ref(props.isFullScreen);
 // 视图大小
 const windowHeight = ref(0);
 const windowWidth = ref(0);
@@ -295,11 +306,27 @@ const currentY = computed(() => {
   }
 });
 
+const topBarHeight = computed(() => {
+  // 顶部导航栏开启时
+  // if (){}
+  return 40;
+});
+const bottomBarHeight = computed(() => {
+  // 底部导航栏开启时
+  // if (){}
+  return 100 + topBarHeight.value;
+});
+
 // 弹窗样式
 const modalStyle = computed(() => {
-  // if ()
   let obj: any = {};
   if (isMaximize.value) {
+    obj = {
+      borderRadius: "0px",
+      width: "100vw",
+      height: `calc(100vh - ${bottomBarHeight.value}px)`,
+    };
+  } else if (isFullScreen.value) {
     obj = {
       borderRadius: "0px",
       width: "100vw",
@@ -319,8 +346,13 @@ const getModalPosition = computed(() => {
   let top;
   let left;
 
-  // 全屏时
+  // 最大化时
   if (isMaximize.value) {
+    top = 0;
+    left = 0;
+  }
+  // 全屏时
+  else if (isFullScreen.value) {
     top = 0;
     left = 0;
   }
@@ -361,7 +393,6 @@ const initPosition = () => {
 
 // 更新弹窗大小
 const resizeModel = (data) => {
-  // perfectScrollbar.value?.update();
   modalHeight.value = data.height;
   modalWidth.value = data.width;
 };
@@ -377,16 +408,6 @@ const transitionStyle = computed(() => {
       height: "50px",
       zIndex: props.index + 1,
     };
-  }
-  // 最大化
-  else if (isMaximize.value) {
-    return {
-      top: "0",
-      left: "0",
-      width: "100vw",
-      height: "100vh",
-      zIndex: props.index - 1,
-    };
   } else {
     return {
       top: `${y.value}px`,
@@ -400,43 +421,58 @@ const transitionStyle = computed(() => {
 
 /** 最小化实现 */
 const minimize = () => {
-  transitionVisible.value = true;
+  isMinimize.value = !isMinimize.value;
   modalVisible.value = false;
+  transitionVisible.value = true;
 
-  setTimeout(() => {
-    isMinimize.value = !isMinimize.value;
-    setTimeout(() => {
-      if (!isMinimize.value) {
-        modalVisible.value = true;
-        transitionVisible.value = false;
-      }
-    }, 100);
-  }, 1);
+  if (!isMinimize.value) {
+    modalVisible.value = true;
+    transitionVisible.value = false;
+  }
 };
 
 /** 最大化 */
 const maximize = () => {
-  transitionVisible.value = true;
-  modalVisible.value = false;
+  if (isFullScreen.value) {
+  } else if (!isMaximize.value) {
+    oldY.value = y.value;
+    oldX.value = x.value;
+  }
+  isFullScreen.value = false;
 
-  setTimeout(() => {
-    isMaximize.value = !isMaximize.value;
-    emits("max", isMaximize.value);
-    if (isMaximize.value) {
-      oldX.value = x.value;
-      oldY.value = y.value;
-      x.value = 0;
-      y.value = 0;
-    }
-    if (!isMaximize.value) {
+  isMaximize.value = !isMaximize.value;
+  emits("max", isMaximize.value);
+  if (isMaximize.value) {
+    x.value = 0;
+    y.value = topBarHeight.value;
+  } else {
+    x.value = oldX.value;
+    y.value = oldY.value;
+    setTimeout(() => {
       x.value = oldX.value;
       y.value = oldY.value;
-    }
-    setTimeout(() => {
-      modalVisible.value = true;
-      transitionVisible.value = false;
-    }, 100);
-  }, 1);
+    });
+  }
+};
+
+/** 全屏 */
+const fullScreen = () => {
+  if (isMaximize.value) {
+  } else if (!isFullScreen.value) {
+    oldY.value = y.value;
+    oldX.value = x.value;
+  }
+  isMaximize.value = false;
+
+  isFullScreen.value = !isFullScreen.value;
+  emits("full", isFullScreen.value);
+  if (isFullScreen.value) {
+    x.value = 0;
+    y.value = 0;
+  } else {
+    x.value = oldX.value;
+    y.value = oldY.value;
+  }
 };
 /** 模态框点击事件 */
 const modalClick = () => {
@@ -528,23 +564,14 @@ const init = () => {
       capture: true,
     });
   }
-  // nextTick(() => {
-  //   setTimeout(() => {
-  //     if (!modal.value) return;
-  //     perfectScrollbar.value = new PerfectScrollbar(modal.value, {
-  //       swipeEasing: true,
-  //     });
-  //     if (
-  //       modalWidth.value >= windowWidth.value &&
-  //       modalHeight.value >= windowHeight.value
-  //     ) {
-  //       maximize();
-  //     } else if (modalWidth.value >= windowWidth.value) {
-  //       // x.value = 0;
-  //       modalWidth.value = windowWidth.value;
-  //     }
-  //   }, 1);
-  // });
+
+  // setTimeout(() => {
+  //   if (isFullScreen.value) {
+  //     fullScreen();
+  //   } else if (isMaximize.value) {
+  //     maximize();
+  //   }
+  // }, 10);
 };
 
 // 挂载后
@@ -558,9 +585,6 @@ onMounted(() => {
 });
 // 卸载前
 onBeforeUnmount(() => {
-  // perfectScrollbar.value?.destroy();
-  // perfectScrollbar.value = null;
-
   // 注销弹窗失去焦点监听
   proxy.$bus.off("modalBlur");
   // 注销单例弹窗监听
@@ -582,6 +606,8 @@ defineExpose({
   maximize,
   // 手动最小化
   minimize,
+  // 手动全屏
+  fullScreen,
   // 是否最大化
   isMaximize,
   // 是否最小化

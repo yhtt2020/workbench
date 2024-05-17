@@ -60,7 +60,7 @@ import navigationData from '../../js/data/tableData'
 
 import {usePlat} from '../../ui/hooks/usePlat'
 let appModel
-if (!usePlat()) {
+if (usePlat('client')) {
   appModel= window.$models.appModel
 }
 

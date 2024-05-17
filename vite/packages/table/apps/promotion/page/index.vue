@@ -68,7 +68,7 @@
   import money16Regular from '@iconify-icons/fluent/money-16-regular';
 let appModel
 import {usePlat} from '../../../ui/hooks/usePlat'
-  if (!usePlat()) {
+  if (usePlat('client')) {
     appModel= window.$models.appModel
 
   }

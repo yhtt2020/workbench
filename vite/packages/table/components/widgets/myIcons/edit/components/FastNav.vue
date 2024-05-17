@@ -82,7 +82,7 @@ import navigationData from "../../../../../js/data/tableData";
 import listItem from "../../../../bottomPanel/listItem.vue";
 import { usePlat } from "../../../../../ui/hooks/usePlat";
 let appModel
-if (!usePlat()) {
+if (usePlat('client')) {
   appModel = window.$models.appModel
 
 }

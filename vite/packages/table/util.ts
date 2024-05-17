@@ -1,6 +1,6 @@
 import { usePlat } from "./ui/hooks/usePlat"
 let path
-if (!usePlat('web')) {
+if (usePlat('client')) {
  path = require('path')
 }
 

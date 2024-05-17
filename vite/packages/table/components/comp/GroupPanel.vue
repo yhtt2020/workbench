@@ -76,7 +76,7 @@ import GradeSmallTip from "../GradeSmallTip.vue";
 import browser from '../../js/common/browser'
 import {usePlat} from '../../ui/hooks/usePlat'
 let groupApi
-if (!usePlat('web')) {
+if (usePlat('client')) {
   groupApi = window.$apis.groupApi
 
 }

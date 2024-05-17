@@ -69,7 +69,7 @@ const list = ref([
 
 // 当为web端时，只保留系统设置
 const iconList = computed(() => {
-    if(window.$usePlat()){
+    if(!window.$usePlat('client')){
         return list.value.filter(item => item.disabled !== 'client')
     } else {
         return list.value

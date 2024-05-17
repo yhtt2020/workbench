@@ -18,7 +18,7 @@ function isMain(){
   return sign === 'table.com';
 }
 function isWin(){
-  if (window.$usePlat()) return
+  if (!!window.$usePlat('client')) return
   return process.platform==='win32'
 }
 export {

@@ -1,7 +1,9 @@
-<template>    
-   <xt-left-menu :list="this.menuList" last="2" model="id" end="1">
+<template>
+   <xt-left-menu :list="this.menuList" last="2" model="id" end="0" leftClass="xt-main-bg py-3">
 
-    <slot></slot>
+<div class="pr-3 py-3 w-full h-full">
+  <slot></slot>
+</div>
 
   </xt-left-menu>
 <!-- 全屏 -->
@@ -56,9 +58,9 @@ export default {
               }
             },
           },
-          {
-            full: true,
-          },
+          // {
+          //   full: true,
+          // },
         ],
       };
     },

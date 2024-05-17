@@ -26,7 +26,7 @@ import { Modal } from 'ant-design-vue'
 import { singleStore } from "../js/common/single";
 import {usePlat} from '../ui/hooks/usePlat'
 let appModel
-if (!usePlat('web')) {
+if (usePlat('client')) {
   appModel= window.$models.appModel
 
 }

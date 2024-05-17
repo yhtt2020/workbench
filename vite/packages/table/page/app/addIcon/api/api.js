@@ -5,7 +5,7 @@ const select = "/app/good/app/selectApp";
 import web from './web.json'
 // import isXT from "../../../../components/card/hooks/mode";
 let appModel;
-if (!usePlat('web')) {
+if (usePlat('client')) {
   appModel  = window.$models.appModel
 }
 // 首页推荐
