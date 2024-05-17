@@ -1,9 +1,19 @@
 //系统应用变量
-const Server = {
+let dev=false
+let Server = {
+  //正式环境配置
   baseUrl: 'https://wad.apps.vip/api',
-  cdn:'https://a.apps.vip/cdn'
- //baseUrl:'http://test1.com:9001'
+  cdn:'https://a.apps.vip/cdn',
+  clientId:10001
 }
+if(dev){
+  //开发环境配置
+  Server.baseUrl='http://localhost:9001'
+  Server.clientId=10001
+}
+
+
+
 
 /**
  * 生成服务端url，斜杠开头
@@ -311,4 +321,4 @@ let ActionGroups = [
     ]
   }
 ]
-export {SystemApps, ActionGroups, Server, sUrl,cdnUrl}
+export {SystemApps, ActionGroups, Server, sUrl,cdnUrl,clientId}
