@@ -1,11 +1,11 @@
 <template>
-  <div class="mr-3 h-full overflow-hidden" style="min-width: 400px;">
+  <div class="h-full overflow-hidden" style="min-width: 400px;width:100%">
     <LeftTab>
       <div class="h-full w-full flex">
         <div class="flex h-full">
           <LeftSearch :changeEditorValue="changeEditorValue" :selDesk="selDesk" :menus="menus"></LeftSearch>
         </div>
-        <div class="flex h-full flex-col w-full" style="min-width: 400px;">
+        <div class="flex h-full flex-col w-full" style="min-width: 400px;width: 100%;">
           <NoteContent :menus="menus" :selDesk="selDesk" ref="content"
                        v-if="this.selNote>=0 && this.noteList.length >0"></NoteContent>
         </div>
@@ -115,6 +115,8 @@ export default {
     }
   },
   mounted () {
+    // console.log('              :>> ', this.customIndex);
+    // console.log('              :>> ', this);
     // 重置默认数据
     this.selNote = -1
     if (this.$route.params.customIndex) {

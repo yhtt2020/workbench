@@ -1,5 +1,5 @@
 <template>
-  <div class="xt-bg-2 w-full p-2 rounded-xl relative mt-1">
+  <div class=" w-full p-2 rounded-xl relative mt-1" :class="textClass">
     <textarea
       class="w-full block overflow-y-auto text-base"
       style="
@@ -11,7 +11,7 @@
         max-height: 200px;
       "
       :class="{ 'xt-scrollbar': isScrollbar }"
-      :style="[initHeight ? '' : 'height: 28px;']"
+      :style="[initHeight ? 'min-height: 84px;height: 84px;' : 'min-height: 84px;height: 84px;']"
       rows="1"
       spellcheck="false"
       placeholder="开始聊天吧"
@@ -35,14 +35,21 @@
 </template>
 
 <script setup>
-import { ref, watch, getCurrentInstance } from "vue";
+import { ref, watch, getCurrentInstance ,inject,computed} from "vue";
 import {completeTask} from '../../../../apps/task/task'
-import { appStore } from "../../../../store"; 
+import { appStore } from "../../../../store";
 import { storeToRefs } from "pinia";
 const { proxy } = getCurrentInstance();
 const appS = appStore();
+const modalStatus = inject("modalStatus");
 
-console.log('completeTask :>> ', completeTask);
+const textClass = computed(() => {
+  if (modalStatus) {
+    return "xt-main-bg";
+  }else {
+    return 'xt-bg-2'
+  }
+});
 const emits = defineEmits(["onSearch"]);
 const isScrollbar = ref(false);
 const initHeight = ref(true);

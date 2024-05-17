@@ -9,8 +9,9 @@
         v-model:icon="currentIcon"
         boxR="10px"
         :select="true"
-        :upload="true"
+        :upload="upload"
         @cb="updateIcon"
+        :menus="menus"
       />
     </div>
     <div class="ml-3" style="width: 100%; height: 40px">
@@ -36,6 +37,14 @@ const props = defineProps({
     default: "var(--main-bg)",
   },
   input: {},
+  upload:{
+    default:true
+  },
+  menus:{
+    default:()=>{
+      return ["icon", "emoji"]
+    }
+  }
 });
 const { icon } = toRefs(props);
 const currentIcon = ref(props.icon);

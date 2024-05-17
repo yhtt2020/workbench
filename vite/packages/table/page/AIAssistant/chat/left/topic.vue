@@ -1,21 +1,26 @@
 <template>
   <xt-menu :menus="menus">
     <div
-      class="group cursor-pointer flex items-center text-base relative rounded-xl pl-2 mb-2 mr-3"
-      style="width: 212px; height: 72px"
+      class="group cursor-pointer flex items-center text-base relative rounded-xl pl-2 mt-2 mr-3"
+      style="width: 224px; height: 72px"
       :class="{ 'xt-active-bg-2': selectTopicIndex === data.id }"
       @click="handleIndex()"
     >
-      <Icon :icon="data.icon?.name" style="font-size: 17.5px"></Icon>
-      <div class="ml-2 flex flex-col">
-        <div class="flex justify-between">
-          <div class="truncate" style="width: 120px">{{ data.name }}</div>
+      <xt-mix-icon
+        :icon="data.icon?.name"
+        type="select"
+        size="32"
+        style="background: none"
+      />
+      <div class="ml-3 flex flex-col">
+        <div class="flex justify-between items-center">
+          <div class="truncate flex-1">{{ data.name }}</div>
           <div class="xt-text-2 text-xs">
             {{ time }}
           </div>
         </div>
         <div
-          class="truncate xt-text-2 text-sm mt-1"
+          class="truncate xt-text-2 text-sm mt-1.5"
           style="width: 160px; height: 22px"
         >
           {{ text }}
@@ -32,6 +37,7 @@
 </template>
 
 <script>
+import emojis from "../../../../ui/components/SelectIcon/iconList/emojis.js";
 import { mapWritableState, mapActions } from "pinia";
 import { aiStore } from "../../../../store/ai";
 import dayjs from "dayjs";
@@ -101,7 +107,23 @@ export default {
       }
     },
   },
-  mounted() {},
+  mounted() {
+    const list = emojis.list;
+    // 获取list的随机值
+    let randomIndex = Math.floor(Math.random() * list.length);
+    const emoji = `https://a.apps.vip/icons/iconSelect/emoji/${list[randomIndex].name}.svg`;
+    if (this.data.icon.type != "emoji") {
+      let id = this.data.id;
+      for (let key in this.topicList) {
+        let item = this.topicList[key];
+
+        if (item.id == id) {
+          item.icon.name = emoji;
+          item.icon.type = "emoji";
+        }
+      }
+    }
+  },
   methods: {
     ...mapActions(aiStore, ["delTopic"]),
     getData() {
