@@ -94,7 +94,8 @@ export default {
       settingVisible: false,
       inputValue: "",
       header: {
-        ifyIcon:"fluent:bot-24-regular",
+        // ifyIcon:"fluent:bot-24-regular",
+        showIcon:"/img/appLogo/ai.png",
         title:"AI助手",
         titleHover:true,
         titleHoverName:'打开应用',

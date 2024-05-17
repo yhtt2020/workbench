@@ -301,7 +301,7 @@ export default {
   watch: {
   },
   methods: {
-    ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData", "setFreeLayoutData", "setFreeLayoutState", 'renewFreeLayout', 'getFreeLayout1']),
+    ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData", "setFreeLayoutData", "setFreeLayoutState", 'renewFreeLayout',]),
 
     // 设置自由布局数据
     showFreeLayout(type) {

@@ -370,7 +370,9 @@ export default {
     header() {
       return {
         title: this.paperTitle,
-        ifyIcon: "fluent:image-multiple-16-regular",
+       //  ifyIcon: "fluent:image-multiple-16-regular",
+        showIcon:"/img/appLogo/wallpaper.png"
+
       };
     },
     options() {

@@ -187,7 +187,8 @@ export default {
     header(){
       return {
         title: this.customData.title,
-        ifyIcon: 'fluent:notepad-16-regular',
+        // ifyIcon: 'fluent:notepad-16-regular',
+        showIcon:'/img/appLogo/note.png',
         titleHover: true,
         titleHoverName: '打开应用',
       }
