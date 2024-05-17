@@ -169,7 +169,7 @@ export const communityDeskStore = defineStore("communityDesk", {
         if (archiveData.desksAll) {
           this.syncDesk.desks = archiveData?.desksAll;
         }
-        this.setting.getSyncTime = archiveData?.updateTime;
+        this.setting.getSyncTime = archiveData?._v;
       } else {
         if (rs.code === 404) {
           // 获取过滤出当前社群的本地桌面数据。
@@ -200,6 +200,7 @@ export const communityDeskStore = defineStore("communityDesk", {
 
       if (rs.status) {
         const archiveData = rs.data?.data;
+
         if (archiveData.deskDetail) {
           // 排查本地桌面desks的数组是否存在云端编辑的数据
           const index = _.findIndex((cardStore() as any).desks, (desk: any) => {
@@ -208,9 +209,9 @@ export const communityDeskStore = defineStore("communityDesk", {
           if (index === -1) {
             (cardStore() as any).desks.push(archiveData?.deskDetail);
           }
-          // this.syncDesk.deskDetail = archiveData?.deskDetail;
+          this.syncDesk.deskDetail = rs.data?.deskDetail;
         }
-        this.setting.getSyncTime = archiveData?.updateTime;
+        this.setting.getSyncTime = archiveData?._v;
       } else {
         if (rs.code === 404) {
           this.syncDesk.deskDetail = null;

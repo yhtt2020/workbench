@@ -45,8 +45,11 @@
           <span class="xt-font font-14 xt-text">更新桌面数据</span>
         </div>
       </xt-button>
-      <span class="xt-font font-14 xt-text-2">
-        上次同步时间：
+      <span class="xt-font font-14 xt-text-2" v-if="role === 'owner'">
+        上次同步时间：{{ setting.saveSyncTime !== "" ?  generateSearchResultTime(setting.saveSyncTime) : "" }}
+      </span>
+      <span class="xt-font font-14 xt-text-2" v-if="role === 'member'">
+        上次同步时间：{{  setting.getSyncTime !== "" ? generateSearchResultTime(setting.getSyncTime) : "" }}
       </span>
     </div>
   </div>
@@ -56,7 +59,7 @@
 import { computed, ref, toRefs } from "vue";
 import { storeToRefs } from "pinia";
 import { communityDeskStore } from "../store/communityDeskStore";
-
+import { generateSearchResultTime } from "../hooks/deskCreateMethod";
 
 const props = defineProps({
   // 当前桌面信息
@@ -68,6 +71,8 @@ const props = defineProps({
 const { deskInfo } = toRefs(props);
 
 const emit = defineEmits(["handleSyncDesk"]);
+
+const { setting } = storeToRefs(communityDeskStore());
 
 // 获取当前社群信息
 const info = computed(() => {

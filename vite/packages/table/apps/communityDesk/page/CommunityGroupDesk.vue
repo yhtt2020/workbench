@@ -502,7 +502,6 @@
     :currentCommunityNo="currentCommunity"
     @createDesk="doAddDesk('空白桌面')"
   />
-  
 </template>
 
 <script>
@@ -837,14 +836,30 @@ export default {
       handler(newVal) {
         // 默认选中桌面方法
         this.setCurrentDefaultDesk();
-        // 成员社群获取云端数据
-        if (newVal.role === "member") {
-          this.loadCommunityCloud();
-        }
+        // // 成员社群获取云端数据
+        // if (newVal.role === "member") {
+        //   this.loadCommunityCloud();
+        // }
       },
       immediate: true,
       deep: true,
     },
+
+    currentDesk: {
+      handler(newVal) {
+        console.log("当前桌面数据正在编辑更新中", newVal);
+        
+      },
+      immediate: true,
+      deep: true,
+    },
+    // deskList: {
+    // handler(newVal) {
+    //   console.log("当前桌面数据正在编辑更新中", newVal);
+    // },
+    // immediate: true,
+    // deep: true,
+    // },
   },
 
   methods: {
@@ -935,6 +950,63 @@ export default {
       this.deskTitle = "";
       this.key = Date.now();
       this.addDeskVisible = false;
+    },
+
+    // 删除桌面
+    delDesk() {
+      const filterList = this.deskList.filter((desk) => {
+        if (desk.communityNo) {
+          return desk;
+        }
+      });
+      /**当前桌面的卡片数据进行删除**/
+      this.currentDesk?.cards?.forEach((item) => {
+        //移除桌面相关的便签卡片
+        if (item.name === "notes" && !this.$usePlat()) {
+          tsbApi.db
+            .find({
+              selector: {
+                _id: "note:" + item.id,
+              },
+            })
+            .then((res) => {
+              if (res?.docs.length) {
+                tsbApi.db.put({
+                  ...res.docs[0],
+                  deskId: "",
+                  deskName: "",
+                });
+              }
+            });
+        }
+      });
+      window.$ui.confirm("删除当前桌面？此操作不可还原。", "", {
+        type: "warning",
+        okText: "删除桌面",
+        okButtonWidth: "100",
+        ok: () => {
+          if (this.communityDeskList.length === 1) {
+            const index = this.deskList.findIndex((desk) => {
+              return String(desk?.id) === String(this.currentDesk?.id);
+            });
+            this.deskList.splice(index, 1);
+            this.doAddDesk("空白桌面");
+            this.$emit("changeDesk", { id: filterList[0].id });
+            this.clearFreeLayout(this.currentDeskId);
+            // 删除桌面数据
+            this.key = Date.now();
+          } else {
+            const index = this.deskList.findIndex((desk) => {
+              return String(desk?.id) === String(this.currentDesk?.id);
+            });
+            this.deskList.splice(index, 1);
+            this.$emit("changeDesk", { id: filterList[0].id });
+            this.clearFreeLayout(this.currentDeskId);
+            // 删除桌面数据
+            this.key = Date.now();
+          }
+        },
+      });
     },
 
     // 解决桌面卡片数据重置
@@ -1155,25 +1227,25 @@ export default {
 
     // 根据当前桌面id进行判断是否为当前社群的桌面
     setCurrentDefaultDesk() {
-      const found = _.find(this.deskList, (desk) => {
-        return String(this.currentDeskId) === String(desk.id);
-      });
-      const filterLocalDesk = _.filter(this.deskList, (desk) => {
-        return Number(this.currentComInfo.no) === Number(desk?.communityNo);
-      });
-      // 检测是不是已经从个人桌面切换到社群桌面的处理逻辑
-      if (found && found?.communityNo) {
-        const isCommunityNoSame =
-          Number(this.currentComInfo.no) === Number(found?.communityNo);
-        console.log('isCommunityNoSame',isCommunityNoSame);
-        if (!isCommunityNoSame) {
-          this.setCurrentDeskId(filterLocalDesk[0]?.id);
-        }
-      }
-      // 过滤出当前社群名下的所有桌面列表
-      else {
-        this.setCurrentDeskId(filterLocalDesk[0]?.id);
-      }
+      // const found = _.find(this.deskList, (desk) => {
+      //   return String(this.currentDeskId) === String(desk.id);
+      // });
+      // const filterLocalDesk = _.filter(this.deskList, (desk) => {
+      //   return Number(this.currentComInfo.no) === Number(desk?.communityNo);
+      // });
+      // // 检测是不是已经从个人桌面切换到社群桌面的处理逻辑
+      // if (found && found?.communityNo) {
+      //   const isCommunityNoSame =
+      //     Number(this.currentComInfo.no) === Number(found?.communityNo);
+      //   console.log("isCommunityNoSame", isCommunityNoSame);
+      //   if (!isCommunityNoSame) {
+      //     this.setCurrentDeskId(filterLocalDesk[0]?.id);
+      //   }
+      // }
+      // // 过滤出当前社群名下的所有桌面列表
+      // else {
+      //   this.setCurrentDeskId(filterLocalDesk[0]?.id);
+      // }
     },
   },
 };
