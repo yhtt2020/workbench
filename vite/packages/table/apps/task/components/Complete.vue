@@ -37,6 +37,7 @@ import XtIfyIcon from "../../../ui/new/IfyIcon/index.vue";
 import { getTaskStatus } from "../api";
 import { Avatar } from "ant-design-vue";
 import { appStore } from "../../../store";
+import { useUpdateUserInfo } from '../../../permission/user/useUserPermit';
 
 import XtButton from "../../../ui/libs/Button/index.vue";
 import ShowReward from "./ShowReward.vue";
@@ -73,26 +74,12 @@ const claimReward = () => {
   // 游客模式
   if(window.$useEnv('guest')){
     useLogin(()=>{
-    //  isTaskDrawer.value = true;
      rewardVisible.value = true;
     })
-    // tsbApi.user.login((data) => {
-    //  app.getUserInfo();
-    //  isTaskDrawer.value = true;
-    //  rewardVisible.value = true;
-    // })
     return;
   }
-
-  // // emits("close-toast");
-  // // app.getUserInfo();
-  // // // console.log("status.value :>> ", status.value);
-  // // if (window.$useEnv('guest')) {
-  // //   // 挑灯绿
-  // //   return
-  // // }
-
   app.getUserInfo();
+  useUpdateUserInfo();
   // 是否第二次完成
   if (status.value) {
     return;
