@@ -74,6 +74,8 @@ import { useRouter } from "vue-router";
 import { appStore } from "../../../store";
 import { getCommunityDeskList } from "../../../apps/communityDesk/hooks/deskCreateMethod";
 import { communityDeskStore } from "../../../apps/communityDesk/store/communityDeskStore";
+import { cardStore } from "../../../store/card";
+import _ from "lodash-es";
 
 // 路由
 const router = useRouter();
@@ -89,6 +91,8 @@ const { currentCommunity } = storeToRefs(comNav);
 const app = appStore();
 const { settings } = storeToRefs(app);
 const communityDesk = communityDeskStore();
+const { syncDesk } = storeToRefs(communityDesk);
+const { desks } = storeToRefs(cardStore());
 
 // ref定义数据
 const search = ref("");
@@ -153,10 +157,11 @@ const selectCommunity = async (item, index) => {
   }
   // 成员
   else if (role === "member") {
-    communityDesk.setCurrentDeskNo(item.cno);
-    const syncRs = await communityDesk.loadCommunityDeskAll();
-    const syncDesks = syncRs?.data?.data?.desks;
-    if (syncRs.code === 404 || syncDesks?.length === 0) {
+    // 加载获取云端数据
+    loadSyncDesk(item.cno);
+    // 检测云端获取的数据有没有存在本地中
+    const communityDesks = getCommunityDeskList(item.communityInfo);
+    if (communityDesks.length === 0) {
       window.$ui.confirm("暂无可用的社群桌面", "请联系你的社群管理员创建", {
         ok: () => {},
         okText: "好的",
@@ -173,6 +178,14 @@ const selectCommunity = async (item, index) => {
   }
   // 选择后进行弹窗关闭
   emit("close");
+};
+
+// 加载云端数据处理方法
+const loadSyncDesk = (no) => {
+  console.log("no", no);
+  communityDesk.setCurrentDeskNo(no);
+  communityDesk.loadCommunityDeskAll();
+  communityDesk.loadCommunityDeskDetail();
 };
 
 onMounted(() => {

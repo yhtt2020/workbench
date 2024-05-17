@@ -165,7 +165,7 @@ const openDesk = async () => {
   // 先检测当前社群是成员还是管理员
   const currentRole = (currentCommunity.value.item as any).role;
   if (currentRole === "owner") {
-    // 其次检测当前所在的社群桌面数据是否为空列表
+    // 检测当前所在的社群桌面数据是否为空列表
     const deskList = getCommunityDeskList(currentCommunity.value?.item);
     if (deskList.length === 0) {
       settings.value.isCommunity = false;
@@ -180,13 +180,12 @@ const openDesk = async () => {
       router.push({ name: "home", params: { no: "" } });
     }
   } else if (currentRole === "member") {
-    // 获取云端社群桌面数据
-    communityDesk.setCurrentDeskNo((currentCommunity.value.item as any).no);
-    const syncDeskRs = await communityDesk.loadCommunityDeskAll();
-    const syncDeskList = syncDeskRs?.data?.data?.desksAll;
-    if (syncDeskRs.code === 404 || syncDeskList.length === 0 ) {
-      settings.value.isCommunity = true;
-      router.go(-1);
+    // 获取云端数据并且存储在本地desks列表中
+    loadSyncDesk((currentCommunity.value.item as any)?.no);
+    // 检测当前所在的社群桌面数据是否为空列表
+    const deskList = getCommunityDeskList(currentCommunity.value?.item);
+    if (deskList.length === 0) {
+      // 提示弹窗
       (window as any).$ui.confirm(
         "暂无可用的社群桌面",
         "请联系你的社群管理员创建",
@@ -197,7 +196,9 @@ const openDesk = async () => {
           type: "link",
         }
       );
-    } else {
+    }
+    // 当前社群桌面数据已经创建
+    else {
       settings.value.isCommunity = false;
       router.push({ name: "home", params: { no: "" } });
     }
@@ -207,6 +208,13 @@ const openDesk = async () => {
     settings.value.isCommunity = false;
     router.push({ name: "home", params: { no: "" } });
   }
+};
+
+// 加载云端数据处理方法
+const loadSyncDesk = (no) => {
+  communityDesk.setCurrentDeskNo(no);
+  communityDesk.loadCommunityDeskAll();
+  communityDesk.loadCommunityDeskDetail();
 };
 </script>
 

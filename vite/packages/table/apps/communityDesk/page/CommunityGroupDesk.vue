@@ -127,7 +127,7 @@
                   style="font-size: 18px; vertical-align: middle"
                   class="mr-2"
                 />
-                <span class="">{{ item.name }}</span>
+                <span class="xt-text xt-font font-16">{{ item.name }}</span>
               </div>
               <!-- 全屏功能,后期需要再开放 -->
               <xt-button w="38" h="38" @click="handleDeskFullScreen" hidden="">
@@ -805,7 +805,18 @@ export default {
         });
         return filterList;
       } else {
-        return this.syncDesk.desks;
+        // const filterMemberList = _.filter(this.deskList, (desk) => {
+        //   if (desk.communityNo) {
+        //     const index = _.findIndex(this.syncDesk.desks, (find) => {
+        //       return String(desk.id) === String(find.id);
+        //     });
+        //     return index > -1 && Number(this.currentComInfo.no) === Number(desk.communityNo);
+        //   }
+        // });
+        // console.log("filterMemberList",filterMemberList);
+        // return filterMemberList;
+
+        return [];
       }
     },
 
@@ -836,10 +847,6 @@ export default {
       handler(newVal) {
         // 默认选中桌面方法
         this.setCurrentDefaultDesk();
-        // // 成员社群获取云端数据
-        // if (newVal.role === "member") {
-        //   this.loadCommunityCloud();
-        // }
       },
       immediate: true,
       deep: true,
@@ -848,18 +855,10 @@ export default {
     currentDesk: {
       handler(newVal) {
         console.log("当前桌面数据正在编辑更新中", newVal);
-        
       },
       immediate: true,
       deep: true,
     },
-    // deskList: {
-    // handler(newVal) {
-    //   console.log("当前桌面数据正在编辑更新中", newVal);
-    // },
-    // immediate: true,
-    // deep: true,
-    // },
   },
 
   methods: {
@@ -1227,25 +1226,32 @@ export default {
 
     // 根据当前桌面id进行判断是否为当前社群的桌面
     setCurrentDefaultDesk() {
-      // const found = _.find(this.deskList, (desk) => {
-      //   return String(this.currentDeskId) === String(desk.id);
-      // });
-      // const filterLocalDesk = _.filter(this.deskList, (desk) => {
-      //   return Number(this.currentComInfo.no) === Number(desk?.communityNo);
-      // });
-      // // 检测是不是已经从个人桌面切换到社群桌面的处理逻辑
-      // if (found && found?.communityNo) {
-      //   const isCommunityNoSame =
-      //     Number(this.currentComInfo.no) === Number(found?.communityNo);
-      //   console.log("isCommunityNoSame", isCommunityNoSame);
-      //   if (!isCommunityNoSame) {
-      //     this.setCurrentDeskId(filterLocalDesk[0]?.id);
-      //   }
-      // }
-      // // 过滤出当前社群名下的所有桌面列表
-      // else {
-      //   this.setCurrentDeskId(filterLocalDesk[0]?.id);
-      // }
+      // 过滤出与当前社群相关联的桌面列表
+      const filterDeskList = _.filter(this.deskList, (desk) => {
+        if (desk.hasOwnProperty("communityNo")) {
+          return Number(this.currentComInfo.no) === Number(desk?.communityNo);
+        }
+      });
+      console.log("过滤出与当前社群相关联的桌面列表", filterDeskList);
+
+      // 检测是不是已经从个人桌面切换到社群桌面的处理逻辑
+      const found = _.find(this.deskList, (desk) => {
+        return String(this.currentDeskId) === String(desk.id);
+      });
+      console.log("检测当前的桌面id", found);
+
+      if (found && found?.communityNo) {
+        const isCommunityNoSame =
+          Number(this.currentComInfo.no) === Number(found?.communityNo);
+
+        console.log("是否满足条件", isCommunityNoSame);
+
+        if (!isCommunityNoSame) {
+          this.setCurrentDeskId(filterDeskList[0]?.id);
+        }
+      } else {
+        this.setCurrentDeskId(filterDeskList[0]?.id);
+      }
     },
   },
 };
