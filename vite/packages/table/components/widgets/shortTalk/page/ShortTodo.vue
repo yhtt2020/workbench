@@ -2,14 +2,14 @@
 
     <xt-container
         v-model:customSize = "customData.customSize"
-        :header="header" 
+        :header="header"
         :envLimit="['guest', 'offline']"
-        @click="onHistoryMessage" 
-        :customData="customData" 
-        :customIndex="customIndex" 
-        :menuList="menuList" 
-        :options="options" 
-        ref="dataSlot" 
+        @click="onHistoryMessage"
+        :customData="customData"
+        :customIndex="customIndex"
+        :menuList="menuList"
+        :options="options"
+        ref="dataSlot"
         :desk="desk"
         @delete="deleteCard">
 
@@ -113,7 +113,8 @@ export default {
             customSize:'2x4',
             header:{
                 title:'社区待办',
-                ifyIcon:'fluent:checkbox-checked-16-regular',
+                // ifyIcon:'fluent:checkbox-checked-16-regular',
+                showIcon:"/img/appLogo/shortTodo.png",
                 rightIcon:[
                     {
                         ifyIcon:'fluent:open-20-filled',
