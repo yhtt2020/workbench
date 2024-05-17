@@ -110,11 +110,11 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 获取当前自由布局数据
     getFreeLayoutData() {
-      return this.freeLayoutData[this.getCurrentDeskId];
+      return this.freeLayoutData[this.freeLayoutId];
     },
     // 获取当前自由布局状态
     getFreeLayoutState() {
-      return this.freeLayoutState[this.getCurrentDeskId];
+      return this.freeLayoutState[this.freeLayoutId];
     },
     // 获取当前自由布局是否开启
     isFreeLayout() {
@@ -123,11 +123,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       // 不存在自由布局数据
       if (!this.freeLayoutState.hasOwnProperty(this.freeLayoutId)) return;
 
-      return this.freeLayoutState[this.getCurrentDeskId]?.system?.isFreeLayout;
-
-      // if (this.freeLayoutState.hasOwnProperty(this.getCurrentDeskId)) {
-      //   return this.freeLayoutState[this.getCurrentDeskId].system?.isFreeLayout;
-      // }
+      return this.freeLayoutState[this.freeLayoutId]?.system?.isFreeLayout;
     },
     // 获取当前自由布局边距状态
     getFreeLayoutMargin() {
