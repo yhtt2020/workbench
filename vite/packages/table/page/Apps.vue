@@ -143,7 +143,7 @@ import Desktop from '../page/app/addIcon/modules/Desktop.vue'
 import pathLib from 'path'
 import {usePlat} from '../ui/hooks/usePlat'
 let fs
-if (!usePlat('web') ) {
+if (usePlat('client')) {
 fs= window.$models.fs
 
 }

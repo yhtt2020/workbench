@@ -101,6 +101,7 @@ import Remote from "../apps/console/pages/Remote.vue";
 import SharedDesk from  '../page/SharedDesk.vue'
 export default [
   {
+
     path: "/main",
     name: "main",
     // component: Main,
@@ -112,11 +113,7 @@ export default [
     children: [
       ...DeckRoute,
       ShortcutKeyRoute,
-      {
-        path:'/s/:id',
-        name:'SharedDesk',
-        component: SharedDesk,
-      },
+
       {
         path: "/ai/:value?",
         name: "ai",

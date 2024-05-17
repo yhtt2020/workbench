@@ -289,7 +289,7 @@ const { edit } = storeToRefs(widgetStore);
 const props = defineProps(defaultProps);
 const { header } = toRefs(props);
 const courierStatus = computed(() => {
-  return window.$usePlat();
+  return !window.$usePlat('client');
 });
 const envLimitStatus = computed(() => {
   return props.envLimit.filter((item) => item != "offline");

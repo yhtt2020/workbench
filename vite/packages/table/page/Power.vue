@@ -33,7 +33,7 @@ import { runNir } from '../js/common/exec'
 import { getSign, isMain } from '../js/common/screenUtils'
 import { usePlat } from '../ui/hooks/usePlat'
 let execShell
-if (!usePlat()) {
+if (usePlat('client')) {
   execShell = require('child_process').exec
 
 }

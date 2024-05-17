@@ -246,7 +246,7 @@ import {usePlat} from '../ui/hooks/usePlat'
 import cache from "../components/card/hooks/cache";
 import { useLogin } from '../permission/user/useLogin'
 let settings
-if ( !usePlat('web')) {
+if (usePlat('client')) {
   settings= window.$models.settings
 
 }

@@ -99,7 +99,7 @@ const customLink = defineAsyncComponent(() => import('./components/CustomLink.vu
 import {usePlat} from '../../../ui/hooks/usePlat'
 import {replaceIcon} from './hook/useReplace'
 let appModel
-if ( !usePlat('web')) {
+if (usePlat('client')) {
   appModel = window.$models.appModel
 
 }

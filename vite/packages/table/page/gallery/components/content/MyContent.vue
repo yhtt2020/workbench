@@ -62,7 +62,7 @@
  import {completeTask} from '../../../../apps/task/task'
 import { usePlat } from '../../../../ui/hooks/usePlat';
 let fs,path
- if (!usePlat('web')) {
+ if (usePlat('client')) {
    fs = window.$models.fs
     path = require('path')
  }

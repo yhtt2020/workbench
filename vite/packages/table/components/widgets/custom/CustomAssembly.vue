@@ -9,11 +9,11 @@
     :custom-data="customData"
     :desk="desk"
     @delete="deleteCard">
-    <div 
-      v-if="Object.keys(myData.img).length > 0" 
-      class="absolute inset-0" 
+    <div
+      v-if="Object.keys(myData.img).length > 0"
+      class="absolute inset-0"
       style="
-        border-radius: 8px; 
+        border-radius: 8px;
         z-index: 1;
         left: -14px;
         right: -14px;
@@ -70,7 +70,7 @@
     <div v-else class="flex flex-col items-center justify-center h-full">
       <!-- <a-empty description="" /> -->
 
-      <xt-button 
+      <xt-button
         type="theme"
         @click="importFile">
         选择图片
@@ -78,8 +78,8 @@
     </div>
   </xt-container>
   <!-- 新版设置 -->
-  <CustomModal 
-    :modalVisible="panelVisible"  
+  <CustomModal
+    :modalVisible="panelVisible"
     @close="panelVisible = false"
     :customInput="myData.title"
     :linkPath="myData.link"
@@ -114,7 +114,7 @@ import { startApp } from '../../../ui/hooks/useStartApp'
 import {usePlat} from '../../../ui/hooks/usePlat'
 import CustomModal from './components/CustomModal.vue'
 let appModel
-if (!usePlat()) {
+if (usePlat('client')) {
   appModel = window.$models.appModel
 
 }
@@ -252,7 +252,7 @@ export default {
         }
       }
     },
-    
+
     sendImg(img) {
       this.myData.img = img;
       this.saveData()

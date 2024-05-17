@@ -7,7 +7,7 @@ import {usePlat} from "../../ui/hooks/usePlat";
 let clipboardChanged = null
 //todo 此处要兼容web版
 let win32, fs, clipboard
-if (!usePlat('web') && process.platform === 'win32') {
+if (usePlat('client') && process.platform === 'win32') {
   fs = window.$models.fs
   clipboard = require('electron').clipboard
   win32 = window.$models.win32

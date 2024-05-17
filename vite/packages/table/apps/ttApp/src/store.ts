@@ -5,7 +5,7 @@ import { appStore as useAppStore } from "../../../store";
 import { appsStore } from "../../../store/apps";
 import { usePlat } from "../../../permission/usePlat";
 let Db
-if(!usePlat('web')){
+if (usePlat('client')) {
   console.log('客户端情况')
    Db= window.$models.Db
 }

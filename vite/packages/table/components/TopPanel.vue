@@ -59,7 +59,7 @@
     <div
       class="absolute top-0 right-0 xt-bg rounded-bl-xl h-9 no-drag"
       style="z-index: 10000;"
-      v-if="showWindowController && !$usePlat()"
+      v-if="showWindowController && $usePlat('client')"
       id="windowController" >
       <WindowController></WindowController>
     </div>
@@ -137,7 +137,7 @@ export default {
 
   mounted(){
     this.loading = false;
-    this.isWeb=usePlat('web')
+    this.isWeb=!usePlat('client')
     if (!this.timer){  setInterval(this.getTime, 1000); };
     this.filterClock(this.clockTag);
   },

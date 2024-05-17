@@ -104,7 +104,7 @@ export const navStore = defineStore("nav", {
       // console.log('执行loadNav')
       if (!this.init) {
         console.log('检测到未初始化')
-        if (usePlat('web')) {
+        if (!usePlat('client')) {
           this.copyFootNav = [...DEFAULT.NAV_WEB]
         } else {
           this.copyFootNav = [...DEFAULT.NAV_CLIENT]

@@ -3,7 +3,7 @@ import {setMuted} from "loudness";
 import { usePlat } from "../../../ui/hooks/usePlat";
 
 let path,exec, ChildProcess
-if (!usePlat()) {
+if (usePlat('client')) {
   path = require('path');
   exec = require('child_process').exec
   ChildProcess = require('child_process').ChildProcess
