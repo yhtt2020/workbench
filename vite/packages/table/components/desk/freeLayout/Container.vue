@@ -11,19 +11,9 @@ import {
 import { storeToRefs } from "pinia";
 import { useFreeLayoutStore } from "./store";
 import { message } from "ant-design-vue";
-import { useGetDesk } from "../../../hooks";
-const deskData = useGetDesk();
-console.log('deskData :>> ', deskData);
-// watch(deskData, () => {
-//   console.log("更新啦啦啦 :>> ");
-// });
 import "animate.css";
-import {
-  useGridToWidth,
-  useHeightToGrid,
-  useElementSize,
-} from "../../../ui/hooks/useCardSize";
-import _, { iteratee } from "lodash";
+import { useElementSize } from "../../../ui/hooks/useCardSize";
+import _ from "lodash";
 import { useCutLayout } from "./useCutLayout";
 // 初始化操作
 const freeLayoutStore: any = useFreeLayoutStore();
@@ -36,8 +26,6 @@ const { proxy }: any = getCurrentInstance();
 
 const { currentDesk, currentID }: any = toRefs(props);
 const {
-  getCurrentDesk,
-  freeLayoutData,
   getFreeLayoutData,
   freeLayoutEnv,
   getFreeLayoutState,

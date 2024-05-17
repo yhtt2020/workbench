@@ -196,7 +196,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       if (!this.freeLayoutExist()) return;
       this.freeLayoutData[this.freeLayoutId] = {};
 
-      // this.getCurrentDesk.cards = [];
+      this.getCurrentDesk.cards = [];
     },
     // 删除当前自由布局数据
     clearFreeLayout(id) {
@@ -308,8 +308,8 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     strategies: [
       {
         paths: ["freeLayoutData", "freeLayoutState", "test"],
-        storage: localStorage,
-        // storage: dbStorage,
+        // storage: localStorage,
+        storage: dbStorage,
       },
     ],
   },
