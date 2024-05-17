@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col justify-between h-full xt-br mr-3">
-    <div class="xt-scrollbar" style="width: 220px">
+    <div class="xt-scrollbar" style="width: 234px">
       <List></List>
     </div>
   </div>

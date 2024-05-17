@@ -17,7 +17,9 @@
       ]"
       :class="[leftClass, leftMargin]"
     >
-      <div class="w-full" v-for="list in listOption" :class="list?.class">
+    <template  v-for="list in listOption"
+    >
+    <div class="w-full" :class="list?.class" v-if="list.array.length">
         <Float
           @itemClick="itemClick"
           :list="item.children"
@@ -52,6 +54,9 @@
           </template>
         </Float>
       </div>
+
+  </template>
+
     </div>
     <!-- 左侧区域结束 -->
     <!-- 主体区域开始 -->
@@ -131,7 +136,7 @@ const isFull = ref(false);
 const typeClass = computed(() => {
   if (full.value) {
     return isFull.value
-      ? " fixed left-0 right-0 top-0 bottom-0 rounded-none py-3 pr-3"
+      ? " fixed left-0 right-0 top-0 bottom-0 rounded-none py-3 pr-3 xt-bg"
       : "xt-bg pr-3 py-3 rounded-xl";
   } else {
     // return "xt-bg pr-3 py-3 rounded-xl";
@@ -177,7 +182,7 @@ const listOption = computed(() => {
     },
     {
       boxClass: "mt-2",
-      array: newList.value.slice(-1 * props.end),
+      array: props.end > 0 ? newList.value.slice(-1 * props.end):[],
       itemOption: {
         type: "",
         bg: "",

@@ -14,30 +14,40 @@ import { useAppModalStore } from "./store";
 const props = defineProps<{
   name: any;
 }>();
-// 弹窗ref
-const modal: any = ref(null);
-// 是否最大化
-const isMaximize: any = ref(false);
-
-const maximize = () => {
-  isMaximize.value = !isMaximize.value;
-  modal.value?.maximize();
-};
-const close = () => {
-  appModalStore.getApp("ai").visible = false;
-};
 
 const appModalStore: any = useAppModalStore();
 const { runList }: any = storeToRefs(appModalStore);
-
 const data: any = ref(null);
 data.value = appModalStore.getApp(props.name);
-console.log("data.value :>> ", data.value);
+console.log("data.value.isFullScreen :>> ", data.value.isFullScreen);
+// 弹窗ref
+const modal: any = ref(null);
+// 是否最大化
+const fullScreen = () => {
+  data.value.isMaximize = false;
+  data.value.isFullScreen = !data.value.isFullScreen;
+  console.log("  data.value.isFullScreen  :>> ", data.value.isFullScreen);
+  modal.value?.fullScreen();
+};
+const maximize = () => {
+  data.value.isFullScreen = false;
+  data.value.isMaximize = !data.value.isMaximize;
+  modal.value?.maximize();
+};
+const minimize = () => {
+  modal.value?.minimize();
+};
+const close = () => {
+  appModalStore.getApp(data.value.name).visible = false;
+};
+
 const modalStyle = computed(() => {
   if (!data.value) return;
-  if (isMaximize.value) {
+  if (data.value.isMaximize || data.value.isFullScreen) {
+    console.log("123321312321312321123 :>> ", 123321312321312321123);
     return {
       "flex-grow": 1,
+      height: "100%",
     };
   }
   return {
@@ -61,11 +71,44 @@ const modalStyle = computed(() => {
     boxClass=""
     headerClass="p-2 xt-modal"
     :mask="false"
+    :isFullScreen="data?.isFullScreen"
+    :isMaximize="data?.isMaximize"
     custom
   >
+    <template #minimize-left>
+      <div class="mr-2 rounded-lg overflow-hidden">
+        <a-avatar shape="square" class="" :size="28" :src="data.icon" />
+      </div>
+      <div class="mr-2 xt-text truncate" style="max-width: 70px">
+        {{ data.cname }}
+      </div>
+    </template>
+    <!-- <a-dropdown
+            placements="bottom"
+            :overlayStyle="{
+              'z-index': '999999999 !important',
+            }"
+          >
+            <div>
+              <xt-mix-icon
+                :icon="
+                  isMaximize
+                    ? 'fluent:full-screen-minimize-16-filled'
+                    : 'fluent:full-screen-maximize-16-regular'
+                "
+                @click="maximize"
+                boxSize="32"
+                style="background: none"
+                class="mx-3"
+              />
+            </div>
+            <template #overlay>
+              <div style="width: 200px; height: 200px; background: red"></div>
+            </template>
+          </a-dropdown> -->
     <div class="flex flex-col h-full">
-      <div
-        class="h-12 flex justify-between items-center px-4 xt-main-bg  xt-modal-header"
+      <header
+        class="h-12 flex justify-between items-center px-4 xt-main-bg xt-modal-header"
         style="border-radius: 12px 12px 0 0"
       >
         <div class="flex items-center">
@@ -73,21 +116,50 @@ const modalStyle = computed(() => {
           {{ data?.cname }}
         </div>
         <div class="flex items-center">
-          <!-- <xt-mix-icon icon="fluent:subtract-16-regular" @click="" />
+          <xt-mix-icon
+            icon="fluent:subtract-16-regular"
+            @click="minimize"
+            boxSize="32"
+            style="background: none"
+          />
+
           <xt-mix-icon
             :icon="
-              isMaximize
+              data.isMaximize
                 ? 'fluent:full-screen-minimize-16-filled'
                 : 'fluent:full-screen-maximize-16-regular'
             "
             @click="maximize"
-          /> -->
-          <xt-mix-icon icon="fluent:dismiss-16-regular" @click="close" />
+            boxSize="32"
+            style="background: none"
+            class="mx-3"
+          />
+
+          <xt-mix-icon
+            :icon="
+              data.isFullScreen
+                ? 'fluent:arrow-minimize-16-regular'
+                : 'fluent:arrow-maximize-16-regular'
+            "
+            @click="fullScreen"
+            boxSize="32"
+            style="background: none"
+            class="mr-3"
+          />
+          <xt-mix-icon
+            icon="fluent:dismiss-16-regular"
+            @click="close"
+            boxSize="32"
+            style="background: none"
+          />
         </div>
-      </div>
-      <!-- <div class="xt-theme-bg flex-grow"></div> -->
-      <div class="flex flex-grow" style="" :style="[modalStyle]">
-        <router-view :name="data?.name"></router-view>
+      </header>
+      <div
+        class="flex flex-grow"
+        style="max-height: calc(100% - 50px)"
+        :style="[modalStyle]"
+      >
+        <router-view :name="data?.name" :props="data?.props"></router-view>
       </div>
     </div>
   </xt-modal>

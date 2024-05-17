@@ -26,7 +26,7 @@
       </template>
 
       <!-- 空状态显示状态 -->
-      <template v-if="customData.list.length <= 0 && !dragSortState">
+      <template v-if="customData?.list.length <= 0 && !dragSortState">
         <Null
           :size="customData.customSize"
           @addFile="addFileClick"
@@ -80,8 +80,8 @@
     v-if="expandVisible"
     @close="expandClose"
   ></Expand>
-  
-  <ModelCard 
+
+  <ModelCard
     v-if="modelVisible"
     :cardData="cardData"
     v-model:model-visible="modelVisible"
@@ -404,8 +404,8 @@ const clickFile = (data) => {
     // 打开卡片
     modelVisible.value = true
     cardData.value = data
-    return 
-  } 
+    return
+  }
   startApp(data.type, data.value, router);
   emit("clickFile", data);
 };
