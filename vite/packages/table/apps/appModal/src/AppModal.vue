@@ -81,23 +81,7 @@ const modalStyle = computed(() => {
         {{ data.cname }}
       </div>
     </template>
-    <div class="flex flex-col h-full">
-      <div
-        class="h-12 flex justify-between items-center px-4 xt-main-bg xt-modal-header"
-        style="border-radius: 12px 12px 0 0"
-      >
-        <div class="flex items-center">
-          <xt-mix-icon :icon="data.icon" :type="data.iconType" class="mr-2" />
-          {{ data?.cname }}
-        </div>
-        <div class="flex items-center">
-          <xt-mix-icon
-            icon="fluent:subtract-16-regular"
-            @click="minimize"
-            boxSize="32"
-            style="background: none"
-          />
-          <!-- <a-dropdown
+    <!-- <a-dropdown
             placements="bottom"
             :overlayStyle="{
               'z-index': '999999999 !important',
@@ -120,6 +104,22 @@ const modalStyle = computed(() => {
               <div style="width: 200px; height: 200px; background: red"></div>
             </template>
           </a-dropdown> -->
+    <div class="flex flex-col h-full">
+      <header
+        class="h-12 flex justify-between items-center px-4 xt-main-bg xt-modal-header"
+        style="border-radius: 12px 12px 0 0"
+      >
+        <div class="flex items-center">
+          <xt-mix-icon :icon="data.icon" :type="data.iconType" class="mr-2" />
+          {{ data?.cname }}
+        </div>
+        <div class="flex items-center">
+          <xt-mix-icon
+            icon="fluent:subtract-16-regular"
+            @click="minimize"
+            boxSize="32"
+            style="background: none"
+          />
 
           <xt-mix-icon
             :icon="
@@ -142,7 +142,7 @@ const modalStyle = computed(() => {
             @click="fullScreen"
             boxSize="32"
             style="background: none"
-            class="mx-3"
+            class="mr-3"
           />
           <xt-mix-icon
             icon="fluent:dismiss-16-regular"
@@ -151,7 +151,7 @@ const modalStyle = computed(() => {
             style="background: none"
           />
         </div>
-      </div>
+      </header>
       <div
         class="flex flex-grow"
         style="max-height: calc(100% - 50px)"

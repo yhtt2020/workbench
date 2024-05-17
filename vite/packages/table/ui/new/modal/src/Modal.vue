@@ -183,7 +183,6 @@
 <script setup lang="ts">
 import McDonalds from "./McDonalds.vue";
 
-// import PerfectScrollbar from "perfect-scrollbar";
 import {
   ref,
   watch,
@@ -201,7 +200,6 @@ import { nanoid } from "nanoid";
 
 import { ModalProps } from "./types";
 const scrollbar: any = ref(null);
-// const perfectScrollbar: any = ref(null);
 const { proxy }: any = getCurrentInstance();
 
 const props = withDefaults(defineProps<ModalProps>(), {
@@ -406,26 +404,6 @@ const transitionStyle = computed(() => {
       height: "50px",
       zIndex: props.index + 1,
     };
-  }
-  // 最大化
-  else if (isMaximize.value) {
-    return {
-      top: topBarHeight.value + "px",
-      left: "0",
-      width: "100vw",
-      height: `calc(100vh - ${bottomBarHeight.value}px)`,
-      zIndex: props.index - 1,
-    };
-  }
-  // 全屏
-  else if (isFullScreen.value) {
-    return {
-      top: "0",
-      left: "0",
-      width: "100vw",
-      height: "100vh",
-      zIndex: props.index - 1,
-    };
   } else {
     return {
       top: `${y.value}px`,
@@ -440,17 +418,12 @@ const transitionStyle = computed(() => {
 /** 最小化实现 */
 const minimize = () => {
   transitionVisible.value = true;
+  isMinimize.value = !isMinimize.value;
   modalVisible.value = false;
-
-  setTimeout(() => {
-    isMinimize.value = !isMinimize.value;
-    setTimeout(() => {
-      if (!isMinimize.value) {
-        modalVisible.value = true;
-        transitionVisible.value = false;
-      }
-    }, 100);
-  }, 1);
+  if (!isMinimize.value) {
+    modalVisible.value = true;
+    transitionVisible.value = false;
+  }
 };
 
 /** 最大化 */
@@ -468,6 +441,8 @@ const maximize = () => {
     x.value = 0;
     y.value = topBarHeight.value;
   } else {
+    x.value = oldX.value;
+    y.value = oldY.value;
     setTimeout(() => {
       x.value = oldX.value;
       y.value = oldY.value;
