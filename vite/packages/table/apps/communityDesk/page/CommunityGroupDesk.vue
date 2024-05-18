@@ -177,8 +177,9 @@
         ref="mixMenu"
         v-if="displayDesks.length !== 0"
       >
+        <!-- currentDesk && currentDesk?.cards?.length > 0 -->
         <Desk
-          v-if="currentDesk && currentDesk?.cards?.length > 0"
+          v-if="false"
           :global-settings="settings"
           :editing="false"
           ref="currentDeskRef"
@@ -200,14 +201,14 @@
             </div>
           </slot>
 
-          <span v-show="false">
+          <!-- <span v-show="false">
             <Desk
               ref="currentDeskRef"
               :editing="editing"
               :key="key"
               :currentDesk="currentDesk"
             />
-          </span>
+          </span> -->
         </template>
       </xt-mix-menu>
 
