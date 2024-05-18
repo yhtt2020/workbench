@@ -111,7 +111,7 @@ const selectDesk = (item) => {
 // 添加桌面
 const addDesk = () => {
   proxy.$bus.emit("updateSetting");
-  const no = communityNo.value?.item?.no;
+  const no = communityNo.value?.no;
   const isCommunity = _.some(desks.value, (desk) => {
     return desk.communityNo && Number(desk.communityNo) === Number(no);
   });

@@ -52,9 +52,9 @@ import Avatar from "../../desk/navigationBar/components/Avatar.vue";
 const router: any = useRouter();
 
 // pinia数据
-const communityNav = chatCommunityStore();
+const communityNav:any = chatCommunityStore();
 const { myCommunity } = storeToRefs(communityNav);
-const comNav = communityNavStore();
+const comNav:any = communityNavStore();
 const { settingType, currentCommunity } = storeToRefs(comNav);
 const app: any = appStore();
 const { settings } = storeToRefs(app);
@@ -162,6 +162,8 @@ const openNav = async (event: any) => {
 
 //  进入社群桌面
 const openDesk = async () => {
+  console.log("测试-进入社群桌面");
+
   // 先检测当前社群是成员还是管理员
   const currentRole = (currentCommunity.value.item as any).role;
   if (currentRole === "owner") {
@@ -180,10 +182,11 @@ const openDesk = async () => {
       router.push({ name: "home", params: { no: "" } });
     }
   } else if (currentRole === "member") {
+    const communityInfo:any = currentCommunity.value?.item;
     // 获取云端数据并且存储在本地desks列表中
-    loadSyncDesk((currentCommunity.value.item as any)?.no);
+    loadSyncDesk(communityInfo?.no);
     // 检测当前所在的社群桌面数据是否为空列表
-    const deskList = getCommunityDeskList(currentCommunity.value?.item);
+    const deskList = getCommunityDeskList(communityInfo);
     if (deskList.length === 0) {
       // 提示弹窗
       (window as any).$ui.confirm(
@@ -200,7 +203,7 @@ const openDesk = async () => {
     // 当前社群桌面数据已经创建
     else {
       settings.value.isCommunity = false;
-      router.push({ name: "home", params: { no: "" } });
+      router.push({ name: "home", params: { no: communityInfo?.no } });
     }
   }
   // 默认社群数据测试,后期需要调整 (就是写死的社群数据)
@@ -211,7 +214,7 @@ const openDesk = async () => {
 };
 
 // 加载云端数据处理方法
-const loadSyncDesk = (no) => {
+const loadSyncDesk = (no:any) => {
   communityDesk.setCurrentDeskNo(no);
   communityDesk.loadCommunityDeskAll();
   communityDesk.loadCommunityDeskDetail();

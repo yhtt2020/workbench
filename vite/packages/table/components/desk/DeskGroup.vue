@@ -725,19 +725,15 @@ export default {
 
     // 过滤出个人桌面数据
     const filterList = this.deskList.filter((desk) => {
-      return !desk.communityNo;
+      return !desk.hasOwnProperty("communityNo");
     });
     // 从社群桌面切换到个人桌面的操作
-    const found = this.deskList.find((desk)=>{ return String(desk.id) === String(this.currentDeskId) })
-    if(found && found?.communityNo){
+    const found = this.deskList.find((desk) => {
+      return String(desk.id) === String(this.currentDeskId);
+    });
+    if (found && found.hasOwnProperty("communityNo")) {
       this.setCurrentDeskId(filterList[0].id);
     }
-
-
-    // const startWithNum = /^\d/; // 检测当前桌面id是社群桌面还是个人
-    // if (startWithNum.test(this.currentDeskId)) {
-    //   this.setCurrentDeskId(filterList[0].id);
-    // }
 
     // 个人桌面正常操作
     if (this.deskList.length > 0) {
@@ -772,7 +768,7 @@ export default {
 
     currentDesk() {
       let currentDesk = this.deskList.find((desk) => {
-        if (!desk.communityNo) return desk.id === this.currentDeskId;
+        return desk.id === this.currentDeskId;
       });
       this.key = Date.now();
       return currentDesk;
@@ -787,10 +783,14 @@ export default {
     displayDesks() {
       return [
         ...this.deskList.filter((desk) => {
-          if (!desk.communityNo) return desk.pin;
+          if (!desk.hasOwnProperty("communityNo")) {
+            return desk.pin;
+          }
         }),
         ...this.deskList.filter((desk) => {
-          if (!desk.communityNo) return !desk.pin;
+          if (!desk.hasOwnProperty("communityNo")) {
+            return !desk.pin;
+          }
         }),
       ]
         .slice(0, 4)
@@ -823,18 +823,18 @@ export default {
     },
 
     /**监听当前桌面数据的变化**/
-    deskList:{
-      handler(){
-        const filterList = this.deskList.filter((desk)=>{
-          return !desk.communityNo
-        })
-        if(filterList.length > 0){
+    deskList: {
+      handler() {
+        const filterList = this.deskList.filter((desk) => {
+          return !desk.hasOwnProperty("communityNo");
+        });
+        if (filterList.length > 0) {
           this.currentDesk = filterList[0];
         }
       },
-      immediate:true,
-      deep:true,
-    }
+      immediate: true,
+      deep: true,
+    },
   },
   methods: {
     ...mapActions(marketStore, ["getRecommend"]),
@@ -854,9 +854,9 @@ export default {
     },
     // 智能定制
     aiCustom() {
-      if(window.$usePlat()){
-        this.guideList = [0, 2]
-      }else{
+      if (window.$usePlat()) {
+        this.guideList = [0, 2];
+      } else {
         this.guideList = [0, 1, 2];
       }
       this.showGuide = true;

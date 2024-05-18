@@ -142,38 +142,34 @@ const selectCommunity = async (item, index) => {
   if (role === "owner") {
     // 管理员,检测当前社群有没有创建桌面。
     const communityDesks = getCommunityDeskList(item.communityInfo);
-    if (communityDesks.length === 0) {
+    if (communityDesks.length > 0){
+      switchCommunity(item,index);
+    }
+    else {
       selectCommunityItem.value = { item, index };
       proxy.$bus.emit("openCommunityDesk");
-    }
-    // 管理员,检测当前社群已经创建桌面。
-    else {
-      if (settings.value.isCommunity) {
-        settings.value.isCommunity = false;
-      }
-      router.push({ name: "home", params: { no: item.communityInfo.no } });
-      comNav.setCurrentCommunity(item, index);
     }
   }
   // 成员
   else if (role === "member") {
     // 加载获取云端数据
-    loadSyncDesk(item.cno);
+    console.log('item',item?.communityInfo?.no)
+    loadSyncDesk(item?.communityInfo?.no);
+
     // 检测云端获取的数据有没有存在本地中
-    const communityDesks = getCommunityDeskList(item.communityInfo);
-    if (communityDesks.length === 0) {
+    const memberDesks = getCommunityDeskList(item.communityInfo);
+    console.log("communityDesks", memberDesks);
+
+    if (memberDesks.length > 0) {
+      switchCommunity(item,index);
+    } else {
+      // router.go(-1);
       window.$ui.confirm("暂无可用的社群桌面", "请联系你的社群管理员创建", {
         ok: () => {},
         okText: "好的",
         noText: null,
         type: "link",
       });
-    } else {
-      if (settings.value.isCommunity) {
-        settings.value.isCommunity = false;
-      }
-      router.push({ name: "home", params: { no: item.communityInfo.no } });
-      comNav.setCurrentCommunity(item, index);
     }
   }
   // 选择后进行弹窗关闭
@@ -181,11 +177,19 @@ const selectCommunity = async (item, index) => {
 };
 
 // 加载云端数据处理方法
-const loadSyncDesk = (no) => {
-  console.log("no", no);
+const loadSyncDesk = async(no) => {
   communityDesk.setCurrentDeskNo(no);
-  communityDesk.loadCommunityDeskAll();
   communityDesk.loadCommunityDeskDetail();
+  communityDesk.loadCommunityDeskAll();
+};
+
+// 切换社群的方法进行提取
+const switchCommunity = (item,index) => {
+  if (settings.value.isCommunity) {
+    settings.value.isCommunity = false;
+  }
+  router.push({ name: "home", params: { no: item.communityInfo.no } });
+  comNav.setCurrentCommunity(item, index);
 };
 
 onMounted(() => {

@@ -1,13 +1,13 @@
 <!-- 社群管理员的空白桌面 -->
 <template>
   <div class="flex items-center justify-center w-full pt-6 pb-3">
-    <a-avatar :src="comInfo.icon" :size="56" shape="square" />
+    <a-avatar :src="comInfo?.icon" :size="56" shape="square" />
   </div>
   <div
     class="xt-text w-full flex items-center justify-center"
     style="font-size: 30px; font-weight: 400; font-family: '优设标题黑'"
   >
-    {{ comInfo.name }}
+    {{ comInfo?.name }}
   </div>
   <div class="flex w-full items-center justify-center">
     <span class="xt-text-2 font-16 xt-font">
