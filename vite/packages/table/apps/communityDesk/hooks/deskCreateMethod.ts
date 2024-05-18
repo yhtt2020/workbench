@@ -4,11 +4,17 @@ import _ from "lodash-es";
 
 // 导航个人桌面切换到社群桌面方法
 export const getCommunityDeskList = (communityInfo: any) => {
-  const { desks } = storeToRefs(cardStore() as any);
-  const currentCommunityDesks = _.filter(desks.value, (desk: any) => {
+  const card: any = cardStore();
+  const { desks } = storeToRefs(card);
+  // 过滤出所有社群桌面的数据
+  const allCommunityDesk = _.filter(desks.value, (desk: any) => {
+    return desk.hasOwnProperty("communityNo");
+  });
+  // 过滤出指定社群的桌面数据
+  const specifyCommunityDesks = _.filter(allCommunityDesk, (desk: any) => {
     return Number(desk?.communityNo) === Number(communityInfo?.no);
   });
-  return currentCommunityDesks;
+  return specifyCommunityDesks;
 };
 
 // 解析时间戳的转换方法
@@ -65,6 +71,5 @@ export const generateSearchResultTime = (timestamp: number) => {
     }
   }
 };
-
 
 // shi

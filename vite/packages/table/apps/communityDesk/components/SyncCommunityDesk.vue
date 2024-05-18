@@ -57,11 +57,9 @@
 
 <script setup>
 import { computed, ref, toRefs } from "vue";
-import { storeToRefs } from "pinia";
 import { communityDeskStore } from "../store/communityDeskStore";
 import { generateSearchResultTime } from "../hooks/deskCreateMethod";
 import { storeToRefs } from "pinia";
-import { communityDeskStore } from "../store/communityDeskStore";
 
 
 const props = defineProps({

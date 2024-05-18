@@ -106,7 +106,6 @@ export const communityDeskStore = defineStore("communityDesk", {
           }
         );
       }
-
     },
 
     // 保存当前社群名下所选中的桌面数据
@@ -125,7 +124,7 @@ export const communityDeskStore = defineStore("communityDesk", {
         force,
         saveKey
       );
-      
+
       // console.log("返回社群当前选中的桌面结果", rs);
 
       if (rs.status) {
@@ -153,86 +152,77 @@ export const communityDeskStore = defineStore("communityDesk", {
           }
         );
       }
-
     },
 
     // 读取当前社群名下云端存储的所有桌面列表
-    async loadCommunityDeskAll() {
+    loadCommunityDeskAll() {
       const communityNo = this.communityDesk.communityDeskNo;
+
       // console.log('打印-communityNo', communityNo);
       // console.log('打印-loadKey', communityDeskAll);
 
-      const rs = await archiveHelper.loadFromCommunity(
-        communityNo,
-        communityNavAppId,
-        communityDeskAll
-      );
-      
-      // console.log('获取桌面列表结果',rs);
-      
-      
-      // console.log('获取桌面详情结果',rs);
-      
-      if (rs.status) {
-        const archiveData = rs.data?.data;
-        if (archiveData.desksAll) {
-          this.syncDesk.desks = archiveData?.desksAll;
-        }
-        this.setting.getSyncTime = archiveData?._v;
-      } else {
-        if (rs.code === 404) {
-          // 获取过滤出当前社群的本地桌面数据。
-          const localDesks = this.getLocalDesks();
-          this.syncDesk.desks = localDesks;
-          this.setting.getSyncTime = "";
-        }
-      }
-      return rs;
+      archiveHelper
+        .loadFromCommunity(communityNo, communityNavAppId, communityDeskAll)
+        .then((rs: any) => {
+          
+          // console.log("获取桌面列表结果", rs);
+
+          if (rs.status) {
+            const archiveData = rs.data?.data;
+            if (archiveData.desksAll) {
+              this.syncDesk.desks = archiveData?.desksAll;
+            }
+            this.setting.getSyncTime = archiveData?._v;
+          } else {
+            if (rs.code === 404) {
+              // 获取过滤出当前社群的本地桌面数据。
+              const localDesks = this.getLocalDesks();
+              this.syncDesk.desks = localDesks;
+              this.setting.getSyncTime = "";
+            }
+          }
+        });
     },
 
     // 读取当前社群名下云端存储的桌面详情
     async loadCommunityDeskDetail() {
-
       // 获取社群id
       const communityNo = this.communityDesk.communityDeskNo;
+
       // console.log('打印-communityNo',communityNo);
 
       // 桌面详情的缓存key
       const loadKey = `_${communityDeskDetail}${communityNo}`;
+
       // console.log('打印-loadKey', loadKey);
 
-      const rs = await archiveHelper.loadFromCommunity(
-        communityNo,
-        communityNavAppId,
-        loadKey
-      );
-      
-      // console.log('获取桌面详情结果',rs);
+      archiveHelper
+        .loadFromCommunity(communityNo, communityNavAppId, loadKey)
+        .then((rs: any) => {
+          
+          // console.log("获取桌面详情结果", rs);
 
-      
-      // console.log('获取桌面详情结果',rs);
-
-      if (rs.status) {
-        const archiveData = rs.data?.data;
-
-        if (archiveData.deskDetail) {
-          // 排查本地桌面desks的数组是否存在云端编辑的数据
-          const index = _.findIndex((cardStore() as any).desks, (desk: any) => {
-            return String(archiveData?.deskDetail.id) === String(desk.id);
-          });
-          if (index === -1) {
-            (cardStore() as any).desks.push(archiveData?.deskDetail);
+          if (rs.status) {
+            const archiveData = rs.data?.data;
+            if (archiveData.deskDetail) {
+              // 排查本地桌面desks的数组是否存在云端编辑的数据
+              const index = _.findIndex(
+                (cardStore() as any).desks,
+                (desk: any) => {
+                  return String(archiveData?.deskDetail.id) === String(desk.id);
+                }
+              );
+              if (index === -1) {
+                (cardStore() as any).desks.unshift(archiveData?.deskDetail);
+              }
+            }
+            this.setting.getSyncTime = archiveData?._v;
+          } else {
+            if (rs.code === 404) {
+              this.setting.getSyncTime = "";
+            }
           }
-          this.syncDesk.deskDetail = rs.data?.deskDetail;
-        }
-        this.setting.getSyncTime = archiveData?._v;
-      } else {
-        if (rs.code === 404) {
-          this.setting.getSyncTime = "";
-        }
-      }
-
-      return rs;
+        });
     },
 
     // 读取本地所有桌面列表数据
