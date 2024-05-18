@@ -52,9 +52,9 @@ import Avatar from "../../desk/navigationBar/components/Avatar.vue";
 const router: any = useRouter();
 
 // pinia数据
-const communityNav:any = chatCommunityStore();
+const communityNav: any = chatCommunityStore();
 const { myCommunity } = storeToRefs(communityNav);
-const comNav:any = communityNavStore();
+const comNav: any = communityNavStore();
 const { settingType, currentCommunity } = storeToRefs(comNav);
 const app: any = appStore();
 const { settings } = storeToRefs(app);
@@ -163,15 +163,16 @@ const openNav = async (event: any) => {
 //  进入社群桌面
 const openDesk = async () => {
   console.log("测试-进入社群桌面");
-
   // 先检测当前社群是成员还是管理员
   const currentRole = (currentCommunity.value.item as any).role;
+  // 社群数据
+  const communityInfo: any = currentCommunity.value?.item;
   if (currentRole === "owner") {
     // 检测当前所在的社群桌面数据是否为空列表
     const deskList = getCommunityDeskList(currentCommunity.value?.item);
     if (deskList.length === 0) {
       settings.value.isCommunity = false;
-      router.push({ name: "home", params: { no: "" } });
+      router.push({ name: "home", params: { no: communityInfo?.no } });
       setTimeout(() => {
         proxy.$bus.emit("openCommunityDesk");
       }, 150);
@@ -179,10 +180,12 @@ const openDesk = async () => {
     // 当前社群桌面数据已经创建
     else {
       settings.value.isCommunity = false;
-      router.push({ name: "home", params: { no: "" } });
+      router.push({ name: "home", params: { no: communityInfo?.no } });
     }
-  } else if (currentRole === "member") {
-    const communityInfo:any = currentCommunity.value?.item;
+  }
+  // 成员
+  else if (currentRole === "member") {
+    const communityInfo: any = currentCommunity.value?.item;
     // 获取云端数据并且存储在本地desks列表中
     loadSyncDesk(communityInfo?.no);
     // 检测当前所在的社群桌面数据是否为空列表
@@ -214,7 +217,7 @@ const openDesk = async () => {
 };
 
 // 加载云端数据处理方法
-const loadSyncDesk = (no:any) => {
+const loadSyncDesk = (no: any) => {
   communityDesk.setCurrentDeskNo(no);
   communityDesk.loadCommunityDeskAll();
   communityDesk.loadCommunityDeskDetail();
