@@ -116,7 +116,7 @@ export default {
   data() {
     return {
       header:{
-        name:'闹钟',
+        title:'闹钟',
         showIcon:"/img/appLogo/alarmClock.png",
 
       },

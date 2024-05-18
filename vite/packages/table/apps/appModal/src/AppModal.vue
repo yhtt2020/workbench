@@ -71,10 +71,11 @@ const modalStyle = computed(() => {
     boxClass=""
     headerClass="p-2 xt-modal"
     :mask="false"
-    :isFullScreen="data?.isFullScreen"
-    :isMaximize="data?.isMaximize"
+
     custom
   >
+  <!-- :isFullScreen="data?.isFullScreen"
+    :isMaximize="data?.isMaximize" -->
     <template #minimize-left>
       <div class="mr-2 rounded-lg overflow-hidden">
         <a-avatar shape="square" class="" :size="28" :src="data.icon" />
@@ -83,30 +84,7 @@ const modalStyle = computed(() => {
         {{ data.cname }}
       </div>
     </template>
-    <!-- <a-dropdown
-            placements="bottom"
-            :overlayStyle="{
-              'z-index': '999999999 !important',
-            }"
-          >
-            <div>
-              <xt-mix-icon
-                :icon="
-                  isMaximize
-                    ? 'fluent:full-screen-minimize-16-filled'
-                    : 'fluent:full-screen-maximize-16-regular'
-                "
-                @click="maximize"
-                boxSize="32"
-                style="background: none"
-                class="mx-3"
-              />
-            </div>
-            <template #overlay>
-              <div style="width: 200px; height: 200px; background: red"></div>
-            </template>
-          </a-dropdown> -->
-    <div class="flex flex-col h-full">
+      <div class="flex flex-col h-full">
       <header
         class="h-12 flex justify-between items-center px-4 xt-main-bg xt-modal-header"
         style="border-radius: 12px 12px 0 0"
