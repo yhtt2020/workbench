@@ -153,17 +153,12 @@ const selectCommunity = async (item, index) => {
   // 成员
   else if (role === "member") {
     // 加载获取云端数据
-    console.log('item',item?.communityInfo?.no)
     loadSyncDesk(item?.communityInfo?.no);
-
     // 检测云端获取的数据有没有存在本地中
     const memberDesks = getCommunityDeskList(item.communityInfo);
-    console.log("communityDesks", memberDesks);
-
     if (memberDesks.length > 0) {
       switchCommunity(item,index);
     } else {
-      // router.go(-1);
       window.$ui.confirm("暂无可用的社群桌面", "请联系你的社群管理员创建", {
         ok: () => {},
         okText: "好的",

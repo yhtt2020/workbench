@@ -178,8 +178,9 @@
         ref="mixMenu"
         v-if="displayDesks.length !== 0"
       >
+        <!-- currentDesk && currentDesk?.cards?.length > 0 -->
         <Desk
-          v-if="currentDesk && currentDesk?.cards?.length > 0"
+          v-if="false"
           :global-settings="settings"
           :editing="false"
           ref="currentDeskRef"
@@ -201,7 +202,7 @@
             </div>
           </slot>
 
-          <span v-show="false">
+          <!-- <span v-show="false">
             <Desk
               ref="currentDeskRef"
               :communityNo="currentComInfo.no"
@@ -209,7 +210,7 @@
               :key="key"
               :currentDesk="currentDesk"
             />
-          </span>
+          </span> -->
         </template>
       </xt-mix-menu>
 
@@ -668,68 +669,25 @@ export default {
         {
           newIcon: "fluent:add-16-regular",
           name: "添加图标",
-          fn: () => {
-            // addIcon
-          },
+          fn: this.addIcon,
         },
         {
           newIcon: "fluent:collections-add-24-regular",
           name: "添加组件",
-          fn: () => {
-            // newAddCard
-          },
+          fn: this.newAddCard,
         },
         {
           newIcon: "fluent:building-shop-16-regular",
           name: "桌面市场",
-          fn: () => {
-            // moreDesk
-          },
+          fn: this.moreDesk,
         },
         {
           newIcon: "fluent:arrow-download-20-filled",
           name: "导入桌面",
-          fn: () => {
-            // importDesk
-          },
+          fn: this.importDesk,
         },
       ],
     };
-  },
-
-  mounted() {
-    // 通过事件总线程触发
-    this.$bus.on("M0104", () => {
-      this.currentAddTab.name = "custom";
-      this.addDeskVisible = true;
-    });
-    this.$bus.on("M0203", () => {
-      this.addDeskVisible = true;
-      this.moreDesk();
-    });
-
-    // 开启社群桌面引导创建弹窗
-    this.$bus.on("openCommunityDesk", () => {
-      this.$nextTick(() => {
-        this.$refs.createDeskRef?.openCommunityDeskModal();
-      });
-    });
-
-    this.hotDesk.push(this.apiList[0].children[0]);
-    // 获取推荐桌面数据
-    this.getRecommend({ goodType: "desk" }).then((rs) => {
-      this.recommendList = rs;
-    });
-
-    // 根据桌面id默认显示当前桌面
-    if (this.deskList.length > 0) {
-      this.currentDesk = this.deskList[0];
-    }
-    this.deskList.forEach((desk) => {
-      if (!desk.id) {
-        desk.id = desk.nanoid;
-      }
-    });
   },
 
   computed: {
@@ -796,28 +754,13 @@ export default {
 
     // 过滤出当前社群名下所有桌面的列表
     communityDeskList() {
-      // 检测是不是管理员,是,就从本地桌面数据中取
-      if (this.currentComRole) {
-        const filterList = _.filter(this.deskList, (desk) => {
-          if (desk.communityNo) {
-            return Number(this.currentComInfo.no) === Number(desk.communityNo);
-          }
-        });
-        return filterList;
-      } else {
-        // const filterMemberList = _.filter(this.deskList, (desk) => {
-        //   if (desk.communityNo) {
-        //     const index = _.findIndex(this.syncDesk.desks, (find) => {
-        //       return String(desk.id) === String(find.id);
-        //     });
-        //     return index > -1 && Number(this.currentComInfo.no) === Number(desk.communityNo);
-        //   }
-        // });
-        // console.log("filterMemberList",filterMemberList);
-        // return filterMemberList;
-
-        return [];
-      }
+      const filterList = _.filter(this.deskList, (desk) => {
+        return desk.hasOwnProperty("communityNo");
+      });
+      const newArr = _.filter(filterList, (desk) => {
+        return Number(this.currentComInfo.no) === Number(desk.communityNo);
+      });
+      return newArr;
     },
 
     // 桌面置顶数据
@@ -841,20 +784,57 @@ export default {
     },
   },
 
+  mounted() {
+    // 通过事件总线程触发
+    this.$bus.on("M0104", () => {
+      this.currentAddTab.name = "custom";
+      this.addDeskVisible = true;
+    });
+    this.$bus.on("M0203", () => {
+      this.addDeskVisible = true;
+      this.moreDesk();
+    });
+
+    // 开启社群桌面引导创建弹窗
+    this.$bus.on("openCommunityDesk", () => {
+      this.$nextTick(() => {
+        this.$refs.createDeskRef?.openCommunityDeskModal();
+      });
+    });
+
+    this.hotDesk.push(this.apiList[0].children[0]);
+    // 获取推荐桌面数据
+    this.getRecommend({ goodType: "desk" }).then((rs) => {
+      this.recommendList = rs;
+    });
+
+    // 根据桌面id默认显示当前桌面
+    if (this.deskList.length > 0) {
+      this.currentDesk = this.deskList[0];
+    }
+    this.deskList.forEach((desk) => {
+      if (!desk.id) {
+        desk.id = desk.nanoid;
+      }
+    });
+
+    // 监听当前桌面的变化
+    this.$watch(
+      () => this.currentDesk?.cards,
+      (newVal, oldVal) => {
+        console.log("myComputedProperty changed:", newVal, oldVal);
+      }
+    );
+
+    this.setCurrentDefaultDesk();
+  },
+
   watch: {
     // 监听当前社群变化
     currentComInfo: {
       handler(newVal) {
         // 默认选中桌面方法
         this.setCurrentDefaultDesk();
-      },
-      immediate: true,
-      deep: true,
-    },
-
-    currentDesk: {
-      handler(newVal) {
-        console.log("当前桌面数据正在编辑更新中", newVal);
       },
       immediate: true,
       deep: true,
@@ -1232,25 +1212,17 @@ export default {
           return Number(this.currentComInfo.no) === Number(desk?.communityNo);
         }
       });
-      console.log("过滤出与当前社群相关联的桌面列表", filterDeskList);
-
       // 检测是不是已经从个人桌面切换到社群桌面的处理逻辑
       const found = _.find(this.deskList, (desk) => {
         return String(this.currentDeskId) === String(desk.id);
       });
-      console.log("检测当前的桌面id", found);
 
-      if (found && found?.communityNo) {
-        const isCommunityNoSame =
-          Number(this.currentComInfo.no) === Number(found?.communityNo);
-
-        console.log("是否满足条件", isCommunityNoSame);
-
-        if (!isCommunityNoSame) {
+      if (found && !found?.communityNo) {
+        this.setCurrentDeskId(filterDeskList[0]?.id);
+      } else {
+        if (Number(found?.communityNo) !== Number(this.currentComInfo.no)) {
           this.setCurrentDeskId(filterDeskList[0]?.id);
         }
-      } else {
-        this.setCurrentDeskId(filterDeskList[0]?.id);
       }
     },
   },
