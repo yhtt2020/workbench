@@ -770,8 +770,24 @@ export default {
       let currentDesk = this.deskList.find((desk) => {
         return desk.id === this.currentDeskId;
       });
-      this.key = Date.now();
-      return currentDesk;
+      if (currentDesk) {
+        this.key = Date.now();
+        return currentDesk;
+      } else {
+        const option = {
+          cards: [],
+          layoutSize: {},
+          id: "",
+          name: "",
+          settings: {
+            cardMargin: 0,
+            cardZoom: 100,
+            marginTop: 0,
+            vDirection: false,
+          },
+        };
+        return option;
+      }
     },
 
     clickDesk() {

@@ -743,7 +743,7 @@ export default {
           return desk.id === this.currentDeskId;
         }
       });
-      if (currentDesk) {
+      if (currentDesk !== undefined) {
         this.key = Date.now();
         return currentDesk;
       } else {
