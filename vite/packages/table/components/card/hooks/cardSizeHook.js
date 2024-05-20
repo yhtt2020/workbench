@@ -12,7 +12,7 @@ export default {
     if (!this.customData.cardSize) {
       this.customData.cardSize = this.options.className;
       //首次将类名作为尺寸进行初始化
-      this.__updateSize(this.options.className);
+      // this.__updateSize(this.options.className);
     }
 
     this.options.className = this.customData.cardSize;

@@ -130,7 +130,6 @@
 <script>
 import Widget from '../../card/Widget.vue'
 import cardSizeHook from '../../card/hooks/cardSizeHook'
-import cardDragHook from '../../card/hooks/cardDragHook'
 import { message } from 'ant-design-vue'
 import { Icon } from '@iconify/vue'
 import notepad12Regular from '@iconify-icons/fluent/notepad-12-regular'
