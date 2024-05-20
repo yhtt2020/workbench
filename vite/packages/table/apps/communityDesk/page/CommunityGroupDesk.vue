@@ -78,8 +78,7 @@
               :editing="editing"
               :key="key"
               :currentDesk="currentDesk"
-            >
-            </Desk>
+            />
           </span>
         </template>
       </xt-mix-menu>
@@ -177,9 +176,8 @@
         ref="mixMenu"
         v-if="displayDesks.length !== 0"
       >
-        <!-- currentDesk && currentDesk?.cards?.length > 0 -->
         <Desk
-          v-if="false"
+          v-if="currentDesk && currentDesk?.cards?.length > 0"
           :global-settings="settings"
           :editing="false"
           ref="currentDeskRef"
@@ -201,14 +199,14 @@
             </div>
           </slot>
 
-          <!-- <span v-show="false">
+          <span v-show="false">
             <Desk
               ref="currentDeskRef"
               :editing="editing"
               :key="key"
               :currentDesk="currentDesk"
             />
-          </span> -->
+          </span>
         </template>
       </xt-mix-menu>
 
@@ -746,8 +744,24 @@ export default {
           return desk.id === this.currentDeskId;
         }
       });
-      this.key = Date.now();
-      return currentDesk;
+      if (currentDesk) {
+        this.key = Date.now();
+        return currentDesk;
+      } else {
+        const option = {
+          cards: [],
+          layoutSize: {},
+          id: "",
+          name: "",
+          settings: {
+            cardMargin: 0,
+            cardZoom: 100,
+            marginTop: 0,
+            vDirection: false,
+          },
+        };
+        return option;
+      }
     },
 
     // 过滤出当前社群名下所有桌面的列表

@@ -3,7 +3,7 @@ export const chatList = [
     name: '天天工作台官方社群',
     cno:1,
     no:1,
-    role:"",
+    role:"member",
     summary: '欢迎加入天天工作台官方社群，在这里您可以了解到和产品有关的一切',
     settings: {//用户设置的
       enableColumns: false,

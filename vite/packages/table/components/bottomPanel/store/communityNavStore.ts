@@ -45,6 +45,8 @@ export const communityNavStore = defineStore("communityNav", {
         mode: "app",
         type: "systemApp",
         id: nanoid(11),
+        no:1,
+        cno:1,
       },
       defaultItem: {
         icon: "/logo/community.svg",
