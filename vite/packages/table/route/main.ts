@@ -108,6 +108,8 @@ export default [
       default: Main,
       ai: AIAssistant,
       note: Note,
+      // shortcutKey: ShortcutKeyRoute,
+      clipboard: Clipboard,
     },
     props: true,
     children: [

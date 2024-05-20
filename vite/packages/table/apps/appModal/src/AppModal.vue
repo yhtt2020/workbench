@@ -11,6 +11,18 @@ import {
 } from "vue";
 import { storeToRefs } from "pinia";
 import { useAppModalStore } from "./store";
+const isInit = ref(true);
+const init = () => {
+  isInit.value = false;
+  console.log(' "初始化成功"');
+};
+onMounted(() => {
+  setTimeout(() => {}, 51);
+});
+onUnmounted(() => {
+  console.log("销毁触发 :>> ");
+  data.value.props = null;
+});
 const props = defineProps<{
   name: any;
 }>();
@@ -19,14 +31,12 @@ const appModalStore: any = useAppModalStore();
 const { runList }: any = storeToRefs(appModalStore);
 const data: any = ref(null);
 data.value = appModalStore.getApp(props.name);
-console.log("data.value.isFullScreen :>> ", data.value.isFullScreen);
 // 弹窗ref
 const modal: any = ref(null);
 // 是否最大化
 const fullScreen = () => {
   data.value.isMaximize = false;
   data.value.isFullScreen = !data.value.isFullScreen;
-  console.log("  data.value.isFullScreen  :>> ", data.value.isFullScreen);
   modal.value?.fullScreen();
 };
 const maximize = () => {
@@ -43,8 +53,7 @@ const close = () => {
 
 const modalStyle = computed(() => {
   if (!data.value) return;
-  if (data.value.isMaximize || data.value.isFullScreen) {
-    console.log("123321312321312321123 :>> ", 123321312321312321123);
+  if ((data.value.isMaximize || data.value.isFullScreen) && !isInit.value) {
     return {
       "flex-grow": 1,
       height: "100%",
@@ -62,6 +71,7 @@ const modalStyle = computed(() => {
     v-if="data && data?.visible"
     v-model="data.visible"
     @close="close"
+    @init="init"
     ref="modal"
     index="1200"
     handle=".xt-modal-header"
@@ -71,11 +81,12 @@ const modalStyle = computed(() => {
     boxClass=""
     headerClass="p-2 xt-modal"
     :mask="false"
-
-    custom
+    v-model:isFullScreen="data.isFullScreen"
+    v-model:isMaximize="data.isMaximize"
   >
-  <!-- :isFullScreen="data?.isFullScreen"
-    :isMaximize="data?.isMaximize" -->
+    <!--
+    custom
+   -->
     <template #minimize-left>
       <div class="mr-2 rounded-lg overflow-hidden">
         <a-avatar shape="square" class="" :size="28" :src="data.icon" />
@@ -84,9 +95,9 @@ const modalStyle = computed(() => {
         {{ data.cname }}
       </div>
     </template>
-      <div class="flex flex-col h-full">
+    <template #header>
       <header
-        class="h-12 flex justify-between items-center px-4 xt-main-bg xt-modal-header"
+        class="no-drag h-12 flex justify-between items-center px-4 xt-main-bg xt-modal-header"
         style="border-radius: 12px 12px 0 0"
       >
         <div class="flex items-center">
@@ -132,11 +143,14 @@ const modalStyle = computed(() => {
           />
         </div>
       </header>
+    </template>
+    <div class="flex flex-col h-full">
       <div
         class="flex flex-grow"
-        style="max-height: calc(100% - 50px)"
+        style="max-height: calc(100% - 0px)"
         :style="[modalStyle]"
       >
+        <!-- 原先max-height: -50px -->
         <router-view :name="data?.name" :props="data?.props"></router-view>
       </div>
     </div>

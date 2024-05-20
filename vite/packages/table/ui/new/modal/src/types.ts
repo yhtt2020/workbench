@@ -32,6 +32,8 @@ export type ModalProps = {
   beforeUnmount?: () => boolean;
   // 自定义插槽
   custom?: boolean;
+  // 是否使用滚动条
+  isScrollbar?: boolean;
   // 最小化
   min?: boolean;
   // 最大化
@@ -47,4 +49,3 @@ export type ModalProps = {
   isFullScreen?: boolean;
   isMaximize?: boolean;
 };
-
