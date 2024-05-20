@@ -51,7 +51,7 @@ export default {
           this.lvInfo.remainHour--
           if (this.lvInfo.remainHour < 0 && this.tipped === false) {
             this.tipped = true
-            if (!window.$usePlat()){
+            if (window.$usePlat('client')){
               ipc.send('getDetailUserInfo')
             }
             Modal.info({

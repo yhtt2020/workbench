@@ -265,9 +265,6 @@ export default {
     currentDesk: {
       type: Object,
       required: true,
-      default: () => {
-        return { cards: [] };
-      },
     },
     muuriOptions: {
       type: Object,

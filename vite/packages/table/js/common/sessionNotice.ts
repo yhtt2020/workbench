@@ -276,7 +276,7 @@ export class Notifications {
     // }
   }
 
-  
+
   // 社群消息通知
   public async receiveNotification(msg: any) {
     // const app:any = appStore();
@@ -343,7 +343,7 @@ export class Notifications {
     //       if (config.atMeMsg && config.atMsg) {  // 强提醒
     //         const strongEl: HTMLAudioElement = this.createSoundStrongElement()
     //         strongEl.play()
-    //       } 
+    //       }
     //       else {
     //        const playElement: HTMLAudioElement = this.createSoundElement();
     //        playElement.play()

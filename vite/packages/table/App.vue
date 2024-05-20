@@ -143,7 +143,7 @@ notification.config({
 })
 window.browser = browser
 let appModel
-if (!usePlat('web')) {
+if (usePlat('client')) {
   appModel = window.$models.appModel
 }
 let startX,
@@ -171,7 +171,7 @@ export default {
   },
 
   async mounted () {
-    if(usePlat('web')){
+    if(!usePlat('client')){
       document.body.classList.add('web')
     }
     this.$router.push({
@@ -196,7 +196,7 @@ export default {
       this.settings.zoomFactor = 100
       tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100).then()
     }
-    if (!usePlat('web')) {
+    if (usePlat('client')) {
       ipc.on('updateRunningApps', async (event, args) => {
         this.runningApps = args.runningApps
         this.runningAppsInfo = {}
@@ -424,7 +424,7 @@ export default {
     },
     'styles': {
       handler () {
-        if(!usePlat('web')){
+        if (usePlat('client')) {
           tsbApi.system.setDarkMode(!this.styles)
         }
       },

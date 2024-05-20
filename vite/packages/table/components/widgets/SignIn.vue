@@ -137,6 +137,7 @@ import FrameAvatar from '../avatar/FrameAvatar.vue'
 import { Icon as newIcon } from '@iconify/vue'
 import AwardModal from '../modal/AwardModal.vue'
 import { usePermissionStore } from "../../permission/store";
+import cache from "../../components/card/hooks/cache";
 export default {
   name: 'SingIn',
   components: {

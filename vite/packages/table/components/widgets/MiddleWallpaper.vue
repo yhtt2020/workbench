@@ -239,7 +239,7 @@ import { usePlat } from "../../ui/hooks/usePlat";
 
 let fs;
 let path;
-if (!usePlat()) {
+if (usePlat('client')) {
   fs = require("fs");
   path = require("path");
 }

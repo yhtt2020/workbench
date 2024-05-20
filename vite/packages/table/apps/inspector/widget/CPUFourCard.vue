@@ -66,7 +66,7 @@ import {Icon as newIcon} from '@iconify/vue'
 import { prettyDisplayBytes } from '../../../js/action/supervisory'
 import { usePlat } from "../../../ui/hooks/usePlat";
 let rpc
-if (!usePlat()) {
+if (usePlat('client')) {
   rpc=window.$models.rpc
 
 }

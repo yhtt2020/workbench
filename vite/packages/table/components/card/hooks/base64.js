@@ -4,7 +4,7 @@ import { myIcons } from "../../../store/myIcons";
 
 import { SHA256 } from "crypto-js";
 let fs,json
-if (!usePlat('web')) {
+if (usePlat('client')) {
   fs= window.$models.fs
   json = require("path").json
 
