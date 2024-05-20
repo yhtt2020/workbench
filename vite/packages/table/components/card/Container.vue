@@ -314,6 +314,7 @@ const handleTouchStart = (e) => {
 onBeforeMount(async () => {
   // 处理默认数据
   if (props.options.defaultData) {
+
     props.options.defaultData = await _.merge(
       {},
       props.options.defaultData,

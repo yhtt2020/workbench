@@ -426,11 +426,10 @@ export default {
     ...mapWritableState(useWidgetStore, ["rightModel"]),
     ...mapWritableState(useFreeLayoutStore, [
       "isFreeLayout",
-      "getFreeLayoutState",
       "previewFlag",
       "freeLayoutId",
     ]),
-    ...mapWritableState(useFloatMenuStore, ["menus", "newMenus"]),
+    ...mapWritableState(useFloatMenuStore, ["menus"]),
     ...mapWritableState(useNavigationStore, ["selectNav", "isDesk"]),
     ...mapWritableState(useDeskStore, ["autoOpenEdit", "adjustLayout"]),
     ...mapWritableState(useAppCenterStore, ["visible"]),
@@ -469,12 +468,9 @@ export default {
   },
   data() {
     return {
-      setVisible: false,
       showGrid: false,
       loaded: false,
       vurriEnable: false,
-      freeDeskEdit: false,
-      freeDeskState: false,
       stashBound: { width: 0, height: 0, zoom: 0 },
       adjustZoom: 1,
       settingVisible: false,
@@ -495,9 +491,6 @@ export default {
       editVisible: false,
     };
   },
-  beforeMount() {
-    window.time = Date.now();
-  },
   mounted() {
     // 空桌面添加图标保持弹窗
     // this.editVisible = this.keepAddIcon;
@@ -517,26 +510,7 @@ export default {
     this.$bus.on("scrollbarUpdate", () => {
       this.freeLayoutScrollbarUpdate();
     });
-    // this.$bus.on("reset", () => {
-    //   this.resetLayout();
-    // });
-    // this.$bus.on("M0102", () => {
-    //   this.newAddIcon();
-    // });
-    // this.$bus.on("M0101", () => {
-    //   this.newAddCard();
-    // });
-    // this.$bus.on("Z0106", () => {
-    //   this.newAddCard();
-    // });
-    // this.$bus.on("M0302", () => {
-    //   this.newAddCard();
-    // });
-    // this.$bus.on("M0201", () => {
-    //   setTimeout(() => {
-    //     this.$refs.galleryRef.openGalleryModal();
-    //   }, 100);
-    // });
+
     this.$bus.on("lockScreen", () => {
       this.$refs.galleryRef.openPaperAppModal();
       setTimeout(() => {
@@ -565,11 +539,7 @@ export default {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
     ...mapActions(cardStore, ["addCard"]),
     ...mapActions(useDeskStore, ["addMenu"]),
-    ...mapActions(taskStore, ["initTask"]),
-    // 打开系统设置
-    showSystemSet() {
-      this.$bus.emit("openSystemSet");
-    },
+    // ...mapActions(taskStore, ["initTask"]),
     getClasses() {
       if (this.usingSettings.vDirection) {
         if (this.usingSettings.vDirection === true) {
@@ -623,18 +593,10 @@ export default {
       if (!this.isFreeLayout) return;
       this.$refs.freeLayoutScrollbar.update();
     },
-    learn() {
-      browser.openInTable(
-        "https://www.bilibili.com/video/BV1Th4y1o7SZ/?vd_source=2b7e342ffb60104849f5db6262bb1e0b"
-      );
-    },
     update(callback) {
       if (this.$refs.grid) {
         this.$refs.grid.update(callback);
       }
-    },
-    hideMenu() {
-      this.menuVisible = false;
     },
     toggleEditing() {
       if (!this.showGuide) {
@@ -652,7 +614,6 @@ export default {
       }
     },
     showSetting() {
-      // this.settingVisible = true;
       this.$bus.emit("openSystemSet");
       setTimeout(() => {
         this.$bus.emit("selectSystemNav", 2);

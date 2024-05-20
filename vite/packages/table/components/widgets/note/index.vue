@@ -3,6 +3,7 @@
     @titleHover="enterNote"
     @delete="removeNote"
     v-model:customSize="customData.customSize"
+
     :header="header"
     :customData="customData"
     :customIndex="customIndex"
@@ -322,6 +323,9 @@ export default {
     if (!this.customData.background) {
       setData.background = this.color.color1
     }
+    if (!this.customData.customSize) {
+      setData.customSize = '2x4'
+    }
     if (!this.customData.text) {
       setData.text = ''
     }
@@ -334,6 +338,7 @@ export default {
     if (Object.keys(setData)) {
       this.updateCustomData(this.customIndex, setData, this.desk)
     }
+
   },
   mounted () {
     this.text = this.customData.text
