@@ -682,6 +682,8 @@ export default {
           fn: this.importDesk,
         },
       ],
+      loadingVisible:true,
+
     };
   },
 
@@ -829,14 +831,6 @@ export default {
       }
     });
 
-    // 监听当前桌面的变化
-    this.$watch(
-      () => this.currentDesk?.cards,
-      (newVal, oldVal) => {
-        console.log("myComputedProperty changed:", newVal, oldVal);
-      }
-    );
-
     this.setCurrentDefaultDesk();
   },
 
@@ -850,6 +844,50 @@ export default {
       immediate: true,
       deep: true,
     },
+
+    // 监听社群桌面更新的变化
+    "currentDesk.cards":{
+      handler(newVal){
+        if(this.loadingVisible){
+          setTimeout(()=>{
+            this.loadingVisible = false
+          },150)
+        }
+        else {
+          if(this.currentComRole){
+            this.syncSaveCommunity();
+          }
+          else {
+            this.loadCommunityCloud();
+          }
+          this.loadingVisible = false
+        }
+      },
+      immediate: true,
+      deep: true,
+    },
+    
+    "currentDesk.id":{
+      handler(newVal){
+        if(this.loadingVisible){
+          setTimeout(()=>{
+            this.loadingVisible = false
+          },150)
+        }
+        else {
+          if(this.currentComRole){
+            this.syncSaveCommunity();
+          }
+          else {
+            this.loadCommunityCloud();
+          }
+          
+        }
+      },
+      immediate: true,
+      deep: true,
+    },
+    
   },
 
   methods: {
