@@ -1,8 +1,8 @@
 <template>
   <template v-if="displayList.length === 0">
     <div class="w-full h-full flex flex-col items-center justify-center">
-      <xt-ify-icon icon="fluent-emoji:knocked-out-face" size="56" />
-      <span class="xt-text xt-font font-16">数据不存在</span>
+      <xt-ify-icon icon="fluent-emoji:magnifying-glass-tilted-right" size="56" class="mb-4" />
+      <span class="xt-text xt-font font-16">没有找到相关内容</span>
     </div>
   </template>
 

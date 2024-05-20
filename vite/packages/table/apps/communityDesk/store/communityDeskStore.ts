@@ -215,6 +215,7 @@ export const communityDeskStore = defineStore("communityDesk", {
               if (index === -1) {
                 (cardStore() as any).desks.unshift(archiveData?.deskDetail);
               }
+              this.deleteMemberList(communityNo);
             }
             this.setting.getSyncTime = archiveData?._v;
           } else {
@@ -236,6 +237,24 @@ export const communityDeskStore = defineStore("communityDesk", {
         }
       });
       return filterList;
+    },
+
+
+    // 删除成员旧数据
+    deleteMemberList(communityNo:any){
+      console.log('查看成员数据列表',this.syncDesk.desks);
+      // const deskId = _.map(this.syncDesk.desks,(desk:any)=>{
+      //   return desk.id;
+      // });
+      // (cardStore() as any).desks.forEach((desk:any,index:any)=> {
+      //   if(desk.hasOwnProperty("communityNo")){
+      //     if(Number(communityNo) === Number(desk.communityNo)){
+      //       if(!deskId.includes(desk.id)){
+      //         (cardStore() as any).desks.splice(index,1);
+      //       }
+      //     }
+      //   }
+      // });
     },
   },
 

@@ -273,11 +273,10 @@ function memberMenus() {
       id: 4,
       newIcon: "fluent:resize-large-16-regular",
       name: "复原桌面位置",
-      // disabled: this.isFreeLayout ? false : true,
       fn: () => {
-        // this.$nextTick(() => {
-        //   this.$refs.currentDeskRef.freeLayoutScrollbarRedirect();
-        // });
+        this.$nextTick(() => {
+          this.$refs.currentDeskRef.freeLayoutScrollbarRedirect();
+        });
       },
     },
     {
