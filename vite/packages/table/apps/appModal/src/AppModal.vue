@@ -14,13 +14,11 @@ import { useAppModalStore } from "./store";
 const isInit = ref(true);
 const init = () => {
   isInit.value = false;
-  console.log(' "初始化成功"');
 };
 onMounted(() => {
   setTimeout(() => {}, 51);
 });
 onUnmounted(() => {
-  console.log("销毁触发 :>> ");
   data.value.props = null;
 });
 const props = defineProps<{
@@ -34,10 +32,10 @@ data.value = appModalStore.getApp(props.name);
 // 弹窗ref
 const modal: any = ref(null);
 // 是否最大化
-const fullScreen = () => {
+const fullscreen = () => {
   data.value.isMaximize = false;
   data.value.isFullScreen = !data.value.isFullScreen;
-  modal.value?.fullScreen();
+  modal.value?.fullscreen();
 };
 const maximize = () => {
   data.value.isFullScreen = false;
@@ -77,6 +75,7 @@ const modalStyle = computed(() => {
     handle=".xt-modal-header"
     min
     max
+    full
     esc
     boxClass=""
     headerClass="p-2 xt-modal"
@@ -84,9 +83,6 @@ const modalStyle = computed(() => {
     v-model:isFullScreen="data.isFullScreen"
     v-model:isMaximize="data.isMaximize"
   >
-    <!--
-    custom
-   -->
     <template #minimize-left>
       <div class="mr-2 rounded-lg overflow-hidden">
         <a-avatar shape="square" class="" :size="28" :src="data.icon" />
@@ -130,7 +126,7 @@ const modalStyle = computed(() => {
                 ? 'fluent:arrow-minimize-16-regular'
                 : 'fluent:arrow-maximize-16-regular'
             "
-            @click="fullScreen"
+            @click="fullscreen"
             boxSize="32"
             style="background: none"
             class="mr-3"

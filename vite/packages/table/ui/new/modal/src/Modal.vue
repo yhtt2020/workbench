@@ -2,18 +2,19 @@
   <Teleport to="body">
     <!-- 弹窗 -->
     <xt-drag
-      :test="false"
-      :x="currentX"
-      @update:x="x = $event"
-      :y="currentY"
-      @update:y="y = $event"
-      :index="modalIndex"
-      :collision="false"
       v-if="modelValue"
-      @update:data="resizeModel"
-      :resetPosition="false"
+      :x="currentX"
+      :y="currentY"
+      :index="modalIndex"
       :handle="handle"
-      :disabled="handle ? false : true"
+      :disabled="disabledDrag"
+      :boundary="true"
+      :test="false"
+      :collision="false"
+      :resetPosition="false"
+      @update:x="updateX($event)"
+      @update:y="updateY($event)"
+      @update:data="resizeModel"
     >
       <div
         @click="modalClick"
@@ -33,69 +34,50 @@
           },
         ]"
       >
+        <!-- 自定义 -->
         <slot v-if="custom"></slot>
-        <template v-else>
-          <div class="flex w-full h-full overflow-hidden">
-            <nav class="h-full">
-              <slot name="nav"> </slot>
-            </nav>
-            <div class="flex flex-col flex-1 w-full">
-              <!-- 主体头部 -->
-              <slot name="header">
-                <header
-                  class="no-drag relative flex items-center xt-modal-header w-full"
-                  :class="headerClass"
-                  v-if="header"
-                  @dblclick="doubleClick"
+        <div v-else class="flex w-full h-full overflow-hidden">
+          <!-- 左侧 -->
+          <nav class="h-full">
+            <slot name="nav"> </slot>
+          </nav>
+          <div class="flex flex-col flex-1 w-full">
+            <!-- 头部 -->
+            <slot name="header">
+              <header
+                class="no-drag relative flex items-center xt-modal-header w-full"
+                :class="headerClass"
+                v-if="header"
+                @dblclick="doubleClick"
+              >
+                <!-- 标题左侧 -->
+                <div class="z-20 flex items-center flex-1">
+                  <slot name="header-left"> </slot>
+                </div>
+                <!-- 标题中间 -->
+                <div
+                  class="absolute z-10 flex items-center flex-1 text-center -translate-x-1/2 left-1/2"
                 >
-                  <!-- 标题左侧 -->
-                  <div class="z-20 flex items-center flex-1">
-                    <slot name="header-left"> </slot>
-                  </div>
-                  <!-- 标题中间 -->
-                  <div
-                    class="absolute z-10 flex items-center flex-1 text-center -translate-x-1/2 left-1/2"
+                  <slot name="header-center">
+                    {{ title }}
+                  </slot>
+                </div>
+                <!-- 标题右侧 -->
+                <div class="right-0 z-20 flex items-center">
+                  <slot name="header-right"> </slot>
+                  <!-- 最小化 -->
+                  <xt-button
+                    v-if="min"
+                    class="ml-3 tt-modal-button"
+                    w="32"
+                    h="32"
+                    radius="8"
+                    @click="minimize"
                   >
-                    <slot name="header-center">
-                      {{ title }}
-                    </slot>
-                  </div>
-                  <!-- 标题右侧 -->
-                  <div class="right-0 z-20 flex items-center">
-                    <slot name="header-right"> </slot>
-                    <!-- 最小化 -->
-                    <xt-button
-                      v-if="min"
-                      class="ml-3 tt-modal-button"
-                      w="32"
-                      h="32"
-                      radius="8"
-                      @click="minimize"
-                    >
-                      <xt-ify-icon icon="fluent:subtract-16-regular" />
-                    </xt-button>
-                    <!-- 最大化 -->
-                    <xt-button
-                      class="ml-3 tt-modal-button"
-                      w="32"
-                      h="32"
-                      radius="8"
-                      @click="maximize"
-                      v-if="max"
-                    >
-                      <xt-new-icon
-                        :icon="
-                          isMaximize
-                            ? 'fluent:full-screen-minimize-16-filled'
-                            : 'fluent:full-screen-maximize-16-regular'
-                        "
-                        size="16"
-                        class="xt-text-2"
-                      />
-                    </xt-button>
-
-                    <!-- 全屏 未对接 -->
-                    <!-- <xt-button
+                    <xt-ify-icon icon="fluent:subtract-16-regular" />
+                  </xt-button>
+                  <!-- 最大化 -->
+                  <xt-button
                     class="ml-3 tt-modal-button"
                     w="32"
                     h="32"
@@ -103,76 +85,80 @@
                     @click="maximize"
                     v-if="max"
                   >
+                    <xt-new-icon
+                      :icon="
+                        isMaximize
+                          ? 'fluent:full-screen-minimize-16-regular'
+                          : 'fluent:full-screen-maximize-16-regular'
+                      "
+                      size="16"
+                      class="xt-text-2"
+                    />
+                  </xt-button>
+                  <!-- 全屏 -->
+                  <xt-button
+                    class="ml-3 tt-modal-button"
+                    w="32"
+                    h="32"
+                    radius="8"
+                    @click="fullscreen"
+                    v-if="full"
+                  >
                     <xt-mix-icon
                       :icon="
-                        data.isFullScreen
+                        isFullScreen
                           ? 'fluent:arrow-minimize-16-regular'
                           : 'fluent:arrow-maximize-16-regular'
                       "
-                      @click="fullScreen"
                       boxSize="32"
                       style="background: none"
-                      class="mr-3"
                     />
-                  </xt-button> -->
-                    <!-- 关闭按钮 -->
-                    <xt-button
-                      class="ml-3 tt-modal-button"
-                      w="32"
-                      h="32"
-                      radius="8"
-                      @click="onNo()"
-                    >
-                      <xt-new-icon
-                        icon="fluent:dismiss-16-regular"
-                        size="16"
-                        class="xt-text-2"
-                      />
-                    </xt-button>
-                  </div>
-                </header>
-              </slot>
-              <!-- 主体内容区 -->
-              <main
-                ref="scrollbar"
-                class="h-full flex-1 overflow-hidden"
-                :class="mainClass"
-                v-if="isScrollbar"
-              >
-                <slot name="main">
-                  <!-- <vue-custom-scrollbar
-                    :settings="{
-                      swipeEasing: true,
-                      suppressScrollY: false,
-                      suppressScrollX: true,
-                      wheelPropagation: false,
-                    }"
-                    style="position: relative"
-                    :style="scrollbarStyle"
-                    class="w-full h-full"
+                  </xt-button>
+                  <!-- 关闭按钮 -->
+                  <xt-button
+                    class="ml-3 tt-modal-button"
+                    w="32"
+                    h="32"
+                    radius="8"
+                    @click="onNo()"
                   >
-                    <slot>
-                      <McDonalds />
-                    </slot>
-                  </vue-custom-scrollbar> -->
-                  <slot>
-                    <McDonalds />
-                  </slot>
-                </slot>
-              </main>
-              <main
-                ref="scrollbar"
-                class="h-full flex-1 overflow-hidden"
-                :class="mainClass"
-                v-else
-              >
-                <slot>
-                  <McDonalds />
-                </slot>
-              </main>
-            </div>
+                    <xt-new-icon
+                      icon="fluent:dismiss-16-regular"
+                      size="16"
+                      class="xt-text-2"
+                    />
+                  </xt-button>
+                </div>
+              </header>
+            </slot>
+            <!-- 内容区 -->
+            <main
+              ref="scrollbar"
+              class="h-full flex-1 overflow-hidden"
+              :class="mainClass"
+            >
+              <slot>
+                <McDonalds />
+              </slot>
+            </main>
+            <!-- 底部 -->
+            <slot name="footer">
+              <footer class="flex items-center justify-end mt-4" v-if="footer">
+                <xt-button w="64" h="40" @click="onNo()">
+                  <span class="xt-text-2">{{ noName }}</span>
+                </xt-button>
+                <xt-button
+                  w="64"
+                  h="40"
+                  class="ml-3"
+                  type="theme"
+                  @click="onOk()"
+                  >{{ okName }}</xt-button
+                >
+              </footer>
+            </slot>
           </div>
-        </template>
+        </div>
       </div>
     </xt-drag>
     <!-- 遮罩 -->
@@ -224,11 +210,9 @@ import { useWindowSize } from "../../drag/src/hooks/useWindowSize";
 import { nanoid } from "nanoid";
 import PerfectScrollbar from "perfect-scrollbar";
 import { ModalProps } from "./types";
-const scrollbar: any = ref(null);
-const perfectScrollbar: any = ref(null);
 
 const { proxy }: any = getCurrentInstance();
-
+// 类型注释在types.ts文件中
 const props = withDefaults(defineProps<ModalProps>(), {
   modelValue: false,
   title: "",
@@ -251,6 +235,7 @@ const props = withDefaults(defineProps<ModalProps>(), {
   type: null,
   min: false,
   max: false,
+  full: false,
   handle: "",
   name: null,
   isFullScreen: false,
@@ -260,17 +245,31 @@ const props = withDefaults(defineProps<ModalProps>(), {
 const { esc, modelValue, beforeMount, beforeUnmount, type } = toRefs(props);
 
 const emits = defineEmits([
+  // 双向绑定弹窗显示状态
+  "update:modelValue",
+  // 双向绑定弹窗全屏状态
+  "update:isFullScreen",
+  // 双向绑定弹窗最大化状态
+  "update:isMaximize",
+  // 弹窗关闭事件
+  "close",
+  // 弹窗最小化事件
+  "minimize",
+  // 弹窗最大化事件
+  "maximize",
+  // 弹窗全屏事件
+  "fullscreen",
+  // 弹窗初始化事件
+  "init",
   "ok",
   "no",
-  "update:modelValue",
-  "update:isFullScreen",
-  "update:isMaximize",
-  "close",
-  "max",
-  "full",
-  "init",
 ]);
-
+/**
+ * 弹窗变量
+ */
+// 弹窗滚动条
+const scrollbar: any = ref(null);
+const perfectScrollbar: any = ref(null);
 // 弹窗元素
 const modal: any = ref(null);
 // 弹窗定位
@@ -284,13 +283,7 @@ const modalHeight = ref(0);
 // 弹窗层级
 const INDEX = 99999;
 const currentModalIndex = ref(0);
-// 当前弹窗层级
-const modalIndex = computed(() => {
-  if (isMinimize.value) {
-    return -999;
-  }
-  return currentModalIndex.value;
-});
+
 // 旧弹窗大小
 const oldWidth = ref(0);
 const oldHeight = ref(0);
@@ -299,8 +292,6 @@ const modalVisible = ref(false);
 // 弹窗过渡显示
 const transitionVisible = ref(false);
 // 最小化
-// isFullScreen: false,
-// isMaximize: false,
 const isMinimize = ref(false);
 // 最大化
 const isMaximize = ref(false);
@@ -308,7 +299,6 @@ watch(
   () => isMaximize.value,
   (val) => {
     emits("update:isMaximize", val);
-    console.log("update:isMaximize:>> ", val);
   }
 );
 // 全屏
@@ -316,7 +306,6 @@ const isFullScreen = ref(false);
 watch(
   () => isFullScreen.value,
   (val) => {
-    console.log("update:isFullScreen:>> ", val);
     emits("update:isFullScreen", val);
   }
 );
@@ -328,6 +317,19 @@ const modalName = ref(nanoid(4));
 // 导航高度
 let barHeight = 0;
 
+// 禁用拖拽状态
+const disabledDrag = computed(() => {
+  if (isFullScreen.value || isMaximize.value) return true;
+  return props.handle ? false : true;
+});
+// 当前弹窗层级
+const modalIndex = computed(() => {
+  if (isMinimize.value) {
+    return -999;
+  }
+  return currentModalIndex.value;
+});
+// 弹窗实际x坐标
 const currentX = computed(() => {
   if (modalWidth.value >= windowWidth.value) {
     return 0;
@@ -339,6 +341,7 @@ const currentX = computed(() => {
     return getModalPosition.value.left;
   }
 });
+// 弹窗实际y坐标
 const currentY = computed(() => {
   if (modalHeight.value >= windowHeight.value) {
     return 0;
@@ -351,11 +354,14 @@ const currentY = computed(() => {
   }
 });
 
+// 头部导航栏高度
 const topBarHeight = computed(() => {
   // 顶部导航栏开启时
   // if (){}
   return 40;
 });
+
+// 底部导航栏高度
 const bottomBarHeight = computed(() => {
   // 底部导航栏开启时
   // if (){}
@@ -384,6 +390,27 @@ const modalSizeStyle = computed(() => {
     };
   }
   return obj;
+});
+// 弹窗过渡样式
+const transitionStyle = computed(() => {
+  // 最小化
+  if (isMinimize.value) {
+    return {
+      top: "80%",
+      left: windowWidth.value - 200 + "px",
+      minWidth: "50px",
+      height: "50px",
+      zIndex: props.index + 1,
+    };
+  } else {
+    return {
+      top: `${y.value}px`,
+      left: `${x.value}px`,
+      width: `${modalWidth.value}px`,
+      height: `${modalHeight.value}px`,
+      zIndex: props.index - 1,
+    };
+  }
 });
 
 /** 获取弹窗位置 */
@@ -434,51 +461,44 @@ const initPosition = () => {
     modalVisible.value = true;
     clearInterval(intervalId); // 数据加载完成后取消定时器
 
-    setTimeout(() => {
-      if (props.isFullScreen == true) {
-        fullScreen();
-      } else if (props.isMaximize == true) {
-        maximize();
-      }
-      emits("init");
-    }, 50);
+    if (props.isFullScreen == true) {
+      fullscreen();
+    } else if (props.isMaximize == true) {
+      maximize();
+    }
+    emits("init");
   }, 1);
 };
-const isInit = ref(true);
 // 更新弹窗大小
 const resizeModel = (data) => {
   modalHeight.value = data.height;
   modalWidth.value = data.width;
-  if (modalHeight.value >= 1 && isInit.value) {
-    isInit.value = false;
-  }
 };
-
-// 弹窗过渡样式
-const transitionStyle = computed(() => {
-  // 最小化
-  if (isMinimize.value) {
-    return {
-      top: "80%",
-      left: windowWidth.value - 200 + "px",
-      minWidth: "50px",
-      height: "50px",
-      zIndex: props.index + 1,
-    };
-  } else {
-    return {
-      top: `${y.value}px`,
-      left: `${x.value}px`,
-      width: `${modalWidth.value}px`,
-      height: `${modalHeight.value}px`,
-      zIndex: props.index - 1,
-    };
-  }
-});
-
+/** 更新x坐标 */
+const updateX = (val) => {
+  // if (val < 0) {
+  //   x.value = 0;
+  // } else if (val > windowWidth.value - modalWidth.value) {
+  //   x.value = windowWidth.value - modalWidth.value;
+  // } else {
+  x.value = val;
+  // }
+};
+/** 更新y坐标 */
+const updateY = (val) => {
+  // if (val < 0) {
+  //   y.value = 0;
+  // } else if (val > windowHeight.value - modalHeight.value) {
+  //   y.value = windowHeight.value - modalHeight.value;
+  // } else {
+  y.value = val;
+  // }
+};
 /** 最小化实现 */
 const minimize = () => {
   isMinimize.value = !isMinimize.value;
+  emits("minimize", isMinimize.value);
+
   modalVisible.value = false;
   transitionVisible.value = true;
 
@@ -498,7 +518,7 @@ const maximize = () => {
   isFullScreen.value = false;
 
   isMaximize.value = !isMaximize.value;
-  emits("max", isMaximize.value);
+  emits("maximize", isMaximize.value);
   if (isMaximize.value) {
     x.value = 0;
     y.value = topBarHeight.value;
@@ -513,7 +533,7 @@ const maximize = () => {
 };
 
 /** 全屏 */
-const fullScreen = () => {
+const fullscreen = () => {
   if (isMaximize.value) {
   } else if (!isFullScreen.value) {
     oldY.value = y.value;
@@ -522,7 +542,7 @@ const fullScreen = () => {
   isMaximize.value = false;
 
   isFullScreen.value = !isFullScreen.value;
-  emits("full", isFullScreen.value);
+  emits("fullscreen", isFullScreen.value);
   if (isFullScreen.value) {
     x.value = 0;
     y.value = 0;
@@ -553,10 +573,9 @@ const getModalFouls = () => {
   // 提升当前弹窗层级
   setTimeout(() => {
     currentModalIndex.value = INDEX;
-  }, 0);
+  }, 3);
 };
 
-/** 通用默认底部按钮事件 */
 // 关闭 or 取消
 const onNo = () => {
   if (!beforeUnmount.value()) return;
@@ -570,15 +589,13 @@ const onOk = () => {
   emits("ok");
   onNo();
 };
+
 // esc关闭
 const onEsc = (event) => {
   if (props.esc && event.keyCode === 27) {
     onNo();
   }
 };
-
-// 挂载前
-onBeforeMount(() => {});
 
 // 初始化
 const init = () => {
@@ -595,10 +612,8 @@ const init = () => {
     currentModalIndex.value = props.index;
   });
 
-  setTimeout(() => {
-    // 获取弹窗焦点
-    getModalFouls();
-  }, 1);
+  // 获取弹窗焦点
+  getModalFouls();
 
   // 属于单例弹窗
   if (props.type) {
@@ -624,10 +639,13 @@ const init = () => {
   }
 
   setTimeout(() => {
-    if (!scrollbar.value) return;
+    if (!scrollbar.value || !props.isScrollbar) return;
     perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
   }, 50);
 };
+
+// 挂载前
+onBeforeMount(() => {});
 
 // 挂载后
 onMounted(() => {
@@ -638,6 +656,7 @@ onMounted(() => {
 
   init();
 });
+
 // 卸载前
 onBeforeUnmount(() => {
   // 注销弹窗失去焦点监听
@@ -653,6 +672,7 @@ onBeforeUnmount(() => {
     });
   }
 });
+
 // 抛出事件
 defineExpose({
   // 手动关闭
@@ -662,7 +682,7 @@ defineExpose({
   // 手动最小化
   minimize,
   // 手动全屏
-  fullScreen,
+  fullscreen,
   // 是否最大化
   isMaximize,
   // 是否最小化

@@ -38,6 +38,8 @@ export type ModalProps = {
   min?: boolean;
   // 最大化
   max?: boolean;
+  // 全屏
+  full?: boolean;
 
   type?: string | null;
   // 自定义拖拽区域
