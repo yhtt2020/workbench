@@ -496,7 +496,6 @@
   <!-- 社群桌面引导创建 -->
   <CreateDeskModal
     ref="createDeskRef"
-    :currentCommunityNo="currentCommunity"
     @createDesk="doAddDesk('空白桌面')"
   />
 </template>
@@ -996,6 +995,7 @@ export default {
             // 删除桌面数据
             this.key = Date.now();
           }
+          this.setCurrentDefaultDesk();
         },
       });
     },
@@ -1228,12 +1228,6 @@ export default {
       const found = _.find(this.deskList, (desk) => {
         return String(this.currentDeskId) === String(desk.id);
       });
-
-      // console.log("found-1", found);
-      // console.log("found-2", found && !found?.communityNo);
-      // console.log("filterDeskList[0]", filterDeskList[0]);
-      // console.log("filterDeskList[0]", filterDeskList[0]?.id);
-
       if (found && !found?.communityNo) {
         this.setCurrentDeskId(filterDeskList[0]?.id);
       } else {

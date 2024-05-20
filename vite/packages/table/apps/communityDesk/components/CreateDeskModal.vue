@@ -46,7 +46,7 @@
     </div>
   </xt-modal>
 
-  <ExistDesktop ref="existDeskRef" :communityNo="currentCommunity"  @prev="openCommunityDeskModal"/>
+  <ExistDesktop ref="existDeskRef" @prev="openCommunityDeskModal"/>
 </template>
 
 <script setup>
@@ -59,15 +59,6 @@ const { proxy } = getCurrentInstance();
 
 // emit事件提交
 const emit = defineEmits(['createDesk']);
-
-// 解构props
-const props = defineProps({
-  currentCommunity:{
-    type:Object,
-    default:()=>{}
-  }
-});
-const { currentCommunity } = toRefs(props);
 
 // 获取组件节点元素
 const existDeskRef = ref(null);

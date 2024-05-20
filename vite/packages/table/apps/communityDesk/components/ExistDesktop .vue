@@ -60,6 +60,7 @@
 import { ref, computed, toRefs, getCurrentInstance } from "vue";
 import { storeToRefs } from "pinia";
 import { cardStore } from "../../../store/card";
+import { communityNavStore } from "../../../components/bottomPanel/store/communityNavStore";
 import _ from "lodash-es";
 
 // 获取全局事件总线程
@@ -70,15 +71,9 @@ const emit = defineEmits(["prev"]);
 
 // 解构store缓存数据
 const { desks } = storeToRefs(cardStore());
+const communityNav = communityNavStore();
+const { currentCommunity } = storeToRefs(communityNav);
 
-// 解构props
-const props = defineProps({
-  communityNo: {
-    type: Object,
-    default: () => {},
-  },
-});
-const { communityNo } = toRefs(props);
 
 // 用于接收当前选中的桌面数据
 const currentDesk = ref({});
@@ -111,27 +106,18 @@ const selectDesk = (item) => {
 // 添加桌面
 const addDesk = () => {
   proxy.$bus.emit("updateSetting");
-  const no = communityNo.value?.no;
-  const isCommunity = _.some(desks.value, (desk) => {
-    return desk.communityNo && Number(desk.communityNo) === Number(no);
+  const no = currentCommunity.value.item?.no;
+  const option = {
+    ...currentDesk.value,
+    communityNo: no,
+    communityDeskId: `${no}_${currentDesk.value?.id}`,
+  };
+  // 避免重复添加
+  const index = _.findIndex(desks.value, (desk) => {
+    return  Number(no) === Number(desk?.communityNo) && String(desk.id) === String(option.id);
   });
-  if (!isCommunity) {
-    const option = {
-      ...currentDesk.value,
-      communityNo: no,
-      communityDeskId: `${no}_${currentDesk.value?.id}`,
-    };
-    // console.log("确保参数", option);
-    const index = _.findIndex(desks.value, (desk) => {
-      // console.log('Number(no) === Number(desk?.communityNo)',Number(no) === Number(desk?.communityNo))
-      if(Number(no) === Number(desk?.communityNo)){
-        return String(desk.id) === String(option.id);
-      }
-    });
-    // console.log("index",index)
-    if (index === -1) {
-      desks.value.unshift(option);
-    }
+  if (index === -1) {
+    desks.value.unshift(option);
   }
   existDeskVisible.value = false;
 };
