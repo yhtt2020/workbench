@@ -146,6 +146,7 @@ const selectCommunity = async (item, index) => {
       switchCommunity(item,index);
     }
     else {
+      router.push({ name: "home", params: { no: item.communityInfo.no } });
       selectCommunityItem.value = { item, index };
       proxy.$bus.emit("openCommunityDesk");
     }
@@ -180,10 +181,10 @@ const loadSyncDesk = async(no) => {
 
 // 切换社群的方法进行提取
 const switchCommunity = (item,index) => {
+  router.push({ name: "home", params: { no: item.communityInfo.no } });
   if (settings.value.isCommunity) {
     settings.value.isCommunity = false;
   }
-  router.push({ name: "home", params: { no: item.communityInfo.no } });
   comNav.setCurrentCommunity(item, index);
 };
 

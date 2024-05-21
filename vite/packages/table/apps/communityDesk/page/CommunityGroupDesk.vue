@@ -1,282 +1,292 @@
 <!-- 社群桌面页面 -->
 <template>
-  <!-- 管理员 -->
-  <template v-if="currentComRole">
-    <!--  工具栏 xt-main-top-util-bar 元素定位类不可删-->
-    <div class="relative flex flex-col h-full" v-if="displayDesks.length !== 0">
-      <xt-mix-menu class="w-full h-full" :menus="deskMenu" ref="mixMenu">
-        <!-- 导航栏 -->
-        <template #extraMenu>
-          <ExtraMenu />
-        </template>
-
-        <!-- 桌面加载组件 -->
-        <Desk
-          v-if="currentDesk && currentDesk?.cards?.length > 0"
-          @changeEditing="editing = !editing"
-          :global-settings="settings"
-          :editing="editing"
-          ref="currentDeskRef"
-          :currentDesk="currentDesk"
-          v-model:settings="currentDesk.settings"
-          :key="currentDeskId"
-          :keepAddIcon="keepAddIcon"
-          @onArrange="onArrange"
-        >
-          <!-- 拿菜单数据 -->
-          <template #settingsAllAfter>
-            <slot name="settingsAll"></slot>
-          </template>
-        </Desk>
-
-        <!-- 空状态 -->
-        <template v-else>
-          <slot name="empty">
-            <div class="flex items-center justify-center w-full h-full">
-              <div class="panel-top xt-bg">
-                <!-- 社群基础信息 -->
-                <AdminEmpty :comInfo="currentComInfo" />
-
-                <!-- 按钮添加 -->
-                <DeskAddButton :buttonList="addButtonList" />
-
-                <!-- 标题描述 -->
-                <div class="line-title xt-text" style="margin-top: 20px">
-                  使用推荐桌面方案
-                </div>
-
-                <!-- 推荐桌面 -->
-                <vue-custom-scrollbar
-                  :scrollbarSettings="scrollbarSettings"
-                  class="mt-4"
-                  style="width: 100%; height: 315px"
-                >
-                  <DeskMarket
-                    :wrapperStyle="{
-                      height: '100%',
-                      flexWrap: 'nowrap',
-                      overflow: 'visible',
-                      width: 'auto',
-                    }"
-                    :desks="deskList"
-                    :items="recommendList"
-                    deskItemStyle="width:327px; height:290px"
-                    :closeParent="true"
-                    :communityInfo="currentComInfo"
-                    :addDesk="false"
-                    @openPreview="openPreview"
-                  />
-                </vue-custom-scrollbar>
-              </div>
-            </div>
-          </slot>
-
-          <!-- 隐藏的桌面页面 -->
-          <span v-show="false">
-            <Desk
-              ref="currentDeskRef"
-              :editing="editing"
-              :key="key"
-              :currentDesk="currentDesk"
-            />
-          </span>
-        </template>
-      </xt-mix-menu>
-
-      <!-- 底部tab切换UI -->
+  <template v-if="!communityVisible">
+    <!-- 管理员 -->
+    <template v-if="currentComRole">
+      <!--  工具栏 xt-main-top-util-bar 元素定位类不可删-->
       <div
-        class="flex flex-row xt-main-top-util-bar desk-group-switcher"
-        v-if="showTopBar && !fullScreen"
-        @mouseenter="handleMouseEnter"
-        @mouseleave="handleMouseLeave"
-      >
-        <xt-task id="D0001" no="1" @cb="clickDesk">
-          <!-- tab切换桌面按钮 -->
-          <div class="panel s-bg">
-            <div class="flex flex-row tabs" v-if="showTabs">
-              <!-- 当前社群桌面头像 -->
-              <div
-                style="width: 38px; height: 38px"
-                class="flex items-center justify-center"
-              >
-                <a-avatar
-                  :src="currentComInfo.icon"
-                  :size="38"
-                  shape="square"
-                />
-              </div>
-              <!-- 桌面切换列表 -->
-              <div
-                :class="{ 'tab-active': currentDeskId === item.id }"
-                @click="setCurrentDeskId(item.id)"
-                class="pr-3 truncate tab s-bg xt-text"
-                v-for="(item, index) in displayDesks"
-              >
-                <a-avatar
-                  v-if="item.iconUrl"
-                  shape="square"
-                  class="mr-2 icon"
-                  :size="22"
-                  :src="item.iconUrl"
-                />
-                <icon
-                  v-else
-                  :icon="item.icon || 'desktop'"
-                  style="font-size: 18px; vertical-align: middle"
-                  class="mr-2"
-                />
-                <span class="xt-text xt-font font-16">{{ item.name }}</span>
-              </div>
-              <!-- 全屏功能,后期需要再开放 -->
-              <xt-button w="38" h="38" @click="handleDeskFullScreen" hidden="">
-                <div class="flex items-center justify-center">
-                  <xt-ify-icon
-                    icon="fluent:full-screen-maximize-16-regular"
-                    size="20"
-                    v-if="!windowFullScreen"
-                  />
-                  <xt-ify-icon
-                    icon="fluent:full-screen-minimize-16-regular"
-                    size="20"
-                    v-else
-                  />
-                </div>
-              </xt-button>
-            </div>
-          </div>
-          <div class="flex dots item-content">
-            <div
-              :class="{ active: currentDeskId === item.id }"
-              class="dot"
-              v-for="(item, index) in displayDesks"
-            >
-              &nbsp;
-            </div>
-          </div>
-        </xt-task>
-
-        <div v-if="false">
-          <div class="flex flex-row ml-1">
-            <slot name="toolsBefore"></slot>
-            <a-tooltip title="菜单" placement="bottom">
-              <div class="pl-3"></div>
-            </a-tooltip>
-          </div>
-        </div>
-      </div>
-    </div>
-  </template>
-
-  <!-- 成员 -->
-  <template v-else>
-    <div class="relative flex flex-col h-full">
-      <xt-mix-menu
-        class="w-full h-full"
-        :menus="deskMenu"
-        ref="mixMenu"
+        class="relative flex flex-col h-full"
         v-if="displayDesks.length !== 0"
       >
-        <Desk
-          v-if="currentDesk && currentDesk?.cards?.length > 0"
-          :global-settings="settings"
-          :editing="false"
-          ref="currentDeskRef"
-          :currentDesk="currentDesk"
-          v-model:settings="currentDesk.settings"
-          :key="currentDeskId"
-          :keepAddIcon="keepAddIcon"
-        >
-          <!-- 拿菜单数据 -->
-          <template #settingsAllAfter>
-            <slot name="settingsAll"></slot>
+        <xt-mix-menu class="w-full h-full" :menus="deskMenu" ref="mixMenu">
+          <!-- 导航栏 -->
+          <template #extraMenu>
+            <ExtraMenu />
           </template>
-        </Desk>
 
-        <template v-else>
-          <slot name="empty">
-            <div class="flex items-center justify-center w-full h-full">
-              <NonAdminEmpty />
-            </div>
-          </slot>
+          <!-- 桌面加载组件 -->
+          <Desk
+            v-if="currentDesk && currentDesk?.cards?.length > 0"
+            @changeEditing="editing = !editing"
+            :global-settings="settings"
+            :editing="editing"
+            ref="currentDeskRef"
+            :currentDesk="currentDesk"
+            v-model:settings="currentDesk.settings"
+            :key="currentDeskId"
+            :keepAddIcon="keepAddIcon"
+            @onArrange="onArrange"
+          >
+            <!-- 拿菜单数据 -->
+            <template #settingsAllAfter>
+              <slot name="settingsAll"></slot>
+            </template>
+          </Desk>
 
-          <span v-show="false">
-            <Desk
-              ref="currentDeskRef"
-              :editing="editing"
-              :key="key"
-              :currentDesk="currentDesk"
-            />
-          </span>
-        </template>
-      </xt-mix-menu>
+          <!-- 空状态 -->
+          <template v-else>
+            <slot name="empty">
+              <div class="flex items-center justify-center w-full h-full">
+                <div class="panel-top xt-bg">
+                  <!-- 社群基础信息 -->
+                  <AdminEmpty :comInfo="currentComInfo" />
 
-      <!-- 底部tab切换UI -->
-      <div
-        class="flex flex-row xt-main-top-util-bar desk-group-switcher"
-        v-if="showTopBar && !fullScreen"
-        @mouseenter="handleMouseEnter"
-        @mouseleave="handleMouseLeave"
-      >
-        <xt-task id="D0001" no="1" @cb="clickDesk">
-          <!-- tab切换桌面按钮 -->
-          <div class="panel s-bg">
-            <div class="flex flex-row tabs" v-if="showTabs">
-              <!-- 当前社群桌面头像 -->
-              <div
-                style="width: 38px; height: 38px"
-                class="flex items-center justify-center"
-              >
-                <a-avatar
-                  :src="currentComInfo.icon"
-                  :size="38"
-                  shape="square"
-                />
+                  <!-- 按钮添加 -->
+                  <DeskAddButton :buttonList="addButtonList" />
+
+                  <!-- 标题描述 -->
+                  <div class="line-title xt-text" style="margin-top: 20px">
+                    使用推荐桌面方案
+                  </div>
+
+                  <!-- 推荐桌面 -->
+                  <vue-custom-scrollbar
+                    :scrollbarSettings="scrollbarSettings"
+                    class="mt-4"
+                    style="width: 100%; height: 315px"
+                  >
+                    <DeskMarket
+                      :wrapperStyle="{
+                        height: '100%',
+                        flexWrap: 'nowrap',
+                        overflow: 'visible',
+                        width: 'auto',
+                      }"
+                      :desks="deskList"
+                      :items="recommendList"
+                      deskItemStyle="width:327px; height:290px"
+                      :closeParent="true"
+                      :communityInfo="currentComInfo"
+                      :addDesk="false"
+                      @openPreview="openPreview"
+                    />
+                  </vue-custom-scrollbar>
+                </div>
               </div>
-              <!-- 桌面切换列表 -->
+            </slot>
+
+            <!-- 隐藏的桌面页面 -->
+            <span v-show="false">
+              <Desk
+                ref="currentDeskRef"
+                :editing="editing"
+                :key="key"
+                :currentDesk="currentDesk"
+              />
+            </span>
+          </template>
+        </xt-mix-menu>
+
+        <!-- 底部tab切换UI -->
+        <div
+          class="flex flex-row xt-main-top-util-bar desk-group-switcher"
+          v-if="showTopBar && !fullScreen"
+          @mouseenter="handleMouseEnter"
+          @mouseleave="handleMouseLeave"
+        >
+          <xt-task id="D0001" no="1" @cb="clickDesk">
+            <!-- tab切换桌面按钮 -->
+            <div class="panel s-bg">
+              <div class="flex flex-row tabs" v-if="showTabs">
+                <!-- 当前社群桌面头像 -->
+                <div
+                  style="width: 38px; height: 38px"
+                  class="flex items-center justify-center"
+                >
+                  <a-avatar
+                    :src="currentComInfo.icon"
+                    :size="38"
+                    shape="square"
+                  />
+                </div>
+                <!-- 桌面切换列表 -->
+                <div
+                  :class="{ 'tab-active': currentDeskId === item.id }"
+                  @click="setCurrentDeskId(item.id)"
+                  class="pr-3 truncate tab s-bg xt-text"
+                  v-for="(item, index) in displayDesks"
+                >
+                  <a-avatar
+                    v-if="item.iconUrl"
+                    shape="square"
+                    class="mr-2 icon"
+                    :size="22"
+                    :src="item.iconUrl"
+                  />
+                  <icon
+                    v-else
+                    :icon="item.icon || 'desktop'"
+                    style="font-size: 18px; vertical-align: middle"
+                    class="mr-2"
+                  />
+                  <span class="xt-text xt-font font-16">{{ item.name }}</span>
+                </div>
+                <!-- 全屏功能,后期需要再开放 -->
+                <xt-button
+                  w="38"
+                  h="38"
+                  @click="handleDeskFullScreen"
+                  hidden=""
+                >
+                  <div class="flex items-center justify-center">
+                    <xt-ify-icon
+                      icon="fluent:full-screen-maximize-16-regular"
+                      size="20"
+                      v-if="!windowFullScreen"
+                    />
+                    <xt-ify-icon
+                      icon="fluent:full-screen-minimize-16-regular"
+                      size="20"
+                      v-else
+                    />
+                  </div>
+                </xt-button>
+              </div>
+            </div>
+            <div class="flex dots item-content">
               <div
-                :class="{ 'tab-active': currentDeskId === item.id }"
-                @click="setCurrentDeskId(item.id)"
-                class="pr-3 truncate tab s-bg xt-text"
+                :class="{ active: currentDeskId === item.id }"
+                class="dot"
                 v-for="(item, index) in displayDesks"
               >
-                <a-avatar
-                  v-if="item.iconUrl"
-                  shape="square"
-                  class="mr-2 icon"
-                  :size="22"
-                  :src="item.iconUrl"
-                />
-                <icon
-                  v-else
-                  :icon="item.icon || 'desktop'"
-                  style="font-size: 18px; vertical-align: middle"
-                  class="mr-2"
-                />
-                <span class="">{{ item.name }}</span>
+                &nbsp;
               </div>
             </div>
-          </div>
-          <div class="flex dots item-content">
-            <div
-              :class="{ active: currentDeskId === item.id }"
-              class="dot"
-              v-for="(item, index) in displayDesks"
-            >
-              &nbsp;
-            </div>
-          </div>
-        </xt-task>
+          </xt-task>
 
-        <div v-if="false">
-          <div class="flex flex-row ml-1">
-            <slot name="toolsBefore"></slot>
-            <a-tooltip title="菜单" placement="bottom">
-              <div class="pl-3"></div>
-            </a-tooltip>
+          <div v-if="false">
+            <div class="flex flex-row ml-1">
+              <slot name="toolsBefore"></slot>
+              <a-tooltip title="菜单" placement="bottom">
+                <div class="pl-3"></div>
+              </a-tooltip>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </template>
+
+    <!-- 成员 -->
+    <template v-else>
+      <div class="relative flex flex-col h-full">
+        <xt-mix-menu
+          class="w-full h-full"
+          :menus="deskMenu"
+          ref="mixMenu"
+          v-if="displayDesks.length !== 0"
+        >
+          <Desk
+            v-if="currentDesk && currentDesk?.cards?.length > 0"
+            :global-settings="settings"
+            :editing="false"
+            ref="currentDeskRef"
+            :currentDesk="currentDesk"
+            v-model:settings="currentDesk.settings"
+            :key="currentDeskId"
+            :keepAddIcon="keepAddIcon"
+          >
+            <!-- 拿菜单数据 -->
+            <template #settingsAllAfter>
+              <slot name="settingsAll"></slot>
+            </template>
+          </Desk>
+
+          <template v-else>
+            <slot name="empty">
+              <div class="flex items-center justify-center w-full h-full">
+                <NonAdminEmpty />
+              </div>
+            </slot>
+
+            <span v-show="false">
+              <Desk
+                ref="currentDeskRef"
+                :editing="editing"
+                :key="key"
+                :currentDesk="currentDesk"
+              />
+            </span>
+          </template>
+        </xt-mix-menu>
+
+        <!-- 底部tab切换UI -->
+        <div
+          class="flex flex-row xt-main-top-util-bar desk-group-switcher"
+          v-if="showTopBar && !fullScreen"
+          @mouseenter="handleMouseEnter"
+          @mouseleave="handleMouseLeave"
+        >
+          <xt-task id="D0001" no="1" @cb="clickDesk">
+            <!-- tab切换桌面按钮 -->
+            <div class="panel s-bg">
+              <div class="flex flex-row tabs" v-if="showTabs">
+                <!-- 当前社群桌面头像 -->
+                <div
+                  style="width: 38px; height: 38px"
+                  class="flex items-center justify-center"
+                >
+                  <a-avatar
+                    :src="currentComInfo.icon"
+                    :size="38"
+                    shape="square"
+                  />
+                </div>
+                <!-- 桌面切换列表 -->
+                <div
+                  :class="{ 'tab-active': currentDeskId === item.id }"
+                  @click="setCurrentDeskId(item.id)"
+                  class="pr-3 truncate tab s-bg xt-text"
+                  v-for="(item, index) in displayDesks"
+                >
+                  <a-avatar
+                    v-if="item.iconUrl"
+                    shape="square"
+                    class="mr-2 icon"
+                    :size="22"
+                    :src="item.iconUrl"
+                  />
+                  <icon
+                    v-else
+                    :icon="item.icon || 'desktop'"
+                    style="font-size: 18px; vertical-align: middle"
+                    class="mr-2"
+                  />
+                  <span class="">{{ item.name }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="flex dots item-content">
+              <div
+                :class="{ active: currentDeskId === item.id }"
+                class="dot"
+                v-for="(item, index) in displayDesks"
+              >
+                &nbsp;
+              </div>
+            </div>
+          </xt-task>
+
+          <div v-if="false">
+            <div class="flex flex-row ml-1">
+              <slot name="toolsBefore"></slot>
+              <a-tooltip title="菜单" placement="bottom">
+                <div class="pl-3"></div>
+              </a-tooltip>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
   </template>
 
   <!-- 添加桌面弹窗式 -->
@@ -494,10 +504,7 @@
   <input style="display: none" ref="fileRef" type="file" />
 
   <!-- 社群桌面引导创建 -->
-  <CreateDeskModal
-    ref="createDeskRef"
-    @createDesk="doAddDesk('空白桌面')"
-  />
+  <CreateDeskModal ref="createDeskRef" @createDesk="doAddDesk('空白桌面')" />
 </template>
 
 <script>
@@ -570,10 +577,12 @@ export default {
   },
 
   props: {
+    // 桌面设置
     settings: {
       type: Object,
       default: {},
     },
+    // 桌面列表
     deskList: {
       type: Array,
       default: [],
@@ -593,9 +602,15 @@ export default {
       type: Boolean,
       default: true,
     },
+    // 当前桌面id
     currentDeskId: {
       type: String,
       default: "0",
+    },
+    // 用于切换桌面
+    communityVisible: {
+      type: Boolean,
+      default: true,
     },
   },
 
@@ -682,8 +697,7 @@ export default {
           fn: this.importDesk,
         },
       ],
-      loadingVisible:true,
-
+      loadingVisible: true,
     };
   },
 
@@ -808,6 +822,9 @@ export default {
       this.moreDesk();
     });
 
+    
+    this.setCurrentDefaultDesk();
+
     // 开启社群桌面引导创建弹窗
     this.$bus.on("openCommunityDesk", () => {
       this.$nextTick(() => {
@@ -831,7 +848,6 @@ export default {
       }
     });
 
-    this.setCurrentDefaultDesk();
   },
 
   watch: {
@@ -846,48 +862,42 @@ export default {
     },
 
     // 监听社群桌面更新的变化
-    "currentDesk.cards":{
-      handler(newVal){
-        if(this.loadingVisible){
-          setTimeout(()=>{
-            this.loadingVisible = false
-          },150)
-        }
-        else {
-          if(this.currentComRole){
+    "currentDesk.cards": {
+      handler(newVal) {
+        if (this.loadingVisible) {
+          setTimeout(() => {
+            this.loadingVisible = false;
+          }, 150);
+        } else {
+          if (this.currentComRole) {
             this.syncSaveCommunity();
-          }
-          else {
+          } else {
             this.loadCommunityCloud();
           }
-          this.loadingVisible = false
+          this.loadingVisible = false;
         }
       },
       immediate: true,
       deep: true,
     },
-    
-    "currentDesk.id":{
-      handler(newVal){
-        if(this.loadingVisible){
-          setTimeout(()=>{
-            this.loadingVisible = false
-          },150)
-        }
-        else {
-          if(this.currentComRole){
+
+    "currentDesk.id": {
+      handler(newVal) {
+        if (this.loadingVisible) {
+          setTimeout(() => {
+            this.loadingVisible = false;
+          }, 150);
+        } else {
+          if (this.currentComRole) {
             this.syncSaveCommunity();
-          }
-          else {
+          } else {
             this.loadCommunityCloud();
           }
-          
         }
       },
       immediate: true,
       deep: true,
     },
-    
   },
 
   methods: {

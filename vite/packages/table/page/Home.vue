@@ -14,7 +14,7 @@
 
     <!-- 社群桌面 -->
     <CommunityGroupDesk
-      v-else
+      :communityVisible="communityVisible"
       ref="deskGroupRef"
       :settings="settings"
       :desk-list="desks"
