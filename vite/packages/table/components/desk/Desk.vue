@@ -35,30 +35,32 @@
     />
     <Drop :classes="getClasses()">
       <!-- 自由布局 -->
-      <template v-if="freeLayout">
-        <FreeLayoutScrollbar ref="freeLayoutScrollbar" class="flex-1">
-          <FreeLayoutCanvas
-            class="home-widgets"
-            v-if="isFreeLayout == true && $route.path == '/main' && freeLayout"
+      <FreeLayoutScrollbar
+        v-if="freeLayout"
+        ref="freeLayoutScrollbar"
+        class="flex-1"
+      >
+        <FreeLayoutCanvas
+          class="home-widgets"
+          v-if="isFreeLayout == true && $route.path == '/main' && freeLayout"
+        >
+          <FreeLayoutContainer
+            :currentDesk="currentDesk"
+            :currentID="currentDesk.id"
+            :isDrag="editing"
           >
-            <FreeLayoutContainer
-              :currentDesk="currentDesk"
-              :currentID="currentDesk.id"
-              :isDrag="editing"
-            >
-              <template #box="{ data }">
-                <component
-                  :desk="currentDesk"
-                  :is="data?.name"
-                  :customIndex="data?.id"
-                  :customData="data?.customData"
-                  :key="data?.id"
-                />
-              </template>
-            </FreeLayoutContainer>
-          </FreeLayoutCanvas>
-        </FreeLayoutScrollbar>
-      </template>
+            <template #box="{ data }">
+              <component
+                :desk="currentDesk"
+                :is="data?.name"
+                :customIndex="data?.id"
+                :customData="data?.customData"
+                :key="data?.id"
+              />
+            </template>
+          </FreeLayoutContainer>
+        </FreeLayoutCanvas>
+      </FreeLayoutScrollbar>
 
       <!-- 默认布局 -->
       <div
@@ -568,6 +570,7 @@ export default {
         if (this.usingSettings.vDirection === true) {
           return "100%";
         } else {
+          console.log('this.usingSettings :>> ', this.usingSettings);
           return (this.usingSettings.containerHeight || 800) + "px";
         }
       }
