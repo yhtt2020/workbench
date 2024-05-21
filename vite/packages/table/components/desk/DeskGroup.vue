@@ -952,7 +952,7 @@ import ExtraMenu from '../../components/windowPanel/components/ExtraMenu.vue';
                 });
             }
           });
-          this.$refs.currentDeskRef.hideMenu();
+          // this.$refs.currentDeskRef.hideMenu();
           window.$ui.confirm("删除当前桌面？此操作不可还原。", "", {
             type: "warning",
             okText: "删除桌面",
