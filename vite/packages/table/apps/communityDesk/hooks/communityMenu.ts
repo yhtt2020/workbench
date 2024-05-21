@@ -4,6 +4,7 @@ import {
   folderData,
   mainData,
 } from "../../../components/desk/freeLayout/config";
+import { generateSearchResultTime } from "../hooks/deskCreateMethod";
 
 /**社群管理员模块**/
 function communityMenus() {
@@ -41,7 +42,8 @@ function communityMenus() {
       name: "更新桌面",
       newIcon: "fluent:cloud-arrow-up-16-regular",
       fn: this.syncSaveCommunity,
-      // updateTime:222222,
+      contentAble:true,
+      newContent:`上次更新:${ generateSearchResultTime(this.setting.saveSyncTime)}`,
     },
     { id: 2, divider: true },
     {
@@ -255,6 +257,8 @@ function memberMenus() {
       name: "更新桌面",
       newIcon: "fluent:cloud-arrow-up-16-regular",
       fn: this.loadCommunityCloud,
+      contentAble:true,
+      newContent:`上次更新:${ generateSearchResultTime(this.setting.getSyncTime)}`,
     },
     { id: 2, divider: true },
     {
