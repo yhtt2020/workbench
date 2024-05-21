@@ -141,7 +141,7 @@ const community = ref([]);
 const leftTab = ref([
   {
     title: "通知",
-    icon: "fluent:alert-16-filled",
+    icon: "fluent:alert-16-regular",
     type: "contact-notice",
   },
   {
@@ -151,7 +151,7 @@ const leftTab = ref([
   },
   {
     title: "好友",
-    icon: "fluent:emoji-smile-slight-24-filled",
+    icon: "fluent:emoji-smile-slight-24-regular",
     type: "contact-friend",
   },
   /**后期开发再放开**/
