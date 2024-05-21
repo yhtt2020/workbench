@@ -1294,7 +1294,7 @@ export const NAV_CLIENT=[
   // { 'type': 'systemApp', 'icon': 'kuaijie1', 'name': '快捷指令', 'event': 'deck' },
   {
     'type': 'systemApp',
-    id: '1705025379',
+    "id": '1705025379',
     'icon': 'fluent:document-bullet-list-multiple-24-regular',
     'name': '办公助手',
     'event': 'work'

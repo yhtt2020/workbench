@@ -141,6 +141,36 @@ export const NavList = [
     cname: "工具",
     children: [
       {
+        name:'Courier',
+        cname:'我的快递',
+        detail:"在桌面上时刻关注你的快递动态，支持批量添加快递单号，自定义修改快递名称和图标",
+        sizes:['2x2','4x4','4x6'],
+        option:[
+          {
+            name:'Courier',
+            imgName:'courier',
+            size:'4x6',
+            zoom:'14'
+          }
+        ],
+        time:'2023/10/27'
+      },
+      {
+        name:'goods',
+        cname:'商品推荐',
+        detail:"自购省钱，分享赚钱",
+        sizes:['2x2','4x4','4x6'],
+        option:[
+          {
+            name:'goods',
+            imgName:'courier',
+            size:'4x6',
+            zoom:'14'
+          }
+        ],
+        time:'2023/10/27'
+      },
+      {
         name: "capture",
         cname: "捕获",
         detail: "一键截屏、开启屏幕录制，录屏状态下控制麦克风的收录状态。",
@@ -931,7 +961,7 @@ export const NavList = [
         option: [
           {
             name: 'Guider',
-            imgName:'Guider',
+            imgName:'guider',
             size: '2x4',
             zoom: '20'
           },
@@ -1042,21 +1072,7 @@ export const NavList = [
       },
 
 
-      {
-        name:'Courier',
-        cname:'我的快递',
-        detail:"在桌面上时刻关注你的快递动态，支持批量添加快递单号，自定义修改快递名称和图标",
-        sizes:['2x2','4x4','4x6'],
-        option:[
-          {
-            name:'Courier',
-            imgName:'courier',
-            size:'4x6',
-            zoom:'14'
-          }
-        ],
-        time:'2023/10/27'
-      }
+
     ]
   },
 ];
