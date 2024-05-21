@@ -141,17 +141,17 @@ const community = ref([]);
 const leftTab = ref([
   {
     title: "通知",
-    icon: "fluent:alert-16-regular",
+    icon: "fluent:alert-16-filled",
     type: "contact-notice",
   },
   {
     title: "群聊",
-    icon: "ant-design:message-outlined",
+    icon: "ant-design:message-filled",
     type: "contact-group",
   },
   {
     title: "好友",
-    icon: "fluent:emoji-smile-slight-24-regular",
+    icon: "fluent:emoji-smile-slight-24-filled",
     type: "contact-friend",
   },
   /**后期开发再放开**/
