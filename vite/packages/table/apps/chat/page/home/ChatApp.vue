@@ -89,7 +89,7 @@ const currentData = ref({
 // 左侧栏数据
 const leftHeader = ref([
   {
-    newIcon: "fluent:chat-16-regular",
+    newIcon: "fluent:chat-16-filled",
     tab: "session",
     type: "session",
     route: { name: "chatMain", params: { no: "" } },
@@ -181,7 +181,7 @@ const leftList = ref([
   {
     tab: "find",
     type: "find",
-    newIcon: "eva:compass-outline",
+    newIcon: "fluent:compass-northwest-24-filled",
     menuVisible: true,
     route: { name: "chatFind", params: { no: "" } },
   },
