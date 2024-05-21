@@ -25,8 +25,8 @@
             :style="{ height: copyNum !== 1 ? '56px' : '48px', lineHeight: copyNum !== 1 ? '56px' : '48px', }" >
             <div class="flex items-center h-full ml-4"  @click="goPage(index - 1)">
               <!-- <AiIcon icon="fluent:chat-16-regular" style="font-size: 20px;" class="mr-3 xt-text" /> -->
-              <xt-base-icon class="mr-3 text-xl xt-text"
-                :icon="recentList[index - 1]?.icon.name || 'message'"></xt-base-icon>
+              <xt-mix-icon class="mr-3 text-xl xt-text"
+                :icon="recentList[index - 1].icon.name" type="select"></xt-mix-icon>
               <div class="text-base xt-text ">{{ recentList[index - 1]?.name }}</div>
             </div>
           </div>

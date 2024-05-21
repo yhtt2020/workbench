@@ -257,7 +257,7 @@ import { useMouseInElement } from "@vueuse/core";
 import { navStore } from "../../store/nav";
 
 import Resize from "./Resize.vue";
-import RightMenu from "./RightMenu.vue";
+import RightMenu from "./RightMenu.vue";  
 import { usePlat } from "../../ui/hooks/usePlat";
 import { addCardToNav } from "./hooks/addCardToNav";
 import { useConversionCard } from "./hooks/useConversionCard";
