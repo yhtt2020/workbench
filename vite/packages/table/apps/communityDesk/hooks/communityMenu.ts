@@ -40,10 +40,13 @@ function communityMenus() {
     {
       id: 1,
       name: "更新桌面",
-      newIcon: "fluent:cloud-arrow-up-16-regular",
+      newIcon: "fluent:cloud-arrow-up-16-filled",
       fn: this.syncSaveCommunity,
-      contentAble:true,
-      newContent:`上次更新:${ generateSearchResultTime(this.setting.saveSyncTime)}`,
+      contentAble: true,
+      newContent:
+        this.setting.saveSyncTime !== ""
+          ? `上次更新:${generateSearchResultTime(this.setting.saveSyncTime)}`
+          : "",
     },
     { id: 2, divider: true },
     {
@@ -58,13 +61,13 @@ function communityMenus() {
     },
     {
       id: 4,
-      newIcon: "fluent:collections-add-24-regular",
+      newIcon: "fluent:collections-add-24-filled",
       name: "添加小组件",
       fn: this.newAddCard,
     },
     {
       id: 4.1,
-      newIcon: "fluent:window-apps-16-regular",
+      newIcon: "fluent:window-apps-16-filled",
       name: "应用中心",
       fn: () => {
         this.$nextTick(() => {
@@ -79,13 +82,13 @@ function communityMenus() {
       children: [
         {
           id: 1,
-          newIcon: "fluent:slide-add-16-regular",
+          newIcon: "fluent:slide-add-16-filled",
           name: "添加新桌面",
           fn: this.showAddDeskForm,
         },
         {
           id: 2,
-          newIcon: "fluent:app-folder-16-regular",
+          newIcon: "fluent:app-folder-16-filled",
           name: "添加图标分组",
           fn: () => {
             this.$nextTick(() => {
@@ -98,7 +101,7 @@ function communityMenus() {
     { id: 6, divider: true },
     {
       id: 6.1,
-      newIcon: "fluent:glance-horizontal-16-regular",
+      newIcon: "fluent:glance-horizontal-16-filled",
       name: "整理桌面",
       disabled: this.isFreeLayout ? false : true,
       fn: () => {
@@ -122,8 +125,8 @@ function communityMenus() {
     {
       id: 6,
       newIcon: this.editing
-        ? "fluent:record-stop-16-regular"
-        : "fluent:window-new-16-regular",
+        ? "fluent:record-stop-16-filled"
+        : "fluent:window-new-16-filled",
       name: this.editing ? "停止调整" : "调整桌面布局",
       fn: () => {
         this.$nextTick(() => {
@@ -133,7 +136,7 @@ function communityMenus() {
     },
     {
       id: 7,
-      newIcon: "fluent:resize-large-16-regular",
+      newIcon: "fluent:resize-large-16-filled",
       name: "复原桌面位置",
       disabled: this.isFreeLayout ? false : true,
       fn: () => {
@@ -144,7 +147,7 @@ function communityMenus() {
     },
     {
       id: 9,
-      newIcon: "fluent:image-multiple-16-regular",
+      newIcon: "fluent:image-multiple-16-filled",
       name: "更换壁纸",
       fn: () => {
         this.$bus.emit("lockScreen");
@@ -158,7 +161,7 @@ function communityMenus() {
       children: [
         {
           id: 0,
-          newIcon: "fluent:settings-16-regular",
+          newIcon: "fluent:settings-16-filled",
           name: "系统设置",
           fn: () => {
             this.$nextTick(() => {
@@ -168,7 +171,7 @@ function communityMenus() {
         },
         {
           id: 1,
-          newIcon: "fluent:settings-16-regular",
+          newIcon: "fluent:settings-16-filled",
           name: "桌面设置",
           fn: () => {
             this.$nextTick(() => {
@@ -199,14 +202,14 @@ function communityMenus() {
         },
         {
           id: 5,
-          newIcon: "fluent:share-android-24-regular",
+          newIcon: "fluent:share-android-24-filled",
           name: "分享桌面",
           fn: this.shareDesk,
           disabled: (window as any).$usePlat(),
         },
         {
           id: 6,
-          newIcon: "fluent:circle-off-16-regular",
+          newIcon: "fluent:circle-off-16-filled",
           name: "清空桌面",
           fn: () => {
             this.$nextTick(() => {
@@ -217,8 +220,8 @@ function communityMenus() {
         {
           id: 7,
           newIcon: this.comHide
-            ? "fluent:eye-16-regular"
-            : "fluent:eye-off-16-regular",
+            ? "fluent:eye-16-filled"
+            : "fluent:eye-off-16-filled",
           name: currentHide ? "显示小组件" : "隐藏小组件",
           fn: () => {
             this.$nextTick(() => {
@@ -257,8 +260,11 @@ function memberMenus() {
       name: "更新桌面",
       newIcon: "fluent:cloud-arrow-up-16-filled",
       fn: this.loadCommunityCloud,
-      contentAble:true,
-      newContent:`上次更新:${ generateSearchResultTime(this.setting.getSyncTime)}`,
+      contentAble: true,
+      newContent:
+        this.setting.getSyncTime !== ""
+          ? `上次更新:${generateSearchResultTime(this.setting.getSyncTime)}`
+          : "",
     },
     { id: 2, divider: true },
     {
@@ -270,7 +276,7 @@ function memberMenus() {
       fn: () => {
         this.$nextTick(() => {
           // this.$refs.currentDeskRef.toggleEditing();
-          console.log('测试',this.deskList);
+          console.log("测试", this.deskList);
         });
       },
     },

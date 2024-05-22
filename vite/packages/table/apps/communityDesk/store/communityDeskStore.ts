@@ -34,8 +34,8 @@ export const communityDeskStore = defineStore("communityDesk", {
 
     setting: {
       // 云端同步时间
-      getSyncTime: "",
-      saveSyncTime: "",
+      getSyncTime: Date.now(),
+      saveSyncTime: Date.now(),
     },
   }),
 
@@ -223,10 +223,9 @@ export const communityDeskStore = defineStore("communityDesk", {
       return filterList;
     },
 
-
     // 删除成员旧数据
-    deleteMemberList(communityNo:any){
-      console.log('查看成员数据列表',this.syncDesk.desks);
+    deleteMemberList(communityNo: any) {
+      console.log("查看成员数据列表", this.syncDesk.desks);
       // const deskId = _.map(this.syncDesk.desks,(desk:any)=>{
       //   return desk.id;
       // });
