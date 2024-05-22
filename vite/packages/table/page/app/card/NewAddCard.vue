@@ -234,10 +234,6 @@ export default {
     if (this.currentId == "M0302") {
       this.updateNavIndex(7);
     }
-
-    // 判断当前桌面数据是否是否存在社群id
-    console.log("打印当前桌面", this.desk);
-    console.log("打印当前组件数据", this.baseNavList);
     // 用于是否满足社群桌面条件的小组件卡片数据。
     const disabledCard = [
       "Audio",

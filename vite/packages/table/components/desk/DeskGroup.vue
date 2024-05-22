@@ -773,7 +773,9 @@ export default {
       if (currentDesk) {
         this.key = Date.now();
         return currentDesk;
-      } else {
+      } 
+      // 这一步是为了解决,深度监听currentDesk中没有settings导致报错无法进行走下去处理逻辑
+      else {
         const option = {
           cards: [],
           layoutSize: {},
@@ -797,26 +799,27 @@ export default {
     },
 
     displayDesks() {
-      return [
-        ...this.deskList.filter((desk) => {
-          if (!desk.hasOwnProperty("communityNo")) {
-            return desk.pin;
-          }
+      // 这里做桌面列表中是否有社群的桌面,以及处理桌面id不为undefined。
+      const filterNewList = this.deskList.filter((desk) => {
+        return !desk.hasOwnProperty("communityNo") && desk.id !== undefined;
+      });
+      const newDeskList = [
+        ...filterNewList.filter((desk) => {
+          return desk.pin;
         }),
-        ...this.deskList.filter((desk) => {
-          if (!desk.hasOwnProperty("communityNo")) {
-            return !desk.pin;
-          }
+        ...filterNewList.filter((desk) => {
+          return !desk.pin;
         }),
-      ]
-        .slice(0, 4)
-        .sort((a, b) => {
-          if (b.pin) {
-            //置顶的桌面排最前面
-            return 9999999999999;
-          }
-          return Number(b.order || 0) - Number(a.order || 0);
-        });
+      ].slice(0, 4);
+      const sortList = newDeskList.sort((a, b) => {
+        if (b.pin) {
+          //置顶的桌面排最前面
+          return 9999999999999;
+        }
+        return Number(b.order || 0) - Number(a.order || 0);
+      });
+
+      return sortList;
     },
   },
   watch: {
@@ -1075,10 +1078,18 @@ export default {
       }
     },
     delDesk() {
+      // 这一步是为了解决数组中误传桌面id为undefined的数据,需要进行删除操作处理。
+      const index  = this.deskList.findIndex((desk)=>{
+        return desk.id === undefined;
+      })
+      if(index !== -1){
+        this.deskList.splice(index,1);
+      }
+
       // 定制桌面时需要屏蔽删除功能
       if (!this.showGuide) {
         const filterDesk = this.deskList.filter((desk) => {
-          return !desk.communityNo;
+          return !desk.hasOwnProperty("communityNo") && desk.id !== undefined;
         });
         if (filterDesk.length === 1) {
           window.$ui.confirm("至少保留一个桌面。", "", {

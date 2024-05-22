@@ -65,7 +65,6 @@ export const communityDeskStore = defineStore("communityDesk", {
     },
 
     // 保存当前社群名下的所有桌面列表
-    // 保存当前社群名下的所有桌面列表
     async saveCommunityDesk(force = 0) {
       const communityNo = this.communityDesk.communityDeskNo;
       // 将当前社群名下的所有桌面列表进行云端存储
@@ -166,12 +165,11 @@ export const communityDeskStore = defineStore("communityDesk", {
               this.syncDesk.desks = archiveData?.desksAll;
             }
             this.setting.getSyncTime = archiveData?._v;
+            this.loadCommunityDeskDetail();
           } else {
             if (rs.code === 404) {
-              // 获取过滤出当前社群的本地桌面数据。
-              const localDesks = this.getLocalDesks();
-              this.syncDesk.desks = localDesks;
-              this.setting.getSyncTime = "";
+              this.syncDesk.desks = [];
+              this.setting.getSyncTime = Date.now();
             }
           }
         });
@@ -186,58 +184,30 @@ export const communityDeskStore = defineStore("communityDesk", {
       archiveHelper
         .loadFromCommunity(communityNo, communityNavAppId, loadKey)
         .then((rs: any) => {
-          if (rs.status) {
-            const archiveData = rs.data?.data;
-            if (archiveData.deskDetail) {
-              // 排查本地桌面desks的数组是否存在云端编辑的数据
-              const index = _.findIndex(
-                (cardStore() as any).desks,
-                (desk: any) => {
-                  return String(archiveData?.deskDetail.id) === String(desk.id);
-                }
-              );
-              if (index === -1) {
-                (cardStore() as any).desks.unshift(archiveData?.deskDetail);
-              }
-              this.deleteMemberList(communityNo);
-            }
-            this.setting.getSyncTime = archiveData?._v;
-          } else {
-            if (rs.code === 404) {
-              this.setting.getSyncTime = "";
+          const deskId = _.map(this.syncDesk.desks,(desk:any)=>{
+            return desk?.id;
+          });
+          const archiveData = rs.data?.data?.deskDetail;
+          if(archiveData){
+            const existDeskId = _.some(archiveData,(id:any)=>{
+              return String(id) === String(archiveData?.id);
+            })
+            if(existDeskId){
+               const deskList =  (cardStore() as any).desks;
+               const index = _.findIndex(deskList,(desk:any)=>{
+                 return String(archiveData?.id) === String(desk.id);
+               });
+               console.log('index',index)
+               if(index === -1){
+                 (cardStore() as any).desks.unshift(archiveData);
+               }
+               else {
+                 (cardStore() as any).desks.splice(index,1,archiveData);
+               }
+               console.log('测试',deskList);
             }
           }
         });
-    },
-
-    // 读取本地所有桌面列表数据
-    getLocalDesks() {
-      const communityNo = this.communityDesk.communityDeskNo;
-      //  从本地的桌面数据进行获取,并且过滤出当前社群所有本地桌面数据。
-      const list = (cardStore() as any).$state.desks;
-      const filterList = _.filter(list, (item: any) => {
-        if (item.communityNo) {
-          return Number(item.communityNo) === Number(communityNo);
-        }
-      });
-      return filterList;
-    },
-
-    // 删除成员旧数据
-    deleteMemberList(communityNo: any) {
-      console.log("查看成员数据列表", this.syncDesk.desks);
-      // const deskId = _.map(this.syncDesk.desks,(desk:any)=>{
-      //   return desk.id;
-      // });
-      // (cardStore() as any).desks.forEach((desk:any,index:any)=> {
-      //   if(desk.hasOwnProperty("communityNo")){
-      //     if(Number(communityNo) === Number(desk.communityNo)){
-      //       if(!deskId.includes(desk.id)){
-      //         (cardStore() as any).desks.splice(index,1);
-      //       }
-      //     }
-      //   }
-      // });
     },
   },
 
