@@ -929,7 +929,6 @@ export default {
         this.$refs.shareDeskRef.update();
         this.$refs.shareDeskRef.setSelectVal(this.currentDeskId);
         this.shareDeskVisible = true;
-        this.$refs.currentDeskRef.hideMenu();
       } else {
         message.info("定制过程中无法操作");
       }
@@ -1069,7 +1068,6 @@ export default {
     },
     showAddDeskForm() {
       if (!this.showGuide) {
-        this.$refs.currentDeskRef.hideMenu();
         this.menuVisible = false;
         this.addDeskVisible = true;
       } else {
@@ -1110,7 +1108,6 @@ export default {
                 });
             }
           });
-          this.$refs.currentDeskRef.hideMenu();
           window.$ui.confirm("删除当前桌面？此操作不可还原。", "", {
             type: "warning",
             okText: "删除桌面",
@@ -1149,7 +1146,6 @@ export default {
         return;
       }
       if (!this.showGuide) {
-        this.$refs.currentDeskRef.hideMenu();
         this.layoutSize = this.$refs.currentDeskRef.getLayoutSize();
         this.exportModal = true;
       } else {
