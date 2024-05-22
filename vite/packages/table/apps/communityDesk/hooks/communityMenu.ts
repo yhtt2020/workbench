@@ -275,8 +275,8 @@ function memberMenus() {
       name: this.editing ? "停止编辑" : "进入编辑模式",
       fn: () => {
         this.$nextTick(() => {
-          // this.$refs.currentDeskRef.toggleEditing();
-          console.log("测试", this.deskList);
+          // this.$refs.currentDeskEditRef.toggleEditing();
+          this.$bus.emit('openMemberEdit');
         });
       },
     },
@@ -285,9 +285,10 @@ function memberMenus() {
       newIcon: "fluent:resize-large-16-filled",
       name: "复原桌面位置",
       fn: () => {
-        this.$nextTick(() => {
-          this.$refs.currentDeskRef.freeLayoutScrollbarRedirect();
-        });
+        this.$bus.emit('redirect');
+        // this.$nextTick(() => {
+        //   this.$refs.currentDeskRef.freeLayoutScrollbarRedirect();
+        // });
       },
     },
     {

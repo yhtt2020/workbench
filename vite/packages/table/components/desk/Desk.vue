@@ -520,6 +520,11 @@ export default {
       }, 300);
     });
 
+    // 触发位置还原
+    this.$bus.on('redirect',()=>{
+      this.freeLayoutScrollbarRedirect()
+    });
+
     if (window.showed) {
       this.showGrid = true;
     }

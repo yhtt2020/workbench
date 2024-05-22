@@ -111,20 +111,19 @@
         <Desk
           v-if="currentDesk && currentDesk?.cards?.length > 0"
           :global-settings="settings"
-          :editing="editing"
+          :editing="false"
           ref="currentDeskRef"
           :currentDesk="currentDesk"
           v-model:settings="currentDesk.settings"
           :key="currentDeskId"
           :keepAddIcon="keepAddIcon"
-          @changeEditing="editing = !editing"
           @onArrange="onArrange"
         >
-         拿菜单数据
-         <template #settingsAllAfter>
-          <slot name="settingsAll"></slot>
-        </template>
-       </Desk>
+          <!-- 拿菜单数据 -->
+          <template #settingsAllAfter>
+            <slot name="settingsAll"></slot>
+          </template>
+        </Desk>
 
         <template v-else>
           <slot name="empty">
@@ -136,12 +135,18 @@
           <span v-show="false">
             <Desk
               ref="currentDeskRef"
-              :editing="editing"
+              :editing="false"
               :key="key"
               :currentDesk="currentDesk"
             />
           </span>
         </template>
+
+        <DeskEditMode
+          ref="currentDeskEditRef"
+          v-model:settings="currentDesk.settings"
+          :global-settings="settings"
+        />
       </xt-mix-menu>
 
       <DeskTabUI
@@ -311,6 +316,7 @@ import NewAddCard from "../../../../page/app/card/NewAddCard.vue";
 import ShareDesk from "../../../../components/desk/ShareDesk.vue";
 import ExportDesk from "../../../../components/desk/ExportDesk.vue";
 import DeskPreview from "../../../../components/desk/DeskPreview.vue";
+import DeskEditMode from "./DeskEditMode.vue";
 
 // 其他文件
 import menuMinis from "../../hooks/communityMenu";
@@ -379,6 +385,7 @@ export default {
     ShareDesk,
     ExportDesk,
     DeskPreview,
+    DeskEditMode,
   },
 
   data() {
