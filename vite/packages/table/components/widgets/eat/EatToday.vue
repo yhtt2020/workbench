@@ -66,7 +66,9 @@ export default {
       eatList: ['糯米饭','拉面','面包','苹果','牛排','烤鸭','炒饭','火锅'],
       header:{
         title: '今天吃什么',
-        ifyIcon:'fluent:emoji-smile-slight-24-regular'
+        // ifyIcon:'fluent:emoji-smile-slight-24-regular'
+        showIcon:"/img/appLogo/eatToday.png",
+
       },
       customSize:'2x4'
 }

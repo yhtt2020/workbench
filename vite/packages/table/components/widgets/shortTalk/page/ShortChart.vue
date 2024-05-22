@@ -1,14 +1,14 @@
 <template>
 
-    <xt-container 
+    <xt-container
         :header="header"
         v-model:customSize="customData.customSize"
-        :envLimit="['guest', 'offline']" 
-        :customData="customData" 
-        :customIndex="customIndex" 
-        :menuList="menuList" 
-        :options="options" 
-        ref="dataSlot" 
+        :envLimit="['guest', 'offline']"
+        :customData="customData"
+        :customIndex="customIndex"
+        :menuList="menuList"
+        :options="options"
+        ref="dataSlot"
         :desk="desk"
         @delete="deleteCard" >
         <Unusual v-if='!this.access_token || !this.baseUrl' title="请完成小组件配置" buttonTitle="立即配置" @back="back" ></Unusual>
@@ -63,7 +63,7 @@
                             :options="timeOption"
                             @change="handleChangeTime"
                         ></a-select>
-                        
+
                     </div>
                 </div>
             </vue-custom-scrollbar>
@@ -207,7 +207,9 @@ export default {
             timer:"",
             header:{
                 title:'社区访问数据/每日/全部',
-                ifyIcon:'fluent:arrow-trending-lines-20-filled',
+                // ifyIcon:'fluent:arrow-trending-lines-20-filled',
+        showIcon:"/img/appLogo/ShortChart.png",
+
                 rightIcon:[
                     {
                         ifyIcon:'fluent:open-20-filled',
@@ -233,7 +235,7 @@ export default {
         this.timer = setInterval(()=>{
             this.init()
         },this.timeVal * 1000)
-        
+
         this.init()
     },
     unmounted() {

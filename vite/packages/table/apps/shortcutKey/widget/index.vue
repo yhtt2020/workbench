@@ -3,12 +3,12 @@
     <xt-container
       :header="header"
       @titleHover="openMainApp"
-      v-model:customSize="customData.customSize" 
-      :customData="customData" 
-      :customIndex="customIndex" 
-      :menuList="menuList" 
-      :options="options" 
-      ref="cardSlot"    
+      v-model:customSize="customData.customSize"
+      :customData="customData"
+      :customIndex="customIndex"
+      :menuList="menuList"
+      :options="options"
+      ref="cardSlot"
       :desk="desk"
       @delete="deleteCard">
       <!-- 快捷键列表 更多快捷键 -->
@@ -199,7 +199,8 @@ export default {
       customSize:'4x4',
       header:{
         title:'快捷键',
-        ifyIcon:"fluent:flash-16-regular",
+        // ifyIcon:"fluent:flash-16-regular",
+        showIcon:"/img/appLogo/shortcutKey.png",
         titleHover:true,
         titleHoverName:'打开应用',
       }

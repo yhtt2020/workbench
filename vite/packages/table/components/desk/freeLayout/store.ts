@@ -196,7 +196,9 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       if (!this.freeLayoutExist()) return;
       this.freeLayoutData[this.freeLayoutId] = {};
 
-      this.getCurrentDesk.cards = [];
+      if (this.getCurrentDesk) {
+        this.getCurrentDesk.cards = [];
+      }
     },
     // 删除当前自由布局数据
     clearFreeLayout(id) {
@@ -297,10 +299,6 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     setFreeLayoutState(id, state) {
       // console.log('this.freeLayoutState', this.freeLayoutState);
       this.freeLayoutState[id] = { ...state };
-    },
-    getFreeLayout1() {
-      console.log("this.freeLayoutData", this.freeLayoutData);
-      console.log("this.freeLayoutState", this.freeLayoutState);
     },
   },
   persist: {

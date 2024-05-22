@@ -16,19 +16,19 @@ export default {
     // 初始化类名
     if (!this.customData.dragCardSize) {
       this.customData.dragCardSize = this.options.className;
-      this.reSizeInit(this.options.className);
+      // this.reSizeInit(this.options.className);
     }
     // 初始化卡片宽高
     if (!this.customData.width && !this.customData.height) {
-      this.reSizeInit(this.options.className);
+      // this.reSizeInit(this.options.className);
     }
     // 使用卡片类名
-    this.dragCardSize = this.customData.dragCardSize;
-    // 使用卡片宽高
-    this.width = this.customData.width;
-    this.height = this.customData.height;
-    this.reSizeInit(this.dragCardSize);
-    await this.updateSize(this.dragCardSize);
+    // this.dragCardSize = this.customData.dragCardSize;
+    // // 使用卡片宽高
+    // this.width = this.customData.width;
+    // this.height = this.customData.height;
+    // this.reSizeInit(this.dragCardSize);
+    // await this.updateSize(this.dragCardSize);
   },
   computed: {
     // 动态计算卡片大小

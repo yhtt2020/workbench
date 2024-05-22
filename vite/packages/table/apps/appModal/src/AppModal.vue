@@ -11,6 +11,16 @@ import {
 } from "vue";
 import { storeToRefs } from "pinia";
 import { useAppModalStore } from "./store";
+const isInit = ref(true);
+const init = () => {
+  isInit.value = false;
+};
+onMounted(() => {
+  setTimeout(() => {}, 51);
+});
+onUnmounted(() => {
+  data.value.props = null;
+});
 const props = defineProps<{
   name: any;
 }>();
@@ -19,15 +29,13 @@ const appModalStore: any = useAppModalStore();
 const { runList }: any = storeToRefs(appModalStore);
 const data: any = ref(null);
 data.value = appModalStore.getApp(props.name);
-console.log("data.value.isFullScreen :>> ", data.value.isFullScreen);
 // 弹窗ref
 const modal: any = ref(null);
 // 是否最大化
-const fullScreen = () => {
+const fullscreen = () => {
   data.value.isMaximize = false;
   data.value.isFullScreen = !data.value.isFullScreen;
-  console.log("  data.value.isFullScreen  :>> ", data.value.isFullScreen);
-  modal.value?.fullScreen();
+  modal.value?.fullscreen();
 };
 const maximize = () => {
   data.value.isFullScreen = false;
@@ -43,8 +51,7 @@ const close = () => {
 
 const modalStyle = computed(() => {
   if (!data.value) return;
-  if (data.value.isMaximize || data.value.isFullScreen) {
-    console.log("123321312321312321123 :>> ", 123321312321312321123);
+  if ((data.value.isMaximize || data.value.isFullScreen) && !isInit.value) {
     return {
       "flex-grow": 1,
       height: "100%",
@@ -62,18 +69,19 @@ const modalStyle = computed(() => {
     v-if="data && data?.visible"
     v-model="data.visible"
     @close="close"
+    @init="init"
     ref="modal"
     index="1200"
     handle=".xt-modal-header"
     min
     max
+    full
     esc
     boxClass=""
     headerClass="p-2 xt-modal"
     :mask="false"
-    :isFullScreen="data?.isFullScreen"
-    :isMaximize="data?.isMaximize"
-    custom
+    v-model:isFullScreen="data.isFullScreen"
+    v-model:isMaximize="data.isMaximize"
   >
     <template #minimize-left>
       <div class="mr-2 rounded-lg overflow-hidden">
@@ -83,32 +91,9 @@ const modalStyle = computed(() => {
         {{ data.cname }}
       </div>
     </template>
-    <!-- <a-dropdown
-            placements="bottom"
-            :overlayStyle="{
-              'z-index': '999999999 !important',
-            }"
-          >
-            <div>
-              <xt-mix-icon
-                :icon="
-                  isMaximize
-                    ? 'fluent:full-screen-minimize-16-filled'
-                    : 'fluent:full-screen-maximize-16-regular'
-                "
-                @click="maximize"
-                boxSize="32"
-                style="background: none"
-                class="mx-3"
-              />
-            </div>
-            <template #overlay>
-              <div style="width: 200px; height: 200px; background: red"></div>
-            </template>
-          </a-dropdown> -->
-    <div class="flex flex-col h-full">
+    <template #header>
       <header
-        class="h-12 flex justify-between items-center px-4 xt-main-bg xt-modal-header"
+        class="no-drag h-12 flex justify-between items-center px-4 xt-main-bg xt-modal-header"
         style="border-radius: 12px 12px 0 0"
       >
         <div class="flex items-center">
@@ -141,7 +126,7 @@ const modalStyle = computed(() => {
                 ? 'fluent:arrow-minimize-16-regular'
                 : 'fluent:arrow-maximize-16-regular'
             "
-            @click="fullScreen"
+            @click="fullscreen"
             boxSize="32"
             style="background: none"
             class="mr-3"
@@ -154,11 +139,14 @@ const modalStyle = computed(() => {
           />
         </div>
       </header>
+    </template>
+    <div class="flex flex-col h-full">
       <div
         class="flex flex-grow"
-        style="max-height: calc(100% - 50px)"
+        style="max-height: calc(100% - 0px)"
         :style="[modalStyle]"
       >
+        <!-- 原先max-height: -50px -->
         <router-view :name="data?.name" :props="data?.props"></router-view>
       </div>
     </div>

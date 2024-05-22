@@ -75,7 +75,8 @@ export default {
       header:{
         titleHover:true,
         title:'捕获',
-        ifyIcon:'fluent:resize-video-20-regular',
+        // ifyIcon:'fluent:resize-video-20-regular',
+        showIcon:"/img/appLogo/capture.png",
         leftHoverName:'打开应用',
         leftHover:true,
         leftHoverIcon:'fluent:open-16-regular'

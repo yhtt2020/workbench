@@ -141,7 +141,9 @@ export default {
     },
     header() {
       return {
-        ifyIcon:"fluent:checkmark-square-24-regular",
+        // ifyIcon:"fluent:checkmark-square-24-regular",
+        showIcon:"/img/appLogo/todo.png",
+
         title:this.selectTodo.title,
         iconHover:true,
         leftHoverIcon:"fluent:checkmark-square-24-regular",
@@ -151,7 +153,7 @@ export default {
             fn:this.todoPage,
             tip:"前往主应用"
           }
-          
+
         ]
       }
     },

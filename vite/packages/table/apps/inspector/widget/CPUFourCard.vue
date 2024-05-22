@@ -112,7 +112,9 @@ export default {
       ],
       header:{
         title:'性能',
-        ifyIcon:"fluent:arrow-trending-lines-20-filled"
+        // ifyIcon:"fluent:arrow-trending-lines-20-filled"
+        showIcon:"/img/appLogo/performance.png",
+
       },
       customSize:'2x4'
 
