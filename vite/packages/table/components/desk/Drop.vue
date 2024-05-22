@@ -1,10 +1,12 @@
 <template>
   <div
-    class="w-full h-full" :class="classes"
+    class="w-full h-full"
+    :class="classes"
     @drop="handleDrop"
     @dragover="handleDragover"
     @dragenter="handleDragenter"
     ref="target"
+    v-element-size="updateSize"
     @click="test"
   >
     <slot></slot>
@@ -13,40 +15,44 @@
 <script></script>
 <script setup>
 import { nanoid } from "nanoid";
-import { ref,getCurrentInstance } from "vue";
+import { ref, getCurrentInstance, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { myIcons } from "../../store/myIcons";
 import { useAddCard } from "../../ui/hooks/useAddCard";
 import { useDeskStore } from "./store";
 import { useFreeLayoutStore } from "./freeLayout/store";
+import { vElementSize } from "../../hooks";
+import { useMouseInElement } from "@vueuse/core";
 
-import { useMouseInElement } from '@vueuse/core'
+import { useFolderStore } from "../../apps/folder/src/store";
 
-import {useFolderStore} from '../../apps/folder/src/store'
-
-import {getFavicon,useGetUrlName} from './navigationBar/hook/getUrlName'
-import { isValidUrl } from './navigationBar/hook/useCheckUrl'
-import {useNavBarStore} from './navigationBar/navBar'
+import { getFavicon, useGetUrlName } from "./navigationBar/hook/getUrlName";
+import { isValidUrl } from "./navigationBar/hook/useCheckUrl";
+import { useNavBarStore } from "./navigationBar/navBar";
+import { useElementSize } from "@vueuse/core";
 const target = ref(null);
 
+const updateSize =(data)=>{
+  deskSize.value = data
+}
 const folderStore = useFolderStore();
-const {  isDrag } = storeToRefs(folderStore);
+const { isDrag } = storeToRefs(folderStore);
 // 自由布局
 const freeLayoutStore = useFreeLayoutStore();
 const { isFreeLayout, getFreeLayoutData, freeLayoutEnv } =
   storeToRefs(freeLayoutStore);
 // 桌面
 const deskStore = useDeskStore();
-const { isEnterFolder, mouseInElement,isEnterBar } = storeToRefs(deskStore);
+const { isEnterFolder, mouseInElement, isEnterBar ,deskSize} = storeToRefs(deskStore);
 
 mouseInElement.value = useMouseInElement(target);
 // 图标组件
 const iconStore = myIcons();
 const { iconOption } = storeToRefs(iconStore);
-const { classes }=defineProps(['classes'])
+const { classes } = defineProps(["classes"]);
 //
-const navBar = useNavBarStore()
-const { proxy } = getCurrentInstance()
+const navBar = useNavBarStore();
+const { proxy } = getCurrentInstance();
 
 const handleDrop = async (dragEvent) => {
   console.log("handleDrop", isEnterBar.value);
@@ -55,7 +61,7 @@ const handleDrop = async (dragEvent) => {
   }
   dragEvent.preventDefault();
   let files = dragEvent.dataTransfer.files;
-  let link = dragEvent.dataTransfer.getData('text/plain');
+  let link = dragEvent.dataTransfer.getData("text/plain");
 
   if (files && files.length > 0) {
     for (const file of files) {
@@ -84,7 +90,7 @@ const handleDrop = async (dragEvent) => {
         );
       };
 
-      console.log('2222 :>> ', 2222);
+      console.log("2222 :>> ", 2222);
       if (isFreeLayout.value) {
         getFreeLayoutData.value[id] = {
           left: offsetX,
@@ -98,16 +104,16 @@ const handleDrop = async (dragEvent) => {
         addCard();
       }
     }
-  } else if (link && link !== '') {
-    if(isDrag.value) return
+  } else if (link && link !== "") {
+    if (isDrag.value) return;
 
     // 判断url是否有http/https
     if (!link.match(/^(http:\/\/|https:\/\/)/)) {
-      link = 'http://' + link;
+      link = "http://" + link;
     }
 
     // 判断添加http后，是否是一个有效的链接
-    if(isValidUrl(link)){
+    if (isValidUrl(link)) {
       // const name = await useGetUrlName(link);
       const icon = await getFavicon(link);
 
@@ -117,8 +123,10 @@ const handleDrop = async (dragEvent) => {
           type: "default",
           value: link,
         },
-        titleValue: icon.pageTitle || '网址链接',
-        src: icon.faviconURL || 'https://a.apps.vip/icons/iconSelect/emoji/globe-showing-asia-australia.svg',
+        titleValue: icon.pageTitle || "网址链接",
+        src:
+          icon.faviconURL ||
+          "https://a.apps.vip/icons/iconSelect/emoji/globe-showing-asia-australia.svg",
       };
 
       const id = Date.now();
@@ -146,8 +154,7 @@ const handleDrop = async (dragEvent) => {
       } else {
         addCard();
       }
-      }
-
+    }
   }
 };
 
@@ -159,9 +166,9 @@ const handleDragover = (dragEvent) => {
   dragEvent.preventDefault();
 };
 
-const test = () =>{
-  proxy.$bus.emit("closeControl")
-}
+const test = () => {
+  // proxy.$bus.emit("closeControl")
+};
 </script>
 
 <style lang="scss" scoped></style>

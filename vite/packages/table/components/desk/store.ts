@@ -10,6 +10,7 @@ export const useDeskStore = defineStore("useDeskStore", {
     isEnterBar: false, // 是否拖拽进入导航栏
     mouseInElement: "",
     adjustLayout: false, // 提供给Container组件拖拽头部调用
+    deskSize:{}
   }),
   getters: {},
   actions: {

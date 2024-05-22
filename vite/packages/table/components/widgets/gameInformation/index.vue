@@ -1,12 +1,12 @@
 <template>
-    <xt-container 
+    <xt-container
         v-model:customSize="customData.customSize"
         :header="header"
-        :customData="customData" 
-        :customIndex="customIndex" 
-        :options="options" 
-        ref="homelSlotRef" 
-        :desk="desk" 
+        :customData="customData"
+        :customIndex="customIndex"
+        :options="options"
+        ref="homelSlotRef"
+        :desk="desk"
         :envLimit="['guest', 'offline', 'single']"
         @delete="deleteCard">
         <div class="box-border">
@@ -103,7 +103,8 @@ export default {
         header() {
             return {
                 title:'电竞资讯',
-                ifyIcon:'fluent:games-16-filled',
+                // ifyIcon:'fluent:games-16-filled',
+        showIcon:"/img/appLogo/gameInformation.png",
                 refresh:{
                     fn:this.refreshNow,
                     tip:'刷新',

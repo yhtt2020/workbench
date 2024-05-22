@@ -270,7 +270,10 @@ watch(
     emits("update:y", newTop);
   }
 );
-
+const isDisabled = ref(props.disabled);
+watch(()=>props.disabled, (val) => {
+  isDisabled.value = val;
+});
 watch(rotate, () => {
   getElementSize(elementSize.value);
 });
@@ -443,7 +446,7 @@ onMounted(() => {
 
 // 拖拽开始
 function snowDragStart(event: MouseEvent | TouchEvent) {
-  if (disabled.value) {
+  if (isDisabled.value) {
     emits("onDisabled", {
       code: 0,
       info: "当前处于禁用模式",

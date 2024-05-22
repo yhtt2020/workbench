@@ -3,6 +3,7 @@ const defaultData = {
   isMaximize: false,
   isFullScreen: false,
   iconType: "select",
+
   width: "1000px",
   height: "752px",
   openMode: "modal",
@@ -14,7 +15,7 @@ export const runList = [
   {
     name: "ai",
     cname: "AI助手",
-    icon: "/logo/ai.svg",
+    icon: "/img/appLogo/ai.png",
     ...defaultData,
   },
   // {

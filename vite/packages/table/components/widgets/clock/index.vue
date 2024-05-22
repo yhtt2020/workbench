@@ -131,7 +131,8 @@ export default {
   header(){
    const headerOption = {
     title:this.customData.backgroundFrame ? `${this.clockDay}` : "",
-    ifyIcon: this.customData.backgroundFrame ? "fluent:clock-12-regular" : "",
+    // ifyIcon: this.customData.backgroundFrame ? "fluent:clock-12-regular" : "",
+    showIcon:"/img/appLogo/clock.png",
     leftHover: true,
     leftHoverName:"进入全屏",
     leftHoverIcon: "fluent:open-16-regular",
