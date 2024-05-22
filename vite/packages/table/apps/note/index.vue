@@ -87,6 +87,7 @@ import Markdown from './components/markdown.vue'
 import {completeTask} from '../task/task'
 export default {
   name: 'note',
+  inject:['modalParams','modalStatus'],
   components: {
     HistoryList,
     LeftTab,
@@ -97,7 +98,7 @@ export default {
     Markdown,
   },
   props: {
-    customIndex: String
+    customIndex: String,
   },
   data () {
     return {
@@ -115,8 +116,8 @@ export default {
     }
   },
   mounted () {
-    // console.log('              :>> ', this.customIndex);
-    // console.log('              :>> ', this);
+    console.log('this.modalParams :>> ', this.modalParams);
+    console.log('this.modalStatus :>> ', this.modalStatus);
     // 重置默认数据
     this.selNote = -1
     if (this.$route.params.customIndex) {

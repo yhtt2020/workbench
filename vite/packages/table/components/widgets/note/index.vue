@@ -174,7 +174,8 @@ export default {
     openWay:{
       type:String,
       default:'desk'
-    }
+    },
+   
   },
   directives: {
     // reSize,

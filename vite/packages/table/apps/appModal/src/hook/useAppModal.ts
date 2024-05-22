@@ -40,7 +40,7 @@ export const useAppModal = (name: string) => {
 
   const openApp = (params?: any) => {
     if (app?.openMode === "modal") {
-      app.props = params;
+      app.params = params;
       appModalStore.switchVisible(name);
     } else {
       (window as any).$ui.router.push({
