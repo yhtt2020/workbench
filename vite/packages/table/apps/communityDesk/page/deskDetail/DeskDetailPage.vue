@@ -919,10 +919,66 @@ export default {
       this.$emit("add", deskName);
       this.key = Date.now();
       this.addDeskVisible = false;
+      this.syncSaveCommunity();
     },
 
     // 删除桌面
-    delDesk() {},
+    delDesk() {
+      const filterList = this.deskList.filter((desk) => {
+        if (desk.hasOwnProperty("communityNo")) {
+          return desk;
+        }
+      });
+      // 当前桌面的卡片数据进行删除
+      this.currentDesk?.cards?.forEach((item) => {
+        //移除桌面相关的便签卡片
+        if (item.name === "notes" && !this.$usePlat()) {
+          tsbApi.db
+            .find({
+              selector: {
+                _id: "note:" + item.id,
+              },
+            })
+            .then((res) => {
+              if (res?.docs.length) {
+                tsbApi.db.put({
+                  ...res.docs[0],
+                  deskId: "",
+                  deskName: "",
+                });
+              }
+            });
+        }
+      });
+      window.$ui.confirm("删除当前桌面？此操作不可还原。", "", {
+        type: "warning",
+        okText: "删除桌面",
+        okButtonWidth: "100",
+        ok: () => {
+          if (this.communityDeskList.length === 1) {
+            const index = this.deskList.findIndex((desk) => {
+              return String(desk?.id) === String(this.currentDesk?.id);
+            });
+            this.deskList.splice(index, 1);
+            this.doAddDesk("空白桌面");
+            this.$emit("changeDesk", { id: filterList[0].id });
+            this.clearFreeLayout(this.currentDeskId);
+            // 删除桌面数据
+            this.key = Date.now();
+          } else {
+            const index = this.deskList.findIndex((desk) => {
+              return String(desk?.id) === String(this.currentDesk?.id);
+            });
+            this.deskList.splice(index, 1);
+            this.$emit("changeDesk", { id: filterList[0].id });
+            this.clearFreeLayout(this.currentDeskId);
+            // 删除桌面数据
+            this.key = Date.now();
+          }
+          this.syncSaveCommunity();
+        },
+      });
+    },
   },
 
   watch: {
@@ -937,38 +993,38 @@ export default {
     },
 
     // 监听社群桌面的id变化
-    "currentDesk.id": {
-      handler(newVal) {
-        if (this.loadingVisible) {
-          setTimeout(() => {
-            this.loadingVisible = false;
-          }, 150);
-        } else {
-          if (this.communityRole) {
-            this.syncSaveCommunity();
-          }
-        }
-      },
-      immediate: true,
-      deep: true,
-    },
+    // "currentDesk.id": {
+    //   handler(newVal) {
+    //     // if (this.loadingVisible) {
+    //     //   setTimeout(() => {
+    //     //     this.loadingVisible = false;
+    //     //   }, 150);
+    //     // } else {
+    //     //   if (this.communityRole) {
+    //     //     this.syncSaveCommunity();
+    //     //   }
+    //     // }
+    //   },
+    //   immediate: true,
+    //   deep: true,
+    // },
 
     // 监听社群桌面更新的变化
-    "currentDesk.cards": {
-      handler(newVal) {
-        if (this.loadingVisible) {
-          setTimeout(() => {
-            this.loadingVisible = false;
-          }, 150);
-        } else {
-          if (this.communityRole) {
-            this.syncSaveCommunity();
-          }
-        }
-      },
-      immediate: true,
-      deep: true,
-    },
+    // "currentDesk.cards": {
+    //   handler(newVal) {
+    //     // if (this.loadingVisible) {
+    //     //   setTimeout(() => {
+    //     //     this.loadingVisible = false;
+    //     //   }, 150);
+    //     // } else {
+    //     //   if (this.communityRole) {
+    //     //     this.syncSaveCommunity();
+    //     //   }
+    //     // }
+    //   },
+    //   immediate: true,
+    //   deep: true,
+    // },
   },
 };
 </script>
