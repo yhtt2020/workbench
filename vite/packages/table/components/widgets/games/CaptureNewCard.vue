@@ -1,13 +1,13 @@
 <template>
-   <xt-container 
+   <xt-container
     @titleHover="enterCapture"
     v-model:customSize="customData.customSize"
     :header="header"
-    :platLimit="['web']" 
-    :menuList="menuList"  
-    :options="options" 
-    :customData="customData" 
-    :customIndex="customIndex" 
+    :platLimit="['web']"
+    :menuList="menuList"
+    :options="options"
+    :customData="customData"
+    :customIndex="customIndex"
     :desk="desk"
     @delete="deleteCard">
       <CaptureCore @selectSource="visibleSource=true"></CaptureCore>
@@ -89,7 +89,9 @@ export default {
       microphoneShow: false,
       header:{
         title:'捕获',
-        ifyIcon:'fluent:resize-video-20-regular',
+        // ifyIcon:'fluent:resize-video-20-regular',
+        showIcon:"/img/appLogo/capture.png",
+
         titleHover:true,
         titleHoverName:'打开应用',
       },
