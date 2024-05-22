@@ -47,6 +47,7 @@ export const communityNavStore = defineStore("communityNav", {
         id: nanoid(11),
         no:1,
         cno:1,
+        role:'member',
       },
       defaultItem: {
         icon: "/logo/community.svg",

@@ -19,7 +19,7 @@ export const getCommunityDeskList = (communityInfo: any) => {
 
 // 解析时间戳的转换方法
 export const generateSearchResultTime = (timestamp: number) => {
-  console.log("时间转换", timestamp);
+  // console.log("时间转换", timestamp);
 
   const now = new Date().getTime();
   // 时间差

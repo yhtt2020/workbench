@@ -157,16 +157,9 @@ export const communityDeskStore = defineStore("communityDesk", {
     // 读取当前社群名下云端存储的所有桌面列表
     loadCommunityDeskAll() {
       const communityNo = this.communityDesk.communityDeskNo;
-
-      // console.log('打印-communityNo', communityNo);
-      // console.log('打印-loadKey', communityDeskAll);
-
       archiveHelper
         .loadFromCommunity(communityNo, communityNavAppId, communityDeskAll)
         .then((rs: any) => {
-          
-          // console.log("获取桌面列表结果", rs);
-
           if (rs.status) {
             const archiveData = rs.data?.data;
             if (archiveData.desksAll) {
@@ -188,20 +181,11 @@ export const communityDeskStore = defineStore("communityDesk", {
     async loadCommunityDeskDetail() {
       // 获取社群id
       const communityNo = this.communityDesk.communityDeskNo;
-
-      // console.log('打印-communityNo',communityNo);
-
       // 桌面详情的缓存key
       const loadKey = `_${communityDeskDetail}${communityNo}`;
-
-      // console.log('打印-loadKey', loadKey);
-
       archiveHelper
         .loadFromCommunity(communityNo, communityNavAppId, loadKey)
         .then((rs: any) => {
-          
-          // console.log("获取桌面详情结果", rs);
-
           if (rs.status) {
             const archiveData = rs.data?.data;
             if (archiveData.deskDetail) {

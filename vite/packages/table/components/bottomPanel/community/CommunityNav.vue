@@ -209,11 +209,6 @@ const openDesk = async () => {
       router.push({ name: "home", params: { no: communityInfo?.no } });
     }
   }
-  // 默认社群数据测试,后期需要调整 (就是写死的社群数据)
-  else {
-    settings.value.isCommunity = false;
-    router.push({ name: "home", params: { no: "" } });
-  }
 };
 
 // 加载云端数据处理方法

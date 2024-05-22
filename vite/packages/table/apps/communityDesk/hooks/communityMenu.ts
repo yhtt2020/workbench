@@ -255,7 +255,7 @@ function memberMenus() {
     {
       id: 1,
       name: "更新桌面",
-      newIcon: "fluent:cloud-arrow-up-16-regular",
+      newIcon: "fluent:cloud-arrow-up-16-filled",
       fn: this.loadCommunityCloud,
       contentAble:true,
       newContent:`上次更新:${ generateSearchResultTime(this.setting.getSyncTime)}`,
@@ -264,18 +264,19 @@ function memberMenus() {
     {
       id: 3,
       newIcon: this.editing
-        ? "fluent:record-stop-16-regular"
-        : "fluent:window-new-16-regular",
-      name: this.editing ? "停止调整" : "调整桌面布局",
-      // fn: () => {
-      //   this.$nextTick(() => {
-      //     this.$refs.currentDeskRef.toggleEditing();
-      //   });
-      // },
+        ? "fluent:record-stop-16-filled"
+        : "fluent:window-new-16-filled",
+      name: this.editing ? "停止编辑" : "进入编辑模式",
+      fn: () => {
+        this.$nextTick(() => {
+          // this.$refs.currentDeskRef.toggleEditing();
+          console.log('测试',this.deskList);
+        });
+      },
     },
     {
       id: 4,
-      newIcon: "fluent:resize-large-16-regular",
+      newIcon: "fluent:resize-large-16-filled",
       name: "复原桌面位置",
       fn: () => {
         this.$nextTick(() => {
@@ -285,7 +286,7 @@ function memberMenus() {
     },
     {
       id: 5,
-      newIcon: "fluent:image-multiple-16-regular",
+      newIcon: "fluent:image-multiple-16-filled",
       name: "更换壁纸",
       fn: () => {
         this.$bus.emit("lockScreen");
@@ -299,7 +300,7 @@ function memberMenus() {
       children: [
         {
           id: 1,
-          newIcon: "fluent:settings-16-regular",
+          newIcon: "fluent:settings-16-filled",
           name: "桌面设置",
           fn: () => {
             console.log("桌面设置", this.displayDesks.length);
