@@ -159,7 +159,7 @@ export const NavList = [
         name:'goods',
         cname:'商品推荐',
         detail:"自购省钱，分享赚钱",
-        sizes:['2x2','4x4','4x6'],
+        sizes:['4x2','4x4','4x6'],
         option:[
           {
             name:'goods',

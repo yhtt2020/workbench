@@ -2,7 +2,7 @@
   <div class="flex flex-1  flex-col" style="width: 370px">
     <div class="flex-1 h-0">
       <xt-scrollbar :y="true" class=" h-full w-full">
-        <GoodsList @showDetail="showDetail"  :list="myPromoGoods"></GoodsList>
+        <GoodsList mod="my" :customData="customData" @showDetail="showDetail"  :list="myPromoGoods"></GoodsList>
       </xt-scrollbar>
     </div>
     <div class="p-2">
@@ -17,12 +17,13 @@
 
 <script setup>
 import { goodsStore } from './goodsStore'
-import { ref, toRefs } from 'vue'
+import { ref, toRefs,defineProps } from 'vue'
 import GoodsList from './GoodsList.vue'
 import GoodsDetail from './GoodsDetail.vue'
 const detail = ref(null)
 const { myPromoGoods } = toRefs(goodsStore())
 const {  getDetail } = goodsStore()
+const props=defineProps(['customData'])
 const showDetail = async (goodsSign) => {
   let rs = await getDetail(goodsSign)
 

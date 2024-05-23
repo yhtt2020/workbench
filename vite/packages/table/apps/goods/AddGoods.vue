@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-3 h-full" style="width:380px">
     <div>
-      <a-input spellcheck="false" v-model:value="keyword" class="h-10 rounded-lg no-drag" placeholder="搜索" @change="keywordChanged">
+      <a-input ref="searchInputRef" spellcheck="false" v-model:value="keyword" class="h-10 rounded-lg no-drag" placeholder="搜索" @change="keywordChanged">
         <template #prefix>
           <SearchOutlined style="cursor: pointer;color: rgba(255, 255, 255, 0.4);"/>
         </template>
@@ -12,6 +12,10 @@
     </div>
     <div class="mt-2 xt-text-2" v-if="!list.length">
      <xt-mix-icon :size="24" icon="fluent:note-pin-16-filled" ></xt-mix-icon> 你可以在这里挑选价格优惠的商品，添加到你的桌面当中。当其他使用你创作的桌面用户购买了你分享的商品时，你将获得一定收益！
+    <div>
+      1.搜索选品2.添加到选品库3.设置到商品推荐组件
+    </div>
+
     </div>
     <div class="flex flex-1 h-0" style="max-height: 534px;">
       <div class="flex-1 w-h">
@@ -30,7 +34,7 @@
 </template>
 
 <script setup>
-import { ref ,toRefs} from 'vue'
+import { ref ,toRefs,onMounted} from 'vue'
 import { SearchOutlined } from '@ant-design/icons-vue'
 import { goodsStore } from './goodsStore'
 import GoodsDetail from './GoodsDetail.vue'
@@ -48,7 +52,7 @@ const keywordChanged = async (value) => {
   }
   console.log(rs, '搜索结果')
 }
-
+const searchInputRef=ref(null)
 const showDetail = async (goodsSign) => {
   let rs = await getDetail(goodsSign)
 
@@ -62,6 +66,9 @@ const addKeyword=(keyword)=>{
   myPromoKeywords.value.unshift(keyword)
   myPromoKeywords.value=_.uniq(myPromoKeywords.value)
 }
+onMounted(()=>{
+    searchInputRef.value.focus()
+})
 </script>
 
 

@@ -32,24 +32,29 @@
       <AddGoods></AddGoods>
     </div>
     <div v-if="activeIndex===1" class="flex flex-row flex-1 h-0 gap-2 ">
-      <MyPromo></MyPromo>
+      <MyPromo :customData="customData"></MyPromo>
     </div>
     <div v-if="activeIndex===2" class="flex flex-row flex-1 h-0 gap-2 ">
-      <Appearance></Appearance>
+      <OrderList :customData="customData"></OrderList>
+    </div>
+    <div v-if="activeIndex===3" class="flex flex-row flex-1 h-0 gap-2 ">
+      <Appearance :customData="customData"></Appearance>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import Appearance from './Appearance.vue'
-import {ref,toRefs,defineEmits} from 'vue'
+import {ref,toRefs,defineEmits,defineProps} from 'vue'
 import AddGoods from './AddGoods.vue'
 import {goodsStore} from "./goodsStore";
 import MyPromo from "./MyPromo.vue";
+import OrderList from "./OrderList.vue";
 const currentTab=ref('add')
 const activeIndex = ref(0);
 const {myPromoGoods} = toRefs(goodsStore())
 const emit=defineEmits(['close'])
+const props=defineProps(['customData'])
 const selectNav = (index: number) => {
   activeIndex.value = index;
 };
@@ -64,6 +69,12 @@ const selectNav = (index: number) => {
      name: "我的选品 " ,
      icon: "fluent:box-16-filled",
      component: "myPromo",
+     disabled: false,
+   },
+   {
+     name: "推广订单" ,
+     icon: "fluent:clipboard-bullet-list-16-filled",
+     component: "orderList",
      disabled: false,
    },
    {

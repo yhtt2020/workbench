@@ -8,6 +8,9 @@
       :class="{active:currentItemSign===item.goods_sign}" class="mb-1 flex gap-2 item relative"
       @click="showDetail(item.goods_sign)"
       @contextmenu="setCurrentSign(item.goods_sign)">
+      <div class="px-1" v-if="mod==='my' && customData.checked">
+        <a-checkbox @change="syncGoods" @click.stop v-model:checked="customData.checked[item.goods_sign]"></a-checkbox>
+      </div>
       <div style="width: 110px">
         <a-avatar :size="110" :src="item.goods_thumbnail_url" shape="square"></a-avatar>
       </div>
@@ -17,9 +20,16 @@
           <span class="xt-text">¥ {{ (item.min_group_price / 100).toFixed(2) }}</span>
           &nbsp;&nbsp;热销 {{ item.sales_tip }} 件
         </div>
-        <div class="highlight">
+        <div v-if="!hidePromoRate" class="highlight">
           赚/省 ¥ {{ (item.min_group_price * item.promotion_rate / 1000 / 100).toFixed(2) }} &nbsp;&nbsp;
           {{ (item.promotion_rate / 10).toFixed(2) }}%
+        </div>
+        <div v-if="showTags" class="flex gap-2 mb-2 flex-wrap">
+          <template v-for="tag in item.unified_tags">
+            <div v-if="tag?.trim().length>0" class="tag px-2 px-1">
+              {{ tag }}
+            </div>
+          </template>
         </div>
       </div>
       <span @click.stop>
@@ -32,13 +42,13 @@
 </template>
 
 <script setup>
-import { computed, defineEmits, defineProps, ref } from 'vue'
+import { computed, defineEmits, defineProps, ref,onMounted } from 'vue'
 import { toRefs } from 'vue'
 import { goodsStore } from './goodsStore'
 
 const currentItemSign = ref('')
 const { myPromoGoods } = toRefs(goodsStore())
-const props = defineProps(['list'])
+const props = defineProps(['list','customData','mod','hidePromoRate','showTags'])
 const emit = defineEmits(['showDetail'])
 const addToMy = (item) => {
   myPromoGoods.value.unshift(item)
@@ -101,7 +111,19 @@ const showDetail = (goodsSign) => {
   currentItemSign.value = goodsSign
   emit('showDetail', goodsSign)
 }
+const syncGoods=()=>{
+  props.customData['goods']=myPromoGoods.value.filter((item)=>{
+    return props.customData['checked'][item.goods_sign]
+  })
+}
+onMounted(()=>{
+  if(props.mod==='my'){
+    if(!props.customData['checked']){
+      props.customData['checked']={}
+    }
+  }
 
+})
 </script>
 
 <style lang="scss" scoped>
@@ -124,5 +146,10 @@ const showDetail = (goodsSign) => {
 
   border: 2px solid transparent;
 
+}
+.tag {
+  background: rgba(250, 123, 20, 0.1);
+  border-radius: 4px;
+  color: #FA7B14
 }
 </style>

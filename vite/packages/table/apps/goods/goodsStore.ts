@@ -21,8 +21,12 @@ export const goodsStore = defineStore('goodsStore', {
     generateUrl(goodsSign,shortUrl=true,params={}){
       return apiPost('/app/ad/pdd/generateUrl',{
         goods_sign_list:JSON.stringify(goodsSign),
-        generate_short_url:shortUrl,
-        custom_parameters:JSON.stringify(params)
+        generate_short_url:shortUrl
+      })
+    },
+    getOrderList(page){
+      return apiPost('/app/ad/pdd/getOrderList',{
+
       })
     }
   },

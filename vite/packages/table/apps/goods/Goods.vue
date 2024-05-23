@@ -13,16 +13,22 @@
 
     ref="cardSlot"
     @delete="deleteCard">
-    <div class="flex item-content pt-5">
-      <xt-button @click="settingVisible=true" type="theme">去选品</xt-button>
+    <div class="flex item-content pt-2" v-if="!customData.goods || customData.goods.length===0">
+      <div class="xt-bg-2 p-2 rounded-lg mb-2">
+        通过选品并设置组件展示商品后，即可在当前桌面展示特定商品，通过组件购买的商品均可获得返佣。
+      </div>
+      <xt-button :w="80" :h="40" @click="settingVisible=true" type="theme">去选品</xt-button>
+    </div>
+    <div class="h-full" v-else>
+      <xt-scrollbar :y="true" class=" h-full w-full">
+      <GoodsList :hidePromoRate="true" :showTags="true" :list="customData.goods"></GoodsList>
+      </xt-scrollbar>
     </div>
   </xt-container>
   <teleport to='body'>
     <Modal v-if="settingVisible" v-model:visible="settingVisible" :blur-flag="true"  :z-index="1001">
       <div class="flex rounded-lg overflow-hidden">
-
-
-      <Settings @close="settingVisible=false"></Settings>
+      <Settings :customData="customData" @close="settingVisible=false"></Settings>
       </div>
     </Modal>
   </teleport>
@@ -34,10 +40,12 @@ import { mapWritableState, mapActions } from 'pinia'
 import Modal from '../../components/Modal.vue'
 import Widget from '../../components/card/Widget.vue'
 import Settings from './Settings.vue'
+import GoodsList from './GoodsList.vue'
 
 export default {
   name: "goods",
   components: {
+    GoodsList,
     Widget,
     newIcon,
     Modal,
@@ -62,7 +70,17 @@ export default {
   },
   data () {
     return {
+      sizeList: [
+        {
+          value: '4x4',
+          name: '4x4',
+        },
+        {
+          value: '4x6',
+          name: '4x6',
+        },
 
+      ],
       settingVisible:false,
       env: {
         web: false,
@@ -100,22 +118,40 @@ export default {
 
   },
   computed: {
-
+    options () {
+      return {
+        defaultData: {
+          customSize: this.customData.customSize !== undefined ? this.customData.customSize : '4x4',
+        },
+      }
+    },
     header(){
       return {
+
         title:'商品推荐',
         ifyIcon:'fluent:cart-16-filled',
-        refresh:{
-          fn:()=>{
-            this.refreshFlag = true
-            this.refreshAll().then(()=>{
-              console.log(111111)
-              this.refreshFlag = false
-            })
-          },
-          tip:'刷新',
-          state:false
-        }
+        // refresh:{
+        //   fn:()=>{
+        //     this.refreshFlag = true
+        //     this.refreshAll().then(()=>{
+        //       console.log(111111)
+        //       this.refreshFlag = false
+        //     })
+        //   },
+        //   tip:'刷新',
+        //   state:false
+        // },
+        rightIcon:[
+          {
+            ifyIcon: "fluent:search-16-filled",
+           // class: props.header.refresh.state ? "refresh" : "",
+            fn: ()=>{
+              this.settingVisible=true
+            },
+            tip: '快速搜索商品',
+
+          }
+        ]
       }
     }
   },
