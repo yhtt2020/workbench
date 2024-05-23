@@ -181,7 +181,7 @@ export default {
     let cats = await this.getCategories('desk')
 
     this.categories = cats
-    if (cats.length > 0) {
+    if (cats?.length > 0) {
       this.categoryId = cats[0].id
     }
     this.update()

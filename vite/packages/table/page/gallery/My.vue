@@ -20,7 +20,7 @@
               <span  class="s-text xt-active-text xt-font font-16 font-400">轮播选中（ {{ activePapers.length }} ）</span>
             </div>
           </xt-button>
-          <xt-button h="40" w="154" style="border-radius: 8px;background: rgba(0,0,0,0.2) !important;" @click="openRight"  >
+          <xt-button h="40" w="154" style="border-radius: 8px;background: rgba(0,0,0,0.2) !important;" @click="openRight" v-if="isWeb">
             <div class="flex items-center justify-center">
               <MyIcon icon="fluent:arrow-download-16-filled" style="font-size:1.25rem;" class="xt-active-text mr-2" />
               <span  class="s-text xt-active-text xt-font font-16 font-400" v-if="!isModal">导入本地图片</span>
@@ -39,7 +39,7 @@
               </template>
             </div>
           </xt-dropdown>
-          <xt-button w="32" h="32" class="xt-bg-2 mr-3" style="border-radius: 8px;" @click="openRight"  >
+          <xt-button w="32" h="32" class="xt-bg-2 mr-3" style="border-radius: 8px;" @click="openRight"  v-if="isWeb">
             <div class="flex items-center justify-center">
               <MyIcon icon="fluent:arrow-download-16-filled" style="font-size:1rem" />
             </div>
@@ -78,7 +78,6 @@ import { Icon as MyIcon } from '@iconify/vue';
 import { fileImageExtension,changeTime } from './libs/utils';
 import Spotlight from 'spotlight.js';
 import Player from 'xgplayer/dist/simple_player';
-import {} from '../../components/card/store';
 
 import MyEmptyStatus from './components/empty/MyEmptyStatus.vue';
 import MyContent from './components/content/MyContent.vue';
@@ -124,6 +123,10 @@ export default {
         return mapList
       }
     },
+    // 判断是发web端
+    isWeb(){
+      return window.$usePlat("client")
+    }
   },
 
   mounted(){

@@ -40,24 +40,28 @@ import { storeToRefs } from "pinia";
 import { computed, getCurrentInstance, toRefs } from "vue";
 import { nanoid } from "nanoid";
 import { useRouter } from "vue-router";
-
 import { chatCommunityStore } from "../../../apps/chat/store/chatCommunity";
 import { communityNavStore } from "../store/communityNavStore";
+import { appStore } from "../../../store";
+import { getCommunityDeskList } from "../../../apps/communityDesk/hooks/deskCreateMethod";
+import { communityDeskStore } from "../../../apps/communityDesk/store/communityDeskStore";
 
 import Avatar from "../../desk/navigationBar/components/Avatar.vue";
 
 // 路由
-const router = useRouter();
+const router: any = useRouter();
 
 // pinia数据
-const communityNav = chatCommunityStore();
+const communityNav: any = chatCommunityStore();
 const { myCommunity } = storeToRefs(communityNav);
-
-const comNav = communityNavStore();
+const comNav: any = communityNavStore();
 const { settingType, currentCommunity } = storeToRefs(comNav);
+const app: any = appStore();
+const { settings } = storeToRefs(app);
+const communityDesk: any = communityDeskStore();
 
 // 获取当前实例
-const { proxy } = getCurrentInstance();
+const { proxy } = getCurrentInstance() as any;
 
 type PropsType = {
   boxClass: string; // 自定义类样式
@@ -81,7 +85,7 @@ const communityNum = computed(() => {
 });
 
 // 团队导航图标公共数据
-const createNavEntry = (options:any) => ({
+const createNavEntry = (options: any) => ({
   bg: "",
   isBg: false,
   mode: "app",
@@ -102,7 +106,7 @@ const communityNavList = computed(() => {
     {
       icon: "/logo/teamNav.svg",
       name: "团队桌面",
-      fn: () => {},
+      fn: openDesk,
     },
   ];
 
@@ -110,7 +114,7 @@ const communityNavList = computed(() => {
     return [
       createNavEntry({
         ...currentCommunity.value.item,
-        fn: (event) => {
+        fn: (event: any) => {
           proxy.$bus.emit("openComSearch", event);
         },
       }),
@@ -118,13 +122,13 @@ const communityNavList = computed(() => {
         icon: currentCommunity.value.defaultItem.icon,
         name: "社群主应用",
         fn: () => {
-          if (currentCommunity.value.item.role) {
+          if ((currentCommunity.value.item as any).role) {
             router.push({
               name: "myCommunity",
               params: { ...currentCommunity.value.item },
             });
           } else {
-            /**调整路由名称**/ 
+            /**调整路由名称**/
             router.push({ name: "officialCommunity", params: { no: 1 } });
           }
         },
@@ -138,7 +142,7 @@ const communityNavList = computed(() => {
         name: "想天社群",
         icon: "/icons/logo128.png",
         fn: () => {
-          /**调整路由名称**/ 
+          /**调整路由名称**/
           router.push({ name: "officialCommunity", params: { no: 1 } });
         },
       }),
@@ -147,13 +151,71 @@ const communityNavList = computed(() => {
   }
 });
 
-const openNav = async (event) => {
-  await communityNavStore().loadCommunityNav();
+const openNav = async (event: any) => {
+  await (communityNavStore() as any).loadCommunityNav();
   if (settingType.value === "app") {
     proxy.$bus.emit("openAppVisible");
   } else {
     proxy.$bus.emit("openTeamNav", event);
   }
+};
+
+//  进入社群桌面
+const openDesk = async () => {
+  console.log("测试-进入社群桌面");
+  // 先检测当前社群是成员还是管理员
+  const currentRole = (currentCommunity.value.item as any).role;
+  // 社群数据
+  const communityInfo: any = currentCommunity.value?.item;
+  if (currentRole === "owner") {
+    // 检测当前所在的社群桌面数据是否为空列表
+    const deskList = getCommunityDeskList(currentCommunity.value?.item);
+    if (deskList.length === 0) {
+      settings.value.isCommunity = false;
+      router.push({ name: "home", params: { no: communityInfo?.no } });
+      setTimeout(() => {
+        proxy.$bus.emit("openCommunityDesk");
+      }, 150);
+    }
+    // 当前社群桌面数据已经创建
+    else {
+      settings.value.isCommunity = false;
+      router.push({ name: "home", params: { no: communityInfo?.no } });
+    }
+  }
+  // 成员
+  else if (currentRole === "member") {
+    const communityInfo: any = currentCommunity.value?.item;
+    // 获取云端数据并且存储在本地desks列表中
+    loadSyncDesk(communityInfo?.no);
+    // 检测当前所在的社群桌面数据是否为空列表
+    const deskList = getCommunityDeskList(communityInfo);
+    if (deskList.length === 0) {
+      // 提示弹窗
+      (window as any).$ui.confirm(
+        "暂无可用的社群桌面",
+        "请联系你的社群管理员创建",
+        {
+          ok: () => {},
+          okText: "好的",
+          noText: null,
+          type: "link",
+        }
+      );
+    }
+    // 当前社群桌面数据已经创建
+    else {
+      settings.value.isCommunity = false;
+      router.push({ name: "home", params: { no: communityInfo?.no } });
+    }
+  }
+};
+
+// 加载云端数据处理方法
+const loadSyncDesk = (no: any) => {
+  communityDesk.setCurrentDeskNo(no);
+  communityDesk.loadCommunityDeskAll();
+  communityDesk.loadCommunityDeskDetail();
 };
 </script>
 

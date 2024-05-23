@@ -146,7 +146,7 @@ const leftTab = ref([
   },
   {
     title: "群聊",
-    icon: "ant-design:message-outlined",
+    icon: "ant-design:message-filled",
     type: "contact-group",
   },
   {

@@ -520,6 +520,11 @@ export default {
       }, 300);
     });
 
+    // 触发位置还原
+    this.$bus.on('redirect',()=>{
+      this.freeLayoutScrollbarRedirect()
+    });
+
     if (window.showed) {
       this.showGrid = true;
     }
@@ -552,7 +557,7 @@ export default {
       }
     },
     getWidth() {
-      console.log(this.usingSettings.fixedLayout);
+      // console.log(this.usingSettings.fixedLayout);
       if (this.usingSettings.fitMod === "full") {
         return "100%";
       } else {
