@@ -111,7 +111,7 @@
         <Desk
           v-if="currentDesk && currentDesk?.cards?.length > 0"
           :global-settings="settings"
-          :editing="false"
+          :editing="editing"
           ref="currentDeskRef"
           :currentDesk="currentDesk"
           v-model:settings="currentDesk.settings"
@@ -128,7 +128,7 @@
         <template v-else>
           <slot name="empty">
             <div class="flex items-center justify-center w-full h-full">
-              <NonAdminEmpty />
+              <NoAdminEmpty />
             </div>
           </slot>
 
@@ -472,6 +472,8 @@ export default {
         },
       ],
       loadingVisible: true,
+      // 接收定时器临时变量
+      loadTime:null,
     };
   },
 
@@ -576,7 +578,7 @@ export default {
     // 当前桌面
     currentDesk() {
       let currentDesk = this.deskList.find((desk) => {
-        if (desk.communityNo) {
+        if (desk.hasOwnProperty("communityNo")) {
           return desk.id === this.currentDeskId;
         }
       });
@@ -649,6 +651,7 @@ export default {
       "saveCommunityDesk",
       "loadCommunityDeskAll",
       "saveCommunityDeskDetail",
+      "clearDeskList",
     ]),
 
     // 设置桌面id的切换方法
@@ -658,6 +661,7 @@ export default {
 
     // 数据同步云端
     syncSaveCommunity() {
+      console.log('同步当前数据',this.currentDesk);
       this.setCurrentDeskNo(this.communityInfo.no);
       this.setCurrentDeskAllList(this.communityDeskList);
       this.setCurrentDeskData(this.currentDesk);
@@ -734,13 +738,6 @@ export default {
     // 隐藏桌面市场
     hideMarket() {
       this.deskMarketVisible = false;
-    },
-
-    // 创建桌面
-    doAddDesk(deskName) {
-      this.$emit("add", deskName);
-      this.key = Date.now();
-      this.addDeskVisible = false;
     },
 
     // 添加图标
@@ -961,7 +958,8 @@ export default {
             });
             this.deskList.splice(index, 1);
             this.doAddDesk("空白桌面");
-            this.$emit("changeDesk", { id: filterList[0].id });
+            // this.$emit("changeDesk", { id: filterList[0].id });
+            this.$emit("updateCurrentDesk", filterList[0]?.id);
             this.clearFreeLayout(this.currentDeskId);
             // 删除桌面数据
             this.key = Date.now();
@@ -970,7 +968,8 @@ export default {
               return String(desk?.id) === String(this.currentDesk?.id);
             });
             this.deskList.splice(index, 1);
-            this.$emit("changeDesk", { id: filterList[0].id });
+            // this.$emit("changeDesk", { id: filterList[0].id });
+            this.$emit("updateCurrentDesk", filterList[0]?.id);
             this.clearFreeLayout(this.currentDeskId);
             // 删除桌面数据
             this.key = Date.now();
@@ -993,38 +992,28 @@ export default {
     },
 
     // 监听社群桌面的id变化
-    // "currentDesk.id": {
-    //   handler(newVal) {
-    //     // if (this.loadingVisible) {
-    //     //   setTimeout(() => {
-    //     //     this.loadingVisible = false;
-    //     //   }, 150);
-    //     // } else {
-    //     //   if (this.communityRole) {
-    //     //     this.syncSaveCommunity();
-    //     //   }
-    //     // }
-    //   },
-    //   immediate: true,
-    //   deep: true,
-    // },
+    currentDesk: {
+      handler(newVal) {
+        if (this.loadingVisible) {
+          setTimeout(() => {
+            this.loadingVisible = false;
+          }, 150);
+        } else {
+          if (!this.communityRole) {
+            // 每隔十分钟检测云端数据是否更新
+            this.loadTime = setInterval(() => {
+              this.loadCommunityCloud();
+            }, 600000);
+          }
+        }
+      },
+      immediate: true,
+      deep: true,
+    },
+  },
 
-    // 监听社群桌面更新的变化
-    // "currentDesk.cards": {
-    //   handler(newVal) {
-    //     // if (this.loadingVisible) {
-    //     //   setTimeout(() => {
-    //     //     this.loadingVisible = false;
-    //     //   }, 150);
-    //     // } else {
-    //     //   if (this.communityRole) {
-    //     //     this.syncSaveCommunity();
-    //     //   }
-    //     // }
-    //   },
-    //   immediate: true,
-    //   deep: true,
-    // },
+  unmounted() {
+    clearInterval(this.loadTime);
   },
 };
 </script>

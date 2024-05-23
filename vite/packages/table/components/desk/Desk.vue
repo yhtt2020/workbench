@@ -520,9 +520,11 @@ export default {
       }, 300);
     });
 
-    // 触发位置还原
+    // 社群成员桌面触发位置还原
     this.$bus.on('redirect',()=>{
-      this.freeLayoutScrollbarRedirect()
+      this.$nextTick(()=>{
+        this.$refs.freeLayoutScrollbar?.redirect();
+      })
     });
 
     if (window.showed) {
