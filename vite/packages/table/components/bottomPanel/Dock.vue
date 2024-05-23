@@ -338,12 +338,6 @@ export default {
       }
       return this.iconMenus;
     },
-    realXY() {
-      return {
-        x: this.left,
-        y: this.parentHeight - (this.navAttribute.navSize / 100) * 100 - 175,
-      };
-    },
     // 合并提示位置
     mergeTip() {
       if(this.iconSize == '44'){
