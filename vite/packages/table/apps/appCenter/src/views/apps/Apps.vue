@@ -28,7 +28,7 @@ import { usePlat } from '../../../../../ui/hooks/usePlat';
 
 const state = useAppStateStore()
 const store = useAppCenterStore()
-const { myApps } = storeToRefs(store)
+const { myApps, installPath } = storeToRefs(store)
 
 let fs
 if (!usePlat('web') ) {
@@ -50,7 +50,7 @@ const install = (app) => {
     console.log('安装',app)
     if(app.downloading) return
     app.downloading = true
-    let downloadDir = dir.value
+    let downloadDir = installPath.value
     fs.ensureDirSync(downloadDir)
     let basePath = require('path').join(downloadDir, require('path').basename(new URL(app.downloadUrl).pathname))
     if(fs.existsSync(basePath)){
@@ -72,6 +72,7 @@ const install = (app) => {
         app.downloading = false
         app.percent = 100
         app.done = 1
+        app.setupPath = basePath
         setup(app, basePath)
       },
       willDownload: (args) => {
@@ -92,7 +93,6 @@ const install = (app) => {
     runExec('start /wait ' + path + ' /S', require('path').dirname(path)).then(rs => {
       message.success({ content: '安装成功，并为您运行此软件', key: 'install' })
       executeLocalApp(app)
-      myApps.value.unshift(app)
       app.installed = true
     }, (rs) => {
       message.error({ content: '安装失败', key: 'install' })
@@ -105,7 +105,6 @@ const install = (app) => {
     runExec('start /wait ' + path, require('path').dirname(path)).then(rs => {
       message.success({ content: '安装成功，并为您运行此软件', key: 'install' })
       executeLocalApp(app)
-      myApps.value.unshift(app)
       app.installed = true
     }, (rs) => {
       message.error({ content: '安装失败', key: 'install' })
@@ -113,6 +112,7 @@ const install = (app) => {
       message.error({ content: '安装错误', key: 'install' })
     }).finally(() => {
       app.installing = false
+      myApps.value.unshift(app)
     })
   }
 }

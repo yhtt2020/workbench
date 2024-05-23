@@ -10,12 +10,12 @@
         <div class="flex flex-col justify-between h-full p-4">
             <div class="flex flex-col gap-3" v-if="!isMore">
                 <xt-input 
-                    style="height: 32px !important;"
+                    style="height: 52px !important;background-color: var(--primary-bg) !important;"
                     v-model:modelValue="inputValue" 
                     placeholder="搜索" 
                     @enter="search">
                     <template #suffix>
-                        <xt-new-icon icon="fluent:search-16-regular" size="16"></xt-new-icon>
+                        <xt-new-icon icon="fluent:search-16-regular" size="20"></xt-new-icon>
                     </template>
                 </xt-input> 
                 <ItemList :list="startMenu" v-if="!isSearch"></ItemList>  
@@ -42,7 +42,7 @@
         </div>
         <div class="w-full h-[56px] xt-bg rounded-b-2xl flex justify-between">
             <div class="flex items-center justify-between gap-2 p-2 pointer" @click="goApps('MyApps')">
-                <xt-new-icon icon="fluent:grid-16-regular" size="20"></xt-new-icon>
+                <xt-new-icon icon="fluent:grid-16-filled" size="20"></xt-new-icon>
                 全部应用
             </div>
             <div class="flex items-center justify-between gap-1 p-2">

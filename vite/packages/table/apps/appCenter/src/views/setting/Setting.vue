@@ -20,13 +20,13 @@
                 title="软件下载安装路径（开发中）"
                 info="选择软件类型的应用下载安装的文件路径"
                 icon="fluent:arrow-clockwise-16-regular"
-                @onIconClick="() => {}"
+                @onIconClick="resetPath"
             >
                 <template #extra>
                     <div class="flex w-full gap-3">
                         <div @click="localAppClick()" class="w-full">
                             <xt-option-input
-                              v-model:input="inputValue"
+                              v-model:input="installPath"
                               readonly
                             />
                         </div>
@@ -48,69 +48,136 @@
 <script setup lang='ts'>
 import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia';
+import { message } from 'ant-design-vue';
 
 import { useAppCenterStore } from '../../store';
 
 import Exit from '../../component/exit.vue'
 
-const { exec } = require('child_process');
-const fs = require('fs');
+import { usePlat } from '../../../../../permission/usePlat';
 
-// 打开本地应用
-const openLocalAddress = (address) => {
-  exec(`start "" "${address}"`, (error) => {
-    if (error) {
-      console.error(`exec error: ${error}`);
-      return;
-    }
-  });
-};
 
 const appCenterStore = useAppCenterStore()
-const { recentUsed } = storeToRefs(appCenterStore)
+const { recentUsed, installPath, defaultPath } = storeToRefs(appCenterStore)
 
-const inputValue = ref(require('path').join(window.globalArgs['user-data-dir'], 'download'))
-
+const fs = require('fs')
 const emits = defineEmits(["onLocalApp"]);
 const fileRef = ref(null);
-const localAppClick = () => {
-  fileRef.value.click();
-  fileRef.value.onchange = async function (files) {
-    if (files.length === 0) {
-      this.clear();
-      return;
-    }
-    const file = this.files[0];
-    console.log(this.files,'<<<<<<<<')
-    inputValue.value = file.path
-  };
+const localAppClick = async() => {
+  const plat = usePlat(['web'])
+  if(plat){
+    confirm(options.value)
+    return
+  }
+  let path = await tsbApi.dialog.showOpenDialog({
+    properties: ['openDirectory'],
+    title: '选择文件夹',
+    
+  })
+  console.log(path)
+  if(path[0]) {
+    installPath.value = path[0]
+  }
 };
 
-
+// 打开指定文件夹
 const open = () => {
   console.log("123 :>> ", 123);
-  openLocalAddress(inputValue.value);
+  require('electron').shell.openPath(installPath.value);
 };
 
-// // 路径变化
+const options = ref({
+  title:'web端暂不支持此功能',
+  content:'请下载客户端体验完整功能',
+  okText: '立即下载',
+  noText: '稍后再说',
+  ok: () => {
+      window.open('https://www.apps.vip/download/');
+  },
+  no: () => {
+    console.log('no')
+  },
+  okButtonWidth: '95',
+  noButtonWidth: '95',
+})
+
+// web端弹窗提示
+const confirm = (options) => {
+  window.$ui.confirm(
+    options.title || 'web端暂不支持此功能',
+    options.content || '请下载客户端体验完整功能',
+    {
+      noText: options.noText || '稍后再说',
+      okText: options.okText || '立即下载',
+      ok: () => {
+        options.ok && options.ok();
+      },
+      no: () => {
+        options.no && options.no();
+      },
+      okButtonWidth: options.okButtonWidth || '95',
+      noButtonWidth: options.noButtonWidth || '95',
+    }
+  )
+}
+
+// 路径变化
 // watch(
-//   () => inputValue.value,
-//   (newV, oldV) => {
-//     if(checkIsFolder(newV)){
-//       window.$ui.confirm('确认选择此文件夹吗？','会自动将原来文件夹的内容移动到新文件夹', async () => {
-//         console.log('opdate')
-//       })
-//     } else {
-//       inputValue.value = oldV
+//   () => installPath.value,
+//   (newVal,oldVal) => {
+//     console.log(oldVal,newVal)
+//     if(newVal !== '' || newVal !== undefined) {
+//       window.$ui.confirm(
+//         '存储路径发生改变',
+//         "将会自动把旧路径中的文件转移至新路径",
+//         {
+//           okText: '确认',
+//           noText: '取消',
+//           ok: () => {
+//             // removeFile(oldVal, newVal)
+//             console.log('ok',newVal)
+//           },
+//           no: () => {
+//             console.log('no',oldVal)
+//             installPath.value = oldVal
+//           },
+//           okButtonWidth: '95',
+//           noButtonWidth: '95',
+//         }
+//       )
 //     }
-//     console.log(checkIsFolder(newV), "checkIsFolder(newV)");
 //   }
 // )
 
-// // 判断是不是文件夹
-// const checkIsFolder = (path) => {
-//   return fs.lstatSync(path).isDirectory();
-// };
+// 重置路径
+const resetPath = () => {
+  installPath.value = defaultPath.value
+}
+
+// 转移文件
+// const removeFile = (oldPath, newPath) => {
+//   fs.readdir(oldPath, (err, files) => {
+//     if (err) {
+//       console.error(err)
+//       return
+//     }
+//     message.info('正在转移文件')
+//     files.forEach((file) => {
+//       const oldPathFile = oldPath + '/' + file
+//       const newPathFile = newPath + '/' + file
+//       fs.rename(oldPathFile, newPathFile, (err) => {
+//         if (err) {
+//           console.error(err)
+//           message.error('转移失败')
+//           return
+//         }
+//         message.success('转移成功')
+//       })
+//     })
+//   })
+// }
+
+
 
 </script>
 <style lang='scss' scoped></style>

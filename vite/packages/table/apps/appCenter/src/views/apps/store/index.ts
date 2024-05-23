@@ -14,6 +14,7 @@ export const useAppStateStore = defineStore("useAppStateStore", {
           data: {
             security: true,
           },
+          defaultFolder: "\\Program Files\\PPet3",
           downloading: false,
           installing: false,
           percent: 0,
@@ -30,6 +31,7 @@ export const useAppStateStore = defineStore("useAppStateStore", {
           data: {
             security: true,
           },
+          defaultFolder:'\\debugtron\\Debugtron.exe',
           downloading: false,
           installing: false,
           percent: 0,
@@ -48,6 +50,7 @@ export const useAppStateStore = defineStore("useAppStateStore", {
           data: {
             security: true,
           },
+          defaultFolder:'\\AIDA64 Extreme\\aida64.exe',
           downloading: false,
           installing: false,
           percent: 0,
@@ -61,6 +64,7 @@ export const useAppStateStore = defineStore("useAppStateStore", {
           needInstall: true,
           installPath:
             "C:\\Program Files (x86)\\RivaTuner Statistics Server\\RTSS.exe",
+          defaultFolder:'\\RivaTuner Statistics Server\\RTSS.exe',
           downloadUrl: "https://a.apps.vip/download/rtss.exe",
           data: {
             security: true,
@@ -83,6 +87,7 @@ export const useAppStateStore = defineStore("useAppStateStore", {
           data: {
             security: true,
           },
+          defaultFolder:'\\DisplayFusion\\DisplayFusion.exe',
           downloading: false,
           installing: false,
           percent: 0,

@@ -109,8 +109,10 @@ const executeApp = (app) => {
 
 // 检查是否已经安装
 const checkInstalled = (app) => {
-    // console.log('检查是否安装',fs.existsSync(app.installPath))
-    if(fs.existsSync(app.installPath)){
+    // 
+    const path = app.installPath
+    // console.log('检查是否安装',fs.existsSync(path),app,path)
+    if(fs.existsSync(path)){
         return true
     }
 }

@@ -6,14 +6,23 @@
             <div class="text-sm xt-text">暂无搜索结果</div>
         </div>
         <div class="pl-4 text-sm xt-text">应用市场</div>
-
+        <div class="flex flex-col w-full h-full gap-3">
+            <MarketList v-for="item in props.list" :key="item.id" :item="item"/>
+        </div>
     </div>
 </template>
 
 <script setup lang='ts'>
 import { ref, defineAsyncComponent } from 'vue'
+import { storeToRefs } from 'pinia';
+
+import { useMarketStore } from '../../../../../apps/appCenter/src/views/market/store/store' 
 
 const ItemList = defineAsyncComponent(() => import('./ItemList.vue'))
+const MarketList = defineAsyncComponent(() => import('../../../../../apps/appCenter/src/views/market/components/Item.vue'))
+
+const store = useMarketStore()
+const { recommendList } = storeToRefs(store)
 
 const props = defineProps({
     list: {
