@@ -192,8 +192,10 @@
         @onBack="
           () => {
             this.addCardVisible = false;
+            console.log('返回');
           }
         "
+        :communityRole="communityRole"
       ></NewAddCard>
     </div>
   </transition>
@@ -326,7 +328,6 @@ export default {
     },
     communityRole:{
       type:Boolean,
-      default:false,
     }
   },
   watch: {
@@ -698,9 +699,6 @@ export default {
     },
     hideAddCard() {
       this.addCardVisible = false;
-      if(this.communityRole){
-        this.$bus.emit('updateSync')
-      }
     },
     onClose() {
       this.menuVisible = false;
