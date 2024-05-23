@@ -11,13 +11,14 @@
         iconSize="16">
       </xt-button>
       <!-- 起始页 -->
-      <StartPage @choose="chooseItem" v-if="isStart"></StartPage>
+      <StartPage @choose="chooseItem" v-if="isStart" :communityRole="communityRole"></StartPage>
       <!-- 左侧导航栏 -->
+      <!-- communityRole ? newLeftMenu.length - 1 : 6 -->
+      <!--  last="6" 
+        end="1"  -->
       <xt-left-menu v-else  
-        :list="leftMenu" 
+        :list="newLeftMenu" 
         model="id" 
-        last="6" 
-        end="1" 
         v-model:index="index" 
         leftMargin="mr-0 py-3"
         w="64" 
@@ -182,9 +183,19 @@ const Labor = defineAsyncComponent(() => import('./components/Labor.vue'))
 message.config({
   maxCount: 1
 })
+export interface EditType {
+  isFolder: boolean,
+  communityRole:boolean,
+}
+
+const props = withDefaults(defineProps<EditType>(), {
+  isFolder: false,
+  communityRole:false,
+})
 
 // 常量
 const iconIndex = ref('Windows')  // 默认显示的组件
+// 'Windows'
 const editVisible = ref(true)  // 是否显示
 const inputValue = ref('')  // 输入框的值
 const previewFlag = ref(false)  // 是否显示预览
@@ -228,13 +239,7 @@ const obj = computed(() => {
   }
 })
 
-export interface EditType {
-  isFolder: boolean
-}
 
-const props = withDefaults(defineProps<EditType>(), {
-  isFolder: false
-})
 
 // 关闭回调事件
 const emit = defineEmits(['setQuick','addIcon'])
@@ -433,10 +438,29 @@ const leftMenu = ref<LeftMenuType[]>([
 
 
 // 选择左侧导航栏
-const chooseItem = (item,i?) => {
-  isStart.value = false
-  iconIndex.value = item.component
-  i ? index.value = i : index.value = item.id
+const chooseItem = (item:any,i?:any) => {
+
+  if(item.component === 'Team'){
+    if(props.communityRole){
+      isStart.value = false
+      index.value = 1;
+      iconIndex.value = 'System'
+    }
+    else {
+      isStart.value = false
+      index.value = 0;
+      iconIndex.value = 'Windows'
+    }
+  }
+  else {
+    isStart.value = false
+    iconIndex.value = item.component
+    const found:any = leftMenu.value.find((find)=>{
+      return String(find.component) === String(item.component); 
+    });
+    index.value = found?.id;
+  }
+  
 }
 
 // 添加图标
@@ -521,7 +545,7 @@ onMounted(() => {
   if(allList.value.length === 0){
     proxy.$bus.emit('refreshBrowser')
   }
-  
+
 })
 
 // 下拉框改变标题
@@ -583,5 +607,20 @@ onBeforeUnmount(() => {
   selectNav.value = '' // 重置导航栏，防止后续再次打开添加到错误位置
   multipleList.value = [] // 重置多选数据
 })
+
+
+// 优化根据社群桌面进行处理
+const newLeftMenu = computed(()=>{
+  if(props.communityRole){
+    const filterMenu = leftMenu.value.filter((menu:any)=>{
+       return menu.name !== 'Win' && menu.id !== 0;
+    });
+    return filterMenu;
+  }
+  else {
+    return leftMenu.value;
+  }
+})
+
 </script>
 <style lang='scss' scoped></style>

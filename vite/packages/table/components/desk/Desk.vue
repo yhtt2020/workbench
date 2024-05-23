@@ -203,6 +203,7 @@
     v-if="editVisible"
     @setQuick="editVisible = false"
     @addIcon="addIcon"
+    :communityRole="communityRole"
   ></EditNewNavigation>
   <GalleryModal ref="galleryRef" />
 </template>
