@@ -4,12 +4,11 @@ import dbStorage from "./dbStorage";
 import audio from "../js/common/audio";
 import { completeTask } from "../apps/task/task"
 import {message} from "ant-design-vue";
-import { useEnv } from "../ui/hooks/useEnv";
+import { usePlat } from "../ui/hooks/usePlat";
 
 let rpc
-if (!useEnv()) {
+if (usePlat('client')) {
   rpc=window.$models.rpc
-
 }
 const readAida64 = window.readAida64
 // @ts-ignore
@@ -69,7 +68,7 @@ export const inspectorStore = defineStore(
         this.displayData[key] = value
       },
       startInspect() {
-        if(this.running){
+        if(this.running || usePlat('web')){
           return
         }
         this.running=true

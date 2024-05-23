@@ -1,15 +1,15 @@
 <template>
-    <xt-container 
+    <xt-container
         :header="header"
         v-model:customSize="customData.customSize"
-        :envLimit="['guest']" 
-        @click="onHistoryMessage" 
-        :sizeList="sizeList" 
-        :customData="customData" 
-        :customIndex="customIndex" 
-        :options="options" 
-        ref="cardSlot" 
-        :desk="desk"  
+        :envLimit="['guest', 'offline']"
+        @click="onHistoryMessage"
+        :sizeList="sizeList"
+        :customData="customData"
+        :customIndex="customIndex"
+        :options="options"
+        ref="cardSlot"
+        :desk="desk"
         :menuList="menuList"
         @delete="deleteCard">
         <!-- <template #left-title>
@@ -178,7 +178,8 @@ export default {
             accUrl:'',
             header:{
                 title:'社区数据',
-                ifyIcon:'majesticons:monitor-line',
+                // ifyIcon:'majesticons:monitor-line',
+                showIcon:"/img/appLogo/shortDashboard.png",
                 rightIcon:[
                     {
                         ifyIcon:'fluent:open-20-filled',

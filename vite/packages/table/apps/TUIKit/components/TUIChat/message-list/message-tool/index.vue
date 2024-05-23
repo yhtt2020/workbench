@@ -1,6 +1,7 @@
 <template>
+  <!-- 修改将v-if替换成v-show -->
   <div
-    v-if="!isAllActionItemInvalid && !messageItem.hasRiskContent"
+    v-show="!isAllActionItemInvalid && !messageItem.hasRiskContent"
     ref="messageToolDom"
     :class="['dialog-item', !isPC ? 'dialog-item-h5' : 'dialog-item-web']"
   >
@@ -12,7 +13,7 @@
       <template v-for="(item, index) in actionItems">
         <div
           v-if="item.renderCondition()"
-          :key="index"
+          :key="item.key"
           class="list-item"
           @click="getFunction(index)"
         >
@@ -36,41 +37,38 @@ import TUIChatEngine, {
   StoreName,
   TUITranslateService,
   IMessageModel,
-} from "@tencentcloud/chat-uikit-engine";
-import { TUIGlobal } from "@tencentcloud/universal-api";
-import { ref, watchEffect, computed } from "../../../../adapter-vue";
-import { isPC, isUniFrameWork } from "../../../../utils/env";
-import Icon from "../../../common/Icon.vue";
-import { Toast, TOAST_TYPE } from "../../../common/Toast/index";
-import delIcon from "../../../../assets/icon/msg-del.svg";
-import copyIcon from "../../../../assets/icon/msg-copy.svg";
-import quoteIcon from "../../../../assets/icon/msg-quote.svg";
-import revokeIcon from "../../../../assets/icon/msg-revoke.svg";
-import forwardIcon from "../../../../assets/icon/msg-forward.svg";
-import { enableSampleTaskStatus } from "../../../../utils/enableSampleTaskStatus";
-import { decodeTextMessage } from "../../utils/emojiList";
-import { copyText } from "../../utils/utils";
+} from '@tencentcloud/chat-uikit-engine';
+import { TUIGlobal } from '@tencentcloud/universal-api';
+import { ref, watchEffect, computed, onMounted, onUnmounted,provide } from '../../../../adapter-vue';
+import Icon from '../../../common/Icon.vue';
+import { Toast, TOAST_TYPE } from '../../../common/Toast/index';
+import delIcon from '../../../../assets/icon/msg-del.svg';
+import copyIcon from '../../../../assets/icon/msg-copy.svg';
+import quoteIcon from '../../../../assets/icon/msg-quote.svg';
+import revokeIcon from '../../../../assets/icon/msg-revoke.svg';
+import forwardIcon from '../../../../assets/icon/msg-forward.svg';
+import translateIcon from '../../../../assets/icon/translate.svg';
+import { enableSampleTaskStatus } from '../../../../utils/enableSampleTaskStatus';
+import { copyText } from '../../utils/utils';
+import { decodeTextMessage } from '../../utils/emojiList';
+import { isPC, isUniFrameWork } from '../../../../utils/env';
+import { ITranslateInfo } from '../../../../interface';
 
-const props = defineProps({
-  messageItem: {
-    type: Object,
-    default: () => ({}),
-  },
-  isShowTool: {
-    type: Boolean,
-    default: false,
-  },
+interface IProps {
+  messageItem: IMessageModel;
+}
+
+const props = withDefaults(defineProps<IProps>(), {
+  messageItem: () => ({}) as IMessageModel,
 });
 
 const TYPES = TUIChatEngine.TYPES;
-const messageToolDom = ref<HTMLElement>();
 
-//新增 替换图标iconUrl
-const actionItems = [
+const actionItems = ref([
   {
     text: TUITranslateService.t("TUIChat.打开"),
     // iconUrl: copyIcon,
-    iconUrl:'fluent:copy-16-regular',
+    iconUrl:'fluent:copy-16-filled',
     renderCondition() {
       if (!message.value) return false;
       return (
@@ -85,7 +83,7 @@ const actionItems = [
   {
     text: TUITranslateService.t("TUIChat.复制"),
     // iconUrl: copyIcon,
-    iconUrl:'fluent:copy-16-regular',
+    iconUrl:'fluent:copy-16-filled',
     renderCondition() {
       if (!message.value) return false;
       return message.value?.type === TYPES.MSG_TEXT;
@@ -107,7 +105,7 @@ const actionItems = [
   {
     text: TUITranslateService.t("TUIChat.删除"),
     // iconUrl: delIcon,
-    iconUrl: "fluent:delete-16-regular",
+    iconUrl: "fluent:delete-16-filled",
     renderCondition() {
       if (!message.value) return false;
       return message.value?.status === "success";
@@ -137,17 +135,51 @@ const actionItems = [
     },
     clickEvent: quoteMessage,
   },
-];
+  // {
+  //   key: 'translate',
+  //   text: TUITranslateService.t('TUIChat.翻译'),
+  //   visible: false,
+  //   iconUrl: translateIcon,
+  //   renderCondition() {
+  //     if (!message.value) return false;
+  //     return message.value.status === 'success' && message.value.type === TYPES.MSG_TEXT;
+  //   },
+  //   clickEvent: translateMessage,
+  // },
+]);
 
 const message = ref<IMessageModel>();
+const messageToolDom = ref<HTMLElement>();
+
+provide('messageToolDom',messageToolDom.value);
+
+onMounted(() => {
+  TUIStore.watch(StoreName.CHAT, {
+    translateTextInfo: onMessageTranslationIDUpdated,
+  });
+});
+
+onUnmounted(() => {
+  TUIStore.unwatch(StoreName.CHAT, {
+    translateTextInfo: onMessageTranslationIDUpdated,
+  });
+});
 
 watchEffect(() => {
   message.value = TUIStore.getMessageModel(props.messageItem.ID);
 });
 
 const isAllActionItemInvalid = computed(() => {
-  for (let i = 0; i < actionItems.length; ++i) {
-    if (actionItems[i].renderCondition()) {
+  
+  // for (let i = 0; i < actionItems.value.length; ++i) {
+  //   if (actionItems[i].renderCondition()) {
+  //     return false;
+  //   }
+  // }
+
+  /**将for循环进行简化**/ 
+  for(const item of actionItems.value){
+    if (item.renderCondition()) {
       return false;
     }
   }
@@ -156,7 +188,9 @@ const isAllActionItemInvalid = computed(() => {
 
 function getFunction(index: number) {
   // 兼容 vue2 小程序的写法 不允许动态绑定
-  actionItems[index].clickEvent();
+  // actionItems[index].clickEvent();
+  /**修改成vue3写法,这里暂时不考虑vue2问题**/ 
+  actionItems.value[index].clickEvent();
 }
 
 function openMessage() {
@@ -222,6 +256,40 @@ function forwardSingleMessage() {
 function quoteMessage() {
   if (!message.value) return;
   message.value.quoteMessage();
+}
+
+function translateMessage() {
+  const enable = TUIStore.getData(StoreName.APP, 'enabledTranslationPlugin');
+  if (!enable) {
+    Toast({
+      message: TUITranslateService.t('TUIChat.请购买翻译插件'),
+      type: TOAST_TYPE.WARNING,
+    });
+    return;
+  }
+
+  if (!message.value) return;
+  const idx = actionItems.value.findIndex(item => item.key === 'translate');
+  TUIStore.update(StoreName.CHAT, 'translateTextInfo', {
+    conversationID: message.value.conversationID,
+    messageID: message.value.ID,
+    visible: !actionItems.value[idx].visible,
+  });
+}
+
+function onMessageTranslationIDUpdated(info: Map<string, ITranslateInfo[]>) {
+  if (info === undefined) return;
+  const translationInfoList = info.get(props.messageItem.conversationID) || [];
+  const idx = actionItems.value.findIndex(item => item.key === 'translate');
+  for (let i = 0; i < translationInfoList.length; ++i) {
+    const { messageID, visible } = translationInfoList[i];
+    if (messageID === props.messageItem.ID) {
+      actionItems.value[idx].text = TUITranslateService.t(visible ? 'TUIChat.隐藏' : 'TUIChat.翻译');
+      actionItems.value[idx].visible = !!visible;
+      return;
+    }
+  }
+  actionItems.value[idx].text = TUITranslateService.t('TUIChat.翻译');
 }
 
 defineExpose({

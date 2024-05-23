@@ -3,7 +3,7 @@
     <template v-for="item in detailList">
       <div
         class="xt-bg-2 pointer content-item rounded-xl pb-4 mb-4"
-        style="position: relative;"
+        style="position: relative"
         @click="enterCommunity(item)"
       >
         <div style="height: 150px; margin-bottom: 30px">
@@ -62,6 +62,10 @@
 
 <script setup>
 import { toRefs } from "vue";
+import { storeToRefs } from "pinia";
+import { chatCommunityStore } from "../../../store/chatCommunity";
+import _ from "lodash-es";
+import { useRouter } from "vue-router";
 
 const props = defineProps({
   detailList: {
@@ -71,22 +75,17 @@ const props = defineProps({
 });
 const { detailList } = toRefs(props);
 
+const router = useRouter();
+
+/**解构store数据**/
+const chatCommunity = chatCommunityStore();
+const { myCommunity } = storeToRefs(chatCommunity);
+
 // 进入相对应社群
-const enterCommunity = (data) =>{
-  console.log(data,'data');
-}
-// enterCommunity(item) {
-//       const list = this.community.communityList.map((item) => {
-//         return item.communityInfo.no;
-//       });
-//       const isJoin = list.some((findItem) => {
-//         return Number(findItem) === Number(item.no);
-//       });
-//       // console.log("item",isJoin);
-//       if (isJoin) {
-//         this.$router.push({ name: "myCommunity", params: { no: item.no } });
-//       }
-//     },
+const enterCommunity = (data) => {
+  const no = data.no;
+  router.push({ name: "myCommunity", params: { no: no } });
+};
 </script>
 
 <style lang="scss" scoped>
@@ -109,7 +108,6 @@ const enterCommunity = (data) =>{
     width: calc(100% / 1);
   }
 }
-
 @media screen and (min-width: 965px) {
   .content-list {
     width: 100%;

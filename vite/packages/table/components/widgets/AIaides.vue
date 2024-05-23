@@ -2,12 +2,13 @@
   <div>
     <xt-container
       @titleHover="pushToMain"
-      :desk="desk" 
-      :sizeList="sizeList" 
-      :options="options" 
-      :customIndex="customIndex" 
+      :desk="desk"
+      :sizeList="sizeList"
+      :options="options"
+      :customIndex="customIndex"
       ref="cardSlot"
       :customData="customData"
+      :envLimit="['guest', 'offline']"
       :header="header"
       v-model:customSize="customData.customSize"
       @delete="doRemoveCard">
@@ -20,12 +21,12 @@
         </a-input>
         <div class="mt-2 mb-2 text-base xt-text">最近对话</div>
         <template v-if="recentList">
-          <div class="mb-3 xt-bg rounded-xl" v-for="index in copyNum"
+          <div class="mb-3 xt-bg rounded-xl cursor-pointer" v-for="index in copyNum"
             :style="{ height: copyNum !== 1 ? '56px' : '48px', lineHeight: copyNum !== 1 ? '56px' : '48px', }" >
             <div class="flex items-center h-full ml-4"  @click="goPage(index - 1)">
               <!-- <AiIcon icon="fluent:chat-16-regular" style="font-size: 20px;" class="mr-3 xt-text" /> -->
-              <xt-base-icon class="mr-3 text-xl xt-text"
-                :icon="recentList[index - 1]?.icon.name || 'message'"></xt-base-icon>
+              <xt-mix-icon class="mr-3 text-xl xt-text"
+                :icon="recentList[index - 1].icon.name" type="select"></xt-mix-icon>
               <div class="text-base xt-text ">{{ recentList[index - 1]?.name }}</div>
             </div>
           </div>
@@ -42,6 +43,9 @@
 </template>
 
 <script>
+import { useOpenAi } from "../../hooks/src/open/useOpenAi";
+import { useAppModal } from "../../apps/appModal/src/hook/useAppModal";
+
 import Widget from "../card/Widget.vue";
 import {
   MessageOutlined,
@@ -90,7 +94,8 @@ export default {
       settingVisible: false,
       inputValue: "",
       header: {
-        ifyIcon:"fluent:bot-24-regular",
+        // ifyIcon:"fluent:bot-24-regular",
+        showIcon:"/img/appLogo/ai.png",
         title:"AI助手",
         titleHover:true,
         titleHoverName:'打开应用',
@@ -118,16 +123,19 @@ export default {
     },
     // 跳转至具体会话
     goPage(index) {
-      console.log(index);
       this.selectTopicIndex = this.recentList[index].id;
-      this.$router.push({ name: "ai" });
+      // useOpenAi()
+      const { openApp } = useAppModal('ai')
+      openApp()
+      return
     },
     pushToMain() {
-      this.$router.push({ name: "ai" });
+      const { openApp } = useAppModal('ai')
+      openApp()
     },
   },
   computed: {
-    ...mapWritableState(aiStore, ["recentList", "selectTopicIndex"]),
+    ...mapWritableState(aiStore, ["recentList", "selectTopicIndex",]),
     // 判断尺寸大小
     showSize() {
       if (this.customData.customSize) {

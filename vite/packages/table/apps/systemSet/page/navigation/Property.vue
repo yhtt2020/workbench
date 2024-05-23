@@ -1,27 +1,27 @@
 <template>
     <div class="w-full h-full">
         <xt-option-box>
-            <xt-option-info 
-                title="导航栏风格（开发中） "
+            <xt-option-info
+                title="导航栏风格 "
                 info="「macOs风格」导航分为「顶部状态栏」和「底部Dock栏」；「Windows风格」导航将状态栏和主导航栏合并，可以选择显示在顶部或底部。" />
             <xt-option-tab
                 style="height: 40px;"
                 boxClass="p-1 xt-bg-2"
                 :boxStyle="{ 'border-radius': '10px' }"
                 :itemStyle="{ 'border-radius': '6px' }"
-                v-model="navStyle" 
+                v-model="navStyle"
                 circle="true"
                 :list="styleList" />
         </xt-option-box>
         <xt-option-box>
-            <xt-option-info 
+            <xt-option-info
                 :key="date"
                 title="主导航"
                 isSwitch="true"
                 v-model:switch="navigationToggle[2]">
                 <template #extra>
                     <xt-option-box :boxClass="'xt-bg'" v-if="navStyle === 'windows'">
-                        <xt-option-info 
+                        <xt-option-info
                             title="主导航位置"/>
                         <xt-option-tab
                             style="height: 40px;"
@@ -35,26 +35,26 @@
                 </template>
             </xt-option-info>
             <hr />
-            <xt-option-info 
+            <xt-option-info
                 :key="date"
                 title="左侧副导航"
                 isSwitch="true"
                 v-model:switch="navigationToggle[0]" />
             <hr />
-            <xt-option-info 
+            <xt-option-info
                 :key="date"
                 title="右侧副导航"
                 isSwitch="true"
                 v-model:switch="navigationToggle[1]"/>
         </xt-option-box>
         <xt-option-box>
-            <xt-option-info 
-                title="社群导航（开发中）"
+            <xt-option-info
+                title="社群导航"
                 isSwitch="true"
                 info="在专属导航栏中快速访问你的社群应用" v-model:switch="communityNavVisible"/>
         </xt-option-box>
         <xt-option-box>
-            <xt-option-info 
+            <xt-option-info
                 title="用户头像"
                 isSwitch="true"
                 v-model:switch="bottomToggle[0]"

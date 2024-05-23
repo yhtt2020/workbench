@@ -1,3 +1,8 @@
+/**
+ * 均为重构后新的数据结构 和旧版有差异 需要阅读源码
+ * 所有参数默认值请都设置为false 请勿随意修改默认值
+ * 新增参数请先商谈
+ */
 export const defaultProps = {
   // ----------下面都属于必填选参数----------
   /**
@@ -140,6 +145,10 @@ export const defaultProps = {
     type: Array,
     default: () => [],
   },
+  platLimit: {
+    type: Array,
+    default: () => [],
+  },
   /**
    * 小组件大小列表
    * 参考格式 [{ name: '4x2'value: '4x2' }]
@@ -150,7 +159,7 @@ export const defaultProps = {
   },
   /**
    * 小组件不可用环境
-   * 参数可选 ["web", "offline", "guest", "mac", "client"]
+   * 参数可选 ["web", "offline", "guest", "mac", "client", "single"]
    */
   envLimit: { type: Array, default: () => [] },
   /**

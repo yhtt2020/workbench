@@ -1,13 +1,18 @@
 import { teamStore } from "./../../store/team";
 import { tt } from "./../../permission/global/global";
-import { useMit } from "./../../hooks";
-import { isObject } from "./../../TUIKit/TUICore/utils/index";
+import { useMit, useAppModal } from "./../../hooks";
+// import { isObject } from "./../../TUIKit/TUICore/utils/index";
+import { useOpenAi } from "../../hooks/src/open/useOpenAi";
+
 import browser from "../../js/common/browser";
 import { appStore } from "../../store";
 import { taskStore } from "../../apps/task/store";
 import { favoStore } from "../../apps/favorites/store";
 import { useComStore } from "../../components/bottomPanel/comStore";
+import { useTTAppStore } from "../../apps/ttApp/src/store";
+import { storeToRefs } from "pinia";
 import fs from "fs";
+import { appsStore } from "../../store/apps";
 async function runApp(uri) {
   console.log("打开uri", uri);
   try {
@@ -107,6 +112,11 @@ export const startApp = async (type, value, router?) => {
     console.warn("startApp :>> type or value 不能为空");
   }
   switch (type) {
+    case "ttapp":
+      const ttappStore = useTTAppStore();
+      const { modal } = storeToRefs(ttappStore);
+      ttappStore.enterApp(value);
+      break;
     case "fixed":
       openFixedApp[value]();
       break;
@@ -123,9 +133,9 @@ export const startApp = async (type, value, router?) => {
       browser.openInInner(value);
       break;
     case "mob":
-      browser.openInMobMod(value,{
-        partition:'persist:webcontent',
-        newName:'手机模式'
+      browser.openInMobMod(value, {
+        partition: "persist:webcontent",
+        newName: "手机模式",
       });
       break;
     // 轻应用
@@ -139,7 +149,15 @@ export const startApp = async (type, value, router?) => {
       break;
     // 酷应用
     case "coolApp":
-      router.push({ name: "app", params: value });
+      // router.push({ name: "app", params: value });
+      // console.log('value = ;' ,value)
+      // 新版打开方式,详细细节可以在vite\packages\table\page\AppFrame.vue中查看
+      const useAppStore = appsStore();
+      const info = {
+        type,
+        ...value,
+      };
+      useAppStore.openApp(info);
       break;
     // 本地应用
     case "tableApp":
@@ -168,6 +186,7 @@ export const startApp = async (type, value, router?) => {
       break;
     // 桌面卡片
     case "card":
+      // useMit.emit("openCard");
       break;
   }
   return true;
@@ -178,6 +197,7 @@ export const openSysApp = (value, router) => {
   const useAppStore: any = appStore();
   const useTakeStore = taskStore();
   const usefavoStore = favoStore();
+  console.log("value :>> ", value);
   // // 全屏
   // if (value === "fullscreen") {
   //   useAppStore.toggleFullScreen();
@@ -234,6 +254,14 @@ export const openSysApp = (value, router) => {
       setTimeout(() => {
         useMit.emit("selectSystemNav", 4);
       }, 100);
+      break;
+    case "home":
+      useAppStore.settings.isCommunity = true;
+      router.push({ name: value });
+      break;
+    case "ai":
+      const { openApp } = useAppModal("ai");
+      openApp();
       break;
     default:
       // 通过路由打开

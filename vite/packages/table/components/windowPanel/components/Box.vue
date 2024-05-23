@@ -1,21 +1,41 @@
 <template>
-    <div 
+    <!-- 单个 -->
+    <div
+        v-if="list.length == 1"
+        class="flex items-center justify-center h-full"
+        @click.stop.prevent="openMain">
+        <xt-new-Icon
+            :icon="list[0].icon"
+            size="24"
+            class="flex-shrink-0"
+            v-if="list[0].icon" >
+        </xt-new-Icon>
+        <a-avatar
+            :size="24"
+            :src="list[0].avatar"
+            v-else-if="list[0].avatar"
+            class="flex-shrink-0" >
+        </a-avatar>
+    </div>
+    <!-- 多个 -->
+    <div
+        v-else
         @click.stop.prevent="openMain"
-        class="w-[40px] h-[40px] xt-main-bg rounded-lg flex flex-wrap relative" 
-        style="gap: 4px;padding: 6px">
+        class="w-[40px] h-[40px] xt-main-bg rounded-lg flex flex-wrap relative gap-1 p-1.5"
+        :class="[list.length === 1 ? 'items-center justify-center' : '']">
         <template v-for="(item,index) in list.slice(0,3)" :key="index" >
             <xt-new-icon :icon="item.icon" size="12" v-if="item.icon"></xt-new-icon>
             <a-avatar :size="12" :src="item.avatar" v-else-if="item.avatar"></a-avatar>
         </template>
-        <xt-new-icon 
-            icon="fluent:more-horizontal-16-regular" 
-            size="12" 
+        <xt-new-icon
+            icon="fluent:more-horizontal-16-filled"
+            size="12"
             v-if="list.length > 3">
         </xt-new-icon>
-        
     </div>
+    <!-- 弹窗显示粗略信息-->
     <Teleport to="body">
-        <div 
+        <div
             ref="message"
             :class="mainClass"
             v-if="mainVisible"
@@ -27,12 +47,14 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, watch , nextTick, onMounted } from 'vue'
+import { ref, watch , nextTick, onMounted, getCurrentInstance, onUnmounted } from 'vue'
 import { onClickOutside } from '@vueuse/core'
 
 import Item from './Item.vue'
 
 const emit = defineEmits(['closeAll'])
+
+const { proxy } = getCurrentInstance()
 
 type propsType = {
     list: Array<any>,
@@ -42,7 +64,7 @@ type propsType = {
 const props = withDefaults(defineProps<propsType>(), {
     list: [
         {
-            icon:'fluent:box-16-regular',
+            icon:'fluent:box-16-filled',
             tip:'',
             name:'快递',
             w:60,
@@ -70,10 +92,15 @@ watch(() => mainVisible.value, (val) => {
 })
 
 // 点击外部关闭
-// onMounted(() => {
-//     onClickOutside(message, () => {
-//         mainVisible.value = false
-//     })
-// })
+onMounted(() => {
+    proxy.$bus.on("closeControl", () => {
+        mainVisible.value = false
+    })
+})
+
+// 卸载
+onUnmounted(() => {
+    proxy.$bus.off("closeControl")
+})
 </script>
 <style lang='scss' scoped></style>

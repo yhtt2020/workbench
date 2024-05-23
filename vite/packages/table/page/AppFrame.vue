@@ -1,8 +1,7 @@
 <template>
-  <div style="width: 100%; display: flex; height: 100%; flex-direction: column">
+  <div style="width: 100%; display: flex; height: 100vh; flex-direction: column;" class="xt-main-bg">
     <div
-      class="drag"
-      :style="{ background: app.theme || '#424242' }"
+      class="drag xt-bg"
       style="height: 4em; width: 100%"
     >
       <a-row>
@@ -110,14 +109,12 @@
     <div
       v-if="fullScreen"
       id="frame"
-      :style="{ background: app.theme || '#424242' }"
-      style="width: 100%; flex: 1"
+      style="width: 100%; flex: 1;height:0"
     ></div>
     <div
       v-else
       id="frame"
-      :style="{ background: app.theme || '#424242' }"
-      style="width: 100%; flex: 1"
+      style="width: 100%; flex: 1;height:0"
     >
       &nbsp;
     </div>
@@ -168,20 +165,21 @@ export default {
       });
     } else {
       //非系统应用，则打开内嵌网页
-      this.$nextTick(() => {
+      this.$nextTick(async () => {
         let frame = document.getElementById("frame");
         let position = {
-          x: this.fixZoom(frame.getBoundingClientRect().x),
-          y: this.fixZoom(frame.getBoundingClientRect().y),
-          width: this.fixZoom(frame.offsetWidth),
-          height: this.fixZoom(frame.offsetHeight),
+          x: frame.getBoundingClientRect().x,
+          y: frame.getBoundingClientRect().y,
+          width:frame.offsetWidth,
+          height: frame.offsetHeight,
         };
+        position=await this.fixPosZoom(position)
         let args = {
           position,
           app,
         };
         this.app = app;
-        if (!window.$useEnv('web')) {
+        if (window.$usePlat('client')) {
           ipc.send("executeTableApp", args);
         setTimeout(() => {
           ipc.send("getRunningApps");
@@ -205,8 +203,13 @@ export default {
   },
   methods: {
     ...mapActions(appsStore,['getPreparingAppInfo']),
-    fixZoom(num) {
-      return Number(((num * this.settings.zoomFactor) / 100).toFixed(0));
+    async fixPosZoom(position){
+      let zoomFactor=(await tsbApi.window.getZoomFactor())
+      position.x=Number((position.x*zoomFactor).toFixed(0))
+      position.y=Number((position.y*zoomFactor).toFixed(0))
+      position.width=Number((position.width*zoomFactor).toFixed(0))
+      position.height=Number((position.height*zoomFactor).toFixed(0))
+      return position
     },
     switchScale() {
       this.showScale = !this.showScale;
@@ -223,14 +226,17 @@ export default {
         this.syncBounds();
       });
     },
-    syncBounds() {
+    async syncBounds() {
       let frame = document.getElementById("frame");
+
       let position = {
-        x: this.fixZoom(frame.getBoundingClientRect().x),
-        y: this.fixZoom(frame.getBoundingClientRect().y),
-        width: this.fixZoom(frame.offsetWidth),
-        height: this.fixZoom(frame.offsetHeight),
+        x: frame.getBoundingClientRect().x,
+        y:frame.getBoundingClientRect().y,
+        width:frame.offsetWidth,
+        height:frame.offsetHeight,
       };
+      position=await this.fixPosZoom(position)
+      console.log(position,'位置xof')
       let args = {
         bounds: position,
         app: this.app,

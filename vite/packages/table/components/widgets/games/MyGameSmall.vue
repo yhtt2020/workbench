@@ -1,15 +1,16 @@
 <template>
-  <xt-container 
+  <xt-container
     @titleHover="goRoute"
     :header="header"
     v-model:customSize="customData.customSize"
-    :envLimit="['web']"  
-    :sizeList="sizeList" 
-    :customData="customData" 
-    :customIndex="customIndex" 
-    :options="options" 
-    ref="gameSmallSlot" 
-    :menuList="gameMiddleBare" 
+    :platLimit="['web']"
+    :envLimit="['guest', 'offline', 'single']"
+    :sizeList="sizeList"
+    :customData="customData"
+    :customIndex="customIndex"
+    :options="options"
+    ref="gameSmallSlot"
+    :menuList="gameMiddleBare"
     :desk="desk"
     @delete="deleteCard">
     <template v-if="showSize.width == 2 && showSize.height == 4">
@@ -155,7 +156,8 @@ export default {
     header(){
       return {
         title:this.myDetailShow === true ? '游戏详情' : '我的游戏',
-        ifyIcon:'mdi:steam',
+        // ifyIcon:'mdi:steam',
+        showIcon:"/img/appLogo/steam.png",
         titleHover: !this.myDetailShow,
         titleHoverName:'点击打开'
       }

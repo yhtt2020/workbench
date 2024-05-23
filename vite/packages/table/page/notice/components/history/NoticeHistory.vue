@@ -2,7 +2,7 @@
  <div class="px-4 pt-4 w-full flex flex-col h-full" v-if="!tabShow">
   <div class="w-full flex items-center justify-between">
     <div class="flex items-center justify-center">
-       <xt-new-icon icon="fluent:clock-16-regular" size="16"></xt-new-icon>
+       <xt-new-icon icon="fluent:clock-16-filled" size="16"></xt-new-icon>
        <span class="xt-font xt-text font-14 font-400 ml-3">历史消息</span>
     </div>
 
@@ -10,7 +10,7 @@
 
     <xt-button w="32" h="32" style="border-radius: 8px;" @click="closeModal">
       <div class="flex items-center justify-center">
-        <xt-new-icon icon="fluent:dismiss-16-regular" size="16"></xt-new-icon>
+        <xt-new-icon icon="fluent:dismiss-16-filled" size="16"></xt-new-icon>
       </div>
     </xt-button>
   </div>
@@ -23,7 +23,7 @@
     <DraftBoxDetail @edit="editDraftBox"/>
   </template>
  </div>
- 
+
  <template v-else>
   <NoticeSend :hide="true" v-if="noticeVisible"  @back="tabShow = false;noticeVisible=false"/>
   <HistoryDetail :isFull="isFull" v-else-if="historyVisible" @close="closeModal" @back="tabShow = false;historyVisible = false"/>

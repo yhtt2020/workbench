@@ -42,7 +42,7 @@
             ></a-avatar>
           </div>
           <xt-ify-icon
-            icon="fluent:camera-16-regular"
+            icon="fluent:camera-16-filled"
             size="20"
             style="
               background: var(--active-bg);

@@ -63,7 +63,7 @@
         </slot>
         <!-- 标题栏end   -->
         <xt-status
-          v-if="useEnv(limitEnv)"
+          v-if="usePlat(limitEnv)"
           :name="options.title"
           :status="limitEnv"
         />
@@ -103,13 +103,12 @@ import { MenuOutlined } from "@ant-design/icons-vue";
 import _ from "lodash-es";
 
 import { cardStore } from "../../store/card";
-import { offlineStore } from "../../js/common/offline";
 
 import RightMenu from "./RightMenu.vue";
 import PageState from "./PageState.vue";
 import { useWidgetStore } from "./store";
 import { useFreeLayoutStore } from "../desk/freeLayout/store";
-import { useEnv } from "../../ui/hooks/useEnv";
+import { usePlat } from "../../ui/hooks/usePlat";
 
 import GetSize from "./GetSize.vue";
 
@@ -196,13 +195,13 @@ export default {
             this.options?.removeCard();
           }
         },
-        title: "删除小组件",
+        title: "删除",
         color: "#FF4D4F",
         disabled: this.options?.disabled || false,
       };
     },
     menus() {
-      if (this.useEnv(this.envLimit)) {
+      if (this.usePlat(this.envLimit)) {
         return [this.del];
       }
       return [...this.menuList, this.del];
@@ -300,8 +299,7 @@ export default {
 
   methods: {
     ...mapActions(cardStore, ["removeCard", "updateCustomData"]),
-    ...mapActions(offlineStore, ["getIsOffline"]),
-    useEnv,
+    usePlat,
     // 右键删除
     doRemoveCard() {
       this.options.beforeDelete && this.$emit("delete");

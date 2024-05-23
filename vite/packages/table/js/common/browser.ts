@@ -7,7 +7,7 @@ const browser={
    */
   async openInUserSelect(url:string){
 
-    if (window.$useEnv()){
+    if (!window.$usePlat('client')){
       return  window.open(url,'_blank')
     }
     //获取到用户设置
@@ -24,7 +24,7 @@ const browser={
    * 在系统默认浏览器内打开
    */
   openInSystem(url:string){
-    if (window.$useEnv()){
+    if (!window.$usePlat('client')){
       window.open(url,'_blank')
       return
     }
@@ -36,7 +36,7 @@ const browser={
    * @constructor
    */
   openInInner(url:string){
-    if (window.$useEnv()){
+    if (!window.$usePlat('client')){
       window.open(url,'_blank')
       return
     }
@@ -46,7 +46,7 @@ const browser={
    * 在工作台内打开
    */
   openInTable(url:string,options:{}){
-    if (window.$useEnv()){
+    if (!window.$usePlat('client')){
       window.open(url,'_blank')
       return
     }

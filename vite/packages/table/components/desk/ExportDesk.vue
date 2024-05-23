@@ -56,6 +56,7 @@ import {cardStore} from '../../store/card'
 import { mapActions, mapWritableState } from 'pinia'
 import { message } from 'ant-design-vue'
 import { useFreeLayoutStore } from './freeLayout/store'
+import { useDeskStore } from './store'
 export default {
   name: "ExportDesk",
   components: {
@@ -90,8 +91,11 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(cardStore, ['settings','deskSize','countdownDay','currentDeskIndex']),
+    ...mapWritableState(cardStore, ['settings','countdownDay','currentDeskIndex']),
     ...mapWritableState(useFreeLayoutStore, ['freeLayoutState','freeLayoutData']),
+    ...mapWritableState(useDeskStore, ['deskSize']),
+
+
     displaySize(){
       if(this.layoutSize){
         return this.layoutSize
@@ -177,7 +181,7 @@ export default {
         return
       }
       this.dataInit()
-      if (this.$useEnv()) {
+      if (this.$usePlat()) {
         console.log('this.getShareJson() :>> ', this.getShareJson());
         const blob = new Blob([JSON.stringify(this.getShareJson())], { type: 'application/json' });
         const url = URL.createObjectURL(blob);

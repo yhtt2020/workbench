@@ -1,16 +1,18 @@
 <template>
   <div class="flex items-center">
-    <div class="" style="width: 40px">
-      <xt-icon-show
-        class="xt-b"
+    <div class="flex items-center justify-center rounded-xl xt-bg h-[38px] w-[40px]" style="border: 1px solid var(--divider);">
+      <xt-mix-icon
+        :type="isIfy"
+        class="xt-bg"
         :maskIndex="99999999"
         :bg="bg"
-        v-model="currentIcon"
+        v-model:icon="currentIcon"
         boxR="10px"
-        :click="true"
-        :upload="true"
+        :select="true"
+        :upload="upload"
         @cb="updateIcon"
-      ></xt-icon-show>
+        :menus="menus"
+      />
     </div>
     <div class="ml-3" style="width: 100%; height: 40px">
       <xt-input
@@ -23,7 +25,8 @@
 </template>
 
 <script setup>
-import { ref, watch, toRefs } from "vue";
+import { ref, watch, toRefs, onMounted, computed } from "vue";
+import { checkIsIfyIcon } from "../../../../components/card/hooks/addCardToNav";
 const props = defineProps({
   icon: {
     type: String,
@@ -34,6 +37,14 @@ const props = defineProps({
     default: "var(--main-bg)",
   },
   input: {},
+  upload:{
+    default:true
+  },
+  menus:{
+    default:()=>{
+      return ["icon", "emoji"]
+    }
+  }
 });
 const { icon } = toRefs(props);
 const currentIcon = ref(props.icon);
@@ -50,6 +61,10 @@ const updateIcon = (icon) => {
 const updateInput = () => {
   emits("update:input", currentInput.value);
 };
+
+const isIfy = computed(() => {
+  return checkIsIfyIcon(currentIcon.value).value ? 'ify' : 'select'
+})
 
 watch(
   () => icon.value,

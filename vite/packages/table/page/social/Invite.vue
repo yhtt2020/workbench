@@ -127,6 +127,8 @@ import { Modal, message } from 'ant-design-vue'
 import { codeStore } from '../../store/code'
 import HorizontalPanel from '../../components/HorizontalCaptrue.vue'
 import RayMedal from '../../components/small/RayMedal.vue'
+import { reconnect } from '../../permission/user/useUserPermit'
+import { usePermissionStore } from '../../permission/store'
 
 export default {
   name: 'Invite',
@@ -201,6 +203,7 @@ export default {
   computed: {
     ...mapState(appStore, ['userInfo']),
     ...mapWritableState(codeStore,['verified']),
+    ...mapWritableState(usePermissionStore,['currentEnv']),
     envGuest(){
       return !window.$useEnv('guest')
     },
@@ -236,6 +239,10 @@ export default {
       })
     },
     async activeCode () {
+      if(this.currentEnv == 'offline'){
+        reconnect()
+        return
+      }
       if(!this.code){
         message.error('请输入邀请码')
         return
@@ -257,7 +264,7 @@ export default {
       this.showUserCard(uid, userInfo)
     },
     friendlyDate: ()=>{
-      if (!window.$useEnv('web')) tsbApi.util.friendlyDate()
+      if (!window.$useEnv('h5')) tsbApi.util.friendlyDate()
     },
     copy (text) {
       require('electron').clipboard.writeText(text)
@@ -300,19 +307,23 @@ export default {
       return this.marked.indexOf(key) > -1
     },
     confirmExchange () {
-      window.$ui.confirm('兑换确认','确认使用200小时在线时长兑换1枚邀请码？此操作无法撤回。兑换并不会减少你的在线时长以及影响你的在线等级，请放心。',{
-        ok: async () => {
-          let rs = await this.exchange()
-          if (rs.status) {
-            rs.data.forEach(item => {
-              this.codes.unshift(item)
-            })
-            message.success('兑换成功。')
-          } else {
-            message.error('兑换失败，您已无法兑换邀请码。')
+      if(this.currentEnv == 'offline'){
+        reconnect()
+      }else {
+        window.$ui.confirm('兑换确认','确认使用200小时在线时长兑换1枚邀请码？此操作无法撤回。兑换并不会减少你的在线时长以及影响你的在线等级，请放心。',{
+          ok: async () => {
+            let rs = await this.exchange()
+            if (rs.status) {
+              rs.data.forEach(item => {
+                this.codes.unshift(item)
+              })
+              message.success('兑换成功。')
+            } else {
+              message.error('兑换失败，您已无法兑换邀请码。')
+            }
           }
-        }
-      })
+        })
+      }
     }
   }
 }

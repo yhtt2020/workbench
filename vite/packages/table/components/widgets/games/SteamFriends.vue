@@ -1,12 +1,12 @@
 <template>
   <xt-container
     v-model:customSize="customData.customSize"
-    :header="header"  
-    :envLimit="['web']"  
-    :options="options" 
-    :customData="customData" 
-    :customIndex="customIndex" 
-    style="overflow: hidden" 
+    :header="header"
+    :platLimit="['web']"
+    :options="options"
+    :customData="customData"
+    :customIndex="customIndex"
+    style="overflow: hidden"
     :desk="desk"
     @delete="deleteCard">
     <XtState v-if="myFriends.length===0"  zoom="30" :state="'null'" :text="{'null':'您还没有好友或未绑定Steam'}" bg="" style="width: 100%;height: 80%;" class="mt-2"></XtState>
@@ -59,7 +59,9 @@ export default {
       },
       header:{
         title:'Steam好友',
-        ifyIcon:'mdi:steam',
+        // ifyIcon:'mdi:steam',
+        showIcon:"/img/appLogo/steam.png",
+
       }
     }
   },

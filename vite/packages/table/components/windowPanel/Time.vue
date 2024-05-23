@@ -1,13 +1,20 @@
 <template>
-    <div class="flex flex-col justify-center w-full text-right time pointer">
-        <div v-if="settings.showTopbarTime"  @click="enterTime" class="flex">
-            <div class="mr-1 xt-text font-14 xt-font">{{ dateTime.year }}/{{ dateTime.month }}/{{ dateTime.day }} </div>
-            <div class="xt-text font-14 xt-font"> {{ dateTime.hours }}:{{ dateTime.minutes }} </div>
+    <div class="flex flex-col justify-center w-full p-1 text-right time pointer">
+        <div class="flex justify-end gap-1">
+            <div v-if="hasWeather && city.now && settings.showTopbarWeather" 
+                @click="enterWeather"
+                class="w-full xt-text font-14 xt-font ">
+                {{ city.now.text }} {{ city.now.temp }}℃
+            </div>
+            <div 
+                class="xt-text font-14 xt-font" 
+                v-if="settings.showTopbarTime"  
+                @click="enterTime"> 
+                {{ dateTime.hours }}:{{ dateTime.minutes }} 
+            </div>
         </div>
-        <div v-if="hasWeather && city.now && settings.showTopbarWeather" 
-            @click="enterWeather"
-            class="w-full xt-text font-14 xt-font ">
-            {{ city.now.text }} {{ city.now.temp }}℃
+        <div v-if="settings.showTopbarTime"  @click="enterTime" class="flex justify-end">
+            <div class="xt-text font-14 xt-font">{{ dateTime.year }}/{{ dateTime.month }}/{{ dateTime.day }} </div>
         </div>
     </div>
 </template>

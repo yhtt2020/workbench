@@ -73,9 +73,9 @@ import { appsStore } from "../store/apps";
 import SecondPanel from "../components/SecondPanel.vue";
 import { SystemApps } from "../consts";
 import { message } from "ant-design-vue";
-import {useEnv} from '../../../packages/table/ui/hooks/useEnv'
+import {usePlat} from '../../../packages/table/ui/hooks/usePlat'
 let fs
-if (!useEnv('web')) {
+if (usePlat('client')) {
   fs= require("fs");
 }
 export default {
@@ -86,7 +86,7 @@ export default {
   },
   mounted() {
     //确认自启动，如果未启动，则静默启动
-    if (window.$useEnv()) return
+    if (!window.$usePlat('client')) return
     let running = ipc.sendSync("ensureTableApp", {
       app: SystemApps.wyyMusic,
     });

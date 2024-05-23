@@ -1,18 +1,12 @@
 <template>
   <template v-for="menu in props.menus">
-    <!--  disabled 为true时隐藏该列 -->
+    <!-- disabled 为 true 时隐藏该列 -->
     <div v-if="!menu.disabled" class="my-2">
       <template v-if="menu.slot">
-        <div class="rounded-lg w-full">
+        <div class="w-full rounded-lg">
           <Item :data="menu" :name="name" :fn="fn" />
         </div>
-        <div
-          @click="
-            handleClick({
-              lock: false,
-            })
-          "
-        >
+        <div @click="handleClick({ lock: false })">
           <slot :name="menu.slot"></slot>
         </div>
       </template>
@@ -20,15 +14,16 @@
       <div v-else-if="menu.children" class="" :key="menu[`${name}`]">
         <xt-popover>
           <template #content>
-            <div class="w-full h-full px-2 xt-b rounded-lg">
-              <div
-                class="my-2"
-                @click="handleClick(data, true)"
-                v-for="data in menu.children"
-                :name="name"
-              >
-                <Item :data="data" :name="name" :fn="fn" />
-              </div>
+            <div class="w-full h-full px-2 rounded-lg xt-b">
+              <template v-for="data in menu.children">
+                <div
+                  class="my-2"
+                  @click="handleClick(data, true)"
+                  v-if="!data?.disabled"
+                >
+                  <Item :data="data" :name="name" :fn="fn" />
+                </div>
+              </template>
             </div>
           </template>
 

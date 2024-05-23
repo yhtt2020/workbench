@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="plat"
+    v-if="platform"
     class="flex flex-col justify-center items-center w-full h-full"
   >
     <div class="flex justify-center">
@@ -20,35 +20,62 @@
 <script>
 import { ENV_MAP } from "../../../permission/config";
 import { usePermissionStore } from "../../../permission/store";
-import { mapWritableState } from "pinia";
+import { mapWritableState, mapActions } from "pinia";
 import cache from "../../../components/card/hooks/cache";
 export default {
   name: "XtStatus",
   data() {
     return {
-      plat: "",
+      platform: "",
       ENV_MAP,
     };
   },
   components: {},
+  computed: {
+    ...mapWritableState(usePermissionStore, ["token", "isGuest", "isSingle", "isOffline"]),
+  },
   mounted() {
-    this.plat = this.$useEnv(this.status);
+    if(this.plat) {
+      // 平台的屏蔽状态优先级大于工作台登录状态 
+      this.platform = this.$usePlat(this.plat);
+    }else{
+      // 离线模式不需要进行屏蔽 过滤掉
+      let status = this.status.filter(item => item !== "offline")
+      this.platform = this.$useEnv(status);
+    }
   },
   watch: {
     token: {
       handler(val) {
         setTimeout(() => {
           let res = this.$useEnv(this.status);
-          console.log("watch token :>> ", this.token);
-          console.log("res :>> ", res);
-          console.log('this.status :>> ', this.status);
-          this.plat = res;
+          this.platform = res;
           if (val) {
             cache.set("isGuest", "");
           }
         }, 1000);
       },
     },
+    isGuest: {
+      handler() {
+        let res = this.$useEnv(this.status);
+        this.platform = res;
+      },
+    },
+    isSingle: {
+      handler() {
+        let res = this.$useEnv(this.status);
+        this.platform = res;
+      },
+    },
+    isOffline: {
+      handler(val) {
+        let res = this.$useEnv(this.status);
+        this.platform = res;
+      },
+    },
+  },
+  methods: {
   },
   props: {
     // 元素名称
@@ -70,9 +97,10 @@ export default {
       type: Array,
       default: "",
     },
-  },
-  computed: {
-    ...mapWritableState(usePermissionStore, ["token"]),
+    plat: {
+      type: Array,
+      default: "",
+    },
   },
 };
 </script>

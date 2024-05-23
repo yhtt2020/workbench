@@ -55,8 +55,12 @@ import { chatCommunityStore } from "../../store/chatCommunity";
 import { message } from "ant-design-vue";
 import { toRefs, computed } from "vue";
 import { CommunityAPI } from "../../api/communityAPI";
+import { useNavigationStore } from "../../../../components/desk/navigationBar/navigationStore";
+import { appStore } from "../../../../store";
 
 const comAPI = new CommunityAPI();
+
+const emit = defineEmits(["close"]);
 
 const props = defineProps({
   list: {
@@ -66,8 +70,13 @@ const props = defineProps({
 });
 const { list } = toRefs(props);
 
+/**解构store缓存数据**/
 const chatCommunity = chatCommunityStore();
 const { myCommunity } = storeToRefs(chatCommunity);
+const useNavigation = useNavigationStore();
+const { communityNavVisible } = storeToRefs(useNavigation);
+const app = appStore();
+const { settings } = storeToRefs(app);
 
 const searchList = computed(() => {
   const listNull = list.value.length !== 0;
@@ -84,16 +93,49 @@ const isJoin = (data) => {
   return result;
 };
 // 立即加入
-const joinNow = async (item) => {
+const joinNow = (item) => {
   const option = { no: item.no };
-  const result = await comAPI.applyJoinCommunity(option);
-  if (result.status) {
-    message.success("加入成功");
-    this.$emit("close");
-    chatCommunity.getMyCommunity();
-  } else {
-    message.error(result.info);
-  }
+  comAPI.applyJoinCommunity(option).then((rs) => {
+    if (rs.status === 1) {
+      message.success("加入成功");
+      chatCommunity.getMyCommunity();
+      if (!settings.value.comNavVisible) {
+        return;
+      } else {
+        if (communityNavVisible.value) {
+          return;
+        } else {
+          window.$ui.confirm("是否需要开启社群导航", "", {
+            ok: () => {
+              communityNavVisible.value = true;
+              settings.value.comNavVisible = false;
+            },
+            no: () => {
+              setTimeout(() => {
+                window.$ui.confirm(
+                  "稍后可以在「系统设置/导航设置」中开启",
+                  "",
+                  {
+                    ok: () => {
+                      settings.value.comNavVisible = false;
+                    },
+                    okText: "好的",
+                    noText: null,
+                  }
+                );
+              }, 500);
+            },
+            noText: "稍后再说",
+            okText: "立即添加",
+            type: "link",
+            okButtonWidth: "95",
+            noButtonWidth: "95",
+          });
+        }
+      }
+    }
+  });
+  emit('close');
 };
 </script>
 

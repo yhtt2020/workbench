@@ -1,10 +1,10 @@
 <!-- 控制中心删除详情页 -->
 <template>
   <!-- 音频 -->
-  <template v-if="controlIndex === 'audio' && !$useEnv()">
+  <template v-if="controlIndex === 'audio' && !$usePlat()">
     <div
       style="width: 252px; height: 120px"
-      class="xt-text flex flex-col xt-bg-t-2 rounded-xl relative"
+      class="xt-text flex flex-col  rounded-xl relative"
       :class="isClick ? 'pointer-events-auto' : 'pointer-events-none'"
       @click="removeControlItem"
     >

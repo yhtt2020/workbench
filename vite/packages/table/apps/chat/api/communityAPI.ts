@@ -1,5 +1,5 @@
 // 群聊API
-import { post } from "../../../js/axios/request";
+import { post,apiPost } from "../../../js/axios/request";
 import { sUrl } from "../../../consts";
 
 export class CommunityAPI {
@@ -77,6 +77,12 @@ export class CommunityAPI {
   // 获取社群版块
   async getCommunityForum(data:any){
     const res = await post(sUrl("/app/com/forum/my"),data);
+    return res;
+  }
+
+  // 没有token情况下调用的接口
+  async getApiPostByNo(data:any){
+    const res = await apiPost("/app/community/getByNo",data);
     return res;
   }
 }

@@ -1,14 +1,14 @@
 <template>
 
-    <xt-container 
+    <xt-container
         :header="header"
         v-model:customSize="customData.customSize"
-        :envLimit="['guest']"  
-        :customData="customData" 
-        :customIndex="customIndex" 
-        :options="options" 
-        ref="homelSlotRef" 
-        :desk="desk" 
+        :envLimit="['guest', 'offline']"
+        :customData="customData"
+        :customIndex="customIndex"
+        :options="options"
+        ref="homelSlotRef"
+        :desk="desk"
         @delete="deleteCard">
         <div class="mt-1 overflow-hidden guider-body xt-scrollbar" style="height: 360px;">
             <div class="guider-cell pointer" v-for="(item,index) in dataList" :key="index" @click="jumpUrl(item.url)">
@@ -23,9 +23,9 @@
 
 
 </template>
-  
+
 <script>
-import Widget from "../../../card/Widget.vue";     
+import Widget from "../../../card/Widget.vue";
 // import {mapActions, mapState,mapWritableState} from "pinia";
 // import { shortTalkStore } from '../store'
 import { Icon } from '@iconify/vue';
@@ -104,7 +104,8 @@ export default {
             ],
             header:{
                 title:'社区助手',
-                ifyIcon:'akar-icons:chat-question',
+                // ifyIcon:'akar-icons:chat-question',
+        showIcon:"/img/appLogo/shortGuider.png",
                 rightIcon:[
                     {
                         ifyIcon:'fluent:open-20-filled',
@@ -135,7 +136,7 @@ export default {
     }
 };
 </script>
-  
+
 <style lang="scss" scoped>
     .top-icon{
         position: absolute;
@@ -151,7 +152,7 @@ export default {
         position: relative;
         top: -3px;
     }
-    
+
     .guider-cell{
         width: 100%;
         height: 50px;
@@ -164,7 +165,7 @@ export default {
     .guider-cell:not(:nth-of-type(1)){
         margin-top: 12px;
     }
-  
+
     .guider-cell span{
         margin-left: 10px;
         overflow: hidden;
@@ -173,4 +174,3 @@ export default {
         font-weight: 400;
     }
 </style>
-  

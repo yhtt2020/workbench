@@ -2,14 +2,15 @@
   <xt-container
     @titleHover="showRegionSelect"
     v-model:customSize="customData.customSize"
-    :header="header" 
-    :envLimit="['web']"  
-    :options="options" 
-    :confirmCCData="confirmCCData" 
-    :customIndex="customIndex" 
-    :menuList="detailBar" 
-    ref="detailSlot" 
-    :customData="customData" 
+    :header="header"
+    :platLimit="['web']"
+    :envLimit="['guest', 'offline', 'single']"
+    :options="options"
+    :confirmCCData="confirmCCData"
+    :customIndex="customIndex"
+    :menuList="detailBar"
+    ref="detailSlot"
+    :customData="customData"
     :desk="desk"
     @delete="deleteCard">
     <a-spin v-if="isLoading === true" style="display: flex; justify-content: center; align-items:center;margin-top: 60%"></a-spin>
@@ -158,7 +159,7 @@ export default {
       isLoading:false,
       detailBar:[{icon:"shezhi1",title:'设置',fn:()=>{this.$refs.regionDrawer.detailDisplay = true; this.$refs.detailSlot.visible = false}}],
       customSize:'2x4',
-      
+
     }
   },
   mounted(){
@@ -219,7 +220,9 @@ export default {
     header(){
       return {
         title:this.region.name,
-        ifyIcon:'mdi:steam',
+        // ifyIcon:'mdi:steam',
+        showIcon:"/img/appLogo/steam.png",
+
         titleHover:true,
         titleHoverName:this.region.name
       }

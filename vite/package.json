@@ -14,7 +14,7 @@
     "@codemirror/lang-json": "^6.0.1",
     "@lk77/vue3-color": "^3.0.6",
     "@popperjs/core": "^2.11.7",
-    "@tencentcloud/chat-uikit-vue": "^2.0.5",
+    "@tencentcloud/chat-uikit-vue": "^2.1.1",
     "@types/node": "^20.11.30",
     "@vueuse/core": "^10.5.0",
     "@wangeditor/editor": "^5.1.23",
@@ -78,6 +78,7 @@
     "vue3-seamless-scroll": "^2.0.1",
     "vue3-selecto": "^1.12.2",
     "vuex": "^4.0.2",
+    "wujie-polyfill": "^1.0.11",
     "wujie-vue3": "^1.0.22",
     "xgplayer": "^2.32.2"
   },

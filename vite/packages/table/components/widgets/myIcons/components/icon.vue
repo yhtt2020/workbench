@@ -1,11 +1,12 @@
 <template>
   <div
-    class="flex-col justify-around cursor-pointer box rounded-xl xt-hover black xt-base-btn"
+    class="relative flex-col items-center justify-around cursor-pointer box rounded-xl xt-hover black xt-base-btn"
     :data-index="index"
     @click.stop="iconClick($event)"
     :style="[iconSize]"
   >
-    <xt-icon-show
+    <!-- <xt-icon-show
+      v-if="isIfy === 'select'"
       v-model="src"
       :h="imgH"
       :w="imgW"
@@ -17,6 +18,30 @@
       :click="false"
       :fit="fit"
     />
+    <xt-newIcon
+      v-else
+      :icon="src"
+      :size="imgW"
+    /> -->
+    <xt-mix-icon
+      :type="isIfy"
+      v-model:icon="src"
+      :w="imgW"
+      :h="imgH"
+      :boxW="bgW"
+      :boxH="bgH"
+      :bg="bg"
+      :r="r"
+      :style="{ borderRadius: '12px', background: bg,}"
+      :iconStyle="{ borderRadius: r,...imgStateStyle  }"
+      :class="''"
+    />
+    <img
+      src="/public/icons/tag.png"
+      alt=""
+      class="absolute w-[30px]"
+      style="top:1px;right:-2px"
+      v-if="isIfy === 'ify'">
     <!-- <div
       class="flex items-center justify-center w-full overflow-hidden xt-text no-drag rounded-xl"
       :style="[bgSize, backgroundState]"
@@ -36,6 +61,7 @@
         :style="[imgSize, radiusState, imgStateStyle]"
         :data-index="index"
       />
+
     </div> -->
     <div
       v-if="isTitle"
@@ -56,6 +82,7 @@ import editProps from "../hooks/editProps";
 import { sizeValues } from "./iconConfig";
 import { renderIcon } from "../../../../js/common/common";
 import { startApp } from "../../../../ui/hooks/useStartApp";
+import { checkIsIfyIcon } from "../../../card/hooks/addCardToNav";
 export default {
   mixins: [editProps],
   props: {
@@ -67,6 +94,8 @@ export default {
       default: false,
     },
   },
+  // 卡片类图标打开其卡片弹窗
+  emits: ["openCard"],
   data() {
     return {
       visible: false,
@@ -88,8 +117,16 @@ export default {
       if (this.isBackground) return { background: this.backgroundColor };
       else return { background: "none" };
     },
+    // 单图标大小 -- 当为ify图标时，控制宽度
     iconSize() {
-      return this.getSizeValues(this.size).iconSize;
+      // return this.isIfy == "ify" ? this.getSizeValues(this.size).imgSize : this.getSizeValues(this.size).iconSize;
+      if(this.isIfy == "ify"){
+        return {
+          width: this.getSizeValues(this.size).imgSize.width,
+          height: this.getSizeValues(this.size).iconSize.height
+        }
+      }
+      return this.getSizeValues(this.size).iconSize
     },
     textSize() {
       let textSize = this.getSizeValues(this.size).textSize;
@@ -107,7 +144,7 @@ export default {
       };
     },
     r() {
-      if (this.isRadius) return this.radius + "%";
+      if (this.isRadius) return this.radius + "px";
     },
     bg() {
       if (this.isBackground) return this.backgroundColor;
@@ -121,28 +158,34 @@ export default {
     // 为了适配新版
     imgH() {
       let h = parseInt(this.getSizeValues(this.size).imgSize.height);
+      h = this.isIfy == "ify" ? h / 2 : h;
       return h;
     },
     imgW() {
       let w = parseInt(this.getSizeValues(this.size).imgSize.width);
+      w = this.isIfy == "ify" ? w / 2 : w;
       return w;
     },
     bgW() {
-      let w = parseInt(this.getSizeValues(this.size).bgSize.width);
+      let w = this.isIfy == "ify" ? parseInt(this.getSizeValues(this.size).imgSize.width) : parseInt(this.getSizeValues(this.size).bgSize.width);
       return w;
     },
     bgH() {
-      let h = parseInt(this.getSizeValues(this.size).bgSize.height);
+      let h = this.isIfy == "ify" ? parseInt(this.getSizeValues(this.size).imgSize.height) : parseInt(this.getSizeValues(this.size).bgSize.height);
       return h;
     },
     fit() {
       return this.imgState;
     },
+    isIfy(){
+      return checkIsIfyIcon(this.src).value ? 'ify' : 'select'
+    }
   },
   watch: {
     imgShape(newV) {},
   },
   methods: {
+    checkIsIfyIcon,
     renderIcon,
     getSizeValues(size) {
       if (this.isReSize) {
@@ -173,7 +216,7 @@ export default {
           height: `${h}px`,
         },
         textSize: {
-          width: `${w - 20}px`,
+          width: this.isIfy == "ify" ? '' : `${w - 20}px`,
           "font-size": "1px",
         },
         imgSize: {
@@ -250,6 +293,11 @@ export default {
       } else if (this.open !== undefined && this.open.value !== "") {
         // 链接
         console.log("lianjie :>> ");
+        if(this.open.type === 'card'){
+          console.log("this.open.value :>> ", this.open.value);
+          this.$emit('openCard')
+          return;
+        }
         // this.newOpenApp();
         this.startApp(this.open.type, this.open.value, this.$router);
       } else if (this.link !== "") {

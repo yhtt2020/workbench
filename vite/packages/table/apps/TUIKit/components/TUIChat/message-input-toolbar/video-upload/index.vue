@@ -74,7 +74,7 @@ const handleIcon = (): string => {
   } else {
     // 新增调整 图标
     // return videoIcon;
-    return 'fluent:video-clip-48-regular';
+    return 'fluent:video-clip-48-filled';
   }
 };
 

@@ -13,7 +13,7 @@ const FloatMenu = defineAsyncComponent(
 );
 // import Folder from "../../apps/folder";
 const Folder = defineAsyncComponent(() => import("../../apps/folder"));
-// 栓q！！！！！！！！！！！！！
+
 export default {
   components: {
     Vuuri,

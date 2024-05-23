@@ -1,15 +1,14 @@
 <template>
     <div>
-
-        <xt-container 
+        <xt-container
             @titleHover="enterBoard"
             :header="header"
             v-model:customSize="customData.customSize"
-            :envLimit="['web']"  
-            :customData="customData" 
-            :customIndex="customIndex" 
-            :options="options" 
-            ref="homelSlotRef" 
+            :platLimit="['web']"
+            :customData="customData"
+            :customIndex="customIndex"
+            :options="options"
+            ref="homelSlotRef"
             :desk="desk"
             @delete="deleteCard">
         <div class="top-col">
@@ -256,7 +255,9 @@ export default {
             ],
             header: {
                 title:'剪贴板',
-                ifyIcon:'fluent:clipboard-bullet-list-16-regular',
+                // ifyIcon:'fluent:clipboard-bullet-list-16-regular',
+        showIcon:"/img/appLogo/clipBoard.png",
+
                 titleHover:true,
                 titleHoverName:'打开应用',
             },

@@ -77,22 +77,22 @@ export default {
           name:'rank'
         }
        },
-      //  {
-      //   title:'推广中心',
-      //   index:'promotion',
-      //   icon:'trophy',
-      //   route:{
-      //     name:'promotion'
-      //   }
-      //  },
-      //  {
-      //   title:'账单(开发中)',
-      //   index:'bill',
-      //   icon:'zhangdan',
-      //   route:{
-      //     name:'bill',
-      //   }
-      //  }
+       {
+        title:'推广中心',
+        index:'promotion',
+        icon:'trophy',
+        route:{
+          name:'promotion'
+        }
+       },
+       {
+        title:'账单(开发中)',
+        index:'bill',
+        icon:'zhangdan',
+        route:{
+          name:'bill',
+        }
+       }
       ],
 
 
@@ -108,7 +108,7 @@ export default {
   },
   async mounted () {
     // 离线模式下隐藏弹幕入口
-    if (window.$isOffline) {
+    if (window.$isSingle) {
       this.tabs = this.tabs.filter(i=>{
         return i.index != "invite"
       })

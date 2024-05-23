@@ -2,7 +2,7 @@
   <xt-container
     :header="header"
     v-model:customSize="customData.customSize "
-    :envLimit="['guest','offline']"
+    :envLimit="['guest', 'single', 'offline']"
     :desk="desk"
     :sizeList="sizeList"
     :options="options"
@@ -10,6 +10,7 @@
     :customData="customData"
     :menuList="menuList"
     :env="env"
+
     ref="cardSlot"
     @delete="deleteCard">
     <div class="flex flex-col w-full h-full">
@@ -89,7 +90,7 @@ import CourierSetting from './courierModal/CourierSetting.vue'
 
 import { autoRefreshTime } from './courierModal/modalMock'
 import ui from './lib/courierUI'
-import { preHandle } from './lib/courierTool'
+import { preHandle, getOrderState } from './lib/courierTool'
 
 export default {
   name: '我的快递',
@@ -189,7 +190,7 @@ export default {
         web: false,
         mobile: false,
         client: false,
-        offline: true
+        single: true
       },
       displayList: [],//显示列表
       autoRefreshTime,
@@ -251,6 +252,19 @@ export default {
           ui.refreshAll(false)
         }, this.refreshInterval?.type)//this.refreshTimes[0].type)
       }
+    },
+    // 用于处理状态栏中快递数量的显示
+    reload (list) {
+      if (this.settings.courierStatus.currentStatus === 'followed') {
+        list = list.filter(li => {
+          return li.followed
+        })
+      } else {
+        list = list.filter(li => {
+          return getOrderState(li) !== 'signed' && getOrderState(li) !== 'canceled'
+        })
+      }
+      return list
     }
   },
   computed: {
@@ -302,7 +316,9 @@ export default {
     header(){
       return {
         title:'我的快递',
-        ifyIcon:'fluent:box-16-regular',
+        // ifyIcon:'fluent:box-16-regular',
+        showIcon:"/img/appLogo/courier.png",
+
         refresh:{
           fn:()=>{
             this.refreshFlag = true
@@ -322,8 +338,7 @@ export default {
       handler (newVal) {
         this.displayList = preHandle(this.orderList)
         this.displayList = this.displayList.slice(0, 10)
-        this.courierList = this.orderList
-        // console.log(this.courierList.length)
+        this.couriersList = this.reload(this.orderList)
       },
       immediate: true
     },

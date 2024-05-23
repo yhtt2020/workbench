@@ -3,6 +3,7 @@
     @titleHover="enterNote"
     @delete="removeNote"
     v-model:customSize="customData.customSize"
+
     :header="header"
     :customData="customData"
     :customIndex="customIndex"
@@ -13,8 +14,7 @@
     style="background: #191919; !important"
     :delete="deleteCard"
   >
-    <!-- {{ customData.customSize }} -->
-      <teleport to="body">                                                       
+      <teleport to="body">
         <xt-msg title="确定删除小组件" text="默认仅删除小组件，备忘录数据不会清除。"  :modelValue="removeValue" @no="no" @ok="ok">
           <template #checkbox>
             <div class="mr-4 font-14" style="color: var(--secondary-text) !important;">
@@ -94,7 +94,7 @@
               <!-- <RadioTab  :navList="sizeType"  class="nav-type"
                         v-model:selectType="cardSize"  @click="test" ></RadioTab> -->
 
-              <XtRadio class="mt-3 mb-3" @onChange="__updateSize" :data="customData.dragCardSize"></XtRadio>
+              <!-- <XtRadio class="mt-3 mb-3" @onChange="__updateSize" :data="customData.dragCardSize"></XtRadio> -->
 
               <div style="color: var(--secondary-text);">支持选择上述推荐尺寸，或按住小组件右下角拖拽图标，自定义大小尺寸。</div>
               <a-divider style="height: 1px; background-color: var(--divider-text); margin: 16px 0; " />
@@ -131,8 +131,6 @@
 <script>
 import Widget from '../../card/Widget.vue'
 import cardSizeHook from '../../card/hooks/cardSizeHook'
-import cardDrag from '../../card/hooks/cardDrag.vue'
-import cardDragHook from '../../card/hooks/cardDragHook'
 import { message } from 'ant-design-vue'
 import { Icon } from '@iconify/vue'
 import notepad12Regular from '@iconify-icons/fluent/notepad-12-regular'
@@ -144,18 +142,20 @@ import { DTPWeb, LPA_JobNames } from 'dtpweb'
 import RadioTab from "../../../components/RadioTab.vue"
 
 import { validateDrive, startPrint, doPreview, doJob  } from '../../card/hooks/print'
-
+import {useAppModal} from '../../../hooks'
 export default {
   name: '便签',
   components: {
     Modal,
     Widget,
     Icon,
-    cardDrag,
     Markdown,
     RadioTab,
   },
-  mixins: [cardDragHook, cardSizeHook],
+  mixins: [
+  // cardDragHook,
+   cardSizeHook
+  ],
   props: {
     customIndex: {
       type: Number,
@@ -174,7 +174,8 @@ export default {
     openWay:{
       type:String,
       default:'desk'
-    }
+    },
+   
   },
   directives: {
     // reSize,
@@ -187,7 +188,8 @@ export default {
     header(){
       return {
         title: this.customData.title,
-        ifyIcon: 'fluent:notepad-16-regular',
+        // ifyIcon: 'fluent:notepad-16-regular',
+        showIcon:'/img/appLogo/note.png',
         titleHover: true,
         titleHoverName: '打开应用',
       }
@@ -271,12 +273,18 @@ export default {
           newIcon: 'fluent:open-20-filled',
           title: '跳转便签',
           fn: () => {
-            this.$router.push({
-              name: 'note',
-              params: {
+            const {openApp} = useAppModal('note')
+            openApp(
+              {
                 customIndex: this.customIndex
               }
-            })
+            )
+            // this.$router.push({
+            //   name: 'note',
+            //   params: {
+            //     customIndex: this.customIndex
+            //   }
+            // })
           }
         }
       ],
@@ -316,6 +324,9 @@ export default {
     if (!this.customData.background) {
       setData.background = this.color.color1
     }
+    if (!this.customData.customSize) {
+      setData.customSize = '2x4'
+    }
     if (!this.customData.text) {
       setData.text = ''
     }
@@ -328,6 +339,7 @@ export default {
     if (Object.keys(setData)) {
       this.updateCustomData(this.customIndex, setData, this.desk)
     }
+
   },
   mounted () {
     this.text = this.customData.text
@@ -348,7 +360,7 @@ export default {
     deleteCard() {
       this.$emit('deleteCard')
     },
-    removeNote(){          
+    removeNote(){
       this.removeValue = true
       this.isRemove = false
     },

@@ -6,31 +6,30 @@
   >
     <div class="flex items-center">
       <div
-      v-for="item in communityNavList.slice(0, 1)"
-      class="communityNav-more pointer"
-      @click="item.fn"
-    >
-      <a-tooltip :title="item.name">
-        <Avatar :item="item" :size="size"/>
-      </a-tooltip>
+        v-for="item in communityNavList.slice(0, 1)"
+        class="communityNav-more pointer"
+        @click="item.fn"
+      >
+        <a-tooltip :title="item.name">
+          <Avatar :item="item" :size="size" />
+        </a-tooltip>
+      </div>
+      <a-divider
+        type="vertical"
+        style="
+          height: 32px;
+          margin: 0 14px;
+          border-top: 1px solid var(--divider) !important;
+        "
+      />
     </div>
-    <a-divider
-      type="vertical"
-      style="
-        height: 32px;
-        margin: 0 14px;
-        border-top: 1px solid var(--divider) !important;
-      "
-    />
-    </div>
-    <div
-      class="flex pointer"
-      :style="{gap: gap + 'px'}">
-      <a-tooltip 
-        :title="item.name" 
-        v-for="item in communityNavList.slice(1)" 
-        @click="item.fn">
-        <Avatar :item="item" :size="size"/>
+    <div class="flex pointer" :style="{ gap: gap + 'px' }">
+      <a-tooltip
+        :title="item.name"
+        v-for="item in communityNavList.slice(1)"
+        @click="item.fn"
+      >
+        <Avatar :item="item" :size="size" />
       </a-tooltip>
     </div>
   </div>
@@ -38,56 +37,55 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { 
-  computed, 
-  getCurrentInstance, 
-  toRefs,
-} from "vue";
+import { computed, getCurrentInstance, toRefs } from "vue";
 import { nanoid } from "nanoid";
 import { useRouter } from "vue-router";
-
-import { communityStore } from "../../../page/chat/store/communityStore";
+import { chatCommunityStore } from "../../../apps/chat/store/chatCommunity";
 import { communityNavStore } from "../store/communityNavStore";
+import { appStore } from "../../../store";
+import { getCommunityDeskList } from "../../../apps/communityDesk/hooks/deskCreateMethod";
+import { communityDeskStore } from "../../../apps/communityDesk/store/communityDeskStore";
 
 import Avatar from "../../desk/navigationBar/components/Avatar.vue";
 
 // 路由
-const router = useRouter();
+const router: any = useRouter();
 
 // pinia数据
-const communityNav = communityStore();
-const { community } = storeToRefs(communityNav);
-
-const comNav = communityNavStore();
+const communityNav: any = chatCommunityStore();
+const { myCommunity } = storeToRefs(communityNav);
+const comNav: any = communityNavStore();
 const { settingType, currentCommunity } = storeToRefs(comNav);
+const app: any = appStore();
+const { settings } = storeToRefs(app);
+const communityDesk: any = communityDeskStore();
 
 // 获取当前实例
-const { proxy } = getCurrentInstance();
+const { proxy } = getCurrentInstance() as any;
 
 type PropsType = {
-  boxClass: string;  // 自定义类样式
-  boxStyle: string;  // 自定义样式
-  size: number;   // 图标大小
-  gap: number;  // 图标布局间隔
-}
+  boxClass: string; // 自定义类样式
+  boxStyle: string; // 自定义样式
+  size: number; // 图标大小
+  gap: number; // 图标布局间隔
+};
 
 const props = withDefaults(defineProps<PropsType>(), {
   boxClass: "xt-bg xt-shadow mr-3 rounded-2xl p-3 ",
   boxStyle: "",
   size: 54,
-  gap: 20
+  gap: 20,
 });
 
 const { boxClass, boxStyle, size, gap } = toRefs(props);
 
-
 // 根据社群数量进行调整
 const communityNum = computed(() => {
-  return community.value.communityList.length !== 0;
+  return myCommunity.value.length !== 0;
 });
 
 // 团队导航图标公共数据
-const createNavEntry = (options) => ({
+const createNavEntry = (options: any) => ({
   bg: "",
   isBg: false,
   mode: "app",
@@ -108,7 +106,7 @@ const communityNavList = computed(() => {
     {
       icon: "/logo/teamNav.svg",
       name: "团队桌面",
-      fn: () => {},
+      fn: openDesk,
     },
   ];
 
@@ -116,7 +114,7 @@ const communityNavList = computed(() => {
     return [
       createNavEntry({
         ...currentCommunity.value.item,
-        fn: (event) => {
+        fn: (event: any) => {
           proxy.$bus.emit("openComSearch", event);
         },
       }),
@@ -124,14 +122,18 @@ const communityNavList = computed(() => {
         icon: currentCommunity.value.defaultItem.icon,
         name: "社群主应用",
         fn: () => {
-          if (currentCommunity.value.item.role) {
-            router.push({ name: "myCommunity", params: { ...currentCommunity.value.item } });
+          if ((currentCommunity.value.item as any).role) {
+            router.push({
+              name: "myCommunity",
+              params: { ...currentCommunity.value.item },
+            });
           } else {
-            router.push({ name: "defaultCommunity", params: { no: 1 } });
+            /**调整路由名称**/
+            router.push({ name: "officialCommunity", params: { no: 1 } });
           }
         },
       }),
-      ...baseItems.map(item => createNavEntry(item)),
+      ...baseItems.map((item) => createNavEntry(item)),
     ];
   } else {
     return [
@@ -140,21 +142,80 @@ const communityNavList = computed(() => {
         name: "想天社群",
         icon: "/icons/logo128.png",
         fn: () => {
-          router.push({ name: "defaultCommunity", params: { no: 1 } });
+          /**调整路由名称**/
+          router.push({ name: "officialCommunity", params: { no: 1 } });
         },
       }),
-      ...baseItems.map(item => createNavEntry(item)),
+      ...baseItems.map((item) => createNavEntry(item)),
     ];
   }
 });
 
-const openNav = async (event) => {
-  await communityNavStore().loadCommunityNav()
+const openNav = async (event: any) => {
+  await (communityNavStore() as any).loadCommunityNav();
   if (settingType.value === "app") {
     proxy.$bus.emit("openAppVisible");
   } else {
     proxy.$bus.emit("openTeamNav", event);
   }
+};
+
+//  进入社群桌面
+const openDesk = async () => {
+  console.log("测试-进入社群桌面");
+  // 先检测当前社群是成员还是管理员
+  const currentRole = (currentCommunity.value.item as any).role;
+  // 社群数据
+  const communityInfo: any = currentCommunity.value?.item;
+  if (currentRole === "owner") {
+    // 检测当前所在的社群桌面数据是否为空列表
+    const deskList = getCommunityDeskList(currentCommunity.value?.item);
+    if (deskList.length === 0) {
+      settings.value.isCommunity = false;
+      router.push({ name: "home", params: { no: communityInfo?.no } });
+      setTimeout(() => {
+        proxy.$bus.emit("openCommunityDesk");
+      }, 150);
+    }
+    // 当前社群桌面数据已经创建
+    else {
+      settings.value.isCommunity = false;
+      router.push({ name: "home", params: { no: communityInfo?.no } });
+    }
+  }
+  // 成员
+  else if (currentRole === "member") {
+    const communityInfo: any = currentCommunity.value?.item;
+    // 获取云端数据并且存储在本地desks列表中
+    loadSyncDesk(communityInfo?.no);
+    // 检测当前所在的社群桌面数据是否为空列表
+    const deskList = getCommunityDeskList(communityInfo);
+    if (deskList.length === 0) {
+      // 提示弹窗
+      (window as any).$ui.confirm(
+        "暂无可用的社群桌面",
+        "请联系你的社群管理员创建",
+        {
+          ok: () => {},
+          okText: "好的",
+          noText: null,
+          type: "link",
+        }
+      );
+    }
+    // 当前社群桌面数据已经创建
+    else {
+      settings.value.isCommunity = false;
+      router.push({ name: "home", params: { no: communityInfo?.no } });
+    }
+  }
+};
+
+// 加载云端数据处理方法
+const loadSyncDesk = (no: any) => {
+  communityDesk.setCurrentDeskNo(no);
+  communityDesk.loadCommunityDeskAll();
+  communityDesk.loadCommunityDeskDetail();
 };
 </script>
 

@@ -89,16 +89,13 @@
 import { ref, reactive, computed, onMounted, watch, h } from 'vue'
 import { Icon as clockIcon } from '@iconify/vue'
 import { cardStore } from '../../store/card'
-import { timerStore } from '../../store/timer'
 // 控制设置顶部按钮显示以及闹钟的筛选
 import { topClockSettingStore } from '../../store/topClockSetting'
 import { countDownStore } from '../../store/countDown'
-import { Notifications } from '../../js/common/sessionNotice'
 import SetupClock from './setClock.vue'
 import FloatAlarm from './alarm/components/FloatAlarm.vue';
 import FloatCountDown from './alarm/components/FloatCountDown.vue';
 
-const notifications = new Notifications()
 const usetopClockSettingStore = topClockSettingStore()
 onMounted(() => {
     closeDetail()
@@ -109,11 +106,9 @@ onMounted(() => {
 })
 const topClockSettingVisible = ref(false)
 
-const useTimerStore = timerStore()
 const useCardStore = cardStore();
 const clockSettingVisible = ref(false)
 const clockEvent = computed(() => useCardStore.clockEvent)
-const firstClockTime = computed(() => clockEvent.value[0]?.dateValue)
 const outerSettings = reactive({
     useBothWheelAxes: true,
     swipeEasing: true,
@@ -121,10 +116,8 @@ const outerSettings = reactive({
     suppressScrollX: true,
     wheelPropagation: true,
 })
-const customizeSetting = ref(false)
 const countDownVisible = ref(false)
 const useCountDownStore = countDownStore()
-const custom = ref(false)
 const soundVisible = ref(true)
 
 const emit = defineEmits(['close'])
@@ -190,52 +183,6 @@ const changeSettingStatus = () => {
     topClockSettingVisible.value = true
     // emit('close')
 }
-let notificationShow = false
-// const detailTime=useCountDownStore.countDowntime
-const countDownDate = computed(() => useCountDownStore.countDowndate)
-
-// 当倒计时完成时弹出弹窗
-watch(countDownDate, (newVal, oldVal) => {
-    const countDownTotalTime = computed(() => {
-        let [hour, minute, second] = useCountDownStore.selectValue
-        let totalTime = ''
-        if (hour && hour !== 0) {
-            totalTime += `${hour}小时`
-        }
-        if (minute && minute !== 0) {
-            totalTime += `${minute}分钟`
-        }
-        if (second && second !== 0) {
-            totalTime += `${second}秒`
-        }
-        return totalTime.trim()
-    })
-    if (newVal < 0 && countDownTotalTime.value !== '') {
-        // const key = `open${Date.now()}`
-        let message = `${countDownTotalTime.value}到了`
-        notifications.clockToast(message, '计时器', false)
-        useCountDownStore.dCountDown()
-    }
-
-})
-// 闹钟完成时弹出
-watch(() => useTimerStore.appDate.minutes, (newVal, oldVal) => {
-    const firstClock = computed(() => {
-        return `${useTimerStore.appDate.hours}:${useTimerStore.appDate.minutes}`
-    })
-    useCardStore.sortClock()
-    if (useTimerStore.appDate.minutes === firstClockTime.value?.minutes &&
-        useTimerStore.appDate.hours == firstClockTime.value?.hours && clockEvent.value[0].flag === undefined) {
-        // const key = `open${Date.now()}`
-        let message = `${firstClock.value}到了,${clockEvent.value[0].eventValue}`
-        notifications.clockToast(message, '闹钟', true)
-        if (clockEvent.value[0].clockType === '不重复') {
-            // console.log(1111);
-            useCardStore.removeClock(0, 1)
-        }
-    }
-
-})
 
 </script>
 <style lang='scss' scoped>

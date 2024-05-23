@@ -6,7 +6,6 @@ import {marketStore} from "./market";
 import {noteStore} from "../apps/note/store";
 import{homeStore} from "./home"
 // @ts-ignore
-
 export const cardStore = defineStore(
   "cardStore",
   {
@@ -23,7 +22,9 @@ export const cardStore = defineStore(
         settings: {
           cardZoom: 100,
           marginTop: 0,
-          cardMargin: 5//卡片间隙
+          cardMargin: 5,//卡片间隙
+          fitMod:"center",//'full'
+          containerWidth:1024,
         },
         aloneSettings: {
           cardZoom: 100,
@@ -57,8 +58,6 @@ export const cardStore = defineStore(
         }],
         clockEvent: [],
         customComponents: [],
-        clockTag: 'within30min',
-        chooseType: '1',
         filterClockEvent: [],
         aidaData: null,
         routeParams: {},
@@ -275,47 +274,31 @@ export const cardStore = defineStore(
           this.clockEvent.push(a)
 
         }
+        // console.log(this.clockEvent,'删除后的数组')
         this.clockFlag = !this.clockFlag
       },
-      filterClock(tag, value) {
-        // console.log(tag);
-        this.filterClockEvent = this.clockEvent
-        // this.temp=value
-        // console.log(value,'this.temp');
-        // if(tag!==null || undefined){
-        // console.log(tag);
+      filterClock(tag) {
+        const timerData = timerStore().appDate;
+        const totalTime = parseInt(timerData.hours) * 60 + parseInt(timerData.minutes);
 
-        this.clockTag = tag
-        this.chooseType = value
+        const filterEvents = (timeLimit) => {
+            return this.clockEvent.filter((event) => {
+                const targetTime = parseInt(event.dateValue.hours) * 60 + parseInt(event.dateValue.minutes);
+                const timeDiff = targetTime - totalTime;
+                return timeDiff <= timeLimit && timeDiff > 0;
+            });
+        };
 
-        // }
-        // console.log(this.clockTag);
-        if (this.clockTag == 'within30min') {
-          this.filterClockEvent = this.clockEvent.filter((value) => {
-            let totalTime = parseInt(timerStore().appDate.hours) * 60 + parseInt(timerStore().appDate.minutes)
-            let targetTime = parseInt(value.dateValue.hours) * 60 + parseInt(value.dateValue.minutes)
-            let timeDiff = targetTime - totalTime
-            return timeDiff <= 30 && timeDiff > 0
+        const filterStrategies = {
+            'within30min': () => filterEvents(30),
+            'within1hour': () => filterEvents(60),
+            'always': () => this.clockEvent
+        };
 
-          })
-          // console.log(this.filterClockEvent);
-
-        } else if (this.clockTag == 'within1hour') {
-          this.filterClockEvent = this.clockEvent.filter((value) => {
-            let totalTime = parseInt(timerStore().appDate.hours) * 60 + parseInt(timerStore().appDate.minutes)
-            let targetTime = parseInt(value.dateValue.hours) * 60 + parseInt(value.dateValue.minutes)
-            let timeDiff = targetTime - totalTime
-            return timeDiff <= 60 && timeDiff > 0
-          })
-        } else if (this.clockTag == 'always') {
-          this.filterClockEvent = this.clockEvent
-        }
-        // console.log(this.clockTag,'this.clockTag');
-
-        // console.log(this.filterClockEvent);
-
-
+        this.filterClockEvent = (filterStrategies[tag] || (() => this.clockEvent))() || [];
+        // console.log(this.filterClockEvent,this.clockEvent);
       },
+
       async addCard(card, desk, flag) {
         //if (this.customComponents.includes(value)) return;
         // let desk = this.desks.find(item => {
@@ -380,7 +363,6 @@ export const cardStore = defineStore(
         desk.cards.splice(desk.cards.findIndex(item => {
           return String(item.id) === String(customIndex)
         }), 1)
-        console.log('删除 卡片:>> ', desk.cards);
 
         // this.customComponents.splice(customIndex,1);
 
@@ -400,7 +382,7 @@ export const cardStore = defineStore(
       strategies: [{
         // 自定义存储的 key，默认是 store.$id
         // 可以指定任何 extends Storage 的实例，默认是 sessionStorage
-        paths: ['countdownDay', 'clockEvent', 'customComponents', 'navigationList', 'settings', 'desks', 'moved', 'deskSize', 'lastHeight', 'clockTag', 'chooseType'],
+        paths: ['countdownDay', 'clockEvent', 'customComponents', 'navigationList', 'settings', 'desks', 'moved', 'deskSize', 'lastHeight'],
         storage: dbStorage,
         // state 中的字段名，按组打包储存
       }]

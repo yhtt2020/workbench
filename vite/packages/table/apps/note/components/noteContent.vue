@@ -95,7 +95,7 @@ export default {
   },
   props: ['selDesk','menus'],
   computed: {
-    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'selNoteTitle', 'selNoteText', 'deskList', 'isTrash']),
+    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'selNoteTitle', 'selNoteText', 'deskList', 'isTrash', 'isModal']),
     deskName () {
       if (this.noteList.length) {
         return this.selNote >= 0 ? this.noteList[this.selNote]?.deskName : ''

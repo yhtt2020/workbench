@@ -1,3 +1,4 @@
+<!-- 社群导航搜索页 -->
 <template>
   <div class="com-nav-bg flex flex-col">
     <!-- 搜索 -->
@@ -49,7 +50,7 @@
           <xt-ify-icon
             icon="fluent:checkmark-circle-16-filled"
             v-if="currentCommunity.index === index"
-            style="color:rgba(80, 139, 254, 0.6);"
+            style="color: rgba(80, 139, 254, 0.6)"
           ></xt-ify-icon>
         </div>
       </div>
@@ -58,24 +59,54 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, watchEffect, getCurrentInstance } from 'vue'
+import {
+  ref,
+  computed,
+  watch,
+  watchEffect,
+  getCurrentInstance,
+  onMounted,
+} from "vue";
 import { storeToRefs } from "pinia";
-import { communityStore } from "../../../page/chat/store/communityStore";
+import { chatCommunityStore } from "../../../apps/chat/store/chatCommunity";
 import { communityNavStore } from "../store/communityNavStore";
+import { useRouter } from "vue-router";
+import { appStore } from "../../../store";
+import { getCommunityDeskList } from "../../../apps/communityDesk/hooks/deskCreateMethod";
+import { communityDeskStore } from "../../../apps/communityDesk/store/communityDeskStore";
+import { cardStore } from "../../../store/card";
+import _ from "lodash-es";
 
-const com = communityStore();
-const { community } = storeToRefs(com);
+// 路由
+const router = useRouter();
+
+// 获取proxy
+const { proxy } = getCurrentInstance();
+
+// 解构store存储数据
+const com = chatCommunityStore();
+const { myCommunity } = storeToRefs(com);
 const comNav = communityNavStore();
 const { currentCommunity } = storeToRefs(comNav);
+const app = appStore();
+const { settings } = storeToRefs(app);
+const communityDesk = communityDeskStore();
+const { syncDesk } = storeToRefs(communityDesk);
+const { desks } = storeToRefs(cardStore());
 
+// ref定义数据
 const search = ref("");
 const communityList = ref([]);
+// 存储选中的社群
+const selectCommunityItem = ref({});
 
-const emit = defineEmits(['close']);
+// emit触发事件
+const emit = defineEmits(["close"]);
+
 // 获取当前已经加入的社群列表
-const getCurrentCommunityList = () =>{
-  if (community.value.communityList.length !== 0) {
-    const filterList = community.value.communityList.filter((item) => {
+const getCurrentCommunityList = () => {
+  if (myCommunity.value.length !== 0) {
+    const filterList = myCommunity.value.filter((item) => {
       if (item.communityInfo) {
         return item;
       }
@@ -84,33 +115,88 @@ const getCurrentCommunityList = () =>{
   } else {
     communityList.value = [];
   }
-}
+};
 watchEffect(() => {
   getCurrentCommunityList();
 });
 
 // 搜索社群
 const getSearchResult = () => {
-  if(search.value !== ''){
-    const searchList = community.value.communityList.filter((item) => {
+  if (search.value !== "") {
+    const searchList = myCommunity.value.communityList.filter((item) => {
       if (item.communityInfo) {
         return item.communityInfo.name.includes(search.value);
       }
     });
     communityList.value = searchList;
-  }
-  else {
+  } else {
     // 搜索框为空时，重置原来的数据列表
     getCurrentCommunityList();
   }
 };
-// 选择社群
-const selectCommunity = (item, index) => {
-  comNav.setCurrentCommunity(item, index);
-  // 选择后进行弹窗关闭
-  emit('close');
 
+// 选择社群
+const selectCommunity = async (item, index) => {
+  const role = item?.role;
+  // 先检测当前所在社群的角色权限是管理员还是成员,
+  if (role === "owner") {
+    // 管理员,检测当前社群有没有创建桌面。
+    const communityDesks = getCommunityDeskList(item.communityInfo);
+    if (communityDesks.length > 0){
+      switchCommunity(item,index);
+    }
+    else {
+      router.push({ name: "home", params: { no: item.communityInfo.no } });
+      selectCommunityItem.value = { item, index };
+      proxy.$bus.emit("openCommunityDesk");
+    }
+  }
+  // 成员
+  else if (role === "member") {
+    // 加载获取云端数据
+    loadSyncDesk(item?.communityInfo?.no);
+    // 检测云端获取的数据有没有存在本地中
+    const memberDesks = getCommunityDeskList(item.communityInfo);
+    if (memberDesks.length > 0) {
+      switchCommunity(item,index);
+    } else {
+      window.$ui.confirm("暂无可用的社群桌面", "请联系你的社群管理员创建", {
+        ok: () => {},
+        okText: "好的",
+        noText: null,
+        type: "link",
+      });
+    }
+  }
+  // 选择后进行弹窗关闭
+  emit("close");
 };
+
+// 加载云端数据处理方法
+const loadSyncDesk = async(no) => {
+  communityDesk.setCurrentDeskNo(no);
+  communityDesk.loadCommunityDeskDetail();
+  communityDesk.loadCommunityDeskAll();
+};
+
+// 切换社群的方法进行提取
+const switchCommunity = (item,index) => {
+  router.push({ name: "home", params: { no: item.communityInfo.no } });
+  if (settings.value.isCommunity) {
+    settings.value.isCommunity = false;
+  }
+  comNav.setCurrentCommunity(item, index);
+};
+
+onMounted(() => {
+  proxy.$bus.on("updateSetting", () => {
+    settings.value.isCommunity = false;
+    comNav.setCurrentCommunity(
+      selectCommunityItem.value?.item,
+      selectCommunityItem.value?.index
+    );
+  });
+});
 </script>
 
 <style lang="scss" scoped>

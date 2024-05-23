@@ -11,12 +11,14 @@ const ttAppModel = {
   async initDb() {
     // 是否存在ttApp表
     let exists = await sqlDb.knex.schema.hasTable("ttApp");
+    console.log("initDb exists :>> ", exists);
     // 不存在则创建
     if (!exists) {
-      await sqlDb.knex.schema.createTable("ttApp", function (t) {
+      let res = await sqlDb.knex.schema.createTable("ttApp", function (t) {
         t.string("id").primary().unique(); // 唯一ID
         t.string("data"); // 模块
       });
+      console.log("initDb createTable :>> ", res);
     }
     // let sql = `INSERT INTO ttApp VALUES ('${id}')`;
     // sqlDb.knex.raw(sql).then((resp) => {
@@ -53,6 +55,7 @@ const ttAppModel = {
    * 删除
    */
   async del(id) {
+    await ttAppModel.initDb();
     try {
       await sqlDb.knex("ttApp").where({ id: id }).del();
       return true;

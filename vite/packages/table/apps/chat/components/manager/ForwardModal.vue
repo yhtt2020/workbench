@@ -30,13 +30,23 @@ const getForwardChatList = () => {
   TUIStore.watch(StoreName.CONV, {
     conversationList: (list) => {
       currentLeftList.value = list.map((conversation) => {
-        return {
-          // 为了实现Transfer的复用，这里用userID代替ConversationID
-          userID: conversation.conversationID,
-          nick: conversation.getShowName(),
-          avatar: conversation.getAvatar(),
-          type: conversation.type,
-        };
+        if (conversation.type === "GROUP") {
+          return {
+            userID: conversation.groupProfile?.groupID,
+            nick: conversation.groupProfile?.name,
+            avatar: conversation.groupProfile?.avatar,
+            type: conversation.type,
+            conversationID:conversation.conversationID
+          };
+        } else if (conversation.type === "C2C") {
+          return {
+            userID: conversation.userProfile?.userID,
+            nick: conversation.userProfile?.nick,
+            avatar: conversation.userProfile?.avatar,
+            type: conversation.type,
+            conversationID:conversation.conversationID
+          };
+        }
       });
     },
   });
@@ -53,7 +63,7 @@ const submitForward = (list) => {
   // 这里传递的是 coversationID
   // 但为了实现 Transfer 的复用 这里用 userID 代替 ConversationID
   const selectedConversationList = list.map((convIDWrapper) => {
-    const { userID: conversationID } = convIDWrapper;
+    const { conversationID } = convIDWrapper;
     return TUIStore.getConversationModel(conversationID);
   });
   const singleForwardMessageID = TUIStore.getData(

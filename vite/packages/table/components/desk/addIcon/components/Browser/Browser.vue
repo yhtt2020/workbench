@@ -152,6 +152,7 @@ const addIcon = (item) => {
     emit('addIcon', item)
 }
 
+// 刷新数据
 const refresh = () => {
     proxy.$bus.emit('refreshBrowser')
 }
@@ -239,27 +240,27 @@ const flattenChildrenArray = (obj, browser, level, parent) => {
     return resTmp.value
 }
 
-const mergeArraysByGuid = (arr1, arr2) => {
-    const existingGuids = new Set(arr1.map(item => item.guid));
-    const newObjects = arr2.filter(item => !existingGuids.has(item.guid));
+// const mergeArraysByGuid = (arr1, arr2) => {
+//     const existingGuids = new Set(arr1.map(item => item.guid));
+//     const newObjects = arr2.filter(item => !existingGuids.has(item.guid));
     
-    if(newObjects.length > 0){
-        newObjects.forEach(item => {
-            item.recent = true
-            item.unRead = true
-            folderList.value.forEach(folder => {
-                if(folder.guid == item.parent && item.parent){
-                    folder.unRead = true
-                }
-            })
-        })
-    }
+//     if(newObjects.length > 0){
+//         newObjects.forEach(item => {
+//             item.recent = true
+//             item.unRead = true
+//             folderList.value.forEach(folder => {
+//                 if(folder.guid == item.parent && item.parent){
+//                     folder.unRead = true
+//                 }
+//             })
+//         })
+//     }
     
-    const content = newObjects.length ? `浏览器收藏夹数据刷新成功。本次更新${newObjects.length}条数据` : '浏览器收藏夹数据刷新成功。'
-    message.success(content)
-    const mergedArray = [...arr1, ...newObjects];
-    return mergedArray
-}
+//     const content = newObjects.length ? `浏览器收藏夹数据刷新成功。本次更新${newObjects.length}条数据` : '浏览器收藏夹数据刷新成功。'
+//     message.success(content)
+//     const mergedArray = [...arr1, ...newObjects];
+//     return mergedArray
+// }
 
 // 展示数据
 const showList = computed(() => {

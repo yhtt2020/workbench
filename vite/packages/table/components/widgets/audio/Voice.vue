@@ -2,7 +2,7 @@
   <xt-container
     :header="header"
     v-model:customSize="customData.customSize"
-    :envLimit="['web']"
+    :platLimit="['web']"
     :customIndex="customIndex"
     :customData="customData"
     :options="options"
@@ -122,7 +122,9 @@ export default {
       ],
       header:{
         title:'音频',
-        ifyIcon:'fluent:speaker-2-16-regular'
+        // ifyIcon:'fluent:speaker-2-16-regular'
+        showIcon:"/img/appLogo/audio.png",
+
       },
       customSize:'2x4',
     }
@@ -141,7 +143,7 @@ export default {
   },
   async mounted () {
     this.customData.customSize = '2x4'
-    if (this.$useEnv()) return
+    if (this.$usePlat()) return
     this.init()
     //
     // const device = await navigator.bluetooth.requestDevice({

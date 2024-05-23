@@ -77,7 +77,7 @@
           </div>
           <div class="flex items-center pointer" @click="replyStatus">
             <replyIcon
-              icon="fluent:chat-16-regular"
+              icon="fluent:chat-16-filled"
               style="font-size: 20px"
               class="mr-1"
             ></replyIcon>

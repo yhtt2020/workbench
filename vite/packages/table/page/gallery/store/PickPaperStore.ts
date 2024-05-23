@@ -2,8 +2,6 @@ import { defineStore } from 'pinia';
 import dbStorage from '../../../store/dbStorage';
 import axios from 'axios';
 
-
-
 // @ts-ignore
 export const pickPaperStore = defineStore('pickPaper',{
  state:()=>({
@@ -50,6 +48,7 @@ export const pickPaperStore = defineStore('pickPaper',{
       cateHow:'',
     },
    },
+   currentID:null,
  }),
 
  actions:{
@@ -60,7 +59,7 @@ export const pickPaperStore = defineStore('pickPaper',{
   enabled: true,
   strategies: [
     {
-      paths: ['pickParams'],
+      paths: ['pickParams','currentID'],
       storage: dbStorage,
     },
   ],

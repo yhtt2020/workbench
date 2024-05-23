@@ -22,7 +22,7 @@
         />
         <xt-button w="40" h="40" class="xt-bg-t-2 ml-2" @click="openSavePath">
          <div class="flex items-center justify-center">
-           <xt-new-icon icon="fluent:open-16-regular" size="20"></xt-new-icon>
+           <xt-new-icon icon="fluent:open-16-filled" size="20"></xt-new-icon>
          </div>
         </xt-button>
        </div>
@@ -44,7 +44,7 @@
         <div class="flex flex-col ">
           <span class="xt-font xt-text font-16 text-start font-400">锁屏壁纸源</span>
           <span class="xt-font xt-text-2 font-14 font-400 text-start my-2.5">选择锁屏时展示的壁纸。</span>
-          <xt-select v-model="settings.wallSource" :zIndex="1200" :list="selectList" class="text-center"  style="margin-bottom: 4px;" :bordered="false"></xt-select>
+          <xt-select v-model="settings.wallSource" :zIndex="100001" :list="selectList" class="text-center"  style="margin-bottom: 4px;" :bordered="false"></xt-select>
         </div>
         <a-divider  style="height: 1px; border-top: 1px solid var(--divider);margin: 16px 0 16px 0 ;" />
 
@@ -129,7 +129,7 @@
               />
               <xt-button w="40" h="40" class=" ml-2" @click="openSavePath">
                <div class="flex items-center justify-center">
-                 <xt-new-icon icon="fluent:open-16-regular" size="20"></xt-new-icon>
+                 <xt-new-icon icon="fluent:open-16-filled" size="20"></xt-new-icon>
                </div>
               </xt-button>
             </div>
@@ -178,7 +178,7 @@
             <div class="flex flex-col ">
               <span class="xt-font text-start xt-text font-16 font-400">锁屏壁纸源</span>
               <span class="xt-font text-start xt-text-2 font-14 font-400 my-2.5">选择锁屏时展示的壁纸。</span>
-              <xt-select v-model="settings.wallSource" :zIndex="1200" style="height: 40px;" :list="selectList" @change="getPaper($event)" :bordered="false"></xt-select>
+              <xt-select v-model="settings.wallSource" :zIndex="100002" style="height: 40px;" :list="selectList" @change="getPaper($event)" :bordered="false"></xt-select>
             </div>
 
             <a-divider  style="height: 1px; border-top: 1px solid var(--divider);margin: 16px 0 16px 0 ;" />

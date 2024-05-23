@@ -1,7 +1,7 @@
 <template>
  <div class="flex flex-col flex-1 w-full h-4/5">
   <XtScrollbar  :y="true" style="height: 100%;width: 100%;" class="flex flex-col">
-    
+
      <div class="flex flex-col mb-3">
       <span class="xt-font font-14 font-400 xt-text-3 mb-4">标题</span>
       <div class="xt-font font-14 font-500 xt-text ">{{ detailItem.content.title }}</div>
@@ -25,13 +25,13 @@
         </a-row>
       </viewer>
     </div>
-    
+
     <div class="flex flex-col mb-3">
       <span class="xt-font font-14 font-400 xt-text-3 mb-4">附件</span>
       <template v-for="item in mockData">
         <div class="mb-3 rounded-xl px-4 py-3 items-center flex justify-between xt-bg-2">
           <div class="flex">
-            <xt-new-icon icon="fluent:document-16-regular" size="20" class="mr-3"></xt-new-icon>
+            <xt-new-icon icon="fluent:document-16-filled" size="20" class="mr-3"></xt-new-icon>
             <span class="xt-font xt-text font-14 font-400">{{ item.title }}</span>
           </div>
           <xt-button style="width:auto !important;" h="0" @click="clickDownload(item)">
@@ -73,7 +73,7 @@
           <div style="max-width: 450px;color:rgba(0,174,236,0.85);" class="truncate xt-font font-14" >{{ item.title }}</div>
         </div>
       </template>
-    </div> 
+    </div>
 
   </XtScrollbar>
  </div>
@@ -96,7 +96,7 @@ const notice = noticeStore();
 const { detailItem } = storeToRefs(notice);
 
 
-const options = ref( 
+const options = ref(
   { url: 'data-source', }
 )
 const biliPlayRef = ref(null);

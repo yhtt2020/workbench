@@ -1,6 +1,6 @@
 /**
- * 主进程消息 on ttapp.js
- * @description 应该是接收主进程的消息
+ * 主进程接收消息 ttapp.js
+ * @description
  */
 const Base = require("./base");
 // const appModel = require("../../model/appModel");
@@ -21,9 +21,9 @@ class TTApp extends Base {
   }
   bindIPC() {
     // 安装
-    this.on("install", async (event, args) => {
-      let res = await installV2(args.zipPath);
-      console.log("res :>> ", res);
+    this.on("installV2", async (event, args) => {
+      console.log("installV2 on :>> ", args);
+      let res = await installV2(args.options);
       event.reply(args.cbId, res);
     });
     // 更新

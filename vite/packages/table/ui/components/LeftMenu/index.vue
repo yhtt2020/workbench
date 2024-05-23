@@ -6,7 +6,7 @@
   >
     <!-- 左侧区域开始 -->
     <div
-      class="flex flex-col items-center h-full xt-br"
+      class="flex flex-col items-center xt-br"
       style="position: relative"
       :style="[
         leftStyle,
@@ -17,7 +17,9 @@
       ]"
       :class="[leftClass, leftMargin]"
     >
-      <div class="w-full" v-for="list in listOption" :class="list?.class">
+    <template  v-for="list in listOption"
+    >
+    <div class="w-full" :class="list?.class" v-if="list.array.length">
         <Float
           @itemClick="itemClick"
           :list="item.children"
@@ -52,10 +54,13 @@
           </template>
         </Float>
       </div>
+
+  </template>
+
     </div>
     <!-- 左侧区域结束 -->
     <!-- 主体区域开始 -->
-    <div class="flex flex-1 w-0 h-full">
+    <div class="flex flex-1 w-0">
       <slot></slot>
     </div>
     <!-- 主体区域结束 -->
@@ -131,19 +136,24 @@ const isFull = ref(false);
 const typeClass = computed(() => {
   if (full.value) {
     return isFull.value
-      ? " fixed left-0 right-0 top-0 bottom-0 rounded-none py-3 pr-3"
+      ? " fixed left-0 right-0 top-0 bottom-0 rounded-none py-3 pr-3 xt-bg"
       : "xt-bg pr-3 py-3 rounded-xl";
+  } else {
+    // return "xt-bg pr-3 py-3 rounded-xl";
   }
 });
 
-const { list ,index} = toRefs(props);
+const { list, index } = toRefs(props);
+const currentList = ref(list.value);
 // 动态添加ID
 const newList = computed(() => {
   let index = -1;
   // 过滤 将需要隐藏的按钮进行过滤
-  let tmp = list.value?.filter((item) => {
+
+  let tmp = currentList.value?.filter((item) => {
     return !item.disabled;
   });
+  console.log("tmp :>> ", tmp);
   let res = tmp.map((item) => {
     if (item.full) full.value = true;
     let id = item.id ?? ++index;
@@ -163,8 +173,7 @@ const listOption = computed(() => {
       array: newList.value.slice(0, props.last),
     },
     {
-      class:
-        "xt-scrollbar xt-container xt-bt flex flex-col items-center flex-1",
+      class: "xt-scrollbar xt-container flex flex-col items-center flex-1",
       boxClass: "mt-2",
       array: newList.value.slice(props.last, -1 * props.end),
       itemOption: {
@@ -173,7 +182,7 @@ const listOption = computed(() => {
     },
     {
       boxClass: "mt-2",
-      array: newList.value.slice(-1 * props.end),
+      array: props.end > 0 ? newList.value.slice(-1 * props.end):[],
       itemOption: {
         type: "",
         bg: "",
@@ -192,8 +201,16 @@ const currentIndex = ref(indexs.value);
 watch(
   () => index.value,
   (val) => {
-    console.log("val :>> ", val);
     selectClick(val);
+  },
+  {
+    deep: true,
+  }
+);
+watch(
+  () => list.value,
+  (val) => {
+    currentList.value = val;
   },
   {
     deep: true,
@@ -203,7 +220,7 @@ watch(
 const emit = defineEmits(["modelValue", "index"]);
 const selectClick = (id, flag) => {
   emit("update:index", id);
-  console.log('更新触发了 :>> ', );
+  console.log("更新触发了 :>> ");
   if (flag) return;
   currentIndex.value = id;
 };

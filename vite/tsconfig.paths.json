@@ -1,0 +1,10 @@
+// tsconfig.paths.json
+
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@table/*": ["packages/table/*"],
+    }
+  }
+}

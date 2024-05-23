@@ -7,7 +7,7 @@
     @change="changeActiveKey"
   >
     <template #expandIcon="{ isActive }">
-      <CaretRightOutlined :rotate="isActive ? 90 : 0" />
+      <CaretRightOutlined :rotate="isActive ? 90 : 0" class="xt-text-2"/>
     </template>
     <a-collapse-panel :show-arrow="showArrow" key="1">
       <template #header>
@@ -45,7 +45,7 @@ const changeActiveKey = (evt) =>{
 
 <style lang="scss" scoped>
 :deep(.ant-collapse-content-box){
-  padding: 0 !important;
+  padding: 0 12px !important;
 }
 :deep(.ant-collapse-header){
   padding: 12 0 !important;

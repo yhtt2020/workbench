@@ -18,7 +18,9 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         noBg: true,
         tab: "OfficialCommunity",
         type: "OfficialCommunity",
+        menuVisible: true,
         route: { name: "officialCommunity", params: { no: 1 } },
+        top: ["tr", "blue", { icon: "fluent:pin-16-filled" }, 0],
       },
     ],
     // 设置当前社群详情的社群号
@@ -37,6 +39,8 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         enable: false,
         no: null,
       },
+      // 存储当前社群子频道目录中的选中状态
+      selectCurrentChannel: null,
     },
     // 热门社群列表
     hotList: [],
@@ -65,21 +69,23 @@ export const chatCommunityStore = defineStore("chatCommunity", {
           for (const item of list) {
             if (item.hasOwnProperty("communityInfo")) {
               const index = _.findIndex(this.myCommunity, function (find: any) {
-                return String(item.id) === String(find.id);
+                return String(item.cno) === String(find.cno);
               });
-              if (index === -1) {
-                const options = {
-                  ...item,
-                  img: item.communityInfo?.icon,
-                  float: "",
-                  tab: `community_${item.communityInfo?.no}`,
-                  noBg: true,
-                  type: `community${item.cno}`,
-                  route: {
-                    name: "myCommunity",
-                    params: { no: item.communityInfo?.no },
-                  },
-                };
+              const options = {
+                ...item,
+                img: item.communityInfo?.icon,
+                float: "",
+                tab: `community_${item.communityInfo?.no}`,
+                noBg: true,
+                type: `community${item.cno}`,
+                route: {
+                  name: "myCommunity",
+                  params: { no: item.communityInfo?.no },
+                },
+                menuVisible: true,
+                top: ["tr", "blue", { icon: "fluent:pin-16-filled" }, 0],
+              };
+              if (index === -1 && item.role) {
                 this.myCommunity.push(options);
               }
             }
@@ -87,6 +93,44 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         }
       });
     },
+
+    /**更新当前我的社群**/
+    async updateMyCommunity(no: any) {
+      const res = await comAPI.getMyCommunityList();
+      if (res.status === 1) {
+        const newList = _.filter(res?.data?.list, (item: any) => {
+          return item.hasOwnProperty("communityInfo");
+        });
+        /**这一步是从this.myCommunity提取模拟添加的数据**/
+        const oldIndex = _.findIndex(this.myCommunity, (item: any) => {
+          return Number(item.cno) === Number(no);
+        });
+        /**获取新的数据进行替换**/
+        const newIndex = _.findIndex(newList, (item: any) => {
+          return Number(item.cno) === Number(no);
+        });
+        if (oldIndex > -1) {
+          this.myCommunity.splice(oldIndex, 1);
+          const data  = newList[newIndex];
+          const options = {
+            ...data,
+            img: data.communityInfo?.icon,
+            float: "",
+            tab: `community_${data.communityInfo?.no}`,
+            noBg: true,
+            type: `community${data.cno}`,
+            route: {
+              name: "myCommunity",
+              params: { no: data.communityInfo?.no },
+            },
+            menuVisible: true,
+            top: ["tr", "blue", { icon: "fluent:pin-16-filled" }, 0],
+          };
+          this.myCommunity.push(options);
+        }
+      }
+    },
+
     // 设置当前社群的ID号
     setCurrentCommunityNo(no: any) {
       this.currentCommunityNo = no;
@@ -138,7 +182,7 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         const status = res[0].status === 1 && res[1].status === 1;
         if (status) {
           // console.log('tree1',res[0].data.list);
-          console.log('tree',res);
+          console.log("tree", res);
           /**处理一级频道列表**/
           const firstList = _.map(res[0].data.list, (item: any) => {
             if (item.type === "group") {
@@ -206,7 +250,6 @@ export const chatCommunityStore = defineStore("chatCommunity", {
     getCategoryList(no: any) {
       const option = { communityNo: parseInt(no) };
       comAPI.getCommunityListChannel(option).then((res: any) => {
-        console.log("res", res);
         if (res.status) {
           const list = res.data.list;
           const filterCategory = _.filter(list, function (item: any) {
@@ -216,19 +259,68 @@ export const chatCommunityStore = defineStore("chatCommunity", {
         }
       });
     },
-    // 获取某个社群的详细信息 
+    // 获取某个社群的详细信息
     // 注意:当前方法只能获取社群的基本信息,不能获取社群的权限角色信息
-    async loadCurrentCommunity(no: any) {
-      const res = await comAPI.getByNoDetail({ no: no });
-      console.log("渠道详情", res);
-      if (res.status === 1) {
-        this.currentCommunity = res.data;
+    loadCurrentCommunity(data: any) {
+      console.log('加载社群详情信息',data);
+      if(data){
+        this.currentCommunity  = data;
       }
     },
     // 排序更新
-    sortUpdateList(list:any){
+    sortUpdateList(list: any) {
       this.categoryList = list;
-    }
+    },
+
+    // 置顶排序
+    topSort(no: any) {
+      const mapTop = _.map(this.myCommunity, (item: any) => {
+        if (Number(item.cno) === Number(no)) {
+          return {
+            ...item,
+            top: ["tr", "blue", { icon: "fluent:pin-16-filled" }, 1],
+          };
+        } else {
+          return item;
+        }
+      });
+      mapTop.sort((a: any, b: any) => {
+        if (Number(a.route.params.no) === Number(no)) {
+          /**将id为指定值的元素置顶**/
+          return -1;
+        } else if (Number(b.route.params.no) === Number(no)) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+      this.myCommunity = mapTop;
+    },
+
+    // 取消置顶排序
+    unSetTopSort(no: any) {
+      const mapUnSetTop = _.map(this.myCommunity, (item: any) => {
+        if (Number(item.cno) === Number(no)) {
+          return {
+            ...item,
+            top: ["tr", "blue", { icon: "fluent:pin-16-filled" }, 0],
+          };
+        } else {
+          return item;
+        }
+      });
+      mapUnSetTop.sort((a: any, b: any) => {
+        if (Number(a.route.params.no) === Number(no)) {
+          /**将id为指定值的元素放到末尾**/
+          return 1;
+        } else if (Number(b.route.params.no) === Number(no)) {
+          return -1;
+        } else {
+          return 0;
+        }
+      });
+      this.myCommunity = mapUnSetTop;
+    },
   },
 
   persist: {

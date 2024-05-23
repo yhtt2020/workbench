@@ -2,13 +2,7 @@
 <template>
   <div class="w-full h-full flex flex-col px-4">
     <div class="flex w-full items-center justify-between pt-1">
-      <span
-        class="xt-text xt-font font-16"
-        v-if="currentNoticeArr.length === 0"
-      >
-        通知
-      </span>
-      <span class="xt-text xt-font font-16" v-else>
+      <span class="xt-text xt-font font-16" >
         通知({{ currentNoticeArr.length }}个)
       </span>
     </div>
@@ -80,7 +74,7 @@ import {
 import _ from "lodash-es";
 import { message } from "ant-design-vue";
 
-const chat = window.$chat.chat;
+const chat = window.$chat?.chat;
 const currentNoticeList = ref([]);
 const userProFile = ref([]);
 
@@ -126,7 +120,7 @@ const handleApplication = async (item, type) => {
 
 // 获取通知列表
 const getNoticeList = () => {
-  chat.getGroupApplicationList().then((res) => {
+  chat?.getGroupApplicationList().then((res) => {
     const { applicationList } = res.data;
     const list = [];
     for (const item of applicationList) {
@@ -137,7 +131,7 @@ const getNoticeList = () => {
         list.push(item.applicant);
       }
     }
-    chat.getUserProfile({ userIDList: list }).then((res) => {
+    chat?.getUserProfile({ userIDList: list }).then((res) => {
       const list = res.data;
       for (const item of list) {
         const index = _.findIndex(userProFile, function (userItem) {

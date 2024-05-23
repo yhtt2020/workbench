@@ -23,10 +23,10 @@
 <script>
 import { mapWritableState } from 'pinia'
 import { Modal } from 'ant-design-vue'
-import { offlineStore } from "../js/common/offline";
-import {useEnv} from '../ui/hooks/useEnv'
+import { singleStore } from "../js/common/single";
+import {usePlat} from '../ui/hooks/usePlat'
 let appModel
-if (!useEnv('web')) {
+if (usePlat('client')) {
   appModel= window.$models.appModel
 
 }
@@ -34,7 +34,7 @@ export default {
   name: 'QingApps',
   computed: {
     // ...mapWritableState(apps,['myApps','qingApps'])
-    ...mapWritableState(offlineStore,['appList'])
+    ...mapWritableState(singleStore,['appList'])
   },
   data () {
     return {
@@ -50,14 +50,16 @@ export default {
   },
   async mounted () {
     this.apps = await appModel.getAllApps()
-    if (window.$isOffline) {
+    if (window.$isSingle) {
       this.apps = this.apps.filter(i=>{
         return !this.appList.includes(i.name)
       })
     }
+    console.log('this.apps :>> ', this.apps);
   },
   methods: {
     executeApp (app) {
+    console.log('app :>> ', app);
       ipc.send('executeApp', { app: JSON.parse(JSON.stringify(app)) })
     },
     uninstall (app) {
@@ -120,3 +122,4 @@ export default {
   }
 }
 </style>
+../js/common/single

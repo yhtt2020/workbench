@@ -1,13 +1,13 @@
 <!-- 添加控制中心详情页 -->
 <template>
   <!-- 音频 -->
-  <template v-if="controlIndex === 'audio' && !$useEnv()">
+  <template v-if="controlIndex === 'audio' && !$usePlat()">
     <div
       style="width: 252px; height: 120px;"
       class="xt-text flex flex-col xt-bg-t-2 rounded-xl relative"
       @click="addControlItem"
     >
-      <SystemAudio />
+      <SystemAudio style="pointer-events: none;"/>
       <div class="absolute" style="top: 3px; right: -4px">
         <xt-button style="width: auto !important" h="0">
           <div class="flex items-center justify-center">
@@ -29,8 +29,8 @@
       style="height: 120px; width: 252px;"
       @click="addControlItem"
     >
-      <UserControl :userinfo="userInfo" v-if="isUserInfoNull" />
-      <UserUnLogin v-else />
+      <UserControl :userinfo="userInfo" v-if="isUserInfoNull" style="pointer-events: none;"/>
+      <UserUnLogin v-else style="pointer-events: none;"/>
       <div class="absolute" style="top: 3px; right: -4px">
         <xt-button style="width: auto !important" h="0">
           <div class="flex items-center justify-center">
@@ -54,10 +54,11 @@
     >
       <div
         class="w-14 h-14 flex items-center xt-bg-t-2 justify-center rounded-full mb-3"
+        style="pointer-events: none;"
       >
         <xt-new-icon :icon="controlItem.icon" size="24"></xt-new-icon>
       </div>
-      <span class="xt-text">{{ controlItem.name }}</span>
+      <span class="xt-text" style="pointer-events: none;">{{ controlItem.name }}</span>
       <div class="absolute" style="top: 3px; right: -4px">
         <xt-button style="width: auto !important" h="0">
           <div class="flex items-center justify-center">
