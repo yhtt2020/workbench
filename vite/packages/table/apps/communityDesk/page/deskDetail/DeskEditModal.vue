@@ -348,7 +348,7 @@ const updateArrange = (newV) => {
         <div class="flex items-center">
           <Item v-for="item in canvasMenu" :item="item" class="mr-2"></Item>
           <XtInput
-            v-model="freeLayoutZoom"
+            v-model="defaultZoom"
             class="flex-1 relative xt-b overflow-hidden floatMenu xt-bg-t-2"
             style="width: 60px; height: 40px; border-radius: 10px"
             type=""

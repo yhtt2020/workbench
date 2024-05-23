@@ -203,6 +203,7 @@
     v-if="editVisible"
     @setQuick="editVisible = false"
     @addIcon="addIcon"
+    :communityRole="communityRole"
   ></EditNewNavigation>
   <GalleryModal ref="galleryRef" />
 </template>
@@ -323,6 +324,10 @@ export default {
       type: Boolean,
       default: () => false,
     },
+    communityRole:{
+      type:Boolean,
+      default:false,
+    }
   },
   watch: {
     adjustLayout(val) {
@@ -520,9 +525,11 @@ export default {
       }, 300);
     });
 
-    // 触发位置还原
+    // 社群成员桌面触发位置还原
     this.$bus.on('redirect',()=>{
-      this.freeLayoutScrollbarRedirect()
+      this.$nextTick(()=>{
+        this.$refs.freeLayoutScrollbar?.redirect();
+      })
     });
 
     if (window.showed) {
@@ -691,6 +698,9 @@ export default {
     },
     hideAddCard() {
       this.addCardVisible = false;
+      if(this.communityRole){
+        this.$bus.emit('updateSync')
+      }
     },
     onClose() {
       this.menuVisible = false;

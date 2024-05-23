@@ -181,33 +181,53 @@ export const communityDeskStore = defineStore("communityDesk", {
       const communityNo = this.communityDesk.communityDeskNo;
       // 桌面详情的缓存key
       const loadKey = `_${communityDeskDetail}${communityNo}`;
-      archiveHelper
-        .loadFromCommunity(communityNo, communityNavAppId, loadKey)
-        .then((rs: any) => {
-          const deskId = _.map(this.syncDesk.desks,(desk:any)=>{
-            return desk?.id;
-          });
+      const getDeskDetail = archiveHelper.loadFromCommunity(
+        communityNo,
+        communityNavAppId,
+        loadKey
+      );
+      getDeskDetail.then((rs:any)=>{
+        if(rs.status){
           const archiveData = rs.data?.data?.deskDetail;
           if(archiveData){
-            const existDeskId = _.some(archiveData,(id:any)=>{
+            // 将id进行遍历返回
+            const deskId = _.map(this.syncDesk.desks,(desk:any)=>{
+              return desk?.id;
+            });
+            // 根据云端桌面列表进行检测存入本地的桌面列表中
+            const existDeskId = _.some(deskId,(id:any)=>{
               return String(id) === String(archiveData?.id);
             })
             if(existDeskId){
-               const deskList =  (cardStore() as any).desks;
-               const index = _.findIndex(deskList,(desk:any)=>{
-                 return String(archiveData?.id) === String(desk.id);
-               });
-               console.log('index',index)
-               if(index === -1){
-                 (cardStore() as any).desks.unshift(archiveData);
-               }
-               else {
-                 (cardStore() as any).desks.splice(index,1,archiveData);
-               }
-               console.log('测试',deskList);
+              const index = _.findIndex((cardStore() as any).desks,(desk:any)=>{
+                return String(desk.id) === String(archiveData?.id);
+              });
+              if(index === -1){
+                (cardStore() as any).desks.unshift(archiveData);
+              }
+              else {
+                (cardStore() as any).desks.splice(index,1,archiveData);
+              }
             }
           }
-        });
+          this.setting.getSyncTime = rs.data?.data?._v;
+
+        }
+      })
+    },
+
+    // 清除老数据
+    clearDeskList(communityNo: any) {
+      const deskList = (cardStore() as any).desks;
+      // const deskId = _.map(this.syncDesk.desks, (desk: any) => {
+      //   return desk?.id;
+      // });
+      deskList.forEach((desk: any, index: any) => {
+        // 存在undefined的数据进行删除
+        if(desk.id === undefined){
+          (cardStore() as any).desks.splice(index,1);
+        }
+      });
     },
   },
 

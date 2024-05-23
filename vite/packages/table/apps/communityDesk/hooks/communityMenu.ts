@@ -259,7 +259,10 @@ function memberMenus() {
       id: 1,
       name: "更新桌面",
       newIcon: "fluent:cloud-arrow-up-16-filled",
-      fn: this.loadCommunityCloud,
+      fn: ()=>{
+        this.loadCommunityCloud();
+        this.clearDeskList(this.communityInfo?.no);
+      },
       contentAble: true,
       newContent:
         this.setting.getSyncTime !== ""
