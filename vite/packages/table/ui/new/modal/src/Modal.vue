@@ -20,7 +20,7 @@
         @click="modalClick"
         :class="[custom ? '' : boxClass]"
         ref="modal"
-        class="relative flex flex-col text-base no-drag rounded-xl xt-modal xt-shadow xt-text overflow-hidden"
+        class="relative flex flex-col overflow-hidden text-base no-drag rounded-xl xt-modal xt-shadow xt-text"
         style="
           border: 1px solid rgba(255, 255, 255, 0.1);
           box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
@@ -45,7 +45,7 @@
             <!-- 头部 -->
             <slot name="header">
               <header
-                class="no-drag relative flex items-center xt-modal-header w-full"
+                class="relative flex items-center w-full no-drag xt-modal-header"
                 :class="headerClass"
                 v-if="header"
                 @dblclick="doubleClick"
@@ -134,7 +134,7 @@
             <!-- 内容区 -->
             <main
               ref="scrollbar"
-              class="h-full flex-1 overflow-hidden"
+              class="flex-1 h-full overflow-hidden"
               :class="mainClass"
             >
               <slot>
@@ -295,6 +295,8 @@ const transitionVisible = ref(false);
 const isMinimize = ref(false);
 // 最大化
 const isMaximize = ref(false);
+// 底部导航栏元素
+let bottomBar : any = ref(null)
 watch(
   () => isMaximize.value,
   (val) => {
@@ -358,6 +360,7 @@ const currentY = computed(() => {
 const topBarHeight = computed(() => {
   // 顶部导航栏开启时
   // if (){}
+  if (bottomBar.value) barHeight = bottomBar.value.clientHeight; 
   return 40;
 });
 
@@ -365,6 +368,7 @@ const topBarHeight = computed(() => {
 const bottomBarHeight = computed(() => {
   // 底部导航栏开启时
   // if (){}
+  if (bottomBar.value) barHeight = bottomBar.value.clientHeight; 
   return 100 + topBarHeight.value;
 });
 
@@ -600,8 +604,8 @@ const onEsc = (event) => {
 // 初始化
 const init = () => {
   // 获取菜单高度
-  const bottomBar = document.getElementsByClassName("xt-main-bottom-bar")[0];
-  if (bottomBar) barHeight = bottomBar.clientHeight;
+  bottomBar.value = document.getElementsByClassName("xt-main-bottom-bar")[0];
+  if (bottomBar.value) barHeight = bottomBar.value.clientHeight;
   // else if () {}
 
   // 初始化弹窗位置

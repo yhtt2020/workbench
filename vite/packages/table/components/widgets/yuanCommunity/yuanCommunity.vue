@@ -14,7 +14,6 @@
             :sizeList="sizeList"
             :customData="customData"
             @delete="deleteCard">
-            ???
             <div v-if="showForumList.length > 0" class="flex flex-col flex-1 " style="height: calc(100%);">
                 <xt-option-tab
                     v-if="showForumList.length > 1"
@@ -180,6 +179,7 @@ export default {
             'getMyForumList',
             'getCommunityPost',
         ]),
+        // 导航栏删除图标回调
         deleteCard() {
             this.$emit('delete')
         },
@@ -211,6 +211,7 @@ export default {
             this.isClick = false
             // console.log(this.cardData);
         },
+        // 关闭详情弹窗
         closeDetail(value) {
             this.communityPostDetail = []
             this.communityReply = []
