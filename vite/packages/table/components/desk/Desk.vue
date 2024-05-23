@@ -230,7 +230,7 @@ import GalleryModal from "../paperModal/PaperApp.vue";
 import { useAddCard } from "../../ui/hooks/useAddCard";
 import { useDeskStore } from "./store";
 import { useFileConversionIcon } from "../../apps/folder/src/hooks/useDataConversion";
-import { taskStore } from "../../../table/apps/task/store";
+import { taskStore } from '../../apps/task/store';
 
 import Drop from "./Drop.vue";
 import AppCenter from "../../apps/appCenter";

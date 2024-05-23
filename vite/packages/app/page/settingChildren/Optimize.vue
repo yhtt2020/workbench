@@ -45,7 +45,7 @@ import DebugTip from '../../components/DebugTip.vue'
 import _ from 'lodash-es'
 import { usePlat } from '../../../table/ui/hooks/usePlat'
 let appModel
-if (!usePlat()) {
+if (usePlat('client')) {
 
   appModel = window.$models.appModel
 }

@@ -187,7 +187,7 @@ import { useDeskStore } from "../../../components/desk/store.ts";
 import { COMPONENT_LIMIT } from "../../../permission/config";
 import { usePlat } from "../../../ui/hooks/usePlat";
 import { comCanUse } from "../../../permission/usePlat";
-
+import {cdnUrl} from '../../../consts'
 export default {
   emits: ["close", "addSuccess"],
   props: {
@@ -290,8 +290,8 @@ export default {
       this.$emit("addSuccess");
       message.success("添加成功！");
     },
-    getImg(url) {
-      return `https://a.apps.vip/cards/${url}.png`;
+    getImg (url) {
+      return cdnUrl(`/cards/${url}.png`)
     },
     mySort(data, property, asc) {
       let datas = [...data];

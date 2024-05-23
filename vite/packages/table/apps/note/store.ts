@@ -48,6 +48,8 @@ export const noteStore = defineStore("noteStore", {
     searchValue: '',
     // 开关
     flag: true,
+    // 弹窗模式
+    isModal: '',
   }),
   actions: {
     //初始化 从全部桌面读取便签
