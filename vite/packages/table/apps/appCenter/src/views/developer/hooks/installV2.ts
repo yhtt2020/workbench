@@ -1,15 +1,39 @@
+import { confirm } from './../../../../../../ui/new/confirm/index';
 import { message } from "ant-design-vue";
 import { getAppImg } from "../../../../../ttApp/src/hooks/getAppImg";
 import { useTTAppStore } from "../../../../../ttApp/src/store";
 import { storeToRefs } from "pinia";
 
 import { useMit } from "../../../../../../hooks";
+import { usePlat } from "../../../../../../permission/usePlat";
 
 import { addIcon, addNav } from "./add";
 import { update } from "./update";
 
+// web端导入应用确认框
+const confirm = () => {
+  window.$ui.confirm(
+    'web端暂不支持导入应用',
+    "请下载客户端体验完整功能",
+    {
+      noText:'稍后再说',
+      okText:'前往下载',
+      ok:()=>{
+        window.open('https://www.apps.vip/download/')
+      },
+      okButtonWidth:'95',
+      noButtonWidth:'95',
+    }
+  )
+}
 // 安装实现
 export const installV2 = async (id?: string) => {
+  // 判断是否是web端，web端不支持导入
+  const plat = usePlat();
+  if(plat){
+    confirm()
+    return
+  }
   // 获取文件
   let path = await tsbApi.dialog.showOpenDialog({
     title: "选择",
