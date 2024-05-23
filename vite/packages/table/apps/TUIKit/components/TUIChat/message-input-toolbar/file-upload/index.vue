@@ -1,6 +1,6 @@
 <template>
   <ToolbarItemContainer
-    :iconFile="'fluent:folder-16-regular'"
+    :iconFile="'fluent:folder-16-filled'"
     title="文件"
     :iconWidth="isUniFrameWork ? '32px' : '21px'"
     :iconHeight="isUniFrameWork ? '25px' : '18px'"

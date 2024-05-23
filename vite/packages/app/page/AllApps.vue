@@ -50,9 +50,9 @@ import { SettingOutlined, EditOutlined, EllipsisOutlined } from '@ant-design/ico
 import { mapActions } from 'pinia'
 import { appStore } from '../store'
 import {Modal,message } from 'ant-design-vue'
-import { useEnv } from '../../table/ui/hooks/useEnv'
+import { usePlat } from '../../table/ui/hooks/usePlat'
 let appModel
-if (!useEnv('web')) {
+if (usePlat('client')) {
   appModel = window.$models.appModel
 }
 export default {

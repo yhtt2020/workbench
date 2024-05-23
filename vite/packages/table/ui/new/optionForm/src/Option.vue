@@ -54,9 +54,7 @@
     v-bind="option"
     v-model:mode="data[option.dropKey]"
     :style="lineSpaceStyle"
-  >
-    
-  </dropDown>
+  />
   <!-- 自定义插槽 -->
   <slot v-else-if="option.type === 'slot'" :name="option.slot"> </slot>
   <div v-if="option?.border" class="tt-divider"></div>
@@ -65,6 +63,7 @@
 <script setup lang="ts">
 import { defineAsyncComponent } from 'vue'
 
+// 下拉框选择 -- 打开模式选择（包含手机模式）
 const dropDown = defineAsyncComponent(
   () => import('../../../../../table/components/desk/navigationBar/components/dropDown/DropDown.vue'));
 export interface fromProps {

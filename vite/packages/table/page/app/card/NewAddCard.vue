@@ -125,6 +125,7 @@
           ></DeskMarket>
           <!-- 预览 -->
           <DeskPreview
+            v-if="showModal"
             @afterAdded="onBack"
             :deskList="deskList"
             :scheme="scheme"
@@ -155,9 +156,10 @@ import DeskMarket from "./DeskMarket.vue";
 import ShareDesk from "../../../components/desk/ShareDesk.vue";
 import DeskPreview from "../../../components/desk/DeskPreview.vue";
 import { marketStore } from "../../../store/market";
-import { offlineStore } from "../../../js/common/offline";
+import { singleStore } from "../../../js/common/single";
 import { taskStore } from "../../../apps/task/store";
 import { getCardData } from "../../../apps/ttApp/src/hooks/getCardData";
+import { comCanUse } from "../../../permission/usePlat";
 export default {
   name: "AddCard",
   components: {
@@ -232,6 +234,31 @@ export default {
     if (this.currentId == "M0302") {
       this.updateNavIndex(7);
     }
+    // 用于是否满足社群桌面条件的小组件卡片数据。
+    const disabledCard = [
+      "Audio",
+      "capture",
+      "supervisory",
+      "shortcutKey",
+      "myFriends",
+      "gameAssis",
+      "clipBoard",
+      "Courier",
+    ];
+    const mapFilter = this.baseNavList.map((nav) => {
+      const filterChildren = nav.children.filter((item) => {
+        return !disabledCard.includes(item.name);
+      });
+      return {
+        ...nav,
+        children: filterChildren,
+      };
+    });
+    if(this.desk.hasOwnProperty("communityNo")){
+      // 重新赋值
+      this.baseNavList = mapFilter;
+    }
+
     // 这里是预留给api请求到时间和下载数据添加数据使用
     let navList = _.cloneDeep(this.baseNavList);
 
@@ -254,18 +281,23 @@ export default {
       children: items,
     });
 
-
     navList.forEach((li) => {
       // 离线模式时 隐藏卡片添加
-      if (this.getIsOffline()) {
+      if (window.$isSingle) {
         li.children = li.children.filter((ele) => {
-          if (this.offlineList.indexOf(ele.name) < 0) {
+          if (this.singleList.indexOf(ele.name) < 0) {
             return ele;
           }
         });
       }
 
-      li.cname = li.cname + `（${li.children.length}）`;
+      li.cname =
+        li.cname +
+        `（${
+          li.children.filter((item) => {
+            return comCanUse(item.name);
+          }).length
+        }）`;
     });
 
     this.baseNavList = navList.map((item) => {
@@ -292,7 +324,7 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(offlineStore, ["isOffline", "offlineList"]),
+    ...mapWritableState(singleStore, ["singleList"]),
     ...mapWritableState(deskStore, ["apiList"]),
     ...mapWritableState(taskStore, ["currentId", "step", "success"]),
 
@@ -341,7 +373,6 @@ export default {
     ...mapActions(marketStore, ["getCategories", "getDesks", "getRecommend"]),
     // ...mapActions(deskStore,['setDeskSize']),
     ...mapActions(cardStore, ["setDeskSize"]),
-    ...mapActions(offlineStore, ["getIsOffline"]),
     doSearch() {
       if (this.selectNav.name === "small") {
         this.keyword = this.search.keywords;
@@ -402,8 +433,8 @@ export default {
     updateNavIndex(index) {
       this.navIndex = index;
     },
-    changeCategory(category) {
-      this.updateDesks(category.id);
+    changeCategory(category, index) {
+      this.updateDesks(category.id, index);
     },
     /**
      * 更新桌面列表
@@ -412,8 +443,8 @@ export default {
      * @param order
      * @returns {Promise<void>}
      */
-    async updateDesks(categoryIndex = this.categoryIndex) {
-      this.categoryIndex = categoryIndex;
+    async updateDesks(categoryIndex = this.categoryIndex, index) {
+      this.categoryIndex = index;
       const keyWord = this.keyword;
       const order =
         this.search.order === "default" ? undefined : this.search.order;
@@ -443,9 +474,7 @@ export default {
         keyWord: keyWord,
         order: order,
       };
-      console.log("需要搜索", params);
       let rs = await this.getDesks(params);
-      console.log(rs, "搜索结果");
       this.desks = rs.list;
       this.deskPagination = rs.pagination;
     },

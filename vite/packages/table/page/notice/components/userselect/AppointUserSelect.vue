@@ -29,7 +29,7 @@
         </div>
         <xt-button style="width: auto !important;" h="0" @click="removeSelectUser(index)">
          <div class="flex items-center justify-center">
-           <xt-new-icon icon="fluent:delete-16-regular" size="20"></xt-new-icon>
+           <xt-new-icon icon="fluent:delete-16-filled" size="20"></xt-new-icon>
          </div>
         </xt-button>
        </div>

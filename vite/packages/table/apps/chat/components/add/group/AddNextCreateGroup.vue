@@ -6,7 +6,7 @@
       <xt-button w="32" h="32" style="border-radius: 8px" @click="returnPrev">
         <div class="flex items-center justify-center">
           <xt-ify-icon
-            icon="fluent:chevron-left-16-regular"
+            icon="fluent:chevron-left-16-filled"
             size="20"
             class="xt-text"
           />
@@ -19,7 +19,7 @@
       <xt-button w="32" h="32" style="border-radius: 8px" @click="closeNext">
         <div class="flex items-center justify-center">
           <xt-ify-icon
-            icon="fluent:dismiss-16-regular"
+            icon="fluent:dismiss-16-filled"
             size="20"
             class="xt-text"
           />
@@ -47,7 +47,7 @@
           ></a-avatar>
         </div>
         <xt-ify-icon
-          icon="fluent:camera-16-regular"
+          icon="fluent:camera-16-filled"
           style="
             position: absolute;
             bottom: 0;
@@ -165,7 +165,7 @@ import { currentGroupType } from "../../../hooks/groupType";
 import { message } from "ant-design-vue";
 import { useRouter } from "vue-router";
 
-const chat = window.$chat.chat;
+const chat = window.$chat?.chat;
 const router = useRouter();
 const emit = defineEmits(["return", "close","handleGroup"]);
 

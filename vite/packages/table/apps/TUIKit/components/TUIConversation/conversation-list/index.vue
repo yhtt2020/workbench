@@ -1,134 +1,164 @@
 <template>
   <div class="tui-conversation-list">
-    <ActionsMenu
-      v-if="isShowOverlay"
-      :selectedConversation="currentConversation"
-      :actionsMenuPosition="actionsMenuPosition"
-      :selectedConversationDomRect="currentConversationDomRect"
-      @closeConversationActionMenu="closeConversationActionMenu"
-    />
-    <div
-      v-for="(conversation, index) in conversationList"
-      :id="`convlistitem-${index}`"
-      :key="index"
-      :class="[
-        'tui-conversation-content',
-        !isPC && 'tui-conversation-content-h5',
-      ]"
-      class="relative"
-    >
+    <!-- 会话列表空状态 -->
+    <template v-if="conversationList.length === 0">
+      <SessionEmpty />
+    </template>
+
+    <template v-else>
+      <ActionsMenu
+        v-if="isShowOverlay"
+        :selectedConversation="currentConversation"
+        :actionsMenuPosition="actionsMenuPosition"
+        :selectedConversationDomRect="currentConversationDomRect"
+        @closeConversationActionMenu="closeConversationActionMenu"
+      />
       <div
+        v-for="(conversation, index) in conversationList"
+        :id="`convlistitem-${index}`"
+        :key="index"
         :class="[
-          isPC && 'isPC',
-          'tui-conversation-item',
-          currentConversationID === conversation.conversationID &&
-            'tui-conversation-item-selected',
-          conversation.isPinned && 'tui-conversation-item-pinned',
+          'tui-conversation-content',
+          isMobile && 'tui-conversation-content-h5 disable-select',
         ]"
-        @click="enterConversationChat(conversation.conversationID)"
-        @longpress="showConversationActionMenu($event, conversation, index)"
-        @contextmenu.prevent="
-          showConversationActionMenu($event, conversation, index, true)
-        "
+        class="relative"
       >
-        <aside class="left">
-          <!-- 将conversation.getAvatar()替换成conversation.groupProfile.avatar来实现真实图片展示,从而达到demo图片的替换  -->
-          <!-- 
-            conversation?.type === 'GROUP'是否为群聊,
-            群聊走conversation?.groupProfile?.avatar
-            好友走conversation?.userProfile?.avatar
-            来处理IM自定义的头像
-          -->
-          <Avatar
-            useSkeletonAnimation
-            :url="
-              conversation?.type === 'GROUP'
-                ? conversation?.groupProfile?.avatar
-                : conversation?.userProfile?.avatar
-            "
-            size="30px"
-          />
-          <div
-            v-if="userOnlineStatusMap && isShowUserOnlineStatus(conversation)"
-            :class="[
-              'online-status',
-              Object.keys(userOnlineStatusMap).length > 0 &&
-              Object.keys(userOnlineStatusMap).includes(
-                conversation.userProfile.userID
-              ) &&
-              userOnlineStatusMap[conversation.userProfile.userID]
-                .statusType === 1
-                ? 'online-status-online'
-                : 'online-status-offline',
-            ]"
-          />
-          <span
-            v-if="conversation.unreadCount > 0 && !conversation.isMuted"
-            class="num"
-          >
-            {{
-              conversation.unreadCount > 99 ? "99+" : conversation.unreadCount
-            }}
-          </span>
-          <span
-            v-if="conversation.unreadCount > 0 && conversation.isMuted"
-            class="num-notify"
-          />
-        </aside>
-        <div class="content">
-          <div class="content-header">
-            <label class="content-header-label">
-              <!-- 将当前conversation.getShowName()替换好友昵称,群聊昵称 -->
-              <!-- 理由是:会显示出通过好友列表添加这样的字样 -->
-              <p class="name">
-                {{
-                  conversation?.type === "GROUP"
-                    ? conversation?.groupProfile?.name
-                    : conversation?.userProfile?.nick
-                }}
-              </p>
-            </label>
-            <div class="middle-box">
-              <span
-                v-if="
-                  conversation.type === 'GROUP' &&
-                  conversation.groupAtInfoList &&
-                  conversation.groupAtInfoList.length > 0
-                "
-                class="middle-box-at"
-                >{{ conversation.getGroupAtInfo() }}</span
-              >
-              <p class="middle-box-content">
-                {{ conversation.getLastMessage("text") }}
-              </p>
+        <div
+          :class="[
+            isPC && 'isPC',
+            'tui-conversation-item',
+            currentConversationID === conversation.conversationID &&
+              'tui-conversation-item-selected',
+            conversation.isPinned && 'tui-conversation-item-pinned',
+          ]"
+          @click="enterConversationChat(conversation.conversationID)"
+          @longpress="showConversationActionMenu($event, conversation, index)"
+          @contextmenu.prevent="
+            showConversationActionMenu($event, conversation, index, true)
+          "
+        >
+          <aside class="left">
+            <!-- 将conversation.getAvatar()替换成conversation.groupProfile.avatar来实现真实图片展示,从而达到demo图片的替换  -->
+  
+            <!-- conversation?.type === 'GROUP'是否为群聊,
+              群聊走conversation?.groupProfile?.avatar
+              好友走conversation?.userProfile?.avatar
+              来处理IM自定义的头像
+               :borderRadius="conversation?.type === 'GROUP' ? '5px':'50%'"
+               群聊是正方形,好友是圆形 -->
+  
+            <Avatar
+              useSkeletonAnimation
+              :url="
+                conversation?.type === 'GROUP'
+                  ? conversation?.groupProfile?.avatar
+                  : conversation?.userProfile?.avatar
+              "
+              size="30px"
+              :borderRadius="conversation?.type === 'GROUP' ? '5px' : '50%'"
+            />
+            <div
+              v-if="userOnlineStatusMap && isShowUserOnlineStatus(conversation)"
+              :class="[
+                'online-status',
+                Object.keys(userOnlineStatusMap).length > 0 &&
+                Object.keys(userOnlineStatusMap).includes(
+                  conversation.userProfile.userID
+                ) &&
+                userOnlineStatusMap[conversation.userProfile.userID]
+                  .statusType === 1
+                  ? 'online-status-online'
+                  : 'online-status-offline',
+              ]"
+            />
+            <span
+              v-if="conversation.unreadCount > 0 && !conversation.isMuted"
+              class="num"
+            >
+              {{
+                conversation.unreadCount > 99 ? "99+" : conversation.unreadCount
+              }}
+            </span>
+            <span
+              v-if="conversation.unreadCount > 0 && conversation.isMuted"
+              class="num-notify"
+            />
+          </aside>
+          <div class="content">
+            <div class="content-header">
+              <label class="content-header-label">
+                <!-- 将当前conversation.getShowName()替换好友昵称,群聊昵称 -->
+                <!-- 理由是:会显示出通过好友列表添加这样的字样 -->
+                <p class="name">
+                  {{
+                    conversation?.type === "GROUP"
+                      ? conversation?.groupProfile?.name
+                      : conversation?.userProfile?.nick
+                  }}
+                </p>
+              </label>
+              <div class="middle-box">
+                <span
+                  v-if="
+                    conversation.type === 'GROUP' &&
+                    conversation.groupAtInfoList &&
+                    conversation.groupAtInfoList.length > 0
+                  "
+                  class="middle-box-at"
+                  >{{ conversation.getGroupAtInfo() }}</span
+                >
+                <p class="middle-box-content">
+                  <!-- 新代码将通过好友列表添加的字样进行清除 -->
+                  {{ text(conversation) }}
+                  <!-- 旧代码 -->
+                  <!-- {{ conversation.getLastMessage("text") }} -->
+                </p>
+              </div>
+            </div>
+            <div class="content-footer">
+              <span class="time">{{ conversation.getLastMessage("time") }}</span>
+              <!-- IM的UI图标组件 -->
+              <!-- <Icon v-if="conversation.isMuted" :file="muteIcon" /> -->
+  
+              <!-- 新版替换的图标组件 -->
+              <xt-ify-icon
+                v-if="conversation.isMuted"
+                icon="fluent:alert-off-16-filled"
+                size="20"
+                class="xt-text-2 muted-icon"
+              />
             </div>
           </div>
-          <div class="content-footer">
-            <span class="time">{{ conversation.getLastMessage("time") }}</span>
-            <!-- IM的UI图标组件 -->
-            <!-- <Icon
-              v-if="conversation.isMuted"
-              :file="muteIcon"
-            /> -->
-
-            <!-- 新版替换的图标组件 -->
-            <xt-ify-icon
-              v-if="conversation.isMuted"
-              icon="fluent:alert-off-16-regular"
-              size="20"
-              class="xt-text-2 muted-icon"
-            />
-          </div>
+  
+          <!-- 新增置顶标记图标 -->
+          <div class="isPined-icon" v-if="conversation.isPinned"></div>
         </div>
-
-        <!-- 新增置顶标记图标 -->
-        <div class="isPined-icon" v-if="conversation.isPinned"></div>
       </div>
-    </div>
+    </template>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { ref, computed, onMounted, onUnmounted } from "../../../adapter-vue";
+import TUIChatEngine, {
+  TUIStore,
+  StoreName,
+  TUIConversationService,
+  IConversationModel,
+} from "@tencentcloud/chat-uikit-engine";
+import {
+  TUIGlobal,
+  isIOS,
+  addLongPressListener,
+} from "@tencentcloud/universal-api";
+import Icon from "../../common/Icon.vue";
+import Avatar from "../../common/Avatar/index.vue";
+import ActionsMenu from "../actions-menu/index.vue";
+import muteIcon from "../../../assets/icon/mute.svg";
+import SessionEmpty from "../../../../chat/page/empty/SessionEmpty.vue";
+
+import { isPC, isH5, isUniFrameWork, isMobile } from "../../../utils/env";
+
 interface IUserStatus {
   statusType: number;
   customStatus: string;
@@ -138,20 +168,6 @@ interface IUserStatusMap {
   [userID: string]: IUserStatus;
 }
 
-import { ref } from "../../../adapter-vue";
-import TUIChatEngine, {
-  TUIStore,
-  StoreName,
-  TUIConversationService,
-  IConversationModel,
-} from "@tencentcloud/chat-uikit-engine";
-import { TUIGlobal } from "@tencentcloud/universal-api";
-import Icon from "../../common/Icon.vue";
-import Avatar from "../../common/Avatar/index.vue";
-import ActionsMenu from "../actions-menu/index.vue";
-import muteIcon from "../../../assets/icon/mute.svg";
-import { isPC, isH5, isUniFrameWork } from "../../../utils/env";
-
 const emits = defineEmits(["handleSwitchConversation", "getPassingRef"]);
 const currentConversation = ref<IConversationModel>();
 const currentConversationID = ref<string>();
@@ -159,46 +175,51 @@ const currentConversationDomRect = ref<DOMRect>();
 const isShowOverlay = ref<boolean>(false);
 const conversationList = ref<IConversationModel[]>([]);
 const conversationListDomRef = ref<HTMLElement | undefined>();
+const conversationListInnerDomRef = ref<HTMLElement | undefined>();
 const actionsMenuPosition = ref<{
   top: number;
-  left?: number;
-  conversationHeight?: number;
+  left: number | undefined;
+  conversationHeight: number | undefined;
 }>({
   top: 0,
+  left: undefined,
+  conversationHeight: undefined,
 });
 const displayOnlineStatus = ref(false); // 在线状态 默认关闭
 const userOnlineStatusMap = ref<IUserStatusMap>();
 
 let lastestOpenActionsMenuTime: number | null = null;
 
-TUIStore.watch(StoreName.CONV, {
-  currentConversationID: (id: string) => {
-    currentConversationID.value = id;
-  },
-  conversationList: (list: Array<IConversationModel>) => {
-    conversationList.value = list;
-  },
-  currentConversation: (conversation: IConversationModel) => {
-    currentConversation.value = conversation;
-  },
+onMounted(() => {
+  TUIStore.watch(StoreName.CONV, {
+    currentConversationID: onCurrentConversationIDUpdated,
+    conversationList: onConversationListUpdated,
+    currentConversation: onCurrentConversationUpdated,
+  });
+
+  // 初始状态
+  TUIStore.watch(StoreName.USER, {
+    displayOnlineStatus: onDisplayOnlineStatusUpdated,
+    userStatusList: onUserStatusListUpdated,
+  });
+
+  if (!isUniFrameWork && isIOS && !isPC) {
+    addLongPressHandler();
+  }
 });
 
-// 初始状态
-TUIStore.watch(StoreName.USER, {
-  displayOnlineStatus: (status: boolean) => {
-    displayOnlineStatus.value = status;
-  },
-  userStatusList: (list: Map<string, IUserStatus>) => {
-    if (list.size !== 0) {
-      userOnlineStatusMap.value = [...list.entries()].reduce(
-        (obj, [key, value]) => {
-          obj[key] = value;
-          return obj;
-        },
-        {} as IUserStatusMap
-      );
-    }
-  },
+onUnmounted(() => {
+  TUIStore.unwatch(StoreName.CONV, {
+    currentConversationID: onCurrentConversationIDUpdated,
+    conversationList: onConversationListUpdated,
+    currentConversation: onCurrentConversationUpdated,
+  });
+
+  // 初始状态
+  TUIStore.unwatch(StoreName.USER, {
+    displayOnlineStatus: onDisplayOnlineStatusUpdated,
+    userStatusList: onUserStatusListUpdated,
+  });
 });
 
 const isShowUserOnlineStatus = (conversation: IConversationModel): boolean => {
@@ -214,8 +235,11 @@ const showConversationActionMenu = (
   index: number,
   isContextMenuEvent?: boolean
 ) => {
-  if (isContextMenuEvent && isUniFrameWork) {
-    return;
+  if (isContextMenuEvent) {
+    event.preventDefault();
+    if (isUniFrameWork) {
+      return;
+    }
   }
   currentConversation.value = conversation;
   lastestOpenActionsMenuTime = Date.now();
@@ -248,6 +272,7 @@ const getActionsMenuPosition = (event: Event, index: number) => {
           actionsMenuPosition.value = {
             // uni-h5的uni-page-head不被认为是视窗中的成员，因此手动上head的高度
             top: data.bottom + (isH5 ? 44 : 0),
+            // @ts-expect-error in uniapp event has touches property
             left: event.touches[0].pageX,
             conversationHeight: data.height,
           };
@@ -257,11 +282,14 @@ const getActionsMenuPosition = (event: Event, index: number) => {
       .exec();
   } else {
     // 处理Vue原生
-    const rect = (event.currentTarget as HTMLElement)?.getBoundingClientRect();
+    const rect =
+      (
+        (event.currentTarget || event.target) as HTMLElement
+      )?.getBoundingClientRect() || {};
     if (rect) {
       actionsMenuPosition.value = {
         top: rect.bottom,
-        left: isPC ? event.clientX : undefined,
+        left: isPC ? (event as MouseEvent).clientX : undefined,
         conversationHeight: rect.height,
       };
     }
@@ -274,8 +302,90 @@ const enterConversationChat = (conversationID: string) => {
   TUIConversationService.switchConversation(conversationID);
 };
 
+function addLongPressHandler() {
+  if (!conversationListInnerDomRef.value) {
+    return;
+  }
+  addLongPressListener({
+    element: conversationListInnerDomRef.value,
+    onLongPress: (event, target) => {
+      const index = (
+        Array.from(conversationListInnerDomRef.value!.children) as HTMLElement[]
+      ).indexOf(target!);
+      showConversationActionMenu(event, conversationList.value[index], index);
+    },
+    options: {
+      eventDelegation: {
+        subSelector: ".tui-conversation-content",
+      },
+    },
+  });
+}
+
+function onCurrentConversationUpdated(conversation: IConversationModel) {
+  currentConversation.value = conversation;
+}
+
+function onConversationListUpdated(list: IConversationModel[]) {
+  conversationList.value = list;
+}
+
+function onCurrentConversationIDUpdated(id: string) {
+  currentConversationID.value = id;
+}
+
+function onDisplayOnlineStatusUpdated(status: boolean) {
+  displayOnlineStatus.value = status;
+}
+
+function onUserStatusListUpdated(list: Map<string, IUserStatus>) {
+  if (list.size !== 0) {
+    userOnlineStatusMap.value = [...list.entries()].reduce(
+      (obj, [key, value]) => {
+        obj[key] = value;
+        return obj;
+      },
+      {} as IUserStatusMap
+    );
+  }
+}
+
+/**新增修改**/
+const text = (conversation: any) => {
+  const isUserName = conversation.userProfile?.nick;
+  const isGroupName = conversation.lastMessage?.nick;
+  const isText = conversation.lastMessage?.payload?.text;
+  const isMessageForShow = conversation.lastMessage?.messageForShow;
+  const isFromAccount = conversation.lastMessage?.fromAccount;
+
+  /**群聊**/
+  if (conversation.type === "GROUP") {
+    if (isGroupName && isText) return `${isGroupName}:${isText}`;
+    else if (isGroupName && isMessageForShow)
+      return `${isGroupName}:${isMessageForShow}`;
+    else if (isFromAccount && isText) return `${isFromAccount}:${isText}`;
+    else return "";
+  } else {
+    /**好友**/
+    if (isUserName && isText) return `${isUserName}:${isText}`;
+    else if (isUserName && isMessageForShow)
+      return `${isUserName}:${isMessageForShow}`;
+    return "";
+  }
+};
+
 // 暴露给父组件，当监听到滑动事件时关闭actionsMenu
 defineExpose({ closeChildren: closeConversationActionMenu });
 </script>
 
 <style lang="scss" scoped src="./style/index.scss"></style>
+<style lang="scss" scoped>
+.disable-select {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+</style>

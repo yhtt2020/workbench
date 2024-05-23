@@ -7,7 +7,7 @@
      <a-col class="image-wrapper" v-for="(img,index) in paperList" :span="6">
       <div class="w-full h-full pointer img-hide">
        <xt-mix-menu :menus="paperMenus" fn="callBack" @mounted="currentPaperImg = img" :stopPropagation="false">
-        <xt-preview-img 
+        <xt-preview-img
           :imgList="imgList"
           :index="index">
         <img :src="img.thumbPath" :data-source="img.fullPath"  class="relative image-item pointer " />
@@ -23,13 +23,13 @@
         <div class="absolute flex right-2 top-1">
          <xt-button :w="modalWidth" :h="modalWidth" class="mr-1 xt-bg-t-2 img-button" style="border-radius: 8px; opacity: 0;" @click="download(img)" >
           <div class="flex items-center justify-center">
-           <xt-new-icon icon="fluent:arrow-download-16-regular" :size="isModal ? 16 : 20" :color="'var(--active-text)'"></xt-new-icon>
+           <xt-new-icon icon="fluent:arrow-download-16-filled" :size="isModal ? 16 : 20" :color="'var(--active-text)'"></xt-new-icon>
           </div>
          </xt-button>
          <xt-button :w="modalWidth" :h="modalWidth" class="mr-1 xt-bg-t-2 img-button" style="border-radius: 8px;" @click="addToMy(img)" :style="isInMyPapers(img) ? { opacity: '1' } :{ opacity: '0' }">
           <div class="flex items-center justify-center">
            <xt-new-icon icon="fluent:star-16-filled" v-if="isInMyPapers(img)" :size="isModal ? 16 : 20" :color="'var(--warning)'"></xt-new-icon>
-           <xt-new-icon icon="fluent:star-16-regular" v-else :size="isModal ? 16 : 20" :color="'var(--active-text)'"></xt-new-icon>
+           <xt-new-icon icon="fluent:star-16-filled" v-else :size="isModal ? 16 : 20" :color="'var(--active-text)'"></xt-new-icon>
           </div>
          </xt-button>
         </div>
@@ -68,7 +68,7 @@ export default {
    },
    paperMenus:[
     {
-     newIcon:'fluent:desktop-16-regular',name:'设为工作台背景',
+     newIcon:'fluent:desktop-16-filled',name:'设为工作台背景',
      callBack:()=>{ this.setAppPaper(this.currentPaperImg)
       completeTask('M0201',()=>{
         this.$bus.emit('closePaperModal')
@@ -79,7 +79,7 @@ export default {
      callBack:()=>{ this.setDesktopPaper() },
     },
     {
-     newIcon:'fluent:arrow-download-16-regular',name:'下载壁纸',
+     newIcon:'fluent:arrow-download-16-filled',name:'下载壁纸',
      callBack:()=>{ this.doStartDownload(this.currentPaperImg) },
     },
    ],
@@ -115,7 +115,7 @@ export default {
   download(img){
     if(this.settings.savePath === ''){
       window.$ui.confirm('您尚未设置壁纸保存目录，请设置目录，设置目录后下载将自动开始。','',{
-        index:1020,
+        index:100010,
         ok: async() => {
           await this.queryStart();
         },
@@ -132,7 +132,7 @@ export default {
       if(!exist && !regex.test(img.path)){ this.doStartDownload(img); }
       else {
         window.$ui.confirm('图片已下载','',{
-          index:1020,
+          index:100010,
           ok: async() => {},
           no: () => {},
           noText: null,
@@ -188,7 +188,7 @@ export default {
    setDesktopPaper(){
     if(this.currentPaperImg !== null){
       window.$ui.confirm('确定将此壁纸设置为系统桌面壁纸','确定将此壁纸设置为系统桌面壁纸？注意，此处设置不是工作台的壁纸。',{
-        index:1020,
+        index:100010,
         ok: () => {
           message.info('正在为您下载并设桌面壁纸');
           tsbApi.system.setPaper(this.currentPaperImg.path);

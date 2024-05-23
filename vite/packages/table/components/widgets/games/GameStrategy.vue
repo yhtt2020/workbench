@@ -1,12 +1,13 @@
 <template>
-  <xt-container 
+  <xt-container
     @titleHover="openGuideDrawer"
     v-model:customSize="customData.customSize"
     :header='header'
-    :envLimit="['web']"  
-    :options="options" 
-    :customData="customData" 
-    :customIndex="customIndex" 
+    :platLimit="['web']"
+    :envLimit="['guest', 'offline', 'single']"
+    :options="options"
+    :customData="customData"
+    :customIndex="customIndex"
     :desk="desk"
     @delete="deleteCard">
     <div class="flex w-full mb-3">
@@ -129,7 +130,8 @@ export default {
     header(){
       return {
         title:`游戏攻略 - ${this.customData.chineseName || ''}`,
-        ifyIcon:'fluent:games-16-regular',
+        // ifyIcon:'fluent:games-16-regular',
+        showIcon:"/img/appLogo/gameStrategy.png",
         titleHover:true,
         titleHoverName:"点击打开",
       }

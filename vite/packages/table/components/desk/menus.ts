@@ -62,7 +62,7 @@ function deskMenus() {
           newIcon: "mingcute:windows-line",
           name: "导入系统桌面图标",
           fn: this.arrange,
-          disabled: window.$useEnv(),
+          disabled: !window.$usePlat('client'),
         },
       ],
     },
@@ -78,13 +78,10 @@ function deskMenus() {
           `整理桌面会将当前自由布局卡片重新规整排列`,
           {
             ok: () => {
-              console.log("整理桌面 :>> ", 1111);
               useCustomLayout({
                 mainList: this.currentDesk.cards,
-                test: false,
+                // test: false,
                 cb: (position) => {
-                  console.log("整理桌面回调 :>> ", 2222);
-
                   this.$bus.emit("cutCanvas", position);
                 },
               });
@@ -114,7 +111,7 @@ function deskMenus() {
       newIcon: "fluent:image-multiple-16-regular",
       name: "更换壁纸",
       fn: () => {
-        this.$refs.galleryRef.openGalleryModal();
+        this.$refs.galleryRef.openPaperAppModal();
       },
     },
     // {
@@ -145,7 +142,7 @@ function deskMenus() {
     //   ],
     // },
 
-    { id: 13, divider: true },
+    // { id: 13, divider: true },
     {
       id: 20,
       newIcon: "fluent:more-horizontal-16-filled",

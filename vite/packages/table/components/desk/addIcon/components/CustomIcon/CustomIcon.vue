@@ -38,7 +38,9 @@ const data = ref({
 const emit = defineEmits(['addIcon'])
 
 const saveIcon = (item) => {
+    // console.log(item,'before')
     const icon = useIconConversionFile(item)
+    // console.log(icon,'after')
     emit('addIcon',icon)
     linkVisible.value = false
 }

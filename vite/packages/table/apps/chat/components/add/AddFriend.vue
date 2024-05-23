@@ -19,7 +19,7 @@
           <xt-button style="width: auto !important" h="0" v-if="keyWord === ''">
             <div class="flex items-center justify-center">
               <xt-ify-icon
-                icon="fluent:search-16-regular"
+                icon="fluent:search-16-filled"
                 size="20"
                 class="xt-text-2"
               />
@@ -62,7 +62,7 @@
               type="primary"
               h="32"
               w="80"
-              @click="addFriend(item)"
+              @click="addCurrentFriend(item)"
               v-if="!isCheckAdd"
               style="border-radius: 8px"
             >
@@ -98,7 +98,6 @@ import { completeTask } from "../../../task/task";
 
 const TUIConstants = Server.getInstance()?.constants?.TUISearch;
 const TUISearchServer = TUICore.getService(TUIConstants?.SERVICE?.NAME);
-const chat = window.$chat.chat;
 
 const keyWord = ref("");
 // 好友结果
@@ -151,14 +150,15 @@ const isCheckAdd = computed(() => {
 });
 
 // 添加好友
-const addFriend = async(item) => {
+const addCurrentFriend = async(item) => {
   const option = {
     to: item.userID,
-    type: TUIChatEngine.TYPES.SNS_ADD_TYPE_BOTH,
     source: "AddSource_Type_Web",
     remark: item.nick,
+    groupName:'好友',
+    type: TUIChatEngine.TYPES.SNS_ADD_TYPE_BOTH,
   };
-  const res = await chat.addFriend(option);
+  const res = await window.$chat?.chat?.addFriend(option);
   if(res.code === 0){
     message.success("添加好友成功");
     keyWord.value = '';

@@ -21,7 +21,7 @@
             class="flex items-center justify-center"
             v-if="joinData.searchKeyword === ''"
           >
-            <xt-ify-icon icon="fluent:search-16-regular" size="20" />
+            <xt-ify-icon icon="fluent:search-16-filled" size="20" />
           </div>
           <div v-else class="flex items-center justify-center">
             <xt-ify-icon
@@ -87,8 +87,8 @@ const openJoinCom = () => {
 
 // 关闭加入社区弹窗
 const closeJoinCom = () => {
-  joinComVisible.value = false;
   joinData.value.searchKeyword = "";
+  joinComVisible.value = false;
 };
 
 // 通过计算属性获取推荐社区列表

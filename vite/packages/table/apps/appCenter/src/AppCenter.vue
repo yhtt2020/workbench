@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed ,watch, defineAsyncComponent} from "vue";
 import Developer from "./views/developer/Developer.vue";
 import { useAppCenterStore } from "./store";
 import { useTTAppStore } from "../../ttApp/src/store";
@@ -7,6 +7,9 @@ import { storeToRefs } from "pinia";
 const ttappStore = useTTAppStore();
 const appCenterStore = useAppCenterStore();
 const { visible } = storeToRefs(appCenterStore);
+
+// 退出组件
+const Exit = defineAsyncComponent(() => import("./component/exit.vue"));
 // 左侧对应组件
 const components = ref({
   Developer,
@@ -65,7 +68,7 @@ const switchCurrentCom = (name: string) => {
 </script>
 
 <template>
-  <xt-modal v-model="visible" index="1200" custom>
+  <xt-modal v-model="visible" index="1200" custom :mask="false">
     <div style="width: 1000px; height: 720px">
       <!-- 左侧菜单容器 -->
       <xt-left-menu
@@ -76,7 +79,10 @@ const switchCurrentCom = (name: string) => {
         leftBg="red"
       >
         <div class="w-full h-full py-4 pr-4">
-          <div v-if="currentCom !== 'Developer'">无暂未开发</div>
+          <div v-if="currentCom !== 'Developer'" class="flex justify-between">
+            无暂未开发
+            <Exit />
+          </div>
           <component v-else :is="components[currentCom]" />
         </div>
       </xt-left-menu>

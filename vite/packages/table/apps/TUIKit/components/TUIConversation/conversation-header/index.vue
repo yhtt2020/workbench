@@ -1,8 +1,9 @@
 <template>
+  <!-- :ref="convHeaderRef" 这里暂时没有用到先屏蔽 解决refs报错问题 -->
   <div
-    :ref="convHeaderRef"
     class="tui-conversation-header"
   >
+  
     <ul
       v-if="menuList.length > 0"
       class="list"
@@ -63,7 +64,8 @@ import Icon from '../../common/Icon.vue';
 import Server, { IMenuItem } from './server';
 
 const showChildren = ref<Array<IMenuItem>>([]);
-const convHeaderRef = ref<HTMLElement | undefined>();
+/**这里暂时没有用到先屏蔽 解决refs报错问题**/  
+// const convHeaderRef = ref<HTMLElement | undefined>();
 
 const menuList = computed(() => {
   return Server.getInstance().getMenu();

@@ -50,7 +50,6 @@ const {
   dragData,
   freeLayoutEnv,
   getFreeLayoutData,
-  getCurrentDeskId,
   isSelectAll,
   isFreeLayout,
 } = storeToRefs(freeLayoutStore);
@@ -97,7 +96,7 @@ onMounted(() => {
   window.addEventListener("mousemove", handleMouseMove);
   // 监听鼠标抬起事件;
   window.addEventListener("mouseup", handleMouseUp);
-  // document.body.addEventListener("keydown", ignoreSpace);
+  document.body.addEventListener("keydown", ignoreSpace);
   // 监听用于更新滚动条X轴滚动事件
   // proxy.$bus.on("updateFreeLayoutScrollX", (x) => {
   //   scrollbar.value.scrollLeft = x;
@@ -133,14 +132,14 @@ watch([isFreeLayout, () => scrollSize.value], ([state, size]) => {
 });
 
 function ignoreSpace(event) {
-  // var e = window.event || event;
-  // if (e.keyCode === 32) {
-  //   if (e.preventDefault) {
-  //     // e.preventDefault();
-  //   } else {
-  //     window.event.returnValue = false;
-  //   }
-  // }
+  var e = window.event || event;
+  if (e.keyCode === 32) {
+    if (e.preventDefault) {
+      e.preventDefault();
+    } else {
+      window.event.returnValue = false;
+    }
+  }
 }
 
 // 鼠标滚动
@@ -269,7 +268,7 @@ onBeforeUnmount(() => {
   window.removeEventListener("mousedown", handleMouseDown);
   window.removeEventListener("mousemove", handleMouseMove);
   window.removeEventListener("mouseup", handleMouseUp);
-  // document.body.removeEventListener("keydown", ignoreSpace);
+  document.body.removeEventListener("keydown", ignoreSpace);
 
   proxy.$bus.off("updateFreeLayoutScroll");
 });

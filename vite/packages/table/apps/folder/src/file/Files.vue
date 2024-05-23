@@ -1,19 +1,43 @@
 <!-- 渲染不同尺寸的文件状态 -->
 <template>
-  <div
-    class="flex items-center mb-1"
-    :class="boxClass"
-    :style="getLayoutSize"
-  >
-    <div  :style="[getImgSize,{background: item.bg}]" class="overflow-hidden rounded-lg">
-      <!-- item?.linkIcon" 获取链接中无法获取到链接的图标使用默认图标 -->
-      <!-- <xt-new-icon :icon="item.icon" size="40" v-if="item?.linkIcon"></xt-new-icon> -->
-      <img ref="img" :src="src" class="w-full h-full " :style="[item.color]"/>
+  <div class="flex items-center mb-1" :class="boxClass" :style="getLayoutSize">
+    <div
+      :style="[getImgSize, { background: item.bg }]"
+      class="relative flex items-center justify-center overflow-hidden rounded-lg"
+    >
+      <!-- 兼容卡片类图标 -->
+      <a-avatar
+        v-if="item.type === 'ttapp' || item.type == 'card'"
+        :src="item.icon"
+        shape="square"
+        :size="40"
+      />
+      <!-- <a-avatar s class="" :size="16" :src="data._logo" /> -->
+      <xt-new-icon
+        :icon="item.icon"
+        v-else-if="isIfyIcon"
+        class="w-full h-full"
+      ></xt-new-icon>
+
+      <img
+        ref="img"
+        :src="src"
+        class="w-full h-full"
+        v-else
+        :style="[item.color]"
+      />
+      <img
+        src="/public/icons/tag.png"
+        alt=""
+        class="absolute w-[25px]"
+        style="top: -2px; right: -3px"
+        v-if="isIfyIcon"
+      />
     </div>
     <div
       class="text-xs truncate xt-text-2"
-      style="width: 90%;text-align: left;"
-      :style="{textAlign:props.layout === 'rows' ? 'center' : 'left'}"
+      style="width: 90%; text-align: left"
+      :style="{ textAlign: props.layout === 'rows' ? 'center' : 'left' }"
       :class="textClass"
     >
       {{ item.name }}
@@ -28,16 +52,22 @@ import { rowOption, columnOption } from "./options";
 // props
 const props = defineProps({
   item: {},
-  layout:'rows'
+  layout: "rows",
 });
 const img = ref();
 const src = ref(props.item.icon);
 const data = inject("data", "");
 const mode = ref("default");
+
+// 查看图标是否是工作台图标
+const isIfyIcon = computed(() => {
+  const regex = /^[a-z-]+:[a-z-]+(?:-\d+)?(?:-[a-z\d-]+)?.*$/;
+  return regex.test(props.item.icon);
+});
 // 获取文件后缀
 const getExtension = (filePath) => {
   // 轻应用打开方式修改后，容错
-  if (typeof filePath == 'object') return "null";
+  if (typeof filePath == "object") return "null";
   const match = filePath.match(/\.([^.]+)$/);
   return match ? match[1] : "null";
 };
@@ -70,7 +100,7 @@ onMounted(() => {
   resize();
   let res = imgType.includes(getExtension(props.item.value));
   if (res) {
-    src.value = props.item.value
+    src.value = props.item.value;
   }
 
   // props.item.type === 'systemApp' ? src.value = props.item.icon : src.value = props.item.value

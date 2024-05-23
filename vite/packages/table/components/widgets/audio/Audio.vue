@@ -3,7 +3,7 @@
     :header="header"
     v-model:customSize="customData.customSize"
     :customData="customData"
-    :envLimit="['web']"
+    :platLimit="['web']"
     :customIndex="customIndex"
     :options="options"
     :desk="desk"
@@ -136,7 +136,7 @@ export default {
     }
   },
   mounted () {
-    if (this.$useEnv()) return
+    if (this.$usePlat()) return
     this.init()
     this.customData.customSize = '2x4'
   },
@@ -144,7 +144,9 @@ export default {
     return{
       header:{
         title:'音频',
-        ifyIcon:'fluent:speaker-2-16-regular'
+        // ifyIcon:'fluent:speaker-2-16-regular'
+        showIcon:"/img/appLogo/audio.png",
+
       },
       customSize:'2x4',
       devices:[],

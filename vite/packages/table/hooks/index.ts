@@ -1,3 +1,4 @@
+import { useAppModal } from "../apps/appModal/src/hook/useAppModal";
 import { useAddCard, useDelCard } from "./src/useCard";
 import {
   useCardSize,
@@ -13,6 +14,7 @@ import { useWindowSize } from "./src/useWindowSize";
 import { useMit } from "./src/useMit";
 import { useTT } from "./src/useTT";
 import { useDoubleClick } from "./src/useDoubleClick";
+import { useStatus } from "./src/useStatus";
 export {
   // useCard
   useAddCard,
@@ -38,5 +40,7 @@ export {
   useTT,
   // useDoubleClick
   useDoubleClick,
-};
+  useStatus,
 
+  useAppModal,
+};

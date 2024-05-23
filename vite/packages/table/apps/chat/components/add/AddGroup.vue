@@ -14,6 +14,7 @@
         class="h-12 xt-bg-2"
         style="border-radius: 12px"
         @keyup.enter="searchGroup"
+        @change="searchGroup"
       >
         <template #suffix>
           <xt-button
@@ -23,7 +24,7 @@
           >
             <div class="flex items-center justify-center">
               <xt-ify-icon
-                icon="fluent:search-16-regular"
+                icon="fluent:search-16-filled"
                 size="20"
                 class="xt-text-2"
               />
@@ -33,7 +34,7 @@
             style="width: auto !important"
             h="0"
             v-else
-            @click="data.searchId = ''"
+            @click="clearSearch"
           >
             <div class="flex items-center justify-center">
               <xt-ify-icon
@@ -79,7 +80,7 @@
                 h="32"
                 type="theme"
                 v-if="!isJoinGroup(item)"
-                @click="joinGroup(item)"
+                @click="joinCurrentGroup(item)"
                 >加入</xt-button
               >
               <xt-button
@@ -109,8 +110,6 @@ import { message } from "ant-design-vue";
 import _ from "lodash-es";
 import { completeTask } from "../../../task/task";
 
-const chat = window.$chat.chat;
-
 const data = ref({
   searchId: "",
   searchResult: [],
@@ -130,7 +129,7 @@ const openAddGroup = () => {
   });
 };
 
-// 关闭群聊退弹窗
+// 关闭群聊弹窗
 const closeAdd = () => {
   addGroupVisible.value = false;
   data.value.searchId = "";
@@ -140,33 +139,43 @@ const closeAdd = () => {
 // 搜索群聊
 const searchGroup = () => {
   if (data.value.searchId !== "") {
-    chat
+    window.$chat?.chat
       .searchGroupByID(data.value.searchId)
       .then((res) => {
-        console.log("res", res);
         if (res.code === 0) {
           const { group } = res.data;
           const isSome = data.value.searchResult.some(
             (item) => item.groupID === res.data.group.groupID
           );
-          console.log(isSome, "isSome");
           if (isSome) {
             return;
           } else {
-            data.value.searchResult.push({ ...group });
+            // 将群聊搜索记录进行替换
+            data.value.searchResult = [];
+            const index = _.findIndex(data.value.searchResult, (item) => {
+              return String(item.groupID) === String(group.groupID);
+            });
+            if (index === -1) {
+              data.value.searchResult.push({ ...group });
+            }
           }
         }
       })
       .catch((err) => {
-        message.warn("该群聊为私群,不支持搜索");
+        if (err.message === "this group can't be searched") {
+          message.warn("该群聊为私群,不支持搜索");
+        } else {
+          message.warn("该群聊不存在");
+        }
       });
   } else {
+    data.value.searchResult = [];
     message.warn("输入框内容不能为空且群ID不能是纯中文");
   }
 };
 
 // 点击加入群聊
-const joinGroup = async (group) => {
+const joinCurrentGroup = async (group) => {
   const disabledJoin =
     group.joinOption === TUIChatEngine.TYPES.JOIN_OPTIONS_DISABLE_APPLY;
   if (disabledJoin) {
@@ -179,9 +188,13 @@ const joinGroup = async (group) => {
         group.applyMessage || TUITranslateService.t("TUIContact.加群"),
       type: group?.type,
     };
-    const res = await chat.joinGroup(options);
+    const res = await window.$chat?.chat.joinGroup(options);
     if (res.data.status === "WaitAdminApproval") {
       message.success("入群申请已发出,等待群主和管理员审核");
+    } else if (res.data.status === "JoinedSuccess") {
+      message.success("群聊添加成功");
+    } else if (res.data.status === "AlreadyInGroup") {
+      message.success("已经在群聊中");
     }
     completeTask("Z0601");
     closeAdd();
@@ -194,6 +207,12 @@ const isJoinGroup = (group) => {
     return item.groupID === group?.groupID;
   });
   return index > -1;
+};
+
+// 清空搜索
+const clearSearch = () => {
+  data.value.searchId = "";
+  data.value.searchResult = [];
 };
 
 defineExpose({

@@ -17,6 +17,8 @@ export interface imgPreviewProps {
         arrowBtn?: boolean; // 箭头按钮
     };
     index?: number; // 当前图片索引,如果是多图预览，必须要传入索引，否则会出现点开图片预览后，图片索引不正确的问题
+    // 阻止触发
+    preventTrigger?: boolean
 }
 const props = withDefaults(defineProps<imgPreviewProps>(),{
     imgList: [],
@@ -35,6 +37,7 @@ const {index,imgList,maskClose,controlOption} = toRefs(props)
 
 // 点击图片预览
 const clickFn = (index: Number) => {
+    if(props.preventTrigger) return
     proxy.$hevueImgPreview({
         nowImgIndex: index,
         multiple:true,

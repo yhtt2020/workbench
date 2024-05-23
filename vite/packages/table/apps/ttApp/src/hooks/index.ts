@@ -1,4 +1,4 @@
-import { useInstallTTApp } from "./install";
-import { useSelect, useSelectAll, useUninstall } from "./curd";
 
-export { useInstallTTApp, useSelect, useSelectAll, useUninstall };
+import { useSelect, useSelectAll } from "./curd";
+
+export {  useSelect, useSelectAll };

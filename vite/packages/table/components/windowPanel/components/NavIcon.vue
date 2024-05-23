@@ -8,7 +8,8 @@
             borderRadius: navigationBar.iconRadius + 'px', 
             background: item?.bg || ''}"
         class="relative flex items-center justify-center overflow-hidden">
-        <xt-new-icon :icon="item.icon" :size="32"></xt-new-icon>
+        <xt-new-icon :icon="item.icon" :size="(size / 2)"></xt-new-icon>
+        <img src="/public/icons/tag.png" alt="" class="absolute w-[30px]" style="top:-2px;right:-3px">
     </div>
     <!-- 文件夹图标 -->
     <Folder 
@@ -47,7 +48,7 @@
             background: item?.bg || ''}"
         class="relative flex items-center justify-center overflow-hidden">
         <a-avatar
-            :size="32"
+            :size="(size / 2)"
             shape="square"
             :src="renderIcon(item.icon)"
             :style="[{ borderRadius: navigationBar.iconRadius + 'px' }, item?.color]">
@@ -88,7 +89,6 @@ const { size , item , community } = toRefs(props)
 // 用于判断是不是工作台图标
 const isIfyIcon = computed(() => {
     const regex = /^[a-z-]+:[a-z-]+(?:-\d+)?(?:-[a-z\d-]+)?.*$/
-    // const regex = /^[a-z]+:[a-z]+(?:-\d+)?(?:-[a-z\d]+)?.*$/
     return regex.test(item.value.icon)
 })
 

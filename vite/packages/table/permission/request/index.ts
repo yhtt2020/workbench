@@ -3,7 +3,7 @@ import cache from "../../components/card/hooks/cache";
 import { Server } from "../../consts";
 const request = new XyRequest({
   baseURL: Server.baseUrl,
-  timeout: 1000,
+  timeout: 10000,
   headers: {
     "Content-type": "application/json;charset=UTF-8",
   },

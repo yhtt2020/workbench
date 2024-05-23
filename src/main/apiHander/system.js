@@ -1,7 +1,7 @@
 const Base = require('./base')
 const SystemHelper = require('../libs/systemHelper')
 const bookmarkHelper = require('../libs/bookmarkHelper')
-
+const {nativeTheme} = require('electron')
 class system extends Base {
   constructor () {
     super('system')
@@ -31,6 +31,19 @@ class system extends Base {
       require('electron').app.exit(0)
     })
 
+    this.on('isDarkMode',(event,args)=>{
+      event.returnValue = nativeTheme.themeSource
+    })
+    this.on('setDarkMode',(event,args)=>{
+      nativeTheme.themeSource = args.mode===true?'dark':'light'
+    })
+    this.on('shouldUseDarkMode',(event,args)=>{
+      event.returnValue = nativeTheme.shouldUseDarkColors
+    })
+
+    this.on('getBookmarks', async (event, args) => {
+      event.returnValue = await bookmarkHelper.getBookmarks(args.browser)
+    })
     this.on('getBookmarks', async (event, args) => {
       let query = []
       if (typeof args.browser === 'string') {

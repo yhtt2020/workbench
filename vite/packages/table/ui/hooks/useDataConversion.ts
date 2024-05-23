@@ -49,6 +49,7 @@ export const defaultData = {
   summary:'',   // 酷应用，轻应用，网址导航等图标的简介
   default:{},   // 数据用于重置图标
   slot:'' ,     // 插槽
+  cardData:{}, // 卡片数据 -- 用于卡片类型图标
 };
 export const useIconConversionFile = (data) => {
   const file = {
@@ -66,6 +67,8 @@ export const useIconConversionFile = (data) => {
     iconState: data.imgState,
     iconShape: data.imgShape,
     mode: data.mode || "app",
+    size: data.size,
+
   };
   return file;
 };
@@ -88,13 +91,15 @@ export const useFileConversionIcon = (data) => {
     isBackground: data.isBg,
     backgroundColor: data.bg,
     backgroundIndex: 0,
+    cardData:data.cardData,
   };
 
   return icon;
 };
 
-// 文件夹图标转为导航栏图标格式
+// 单图标组件转为导航栏图标格式
 export const useIconConversionNav = (data) => {
+  console.log(data,'<<<<<<<<<<')
   const icon = {
     icon: data.icon,
     name: data.name,
@@ -108,7 +113,7 @@ export const useIconConversionNav = (data) => {
   return icon;
 };
 
-// 单图标组件转为导航栏图标格式
+// 文件夹图标转为导航栏图标格式
 export const useFileConversionNav = (data) => {
   const icon = {
     icon: data.src,
@@ -119,6 +124,7 @@ export const useFileConversionNav = (data) => {
     bg: data.backgroundColor,
     type: data.open.type,
     id: data.iconIndex || nanoid(6),
+    cardData:data.cardData
   };
   return icon;
 };

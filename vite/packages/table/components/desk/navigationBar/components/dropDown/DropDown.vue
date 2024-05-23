@@ -1,5 +1,5 @@
 <template>
-    <a-dropdown :trigger="[trigger]" :overlayClassName="hover" :overlayStyle="{zIndex: 9999999 + 10}">
+    <a-dropdown :trigger="[trigger]" :overlayClassName="'hover'" :overlayStyle="{zIndex: zIndex}">
         <template #overlay>
             <a-menu class="rounded-xl xt-modal" 
                     style="
@@ -46,7 +46,10 @@ type PropsType = {
             info?: string   // 说明
         }
     ],
-    mode:string
+    // 当前默认模式
+    mode:string,
+    // 层级
+    zIndex:number
 
 }
 
@@ -60,7 +63,8 @@ const props = withDefaults(defineProps<PropsType>(), {
             info: '使用想天浏览器内置的「手机模式」打开，可以模拟手机端的浏览状态。'
         }
     ],
-    mode:'default'
+    mode:'default',
+    zIndex: 9999999 + 10
 })
 
 const { trigger, list } = toRefs(props)
@@ -73,6 +77,7 @@ const defaultData = ref('默认')
 const input = ref(null)
 const { elementWidth } = useMouseInElement(input)
 
+// 菜单点击，回调
 const handleMenuClick = (item: any) => {
     defaultData.value = item.name
     mode.value = item.value
@@ -95,6 +100,7 @@ watch(
     }
 )
 
+// 获取当前模式
 onMounted(() => {
     defaultData.value = list.value.filter((item) => item.value === mode.value)[0].name
 })

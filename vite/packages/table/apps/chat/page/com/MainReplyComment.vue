@@ -78,7 +78,7 @@
           </div>
           <div class="flex items-center pointer" @click="replyStatus">
             <replyIcon
-              icon="fluent:chat-16-regular"
+              icon="fluent:chat-16-filled"
               style="font-size: 18px"
               class="mr-1"
             ></replyIcon>
@@ -108,7 +108,7 @@
         </div>
         <div class="">
           <span class="local-city font-14 xt-text-2">{{
-            commentList.user.ip_home.region
+            commentList.user.ip_home?.region
           }}</span>
           <span class="mr-1 font-14 xt-text-2">{{ createTime[0] }}</span>
           <span class="font-14 xt-text-2">{{ createTime[1] }}</span>

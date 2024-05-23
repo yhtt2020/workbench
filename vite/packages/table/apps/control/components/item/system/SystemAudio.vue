@@ -90,7 +90,7 @@ const app = appStore();
 const { status } = storeToRefs(app);
 
 onMounted(async () => {
-  if (window.$useEnv()) return;
+  if (!window.$usePlat('client')) return;
   defaultOutput.value = await getDefaultVolume();
   mute.value = defaultOutput.value.muted;
 });

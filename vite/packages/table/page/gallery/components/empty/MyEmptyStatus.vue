@@ -25,9 +25,24 @@ export default {
 
   data(){
     return {
-      emptyList:galleryList.list,
+      // emptyList:galleryList.list,
     }
   },
+
+  computed:{
+    emptyList(){
+      if(window.$usePlat("client")){
+        return galleryList.list;
+      }
+      else {
+        const newArr = galleryList.list.filter((list)=>{
+          return  list.index !== 'i';
+        })
+        return newArr;
+      }
+    }
+  },
+
 
   methods:{
     goDetail(item){

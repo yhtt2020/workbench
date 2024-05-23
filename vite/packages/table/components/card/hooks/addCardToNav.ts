@@ -117,9 +117,13 @@ const tip = (data, nav) => {
  * @returns void
  */
 export const deleteIcon = (data: any, nav: string) => {
+  // 当前导航栏的相关数据
   const current = navObj.value[nav];
+  // 除当前导航栏外其他处于开启状态下的导航栏数据
   const otherList = current.otherList();
+  // 当前导航栏数据
   const list = current.list;
+  // 主要删除函数
   const _del = (data:any, list:any) => {
     const index = list.findIndex((item) => item.id === data.id);
     if(index !== -1){
@@ -128,6 +132,7 @@ export const deleteIcon = (data: any, nav: string) => {
     }
     // message.info(`未找到${data.name}`)
   };
+  // 判断删除的图标是不是主页
   if (data.value === "home") {
     if (otherList.find((item) => item.value === "home")) {
       _del(data, list);
@@ -159,8 +164,18 @@ export const checkItems = (list: Array<ListItem>, id: string, dragId: string): b
         if (item && dragItem) break; // 当两者都找到提前退出循环
     }
 
-    // console.log(item, dragItem);
-    
-    return item?.type === 'card' || dragItem?.type === 'card';
+    // return item?.type === 'card' || dragItem?.type === 'card';
+    return false
 };
 
+
+/**
+ * 检测图标是否是工作台图标
+ */
+export const checkIsIfyIcon = (icon : string) => {
+  const isIfyIcon = computed(() => {
+    const regex = /^[a-z-]+:[a-z-]+(?:-\d+)?(?:-[a-z\d-]+)?.*$/
+    return regex.test(icon)
+  })
+  return isIfyIcon
+}

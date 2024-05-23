@@ -1,44 +1,91 @@
 <template>
-  <div class="flex flex-col justify-center items-center cursor-pointer">
-    <!-- antd插槽 -->
-    <div
-      v-if="item.slot"
-      style="width: 40px; height: 40px; border-radius: 10px"
-      class="xt-bg-2 xt-base-btn"
-    >
-      <slot :name="item.slot"> </slot>
-    </div>
-    <!-- 图片 -->
-    <div
-      v-else-if="item.img"
-      style="width: 40px; height: 40px"
-      class="xt-base-btn"
-    >
-      <!-- 解析改变图片背景 -->
-      <img
-        :src="item.img"
-        :style="[imgSize, imgBg]"
-        style="border-radius: 10px; object-fit: cover"
+  <template v-if="!item.menuVisible">
+    <div class="flex flex-col justify-center items-center cursor-pointer">
+      <!-- antd插槽 -->
+      <div
+        v-if="item.slot"
+        style="width: 40px; height: 40px; border-radius: 10px"
+        class="xt-bg-2 xt-base-btn"
+      >
+        <slot :name="item.slot"> </slot>
+      </div>
+      <!-- 图片 -->
+      <div
+        v-else-if="item.img"
+        style="width: 40px; height: 40px"
+        class="xt-base-btn"
+      >
+        <!-- 解析改变图片背景 -->
+        <img
+          :src="item.img"
+          :style="[imgSize, imgBg]"
+          style="border-radius: 10px; object-fit: cover"
+        />
+      </div>
+      <!-- icon -->
+      <xt-icon
+        v-else-if="item.icon"
+        w="40"
+        size="20"
+        radius="10"
+        :type="type"
+        :icon="item.icon"
+      />
+      <xt-new-icon
+        v-else
+        size="20"
+        w="40"
+        :icon="item.full ? full : item.newIcon"
+        :bgStyle="iconBg(item.bg)"
+        radius="10"
       />
     </div>
-    <!-- icon -->
-    <xt-icon
-      v-else-if="item.icon"
-      w="40"
-      size="20"
-      radius="10"
-      :type="type"
-      :icon="item.icon"
-    />
-    <xt-new-icon
-      v-else
-      size="20"
-      w="40"
-      :icon="item.full ? full : item.newIcon"
-      :bgStyle="iconBg(item.bg)"
-      radius="10"
-    />
-  </div>
+  </template>
+
+  <template v-else>
+    <xt-menu :menus="item.menu" name="label" :stopPropagation="false">
+      <div class="flex flex-col justify-center items-center cursor-pointer">
+        <!-- antd插槽 -->
+        <div
+          v-if="item.slot"
+          style="width: 40px; height: 40px; border-radius: 10px"
+          class="xt-bg-2 xt-base-btn"
+        >
+          <slot :name="item.slot"> </slot>
+        </div>
+        <!-- 图片 -->
+        <div
+          v-else-if="item.img"
+          style="width: 40px; height: 40px"
+          class="xt-base-btn"
+        >
+          <!-- 解析改变图片背景 -->
+          <img
+            :src="item.img"
+            :style="[imgSize, imgBg]"
+            style="border-radius: 10px; object-fit: cover"
+          />
+        </div>
+        <!-- icon -->
+        <xt-icon
+          v-else-if="item.icon"
+          w="40"
+          size="20"
+          radius="10"
+          :type="type"
+          :icon="item.icon"
+        />
+        <xt-new-icon
+          v-else
+          size="20"
+          w="40"
+          :icon="item.full ? full : item.newIcon"
+          :bgStyle="iconBg(item.bg)"
+          radius="10"
+        />
+      </div>
+    </xt-menu>
+  </template>
 </template>
 
 <script setup>

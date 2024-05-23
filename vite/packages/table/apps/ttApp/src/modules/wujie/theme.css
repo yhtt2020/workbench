@@ -141,6 +141,16 @@
   color: var(--tt-disable-text-color);
 }
 
+.tt-modal-bg {
+  background: var(--tt-modal-color);
+}
+.tt-mask-bg {
+  background: var(--tt-mask-color);
+}
+.tt-main-bg {
+  background: var(--tt-main-color);
+}
+
 /* 边框颜色类 */
 /* 主要边框颜色 */
 .tt-border {

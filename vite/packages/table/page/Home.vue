@@ -1,6 +1,8 @@
 <template>
   <div style="height: 100%">
+    <!-- 个人桌面 -->
     <desk-group
+      v-if="communityVisible"
       @changeDesk="changeDesk"
       ref="deskGroupRef"
       :settings="settings"
@@ -9,6 +11,18 @@
     >
       <template #settingsAll> </template>
     </desk-group>
+
+    <!-- 社群桌面 -->
+    <CommunityGroupDesk
+      :communityVisible="communityVisible"
+      ref="deskGroupRef"
+      :settings="settings"
+      :desk-list="desks"
+      v-model:currentDeskId="this.currentDeskId"
+      @changeDesk="changeDesk"
+    >
+      <template #settingsAll> </template>
+    </CommunityGroupDesk>
   </div>
   <!-- 检测到用户头像为默认头像时触发用户中心个人信息修改弹窗 -->
   <div
@@ -28,10 +42,8 @@
       @closeShowGuide="closeShowGuide"
       :deskId="deskId"
     ></NewGuidePage>
-    <!-- <NewGuidePage v-if="showGuide" @closeShowGuide="closeShowGuide" :deskId="deskId"></NewGuidePage> -->
     <!-- 右上方的缩放推荐 -->
     <ScalePanel v-if="visibleScale" @closeScale="closeScale"></ScalePanel>
-    <!-- <ScalePanel v-if="visibleScale" @closeScale="closeScale" ></ScalePanel> -->
     <!-- 仅限于web的登录提示弹窗 -->
     <WebLogin
       v-if="visibleWeb"
@@ -44,7 +56,6 @@
       @closeGuide="closeGuide"
       @addGuide="addGuide"
     ></GuidePanel>
-    <!-- <GuidePanel v-if="visibleGuide" @closeGuide="closeGuide" @addGuide="addGuide"></GuidePanel> -->
 
     <!-- 全屏遮罩层 -->
     <div
@@ -66,14 +77,14 @@ import { appStore } from "../store";
 import { weatherStore } from "../store/weather";
 
 import NewGuidePage from "./app/grade/NewGuidePage.vue";
-
 import DeskGroup from "../components/desk/DeskGroup.vue";
 import UpdateMyInfo from "../components/comp/UpdateMyInfo.vue";
 import ScalePanel from "./ScalePanel.vue";
 import GuidePanel from "./GuidePanel.vue";
-
 import WebLogin from "./WebLogin.vue";
-import GalleryModal from "../components/paperModal/GalleryModal.vue";
+import GalleryModal from "../components/paperModal/PaperApp.vue";
+import CommunityGroupDesk from "../apps/communityDesk/page/CommunityGroupDesk.vue";
+
 import { taskStore } from "../apps/task/store";
 import navigationData from "../js/data/tableData";
 import { navStore } from "../store/nav";
@@ -84,7 +95,18 @@ import { replaceType } from "../components/desk/navigationBar/hook/replaceType";
 import { defaultFreeLayoutStore } from "./defaultFreeLayout";
 import { useFreeLayoutStore } from "../components/desk/freeLayout/store";
 import { mergeData } from "../ui/hooks/useDataConversion";
-import { useEnv } from "../ui/hooks/useEnv";
+import { usePlat } from "../ui/hooks/usePlat";
+import { usePermissionStore } from "../permission/store";
+import { useUpdateUserInfo } from "../permission/user/useUserPermit";
+import cache from "../components/card/hooks/cache";
+import { communityDeskStore } from "../apps/communityDesk/store/communityDeskStore";
+
+import { isMain } from "../js/common/screenUtils";
+// 检查当前网络状态
+import { useNetwork } from "@vueuse/core";
+import { DESKS } from '../js/const/default'
+const { isOnline } = useNetwork();
+
 let steamUser,
   steamSession,
   path,
@@ -92,7 +114,7 @@ let steamUser,
   steamFs,
   LoginSession,
   EAuthTokenPlatformType;
-if (!useEnv("web")) {
+if (usePlat('client')) {
   steamUser = $models.steamUser;
   steamSession = $models.steamSession;
   path = $models.path;
@@ -107,8 +129,6 @@ if (!useEnv("web")) {
     });
   }
 }
-
-let List = [];
 
 export default {
   name: "Home",
@@ -178,6 +198,7 @@ export default {
     ScalePanel,
     GuidePanel,
     WebLogin,
+    CommunityGroupDesk,
   },
   computed: {
     ...mapWritableState(navStore, [
@@ -185,7 +206,7 @@ export default {
       "footNavigationList",
       "rightNavigationList",
       "copyFootNav",
-      "init",
+      // "init",
       "leftNavInit",
       "rightNavInit",
       "footNavInit",
@@ -213,8 +234,10 @@ export default {
       "visibleGuide",
       "showGuide",
       "guideList",
+      "userInfo",
+      "init",
+      "loginVisible",
     ]),
-
     ...mapWritableState(appStore, {
       appSettings: "settings",
     }),
@@ -233,6 +256,14 @@ export default {
       "freeLayoutDataTmp",
       "freeLayoutStateTmp",
     ]),
+    ...mapWritableState(usePermissionStore, [
+      "isOffline",
+      "isSingle",
+      "isGuest",
+      "currentEnv",
+    ]),
+    ...mapWritableState(communityDeskStore, ["communityCurrentDesk"]),
+
     deskGroupRef() {
       return this.$refs.deskGroupRef;
     },
@@ -263,11 +294,23 @@ export default {
         return this.desks[0];
       }
     },
+    /**区分个人桌面和社群桌面**/
+    communityVisible() {
+      return this.appSettings.isCommunity;
+    },
   },
   async mounted() {
-    this.replaceIcon(this.sideNavigationList, this.leftNavInit);
-    this.replaceIcon(this.rightNavigationList, this.rightNavInit);
-    this.replaceIcon(this.copyFootNav, this.footNavInit);
+    // 每次进来需要设置工作台目前处于状态
+    this.setStatus();
+
+    // 用于桌面初始化 组件
+    this.componentInit();
+
+    // 首次客户端引导
+    if (!this.init && isMain() && usePlat("client")) {
+      this.$router.replace({ name: "wizard" });
+    }
+
     let n = 0;
     let timer = setInterval(() => {
       if (n > 3) {
@@ -282,28 +325,11 @@ export default {
       this.replaceIcon(this.copyFootNav, this.footNavInit);
       n++;
     }, 2000);
-    // 判断是否是第一次加载
-    if (this.deskInit) {
-      this.deskInit = false;
-      this.initTask();
-      // 配置向导 之后的行为
-      this.addFreeLayoutDesk();
-      if (!useEnv("web")) {
-        this.visibleScale = true;
-      } else {
-        this.visibleWeb = true;
-      }
-    }
 
     this.$bus.on("customDesk", () => {
       console.log("定制桌面", this.visibleGuide);
       this.visibleGuide = true;
     });
-    if (!this.moved) {
-      //最早的修复
-      this.desks[0].cards = this.customComponents;
-      this.moved = true;
-    }
     if (this.currentDeskId === "") {
       this.currentDeskId = this.desks[0].id;
     }
@@ -398,9 +424,10 @@ export default {
     ...mapActions(weatherStore, ["fixData"]),
     // ...mapActions(deskStore, ["setDeskSize"]),
     ...mapActions(taskStore, ["initTask"]),
-    initGrids() {
-      this.currentDesk.cards = this.cleanMuuriData(deskTemplate["daily"]);
-    },
+    ...mapActions(usePermissionStore, ["setOffline", "setGuest", "setSingle"]),
+    // initGrids() {
+    //   this.currentDesk.cards = this.cleanMuuriData(deskTemplate["daily"]);
+    // },
 
     showAddDeskForm() {
       this.menuVisible = false;
@@ -421,6 +448,57 @@ export default {
         };
       }
     },
+
+    // 覆写当前工作台状态
+    setStatus() {
+      this.isOffline = cache.get("isOffline");
+      this.isSingle = cache.get("isSingle");
+      this.isGuest = cache.get("isGuest");
+
+      if (!isOnline.value) setOffline(true);
+
+      this.currentEnv = window.$currentEnv();
+      // 进行一次重连操作
+      // useUpdateUserInfo()
+
+      this.replaceIcon(this.sideNavigationList, this.leftNavInit);
+      this.replaceIcon(this.rightNavigationList, this.rightNavInit);
+      this.replaceIcon(this.copyFootNav, this.footNavInit);
+    },
+
+    //
+    componentInit() {
+      // 判断是否是第一次加载
+      if (this.deskInit) {
+        console.log('执行组件初始化')
+        this.deskInit = false;
+        // 初始化任务
+        this.initTask();
+        // 初始化桌面
+        if (usePlat('client')) {
+          this.addFreeLayoutDesk();
+          // 非web端打开缩放提示弹窗
+          this.visibleScale = true;
+        } else {
+          console.log(_.cloneDeep(DESKS))
+          console.log(_.cloneDeep(this.desks),'修改前的desks')
+          let desks=_.cloneDeep(DESKS)
+
+          this.desks= desks
+          this.currentDesk=this.desks[0]
+          this.currentDeskIndex={
+            name:this.desk[0].name,
+            id:this.desk[0].id
+          }
+          this.currentDeskId=this.desk[0].id
+          console.log(_.cloneDeep(this.desks),'修改后的desks')
+
+          // web端打开功能介绍提示弹窗
+          this.visibleWeb = true;
+        }
+      }
+    },
+
     doAddDesk() {
       if (this.deskTitle.trim() === "") {
         message.error("请输入新桌面名称");
@@ -480,25 +558,31 @@ export default {
     // 第一次登录默认数据
     addFreeLayoutDesk() {
       if (this.currentInit) {
-        // 会有一个清除数据的过程 暂时没找到原因 先用定时器延迟执行
-        setTimeout(() => {
-          let deskTmp = _.cloneDeep(this.deskDefault[0]);
-          let oldId = deskTmp.id;
-          let cardZoom = (
-            (deskTmp.settings.zoom * 10) /
-            deskTmp.deskHeight
-          ).toFixed();
-          deskTmp.settings.zoom = parseInt(cardZoom);
-          deskTmp.id = window.$models.nanoid.nanoid(8);
-          if (this.freeLayoutStateTmp[oldId]) {
-            this.freeLayoutData[deskTmp.id] = this.freeLayoutDataTmp[oldId];
-            this.freeLayoutState[deskTmp.id] = this.freeLayoutStateTmp[oldId];
-          }
-          this.desks[0] = deskTmp;
-          this.currentDeskId = deskTmp.id;
-          this.addApptoDesk();
+        if(usePlat('web')){
+          console.log('跳过自由布局初始化')
           this.currentInit = false;
-        }, 2000);
+        }else{
+          // 会有一个清除数据的过程 暂时没找到原因 先用定时器延迟执行
+          setTimeout(() => {
+            let deskTmp = _.cloneDeep(this.deskDefault[0]);
+            let oldId = deskTmp.id;
+            let cardZoom = (
+              (deskTmp.settings.zoom * 10) /
+              deskTmp.deskHeight
+            ).toFixed();
+            deskTmp.settings.zoom = parseInt(cardZoom);
+            deskTmp.id = window.$models.nanoid.nanoid(8);
+            if (this.freeLayoutStateTmp[oldId]) {
+              this.freeLayoutData[deskTmp.id] = this.freeLayoutDataTmp[oldId];
+              this.freeLayoutState[deskTmp.id] = this.freeLayoutStateTmp[oldId];
+            }
+            this.desks[0] = deskTmp;
+            this.currentDeskId = deskTmp.id;
+            this.addApptoDesk();
+            this.currentInit = false;
+          }, 2000);
+        }
+
       }
     },
 
@@ -555,6 +639,23 @@ export default {
       this.visibleScale = false;
       this.visibleGuide = true;
     },
+    // 调试用 后续删除
+    test1() {
+      this.setOffline(!this.isOffline);
+    },
+    test2() {
+      this.setGuest(!this.isGuest);
+    },
+    test3() {
+      this.setSingle(!this.isSingle);
+    },
+    test4() {
+      console.log("isOnline", isOnline);
+    },
+    test8() {
+      this.loginVisible = true;
+    },
+
     // 关闭缩放弹窗
     closeWebLogin() {
       this.visibleWeb = false;
@@ -582,12 +683,16 @@ export default {
     },
   },
   watch: {
+    desks:{
+      handler(newVal,oldVal){
+      },
+      deep:true
+    },
     // currentDeskIndex: {
     //   handler() {
     //     this.updateLayout();
     //   },
     // },
-
     backgroundSettings: {
       handler() {
         document.body.style.setProperty(

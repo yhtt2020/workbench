@@ -36,14 +36,17 @@ const { desks } = storeToRefs(useCard)
 const cardRef = ref(null)
 
 const props = defineProps({
+    // 卡片数据
     cardData: {
         type: Object,
         default: () => ({})
     },
+    // 当前卡片组件
     currentComponent: {
         type: String,
         default: ''
     },
+    // 卡片定位
     position: {
         type: Object,
         default: () => ({
@@ -51,6 +54,7 @@ const props = defineProps({
             y: 0
         })
     },
+    // 导航栏id
     navId:{
         type: String,
         default: 'foot'
@@ -65,20 +69,13 @@ const close = (e) => {
     }
 }
 
+// 桌面数据
 const desk = computed(() => {
     return props.cardData.desk || desks.value[0]
 })
 
+// 导航栏删除卡片，不影响桌面卡片
 const deleteCard = (val) => {
-    // console.log(val,'<<<<',navObj.value[props.navId])
-    // const list = navObj.value[props.navId].list.filter((item) => {
-    //     return item.type === 'card'
-    // })
-    // const target = list.find(item => {
-    //     return item.cardData.customIndex === val
-    // })
-    // console.log(target)
-    // deleteIcon(target,props.navId)
     emit('delete')
 }
 

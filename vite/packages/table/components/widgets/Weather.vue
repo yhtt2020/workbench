@@ -1,14 +1,14 @@
 <template>
-  <xt-container 
+  <xt-container
     @titleHover="openWeatherDrawer"
     v-model:customSize="customData.customSize"
     :header="header"
-    :options="options" 
-    ref="weatherSlot" 
-    :customIndex="customIndex" 
-    :customData="customData" 
-    :desk="desk" 
-    :envLimit="['offline']"
+    :options="options"
+    ref="weatherSlot"
+    :customIndex="customIndex"
+    :customData="customData"
+    :desk="desk"
+    :envLimit="['single']"
     @delete="deleteCard">
     <!-- <div v-if="defaultCity" class="px-3 py-1 bg-mask rounded-xl pointer" @click="openWeatherDrawer" style="position: absolute;left: 45px;top:10px">
       {{ defaultCity.name }}
@@ -121,7 +121,7 @@ export default {
         web: false,
         mobile: false,
         client: false,
-        offline:true
+        single:true
       },
     };
   },
@@ -144,7 +144,8 @@ export default {
     header(){
       return {
         title:this.defaultCity?.name ? this.defaultCity?.name : "天气",
-        ifyIcon:'fluent:cloud-16-regular',
+        // ifyIcon:'fluent:cloud-16-regular',
+        showIcon:"/img/appLogo/weather.png",
         titleHoverName:'点击切换',
         titleHover:true,
       }

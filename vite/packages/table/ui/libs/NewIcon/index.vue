@@ -77,7 +77,5 @@ const boxBgStyle = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-a {
-  background: var(--secondary-bg);
-}
+
 </style>

@@ -111,7 +111,7 @@ const props = withDefaults(defineProps<ConfirmProps>(), {
   no: () => {},
   ok: () => {},
   close: () => {},
-  type: "success",
+  type: "link",
   okButtonWidth: "64",
   noButtonWidth: "64",
 });
@@ -137,7 +137,6 @@ onMounted(() => {
  * 关闭事件
  */
 const onCloseClick = () => {
-  console.log("关闭事件 :>> ");
   isVisible.value = false;
   // 等待动画完全关闭后触发关闭回调
   setTimeout(() => {

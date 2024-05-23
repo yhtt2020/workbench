@@ -1,6 +1,6 @@
 <template>
     <vueCustomScrollbar :settings="scrollbarSettings" style="padding: 15px;white-space: nowrap;height: 100%">
-      <div class="page-container rounded-xl xt-bg box-body flex"  style="height: 100%;min-width: 1000px;min-height: 800px;">
+      <div class="page-container rounded-xl xt-bg box-body flex"  style="min-width: 1000px;min-height: 800px;">
 
         <div class="left-box overflow-hidden overflow-y-auto xt-scrollbar beautiful-sm-scroll">
             <!-- 头像 -->
@@ -67,8 +67,8 @@
   import peopleCommunity16Regular from '@iconify-icons/fluent/people-community-16-regular';
   import money16Regular from '@iconify-icons/fluent/money-16-regular';
 let appModel
-import {useEnv} from '../../../ui/hooks/useEnv'
-  if (!useEnv()) {
+import {usePlat} from '../../../ui/hooks/usePlat'
+  if (usePlat('client')) {
     appModel= window.$models.appModel
 
   }

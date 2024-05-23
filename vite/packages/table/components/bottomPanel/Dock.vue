@@ -21,9 +21,7 @@
       navId="foot"
       @delete="deleteCard">
     </FloatCard>
-  </teleport>
-  <!-- 快速搜索 底部栏区域 -->
-  <transition>
+    <transition>
     <div
       v-if="
         hoverIndex > -1 &&
@@ -41,6 +39,9 @@
       松开鼠标合并
     </div>
   </transition>
+  </teleport>
+  
+  <!-- 快速搜索 底部栏区域 -->
   <div
     id="bottomPanel"
     :class="customClass"
@@ -84,7 +85,7 @@
                 v-if="copyFootNav.length <= 0"
                 style=""
                 class="flex items-center justify-center w-[52px] h-[52px]"
-                @click="editNavigation(drawerMenus[0])"
+                @click="editNav(drawerMenus[0])"
               >
                 <xt-new-icon
                   icon="fluent:add-16-regular"
@@ -109,7 +110,7 @@
                   <div
                     @dragover="onDrag"
                     @dragend="hoverIndex = -1"
-                    v-if="!(navList.includes(item.event) && isOffline)"
+                    v-if="!(navList.includes(item.event) && isSingle)"
                     class="flex items-center justify-center pointer"
                     :class="{
                       hover:
@@ -154,7 +155,8 @@ import { navStore } from "../../store/nav";
 import { useNavBarStore } from "../desk/navigationBar/navBar.ts";
 import { useNavigationStore } from "../desk/navigationBar/navigationStore";
 import { controlStore } from "../../apps/control/hooks/controlStore";
-import { offlineStore } from "../../js/common/offline";
+import { singleStore } from "../../js/common/single";
+import { usePermissionStore } from "../../permission/store";
 
 import { mapWritableState, mapActions } from "pinia";
 import Sortable from "sortablejs";
@@ -170,7 +172,6 @@ import {
 } from "../../components/desk/navigationBar/index";
 import { useMergeFolder } from "../../components/desk/navigationBar/hook/mergeFolder.ts";
 import { Notifications } from "../../js/common/sessionNotice";
-import { startApp } from "../../ui/hooks/useStartApp";
 import { defaultFolderData } from "../../apps/folder/src/components/options";
 import { hoverRealItemId } from "../desk/navigationBar/hook/hoverRealItemId";
 import { mergeData } from "../../ui/hooks/useDataConversion";
@@ -185,6 +186,8 @@ import Team from "./Team.vue";
 import FloatCard from "../windowPanel/components/FloatCard.vue";
 import FloatFolder from "../windowPanel/components/FloatFolder.vue";
 
+import menuMin from "../windowPanel/hook/menu";
+
 const {
   //是否全屏状态
   isFullscreen,
@@ -195,6 +198,7 @@ const {
 export default {
   name: "BottomPanel",
   emits: ["getDelIcon", "hiedNavBar", "edit", "control", "getHoverIndex", "update:isOpen"],
+  mixins: [menuMin],
   components: {
     EditIcon,
     Avatar,
@@ -216,56 +220,6 @@ export default {
       delNav: false,
       drawerMenus: [...extraRightMenu, ...moreMenus],
       componentId: "EditNavigationIcon",
-      iconMenus: [
-        {
-          id: 1,
-          newIcon: "fluent:open-16-regular",
-          label: "打开",
-          callBack: () => {
-            this.newOpenApp(this.currentItem);
-          },
-        },
-        {
-          id: 2,
-          label: "编辑",
-          newIcon: "fluent:compose-16-regular",
-          callBack: () => {
-            this.editNavigation(this.currentItem);
-          },
-        },
-        {
-          id: 3,
-          label: "删除",
-          newIcon: "fluent:delete-16-regular",
-          color: "#FF4D4F",
-          callBack: () => {
-            this.deleteIcon(this.currentItem,'foot');
-          },
-        },
-        {
-          id: 5,
-          divider: true,
-        },
-        {
-          id: 6,
-          label: "添加导航图标",
-          newIcon: "fluent:add-16-regular",
-          callBack: () => {
-            this.editNavigation(this.drawerMenus[0]);
-          },
-        },
-        {
-          id: 7,
-          label: "导航栏设置",
-          newIcon: "fluent:settings-16-regular",
-          callBack: () => {
-            this.$bus.emit("openSystemSet");
-            setTimeout(() => {
-              this.$bus.emit("selectSystemNav", 3);
-            }, 10);
-          },
-        },
-      ],
       currentIndex: null,
       currentItem: null,
       delItemIcon: false,
@@ -291,6 +245,8 @@ export default {
       floatCardVisible:false,
       floatCard:{},
       clickOutside:false,
+      sortId:'foot',
+      isFirst:true,
     };
   },
   props: {
@@ -338,7 +294,8 @@ export default {
       "init",
       "copyFootNav",
     ]),
-    ...mapWritableState(offlineStore, ["isOffline", "navList"]),
+    ...mapWritableState(singleStore, ["navList"]),
+    ...mapWritableState(usePermissionStore, ["isSingle"]),
     ...mapWritableState(useNavigationStore, [
       "selectNav",
       "popVisible",
@@ -361,7 +318,7 @@ export default {
     community() {
       return {
         x: this.position.x,
-        y: (this.navAttribute.navSize * this.position.y) / 100,
+        y: this.position.y,
         placement: "top",
         visible: this.comVisible,
       };
@@ -381,27 +338,6 @@ export default {
       }
       return this.iconMenus;
     },
-    /**
-     * 通过文件夹中数据的多少来自定义大小
-     */
-    resize() {
-      const length = this.folderList.length;
-      if (length <= 6) {
-        return "2x2";
-      } else if (length <= 12 && length > 6) {
-        return "3x3";
-      } else if (length <= 18 && length > 12) {
-        return "4x4";
-      } else {
-        return "6x4";
-      }
-    },
-    realXY() {
-      return {
-        x: this.left,
-        y: this.parentHeight - (this.navAttribute.navSize / 100) * 100 - 175,
-      };
-    },
     // 合并提示位置
     mergeTip() {
       if(this.iconSize == '44'){
@@ -410,7 +346,7 @@ export default {
         }
         return 'top:120px'
       }
-      return 'top:-8px'
+      return 'bottom:60px'
     }
   },
   watch: {
@@ -549,7 +485,7 @@ export default {
      * 打开菜单选项
      * @param {*} item
      */
-    editNavigation(item) {
+    editNav(item) {
       if (item.component) {
         this.componentId = item.component;
         if (item.component === "EditNewNavigation") {
@@ -608,26 +544,14 @@ export default {
     updateLayout(value) {
       this.currentItem.layout = value;
     },
-    showElement(item, index) {
-      this.currentItem = item;
-      this.currentIndex = index;
-    },
-    /**
-     * 打开桌面应用提示
-     * @param {*} item 当前图标
-     */
-    msgNotice(item) {
-      if (item.type === "tableApp") {
-        message.loading({
-          content: `打开「${item.name}」...`,
-          key: "tipRun",
-        });
-      }
-    },
+    // showElement(item, index) {
+    //   this.currentItem = item;
+    //   this.currentIndex = index;
+    // },
     openCard(item) {
-      if(this.floatCard.value !== item.value && this.floatCard !== undefined) {
+      if(this.floatCard.cardData?.customIndex !== item.cardData?.customIndex && this.floatCard !== undefined) {
         this.floatCard = item
-        // console.log(this.floatCard)
+        console.log(this.floatCard)
         this.$nextTick(() => {
           this.floatCardVisible = true
         })
@@ -635,60 +559,7 @@ export default {
       }
       this.floatCardVisible = !this.floatCardVisible
     },
-    /**
-     * 打开应用
-     * @param {*} item 图标详细信息
-     */
-    async newOpenApp(item, e) {
-      const { type, value } = item;
-      if (type === "card") {
-        this.openCard(item)
-      }
-      if (type !== "card") {
-        this.floatCardVisible = false
-      }
-      if (type !== "folder") {
-        this.folderVisible = false;
-      }
-      if ( value !== 'commun') {
-        this.comVisible = false
-      }
-      // 更新鼠标定位
-      this.resetElementPosition();
-      if (value === "control") {
-        this.$emit("control", e);
-        return;
-      }
-      if (value === "setting") {
-        this.$bus.emit("openSystemSet");
-        return;
-      }
-      if (value === "commun") {
-        this.comVisible = !this.comVisible;
-        return;
-      }
-      if (type === "folder") {
-        this.openFolder(item);
-      }
-      if (value == "fullscreen" && window.$useEnv()) {
-        toggle();
-        return;
-      }
-      if (window.$useEnvLimit("web", value)) return;
 
-      this.msgNotice(item);
-      if (value === "home" && item.home) {
-        this.jumpDesk = item.home;
-      }
-      let rs = await startApp(type, value, this.$router);
-      if (!rs) {
-        message.error({
-          content: `打开「${item.name}」失败`,
-          key: "tipRun",
-        });
-      }
-      this.comVisible = false;
-    },
 
     /**
      * 解散文件夹和切换文件夹
@@ -725,10 +596,11 @@ export default {
      */
     enableDrag() {
       // console.log('触发一次重置 ')
-      if (this.sortable) {
-        // console.log('先清理 ')
-        this.sortable.destroy();
-      }
+      // 暂时隐藏,第一次打开应用时,由于执行多次，导致sortable被卸载,导致原始H5的拖拽失效
+      // if (this.sortable) {
+      //   console.log('先清理 ')
+      //   this.sortable.destroy();
+      // }
       let that = this;
       let drop = document.getElementById("bottomContent");
       if (!drop) {
@@ -801,7 +673,7 @@ export default {
           return;
         }, 100),
         onEnd: function (event) {
-          // console.log('onEnd')
+          console.log('onEnd')
           that.$emit("getDelIcon", false);
           that.popVisible = false;
           // 删除
@@ -809,6 +681,7 @@ export default {
           index = null;
           that.isBorder = false;
           isDrag = false;
+          that.isFirst = false
         },
         onMove: function (event, originalEvent) {
           isDrag = true;
@@ -923,7 +796,12 @@ export default {
      */
     syncBottomPanel() {
       this.bottomKey = Date.now();
+      // if(this.sortable){
+      //   console.log('update <<< from')
+      //   this.sortable.destroy();
+      // }
       this.$nextTick(() => {
+        // console.log(this.sortable,'<<<<<<<<<<,')
         this.enableDrag();
       });
     },
@@ -934,10 +812,12 @@ export default {
      * 重置元素位置
      */
     resetElementPosition() {
-      const draggableSize = (this.currentItem?.cardData?.customSize || this.currentItem?.customSize || this.resize || '1x1').split("x");
+      const draggableSize = (
+        this.currentItem?.cardData?.customData?.customSize || 
+        this.currentItem?.customSize || 
+        this.resize || 
+        '1x1').split("x");
       // console.log(draggableSize)
-      // 视图大小
-      let vW = window.innerWidth;
       // 元素坐标
       let pos = {
         x:this.defaultPosition.x,
@@ -945,8 +825,8 @@ export default {
       };
       // 元素大小
       let menu = {
-        x:draggableSize[0] * 140,
-        y:draggableSize[1] * 100
+        x:draggableSize[0] * 142,
+        y:draggableSize[1] * 105
       };
       this.position = this.usePosition(pos,menu)
     },

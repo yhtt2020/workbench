@@ -3,7 +3,7 @@
     <template v-for="item in itemList">
       <div
         style="width: 105px; height: 105px; border-radius: 12px"
-        class="flex flex-col items-center justify-center xt-bg-2 cursor-pointer"
+        class="flex flex-col items-center justify-center cursor-pointer xt-bg-2"
         v-if="!item?.disabled"
         @click="item.fn"
       >
@@ -26,7 +26,13 @@
     "
   >
     <div
-      style="zoom: 1.5; font-size: 16px; padding-top: 5em; text-align: center"
+      style="
+        zoom: 1.5;
+        font-size: 16px;
+        padding-top: 5em;
+        text-align: center;
+        z-index: 9999999999999999999;
+      "
     >
       <div style="width: 500px; overflow: visible; display: inline-block">
         <ChooseScreen />
@@ -34,17 +40,17 @@
     </div>
   </a-modal>
 
-  <Zoom v-if="!$useEnv('web')" />
+  <Zoom v-if="$usePlat('client')" />
   <!-- 2 -->
   <xt-option-box>
     <xt-option-info
-      title="顶部状态栏显示日期和时间"
+      title="状态栏显示日期和时间"
       isSwitch
       v-model:switch="appSettings.showTopbarTime"
     />
     <hr />
     <xt-option-info
-      title="顶部状态栏显示天气"
+      title="状态栏显示天气"
       info="需要先添加天气组件，完成城市设置。"
       class="pb-3"
       isSwitch
@@ -52,7 +58,7 @@
     />
   </xt-option-box>
   <!-- 3 -->
-  <xt-option-box v-if="!$useEnv()">
+  <xt-option-box v-if="!$usePlat()">
     <xt-option-info
       title="在系统任务栏中显示工作台窗口"
       isSwitch
@@ -74,7 +80,7 @@
     />
   </xt-option-box>
   <!-- 4 -->
-  <xt-option-box v-if="!$useEnv()">
+  <xt-option-box v-if="!$usePlat()">
     <xt-option-info title="双击托盘菜单默认打开" />
     <xt-option-tab
       v-model="trayMode"
@@ -141,7 +147,7 @@ const itemList = computed(() => {
           await tsbApi.window.setAlwaysOnTop(true);
         });
       },
-      disabled: proxy.$useEnv(),
+      disabled: proxy.$usePlat(),
     },
     {
       name: "选择屏幕",
@@ -149,7 +155,7 @@ const itemList = computed(() => {
       fn: () => {
         visibleChooseScreen.value = true;
       },
-      disabled: proxy.$useEnv(),
+      disabled: proxy.$usePlat(),
     },
     {
       name: "鼠标穿梭",
@@ -157,7 +163,7 @@ const itemList = computed(() => {
       fn: () => {
         emits("switchNav", "Key");
       },
-      disabled: proxy.$useEnv(),
+      disabled: proxy.$usePlat(),
     },
     {
       name: "锁屏设置",
@@ -179,6 +185,7 @@ const trayMode = ref("table");
 watch(
   () => trayMode.value,
   async (value) => {
+
     await tsbApi.settings.set("trayOpen", value);
   }
 );
@@ -207,7 +214,6 @@ watch(
  */
 const isAutoRun = ref(false);
 
-
 // 监听是否开机自启动
 watch(
   () => isAutoRun.value,
@@ -216,11 +222,11 @@ watch(
   }
 );
 
-const hardware=ref(true)
+const hardware = ref(true);
 // 监听是否硬件加速
 
 onMounted(async () => {
-  if (proxy.$useEnv()) return;
+  if (proxy.$usePlat()) return;
   // 获取窗口缩放
   // windowZoom.value = (await tsbApi.window.getZoomFactor()) * 100 || 100;
   // oldWindowZoom.value = windowZoom.value;
@@ -231,44 +237,45 @@ onMounted(async () => {
   // 获取开机自启动
   isAutoRun.value = await tsbApi.settings.get("autoRun");
   //硬件加速
-  hardware.value=await tsbApi.settings.get('hardware')
-  if(hardware.value===undefined)
-  {
-    hardware.value=true
+  hardware.value = await tsbApi.settings.get("hardware");
+  if (hardware.value === undefined) {
+    hardware.value = true;
   }
   watch(
     () => hardware.value,
     async (value) => {
-      await tsbApi.settings.set('hardware',value);
-      if(value){
-        window.$ui.confirm('提示','开启硬件加速需要重启后方可生效。',
+      await tsbApi.settings.set("hardware", value);
+      if (value) {
+        window.$ui.confirm("提示", "开启硬件加速需要重启后方可生效。", {
+          type: "warning",
+          noText: "立即重启软件",
+          okText: "稍后手动重启",
+          noButtonWidth: 120,
+          no: () => {
+            tsbApi.system.restart();
+          },
+          okButtonWidth: 120,
+        });
+      } else {
+        window.$ui.confirm(
+          "提示",
+          "关闭硬件加速后，会将显卡的负载转移到处理器，且需重启软件生效。",
           {
-            type:'warning',
-            noText:'立即重启软件',
-            okText:'稍后手动重启',
-            noButtonWidth:120,
+            type: "warning",
+            okButtonWidth: 120,
+            noText: "立即重启软件",
+            okText: "稍后手动重启",
+            noButtonWidth: 120,
             no: () => {
-              tsbApi.system.restart()
+              tsbApi.system.restart();
             },
-            okButtonWidth:120},
-
-        )
-      }else{
-        window.$ui.confirm('提示','关闭硬件加速后，会将显卡的负载转移到处理器，且需重启软件生效。',
-          {
-            type:'warning',
-            okButtonWidth:120,
-            noText:'立即重启软件',
-            okText:'稍后手动重启',
-            noButtonWidth:120,
-            no: () => {
-              tsbApi.system.restart()
-            }}
-        )
+          }
+        );
       }
     }
   );
 });
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>

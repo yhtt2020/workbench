@@ -355,6 +355,7 @@ class WindowManager {
       ...((isDevelopmentMode ? ['--development-mode'] : [])),
       '--name=' + name
     ].concat(additionalArguments)
+    console.log('启动参数',windowOption)
 
     let window = new BrowserWindow(windowOption)
     window.once('ready-to-show', () => {

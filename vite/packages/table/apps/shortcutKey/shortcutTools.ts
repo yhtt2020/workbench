@@ -2,10 +2,10 @@ import {message, Modal, notification} from "ant-design-vue";
 import {RocketFilled} from "@ant-design/icons-vue";
 import {h} from 'vue'
 import {appStore} from "../../store";
-import { useEnv } from "../../ui/hooks/useEnv";
+import { usePlat } from "../../ui/hooks/usePlat";
 
 let win32
-if (!useEnv()) {
+if (usePlat('client')) {
    win32 = $models.win32
 
 }

@@ -25,7 +25,7 @@
           @click="enterGroup(item)"
         >
           <div class="flex items-center justify-center">
-            <xt-ify-icon icon="fluent:chat-16-regular" class="mr-2" size="20" />
+            <xt-ify-icon icon="fluent:chat-16-filled" class="mr-2" size="20" />
             <span class="xt-text xt-font font-16 font-400">进入群聊</span>
           </div>
         </xt-button>
@@ -50,11 +50,12 @@ import { storeToRefs } from "pinia";
 import { completeTask } from "../../../../task/task";
 import { chatStore } from "../../../../../store/chat";
 import { TUIConversationService } from "@tencentcloud/chat-uikit-engine";
-
-const chatServer = window.$chat.chat;
+import { appStore } from "../../../../../store";
+import { contactStore } from "../../../store/contactStore";
+const chatServer = window?.$chat?.chat;
 const router = useRouter();
 const chat = chatStore();
-
+const app = appStore();
 const props = defineProps({
   groupList: {
     type: Array,
@@ -63,21 +64,33 @@ const props = defineProps({
 });
 const { groupList } = toRefs(props);
 
+const contact = contactStore();
+const { currentContact } = storeToRefs(contact);
+
 // 添加群聊
 const addGroup = async (id) => {
-  const option = { groupID: id };
-  const res =  await chatServer.joinGroup(option);
-  if(res.code === 0){
-    const conversationID =  `GROUP${id}`;
-    handlerConversationList(conversationID)
-    completeTask("Z0601");
-    chat.loadGroupRelationship();
+  if (window.$currentEnv() === "online") {
+    const option = { groupID: id };
+    const res = await chatServer.joinGroup(option);
+    if (res.code === 0) {
+      const conversationID = `GROUP${id}`;
+      handlerConversationList(conversationID);
+      completeTask("Z0601");
+      chat.updateGroupRelationship();
+    }
+  } else {
+    app.loginVisible = true
   }
 };
 
 // 进入群聊
 const enterGroup = async (item) => {
   const conversationID = `GROUP${item.groupID}`;
+  /**补充群聊进入状态**/ 
+  currentContact.value = {
+    type: "group",
+    groupID:conversationID,
+  }
   handlerConversationList(conversationID);
 };
 const handlerConversationList = (conversationID) => {

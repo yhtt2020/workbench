@@ -1,21 +1,19 @@
 import {defineStore} from "pinia";
 import dbStorage from "./store/dbStorage";
 import {sUrl} from './consts'
-import { useEnv} from './ui/hooks/useEnv'
+import { usePlat} from './ui/hooks/usePlat'
  const userCardUrl = sUrl('/app/com/userCard')
 import cache from '../table/components/card/hooks/cache'
 import {post} from "./js/axios/request";
 import {message, notification} from "ant-design-vue";
 import shake from "./js/common/shake";
-
+import {DEFAULT} from'./js/const/default'
 import { getUserInfo as useGetUserInfo } from "./permission/api/login";
-// @ts-ignore
 // @ts-ignore
 export const appStore = defineStore('appStore', {
   state: () => ({
-    currentRoute: undefined,//当前路由
-
-
+    //当前路由
+    currentRoute: undefined,
     //用户信息卡片
     userCardVisible: false,
     userCardUid: 0,
@@ -78,7 +76,7 @@ export const appStore = defineStore('appStore', {
         sensitive: 4,
         pos: {x: 0, y: 0},
         sound: true,//播放音频提示
-        audio: 'chua.mp3',
+        audio: 'chua.wav',
         init: false
       },
 
@@ -101,6 +99,10 @@ export const appStore = defineStore('appStore', {
       customCourier: false, // 自定义快递
       tagVisible: true, // 快递组件排序tag提示
 
+      /**用于社群导航是否第一次开启提示**/
+      comNavVisible:true,
+      /**用于社群桌面和个人桌面的切换**/ 
+      isCommunity:true,
     },
 
     routeUpdateTime: Date.now(),//用于更新滚动条
@@ -117,7 +119,7 @@ export const appStore = defineStore('appStore', {
       backGroundImgLight: 0.3,
     },
     backgroundImage: {
-      path: '',
+      path:DEFAULT.WALLPAPER,
     },
     backgroundName:{
       name:'img',
@@ -130,7 +132,7 @@ export const appStore = defineStore('appStore', {
       type: 'work'
     },
     // 桌面初始化
-    deskInit: false,
+    deskInit: true,
     // 桌面缩放
     visibleScale: false,
     // web端登录框
@@ -278,7 +280,7 @@ export const appStore = defineStore('appStore', {
     },
 
    async getUserInfo() {
-      if (useEnv()) return
+      if (usePlat()) return
       ipc.send('getDetailUserInfo')
       // getUserInfo
       //  let res= await useGetUserInfo()
@@ -310,7 +312,7 @@ export const appStore = defineStore('appStore', {
 
       function handleGrade(name) {
         // 拦截用户信息加载报错
-        if (window.$useEnv()) return
+        if (!window.$usePlat('client')) return
         for (let i = 0; i < userInfo.onlineGrade[name]; i++) {
           userInfo.onlineGradeIcons[name].push({
             // icon: 'file://' + window.globalArgs['app-dir_name'] + `/../../icons/grade/${name}.svg`

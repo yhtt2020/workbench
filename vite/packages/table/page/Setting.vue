@@ -13,7 +13,7 @@
           ">
         <h3 style="color: var(--primary-text)">快速开关功能</h3>
         <a-row :gutter="[20, 20]" style="font-size: 1.2em; text-align: center">
-          <a-col :span="12" v-if="!$useEnv(['guest', 'web'])">
+          <a-col :span="12" v-if="!$useEnv(['guest', 'offline']) || !usePlat()">
             <div class="relative btn">
               弹幕
               <br />
@@ -28,7 +28,7 @@
             </div>
           </a-col>
 
-          <a-col :span="12" v-if="!$useEnv()">
+          <a-col :span="12" v-if="!$usePlat()">
             <div class="relative btn">
               窗口控制<br />
               <a-switch @click.stop="() => { }" v-model:checked="showWindowController"></a-switch>
@@ -42,7 +42,7 @@
             </div>
           </a-col>
 
-          <a-col :span="12" v-if="!this.isOffline">
+          <a-col :span="12" v-if="!this.isSingle">
             <div class="relative btn">
               社群沟通<br />
               <a-switch v-model:checked="settings.enableChat"></a-switch>
@@ -54,25 +54,25 @@
               <a-switch v-model:checked="settings.noticeEnable"></a-switch>
             </div>
           </a-col>
-          <a-col :span="12" v-if="!this.isOffline">
+          <a-col :span="12" v-if="!this.isSingle">
             <div style="cursor: help" @click="tipSimple" class="relative btn">
               极简模式<br />
               <a-switch @click.stop="() => { }" v-model:checked="simple"></a-switch>
             </div>
           </a-col>
           <!-- <a-col :span="12">
-              <div  @click="tipOffline" class="relative btn">
+              <div  @click="tipSingle" class="relative btn">
                 离线模式<br />
-                <a-switch @click="changeOffline"  v-model:checked="isOffline"></a-switch>
+                <a-switch @click="setSingle(!isSingle)"  v-model:checked="isSingle"></a-switch>
               </div>
             </a-col> -->
-          <a-col :span="12" v-if="!$useEnv()">
+          <a-col :span="12" v-if="!$usePlat()">
             <div class="relative btn">
               辅助模式<br />
               <a-switch @click="this.toggleAided" v-model:checked="aided"></a-switch>
             </div>
           </a-col>
-          <a-col :span="12" v-if="!$useEnv()">
+          <a-col :span="12" v-if="!$usePlat()">
             <div class="relative btn" @click="goShake">
               摇一摇<br />
               <div @click.stop>
@@ -86,20 +86,20 @@
         <div></div>
       </div>
       <div class="" style="display: inline-block; vertical-align: top">
-        <div class="p-4 ml-4 s-bg menu-block" v-if="!$useEnv()">
+        <div class="p-4 ml-4 s-bg menu-block" v-if="!$usePlat()">
           <h3 style="color: var(--primary-text)">常用</h3>
           <a-row style="font-size: 1.2em; text-align: center">
             <a-col v-if="isMain() && isWin()" :span="6">
               <div @click="setTouch" class="btn">
                 <!-- <Icon icon="Touch" style="font-size: 2em"></Icon> -->
-                <Iconify icon="fluent:hand-draw-16-regular" style="font-size: 2em" />
+                <Iconify icon="fluent:hand-draw-16-filled" style="font-size: 2em" />
                 <div>设置触摸屏</div>
               </div>
             </a-col>
             <!--              <a-col v-if="isMain() && isWin()" :span="6">-->
             <!--                <div @click="setPen" class="btn">-->
             <!--                  <Icon icon="icon-checkin" style="font-size: 2em"></Icon>-->
-            <!--                  <Iconify icon="fluent:pen-sparkle-16-regular" style="font-size: 2em" />  -->
+            <!--                  <Iconify icon="fluent:pen-sparkle-16-filled" style="font-size: 2em" />  -->
             <!--                  <div>设置笔</div>-->
             <!--                </div>-->
             <!--              </a-col>-->
@@ -113,11 +113,11 @@
             <a-col :span="6">
               <div v-if="isMain()" @click="subscreen" class="btn">
                 <!-- <Icon icon="pingmufenge02" style="font-size: 2em"></Icon> -->
-                <Iconify icon="fluent:slide-settings-24-regular" style="font-size: 2em" />
+                <Iconify icon="fluent:slide-settings-24-filled" style="font-size: 2em" />
                 <div> 分屏设置</div>
               </div>
             </a-col>
-            <a-col v-if="simple && !this.isOffline" :span="6">
+            <a-col v-if="simple && !this.isSingle" :span="6">
               <MyAvatar :size="37" :limit="true"></MyAvatar>
             </a-col>
           </a-row>
@@ -129,7 +129,7 @@
             <a-col v-if="isMain()" :span="6">
               <div @click="editNavigation" class="btn">
                 <!-- <Icon icon="Pushpin" style="font-size: 2em"></Icon> -->
-                <Iconify icon="fluent:tablet-16-regular" style="font-size: 2em" />
+                <Iconify icon="fluent:tablet-16-filled" style="font-size: 2em" />
                 <div>导航栏编辑</div>
               </div>
             </a-col>
@@ -137,20 +137,20 @@
 
               <div @click="basic" class="btn">
                 <!-- <Icon icon="shezhi" style="font-size: 2em"></Icon> -->
-                <Iconify icon="fluent:settings-16-regular" style="font-size: 2em" />
+                <Iconify icon="fluent:settings-16-filled" style="font-size: 2em" />
                 <div>通用设置</div>
               </div>
             </a-col>
-            <a-col v-if="isMain() && !$useEnv()" :span="6">
+            <a-col v-if="isMain() && !$usePlat()" :span="6">
               <div @click="goApps()" class="btn">
-                <Iconify icon="fluent:grid-16-regular" style="font-size: 2em"></Iconify>
+                <Iconify icon="fluent:grid-16-filled" style="font-size: 2em"></Iconify>
                 <div>应用管理</div>
               </div>
             </a-col>
             <!-- <Icon icon="jurassic_nav" style="font-size: 2em"></Icon> -->
             <!-- <a-col v-if="isMain()" :span="6">
                <div @click="wizard" class="btn">
-                 <Iconify icon="fluent:star-settings-24-regular" style="font-size: 2em" />
+                 <Iconify icon="fluent:star-settings-24-filled" style="font-size: 2em" />
                  <div>配置向导</div>
                </div>
              </a-col> -->
@@ -158,7 +158,7 @@
             <a-col :span="6">
               <div @click="papersSettings" class="btn">
                 <!-- <Icon icon="banner" style="font-size: 2em"></Icon> -->
-                <Iconify icon="fluent:image-multiple-16-regular" style="font-size: 2em" />
+                <Iconify icon="fluent:image-multiple-16-filled" style="font-size: 2em" />
                 <div>壁纸</div>
               </div>
             </a-col>
@@ -168,21 +168,21 @@
 
               <div @click="settingTheme" class="btn">
                 <!-- <Icon icon="yifu" style="font-size: 2em"></Icon> -->
-                <Iconify icon="fluent:color-24-regular" style="font-size: 2em" />
+                <Iconify icon="fluent:color-24-filled" style="font-size: 2em" />
                 <div>主题颜色</div>
               </div>
             </a-col>
-            <a-col v-if="isMain() && !this.isOffline" :span="6">
+            <a-col v-if="isMain() && !this.isSingle" :span="6">
               <div @click="invite" class="btn">
                 <!-- <Icon icon="tianjiachengyuan" style="font-size: 2em"></Icon> -->
-                <Iconify icon="fluent:people-add-16-regular" style="font-size: 2em" />
+                <Iconify icon="fluent:people-add-16-filled" style="font-size: 2em" />
                 <div>邀请</div>
               </div>
             </a-col>
-            <a-col v-if="isMain() && !this.isOffline" :span="6">
+            <a-col v-if="isMain() && !this.isSingle" :span="6">
               <div @click="verify" class="btn">
                 <!-- <Icon icon="team" style="font-size: 2em"></Icon> -->
-                <Iconify icon="fluent:people-16-regular" style="font-size: 2em" />
+                <Iconify icon="fluent:people-16-filled" style="font-size: 2em" />
                 <div>受邀</div>
               </div>
             </a-col>
@@ -192,7 +192,7 @@
                 <div>生成激活码</div>
               </div>
             </a-col>
-            <a-col :span="6" v-if="!$useEnv()">
+            <a-col :span="6" v-if="!$usePlat()">
               <div @click="power" class="btn">
                 <!-- <Icon icon="tuichu" style="font-size: 2em"></Icon> -->
                 <Iconify icon="fluent:power-20-filled" style="font-size: 2em" />
@@ -266,7 +266,7 @@ import EditNewNavigation from "../components/desk/addIcon/EditNewNavigation.vue"
 import ThemeSettingModal from "../components/setting/ThemeSettingModal.vue";
 
 import { taskStore } from "../apps/task/store";
-import { offlineStore } from "../js/common/offline";
+import { usePermissionStore } from "../permission/store";
 import { completeTask } from '../apps/task/task';
 import {Icon as Iconify} from '@iconify/vue';
 
@@ -345,14 +345,14 @@ export default {
     ]),
     ...mapWritableState(appStore, ["userInfo","backgroundColor"]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
-    ...mapWritableState(offlineStore, ["isOffline"]),
+    ...mapWritableState(usePermissionStore, ["isSingle"]),
     ...mapWritableState(useNavigationStore,['oldToggle','editToggle']),
 
   },
 
   methods: {
     ...mapActions(codeStore, ["verify", "create", "myCode"]),
-    ...mapActions(offlineStore, ["changeOffline"]),
+    ...mapActions(usePermissionStore, ["setSingle"]),
     ...mapActions(appStore, ['enterAided', 'leaveAided','enableShake','disableShake']),
     isMain: isMain, isWin,
     goShake(){
@@ -410,7 +410,7 @@ export default {
       // });
       this.simpleVisible=true
     },
-    tipOffline() {
+    tipSingle() {
       Modal.info({
         content:
           "使用离线模式后，将隐藏部分娱乐、社交类的功能，例如游戏、天气等。",
@@ -541,4 +541,4 @@ export default {
   color: var(--primary-text);
   background: var(--primary-bg);
 }
-</style>../components/desk/addIcon/EditNewNavigation.vue
+</style>

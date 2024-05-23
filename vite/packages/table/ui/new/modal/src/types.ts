@@ -32,10 +32,14 @@ export type ModalProps = {
   beforeUnmount?: () => boolean;
   // 自定义插槽
   custom?: boolean;
+  // 是否使用滚动条
+  isScrollbar?: boolean;
   // 最小化
   min?: boolean;
   // 最大化
   max?: boolean;
+  // 全屏
+  full?: boolean;
 
   type?: string | null;
   // 自定义拖拽区域
@@ -43,6 +47,7 @@ export type ModalProps = {
   // 用于记录保存拖拽位置的key
   name?: string | null;
 
-  // 栓q我也不知道啊
   scrollbarStyle?: any;
+  isFullScreen?: boolean;
+  isMaximize?: boolean;
 };

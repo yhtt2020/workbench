@@ -56,7 +56,7 @@ export const confirm: Confirm = (
     index: 1001,
     mask: false,
     maskIndex: 1000,
-    type: "link",
+    type: "warning",
     // 按钮宽
     okButtonWidth: "64",
     noButtonWidth: "64",
@@ -78,7 +78,6 @@ export const confirm: Confirm = (
 
   // 3 把渲染的 vNode 移除
   const close = () => {
-    console.log("关闭事件 :>> ");
     render(null, document.body);
   };
 

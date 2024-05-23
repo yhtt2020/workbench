@@ -3,22 +3,27 @@
         class="
             w-full h-[64px]  
             flex items-center 
-            justify-between p-3 " 
+            justify-between p-3 relative" 
         style="
-            border: 1px solid var(--divider);
             background: rgba(26,26,26,0.65);
             backdrop-filter: blur(50px);"
-        :style="{zoom: `${navAttribute.navSize / 100}`}">
+        :style="[
+            {zoom: `${navAttribute.navSize / 100}`}, 
+            currentNavPosition === 'top' ? { borderBottom:'1px solid var(--divider)' } : { borderTop:'1px solid var(--divider)'}]"
+        :class="radius">
         <!-- 用户头像以及控制中心 -->
         <User></User>
         <!-- 导航栏图标 -->
-        <Panel 
-            v-model:folderVisible="folderVisible"
-            @edit="edit" 
-            id="bottomPanel" 
-            @getDelIcon="getDelIcon" 
-            @control="control">
-        </Panel>
+        <div class="absolute -translate-x-1/2 -translate-y-1/2 left-1/2 top-1/2">
+           <Panel 
+                v-model:folderVisible="folderVisible"
+                @edit="edit" 
+                id="bottomPanel" 
+                @getDelIcon="getDelIcon" 
+                @control="control">
+            </Panel> 
+        </div>
+        
         <!-- 右侧时间天气和消息通知 -->
         <div class="flex">
             <Time></Time>
@@ -44,7 +49,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, provide, watch } from 'vue'
+import { ref, provide, watch, computed } from 'vue'
 import { storeToRefs } from 'pinia';
 import { message } from 'ant-design-vue';
 
@@ -63,7 +68,7 @@ const useAppStore = appStore()
 const { showGuide , status } = storeToRefs(useAppStore)
 
 const useNav = useNavigationStore()
-const { navAttribute } = storeToRefs(useNav)
+const { navAttribute, currentNavPosition } = storeToRefs(useNav)
 
 const emit = defineEmits(['edit', 'getDelIcon', 'control', 'update:folderVisible'])
 
@@ -118,5 +123,10 @@ watch(
         emit('update:folderVisible', val)
     }
 )
+
+// 边框圆角
+const radius = computed(() => {
+   return currentNavPosition.value === 'top' ? 'rounded-t-md' : 'rounded-b-md'
+})
 </script>
 <style lang='scss' scoped></style>

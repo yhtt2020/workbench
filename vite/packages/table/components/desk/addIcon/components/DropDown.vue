@@ -1,5 +1,5 @@
 <template>
-    <a-dropdown trigger="['click']">
+    <a-dropdown trigger="['click']" :overlayStyle="{zIndex: 9999999 + 10}">
         <template #overlay>
             <a-menu class="rounded-xl xt-modal" style="border-radius: 12px !important;">
                 <a-menu-item @click="handleMenuClick(item)" key="index" v-for="(item, index) in list"

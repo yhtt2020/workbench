@@ -17,7 +17,7 @@
           >
             <div class="flex items-center justify-center">
               <xt-ify-icon
-                icon="fluent:chevron-left-16-regular"
+                icon="fluent:chevron-left-16-filled"
                 class="xt-text-2"
                 size="30"
               />
@@ -183,7 +183,7 @@ message.config({
   maxCount: 1,
 });
 
-const chat = window.$chat.chat;
+const chat = window.$chat?.chat;
 const emit = defineEmits(["closeMember", "updateMuteAllMembers"]);
 
 const props = defineProps({
@@ -334,7 +334,6 @@ const delMuteList = (list) =>{
       muteTime: 0,
     }
     chat.setGroupMemberMuteTime(option).then((res) => {
-      console.log('测试',res);
       if(res.code === 0){
         message.success("解除禁言成功");
       }

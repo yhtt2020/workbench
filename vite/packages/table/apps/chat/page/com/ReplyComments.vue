@@ -33,7 +33,7 @@
                 <a-tooltip title="添加表情" placement="bottom">
                     <xt-button class="rounded-lg xt-text-2 ml-9 active-btn"
                         style="color: var(--secondary-text) !important; text-align: center !important; border: none;width: 50px;height: 32px;">
-                        <replyIcon icon="fluent:emoji-smile-slight-24-regular"
+                        <replyIcon icon="fluent:emoji-smile-slight-24-filled"
                             style="font-size: 20px !important; margin-right: 4px; vertical-align: sub;"></replyIcon>
                     </xt-button>
                 </a-tooltip>
@@ -42,7 +42,7 @@
             <a-tooltip title="添加图片" placement="bottom">
                 <xt-button class="ml-1 rounded-lg xt-text-2 active-btn"
                     style="color: var(--secondary-text) !important; text-align: center !important; border: none;width: 50px;height: 32px;">
-                    <replyIcon icon="fluent:image-sparkle-16-regular"
+                    <replyIcon icon="fluent:image-sparkle-16-filled"
                         style="font-size: 20px !important; margin-right: 4px; vertical-align: sub;"></replyIcon>
                 </xt-button>
             </a-tooltip>

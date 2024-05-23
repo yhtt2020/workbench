@@ -1,5 +1,8 @@
 <template>
   <xtMixMenu :menus="mainOption" name="name" class="flex max-w-full">
+    <template #extraMenu>
+      <ExtraMenu />
+    </template>
     <!-- xt-main-bottom-bar 定位类不可删 -->
 
     <!-- mac版导航栏 -->
@@ -54,7 +57,7 @@
             </Dock>
           </Drop>
           <!-- 社群开关开启后,用户头像信息放底部导航栏右侧 -->
-          <UserNavBar
+          <UserBar
             v-if="communityNavVisible"
             @openControl="openControl"
             :navSize="navAttribute.navRadius"
@@ -97,27 +100,23 @@
         v-model:isLeaveBar="isFootBar"
       >
         <div v-show="autoVisible" :style="[this.state ? this.winPosition : '']">
-          <Drop 
-          @createFile="createFile" 
-          currentId="bottom" 
+          <Drop
+          @createFile="createFile"
+          currentId="bottom"
           >
-            <WinPanel 
+            <WinPanel
               v-model:folderVisible="folderVisible"
               :mainClass="mainClass"
               @edit="edit"
-              @getDelIcon="getDelIcon" 
+              @getDelIcon="getDelIcon"
               @control="openControl">
             </WinPanel>
           </Drop>
         </div>
       </AutoHide>
     </template>
-    <keep-alive>
       <TaskBox v-if="true"></TaskBox>
-    </keep-alive>
-    <keep-alive>
       <Favorites v-if="true"></Favorites>
-    </keep-alive>
     <Common ref="common"></Common>
   </xtMixMenu>
 
@@ -154,7 +153,6 @@ import { messageStore } from "../store/message";
 import TaskBox from "../apps/task/page/TaskBox.vue";
 import Favorites from "../apps/favorites/page/index.vue";
 import navigationData from "../js/data/tableData";
-import { offlineStore } from "../js/common/offline";
 
 import {
   moreMenus,
@@ -176,25 +174,24 @@ import AutoHide from "./desk/navigationBar/components/folder/AutoHide.vue";
 import { mergeData } from "../ui/hooks/useDataConversion";
 import UserBar from "./bottomPanel/UserBar.vue";
 import Dock from "./bottomPanel/Dock.vue";
-import { useFullscreen } from "@vueuse/core";
-import UserNavBar from "./bottomPanel/community/UserNavBar.vue";
 import CommunityNav from "./bottomPanel/community/CommunityNav.vue";
 import TeamNav from "./bottomPanel/community/TeamNav.vue";
 import AppModal from "./bottomPanel/community/AppModal.vue";
 import { controlStore } from "../apps/control/hooks/controlStore";
-import WinPanel from "./WindowPanel/WinPanel.vue";
+import WinPanel from "./windowPanel/WinPanel.vue";
 import Setting from "./bottomPanel/setting/CommunitySetting.vue";
 import ComNavSearch from "./bottomPanel/search/ComNavSearch.vue";
-import { communityStore } from "../page/chat/store/communityStore";
+import { chatCommunityStore } from "../apps/chat/store/chatCommunity";
 import DeskAppModal from "./bottomPanel/desk/DeskAppList.vue";
 import { startApp } from "../ui/hooks/useStartApp";
 
-// 是否全屏状态 切换全屏
-const { isFullscreen, toggle } = useFullscreen();
+import mainMin from './windowPanel/hook/mainMenu'
+import ExtraMenu from './windowPanel/components/ExtraMenu.vue';
 
 export default {
   name: "BottomPanel",
   emits: ["getDelIcon", "hiedNavBar"],
+  mixins: [mainMin],
   components: {
     Dock,
     TeamTip,
@@ -208,7 +205,6 @@ export default {
     AutoHide,
     Favorites,
     UserBar,
-    UserNavBar,
     CommunityNav,
     TeamNav,
     AppModal,
@@ -216,6 +212,7 @@ export default {
     Setting,
     ComNavSearch,
     DeskAppModal,
+    ExtraMenu
   },
   data() {
     return {
@@ -231,93 +228,6 @@ export default {
       delNav: false,
       drawerMenus: [...extraRightMenu, ...moreMenus],
       componentId: "EditNavigationIcon",
-      mainMenus: [
-        {
-          id: 1,
-          newIcon: "fluent:add-16-regular",
-          name: "添加导航图标",
-          fn: () => {
-            this.editNavigation(this.drawerMenus[0]);
-          },
-        },
-        {
-          id: 2,
-          name: "导航栏设置",
-          newIcon: "fluent:settings-16-regular",
-          fn: () => {
-            this.$bus.emit("openSystemSet");
-            setTimeout(() => {
-              this.$bus.emit("selectSystemNav", 3);
-            }, 10);
-          },
-        },
-        {
-          id: 3,
-          name: "关闭当前导航",
-          newIcon: "fluent:eye-off-16-regular",
-          fn: () => {
-            this.$emit("hiedNavBar", "foot");
-          },
-        },
-        {
-          id: 4,
-          name: "清空当前导航栏",
-          newIcon: "fluent:circle-off-16-regular",
-          fn: () => {
-            this.clearAll();
-          },
-        },
-        {
-          id: 8,
-          name: "更多",
-          newIcon: "fluent:more-horizontal-16-filled",
-          children: [],
-        },
-        {
-          divider: true,
-          id: 12,
-        },
-        {
-          id: 13,
-          type: "systemApp",
-          newIcon: "fluent:lock-closed-16-regular",
-          name: "锁定屏幕",
-          event: "lock",
-          fn: () => {
-            this.newOpenApp(this.builtInFeatures[0]);
-          },
-        },
-        {
-          id: 14,
-          type: "systemApp",
-          newIcon: "fluent:settings-16-regular",
-          name: "基础设置",
-          event: "setting",
-          fn: () => {
-            this.newOpenApp(this.builtInFeatures[1]);
-          },
-        },
-        {
-          id: 15,
-          type: "systemApp",
-          newIcon: "fluent:full-screen-maximize-16-filled",
-          name: "全屏显示",
-          event: "fullscreen",
-          fn: () => {
-            this.newOpenApp(this.builtInFeatures[2]);
-          },
-        },
-        {
-          id: 16,
-          type: "systemApp",
-          newIcon: "fluent:slide-settings-24-regular",
-          name: "设备设置",
-          event: "status",
-          fn: () => {
-            this.newOpenApp(this.builtInFeatures[3]);
-          },
-        },
-      ],
       // 弹窗显示
       noticeFlag: true,
       addIconFlag: false,
@@ -342,6 +252,8 @@ export default {
 
       // 文件夹打开状态
       folderVisible: false,
+
+      sortId:'foot',
     };
   },
   props: {
@@ -418,7 +330,7 @@ export default {
       let macExtraWidth = this.communityNavVisible ? 540 : 200;
       let maxWidth = this.currentNavFormat === 'mac' ? macWidth : windowWidth * 0.6;
       let extraWidth = this.currentNavFormat === 'mac' ? macExtraWidth : windowWidth * 0.3;
-        
+
       // 计算当前可添加的最多图标个数
       this.maxItemNum = Math.round(maxWidth / this.realSize);
 
@@ -464,7 +376,6 @@ export default {
       "init",
       "copyFootNav",
     ]),
-    ...mapWritableState(offlineStore, ["isOffline"]),
     ...mapWritableState(useNavigationStore, [
       "selectNav",
       "bottomToggle",
@@ -487,43 +398,6 @@ export default {
 
     isMain() {
       return isMain();
-    },
-    childrenMenu() {
-      return [
-        {
-          id: 1,
-          name: this.bottomToggle[0] ? "隐藏用户中心" : "显示用户中心",
-          newIcon: "fluent:person-16-regular",
-          fn: () => {
-            this.bottomToggle[0] = !this.bottomToggle[0];
-          },
-        },
-        {
-          id: 2,
-          name: this.bottomToggle[1] ? "隐藏社区助手" : "显示社区助手",
-          newIcon: "fluent:people-community-16-regular",
-          fn: () => {
-            this.bottomToggle[1] = !this.bottomToggle[1];
-          },
-        },
-        {
-          id: 3,
-          name: this.bottomToggle[2] ? "隐藏任务中心" : "显示任务中心",
-          newIcon: "fluent:task-list-square-16-regular",
-          fn: () => {
-            (this.bottomToggle[2] = !this.bottomToggle[2]),
-              (this.isTask = !this.isTask);
-          },
-        },
-        {
-          id: 4,
-          name: this.settings.enableChat ? "隐藏社群沟通" : "显示社群沟通",
-          newIcon: "fluent:chat-16-regular",
-          fn: () => {
-            this.settings.enableChat = !this.settings.enableChat;
-          },
-        },
-      ];
     },
     rightMenus() {
       this.mainMenus[4].children = [...this.childrenMenu];
@@ -570,7 +444,7 @@ export default {
       this.delNav = val;
       this.$emit("getDelIcon", val);
     },
-    // 
+    //
     navigationToggle: {
       immediate: true,
       deep: true,
@@ -618,12 +492,8 @@ export default {
       },
     },
     // 任务弹窗显示与隐藏与导航栏选择同步
-    isTask() {
-      if (this.isTask) {
-        this.bottomToggle[2] = true;
-      } else {
-        this.bottomToggle[2] = false;
-      }
+    isTask(newV) {
+      this.bottomToggle[2] = newV;
     },
   },
   methods: {
@@ -638,7 +508,7 @@ export default {
       "removeFootNavigationList",
     ]),
     ...mapActions(useNavigationStore, ["toggleEdit", "toggleTaskBox"]),
-    ...mapActions(communityStore, ["getMyCommunity"]),
+    ...mapActions(chatCommunityStore, ["getMyCommunity"]),
     mergeData,
     // 监听鼠标位置
     listenMouse(e) {
@@ -675,7 +545,7 @@ export default {
      * 打开菜单选项
      * @param {*} item
      */
-    editNavigation(item) {
+    editNav(item) {
       if (item.component) {
         this.componentId = item.component;
         if (item.component === "EditNewNavigation") {
@@ -700,18 +570,6 @@ export default {
       this.quick = false;
     },
     /**
-     * 打开桌面应用提示
-     * @param {*} item 当前图标
-     */
-    msgNotice(item) {
-      if (item.type === "tableApp") {
-        message.loading({
-          content: `打开「${item.name}」...`,
-          key: "tipRun",
-        });
-      }
-    },
-    /**
      * 打开应用 -- 简化版
      * @param {*} type 图标类型
      * @param {*} value 打开路径
@@ -719,7 +577,7 @@ export default {
      */
     async newOpenApp(item) {
       const { type, value } = item;
-      console.log("item :>> ", type, value);
+      // console.log("item :>> ", type, value);
       let rs = await startApp(type, value, this.$router);
       if (!rs) {
         message.error({

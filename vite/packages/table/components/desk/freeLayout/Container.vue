@@ -12,14 +12,8 @@ import { storeToRefs } from "pinia";
 import { useFreeLayoutStore } from "./store";
 import { message } from "ant-design-vue";
 import "animate.css";
-import { useDebounceFn } from "@vueuse/core";
-
-import {
-  useGridToWidth,
-  useHeightToGrid,
-  useElementSize,
-} from "../../../ui/hooks/useCardSize";
-import _, { iteratee } from "lodash";
+import { useElementSize } from "../../../ui/hooks/useCardSize";
+import _ from "lodash";
 import { useCutLayout } from "./useCutLayout";
 // 初始化操作
 const freeLayoutStore: any = useFreeLayoutStore();
@@ -32,8 +26,6 @@ const { proxy }: any = getCurrentInstance();
 
 const { currentDesk, currentID }: any = toRefs(props);
 const {
-  freeLayoutData,
-  getCurrentDeskId,
   getFreeLayoutData,
   freeLayoutEnv,
   getFreeLayoutState,
@@ -49,7 +41,6 @@ onMounted(() => {
   }, 2);
   proxy.$bus.on("cutCanvas", (position) => {
     loading.value = true;
-    console.log("整理桌面回调触发了 :>> ");
     setTimeout(() => {
       cutCanvas({
         redirect: true,
@@ -73,6 +64,7 @@ const waterfallFlow: any = ref(null);
 async function getPosition(item) {
   cards.value.push(item);
   const nodes = await waterfallFlow.value?.getElementsByTagName("div");
+  if (!nodes) return;
   for (let node of nodes) {
     if (
       !(node instanceof HTMLDivElement) ||
@@ -341,8 +333,9 @@ async function updateCard(data) {
 }
 
 let updateCardTimer: any;
+
 watch(
-  currentDesk.value?.cards,
+  () => currentDesk.value?.cards,
   (card) => {
     if (firstLoading.value) return;
     clearTimeout(updateCardTimer);
@@ -353,6 +346,7 @@ watch(
   },
   {
     immediate: true,
+    deep: true,
   }
 );
 
@@ -397,7 +391,6 @@ onBeforeUnmount(() => {
   let data = {
     ...currentData.value,
   };
-  // const freeLayout = freeLayoutStore.getOneFreeLayoutData(currentID.value);
 
   // for (const id in freeLayout) {
   //   if (data[id]?.id.toString() != id.toString()) {
@@ -407,6 +400,19 @@ onBeforeUnmount(() => {
   // }
   // console.log("自由布局销毁操作 :>> ", getFreeLayoutData.value);
 });
+
+const handleIntersection = (visible, item) => {
+  console.log(`Element is intersecting: ${visible}`);
+  console.log("item :>> ", item);
+  if (visible) {
+    item.visible = true;
+    console.log("object :>> ", 111);
+    // Do something when element is intersecting
+  } else {
+    item.visible = false;
+    // Do something when element is not intersecting
+  }
+};
 </script>
 
 <template>
@@ -443,7 +449,7 @@ onBeforeUnmount(() => {
   </div>
   <template v-for="item in getFreeLayoutData">
     <xt-drag
-      v-if="!getFreeLayoutState.system.hide && item?.id"
+      v-if="item?.id"
       :test="false"
       @onDisabled="disabledInfo"
       mode="all"
@@ -480,15 +486,18 @@ onBeforeUnmount(() => {
         enter-active-class="animate__bounceIn"
         leave-active-class="animate__bounceIn"
       >
+        <!-- v-intersection="(visible) => handleIntersection(visible, item)" -->
+
         <div
-          v-if="item.id"
           class="rounded-xl"
           :style="{
+            display: getFreeLayoutState.system.hide ? 'none' : 'block',
             border: isSelectAll ? '3px solid var(--active-bg) ' : '',
           }"
           :key="item.id"
           ref="test"
         >
+          <!-- <xt-button>{{ item.visible }}</xt-button> -->
           <!-- <xt-button>id： {{ item.id }}</xt-button> -->
           <!-- <xt-button  w="280" h="400">  {{ freeLayoutEnv.scrollData }} </xt-button> -->
           <!-- <xt-button w="280">top {{ item.top }}</xt-button> -->

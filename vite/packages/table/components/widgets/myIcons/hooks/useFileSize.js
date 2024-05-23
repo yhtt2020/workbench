@@ -23,7 +23,7 @@ export function getObjectSize(obj) {
 export function formatArrayAsFileSize(array) {
   let totalSize = 0;
 
-  for (let i = 0; i < array.length; i++) {
+  for (let i = 0; i < array.length; i++) { 
     let elementSize = getObjectSize(array[i]);
     totalSize += elementSize;
   }

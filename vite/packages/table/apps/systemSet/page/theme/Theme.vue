@@ -45,7 +45,7 @@
     </template>
     <hr />
     <xt-option-info
-      v-if="!$useEnv()"
+      v-if="!$usePlat()"
       isSwitch
       v-model:switch="appSettings.transparent"
       title="透明背景"

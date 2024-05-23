@@ -1,4 +1,4 @@
-/**新版IM样式表(覆盖版)**/ 
+/**新版IM样式表(覆盖版)**/
 
 // 容器宽高
 .TUIKit {
@@ -6,25 +6,30 @@
   flex: 1 !important;
   width: 100% !important;
   height: 100% !important;
-  &-main-container{
+
+  &-main-container {
     display: flex !important;
     flex: 1 !important;
   }
-  &-main{
+
+  &-main {
     display: flex !important;
     flex: 1 !important;
     width: 100% !important;
   }
-  &-main-main{
+
+  &-main-main {
     width: 100% !important;
     display: flex !important;
     flex: 1 !important;
-    .chat{
+
+    .chat {
       width: 100% !important;
       flex: 1 !important;
     }
   }
-  &-main-aside{
+
+  &-main-aside {
     width: 320px !important;
   }
 }
@@ -38,13 +43,14 @@
 .manage,
 .message-input-toolbar-list-end,
 .message-input-button-hover,
-.tui-chat-application-tips {
+.tui-chat-application-tips,.application-tips {
   display: none !important;
 }
 
 // 会话样式
 .tui-conversation {
   background: transparent !important;
+  height: calc(100% - 8%) !important;
 
   &-list {
     overflow-y: auto;
@@ -58,6 +64,7 @@
   &-content {
     cursor: pointer !important;
     margin-bottom: 6px !important;
+    border-radius: 8px !important;
 
     &:hover {
       cursor: pointer !important;
@@ -91,15 +98,29 @@
         }
       }
     }
+
+    .left {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
 
   &-item-pinned {
     background: transparent !important;
   }
+
   &-item-selected {
+    border-radius: 8px !important;
     background: rgba(80, 139, 254, 0.2) !important;
   }
+
+  // 会话列表顶部
+  &-header {
+    display: none !important;
+  }
 }
+
 .actions-menu {
   background-color: transparent !important;
   background: var(--secondary-bg) !important;
@@ -112,20 +133,25 @@
     }
   }
 }
+
 .TUIKit-main-aside {
   border-right: 1px solid var(--divider) !important;
 }
+
 .chat-header-content {
   color: var(--primary-text) !important;
 }
+
 .chat-header-setting {
   .common-icon-container {
     color: var(--primary-text) !important;
   }
 }
+
 .message-input-toolbar {
   border-top: 1px solid var(--divider) !important;
 }
+
 .toolbar-item-container-dialog {
   background: var(--secondary-bg) !important;
 
@@ -149,6 +175,7 @@
     }
   }
 }
+
 .toolbar-item-container {
   &:nth-of-type(2n) {
     .toolbar-item-container-icon {
@@ -168,6 +195,7 @@
     }
   }
 }
+
 .message-item {
   cursor: pointer !important;
 }
@@ -203,6 +231,7 @@
     }
   }
 }
+
 .input-quote {
   &-content {
     background-color: rgba(255, 255, 255, 1) !important;
@@ -212,21 +241,26 @@
     }
   }
 }
+
 // 昵称
 .message-body-nick-name {
   color: var(--secondary-text) !important;
 }
+
 .message-timestamp {
   color: var(--secondary-text) !important;
 }
+
 .message-tip {
   span {
     color: var(--secondary-text) !important;
   }
 }
+
 .message-more {
   color: var(--secondary-text) !important;
 }
+
 .revoke {
   .edit {
     color: #006eff !important;
@@ -240,24 +274,167 @@
     color: var(--secondary-text) !important;
   }
 }
-.tui-chat-default{
-  h1{
+
+.tui-chat-default {
+  h1 {
     display: none !important;
   }
 }
 
 // 置顶三角图标
-.isPined-icon{
-  &::after{
-    width: 12px;
-    height: 12px;
-    position: relative;
-    top: -27px;
-    right: -12px;
-    display: block;
-    content: '';
-    border-left: 12px solid transparent;
-    border-right: 12px solid #508bfe;
-    border-bottom: 12px solid transparent;
+.isPined-icon {
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  top:0;
+  right:0;
+  border-left: 12px solid transparent;
+  border-right: 12px solid #508bfe;
+  border-bottom: 12px solid transparent;
+}
+
+.message-file {
+  display: flex;
+  flex-direction: column;
+
+  .box {
+    flex: 1;
+    display: flex;
+    cursor: pointer;
+
+    .message-file-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  progress {
+    width: 100%;
+    color: #006eff;
+    appearance: none;
+    border-radius: 0.25rem;
+    background: rgba(#ffffff, 1);
+    width: 100%;
+    height: 0.5rem;
+
+    &::-webkit-progress-value {
+      background-color: #006eff;
+      border-radius: 0.25rem;
+    }
+
+    &::-webkit-progress-bar {
+      border-radius: 0.25rem;
+      background: rgba(#ffffff, 1);
+    }
+
+    &::-moz-progress-bar {
+      color: #006eff;
+      background: #006eff;
+      border-radius: 0.25rem;
+    }
   }
 }
+
+.model-icon {
+  color: #666;
+  margin-right: 5px;
+  vertical-align: text-top
+}
+
+
+/**社群列表高度**/
+@media screen and (max-height: 500px) {
+  .category-scrollbar,.official-scrollbar {
+    height: 15vh !important;
+  }
+  .column-scrollbar,.official-scroll {
+    height: 4vh !important;
+  }
+}
+@media screen and (min-height: 501px) and (max-height: 512px) {
+  .category-scrollbar,.official-scrollbar {
+    height: 22vh !important;
+  }
+  .column-scrollbar,.official-scroll{
+    height: 10vh !important;
+  }
+}
+@media screen and (min-height: 513px) and (max-height: 550px) {
+  .category-scrollbar,.official-scrollbar {
+    height: 27vh !important;
+  }
+  .column-scrollbar,.official-scroll {
+    height: 15vh !important;
+  }
+}
+@media screen and (min-height: 551px) and (max-height: 600px) {
+  .category-scrollbar,.official-scrollbar {
+    height: 34vh !important;
+  }
+  .column-scrollbar,.official-scroll {
+    height: 24vh !important;
+  }
+}
+@media screen and (min-height: 601px) and (max-height: 650px) {
+  .category-scrollbar,.official-scrollbar {
+    height: 38vh !important;
+  }
+  .column-scrollbar,.official-scroll{
+    height: 30vh !important;
+  }
+}
+@media screen and (min-height: 651px) and (max-height: 700px) {
+  .category-scrollbar,.official-scrollbar  {
+    height: 42vh !important;
+  }
+  .column-scrollbar,.official-scroll {
+    height: 34vh !important;
+  }
+}
+@media screen and (min-height: 701px) and (max-height: 750px) {
+  .category-scrollbar,.official-scrollbar  {
+    height: 45vh !important;
+  }
+  .column-scrollbar,.official-scroll {
+    height: 38vh !important;
+  }
+}
+@media screen and (min-height: 751px) and (max-height: 800px) {
+  .category-scrollbar,.official-scrollbar {
+    height: 50vh !important;
+  }
+  .column-scrollbar,.official-scroll {
+    height: 42.5vh !important;
+  }
+}
+@media screen and (min-height: 801px) and (max-height: 850px) {
+  .category-scrollbar,.official-scrollbar{
+    height: 53vh !important;
+  }
+  .column-scrollbar,.official-scroll {
+    height: 47vh !important;
+  }
+}
+@media screen and (min-height: 851px) and (max-height: 1000px) {
+  .category-scrollbar,.official-scrollbar {
+    height: 59vh !important;
+  }
+  .column-scrollbar,.official-scroll {
+    height: 54vh !important;
+  }
+}
+@media screen and (min-height: 1001px) {
+  .category-scrollbar {
+    height: 61vh !important;
+  }
+  .official-scrollbar{
+    height: 59.5vh !important;
+  }
+  .column-scrollbar {
+    height: 56vh !important;
+  }
+  .official-scroll{
+    height: 55vh !important;
+  }
+} 

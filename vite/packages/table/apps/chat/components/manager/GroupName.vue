@@ -18,7 +18,7 @@
           >
             <div class="flex items-center justify-center">
               <xt-ify-icon
-                icon="fluent:chevron-left-16-regular"
+                icon="fluent:chevron-left-16-filled"
                 class="xt-text-2"
                 size="30"
               />
@@ -62,7 +62,7 @@
                   ></a-avatar>
                 </div>
                 <xt-ify-icon
-                  icon="fluent:camera-16-regular"
+                  icon="fluent:camera-16-filled"
                   size="24"
                   class="absolute xt-active-text"
                   style="
@@ -148,7 +148,7 @@ const props = defineProps({
 });
 const { info } = toRefs(props);
 
-const chat = window.$chat.chat;
+const chat = window.$chat?.chat;
 
 // ref定义数据
 const data = ref({

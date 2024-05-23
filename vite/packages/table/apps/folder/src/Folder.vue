@@ -26,7 +26,7 @@
       </template>
 
       <!-- 空状态显示状态 -->
-      <template v-if="customData.list.length <= 0 && !dragSortState">
+      <template v-if="customData?.list.length <= 0 && !dragSortState">
         <Null
           :size="customData.customSize"
           @addFile="addFileClick"
@@ -80,6 +80,13 @@
     v-if="expandVisible"
     @close="expandClose"
   ></Expand>
+
+  <ModelCard
+    v-if="modelVisible"
+    :cardData="cardData"
+    v-model:model-visible="modelVisible"
+    @delete="deleteFile"
+  />
 </template>
 
 <script setup>
@@ -122,6 +129,9 @@ const FolderSet = defineAsyncComponent(() =>
 );
 const EditNewNavigation = defineAsyncComponent(() =>
   import("../../../components/desk/addIcon/EditNewNavigation.vue")
+);
+const ModelCard = defineAsyncComponent(() =>
+  import("../../../components/windowPanel/components/ModelCard.vue")
 );
 
 const { proxy } = getCurrentInstance();
@@ -188,10 +198,11 @@ const props = defineProps({
     },
   },
   secondary: {},
+  // 导航栏特定设置
   navBar: {
     type: Object,
     default: () => ({
-      // 右下角图标显示
+      // 右下角自定义大小图标显示
       resize: true,
       // 设置中尺寸大小选择
       sizeOption: true,
@@ -199,7 +210,7 @@ const props = defineProps({
       bg: true,
       // 隐藏删除小组件选项
       isDel: false,
-      // 隐藏层级选择
+      // 隐藏当桌面为自由桌面时，上置下置层级选择
       hierarchy: false,
       // 点击文件夹外部关闭
       close: Boolean,
@@ -298,9 +309,9 @@ const options = computed(() => {
   return {
     defaultData: defaultFolderData,
     bg: isDrag.value ? "var(--active-secondary-bg) " : "",
-    // 隐藏删除
+    // 当位于导航栏时，隐藏删除选项
     disabledDelete: navBar.value.isDel,
-    // 隐藏层级
+    // 当位于导航栏时，且桌面为自由桌面时，隐藏上置下置层级
     hierarchy: navBar.value.hierarchy,
     // 二级
     secondary: {
@@ -310,6 +321,8 @@ const options = computed(() => {
     modalSize: modalSize.value,
     customDel: true,
     rightMenuVisible: navBar.value.customRight,
+    // 隐藏菜单中添加到导航栏的选项
+    disabledNav: true,
   };
 });
 
@@ -368,6 +381,14 @@ const autoSize = computed(() => {
 const expandList = ref(props)
 
 /**
+ * 卡片类图标的相关数据
+ */
+// 模态框是否可见
+const modelVisible = ref(false)
+// 当前卡片的详细数据
+const cardData = ref({})
+
+/**
  *点击组件关闭
  */
 const clickFile = (data) => {
@@ -378,6 +399,11 @@ const clickFile = (data) => {
     expandList.value = expandData()
     // 保留原来的大小
     oldCardSize.value = customData.value.customSize
+    return
+  } else if (data.type === 'card'){
+    // 打开卡片
+    modelVisible.value = true
+    cardData.value = data
     return
   }
   startApp(data.type, data.value, router);
@@ -477,9 +503,10 @@ const createFile = (data) => {
 };
 // 删
 const deleteFile = (data) => {
+  console.log(data,'<<<<<<<<<<')
   if (!navBar.value.isOut) {
     customData.value.list.splice(customData.value.list.indexOf(data), 1);
-  focusClose.value = false
+    focusClose.value = false
   } else {
     emit("deleteNavApp", data);
   }

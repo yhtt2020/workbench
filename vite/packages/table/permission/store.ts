@@ -1,24 +1,44 @@
 import { defineStore } from "pinia";
+import cache from "../components/card/hooks/cache";
+import { useLogout } from "./user/useLogout";
 // @ts-ignore
 export const usePermissionStore = defineStore("usePermissionStore", {
   state: () => ({
     // 实际使用的token
     token: "",
-    /**
-     * 这个变量不会记录token 只作为标记
-     * 如果取过旧版token，就不再取了
-     */
-    retrievedOldTokenFlag: false,
     // 用户信息
-    userInfo: {},
+    userInfo: null,
+    // 工作台特殊状态
+    isOffline: false,
+    isSingle: false,
+    isGuest: false,
+    isLogin: false,
+    //平台
+    currentEnv:""
   }),
   getters: {},
-  actions: {},
+  actions: {
+    setGuest(boolean){
+      this.isGuest = boolean
+      cache.set('isGuest',boolean)
+      this.currentEnv = window.$currentEnv()
+    },
+    setSingle(boolean){
+      this.isSingle = boolean
+      cache.set('isSingle',boolean)
+      this.currentEnv = window.$currentEnv()
+    },
+    setOffline(boolean){
+      this.isOffline = boolean
+      cache.set('isOffline',boolean)
+      this.currentEnv = window.$currentEnv()
+    },
+  },
   persist: {
     enabled: true,
     strategies: [
       {
-        paths: ["token", "retrievedOldTokenFlag"],
+        paths: ["token", "userInfo"],
         storage: localStorage,
       },
     ],

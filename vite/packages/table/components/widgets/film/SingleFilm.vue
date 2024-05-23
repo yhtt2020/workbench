@@ -3,6 +3,7 @@
       :header="header"
       v-model:customSize="customData.customSize"
       :customIndex="customIndex"
+      :envLimit="['guest', 'offline', 'single']"
       :desk="desk" 
       :options="options" 
       v-if="!detailToggle"
@@ -81,7 +82,7 @@
           web: false,
           mobile: false,
           client: false,
-          offline:false
+          single:false
         },
         customSize:'2x4',
         header:{
