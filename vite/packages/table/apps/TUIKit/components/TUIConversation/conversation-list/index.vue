@@ -118,12 +118,12 @@
             <div class="content-footer">
               <span class="time">{{ conversation.getLastMessage("time") }}</span>
               <!-- IM的UI图标组件 -->
-              <Icon v-if="conversation.isMuted" :file="muteIcon" />
+              <!-- <Icon v-if="conversation.isMuted" :file="muteIcon" /> -->
   
               <!-- 新版替换的图标组件 -->
               <xt-ify-icon
                 v-if="conversation.isMuted"
-                icon="fluent:alert-off-16-regular"
+                icon="fluent:alert-off-16-filled"
                 size="20"
                 class="xt-text-2 muted-icon"
               />

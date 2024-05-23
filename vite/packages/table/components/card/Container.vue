@@ -125,6 +125,7 @@
                       w="18"
                       h="18"
                       :modelValue="header.showIcon"
+                      :click="false"
                     />
                   </template>
                 </div>
@@ -256,7 +257,7 @@ import { useMouseInElement } from "@vueuse/core";
 import { navStore } from "../../store/nav";
 
 import Resize from "./Resize.vue";
-import RightMenu from "./RightMenu.vue";
+import RightMenu from "./RightMenu.vue";  
 import { usePlat } from "../../ui/hooks/usePlat";
 import { addCardToNav } from "./hooks/addCardToNav";
 import { useConversionCard } from "./hooks/useConversionCard";
@@ -313,6 +314,7 @@ const handleTouchStart = (e) => {
 onBeforeMount(async () => {
   // 处理默认数据
   if (props.options.defaultData) {
+
     props.options.defaultData = await _.merge(
       {},
       props.options.defaultData,

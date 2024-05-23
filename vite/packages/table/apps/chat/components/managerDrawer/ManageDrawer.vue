@@ -509,9 +509,8 @@ const updateJoin = async (data) => {
     joinOption: data,
   };
   const res = await chat.updateGroupProfile(options);
-  // console.log("更新", res);
   if (res.code === 0) {
-    const { group } = res.data;
+    const  group  = res.data?.group;
     manageInfo.value.join = group.joinOption;
     message.success("加群方式修改成功");
     joinRef.value.joinVisible = false;
@@ -525,8 +524,9 @@ const updateInvite = async (data) => {
     inviteOption: data,
   };
   const res = await chat.updateGroupProfile(options);
+  console.log('测试',res);
   if (res.code === 0) {
-    const { group } = res.data;
+    const group  = res.data.group;
     manageInfo.value.invite = group.inviteOption;
     message.success("邀请方式修改成功");
     inviteRef.value.inviteVisible = false;

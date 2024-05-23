@@ -1,15 +1,15 @@
 <template>
-  <xt-container 
+  <xt-container
   :header="header"
   :envLimit="['single']"
   @titleHover="showDrawer"
   v-model:customSize="customData.customSize"
-  :options="options" 
+  :options="options"
   :sizeList="sizeList"
   :customData="customData"
   :customIndex="customIndex"
-  :desk="desk" 
-  ref="rankingSmallSlot" 
+  :desk="desk"
+  ref="rankingSmallSlot"
   :menuList="toggleRankingList"
   @delete="deleteCard">
     <!-- 总在线时长榜 -->
@@ -44,9 +44,9 @@
   </xt-container>
   <a-drawer v-model:visible="middleShow" title="设置" placement="right" width="500">
     <div class="flex flex-col" style="color:var(--primary-text)">
-      <span   v-for="(item,index) in rankingType" :key="index"  
-      @click="getRankingType(item,index)" 
-      :class="rankIndex === index ? 'active-index':''" 
+      <span   v-for="(item,index) in rankingType" :key="index"
+      @click="getRankingType(item,index)"
+      :class="rankIndex === index ? 'active-index':''"
       class="h-12 py-3 mb-4 text-center rounded-lg pointer change xt-bg-2 show-game-time">
          {{ item.title }}
       </span>
@@ -146,7 +146,8 @@ export default {
     header(){
       return {
         title:this.rankingType[this.rankIndex].title,
-        ifyIcon:'fluent:people-community-16-regular',
+        // ifyIcon:'fluent:people-community-16-regular',
+        showIcon:"/img/appLogo/rank.png",
         titleHover:true,
         titleHoverName:this.rankingType[this.rankIndex].title,
       }

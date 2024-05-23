@@ -39,7 +39,10 @@ export default {
       isDark:true,
       header:{
         title:'日历',
-        ifyIcon:"fluent:calendar-16-regular",
+        // ifyIcon:"fluent:calendar-16-regular",
+        showIcon:"/img/appLogo/customTimer.png",
+
+
       },
       customSize:'2x4'
 

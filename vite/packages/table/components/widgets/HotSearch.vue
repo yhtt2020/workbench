@@ -82,7 +82,8 @@ export default {
     header() {
       return {
         title:'微博热搜',
-        ifyIcon:'ri:weibo-fill',
+        // ifyIcon:'ri:weibo-fill',
+        showIcon:"/img/appLogo/weibo.png",
         refresh:{
           state:this.refreshFlag ? true : false,
           fn:this.refreshNow,

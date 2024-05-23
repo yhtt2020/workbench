@@ -12,9 +12,8 @@ import { getUserInfo as useGetUserInfo } from "./permission/api/login";
 // @ts-ignore
 export const appStore = defineStore('appStore', {
   state: () => ({
-    currentRoute: undefined,//当前路由
-
-
+    //当前路由
+    currentRoute: undefined,
     //用户信息卡片
     userCardVisible: false,
     userCardUid: 0,
@@ -102,6 +101,8 @@ export const appStore = defineStore('appStore', {
 
       /**用于社群导航是否第一次开启提示**/
       comNavVisible:true,
+      /**用于社群桌面和个人桌面的切换**/ 
+      isCommunity:true,
     },
 
     routeUpdateTime: Date.now(),//用于更新滚动条

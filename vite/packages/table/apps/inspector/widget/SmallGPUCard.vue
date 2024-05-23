@@ -1,11 +1,11 @@
 <template>
-  <xt-container  
+  <xt-container
     v-model:customSize="customData.customSize"
-    :customData="customData" 
+    :customData="customData"
     :header="header"
-    :devLimit="['h5']"  
-    :options="options" 
-    :menu-list="menuList" 
+    :devLimit="['h5']"
+    :options="options"
+    :menu-list="menuList"
     :customIndex="customIndex"
     :desk="desk"
     @delete="deleteCard">
@@ -73,7 +73,9 @@ export default {
       ],
       header:{
         title: 'GPU',
-        ifyIcon:'fluent:arrow-trending-lines-20-filled'
+        // ifyIcon:'fluent:arrow-trending-lines-20-filled'
+        showIcon:"/img/appLogo/performance.png",
+
       }
     }
   },
