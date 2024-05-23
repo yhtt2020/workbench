@@ -105,6 +105,7 @@ export default [
     path: "/main",
     name: "main",
     // component: Main,
+    // 注册应用弹窗路由
     components: {
       default: Main,
       ai: AIAssistant,

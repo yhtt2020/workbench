@@ -19,7 +19,7 @@ onMounted(() => {
   setTimeout(() => {}, 51);
 });
 onUnmounted(() => {
-  data.value.props = null;
+  data.value.params = null;
 });
 const props = defineProps<{
   name: any;
@@ -29,6 +29,7 @@ const appModalStore: any = useAppModalStore();
 const { runList }: any = storeToRefs(appModalStore);
 const data: any = ref(null);
 data.value = appModalStore.getApp(props.name);
+provide('modalParams',data.value.params)
 // 弹窗ref
 const modal: any = ref(null);
 // 是否最大化
@@ -141,13 +142,14 @@ const modalStyle = computed(() => {
       </header>
     </template>
     <div class="flex flex-col h-full">
+        <!-- 原先max-height: -50px  -->
       <div
         class="flex flex-grow"
         style="max-height: calc(100% - 0px)"
         :style="[modalStyle]"
       >
-        <!-- 原先max-height: -50px -->
-        <router-view :name="data?.name" :props="data?.props"></router-view>
+        <!-- :props="data?.props" -->
+        <router-view :name="data?.name"></router-view>
       </div>
     </div>
   </xt-modal>

@@ -257,7 +257,7 @@ import { useMouseInElement } from "@vueuse/core";
 import { navStore } from "../../store/nav";
 
 import Resize from "./Resize.vue";
-import RightMenu from "./RightMenu.vue";  
+import RightMenu from "./RightMenu.vue";
 import { usePlat } from "../../ui/hooks/usePlat";
 import { addCardToNav } from "./hooks/addCardToNav";
 import { useConversionCard } from "./hooks/useConversionCard";
@@ -290,7 +290,7 @@ const { edit } = storeToRefs(widgetStore);
 const props = defineProps(defaultProps);
 const { header } = toRefs(props);
 const courierStatus = computed(() => {
-  return !window.$usePlat('client');
+  return !window.$usePlat("client");
 });
 const envLimitStatus = computed(() => {
   return props.envLimit.filter((item) => item != "offline");
@@ -314,12 +314,7 @@ const handleTouchStart = (e) => {
 onBeforeMount(async () => {
   // 处理默认数据
   if (props.options.defaultData) {
-
-    props.options.defaultData = await _.merge(
-      {},
-      props.options.defaultData,
-      props.customData
-    );
+    props.customData = _.merge(props.customData, props.options.defaultData);
   }
 });
 onMounted(() => {
