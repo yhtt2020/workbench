@@ -26,6 +26,7 @@
           :keepAddIcon="keepAddIcon"
           @changeEditing="editing = !editing"
           @onArrange="onArrange"
+          :communityRole="communityRole"
         >
           <!-- 拿菜单数据 -->
           <template #settingsAllAfter>
@@ -82,6 +83,7 @@
               :editing="editing"
               :key="key"
               :currentDesk="currentDesk"
+              :communityRole="communityRole"
             />
           </span>
         </template>
@@ -317,6 +319,9 @@ import ShareDesk from "../../../../components/desk/ShareDesk.vue";
 import ExportDesk from "../../../../components/desk/ExportDesk.vue";
 import DeskPreview from "../../../../components/desk/DeskPreview.vue";
 import DeskEditMode from "./DeskEditMode.vue";
+import VueCustomScrollbar from "../../../../../../src/components/vue-scrollbar.vue";
+import Icon from "../../../../components/Icon.vue";
+import HorizontalPanel from "../../../../components/HorizontalPanel.vue";
 
 // 其他文件
 import menuMinis from "../../hooks/communityMenu";
@@ -386,6 +391,9 @@ export default {
     ExportDesk,
     DeskPreview,
     DeskEditMode,
+    VueCustomScrollbar,
+    Icon,
+    HorizontalPanel,
   },
 
   data() {
@@ -473,7 +481,7 @@ export default {
       ],
       loadingVisible: true,
       // 接收定时器临时变量
-      loadTime:null,
+      loadTime: null,
     };
   },
 
@@ -613,6 +621,9 @@ export default {
       this.addDeskVisible = true;
       this.moreDesk();
     });
+    this.$bus.on("updateSync",()=>{
+      this.syncSaveCommunity();
+    })
 
     // 默认触发
     this.setCurrentDefaultDesk();
@@ -637,6 +648,7 @@ export default {
     if (!this.communityRole) {
       this.loadCommunityCloud();
     }
+
   },
 
   methods: {
@@ -661,7 +673,7 @@ export default {
 
     // 数据同步云端
     syncSaveCommunity() {
-      console.log('同步当前数据',this.currentDesk);
+      console.log("同步当前数据", this.currentDesk);
       this.setCurrentDeskNo(this.communityInfo.no);
       this.setCurrentDeskAllList(this.communityDeskList);
       this.setCurrentDeskData(this.currentDesk);

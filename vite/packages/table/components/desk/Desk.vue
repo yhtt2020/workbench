@@ -323,6 +323,10 @@ export default {
       type: Boolean,
       default: () => false,
     },
+    communityRole:{
+      type:Boolean,
+      default:false,
+    }
   },
   watch: {
     adjustLayout(val) {
@@ -693,6 +697,9 @@ export default {
     },
     hideAddCard() {
       this.addCardVisible = false;
+      if(this.communityRole){
+        this.$bus.emit('updateSync')
+      }
     },
     onClose() {
       this.menuVisible = false;
