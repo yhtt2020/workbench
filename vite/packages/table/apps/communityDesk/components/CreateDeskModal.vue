@@ -27,7 +27,7 @@
           w="64"
           h="40"
           :radius="8"
-          @click="deskVisible = false"
+          @click="close"
           style="margin-right: 12px"
         >
           取消
@@ -51,14 +51,24 @@
 
 <script setup>
 import { ref,nextTick,toRefs, getCurrentInstance } from "vue";
+import { useRouter } from "vue-router";
+import { storeToRefs } from "pinia";
+import { appStore } from "../../../store";
 
 import ExistDesktop from "./ExistDesktop .vue";
+
+
+// 路由
+const router = useRouter();
 
 // 获取全局事件总线程
 const { proxy } = getCurrentInstance();
 
 // emit事件提交
 const emit = defineEmits(['createDesk']);
+
+const  app = appStore();
+const { settings } = storeToRefs(app);
 
 // 获取组件节点元素
 const existDeskRef = ref(null);
@@ -101,6 +111,12 @@ const selectSubmit = () => {
   }
   deskVisible.value = false;
 };
+
+// 取消
+const close = () =>{
+  deskVisible.value = false;
+  settings.value.isCommunity = true;
+}
 
 defineExpose({
   openCommunityDeskModal,
