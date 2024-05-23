@@ -818,10 +818,12 @@ export default {
      * 重置元素位置
      */
     resetElementPosition() {
-      const draggableSize = (this.currentItem?.cardData?.customSize || this.currentItem?.customSize || this.resize || '1x1').split("x");
+      const draggableSize = (
+        this.currentItem?.cardData?.customData?.customSize || 
+        this.currentItem?.customSize || 
+        this.resize || 
+        '1x1').split("x");
       // console.log(draggableSize)
-      // 视图大小
-      let vW = window.innerWidth;
       // 元素坐标
       let pos = {
         x:this.defaultPosition.x,
