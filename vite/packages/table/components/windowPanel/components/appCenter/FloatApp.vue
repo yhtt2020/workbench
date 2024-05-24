@@ -14,7 +14,7 @@
                 background-color: var(--primary-bg) !important;
                 border-radius: 16px 16px 0px 0px;
                 border-bottom: 1px solid var(--divider);
-                margin-bottom: 16px;"
+                margin-bottom: 8px;"
             v-model:modelValue="inputValue" 
             placeholder="搜索" 
             @enter="search">
@@ -22,14 +22,22 @@
                 <xt-new-icon icon="fluent:search-16-regular" size="20"></xt-new-icon>
             </template>
         </xt-input>
-        <div class="flex flex-col justify-between h-full pb-4 pl-4 pr-4">
-            <div class="flex flex-col gap-3" v-if="!isMore">
+        <div class="flex flex-col justify-between pb-4 pl-4 pr-4" style="height: 85%;">
+            <div class="flex flex-col justify-center gap-3" v-if="!isMore">
+                <div class="flex items-center justify-center w-full h-full">
+                    <Tips 
+                        :closeVisible="false"
+                        @jumpMy="goApps('MyApps')" 
+                        v-if="!isSearch && startMenu.length <= 0 && recentUsed">
+                    </Tips>  
+                </div>
+                
                 <!-- 开始菜单列表 -->
-                <ItemList :list="startMenu" v-if="!isSearch" @close="close"></ItemList>  
+                <ItemList :list="lastStartMenu" v-if="!isSearch" @close="close"></ItemList>  
                 <!-- 搜索后列表 -->
-                <SearchList :list="searchList" v-else @close="close"/>
+                <SearchList :list="searchList" v-else @close="close" :market="marketList"/>
             </div>
-            <div v-if="recentUsed && !isSearch" class="overflow-hidden">
+            <div v-if="recentUsed && !isSearch" class="w-full h-full">
                 <div class="flex items-center justify-between mt-3 mb-3">
                     <div class="text-sm xt-text">最近使用</div>
                     <xt-button 
@@ -45,11 +53,15 @@
                     </xt-button>
                 </div>
                 <!-- 最近使用前五个 -->
-                <ItemList :list="lastList" :isStartMenu="false" v-if="!isMore"></ItemList> 
+                <ItemList :list="lastList" :isStartMenu="false" v-if="!isMore" @close="close"></ItemList> 
                 <!-- 全部最近使用 -->
-                <ItemList :list="arr" :isStartMenu="false" v-else></ItemList> 
+                <xt-scrollbar class="flex-1 w-full h-full" :x="false" :y="true" v-else>
+                   <ItemList :list="arr" :isStartMenu="false" @close="close"></ItemList>  
+                </xt-scrollbar>
             </div>
-            <Tips v-model:modelValue="showTip" @jumpMy="goApps('MyApps')" v-if="!recentUsed"></Tips>
+            <div v-else class="flex items-center justify-center w-full h-full">
+                <Tips v-model:modelValue="showTip" @jumpMy="goApps('MyApps')" ></Tips>
+            </div>
         </div>
         <!-- 底部选项 -->
         <BottomBar @goApps="goApps"/>
@@ -70,9 +82,13 @@ import {
 
 import { storeToRefs } from 'pinia';
 import { useAppCenterStore } from '../../../../apps/appCenter/src/store';
+import { useMarketStore } from '../../../../apps/appCenter/src/views/market/store/store';
 
 const appCenterStore = useAppCenterStore()
 const { current, visible, recentUsed, myApps, showTip } = storeToRefs(appCenterStore)
+
+const marketStore = useMarketStore()
+const { recommendList } = storeToRefs(marketStore)
 
 const ItemList = defineAsyncComponent(() => import('./components/ItemList.vue'))
 const SearchList = defineAsyncComponent(() => import('./components/SearchList.vue'))
@@ -108,6 +124,8 @@ const isSearch = ref(false)
 // 搜索列表 -- 搜索
 const searchList = ref([])
 
+const marketList = ref([])
+
 // 查看更多 -- 最近使用
 const isMore = ref(false)
 
@@ -120,6 +138,8 @@ const search = () => {
     isSearch.value = true
     searchList.value = startMenu.value
     searchList.value = searchList.value.filter(item => item.name.indexOf(inputValue.value) !== -1)
+    marketList.value = recommendList.value
+    marketList.value = marketList.value.filter(item => item.name.indexOf(inputValue.value) !== -1)
 }
 
 // 取消搜索状态
@@ -155,6 +175,12 @@ const lastList = computed(() => {
     return list.splice(0,5)
 })
 
+// 开始菜单
+const lastStartMenu = computed(() => {
+    return startMenu.value.splice(0,15)
+})
+
+// 当屏幕高度小于界面高度时，缩放
 const cardZoom = computed(() => {
     const wH = window.innerHeight
     // console.log('wH :>> ', wH,wH / 800 ,appPos.value,(appPos.value.x / (wH / 800)),(appPos.value.y / (wH / 800)) );

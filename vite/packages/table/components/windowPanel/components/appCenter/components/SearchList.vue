@@ -7,7 +7,7 @@
         </div>
         <div class="pl-4 text-sm xt-text">应用市场</div>
         <div class="flex flex-col w-full h-full gap-3">
-            <MarketList v-for="item in props.list" :key="item.id" :item="item"/>
+            <MarketList v-for="item in props.market" :key="item.id" :item="item"/>
         </div>
     </div>
 </template>
@@ -32,6 +32,10 @@ const close = () => {
 
 const props = defineProps({
     list: {
+        type: Array,
+        default: () => []
+    },
+    market:{
         type: Array,
         default: () => []
     }

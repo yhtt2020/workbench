@@ -74,6 +74,7 @@ const check = async(list) => {
 // 下载安装
 const download = (item) => {
     // console.log(item,'<<<<<<')
+    message.info('正在安装，请勿重复点击')
     tsbApi.app.installAppConfirm(install(item.value.version.app.version).appJson,async(data) => {
         // console.log(data)
         if(data.status) {

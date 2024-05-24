@@ -24,6 +24,11 @@ export const dropList = [
         id: "4",
         name:'轻应用',
         value:'lightApp'
+    },
+    {
+      id: "5",
+      name:'系统应用',
+      value:'systemApp'
     }
 ]
 

@@ -2,7 +2,7 @@
     <!-- 弹窗 -->
     <div 
         v-if="modelValue" 
-        class="p-4 text-sm rounded-xl xt-modal xt-shadow xt-text max-w-[400px]"
+        class="p-4 text-sm rounded-xl xt-modal xt-shadow xt-text max-w-[400px] "
         style="
         border: 1px solid rgba(255, 255, 255, 0.1);
         box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
@@ -10,7 +10,7 @@
         <div class="flex justify-between">
             <div class="flex items-center">
                 <div class="mr-4">
-                    <xt-new-icon icon="fluent:info-12-filled" :boxBgStyle="'var(--primary-color)'" />
+                    <xt-new-icon icon="fluent:info-12-filled"/>
                 </div>
                 <span class="xt-text">Tips</span>
             </div>
@@ -48,10 +48,10 @@ const close = () => {
     emit('update:closeVisible', false)
 }
 
-onMounted(() => {
-    emit('update:modelValue', true)
-    console.log('closeVisible', true)
-})
+// onMounted(() => {
+//     emit('update:modelValue', true)
+//     console.log('closeVisible', true)
+// })
 
 const jumpMy = () => {
     emit('jumpMy')

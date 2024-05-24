@@ -60,4 +60,13 @@ export const useMarketStore = defineStore("useMarketStore", {
             console.log(res)
         }
     },
+    persist: {
+        enabled: true,
+        strategies: [
+            {
+                paths: ['recommendList', 'adList'],
+                storage: localStorage,
+            },
+        ],
+    }
 })

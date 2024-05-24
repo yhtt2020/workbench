@@ -1,5 +1,5 @@
 <template>
-    <div class="flex items-center justify-between flex-1 pl-4">
+    <div class="flex items-center justify-between pl-4">
         <div class="flex items-center">
             <xt-ify-icon :icon="props.icon" class="mr-2" />
             {{ props.title }}
@@ -12,7 +12,6 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive } from 'vue'
 import Exit from './exit.vue'
 
 interface PropsType {

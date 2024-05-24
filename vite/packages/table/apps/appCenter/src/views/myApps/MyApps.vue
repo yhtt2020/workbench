@@ -24,11 +24,11 @@
                 
             </template>
         </Header>
-        <xt-scrollbar class="flex-1 w-full overflow-hidden" :x="false" :y="true">
+        <xt-scrollbar class="flex-1 w-full " :x="false" :y="true" style="height: 98%;">
             <div class="flex flex-wrap gap-2 mt-4" v-if="list.length > 0">
                 <template v-for="(item, index) in list" :key="item.id">
                     <xt-menu :menus="menus" @onMounted="getItem(item)">
-                        <Item :size="140" :isApp="true" :item="item" :info="getInfo(item)"/> 
+                        <Item :size="140" :isApp="true" :item="item" :info="getInfo(item)" :showFolder="false"/> 
                     </xt-menu>
                 </template>
             </div>
@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, computed, defineAsyncComponent, onMounted, watch } from 'vue'
+import { ref, computed, defineAsyncComponent, onMounted, watch, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia';
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
@@ -168,6 +168,8 @@ const getInfo = (item) => {
             return '系统应用'
         case 'lightApp':
             return '轻应用'
+        case 'folder':
+            return '文件夹'
         case 'ttapp':
             return '开发者应用'
         default:
@@ -191,6 +193,10 @@ onMounted(() => {
     })
     list.value = myApps.value
 })
+
+// onUnmounted(() => {
+//     myApps.value = []
+// })
 
 // 打开搜索框
 const openSearch = () => {
