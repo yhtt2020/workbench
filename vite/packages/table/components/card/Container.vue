@@ -442,6 +442,7 @@ const addObj = computed(() => {
 // 实际渲染的右键菜单
 const menus = computed(() => {
   const platLimit = props.platLimit || " ";
+  if (props?.options?.disableEdit) return [];
   if (usePlat(platLimit)) return [addObj.value, deleteObj.value];
   let menu = [...props.menuList, addObj.value, deleteObj.value];
   return menu;
