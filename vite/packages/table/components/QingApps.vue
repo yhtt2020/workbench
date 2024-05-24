@@ -26,7 +26,7 @@ import { Modal } from 'ant-design-vue'
 import { singleStore } from "../js/common/single";
 import {usePlat} from '../ui/hooks/usePlat'
 let appModel
-if (!usePlat('web')) {
+if (usePlat('client')) {
   appModel= window.$models.appModel
 
 }
@@ -55,9 +55,11 @@ export default {
         return !this.appList.includes(i.name)
       })
     }
+    console.log('this.apps :>> ', this.apps);
   },
   methods: {
     executeApp (app) {
+    console.log('app :>> ', app);
       ipc.send('executeApp', { app: JSON.parse(JSON.stringify(app)) })
     },
     uninstall (app) {

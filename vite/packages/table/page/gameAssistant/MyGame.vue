@@ -434,7 +434,6 @@ import Menu from "../../ui/components/Menu/index.vue";
 import XtButton from "../../ui/libs/Button/index.vue";
 import { MoreOutlined, ShopOutlined } from "@ant-design/icons-vue";
 import ShareToChat from "../../ui/chat/ShareToChat.vue";
-import { useGlobalStore } from "../../apps/Global/store";
 
 import { completeTask } from "../../apps/task/task";
 import { getHide, isHide } from "./game";
@@ -530,8 +529,7 @@ export default {
       "deskList",
       "hideGames",
     ]),
-    ...mapWritableState(appStore, ["fullScreen"]),
-    ...mapWritableState(useGlobalStore, ["loginVisible"]),
+    ...mapWritableState(appStore, ["fullScreen", "loginVisible"]),
     ...mapWritableState(steamUserStore, {
       gameSettings: "settings",
     }),
@@ -590,19 +588,7 @@ export default {
       if (!window.$useEnv("guest")) {
         this.$router.push({ name: "gameSetting" });
       } else {
-        window.$ui.confirm(
-          "登录提示",
-          "目前处于游客模式，请登录后体验完整功能。",
-          {
-            ok: () => {
-              this.loginVisible = true;
-            },
-            okText: "立即登录",
-            noText: "暂不登录",
-            okButtonWidth: "95",
-            noButtonWidth: "95",
-          }
-        );
+        this.loginVisible = true;
       }
     },
     openMyGame(item) {

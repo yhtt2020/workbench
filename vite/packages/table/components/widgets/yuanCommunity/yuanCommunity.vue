@@ -3,22 +3,23 @@
         <xt-container
             @titleHover="settingVisible = true"
             v-model:customSize="customData.customSize"
-            :header="header" 
-            :desk="desk" 
-            :options="options" 
-            :customIndex="customIndex" 
-            :menuList="menuList" 
-            ref="cardSlot" 
+            :header="header"
+            :desk="desk"
+            :options="options"
+            :customIndex="customIndex"
+            :envLimit="['guest', 'offline', 'single']"
+            :menuList="menuList"
+            ref="cardSlot"
             :env="env"
-            :sizeList="sizeList" 
+            :sizeList="sizeList"
             :customData="customData"
             @delete="deleteCard">
             <div v-if="showForumList.length > 0" class="flex flex-col flex-1 " style="height: calc(100%);">
-                <xt-option-tab 
-                    v-if="showForumList.length > 1" 
-                    :list="showForumList" 
-                    :circle="true" 
-                    v-model="defaultForum" 
+                <xt-option-tab
+                    v-if="showForumList.length > 1"
+                    :list="showForumList"
+                    :circle="true"
+                    v-model="defaultForum"
                     style="height: 40px;">
                 </xt-option-tab>
             <div  v-if="showForumPost.length > 0" class="flex flex-col flex-1 w-full h-0">
@@ -49,31 +50,31 @@
         <Unusual :title="'暂无数据'" :buttonTitle="'设置'" v-else @back="backSetting"></Unusual>
         </xt-container>
         <teleport to="body" :disabled="false">
-            <PublishModal 
-                v-if="showPublishModal" 
-                :visible="showPublishModal" 
+            <PublishModal
+                v-if="showPublishModal"
+                :visible="showPublishModal"
                 @close="showPublishModal = false"
                 @refreshDefaultForum="refresh"
                 :section="forumList"
                 :defaultSection="defaultForum">
             </PublishModal>
             <div v-if="showDetailModal">
-                <detailModal 
-                    v-if="toggleDetail" 
-                    :cardData="cardData" 
+                <detailModal
+                    v-if="toggleDetail"
+                    :cardData="cardData"
                     :showDetailModal="showDetailModal"
-                    @closeDetail="closeDetail" 
+                    @closeDetail="closeDetail"
                 />
-                <MinDetailModal 
-                    v-else :cardData="cardData" 
-                    :showDetailModal="showDetailModal" 
-                    @closeDetail="closeDetail" 
+                <MinDetailModal
+                    v-else :cardData="cardData"
+                    :showDetailModal="showDetailModal"
+                    @closeDetail="closeDetail"
                 />
             </div>
         </teleport>
-        <CommunitySetting 
-            v-if="settingVisible" 
-            :settingVisible="settingVisible" 
+        <CommunitySetting
+            v-if="settingVisible"
+            :settingVisible="settingVisible"
             :forumList="forumList"
             :defaultForum="customData.selectList"
             @forumList="updateForumList"
@@ -178,6 +179,7 @@ export default {
             'getMyForumList',
             'getCommunityPost',
         ]),
+        // 导航栏删除图标回调
         deleteCard() {
             this.$emit('delete')
         },
@@ -209,6 +211,7 @@ export default {
             this.isClick = false
             // console.log(this.cardData);
         },
+        // 关闭详情弹窗
         closeDetail(value) {
             this.communityPostDetail = []
             this.communityReply = []
@@ -282,7 +285,8 @@ export default {
         header(){
             return {
                 title: this.options.title,
-                ifyIcon:'fluent:chat-16-regular',
+                // ifyIcon:'fluent:chat-16-regular',
+        showIcon:"/img/appLogo/yuanCommunity.png",
                 refresh:{
                     fn:this.refreshPost,
                     tip:"刷新",
@@ -302,12 +306,12 @@ export default {
     },
     async beforeMount() {
         this.getMyForumList().then(() => {
-           this.customData.forumList = this.myForumList 
+           this.customData.forumList = this.myForumList
         })
         // console.log(this.myForumList,'this.myForumList');
         // 判断是否刷新加载内容
         if (this.customData && this.customData.defaultForum) {
-            this.defaultForum = this.customData.defaultForum 
+            this.defaultForum = this.customData.defaultForum
         } else if (this.customData && this.customData.selectList) {
             this.defaultForum = this.customData.selectList[0]
         } else {

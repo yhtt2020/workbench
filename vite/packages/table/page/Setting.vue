@@ -92,14 +92,14 @@
             <a-col v-if="isMain() && isWin()" :span="6">
               <div @click="setTouch" class="btn">
                 <!-- <Icon icon="Touch" style="font-size: 2em"></Icon> -->
-                <Iconify icon="fluent:hand-draw-16-regular" style="font-size: 2em" />
+                <Iconify icon="fluent:hand-draw-16-filled" style="font-size: 2em" />
                 <div>设置触摸屏</div>
               </div>
             </a-col>
             <!--              <a-col v-if="isMain() && isWin()" :span="6">-->
             <!--                <div @click="setPen" class="btn">-->
             <!--                  <Icon icon="icon-checkin" style="font-size: 2em"></Icon>-->
-            <!--                  <Iconify icon="fluent:pen-sparkle-16-regular" style="font-size: 2em" />  -->
+            <!--                  <Iconify icon="fluent:pen-sparkle-16-filled" style="font-size: 2em" />  -->
             <!--                  <div>设置笔</div>-->
             <!--                </div>-->
             <!--              </a-col>-->
@@ -113,7 +113,7 @@
             <a-col :span="6">
               <div v-if="isMain()" @click="subscreen" class="btn">
                 <!-- <Icon icon="pingmufenge02" style="font-size: 2em"></Icon> -->
-                <Iconify icon="fluent:slide-settings-24-regular" style="font-size: 2em" />
+                <Iconify icon="fluent:slide-settings-24-filled" style="font-size: 2em" />
                 <div> 分屏设置</div>
               </div>
             </a-col>
@@ -129,7 +129,7 @@
             <a-col v-if="isMain()" :span="6">
               <div @click="editNavigation" class="btn">
                 <!-- <Icon icon="Pushpin" style="font-size: 2em"></Icon> -->
-                <Iconify icon="fluent:tablet-16-regular" style="font-size: 2em" />
+                <Iconify icon="fluent:tablet-16-filled" style="font-size: 2em" />
                 <div>导航栏编辑</div>
               </div>
             </a-col>
@@ -137,20 +137,20 @@
 
               <div @click="basic" class="btn">
                 <!-- <Icon icon="shezhi" style="font-size: 2em"></Icon> -->
-                <Iconify icon="fluent:settings-16-regular" style="font-size: 2em" />
+                <Iconify icon="fluent:settings-16-filled" style="font-size: 2em" />
                 <div>通用设置</div>
               </div>
             </a-col>
             <a-col v-if="isMain() && !$usePlat()" :span="6">
               <div @click="goApps()" class="btn">
-                <Iconify icon="fluent:grid-16-regular" style="font-size: 2em"></Iconify>
+                <Iconify icon="fluent:grid-16-filled" style="font-size: 2em"></Iconify>
                 <div>应用管理</div>
               </div>
             </a-col>
             <!-- <Icon icon="jurassic_nav" style="font-size: 2em"></Icon> -->
             <!-- <a-col v-if="isMain()" :span="6">
                <div @click="wizard" class="btn">
-                 <Iconify icon="fluent:star-settings-24-regular" style="font-size: 2em" />
+                 <Iconify icon="fluent:star-settings-24-filled" style="font-size: 2em" />
                  <div>配置向导</div>
                </div>
              </a-col> -->
@@ -158,7 +158,7 @@
             <a-col :span="6">
               <div @click="papersSettings" class="btn">
                 <!-- <Icon icon="banner" style="font-size: 2em"></Icon> -->
-                <Iconify icon="fluent:image-multiple-16-regular" style="font-size: 2em" />
+                <Iconify icon="fluent:image-multiple-16-filled" style="font-size: 2em" />
                 <div>壁纸</div>
               </div>
             </a-col>
@@ -168,21 +168,21 @@
 
               <div @click="settingTheme" class="btn">
                 <!-- <Icon icon="yifu" style="font-size: 2em"></Icon> -->
-                <Iconify icon="fluent:color-24-regular" style="font-size: 2em" />
+                <Iconify icon="fluent:color-24-filled" style="font-size: 2em" />
                 <div>主题颜色</div>
               </div>
             </a-col>
             <a-col v-if="isMain() && !this.isSingle" :span="6">
               <div @click="invite" class="btn">
                 <!-- <Icon icon="tianjiachengyuan" style="font-size: 2em"></Icon> -->
-                <Iconify icon="fluent:people-add-16-regular" style="font-size: 2em" />
+                <Iconify icon="fluent:people-add-16-filled" style="font-size: 2em" />
                 <div>邀请</div>
               </div>
             </a-col>
             <a-col v-if="isMain() && !this.isSingle" :span="6">
               <div @click="verify" class="btn">
                 <!-- <Icon icon="team" style="font-size: 2em"></Icon> -->
-                <Iconify icon="fluent:people-16-regular" style="font-size: 2em" />
+                <Iconify icon="fluent:people-16-filled" style="font-size: 2em" />
                 <div>受邀</div>
               </div>
             </a-col>

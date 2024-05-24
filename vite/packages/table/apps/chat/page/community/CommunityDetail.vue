@@ -22,7 +22,7 @@
           v-if="currentItem"
           class="flex flex-col h-full"
         >
-          <CommunityHeader :headerContent="currentItem" />
+          <!-- <CommunityHeader :headerContent="currentItem" /> -->
           <RightDetailMain :currentItem="currentItem" />
         </a-col>
         <a-col flex=" 1 1 200px" v-else class="flex flex-col h-full">
@@ -61,10 +61,12 @@ import { checkGroupShip } from "../../../../js/common/sns";
 import { TUIConversationService } from "@tencentcloud/chat-uikit-engine";
 import { message } from "ant-design-vue";
 import { chatCommunityStore } from "../../store/chatCommunity";
+import { useNavigationStore } from "../../../../components/desk/navigationBar/navigationStore";
 
 import CategoryFloat from "../../components/suspendMode/CategoryFloat.vue";
 import PageDoesNotExist from "../empty/PageDoesNotExist.vue";
 import RightDetailMain from "./RightDetailMain.vue";
+/**后期需要使用时再开放**/ 
 // import CommunityHeader from "../../components/suspendMode/CommunityHeader.vue";
 import Article from "../../../../components/Article.vue";
 import CommunityDetailEmpty from "../empty/CommunityDetailEmpty.vue";
@@ -81,6 +83,8 @@ const route = useRoute();
 const chatCommunity: any = chatCommunityStore();
 const { currentCommunityNo, setting, communityTreeList, myCommunity } =
   storeToRefs(chatCommunity);
+const useNavigation = useNavigationStore();
+const { communityNavVisible } = storeToRefs(useNavigation);
 
 /**用于判断当前的社群是否存在**/
 const currentPageExist = ref(false);
@@ -93,7 +97,7 @@ interface IInstance extends ComponentPublicInstance {
   getCommunityByNo(no: any): void;
 }
 
-/**监听路由进入的方法**/ 
+/**监听路由进入的方法**/
 defineOptions({
   name: "CommunityDetail",
   beforeRouteEnter(_to: any, _from: any, next) {
@@ -107,29 +111,25 @@ defineOptions({
 
 /**检测社群是否存在的方法**/
 const getCommunityByNo = (no: any) => {
-  if (no) {
+  /**对当前社群编号进行容错处理**/
+  if (!no) return;
+
+  /**工作台在线模式**/
+  if ((window as any).$currentEnv() === "online") {
+    /**调用社群排查是否存在的接口**/
     currentAPI.getByNoDetail({ no: no }).then(async (res: any) => {
-      console.log("路由进入", res);
-      /**社群不存在**/
+      /**当前社群不存在逻辑**/
       if (res.status === 0 && res.code === 404) {
-        currentPageExist.value = true;
-      } else if (res.status === 1) {
-        /**社群存在**/
+        return (currentPageExist.value = true);
+      } else {
+        /**当前社群存在逻辑**/
         currentPageExist.value = false;
-        /**获取已经加入的我的社群列表**/
-        const list = await getMy();
-        /**
-         * 检测是否加入我的社群。
-         * 如果加入直接跳过,  如果没有加入就将模拟添加。
-         * 但是在右侧会显示未添加入口。
-         * **/
-        const index = _.findIndex(list, (item: any) => {
-          return Number(item?.communityInfo?.no) === Number(no);
+        /**获取老的我的社群列表进行排查是否存在**/
+        const oldIndex = _.findIndex(myCommunity.value, (item: any) => {
+          return Number(item?.cno) === Number(no);
         });
-        const myIndex = _.findIndex(myCommunity.value, (item: any) => {
-          return Number(item?.route?.params?.no) === Number(no);
-        });
-        if (index === -1 && myIndex === -1) {
+        /**不存在添加当前社群模拟添加,并且显示社群加入入口**/
+        if (oldIndex === -1) {
           const data = res?.data;
           /**添加的参数**/
           const option = {
@@ -144,11 +144,51 @@ const getCommunityByNo = (no: any) => {
             type: `community${data.no}`,
             communityInfo: data,
           };
-          console.log("测试", option);
-          myCommunity.value.push(option);
+          // console.log('在线状态',option);
+          chatCommunity.loadCurrentCommunity(option);
+          chatCommunity.getCommunityTree(no);
+          // myCommunity.value.push(option);
+          return;
         } else {
           chatCommunity.setCurrentCommunityNo(no);
           chatCommunity.loadCurrentCommunity(no);
+          chatCommunity.getCommunityTree(no);
+        }
+      }
+    });
+  } 
+  
+  else {
+    /**工作台离线模式或者是其他模式  这里走的是不想要token情况下的接口**/
+    currentAPI.getApiPostByNo({ no: no }).then((rs: any) => {
+      /**当前社群不存在逻辑**/
+      if (rs.status === 0 && rs.code === 404) {
+        currentPageExist.value = true;
+        return;
+      } else {
+        /**当前社群存在逻辑**/
+        currentPageExist.value = false;
+        const myIndex = _.findIndex(myCommunity.value, (item: any) => {
+          return Number(item?.communityInfo?.no) === Number(no);
+        });
+        if (myIndex === -1) {
+          const data = rs?.data;
+          /**添加的参数**/
+          const option = {
+            id: data.id,
+            cno: data.no,
+            float: "",
+            img: data.icon,
+            menuVisible: true,
+            noBg: true,
+            route: { name: "myCommunity", params: { no: data.no } },
+            tab: `community_${data.no}`,
+            type: `community${data.no}`,
+            communityInfo: data,
+          };
+          // console.log('离线状态',option);
+          chatCommunity.loadCurrentCommunity(option)
+          // myCommunity.value.push(option);
         }
       }
     });
@@ -156,11 +196,11 @@ const getCommunityByNo = (no: any) => {
 };
 
 /**监听路由更新过程**/
-router.beforeEach((to,from,next)=>{
+router.beforeEach((to, from, next) => {
   const no = to?.params?.no;
-  getCommunityByNo(no)
+  getCommunityByNo(no);
   next();
-}) 
+});
 
 /**通过计算属性获取当前社群编号**/
 const currentNo = computed(() => {
@@ -255,7 +295,7 @@ const handleCurrentItem = async (data: any) => {
         }
       } else {
         /**当前群聊为公开群**/
-        const res = await window.$chat?.chat?.searchGroupByID(
+        const res = await window.$chat?.chat.searchGroupByID(
           groupProps.groupID
         );
         const isDisable = res.data.group.joinOption !== "DisableApply";
@@ -276,16 +316,6 @@ const handleCurrentItem = async (data: any) => {
       }
     }
   }
-};
-
-/**获取我的社群列表**/
-const getMy = async () => {
-  /**请求我的社群接口**/
-  const myList = await currentAPI.getMyCommunityList();
-  const filerMyList = _.filter(myList?.data?.list, (item) => {
-    return item.hasOwnProperty("communityInfo");
-  });
-  return filerMyList;
 };
 
 onMounted(() => {

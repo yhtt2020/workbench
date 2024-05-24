@@ -326,7 +326,7 @@ export default {
     community() {
       return {
         x: this.position.x,
-        y: (this.navAttribute.navSize * this.position.y) / 100,
+        y: this.position.y,
         placement: "top",
         visible: this.comVisible,
       };
@@ -345,12 +345,6 @@ export default {
         return arr.sort((a, b) => a.id - b.id);
       }
       return this.iconMenus;
-    },
-    realXY() {
-      return {
-        x: this.left,
-        y: this.parentHeight - (this.navAttribute.navSize / 100) * 100 - 175,
-      };
     },
     // 合并提示位置
     mergeTip() {
@@ -826,10 +820,12 @@ export default {
      * 重置元素位置
      */
     resetElementPosition(custom = undefined) {
-      const draggableSize = (this.currentItem?.cardData?.customSize || this.currentItem?.customSize || this.resize || '1x1').split("x");
+      const draggableSize = (
+        this.currentItem?.cardData?.customData?.customSize || 
+        this.currentItem?.customSize || 
+        this.resize || 
+        '1x1').split("x");
       // console.log(draggableSize)
-      // 视图大小
-      let vW = window.innerWidth;
       // 元素坐标
       let pos = {
         x:this.defaultPosition.x,

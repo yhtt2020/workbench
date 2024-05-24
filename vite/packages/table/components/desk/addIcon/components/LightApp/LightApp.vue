@@ -23,8 +23,8 @@ const props = defineProps({
 })
 
 onMounted( async() => {
-    if(!usePlat('web')){
-      lightApp.value =await appModel.getAllApps() 
+    if (usePlat('client')) {
+      lightApp.value =await appModel.getAllApps()
     } else {
       lightApp.value = []
     }

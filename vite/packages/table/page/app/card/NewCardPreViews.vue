@@ -1,5 +1,12 @@
 <template>
-  <div class="main-box">
+  <template v-if="displayList.length === 0">
+    <div class="w-full h-full flex flex-col items-center justify-center">
+      <xt-ify-icon icon="fluent-emoji:magnifying-glass-tilted-right" size="56" class="mb-4" />
+      <span class="xt-text xt-font font-16">没有找到相关内容</span>
+    </div>
+  </template>
+
+  <div class="main-box" v-else>
     <template v-for="(item, index) in displayList" :key="item.name">
       <div class="box xt-bg-2">
         <xt-button
@@ -26,7 +33,7 @@
         >
           <div class="flex items-center justify-center">
             <xt-new-icon
-              icon="fluent:more-horizontal-16-regular"
+              icon="fluent:more-horizontal-16-filled"
               style="color: var(--active-text) !important"
             ></xt-new-icon>
           </div>
@@ -102,7 +109,7 @@
         </div>
         <div class="right" style="">
           <div class="title" style="color: var(--primary-text)">
-            {{ item.cname }}
+            {{ item.cname }} <sub class="xt-text-2">{{ item.name }}</sub>
           </div>
           <div class="text" style="color: var(--secondary-text)">
             {{ item.detail }}
@@ -177,6 +184,10 @@ import { completeTask } from "../../../apps/task/task";
 // import IconSet from "../../../components/widgets/myIcons/set/index.vue";
 import { useAddCard } from "../../../hooks";
 import { useDeskStore } from "../../../components/desk/store.ts";
+import { COMPONENT_LIMIT } from "../../../permission/config";
+import { usePlat } from "../../../ui/hooks/usePlat";
+import { comCanUse } from "../../../permission/usePlat";
+import {cdnUrl} from '../../../consts'
 export default {
   emits: ["close", "addSuccess"],
   props: {
@@ -209,16 +220,21 @@ export default {
       return this.taskID == "M0101" && this.step == 3;
     },
     displayList() {
+      let mapped = [];
       if (this.keywords) {
-        return this.allList.filter((item) => {
+        mapped = this.allList.filter((item) => {
           return (
             item.cname.toLowerCase().includes(this.keywords.toLowerCase()) ||
             item.detail.toLowerCase().includes(this.keywords.toLowerCase())
           );
         });
       } else {
-        return this.cardList;
+        mapped = this.cardList;
       }
+
+      return mapped.filter((item) => {
+        return comCanUse(item.name);
+      });
     },
   },
   mounted() {},
@@ -274,8 +290,8 @@ export default {
       this.$emit("addSuccess");
       message.success("添加成功！");
     },
-    getImg(url) {
-      return `https://a.apps.vip/cards/${url}.png`;
+    getImg (url) {
+      return cdnUrl(`/cards/${url}.png`)
     },
     mySort(data, property, asc) {
       let datas = [...data];

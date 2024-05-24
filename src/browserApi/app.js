@@ -15,13 +15,29 @@ const app={
    * @param nanoid
    * @param background
    * @param app
+   * @param args
    */
-  run:(nanoid,background,app)=>{
+  run:(nanoid,background,app,args)=>{
      return send('run',{
        nanoid:nanoid,
        background:background,
-       app:app
-     }) 
+       app:app,
+       args:args
+     })
+  },
+  /**
+   *
+   * @param pkg 包名
+   * @param background
+   * @param app
+   * @param option
+   */
+  runByPackage:(pkg,background,option)=>{
+    return send('runByPackage',{
+      pkg:pkg,
+      background:background,
+      option:option
+    })
   },
   /**
    * 安装指定应用1

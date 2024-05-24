@@ -23,9 +23,9 @@ export const addNav = (data: any, position?: string) => {
   let navData = useFileConversionNav(iconData);
   // 添加第三方卡片id做标识
   navData.cardData = {
-    id:data.id
-  }
-
+    id: data.id,
+  };
+  console.log("   copyFootNav.value :>> ", copyFootNav.value);
   // 有指定位置
   if (position != undefined) {
     // 添加到底部导航栏

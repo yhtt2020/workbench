@@ -10,6 +10,7 @@ import {
   nextTick,
   getCurrentInstance,
 } from "vue";
+import { useStatus } from "../../../../../hooks";
 import { storeToRefs } from "pinia";
 import WuJie from "../wujie/WuJie.vue";
 import PerfectScrollbar from "perfect-scrollbar";
@@ -50,17 +51,13 @@ const data: any = ref(null);
 const loading = ref(true);
 // 社交列表
 const socializeList: any = ref([]);
+const { status } = useStatus();
 /** 初始化方法 */
 const init = async () => {
   let res = ttappStore.select(modal.value.id);
-  console.log("modal.value.id :>> ", modal.value.id);
-  console.log("res :>> ", res);
-  console.log("modal.value :>> ", modal.value);
   if (!res) {
-    // modal.value.visible = false;
-    // return;
+    return;
   }
-  console.log("2222 :>> ", 2222);
   // 有社区
   const community = data?.community;
   if (community) {
@@ -92,9 +89,10 @@ const init = async () => {
     socializeList.value.push(obj);
   }
   res.socializeList = socializeList;
-  console.log("初始化到这里了 :>> ", 222222);
   // 获取用户信息 没写完
-  // await ttappStore.getUserInfo(res.uid || 1);
+  if (res?.uid && status.value != "single") {
+    await ttappStore.getUserInfo(res.uid);
+  }
 
   // 完成
   data.value = res;
@@ -157,14 +155,15 @@ const modalSize = computed(() => {
   const maxModalHeight = windowHeight.value - 48;
   const maxModalWidth = windowWidth.value;
   // 弹窗尺寸
-  const mainWidth = data.value.main.width || 0;
-  const mainHeight = data.value.main.height || 0;
-  const width = mainWidth.replace(/\D/g, "");
-  const height = mainHeight.replace(/\D/g, "");
+  const mainWidth = modal.value.width || 0;
+  const mainHeight = modal.value.height || 0;
+  // const width = mainWidth.replace(/\D/g, "");
+  // const height = mainHeight.replace(/\D/g, "");
   // 当前弹窗尺寸
-  const currentWidth = width > maxModalWidth ? maxModalWidth + "px" : mainWidth;
+  const currentWidth = mainWidth > maxModalWidth ? maxModalWidth + "px" : mainWidth;
   const currentHeight =
-    height > maxModalHeight ? maxModalHeight + "px" : mainHeight;
+  mainHeight > maxModalHeight ? maxModalHeight + "px" : mainHeight;
+  console.log('currentWidth :>> ', currentWidth);
   if (isMax.value) {
     return {
       width: "100%",
@@ -172,8 +171,8 @@ const modalSize = computed(() => {
     };
   } else {
     return {
-      width: currentWidth,
-      height: currentHeight,
+      width: mainWidth + "px",
+      height: mainHeight + "px",
     };
   }
 });
@@ -210,7 +209,6 @@ const perfectScrollbar: any = ref(null);
 watch(
   () => data.value,
   (val) => {
-    console.log("val :>> ", val);
     // 数据没加载时不执行
     // if (!val) return;
     // nextTick(() => {
@@ -299,7 +297,7 @@ const settingClose = () => {
         <div
           class="group header-left hover:tt-theme-bg-2 relative pl-2 rounded-lg title h-[32px] flex items-center text-sm cursor-pointer"
         >
-        <a-avatar shape="square" class="" :size="16" :src="data._logo" />
+          <a-avatar shape="square" class="" :size="16" :src="data._logo" />
           <span class="mx-2">{{ data.name }}</span>
         </div>
 
@@ -424,7 +422,6 @@ const settingClose = () => {
   }
 }
 .header-left-hover {
-
   display: none;
   position: absolute;
 }

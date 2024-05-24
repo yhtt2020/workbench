@@ -127,7 +127,8 @@ import { Modal, message } from 'ant-design-vue'
 import { codeStore } from '../../store/code'
 import HorizontalPanel from '../../components/HorizontalCaptrue.vue'
 import RayMedal from '../../components/small/RayMedal.vue'
-import { useUpdateUserInfo } from '../../permission/user/useUserPermit'
+import { reconnect } from '../../permission/user/useUserPermit'
+import { usePermissionStore } from '../../permission/store'
 
 export default {
   name: 'Invite',
@@ -202,6 +203,7 @@ export default {
   computed: {
     ...mapState(appStore, ['userInfo']),
     ...mapWritableState(codeStore,['verified']),
+    ...mapWritableState(usePermissionStore,['currentEnv']),
     envGuest(){
       return !window.$useEnv('guest')
     },
@@ -237,18 +239,8 @@ export default {
       })
     },
     async activeCode () {
-      if(window.$currentEnv() == 'offline'){
-        /**提示重连弹窗**/
-        window.$ui.confirm("提示", "目前处于离线模式，请重连后体验完整功能。", {
-          ok: () => {
-            useUpdateUserInfo()
-          },
-          okText: "立即重连",
-          noText: "暂不连接",
-          type: "warning",
-          okButtonWidth: "95",
-          noButtonWidth: "95",
-        });
+      if(this.currentEnv == 'offline'){
+        reconnect()
         return
       }
       if(!this.code){
@@ -315,18 +307,8 @@ export default {
       return this.marked.indexOf(key) > -1
     },
     confirmExchange () {
-      if(window.$currentEnv() == 'offline'){
-        /**提示重连弹窗**/
-        window.$ui.confirm("提示", "目前处于离线模式，请重连后体验完整功能。", {
-          ok: () => {
-            useUpdateUserInfo()
-          },
-          okText: "立即重连",
-          noText: "暂不连接",
-          type: "warning",
-          okButtonWidth: "95",
-          noButtonWidth: "95",
-        });
+      if(this.currentEnv == 'offline'){
+        reconnect()
       }else {
         window.$ui.confirm('兑换确认','确认使用200小时在线时长兑换1枚邀请码？此操作无法撤回。兑换并不会减少你的在线时长以及影响你的在线等级，请放心。',{
           ok: async () => {

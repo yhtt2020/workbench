@@ -1,10 +1,11 @@
 <template>
-    <xt-container 
+    <xt-container
       :header="header"
       v-model:customSize="customSize"
-      :options="options" 
-      :customIndex="customIndex" 
+      :options="options"
+      :customIndex="customIndex"
       :custom-data="customData"
+      :envLimit="['guest', 'offline', 'single']"
       @delete="deleteCard">
       <div class="example" v-if="isLoading">
         <a-spin />
@@ -98,7 +99,9 @@
         isLoading: false,
         customSize:'2x4',
         header:{
-          ifyIcon:"fluent:movies-and-tv-16-regular",
+          // ifyIcon:"fluent:movies-and-tv-16-regular",
+        showIcon:"/img/appLogo/film.png",
+
           title:"正在热映",
         }
       };

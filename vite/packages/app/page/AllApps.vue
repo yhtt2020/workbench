@@ -52,7 +52,7 @@ import { appStore } from '../store'
 import {Modal,message } from 'ant-design-vue'
 import { usePlat } from '../../table/ui/hooks/usePlat'
 let appModel
-if (!usePlat('web')) {
+if (usePlat('client')) {
   appModel = window.$models.appModel
 }
 export default {

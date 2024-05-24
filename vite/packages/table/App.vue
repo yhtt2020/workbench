@@ -2,7 +2,6 @@
   <!-- Your Drag-and-Drop Application -->
   <!-- <xt-task-reward/> -->
   <!-- 登录引导弹窗 -->
-  <!-- {{loginVisible}} -->
   <xt-confirm v-if="loginVisible" noText="暂不登录" okText="立即登录" okButtonWidth="95" noButtonWidth="95"
               title="登录提示" content="目前处于游客模式，请登录后体验完整功能。" :no="unLoginModal"
               :ok="loginModal"></xt-confirm>
@@ -73,7 +72,7 @@
 
     <div v-else>
       <!-- 修改默认壁纸 -->
-      <div class="fixed inset-0  none-bg default-bg" style="z-index: -1">
+      <div class="fixed inset-0  none-bg default-bg"  :style="{'z-index':-1}">
       </div>
     </div>
   </template>
@@ -144,7 +143,7 @@ notification.config({
 })
 window.browser = browser
 let appModel
-if (!usePlat('web')) {
+if (usePlat('client')) {
   appModel = window.$models.appModel
 }
 let startX,
@@ -172,7 +171,7 @@ export default {
   },
 
   async mounted () {
-    if(usePlat('web')){
+    if(!usePlat('client')){
       document.body.classList.add('web')
     }
     this.$router.push({
@@ -197,7 +196,7 @@ export default {
       this.settings.zoomFactor = 100
       tsbApi.window.setZoomFactor(+this.settings.zoomFactor / 100).then()
     }
-    if (!usePlat('web')) {
+    if (usePlat('client')) {
       ipc.on('updateRunningApps', async (event, args) => {
         this.runningApps = args.runningApps
         this.runningAppsInfo = {}
@@ -425,7 +424,7 @@ export default {
     },
     'styles': {
       handler () {
-        if(!usePlat('web')){
+        if (usePlat('client')) {
           tsbApi.system.setDarkMode(!this.styles)
         }
       },
@@ -450,7 +449,6 @@ export default {
 }
 
 .default-bg {
-  background-image: url('https://a.apps.vip/icons/defaultBackground.jpg') !important;
   background-size: cover !important;
   background-repeat: no-repeat !important;
   background-position: center !important;

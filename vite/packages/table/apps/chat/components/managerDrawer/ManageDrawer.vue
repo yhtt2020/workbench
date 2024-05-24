@@ -16,7 +16,7 @@
         <div class="flex items-center justify-between pointer mb-3">
           <span class="xt-text font-16 xt-font">群信息</span>
           <xt-ify-icon
-            icon="fluent:chevron-right-28-regular"
+            icon="fluent:chevron-right-28-filled"
             class="xt-text-2"
             size="20"
           ></xt-ify-icon>
@@ -44,7 +44,7 @@
         >
           <span class="xt-text font-16 xt-font">群公告</span>
           <xt-ify-icon
-            icon="fluent:chevron-right-28-regular"
+            icon="fluent:chevron-right-28-filled"
             class="xt-text-2"
             size="20"
           ></xt-ify-icon>
@@ -64,7 +64,7 @@
           <div class="flex">
             <span class="xt-text-2 xt-font font-14">{{ currentMemberList.length }}人</span>
             <xt-ify-icon
-              icon="fluent:chevron-right-28-regular"
+              icon="fluent:chevron-right-28-filled"
               class="xt-text-2"
               size="20"
             />
@@ -151,7 +151,7 @@
         >
           <span class="xt-text font-16 xt-font">群管理</span>
           <xt-ify-icon
-            icon="fluent:chevron-right-28-regular"
+            icon="fluent:chevron-right-28-filled"
             class="xt-text-2"
             size="24"
           />
@@ -171,7 +171,7 @@
               >
                 <div class="flex items-center justify-center">
                   <xt-ify-icon
-                    icon="fluent:copy-16-regular"
+                    icon="fluent:copy-16-filled"
                     size="24"
                     class="xt-text-2"
                   />
@@ -203,7 +203,7 @@
               >
                 <div class="flex items-center justify-center">
                   <xt-ify-icon
-                    icon="fluent:chevron-right-28-regular"
+                    icon="fluent:chevron-right-28-filled"
                     class="xt-text-2"
                     size="24"
                   />
@@ -227,7 +227,7 @@
               >
                 <div class="flex items-center justify-center">
                   <xt-ify-icon
-                    icon="fluent:chevron-right-28-regular"
+                    icon="fluent:chevron-right-28-filled"
                     class="xt-text-2"
                     size="24"
                   />
@@ -362,7 +362,7 @@ import JoinVerfiate from "../manager/JoinVerfiate.vue";
 import InviteVerfiacte from "../manager/InviteVerfiacte.vue";
 import GroupTransfer from "../manager/GroupTransfer.vue";
 
-const chat = window.$chat.chat;
+const chat = window.$chat?.chat;
 
 const props = defineProps({
   groupID: {
@@ -509,9 +509,8 @@ const updateJoin = async (data) => {
     joinOption: data,
   };
   const res = await chat.updateGroupProfile(options);
-  // console.log("更新", res);
   if (res.code === 0) {
-    const { group } = res.data;
+    const  group  = res.data?.group;
     manageInfo.value.join = group.joinOption;
     message.success("加群方式修改成功");
     joinRef.value.joinVisible = false;
@@ -525,8 +524,9 @@ const updateInvite = async (data) => {
     inviteOption: data,
   };
   const res = await chat.updateGroupProfile(options);
+  console.log('测试',res);
   if (res.code === 0) {
-    const { group } = res.data;
+    const group  = res.data.group;
     manageInfo.value.invite = group.inviteOption;
     message.success("邀请方式修改成功");
     inviteRef.value.inviteVisible = false;

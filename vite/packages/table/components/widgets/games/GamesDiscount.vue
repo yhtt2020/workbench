@@ -2,14 +2,15 @@
   <xt-container
     @titleHover="showRegionSelect"
     v-model:customSize="customData.customSize"
-    :header="header" 
-    :devLimit="['h5']"  
-    :options="options" 
-    :confirmCCData="confirmCCData" 
-    :customIndex="customIndex" 
-    :menuList="gameBare" 
-    ref="detailSlot" 
-    :customData="customData" 
+    :header="header"
+    :platLimit="['web']"
+    :envLimit="['guest', 'offline', 'single']"
+    :options="options"
+    :confirmCCData="confirmCCData"
+    :customIndex="customIndex"
+    :menuList="gameBare"
+    ref="detailSlot"
+    :customData="customData"
     :desk="desk"
     @delete="deleteCard">
     <a-spin v-if="isLoading === true"
@@ -206,7 +207,9 @@ export default {
     header(){
       return {
         title:this.region.name,
-        ifyIcon:'mdi:steam',
+        // ifyIcon:'mdi:steam',
+        showIcon:"/img/appLogo/steam.png",
+
         titleHover:true,
         titleHoverName:'点击切换'
       }

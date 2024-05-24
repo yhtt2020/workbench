@@ -188,7 +188,7 @@ import { ExclamationCircleFilled } from '@ant-design/icons-vue'
 import {usePlat} from '../../ui/hooks/usePlat'
 import {completeTask} from "../../apps/task/task"
 let steamUser, steamSession, path, https, steamFs
-if (!usePlat()) {
+if (usePlat('client')) {
   steamUser= $models.steamUser
   steamSession= $models.steamSession
   path= $models.path

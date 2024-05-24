@@ -1,10 +1,10 @@
 <template>
-  <xt-container  
+  <xt-container
     v-model:customSize="customData.customSize"
     :header="header"
-    :devLimit="['h5']" 
-    :options="options" 
-    :menu-list="menuList" 
+    :platLimit="['web']"
+    :options="options"
+    :menu-list="menuList"
     :customData="customData"
     :customIndex="customIndex"
     :desk="desk"
@@ -76,7 +76,9 @@ export default {
       ],
       header:{
         title: 'CPU',
-        ifyIcon:'fluent:arrow-trending-lines-20-filled'
+        // ifyIcon:'fluent:arrow-trending-lines-20-filled'
+        showIcon:"/img/appLogo/performance.png",
+
       }
     }
   },
@@ -108,7 +110,7 @@ export default {
         customDel:this.openWay === 'nav' ? true : false
       }
     }
-  }, 
+  },
   mounted () {
     this.startInspect()
     this.customData.customSize = '2x2'

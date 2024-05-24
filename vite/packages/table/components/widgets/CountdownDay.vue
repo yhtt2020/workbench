@@ -1,10 +1,10 @@
 <template>
-  <xt-container 
-    :desk="desk" 
-    :sizeList="sizeList" 
-    :options="options" 
-    :customIndex="customIndex" 
-    :menuList="menuList" 
+  <xt-container
+    :desk="desk"
+    :sizeList="sizeList"
+    :options="options"
+    :customIndex="customIndex"
+    :menuList="menuList"
     :custom-data="customData"
     ref="cardSlot"
     :header="header"
@@ -207,7 +207,8 @@ export default {
       countdownDays: [],
       header:{
         title:'纪念日',
-        ifyIcon:'fluent:calendar-16-regular',
+        // ifyIcon:'fluent:calendar-16-regular',
+        showIcon:"/img/appLogo/countdownDay.png",
       }
     }
   },

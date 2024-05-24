@@ -12,10 +12,10 @@ import WuJie from "../wujie/WuJie.vue";
 import { useTTAppStore } from "../../store";
 import { mapActions, storeToRefs } from "pinia";
 import { useCardSize } from "../../../../../hooks";
-import { useWuJieStore } from "../wujie/store";
 import PerfectScrollbar from "perfect-scrollbar";
 import { appsStore as useAppStore } from "../../../../../store/apps";
 import { cardValidate } from "../../../../appCenter/src/views/developer/hooks/validate";
+import { useGridToWidth, useGridToHeight } from "../../../../../hooks";
 const { proxy }: any = getCurrentInstance();
 
 const appsStore: any = useAppStore();
@@ -79,7 +79,7 @@ onMounted(async () => {
       wheelPropagation: false,
     });
   });
-  injectProps.value.api=await ttappStore.injectApi(data.value.id)
+  injectProps.value.api = await ttappStore.injectApi(data.value.id);
 });
 
 const props = defineProps({
@@ -123,16 +123,23 @@ const menus = computed(() => {
       fn: () => {
         ttappStore.enterApp(data.value.id);
       },
+      disabled: !data.value?.main,
     },
     {
       newIcon: "fluent:window-16-regular",
       title: "弹窗打开",
       fn: () => {
         modal.value.id = data.value.id;
-        // modal.value.url = "ttapp://" + data.value.id + props.customData.entry;
         modal.value.url = props.customData._entry;
+
+        const size = props.customData.customSize.split("x");
+        modal.value.width = useGridToWidth(size[0]);
+        modal.value.height = useGridToHeight(size[1]);
+        console.log('   modal.value.width  :>> ',    modal.value.width );
+        modal.value.size = props.customData.customSize;
         modal.value.visible = true;
       },
+      disabled: data.value?.modal,
     },
     {
       title: "设置",
@@ -171,9 +178,7 @@ onUnmounted(() => {
   perfectScrollbar.value = null;
 });
 
-
-const injectProps=ref({})
-
+const injectProps = ref({});
 </script>
 
 <template>
@@ -213,4 +218,3 @@ const injectProps=ref({})
   </xt-container>
 </template>
 <style lang="scss"></style>
-../../../../appCenter/src/views/developer/hooks/validate

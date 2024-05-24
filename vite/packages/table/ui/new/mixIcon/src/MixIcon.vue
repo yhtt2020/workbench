@@ -128,7 +128,7 @@ const onClick = () => {
 
 const iconUrl = ref(props.icon);
 const color = computed(() => {
-  if (iconUrl.value.indexOf("color=") >= 0) {
+  if (typeof iconUrl.value === 'string' && iconUrl.value?.indexOf("color=") >= 0) {
     let colors = iconUrl.value.substr(iconUrl.value.indexOf("color=") + 7);
     return colors;
   }

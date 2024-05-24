@@ -105,10 +105,12 @@ export default {
         // 卡片类图标
         case "card":
           this.openCard(item);
+          this.folderVisible = false;
           break;
         // 文件夹图标
         case "folder":
           this.openFolder(item);
+          this.floatCardVisible = false;
           break;
         // 第三方应用图标
         case "ttapp":
@@ -119,12 +121,13 @@ export default {
           this.floatCardVisible = false;
           this.folderVisible = false;
       }
-    
+
       // 然后处理与 value 相关的
       switch (value) {
         // 社区中心
         case "commun":
           this.comVisible = !this.comVisible;
+          closeTag = false
           break;
         // 控制中心
         case "control":
@@ -137,7 +140,7 @@ export default {
           break;
         // 全屏
         case "fullscreen":
-          if (window.$usePlat()) {
+          if (!window.$usePlat('client')) {
             toggle();
             return;
           }
@@ -178,7 +181,7 @@ export default {
         });
       }
     },
-    
+
     /**
      * 当前选中的元素
      * @param item 元素

@@ -6,7 +6,7 @@ import { usePlat } from '../../../ui/hooks/usePlat';
 // let fs = require('fs')
 let fs
 let path
-if (!usePlat()) {
+if (usePlat('client')) {
   fs= (window as any).$models.fs;
   path = require('path')
 }

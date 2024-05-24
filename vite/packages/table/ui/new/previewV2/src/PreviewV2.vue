@@ -43,7 +43,7 @@ import componentsMinis from "../../../../../table/components/desk/components";
 import { homeStore } from "../../../../store/home";
 import { message } from "ant-design-vue";
 import { useAddCard } from "../../../../hooks";
-
+import {DEFAULT} from '../../../../js/const/default'
 export default {
   mixins: [componentsMinis],
   data() {
@@ -102,7 +102,7 @@ export default {
       let background = "url(" + this.backgroundImage.path + ")";
       return this.backgroundImage.path
         ? background
-        : "url('https://a.apps.vip/icons/defaultBackground.jpg')";
+        : "url('"+DEFAULT.WALLPAPER+"')";
     },
     zoom() {
       if (this.zoom) {

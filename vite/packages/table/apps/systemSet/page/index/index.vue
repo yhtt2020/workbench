@@ -211,7 +211,7 @@ watch(
   (val) => {
     const isDesk = val === "Desk";
     const isLayout =
-      isFreeLayout.value || getCurrentDesk.value.settings.enableZoom;
+      isFreeLayout.value || getCurrentDesk.value?.settings?.enableZoom;
 
     const tabMap = {
       Desk: isLayout ? "current" : "all",
@@ -223,7 +223,7 @@ watch(
 );
 
 onMounted(() => {
-  if (isFreeLayout.value || getCurrentDesk.value.settings.enableZoom) {
+  if (isFreeLayout.value || getCurrentDesk.value?.settings?.enableZoom) {
     deskTab.value = "current";
   }
   proxy.$bus.on("selectSystemNav", (id) => {

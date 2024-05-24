@@ -36,7 +36,6 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import { createPinia } from "pinia";
 import "dayjs/locale/zh-cn";
 import "./index.css";
-import { cardStore } from "./store/card";
 import vueCustomScrollbar from "../../src/components/vue-scrollbar.vue";
 
 import VueTippy from "vue-tippy";
@@ -118,18 +117,17 @@ dayjs.locale("zh-cn");
 const app = createApp(App);
 
 //腾讯IM部分
-import { loadChat,TUIKit } from "./chat";
+// import { loadChat,TUIKit } from "./chat";
+import { loadChat,TUIChatKit,TUIComponents} from "./chat";
 loadChat();
-TUIKit.TUIChatKit.components(TUIKit.TUIComponents,app);
+TUIChatKit.components(TUIComponents,app);
+
 // 导入IM的UI覆写样式文件
 import "./apps/chat/assets/chat.scss";
-// TUIKit
 
 app.use(Wujie);
 // app.use(hevueImgPreview)
 // 使用 provide 将全局变量作为响应式对象
-app.provide("currentEnv", currentEnv);
-app.provide("currentPlat", currentPlat);
 app.provide("isWeb", isWeb);
 app.provide("isWin", isWin);
 app.provide("isMac", isMac);
@@ -138,6 +136,8 @@ app.provide("isSingle", isSingle);
 app.provide("isGuest", isGuest);
 app.provide("$useEnv", useEnv);
 app.provide("$usePlat", usePlat);
+app.provide("currentEnv", currentEnv);
+app.provide("currentPlat", currentPlat);
 
 // 使用 globalProperties 将全局变量附加到 Vue 实例上
 app.config.globalProperties.$currentEnv = currentEnv;
@@ -209,7 +209,7 @@ app.component("PanelButton", PanelButton);
 app.component("BackBtn", BackBtn);
 app.component("vueCustomScrollbar", vueCustomScrollbar);
 
-if (!usePlat()) {
+if (usePlat('client')) {
   window.USER_DATA_PATH = window.globalArgs["user-data-dir"]; //挂载一个用户数据目录的常量，方便后续开发
 }
 

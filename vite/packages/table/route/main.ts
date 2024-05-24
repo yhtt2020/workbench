@@ -83,13 +83,12 @@ import Channel from "../apps/chat/page/channels/Channel.vue";
 import ChannelIndex from "../apps/chat/page/channels/ChannelsIndex.vue";
 import Circle from "../apps/chat/page/channels/Group.vue";
 import CircleDetail from "../apps/chat/page/channels/GroupsDetail.vue";
+import SettingIndex from "../apps/chat/page/setting/SettingIndex.vue";
+import CommunitySetting from "../apps/chat/page/setting/CommunitySetting.vue";
+import MemberManage from "../apps/chat/page/setting/CommunityMember.vue";
+import MoreSetting from "../apps/chat/page/setting/CommunityMoreSetting.vue";
+import RoleAuthority from "../apps/chat/page/setting/CommunityRole.vue";
 
-// import ChatDesk from '../page/chat/chatDesk.vue'
-// // import ImTeam from '../page/chat/team.vue'
-// import CommunitySetting from '../page/chat/page/setting/communitySetting.vue'
-// import MemberManage from '../page/chat/page/setting/memberManage.vue'
-// import MoreSetting from '../page/chat/page/setting/moreSetting.vue'
-// import RoleAuthority from '../page/chat/page/setting/roleAuthority.vue'
 /**聊天团队模式结束**/
 
 import Device from "../apps/console/pages/Device.vue";
@@ -99,13 +98,62 @@ import ShortcutKeyRoute from "../apps/shortcutKey/route";
 import BarrageRoute from "../apps/barrage/route";
 import Power from "../page/Power.vue";
 import Remote from "../apps/console/pages/Remote.vue";
-
+import SharedDesk from  '../page/SharedDesk.vue'
 export default [
   {
+
     path: "/main",
     name: "main",
-    component: Main,
+    // component: Main,
+    // 注册应用弹窗路由
+    components: {
+      default: Main,
+      ai: AIAssistant,
+      note: Note,
+      // shortcutKey: ShortcutKeyRoute,
+      clipboard: Clipboard,
+    },
+    props: true,
     children: [
+      ...DeckRoute,
+      ShortcutKeyRoute,
+
+      {
+        path: "/ai/:value?",
+        name: "ai",
+        component: AIAssistant,
+        meta: {
+          tab1: "work",
+          tab2: "ai",
+        },
+      },
+      {
+        path: "/Note/:customIndex?",
+        name: "note",
+        component: Note,
+        meta: {
+          tab1: "work",
+          tab2: "note",
+        },
+      },
+      {
+        path: "/clipboard",
+        name: "clipboard",
+        component: Clipboard,
+        meta: {
+          tab1: "work",
+          tab2: "clipboard",
+        },
+      },
+      {
+        path: "/todo",
+        name: "todo",
+        component: Todo,
+        meta: {
+          tab1: "work",
+          tab2: "todo",
+        },
+      },
       {
         path: "/device",
         name: "device",
@@ -257,8 +305,8 @@ export default [
               name: "chatMain",
             },
             children: [
+              /**群聊会话列表路由**/
               {
-                /**群聊会话列表路由**/
                 path: "/chatMain/:no?/:action?",
                 name: "chatMain",
                 component: ChatMain,
@@ -269,8 +317,8 @@ export default [
                   tab3: "session",
                 },
               },
+              /**群聊发现页路由**/
               {
-                /**群聊发现页路由**/
                 path: "/chatFind",
                 name: "chatFind",
                 component: ChatFind,
@@ -281,8 +329,8 @@ export default [
                   tab3: "find",
                 },
               },
+              /**其他社群路由**/
               {
-                /**其他社群路由**/
                 path: "/com/:no",
                 name: "myCommunity",
                 component: MyCommunity,
@@ -292,9 +340,73 @@ export default [
                   tab2: "chat",
                   tab3: "community_{no}",
                 },
+                /**社群设置路由**/
+                children: [
+                  {
+                    path: "/com/set/:no",
+                    name: "SettingIndex",
+                    component: SettingIndex,
+                    meta: {
+                      tab1: "community",
+                      tab2: "chat",
+                      tab3: "community_{no}",
+                      tab4: "settingIndex",
+                    },
+                    redirect: {
+                      name: "CommunitySetting",
+                    },
+                    /**社群设置的子路由**/
+                    children: [
+                      {
+                        path: "/com/:no/setting",
+                        name: "CommunitySetting",
+                        component: CommunitySetting,
+                        meta: {
+                          tab1: "community",
+                          tab2: "chat",
+                          tab3: "community_{no}",
+                          tab4: "communitySetting",
+                        },
+                      },
+                      {
+                        path: "/com/:no/member",
+                        name: "CommunityMember",
+                        component: MemberManage,
+                        meta: {
+                          tab1: "community",
+                          tab2: "chat",
+                          tab3: "community_{no}",
+                          tab4: "member",
+                        },
+                      },
+                      {
+                        path: "/com/:no/more",
+                        name: "MoreSetting",
+                        component: MoreSetting,
+                        meta: {
+                          tab1: "community",
+                          tab2: "chat",
+                          tab3: "community_{no}",
+                          tab4: "more",
+                        },
+                      },
+                      {
+                        path: "/com/:no/role",
+                        name: "RoleAuthority",
+                        component: RoleAuthority,
+                        meta: {
+                          tab1: "community",
+                          tab2: "chat",
+                          tab3: "community_{no}",
+                          tab4: "role",
+                        },
+                      },
+                    ],
+                  },
+                ],
               },
+              /**官方默认社群路由**/
               {
-                /**官方默认社群路由**/
                 path: "/OfficialCommunity",
                 name: "officialCommunity",
                 component: OfficialCommunity,
@@ -319,18 +431,6 @@ export default [
                   tab3: "admin",
                 },
               },
-              /**群聊通讯录路由**/
-              // {
-              //   path: "/contact",
-              //   name: "contact",
-              //   component: Contact,
-              //   meta: {
-              //     type: "contact",
-              //     tab1: "community",
-              //     tab2: "chat",
-              //     tab3: "contact",
-              //   },
-              // },
               /**社区路由**/
               {
                 path: "/channel",
@@ -374,85 +474,8 @@ export default [
                   },
                 ],
               },
-              /**小队路由**/
-              {
-                path: "/team",
-                name: "team",
-                component: Team,
-                redirect: {
-                  name: "hall",
-                },
-                children: [
-                  {
-                    path: "",
-                    name: "hall",
-                    meta: {
-                      tab1: "community",
-                      tab2: "team",
-                      type: "team",
-                      tab: "team",
-                    },
-                    component: Hall,
-                  },
-                ],
-              },
             ],
           },
-
-          // {
-          //   children:[
-          //     {
-          //       path:'',
-          //       name:'communitySettings',
-          //       component:CommunitySetting,
-          //       meta: {
-          //         tab1:'community',
-          //         tab2: 'chat',
-          //         tab3:'community_{no}',
-          //         tab4:'communitySettings'
-          //       }
-          //     },
-          //     {
-          //       path:'/myCommunity/:no/member',
-          //       name:'member',
-          //       component:MemberManage,
-          //       meta: {
-          //         tab1:'community',
-          //         tab2: 'chat',
-          //         tab3:'community_{no}',
-          //         tab4:'member'
-          //       }
-          //     },
-          //     {
-          //       path:'/myCommunity/:no/more',
-          //       name:'more',
-          //       component:MoreSetting,
-          //       meta: {
-          //         tab1:'community',
-          //         tab2: 'chat',
-          //         tab3:'community_{no}',
-          //         tab4:'more'
-          //       }
-          //     },
-          //     {
-          //       path:'/myCommunity/:no/role',
-          //       name:'role',
-          //       component:RoleAuthority,
-          //       meta: {
-          //         tab1:'community',
-          //         tab2: 'chat',
-          //         tab3:'community_{no}',
-          //         tab4:'role'
-          //       }
-          //     }
-          //   ]
-          // }
-
-          // {
-          //   path: '/chatDesk',
-          //   name: 'chatDesk',
-          //   component: ChatDesk
-          // },
         ],
       },
 
@@ -553,57 +576,29 @@ export default [
         meta: {
           rememberChildrenPosition: true,
         },
-        redirect: "/ai",
+        redirect: {
+          name: "ai",
+        },
         children: [
-          {
-            path: "/Note/:customIndex?",
-            name: "note",
-            component: Note,
-            meta: {
-              tab1: "work",
-              tab2: "note",
-            },
-          },
-          ...DeckRoute,
           {
             path: "/TomatoStart",
             name: "tomatoStart",
             component: TomatoStart,
           },
-
           {
             path: "/Tomato",
             name: "tomato",
             component: Tomato,
           },
-          {
-            path: "/ai/:value?",
-            name: "ai",
-            component: AIAssistant,
-            meta: {
-              tab1: "work",
-              tab2: "ai",
-            },
-          },
-          {
-            path: "/clipboard",
-            name: "clipboard",
-            component: Clipboard,
-            meta: {
-              tab1: "work",
-              tab2: "clipboard",
-            },
-          },
-          ShortcutKeyRoute,
-          {
-            path: "/todo",
-            name: "todo",
-            component: Todo,
-            meta: {
-              tab1: "work",
-              tab2: "todo",
-            },
-          },
+          // {
+          //   path: "/ai/:value?",
+          //   name: "ai",
+          //   component: AIAssistant,
+          //   meta: {
+          //     tab1: "work",
+          //     tab2: "ai",
+          //   },
+          // },
         ],
       },
 

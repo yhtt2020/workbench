@@ -55,7 +55,7 @@ const IMAGE_TOOLBAR_SHOW_MAP = {
   web_album: {
     // 新增调整 icon
     // icon: imageIcon,
-    icon:'fluent:image-sparkle-16-regular',
+    icon:'fluent:image-sparkle-16-filled',
     title: '图片',
   },
   uni_album: {

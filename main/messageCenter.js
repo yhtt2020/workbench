@@ -41,7 +41,7 @@ app.whenReady().then(() => {
         appManager.showAppWindowByPackage(GROUP_PKG)
         appManager.getWindowByPackage(GROUP_PKG).view.webContents.send('switchChat', args.indexName)
       } else {
-        appManager.executeAppByPackage(GROUP_PKG, () => {
+        appManager.executeAppByPackage(GROUP_PKG, false,{},() => {
           appManager.getWindowByPackage(GROUP_PKG).view.webContents.send('switchChat', args.indexName)
         })
       }

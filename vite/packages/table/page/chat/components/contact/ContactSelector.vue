@@ -24,16 +24,16 @@
           <EmptyStatus />
         </div>
         <vue-custom-scrollbar v-else class="flex flex-col justify-between" :settings="settingsScroller" style="height:320px;">
-         <div v-for="(item,index) in teamList" :class="{'select-bg':isSelect(index)}" 
+         <div v-for="(item,index) in teamList" :class="{'select-bg':isSelect(index)}"
           class="flex rounded-lg items-center pointer p-3" @click="selectCurrentContact(item)"
          >
           <template v-if="item.userInfo">
            <a-avatar :size="32" shape="circle" :src="item.userInfo.avatar"></a-avatar>
-           <span class="font-16 font-400 ml-4" style="color:var(--primary-text);">{{ item.userInfo.nickname }}</span> 
+           <span class="font-16 font-400 ml-4" style="color:var(--primary-text);">{{ item.userInfo.nickname }}</span>
           </template>
           <template v-else>
            <a-avatar :size="32" :shape="item.nick ? 'circle' : 'square'" :src="item.avatar"></a-avatar>
-           <span class="font-16 font-400 ml-4" style="color:var(--primary-text);">{{ item.nick ? item.nick : item.name }}</span> 
+           <span class="font-16 font-400 ml-4" style="color:var(--primary-text);">{{ item.nick ? item.nick : item.name }}</span>
           </template>
          </div>
         </vue-custom-scrollbar>
@@ -49,17 +49,17 @@
         <EmptyStatus />
       </div>
       <vue-custom-scrollbar class="flex flex-col justify-between" v-else :settings="settingsScroller" style="height:430px;">
-        <div v-for="(item,index) in teamList" :class="{'select-bg':isSelect(index)}" 
+        <div v-for="(item,index) in teamList" :class="{'select-bg':isSelect(index)}"
          class="flex rounded-lg items-center pointer  p-3"
          @click="selectCurrentContact(item,index)"
         >
          <template v-if="item.userInfo">
           <a-avatar :size="32" shape="circle" :src="item.userInfo.avatar"></a-avatar>
-          <span class="font-16 font-400 ml-4" style="color:var(--primary-text);">{{ item.userInfo.nickname }}</span> 
+          <span class="font-16 font-400 ml-4" style="color:var(--primary-text);">{{ item.userInfo.nickname }}</span>
          </template>
          <template v-else>
           <a-avatar :size="32" :shape="item.nick ? 'circle' : 'square'" :src="item.avatar"></a-avatar>
-          <span class="font-16 font-400 ml-4" style="color:var(--primary-text);">{{ item.nick ? item.nick : item.name }}</span> 
+          <span class="font-16 font-400 ml-4" style="color:var(--primary-text);">{{ item.nick ? item.nick : item.name }}</span>
          </template>
         </div>
       </vue-custom-scrollbar>
@@ -113,14 +113,14 @@ export default {
       searchKeyword:'',
       selectedList:[],
       joinCategory:[
-       // { icon:'fluent:people-16-regular',name:'我的组织',type:'myOrganize',bgColor:'var(----active-secondary-bg)',iconColor:'var(--active-bg)' },
-       { icon:'fluent:chat-16-regular',name:'我的好友',type:'myFriend',bgColor:'rgba(250,173,20,0.2)',iconColor:'var(--warning)'},
+       // { icon:'fluent:people-16-filled',name:'我的组织',type:'myOrganize',bgColor:'var(----active-secondary-bg)',iconColor:'var(--active-bg)' },
+       { icon:'fluent:chat-16-filled',name:'我的好友',type:'myFriend',bgColor:'rgba(250,173,20,0.2)',iconColor:'var(--warning)'},
       ],
       teamList:this.list.teamData,
       teamTitle:this.title,
 
 
-      // 滚动条配置 
+      // 滚动条配置
       settingsScroller: {
        useBothWheelAxes: true,
        swipeEasing: true,
@@ -160,7 +160,7 @@ export default {
         const copySelectList = [...this.selectedList]
         copySelectList.splice(findIndex,1)
         this.selectedList = copySelectList
-       
+
       }
 
      }else{
@@ -184,36 +184,36 @@ export default {
        }
       }
      }
-     
+
     },
 
     // 清除已经选中的联系人
     deleteSelected(item){
       if(item.userInfo){
-        
+
         const mapList = this.selectedList.map((item)=>{ return item })
-        const index = mapList.findIndex((findItem)=>{ 
+        const index = mapList.findIndex((findItem)=>{
           return findItem.userInfo.uid === item.userInfo.uid
         })
         mapList.splice(index,1)
         this.selectedList = mapList
-       
+
       }else{
         const copyList = [...this.selectedList]
         if(item.groupID){ // 群聊
-          const index = copyList.findIndex((copy)=>{ 
-           return String(copy.groupID) === String(item.groupID) 
+          const index = copyList.findIndex((copy)=>{
+           return String(copy.groupID) === String(item.groupID)
           })
           copyList.splice(index,1)
           this.selectedList = copyList
         }else{ // 好友
-          const index = copyList.findIndex((copy)=>{ 
-           return String(copy.userID) === String(item.userID) 
+          const index = copyList.findIndex((copy)=>{
+           return String(copy.userID) === String(item.userID)
           })
           copyList.splice(index,1)
           this.selectedList = copyList
         }
-       
+
       }
     },
 
@@ -256,7 +256,7 @@ export default {
           this.teamList = this.list.teamData
         }
       }
-      
+
     },
 
     // 全选和反选

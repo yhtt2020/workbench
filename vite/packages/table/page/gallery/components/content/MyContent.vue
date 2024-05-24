@@ -30,13 +30,13 @@
             <div class="absolute flex " style="right:16px;" :style="isModal ? {top: '4px'}:{top: '8px'}" v-if="isLocalDownload(img)">
               <xt-button  :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="mr-2 xt-bg-t-2 img-button" style="border-radius: 8px; opacity: 0;" @click="download(img)">
                 <div class="flex items-center justify-center">
-                  <xt-new-icon icon="fluent:arrow-download-16-regular" :size="isModal ? 16 : 20" :color="'var(--active-text)'"></xt-new-icon>
+                  <xt-new-icon icon="fluent:arrow-download-16-filled" :size="isModal ? 16 : 20" :color="'var(--active-text)'"></xt-new-icon>
                 </div>
               </xt-button>
               <xt-button :w="isModal ? 32 : 40" :h="isModal ? 32 : 40" class="xt-bg-t-2 img-button" style="border-radius: 8px; opacity: 0;" @click="removeToMyPaper(img)">
                 <div class="flex items-center justify-center">
                   <xt-new-icon icon="fluent:star-16-filled" v-if="isInMyPapers(img)" :size="isModal ? 16 : 20" :color="'var(--warning)'"></xt-new-icon>
-                  <xt-new-icon icon="fluent:star-16-regular" v-else :size="isModal ? 16 : 20" :color="'var(--active-text)'"></xt-new-icon>
+                  <xt-new-icon icon="fluent:star-16-filled" v-else :size="isModal ? 16 : 20" :color="'var(--active-text)'"></xt-new-icon>
                 </div>
               </xt-button>
             </div>
@@ -62,7 +62,7 @@
  import {completeTask} from '../../../../apps/task/task'
 import { usePlat } from '../../../../ui/hooks/usePlat';
 let fs,path
- if (!usePlat('web')) {
+ if (usePlat('client')) {
    fs = window.$models.fs
     path = require('path')
  }
@@ -92,7 +92,7 @@ let fs,path
       },
       myMenus:[
        {
-        newIcon:'fluent:desktop-16-regular',name:'设为工作台背景',
+        newIcon:'fluent:desktop-16-filled',name:'设为工作台背景',
         callBack:()=>{ this.setAppPaper(this.myCurrentID)
           completeTask('M0201',()=>{
             this.$bus.emit('closePaperModal')
@@ -103,29 +103,29 @@ let fs,path
         callBack:()=>{ this.setDesktopPaper(); }
        },
        {
-        newIcon:'fluent:arrow-download-16-regular',name:'下载壁纸',
+        newIcon:'fluent:arrow-download-16-filled',name:'下载壁纸',
         callBack:()=>{ this.download(this.myCurrentID); }
        },
        {
-        newIcon:'fluent:delete-16-regular',name:'删除该壁纸',color: 'var(--error)',
+        newIcon:'fluent:delete-16-filled',name:'删除该壁纸',color: 'var(--error)',
         callBack:()=>{ this.delCurrentPaper(); }
        },
       ],
       // 动态壁纸的菜单
       liveMenu:[
        {
-        newIcon:'fluent:desktop-16-regular',name:'设为工作台背景',
+        newIcon:'fluent:desktop-16-filled',name:'设为工作台背景',
         callBack:()=>{ this.setAppPaper(this.myCurrentID) }
        },
        {
-        newIcon:'fluent:delete-16-regular',name:'删除该壁纸',color: 'var(--error)',
+        newIcon:'fluent:delete-16-filled',name:'删除该壁纸',color: 'var(--error)',
         callBack:()=>{ this.delCurrentPaper(); }
        },
       ],
       // 没有下载按钮的菜单
       downloadMenu:[
        {
-        newIcon:'fluent:desktop-16-regular',name:'设为工作台背景',
+        newIcon:'fluent:desktop-16-filled',name:'设为工作台背景',
         callBack:()=>{ this.setAppPaper(this.myCurrentID) }
        },
        {
@@ -133,7 +133,7 @@ let fs,path
         callBack:()=>{ this.setDesktopPaper(); }
        },
        {
-        newIcon:'fluent:delete-16-regular',name:'删除该壁纸',color: 'var(--error)',
+        newIcon:'fluent:delete-16-filled',name:'删除该壁纸',color: 'var(--error)',
         callBack:()=>{ this.delCurrentPaper(); }
        },
       ]
@@ -166,7 +166,7 @@ let fs,path
     setDesktopPaper(){
      if(this.myCurrentID !== null){
       window.$ui.confirm('确定将此壁纸设置为系统桌面壁纸','确定将此壁纸设置为系统桌面壁纸？注意，此处设置不是工作台的壁纸。',{
-        index:1020,
+        index:100010,
         ok: () => {
           message.info('正在为您下载并设桌面壁纸')
           tsbApi.system.setPaper(this.myCurrentID.path)
@@ -207,7 +207,7 @@ let fs,path
     download(img){
      if(this.settings.savePath === ''){
       window.$ui.confirm('您尚未设置壁纸保存目录，请设置目录，设置目录后下载将自动开始。','',{
-        index:1020,
+        index:100010,
         ok: async() => {
           await this.queryStart();
         },

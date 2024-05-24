@@ -1,13 +1,13 @@
 <template>
- <xt-container 
-  :customIndex="customIndex" 
-  :customData="customData" 
+ <xt-container
+  :customIndex="customIndex"
+  :customData="customData"
   :desk="desk"
-  :menuList="menuList" 
+  :menuList="menuList"
   v-model:customSize="customData.customSize"
-  :header="header" 
-  :options="options"  
-  @leftClick="fullScreen" 
+  :header="header"
+  :options="options"
+  @leftClick="fullScreen"
   @resize="resize"
   @delete="deleteCard"
  >
@@ -48,7 +48,7 @@ import { dateTimeStamp } from './hooks/clockList';
 import Resize from "../../../apps/folder/src/components/Resize.vue";
 import ClockSettingModal from "./components/ClockSettingModal.vue";
 import ClockFullScreen from "./clockState/ClockFullScreen.vue";
-
+import {DEFAULT} from '../../../js/const/default'
 export default {
  mixins: [mixin,],
 
@@ -103,7 +103,7 @@ export default {
      this.updateCustomData(this.customIndex,{
          backgroundFrame:true,
         clockId:"clock4",
-        imgUrl:"https://a.apps.vip/icons/defaultBackground.jpg",
+        imgUrl:DEFAULT.WALLPAPER,
         blurs:3,
         bgZoom:100,
         zoom:1.5,
@@ -121,9 +121,9 @@ export default {
     this.clockDay = this.dateTimeStamp(Date.now());
   },12 * 60 * 60 * 1000);
   /**
-   *   
-   * 
-   * **/ 
+   *
+   *
+   * **/
  },
  computed:{
   ...mapWritableState(appStore,["backgroundImage"]),
@@ -131,7 +131,8 @@ export default {
   header(){
    const headerOption = {
     title:this.customData.backgroundFrame ? `${this.clockDay}` : "",
-    ifyIcon: this.customData.backgroundFrame ? "fluent:clock-12-regular" : "",
+    // ifyIcon: this.customData.backgroundFrame ? "fluent:clock-12-regular" : "",
+    showIcon:"/img/appLogo/clock.png",
     leftHover: true,
     leftHoverName:"进入全屏",
     leftHoverIcon: "fluent:open-16-regular",
@@ -148,7 +149,7 @@ export default {
       defaultData:{
         backgroundFrame:true,
         clockId:"clock4",
-        imgUrl:"https://a.apps.vip/icons/defaultBackground.jpg",
+        imgUrl:DEFAULT.WALLPAPER,
         blurs:3,
         bgZoom:100,
         zoom:1.5,

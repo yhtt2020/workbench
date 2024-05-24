@@ -193,7 +193,7 @@ export default {
 }
 
 .pop-box {
-  z-index: 1000;
+  z-index: 100001;
   position: fixed;
   top: 0;
   left: 0;

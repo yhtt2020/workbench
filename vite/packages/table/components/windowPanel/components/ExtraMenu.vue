@@ -1,13 +1,13 @@
 <template>
-    <div>
+    <div v-if="client">
         <xt-divider class="mx-auto" style="width: 90%" />
         <div class="w-full h-full text-sm text-center xt-text-2 items">工作台常用功能</div>
         <div class="flex items-center justify-center gap-6 mx-auto mb-2" style="width: 90%">
-            <xt-new-icon 
-                v-for="(item, index) in iconList" 
-                :key="index" 
-                :icon="item.icon" 
-                size="18" 
+            <xt-new-icon
+                v-for="(item, index) in iconList"
+                :key="index"
+                :icon="item.icon"
+                size="18"
                 class="pointer xt-text"
                 @click="item.cb()"
             />
@@ -19,11 +19,12 @@
 import { ref, computed, getCurrentInstance, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router';
 import { startApp } from '../../../ui/hooks/useStartApp';
+import {usePlat} from "../../../ui/hooks/usePlat";
 
 const router = useRouter()
 
 const { proxy } = getCurrentInstance()
-
+const client=ref(usePlat('client'))
 // const emit = defineEmits(['click'])
 
 const list = ref([
@@ -68,7 +69,7 @@ const list = ref([
 
 // 当为web端时，只保留系统设置
 const iconList = computed(() => {
-    if(window.$usePlat()){
+    if(!window.$usePlat('client')){
         return list.value.filter(item => item.disabled !== 'client')
     } else {
         return list.value

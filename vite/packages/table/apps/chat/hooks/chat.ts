@@ -2,16 +2,26 @@
 import { chatCommunityStore } from "../store/chatCommunity";
 import { storeToRefs } from "pinia";
 import _ from "lodash-es";
+import { useNavigationStore } from "../../../components/desk/navigationBar/navigationStore";
 
-export class ChatLogout {
-  logout() {
-    // 清除群聊登录
-    (window as any).$chat?.chat?.logout();
-    const chatCommunity: any = chatCommunityStore();
-    const { myCommunity } = storeToRefs(chatCommunity);
-    const filterMy = _.filter(myCommunity.value,(item:any)=>{
-     return Number(item.id) === 0;
-    });
-    myCommunity.value = filterMy;
-  }
+/**群聊退出登录操作**/ 
+export const chatLogout = () => {
+  (window as any).$TUIKit.logout();
+  (window as any).$TUIKit.TUIStore.storeMap.conversation.store.conversationList = [];
+  (window as any).$TUIKit.TUIStore.storeMap.group.store.groupList = [];
+  (window as any).$TUIKit.TUIStore.storeMap.friend.store.friendList = [];
+  const chatCommunity: any = chatCommunityStore();
+  const { myCommunity, currentCommunityNo } = storeToRefs(chatCommunity);
+  const filterMy = _.filter(myCommunity.value, (item: any) => {
+    return Number(item.id) === 0;
+  });
+  myCommunity.value = filterMy;
+  currentCommunityNo.value = null;
+  (useNavigationStore() as any).communityNavVisible = false;
+};
+
+/**登录刷新**/
+export const updateLogin = async() =>{
+  const chatCommunity: any = chatCommunityStore();
+  chatCommunity.getMyCommunity();
 }

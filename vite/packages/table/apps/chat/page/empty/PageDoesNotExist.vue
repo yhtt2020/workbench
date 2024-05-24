@@ -2,7 +2,10 @@
 <template>
   <div class="w-full h-full flex items-center justify-center xt-bg">
     <div class="flex items-center flex-col justify-center">
-      <span class="xt-text font-24 xt-font mb-4">404,页面不存在</span>
+      <div class="flex items-center justify-center flex-col mb-4">
+        <xt-ify-icon icon="fluent-emoji-flat:magnifying-glass-tilted-right" size="56"/>
+        <span class="xt-text-2 font-14 xt-font mt-4">没有找到相关内容</span>
+      </div>
       <xt-button w="180" h="40" type="theme" @click="prev"> 返回 </xt-button>
     </div>
   </div>

@@ -2,7 +2,7 @@ import {message} from "ant-design-vue";
 import {courierStore} from "../../../../apps/ecommerce/courier";
 import { usePlat } from "../../../../ui/hooks/usePlat";
 let appDirName
-if ( !usePlat('web')) {
+if (usePlat('client')) {
    appDirName = window.globalArgs['app-dir_name']
 }
 const grab = {

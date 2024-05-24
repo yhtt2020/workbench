@@ -198,7 +198,13 @@ export default {
     }
   },
   mounted() {
-
+    if (
+      this.customData.iconList?.length <= 1 ||
+      this.customData.iconList?.length == undefined
+    ) {
+      return;
+    }
+    // 是ttapp
     let res = this.customData.iconList[0];
     // 是ttapp
     if (res?.type !== "ttapp") {
@@ -206,18 +212,6 @@ export default {
       let res = iconValidate(this.customIndex, this.customData.iconList[0]);
       if (!res) return;
     }
-
-    // if (cardValidate())
-    // console.log("this.customData :>> ", this.customData.iconList[0].src);
-    // console.log("this.customData :>> ", this.customData);
-    // console.log("window.globalArgs :>> ", window.globalArgs);
-
-    if (
-      this.customData.iconList?.length <= 1 ||
-      this.customData.iconList?.length == undefined
-    )
-      return;
-
     let index = this.desk.cards.findIndex(
       (item) => item.id == this.customIndex
     );
@@ -238,6 +232,7 @@ export default {
       file.isRadius = item.isRadius;
       file.iconState = item.imgState;
       file.iconShape = item.imgShape;
+      file.size = item.size;
       list.push({
         ...file,
       });
@@ -389,10 +384,11 @@ export default {
     },
     openEdit() {
       let icon = this.customData.iconList[this.index];
-
       this.edit = {};
       Object.keys(this.iconOption).forEach((k) => {
-        this.edit[k] = icon[k] || this.iconOption[k];
+        this.edit[k] =   icon[k] !== undefined
+          ? icon[k]
+          : this.iconOption[k]
       });
       this.settingVisible = true;
     },

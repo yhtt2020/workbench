@@ -41,14 +41,13 @@
     <Store style="width: 440px"></Store>
   </xt-old-modal>
   <!-- 编辑 -->
-  <XtDrawer placement="right" v-model="settingVisible">
+  <!-- <XtDrawer placement="right" v-model="settingVisible">
     <template #title>
       <XtTitle type="header"
         >设置
         <template #right>
           <XtButton
             @click="saveEdit()"
-
             type="theme"
             h="40"
             w="80"
@@ -56,8 +55,14 @@
         </template>
       </XtTitle>
     </template>
+
+  </XtDrawer> -->
+  <xt-modal v-model="settingVisible" title="设置" index="99999" :mask="false">
+    <template #header-right>
+      <XtButton @click="saveEdit()" type="theme" h="32" w="66">保存</XtButton>
+    </template>
     <Edit :data="topicList[selectTopicIndex]" ref="editRef" @del="del"></Edit>
-  </XtDrawer>
+  </xt-modal>
 </template>
 
 <script>

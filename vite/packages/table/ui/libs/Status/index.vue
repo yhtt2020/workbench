@@ -1,6 +1,6 @@
 <template>
   <div
-    v-if="plat"
+    v-if="platform"
     class="flex flex-col justify-center items-center w-full h-full"
   >
     <div class="flex justify-center">
@@ -26,7 +26,7 @@ export default {
   name: "XtStatus",
   data() {
     return {
-      plat: "",
+      platform: "",
       ENV_MAP,
     };
   },
@@ -35,16 +35,21 @@ export default {
     ...mapWritableState(usePermissionStore, ["token", "isGuest", "isSingle", "isOffline"]),
   },
   mounted() {
-    // 离线模式不需要进行屏蔽 过滤掉
-    let status = this.status.filter(item => item !== "offline")
-    this.plat = this.$useEnv(status);
+    if(this.plat) {
+      // 平台的屏蔽状态优先级大于工作台登录状态 
+      this.platform = this.$usePlat(this.plat);
+    }else{
+      // 离线模式不需要进行屏蔽 过滤掉
+      let status = this.status.filter(item => item !== "offline")
+      this.platform = this.$useEnv(status);
+    }
   },
   watch: {
     token: {
       handler(val) {
         setTimeout(() => {
           let res = this.$useEnv(this.status);
-          this.plat = res;
+          this.platform = res;
           if (val) {
             cache.set("isGuest", "");
           }
@@ -54,19 +59,19 @@ export default {
     isGuest: {
       handler() {
         let res = this.$useEnv(this.status);
-        this.plat = res;
+        this.platform = res;
       },
     },
     isSingle: {
       handler() {
         let res = this.$useEnv(this.status);
-        this.plat = res;
+        this.platform = res;
       },
     },
     isOffline: {
       handler(val) {
         let res = this.$useEnv(this.status);
-        this.plat = res;
+        this.platform = res;
       },
     },
   },
@@ -89,6 +94,10 @@ export default {
       default: 100,
     },
     status: {
+      type: Array,
+      default: "",
+    },
+    plat: {
       type: Array,
       default: "",
     },

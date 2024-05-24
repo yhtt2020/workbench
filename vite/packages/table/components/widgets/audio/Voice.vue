@@ -2,7 +2,7 @@
   <xt-container
     :header="header"
     v-model:customSize="customData.customSize"
-    :devLimit="['h5']"
+    :platLimit="['web']"
     :customIndex="customIndex"
     :customData="customData"
     :options="options"
@@ -122,7 +122,9 @@ export default {
       ],
       header:{
         title:'音频',
-        ifyIcon:'fluent:speaker-2-16-regular'
+        // ifyIcon:'fluent:speaker-2-16-regular'
+        showIcon:"/img/appLogo/audio.png",
+
       },
       customSize:'2x4',
     }

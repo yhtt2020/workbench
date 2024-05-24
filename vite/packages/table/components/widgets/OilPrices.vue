@@ -1,17 +1,17 @@
 <template>
   <div>
-    <xt-container 
+    <xt-container
       @titleHover="settingVisible = true"
       :header="header"
       v-model:customSize="customData.customSize"
-      :options="options" 
-      :customIndex="customIndex" 
-      :customData="customData" 
-      :menuList="menuList" 
+      :options="options"
+      :customIndex="customIndex"
+      :customData="customData"
+      :menuList="menuList"
       ref="cardSlot"
-      :desk="desk" 
-      :size="size" 
-      :envLimit="['single']"
+      :desk="desk"
+      :size="size"
+      :envLimit="['guest', 'offline', 'single']"
       @delete="deleteCard">
       <div v-if="isLoading">
         <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 60%" />
@@ -118,7 +118,9 @@ export default {
       ],
       header: {
         title: '今日油价',
-        ifyIcon:'fluent:gas-pump-24-regular',
+        // ifyIcon:'fluent:gas-pump-24-regular',
+        showIcon:"/img/appLogo/oilPrices.png",
+
         titleHover: true,
         titleHoverName: '点击切换',
       },

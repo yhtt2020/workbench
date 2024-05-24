@@ -6,7 +6,7 @@ import { usePlat } from "../ui/hooks/usePlat";
 
 let steamUser, steamSession, path, https, steamFs, client
 
-if (!usePlat()) {
+if (usePlat('client')) {
   steamUser = $models.steamUser
   path = $models.path
   steamSession = $models.steamSession

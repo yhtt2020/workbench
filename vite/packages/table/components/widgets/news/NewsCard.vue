@@ -1,16 +1,17 @@
 <template>
   <div>
-    <xt-container 
+    <xt-container
       @titleHover="settingVisible = true"
-      v-model:customSize="customData.customSize" 
-      :desk="desk" 
-      :header="header" 
-      :sizeList="sizeList" 
-      :options="options" 
-      :customIndex="customIndex" 
+      v-model:customSize="customData.customSize"
+      :desk="desk"
+      :header="header"
+      :sizeList="sizeList"
+      :options="options"
+      :customIndex="customIndex"
       :menuList="menuList"
-      ref="cardSlot" 
-      :customData="customData" 
+      ref="cardSlot"
+      :customData="customData"
+      :envLimit="['guest', 'offline']"
       :env="env"
       @delete="deleteCard">
       <div class="top-bar">
@@ -23,7 +24,7 @@
       </div>
       <!-- {{ currentIndex }}
       {{ this.customData.index }}
-      <xt-tab 
+      <xt-tab
         v-model="currentIndex"
         :list="showList"
         style="height: 32px;"
@@ -307,7 +308,8 @@ export default {
     header(){
       return {
         title:'新闻资讯',
-        ifyIcon:'fluent:news-16-regular',
+        // ifyIcon:'fluent:news-16-regular',
+        showIcon:"/img/appLogo/news.png",
         refresh:{
           fn: this.refreshData,
           tip:'刷新',

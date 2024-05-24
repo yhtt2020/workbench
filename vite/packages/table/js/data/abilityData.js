@@ -85,7 +85,7 @@ export const powerList = [
   },
   // 社群
   {
-    icon:'fluent:people-16-regular',
+    icon:'fluent:people-16-filled',
     name:"createChat",
     alias:'创建社群',
     detail:{
@@ -158,9 +158,9 @@ export const powerList = [
   //   name:'closeChat',
   //   alias:'轻聊',
   //   detail:{
-  //     0:'创建群聊',    
-  //     1:'创建群聊',    
-  //     2:'创建群聊',    
+  //     0:'创建群聊',
+  //     1:'创建群聊',
+  //     2:'创建群聊',
   //     3:'创建群聊',
   //     5:' ',
   //     10:' '

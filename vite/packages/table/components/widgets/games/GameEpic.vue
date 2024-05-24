@@ -1,11 +1,12 @@
 <template>
-  <xt-container 
+  <xt-container
     :header="header"
     v-model:customSize="customData.customSize"
     :customData="customData"
-    :devLimit="['h5']"  
-    :options="options" 
-    :customIndex="customIndex" 
+    :platLimit="['web']"
+    :envLimit="['guest', 'offline', 'single']"
+    :options="options"
+    :customIndex="customIndex"
     :desk="desk"
     @delete="deleteCard">
 
@@ -98,7 +99,7 @@ export default {
       unPromotionList: [],
 
       detailList: {},
-      
+
       refreshFlag:false,
     }
   },
@@ -108,7 +109,8 @@ export default {
     header(){
       return {
         title: 'Epic喜加一',
-        ifyIcon:'cib:epic-games',
+        // ifyIcon:'cib:epic-games',
+        showIcon:"/img/appLogo/epic.png",
         refresh:{
           fn:this.refreshNow,
           tip:'刷新',

@@ -10,6 +10,7 @@ import { Modal } from 'ant-design-vue'
 import Emoji from '../comp/Emoji.vue'
 import {isMain} from '../../js/common/screenUtils'
 import {useNavigationStore} from '../desk/navigationBar/navigationStore'
+import {usePermissionStore} from '../../permission/store'
 
 export default {
   components: {
@@ -28,6 +29,7 @@ export default {
   computed: {
     ...mapWritableState(messageStore, ['messageIndex', 'totalCount']),
     ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
+    ...mapWritableState(usePermissionStore, ['currentEnv']),
   },
   mounted () {
     console.log('this.userInfo :>> ', this.userInfo);
@@ -49,7 +51,7 @@ export default {
           this.lvInfo.remainHour--
           if (this.lvInfo.remainHour < 0 && this.tipped === false) {
             this.tipped = true
-            if (!window.$usePlat()){
+            if (window.$usePlat('client')){
               ipc.send('getDetailUserInfo')
             }
             Modal.info({
@@ -140,13 +142,13 @@ export default {
     <div class="pointer" @click="social">
       <div v-if="!simple" class="user-info" :span="24" style="padding: 0.6em;position:relative;">
         <!-- <FrameAvatar class="frame-position" :avatarUrl="userInfo.avatar" :avatarSize="size || 42" :frameUrl="myFrameUrl"></FrameAvatar> -->
-        <a-row style="text-align: left" :gutter="10" align="middle">
-          <a-col class="text-center" :span="12">
+        <a-row style="text-align: left" :gutter="10">
+          <a-col class="text-center" :class="currentEnv == 'offline' ? 'gray' : ''" :span="12">
             <!-- <BorderAavtar :avatarUrl="userInfo.avatar" :rarity="1" :borderSize="4" :avatarSize="size || 50"></BorderAavtar> -->
          <!-- 头像框 -->
-            <FrameAvatar  v-if="userInfo.frame" class="frame" :class="$currentEnv() == 'offline'?'gray':''" :avatarUrl="userInfo.avatar" :avatarSize="size || 50"
+            <FrameAvatar  v-if="userInfo.frame" class="frame" :avatarUrl="userInfo.avatar" :avatarSize="size || 50"
                          :frameUrl="userInfo.frame"></FrameAvatar>
-            <a-avatar v-else :class="$currentEnv() == 'offline'?'gray':''" :src="userInfo.avatar" :size="size || 50"></a-avatar>
+            <a-avatar v-else :src="userInfo.avatar" :size="size || 50"></a-avatar>
             <!-- <a-badge style="border:none;" :count="totalCount">
               <a-avatar :src="userInfo.avatar" :size="size || 50">{{ userInfo.nickname }}</a-avatar>
             </a-badge> -->

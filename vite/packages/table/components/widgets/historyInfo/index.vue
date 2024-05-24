@@ -1,11 +1,11 @@
 <template>
-    <xt-container 
+    <xt-container
         v-model:customSize="customData.customSize"
         :header="header"
-        :customData="customData" 
-        :customIndex="customIndex" 
-        :options="options" 
-        ref="homelSlotRef" 
+        :customData="customData"
+        :customIndex="customIndex"
+        :options="options"
+        ref="homelSlotRef"
         :desk="desk"
         :envLimit="['guest', 'offline', 'single']"
         @delete="deleteCard">
@@ -61,7 +61,7 @@ export default {
                 tetle:""
             },
             timer:"12",
-            
+
         };
     },
     mounted() {
@@ -101,7 +101,9 @@ export default {
         header(){
             return {
                 title:'历史上的今天',
-                ifyIcon:"fluent:clock-12-regular",
+                // ifyIcon:"fluent:clock-12-regular",historyInfo
+        showIcon:"/img/appLogo/historyInfo.png",
+
                 refresh:{
                     fn:this.onHistoryMessage,
                     tip:'刷新',
@@ -155,6 +157,6 @@ export default {
     .refresh{
         position: relative;
         top: 4px;
-        
+
     }
 </style>

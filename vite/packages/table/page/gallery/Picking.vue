@@ -3,7 +3,7 @@
     <div class="flex items-center justify-between mb-2">
       <div class="flex items-center justify-center">
         <xt-new-icon
-          icon="fluent:image-multiple-16-regular"
+          icon="fluent:image-multiple-16-filled"
           size="20"
           class="mr-2 xt-text"
         ></xt-new-icon>
@@ -39,7 +39,7 @@
           :iconSize="isModal ? 20 : 24"
           :placement="'bottomRight'"
           :buttonClass="'xt-active-bg'"
-          :newIcon="'fluent:filter-16-regular'"
+          :newIcon="'fluent:filter-16-filled'"
           :iconBg="'var(--active-text)'"
           :class="isModal ? 'mr-3' : ''"
           :zIndex="100001"
@@ -100,7 +100,7 @@
                   >
                     <div class="flex items-center justify-center">
                       <xt-new-icon
-                        icon="fluent:arrow-download-16-regular"
+                        icon="fluent:arrow-download-16-filled"
                         :size="isModal ? 16 : 20"
                         :color="'var(--active-text)'"
                       ></xt-new-icon>
@@ -124,7 +124,7 @@
                         :color="'var(--warning)'"
                       ></xt-new-icon>
                       <xt-new-icon
-                        icon="fluent:star-16-regular"
+                        icon="fluent:star-16-filled"
                         v-else
                         :size="isModal ? 16 : 20"
                         :color="'var(--active-text)'"
@@ -191,7 +191,7 @@ import { completeTask } from "../../apps/task/task";
 import { usePlat } from "../../ui/hooks/usePlat";
 
 let fs, path;
-if (!usePlat("web")) {
+if (usePlat('client')) {
   fs = window.$models.fs;
   path = require("path");
 }
@@ -223,7 +223,7 @@ export default {
       },
       pickPaperMenu: [
         {
-          newIcon: "fluent:desktop-16-regular",
+          newIcon: "fluent:desktop-16-filled",
           name: "设为工作台背景",
           callBack: () => {
             this.setAppPaper(this.currentPaper);
@@ -237,7 +237,7 @@ export default {
           },
         },
         {
-          newIcon: "fluent:arrow-download-16-regular",
+          newIcon: "fluent:arrow-download-16-filled",
           name: "下载壁纸",
           callBack: () => {
             this.download(this.currentPaper);
@@ -362,7 +362,7 @@ export default {
         "确定将此壁纸设置为系统桌面壁纸？注意，此处设置不是工作台的壁纸。",
         "",
         {
-          index: 1020,
+          index:100010,
           ok: () => {
             message.info("正在为您下载并设桌面壁纸");
             tsbApi.system.setPaper(img.path);
@@ -381,7 +381,7 @@ export default {
           "您尚未设置壁纸保存目录，请设置目录，设置目录后下载将自动开始。",
           "",
           {
-            index: 1020,
+            index:100010,
             ok: async () => {
               await this.queryStart();
             },

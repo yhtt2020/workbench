@@ -3,7 +3,7 @@
     <template v-for="item in itemList">
       <div
         style="width: 105px; height: 105px; border-radius: 12px"
-        class="flex flex-col items-center justify-center xt-bg-2 cursor-pointer"
+        class="flex flex-col items-center justify-center cursor-pointer xt-bg-2"
         v-if="!item?.disabled"
         @click="item.fn"
       >
@@ -40,17 +40,17 @@
     </div>
   </a-modal>
 
-  <Zoom v-if="!$usePlat('web')" />
+  <Zoom v-if="$usePlat('client')" />
   <!-- 2 -->
   <xt-option-box>
     <xt-option-info
-      title="顶部状态栏显示日期和时间"
+      title="状态栏显示日期和时间"
       isSwitch
       v-model:switch="appSettings.showTopbarTime"
     />
     <hr />
     <xt-option-info
-      title="顶部状态栏显示天气"
+      title="状态栏显示天气"
       info="需要先添加天气组件，完成城市设置。"
       class="pb-3"
       isSwitch

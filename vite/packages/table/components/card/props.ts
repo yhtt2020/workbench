@@ -145,6 +145,10 @@ export const defaultProps = {
     type: Array,
     default: () => [],
   },
+  platLimit: {
+    type: Array,
+    default: () => [],
+  },
   /**
    * 小组件大小列表
    * 参考格式 [{ name: '4x2'value: '4x2' }]

@@ -7,6 +7,7 @@
     :options="options"
     :customIndex="customIndex"
     :custom-data="customData"
+    :envLimit="['guest', 'offline', 'single']"
     :menuList="menuList"
     :env="env"
     v-if="!detailToggle"

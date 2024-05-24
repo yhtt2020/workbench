@@ -10,7 +10,7 @@
     :customData="customData"
     :menuList="menuList"
     :env="env"
-    
+
     ref="cardSlot"
     @delete="deleteCard">
     <div class="flex flex-col w-full h-full">
@@ -316,7 +316,9 @@ export default {
     header(){
       return {
         title:'我的快递',
-        ifyIcon:'fluent:box-16-regular',
+        // ifyIcon:'fluent:box-16-regular',
+        showIcon:"/img/appLogo/courier.png",
+
         refresh:{
           fn:()=>{
             this.refreshFlag = true

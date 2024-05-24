@@ -54,7 +54,7 @@ import {renderIcon} from '../js/common/common'
 import { startApp } from '../ui/hooks/useStartApp'
 import { usePlat } from '../ui/hooks/usePlat'
 let fs
-if (!usePlat('web')) {
+if (usePlat('client')) {
 fs = window.$models.fs
 }
 export default {

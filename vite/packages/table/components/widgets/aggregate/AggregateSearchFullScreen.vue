@@ -121,7 +121,7 @@ import { mapActions,mapWritableState } from "pinia";
 import {clipboardStore} from '../../../apps/clipboard/store'
 import { usePlat } from "../../../ui/hooks/usePlat";
 let clipboard
-if (!usePlat()) {
+if (usePlat('client')) {
   clipboard = require('electron').clipboard
 
 }

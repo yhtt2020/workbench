@@ -5,7 +5,7 @@
       <div class="flex items-center">
         <div class="flex items-center justify-center" style="width: 32px;height: 32px;">
           <clockIcon icon="fluent:clock-alarm-16-filled"  class="object-cover w-full h-full rounded-full xt-text" v-show="changeIcon"></clockIcon>
-          <clockIcon icon="fluent:clock-12-regular"  class="object-cover w-full h-full rounded-full xt-text" v-show="!changeIcon"></clockIcon>
+          <clockIcon icon="fluent:clock-12-filled"  class="object-cover w-full h-full rounded-full xt-text" v-show="!changeIcon"></clockIcon>
         </div>
         <div class="ml-3 font-16 xt-text" style="color: var(--primary-text);">{{ title }}</div>
       </div>

@@ -5,7 +5,7 @@ import {appStore} from "../../store";
 import { usePlat } from "../../ui/hooks/usePlat";
 
 let win32
-if (!usePlat()) {
+if (usePlat('client')) {
    win32 = $models.win32
 
 }
