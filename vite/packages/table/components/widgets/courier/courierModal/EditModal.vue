@@ -20,8 +20,6 @@
               <Cover :cover="form.cover" :store="order.store"></Cover>
             </div>
 
-            <!-- <GoodIcon :default-avatar="order.store?order.content?.items[0].cover:''" v-show="goodIconVisible" :goodVisible="false" :windowHeight="innerHeight" @getAvatar="getAvatar"/> -->
-
             <xt-selectIcon :defaultIcon="order.store?order.content?.items[0].cover:''" :menus="['goods']" v-model="modelValue" @getAvatar="getAvatar" ></xt-selectIcon>
 
             <a-input @keydown.enter="submitEdit" ref="titleRef" class="xt-bg-2 h-10" v-model:value="form.title" style="width:383px;border-radius: 8px;"></a-input>
@@ -61,7 +59,6 @@ import { expressList } from './modalMock'
 import { getCourierName } from './utils/courierUtils'
 import {mapActions} from 'pinia'
 import Modal from '../../../Modal.vue'
-import GoodIcon from '../../../../../selectIcon/page/index.vue'
 import { courierStore } from '../../../../apps/ecommerce/courier'
 import { message } from 'ant-design-vue'
 import { generateTitle } from '../lib/courierTool'
@@ -70,7 +67,7 @@ import Cover from '../component/Cover.vue'
 export default {
   components: {
     Cover,
-    Modal, EditIcon, GoodIcon
+    Modal, EditIcon
   },
 
   props: ['avatar', 'order'],
@@ -83,7 +80,6 @@ export default {
       editPhone: '9150',
       optionList: expressList,
       editValue: '',
-      // goodIconVisible: false,
       modelValue:false,
       innerHeight: 100,
       editAvatar: this.avatar,
@@ -127,7 +123,6 @@ export default {
     },
 
     onUpdateImg () {
-      // this.goodIconVisible = !this.goodIconVisible
       this.modelValue = !this.modelValue
     },
 
@@ -140,7 +135,6 @@ export default {
         this.bgColor = ''
       }
       this.form.cover = avatar
-      // this.goodIconVisible=false
       this.modelValue=false
     },
 
