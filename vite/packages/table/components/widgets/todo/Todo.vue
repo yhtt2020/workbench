@@ -194,9 +194,16 @@ export default {
   computed: {
     ...mapWritableState(taskStore, ["taskFilter", "displayList", "tasks"]),
     ...mapWritableState(listStore, ["activeList", "lists"]),
+    ...mapWritableState(communityNavStore, ["currentCommunity"]),
+
     notFinish() {
       return this.taskList.filter((item) => !item.completed);
     },
+
+    communityRole() {
+      return this.currentCommunity?.item.role === "member";
+    },
+
     header() {
       return {
         // ifyIcon:"fluent:checkmark-square-24-regular",
@@ -204,30 +211,30 @@ export default {
         showIcon: "/img/appLogo/todo.png",
 
         title: this.selectTodo.title,
-        titleHover: true,
+        titleHover: this.communityRole ? false : true,
         titleHoverName: this.selectTodo.title,
 
         // leftHoverIcon: "fluent:checkmark-square-24-regular",
 
-        rightIcon: this.checkWriteAuth()
-          ? [
+        rightIcon: this.communityRole
+          ? []
+          : [
               {
                 ifyIcon: "fluent:chevron-right-16-regular",
                 fn: this.todoPage,
                 tip: "前往主应用",
               },
-            ]
-          : [],
+            ],
       };
     },
     options() {
       return {
         customDel: this.openWay === "nav" ? true : false,
-        disableEdit: this.checkWriteAuth() ? false : true,
+        disableEdit: this.communityRole,
       };
     },
     isEdit() {
-      return this.checkWriteAuth();
+      return !this.communityRole;
     },
   },
   async mounted() {
@@ -252,8 +259,10 @@ export default {
       this.customData.customSize = "2x2";
     }
 
+
+
     // 在社群成员桌面的场景下将尺寸切换操作进行屏蔽
-    if (!this.checkWriteAuth()) {
+    if (this.communityRole) {
       this.sizeList = [];
     } else {
       this.sizeList = [
@@ -263,7 +272,6 @@ export default {
     }
   },
   methods: {
-    ...mapActions(communityNavStore, ["checkWriteAuth"]),
 
     deleteCard() {
       this.$emit("delete");

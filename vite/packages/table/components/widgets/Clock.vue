@@ -322,10 +322,16 @@ export default {
       "countDownBtn",
     ]),
     ...mapWritableState(topClockSettingStore, ["topClockSettingVisible"]),
+    ...mapWritableState(communityNavStore,['currentCommunity']),
+
+    communityRole(){
+      return this.currentCommunity?.item?.role === 'member'
+    },
+
     options() {
       return {
         customDel: this.openWay === "nav" ? true : false,
-        disableEdit: this.checkWriteAuth() ? false : true,
+        disableEdit: this.communityRole,
       };
     },
   },
@@ -342,7 +348,6 @@ export default {
       "dCountDown",
     ]),
     ...mapActions(topClockSettingStore, ["changeSettingStatus"]),
-    ...mapActions(communityNavStore, ["checkWriteAuth"]),
 
     deleteCard() {
       this.$emit("delete");

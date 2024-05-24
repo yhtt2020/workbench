@@ -281,8 +281,14 @@ export default {
   computed: {
     ...mapWritableState(cardStore, ["countdownDay"]),
     ...mapWritableState(timerStore, ["appDate"]),
+    ...mapWritableState(communityNavStore,['currentCommunity']),
+
+    communityRole(){
+      return this.currentCommunity?.item?.role === 'member';
+    },
+
     options() {
-      if (!this.checkWriteAuth()) {
+      if (this.communityRole) {
         this.sizeList = [];
       } else {
         this.sizeList = [
@@ -298,7 +304,7 @@ export default {
           customSize: this.customData.customSize || "2x2",
         },
         customDel: this.openWay === "nav" ? true : false,
-        disableEdit: this.checkWriteAuth() ? false : true,
+        disableEdit: this.communityRole,
       };
     },
   },
@@ -315,7 +321,7 @@ export default {
       "addCountdownDay",
       "sortCountdown",
     ]),
-    ...mapActions(communityNavStore, ["checkWriteAuth"]),
+    
     onPanelChange(value, mode) {},
     transDate,
     deleteCard() {
@@ -383,10 +389,10 @@ export default {
 
     // 开启右侧抽屉弹窗
     openRightDrawer() {
-      if (this.checkWriteAuth()) {
-        this.settingVisible = true;
-      } else {
+      if (this.communityRole) {
         this.settingVisible = false;
+      } else {
+        this.settingVisible = true;
       }
     },
   },

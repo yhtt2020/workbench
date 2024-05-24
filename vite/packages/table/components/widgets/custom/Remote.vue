@@ -61,6 +61,9 @@ import {taskStore} from "../../../apps/task/store"
 import { mapWritableState, mapActions } from 'pinia';
 import { cardStore } from "../../../store/card";
 // import RemoteShare from '../../card/remote/RemoteShare.vue';
+import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
+
+
 function loadScript(src, id, callback) {
   const s = document.createElement("script", id);
   s.type = "text/javascript";
@@ -74,6 +77,7 @@ function loadScript(src, id, callback) {
   };
   document.body.appendChild(s);
 }
+
 export default {
   name: 'Remote',
   components: { Widget },
@@ -157,6 +161,7 @@ export default {
   },
   methods: {
     ...mapActions(cardStore, ["updateCustomData"]),
+
     openRightMenu(){
       this.$refs.remote.menuVisible = true
     },
@@ -214,6 +219,7 @@ export default {
   },
   computed: {
     ...mapWritableState(taskStore, ["taskID", "step"]),
+    ...mapWritableState(communityNavStore,['currentCommunity']),
     m03031() {
       return this.customData.task && this.taskID == "M0303" && this.step == 1;
     },
@@ -227,11 +233,15 @@ export default {
       const { width, height } = this.$refs.cardSize.getBoundingClientRect();
       return { width, height };
     },
+    communityRole(){
+      return this.currentCommunity?.item.role === 'member';
+    },
     options(){
       return {
         bg:this.customData.hideFrame ? 'transparent' : '',
         shadow: this.customData.hideFrame,
-        customDel: this.openWay === 'nav' ? true : false
+        customDel: this.openWay === 'nav' ? true : false,
+        disableEdit: this.communityRole ? true : false,
       }
     },
     header(){

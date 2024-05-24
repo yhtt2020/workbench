@@ -194,6 +194,8 @@ export default {
   emits: ["delete"],
   computed: {
     ...mapWritableState(paperStore, ["settings", "myPapers"]),
+    ...mapWritableState(communityNavStore,['currentCommunity']),
+    // currentCommunity
     // filterList() {
     //   return this.ClassifyData.filter((i) => {
     //     return (
@@ -201,26 +203,31 @@ export default {
     //     );
     //   });
     // },
+
     title() {
       return this.myData.link.name || this.myData.link;
     },
     imgSrc() {
       return this.myData.img.middleSrc || this.myData.img.src;
     },
-    options() {
 
+    // 获取当前社群的角色权限
+    communityRole(){
+      return this.currentCommunity?.item.role === 'member';
+    },
+
+    options() {
       return {
         bg: this.customData.hideFrame ? "transparent" : "",
         shadow: this.customData.hideFrame,
-        resize: this.checkWriteAuth() ? true : false,
+        resize: this.communityRole ? false : true,
         customDel: this.openWay === "nav" ? true : false,
-        disableEdit:this.checkWriteAuth() ? false : true,
+        disableEdit:this.communityRole ? true : false,
       };
     },
   },
   methods: {
     ...mapActions(cardStore, ["updateCustomData"]),
-    ...mapActions(communityNavStore,['checkWriteAuth']),
 
     deleteCard() {
       this.$emit("delete");
