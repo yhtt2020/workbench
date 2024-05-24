@@ -20,7 +20,7 @@ export const runList = [
   {
     name: "note",
     cname: "便签",
-    icon: "/logo/note.svg",
+    icon: "/img/appLogo/note.png",
     ...defaultData,
   },
 ];

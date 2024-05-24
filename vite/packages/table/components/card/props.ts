@@ -67,6 +67,7 @@ export const defaultProps = {
         disabledDrag: false,
         // 是否允许添加到导航栏
         disabledNav: false,
+        // 
       };
     },
   },

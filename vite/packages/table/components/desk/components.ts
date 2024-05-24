@@ -126,8 +126,11 @@ const TTAppCard = defineAsyncComponent(
 const TTAppModal = defineAsyncComponent(
   () => import("../../apps/ttApp/src/modules/modal")
 );
+
+import AggregatedSearch from "../widgets/aggregatedSearch";
 export default {
   components: {
+    AggregatedSearch,
     TTAppCard,
     TTAppModal,
     Test,

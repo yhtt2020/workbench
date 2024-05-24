@@ -7,6 +7,7 @@
  -->
 <template>
   <!-- 右键菜单 -->
+  <!-- v-if="init" -->
   <RightMenu
     v-model:size="currentSize"
     :menus="menus"
@@ -15,7 +16,7 @@
     :disableHierarchy="options.hierarchy"
   >
     <div class="menu-box">
-      <!-- 遮罩层 离线模式遮罩 -->
+      <!-- 离线模式-->
       <div
         class="mask rounded-xl"
         v-if="envLimit.includes('offline') && currentEnv == 'offline'"
@@ -50,10 +51,17 @@
           </p>
         </div>
       </div>
-      <!-- 小组件控制器开始 -->
+
+      <!-- 自定义模式 -->
+      <div v-if="options?.custom" :class="[edit ? 'editing' : '']">
+        <slot>
+          <!--  主体内容插槽2  -->
+        </slot>
+      </div>
+      <!-- 默认模式 -->
       <div
+        v-else
         ref="container"
-        v-if="!options?.custom"
         class="flex flex-col widget rounded-xl"
         :class="[
           edit ? 'editing' : '',
@@ -189,7 +197,7 @@
             >
               <div class="header-right-icon">
                 <xt-ify-icon
-                  icon="fluent:line-horizontal-3-20-filled"
+                  icon="fluent:line-horizontal-3-20-regular"
                   size="20"
                 />
               </div>
@@ -228,13 +236,7 @@
 
         <!-- 小组件主体结束 -->
       </div>
-      <div v-else :class="[edit ? 'editing' : '']">
-        <slot>
-          <!--  主体内容插槽2  -->
-        </slot>
-      </div>
     </div>
-    <!-- 小组件控制器结束 -->
   </RightMenu>
 </template>
 <script setup>
@@ -248,6 +250,7 @@ import {
   onBeforeUnmount,
   getCurrentInstance,
   toRefs,
+  nextTick,
 } from "vue";
 import { storeToRefs } from "pinia";
 import { cardStore as useCardStore } from "../../store/card";
@@ -284,6 +287,8 @@ const widgetStore = useWidgetStore();
 const usePermission = usePermissionStore();
 const { currentEnv } = storeToRefs(usePermission);
 const { edit } = storeToRefs(widgetStore);
+
+const init = ref(false);
 // 自由布局
 // const freeLayoutStore = useFreeLayoutStore();
 
@@ -311,19 +316,22 @@ const handleTouchStart = (e) => {
   e.stopPropagation();
 };
 
-onBeforeMount(async () => {
+onBeforeMount(() => {
   // 处理默认数据
   if (props.options.defaultData) {
-    props.customData = _.merge(props.customData, props.options.defaultData);
+    props.customData = _.defaults(props.customData, props.options.defaultData);
+    // props.customData = _.merge({}, props.options.defaultData, props.customData);
   }
 });
 onMounted(() => {
+  // setTimeout(() => {
   container.value.addEventListener("keydown", handleKeyDown, {
     capture: true,
   });
   container.value.addEventListener("keydown", handleTouchStart, {
     capture: true,
   });
+  // },100);
 });
 onBeforeUnmount(() => {
   container.value.removeEventListener("keydown", handleKeyDown, {
@@ -443,6 +451,7 @@ const addObj = computed(() => {
 const menus = computed(() => {
   const platLimit = props.platLimit || " ";
   if (usePlat(platLimit)) return [addObj.value, deleteObj.value];
+  // if (xxx) return []
   let menu = [...props.menuList, addObj.value, deleteObj.value];
   return menu;
 });

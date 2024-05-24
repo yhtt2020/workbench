@@ -13,17 +13,17 @@ const router = createRouter({
   routes,
 });
 router.beforeEach(async (to, from, next) => {
-  console.log('to.name :>> ', to.name);
-  console.log("to, from :>> ", to, from);
+  // console.log('to.name :>> ', to.name);
+  // console.log("to, from :>> ", to, from);
   // if (to.name === "splash" && usePlat("web")) {
   //   next({
   //     name: "home",
   //   });
   // }
   // 用户信息判断 优先级1
-  console.time("Run Time");
+  // console.time("Run Time");
   await useUserPermit();
-  console.timeEnd("Run Time");
+  // console.timeEnd("Run Time");
 
   // 用户环境判断 优先级2
   if (

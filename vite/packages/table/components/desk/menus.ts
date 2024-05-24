@@ -1,5 +1,6 @@
 import { useCustomLayout } from "./freeLayout/useCustomLayout";
-import { headerData, folderData, mainData } from "./freeLayout/config";
+import { headerData, mainData } from "./freeLayout/config";
+import { useAddCard } from "../../hooks";
 function deskMenus() {
   let currentHide = null;
   if (this.isFreeLayout) {
@@ -11,18 +12,23 @@ function deskMenus() {
     {
       id: 0,
       newIcon: "fluent:add-16-filled",
-      name: "导入文件测试",
-      disabled: true,
+      name: "测试组件",
+      disabled: false,
+      fn: () => {
+        // AggregatedSearch
+        useAddCard({
+          name: "AggregatedSearch",
+        });
+      },
     },
     {
-      id: 0,
+      id: 0.2,
       newIcon: "fluent:add-16-filled",
       name: "定制桌面测试",
-      disabled: true,
+      disabled: false,
       fn: () => {
         useCustomLayout({
           headerList: headerData,
-          folderList: folderData,
           mainList: mainData,
           cb: (position) => {},
         });
@@ -62,7 +68,7 @@ function deskMenus() {
           newIcon: "mingcute:windows-line",
           name: "导入系统桌面图标",
           fn: this.arrange,
-          disabled: !window.$usePlat('client'),
+          disabled: !window.$usePlat("client"),
         },
       ],
     },
