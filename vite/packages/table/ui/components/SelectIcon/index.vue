@@ -72,8 +72,8 @@
           <div v-for="(item,index) in search" :key="index" @click="onSelectIcon(item.name)" class="flex items-center justify-center mt-2 ml-2 overflow-hidden pointer xt-bg-2" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
             <a-tooltip>
               <template #title>{{ item.alias }}</template>
-              <a-avatar v-if="item.name != 'goods'" :src="`${address}icon_select/${menus[selIndex]}/${item.name}.svg`" :alt="item.alias" width="32" height="32" :style="{'filter': menus[selIndex] == 'icon'?`drop-shadow(${bgColor[selBgColor]} 80px 0)`:'',transform:menus[selIndex] == 'icon'?'translateX(-80px)':''}"></a-avatar>
-              <a-avatar v-else :src="`${address}goods_select/${item.name}.svg`" :alt="item.alias" width="32" height="32"></a-avatar>
+              <a-avatar v-if="item.name != 'goods'" :src="cdnUrl(`/icon_select/${menus[selIndex]}/${item.name}.svg`)" :alt="item.alias" width="32" height="32" :style="{'filter': menus[selIndex] == 'icon'?`drop-shadow(${bgColor[selBgColor]} 80px 0)`:'',transform:menus[selIndex] == 'icon'?'translateX(-80px)':''}"></a-avatar>
+              <a-avatar v-else :src="cdnUrl(`/goods_select/${item.name}.svg`)" :alt="item.alias" width="32" height="32"></a-avatar>
             </a-tooltip>
           </div>
         </div>
@@ -108,6 +108,7 @@
   import iconList from './iconList/icon'
   import emojisList from './iconList/emojis'
   import goodsList from './iconList/goods'
+  import {cdnUrl} from '../../../consts'
 
   // 全部的数组
   const allList = {
@@ -131,9 +132,6 @@
   const isShowBgColor = ref(false)
   //进度条
   const percent = ref(0)
-  // 图片地址
-  const address = ref('https://a.apps.vip/cdn/')
-
 
   const groupFileID = ref({})
 
@@ -211,11 +209,11 @@
       const type = menus.value[selIndex.value]
       if (type == 'icon') {
         const color = props.bgColor[selBgColor.value]
-        emits('getAvatar',`${address.value}/icon_select/${type}/${name}.svg?color=${color}`)
+        emits('getAvatar',cdnUrl(`/icon_select/${type}/${name}.svg?color=${color}`))
       }else if(type == 'goods'){
-        emits('getAvatar',`${address.value}goods_select/${name}.svg`)
+        emits('getAvatar',cdnUrl(`/goods_select/${name}.svg`))
       }else{
-        emits('getAvatar',`${address.value}/icon_select/${type}/${name}.svg`)
+        emits('getAvatar',cdnUrl(`/icon_select/${type}/${name}.svg`))
       }
       closeClick()
     }
@@ -231,11 +229,11 @@
         let res
         if (type == 'icon') {
           const color = props.bgColor[selBgColor.value]
-          res = `${address.value}icon_select/${type}/${name}.svg?color=${color}`
+          res = cdnUrl(`/icon_select/${type}/${name}.svg?color=${color}`)
         }else if(type == 'goods'){
-          res = `${address.value}goods_select/${name}.svg`
+          res = cdnUrl(`/goods_select/${name}.svg`)
         }else{
-          res = `${address.value}icon_select/${type}/${name}.svg`
+          res = cdnUrl(`/icon_select/${type}/${name}.svg`)
         }
         emits('getAvatar',res)
         return res
