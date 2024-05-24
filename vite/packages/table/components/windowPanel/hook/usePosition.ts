@@ -7,7 +7,6 @@ import { storeToRefs } from 'pinia'
  * @returns 返回元素的位置
  */
 export const usePosition = (event, itemSize) => {
-export const usePosition = (event, itemSize) => {
     const useNav = useNavigationStore();
     const { navAttribute, currentNavFormat, currentNavPosition } = storeToRefs(useNav);
 
