@@ -66,7 +66,7 @@
                 </a-avatar>
               </a-col>
               <a-col :span="5">
-                <div class="app-name  font-bold text-white" style="text-align: left;"
+                <div class="font-bold text-white app-name" style="text-align: left;"
                      :style="{ color: 'var(--font-color)' }">
                   {{
                     app.name
@@ -82,7 +82,7 @@
                 <tempalate v-if="app.needInstall">
                   <div v-if="!checkInstalled(app)" @click="install(app)" class="btn">
                     <template v-if="app.downloading">
-                      <svg style="vertical-align: text-bottom;" class="ml-1 animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                      <svg style="vertical-align: text-bottom;" class="w-5 h-5 ml-1 mr-3 -ml-1 text-white animate-spin"
                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
                                 stroke-width="4"></circle>
@@ -91,9 +91,10 @@
                         </path>
                       </svg>
                       <span>{{ app.percent }} %</span>
+                      
                     </template>
                     <template v-else-if="app.installing">
-                      <svg style="vertical-align: text-bottom;" class="ml-1 animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                      <svg style="vertical-align: text-bottom;" class="w-5 h-5 ml-1 mr-3 -ml-1 text-white animate-spin"
                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
                                 stroke-width="4"></circle>
@@ -578,6 +579,7 @@ export default {
     },
     openDir () {
       require('electron').shell.openPath(require('path').join(window.globalArgs['user-data-dir'], 'download'))
+      console.log(require('path').join(window.globalArgs['user-data-dir'], 'download'))
     },
     install (app) {
       if (app.downloading) {
