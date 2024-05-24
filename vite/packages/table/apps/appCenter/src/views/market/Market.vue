@@ -5,7 +5,7 @@
             icon="fluent:building-shop-16-regular"
         >
             <template #right>
-                <xt-button w="98" h="32" radius="8" icon="">我要上架</xt-button>
+                <xt-button w="98" h="32" radius="8" icon="" @click="putaway">我要上架</xt-button>
                 <xt-button w="127" h="32" radius="8" type="theme">全部应用（{{ recommendList.length }}）</xt-button>
             </template>
         </Header>
@@ -20,6 +20,7 @@
                     :key="index" 
                     @download="download" 
                     @open="open"
+                    @goDetail="putaway"
                 />
             </div>
         </xt-scrollbar>
@@ -39,6 +40,12 @@ import { updateValue } from './hooks/useUpdateValue'
 import { useMarketStore } from './store/store';
 import { useAppCenterStore } from '../../store';
 import { message } from 'ant-design-vue';
+
+import { appData } from '../developer/hooks/data';
+
+const putaway = () => {
+  ipc.send("executeApp", { app: JSON.parse(JSON.stringify(appData)) });
+};
 
 const appModel = window.$models.appModel
 

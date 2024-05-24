@@ -2,7 +2,7 @@
     <div class="w-[446px] h-[102px] rounded-xl p-3 xt-bg-2 flex justify-between items-center gap-1">
        <div class="flex items-center gap-4 ">
             <img :src="item.icon" alt="" class="w-[70px] h-[70px] rounded-xl">
-            <div class="flex flex-col gap-1">
+            <div class="flex flex-col gap-1 pointer" @click="goDetail(item)">
                 <div class="text-base xt-text line-clamp-1">
                     {{ item.name }}
                 </div>
@@ -79,7 +79,7 @@ interface PropsType {
     }
 }
 
-const emit = defineEmits(['download','open'])
+const emit = defineEmits(['download','open', 'goDetail'])
 
 // 下载
 const download = (app) => {
@@ -102,6 +102,11 @@ const executeLocalApp = (app) => {
 const tagTitle = computed(() => {
     return '安装'
 })
+
+// 产品详情
+const goDetail = (item) => {
+    emit('goDetail',item)
+}
 
 // 右键菜单
 const menu = computed(() => {

@@ -59,7 +59,7 @@
                    <ItemList :list="arr" :isStartMenu="false" @close="close"></ItemList>  
                 </xt-scrollbar>
             </div>
-            <div v-else class="flex items-center justify-center w-full h-full">
+            <div v-if="!recentUsed" class="flex items-center justify-center w-full h-full">
                 <Tips v-model:modelValue="showTip" @jumpMy="goApps('MyApps')" ></Tips>
             </div>
         </div>
