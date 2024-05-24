@@ -1,15 +1,12 @@
 <template>
   <div class="w-full h-full flex">
-    收益中
-
+    <Center></Center>
   </div>
 
 </template>
 
-<script>
-export default {
-  name: 'center'
-}
+<script setup lang="ts">
+import Center from '../goods/Center.vue'
 </script>
 
 <style scoped>
