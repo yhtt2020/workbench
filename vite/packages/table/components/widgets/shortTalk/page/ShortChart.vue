@@ -44,14 +44,13 @@
                     <p class="mt-3 ml-1">时间周期</p>
                     <RadioTab :navList="timeType" v-model:selectType="defaultTimeType" ></RadioTab>
                     <div  v-show="this.defaultDataType.name == 'visit'">
-                    <!-- <div > -->
                         <p class="mt-3 ml-1">平台类型</p>
                         <RadioTab  :navList="platType"  class="nav-type"
                         v-model:selectType="defaultPlatType"  ></RadioTab>
                     </div>
                     <div>
-                        <p class="mt-3 ml-1">数据更新频率</p>
-                        <a-select
+                        <!-- <p class="mt-3 ml-1">数据更新频率</p> -->
+                        <!-- <a-select
                             ref="select"
                             v-model:value="timeVal"
                             class="w-full"
@@ -62,7 +61,7 @@
                             dropdownClassName="drop-class"
                             :options="timeOption"
                             @change="handleChangeTime"
-                        ></a-select>
+                        ></a-select> -->
 
                     </div>
                 </div>
