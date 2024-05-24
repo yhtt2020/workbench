@@ -10,7 +10,7 @@
     :menuList="menuList"
     ref="homelSlotRef"
     :desk="desk"
-    style="background: #191919; !important"
+    style="background: #191919 !important"
     :delete="deleteCard"
   >
     <teleport to="body">
@@ -262,6 +262,7 @@ export default {
     ...mapWritableState(noteStore, ["selNoteText", "initFlag"]),
     ...mapWritableState(communityNavStore,['currentCommunity']),
 
+    // 社群桌面的角色权限,默认条件是成员。
     communityRole(){
       return this.currentCommunity?.item?.role === 'member';
     },

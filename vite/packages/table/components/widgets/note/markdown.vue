@@ -90,13 +90,13 @@ export default {
     });
 
     // 社群成员桌面场景下禁用编辑
-    if (this.disableEdit) {
-      this.$nextTick(() => {
-        console.log('this',this);
-        console.log('this.contentEditor',this.contentEditor)
-        // this.$refs.vditor.disabled();
-      });
-    }
+    // const contentEditorEl = Object.getPrototypeOf(this.contentEditor);
+    // console.log("测试", contentEditorEl);
+    // console.log('获取this.disableEdit',this.disableEdit);
+
+    // if (this.disableEdit) {
+    //   // contentEditorEl.disabled(true);
+    // }
   },
   methods: {
     ...mapActions(cardStore, ["updateCustomData"]),
