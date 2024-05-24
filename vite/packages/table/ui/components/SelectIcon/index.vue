@@ -1,7 +1,7 @@
 <template>
     <Teleport to="body">
       <div
-       v-show="modelValue"
+       v-if="modelValue"
        style='width:400px;height:400px;background:var(--modal-bg);
        border: 1px solid var(--secondary-bg);box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
        border-radius: 10px;'
@@ -67,24 +67,19 @@
         </div>
 
 
-        <!-- 渲染的列表 -->
-        <div v-show="key == menus[selIndex]" v-for="(value,key) in handleList"  :key="key" class="flex flex-wrap pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar" style="height: 290px;">
-          <div v-show="!searchValue" v-for="(item,index) in value" :key="index" @click="onSelectIcon(item.name)" class="flex items-center justify-center mt-2 ml-2 overflow-hidden pointer xt-bg-2" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
+        <!-- 渲染的列表  需要将show 换成 if-->
+        <div v-if="selIndex != menus.length" class="flex flex-wrap pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar" style="height: 290px;">
+          <div v-for="(item,index) in search" :key="index" @click="onSelectIcon(item.name)" class="flex items-center justify-center mt-2 ml-2 overflow-hidden pointer xt-bg-2" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
             <a-tooltip>
               <template #title>{{ item.alias }}</template>
-              <a-avatar :src="`https://a.apps.vip/icons/iconSelect/${key}/${item.name}.svg`" :alt="item.alias" width="32" height="32" :style="{'filter': menus[selIndex] == 'icon'?`drop-shadow(${bgColor[selBgColor]} 80px 0)`:'',transform:menus[selIndex] == 'icon'?'translateX(-80px)':''}"></a-avatar>
+              <a-avatar v-if="item.name != 'goods'" :src="`${address}icon_select/${menus[selIndex]}/${item.name}.svg`" :alt="item.alias" width="32" height="32" :style="{'filter': menus[selIndex] == 'icon'?`drop-shadow(${bgColor[selBgColor]} 80px 0)`:'',transform:menus[selIndex] == 'icon'?'translateX(-80px)':''}"></a-avatar>
+              <a-avatar v-else :src="`${address}goods_select/${item.name}.svg`" :alt="item.alias" width="32" height="32"></a-avatar>
             </a-tooltip>
           </div>
-          <div v-show="!!searchValue" v-for="(item,index) in search" :key="index" @click="onSelectIcon(item.name)" class="flex items-center justify-center mt-2 ml-2 overflow-hidden pointer xt-bg-2" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
-            <a-tooltip>
-              <template #title>{{ item.alias }}</template>
-              <a-avatar :src="`https://a.apps.vip/icons/iconSelect/${key}/${item.name}.svg`" :alt="item.alias" width="32" height="32" :style="{'filter': menus[selIndex] == 'icon'?`drop-shadow(${bgColor[selBgColor]} 80px 0)`:'','transform':menus[selIndex] == 'icon'?'translateX(-80px)':''}"></a-avatar>
-            </a-tooltip>
-          </div>
-
         </div>
+
         <!-- 自定义上传 -->
-        <div v-if="selIndex == menus.length" class="flex flex-col flex-wrap items-center px-6" style="height:330px;">
+        <div v-else class="flex flex-col flex-wrap items-center px-6" style="height:330px;">
           <input type="file" style="display:none;" ref="groupFileID"  @change="getFileInfo($event)" />
           <div v-if="!avatarUrl" class="flex items-center justify-center pointer" @click="updateGroupAvatar()" style="margin-top: 98px;height: 64px;width: 64px;background: var(--secondary-bg);border: 1px dashed rgba(255,255,255,0.1);border-radius: 6px;">
             <Icon icon="fluent:add-16-filled" width="20" height="20"/>
@@ -113,12 +108,7 @@
   import iconList from './iconList/icon'
   import emojisList from './iconList/emojis'
   import goodsList from './iconList/goods'
-  import { ColorPicker } from "vue3-colorpicker";
-  import "vue3-colorpicker/style.css";
 
-//   const icon = iconList.list
-//   const emoji = emojisList.list
-//   const goods = goodsList.list
   // 全部的数组
   const allList = {
     icon:iconList.list,
@@ -141,6 +131,9 @@
   const isShowBgColor = ref(false)
   //进度条
   const percent = ref(0)
+  // 图片地址
+  const address = ref('https://a.apps.vip/cdn/')
+
 
   const groupFileID = ref({})
 
@@ -197,8 +190,10 @@
             tmpList.push(i)
           }
         })
+        return tmpList
+      }else{
+        return list
       }
-      return tmpList
     });
 
     // 选择图标类型
@@ -216,9 +211,11 @@
       const type = menus.value[selIndex.value]
       if (type == 'icon') {
         const color = props.bgColor[selBgColor.value]
-        emits('getAvatar',`https://a.apps.vip/icons/iconSelect/${type}/${name}.svg?color=${color}`)
+        emits('getAvatar',`${address.value}/icon_select/${type}/${name}.svg?color=${color}`)
+      }else if(type == 'goods'){
+        emits('getAvatar',`${address.value}goods_select/${name}.svg`)
       }else{
-        emits('getAvatar',`https://a.apps.vip/icons/iconSelect/${type}/${name}.svg`)
+        emits('getAvatar',`${address.value}/icon_select/${type}/${name}.svg`)
       }
       closeClick()
     }
@@ -231,32 +228,25 @@
         let randomNum = Math.round(Math.random()*randomLength);
         const name = handleList.value[type][randomNum].name
         selectIcon.value = randomNum;
+        let res
         if (type == 'icon') {
           const color = props.bgColor[selBgColor.value]
-          let res = `https://a.apps.vip/icons/iconSelect/${type}/${name}.svg?color=${color}`
-          emits('getAvatar',res)
-          return res
+          res = `${address.value}icon_select/${type}/${name}.svg?color=${color}`
+        }else if(type == 'goods'){
+          res = `${address.value}goods_select/${name}.svg`
         }else{
-          let res = `https://a.apps.vip/icons/iconSelect/${type}/${name}.svg`
-          emits('getAvatar',res)
-          return res
+          res = `${address.value}icon_select/${type}/${name}.svg`
         }
+        emits('getAvatar',res)
+        return res
     }
 
-defineExpose({
-  onRandom
-})
+    defineExpose({
+      onRandom
+    })
     // 改变颜色
     const changeBgColor = (n) => {
         selBgColor.value = n
-        // 如果此时已经选择了图标需要同步修改颜色
-        // if(menus.value[selIndex.value] == 'icon' && selIndex.value >= 0){
-        //     const type = menus.value[selIndex.value]
-        //     const name = handleList.value[name][selectIcon.value].name
-        //     const color = props.bgColor[selBgColor.value]
-        //     emits('getAvatar','https://a.apps.vip/icons/iconSelect/icon/' + name + '.svg?color=' + color)
-        //     console.log('https://a.apps.vip/icons/iconSelect/icon/' + name + '.svg?color=' + color);
-        // }
     }
 
       // 上传文件
@@ -394,6 +384,7 @@ defineExpose({
 
     .sel-active{
       background: rgba(80,139,254,0.20);
+      background: rgba(51,127,255,0.30) !important;
     }
 
     .circle{
