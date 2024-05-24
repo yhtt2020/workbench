@@ -7,21 +7,29 @@
             border: 1px solid var(--divider);
             background: rgba(26,26,26,0.65);
             backdrop-filter: blur(50px);">
-        <div class="flex flex-col justify-between h-full p-4">
+        <xt-input 
+            v-if="!isMore"
+            style="
+                height: 52px !important;
+                background-color: var(--primary-bg) !important;
+                border-radius: 16px 16px 0px 0px;
+                border-bottom: 1px solid var(--divider);
+                margin-bottom: 16px;"
+            v-model:modelValue="inputValue" 
+            placeholder="搜索" 
+            @enter="search">
+            <template #suffix>
+                <xt-new-icon icon="fluent:search-16-regular" size="20"></xt-new-icon>
+            </template>
+        </xt-input>
+        <div class="flex flex-col justify-between h-full pb-4 pl-4 pr-4">
             <div class="flex flex-col gap-3" v-if="!isMore">
-                <xt-input 
-                    style="height: 52px !important;background-color: var(--primary-bg) !important;"
-                    v-model:modelValue="inputValue" 
-                    placeholder="搜索" 
-                    @enter="search">
-                    <template #suffix>
-                        <xt-new-icon icon="fluent:search-16-regular" size="20"></xt-new-icon>
-                    </template>
-                </xt-input> 
-                <ItemList :list="startMenu" v-if="!isSearch"></ItemList>  
-                <SearchList :list="searchList" v-else />
+                <!-- 开始菜单列表 -->
+                <ItemList :list="startMenu" v-if="!isSearch" @close="close"></ItemList>  
+                <!-- 搜索后列表 -->
+                <SearchList :list="searchList" v-else @close="close"/>
             </div>
-            <div v-if="recentUsed && !isSearch">
+            <div v-if="recentUsed && !isSearch" class="overflow-hidden">
                 <div class="flex items-center justify-between mt-3 mb-3">
                     <div class="text-sm xt-text">最近使用</div>
                     <xt-button 
@@ -36,32 +44,15 @@
                         </div>
                     </xt-button>
                 </div>
+                <!-- 最近使用前五个 -->
                 <ItemList :list="lastList" :isStartMenu="false" v-if="!isMore"></ItemList> 
+                <!-- 全部最近使用 -->
                 <ItemList :list="arr" :isStartMenu="false" v-else></ItemList> 
             </div>
+            <Tips v-model:modelValue="showTip" @jumpMy="goApps('MyApps')" v-if="!recentUsed"></Tips>
         </div>
-        <div class="w-full h-[56px] xt-bg rounded-b-2xl flex justify-between">
-            <div class="flex items-center justify-between gap-2 p-2 pointer" @click="goApps('MyApps')">
-                <xt-new-icon icon="fluent:grid-16-filled" size="20"></xt-new-icon>
-                全部应用
-            </div>
-            <div class="flex items-center justify-between gap-1 p-2">
-                <xt-button 
-                    :w="40" 
-                    :h="40" 
-                    @click="goApps('Market')" 
-                    icon="fluent:building-shop-16-regular" 
-                    style="background-color: var(--primary-bg);">
-                </xt-button>
-                <xt-button 
-                    :w="40" 
-                    :h="40" 
-                    icon="fluent:settings-16-regular" 
-                    @click="goApps('Setting')"
-                    style="background-color: var(--primary-bg);">
-                </xt-button>
-            </div>
-        </div>
+        <!-- 底部选项 -->
+        <BottomBar @goApps="goApps"/>
     </div>
 </template>
 
@@ -81,10 +72,12 @@ import { storeToRefs } from 'pinia';
 import { useAppCenterStore } from '../../../../apps/appCenter/src/store';
 
 const appCenterStore = useAppCenterStore()
-const { current, visible, recentUsed, myApps } = storeToRefs(appCenterStore)
+const { current, visible, recentUsed, myApps, showTip } = storeToRefs(appCenterStore)
 
 const ItemList = defineAsyncComponent(() => import('./components/ItemList.vue'))
 const SearchList = defineAsyncComponent(() => import('./components/SearchList.vue'))
+const Tips = defineAsyncComponent(() => import('./Tips.vue'))
+const BottomBar = defineAsyncComponent(() => import('./components/BottomBar.vue'))
 
 const { proxy } = getCurrentInstance()
 
@@ -183,6 +176,11 @@ const goApps = (name:string) => {
 const getMore = () => {
     console.log('更多')
     isMore.value = ! isMore.value
+}
+
+// 关闭
+const close = () => {
+    emit('close')
 }
 
 // 点击外部关闭

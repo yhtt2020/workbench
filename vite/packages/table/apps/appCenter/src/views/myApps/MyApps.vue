@@ -42,13 +42,16 @@ import { ref, computed, defineAsyncComponent, onMounted, watch } from 'vue'
 import { storeToRefs } from 'pinia';
 import { message } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
-
+import _ from 'lodash-es'
 import { useAppCenterStore } from "../../store";
 
 import { dropList, appsList } from './data'
-import { useTransform } from './hooks/useTransform'
+import navigationData from '../../../../../js/data/tableData';
+import { useTransform, defaultStartMenu } from './hooks/useTransform'
 import { useMenus } from '../../../hooks/useMenus';
 import { startApp } from '../../../../../ui/hooks/useStartApp';
+
+import { useReplaceData } from './hooks/useReplaceData'
 
 // 导入组件
 const Header = defineAsyncComponent(() => import('../../component/Header.vue'))
@@ -161,6 +164,8 @@ const getInfo = (item) => {
             return '本地应用'
         case 'coolApp':
             return '酷应用'
+        case 'systemApp':
+            return '系统应用'
         case 'lightApp':
             return '轻应用'
         case 'ttapp':
@@ -173,13 +178,17 @@ const getInfo = (item) => {
 // 初始化全部数据
 onMounted(() => {
     if(myApps.value.length === 0) {
-        myApps.value.push(...appsList)
-        
+        const list = useReplaceData(navigationData.systemAppList)
+        myApps.value.push(...list)
+        myApps.value.forEach((item) => {
+            if(defaultStartMenu.includes(item.value)){
+                item.isStart = true
+            }
+        })
     } 
     myApps.value = myApps.value.map((item) => {
         return useTransform(item)
     })
-    // console.log(myApps.value,'appList.value')
     list.value = myApps.value
 })
 

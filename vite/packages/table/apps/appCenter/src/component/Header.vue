@@ -1,5 +1,5 @@
 <template>
-    <div class="flex items-center justify-between pl-4">
+    <div class="flex items-center justify-between flex-1 pl-4">
         <div class="flex items-center">
             <xt-ify-icon :icon="props.icon" class="mr-2" />
             {{ props.title }}

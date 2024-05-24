@@ -38,7 +38,6 @@ if (!usePlat('web') ) {
 const Item = defineAsyncComponent(() => import('./components/Item.vue'))
 const Header = defineAsyncComponent(() => import('../../component/Header.vue'))
 
-const dir = ref(require('path').join(window.globalArgs['user-data-dir'], 'download'))
 
 // 打开本地应用
 const executeLocalApp = (app) => {

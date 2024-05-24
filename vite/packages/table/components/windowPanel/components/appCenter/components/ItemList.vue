@@ -41,6 +41,8 @@ const Item = defineAsyncComponent(() => import('./Item.vue'))
 
 const router = useRouter()
 
+const emit = defineEmits(['close'])
+
 // 当前选中的应用
 const currentItem = ref('')
 
@@ -74,6 +76,7 @@ const open = (item) => {
     item.lastUseTime = Date.now()
     startApp(item.type,item.value,router)
     console.log(item,'open item')
+    emit('close')
 }
 
 // 获取当前应用
