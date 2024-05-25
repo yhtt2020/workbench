@@ -120,7 +120,7 @@ const arr = ref([
 // 右键菜单
 const menus = computed(() => {
     const list = useMenus(3,currentItem.value)
-    const menu = [list, ...arr.value]
+    const menu = [...list, ...arr.value]
     return menu.sort((a, b) => a.id - b.id)
 })
 

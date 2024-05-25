@@ -115,7 +115,7 @@ const goDetail = (item) => {
 // 右键菜单
 const menu = computed(() => {
     const list = useMenus(1,item.value, cb)
-    return [list]
+    return list
 })
 
 const cb = async(item) => {

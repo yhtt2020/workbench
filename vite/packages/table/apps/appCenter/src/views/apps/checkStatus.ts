@@ -13,4 +13,5 @@ export const checkStatus = () => {
     });
     return false;
   }
+  return true;
 };

@@ -139,7 +139,7 @@ const tagTitle = computed(() => {
 
 const menu = computed(() => {
     const list = useMenus(1,item.value)
-    return [list]
+    return list
 })
 
 </script>
