@@ -86,17 +86,17 @@ export default {
           this.contentEditor.insertValue(urls);
         },
       },
-      //   disabled(){},
+      // readonly:this.disableEdit,
     });
 
     // 社群成员桌面场景下禁用编辑
-    // const contentEditorEl = Object.getPrototypeOf(this.contentEditor);
-    // console.log("测试", contentEditorEl);
-    // console.log('获取this.disableEdit',this.disableEdit);
+    setTimeout(()=>{
+      if (this.disableEdit) {
+        this.contentEditor?.disabled();
+      }
+    },1000);
 
-    // if (this.disableEdit) {
-    //   // contentEditorEl.disabled(true);
-    // }
+    
   },
   methods: {
     ...mapActions(cardStore, ["updateCustomData"]),
@@ -107,6 +107,7 @@ export default {
     getMarkdown() {
       return this.contentEditor.getValue();
     },
+    disableMarkdown() {},
   },
 };
 </script>
