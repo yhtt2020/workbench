@@ -49,8 +49,8 @@
                         v-model:selectType="defaultPlatType"  ></RadioTab>
                     </div>
                     <div>
-                        <!-- <p class="mt-3 ml-1">数据更新频率</p> -->
-                        <!-- <a-select
+                        <p class="mt-3 ml-1">数据更新频率</p>
+                        <a-select
                             ref="select"
                             v-model:value="timeVal"
                             class="w-full"
@@ -61,7 +61,7 @@
                             dropdownClassName="drop-class"
                             :options="timeOption"
                             @change="handleChangeTime"
-                        ></a-select> -->
+                            ></a-select>
 
                     </div>
                 </div>
@@ -118,11 +118,11 @@ export default {
     emit:['delete'],
     computed: {
         ...mapWritableState(shortTalkStore, ['access','interact','access_token','baseUrl','setVisible']),
-        timeOption(){
-            return {
-                customDel:this.openWay === 'nav' ? true : false
-            }
-        }
+        // timeOption(){
+        //     return {
+        //         customDel:this.openWay === 'nav' ? true : false
+        //     }
+        // }
     },
     data() {
         return {
