@@ -13,155 +13,229 @@
     :env="env"
     @delete="deleteCard"
   >
+    <div style="height: 100%">
+      <div
+        @click.stop
+        style="cursor: auto; height: calc(100% - 10px); position: relative"
+        class="mt-2"
+      >
+        <Tasklist
+          class="content-box"
+          :data="notFinish"
+          :disableEdit="options?.disableEdit"
+        ></Tasklist>
 
-    <div style="height:100%;">
-      <div @click.stop style="cursor: auto;height:calc( 100% - 10px);position: relative" class="mt-2 ">
-        <Tasklist class="content-box " :data="notFinish"></Tasklist>
-
-        <div style="position:absolute;display: flex;right:0;align-content: end;bottom:0;z-index: 99">
-          <div v-if="addVisible" style="display: flex;margin-bottom:-15px;width: 250px;">
-            <xt-button class="mr-2" style="margin-top:9px" @click="toggleInput" :w="42" :h="47" type="default">
-              <left-outlined/>
+        <div
+          style="
+            position: absolute;
+            display: flex;
+            right: 0;
+            align-content: end;
+            bottom: 0;
+            z-index: 99;
+          "
+          v-if="isEdit"
+        >
+          <div
+            v-if="addVisible"
+            style="display: flex; margin-bottom: -15px; width: 250px"
+          >
+            <xt-button
+              class="mr-2"
+              style="margin-top: 9px"
+              @click="toggleInput"
+              :w="42"
+              :h="47"
+              type="default"
+            >
+              <left-outlined />
             </xt-button>
-            <div style="flex:1;">
-              <TaskInput  @added="added" :addToList="selectTodo" ref="input"></TaskInput>
+            <div style="flex: 1">
+              <TaskInput
+                @added="added"
+                :addToList="selectTodo"
+                ref="input"
+              ></TaskInput>
             </div>
           </div>
           <div>
-
-            <xt-button v-if="!addVisible" @click="toggleInput" :w="40" :h="40" type="theme">
-              <plus-outlined/>
+            <xt-button
+              v-if="!addVisible"
+              @click="toggleInput"
+              :w="40"
+              :h="40"
+              type="theme"
+            >
+              <plus-outlined />
             </xt-button>
           </div>
-
         </div>
-
-
       </div>
-
     </div>
   </xt-container>
-  <a-drawer v-model:visible="openSettings" title="设置" placement="right" width="500">
-    <div class="flex flex-col" style="color:var(--primary-text)">
-      <span class="drawer-title" style="margin-top:0;">类型</span>
-      <span v-for="(item,index) in todoType" :key="index"
-            @click.stop="getTodoType(item)"
-            :class="selectTodo.nanoid === item.nanoid ? 'active-index':''"
-            class="h-12 py-3 mb-4 text-center rounded-lg pointer change xt-bg-2 show-game-time">
-         {{ item.title }}
+  <a-drawer
+    v-model:visible="openSettings"
+    title="设置"
+    placement="right"
+    width="500"
+  >
+    <div class="flex flex-col" style="color: var(--primary-text)">
+      <span class="drawer-title" style="margin-top: 0">类型</span>
+      <span
+        v-for="(item, index) in todoType"
+        :key="index"
+        @click.stop="getTodoType(item)"
+        :class="selectTodo.nanoid === item.nanoid ? 'active-index' : ''"
+        class="h-12 py-3 mb-4 text-center rounded-lg pointer change xt-bg-2 show-game-time"
+      >
+        {{ item.title }}
       </span>
       <span class="drawer-title">清单</span>
-      <span v-for="(item,index) in listType" :key="index"
-            @click.stop="getTodoType(item,index)"
-            :class="selectTodo.nanoid === item.nanoid ? 'active-index':''"
-            class="h-12 py-3 mb-4 text-center rounded-lg pointer change xt-bg-2 show-game-time">
-         {{ item.title }}
+      <span
+        v-for="(item, index) in listType"
+        :key="index"
+        @click.stop="getTodoType(item, index)"
+        :class="selectTodo.nanoid === item.nanoid ? 'active-index' : ''"
+        class="h-12 py-3 mb-4 text-center rounded-lg pointer change xt-bg-2 show-game-time"
+      >
+        {{ item.title }}
       </span>
     </div>
   </a-drawer>
 </template>
 
 <script lang="ts">
-import Widget from '../../card/Widget.vue'
-import {mapActions, mapWritableState} from 'pinia'
-import Tasklist from './TaskList.vue'
-import {PlusOutlined, LeftOutlined,RightOutlined} from "@ant-design/icons-vue";
+import Widget from "../../card/Widget.vue";
+import { mapActions, mapWritableState } from "pinia";
+import Tasklist from "./TaskList.vue";
+import {
+  PlusOutlined,
+  LeftOutlined,
+  RightOutlined,
+} from "@ant-design/icons-vue";
 import XtButton from "../../../ui/libs/Button/index.vue";
 import Modal from "../../Modal.vue";
 import TaskInput from "../../../page/app/todo/components/TaskInput.vue";
-import {Tippy} from "vue-tippy";
-import {message} from 'ant-design-vue'
-import {Icon as newIcon} from '@iconify/vue'
-import {taskStore} from "../../../page/app/todo/stores/task";
-import {listStore} from "../../../page/app/todo/stores/list";
+import { Tippy } from "vue-tippy";
+import { message } from "ant-design-vue";
+import { Icon as newIcon } from "@iconify/vue";
+import { taskStore } from "../../../page/app/todo/stores/task";
+import { listStore } from "../../../page/app/todo/stores/list";
+import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
+
 export default {
-  name: 'Todo',
+  name: "Todo",
   components: {
     Tippy,
     TaskInput,
     Modal,
-    XtButton, PlusOutlined, LeftOutlined,RightOutlined,
+    XtButton,
+    PlusOutlined,
+    LeftOutlined,
+    RightOutlined,
     Widget,
     Tasklist,
-    newIcon
+    newIcon,
   },
   props: {
     customIndex: {
       type: Number,
-      default: 0
+      default: 0,
     },
     customData: {
       type: Object,
-      default: () => {
-      }
+      default: () => {},
     },
     desk: {
-      type: Object
+      type: Object,
     },
-    openWay:{
+    openWay: {
       type: String,
-      default: 'desk'
-    }
+      default: "desk",
+    },
   },
-  emits: ['delete'],
+  emits: ["delete"],
   data() {
     return {
       addVisible: false,
-      sizeList: [{value: '2x2', name: '2x2'}, {value: '2x4', name: '2x4'}],
+      sizeList: [
+        { value: "2x2", name: "2x2" },
+        { value: "2x4", name: "2x4" },
+      ],
       openSettings: false,
-      toggleTodoList: [{
-        icon: 'shezhi1', title: '设置', fn: () => {
-          this.openSettings = true;
-          this.$refs.todoSlot.visible = false
-        }
-      }],
+      toggleTodoList: [
+        {
+          icon: "shezhi1",
+          title: "设置",
+          fn: () => {
+            this.openSettings = true;
+            this.$refs.todoSlot.visible = false;
+          },
+        },
+      ],
       todoType: [
-        {title: '个人', nanoid: 'T00111'},
-        {title: '今天', nanoid: 'T00222'},
-        {title: '七天', nanoid: 'T00333'}
+        { title: "个人", nanoid: "T00111" },
+        { title: "今天", nanoid: "T00222" },
+        { title: "七天", nanoid: "T00333" },
       ],
       // 清单
       listType: [],
       todoIndex: 0,
-      selectTodo: {title: '个人', nanoid: 'T00111'},
+      selectTodo: { title: "个人", nanoid: "T00111" },
       taskList: [],
-      env:{
+      env: {
         web: false,
         mobile: false,
         client: false,
-        single:false
+        single: false,
       },
-    }
+    };
   },
   computed: {
-    ...mapWritableState(taskStore, ["taskFilter", "displayList", 'tasks']),
+    ...mapWritableState(taskStore, ["taskFilter", "displayList", "tasks"]),
     ...mapWritableState(listStore, ["activeList", "lists"]),
+    ...mapWritableState(communityNavStore, ["currentCommunity"]),
+
     notFinish() {
-      return this.taskList.filter(item => !item.completed)
+      return this.taskList.filter((item) => !item.completed);
     },
+
+    communityRole() {
+      return this.currentCommunity?.item.role === "member";
+    },
+
     header() {
       return {
         // ifyIcon:"fluent:checkmark-square-24-regular",
-        showIcon:"/img/appLogo/todo.png",
 
-        title:this.selectTodo.title,
-        iconHover:true,
-        leftHoverIcon:"fluent:checkmark-square-24-regular",
-        rightIcon:[
-          {
-            ifyIcon:'fluent:chevron-right-16-regular',
-            fn:this.todoPage,
-            tip:"前往主应用"
-          }
+        showIcon: "/img/appLogo/todo.png",
 
-        ]
-      }
+        title: this.selectTodo.title,
+        titleHover: this.communityRole ? false : true,
+        titleHoverName: this.selectTodo.title,
+
+        // leftHoverIcon: "fluent:checkmark-square-24-regular",
+
+        rightIcon: this.communityRole
+          ? []
+          : [
+              {
+                ifyIcon: "fluent:chevron-right-16-regular",
+                fn: this.todoPage,
+                tip: "前往主应用",
+              },
+            ],
+      };
     },
     options() {
       return {
-        customDel: this.openWay === 'nav' ? true : false
-      }
-    }
+        customDel: this.openWay === "nav" ? true : false,
+        disableEdit: this.communityRole,
+      };
+    },
+    isEdit() {
+      return !this.communityRole;
+    },
   },
   async mounted() {
     //初始化数据
@@ -173,66 +247,82 @@ export default {
     //   this.todoIndex = this.customData.id
     // }
     if (this.customData?.currentTodo) {
-      this.selectTodo = this.customData.currentTodo
+      this.selectTodo = this.customData.currentTodo;
     }
     this.listType = this.lists?.map((item, index) => {
-      return Object.assign({}, {'title': item.title, 'nanoid': item.nanoid})
-    })
-    if (!this.listType.length) this.selectTodo = {title: '个人', nanoid: 'T00111'}
-    this.getTodoType(this.selectTodo)
-    if(this.customData.customSize === undefined){
-            this.customData.customSize = '2x2'
+      return Object.assign({}, { title: item.title, nanoid: item.nanoid });
+    });
+    if (!this.listType.length)
+      this.selectTodo = { title: "个人", nanoid: "T00111" };
+    this.getTodoType(this.selectTodo);
+    if (this.customData.customSize === undefined) {
+      this.customData.customSize = "2x2";
+    }
+
+
+
+    // 在社群成员桌面的场景下将尺寸切换操作进行屏蔽
+    if (this.communityRole) {
+      this.sizeList = [];
+    } else {
+      this.sizeList = [
+        { value: "2x2", name: "2x2" },
+        { value: "2x4", name: "2x4" },
+      ];
     }
   },
   methods: {
+
     deleteCard() {
-      this.$emit('delete')
+      this.$emit("delete");
     },
-    added(){
-      this.getTodoType(this.selectTodo)
-      message.success('添加任务成功。')
+    added() {
+      this.getTodoType(this.selectTodo);
+      message.success("添加任务成功。");
     },
     showDrawer() {
-      this.openSettings = true
-      this.$refs.todoSlot.visible = false
+      this.openSettings = true;
+      this.$refs.todoSlot.visible = false;
     },
     toggleInput() {
-      this.addVisible = !this.addVisible
+      this.addVisible = !this.addVisible;
       setTimeout(() => {
-        this.$refs.input.focus()
-      }, 200)
+        this.$refs.input.focus();
+      }, 200);
     },
     getTodoType(item, index) {
-      this.customData.currentTodo = item
-      this.selectTodo = item
+      this.customData.currentTodo = item;
+      this.selectTodo = item;
       // this.customData.id = index
       // this.todoIndex = this.customData.id
-      this.openSettings = false
+      this.openSettings = false;
       switch (item.nanoid) {
-        case 'T00111':
-          this.taskList = this.tasks
+        case "T00111":
+          this.taskList = this.tasks;
           break;
-        case 'T00222':
-          this.taskList = []
+        case "T00222":
+          this.taskList = [];
           break;
-        case 'T00333':
-          this.taskList = []
+        case "T00333":
+          this.taskList = [];
           break;
         default:
-          this.taskList = this.tasks.filter(t => t.listNanoid[0] === item.nanoid)
+          this.taskList = this.tasks.filter(
+            (t) => t.listNanoid[0] === item.nanoid
+          );
           break;
       }
     },
     todoPage() {
-      this.$router.push({name: 'todo'})
-    }
+      this.$router.push({ name: "todo" });
+    },
   },
-  watch:{
-    customSize(newVal,oldVal){
-      this.customData.customSize = newVal
-    }
-  }
-}
+  watch: {
+    customSize(newVal, oldVal) {
+      this.customData.customSize = newVal;
+    },
+  },
+};
 </script>
 
 <style scoped lang="scss">
@@ -247,7 +337,6 @@ export default {
 }
 
 .drawer-title {
-
   font-size: 16px;
   color: var(--primary-text);
   letter-spacing: 0;
@@ -266,6 +355,5 @@ export default {
   top: 12px;
   color: var(--primary-text);
   display: flex;
-
 }
 </style>

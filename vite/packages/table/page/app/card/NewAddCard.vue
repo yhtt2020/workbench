@@ -93,6 +93,7 @@
             :cardList="baseNavList[navIndex].children"
             :search="orderType"
             :desk="desk"
+            :communityRole="communityRole"
           >
           </NewCardPreViews>
           <template v-else>
@@ -184,6 +185,9 @@ export default {
     deskList: {
       type: Array,
     },
+    communityRole:{
+      type:Boolean,
+    }
   },
   data() {
     return {

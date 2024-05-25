@@ -8,7 +8,8 @@
     ref="customAssembly"
     :custom-data="customData"
     :desk="desk"
-    @delete="deleteCard">
+    @delete="deleteCard"
+  >
     <div
       v-if="Object.keys(myData.img).length > 0"
       class="absolute inset-0"
@@ -18,7 +19,9 @@
         left: -14px;
         right: -14px;
         bottom: -14px;
-        top: -45px;">
+        top: -45px;
+      "
+    >
       <div
         class="w-full h-full pointer"
         @click="openApp"
@@ -62,7 +65,7 @@
       <div
         class="absolute bottom-0 flex items-center w-full h-12 pl-3 game-item-title-bg"
         v-if="showName"
-        style="border-radius: 0 0 8px 8px;color: var(--primary-text);"
+        style="border-radius: 0 0 8px 8px; color: var(--primary-text)"
       >
         {{ myData.title }}
       </div>
@@ -70,11 +73,7 @@
     <div v-else class="flex flex-col items-center justify-center h-full">
       <!-- <a-empty description="" /> -->
 
-      <xt-button
-        type="theme"
-        @click="importFile">
-        选择图片
-      </xt-button>
+      <xt-button type="theme" @click="importFile"> 选择图片 </xt-button>
     </div>
   </xt-container>
   <!-- 新版设置 -->
@@ -92,7 +91,7 @@
     @updateInput="updateInput"
     @updateLink="updateLink"
     @localFile="localFile"
-    />
+  />
 </template>
 
 
@@ -109,15 +108,16 @@ import { paperStore } from "../../../store/paper";
 import Template from "../../../../user/pages/Template.vue";
 import { cardStore } from "../../../store/card";
 import { message } from "ant-design-vue";
-import { startApp } from '../../../ui/hooks/useStartApp'
+import { startApp } from "../../../ui/hooks/useStartApp";
+import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
 
-import {usePlat} from '../../../ui/hooks/usePlat'
-import CustomModal from './components/CustomModal.vue'
-let appModel
-if (usePlat('client')) {
-  appModel = window.$models.appModel
-
+import { usePlat } from "../../../ui/hooks/usePlat";
+import CustomModal from "./components/CustomModal.vue";
+let appModel;
+if (usePlat("client")) {
+  appModel = window.$models.appModel;
 }
+
 export default {
   name: "CustomAssembly",
   components: {
@@ -127,7 +127,7 @@ export default {
     Classification,
     listItem,
     ModalList,
-    CustomModal
+    CustomModal,
   },
   props: {
     customIndex: {
@@ -138,13 +138,13 @@ export default {
       type: Object,
       default: () => {},
     },
-    desk:{
-      type:Object
+    desk: {
+      type: Object,
     },
-    openWay:{
-      type:String,
-      default:'desk'
-    }
+    openWay: {
+      type: String,
+      default: "desk",
+    },
   },
   data() {
     return {
@@ -186,14 +186,16 @@ export default {
           },
         },
       ],
-      header:{
+      header: {
         // disabled:true
-      }
+      },
     };
   },
   emits: ["delete"],
   computed: {
     ...mapWritableState(paperStore, ["settings", "myPapers"]),
+    ...mapWritableState(communityNavStore,['currentCommunity']),
+    // currentCommunity
     // filterList() {
     //   return this.ClassifyData.filter((i) => {
     //     return (
@@ -201,23 +203,32 @@ export default {
     //     );
     //   });
     // },
+
     title() {
       return this.myData.link.name || this.myData.link;
     },
-    imgSrc(){
-      return this.myData.img.middleSrc || this.myData.img.src
+    imgSrc() {
+      return this.myData.img.middleSrc || this.myData.img.src;
     },
-    options(){
+
+    // 获取当前社群的角色权限
+    communityRole(){
+      return this.currentCommunity?.item.role === 'member';
+    },
+
+    options() {
       return {
-        bg:this.customData.hideFrame ? 'transparent' : '',
+        bg: this.customData.hideFrame ? "transparent" : "",
         shadow: this.customData.hideFrame,
-        resize: true,
-        customDel: this.openWay === 'nav' ? true : false
-      }
+        resize: this.communityRole ? false : true,
+        customDel: this.openWay === "nav" ? true : false,
+        disableEdit:this.communityRole ? true : false,
+      };
     },
   },
   methods: {
     ...mapActions(cardStore, ["updateCustomData"]),
+
     deleteCard() {
       this.$emit("delete");
     },
@@ -242,7 +253,7 @@ export default {
         this.myData.img = {};
         if (imgReg.test(openPath[0])) {
           this.myData.img.src = openPath[0];
-          this.saveData()
+          this.saveData();
         } else if (videoReg.test(openPath[0])) {
           this.myData.img.srcProtocol = openPath[0];
           this.$nextTick(() => {
@@ -255,37 +266,37 @@ export default {
 
     sendImg(img) {
       this.myData.img = img;
-      this.saveData()
+      this.saveData();
     },
     // 替换图片
     updateImg(img) {
       this.myData.img = img;
-      this.saveData()
+      this.saveData();
     },
     // 无边框
     updateBorder(val) {
-      this.customData.hideFrame = val
+      this.customData.hideFrame = val;
     },
     // 底部名称
     updateName(val) {
-      this.showName = val
-      this.saveData()
+      this.showName = val;
+      this.saveData();
     },
     // 名称
     updateInput(val) {
-      this.myData.title = val
-      this.saveData()
+      this.myData.title = val;
+      this.saveData();
     },
     // 链接
     updateLink(val) {
-      this.myData.link = val
-      this.saveData()
+      this.myData.link = val;
+      this.saveData();
       // console.log('updateLink',this.myData.link);
     },
     // 本地文件路径
-    localFile(val){
-      this.myData.link = val
-      this.saveData()
+    localFile(val) {
+      this.myData.link = val;
+      this.saveData();
       // console.log('localFile',val);
     },
     openApp() {
@@ -330,8 +341,8 @@ export default {
             });
             break;
           default:
-            startApp('localApp',app.path)
-            //require("electron").shell.openPath(this.myData.link.path);
+            startApp("localApp", app.path);
+          //require("electron").shell.openPath(this.myData.link.path);
         }
       } else if (this.myData.link) {
         this.myData.link.path
@@ -347,12 +358,16 @@ export default {
       //   message.warning("未添加小组件封面");
       //   return;
       // }
-      this.updateCustomData(this.customIndex, {
-        showName: this.showName,
-        mySize: this.mySize,
-        myData: this.myData,
-        customSize: this.mySize.title
-      },this.desk);
+      this.updateCustomData(
+        this.customIndex,
+        {
+          showName: this.showName,
+          mySize: this.mySize,
+          myData: this.myData,
+          customSize: this.mySize.title,
+        },
+        this.desk
+      );
       // message.success("保存成功");
       // this.panelVisible = false;
     },
@@ -365,8 +380,8 @@ export default {
     if (showName) this.showName = showName;
     if (mySize) this.mySize = { ...this.mySize, ...mySize };
     if (myData) this.myData = { ...this.myData, ...myData };
-    if(this.customData.customSize == undefined){
-      this.customData.customSize = '2x2'
+    if (this.customData.customSize == undefined) {
+      this.customData.customSize = "2x2";
     }
   },
   // watch: {

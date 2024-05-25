@@ -137,35 +137,28 @@ const getSearchResult = () => {
 
 // 选择社群
 const selectCommunity = async (item, index) => {
-  const role = item?.role;
-  // 先检测当前所在社群的角色权限是管理员还是成员,
-  if (role === "owner") {
-    // 管理员,检测当前社群有没有创建桌面。
-    const communityDesks = getCommunityDeskList(item.communityInfo);
-    if (communityDesks.length > 0){
-      switchCommunity(item,index);
+  // 在没有进入社群桌面的切换下,可以随意切换社群
+  if (settings.value.isCommunity) {
+    comNav.setCurrentCommunity(item, index);
+  } else {
+    const role = item?.role;
+    // 先检测当前所在社群的角色权限是管理员还是成员,
+    if (role === "owner") {
+      // 管理员,检测当前社群有没有创建桌面。
+      const communityDesks = getCommunityDeskList(item.communityInfo);
+      if (communityDesks.length > 0) {
+        comNav.setCurrentCommunity(item, index);
+      }
     }
-    else {
-      router.push({ name: "home", params: { no: item.communityInfo.no } });
-      selectCommunityItem.value = { item, index };
-      proxy.$bus.emit("openCommunityDesk");
-    }
-  }
-  // 成员
-  else if (role === "member") {
-    // 加载获取云端数据
-    loadSyncDesk(item?.communityInfo?.no);
-    // 检测云端获取的数据有没有存在本地中
-    const memberDesks = getCommunityDeskList(item.communityInfo);
-    if (memberDesks.length > 0) {
-      switchCommunity(item,index);
-    } else {
-      window.$ui.confirm("暂无可用的社群桌面", "请联系你的社群管理员创建", {
-        ok: () => {},
-        okText: "好的",
-        noText: null,
-        type: "link",
-      });
+    // 成员
+    else if (role === "member") {
+      // 加载获取云端数据
+      loadSyncDesk(item?.communityInfo?.no);
+      // 检测云端获取的数据有没有存在本地中
+      const memberDesks = getCommunityDeskList(item.communityInfo);
+      if (memberDesks.length > 0) {
+        comNav.setCurrentCommunity(item, index);
+      }
     }
   }
   // 选择后进行弹窗关闭
@@ -173,30 +166,11 @@ const selectCommunity = async (item, index) => {
 };
 
 // 加载云端数据处理方法
-const loadSyncDesk = async(no) => {
+const loadSyncDesk = async (no) => {
   communityDesk.setCurrentDeskNo(no);
   communityDesk.loadCommunityDeskDetail();
   communityDesk.loadCommunityDeskAll();
 };
-
-// 切换社群的方法进行提取
-const switchCommunity = (item,index) => {
-  router.push({ name: "home", params: { no: item.communityInfo.no } });
-  if (settings.value.isCommunity) {
-    settings.value.isCommunity = false;
-  }
-  comNav.setCurrentCommunity(item, index);
-};
-
-onMounted(() => {
-  proxy.$bus.on("updateSetting", () => {
-    settings.value.isCommunity = false;
-    comNav.setCurrentCommunity(
-      selectCommunityItem.value?.item,
-      selectCommunityItem.value?.index
-    );
-  });
-});
 </script>
 
 <style lang="scss" scoped>
