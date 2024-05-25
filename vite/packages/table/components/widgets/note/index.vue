@@ -3,7 +3,6 @@
     @titleHover="enterNote"
     @delete="removeNote"
     v-model:customSize="customData.customSize"
-
     :header="header"
     :customData="customData"
     :customIndex="customIndex"
