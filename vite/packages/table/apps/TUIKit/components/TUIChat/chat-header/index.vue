@@ -34,8 +34,8 @@
       >
         <div class="flex items-center justify-center">
           <xt-ify-icon
-            icon="fluent:channel-16-filled"
-            size="16"
+            icon="ant-design:sound-filled"
+            size="20"
             class="xt-text-2"
           />
         </div>

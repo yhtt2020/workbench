@@ -18,6 +18,12 @@ export const runList = [
     ...defaultData,
   },
   {
+    name: "income",
+    cname: "收益中心",
+    icon: "/logo/income.svg",
+    ...defaultData,
+  },
+  {
     name: "note",
     cname: "便签",
     icon: "/img/appLogo/note.png",

@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { ref,  getCurrentInstance,computed } from "vue";
+import { ref, getCurrentInstance, computed } from "vue";
 import { useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import { appStore } from "../../../store";
@@ -30,7 +30,7 @@ const emit = defineEmits(["close"]);
 const router = useRouter();
 
 const app = appStore();
-const { windowFullScreen }  = storeToRefs(app);
+const { windowFullScreen } = storeToRefs(app);
 
 const bottomButton = ref([
   {
@@ -74,26 +74,50 @@ const bottomButton = ref([
   },
 ]);
 
+
 // 全屏图标的切换
-const buttonList = computed(()=>{
-  if(windowFullScreen.value){
-    const mapBottomButton = bottomButton.value.map((item)=>{
-      if(item.name === '全屏'){
-        return {
-          ...item,
-          newIcon:"fluent:full-screen-minimize-16-regular"
+const buttonList = computed(() => {
+  // PC端判断处理
+  if (window.$usePlat("client")) {
+    if (windowFullScreen.value) {
+      const mapBottomButton = bottomButton.value.map((item) => {
+        if (item.name === "全屏") {
+          return {
+            ...item,
+            newIcon: "fluent:full-screen-minimize-16-regular",
+          };
+        } else {
+          return { ...item };
         }
-      }
-      else {
-        return {...item}
-      }
-    });
-    return mapBottomButton;
-  }
+      });
+      return mapBottomButton;
+    } else {
+      return bottomButton.value;
+    }
+  } 
+  // web端的处理
   else {
-    return bottomButton.value;
+    const filterList = bottomButton.value.filter((item) => {
+      return item.name !== "电源";
+    });
+    if (windowFullScreen.value){
+      const webBottom = filterList.map((item) => {
+        if (item.name === "全屏") {
+          return {
+            ...item,
+            newIcon: "fluent:full-screen-minimize-16-regular",
+          };
+        } else {
+          return { ...item };
+        }
+      });
+      return webBottom;
+    }
+    else {
+      return filterList;
+    }
   }
-})
+});
 </script>
 
 <style lang="scss" scoped>

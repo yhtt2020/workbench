@@ -123,11 +123,21 @@ export default {
     if (this.$route.params.customIndex) {
       this.isSelTab = false
     }
+    // 设置是否弹窗打开
+    this.isModal = this.modalStatus
+
     // 处理从桌面跳转过来的数据
+    let params =''
+    if(this.modalParams?.customIndex){
+      params = this.modalParams.customIndex
+    } else if(this.$route.params.customIndex){
+      params = this.$route.params.customIndex
+    } 
+    
     this.getNotes().then(() => {
-      if (this.$route.params.customIndex) {
+      if (params) {
         this.noteList.forEach((item, index) => {
-          if (item.id == this.$route.params.customIndex) {
+          if (item.id == params) {
             this.selNote = index
             this.selNoteTitle = this.noteList[this.selNote]?.customData.title
           }
@@ -136,7 +146,7 @@ export default {
     })
   },
   computed: {
-    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'isTrash', 'deskList', 'selNoteTitle', 'selIndex']),
+    ...mapWritableState(noteStore, ['noteList', 'selNote', 'noteBgColor', 'isTrash', 'deskList', 'selNoteTitle', 'selIndex', 'isModal']),
     ...mapWritableState(cardStore, ['desks']),
     ...mapWritableState(homeStore, ["currentDeskId", "currentDeskIndex", 'currentInit']),
     content(){

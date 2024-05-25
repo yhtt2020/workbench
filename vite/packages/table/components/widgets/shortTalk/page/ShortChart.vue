@@ -44,7 +44,6 @@
                     <p class="mt-3 ml-1">时间周期</p>
                     <RadioTab :navList="timeType" v-model:selectType="defaultTimeType" ></RadioTab>
                     <div  v-show="this.defaultDataType.name == 'visit'">
-                    <!-- <div > -->
                         <p class="mt-3 ml-1">平台类型</p>
                         <RadioTab  :navList="platType"  class="nav-type"
                         v-model:selectType="defaultPlatType"  ></RadioTab>
@@ -62,7 +61,7 @@
                             dropdownClassName="drop-class"
                             :options="timeOption"
                             @change="handleChangeTime"
-                        ></a-select>
+                            ></a-select>
 
                     </div>
                 </div>
@@ -119,11 +118,11 @@ export default {
     emit:['delete'],
     computed: {
         ...mapWritableState(shortTalkStore, ['access','interact','access_token','baseUrl','setVisible']),
-        timeOption(){
-            return {
-                customDel:this.openWay === 'nav' ? true : false
-            }
-        }
+        // timeOption(){
+        //     return {
+        //         customDel:this.openWay === 'nav' ? true : false
+        //     }
+        // }
     },
     data() {
         return {

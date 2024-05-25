@@ -70,7 +70,7 @@ import Clipboard from "../apps/clipboard/page/Clipboard.vue";
 import WorkDesk from "../page/work/Desk.vue";
 /*便签*/
 import Note from "../apps/note/index.vue";
-
+import Income from '../apps/income/index.vue'
 /**聊天团队模式开始**/
 import ChatIndex from "../apps/chat/page/home/ChatIndex.vue";
 import Chat from "../apps/chat/page/home/ChatApp.vue";
@@ -112,12 +112,22 @@ export default [
       note: Note,
       // shortcutKey: ShortcutKeyRoute,
       clipboard: Clipboard,
+      income:Income
     },
     props: true,
     children: [
       ...DeckRoute,
       ShortcutKeyRoute,
 
+      {
+        path: "/income",
+        name: "income",
+        component: Income,
+        meta: {
+          tab1: "work",
+          tab2: "income",
+        },
+      },
       {
         path: "/ai/:value?",
         name: "ai",

@@ -181,7 +181,7 @@ const leftList = ref([
   {
     tab: "find",
     type: "find",
-    newIcon: "fluent:compass-northwest-16-filled",
+    newIcon: "fluent:compass-northwest-24-filled",
     menuVisible: true,
     route: { name: "chatFind", params: { no: "" } },
   },

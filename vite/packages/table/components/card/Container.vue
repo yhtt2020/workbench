@@ -219,7 +219,7 @@
           :name="header.title"
           :status="envLimitStatus"
           :plat="platLimit"
-          imgSize="'75'"
+          imgSize="75"
         >
           <div
             class="flex-1 h-full rounded-b-lg"
@@ -328,7 +328,6 @@ onBeforeMount(() => {
   // 处理默认数据
   if (props.options.defaultData) {
     props.customData = _.defaults(props.customData, props.options.defaultData);
-    // props.customData = _.merge({}, props.options.defaultData, props.customData);
   }
 });
 onMounted(() => {

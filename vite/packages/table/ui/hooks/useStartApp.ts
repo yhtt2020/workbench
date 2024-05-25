@@ -1,6 +1,6 @@
 import { teamStore } from "./../../store/team";
 import { tt } from "./../../permission/global/global";
-import { useMit ,useAppModal} from "./../../hooks";
+import { useMit, useAppModal } from "./../../hooks";
 // import { isObject } from "./../../TUIKit/TUICore/utils/index";
 import { useOpenAi } from "../../hooks/src/open/useOpenAi";
 
@@ -255,9 +255,16 @@ export const openSysApp = (value, router) => {
         useMit.emit("selectSystemNav", 4);
       }, 100);
       break;
+    case "home":
+      useAppStore.settings.isCommunity = true;
+      router.push({ name: value });
+      break;
     case "ai":
-      const { openApp } = useAppModal('ai')
-      openApp()
+      const { openApp } = useAppModal("ai");
+      openApp();
+      break;
+    case "income":
+      useAppModal("income").openApp()
       break;
     default:
       // 通过路由打开

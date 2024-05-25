@@ -111,7 +111,7 @@ import OilPrices from '../widgets/OilPrices.vue'
 
 import YuanCommunity from '../widgets/yuanCommunity/YuanCommunity.vue'
 import Courier from '../widgets/courier/Courier.vue'
-
+import Goods from '../../apps/goods/Goods.vue'
 import FreeLayoutScrollbar from "./freeLayout/Scrollbar.vue";
 import FreeLayoutContainer from "./freeLayout/Container.vue";
 import FreeLayoutState from "./freeLayout/State.vue";
@@ -201,5 +201,6 @@ export default {
     OilPrices,
     YuanCommunity,
     Courier,
+    Goods
   },
 };
