@@ -1,10 +1,32 @@
 export const sourceList = [
   {
-    name: "谷歌",
-    icon: "/img/appLogo/google.webp",
+    name: "百度",
+    icon: "/img/appLogo/baidu.webp",
     iconType: "select",
-    searchUrl: "https://www.google.com/search?q=",
-    recommendUrl: "https://www.google.com/search?q=",
+    searchUrl: "https://www.baidu.com/s?wd=",
+    recommendUrl: "https://www.baidu.com/sugrec?prod=pc&wd=",
+  },
+  {
+    name: "Bilibili",
+    icon: "/img/appLogo/bilibili.webp",
+    iconType: "select",
+    searchUrl: "https://search.bilibili.com/all?keyword=",
+    recommendUrl:
+      "https://s.search.bilibili.com/main/suggest?func=suggest&term=",
+  },
+  {
+    name: "微博",
+    icon: "/img/appLogo/weibo.webp",
+    iconType: "select",
+    searchUrl: "https://s.weibo.com/weibo?q=",
+    recommendUrl: "https://weibo.com/ajax/side/search?q=",
+  },
+  {
+    name: "知乎",
+    icon: "/img/appLogo/zhihu.webp",
+    iconType: "select",
+    searchUrl: "https://www.zhihu.com/search?type=content&q=",
+    recommendUrl: "https://www.zhihu.com/api/v4/search/suggest?q=",
   },
   {
     name: "工作台",
@@ -20,34 +42,13 @@ export const sourceList = [
     searchUrl: "",
     recommendUrl: "",
   },
+
   {
-    name: "GitHub",
-    icon: "/img/appLogo/github.webp",
+    name: "优酷",
+    icon: "/img/appLogo/youku.webp",
     iconType: "select",
-    searchUrl: "https://github.com/search?q=",
-    recommendUrl: "https://api.github.com/search/repositories?q=",
-  },
-  {
-    name: "微博",
-    icon: "/img/appLogo/weibo.webp",
-    iconType: "select",
-    searchUrl: "https://s.weibo.com/?Refer=",
-    recommendUrl: "https://weibo.com/ajax/side/search?q=",
-  },
-  {
-    name: "Bilibili",
-    icon: "/img/appLogo/bilibili.webp",
-    iconType: "select",
-    searchUrl: "https://search.bilibili.com/all?keyword=",
-    recommendUrl:
-      "https://s.search.bilibili.com/main/suggest?func=suggest&term=",
-  },
-  {
-    name: "百度",
-    icon: "/img/appLogo/baidu.webp",
-    iconType: "select",
-    searchUrl: "https://www.baidu.com/s?wd=",
-    recommendUrl: "https://www.baidu.com/sugrec?prod=pc&wd=",
+    searchUrl: "https://so.youku.com/search_video/q_",
+    recommendUrl: "https://suggest.video.iqiyi.com/?key=",
   },
 
   {
@@ -65,18 +66,18 @@ export const sourceList = [
     recommendUrl: "https://api.bing.com/osjson.aspx?query=",
   },
   {
-    name: "知乎",
-    icon: "/img/appLogo/zhihu.webp",
+    name: "谷歌",
+    icon: "/img/appLogo/google.webp",
     iconType: "select",
-    searchUrl: "https://www.zhihu.com/search?type=content&q=",
-    recommendUrl: "https://www.zhihu.com/api/v4/search/suggest?q=",
+    searchUrl: "https://www.google.com/search?q=",
+    recommendUrl: "https://www.google.com/search?q=",
   },
   {
-    name: "优酷",
-    icon: "/img/appLogo/youku.webp",
+    name: "GitHub",
+    icon: "/img/appLogo/github.webp",
     iconType: "select",
-    searchUrl: "https://so.youku.com/search_video/q_",
-    recommendUrl: "https://suggest.video.iqiyi.com/?key=",
+    searchUrl: "https://github.com/search?q=",
+    recommendUrl: "https://api.github.com/search/repositories?q=",
   },
 ];
 export const openWithList = [

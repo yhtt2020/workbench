@@ -1,35 +1,47 @@
 <script setup lang="ts">
-import {
-  ref,
-  computed,
-  inject,
-  watch,
-  provide,
-  onMounted,
-  reactive,
-} from "vue";
+import { ref, computed, inject, watch, provide, onMounted } from "vue";
+import PerfectScrollbar from "perfect-scrollbar";
 import { useEventListener, useDebounce } from "@vueuse/core";
+import { openBrowser } from "../../utils/open";
 import History from "./History.vue";
-import Search from "./Search.vue";
+
 import { sourceList, openWithList } from "../../config/data";
 import axios from "axios";
+const emit = defineEmits(["close", "openCardSet"]);
 
+const scrollbar: any = ref(null);
+const searchScrollbar: any = ref(null);
+
+const initScrollbar = () => {
+  scrollbar.value = new PerfectScrollbar(searchScrollbar.value, {});
+};
 const data: any = inject("data");
-const customData = reactive(data);
-const emit = defineEmits(["close", ]);
 const props: any = defineProps({
+  // 指定搜索源
   specifySource: {},
 });
 /** 搜索数据 */
 const words = ref("");
+const debounceWord = useDebounce(words, 1);
+/** 当前搜索源 */
+const currentSource = ref();
+const debounceSource = useDebounce(currentSource, 1);
 // 打开方式下标
 const openWithIndex = ref(0);
 /** 搜索源下标 */
 const sourceIndex = ref(0);
 /** 当前打开方式 */
 const currentOpenWith: any = ref();
-/** 当前搜索源 */
-const currentSource = ref();
+
+// tab栏显示状态
+const tabVisible = ref(false);
+// 推荐列表
+const recommendList: any = ref([]);
+// 选择的下标
+const ctrlSelectIndex = ref(0);
+const historyRef: any = ref();
+const debounceCtrlSelectIndex = useDebounce(ctrlSelectIndex, 1);
+provide("ctrlSelectIndex", ctrlSelectIndex);
 /** 初始化当前搜索源 */
 const initCurrentSource = () => {
   let source;
@@ -59,51 +71,131 @@ const initOpenWith = () => {
 initCurrentSource();
 initOpenWith();
 
-const search: any = async () => {
-  const history = {
-    value: words.value,
-    source: currentSource.value,
-  };
+const currentSourceType = computed(() => {
+  const name = currentSource.value.name;
+  if (name === "文件夹") {
+    return "folder";
+  }
+  if (name === "工作台") {
+    return "";
+  }
+  return "web";
+});
+const recommendIndex = computed(() => {
+  if (ctrlSelectIndex.value < 0) {
+    ctrlSelectIndex.value = recommendList.value.length - 1;
+  }
+  if (ctrlSelectIndex.value > recommendList.value.length - 1) {
+    ctrlSelectIndex.value = 0;
+  }
+  return ctrlSelectIndex.value % recommendList.value.length;
+});
+watch(debounceCtrlSelectIndex, (val) => {
+  searchScrollbar.value.scrollTop = ctrlSelectIndex.value * 44;
+});
+watch([debounceWord, debounceSource], async (val) => {
+  // 重置下标
+  ctrlSelectIndex.value = 0;
+  await getRecommend();
+});
+const handlers = {
+  百度: (data) =>
+    data?.g?.map((item) => {
+      return {
+        name: item.q,
+      };
+    }),
+  微博: (data) =>
+    data?.data?.hotquery?.map((item) => {
+      return {
+        name: item.suggestion,
+      };
+    }),
+  Bilibili: (data) =>
+    data?.result?.tag?.map((item) => {
+      return {
+        name: item.value,
+      };
+    }),
+  豆瓣: (data) =>
+    data?.words?.map((item) => {
+      return {
+        name: item,
+      };
+    }),
+  必应: (data) =>
+    data?.[1]?.map((item) => {
+      return {
+        name: item,
+      };
+    }),
+  知乎: (data) =>
+    data?.suggest?.map((item) => {
+      return {
+        name: item.query,
+      };
+    }),
+  优酷: (data) =>
+    data?.data?.map((item) => {
+      return {
+        name: item.name,
+      };
+    }),
+  default: () => [words.value],
+};
+const getRecommend = async () => {
+  // 空数据
+  if (!words.value.trim()) {
+    return;
+  }
+  // 搜索源不符合
+  const name = currentSource.value.name;
+  if (name === "工作台") {
+    return;
+  }
+  if (name === "文件") {
+    const desktopApps = await ipc.sendSync("getDeskApps");
+    recommendList.value = desktopApps.filter((item) => {
+      let res = item.name.includes(words.value);
+      if (res) {
+        return item;
+      }
+    });
+    return;
+  }
+  let recommendUrl =
+    currentSource.value.recommendUrl + encodeURIComponent(words.value);
+  let { data } = await axios.get(recommendUrl);
+  recommendList.value = handlers[name]?.(data) || handlers["default"]();
+};
 
-  data.value.historyList.push(history);
-
+/** 搜索 */
+const search: any = async (value?: any) => {
   if (data.value.lastUse) {
     data.value.source = currentSource.value;
     data.value.openWith = currentOpenWith.value.value;
   }
+  let word = value ? value.name : words.value;
+  let searchUrl = currentSource.value.searchUrl + encodeURIComponent(word);
+
+  const history = {
+    name: word,
+    source: currentSource.value,
+    value: searchUrl,
+    type: "网页",
+    openWith: currentOpenWith.value.value,
+  };
+
+  data.value.historyList.push(history);
+
+  openBrowser(searchUrl, currentOpenWith.value.value);
+  close();
 };
-const getRecommend = async () => {
-  // 空数据
-  // if (!words.value.trim()) {
-  // return;
-  // }
-  // 搜索源不符合
-  const name = currentSource.value.name;
-  if (name === "文件夹" || name === "工作台") {
-    return;
-  }
-
-  const searchUrl =
-    currentSource.value.searchUrl + encodeURIComponent(words.value);
-  let res = await axios.get(searchUrl);
-
-  if (name == "百度") {
-  }
-  console.log("res :>> ", res);
-};
-const debounceWord = useDebounce(words, 500);
-const debounceSource = useDebounce(currentSource, 500);
-
-watch([debounceWord, debounceSource], async (val) => {
-  await getRecommend();
-});
+/** 关闭弹窗 */
 const close = () => {
   emit("close");
 };
 
-const searchValueChange = (data) => {
-  console.log("data :>> ", data);
-};
 /** 打开方式选择 */
 const selectOpenWith = (index) => {
   currentOpenWith.value = openWithList[index];
@@ -113,14 +205,41 @@ const selectOpenWith = (index) => {
 const selectSource = (newSource) => {
   currentSource.value = newSource;
 };
-const tabVisible = ref(false);
-/** tab相关事件 */
-const tabEventDown = (e) => {
+/** 打开卡片设置 */
+const openCardSet = () => {
+  emit("openCardSet");
+};
+
+/** 相关事件 */
+const eventDown = (e) => {
   // ctrl+tab
   if (e.key == "Tab" && e.ctrlKey) {
     e.preventDefault();
     openWithIndex.value = (openWithIndex.value + 1) % openWithList.length;
     selectOpenWith(openWithIndex.value);
+    return;
+  }
+  // ctrl+[1-9]
+  if (e.ctrlKey && e.key.match(/^[1-9]$/)) {
+    ctrlSelectIndex.value = e.key - 1;
+    return;
+  }
+  // enter
+  if (e.key === "Enter") {
+    e.preventDefault();
+    if (words.value.length > 0) {
+      search(recommendList.value[ctrlSelectIndex.value]);
+    } else {
+      historyRef.value.search(ctrlSelectIndex.value);
+    }
+    return;
+  }
+  if (e.key === "ArrowUp") {
+    ctrlSelectIndex.value -= 1;
+    return;
+  }
+  if (e.key === "ArrowDown") {
+    ctrlSelectIndex.value += 1;
     return;
   }
   // tab
@@ -132,6 +251,7 @@ const tabEventDown = (e) => {
     selectSource(sourceVal);
   }
 };
+
 const tabEventUp = (e) => {
   if (e.key == "Tab") {
     e.preventDefault();
@@ -140,37 +260,46 @@ const tabEventUp = (e) => {
     }, 100);
   }
 };
-useEventListener("keydown", tabEventDown);
+useEventListener("keydown", eventDown);
 useEventListener("keyup", tabEventUp);
 
-const ctrlSelectIndex = ref(0);
-provide("selectIndex", ctrlSelectIndex);
-const ctrl1_9Event = (e) => {
-  if (!e.ctrlKey || !e.key.match(/^[1-9]$/)) {
-    return;
+const highlightText = (text) => {
+  if (typeof text !== "string" || text === "") {
+    text = words.value;
   }
-  ctrlSelectIndex.value = e.key;
-  console.log("pressedNumber :>> ", ctrlSelectIndex.value);
+  const wordArr = [...words.value];
+  if (!Array.isArray(wordArr) || wordArr.length === 0) {
+    console.log("第二次拦截 :>> ");
+
+    return text;
+  }
+  // 将关键字数组转换为正则表达式数组
+  const regexArray = wordArr.map((keyword) => new RegExp(`(${keyword})`, "gi"));
+
+  // 使用reduce方法结合replace来替换所有关键字
+  return regexArray.reduce(function (result, regex) {
+    return result.replace(regex, function (match) {
+      return `<span class="tt-theme">${match}</span>`;
+    });
+  }, text);
 };
-useEventListener("keydown", ctrl1_9Event);
 </script>
 
 <template>
-  <xt-modal :model-value="true" @close="close" custom>
-    <div class="w-[600px] h-[600px] flex flex-col">
+  <xt-modal :model-value="true" @close="close" @init="initScrollbar" custom>
+    <div class="w-[600px] h-[600px] flex flex-col max-h-[100%]">
       <!-- 头部 -->
-      <header class="tt-main-bg flex items-center justify-between p-3">
+      <header class="tt-bg-2-t flex items-center justify-between p-3">
         <div class="flex-1 flex items-center">
           <!-- 可切换搜索源 -->
           <a-dropdown
-            trigger='["click","hover"]'
             v-model:visible="tabVisible"
             placements="bottom"
             :overlayStyle="{
               'z-index': '999999999 !important',
             }"
           >
-            <div>
+            <div class="flex items-center">
               <xt-mix-icon :icon="currentSource.icon" type="select" size="24" />
             </div>
             <template #overlay>
@@ -179,7 +308,7 @@ useEventListener("keydown", ctrl1_9Event);
               >
                 <div
                   v-for="item in sourceList"
-                  class="w-full h-10 flex items-center justify-between p-2 mb-2 text-sm hover:tt-theme-bg cursor-pointer"
+                  class="w-full h-10 flex items-center justify-between p-2 mb-2 text-sm hover:tt-theme-bg-2 cursor-pointer"
                   style="border-radius: 10px"
                   :class="[
                     {
@@ -206,64 +335,96 @@ useEventListener("keydown", ctrl1_9Event);
           </a-dropdown>
           <!-- 输入框 -->
           <div class="flex-1">
-            <xt-input
-              class="tt-main-bg"
-              v-model="words"
-              @change="searchValueChange"
-              @pressEnter="search"
-            />
-            <a-input
-              v-model-value="words"
-              placeholder="搜索"
-              class="w-full"
-              @change="searchValueChange"
-              @pressEnter="search"
-            />
-            {{ words }}
+            <xt-input type="" v-model="words" />
           </div>
         </div>
         <!-- 搜索按钮 -->
-        <xt-mix-icon icon="fluent:search-16-regular" @click="search" />
+        <xt-mix-icon
+          icon="fluent:search-16-regular"
+          @click="search()"
+          boxSize="32"
+        />
       </header>
-
-      <main class="flex-1 w-full p-3 overflow-hidden">
-        <xt-scrollbar v-if="words" class="h-full" :x="false" :y="true">
-          <div>
-            {{ customData.openWith }}
+      <main
+        class="flex-1 w-full p-3 overflow-hidden relative"
+        ref="searchScrollbar"
+      >
+        <template v-if="words">
+          <div class="flex pb-2">
+            <div class="text-sm tt-text-2">猜你想找</div>
           </div>
-          <div>
-            {{ data.openWith }}
-          </div>
-
-          <div class="w-full h-12 rounded-lg">
-            <div class="w-full p-3 h-11 flex" v-for="item in 10">
-              <div class="flex-1"></div>
+          <!-- 搜索建议 -->
+          <div
+            class="w-full p-3 h-11 flex justify-between rounded-xl cursor-pointer hover:tt-theme-bg-2"
+            v-for="(item, index) in recommendList"
+            :class="{
+              'xt-theme-bg-2': recommendIndex == index,
+            }"
+            @click="search(item)"
+          >
+            <div v-html="highlightText(item.name)"></div>
+            <a-dropdown
+              placements="bottom"
+              :overlayStyle="{
+                'z-index': '999999999 !important',
+              }"
+            >
               <div class="flex items-center">
-                {{ currentOpenWith?.name }}
-                <xt-mix-icon
-                  icon="fluent:caret-down-12-filled"
-                  class="tt-no-bg ml-2"
-                  iconStyle="color: var(--active-bg)"
-                />
+                <template v-if="recommendIndex == index">
+                  {{ currentOpenWith?.name }}
+                  <xt-mix-icon
+                    icon="fluent:caret-down-12-filled"
+                    class="tt-no-bg ml-2"
+                    iconStyle="color: var(--active-bg)"
+                  />
+                </template>
+                <template v-else> 网页 </template>
               </div>
-            </div>
+              <template #overlay>
+                <!-- <div
+                    class="p-2 pb-0 w-[240px] xt-shadow xt-border tt-modal-bg rounded-xl"
+                  >
+                    <div
+                      v-for="item in openWithList"
+                      class="w-full h-10 flex items-center justify-between p-2 mb-2 text-sm hover:tt-theme-bg cursor-pointer"
+                      style="border-radius: 10px"
+                      :class="[
+                        {
+                          'tt-theme-bg-2': currentSource.name == item.name,
+                        },
+                      ]"
+                      @click="selectSource(item)"
+                    >
+                      <div class="flex items-center">
+                        {{ item.name }}
+                      </div>
+                    </div>
+                  </div> -->
+              </template>
+            </a-dropdown>
           </div>
-        </xt-scrollbar>
-        <History v-else :selectIndex="ctrlSelectIndex" />
+        </template>
+        <!-- 搜索历史 -->
+        <History v-else ref="historyRef" />
       </main>
       <footer
-        class="h-10 tt-main-bg flex items-center justify-between px-2 text-xs"
+        class="h-10 tt-bg-2-t flex items-center justify-between px-2 text-xs"
       >
         <div class="tt-text-3 flex h-8 items-center">
-          <div class="p-1 rounded-md ml-1 tt-bg-2-t px-1">Tab</div>
+          <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">Tab</div>
           <div class="ml-1">切换搜索方式</div>
-          <div class="p-1 rounded-md ml-1tt-bg-2-t px-1">Ctrl</div>
-          <div class="p-1 rounded-md ml-1 tt-bg-2-t px-1">1-9</div>
-          <div class="ml-1">快速打开候选项</div>
-          <div class="p-1 rounded-md ml-1 tt-bg-2-t px-1">1-8</div>
-          <div>快速切换类型</div>
+          <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">Ctrl</div>
+          <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">1-9</div>
+          <div>快速打开候选项</div>
+          <template v-if="words">
+            <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">
+              Ctrl
+            </div>
+            <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">Tab</div>
+            <div>切换打开方式</div>
+          </template>
         </div>
-        <xt-mix-icon icon="fluent:search-16-regular" @click="search" />
+        <xt-mix-icon icon="fluent:settings-16-regular" @click="openCardSet" />
       </footer>
     </div>
   </xt-modal>

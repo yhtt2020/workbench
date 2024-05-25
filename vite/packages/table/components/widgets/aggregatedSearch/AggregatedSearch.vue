@@ -18,7 +18,7 @@ const options = {
     // 搜索源
     source: sourceList[0],
     // 打开方式
-    openWith: "default",
+    openWith: "system",
     // 记住上次使用的搜索方式
     lastUse: false,
     // 历史记录

@@ -13,7 +13,7 @@ function deskMenus() {
       id: 0,
       newIcon: "fluent:add-16-filled",
       name: "测试组件",
-      disabled: false,
+      disabled: true,
       fn: () => {
         // AggregatedSearch
         useAddCard({
@@ -25,7 +25,7 @@ function deskMenus() {
       id: 0.2,
       newIcon: "fluent:add-16-filled",
       name: "定制桌面测试",
-      disabled: false,
+      disabled: true,
       fn: () => {
         useCustomLayout({
           headerList: headerData,
