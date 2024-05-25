@@ -47,11 +47,10 @@ export const COMPONENT_LIMIT = {
     "GameEpic",
     "clipBoard",
     "GameStrategy",
-    "Courier",
     "GamesDiscount",
     "DiscountPercentage",
     "customAssembly",
-    "notes",
+    "notes",,
   ],
 };
 /**
@@ -59,7 +58,7 @@ export const COMPONENT_LIMIT = {
  */
 export const COMPONENT_LIMIT_NAME={
   web:[
-   "supervisory",
+    "supervisory",
     'myfriends'
   ]
 }

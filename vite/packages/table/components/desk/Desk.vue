@@ -203,6 +203,7 @@
     v-if="editVisible"
     @setQuick="editVisible = false"
     @addIcon="addIcon"
+    :communityRole="communityRole"
   ></EditNewNavigation>
   <GalleryModal ref="galleryRef" />
 </template>
@@ -229,7 +230,7 @@ import GalleryModal from "../paperModal/PaperApp.vue";
 import { useAddCard } from "../../ui/hooks/useAddCard";
 import { useDeskStore } from "./store";
 import { useFileConversionIcon } from "../../apps/folder/src/hooks/useDataConversion";
-import { taskStore } from "../../../table/apps/task/store";
+import { taskStore } from '../../apps/task/store';
 
 import Drop from "./Drop.vue";
 import AppCenter from "../../apps/appCenter";
@@ -323,6 +324,10 @@ export default {
       type: Boolean,
       default: () => false,
     },
+    communityRole:{
+      type:Boolean,
+      default:false,
+    }
   },
   watch: {
     adjustLayout(val) {
@@ -520,6 +525,13 @@ export default {
       }, 300);
     });
 
+    // 社群成员桌面触发位置还原
+    this.$bus.on('redirect',()=>{
+      this.$nextTick(()=>{
+        this.$refs.freeLayoutScrollbar?.redirect();
+      })
+    });
+
     if (window.showed) {
       this.showGrid = true;
     }
@@ -552,7 +564,7 @@ export default {
       }
     },
     getWidth() {
-      console.log(this.usingSettings.fixedLayout);
+      // console.log(this.usingSettings.fixedLayout);
       if (this.usingSettings.fitMod === "full") {
         return "100%";
       } else {
@@ -686,6 +698,9 @@ export default {
     },
     hideAddCard() {
       this.addCardVisible = false;
+      if(this.communityRole){
+        this.$bus.emit('updateSync')
+      }
     },
     onClose() {
       this.menuVisible = false;

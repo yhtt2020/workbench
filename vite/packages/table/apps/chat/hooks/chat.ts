@@ -2,6 +2,7 @@
 import { chatCommunityStore } from "../store/chatCommunity";
 import { storeToRefs } from "pinia";
 import _ from "lodash-es";
+import { useNavigationStore } from "../../../components/desk/navigationBar/navigationStore";
 
 /**群聊退出登录操作**/ 
 export const chatLogout = () => {
@@ -16,6 +17,7 @@ export const chatLogout = () => {
   });
   myCommunity.value = filterMy;
   currentCommunityNo.value = null;
+  (useNavigationStore() as any).communityNavVisible = false;
 };
 
 /**登录刷新**/

@@ -12,13 +12,11 @@
   >
     <xt-left-menu
       :list="updatePaperLeftList"
-      last="5"
-      end="2"
       leftClass="xt-bg-m rounded-l-xl"
       leftMargin="mr-0 py-3"
       w="64"
-      v-model:index="currentStatus"
-      model="id"
+      end="2"
+      :index="currentStatus"
       :class="currentParams.maxVisible ? 'w-full h-full' : 'small-w'"
     >
       <div class="w-full xt-modal rounded-r-xl px-4 pt-4 pb-0">

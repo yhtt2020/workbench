@@ -134,7 +134,7 @@ export default {
     // 设置桌面壁纸
     setDesktopPaper(img){
       window.$ui.confirm('确定将此壁纸设置为系统桌面壁纸？注意，此处设置不是工作台的壁纸。','',{
-        index:1020,
+        index:100010,
         ok: () => {
           message.info('正在为您下载并设桌面壁纸');
           tsbApi.system.setPaper(img.src);

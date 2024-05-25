@@ -35,6 +35,7 @@ const joinTab  = ref([
   },
 ])
 const join = ref('');
+const hasDefaultValue = ref(true); // 用于标记是否有默认值
 
 // 开启加群方式设置弹窗
 const joinVisible = ref(false);
@@ -47,8 +48,12 @@ const openJoinModal = () => {
 
 // 监听当前加入方式修改状态
 watch(()=>join.value,(newVal)=>{
-  // console.log('测试',newVal);
-  emit('update',newVal);
+  if(hasDefaultValue.value){
+    hasDefaultValue.value = false;
+  }
+  else {
+    emit('update',newVal);
+  }
 })
 
 defineExpose({
