@@ -2,6 +2,7 @@ import { storeToRefs } from "pinia";
 import { cardStore as useCardSize } from "../../../../../../store/card";
 import { navStore as useNavStore } from "../../../../../../store/nav";
 import { useTTAppStore } from "../../../../../ttApp/src/store";
+import { useAppCenterStore } from "../../../store";
 import { useFreeLayoutStore } from "../../../../../../components/desk/freeLayout/store";
 import { message } from "ant-design-vue";
 
@@ -11,6 +12,7 @@ export const uninstall = (id: string) => {
   clearDesk(id);
   clearNav(id);
   clearDb(id);
+  clearMyApps(id);
 };
 /** 删除store数据 */
 const clearStore = (id: string) => {
@@ -100,6 +102,17 @@ const clearNav = (id: string) => {
   // 右侧导航栏
   rightNavigationList.value = filterNavItem(rightNavigationList.value);
 };
+
+/** 删除我的应用数据 */
+const clearMyApps = (id: string) => {
+  const appCenterStore = useAppCenterStore();
+  const filterApps = (app) =>  app.value !== id;
+
+  // 更新 myApps 和 startMenu 两个属性，去除特定 id 的 ttapp 类型应用
+  appCenterStore.myApps = appCenterStore.myApps.filter(filterApps);
+  appCenterStore.startMenu = appCenterStore.startMenu.filter(filterApps);
+}
+
 
 /** 删除db数据 */
 export const clearDb = async (id: string) => {

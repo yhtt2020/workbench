@@ -1,13 +1,13 @@
 <template>
     <div @click="clickRightListItem(item)"
-        class="w-[168px] h-[168px] rounded-xl flex justify-center items-center flex-col relative pointer"
-        :style="checked">
-        <xt-button v-if="item.type === 'folder'" w="48" h="22" radius="6" type="theme" style="font-size: 12px;"
+        class="relative flex flex-col items-center justify-center rounded-xl pointer"
+        :style="[checked, { width: size + 'px', height: size + 'px'}]">
+        <xt-button v-if="item.type === 'folder' && showFolder" w="48" h="22" radius="6" type="theme" style="font-size: 12px;"
             class="absolute z-50 top-2 left-2">
             图标组
         </xt-button>
         <div class="w-[64px] h-[64px] rounded-xl  flex items-center justify-center">
-            <div style="width: 64px; height:64px;border-radius: 8px;" v-if="item.type !== 'folder'"
+            <div style="width: 64px; height:64px;border-radius: 8px;" v-if="item.type !== 'folder' || !showFolder"
                 class="flex items-center justify-center rounded-lg ">
                 <a-avatar :size="64" shape="square" :src="item.icon"></a-avatar>
             </div>
@@ -40,9 +40,21 @@ const { multipleList, isMultiple } = storeToRefs(iconStore)
 
 const props = defineProps({
     item: Object,  // 图标对象
-    info: String,  // 图标提示  
+    info: String,  // 图标提示
+    size:{
+        type: Number,
+        default: 168
+    },
+    isApp:{
+        type: Boolean,
+        default: false
+    },
+    showFolder:{
+        type: Boolean,
+        default: true
+    }  
 })
-const { item, info } = toRefs(props)
+const { item, info, size, isApp, showFolder } = toRefs(props)
 
 const emit = defineEmits(['clickRightListItem'])
 
@@ -57,7 +69,7 @@ const checked = computed(() => {
         };
     } else {
         return {
-            background: 'var(--secondary-bg)'
+            background: isApp.value ? '' : 'var(--secondary-bg)'
         };
     }
 });

@@ -315,7 +315,7 @@ export default {
     ...mapActions(goodsStore, ['getOrderList']),
     ...mapActions(appStore, ['showUserCard']),
     async refreshData (page = 1) {
-      let rs = await this.getOrderList(page)
+      let rs = await this.getOrderList(page,true)
       if (rs.status) {
         this.detailList.data = rs.data.list
         for (const order of this.detailList.data) {

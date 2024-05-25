@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col p-3 xt-main-bg" style="width: 200px">
+  <div class="flex flex-col p-3 xt-main-bg" style="width: 200px;min-width: 200px">
     <template v-for="(item, index) in navList">
       <div v-if="!item.disabled"
         class="flex items-center mb-3 cursor-pointer"
@@ -14,11 +14,11 @@
     </template>
 
   </div>
-  <div class="flex flex-col h-full p-3 xt-modal" style="max-height: 80vh;min-height: 40vh">
+  <div class="flex flex-col h-full p-3 w-0 flex-1" style="">
     <!-- 头部 -->
     <div class="flex items-center w-full mb-3">
       {{navList[activeIndex].name}}
-      <xt-button
+      <xt-button v-if="customData"
         class="absolute right-3"
         @click="closeNav"
         icon="fluent:dismiss-16-regular"
@@ -37,7 +37,7 @@
     <div v-if="activeIndex===2" class="flex flex-row flex-1 h-0 gap-2 ">
       <OrderList :customData="customData"></OrderList>
     </div>
-    <div v-if="activeIndex===3" class="flex flex-row flex-1 h-0 gap-2 ">
+    <div v-if="activeIndex===3 && customData" class="flex flex-row flex-1 h-0 gap-2 ">
       <Appearance :customData="customData"></Appearance>
     </div>
   </div>
@@ -77,13 +77,16 @@ const selectNav = (index: number) => {
      component: "orderList",
      disabled: false,
    },
-   {
-     name: "组件外观",
-     icon: "fluent:color-16-filled",
-     component: "Common",
-     disabled: false,
-   },
+
  ]
+if(props.customData){
+  navList.push({
+    name: "组件外观",
+    icon: "fluent:color-16-filled",
+    component: "Common",
+    disabled: false,
+  })
+}
 
 const closeNav=()=>{
    emit('close')

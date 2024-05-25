@@ -1,6 +1,6 @@
 <template>
   <template v-if="displayList.length === 0">
-    <div class="w-full h-full flex flex-col items-center justify-center">
+    <div class="flex flex-col items-center justify-center w-full h-full">
       <xt-ify-icon
         icon="fluent-emoji:magnifying-glass-tilted-right"
         size="56"
@@ -55,7 +55,7 @@
           <!-- 图片长度大于1 -->
           <template v-if="item.option.length > 1">
             <template v-if="item.type == 'ttapp'">
-              <div class="flex justify-center h-full items-center rounded-xl">
+              <div class="flex items-center justify-center h-full rounded-xl">
                 <img
                   style="width: 80px; height: 110px !important; zoom: 1"
                   :src="item.option[0]._preview"
@@ -113,7 +113,7 @@
         </div>
         <div class="right" style="">
           <div class="title" style="color: var(--primary-text)">
-            {{ item.cname }} <sub class="xt-text-2">{{ item.name }}</sub>
+            {{ item.cname }}
           </div>
           <div class="text" style="color: var(--secondary-text)">
             {{ item.detail }}
