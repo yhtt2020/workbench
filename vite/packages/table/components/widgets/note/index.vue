@@ -261,12 +261,7 @@ export default {
   },
   computed: {
     ...mapWritableState(noteStore, ["selNoteText", "initFlag"]),
-    ...mapWritableState(communityNavStore,['currentCommunity']),
-
-    // 社群桌面的角色权限,默认条件是成员。
-    communityRole(){
-      return this.currentCommunity?.item?.role === 'member';
-    },
+    
 
     content() {
       return this.customData.text;
@@ -276,7 +271,7 @@ export default {
         title: this.customData.title,
         // ifyIcon: 'fluent:notepad-16-regular',
         showIcon: "/img/appLogo/note.png",
-        titleHover: this.communityRole ? false : true,
+        titleHover: this.options.disableEdit ? false : true,
         titleHoverName: "打开应用",
       };
     },
@@ -285,14 +280,14 @@ export default {
         ...this.options,
         bg: this.customData.background,
         title: this.customData.title,
-        resize: this.communityRole ? false : true,
+        resize: this.options.disableEdit ? false : true,
         customDel: this.customDel,
       };
     },
     options() {
       return {
         customDel: this.openWay === "nav" ? true : false,
-        disableEdit:this.communityRole,
+        disableEdit:this.isCommunityDesktop(this.desk),
       };
     },
   },
@@ -439,7 +434,8 @@ export default {
 
   methods: {
     ...mapActions(noteStore, ["changeDeskBg", "saveDeskTitle"]),
-    
+    ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+
     // 自定义删除卡片
     deleteCard() {
       this.$emit("deleteCard");

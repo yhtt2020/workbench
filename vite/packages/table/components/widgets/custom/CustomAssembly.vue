@@ -194,15 +194,6 @@ export default {
   emits: ["delete"],
   computed: {
     ...mapWritableState(paperStore, ["settings", "myPapers"]),
-    ...mapWritableState(communityNavStore,['currentCommunity']),
-    // currentCommunity
-    // filterList() {
-    //   return this.ClassifyData.filter((i) => {
-    //     return (
-    //       i.type === this.nowClassify && i.name.includes(this.selectContent)
-    //     );
-    //   });
-    // },
 
     title() {
       return this.myData.link.name || this.myData.link;
@@ -211,23 +202,22 @@ export default {
       return this.myData.img.middleSrc || this.myData.img.src;
     },
 
-    // 获取当前社群的角色权限
-    communityRole(){
-      return this.currentCommunity?.item.role === 'member';
-    },
+
 
     options() {
       return {
         bg: this.customData.hideFrame ? "transparent" : "",
         shadow: this.customData.hideFrame,
-        resize: this.communityRole ? false : true,
+        resize: this.isCommunityDesktop(this.desk) ? false : true,
         customDel: this.openWay === "nav" ? true : false,
-        disableEdit:this.communityRole ? true : false,
+        disableEdit:this.isCommunityDesktop(this.desk) ,
       };
     },
   },
   methods: {
     ...mapActions(cardStore, ["updateCustomData"]),
+    ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+
 
     deleteCard() {
       this.$emit("delete");
@@ -383,6 +373,29 @@ export default {
     if (this.customData.customSize == undefined) {
       this.customData.customSize = "2x2";
     }
+
+    if(this.options.disableEdit){
+      this.sizeList = [];
+      this.menuList = []
+    }
+    else {
+      this.menuList = [
+        {
+          icon: "shezhi1",
+          title: "设置",
+          fn: () => {
+            this.panelVisible = true;
+            this.$refs.customAssembly.visible = false;
+          },
+        },
+      ];
+      this.sizeList = [
+        { title: "2x2", className: "small", name: "2x2" },
+        { title: "2x4", className: "", name: "2x4" },
+        { title: "4x4", className: "double", name: "4x4" },
+      ]
+    }
+
   },
   // watch: {
   //   'myData.img':{

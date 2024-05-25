@@ -13,86 +13,119 @@
       :customData="customData"
       :envLimit="['guest', 'offline']"
       :env="env"
-      @delete="deleteCard">
+      @delete="deleteCard"
+    >
       <div class="top-bar">
         <div class="center">
-          <div :class="['item', { action: currentIndex == index }]" v-for="(title, index) in showList"
-            @click="setCurrentIndex(index)" :style="{ width: this.showSize.width == 2 ? '81px' : '67px' }">
+          <div
+            :class="['item', { action: currentIndex == index }]"
+            v-for="(title, index) in showList"
+            @click="setCurrentIndex(index)"
+            :style="{ width: this.showSize.width == 2 ? '81px' : '67px' }"
+          >
             <span>{{ title.title }}</span>
           </div>
         </div>
       </div>
-      <!-- {{ currentIndex }}
-      {{ this.customData.index }}
-      <xt-tab
-        v-model="currentIndex"
-        :list="showList"
-        style="height: 32px;"
-        :boxStyle="{ 'border-radius': '8px' }"
-        :itemStyle="{ 'border-radius': '6px' }"
-        :modeValue="modeValue">
-      </xt-tab> -->
       <div v-if="pageToggle">
         <div v-if="isLoading">
-          <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
+          <a-spin
+            style="
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              margin-top: 25%;
+            "
+          />
         </div>
         <div class="content" v-else>
-          <div v-for="(item, index) in newsItemList" style="display: flex;" class="set-type">
+          <div
+            v-for="(item, index) in newsItemList"
+            style="display: flex"
+            class="set-type"
+          >
             <span class="sort">{{ index + 1 }}</span>
             <div class="item">
               <NewsItem :key="index" :newsMsgList="item" :copyNum="copyNum" />
             </div>
             <!-- 添加分割线 -->
             <div class="divider" v-show="this.copyNum >= 8">
-              <a-divider type="vertical" orientation="center" style="color: var(--divider); width: 1px; height: 100%;" />
+              <a-divider
+                type="vertical"
+                orientation="center"
+                style="color: var(--divider); width: 1px; height: 100%"
+              />
             </div>
-
           </div>
-
         </div>
-
       </div>
-      <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu>
+      <DataStatu
+        v-else
+        imgDisplay="/img/test/load-ail.png"
+        :btnToggle="false"
+        textPrompt="暂无数据"
+      ></DataStatu>
     </xt-container>
 
-    <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
-      <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
-        <div class="primary-title" style="color: var(--primary-text);">新闻类别</div>
-        <div class="mt-2 mb-6 secondary-title" style="color: var(--secondary-text);">长按拖拽排序,最多选择八个(小尺寸(2x4)只显示前三个)</div>
-        <NewsCardDrawer @setSortedList="setSortedList" :drawerList="aggList"></NewsCardDrawer>
+    <a-drawer
+      :width="500"
+      title="设置"
+      v-model:visible="settingVisible"
+      placement="right"
+    >
+      <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%">
+        <div class="primary-title" style="color: var(--primary-text)">
+          新闻类别
+        </div>
+        <div
+          class="mt-2 mb-6 secondary-title"
+          style="color: var(--secondary-text)"
+        >
+          长按拖拽排序,最多选择八个(小尺寸(2x4)只显示前三个)
+        </div>
+        <NewsCardDrawer
+          @setSortedList="setSortedList"
+          :drawerList="aggList"
+        ></NewsCardDrawer>
       </vue-custom-scrollbar>
-
     </a-drawer>
   </div>
 </template>
 
 <script>
-import Widget from '../../card/Widget.vue';
-import NewsItem from './NewsItem.vue';
-import { mapWritableState, mapActions } from 'pinia'
-import DataStatu from "../DataStatu.vue"
-import { newsStore } from '../../../store/news.ts'
+import Widget from "../../card/Widget.vue";
+import NewsItem from "./NewsItem.vue";
+import { mapWritableState, mapActions } from "pinia";
+import DataStatu from "../DataStatu.vue";
+import { newsStore } from "../../../store/news.ts";
 import NewsCardDrawer from "./NewsCardDrawer.vue";
-import { LeftOutlined, RightOutlined, HolderOutlined, FileSearchOutlined } from '@ant-design/icons-vue'
-import { Icon as newIcon } from '@iconify/vue'
+import {
+  LeftOutlined,
+  RightOutlined,
+  HolderOutlined,
+  FileSearchOutlined,
+} from "@ant-design/icons-vue";
+import { Icon as newIcon } from "@iconify/vue";
+import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
+
 export default {
   name: "News",
   props: {
     customIndex: {
       type: Number,
-      default: 0
+      default: 0,
     },
     customData: {
       type: Object,
-      default: () => { }
+      default: () => {},
     },
     desk: {
-      type: Object
+      type: Object,
     },
-    openWay:{
+    openWay: {
       type: String,
-      default: "desk"
-    }
+      default: "desk",
+    },
   },
   components: {
     Widget,
@@ -103,93 +136,95 @@ export default {
     RightOutlined,
     HolderOutlined,
     FileSearchOutlined,
-    newIcon
+    newIcon,
   },
-  emit: ['delete'],
+  emit: ["delete"],
   data() {
     return {
       settingVisible: false,
       sizeList: [
         {
-          value: '2x4',
-          name: '2x4'
+          value: "2x4",
+          name: "2x4",
         },
         {
-          value: '4x4',
-          name: '4x4'
+          value: "4x4",
+          name: "4x4",
         },
         {
-          value: '4x6',
-          name: '4x6'
+          value: "4x6",
+          name: "4x6",
         },
-
       ],
-      customSize:'2x4',
+      customSize: "2x4",
       menuList: [
         {
-          icon: 'shezhi1',
-          title: '设置',
-          fn: () => { this.settingVisible = true; this.$refs.cardSlot.visible = false }
+          icon: "shezhi1",
+          title: "设置",
+          fn: () => {
+            this.settingVisible = true;
+            this.$refs.cardSlot.visible = false;
+          },
         },
       ],
       currentIndex: 0,
       // '头条', '国内', '国际', '娱乐', '军事', '体育', '科技'
       titleList: [
         {
-          title: '头条',
-          tag: 'top',
+          title: "头条",
+          tag: "top",
           // id:0
         },
         {
-          title: '国内',
-          tag: 'guonei',
+          title: "国内",
+          tag: "guonei",
           // id:1
         },
         {
-          title: '国际',
-          tag: 'guoji',
+          title: "国际",
+          tag: "guoji",
           // id:2
         },
         {
-          title: '娱乐',
-          tag: 'yule',
+          title: "娱乐",
+          tag: "yule",
           // id:3
         },
         {
-          title: '军事',
-          tag: 'junshi',
+          title: "军事",
+          tag: "junshi",
           // id:4
         },
         {
-          title: '体育',
-          tag: 'tiyu',
+          title: "体育",
+          tag: "tiyu",
           // id:5
         },
         {
-          title: '科技',
-          tag: 'keji',
+          title: "科技",
+          tag: "keji",
           // id:6
         },
         {
-          title: '财经',
-          tag: 'caijing',
+          title: "财经",
+          tag: "caijing",
           // id:7
         },
         {
-          title: '汽车',
-          tag: 'qiche',
+          title: "汽车",
+          tag: "qiche",
           // id:8
         },
         {
-          title: '游戏',
-          tag: 'youxi',
+          title: "游戏",
+          tag: "youxi",
           // id:9
         },
         {
-          title: '健康',
-          tag: 'jiankang',
+          title: "健康",
+          tag: "jiankang",
           // id:10
-        }
+        },
       ],
       isLoading: false,
       pageToggle: true,
@@ -198,144 +233,178 @@ export default {
         swipeEasing: true,
         suppressScrollY: false,
         suppressScrollX: true,
-        wheelPropagation: true
+        wheelPropagation: true,
       },
       env: {
         web: false,
         mobile: false,
         client: false,
-        single: true
+        single: true,
       },
-      refreshFlag: false
-    }
+      refreshFlag: false,
+    };
   },
   methods: {
+    ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+
+
     // 卡片自定义删除事件
-    deleteCard(){
-      this.$emit('delete')
+    deleteCard() {
+      this.$emit("delete");
     },
     async setCurrentIndex(index) {
-      this.currentIndex = index
-      this.customData.index = this.currentIndex
-      await this.getNewsData()
-      this.customData.newsList = this.newsMsgList
+      this.currentIndex = index;
+      this.customData.index = this.currentIndex;
+      await this.getNewsData();
+      this.customData.newsList = this.newsMsgList;
     },
     setSortedList(arrList) {
       // 获取拖拽排序后数据
-      this.customData.sortList = arrList
+      this.customData.sortList = arrList;
     },
-    ...mapActions(newsStore, ['getNewsMsg']),
+    ...mapActions(newsStore, ["getNewsMsg"]),
     async getNewsData() {
-      let tag = this.showList[this.currentIndex].tag
-      this.customData.tag = tag
+      let tag = this.showList[this.currentIndex].tag;
+      this.customData.tag = tag;
       // console.log(this.customData.tag)
-      await this.getNewsMsg(this.customData.tag)
-      this.customData.newsList=this.newsMsgList
+      await this.getNewsMsg(this.customData.tag);
+      this.customData.newsList = this.newsMsgList;
       // console.log(this.customData.newList);
     },
     refreshData() {
-      this.refreshFlag = true
+      this.refreshFlag = true;
       this.getNewsData().then(() => {
-        this.refreshFlag = false
-      })
-    }
+        this.refreshFlag = false;
+      });
+    },
   },
   computed: {
+    ...mapWritableState(communityNavStore, ["currentCommunity"]),
+
     // 卡片选项
     options() {
       return {
         // 当卡片添加到导航栏时，阻止默认删除事件
-        customDel: this.openWay === 'nav' ? true : false,
+        customDel: this.openWay === "nav" ? true : false,
         defaultData: {
-          customSize:this.customData.customSize ||'2x4',
-        }
-      }
+          customSize: this.customData.customSize || "2x4",
+        },
+        disableEdit: this.isCommunityDesktop(this.desk),
+      };
     },
 
     aggList() {
       if (this.customData && this.customData.sortList) {
-        return this.customData.sortList
+        return this.customData.sortList;
       } else {
-        return this.titleList
+        return this.titleList;
       }
     },
-    ...mapWritableState(newsStore, ['newsMsgList']),
+    ...mapWritableState(newsStore, ["newsMsgList"]),
     showList() {
-      return this.aggList.slice(0, this.copyItem)
+      return this.aggList.slice(0, this.copyItem);
     },
     // 判断尺寸大小
     showSize() {
       if (this.customData.customSize) {
-        let arr = this.customData.customSize.split('x')
+        let arr = this.customData.customSize.split("x");
         return {
           width: arr[0],
-          height: arr[1]
-        }
-      }else{
+          height: arr[1],
+        };
+      } else {
         return {
           width: 2,
-          height: 4
-        }
+          height: 4,
+        };
       }
     },
     // 判断不同高度返回不同个数
     copyNum() {
       // return this.showSize.height == 2 ? 6 : 10
       if (this.showSize.width == 2) {
-        return 4
+        return 4;
       }
-      return this.showSize.height == 4 ? 8 : 12
-
+      return this.showSize.height == 4 ? 8 : 12;
     },
     // 判断top-bar需要几个标签
     copyItem() {
-      return this.showSize.width == 2 ? 3 : 8
+      return this.showSize.width == 2 ? 3 : 8;
     },
     // 通过接口返回的数据进行裁切，返回适合页面长度的数据
     newsItemList() {
       if (this.customData && this.customData.newsList?.length) {
-        return this.customData.newsList.slice(0, this.copyNum)
+        return this.customData.newsList.slice(0, this.copyNum);
       }
-      return this.newsMsgList.slice(0, this.copyNum)
-
+      return this.newsMsgList.slice(0, this.copyNum);
     },
     currentTag() {
       if (this.customData && this.customData.index) {
-        return this.showList[this.customData.index].title
+        return this.showList[this.customData.index].title;
       }
-      return this.showList[this.currentIndex].title
+      return this.showList[this.currentIndex].title;
     },
-    header(){
+    header() {
       return {
-        title:'新闻资讯',
+        title: "新闻资讯",
         // ifyIcon:'fluent:news-16-regular',
-        showIcon:"/img/appLogo/news.png",
-        refresh:{
+        showIcon: "/img/appLogo/news.png",
+        refresh: {
           fn: this.refreshData,
-          tip:'刷新',
-          state:this.refreshFlag ? true : false
+          tip: "刷新",
+          state: this.refreshFlag ? true : false,
         },
-        titleHover:true,
-        titleHoverName:'点击切换',
-      }
-    }
+        titleHover: true,
+        titleHoverName: "点击切换",
+      };
+    },
   },
   async mounted() {
-    this.isLoading = true
+    this.isLoading = true;
     this.getNewsMsg(this.showList[this.currentIndex].tag).then(() => {
-      this.isLoading = false
-    })
+      this.isLoading = false;
+    });
     // await this.getNewsData()
-    if(this.customData.customSize == undefined){
-      this.customData.customSize = '2x4'
+    if (this.customData.customSize == undefined) {
+      this.customData.customSize = "2x4";
+    }
+
+    if (this.options.disableEdit) {
+      this.sizeList = [];
+      this.menuList = [];
+    } else {
+      this.menuList = [
+        {
+          icon: "shezhi1",
+          title: "设置",
+          fn: () => {
+            this.settingVisible = true;
+            this.$refs.cardSlot.visible = false;
+          },
+        },
+      ];
+      this.sizeList = [
+        {
+          value: "2x4",
+          name: "2x4",
+        },
+        {
+          value: "4x4",
+          name: "4x4",
+        },
+        {
+          value: "4x6",
+          name: "4x6",
+        },
+      ];
     }
   },
   watch: {
-    customSize(newVal,oldVal) {
-      this.customData.customSize = newVal
-    }
-  }
-}
+    customSize(newVal, oldVal) {
+      this.customData.customSize = newVal;
+    },
+  },
+};
 </script>
 <style lang='scss' scoped>
 .top-bar {
@@ -348,12 +417,11 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(0, 0, 0, 0.30);
+    background: rgba(0, 0, 0, 0.3);
     border-radius: 8px;
 
     span {
       color: #ffffffff;
-
     }
   }
 
@@ -365,7 +433,7 @@ export default {
     border-radius: 8px;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.30);
+    background: rgba(0, 0, 0, 0.3);
     display: flex;
     box-sizing: border-box;
     overflow-x: auto;
@@ -380,7 +448,7 @@ export default {
     .action {
       width: 100%;
       height: 100%;
-      background: #508BFE;
+      background: #508bfe;
       cursor: pointer;
       border-radius: 8px;
       flex: 1;
@@ -402,18 +470,14 @@ export default {
       border-radius: 8px;
       flex-shrink: 0;
 
-
       span {
-
         font-size: 16px;
         color: rgba(255, 255, 255, 0.85);
         text-align: center;
         font-weight: 400;
       }
-
     }
   }
-
 }
 
 .content {
@@ -432,7 +496,6 @@ export default {
     left: 285px;
     right: 286px;
     overflow: hidden;
-
   }
 
   .sort {
@@ -450,18 +513,18 @@ export default {
     margin-top: 8px;
   }
 
-  .set-type:nth-of-type(1)>span {
-    background: #FE2C46;
+  .set-type:nth-of-type(1) > span {
+    background: #fe2c46;
     color: rgba(255, 255, 255, 0.85);
   }
 
-  .set-type:nth-of-type(2)>span {
-    background: #FF6600;
+  .set-type:nth-of-type(2) > span {
+    background: #ff6600;
     color: rgba(255, 255, 255, 0.85);
   }
 
-  .set-type:nth-of-type(3)>span {
-    background: #FAAA10;
+  .set-type:nth-of-type(3) > span {
+    background: #faaa10;
     color: rgba(255, 255, 255, 0.85);
   }
 

@@ -281,30 +281,14 @@ export default {
   computed: {
     ...mapWritableState(cardStore, ["countdownDay"]),
     ...mapWritableState(timerStore, ["appDate"]),
-    ...mapWritableState(communityNavStore,['currentCommunity']),
-
-    communityRole(){
-      return this.currentCommunity?.item?.role === 'member';
-    },
 
     options() {
-      if (this.communityRole) {
-        this.sizeList = [];
-      } else {
-        this.sizeList = [
-          { value: "2x2", name: "2x2" },
-          {
-            value: "2x4",
-            name: "2x4",
-          },
-        ];
-      }
       return {
         defaultData: {
           customSize: this.customData.customSize || "2x2",
         },
         customDel: this.openWay === "nav" ? true : false,
-        disableEdit: this.communityRole,
+        disableEdit: this.isCommunityDesktop(this.desk),
       };
     },
   },
@@ -314,6 +298,29 @@ export default {
     if (this.customData.customSize == undefined) {
       this.customData.customSize = "2x2";
     }
+
+    if (this.options.disableEdit) {
+      this.sizeList = [];
+      this.menuList = [];
+    } else {
+      this.sizeList = [
+        { value: "2x2", name: "2x2" },
+        {
+          value: "2x4",
+          name: "2x4",
+        },
+      ];
+      this.menuList = [
+        {
+          icon: "shezhi1",
+          title: "设置",
+          fn: () => {
+            this.settingVisible = true;
+            this.$refs.cardSlot.visible = false;
+          },
+        },
+      ];
+    }
   },
   methods: {
     ...mapActions(cardStore, [
@@ -321,7 +328,8 @@ export default {
       "addCountdownDay",
       "sortCountdown",
     ]),
-    
+    ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+
     onPanelChange(value, mode) {},
     transDate,
     deleteCard() {

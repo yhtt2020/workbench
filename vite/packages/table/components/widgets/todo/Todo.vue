@@ -211,12 +211,12 @@ export default {
         showIcon: "/img/appLogo/todo.png",
 
         title: this.selectTodo.title,
-        titleHover: this.communityRole ? false : true,
+        titleHover: this.options.disableEdit ? false : true,
         titleHoverName: this.selectTodo.title,
 
         // leftHoverIcon: "fluent:checkmark-square-24-regular",
 
-        rightIcon: this.communityRole
+        rightIcon: this.options.disableEdit
           ? []
           : [
               {
@@ -230,11 +230,11 @@ export default {
     options() {
       return {
         customDel: this.openWay === "nav" ? true : false,
-        disableEdit: this.communityRole,
+        disableEdit: this.isCommunityDesktop(this.desk),
       };
     },
     isEdit() {
-      return !this.communityRole;
+      return !this.options.disableEdit;
     },
   },
   async mounted() {
@@ -259,19 +259,29 @@ export default {
       this.customData.customSize = "2x2";
     }
 
-
-
     // 在社群成员桌面的场景下将尺寸切换操作进行屏蔽
     if (this.communityRole) {
       this.sizeList = [];
+      this.toggleTodoList = [];
     } else {
       this.sizeList = [
         { value: "2x2", name: "2x2" },
         { value: "2x4", name: "2x4" },
       ];
+      this.toggleTodoList = [
+        {
+          icon: "shezhi1",
+          title: "设置",
+          fn: () => {
+            this.openSettings = true;
+            this.$refs.todoSlot.visible = false;
+          },
+        },
+      ];
     }
   },
   methods: {
+    ...mapActions(communityNavStore, ["isCommunityDesktop"]),
 
     deleteCard() {
       this.$emit("delete");

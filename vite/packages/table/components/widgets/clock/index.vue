@@ -149,19 +149,24 @@ export default {
     this.clockTime = setInterval(() => {
       this.clockDay = this.dateTimeStamp(Date.now());
     }, 12 * 60 * 60 * 1000);
-    /**
-     *
-     *
-     * **/
+
+    if (this.options.disableEdit) {
+      this.menuList = [];
+    } else {
+      this.menuList = [
+        {
+          icon: "shezhi1",
+          title: "设置",
+          fn: () => {
+            this.$refs.clockSettingRef.openClockModal();
+          },
+        },
+      ];
+    }
   },
   computed: {
     ...mapWritableState(appStore, ["backgroundImage"]),
-    ...mapWritableState(communityNavStore, ["currentCommunity"]),
-
-    // 社群角色权限
-    communityRole() {
-      return this.currentCommunity?.item?.role === "member";
-    },
+ 
 
     // 组件头部
     header() {
@@ -181,7 +186,7 @@ export default {
       return {
         shadow: !this.customData.backgroundFrame,
         bg: !this.customData.backgroundFrame ? "transparent" : "",
-        resize: !this.communityRole ? true : false,
+        resize: !this.isCommunityDesktop(this.desk) ? true : false,
         defaultData: {
           backgroundFrame: true,
           clockId: "clock4",
@@ -198,7 +203,7 @@ export default {
           name: dateTimeStamp(Date.now()),
         },
         customDel: this.openWay === "nav" ? true : false,
-        disableEdit: this.communityRole,
+        disableEdit: this.isCommunityDesktop(this.desk),
       };
     },
     // 拖拽缩放
@@ -255,6 +260,10 @@ export default {
 
   methods: {
     ...mapActions(cardStore, ["updateCustomData"]),
+    ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+
+
+
     dateTimeStamp,
     deleteCard() {
       this.$emit("delete");

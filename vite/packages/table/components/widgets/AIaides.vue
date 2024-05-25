@@ -84,7 +84,7 @@ import {
 } from "@ant-design/icons-vue";
 import DataStatu from "./DataStatu.vue";
 import { aiStore } from "../../store/ai";
-import { mapWritableState } from "pinia";
+import { mapWritableState, mapActions } from "pinia";
 import { Icon as AiIcon } from "@iconify/vue";
 import { communityNavStore } from "../bottomPanel/store/communityNavStore";
 
@@ -135,6 +135,8 @@ export default {
     };
   },
   methods: {
+    ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+
     doRemoveCard(value) {
       if (this.openWay === "nav") {
         console.log(value);
@@ -167,12 +169,6 @@ export default {
   },
   computed: {
     ...mapWritableState(aiStore, ["recentList", "selectTopicIndex"]),
-    ...mapWritableState(communityNavStore, ["currentCommunity"]),
-
-    // 社群角色权限
-    communityRole() {
-      return this.currentCommunity?.item?.role === "member";
-    },
 
     // 判断尺寸大小
     showSize() {
@@ -196,29 +192,12 @@ export default {
         : this.recentList?.slice(0, 4).length;
     },
     options() {
-      // 根据权限设置尺寸大小
-      if (this.communityRole) {
-        this.sizeList = [];
-      } else {
-        this.sizeList = [
-          { value: "2x2", name: "2x2" },
-          { value: "2x4", name: "2x4" },
-        ];
-      }
-
-      // 根据权限设置标题鼠标经过
-      // if (this.communityRole) {
-      //   this.header.titleHover = false;
-      // } else {
-      //   this.header.titleHover = true;
-      // }
-
       return {
         customDel: this.openWay === "nav" ? true : false,
         defaultData: {
           customSize: this.customData.customSize || "2x2",
         },
-        disableEdit: this.communityRole,
+        disableEdit: this.isCommunityDesktop(this.desk),
       };
     },
   },
@@ -230,6 +209,16 @@ export default {
   mounted() {
     if (this.customData.customSize == undefined) {
       this.customData.customSize = "2x2";
+    }
+    console.log('闹钟组件',this.isCommunityDesktop(this.desk));
+    // 根据权限设置尺寸大小
+    if (this.options.disableEdit) {
+      this.sizeList = [];
+    } else {
+      this.sizeList = [
+        { value: "2x2", name: "2x2" },
+        { value: "2x4", name: "2x4" },
+      ];
     }
   },
 };

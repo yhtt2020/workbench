@@ -108,7 +108,10 @@
       </div>
      -->
 
-      <div class="flex flex-col items-center justify-center h-full" v-if="!options.disableEdit">
+      <div
+        class="flex flex-col items-center justify-center h-full"
+        v-if="!options.disableEdit"
+      >
         <xt-button
           class="rounded-lg w-[120px] h-[45px] xt-active-bg mb-4 border-0 p-0 font-16"
           type="primary"
@@ -133,11 +136,14 @@
 
       <template v-else>
         <div class="flex flex-col items-center justify-center h-full">
-          <xt-ify-icon icon="fluent-emoji:sleeping-face"  class="pb-4" size="56"/>
+          <xt-ify-icon
+            icon="fluent-emoji:sleeping-face"
+            class="pb-4"
+            size="56"
+          />
           <span class="xt-text xt-font font-16">暂无数据</span>
         </div>
       </template>
-
     </div>
     <div
       @click="onSetup"
@@ -322,21 +328,32 @@ export default {
       "countDownBtn",
     ]),
     ...mapWritableState(topClockSettingStore, ["topClockSettingVisible"]),
-    ...mapWritableState(communityNavStore,['currentCommunity']),
-
-    communityRole(){
-      return this.currentCommunity?.item?.role === 'member'
-    },
 
     options() {
       return {
         customDel: this.openWay === "nav" ? true : false,
-        disableEdit: this.communityRole,
+        disableEdit: this.isCommunityDesktop(this.desk),
       };
     },
   },
   mounted() {
     this.customData.customSize = "2x2";
+
+    if (this.options.disableEdit) {
+      this.menuList = [];
+    } else {
+      this.menuList = [
+        {
+          icon: "shezhi1",
+          title: "设置",
+          fn: () => {
+            this.settingVisible = true;
+            this.$refs.cardSlot.visible = false;
+            this.changeSettingStatus();
+          },
+        },
+      ];
+    }
   },
   emit: ["delete"],
   methods: {
@@ -348,6 +365,7 @@ export default {
       "dCountDown",
     ]),
     ...mapActions(topClockSettingStore, ["changeSettingStatus"]),
+    ...mapActions(communityNavStore, ["isCommunityDesktop"]),
 
     deleteCard() {
       this.$emit("delete");

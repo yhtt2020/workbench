@@ -255,6 +255,7 @@ import { useWidgetStore } from "./store";
 import { useFreeLayoutStore } from "../desk/freeLayout/store";
 import { useMouseInElement } from "@vueuse/core";
 import { navStore } from "../../store/nav";
+import { titleOption } from "./libs/rightMenuOption";
 
 import Resize from "./Resize.vue";
 import RightMenu from "./RightMenu.vue";
@@ -442,26 +443,19 @@ const addObj = computed(() => {
 // 实际渲染的右键菜单
 const menus = computed(() => {
   const platLimit = props.platLimit || " ";
-  
-  // 在社群成员桌面的场景下,需要的处理
-  const titleList = ['打印','复制HTML代码','复制MD文本','复制内容'];
-  const filterMenu = props.menuList.filter((item)=>{
-    return titleList.some((some)=>{
-      return String(some) === String(item.title);
-    })
-  })
-  if (props?.options?.disableEdit) {
-    if(filterMenu.length > 0){
-      return filterMenu;
-    }
-    else {
-      return [];
-    }
-  };
-
   if (usePlat(platLimit)) return [addObj.value, deleteObj.value];
   let menu = [...props.menuList, addObj.value, deleteObj.value];
-  return menu;
+  // 在社群成员桌面的场景下,需要的处理
+  const filterMenu = props.menuList.filter((item) => {
+    return titleOption.some((some) => {
+      return String(some) !== String(item.title);
+    });
+  });
+  if (props?.options?.disableEdit) {
+    return filterMenu;
+  } else {
+    return menu;
+  }
 });
 // 头部左侧显示区域状态
 const leftHover = computed(() => {

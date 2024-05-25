@@ -85,7 +85,7 @@
 </template>
 <script>
 
-import { mapState,mapWritableState } from 'pinia'
+import { mapState,mapWritableState,mapActions } from 'pinia'
 import { getDateTime } from '../../../../src/util/dateTime'
 import { weatherStore } from '../../store/weather'
 import Widget from "../card/Widget.vue";
@@ -136,12 +136,7 @@ export default {
   },
   computed: {
     ...mapState(weatherStore, ['cities','reloadAll']),
-    ...mapWritableState(communityNavStore, ["currentCommunity"]),
-
-    // 社群角色权限
-    communityRole() {
-      return this.currentCommunity?.item?.role === "member";
-    },
+  
 
     header(){
       return {
@@ -155,7 +150,7 @@ export default {
     options(){
       return {
         customDel:this.openWay === 'nav' ? true : false,
-        disableEdit: this.communityRole,
+        disableEdit: this.isCommunityDesktop(this.desk),
       }
     },
     defaultCity(){
@@ -179,6 +174,9 @@ export default {
     this.customData.customSize = '2x2'
   },
   methods: {
+    ...mapActions(communityNavStore,['isCommunityDesktop']),
+
+
     // 自定义删除卡片事件
     deleteCard() {
       this.$emit("delete", this.customIndex);
