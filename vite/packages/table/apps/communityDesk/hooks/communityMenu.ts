@@ -1,7 +1,6 @@
 import { useCustomLayout } from "../../../components/desk/freeLayout/useCustomLayout";
 import {
   headerData,
-  folderData,
   mainData,
 } from "../../../components/desk/freeLayout/config";
 import { generateSearchResultTime } from "../hooks/deskCreateMethod";
@@ -31,7 +30,6 @@ function communityMenus() {
       fn: () => {
         useCustomLayout({
           headerList: headerData,
-          folderList: folderData,
           mainList: mainData,
           cb: (position: any) => {},
         });
