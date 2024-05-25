@@ -1,5 +1,9 @@
 import { defineStore } from "pinia";
-
+import {usePlat} from "../../../permission/usePlat";
+let appPath=''
+if(usePlat('client')){
+  appPath=require('path').join(window.globalArgs['user-data-dir'],'download')
+}
 // @ts-ignore
 export const useAppCenterStore = defineStore("useAppCenterStore", {
   state: () => ({
@@ -13,12 +17,12 @@ export const useAppCenterStore = defineStore("useAppCenterStore", {
     // 最近使用
     recentUsed: false,
     // 默认路径
-    defaultPath: require('path').join(window.globalArgs['user-data-dir'], 'download'),
+    defaultPath: appPath,
     // 安装路径
-    installPath: require('path').join(window.globalArgs['user-data-dir'], 'download'),
+    installPath: appPath,
     // 提示显示
     showTip: true,
-    
+
   }),
   getters: {},
   actions: {},

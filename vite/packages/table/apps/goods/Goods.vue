@@ -26,9 +26,9 @@
     </div>
   </xt-container>
   <teleport to='body'>
-    <Modal v-if="settingVisible" v-model:visible="settingVisible" :blur-flag="true"  :z-index="1001">
-      <div class="flex rounded-lg overflow-hidden">
-      <Settings :customData="customData" @close="settingVisible=false"></Settings>
+    <Modal v-if="settingVisible" v-model:visible="settingVisible" :blur-flag="true"  :z-index="1001" >
+      <div class="flex rounded-lg overflow-hidden" style="width: 1000px;min-height: 752px;max-height: 90vh">
+      <Center style="height: 100%" :customData="customData" @close="settingVisible=false"></Center>
       </div>
     </Modal>
   </teleport>
@@ -39,7 +39,7 @@ import { Icon as newIcon } from '@iconify/vue'
 import { mapWritableState, mapActions } from 'pinia'
 import Modal from '../../components/Modal.vue'
 import Widget from '../../components/card/Widget.vue'
-import Settings from './Settings.vue'
+import Center from './Center.vue'
 import GoodsList from './GoodsList.vue'
 
 export default {
@@ -49,7 +49,7 @@ export default {
     Widget,
     newIcon,
     Modal,
-    Settings
+    Center
   },
   props: {
     customIndex: {

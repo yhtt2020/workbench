@@ -1,5 +1,6 @@
 <template>
-  <div class="mb-2 relative">
+  <template v-if="detail">
+  <div class="mb-2 relative" >
 
     <a-avatar :size="350" :src="detail.goods_thumbnail_url" shape="square"></a-avatar>
     <div class="xt-bg text-center pt-8 p-5 rounded-lg" style="position: absolute;right:10px;top:10px" v-if="qrcodeVisible"   :blur-flag="false" :z-index="1010">
@@ -75,7 +76,10 @@
     </div>
 
   </div>
-
+  </template>
+  <div v-else class="p-5 text-center">
+    请在左侧选择商品。
+  </div>
 </template>
 
 <script setup>
@@ -105,6 +109,9 @@ const generateQRCode = async ( url,size) => {
 const qrcodeVisible =ref(false)
 const src = ref('')
 const goView = async (goodsSign) => {
+  if(!goodsSign){
+    return
+  }
   let rs = await generateUrl([goodsSign], true, { uid: 40708858, 'sid': '22222' })
   console.log(rs?.data, '获取到的链接')
   if (rs.status) {
@@ -116,7 +123,7 @@ const goView = async (goodsSign) => {
   }
 }
 
-watch(()=>props.detail.goods_sign,()=>{
+watch(()=>props?.detail?.goods_sign,()=>{
   qrcodeVisible.value=false
 },{
   deep:true

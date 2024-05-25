@@ -24,9 +24,10 @@ export const goodsStore = defineStore('goodsStore', {
         generate_short_url:shortUrl
       })
     },
-    getOrderList(page){
+    getOrderList(page,showAll=false){
       return apiPost('/app/ad/pdd/getOrderList',{
-
+        page:page,
+        showAll:showAll
       })
     }
   },

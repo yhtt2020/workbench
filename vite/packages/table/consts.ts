@@ -320,4 +320,4 @@ let ActionGroups = [
     ]
   }
 ]
-export {cdnUrl,SystemApps, ActionGroups, Server, sUrl,clientId}
+export {SystemApps, ActionGroups, Server, sUrl,cdnUrl}
