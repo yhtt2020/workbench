@@ -197,14 +197,14 @@ export default {
     },
     options() {
       // 根据权限设置尺寸大小
-      // if (this.communityRole) {
-      //   this.sizeList = [];
-      // } else {
-      //   this.sizeList = [
-      //     { value: "2x2", name: "2x2" },
-      //     { value: "2x4", name: "2x4" },
-      //   ];
-      // }
+      if (this.communityRole) {
+        this.sizeList = [];
+      } else {
+        this.sizeList = [
+          { value: "2x2", name: "2x2" },
+          { value: "2x4", name: "2x4" },
+        ];
+      }
 
       // 根据权限设置标题鼠标经过
       // if (this.communityRole) {
@@ -218,7 +218,7 @@ export default {
         defaultData: {
           customSize: this.customData.customSize || "2x2",
         },
-        // disableEdit: this.communityRole,
+        disableEdit: this.communityRole,
       };
     },
   },

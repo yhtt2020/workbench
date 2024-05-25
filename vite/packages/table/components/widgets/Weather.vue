@@ -85,13 +85,15 @@
 </template>
 <script>
 
-import { mapState } from 'pinia'
+import { mapState,mapWritableState } from 'pinia'
 import { getDateTime } from '../../../../src/util/dateTime'
 import { weatherStore } from '../../store/weather'
 import Widget from "../card/Widget.vue";
 import HorizontalDrawer from '../HorizontalDrawer.vue';
 import XtButton from '../../ui/libs/Button/index.vue'
 import { Icon as newIcon } from '@iconify/vue';
+import { communityNavStore } from "../bottomPanel/store/communityNavStore";
+
 export default {
   name: "Weather",
   props:{
@@ -134,13 +136,13 @@ export default {
   },
   computed: {
     ...mapState(weatherStore, ['cities','reloadAll']),
-    // city () {
-    //   if(this.cities[0]){
-    //     return this.cities[0]
-    //   }else{
-    //     return {}
-    //   }
-    // },
+    ...mapWritableState(communityNavStore, ["currentCommunity"]),
+
+    // 社群角色权限
+    communityRole() {
+      return this.currentCommunity?.item?.role === "member";
+    },
+
     header(){
       return {
         title:this.defaultCity?.name ? this.defaultCity?.name : "天气",
@@ -153,6 +155,7 @@ export default {
     options(){
       return {
         customDel:this.openWay === 'nav' ? true : false,
+        disableEdit: this.communityRole,
       }
     },
     defaultCity(){

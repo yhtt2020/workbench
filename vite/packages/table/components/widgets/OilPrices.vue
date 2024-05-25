@@ -78,9 +78,11 @@
 import Widget from '../card/Widget.vue'
 import { LineChartOutlined, CaretDownOutlined } from '@ant-design/icons-vue'
 import city from '../../js/axios/city.ts'
-import { mapActions, mapState } from 'pinia'
+import { mapActions, mapState,mapWritableState } from 'pinia'
 import { oilStore } from '../../store/store.ts'
 import { Icon as newIcon } from '@iconify/vue';
+import { communityNavStore } from "../bottomPanel/store/communityNavStore";
+
 export default {
   name: 'OilPrices',
   components: {
@@ -186,6 +188,14 @@ export default {
   },
   computed: {
     ...mapState(oilStore, ['cityOilData', 'currentCity', 'cityOilList']),
+    ...mapWritableState(communityNavStore, ["currentCommunity"]),
+
+    // 社群角色权限
+    communityRole() {
+      return this.currentCommunity?.item?.role === "member";
+    },
+    
+
     // 获取当前组件省市的油价信息
     showOilData() {
       let cityMsg = this.cityOilData.filter((item) => {
@@ -198,7 +208,8 @@ export default {
         customDel: this.openWay === 'nav' ? true : false,
         defaultData: {
           customSize: '2x4'
-        }
+        },
+        disableEdit: this.communityRole,
       }
     }
   },
