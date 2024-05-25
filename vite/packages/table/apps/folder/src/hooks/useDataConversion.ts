@@ -29,7 +29,7 @@ const isTrueSize = (data) => {
 export const useFileConversionIcon = (data) => {
   const icon = {
     model: "file",
-    size: isTrueSize(data.size) ? data.size ||  "mini" : "mini",
+    size: (data.size && isTrueSize(data.size)) ? data.size ||  "mini" : "mini",
     open: {
       type: data.type,
       value: data.value,
