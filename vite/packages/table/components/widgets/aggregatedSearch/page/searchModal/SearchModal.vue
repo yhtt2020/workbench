@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, inject, watch, provide, onMounted } from "vue";
 import PerfectScrollbar from "perfect-scrollbar";
-import { useEventListener, useDebounce } from "@vueuse/core";
+import { useEventListener, useDebounce, useDebounceFn } from "@vueuse/core";
 import { openBrowser } from "../../utils/open";
 import History from "./History.vue";
 
@@ -71,24 +71,14 @@ const initOpenWith = () => {
 initCurrentSource();
 initOpenWith();
 
-const currentSourceType = computed(() => {
-  const name = currentSource.value.name;
-  if (name === "文件夹") {
-    return "folder";
-  }
-  if (name === "工作台") {
-    return "";
-  }
-  return "web";
-});
 const recommendIndex = computed(() => {
   if (ctrlSelectIndex.value < 0) {
-    ctrlSelectIndex.value = recommendList.value.length - 1;
+    ctrlSelectIndex.value = searchList.value.length - 1;
   }
-  if (ctrlSelectIndex.value > recommendList.value.length - 1) {
+  if (ctrlSelectIndex.value > searchList.value.length - 1) {
     ctrlSelectIndex.value = 0;
   }
-  return ctrlSelectIndex.value % recommendList.value.length;
+  return ctrlSelectIndex.value % searchList.value.length;
 });
 watch(debounceCtrlSelectIndex, (val) => {
   searchScrollbar.value.scrollTop = ctrlSelectIndex.value * 44;
@@ -168,7 +158,10 @@ const getRecommend = async () => {
   let { data } = await axios.get(recommendUrl);
   recommendList.value = handlers[name]?.(data) || handlers["default"]();
 };
-
+const historySearch = (index: string) => {
+  let item = data.value.historyList[index];
+  openBrowser(item.value, currentOpenWith.value.value);
+};
 /** 搜索 */
 const search: any = async (value?: any) => {
   if (data.value.lastUse) {
@@ -189,7 +182,7 @@ const search: any = async (value?: any) => {
   data.value.historyList.push(history);
 
   openBrowser(searchUrl, currentOpenWith.value.value);
-  close()
+  close();
 };
 /** 关闭弹窗 */
 const close = () => {
@@ -230,7 +223,7 @@ const eventDown = (e) => {
     if (words.value.length > 0) {
       search(recommendList.value[ctrlSelectIndex.value]);
     } else {
-      historyRef.value.search(ctrlSelectIndex.value);
+      historySearch(ctrlSelectIndex.value);
     }
     return;
   }
@@ -251,14 +244,23 @@ const eventDown = (e) => {
     selectSource(sourceVal);
   }
 };
-
+const searchList = computed(() => {
+  if (words.value.length == 0) {
+    return data.value.historyList;
+  } else {
+    return recommendList.value;
+  }
+});
+const debouncedChangeTabVisible = useDebounceFn(() => {
+  tabVisible.value = false;
+}, 11111500);
 const tabEventUp = (e) => {
   if (e.key == "Tab") {
-    e.preventDefault();
-    setTimeout(() => {
-      tabVisible.value = false;
-    }, 100);
+    debouncedChangeTabVisible();
   }
+};
+const clear = () => {
+  data.value.historyList = [];
 };
 useEventListener("keydown", eventDown);
 useEventListener("keyup", tabEventUp);
@@ -269,8 +271,6 @@ const highlightText = (text) => {
   }
   const wordArr = [...words.value];
   if (!Array.isArray(wordArr) || wordArr.length === 0) {
-    console.log("第二次拦截 :>> ");
-
     return text;
   }
   // 将关键字数组转换为正则表达式数组
@@ -287,9 +287,11 @@ const highlightText = (text) => {
 
 <template>
   <xt-modal :model-value="true" @close="close" @init="initScrollbar" custom>
-    <div class="w-[600px] h-[600px] flex flex-col max-h-[100%]">
+    <div class="w-[600px] flex flex-col max-h-[600px]">
       <!-- 头部 -->
-      <header class="tt-bg-2-t flex items-center justify-between p-3">
+      <header
+        class="tt-bg-2-t flex items-center justify-between p-3 pr-2 h-[52px] max-h-[52px]"
+      >
         <div class="flex-1 flex items-center">
           <!-- 可切换搜索源 -->
           <a-dropdown
@@ -346,17 +348,31 @@ const highlightText = (text) => {
         />
       </header>
       <main
-        class="flex-1 w-full p-3 overflow-hidden relative"
+        class="flex-1 w-full overflow-hidden relative"
         ref="searchScrollbar"
       >
-        <template v-if="words">
-          <div class="flex pb-2">
+        <div
+          class="p-3 h-[500px]"
+          v-if="words.length > 0 || data.historyList.length > 0"
+        >
+          <div class="flex pb-2" v-if="words">
             <div class="text-sm tt-text-2">猜你想找</div>
+          </div>
+          <div
+            class="flex justify-between pb-3"
+            v-else-if="data.historyList.length > 0"
+          >
+            <div class="text-sm tt-text-2">最近</div>
+            <xt-mix-icon
+              size="20"
+              icon="fluent:dismiss-circle-16-filled"
+              @click="clear"
+            />
           </div>
           <!-- 搜索建议 -->
           <div
             class="w-full p-3 h-11 flex justify-between rounded-xl cursor-pointer hover:tt-theme-bg-2"
-            v-for="(item, index) in recommendList"
+            v-for="(item, index) in searchList"
             :class="{
               'xt-theme-bg-2': recommendIndex == index,
             }"
@@ -371,14 +387,16 @@ const highlightText = (text) => {
             >
               <div class="flex items-center">
                 <template v-if="recommendIndex == index">
-                <span class=" tt-theme">  {{ currentOpenWith?.name }}</span>
+                  <span class="tt-theme"> {{ currentOpenWith?.name }}</span>
                   <xt-mix-icon
                     icon="fluent:caret-down-12-filled"
                     class="tt-no-bg ml-2"
                     iconStyle="color: var(--active-bg)"
                   />
                 </template>
-                <template v-else> <div class=" tt-text-3">网页</div> </template>
+                <template v-else>
+                  <div class="tt-text-3">网页</div>
+                </template>
               </div>
               <template #overlay>
                 <!-- <div
@@ -403,20 +421,23 @@ const highlightText = (text) => {
               </template>
             </a-dropdown>
           </div>
-        </template>
-        <!-- 搜索历史 -->
-        <History v-else ref="historyRef" />
+          <!-- 搜索历史 -->
+          <!-- <History v-else ref="historyRef" /> -->
+        </div>
       </main>
       <footer
-        class="h-10 tt-bg-2-t flex items-center justify-between px-2 text-xs"
+        class="h-10 tt-bg-2-t flex items-center justify-between p-3 pr-2 text-xs"
       >
         <div class="tt-text-3 flex h-8 items-center">
           <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">Tab</div>
           <div class="ml-1">切换搜索方式</div>
-          <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">Ctrl</div>
-          <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">1-9</div>
-          <div>快速打开候选项</div>
-          <template v-if="words">
+
+          <template v-if="words || data.historyList.length > 0">
+            <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">
+              Ctrl
+            </div>
+            <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">1-9</div>
+            <div>快速打开候选项</div>
             <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">
               Ctrl
             </div>
@@ -424,11 +445,15 @@ const highlightText = (text) => {
             <div>切换打开方式</div>
           </template>
         </div>
-        <xt-mix-icon icon="fluent:settings-16-regular" @click="openCardSet" />
+        <xt-mix-icon
+          icon="fluent:settings-16-regular"
+          @click="openCardSet"
+          boxSize="32"
+          class="tt-no-bg"
+        />
       </footer>
     </div>
   </xt-modal>
 </template>
 <style lang="scss" scoped>
-
 </style>

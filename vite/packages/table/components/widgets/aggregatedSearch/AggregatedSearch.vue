@@ -57,9 +57,6 @@ const searchStyle = computed(() => {
       "border-radius": "10px",
       height: "56px",
       border: "1px solid rgba(255,255,255,0.1)",
-      // box-shadow: 0px 0px 3.12px 0px rgba(0,0,0,0.03);
-      // box-shadow: 0px 0px 10.23px 0px rgba(0,0,0,0.1);
-      // box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
     };
   }
 });
@@ -189,8 +186,8 @@ const surplusIcon = computed(() => {
     :specifySource="searchSource"
     v-if="searchVisible"
     @close="closeSearch"
+    @openCardSet="cardSetVisible = true"
   />
 </template>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

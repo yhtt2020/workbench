@@ -1,7 +1,8 @@
 /**
+ * 新增参数前，请先确定当前参数是否无法完成
+ *
  * 均为重构后新的数据结构 和旧版有差异 需要阅读源码
  * 所有参数默认值请都设置为false 请勿随意修改默认值
- * 新增参数请先商谈
  */
 export const defaultProps = {
   // ----------下面都属于必填选参数----------
@@ -67,7 +68,7 @@ export const defaultProps = {
         disabledDrag: false,
         // 是否允许添加到导航栏
         disabledNav: false,
-        // 
+        //
       };
     },
   },

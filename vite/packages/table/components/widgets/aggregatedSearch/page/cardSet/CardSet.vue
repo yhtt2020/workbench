@@ -97,7 +97,7 @@ const menuIndex = ref(0);
         <div class="mb-3"></div>
       </xt-option-box>
       <div class="flex justify-between text-sm mb-3">
-        <div>搜索方式</div>
+        <div>搜索引擎</div>
         <div class="tt-text-2">长按拖拽排序</div>
       </div>
       <div

@@ -36,7 +36,7 @@ export const sourceList = [
   //   recommendUrl: "",
   // },
   // {
-  //   name: "文件",
+  //   name: "window桌面文件",
   //   icon: "/img/appLogo/folder.png",
   //   iconType: "select",
   //   searchUrl: "",
