@@ -35,7 +35,7 @@
                 <!-- 开始菜单列表 -->
                 <ItemList :list="lastStartMenu" v-if="!isSearch" @close="close"></ItemList>  
                 <!-- 搜索后列表 -->
-                <SearchList :list="searchList" v-else @close="close" :market="marketList"/>
+                <SearchList :list="searchList" v-else @close="close" :market="marketList" @open="goApps('Market')"/>
             </div>
             <div v-if="recentUsed && !isSearch" class="w-full h-full">
                 <div class="flex items-center justify-between mt-3 mb-3">

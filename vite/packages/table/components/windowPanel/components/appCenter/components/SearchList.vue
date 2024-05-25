@@ -7,7 +7,13 @@
         </div>
         <div class="pl-4 text-sm xt-text">应用市场</div>
         <div class="flex flex-col w-full h-full gap-3">
-            <MarketList v-for="item in props.market" :key="item.id" :item="item"/>
+            <MarketList 
+                v-for="item in props.market" 
+                :key="item.id" 
+                :item="item"
+                @open="open"
+                @download="open"
+            />
         </div>
     </div>
 </template>
@@ -24,10 +30,14 @@ const MarketList = defineAsyncComponent(() => import('../../../../../apps/appCen
 const store = useMarketStore()
 const { recommendList } = storeToRefs(store)
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'open'])
 
 const close = () => {
     emit('close')
+}
+
+const open = () => {
+    emit('open')
 }
 
 const props = defineProps({
