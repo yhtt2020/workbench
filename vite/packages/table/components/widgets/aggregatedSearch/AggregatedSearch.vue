@@ -10,40 +10,44 @@ const header = {
   showIcon: "/img/appLogo/aggregateSearch.png",
 };
 
-const options = {
-  // 初始化数据
-  defaultData: {
-    // 搜索源列表
-    sourceList: sourceList,
-    // 搜索源
-    source: sourceList[0],
-    // 打开方式
-    openWith: "system",
-    // 记住上次使用的搜索方式
-    lastUse: false,
-    // 历史记录
-    historyList: [],
-  },
-};
+const options = computed(() => {
+  return {
+    // 初始化数据
+    defaultData: {
+      // 搜索源列表
+      sourceList: sourceList,
+      // 搜索源
+      source: sourceList[0],
+      // 打开方式
+      openWith: "system",
+      // 记住上次使用的搜索方式
+      lastUse: false,
+      // 历史记录
+      historyList: [],
+      noBorder: true,
+      customSize: "4x2",
+    },
+    noBorder: customData.value.noBorder,
+  };
+});
+const customSize = computed(() => {
+  if (customData.value.noBorder) {
+    customData.value.customSize = "4x1";
+  } else {
+    customData.value.customSize = "4x2";
+  }
+  return customData.value.customSize;
+});
 
 const props = defineProps({
   customIndex: {},
-  customData: {
-    default: () => {
-      return {
-        customSize: "4x2",
-        name: "",
-      };
-    },
-  },
+  customData: {},
 });
 const { customData }: any = toRefs(props);
 provide("data", customData);
-console.log("customData.value :>> ", customData.value);
 
-const noBorder = ref(false);
 const searchStyle = computed(() => {
-  if (!noBorder.value) {
+  if (!customData.value.noBorder) {
     return {
       "border-radius": "12px",
       height: "100%",
@@ -65,7 +69,6 @@ const searchSource: any = ref(false);
 const openSearch = (data?: any) => {
   if (data) {
     searchSource.value = data;
-    console.log("    searchSource.value :>> ", searchSource.value);
   }
   searchVisible.value = true;
 };
@@ -119,19 +122,24 @@ const surplusIcon = computed(() => {
     :customData="customData"
     :options="options"
     :menuList="menuList"
-    customSize="4x2"
+    :customSize="customSize"
     :header="header"
     class="xt-theme-b"
   >
-    <div class="w-full h-full flex flex-col">
+    <div class="w-full h-full flex flex-col justify-center">
       <div
         @click="openSearch(null)"
-        class="w-full flex-1 tt-bg-2-t flex justify-between items-center p-4 cursor-pointer"
+        class="w-full flex justify-between p-4 cursor-pointer"
         :style="searchStyle"
+        :class="[
+          customData.noBorder
+            ? 'h-[56px] xt-shadow xt-border xt-filter tt-bg'
+            : 'flex-1 tt-bg-2-t',
+        ]"
       >
         <div
           class="h-full flex"
-          :class="noBorder ? 'items-center' : ' items-start'"
+          :class="customData.noBorder ? 'items-center' : ' items-start'"
         >
           <xt-mix-icon
             :icon="lastIcon?.icon"
@@ -142,12 +150,12 @@ const surplusIcon = computed(() => {
         </div>
         <div
           class="h-full flex"
-          :class="noBorder ? 'items-center' : ' items-end'"
+          :class="customData.noBorder ? 'items-center' : ' items-end'"
         >
           <xt-mix-icon icon="fluent:search-16-regular" class="tt-no-bg" />
         </div>
       </div>
-      <div class="flex mt-3 justify-between">
+      <div v-if="!customData.noBorder" class="flex mt-3 justify-between">
         <div
           class="w-[100px] h-12 tt-bg-2-t flex items-center cursor-pointer"
           @click="openSearch(item)"
@@ -184,4 +192,5 @@ const surplusIcon = computed(() => {
   />
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>

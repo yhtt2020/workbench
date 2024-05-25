@@ -189,7 +189,7 @@ const search: any = async (value?: any) => {
   data.value.historyList.push(history);
 
   openBrowser(searchUrl, currentOpenWith.value.value);
-  close();
+  close()
 };
 /** 关闭弹窗 */
 const close = () => {
@@ -371,14 +371,14 @@ const highlightText = (text) => {
             >
               <div class="flex items-center">
                 <template v-if="recommendIndex == index">
-                  {{ currentOpenWith?.name }}
+                <span class=" tt-theme">  {{ currentOpenWith?.name }}</span>
                   <xt-mix-icon
                     icon="fluent:caret-down-12-filled"
                     class="tt-no-bg ml-2"
                     iconStyle="color: var(--active-bg)"
                   />
                 </template>
-                <template v-else> 网页 </template>
+                <template v-else> <div class=" tt-text-3">网页</div> </template>
               </div>
               <template #overlay>
                 <!-- <div
@@ -429,4 +429,6 @@ const highlightText = (text) => {
     </div>
   </xt-modal>
 </template>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+</style>

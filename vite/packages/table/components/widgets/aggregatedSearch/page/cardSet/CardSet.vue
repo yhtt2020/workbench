@@ -118,13 +118,14 @@ const menuIndex = ref(0);
       </div>
     </template>
 
-    <!-- <xt-option-box>
+    <xt-option-box>
       <xt-option-info
         title="无边框模式"
         isSwitch
-        v-model:switch="data.lastUse"
+        v-model:switch="data.noBorder"
       />
     </xt-option-box>
+    <!--
     <xt-option-box>
       <xt-option-info title="无边框模式" />
       <xt-option-select />

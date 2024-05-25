@@ -58,6 +58,14 @@
           <!--  主体内容插槽2  -->
         </slot>
       </div>
+      <div
+        v-else-if="options?.noBorder"
+        ref="container"
+        :style="[getSize]"
+        :class="[edit ? 'editing' : '']"
+      >
+        <slot></slot>
+      </div>
       <!-- 默认模式 -->
       <div
         v-else
@@ -78,7 +86,7 @@
         ]"
       >
         <!-- 小组件头部开始 -->
-        <div
+        <header
           v-if="!header.disabled"
           @dragstart.stop="titleDragStart"
           draggable="true"
@@ -204,7 +212,7 @@
             </RightMenu>
             <slot name="customRightMenu" v-else></slot>
           </div>
-        </div>
+        </header>
         <!-- 小组件头部结束 -->
         <!-- 小组件主体开始 -->
         <xt-status
@@ -726,6 +734,7 @@ defineExpose({
   backdrop-filter: blur(50px);
   -webkit-backdrop-filter: blur(50px);
 }
+
 
 .menu-box {
   z-index: 9;
