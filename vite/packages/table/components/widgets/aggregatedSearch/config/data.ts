@@ -28,20 +28,20 @@ export const sourceList = [
     searchUrl: "https://www.zhihu.com/search?type=content&q=",
     recommendUrl: "https://www.zhihu.com/api/v4/search/suggest?q=",
   },
-  {
-    name: "工作台",
-    icon: "/img/appLogo/tt.png",
-    iconType: "select",
-    searchUrl: "",
-    recommendUrl: "",
-  },
-  {
-    name: "文件",
-    icon: "/img/appLogo/folder.png",
-    iconType: "select",
-    searchUrl: "",
-    recommendUrl: "",
-  },
+  // {
+  //   name: "工作台",
+  //   icon: "/img/appLogo/tt.png",
+  //   iconType: "select",
+  //   searchUrl: "",
+  //   recommendUrl: "",
+  // },
+  // {
+  //   name: "文件",
+  //   icon: "/img/appLogo/folder.png",
+  //   iconType: "select",
+  //   searchUrl: "",
+  //   recommendUrl: "",
+  // },
 
   {
     name: "优酷",
