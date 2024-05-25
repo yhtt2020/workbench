@@ -30,7 +30,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, defineAsyncComponent, onMounted } from 'vue'
+import { ref, defineAsyncComponent, onMounted, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia';
 
 import Header from '../../component/Header.vue';
@@ -43,6 +43,8 @@ import { message } from 'ant-design-vue';
 
 import { appData } from '../developer/hooks/data';
 
+import { usePlat } from '../../../../../ui/hooks/usePlat';
+import { checkStatus } from '../apps/checkStatus';
 const putaway = () => {
   ipc.send("executeApp", { app: JSON.parse(JSON.stringify(appData)) });
 };
@@ -63,40 +65,36 @@ const target = ref(null)
 onMounted( async() => {
     await store.getRecommendList()
     await store.getAd()
-    // setTimeout(() => {
-    // }, 200);
     check(recommendList.value)
 })
-
 // 检查是否已经安装
 const check = async(list) => {
     for(const item of list) {
-        // item.isInstalled = await appModel.isInstalled(item.id)
-        const allList = await appModel.getAllApps()
-        item.isInstalled = allList.some(app => app.appid === item.id) 
-        // console.log(item.isInstalled,'<<<')
+        if( !usePlat('web')) {
+            const allList = await appModel.getAllApps()
+            item.isInstalled = allList.find(app => app.appid === item.id)
+        } else {
+            item.isInstalled = false
+        }
     }
 }
 
+// onUnmounted(() => {
+//     recommendList.value = []
+//     adList.value = []
+// })
+
 // 下载安装
 const download = (item) => {
-    // console.log(item,'<<<<<<')
+    if(!checkStatus()) return
     message.info('正在安装，请勿重复点击')
     tsbApi.app.installAppConfirm(install(item.value.version.app.version).appJson,async(data) => {
-        // console.log(data)
         if(data.status) {
             store.downloadCount({appNanoid:item.id})
-            // appModel.isInstalled(item.id).then(res => {
-            //     console.log(res,'<<<')
-            // })
-            // appModel.getAllApps().then(res => {
-            //     console.log(res,'<<<')
-            // })
             check(recommendList.value)
             message.success('安装成功')
             setTimeout(async() => {
                 const target = await updateValue(item)
-                // console.log(target,'<<<')
                 myApps.value.unshift(target)
             }, 50);
         } else {
@@ -107,9 +105,8 @@ const download = (item) => {
 
 // 打开
 const open = async(val) => {
-    console.log(val)
+    if(!checkStatus()) return
     const list = await appModel.getAllApps()
-    // console.log(list,'value')
     const app = list.find(app => app.appid === val.id)
     tsbApi.app.run(app.nanoid,false,app)
 }
