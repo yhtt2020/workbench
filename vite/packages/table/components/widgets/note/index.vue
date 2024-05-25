@@ -3,6 +3,7 @@
     @titleHover="enterNote"
     @delete="removeNote"
     v-model:customSize="customData.customSize"
+    :platLimit="['web']"
     :header="header"
     :customData="customData"
     :customIndex="customIndex"
