@@ -119,7 +119,7 @@ export default {
     emit:['delete'],
     computed: {
         ...mapWritableState(shortTalkStore, ['access','interact','access_token','baseUrl','setVisible']),
-        timeOption(){
+        options(){
             return {
                 customDel:this.openWay === 'nav' ? true : false
             }
@@ -186,12 +186,12 @@ export default {
                     }
                 },
             ],
-            options: {
-                className: "card double w-full",
-                title: "社区访问数据/每日/全部",
-                icon: "iconamoon:history-fill",
-                rightIcon:"fluent:open-20-filled",
-            },
+            // options: {
+            //     className: "card double w-full",
+            //     title: "社区访问数据/每日/全部",
+            //     icon: "iconamoon:history-fill",
+            //     rightIcon:"fluent:open-20-filled",
+            // },
             // 网格数据
             myChartStyle:{
                 float:"left",
