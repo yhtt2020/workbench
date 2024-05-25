@@ -263,6 +263,9 @@ export const openSysApp = (value, router) => {
       const { openApp } = useAppModal("ai");
       openApp();
       break;
+    case "income":
+      useAppModal("income").openApp()
+      break;
     default:
       // 通过路由打开
       router.push({ name: value });
