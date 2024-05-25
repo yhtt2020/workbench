@@ -49,7 +49,10 @@ const putaway = () => {
   ipc.send("executeApp", { app: JSON.parse(JSON.stringify(appData)) });
 };
 
-const appModel = window.$models.appModel
+let appModel
+if(!usePlat('web')) {
+    appModel = window.$models.appModel
+}
 
 const store = useMarketStore()
 const { recommendList, adList } = storeToRefs(store)

@@ -111,10 +111,11 @@ const executeApp = (app) => {
 const checkInstalled = (app) => {
     // 
     const path = app.installPath
+    if(usePlat('web')) return false
     // console.log('检查是否安装',fs.existsSync(path),app,path)
     if(fs.existsSync(path)){
         return true
-    }
+    } 
 }
 
 // 打开本地应用

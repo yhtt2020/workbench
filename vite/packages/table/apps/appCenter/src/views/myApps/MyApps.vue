@@ -177,22 +177,25 @@ const getInfo = (item) => {
     }
 }
 
-// 初始化全部数据
 onMounted(() => {
-    if(myApps.value.length === 0) {
-        const list = useReplaceData(navigationData.systemAppList)
-        myApps.value.push(...list)
-        myApps.value.forEach((item) => {
-            if(defaultStartMenu.includes(item.value)){
-                item.isStart = true
+    if (myApps.value.length === 0 || myApps.value.length !== navigationData.systemAppList.length) {
+        // 获取系统应用的列表
+        const systemApps = useReplaceData(navigationData.systemAppList);
+
+        // 将新的系统应用添加到 myApps 中
+        systemApps.forEach(systemApp => {
+            // 检查是否已存在
+            if (!myApps.value.some(app => app.value === systemApp.value)) {
+                // 初始化新应用的启动状态
+                systemApp.isStart = systemApp.isStart || defaultStartMenu.includes(systemApp.value);
+                myApps.value.push(systemApp);
             }
-        })
-    } 
-    myApps.value = myApps.value.map((item) => {
-        return useTransform(item)
-    })
-    list.value = myApps.value
-})
+        });
+    }
+    myApps.value = myApps.value.map(item => useTransform(item));
+    list.value = myApps.value;
+});
+
 
 // onUnmounted(() => {
 //     myApps.value = []
