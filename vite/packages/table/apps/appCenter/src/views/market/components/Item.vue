@@ -1,5 +1,5 @@
 <template>
-    <div class="w-[446px] h-[102px] rounded-xl p-3 xt-bg-2 flex justify-between items-center gap-1">
+    <div class="h-[102px] rounded-xl p-3 xt-bg-2 flex justify-between items-center gap-1" :class="[boxClass]">
        <div class="flex items-center gap-4 ">
             <img :src="item.icon" alt="" class="w-[70px] h-[70px] rounded-xl">
             <div class="flex flex-col gap-1 pointer" @click="goDetail(item)">
@@ -80,7 +80,8 @@ interface PropsType {
         data?: any,
         downloading?: boolean,
         percent?: number,
-    }
+    },
+    boxClass: string
 }
 
 const emit = defineEmits(['download','open', 'goDetail'])
@@ -91,7 +92,8 @@ const download = (app) => {
 }
 
 const props = withDefaults(defineProps<PropsType>(), {
-    item: () => ({})
+    item: () => ({}),
+    boxClass:'w-[446px]',
 });
 
 const { item } = toRefs(props)

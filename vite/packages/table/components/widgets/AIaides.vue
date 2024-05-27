@@ -13,7 +13,12 @@
       v-model:customSize="customData.customSize"
       @delete="doRemoveCard">
       <div class="mt-1">
-        <a-input v-model:value="inputValue" :bordered="false" placeholder="问我任何问题" class=" xt-bg h-[48px] rounded-xl"
+        <a-input 
+          style="background-color: var(--primary-bg);"
+          v-model:value="inputValue" 
+          :bordered="false" 
+          placeholder="问我任何问题" 
+          class="h-[48px] rounded-xl"
           @keyup.enter="enterMsg">
           <template #suffix>
             <SendOutlined class="xt-text-2 pointer" style="font-size: 20px;" @click="enterMsg" />
@@ -21,7 +26,7 @@
         </a-input>
         <div class="mt-2 mb-2 text-base xt-text">最近对话</div>
         <template v-if="recentList">
-          <div class="mb-3 xt-bg rounded-xl cursor-pointer" v-for="index in copyNum"
+          <div class="mb-3 cursor-pointer xt-bg rounded-xl" v-for="index in copyNum"
             :style="{ height: copyNum !== 1 ? '56px' : '48px', lineHeight: copyNum !== 1 ? '56px' : '48px', }" >
             <div class="flex items-center h-full ml-4"  @click="goPage(index - 1)">
               <!-- <AiIcon icon="fluent:chat-16-regular" style="font-size: 20px;" class="mr-3 xt-text" /> -->

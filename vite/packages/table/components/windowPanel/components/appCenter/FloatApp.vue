@@ -36,7 +36,13 @@
                 <!-- 开始菜单列表 -->
                 <ItemList :list="lastStartMenu" v-if="!isSearch" @close="close"></ItemList>  
                 <!-- 搜索后列表 -->
-                <SearchList :list="searchList" v-else @close="close" :market="marketList" @open="goApps('Market')"/>
+                <SearchList 
+                    @back="inputValue = ''"
+                    :list="searchList" 
+                    v-else @close="close" 
+                    :market="marketList" 
+                    @open="goApps('Market')"
+                />
             </div>
             <div v-if="recentUsed && !isSearch" class="w-full h-full">
                 <div class="flex items-center justify-between mt-3 mb-3">
@@ -220,14 +226,14 @@ onMounted(() => {
     // proxy.$bus.on('closeControl', () => {
     //     emit('close')
     // })
-    onClickOutside(appRef, () => {
-        emit('close')
-    })
+    // onClickOutside(appRef, () => {
+    //     emit('close')
+    // })
 })
 
 onUnmounted(() => {
     // proxy.$bus.off('closeControl')
-    onClickOutside(appRef, null)
+    // onClickOutside(appRef, null)
 })
 </script>
 <style lang='scss' scoped></style>

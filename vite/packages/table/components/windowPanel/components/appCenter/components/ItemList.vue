@@ -65,6 +65,15 @@ const arr = computed(() => {
             callBack: () => {
                 currentItem.value.isStart = false
             }
+        },
+        {
+            label:'固定到开始菜单',
+            id:"3",
+            disabled:props.isStartMenu,
+            newIcon: "fluent:grid-16-regular",
+            callBack: () => {
+                currentItem.value.isStart = true
+            }
         }
     ]
     const menus = useMenus(3,currentItem.value)

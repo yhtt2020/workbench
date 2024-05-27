@@ -32,16 +32,22 @@ export const useMarketStore = defineStore("useMarketStore", {
         // 获取广告位
         async getAd() {
             const res = await post(ad)
-            const list = res.map(item => this.resetAdType(item))
+            const list = this.resetAdType(res[0])
             this.adList = list
-            // console.log(res,list,'ad')
+            console.log(res,list,'ad')
         },
         // 重置图片
         resetAdType(data) {
-            return {
+            return [
+            {
                 img:data.img1,
                 url:data.link1
+            },
+            {
+                img:data.img2,
+                url:data.link2
             }
+        ]
         },
         // 重置格式
         resetGoodsType(data){

@@ -102,8 +102,7 @@ onUnmounted(() => {
       <!-- 左侧菜单容器 -->
       <xt-left-menu
         :list="leftMenuList"
-        :end="0"
-        :last="5"
+        end="2"
         fn="fn"
         leftBg="red"
         model="id"

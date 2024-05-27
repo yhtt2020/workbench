@@ -289,6 +289,9 @@ export default {
   },
   mounted() {
     this.enableDrag();
+    this.$bus.on('openAppCenter',() => {
+      console.log('11111111111111')
+    })
   },
   computed: {
     ...mapWritableState(navStore, [

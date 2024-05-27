@@ -6,7 +6,7 @@
         >
             <template #right>
                 <xt-button w="98" h="32" radius="8" icon="" @click="putaway">我要上架</xt-button>
-                <xt-button w="127" h="32" radius="8" type="theme">全部应用（{{ recommendList.length }}）</xt-button>
+                <xt-button w="127" h="32" radius="8" type="theme" @click="putaway">全部应用（{{ recommendList.length }}）</xt-button>
             </template>
         </Header>
         <ImgList :list="adList"></ImgList>
