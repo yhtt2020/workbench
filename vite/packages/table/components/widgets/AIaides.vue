@@ -210,7 +210,6 @@ export default {
     if (this.customData.customSize == undefined) {
       this.customData.customSize = "2x2";
     }
-    console.log('闹钟组件',this.isCommunityDesktop(this.desk));
     // 根据权限设置尺寸大小
     if (this.options.disableEdit) {
       this.sizeList = [];
