@@ -138,6 +138,8 @@ import {
 import { nanoid } from "nanoid";
 import { useFreeLayoutStore } from "../../desk/freeLayout/store";
 import { update } from "../../../apps/appCenter/src/views/developer/hooks/update";
+import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
+
 export default {
   props: {
     customIndex: {
@@ -168,7 +170,7 @@ export default {
       isSelect: false,
       settingVisible: false, // 编辑状态
       iconsSetVisible: false,
-      options: { custom:true, disabledDelete:true }, // 卡片核心配置
+      options: { custom:true, disabledDelete:true,disableEdit:this.isCommunityDesktop(this.desk), }, // 卡片核心配置
       // 卡片类相关数据
       modelVisible: false, // 卡片弹窗是否可见
       cardData: {}, // 卡片详细数据
@@ -379,7 +381,13 @@ export default {
         //   menus.splice(settingIndex, 1);
         // }
       }
+      if(this.options.disableEdit){
+        return []
+      }
+      else {
       return menus;
+
+      }
     },
   },
   watch: {
@@ -392,6 +400,8 @@ export default {
   },
   methods: {
     ...mapActions(cardStore, ["updateCustomData", "addCard"]),
+    ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+
     openCard() {
       this.cardData = this.customData.iconList[0];
       this.modelVisible = true;
