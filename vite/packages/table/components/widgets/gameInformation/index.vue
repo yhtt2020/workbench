@@ -40,6 +40,10 @@ import { Icon as MyIcon } from "@iconify/vue";
 import { message } from "ant-design-vue";
 import { getGameInfo } from "../../../store/gameInfomation";
 import browser from "../../../js/common/browser";
+import { mapActions,mapWritableState  } from "pinia";
+import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
+
+
 export default {
   name: "gameInformation",
   components: {
@@ -83,6 +87,8 @@ export default {
   },
   emit: ["delete"],
   methods: {
+    ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+
     // 自定义删除卡片
     deleteCard() {
       this.$emit("delete");
@@ -121,6 +127,7 @@ export default {
           customSize: "4x4",
         },
         customDel: this.openWay === "nav" ? true : false,
+        disableEdit:this.isCommunityDesktop(this.desk),
       };
     },
   },

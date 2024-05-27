@@ -29,9 +29,12 @@
 </template>
 <script>
 import { appStore } from "../../store";
-import { mapWritableState } from "pinia";
+import { mapWritableState,mapActions } from "pinia";
 import Widget from "../card/Widget.vue";
 import { Icon as newIcon } from "@iconify/vue";
+import { communityNavStore } from "../bottomPanel/store/communityNavStore";
+
+
 export default {
   name: "Music",
   props: {
@@ -73,10 +76,13 @@ export default {
     options() {
       return {
         customDel: this.openWay === "nav" ? true : false,
+        disableEdit: this.isCommunityDesktop(this.desk),
       }
     }
   },
   methods: {
+    ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+
     enterMusic() {
       this.$router.push("/music");
     },

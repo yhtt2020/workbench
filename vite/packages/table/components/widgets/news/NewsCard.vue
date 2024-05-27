@@ -279,8 +279,7 @@ export default {
     },
   },
   computed: {
-    ...mapWritableState(communityNavStore, ["currentCommunity"]),
-
+    
     // 卡片选项
     options() {
       return {

@@ -194,14 +194,9 @@ export default {
   computed: {
     ...mapWritableState(taskStore, ["taskFilter", "displayList", "tasks"]),
     ...mapWritableState(listStore, ["activeList", "lists"]),
-    ...mapWritableState(communityNavStore, ["currentCommunity"]),
 
     notFinish() {
       return this.taskList.filter((item) => !item.completed);
-    },
-
-    communityRole() {
-      return this.currentCommunity?.item.role === "member";
     },
 
     header() {
@@ -260,7 +255,7 @@ export default {
     }
 
     // 在社群成员桌面的场景下将尺寸切换操作进行屏蔽
-    if (this.communityRole) {
+    if (this.options.disableEdit) {
       this.sizeList = [];
       this.toggleTodoList = [];
     } else {
