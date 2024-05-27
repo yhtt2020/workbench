@@ -2,7 +2,7 @@
 <!-- 2023-12-19 该组件数据体和新版本有差异 -->
 <template>
   <!-- 图标组件开始 Widget -->
-  <Widget
+  <!-- <Widget
     :customData="customData"
     :editing="true"
     :customIndex="customIndex"
@@ -10,10 +10,21 @@
     :menuList="menuList"
     ref="homelSlotRef"
     :desk="desk"
-  >
+  > -->
     <div ref="iconRef" class="box-border icon-box" :style="dragStyle">
       <!-- 可放置区域 -->
       <droppable-area @drop="handleDrop">
+        <xt-container
+          :header="header"
+          :customSize="'1x1'"
+          :customIndex="customIndex"
+          :size="customSize"
+          :options="options"
+          :menuList="menuList"
+          ref="homelSlotRef"
+          :customData="customData"
+          :desk="desk"
+        >
         <xt-task :modelValue="m0202" @cb="handleMenu">
           <drag-and-follow
             :isSelect="isSelect"
@@ -65,10 +76,11 @@
             <!-- </template> -->
           </drag-and-follow>
         </xt-task>
+        </xt-container>
       </droppable-area>
       <!-- 卡片核心 -->
     </div>
-  </Widget>
+  <!-- </Widget> -->
   <!-- 图标组件结束 -->
   <!-- 内容编辑 -->
   <Set
@@ -156,7 +168,7 @@ export default {
       isSelect: false,
       settingVisible: false, // 编辑状态
       iconsSetVisible: false,
-      options: { hide: true, disabled: true }, // 卡片核心配置
+      options: { custom:true, disabledDelete:true }, // 卡片核心配置
       // 卡片类相关数据
       modelVisible: false, // 卡片弹窗是否可见
       cardData: {}, // 卡片详细数据
@@ -267,7 +279,12 @@ export default {
     ]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(useFreeLayoutStore, ["getCurrentDesk", "isFreeLayout"]),
-
+    // 新版小组件头部设置
+    header(){
+      return {
+        disabled:true
+      }
+    },
     m02021() {
       return (
         this.customData.copy === true &&
@@ -482,7 +499,7 @@ export default {
           this.addIcon(this.customData.iconList[i]);
         }, 10);
       }
-      this.$refs.homelSlotRef.doRemoveCard(); // 删除原有的多图标组件
+      this.$refs.homelSlotRef.removeCard(); // 删除原有的多图标组件
       message.success("解除分组成功");
     },
     // 点击移动图标组件
@@ -564,7 +581,7 @@ export default {
       // 遍历图标组件进行删除
       this.iconsRefs.forEach((item) => {
         if (item.customIndex === this.customIndex) return;
-        if (item !== undefined) item.doRemoveCard();
+        if (item !== undefined) item.removeCard();
       });
       this.isPaste = true; // 打开粘贴状态
       this.isDrag = false;
@@ -577,12 +594,12 @@ export default {
       this.menuVisible = false;
       if (this.isSelect) {
         for (let i = 0; i < this.iconsRefs.length; i++) {
-          this.iconsRefs[i].doRemoveCard();
+          this.iconsRefs[i].removeCard();
         }
         this.iconsRefs = [];
         this.iconList = []; // 清空图标列表，防止数据添加到导航栏或者文件夹中
       } else {
-        this.$refs.homelSlotRef.doRemoveCard();
+        this.$refs.homelSlotRef.removeCard();
       }
     },
     // 更新多图标组件标题
