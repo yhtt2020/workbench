@@ -290,7 +290,7 @@ export default {
         });
         return find;
       } else {
-        this.currentDeskId = this.desks[0].id;
+        this.currentDeskId = this.desks[0]?.id;
         return this.desks[0];
       }
     },
@@ -331,7 +331,7 @@ export default {
       this.visibleGuide = true;
     });
     if (this.currentDeskId === "") {
-      this.currentDeskId = this.desks[0].id;
+      this.currentDeskId = this.desks[0]?.id;
     }
     if (this.desks.length > 0 && !this.currentDeskIndex.name) {
       this.currentDeskIndex = {
@@ -487,10 +487,10 @@ export default {
           this.desks= desks
           this.currentDesk=this.desks[0]
           this.currentDeskIndex={
-            name:this.desk[0].name,
-            id:this.desk[0].id
+            name:this.desk[0]?.name,
+            id:this.desk[0]?.id
           }
-          this.currentDeskId=this.desk[0].id
+          this.currentDeskId=this.desk[0]?.id
           console.log(_.cloneDeep(this.desks),'修改后的desks')
 
           // web端打开功能介绍提示弹窗

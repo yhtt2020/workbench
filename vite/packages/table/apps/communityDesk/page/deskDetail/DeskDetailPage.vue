@@ -27,6 +27,7 @@
           @changeEditing="editing = !editing"
           @onArrange="onArrange"
           :communityRole="communityRole"
+          :communityInfo="communityInfo"
         >
           <!-- 拿菜单数据 -->
           <template #settingsAllAfter>
@@ -84,6 +85,7 @@
               :key="key"
               :currentDesk="currentDesk"
               :communityRole="communityRole"
+              :communityInfo="communityInfo"
             />
           </span>
         </template>
@@ -684,6 +686,7 @@ export default {
     loadCommunityCloud() {
       this.setCurrentDeskNo(this.communityInfo.no);
       this.loadCommunityDeskAll();
+      this.setCurrentDefaultDesk();
     },
 
     // 设置当前桌面的默认状态

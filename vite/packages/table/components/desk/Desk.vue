@@ -328,6 +328,10 @@ export default {
     },
     communityRole:{
       type:Boolean,
+    },
+    communityInfo:{
+      type: Object,
+      required: true,
     }
   },
   watch: {
@@ -652,6 +656,7 @@ export default {
             okButtonWidth: 100,
             type: "warning",
             ok: () => {
+
               desk?.cards?.forEach((item) => {
                 //移除桌面相关的便签卡片
                 if (item.name === "notes" && !this.$usePlat()) {
@@ -676,6 +681,11 @@ export default {
               desk.cards = [];
               this.menuVisible = false;
               this.clearFreeLayoutData();
+
+              if(this.communityInfo?.role === 'owner'){
+                this.$bus.emit('updateSync')
+              }
+
             },
           });
         }
