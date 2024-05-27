@@ -13,7 +13,7 @@ function deskMenus() {
       id: 0,
       newIcon: "fluent:add-16-filled",
       name: "测试组件",
-      disabled: true,
+      disabled: false,
       fn: () => {
         // AggregatedSearch
         useAddCard({

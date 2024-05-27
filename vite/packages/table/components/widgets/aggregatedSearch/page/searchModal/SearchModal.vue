@@ -5,7 +5,7 @@ import { useEventListener, useDebounce, useDebounceFn } from "@vueuse/core";
 import { openBrowser } from "../../utils/open";
 import History from "./History.vue";
 
-import { sourceList, openWithList } from "../../config/data";
+import { sourceList, openWithList, defaultSourceList } from "../../config/data";
 import axios from "axios";
 const emit = defineEmits(["close", "openCardSet"]);
 
@@ -68,8 +68,28 @@ const initOpenWith = () => {
   );
   currentOpenWith.value = openWithList[openWithIndex.value];
 };
+/** 用于判断是否属于web搜索源 */
+const isWebSource = computed(() => {
+  const name = currentSource.value.name;
+  if (name == "工作台" || name == "window桌面文件") {
+    return false;
+  }
+  return true;
+});
 initCurrentSource();
 initOpenWith();
+const webSource = ref();
+
+const initWebSource = () => {
+  webSource.value = data.value.webSource;
+};
+initWebSource();
+const tabSourceList = computed(() => {
+  let res: any = [...defaultSourceList];
+  res.push(webSource.value);
+
+  return res;
+});
 
 const recommendIndex = computed(() => {
   if (ctrlSelectIndex.value < 0) {
@@ -158,7 +178,7 @@ const getRecommend = async () => {
   let { data } = await axios.get(recommendUrl);
   recommendList.value = handlers[name]?.(data) || handlers["default"]();
 };
-const historySearch = (index: string) => {
+const historySearch = (index: number) => {
   let item = data.value.historyList[index];
   openBrowser(item.value, currentOpenWith.value.value);
 };
@@ -195,7 +215,12 @@ const selectOpenWith = (index) => {
 };
 
 /** 搜索源选择 */
-const selectSource = (newSource) => {
+const selectTabSource = (newSource) => {
+  currentSource.value = newSource;
+};
+const selectWebSource = (newSource) => {
+  // 修改实际web搜索源
+  data.value.webSource = newSource;
   currentSource.value = newSource;
 };
 /** 打开卡片设置 */
@@ -235,13 +260,19 @@ const eventDown = (e) => {
     ctrlSelectIndex.value += 1;
     return;
   }
+  // Alt+tab
+  if (e.key === "Tab" && e.key === "Alt") {
+    e.preventDefault();
+    console.log("2222222 :>> ", 2222222);
+    return;
+  }
   // tab
   if (e.key == "Tab") {
     e.preventDefault();
     tabVisible.value = true;
-    sourceIndex.value = (sourceIndex.value + 1) % sourceList.length;
-    const sourceVal = sourceList[sourceIndex.value];
-    selectSource(sourceVal);
+    sourceIndex.value = (sourceIndex.value + 1) % tabSourceList.value.length;
+    const sourceVal = tabSourceList.value[sourceIndex.value];
+    selectTabSource(sourceVal);
   }
 };
 const searchList = computed(() => {
@@ -309,7 +340,7 @@ const highlightText = (text) => {
                 class="p-2 pb-0 w-[240px] xt-shadow xt-border tt-modal-bg rounded-xl"
               >
                 <div
-                  v-for="item in sourceList"
+                  v-for="item in tabSourceList"
                   class="w-full h-10 flex items-center justify-between p-2 mb-2 text-sm hover:tt-theme-bg-2 cursor-pointer"
                   style="border-radius: 10px"
                   :class="[
@@ -317,7 +348,7 @@ const highlightText = (text) => {
                       'tt-theme-bg-2': currentSource.name == item.name,
                     },
                   ]"
-                  @click="selectSource(item)"
+                  @click="selectTabSource(item)"
                 >
                   <div class="flex items-center">
                     <xt-mix-icon
@@ -347,6 +378,30 @@ const highlightText = (text) => {
           boxSize="32"
         />
       </header>
+      <xt-scrollbar
+        v-if="words && isWebSource"
+        :x="true"
+        style="border-bottom: var(--tt-primary-border-color)"
+        class="w-full relative flex overflow-hidden tab-container flex-nowrap whitespace-nowrap pb-3"
+      >
+        {{ currentSource.name }}
+        <div
+          v-for="item in sourceList"
+          @click="selectWebSource(item)"
+          :style="[
+            {
+              'border-bottom':
+                currentSource.name == item.name
+                  ? '2px solid var(--tt-theme-color)'
+                  : '2px solid var(--tt-secondary-color)',
+            },
+          ]"
+          class="p-3 inline-flex items-center cursor-pointer"
+        >
+          <xt-mix-icon :icon="item.icon" type="select" size="24" class="mr-1" />
+          <span class="">{{ item.name }}</span>
+        </div>
+      </xt-scrollbar>
       <main
         class="flex-1 w-full overflow-hidden relative"
         ref="searchScrollbar"
@@ -411,7 +466,7 @@ const highlightText = (text) => {
                           'tt-theme-bg-2': currentSource.name == item.name,
                         },
                       ]"
-                      @click="selectSource(item)"
+                      @click="selectTabSource(item)"
                     >
                       <div class="flex items-center">
                         {{ item.name }}
@@ -443,6 +498,16 @@ const highlightText = (text) => {
             </div>
             <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">Tab</div>
             <div>切换打开方式</div>
+
+            <template v-if="isWebSource">
+              <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">
+                Alt
+              </div>
+              <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">
+                Tab
+              </div>
+              <div>切换打开方式</div>
+            </template>
           </template>
         </div>
         <xt-mix-icon
@@ -455,5 +520,4 @@ const highlightText = (text) => {
     </div>
   </xt-modal>
 </template>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

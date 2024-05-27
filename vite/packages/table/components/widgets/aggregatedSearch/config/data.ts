@@ -28,20 +28,6 @@ export const sourceList = [
     searchUrl: "https://www.zhihu.com/search?type=content&q=",
     recommendUrl: "https://www.zhihu.com/api/v4/search/suggest?q=",
   },
-  // {
-  //   name: "工作台",
-  //   icon: "/img/appLogo/tt.png",
-  //   iconType: "select",
-  //   searchUrl: "",
-  //   recommendUrl: "",
-  // },
-  // {
-  //   name: "window桌面文件",
-  //   icon: "/img/appLogo/folder.png",
-  //   iconType: "select",
-  //   searchUrl: "",
-  //   recommendUrl: "",
-  // },
 
   {
     name: "优酷",
@@ -92,5 +78,22 @@ export const openWithList = [
   {
     name: "系统默认浏览器",
     value: "system",
+  },
+];
+
+export const defaultSourceList = [
+  {
+    name: "工作台",
+    icon: "/img/appLogo/tt.png",
+    iconType: "select",
+    searchUrl: "",
+    recommendUrl: "",
+  },
+  {
+    name: "window桌面文件",
+    icon: "/img/appLogo/folder.png",
+    iconType: "select",
+    searchUrl: "",
+    recommendUrl: "",
   },
 ];

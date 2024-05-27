@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch, computed, toRefs, provide } from "vue";
-
-import { sourceList } from "./config/data";
+import _ from "lodash-es";
+import { sourceList, defaultSourceList } from "./config/data";
 import CardSet from "./page/cardSet/CardSet.vue";
 import SearchModal from "./page/searchModal/SearchModal.vue";
 
@@ -9,15 +9,16 @@ const header = {
   title: "聚合搜索",
   showIcon: "/img/appLogo/aggregateSearch.png",
 };
-
+const cloneSourceList = _.cloneDeep(sourceList);
 const options = computed(() => {
   return {
     // 初始化数据
     defaultData: {
       // 搜索源列表
-      sourceList: sourceList,
+      sourceList: cloneSourceList,
       // 搜索源
-      source: sourceList[0],
+      source: cloneSourceList[0],
+      webSource: cloneSourceList[0],
       // 打开方式
       openWith: "system",
       // 记住上次使用的搜索方式
@@ -102,14 +103,20 @@ const lastIcon = computed(() => {
   return customData.value.sourceList?.slice(0, 1)[0];
 });
 const surplusIcon = computed(() => {
+  // surplusIcon
+  let arr: any = [];
   // 最后使用有记录时
   if (customData.value.lastUse) {
     const sourceList = customData.value.sourceList.filter(
       (item) => item.name !== customData.value.source.name
     );
-    return sourceList.slice(0, 5);
+    arr = sourceList.slice(0, 3);
   }
-  return customData.value.sourceList?.slice(1, 6);
+  arr = customData.value.sourceList?.slice(1, 4);
+  arr.unshift(...defaultSourceList);
+
+  console.log('arr 222 :>> ', arr);
+  return arr;
 });
 </script>
 
