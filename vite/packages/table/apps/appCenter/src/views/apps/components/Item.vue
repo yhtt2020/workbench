@@ -111,10 +111,11 @@ const executeApp = (app) => {
 const checkInstalled = (app) => {
     // 
     const path = app.installPath
+    if(usePlat('web')) return false
     // console.log('检查是否安装',fs.existsSync(path),app,path)
     if(fs.existsSync(path)){
         return true
-    }
+    } 
 }
 
 // 打开本地应用
@@ -138,7 +139,7 @@ const tagTitle = computed(() => {
 
 const menu = computed(() => {
     const list = useMenus(1,item.value)
-    return [list]
+    return list
 })
 
 </script>

@@ -319,20 +319,27 @@ onBeforeMount(async () => {
   }
 });
 onMounted(() => {
-  container.value.addEventListener("keydown", handleKeyDown, {
-    capture: true,
-  });
-  container.value.addEventListener("keydown", handleTouchStart, {
-    capture: true,
-  });
+  // 防止自定义时，无法获取到container导致卡死
+  if(container.value){
+      container.value.addEventListener("keydown", handleKeyDown, {
+      capture: true,
+    });
+    container.value.addEventListener("keydown", handleTouchStart, {
+      capture: true,
+    });
+  }
+  
 });
 onBeforeUnmount(() => {
-  container.value.removeEventListener("keydown", handleKeyDown, {
-    capture: true,
-  });
-  container.value.removeEventListener("keydown", handleTouchStart, {
-    capture: true,
-  });
+  if(container.value){
+      container.value.removeEventListener("keydown", handleKeyDown, {
+      capture: true,
+    });
+    container.value.removeEventListener("keydown", handleTouchStart, {
+      capture: true,
+    });
+  }
+  
 });
 // emits 小组件事件回调
 /**

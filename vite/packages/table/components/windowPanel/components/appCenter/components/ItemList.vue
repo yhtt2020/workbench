@@ -68,7 +68,7 @@ const arr = computed(() => {
         }
     ]
     const menus = useMenus(3,currentItem.value)
-    return [menus,...list].sort((a,b) => a.id - b.id)  
+    return [...menus,...list].sort((a,b) => a.id - b.id)  
 })
 
 // 打开应用

@@ -182,7 +182,7 @@ const handleMouseUp = (e) => {
   console.log("iconsRefs.value.length  :>> ", iconsRefs.value.length);
   if (!isCtrl) {
     iconsRefs.value.forEach((item) => {
-      item.doRemoveCard();
+      item.removeCard();
     });
   }
 

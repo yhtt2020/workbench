@@ -19,6 +19,7 @@
 <script>
 import { defineComponent, computed } from 'vue';
 import componentsMinis from '../../../../table/components/desk/components';
+import { onClickOutside } from '@vueuse/core'
 
 export default defineComponent({
     mixins: [componentsMinis]
@@ -79,14 +80,16 @@ const deleteCard = (val) => {
     emit('delete')
 }
 
-// onClickOutside(cardRef, close)
+// 点击外部关闭
 onMounted(() => {
     window.addEventListener('click', close)
     // console.log(props.cardData,'<<<<<<<<<<<<<<<<')
+    // onClickOutside(cardRef, close)
 })
 
 onUnmounted(() => {
     window.removeEventListener('click', close)
+    // onClickOutside(cardRef, null)
 })
 </script>
 

@@ -141,7 +141,7 @@
             <teleport to="body">
               <CustomIcon
                 v-if="iconIndex === 'CustomIcon'"
-                @addIcon="addIcon"
+                @addIcon="addIcon" @close="customClose"
               ></CustomIcon>
               <!-- 以文件夹形式添加,预览 -->
               <xt-preview
@@ -469,6 +469,12 @@ const closeNav = () => {
   emit("setQuick");
 };
 
+// 自定义关闭后自动跳转到系统设置
+const customClose = () => {
+  index.value = 1
+  iconIndex.value = 'System'
+}
+
 // 左侧导航栏数组类型格式
 type LeftMenuType = {
   newIcon: string; // 新版图标
@@ -688,7 +694,7 @@ const dropArr = computed(() => {
 // 左侧导航栏进行切换时，多选图标数据清空
 watch(
   () => iconIndex.value,
-  (val) => {
+  (newVal, oldVal) => {
     multipleList.value = [];
   }
 );
