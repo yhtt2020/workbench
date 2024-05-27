@@ -1,5 +1,6 @@
 <template>
     <div 
+        ref="appRef"
         :style="{ left: `${appPos.x}px`, top: `${appPos.y}px`} "
         class="w-[600px] h-[632px] rounded-2xl flex flex-col absolute justify-between" 
         style="
@@ -81,6 +82,8 @@ import {
 } from 'vue'
 
 import { storeToRefs } from 'pinia';
+import { onClickOutside } from '@vueuse/core'
+
 import { useAppCenterStore } from '../../../../apps/appCenter/src/store';
 import { useMarketStore } from '../../../../apps/appCenter/src/views/market/store/store';
 import { ROUTER_LIMIT } from '../../../../permission/config';
@@ -132,7 +135,8 @@ const marketList = ref([])
 const isMore = ref(false)
 
 const arr =ref([])
-
+// 组件实例
+const appRef = ref(null)
 
 // 搜索
 const search = () => {
@@ -213,13 +217,17 @@ const close = () => {
 
 // 点击外部关闭
 onMounted(() => {
-    proxy.$bus.on('closeControl', () => {
+    // proxy.$bus.on('closeControl', () => {
+    //     emit('close')
+    // })
+    onClickOutside(appRef, () => {
         emit('close')
     })
 })
 
 onUnmounted(() => {
-    proxy.$bus.off('closeControl')
+    // proxy.$bus.off('closeControl')
+    onClickOutside(appRef, null)
 })
 </script>
 <style lang='scss' scoped></style>
