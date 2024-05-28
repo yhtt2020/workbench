@@ -23,7 +23,7 @@ import { deskTemplates } from "../../../js/data/deskTemplates";
 // store文件
 import { homeStore } from "../../../store/home";
 import { cardStore } from "../../../store/card";
-import { communityNavStore } from "../../../components/bottomPanel/store/communityNavStore";
+import { communityDeskStore } from "../store/communityDeskStore";
 
 // page文件
 import CreateDeskModal from "../components/CreateDeskModal.vue";
@@ -49,10 +49,10 @@ export default {
   computed: {
     ...mapWritableState(homeStore, ["currentDeskId"]),
     ...mapWritableState(cardStore, ["settings", "desks"]),
-    ...mapWritableState(communityNavStore, ["currentCommunity"]),
+    ...mapWritableState(communityDeskStore, ["communityDeskInfo"]),
 
     communityInfo() {
-      return this.currentCommunity?.item;
+      return this.communityDeskInfo;
     },
   },
 

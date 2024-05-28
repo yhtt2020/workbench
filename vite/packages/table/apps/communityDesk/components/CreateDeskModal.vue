@@ -116,7 +116,7 @@ const selectSubmit = () => {
 const close = () =>{
   deskVisible.value = false;
   settings.value.isCommunity = true;
-  router.go(-1);
+  // router.go(-1);
 }
 
 defineExpose({
