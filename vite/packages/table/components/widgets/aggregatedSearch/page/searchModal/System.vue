@@ -1,12 +1,20 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, inject, computed } from "vue";
 import { highLightKeywords } from "../../utils";
+import { favoStore as useFavoStore } from "../../../../../apps/favorites/store";
+import { noteStore as useNoteStore } from "../../../../../apps/note/store";
+import { storeToRefs } from "pinia";
 import Scrollbar from "./Scrollbar.vue";
 const words = inject("words");
 const isWebSource = inject("isWebSource");
 const currentSource = inject("currentSource");
-
 const currentIndex = ref(0);
+
+const favoStore = useFavoStore();
+const { allList } = storeToRefs(favoStore);
+const noteStore = useNoteStore();
+noteStore.getNotes();
+const { noteList } = storeToRefs(noteStore);
 
 const systemList = ref([
   {
@@ -34,6 +42,11 @@ const systemList = ref([
     name: "系统",
   },
 ]);
+
+const init = () => {
+  // 获取收藏数据
+  favoStore.getFavoList();
+};
 
 const systemData = computed(() => {
   let res = [];
@@ -67,7 +80,9 @@ const systemData = computed(() => {
       <span class="">{{ item.name }}</span>
     </div>
   </xt-scrollbar>
-  <Scrollbar> 123321 </Scrollbar>
+  <Scrollbar>
+    {{ noteList }}
+  </Scrollbar>
 </template>
 
 <style lang="scss" scoped></style>

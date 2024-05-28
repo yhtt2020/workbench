@@ -12,6 +12,7 @@ export const noteStore = defineStore("noteStore", {
     ...mapWritableState(cardStore, ['desks']),
     // 记录用户是否进行过初始化
     initFlag: false,
+    // 桌面便签列表
     noteList: [],
     // 主应用里当前选中
     selNote: -1,
