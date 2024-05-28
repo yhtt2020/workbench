@@ -548,13 +548,15 @@ export const noteStore = defineStore("noteStore", {
               '_id': 'desc'
             }
           ]
-        })
+        }) 
         this.noteList = []
         tmp.docs.forEach((item, index) => {
           this.noteList.push(item)
         })
+        return tmp.docs
       } else {
         this.getNotes();
+        return this.noteList
       }
     }
   },
