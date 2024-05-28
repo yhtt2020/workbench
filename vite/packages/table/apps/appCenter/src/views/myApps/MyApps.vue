@@ -51,7 +51,7 @@ import { useTransform, defaultStartMenu } from './hooks/useTransform'
 import { useMenus } from '../../../hooks/useMenus';
 import { startApp } from '../../../../../ui/hooks/useStartApp';
 
-import { useReplaceData } from './hooks/useReplaceData'
+import { useReplaceData, reloadList } from './hooks/useReplaceData'
 import { usePlat } from '../../../../../permission/usePlat';
 
 let appModel
@@ -107,7 +107,7 @@ const arr = ref([
         callBack: () => {
             // addStartMenu(currentItem.value)
             currentItem.value.isStart = true
-            // console.log(currentItem.value)
+            myApps.value = reloadList(list.value)
             message.info(`${currentItem.value.name}已经固定到开始菜单`)
         }
     },
@@ -183,6 +183,7 @@ const getInfo = (item) => {
     }
 }
 
+// 数据初始化
 onMounted(() => {
     if (myApps.value.length === 0 || myApps.value.length !== navigationData.systemAppList.length) {
         // 获取系统应用的列表

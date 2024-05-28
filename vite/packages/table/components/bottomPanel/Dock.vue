@@ -317,6 +317,7 @@ export default {
       "currentNavPosition",
       "currentNavFormat",
       "communityNavVisible",
+      "currentMainH",
     ]),
 
     ...mapWritableState(useNavBarStore, ["isEnterDesk"]),
@@ -447,7 +448,23 @@ export default {
     // 文件夹打开状态
     folderVisible(val) {
       this.$emit("update:isOpen", val);
-    }
+    },
+
+    // 当导航栏进行缩放后，记录主导航栏高度
+    'navAttribute.navSize'(val) {
+      const size = (this.currentNavFormat === 'mac' ? 64 : 80) * (val / 100) + 20;
+      this.currentNavPosition === 'top' ? this.currentMainH.top = size : this.currentNavSize.bottom = size
+    },
+    // 当导航栏模式发生变化后，记录主导航栏高度
+    'currentNavFormat'(val) {
+      const size = (this.currentNavFormat === 'mac' ? 64 : 80) * (this.navAttribute.navSize / 100) + 20;
+      this.currentNavPosition === 'top' ? this.currentMainH.top = size : this.currentNavSize.bottom = size
+    },
+    // 当导航栏位置发生变化后，记录主导航栏高度
+    'currentNavPosition'(val) {
+      const size = (this.currentNavFormat === 'mac' ? 64 : 80) * (this.navAttribute.navSize / 100) + 20;
+      this.currentNavPosition === 'top' ? this.currentMainH.top = size : this.currentNavSize.bottom = size
+    },
   },
   methods: {
     ...mapActions(navStore, [
