@@ -169,6 +169,10 @@ const openDesk = async () => {
   // 检测当前所在的社群桌面数据是否为空列表
   const deskList = getCommunityDeskList(communityInfo);
 
+  // 检测当前所在的社群桌面数据是否为空列表
+  const deskList = getCommunityDeskList(communityInfo);
+  communityDesk.setCommunityInfo(communityInfo);
+
   if (currentRole === "owner") {
     // 检测当前所在的社群桌面数据是否为空列表
     if (deskList.length === 0) {
