@@ -156,8 +156,8 @@ export const startApp = async (type, value, router?) => {
       const info = {
         type,
         ...value,
-      };
-      useAppStore.openApp(info);
+      }
+      useAppStore.openApp(info)
       break;
     // 本地应用
     case "tableApp":

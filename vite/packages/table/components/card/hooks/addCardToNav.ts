@@ -147,7 +147,7 @@ export const deleteIcon = (data: any, nav: string) => {
 
 
 /**
- * 判断合并的是不是卡片
+ * 判断合并的是不是卡片 --- 废用
  * @param list 导航栏数据
  * @param id 要合并的图标id
  * @param dragId 拖拽图标的id

@@ -8,7 +8,7 @@
       :class="{active:currentItemSign===item.goods_sign}" class="mb-1 flex gap-2 item relative"
       @click="showDetail(item.goods_sign)"
       @contextmenu="setCurrentSign(item.goods_sign)">
-      <div class="px-1" v-if="mod==='my' && customData.checked">
+      <div class="px-1" v-if="customData && mod==='my' && customData.checked">
         <a-checkbox @change="syncGoods" @click.stop v-model:checked="customData.checked[item.goods_sign]"></a-checkbox>
       </div>
       <div style="width: 110px">
@@ -118,6 +118,9 @@ const syncGoods=()=>{
 }
 onMounted(()=>{
   if(props.mod==='my'){
+    if(!props.customData){
+      return
+    }
     if(!props.customData['checked']){
       props.customData['checked']={}
     }

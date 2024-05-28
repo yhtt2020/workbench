@@ -9,9 +9,8 @@ let Server = {
 if(dev){
   //开发环境配置
   Server.baseUrl='http://localhost:9001'
-  Server.clientId=10001
+  Server.clientId=10010
 }
-
 
 
 
@@ -321,4 +320,4 @@ let ActionGroups = [
     ]
   }
 ]
-export {SystemApps, ActionGroups, Server, sUrl,cdnUrl,clientId}
+export {SystemApps, ActionGroups, Server, sUrl,cdnUrl}

@@ -13,7 +13,6 @@ export const ENV_MAP = {
 export const ROUTER_LIMIT = {
   web: [
     "screen",
-    "apps",
     "browser",
     "key",
     "myGame",

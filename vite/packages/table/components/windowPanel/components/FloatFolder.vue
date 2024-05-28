@@ -1,5 +1,6 @@
 <template>
     <div 
+        ref="folderRef"
         style="position: absolute; z-index: 500 !important;" 
         :style="{ left: `${folderPos.x}px`, top: `${folderPos.y}px`}"
         class="rounded-xl pointer "
@@ -26,8 +27,9 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, toRefs, onMounted } from 'vue'
+import { ref, toRefs, onMounted, onUnmounted } from 'vue'
 import Folder from '../../../apps/folder/src/Folder.vue';
+import { onClickOutside } from '@vueuse/core'
 // defineExpose
 const props = defineProps({
     // 文件夹定位
@@ -56,6 +58,8 @@ const { folderPos, customData, sideKey } = toRefs(props)
 
 const emit = defineEmits(['clickFile', 'update:layout', 'update:customSize', 'close'])
 
+const folderRef = ref(null)
+
 const clickFile = (item: any) => {
     emit('clickFile', item)
 }
@@ -69,9 +73,15 @@ const close = () => {
     emit('close')
 }
 
-
+// 点击外部关闭
 // onMounted(() => {
-//     console.log('folderVisible', folderPos.value, customData.value, sideKey.value)
+//     onClickOutside(folderRef, () => {
+//         emit('close')
+//     })
+// })
+
+// onUnmounted(() => {
+//     onClickOutside(folderRef, null)
 // })
 </script>
 <style lang='scss' scoped></style>

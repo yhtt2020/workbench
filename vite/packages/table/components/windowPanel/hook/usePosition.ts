@@ -2,8 +2,8 @@ import { useNavigationStore } from './../../desk/navigationBar/navigationStore';
 import { storeToRefs } from 'pinia'
 /**
  * 动态调整元素的定位
- * @param e 鼠标点击的位置
- * @param i 元素的宽高
+ * @param event 鼠标点击的位置
+ * @param itemSize 元素的宽高
  * @returns 返回元素的位置
  */
 export const usePosition = (event, itemSize) => {
@@ -40,3 +40,12 @@ export const usePosition = (event, itemSize) => {
 
     return { x, y: y };
 }
+
+/**
+ * min = 10
+ * mac:80 win:64
+ * elementH
+ * winH
+ * top = winH - elementH - 10 - 80
+ * 
+ */

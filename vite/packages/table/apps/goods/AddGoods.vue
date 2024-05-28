@@ -17,8 +17,8 @@
     </div>
 
     </div>
-    <div class="flex flex-1 h-0" style="max-height: 534px;">
-      <div class="flex-1 w-h">
+    <div class="flex flex-1 h-0"  >
+      <div class="flex-1 h-full">
         <xt-scrollbar :y="true" class=" h-full w-full">
           <div class="flex  gap-3 flex-col ">
             <GoodsList @showDetail="showDetail" :list="list"></GoodsList>
@@ -27,7 +27,7 @@
       </div>
     </div>
   </div>
-  <div v-if="detail" class="flex flex-col xt-bg-2 p-3 rounded-lg" style="width: 373px">
+  <div class="flex flex-col xt-bg-2 p-3 rounded-lg" style="width: 373px">
 
     <GoodsDetail :detail="detail"></GoodsDetail>
   </div>

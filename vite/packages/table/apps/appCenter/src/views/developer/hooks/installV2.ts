@@ -7,7 +7,7 @@ import { storeToRefs } from "pinia";
 import { useMit } from "../../../../../../hooks";
 import { usePlat } from "../../../../../../permission/usePlat";
 
-import { addIcon, addNav } from "./add";
+import { addIcon, addNav, addMyApp } from "./add";
 import { update } from "./update";
 
 // web端导入应用确认框
