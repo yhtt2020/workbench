@@ -166,26 +166,32 @@ const openDesk = async () => {
   const currentRole = (currentCommunity.value.item as any).role;
   // 社群数据
   const communityInfo: any = currentCommunity.value?.item;
+  // 检测当前所在的社群桌面数据是否为空列表
+  const deskList = getCommunityDeskList(communityInfo);
+  communityDesk.setCommunityInfo(communityInfo);
+
   if (currentRole === "owner") {
     // 检测当前所在的社群桌面数据是否为空列表
-    const deskList = getCommunityDeskList(currentCommunity.value?.item);
     if (deskList.length === 0) {
-      // settings.value.isCommunity = false;
-      router.push({ name:'CommunityGroupDesk', params: { no: communityInfo?.no } });
+      router.push({
+        name: "CommunityGroupDesk",
+        params: { no: communityInfo?.no },
+      });
       setTimeout(() => {
         proxy.$bus.emit("openCommunityDesk");
       }, 150);
     }
     // 当前社群桌面数据已经创建
     else {
-      // settings.value.isCommunity = false;
-      router.push({ name:'CommunityGroupDesk', params: { no: communityInfo?.no } });
+      router.push({
+        name: "CommunityGroupDesk",
+        params: { no: communityInfo?.no },
+      });
     }
   }
   // 成员
   else if (currentRole === "member") {
-    // 检测当前所在的社群桌面数据是否为空列表
-    const deskList = getCommunityDeskList(communityInfo);
+    loadSyncDesk(communityInfo?.no);
     if (deskList.length === 0) {
       // 提示弹窗
       (window as any).$ui.confirm(
@@ -201,8 +207,10 @@ const openDesk = async () => {
     }
     // 当前社群桌面数据已经创建
     else {
-      settings.value.isCommunity = false;
-      router.push({ name:'CommunityGroupDesk', params: { no: communityInfo?.no } });
+      router.push({
+        name: "CommunityGroupDesk",
+        params: { no: communityInfo?.no },
+      });
     }
   }
 };

@@ -489,11 +489,11 @@ export default {
   },
 
   computed: {
-    ...mapWritableState(communityNavStore, ["currentCommunity"]),
+    // ...mapWritableState(communityNavStore, ["currentCommunity"]),
     ...mapWritableState(deskStore, ["apiList"]),
     ...mapWritableState(taskStore, ["taskID", "step", "taskTmp"]),
     ...mapWritableState(useDeskStore, ["menus"]),
-    ...mapWritableState(communityDeskStore, ["syncDesk", "setting"]),
+    ...mapWritableState(communityDeskStore, ["syncDesk", "setting","communityDeskInfo"]),
     ...mapWritableState(appStore, [
       "fullScreen",
       "showGuide",
@@ -514,12 +514,13 @@ export default {
 
     // 社群信息
     communityInfo() {
-      return this.currentCommunity?.item;
+      console.log('查看社群信息',this.communityDeskInfo);
+      return this.communityDeskInfo;
     },
 
     // 社群角色权限
     communityRole() {
-      return this.currentCommunity?.item?.role === "owner";
+      return this.communityDeskInfo?.role === "owner";
     },
 
     // 右键下拉菜单
