@@ -68,6 +68,15 @@ const initOpenWith = () => {
   );
   currentOpenWith.value = openWithList[openWithIndex.value];
 };
+const webSource = ref();
+
+const initWebSource = () => {
+  if (isWebSource.value) {
+    webSource.value = currentSource.value;
+  } else {
+    webSource.value = data.value.webSource;
+  }
+};
 /** 用于判断是否属于web搜索源 */
 const isWebSource = computed(() => {
   const name = currentSource.value.name;
@@ -78,11 +87,7 @@ const isWebSource = computed(() => {
 });
 initCurrentSource();
 initOpenWith();
-const webSource = ref();
 
-const initWebSource = () => {
-  webSource.value = data.value.webSource;
-};
 initWebSource();
 const tabSourceList = computed(() => {
   let res: any = [...defaultSourceList];
@@ -230,18 +235,37 @@ const openCardSet = () => {
 
 /** 相关事件 */
 const eventDown = (e) => {
+  /** 组合键 */
   // ctrl+tab
   if (e.key == "Tab" && e.ctrlKey) {
+    if (words.value.length == 0) {
+      return;
+    }
     e.preventDefault();
+
     openWithIndex.value = (openWithIndex.value + 1) % openWithList.length;
     selectOpenWith(openWithIndex.value);
     return;
   }
-  // ctrl+[1-9]
+  // ctrl + [1-9]
   if (e.ctrlKey && e.key.match(/^[1-9]$/)) {
+    if (words.value.length == 0) {
+      return;
+    }
+    e.preventDefault();
     ctrlSelectIndex.value = e.key - 1;
     return;
   }
+  // alt + [1-9]
+  if (e.altKey && e.key.match(/^[1-9]$/)) {
+    if (words.value.length == 0) {
+      return;
+    }
+    e.preventDefault();
+    currentSource.value = data.value.sourceList[e.key - 1];
+    return;
+  }
+  /** 单键 */
   // enter
   if (e.key === "Enter") {
     e.preventDefault();
@@ -253,19 +277,22 @@ const eventDown = (e) => {
     return;
   }
   if (e.key === "ArrowUp") {
+    if (words.value.length == 0) {
+      return;
+    }
+    e.preventDefault();
     ctrlSelectIndex.value -= 1;
     return;
   }
   if (e.key === "ArrowDown") {
+    if (words.value.length == 0) {
+      return;
+    }
+    e.preventDefault();
     ctrlSelectIndex.value += 1;
     return;
   }
-  // Alt+tab
-  if (e.key === "Tab" && e.key === "Alt") {
-    e.preventDefault();
-    console.log("2222222 :>> ", 2222222);
-    return;
-  }
+
   // tab
   if (e.key == "Tab") {
     e.preventDefault();
@@ -314,6 +341,33 @@ const highlightText = (text) => {
     });
   }, text);
 };
+
+const systemList = ref([
+  {
+    name: "全部",
+  },
+  {
+    name: "收藏",
+  },
+  {
+    name: "应用",
+  },
+  {
+    name: "备忘录",
+  },
+  {
+    name: "待办",
+  },
+  {
+    name: "剪切板",
+  },
+  {
+    name: "社群",
+  },
+  {
+    name: "系统",
+  },
+]);
 </script>
 
 <template>
@@ -382,9 +436,8 @@ const highlightText = (text) => {
         v-if="words && isWebSource"
         :x="true"
         style="border-bottom: var(--tt-primary-border-color)"
-        class="w-full relative flex overflow-hidden tab-container flex-nowrap whitespace-nowrap pb-3"
+        class="w-full relative flex overflow-hidden tab-container flex-nowrap whitespace-nowrap pb-1"
       >
-        {{ currentSource.name }}
         <div
           v-for="item in sourceList"
           @click="selectWebSource(item)"
@@ -396,9 +449,31 @@ const highlightText = (text) => {
                   : '2px solid var(--tt-secondary-color)',
             },
           ]"
+          class="py-3 px-2 inline-flex items-center cursor-pointer"
+        >
+          <xt-mix-icon :icon="item.icon" type="select" size="20" class="mr-2" />
+          <span class="">{{ item.name }}</span>
+        </div>
+      </xt-scrollbar>
+      <xt-scrollbar
+        v-if="words && !isWebSource"
+        :x="true"
+        style="border-bottom: var(--tt-primary-border-color)"
+        class="w-full relative flex overflow-hidden tab-container flex-nowrap whitespace-nowrap pb-1"
+      >
+        <div
+          v-for="item in systemList"
+          @click="selectWebSource(item)"
+          :style="[
+            {
+              'border-bottom':
+                currentSource.name == item.name
+                  ? '2px solid var(--tt-theme-color)'
+                  : '2px solid var(--tt-secondary-color)',
+            },
+          ]"
           class="p-3 inline-flex items-center cursor-pointer"
         >
-          <xt-mix-icon :icon="item.icon" type="select" size="24" class="mr-1" />
           <span class="">{{ item.name }}</span>
         </div>
       </xt-scrollbar>
@@ -484,9 +559,10 @@ const highlightText = (text) => {
         class="h-10 tt-bg-2-t flex items-center justify-between p-3 pr-2 text-xs"
       >
         <div class="tt-text-3 flex h-8 items-center">
-          <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">Tab</div>
-          <div class="ml-1">切换搜索方式</div>
-
+          <template v-if="words.length == 0">
+            <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">Tab</div>
+            <div class="ml-1">切换搜索方式</div>
+          </template>
           <template v-if="words || data.historyList.length > 0">
             <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">
               Ctrl
@@ -504,9 +580,9 @@ const highlightText = (text) => {
                 Alt
               </div>
               <div class="py-1 rounded-md mr-1 tt-bg-2-t px-2 tt-text-2">
-                Tab
+                1-9
               </div>
-              <div>切换打开方式</div>
+              <div>切换搜索引擎</div>
             </template>
           </template>
         </div>
