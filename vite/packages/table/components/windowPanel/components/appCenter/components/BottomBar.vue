@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full h-[56px] xt-bg rounded-b-2xl flex justify-between">
+    <div class="w-full h-[56px] xt-bg rounded-b-2xl flex justify-between flex-shrink-0">
         <div class="flex items-center justify-between gap-2 p-4 text-sm pointer" @click="goApps('MyApps')">
             <xt-new-icon icon="fluent:grid-16-filled" size="16"></xt-new-icon>
             全部应用

@@ -6,7 +6,7 @@
         >
             <template #right>
                 <xt-button w="98" h="32" radius="8" icon="" @click="putaway">我要上架</xt-button>
-                <xt-button w="127" h="32" radius="8" type="theme" @click="putaway">全部应用（{{ recommendList.length }}）</xt-button>
+                <xt-button w="127" h="32" radius="8" type="theme" @click="putaway">全部应用（{{ searchApps?.length }}）</xt-button>
             </template>
         </Header>
         <ImgList :list="adList"></ImgList>
@@ -18,7 +18,7 @@
                     :item="item" 
                     v-for="(item, index) in recommendList" 
                     :key="index" 
-                    @download="download" 
+                    @download="getDown" 
                     @open="open"
                     @goDetail="putaway"
                 />
@@ -34,17 +34,13 @@ import { ref, defineAsyncComponent, onMounted, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia';
 
 import Header from '../../component/Header.vue';
-import { install } from './hooks/install';
-import { updateValue } from './hooks/useUpdateValue'
 
 import { useMarketStore } from './store/store';
-import { useAppCenterStore } from '../../store';
-import { message } from 'ant-design-vue';
 
 import { appData } from '../developer/hooks/data';
 
 import { usePlat } from '../../../../../ui/hooks/usePlat';
-import { checkStatus } from '../apps/checkStatus';
+import { open, download } from './hooks/lightApp'
 const putaway = () => {
   ipc.send("executeApp", { app: JSON.parse(JSON.stringify(appData)) });
 };
@@ -55,10 +51,7 @@ if(!usePlat('web')) {
 }
 
 const store = useMarketStore()
-const { recommendList, adList } = storeToRefs(store)
-
-const appCenterStore = useAppCenterStore()
-const { myApps } = storeToRefs(appCenterStore)
+const { recommendList, adList, searchApps } = storeToRefs(store)
 
 const ImgList = defineAsyncComponent(() => import('./components/ImgList.vue'))
 const Item = defineAsyncComponent(() => import('./components/Item.vue'))
@@ -68,6 +61,7 @@ const target = ref(null)
 onMounted( async() => {
     await store.getRecommendList()
     await store.getAd()
+    await store.searchApp('')
     check(recommendList.value)
 })
 // 检查是否已经安装
@@ -82,36 +76,15 @@ const check = async(list) => {
     }
 }
 
+// 用于测试
 // onUnmounted(() => {
 //     recommendList.value = []
 //     adList.value = []
 // })
 
 // 下载安装
-const download = (item) => {
-    if(!checkStatus()) return
-    message.info('正在安装，请勿重复点击')
-    tsbApi.app.installAppConfirm(install(item.value.version.app.version).appJson,async(data) => {
-        if(data.status) {
-            store.downloadCount({appNanoid:item.id})
-            check(recommendList.value)
-            message.success('安装成功')
-            setTimeout(async() => {
-                const target = await updateValue(item)
-                myApps.value.unshift(target)
-            }, 50);
-        } else {
-            message.error('安装失败')
-        }
-    })
-}
-
-// 打开
-const open = async(val) => {
-    if(!checkStatus()) return
-    const list = await appModel.getAllApps()
-    const app = list.find(app => app.appid === val.id)
-    tsbApi.app.run(app.nanoid,false,app)
+const getDown = (item) => {
+    download(item, item.value.version.app.version)
 }
 
 </script>

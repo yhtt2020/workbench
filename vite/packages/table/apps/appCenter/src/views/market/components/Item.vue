@@ -71,6 +71,10 @@ if(!usePlat('web')) {
     appModel = window.$models.appModel
 }
 
+// onMounted(() =>{
+//     console.log(props.item,'<<<<<<<<<<')
+// })
+
 interface PropsType {
     item: {
         icon?: string,
