@@ -168,7 +168,7 @@ export default {
       isSelect: false,
       settingVisible: false, // 编辑状态
       iconsSetVisible: false,
-      options: { custom:true, disabledDelete:true }, // 卡片核心配置
+      options: { custom:true, disabledDelete:true, disabledNav:true }, // 卡片核心配置
       // 卡片类相关数据
       modelVisible: false, // 卡片弹窗是否可见
       cardData: {}, // 卡片详细数据
