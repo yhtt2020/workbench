@@ -1,13 +1,13 @@
 <template>
     <div class="flex flex-col justify-center w-full h-full gap-3">
         <div class="pl-4 text-sm xt-text" v-if="list.length > 0">搜索结果</div>
-        <div class="flex-1 w-full" style="max-height: 100%;">
-            <ItemList :list="list" bg="var(--active-secondary-bg)" v-if="list.length > 0" @close="close"/>
+        <div class="flex-1 w-full" style="max-height: 100%;" v-if="list.length > 0">
+            <ItemList :list="list" bg="var(--active-secondary-bg)" @close="close"/>
         </div>
         <div class="flex flex-col w-full gap-3" style="max-height: 475px;">
             <div class="pl-4 text-sm xt-text" v-if="marketList.length > 0">应用市场</div>
             <xt-scrollbar class="flex-1 w-full h-full" :x="false" :y="true">
-                <div class="flex flex-col w-full h-full gap-3" v-if="marketList.length > 0">
+                <div class="flex flex-col w-full h-full gap-2" v-if="marketList.length > 0">
                     <MarketList 
                         v-for="item in marketList" 
                         :key="item.id" 
@@ -15,13 +15,14 @@
                         @open="open"
                         @download="getDown"
                         boxClass="w-full"
+                        :sizeStyle="{h:64,size:32,text:14}"
                     />
                 </div>
             </xt-scrollbar>  
         </div>
         
     </div>
-    <div class="flex items-center justify-center w-full h-full">
+    <div class="flex items-center justify-center w-full h-full mt-20">
         <Empty @back="back" v-if="marketList.length <= 0 && list.length <= 0"/>
     </div>
 </template>
