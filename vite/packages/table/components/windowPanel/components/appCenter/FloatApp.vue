@@ -154,7 +154,9 @@ const search = () => {
         return
     }
     isSearch.value = true
-    searchList.value = myApps.value.filter(item => item.name.indexOf(inputValue.value) !== -1)
+    searchList.value = myApps.value.filter(item => 
+        item.name.toLowerCase().includes(inputValue.value.toLowerCase())
+    );
     marketStore.searchApp(inputValue.value).then(() => {
         console.log(searchApps.value,'searchApps.value')
         marketList.value = searchApps.value

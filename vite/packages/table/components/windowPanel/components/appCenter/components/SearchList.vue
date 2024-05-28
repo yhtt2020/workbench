@@ -21,11 +21,14 @@
         </div>
         
     </div>
-    <Empty @back="back" v-if="marketList.length <= 0 && list.length <= 0"/>
+    <div class="flex items-center justify-center w-full h-full">
+        <Empty @back="back" v-if="marketList.length <= 0 && list.length <= 0"/>
+    </div>
 </template>
 
 <script setup lang='ts'>
 import { ref, defineAsyncComponent, computed, toRefs } from 'vue'
+import { usePlat } from '../../../../../ui/hooks/usePlat';
 
 import { open, download } from '../../../../../apps/appCenter/src/views/market/hooks/lightApp'
 
@@ -33,6 +36,10 @@ const ItemList = defineAsyncComponent(() => import('./ItemList.vue'))
 const MarketList = defineAsyncComponent(() => import('../../../../../apps/appCenter/src/views/market/components/Item.vue'))
 const Empty = defineAsyncComponent(() => import('./Empty.vue'))
 
+let appModel
+if(!usePlat('web')) {
+    appModel = window.$models.appModel
+}
 
 const emit = defineEmits(['close', 'open', 'back'])
 
@@ -67,7 +74,17 @@ const marketList = computed(() => {
 });
 
 const getDown = (item) => {
-    download(item, item.value.version)
+    download(item, item.value.version, () => check(item))
+}
+
+// 检查是否已经安装
+const check = async(item) => {
+    if( !usePlat('web')) {
+        const allList = await appModel.getAllApps()
+        item.isInstalled = allList.find(app => app.appid === item.id)
+    } else {
+        item.isInstalled = false
+    }
 }
 
 </script>

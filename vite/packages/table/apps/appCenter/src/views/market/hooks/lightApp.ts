@@ -14,7 +14,7 @@ if(!usePlat('web')) {
     appModel = window.$models.appModel
 }
 // 下载安装
-export const download = (item, version, fn?: Function) => {
+export const download = async(item, version, fn?: Function | any | undefined) => {
     const store = useMarketStore()
     const appCenter = useAppCenterStore()
     const { myApps } = storeToRefs(appCenter)
@@ -23,12 +23,14 @@ export const download = (item, version, fn?: Function) => {
     tsbApi.app.installAppConfirm(install(version).appJson,async(data) => {
         if(data.status) {
             store.downloadCount({appNanoid:item.id})
+            // 回调事件
+            if(fn) {
+                await fn()
+            }
             message.success('安装成功')
             setTimeout(async() => {
                 const target = await updateValue(item)
                 myApps.value.unshift(target)
-                // 回调事件
-                fn && fn(item)
             }, 50);
         } else {
             message.error('安装失败')

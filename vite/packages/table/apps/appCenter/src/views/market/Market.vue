@@ -84,7 +84,7 @@ const check = async(list) => {
 
 // 下载安装
 const getDown = (item) => {
-    download(item, item.value.version.app.version)
+    download(item, item.value.version.app.version, () => check(recommendList.value))
 }
 
 </script>
