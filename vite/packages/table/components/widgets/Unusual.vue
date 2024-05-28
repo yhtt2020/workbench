@@ -1,11 +1,12 @@
 <template>
     <div class="flex flex-col items-center justify-center w-full h-full primary-text">
-        <xt-ify-icon :icon="newIcon" size="56" />
+        <xt-ify-icon :icon="newIcon" size="56" class="mb-4"/>
+
         <template v-if="disableEdit">
-          <div class="my-4 xt-text-2 font-14">{{ newTitle }}</div>
+          <div class="mb-4 xt-text-2 font-14" v-if="newTitle">{{ newTitle }}</div>
         </template>
         <template v-else>
-          <div class="my-4 xt-text-2 font-14">{{ title }}</div>
+          <div class="mb-4 xt-text-2 font-14" v-if="title">{{ title }}</div>
         </template>
 
         <xt-button  h="32" @click="back" type="theme" class="font-14" :radius="8" v-if="!disableEdit"  style="width: auto !important; padding: 0 10px ;">

@@ -10,12 +10,16 @@
     :desk="desk"
     :envLimit="['single']"
     @delete="deleteCard">
+
     <!-- <div v-if="defaultCity" class="px-3 py-1 bg-mask rounded-xl pointer" @click="openWeatherDrawer" style="position: absolute;left: 45px;top:10px">
       {{ defaultCity.name }}
     </div> -->
+
     <div @click="enterWeather">
       <div v-if="!cities.length">
-        <div>
+        <Unusual :newIcon="'fluent-emoji:sun-behind-cloud'" :buttonTitle="'添加城市'" @back="add"/>
+
+        <!-- <div>
           <a-col style="text-align: center; margin-top: 0em">
             <Icon style=" width: 5em;  height: 5em;    vertical-align: middle; " icon="icon_qingtian"></Icon>
           </a-col>
@@ -25,7 +29,8 @@
             <Icon icon="tianjia1"></Icon>
             添加城市
           </xt-button>
-        </div>
+        </div> -->
+        
       </div>
       <div @click="enterWeather" v-else>
         <template v-if="defaultCity.now && defaultCity.d7 && defaultCity.h24 && defaultCity.d7.daily">
@@ -93,6 +98,7 @@ import HorizontalDrawer from '../HorizontalDrawer.vue';
 import XtButton from '../../ui/libs/Button/index.vue'
 import { Icon as newIcon } from '@iconify/vue';
 import { communityNavStore } from "../bottomPanel/store/communityNavStore";
+import Unusual from './Unusual.vue';
 
 export default {
   name: "Weather",
@@ -132,7 +138,8 @@ export default {
     XtButton,
     Widget,
     HorizontalDrawer,
-    newIcon
+    newIcon,
+    Unusual
   },
   computed: {
     ...mapState(weatherStore, ['cities','reloadAll']),

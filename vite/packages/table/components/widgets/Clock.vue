@@ -137,7 +137,7 @@
       <template v-else>
         <div class="flex flex-col items-center justify-center h-full">
           <xt-ify-icon
-            icon="fluent-emoji:sleeping-face"
+            icon="fluent-emoji:alarm-clock"
             class="pb-4"
             size="56"
           />
