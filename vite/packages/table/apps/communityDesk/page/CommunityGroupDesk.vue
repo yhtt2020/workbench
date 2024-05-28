@@ -1,18 +1,15 @@
-<!-- 社群桌面 -->
 <template>
-  <!-- 社群桌面模块 -->
-  <template v-if="!communityVisible">
-    <DeskDetailPage
-      :currentDeskId="currentDeskId"
-      :settings="settings"
-      :desk-list="deskList"
-      :showTabs="showTabs"
-      :showTopBar="showTopBar"
-      :showTools="showTools"
-      @updateCurrentDesk="updateId"
-      @add="doAddDesk"
-    />
-  </template>
+  <!-- 桌面渲染页面 -->
+  <DeskDetailPage
+    :currentDeskId="currentDeskId"
+    :settings="settings"
+    :desk-list="desks"
+    :showTabs="showTabs"
+    :showTopBar="showTopBar"
+    :showTools="showTools"
+    @updateCurrentDesk="updateId"
+    @add="doAddDesk"
+  />
 
   <!-- 社群桌面空时,引导创建桌面弹窗 -->
   <CreateDeskModal ref="createDeskRef" @createDesk="doAddDesk('空白桌面')" />
@@ -23,55 +20,17 @@ import { nanoid } from "nanoid";
 import { mapActions, mapWritableState } from "pinia";
 import { deskTemplates } from "../../../js/data/deskTemplates";
 
+// store文件
+import { homeStore } from "../../../store/home";
+import { cardStore } from "../../../store/card";
+import { communityNavStore } from "../../../components/bottomPanel/store/communityNavStore";
+
 // page文件
 import CreateDeskModal from "../components/CreateDeskModal.vue";
 import DeskDetailPage from "./deskDetail/DeskDetailPage.vue";
 
-// store文件
-import { communityNavStore } from "../../../components/bottomPanel/store/communityNavStore";
-
 export default {
   name: "CommunityGroupDesk",
-
-  emits: ["update:currentDeskId"],
-
-  props: {
-    // 桌面设置
-    settings: {
-      type: Object,
-      default: {},
-    },
-    // 桌面列表
-    deskList: {
-      type: Array,
-      default: [],
-    },
-    //是否显示tabs
-    showTabs: {
-      type: Boolean,
-      default: true,
-    },
-    //是否显示顶部栏
-    showTopBar: {
-      type: Boolean,
-      default: true,
-    },
-    //是否显示工具栏
-    showTools: {
-      type: Boolean,
-      default: true,
-    },
-    // 当前桌面id
-    currentDeskId: {
-      type: String,
-      default: "0",
-    },
-    // 用于切换桌面
-    communityVisible: {
-      type: Boolean,
-      default: true,
-    },
-  },
 
   components: {
     CreateDeskModal,
@@ -88,10 +47,30 @@ export default {
   },
 
   computed: {
+    ...mapWritableState(homeStore, ["currentDeskId"]),
+    ...mapWritableState(cardStore, ["settings", "desks"]),
     ...mapWritableState(communityNavStore, ["currentCommunity"]),
 
     communityInfo() {
       return this.currentCommunity?.item;
+    },
+  },
+
+  props: {
+    //是否显示tabs
+    showTabs: {
+      type: Boolean,
+      default: true,
+    },
+    //是否显示顶部栏
+    showTopBar: {
+      type: Boolean,
+      default: true,
+    },
+    //是否显示工具栏
+    showTools: {
+      type: Boolean,
+      default: true,
     },
   },
 
@@ -129,11 +108,17 @@ export default {
       if (deskName) {
         desk.cards = [];
       }
-      this.deskList.unshift(desk);
-      this.$emit("changeDesk", { id: desk.id });
+      this.desks.unshift(desk);
+      this.$bus.emit('changeCurrentDesk',{id:desk.id});
       this.deskTitle = "";
     },
 
+    // 更新桌面id
+    updateId(id){
+      this.currentDeskId = id;
+      this.$bus.emit('changeCurrentDesk',{id:id});
+    },
+    
     // 解决桌面卡片数据重置
     cleanMuuriData(list) {
       list.forEach((li) => {
@@ -142,14 +127,9 @@ export default {
       });
       return [...list];
     },
-    // 更新当前桌面id
-    updateId(id) {
-      this.$emit("update:currentDeskId", id);
-      this.$emit("changeDesk", { id: id });
-    },
   },
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 </style>

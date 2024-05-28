@@ -2,7 +2,7 @@
   <div style="height: 100%">
     <!-- 个人桌面 -->
     <desk-group
-      v-if="communityVisible"
+      
       @changeDesk="changeDesk"
       ref="deskGroupRef"
       :settings="settings"
@@ -12,8 +12,12 @@
       <template #settingsAll> </template>
     </desk-group>
 
+
     <!-- 社群桌面 -->
-    <CommunityGroupDesk
+    <router-view></router-view>
+
+    
+    <!-- <CommunityGroupDesk
       :communityVisible="communityVisible"
       ref="deskGroupRef"
       :settings="settings"
@@ -22,7 +26,8 @@
       @changeDesk="changeDesk"
     >
       <template #settingsAll> </template>
-    </CommunityGroupDesk>
+    </CommunityGroupDesk> -->
+    
   </div>
   <!-- 检测到用户头像为默认头像时触发用户中心个人信息修改弹窗 -->
   <div
@@ -83,7 +88,7 @@ import ScalePanel from "./ScalePanel.vue";
 import GuidePanel from "./GuidePanel.vue";
 import WebLogin from "./WebLogin.vue";
 import GalleryModal from "../components/paperModal/PaperApp.vue";
-import CommunityGroupDesk from "../apps/communityDesk/page/CommunityGroupDesk.vue";
+// import CommunityGroupDesk from "../apps/communityDesk/page/CommunityGroupDesk.vue";
 
 import { taskStore } from "../apps/task/store";
 import navigationData from "../js/data/tableData";
@@ -198,7 +203,7 @@ export default {
     ScalePanel,
     GuidePanel,
     WebLogin,
-    CommunityGroupDesk,
+    // CommunityGroupDesk,
   },
   computed: {
     ...mapWritableState(navStore, [
@@ -346,6 +351,11 @@ export default {
         this.customComponents = [];
       }
     }
+
+    // 更新社群桌面
+    this.$bus.on('changeCurrentDesk',(desk)=>{
+      this.changeDesk(desk);
+    })
   },
   created() {
     if (this.currentDesk.cards.length) {
