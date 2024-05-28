@@ -16,6 +16,9 @@
       title="请完成小组件配置"
       buttonTitle="立即配置"
       @back="back"
+      :disableEdit="options.disableEdit"
+      :newIcon="'fluent-emoji:memo'"
+      :newTitle="'未读到社区数据'"
     ></Unusual>
     <div v-else class="echarts" ref="myChart" :style="myChartStyle"></div>
     <!-- 设置面板 -->

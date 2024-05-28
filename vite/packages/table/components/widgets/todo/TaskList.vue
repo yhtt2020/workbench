@@ -1,11 +1,27 @@
 <template>
   <div class="flex items-center justify-center h-full" v-if="!data.length">
-    <a-empty
-      @click="goTodo"
+
+    <template v-if="disableEdit">
+       <div class="flex flex-col w-full items-center justify-center">
+         <xt-ify-icon icon="fluent-emoji:ballot-box-with-ballot" size="56" class="mb-4"/>
+         <span class="xt-text-2 font-14 xt-font">当前没有任务,放松一下</span>
+       </div>
+    </template>
+
+    <template v-else>
+      <div class="flex flex-col w-full items-center justify-center pointer" @click="goTodo">
+        <xt-ify-icon icon="fluent-emoji:ballot-box-with-ballot" size="56" class="mb-4"/>
+        <span class="xt-text-2 font-14 xt-font">点击进入待办应用</span>
+      </div>
+    </template>
+    <!-- <a-empty
+      
       style="zoom: 0.6; cursor: pointer"
       description="点击进入待办应用"
       image="/emoji/sleep.png"
-    ></a-empty>
+    ></a-empty> -->
+
+    <!-- fluent-emoji:ballot-box-with-ballot -->
   </div>
   <vue-custom-scrollbar
     v-else
