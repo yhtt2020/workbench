@@ -139,7 +139,7 @@ const recommendIndex = computed(() => {
       <span class="">{{ item.name }}</span>
     </div>
   </xt-scrollbar>
-  <div class="flex px-3 pt-3">
+  <div class="flex p-3">
     <div class="text-sm tt-text-2">猜你想找</div>
   </div>
   <Scrollbar>

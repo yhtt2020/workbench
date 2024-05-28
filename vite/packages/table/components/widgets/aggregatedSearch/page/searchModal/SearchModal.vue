@@ -9,7 +9,6 @@ import History from "./History.vue";
 import System from "./System.vue";
 import Search from "./Search.vue";
 
-
 const emit = defineEmits(["close", "openCardSet"]);
 
 const data: any = inject("data");
@@ -42,7 +41,7 @@ const webSource = ref();
 /** 用于判断是否属于web搜索源 */
 const isWebSource = computed(() => {
   const name = currentSource.value.name;
-  if (name == "工作台" || name == "window桌面文件") {
+  if (name == "工作台" || name == "文件") {
     return false;
   }
   return true;
@@ -69,8 +68,14 @@ const initCurrentSource = () => {
     source = data.value.sourceList[0];
   }
 
-  sourceIndex.value = sourceList.findIndex((item) => item.name === source.name);
   currentSource.value = source;
+  if (source.name == "工作台") {
+    sourceIndex.value = 0;
+  } else if (source.name == "文件") {
+    sourceIndex.value = 1;
+  } else {
+    sourceIndex.value = 2;
+  }
 };
 
 /** 初始化打开方式 */
@@ -187,7 +192,8 @@ const eventDown = (e) => {
   if (e.key === "Enter") {
     e.preventDefault();
     if (words.value.length > 0) {
-      search(recommendList.value[ctrlSelectIndex.value]);
+      // 有bug
+      // search(recommendList.value[ctrlSelectIndex.value]);
     } else {
       historySearch(ctrlSelectIndex.value);
     }
@@ -214,6 +220,7 @@ const eventDown = (e) => {
   if (e.key == "Tab") {
     e.preventDefault();
     tabVisible.value = true;
+    // 有bug
     sourceIndex.value = (sourceIndex.value + 1) % tabSourceList.value.length;
     const sourceVal = tabSourceList.value[sourceIndex.value];
     selectTabSource(sourceVal);
@@ -294,8 +301,9 @@ useEventListener("keyup", tabEventUp);
       </header>
 
       <main
-        class="flex-1 w-full overflow-hidden flex flex-col"
-
+        class="w-full overflow-hidden flex flex-col px-3"
+        style="height: 508px"
+        v-if="data.historyList.length > 0 || words"
       >
         <System v-if="words && !isWebSource" />
         <Search v-if="words && isWebSource" @search="search" />

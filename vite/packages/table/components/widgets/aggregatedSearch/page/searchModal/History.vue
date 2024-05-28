@@ -36,7 +36,7 @@ defineExpose({
 </script>
 
 <template>
-  <div class="flex justify-between px-3 pt-3">
+  <div class="flex justify-between p-3">
     <div class="text-sm tt-text-2">最近</div>
     <xt-mix-icon
       size="20"

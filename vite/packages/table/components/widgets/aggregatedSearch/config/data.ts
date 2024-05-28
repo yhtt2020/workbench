@@ -90,7 +90,7 @@ export const defaultSourceList = [
     recommendUrl: "",
   },
   {
-    name: "window桌面文件",
+    name: "文件",
     icon: "/img/appLogo/folder.png",
     iconType: "select",
     searchUrl: "",

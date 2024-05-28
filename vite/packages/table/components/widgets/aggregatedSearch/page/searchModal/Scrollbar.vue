@@ -5,7 +5,7 @@ import PerfectScrollbar from "perfect-scrollbar";
 const ctrlSelectIndex = inject("ctrlSelectIndex");
 
 const scrollbar = ref(null);
-const searchScrollbar= ref(null);
+const searchScrollbar = ref(null);
 
 watch(ctrlSelectIndex, (val) => {
   searchScrollbar.value.scrollTop = ctrlSelectIndex.value * 44;
@@ -25,7 +25,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div
-    class="flex-1 w-full overflow-hidden relative p-3 h-[500px]"
+    class="flex-1 w-full overflow-hidden relative"
     ref="searchScrollbar"
   >
     <slot></slot>

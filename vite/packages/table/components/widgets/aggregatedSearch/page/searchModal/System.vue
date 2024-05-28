@@ -1,10 +1,12 @@
 <script setup>
-import { ref, onMounted, onBeforeUnmount, inject } from "vue";
+import { ref, onMounted, onBeforeUnmount, inject, computed } from "vue";
 import { highLightKeywords } from "../../utils";
 import Scrollbar from "./Scrollbar.vue";
 const words = inject("words");
 const isWebSource = inject("isWebSource");
 const currentSource = inject("currentSource");
+
+const currentIndex = ref(0);
 
 const systemList = ref([
   {
@@ -32,20 +34,30 @@ const systemList = ref([
     name: "系统",
   },
 ]);
+
+const systemData = computed(() => {
+  let res = [];
+  return res;
+});
 </script>
 
 <template>
   <xt-scrollbar
     :x="true"
-    style="border-bottom: 1px solid var(--tt-primary-border-color)"
+    style="
+      border-bottom: 1px solid var(--tt-primary-border-color);
+      height: 50px;
+      min-height: 50px;
+    "
     class="w-full relative flex overflow-hidden tab-container flex-nowrap whitespace-nowrap mb-1"
   >
     <div
-      v-for="item in systemList"
+      @click="currentIndex = index"
+      v-for="(item, index) in systemList"
       :style="[
         {
           'border-bottom':
-            currentSource.name == item.name
+            currentIndex == index
               ? '2px solid var(--tt-theme-color)'
               : '2px solid var(--modal-bg)',
         },
@@ -55,11 +67,7 @@ const systemList = ref([
       <span class="">{{ item.name }}</span>
     </div>
   </xt-scrollbar>
-
-  <Scrollbar
-  >
-    123321
-  </Scrollbar>
+  <Scrollbar> 123321 </Scrollbar>
 </template>
 
 <style lang="scss" scoped></style>
