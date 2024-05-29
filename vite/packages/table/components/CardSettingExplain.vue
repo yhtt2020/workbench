@@ -1,3 +1,4 @@
+<!-- 用于社群管理员桌面的部分卡片设置提示 -->
 <template>
   <div class="w-full p-4 flex rounded-lg setting-card mb-4">
      <xt-ify-icon icon="fluent:info-12-filled" class="setting-icon mr-3" />

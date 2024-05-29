@@ -79,11 +79,12 @@
   <!-- 新版设置 -->
   <CustomModal
     :modalVisible="panelVisible"
-    @close="panelVisible = false"
     :customInput="myData.title"
     :linkPath="myData.link"
     :showName="showName"
     :img="imgSrc"
+    :desk="desk"
+    @close="panelVisible = false"
     @update:img="updateImg"
     @updateBorder="updateBorder"
     :noBorder="customData.hideFrame"

@@ -59,6 +59,8 @@
         </div>
       </template>
       <vue-custom-scrollbar :settings="settings" style="height: 100%">
+        <CardSettingExplain v-if="communityAuth(desk?.communityNo)"/>
+
         <div>
           <div class="text-content">
             <div>关联短说社区系统</div>
@@ -99,12 +101,15 @@ import { cardStore } from "../../../../store/card";
 import browser from "../../../../js/common/browser";
 import Unusual from "../../Unusual.vue";
 import { communityNavStore } from "../../../bottomPanel/store/communityNavStore";
+import { communityAuth } from "../../../../apps/communityDesk/hooks/deskCreateMethod";
+import CardSettingExplain from "../../../CardSettingExplain.vue";
 
 export default {
   components: {
     Widget,
     Icon,
     Unusual,
+    CardSettingExplain,
   },
 
   props: {
@@ -208,6 +213,7 @@ export default {
     ...mapActions(cardStore, ["updateCustomData"]),
     ...mapActions(shortTalkStore, ["getTodoData", "changeAccToken"]),
     ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+    communityAuth,
 
     changeVisible() {
       this.settingVisible = false;

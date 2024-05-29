@@ -47,6 +47,8 @@
         </div>
       </template>
       <vue-custom-scrollbar :settings="settings" style="height: 100%">
+        <CardSettingExplain  v-if="communityAuth(desk?.communityNo)"/>
+        
         <div v-show="this.setVisible">
           <div class="text-content">
             <div>关联短说社区系统</div>
@@ -72,6 +74,7 @@
             class="pl-1 search input-txt"
           ></a-input>
         </div>
+        
         <div v-show="!this.setVisible">
           <div
             class="txt-content pointer"
@@ -155,6 +158,8 @@ import { shortTalkStore } from "../store";
 import { useToast } from "vue-toastification";
 import Unusual from "../../Unusual.vue";
 import { communityNavStore } from "../../../bottomPanel/store/communityNavStore";
+import { communityAuth } from "../../../../apps/communityDesk/hooks/deskCreateMethod";
+import CardSettingExplain from "../../../CardSettingExplain.vue";
 
 const toast = useToast();
 
@@ -165,6 +170,7 @@ export default {
     echarts,
     RadioTab,
     Unusual,
+    CardSettingExplain,
   },
 
   props: {
@@ -345,6 +351,7 @@ export default {
     ...mapActions(cardStore, ["updateCustomData"]),
     ...mapActions(shortTalkStore, ["getChartData", "changeAccToken"]),
     ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+    communityAuth,
 
     deleteCard() {
       this.$emit("delete");
