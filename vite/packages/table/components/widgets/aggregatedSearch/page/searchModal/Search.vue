@@ -30,6 +30,7 @@ watch([words, currentSource], async (val) => {
   await getRecommend();
 });
 
+// 获取推荐
 const getRecommend = async () => {
   // 空数据
   if (!words.value.trim()) {

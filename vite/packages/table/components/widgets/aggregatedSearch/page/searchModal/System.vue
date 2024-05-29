@@ -151,6 +151,16 @@ const openSystemApp = (data, name) => {
       customIndex: data.id,
     });
   }
+
+  const history = {
+    name: data.name,
+    source: currentSource.value,
+    value: data.value,
+    type: name,
+    openWith: name,
+  };
+
+  data.value.historyList.push(history);
 };
 </script>
 
@@ -202,32 +212,11 @@ const openSystemApp = (data, name) => {
         v-for="data in item.data"
       >
         <xt-mix-icon :icon="data.icon" type="select" size="24" class="mr-2.5" />
-        <div
-          class="flex-1  truncate"
-        >
+        <div class="flex-1 truncate">
           {{ data?.name }}
         </div>
-        <div class="ml-1 text-xs tt-text-3">尾巴</div>
+        <!-- <div class="ml-1 text-xs tt-text-3">{{ data.name }}</div> -->
       </div>
-
-      <!-- <div
-        class="w-full flex h-11 p-2.5 justify-between items-center cursor-pointer"
-        @click="openSystemApp(data, item.name)"
-      >
-        <div class="flex flex-1">
-          <xt-mix-icon
-            :icon="data.icon"
-            type="select"
-            size="24"
-            class="mr-2.5"
-          />
-
-          <div class="flex-1 truncate">
-
-          </div>
-        </div>
-        <div>网页</div>
-      </div> -->
     </template>
     <template v-else> 无数据 </template>
     <div>

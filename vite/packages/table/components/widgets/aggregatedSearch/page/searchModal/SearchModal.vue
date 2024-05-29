@@ -112,6 +112,7 @@ const historySearch = (index: number) => {
 };
 /** 搜索 */
 const search: any = async (value?: any) => {
+  if (!isWebSource.value) return;
   if (data.value.lastUse) {
     data.value.source = currentSource.value;
     data.value.openWith = currentOpenWith.value.value;
@@ -227,12 +228,12 @@ const eventDown = (e) => {
   }
 
   if (e.code === "Space") {
-    console.log('222 :>> ', 222);
+    console.log("222 :>> ", 222);
     e.stopPropagation();
   }
 
   if (e.ctrlKey && (e.key === "A" || e.key === "a")) {
-    console.log('222 :>> ', 222);
+    console.log("222 :>> ", 222);
 
     e.stopPropagation();
   }
