@@ -2,7 +2,6 @@
   <div class="fixed overflow-hidden modal-center xt-modal tran" :class="popState ? 'pop' : step == 5 ? 'theme' : 'Popup'"
     style="">
     <!--  -->
-    <!-- {{ step }} -->
     <div v-if="!popState" class="h-full">
       <!-- 返回按钮 -->
       <div v-if="step !== 0 && guideList.length > 1" @click="prevStep" class="absolute ml-4 top-icon no-drag">
@@ -10,7 +9,7 @@
       </div>
       <!-- 主题色按钮 -->
       <div @click="themeSwitch" class="absolute mr-4 top-icon no-drag" style="right:0;">
-        <MyIcon icon="fluent:weather-moon-16-regular" width="20" height="20" />
+        <MyIcon icon="fluent:weather-moon-16-filled" width="20" height="20" />
       </div>
       <!-- 选择偏好 -->
       <div v-if="step == 0" class="w-full h-full ">
@@ -46,7 +45,7 @@
         <div class="float-left">
           <xt-button class="float-left button-bottom" @click="preview" style="width:113px !important;" size="large">
             <div class="flex items-center ">
-              <MyIcon class="mr-1" icon="fluent:desktop-16-regular" width="20" height="20" />
+              <MyIcon class="mr-1" icon="fluent:desktop-16-filled" width="20" height="20" />
               预览桌面
             </div>
           </xt-button>
@@ -82,7 +81,7 @@
     <!-- 预览桌面 效果 -->
     <div v-else>
       <div style="height:60px;width:200px" class="flex items-center justify-between px-4 xt-text font-16 pointer"
-        @click="popState = flase">
+        @click="popState = false">
         定制桌面
         <div class="flex items-center justify-center w-8 h-8 rounded-lg xt-bg-2">
           <MyIcon icon="fluent:full-screen-maximize-16-filled" width="20" height="20" />
@@ -94,8 +93,8 @@
     <teleport to="body">
       <div style="z-index: 9999">
         <!-- @afterAdded="afterAdded" -->
-        <Preview :deskTypeObj="deskTypeObj" :deskList="deskList" :scheme="scheme" :showModal="showModal"
-          @closePreview="closePreview" @analysis="analysis" @addStep="addStep"></Preview>
+        <Preview :deskTypeObj="deskTypeObj" :scheme="scheme" :showModal="showModal"
+          @closePreview="closePreview" @addStep="nextStep"></Preview>
       </div>
     </teleport>
   </div>
@@ -116,7 +115,7 @@ import { nanoid } from 'nanoid'
 import { NavList } from '../card/navList'
 import { navStore } from '../../../store/nav';
 import { message } from "ant-design-vue";
-import GalleryModal from "../../../components/paperModal/GalleryModal.vue";
+import GalleryModal from "../../../components/paperModal/PaperApp.vue";
 import DeskType from "./components/DeskType.vue";
 import DeskIcon from "./components/DeskIcon.vue";
 import CardList from "./components/CardList.vue";
@@ -301,7 +300,7 @@ export default {
   watch: {
   },
   methods: {
-    ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData", "setFreeLayoutData", "setFreeLayoutState", 'renewFreeLayout', 'getFreeLayout1']),
+    ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData", "setFreeLayoutData", "setFreeLayoutState", 'renewFreeLayout',]),
 
     // 设置自由布局数据
     showFreeLayout(type) {
@@ -326,10 +325,8 @@ export default {
     },
     // 触发打开壁纸弹窗
     openPaperModal() {
-      this.$refs.paperModal.openGalleryModal()
+      this.$refs.paperModal.openPaperAppModal()
     },
-
-    //
 
     // 调整类型
     setDeskType(type) {
@@ -397,13 +394,12 @@ export default {
       } else {
         this.$emit('closeShowGuide')
       }
+      // 整理图标同时进行分析
+      if (this.step == 1) {
+        this.analysis()
+      }
 
     },
-
-    addStep() {
-      this.stepIndex++
-    },
-
     // 分析过程
     async analysis() {
       message.loading({

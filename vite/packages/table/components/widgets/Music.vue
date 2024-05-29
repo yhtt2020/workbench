@@ -1,12 +1,14 @@
 <template>
-  <xt-container 
+  <xt-container
     @titleHover="enterMusic"
     v-model:customSize="customData.customSize"
     :customData = "customData"
     :header="header"
-    :options="options" 
-    :customIndex="customIndex" 
-    :desk="desk">
+    :options="options"
+    :envLimit="['guest', 'offline']"
+    :customIndex="customIndex"
+    :desk="desk"
+    @delete="deleteCard">
     <div
       @click="enterMusic"
       class="pointer"
@@ -43,19 +45,20 @@ export default {
     },
     desk:{
       type:Object
+    },
+    openWay: {
+      type: String,
+      default: "desk",
     }
   },
+  emit:['delete'],
   data() {
     return {
-      options: {
-        className: "card small",
-        title: "网易云",
-        // icon: "customerservice",
-        type: "music",
-      },
       header:{
         title:'网易云',
-        ifyIcon:'fluent:music-note-2-16-regular',
+        // ifyIcon:'fluent:music-note-2-16-regular',
+        showIcon:"/img/appLogo/music.png",
+
         titleHover:true,
         titleHoverName:'打开应用',
       }
@@ -67,11 +70,19 @@ export default {
   },
   computed: {
     ...mapWritableState(appStore, ["status"]),
+    options() {
+      return {
+        customDel: this.openWay === "nav" ? true : false,
+      }
+    }
   },
   methods: {
     enterMusic() {
       this.$router.push("/music");
     },
+    deleteCard() {
+      this.$emit("delete");
+    }
   },
   mounted() {
     this.customData.customSize = '2x2'

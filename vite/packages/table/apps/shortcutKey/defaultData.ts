@@ -3348,12 +3348,17 @@ const appMap = [
     id: 'explorer.exe',
   },
   {
-    exeName: ['webstorm64.exe', 'webstorm.exe'],
+    exeName: 'webstorm64.exe',
     alias: 'WebStorm',
     company: 'idea',
     id: 'webstorm'
   },
-
+  {
+    exeName:  'webstorm.exe',
+    alias: 'WebStorm',
+    company: 'idea',
+    id: 'webstorm'
+  },
 ]
 
 export  {

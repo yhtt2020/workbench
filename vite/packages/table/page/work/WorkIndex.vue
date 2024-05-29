@@ -6,9 +6,7 @@
   <div
     :class="{'ml-2':!fullScreen,'height':fullScreen?'100%':'99%','padding-top':fullScreen?'0':'1em'}"
     class="flex-1 content-view " style="display: flex;flex-direction: column;width: 0">
-    <keep-alive>
     <router-view></router-view>
-    </keep-alive>
   </div>
   </div>
 </template>
@@ -69,22 +67,22 @@ export default defineComponent({
             name:'deck'
           }
         },
-        {
-          title:'剪切板',
-          name:'clipboard',
-          icon:'xiangmu',
-          route:{
-            name:'clipboard'
-          }
-        },
-        {
-          title:'待办',
-          name:'todo',
-          icon:'check-square',
-          route:{
-            name:'todo'
-          }
-        },
+        // {
+        //   title:'剪切板',
+        //   name:'clipboard',
+        //   icon:'xiangmu',
+        //   route:{
+        //     name:'clipboard'
+        //   }
+        // },
+        // {
+        //   title:'待办',
+        //   name:'todo',
+        //   icon:'check-square',
+        //   route:{
+        //     name:'todo'
+        //   }
+        // },
         // {
         //   title:'番茄钟',
         //   name:'tomato',

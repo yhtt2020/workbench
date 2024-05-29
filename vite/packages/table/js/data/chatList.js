@@ -2,6 +2,8 @@ export const chatList = [
   {
     name: '天天工作台官方社群',
     cno:1,
+    no:1,
+    role:"member",
     summary: '欢迎加入天天工作台官方社群，在这里您可以了解到和产品有关的一切',
     settings: {//用户设置的
       enableColumns: false,
@@ -12,7 +14,7 @@ export const chatList = [
 
     channelList: [
       {
-        id: '',
+        id: 2,
         role: 'category',//代表这个是一个目录
         name: '常用',
         props: {},
@@ -45,7 +47,8 @@ export const chatList = [
               openMethod: 'userSelect'  //根据用户工作台设置
             }
           }
-        ]
+        ],
+        key:['1'],
       },
       {
         id:5,
@@ -75,7 +78,8 @@ export const chatList = [
               openMethod:'currentPage'
             }
           },
-        ]
+        ],
+        key:['1']
       },
       {
         id:6,
@@ -96,7 +100,8 @@ export const chatList = [
           {id:'777',  role: 'channel', name: '屏幕DIY', type: 'group', props: { id: 'screen_diy' } },
           {id:'888',  role: 'channel', name: '游戏玩家交流', type: 'group', props: { id: 'player' } },
           {id:'999',  role: 'channel', name: '闲置交易群', type: 'group', props: { id: 'trade' } },
-        ]
+        ],
+        key:['1']
       }
     ]
   }

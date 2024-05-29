@@ -42,7 +42,7 @@ const getHeight = () => {
 
 // 过滤控制中心列表在web端显示
 const controlList = computed(() => {
-  if (!window.$useEnv()) return currentControlList.value;
+  if (window.$usePlat('client')) return currentControlList.value;
   const arr = [
     "window-control",
     "assist-mode",

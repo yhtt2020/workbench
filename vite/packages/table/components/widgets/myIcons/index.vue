@@ -2,7 +2,7 @@
 <!-- 2023-12-19 该组件数据体和新版本有差异 -->
 <template>
   <!-- 图标组件开始 Widget -->
-  <Widget
+  <!-- <Widget
     :customData="customData"
     :editing="true"
     :customIndex="customIndex"
@@ -10,10 +10,21 @@
     :menuList="menuList"
     ref="homelSlotRef"
     :desk="desk"
-  >
+  > -->
     <div ref="iconRef" class="box-border icon-box" :style="dragStyle">
       <!-- 可放置区域 -->
       <droppable-area @drop="handleDrop">
+        <xt-container
+          :header="header"
+          :customSize="'1x1'"
+          :customIndex="customIndex"
+          :size="customSize"
+          :options="options"
+          :menuList="menuList"
+          ref="homelSlotRef"
+          :customData="customData"
+          :desk="desk"
+        >
         <xt-task :modelValue="m0202" @cb="handleMenu">
           <drag-and-follow
             :isSelect="isSelect"
@@ -60,14 +71,16 @@
               :newIcon="customData.newIcon"
               v-bind="customData?.iconList[0]"
               @custom-event="handleCustomEvent"
+              @openCard="openCard"
             ></icon>
             <!-- </template> -->
           </drag-and-follow>
         </xt-task>
+        </xt-container>
       </droppable-area>
       <!-- 卡片核心 -->
     </div>
-  </Widget>
+  <!-- </Widget> -->
   <!-- 图标组件结束 -->
   <!-- 内容编辑 -->
   <Set
@@ -76,6 +89,12 @@
     @save="closeSet"
     :mask="0"
   ></Set>
+  <!-- 卡片弹窗 -->
+  <ModelCard
+    v-if="modelVisible"
+    v-model:modelVisible="modelVisible"
+    :cardData="cardData"
+  />
   <!-- 多图标组件设置 -->
   <!-- <XtDrawer v-model="iconsSetVisible" placement="right">
     <div class="p-4 xt-bg-2 rounded-xl">
@@ -91,12 +110,17 @@
 </template>
 <script>
 import { defineAsyncComponent } from "vue";
+
+import { iconValidate } from "../../../apps/appCenter/src/views/developer/hooks/validate.ts";
 // components
 import Widget from "../../card/Widget.vue";
 import icon from "./components/icon.vue";
 import DragAndFollow from "./components/DragAndFollow.vue";
 import DroppableArea from "./components/DroppableArea.vue";
 const Set = defineAsyncComponent(() => import("./set/index.vue"));
+const ModelCard = defineAsyncComponent(() =>
+  import("../../windowPanel/components/ModelCard.vue")
+);
 // pinia
 import { mapActions, mapWritableState } from "pinia";
 import { cardStore } from "../../../store/card.ts";
@@ -113,7 +137,7 @@ import {
 
 import { nanoid } from "nanoid";
 import { useFreeLayoutStore } from "../../desk/freeLayout/store";
-
+import { update } from "../../../apps/appCenter/src/views/developer/hooks/update";
 export default {
   props: {
     customIndex: {
@@ -134,6 +158,7 @@ export default {
     icon,
     DragAndFollow,
     DroppableArea,
+    ModelCard,
   },
   data() {
     return {
@@ -143,7 +168,10 @@ export default {
       isSelect: false,
       settingVisible: false, // 编辑状态
       iconsSetVisible: false,
-      options: { hide: true, disabled: true }, // 卡片核心配置
+      options: { custom:true, disabledDelete:true }, // 卡片核心配置
+      // 卡片类相关数据
+      modelVisible: false, // 卡片弹窗是否可见
+      cardData: {}, // 卡片详细数据
     };
   },
   beforeMount() {
@@ -182,24 +210,20 @@ export default {
     }
   },
   mounted() {
-    // console.log("this.customData :>> ", this.customData.iconList[0].src);
-    // console.log("this.customData :>> ", this.customData);
-    // console.log("window.globalArgs :>> ", window.globalArgs);
-
-    console.log(
-      "this.customData.iconList?.length 111:>> ",
-      this.customData.iconList?.length
-    );
     if (
       this.customData.iconList?.length <= 1 ||
       this.customData.iconList?.length == undefined
-    )
+    ) {
       return;
-    console.log(
-      "this.customData.iconList?.length 222:>> ",
-      this.customData.iconList?.length
-    );
-
+    }
+    // 是ttapp
+    let res = this.customData.iconList[0];
+    // 是ttapp
+    if (res?.type !== "ttapp") {
+      // 校验
+      let res = iconValidate(this.customIndex, this.customData.iconList[0]);
+      if (!res) return;
+    }
     let index = this.desk.cards.findIndex(
       (item) => item.id == this.customIndex
     );
@@ -220,6 +244,7 @@ export default {
       file.isRadius = item.isRadius;
       file.iconState = item.imgState;
       file.iconShape = item.imgShape;
+      file.size = item.size;
       list.push({
         ...file,
       });
@@ -254,7 +279,12 @@ export default {
     ]),
     ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(useFreeLayoutStore, ["getCurrentDesk", "isFreeLayout"]),
-
+    // 新版小组件头部设置
+    header(){
+      return {
+        disabled:true
+      }
+    },
     m02021() {
       return (
         this.customData.copy === true &&
@@ -305,7 +335,7 @@ export default {
         },
         {
           newIcon: "akar-icons:trash-can",
-          title: "删除小组件",
+          title: "删除",
           color: "#FF4D4F",
           fn: () => {
             this.deleteIcon();
@@ -362,16 +392,20 @@ export default {
   },
   methods: {
     ...mapActions(cardStore, ["updateCustomData", "addCard"]),
-
+    openCard() {
+      this.cardData = this.customData.iconList[0];
+      this.modelVisible = true;
+    },
     openIconsSet() {
       this.iconsSetVisible = true;
     },
     openEdit() {
       let icon = this.customData.iconList[this.index];
-
       this.edit = {};
       Object.keys(this.iconOption).forEach((k) => {
-        this.edit[k] = icon[k] || this.iconOption[k];
+        this.edit[k] =   icon[k] !== undefined
+          ? icon[k]
+          : this.iconOption[k]
       });
       this.settingVisible = true;
     },
@@ -465,7 +499,7 @@ export default {
           this.addIcon(this.customData.iconList[i]);
         }, 10);
       }
-      this.$refs.homelSlotRef.doRemoveCard(); // 删除原有的多图标组件
+      this.$refs.homelSlotRef.removeCard(); // 删除原有的多图标组件
       message.success("解除分组成功");
     },
     // 点击移动图标组件
@@ -547,7 +581,7 @@ export default {
       // 遍历图标组件进行删除
       this.iconsRefs.forEach((item) => {
         if (item.customIndex === this.customIndex) return;
-        if (item !== undefined) item.doRemoveCard();
+        if (item !== undefined) item.removeCard();
       });
       this.isPaste = true; // 打开粘贴状态
       this.isDrag = false;
@@ -560,12 +594,12 @@ export default {
       this.menuVisible = false;
       if (this.isSelect) {
         for (let i = 0; i < this.iconsRefs.length; i++) {
-          this.iconsRefs[i].doRemoveCard();
+          this.iconsRefs[i].removeCard();
         }
         this.iconsRefs = [];
         this.iconList = []; // 清空图标列表，防止数据添加到导航栏或者文件夹中
       } else {
-        this.$refs.homelSlotRef.doRemoveCard();
+        this.$refs.homelSlotRef.removeCard();
       }
     },
     // 更新多图标组件标题
@@ -578,7 +612,7 @@ export default {
     },
     // 适配新版保存图标
     closeSet() {
-      console.log('22222 :>> ', this.edit);
+      console.log("22222 :>> ", this.edit);
       this.customData.iconList[this.index] = {
         ...this.edit,
         open: {

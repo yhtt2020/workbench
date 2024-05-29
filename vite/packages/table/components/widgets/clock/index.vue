@@ -1,7 +1,15 @@
 <template>
- <xt-container :customIndex="customIndex" :customData="customData" :desk="desk"
- :menuList="menuList" v-model:customSize="customData.customSize"
-  :header="header" :options="options"  @leftClick="fullScreen" @resize="resize"
+ <xt-container
+  :customIndex="customIndex"
+  :customData="customData"
+  :desk="desk"
+  :menuList="menuList"
+  v-model:customSize="customData.customSize"
+  :header="header"
+  :options="options"
+  @leftClick="fullScreen"
+  @resize="resize"
+  @delete="deleteCard"
  >
   <div class="box no-drag" @click="fullScreen">
     <div style="width: 100%;height: 100%;" class="flex items-center justify-center" :style="sliderScale">
@@ -40,14 +48,14 @@ import { dateTimeStamp } from './hooks/clockList';
 import Resize from "../../../apps/folder/src/components/Resize.vue";
 import ClockSettingModal from "./components/ClockSettingModal.vue";
 import ClockFullScreen from "./clockState/ClockFullScreen.vue";
-
+import {DEFAULT} from '../../../js/const/default'
 export default {
  mixins: [mixin,],
 
  components:{
   Resize,ClockSettingModal,ClockFullScreen,
  },
-
+ emit: ["delete"],
  props:{
   customIndex: { type: Number, default: 0,},
   customData: { type: Object,default: {
@@ -55,6 +63,10 @@ export default {
       enableSecond:false,
     }},
   desk: { type: Object, },
+  openWay:{
+    type: String,
+    default: 'desk',
+  }
  },
 
  data(){
@@ -76,6 +88,7 @@ export default {
   }
  },
  mounted () {
+  // console.log(this.desk,'clock')
   // 当底部导航栏为windows模式时，点击导航栏中的时间，进入时间全屏
   this.$bus.on("openClockFullScreen",(data)=>{
     this.isClockFullScreen = data
@@ -90,7 +103,7 @@ export default {
      this.updateCustomData(this.customIndex,{
          backgroundFrame:true,
         clockId:"clock4",
-        imgUrl:"https://a.apps.vip/icons/defaultBackground.jpg",
+        imgUrl:DEFAULT.WALLPAPER,
         blurs:3,
         bgZoom:100,
         zoom:1.5,
@@ -108,9 +121,9 @@ export default {
     this.clockDay = this.dateTimeStamp(Date.now());
   },12 * 60 * 60 * 1000);
   /**
-   *   
-   * 
-   * **/ 
+   *
+   *
+   * **/
  },
  computed:{
   ...mapWritableState(appStore,["backgroundImage"]),
@@ -118,7 +131,8 @@ export default {
   header(){
    const headerOption = {
     title:this.customData.backgroundFrame ? `${this.clockDay}` : "",
-    ifyIcon: this.customData.backgroundFrame ? "fluent:clock-12-regular" : "",
+    // ifyIcon: this.customData.backgroundFrame ? "fluent:clock-12-regular" : "",
+    showIcon:"/img/appLogo/clock.png",
     leftHover: true,
     leftHoverName:"进入全屏",
     leftHoverIcon: "fluent:open-16-regular",
@@ -135,7 +149,7 @@ export default {
       defaultData:{
         backgroundFrame:true,
         clockId:"clock4",
-        imgUrl:"https://a.apps.vip/icons/defaultBackground.jpg",
+        imgUrl:DEFAULT.WALLPAPER,
         blurs:3,
         bgZoom:100,
         zoom:1.5,
@@ -147,6 +161,7 @@ export default {
         currentZoom:100,
         name: dateTimeStamp(Date.now()),
       },
+      customDel:this.openWay === 'nav' ? true : false,
     }
   },
   // 拖拽缩放
@@ -204,6 +219,9 @@ export default {
  methods:{
   ...mapActions(cardStore, ["updateCustomData"]),
   dateTimeStamp,
+  deleteCard(){
+    this.$emit("delete")
+  },
   // 更换时钟组件
   updateClockStyle(e){
    this.updateCustomData(this.customIndex,{ clockId:e },this.desk);

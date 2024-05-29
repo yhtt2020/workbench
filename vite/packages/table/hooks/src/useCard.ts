@@ -5,7 +5,7 @@ import { useGetDesk } from "./useDesk";
 interface AddCardParams {
   name: string; // 假设name是必传的字符串类型
   data?: { [key: string]: any }; // 自定义数据，默认为空对象
-  id: number | string; // id，默认为当前时间戳
+  id?: number | string; // id，默认为当前时间戳
   deskId?: string; // deskId，可选的字符串类型
 }
 /**
@@ -55,10 +55,12 @@ export const useDelCard = (cardId, deskId?) => {
   }
 
   // 删除卡片数据
-  let card = useGetDesk(deskId).cards;
+  let desk = useGetDesk(deskId);
 
-  card = card.filter((item) => {
+  console.log('1desk :>> ', desk);
+  desk.cards = desk.cards.filter((item) => {
     return String(item.id) !== String(cardId);
   });
-  console.log("card :>> ", card);
+  console.log('2desk :>> ', desk);
+
 };

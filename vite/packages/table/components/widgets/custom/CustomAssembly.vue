@@ -7,12 +7,13 @@
     :menuList="menuList"
     ref="customAssembly"
     :custom-data="customData"
-    :desk="desk">
-    <div 
-      v-if="Object.keys(myData.img).length > 0" 
-      class="absolute inset-0" 
+    :desk="desk"
+    @delete="deleteCard">
+    <div
+      v-if="Object.keys(myData.img).length > 0"
+      class="absolute inset-0"
       style="
-        border-radius: 8px; 
+        border-radius: 8px;
         z-index: 1;
         left: -14px;
         right: -14px;
@@ -69,7 +70,7 @@
     <div v-else class="flex flex-col items-center justify-center h-full">
       <!-- <a-empty description="" /> -->
 
-      <xt-button 
+      <xt-button
         type="theme"
         @click="importFile">
         选择图片
@@ -77,8 +78,8 @@
     </div>
   </xt-container>
   <!-- 新版设置 -->
-  <CustomModal 
-    :modalVisible="panelVisible"  
+  <CustomModal
+    :modalVisible="panelVisible"
     @close="panelVisible = false"
     :customInput="myData.title"
     :linkPath="myData.link"
@@ -110,10 +111,10 @@ import { cardStore } from "../../../store/card";
 import { message } from "ant-design-vue";
 import { startApp } from '../../../ui/hooks/useStartApp'
 
-import {useEnv} from '../../../ui/hooks/useEnv'
+import {usePlat} from '../../../ui/hooks/usePlat'
 import CustomModal from './components/CustomModal.vue'
 let appModel
-if (! useEnv()) {
+if (usePlat('client')) {
   appModel = window.$models.appModel
 
 }
@@ -139,6 +140,10 @@ export default {
     },
     desk:{
       type:Object
+    },
+    openWay:{
+      type:String,
+      default:'desk'
     }
   },
   data() {
@@ -186,6 +191,7 @@ export default {
       }
     };
   },
+  emits: ["delete"],
   computed: {
     ...mapWritableState(paperStore, ["settings", "myPapers"]),
     // filterList() {
@@ -206,11 +212,15 @@ export default {
         bg:this.customData.hideFrame ? 'transparent' : '',
         shadow: this.customData.hideFrame,
         resize: true,
+        customDel: this.openWay === 'nav' ? true : false
       }
     },
   },
   methods: {
     ...mapActions(cardStore, ["updateCustomData"]),
+    deleteCard() {
+      this.$emit("delete");
+    },
     async importFile() {
       let openPath = await tsbApi.dialog.showOpenDialog({
         title: "选择导入的代码",
@@ -242,7 +252,7 @@ export default {
         }
       }
     },
-    
+
     sendImg(img) {
       this.myData.img = img;
       this.saveData()

@@ -1,12 +1,14 @@
 /**
- * ttapp.js
+ * 检查manifest.json配置是否完整 ttapp.js
  */
 let currentId;
 const { readFile, existsFolder } = require("../useFile.js");
 const ERROR_CODE = require("./constant.js");
+
 const checkMainFest = async (id) => {
   currentId = id;
   let manifestPath = ["apps_test", id, "manifest.json"];
+  console.log("id :>> ", id);
   let res = await readFile(manifestPath);
 
   // 1、检测manifest.json文件是否存在
@@ -35,8 +37,7 @@ const checkMainFest = async (id) => {
   // 3、数据检查
   console.log("3、数据检查 :>> ");
   // 基础数据
-  console.log("基础数据 :>> ");
-  let baseWeak = ["name", "description", "modules"];
+  let baseWeak = ["package", "name", "modules", "version", "summary"];
   let baseStrong = [
     {
       value: res?.logo,
@@ -54,45 +55,28 @@ const checkMainFest = async (id) => {
   }
   const modules = res?.modules;
   // 主应用数据
-  console.log("主应用数据 :>> ");
-  if (!modules?.main) {
-    return {
-      status: 1,
-      code: 24,
-      data: "缺少主应用数据",
-      info: ERROR_CODE[24],
+  if (modules?.main) {
+    const main = modules?.main;
+    let weak = ["width", "height", "entry"];
+    let strong = [];
+    let obj = {
+      weak,
+      strong,
+      data: main,
     };
+    let mainRes = await check(obj);
+    if (mainRes.code !== 200) {
+      return mainRes;
+    }
   }
-  const main = modules?.main;
-  let weak = ["width", "height"];
-  let strong = [];
-  let entry = main?.entry;
-  if (!entry || entry.charAt(0) == "/") {
-    strong.push({
-      value: main?.entry,
-      info: "主应用入口",
-    });
-  }
-  console.log("main strong :>> ", strong);
 
-  let obj = {
-    weak,
-    strong,
-    data: main,
-  };
-  let mainRes = await check(obj);
-  if (mainRes.code !== 200) {
-    return mainRes;
-  }
   // 卡片数据
-  console.log("卡片数据 :>> ");
   let cardRes = await checkCard(modules?.card);
   if (cardRes.code !== 200) {
     return cardRes;
   }
 
   // 5、返回数据
-  console.log("没走到结尾是吧栓q :>> ");
   return {
     status: 0,
     code: 200,
@@ -110,13 +94,14 @@ const checkCard = async (card) => {
       code: 200,
     };
   }
-  // 如果数据不是对象则转为数组
-  if (typeof card !== "object") {
+  // 如果数据是对象则转为数组
+  if (!Array.isArray(card)) {
     card = [card];
   }
   // 遍历card
+
   for (const item of card) {
-    let weak = ["size"];
+    let weak = ["size", "entry"];
 
     let strong = [
       {
@@ -124,14 +109,6 @@ const checkCard = async (card) => {
         info: "预览图",
       },
     ];
-
-    let entry = item?.entry;
-    if (!entry || entry.charAt(0) == "/") {
-      strong.push({
-        value: item?.entry,
-        info: "card入口",
-      });
-    }
 
     let ojb = {
       weak,
@@ -162,7 +139,6 @@ const check = async (options) => {
 
   if (strong) {
     let strongRes = await strongCheck(strong);
-    console.log("strongRes :>> ", strongRes);
     if (strongRes.code !== 200) {
       return strongRes;
     }
@@ -185,7 +161,6 @@ const checkFile = async (filePath) => {
 };
 /** 强检查 */
 const strongCheck = async (array) => {
-  console.log("拿到的 强检查array :>> ", array);
   let checkRes = [];
   for (data of array) {
     let currentRes = data?.value && (await checkFile(data?.value));

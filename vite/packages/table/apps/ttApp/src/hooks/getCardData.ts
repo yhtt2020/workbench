@@ -12,20 +12,28 @@ export const getCardData = () => {
     children: [],
   };
   ttappList.value.forEach((item: any) => {
-    if(!item.card) return
-    data.children.push({
+    const card = item?.card;
+    if (!card) return;
+    let cardData: any = {
       type: "ttapp",
       cname: item.name,
       detail: item.description,
-      sizes: [item.card.size],
+      sizes: [],
       time: "2024/6/28",
-      img: item.card._preview,
-      data: { id: item.id },
+      logo: item._logo,
+
       // 伪数据 只是防止报错
-      option: [{}],
+      option: [],
+    };
+    card.map((data: any) => {
+      cardData.sizes.push(data.customSize);
+      cardData.option.push({
+        ...data,
+        originalData: data,
+      });
     });
+    data.children.push(cardData);
   });
 
-  console.log("data :>> ", data);
   return data;
 };

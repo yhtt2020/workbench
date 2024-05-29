@@ -2,18 +2,17 @@
   <xt-container
     @titleHover="showRegionSelect"
     v-model:customSize="customData.customSize"
-    :header="header" 
-    :envLimit="['web']"  
-    :options="options" 
-    :confirmCCData="confirmCCData" 
-    :customIndex="customIndex" 
-    :menuList="detailBar" 
-    ref="detailSlot" 
-    :customData="customData" 
-    :desk="desk">
-    <!-- <div class="px-3 py-1 rounded-lg bg-mask pointer xt-bg-2" @click="showRegionSelect"
-         style="position: absolute;left: 45px;top:10px;">{{ region.name }}
-    </div> -->
+    :header="header"
+    :platLimit="['web']"
+    :envLimit="['guest', 'offline', 'single']"
+    :options="options"
+    :confirmCCData="confirmCCData"
+    :customIndex="customIndex"
+    :menuList="detailBar"
+    ref="detailSlot"
+    :customData="customData"
+    :desk="desk"
+    @delete="deleteCard">
     <a-spin v-if="isLoading === true" style="display: flex; justify-content: center; align-items:center;margin-top: 60%"></a-spin>
     <template v-else-if="fail">
       <a-result :status="null" title="请确认网络" style="margin-top: 3em">
@@ -129,6 +128,10 @@ export default {
     },
     desk:{
       type:Object
+    },
+    openWay:{
+      type:String,
+      default:'desk'
     }
   },
   components:{
@@ -143,13 +146,6 @@ export default {
     return{
       fail:false,
       key:Date.now(),
-      options:{
-        className:'card',
-        title:'',
-        // icon:'steam',
-        type:'games',
-        epicShow:true
-      },
       regionRange:regionRange,
       percentageList:[],
       reloadShow:false,
@@ -163,7 +159,7 @@ export default {
       isLoading:false,
       detailBar:[{icon:"shezhi1",title:'设置',fn:()=>{this.$refs.regionDrawer.detailDisplay = true; this.$refs.detailSlot.visible = false}}],
       customSize:'2x4',
-      
+
     }
   },
   mounted(){
@@ -178,6 +174,7 @@ export default {
 
     })
   },
+  emit:['delete'],
   computed:{
     ...mapWritableState(steamStore,["data","dataDetail",'getData']),
     ...mapWritableState(cardStore,["customComponents","updateCustomData"]),
@@ -192,6 +189,11 @@ export default {
       }
       return this.regionRange[0]
 
+    },
+    options(){
+      return {
+        customDel: this.openWay === 'nav' ? true : false
+      }
     },
     list () {
       if (this.key) {
@@ -218,7 +220,9 @@ export default {
     header(){
       return {
         title:this.region.name,
-        ifyIcon:'mdi:steam',
+        // ifyIcon:'mdi:steam',
+        showIcon:"/img/appLogo/steam.png",
+
         titleHover:true,
         titleHoverName:this.region.name
       }
@@ -230,7 +234,9 @@ export default {
     showRegionSelect () {
       this.$refs.regionDrawer.openDrawer()
     },
-
+    deleteCard(){
+      this.$emit('delete')
+    },
     retry(){
       this.getRegion().then(() => {
       }).catch(()=>this.fail=true).finally(()=>{

@@ -11,6 +11,7 @@ import { message } from "ant-design-vue";
 // @ts-ignore
 export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
   state: () => ({
+    freeLayoutId: null,
     // 自由布局数据
     freeLayoutData: {},
     // 自由布局状态
@@ -98,28 +99,24 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 获取当前桌面Id
     getCurrentDeskId() {
-      const home: any = homeStore();
-      const { currentDeskId } = storeToRefs(home);
-      if (this.previewFlag) {
-        return "mj36hf6h";
-      } else {
-        return currentDeskId.value;
-      }
+      return this.freeLayoutId;
     },
     // 获取当前自由布局数据
     getFreeLayoutData() {
-      return this.freeLayoutData[this.getCurrentDeskId];
+      return this.freeLayoutData[this.freeLayoutId];
     },
     // 获取当前自由布局状态
     getFreeLayoutState() {
-      return this.freeLayoutState[this.getCurrentDeskId];
+      return this.freeLayoutState[this.freeLayoutId];
     },
+
     // 获取当前自由布局是否开启
     isFreeLayout() {
-      console.log("开始加载自由布局:>>\n 当前桌面id ", this.getCurrentDeskId);
-      if (this.freeLayoutState.hasOwnProperty(this.getCurrentDeskId)) {
-        return this.freeLayoutState[this.getCurrentDeskId].system?.isFreeLayout;
+      if (!this.freeLayoutExist()) {
+        return;
       }
+
+      return this.freeLayoutState[this.freeLayoutId]?.system?.isFreeLayout;
     },
     // 获取当前自由布局边距状态
     getFreeLayoutMargin() {
@@ -131,6 +128,17 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
   },
   actions: {
+    // 获取是否存在
+    freeLayoutExist() {
+      // 不存在自由布局ID
+      if (!this.freeLayoutId) return;
+      // 不存在自由布局状态
+      if (!this.freeLayoutState.hasOwnProperty(this.freeLayoutId)) return;
+      // // 不存在自由布局数据
+      // if (!this.freeLayoutData.hasOwnProperty(this.freeLayoutId)) return;
+
+      return true;
+    },
     deepMerge(target, source) {
       for (let key in source) {
         if (source.hasOwnProperty(key)) {
@@ -163,7 +171,6 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
         // console.log("res :>> ", res);
         // props.options.defaultData =  _.merge(props.customData, props.options.defaultData);
       }
-      console.log("自由布局状态初始化成功 :>> ", this.getFreeLayoutState);
     },
     // 更新自由布局数据
     renewFreeLayout() {
@@ -186,26 +193,20 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 清空自由布局组件数据
     clearFreeLayoutData() {
-      if (this.getFreeLayoutData) {
-        this.freeLayoutData[this.getCurrentDeskId] = {};
+      if (!this.freeLayoutExist()) return;
+      this.freeLayoutData[this.freeLayoutId] = {};
+
+      if (this.getCurrentDesk) {
+        this.getCurrentDesk.cards = [];
       }
-      console.log("    this.getCurrentDesk :>> ", this.getCurrentDesk);
-      this.getCurrentDesk.cards = [];
-    },
-    // 删除自由布局组件数据
-    clearFreeLayoutState() {
-      this.getFreeLayoutState = {};
     },
     // 删除当前自由布局数据
     clearFreeLayout(id) {
+      this.freeLayoutData[id] = null;
+      this.freeLayoutState[id] = null;
       delete this.freeLayoutData[id];
       delete this.freeLayoutState[id];
       console.log("删除数据成功 :>> ", this.freeLayoutState);
-    },
-    // 清除所有自由布局数据
-    clearAllFreeLayout() {
-      this.freeLayoutData = {};
-      this.freeLayoutState = {};
     },
     // 初始化当前环境
     initFreeLayoutEnv() {
@@ -298,10 +299,6 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     setFreeLayoutState(id, state) {
       // console.log('this.freeLayoutState', this.freeLayoutState);
       this.freeLayoutState[id] = { ...state };
-    },
-    getFreeLayout1() {
-      console.log("this.freeLayoutData", this.freeLayoutData);
-      console.log("this.freeLayoutState", this.freeLayoutState);
     },
   },
   persist: {

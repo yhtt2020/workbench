@@ -7,9 +7,11 @@
     :options="options"
     :customIndex="customIndex"
     :custom-data="customData"
+    :envLimit="['guest', 'offline', 'single']"
     :menuList="menuList"
     :env="env"
     v-if="!detailToggle"
+    @delete="deleteCard"
     >
       <!-- <span style="position: absolute;top: 16px;left: 120px"><icon style="font-size: 18px" icon="shuaxin"></icon></span> -->
       <div v-if="pageToggle">
@@ -82,20 +84,15 @@
       },
       desk:{
         type:Object
+      },
+      openWay:{
+        type:String,
+        default:'desk'
       }
     },
     data() {
       return {
         sizeList:[{value:'2x4',name:'2x4'},{value:'4x4',name:'4x4'},],
-        options:{
-          className:'card',
-          title:'正在热映',
-          // icon:'video',
-          type:'singleFilm',
-          defaultData:{
-            customSize: this.customData.customSize ? this.customData.customSize : '2x4',
-          }
-        },
         mySize: { title: "1x2", height:2,width:1,name:'1x2' },
         filmList: [],
         filmPart: [],
@@ -108,7 +105,7 @@
           web: false,
           mobile: false,
           client: false,
-          offline:false
+          single:false
         },
         header:{
           ifyIcon:"fluent:movies-and-tv-16-regular",
@@ -123,7 +120,16 @@
     },
     computed: {
       ...mapWritableState(filmStore, ['data']),
+      options(){
+        return {
+          defaultData:{
+            customSize:'4x4'
+          },
+          customDel:this.openWay === 'nav' ? true : false
+        }
+      }
     },
+    emit:['delete'],
     watch:{
       'customData.width': {
         handler() {
@@ -138,6 +144,9 @@
     },
     methods: {
       ...mapActions(filmStore,['getData']),
+      deleteCard(){
+        this.$emit('delete')
+      },
       getDoubanList(){
         if(this.customData.width ? this.customData.width === 1 :  'true'){
           this.filmArrange = this.filmPart.slice(0,4)

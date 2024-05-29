@@ -2,14 +2,15 @@
    <xt-container
     v-model:customSize="customData.customSize"
     :header="header"
-    :envLimit="['web']"
+    :platLimit="['web']"
     :menuList="menuList"
     :options="options"
     :customData="customData"
     :customIndex="customIndex"
     @titleHover="goCapture"
     @leftClick="goCapture"
-    :desk="desk">
+    :desk="desk"
+    @delete="deleteCard">
      <CaptureCore @selectSource="visibleSource=true"></CaptureCore>
    </xt-container>
   <teleport to="#app">
@@ -46,8 +47,13 @@ export default {
     desk:{
       type:Object
     },
+    openWay:{
+      type:String,
+      default:'desk'
+    }
 
   },
+  emit:['delete'],
   data(){
     return{
       visibleSettings:false,
@@ -66,21 +72,23 @@ export default {
           this.visibleSettings=true
         }
       }],
-      options: {
-        className: 'card small',
-        title: '捕获',
-        // icon: 'video',
-        type: 'games',
-      },
       header:{
         titleHover:true,
         title:'捕获',
-        ifyIcon:'fluent:resize-video-20-regular',
+        // ifyIcon:'fluent:resize-video-20-regular',
+        showIcon:"/img/appLogo/capture.png",
         leftHoverName:'打开应用',
         leftHover:true,
         leftHoverIcon:'fluent:open-16-regular'
       },
 
+    }
+  },
+  computed:{
+    options(){
+      return {
+        customDel:this.openWay === 'nav' ? true : false
+      }
     }
   },
   methods:{
@@ -91,7 +99,10 @@ export default {
       this.$router.push({
         name:'GameCapture'
       })
-    }
+    },
+    deleteCard(){
+      this.$emit('delete')
+    },
 
   },
   mounted(){

@@ -8,7 +8,7 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, onMounted ,defineAsyncComponent} from 'vue'
+import { ref, onMounted ,defineAsyncComponent, watch} from 'vue'
 import { storeToRefs } from 'pinia';
 
 const setting = defineAsyncComponent(() => import('../../../../widgets/myIcons/set/index.vue'))
@@ -35,10 +35,12 @@ const data = ref({
     src:"https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/jmPD-I__T-SMyc-LMzn",
     value:""
   })
-const emit = defineEmits(['addIcon'])
+const emit = defineEmits(['addIcon', 'close'])
 
 const saveIcon = (item) => {
+    // console.log(item,'before')
     const icon = useIconConversionFile(item)
+    // console.log(icon,'after')
     emit('addIcon',icon)
     linkVisible.value = false
 }
@@ -47,6 +49,15 @@ onMounted( () => {
     linkVisible.value = true
     edit.value = data.value
 }) 
+
+watch(
+    () => linkVisible.value,
+    (newVal,oldVal) => {
+        if(!newVal && oldVal){
+            emit('close')
+        }
+    }
+)
 
 </script>
 <style lang='scss' scoped></style>

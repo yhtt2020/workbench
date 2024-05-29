@@ -3,53 +3,83 @@
   <div class="prompt-modal xt-mask" v-if="showModal">
     <div class="head-icon">
       <div class="icon" @click="close">
-        <Icon icon="guanbi" style="width: 24px;height: 24px;"></Icon>
+        <Icon icon="guanbi" style="width: 24px; height: 24px"></Icon>
       </div>
       <div class="flex">
         <div class="icon" @click="openDrawer = true">
-          <Icon icon="tishi-xianxing" style="width: 24px;height: 24px;"></Icon>
+          <Icon icon="tishi-xianxing" style="width: 24px; height: 24px"></Icon>
         </div>
       </div>
-
     </div>
     <!-- 预览 -->
     <!-- <div class="flex justify-center items-center preview" :style="{'--previewH': previewH}" id="cards" readonly> -->
     <div class="flex justify-center items-center preview" id="previewContent">
       <!-- 市场分享 桌面布局定位 -->
-      <Desk :muuriOptions="muuriOptions"   :freeLayout="false" :currentDesk="displayScheme" :settings="displayScheme.settings" :notTrigger="true" :editing="false"></Desk>
+      <Desk
+        :muuriOptions="muuriOptions"
+        :freeLayout="false"
+        :currentDesk="displayScheme"
+        :settings="displayScheme.settings"
+        :notTrigger="true"
+        :editing="false"
+      ></Desk>
     </div>
-    <div class="foot flex ">
+    <div class="foot flex">
       <div class="flex items-center mr-2">
-        <strong class="mr-2">{{ scheme.alias }}</strong> 共{{ template.cards.length }}个组件，尺寸
-        {{ layoutSize.width + '*' + layoutSize.height }}
-        <Icon icon="tishi-xianxing" class="ml-3" style="width: 24px;height: 24px;"></Icon>
+        <strong class="mr-2">{{ scheme.alias }}</strong> 共{{
+          template.cards.length
+        }}个组件，尺寸
+        {{ layoutSize.width + "*" + layoutSize.height }}
+        <Icon
+          icon="tishi-xianxing"
+          class="ml-3"
+          style="width: 24px; height: 24px"
+        ></Icon>
       </div>
       <div class="flex items-center" style="padding: 0">
-        <div class="market-button mr-2 active" @click="addPlan"><icon icon="xiazai1"></icon> 立即添加</div>
-          <div class="market-button mr-0" @click="doIncSupport"><icon icon="dianzan"></icon> 点赞 {{displayScheme.support}}</div>
+        <div class="market-button mr-2 active" @click="addPlan">
+          <icon icon="xiazai1"></icon> 立即添加
         </div>
+        <div class="market-button mr-0" @click="doIncSupport">
+          <icon icon="dianzan"></icon> 点赞 {{ displayScheme.support }}
+        </div>
+      </div>
     </div>
   </div>
   <!-- 预览添加抽屉 -->
-  <a-drawer v-model:visible="openDrawer" style="z-index:9999999999;" width="320" placement="right">
+  <a-drawer
+    v-model:visible="openDrawer"
+    style="z-index: 9999999999"
+    width="320"
+    placement="right"
+  >
     <template #closeIcon>
       <Icon icon="xiangyou"></Icon>
     </template>
-    <template #extra v-if="!displayScheme.uid===userInfo.uid">
+    <template #extra v-if="!displayScheme.uid === userInfo.uid">
       <a-space>
         <div class="flex">
-          <div class="pointer mr-3 xt-bg-2 xt-text h-12 w-12 flex items-center rounded-lg justify-center"
-               @click="openSet = true">
-            <Icon icon="dianzan" style="font-size: 1.5em;"></Icon>
+          <div
+            class="pointer mr-3 xt-bg-2 xt-text h-12 w-12 flex items-center rounded-lg justify-center"
+            @click="openSet = true"
+          >
+            <Icon icon="dianzan" style="font-size: 1.5em"></Icon>
           </div>
-          <div class="add-scheme" @click="addPlan"><icon icon="xiazai1"></icon>立即添加</div>
+          <div class="add-scheme" @click="addPlan">
+            <icon icon="xiazai1"></icon>立即添加
+          </div>
         </div>
       </a-space>
     </template>
     <div class="drawer-center no-drag">
-      <span class="drawer-title">{{ scheme.alias }} <span class="xt-text-2 " style="user-select: text">{{scheme.nanoid}}</span></span>
+      <span class="drawer-title"
+        >{{ scheme.alias }}
+        <span class="xt-text-2" style="user-select: text">{{
+          scheme.nanoid
+        }}</span></span
+      >
       <span class="drawer-text">{{ scheme.summary }}</span>
-      <div class="flex" v-if="tagList.length>0">
+      <div class="flex" v-if="tagList.length > 0">
         <div class="label" v-for="tag in tagList">{{ tag }}</div>
       </div>
       <div class="flex justify-between items-center">
@@ -58,9 +88,11 @@
             <a-avatar size="24" :src="displayScheme.userInfo?.avatar">
             </a-avatar>
           </div>
-          <span class="ml-3" style="color: var(--secondary-text);">{{ scheme.userInfo?.nickname }}</span>
+          <span class="ml-3" style="color: var(--secondary-text)">{{
+            scheme.userInfo?.nickname
+          }}</span>
         </span>
-        <span style="color: var(--secondary-text);">
+        <span style="color: var(--secondary-text)">
           <span>
             <Icon icon="dianzan" class="mr-2"></Icon>
             <span>{{ scheme.support }}</span>
@@ -71,7 +103,9 @@
           </span>
         </span>
       </div>
-      <span class="drawer-title">包含以下小组件（{{ template.cards.length }}）</span>
+      <span class="drawer-title"
+        >包含以下小组件（{{ template.cards.length }}）</span
+      >
       <div v-for="item in template.cards" :key="item" class="drawer-item">
         <Icon :icon="item.icon" class="mr-2"></Icon>
         <span>{{ getName(item.name) }}</span>
@@ -81,33 +115,33 @@
 </template>
 
 <script>
-import { message } from 'ant-design-vue'
-import { mapActions, mapWritableState } from 'pinia'
-import { appStore } from '../../store'
-import Desk from './Desk.vue'
-import { cardStore } from '../../store/card'
-import {nanoid} from 'nanoid'
-import { marketStore } from '../../store/market'
-import { taskStore } from '../../apps/task/store'
-import { completeTask } from '../../apps/task/task'
+import { message } from "ant-design-vue";
+import { mapActions, mapWritableState } from "pinia";
+import { appStore } from "../../store";
+import Desk from "./Desk.vue";
+import { cardStore } from "../../store/card";
+import { nanoid } from "nanoid";
+import { marketStore } from "../../store/market";
+import { taskStore } from "../../apps/task/store";
+import { completeTask } from "../../apps/task/task";
 import Muuri from "muuri";
-import { NavList } from '../../page/app/card/navList'
-import _ from 'lodash-es'
+import { NavList } from "../../page/app/card/navList";
+import _ from "lodash-es";
 export default {
-  name: 'DeskPreview',
+  name: "DeskPreview",
   components: {
-    Desk
+    Desk,
   },
-  data () {
+  data() {
     return {
       // 添加
       openDrawer: false,
-      previewH: '100%',
+      previewH: "100%",
       displayScheme: {
-        title: '',
-        nanoid: '',
+        title: "",
+        nanoid: "",
         cards: [],
-        settings: {}
+        settings: {},
       },
       deskWidth: 0,
       deskHeight: 0,
@@ -148,7 +182,7 @@ export default {
         },
       },
       baseNavList: [],
-    }
+    };
   },
   props: {
     // 方案
@@ -166,60 +200,74 @@ export default {
     //显示与隐藏
     showModal: {
       type: Boolean,
-      default: () => false
+      default: () => false,
     },
     deskList: {
-      type: Array
-    }
+      type: Array,
+    },
+    /**当前社群的信息**/
+    communityInfo: {
+      type: Object,
+      default: () => {},
+    },
   },
   computed: {
-    ...mapWritableState(appStore, ['fullScreen','userInfo']),
-    tagList () {
+    ...mapWritableState(appStore, ["fullScreen", "userInfo"]),
+    tagList() {
       if (this.scheme.tags) {
-        return this.scheme.tags.split(',')
+        return this.scheme.tags.split(",");
       } else {
-        return []
+        return [];
       }
     },
-    layoutSize () {
-      return JSON.parse(this.scheme.layoutSize)
+    layoutSize() {
+      return JSON.parse(this.scheme.layoutSize);
     },
-    template () {
+    template() {
       // // 卡片数据去重
-      let items = []
-      NavList.map(li => {
-        return items.push(...li.children)
-      })
-      items = _.uniqBy(items, (li) => { return li.name })
-      this.baseNavList = items
-      return JSON.parse(this.scheme.template)
-    }
+      let items = [];
+      NavList.map((li) => {
+        return items.push(...li.children);
+      });
+      items = _.uniqBy(items, (li) => {
+        return li.name;
+      });
+      this.baseNavList = items;
+      return JSON.parse(this.scheme.template);
+    },
   },
   watch: {
-    showModal (newVal) {
-      if (newVal) this.fullScreen = true
-      if (this.fullScreen) {
-        this.cardZoom = this.template.settings.cardZoom
-        this.cardMargin=this.template.settings.cardMargin
-        this.zoom = this.cardZoom / 100
-        this.getPreviewHeight()
-        this.displayScheme = {
-          ...this.scheme,
-          settings: {
-            ...this.template.settings
-          },
-          cards:[
-            ... this.template.cards
-          ],
+    showModal: {
+      handler(newVal) {
+        if (newVal) this.fullScreen = true;
+        if (this.fullScreen) {
+          this.cardZoom = this.template.settings.cardZoom;
+          this.cardMargin = this.template.settings.cardMargin;
+          this.zoom = this.cardZoom / 100;
+          this.getPreviewHeight();
+          let cards = _.cloneDeep(
+            this.template.cards.map((card) => {
+              card.id = nanoid(8);
+              return card;
+            })
+          );
+          this.displayScheme = {
+            ...this.scheme,
+            settings: {
+              ...this.template.settings,
+            },
+            cards: cards,
+          };
+          this.deskWidth = this.layoutSize.width;
+          this.deskHeight = this.layoutSize.height;
+          this.cardHeight = this.layoutSize.height;
+          var that = this;
+          window.addEventListener("resize", () => {
+            that.getPreviewHeight();
+          });
         }
-        this.deskWidth = this.layoutSize.width
-        this.deskHeight = this.layoutSize.height
-        this.cardHeight = this.layoutSize.height
-        var that = this
-        window.addEventListener('resize', () => {
-          that.getPreviewHeight()
-        })
-      }
+      },
+      deep: true,
     },
     // windowHeight(val){
     //   // let zoom = (val / this.deskHeight * 100).toFixed(2)
@@ -233,98 +281,144 @@ export default {
     // }
   },
   methods: {
-    ...mapActions(cardStore, ['addShareDesk', 'setDeskSize', 'getCurrentId']),
-    ...mapActions(marketStore,['incSupport']),
+    ...mapActions(cardStore, ["addShareDesk", "setDeskSize", "getCurrentId"]),
+    ...mapActions(marketStore, ["incSupport"]),
     // 获取组件名称
-    getName(name){
-      let nameTmp = ''
-      this.baseNavList.forEach(item=>{
-        item.option.forEach(card=>{
-          if(card.name==name) nameTmp = item.cname
-          if(name=='folder') nameTmp = '文件夹'
-        })
-      })
-      return nameTmp?nameTmp:name
+    getName(name) {
+      let nameTmp = "";
+      this.baseNavList.forEach((item) => {
+        item.option.forEach((card) => {
+          if (card.name == name) nameTmp = item.cname;
+          if (name == "folder") nameTmp = "文件夹";
+        });
+      });
+      return nameTmp ? nameTmp : name;
     },
-    async doIncSupport(){
-      const rs=await this.incSupport(this.displayScheme.dataNanoid)
-      if(rs && rs.msg.includes('取消')){
-        this.displayScheme.support=rs.supportCount
-        message.success('已取消点赞')
-      }else{
-        console.log(rs)
-        this.displayScheme.support=rs.supportCount
-        message.success('感谢您的支持，您的支持是对作者最大的鼓励。')
+    async doIncSupport() {
+      const rs = await this.incSupport(this.displayScheme.dataNanoid);
+      if (rs && rs.msg.includes("取消")) {
+        this.displayScheme.support = rs.supportCount;
+        message.success("已取消点赞");
+      } else {
+        console.log(rs);
+        this.displayScheme.support = rs.supportCount;
+        message.success("感谢您的支持，您的支持是对作者最大的鼓励。");
       }
     },
-    addPlan () {
-      completeTask('m0203')
-      this.$emit('afterAdded')
-      this.openDrawer = false
-      message.success('添加成功')
-      
+    addPlan() {
+      completeTask("m0203");
+      this.$emit("afterAdded");
+      this.openDrawer = false;
+      message.success("添加成功");
+
       // 需要替换的桌面index
-      let replace = null
-      let deskId = this.getCurrentId()
-      
+      let replace = null;
+      let deskId = this.getCurrentId();
+
       // 当 addDesk 为false时 需要将数据进行替换
-      if(!this.addDesk){
-        let deskIndex = this.deskList.forEach((item, index)=>{
-          if(item.id == deskId){
-            replace = index 
+      if (!this.addDesk) {
+        let deskIndex = this.deskList.forEach((item, index) => {
+          if (item.id == deskId) {
+            replace = index;
           }
-        })
-      }else{
-        replace = -1
+        });
+      } else {
+        replace = -1;
       }
-      this.addShareDesk({
-        ...this.displayScheme,
-        title:this.displayScheme.alias,
-        cards:this.template.cards,
-        settings:this.template.settings
-      },this.layoutSize, this.deskList, replace)
-      this.close()
-      this.$emit('closeGroup')
-      // setTimeout(() => {
-      //   let cardsHeight = document.getElementById('cardContent')?.offsetHeight
-      //   let deskHeight = document.documentElement.clientHeight // 高
-      //   let deskWidth = document.documentElement.clientWidth // 宽
-      //   let size = {
-      //     deskWidth,
-      //     deskHeight,
-      //     cardsHeight,
-      //   }
-      //   this.setDeskSize(size)
-      //   this.cardsHeight = cardsHeight
-      // }, 300)
+
+      // 检测是否为社群桌面
+      if (this.communityInfo && this.communityInfo?.no) {
+        this.addShareDesk(
+          {
+            ...this.displayScheme,
+            title: this.displayScheme.alias,
+            cards: this.template.cards,
+            settings: this.template.settings,
+            communityNo: this.communityInfo?.no,
+            communityDeskId:`${this.communityInfo?.no}_${nanoid(4)}`,
+          },
+          this.layoutSize,
+          this.deskList,
+          replace
+        );
+      } else {
+        this.addShareDesk(
+          {
+            ...this.displayScheme,
+            title: this.displayScheme.alias,
+            cards: this.template.cards,
+            settings: this.template.settings,
+          },
+          this.layoutSize,
+          this.deskList,
+          replace
+        );
+      }
+      this.close();
+      this.$emit("closeGroup");
     },
-    close () {
+
+    close() {
       // this.cards.settings.cardZoom = this.cardZoom
-      this.$emit('closePreview', false)
-      this.fullScreen = false
+      this.$emit("closePreview", false);
+      this.fullScreen = false;
     },
-    getPreviewHeight () {
+    
+    getPreviewHeight() {
       this.$nextTick(() => {
         if (this.fullScreen) {
           //计算得出修正后的缩放率
-          this.previewHeight = document.getElementById('previewContent')?.offsetHeight
-          let cardZoom = (this.cardZoom * this.previewHeight / this.cardHeight).toFixed()
-          let cardMargin=(this.cardMargin * this.previewHeight / this.cardHeight).toFixed()
-          this.displayScheme.settings.cardZoom = cardZoom
-          this.displayScheme.settings.cardMargin=cardMargin
-          this.displayScheme.settings.enableZoom=true
+          this.previewHeight =
+            document.getElementById("previewContent")?.offsetHeight;
+          let cardZoom = (
+            (this.cardZoom * this.previewHeight) /
+            this.cardHeight
+          ).toFixed();
+          let cardMargin = (
+            (this.cardMargin * this.previewHeight) /
+            this.cardHeight
+          ).toFixed();
+          this.displayScheme.settings.cardZoom = cardZoom;
+          this.displayScheme.settings.cardMargin = cardMargin;
+          this.displayScheme.settings.enableZoom = true;
         }
-      })
+      });
+    },
+  },
+  mounted() {
+    if (this.showModal) this.fullScreen = true;
+    if (this.fullScreen) {
+      this.cardZoom = this.template.settings.cardZoom;
+      this.cardMargin = this.template.settings.cardMargin;
+      this.zoom = this.cardZoom / 100;
+      this.getPreviewHeight();
+      console.log("template", this.template);
+      let cards = _.cloneDeep(
+        this.template.cards.map((card) => {
+          card.id = nanoid(8);
+          return card;
+        })
+      );
+      this.displayScheme = {
+        ...this.scheme,
+        settings: {
+          ...this.template.settings,
+        },
+        cards: cards,
+      };
+      this.deskWidth = this.layoutSize.width;
+      this.deskHeight = this.layoutSize.height;
+      this.cardHeight = this.layoutSize.height;
+      var that = this;
+      window.addEventListener("resize", () => {
+        that.getPreviewHeight();
+      });
     }
-
   },
-  mounted () {
-  },
-}
+};
 </script>
 
 <style lang="scss" scoped>
-
 .prompt-modal {
   position: absolute;
   top: 0;
@@ -441,7 +535,7 @@ export default {
 }
 
 .desk-style::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   bottom: 0;
@@ -462,14 +556,15 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
- color:var(--primary-text);
+  color: var(--primary-text);
   padding: 10px;
   cursor: pointer;
-  &.active,&:hover{
+  &.active,
+  &:hover {
     background: var(--active-bg);
     color: var(--active-text);
   }
-  &:hover{
+  &:hover {
     opacity: 0.9;
   }
 }

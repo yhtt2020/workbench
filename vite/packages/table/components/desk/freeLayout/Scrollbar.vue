@@ -25,14 +25,15 @@ import {
   getCurrentInstance,
 } from "vue";
 import { storeToRefs } from "pinia";
-// import { useElementSize } from "@vueuse/core";
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 import { useElementBounding } from "@vueuse/core";
 import { useFreeLayoutStore } from "./store";
 import { useElementSize } from "../../../ui/new/drag/src/hooks/useElementSize";
 import { useWindowSize } from "../../../ui/new/drag/src/hooks/useWindowSize";
-import { useThrottleFn } from "@vueuse/core";
+import { useWidgetStore } from "../../card/store";
+const widgetStore = useWidgetStore();
+const { edit } = storeToRefs(widgetStore);
 const { proxy } = getCurrentInstance();
 const dragStyle = computed(() => {
   if (isKey.value && isDragging.value) {
@@ -49,7 +50,6 @@ const {
   dragData,
   freeLayoutEnv,
   getFreeLayoutData,
-  getCurrentDeskId,
   isSelectAll,
   isFreeLayout,
 } = storeToRefs(freeLayoutStore);
@@ -189,7 +189,6 @@ async function redirect() {
   scrollbar.value.scrollTop = h;
   freeLayoutEnv.value.scrollLeft = w;
   freeLayoutEnv.value.scrollTop = h;
-
 }
 
 // 鼠标按下
@@ -237,7 +236,7 @@ function handleKeyDown(event) {
     event.preventDefault();
     event.stopPropagation();
   }
-  if (event.ctrlKey && (event.key === "A" || event.key === "a")) {
+  if (edit.value && event.ctrlKey && (event.key === "A" || event.key === "a")) {
     isSelectAll.value = !isSelectAll.value;
   }
 }

@@ -1,16 +1,18 @@
 <template>
-  <xt-container 
+  <xt-container
     @titleHover="goRoute"
     :header="header"
     v-model:customSize="customData.customSize"
-    :envLimit="['web']"  
-    :sizeList="sizeList" 
-    :customData="customData" 
-    :customIndex="customIndex" 
-    :options="options" 
-    ref="gameSmallSlot" 
-    :menuList="gameMiddleBare" 
-    :desk="desk">
+    :platLimit="['web']"
+    :envLimit="['guest', 'offline', 'single']"
+    :sizeList="sizeList"
+    :customData="customData"
+    :customIndex="customIndex"
+    :options="options"
+    ref="gameSmallSlot"
+    :menuList="gameMiddleBare"
+    :desk="desk"
+    @delete="deleteCard">
     <template v-if="showSize.width == 2 && showSize.height == 4">
       <div v-if="defaultGame.name === 'steam'" class="w-full h-full">
         <div class="flex items-center justify-center w-full h-full" v-if="detailShow === false">
@@ -117,8 +119,13 @@ export default {
     },
     desk:{
       type:Object
+    },
+    openWay:{
+      type:String,
+      default:'desk'
     }
   },
+  emits:['delete'],
   computed:{
     ...mapWritableState(steamUserStore,['steamGameList']),
     showSize(){
@@ -149,27 +156,20 @@ export default {
     header(){
       return {
         title:this.myDetailShow === true ? '游戏详情' : '我的游戏',
-        ifyIcon:'mdi:steam',
+        // ifyIcon:'mdi:steam',
+        showIcon:"/img/appLogo/steam.png",
         titleHover: !this.myDetailShow,
         titleHoverName:'点击打开'
+      }
+    },
+    options(){
+      return {
+         customDel:this.openWay === 'nav' ? true : false
       }
     }
   },
   data(){
     return{
-      options: {
-        className: 'card ',
-        title: '',
-        titleRoute:{
-          name:'myGame'
-        },
-        // icon: 'game',
-        type: 'games',
-        epicShow: true,
-        defaultData:{
-          customSize: this.customData.customSize ? this.customData.customSize : '2x4',
-        }
-      },
       myDetailShow:false,
       middleShow:false,
       openCpu:false,
@@ -210,6 +210,9 @@ export default {
   },
   methods:{
     // ...mapActions(cardStore,['increaseCustomComponents']),
+    deleteCard(){
+      this.$emit('delete')
+    },
     getGameType(item,index){
       this.customData.name = item.name
       this.steamIndex = index
@@ -240,7 +243,7 @@ export default {
     if(this.customData.customSize === undefined ){
       this.customData.customSize = '2x4'
     }
-  }
+  },
 }
 </script>
 

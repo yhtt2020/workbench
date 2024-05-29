@@ -19,13 +19,13 @@
           >
             <div class="flex items-center justify-center">
               <xt-ify-icon
-                icon="fluent:chevron-left-16-regular"
+                icon="fluent:chevron-left-16-filled"
                 class="xt-text-2"
                 size="30"
                 v-if="isBack"
               />
               <xt-ify-icon
-                icon="fluent:dismiss-16-regular"
+                icon="fluent:dismiss-16-filled"
                 class="xt-text-2"
                 size="30"
                 v-else
@@ -121,7 +121,7 @@ const currentLength = computed(() => {
 
 // 修改公告信息
 const saveGroupNotice = async () => {
-  const chat = window.$chat.chat;
+  const chat = window.$chat?.chat;
   const res = await chat.updateGroupProfile({
     groupID: groupID.value,
     notification: noticeValue.value,

@@ -1,10 +1,11 @@
 // 权限匹配优先级
-export const PRIORITY = ["web", "offline", "guest", "mac", "window"];
+export const PRIORITY = ["web", "single","offline", "guest", "mac", "win"];
 // 环境名称
 export const ENV_MAP = {
   web: "网页端",
+  single: "单机模式",
   mac: "mac",
-  window: "window",
+  win: "win",
   offline: "离线模式",
   guest: "游客模式",
 };
@@ -12,7 +13,6 @@ export const ENV_MAP = {
 export const ROUTER_LIMIT = {
   web: [
     "screen",
-    "apps",
     "browser",
     "key",
     "myGame",
@@ -25,9 +25,10 @@ export const ROUTER_LIMIT = {
     "barrage",
     "shortcut",
     "note",
+    "favorites"
   ],
 };
-// 组件限制
+// 组件限制，这里的是组件名不是列表中的name
 export const COMPONENT_LIMIT = {
   web: [
     "audio",
@@ -45,19 +46,25 @@ export const COMPONENT_LIMIT = {
     "GameEpic",
     "clipBoard",
     "GameStrategy",
-    "Courier",
     "GamesDiscount",
     "DiscountPercentage",
-    "AggregateSearch",
     "customAssembly",
-    "remote",
   ],
 };
+/**
+ * 补充的组件添加列表内的元素名称，和组件名不统一
+ */
+export const COMPONENT_LIMIT_NAME={
+  web:[
+    "supervisory",
+    'myfriends'
+  ]
+}
 // 汇总所有限制
 export const ALL_LIMITS = {
   web: [...ROUTER_LIMIT.web, ...COMPONENT_LIMIT.web],
   mac: [""],
-  window: [""],
+  win: [""],
   offline: [""],
   guest: [""],
 };

@@ -110,25 +110,10 @@ export default {
     },
 
     addNewList() {
-
-      if(!window.$useEnv('guest')){
-        this.addList(this.newList);
-        // this.addNewListVisible = false;
-        this.promptVisible =false
-        this.newList.title = "";
-      }else{
-        window.$ui.confirm("登录提示", '目前处于游客模式，请登录后体验完整功能。', {
-          ok: () => {
-            this.loginVisible = true
-          },
-          index: 999999,
-          okText: "立即登录",
-          noText: "暂不登录",
-          okButtonWidth: '95',
-          noButtonWidth: '95',
-        });
-      }
-
+      this.addList(this.newList);
+      // this.addNewListVisible = false;
+      this.promptVisible =false
+      this.newList.title = "";
     },
   },
 };

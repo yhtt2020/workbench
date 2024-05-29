@@ -74,9 +74,9 @@ import { appStore } from '../../store'
 import {mapWritableState} from 'pinia'
 import GradeSmallTip from "../GradeSmallTip.vue";
 import browser from '../../js/common/browser'
-import {useEnv} from '../../ui/hooks/useEnv'
+import {usePlat} from '../../ui/hooks/usePlat'
 let groupApi
-if (!useEnv('web')) {
+if (usePlat('client')) {
   groupApi = window.$apis.groupApi
 
 }
@@ -133,7 +133,7 @@ export default {
      * @returns {Promise<void>}
      */
     async getMyCircle ( options) {
-      if (this.$useEnv()) return
+      if (this.$usePlat()) return
       const result = await groupApi.getMyCircle(options)
       if (result.code === 1000) {
         this.myData.myCircle=result.data

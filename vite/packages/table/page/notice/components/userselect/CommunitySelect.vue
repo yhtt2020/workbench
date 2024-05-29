@@ -44,11 +44,11 @@
 <script setup>
 import { ref,computed } from 'vue';
 import { storeToRefs } from 'pinia';
-import { communityStore } from '../../../chat/store/communityStore';
+import { chatCommunityStore } from '../../../../apps/chat/store/chatCommunity';
 import { noticeStore } from '../../store/noticeStore';
 
-const communitys = communityStore();
-const { community } = storeToRefs(communitys);
+const community = chatCommunityStore();
+const { myCommunity } = storeToRefs(community);
 const notice  = noticeStore();
 const { msgSetting } = storeToRefs(notice);
 
@@ -58,7 +58,7 @@ const selectList = ref([])
 
 // 通过计算属性获取自己创建的社群
 const getMyCommunity = computed(()=>{
- const list = community.value.communityList;
+ const list = myCommunity.value.communityList;
  const filterList = list.filter((item)=>{
   return item.role === 'owner'
  })

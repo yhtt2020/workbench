@@ -1,66 +1,44 @@
 <template>
-  <!-- 方案列表 -->
-  <div class="flex flex-row w-full item-wrapper justify-center" style="height: 100%">
-    <div class="item-content px-8" :style="wrapperStyle">
-      <div class="text-center flex items-center h-full" v-if="displayItems.length == 0">
-        <a-empty image="/img/test/load-ail.png" description="暂无分享"></a-empty>
-      </div>
-      <template v-else v-for="(item, index) in displayItems" :key="item.id">
-        <xt-task v-if="index == 0" :modelValue="m03025" @cb="previewKay(item)">
-          <div class="pointer recommend mb-2" :style="deskItemStyle" @click="previewKay(item)">
-            <div class=" cover-wrapper xt-main-bg" style="">
-              <!-- <a-image :width="328" :height="185" :preview="false" src="../../../../../public/img/test/deckImg.jpg" /> -->
-              <img class="cover-preview" :src="item.cover" />
-            </div>
-            <div style="padding: 0 12px 14px">
-              <div class="title">{{ item.alias || item.title }}
-                <!-- <span class="label" v-if="item.tags"
-                      v-for="x in item.tags?.split(',')"
-                      :key="x">{{ x }}</span> -->
-              </div>
-              <div class="flex justify-between items-center mt-3" style="font-size: 14px;color: var(--secondary-text);">
-                <span class="flex items-center">
-                  <div @click="showCard(item.id)">
-                    <a-avatar :src="item.userInfo?.avatar" :size="24"></a-avatar>
-                  </div>
-                  <span class="ml-2 xt-text-2 font-14">{{ item.userInfo?.nickname }}</span>
-                </span>
-                <span style="color: var(--secondary-text);">
-                  <!-- <span>
-                    <Icon icon="dianzan" class="mr-2"></Icon>
-                    <span>{{ item.support }}</span>
-                  </span> -->
-                  <span class="ml-3 xt-text-3">
-                    <Icon icon="xiazai" class="mr-2"></Icon>
-                    <span>{{ item.count }}</span>
-                  </span>
-                </span>
-              </div>
-            </div>
-          </div>
-        </xt-task>
+  <!-- 空状态 -->
+  <div
+    v-if="displayItems.length == 0"
+    class="flex items-center justify-center w-full flex-col h-full"
+  >
+    <xt-ify-icon icon="fluent-emoji:knocked-out-face" class="mb-3" size="56" />
+    <span class="xt-text font-16 xt-font">暂无分享</span>
+  </div>
 
-        <div v-else class="pointer recommend mb-2" :style="deskItemStyle" @click="previewKay(item)">
-          <div class=" cover-wrapper xt-main-bg" style="">
-            <!-- <a-image :width="328" :height="185" :preview="false" src="../../../../../public/img/test/deckImg.jpg" /> -->
+  <!-- 方案列表 -->
+  <div
+    class="flex flex-row w-full item-wrapper justify-between"
+    style="height: 100%"
+    v-else
+  >
+    <div class="item-content px-8" :style="wrapperStyle">
+      <template v-for="item in displayItems" :key="item.id">
+        <div
+          class="pointer recommend mb-2"
+          :style="deskItemStyle"
+          @click="previewKay(item)"
+        >
+          <div class="cover-wrapper xt-main-bg" style="">
             <img class="cover-preview" :src="item.cover" />
           </div>
           <div style="padding: 0 12px 14px">
-            <div class="title">{{ item.alias || item.title }}
-              <!-- <span class="label" v-if="item.tags" v-for="x in item.tags?.split(',')" :key="x">{{ x }}</span> -->
-            </div>
-            <div class="flex justify-between items-center mt-3" style="font-size: 14px;color: var(--secondary-text);">
+            <div class="title">{{ item.alias || item.title }}</div>
+            <div
+              class="flex justify-between items-center mt-3"
+              style="font-size: 14px; color: var(--secondary-text)"
+            >
               <span class="flex items-center">
                 <div @click="showCard(item.id)">
                   <a-avatar :src="item.userInfo?.avatar" :size="24"></a-avatar>
                 </div>
-                <span class="ml-2 xt-text-2 font-14">{{ item.userInfo?.nickname }}</span>
+                <span class="ml-2 xt-text-2 font-14">{{
+                  item.userInfo?.nickname
+                }}</span>
               </span>
-              <span style="color: var(--secondary-text);">
-                <!-- <span>
-                  <Icon icon="dianzan" class="mr-2"></Icon>
-                  <span>{{ item.support }}</span>
-                </span> -->
+              <span style="color: var(--secondary-text)">
                 <span class="ml-3 xt-text-3">
                   <Icon icon="xiazai" class="mr-2"></Icon>
                   <span>{{ item.count }}</span>
@@ -70,28 +48,25 @@
           </div>
         </div>
       </template>
-
     </div>
   </div>
-  <!-- 预览 -->
-  <!-- <DeskPreview :scheme="scheme" :showModal="showModal" @closePreview="closePreview"></DeskPreview> -->
 </template>
 
 <script>
-import { appStore } from '../../../store'
-import { mapActions, mapWritableState } from 'pinia'
-import { taskStore } from '../../../apps/task/store'
+import { appStore } from "../../../store";
+import { mapActions, mapWritableState } from "pinia";
+import { taskStore } from "../../../apps/task/store";
 // import DeskPreview from '../../../components/desk/DeskPreview.vue';
 export default {
-  name: 'DeskMarket',
+  name: "DeskMarket",
   components: {
     // DeskPreview
   },
   computed: {
     ...mapWritableState(taskStore, ["taskID", "step"]),
     m03025() {
-      return this.taskID == "M0302" && this.step == 5
-    }
+      return this.taskID == "M0302" && this.step == 5;
+    },
   },
   data() {
     return {
@@ -101,16 +76,15 @@ export default {
       // 预览
       showModal: false,
       // 添加
-      openDrawer: false
-    }
+      openDrawer: false,
+    };
   },
   props: {
     wrapperStyle: {
       type: Object,
       default: {
-        height: '100%'
-      }
-
+        height: "100%",
+      },
     },
     //排序列表
     items: {
@@ -120,63 +94,63 @@ export default {
 
     deskItemStyle: {
       type: String,
-      default: () => ''
-    },    
-    
+      default: () => "",
+    },
+
     // 处理桌面市场添加 为 false 时 将当前桌面进行替换
     addDesk: {
       type: Boolean,
       default: true,
     },
-    
   },
   watch: {
     items: {
       immediate: true,
       handler() {
-        let items = JSON.parse(JSON.stringify(this.items))
-        this.displayItems = items.map(item => {
+        let items = JSON.parse(JSON.stringify(this.items));
+        this.displayItems = items.map((item) => {
           let itemNew = {
             ...item,
-            ...item.data
-          }
-          return itemNew
-        })
-        console.log(this.displayItems)
-      }
+            ...item.data,
+          };
+          return itemNew;
+        });
+        // console.log(this.displayItems);
+      },
     },
-
   },
   methods: {
-    ...mapActions(appStore, ['showUserCard']),
+    ...mapActions(appStore, ["showUserCard"]),
     showCard(id) {
-      this.showUserCard(id)
+      this.showUserCard(id);
     },
     mySort(data, property, asc) {
-      let datas = [...data]
+      let datas = [...data];
       return datas.sort(function (a, b) {
-        a = a[property]
-        b = b[property]
-        if (asc) return a - b
-        else return b - a
-      })
+        a = a[property];
+        b = b[property];
+        if (asc) return a - b;
+        else return b - a;
+      });
     },
     previewKay(item) {
-      console.log(item)
-      this.$emit('openPreview', {
+      // console.log(item);
+      this.$emit("openPreview", {
         scheme: {
           ...item,
-          dataNanoid: item.nanoid
-        }, showModal: true, addDesk: this.addDesk,
-      })
+          dataNanoid: item.nanoid,
+        },
+        showModal: true,
+        addDesk: this.addDesk,
+      });
       // this.scheme = item
       // this.showModal = true
     },
     closePreview() {
       // this.showModal = false
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
@@ -202,7 +176,7 @@ export default {
 
   .title {
     color: var(--primary-text);
-    margin-top: 12px;;
+    margin-top: 12px;
     font-size: 16px;
     font-weight: 600;
   }
@@ -237,7 +211,7 @@ export default {
     height: 10%;
 
     .icon {
-      background: #2A2A2A;
+      background: #2a2a2a;
       border-radius: 12px;
       width: 48px;
       height: 48px;
@@ -254,8 +228,8 @@ export default {
     align-items: end;
     height: 10%;
 
-    >div {
-      background: rgba(0, 0, 0, 0.30);
+    > div {
+      background: rgba(0, 0, 0, 0.3);
       border-radius: 12px;
       height: 48px;
       line-height: 48px;
@@ -267,7 +241,7 @@ export default {
 }
 
 .add-scheme {
-  background: #2A2A2A;
+  background: #2a2a2a;
   border-radius: 12px;
   width: 80px;
   height: 48px;

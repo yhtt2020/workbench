@@ -1,5 +1,5 @@
+import { message } from "ant-design-vue";
 import { h, render,defineAsyncComponent } from "vue";
-// import Login from "./Login.vue";
 const Login = defineAsyncComponent(() => import("./Login.vue"));
 export default Login;
 export const useLogin = (cb?) => {
@@ -7,7 +7,10 @@ export const useLogin = (cb?) => {
   const close = () => {
     render(null, document.body);
   };
-
+  if(window.$useEnv('offline')) {
+    message.warning('当前网络不佳，请稍后重试！')
+    return 
+  }
   // 1 生成 vNode
   const vNode = h(Login, {
     close,

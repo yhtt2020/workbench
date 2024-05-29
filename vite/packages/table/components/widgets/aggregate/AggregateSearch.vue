@@ -1,16 +1,17 @@
 <template>
-  <xt-container 
+  <xt-container
     @titleHover="aggSearchShow = true"
     :header="header"
     v-model:customSize="customData.customSize"
-    :editing="editing" 
-    :sizeList="bottomSizeList" 
-    :customData="customData" 
+    :editing="editing"
+    :sizeList="bottomSizeList"
+    :customData="customData"
     :customIndex="customIndex"
-    :desk="desk" 
+    :desk="desk"
     :options="options"
-    :menuList="gameMiddleBare" 
-    ref="aggregateSearchSlot">
+    :menuList="gameMiddleBare"
+    ref="aggregateSearchSlot"
+    @delete="deleteCard">
     <div class="flex items-center justify-center w-full p-2 mt-4 mb-3 rounded-xl pointer"
       style="border: 1px solid var(--divider); background: var(--secondary-bg);" @click="enterSearchEngine">
       <div class="flex items-center justify-center" style="width: 20px;height:20px;">
@@ -109,16 +110,14 @@ export default {
     desk: {
       type: Object,
     },
+    openWay: {
+      type: String,
+      default: "desk"
+    }
   },
-
+  emit:['delete'],
   data() {
     return {
-      options: {
-        className: 'card small',
-        title: '聚合搜索',
-        // icon: 'sousuo1',
-        type: 'search',
-      },
 
       aggSearchShow: false, // 控制右侧抽屉显示
       searchVisible: false, // 显示模态弹窗
@@ -145,7 +144,8 @@ export default {
       openId: '',  // 根据卡片外部的id进行弹窗内搜索引擎的锁定
       header:{
         title:'聚合搜索',
-        ifyIcon:'fluent:search-20-filled',
+        // ifyIcon:'fluent:search-20-filled',
+        showIcon:"/img/appLogo/aggregateSearch.png",
         titleHover:true,
         titleHoverName:'点击切换',
       }
@@ -177,6 +177,11 @@ export default {
     aggInputValue() {
       return this.aggList[0].icon
     },
+    options() {
+      return {
+        customDel: this.openWay === 'nav' ? true : false
+      }
+    }
   },
 
   mounted() {
@@ -204,6 +209,9 @@ export default {
       this.searchVisible = true
       this.openId = index
     },
+    deleteCard() {
+      this.$emit('delete')
+    }
   },
   watch:{
     customSize(newVal,oldVal){

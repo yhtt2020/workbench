@@ -1,7 +1,7 @@
 <template>
     <Teleport to="body">
       <div
-       v-show="modelValue"
+       v-if="modelValue"
        style='width:400px;height:400px;background:var(--modal-bg);
        border: 1px solid var(--secondary-bg);box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
        border-radius: 10px;'
@@ -15,7 +15,10 @@
               <span v-for="(item,index) in menus" :key="index" @click="onSelChange(index)" :class="selIndex == index ? 'active':''">{{ item }}</span>
               <span @click="onSelChange(menus.length)" v-if="isUpload" :class="selIndex == menus.length ? 'active':''">自定义</span>
           </div>
-          <div class="flex items-center pointer xt-text" @click="clearAvatar">移除</div>
+          <div class="flex ">
+            <div class="flex items-center pointer xt-text mr-3" @click="clearAvatar">移除</div>
+            <div class="flex items-center pointer xt-text" @click="closeClick">关闭</div>
+          </div>
         </div>
         <!--  搜索栏 随机 颜色选择 -->
         <div class="flex pt-3 pl-3 pr-3 action-search" style="justify-content: space-between;" v-if="selIndex != menus.length">
@@ -64,31 +67,25 @@
         </div>
 
 
-        <!-- 渲染的列表 -->
-        <div v-show="key == menus[selIndex]" v-for="(value,key) in handleList"  :key="key" class="flex flex-wrap pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar" style="height: 290px;">
-          <div v-show="!searchValue" v-for="(item,index) in value" :key="index" @click="onSelectIcon(item.name)" class="flex items-center justify-center mt-2 ml-2 overflow-hidden pointer" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
+        <!-- 渲染的列表  需要将show 换成 if-->
+        <div v-if="selIndex != menus.length" class="flex flex-wrap pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar" style="height: 290px;">
+          <div v-for="(item,index) in search" :key="index" @click="onSelectIcon(item.name)" class="flex items-center justify-center mt-2 ml-2 overflow-hidden pointer xt-bg-2" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
             <a-tooltip>
               <template #title>{{ item.alias }}</template>
-              <a-avatar :src="`https://a.apps.vip/icons/iconSelect/${key}/${item.name}.svg`" :alt="item.alias" width="32" height="32" :style="{'filter': menus[selIndex] == 'icon'?`drop-shadow(${bgColor[selBgColor]} 80px 0)`:'',transform:menus[selIndex] == 'icon'?'translateX(-80px)':''}"></a-avatar>
+              <a-avatar v-if="item.name != 'goods'" :src="cdnUrl(`/icon_select/${menus[selIndex]}/${item.name}.svg`)" :alt="item.alias" width="32" height="32" :style="{'filter': menus[selIndex] == 'icon'?`drop-shadow(${bgColor[selBgColor]} 80px 0)`:'',transform:menus[selIndex] == 'icon'?'translateX(-80px)':''}"></a-avatar>
+              <a-avatar v-else :src="cdnUrl(`/goods_select/${item.name}.svg`)" :alt="item.alias" width="32" height="32"></a-avatar>
             </a-tooltip>
           </div>
-          <div v-show="!!searchValue" v-for="(item,index) in search" :key="index" @click="onSelectIcon(item.name)" class="flex items-center justify-center mt-2 ml-2 overflow-hidden pointer" style="width: 40px;height:40px;border-radius: 10px;" :class="selectIcon == index ? 'sel-active':''">
-            <a-tooltip>
-              <template #title>{{ item.alias }}</template>
-              <a-avatar :src="`https://a.apps.vip/icons/iconSelect/${key}/${item.name}.svg`" :alt="item.alias" width="32" height="32" :style="{'filter': menus[selIndex] == 'icon'?`drop-shadow(${bgColor[selBgColor]} 80px 0)`:'','transform':menus[selIndex] == 'icon'?'translateX(-80px)':''}"></a-avatar>
-            </a-tooltip>
-          </div>
-
         </div>
+
         <!-- 自定义上传 -->
-        <div v-if="selIndex == menus.length" class="flex flex-col flex-wrap items-center px-6" style="height:330px;">
+        <div v-else class="flex flex-col flex-wrap items-center px-6" style="height:330px;">
           <input type="file" style="display:none;" ref="groupFileID"  @change="getFileInfo($event)" />
           <div v-if="!avatarUrl" class="flex items-center justify-center pointer" @click="updateGroupAvatar()" style="margin-top: 98px;height: 64px;width: 64px;background: var(--secondary-bg);border: 1px dashed rgba(255,255,255,0.1);border-radius: 6px;">
             <Icon icon="fluent:add-16-filled" width="20" height="20"/>
           </div>
           <a-avatar style="margin-top: 98px;" v-else shape="square" :size="64" :src="avatarUrl + '?imageMogr2/crop/260x260/gravity/center'"></a-avatar>
           <div class="mt-4" style="font-size: 14px;color: var(--secondary-text)">{{ title }}</div>
-          <xt-button class="mt-4 xt-active-btn" style="width:64px;height:40px;" @click="changeAvatar">确定</xt-button>
           <a-progress v-if="percent !== 0 && percent != 100" :percent="percent" />
         </div>
       </div>
@@ -98,7 +95,7 @@
         @click.stop.self="closeClick()"
         class="fixed top-0 bottom-0 left-0 w-full h-full xt-mask ring-0"
         :style="{
-          'z-index': maskIndex,
+          'z-index': zIndex,
         }"
       ></div>
     </Teleport>
@@ -111,12 +108,8 @@
   import iconList from './iconList/icon'
   import emojisList from './iconList/emojis'
   import goodsList from './iconList/goods'
-  import { ColorPicker } from "vue3-colorpicker";
-  import "vue3-colorpicker/style.css";
+  import {cdnUrl} from '../../../consts'
 
-//   const icon = iconList.list
-//   const emoji = emojisList.list
-//   const goods = goodsList.list
   // 全部的数组
   const allList = {
     icon:iconList.list,
@@ -176,6 +169,9 @@
       },
       maskIndex:{
         default:900
+      },
+      zIndex:{
+        default:900
       }
 
     });
@@ -192,8 +188,10 @@
             tmpList.push(i)
           }
         })
+        return tmpList
+      }else{
+        return list
       }
-      return tmpList
     });
 
     // 选择图标类型
@@ -211,9 +209,11 @@
       const type = menus.value[selIndex.value]
       if (type == 'icon') {
         const color = props.bgColor[selBgColor.value]
-        emits('getAvatar',`https://a.apps.vip/icons/iconSelect/${type}/${name}.svg?color=${color}`)
+        emits('getAvatar',cdnUrl(`/icon_select/${type}/${name}.svg?color=${color}`))
+      }else if(type == 'goods'){
+        emits('getAvatar',cdnUrl(`/goods_select/${name}.svg`))
       }else{
-        emits('getAvatar',`https://a.apps.vip/icons/iconSelect/${type}/${name}.svg`)
+        emits('getAvatar',cdnUrl(`/icon_select/${type}/${name}.svg`))
       }
       closeClick()
     }
@@ -226,32 +226,25 @@
         let randomNum = Math.round(Math.random()*randomLength);
         const name = handleList.value[type][randomNum].name
         selectIcon.value = randomNum;
+        let res
         if (type == 'icon') {
           const color = props.bgColor[selBgColor.value]
-          let res = `https://a.apps.vip/icons/iconSelect/${type}/${name}.svg?color=${color}`
-          emits('getAvatar',res)
-          return res
+          res = cdnUrl(`/icon_select/${type}/${name}.svg?color=${color}`)
+        }else if(type == 'goods'){
+          res = cdnUrl(`/goods_select/${name}.svg`)
         }else{
-          let res = `https://a.apps.vip/icons/iconSelect/${type}/${name}.svg`
-          emits('getAvatar',res)
-          return res
+          res = cdnUrl(`/icon_select/${type}/${name}.svg`)
         }
+        emits('getAvatar',res)
+        return res
     }
 
-defineExpose({
-  onRandom
-})
+    defineExpose({
+      onRandom
+    })
     // 改变颜色
     const changeBgColor = (n) => {
         selBgColor.value = n
-        // 如果此时已经选择了图标需要同步修改颜色
-        // if(menus.value[selIndex.value] == 'icon' && selIndex.value >= 0){
-        //     const type = menus.value[selIndex.value]
-        //     const name = handleList.value[name][selectIcon.value].name
-        //     const color = props.bgColor[selBgColor.value]
-        //     emits('getAvatar','https://a.apps.vip/icons/iconSelect/icon/' + name + '.svg?color=' + color)
-        //     console.log('https://a.apps.vip/icons/iconSelect/icon/' + name + '.svg?color=' + color);
-        // }
     }
 
       // 上传文件
@@ -389,6 +382,7 @@ defineExpose({
 
     .sel-active{
       background: rgba(80,139,254,0.20);
+      background: rgba(51,127,255,0.30) !important;
     }
 
     .circle{

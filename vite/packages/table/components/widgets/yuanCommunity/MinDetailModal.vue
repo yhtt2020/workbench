@@ -191,14 +191,14 @@
 <script setup lang='ts'>
 import { ref, computed, reactive, onMounted, watch } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
-import Comment from '../../../page/chat/com/Comment.vue';
-import { useCommunityStore } from '../../../page/chat/commun'
+import Comment from '../../../apps/chat/page/com/Comment.vue';
+import { useCommunityStore } from '../../../apps/chat/store/commun'
 import { appStore } from '../../../../table/store'
 import { Icon } from '@iconify/vue';
 import browser from '../../../js/common/browser';
 import emojiReplace from '../../../js/chat/emoji'
 import { message } from "ant-design-vue";
-import Detail from '../../../page/chat/com/Detail.vue';
+import Detail from '../../../apps/chat/page/com/Detail.vue';
 const isFullScreen = ref(false)
 const fullScreen = () => {
     isFullScreen.value = !isFullScreen.value

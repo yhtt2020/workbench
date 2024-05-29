@@ -10,13 +10,15 @@
         radius="8" 
         iconSize="16">
       </xt-button>
-      <StartPage @choose="chooseItem" v-if="isStart"></StartPage>
+      <!-- 起始页 -->
+      <StartPage @choose="chooseItem" v-if="isStart" :communityRole="communityRole"></StartPage>
       <!-- 左侧导航栏 -->
+      <!-- communityRole ? newLeftMenu.length - 1 : 6 -->
+      <!--  last="6" 
+        end="1"  -->
       <xt-left-menu v-else  
-        :list="leftMenu" 
+        :list="newLeftMenu" 
         model="id" 
-        last="6" 
-        end="1" 
         v-model:index="index" 
         leftMargin="mr-0 py-3"
         w="64" 
@@ -24,7 +26,7 @@
         class="w-full">
         <!-- 右侧功能区 -->
         <div v-if="iconIndex === 'Browser'" class="h-full max-w-[250px] flex-shrink-0" style="overflow:hidden;" @wheel.stop>
-          <LeftMenu @changeFolder="changeFolder" @refresh="refresh"></LeftMenu>
+          <LeftMenu @changeFolder="changeFolder" @refresh="refresh" :isNav="true"></LeftMenu>
         </div>
         <div class="flex flex-col w-full h-full p-3 xt-modal">
           <!-- 头部 -->
@@ -36,6 +38,7 @@
                 <xt-new-icon icon="fluent:search-16-regular" size="20" class="xt-text-2" />
               </template>
             </a-input>
+            
             
             <!-- 下拉框 -->
             <div class="flex mr-12" v-if="!isFolder">
@@ -65,7 +68,7 @@
             <LightApp v-if="iconIndex === 'LightApp'" v-model:value="inputValue" @addIcon="addIcon"></LightApp>
             <!-- 自定义 -->
             <teleport to='body'>
-              <CustomIcon v-if="iconIndex === 'CustomIcon'" @addIcon="addIcon"></CustomIcon>
+              <CustomIcon v-if="iconIndex === 'CustomIcon'" @addIcon="addIcon" @close="customClose"></CustomIcon>
               <!-- 以文件夹形式添加,预览 -->
               <xt-preview 
                 v-if="previewFlag" 
@@ -180,9 +183,19 @@ const Labor = defineAsyncComponent(() => import('./components/Labor.vue'))
 message.config({
   maxCount: 1
 })
+export interface EditType {
+  isFolder: boolean,
+  communityRole:boolean,
+}
+
+const props = withDefaults(defineProps<EditType>(), {
+  isFolder: false,
+  communityRole:false,
+})
 
 // 常量
 const iconIndex = ref('Windows')  // 默认显示的组件
+// 'Windows'
 const editVisible = ref(true)  // 是否显示
 const inputValue = ref('')  // 输入框的值
 const previewFlag = ref(false)  // 是否显示预览
@@ -226,13 +239,7 @@ const obj = computed(() => {
   }
 })
 
-export interface EditType {
-  isFolder: boolean
-}
 
-const props = withDefaults(defineProps<EditType>(), {
-  isFolder: false
-})
 
 // 关闭回调事件
 const emit = defineEmits(['setQuick','addIcon'])
@@ -362,6 +369,12 @@ const closeNav = () => {
   emit('setQuick')
 }
 
+// 自定义关闭后自动跳转到系统设置
+const customClose = () => {
+  index.value = 1
+  iconIndex.value = 'System'
+}
+
 // 左侧导航栏数组类型格式
 type LeftMenuType = {
   newIcon: string,  // 新版图标
@@ -431,10 +444,29 @@ const leftMenu = ref<LeftMenuType[]>([
 
 
 // 选择左侧导航栏
-const chooseItem = (item,i?) => {
-  isStart.value = false
-  iconIndex.value = item.component
-  i ? index.value = i : index.value = item.id
+const chooseItem = (item:any,i?:any) => {
+
+  if(item.component === 'Team'){
+    if(props.communityRole){
+      isStart.value = false
+      index.value = 1;
+      iconIndex.value = 'System'
+    }
+    else {
+      isStart.value = false
+      index.value = 0;
+      iconIndex.value = 'Windows'
+    }
+  }
+  else {
+    isStart.value = false
+    iconIndex.value = item.component
+    const found:any = leftMenu.value.find((find)=>{
+      return String(find.component) === String(item.component); 
+    });
+    index.value = found?.id;
+  }
+  
 }
 
 // 添加图标
@@ -462,6 +494,7 @@ const addIcon = (item: object | undefined) => {
       if (target) {
         const card = _.cloneDeep(item);
         const i = useFileConversionIcon(card)
+        // console.log(i,'<<<<<<<<')
         const id = nanoid(6)
         target.cards.push({
           name:"myIcons",
@@ -518,7 +551,7 @@ onMounted(() => {
   if(allList.value.length === 0){
     proxy.$bus.emit('refreshBrowser')
   }
-  
+
 })
 
 // 下拉框改变标题
@@ -547,7 +580,7 @@ const dropArr = computed(() => {
 // 左侧导航栏进行切换时，多选图标数据清空
 watch(
   () => iconIndex.value,
-  (val) => {
+  (newVal, oldVal) => {
     multipleList.value = []
   }
 )
@@ -580,5 +613,20 @@ onBeforeUnmount(() => {
   selectNav.value = '' // 重置导航栏，防止后续再次打开添加到错误位置
   multipleList.value = [] // 重置多选数据
 })
+
+
+// 优化根据社群桌面进行处理
+const newLeftMenu = computed(()=>{
+  if(props.communityRole){
+    const filterMenu = leftMenu.value.filter((menu:any)=>{
+       return menu.name !== 'Win' && menu.id !== 0;
+    });
+    return filterMenu;
+  }
+  else {
+    return leftMenu.value;
+  }
+})
+
 </script>
 <style lang='scss' scoped></style>

@@ -29,7 +29,7 @@ export default defineComponent({
     ...mapWritableState(captureStore, ['recordedSeconds','sources', 'settings', 'images', 'videos','currentSource','recording']),
   },
   mounted () {
-    if (this.$useEnv()) return
+    if (this.$usePlat()) return
     this.reloadMic()
   },
   methods:{
@@ -93,12 +93,13 @@ export default defineComponent({
 </script>
 
 <template>
+  <div class="overflow-hidden">
   <div style="min-height: 100px"  v-if="!currentSource.id">
     <div @click="selectSource" class="flex flex-col items-center justify-center " style="margin-top: 30px">
       <span class="w-full py-3 mb-3 text-center rounded-lg s-item pointer my-active btn-active voice-hover "><icon icon="wanggeshitu"></icon> 选择捕获源使用</span>
     </div>
   </div>
-  <div v-else class="flex items-center justify-center mx-5 my-8 mb-5 relative" style="color:var(--primary-text)">
+  <div v-else class="relative flex items-center justify-center mx-5 my-8 mb-5" style="color:var(--primary-text)">
     <div @click="selectSource" style="width: 200px;position: absolute;left: -10px;top: -30px" class="truncate pointer" >
       <a-avatar style="vertical-align: top" shape="square" :size="20" :src="'file://'+currentSource.icon"></a-avatar> {{currentSource.name}}
     </div>
@@ -131,6 +132,8 @@ export default defineComponent({
 
 
   </div>
+</div>
+
 
 </template>
 

@@ -41,15 +41,11 @@ const gradeTableGenerate = (num) => {
   return lvSys;
 };
 
-export const setLV = (args) => {
-  if (!args) {
+export const setLV = (userInfo) => {
+  if (!userInfo) {
     return false;
   }
 
-  // ai 助手理论正确
-
-  // 从传入的参数对象中提取用户信息
-  const userInfo = args.data;
 
   // 调用appStore函数获取用户存储对象，并将其类型设置为any
   const userStore: any = appStore();
@@ -85,6 +81,7 @@ export const setLV = (args) => {
 
   // 更新或设置用户的整体信息
   userStore.setUser(userInfo);
+  console.log('走到了这里 :>> ', );
 
   return true;
 };

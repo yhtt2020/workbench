@@ -537,7 +537,6 @@ export default {
     }
   },
   created () {
-    console.log('执行一次create事件')
     this._setupNonReactiveProps()
     this._setupOptions()
   },

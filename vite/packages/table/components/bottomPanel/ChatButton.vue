@@ -12,7 +12,7 @@ export default defineComponent({
   },
   mounted() {
     // 监听IM聊天消息是否已读,未读总数
-    window.$chat.on(window.$TUIKit.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, (e) => {
+    window.$chat?.chat.on(window.$TUIKit.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, (e) => {
       this.unReadStatus = e.data
     })
   },

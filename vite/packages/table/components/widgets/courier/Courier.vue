@@ -2,16 +2,19 @@
   <xt-container
     :header="header"
     v-model:customSize="customData.customSize "
-    :envLimit="['guest','offline']"
+    :envLimit="['guest', 'single', 'offline']"
     :desk="desk"
     :sizeList="sizeList"
     :options="options"
     :customIndex="customIndex"
+    :customData="customData"
     :menuList="menuList"
     :env="env"
-    ref="cardSlot">
-    <div class="flex flex-col w-full" style="height: 100%">
-      <div class="flex-1 w-full h-0 courier" style="position:relative;">
+
+    ref="cardSlot"
+    @delete="deleteCard">
+    <div class="flex flex-col w-full h-full">
+      <div class="relative flex-1 w-full h-0 courier">
         <div v-if="isLoading">
           <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%"/>
         </div>
@@ -87,7 +90,7 @@ import CourierSetting from './courierModal/CourierSetting.vue'
 
 import { autoRefreshTime } from './courierModal/modalMock'
 import ui from './lib/courierUI'
-import { preHandle } from './lib/courierTool'
+import { preHandle, getOrderState } from './lib/courierTool'
 
 export default {
   name: '我的快递',
@@ -118,6 +121,10 @@ export default {
     desk: {
       type: Object,
     },
+    openWay:{
+      type: String,
+      default: "desk"
+    }
   },
   data () {
     return {
@@ -137,15 +144,6 @@ export default {
         },
 
       ],
-      options: {
-        className: 'card double',
-        title: '我的快递',
-        icon: '',
-        type: 'Courier',
-        defaultData: {
-          customSize: this.customData.customSize !== undefined ? this.customData.customSize : '4x4',
-        }
-      },
       menuList: [
         {
           newIcon: 'fluent:add-16-filled',
@@ -192,7 +190,7 @@ export default {
         web: false,
         mobile: false,
         client: false,
-        offline: true
+        single: true
       },
       displayList: [],//显示列表
       autoRefreshTime,
@@ -201,6 +199,10 @@ export default {
   },
   methods: {
     ...mapActions(courierStore, ['getDbCourier', 'refreshCouriers', 'saveJdOrders']),
+    // 自定义删除函数，当添加到导航栏时，不删除卡片
+    deleteCard(){
+      this.$emit('delete')
+    },
     changeState () {
       this.allCourierVisible = false
       this.getDbCourier()
@@ -250,6 +252,19 @@ export default {
           ui.refreshAll(false)
         }, this.refreshInterval?.type)//this.refreshTimes[0].type)
       }
+    },
+    // 用于处理状态栏中快递数量的显示
+    reload (list) {
+      if (this.settings.courierStatus.currentStatus === 'followed') {
+        list = list.filter(li => {
+          return li.followed
+        })
+      } else {
+        list = list.filter(li => {
+          return getOrderState(li) !== 'signed' && getOrderState(li) !== 'canceled'
+        })
+      }
+      return list
     }
   },
   computed: {
@@ -258,6 +273,15 @@ export default {
       'couriersDetailMsg',
       'couriersList',
       'storeInfo', 'currentDetail', 'settings']),
+    // 判断当前是否在导航栏，自定义删除
+    options () {
+      return {
+        defaultData: {
+          customSize: this.customData.customSize !== undefined ? this.customData.customSize : '4x4',
+        },
+        customDel: this.openWay === 'nav' ? true : false
+      }
+    },
 
     // 判断尺寸大小
     showSize () {
@@ -284,27 +308,6 @@ export default {
     courierMsg () {
       return this.courierMsgList
     },
-    // refreshTime() {
-    //   switch (this.settings.courierRefresh.autoTime) {
-    //     case '10分钟':
-    //       return 600000
-    //       break;
-    //     case '30分钟':
-    //       return 1800000
-    //       break;
-    //     case '1小时':
-    //       return 3600000
-
-    //       break;
-    //     case '2小时':
-    //       return 7200000
-    //       break;
-
-    //     default:
-    //       return 1800000
-    //       break;
-    //   }
-    // },
     refreshInterval () {
       return this.autoRefreshTime.find((item) => {
         return item.value === this.settings.courierRefresh.autoTime
@@ -313,7 +316,9 @@ export default {
     header(){
       return {
         title:'我的快递',
-        ifyIcon:'fluent:box-16-regular',
+        // ifyIcon:'fluent:box-16-regular',
+        showIcon:"/img/appLogo/courier.png",
+
         refresh:{
           fn:()=>{
             this.refreshFlag = true
@@ -333,8 +338,7 @@ export default {
       handler (newVal) {
         this.displayList = preHandle(this.orderList)
         this.displayList = this.displayList.slice(0, 10)
-        this.courierList = this.orderList
-        // console.log(this.courierList.length)
+        this.couriersList = this.reload(this.orderList)
       },
       immediate: true
     },
@@ -343,7 +347,7 @@ export default {
     },
   },
   async mounted () {
-    // console.log(this.courierDetailList)
+    // console.log(this.customData.customSize)
     if(this.customData.customSize === undefined){
       this.customData.customSize = '4x4'
     }

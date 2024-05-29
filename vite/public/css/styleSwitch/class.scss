@@ -56,7 +56,7 @@ img {
 }
 // 字体次要色
 .xt-text-2 {
-  color: var(--secondary-text) !important;
+  color: var(--secondary-text);
 }
 // 字体禁用色 处于零使用场景
 .xt-text-3 {
@@ -68,7 +68,7 @@ img {
 */
 // 主要背景色
 .xt-bg {
-  background: var(--primary-bg) !important;
+  background: var(--primary-bg);
 }
 // 次要背景色
 .xt-bg-2 {
@@ -171,3 +171,22 @@ hr {
 .xt-enable-bg {
   background: var(--disable-text) !important;
 }
+
+/* 亮色主题 */
+/* .light-model {
+  --tt-active-bg: #508bfe;
+  --tt-active-secondary-bg: rgba(80, 139, 254, 0.2);
+  --tt-main-bg: #f7f7f7;
+  --tt-primary-bg: rgba(255, 255, 255, 0.55);
+  --tt-secondary-bg: rgba(230, 230, 230, 1);
+  --tt-secondary-transp-bg: rgba(0, 0, 0, 0.1);
+  --tt-modal-bg: #ffffff;
+  --tt-mask-bg: rgba(255, 255, 255, 0.3);
+  --tt-main-mask-bg: rgba(255, 255, 255, 0.8);
+  --tt-active-text: #fff;
+  --tt-primary-text: rgba(0, 0, 0, 0.85);
+  --tt-secondary-text: rgba(0, 0, 0, 0.65);
+  --tt-disable-text: rgba(0, 0, 0, 0.25);
+  --tt-divider: rgba(230, 230, 230, 0.25);
+  --tt-active: rgba(235, 235, 235, 0.6);
+} */

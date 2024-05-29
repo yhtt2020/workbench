@@ -11,6 +11,7 @@
     ref="todoSlot"
     :menuList="toggleTodoList"
     :env="env"
+    @delete="deleteCard"
   >
 
     <div style="height:100%;">
@@ -97,13 +98,15 @@ export default {
     desk: {
       type: Object
     },
+    openWay:{
+      type: String,
+      default: 'desk'
+    }
   },
+  emits: ['delete'],
   data() {
     return {
       addVisible: false,
-
-      // options: {className: 'card small',title: '',icon: 'check-square',type: 'todo'},
-      options: {className: 'card small', title: '', type: 'todo'},
       sizeList: [{value: '2x2', name: '2x2'}, {value: '2x4', name: '2x4'}],
       openSettings: false,
       toggleTodoList: [{
@@ -126,7 +129,7 @@ export default {
         web: false,
         mobile: false,
         client: false,
-        offline:false
+        single:false
       },
     }
   },
@@ -138,7 +141,9 @@ export default {
     },
     header() {
       return {
-        ifyIcon:"fluent:checkmark-square-24-regular",
+        // ifyIcon:"fluent:checkmark-square-24-regular",
+        showIcon:"/img/appLogo/todo.png",
+
         title:this.selectTodo.title,
         iconHover:true,
         leftHoverIcon:"fluent:checkmark-square-24-regular",
@@ -148,8 +153,13 @@ export default {
             fn:this.todoPage,
             tip:"前往主应用"
           }
-          
+
         ]
+      }
+    },
+    options() {
+      return {
+        customDel: this.openWay === 'nav' ? true : false
       }
     }
   },
@@ -175,6 +185,9 @@ export default {
     }
   },
   methods: {
+    deleteCard() {
+      this.$emit('delete')
+    },
     added(){
       this.getTodoType(this.selectTodo)
       message.success('添加任务成功。')

@@ -1,18 +1,29 @@
 // import devtools from '@vue/devtools'//注释此行无法连接vue调试工具
 // 注册想天客户端状态
-import { isWeb, isClient, isMac, isOffline, isGuest } from "./ui/hooks/env";
+import { isWeb, isWin, isMac, isOffline, isGuest, isSingle } from "./ui/hooks/env";
 import {
   useEnv,
   useEnvLimit,
-  useComLimit,
+  // useComLimit,
   currentEnv,
 } from "./permission/useEnv";
+import {
+  usePlat,
+  usePlatLimit,
+  useComLimit,
+  currentPlat,
+} from "./permission/usePlat.ts";
 import type { UseEnv, baseEnv } from "./permission/useEnv";
 import archiveHelper from "./js/lib/archiveHelper";
 window.$isOffline = isOffline;
 window.$isGuest = isGuest;
+window.$isSingle = isSingle;
 window.$useEnv = useEnv;
+window.$usePlat = usePlat;
+window.$currentEnv = currentEnv;
+window.$currentPlat = currentPlat;
 window.$useEnvLimit = useEnvLimit;
+window.$usePlatLimit = usePlatLimit;
 window.$useComLimit = useComLimit;
 //import {initDb} from './js/api/db'
 import { createApp } from "vue";
@@ -25,7 +36,6 @@ import { createRouter, createWebHashHistory } from "vue-router";
 import { createPinia } from "pinia";
 import "dayjs/locale/zh-cn";
 import "./index.css";
-import { cardStore } from "./store/card";
 import vueCustomScrollbar from "../../src/components/vue-scrollbar.vue";
 
 import VueTippy from "vue-tippy";
@@ -48,6 +58,7 @@ import "vue-toastification/dist/index.css";
 // import components from "./ui/components/index.js"
 import XTUI from "./ui/new/index.js";
 import registerXTUI from "./ui/index";
+import '../table/apps/ttApp/src/modules/wujie/theme.css'
 // 注册任务引导
 import VueShepherdPlugin from "vue-shepherd";
 import "shepherd.js/dist/css/shepherd.css";
@@ -106,33 +117,40 @@ dayjs.locale("zh-cn");
 const app = createApp(App);
 
 //腾讯IM部分
-import { loadChat,TUIKit } from "./chat";
-TUIKit.TUIChatKit.components(TUIKit.TUIComponents,app);
+// import { loadChat,TUIKit } from "./chat";
+import { loadChat,TUIChatKit,TUIComponents} from "./chat";
 loadChat();
+TUIChatKit.components(TUIComponents,app);
+
 // 导入IM的UI覆写样式文件
 import "./apps/chat/assets/chat.scss";
-// TUIKit
 
 app.use(Wujie);
 // app.use(hevueImgPreview)
 // 使用 provide 将全局变量作为响应式对象
-app.provide("currentEnv", currentEnv);
 app.provide("isWeb", isWeb);
-app.provide("isClient", isClient);
+app.provide("isWin", isWin);
 app.provide("isMac", isMac);
 app.provide("isOffline", isOffline);
+app.provide("isSingle", isSingle);
 app.provide("isGuest", isGuest);
 app.provide("$useEnv", useEnv);
+app.provide("$usePlat", usePlat);
+app.provide("currentEnv", currentEnv);
+app.provide("currentPlat", currentPlat);
 
 // 使用 globalProperties 将全局变量附加到 Vue 实例上
 app.config.globalProperties.$currentEnv = currentEnv;
+app.config.globalProperties.$currentPlat = currentPlat;
 app.config.globalProperties.$isWeb = isWeb;
-app.config.globalProperties.$isClient = isClient;
+app.config.globalProperties.$isWin = isWin;
 app.config.globalProperties.$isMac = isMac;
 app.config.globalProperties.$isOffline = isOffline;
+app.config.globalProperties.$isSingle = isSingle;
 app.config.globalProperties.$isGuest = isGuest;
 app.config.globalProperties.$bus = useMit;
 app.config.globalProperties.$useEnv = useEnv;
+app.config.globalProperties.$usePlat = usePlat;
 window.$ui = {
   confirm,
   router,
@@ -191,7 +209,7 @@ app.component("PanelButton", PanelButton);
 app.component("BackBtn", BackBtn);
 app.component("vueCustomScrollbar", vueCustomScrollbar);
 
-if (!useEnv()) {
+if (usePlat('client')) {
   window.USER_DATA_PATH = window.globalArgs["user-data-dir"]; //挂载一个用户数据目录的常量，方便后续开发
 }
 

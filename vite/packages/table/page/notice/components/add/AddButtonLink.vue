@@ -1,5 +1,5 @@
 <template>
-  <xt-modal v-model="buttonVisible" title="添加按钮链接" v-if="buttonVisible" :scrollbarPadding="{paddingRight:'0px',paddingLeft:'0px'}">
+  <xt-modal v-model="buttonVisible" title="添加按钮链接" v-if="buttonVisible" :scrollbarStyle="{paddingRight:'0px',paddingLeft:'0px'}">
    <div style="width: 500px;" class="flex items-center flex-col justify-center">
     <a-input spellcheck="false" v-model:value="linkName" class="h-10" style=" min-width: 452px; margin-bottom: 16px;border-radius: 10px;" placeholder="请输入按钮名称"></a-input>
     <a-textarea spellcheck="false" v-model:value="linkValue"  style="border-radius: 10px;min-width: 452px; height: 80px;" placeholder="请输入链接地址"></a-textarea>

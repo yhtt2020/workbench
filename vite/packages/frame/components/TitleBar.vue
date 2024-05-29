@@ -137,7 +137,7 @@ export default {
       this.currentUrl = args.url
     })
 
-    ipc.on('init', (event, args) => {
+    ipc.once('init', (event, args) => {
       windowId = args.windowId
       window.app=args.app
       this.app=args.app
@@ -155,8 +155,9 @@ export default {
       // document.getElementById('goForward').hidden = true
       //   document.getElementById('goHome').hidden = true
       //   document.getElementById('refresh').style.marginLeft = '30px'
-
-
+      setTimeout(()=>{
+        ipc.sendTo(args.viewId,'init',args)
+      },1000)
     })
     ipc.on('maximize',  (e) =>{
       this.windowIsMaximized = true

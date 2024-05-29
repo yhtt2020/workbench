@@ -1,31 +1,46 @@
 <template>
-  <XtTitle
-    type="text"
-    class="xt-text"
-    style="color: var(--primary-text) !important"
-    >对话
-    <template #right>
-      <xt-base-icon
-        @click="add()"
-        icon="tianjia2"
-        class="mr-3 xt-text"
-        style="font-size: 16px"
-      ></xt-base-icon>
-    </template>
-  </XtTitle>
+  <div class="flex items-center justify-between">
+    <div class="flex items-center">
+      <xt-mix-icon icon="fluent:chat-16-regular" class="mr-2" />
+      聊天
+    </div>
+    <xt-base-icon
+      @click="add()"
+      icon="tianjia2"
+      class="mr-3 xt-text"
+      style="font-size: 16px"
+    ></xt-base-icon>
+  </div>
   <template v-if="topList.length">
     <XtTitle type="text">置顶</XtTitle>
-    <Topic v-for="data in topList" :data="data"></Topic>
+    <Topic
+      v-for="data in topList.sort((a, b) => {
+        return b.time - a.time;
+      })"
+      :data="data"
+      :key="data.id"
+    ></Topic>
   </template>
   <template v-if="todayList.length">
     <XtTitle type="text">今天</XtTitle>
-    <Topic v-for="data in todayList" :data="data"></Topic>
+    <Topic
+      v-for="data in todayList.sort((a, b) => {
+        return b.time - a.time;
+      })"
+      :data="data"
+      :key="data.id"
+    ></Topic>
   </template>
   <template v-if="previousList.length">
     <XtTitle type="text">过去</XtTitle>
-    <Topic v-for="data in previousList" :data="data"></Topic>
+    <Topic
+      v-for="data in previousList.sort((a, b) => {
+        return b.time - a.time;
+      })"
+      :data="data"
+      :key="data.id"
+    ></Topic>
   </template>
-
 </template>
 
 <script>

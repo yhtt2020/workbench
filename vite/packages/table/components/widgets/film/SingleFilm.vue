@@ -2,9 +2,12 @@
     <xt-container 
       :header="header"
       v-model:customSize="customData.customSize"
+      :customIndex="customIndex"
+      :envLimit="['guest', 'offline', 'single']"
       :desk="desk" 
       :options="options" 
-      v-if="!detailToggle">
+      v-if="!detailToggle"
+      @delete="deleteCard">
       <div v-if="pageToggle">
         <div v-if="isLoading">
           <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 60%"/>
@@ -61,12 +64,14 @@
         default: () => {
 
         },
+      },
+      openWay:{
+        type:String,
+        default:'desk'
       }
     },
     data() {
       return {
-        options:{
-        },
         filmList: [],
         singleFilm: {},
         detailToggle: false,
@@ -77,7 +82,7 @@
           web: false,
           mobile: false,
           client: false,
-          offline:false
+          single:false
         },
         customSize:'2x4',
         header:{
@@ -93,9 +98,18 @@
     },
     computed: {
       ...mapWritableState(filmStore, ['data']),
+      options(){
+        return {
+          customDel:this.openWay === 'nav' ? true : false
+        }
+      }
     },
+    emit:['delete'],
     methods: {
       ...mapActions(filmStore,['getData','getFilmDetail']),
+      deleteCard(){
+        this.$emit('delete')
+      },
       btnDetail(id){
         this.detailId = id
         this.detailToggle = true

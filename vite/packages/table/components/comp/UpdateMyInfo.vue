@@ -24,11 +24,11 @@
         <a-divider type="vertical" class="myInfo-divider"  style="margin: 0 16px;"/>
         <div class="w-1/2 grow flex flex-col myInfo-divider">
           <span class="xt-text font-16 xt-font mb-3">个性签名</span>
-          <a-textarea v-model:value="data.sign" placeholder="暂无签名" 
-            class="no-scrollbar"  :rows="3" :maxlength="200" 
+          <a-textarea v-model:value="data.sign" placeholder="暂无签名"
+            class="no-scrollbar"  :rows="3" :maxlength="200"
             style="height: 100px;margin-bottom:12px;background: var(--secondary-bg);border: 1px solid var(--divider); border-radius: 8px;"
           />
-          
+
           <span class="xt-text font-16 xt-font mb-3">性别</span>
           <xt-tab v-model="selectSexItem" :list="data.selectSex" class="p-1 xt-bg-t-2 h-10" :boxStyle="{ 'border-radius': '10px' }" :itemStyle="{ 'border-radius': '6px' }" />
 
@@ -65,7 +65,7 @@ import {completeTask} from '../../apps/task/task';
 import { useUpdateUserInfo } from '../../permission/user/useUserPermit'
 
 import UploadImage from '../UploadImage.vue';
-
+import {cdnUrl} from '../../consts'
 const app = appStore();
 const { userInfo } = storeToRefs(app);
 const frame = frameStore();
@@ -94,7 +94,7 @@ const data = ref({
     },
   ],
   // 预设头像选中下标
-  presetIndex:'',  
+  presetIndex:'',
 });
 // 接收切换到的性别
 const selectSexItem = ref('0');
@@ -103,13 +103,13 @@ const presetAvatar = ref(avatarNumber);
 // 头像URL
 const infoAvatar = ref('');
 
-/**事件方法**/ 
+/**事件方法**/
 // 打开修改信息弹窗
 const openMyInfo = () =>{ data.value.myInfoVisible = true;};
 // 稍后设置
 const laterSetup = () =>{ data.value.myInfoVisible = false;};
 // 预设头像url拼接
-const presetAvatarUrl = (id) =>{ return 'https://up.apps.vip/avatar/' +  id + '.png';};
+const presetAvatarUrl = (id) =>{ return cdnUrl('/default_avatar/'+id + '.jpg');};
 
 // 随机获取昵称
 const roll = (animate=true) =>{

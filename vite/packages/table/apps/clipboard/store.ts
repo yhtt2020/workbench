@@ -2,13 +2,14 @@ import {defineStore} from "pinia";
 import dbStorage from "../../store/dbStorage";
 import {getDateTime} from '../../util'
 import {completeTask} from '../../apps/task/task'
-import { useEnv } from "../../ui/hooks/useEnv";
+import {usePlat} from "../../ui/hooks/usePlat";
+
 let clipboardChanged = null
 //todo 此处要兼容web版
-let win32,fs,clipboard
-if(!useEnv('web') &&process.platform==='win32'){
-fs = window.$models.fs
- clipboard = require('electron').clipboard
+let win32, fs, clipboard
+if (usePlat('client') && process.platform === 'win32') {
+  fs = window.$models.fs
+  clipboard = require('electron').clipboard
   win32 = window.$models.win32
   win32.watchClipboard(() => {
     if (clipboardChanged) {
@@ -19,14 +20,11 @@ fs = window.$models.fs
 //todo 此处要兼容mac版
 
 
-
-
-
-
 // @ts-ignore
 export const clipboardStore = defineStore("clipboardStore", {
   state: () => ({
     // 历史和收藏切换数组默认值
+    lastInsertTime: Date.now(),//最后插入的时间
     tab: {title: '剪切板历史', icon: 'time-circle', name: 'history'},
     loading: false,//控制加载动画
     items: [],//剪切板的收集箱内容
@@ -39,7 +37,7 @@ export const clipboardStore = defineStore("clipboardStore", {
     collections: [],//我的收藏，收藏的时候从中复制一个出来，方便后面查找。
     previewShow: false,//预览
     settings: {
-      historyCapacity:86400,//历史容量，默认一天
+      historyCapacity: 86400,//历史容量，默认一天
       enable: false,
       duration: 500,//ms
       codeHighlight: true, // 是否打开代码高亮
@@ -53,10 +51,11 @@ export const clipboardStore = defineStore("clipboardStore", {
   actions: {
     async doSearch() {
       this.items = []
-      this.hasNextPage=true
+      this.hasNextPage = true
       this.nextPage()
     },
     async nextPage() {
+
       let dbKey = ''
       if (this.tab.name === 'history') {
         dbKey = 'clipboard:item:'
@@ -69,7 +68,7 @@ export const clipboardStore = defineStore("clipboardStore", {
         this.loading = true
         await tsbApi.db.createIndex({
           index: {
-            fields: ['type', 'createTime', 'content','searchKey']
+            fields: ['type', 'createTime', 'content', 'searchKey']
           }
         })
         let map: any = {
@@ -95,16 +94,17 @@ export const clipboardStore = defineStore("clipboardStore", {
             // 使用正则表达式替换特殊字符
             return str.replace(specialChars, "\\$&");
           }
-          const words=escapeSpecialChars(this.searchWords)
+
+          const words = escapeSpecialChars(this.searchWords)
           map['$or'] = [
             {
               content: {
-                $regex: new RegExp(`.*${words}.*`,'ig')
+                $regex: new RegExp(`.*${words}.*`, 'ig')
               },
             },
             {
               searchKey: {
-                $regex: new RegExp(`.*${words}.*`,'ig')
+                $regex: new RegExp(`.*${words}.*`, 'ig')
               },
             }
           ]
@@ -267,7 +267,7 @@ export const clipboardStore = defineStore("clipboardStore", {
       }
     },
     changed() {
-      if(!this.settings.enable){
+      if (!this.settings.enable) {
         return
       }
       // 任务点
@@ -378,8 +378,20 @@ export const clipboardStore = defineStore("clipboardStore", {
         content: '',
         ext: require('path').extname(uri),
         size: stat.size,
-        searchKey:uri
+        searchKey: uri
       })
+    },
+    //更新最后插入的时间
+    updateLastTime(time) {
+      this.lastInsertTime = time
+    },
+    //是否是新插入的
+    isNew(time) {
+      if (time > this.lastInsertTime) {
+        return true
+      } else {
+        return false
+      }
     },
     /**
      * 插入一个剪切板内容
@@ -430,7 +442,7 @@ export const clipboardStore = defineStore("clipboardStore", {
         content: '',
         count: uri.length,
         files: uri,
-        searchKey:uri.join(',')
+        searchKey: uri.join(',')
       })
     },
     async audioChange(audio) {
@@ -441,7 +453,7 @@ export const clipboardStore = defineStore("clipboardStore", {
         content: '',
         ext: require('path').extname(audio),
         size: stat.size,
-        searchKey:audio
+        searchKey: audio
       })
     },
     async imageChange(image: any) {
@@ -470,8 +482,8 @@ export const clipboardStore = defineStore("clipboardStore", {
           ext: '.png',
           filename: 'image_' + now + '.png',
           path: filepath,
-          filepath:filepath,
-          searchKey:filepath,
+          filepath: filepath,
+          searchKey: filepath,
         })
       } catch (e) {
         console.error('图片写入失败', e)

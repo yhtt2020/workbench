@@ -1,40 +1,17 @@
 <template>
-  <xt-container 
+  <xt-container
     :customData="customData"
-    :options="options" 
+    :options="options"
     :desk="desk"
     :header="header"
-    v-model:customSize="customData.customSize">
+    v-model:customSize="customData.customSize"
+    :customIndex="customIndex"
+    @delete="deleteCard">
     <div class="absolute w-16 h-6 left-4 top-1 pointer"   @click="moveToday"></div>
-    <div style="border-bottom: solid 1px  rgba(255, 255, 255, 0.1);color:var(--primary-text) !important" class="my-calendar">
+    <div style="color:var(--primary-text) !important" class="my-calendar">
       <Calendar style="color:var(--primary-text) !important" :is-dark="isDark" :attributes="attributes"  transparent borderless  :color="selectedColor" ref="calendar">
       </Calendar>
     </div>
-
-      <a-row class="mt-4 festival s-item xt-bg-2 xt-text" style="border-radius: 12px;height: 60px;">
-        <a-col :span="11" class="flex flex-row items-center py-2 pl-2" >
-          <a-row>
-            <a-col :span="4" class="flex pt-4">
-              <div class="round-dot "></div>
-            </a-col>
-            <a-col>
-              <div class="flex flex-col" >
-                <span>春节</span>
-                <span style="font-size: 12px;">放假8天</span>
-              </div>
-            </a-col>
-          </a-row>
-        </a-col>
-        <a-col :span="13" class="flex flex-row items-center justify-end pt-4 pr-2" >2月10日~2月17日</a-col>
-      </a-row>
-<!--      <a-row class="mt-2 festival " style="border-radius: 12px;background: rgba(42, 42, 42, 1);height: 44px">-->
-<!--        <a-col :span="11" class="flex flex-row items-center pl-2">-->
-<!--          <div class="mr-3 round-dot"></div>-->
-<!--          端午节-->
-<!--        </a-col>-->
-<!--        <a-col :span="13"  class="flex items-center justify-end pr-2 text-right">6月22日~6月24日</a-col>-->
-<!--      </a-row>-->
-
   </xt-container>
 
 </template>
@@ -48,17 +25,12 @@ import 'v-calendar/style.css';
 import { Icon as newIcon } from '@iconify/vue';
 export default {
   name: 'CustomTimer',
-  props:['desk','customData'],
+  props:['desk','customData','openWay','customIndex'],
   data () {
     return {
       status: 'pause',
       value: null,
       visible: false,
-      options: {
-        defaultData: {
-          customSize: '2x4',
-        }
-      },
       attributes:[{
         highlight: true,
         dates: new Date()
@@ -67,7 +39,10 @@ export default {
       isDark:true,
       header:{
         title:'日历',
-        ifyIcon:"fluent:calendar-16-regular",
+        // ifyIcon:"fluent:calendar-16-regular",
+        showIcon:"/img/appLogo/customTimer.png",
+
+
       },
       customSize:'2x4'
 
@@ -79,8 +54,16 @@ export default {
     Calendar,
     newIcon
   },
+  computed:{
+    options(){
+      return {
+        customDel: this.openWay === "nav" ? true : false,
+      }
+    }
+  },
+  emit:['delete'],
   mounted() {
-    this.customData.customSize = '2x4'
+    this.customData.customSize = '2x3'
   },
   methods: {
     onPanelChange (value, mode) {},
@@ -97,6 +80,9 @@ export default {
     removeCalendar () {
       this.removeCard(this.customIndex)
       this.visible = false
+    },
+    deleteCard(){
+      this.$emit('delete')
     }
   },
 }

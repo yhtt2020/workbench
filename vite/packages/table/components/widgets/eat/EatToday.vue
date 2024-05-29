@@ -8,8 +8,9 @@
     :desk="desk"
     ref="eatSlot"
     :menuList="menuList"
+    @delete="deleteCard"
   >
-  <div @click="openSettings = true">
+  <div @click="openSettings = true" class="overflow-hidden">
     <Turntable :eatList="eatList"></Turntable>
   </div>
   </xt-container>
@@ -30,6 +31,7 @@ import Turntable from './Turntable.vue'
 import { mapActions, mapWritableState } from 'pinia'
 import {message} from "ant-design-vue"
 import { Icon as newIcon } from '@iconify/vue'
+import { optionProps } from 'ant-design-vue/lib/vc-mentions/src/Option'
 export default {
   name: 'Todo',
   components: {
@@ -49,10 +51,14 @@ export default {
     desk:{
       type:Object
     },
+    openWay:{
+      type:String,
+      default:'desk'
+    }
   },
+  emit:['delete'],
   data () {
     return {
-      options: {className: 'card',title: '',type: 'todo'},
       openSettings: false,
       menuList:[ { icon: 'shezhi1', title: '设置', fn: () => {this.openSettings = true;this.$refs.eatSlot.visible = false } } ],
       title: '今天吃什么',
@@ -60,13 +66,19 @@ export default {
       eatList: ['糯米饭','拉面','面包','苹果','牛排','烤鸭','炒饭','火锅'],
       header:{
         title: '今天吃什么',
-        ifyIcon:'fluent:emoji-smile-slight-24-regular'
+        // ifyIcon:'fluent:emoji-smile-slight-24-regular'
+        showIcon:"/img/appLogo/eatToday.png",
+
       },
       customSize:'2x4'
 }
   },
   computed: {
-
+    options(){
+      return {
+        customDel:this.openWay === 'nav' ? true : false
+      }
+    }
   },
   mounted() {
     this.customData.customSize = '2x4'
@@ -135,6 +147,9 @@ export default {
           this.eatList.splice(0,this.eatList.length,...eatVal)
           this.customData.eatList = this.eatList
         }
+    },
+    deleteCard(){
+      this.$emit('delete')
     }
   },
   watch: {

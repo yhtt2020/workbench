@@ -18,6 +18,9 @@
     <template #cardSize>
       <slot name="follow"></slot>
     </template>
+    <template #extraMenu>
+      <slot name="extraMenu"></slot>
+    </template>
   </xt-menu>
 
   <xt-drawer v-if="drawerVisible" v-model="drawerVisible" :height="h">
@@ -40,6 +43,7 @@ import { storeToRefs } from "pinia";
 import { useWidgetStore } from "../../../components/card/store";
 import DefaultItem from "./DefaultItem.vue";
 import ChooseModal from "./ChooseModal.vue";
+import { usePlat } from '../../hooks/usePlat'
 const props = defineProps({
   menus: {},
   model: {
@@ -62,7 +66,7 @@ const props = defineProps({
   },
 });
 const menu = ref(null);
-const { menus, model, height } = toRefs(props);
+const { menus, model, height, stopPropagation } = toRefs(props);
 
 const widgetStore = useWidgetStore();
 const { rightModel } = storeToRefs(widgetStore);
@@ -119,15 +123,26 @@ function defaultListClick(event) {
     // event.preventDefault();
     // event.stopPropagation();
     drawerVisible.value = true;
+    // 阻止默认事件
+    if(stopPropagation.value){
+      event.stopPropagation();
+      event.preventDefault();
+    }
     onMounted();
   }
 }
 function defaultListContextmenu(event) {
   // 第一次触发后出现弹窗让用户选择
+
   if (!firstOpen.value) {
-    chooseVisible.value = true;
-    firstOpen.value = true;
-    return;
+    if(usePlat('web')){
+      rightModel.value='follow'
+      firstOpen.value = true;
+    }else{
+      chooseVisible.value = true;
+      firstOpen.value = true;
+      return;
+    }
   }
 
   if (rightModel.value == "default") {
@@ -135,6 +150,11 @@ function defaultListContextmenu(event) {
     // event.preventDefault();
     // event.stopPropagation();
     drawerVisible.value = true;
+    // 阻止默认事件
+    if(stopPropagation.value){
+      event.stopPropagation();
+      event.preventDefault();
+    }
     onMounted();
   }
 }

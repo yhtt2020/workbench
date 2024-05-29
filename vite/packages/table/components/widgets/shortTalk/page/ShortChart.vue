@@ -1,15 +1,16 @@
 <template>
 
-    <xt-container 
+    <xt-container
         :header="header"
         v-model:customSize="customData.customSize"
-        :envLimit="['guest']" 
-        :customData="customData" 
-        :customIndex="customIndex" 
-        :menuList="menuList" 
-        :options="options" 
-        ref="dataSlot" 
-        :desk="desk" >
+        :envLimit="['guest', 'offline']"
+        :customData="customData"
+        :customIndex="customIndex"
+        :menuList="menuList"
+        :options="options"
+        ref="dataSlot"
+        :desk="desk"
+        @delete="deleteCard" >
         <Unusual v-if='!this.access_token || !this.baseUrl' title="请完成小组件配置" buttonTitle="立即配置" @back="back" ></Unusual>
         <div v-else class="echarts" ref="myChart" :style="myChartStyle"></div>
         <!-- 设置面板 -->
@@ -62,7 +63,7 @@
                             :options="timeOption"
                             @change="handleChangeTime"
                         ></a-select>
-                        
+
                     </div>
                 </div>
             </vue-custom-scrollbar>
@@ -110,31 +111,41 @@ export default {
         editing: {
             type: Boolean,
         },
+        openWay:{
+            type:String,
+            default:'desk'
+        }
     },
+    emit:['delete'],
     computed: {
         ...mapWritableState(shortTalkStore, ['access','interact','access_token','baseUrl','setVisible']),
+        options(){
+            return {
+                customDel:this.openWay === 'nav' ? true : false
+            }
+        }
     },
     data() {
         return {
             // 设置定时刷新
-            timeOption:[
-                {
-                    value:600,
-                    label:'10分钟'
-                },
-                {
-                    value:1800,
-                    label:'30分钟'
-                },
-                {
-                    value:3600,
-                    label:'1小时（默认）'
-                },
-                {
-                    value:86400,
-                    label:'24小时'
-                },
-            ],
+            // timeOption:[
+            //     {
+            //         value:600,
+            //         label:'10分钟'
+            //     },
+            //     {
+            //         value:1800,
+            //         label:'30分钟'
+            //     },
+            //     {
+            //         value:3600,
+            //         label:'1小时（默认）'
+            //     },
+            //     {
+            //         value:86400,
+            //         label:'24小时'
+            //     },
+            // ],
             timeVal:3600,
             settings: {
                 swipeEasing: true,
@@ -175,12 +186,12 @@ export default {
                     }
                 },
             ],
-            options: {
-                className: "card double w-full",
-                title: "社区访问数据/每日/全部",
-                icon: "iconamoon:history-fill",
-                rightIcon:"fluent:open-20-filled",
-            },
+            // options: {
+            //     className: "card double w-full",
+            //     title: "社区访问数据/每日/全部",
+            //     icon: "iconamoon:history-fill",
+            //     rightIcon:"fluent:open-20-filled",
+            // },
             // 网格数据
             myChartStyle:{
                 float:"left",
@@ -196,7 +207,9 @@ export default {
             timer:"",
             header:{
                 title:'社区访问数据/每日/全部',
-                ifyIcon:'fluent:arrow-trending-lines-20-filled',
+                // ifyIcon:'fluent:arrow-trending-lines-20-filled',
+        showIcon:"/img/appLogo/ShortChart.png",
+
                 rightIcon:[
                     {
                         ifyIcon:'fluent:open-20-filled',
@@ -207,6 +220,7 @@ export default {
 
         };
     },
+    emit:['delete'],
     async mounted() {
         this.accToken = this.access_token
         this.accUrl = this.baseUrl
@@ -221,7 +235,7 @@ export default {
         this.timer = setInterval(()=>{
             this.init()
         },this.timeVal * 1000)
-        
+
         this.init()
     },
     unmounted() {
@@ -230,6 +244,9 @@ export default {
     methods:{
         ...mapActions(cardStore, ['updateCustomData']),
         ...mapActions(shortTalkStore, ['getChartData','changeAccToken']),
+        deleteCard(){
+            this.$emit('delete')
+        },
         // 设置定时刷新
         handleChangeTime(value){
             this.updateCustomData(this.customIndex,{

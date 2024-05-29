@@ -347,6 +347,7 @@ global.render = {
   getUrl (url, params, domain = '.', forcePrd = false) {
     let protocolUrl
     protocolUrl = `tsbapp://${domain}/${url}` //todo 需要验证正式环境的协议情况
+    console.log(protocolUrl,'protocolUrl')
     if (isDevelopmentMode && forcePrd === false) {
       if (domain === '.') {
         protocolUrl = `http://localhost:1600/html/${url}`
@@ -446,17 +447,19 @@ global.render = {
    */
   findFile(requestUrl,pathName){
     let filePath
+    pathName=path.normalize(pathName)
     let extension = path.extname(pathName).toLowerCase()
     let url=new URL(requestUrl)
     //检查应用文件夹
     let root = require('electron').app.getPath('userData')
-    let appsPath = path.join(root, 'apps', url.hostname)
-    if(fs.existsSync(appsPath)){
-      //存在应用文件夹，则直接从应用文件夹返回文件
-      filePath = path.join(appsPath, pathName)
-      return this.fixPath(filePath)
+    if(url.hostname!=='.'){
+      let appsPath = path.join(root, 'apps', url.hostname)
+      if(fs.existsSync(appsPath)){
+        //存在应用文件夹，则直接从应用文件夹返回文件
+        filePath = path.join(appsPath, pathName)
+        return this.fixPath(filePath)
+      }
     }
-
     //不存在应用文件夹，则返回vite目录下的文件夹路径
     if (extension === '.html' || extension==='') {
       //对html文件特殊处理，返回html文件夹下的文件
@@ -488,7 +491,6 @@ global.render = {
     let filePath = this.findFile(request.url, pathName)
     //todo 对/默认路径要做index.html default.html等的缺省判断
     if (!filePath) return
-    console.log('filePath',filePath)
     render.readFile(filePath,(error,mimeType, data)=>{
       response({
         headers: {

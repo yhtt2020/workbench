@@ -1,0 +1,165 @@
+/* 基础颜色变量定义，用于全局颜色管理 */
+:root {
+  /* 定义错误颜色 */
+  --tt-error-color: #ff4d4f;
+  /* 定义链接颜色 */
+  --tt-link-color: #508bfe;
+  /* 定义成功颜色 */
+  --tt-success-color: #52c41a;
+  /* 定义警告颜色 */
+  --tt-warning-color: #faad14;
+  /* 主题颜色 */
+  --tt-theme-color: #508bfe;
+  /* 主题次要颜色，用于背景等 */
+  --tt-theme-secondary-color: rgba(80, 139, 254, 0.2);
+}
+
+/* 暗色主题样式变量定义 */
+.dark-model {
+  /* ——————基础类—————— */
+  /* 主要颜色 */
+  --tt-primary-color: rgba(26, 26, 26, 0.65);
+  /* 次要颜色 */
+  --tt-secondary-color: #2a2a2a;
+  /* 次要透明背景色 */
+  --tt-secondary-transparent-color: rgba(0, 0, 0, 0.3);
+
+  /* ——————字体类—————— */
+  /* 主题字体色 */
+  --tt-theme-text-color: #fff;
+  /* 主要字体色 */
+  --tt-primary-text-color: rgba(255, 255, 255, 0.85);
+  /* 次要字体色 */
+  --tt-secondary-text-color: rgba(255, 255, 255, 0.6);
+  /* 残缺字体色 */
+  --tt-disable-text-color: rgba(255, 255, 255, 0.4);
+
+  /* ——————场景类—————— */
+  /* 主要背景色 */
+  --tt-main-color: #191919;
+  /* 弹窗颜色 */
+  --tt-modal-color: #212121;
+  /* 遮罩层颜色 */
+  --tt-mask-color: rgba(0, 0, 0, 0.3);
+
+  /* ——————边框类—————— */
+  /* 主要边框色 */
+  --tt-primary-border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 亮色主题 */
+.light-model {
+  /* ——————基础类—————— */
+  /* 主要颜色 */
+  --tt-primary-color: rgba(255, 255, 255, 0.55);
+  /* 次要颜色 */
+  --tt-secondary-color: rgba(230, 230, 230, 1);
+  /* 次要透明背景色 */
+  --tt-secondary-transparent-color: rgba(0, 0, 0, 0.1);
+
+  /* ——————字体类—————— */
+  /* 主题字体色 */
+  --tt-theme-text-color: #fff;
+  /* 主要字体色 */
+  --tt-primary-text-color: rgba(0, 0, 0, 0.85);
+  /* 次要字体色 */
+  --tt-secondary-text-color: rgba(0, 0, 0, 0.65);
+  /* 残缺字体色 */
+  --tt-disable-text-color: rgba(0, 0, 0, 0.25);
+
+  /* ——————场景类—————— */
+  /* 主要背景色 */
+  --tt-main-color: #f7f7f7;
+  /* 弹窗颜色 */
+  --tt-modal-color: #ffffff;
+  /* 遮罩层颜色 */
+  --tt-mask-color: rgba(255, 255, 255, 0.3);
+
+  /* ——————边框类—————— */
+  /* 主要边框色 */
+  --tt-primary-border-color: rgba(230, 230, 230, 0.25);
+}
+
+/* 颜色类，用于直接应用颜色样式 */
+/* 错误色 */
+.tt-error {
+  color: var(--tt-error-color);
+}
+/* 成功色 */
+.tt-success {
+  color: var(--tt-success-color);
+}
+/* 警告色 */
+.tt-warning {
+  color: var(--tt-warning-color);
+}
+/* 链接色 */
+.tt-link {
+  color: var(--tt-link-color);
+}
+/* 主题色 */
+.tt-theme {
+  color: var(--tt-theme-color);
+}
+/* 主题次要色 */
+.tt-theme-2 {
+  color: var(--tt-theme-secondary-color);
+}
+
+/* 主题颜色背景 */
+.tt-theme-bg {
+  background: var(--tt-theme-color);
+}
+/* 主题次要颜色背景 */
+.tt-theme-bg-2 {
+  background: var(--tt-theme-secondary-color);
+}
+/* 主要背景颜色 */
+.tt-bg {
+  background: var(--tt-primary-color);
+}
+/* 次要背景颜色 */
+.tt-bg-2 {
+  background: var(--tt-secondary-color);
+}
+/* 次要透明背景颜色 */
+.tt-bg-2-t {
+  background: var(--tt-secondary-transparent-color);
+}
+
+/* 字体颜色类 */
+/* 主要字体颜色 */
+.tt-text {
+  color: var(--tt-primary-text-color);
+}
+/* 次要字体颜色 */
+.tt-text-2 {
+  color: var(--tt-secondary-text-color);
+}
+/* 残缺字体颜色 */
+.tt-text-3 {
+  color: var(--tt-disable-text-color);
+}
+
+.tt-modal-bg {
+  background: var(--tt-modal-color);
+}
+.tt-mask-bg {
+  background: var(--tt-mask-color);
+}
+.tt-main-bg {
+  background: var(--tt-main-color);
+}
+
+/* 边框颜色类 */
+/* 主要边框颜色 */
+.tt-border {
+  border-color: var(--tt-primary-border-color);
+}
+
+/* 阴影类 */
+.tt-shadow {
+  box-shadow: 0px 0px 10px 0px rgb(0 0 0 / 50%);
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
+}

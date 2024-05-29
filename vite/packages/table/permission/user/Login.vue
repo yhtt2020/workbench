@@ -25,7 +25,7 @@
       id="myFrame"
       @load="newLogin"
       boxClass=""
-      src="https://s.apps.vip/login?response_type=code&client_id=10001&state=1"
+      :src="'https://s.apps.vip/login?response_type=code&client_id='+cid+'&state=1'"
       width="700"
       height="745"
     ></iframe>
@@ -38,29 +38,26 @@
 </template>
 
 <script setup>
-import { ref, getCurrentInstance, onMounted, toRefs } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { ref, onMounted } from "vue";
 import cache from "../../components/card/hooks/cache";
 import { useUserPermit } from "./useUserPermit";
 import XtButton from "../../ui/libs/Button/index.vue";
 import XtIfyIcon from "../../ui/new/IfyIcon/index";
 import { usePermissionStore } from "../store";
 import { storeToRefs } from "pinia";
-const permissionStore = usePermissionStore();
-const { token } = storeToRefs(permissionStore);
+// const permissionStore = usePermissionStore();
+// const { token, userInfo } = storeToRefs(permissionStore);
 const loginVisible = ref(true);
-const router = useRouter();
-const { proxy } = getCurrentInstance();
-import axios from 'axios'
 import { useGlobalStore } from "../../apps/global/store";
-import { sUrl } from '../../consts'
-import { useEnv } from '../useEnv'
-
+import { usePlat } from "../usePlat";
+import {Server} from '../../consts'
 const globalStore = useGlobalStore();
 const props = defineProps({
   close: {},
   cb: {},
 });
+
+const cid=ref(Server.clientId)
 
 onMounted(() => {
   window.addEventListener(
@@ -71,11 +68,11 @@ onMounted(() => {
       if (currentToken) {
         console.log("token :>> ", currentToken);
         cache.set("ttUserToken", currentToken);
-        token.value = currentToken;
-        await useUserPermit();
-        if(!useEnv('web')){
+        // token.value = currentToken;
+   await useUserPermit();
+        if (usePlat('client')) {
           //如果是客户端，则执行同步主线程的操作
-          syncMainUserInfo(currentToken)
+          syncMainUserInfo(currentToken);
         }
 
         loginVisible.value = false;
@@ -89,12 +86,11 @@ onMounted(() => {
 });
 const emits = defineEmits(["close"]);
 
-async function syncMainUserInfo (token) {
+async function syncMainUserInfo(token) {
   // let rs = await axios.post(sUrl('/app/loginBrowserWithToken'), {
   //   token: token
   // })
-  require('electron').ipcRenderer.send('loginBrowserWithToken',token)
-
+  require("electron").ipcRenderer.send("loginBrowserWithToken", token);
 }
 
 const loginClose = () => {

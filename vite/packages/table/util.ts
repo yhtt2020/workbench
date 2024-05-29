@@ -1,6 +1,6 @@
-import { useEnv } from "./ui/hooks/useEnv"
+import { usePlat } from "./ui/hooks/usePlat"
 let path
-if (!useEnv('web')) {
+if (usePlat('client')) {
  path = require('path')
 }
 

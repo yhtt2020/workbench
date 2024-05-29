@@ -37,7 +37,7 @@ export default {
       }
     },
     {
-      path:'/editApp',
+      path:'/editApp:exeName?',
       name:'editApp',
       component: EditApp,
       meta:{

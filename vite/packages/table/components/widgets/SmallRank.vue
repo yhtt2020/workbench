@@ -1,15 +1,17 @@
 <template>
-  <xt-container 
+  <xt-container
   :header="header"
-  :envLimit="['offline']"
+  :envLimit="['single']"
   @titleHover="showDrawer"
   v-model:customSize="customData.customSize"
-  :options="options" 
+  :options="options"
   :sizeList="sizeList"
   :customData="customData"
-  :desk="desk" 
-  ref="rankingSmallSlot" 
-  :menuList="toggleRankingList">
+  :customIndex="customIndex"
+  :desk="desk"
+  ref="rankingSmallSlot"
+  :menuList="toggleRankingList"
+  @delete="deleteCard">
     <!-- 总在线时长榜 -->
     <div class="content-box" v-if="rankIndex === 0">
       <!-- 列表 -->
@@ -42,9 +44,9 @@
   </xt-container>
   <a-drawer v-model:visible="middleShow" title="设置" placement="right" width="500">
     <div class="flex flex-col" style="color:var(--primary-text)">
-      <span   v-for="(item,index) in rankingType" :key="index"  
-      @click="getRankingType(item,index)" 
-      :class="rankIndex === index ? 'active-index':''" 
+      <span   v-for="(item,index) in rankingType" :key="index"
+      @click="getRankingType(item,index)"
+      :class="rankIndex === index ? 'active-index':''"
       class="h-12 py-3 mb-4 text-center rounded-lg pointer change xt-bg-2 show-game-time">
          {{ item.title }}
       </span>
@@ -77,11 +79,15 @@ export default {
     },
     desk:{
       type:Object
+    },
+    openWay:{
+      type:String,
+      default:'desk'
     }
   },
+  emits: ['delete'],
   data () {
     return {
-      options: {className: 'card small',title: '排行榜',type: 'smallRank'},
       sizeList:[{value:'2x2',name:'2x2'},{value:'2x4',name:'2x4'},],
       //在线时长榜
       onLineList,
@@ -115,6 +121,9 @@ export default {
   },
   methods: {
     ...mapActions(appStore,['showUserCard']),
+    deleteCard () {
+      this.$emit('delete')
+    },
     showCard(uid){
       this.showUserCard(uid)
     },
@@ -137,9 +146,15 @@ export default {
     header(){
       return {
         title:this.rankingType[this.rankIndex].title,
-        ifyIcon:'fluent:people-community-16-regular',
+        // ifyIcon:'fluent:people-community-16-regular',
+        showIcon:"/img/appLogo/rank.png",
         titleHover:true,
         titleHoverName:this.rankingType[this.rankIndex].title,
+      }
+    },
+    options(){
+      return {
+        customDel:this.openWay === 'nav' ? true : false
       }
     }
   }

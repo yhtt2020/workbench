@@ -24,8 +24,8 @@
 import { ref, computed,watch } from "vue";
 import { storeToRefs } from "pinia";
 import { appStore } from "../../../store";
-
-import GalleryModal from "../../../components/paperModal/GalleryModal.vue";
+import {DEFAULT} from '../../../js/const/default'
+import GalleryModal from "../../../components/paperModal/PaperApp.vue";
 
 const tabList = ref([
   { name: "图片", value: "img" },
@@ -39,7 +39,7 @@ const { backgroundImage,backgroundName,backgroundColor } = storeToRefs(app);
 
 // 触发打开壁纸弹窗
 const openPaperModal = () => {
-  paperModal.value.openGalleryModal();
+  paperModal.value.openPaperAppModal();
 };
 
 // 计算属性获取当前壁纸数据
@@ -47,7 +47,7 @@ const backImage = computed(() => {
   if (backgroundImage.value.path !== "") {
     return { src: backgroundImage.value.src };
   } else {
-    return { src: "https://a.apps.vip/icons/defaultBackground.jpg" };
+    return { src: DEFAULT.WALLPAPER };
   }
 });
 

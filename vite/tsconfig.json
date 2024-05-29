@@ -6,7 +6,7 @@
     "moduleResolution": "node",
     "strict": false,
     "jsx": "preserve",
-    "sourceMap": true,
+    "sourceMap": false,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "esModuleInterop": true,
@@ -25,7 +25,8 @@
     "packages/**/*.d.ts",
     "packages/table/ui/new/new.d.ts",
     "./packages/table/ui/new/new.d.ts",
-    "packages/table/ui/**/*.d.ts",
+    "packages/table/ui/**/*.d.ts"
   ],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "references": [{ "path": "./tsconfig.node.json" }],
+
 }

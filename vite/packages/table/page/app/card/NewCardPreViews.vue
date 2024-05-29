@@ -1,5 +1,12 @@
 <template>
-  <div class="main-box">
+  <template v-if="displayList.length === 0">
+    <div class="flex flex-col items-center justify-center w-full h-full">
+      <xt-ify-icon icon="fluent-emoji:magnifying-glass-tilted-right" size="56" class="mb-4" />
+      <span class="xt-text xt-font font-16">没有找到相关内容</span>
+    </div>
+  </template>
+
+  <div class="main-box" v-else>
     <template v-for="(item, index) in displayList" :key="item.name">
       <div class="box xt-bg-2">
         <xt-button
@@ -26,7 +33,7 @@
         >
           <div class="flex items-center justify-center">
             <xt-new-icon
-              icon="fluent:more-horizontal-16-regular"
+              icon="fluent:more-horizontal-16-filled"
               style="color: var(--active-text) !important"
             ></xt-new-icon>
           </div>
@@ -43,21 +50,41 @@
         <div class="left no-drag" @click="fullScreen(item)">
           <!-- 图片长度大于1 -->
           <template v-if="item.option.length > 1">
-            <div class="top">
-              <img
-                :style="[{ zoom: item.option[0].zoom + '%' }]"
-                :src="getImg(item.option[0].imgName)"
-                alt=""
-              />
-            </div>
-            <div class="bottom">
-              <img
-                class="small-cover"
-                v-for="i in item.option"
-                :src="getImg(i.imgName)"
-                alt=""
-              />
-            </div>
+            <template v-if="item.type == 'ttapp'">
+              <div class="flex items-center justify-center h-full rounded-xl">
+                <img
+                  style="width: 80px; height: 110px !important; zoom: 1"
+                  :src="item.option[0]._preview"
+                  alt=""
+                />
+              </div>
+              <div class="bottom">
+                <img
+                  class="small-cover"
+                  v-for="i in item.option"
+                  :src="i?._preview"
+                  alt=""
+                />
+              </div>
+            </template>
+
+            <template v-else>
+              <div class="top">
+                <img
+                  :style="[{ zoom: item.option[0].zoom + '%' }]"
+                  :src="getImg(item.option[0].imgName)"
+                  alt=""
+                />
+              </div>
+              <div class="bottom">
+                <img
+                  class="small-cover"
+                  v-for="i in item.option"
+                  :src="getImg(i.imgName)"
+                  alt=""
+                />
+              </div>
+            </template>
           </template>
           <!-- 图片长度等于1 -->
           <template v-else>
@@ -65,7 +92,7 @@
             <img
               v-if="item?.type == 'ttapp'"
               style="width: 80px; height: 120px"
-              :src="item?.img"
+              :src="item.option[0]._preview"
               alt=""
             />
             <img
@@ -156,6 +183,11 @@ import { taskStore } from "../../../apps/task/store";
 import { completeTask } from "../../../apps/task/task";
 // import IconSet from "../../../components/widgets/myIcons/set/index.vue";
 import { useAddCard } from "../../../hooks";
+import { useDeskStore } from "../../../components/desk/store.ts";
+import { COMPONENT_LIMIT } from "../../../permission/config";
+import { usePlat } from "../../../ui/hooks/usePlat";
+import { comCanUse } from "../../../permission/usePlat";
+import {cdnUrl} from '../../../consts'
 export default {
   emits: ["close", "addSuccess"],
   props: {
@@ -182,20 +214,27 @@ export default {
   computed: {
     ...mapWritableState(myIcons, ["iconOption", "edit"]),
     ...mapWritableState(taskStore, ["taskID", "step", "success"]),
+    ...mapWritableState(useDeskStore, ["autoOpenEdit", ""]),
+
     M01013() {
       return this.taskID == "M0101" && this.step == 3;
     },
     displayList() {
+      let mapped = [];
       if (this.keywords) {
-        return this.allList.filter((item) => {
+        mapped = this.allList.filter((item) => {
           return (
             item.cname.toLowerCase().includes(this.keywords.toLowerCase()) ||
             item.detail.toLowerCase().includes(this.keywords.toLowerCase())
           );
         });
       } else {
-        return this.cardList;
+        mapped = this.cardList;
       }
+
+      return mapped.filter((item) => {
+        return comCanUse(item.name);
+      });
     },
   },
   mounted() {},
@@ -251,8 +290,8 @@ export default {
       this.$emit("addSuccess");
       message.success("添加成功！");
     },
-    getImg(url) {
-      return `https://a.apps.vip/cards/${url}.png`;
+    getImg (url) {
+      return cdnUrl(`/cards/${url}.png`)
     },
     mySort(data, property, asc) {
       let datas = [...data];
@@ -283,18 +322,6 @@ export default {
       });
     },
     addNewCard(item) {
-      // 无界应用
-      if (item?.type == "ttapp") {
-        useAddCard({
-          name: "TTAppCard",
-          data: item.data,
-        });
-
-        this.$emit("addSuccess");
-        message.success("添加成功！");
-        return;
-      }
-
       if (item.option[1] != undefined) {
         this.fullScreen(item);
       } else {
@@ -324,6 +351,21 @@ export default {
     },
     add(item, index) {
       index = index ?? this.carouselIndex;
+
+      if (this.autoOpenEdit) {
+        this.$bus.emit("startAdjust");
+      }
+      // 无界应用
+      if (item?.type == "ttapp") {
+        useAddCard({
+          name: "TTAppCard",
+          data: item.option[index],
+        });
+
+        this.$emit("addSuccess");
+        message.success("添加成功！");
+        return;
+      }
       let res = window.$useComLimit(["web"], item.option[index].name);
       if (res) return;
       this.addCard(

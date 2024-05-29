@@ -1,14 +1,15 @@
 <template>
-  <xt-container 
-    :desk="desk" 
-    :sizeList="sizeList" 
-    :options="options" 
-    :customIndex="customIndex" 
-    :menuList="menuList" 
+  <xt-container
+    :desk="desk"
+    :sizeList="sizeList"
+    :options="options"
+    :customIndex="customIndex"
+    :menuList="menuList"
     :custom-data="customData"
     ref="cardSlot"
     :header="header"
-    v-model:customSize="customData.customSize">
+    v-model:customSize="customData.customSize"
+    @delete="deleteCard">
     <div class="mt-1 content"
          style="display: flex;flex-direction: column;justify-content: space-between;padding: 0;align-items: center"
          v-if="countdownDays.length <= 0">
@@ -166,13 +167,17 @@ export default {
     },
     desk: {
       type: Object
+    },
+    openWay:{
+      type: String,
+      default: "desk"
     }
   },
   components: {
     Widget,
     newIcon
   },
-
+  emit: ['delete'],
   data () {
     return {
       outerSettings: {
@@ -202,7 +207,8 @@ export default {
       countdownDays: [],
       header:{
         title:'纪念日',
-        ifyIcon:'fluent-calendar-16-regular',
+        // ifyIcon:'fluent:calendar-16-regular',
+        showIcon:"/img/appLogo/countdownDay.png",
       }
     }
   },
@@ -213,7 +219,8 @@ export default {
       return {
         defaultData:{
           customSize:this.customData.customSize || '2x2'
-        }
+        },
+        customDel: this.openWay === 'nav' ? true : false
       }
     },
   },
@@ -228,6 +235,9 @@ export default {
     ...mapActions(cardStore, ['removeCountdownDay', 'addCountdownDay', 'sortCountdown']),
     onPanelChange (value, mode) {},
     transDate,
+    deleteCard () {
+      this.$emit('delete')
+    },
     differenceDay (item) {
       return transDate(
         this.appDate.year + '-' + this.appDate.month + '-' + this.appDate.day,

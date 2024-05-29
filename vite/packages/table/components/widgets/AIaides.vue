@@ -2,14 +2,16 @@
   <div>
     <xt-container
       @titleHover="pushToMain"
-      :desk="desk" 
-      :sizeList="sizeList" 
-      :options="options" 
-      :customIndex="customIndex" 
+      :desk="desk"
+      :sizeList="sizeList"
+      :options="options"
+      :customIndex="customIndex"
       ref="cardSlot"
       :customData="customData"
+      :envLimit="['guest', 'offline']"
       :header="header"
-      v-model:customSize="customData.customSize">
+      v-model:customSize="customData.customSize"
+      @delete="doRemoveCard">
       <div class="mt-1">
         <a-input v-model:value="inputValue" :bordered="false" placeholder="问我任何问题" class=" xt-bg h-[48px] rounded-xl"
           @keyup.enter="enterMsg">
@@ -19,12 +21,12 @@
         </a-input>
         <div class="mt-2 mb-2 text-base xt-text">最近对话</div>
         <template v-if="recentList">
-          <div class="mb-3 xt-bg rounded-xl" v-for="index in copyNum"
+          <div class="mb-3 xt-bg rounded-xl cursor-pointer" v-for="index in copyNum"
             :style="{ height: copyNum !== 1 ? '56px' : '48px', lineHeight: copyNum !== 1 ? '56px' : '48px', }" >
             <div class="flex items-center h-full ml-4"  @click="goPage(index - 1)">
               <!-- <AiIcon icon="fluent:chat-16-regular" style="font-size: 20px;" class="mr-3 xt-text" /> -->
-              <xt-base-icon class="mr-3 text-xl xt-text"
-                :icon="recentList[index - 1]?.icon.name || 'message'"></xt-base-icon>
+              <xt-mix-icon class="mr-3 text-xl xt-text"
+                :icon="recentList[index - 1].icon.name" type="select"></xt-mix-icon>
               <div class="text-base xt-text ">{{ recentList[index - 1]?.name }}</div>
             </div>
           </div>
@@ -41,6 +43,9 @@
 </template>
 
 <script>
+import { useOpenAi } from "../../hooks/src/open/useOpenAi";
+import { useAppModal } from "../../apps/appModal/src/hook/useAppModal";
+
 import Widget from "../card/Widget.vue";
 import {
   MessageOutlined,
@@ -53,6 +58,7 @@ import { mapWritableState } from "pinia";
 import { Icon as AiIcon } from '@iconify/vue'
 export default {
   name: "AIaides",
+  emit:['delete'],
   components: {
     Widget,
     MessageOutlined,
@@ -73,6 +79,10 @@ export default {
     desk: {
       type: Object,
     },
+    openWay: {
+      type: String,
+      default: "desk",
+    }
   },
   data() {
     return {
@@ -84,7 +94,8 @@ export default {
       settingVisible: false,
       inputValue: "",
       header: {
-        ifyIcon:"fluent:bot-24-regular",
+        // ifyIcon:"fluent:bot-24-regular",
+        showIcon:"/img/appLogo/ai.png",
         title:"AI助手",
         titleHover:true,
         titleHoverName:'打开应用',
@@ -93,6 +104,14 @@ export default {
 
   },
   methods: {
+    doRemoveCard(value) {
+      if(this.openWay === 'nav'){
+        console.log(value)
+        this.$emit("delete", this.customIndex)
+      } else {
+        return
+      }
+    },
     // 跳转至AI，并创建新对话
     enterMsg() {
       if (this.inputValue == "") {
@@ -104,16 +123,19 @@ export default {
     },
     // 跳转至具体会话
     goPage(index) {
-      console.log(index);
       this.selectTopicIndex = this.recentList[index].id;
-      this.$router.push({ name: "ai" });
+      // useOpenAi()
+      const { openApp } = useAppModal('ai')
+      openApp()
+      return
     },
     pushToMain() {
-      this.$router.push({ name: "ai" });
+      const { openApp } = useAppModal('ai')
+      openApp()
     },
   },
   computed: {
-    ...mapWritableState(aiStore, ["recentList", "selectTopicIndex"]),
+    ...mapWritableState(aiStore, ["recentList", "selectTopicIndex",]),
     // 判断尺寸大小
     showSize() {
       if (this.customData.customSize) {
@@ -135,6 +157,7 @@ export default {
     },
     options () {
       return {
+        customDel: this.openWay === 'nav' ? true : false,
         defaultData:{
           customSize:this.customData.customSize || '2x2'
         }
@@ -153,72 +176,6 @@ export default {
   }
 };
 </script>
-<!-- <style lang="scss" scoped>
-.content {
-  box-sizing: border-box;
-  width: 252px;
-  margin-top: 15px;
-  display: flex;
-  flex-direction: column;
-
-  .input {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 252px;
-    height: 48px;
-    border-radius: 12px;
-    margin-top: -6px;
-    // margin: auto 5px;
-    :deep(.ant-input) {
-      color: var(--secondary-text);
-      font-size: 14px;
-      height: 40px;
-      width: 100%;
-      padding-left: 16px;
-      &::placeholder {
-
-        font-size: 14px;
-        font-weight: 400;
-        color: var(--secondary-text);
-      }
-    }
-  }
-  .ai-con {
-
-    font-size: 16px;
-    font-weight: 400;
-    // margin-top: -5px;
-  }
-  .ai-msg {
-    width: 252px;
-    // height: 48px;
-    border-radius: 12px;
-    display: flex;
-    // justify-content: center;
-    align-items: center;
-    // margin-top: 1.7%;
-    margin-bottom: 12px;
-    cursor: pointer;
-    .msg-icon {
-      font-size: 18px;
-      margin-left: 17.25px;
-      margin-right: 13.25px;
-      flex-shrink: 0;
-    }
-    .msg-title {
-
-      font-size: 16px;
-      // width: 80%;
-      color: var(--primary-text);
-      font-weight: 400;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-  }
-}
-</style> -->
 <style lang="scss" scoped>
 :deep(.ant-input-affix-wrapper) {
   font-size: 16px;

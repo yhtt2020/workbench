@@ -23,7 +23,9 @@ export const useParserCard = (data: any) => {
 const parserHeader = (props: any, card: any) => {
   let obj: any = {};
   // 解析卡片标题
-  if (props?.name) {
+  if (card?.name) {
+    obj.title = card.name;
+  } else if (props?.name) {
     obj.title = props.name;
   } else {
     obj.title = "小组件";
@@ -40,5 +42,3 @@ const parserHeader = (props: any, card: any) => {
 
   return obj;
 };
-
-

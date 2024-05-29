@@ -1,12 +1,14 @@
 <template>
-<xt-container  
+<xt-container
   :header="header"
   v-model:customSize="customData.customSize"
-  :envLimit="['web']" 
-  :options="options" 
+  :platLimit="['web']"
+  :options="options"
   :customData="customData"
-  :menu-list="menuList" 
-  :desk="desk"  >
+  :customIndex="customIndex"
+  :menu-list="menuList"
+  :desk="desk"
+  @delete="deleteCard" >
   <div @click="go"  class="top-content pointer" style="color:var(--primary-text)">
     <div><span>{{CPUGPUData.useCPU.toFixed(1)}}%</span>
       <span>
@@ -62,9 +64,9 @@ import { inspectorStore } from '../../../store/inspector'
 import {message} from 'ant-design-vue'
 import {Icon as newIcon} from '@iconify/vue'
 import { prettyDisplayBytes } from '../../../js/action/supervisory'
-import { useEnv } from "../../../ui/hooks/useEnv";
+import { usePlat } from "../../../ui/hooks/usePlat";
 let rpc
-if (!useEnv()) {
+if (usePlat('client')) {
   rpc=window.$models.rpc
 
 }
@@ -77,16 +79,19 @@ export default {
     },
     customData:{
       type:Object
+    },
+    customIndex:{
+      type:Number,
+      default:0
+    },
+    openWay:{
+      type:String,
+      default:'desk'
     }
   },
+  emit:['delete'],
   data(){
     return {
-      options:{
-        className:'card',
-        title:'性能',
-        // icon:'dashboard',
-        type:'CPUFourCard'
-      },
       CPUGPUData:{
         useCPU:0,
         useGPU:0,
@@ -107,7 +112,9 @@ export default {
       ],
       header:{
         title:'性能',
-        ifyIcon:"fluent:arrow-trending-lines-20-filled"
+        // ifyIcon:"fluent:arrow-trending-lines-20-filled"
+        showIcon:"/img/appLogo/performance.png",
+
       },
       customSize:'2x4'
 
@@ -136,7 +143,8 @@ export default {
   components:{
     Widget,
     newIcon
-  }, mounted () {
+  },
+  mounted () {
     this.startInspect()
     this.customData.customSize = '2x4'
   },
@@ -150,11 +158,19 @@ export default {
     },
     lastUp(){
       return prettyDisplayBytes(this.CPUGPUData.up)+'/s'
+    },
+    options(){
+      return {
+        customDel:this.openWay === 'nav' ? true : false
+      }
     }
 
   },
   methods:{
     ...mapActions(inspectorStore, ['startInspect', 'stopInspect']),
+    deleteCard(){
+      this.$emit('delete')
+    },
 
     go(){
       this.$router.push({name:'inspector'})

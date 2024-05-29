@@ -1,13 +1,14 @@
 <template>
   <xt-container
     v-model:customSize="customData.customSize"
-    :header="header"  
-    :envLimit="['web']"  
-    :options="options" 
-    :customData="customData" 
-    :customIndex="customIndex" 
-    style="overflow: hidden" 
-    :desk="desk">
+    :header="header"
+    :platLimit="['web']"
+    :options="options"
+    :customData="customData"
+    :customIndex="customIndex"
+    style="overflow: hidden"
+    :desk="desk"
+    @delete="deleteCard">
     <XtState v-if="myFriends.length===0"  zoom="30" :state="'null'" :text="{'null':'您还没有好友或未绑定Steam'}" bg="" style="width: 100%;height: 80%;" class="mt-2"></XtState>
     <vue-custom-scrollbar v-else :settings="scrollbarSettings" style="height: 90%">
       <div class="mt-2 my-friends"  >
@@ -56,24 +57,31 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
-      options: {
-        className: 'card small',
-        title: 'Steam好友',
-        // icon: 'steam',
-        type: 'games',
-      },
       header:{
         title:'Steam好友',
-        ifyIcon:'mdi:steam',
+        // ifyIcon:'mdi:steam',
+        showIcon:"/img/appLogo/steam.png",
+
       }
     }
   },
   computed:{
-    ...mapState(steamUserStore,['myFriends'])
+    ...mapState(steamUserStore,['myFriends']),
+    options(){
+      return {
+        customDel: this.openWay === "nav" ? true : false,
+      }
+    }
   },
   mounted(){
     this.customData.customSize = '2x2'
-  }
+  },
+  methods:{
+    deleteCard(){
+      this.$emit('delete')
+    }
+  },
+  emits:['delete']
 }
 </script>
 

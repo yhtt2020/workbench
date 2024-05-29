@@ -6,11 +6,10 @@
     :sizeList="sizeList"
     :customData="customData"
     :customIndex="customIndex"
-    :desk="desk">
+    :envLimit="['guest', 'offline']"
+    :desk="desk"
+    @delete="deleteCard">
   <div class="flex flex-col mt-1 overflow hot-box" style="height: 95%;">
-    <!-- <div ref="refreshButton" @click="refreshNow" class="pointer" style="position: absolute;left: 120px;top: 16px;">
-      <newIcon icon="fluent:arrow-counterclockwise-20-filled" style="font-size: 20px;"/>
-    </div> -->
     <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height: 100%;">
 
       <div  v-for="item in hotList" :key="item.id" @click="jump(item.title)"
@@ -57,8 +56,13 @@ export default {
     },
     desk:{
       type:Object
+    },
+    openWay:{
+      type:String,
+      default:'desk'
     }
   },
+  emit:['delete'],
   data () {
     return {
       settingsScroller: {
@@ -68,7 +72,6 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true
       },
-      options: {className: 'card',title: '微博热搜',type: 'hotSearch'},
       sizeList:[{value:'2x4',name:'2x4'},{value:'4x4',name:'4x4'}],
       hotList: [],
       refreshFlag:false
@@ -79,11 +82,20 @@ export default {
     header() {
       return {
         title:'微博热搜',
-        ifyIcon:'ri:weibo-fill',
+        // ifyIcon:'ri:weibo-fill',
+        showIcon:"/img/appLogo/weibo.png",
         refresh:{
           state:this.refreshFlag ? true : false,
           fn:this.refreshNow,
           tip:'刷新',
+        }
+      }
+    },
+    options() {
+      return {
+        customDel: this.openWay === 'nav' ? true : false,
+        defaultData: {
+          customSize: '2x4'
         }
       }
     }
@@ -99,6 +111,9 @@ export default {
   },
   methods: {
     ...mapActions(hotStore,['getData','refresh']),
+    deleteCard(){
+      this.$emit('delete')
+    },
     jump(words){
       browser.openInUserSelect('https://s.weibo.com/weibo?q='+words)
     },

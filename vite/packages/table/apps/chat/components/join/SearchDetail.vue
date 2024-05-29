@@ -1,0 +1,146 @@
+<!-- 搜索详情 -->
+<template>
+  <xt-scrollbar :y="true" style="height: 330px">
+    <div class="grid grid-cols-2 gap-3">
+      <template v-for="item in searchList">
+        <div class="flex flex-col rounded-lg p-4 xt-bg-2">
+          <div class="flex items-center mb-3">
+            <a-avatar :size="40" :src="item.icon" shape="square"></a-avatar>
+            <span
+              class="font-16-500 pl-3 truncate"
+              style="color: var(--primary-text)"
+            >
+              {{ item.name }}
+            </span>
+          </div>
+          <div class="flex justify-between">
+            <span class="font-12-400" style="color: var(--secondary-text)">
+              {{ item.memberNum }}人
+            </span>
+            <span class="font-12-400" style="color: var(--secondary-text)">
+              {{ item.joinOption === "freeAccess" ? "公开加入" : "审核加入" }}
+            </span>
+          </div>
+          <a-divider
+            style="
+              height: 2px;
+              background-color: var(--divider);
+              margin: 16px 0;
+            "
+          />
+          <xt-button
+            h="40"
+            v-if="isJoin(item)"
+            style="
+              width: 100%;
+              pointer-events: none;
+              background: var(--secondary-transp-bg) !important;
+            "
+            @click="closeJoinCom"
+          >
+            已加入
+          </xt-button>
+          <xt-button h="40" v-else style="width: 100%" @click="joinNow(item)">
+            立即加入
+          </xt-button>
+        </div>
+      </template>
+    </div>
+  </xt-scrollbar>
+</template>
+
+<script setup>
+import { storeToRefs } from "pinia";
+import { chatCommunityStore } from "../../store/chatCommunity";
+import { message } from "ant-design-vue";
+import { toRefs, computed } from "vue";
+import { CommunityAPI } from "../../api/communityAPI";
+import { useNavigationStore } from "../../../../components/desk/navigationBar/navigationStore";
+import { appStore } from "../../../../store";
+
+const comAPI = new CommunityAPI();
+
+const emit = defineEmits(["close"]);
+
+const props = defineProps({
+  list: {
+    type: Array,
+    default: () => [],
+  },
+});
+const { list } = toRefs(props);
+
+/**解构store缓存数据**/
+const chatCommunity = chatCommunityStore();
+const { myCommunity } = storeToRefs(chatCommunity);
+const useNavigation = useNavigationStore();
+const { communityNavVisible } = storeToRefs(useNavigation);
+const app = appStore();
+const { settings } = storeToRefs(app);
+
+const searchList = computed(() => {
+  const listNull = list.value.length !== 0;
+  if (listNull) {
+    return list.value;
+  }
+});
+
+// 判断是否已经进入推荐社群
+const isJoin = (data) => {
+  const result = myCommunity.value.some((item) => {
+    return Number(item?.communityInfo?.no) === Number(data?.no);
+  });
+  return result;
+};
+// 立即加入
+const joinNow = (item) => {
+  const option = { no: item.no };
+  comAPI.applyJoinCommunity(option).then((rs) => {
+    if (rs.status === 1) {
+      message.success("加入成功");
+      chatCommunity.getMyCommunity();
+      if (!settings.value.comNavVisible) {
+        return;
+      } else {
+        if (communityNavVisible.value) {
+          return;
+        } else {
+          window.$ui.confirm("是否需要开启社群导航", "", {
+            ok: () => {
+              communityNavVisible.value = true;
+              settings.value.comNavVisible = false;
+            },
+            no: () => {
+              setTimeout(() => {
+                window.$ui.confirm(
+                  "稍后可以在「系统设置/导航设置」中开启",
+                  "",
+                  {
+                    ok: () => {
+                      settings.value.comNavVisible = false;
+                    },
+                    okText: "好的",
+                    noText: null,
+                  }
+                );
+              }, 500);
+            },
+            noText: "稍后再说",
+            okText: "立即添加",
+            type: "link",
+            okButtonWidth: "95",
+            noButtonWidth: "95",
+          });
+        }
+      }
+    }
+  });
+  emit('close');
+};
+</script>
+
+<style lang="scss" scoped>
+:deep(.ps__rail-y) {
+  display: none !important;
+}
+</style>

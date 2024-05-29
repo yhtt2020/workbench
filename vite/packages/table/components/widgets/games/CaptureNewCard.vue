@@ -1,14 +1,15 @@
 <template>
-   <xt-container 
+   <xt-container
     @titleHover="enterCapture"
     v-model:customSize="customData.customSize"
     :header="header"
-    :envLimit="['web']" 
-    :menuList="menuList"  
-    :options="options" 
-    :customData="customData" 
-    :customIndex="customIndex" 
-    :desk="desk">
+    :platLimit="['web']"
+    :menuList="menuList"
+    :options="options"
+    :customData="customData"
+    :customIndex="customIndex"
+    :desk="desk"
+    @delete="deleteCard">
       <CaptureCore @selectSource="visibleSource=true"></CaptureCore>
     <div class="flex flex-col items-center justify-center">
       <span :class="{disable:!this.settings.imageSavePath}" @click="showImages" class="w-full py-3 mb-3 text-center rounded-lg s-item pointer btn-active voice-hover">我的截屏({{ images.length }})</span>
@@ -57,6 +58,10 @@ export default {
     },
     desk: {
       type: Object
+    },
+    openWay: {
+      type: String,
+      default: 'desk'
     }
   },
   data () {
@@ -76,12 +81,6 @@ export default {
           this.visibleSettings = true
         }
       }],
-      options: {
-        className: 'card',
-        title: '捕获',
-        // icon: 'video',
-        type: 'games',
-      },
       captureNewShow: false,
       screenShotAddress: 'C:\PROGRAM FILES (X86)\CLIP', // 用于接收截屏获取的地址
       shortcutKey: 'CTRL + WIN + G',
@@ -90,7 +89,9 @@ export default {
       microphoneShow: false,
       header:{
         title:'捕获',
-        ifyIcon:'fluent:resize-video-20-regular',
+        // ifyIcon:'fluent:resize-video-20-regular',
+        showIcon:"/img/appLogo/capture.png",
+
         titleHover:true,
         titleHoverName:'打开应用',
       },
@@ -98,15 +99,24 @@ export default {
     }
   },
   mounted () {
-    if (this.$useEnv()) return
+    if (this.$usePlat()) return
     this.reloadAll()
     this.customData.customSize = '2x4'
   },
   computed:{
-    ...mapState(captureStore,['images','videos','settings'])
+    ...mapState(captureStore,['images','videos','settings']),
+    options(){
+      return {
+        customDel:this.openWay === 'nav' ? true : false
+      }
+    }
   },
+  emits:['delete'],
   methods: {
     ...mapActions(captureStore,['reloadAll']),
+    deleteCard(){
+      this.$emit('delete')
+    },
     closeMicrophone () {
       this.microphoneShow = !this.microphoneShow
     },

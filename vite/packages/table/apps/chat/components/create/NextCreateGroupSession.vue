@@ -1,4 +1,4 @@
-<!-- 群聊创建下一步 -->
+<!-- 群聊创建下一步的弹窗页面 -->
 <template>
   <xt-modal v-if="nextVisible" v-model="nextVisible" custom :index="1000">
     <div class="create-header flex items-center pt-4 px-4 justify-between mb-4">
@@ -6,7 +6,7 @@
       <xt-button w="32" h="32" style="border-radius: 8px" @click="returnPrev">
         <div class="flex items-center justify-center">
           <xt-ify-icon
-            icon="fluent:chevron-left-16-regular"
+            icon="fluent:chevron-left-16-filled"
             size="20"
             class="xt-text"
           />
@@ -19,7 +19,7 @@
       <xt-button w="32" h="32" style="border-radius: 8px" @click="closeNext">
         <div class="flex items-center justify-center">
           <xt-ify-icon
-            icon="fluent:dismiss-16-regular"
+            icon="fluent:dismiss-16-filled"
             size="20"
             class="xt-text"
           />
@@ -47,7 +47,7 @@
           ></a-avatar>
         </div>
         <xt-ify-icon
-          icon="fluent:camera-16-regular"
+          icon="fluent:camera-16-filled"
           style="
             position: absolute;
             bottom: 0;
@@ -63,7 +63,8 @@
           v-model="data.modelValue"
           @getAvatar="getAvatar"
           isUpload="true"
-          :maskIndex="1010"
+          :maskIndex="(1000000000 + 2)"
+          :zIndex="(1000000000 + 1)"
         />
         <input
           type="file"
@@ -123,7 +124,7 @@
       <!-- 下拉选择群聊类型 公共、私密群、 临时-->
       <xt-select
         v-model="currentType"
-        :zIndex="2001"
+        :zIndex="(1000000000 + 1)"
         style="width: 320px"
         :list="typeList"
       ></xt-select>
@@ -166,7 +167,7 @@ import { TUIConversationService } from "@tencentcloud/chat-uikit-engine";
 import { completeTask } from "../../../task/task";
 import { useRouter } from "vue-router";
 
-const chat = window.$chat.chat;
+const chat = window.$chat?.chat;
 const router = useRouter();
 const emit = defineEmits(["return", "close"]);
 

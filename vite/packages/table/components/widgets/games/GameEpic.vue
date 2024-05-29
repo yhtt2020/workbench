@@ -1,12 +1,14 @@
 <template>
-  <xt-container 
+  <xt-container
     :header="header"
     v-model:customSize="customData.customSize"
     :customData="customData"
-    :envLimit="['web']"  
-    :options="options" 
-    :customIndex="customIndex" 
-    :desk="desk">
+    :platLimit="['web']"
+    :envLimit="['guest', 'offline', 'single']"
+    :options="options"
+    :customIndex="customIndex"
+    :desk="desk"
+    @delete="deleteCard">
 
     <HorizontalPanel style="min-width: 100%" :navList="epicTips"  v-model:selectType="epicType"  class=" drawer-item-bg" >
     </HorizontalPanel>
@@ -73,7 +75,7 @@ export default {
     newIcon,
   },
 
-  props: ["desk", "customIndex",'customData'],
+  props: ["desk", "customIndex",'customData','openWay'],
 
   data() {
     return {
@@ -81,12 +83,6 @@ export default {
         { title: "本周免费", name: "week" },
         { title: "下周预告", name: "next" },
       ],
-      options: {
-        className: "card",
-        title: "Epic喜加一",
-        // icon: 'epicgames',
-        type: "games",
-      },
 
       epicType: { title: "本周免费", name: "week" },
       simpleImage: "/public/img/test/not-data.png", // 空状态
@@ -96,14 +92,14 @@ export default {
         web: false,
         mobile: false,
         client: false,
-        offline: false,
+        single: false,
       },
 
       promotionList: [],
       unPromotionList: [],
 
       detailList: {},
-      
+
       refreshFlag:false,
     }
   },
@@ -113,12 +109,18 @@ export default {
     header(){
       return {
         title: 'Epic喜加一',
-        ifyIcon:'cib:epic-games',
+        // ifyIcon:'cib:epic-games',
+        showIcon:"/img/appLogo/epic.png",
         refresh:{
           fn:this.refreshNow,
           tip:'刷新',
           state:this.refreshFlag ? true : false
         }
+      }
+    },
+    options(){
+      return {
+        customDel:this.openWay === 'nav' ? true : false
       }
     }
   },
@@ -131,9 +133,12 @@ export default {
     }
     this.customData.customSize = '2x4'
   },
-
+  emit:['delete'],
   methods: {
     ...mapActions(epicStore,['getEpicData','refresh']),
+    deleteCard(){
+      this.$emit('delete')
+    },
     // 点击刷新
     refreshNow(){
       this.refreshFlag = true

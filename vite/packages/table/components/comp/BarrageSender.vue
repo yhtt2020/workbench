@@ -28,7 +28,8 @@ import { teamStore } from '../../store/team'
 import {completeTask} from "../../apps/task/task"
 import { appStore } from '../../store'
 import GradeSmallTipVue from '../GradeSmallTip.vue'
-import {useGlobalStore} from '../../apps/Global/store'
+import { reconnect } from '../../permission/user/useUserPermit'
+import { usePermissionStore } from '../../permission/store'
 export default {
   name: 'BarrageSender',
   components:{
@@ -45,19 +46,23 @@ export default {
   mounted () {
     console.log('this.currentChannel.name :>> ', this.currentChannel.name);
 
-if (!this.$useEnv()) {
+if (!this.$usePlat()) {
   this.CONST = tsbApi.barrage.CONST
 }
   },
   computed:{
     ...mapState(teamStore, ['my','myTeamNo','myTeam']),
-    ...mapWritableState(appStore,['userInfo','lvInfo']),
-    ...mapWritableState(useGlobalStore,['loginVisible']),
+    ...mapWritableState(appStore,['userInfo','lvInfo', 'loginVisible']),
+    ...mapWritableState(usePermissionStore,['currentEnv']),
   },
   methods:{
     ...mapActions(teamStore,['updateMy']),
     async postBarrage () {
-      if(!window.$useEnv('guest')){
+      if(window.$useEnv('guest')){
+        this.loginVisible = true
+      }else if(this.currentEnv == 'offline'){
+        reconnect()
+      }else{
         if(this.lvInfo.lv < 1){
           this.checkLevel()
           return
@@ -107,17 +112,6 @@ if (!this.$useEnv()) {
             message.error('弹幕发送失败，失败原因：' + rs)
           }
         }
-      }else{
-
-        window.$ui.confirm("登录提示", '目前处于游客模式，请登录后体验完整功能。', {
-          ok: () => {
-            this.loginVisible = true
-          },
-          okText: "立即登录",
-          noText: "暂不登录",
-          okButtonWidth: '95',
-          noButtonWidth: '95',
-        });
       }
 
     },

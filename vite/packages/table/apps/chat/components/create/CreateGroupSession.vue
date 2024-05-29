@@ -1,4 +1,4 @@
-<!-- 创建群聊会话 -->
+<!-- 创建群聊会话弹窗页面 -->
 <template>
   <xt-modal
     v-if="createGroupVisible"
@@ -52,7 +52,6 @@ const openCreateGroupSession = () => {
         const mapList = _.map(filterData, function (item) {
           return item.profile;
         });
-        console.log("测试", mapList);
         currentFriendList.value = mapList;
       },
     });

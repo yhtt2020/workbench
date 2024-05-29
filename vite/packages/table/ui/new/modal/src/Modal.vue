@@ -2,45 +2,50 @@
   <Teleport to="body">
     <!-- 弹窗 -->
     <xt-drag
-      :test="false"
-      v-model:x="x"
-      v-model:y="y"
-      :index="modalIndex"
-      :collision="false"
       v-if="modelValue"
-      @update:data="resizeModel"
+      :x="currentX"
+      :y="currentY"
+      :index="modalIndex"
       :handle="handle"
-      :disabled="handle ? false : true"
+      :disabled="disabledDrag"
+      :boundary="true"
+      :test="false"
+      :collision="false"
+      :resetPosition="false"
+      @update:x="updateX($event)"
+      @update:y="updateY($event)"
+      @update:data="resizeModel"
     >
       <div
         @click="modalClick"
         :class="[custom ? '' : boxClass]"
         ref="modal"
-        class="no-drag flex flex-col text-base rounded-xl xt-modal xt-shadow xt-text overflow-hidden"
+        class="relative flex flex-col overflow-hidden text-base no-drag rounded-xl xt-modal xt-shadow xt-text"
         style="
           border: 1px solid rgba(255, 255, 255, 0.1);
           box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+          max-width: 100vw !important;
+          max-height: 100vh !important;
         "
         :style="[
-          modalStyle,
+          modalSizeStyle,
           {
             opacity: modalVisible ? '1' : '0',
           },
         ]"
       >
+        <!-- 自定义 -->
         <slot v-if="custom"></slot>
-        <template v-else>
-          <!-- 标题和左右内容 -->
-          <div class="flex flex-1 w-full">
-            <!-- 左侧 -->
-            <nav>
-              <slot name="nav"> </slot>
-            </nav>
-            <!-- 右侧 -->
-            <main class="flex flex-col flex-1 h-full">
-              <!-- 主体头部 -->
+        <div v-else class="flex w-full h-full overflow-hidden">
+          <!-- 左侧 -->
+          <nav class="h-full">
+            <slot name="nav"> </slot>
+          </nav>
+          <div class="flex flex-col flex-1 w-full">
+            <!-- 头部 -->
+            <slot name="header">
               <header
-                class="relative flex items-center xt-modal-header"
+                class="relative flex items-center w-full no-drag xt-modal-header"
                 :class="headerClass"
                 v-if="header"
                 @dblclick="doubleClick"
@@ -83,11 +88,30 @@
                     <xt-new-icon
                       :icon="
                         isMaximize
-                          ? 'fluent:full-screen-minimize-16-filled'
+                          ? 'fluent:full-screen-minimize-16-regular'
                           : 'fluent:full-screen-maximize-16-regular'
                       "
                       size="16"
                       class="xt-text-2"
+                    />
+                  </xt-button>
+                  <!-- 全屏 -->
+                  <xt-button
+                    class="ml-3 tt-modal-button"
+                    w="32"
+                    h="32"
+                    radius="8"
+                    @click="fullscreen"
+                    v-if="full"
+                  >
+                    <xt-mix-icon
+                      :icon="
+                        isFullScreen
+                          ? 'fluent:arrow-minimize-16-regular'
+                          : 'fluent:arrow-maximize-16-regular'
+                      "
+                      boxSize="32"
+                      style="background: none"
                     />
                   </xt-button>
                   <!-- 关闭按钮 -->
@@ -106,42 +130,35 @@
                   </xt-button>
                 </div>
               </header>
-              <!-- 主体内容区 -->
-              <vue-custom-scrollbar
-                :settings="{
-                  swipeEasing: true,
-                  suppressScrollY: false,
-                  suppressScrollX: true,
-                  wheelPropagation: false,
-                }"
-                style="position: relative"
-                :style="scrollbarPadding"
-                class="flex-1"
-                :class="mainClass"
-              >
-                <slot>
-                  <McDonalds />
-                </slot>
-              </vue-custom-scrollbar>
+            </slot>
+            <!-- 内容区 -->
+            <main
+              ref="scrollbar"
+              class="flex-1 h-full overflow-hidden"
+              :class="mainClass"
+            >
+              <slot>
+                <McDonalds />
+              </slot>
             </main>
+            <!-- 底部 -->
+            <slot name="footer">
+              <footer class="flex items-center justify-end mt-4" v-if="footer">
+                <xt-button w="64" h="40" @click="onNo()">
+                  <span class="xt-text-2">{{ noName }}</span>
+                </xt-button>
+                <xt-button
+                  w="64"
+                  h="40"
+                  class="ml-3"
+                  type="theme"
+                  @click="onOk()"
+                  >{{ okName }}</xt-button
+                >
+              </footer>
+            </slot>
           </div>
-          <!-- 底部 -->
-          <slot name="footer">
-            <footer class="flex items-center justify-end mt-4" v-if="footer">
-              <xt-button w="64" h="40" @click="onNo()">
-                <span class="xt-text-2">{{ noName }}</span>
-              </xt-button>
-              <xt-button
-                w="64"
-                h="40"
-                class="ml-3"
-                type="theme"
-                @click="onOk()"
-                >{{ okName }}</xt-button
-              >
-            </footer>
-          </slot>
-        </template>
+        </div>
       </div>
     </xt-drag>
     <!-- 遮罩 -->
@@ -158,7 +175,7 @@
       v-if="transitionVisible"
       :style="transitionStyle"
       style="transition: all 0.1s"
-      class="fixed xt-modal rounded-xl flex justify-center items-center px-2 cursor-pointer"
+      class="fixed flex items-center justify-center px-2 cursor-pointer xt-modal rounded-xl"
       @click="minimize"
     >
       <slot name="minimize-left"></slot>
@@ -176,6 +193,7 @@
 
 <script setup lang="ts">
 import McDonalds from "./McDonalds.vue";
+
 import {
   ref,
   watch,
@@ -190,11 +208,11 @@ import {
 import { useWindowSize } from "../../drag/src/hooks/useWindowSize";
 // import { vElementSize } from "../../drag/src/hooks/useElementSize";
 import { nanoid } from "nanoid";
-import { useDoubleClick } from "../../../../hooks";
+import PerfectScrollbar from "perfect-scrollbar";
 import { ModalProps } from "./types";
 
 const { proxy }: any = getCurrentInstance();
-
+// 类型注释在types.ts文件中
 const props = withDefaults(defineProps<ModalProps>(), {
   modelValue: false,
   title: "",
@@ -213,17 +231,45 @@ const props = withDefaults(defineProps<ModalProps>(), {
   beforeMount: () => true,
   beforeUnmount: () => true,
   custom: false,
-  scrollbarPadding: { paddingRight: "0px", paddingLeft: "0px" },
+  scrollbarStyle: { paddingRight: "0px", paddingLeft: "0px" },
   type: null,
   min: false,
   max: false,
+  full: false,
   handle: "",
   name: null,
+  isFullScreen: false,
+  isMaximize: false,
+  isScrollbar: true,
 });
 const { esc, modelValue, beforeMount, beforeUnmount, type } = toRefs(props);
 
-const emits = defineEmits(["ok", "no", "update:modelValue", "close", "max"]);
-
+const emits = defineEmits([
+  // 双向绑定弹窗显示状态
+  "update:modelValue",
+  // 双向绑定弹窗全屏状态
+  "update:isFullScreen",
+  // 双向绑定弹窗最大化状态
+  "update:isMaximize",
+  // 弹窗关闭事件
+  "close",
+  // 弹窗最小化事件
+  "minimize",
+  // 弹窗最大化事件
+  "maximize",
+  // 弹窗全屏事件
+  "fullscreen",
+  // 弹窗初始化事件
+  "init",
+  "ok",
+  "no",
+]);
+/**
+ * 弹窗变量
+ */
+// 弹窗滚动条
+const scrollbar: any = ref(null);
+const perfectScrollbar: any = ref(null);
 // 弹窗元素
 const modal: any = ref(null);
 // 弹窗定位
@@ -235,15 +281,9 @@ const oldY = ref(0);
 const modalWidth = ref(0);
 const modalHeight = ref(0);
 // 弹窗层级
-const INDEX = 999999999;
+const INDEX = 99999;
 const currentModalIndex = ref(0);
-// 当前弹窗层级
-const modalIndex = computed(() => {
-  if (isMinimize.value) {
-    return -999;
-  }
-  return currentModalIndex.value;
-});
+
 // 旧弹窗大小
 const oldWidth = ref(0);
 const oldHeight = ref(0);
@@ -255,6 +295,22 @@ const transitionVisible = ref(false);
 const isMinimize = ref(false);
 // 最大化
 const isMaximize = ref(false);
+// 底部导航栏元素
+let bottomBar : any = ref(null)
+watch(
+  () => isMaximize.value,
+  (val) => {
+    emits("update:isMaximize", val);
+  }
+);
+// 全屏
+const isFullScreen = ref(false);
+watch(
+  () => isFullScreen.value,
+  (val) => {
+    emits("update:isFullScreen", val);
+  }
+);
 // 视图大小
 const windowHeight = ref(0);
 const windowWidth = ref(0);
@@ -262,56 +318,83 @@ const windowWidth = ref(0);
 const modalName = ref(nanoid(4));
 // 导航高度
 let barHeight = 0;
+
+// 禁用拖拽状态
+const disabledDrag = computed(() => {
+  if (isFullScreen.value || isMaximize.value) return true;
+  return props.handle ? false : true;
+});
+// 当前弹窗层级
+const modalIndex = computed(() => {
+  if (isMinimize.value) {
+    return -999;
+  }
+  return currentModalIndex.value;
+});
+// 弹窗实际x坐标
+const currentX = computed(() => {
+  if (modalWidth.value >= windowWidth.value) {
+    return 0;
+  }
+  // 如果是手动拖拽
+  if (props.handle) {
+    return x.value;
+  } else {
+    return getModalPosition.value.left;
+  }
+});
+// 弹窗实际y坐标
+const currentY = computed(() => {
+  if (modalHeight.value >= windowHeight.value) {
+    return 0;
+  }
+  // 如果是手动拖拽
+  if (props.handle) {
+    return y.value;
+  } else {
+    return getModalPosition.value.top;
+  }
+});
+
+// 头部导航栏高度
+const topBarHeight = computed(() => {
+  // 顶部导航栏开启时
+  // if (){}
+  if (bottomBar.value) barHeight = bottomBar.value.clientHeight; 
+  return 40;
+});
+
+// 底部导航栏高度
+const bottomBarHeight = computed(() => {
+  // 底部导航栏开启时
+  // if (){}
+  if (bottomBar.value) barHeight = bottomBar.value.clientHeight; 
+  return 100 + topBarHeight.value;
+});
+
 // 弹窗样式
-const modalStyle = computed(() => {
+const modalSizeStyle = computed(() => {
+  let obj: any = {};
   if (isMaximize.value) {
-    return {
+    obj = {
+      borderRadius: "0px",
+      width: "100vw",
+      height: `calc(100vh - ${bottomBarHeight.value}px)`,
+    };
+  } else if (isFullScreen.value) {
+    obj = {
       borderRadius: "0px",
       width: "100vw",
       height: "100vh",
     };
+  } else {
+    obj = {
+      borderRadius: "12px",
+      height: "auto",
+    };
   }
-
-  // x.value = oldX.value;
-  // y.value = oldY.value;
-  return {
-    borderRadius: "12px",
-    height: "auto",
-  };
+  return obj;
 });
-let intervalId;
-// 初始化位置
-function initPosition() {
-  intervalId = setInterval(() => {
-    // 数据未加载完成时
-    if (windowHeight.value <= 0 || modalHeight.value <= 0) return;
-    let top;
-    let left;
-    if (props.mask) {
-      top = (windowHeight.value - modalHeight.value) / 2;
-      left = (windowWidth.value - modalWidth.value) / 2;
-    } else {
-      top = (windowHeight.value - barHeight - modalHeight.value) / 2;
-      left = (windowWidth.value - modalWidth.value) / 2;
-    }
-
-    y.value = top;
-    x.value = left;
-    oldX.value = left;
-    oldY.value = top;
-    oldHeight.value = modalHeight.value;
-    oldWidth.value = modalWidth.value;
-    modalVisible.value = true;
-    clearInterval(intervalId); // 数据加载完成后取消定时器
-  }, 1);
-}
-
-// 更新弹窗大小
-const resizeModel = (data) => {
-  modalWidth.value = data.width;
-  modalHeight.value = data.height;
-};
-
 // 弹窗过渡样式
 const transitionStyle = computed(() => {
   // 最小化
@@ -322,16 +405,6 @@ const transitionStyle = computed(() => {
       minWidth: "50px",
       height: "50px",
       zIndex: props.index + 1,
-    };
-  }
-  // 最大化
-  else if (isMaximize.value) {
-    return {
-      top: "0",
-      left: "0",
-      width: "100vw",
-      height: "100vh",
-      zIndex: props.index - 1,
     };
   } else {
     return {
@@ -344,46 +417,145 @@ const transitionStyle = computed(() => {
   }
 });
 
+/** 获取弹窗位置 */
+const getModalPosition = computed(() => {
+  let top;
+  let left;
+
+  // 最大化时
+  if (isMaximize.value) {
+    top = 0;
+    left = 0;
+  }
+  // 全屏时
+  else if (isFullScreen.value) {
+    top = 0;
+    left = 0;
+  }
+  // 有遮罩层时
+  else if (props.mask) {
+    top = (windowHeight.value - modalHeight.value) / 2;
+    left = (windowWidth.value - modalWidth.value) / 2;
+  }
+  // 无遮罩层的情况
+  else {
+    top = (windowHeight.value - barHeight - modalHeight.value) / 2;
+    left = (windowWidth.value - modalWidth.value) / 2;
+  }
+
+  return {
+    top,
+    left,
+  };
+});
+
+let intervalId;
+// 初始化位置
+const initPosition = () => {
+  intervalId = setInterval(() => {
+    // 数据未加载完成时
+    if (windowHeight.value <= 0 || modalHeight.value <= 0) return;
+    const { left, top } = getModalPosition.value;
+    y.value = top;
+    x.value = left;
+    oldX.value = left;
+    oldY.value = top;
+    oldHeight.value = modalHeight.value;
+    oldWidth.value = modalWidth.value;
+    modalVisible.value = true;
+    clearInterval(intervalId); // 数据加载完成后取消定时器
+
+    if (props.isFullScreen == true) {
+      fullscreen();
+    } else if (props.isMaximize == true) {
+      maximize();
+    }
+    emits("init");
+  }, 1);
+};
+// 更新弹窗大小
+const resizeModel = (data) => {
+  modalHeight.value = data.height;
+  modalWidth.value = data.width;
+};
+/** 更新x坐标 */
+const updateX = (val) => {
+  // if (val < 0) {
+  //   x.value = 0;
+  // } else if (val > windowWidth.value - modalWidth.value) {
+  //   x.value = windowWidth.value - modalWidth.value;
+  // } else {
+  x.value = val;
+  // }
+};
+/** 更新y坐标 */
+const updateY = (val) => {
+  // if (val < 0) {
+  //   y.value = 0;
+  // } else if (val > windowHeight.value - modalHeight.value) {
+  //   y.value = windowHeight.value - modalHeight.value;
+  // } else {
+  y.value = val;
+  // }
+};
 /** 最小化实现 */
 const minimize = () => {
-  transitionVisible.value = true;
-  modalVisible.value = false;
+  isMinimize.value = !isMinimize.value;
+  emits("minimize", isMinimize.value);
 
-  setTimeout(() => {
-    isMinimize.value = !isMinimize.value;
-    setTimeout(() => {
-      if (!isMinimize.value) {
-        modalVisible.value = true;
-        transitionVisible.value = false;
-      }
-    }, 100);
-  }, 1);
+  modalVisible.value = false;
+  transitionVisible.value = true;
+
+  if (!isMinimize.value) {
+    modalVisible.value = true;
+    transitionVisible.value = false;
+  }
 };
 
 /** 最大化 */
 const maximize = () => {
-  transitionVisible.value = true;
-  modalVisible.value = false;
+  if (isFullScreen.value) {
+  } else if (!isMaximize.value) {
+    oldY.value = y.value;
+    oldX.value = x.value;
+  }
+  isFullScreen.value = false;
 
-  setTimeout(() => {
-    isMaximize.value = !isMaximize.value;
-    emits("max", isMaximize.value);
-    if (isMaximize.value) {
-      oldX.value = x.value;
-      oldY.value = y.value;
-      x.value = 0;
-      y.value = 0;
-    }
-    if (!isMaximize.value) {
+  isMaximize.value = !isMaximize.value;
+  emits("maximize", isMaximize.value);
+  if (isMaximize.value) {
+    x.value = 0;
+    y.value = topBarHeight.value;
+  } else {
+    x.value = oldX.value;
+    y.value = oldY.value;
+    setTimeout(() => {
       x.value = oldX.value;
       y.value = oldY.value;
-    }
-    setTimeout(() => {
-      modalVisible.value = true;
-      transitionVisible.value = false;
-    }, 100);
-  }, 1);
+    });
+  }
 };
+
+/** 全屏 */
+const fullscreen = () => {
+  if (isMaximize.value) {
+  } else if (!isFullScreen.value) {
+    oldY.value = y.value;
+    oldX.value = x.value;
+  }
+  isMaximize.value = false;
+
+  isFullScreen.value = !isFullScreen.value;
+  emits("fullscreen", isFullScreen.value);
+  if (isFullScreen.value) {
+    x.value = 0;
+    y.value = 0;
+  } else {
+    x.value = oldX.value;
+    y.value = oldY.value;
+  }
+};
+
 /** 模态框点击事件 */
 const modalClick = () => {
   getModalFouls();
@@ -393,23 +565,21 @@ const doubleClick = (event: any) => {
   let res = event.target?.closest(".tt-modal-button");
   if (res) return;
   maximize();
-}
-// 头部框双击事件
-// const { doubleClick } = useDoubleClick(d);
+};
 
 /** 模态框获取焦点 */
 const getModalFouls = () => {
   // 如果当前弹窗已经是焦点弹窗则不处理
   if (currentModalIndex.value == INDEX) return;
-  console.log("2222 :>> ", 2222);
   // 先通知所有弹窗移除焦点
   proxy.$bus.emit("modalBlur");
 
   // 提升当前弹窗层级
-  currentModalIndex.value = INDEX;
+  setTimeout(() => {
+    currentModalIndex.value = INDEX;
+  }, 3);
 };
 
-/** 通用默认底部按钮事件 */
 // 关闭 or 取消
 const onNo = () => {
   if (!beforeUnmount.value()) return;
@@ -423,6 +593,7 @@ const onOk = () => {
   emits("ok");
   onNo();
 };
+
 // esc关闭
 const onEsc = (event) => {
   if (props.esc && event.keyCode === 27) {
@@ -430,14 +601,12 @@ const onEsc = (event) => {
   }
 };
 
-// 挂载前
-onBeforeMount(() => {});
-
 // 初始化
 const init = () => {
   // 获取菜单高度
-  const bottomBar = document.getElementsByClassName("xt-main-bottom-bar")[0];
-  if (bottomBar) barHeight = bottomBar.clientHeight;
+  bottomBar.value = document.getElementsByClassName("xt-main-bottom-bar")[0];
+  if (bottomBar.value) barHeight = bottomBar.value.clientHeight;
+  // else if () {}
 
   // 初始化弹窗位置
   initPosition();
@@ -447,10 +616,8 @@ const init = () => {
     currentModalIndex.value = props.index;
   });
 
-  setTimeout(() => {
-    // 获取弹窗焦点
-    getModalFouls();
-  }, 1);
+  // 获取弹窗焦点
+  getModalFouls();
 
   // 属于单例弹窗
   if (props.type) {
@@ -474,7 +641,15 @@ const init = () => {
       capture: true,
     });
   }
+
+  setTimeout(() => {
+    if (!scrollbar.value || !props.isScrollbar) return;
+    perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
+  }, 50);
 };
+
+// 挂载前
+onBeforeMount(() => {});
 
 // 挂载后
 onMounted(() => {
@@ -485,6 +660,7 @@ onMounted(() => {
 
   init();
 });
+
 // 卸载前
 onBeforeUnmount(() => {
   // 注销弹窗失去焦点监听
@@ -500,14 +676,21 @@ onBeforeUnmount(() => {
     });
   }
 });
+
 // 抛出事件
 defineExpose({
   // 手动关闭
   close: onNo,
-  // 手动最小化
-  maximize,
   // 手动最大化
+  maximize,
+  // 手动最小化
   minimize,
+  // 手动全屏
+  fullscreen,
+  // 是否最大化
+  isMaximize,
+  // 是否最小化
+  isMinimize,
 });
 </script>
 

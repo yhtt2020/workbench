@@ -1,12 +1,14 @@
 <template>
-  <xt-container  
+  <xt-container
     v-model:customSize="customData.customSize"
     :header="header"
-    :envLimit="['web']" 
-    :options="options" 
-    :menu-list="menuList" 
+    :platLimit="['web']"
+    :options="options"
+    :menu-list="menuList"
     :customData="customData"
-    :desk="desk">
+    :customIndex="customIndex"
+    :desk="desk"
+    @delete="deleteCard">
     <div @click="go" class="content pointer" style="color:var(--primary-text)">
       <div><a-progress type="circle"  stroke-color="#FF9C00" :percent="CPUData.useCPU" :strokeWidth="10" :width="105" style="margin-top: 28px">
         <template #format="percent">
@@ -56,12 +58,6 @@ export default {
   name: "SmallCPUCard",
   data(){
     return {
-      options:{
-        className:'card small',
-        title:'CPU',
-        // icon:'cpu',
-        type:'smallCPUCard'
-      },
       CPUData:{
         useCPU:0,
         warmCPU:0,
@@ -80,10 +76,13 @@ export default {
       ],
       header:{
         title: 'CPU',
-        ifyIcon:'fluent:arrow-trending-lines-20-filled'
+        // ifyIcon:'fluent:arrow-trending-lines-20-filled'
+        showIcon:"/img/appLogo/performance.png",
+
       }
     }
   },
+  emit:['delete'],
   components:{
     Widget,
     newIcon
@@ -94,12 +93,25 @@ export default {
     },
     customData:{
       type:Object
+    },
+    customIndex:{
+      type:Number
+    },
+    openWay:{
+      type:String,
+      default:'desk'
     }
   },
   computed:{
     ...mapWritableState(inspectorStore,['displayData','aidaData']),
-    ...mapWritableState(appStore,['saving'])
-  }, mounted () {
+    ...mapWritableState(appStore,['saving']),
+    options(){
+      return {
+        customDel:this.openWay === 'nav' ? true : false
+      }
+    }
+  },
+  mounted () {
     this.startInspect()
     this.customData.customSize = '2x2'
   },
@@ -130,6 +142,9 @@ export default {
     initCanvas,
     go(){
       this.$router.push({name:'inspector'})
+    },
+    deleteCard(){
+      this.$emit('delete')
     }
   }
 }

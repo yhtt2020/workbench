@@ -2,8 +2,10 @@
   <xt-container 
     :customSize="'2x2'"
     :options="{ ...this.options,bg:this.isColor}" 
-    :customIndex="customIndex" :customData="customData" 
-    :desk="desk" :showRightIcon="!this.$props.isTop" 
+    :customIndex="customIndex" 
+    :customData="customData" 
+    :desk="desk" 
+    :showRightIcon="!this.$props.isTop" 
     ref="clockSlot"   
     :menuList="menuList"  
     @delete='clearTime'>
@@ -98,17 +100,16 @@
       },
       isTop:{
         type: Boolean,
+      },
+      openWay:{
+        type: String,
+        default: 'desk'
       }
     },
     data(){
       return {
         // 设置
         settingVisible:false,
-        options:{
-          defaultData:{
-            customSize:'2x2'
-          }
-        },
         menuList: [
             {
                 icon: 'shezhi1',
@@ -123,18 +124,28 @@
     },
     mounted(){
       this.getTomatoNum();
+      console.log(this.desk,'tomato')
       // this.customData.customSize = '2x2';
       this.init(this.customData,this.customIndex,this.desk);
     },
     computed: {
       ...mapWritableState(tomatoStore, ['hours','minutes','seconds','running','isPause','isColor','isFullScreen','isFull','isState','tomatoNum']),
+      options() {
+        return {
+          customDel: this.openWay === 'nav' ? true : false
+        }
+      }
     },
+    emit:['delete'],
     methods: {
       ...mapActions(tomatoStore, ['onPlay','onStop','onPause','onFullScreen','getTomatoNum','onChange','init']),
       ...mapActions(cardStore, ['updateCustomData']),
       // 删除 清除定时器
       clearTime() {
         this.onStop();
+        if(this.openWay === 'nav'){
+          this.$emit('delete');
+        }
       },
       // 计算今日番茄时间
       countToday(num){

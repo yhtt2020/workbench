@@ -42,7 +42,7 @@ const newsMsgList = defineProps({
 })
 const goNews = () => {
 
-  if (window.$useEnv()) {
+  if (!window.$usePlat('client')) {
     window.open(newsMsgList.newsMsgList.url, '_blank')
     return
   }

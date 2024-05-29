@@ -1,57 +1,107 @@
 <script setup lang="ts">
-// import dbStorage from "../../../../../store/dbStorage";
-import { ref, onMounted, computed } from "vue";
+import {
+  ref,
+  onMounted,
+  computed,
+  onUnmounted,
+  nextTick,
+  getCurrentInstance,
+} from "vue";
 import { useParserCard } from "./parser";
 import WuJie from "../wujie/WuJie.vue";
 import { useTTAppStore } from "../../store";
-import { storeToRefs } from "pinia";
+import { mapActions, storeToRefs } from "pinia";
+import { useCardSize } from "../../../../../hooks";
+import PerfectScrollbar from "perfect-scrollbar";
+import { appsStore as useAppStore } from "../../../../../store/apps";
+import { cardValidate } from "../../../../appCenter/src/views/developer/hooks/validate";
+import { useGridToWidth, useGridToHeight } from "../../../../../hooks";
+const { proxy }: any = getCurrentInstance();
+
+const appsStore: any = useAppStore();
+const scrollbar: any = ref(null);
+const perfectScrollbar: any = ref(null);
 
 const ttappStore: any = useTTAppStore();
 const { modal } = storeToRefs(ttappStore);
 const loading = ref(true);
 // 卡片头部
 const cardHeader: any = ref({});
-// 卡片大小
-const customSize = ref("2x2");
-const wujie: any = ref({});
-
+const sizeList = ref();
 const data = ref();
 // 卡片状态 无数据、加载中、正常 对应的值分别为 noData、loading、normal
-
-const status = ref("loading");
-onMounted(async () => {
-  loading.value = false;
-  // 无数据情况
-  if (!props.customData?.id) return;
+/** 卡片数据初始化 */
+const init = (): any => {
+  data.value = false;
+  // 开始加载
+  loading.value = true;
+  // 存储ID
+  if (!props.customData?.parentId) return;
   // 查询数据
-  let res = ttappStore.select(props.customData.id);
-  console.log("res :>> ", res);
+  let res = cardValidate(props.customIndex, props.customData?.parentId);
   if (!res) return;
+  console.log("res :>> ", res);
+  data.value = res;
   // 解析数据
   let options = useParserCard(res);
-  data.value = res;
-  customSize.value = options.customSize;
   cardHeader.value = options.header;
+
+  if (props.customData.sizeList) {
+    sizeList.value = props.customData.sizeList.map((item: any) => {
+      return {
+        value: item,
+        name: item,
+      };
+    });
+  }
+  // 加载完成
   loading.value = false;
+};
+
+onMounted(async () => {
+  proxy.$bus.on("updateTTApp", (id: string) => {
+    const parentId = props.customData?.parentId;
+    // 非自己更新无需操作
+    if (parentId != id) {
+      return;
+    }
+    let res = init();
+    if (!res) return;
+  });
+  let res = init();
+  if (!res) return;
+
+  // 是否加载滚动条
+  nextTick(() => {
+    const scroll = props.customData.scroll;
+    if (scroll === false) return;
+    perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {
+      wheelPropagation: false,
+    });
+  });
+  injectProps.value.api = await ttappStore.injectApi(data.value.id);
 });
+
 const props = defineProps({
   customIndex: {},
   customData: {
     type: Object,
+    required: true,
   },
 });
 
 const options = ref({
   // bg: "pink",
+  resize: props.customData?.resize,
 });
-
+const refreshFn = () => {
+  loading.value = true;
+  setTimeout(() => {
+    loading.value = false;
+  }, 1);
+};
 const refresh = ref({
-  fn: () => {
-    loading.value = true;
-    setTimeout(() => {
-      loading.value = false;
-    }, 1);
-  },
+  fn: refreshFn,
   newIcon: "fluent:arrow-clockwise-16-regular",
   tip: "刷新",
   title: "刷新",
@@ -63,31 +113,84 @@ const header = computed(() => {
     refresh: refresh.value,
   };
 });
+
 const menus = computed(() => {
   let list = [
     refresh.value,
     {
       newIcon: "fluent:open-16-regular",
-      title: "弹窗内打开",
+      title: "进入主应用",
+      fn: () => {
+        ttappStore.enterApp(data.value.id);
+      },
+      disabled: !data.value?.main,
+    },
+    {
+      newIcon: "fluent:window-16-regular",
+      title: "弹窗打开",
       fn: () => {
         modal.value.id = data.value.id;
+        modal.value.url = props.customData._entry;
+
+        const size = props.customData.customSize.split("x");
+        modal.value.width = useGridToWidth(size[0]);
+        modal.value.height = useGridToHeight(size[1]);
+        console.log('   modal.value.width  :>> ',    modal.value.width );
+        modal.value.size = props.customData.customSize;
         modal.value.visible = true;
+      },
+      disabled: data.value?.modal,
+    },
+    {
+      title: "设置",
+      newIcon: "fluent:settings-16-regular",
+    },
+    {
+      newIcon: "fluent:open-16-regular",
+      title: "清空缓存",
+      fn: () => {
+        ttappStore.clearData(data.value.id);
+        refreshFn();
       },
     },
   ];
-  console.log("list :>> ", list);
   return list;
 });
+
+const container = ref({
+  // 头部
+  header: header.value,
+  // 右键菜单
+  menus: menus.value,
+  // 配置对象
+  options: options.value,
+  // 卡片尺寸
+});
+
+const resize = () => {
+  // perfectScrollbar.value.update();
+  // scrollbar.value.scrollTop += 1;
+  // perfectScrollbar.value.update();
+};
+onUnmounted(() => {
+  proxy.$bus.off("updateTTApp");
+  perfectScrollbar.value?.destroy();
+  perfectScrollbar.value = null;
+});
+
+const injectProps = ref({});
 </script>
 
 <template>
   <xt-container
     :customIndex="customIndex"
     :customData="customData"
-    :header="header"
-    :menuList="menus"
-    :options="options"
-    :customSize="customData.size"
+    :header="container.header"
+    :menuList="container.menus"
+    :options="container.options"
+    :sizeList="sizeList"
+    @resize="resize"
+    v-model:customSize="customData.customSize"
     v-if="data"
   >
     <template #header-left v-if="!loading">
@@ -98,14 +201,20 @@ const menus = computed(() => {
         {{ data?.name }}
       </div>
     </template>
-    <template v-if="!loading">
-      <div
-        class="w-full flex flex-col h-full"
-        style="overflow: hidden !important"
-      >
-        <WuJie :url="customData._entry" :id="customIndex" class="" />
-      </div>
-    </template>
+    <div
+      class="relative w-full h-full overflow-hidden"
+      ref="scrollbar"
+      style="overflow: hidden !important"
+    >
+      <WuJie
+        v-if="!loading"
+        v-model:cardConfig="cardContainer"
+        :props="injectProps"
+        :url="customData._entry"
+        :id="customData.parentId"
+        :app-info="data"
+      />
+    </div>
   </xt-container>
 </template>
 <style lang="scss"></style>

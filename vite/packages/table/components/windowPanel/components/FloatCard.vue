@@ -1,70 +1,96 @@
 <template>
     <div 
-        class="absolute"
+        ref="cardRef"
+        class="absolute tt-card-container"
         style="z-index:500" 
         :style="{ left: `${position.x}px`, top: `${position.y}px`}">
         <component
-            :desk="cardData.desks"
+            :desk="desk"
             :is="currentComponent"
             :custom-index="cardData.customIndex"
             :custom-data="cardData.customData"
             :custom-size="cardData.customSize"
+            :openWay="'nav'"
+            @delete="deleteCard"
         />
     </div>
 </template>
 
 <script>
+import { defineComponent, computed } from 'vue';
 import componentsMinis from '../../../../table/components/desk/components';
+import { onClickOutside } from '@vueuse/core'
 
-export default {
-    name: 'FloatCard',
-    mixins: [componentsMinis],
-    data() {
-        return {
-        }
-    },
-    props: {
-        cardData: {
-            type: Object,
-            default: () => {}
-        },
-        currentComponent: {
-            type: String,
-            default: ''
-        },
-        position: {
-            type:Object,
-            default: () => {
-                return {
-                    x:100,
-                    y:90
-                }
-            }
-        }
-    },
+export default defineComponent({
+    mixins: [componentsMinis]
+});
+</script>
 
-    methods: {
+<script setup>
+import { computed, ref, onMounted, onUnmounted } from 'vue';
+import { cardStore } from '../../../store/card';
+import { storeToRefs } from 'pinia';
 
-    },
+const useCard = cardStore()
+const { desks } = storeToRefs(useCard)
 
-    watch: {
-    },
-    computed: {
-        zoom() {
-            if (this.zoom) {
-                return this.zoom;
-            }
-            let scale = 1;
-            let str = this.cardData.customSize.split(/x|\*/);
-            let scaleW = (380 / (135 * str[0])).toFixed(4);
-            let scaleH = (260 / (100 * str[1])).toFixed(4);
-            scale = scaleW > scaleH ? scaleH : scaleW;
-            scale = scale > 1 ? 1 : scale;
-            return scale;
-        }
-    },
+const cardRef = ref(null)
 
+const props = defineProps({
+    // 卡片数据
+    cardData: {
+        type: Object,
+        default: () => ({})
+    },
+    // 当前卡片组件
+    currentComponent: {
+        type: String,
+        default: ''
+    },
+    // 卡片定位
+    position: {
+        type: Object,
+        default: () => ({
+            x: 0,
+            y: 0
+        })
+    },
+    // 导航栏id
+    navId:{
+        type: String,
+        default: 'foot'
+    }
+})
+
+const emit = defineEmits(['close','delete'])
+
+const close = (e) => {
+    if(e.target.closest('.tt-card-container') == null) {
+        emit('close')
+    }
 }
 
+// 桌面数据
+const desk = computed(() => {
+    return props.cardData.desk || desks.value[0]
+})
+
+// 导航栏删除卡片，不影响桌面卡片
+const deleteCard = (val) => {
+    emit('delete')
+}
+
+// 点击外部关闭
+onMounted(() => {
+    window.addEventListener('click', close)
+    // console.log(props.cardData,'<<<<<<<<<<<<<<<<')
+    // onClickOutside(cardRef, close)
+})
+
+onUnmounted(() => {
+    window.removeEventListener('click', close)
+    // onClickOutside(cardRef, null)
+})
 </script>
+
 <style lang='scss' scoped></style>

@@ -17,7 +17,7 @@
         :lastPowerType="limitClick"
         v-if="limitClick !== undefined"
       ></GradeSmallTip>
-      <xt-new-icon icon="fluent:add-16-regular"></xt-new-icon>
+      <xt-new-icon icon="fluent:add-16-filled"></xt-new-icon>
     </template>
     <template #createChat>
       <GradeSmallTip
@@ -29,23 +29,14 @@
       ></GradeSmallTip>
       <div class="flex items-center">
         <xt-ify-icon
-          icon="fluent:emoji-smile-slight-24-regular"
+          icon="fluent:emoji-smile-slight-24-filled"
           class="mr-3"
         ></xt-ify-icon>
         创建社群
       </div>
     </template>
   </xt-left-menu>
-  <!-- 社群创建 -->
-  <CreateCommunity />
-  <!-- 群聊创建 -->
-  <CreateGroup ref="createGroupRef" />
-  <!-- 好友添加、搜索 -->
-  <AddFriend ref="addRef"/>
-  <!-- 推荐社群和搜索社群的添加 -->
-  <JoinCommunitys ref="joinComRef"/>
-  <!-- 群聊添加、搜索-->
-  <AddGroup  ref="addGroupRef"/>
+
 </template>
 
 <script>
@@ -63,35 +54,24 @@ import { useRouter, useRoute } from "vue-router";
 import { storeToRefs } from "pinia";
 import { Icon as ChatIcon } from "@iconify/vue";
 import { communityStore } from "./store/communityStore";
-import config from "./config";
 import { appStore } from "../../store";
 import { chatStore } from "../../store/chat";
 import _ from "lodash-es";
-import { communityTotal } from "./libs/utils";
+import { communityTotal } from "../../apps/chat/hooks/utils";
 import { completeTask } from "../../apps/task/page/branch/task";
 import { useGlobalStore } from "../../apps/Global/store";
 
-import CreateCommunity from "./components/CreateCommunitys.vue";
-import AddFriend from '../../apps/chat/components/add/AddFriend.vue';
-import CreateGroup from "../../apps/chat/components/create/CreateGroupSession.vue";
 import CategoryFloat from "./components/float/CategorysFloat.vue";
 import DefaultFloat from "./components/float/DefaultsFloat.vue";
-import JoinCommunitys from './components/communityJoin/JoinCommunitys.vue';
-import GradeSmallTip from "../../components/GradeSmallTip.vue";
-import AddGroup from "../../apps/chat/components/add/AddGroup.vue";
 
 export default {
   name: "chat",
   components: {
     ChatIcon,
-    AddFriend,
-    CreateGroup,
     CategoryFloat,
     DefaultFloat,
     JoinCommunitys,
-    GradeSmallTip,
-    CreateCommunity,
-    AddGroup,
+
   },
   setup(props, ctx) {
     const com = communityStore();
@@ -100,13 +80,13 @@ export default {
 
     const { community } = storeToRefs(com);
     const { settings, contactsSet } = storeToRefs(chat);
+    const { loginVisible } = storeToRefs(appS);
     const { userInfo, lvInfo } = appS;
     const router = useRouter();
     const route = useRoute();
     // const TUIServer = window.$TUIKit
     const { proxy } = getCurrentInstance();
     const globalStore = useGlobalStore();
-    const { loginVisible } = storeToRefs(globalStore);
     const createGroupRef = ref(null);
     const addRef = ref(null);
     const joinComRef = ref(null);
@@ -133,7 +113,7 @@ export default {
       if (!window.$useEnv("guest")) {
         proxy.$bus.emit("createModal");
       } else {
-        loginTip();
+        loginVisible.value = true;
       }
     };
     // 切换左侧tab
@@ -165,23 +145,6 @@ export default {
       }
     };
 
-    // 提示登录弹窗
-    const loginTip = (item) => {
-      window.$ui.confirm(
-        "登录提示",
-        "目前处于游客模式，请登录后体验完整功能。",
-        {
-          ok: () => {
-            loginVisible.value = true;
-          },
-          okText: "立即登录",
-          noText: "暂不登录",
-          okButtonWidth: "95",
-          noButtonWidth: "95",
-        }
-      );
-    };
-
     // 获取总的消息未读数据
     const unreadTotal = computed(() => {
       // const list =
@@ -201,7 +164,7 @@ export default {
     /**初始ref定义数组**/
     const headList = ref([
       {
-        newIcon: "fluent:chat-16-regular",
+        newIcon: "fluent:chat-16-filled",
         tab: "session",
         route: { name: "chatMain", params: { no: "" } },
         disabled: false,
@@ -215,36 +178,27 @@ export default {
       },
       {
         tab: "contact",
-        newIcon: "fluent:people-16-regular",
+        newIcon: "fluent:people-16-filled",
         disabled: false,
         route: { name: "contact", params: { no: "" } },
         callBack: (item) => {
           selectTab(item);
         },
       },
-      ...(config.adminUids.includes(userInfo.uid)
-        ? [
-            {
-              icon: "diannao",
-              type: "admin",
-              tab: "admin",
-              title: "管理面板(仅管理员可见)",
-              route: { name: "chatAdmin", params: { no: "" } },
-              callBack: (item) => {
-                selectTab(item);
-              },
-            },
-          ]
-        : []),
-      {
-        tab: "find",
-        type: "find",
-        newIcon: "eva:compass-outline",
-        route: { name: "chatFind", params: { no: "" } },
-        callBack: (item) => {
-          selectTab(item);
-        },
-      },
+      // ...(config.adminUids.includes(userInfo.uid)
+      //   ? [
+      //       {
+      //         icon: "diannao",
+      //         type: "admin",
+      //         tab: "admin",
+      //         title: "管理面板(仅管理员可见)",
+      //         route: { name: "chatAdmin", params: { no: "" } },
+      //         callBack: (item) => {
+      //           selectTab(item);
+      //         },
+      //       },
+      //     ]
+      //   : []),
     ]);
     const bodyList = ref([
       // 写社群相关静态内容时临时打开的路由
@@ -270,7 +224,7 @@ export default {
         icon: "tianjia2",
         children: [
           {
-            newIcon: "fluent:chat-16-regular",
+            newIcon: "fluent:chat-16-filled",
             name: "发起群聊",
             index: "launch",
             callBack: (item) => {
@@ -278,12 +232,12 @@ export default {
                 triggerAddModal(item);
                 completeTask("Z0601");
               } else {
-                loginTip();
+                loginVisible.value = true;
               }
             },
           },
           {
-            newIcon: "fluent:people-16-regular",
+            newIcon: "fluent:people-16-filled",
             name: "加入群聊",
             index: "addGroup",
             callBack: (item) => {
@@ -291,12 +245,12 @@ export default {
                 triggerAddModal(item);
                 completeTask("Z0601");
               } else {
-                loginTip();
+                loginVisible.value = true;
               }
             },
           },
           {
-            newIcon: "fluent:people-add-16-regular",
+            newIcon: "fluent:people-add-16-filled",
             name: "添加好友",
             index: "addFriend",
             callBack: (item) => {
@@ -304,12 +258,12 @@ export default {
                 triggerAddModal(item);
                 completeTask("Z0602");
               } else {
-                loginTip();
+                loginVisible.value = true;
               }
             },
           },
           {
-            newIcon: "fluent:emoji-smile-slight-24-regular",
+            newIcon: "fluent:emoji-smile-slight-24-filled",
             name: "创建社群",
             index: "createCom",
             slot: "createChat",
@@ -319,14 +273,14 @@ export default {
           },
           {
             icon: "team",
-            newIcon: "fluent:people-16-regular",
+            newIcon: "fluent:people-16-filled",
             index: "joinCom",
             name: "加入社群",
             callBack: (item) => {
               if (!window.$useEnv("guest")) {
                 triggerAddModal(item);
               } else {
-                loginTip();
+                loginVisible.value = true;
               }
             },
           },
@@ -425,7 +379,7 @@ export default {
       //   })
       //   console.log(list)
       // },2000)
-      
+
       com.getMyCommunity();
       com.getCommunityTree();
       // 游客模式下 隐藏 聊天对话 和 通讯录
@@ -435,7 +389,7 @@ export default {
         headList.value[1].disabled = true;
       }
       nextTick(() => {
-        // window.$chat?.on(window.$TUIKit?.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, async(e) => {
+        // window.$chat?.chat?.on(window.$TUIKit?.TIM.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, async(e) => {
         //   // headList.value[0].unread = e.data === 0 ? 0 : e.data > 99 ? 99 : e.data;
         //   headList.value[0].info = e.data === 0 ? [] :  e.data > 99 ? ['tr','red','99'] : ['tr','red',`${e.data}`];
         //   const list = community.value.communityList;

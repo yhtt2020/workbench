@@ -68,7 +68,6 @@ const { settings,userInfo } = storeToRefs(app);
 
 
 const { list, taskID, currentId, completedList, currentTaskList } = toRefs(store);
-const visitor=ref($useEnv('visitor'))
 /**
  * 首次进入时，处理任务进度
  */

@@ -1,16 +1,17 @@
 <template>
-    <xt-container 
+    <xt-container
         :header="header"
         v-model:customSize="customData.customSize"
-        :envLimit="['guest']" 
-        @click="onHistoryMessage" 
-        :sizeList="sizeList" 
-        :customData="customData" 
-        :customIndex="customIndex" 
-        :options="options" 
-        ref="cardSlot" 
-        :desk="desk"  
-        :menuList="menuList">
+        :envLimit="['guest', 'offline']"
+        @click="onHistoryMessage"
+        :sizeList="sizeList"
+        :customData="customData"
+        :customIndex="customIndex"
+        :options="options"
+        ref="cardSlot"
+        :desk="desk"
+        :menuList="menuList"
+        @delete="deleteCard">
         <!-- <template #left-title>
             <Icon icon='fluent:open-20-filled' class="pointer" width="20" height="20" style="position: relative;top:3px;" />
         </template>
@@ -121,9 +122,22 @@ export default {
         editing: {
             type: Boolean,
         },
+        openWay: {
+            type: String,
+            default: "desk"
+        }
     },
+    emit:['delete'],
     computed: {
         ...mapWritableState(shortTalkStore, ['mockData','access_token','baseUrl','setVisible']),
+        options () {
+            return {
+                customDel: this.openWay === 'nav' ? true : false,
+                defaultData: {
+                    customSize: '2x4'
+                }
+            }
+        }
     },
     data() {
         return {
@@ -158,24 +172,14 @@ export default {
                     }
                 },
             ],
-            options: {
-                className: "card",
-                title: "社区数据",
-                // newIcon:'majesticons:monitor-line'
-                // 左侧图标
-                // icon: "iconamoon:history-fill",
-                // rightIcon:"fluent:open-20-filled",
-                defaultData: {
-                    customSize: this.customData.customSize ? this.customData.customSize : '2x4',
-                }
-            },
             targetKeys:[1,2,3,4,5,6,7,8,9],
             // 密钥和地址
             accToken:'',
             accUrl:'',
             header:{
                 title:'社区数据',
-                ifyIcon:'majesticons:monitor-line',
+                // ifyIcon:'majesticons:monitor-line',
+                showIcon:"/img/appLogo/shortDashboard.png",
                 rightIcon:[
                     {
                         ifyIcon:'fluent:open-20-filled',
@@ -197,6 +201,9 @@ export default {
     methods:{
         ...mapActions(cardStore, ['updateCustomData']),
         ...mapActions(shortTalkStore, ['getBoardData','changeAccToken']),
+        deleteCard(){
+            this.$emit('delete')
+        },
         init(){
             // 初始化设置数组
             if(!this.customData.targetKeys){

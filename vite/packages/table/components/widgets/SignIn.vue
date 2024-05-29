@@ -2,10 +2,13 @@
   <xt-container
     v-model:customSize="customData.customSize"
     :header="header"
-    :custom-data="customData" :custom-index="customIndex" :envLimit="['guest','offline']"
+    :custom-data="customData"
+    :custom-index="customIndex"
+    :envLimit="['offline']"
     :options="options"
     :desk="desk"
-    :showRightIcon='rightIcon'>
+    :showRightIcon='rightIcon'
+    @delete="deleteCard">
     <div></div>
     <!--    <div class="pointer" @click="activityDescription(illustrateUrl)"-->
     <!--         style="position: absolute;left: 90px;top:15px;font-size: 13px;color: rgba(255, 255, 255, 0.6);background: rgba(255, 255, 255, 0.2); padding: 3px 12px;border-radius: 4px;">-->
@@ -133,7 +136,8 @@ import _ from 'lodash-es'
 import FrameAvatar from '../avatar/FrameAvatar.vue'
 import { Icon as newIcon } from '@iconify/vue'
 import AwardModal from '../modal/AwardModal.vue'
-
+import { usePermissionStore } from "../../permission/store";
+import cache from "../../components/card/hooks/cache";
 export default {
   name: 'SingIn',
   components: {
@@ -144,18 +148,13 @@ export default {
     UserOutlined,
     newIcon
   },
-  props: ['desk', 'rightIcon','customData','customIndex'],
+  props: ['desk', 'rightIcon','customData','customIndex','openWay'],
+  emits: ['delete'],
   data () {
     return {
       tip:'',
       modalVisible: false,
       awardItems: [],
-      options: {
-        className: 'card',
-        title: '签到',
-        // icon: 'star',
-        type: 'signIn'
-      },
       signInTitle: [{ title: '今日已签', name: 'today' },
         { title: '累签榜', name: 'accrue' }, { title: '连签榜', name: 'continued' }
       ],
@@ -189,7 +188,9 @@ export default {
       customSize: '2x4',
       header:{
         title:"签到",
-        ifyIcon:"fluent:calendar-16-regular",
+        // ifyIcon:"fluent:calendar-16-regular",
+        showIcon:"/img/appLogo/signIn.png",
+
       }
 
 
@@ -206,6 +207,13 @@ export default {
   },
   computed: {
     ...mapWritableState(comStore, ['todayRank']),
+    ...mapWritableState(appStore, ['loginVisible']),
+    ...mapWritableState(usePermissionStore, ['currentEnv']),
+    options () {
+      return {
+        customDel: this.openWay === 'nav' ? true : false
+      }
+    }
 
   },
   methods: {
@@ -213,6 +221,9 @@ export default {
     ...mapActions(appStore, ['showUserCard']),
     showAwardModal () {
       this.modalVisible = true
+    },
+    deleteCard(){
+      this.$emit('delete')
     },
     closeModal () {
       this.modalVisible = false
@@ -276,146 +287,150 @@ export default {
       this.showUserCard(uid, userInfo)
     },
     async signIn () {
-      if (!this.signedIn) {
-        let rs = await this.doSign()
-        // let rs = {
-        //   'status': 1,
-        //   'info': '工作台签到成功，社区签到也成功。',
-        //   'data':
-        //     {
-        //       'comResult':
-        //         {
-        //           'code':
-        //             200,
-        //           'msg':
-        //             'ok',
-        //           'data':
-        //             {
-        //               'msg':
-        //                 '签到成功',
-        //               'jifen':
-        //                 [
-        //                   {
-        //                     'one': 1,
-        //                     'max': 1,
-        //                     'name': '经验值'
-        //                   },
-        //                   {
-        //                     'one': 1,
-        //                     'max': 1,
-        //                     'name': '社区积分'
-        //                   },
-        //                   {
-        //                     'one': 1,
-        //                     'max': 1,
-        //                     'name': '购物积分'
-        //                   },
-        //                   {
-        //                     'one': 0,
-        //                     'max': 0,
-        //                     'name': '贡献值'
-        //                   },
-        //                   {
-        //                     'one': 2,
-        //                     'max': 2,
-        //                     'name': '金豆'
-        //                   }
-        //                 ],
-        //               'scores':
-        //                 [
-        //                   {
-        //                     'flag': 'exp',
-        //                     'name': '经验值',
-        //                     'num': 1
-        //                   },
-        //                   {
-        //                     'flag': 'fly',
-        //                     'name': '社区积分',
-        //                     'num': 1
-        //                   },
-        //                   {
-        //                     'flag': 'buy',
-        //                     'name': '购物积分',
-        //                     'num': 1
-        //                   },
-        //                   {
-        //                     'flag': 'two',
-        //                     'name': '金豆',
-        //                     'num': 2
-        //                   }
-        //                 ],
-        //               'status':
-        //                 1
-        //             }
-        //           ,
-        //           'count':
-        //             0
-        //         }
-        //       ,
-        //       'itemRewards':
-        //         {
-        //           'status':
-        //             1,
-        //           'info':
-        //             '抽中概率，随机数：0.5724386867473654',
-        //           'data':
-        //             [
-        //               {
-        //                 'id': 16,
-        //                 'createTime': '2023-08-10 17:19:34',
-        //                 'updateTime': '2024-02-02 15:56:59',
-        //                 'nanoid': 'PEg8jCkZ',
-        //                 'icon': 'http://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/app/base/19197b88f4484a348577941eef685ba4_cat2.png',
-        //                 'image': 'http://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/app/base/19197b88f4484a348577941eef685ba4_cat2.png',
-        //                 'summary': 'cat',
-        //                 'name': 'bcat',
-        //                 'type': 'frame',
-        //                 'alias': '黑猫',
-        //                 'gainMethod': 'store,sign',
-        //                 'unique': 1
-        //               }
-        //             ]
-        //         }
-        //     }
-        // }
-        if (rs.status) {
-          this.updateTodayRank().then()
-          //提示奖励
-            this.awardItems=[]
-          rs.data?.itemRewards?.data?.forEach(item=>{
-              this.awardItems.push({
-                type:'item',
-                name:item.name,
-                data:{
-                  ...item,
-                  detail:item
-                },
+      if (this.currentEnv === 'guest') {
+        this.loginVisible = true;
+      }else {
+        if (!this.signedIn) {
+          let rs = await this.doSign()
+          // let rs = {
+          //   'status': 1,
+          //   'info': '工作台签到成功，社区签到也成功。',
+          //   'data':
+          //     {
+          //       'comResult':
+          //         {
+          //           'code':
+          //             200,
+          //           'msg':
+          //             'ok',
+          //           'data':
+          //             {
+          //               'msg':
+          //                 '签到成功',
+          //               'jifen':
+          //                 [
+          //                   {
+          //                     'one': 1,
+          //                     'max': 1,
+          //                     'name': '经验值'
+          //                   },
+          //                   {
+          //                     'one': 1,
+          //                     'max': 1,
+          //                     'name': '社区积分'
+          //                   },
+          //                   {
+          //                     'one': 1,
+          //                     'max': 1,
+          //                     'name': '购物积分'
+          //                   },
+          //                   {
+          //                     'one': 0,
+          //                     'max': 0,
+          //                     'name': '贡献值'
+          //                   },
+          //                   {
+          //                     'one': 2,
+          //                     'max': 2,
+          //                     'name': '金豆'
+          //                   }
+          //                 ],
+          //               'scores':
+          //                 [
+          //                   {
+          //                     'flag': 'exp',
+          //                     'name': '经验值',
+          //                     'num': 1
+          //                   },
+          //                   {
+          //                     'flag': 'fly',
+          //                     'name': '社区积分',
+          //                     'num': 1
+          //                   },
+          //                   {
+          //                     'flag': 'buy',
+          //                     'name': '购物积分',
+          //                     'num': 1
+          //                   },
+          //                   {
+          //                     'flag': 'two',
+          //                     'name': '金豆',
+          //                     'num': 2
+          //                   }
+          //                 ],
+          //               'status':
+          //                 1
+          //             }
+          //           ,
+          //           'count':
+          //             0
+          //         }
+          //       ,
+          //       'itemRewards':
+          //         {
+          //           'status':
+          //             1,
+          //           'info':
+          //             '抽中概率，随机数：0.5724386867473654',
+          //           'data':
+          //             [
+          //               {
+          //                 'id': 16,
+          //                 'createTime': '2023-08-10 17:19:34',
+          //                 'updateTime': '2024-02-02 15:56:59',
+          //                 'nanoid': 'PEg8jCkZ',
+          //                 'icon': 'http://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/app/base/19197b88f4484a348577941eef685ba4_cat2.png',
+          //                 'image': 'http://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/app/base/19197b88f4484a348577941eef685ba4_cat2.png',
+          //                 'summary': 'cat',
+          //                 'name': 'bcat',
+          //                 'type': 'frame',
+          //                 'alias': '黑猫',
+          //                 'gainMethod': 'store,sign',
+          //                 'unique': 1
+          //               }
+          //             ]
+          //         }
+          //     }
+          // }
+          if (rs.status) {
+            this.updateTodayRank().then()
+            //提示奖励
+              this.awardItems=[]
+            rs.data?.itemRewards?.data?.forEach(item=>{
+                this.awardItems.push({
+                  type:'item',
+                  name:item.name,
+                  data:{
+                    ...item,
+                    detail:item
+                  },
 
+                })
+              }
+            )
+            rs.data?.comResult?.data?.scores?.forEach(item=>{
+              this.awardItems.push({
+                type:'score',
+                name:item.name,
+                value:item.num,
+                flag:item.flag,
               })
-            }
-          )
-          rs.data?.comResult?.data?.scores?.forEach(item=>{
-            this.awardItems.push({
-              type:'score',
-              name:item.name,
-              value:item.num,
-              flag:item.flag,
             })
-          })
-          this.tip='签到成功。每天签到有概率获得<strong class=\'active-bg\'><img style=\'width: 20px\' src=\'/img/bottomPanel/prop.png\'>珍贵道具</strong>哦！'
-          if(this.awardItems.length>0){
-            this.tip=this.tip+'<br>注意：如果您已在社区完成签到，将无法重复获得积分奖励。仅支持通过工作台签到获得道具奖励。'
+            this.tip='签到成功。每天签到有概率获得<strong class=\'active-bg\'><img style=\'width: 20px\' src=\'/img/bottomPanel/prop.png\'>珍贵道具</strong>哦！'
+            if(this.awardItems.length>0){
+              this.tip=this.tip+'<br>注意：如果您已在社区完成签到，将无法重复获得积分奖励。仅支持通过工作台签到获得道具奖励。'
+            }
+
+            console.log(this.awardItems,'奖品')
+              this.showAwardModal()
+              this.signedIn = true
+          } else {
+            message.error('签到失败。')
           }
 
-          console.log(this.awardItems,'奖品')
-            this.showAwardModal()
-            this.signedIn = true
         } else {
-          message.error('签到失败。')
+          this.newPeoplePage = true
         }
-
-      } else {
-        this.newPeoplePage = true
       }
     },
     signInBack () {

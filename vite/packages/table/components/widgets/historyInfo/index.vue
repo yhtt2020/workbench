@@ -1,13 +1,14 @@
 <template>
-    <xt-container 
+    <xt-container
         v-model:customSize="customData.customSize"
         :header="header"
-        :customData="customData" 
-        :customIndex="customIndex" 
-        :options="options" 
-        ref="homelSlotRef" 
+        :customData="customData"
+        :customIndex="customIndex"
+        :options="options"
+        ref="homelSlotRef"
         :desk="desk"
-        :envLimit="['offline']">
+        :envLimit="['guest', 'offline', 'single']"
+        @delete="deleteCard">
         <div class="box-flex">
             <div>{{ this.history?.date }}</div>
             <div>{{ this.history?.title }}</div>
@@ -46,22 +47,21 @@ export default {
         editing: {
             type: Boolean,
         },
+        openWay: {
+            type: String,
+            default: "desk",
+        }
     },
+    emit:['delete'],
     data() {
         return {
             loading: false,
-            options: {
-                className: "card small",
-                title: "历史上的今天",
-                // icon: "iconamoon:history-fill",
-                newIcon:'ant-design:calendar-outlined'
-            },
             history:{
                 date:"",
                 tetle:""
             },
             timer:"12",
-            
+
         };
     },
     mounted() {
@@ -92,17 +92,28 @@ export default {
                 })
             }
         },
+        // 自定义删除卡片
+        deleteCard(){
+            this.$emit('delete')
+        }
     },
     computed:{
         header(){
             return {
                 title:'历史上的今天',
-                ifyIcon:"fluent:clock-12-regular",
+                // ifyIcon:"fluent:clock-12-regular",historyInfo
+        showIcon:"/img/appLogo/historyInfo.png",
+
                 refresh:{
                     fn:this.onHistoryMessage,
                     tip:'刷新',
                     state:this.loading ? true : false
                 }
+            }
+        },
+        options(){
+            return {
+                customDel:this.openWay === 'nav' ? true : false
             }
         }
     }
@@ -146,6 +157,6 @@ export default {
     .refresh{
         position: relative;
         top: 4px;
-        
+
     }
 </style>

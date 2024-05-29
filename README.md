@@ -12,7 +12,9 @@ B站开源相关介绍视频：
 
 本项目官方主页：[想天浏览器官方主页](https://www.apps.vip)
 
-文档项目：[XtUI项目主页](https://gitee.com/tsbrowser/xtui) （持续更新中）
+文档站在线页面：[文档站](https://a.apps.vip/ttdoc/)
+
+文档站项目：[XtUI项目主页](https://gitee.com/tsbrowser/xtui) （持续更新中）
 
 ## 开源项目引用说明
 
@@ -25,7 +27,7 @@ B站开源相关介绍视频：
 B站账号：
 [玩屏开发者皮克斯](https://space.bilibili.com/167397379)
 
-服务端暂不开源。我们会为希望独立使用的用户提供离线模式，敬请关注后续的项目更新。
+服务端暂不开源。我们会为希望独立使用的用户提供单机模式，敬请关注后续的项目更新。
 
 
 项目是天天工作台的客户端前端部分，是全部前端源码，基于AGPL3.0协议开源。请勿直接用作商业用途。
@@ -48,11 +50,13 @@ B站账号：
 
 7.复制一个/node_modules下的dragula/dist/dragula.css 到 dragula/dist/dragula.min.css，不然会报这个库缺文件
 
-8.在目录 vite\packages\table\js\common\offline.ts 下，将文件的 isOffline 属性改为 true ，启动离线模式
+8.在目录 vite\packages\table\permission\store.ts 下，将文件的 isSingle 属性改为 true ，启动单机模式
 
-## 【关于离线模式】
+9.相关技术文档可查看http://gitlab.xiangtian.ren/pd/worktable/apps/xtui-doc
 
-离线模式下，我们尽可能减少与服务器的交互，以确保客户端可以独立运行。此模式适合大家自行研究，也可以自行把需要用到的部分封包起来。
+## 【关于单机模式】
+
+单机模式下，我们尽可能减少与服务器的交互，以确保客户端可以独立运行。此模式适合大家自行研究，也可以自行把需要用到的部分封包起来。
 
 
 ## 启动项目
@@ -89,3 +93,30 @@ C:\Windows\System32\drivers\etc\hosts 注意这个文件不能带.txt扩展名�
 ## 打包桌面客户端
 
 在根目录运行yarn run packageWin
+## 调试web端
+在/vite运行yarn安装扩展，
+
+然后yarn run start运行项目
+
+打开浏览器，访问首页地址：
+http://localhost:1600/html/table.html#/
+
+
+## web版部署指南
+
+需要将根目录cdn目录下的文件放置到cdn服务器上。
+并对配置文件修改后，打包
+
+/vite/packages/table/consts.ts
+```javascript
+const Server = {
+  baseUrl: 'https://wad.apps.vip/api', //修改为api所在位置
+  cdn:'https://a.apps.vip/cdn' //修改为cdn服务器的路径
+ //baseUrl:'http://test1.com:9001'
+}
+```
+打包命令
+在/vite下终端执行yarn run build
+将编译后的文件/dist放到web上
+同时将/vite/dist/html/table.html放到web根目录，并修改名称为index.html(或将table.html设置为默认首页)
+

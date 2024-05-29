@@ -1,17 +1,19 @@
 <template>
   <div>
-    <xt-container 
+    <xt-container
       @titleHover="settingVisible = true"
-      v-model:customSize="customData.customSize" 
-      :desk="desk" 
-      :header="header" 
-      :sizeList="sizeList" 
-      :options="options" 
-      :customIndex="customIndex" 
+      v-model:customSize="customData.customSize"
+      :desk="desk"
+      :header="header"
+      :sizeList="sizeList"
+      :options="options"
+      :customIndex="customIndex"
       :menuList="menuList"
-      ref="cardSlot" 
-      :customData="customData" 
-      :env="env">
+      ref="cardSlot"
+      :customData="customData"
+      :envLimit="['guest', 'offline']"
+      :env="env"
+      @delete="deleteCard">
       <div class="top-bar">
         <div class="center">
           <div :class="['item', { action: currentIndex == index }]" v-for="(title, index) in showList"
@@ -22,7 +24,7 @@
       </div>
       <!-- {{ currentIndex }}
       {{ this.customData.index }}
-      <xt-tab 
+      <xt-tab
         v-model="currentIndex"
         :list="showList"
         style="height: 32px;"
@@ -86,6 +88,10 @@ export default {
     },
     desk: {
       type: Object
+    },
+    openWay:{
+      type: String,
+      default: "desk"
     }
   },
   components: {
@@ -99,6 +105,7 @@ export default {
     FileSearchOutlined,
     newIcon
   },
+  emit: ['delete'],
   data() {
     return {
       settingVisible: false,
@@ -118,11 +125,6 @@ export default {
 
       ],
       customSize:'2x4',
-      options: {
-        defaultData: {
-          customSize:this.customData.customSize ||'2x4',
-        }
-      },
       menuList: [
         {
           icon: 'shezhi1',
@@ -202,12 +204,16 @@ export default {
         web: false,
         mobile: false,
         client: false,
-        offline: true
+        single: true
       },
       refreshFlag: false
     }
   },
   methods: {
+    // 卡片自定义删除事件
+    deleteCard(){
+      this.$emit('delete')
+    },
     async setCurrentIndex(index) {
       this.currentIndex = index
       this.customData.index = this.currentIndex
@@ -235,6 +241,16 @@ export default {
     }
   },
   computed: {
+    // 卡片选项
+    options() {
+      return {
+        // 当卡片添加到导航栏时，阻止默认删除事件
+        customDel: this.openWay === 'nav' ? true : false,
+        defaultData: {
+          customSize:this.customData.customSize ||'2x4',
+        }
+      }
+    },
 
     aggList() {
       if (this.customData && this.customData.sortList) {
@@ -292,7 +308,8 @@ export default {
     header(){
       return {
         title:'新闻资讯',
-        ifyIcon:'fluent:news-16-regular',
+        // ifyIcon:'fluent:news-16-regular',
+        showIcon:"/img/appLogo/news.png",
         refresh:{
           fn: this.refreshData,
           tip:'刷新',

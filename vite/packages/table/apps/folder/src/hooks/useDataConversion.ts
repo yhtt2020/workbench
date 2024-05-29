@@ -21,10 +21,15 @@ export const useIconConversionFile = (data) => {
   return file;
 };
 
+// 由于直接添加图标，size返回的是‘1x1‘，会导致无法读取到图标大小导致卡死，需要进行判断
+const isTrueSize = (data) => {
+  return !data.includes('x')
+}
+
 export const useFileConversionIcon = (data) => {
   const icon = {
     model: "file",
-    size: "mini",
+    size: (data.size && isTrueSize(data.size)) ? data.size ||  "mini" : "mini",
     open: {
       type: data.type,
       value: data.value,
@@ -55,6 +60,7 @@ export const useIconConversionNav = (data) => {
     bg: data.bg,
     type: data.type,
     id: data.id || nanoid(6),
+    cardData: data.cardData,
   };
   return icon;
 };
@@ -70,6 +76,7 @@ export const useFileConversionNav = (data) => {
     bg: data.backgroundColor,
     type: data.open.type,
     id: nanoid(6),
+    cardData: data.cardData,
   };
   return icon;
 };

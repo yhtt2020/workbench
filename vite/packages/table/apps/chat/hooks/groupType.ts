@@ -1,4 +1,5 @@
 import TUIChatEngine from "@tencentcloud/chat-uikit-engine";
+import _ from "lodash-es";
 
 // 群类型名称
 export const getTypeName = (type: any) => {
@@ -92,4 +93,48 @@ export const currentGroupType = [
       "类似普通微信群，创建后仅支持已在群内的好友邀请加群，且无需被邀请方同意或群主审批。",
     src: "产品文档",
   },
+];
+
+/**当前群聊的未读数据**/
+export const currentUnreadCount = (no: any) => {
+  const list = (window as any).$TUIKit?.TUIStore?.storeMap?.conversation?.store
+    ?.conversationList;
+  if (!list) {
+    return 0;
+  } else {
+    const unreadCount = list.find(
+      (item: any) => String(item.groupProfile?.group) === String(no)
+    );
+    if(unreadCount){
+      return unreadCount?.unreadCount;
+    }
+    else {
+      return 0;
+    }
+  }
+};
+
+/**群聊添加状态**/
+
+
+/**判断3D文件的后缀名**/
+export const fileSuffix = [
+  ".stl",
+  ".obj",
+  ".3ds",
+  ".ply",
+  ".gltf",
+  ".off",
+  ".3dm",
+  ".fbx",
+  ".dae",
+  ".wrl",
+  ".3mf",
+  ".amf",
+  ".ifc",
+  ".brep",
+  ".step",
+  ".iges",
+  ".fcstd",
+  ".bim",
 ];

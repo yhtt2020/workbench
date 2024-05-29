@@ -12,14 +12,8 @@ import { storeToRefs } from "pinia";
 import { useFreeLayoutStore } from "./store";
 import { message } from "ant-design-vue";
 import "animate.css";
-import { useDebounceFn } from "@vueuse/core";
-
-import {
-  useGridToWidth,
-  useHeightToGrid,
-  useElementSize,
-} from "../../../ui/hooks/useCardSize";
-import _, { iteratee } from "lodash";
+import { useElementSize } from "../../../ui/hooks/useCardSize";
+import _ from "lodash";
 import { useCutLayout } from "./useCutLayout";
 // 初始化操作
 const freeLayoutStore: any = useFreeLayoutStore();
@@ -32,8 +26,6 @@ const { proxy }: any = getCurrentInstance();
 
 const { currentDesk, currentID }: any = toRefs(props);
 const {
-  freeLayoutData,
-  getCurrentDeskId,
   getFreeLayoutData,
   freeLayoutEnv,
   getFreeLayoutState,
@@ -49,7 +41,6 @@ onMounted(() => {
   }, 2);
   proxy.$bus.on("cutCanvas", (position) => {
     loading.value = true;
-    console.log("整理桌面回调触发了 :>> ");
     setTimeout(() => {
       cutCanvas({
         redirect: true,
@@ -73,6 +64,7 @@ const waterfallFlow: any = ref(null);
 async function getPosition(item) {
   cards.value.push(item);
   const nodes = await waterfallFlow.value?.getElementsByTagName("div");
+  if (!nodes) return;
   for (let node of nodes) {
     if (
       !(node instanceof HTMLDivElement) ||
@@ -183,10 +175,6 @@ const cutCanvas = async (config) => {
       bottomItem = item;
     }
   });
-  console.log("left :>> ", left);
-  console.log("top :>> ", top);
-  console.log("right :>> ", right);
-  console.log("bottom :>> ", bottom);
   // 获取画布大小
   let { width: canvasWidth, height: canvasHeight } =
     getFreeLayoutState.value.canvas;
@@ -200,8 +188,6 @@ const cutCanvas = async (config) => {
   const viewHeight = scrollHeight * HEIGHT_PROPORTION;
   let msgArr: any = [];
 
-  console.log("原始宽度 :>> ", getFreeLayoutState.value.canvas.width);
-  console.log("原始高度 :>> ", getFreeLayoutState.value.canvas.height);
   // 左边
 
   if (redirect || currentLeft == left) {
@@ -213,7 +199,7 @@ const cutCanvas = async (config) => {
           return item;
         }
       );
-      console.log("触发左边扩展 :>> ");
+      // console.log("触发左边扩展 :>> ");
       msgArr.push("左边");
       getFreeLayoutState.value.canvas.width += diff;
     }
@@ -226,7 +212,7 @@ const cutCanvas = async (config) => {
         }
       );
       msgArr.push("左边");
-      console.log("触发左边收缩 :>> ");
+      // console.log("触发左边收缩 :>> ");
       getFreeLayoutState.value.canvas.width -= diff;
     }
   }
@@ -234,7 +220,7 @@ const cutCanvas = async (config) => {
   if (redirect || currentTop == top) {
     if (top < viewHeight) {
       let diff = viewHeight - top;
-      console.log("触发上边扩展 :>> ");
+      // console.log("触发上边扩展 :>> ");
       getFreeLayoutData.value = Object.values(getFreeLayoutData.value).map(
         (item: any) => {
           item.top += diff;
@@ -242,13 +228,13 @@ const cutCanvas = async (config) => {
         }
       );
       msgArr.push("上边");
-      console.log("触发上边收缩 :>> ");
+      // console.log("触发上边收缩 :>> ");
 
       getFreeLayoutState.value.canvas.height += diff;
     }
     if (top > viewHeight) {
       let diff = top - viewHeight;
-      console.log("触发上边收缩 :>> ");
+      // console.log("触发上边收缩 :>> ");
       getFreeLayoutData.value = Object.values(getFreeLayoutData.value).map(
         (item: any) => {
           item.top -= diff;
@@ -260,23 +246,18 @@ const cutCanvas = async (config) => {
     }
   }
   // 右边
-  console.log("right :>> ", right);
   if (redirect || currentRight == right) {
     console.log("触发右边扩展 :>> ");
     msgArr.push("右边");
-    console.log("right :>> ", right);
-    console.log("canvasWidth :>> ", canvasWidth);
     getFreeLayoutState.value.canvas.width = right + viewWidth;
   }
   // 下边
   if (redirect || currentBottom == bottom) {
-    console.log("触发下边扩展 :>> ");
+    // console.log("触发下边扩展 :>> ");
     msgArr.push("下边");
     getFreeLayoutState.value.canvas.height = bottom + viewHeight;
   }
 
-  console.log("实际宽度 :>> ", getFreeLayoutState.value.canvas.width);
-  console.log("实际高度 :>> ", getFreeLayoutState.value.canvas.height);
   if (msgArr.length > 0) {
     message.success("已为您更新画布");
   }
@@ -289,7 +270,6 @@ const cutCanvas = async (config) => {
       });
     }
   }, 2);
-  console.log("redirect :>> ", redirect);
   if (!redirect) return;
   let x = Infinity;
   let y = Infinity;
@@ -325,9 +305,9 @@ const cutCanvas = async (config) => {
  */
 const currentData: any = ref({});
 async function updateCard(data) {
-  console.log("--------------- 自由布局数据更新开始 ---------------");
-  console.time("Free Layout Run Time");
-  console.log("当前配置项 :>> \n", `桌面ID ${currentID.value}`);
+  // console.log("--------------- 自由布局数据更新开始 ---------------");
+  // console.time("Free Layout Run Time");
+  // console.log("当前配置项 :>> \n", `桌面ID ${currentID.value}`);
   currentData.value = {};
   data.forEach((item) => {
     const { id, customData } = item;
@@ -347,24 +327,26 @@ async function updateCard(data) {
       delete freeLayout[id];
     }
   }
-  console.timeEnd("Free Layout Run Time");
-  console.log("--------------- 自由布局数据更新结束 ---------------");
+  // console.timeEnd("Free Layout Run Time");
+  // console.log("--------------- 自由布局数据更新结束 ---------------");
   firstLoading.value = false;
 }
 
 let updateCardTimer: any;
+
 watch(
-  currentDesk.value?.cards,
+  () => currentDesk.value?.cards,
   (card) => {
     if (firstLoading.value) return;
     clearTimeout(updateCardTimer);
     updateCardTimer = setTimeout(() => {
       updateCard(card);
     }, 10);
-    console.log("watch数据更新了 :>> ");
+    // console.log("watch数据更新了 :>> ");
   },
   {
     immediate: true,
+    deep: true,
   }
 );
 
@@ -386,7 +368,6 @@ const dragStart = () => {
 
 // 元素拖拽结束
 const dragStop = (item) => {
-  console.log("dragStop item :>> ", isSelectAll.value);
   setTimeout(() => {
     cutCanvas({ id: item.data.id, item: item.data });
   }, 1);
@@ -410,7 +391,6 @@ onBeforeUnmount(() => {
   let data = {
     ...currentData.value,
   };
-  // const freeLayout = freeLayoutStore.getOneFreeLayoutData(currentID.value);
 
   // for (const id in freeLayout) {
   //   if (data[id]?.id.toString() != id.toString()) {
@@ -420,6 +400,19 @@ onBeforeUnmount(() => {
   // }
   // console.log("自由布局销毁操作 :>> ", getFreeLayoutData.value);
 });
+
+const handleIntersection = (visible, item) => {
+  console.log(`Element is intersecting: ${visible}`);
+  console.log("item :>> ", item);
+  if (visible) {
+    item.visible = true;
+    console.log("object :>> ", 111);
+    // Do something when element is intersecting
+  } else {
+    item.visible = false;
+    // Do something when element is not intersecting
+  }
+};
 </script>
 
 <template>
@@ -456,7 +449,7 @@ onBeforeUnmount(() => {
   </div>
   <template v-for="item in getFreeLayoutData">
     <xt-drag
-      v-if="!getFreeLayoutState.system.hide && item?.id"
+      v-if="item?.id"
       :test="false"
       @onDisabled="disabledInfo"
       mode="all"
@@ -493,15 +486,18 @@ onBeforeUnmount(() => {
         enter-active-class="animate__bounceIn"
         leave-active-class="animate__bounceIn"
       >
+        <!-- v-intersection="(visible) => handleIntersection(visible, item)" -->
+
         <div
-          v-if="item.id"
           class="rounded-xl"
           :style="{
+            display: getFreeLayoutState.system.hide ? 'none' : 'block',
             border: isSelectAll ? '3px solid var(--active-bg) ' : '',
           }"
           :key="item.id"
           ref="test"
         >
+          <!-- <xt-button>{{ item.visible }}</xt-button> -->
           <!-- <xt-button>id： {{ item.id }}</xt-button> -->
           <!-- <xt-button  w="280" h="400">  {{ freeLayoutEnv.scrollData }} </xt-button> -->
           <!-- <xt-button w="280">top {{ item.top }}</xt-button> -->

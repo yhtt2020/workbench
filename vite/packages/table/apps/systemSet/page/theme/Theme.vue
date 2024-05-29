@@ -45,7 +45,7 @@
     </template>
     <hr />
     <xt-option-info
-      v-if="!$useEnv()"
+      v-if="!$usePlat()"
       isSwitch
       v-model:switch="appSettings.transparent"
       title="透明背景"
@@ -63,6 +63,7 @@ import { setThemeSwitch } from "../../../../components/card/hooks/themeSwitch";
 import { onMounted, ref,getCurrentInstance } from "vue";
 import { getBgColor } from "../../../../components/card/hooks/styleSwitch/getStyle";
 import { completeTask } from "../../../task/task";
+import { setTheme,setThemeColor } from "../../../ttApp/src/modules/wujie/useWuJieBus";
 import {
   setBgColor,
   setSecondaryBgColor,
@@ -90,6 +91,7 @@ const { proxy } = getCurrentInstance();
 // 更新主题
 const updateThemeMode = (data) => {
   setThemeSwitch(data);
+  setTheme()
 };
 
 const themeColor = ref("#508BFE");
@@ -97,6 +99,7 @@ const themeColor = ref("#508BFE");
 const updateThemeColor = (value) => {
   setBgColor(value);
   setSecondaryBgColor(value);
+  setThemeColor()
   completeTask("M0202",()=>{
     proxy.$bus.emit('closeSystemSet');
   });

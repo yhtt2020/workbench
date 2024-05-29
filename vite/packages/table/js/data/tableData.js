@@ -43,16 +43,18 @@ export default {
         })
       }
     },
-    {
-      icon: 'https://a.apps.vip/icons/ppet.png',
-      name: 'PPet桌面宠物',
-      type: 'coolApp',
-      summary: '一款开源桌面看板娘，让你不再孤单。',
-      needInstall: true,
-      data: {
-        security: true
-      }
-    },
+    // 打开方式不同，暂时隐藏
+    // {
+    //   icon: 'https://a.apps.vip/icons/ppet.png',
+    //   name: 'PPet桌面宠物',
+    //   type: 'coolApp',
+    //   summary: '一款开源桌面看板娘，让你不再孤单。',
+    //   needInstall: true,
+    //   data: {
+    //     security: true,
+    //     url:"https://github.com/zenghongtu/PPet"
+    //   }
+    // },
     {
       icon: 'https://a.apps.vip/wallpaper/favicon.png',
       name: 'OneWallheaven壁纸',
@@ -168,63 +170,63 @@ export default {
       tab:'work',
       event: 'work',
       children:[
-        { 
-          type: 'systemApp', 
-          icon: '/logo/efficiency.svg', 
-          name: '效率助手', 
-          bg: '', 
-          isBg: false, 
-          ext: '', 
-          mode: 'app', 
-          value: 'work' 
+        {
+          type: 'systemApp',
+          icon: '/logo/efficiency.svg',
+          name: '效率助手',
+          bg: '',
+          isBg: false,
+          ext: '',
+          mode: 'app',
+          value: 'work'
         },
-        { 
-          type: 'systemApp', 
-          icon: '/logo/directive.svg', 
-          name: '快捷指令',  
-          bg: '', 
-          isBg:false, 
-          ext: '',  
-          mode: 'app', 
-          value: 'deck' 
-        },
-        { 
-          type: 'systemApp', 
-          icon: '/logo/shortCut.svg', 
-          name: '快捷键',  
-          bg: '', 
+        {
+          type: 'systemApp',
+          icon: '/logo/directive.svg',
+          name: '快捷指令',
+          bg: '',
           isBg:false,
           ext: '',
-          mode: 'app', 
-          value: 'shortcutIndex' 
+          mode: 'app',
+          value: 'deck'
         },
-        { 
-          type: 'systemApp', 
-          icon: '/logo/ai.svg', 
-          name: 'AI助手',  
-          bg: '', 
-          isBg:false, 
-          ext: '', 
-          mode: 'app', 
-          value: 'ai' 
+        {
+          type: 'systemApp',
+          icon: '/logo/shortCut.svg',
+          name: '快捷键',
+          bg: '',
+          isBg:false,
+          ext: '',
+          mode: 'app',
+          value: 'shortcutIndex'
         },
-        { 
-          type: 'systemApp', 
-          icon: '/logo/clipboard.svg', 
-          name: '剪切板',  
-          bg: '', 
-          isBg:false,  
-          mode: 'app', 
-          value: 'clipboard' 
+        {
+          type: 'systemApp',
+          icon: '/logo/ai.svg',
+          name: 'AI助手',
+          bg: '',
+          isBg:false,
+          ext: '',
+          mode: 'app',
+          value: 'ai'
         },
-        { 
-          type: 'systemApp', 
-          icon: '/logo/memorandum.svg', 
-          name: '备忘录',  
-          bg: '', 
-          isBg:false, 
-          mode: 'app', 
-          value: 'note' 
+        {
+          type: 'systemApp',
+          icon: '/logo/clipboard.svg',
+          name: '剪切板',
+          bg: '',
+          isBg:false,
+          mode: 'app',
+          value: 'clipboard'
+        },
+        {
+          type: 'systemApp',
+          icon: '/logo/memorandum.svg',
+          name: '备忘录',
+          bg: '',
+          isBg:false,
+          mode: 'app',
+          value: 'note'
         },
       ]
     },
@@ -262,6 +264,12 @@ export default {
       "icon": "/logo/ai.svg",
       "name": "AI助手",
       "event": "ai"
+    },
+    {
+      "type": "systemApp",
+      "icon": "/logo/income.svg",
+      "name": "收益中心",
+      "event": "income"
     },
     {
       "type": "systemApp",
@@ -367,8 +375,8 @@ export default {
     fn () {
       vm.$router.push({ path: '/lock' })
     }
-  }, 
-  
+  },
+
   {
     type: 'systemApp',
     icon: '/logo/fullScreen.svg',

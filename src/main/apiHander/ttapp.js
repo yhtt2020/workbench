@@ -1,12 +1,13 @@
 /**
- * 主进程消息 on ttapp.js
- * @description 应该是接收主进程的消息
+ * 主进程接收消息 ttapp.js
+ * @description
  */
 const Base = require("./base");
 // const appModel = require("../../model/appModel");
 
-const { installJson, installV2, checkFile } = require("../ttApps/install/install.js");
+const { installV2 } = require("../ttApps/install/install.js");
 const useUninstall = require("../ttApps/useUninstall");
+const { renew } = require("../ttApps/install/renew.js");
 
 const { useSelect, useSelectAll } = require("../ttApps/useSelect");
 const { BrowserWindow } = require("electron");
@@ -20,19 +21,15 @@ class TTApp extends Base {
   }
   bindIPC() {
     // 安装
-    this.on("install", async (event, args) => {
-      let res = await installV2(args.zipPath);
-      console.log("res :>> ", res);
+    this.on("installV2", async (event, args) => {
+      console.log("installV2 on :>> ", args);
+      let res = await installV2(args.options);
       event.reply(args.cbId, res);
     });
-    // 写入json
-    this.on("installJson", async (event, args) => {
-      let res = await installJson(args.data);
-      event.reply(args.cbId, res);
-    });
-    // 检查文件
-    this.on("checkFile", async (event, args) => {
-      let res = await checkFile(args.path);
+    // 更新
+    this.on("renew", async (event, args) => {
+      console.log('拿到id了 on("renew" :>> ', args.id);
+      let res = await renew(args.id);
       event.reply(args.cbId, res);
     });
     // 卸载

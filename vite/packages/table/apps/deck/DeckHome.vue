@@ -1,11 +1,5 @@
 <template>
-  <div v-if="!isWin()" class="w-auto p-4 px-5 m-auto mt-10 rounded-lg xt-bg-2">
-    <div class="pt-1 mr-2 ">
-      <iconify style="font-size: 18px;vertical-align: text-bottom" icon="akar-icons:info-fill"></iconify>
-      暂不支持在非Windows平台上使用快捷指令功能。请耐心等待版本更新。
-    </div>
-  </div>
-  <template v-else>
+  <template v-if="!isWin()">
     <div v-if="this.grids.length === 0" class="w-full p-5 box item-content" style="max-height: 100%">
       <a-result class="w-full rounded-lg xt-text" style="background: none;width:100%"
                 status="success" title="使用快捷指令"
@@ -37,6 +31,12 @@
     </div>
 
   </template>
+  <div v-else class="w-auto p-4 px-5 m-auto mt-10 rounded-lg xt-bg-2">
+    <div class="pt-1 mr-2 ">
+      <iconify style="font-size: 18px;vertical-align: text-bottom" icon="akar-icons:info-fill"></iconify>
+      暂不支持在非Windows平台上使用快捷指令功能。请耐心等待版本更新。
+    </div>
+  </div>
   <div v-if="this.grids.length !== 0" class="flex flex-col w-full h-full">
     <div v-if="sharing"  >
       <div class="font">请选择您要分享的小组，勾选后，在底部选择需要分享的方式。</div>

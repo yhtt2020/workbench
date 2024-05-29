@@ -1,10 +1,12 @@
 <template>
-    <xt-container 
+    <xt-container
       :header="header"
       v-model:customSize="customSize"
-      :options="options" 
-      :customIndex="customIndex" 
-      :custom-data="customData">
+      :options="options"
+      :customIndex="customIndex"
+      :custom-data="customData"
+      :envLimit="['guest', 'offline', 'single']"
+      @delete="deleteCard">
       <div class="example" v-if="isLoading">
         <a-spin />
       </div>
@@ -85,26 +87,37 @@
         type: Number,
         default: 0
       },
+      openWay:{
+        type:String,
+        default:'desk'
+      }
     },
     data() {
       return {
-        options:{
-          className:'card',
-          title:'正在热映',
-          // icon:'video',
-          type:'singleDoubanFilm'
-        },
         detailMovie: {},
         pageToggle: true,
         isLoading: false,
         customSize:'2x4',
         header:{
-          ifyIcon:"fluent:movies-and-tv-16-regular",
+          // ifyIcon:"fluent:movies-and-tv-16-regular",
+        showIcon:"/img/appLogo/film.png",
+
           title:"正在热映",
         }
       };
     },
+    computed: {
+      options(){
+        return {
+          customDel:this.openWay === 'nav' ? true : false
+        }
+      }
+    },
+    emit:['delete'],
     methods: {
+      deleteCard(){
+        this.$emit('delete')
+      },
       setDetail(){
         this.detailMovie.image = this.detailMovie.img.replace('2500x2500','240x354')
         this.detailMovie.members = this.detailMovie.star.replace(/,/g,' / ')

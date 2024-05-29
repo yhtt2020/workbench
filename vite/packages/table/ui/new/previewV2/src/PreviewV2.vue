@@ -22,7 +22,7 @@
       :style="{ background: bg }"
     >
       <!-- 预览内容区域 -->
-      <div :style="{ zoom:zoom }">
+      <div :style="{ zoom: zoom }">
         <component
           :desk="desks[0]"
           :is="customComponent"
@@ -43,7 +43,7 @@ import componentsMinis from "../../../../../table/components/desk/components";
 import { homeStore } from "../../../../store/home";
 import { message } from "ant-design-vue";
 import { useAddCard } from "../../../../hooks";
-
+import {DEFAULT} from '../../../../js/const/default'
 export default {
   mixins: [componentsMinis],
   data() {
@@ -102,7 +102,7 @@ export default {
       let background = "url(" + this.backgroundImage.path + ")";
       return this.backgroundImage.path
         ? background
-        : "url('https://a.apps.vip/icons/defaultBackground.jpg')";
+        : "url('"+DEFAULT.WALLPAPER+"')";
     },
     zoom() {
       if (this.zoom) {
@@ -140,13 +140,15 @@ export default {
       return list;
     },
     add() {
+      this.visible = false;
+      message.success("添加成功");
+
       useAddCard({
         name: this.name,
         data: this.data,
         id: Date.now(),
         deskId: this.currentDesk,
       });
-      message.success("添加成功");
       this.close();
     },
   },

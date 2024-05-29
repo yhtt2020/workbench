@@ -1,17 +1,18 @@
 <template>
   <div>
-    <xt-container 
+    <xt-container
       @titleHover="settingVisible = true"
       :header="header"
       v-model:customSize="customData.customSize"
-      :options="options" 
-      :customIndex="customIndex" 
-      :customData="customData" 
-      :menuList="menuList" 
+      :options="options"
+      :customIndex="customIndex"
+      :customData="customData"
+      :menuList="menuList"
       ref="cardSlot"
-      :desk="desk" 
-      :size="size" 
-      :envLimit="['offline']">
+      :desk="desk"
+      :size="size"
+      :envLimit="['guest', 'offline', 'single']"
+      @delete="deleteCard">
       <div v-if="isLoading">
         <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 60%" />
       </div>
@@ -99,16 +100,15 @@ export default {
     },
     desk: {
       type: Object
+    },
+    openWay: {
+      type: String,
+      default: "desk"
     }
   },
   data() {
     return {
       fail: false,
-      options: {
-        defaultData: {
-          customSize: '2x4',
-        }
-      },
       menuList: [
         {
           icon: 'shezhi1',
@@ -118,7 +118,9 @@ export default {
       ],
       header: {
         title: '今日油价',
-        ifyIcon:'fluent:gas-pump-24-regular',
+        // ifyIcon:'fluent:gas-pump-24-regular',
+        showIcon:"/img/appLogo/oilPrices.png",
+
         titleHover: true,
         titleHoverName: '点击切换',
       },
@@ -143,11 +145,15 @@ export default {
         web: false,
         mobile: false,
         client: false,
-        offline: true
+        single: true
       }
     }
   },
+  emit:['delete'],
   methods: {
+    deleteCard(){
+      this.$emit('delete')
+    },
     selectedAreaSuit(item) {
       this.defaultCityIndex = (item.id - 1)
       this.settingVisible = false
@@ -186,6 +192,14 @@ export default {
         return item.city == this.customData.city
       })
       return cityMsg
+    },
+    options() {
+      return {
+        customDel: this.openWay === 'nav' ? true : false,
+        defaultData: {
+          customSize: '2x4'
+        }
+      }
     }
   },
   async mounted() {

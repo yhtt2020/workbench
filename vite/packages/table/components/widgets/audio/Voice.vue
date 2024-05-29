@@ -2,12 +2,13 @@
   <xt-container
     :header="header"
     v-model:customSize="customData.customSize"
-    :envLimit="['web']"
+    :platLimit="['web']"
     :customIndex="customIndex"
     :customData="customData"
     :options="options"
     :desk="desk"
-    :menu-list="menus">
+    :menu-list="menus"
+    @delete="deleteCard">
      <div  class="flex flex-col mt-5" v-if="inputShow === false && outputShow === false " style="color:var(--primary-text) !important">
       <div class="flex">
         <div class="flex flex-col flex-1 mr-4">
@@ -89,17 +90,17 @@ export default {
     },
     desk:{
       type:Object
-    }
+    },
+    openWay:{
+      type:String,
+      default:'desk'
+    },
   },
+  emit:['delete'],
   data(){
     return{
       defaultMic:{},
       defaultOutput:{},
-      options: {
-        defaultData: {
-          customSize: '2x4',
-        }
-      },
       audioValue:50,
       outputShow:false,
       inputShow:false,
@@ -121,18 +122,28 @@ export default {
       ],
       header:{
         title:'音频',
-        ifyIcon:'fluent:speaker-2-16-regular'
+        // ifyIcon:'fluent:speaker-2-16-regular'
+        showIcon:"/img/appLogo/audio.png",
+
       },
       customSize:'2x4',
     }
   },
   computed:{
     ...mapWritableState(inspectorStore,['audioTest','testingAudio']),
-    ...mapWritableState(appStore,['settings'])
+    ...mapWritableState(appStore,['settings']),
+    options(){
+      return {
+        defaultData: {
+          customSize: '2x4',
+        },
+        customDel:this.openWay === 'nav' ? true : false
+      }
+    }
   },
   async mounted () {
     this.customData.customSize = '2x4'
-    if (this.$useEnv()) return
+    if (this.$usePlat()) return
     this.init()
     //
     // const device = await navigator.bluetooth.requestDevice({
@@ -148,6 +159,9 @@ export default {
   },
   methods:{
     ...mapActions(inspectorStore,['startAudioTest','stopAudioTest']),
+    deleteCard(){
+      this.$emit('delete')
+    },
     async init(){
       this.defaultOutput = await getDefaultVolume()
       this.defaultMic=await getDefaultMic()

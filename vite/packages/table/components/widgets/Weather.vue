@@ -1,14 +1,15 @@
 <template>
-  <xt-container 
+  <xt-container
     @titleHover="openWeatherDrawer"
     v-model:customSize="customData.customSize"
     :header="header"
-    :options="options" 
-    ref="weatherSlot" 
-    :customIndex="customIndex" 
-    :customData="customData" 
-    :desk="desk" 
-    :envLimit="['offline']">
+    :options="options"
+    ref="weatherSlot"
+    :customIndex="customIndex"
+    :customData="customData"
+    :desk="desk"
+    :envLimit="['single']"
+    @delete="deleteCard">
     <!-- <div v-if="defaultCity" class="px-3 py-1 bg-mask rounded-xl pointer" @click="openWeatherDrawer" style="position: absolute;left: 45px;top:10px">
       {{ defaultCity.name }}
     </div> -->
@@ -104,24 +105,23 @@ export default {
     },
     desk:{
       type:Object
+    },
+    openWay:{
+      type:String,
+      default:'desk'
     }
   },
+  emit:['delete'],
   data() {
     return {
       today: "",
-      options:{
-        className:'card small',
-        title:'天气',
-        icon:'',
-        type:'weather',
-      },
       defaultValue:'',
       drawerTitle:'常用天气位置',
       env:{
         web: false,
         mobile: false,
         client: false,
-        offline:true
+        single:true
       },
     };
   },
@@ -144,9 +144,15 @@ export default {
     header(){
       return {
         title:this.defaultCity?.name ? this.defaultCity?.name : "天气",
-        ifyIcon:'fluent:cloud-16-regular',
+        // ifyIcon:'fluent:cloud-16-regular',
+        showIcon:"/img/appLogo/weather.png",
         titleHoverName:'点击切换',
         titleHover:true,
+      }
+    },
+    options(){
+      return {
+        customDel:this.openWay === 'nav' ? true : false,
       }
     },
     defaultCity(){
@@ -170,6 +176,10 @@ export default {
     this.customData.customSize = '2x2'
   },
   methods: {
+    // 自定义删除卡片事件
+    deleteCard() {
+      this.$emit("delete", this.customIndex);
+    },
     openWeatherDrawer(){
       this.$refs.regionDrawer.openDrawer()
     },

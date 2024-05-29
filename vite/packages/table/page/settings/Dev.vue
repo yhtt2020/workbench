@@ -15,7 +15,6 @@
         >
       </div>
       <div class="line">
-        <AppCenter  v-if="visible"/>
         <xt-button @click="openAppCenter" :w="140" :h="40" type="theme"
           >打开新版应用中心</xt-button
         >
@@ -92,12 +91,16 @@
             </tr>
           </tbody>
         </table>
+        <div>
+          <StorageStats></StorageStats>
+        </div>
       </div>
     </template>
   </xt-scrollbar>
 </template>
 
 <script>
+import StorageStats from '../../apps/systemSet/page/develop/StorageStats.vue';
 import ZoomUI from "../../components/comp/ZoomUI.vue";
 import { appStore } from "../../store";
 import { mapWritableState } from "pinia";
@@ -107,11 +110,10 @@ import { useWidgetStore } from "../../components/card/store.ts";
 import { message } from "ant-design-vue";
 import { prettyDisplayBytes } from "../../js/action/supervisory";
 import { useLogout } from "../../permission/user/useLogout";
-import AppCenter from "../../apps/appCenter";
 import { useAppCenterStore } from "../../apps/appCenter/src/store";
 export default {
   name: "Common",
-  components: { Template, ZoomUI, AppCenter },
+  components: { Template, ZoomUI,  StorageStats},
   data() {
     return {
       trayOpen: "",
@@ -160,7 +162,7 @@ export default {
     },
   },
   async mounted() {
-    if (this.$useEnv()) return;
+    if (this.$usePlat()) return;
     this.trayOpen = (await tsbApi.settings.get("trayOpen")) || "table";
     let showInTaskBar = await tsbApi.settings.get("showInTaskBar");
     if (showInTaskBar === undefined) {

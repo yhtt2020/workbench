@@ -94,6 +94,7 @@ const handleDragEnd = (event) => {
       isBackground: currentData.value.isBg,
       backgroundColor: currentData.value.bg,
       backgroundIndex: 0,
+      cardData: currentData.value.cardData || {},
     };
 
     let id = Date.now();
@@ -108,6 +109,7 @@ const handleDragEnd = (event) => {
         id,
       };
     }
+    console.log('file  :>> ', file );
     useAddCard(
       "myIcons",
       {
@@ -115,7 +117,7 @@ const handleDragEnd = (event) => {
       },
       id
     );
-    
+
     if(!isCtrl){
       emits("deleteFile", props.data);
     }
