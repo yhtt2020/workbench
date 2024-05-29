@@ -46,7 +46,7 @@ const isWebSource = computed(() => {
   }
   return true;
 });
-provide("words", debounceWord);
+provide("words", words);
 provide("currentSource", debounceSource);
 provide("currentOpenWith", currentOpenWith);
 provide("ctrlSelectIndex", ctrlSelectIndex);
@@ -224,6 +224,17 @@ const eventDown = (e) => {
     sourceIndex.value = (sourceIndex.value + 1) % tabSourceList.value.length;
     const sourceVal = tabSourceList.value[sourceIndex.value];
     selectTabSource(sourceVal);
+  }
+
+  if (e.code === "Space") {
+    console.log('222 :>> ', 222);
+    e.stopPropagation();
+  }
+
+  if (e.ctrlKey && (e.key === "A" || e.key === "a")) {
+    console.log('222 :>> ', 222);
+
+    e.stopPropagation();
   }
 };
 

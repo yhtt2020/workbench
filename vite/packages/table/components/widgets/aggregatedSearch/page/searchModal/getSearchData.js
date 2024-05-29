@@ -103,7 +103,7 @@ export const getTodoData = (word) => {
   tasks.value.forEach((item) => {
     if (item.title.includes(word) || item.description.includes(word)) {
       arr.push({
-        item,
+        ...item,
         name: item.title,
         icon: "/img/appLogo/todo.png",
       });

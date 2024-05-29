@@ -25,73 +25,113 @@ import { startApp } from "../../../../../ui/hooks/useStartApp";
 const systemList = ref([
   {
     name: "全部",
+    fn: async (words) => {},
   },
   {
     name: "收藏",
+    fn: async (words) => {
+      let likeData = getLikeData(words);
+      if (likeData) {
+        return likeData;
+      }
+    },
   },
   {
     name: "应用",
+    fn: async (words) => {
+      // 获取应用数据
+      let appData = getAppData(words);
+      if (appData) {
+        return appData;
+      }
+    },
   },
   {
     name: "备忘录",
+    fn: async (words) => {
+      let noteData = await getNoteData(words);
+      if (noteData) {
+        return noteData;
+      }
+    },
   },
   {
     name: "待办",
+    fn: async (words) => {
+      // 获取待办数据
+      let todoData = getTodoData(words);
+      if (todoData) {
+        return todoData;
+      }
+    },
   },
   {
     name: "剪切板",
+    fn: async (words) => {
+      // 获取剪切板数据
+      let clipboardData = await getClipboardData(words);
+      if (clipboardData) {
+        return clipboardData;
+      }
+    },
   },
   {
     name: "社群",
+    fn: async (words) => {
+      // 获取群聊数据
+      let groupData = getGroupData(words);
+      if (groupData) {
+        return groupData;
+      }
+    },
   },
   {
     name: "系统",
+    fn: async (words) => {},
   },
 ]);
 const searchList = ref([]);
-
+const loading = ref(false);
 const allSearch = async (val) => {
+  val = val.toString();
+  loading.value = true;
   searchList.value = [];
-  let arr = [];
-  // 获取便签数据
-  let noteData = await getNoteData(val);
-  if (noteData) {
-    arr.push(noteData);
-  }
-  // 获取收藏数据
-  let likeData = getLikeData(val);
-  if (likeData) {
-    arr.push(likeData);
+  // 搜索指定源
+  if (currentIndex.value !== 0) {
+    let res = await systemList.value[currentIndex.value].fn(val);
+    console.log("res :>> ", res);
+    if (res) {
+      searchList.value = [res];
+    }
+    loading.value = false;
+    return;
   }
 
-  // 获取应用数据
-  let appData = getAppData(val);
-  if (appData) {
-    arr.push(appData);
+  let arr = [];
+  for (let item of systemList.value) {
+    if (item.name === "全部") {
+      continue;
+    }
+    let res = await item.fn(val);
+    if (res) {
+      if (res.data.length > 2) {
+        console.log("res.data :>> ", res.data);
+        res.data = res.data.slice(0, 2);
+        res.more = true;
+      }
+      arr.push(res);
+    }
   }
-  // 获取待办数据
-  let todoData = getTodoData(val);
-  if (todoData) {
-    arr.push(todoData);
-  }
-  // 获取群聊数据
-  let groupData = getGroupData(val);
-  if (groupData) {
-    arr.push(groupData);
-  }
-  let clipboardData = await getClipboardData(val);
-  if (clipboardData) {
-    arr.push(clipboardData);
-  }
+  loading.value = false;
+
   searchList.value = arr;
 };
 
 watch(
-  words,
+  [words, currentIndex],
   (val) => {
-    console.log("222222 :>> ", val);
     ctrlSelectIndex.value = 0;
-    allSearch(val);
+    allSearch(words.value);
   },
   {
     immediate: true,
@@ -141,17 +181,37 @@ const openSystemApp = (data, name) => {
     </div>
   </xt-scrollbar>
   <Scrollbar>
-    <template v-for="item in searchList">
+    <div v-if="loading">加载中</div>
+    <template v-else-if="searchList.length > 0" v-for="item in searchList">
       <div class="p-2.5 tt-text-3 w-full text-sm flex justify-between">
         <div>
           {{ item.name }}
         </div>
-        <div class="cursor-pointer" @click="selectAll(item.name)">查看全部</div>
+        <div
+          class="cursor-pointer"
+          @click="selectAll(item.name)"
+          v-if="item.more"
+        >
+          查看全部
+        </div>
       </div>
 
       <div
-        class="w-full flex h-11 p-2.5 justify-between items-center cursor-pointer"
+        class="w-full flex items-center justify-between h-11 p-2.5 cursor-pointer rounded-xl hover:tt-theme-bg-2"
+        @click="openSystemApp(data, item.name)"
         v-for="data in item.data"
+      >
+        <xt-mix-icon :icon="data.icon" type="select" size="24" class="mr-2.5" />
+        <div
+          class="flex-1  truncate"
+        >
+          {{ data?.name }}
+        </div>
+        <div class="ml-1 text-xs tt-text-3">尾巴</div>
+      </div>
+
+      <!-- <div
+        class="w-full flex h-11 p-2.5 justify-between items-center cursor-pointer"
         @click="openSystemApp(data, item.name)"
       >
         <div class="flex flex-1">
@@ -163,16 +223,23 @@ const openSystemApp = (data, name) => {
           />
 
           <div class="flex-1 truncate">
-            {{ data?.name }}
+
           </div>
         </div>
         <div>网页</div>
-      </div>
+      </div> -->
     </template>
+    <template v-else> 无数据 </template>
     <div>
       {{ items }}
     </div>
   </Scrollbar>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+</style>

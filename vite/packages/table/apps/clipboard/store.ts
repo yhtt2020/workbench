@@ -101,7 +101,7 @@ export const clipboardStore = defineStore("clipboardStore", {
             const specialChars = /[.*+?^${}()|[\]\\]/g;
 
             // 使用正则表达式替换特殊字符
-            return str.replace(specialChars, "\\$&");
+            return str?.replace(specialChars, "\\$&");
           }
 
           const words = escapeSpecialChars(this.searchWords)

@@ -548,7 +548,7 @@ export const noteStore = defineStore("noteStore", {
               '_id': 'desc'
             }
           ]
-        }) 
+        })
         this.noteList = []
         tmp.docs.forEach((item, index) => {
           this.noteList.push(item)
