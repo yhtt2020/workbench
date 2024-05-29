@@ -37,7 +37,15 @@
             height: 100%;
           "
         >
-          <xt-button size="large" @click="this.panelVisible = true" v-if="!options.disableEdit">
+          <Unusual
+            :newIcon="'fluent-emoji-flat:globe-with-meridians'"
+            :normalButtonTitle="'配置卡片'"
+            class="mb-6"
+            :disableEdit="options.disableEdit"
+            @back="this.panelVisible = true"
+          />
+
+          <!-- <xt-button size="large" @click="this.panelVisible = true" v-if="!options.disableEdit">
             配置卡片
           </xt-button>
 
@@ -50,8 +58,7 @@
               />
               <span class="xt-text xt-font font-16">暂无数据</span>
             </div>
-          </template>
-
+          </template> -->
         </div>
         <template v-else>
           <iframe
@@ -68,6 +75,8 @@
   </xt-task>
 
   <a-drawer v-model:visible="panelVisible">
+    <CardSettingExplain v-if="communityAuth(desk?.communityNo)" />
+
     <div class="line">
       卡片地址：
       <a-input
@@ -110,6 +119,9 @@ import { mapWritableState, mapActions } from "pinia";
 import { cardStore } from "../../../store/card";
 // import RemoteShare from '../../card/remote/RemoteShare.vue';
 import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
+import { communityAuth } from "../../../apps/communityDesk/hooks/deskCreateMethod";
+import CardSettingExplain from "../../CardSettingExplain.vue";
+import Unusual from "../Unusual.vue";
 
 function loadScript(src, id, callback) {
   const s = document.createElement("script", id);
@@ -131,7 +143,7 @@ function loadScript(src, id, callback) {
 
 export default {
   name: "Remote",
-  components: { Widget },
+  components: { Widget, CardSettingExplain, Unusual },
   props: {
     customIndex: {
       type: Number,
@@ -219,6 +231,7 @@ export default {
   methods: {
     ...mapActions(cardStore, ["updateCustomData"]),
     ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+    communityAuth,
 
     openRightMenu() {
       this.$refs.remote.menuVisible = true;

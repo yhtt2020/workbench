@@ -22,28 +22,29 @@
     <div class="overflow-hidden dash-board" style="height: 365px">
       <Unusual
         v-if="!this.access_token || !this.baseUrl"
-        title="请完成小组件配置"
-        buttonTitle="立即配置"
-        @back="back"
         :disableEdit="options.disableEdit"
         :newIcon="'fluent-emoji:chart-increasing'"
-        :newTitle="'未读到社区数据'"
-      ></Unusual>
-      <div
-        v-else
-        class="mt-2 dash-cell"
-        v-for="(item, index) in targetKeys"
-        :key="index"
-      >
-        <div class="cell-title">{{ this.mockData[item - 1].title }}</div>
-        <div class="cell-num" style="font-family: 'Oswald-Medium'">
-          {{
-            this.mockData[item - 1].num == undefined
-              ? "-"
-              : this.mockData[item - 1].num
-          }}
-        </div>
-      </div>
+        :title="'请完成小组件配置'"
+        :normalButtonTitle="'立即配置'"
+        :description="'未读到社区数据'"
+        @back="settingBack"
+      />
+
+      <template v-else>
+        <template v-for="(item, index) in targetKeys" :key="index">
+          <div class="mt-2 dash-cell">
+            <div class="cell-title">{{ this.mockData[item - 1].title }}</div>
+            <div class="cell-num" style="font-family: 'Oswald-Medium'">
+              {{
+                this.mockData[item - 1].num == undefined
+                  ? "-"
+                  : this.mockData[item - 1].num
+              }}
+            </div>
+          </div>
+        </template>
+      </template>
+
     </div>
 
     <!-- 设置面板 -->
@@ -64,7 +65,6 @@
         </div>
       </template>
       <vue-custom-scrollbar :settings="settings" style="height: 100%">
-
         <CardSettingExplain v-if="communityAuth(desk?.communityNo)" />
 
         <div v-show="this.setVisible">
@@ -147,7 +147,7 @@ import { mapActions, mapState, mapWritableState } from "pinia";
 import { shortTalkStore } from "../store";
 import Unusual from "../../Unusual.vue";
 import { communityNavStore } from "../../../bottomPanel/store/communityNavStore";
-import { communityAuth }  from "../../../../apps/communityDesk/hooks/deskCreateMethod";
+import { communityAuth } from "../../../../apps/communityDesk/hooks/deskCreateMethod";
 
 import CardSettingExplain from "../../../CardSettingExplain.vue";
 
@@ -345,7 +345,7 @@ export default {
       );
     },
 
-    back() {
+    settingBack() {
       this.settingVisible = true;
       this.setVisible = true;
     },
@@ -488,8 +488,8 @@ export default {
 }
 
 // :deep(.ant-drawer-body) {
-  // padding: 100px !important;
-  // font-size: 10px;
+// padding: 100px !important;
+// font-size: 10px;
 //}
 
 .input-txt {

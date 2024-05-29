@@ -14,33 +14,34 @@
   >
     <Unusual
       v-if="!this.access_token || !this.baseUrl"
-      title="请完成小组件配置"
-      buttonTitle="立即配置"
-      @back="back"
       :disableEdit="options.disableEdit"
       :newIcon="'fluent-emoji:memo'"
-      :newTitle="'未读到社区数据'"
-    ></Unusual>
+      :title="'请完成小组件配置'"
+      :description="'未读到社区数据'"
+      :normalButtonTitle="'立即配置'"
+      @back="todoBack"
+    />
+
     <div v-else class="dash-board">
-      <div
-        class="dash-cell pointer"
-        :class="
-          (item.num == 0 || item.num == undefined
-            ? 'green'
-            : item.num < 100
-            ? 'yellow'
-            : 'red',
-          index > 1 ? 'mt-3' : '')
-        "
-        v-for="(item, index) in this.todoList"
-        :key="index"
-        @click="jumpUrl(item.url)"
-      >
-        <div class="cell-title">{{ item.title }}</div>
-        <div class="cell-num" style="font-family: 'Oswald-Medium'">
-          {{ item.num == undefined ? "-" : item.num }}
+      <template v-for="(item, index) in this.todoList" :key="index">
+        <div
+          class="dash-cell pointer"
+          :class="
+            (item.num == 0 || item.num == undefined
+              ? 'green'
+              : item.num < 100
+              ? 'yellow'
+              : 'red',
+            index > 1 ? 'mt-3' : '')
+          "
+          @click="jumpUrl(item.url)"
+        >
+          <div class="cell-title">{{ item.title }}</div>
+          <div class="cell-num" style="font-family: 'Oswald-Medium'">
+            {{ item.num == undefined ? "-" : item.num }}
+          </div>
         </div>
-      </div>
+      </template>
     </div>
     <!-- 设置面板 -->
     <a-drawer
@@ -59,7 +60,7 @@
         </div>
       </template>
       <vue-custom-scrollbar :settings="settings" style="height: 100%">
-        <CardSettingExplain v-if="communityAuth(desk?.communityNo)"/>
+        <CardSettingExplain v-if="communityAuth(desk?.communityNo)" />
 
         <div>
           <div class="text-content">
@@ -222,7 +223,7 @@ export default {
     jumpUrl(url) {
       browser.openInUserSelect(url);
     },
-    back() {
+    todoBack() {
       this.settingVisible = true;
     },
     deleteCard() {

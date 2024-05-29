@@ -71,9 +71,17 @@
       </div>
     </div>
     <div v-else class="flex flex-col items-center justify-center h-full">
-      <!-- <a-empty description="" /> -->
+      <Unusual
+        :newIcon="'fluent-emoji-flat:framed-picture'"
+        class="mb-6"
+        :normalButtonTitle="'选择图片'"
+        :disableEdit="options.disableEdit"
+        @back="importFile"
+      />
 
-      <xt-button type="theme" @click="importFile"> 选择图片 </xt-button>
+      <!-- <a-empty description="" /> -->
+      <!-- <xt-button type="theme" @click="importFile"> 选择图片 </xt-button> -->
+
     </div>
   </xt-container>
   <!-- 新版设置 -->
@@ -114,6 +122,8 @@ import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
 
 import { usePlat } from "../../../ui/hooks/usePlat";
 import CustomModal from "./components/CustomModal.vue";
+import Unusual from "../Unusual.vue";
+
 let appModel;
 if (usePlat("client")) {
   appModel = window.$models.appModel;
@@ -129,6 +139,7 @@ export default {
     listItem,
     ModalList,
     CustomModal,
+    Unusual,
   },
   props: {
     customIndex: {
@@ -203,22 +214,19 @@ export default {
       return this.myData.img.middleSrc || this.myData.img.src;
     },
 
-
-
     options() {
       return {
         bg: this.customData.hideFrame ? "transparent" : "",
         shadow: this.customData.hideFrame,
         resize: this.isCommunityDesktop(this.desk) ? false : true,
         customDel: this.openWay === "nav" ? true : false,
-        disableEdit:this.isCommunityDesktop(this.desk) ,
+        disableEdit: this.isCommunityDesktop(this.desk),
       };
     },
   },
   methods: {
     ...mapActions(cardStore, ["updateCustomData"]),
     ...mapActions(communityNavStore, ["isCommunityDesktop"]),
-
 
     deleteCard() {
       this.$emit("delete");
@@ -375,11 +383,10 @@ export default {
       this.customData.customSize = "2x2";
     }
 
-    if(this.options.disableEdit){
+    if (this.options.disableEdit) {
       this.sizeList = [];
-      this.menuList = []
-    }
-    else {
+      this.menuList = [];
+    } else {
       this.menuList = [
         {
           icon: "shezhi1",
@@ -394,9 +401,8 @@ export default {
         { title: "2x2", className: "small", name: "2x2" },
         { title: "2x4", className: "", name: "2x4" },
         { title: "4x4", className: "double", name: "4x4" },
-      ]
+      ];
     }
-
   },
   // watch: {
   //   'myData.img':{

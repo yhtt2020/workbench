@@ -11,13 +11,9 @@
     :envLimit="['single']"
     @delete="deleteCard">
 
-    <!-- <div v-if="defaultCity" class="px-3 py-1 bg-mask rounded-xl pointer" @click="openWeatherDrawer" style="position: absolute;left: 45px;top:10px">
-      {{ defaultCity.name }}
-    </div> -->
-
     <div @click="enterWeather">
       <div v-if="!cities.length">
-        <Unusual :newIcon="'fluent-emoji:sun-behind-cloud'" :buttonTitle="'添加城市'" @back="add"/>
+        <Unusual :newIcon="'fluent-emoji:sun-behind-cloud'" :normalButtonTitle="'添加城市'" @back="add"/>
 
         <!-- <div>
           <a-col style="text-align: center; margin-top: 0em">

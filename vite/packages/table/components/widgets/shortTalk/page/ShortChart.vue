@@ -14,13 +14,15 @@
     <Unusual
       v-if="!this.access_token || !this.baseUrl"
       title="请完成小组件配置"
-      buttonTitle="立即配置"
-      @back="back"
       :disableEdit="options.disableEdit"
       :newIcon="'fluent-emoji:memo'"
-      :newTitle="'未读到社区数据'"
-    ></Unusual>
+      :description="'未读到社区数据'"
+      :normalButtonTitle="'立即配置'"
+      @back="shortBack"
+    />
+    
     <div v-else class="echarts" ref="myChart" :style="myChartStyle"></div>
+
     <!-- 设置面板 -->
     <a-drawer
       :width="500"
@@ -47,8 +49,8 @@
         </div>
       </template>
       <vue-custom-scrollbar :settings="settings" style="height: 100%">
-        <CardSettingExplain  v-if="communityAuth(desk?.communityNo)"/>
-        
+        <CardSettingExplain v-if="communityAuth(desk?.communityNo)" />
+
         <div v-show="this.setVisible">
           <div class="text-content">
             <div>关联短说社区系统</div>
@@ -74,7 +76,7 @@
             class="pl-1 search input-txt"
           ></a-input>
         </div>
-        
+
         <div v-show="!this.setVisible">
           <div
             class="txt-content pointer"
@@ -574,7 +576,7 @@ export default {
         this.init();
       }, 500);
     },
-    back() {
+    shortBack() {
       this.settingVisible = true;
     },
   },

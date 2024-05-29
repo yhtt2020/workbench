@@ -70,16 +70,22 @@
           </vue-custom-scrollbar>
         </div>
         <Unusual
-          :title="'暂无数据'"
-          :buttonTitle="'设置'"
           v-else
+          :newIcon="'fluent-emoji:magnifying-glass-tilted-right'"
+          :title="'没有找到相关内容'"
+          :description="'没有找到相关内容'"
+          :disableEdit="options.disableEdit"
+          :normalButtonTitle="'设置'"
           @back="backSetting"
         ></Unusual>
       </div>
       <Unusual
-        :title="'暂无数据'"
-        :buttonTitle="'设置'"
         v-else
+        :newIcon="'fluent-emoji:magnifying-glass-tilted-right'"
+        :title="'没有找到相关内容'"
+        :description="'没有找到相关内容'"
+        :normalButtonTitle="'设置'"
+        :disableEdit="options.disableEdit"
         @back="backSetting"
       ></Unusual>
     </xt-container>

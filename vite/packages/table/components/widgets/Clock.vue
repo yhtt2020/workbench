@@ -102,13 +102,25 @@
       v-else-if="clockEvent.length <= 0"
       style="width: 100%"
     >
-      <!-- 
-      <div class="right-title" @click.stop="showDrawer" @contextmenu.stop="showDrawer">
-        <Icon icon="gengduo1" class="title-icon" style="cursor:pointer"></Icon>
-      </div>
-     -->
+      <Unusual
+        :newIcon="'fluent-emoji:alarm-clock'"
+        :normalButtonTitle="'添加闹钟'"
+        :addButtonTitle="'添加定时器'"
+        :menuAble="true"
+        :menuList="timerMenu"
+        :buttonColor="'#fbae17'"
+        @back="onSetup"
+        v-if="!options.disableEdit"
+      />
 
-      <div
+      <template v-else>
+        <div class="flex flex-col items-center justify-center h-full">
+          <xt-ify-icon icon="fluent-emoji:alarm-clock" class="pb-4" size="56" />
+          <span class="xt-text xt-font font-16">暂无数据</span>
+        </div>
+      </template>
+
+      <!-- <div
         class="flex flex-col items-center justify-center h-full"
         v-if="!options.disableEdit"
       >
@@ -130,20 +142,10 @@
               添加定时器
             </xt-button>
           </div>
-          <!-- @click="onSetCountDown" -->
-        </xt-menu>
-      </div>
-
-      <template v-else>
-        <div class="flex flex-col items-center justify-center h-full">
-          <xt-ify-icon
-            icon="fluent-emoji:alarm-clock"
-            class="pb-4"
-            size="56"
-          />
-          <span class="xt-text xt-font font-16">暂无数据</span>
-        </div>
-      </template>
+          @click="onSetCountDown"
+        </xt-menu>        
+      </div>-->
+      
     </div>
     <div
       @click="onSetup"
@@ -172,7 +174,7 @@
         </clockIcon>
         下一个闹钟
       </div>
-      <!-- style="font-size: 3em; margin-top: 0.5em" -->
+
       <div
         class="mt-2 mb-4 font-40"
         style="
@@ -181,7 +183,6 @@
           font-weight: 600;
         "
       >
-        <!-- <icon icon="naozhong"></icon> -->
         {{ clockEvent[0].dateValue.hours }}:{{
           clockEvent[0].dateValue.minutes
         }}
@@ -194,8 +195,7 @@
       </div>
     </div>
   </xt-container>
-  <!-- {{ topClockSettingVisible }} -->
-  <!-- <clockDrawer v-if="topClockSettingVisible"></clockDrawer> -->
+
   <a-drawer
     v-model:visible="topClockSettingVisible"
     class="custom-class xt-text"
@@ -204,10 +204,19 @@
     placement="right"
     :width="600"
   >
-    <div class="flex">
+    <CardSettingExplain
+      v-if="communityAuth(desk?.communityNo)"
+      style="margin-bottom: 0 !important"
+    />
+
+    <div
+      class="flex"
+      :class="communityAuth(desk?.communityNo) ? 'mt-4' : 'mt-0'"
+    >
       <SetupClock></SetupClock>
     </div>
   </a-drawer>
+
   <a-modal
     v-model:visible="custom"
     title=""
@@ -243,10 +252,13 @@ import Widget from "../card/Widget.vue";
 import { Icon as clockIcon } from "@iconify/vue";
 import SetupClock from "./setClock.vue";
 import { communityNavStore } from "../bottomPanel/store/communityNavStore";
+import Unusual from "./Unusual.vue";
+import CardSettingExplain from "../CardSettingExplain.vue";
+import { communityAuth } from "../../apps/communityDesk/hooks/deskCreateMethod";
 
 export default {
   name: "Clock",
-  components: { Widget, clockIcon, SetupClock },
+  components: { Widget, clockIcon, SetupClock, Unusual, CardSettingExplain },
   props: {
     customIndex: {
       type: Number,
@@ -366,6 +378,7 @@ export default {
     ]),
     ...mapActions(topClockSettingStore, ["changeSettingStatus"]),
     ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+    communityAuth,
 
     deleteCard() {
       this.$emit("delete");

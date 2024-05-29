@@ -80,6 +80,8 @@
     width="500"
   >
     <div class="flex flex-col" style="color: var(--primary-text)">
+      <CardSettingExplain v-if="communityAuth(desk?.communityNo)"/>
+
       <span class="drawer-title" style="margin-top: 0">类型</span>
       <span
         v-for="(item, index) in todoType"
@@ -122,6 +124,8 @@ import { Icon as newIcon } from "@iconify/vue";
 import { taskStore } from "../../../page/app/todo/stores/task";
 import { listStore } from "../../../page/app/todo/stores/list";
 import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
+import CardSettingExplain from "../../CardSettingExplain.vue";
+import { communityAuth } from "../../../apps/communityDesk/hooks/deskCreateMethod";
 
 export default {
   name: "Todo",
@@ -136,6 +140,7 @@ export default {
     Widget,
     Tasklist,
     newIcon,
+    CardSettingExplain
   },
   props: {
     customIndex: {
@@ -148,6 +153,7 @@ export default {
     },
     desk: {
       type: Object,
+      default: () => {},
     },
     openWay: {
       type: String,
@@ -194,7 +200,7 @@ export default {
   computed: {
     ...mapWritableState(taskStore, ["taskFilter", "displayList", "tasks"]),
     ...mapWritableState(listStore, ["activeList", "lists"]),
-
+    
     notFinish() {
       return this.taskList.filter((item) => !item.completed);
     },
@@ -277,6 +283,7 @@ export default {
   },
   methods: {
     ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+    communityAuth,
 
     deleteCard() {
       this.$emit("delete");
