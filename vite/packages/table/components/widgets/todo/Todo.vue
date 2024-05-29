@@ -175,11 +175,9 @@ export default {
     if (this.customData?.currentTodo) {
       this.selectTodo = this.customData.currentTodo
     }
-    console.log('this.lists :>> ', this.lists);
     this.listType = this.lists?.map((item, index) => {
       return Object.assign({}, {'title': item.title, 'nanoid': item.nanoid})
     })
-    console.log('    this.listType :>> ',     this.listType);
     if (!this.listType.length) this.selectTodo = {title: '个人', nanoid: 'T00111'}
     this.getTodoType(this.selectTodo)
     if(this.customData.customSize === undefined){

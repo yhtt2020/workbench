@@ -115,7 +115,6 @@ const surplusIcon = computed(() => {
   arr = customData.value.sourceList?.slice(1, 4);
   arr.unshift(...defaultSourceList);
 
-  console.log('arr 222 :>> ', arr);
   return arr;
 });
 </script>

@@ -54,6 +54,15 @@ export const clipboardStore = defineStore("clipboardStore", {
       this.hasNextPage = true
       this.nextPage()
     },
+    // 关键字搜索 聚合搜索使用
+    async wordsSearch(val) {
+      this.searchWords = val
+      this.items = []
+      this.hasNextPage = true
+      let res = await this.nextPage()
+      this.searchWords = ''
+      return res
+    },
     async nextPage() {
 
       let dbKey = ''
