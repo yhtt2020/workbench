@@ -192,8 +192,10 @@
         @onBack="
           () => {
             this.addCardVisible = false;
+            console.log('返回');
           }
         "
+        :communityRole="communityRole"
       ></NewAddCard>
     </div>
   </transition>
@@ -326,7 +328,10 @@ export default {
     },
     communityRole:{
       type:Boolean,
-      default:false,
+    },
+    communityInfo:{
+      type: Object,
+      required: true,
     }
   },
   watch: {
@@ -651,6 +656,7 @@ export default {
             okButtonWidth: 100,
             type: "warning",
             ok: () => {
+
               desk?.cards?.forEach((item) => {
                 //移除桌面相关的便签卡片
                 if (item.name === "notes" && !this.$usePlat()) {
@@ -675,6 +681,11 @@ export default {
               desk.cards = [];
               this.menuVisible = false;
               this.clearFreeLayoutData();
+
+              if(this.communityInfo?.role === 'owner'){
+                this.$bus.emit('updateSync')
+              }
+
             },
           });
         }
@@ -698,9 +709,6 @@ export default {
     },
     hideAddCard() {
       this.addCardVisible = false;
-      if(this.communityRole){
-        this.$bus.emit('updateSync')
-      }
     },
     onClose() {
       this.menuVisible = false;

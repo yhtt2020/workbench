@@ -11,33 +11,63 @@
       :envLimit="['guest', 'offline']"
       :header="header"
       v-model:customSize="customData.customSize"
-      @delete="doRemoveCard">
+      @delete="doRemoveCard"
+    >
       <div class="mt-1">
-        <a-input v-model:value="inputValue" :bordered="false" placeholder="问我任何问题" class=" xt-bg h-[48px] rounded-xl"
-          @keyup.enter="enterMsg">
+        <a-input
+          v-model:value="inputValue"
+          :bordered="false"
+          placeholder="问我任何问题"
+          class="xt-bg h-[48px] rounded-xl"
+          @keyup.enter="enterMsg"
+        >
           <template #suffix>
-            <SendOutlined class="xt-text-2 pointer" style="font-size: 20px;" @click="enterMsg" />
+            <SendOutlined
+              class="xt-text-2 pointer"
+              style="font-size: 20px"
+              @click="enterMsg"
+            />
           </template>
         </a-input>
         <div class="mt-2 mb-2 text-base xt-text">最近对话</div>
         <template v-if="recentList">
-          <div class="mb-3 xt-bg rounded-xl cursor-pointer" v-for="index in copyNum"
-            :style="{ height: copyNum !== 1 ? '56px' : '48px', lineHeight: copyNum !== 1 ? '56px' : '48px', }" >
-            <div class="flex items-center h-full ml-4"  @click="goPage(index - 1)">
+          <div
+            class="mb-3 xt-bg rounded-xl cursor-pointer"
+            v-for="index in copyNum"
+            :style="{
+              height: copyNum !== 1 ? '56px' : '48px',
+              lineHeight: copyNum !== 1 ? '56px' : '48px',
+            }"
+          >
+            <div
+              class="flex items-center h-full ml-4"
+              @click="goPage(index - 1)"
+            >
               <!-- <AiIcon icon="fluent:chat-16-regular" style="font-size: 20px;" class="mr-3 xt-text" /> -->
-              <xt-mix-icon class="mr-3 text-xl xt-text"
-                :icon="recentList[index - 1].icon.name" type="select"></xt-mix-icon>
-              <div class="text-base xt-text ">{{ recentList[index - 1]?.name }}</div>
+              <xt-mix-icon
+                class="mr-3 text-xl xt-text"
+                :icon="recentList[index - 1].icon.name"
+                type="select"
+              ></xt-mix-icon>
+              <div class="text-base xt-text">
+                {{ recentList[index - 1]?.name }}
+              </div>
             </div>
           </div>
         </template>
         <template v-else>
-          <div v-if="copyNum == 1" style="text-align: center;font-size: 16px;">暂无数据</div>
-          <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"
-            class="mt-4"></DataStatu>
+          <div v-if="copyNum == 1" style="text-align: center; font-size: 16px">
+            暂无数据
+          </div>
+          <DataStatu
+            v-else
+            imgDisplay="/img/test/load-ail.png"
+            :btnToggle="false"
+            textPrompt="暂无数据"
+            class="mt-4"
+          ></DataStatu>
         </template>
       </div>
-
     </xt-container>
   </div>
 </template>
@@ -54,18 +84,20 @@ import {
 } from "@ant-design/icons-vue";
 import DataStatu from "./DataStatu.vue";
 import { aiStore } from "../../store/ai";
-import { mapWritableState } from "pinia";
-import { Icon as AiIcon } from '@iconify/vue'
+import { mapWritableState, mapActions } from "pinia";
+import { Icon as AiIcon } from "@iconify/vue";
+import { communityNavStore } from "../bottomPanel/store/communityNavStore";
+
 export default {
   name: "AIaides",
-  emit:['delete'],
+  emit: ["delete"],
   components: {
     Widget,
     MessageOutlined,
     SendOutlined,
     RobotOutlined,
     DataStatu,
-    AiIcon
+    AiIcon,
   },
   props: {
     customIndex: {
@@ -74,7 +106,7 @@ export default {
     },
     customData: {
       type: Object,
-      default: () => { },
+      default: () => {},
     },
     desk: {
       type: Object,
@@ -82,7 +114,7 @@ export default {
     openWay: {
       type: String,
       default: "desk",
-    }
+    },
   },
   data() {
     return {
@@ -95,21 +127,22 @@ export default {
       inputValue: "",
       header: {
         // ifyIcon:"fluent:bot-24-regular",
-        showIcon:"/img/appLogo/ai.png",
-        title:"AI助手",
-        titleHover:true,
-        titleHoverName:'打开应用',
+        showIcon: "/img/appLogo/ai.png",
+        title: "AI助手",
+        titleHover: true,
+        titleHoverName: "打开应用",
       },
     };
-
   },
   methods: {
+    ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+
     doRemoveCard(value) {
-      if(this.openWay === 'nav'){
-        console.log(value)
-        this.$emit("delete", this.customIndex)
+      if (this.openWay === "nav") {
+        console.log(value);
+        this.$emit("delete", this.customIndex);
       } else {
-        return
+        return;
       }
     },
     // 跳转至AI，并创建新对话
@@ -125,55 +158,68 @@ export default {
     goPage(index) {
       this.selectTopicIndex = this.recentList[index].id;
       // useOpenAi()
-      const { openApp } = useAppModal('ai')
-      openApp()
-      return
+      const { openApp } = useAppModal("ai");
+      openApp();
+      return;
     },
     pushToMain() {
-      const { openApp } = useAppModal('ai')
-      openApp()
+      const { openApp } = useAppModal("ai");
+      openApp();
     },
   },
   computed: {
-    ...mapWritableState(aiStore, ["recentList", "selectTopicIndex",]),
+    ...mapWritableState(aiStore, ["recentList", "selectTopicIndex"]),
+
     // 判断尺寸大小
     showSize() {
       if (this.customData.customSize) {
-        let arr = this.customData.customSize.split('x')
+        let arr = this.customData.customSize.split("x");
         return {
           width: arr[0],
-          height: arr[1]
-        }
-      }else{
+          height: arr[1],
+        };
+      } else {
         return {
           width: 2,
-          height: 2
-        }
+          height: 2,
+        };
       }
     },
     // 判断不同高度返回不同具体会话个数
     copyNum() {
-      return this.showSize.height == 2 ? 1 : this.recentList?.slice(0, 4).length;
+      return this.showSize.height == 2
+        ? 1
+        : this.recentList?.slice(0, 4).length;
     },
-    options () {
+    options() {
       return {
-        customDel: this.openWay === 'nav' ? true : false,
-        defaultData:{
-          customSize:this.customData.customSize || '2x2'
-        }
-      }
+        customDel: this.openWay === "nav" ? true : false,
+        defaultData: {
+          customSize: this.customData.customSize || "2x2",
+        },
+        disableEdit: this.isCommunityDesktop(this.desk),
+      };
     },
   },
   watch: {
-    customSize(newVal,oldVal) {
-      this.customData.customSize = newVal
-    }
+    customSize(newVal, oldVal) {
+      this.customData.customSize = newVal;
+    },
   },
   mounted() {
     if (this.customData.customSize == undefined) {
-      this.customData.customSize = '2x2'
+      this.customData.customSize = "2x2";
     }
-  }
+    // 根据权限设置尺寸大小
+    if (this.options.disableEdit) {
+      this.sizeList = [];
+    } else {
+      this.sizeList = [
+        { value: "2x2", name: "2x2" },
+        { value: "2x4", name: "2x4" },
+      ];
+    }
+  },
 };
 </script>
 <style lang="scss" scoped>

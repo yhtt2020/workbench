@@ -23,6 +23,8 @@ import Widget from '../card/Widget.vue'
 import { Calendar  } from 'v-calendar';
 import 'v-calendar/style.css';
 import { Icon as newIcon } from '@iconify/vue';
+import { communityNavStore } from "../bottomPanel/store/communityNavStore";
+
 export default {
   name: 'CustomTimer',
   props:['desk','customData','openWay','customIndex'],
@@ -41,8 +43,6 @@ export default {
         title:'日历',
         // ifyIcon:"fluent:calendar-16-regular",
         showIcon:"/img/appLogo/customTimer.png",
-
-
       },
       customSize:'2x4'
 
@@ -58,6 +58,7 @@ export default {
     options(){
       return {
         customDel: this.openWay === "nav" ? true : false,
+        disableEdit:this.isCommunityDesktop(this.desk),
       }
     }
   },
@@ -66,6 +67,8 @@ export default {
     this.customData.customSize = '2x3'
   },
   methods: {
+    ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+
     onPanelChange (value, mode) {},
     ...mapActions(cardStore, ['removeCard']),
    async moveToday(){

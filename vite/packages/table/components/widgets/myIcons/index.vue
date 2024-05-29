@@ -11,20 +11,20 @@
     ref="homelSlotRef"
     :desk="desk"
   > -->
-    <div ref="iconRef" class="box-border icon-box" :style="dragStyle">
-      <!-- 可放置区域 -->
-      <droppable-area @drop="handleDrop">
-        <xt-container
-          :header="header"
-          :customSize="'1x1'"
-          :customIndex="customIndex"
-          :size="customSize"
-          :options="options"
-          :menuList="menuList"
-          ref="homelSlotRef"
-          :customData="customData"
-          :desk="desk"
-        >
+  <div ref="iconRef" class="box-border icon-box" :style="dragStyle">
+    <!-- 可放置区域 -->
+    <droppable-area @drop="handleDrop">
+      <xt-container
+        :header="header"
+        :customSize="'1x1'"
+        :customIndex="customIndex"
+        :size="customSize"
+        :options="options"
+        :menuList="menuList"
+        ref="homelSlotRef"
+        :customData="customData"
+        :desk="desk"
+      >
         <xt-task :modelValue="m0202" @cb="handleMenu">
           <drag-and-follow
             :isSelect="isSelect"
@@ -76,10 +76,10 @@
             <!-- </template> -->
           </drag-and-follow>
         </xt-task>
-        </xt-container>
-      </droppable-area>
-      <!-- 卡片核心 -->
-    </div>
+      </xt-container>
+    </droppable-area>
+    <!-- 卡片核心 -->
+  </div>
   <!-- </Widget> -->
   <!-- 图标组件结束 -->
   <!-- 内容编辑 -->
@@ -138,6 +138,8 @@ import {
 import { nanoid } from "nanoid";
 import { useFreeLayoutStore } from "../../desk/freeLayout/store";
 import { update } from "../../../apps/appCenter/src/views/developer/hooks/update";
+import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
+
 export default {
   props: {
     customIndex: {
@@ -168,7 +170,11 @@ export default {
       isSelect: false,
       settingVisible: false, // 编辑状态
       iconsSetVisible: false,
-      options: { custom:true, disabledDelete:true }, // 卡片核心配置
+      options: {
+        custom: true,
+        disabledDelete: true,
+        disableEdit: this.isCommunityDesktop(this.desk),
+      }, // 卡片核心配置
       // 卡片类相关数据
       modelVisible: false, // 卡片弹窗是否可见
       cardData: {}, // 卡片详细数据
@@ -280,10 +286,10 @@ export default {
     ...mapWritableState(taskStore, ["taskID", "step"]),
     ...mapWritableState(useFreeLayoutStore, ["getCurrentDesk", "isFreeLayout"]),
     // 新版小组件头部设置
-    header(){
+    header() {
       return {
-        disabled:true
-      }
+        disabled: true,
+      };
     },
     m02021() {
       return (
@@ -379,7 +385,11 @@ export default {
         //   menus.splice(settingIndex, 1);
         // }
       }
-      return menus;
+      if (this.options.disableEdit) {
+        return [];
+      } else {
+        return menus;
+      }
     },
   },
   watch: {
@@ -392,6 +402,8 @@ export default {
   },
   methods: {
     ...mapActions(cardStore, ["updateCustomData", "addCard"]),
+    ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+
     openCard() {
       this.cardData = this.customData.iconList[0];
       this.modelVisible = true;
@@ -403,9 +415,7 @@ export default {
       let icon = this.customData.iconList[this.index];
       this.edit = {};
       Object.keys(this.iconOption).forEach((k) => {
-        this.edit[k] =   icon[k] !== undefined
-          ? icon[k]
-          : this.iconOption[k]
+        this.edit[k] = icon[k] !== undefined ? icon[k] : this.iconOption[k];
       });
       this.settingVisible = true;
     },
