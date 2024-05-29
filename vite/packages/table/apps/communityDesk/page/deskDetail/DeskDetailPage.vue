@@ -27,6 +27,7 @@
           @changeEditing="editing = !editing"
           @onArrange="onArrange"
           :communityRole="communityRole"
+          :communityInfo="communityInfo"
         >
           <!-- 拿菜单数据 -->
           <template #settingsAllAfter>
@@ -84,6 +85,7 @@
               :key="key"
               :currentDesk="currentDesk"
               :communityRole="communityRole"
+              :communityInfo="communityInfo"
             />
           </span>
         </template>
@@ -98,6 +100,7 @@
         :currentDeskId="currentDeskId"
         @tabDeskId="setCurrentDeskId"
       />
+
     </div>
   </template>
 
@@ -486,11 +489,11 @@ export default {
   },
 
   computed: {
-    ...mapWritableState(communityNavStore, ["currentCommunity"]),
+    // ...mapWritableState(communityNavStore, ["currentCommunity"]),
     ...mapWritableState(deskStore, ["apiList"]),
     ...mapWritableState(taskStore, ["taskID", "step", "taskTmp"]),
     ...mapWritableState(useDeskStore, ["menus"]),
-    ...mapWritableState(communityDeskStore, ["syncDesk", "setting"]),
+    ...mapWritableState(communityDeskStore, ["syncDesk", "setting","communityDeskInfo"]),
     ...mapWritableState(appStore, [
       "fullScreen",
       "showGuide",
@@ -511,12 +514,13 @@ export default {
 
     // 社群信息
     communityInfo() {
-      return this.currentCommunity?.item;
+      // console.log('查看社群信息',this.communityDeskInfo);
+      return this.communityDeskInfo;
     },
 
     // 社群角色权限
     communityRole() {
-      return this.currentCommunity?.item?.role === "owner";
+      return this.communityDeskInfo?.role === "owner";
     },
 
     // 右键下拉菜单
@@ -684,6 +688,7 @@ export default {
     loadCommunityCloud() {
       this.setCurrentDeskNo(this.communityInfo.no);
       this.loadCommunityDeskAll();
+      this.setCurrentDefaultDesk();
     },
 
     // 设置当前桌面的默认状态

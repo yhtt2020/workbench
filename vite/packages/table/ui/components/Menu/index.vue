@@ -11,31 +11,34 @@
         @enter="handleEnter"
         @afterEnter="handleAfterEnter"
       >
-        <div
-          v-if="show"
-          class="container fixed xt-modal xt-b xt-shadow rounded-xl xt-text"
-          :style="pos"
-          v-resize="handleMenuViewport"
-          @mouseleave="handleCloseLock()"
-          @mouseover="handleStartLock()"
-        >
-          <slot name="menu">
-            <div class="w-full h-full px-2 list">
-              <Menus
-                @handleClick="handleItemCallBack"
-                :menus="menus"
-                :name="name"
-                :fn="fn"
-              >
-                <template #cardSize>
-                  <slot name="cardSize"></slot>
-                </template>
-              </Menus>
-              <!-- 扩展插槽 -->
-              <slot name="extraMenu"></slot>
-            </div>
-          </slot>
-        </div>
+        <!-- 判断当前右键菜单是否为空 -->
+        <template v-if="menus.length > 0">
+          <div
+            v-if="show"
+            class="container fixed xt-modal xt-b xt-shadow rounded-xl xt-text"
+            :style="pos"
+            v-resize="handleMenuViewport"
+            @mouseleave="handleCloseLock()"
+            @mouseover="handleStartLock()"
+          >
+            <slot name="menu">
+              <div class="w-full h-full px-2 list">
+                <Menus
+                  @handleClick="handleItemCallBack"
+                  :menus="menus"
+                  :name="name"
+                  :fn="fn"
+                >
+                  <template #cardSize>
+                    <slot name="cardSize"></slot>
+                  </template>
+                </Menus>
+                <!-- 扩展插槽 -->
+                <slot name="extraMenu"></slot>
+              </div>
+            </slot>
+          </div>
+        </template>
       </Transition>
     </teleport>
   </div>

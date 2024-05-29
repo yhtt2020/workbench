@@ -67,6 +67,8 @@ export const defaultProps = {
         disabledDrag: false,
         // 是否允许添加到导航栏
         disabledNav: false,
+        // 在社群成员桌面的情况下禁用组件编辑
+        disableEdit:false,
       };
     },
   },

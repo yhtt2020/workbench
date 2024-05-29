@@ -45,9 +45,9 @@ export const communityNavStore = defineStore("communityNav", {
         mode: "app",
         type: "systemApp",
         id: nanoid(11),
-        no:1,
-        cno:1,
-        role:'member',
+        no: 1,
+        cno: 1,
+        role: "member",
       },
       defaultItem: {
         icon: "/logo/community.svg",
@@ -94,6 +94,15 @@ export const communityNavStore = defineStore("communityNav", {
       );
     },
 
+    // 根据当前桌面来处理组件是否开启编辑
+    isCommunityDesktop(desk: any) {
+      if (desk.hasOwnProperty("communityNo")) {
+        return this.currentCommunity.item.role === "member";
+      } else {
+        return false;
+      }
+    },
+
     async saveCommunityNav(force = 0) {
       let rs = await archiveHelper.saveToCommunity(
         this.currentCommunity.item.no,
@@ -138,6 +147,7 @@ export const communityNavStore = defineStore("communityNav", {
       }
       return rs;
     },
+
     async loadCommunityNav() {
       // console.log('当前社群', this.currentCommunity)
       let rs = await archiveHelper.loadFromCommunity(
