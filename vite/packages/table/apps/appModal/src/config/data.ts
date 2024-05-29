@@ -14,7 +14,7 @@ export const runList = [
   {
     name: "ai",
     cname: "AI助手",
-    icon: "/img/appLogo/ai.png",
+    icon: "/logo/ai.svg",
     ...defaultData,
   },
   {
@@ -27,7 +27,7 @@ export const runList = [
     name: "note",
     cname: "便签",
     // icon: "/logo/note.svg",
-    icon: "/img/appLogo/note.png",
+    icon: "/logo/memorandum.svg",
     ...defaultData,
   },
 ];

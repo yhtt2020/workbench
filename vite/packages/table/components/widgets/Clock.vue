@@ -115,11 +115,11 @@ export default {
   },
   data() {
     return {
-      header:{
-        title:'闹钟',
-        showIcon:"/img/appLogo/alarmClock.png",
+      // header:{
+      //   title:'闹钟',
+      //   showIcon:"/img/appLogo/alarmClock.png",
 
-      },
+      // },
       simpleImage: '/public/img/test/load-ail.png',
       visible: false,
       value1: dayjs('00:00:00', 'HH:mm'),
