@@ -85,6 +85,11 @@ export default {
     },
     computed: {
         ...mapWritableState(shortTalkStore, ['todoList','access_token','baseUrl','admin_url']),
+        options () {
+            return {
+                customDel: this.openWay === 'nav' ? true : false,
+            }
+        }
     },
     data() {
         return {
@@ -124,13 +129,6 @@ export default {
         };
     },
     emit:['delete'],
-    computed: {
-        options () {
-            return {
-                customDel: this.openWay === 'nav' ? true : false,
-            }
-        }
-    },
     mounted() {
         // 初始化
         this.accToken = this.access_token
