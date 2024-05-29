@@ -792,11 +792,6 @@ export default {
       }
     },
 
-    clickDesk() {
-      this.step = -1;
-      this.taskID = this.taskTmp;
-      this.taskTmp = "";
-    },
 
     displayDesks() {
       // 这里做桌面列表中是否有社群的桌面,以及处理桌面id不为undefined。
@@ -859,6 +854,12 @@ export default {
     ...mapActions(marketStore, ["getRecommend"]),
     ...mapActions(useFreeLayoutStore, ["clearFreeLayout"]),
     ...mapActions(useDeskStore, ["addMenu"]),
+    clickDesk() {
+      this.step = -1;
+      this.taskID = this.taskTmp;
+      this.taskTmp = "";
+    },
+
     closeShowGuide() {
       this.showGuide = false;
     },
