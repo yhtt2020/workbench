@@ -363,11 +363,11 @@ const currentY = computed(() => {
 
 // 头部导航栏高度
 const topBarHeight = computed(() => {
-  if (window.$usePlat("client")) {
+  if (window.$usePlat("web")) {
     return 0;
   }
   // 顶部导航栏开启时
-  if (bottomBar.value) barHeight = bottomBar.value.clientHeight;
+  // if (bottomBar.value) barHeight = bottomBar.value.clientHeight;
 
   return currentMainH.value.top;
 });
@@ -376,7 +376,7 @@ const topBarHeight = computed(() => {
 const bottomBarHeight = computed(() => {
   let height = currentMainH.value.bottom;
   // 底部导航栏开启时
-  if (bottomBar.value) barHeight = bottomBar.value.clientHeight;
+  // if (bottomBar.value) barHeight = bottomBar.value.clientHeight;
   return height + topBarHeight.value;
 });
 
@@ -447,7 +447,9 @@ const getModalPosition = computed(() => {
   }
   // 无遮罩层的情况
   else {
-    top = (windowHeight.value - barHeight - modalHeight.value) / 2;
+    // 防止弹窗越界，超出屏幕
+    let h = (windowHeight.value - bottomBarHeight.value - modalHeight.value) / 2
+    top = h < 0 ? 0 : h;
     left = (windowWidth.value - modalWidth.value) / 2;
   }
 
@@ -612,8 +614,8 @@ const onEsc = (event) => {
 // 初始化
 const init = () => {
   // 获取菜单高度
-  bottomBar.value = document.getElementsByClassName("xt-main-bottom-bar")[0];
-  if (bottomBar.value) barHeight = bottomBar.value.clientHeight;
+  // bottomBar.value = document.getElementsByClassName("xt-main-bottom-bar")[0];
+  // if (bottomBar.value) barHeight = bottomBar.value.clientHeight;
   // else if () {}
 
   // 初始化弹窗位置

@@ -452,19 +452,24 @@ export default {
 
     // 当导航栏进行缩放后，记录主导航栏高度
     'navAttribute.navSize'(val) {
-      const size = (this.currentNavFormat === 'mac' ? 64 : 80) * (val / 100) + 20;
-      this.currentNavPosition === 'top' ? this.currentMainH.top = size : this.currentNavSize.bottom = size
+      this.updateH()
     },
     // 当导航栏模式发生变化后，记录主导航栏高度
-    'currentNavFormat'(val) {
-      const size = (this.currentNavFormat === 'mac' ? 64 : 80) * (this.navAttribute.navSize / 100) + 20;
-      this.currentNavPosition === 'top' ? this.currentMainH.top = size : this.currentNavSize.bottom = size
+    currentNavFormat : {
+      handler(val) {
+        this.updateH()
+      },
+      immediate: true,
+      deep: true
     },
     // 当导航栏位置发生变化后，记录主导航栏高度
-    'currentNavPosition'(val) {
-      const size = (this.currentNavFormat === 'mac' ? 64 : 80) * (this.navAttribute.navSize / 100) + 20;
-      this.currentNavPosition === 'top' ? this.currentMainH.top = size : this.currentNavSize.bottom = size
-    },
+    currentNavPosition : {
+      handler(val) {
+        this.updateH()
+      },
+      immediate: true,
+      deep: true
+    }
   },
   methods: {
     ...mapActions(navStore, [
@@ -476,6 +481,25 @@ export default {
     mergeData,
     usePosition,
     deleteIcon,
+    // 更新主导航栏高度，用于弹窗定位
+    updateH() {
+      // 计算导航栏尺寸
+      const baseSize = this.currentNavFormat === 'mac' ? 80 : 64;
+      const size = baseSize * (this.navAttribute.navSize / 100) + 20;
+
+      // 初始化主区域高度
+      this.currentMainH = { top: 40, bottom: size };
+
+      // 根据导航位置和开关状态调整高度
+      if (this.currentNavPosition === 'top') {
+        this.currentMainH.top = this.navigationToggle[2] ? size : 0;
+        this.currentMainH.bottom = 0;
+      } else {
+        if (!this.navigationToggle[2]) {
+          this.currentMainH.bottom = 0;
+        }
+      }
+    },
     deleteCard(val){
       this.deleteIcon(this.currentItem,'foot')
     },
