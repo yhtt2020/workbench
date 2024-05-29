@@ -93,6 +93,14 @@ C:\Windows\System32\drivers\etc\hosts 注意这个文件不能带.txt扩展名�
 ## 打包桌面客户端
 
 在根目录运行yarn run packageWin
+## 调试web端
+在/vite运行yarn安装扩展，
+
+然后yarn run start运行项目
+
+打开浏览器，访问首页地址：
+http://localhost:1600/html/table.html#/
+
 
 ## web版部署指南
 
@@ -109,3 +117,6 @@ const Server = {
 ```
 打包命令
 在/vite下终端执行yarn run build
+将编译后的文件/dist放到web上
+同时将/vite/dist/html/table.html放到web根目录，并修改名称为index.html(或将table.html设置为默认首页)
+

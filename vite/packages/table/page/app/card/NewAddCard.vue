@@ -5,7 +5,6 @@
       <div class="header">
         <div class="left">
           <div
-            @click="onBack"
             class="pointer flex items-center rounded-lg justify-center no-drag"
             style="
               background: var(--secondary-bg);
@@ -14,18 +13,19 @@
               font-size: 16px;
               color: var(--primary-text);
             "
+            @click="onBack"
           >
             <Icon icon="xiangzuo" style="font-size: 1.5em"></Icon>
           </div>
           <div class="box-title no-drag">
-            {{ selectNav.name === "small" ? "小组件" : "桌面市场" }}
+            {{ selectNav.name === 'small' ? '小组件' : '桌面市场' }}
           </div>
         </div>
         <div class="flex no-grag">
           <div class="no-drag mr-3">
             <HorizontalPanel
-              :navList="navType"
               v-model:selectType="selectNav"
+              :navList="navType"
             ></HorizontalPanel>
           </div>
           <!-- 头部搜索和下拉列表 -->
@@ -33,9 +33,9 @@
             <Search
               v-model:keywords="search.keywords"
               v-model:order="search.order"
-              placeholder="关键词"
-              :sortType="searchOptions"
               :isFiltrate="true"
+              :sortType="searchOptions"
+              placeholder="关键词"
               @search="doSearch"
             />
           </div>
@@ -56,43 +56,43 @@
           </div>
         </div>
       </div>
-      <div class="text-center no-drag mb-2" v-if="isSearching">
+      <div v-if="isSearching" class="text-center no-drag mb-2">
         搜索结果：{{ keyword }}
         <icon
-          @click="cancelSearch"
           class="pointer"
-          style="color: red"
           icon="close-circle-fill"
+          style="color: red"
+          @click="cancelSearch"
         ></icon>
       </div>
-      <div class="mian" v-if="selectNav.name === 'small'">
+      <div v-if="selectNav.name === 'small'" class="mian">
         <!-- 左侧 -->
         <div class="left">
           <div
-            class="no-drag nav"
-            style="color: var(--primary-text)"
-            :class="{ 'xt-active-btn': navIndex == index }"
-            @click="updateNavIndex(index)"
             v-for="(item, index) in baseNavList"
             :key="item.name"
+            :class="{ 'xt-active-btn': navIndex == index }"
+            class="no-drag nav"
+            style="color: var(--primary-text)"
+            @click="updateNavIndex(index)"
           >
             {{ item.cname }}
           </div>
         </div>
         <div class="right no-drag">
-          <div class="warn xt-bg-2" v-if="navIndex === baseNavList.length - 1">
+          <div v-if="navIndex === baseNavList.length - 1" class="warn xt-bg-2">
             <div class="icon">i</div>
             以下组件正在奋力💪开发中，部分功能还不完善或有明显Bug🐞，可以尝鲜试用～
           </div>
           <!-- 进行数据筛选 将离线模式屏蔽的隐藏 -->
           <NewCardPreViews
-            :allList="baseNavList[1].children"
-            :keywords="keyword"
-            @addSuccess="onBack"
             v-if="baseNavList[navIndex].children !== null"
+            :allList="baseNavList[1].children"
             :cardList="baseNavList[navIndex].children"
-            :search="orderType"
             :desk="desk"
+            :keywords="keyword"
+            :search="orderType"
+            @addSuccess="onBack"
             :communityRole="communityRole"
           >
           </NewCardPreViews>
@@ -100,9 +100,9 @@
             <div class="warn-boxs">
               <XtState
                 :state="'null'"
-                @onClick="onClick"
-                style="width: 320px; height: 320px"
                 bg=""
+                style="width: 320px; height: 320px"
+                @onClick="onClick"
               ></XtState>
             </div>
           </template>
@@ -114,23 +114,23 @@
         style="height: 90%"
       >
         <NavMenu
-          :list="categories"
           :currenIndex="categoryIndex"
+          :list="categories"
           @changeNav="changeCategory"
         />
         <div class="ml-5 no-drag w-full">
           <DeskMarket
-            :selected="orderType"
             :items="desks"
+            :selected="orderType"
             @openPreview="openPreview"
           ></DeskMarket>
           <!-- 预览 -->
           <DeskPreview
             v-if="showModal"
-            @afterAdded="onBack"
             :deskList="deskList"
             :scheme="scheme"
             :showModal="showModal"
+            @afterAdded="onBack"
             @closePreview="closePreview"
           ></DeskPreview>
         </div>
@@ -144,25 +144,26 @@
 </template>
 
 <script>
-import NewCardPreViews from "./NewCardPreViews.vue";
-import { NavList } from "./navList";
-import HorizontalPanel from "../../../components/HorizontalPanel.vue";
-import _ from "lodash-es";
-import Search from "../../../components/Search.vue";
-import NavMenu from "../../../components/NavMenu.vue";
-import { deskStore } from "../../../store/desk";
-import { cardStore } from "../../../store/card";
-import { mapActions, mapWritableState } from "pinia";
-import DeskMarket from "./DeskMarket.vue";
-import ShareDesk from "../../../components/desk/ShareDesk.vue";
-import DeskPreview from "../../../components/desk/DeskPreview.vue";
-import { marketStore } from "../../../store/market";
-import { singleStore } from "../../../js/common/single";
-import { taskStore } from "../../../apps/task/store";
-import { getCardData } from "../../../apps/ttApp/src/hooks/getCardData";
-import { comCanUse } from "../../../permission/usePlat";
+import NewCardPreViews from './NewCardPreViews.vue'
+import { NavList } from './navList'
+import HorizontalPanel from '../../../components/HorizontalPanel.vue'
+import _ from 'lodash-es'
+import Search from '../../../components/Search.vue'
+import NavMenu from '../../../components/NavMenu.vue'
+import { deskStore } from '../../../store/desk'
+import { cardStore } from '../../../store/card'
+import { mapActions, mapWritableState } from 'pinia'
+import DeskMarket from './DeskMarket.vue'
+import ShareDesk from '../../../components/desk/ShareDesk.vue'
+import DeskPreview from '../../../components/desk/DeskPreview.vue'
+import { marketStore } from '../../../store/market'
+import { singleStore } from '../../../js/common/single'
+import { taskStore } from '../../../apps/task/store'
+import { getCardData } from '../../../apps/ttApp/src/hooks/getCardData'
+import { comCanUse } from '../../../permission/usePlat'
+
 export default {
-  name: "AddCard",
+  name: 'AddCard',
   components: {
     NewCardPreViews,
     HorizontalPanel,
@@ -172,7 +173,7 @@ export default {
     ShareDesk,
     DeskPreview,
   },
-  emits: ["onClose"],
+  emits: ['onClose'],
   props: {
     desk: {
       type: Object,
@@ -189,24 +190,24 @@ export default {
       type:Boolean,
     }
   },
-  data() {
+  data () {
     return {
       navIndex: 0,
-      selectContent: "",
-      orderType: "默认排序",
+      selectContent: '',
+      orderType: '默认排序',
       baseNavList: [...NavList],
       searchOptions: [
-        { value: "default", name: "默认排序" },
-        { value: "count", name: "销量/下载量" },
-        { value: "support", name: "点赞数" },
-        { value: "updateTime", name: "更新时间" },
-        { value: "createTime", name: "发布时间" },
+        { value: 'default', name: '默认排序' },
+        { value: 'count', name: '销量/下载量' },
+        { value: 'support', name: '点赞数' },
+        { value: 'updateTime', name: '更新时间' },
+        { value: 'createTime', name: '发布时间' },
       ],
       navType: [
-        { title: "小组件", name: "small" },
-        { title: "社区桌面分享", name: "desktop" },
+        { title: '小组件', name: 'small' },
+        { title: '社区桌面分享', name: 'desktop' },
       ],
-      selectNav: { title: "小组件", name: "small" },
+      selectNav: { title: '小组件', name: 'small' },
       navDeskIndex: 0,
       openDrawer: false,
       scheme: {},
@@ -215,7 +216,7 @@ export default {
       categoryIndex: 0,
       categories: [
         {
-          cname: "推荐",
+          cname: '推荐',
           id: 0,
         },
       ], //分类列表
@@ -223,253 +224,260 @@ export default {
       deskPagination: {},
       //搜索表单值
       search: {
-        keywords: "",
-        order: "default",
+        keywords: '',
+        order: 'default',
       },
-      keyword: "", //真正搜索词
+      keyword: '', //真正搜索词
       searching: false,
-    };
-  },
-  unmounted() {
-    if (this.currentId == "M0302") {
     }
   },
-  async mounted() {
-    if (this.currentId == "M0302") {
-      this.updateNavIndex(7);
+  unmounted () {
+    if (this.currentId == 'M0302') {
+    }
+  },
+  async mounted () {
+    if (this.currentId == 'M0302') {
+      this.updateNavIndex(7)
     }
     // 用于是否满足社群桌面条件的小组件卡片数据。
     const disabledCard = [
-      "Audio",
-      "capture",
-      "supervisory",
-      "shortcutKey",
-      "myFriends",
-      "gameAssis",
-      "clipBoard",
-      "Courier",
-    ];
+      'Audio',
+      'capture',
+      'supervisory',
+      'shortcutKey',
+      'myFriends',
+      'gameAssis',
+      'clipBoard',
+      'Courier',
+    ]
     const mapFilter = this.baseNavList.map((nav) => {
       const filterChildren = nav.children.filter((item) => {
-        return !disabledCard.includes(item.name);
-      });
+        return !disabledCard.includes(item.name)
+      })
       return {
         ...nav,
         children: filterChildren,
-      };
-    });
-    if(this.desk.hasOwnProperty("communityNo")){
+      }
+    })
+    if (this.desk.hasOwnProperty('communityNo')) {
       // 重新赋值
-      this.baseNavList = mapFilter;
+      this.baseNavList = mapFilter
     }
 
     // 这里是预留给api请求到时间和下载数据添加数据使用
-    let navList = _.cloneDeep(this.baseNavList);
+    let navList = _.cloneDeep(this.baseNavList)
 
-    let items = [];
-    let res = getCardData();
+    let items = []
+    let res = getCardData()
     if (res) {
-      navList.splice(1, 0, res);
+      navList.splice(1, 0, res)
     }
     navList.map((li) => {
-      return items.push(...li.children);
-    });
+      return items.push(...li.children)
+    })
 
     //取得全部不重复的数组元素
     items = _.uniqBy(items, (li) => {
-      return li.name;
-    });
+      return li.name
+    })
 
     navList.splice(1, 0, {
-      cname: "全部",
+      cname: '全部',
       children: items,
-    });
+    })
 
     navList.forEach((li) => {
       // 离线模式时 隐藏卡片添加
       if (window.$isSingle) {
         li.children = li.children.filter((ele) => {
           if (this.singleList.indexOf(ele.name) < 0) {
-            return ele;
+            return ele
           }
-        });
+        })
       }
 
       li.cname =
         li.cname +
         `（${
           li.children.filter((item) => {
-            return comCanUse(item.name);
+            return comCanUse(item.name)
           }).length
-        }）`;
-    });
+        }）`
+    })
 
     this.baseNavList = navList.map((item) => {
       if (item.children != null) {
-        let children = [];
+        let children = []
         item.children.forEach((i) => {
-          i.time = new Date(i.time).getTime();
+          i.time = new Date(i.time).getTime()
           children.push({
             ...i,
             download: Math.floor(Math.random() * 10000) + 1,
             // time: this.getTimes()
-          });
-        });
+          })
+        })
         return {
           cname: item.cname,
           children,
-        };
-      } else return item;
-    });
+        }
+      } else return item
+    })
     if (this.panelIndex === 1) {
-      this.selectNav = this.navType[this.panelIndex];
+      this.selectNav = this.navType[this.panelIndex]
     } else {
-      this.selectNav = this.navType[0];
+      this.selectNav = this.navType[0]
     }
   },
   computed: {
-    ...mapWritableState(singleStore, ["singleList"]),
-    ...mapWritableState(deskStore, ["apiList"]),
-    ...mapWritableState(taskStore, ["currentId", "step", "success"]),
+    ...mapWritableState(singleStore, ['singleList']),
+    ...mapWritableState(deskStore, ['apiList']),
+    ...mapWritableState(taskStore, ['currentId', 'step', 'success']),
 
-    displayList() {
+    displayList () {
       // return this.apiList.filter
     },
-    isSearching() {
-      return this.searching;
+    isSearching () {
+      return this.searching
     },
   },
   watch: {
-    selectNav(newV) {
-      if (newV.name === "desktop") {
-        this.getDeskData();
-        this.navIndex = 0;
-        this.updateDesks("0");
-      }
+    selectNav: {
+      handler (newV) {
+        if (newV.name === 'desktop') {
+          this.getDeskData().then(()=>{
+            this.navIndex = 0
+            this.updateDesks(0)
+          })
+
+
+        }
+      },
+      deep:true,
+      immediate: true
     },
-    selectContent(newV, oldV) {
-      if (newV == "" || newV == null) {
-        this.navList = this.baseNavList;
-        this.navIndex = 0;
-        return;
+    selectContent (newV, oldV) {
+      if (newV === '' || newV == null) {
+        this.navList = this.baseNavList
+        this.navIndex = 0
+        return
       }
-      let data = [];
-      this.navList = this.baseNavList;
-      let arr = [];
+      let data = []
+      this.navList = this.baseNavList
+      let arr = []
       this.navList.filter((item) => {
         if (item.children != null) {
           item.children.forEach((i) => {
-            if (i.cname.includes(newV) || i.detail.includes(newV)) arr.push(i);
-          });
+            if (i.cname.includes(newV) || i.detail.includes(newV)) arr.push(i)
+          })
         }
-      });
+      })
       if (arr != false) {
         data.push({
-          cname: "全部数据",
+          cname: '全部数据',
           children: arr,
-        });
-        this.navIndex = 0;
-        this.navList = data;
+        })
+        this.navIndex = 0
+        this.navList = data
       }
     },
   },
   methods: {
-    ...mapActions(marketStore, ["getCategories", "getDesks", "getRecommend"]),
+    ...mapActions(marketStore, ['getCategories', 'getDesks', 'getRecommend']),
     // ...mapActions(deskStore,['setDeskSize']),
-    ...mapActions(cardStore, ["setDeskSize"]),
-    doSearch() {
-      if (this.selectNav.name === "small") {
-        this.keyword = this.search.keywords;
-        return;
+    ...mapActions(cardStore, ['setDeskSize']),
+    doSearch () {
+      if (this.selectNav.name === 'small') {
+        this.keyword = this.search.keywords
+        return
       }
-      if (this.search.keywords === "") {
-        this.cancelSearch();
-        return;
+      if (this.search.keywords === '') {
+        this.cancelSearch()
+        return
       }
-      this.categories[0].cname = "全部";
-      this.searching = true;
-      this.keyword = this.search.keywords;
-      this.updateDesks(this.categoryIndex, this.keyword, this.search.order);
+      this.categories[0].cname = '全部'
+      this.searching = true
+      this.keyword = this.search.keywords
+      this.updateDesks(this.categoryIndex, this.keyword, this.search.order)
     },
-    cancelSearch() {
-      this.categories[0].cname = "推荐";
-      this.searching = false;
-      this.search.keywords = "";
-      this.keyword = "";
-      this.updateDesks();
+    cancelSearch () {
+      this.categories[0].cname = '推荐'
+      this.searching = false
+      this.search.keywords = ''
+      this.keyword = ''
+      this.updateDesks()
     },
-    async getDeskData() {
+    async getDeskData () {
       //获取桌面分类
-      let cats = await this.getCategories("desk");
+      let cats = await this.getCategories('desk')
+      console.log(cats, 'cats')
       if (cats) {
         this.categories = [
           {
-            cname: "推荐",
+            cname: '推荐',
             id: 0,
           },
           ...cats.map((cat) => {
             return {
               cname: cat.name,
               id: cat.id,
-            };
+            }
           }),
-        ];
+        ]
       }
     },
-    onClick() {},
-    handleChange(value) {
+    onClick () {},
+    handleChange (value) {
       // console.log(`selected ${value}`)
     },
-    getTimes() {
-      const currentTime = Date.now();
-      const startDate = new Date("2023-01-01T00:00:00Z").getTime();
+    getTimes () {
+      const currentTime = Date.now()
+      const startDate = new Date('2023-01-01T00:00:00Z').getTime()
       const randomTimestamp =
-        Math.floor(Math.random() * (currentTime - startDate)) + startDate;
-      return randomTimestamp;
+        Math.floor(Math.random() * (currentTime - startDate)) + startDate
+      return randomTimestamp
     },
-    onBack() {
-      this.$emit("close");
-      this.$emit("onClose");
+    onBack () {
+      this.$emit('close')
+      this.$emit('onClose')
     },
-    afterAdded() {
-      this.onBack();
+    afterAdded () {
+      this.onBack()
     },
-    updateNavIndex(index) {
-      this.navIndex = index;
+    updateNavIndex (index) {
+      this.navIndex = index
     },
-    changeCategory(category, index) {
-      this.updateDesks(category.id, index);
+    changeCategory (category, index) {
+      this.updateDesks(category.id, index)
     },
     /**
      * 更新桌面列表
      * @param categoryIndex 当前分类
-     * @param keywords
-     * @param order
+     * @param index
      * @returns {Promise<void>}
      */
-    async updateDesks(categoryIndex = this.categoryIndex, index) {
-      this.categoryIndex = index;
-      const keyWord = this.keyword;
+    async updateDesks (categoryIndex = this.categoryIndex, index) {
+      this.categoryIndex = index
+      const keyWord = this.keyword
       const order =
-        this.search.order === "default" ? undefined : this.search.order;
-      if (this.categoryIndex == 0) {
+        this.search.order === 'default' ? undefined : this.search.order
+      if (this.categoryIndex ===0) {
         if (!this.isSearching) {
           this.desks = await this.getRecommend({
-            goodType: "desk",
+            goodType: 'desk',
             order: order,
-          });
+          })
         } else {
           let params = {
             page: 1,
             size: 20,
             keyWord: keyWord,
             order: order,
-          };
-          let rs = await this.getDesks(params);
-          this.desks = rs.list;
-          this.deskPagination = rs.pagination;
+          }
+          let rs = await this.getDesks(params)
+          this.desks = rs.list
+          this.deskPagination = rs.pagination
         }
-        return;
+        return
       }
       let params = {
         page: 1,
@@ -477,41 +485,41 @@ export default {
         categoryId: categoryIndex,
         keyWord: keyWord,
         order: order,
-      };
-      let rs = await this.getDesks(params);
-      this.desks = rs.list;
-      this.deskPagination = rs.pagination;
+      }
+      let rs = await this.getDesks(params)
+      this.desks = rs.list
+      this.deskPagination = rs.pagination
     },
-    changeSelect(event) {
+    changeSelect (event) {
       // console.log('选择下拉',event)
-      this.orderType = event;
+      this.orderType = event
     },
-    share() {
-      this.openDrawer = true;
+    share () {
+      this.openDrawer = true
     },
-    closeShare(val) {
-      this.openDrawer = val;
+    closeShare (val) {
+      this.openDrawer = val
     },
-    openPreview({ scheme, showModal }) {
-      this.scheme = scheme;
-      this.showModal = showModal;
+    openPreview ({ scheme, showModal }) {
+      this.scheme = scheme
+      this.showModal = showModal
     },
-    closePreview() {
-      this.showModal = false;
+    closePreview () {
+      this.showModal = false
       setTimeout(() => {
-        let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
-        let deskHeight = document.documentElement.clientHeight; // 高
-        let deskWidth = document.documentElement.clientWidth; // 宽
+        let cardsHeight = document.getElementById('cardContent')?.offsetHeight
+        let deskHeight = document.documentElement.clientHeight // 高
+        let deskWidth = document.documentElement.clientWidth // 宽
         let size = {
           deskWidth,
           deskHeight,
           cardsHeight,
-        };
-        this.setDeskSize(size);
-      }, 300);
+        }
+        this.setDeskSize(size)
+      }, 300)
     },
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
