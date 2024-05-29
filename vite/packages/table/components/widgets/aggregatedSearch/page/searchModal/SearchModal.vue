@@ -305,7 +305,7 @@ useEventListener("keyup", tabEventUp);
         style="height: 508px"
         v-if="data.historyList.length > 0 || words"
       >
-        <System v-if="words && !isWebSource" />
+        <System v-if="words && currentSource.name == '工作台'" />
         <Search v-if="words && isWebSource" @search="search" />
         <History v-if="!words && data.historyList.length > 0" />
       </main>

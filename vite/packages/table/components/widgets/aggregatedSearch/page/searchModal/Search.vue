@@ -139,9 +139,6 @@ const recommendIndex = computed(() => {
       <span class="">{{ item.name }}</span>
     </div>
   </xt-scrollbar>
-  <div class="flex p-3">
-    <div class="text-sm tt-text-2">猜你想找</div>
-  </div>
   <Scrollbar>
     <div
       class="w-full p-3 h-11 flex justify-between rounded-xl cursor-pointer hover:tt-theme-bg-2"
