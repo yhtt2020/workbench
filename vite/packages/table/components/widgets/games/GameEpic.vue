@@ -110,7 +110,7 @@ export default {
       return {
         title: 'Epic喜加一',
         // ifyIcon:'cib:epic-games',
-        showIcon:"/img/appLogo/epic.png",
+        showIcon:"/logo/epic.svg",
         refresh:{
           fn:this.refreshNow,
           tip:'刷新',

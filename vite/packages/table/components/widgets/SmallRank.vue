@@ -2,7 +2,7 @@
   <xt-container
   :header="header"
   :envLimit="['single']"
-  @titleHover="showDrawer"
+  @leftClick="showDrawer"
   v-model:customSize="customData.customSize"
   :options="options"
   :sizeList="sizeList"
@@ -147,9 +147,10 @@ export default {
       return {
         title:this.rankingType[this.rankIndex].title,
         // ifyIcon:'fluent:people-community-16-regular',
-        showIcon:"/img/appLogo/rank.png",
-        titleHover:true,
-        titleHoverName:this.rankingType[this.rankIndex].title,
+        showIcon:"/logo/rank.svg",
+        leftHover: true,
+        leftHoverName:this.rankingType[this.rankIndex].title,
+        leftHoverIcon: "fluent:open-16-regular",
       }
     },
     options(){

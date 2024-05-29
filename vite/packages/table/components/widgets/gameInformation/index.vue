@@ -104,7 +104,7 @@ export default {
             return {
                 title:'电竞资讯',
                 // ifyIcon:'fluent:games-16-filled',
-        showIcon:"/img/appLogo/gameInformation.png",
+                showIcon:"/logo/news.svg",
                 refresh:{
                     fn:this.refreshNow,
                     tip:'刷新',

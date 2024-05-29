@@ -371,7 +371,7 @@ export default {
       return {
         title: this.paperTitle,
        //  ifyIcon: "fluent:image-multiple-16-regular",
-        showIcon:"/img/appLogo/wallpaper.png"
+        showIcon:"/logo/wallpaper.svg",
 
       };
     },

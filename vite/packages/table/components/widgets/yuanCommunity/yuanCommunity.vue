@@ -1,7 +1,7 @@
 <template>
     <div>
         <xt-container
-            @titleHover="settingVisible = true"
+            @leftClick="settingVisible = true"
             v-model:customSize="customData.customSize"
             :header="header"
             :desk="desk"
@@ -286,14 +286,15 @@ export default {
             return {
                 title: this.options.title,
                 // ifyIcon:'fluent:chat-16-regular',
-        showIcon:"/img/appLogo/yuanCommunity.png",
+                showIcon:"/logo/community.svg",
                 refresh:{
                     fn:this.refreshPost,
                     tip:"刷新",
                     state:this.isLoading ? true : false
                 },
-                titleHoverName:'点击切换',
-                titleHover:true,
+                leftHover: true,
+                leftHoverName:"点击切换",
+                leftHoverIcon: "fluent:open-16-regular",
                 rightIcon:[
                     {
                         tip:"发布",

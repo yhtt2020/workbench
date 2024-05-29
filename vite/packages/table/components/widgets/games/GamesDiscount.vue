@@ -1,6 +1,6 @@
 <template>
   <xt-container
-    @titleHover="showRegionSelect"
+    @leftClick="showRegionSelect"
     v-model:customSize="customData.customSize"
     :header="header"
     :platLimit="['web']"
@@ -208,10 +208,11 @@ export default {
       return {
         title:this.region.name,
         // ifyIcon:'mdi:steam',
-        showIcon:"/img/appLogo/steam.png",
+        showIcon:"/logo/steam.svg",
 
-        titleHover:true,
-        titleHoverName:'点击切换'
+        leftHover: true,
+        leftHoverName:"点击切换",
+        leftHoverIcon: "fluent:open-16-regular",
       }
     }
   },

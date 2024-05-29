@@ -1,6 +1,6 @@
 <template>
   <xt-container
-    @titleHover="openWeatherDrawer"
+    @leftClick="openWeatherDrawer"
     v-model:customSize="customData.customSize"
     :header="header"
     :options="options"
@@ -145,9 +145,10 @@ export default {
       return {
         title:this.defaultCity?.name ? this.defaultCity?.name : "天气",
         // ifyIcon:'fluent:cloud-16-regular',
-        showIcon:"/img/appLogo/weather.png",
-        titleHoverName:'点击切换',
-        titleHover:true,
+        showIcon:"/logo/weather.svg",
+        leftHover: true,
+        leftHoverName:"点击切换",
+        leftHoverIcon: "fluent:open-16-regular",
       }
     },
     options(){

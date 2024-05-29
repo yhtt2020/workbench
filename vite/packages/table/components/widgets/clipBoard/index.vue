@@ -1,7 +1,7 @@
 <template>
     <div>
         <xt-container
-            @titleHover="enterBoard"
+            @leftClick="enterBoard"
             :header="header"
             v-model:customSize="customData.customSize"
             :platLimit="['web']"
@@ -256,10 +256,11 @@ export default {
             header: {
                 title:'剪贴板',
                 // ifyIcon:'fluent:clipboard-bullet-list-16-regular',
-        showIcon:"/img/appLogo/clipBoard.png",
+                showIcon:"/logo/clipBoard.svg",
 
-                titleHover:true,
-                titleHoverName:'打开应用',
+                leftHover: true,
+                leftHoverName:"打开应用",
+                leftHoverIcon: "fluent:open-16-regular",
             },
             customSize:'4x4'
         };

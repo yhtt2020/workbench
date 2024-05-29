@@ -208,7 +208,7 @@ export default {
             header:{
                 title:'社区访问数据/每日/全部',
                 // ifyIcon:'fluent:arrow-trending-lines-20-filled',
-        showIcon:"/img/appLogo/ShortChart.png",
+                showIcon:"/logo/ShortChart.svg",
 
                 rightIcon:[
                     {

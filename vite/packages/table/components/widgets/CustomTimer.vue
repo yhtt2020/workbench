@@ -40,7 +40,7 @@ export default {
       header:{
         title:'日历',
         // ifyIcon:"fluent:calendar-16-regular",
-        showIcon:"/img/appLogo/customTimer.png",
+        showIcon:"/logo/countdownDay.svg",
 
 
       },

@@ -1,7 +1,7 @@
 <template>
   <div>
     <xt-container
-      @titleHover="pushToMain"
+      @leftClick="pushToMain"
       :desk="desk"
       :sizeList="sizeList"
       :options="options"
@@ -100,10 +100,11 @@ export default {
       inputValue: "",
       header: {
         // ifyIcon:"fluent:bot-24-regular",
-        showIcon:"/img/appLogo/ai.png",
+        showIcon:"/logo/ai.svg",
         title:"AI助手",
-        titleHover:true,
-        titleHoverName:'打开应用',
+        leftHover: true,
+        leftHoverName:"打开应用",
+        leftHoverIcon: "fluent:open-16-regular",
       },
     };
 

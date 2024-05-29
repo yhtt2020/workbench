@@ -57,7 +57,7 @@ export default {
       header:{
         title:'网易云',
         // ifyIcon:'fluent:music-note-2-16-regular',
-        showIcon:"/img/appLogo/music.png",
+        showIcon:"/logo/music.svg",
 
         titleHover:true,
         titleHoverName:'打开应用',

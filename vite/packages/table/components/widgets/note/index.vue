@@ -1,6 +1,6 @@
 <template>
   <xt-container
-    @titleHover="enterNote"
+    @leftClick="enterNote"
     @delete="removeNote"
     v-model:customSize="customData.customSize"
 
@@ -189,9 +189,10 @@ export default {
       return {
         title: this.customData.title,
         // ifyIcon: 'fluent:notepad-16-regular',
-        showIcon:'/img/appLogo/note.png',
-        titleHover: true,
-        titleHoverName: '打开应用',
+        showIcon:'/logo/memorandum.svg',
+        leftHover: true,
+        leftHoverName:"打开应用",
+        leftHoverIcon: "fluent:open-16-regular",
       }
     },
     noteOptions(){

@@ -1,6 +1,6 @@
 <template>
   <xt-container
-    @titleHover="openGuideDrawer"
+    @leftClick="openGuideDrawer"
     v-model:customSize="customData.customSize"
     :header='header'
     :platLimit="['web']"
@@ -131,9 +131,10 @@ export default {
       return {
         title:`游戏攻略 - ${this.customData.chineseName || ''}`,
         // ifyIcon:'fluent:games-16-regular',
-        showIcon:"/img/appLogo/gameStrategy.png",
-        titleHover:true,
-        titleHoverName:"点击打开",
+        showIcon:"/logo/game.svg",
+        leftHover: true,
+        leftHoverName:"点击打开",
+        leftHoverIcon: "fluent:open-16-regular",
       }
     },
     options(){

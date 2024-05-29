@@ -1,6 +1,6 @@
 <template>
   <xt-container
-    @titleHover="goRoute"
+    @leftClick="goRoute"
     :header="header"
     v-model:customSize="customData.customSize"
     :platLimit="['web']"
@@ -157,9 +157,10 @@ export default {
       return {
         title:this.myDetailShow === true ? '游戏详情' : '我的游戏',
         // ifyIcon:'mdi:steam',
-        showIcon:"/img/appLogo/steam.png",
-        titleHover: !this.myDetailShow,
-        titleHoverName:'点击打开'
+        showIcon:"/logo/steam.svg",
+        leftHover: true,
+        leftHoverName:"打开应用",
+        leftHoverIcon: "fluent:open-16-regular",
       }
     },
     options(){

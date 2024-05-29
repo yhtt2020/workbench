@@ -145,7 +145,7 @@ export default {
       header:{
         title:'音频',
         // ifyIcon:'fluent:speaker-2-16-regular'
-        showIcon:"/img/appLogo/audio.png",
+        showIcon:"/logo/voice.svg",
 
       },
       customSize:'2x4',

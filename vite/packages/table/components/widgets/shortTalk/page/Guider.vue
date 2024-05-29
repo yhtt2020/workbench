@@ -105,7 +105,7 @@ export default {
             header:{
                 title:'社区助手',
                 // ifyIcon:'akar-icons:chat-question',
-        showIcon:"/img/appLogo/shortGuider.png",
+                showIcon:"/logo/shortGuider.svg",
                 rightIcon:[
                     {
                         ifyIcon:'fluent:open-20-filled',

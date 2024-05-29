@@ -1,6 +1,6 @@
 <template>
   <xt-container
-    @titleHover="aggSearchShow = true"
+    @leftClick="aggSearchShow = true"
     :header="header"
     v-model:customSize="customData.customSize"
     :editing="editing"
@@ -145,9 +145,10 @@ export default {
       header:{
         title:'聚合搜索',
         // ifyIcon:'fluent:search-20-filled',
-        showIcon:"/img/appLogo/aggregateSearch.png",
-        titleHover:true,
-        titleHoverName:'点击切换',
+        showIcon:"/logo/aggregateSearch.svg",
+        leftHover: true,
+        leftHoverName:"点击切换",
+        leftHoverIcon: "fluent:open-16-regular",
       }
     }
   },
