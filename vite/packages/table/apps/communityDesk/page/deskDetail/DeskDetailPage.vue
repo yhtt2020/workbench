@@ -514,7 +514,7 @@ export default {
 
     // 社群信息
     communityInfo() {
-      console.log('查看社群信息',this.communityDeskInfo);
+      // console.log('查看社群信息',this.communityDeskInfo);
       return this.communityDeskInfo;
     },
 

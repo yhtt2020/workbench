@@ -64,6 +64,9 @@
         </div>
       </template>
       <vue-custom-scrollbar :settings="settings" style="height: 100%">
+
+        <CardSettingExplain v-if="communityAuth(desk?.communityNo)" />
+
         <div v-show="this.setVisible">
           <div class="text-content">
             <div>关联短说社区系统</div>
@@ -89,6 +92,7 @@
             class="pl-1 search input-txt"
           ></a-input>
         </div>
+
         <div v-show="!this.setVisible && this.access_token && this.baseUrl">
           <div class="text-title" @click="this.setVisible = !this.setVisible">
             关联短说社区系统
@@ -143,6 +147,9 @@ import { mapActions, mapState, mapWritableState } from "pinia";
 import { shortTalkStore } from "../store";
 import Unusual from "../../Unusual.vue";
 import { communityNavStore } from "../../../bottomPanel/store/communityNavStore";
+import { communityAuth }  from "../../../../apps/communityDesk/hooks/deskCreateMethod";
+
+import CardSettingExplain from "../../../CardSettingExplain.vue";
 
 export default {
   components: {
@@ -150,6 +157,7 @@ export default {
     Icon,
     defineComponent,
     Unusual,
+    CardSettingExplain,
   },
 
   props: {
@@ -282,6 +290,7 @@ export default {
     ...mapActions(cardStore, ["updateCustomData"]),
     ...mapActions(shortTalkStore, ["getBoardData", "changeAccToken"]),
     ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+    communityAuth,
 
     deleteCard() {
       this.$emit("delete");
@@ -478,10 +487,10 @@ export default {
   float: right;
 }
 
-:deep(.ant-drawer-body) {
+// :deep(.ant-drawer-body) {
   // padding: 100px !important;
   // font-size: 10px;
-}
+//}
 
 .input-txt {
   height: 40px;
