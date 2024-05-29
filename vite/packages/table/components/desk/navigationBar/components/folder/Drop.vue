@@ -129,7 +129,7 @@ const handleMouseUp = (e) => {
   if (iconsRefs.value.length < 1) return;
   if(!isCtrl){
     iconsRefs.value.forEach((item) => {
-      item.doRemoveCard();
+      item.removeCard();
     });
   }
   iconsRefs.value = [];

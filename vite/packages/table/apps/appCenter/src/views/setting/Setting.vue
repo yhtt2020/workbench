@@ -15,7 +15,7 @@
                 v-model:switch="recentUsed"
             />
         </xt-option-box>
-        <xt-option-box>
+        <xt-option-box v-if="!usePlat('web')">
             <xt-option-info 
                 title="软件下载安装路径（开发中）"
                 info="选择软件类型的应用下载安装的文件路径"
@@ -54,15 +54,15 @@ import { useAppCenterStore } from '../../store';
 
 import Exit from '../../component/exit.vue'
 
-import { usePlat } from '../../../../../permission/usePlat';
+import { usePlat } from '../../../../../ui/hooks/usePlat';
 
 
 const appCenterStore = useAppCenterStore()
 const { recentUsed, installPath, defaultPath } = storeToRefs(appCenterStore)
 
-const fs = require('fs')
 const emits = defineEmits(["onLocalApp"]);
 const fileRef = ref(null);
+
 const localAppClick = async() => {
   const plat = usePlat(['web'])
   if(plat){
@@ -83,6 +83,10 @@ const localAppClick = async() => {
 // 打开指定文件夹
 const open = () => {
   console.log("123 :>> ", 123);
+  if(usePlat('web')){
+    message.info('web端暂不支持此功能')
+    return
+  }
   require('electron').shell.openPath(installPath.value);
 };
 
@@ -121,61 +125,10 @@ const confirm = (options) => {
   )
 }
 
-// 路径变化
-// watch(
-//   () => installPath.value,
-//   (newVal,oldVal) => {
-//     console.log(oldVal,newVal)
-//     if(newVal !== '' || newVal !== undefined) {
-//       window.$ui.confirm(
-//         '存储路径发生改变',
-//         "将会自动把旧路径中的文件转移至新路径",
-//         {
-//           okText: '确认',
-//           noText: '取消',
-//           ok: () => {
-//             // removeFile(oldVal, newVal)
-//             console.log('ok',newVal)
-//           },
-//           no: () => {
-//             console.log('no',oldVal)
-//             installPath.value = oldVal
-//           },
-//           okButtonWidth: '95',
-//           noButtonWidth: '95',
-//         }
-//       )
-//     }
-//   }
-// )
-
 // 重置路径
 const resetPath = () => {
   installPath.value = defaultPath.value
 }
-
-// 转移文件
-// const removeFile = (oldPath, newPath) => {
-//   fs.readdir(oldPath, (err, files) => {
-//     if (err) {
-//       console.error(err)
-//       return
-//     }
-//     message.info('正在转移文件')
-//     files.forEach((file) => {
-//       const oldPathFile = oldPath + '/' + file
-//       const newPathFile = newPath + '/' + file
-//       fs.rename(oldPathFile, newPathFile, (err) => {
-//         if (err) {
-//           console.error(err)
-//           message.error('转移失败')
-//           return
-//         }
-//         message.success('转移成功')
-//       })
-//     })
-//   })
-// }
 
 
 

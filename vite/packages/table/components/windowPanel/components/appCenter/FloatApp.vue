@@ -1,5 +1,6 @@
 <template>
     <div 
+        ref="appRef"
         :style="{ left: `${appPos.x}px`, top: `${appPos.y}px`} "
         class="w-[600px] h-[632px] rounded-2xl flex flex-col absolute justify-between" 
         style="
@@ -28,14 +29,14 @@
                     <Tips 
                         :closeVisible="false"
                         @jumpMy="goApps('MyApps')" 
-                        v-if="!isSearch && startMenu.length <= 0 && recentUsed">
+                        v-if="!isSearch && lastStartMenu.length <= 0 && recentUsed">
                     </Tips>  
                 </div>
                 
                 <!-- 开始菜单列表 -->
                 <ItemList :list="lastStartMenu" v-if="!isSearch" @close="close"></ItemList>  
                 <!-- 搜索后列表 -->
-                <SearchList :list="searchList" v-else @close="close" :market="marketList"/>
+                <SearchList :list="searchList" v-else @close="close" :market="marketList" @open="goApps('Market')"/>
             </div>
             <div v-if="recentUsed && !isSearch" class="w-full h-full">
                 <div class="flex items-center justify-between mt-3 mb-3">
@@ -81,8 +82,12 @@ import {
 } from 'vue'
 
 import { storeToRefs } from 'pinia';
+import { onClickOutside } from '@vueuse/core'
+
 import { useAppCenterStore } from '../../../../apps/appCenter/src/store';
 import { useMarketStore } from '../../../../apps/appCenter/src/views/market/store/store';
+import { ROUTER_LIMIT } from '../../../../permission/config';
+import { usePlat } from '../../../../permission/usePlat';
 
 const appCenterStore = useAppCenterStore()
 const { current, visible, recentUsed, myApps, showTip } = storeToRefs(appCenterStore)
@@ -130,14 +135,13 @@ const marketList = ref([])
 const isMore = ref(false)
 
 const arr =ref([])
-
+// 组件实例
+const appRef = ref(null)
 
 // 搜索
 const search = () => {
-    // console.log(inputValue.value)
     isSearch.value = true
-    searchList.value = startMenu.value
-    searchList.value = searchList.value.filter(item => item.name.indexOf(inputValue.value) !== -1)
+    searchList.value = myApps.value.filter(item => item.name.indexOf(inputValue.value) !== -1)
     marketList.value = recommendList.value
     marketList.value = marketList.value.filter(item => item.name.indexOf(inputValue.value) !== -1)
 }
@@ -154,9 +158,12 @@ watch(
 
 // 开始菜单
 const startMenu = computed(() => {
-    const list = myApps.value.filter(item => item.isStart)
-    return list
-})
+  // 根据平台使用条件过滤 myApps 列表
+  return myApps.value.filter(item => 
+    item.isStart && (usePlat('web') ? !ROUTER_LIMIT.web.includes(item.value) : true)
+  );
+});
+
 
 // 最近使用
 const lastUseList = computed(() => {
@@ -183,7 +190,6 @@ const lastStartMenu = computed(() => {
 // 当屏幕高度小于界面高度时，缩放
 const cardZoom = computed(() => {
     const wH = window.innerHeight
-    // console.log('wH :>> ', wH,wH / 800 ,appPos.value,(appPos.value.x / (wH / 800)),(appPos.value.y / (wH / 800)) );
     if(wH < 800) {
         return (wH / 800).toFixed(2)
     } else {
@@ -211,13 +217,17 @@ const close = () => {
 
 // 点击外部关闭
 onMounted(() => {
-    proxy.$bus.on('closeControl', () => {
+    // proxy.$bus.on('closeControl', () => {
+    //     emit('close')
+    // })
+    onClickOutside(appRef, () => {
         emit('close')
     })
 })
 
 onUnmounted(() => {
-    proxy.$bus.off('closeControl')
+    // proxy.$bus.off('closeControl')
+    onClickOutside(appRef, null)
 })
 </script>
 <style lang='scss' scoped></style>

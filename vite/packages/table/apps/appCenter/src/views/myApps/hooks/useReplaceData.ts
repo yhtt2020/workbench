@@ -8,6 +8,5 @@ export const useReplaceData = (data) => {
     list = list.map((item) => {
         return mergeData(item)
     })
-    console.log(list,'<<<<<<<,list')
     return list
 }

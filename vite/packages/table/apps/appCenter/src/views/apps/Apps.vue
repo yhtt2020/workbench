@@ -25,6 +25,7 @@ import { useAppCenterStore } from '../../store';
 
 import { runExec } from '../../../../../js/common/exec';
 import { usePlat } from '../../../../../ui/hooks/usePlat';
+import { checkStatus } from './checkStatus';
 
 const state = useAppStateStore()
 const store = useAppCenterStore()
@@ -46,6 +47,7 @@ const executeLocalApp = (app) => {
 
 // 安装函数
 const install = (app) => {
+    if(!checkStatus()) return
     console.log('安装',app)
     if(app.downloading) return
     app.downloading = true
@@ -86,6 +88,7 @@ const install = (app) => {
  * @param path
  */
  const setup = (app, path, silent = true) => {
+  if(!checkStatus()) return
   message.success({ content: '正在为您安装', key: 'install' })
   app.installing = true
   if (silent) {
