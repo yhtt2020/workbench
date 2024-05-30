@@ -10,12 +10,12 @@
     :desk="desk"
     :envLimit="['single']"
     @delete="deleteCard">
-    <!-- <div v-if="defaultCity" class="px-3 py-1 bg-mask rounded-xl pointer" @click="openWeatherDrawer" style="position: absolute;left: 45px;top:10px">
-      {{ defaultCity.name }}
-    </div> -->
+
     <div @click="enterWeather">
       <div v-if="!cities.length">
-        <div>
+        <Unusual :newIcon="'fluent-emoji:sun-behind-cloud'" :normalButtonTitle="'添加城市'" @back="add"/>
+
+        <!-- <div>
           <a-col style="text-align: center; margin-top: 0em">
             <Icon style=" width: 5em;  height: 5em;    vertical-align: middle; " icon="icon_qingtian"></Icon>
           </a-col>
@@ -25,7 +25,8 @@
             <Icon icon="tianjia1"></Icon>
             添加城市
           </xt-button>
-        </div>
+        </div> -->
+        
       </div>
       <div @click="enterWeather" v-else>
         <template v-if="defaultCity.now && defaultCity.d7 && defaultCity.h24 && defaultCity.d7.daily">
@@ -85,13 +86,16 @@
 </template>
 <script>
 
-import { mapState } from 'pinia'
+import { mapState,mapWritableState,mapActions } from 'pinia'
 import { getDateTime } from '../../../../src/util/dateTime'
 import { weatherStore } from '../../store/weather'
 import Widget from "../card/Widget.vue";
 import HorizontalDrawer from '../HorizontalDrawer.vue';
 import XtButton from '../../ui/libs/Button/index.vue'
 import { Icon as newIcon } from '@iconify/vue';
+import { communityNavStore } from "../bottomPanel/store/communityNavStore";
+import Unusual from './Unusual.vue';
+
 export default {
   name: "Weather",
   props:{
@@ -130,17 +134,13 @@ export default {
     XtButton,
     Widget,
     HorizontalDrawer,
-    newIcon
+    newIcon,
+    Unusual
   },
   computed: {
     ...mapState(weatherStore, ['cities','reloadAll']),
-    // city () {
-    //   if(this.cities[0]){
-    //     return this.cities[0]
-    //   }else{
-    //     return {}
-    //   }
-    // },
+  
+
     header(){
       return {
         title:this.defaultCity?.name ? this.defaultCity?.name : "天气",
@@ -153,6 +153,7 @@ export default {
     options(){
       return {
         customDel:this.openWay === 'nav' ? true : false,
+        disableEdit: this.isCommunityDesktop(this.desk),
       }
     },
     defaultCity(){
@@ -176,6 +177,9 @@ export default {
     this.customData.customSize = '2x2'
   },
   methods: {
+    ...mapActions(communityNavStore,['isCommunityDesktop']),
+
+
     // 自定义删除卡片事件
     deleteCard() {
       this.$emit("delete", this.customIndex);

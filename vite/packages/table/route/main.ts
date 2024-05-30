@@ -1,3 +1,4 @@
+// @ts-ignore
 import BarrageSetting from "../page/settings/BarrageSetting.vue";
 
 import Setting from "../page/Setting.vue";
@@ -98,7 +99,9 @@ import ShortcutKeyRoute from "../apps/shortcutKey/route";
 import BarrageRoute from "../apps/barrage/route";
 import Power from "../page/Power.vue";
 import Remote from "../apps/console/pages/Remote.vue";
-import SharedDesk from  '../page/SharedDesk.vue'
+import SharedDesk from  '../page/SharedDesk.vue';
+import DeskIndexRouter from "../apps/communityDesk/router/deskIndexRouter";
+
 export default [
   {
 
@@ -118,6 +121,7 @@ export default [
     children: [
       ...DeckRoute,
       ShortcutKeyRoute,
+      DeskIndexRouter,
 
       {
         path: "/income",

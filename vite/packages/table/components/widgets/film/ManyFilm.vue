@@ -1,5 +1,5 @@
 <template>
-    <xt-container
+  <xt-container
     :header="header"
     v-model:customSize="customData.customSize"
     :desk="desk"
@@ -12,240 +12,334 @@
     :env="env"
     v-if="!detailToggle"
     @delete="deleteCard"
-    >
-      <!-- <span style="position: absolute;top: 16px;left: 120px"><icon style="font-size: 18px" icon="shuaxin"></icon></span> -->
-      <div v-if="pageToggle">
-        <div class="example" v-if="isLoading">
-          <a-spin />
-        </div>
-        <div v-else>
+  >
+    <!-- <span style="position: absolute;top: 16px;left: 120px"><icon style="font-size: 18px" icon="shuaxin"></icon></span> -->
+    <div v-if="pageToggle">
+      <div class="example" v-if="isLoading">
+        <a-spin />
+      </div>
+      <div v-else>
         <div class="pointer title-refresh" @click="refreshPage"></div>
-          <div class="film-box" v-if="customData.width ? customData.width === 1 :  'true' ">
-            <div v-for="item in filmArrange" :key="item.id"
+        <div
+          class="film-box"
+          v-if="customData.width ? customData.width === 1 : 'true'"
+        >
+          <div
+            v-for="item in filmArrange"
+            :key="item.id"
             @click="btnDetail(item.id)"
             class="w-full cursor-pointer one-film"
-            style="display:hiddle;">
-              <!-- <img :src="item.img" alt="" class="rounded-lg img-film"> -->
-              <a-image :src="item.img" :preview="false" class="rounded-lg" style="object-fit: cover;" width="116px" height="171px"/>
-              <div class="text-center bg-black right-top bg-opacity-70"  style="background: var(--primary-bg) !important;">
-              <span v-if="item.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;color: var(--primary-text);">
-                猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;">{{item.score}}</span>
+            style="display: hiddle"
+          >
+            <!-- <img :src="item.img" alt="" class="rounded-lg img-film"> -->
+            <a-image
+              :src="item.img"
+              :preview="false"
+              class="rounded-lg"
+              style="object-fit: cover"
+              width="116px"
+              height="171px"
+            />
+            <div
+              class="text-center bg-black right-top bg-opacity-70"
+              style="background: var(--primary-bg) !important"
+            >
+              <span
+                v-if="item.sc"
+                style="
+                  font-family: PingFangSC-Semibold;
+                  font-weight: 600;
+                  color: var(--primary-text);
+                "
+              >
+                猫眼：<span
+                  style="font-weight: 700; font-family: Oswald-Bold"
+                  >{{ item.score }}</span
+                >
               </span>
-              <span v-else style="font-weight: 700;font-family: Oswald-Bold;color: var(--primary-text);">{{ item.comingDate }}</span>
-              </div>
+              <span
+                v-else
+                style="
+                  font-weight: 700;
+                  font-family: Oswald-Bold;
+                  color: var(--primary-text);
+                "
+                >{{ item.comingDate }}</span
+              >
             </div>
           </div>
-          <div class="film-item" v-else-if="customData.width === 2">
-            <div v-for="item in filmArrange" :key="item.id" @click="btnDetail(item.id)"
-            class="w-full mr-5 rounded-t-lg cursor-pointer one-film">
-              <!-- <img :src="item.img" alt="" class="rounded-lg img-film"> -->
-              <a-image :src="item.img" :preview="false" alt="" class="rounded-lg" style="object-fit: cover;" width="116px" height="171px"/>
-              <div class="text-center bg-black right-top bg-opacity-70" style="background: var(--primary-bg) !important;">
-                <span v-if="item.sc" style="font-family: PingFangSC-Semibold;font-weight: 600;">
-                  猫眼：<span style="font-weight: 700;font-family: Oswald-Bold;color: var(--primary-text);background: background: var(--primary-bg);">{{item.score}}</span>
-                </span>
-                <span v-else style="font-weight: 700;font-family: Oswald-Bold;color: var(--primary-text);">{{ item.comingDate }}</span>
-              </div>
+        </div>
+        <div class="film-item" v-else-if="customData.width === 2">
+          <div
+            v-for="item in filmArrange"
+            :key="item.id"
+            @click="btnDetail(item.id)"
+            class="w-full mr-5 rounded-t-lg cursor-pointer one-film"
+          >
+            <!-- <img :src="item.img" alt="" class="rounded-lg img-film"> -->
+            <a-image
+              :src="item.img"
+              :preview="false"
+              alt=""
+              class="rounded-lg"
+              style="object-fit: cover"
+              width="116px"
+              height="171px"
+            />
+            <div
+              class="text-center bg-black right-top bg-opacity-70"
+              style="background: var(--primary-bg) !important"
+            >
+              <span
+                v-if="item.sc"
+                style="font-family: PingFangSC-Semibold; font-weight: 600"
+              >
+                猫眼：<span
+                  style="font-weight: 700;font-family: Oswald-Bold;color: var(--primary-text);background: background: var(--primary-bg);"
+                  >{{ item.score }}</span
+                >
+              </span>
+              <span
+                v-else
+                style="
+                  font-weight: 700;
+                  font-family: Oswald-Bold;
+                  color: var(--primary-text);
+                "
+                >{{ item.comingDate }}</span
+              >
             </div>
           </div>
         </div>
       </div>
-      <DataStatu v-else imgDisplay="/img/test/load-ail.png" :btnToggle="false" textPrompt="暂无数据"></DataStatu>
-    </xt-container>
-    <FilmDetail v-if="detailToggle" :detailId="detailId" :fatherWidth="customData.width" @detailBack="detailBack"></FilmDetail>
+    </div>
+    <DataStatu
+      v-else
+      imgDisplay="/img/test/load-ail.png"
+      :btnToggle="false"
+      textPrompt="暂无数据"
+    ></DataStatu>
+  </xt-container>
+  <FilmDetail
+    v-if="detailToggle"
+    :detailId="detailId"
+    :fatherWidth="customData.width"
+    @detailBack="detailBack"
+  ></FilmDetail>
 </template>
 
 <script>
-  import { mapWritableState, mapActions } from 'pinia'
-  import Widget from "../../card/Widget.vue";
-  import { filmStore } from '../../../store/douBan';
-  import DataStatu from "../DataStatu.vue"
-  import FilmDetail from './FilmDetail.vue'
-  import { Icon as newIcon } from '@iconify/vue';
-  import _ from 'lodash-es';
-  export default {
-    name: "ManyFilm",
-    components:{
-      Widget,
-      FilmDetail,
-      DataStatu,
-      newIcon
-    },
-    props: {
-      customIndex:{
-        type:Number,
-        default:0
-      },
-      customData: {
-        type: Object,
-        default: () => {
+import { mapWritableState, mapActions } from "pinia";
+import Widget from "../../card/Widget.vue";
+import { filmStore } from "../../../store/douBan";
+import DataStatu from "../DataStatu.vue";
+import FilmDetail from "./FilmDetail.vue";
+import { Icon as newIcon } from "@iconify/vue";
+import _ from "lodash-es";
+import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
 
-        },
-      },
-      desk:{
-        type:Object
-      },
-      openWay:{
-        type:String,
-        default:'desk'
-      }
+export default {
+  name: "ManyFilm",
+  components: {
+    Widget,
+    FilmDetail,
+    DataStatu,
+    newIcon,
+  },
+  props: {
+    customIndex: {
+      type: Number,
+      default: 0,
     },
-    data() {
-      return {
-        sizeList:[{value:'2x4',name:'2x4'},{value:'4x4',name:'4x4'},],
-        mySize: { title: "1x2", height:2,width:1,name:'1x2' },
-        filmList: [],
-        filmPart: [],
-        filmArrange: [],
-        detailToggle: false,
-        detailId: -1,
-        isLoading: false,
-        pageToggle: true,
-        env:{
-          web: false,
-          mobile: false,
-          client: false,
-          single:false
+    customData: {
+      type: Object,
+      default: () => {},
+    },
+    desk: {
+      type: Object,
+    },
+    openWay: {
+      type: String,
+      default: "desk",
+    },
+  },
+  data() {
+    return {
+      sizeList: [
+        { value: "2x4", name: "2x4" },
+        { value: "4x4", name: "4x4" },
+      ],
+      mySize: { title: "1x2", height: 2, width: 1, name: "1x2" },
+      filmList: [],
+      filmPart: [],
+      filmArrange: [],
+      detailToggle: false,
+      detailId: -1,
+      isLoading: false,
+      pageToggle: true,
+      env: {
+        web: false,
+        mobile: false,
+        client: false,
+        single: false,
+      },
+      header: {
+        // ifyIcon: "fluent:movies-and-tv-16-regular",
+        showIcon:"/img/appLogo/film.png",
+        title: "正在热映",
+        refresh: {
+          fn: this.refreshPage,
+          tip: "刷新",
         },
-        header:{
-          ifyIcon:"fluent:movies-and-tv-16-regular",
-          title:"正在热映",
-          refresh:{
-            fn:this.refreshPage,
-            tip:'刷新',
-            
-          }
-        }
+      },
+    };
+  },
+  computed: {
+    ...mapWritableState(filmStore, ["data"]),
+    ...mapWritableState(communityNavStore, ["currentCommunity"]),
+
+    communityRole() {
+      return this.currentCommunity?.item?.role === "member";
+    },
+
+    options() {
+      return {
+        defaultData: {
+          customSize: "4x4",
+        },
+        customDel: this.openWay === "nav" ? true : false,
+        disableEdit: this.isCommunityDesktop(this.desk),
       };
     },
-    computed: {
-      ...mapWritableState(filmStore, ['data']),
-      options(){
-        return {
-          defaultData:{
-            customSize:'4x4'
-          },
-          customDel:this.openWay === 'nav' ? true : false
-        }
-      }
+  },
+  emit: ["delete"],
+  watch: {
+    "customData.width": {
+      handler() {
+        this.getDoubanList();
+      },
+      deep: true,
+      immediate: true,
     },
-    emit:['delete'],
-    watch:{
-      'customData.width': {
-        handler() {
-          this.getDoubanList()
-        },
-        deep: true,
-        immediate: true
-      },
-      customSize(newVal,oldVal){
-        this.customData.customSize = newVal
-      }
+    customSize(newVal, oldVal) {
+      this.customData.customSize = newVal;
     },
-    methods: {
-      ...mapActions(filmStore,['getData']),
-      deleteCard(){
-        this.$emit('delete')
-      },
-      getDoubanList(){
-        if(this.customData.width ? this.customData.width === 1 :  'true'){
-          this.filmArrange = this.filmPart.slice(0,4)
-        }else if(this.customData.width === 2){
-          this.filmArrange = this.filmPart
-        }
-      },
-      async refreshPage () {
-        this.filmPart = _.sampleSize(this.filmList, 8)
-        await this.getData(0)
-        this.getDoubanList()
-      },
-      btnDetail(id){
-        this.detailId = id
-        this.detailToggle = true
-      },
-      detailBack(val){
-        this.detailToggle = val
-      }
-    },
-    mounted() {
-      if(this.customData.customSize === undefined){
-        this.customData.customSize = '2x4'
-      }
-      this.isLoading = true
-      this.getData().then(()=>{
-        if(!this.data){
-          this.pageToggle = false
-        }else{
-          this.filmList = this.data.list || []
-          if(!this.filmList.length){
-            this.pageToggle = false
-          }
-          this.filmPart = _.sampleSize(this.filmList, 8)
-          this.getDoubanList()
-        }
-        setTimeout(() => {
-          this.isLoading = false
-        })
-      })
+  },
+  methods: {
+    ...mapActions(filmStore, ["getData"]),
+    ...mapActions(communityNavStore, ["isCommunityDesktop"]),
 
+
+    deleteCard() {
+      this.$emit("delete");
     },
-  };
+    getDoubanList() {
+      if (this.customData.width ? this.customData.width === 1 : "true") {
+        this.filmArrange = this.filmPart.slice(0, 4);
+      } else if (this.customData.width === 2) {
+        this.filmArrange = this.filmPart;
+      }
+    },
+    async refreshPage() {
+      this.filmPart = _.sampleSize(this.filmList, 8);
+      await this.getData(0);
+      this.getDoubanList();
+    },
+    btnDetail(id) {
+      this.detailId = id;
+      this.detailToggle = true;
+    },
+    detailBack(val) {
+      this.detailToggle = val;
+    },
+  },
+  mounted() {
+    if (this.customData.customSize === undefined) {
+      this.customData.customSize = "2x4";
+    }
+    this.isLoading = true;
+    this.getData().then(() => {
+      if (!this.data) {
+        this.pageToggle = false;
+      } else {
+        this.filmList = this.data.list || [];
+        if (!this.filmList.length) {
+          this.pageToggle = false;
+        }
+        this.filmPart = _.sampleSize(this.filmList, 8);
+        this.getDoubanList();
+      }
+      setTimeout(() => {
+        this.isLoading = false;
+      });
+    });
+
+    if (this.options.disableEdit) {
+        this.sizeList = [];
+      } else {
+        this.sizeList = [
+          { value: "2x4", name: "2x4" },
+          { value: "4x4", name: "4x4" },
+        ];
+      }
+  },
+};
 </script>
 
 <style scoped lang="scss">
-  .film-box{
-    display: flex;
-    flex-flow: wrap;
-    margin: 0px 0 0 3px;
-  }
-  .film-box>div:nth-child(odd){
-    margin-right: 16px;
-  }
+.film-box {
+  display: flex;
+  flex-flow: wrap;
+  margin: 0px 0 0 3px;
+}
+.film-box > div:nth-child(odd) {
+  margin-right: 16px;
+}
 
-  .right-top{
-    position: absolute;
-    top: 0;
-    right: 0;
-    border-radius: 0px 8px 0px 8px;
-    width: 68px;
-    height: 24px;
-    line-height: 24px;
-    font-size: 13px;
+.right-top {
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-radius: 0px 8px 0px 8px;
+  width: 68px;
+  height: 24px;
+  line-height: 24px;
+  font-size: 13px;
+}
+.film-item {
+  padding: 12px 0 0 20px;
+  display: grid;
+  grid-template-columns: repeat(4, 0.225fr);
+  justify-content: center;
+  align-items: center;
+}
+.one-film {
+  width: 116px;
+  height: 171px;
+  position: relative;
+  margin-bottom: 14px;
+  .img-film {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
-  .film-item{
-      padding: 12px 0 0 20px;
-      display: grid;
-      grid-template-columns: repeat(4, 0.225fr);
-      justify-content: center;
-      align-items: center;
-    }
-    .one-film{
-      width: 116px;
-      height: 171px;
-      position: relative;
-      margin-bottom: 14px;
-      .img-film{
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-    }
-    .title-refresh{
-      position: absolute;
-      left: 20px;
-      top:10px;
-      width: 230px;
-      height: 40px;
-    }
-    .example {
-      width: 100%;
-      height: 328px;
-      text-align: center;
-      border-radius: 4px;
-      margin-bottom: 20px;
-      padding: 30px 50px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+}
+.title-refresh {
+  position: absolute;
+  left: 20px;
+  top: 10px;
+  width: 230px;
+  height: 40px;
+}
+.example {
+  width: 100%;
+  height: 328px;
+  text-align: center;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  padding: 30px 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>

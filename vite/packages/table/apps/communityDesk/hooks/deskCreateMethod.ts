@@ -1,6 +1,7 @@
 import { cardStore } from "../../../store/card";
 import { storeToRefs } from "pinia";
 import _ from "lodash-es";
+import { communityNavStore } from "../../../components/bottomPanel/store/communityNavStore";
 
 // 导航个人桌面切换到社群桌面方法
 export const getCommunityDeskList = (communityInfo: any) => {
@@ -72,4 +73,11 @@ export const generateSearchResultTime = (timestamp: number) => {
   }
 };
 
-// shi
+// 根据当前社群号来获取当前社群的管理员权限
+export const communityAuth = (no:any) => {
+  const { currentCommunity } = storeToRefs(communityNavStore() as any);
+  const communityNo = currentCommunity.value?.item?.no;
+  if(Number(no) === Number(communityNo)){
+    return currentCommunity.value?.item?.role  === 'owner';
+  }
+};

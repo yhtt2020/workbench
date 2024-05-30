@@ -105,7 +105,6 @@ async function runApp(uri) {
  *
  * @param type
  * @param value
- * @param router 这个是路由 ts无法调用 得手动传入
  */
 export const startApp = async (type, value, router?) => {
   if (type === "" || value === "") {
@@ -156,8 +155,8 @@ export const startApp = async (type, value, router?) => {
       const info = {
         type,
         ...value,
-      }
-      useAppStore.openApp(info)
+      };
+      useAppStore.openApp(info);
       break;
     // 本地应用
     case "tableApp":
@@ -257,18 +256,22 @@ export const openSysApp = (value, router) => {
       break;
     case "home":
       useAppStore.settings.isCommunity = true;
-      router.push({ name: value });
+      window.$ui.router.push({ name: value });
       break;
     case "ai":
-      const { openApp } = useAppModal("ai");
-      openApp();
+      const { openApp : aiOpen } = useAppModal("ai");
+      aiOpen();
+      break;
+    case "note":
+      const { openApp:noteOpen } = useAppModal("note");
+      noteOpen();
       break;
     case "income":
-      useAppModal("income").openApp()
+      useAppModal("income").openApp();
       break;
     default:
       // 通过路由打开
-      router.push({ name: value });
+      window.$ui.router.push({ name: value });
       break;
   }
 };

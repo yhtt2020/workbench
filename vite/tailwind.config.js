@@ -37,6 +37,9 @@ module.exports = {
         ".tt-theme-bg-2": {
           background: "var(--tt-theme-secondary-color)",
         },
+        ".tt-no-bg": {
+          background: "none !important",
+        },
         ".tt-bg": {
           background: "var(--tt-primary-color)",
         },
