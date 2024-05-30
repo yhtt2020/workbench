@@ -93,7 +93,6 @@
             :keywords="keyword"
             :search="orderType"
             @addSuccess="onBack"
-            :communityRole="communityRole"
           >
           </NewCardPreViews>
           <template v-else>
@@ -186,9 +185,6 @@ export default {
     deskList: {
       type: Array,
     },
-    communityRole:{
-      type:Boolean,
-    }
   },
   data () {
     return {

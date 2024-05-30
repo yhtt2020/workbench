@@ -163,6 +163,7 @@ export const communityDeskStore = defineStore("communityDesk", {
         .loadFromCommunity(communityNo, communityNavAppId, communityDeskAll)
         .then((rs: any) => {
           if (rs.status) {
+            console.log('查看云端数据结果-全部桌面数据',rs);
             const archiveData = rs.data?.data;
             if (archiveData.desksAll) {
               this.syncDesk.desks = archiveData?.desksAll;
@@ -190,6 +191,7 @@ export const communityDeskStore = defineStore("communityDesk", {
         loadKey
       );
       getDeskDetail.then((rs:any)=>{
+        console.log('查看云端数据结果-当前桌面数据',rs);
         if(rs.status){
           const archiveData = rs.data?.data?.deskDetail;
           if(archiveData){

@@ -34,13 +34,6 @@
         </template>
       </xt-msg>
     </teleport>
-    <!-- </template> -->
-    <!-- 窗口化 -->
-    <!-- <template #right-menu>
-      <div class="pointer" v-if="options.isCopy" style="position: absolute; left:-28px;top:2px;" @click="options.copyContent">
-          <Icon width="20" height="20" icon="fluent:window-multiple-16-filled" />
-        </div>
-    </template> -->
 
     <template #title-text>
       <a-input
@@ -59,10 +52,7 @@
         @blur="changeNoteTitle"
       ></a-input>
     </template>
-    <!-- <cardDrag ref="drag" @reSizeInit="reSizeInit"> </cardDrag> -->
 
-    <!-- <cardDrag ref="drag" @reSizeInit="reSizeInit"> -->
-    <!-- <template #="{ row }"> -->
     <Markdown
       ref="mdEditor"
       :customData="customData"
@@ -70,135 +60,85 @@
       :desk="desk"
       :disableEdit="options?.disableEdit"
     ></Markdown>
-    <!-- </template> -->
-    <!-- </cardDrag> -->
   </xt-container>
-  <!-- <a-drawer :width="500" v-model:visible="settingVisible" placement="right">
-    <template #title>
-      <div class="text-center">设置</div>
-    </template>
 
-    <XtRadio @onChange="__updateSize" :data="customData.dragCardSize"></XtRadio>
-    <div class="text-base" style="margin: 12px 0">背景色</div>
-    <div class="item-box">
-      <div
-        class="item"
-        :key="item"
-        :style="{ background: color[`${'color' + item}`] }"
-        v-for="item in 6"
-        @click="updateBackground(color[`${'color' + item}`])"
-      ></div>
-    </div>
-  </a-drawer> -->
-  <teleport to="body">
-    <!-- 新设置 -->
-    <Modal
-      v-if="settingVisible"
-      v-model:visible="settingVisible"
-      :blurFlag="true"
-      :mask-no-close="false"
-    >
-      <div style="width: 500px; height: 466px">
-        <div
-          class="p-4 font-16"
+  <xt-modal
+    v-if="settingVisible"
+    v-model="settingVisible"
+    title="「桌面便签」设置"
+    :mask="false"
+    @close="settingVisible = false"
+  >
+    <div style="width: 500px; height: 466px">
+
+      <CardSettingExplain v-if="communityAuth(desk?.communityNo)"/>
+
+      <div class="w-full h-full p-4 rounded-lg xt-bg-2 flex flex-col">
+        <span class="xt-text font-16 xt-font"> 小组件尺寸</span>
+        <span class="xt-text-2 font-14 xt-font">
+          支持选择上述推荐尺寸，或按住小组件右下角拖拽图标，自定义大小尺寸。
+        </span>
+
+        <a-divider
           style="
-            height: 64px;
-            line-height: 32px;
-            text-align: center;
-            color: var(--primary-text);
+            height: 1px;
+            background-color: var(--divider-text);
+            margin: 16px 0;
           "
-        >
-          「桌面便签」设置
-          <div
-            class="flex items-center justify-center rounded-lg pointer"
-            style="
-              width: 32px;
-              height: 32px;
-              background-color: var(--secondary-bg);
-              float: right;
-            "
-            @click="settingVisible = false"
-          >
-            <Icon icon="fluent:dismiss-16-filled" />
+        />
+
+        <span class="xt-text font-16 xt-font"> 便签主题色 </span>
+
+        <div>
+          <div class="mt-4 item-box">
+            <div
+              class="flex items-center justify-center mr-4 item"
+              :key="item"
+              :style="{ background: color[`${'color' + item}`] }"
+              v-for="(item, index) in 6"
+              @click="updateBackground(color[`${'color' + item}`], item)"
+            >
+              <Icon
+                v-show="colorIndex == item"
+                icon="ri:checkbox-circle-fill"
+                width="20"
+                height="20"
+              />
+            </div>
           </div>
         </div>
-        <!--  -->
-        <div class="w-full" style="padding: 0 24px 24px 24px; height: 400px">
-          <div
-            class="w-full h-full p-4 rounded-lg"
-            style="background-color: var(--secondary-bg)"
-          >
-            <div style="color: var(--primary-text); font-size: 16px">
-              小组件尺寸
-            </div>
 
-            <!-- <xt-tab v-model="cardSize" :list="sizeType1" class="h-12 p-1 mb-3 xt-bg-2"  @click="__updateSize" :data="customData.dragCardSize"/> -->
+        <a-divider
+          style="
+            height: 1px;
+            background-color: var(--divider-text);
+            margin: 16px 0;
+          "
+        />
 
-            <!-- <RadioTab  :navList="sizeType"  class="nav-type"
-                        v-model:selectType="cardSize"  @click="test" ></RadioTab> -->
-
-            <!-- <XtRadio class="mt-3 mb-3" @onChange="__updateSize" :data="customData.dragCardSize"></XtRadio> -->
-
-            <div style="color: var(--secondary-text)">
-              支持选择上述推荐尺寸，或按住小组件右下角拖拽图标，自定义大小尺寸。
-            </div>
-            <a-divider
-              style="
-                height: 1px;
-                background-color: var(--divider-text);
-                margin: 16px 0;
-              "
-            />
-            <div style="color: var(--primary-text); font-size: 16px">
-              便签主题色
-            </div>
-            <div>
-              <div class="mt-4 item-box">
-                <div
-                  class="flex items-center justify-center mr-4 item"
-                  :key="item"
-                  :style="{ background: color[`${'color' + item}`] }"
-                  v-for="(item, index) in 6"
-                  @click="updateBackground(color[`${'color' + item}`], item)"
-                >
-                  <Icon
-                    v-show="colorIndex == item"
-                    icon="ri:checkbox-circle-fill"
-                    width="20"
-                    height="20"
-                  />
-                </div>
-              </div>
-            </div>
-            <a-divider
-              style="
-                height: 1px;
-                background-color: var(--divider-text);
-                margin: 16px 0;
-              "
-            />
-            <div class="flex" style="justify-content: space-between">
-              <div style="color: var(--primary-text); font-size: 16px">
-                仅在标题处显示主题色
-              </div>
-              <a-switch
-                @click="this.changeShowColor"
-                v-model:checked="options.showColor"
-              ></a-switch>
-            </div>
-            <div style="color: var(--secondary-text)">
-              开启后小组件背景使用默认的编辑器颜色，标题部分使用上方选择的主题色。
-            </div>
+        <div class="flex" style="justify-content: space-between">
+          <div class="xt-text xt-font font-16">
+            仅在标题处显示主题色
           </div>
+          <a-switch
+            v-model:checked="options.showColor"
+            @change="this.changeShowColor"
+          ></a-switch>
+        </div>
+
+        <div class="xt-text-2 xt-font font-14">
+          开启后小组件背景使用默认的编辑器颜色，标题部分使用上方选择的主题色。
         </div>
       </div>
-    </Modal>
+    </div>
+  </xt-modal>
+
+  <teleport to="body">
     <xt-print
       v-if="modelValue"
       v-model="modelValue"
       :content="content"
     ></xt-print>
-    <!-- :content="this.$refs.mdEditor?.getContent()" -->
   </teleport>
 </template>
 
@@ -223,6 +163,9 @@ import {
 import { useAppModal } from "../../../hooks";
 import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
 
+import CardSettingExplain from '../../CardSettingExplain.vue';
+import { communityAuth } from "../../../apps/communityDesk/hooks/deskCreateMethod"
+
 export default {
   name: "便签",
   components: {
@@ -231,6 +174,7 @@ export default {
     Icon,
     Markdown,
     RadioTab,
+    CardSettingExplain,
   },
   mixins: [
     // cardDragHook,
@@ -545,6 +489,7 @@ export default {
   methods: {
     ...mapActions(noteStore, ["changeDeskBg", "saveDeskTitle"]),
     ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+    communityAuth,
 
     // 自定义删除卡片
     deleteCard() {
