@@ -5,24 +5,6 @@
     @click.stop="iconClick($event)"
     :style="[iconSize]"
   >
-    <!-- <xt-icon-show
-      v-if="isIfy === 'select'"
-      v-model="src"
-      :h="imgH"
-      :w="imgW"
-      :boxW="bgW"
-      :boxH="bgH"
-      :bg="bg"
-      :r="r"
-      boxR="12px"
-      :click="false"
-      :fit="fit"
-    />
-    <xt-newIcon
-      v-else
-      :icon="src"
-      :size="imgW"
-    /> -->
     <xt-mix-icon
       :type="isIfy"
       v-model:icon="src"
@@ -43,35 +25,13 @@
       style="top: 1px; right: -2px"
       v-if="isIfy === 'ify'"
     />
-    <!-- <div
-      class="flex items-center justify-center w-full overflow-hidden xt-text no-drag rounded-xl"
-      :style="[bgSize, backgroundState]"
-      :data-index="index"
-    >
-      <img
-        v-if="src && src.length > 0 && open.type === 'systemApp'"
-        :src="src"
-        alt=""
-        :style="[imgSize, radiusState, imgStateStyle]"
-        :data-index="index"
-      />
-      <img
-        v-if="src && src.length > 0 && open.type !== 'systemApp'"
-        :src="renderIcon(src)"
-        alt=""
-        :style="[imgSize, radiusState, imgStateStyle]"
-        :data-index="index"
-      />
-
-    </div> -->
-    <div></div>
     <div
       v-if="isTitle"
-      class="flex-1 mx-auto text-center flex xt-text justify-center items-center"
+      class="flex-1 mx-auto text-center xt-text items-center"
       :style="[textSize]"
       :data-index="index"
     >
-      <div class="w-full truncate">
+      <div class="wf truncate">
         {{ titleValue }}
       </div>
     </div>
