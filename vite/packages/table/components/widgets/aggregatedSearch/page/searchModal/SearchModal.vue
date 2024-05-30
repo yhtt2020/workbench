@@ -301,7 +301,7 @@ useEventListener("keyup", tabEventUp);
           </a-dropdown>
           <!-- 输入框 -->
           <div class="flex-1">
-            <xt-input type="" v-model="words" />
+            <xt-input type="" v-model="words" :focus="true" />
           </div>
         </div>
         <!-- 搜索按钮 -->
