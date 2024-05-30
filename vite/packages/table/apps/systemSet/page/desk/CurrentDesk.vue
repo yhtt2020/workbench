@@ -103,9 +103,9 @@
         <hr />
         <xt-option-info
           title="组件间距"
-          info="调节组件之间的间距，默认为 12px。"
+          info="调节组件之间的间距，默认为 6px。"
           icon="fluent:arrow-clockwise-16-regular"
-          @onIconClick="currentDeskSettings.cardMargin = 12"
+          @onIconClick="currentDeskSettings.cardMargin = 6"
         />
         <xt-option-slider
           v-model:slider="currentDeskSettings.cardMargin"
