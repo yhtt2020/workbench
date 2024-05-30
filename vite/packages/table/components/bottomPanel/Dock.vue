@@ -289,6 +289,9 @@ export default {
   },
   mounted() {
     this.enableDrag();
+    this.$bus.on('openAppCenter',() => {
+      console.log('11111111111111')
+    })
   },
   computed: {
     ...mapWritableState(navStore, [
@@ -314,6 +317,7 @@ export default {
       "currentNavPosition",
       "currentNavFormat",
       "communityNavVisible",
+      "currentMainH",
     ]),
 
     ...mapWritableState(useNavBarStore, ["isEnterDesk"]),
@@ -444,6 +448,27 @@ export default {
     // 文件夹打开状态
     folderVisible(val) {
       this.$emit("update:isOpen", val);
+    },
+
+    // 当导航栏进行缩放后，记录主导航栏高度
+    'navAttribute.navSize'(val) {
+      this.updateH()
+    },
+    // 当导航栏模式发生变化后，记录主导航栏高度
+    currentNavFormat : {
+      handler(val) {
+        this.updateH()
+      },
+      immediate: true,
+      deep: true
+    },
+    // 当导航栏位置发生变化后，记录主导航栏高度
+    currentNavPosition : {
+      handler(val) {
+        this.updateH()
+      },
+      immediate: true,
+      deep: true
     }
   },
   methods: {
@@ -456,6 +481,25 @@ export default {
     mergeData,
     usePosition,
     deleteIcon,
+    // 更新主导航栏高度，用于弹窗定位
+    updateH() {
+      // 计算导航栏尺寸
+      const baseSize = this.currentNavFormat === 'mac' ? 80 : 64;
+      const size = baseSize * (this.navAttribute.navSize / 100) + 20;
+
+      // 初始化主区域高度
+      this.currentMainH = { top: 40, bottom: size };
+
+      // 根据导航位置和开关状态调整高度
+      if (this.currentNavPosition === 'top') {
+        this.currentMainH.top = this.navigationToggle[2] ? size : 0;
+        this.currentMainH.bottom = 0;
+      } else {
+        if (!this.navigationToggle[2]) {
+          this.currentMainH.bottom = 0;
+        }
+      }
+    },
     deleteCard(val){
       this.deleteIcon(this.currentItem,'foot')
     },

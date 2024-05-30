@@ -51,7 +51,13 @@ import { useTransform, defaultStartMenu } from './hooks/useTransform'
 import { useMenus } from '../../../hooks/useMenus';
 import { startApp } from '../../../../../ui/hooks/useStartApp';
 
-import { useReplaceData } from './hooks/useReplaceData'
+import { useReplaceData, reloadList } from './hooks/useReplaceData'
+import { usePlat } from '../../../../../permission/usePlat';
+
+let appModel
+if(!usePlat('web')) {
+    appModel = window.$models.appModel
+}
 
 // 导入组件
 const Header = defineAsyncComponent(() => import('../../component/Header.vue'))
@@ -102,7 +108,7 @@ const arr = ref([
         callBack: () => {
             // addStartMenu(currentItem.value)
             currentItem.value.isStart = true
-            // console.log(currentItem.value)
+            myApps.value = reloadList(list.value)
             message.info(`${currentItem.value.name}已经固定到开始菜单`)
         }
     },
@@ -178,6 +184,7 @@ const getInfo = (item) => {
     }
 }
 
+// 数据初始化
 onMounted(() => {
     if (myApps.value.length === 0 || myApps.value.length !== navigationData.systemAppList.length) {
         // 获取系统应用的列表
@@ -222,15 +229,60 @@ const search = () => {
 
 // 删除
 const delItem = (item) => {
-    const index = appsList.findIndex((ele) => ele.name === item.name)
-    // console.log(index,'index',item,appsList)
-    if(index !== -1) {
-        message.info(`${item.name}不能删除`)
-    } else {
-        myApps.value = myApps.value.filter((ele) => ele.name !== item.name)
-        list.value = myApps.value
-        message.success(`${item.name}删除成功`)
+    if(item.type === 'lightApp') {
+        uninstall(item)
+        return
     }
+    remove(item)
+}
+
+const remove = (item) => {
+    myApps.value = myApps.value.filter((ele) => ele.name !== item.name)
+    list.value = myApps.value
+    message.success(`${item.name}删除成功`)
+}
+
+const uninstall = async(app) => {
+    let apps = await appModel.getAllApps()
+    let appId = app.value.nanoid
+    window.$ui.confirm(
+       '确定卸载此应用？',
+      '此操作将卸载应用并清空所有应用数据，且无法还原。请谨慎操作。',
+      {
+      okText: '确认',
+      type: 'warning',
+      ok () {
+        console.log(apps, 'apps', appId, 'appId',appModel, 'app')
+        // appModel.uninstall(appId).then(
+        //     console.log('卸载成功'),
+        // )
+        appModel.uninstall(app.value.nanoid).then(
+          (success) => {
+            for (let i = 0; i < apps.length; i++) {
+              if (apps[i].nanoid === appId) {
+                console.log(apps[i], 'apps[i]')
+                apps.splice(i, 1)
+              }
+            }
+            console.log(apps, 'apps')
+            ipc.send('message', {
+              type: 'success',
+              config: { content: '卸载应用成功。' },
+            })
+            ipc.send('deleteApp', { nanoid: appId })
+            remove(app)
+          },
+          (err) => {
+            ipc.send('message', {
+              type: 'success',
+              config: { content: '卸载失败。' },
+            })
+          }
+        )
+      },
+      onCancel () {
+      },
+    })
 }
 
 </script>

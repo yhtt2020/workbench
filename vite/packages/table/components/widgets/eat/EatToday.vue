@@ -108,7 +108,8 @@ export default {
       header: {
         title: "今天吃什么",
         // ifyIcon:'fluent:emoji-smile-slight-24-regular'
-        showIcon: "/img/appLogo/eatToday.png",
+        showIcon:"/logo/eatToday.svg",
+
       },
       customSize: "2x4",
     };

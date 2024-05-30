@@ -205,11 +205,16 @@ import {
   computed,
   getCurrentInstance,
 } from "vue";
+import { storeToRefs } from "pinia";
 import { useWindowSize } from "../../drag/src/hooks/useWindowSize";
 // import { vElementSize } from "../../drag/src/hooks/useElementSize";
 import { nanoid } from "nanoid";
 import PerfectScrollbar from "perfect-scrollbar";
 import { ModalProps } from "./types";
+import { useNavigationStore } from "../../../../components/desk/navigationBar/navigationStore";
+
+const navStore = useNavigationStore();
+const { currentMainH } = storeToRefs(navStore);
 
 const { proxy }: any = getCurrentInstance();
 // 类型注释在types.ts文件中
@@ -358,18 +363,21 @@ const currentY = computed(() => {
 
 // 头部导航栏高度
 const topBarHeight = computed(() => {
+  if (window.$usePlat("web")) {
+    return 0;
+  }
   // 顶部导航栏开启时
-  // if (){}
-  if (bottomBar.value) barHeight = bottomBar.value.clientHeight; 
-  return 40;
+  // if (bottomBar.value) barHeight = bottomBar.value.clientHeight;
+
+  return currentMainH.value.top;
 });
 
 // 底部导航栏高度
 const bottomBarHeight = computed(() => {
+  let height = currentMainH.value.bottom;
   // 底部导航栏开启时
-  // if (){}
-  if (bottomBar.value) barHeight = bottomBar.value.clientHeight; 
-  return 100 + topBarHeight.value;
+  // if (bottomBar.value) barHeight = bottomBar.value.clientHeight;
+  return height + topBarHeight.value;
 });
 
 // 弹窗样式
@@ -439,7 +447,9 @@ const getModalPosition = computed(() => {
   }
   // 无遮罩层的情况
   else {
-    top = (windowHeight.value - barHeight - modalHeight.value) / 2;
+    // 防止弹窗越界，超出屏幕
+    let h = (windowHeight.value - bottomBarHeight.value - modalHeight.value) / 2
+    top = h < 0 ? 0 : h;
     left = (windowWidth.value - modalWidth.value) / 2;
   }
 
@@ -604,8 +614,8 @@ const onEsc = (event) => {
 // 初始化
 const init = () => {
   // 获取菜单高度
-  bottomBar.value = document.getElementsByClassName("xt-main-bottom-bar")[0];
-  if (bottomBar.value) barHeight = bottomBar.value.clientHeight;
+  // bottomBar.value = document.getElementsByClassName("xt-main-bottom-bar")[0];
+  // if (bottomBar.value) barHeight = bottomBar.value.clientHeight;
   // else if () {}
 
   // 初始化弹窗位置

@@ -1,64 +1,40 @@
 <template>
-  <div>
-    <xt-container
-      @titleHover="settingVisible = true"
-      v-model:customSize="customData.customSize"
-      :header="header"
-      :desk="desk"
-      :options="options"
-      :customIndex="customIndex"
-      :envLimit="['guest', 'offline', 'single']"
-      :menuList="menuList"
-      ref="cardSlot"
-      :env="env"
-      :sizeList="sizeList"
-      :customData="customData"
-      @delete="deleteCard"
-    >
-      <div
-        v-if="showForumList.length > 0"
-        class="flex flex-col flex-1"
-        style="height: calc(100%)"
-      >
-        <xt-option-tab
-          v-if="showForumList.length > 1"
-          :list="showForumList"
-          :circle="true"
-          v-model="defaultForum"
-          style="height: 40px"
-        >
-        </xt-option-tab>
-        <div
-          v-if="showForumPost.length > 0"
-          class="flex flex-col flex-1 w-full h-0"
-        >
-          <vue-custom-scrollbar
-            ref="threadListRef"
-            :settings="outerSettings"
-            style="overflow: hidden; width: 100%"
-            class="flex-1"
-          >
-            <div v-if="isLoading">
-              <a-spin
-                style="
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                  margin-top: 25%;
-                "
-              />
-            </div>
-            <div class="content" v-else>
-              <div
-                v-for="(item, index) in showForumPost"
-                style="display: flex"
-                class=""
-              >
-                <div class="item" @click="showDetail(item)">
-                  <communItem :key="index" :showForumPost="item" />
-                </div>
-              </div>
-              <!-- <div class="flex items-center justify-center w-full h-[40px] mt-3">
+    <div>
+        <xt-container
+            @leftClick="settingVisible = true"
+            v-model:customSize="customData.customSize"
+            :header="header"
+            :desk="desk"
+            :options="options"
+            :customIndex="customIndex"
+            :envLimit="['guest', 'offline', 'single']"
+            :menuList="menuList"
+            ref="cardSlot"
+            :env="env"
+            :sizeList="sizeList"
+            :customData="customData"
+            @delete="deleteCard">
+            <div v-if="showForumList.length > 0" class="flex flex-col flex-1 " style="height: calc(100%);">
+                <xt-option-tab
+                    v-if="showForumList.length > 1"
+                    :list="showForumList"
+                    :circle="true"
+                    v-model="defaultForum"
+                    style="height: 40px;">
+                </xt-option-tab>
+            <div  v-if="showForumPost.length > 0" class="flex flex-col flex-1 w-full h-0">
+                <vue-custom-scrollbar ref="threadListRef"  :settings="outerSettings"
+                    style="overflow: hidden;width: 100%;" class="flex-1">
+                    <div v-if="isLoading">
+                        <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 25%" />
+                    </div>
+                    <div class="content" v-else>
+                        <div v-for="(item, index) in showForumPost" style="display: flex;" class="">
+                            <div class="item" @click="showDetail(item)">
+                                <communItem :key="index" :showForumPost="item" />
+                            </div>
+                        </div>
+                        <!-- <div class="flex items-center justify-center w-full h-[40px] mt-3">
                             <xt-button :w="84" :h="32"
                                 style="
                                 backend:var(--primary-bg);
@@ -342,28 +318,30 @@ export default {
       }
       return this.selectList.slice(0, 5);
     },
-    header() {
-      return {
-        title: this.options.title,
-        // ifyIcon:'fluent:chat-16-regular',
-        showIcon: "/img/appLogo/yuanCommunity.png",
-        refresh: {
-          fn: this.refreshPost,
-          tip: "刷新",
-          state: this.isLoading ? true : false,
+    header(){
+            return {
+                title: this.options.title,
+                // ifyIcon:'fluent:chat-16-regular',
+                showIcon:"/logo/community.svg",
+                refresh:{
+                    fn:this.refreshPost,
+                    tip:"刷新",
+                    state:this.isLoading ? true : false
+                },
+                leftHover: true,
+                leftHoverName:"点击切换",
+                leftHoverIcon: "fluent:open-16-regular",
+                rightIcon:[
+                    {
+                        tip:"发布",
+                        ifyIcon:'fluent:add-16-regular',
+                        fn:this.publishModalVisible,
+                    }
+                ]
+            }
         },
-        titleHoverName: "点击切换",
-        titleHover: true,
-        rightIcon: [
-          {
-            tip: "发布",
-            ifyIcon: "fluent:add-16-regular",
-            fn: this.publishModalVisible,
-          },
-        ],
-      };
     },
-  },
+  
   async beforeMount() {
     this.getMyForumList().then(() => {
       this.customData.forumList = this.myForumList;

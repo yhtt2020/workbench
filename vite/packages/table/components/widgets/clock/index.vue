@@ -93,170 +93,152 @@ export default {
     },
   },
 
-  data() {
-    return {
-      menuList: [
-        {
-          icon: "shezhi1",
-          title: "设置",
-          fn: () => {
-            this.$refs.clockSettingRef.openClockModal();
-          },
-        },
-      ],
-      key: Date.now(),
-      week: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
-      //  defaultClockData:defaultClockData,
-      isClockFullScreen: false,
-      bgZoom: this.customData.bgZoom,
-      clockDay: this.dateTimeStamp(Date.now()),
-    };
-  },
-  mounted() {
-    // console.log(this.desk,'clock')
-    // 当底部导航栏为windows模式时，点击导航栏中的时间，进入时间全屏
-    this.$bus.on("openClockFullScreen", (data) => {
-      this.isClockFullScreen = data;
-    });
-    if (typeof this.customData.enableSecond === "undefined") {
-      this.customData.enableSecond = false;
-    }
-    if (typeof this.customData.backgroundFrame === "undefined") {
-      this.customData.backgroundFrame = true;
-    }
-    if (this.customData.customZoom === undefined) {
-      this.updateCustomData(
-        this.customIndex,
-        {
-          backgroundFrame: true,
-          clockId: "clock4",
-          imgUrl: DEFAULT.WALLPAPER,
-          blurs: 3,
-          bgZoom: 100,
-          zoom: 1.5,
-          customSize: "2x2",
-          font: "font-family: '优设标题黑' !important;",
-          fontColor: "#FFFFFF",
-          enableSecond: false,
-          currentStatus: "font",
-          currentZoom: 100,
-          name: dateTimeStamp(Date.now()),
-        },
-        this.desk
-      );
-    }
-    // 在不切换页面的情况下,通过定时器来实现自动更新时钟日期标题
-    this.clockTime = setInterval(() => {
-      this.clockDay = this.dateTimeStamp(Date.now());
-    }, 12 * 60 * 60 * 1000);
-
-    if (this.options.disableEdit) {
-      this.menuList = [];
-    } else {
-      this.menuList = [
-        {
-          icon: "shezhi1",
-          title: "设置",
-          fn: () => {
-            this.$refs.clockSettingRef.openClockModal();
-          },
-        },
-      ];
-    }
-  },
-  computed: {
-    ...mapWritableState(appStore, ["backgroundImage"]),
- 
-
-    // 组件头部
-    header() {
-      const headerOption = {
-        title: this.customData.backgroundFrame ? `${this.clockDay}` : "",
-        // ifyIcon: this.customData.backgroundFrame ? "fluent:clock-12-regular" : "",
-        showIcon: "/img/appLogo/clock.png",
-        leftHover: true,
-        leftHoverName: "进入全屏",
-        leftHoverIcon: "fluent:open-16-regular",
-        rightIcon: [],
-      };
-      return headerOption;
+ data(){
+  return{
+   menuList: [
+    {
+     icon: "shezhi1",title: "设置",
+     fn: () => {
+      this.$refs.clockSettingRef.openClockModal();
+     },
     },
-    // 配置数据
-    options() {
+   ],
+   key: Date.now(),
+   week: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+  //  defaultClockData:defaultClockData,
+   isClockFullScreen:false,
+   bgZoom: this.customData.bgZoom,
+   clockDay:this.dateTimeStamp(Date.now()),
+  }
+ },
+ mounted () {
+  // console.log(this.desk,'clock')
+  // 当底部导航栏为windows模式时，点击导航栏中的时间，进入时间全屏
+  this.$bus.on("openClockFullScreen",(data)=>{
+    this.isClockFullScreen = data
+  })
+  if(typeof this.customData.enableSecond==='undefined'){
+    this.customData.enableSecond=false
+  }
+  if(typeof this.customData.backgroundFrame==='undefined'){
+    this.customData.backgroundFrame=true
+  }
+  if(this.customData.customZoom === undefined){
+     this.updateCustomData(this.customIndex,{
+         backgroundFrame:true,
+        clockId:"clock4",
+        imgUrl:DEFAULT.WALLPAPER,
+        blurs:3,
+        bgZoom:100,
+        zoom:1.5,
+        customSize:"2x2",
+        font:"font-family: '优设标题黑' !important;",
+        fontColor:"#FFFFFF",
+        enableSecond:false,
+        currentStatus:"font",
+        currentZoom:100,
+        name: dateTimeStamp(Date.now()),
+     },this.desk)
+  }
+  // 在不切换页面的情况下,通过定时器来实现自动更新时钟日期标题
+  this.clockTime = setInterval(()=>{
+    this.clockDay = this.dateTimeStamp(Date.now());
+  },12 * 60 * 60 * 1000);
+  /**
+   *
+   *
+   * **/
+ },
+ computed:{
+  ...mapWritableState(appStore,["backgroundImage"]),
+  // 组件头部
+  header(){
+   const headerOption = {
+    title:this.customData.backgroundFrame ? `${this.clockDay}` : "",
+    // ifyIcon: this.customData.backgroundFrame ? "fluent:clock-12-regular" : "",
+    showIcon:"/logo/clock.svg",
+    leftHover: true,
+    leftHoverName:"进入全屏",
+    leftHoverIcon: "fluent:open-16-regular",
+    rightIcon:[],
+   }
+   return headerOption;
+  },
+  // 配置数据
+  options(){
+    return{
+      shadow:!this.customData.backgroundFrame,
+      bg:!this.customData.backgroundFrame ? "transparent" : "",
+      resize: true,
+      defaultData:{
+        backgroundFrame:true,
+        clockId:"clock4",
+        imgUrl:DEFAULT.WALLPAPER,
+        blurs:3,
+        bgZoom:100,
+        zoom:1.5,
+        customSize:"2x2",
+        font:"font-family: '优设标题黑' !important;",
+        fontColor:"#FFFFFF",
+        enableSecond:false,
+        currentStatus:"font",
+        currentZoom:100,
+        name: dateTimeStamp(Date.now()),
+      },
+      customDel:this.openWay === 'nav' ? true : false,
+    }
+  },
+  // 拖拽缩放
+  customZoom(){
+    let width = Number(this.customData.customSize.split("x")[0]);
+    let height = Number(this.customData.customSize.split("x")[1]);
+    let min = width < height ? width:height;
+    let minProp;
+    if(this.customData.enableSecond){
+      minProp = ((1.5 - 0.5) + (Number(min)-2) * (min<6?0.4:0.5)) ;
+      this.customData.zoom = minProp;
+      return minProp;
+    }
+    else {
+      minProp = (1.5 + (Number(min)-2) * (min<6?0.6:0.7)) ;
+      this.customData.zoom = minProp;
+      return minProp;
+    }
+  },
+  // 滑块缩放,是否开启秒针
+  sliderScale(){
+    if(!this.customData.customSize){
+      this.customData.customSize='2x2'
+    }
+    let width = Number(this.customData.customSize.split("x")[0]);
+    let height = Number(this.customData.customSize.split("x")[1]);
+    let min = width < height ? width:height;
+    if(this.customData.enableSecond){
       return {
-        shadow: !this.customData.backgroundFrame,
-        bg: !this.customData.backgroundFrame ? "transparent" : "",
-        resize: !this.isCommunityDesktop(this.desk) ? true : false,
-        defaultData: {
-          backgroundFrame: true,
-          clockId: "clock4",
-          imgUrl: DEFAULT.WALLPAPER,
-          blurs: 3,
-          bgZoom: 100,
-          zoom: 1.5,
-          customSize: "2x2",
-          font: "font-family: '优设标题黑' !important;",
-          fontColor: "#FFFFFF",
-          enableSecond: false,
-          currentStatus: "font",
-          currentZoom: 100,
-          name: dateTimeStamp(Date.now()),
-        },
-        customDel: this.openWay === "nav" ? true : false,
-        disableEdit: this.isCommunityDesktop(this.desk),
-      };
-    },
-    // 拖拽缩放
-    customZoom() {
-      let width = Number(this.customData.customSize.split("x")[0]);
-      let height = Number(this.customData.customSize.split("x")[1]);
-      let min = width < height ? width : height;
-      let minProp;
-      if (this.customData.enableSecond) {
-        minProp = 1.5 - 0.5 + (Number(min) - 2) * (min < 6 ? 0.4 : 0.5);
-        this.customData.zoom = minProp;
-        return minProp;
-      } else {
-        minProp = 1.5 + (Number(min) - 2) * (min < 6 ? 0.6 : 0.7);
-        this.customData.zoom = minProp;
-        return minProp;
+       transform:`scale(${Number(this.customData.currentZoom) / (100 + (Number(min-2)) * 0.15)})`,
       }
-    },
-    // 滑块缩放,是否开启秒针
-    sliderScale() {
-      if (!this.customData.customSize) {
-        this.customData.customSize = "2x2";
+    }
+    else {
+      return {
+       transform:`scale(${Number(this.customData.currentZoom) / (100 + (Number(min-2)) * 0.25)})`,
       }
-      let width = Number(this.customData.customSize.split("x")[0]);
-      let height = Number(this.customData.customSize.split("x")[1]);
-      let min = width < height ? width : height;
-      if (this.customData.enableSecond) {
-        return {
-          transform: `scale(${
-            Number(this.customData.currentZoom) / (100 + Number(min - 2) * 0.15)
-          })`,
-        };
-      } else {
-        return {
-          transform: `scale(${
-            Number(this.customData.currentZoom) / (100 + Number(min - 2) * 0.25)
-          })`,
-        };
-      }
-    },
-    // 全屏情况下
-    fullImage() {
-      if (this.backgroundImage.path) {
-        return this.backgroundImage.path;
-      } else {
-        if (this.customData.imgUrl) {
-          return this.customData.imgUrl;
-        } else {
-          //  return this.defaultClockData.imgUrl;
-        }
-      }
-    },
+    }
   },
+  // 全屏情况下
+  fullImage(){
+    if(this.backgroundImage.path){
+      return this.backgroundImage.path;
+    }
+    else {
+      if(this.customData.imgUrl){
+        return this.customData.imgUrl;
+      }
+      else {
+      //  return this.defaultClockData.imgUrl;
+      }
+    }
+  },
+ },
 
   methods: {
     ...mapActions(cardStore, ["updateCustomData"]),

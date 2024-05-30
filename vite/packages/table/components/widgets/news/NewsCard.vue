@@ -1,7 +1,7 @@
 <template>
   <div>
     <xt-container
-      @titleHover="settingVisible = true"
+      @leftClick="settingVisible = true"
       v-model:customSize="customData.customSize"
       :desk="desk"
       :header="header"
@@ -347,16 +347,17 @@ export default {
       return {
         title: "新闻资讯",
         // ifyIcon:'fluent:news-16-regular',
-        showIcon: "/img/appLogo/news.png",
-        refresh: {
+        showIcon:"/logo/news.svg",
+        refresh:{
           fn: this.refreshData,
           tip: "刷新",
           state: this.refreshFlag ? true : false,
         },
-        titleHover: true,
-        titleHoverName: "点击切换",
-      };
-    },
+        leftHover: true,
+        leftHoverName:"点击切换",
+        leftHoverIcon: "fluent:open-16-regular",
+      }
+    }
   },
   async mounted() {
     this.isLoading = true;

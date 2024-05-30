@@ -241,7 +241,7 @@ export default {
       header: {
         title: "社区数据",
         // ifyIcon:'majesticons:monitor-line',
-        showIcon: "/img/appLogo/shortDashboard.png",
+        showIcon:"/logo/shortDashboard.svg",
         rightIcon: [
           {
             ifyIcon: "fluent:open-20-filled",

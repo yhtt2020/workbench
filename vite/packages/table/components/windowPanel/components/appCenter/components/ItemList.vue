@@ -16,9 +16,12 @@
 <script setup lang='ts'>
 import { ref, defineAsyncComponent, computed } from 'vue'
 import { useRouter } from 'vue-router';
+import { storeToRefs } from 'pinia';
 
 import { startApp } from '../../../../../ui/hooks/useStartApp';
 import { useMenus } from '../../../../../apps/appCenter/hooks/useMenus';
+import { reloadList } from '../../../../../apps/appCenter/src/views/myApps/hooks/useReplaceData';
+import { useAppCenterStore } from '../../../../../apps/appCenter/src/store';
 
 
 const props = defineProps({
@@ -43,6 +46,9 @@ const router = useRouter()
 
 const emit = defineEmits(['close'])
 
+const store = useAppCenterStore()
+const { myApps } = storeToRefs(store)
+
 // 当前选中的应用
 const currentItem = ref('')
 
@@ -64,6 +70,16 @@ const arr = computed(() => {
             newIcon: "fluent:grid-16-regular",
             callBack: () => {
                 currentItem.value.isStart = false
+            }
+        },
+        {
+            label:'固定到开始菜单',
+            id:"3",
+            disabled:props.isStartMenu,
+            newIcon: "fluent:grid-16-regular",
+            callBack: () => {
+                currentItem.value.isStart = true
+                myApps.value = reloadList(myApps.value)
             }
         }
     ]

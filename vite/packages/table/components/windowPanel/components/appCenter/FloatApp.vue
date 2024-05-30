@@ -15,7 +15,8 @@
                 background-color: var(--primary-bg) !important;
                 border-radius: 16px 16px 0px 0px;
                 border-bottom: 1px solid var(--divider);
-                margin-bottom: 8px;"
+                margin-bottom: 8px;
+                flex-shrink: 0;"
             v-model:modelValue="inputValue" 
             placeholder="搜索" 
             @enter="search">
@@ -36,7 +37,14 @@
                 <!-- 开始菜单列表 -->
                 <ItemList :list="lastStartMenu" v-if="!isSearch" @close="close"></ItemList>  
                 <!-- 搜索后列表 -->
-                <SearchList :list="searchList" v-else @close="close" :market="marketList" @open="goApps('Market')"/>
+                <SearchList 
+                    v-else
+                    @back="inputValue = ''"
+                    :list="searchList" 
+                    @close="close" 
+                    :market="marketList" 
+                    @open="goApps('Market')"
+                />
             </div>
             <div v-if="recentUsed && !isSearch" class="w-full h-full">
                 <div class="flex items-center justify-between mt-3 mb-3">
@@ -60,7 +68,7 @@
                    <ItemList :list="arr" :isStartMenu="false" @close="close"></ItemList>  
                 </xt-scrollbar>
             </div>
-            <div v-if="!recentUsed" class="flex items-center justify-center w-full h-full">
+            <div v-if="!recentUsed && !isSearch" class="flex items-center justify-center w-full h-full">
                 <Tips v-model:modelValue="showTip" @jumpMy="goApps('MyApps')" ></Tips>
             </div>
         </div>
@@ -83,6 +91,7 @@ import {
 
 import { storeToRefs } from 'pinia';
 import { onClickOutside } from '@vueuse/core'
+import { message } from 'ant-design-vue';
 
 import { useAppCenterStore } from '../../../../apps/appCenter/src/store';
 import { useMarketStore } from '../../../../apps/appCenter/src/views/market/store/store';
@@ -93,7 +102,7 @@ const appCenterStore = useAppCenterStore()
 const { current, visible, recentUsed, myApps, showTip } = storeToRefs(appCenterStore)
 
 const marketStore = useMarketStore()
-const { recommendList } = storeToRefs(marketStore)
+const { recommendList, searchApps } = storeToRefs(marketStore)
 
 const ItemList = defineAsyncComponent(() => import('./components/ItemList.vue'))
 const SearchList = defineAsyncComponent(() => import('./components/SearchList.vue'))
@@ -140,10 +149,18 @@ const appRef = ref(null)
 
 // 搜索
 const search = () => {
+    if(inputValue.value === '') {
+        message.info('请输入搜索内容')
+        return
+    }
     isSearch.value = true
-    searchList.value = myApps.value.filter(item => item.name.indexOf(inputValue.value) !== -1)
-    marketList.value = recommendList.value
-    marketList.value = marketList.value.filter(item => item.name.indexOf(inputValue.value) !== -1)
+    searchList.value = myApps.value.filter(item => 
+        item.name.toLowerCase().includes(inputValue.value.toLowerCase())
+    );
+    marketStore.searchApp(inputValue.value).then(() => {
+        console.log(searchApps.value,'searchApps.value')
+        marketList.value = searchApps.value
+    })
 }
 
 // 取消搜索状态
@@ -220,14 +237,14 @@ onMounted(() => {
     // proxy.$bus.on('closeControl', () => {
     //     emit('close')
     // })
-    onClickOutside(appRef, () => {
-        emit('close')
-    })
+    // onClickOutside(appRef, () => {
+    //     emit('close')
+    // })
 })
 
 onUnmounted(() => {
     // proxy.$bus.off('closeControl')
-    onClickOutside(appRef, null)
+    // onClickOutside(appRef, null)
 })
 </script>
 <style lang='scss' scoped></style>

@@ -274,9 +274,9 @@ export default {
       header: {
         title: "纪念日",
         // ifyIcon:'fluent:calendar-16-regular',
-        showIcon: "/img/appLogo/countdownDay.png",
-      },
-    };
+        showIcon:"/logo/countdownDay.svg",
+      }
+    }
   },
   computed: {
     ...mapWritableState(cardStore, ["countdownDay"]),

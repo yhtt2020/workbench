@@ -317,7 +317,7 @@ export default {
       return {
         title:'我的快递',
         // ifyIcon:'fluent:box-16-regular',
-        showIcon:"/img/appLogo/courier.png",
+        showIcon:"/logo/courier.svg",
 
         refresh:{
           fn:()=>{

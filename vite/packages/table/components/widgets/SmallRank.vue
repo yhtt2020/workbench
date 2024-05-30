@@ -1,18 +1,17 @@
 <template>
   <xt-container
-    :header="header"
-    :envLimit="['single']"
-    @titleHover="showDrawer"
-    v-model:customSize="customData.customSize"
-    :options="options"
-    :sizeList="sizeList"
-    :customData="customData"
-    :customIndex="customIndex"
-    :desk="desk"
-    ref="rankingSmallSlot"
-    :menuList="toggleRankingList"
-    @delete="deleteCard"
-  >
+  :header="header"
+  :envLimit="['single']"
+  @leftClick="showDrawer"
+  v-model:customSize="customData.customSize"
+  :options="options"
+  :sizeList="sizeList"
+  :customData="customData"
+  :customIndex="customIndex"
+  :desk="desk"
+  ref="rankingSmallSlot"
+  :menuList="toggleRankingList"
+  @delete="deleteCard">
     <!-- 总在线时长榜 -->
     <div class="content-box" v-if="rankIndex === 0">
       <!-- 列表 -->
@@ -206,10 +205,11 @@ export default {
       return {
         title: this.rankingType[this.rankIndex].title,
         // ifyIcon:'fluent:people-community-16-regular',
-        showIcon: "/img/appLogo/rank.png",
-        titleHover: true,
-        titleHoverName: this.rankingType[this.rankIndex].title,
-      };
+        showIcon:"/logo/rank.svg",
+        leftHover: true,
+        leftHoverName:this.rankingType[this.rankIndex].title,
+        leftHoverIcon: "fluent:open-16-regular",
+      }
     },
     options() {
       return {

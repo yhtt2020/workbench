@@ -1,9 +1,9 @@
 <template>
-    <div class="w-[446px] h-[102px] rounded-xl p-3 xt-bg-2 flex justify-between items-center gap-1">
+    <div class="flex items-center justify-between gap-1 p-3 rounded-xl xt-bg-2" :class="[boxClass]" :style="{height: sizeStyle.h + 'px'}">
        <div class="flex items-center gap-4 ">
-            <img :src="item.icon" alt="" class="w-[70px] h-[70px] rounded-xl">
+            <img :src="item.icon" alt="" class="rounded-xl" :style="{width: sizeStyle.size + 'px', height: sizeStyle.size + 'px'}">
             <div class="flex flex-col gap-1 pointer" @click="goDetail(item)">
-                <div class="text-base xt-text line-clamp-1">
+                <div class="xt-text line-clamp-1" :style="{fontSize:sizeStyle.text + 'px'}">
                     {{ item.name }}
                 </div>
                 <div class="text-sm xt-text-2 line-clamp-2">{{ item.summary }}</div>
@@ -71,6 +71,10 @@ if(!usePlat('web')) {
     appModel = window.$models.appModel
 }
 
+// onMounted(() =>{
+//     console.log(props.item,'<<<<<<<<<<')
+// })
+
 interface PropsType {
     item: {
         icon?: string,
@@ -80,6 +84,13 @@ interface PropsType {
         data?: any,
         downloading?: boolean,
         percent?: number,
+    },
+    boxClass: string,
+    // 整体样式调整
+    sizeStyle:{
+        h:number | string,
+        size:number | string,
+        text:number | string,
     }
 }
 
@@ -91,10 +102,16 @@ const download = (app) => {
 }
 
 const props = withDefaults(defineProps<PropsType>(), {
-    item: () => ({})
+    item: () => ({}),
+    boxClass:'w-[446px]',
+    sizeStyle: () => ({
+        h: 102,
+        size: 70,
+        text: 16
+    })
 });
 
-const { item } = toRefs(props)
+const { item, sizeStyle } = toRefs(props)
 
 
 // 打开本地应用
