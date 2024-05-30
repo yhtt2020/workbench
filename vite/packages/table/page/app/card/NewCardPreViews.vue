@@ -192,6 +192,9 @@ import { COMPONENT_LIMIT } from "../../../permission/config";
 import { usePlat } from "../../../ui/hooks/usePlat";
 import { comCanUse } from "../../../permission/usePlat";
 import { cdnUrl } from "../../../consts";
+import { chatCommunityStore } from "../../../apps/chat/store/chatCommunity";
+import { addCardList } from "../../../apps/communityDesk/store/desktopOtherData";
+
 export default {
   emits: ["close", "addSuccess"],
   props: {
@@ -214,14 +217,12 @@ export default {
     keywords: {
       type: String,
     },
-    communityRole: {
-      type: Boolean,
-    },
   },
   computed: {
     ...mapWritableState(myIcons, ["iconOption", "edit"]),
     ...mapWritableState(taskStore, ["taskID", "step", "success"]),
     ...mapWritableState(useDeskStore, ["autoOpenEdit", ""]),
+    ...mapWritableState(chatCommunityStore, ["myCommunity"]),
 
     M01013() {
       return this.taskID == "M0101" && this.step == 3;
@@ -243,6 +244,23 @@ export default {
         return comCanUse(item.name);
       });
     },
+
+    // 根据当前桌面数据进行检测是否为社群管理员桌面
+    ownerDeskVisible() {
+      if (this.desk.hasOwnProperty("communityNo")) {
+        const deskCommunityId = this.desk?.communityNo;
+        const found = this.myCommunity.find((item) => {
+          return Number(deskCommunityId) === Number(item?.communityInfo?.no);
+        });
+        if (found) {
+          return found?.role === "owner";
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
+    },
   },
   mounted() {},
   data() {
@@ -254,6 +272,7 @@ export default {
       settingVisible: false,
       openRemote: false,
       remoteContent: {},
+      addCardList,
     };
   },
   components: {
@@ -329,6 +348,37 @@ export default {
       });
     },
     addNewCard(item) {
+      if (this.ownerDeskVisible) {
+        // 检测是否符合要求的组件
+        const satisfyVisible = this.addCardList.some((addItem) => {
+          return String(item?.name) === String(addItem);
+        });
+        if (satisfyVisible) {
+          window.$ui.confirm(
+            "当前组件数据将会存储在团队桌面中",
+            `${
+              item?.cname === "桌面便签"
+                ? `${item?.cname}数据不会存储到你的备忘录应用中`
+                : ""
+            }`,
+            {
+              ok: () => {
+                this.addCallback(item);
+              },
+              okText: "确定",
+              noText: "取消",
+              type: "link",
+            }
+          );
+        } else {
+          this.addCallback(item);
+        }
+      } else {
+        this.addCallback(item);
+      }
+    },
+
+    addCallback(item) {
       if (item.option[1] != undefined) {
         this.fullScreen(item);
       } else {
@@ -337,12 +387,12 @@ export default {
             this.openRemote = true;
             this.remoteContent = item;
           }
-
           return;
         }
         this.addCardAchieve(item);
       }
     },
+
     fullScreen(item) {
       this.cardDetails = item;
       this.isCardDetails = true;
