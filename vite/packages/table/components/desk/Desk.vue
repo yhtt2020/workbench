@@ -32,6 +32,7 @@
       v-model:aloneZoom="settings.cardZoom"
       :alone="settings.enableZoom"
       :hide="hide"
+      :communityInfo="communityInfo"
     />
     <Drop :classes="getClasses()">
       <!-- 自由布局 -->
@@ -325,9 +326,6 @@ export default {
     notTrigger: {
       type: Boolean,
       default: () => false,
-    },
-    communityRole:{
-      type:Boolean,
     },
     communityInfo:{
       type: Object,

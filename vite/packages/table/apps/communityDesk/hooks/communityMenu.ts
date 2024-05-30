@@ -259,9 +259,8 @@ function memberMenus() {
       id: 1,
       name: "更新桌面",
       newIcon: "fluent:cloud-arrow-up-16-filled",
-      fn: ()=>{
+      fn: () => {
         this.loadCommunityCloud();
-        // this.clearDeskList(this.communityInfo?.no);
       },
       contentAble: true,
       newContent:
@@ -275,11 +274,10 @@ function memberMenus() {
       newIcon: this.editing
         ? "fluent:record-stop-16-filled"
         : "fluent:window-new-16-filled",
-      name: this.editing ? "停止编辑" : "进入编辑模式",
+      name: this.editing ? "停止调整" : "调整桌面布局",
       fn: () => {
         this.$nextTick(() => {
-          // this.$refs.currentDeskEditRef.toggleEditing();
-          this.$bus.emit('openMemberEdit');
+          this.$refs.currentDeskRef.toggleEditing();
         });
       },
     },
@@ -288,7 +286,7 @@ function memberMenus() {
       newIcon: "fluent:resize-large-16-filled",
       name: "复原桌面位置",
       fn: () => {
-        this.$bus.emit('redirect');
+        // this.$bus.emit('redirect');
         // this.$nextTick(() => {
         //   this.$refs.currentDeskRef.freeLayoutScrollbarRedirect();
         // });

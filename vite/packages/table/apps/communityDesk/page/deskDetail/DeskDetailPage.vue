@@ -20,7 +20,6 @@
           :keepAddIcon="keepAddIcon"
           @changeEditing="editing = !editing"
           @onArrange="onArrange"
-          :communityRole="communityRole"
           :communityInfo="communityInfo"
         >
           <!-- 拿菜单数据 -->
@@ -78,7 +77,6 @@
               :editing="editing"
               :key="key"
               :currentDesk="currentDesk"
-              :communityRole="communityRole"
               :communityInfo="communityInfo"
             />
           </span>
@@ -111,6 +109,8 @@
           :key="currentDeskId"
           :keepAddIcon="keepAddIcon"
           @onArrange="onArrange"
+          @changeEditing="editing = !editing"
+          :communityInfo="communityInfo"
         >
           <!-- 拿菜单数据 -->
           <template #settingsAllAfter>
@@ -128,9 +128,10 @@
           <span v-show="false">
             <Desk
               ref="currentDeskRef"
-              :editing="false"
+              :editing="editing"
               :key="key"
               :currentDesk="currentDesk"
+              :communityInfo="communityInfo"
             />
           </span>
         </template>
