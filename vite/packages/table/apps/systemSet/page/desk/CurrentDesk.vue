@@ -5,7 +5,7 @@
     </div>
   </template>
 
-  <!-- 满足communityRole为true时可以看见设置参数,不能触发编辑,反之相反 -->
+  <!-- 满足communityRole为true时可以看见设置参数,不能编辑,反之相反 -->
   <div :class="communityRole ? 'disable-edit' : ''">
     <div class="p-4 mb-4 text-base xt-bg-2 rounded-xl">
       <div class="mb-4">桌面名称</div>
