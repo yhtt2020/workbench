@@ -541,6 +541,7 @@ export default {
       // if (this.isCopy === false && this.isDrag === false)
       //   return message.error("你还未移动任何图标组件");
       // 遍历全局数组并添加
+      console.log(" 1 this.customData.iconList :>> ", this.customData.iconList);
       this.iconList.forEach((item) => {
         const { iconRef, iconIndex, ...icon } = item;
         // 拦截重复的数据
@@ -550,43 +551,41 @@ export default {
         }
         this.customData.iconList.push({ ...icon });
 
-        let index = this.desk.cards.findIndex(
-          (item) => item.id == this.customIndex
-        );
-
-        let list = [];
-        this.customData.iconList.forEach((item) => {
-          const file = {
-            ...defaultData,
-            id: nanoid(5),
-          };
-          file.type = item.open.type;
-          file.value = item.open.value;
-          file.icon = item.src;
-          file.name = item.titleValue;
-          file.isName = item.isTitle;
-          file.bg = item.backgroundColor;
-          file.isBg = item.isBackground;
-          file.radius = item.radius;
-          file.isRadius = item.isRadius;
-          file.iconState = item.imgState;
-          file.iconShape = item.imgShape;
-          list.push({
-            ...file,
-          });
+        // this.$bus.emit("reset");
+      });
+      let list = [];
+      this.customData.iconList.forEach((item) => {
+        const file = {
+          ...defaultData,
+          id: nanoid(5),
+        };
+        file.type = item.open.type;
+        file.value = item.open.value;
+        file.icon = item.src;
+        file.name = item.titleValue;
+        file.isName = item.isTitle;
+        file.bg = item.backgroundColor;
+        file.isBg = item.isBackground;
+        file.radius = item.radius;
+        file.isRadius = item.isRadius;
+        file.iconState = item.imgState;
+        file.iconShape = item.imgShape;
+        list.push({
+          ...file,
         });
-
-        this.desk.cards[index] = {
-          ...this.desk.cards[index],
-          name: "folder",
-          customData: {
+      });
+      this.desk.cards = this.desk.cards.map((item) => {
+        if (item.id == this.customIndex) {
+          item.name = "folder";
+          item.customData = {
             ...defaultFolderData,
             list,
-          },
-        };
-
-        this.$bus.emit("reset");
+          };
+        }
+        return item;
       });
+
+      // this.desk.cards
 
       // 遍历图标组件进行删除
       this.iconsRefs.forEach((item) => {
