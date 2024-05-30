@@ -19,21 +19,25 @@ export const attributeOptions = [
     title: "图标链接",
     info: "自定义图标打开链接，支持网站地址或本地文件快捷方式类型。",
   },
+  // {
+  //   type: "tab",
+  //   tabKey: "mode",
+  //   list: [
+  //     {
+  //       name: "网站链接",
+  //       value: "link",
+  //     },
+  //     {
+  //       name: "系统程序或文件",
+  //       value: "app",
+  //     },
+  //   ],
+  // },
   {
-    type: "tab",
-    tabKey: "mode",
-    list: [
-      {
-        name: "网站链接",
-        value: "link",
-      },
-      {
-        name: "系统程序或文件",
-        value: "app",
-      },
-    ],
+    type: "slot",
+    slot: "mode",
+    border: true,
   },
-
   {
     type: "children",
     flag: "link",

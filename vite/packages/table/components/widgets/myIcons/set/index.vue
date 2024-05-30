@@ -1,7 +1,8 @@
 <template>
   <xt-modal
     v-model="visible"
-    v-if="visible" :footer="0"
+    v-if="visible"
+    :footer="0"
     @close="close"
     :index="index"
     :maskIndex="maskIndex"
@@ -27,7 +28,6 @@
           <xt-text class="mb-3" center> 当前图标为「系统功能」类型。 </xt-text>
         </xt-option-box>
         <template v-else>
-
           <xt-option-form :options="attributeOptions" :data="edit">
             <template #custom>
               <div @click="openLocalApp()">
@@ -40,6 +40,14 @@
               <div v-show="!edit.value">
                 <LocalApp ref="localApp" @click="" @onLocalApp="updateApp" />
               </div>
+            </template>
+            <template #mode>
+              <xt-option-tab
+                v-model="mode"
+                :list="modeList"
+                circle
+                style="height: 40px"
+              />
             </template>
           </xt-option-form>
         </template>
@@ -80,7 +88,7 @@ import {
   onMounted,
   onBeforeUnmount,
   getCurrentInstance,
-  defineAsyncComponent
+  defineAsyncComponent,
 } from "vue";
 import { myIcons } from "../../../../store/myIcons";
 import Icon from "../components/icon.vue";
@@ -94,9 +102,25 @@ import {
 import { getHostAddress } from "../edit/hooks/getHostAddress";
 
 // 手动引入通用表单组件
-const Form = defineAsyncComponent(() => import("../../../../ui/new/optionForm/src/Form.vue"))
+const Form = defineAsyncComponent(() =>
+  import("../../../../ui/new/optionForm/src/Form.vue")
+);
 const { proxy } = getCurrentInstance();
-
+const modeList = computed(() => {
+  let res = [
+    {
+      name: "网站链接",
+      value: "link",
+    },
+  ];
+  if (window.$usePlat("client")) {
+    res.push({
+      name: "系统程序或文件",
+      value: "app",
+    });
+  }
+  return res;
+});
 const iconStore = myIcons();
 const { edit } = storeToRefs(iconStore);
 const emits = defineEmits(["close", "update:modelValue", "save"]);
@@ -109,7 +133,7 @@ const props = defineProps({
     default: "999",
   },
 });
-const arr = ["internal", "default", "thinksky",'mob'];
+const arr = ["internal", "default", "thinksky", "mob"];
 const res = arr.includes(edit.value.open.type);
 edit.value.type = edit.value.open.type;
 
@@ -162,11 +186,12 @@ const updateApp = (data) => {
   };
 };
 
+const mode = ref(edit.value.mode);
 /**
  * watch 类型切换清空数据
  */
 watch(
-  () => edit.value.mode,
+  () => mode.value,
   (newVal, oldVal) => {
     console.log("newVal,oldVal :>> ", newVal, oldVal);
     window.$ui.confirm("是否切换模式", "切换模式将清空数据，是否继续？", {
@@ -176,14 +201,17 @@ watch(
         edit.value.value = "";
         if (newVal == "link") {
           edit.value.type = "default";
+          edit.value.mode = "link";
         }
         if (newVal === "app") {
+          edit.value.mode = "app";
           edit.value.src =
             "https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/jmPD-I__T-SMyc-LMzn";
         }
       },
       no: () => {
         edit.value.mode = oldVal;
+        mode.value = oldVal;
       },
       type: "warning",
     });
@@ -206,10 +234,10 @@ watch(
 watch(
   () => edit.value.type,
   (newV, oldV) => {
-    edit.value.open.type = newV
-    console.log(newV,edit.value.open.type)
+    edit.value.open.type = newV;
+    console.log(newV, edit.value.open.type);
   }
-)
+);
 /**
  * 恢复默认图标
  */
