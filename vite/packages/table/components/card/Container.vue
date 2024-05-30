@@ -7,6 +7,7 @@
  -->
 <template>
   <!-- 右键菜单 -->
+  <!-- v-if="init" -->
   <RightMenu
     v-model:size="currentSize"
     :menus="menus"
@@ -15,7 +16,7 @@
     :disableHierarchy="options.hierarchy"
   >
     <div class="menu-box">
-      <!-- 遮罩层 离线模式遮罩 -->
+      <!-- 离线模式-->
       <div
         class="mask rounded-xl"
         v-if="envLimit.includes('offline') && currentEnv == 'offline'"
@@ -50,10 +51,25 @@
           </p>
         </div>
       </div>
-      <!-- 小组件控制器开始 -->
+
+      <!-- 自定义模式 -->
+      <div v-if="options?.custom" :class="[edit ? 'editing' : '']">
+        <slot>
+          <!--  主体内容插槽2  -->
+        </slot>
+      </div>
       <div
+        v-else-if="options?.noBorder"
         ref="container"
-        v-if="!options?.custom"
+        :style="[getSize]"
+        :class="[edit ? 'editing' : '']"
+      >
+        <slot></slot>
+      </div>
+      <!-- 默认模式 -->
+      <div
+        v-else
+        ref="container"
         class="flex flex-col widget rounded-xl"
         :class="[
           edit ? 'editing' : '',
@@ -70,7 +86,7 @@
         ]"
       >
         <!-- 小组件头部开始 -->
-        <div
+        <header
           v-if="!header.disabled"
           @dragstart.stop="titleDragStart"
           draggable="true"
@@ -189,14 +205,14 @@
             >
               <div class="header-right-icon">
                 <xt-ify-icon
-                  icon="fluent:line-horizontal-3-20-filled"
+                  icon="fluent:line-horizontal-3-20-regular"
                   size="20"
                 />
               </div>
             </RightMenu>
             <slot name="customRightMenu" v-else></slot>
           </div>
-        </div>
+        </header>
         <!-- 小组件头部结束 -->
         <!-- 小组件主体开始 -->
         <xt-status
@@ -228,13 +244,7 @@
 
         <!-- 小组件主体结束 -->
       </div>
-      <div v-else :class="[edit ? 'editing' : '']">
-        <slot>
-          <!--  主体内容插槽2  -->
-        </slot>
-      </div>
     </div>
-    <!-- 小组件控制器结束 -->
   </RightMenu>
 </template>
 <script setup>
@@ -248,6 +258,7 @@ import {
   onBeforeUnmount,
   getCurrentInstance,
   toRefs,
+  nextTick,
 } from "vue";
 import { storeToRefs } from "pinia";
 import { cardStore as useCardStore } from "../../store/card";
@@ -285,6 +296,8 @@ const widgetStore = useWidgetStore();
 const usePermission = usePermissionStore();
 const { currentEnv } = storeToRefs(usePermission);
 const { edit } = storeToRefs(widgetStore);
+
+const init = ref(false);
 // 自由布局
 // const freeLayoutStore = useFreeLayoutStore();
 
@@ -312,7 +325,7 @@ const handleTouchStart = (e) => {
   e.stopPropagation();
 };
 
-onBeforeMount(async () => {
+onBeforeMount(() => {
   // 处理默认数据
   if (props.options.defaultData) {
     props.customData = _.defaults(props.customData, props.options.defaultData);
@@ -328,6 +341,7 @@ onMounted(() => {
       capture: true,
     });
   }
+
 });
 onBeforeUnmount(() => {
   if (container.value) {
@@ -338,6 +352,7 @@ onBeforeUnmount(() => {
       capture: true,
     });
   }
+
 });
 // emits 小组件事件回调
 /**
@@ -449,6 +464,7 @@ const addObj = computed(() => {
 const menus = computed(() => {
   const platLimit = props.platLimit || " ";
   if (usePlat(platLimit)) return [addObj.value, deleteObj.value];
+  // if (xxx) return []
   let menu = [...props.menuList, addObj.value, deleteObj.value];
   // 在社群成员桌面的场景下,需要的处理
   const filterMenu = props.menuList.filter((item) => {
@@ -737,6 +753,7 @@ defineExpose({
   backdrop-filter: blur(50px);
   -webkit-backdrop-filter: blur(50px);
 }
+
 
 .menu-box {
   z-index: 9;

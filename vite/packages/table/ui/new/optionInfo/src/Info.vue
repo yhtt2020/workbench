@@ -58,12 +58,13 @@ interface infoProps {
 const props = withDefaults(defineProps<infoProps>(), {
   info: "",
 });
-const emits = defineEmits(["update:switch", "onIconClick"]);
+const emits = defineEmits(["update:switch",'updateSwitchCb', "onIconClick"]);
 const { title, info, isSwitch, isState, icon } = toRefs(props);
 // 选择回调
 const currentSwitch = ref(props.switch);
 const changeSwitch = () => {
   emits("update:switch", currentSwitch.value);
+  emits("updateSwitchCb", currentSwitch.value);
 };
 
 // 图标回调

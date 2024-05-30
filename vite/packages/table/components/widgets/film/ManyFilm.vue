@@ -184,7 +184,8 @@ export default {
         single: false,
       },
       header: {
-        ifyIcon: "fluent:movies-and-tv-16-regular",
+        // ifyIcon: "fluent:movies-and-tv-16-regular",
+        showIcon:"/img/appLogo/film.png",
         title: "正在热映",
         refresh: {
           fn: this.refreshPage,

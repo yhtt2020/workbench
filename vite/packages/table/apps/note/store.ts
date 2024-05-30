@@ -5,6 +5,7 @@ import {mapActions, mapState, mapWritableState} from "pinia";
 import {useToast} from "vue-toastification";
 import { v4 as uuidv4 } from 'uuid'
 import { message } from 'ant-design-vue'
+import { communityAuth } from "../communityDesk/hooks/deskCreateMethod";
 const toast = useToast()
 // @ts-ignore
 export const noteStore = defineStore("noteStore", {
@@ -12,6 +13,7 @@ export const noteStore = defineStore("noteStore", {
     ...mapWritableState(cardStore, ['desks']),
     // 记录用户是否进行过初始化
     initFlag: false,
+    // 桌面便签列表
     noteList: [],
     // 主应用里当前选中
     selNote: -1,
@@ -132,6 +134,8 @@ export const noteStore = defineStore("noteStore", {
       let tmpList = [] as any[]
       this.deskList.forEach((item: any) => {
         if (item.cards.length) {
+          // 判断是否是社群桌面
+          if(item.communityNo && !communityAuth(item.communityNo)) return
           item.cards.forEach((tmp: any) => {
             if (tmp.name == 'notes') {
               if (!tmp.customData.hasOwnProperty('title')) {
@@ -552,8 +556,10 @@ export const noteStore = defineStore("noteStore", {
         tmp.docs.forEach((item, index) => {
           this.noteList.push(item)
         })
+        return tmp.docs
       } else {
         this.getNotes();
+        return this.noteList
       }
     }
   },

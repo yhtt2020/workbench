@@ -463,7 +463,7 @@ export const appStore = defineStore('appStore', {
               'windowFullScreen', 'windowOriginBounds', 'aided', 'currentRoute',
               'status', 'settings', 'init', 'agreeTest', 'backgroundSettings', 'infoVisible',
               'backgroundImage', 'saving', 'simple', 'styles', 'stylesIndex', 'style', 'windowFullScreen',
-              'aggList', 'deskInit','backgroundName','backgroundColor','showWindowController' ,'userInfo'
+              'aggList', 'deskInit','backgroundName','backgroundColor','showWindowController' ,'userInfo', 'firstGuide'
             ],
       storage: dbStorage,
       // state 中的字段名，按组打包储存

@@ -31,7 +31,6 @@
           {
             filter: color ? `drop-shadow(#${color} 1000px 0)` : '',
             transform: color ? 'translateX(-1000px)' : '',
-            'border-radius': `${r}`,
           },
         ]"
       />
@@ -48,7 +47,7 @@ const mixIconStyle = computed(() => {
   return {
     width: (props.w || props.size) + "px",
     height: (props.h || props.size) + "px",
-    // border-radius : +
+    "border-radius": props.r + "px",
   };
 });
 
@@ -128,7 +127,10 @@ const onClick = () => {
 
 const iconUrl = ref(props.icon);
 const color = computed(() => {
-  if (typeof iconUrl.value === 'string' && iconUrl.value?.indexOf("color=") >= 0) {
+  if (
+    typeof iconUrl.value === "string" &&
+    iconUrl.value?.indexOf("color=") >= 0
+  ) {
     let colors = iconUrl.value.substr(iconUrl.value.indexOf("color=") + 7);
     return colors;
   }
