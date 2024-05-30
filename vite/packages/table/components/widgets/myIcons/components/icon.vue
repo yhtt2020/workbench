@@ -67,12 +67,13 @@
     <div></div>
     <div
       v-if="isTitle"
-      class="flex-1 mx-auto text-center truncate xt-text items-center"
-      style="display: inherit; align-items: end"
+      class="flex-1 mx-auto text-center flex xt-text justify-center items-center"
       :style="[textSize]"
       :data-index="index"
     >
-      {{ titleValue }}
+      <div class="w-full truncate">
+        {{ titleValue }}
+      </div>
     </div>
   </div>
 
