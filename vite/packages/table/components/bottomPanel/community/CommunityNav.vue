@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed, getCurrentInstance, toRefs } from "vue";
+import { computed, getCurrentInstance, toRefs,onMounted } from "vue";
 import { nanoid } from "nanoid";
 import { useRouter } from "vue-router";
 import { chatCommunityStore } from "../../../apps/chat/store/chatCommunity";
@@ -162,34 +162,36 @@ const openNav = async (event: any) => {
 
 //  进入社群桌面
 const openDesk = async () => {
-  console.log("测试-进入社群桌面");
   // 先检测当前社群是成员还是管理员
   const currentRole = (currentCommunity.value.item as any).role;
   // 社群数据
   const communityInfo: any = currentCommunity.value?.item;
+  // 检测当前所在的社群桌面数据是否为空列表
+  const deskList = getCommunityDeskList(communityInfo);
+
   if (currentRole === "owner") {
     // 检测当前所在的社群桌面数据是否为空列表
-    const deskList = getCommunityDeskList(currentCommunity.value?.item);
     if (deskList.length === 0) {
-      settings.value.isCommunity = false;
-      router.push({ name: "home", params: { no: communityInfo?.no } });
+      router.push({
+        name: "CommunityGroupDesk",
+        params: { no: communityInfo?.no },
+      });
       setTimeout(() => {
         proxy.$bus.emit("openCommunityDesk");
       }, 150);
     }
     // 当前社群桌面数据已经创建
     else {
-      settings.value.isCommunity = false;
-      router.push({ name: "home", params: { no: communityInfo?.no } });
+      communityDesk.setCommunityInfo(communityInfo);
+      router.push({
+        name: "CommunityGroupDesk",
+        params: { no: communityInfo?.no },
+      });
     }
   }
   // 成员
   else if (currentRole === "member") {
-    const communityInfo: any = currentCommunity.value?.item;
-    // 获取云端数据并且存储在本地desks列表中
     loadSyncDesk(communityInfo?.no);
-    // 检测当前所在的社群桌面数据是否为空列表
-    const deskList = getCommunityDeskList(communityInfo);
     if (deskList.length === 0) {
       // 提示弹窗
       (window as any).$ui.confirm(
@@ -205,8 +207,11 @@ const openDesk = async () => {
     }
     // 当前社群桌面数据已经创建
     else {
-      settings.value.isCommunity = false;
-      router.push({ name: "home", params: { no: communityInfo?.no } });
+      communityDesk.setCommunityInfo(communityInfo);
+      router.push({
+        name: "CommunityGroupDesk",
+        params: { no: communityInfo?.no },
+      });
     }
   }
 };
@@ -217,6 +222,12 @@ const loadSyncDesk = (no: any) => {
   communityDesk.loadCommunityDeskAll();
   communityDesk.loadCommunityDeskDetail();
 };
+
+onMounted(()=>{
+  proxy.$bus.on('updateSetting',()=>{
+    communityDesk.setCommunityInfo(currentCommunity.value?.item);
+  })
+})
 </script>
 
 <style lang="scss" scoped>

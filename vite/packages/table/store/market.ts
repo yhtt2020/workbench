@@ -1,10 +1,10 @@
-import {get, post} from '../js/axios/request'
+import {apiPost, get, post} from '../js/axios/request'
 import {sUrl} from '../consts'
 import {defineStore} from "pinia";
 
 
 const api = {
-  getCategories: sUrl('/app/category/list'),
+  getCategories: '/app/category/list',
   addDesk: sUrl('/app/good/desk/add'),
   getDesks: sUrl('/app/good/desk/page'),
   getRecommend:sUrl('/app/good/getGoodRecommend'),
@@ -17,7 +17,7 @@ export const marketStore = defineStore('marketStore', {
   state: () => ({}),
   actions: {
     getCategories(goodType, subType) {
-      return post(api.getCategories, {
+      return apiPost(api.getCategories, {
         goodType: goodType,
         subType: subType
       })

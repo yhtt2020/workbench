@@ -12,210 +12,358 @@
     ref="detailSlot"
     :customData="customData"
     :desk="desk"
-    @delete="deleteCard">
-    <a-spin v-if="isLoading === true"
-            style="display: flex; justify-content: center; align-items:center;margin-top: 60%"></a-spin>
+    @delete="deleteCard"
+  >
+    <a-spin
+      v-if="isLoading === true"
+      style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 60%;
+      "
+    ></a-spin>
     <template v-else-if="fail">
       <a-result :status="null" title="请确认网络" style="margin-top: 3em">
         <template #extra>
-          <a-button key="console" type="primary" @click="retry" style="background: var(--primary-bg);color:var(--primary-text)">重试</a-button>
+          <a-button
+            key="console"
+            type="primary"
+            @click="retry"
+            style="background: var(--primary-bg); color: var(--primary-text)"
+            >重试</a-button
+          >
         </template>
       </a-result>
-
     </template>
     <template v-else>
-      <template v-if="gameShow ===false">
-
-        <div class="flex flex-col discount-item" style="margin-top: 0em;">
-          <div class="flex flex-col ">
-            <div class="flex w-full rounded-md cursor-pointer" @click="enterDetail(item,customData.id)"
-                 v-for="item in list" style="position:relative;height:65px; margin-bottom: 12px;overflow: hidden">
-              <img :src="item.header_image" alt="" class="rounded-md "
-                   style="width:140px;height:65px; object-fit: cover;">
-              <div class="flex flex-col discount-content" style="margin-left: 10px; width: 104px;">
-                <div class="truncate name" style="width: 100%; margin-bottom: 10px;color: var(--primary-text);">{{ item.name }}</div>
-                <span class="text-white line-through price-font text-opacity-60" style="font-size: 10px;color: var(--secondary-text);">
-                {{ currencyFormat(item.original_price, item.currency) }}
-              </span>
-                <div class="flex justify-between w-full ">
-                <span style="color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 16px;font-weight: 500;">
-                 {{ currencyFormat(item.final_price, item.currency) }}
+      <template v-if="gameShow === false">
+        <div class="flex flex-col discount-item" style="margin-top: 0em">
+          <div class="flex flex-col">
+            <div
+              class="flex w-full rounded-md cursor-pointer"
+              @click="enterDetail(item, customData.id)"
+              v-for="item in list"
+              style="
+                position: relative;
+                height: 65px;
+                margin-bottom: 12px;
+                overflow: hidden;
+              "
+            >
+              <img
+                :src="item.header_image"
+                alt=""
+                class="rounded-md"
+                style="width: 140px; height: 65px; object-fit: cover"
+              />
+              <div
+                class="flex flex-col discount-content"
+                style="margin-left: 10px; width: 104px"
+              >
+                <div
+                  class="truncate name"
+                  style="
+                    width: 100%;
+                    margin-bottom: 10px;
+                    color: var(--primary-text);
+                  "
+                >
+                  {{ item.name }}
+                </div>
+                <span
+                  class="text-white line-through price-font text-opacity-60"
+                  style="font-size: 10px; color: var(--secondary-text)"
+                >
+                  {{ currencyFormat(item.original_price, item.currency) }}
                 </span>
-
+                <div class="flex justify-between w-full">
+                  <span
+                    style="
+                      color: rgba(255, 77, 79, 1);
+                      line-height: 21px;
+                      font-size: 16px;
+                      font-weight: 500;
+                    "
+                  >
+                    {{ currencyFormat(item.final_price, item.currency) }}
+                  </span>
                 </div>
                 <div
-                  style="position: absolute;top:0;left:0;background-color: rgba(255, 77, 79,0.5);backdrop-filter: blur(8px);border-bottom-right-radius: 9px;">
-                 <span style="font-family: oswald; padding: 3px 10px;font-size: 12px;color: var(--active-text);">
-                   - {{ item.discount_percent }} %
+                  style="
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    background-color: rgba(255, 77, 79, 0.5);
+                    backdrop-filter: blur(8px);
+                    border-bottom-right-radius: 9px;
+                  "
+                >
+                  <span
+                    style="
+                      font-family: oswald;
+                      padding: 3px 10px;
+                      font-size: 12px;
+                      color: var(--active-text);
+                    "
+                  >
+                    - {{ item.discount_percent }} %
                   </span>
                 </div>
               </div>
-
             </div>
           </div>
 
           <div class="flex items-center justify-between">
-            <div class="flex rounded-lg cursor-pointer s-item change xt-bg-2" @click="discountChange" style="padding:13px 41px;color:var(--primary-text)">
-              <Icon icon="reload" class="animate-spin" style="font-size: 1.429em;" v-if="reloadShow === true"></Icon>
-              <Icon icon="reload" style="font-size: 1.429em;" v-else></Icon>
-              <span style="margin-left: 1em;">换一换</span>
+            <div
+              class="flex rounded-lg cursor-pointer s-item change xt-bg-2"
+              @click="discountChange"
+              style="padding: 13px 41px; color: var(--primary-text)"
+            >
+              <Icon
+                icon="reload"
+                class="animate-spin"
+                style="font-size: 1.429em"
+                v-if="reloadShow === true"
+              ></Icon>
+              <Icon icon="reload" style="font-size: 1.429em" v-else></Icon>
+              <span style="margin-left: 1em">换一换</span>
             </div>
-            <span style="padding:13px 26px;" class="rounded-lg s-item change pointer xt-bg-2" @click="enterDiscountDetail">更多</span>
+            <span
+              style="padding: 13px 26px"
+              class="rounded-lg s-item change pointer xt-bg-2"
+              @click="enterDiscountDetail"
+              >更多</span
+            >
           </div>
         </div>
       </template>
       <template v-else-if="gameShow === true">
-        <div class="flex flex-col flex-grow" style="margin-top: 14px;" >
-          <div class="rounded-lg detail-image" style="margin-bottom: 14px;">
-            <img class="rounded-lg" :src="detailList.header_image" alt="">
+        <div class="flex flex-col flex-grow" style="margin-top: 14px">
+          <div class="rounded-lg detail-image" style="margin-bottom: 14px">
+            <img class="rounded-lg" :src="detailList.header_image" alt="" />
           </div>
-          <div class="truncate" style="margin-bottom: 6px; font-size: 18px;font-weight: 500;color: var(--primary-text);">{{ detailList.name }}</div>
-          <span class="text-white content-introduction text-opacity-60" style="color: var(--secondary-text);">{{ detailList.short_description }}</span>
-          <div class="flex" style="margin-bottom: 10px;">
-          <span class="bg-white rounded-md discount-description bg-opacity-20 " style="color: var(--secondary-text);background: var(--secondary-bg);"
-                v-for="item in detailList.genres">{{ item.description }}</span>
+          <div
+            class="truncate"
+            style="
+              margin-bottom: 6px;
+              font-size: 18px;
+              font-weight: 500;
+              color: var(--primary-text);
+            "
+          >
+            {{ detailList.name }}
           </div>
-          <span v-if="detailList.price_overview.initial_formatted" class="text-white line-through price-font text-opacity-60"
-                style="font-size: 12px;color: var(--secondary-text);">
+          <span
+            class="text-white content-introduction text-opacity-60"
+            style="color: var(--secondary-text)"
+            >{{ detailList.short_description }}</span
+          >
+          <div class="flex" style="margin-bottom: 10px">
+            <span
+              class="bg-white rounded-md discount-description bg-opacity-20"
+              style="
+                color: var(--secondary-text);
+                background: var(--secondary-bg);
+              "
+              v-for="item in detailList.genres"
+              >{{ item.description }}</span
+            >
+          </div>
+          <span
+            v-if="detailList.price_overview.initial_formatted"
+            class="text-white line-through price-font text-opacity-60"
+            style="font-size: 12px; color: var(--secondary-text)"
+          >
             {{ detailList.price_overview.initial_formatted }}
           </span>
-          <div class="flex justify-between w-full " style="margin-bottom: 16px;">
+          <div class="flex justify-between w-full" style="margin-bottom: 16px">
             <span
-              style="font-family: oswald; color:rgba(255, 77, 79, 1); line-height: 21px; font-size: 16px;font-weight: 500; padding-right: 2.41em;">
-             {{ detailList.price_overview.final_formatted }}
+              style="
+                font-family: oswald;
+                color: rgba(255, 77, 79, 1);
+                line-height: 21px;
+                font-size: 16px;
+                font-weight: 500;
+                padding-right: 2.41em;
+              "
+            >
+              {{ detailList.price_overview.final_formatted }}
             </span>
             <div class="flex justify-end">
-              <span class="rounded-md" style="font-family: oswald; background:rgba(255, 77, 79, 1);color: var(--active-text); padding: 3px 10.23px;font-size: 12px;">
-               -{{ detailList.price_overview.discount_percent }}%
+              <span
+                class="rounded-md"
+                style="
+                  font-family: oswald;
+                  background: rgba(255, 77, 79, 1);
+                  color: var(--active-text);
+                  padding: 3px 10.23px;
+                  font-size: 12px;
+                "
+              >
+                -{{ detailList.price_overview.discount_percent }}%
               </span>
             </div>
           </div>
           <div class="flex items-center justify-around">
-            <div @click="discountBack"
-                 class="flex items-center justify-center w-12 h-12 rounded-lg cursor-pointer s-item change" style="color: var(--primary-text);background: var(--primary-bg);">
-              <Icon icon="xiangzuo" style="font-size: 1.715em;color: var(--primary-text);"></Icon>
+            <div
+              @click="discountBack"
+              class="flex items-center justify-center w-12 h-12 rounded-lg cursor-pointer s-item change"
+              style="color: var(--primary-text); background: var(--primary-bg)"
+            >
+              <Icon
+                icon="xiangzuo"
+                style="font-size: 1.715em; color: var(--primary-text)"
+              ></Icon>
             </div>
-            <span class="flex items-center justify-center rounded-lg change pointer s-item"
-            style="padding:13px 30px;color: var(--primary-text);background: var(--primary-bg);"
-             @click="enterGameDetail(detailList.steam_appid)"
+            <span
+              class="flex items-center justify-center rounded-lg change pointer s-item"
+              style="
+                padding: 13px 30px;
+                color: var(--primary-text);
+                background: var(--primary-bg);
+              "
+              @click="enterGameDetail(detailList.steam_appid)"
             >
               详情
             </span>
-            <span class="flex items-center justify-center rounded-lg change pointer s-item"
-             style="padding:13px 30px;color: var(--primary-text);background: var(--primary-bg);"
-             @click="openSteam(detailList.steam_appid)">购买</span>
+            <span
+              class="flex items-center justify-center rounded-lg change pointer s-item"
+              style="
+                padding: 13px 30px;
+                color: var(--primary-text);
+                background: var(--primary-bg);
+              "
+              @click="openSteam(detailList.steam_appid)"
+              >购买</span
+            >
           </div>
         </div>
       </template>
     </template>
-
   </xt-container>
 
-  <HorizontalDrawer :drawerTitle="drawerTitle" ref="regionDrawer" v-model:selectRegion="customData.id" :rightSelect="regionRange" @getArea="getArea"></HorizontalDrawer>
+  <HorizontalDrawer
+    :drawerTitle="drawerTitle"
+    ref="regionDrawer"
+    v-model:selectRegion="customData.id"
+    :rightSelect="regionRange"
+    @getArea="getArea"
+  ></HorizontalDrawer>
 </template>
 
 <script>
-import Widget from '../../card/Widget.vue'
-import HorizontalDrawer from '../../HorizontalDrawer.vue'
-import { randomData, sendRequest, currencyFormat, compareTime } from '../../../js/axios/api'
-import { mapWritableState, mapActions, mapState } from 'pinia'
-import { steamStore } from '../../../store/steam'
-import { cardStore } from '../../../store/card'
-import Template from '../../../../user/pages/Template.vue'
-import { regionRange } from '../../../js/axios/api'
-import browser from '../../../js/common/browser'
-import { Icon as newIcon} from '@iconify/vue'
+import Widget from "../../card/Widget.vue";
+import HorizontalDrawer from "../../HorizontalDrawer.vue";
+import {
+  randomData,
+  sendRequest,
+  currencyFormat,
+  compareTime,
+} from "../../../js/axios/api";
+import { mapWritableState, mapActions, mapState } from "pinia";
+import { steamStore } from "../../../store/steam";
+import { cardStore } from "../../../store/card";
+import Template from "../../../../user/pages/Template.vue";
+import { regionRange } from "../../../js/axios/api";
+import browser from "../../../js/common/browser";
+import { Icon as newIcon } from "@iconify/vue";
+import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
+
 export default {
-  name: 'GamesDiscount',
+  name: "GamesDiscount",
   props: {
     customIndex: {
       type: Number,
-      default: 0
+      default: 0,
     },
     customData: {
       type: Object,
       default: () => {
         return {
-          id:0
-        }
-      }
+          id: 0,
+        };
+      },
     },
-    desk:{
-      type:Object
+    desk: {
+      type: Object,
     },
-    openWay:{
-      type:String,
-      default:"desk"
-    }
+    openWay: {
+      type: String,
+      default: "desk",
+    },
   },
   components: {
     Template,
     Widget,
     HorizontalDrawer,
-    newIcon
+    newIcon,
   },
-  data () {
+  data() {
     return {
-      fail:false,//失败
+      fail: false, //失败
       regionRange,
-      defaultRegion: 'cn',
+      defaultRegion: "cn",
       randomList: [],
       key: Date.now(),
       reloadShow: false,
-      drawerTitle:'地区',
+      drawerTitle: "地区",
       detailList: {},
       gameShow: false,
       isLoading: false,
       epicShow: false,
-      gameBare: [{
-        icon: 'shezhi1', title: '设置', fn: () => {
-          this.$refs.regionDrawer.detailDisplay = true;
-          this.$refs.gameSlot.visible = false
-        }
-      }],
-      customSize:'2x4',
-    }
+      gameBare: [
+        {
+          icon: "shezhi1",
+          title: "设置",
+          fn: () => {
+            this.$refs.regionDrawer.detailDisplay = true;
+            this.$refs.gameSlot.visible = false;
+          },
+        },
+      ],
+      customSize: "2x4",
+    };
   },
   computed: {
-    ...mapWritableState(steamStore, ['data', 'dataDetail']),
-    ...mapWritableState(cardStore, ['customComponents']),
-    region () {
+    ...mapWritableState(steamStore, ["data", "dataDetail"]),
+    ...mapWritableState(cardStore, ["customComponents"]),
+    region() {
       if (this.customData && this.customData.id) {
-        let found = this.regionRange.find(re => {
-          return re.id === this.customData.id
-        })
+        let found = this.regionRange.find((re) => {
+          return re.id === this.customData.id;
+        });
         if (found) {
-          return found
+          return found;
         }
       }
-      return this.regionRange[0]
-
+      return this.regionRange[0];
     },
-    options(){
+    options() {
       return {
-        customDel:this.openWay === 'nav' ? true : false
-      }
+        customDel: this.openWay === "nav" ? true : false,
+        disableEdit:this.isCommunityDesktop(this.desk),
+      };
     },
-    list () {
+    list() {
       if (this.key) {
-
       }
       if (this.data[this.region.id]) {
-        return this.getRandomList(this.data[this.region.id].list)
-      } else return []
+        return this.getRandomList(this.data[this.region.id].list);
+      } else return [];
     },
-    header(){
+    header() {
       return {
-        title:this.region.name,
+        title: this.region.name,
         // ifyIcon:'mdi:steam',
-        showIcon:"/img/appLogo/steam.png",
+        showIcon: "/img/appLogo/steam.png",
 
-        titleHover:true,
-        titleHoverName:'点击切换'
-      }
-    }
+        titleHover: true,
+        titleHoverName: "点击切换",
+      };
+    },
   },
-  emit:['delete'],
+  emit: ["delete"],
   watch: {
     // data: {
     //   handler (newVal, oldVal) {
@@ -228,116 +376,149 @@ export default {
     //   immediate: true
     // }
   },
-  async mounted () {
-    this.customData.customSize = '2x4'
-    this.isLoading = true
+  async mounted() {
+    this.customData.customSize = "2x4";
+    this.isLoading = true;
     if (this.customData && this.customData.id) {
-      this.defaultRegion = this.customData.id
+      this.defaultRegion = this.customData.id;
     }
 
+    this.getRegion().then(() => {});
 
-    this.getRegion().then(() => {
-
-    })
+    if(this.options.disableEdit){
+      this.gameBare = []
+    }
+    else {
+      this.gameBare = [
+        {
+          icon: "shezhi1",
+          title: "设置",
+          fn: () => {
+            this.$refs.regionDrawer.detailDisplay = true;
+            this.$refs.gameSlot.visible = false;
+          },
+        },
+      ]
+    }
   },
   methods: {
-    ...mapActions(steamStore, ['setGameDetail', 'updateGameData', 'setGameData', 'getData','getRandomList']),
-    ...mapActions(cardStore, ['updateCustomData']),
+    ...mapActions(steamStore, [
+      "setGameDetail",
+      "updateGameData",
+      "setGameData",
+      "getData",
+      "getRandomList",
+    ]),
+    ...mapActions(cardStore, ["updateCustomData"]),
+    ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+
+
+
     currencyFormat,
-    deleteCard(){
-      this.$emit('delete')
+    deleteCard() {
+      this.$emit("delete");
     },
-    showRegionSelect () {
-      this.$refs.regionDrawer.openDrawer()
+    showRegionSelect() {
+      this.$refs.regionDrawer.openDrawer();
     },
-    retry(){
-      this.getRegion().then(() => {
-      }).catch(()=>this.fail=true).finally(()=>{
-        this.isLoading = false
-      })
+    retry() {
+      this.getRegion()
+        .then(() => {})
+        .catch(() => (this.fail = true))
+        .finally(() => {
+          this.isLoading = false;
+        });
     },
 
     // 点击切换
-    discountChange () {
-      this.reloadShow = true
+    discountChange() {
+      this.reloadShow = true;
       setTimeout(() => {
-        this.key = Date.now()
-        this.reloadShow = false
-      }, 300)
+        this.key = Date.now();
+        this.reloadShow = false;
+      }, 300);
     },
     // 点击进入详情
-    enterDetail (item, cc) {
-      this.gameShow = true
+    enterDetail(item, cc) {
+      this.gameShow = true;
       if (!this.isLoading) {
-        this.isLoading = true
+        this.isLoading = true;
         if (Object.keys(this.customData).length !== 0) {
           setTimeout(() => {
-            sendRequest(`https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${cc}&l=${cc}`, {},{
-              localCache:true,
-              localTtl:60
-            }).then(res => {
-              const resData = res.data[item.id]
-              if (resData.success === true) {
-                const detailData = resData.data
-                this.detailList = detailData
-              } else {
-                return
+            sendRequest(
+              `https://store.steampowered.com/api/appdetails?appids=${item.id}&cc=${cc}&l=${cc}`,
+              {},
+              {
+                localCache: true,
+                localTtl: 60,
               }
-            }).finally(() => {
-              this.$nextTick(() => {
-                this.isLoading = false
+            )
+              .then((res) => {
+                const resData = res.data[item.id];
+                if (resData.success === true) {
+                  const detailData = resData.data;
+                  this.detailList = detailData;
+                } else {
+                  return;
+                }
               })
-            })
-          }, 500)
+              .finally(() => {
+                this.$nextTick(() => {
+                  this.isLoading = false;
+                });
+              });
+          }, 500);
         }
       }
     },
-    discountBack () {
-      this.gameShow = false
-      window.localStorage.removeItem('detail')
+    discountBack() {
+      this.gameShow = false;
+      window.localStorage.removeItem("detail");
     },
-    openSteam (id) {
-      browser.openInUserSelect(`https://store.steampowered.com/app/${id}` )
+    openSteam(id) {
+      browser.openInUserSelect(`https://store.steampowered.com/app/${id}`);
     },
-    async getRegion () {
-
-      this.fail=false
-      this.isLoading = true
-      setTimeout(()=>{
-        if(this.loading){
-          this.fail=true
+    async getRegion() {
+      this.fail = false;
+      this.isLoading = true;
+      setTimeout(() => {
+        if (this.loading) {
+          this.fail = true;
         }
-      },6000)
+      }, 6000);
 
-
-      this.gameVisible = false
-      this.customData.id = this.defaultRegion
+      this.gameVisible = false;
+      this.customData.id = this.defaultRegion;
       // 获取国家地区名称参数
-      await this.getData(this.region.id).catch(()=>this.fail=true).finally(()=>{
-        this.key=Date.now()
-        this.isLoading = false
-      })
+      await this.getData(this.region.id)
+        .catch(() => (this.fail = true))
+        .finally(() => {
+          this.key = Date.now();
+          this.isLoading = false;
+        });
     },
-    getArea(v){
-      this.defaultRegion = v.id
-      this.getRegion()
+    getArea(v) {
+      this.defaultRegion = v.id;
+      this.getRegion();
     },
-    enterDiscountDetail(){
-      this.$router.push({name:'recommend',params:{id:this.customData.id}})
+    enterDiscountDetail() {
+      this.$router.push({
+        name: "recommend",
+        params: { id: this.customData.id },
+      });
     },
-    enterGameDetail(v){
-      this.$router.push({name:'GameDiscountDetail',params:{id:v}})
-    }
-  }
-}
+    enterGameDetail(v) {
+      this.$router.push({ name: "GameDiscountDetail", params: { id: v } });
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>
-.animate-spin{
+.animate-spin {
   animation: spin 0.3s linear infinite !important;
 }
 .discount-item {
-
   .discount-content {
     .name {
       max-width: 104px;
@@ -383,11 +564,10 @@ export default {
   margin-bottom: 5px;
 }
 
-.price-font{
+.price-font {
   font-family: Oswald-Regular;
 }
-.oswald-font{
+.oswald-font {
   font-family: Oswald-SemiBold;
 }
-
 </style>

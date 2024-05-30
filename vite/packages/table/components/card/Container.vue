@@ -266,6 +266,7 @@ import { useWidgetStore } from "./store";
 import { useFreeLayoutStore } from "../desk/freeLayout/store";
 import { useMouseInElement } from "@vueuse/core";
 import { navStore } from "../../store/nav";
+import { titleOption } from "./libs/rightMenuOption";
 
 import Resize from "./Resize.vue";
 import RightMenu from "./RightMenu.vue";
@@ -332,8 +333,8 @@ onBeforeMount(() => {
 });
 onMounted(() => {
   // 防止自定义时，无法获取到container导致卡死
-  if(container.value){
-      container.value.addEventListener("keydown", handleKeyDown, {
+  if (container.value) {
+    container.value.addEventListener("keydown", handleKeyDown, {
       capture: true,
     });
     container.value.addEventListener("keydown", handleTouchStart, {
@@ -343,8 +344,8 @@ onMounted(() => {
 
 });
 onBeforeUnmount(() => {
-  if(container.value){
-      container.value.removeEventListener("keydown", handleKeyDown, {
+  if (container.value) {
+    container.value.removeEventListener("keydown", handleKeyDown, {
       capture: true,
     });
     container.value.removeEventListener("keydown", handleTouchStart, {
@@ -465,7 +466,17 @@ const menus = computed(() => {
   if (usePlat(platLimit)) return [addObj.value, deleteObj.value];
   // if (xxx) return []
   let menu = [...props.menuList, addObj.value, deleteObj.value];
-  return menu;
+  // 在社群成员桌面的场景下,需要的处理
+  const filterMenu = props.menuList.filter((item) => {
+    return titleOption.some((some) => {
+      return String(some) !== String(item.title);
+    });
+  });
+  if (props?.options?.disableEdit) {
+    return filterMenu;
+  } else {
+    return menu;
+  }
 });
 // 头部左侧显示区域状态
 const leftHover = computed(() => {
@@ -587,6 +598,10 @@ const removeCard = () => {
   // 属于自定义删除事件
   if (props.options.customDel) return;
   customDelete();
+  // 将社群桌面的数据进行同步,只限社群管理员。
+  if (props.desk.hasOwnProperty("communityNo")) {
+    proxy.$bus.emit('updateSync');
+  }
 };
 // 实际删除事件
 const customDelete = () => {

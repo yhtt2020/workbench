@@ -13,8 +13,14 @@ const router = createRouter({
   routes,
 });
 router.beforeEach(async (to, from, next) => {
-  // console.log('to.name :>> ', to.name);
-  // console.log("to, from :>> ", to, from);
+
+  if (to.path) {
+    if (window._hmt) {
+      window._hmt.push(['_trackPageview', '/#' + to.fullPath])
+    }
+  }
+  console.log('to.name :>> ', to.name);
+  console.log("to, from :>> ", to, from);
   // if (to.name === "splash" && usePlat("web")) {
   //   next({
   //     name: "home",
