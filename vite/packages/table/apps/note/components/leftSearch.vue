@@ -25,7 +25,7 @@
             <div @click="showData">目前数据</div>
             <div @click="showDesk">桌面数据</div>
             <div @click="this.findAll">db数据</div> -->
-            <xt-menu  ref="menu" :menus="menus" v-for="(item,index) in this.noteList"  @mounted="changeMenu(index)"
+            <xt-menu  ref="menu" :menus="menus" v-for="(item,index) in this.noteList" :key="index"  @mounted="changeMenu(index)"
             >
                 <div @click="changeNote(index)" style="min-width: 296px;;border-radius: 10px;padding: 12px;"
                 class="note-box w-full"

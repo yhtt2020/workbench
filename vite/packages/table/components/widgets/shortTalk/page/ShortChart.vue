@@ -20,7 +20,7 @@
       :normalButtonTitle="'立即配置'"
       @back="shortBack"
     />
-    
+
     <div v-else class="echarts" ref="myChart" :style="myChartStyle"></div>
 
     <!-- 设置面板 -->

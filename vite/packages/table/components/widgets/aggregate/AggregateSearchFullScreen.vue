@@ -266,8 +266,11 @@ export default {
     async fetchSuggestions(val){
       if(val){ // 防止重复请求
         const words = encodeURIComponent(this.searchKeyWords)
+        console.log('words :>> ', words);
         const url = `${this.list[this.selectIndex].recommendUrl}${words}`
+        console.log('url :>> ', url);
         const result = await axios.get(url)
+        console.log('result :>> ', result);
         this.getDataFields(result)
       }
       return

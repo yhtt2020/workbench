@@ -7,7 +7,14 @@
       class="mb-3"
     />
     <div class="p-2 mb-3 text-sm xt-bg-t-2 rounded-xl" style="max-width: 452px">
-      你可以拖动工作台桌面图标或Windows程序或文件图标到此处；或者进入分组设置选择自动整理模式，为你自动整理桌面图标。
+      你可以拖动工作台桌面图标
+      {{ $usePlat("client") ? "或Windows程序" : "" }}
+      或文件图标到此处
+      {{
+        $usePlat("client")
+          ? "；或者进入分组设置选择自动整理模式，为你自动整理桌面图标。"
+          : "。"
+      }}
     </div>
     <xt-button type="theme" w="84" h="32" radius="8" @click="editClick">
       添加图标</xt-button
