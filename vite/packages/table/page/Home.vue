@@ -1,33 +1,31 @@
 <template>
   <div style="height: 100%">
     <!-- 个人桌面 -->
-    <desk-group
-      
-      @changeDesk="changeDesk"
-      ref="deskGroupRef"
-      :settings="settings"
-      :desk-list="desks"
-      v-model:currentDeskId="this.currentDeskId"
-    >
-      <template #settingsAll> </template>
-    </desk-group>
-
+    <template v-if="communityVisible">
+      <desk-group
+        @changeDesk="changeDesk"
+        ref="deskGroupRef"
+        :settings="settings"
+        :desk-list="desks"
+        v-model:currentDeskId="this.currentDeskId"
+      >
+        <template #settingsAll> </template>
+      </desk-group>
+    </template>
 
     <!-- 社群桌面 -->
-    <router-view></router-view>
+    <!-- <router-view></router-view> -->
 
-    
-    <!-- <CommunityGroupDesk
-      :communityVisible="communityVisible"
-      ref="deskGroupRef"
-      :settings="settings"
-      :desk-list="desks"
-      v-model:currentDeskId="this.currentDeskId"
-      @changeDesk="changeDesk"
-    >
-      <template #settingsAll> </template>
-    </CommunityGroupDesk> -->
-    
+    <CommunityGroupDesk
+    :communityVisible="communityVisible"
+    ref="deskGroupRef"
+    :settings="settings"
+    :desk-list="desks"
+    v-model:currentDeskId="this.currentDeskId"
+    @changeDesk="changeDesk"
+  />
+
+
   </div>
   <!-- 检测到用户头像为默认头像时触发用户中心个人信息修改弹窗 -->
   <div
@@ -88,7 +86,7 @@ import ScalePanel from "./ScalePanel.vue";
 import GuidePanel from "./GuidePanel.vue";
 import WebLogin from "./WebLogin.vue";
 import GalleryModal from "../components/paperModal/PaperApp.vue";
-// import CommunityGroupDesk from "../apps/communityDesk/page/CommunityGroupDesk.vue";
+import CommunityGroupDesk from "../apps/communityDesk/page/CommunityGroupDesk.vue";
 
 import { taskStore } from "../apps/task/store";
 import navigationData from "../js/data/tableData";
@@ -109,7 +107,7 @@ import { communityDeskStore } from "../apps/communityDesk/store/communityDeskSto
 import { isMain } from "../js/common/screenUtils";
 // 检查当前网络状态
 import { useNetwork } from "@vueuse/core";
-import { DESKS } from '../js/const/default'
+import { DESKS } from "../js/const/default";
 const { isOnline } = useNetwork();
 
 let steamUser,
@@ -119,7 +117,7 @@ let steamUser,
   steamFs,
   LoginSession,
   EAuthTokenPlatformType;
-if (usePlat('client')) {
+if (usePlat("client")) {
   steamUser = $models.steamUser;
   steamSession = $models.steamSession;
   path = $models.path;
@@ -203,7 +201,7 @@ export default {
     ScalePanel,
     GuidePanel,
     WebLogin,
-    // CommunityGroupDesk,
+    CommunityGroupDesk,
   },
   computed: {
     ...mapWritableState(navStore, [
@@ -353,9 +351,9 @@ export default {
     }
 
     // 更新社群桌面
-    this.$bus.on('changeCurrentDesk',(desk)=>{
-      this.changeDesk(desk);
-    })
+    // this.$bus.on("changeCurrentDesk", (desk) => {
+    //   this.changeDesk(desk);
+    // });
   },
   created() {
     if (this.currentDesk.cards.length) {
@@ -480,28 +478,28 @@ export default {
     componentInit() {
       // 判断是否是第一次加载
       if (this.deskInit) {
-        console.log('执行组件初始化')
+        console.log("执行组件初始化");
         this.deskInit = false;
         // 初始化任务
         this.initTask();
         // 初始化桌面
-        if (usePlat('client')) {
+        if (usePlat("client")) {
           this.addFreeLayoutDesk();
           // 非web端打开缩放提示弹窗
           this.visibleScale = true;
         } else {
-          console.log(_.cloneDeep(DESKS))
-          console.log(_.cloneDeep(this.desks),'修改前的desks')
-          let desks=_.cloneDeep(DESKS)
+          console.log(_.cloneDeep(DESKS));
+          console.log(_.cloneDeep(this.desks), "修改前的desks");
+          let desks = _.cloneDeep(DESKS);
 
-          this.desks= desks
-          this.currentDesk=this.desks[0]
-          this.currentDeskIndex={
-            name:this.desk[0]?.name,
-            id:this.desk[0]?.id
-          }
-          this.currentDeskId=this.desk[0]?.id
-          console.log(_.cloneDeep(this.desks),'修改后的desks')
+          this.desks = desks;
+          this.currentDesk = this.desks[0];
+          this.currentDeskIndex = {
+            name: this.desk[0]?.name,
+            id: this.desk[0]?.id,
+          };
+          this.currentDeskId = this.desk[0]?.id;
+          console.log(_.cloneDeep(this.desks), "修改后的desks");
 
           // web端打开功能介绍提示弹窗
           this.visibleWeb = true;
@@ -568,10 +566,10 @@ export default {
     // 第一次登录默认数据
     addFreeLayoutDesk() {
       if (this.currentInit) {
-        if(usePlat('web')){
-          console.log('跳过自由布局初始化')
+        if (usePlat("web")) {
+          console.log("跳过自由布局初始化");
           this.currentInit = false;
-        }else{
+        } else {
           // 会有一个清除数据的过程 暂时没找到原因 先用定时器延迟执行
           setTimeout(() => {
             let deskTmp = _.cloneDeep(this.deskDefault[0]);
@@ -592,7 +590,6 @@ export default {
             this.currentInit = false;
           }, 2000);
         }
-
       }
     },
 
@@ -693,10 +690,9 @@ export default {
     },
   },
   watch: {
-    desks:{
-      handler(newVal,oldVal){
-      },
-      deep:true
+    desks: {
+      handler(newVal, oldVal) {},
+      deep: true,
     },
     // currentDeskIndex: {
     //   handler() {
