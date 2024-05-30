@@ -341,7 +341,7 @@ export default {
             }
         },
     },
-  },
+  
   async beforeMount() {
     this.getMyForumList().then(() => {
       this.customData.forumList = this.myForumList;
