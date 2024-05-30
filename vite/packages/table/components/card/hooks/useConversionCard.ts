@@ -10,8 +10,9 @@ import { checkIsIfyIcon } from "./addCardToNav"
  */
 export const useConversionCard = (data) => {
     const index = data.customIndex
+    const header = data.header
     let name = data.desk.cards.find((item) => item.id === index).name
-    let icon = data.header.ifyIcon || data.header.icon || 'fluent:cloud-16-filled'
+    let icon =  header.showIcon || header.ifyIcon || header.icon || 'fluent:cloud-16-filled'
     let title = data.header.title || name
     if(updateState(data)){
         title = updateState(data).title
