@@ -31,8 +31,9 @@ import Widget from '../card/Widget.vue'
 import fish from '../../assets/img/fish/muyu.png'
 import bing from '../../assets/img/fish/bing.png'
 import { fishStore } from '../../store/fish'
-import { mapWritableState } from 'pinia'
+import { mapWritableState,mapActions } from 'pinia'
 import {message} from 'ant-design-vue'
+import { communityNavStore } from "../bottomPanel/store/communityNavStore"
 
 export default {
   name: 'Fish',
@@ -69,6 +70,13 @@ export default {
   },
   computed: {
     ...mapWritableState(fishStore, ['days', 'total']),
+    ...mapWritableState(communityNavStore, ["currentCommunity"]),
+
+    // 社群角色权限
+    communityRole() {
+      return this.currentCommunity?.item?.role === "member";
+    },
+
     getToday () {
       let now = new Date()
       if(!this.days[now.getFullYear() + '-' + now.getMonth() + '-' + now.getDay()]){
@@ -85,7 +93,8 @@ export default {
     },
     options () {
       return {
-        customDel: this.openWay === 'nav' ? true : false
+        customDel: this.openWay === 'nav' ? true : false,
+        disableEdit: this.isCommunityDesktop(this.desk),
       }
     }
   },
@@ -93,6 +102,8 @@ export default {
     Widget
   },
   methods: {
+    ...mapActions(communityNavStore,['isCommunityDesktop']),
+
     // 自定义删除事件
     deleteCard () {
       this.$emit('delete')

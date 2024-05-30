@@ -9,44 +9,74 @@
     ref="cardSlot"
     :header="header"
     v-model:customSize="customData.customSize"
-    @delete="deleteCard">
-    <div class="mt-1 content"
-         style="display: flex;flex-direction: column;justify-content: space-between;padding: 0;align-items: center"
-         v-if="countdownDays.length <= 0">
-      <a-empty :description="null" image="/img/test/load-ail.png"/>
-      <a-button type="primary" class="rounded-full xt-text xt--active-bg"
-                @click="()=>{settingVisible=true;goAddEvent()}">立即添加
+    @delete="deleteCard"
+  >
+    <div
+      class="mt-1 content"
+      style="
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 0;
+        align-items: center;
+      "
+      v-if="countdownDays.length <= 0"
+    >
+      <a-empty :description="null" image="/img/test/load-ail.png" />
+      <a-button
+        type="primary"
+        class="rounded-full xt-text xt--active-bg"
+        @click="
+          () => {
+            settingVisible = true;
+            goAddEvent();
+          }
+        "
+        >立即添加
       </a-button>
     </div>
-    <div class="mt-1 content" style="height: 100% ;overflow: hidden;" v-else>
-      <xt-scrollbar @click="settingVisible=true" class="w-full h-full" :y="true">
+    <div class="mt-1 content" style="height: 100%; overflow: hidden" v-else>
+      <xt-scrollbar
+        @click="openRightDrawer"
+        class="w-full h-full pointer"
+        :y="true"
+      >
         <div
-          class="px-4 mb-3 event-list s-item xt-bg-2" style=""
-          v-for="(item) in countdownDays"
+          class="px-4 mb-3 event-list s-item xt-bg-2"
+          style=""
+          v-for="item in countdownDays"
         >
           <div class="flex flex-row items-center">
             <div class="mr-4 round-dot"></div>
             <div class="event-title">
-              <span class="text-more w-28 xt-text" style="font-size: 16px">{{ item.eventValue }}</span>
-              <span class="event xt-text" style="font-size: 12px;"
-              >{{ item.dateValue.year }}/{{ item.dateValue.month }}/{{
+              <span class="text-more w-28 xt-text" style="font-size: 16px">{{
+                item.eventValue
+              }}</span>
+              <span class="event xt-text" style="font-size: 12px"
+                >{{ item.dateValue.year }}/{{ item.dateValue.month }}/{{
                   item.dateValue.day
                 }}</span
               >
             </div>
           </div>
-          <span
-            class="xt-text"
-            style="font-size: 16px;"><span v-if="item.type">还有</span>
-        <span v-else>已过</span> {{
-              differenceDay(item)
-            }} 天</span
+          <span class="xt-text" style="font-size: 16px"
+            ><span v-if="item.type">还有</span> <span v-else>已过</span>
+            {{ differenceDay(item) }} 天</span
           >
         </div>
       </xt-scrollbar>
     </div>
   </xt-container>
-  <a-drawer :width="500" v-model:visible="settingVisible" placement="right" @close="()=>{this.goAddFlag = false}">
+  <a-drawer
+    :width="500"
+    v-model:visible="settingVisible"
+    placement="right"
+    @close="
+      () => {
+        this.goAddFlag = false;
+      }
+    "
+  >
     <template #title>
       <div class="text-center">纪念日设置</div>
     </template>
@@ -55,59 +85,87 @@
       <div>
         <vue-custom-scrollbar
           :settings="outerSettings"
-          style="position: relative; height: calc(100vh - 15em);margin-top: 10px"
+          style="
+            position: relative;
+            height: calc(100vh - 15em);
+            margin-top: 10px;
+          "
           class="scroll"
         >
           <div
             class="px-4 mb-3 event-list s-item xt-bg-2 xt-text"
-            v-for="(item,index) in countdownDays"
+            v-for="(item, index) in countdownDays"
           >
-
             <div class="flex flex-row items-center justify-between w-full">
               <div class="flex flex-row items-center">
                 <div class="mr-4 round-dot"></div>
                 <div class="event-title">
-                  <span class="text-more" style="font-size: 16px;">{{ item.eventValue }}</span>
-                  <span class="event" style="font-size: 12px;"
-                  >{{ item.dateValue.year }}/{{ item.dateValue.month }}/{{
+                  <span class="text-more" style="font-size: 16px">{{
+                    item.eventValue
+                  }}</span>
+                  <span class="event" style="font-size: 12px"
+                    >{{ item.dateValue.year }}/{{ item.dateValue.month }}/{{
                       item.dateValue.day
                     }}</span
                   >
                 </div>
               </div>
-              <span
-                style="font-size: 18px;"><span v-if="item.type">还有</span>
-        <span v-else>已过</span> {{
-                  differenceDay(item)
-                }} 天</span
+              <span style="font-size: 18px"
+                ><span v-if="item.type">还有</span> <span v-else>已过</span>
+                {{ differenceDay(item) }} 天</span
               >
 
-              <xt-button  @click="(e) => onContextMenuClick(e, index)" type="theme">删除</xt-button>
+              <xt-button
+                @click="(e) => onContextMenuClick(e, index)"
+                type="theme"
+                >删除</xt-button
+              >
             </div>
           </div>
-        </vue-custom-scrollbar
-        >
+        </vue-custom-scrollbar>
       </div>
       <div class="flex flex-row items-center justify-center w-full mt-4">
-
-        <div class="flex items-center justify-center w-full h-10 rounded-lg xt-active-bg pointer "
-             style="color: var(--primary-text);" @click="goAddEvent">添加事件
+        <div
+          class="flex items-center justify-center w-full h-10 rounded-lg xt-active-bg pointer"
+          style="color: var(--primary-text)"
+          @click="goAddEvent"
+        >
+          添加事件
         </div>
       </div>
     </div>
     <div v-else>
       <div>事件名称</div>
-      <xt-input class="h-12 mt-4 rounded-lg xt-text" style="height: 48px;" v-model="eventValue"
-                placeholder="请输入"></xt-input>
+      <xt-input
+        class="h-12 mt-4 rounded-lg xt-text"
+        style="height: 48px"
+        v-model="eventValue"
+        placeholder="请输入"
+      ></xt-input>
       <!-- <a-input class="h-10 mt-4 rounded-lg xt-text" allow-clear v-model:value="eventValue" placeholder="请输入"/> -->
       <div class="mt-4">日期</div>
-      <a-date-picker v-model:value="dateValue" class="mt-4"/>
-      <div class="flex flex-row items-center justify-center w-full mt-4 xt-text" style="color: var(--primary-text);">
-        <div class="flex items-center justify-center w-24 h-10 mr-4 rounded-lg pointer xt-bg-2 "
-             style="  ;color: var(--primary-text);" @click="()=>{this.goAddFlag = false}">取消
+      <a-date-picker v-model:value="dateValue" class="mt-4" />
+      <div
+        class="flex flex-row items-center justify-center w-full mt-4 xt-text"
+        style="color: var(--primary-text)"
+      >
+        <div
+          class="flex items-center justify-center w-24 h-10 mr-4 rounded-lg pointer xt-bg-2"
+          style="color: var(--primary-text)"
+          @click="
+            () => {
+              this.goAddFlag = false;
+            }
+          "
+        >
+          取消
         </div>
-        <div class="flex items-center justify-center w-24 h-10 rounded-lg pointer xt-active-bg"
-             style="color: var(--primary-text);" @click="addEvent">确定添加
+        <div
+          class="flex items-center justify-center w-24 h-10 rounded-lg pointer xt-active-bg"
+          style="color: var(--primary-text)"
+          @click="addEvent"
+        >
+          确定添加
         </div>
       </div>
     </div>
@@ -145,40 +203,41 @@
 </template>
 
 <script>
-import { mapActions, mapWritableState } from 'pinia'
-import { cardStore } from '../../store/card'
-import { transDate } from '../../../../src/util/dateTime'
-import Widget from '../card/Widget.vue'
-import { message } from 'ant-design-vue'
-import { timeStamp } from '../../util'
-import { timerStore } from '../../store/timer'
-import { Icon as newIcon } from '@iconify/vue'
+import { mapActions, mapWritableState } from "pinia";
+import { cardStore } from "../../store/card";
+import { transDate } from "../../../../src/util/dateTime";
+import Widget from "../card/Widget.vue";
+import { message } from "ant-design-vue";
+import { timeStamp } from "../../util";
+import { timerStore } from "../../store/timer";
+import { Icon as newIcon } from "@iconify/vue";
+import { communityNavStore } from "../bottomPanel/store/communityNavStore";
 
 export default {
-  name: 'CountdownDay',
+  name: "CountdownDay",
   props: {
     customIndex: {
       type: Number,
-      default: 0
+      default: 0,
     },
     customData: {
       type: Object,
-      default: () => {}
+      default: () => {},
     },
     desk: {
-      type: Object
+      type: Object,
     },
-    openWay:{
+    openWay: {
       type: String,
-      default: "desk"
-    }
+      default: "desk",
+    },
   },
   components: {
     Widget,
-    newIcon
+    newIcon,
   },
-  emit: ['delete'],
-  data () {
+  emit: ["delete"],
+  data() {
     return {
       outerSettings: {
         useBothWheelAxes: true,
@@ -187,129 +246,176 @@ export default {
         suppressScrollX: true,
         wheelPropagation: true,
       },
-      eventValue: '',
-      sizeList: [{ value: '2x2', name: '2x2' }, {
-        value: '2x4',
-        name: '2x4'
-      },],
+      eventValue: "",
+      sizeList: [
+        { value: "2x2", name: "2x2" },
+        {
+          value: "2x4",
+          name: "2x4",
+        },
+      ],
       dateValue: null,
-      menuList: [{
-        icon: 'shezhi1', title: '设置', fn: () => {
-          this.settingVisible = true
-          this.$refs.cardSlot.visible = false
-        }
-      },],
+      menuList: [
+        {
+          icon: "shezhi1",
+          title: "设置",
+          fn: () => {
+            this.settingVisible = true;
+            this.$refs.cardSlot.visible = false;
+          },
+        },
+      ],
       settingVisible: false,
-      status: 'pause',
+      status: "pause",
       value: null,
       visible: false,
       goAddFlag: false,
       countdownDays: [],
-      header:{
-        title:'纪念日',
+      header: {
+        title: "纪念日",
         // ifyIcon:'fluent:calendar-16-regular',
         showIcon:"/logo/countdownDay.svg",
       }
     }
   },
   computed: {
-    ...mapWritableState(cardStore, ['countdownDay']),
-    ...mapWritableState(timerStore, ['appDate']),
-    options () {
+    ...mapWritableState(cardStore, ["countdownDay"]),
+    ...mapWritableState(timerStore, ["appDate"]),
+
+    options() {
       return {
-        defaultData:{
-          customSize:this.customData.customSize || '2x2'
+        defaultData: {
+          customSize: this.customData.customSize || "2x2",
         },
-        customDel: this.openWay === 'nav' ? true : false
-      }
+        customDel: this.openWay === "nav" ? true : false,
+        disableEdit: this.isCommunityDesktop(this.desk),
+      };
     },
   },
-  mounted () {
-    this.sortCountdown()
-    this.setCountdownDay()
-    if(this.customData.customSize == undefined){
-      this.customData.customSize = '2x2'
+  mounted() {
+    this.sortCountdown();
+    this.setCountdownDay();
+    if (this.customData.customSize == undefined) {
+      this.customData.customSize = "2x2";
+    }
+
+    if (this.options.disableEdit) {
+      this.sizeList = [];
+      this.menuList = [];
+    } else {
+      this.sizeList = [
+        { value: "2x2", name: "2x2" },
+        {
+          value: "2x4",
+          name: "2x4",
+        },
+      ];
+      this.menuList = [
+        {
+          icon: "shezhi1",
+          title: "设置",
+          fn: () => {
+            this.settingVisible = true;
+            this.$refs.cardSlot.visible = false;
+          },
+        },
+      ];
     }
   },
   methods: {
-    ...mapActions(cardStore, ['removeCountdownDay', 'addCountdownDay', 'sortCountdown']),
-    onPanelChange (value, mode) {},
+    ...mapActions(cardStore, [
+      "removeCountdownDay",
+      "addCountdownDay",
+      "sortCountdown",
+    ]),
+    ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+
+    onPanelChange(value, mode) {},
     transDate,
-    deleteCard () {
-      this.$emit('delete')
+    deleteCard() {
+      this.$emit("delete");
     },
-    differenceDay (item) {
+    differenceDay(item) {
       return transDate(
-        this.appDate.year + '-' + this.appDate.month + '-' + this.appDate.day,
+        this.appDate.year + "-" + this.appDate.month + "-" + this.appDate.day,
         item.dateValue.year +
-        '-' +
-        item.dateValue.month +
-        '-' +
-        item.dateValue.day
-      )
+          "-" +
+          item.dateValue.month +
+          "-" +
+          item.dateValue.day
+      );
     },
-    closeDrawer () {
-      this.goAddFlag = false
-      this.settingVisible = false
+    closeDrawer() {
+      this.goAddFlag = false;
+      this.settingVisible = false;
     },
-    onSetup () {
+    onSetup() {
       this.$router.push({
-        name: 'addCardSetting',
+        name: "addCardSetting",
         params: {
-          name: 'countdownDay',
-          cname: '纪念日',
+          name: "countdownDay",
+          cname: "纪念日",
         },
-      })
+      });
     },
 
-    onContextMenuClick (e, index) {
-      this.removeCountdownDay(index)
+    onContextMenuClick(e, index) {
+      this.removeCountdownDay(index);
     },
-    goAddEvent () {
-      this.goAddFlag = true
+    goAddEvent() {
+      this.goAddFlag = true;
     },
-    addEvent () {
-      if (this.eventValue === '' || this.dateValue === null) {
-        message.info('不可为空！')
-        return
+    addEvent() {
+      if (this.eventValue === "" || this.dateValue === null) {
+        message.info("不可为空！");
+        return;
       }
-      this.goAddFlag = false
+      this.goAddFlag = false;
       this.addCountdownDay({
         eventValue: this.eventValue,
         dateValue: timeStamp(this.dateValue.valueOf()),
-        customIndex: this.customIndex
-      })
-      this.eventValue = ''
-      this.dateValue = null
-      message.info('添加成功！')
+        customIndex: this.customIndex,
+      });
+      this.eventValue = "";
+      this.dateValue = null;
+      message.info("添加成功！");
     },
-    setCountdownDay () {
-      let countdownDay = JSON.parse(JSON.stringify(this.countdownDay))
+    setCountdownDay() {
+      let countdownDay = JSON.parse(JSON.stringify(this.countdownDay));
       if (this.customData.notRetain) {
         for (let i = 0; i < countdownDay.length; i++) {
           if (countdownDay[i].customIndex) {
-            countdownDay.splice(i, 1)
-            i--
+            countdownDay.splice(i, 1);
+            i--;
           }
         }
-        this.countdownDays = countdownDay
+        this.countdownDays = countdownDay;
       } else {
-        this.countdownDays = this.countdownDay
+        this.countdownDays = this.countdownDay;
       }
-    }
+    },
+
+    // 开启右侧抽屉弹窗
+    openRightDrawer() {
+      if (this.communityRole) {
+        this.settingVisible = false;
+      } else {
+        this.settingVisible = true;
+      }
+    },
   },
   watch: {
     countdownDay: {
       deep: true,
-      handler (val) {
-        this.setCountdownDay()
-      }
+      handler(val) {
+        this.setCountdownDay();
+      },
     },
-    customSize(newVal,oldVal) {
-      this.customData.customSize = newVal
-    }
-  }
-}
+    customSize(newVal, oldVal) {
+      this.customData.customSize = newVal;
+    },
+  },
+};
 </script>
 
 <style scoped lang="scss">

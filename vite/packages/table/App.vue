@@ -136,7 +136,6 @@ import Global from './apps/global/Global.vue'
 // import { taskStore } from './apps/task/store'
 import { usePlat } from './ui/hooks/usePlat'
 import { useLogin } from '../table/permission/user/useLogin'
-
 notification.config({
   top: '70px',//设置notification默认距离顶部位置
   rtl: false,

@@ -8,57 +8,110 @@
     :options="options"
     :customIndex="customIndex"
     :desk="desk"
-    @delete="deleteCard">
-
-    <HorizontalPanel style="min-width: 100%" :navList="epicTips"  v-model:selectType="epicType"  class=" drawer-item-bg" >
+    @delete="deleteCard"
+  >
+    <HorizontalPanel
+      style="min-width: 100%"
+      :navList="epicTips"
+      v-model:selectType="epicType"
+      class="drawer-item-bg"
+    >
     </HorizontalPanel>
 
     <template v-if="epicType.name === 'week'">
       <div class="w-full mt-3" v-if="detailShow === false">
-        <div class="flex items-center justify-center my-10" v-if="promotionList.length === 0">
+        <div
+          class="flex items-center justify-center my-10"
+          v-if="promotionList.length === 0"
+        >
           <a-empty :image="simpleImage" />
         </div>
-        <div v-else class="relative rounded-lg cursor-pointer week-image"  v-for="item in promotionList" @click.stop="enterWeek(item)">
-         <img class="rounded-lg" :src="item.keyImages[0].url" alt=""  style="width:100%;height:100%;object-fit: cover;">
+        <div
+          v-else
+          class="relative rounded-lg cursor-pointer week-image"
+          v-for="item in promotionList"
+          @click.stop="enterWeek(item)"
+        >
+          <img
+            class="rounded-lg"
+            :src="item.keyImages[0].url"
+            alt=""
+            style="width: 100%; height: 100%; object-fit: cover"
+          />
 
-         <div class="remainder-day xt-num-font-600" style="color: var(--active-text);min-width: 100px;">
-          剩余 {{ item.days.start }} 天
-         </div>
-         <div class="stablish-province xt-num-font-600" style="min-width: 100px;">
-          立省  {{ item.price.totalPrice.fmtPrice.originalPrice }}
-         </div>
+          <div
+            class="remainder-day xt-num-font-600"
+            style="color: var(--active-text); min-width: 100px"
+          >
+            剩余 {{ item.days.start }} 天
+          </div>
+          <div
+            class="stablish-province xt-num-font-600"
+            style="min-width: 100px"
+          >
+            立省 {{ item.price.totalPrice.fmtPrice.originalPrice }}
+          </div>
         </div>
       </div>
-      <EpicDetail :detailOptions="detailList" :detailType="epicType" v-else @update:backShow="detailBack"></EpicDetail>
+      <EpicDetail
+        :detailOptions="detailList"
+        :detailType="epicType"
+        v-else
+        @update:backShow="detailBack"
+      ></EpicDetail>
     </template>
 
     <template v-else>
       <div class="w-full mt-3" v-if="detailShow === false">
-        <div class="flex items-center justify-center my-10" v-if="unPromotionList.length === 0">
+        <div
+          class="flex items-center justify-center my-10"
+          v-if="unPromotionList.length === 0"
+        >
           <a-empty :image="simpleImage" />
         </div>
-        <div v-else class="relative rounded-lg cursor-pointer week-image"  v-for="item in unPromotionList" @click.stop="enterWeek(item)">
-         <img class="rounded-lg" :src="item.keyImages[0].url" alt=""  style="width:100%;height:100%;object-fit: cover;">
+        <div
+          v-else
+          class="relative rounded-lg cursor-pointer week-image"
+          v-for="item in unPromotionList"
+          @click.stop="enterWeek(item)"
+        >
+          <img
+            class="rounded-lg"
+            :src="item.keyImages[0].url"
+            alt=""
+            style="width: 100%; height: 100%; object-fit: cover"
+          />
 
-         <div class="remainder-day xt-num-font-600" style="color: var(--active-text);min-width: 100px;">
-          剩余 {{ item.days.end }} 天
-         </div>
-         <div class="stablish-province xt-num-font-600" style="min-width: 100px;">
-          立省
-          {{ item.price.totalPrice.fmtPrice.originalPrice }}
-         </div>
+          <div
+            class="remainder-day xt-num-font-600"
+            style="color: var(--active-text); min-width: 100px"
+          >
+            剩余 {{ item.days.end }} 天
+          </div>
+          <div
+            class="stablish-province xt-num-font-600"
+            style="min-width: 100px"
+          >
+            立省
+            {{ item.price.totalPrice.fmtPrice.originalPrice }}
+          </div>
         </div>
       </div>
-      <EpicDetail :detailOptions="detailList" :detailType="epicType" v-else @update:backShow="detailBack"></EpicDetail>
+      <EpicDetail
+        :detailOptions="detailList"
+        :detailType="epicType"
+        v-else
+        @update:backShow="detailBack"
+      ></EpicDetail>
     </template>
   </xt-container>
 </template>
 
 <script>
 import { Icon as newIcon } from "@iconify/vue";
-import { mapWritableState,mapActions } from 'pinia'
-import { epicStore } from '../../../store/epicStore'
-import { message } from 'ant-design-vue'
+import { mapWritableState, mapActions } from "pinia";
+import { epicStore } from "../../../store/epicStore";
+import { message } from "ant-design-vue";
 // import { serverCache, localCache } from "../../../js/axios/serverCache";
 // import axios from "axios";
 // import { thisWeek, nextWeek,remainderDays } from "./utils/epicUtils";
@@ -66,6 +119,8 @@ import { message } from 'ant-design-vue'
 import Widget from "../../card/Widget.vue";
 import HorizontalPanel from "../../HorizontalPanel.vue";
 import EpicDetail from "./EpicDetail.vue";
+
+import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
 
 export default {
   components: {
@@ -75,7 +130,7 @@ export default {
     newIcon,
   },
 
-  props: ["desk", "customIndex",'customData','openWay'],
+  props: ["desk", "customIndex", "customData", "openWay"],
 
   data() {
     return {
@@ -100,15 +155,15 @@ export default {
 
       detailList: {},
 
-      refreshFlag:false,
-    }
+      refreshFlag: false,
+    };
   },
 
-  computed:{
-    ...mapWritableState(epicStore,['epicData']),
-    header(){
+  computed: {
+    ...mapWritableState(epicStore, ["epicData"]),
+    header() {
       return {
-        title: 'Epic喜加一',
+        title: "Epic喜加一",
         // ifyIcon:'cib:epic-games',
         showIcon:"/logo/epic.svg",
         refresh:{
@@ -118,56 +173,60 @@ export default {
         }
       }
     },
-    options(){
+    options() {
       return {
-        customDel:this.openWay === 'nav' ? true : false
-      }
-    }
+        customDel: this.openWay === "nav" ? true : false,
+        disableEdit:this.isCommunityDesktop(this.desk),
+      };
+    },
   },
 
   mounted() {
     this.getEpicData();
-    if(Object.keys(this.epicData).length !== 0){
-      this.unPromotionList = this.epicData.unPromotionList
-      this.promotionList = this.epicData.promotionList
+    if (Object.keys(this.epicData).length !== 0) {
+      this.unPromotionList = this.epicData.unPromotionList;
+      this.promotionList = this.epicData.promotionList;
     }
-    this.customData.customSize = '2x4'
+    this.customData.customSize = "2x4";
   },
-  emit:['delete'],
+  emit: ["delete"],
   methods: {
-    ...mapActions(epicStore,['getEpicData','refresh']),
-    deleteCard(){
-      this.$emit('delete')
+    ...mapActions(epicStore, ["getEpicData", "refresh"]),
+    ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+
+
+    deleteCard() {
+      this.$emit("delete");
     },
     // 点击刷新
-    refreshNow(){
-      this.refreshFlag = true
-      this.refresh()
-      setTimeout(()=>{
-        this.refreshFlag = false
-      },500)
+    refreshNow() {
+      this.refreshFlag = true;
+      this.refresh();
+      setTimeout(() => {
+        this.refreshFlag = false;
+      }, 500);
     },
 
-    enterWeek (item){
+    enterWeek(item) {
       const data = {
         ...item,
-        image:item.keyImages[0].url,
+        image: item.keyImages[0].url,
         price: item.price.totalPrice.fmtPrice.originalPrice,
-        days:this.epicType.name === 'week' ? item.days.end :  item.days.start
-      }
-      this.detailShow = true
-      this.detailList = data
+        days: this.epicType.name === "week" ? item.days.end : item.days.start,
+      };
+      this.detailShow = true;
+      this.detailList = data;
     },
-    detailBack () {
-      this.detailShow = false
+    detailBack() {
+      this.detailShow = false;
     },
   },
 
   watch: {
-    epicType () {
-      this.detailShow = false
-    }
-  }
+    epicType() {
+      this.detailShow = false;
+    },
+  },
 };
 </script>
 
@@ -209,11 +268,11 @@ export default {
   right: 0;
   padding: 3px 6px 2px 6px;
   text-align: center;
-  background:var(--secondary-bg);
+  background: var(--secondary-bg);
   border-bottom-left-radius: 6px;
   font-size: 13px;
   font-weight: 500;
-  color:var(--primary-text);
+  color: var(--primary-text);
 }
 
 .epic-detail-image {
@@ -239,8 +298,7 @@ export default {
   font-weight: 400;
 }
 
-
-:deep(.nav-item){
+:deep(.nav-item) {
   border-radius: 8px !important;
 }
 

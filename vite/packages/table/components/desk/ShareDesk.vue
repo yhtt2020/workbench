@@ -302,7 +302,10 @@ export default {
       const template=JSON.stringify({
         cards: cloneDesk.cards,
         settings:settings,
+        customData:{}
       })
+
+
       this.scheme = {
         cover:cover,
         categoryId:this.categoryId,

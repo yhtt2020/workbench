@@ -1,7 +1,6 @@
 import { useCustomLayout } from "../../../components/desk/freeLayout/useCustomLayout";
 import {
   headerData,
-  folderData,
   mainData,
 } from "../../../components/desk/freeLayout/config";
 import { generateSearchResultTime } from "../hooks/deskCreateMethod";
@@ -31,7 +30,6 @@ function communityMenus() {
       fn: () => {
         useCustomLayout({
           headerList: headerData,
-          folderList: folderData,
           mainList: mainData,
           cb: (position: any) => {},
         });
@@ -261,7 +259,7 @@ function memberMenus() {
       newIcon: "fluent:cloud-arrow-up-16-filled",
       fn: ()=>{
         this.loadCommunityCloud();
-        this.clearDeskList(this.communityInfo?.no);
+        // this.clearDeskList(this.communityInfo?.no);
       },
       contentAble: true,
       newContent:

@@ -212,7 +212,7 @@
       :modelValue="wallModelValue"
       @updateCustomDatas="updatePaperSource"
     />
-    <GalleryModal ref="galleryRef"/>
+    <GalleryModal ref="galleryRef" />
   </teleport>
 </template>
 
@@ -236,10 +236,11 @@ import Widget from "../card/Widget.vue";
 import WallpaperWidgetModal from "../paperModal/WallpaperWidgetModal.vue";
 import GalleryModal from "../paperModal/PaperApp.vue";
 import { usePlat } from "../../ui/hooks/usePlat";
+import { communityNavStore } from "../bottomPanel/store/communityNavStore";
 
 let fs;
 let path;
-if (usePlat('client')) {
+if (usePlat("client")) {
   fs = require("fs");
   path = require("path");
 }
@@ -367,6 +368,7 @@ export default {
 
   computed: {
     ...mapWritableState(paperStore, ["myPapers", "settings"]),
+
     header() {
       return {
         title: this.paperTitle,
@@ -381,6 +383,7 @@ export default {
           customSize: "4x4",
         },
         customDel: this.openWay === "nav" ? true : false,
+        disableEdit: this.isCommunityDesktop(this.desk),
       };
     },
     // 组件标题
@@ -477,12 +480,23 @@ export default {
     if (this.customData.customSize === undefined) {
       this.customData.customSize = "4x4";
     }
+
+    if (this.options.disableEdit) {
+      this.sizeList = [];
+    } else {
+      this.sizeList = [
+        { value: "2x2", name: "2x2" },
+        { value: "4x4", name: "4x4" },
+      ];
+    }
   },
 
   methods: {
     ...mapActions(paperStore, ["removeToMyPaper"]),
     ...mapActions(appStore, ["setBackgroundImage"]),
     ...mapActions(cardStore, ["updateCustomData"]),
+    ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+
     getFileName,
     deleteCard() {
       this.$emit("delete");
@@ -629,7 +643,7 @@ export default {
           "您尚未设置壁纸保存目录，请设置目录，设置目录后下载将自动开始。",
           "",
           {
-            index:100010,
+            index: 100010,
             ok: async () => {
               await this.queryStart();
             },
@@ -697,7 +711,7 @@ export default {
           "确定将此壁纸设置为系统桌面壁纸",
           "确定将此壁纸设置为系统桌面壁纸？注意，此处设置不是工作台的壁纸。",
           {
-            index:100010,
+            index: 100010,
             ok: () => {
               message.info("正在为您下载并设桌面壁纸");
               tsbApi.system.setPaper(paper.path);

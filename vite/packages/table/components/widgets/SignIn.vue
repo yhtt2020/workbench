@@ -7,50 +7,103 @@
     :envLimit="['offline']"
     :options="options"
     :desk="desk"
-    :showRightIcon='rightIcon'
-    @delete="deleteCard">
+    :showRightIcon="rightIcon"
+    @delete="deleteCard"
+  >
     <div></div>
     <!--    <div class="pointer" @click="activityDescription(illustrateUrl)"-->
     <!--         style="position: absolute;left: 90px;top:15px;font-size: 13px;color: rgba(255, 255, 255, 0.6);background: rgba(255, 255, 255, 0.2); padding: 3px 12px;border-radius: 4px;">-->
     <!--      活动说明-->
     <!--    </div>-->
     <template v-if="!newPeoplePage">
-      <div class="flex justify-between p-4 rounded-lg s-item xt-bg-2 xt-text"
-           style="margin-top: 0em;">
+      <div
+        class="flex justify-between p-4 rounded-lg s-item xt-bg-2 xt-text"
+        style="margin-top: 0em"
+      >
         <div>
-          <div class="mt-2" style=" font-size: 16px; font-weight: 600;">
-            {{ signedIn ? '今日已签到' : '今日未签到' }}
+          <div class="mt-2" style="font-size: 16px; font-weight: 600">
+            {{ signedIn ? "今日已签到" : "今日未签到" }}
           </div>
-          <span v-if="false" style="color: var(--secondary-text); font-size: 14px;">已连续签到2天</span>
+          <span
+            v-if="false"
+            style="color: var(--secondary-text); font-size: 14px"
+            >已连续签到2天</span
+          >
         </div>
-        <div @click="signIn" class="middle-button sign-in-btn s-item"
-             style="height: 42px;line-height: 42px;color: white"
-             :class="signedIn ? (completeLikes.length > 4 ? 'already' : 'new-people') : 'old-people'">
-          {{ signedIn ? (completeLikes.length > 4 ? '已签到' : '今日新人') : '签到' }}
+        <div
+          @click="signIn"
+          class="middle-button sign-in-btn s-item"
+          style="height: 42px; line-height: 42px; color: white"
+          :class="
+            signedIn
+              ? completeLikes.length > 4
+                ? 'already'
+                : 'new-people'
+              : 'old-people'
+          "
+        >
+          {{
+            signedIn
+              ? completeLikes.length > 4
+                ? "已签到"
+                : "今日新人"
+              : "签到"
+          }}
         </div>
       </div>
-      <HorizontalPanel style="min-width: 100%" :navList="signInTitle" v-model:selectType="signInType" :height="44"
-                       class="mt-3 mb-2"></HorizontalPanel>
-      <div v-if="signInType.name === 'today'" class="flex flex-col pt-1 overflow content-box ">
+      <HorizontalPanel
+        style="min-width: 100%"
+        :navList="signInTitle"
+        v-model:selectType="signInType"
+        :height="44"
+        class="mt-3 mb-2"
+      ></HorizontalPanel>
+      <div
+        v-if="signInType.name === 'today'"
+        class="flex flex-col pt-1 overflow content-box"
+      >
         <!-- <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop :settings="settingsScroller" style="height:210px;"> -->
-        <div v-if="!todayRank.length" class="flex items-center justify-center h-full not-sign ">还没有人签到，快来抢第一
+        <div
+          v-if="!todayRank.length"
+          class="flex items-center justify-center h-full not-sign"
+        >
+          还没有人签到，快来抢第一
         </div>
-        <div v-else v-for="item in todayRank.slice(0,5)" :key="item.id"
-             class="flex items-center justify-between w-full rounded-lg pointer set-type" style="margin: 6px 0 6px;">
+        <div
+          v-else
+          v-for="item in todayRank.slice(0, 5)"
+          :key="item.id"
+          class="flex items-center justify-between w-full rounded-lg pointer set-type"
+          style="margin: 6px 0 6px"
+        >
           <span class="ranking">{{ item.id }}</span>
           <div class="flex items-center flex-1 ml-3" style="width: 60px">
-            <FrameAvatar style="zoom:0.5;" :avatar-size="60" @click="showCard(item.uid)" :avatar-url="item.avatar"
-                         :frame-url="item.equippedItems?.frameDetail?.image">
+            <FrameAvatar
+              style="zoom: 0.5"
+              :avatar-size="60"
+              @click="showCard(item.uid)"
+              :avatar-url="item.avatar"
+              :frame-url="item.equippedItems?.frameDetail?.image"
+            >
               <template #icon>
-                <UserOutlined/>
+                <UserOutlined />
               </template>
             </FrameAvatar>
-            <div @click="showCard(item.uid)" class="ml-3 truncate"
-                 style="color: var(--primary-text);font-size: 14px;max-width: 120px;">
+            <div
+              @click="showCard(item.uid)"
+              class="ml-3 truncate"
+              style="
+                color: var(--primary-text);
+                font-size: 14px;
+                max-width: 120px;
+              "
+            >
               {{ item.nickname }}
             </div>
           </div>
-          <div style="color:var(--primary-text);font-size: 16px;">{{ item.time }}</div>
+          <div style="color: var(--primary-text); font-size: 16px">
+            {{ item.time }}
+          </div>
         </div>
         <!-- </vue-custom-scrollbar> -->
       </div>
@@ -76,31 +129,58 @@
         <!-- </vue-custom-scrollbar> -->
       </div>
       <div class="integral-modal s-bg" v-if="toggleModal">
-        <img class="modal-icon" src="../../../../public/img/test/s-good.png" alt="">
+        <img
+          class="modal-icon"
+          src="../../../../public/img/test/s-good.png"
+          alt=""
+        />
         <span class="modal-number">+2积分</span>
       </div>
     </template>
     <template v-else>
-      <div v-if="false " class="rounded-lg s-item" style="margin-top: 1em;padding: 10px 12px 15px;">
-        <span class="text-style" style="color: var(--primary-text);font-size: 14px;">点击用户头像，为社区新人点赞，每日完成 5 个「迎新签到」可获得 n 倍签到奖励。</span>
-        <div class="mt-1" style="color: var(--secondary-text);font-size: 14px;">今日已为{{
-            completeLikes.length
-          }}位社区新人点赞
+      <div
+        v-if="false"
+        class="rounded-lg s-item"
+        style="margin-top: 1em; padding: 10px 12px 15px"
+      >
+        <span
+          class="text-style"
+          style="color: var(--primary-text); font-size: 14px"
+          >点击用户头像，为社区新人点赞，每日完成 5 个「迎新签到」可获得 n
+          倍签到奖励。</span
+        >
+        <div class="mt-1" style="color: var(--secondary-text); font-size: 14px">
+          今日已为{{ completeLikes.length }}位社区新人点赞
         </div>
       </div>
-      <div v-else class="rounded-lg s-item" style="margin-top: 1em;padding: 10px 12px 15px;">
-        <span class="text-style"
-              style="color: rgba(255,255,255,0.85);font-size: 14px;">今日新注册用户：  {{ total }} 人</span>
+      <div
+        v-else
+        class="rounded-lg s-item"
+        style="margin-top: 1em; padding: 10px 12px 15px"
+      >
+        <span
+          class="text-style"
+          style="color: rgba(255, 255, 255, 0.85); font-size: 14px"
+          >今日新注册用户： {{ total }} 人</span
+        >
       </div>
-      <div class="mt-3" style="height:235px; overflow:hidden;">
+      <div class="mt-3" style="height: 235px; overflow: hidden">
         <!--        <div class="mb-1 text-center" style="color: var(--secondary-text);font-size: 14px;">今日新人</div>-->
         <div class="head-list">
-          <div v-for="item in newPeopleList" class="flex flex-col items-center justify-center w-14 pointer"
-               :key="item.id"
-               style="margin:8px 14px;border-radius: 50%;" @click="showCard(item.uid,item.userInfo)"
-               @contextmenu.stop="showCard(item.uid,item.userInfo)">
+          <div
+            v-for="item in newPeopleList"
+            class="flex flex-col items-center justify-center w-14 pointer"
+            :key="item.id"
+            style="margin: 8px 14px; border-radius: 50%"
+            @click="showCard(item.uid, item.userInfo)"
+            @contextmenu.stop="showCard(item.uid, item.userInfo)"
+          >
             <div class="mt-2 mb-2">
-              <a-avatar class="h-14 w-14" :class="item.headToggle ? 'h-8 w-8' : ''" :src="item.userInfo.avatar"/>
+              <a-avatar
+                class="h-14 w-14"
+                :class="item.headToggle ? 'h-8 w-8' : ''"
+                :src="item.userInfo.avatar"
+              />
             </div>
             <div>
               {{ item.userInfo.nickname }}
@@ -109,85 +189,112 @@
         </div>
       </div>
       <div class="flex items-center justify-around">
-        <div @click="signInBack"
-             class="flex items-center justify-center w-12 h-12 rounded-lg cursor-pointer s-item change">
-          <Icon icon="xiangzuo" style="font-size: 1.715em;color: var(--primary-text);"></Icon>
-        </div>
-        <span @click="popUsers" class="flex items-center justify-center rounded-lg change pointer s-item"
-              style="padding:13px 55px;color: var(--primary-text);"
+        <div
+          @click="signInBack"
+          class="flex items-center justify-center w-12 h-12 rounded-lg cursor-pointer s-item change"
         >
-          <icon style="font-size: 20px" icon="shuaxin" class="mr-2"></icon>   换一换
-          </span>
+          <Icon
+            icon="xiangzuo"
+            style="font-size: 1.715em; color: var(--primary-text)"
+          ></Icon>
+        </div>
+        <span
+          @click="popUsers"
+          class="flex items-center justify-center rounded-lg change pointer s-item"
+          style="padding: 13px 55px; color: var(--primary-text)"
+        >
+          <icon style="font-size: 20px" icon="shuaxin" class="mr-2"></icon>
+          换一换
+        </span>
       </div>
     </template>
   </xt-container>
-  <AwardModal :tip="tip" :items="awardItems" @close="closeModal" v-model:visible="modalVisible"></AwardModal>
+  <AwardModal
+    :tip="tip"
+    :items="awardItems"
+    @close="closeModal"
+    v-model:visible="modalVisible"
+  ></AwardModal>
 </template>
 
 <script>
-import Widget from '../card/Widget.vue'
-import HorizontalPanel from '../HorizontalPanel.vue'
-import { mapActions, mapWritableState } from 'pinia'
-import { UserOutlined } from '@ant-design/icons-vue'
-import { comStore } from '../../store/com'
-import { message } from 'ant-design-vue'
-import { appStore } from '../../store'
-import _ from 'lodash-es'
-import FrameAvatar from '../avatar/FrameAvatar.vue'
-import { Icon as newIcon } from '@iconify/vue'
-import AwardModal from '../modal/AwardModal.vue'
+import Widget from "../card/Widget.vue";
+import HorizontalPanel from "../HorizontalPanel.vue";
+import { mapActions, mapWritableState } from "pinia";
+import { UserOutlined } from "@ant-design/icons-vue";
+import { comStore } from "../../store/com";
+import { message } from "ant-design-vue";
+import { appStore } from "../../store";
+import _ from "lodash-es";
+import FrameAvatar from "../avatar/FrameAvatar.vue";
+import { Icon as newIcon } from "@iconify/vue";
+import AwardModal from "../modal/AwardModal.vue";
 import { usePermissionStore } from "../../permission/store";
 import cache from "../../components/card/hooks/cache";
+import { communityNavStore } from "../bottomPanel/store/communityNavStore";
+
 export default {
-  name: 'SingIn',
+  name: "SingIn",
   components: {
     AwardModal,
     FrameAvatar,
     Widget,
     HorizontalPanel,
     UserOutlined,
-    newIcon
+    newIcon,
   },
-  props: ['desk', 'rightIcon','customData','customIndex','openWay'],
-  emits: ['delete'],
-  data () {
+  props: ["desk", "rightIcon", "customData", "customIndex", "openWay"],
+  emits: ["delete"],
+  data() {
     return {
-      tip:'',
+      tip: "",
       modalVisible: false,
       awardItems: [],
-      signInTitle: [{ title: '今日已签', name: 'today' },
-        { title: '累签榜', name: 'accrue' }, { title: '连签榜', name: 'continued' }
+      signInTitle: [
+        { title: "今日已签", name: "today" },
+        { title: "累签榜", name: "accrue" },
+        { title: "连签榜", name: "continued" },
       ],
-      signInType: { title: '今日签到榜', name: 'today' },
+      signInType: { title: "今日签到榜", name: "today" },
       // todayList: [],
       accrueList: [
-        { id: 1, headSculpture: '', username: '外太空的狗', accumulate: '345天' },
-        { id: 2, headSculpture: '', username: '猫星人', accumulate: '300天' },
-        { id: 3, headSculpture: '', username: '晒太阳的猫', accumulate: '1266天' },
-        { id: 4, headSculpture: '', username: '猪猪人', accumulate: '240天' },
-        { id: 5, headSculpture: '', username: '彩虹马', accumulate: '160天' }
+        {
+          id: 1,
+          headSculpture: "",
+          username: "外太空的狗",
+          accumulate: "345天",
+        },
+        { id: 2, headSculpture: "", username: "猫星人", accumulate: "300天" },
+        {
+          id: 3,
+          headSculpture: "",
+          username: "晒太阳的猫",
+          accumulate: "1266天",
+        },
+        { id: 4, headSculpture: "", username: "猪猪人", accumulate: "240天" },
+        { id: 5, headSculpture: "", username: "彩虹马", accumulate: "160天" },
       ],
       settingsScroller: {
         useBothWheelAxes: true,
         swipeEasing: true,
         suppressScrollY: false,
         suppressScrollX: true,
-        wheelPropagation: true
+        wheelPropagation: true,
       },
       signedIn: false,
       toggleModal: false,
       newPeoplePage: false,
       newPeopleList: [],
       completeLikes: [],
-      illustrateUrl: 'https://www.yuque.com/tswork/mqon1y/kax12qz084vffcyp',
+      illustrateUrl: "https://www.yuque.com/tswork/mqon1y/kax12qz084vffcyp",
 
       page: 1,
       max: 99999,
       lastUsers: [],
       total: 0,
-      customSize: '2x4',
-      header:{
-        title:"签到",
+      customSize: "2x4",
+      header: {
+        title: "签到",
         // ifyIcon:"fluent:calendar-16-regular",
         showIcon:"/logo/countdownDay.svg",
 
@@ -196,52 +303,60 @@ export default {
 
     }
   },
-  async mounted () {
-    this.updateTodayRank().then()
-    this.getSingInfo()
+  async mounted() {
+    this.updateTodayRank().then();
+    this.getSingInfo();
 
     this.request().then(() => {
-      this.popUsers()
-    })
-    this.customData.customSize = '2x4'
+      this.popUsers();
+    });
+    this.customData.customSize = "2x4";
   },
   computed: {
-    ...mapWritableState(comStore, ['todayRank']),
-    ...mapWritableState(appStore, ['loginVisible']),
-    ...mapWritableState(usePermissionStore, ['currentEnv']),
-    options () {
-      return {
-        customDel: this.openWay === 'nav' ? true : false
-      }
-    }
+    ...mapWritableState(comStore, ["todayRank"]),
+    ...mapWritableState(appStore, ["loginVisible"]),
+    ...mapWritableState(usePermissionStore, ["currentEnv"]),
 
+    options() {
+      return {
+        customDel: this.openWay === "nav" ? true : false,
+        disableEdit:this.isCommunityDesktop(this.desk),
+      };
+    },
   },
   methods: {
-    ...mapActions(comStore, ['updateTodayRank', 'doSign', 'getSignInfo', 'getDailyNewUsers']),
-    ...mapActions(appStore, ['showUserCard']),
-    showAwardModal () {
-      this.modalVisible = true
+    ...mapActions(comStore, [
+      "updateTodayRank",
+      "doSign",
+      "getSignInfo",
+      "getDailyNewUsers",
+    ]),
+    ...mapActions(appStore, ["showUserCard"]),
+    ...mapActions(communityNavStore,['isCommunityDesktop']),
+
+    showAwardModal() {
+      this.modalVisible = true;
     },
-    deleteCard(){
-      this.$emit('delete')
+    deleteCard() {
+      this.$emit("delete");
     },
-    closeModal () {
-      this.modalVisible = false
+    closeModal() {
+      this.modalVisible = false;
     },
-    async popUsers () {
+    async popUsers() {
       // console.log('开始弹出用户')
       if (this.lastUsers.length > 0) {
         // console.log('剩余用户数组', this.lastUsers)
         if (this.lastUsers[0].length < 6) {
           // console.log('剩余用户不足6')
           //证明已经没有下一页了
-          this.newPeopleList = _.cloneDeep(this.lastUsers[0])
-          this.lastUsers.splice(0, 1)//移除
+          this.newPeopleList = _.cloneDeep(this.lastUsers[0]);
+          this.lastUsers.splice(0, 1); //移除
         } else {
           // console.log('剩余用户充足')
           //如果还有数组
-          this.newPeopleList = this.lastUsers[0]
-          this.lastUsers.splice(0, 1)//移除
+          this.newPeopleList = this.lastUsers[0];
+          this.lastUsers.splice(0, 1); //移除
         }
       } else {
         // console.log('剩余用户组不足，翻页')
@@ -249,49 +364,51 @@ export default {
         if (this.page >= this.max) {
           // console.log('已经到达最后一页')
           //已经是最多的了，重新获取第一页
-          this.page = 1
-          await this.request(this.page)
+          this.page = 1;
+          await this.request(this.page);
         } else {
-
-          this.page++
+          this.page++;
           // console.log('请求下一页', this.page)
-          await this.request(this.page)
+          await this.request(this.page);
         }
         // console.log('再次执行弹出')
-        if (this.page === 1 && this.lastUsers.length === 0 && this.total === 0) {
+        if (
+          this.page === 1 &&
+          this.lastUsers.length === 0 &&
+          this.total === 0
+        ) {
           //如果是第一页，且已经没有空余的了，不需要再请求
-          return
+          return;
         } else {
-          await this.popUsers()
+          await this.popUsers();
         }
-
       }
     },
-    async request (page) {
-      let dailyNew = await this.getDailyNewUsers(page)
-      this.lastUsers = _.chunk(dailyNew.list, 6)//按照每页6个分页
-      this.max = dailyNew.pageInfo.pages
-      this.total = dailyNew.pageInfo.count
+    async request(page) {
+      let dailyNew = await this.getDailyNewUsers(page);
+      this.lastUsers = _.chunk(dailyNew.list, 6); //按照每页6个分页
+      this.max = dailyNew.pageInfo.pages;
+      this.total = dailyNew.pageInfo.count;
       // console.log(dailyNew, '请求到一页的数据')
     },
-    getSingInfo () {
-      this.getSignInfo().then(data => {
+    getSingInfo() {
+      this.getSignInfo().then((data) => {
         if (data?.status === 1) {
-          this.signedIn = true
+          this.signedIn = true;
         } else {
-          this.signedIn = false
+          this.signedIn = false;
         }
-      })
+      });
     },
-    showCard (uid, userInfo) {
-      this.showUserCard(uid, userInfo)
+    showCard(uid, userInfo) {
+      this.showUserCard(uid, userInfo);
     },
-    async signIn () {
-      if (this.currentEnv === 'guest') {
+    async signIn() {
+      if (this.currentEnv === "guest") {
         this.loginVisible = true;
-      }else {
+      } else {
         if (!this.signedIn) {
-          let rs = await this.doSign()
+          let rs = await this.doSign();
           // let rs = {
           //   'status': 1,
           //   'info': '工作台签到成功，社区签到也成功。',
@@ -393,75 +510,75 @@ export default {
           //     }
           // }
           if (rs.status) {
-            this.updateTodayRank().then()
+            this.updateTodayRank().then();
             //提示奖励
-              this.awardItems=[]
-            rs.data?.itemRewards?.data?.forEach(item=>{
-                this.awardItems.push({
-                  type:'item',
-                  name:item.name,
-                  data:{
-                    ...item,
-                    detail:item
-                  },
-
-                })
-              }
-            )
-            rs.data?.comResult?.data?.scores?.forEach(item=>{
+            this.awardItems = [];
+            rs.data?.itemRewards?.data?.forEach((item) => {
               this.awardItems.push({
-                type:'score',
-                name:item.name,
-                value:item.num,
-                flag:item.flag,
-              })
-            })
-            this.tip='签到成功。每天签到有概率获得<strong class=\'active-bg\'><img style=\'width: 20px\' src=\'/img/bottomPanel/prop.png\'>珍贵道具</strong>哦！'
-            if(this.awardItems.length>0){
-              this.tip=this.tip+'<br>注意：如果您已在社区完成签到，将无法重复获得积分奖励。仅支持通过工作台签到获得道具奖励。'
+                type: "item",
+                name: item.name,
+                data: {
+                  ...item,
+                  detail: item,
+                },
+              });
+            });
+            rs.data?.comResult?.data?.scores?.forEach((item) => {
+              this.awardItems.push({
+                type: "score",
+                name: item.name,
+                value: item.num,
+                flag: item.flag,
+              });
+            });
+            this.tip =
+              "签到成功。每天签到有概率获得<strong class='active-bg'><img style='width: 20px' src='/img/bottomPanel/prop.png'>珍贵道具</strong>哦！";
+            if (this.awardItems.length > 0) {
+              this.tip =
+                this.tip +
+                "<br>注意：如果您已在社区完成签到，将无法重复获得积分奖励。仅支持通过工作台签到获得道具奖励。";
             }
 
-            console.log(this.awardItems,'奖品')
-              this.showAwardModal()
-              this.signedIn = true
+            console.log(this.awardItems, "奖品");
+            this.showAwardModal();
+            this.signedIn = true;
           } else {
-            message.error('签到失败。')
+            message.error("签到失败。");
           }
-
         } else {
-          this.newPeoplePage = true
+          this.newPeoplePage = true;
         }
       }
     },
-    signInBack () {
-      this.newPeoplePage = false
+    signInBack() {
+      this.newPeoplePage = false;
     },
-    newLikes (item) {
+    newLikes(item) {
       if (this.completeLikes.length) {
-        if (!this.completeLikes.find(info => info.id === item.id)) {
-          this.completeLikes.push(item)
-          this.newPeopleList.forEach(i => {
+        if (!this.completeLikes.find((info) => info.id === item.id)) {
+          this.completeLikes.push(item);
+          this.newPeopleList.forEach((i) => {
             if (i.id === item.id) {
-              i.headSculpture = '../../../../public/img/test/s-good.png'
-              i.headToggle = true
+              i.headSculpture = "../../../../public/img/test/s-good.png";
+              i.headToggle = true;
             }
-          })
+          });
         }
       } else {
-        this.completeLikes.push(item)
-        this.newPeopleList.forEach(i => {
+        this.completeLikes.push(item);
+        this.newPeopleList.forEach((i) => {
           if (i.id === item.id) {
-            i.headSculpture = '../../../../public/img/test/s-good.png'
-            i.headToggle = true
+            i.headSculpture = "../../../../public/img/test/s-good.png";
+            i.headToggle = true;
           }
-        })
+        });
       }
     },
-    activityDescription (url) {
-      window.open(url, '_blank')
-    }
-  }
-}
+    activityDescription(url) {
+      window.open(url, "_blank");
+    },
+  },
+};
 </script>
 
 <style scoped lang="scss">
@@ -485,11 +602,11 @@ export default {
 }
 
 .new-people {
-  background: #3CA10B;
+  background: #3ca10b;
 }
 
 .already {
-  background: rgba(0, 0, 0, 0.30);
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .ranking {
@@ -538,15 +655,15 @@ export default {
 }
 
 .set-type:nth-of-type(1) > span {
-  background: #FE2C46;
+  background: #fe2c46;
 }
 
 .set-type:nth-of-type(2) > span {
-  background: #FF6600;
+  background: #ff6600;
 }
 
 .set-type:nth-of-type(3) > span {
-  background: #FAAA10;
+  background: #faaa10;
 }
 
 .text-style {
@@ -597,5 +714,4 @@ export default {
 ::v-deep .ps__thumb-y {
   display: none !important;
 }
-
 </style>

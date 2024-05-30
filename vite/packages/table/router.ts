@@ -13,6 +13,12 @@ const router = createRouter({
   routes,
 });
 router.beforeEach(async (to, from, next) => {
+
+  if (to.path) {
+    if (window._hmt) {
+      window._hmt.push(['_trackPageview', '/#' + to.fullPath])
+    }
+  }
   console.log('to.name :>> ', to.name);
   console.log("to, from :>> ", to, from);
   // if (to.name === "splash" && usePlat("web")) {
@@ -21,9 +27,9 @@ router.beforeEach(async (to, from, next) => {
   //   });
   // }
   // 用户信息判断 优先级1
-  console.time("Run Time");
+  // console.time("Run Time");
   await useUserPermit();
-  console.timeEnd("Run Time");
+  // console.timeEnd("Run Time");
 
   // 用户环境判断 优先级2
   if (

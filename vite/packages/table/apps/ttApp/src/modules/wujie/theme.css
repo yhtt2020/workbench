@@ -105,7 +105,9 @@
 .tt-theme-2 {
   color: var(--tt-theme-secondary-color);
 }
-
+.tt-no-bg {
+  background: "none !important";
+}
 /* 主题颜色背景 */
 .tt-theme-bg {
   background: var(--tt-theme-color);
