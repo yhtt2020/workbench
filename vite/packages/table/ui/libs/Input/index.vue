@@ -10,6 +10,7 @@
       @input="handleInput"
       @keydown.enter.exact.prevent="handleEnter"
       @focus="handleFocus"
+
       @blur="handleBlur"
       @change="handleChange"
       @keyup="handleKeyUp"
