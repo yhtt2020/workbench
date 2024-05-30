@@ -541,7 +541,6 @@ export default {
       // if (this.isCopy === false && this.isDrag === false)
       //   return message.error("你还未移动任何图标组件");
       // 遍历全局数组并添加
-      console.log(" 1 this.customData.iconList :>> ", this.customData.iconList);
       this.iconList.forEach((item) => {
         const { iconRef, iconIndex, ...icon } = item;
         // 拦截重复的数据
