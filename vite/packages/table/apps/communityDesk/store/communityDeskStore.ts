@@ -37,6 +37,9 @@ export const communityDeskStore = defineStore("communityDesk", {
       getSyncTime: Date.now(),
       saveSyncTime: Date.now(),
     },
+
+    // 存储社群信息
+    communityDeskInfo:{},
   }),
 
   actions: {
@@ -229,13 +232,18 @@ export const communityDeskStore = defineStore("communityDesk", {
         }
       });
     },
+
+    // 设置社群信息
+    setCommunityInfo(info:any){
+      this.communityDeskInfo = info;
+    },
   },
 
   persist: {
     enabled: true,
     strategies: [
       {
-        paths: ["communityDesk", "syncDesk", "setting"],
+        paths: ["communityDesk", "syncDesk", "setting","communityDeskInfo"],
         storage: localStorage,
       },
     ],

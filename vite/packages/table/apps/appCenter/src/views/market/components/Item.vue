@@ -64,8 +64,12 @@
 import { computed, toRefs, onMounted } from 'vue'
 
 import { useMenus } from '../../../../hooks/useMenus';
+import { usePlat } from '../../../../../../ui/hooks/usePlat';
 
-const appModel = window.$models.appModel
+let appModel
+if(!usePlat('web')) {
+    appModel = window.$models.appModel
+}
 
 interface PropsType {
     item: {
@@ -111,10 +115,11 @@ const goDetail = (item) => {
 // 右键菜单
 const menu = computed(() => {
     const list = useMenus(1,item.value, cb)
-    return [list]
+    return list
 })
 
 const cb = async(item) => {
+    if(usePlat('web')) return
     const list = await appModel.getAllApps()
     const target = list.find(app => app.appid === item.id)
     item.value = target

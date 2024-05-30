@@ -1,5 +1,6 @@
 <template>
   <div class="w-full h-full flex items-center">
+    <!-- 这里是显示社群桌面右键菜单的更新同步桌面的配置项 -->
     <template v-if="data?.contentAble">
       <div  class="flex w-full cursor-pointer items-center h-14" :class="{ item: isBg }">
         <xt-base-icon

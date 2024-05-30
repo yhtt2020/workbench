@@ -12,119 +12,145 @@
       :desk="desk"
       :size="size"
       :envLimit="['guest', 'offline', 'single']"
-      @delete="deleteCard">
+      @delete="deleteCard"
+    >
       <div v-if="isLoading">
-        <a-spin style="display: flex; justify-content: center; align-items:center;margin-top: 60%" />
+        <a-spin
+          style="
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 60%;
+          "
+        />
       </div>
       <template v-else-if="fail">
         <a-result :status="null" title="请确认网络" style="margin-top: 3em">
           <template #extra>
-            <a-button key="console" type="primary" @click="retry"
-              style="background: var(--primary-bg);color:var(--primary-text)">重试</a-button>
+            <a-button
+              key="console"
+              type="primary"
+              @click="retry"
+              style="background: var(--primary-bg); color: var(--primary-text)"
+              >重试</a-button
+            >
           </template>
         </a-result>
-
       </template>
-      <div v-else-if="showOilData?.length>0">
+      <div v-else-if="showOilData?.length > 0">
         <div class="city xt-bg xt-text pointer" @click="showMenu">
           {{ showOilData[0].city }}
-          <CaretDownOutlined style="font-size: 16px; " />
+          <CaretDownOutlined style="font-size: 16px" />
         </div>
         <div class="oil">
-          <div class="oil-item mar-r xt-bg ">
+          <div class="oil-item mar-r xt-bg">
             <span class="xt-text">92号汽油</span>
             <div class="oil-price xt-text">
-              {{ showOilData[0]['92h'] }}
+              {{ showOilData[0]["92h"] }}
             </div>
           </div>
           <div class="oil-item xt-bg">
             <span class="xt-text">95号汽油</span>
             <div class="oil-price xt-text">
-              {{ showOilData[0]['95h'] }}
+              {{ showOilData[0]["95h"] }}
             </div>
           </div>
           <div class="oil-item mar-r xt-bg">
             <span class="xt-text">98号汽油</span>
             <div class="oil-price xt-text">
-              {{ showOilData[0]['98h'] }}
+              {{ showOilData[0]["98h"] }}
             </div>
           </div>
           <div class="oil-item xt-bg">
             <span class="xt-text">0号柴油</span>
             <div class="oil-price xt-text">
-              {{ showOilData[0]['0h'] }}
+              {{ showOilData[0]["0h"] }}
             </div>
           </div>
         </div>
       </div>
-
     </xt-container>
-    <a-drawer :width="500" title="设置" v-model:visible="settingVisible" placement="right">
-      <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
-        <div class="primary-title" style="color: var(--primary-text);">选择地区</div>
-        <div class="flex items-center justify-center w-full h-12 my-4 rounded-lg pointer s-list" v-for="(item) in city"
-          :class="defaultCityIndex === item.id ? 'drawer-active' : ''" @click="selectedAreaSuit(item)">
+    <a-drawer
+      :width="500"
+      title="设置"
+      v-model:visible="settingVisible"
+      placement="right"
+    >
+      <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%">
+        <div class="primary-title" style="color: var(--primary-text)">
+          选择地区
+        </div>
+        <div
+          class="flex items-center justify-center w-full h-12 my-4 rounded-lg pointer s-list"
+          v-for="item in city"
+          :class="defaultCityIndex === item.id ? 'drawer-active' : ''"
+          @click="selectedAreaSuit(item)"
+        >
           <!-- {{ defaultCityIndex }} -->
           <!-- {{ item.id }} -->
           {{ item.city }}
         </div>
       </vue-custom-scrollbar>
-
     </a-drawer>
   </div>
 </template>
 
 <script>
-import Widget from '../card/Widget.vue'
-import { LineChartOutlined, CaretDownOutlined } from '@ant-design/icons-vue'
-import city from '../../js/axios/city.ts'
-import { mapActions, mapState } from 'pinia'
-import { oilStore } from '../../store/store.ts'
-import { Icon as newIcon } from '@iconify/vue';
+import Widget from "../card/Widget.vue";
+import { LineChartOutlined, CaretDownOutlined } from "@ant-design/icons-vue";
+import city from "../../js/axios/city.ts";
+import { mapActions, mapState, mapWritableState } from "pinia";
+import { oilStore } from "../../store/store.ts";
+import { Icon as newIcon } from "@iconify/vue";
+import { communityNavStore } from "../bottomPanel/store/communityNavStore";
+
 export default {
-  name: 'OilPrices',
+  name: "OilPrices",
   components: {
     Widget,
     LineChartOutlined,
     CaretDownOutlined,
-    newIcon
+    newIcon,
   },
   props: {
     customIndex: {
       type: Number,
-      default: 0
+      default: 0,
     },
     customData: {
       type: Object,
-      default: () => { }
+      default: () => {},
     },
     desk: {
-      type: Object
+      type: Object,
     },
     openWay: {
       type: String,
-      default: "desk"
-    }
+      default: "desk",
+    },
   },
   data() {
     return {
       fail: false,
       menuList: [
         {
-          icon: 'shezhi1',
-          title: '设置',
-          fn: () => { this.settingVisible = true; this.$refs.cardSlot.visible = false }
+          icon: "shezhi1",
+          title: "设置",
+          fn: () => {
+            this.settingVisible = true;
+            this.$refs.cardSlot.visible = false;
+          },
         },
       ],
       header: {
-        title: '今日油价',
+        title: "今日油价",
         // ifyIcon:'fluent:gas-pump-24-regular',
-        showIcon:"/img/appLogo/oilPrices.png",
+        showIcon: "/img/appLogo/oilPrices.png",
 
         titleHover: true,
-        titleHoverName: '点击切换',
+        titleHoverName: "点击切换",
       },
-      customSize: '2x4',
+      customSize: "2x4",
       currentIndex: 0,
       size: {
         width: 1,
@@ -136,7 +162,7 @@ export default {
         swipeEasing: true,
         suppressScrollY: false,
         suppressScrollX: true,
-        wheelPropagation: true
+        wheelPropagation: true,
       },
       defaultCityIndex: 0,
       city: city,
@@ -145,98 +171,99 @@ export default {
         web: false,
         mobile: false,
         client: false,
-        single: true
-      }
-    }
+        single: true,
+      },
+    };
   },
-  emit:['delete'],
+  emit: ["delete"],
   methods: {
-    deleteCard(){
-      this.$emit('delete')
+    ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+
+    deleteCard() {
+      this.$emit("delete");
     },
     selectedAreaSuit(item) {
-      this.defaultCityIndex = (item.id - 1)
-      this.settingVisible = false
+      this.defaultCityIndex = item.id - 1;
+      this.settingVisible = false;
 
       // this.city[this.defaultCityIndex].city=this.customData.city
-      let defaultCity = this.city[this.defaultCityIndex].city
-      this.customData.city = defaultCity
-      this.currentCity.p = undefined
+      let defaultCity = this.city[this.defaultCityIndex].city;
+      this.customData.city = defaultCity;
+      this.currentCity.p = undefined;
       // this.getCityOilData()
       // this.showCity()
-      this.cityOil(this.customData.city)
+      this.cityOil(this.customData.city);
     },
     showCity() {
       if (this.currentCity.p !== this.customData.city) {
-        this.currentCity.p = this.customData.city
+        this.currentCity.p = this.customData.city;
       }
     },
     showMenu() {
-      this.settingVisible = true
+      this.settingVisible = true;
     },
-    ...mapActions(oilStore, ['getCityOilData', 'getCity', 'cityOil']),
+    ...mapActions(oilStore, ["getCityOilData", "getCity", "cityOil"]),
     retry() {
-      this.cityOil(this.city[this.defaultCityIndex].city).then(() => {
-      }).catch(() => this.fail = true).finally(() => {
-        this.isLoading = false
-      })
+      this.cityOil(this.city[this.defaultCityIndex].city)
+        .then(() => {})
+        .catch(() => (this.fail = true))
+        .finally(() => {
+          this.isLoading = false;
+        });
     },
-
-
   },
   computed: {
-    ...mapState(oilStore, ['cityOilData', 'currentCity', 'cityOilList']),
+    ...mapState(oilStore, ["cityOilData", "currentCity", "cityOilList"]),
+
     // 获取当前组件省市的油价信息
     showOilData() {
       let cityMsg = this.cityOilData.filter((item) => {
-        return item.city == this.customData.city
-      })
-      return cityMsg
+        return item.city == this.customData.city;
+      });
+      return cityMsg;
     },
     options() {
       return {
-        customDel: this.openWay === 'nav' ? true : false,
+        customDel: this.openWay === "nav" ? true : false,
         defaultData: {
-          customSize: '2x4'
-        }
-      }
-    }
+          customSize: "2x4",
+        },
+        disableEdit: this.isCommunityDesktop(this.desk),
+      };
+    },
   },
   async mounted() {
-    this.customData.customSize = '2x4'
-    let isCity = false
-    this.isLoading = true
+    this.customData.customSize = "2x4";
+    let isCity = false;
+    this.isLoading = true;
     this.getCity().then(() => {
       //  console.log(this.currentCity);
       //  await this.getCityOilData()
       // 判断用户ip是否在国内省市
-      isCity = this.city.some(item => item.city == this.currentCity.p)
+      isCity = this.city.some((item) => item.city == this.currentCity.p);
       // console.log(isCity,'isCity');
-    })
+    });
     if (this.customData && this.customData.city) {
-      this.cityOil(this.customData.city)
+      this.cityOil(this.customData.city);
     } else {
       if (isCity && this.currentCity.p) {
-        let city = this.currentCity.p
-        this.customData.city = city
-        this.cityOil(this.customData.city)
-
+        let city = this.currentCity.p;
+        this.customData.city = city;
+        this.cityOil(this.customData.city);
       } else {
-        this.customData.city = this.city[this.defaultCityIndex].city
-        this.cityOil(this.city[this.defaultCityIndex].city)
+        this.customData.city = this.city[this.defaultCityIndex].city;
+        this.cityOil(this.city[this.defaultCityIndex].city);
       }
     }
-    this.isLoading = false
-
-  }
-
-}
+    this.isLoading = false;
+  },
+};
 </script>
 <style lang='scss' scoped>
 .city {
   width: 252px;
   height: 56px;
-  background: #2A2A2A;
+  background: #2a2a2a;
   border-radius: 10px;
   text-align: center;
   line-height: 56px;
@@ -259,7 +286,7 @@ export default {
   .oil-item {
     width: 120px;
     height: 138px;
-    background: #2A2A2A;
+    background: #2a2a2a;
     border-radius: 10px;
     display: flex;
     flex-direction: column;

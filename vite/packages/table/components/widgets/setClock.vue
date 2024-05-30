@@ -1,5 +1,5 @@
 <template>
-    <div class="p-0 -mt-8 card content">
+    <div class="p-0  card content">
         <a-row>
             <a-col :span="12" style="border-right: 1px solid var(--divider); height: calc(100vh - 5em )">
                 <vue-custom-scrollbar :settings="outerSettings"

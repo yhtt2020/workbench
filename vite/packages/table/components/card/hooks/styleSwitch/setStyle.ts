@@ -12,6 +12,7 @@ import {
  */
 export const setBgColor = (color) => {
   setStyleName(BG_COLOR, color);
+  setStyleName("--tt-theme-color", color);
 };
 
 /**
@@ -20,6 +21,7 @@ export const setBgColor = (color) => {
  */
 export const setSecondaryBgColor = (color) => {
   setStyleName(SECONDARY_BG_COLOR, color, 0.2);
+  setStyleName("--tt-theme-secondary-color", color, 0.2);
 };
 
 /**
@@ -46,7 +48,7 @@ export const setWallpaperColor = (color) => {
  */
 export const setStyleName = (styleName, color, opacity?) => {
   const StyleColor = setColor(styleName, color, opacity);
-  console.log('styleName :>> ', styleName);
+  console.log("styleName :>> ", styleName);
   cache.set(styleName, StyleColor);
 };
 

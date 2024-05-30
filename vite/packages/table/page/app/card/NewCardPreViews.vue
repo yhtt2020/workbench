@@ -1,7 +1,11 @@
 <template>
   <template v-if="displayList.length === 0">
     <div class="flex flex-col items-center justify-center w-full h-full">
-      <xt-ify-icon icon="fluent-emoji:magnifying-glass-tilted-right" size="56" class="mb-4" />
+      <xt-ify-icon
+        icon="fluent-emoji:magnifying-glass-tilted-right"
+        size="56"
+        class="mb-4"
+      />
       <span class="xt-text xt-font font-16">没有找到相关内容</span>
     </div>
   </template>
@@ -187,7 +191,7 @@ import { useDeskStore } from "../../../components/desk/store.ts";
 import { COMPONENT_LIMIT } from "../../../permission/config";
 import { usePlat } from "../../../ui/hooks/usePlat";
 import { comCanUse } from "../../../permission/usePlat";
-import {cdnUrl} from '../../../consts'
+import { cdnUrl } from "../../../consts";
 export default {
   emits: ["close", "addSuccess"],
   props: {
@@ -209,6 +213,9 @@ export default {
     },
     keywords: {
       type: String,
+    },
+    communityRole: {
+      type: Boolean,
     },
   },
   computed: {
@@ -290,8 +297,8 @@ export default {
       this.$emit("addSuccess");
       message.success("添加成功！");
     },
-    getImg (url) {
-      return cdnUrl(`/cards/${url}.png`)
+    getImg(url) {
+      return cdnUrl(`/cards/${url}.png`);
     },
     mySort(data, property, asc) {
       let datas = [...data];
@@ -381,6 +388,12 @@ export default {
       if (item.name == "yuanCommunity") {
         completeTask("m0302");
       }
+      setTimeout(() => {
+        // 处理社群桌面添加组小组件的回调
+        if (this.communityRole) {
+          this.$bus.emit("updateSync");
+        }
+      }, 800);
     },
     closeMarket(val) {
       this.openRemote = val;

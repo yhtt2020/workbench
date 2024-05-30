@@ -2,33 +2,33 @@
     <div class="w-full h-full">
         <Header icon="fluent:building-shop-16-regular" title="我的应用">
             <template #right>
-                <DropDown 
+                <DropDown
                     :list="dropList"
                     v-model:defaultTitle="defaultData"
                 />
-                <xt-button 
+                <xt-button
                     v-if="!isSearch"
-                    w="32" 
-                    h="32" 
-                    radius="8" 
+                    w="32"
+                    h="32"
+                    radius="8"
                     icon="fluent:search-16-regular"
                     @click="openSearch"
                 />
-                <xt-input 
-                    v-else 
-                    v-model:modelValue="inputValue" 
-                    placeholder="搜索应用" 
+                <xt-input
+                    v-else
+                    v-model:modelValue="inputValue"
+                    placeholder="搜索应用"
                     @blur="closeSearch"
                     @enter="search">
-                </xt-input> 
-                
+                </xt-input>
+
             </template>
         </Header>
         <xt-scrollbar class="flex-1 w-full " :x="false" :y="true" style="height: 98%;">
             <div class="flex flex-wrap gap-2 mt-4" v-if="list.length > 0">
                 <template v-for="(item, index) in list" :key="item.id">
                     <xt-menu :menus="menus" @onMounted="getItem(item)">
-                        <Item :size="140" :isApp="true" :item="item" :info="getInfo(item)" :showFolder="false"/> 
+                        <Item :size="140" :isApp="true" :item="item" :info="getInfo(item)" :showFolder="false"/>
                     </xt-menu>
                 </template>
             </div>
@@ -88,6 +88,7 @@ const arr = ref([
         id:"1",
         newIcon: "fluent:open-16-regular",
         callBack: () => {
+          //
             const { type , value } = currentItem.value
             startApp(type, value, router)
             currentItem.value.lastUseTime = Date.now()
@@ -120,7 +121,7 @@ const arr = ref([
 // 右键菜单
 const menus = computed(() => {
     const list = useMenus(3,currentItem.value)
-    const menu = [list, ...arr.value]
+    const menu = [...list, ...arr.value]
     return menu.sort((a, b) => a.id - b.id)
 })
 
@@ -177,22 +178,25 @@ const getInfo = (item) => {
     }
 }
 
-// 初始化全部数据
 onMounted(() => {
-    if(myApps.value.length === 0) {
-        const list = useReplaceData(navigationData.systemAppList)
-        myApps.value.push(...list)
-        myApps.value.forEach((item) => {
-            if(defaultStartMenu.includes(item.value)){
-                item.isStart = true
+    if (myApps.value.length === 0 || myApps.value.length !== navigationData.systemAppList.length) {
+        // 获取系统应用的列表
+        const systemApps = useReplaceData(navigationData.systemAppList);
+
+        // 将新的系统应用添加到 myApps 中
+        systemApps.forEach(systemApp => {
+            // 检查是否已存在
+            if (!myApps.value.some(app => app.value === systemApp.value)) {
+                // 初始化新应用的启动状态
+                systemApp.isStart = systemApp.isStart || defaultStartMenu.includes(systemApp.value);
+                myApps.value.push(systemApp);
             }
-        })
-    } 
-    myApps.value = myApps.value.map((item) => {
-        return useTransform(item)
-    })
-    list.value = myApps.value
-})
+        });
+    }
+    myApps.value = myApps.value.map(item => useTransform(item));
+    list.value = myApps.value;
+});
+
 
 // onUnmounted(() => {
 //     myApps.value = []

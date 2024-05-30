@@ -54,6 +54,15 @@ export const clipboardStore = defineStore("clipboardStore", {
       this.hasNextPage = true
       this.nextPage()
     },
+    // 关键字搜索 聚合搜索使用
+    async wordsSearch(val) {
+      this.searchWords = val
+      this.items = []
+      this.hasNextPage = true
+      let res = await this.nextPage()
+      this.searchWords = ''
+      return res
+    },
     async nextPage() {
 
       let dbKey = ''
@@ -92,7 +101,7 @@ export const clipboardStore = defineStore("clipboardStore", {
             const specialChars = /[.*+?^${}()|[\]\\]/g;
 
             // 使用正则表达式替换特殊字符
-            return str.replace(specialChars, "\\$&");
+            return str?.replace(specialChars, "\\$&");
           }
 
           const words = escapeSpecialChars(this.searchWords)

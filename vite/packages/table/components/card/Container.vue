@@ -7,6 +7,7 @@
  -->
 <template>
   <!-- 右键菜单 -->
+  <!-- v-if="init" -->
   <RightMenu
     v-model:size="currentSize"
     :menus="menus"
@@ -15,7 +16,7 @@
     :disableHierarchy="options.hierarchy"
   >
     <div class="menu-box">
-      <!-- 遮罩层 离线模式遮罩 -->
+      <!-- 离线模式-->
       <div
         class="mask rounded-xl"
         v-if="envLimit.includes('offline') && currentEnv == 'offline'"
@@ -50,10 +51,25 @@
           </p>
         </div>
       </div>
-      <!-- 小组件控制器开始 -->
+
+      <!-- 自定义模式 -->
+      <div v-if="options?.custom" :class="[edit ? 'editing' : '']">
+        <slot>
+          <!--  主体内容插槽2  -->
+        </slot>
+      </div>
       <div
+        v-else-if="options?.noBorder"
         ref="container"
-        v-if="!options?.custom"
+        :style="[getSize]"
+        :class="[edit ? 'editing' : '']"
+      >
+        <slot></slot>
+      </div>
+      <!-- 默认模式 -->
+      <div
+        v-else
+        ref="container"
         class="flex flex-col widget rounded-xl"
         :class="[
           edit ? 'editing' : '',
@@ -70,7 +86,7 @@
         ]"
       >
         <!-- 小组件头部开始 -->
-        <div
+        <header
           v-if="!header.disabled"
           @dragstart.stop="titleDragStart"
           draggable="true"
@@ -189,21 +205,21 @@
             >
               <div class="header-right-icon">
                 <xt-ify-icon
-                  icon="fluent:line-horizontal-3-20-filled"
+                  icon="fluent:line-horizontal-3-20-regular"
                   size="20"
                 />
               </div>
             </RightMenu>
             <slot name="customRightMenu" v-else></slot>
           </div>
-        </div>
+        </header>
         <!-- 小组件头部结束 -->
         <!-- 小组件主体开始 -->
         <xt-status
           :name="header.title"
           :status="envLimitStatus"
           :plat="platLimit"
-          imgSize="'75'"
+          imgSize="75"
         >
           <div
             class="flex-1 h-full rounded-b-lg"
@@ -228,13 +244,7 @@
 
         <!-- 小组件主体结束 -->
       </div>
-      <div v-else :class="[edit ? 'editing' : '']">
-        <slot>
-          <!--  主体内容插槽2  -->
-        </slot>
-      </div>
     </div>
-    <!-- 小组件控制器结束 -->
   </RightMenu>
 </template>
 <script setup>
@@ -248,6 +258,7 @@ import {
   onBeforeUnmount,
   getCurrentInstance,
   toRefs,
+  nextTick,
 } from "vue";
 import { storeToRefs } from "pinia";
 import { cardStore as useCardStore } from "../../store/card";
@@ -255,6 +266,7 @@ import { useWidgetStore } from "./store";
 import { useFreeLayoutStore } from "../desk/freeLayout/store";
 import { useMouseInElement } from "@vueuse/core";
 import { navStore } from "../../store/nav";
+import { titleOption } from "./libs/rightMenuOption";
 
 import Resize from "./Resize.vue";
 import RightMenu from "./RightMenu.vue";
@@ -284,6 +296,8 @@ const widgetStore = useWidgetStore();
 const usePermission = usePermissionStore();
 const { currentEnv } = storeToRefs(usePermission);
 const { edit } = storeToRefs(widgetStore);
+
+const init = ref(false);
 // 自由布局
 // const freeLayoutStore = useFreeLayoutStore();
 
@@ -311,27 +325,34 @@ const handleTouchStart = (e) => {
   e.stopPropagation();
 };
 
-onBeforeMount(async () => {
+onBeforeMount(() => {
   // 处理默认数据
   if (props.options.defaultData) {
     props.customData = _.defaults(props.customData, props.options.defaultData);
   }
 });
 onMounted(() => {
-  container.value.addEventListener("keydown", handleKeyDown, {
-    capture: true,
-  });
-  container.value.addEventListener("keydown", handleTouchStart, {
-    capture: true,
-  });
+  // 防止自定义时，无法获取到container导致卡死
+  if (container.value) {
+    container.value.addEventListener("keydown", handleKeyDown, {
+      capture: true,
+    });
+    container.value.addEventListener("keydown", handleTouchStart, {
+      capture: true,
+    });
+  }
+
 });
 onBeforeUnmount(() => {
-  container.value.removeEventListener("keydown", handleKeyDown, {
-    capture: true,
-  });
-  container.value.removeEventListener("keydown", handleTouchStart, {
-    capture: true,
-  });
+  if (container.value) {
+    container.value.removeEventListener("keydown", handleKeyDown, {
+      capture: true,
+    });
+    container.value.removeEventListener("keydown", handleTouchStart, {
+      capture: true,
+    });
+  }
+
 });
 // emits 小组件事件回调
 /**
@@ -443,8 +464,19 @@ const addObj = computed(() => {
 const menus = computed(() => {
   const platLimit = props.platLimit || " ";
   if (usePlat(platLimit)) return [addObj.value, deleteObj.value];
+  // if (xxx) return []
   let menu = [...props.menuList, addObj.value, deleteObj.value];
-  return menu;
+  // 在社群成员桌面的场景下,需要的处理
+  const filterMenu = props.menuList.filter((item) => {
+    return titleOption.some((some) => {
+      return String(some) !== String(item.title);
+    });
+  });
+  if (props?.options?.disableEdit) {
+    return filterMenu;
+  } else {
+    return menu;
+  }
 });
 // 头部左侧显示区域状态
 const leftHover = computed(() => {
@@ -566,6 +598,10 @@ const removeCard = () => {
   // 属于自定义删除事件
   if (props.options.customDel) return;
   customDelete();
+  // 将社群桌面的数据进行同步,只限社群管理员。
+  if (props.desk.hasOwnProperty("communityNo")) {
+    proxy.$bus.emit('updateSync');
+  }
 };
 // 实际删除事件
 const customDelete = () => {
@@ -717,6 +753,7 @@ defineExpose({
   backdrop-filter: blur(50px);
   -webkit-backdrop-filter: blur(50px);
 }
+
 
 .menu-box {
   z-index: 9;
