@@ -58,6 +58,7 @@ import "vue-toastification/dist/index.css";
 // import components from "./ui/components/index.js"
 import XTUI from "./ui/new/index.js";
 import registerXTUI from "./ui/index";
+// 新版天天应用
 import '../table/apps/ttApp/src/modules/wujie/theme.css'
 // 注册任务引导
 import VueShepherdPlugin from "vue-shepherd";

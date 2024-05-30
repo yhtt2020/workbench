@@ -27,9 +27,9 @@ router.beforeEach(async (to, from, next) => {
   //   });
   // }
   // 用户信息判断 优先级1
-  console.time("Run Time");
+  // console.time("Run Time");
   await useUserPermit();
-  console.timeEnd("Run Time");
+  // console.timeEnd("Run Time");
 
   // 用户环境判断 优先级2
   if (

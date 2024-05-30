@@ -324,7 +324,7 @@ const deskRole = computed(()=>{
     resetPosition
     v-model:y="floatMenuStore.y"
     v-model:x="floatMenuStore.x"
-    :index="100"
+    :index="123"
     disabledHandle=".floatMenu"
     :firstPosition="firstPosition"
     :test="false"

@@ -5,24 +5,6 @@
     @click.stop="iconClick($event)"
     :style="[iconSize]"
   >
-    <!-- <xt-icon-show
-      v-if="isIfy === 'select'"
-      v-model="src"
-      :h="imgH"
-      :w="imgW"
-      :boxW="bgW"
-      :boxH="bgH"
-      :bg="bg"
-      :r="r"
-      boxR="12px"
-      :click="false"
-      :fit="fit"
-    />
-    <xt-newIcon
-      v-else
-      :icon="src"
-      :size="imgW"
-    /> -->
     <xt-mix-icon
       :type="isIfy"
       v-model:icon="src"
@@ -32,44 +14,26 @@
       :boxH="bgH"
       :bg="bg"
       :r="r"
-      :style="{ borderRadius: '12px', background: bg,}"
-      :iconStyle="{ borderRadius: r,...imgStateStyle  }"
+      :style="{ borderRadius: '12px', background: bg }"
+      :iconStyle="{ borderRadius: r, ...imgStateStyle }"
       :class="''"
     />
     <img
       src="/public/icons/tag.png"
       alt=""
       class="absolute w-[30px]"
-      style="top:1px;right:-2px"
-      v-if="isIfy === 'ify'">
-    <!-- <div
-      class="flex items-center justify-center w-full overflow-hidden xt-text no-drag rounded-xl"
-      :style="[bgSize, backgroundState]"
-      :data-index="index"
-    >
-      <img
-        v-if="src && src.length > 0 && open.type === 'systemApp'"
-        :src="src"
-        alt=""
-        :style="[imgSize, radiusState, imgStateStyle]"
-        :data-index="index"
-      />
-      <img
-        v-if="src && src.length > 0 && open.type !== 'systemApp'"
-        :src="renderIcon(src)"
-        alt=""
-        :style="[imgSize, radiusState, imgStateStyle]"
-        :data-index="index"
-      />
-
-    </div> -->
+      style="top: 1px; right: -2px"
+      v-if="isIfy === 'ify'"
+    />
     <div
       v-if="isTitle"
-      class="h-6 mx-auto text-center truncate xt-text"
+      class="flex-1 mx-auto text-center xt-text items-center"
       :style="[textSize]"
       :data-index="index"
     >
-      {{ titleValue }}
+      <div class="wf truncate">
+        {{ titleValue }}
+      </div>
     </div>
   </div>
 
@@ -120,13 +84,13 @@ export default {
     // 单图标大小 -- 当为ify图标时，控制宽度
     iconSize() {
       // return this.isIfy == "ify" ? this.getSizeValues(this.size).imgSize : this.getSizeValues(this.size).iconSize;
-      if(this.isIfy == "ify"){
+      if (this.isIfy == "ify") {
         return {
           width: this.getSizeValues(this.size).imgSize.width,
-          height: this.getSizeValues(this.size).iconSize.height
-        }
+          height: this.getSizeValues(this.size).iconSize.height,
+        };
       }
-      return this.getSizeValues(this.size).iconSize
+      return this.getSizeValues(this.size).iconSize;
     },
     textSize() {
       let textSize = this.getSizeValues(this.size).textSize;
@@ -167,19 +131,25 @@ export default {
       return w;
     },
     bgW() {
-      let w = this.isIfy == "ify" ? parseInt(this.getSizeValues(this.size).imgSize.width) : parseInt(this.getSizeValues(this.size).bgSize.width);
+      let w =
+        this.isIfy == "ify"
+          ? parseInt(this.getSizeValues(this.size).imgSize.width)
+          : parseInt(this.getSizeValues(this.size).bgSize.width);
       return w;
     },
     bgH() {
-      let h = this.isIfy == "ify" ? parseInt(this.getSizeValues(this.size).imgSize.height) : parseInt(this.getSizeValues(this.size).bgSize.height);
+      let h =
+        this.isIfy == "ify"
+          ? parseInt(this.getSizeValues(this.size).imgSize.height)
+          : parseInt(this.getSizeValues(this.size).bgSize.height);
       return h;
     },
     fit() {
       return this.imgState;
     },
-    isIfy(){
-      return checkIsIfyIcon(this.src).value ? 'ify' : 'select'
-    }
+    isIfy() {
+      return checkIsIfyIcon(this.src).value ? "ify" : "select";
+    },
   },
   watch: {
     imgShape(newV) {},
@@ -216,7 +186,7 @@ export default {
           height: `${h}px`,
         },
         textSize: {
-          width: this.isIfy == "ify" ? '' : `${w - 20}px`,
+          width: this.isIfy == "ify" ? "" : `${w - 20}px`,
           "font-size": "1px",
         },
         imgSize: {
@@ -285,7 +255,7 @@ export default {
       }
 
       if (this.edit) return;
- if (this.newIcon) {
+      if (this.newIcon) {
         console.log(this.newIcon, "open");
         console.log("this.open.type :>> ", this.open.type);
         console.log("this.open.type :>> ", this.open.value);
@@ -293,9 +263,9 @@ export default {
       } else if (this.open !== undefined && this.open.value !== "") {
         // 链接
         console.log("lianjie :>> ");
-        if(this.open.type === 'card'){
+        if (this.open.type === "card") {
           console.log("this.open.value :>> ", this.open.value);
-          this.$emit('openCard')
+          this.$emit("openCard");
           return;
         }
         // this.newOpenApp();

@@ -1,7 +1,7 @@
 <template>
   <template v-if="checkIsCommunity">
     <div class="rounded-lg mb-4 xt-bg-2 px-4 py-3.5 flex flex-col">
-      <SyncCommunityDesk :deskInfo="community" />
+      <SyncCommunityDesk :deskInfo="community"  />
     </div>
   </template>
 
@@ -53,7 +53,8 @@
         <xt-option-info title="适应模式" info="" />
 
         <xt-option-tab
-          v-model="currentDeskSettings.fitMod"
+          v-model="fitMod"
+          @cb="updateFitMod"
           :list="fitList"
           circle
           style="height: 40px"
@@ -118,9 +119,9 @@
 
         <xt-option-info
           title="组件间距"
-          info="调节组件之间的间距，默认为 12px。"
+          info="调节组件之间的间距，默认为 6px。"
           icon="fluent:arrow-clockwise-16-regular"
-          @onIconClick="currentDeskSettings.cardMargin = 12"
+          @onIconClick="currentDeskSettings.cardMargin = 6"
         />
 
         <xt-option-slider
@@ -195,6 +196,12 @@ const fitList = ref([
     value: "center",
   },
 ]);
+const fitMod = ref(
+  currentDeskSettings.fitMod ? currentDeskSettings.fitMod : "center"
+);
+const updateFitMod = (data) => {
+  currentDeskSettings.value.fitMod = data;
+};
 const updateTab = (data) => {
   freeLayoutStore.renewFreeLayout();
 };

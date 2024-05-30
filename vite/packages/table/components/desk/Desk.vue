@@ -141,7 +141,7 @@
                   }"
                 >
                   <component
-                    :desk="currentDesk"
+                    :desk="desk"
                     :is="item.name"
                     :customIndex="item.id"
                     :customData="item.customData"
@@ -233,7 +233,7 @@ import GalleryModal from "../paperModal/PaperApp.vue";
 import { useAddCard } from "../../ui/hooks/useAddCard";
 import { useDeskStore } from "./store";
 import { useFileConversionIcon } from "../../apps/folder/src/hooks/useDataConversion";
-import { taskStore } from '../../apps/task/store';
+import { taskStore } from "../../apps/task/store";
 
 import Drop from "./Drop.vue";
 import AppCenter from "../../apps/appCenter";
@@ -330,7 +330,7 @@ export default {
     communityInfo:{
       type: Object,
       required: true,
-    }
+    },
   },
   watch: {
     adjustLayout(val) {
@@ -360,20 +360,26 @@ export default {
         });
       },
     },
-    currentDesk(newVal) {
-      if (!this.isFreeLayout) {
-        newVal.layoutSize = this.getLayoutSize();
-        // if (!newVal.settings) {
-        //   newVal.settings=
-        //     .settings = {
-        //     cardZoom: 100,
-        //     marginTop: 0,
-        //     cardMargin: 5,//卡片间隙
-        //     vDirection: false,
-        //   }
-        // }
-        this.muuriOptions.layout.horizontal = !newVal.settings?.vDirection;
-      }
+    currentDesk: {
+      handler(newVal) {
+        this.desk = newVal;
+        if (!this.isFreeLayout) {
+          newVal.layoutSize = this.getLayoutSize();
+
+
+          // if (!newVal.settings) {
+          //   newVal.settings=
+          //     .settings = {
+          //     cardZoom: 100,
+          //     marginTop: 0,
+          //     cardMargin: 5,//卡片间隙
+          //     vDirection: false,
+          //   }
+          // }
+          this.muuriOptions.layout.horizontal = !newVal.settings?.vDirection;
+        }
+      },
+      deep: true,
     },
     // 监听ID变化
     "currentDesk.id": {
@@ -478,6 +484,7 @@ export default {
   },
   data() {
     return {
+      desk: this.currentDesk,
       showGrid: false,
       loaded: false,
       vurriEnable: false,
@@ -529,10 +536,10 @@ export default {
     });
 
     // 社群成员桌面触发位置还原
-    this.$bus.on('redirect',()=>{
-      this.$nextTick(()=>{
+    this.$bus.on("redirect", () => {
+      this.$nextTick(() => {
         this.$refs.freeLayoutScrollbar?.redirect();
-      })
+      });
     });
 
     if (window.showed) {
@@ -585,7 +592,7 @@ export default {
         if (this.usingSettings.vDirection === true) {
           return "100%";
         } else {
-          console.log('this.usingSettings :>> ', this.usingSettings);
+          console.log("this.usingSettings :>> ", this.usingSettings);
           return (this.usingSettings.containerHeight || 800) + "px";
         }
       }
@@ -654,7 +661,6 @@ export default {
             okButtonWidth: 100,
             type: "warning",
             ok: () => {
-
               desk?.cards?.forEach((item) => {
                 //移除桌面相关的便签卡片
                 if (item.name === "notes" && !this.$usePlat()) {
@@ -680,10 +686,9 @@ export default {
               this.menuVisible = false;
               this.clearFreeLayoutData();
 
-              if(this.communityInfo?.role === 'owner'){
-                this.$bus.emit('updateSync')
+              if (this.communityInfo?.role === "owner") {
+                this.$bus.emit("updateSync");
               }
-
             },
           });
         }
