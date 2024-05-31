@@ -182,8 +182,8 @@
                 仅在标题处显示主题色
               </div>
               <a-switch
-                @click="this.changeShowColor"
-                v-model:checked="options.showColor"
+                @change="changeShowColor"
+                v-model:checked="showColor"
               ></a-switch>
             </div>
             <div style="color: var(--secondary-text)">
@@ -281,6 +281,7 @@ export default {
         title: this.customData.title,
         resize: this.options.disableEdit ? false : true,
         customDel: this.customDel,
+        showColor: this.showColor
       };
     },
     options() {
@@ -302,6 +303,7 @@ export default {
       fontColor: "white",
       tmpTitle: "桌面标签",
       settingVisible: false,
+      showColor: false,
       menuList: [
         {
           newIcon: "fluent:copy-20-regular",
@@ -422,7 +424,7 @@ export default {
   mounted() {
     this.text = this.customData.text;
     this.colorIndex = this.customData.colorIndex;
-    this.options.showColor = this.customData.showColor;
+    this.showColor = this.customData.showColor;
     this.tmpTitle = this.customData.title;
     this.background = this.customData.background;
     this.colors = this.customData.color;
@@ -676,7 +678,7 @@ export default {
       this.updateCustomData(
         this.customIndex,
         {
-          showColor: this.options.showColor,
+          showColor: this.showColor,
         },
         this.desk
       );
