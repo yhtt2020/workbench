@@ -124,6 +124,7 @@ export default {
       return {
         defaultData: {
           customSize: '2x4',
+          _updateFlag: "24531",
         },
         customDel:this.openWay === 'nav' ? true : false
       }

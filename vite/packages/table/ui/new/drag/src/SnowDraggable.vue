@@ -37,7 +37,6 @@ import {
   onUnmounted,
   nextTick,
 } from "vue";
-// import { useWindowSize } from "./hooks/useWindowSize";
 import { useGlobalStore } from "../../../../apps/global/store";
 import { storeToRefs } from "pinia";
 const globalStore = useGlobalStore();

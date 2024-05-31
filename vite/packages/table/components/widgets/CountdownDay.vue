@@ -46,7 +46,7 @@
           }
         "
       />
-      
+
     </div>
 
     <div class="mt-1 content" style="height: 100%; overflow: hidden" v-else>
@@ -310,6 +310,7 @@ export default {
       return {
         defaultData: {
           customSize: this.customData.customSize || "2x2",
+          _updateFlag: "24531",
         },
         customDel: this.openWay === "nav" ? true : false,
         disableEdit: this.isCommunityDesktop(this.desk),

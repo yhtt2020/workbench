@@ -27,7 +27,7 @@ const options = computed(() => {
       historyList: [],
       noBorder: true,
       customSize: "4x2",
-      _updateFlag: "222",
+      _updateFlag: "24531",
     },
     noBorder: customData.value.noBorder,
   };

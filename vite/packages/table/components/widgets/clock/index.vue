@@ -188,6 +188,7 @@ export default {
         bg: !this.customData.backgroundFrame ? "transparent" : "",
         resize: !this.isCommunityDesktop(this.desk) ? true : false,
         defaultData: {
+          _updateFlag: "24531",
           backgroundFrame: true,
           clockId: "clock4",
           imgUrl: DEFAULT.WALLPAPER,

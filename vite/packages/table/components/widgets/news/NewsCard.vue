@@ -279,14 +279,15 @@ export default {
     },
   },
   computed: {
-    
+
     // 卡片选项
     options() {
       return {
         // 当卡片添加到导航栏时，阻止默认删除事件
         customDel: this.openWay === "nav" ? true : false,
         defaultData: {
-          customSize: this.customData.customSize || "2x4",
+          customSize:  "2x4",
+          _updateFlag: "24531",
         },
         disableEdit: this.isCommunityDesktop(this.desk),
       };
