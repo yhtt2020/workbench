@@ -178,7 +178,7 @@ export default {
       header: {
         title: "社区待办",
         // ifyIcon:'fluent:checkbox-checked-16-regular',
-        showIcon: "/img/appLogo/shortTodo.png",
+        showIcon:"/logo/todo.svg",
         rightIcon: [
           {
             ifyIcon: "fluent:open-20-filled",

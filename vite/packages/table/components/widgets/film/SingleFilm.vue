@@ -141,7 +141,7 @@ export default {
       customSize: "2x4",
       header: {
         // ifyIcon: "fluent:movies-and-tv-16-regular",
-        showIcon:"/img/appLogo/film.png",
+        showIcon:"/logo/film.svg",
         title: "正在热映",
         refresh: {
           fn: this.refreshPage,

@@ -15,7 +15,8 @@
                 background-color: var(--primary-bg) !important;
                 border-radius: 16px 16px 0px 0px;
                 border-bottom: 1px solid var(--divider);
-                margin-bottom: 8px;"
+                margin-bottom: 8px;
+                flex-shrink: 0;"
             v-model:modelValue="inputValue" 
             placeholder="搜索" 
             @enter="search">
@@ -36,7 +37,14 @@
                 <!-- 开始菜单列表 -->
                 <ItemList :list="lastStartMenu" v-if="!isSearch" @close="close"></ItemList>  
                 <!-- 搜索后列表 -->
-                <SearchList :list="searchList" v-else @close="close" :market="marketList" @open="goApps('Market')"/>
+                <SearchList 
+                    v-else
+                    @back="inputValue = ''"
+                    :list="searchList" 
+                    @close="close" 
+                    :market="marketList" 
+                    @open="goApps('Market')"
+                />
             </div>
             <div v-if="recentUsed && !isSearch" class="w-full h-full">
                 <div class="flex items-center justify-between mt-3 mb-3">
@@ -60,7 +68,7 @@
                    <ItemList :list="arr" :isStartMenu="false" @close="close"></ItemList>  
                 </xt-scrollbar>
             </div>
-            <div v-if="!recentUsed" class="flex items-center justify-center w-full h-full">
+            <div v-if="!recentUsed && !isSearch" class="flex items-center justify-center w-full h-full">
                 <Tips v-model:modelValue="showTip" @jumpMy="goApps('MyApps')" ></Tips>
             </div>
         </div>
@@ -83,17 +91,19 @@ import {
 
 import { storeToRefs } from 'pinia';
 import { onClickOutside } from '@vueuse/core'
+import { message } from 'ant-design-vue';
 
 import { useAppCenterStore } from '../../../../apps/appCenter/src/store';
 import { useMarketStore } from '../../../../apps/appCenter/src/views/market/store/store';
 import { ROUTER_LIMIT } from '../../../../permission/config';
 import { usePlat } from '../../../../permission/usePlat';
+import { resetType } from '../../../../apps/appCenter/src/views/myApps/hooks/useTransform'
 
 const appCenterStore = useAppCenterStore()
-const { current, visible, recentUsed, myApps, showTip } = storeToRefs(appCenterStore)
+const { current, visible, recentUsed, myApps, showTip, startMenu } = storeToRefs(appCenterStore)
 
 const marketStore = useMarketStore()
-const { recommendList } = storeToRefs(marketStore)
+const { recommendList, searchApps } = storeToRefs(marketStore)
 
 const ItemList = defineAsyncComponent(() => import('./components/ItemList.vue'))
 const SearchList = defineAsyncComponent(() => import('./components/SearchList.vue'))
@@ -140,10 +150,18 @@ const appRef = ref(null)
 
 // 搜索
 const search = () => {
+    if(inputValue.value === '') {
+        message.info('请输入搜索内容')
+        return
+    }
     isSearch.value = true
-    searchList.value = myApps.value.filter(item => item.name.indexOf(inputValue.value) !== -1)
-    marketList.value = recommendList.value
-    marketList.value = marketList.value.filter(item => item.name.indexOf(inputValue.value) !== -1)
+    searchList.value = myApps.value.filter(item => 
+        item.name.toLowerCase().includes(inputValue.value.toLowerCase())
+    );
+    marketStore.searchApp(inputValue.value).then(() => {
+        console.log(searchApps.value,'searchApps.value')
+        marketList.value = searchApps.value
+    })
 }
 
 // 取消搜索状态
@@ -157,11 +175,36 @@ watch(
 )
 
 // 开始菜单
-const startMenu = computed(() => {
+// const startApps = computed(() => {
+//   // 根据平台使用条件过滤 myApps 列表
+// //   return myApps.value.filter(item => 
+// //     item.isStart && (usePlat('web') ? !ROUTER_LIMIT.web.includes(item.value) : true)
+// //   );
+//     const list = myApps.value.filter(item => {
+//         return startMenu.value.map((i) => {
+//             return i === item.id
+//         })
+//     })
+//     return list.filter(item => {
+//         if(usePlat('web')) {
+//             return !ROUTER_LIMIT.web.includes(item.value)
+//         }
+//     }) 
+// });
+
+const startApps = computed(() => {
   // 根据平台使用条件过滤 myApps 列表
-  return myApps.value.filter(item => 
-    item.isStart && (usePlat('web') ? !ROUTER_LIMIT.web.includes(item.value) : true)
-  );
+  return myApps.value.filter(item => {
+    // 检查是否包含在启动菜单中
+    if (!startMenu.value.includes(item.id)) {
+      return false;
+    }
+    // 如果是Web平台，确保不在ROUTER_LIMIT中
+    if (usePlat('web') && ROUTER_LIMIT.web.includes(item.value)) {
+      return false;
+    }
+    return true;
+  });
 });
 
 
@@ -184,7 +227,7 @@ const lastList = computed(() => {
 
 // 开始菜单
 const lastStartMenu = computed(() => {
-    return startMenu.value.splice(0,15)
+    return startApps.value.splice(0,15)
 })
 
 // 当屏幕高度小于界面高度时，缩放
@@ -220,14 +263,20 @@ onMounted(() => {
     // proxy.$bus.on('closeControl', () => {
     //     emit('close')
     // })
-    onClickOutside(appRef, () => {
-        emit('close')
-    })
+    // onClickOutside(appRef, () => {
+    //     emit('close')
+    // })
+    myApps.value = resetType(myApps.value)
+    // console.log(myApps.value,'myApps.value')
+    // setTimeout(() => {
+    //   console.log(startApps.value,'<<<<<<<<<<<<<<<<',lastStartMenu.value, startMenu.value)  
+    // }, 2000);
+    
 })
 
 onUnmounted(() => {
     // proxy.$bus.off('closeControl')
-    onClickOutside(appRef, null)
+    // onClickOutside(appRef, null)
 })
 </script>
 <style lang='scss' scoped></style>

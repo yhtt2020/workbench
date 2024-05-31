@@ -107,8 +107,7 @@ export default {
       return {
         title: "历史上的今天",
         // ifyIcon:"fluent:clock-12-regular",historyInfo
-        showIcon: "/img/appLogo/historyInfo.png",
-
+        showIcon:"/logo/clock.svg",
         refresh: {
           fn: this.onHistoryMessage,
           tip: "刷新",

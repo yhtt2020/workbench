@@ -172,7 +172,8 @@ export default {
       iconsSetVisible: false,
       options: {
         custom: true,
-        disabledDelete: true,
+        disabledDelete: 
+        true, disabledNav:true,
         disableEdit: this.isCommunityDesktop(this.desk),
       }, // 卡片核心配置
       // 卡片类相关数据

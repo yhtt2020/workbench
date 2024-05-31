@@ -269,6 +269,9 @@ export const openSysApp = (value, router) => {
     case "income":
       useAppModal("income").openApp();
       break;
+    case 'apps':
+      useMit.emit('openAppCenter')
+      break;
     default:
       // 通过路由打开
       window.$ui.router.push({ name: value });

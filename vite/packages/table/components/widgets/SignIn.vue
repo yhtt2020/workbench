@@ -296,9 +296,12 @@ export default {
       header: {
         title: "签到",
         // ifyIcon:"fluent:calendar-16-regular",
-        showIcon: "/img/appLogo/signIn.png",
-      },
-    };
+        showIcon:"/logo/countdownDay.svg",
+
+      }
+
+
+    }
   },
   async mounted() {
     this.updateTodayRank().then();

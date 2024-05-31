@@ -10,3 +10,15 @@ export const useReplaceData = (data) => {
     })
     return list
 }
+
+// 根据开始菜单的状态，进行重新排序
+export const reloadList = (list) => {
+    return list.reduce((acc, item) => {
+        if (item.isStart) {
+            acc.unshift(item);
+        } else {
+            acc.push(item);
+        }
+        return acc;
+    }, []);
+};

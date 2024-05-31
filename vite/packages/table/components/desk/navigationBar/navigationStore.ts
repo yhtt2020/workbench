@@ -67,6 +67,11 @@ export const useNavigationStore = defineStore("useNavigationStore", {
       currentNavFormat: "mac",
       // 当前导航栏位置
       currentNavPosition: "bottom",
+      // 主导航栏高度
+      currentMainH:{
+        top:40,
+        bottom:100,
+      },
     };
   },
   actions: {
@@ -79,7 +84,7 @@ export const useNavigationStore = defineStore("useNavigationStore", {
     strategies: [
       {
         // storage: dbStorage,
-        path: ["communityNavVisible", "currentNavFormat", "currentNavPosition"],
+        path: ["communityNavVisible", "currentNavFormat", "currentNavPosition", 'currentMainH'],
         storage: localStorage,
       },
     ],

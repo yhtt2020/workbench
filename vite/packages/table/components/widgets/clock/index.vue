@@ -141,6 +141,7 @@ export default {
           currentStatus: "font",
           currentZoom: 100,
           name: dateTimeStamp(Date.now()),
+          _updateFlag: "24531",
         },
         this.desk
       );
@@ -188,7 +189,6 @@ export default {
         bg: !this.customData.backgroundFrame ? "transparent" : "",
         resize: !this.isCommunityDesktop(this.desk) ? true : false,
         defaultData: {
-          _updateFlag: "24531",
           backgroundFrame: true,
           clockId: "clock4",
           imgUrl: DEFAULT.WALLPAPER,
@@ -202,7 +202,6 @@ export default {
           currentStatus: "font",
           currentZoom: 100,
           name: dateTimeStamp(Date.now()),
-          _updateFlag:'2222'
         },
         customDel: this.openWay === "nav" ? true : false,
         disableEdit: this.isCommunityDesktop(this.desk),

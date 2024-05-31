@@ -130,7 +130,7 @@ export default {
       return {
 
         title:'商品推荐',
-        ifyIcon:'fluent:cart-16-filled',
+        showIcon:"/logo/goods.svg",
         // refresh:{
         //   fn:()=>{
         //     this.refreshFlag = true

@@ -1,6 +1,6 @@
 <template>
   <xt-container
-    @titleHover="showRegionSelect"
+    @leftClick="showRegionSelect"
     v-model:customSize="customData.customSize"
     :header="header"
     :platLimit="['web']"
@@ -362,11 +362,12 @@ export default {
       return {
         title: this.region.name,
         // ifyIcon:'mdi:steam',
-        showIcon: "/img/appLogo/steam.png",
-        titleHover: true,
-        titleHoverName: this.region.name,
-      };
-    },
+        showIcon:"/logo/steam.svg",
+        leftHover: true,
+        leftHoverName:this.region.name,
+        leftHoverIcon: "fluent:open-16-regular",
+      }
+    }
   },
   methods: {
     ...mapActions(steamStore, [
