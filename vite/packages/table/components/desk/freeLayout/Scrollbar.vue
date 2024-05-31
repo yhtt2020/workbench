@@ -30,8 +30,15 @@ import "perfect-scrollbar/css/perfect-scrollbar.css";
 import { useElementBounding } from "@vueuse/core";
 import { useFreeLayoutStore } from "./store";
 import { useElementSize } from "../../../ui/new/drag/src/hooks/useElementSize";
-import { useWindowSize } from "../../../ui/new/drag/src/hooks/useWindowSize";
+
 import { useWidgetStore } from "../../card/store";
+import { useGlobalStore } from "../../../apps/global/store";
+const globalStore = useGlobalStore();
+const { windowWidth, windowHeight } = storeToRefs(globalStore);
+watch([() => windowWidth.value, () => windowHeight.value], () => {
+  if (!windowWidth.value || !windowHeight.value) return;
+  redirect();
+});
 const widgetStore = useWidgetStore();
 const { edit } = storeToRefs(widgetStore);
 const { proxy } = getCurrentInstance();
@@ -82,10 +89,7 @@ onMounted(() => {
   scrollbar.value.addEventListener("ps-scroll-y", () => {
     freeLayoutEnv.value.scrollTop = scrollbar.value?.scrollTop;
   });
-  // 监听窗口大小变化
-  useWindowSize((size) => {
-    redirect();
-  });
+
   // 监听键盘按下事件
   window.addEventListener("keydown", handleKeyDown);
   // 监听键盘抬起事件

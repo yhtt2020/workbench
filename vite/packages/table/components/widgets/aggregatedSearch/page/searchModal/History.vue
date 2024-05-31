@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, inject } from "vue";
-import { openBrowser } from "../../utils/open";
+import { openBrowser, open } from "../../utils/open";
 import Scrollbar from "./Scrollbar.vue";
 const data: any = inject("data");
 const ctrlSelectIndex: any = inject("ctrlSelectIndex");
@@ -26,13 +26,12 @@ const historyIndex = computed(() => {
 });
 const search = (index: string) => {
   let item = data.value.historyList[index];
-  openBrowser(item.value, item.openWith);
+  open(item);
 };
 defineExpose({
   clear,
   search,
 });
-
 </script>
 
 <template>
@@ -54,7 +53,10 @@ defineExpose({
         'xt-theme-bg-2': index == historyIndex,
       }"
     >
-      <div>{{ item.name }}</div>
+      <div class="flex items-center">
+        <xt-mix-icon :icon="item.icon" type="select" class="mr-2.5" />
+        {{ item.name }}
+      </div>
       <a-dropdown
         placements="bottom"
         :overlayStyle="{
@@ -62,7 +64,7 @@ defineExpose({
         }"
       >
         <div class="flex items-center">
-          <template v-if="historyIndex == index">
+          <template v-if="historyIndex == index && item.showType == '网页'">
             <span class="tt-theme"> {{ currentOpenWith?.name }}</span>
             <xt-mix-icon
               icon="fluent:caret-down-12-filled"
@@ -71,7 +73,7 @@ defineExpose({
             />
           </template>
           <template v-else>
-            <div class="tt-text-3">网页</div>
+            <div class="tt-text-3">{{ item.showType }}</div>
           </template>
         </div>
       </a-dropdown>

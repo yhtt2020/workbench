@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, inject, watch, computed } from "vue";
 import axios from "axios";
 

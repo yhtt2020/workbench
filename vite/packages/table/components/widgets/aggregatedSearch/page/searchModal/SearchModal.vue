@@ -9,6 +9,8 @@ import History from "./History.vue";
 import System from "./System.vue";
 import Search from "./Search.vue";
 
+import { HistoryData } from "./types";
+
 const emit = defineEmits(["close", "openCardSet"]);
 
 const data: any = inject("data");
@@ -120,11 +122,11 @@ const search: any = async (value?: any) => {
   let word = value ? value.name : words.value;
   let searchUrl = currentSource.value.searchUrl + encodeURIComponent(word);
 
-  const history = {
+  const history: HistoryData = {
     name: word,
     source: currentSource.value,
     value: searchUrl,
-    type: "网页",
+    showType: "网页",
     openWith: currentOpenWith.value.value,
   };
 
@@ -228,13 +230,10 @@ const eventDown = (e) => {
   }
 
   if (e.code === "Space") {
-    console.log("222 :>> ", 222);
     e.stopPropagation();
   }
 
   if (e.ctrlKey && (e.key === "A" || e.key === "a")) {
-    console.log("222 :>> ", 222);
-
     e.stopPropagation();
   }
 };

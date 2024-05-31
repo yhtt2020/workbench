@@ -53,18 +53,23 @@ import {
   onBeforeUnmount,
   onUnmounted,
   getCurrentInstance,
+  inject,
+  watch,
   watch,
 } from "vue";
-import useWindowViewport from "./useWindowViewport";
+// import useWindowViewport from "./useWindowViewport";
 import { reSize as vResize } from "./useElementResize";
 import Menus from "./Menus.vue";
-import { cacheStore } from './cacheTag';
+import { useGlobalStore } from "../../../apps/global/store";
 import { storeToRefs } from "pinia";
+const globalStore: any = useGlobalStore();
+const { windowWidth, windowHeight } = storeToRefs(globalStore);
+import { cacheStore } from './cacheTag';
 
 const store = cacheStore();
 const { isHide } = storeToRefs(store);
 
-const { proxy } = getCurrentInstance();
+const { proxy }: any = getCurrentInstance();
 
 interface Menus {
   name: string;
@@ -196,7 +201,7 @@ function handleCloseMenu() {
 }
 
 // 获取 视图大小
-const { windowWidth, windowHeight } = useWindowViewport();
+// const { windowWidth, windowHeight } = useWindowViewport();
 // 获取菜单大小
 const w = ref(0);
 const h = ref(0);

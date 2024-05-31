@@ -173,9 +173,6 @@ const updateApp = (data: any) => {
     return item;
   });
   // 更新导航栏
-  // useMit.emit("updateTTApp", currentData.id);
-  // update(currentData.id);
-
   useMit.emit("updateTTApp", data.package);
   update(data.package);
 };

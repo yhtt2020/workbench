@@ -1,4 +1,4 @@
-import { dateTimeStamp } from '../../../../components/widgets/clock/hooks/clockList';
+import { dateTimeStamp } from "../../../../components/widgets/clock/hooks/clockList";
 
 // 单个文件数据
 export const defaultData = {
@@ -32,4 +32,6 @@ export const defaultFolderData = {
   model: "custom",
   // 分类规则
   rules: [],
+  // 用于数据更新的标记
+  _updateFlag: "123",
 };
