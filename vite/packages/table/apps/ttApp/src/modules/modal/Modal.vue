@@ -16,9 +16,12 @@ import WuJie from "../wujie/WuJie.vue";
 import PerfectScrollbar from "perfect-scrollbar";
 import { useRouter } from "vue-router";
 import { useTTAppStore } from "../../store";
-import { useWindowSize } from "@vueuse/core";
 import { useAppCenterStore } from "../../../../appCenter/src/store";
 import ModalSetting from "../modalSetting/ModalSetting.vue";
+import { useGlobalStore } from "../../../../global/store";
+const globalStore = useGlobalStore()
+const { windowWidth, windowHeight } = storeToRefs(globalStore);
+
 const { proxy }: any = getCurrentInstance();
 onUnmounted(() => {
   proxy.$bus.off("updateTTApp");
@@ -39,7 +42,6 @@ onBeforeMount(async () => {
 
 const appCenterStore = useAppCenterStore();
 const { visible } = storeToRefs(appCenterStore);
-const { width: windowWidth, height: windowHeight } = useWindowSize();
 const ttappStore: any = useTTAppStore();
 const { modal, ttappList } = storeToRefs(ttappStore);
 // 窗口弹窗

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, watch, inject, computed } from "vue";
 import { highLightKeywords } from "../../utils";
 import {
@@ -11,17 +11,20 @@ import {
 } from "./getSearchData.js";
 import { storeToRefs } from "pinia";
 import Scrollbar from "./Scrollbar.vue";
+import { HistoryData } from "./types";
 import { useAppModal } from "../../../../../hooks";
 const words = inject("words");
 const isWebSource = inject("isWebSource");
 const currentSource = inject("currentSource");
 const ctrlSelectIndex = inject("ctrlSelectIndex");
+const data = inject("data");
+
 const currentIndex = ref(0);
 import { startApp } from "../../../../../ui/hooks/useStartApp";
+import { open } from "../../utils/open.js";
 
 // const { type , value } = currentItem.value
 //             startApp(type, value, router)
-
 const systemList = ref([
   {
     name: "全部",
@@ -76,7 +79,7 @@ const systemList = ref([
     },
   },
   {
-    name: "社群",
+    name: "群聊",
     fn: async (words) => {
       // 获取群聊数据
       let groupData = getGroupData(words);
@@ -99,7 +102,6 @@ const allSearch = async (val) => {
   // 搜索指定源
   if (currentIndex.value !== 0) {
     let res = await systemList.value[currentIndex.value].fn(val);
-    console.log("res :>> ", res);
     if (res) {
       searchList.value = [res];
     }
@@ -107,7 +109,7 @@ const allSearch = async (val) => {
     return;
   }
 
-  let arr = [];
+  let arr :any= [];
   for (let item of systemList.value) {
     if (item.name === "全部") {
       continue;
@@ -115,7 +117,6 @@ const allSearch = async (val) => {
     let res = await item.fn(val);
     if (res) {
       if (res.data.length > 2) {
-        console.log("res.data :>> ", res.data);
         res.data = res.data.slice(0, 2);
         res.more = true;
       }
@@ -141,26 +142,19 @@ const selectAll = (name) => {
   currentIndex.value = systemList.value.findIndex((item) => item.name === name);
 };
 const openNote = (data) => {};
-const openSystemApp = (data, name) => {
-  console.log("data :>> ", data);
-  if (name === "应用") {
-    startApp(data.type, data.value);
-  } else if (name === "备忘录") {
-    const { openApp } = useAppModal("note");
-    openApp({
-      customIndex: data.id,
-    });
-  }
-
-  const history = {
-    name: data.name,
-    source: currentSource.value,
-    value: data.value,
-    type: name,
-    openWith: name,
+const openSystemApp = (obj, name) => {
+  console.log("data :>> ", obj.icon);
+  const history: HistoryData = {
+    name: obj.name,
+    source: obj.icon,
+    value: obj.value,
+    showType: name,
+    openWith: obj.type,
   };
 
   data.value.historyList.push(history);
+
+  open(history)
 };
 </script>
 

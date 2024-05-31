@@ -10,7 +10,6 @@ import {
 } from "./src/useCardSize";
 import { useFindDesk, useGetDesk } from "./src/useDesk";
 import { useElementSize, vElementSize } from "./src/useElementSize";
-import { useWindowSize } from "./src/useWindowSize";
 import { useMit } from "./src/useMit";
 import { useTT } from "./src/useTT";
 import { useDoubleClick } from "./src/useDoubleClick";
@@ -32,8 +31,6 @@ export {
   // useElementSize
   useElementSize,
   vElementSize,
-  // useWindowSize
-  useWindowSize,
   // useMit
   useMit,
   // useTT

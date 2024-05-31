@@ -206,6 +206,7 @@ export default {
       return {
         defaultData: {
           customSize: "4x4",
+          _updateFlag: "24531",
         },
         customDel: this.openWay === "nav" ? true : false,
         disableEdit: this.isCommunityDesktop(this.desk),
