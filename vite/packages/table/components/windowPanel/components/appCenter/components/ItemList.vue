@@ -17,6 +17,7 @@
 import { ref, defineAsyncComponent, computed } from 'vue'
 import { useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
+import { message } from 'ant-design-vue';
 
 import { startApp } from '../../../../../ui/hooks/useStartApp';
 import { useMenus } from '../../../../../apps/appCenter/hooks/useMenus';
@@ -47,7 +48,7 @@ const router = useRouter()
 const emit = defineEmits(['close'])
 
 const store = useAppCenterStore()
-const { myApps } = storeToRefs(store)
+const { myApps, startMenu } = storeToRefs(store)
 
 // 当前选中的应用
 const currentItem = ref('')
@@ -69,7 +70,9 @@ const arr = computed(() => {
             disabled:!props.isStartMenu,
             newIcon: "fluent:grid-16-regular",
             callBack: () => {
-                currentItem.value.isStart = false
+                // currentItem.value.isStart = false
+                const index = startMenu.value.findIndex(item => item === currentItem.value.id)
+                startMenu.value.splice(index,1)
             }
         },
         {
@@ -78,8 +81,15 @@ const arr = computed(() => {
             disabled:props.isStartMenu,
             newIcon: "fluent:grid-16-regular",
             callBack: () => {
-                currentItem.value.isStart = true
-                myApps.value = reloadList(myApps.value)
+                // currentItem.value.isStart = true
+                // myApps.value = reloadList(myApps.value)
+                const isIn = startMenu.value.includes(currentItem.value.id)
+                if(!isIn) {
+                    startMenu.value.unshift(currentItem.value.id)  
+                    message.info(`${currentItem.value.name}成功固定到开始菜单`)
+                } else {
+                    message.info(`${currentItem.value.name}已经固定到开始菜单,请勿重复操作`)
+                }
             }
         }
     ]

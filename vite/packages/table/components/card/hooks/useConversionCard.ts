@@ -36,7 +36,7 @@ export const useConversionCard = (data) => {
             customData:data.customData || {customSize:data.customSize}, // 卡片自定义数据
             customSize:data.customSize, // 卡片自定义尺寸
             desk:data.desk, // 卡片所在的桌面
-            id:data.customData.parentId
+            id:data.customData?.parentId || nanoid(6)
         },
         id:nanoid(6),
     }

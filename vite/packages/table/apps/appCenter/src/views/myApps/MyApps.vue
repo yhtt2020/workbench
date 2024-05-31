@@ -47,7 +47,7 @@ import { useAppCenterStore } from "../../store";
 
 import { dropList, appsList } from './data'
 import navigationData from '../../../../../js/data/tableData';
-import { useTransform, defaultStartMenu } from './hooks/useTransform'
+import { useTransform, defaultStartMenu, resetType } from './hooks/useTransform'
 import { useMenus } from '../../../hooks/useMenus';
 import { startApp } from '../../../../../ui/hooks/useStartApp';
 
@@ -70,7 +70,7 @@ const router = useRouter()
 
 // 应用中心pinia数据
 const store = useAppCenterStore()
-const { myApps, visible } = storeToRefs(store)
+const { myApps, visible, startMenu } = storeToRefs(store)
 
 // 搜索相关
 const isSearch = ref(false)
@@ -95,9 +95,12 @@ const arr = ref([
         newIcon: "fluent:open-16-regular",
         callBack: () => {
           //
-            const { type , value } = currentItem.value
+            const { type, value, id } = currentItem.value
             startApp(type, value, router)
-            currentItem.value.lastUseTime = Date.now()
+            // currentItem.value.lastUseTime = Date.now()
+            // console.log(myApps.value.find((item) => item.id === id),'this is item')
+            let item = myApps.value.find((item) => item.id === id)
+            item.lastUseTime = Date.now()
             visible.value = false
         }
     },
@@ -109,7 +112,13 @@ const arr = ref([
             // addStartMenu(currentItem.value)
             currentItem.value.isStart = true
             myApps.value = reloadList(list.value)
-            message.info(`${currentItem.value.name}已经固定到开始菜单`)
+            const isIn = startMenu.value.includes(currentItem.value.id)
+            if(!isIn) {
+                startMenu.value.unshift(currentItem.value.id)  
+                message.info(`${currentItem.value.name}成功固定到开始菜单`)
+            } else {
+                message.info(`${currentItem.value.name}已经固定到开始菜单,请勿重复操作`)
+            }
         }
     },
     {
@@ -186,27 +195,28 @@ const getInfo = (item) => {
 
 // 数据初始化
 onMounted(() => {
-    if (myApps.value.length === 0 || myApps.value.length !== navigationData.systemAppList.length) {
-        // 获取系统应用的列表
-        const systemApps = useReplaceData(navigationData.systemAppList);
+    // if (myApps.value.length === 0 || myApps.value.length !== navigationData.systemAppList.length) {
+    //     // 获取系统应用的列表
+    //     const systemApps = useReplaceData(navigationData.systemAppList);
 
-        // 将新的系统应用添加到 myApps 中
-        systemApps.forEach(systemApp => {
-            // 检查是否已存在
-            if (!myApps.value.some(app => app.value === systemApp.value)) {
-                // 初始化新应用的启动状态
-                systemApp.isStart = systemApp.isStart || defaultStartMenu.includes(systemApp.value);
-                myApps.value.push(systemApp);
-            }
-        });
-    }
-    myApps.value = myApps.value.map(item => useTransform(item));
-    list.value = myApps.value;
+    //     // 将新的系统应用添加到 myApps 中
+    //     systemApps.forEach(systemApp => {
+    //         // 检查是否已存在
+    //         if (!myApps.value.some(app => app.value === systemApp.value)) {
+    //             // 初始化新应用的启动状态
+    //             systemApp.isStart = systemApp.isStart || defaultStartMenu.includes(systemApp.value);
+    //             myApps.value.push(systemApp);
+    //         }
+    //     });
+    // }
+    // myApps.value = myApps.value.map(item => useTransform(item));
+    list.value = resetType(myApps.value);
 });
 
 
 // onUnmounted(() => {
 //     myApps.value = []
+//     startMenu.value=[]
 // })
 
 // 打开搜索框
