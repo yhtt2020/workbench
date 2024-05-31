@@ -53,9 +53,10 @@ defineExpose({
         'xt-theme-bg-2': index == historyIndex,
       }"
     >
-      <div>
-        <xt-mix-icon :icon="item.icon" type="select" class="mr-2.5"/>
-        {{ item.name }}</div>
+      <div class="flex items-center">
+        <xt-mix-icon :icon="item.icon" type="select" class="mr-2.5" />
+        {{ item.name }}
+      </div>
       <a-dropdown
         placements="bottom"
         :overlayStyle="{

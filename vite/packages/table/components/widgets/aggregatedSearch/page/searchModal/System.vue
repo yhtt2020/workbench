@@ -21,6 +21,7 @@ const data = inject("data");
 
 const currentIndex = ref(0);
 import { startApp } from "../../../../../ui/hooks/useStartApp";
+import { open } from "../../utils/open.js";
 
 // const { type , value } = currentItem.value
 //             startApp(type, value, router)
@@ -108,7 +109,7 @@ const allSearch = async (val) => {
     return;
   }
 
-  let arr = [];
+  let arr :any= [];
   for (let item of systemList.value) {
     if (item.name === "全部") {
       continue;
@@ -142,10 +143,10 @@ const selectAll = (name) => {
 };
 const openNote = (data) => {};
 const openSystemApp = (obj, name) => {
-  console.log("data :>> ", obj);
+  console.log("data :>> ", obj.icon);
   const history: HistoryData = {
     name: obj.name,
-    source: currentSource.value,
+    source: obj.icon,
     value: obj.value,
     showType: name,
     openWith: obj.type,
@@ -153,14 +154,7 @@ const openSystemApp = (obj, name) => {
 
   data.value.historyList.push(history);
 
-  if (name === "应用") {
-    startApp(obj.openWith, obj.value);
-  } else if (name === "备忘录") {
-    const { openApp } = useAppModal("note");
-    openApp({
-      customIndex: obj.id,
-    });
-  }
+  open(history)
 };
 </script>
 

@@ -13,6 +13,7 @@ export const openBrowser = (type: string, url: string) => {
 };
 
 export const open = (item) => {
+  console.log('item :>> ', item);
   let showType = item.showType;
   if (!showType) {
     return;

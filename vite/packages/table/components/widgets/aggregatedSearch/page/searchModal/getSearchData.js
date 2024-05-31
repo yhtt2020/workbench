@@ -24,7 +24,7 @@ export const getGroupData = (word) => {
     return false;
   }
   return {
-    name: "社群",
+    name: "群聊",
     data: arr,
   };
 };
