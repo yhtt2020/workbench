@@ -16,12 +16,13 @@ const words = inject("words");
 const isWebSource = inject("isWebSource");
 const currentSource = inject("currentSource");
 const ctrlSelectIndex = inject("ctrlSelectIndex");
+const data = inject("data");
+
 const currentIndex = ref(0);
 import { startApp } from "../../../../../ui/hooks/useStartApp";
 
 // const { type , value } = currentItem.value
 //             startApp(type, value, router)
-
 const systemList = ref([
   {
     name: "全部",
@@ -141,21 +142,21 @@ const selectAll = (name) => {
   currentIndex.value = systemList.value.findIndex((item) => item.name === name);
 };
 const openNote = (data) => {};
-const openSystemApp = (data, name) => {
-  console.log("data :>> ", data);
+const openSystemApp = (value, name) => {
+  console.log("data :>> ", value);
   if (name === "应用") {
-    startApp(data.type, data.value);
+    startApp(value.type, value.value);
   } else if (name === "备忘录") {
     const { openApp } = useAppModal("note");
     openApp({
-      customIndex: data.id,
+      customIndex: value.id,
     });
   }
 
   const history = {
-    name: data.name,
+    name: value.name,
     source: currentSource.value,
-    value: data.value,
+    value: value.value,
     type: name,
     openWith: name,
   };
