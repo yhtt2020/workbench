@@ -205,11 +205,14 @@ import {
   computed,
   getCurrentInstance,
 } from "vue";
-import { useWindowSize } from "../../drag/src/hooks/useWindowSize";
+import { useGlobalStore } from "../../../../apps/global/store";
 // import { vElementSize } from "../../drag/src/hooks/useElementSize";
 import { nanoid } from "nanoid";
 import PerfectScrollbar from "perfect-scrollbar";
 import { ModalProps } from "./types";
+import { storeToRefs } from "pinia";
+const globalStore = useGlobalStore();
+const { windowHeight, windowWidth } = storeToRefs(globalStore);
 
 const { proxy }: any = getCurrentInstance();
 // 类型注释在types.ts文件中
@@ -296,7 +299,7 @@ const isMinimize = ref(false);
 // 最大化
 const isMaximize = ref(false);
 // 底部导航栏元素
-let bottomBar : any = ref(null)
+let bottomBar: any = ref(null);
 watch(
   () => isMaximize.value,
   (val) => {
@@ -311,9 +314,7 @@ watch(
     emits("update:isFullScreen", val);
   }
 );
-// 视图大小
-const windowHeight = ref(0);
-const windowWidth = ref(0);
+
 // 弹窗名称
 const modalName = ref(nanoid(4));
 // 导航高度
@@ -360,7 +361,7 @@ const currentY = computed(() => {
 const topBarHeight = computed(() => {
   // 顶部导航栏开启时
   // if (){}
-  if (bottomBar.value) barHeight = bottomBar.value.clientHeight; 
+  if (bottomBar.value) barHeight = bottomBar.value.clientHeight;
   return 40;
 });
 
@@ -368,7 +369,7 @@ const topBarHeight = computed(() => {
 const bottomBarHeight = computed(() => {
   // 底部导航栏开启时
   // if (){}
-  if (bottomBar.value) barHeight = bottomBar.value.clientHeight; 
+  if (bottomBar.value) barHeight = bottomBar.value.clientHeight;
   return 100 + topBarHeight.value;
 });
 
@@ -653,11 +654,6 @@ onBeforeMount(() => {});
 
 // 挂载后
 onMounted(() => {
-  useWindowSize((size) => {
-    windowHeight.value = size.height.value;
-    windowWidth.value = size.width.value;
-  }, 0);
-
   init();
 });
 

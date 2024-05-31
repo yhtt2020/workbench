@@ -33,18 +33,17 @@ const { systemVisible, loginVisible, loginCb, windowWidth, windowHeight } =
 
 // 获取窗口大小
 const { width, height } = useWindowSize();
-provide("windowWidth", width);
-provide("windowHeight", height);
-// watch(
-//   [() => width.value, () => height.value],
-//   ([newWidth, newHeight]) => {
-//     windowWidth.value = newWidth;
-//     windowHeight.value = newHeight;
-//   },
-//   {
-//     immediate: true,
-//   }
-// );
+
+watch(
+  [() => width.value, () => height.value],
+  ([newWidth, newHeight]) => {
+    windowWidth.value = newWidth;
+    windowHeight.value = newHeight;
+  },
+  {
+    immediate: true,
+  }
+);
 // 领取任务奖励
 const ClaimReward = defineAsyncComponent(
   () => import("../task/components/ClaimReward.vue")
