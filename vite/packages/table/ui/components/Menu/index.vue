@@ -53,10 +53,16 @@ import {
   onBeforeUnmount,
   onUnmounted,
   getCurrentInstance,
+  watch,
 } from "vue";
 import useWindowViewport from "./useWindowViewport";
 import { reSize as vResize } from "./useElementResize";
 import Menus from "./Menus.vue";
+import { cacheStore } from './cacheTag';
+import { storeToRefs } from "pinia";
+
+const store = cacheStore();
+const { isHide } = storeToRefs(store);
 
 const { proxy } = getCurrentInstance();
 
@@ -249,9 +255,10 @@ onMounted(() => {
   window.addEventListener("click", handleCloseMenu, { capture: true });
   window.addEventListener("contextmenu", handleCloseMenu, { capture: true });
   // 扩展插槽隐藏右键菜单
-  proxy.$bus.on("closeMenus", () => {
-    show.value = false;
-  });
+  // proxy.$bus.on("closeMenus", () => {
+  //   console.log('fly reset')
+  //   show.value = false;
+  // });
 });
 
 onUnmounted(() => {
@@ -259,9 +266,19 @@ onUnmounted(() => {
   window.removeEventListener("contextmenu", handleCloseMenu, { capture: true });
 });
 // onBeforeUnmount(() => {
-//   window.addEventListener("click", handleCloseMenu, { capture: true });
-//   window.addEventListener("contextmenu", handleCloseMenu, { capture: true });
+//   // window.addEventListener("click", handleCloseMenu, { capture: true });
+//   // window.addEventListener("contextmenu", handleCloseMenu, { capture: true });
 // });
+
+// 扩展插槽隐藏右键菜单
+watch(
+  () => isHide.value,
+  (val) => {
+    if (val) {
+      show.value = false;
+    }
+  }
+)
 
 defineExpose({
   handleOpenMenu,
