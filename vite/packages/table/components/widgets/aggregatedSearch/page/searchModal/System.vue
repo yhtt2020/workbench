@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, watch, inject, computed } from "vue";
 import { highLightKeywords } from "../../utils";
 import {
@@ -11,6 +11,7 @@ import {
 } from "./getSearchData.js";
 import { storeToRefs } from "pinia";
 import Scrollbar from "./Scrollbar.vue";
+import { HistoryData } from "./types";
 import { useAppModal } from "../../../../../hooks";
 const words = inject("words");
 const isWebSource = inject("isWebSource");
@@ -77,7 +78,7 @@ const systemList = ref([
     },
   },
   {
-    name: "社群",
+    name: "群聊",
     fn: async (words) => {
       // 获取群聊数据
       let groupData = getGroupData(words);
@@ -100,7 +101,6 @@ const allSearch = async (val) => {
   // 搜索指定源
   if (currentIndex.value !== 0) {
     let res = await systemList.value[currentIndex.value].fn(val);
-    console.log("res :>> ", res);
     if (res) {
       searchList.value = [res];
     }
@@ -116,7 +116,6 @@ const allSearch = async (val) => {
     let res = await item.fn(val);
     if (res) {
       if (res.data.length > 2) {
-        console.log("res.data :>> ", res.data);
         res.data = res.data.slice(0, 2);
         res.more = true;
       }
@@ -142,26 +141,26 @@ const selectAll = (name) => {
   currentIndex.value = systemList.value.findIndex((item) => item.name === name);
 };
 const openNote = (data) => {};
-const openSystemApp = (value, name) => {
-  console.log("data :>> ", value);
-  if (name === "应用") {
-    startApp(value.type, value.value);
-  } else if (name === "备忘录") {
-    const { openApp } = useAppModal("note");
-    openApp({
-      customIndex: value.id,
-    });
-  }
-
-  const history = {
-    name: value.name,
+const openSystemApp = (obj, name) => {
+  console.log("data :>> ", obj);
+  const history: HistoryData = {
+    name: obj.name,
     source: currentSource.value,
-    value: value.value,
-    type: name,
-    openWith: name,
+    value: obj.value,
+    showType: name,
+    openWith: obj.type,
   };
 
   data.value.historyList.push(history);
+
+  if (name === "应用") {
+    startApp(obj.openWith, obj.value);
+  } else if (name === "备忘录") {
+    const { openApp } = useAppModal("note");
+    openApp({
+      customIndex: obj.id,
+    });
+  }
 };
 </script>
 

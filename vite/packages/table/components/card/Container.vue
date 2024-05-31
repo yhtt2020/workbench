@@ -327,10 +327,23 @@ const handleTouchStart = (e) => {
 
 onBeforeMount(() => {
   // 处理默认数据
-  if (props.options.defaultData) {
-    props.customData = _.defaults(props.customData, props.options.defaultData);
+  let defaultData = props.options.defaultData;
+  let currentData = props.customData;
+  let _updateFlag = currentData?._updateFlag ? currentData?._updateFlag : true;
+  if (defaultData && _updateFlag != defaultData?._updateFlag) {
+    console.time("组件数据更新");
+    props.customData = _.defaults(currentData, defaultData);
+    // props.customData = _.merge(props.customData, props.options.defaultData);
+    console.timeEnd("组件数据更新");
+    console.log(
+      "组件数据更新 ID :>> ",
+      props.customIndex,
+      " name :>> ",
+      props.header.title
+    );
   }
 });
+
 onMounted(() => {
   // 防止自定义时，无法获取到container导致卡死
   if (container.value) {
@@ -341,7 +354,6 @@ onMounted(() => {
       capture: true,
     });
   }
-
 });
 onBeforeUnmount(() => {
   if (container.value) {
@@ -352,7 +364,6 @@ onBeforeUnmount(() => {
       capture: true,
     });
   }
-
 });
 // emits 小组件事件回调
 /**
@@ -599,8 +610,8 @@ const removeCard = () => {
   if (props.options.customDel) return;
   customDelete();
   // 将社群桌面的数据进行同步,只限社群管理员。
-  if (props.desk.hasOwnProperty("communityNo")) {
-    proxy.$bus.emit('updateSync');
+  if (props.desk?.hasOwnProperty("communityNo")) {
+    proxy.$bus.emit("updateSync");
   }
 };
 // 实际删除事件
@@ -753,7 +764,6 @@ defineExpose({
   backdrop-filter: blur(50px);
   -webkit-backdrop-filter: blur(50px);
 }
-
 
 .menu-box {
   z-index: 9;

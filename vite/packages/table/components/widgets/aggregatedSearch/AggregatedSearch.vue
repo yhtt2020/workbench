@@ -9,7 +9,7 @@ const header = {
   title: "聚合搜索",
   showIcon: "/img/appLogo/aggregateSearch.png",
 };
-const cloneSourceList = _.cloneDeep(sourceList);
+const cloneSourceList = JSON.parse(JSON.stringify(sourceList))
 const options = computed(() => {
   return {
     // 初始化数据
@@ -27,6 +27,7 @@ const options = computed(() => {
       historyList: [],
       noBorder: true,
       customSize: "4x2",
+      _updateFlag: "222",
     },
     noBorder: customData.value.noBorder,
   };
@@ -113,7 +114,7 @@ const surplusIcon = computed(() => {
     arr = sourceList.slice(0, 3);
   }
   arr = customData.value.sourceList?.slice(1, 4);
-  arr.unshift(...defaultSourceList);
+  arr?.unshift(...defaultSourceList);
 
   return arr;
 });

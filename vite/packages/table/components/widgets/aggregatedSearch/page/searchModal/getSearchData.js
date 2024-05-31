@@ -16,6 +16,7 @@ export const getGroupData = (word) => {
       arr.push({
         ...item,
         icon: item.avatar,
+        value: item.groupID,
       });
     }
   });
@@ -86,6 +87,9 @@ export const getNoteData = async (word) => {
       ...item,
       name: item.customData.title,
       icon: "/img/appLogo/note.png",
+      value: {
+        customIndex: item.id,
+      },
     };
   });
   return {
@@ -128,10 +132,10 @@ export const getClipboardData = async (words) => {
     return {
       ...item,
       name: item.content,
-      icon:'/img/appLogo/clipboard.png'
+      icon: "/img/appLogo/clipboard.png",
     };
   });
-  console.log('arr2 :>> ', arr);
+  console.log("arr2 :>> ", arr);
   return {
     name: "剪切板",
     data: arr,
