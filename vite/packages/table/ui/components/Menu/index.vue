@@ -55,7 +55,6 @@ import {
   getCurrentInstance,
   inject,
   watch,
-  watch,
 } from "vue";
 // import useWindowViewport from "./useWindowViewport";
 import { reSize as vResize } from "./useElementResize";
