@@ -1,14 +1,8 @@
-<!-- 社群桌面详情页面 -->
 <template>
   <!-- 管理员 -->
-  <template v-if="communityRole">
+  <template v-if="communityAuth(communityInfo?.no)">
     <div class="relative flex flex-col h-full">
-      <xt-mix-menu
-        class="w-full h-full"
-        :menus="deskMenu"
-        ref="mixMenu"
-        v-if="displayDesks.length !== 0"
-      >
+      <xt-mix-menu class="w-full h-full" :menus="deskMenu" ref="mixMenu">
         <!-- 导航栏 -->
         <template #extraMenu>
           <ExtraMenu />
@@ -26,7 +20,6 @@
           :keepAddIcon="keepAddIcon"
           @changeEditing="editing = !editing"
           @onArrange="onArrange"
-          :communityRole="communityRole"
           :communityInfo="communityInfo"
         >
           <!-- 拿菜单数据 -->
@@ -84,7 +77,6 @@
               :editing="editing"
               :key="key"
               :currentDesk="currentDesk"
-              :communityRole="communityRole"
               :communityInfo="communityInfo"
             />
           </span>
@@ -100,19 +92,13 @@
         :currentDeskId="currentDeskId"
         @tabDeskId="setCurrentDeskId"
       />
-
     </div>
   </template>
 
   <!-- 成员 -->
   <template v-else>
     <div class="relative flex flex-col h-full">
-      <xt-mix-menu
-        class="w-full h-full"
-        :menus="deskMenu"
-        ref="mixMenu"
-        v-if="displayDesks.length !== 0"
-      >
+      <xt-mix-menu class="w-full h-full" :menus="deskMenu" ref="mixMenu">
         <Desk
           v-if="currentDesk && currentDesk?.cards?.length > 0"
           :global-settings="settings"
@@ -123,6 +109,8 @@
           :key="currentDeskId"
           :keepAddIcon="keepAddIcon"
           @onArrange="onArrange"
+          @changeEditing="editing = !editing"
+          :communityInfo="communityInfo"
         >
           <!-- 拿菜单数据 -->
           <template #settingsAllAfter>
@@ -140,21 +128,17 @@
           <span v-show="false">
             <Desk
               ref="currentDeskRef"
-              :editing="false"
+              :editing="editing"
               :key="key"
               :currentDesk="currentDesk"
+              :communityInfo="communityInfo"
             />
           </span>
         </template>
-
-        <DeskEditMode
-          ref="currentDeskEditRef"
-          v-model:settings="currentDesk.settings"
-          :global-settings="settings"
-        />
       </xt-mix-menu>
 
       <DeskTabUI
+        v-if="displayDesks.length > 0"
         :showTopBar="showTopBar"
         :fullScreen="fullScreen"
         :communityInfo="communityInfo"
@@ -321,14 +305,9 @@ import NewAddCard from "../../../../page/app/card/NewAddCard.vue";
 import ShareDesk from "../../../../components/desk/ShareDesk.vue";
 import ExportDesk from "../../../../components/desk/ExportDesk.vue";
 import DeskPreview from "../../../../components/desk/DeskPreview.vue";
-import DeskEditMode from "./DeskEditMode.vue";
 import VueCustomScrollbar from "../../../../../../src/components/vue-scrollbar.vue";
 import Icon from "../../../../components/Icon.vue";
 import HorizontalPanel from "../../../../components/HorizontalPanel.vue";
-
-// 其他文件
-import menuMinis from "../../hooks/communityMenu";
-import { completeTask } from "../../../task/task";
 
 // store文件
 import { useNavigationStore } from "../../../../components/desk/navigationBar/navigationStore";
@@ -336,11 +315,16 @@ import { appStore } from "../../../../store";
 import { taskStore } from "../../../task/store";
 import { deskStore } from "../../../../store/desk";
 import { marketStore } from "../../../../store/market";
-import { communityNavStore } from "../../../../components/bottomPanel/store/communityNavStore";
 import { useDeskStore } from "../../../../components/desk/store";
 import { useFreeLayoutStore } from "../../../../components/desk/freeLayout/store";
 import { useFloatMenuStore } from "../../../../components/desk/floatMenu/store";
 import { communityDeskStore } from "../../store/communityDeskStore";
+import { communityNavStore } from "../../../../components/bottomPanel/store/communityNavStore";
+
+// 其他文件
+import menuMinis from "../../hooks/communityMenu";
+import { completeTask } from "../../../task/task";
+import { communityAuth } from "../../hooks/deskCreateMethod";
 
 export default {
   name: "DeskDetailPage",
@@ -378,26 +362,25 @@ export default {
     },
   },
 
-  mixins: [menuMinis],
-
   components: {
     Desk,
     ExtraMenu,
-    NoAdminEmpty,
     AdminEmpty,
+    NoAdminEmpty,
     DeskAddButton,
+    VueCustomScrollbar,
+    Icon,
+    HorizontalPanel,
+    DeskPreview,
+    ExportDesk,
     DeskMarket,
     AllDeskList,
     DeskTabUI,
     NewAddCard,
     ShareDesk,
-    ExportDesk,
-    DeskPreview,
-    DeskEditMode,
-    VueCustomScrollbar,
-    Icon,
-    HorizontalPanel,
   },
+
+  mixins: [menuMinis],
 
   data() {
     return {
@@ -413,7 +396,7 @@ export default {
       // 当前添加tab类型
       currentAddTab: { name: "market" },
       // 隐藏桌面组件参数
-      comHide: false,
+      comHide: true,
       // 唯一key
       key: Date.now(),
       // 显示更多桌面
@@ -489,11 +472,11 @@ export default {
   },
 
   computed: {
-    // ...mapWritableState(communityNavStore, ["currentCommunity"]),
     ...mapWritableState(deskStore, ["apiList"]),
     ...mapWritableState(taskStore, ["taskID", "step", "taskTmp"]),
     ...mapWritableState(useDeskStore, ["menus"]),
-    ...mapWritableState(communityDeskStore, ["syncDesk", "setting","communityDeskInfo"]),
+    ...mapWritableState(useDeskStore, ["menus"]),
+    ...mapWritableState(communityNavStore, ["currentCommunity"]),
     ...mapWritableState(appStore, [
       "fullScreen",
       "showGuide",
@@ -511,33 +494,25 @@ export default {
       "selectNav",
       "jumpDesk",
     ]),
+    ...mapWritableState(communityDeskStore, [
+      "syncDesk",
+      "setting",
+      "communityDeskInfo",
+    ]),
 
     // 社群信息
     communityInfo() {
-      // console.log('查看社群信息',this.communityDeskInfo);
-      return this.communityDeskInfo;
-    },
-
-    // 社群角色权限
-    communityRole() {
-      return this.communityDeskInfo?.role === "owner";
+      return this.currentCommunity?.item;
     },
 
     // 右键下拉菜单
     deskMenu() {
       /**当前社群具备管理员资格**/
-      if (this.communityRole) {
+      if (this.communityAuth(this.communityInfo?.no)) {
         return this.communityMenus;
       } else {
         return this.memberMenus;
       }
-    },
-
-    // 点击桌面
-    clickDesk() {
-      this.step = -1;
-      this.taskID = this.taskTmp;
-      this.taskTmp = "";
     },
 
     // 过滤出当前社群名下所有桌面的列表
@@ -548,7 +523,7 @@ export default {
       const newArr = _.filter(filterList, (desk) => {
         return Number(this.communityInfo.no) === Number(desk.communityNo);
       });
-      if (this.communityRole) {
+      if (this.communityAuth(this.communityInfo?.no)) {
         return newArr;
       } else {
         const deskId = _.map(this.syncDesk?.desks, (desk) => {
@@ -589,11 +564,18 @@ export default {
 
     // 当前桌面
     currentDesk() {
+      // console.log("测试", this.currentDeskId);
+
       let currentDesk = this.deskList.find((desk) => {
         if (desk.hasOwnProperty("communityNo")) {
-          return desk.id === this.currentDeskId;
+          if (Number(this.communityInfo?.no) === Number(desk?.communityNo)) {
+            return desk.id === this.currentDeskId;
+          }
         }
       });
+
+      // console.log("查看当前桌面", currentDesk);
+
       if (currentDesk !== undefined) {
         this.key = Date.now();
         return currentDesk;
@@ -625,12 +607,9 @@ export default {
       this.addDeskVisible = true;
       this.moreDesk();
     });
-    this.$bus.on("updateSync",()=>{
-      this.syncSaveCommunity();
-    })
-
-    // 默认触发
-    this.setCurrentDefaultDesk();
+    this.$bus.on("updateSync", () => {
+      // this.syncSaveCommunity();
+    });
 
     // 获取推荐桌面数据
     this.hotDesk.push(this.apiList[0].children[0]);
@@ -653,6 +632,8 @@ export default {
       this.loadCommunityCloud();
     }
 
+    // 默认触发
+    this.setCurrentDefaultDesk();
   },
 
   methods: {
@@ -669,21 +650,165 @@ export default {
       "saveCommunityDeskDetail",
       "clearDeskList",
     ]),
+    communityAuth,
 
     // 设置桌面id的切换方法
     setCurrentDeskId(id) {
       this.$emit("updateCurrentDesk", id);
     },
 
+    // 点击桌面
+    clickDesk() {
+      this.step = -1;
+      this.taskID = this.taskTmp;
+      this.taskTmp = "";
+    },
+
+    // 添加新桌面
+    doAddDesk(deskName) {
+      this.$emit("add", deskName);
+      this.key = Date.now();
+      this.addDeskVisible = false;
+      this.syncSaveCommunity();
+    },
+
+    // 删除桌面
+    delDesk() {
+      const filterList = this.deskList.filter((desk) => {
+        if (desk.hasOwnProperty("communityNo")) {
+          return desk;
+        }
+      });
+      // 当前桌面的卡片数据进行删除
+      this.currentDesk?.cards?.forEach((item) => {
+        //移除桌面相关的便签卡片
+        if (item.name === "notes" && !this.$usePlat()) {
+          tsbApi.db
+            .find({
+              selector: {
+                _id: "note:" + item.id,
+              },
+            })
+            .then((res) => {
+              if (res?.docs.length) {
+                tsbApi.db.put({
+                  ...res.docs[0],
+                  deskId: "",
+                  deskName: "",
+                });
+              }
+            });
+        }
+      });
+      window.$ui.confirm("删除当前桌面？此操作不可还原。", "", {
+        type: "warning",
+        okText: "删除桌面",
+        okButtonWidth: "100",
+        ok: () => {
+          if (this.communityDeskList.length === 1) {
+            const index = this.deskList.findIndex((desk) => {
+              return String(desk?.id) === String(this.currentDesk?.id);
+            });
+            this.deskList.splice(index, 1);
+            this.doAddDesk("空白桌面");
+            // this.$emit("changeDesk", { id: filterList[0].id });
+            this.$emit("updateCurrentDesk", filterList[0]?.id);
+            this.clearFreeLayout(this.currentDeskId);
+            // 删除桌面数据
+            this.key = Date.now();
+          } else {
+            const index = this.deskList.findIndex((desk) => {
+              return String(desk?.id) === String(this.currentDesk?.id);
+            });
+            this.deskList.splice(index, 1);
+            // this.$emit("changeDesk", { id: filterList[0].id });
+            this.$emit("updateCurrentDesk", filterList[0]?.id);
+            this.clearFreeLayout(this.currentDeskId);
+            // 删除桌面数据
+            this.key = Date.now();
+          }
+          this.syncSaveCommunity();
+        },
+      });
+    },
+
+    // 读取文件配置
+    async readConfig(file) {
+      let needImportDesk;
+      needImportDesk = JSON.parse(file);
+      const { desk, freeLayoutData, freeLayoutState } = needImportDesk;
+      let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
+      desk.forEach((g) => {
+        let oldId = g.id;
+        //修正一下老版本导出的数据
+        if (g.cardsHeight) {
+          g.deskHeight = g.cardsHeight;
+        }
+        if (g.settings.cardZoom) {
+          g.settings.zoom = g.settings.cardZoom;
+        }
+        let cardZoom = (
+          (g.settings.zoom * cardsHeight) /
+          g.deskHeight
+        ).toFixed();
+        g.icon = "desktop";
+        g.settings.zoom = parseInt(cardZoom);
+        g.id = `${this.currentComInfo?.no}${nanoid(8)}`;
+        g.communityNo = this.currentComInfo?.no;
+        // 将导入的便签重新修改时间
+        g?.cards?.forEach((item, index) => {
+          //移除桌面相关的便签卡片
+          if (item.name === "notes" && !this.$usePlat()) {
+            const now = new Date().getTime();
+            const obj = {
+              ...item,
+              id: now,
+              _id: "note:" + now,
+              createTime: now,
+              updateTime: now,
+              isDelete: false,
+              deskId: g.id,
+              deskName: g.name,
+            };
+            if (!this.$usePlat()) {
+              tsbApi.db.put(obj);
+            }
+            g.cards[index] = obj;
+          }
+        });
+
+        if (freeLayoutState[oldId]) {
+          this.freeLayoutData[g.id] = freeLayoutData[oldId];
+          this.freeLayoutState[g.id] = freeLayoutState[oldId];
+        }
+        this.deskList.unshift(g);
+      });
+      this.addDeskVisible = false;
+      message.success("为您成功导入" + desk.length + "个桌面。");
+      this.setCurrentDeskId(needImportDesk.desk[0].id);
+    },
+
+    // 编辑操作
+    startEdit() {
+      this.key = Date.now();
+      this.editing = true;
+      this.$refs.currentDeskRef.update();
+    },
+    stopEdit() {
+      this.key = Date.now();
+      this.editing = false;
+    },
+
     // 数据同步云端
     syncSaveCommunity() {
-      console.log("同步当前数据", this.currentDesk);
+      // console.log("同步当前数据", this.currentDesk);
       this.setCurrentDeskNo(this.communityInfo.no);
       this.setCurrentDeskAllList(this.communityDeskList);
       this.setCurrentDeskData(this.currentDesk);
       this.saveCommunityDesk();
       this.saveCommunityDeskDetail();
     },
+
     // 获取云端同步数据
     loadCommunityCloud() {
       this.setCurrentDeskNo(this.communityInfo.no);
@@ -860,141 +985,6 @@ export default {
     showMore() {
       this.$emit("showMore");
     },
-
-    // 编辑操作
-    startEdit() {
-      this.key = Date.now();
-      this.editing = true;
-      this.$refs.currentDeskRef.update();
-    },
-    stopEdit() {
-      this.key = Date.now();
-      this.editing = false;
-    },
-
-    // 读取文件配置
-    async readConfig(file) {
-      let needImportDesk;
-      needImportDesk = JSON.parse(file);
-      const { desk, freeLayoutData, freeLayoutState } = needImportDesk;
-      let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
-      desk.forEach((g) => {
-        let oldId = g.id;
-        //修正一下老版本导出的数据
-        if (g.cardsHeight) {
-          g.deskHeight = g.cardsHeight;
-        }
-        if (g.settings.cardZoom) {
-          g.settings.zoom = g.settings.cardZoom;
-        }
-        let cardZoom = (
-          (g.settings.zoom * cardsHeight) /
-          g.deskHeight
-        ).toFixed();
-        g.icon = "desktop";
-        g.settings.zoom = parseInt(cardZoom);
-        g.id = `${this.currentComInfo?.no}${nanoid(8)}`;
-        g.communityNo = this.currentComInfo?.no;
-        // 将导入的便签重新修改时间
-        g?.cards?.forEach((item, index) => {
-          //移除桌面相关的便签卡片
-          if (item.name === "notes" && !this.$usePlat()) {
-            const now = new Date().getTime();
-            const obj = {
-              ...item,
-              id: now,
-              _id: "note:" + now,
-              createTime: now,
-              updateTime: now,
-              isDelete: false,
-              deskId: g.id,
-              deskName: g.name,
-            };
-            if (!this.$usePlat()) {
-              tsbApi.db.put(obj);
-            }
-            g.cards[index] = obj;
-          }
-        });
-
-        if (freeLayoutState[oldId]) {
-          this.freeLayoutData[g.id] = freeLayoutData[oldId];
-          this.freeLayoutState[g.id] = freeLayoutState[oldId];
-        }
-        this.deskList.unshift(g);
-      });
-      this.addDeskVisible = false;
-      message.success("为您成功导入" + desk.length + "个桌面。");
-      this.setCurrentDeskId(needImportDesk.desk[0].id);
-    },
-
-    // 添加新桌面
-    doAddDesk(deskName) {
-      this.$emit("add", deskName);
-      this.key = Date.now();
-      this.addDeskVisible = false;
-      this.syncSaveCommunity();
-    },
-
-    // 删除桌面
-    delDesk() {
-      const filterList = this.deskList.filter((desk) => {
-        if (desk.hasOwnProperty("communityNo")) {
-          return desk;
-        }
-      });
-      // 当前桌面的卡片数据进行删除
-      this.currentDesk?.cards?.forEach((item) => {
-        //移除桌面相关的便签卡片
-        if (item.name === "notes" && !this.$usePlat()) {
-          tsbApi.db
-            .find({
-              selector: {
-                _id: "note:" + item.id,
-              },
-            })
-            .then((res) => {
-              if (res?.docs.length) {
-                tsbApi.db.put({
-                  ...res.docs[0],
-                  deskId: "",
-                  deskName: "",
-                });
-              }
-            });
-        }
-      });
-      window.$ui.confirm("删除当前桌面？此操作不可还原。", "", {
-        type: "warning",
-        okText: "删除桌面",
-        okButtonWidth: "100",
-        ok: () => {
-          if (this.communityDeskList.length === 1) {
-            const index = this.deskList.findIndex((desk) => {
-              return String(desk?.id) === String(this.currentDesk?.id);
-            });
-            this.deskList.splice(index, 1);
-            this.doAddDesk("空白桌面");
-            // this.$emit("changeDesk", { id: filterList[0].id });
-            this.$emit("updateCurrentDesk", filterList[0]?.id);
-            this.clearFreeLayout(this.currentDeskId);
-            // 删除桌面数据
-            this.key = Date.now();
-          } else {
-            const index = this.deskList.findIndex((desk) => {
-              return String(desk?.id) === String(this.currentDesk?.id);
-            });
-            this.deskList.splice(index, 1);
-            // this.$emit("changeDesk", { id: filterList[0].id });
-            this.$emit("updateCurrentDesk", filterList[0]?.id);
-            this.clearFreeLayout(this.currentDeskId);
-            // 删除桌面数据
-            this.key = Date.now();
-          }
-          this.syncSaveCommunity();
-        },
-      });
-    },
   },
 
   watch: {
@@ -1003,34 +993,12 @@ export default {
       handler(newVal) {
         // 默认选中桌面方法
         this.setCurrentDefaultDesk();
+        // 加载数据
+        this.loadCommunityCloud();
       },
       immediate: true,
       deep: true,
     },
-
-    // 监听社群桌面的id变化
-    currentDesk: {
-      handler(newVal) {
-        if (this.loadingVisible) {
-          setTimeout(() => {
-            this.loadingVisible = false;
-          }, 150);
-        } else {
-          if (!this.communityRole) {
-            // 每隔十分钟检测云端数据是否更新
-            this.loadTime = setInterval(() => {
-              this.loadCommunityCloud();
-            }, 600000);
-          }
-        }
-      },
-      immediate: true,
-      deep: true,
-    },
-  },
-
-  unmounted() {
-    clearInterval(this.loadTime);
   },
 };
 </script>

@@ -1,6 +1,7 @@
 <template>
   <!-- 桌面渲染页面 -->
   <DeskDetailPage
+    v-if="!communityVisible"
     :currentDeskId="currentDeskId"
     :settings="settings"
     :desk-list="desks"
@@ -10,9 +11,6 @@
     @updateCurrentDesk="updateId"
     @add="doAddDesk"
   />
-
-  <!-- 社群桌面空时,引导创建桌面弹窗 -->
-  <CreateDeskModal ref="createDeskRef" @createDesk="doAddDesk('空白桌面')" />
 </template>
 
 <script>
@@ -23,7 +21,7 @@ import { deskTemplates } from "../../../js/data/deskTemplates";
 // store文件
 import { homeStore } from "../../../store/home";
 import { cardStore } from "../../../store/card";
-import { communityDeskStore } from "../store/communityDeskStore";
+import { communityNavStore } from "../../../components/bottomPanel/store/communityNavStore";
 
 // page文件
 import CreateDeskModal from "../components/CreateDeskModal.vue";
@@ -31,6 +29,46 @@ import DeskDetailPage from "./deskDetail/DeskDetailPage.vue";
 
 export default {
   name: "CommunityGroupDesk",
+
+  emits: ["update:currentDeskId", "showMore"],
+
+  props: {
+    // 配置项
+    settings: {
+      type: Object,
+      default: () => {},
+    },
+    // 桌面数据
+    deskList: {
+      type: Array,
+      default: () => [],
+    },
+    // 切换个人和社群桌面
+    communityVisible: {
+      type: Boolean,
+      default: false,
+    },
+    //是否显示tabs
+    showTabs: {
+      type: Boolean,
+      default: true,
+    },
+    //是否显示顶部栏
+    showTopBar: {
+      type: Boolean,
+      default: true,
+    },
+    //是否显示工具栏
+    showTools: {
+      type: Boolean,
+      default: true,
+    },
+    // 当前桌面id
+    currentDeskId: {
+      type: String,
+      required: true,
+    },
+  },
 
   components: {
     CreateDeskModal,
@@ -49,28 +87,10 @@ export default {
   computed: {
     ...mapWritableState(homeStore, ["currentDeskId"]),
     ...mapWritableState(cardStore, ["settings", "desks"]),
-    ...mapWritableState(communityDeskStore, ["communityDeskInfo"]),
+    ...mapWritableState(communityNavStore, ["currentCommunity"]),
 
     communityInfo() {
-      return this.communityDeskInfo;
-    },
-  },
-
-  props: {
-    //是否显示tabs
-    showTabs: {
-      type: Boolean,
-      default: true,
-    },
-    //是否显示顶部栏
-    showTopBar: {
-      type: Boolean,
-      default: true,
-    },
-    //是否显示工具栏
-    showTools: {
-      type: Boolean,
-      default: true,
+      return this.currentCommunity?.item;
     },
   },
 
@@ -78,12 +98,13 @@ export default {
     // 开启社群桌面引导创建弹窗
     this.$bus.on("openCommunityDesk", () => {
       this.$nextTick(() => {
-        this.$refs.createDeskRef?.openCommunityDeskModal();
+        this.doAddDesk("空白桌面");
       });
     });
   },
 
   methods: {
+
     // 社群桌面引导弹窗创建桌面方法
     doAddDesk(deskName) {
       if (deskName) {
@@ -108,17 +129,17 @@ export default {
       if (deskName) {
         desk.cards = [];
       }
-      this.desks.unshift(desk);
-      this.$bus.emit('changeCurrentDesk',{id:desk.id});
+      this.deskList.unshift(desk);
+      this.$emit("changeDesk", { id: desk.id });
       this.deskTitle = "";
     },
 
     // 更新桌面id
-    updateId(id){
-      this.currentDeskId = id;
-      this.$bus.emit('changeCurrentDesk',{id:id});
+    updateId(id) {
+      this.$emit("update:currentDeskId", id);
+      this.$emit("changeDesk", { id: id });
     },
-    
+
     // 解决桌面卡片数据重置
     cleanMuuriData(list) {
       list.forEach((li) => {
@@ -127,6 +148,7 @@ export default {
       });
       return [...list];
     },
+
   },
 };
 </script>
