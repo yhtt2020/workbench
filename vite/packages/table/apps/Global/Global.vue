@@ -9,13 +9,14 @@ import {
   inject,
   defineAsyncComponent,
   watch,
+  provide,
 } from "vue";
 // store
 import { storeToRefs } from "pinia";
 import { taskStore as useTaskStore } from "../task/store";
 import { useGlobalStore } from "./store";
 // 检查当前网络状态
-import { useNetwork } from "@vueuse/core";
+import { useNetwork, useWindowSize } from "@vueuse/core";
 const {
   isOnline,
   offlineAt,
@@ -26,6 +27,24 @@ const {
   type,
 } = useNetwork();
 
+const globalStore: any = useGlobalStore();
+const { systemVisible, loginVisible, loginCb, windowWidth, windowHeight } =
+  storeToRefs(globalStore);
+
+// 获取窗口大小
+const { width, height } = useWindowSize();
+provide("windowWidth", width);
+provide("windowHeight", height);
+// watch(
+//   [() => width.value, () => height.value],
+//   ([newWidth, newHeight]) => {
+//     windowWidth.value = newWidth;
+//     windowHeight.value = newHeight;
+//   },
+//   {
+//     immediate: true,
+//   }
+// );
 // 领取任务奖励
 const ClaimReward = defineAsyncComponent(
   () => import("../task/components/ClaimReward.vue")
@@ -63,24 +82,24 @@ import { useLogin } from "../../permission/user/useLogin";
 
 const tt: any = inject("tt");
 const { proxy }: any = getCurrentInstance();
-
-const globalStore: any = useGlobalStore();
-const { systemVisible, loginVisible, loginCb } = storeToRefs(globalStore);
 import { useUpdateUserInfo } from "../../permission/user/useUserPermit";
 import { usePermissionStore } from "../../permission/store";
 
-const usePermission = usePermissionStore()
+const usePermission = usePermissionStore();
 const { currentEnv } = storeToRefs(usePermissionStore);
 // 网络情况判断
-watch(()=>isOnline.value, (newValue, oldValue) => {
-  if(newValue){
-    // 上线
-    if(usePermission.isOffline) usePermission.setOffline(false)
-  }else{
-    // 掉线
-    usePermission.setOffline(true)
+watch(
+  () => isOnline.value,
+  (newValue, oldValue) => {
+    if (newValue) {
+      // 上线
+      if (usePermission.isOffline) usePermission.setOffline(false);
+    } else {
+      // 掉线
+      usePermission.setOffline(true);
+    }
   }
-})
+);
 // 文件弹窗
 const fileVisible = ref(true);
 const file: any = ref(null);
@@ -106,7 +125,7 @@ import { useAppModal } from "../../hooks";
 let timer;
 onMounted(() => {
   const { initApp } = useAppModal("");
-  initApp()
+  initApp();
   // 打开系统设置
   proxy.$bus.on("openSystemSet", () => {
     console.log("systemVisible.value :>> ", systemVisible.value);
