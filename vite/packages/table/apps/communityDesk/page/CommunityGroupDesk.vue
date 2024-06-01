@@ -11,6 +11,9 @@
     @updateCurrentDesk="updateId"
     @add="doAddDesk"
   />
+
+  <!-- 导入已有桌面的弹窗组件 -->
+  <ExistDesktop ref="existDesktopRef" />
 </template>
 
 <script>
@@ -24,8 +27,8 @@ import { cardStore } from "../../../store/card";
 import { communityNavStore } from "../../../components/bottomPanel/store/communityNavStore";
 
 // page文件
-import CreateDeskModal from "../components/CreateDeskModal.vue";
 import DeskDetailPage from "./deskDetail/DeskDetailPage.vue";
+import ExistDesktop from "../components/ExistDesktop .vue";
 
 export default {
   name: "CommunityGroupDesk",
@@ -71,8 +74,8 @@ export default {
   },
 
   components: {
-    CreateDeskModal,
     DeskDetailPage,
+    ExistDesktop,
   },
 
   data() {
@@ -95,12 +98,20 @@ export default {
   },
 
   mounted() {
-    // 开启社群桌面引导创建弹窗
+    // 触发管理员创建默认空桌面
     this.$bus.on("openCommunityDesk", () => {
       this.$nextTick(() => {
         this.doAddDesk("空白桌面");
       });
     });
+
+    // 
+    this.$bus.on("openExistDeskListModal",() => {
+      this.$nextTick(()=>{
+        this.$refs.existDesktopRef?.openExistDeskModal();
+      })
+    })
+
   },
 
   methods: {
@@ -124,12 +135,11 @@ export default {
         icon: "desktop",
         cards: this.cleanMuuriData(deskTemplates[this.selectDesk.name]),
         communityNo: this.communityInfo?.no,
-        communityDeskId: `${this.communityInfo?.no}_${nanoid(4)}`,
       };
       if (deskName) {
         desk.cards = [];
       }
-      this.deskList.unshift(desk);
+      this.deskList.unshift({...desk,communityDeskId: `${this.communityInfo?.no}_${desk?.id}`,});
       this.$emit("changeDesk", { id: desk.id });
       this.deskTitle = "";
     },
