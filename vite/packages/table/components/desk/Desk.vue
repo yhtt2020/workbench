@@ -197,17 +197,16 @@
           }
         "
       ></NewAddCard>
-      <!--  :communityRole="communityInfo?.role ? false : true" -->
     </div>
   </transition>
   <AppCenter v-if="visible" />
   <!-- 添加图标 -->
   <EditNewNavigation
     v-if="editVisible"
+    :communityRole="communityInfo?.role ? true : false"
     @setQuick="editVisible = false"
     @addIcon="addIcon"
   ></EditNewNavigation>
-  <!-- :communityRole="communityRole" -->
   <GalleryModal ref="galleryRef" />
 </template>
 
