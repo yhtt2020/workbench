@@ -104,7 +104,7 @@ const addDesk = () => {
     const option = {
       ...deskFound,
       communityNo: no,
-      communityDeskId: `${no}_${deskFound?.id}`,
+      id:`${no}_${deskFound?.id}`,
     };
     // 避免重复添加
     const index = _.findIndex(desks.value, (desk) => {
