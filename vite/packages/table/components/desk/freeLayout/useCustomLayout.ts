@@ -190,7 +190,6 @@ export const useCustomLayout = async (options) => {
   cardPositionInit(arr1x1);
   // 开始收尾
   useDelCard(positioningId);
-  console.log("cb :>> ", cb);
   cb && cb(position);
 };
 /**

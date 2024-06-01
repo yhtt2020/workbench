@@ -232,17 +232,29 @@ const cutCanvas = async (config) => {
     }
   }, 50);
   if (!redirect) return;
+  let x = Infinity;
+  let y = Infinity;
+  setTimeout(() => {
+    Object.values(getFreeLayoutData.value).forEach((item: any) => {
+      if (item.top < y) {
+        y = item.top;
+      }
 
-  getFreeLayoutState.value.mode.align = "custom";
-  const zoom = getFreeLayoutState.value.canvas.zoom;
-  getFreeLayoutState.value.line.centerLine.y = top - 20;
-  getFreeLayoutState.value.line.centerLine.x =
-    (left * zoom - position + scrollWidth / 2) / zoom;
-  proxy.$bus.emit("restoreLocation");
-  getFreeLayoutState.value.system.hide = false;
-  loading.value = false;
-  console.timeEnd("Free Layout Run Time");
-  console.log("--------------- 处理画布结束 ---------------");
+      if (item.left < x) {
+        x = item.left;
+      }
+    });
+    getFreeLayoutState.value.mode.align = "custom";
+    const zoom = getFreeLayoutState.value.canvas.zoom;
+    getFreeLayoutState.value.line.centerLine.y = y - 20;
+    getFreeLayoutState.value.line.centerLine.x =
+      (x * zoom - position + scrollWidth / 2) / zoom;
+    proxy.$bus.emit("restoreLocation");
+    getFreeLayoutState.value.system.hide = false;
+    loading.value = false;
+    console.timeEnd("Free Layout Run Time");
+    console.log("--------------- 处理画布结束 ---------------");
+  }, 100);
 };
 
 /**
@@ -314,7 +326,7 @@ const dragStart = () => {
 // 元素拖拽结束
 const dragStop = (item) => {
   setTimeout(() => {
-    cutCanvas();
+    cutCanvas({});
   }, 5);
 
   if (!isSelectAll.value) {
