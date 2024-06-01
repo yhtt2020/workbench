@@ -230,6 +230,20 @@ export const communityDeskStore = defineStore("communityDesk", {
         }
       });
     },
+
+    // 获取云存储数据
+    async getCommunityData(){
+      // 获取社群id
+      const communityNo = this.communityDesk.communityDeskNo;
+      // 桌面详情的缓存key
+      const loadKey = `_${communityDeskDetail}${communityNo}`;
+      const rs = await archiveHelper.loadFromCommunity(
+        communityNo,
+        communityNavAppId,
+        loadKey
+      );
+      return rs.data?.data?.deskDetail;
+    },
   },
 
   persist: {
