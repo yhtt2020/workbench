@@ -754,8 +754,8 @@ export default {
      */
     stashLayout() {
       let bound = {
-        width: this.$refs.deskContainer.clientWidth,
-        height: this.$refs.deskContainer.clientHeight,
+        width: this.$refs.deskContainer?.clientWidth,
+        height: this.$refs.deskContainer?.clientHeight,
       };
       this.stashBound = bound;
     },
@@ -769,8 +769,8 @@ export default {
         return;
       }
       let bound = {
-        width: this.$refs.deskContainer.clientWidth,
-        height: this.$refs.deskContainer.clientHeight,
+        width: this.$refs.deskContainer?.clientWidth,
+        height: this.$refs.deskContainer?.clientHeight,
       };
       this.adjustZoom = bound.height / this.stashBound.height;
       this.update();
@@ -782,8 +782,8 @@ export default {
     getLayoutSize() {
       if (!this.isFreeLayout) {
         this.currentDesk.layoutSize = {
-          width: this.$refs.deskContainer.clientWidth,
-          height: this.$refs.deskContainer.clientHeight,
+          width: this.$refs.deskContainer?.clientWidth,
+          height: this.$refs.deskContainer?.clientHeight,
         };
         if (this.currentDesk?.settings?.preparing) {
           message.loading({
@@ -794,8 +794,8 @@ export default {
             setTimeout(() => {
               this.$nextTick(() => {
                 const fullLayoutSize = {
-                  width: this.$refs.deskContainer.clientWidth,
-                  height: this.$refs.deskContainer.clientHeight,
+                  width: this.$refs.deskContainer?.clientWidth,
+                  height: this.$refs.deskContainer?.clientHeight,
                 };
                 const settings = this.currentDesk.settings;
                 const oldLayoutSize = this.settings.layoutSize;
