@@ -8,7 +8,6 @@ import { STYLE_ARRAY } from "./types";
 export const initStyle = () => {
   STYLE_ARRAY.forEach((Style) => {
     const styleColor = getStyleColor(Style);
-    console.log("styleColor :>> ", Style, styleColor);
     if (styleColor) setColor(Style, styleColor);
   });
 
