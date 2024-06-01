@@ -187,17 +187,17 @@
     >
       <NewAddCard
         v-if="addCardVisible"
+        :desk="currentDesk"
         @close="hideAddCard"
         @addSuccess="hideAddCard"
-        :desk="currentDesk"
         @onBack="
           () => {
             this.addCardVisible = false;
             console.log('返回');
           }
         "
-        :communityRole="communityRole"
       ></NewAddCard>
+      <!--  :communityRole="communityInfo?.role ? false : true" -->
     </div>
   </transition>
   <AppCenter v-if="visible" />
@@ -206,8 +206,8 @@
     v-if="editVisible"
     @setQuick="editVisible = false"
     @addIcon="addIcon"
-    :communityRole="communityRole"
   ></EditNewNavigation>
+  <!-- :communityRole="communityRole" -->
   <GalleryModal ref="galleryRef" />
 </template>
 

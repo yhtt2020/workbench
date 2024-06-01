@@ -262,6 +262,7 @@
       @onClose="hideMarket"
       :desk="currentDesk"
       :panelIndex="panelIndex"
+      :communityInfo="communityInfo"
     />
   </div>
 
@@ -615,7 +616,7 @@ export default {
       this.moreDesk();
     });
     this.$bus.on("updateSync", () => {
-      // this.syncSaveCommunity();
+      this.syncSaveCommunity();
     });
 
     // 获取推荐桌面数据
@@ -809,11 +810,11 @@ export default {
     // 数据同步云端
     syncSaveCommunity() {
       // console.log("同步当前数据", this.currentDesk);
-      this.setCurrentDeskNo(this.communityInfo.no);
-      this.setCurrentDeskAllList(this.communityDeskList);
-      this.setCurrentDeskData(this.currentDesk);
-      this.saveCommunityDesk();
-      this.saveCommunityDeskDetail();
+      // this.setCurrentDeskNo(this.communityInfo.no);
+      // this.setCurrentDeskAllList(this.communityDeskList);
+      // this.setCurrentDeskData(this.currentDesk);
+      // this.saveCommunityDesk();
+      // this.saveCommunityDeskDetail();
     },
 
     // 获取云端同步数据

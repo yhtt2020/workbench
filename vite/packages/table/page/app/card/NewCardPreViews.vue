@@ -348,31 +348,27 @@ export default {
       });
     },
     addNewCard(item) {
-      if (this.ownerDeskVisible) {
-        // 检测是否符合要求的组件
-        const satisfyVisible = this.addCardList.some((addItem) => {
-          return String(item?.name) === String(addItem);
-        });
-        if (satisfyVisible) {
-          window.$ui.confirm(
-            "当前组件数据将会存储在团队桌面中",
-            `${
-              item?.cname === "桌面便签"
-                ? `${item?.cname}数据不会存储到你的备忘录应用中`
-                : ""
-            }`,
-            {
-              ok: () => {
-                this.addCallback(item);
-              },
-              okText: "确定",
-              noText: "取消",
-              type: "link",
-            }
-          );
-        } else {
-          this.addCallback(item);
-        }
+      // 检测是否符合要求团队桌面需要适配的组件
+      const satisfyVisible = this.addCardList.some((addItem) => {
+        return String(item?.name) === String(addItem);
+      });
+      if (this.ownerDeskVisible && satisfyVisible) {
+        window.$ui.confirm(
+          "当前组件数据将会存储在团队桌面中",
+          `${
+            item?.cname === "桌面便签"
+              ? `${item?.cname}数据不会存储到你的备忘录应用中`
+              : ""
+          }`,
+          {
+            ok: () => {
+              this.addCallback(item);
+            },
+            okText: "确定",
+            noText: "取消",
+            type: "link",
+          }
+        );
       } else {
         this.addCallback(item);
       }
@@ -440,10 +436,10 @@ export default {
       }
       setTimeout(() => {
         // 处理社群桌面添加组小组件的回调
-        if (this.communityRole) {
+        if (this.ownerDeskVisible) {
           this.$bus.emit("updateSync");
         }
-      }, 800);
+      }, 200);
     },
     closeMarket(val) {
       this.openRemote = val;

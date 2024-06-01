@@ -52,6 +52,7 @@ import { storeToRefs } from "pinia";
 import { cardStore } from "../../../store/card";
 import { communityNavStore } from "../../../components/bottomPanel/store/communityNavStore";
 import _ from "lodash-es";
+import { nanoid } from "nanoid";
 
 // 获取全局事件总线程
 const { proxy } = getCurrentInstance();
@@ -104,7 +105,7 @@ const addDesk = () => {
     const option = {
       ...deskFound,
       communityNo: no,
-      id:`${no}_${deskFound?.id}`,
+      id:`${nanoid(5)}`,
     };
     // 避免重复添加
     const index = _.findIndex(desks.value, (desk) => {
