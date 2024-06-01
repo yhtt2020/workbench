@@ -116,7 +116,7 @@
       <template v-else>
         <div class="flex flex-col items-center justify-center h-full">
           <xt-ify-icon icon="fluent-emoji:alarm-clock" class="pb-4" size="56" />
-          <span class="xt-text xt-font font-16">暂无数据</span>
+          <span class="xt-text-2 xt-font font-14">暂无数据</span>
         </div>
       </template>
 
