@@ -468,10 +468,10 @@ export default {
         {
           newIcon: "fluent:add-16-filled",
           name: "添加已有桌面",
-          fn:()=>{
+          fn: () => {
             this.$bus.emit("openExistDeskListModal");
-          }
-        }
+          },
+        },
       ],
       loadingVisible: true,
       // 接收定时器临时变量
@@ -495,6 +495,7 @@ export default {
       "freeLayoutData",
       "freeLayoutState",
       "getFreeLayoutState",
+      "getFreeLayoutData",
       "isFreeLayout",
     ]),
     ...mapWritableState(useNavigationStore, [
@@ -572,21 +573,23 @@ export default {
 
     // 当前桌面
     currentDesk() {
-      // console.log("测试", this.currentDeskId);
-
-      let currentDesk = this.deskList.find((desk) => {
+      let deskItem = this.deskList.find((desk) => {
         if (desk.hasOwnProperty("communityNo")) {
           if (Number(this.communityInfo?.no) === Number(desk?.communityNo)) {
             return desk.id === this.currentDeskId;
           }
         }
       });
-
-      // console.log("查看当前桌面", currentDesk);
-
-      if (currentDesk !== undefined) {
+      if (deskItem !== undefined) {
+        if (this.communityInfo.role === "member") {
+          // 是处理社群成员桌面时获取云端的数据进行自由布局的同步
+          if (deskItem?.freeLayoutData && deskItem?.freeLayoutState) {
+            this.setFreeLayoutData(deskItem?.id, deskItem?.freeLayoutData);
+            this.setFreeLayoutState(deskItem?.id, deskItem?.freeLayoutState);
+          }
+        }
         this.key = Date.now();
-        return currentDesk;
+        return deskItem;
       } else {
         const option = {
           cards: [],
@@ -646,9 +649,13 @@ export default {
 
   methods: {
     ...mapActions(marketStore, ["getRecommend"]),
-    ...mapActions(useFreeLayoutStore, ["clearFreeLayout"]),
     ...mapActions(useDeskStore, ["addMenu"]),
     ...mapActions(appStore, ["toggleFullScreen"]),
+    ...mapActions(useFreeLayoutStore, [
+      "clearFreeLayout",
+      "setFreeLayoutData",
+      "setFreeLayoutState",
+    ]),
     ...mapActions(communityDeskStore, [
       "setCurrentDeskNo",
       "setCurrentDeskAllList",
@@ -656,6 +663,7 @@ export default {
       "saveCommunityDesk",
       "loadCommunityDeskAll",
       "saveCommunityDeskDetail",
+      "setDeskLayoutData",
       "clearDeskList",
     ]),
     communityAuth,
@@ -809,12 +817,12 @@ export default {
 
     // 数据同步云端
     syncSaveCommunity() {
-      // console.log("同步当前数据", this.currentDesk);
-      // this.setCurrentDeskNo(this.communityInfo.no);
-      // this.setCurrentDeskAllList(this.communityDeskList);
-      // this.setCurrentDeskData(this.currentDesk);
-      // this.saveCommunityDesk();
-      // this.saveCommunityDeskDetail();
+      this.setCurrentDeskNo(this.communityInfo.no);
+      this.setCurrentDeskAllList(this.communityDeskList);
+      this.setCurrentDeskData(this.currentDesk);
+      this.setDeskLayoutData(this.getFreeLayoutData, this.getFreeLayoutState);
+      this.saveCommunityDesk();
+      this.saveCommunityDeskDetail();
     },
 
     // 获取云端同步数据

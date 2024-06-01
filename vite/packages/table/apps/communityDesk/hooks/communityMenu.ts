@@ -259,6 +259,8 @@ function memberMenus() {
       newIcon: "fluent:cloud-arrow-up-16-filled",
       fn: () => {
         this.loadCommunityCloud();
+        // // 
+        // this.$forceUpdate();
       },
       contentAble: true,
       newContent:
