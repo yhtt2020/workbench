@@ -464,6 +464,13 @@ export default {
           name: "导入桌面",
           fn: this.importDesk,
         },
+        {
+          newIcon: "fluent:add-16-filled",
+          name: "添加已有桌面",
+          fn:()=>{
+            this.$bus.emit("openExistDeskListModal");
+          }
+        }
       ],
       loadingVisible: true,
       // 接收定时器临时变量
