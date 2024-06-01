@@ -108,6 +108,8 @@ const cutCanvas = async (config) => {
   if (!redirect) {
     if (!getFreeLayoutState.value.canvas.autoExtend) {
       console.log("被跳出了 :>> ");
+      getFreeLayoutState.value.system.hide = false;
+      loading.value = false;
       return;
     }
   }
@@ -230,31 +232,17 @@ const cutCanvas = async (config) => {
     }
   }, 50);
   if (!redirect) return;
-  let x = Infinity;
-  let y = Infinity;
-  setTimeout(() => {
-    Object.values(getFreeLayoutData.value).forEach((item: any) => {
-      if (item.top < y) {
-        y = item.top;
-      }
 
-      if (item.left < x) {
-        x = item.left;
-      }
-    });
-    setTimeout(() => {
-      getFreeLayoutState.value.mode.align = "custom";
-      const zoom = getFreeLayoutState.value.canvas.zoom;
-      getFreeLayoutState.value.line.centerLine.y = top - 20;
-      getFreeLayoutState.value.line.centerLine.x =
-        (left * zoom - position + scrollWidth / 2) / zoom;
-      proxy.$bus.emit("restoreLocation");
-      getFreeLayoutState.value.system.hide = false;
-      loading.value = false;
-      console.timeEnd("Free Layout Run Time");
-      console.log("--------------- 处理画布结束 ---------------");
-    }, 100);
-  }, 100);
+  getFreeLayoutState.value.mode.align = "custom";
+  const zoom = getFreeLayoutState.value.canvas.zoom;
+  getFreeLayoutState.value.line.centerLine.y = top - 20;
+  getFreeLayoutState.value.line.centerLine.x =
+    (left * zoom - position + scrollWidth / 2) / zoom;
+  proxy.$bus.emit("restoreLocation");
+  getFreeLayoutState.value.system.hide = false;
+  loading.value = false;
+  console.timeEnd("Free Layout Run Time");
+  console.log("--------------- 处理画布结束 ---------------");
 };
 
 /**
