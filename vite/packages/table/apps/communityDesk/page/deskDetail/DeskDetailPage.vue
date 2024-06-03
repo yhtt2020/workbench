@@ -337,7 +337,7 @@ import { communityNavStore } from "../../../../components/bottomPanel/store/comm
 // 其他文件
 import menuMinis from "../../hooks/communityMenu";
 import { completeTask } from "../../../task/task";
-import { communityAuth,isArrayEqual } from "../../hooks/deskCreateMethod";
+import { communityAuth, isArrayEqual } from "../../hooks/deskCreateMethod";
 import { disabledCard } from "../../store/desktopOtherData";
 
 export default {
@@ -713,11 +713,6 @@ export default {
 
     // 删除桌面
     delDesk() {
-      const filterList = this.deskList.filter((desk) => {
-        if (desk.hasOwnProperty("communityNo")) {
-          return desk;
-        }
-      });
       // 当前桌面的卡片数据进行删除
       this.currentDesk?.cards?.forEach((item) => {
         //移除桌面相关的便签卡片
@@ -740,34 +735,29 @@ export default {
         }
       });
       window.$ui.confirm("删除当前桌面？此操作不可还原。", "", {
-        type: "warning",
-        okText: "删除桌面",
-        okButtonWidth: "100",
         ok: () => {
           if (this.communityDeskList.length === 1) {
             const index = this.deskList.findIndex((desk) => {
               return String(desk?.id) === String(this.currentDesk?.id);
             });
             this.deskList.splice(index, 1);
+            // 默认创建一个空白桌面
             this.doAddDesk("空白桌面");
-            // this.$emit("changeDesk", { id: filterList[0].id });
-            this.$emit("updateCurrentDesk", filterList[0]?.id);
-            this.clearFreeLayout(this.currentDeskId);
-            // 删除桌面数据
-            this.key = Date.now();
           } else {
             const index = this.deskList.findIndex((desk) => {
               return String(desk?.id) === String(this.currentDesk?.id);
             });
             this.deskList.splice(index, 1);
-            // this.$emit("changeDesk", { id: filterList[0].id });
-            this.$emit("updateCurrentDesk", filterList[0]?.id);
-            this.clearFreeLayout(this.currentDeskId);
-            // 删除桌面数据
-            this.key = Date.now();
           }
+          this.$emit("updateCurrentDesk", this.communityDeskList[0]?.id);
+          this.clearFreeLayout(this.currentDeskId);
+          // 删除桌面数据
+          this.key = Date.now();
           this.syncSaveCommunity();
         },
+        type: "warning",
+        okText: "删除桌面",
+        okButtonWidth: "100",
       });
     },
 
@@ -1066,16 +1056,19 @@ export default {
     },
 
     // 编辑关闭时进行同步
-    editSync(){
-      if(!this.editing){
-        const isSync = this.isArrayEqual(this.originalCards,this.currentDesk?.cards);
-        if(!isSync){
-          this.syncSaveCommunity(); 
+    editSync() {
+      if (!this.editing) {
+        const isSync = this.isArrayEqual(
+          this.originalCards,
+          this.currentDesk?.cards
+        );
+        if (!isSync) {
+          this.syncSaveCommunity();
           // 同步之后重新赋值
           this.originalCards = [...this.currentDesk?.cards];
         }
       }
-    }
+    },
   },
 
   watch: {
