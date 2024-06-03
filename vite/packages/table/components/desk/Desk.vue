@@ -18,8 +18,13 @@
     >
       暂无卡片
     </div>
+
+    <!-- 
+      communityInfo?.role !== 'member' ? editing : showRightMenu
+      这里做社群桌面是否为成员场景的情况
+    -->
     <FloatMenu
-      v-if="editing"
+      v-if="communityInfo?.role !== 'member' ? editing : showRightMenu"
       @addIcon="newAddIcon"
       @addFolder="addFolder"
       @add="newAddCard"
@@ -34,6 +39,7 @@
       :hide="hide"
       :communityInfo="communityInfo"
     />
+
     <Drop :classes="getClasses()">
       <!-- 自由布局 -->
       <FreeLayoutScrollbar
@@ -330,6 +336,12 @@ export default {
       type: Object,
       required: true,
     },
+    // 社群成员桌面下开启右键菜单
+    showRightMenu:{
+      type: Boolean,
+      required: true,
+      default: false,
+    }
   },
   watch: {
     adjustLayout(val) {

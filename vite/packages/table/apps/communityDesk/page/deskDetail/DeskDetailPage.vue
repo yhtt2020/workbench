@@ -99,17 +99,19 @@
   <template v-else>
     <div class="relative flex flex-col h-full">
       <xt-mix-menu class="w-full h-full" :menus="deskMenu" ref="mixMenu">
+        <!-- editing -->
         <Desk
           v-if="currentDesk && currentDesk?.cards?.length > 0"
           :global-settings="settings"
-          :editing="editing"
+          :editing="false"
+          :showRightMenu="showRightMenu"
           ref="currentDeskRef"
           :currentDesk="currentDesk"
           v-model:settings="currentDesk.settings"
           :key="currentDeskId"
           :keepAddIcon="keepAddIcon"
           @onArrange="onArrange"
-          @changeEditing="editing = !editing"
+          @changeEditing="()=>{editing = !editing; showRightMenu = false}"
           :communityInfo="communityInfo"
         >
           <!-- 拿菜单数据 -->
@@ -476,6 +478,8 @@ export default {
       loadingVisible: true,
       // 接收定时器临时变量
       loadTime: null,
+      // 是否开启右键菜单弹窗
+      showRightMenu:false,
     };
   },
 
