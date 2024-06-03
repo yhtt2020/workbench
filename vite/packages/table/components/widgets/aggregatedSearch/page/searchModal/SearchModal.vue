@@ -2,9 +2,8 @@
 import { ref, computed, inject, watch, provide, onMounted } from "vue";
 import { useEventListener, useDebounce, useDebounceFn } from "@vueuse/core";
 
-import { openBrowser } from "../../utils/open";
+import { open } from "../../utils/open";
 import { sourceList, openWithList, defaultSourceList } from "../../config/data";
-
 import HistorySearch from "./HistorySearch.vue";
 import SystemSearch from "./SystemSearch.vue";
 import WebSearch from "./WebSearch.vue";
@@ -110,11 +109,12 @@ const tabSourceList = computed(() => {
 /** 历史搜索 */
 const historySearch = (index: number) => {
   let item = data.value.historyList[index];
-  openBrowser(item.value, currentOpenWith.value.value);
+  open(item);
 };
 /** 搜索 */
 const search: any = async (value?: any) => {
   if (!isWebSource.value) return;
+  console.log("value :>> ", value);
   if (data.value.lastUse) {
     data.value.source = currentSource.value;
     data.value.openWith = currentOpenWith.value.value;
@@ -128,10 +128,13 @@ const search: any = async (value?: any) => {
     showType: "网页",
     openWith: currentOpenWith.value.value,
   };
+  // item.openWith, item.value
+  console.log("history :>> ", history);
+  console.log("currentOpenWith.value.value :>> ", currentOpenWith.value.value);
 
   data.value.historyList.push(history);
 
-  openBrowser(searchUrl, currentOpenWith.value.value);
+  open(history);
   close();
 };
 /** 关闭弹窗 */
