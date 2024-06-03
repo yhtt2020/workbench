@@ -74,7 +74,7 @@ export default {
       header:{
         title: 'GPU',
         // ifyIcon:'fluent:arrow-trending-lines-20-filled'
-        showIcon:"/img/appLogo/performance.png",
+        showIcon:"/logo/performance.svg",
 
       }
     }

@@ -1,7 +1,7 @@
 <template>
   <xt-container
     v-model:customSize="customData.customSize"
-    @leftIconHover="todoPage"
+    @leftClick="todoPage"
     :header="header"
     :options="options"
     :sizeList="sizeList"
@@ -208,12 +208,12 @@ export default {
     header() {
       return {
         // ifyIcon:"fluent:checkmark-square-24-regular",
-
-        showIcon: "/img/appLogo/todo.png",
+        showIcon:"/logo/todo.svg",
 
         title: this.selectTodo.title,
-        titleHover: this.options.disableEdit ? false : true,
-        titleHoverName: this.selectTodo.title,
+        leftHover: this.options.disableEdit ? false : true,
+        leftHoverName: this.selectTodo.title,
+        leftHoverIcon: "fluent:open-16-regular",
 
         // leftHoverIcon: "fluent:checkmark-square-24-regular",
 

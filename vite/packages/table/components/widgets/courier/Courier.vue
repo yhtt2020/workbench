@@ -277,6 +277,7 @@ export default {
     options () {
       return {
         defaultData: {
+          _updateFlag: "24531",
           customSize: this.customData.customSize !== undefined ? this.customData.customSize : '4x4',
         },
         customDel: this.openWay === 'nav' ? true : false
@@ -317,7 +318,7 @@ export default {
       return {
         title:'我的快递',
         // ifyIcon:'fluent:box-16-regular',
-        showIcon:"/img/appLogo/courier.png",
+        showIcon:"/logo/courier.svg",
 
         refresh:{
           fn:()=>{

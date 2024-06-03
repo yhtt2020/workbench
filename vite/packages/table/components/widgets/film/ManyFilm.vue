@@ -184,7 +184,8 @@ export default {
         single: false,
       },
       header: {
-        ifyIcon: "fluent:movies-and-tv-16-regular",
+        // ifyIcon: "fluent:movies-and-tv-16-regular",
+        showIcon:"/logo/film.svg",
         title: "正在热映",
         refresh: {
           fn: this.refreshPage,
@@ -205,6 +206,7 @@ export default {
       return {
         defaultData: {
           customSize: "4x4",
+          _updateFlag: "24531",
         },
         customDel: this.openWay === "nav" ? true : false,
         disableEdit: this.isCommunityDesktop(this.desk),

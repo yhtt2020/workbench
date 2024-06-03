@@ -121,6 +121,7 @@ export default {
     options () {
       return {
         defaultData: {
+          _updateFlag: "24531",
           customSize: this.customData.customSize !== undefined ? this.customData.customSize : '4x4',
         },
       }
@@ -129,7 +130,7 @@ export default {
       return {
 
         title:'商品推荐',
-        ifyIcon:'fluent:cart-16-filled',
+        showIcon:"/logo/goods.svg",
         // refresh:{
         //   fn:()=>{
         //     this.refreshFlag = true

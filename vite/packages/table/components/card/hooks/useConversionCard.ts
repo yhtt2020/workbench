@@ -10,8 +10,9 @@ import { checkIsIfyIcon } from "./addCardToNav"
  */
 export const useConversionCard = (data) => {
     const index = data.customIndex
+    const header = data.header
     let name = data.desk.cards.find((item) => item.id === index).name
-    let icon = data.header.ifyIcon || data.header.icon || 'fluent:cloud-16-filled'
+    let icon =  header.showIcon || header.ifyIcon || header.icon || 'fluent:cloud-16-filled'
     let title = data.header.title || name
     if(updateState(data)){
         title = updateState(data).title
@@ -35,7 +36,7 @@ export const useConversionCard = (data) => {
             customData:data.customData || {customSize:data.customSize}, // 卡片自定义数据
             customSize:data.customSize, // 卡片自定义尺寸
             desk:data.desk, // 卡片所在的桌面
-            id:data.customData.parentId
+            id:data.customData?.parentId || nanoid(6)
         },
         id:nanoid(6),
     }

@@ -127,7 +127,6 @@ export default {
         // 社区中心
         case "commun":
           this.comVisible = !this.comVisible;
-          closeTag = false
           break;
         // 控制中心
         case "control":

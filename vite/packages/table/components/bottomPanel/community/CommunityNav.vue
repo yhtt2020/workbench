@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import { computed, getCurrentInstance, toRefs,onMounted } from "vue";
+import { computed, getCurrentInstance, toRefs, onMounted } from "vue";
 import { nanoid } from "nanoid";
 import { useRouter } from "vue-router";
 import { chatCommunityStore } from "../../../apps/chat/store/chatCommunity";
@@ -45,8 +45,9 @@ import { communityNavStore } from "../store/communityNavStore";
 import { appStore } from "../../../store";
 import { getCommunityDeskList } from "../../../apps/communityDesk/hooks/deskCreateMethod";
 import { communityDeskStore } from "../../../apps/communityDesk/store/communityDeskStore";
-
 import Avatar from "../../desk/navigationBar/components/Avatar.vue";
+import _ from "lodash-es";
+import { cardStore } from "../../../store/card";
 
 // 路由
 const router: any = useRouter();
@@ -59,6 +60,9 @@ const { settingType, currentCommunity } = storeToRefs(comNav);
 const app: any = appStore();
 const { settings } = storeToRefs(app);
 const communityDesk: any = communityDeskStore();
+const { syncDesk, communityDeskInfo } = storeToRefs(communityDesk);
+const card: any = cardStore();
+const { desks } = storeToRefs(card);
 
 // 获取当前实例
 const { proxy } = getCurrentInstance() as any;
@@ -162,57 +166,35 @@ const openNav = async (event: any) => {
 
 //  进入社群桌面
 const openDesk = async () => {
-  // 先检测当前社群是成员还是管理员
-  const currentRole = (currentCommunity.value.item as any).role;
-  // 社群数据
+  // 获取社群信息数据
   const communityInfo: any = currentCommunity.value?.item;
-  // 检测当前所在的社群桌面数据是否为空列表
-  const deskList = getCommunityDeskList(communityInfo);
+  // 根据当前路由检测是否在home页面
+  const isHome = router.currentRoute.value.fullPath === "/main";
+  if (isHome) {
+    enterOwnerDesk(communityInfo);
+  } else {
+    router.push({ name: "home", params: {} });
+    enterOwnerDesk(communityInfo);
+  }
+};
 
-  if (currentRole === "owner") {
-    // 检测当前所在的社群桌面数据是否为空列表
-    if (deskList.length === 0) {
-      router.push({
-        name: "CommunityGroupDesk",
-        params: { no: communityInfo?.no },
-      });
-      setTimeout(() => {
-        proxy.$bus.emit("openCommunityDesk");
-      }, 150);
-    }
-    // 当前社群桌面数据已经创建
-    else {
-      communityDesk.setCommunityInfo(communityInfo);
-      router.push({
-        name: "CommunityGroupDesk",
-        params: { no: communityInfo?.no },
-      });
+// 进入社群桌面公共方法
+const enterOwnerDesk = (communityInfo: any) => {
+  // 管理员
+  if (communityInfo?.role === "owner") {
+    // 获取当前管理员社群下的所有桌面列表
+    const ownerDesks = getCommunityDeskList(communityInfo);
+    if (ownerDesks.length !== 0) {
+      settings.value.isCommunity = false;
+    } else {
+      proxy.$bus.emit("openCommunityDesk");
+      settings.value.isCommunity = false;
     }
   }
   // 成员
-  else if (currentRole === "member") {
+  else if (communityInfo?.role === "member") {
     loadSyncDesk(communityInfo?.no);
-    if (deskList.length === 0) {
-      // 提示弹窗
-      (window as any).$ui.confirm(
-        "暂无可用的社群桌面",
-        "请联系你的社群管理员创建",
-        {
-          ok: () => {},
-          okText: "好的",
-          noText: null,
-          type: "link",
-        }
-      );
-    }
-    // 当前社群桌面数据已经创建
-    else {
-      communityDesk.setCommunityInfo(communityInfo);
-      router.push({
-        name: "CommunityGroupDesk",
-        params: { no: communityInfo?.no },
-      });
-    }
+    settings.value.isCommunity = false;
   }
 };
 
@@ -223,11 +205,11 @@ const loadSyncDesk = (no: any) => {
   communityDesk.loadCommunityDeskDetail();
 };
 
-onMounted(()=>{
-  proxy.$bus.on('updateSetting',()=>{
+onMounted(() => {
+  proxy.$bus.on("updateSetting", () => {
     communityDesk.setCommunityInfo(currentCommunity.value?.item);
-  })
-})
+  });
+});
 </script>
 
 <style lang="scss" scoped>

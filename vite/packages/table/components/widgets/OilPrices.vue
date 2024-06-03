@@ -145,7 +145,7 @@ export default {
       header: {
         title: "今日油价",
         // ifyIcon:'fluent:gas-pump-24-regular',
-        showIcon: "/img/appLogo/oilPrices.png",
+        showIcon:"/logo/oilPrices.svg",
 
         titleHover: true,
         titleHoverName: "点击切换",
@@ -227,6 +227,7 @@ export default {
         customDel: this.openWay === "nav" ? true : false,
         defaultData: {
           customSize: "2x4",
+          _updateFlag: "24531",
         },
         disableEdit: this.isCommunityDesktop(this.desk),
       };

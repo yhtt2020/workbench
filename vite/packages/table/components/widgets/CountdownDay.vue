@@ -22,7 +22,7 @@
       "
       v-if="countdownDays.length <= 0"
     >
-      <a-empty :description="null" image="/img/test/load-ail.png" />
+      <!-- <a-empty :description="null" image="/img/test/load-ail.png" />
       <a-button
         type="primary"
         class="rounded-full xt-text xt--active-bg"
@@ -33,8 +33,22 @@
           }
         "
         >立即添加
-      </a-button>
+      </a-button> -->
+
+      <Unusual
+        :newIcon="'fluent-emoji-flat:tear-off-calendar'"
+        :normalButtonTitle="'立即添加'"
+        :disableEdit="options.disableEdit"
+        @back="
+          () => {
+            settingVisible = true;
+            goAddEvent();
+          }
+        "
+      />
+
     </div>
+
     <div class="mt-1 content" style="height: 100%; overflow: hidden" v-else>
       <xt-scrollbar
         @click="openRightDrawer"
@@ -67,6 +81,7 @@
       </xt-scrollbar>
     </div>
   </xt-container>
+
   <a-drawer
     :width="500"
     v-model:visible="settingVisible"
@@ -80,6 +95,9 @@
     <template #title>
       <div class="text-center">纪念日设置</div>
     </template>
+
+    <CardSettingExplain v-if="communityAuth(desk?.communityNo)" />
+
     <div v-if="!goAddFlag">
       已设置的纪念日
       <div>
@@ -134,6 +152,7 @@
         </div>
       </div>
     </div>
+
     <div v-else>
       <div>事件名称</div>
       <xt-input
@@ -212,6 +231,9 @@ import { timeStamp } from "../../util";
 import { timerStore } from "../../store/timer";
 import { Icon as newIcon } from "@iconify/vue";
 import { communityNavStore } from "../bottomPanel/store/communityNavStore";
+import CardSettingExplain from "../CardSettingExplain.vue";
+import { communityAuth } from "../../apps/communityDesk/hooks/deskCreateMethod";
+import Unusual from "./Unusual.vue";
 
 export default {
   name: "CountdownDay",
@@ -235,6 +257,8 @@ export default {
   components: {
     Widget,
     newIcon,
+    CardSettingExplain,
+    Unusual,
   },
   emit: ["delete"],
   data() {
@@ -274,9 +298,9 @@ export default {
       header: {
         title: "纪念日",
         // ifyIcon:'fluent:calendar-16-regular',
-        showIcon: "/img/appLogo/countdownDay.png",
-      },
-    };
+        showIcon:"/logo/countdownDay.svg",
+      }
+    }
   },
   computed: {
     ...mapWritableState(cardStore, ["countdownDay"]),
@@ -286,6 +310,7 @@ export default {
       return {
         defaultData: {
           customSize: this.customData.customSize || "2x2",
+          _updateFlag: "24531",
         },
         customDel: this.openWay === "nav" ? true : false,
         disableEdit: this.isCommunityDesktop(this.desk),
@@ -329,6 +354,7 @@ export default {
       "sortCountdown",
     ]),
     ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+    communityAuth,
 
     onPanelChange(value, mode) {},
     transDate,

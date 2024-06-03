@@ -90,10 +90,10 @@ export default {
       header:{
         title:'捕获',
         // ifyIcon:'fluent:resize-video-20-regular',
-        showIcon:"/img/appLogo/capture.png",
-
-        titleHover:true,
-        titleHoverName:'打开应用',
+        showIcon:"/logo/capture.svg",
+        leftHover: true,
+        leftHoverName:"打开应用",
+        leftHoverIcon: "fluent:open-16-regular",
       },
       customSize:'2x4'
     }

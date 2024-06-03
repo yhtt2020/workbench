@@ -1,7 +1,7 @@
 <template>
   <div>
     <xt-container
-      @titleHover="pushToMain"
+      @leftClick="pushToMain"
       :desk="desk"
       :sizeList="sizeList"
       :options="options"
@@ -14,13 +14,13 @@
       @delete="doRemoveCard"
     >
       <div class="mt-1">
-        <a-input
-          v-model:value="inputValue"
-          :bordered="false"
-          placeholder="问我任何问题"
-          class="xt-bg h-[48px] rounded-xl"
-          @keyup.enter="enterMsg"
-        >
+        <a-input 
+          style="background-color: var(--primary-bg);"
+          v-model:value="inputValue" 
+          :bordered="false" 
+          placeholder="问我任何问题" 
+          class="h-[48px] rounded-xl"
+          @keyup.enter="enterMsg">
           <template #suffix>
             <SendOutlined
               class="xt-text-2 pointer"
@@ -31,18 +31,9 @@
         </a-input>
         <div class="mt-2 mb-2 text-base xt-text">最近对话</div>
         <template v-if="recentList">
-          <div
-            class="mb-3 xt-bg rounded-xl cursor-pointer"
-            v-for="index in copyNum"
-            :style="{
-              height: copyNum !== 1 ? '56px' : '48px',
-              lineHeight: copyNum !== 1 ? '56px' : '48px',
-            }"
-          >
-            <div
-              class="flex items-center h-full ml-4"
-              @click="goPage(index - 1)"
-            >
+          <div class="mb-3 cursor-pointer xt-bg rounded-xl" v-for="index in copyNum"
+            :style="{ height: copyNum !== 1 ? '56px' : '48px', lineHeight: copyNum !== 1 ? '56px' : '48px', }" >
+            <div class="flex items-center h-full ml-4"  @click="goPage(index - 1)">
               <!-- <AiIcon icon="fluent:chat-16-regular" style="font-size: 20px;" class="mr-3 xt-text" /> -->
               <xt-mix-icon
                 class="mr-3 text-xl xt-text"
@@ -127,10 +118,11 @@ export default {
       inputValue: "",
       header: {
         // ifyIcon:"fluent:bot-24-regular",
-        showIcon: "/img/appLogo/ai.png",
-        title: "AI助手",
-        titleHover: true,
-        titleHoverName: "打开应用",
+        showIcon:"/logo/ai.svg",
+        title:"AI助手",
+        leftHover: true,
+        leftHoverName:"打开应用",
+        leftHoverIcon: "fluent:open-16-regular",
       },
     };
   },
@@ -195,6 +187,7 @@ export default {
       return {
         customDel: this.openWay === "nav" ? true : false,
         defaultData: {
+          _updateFlag: "24531",
           customSize: this.customData.customSize || "2x2",
         },
         disableEdit: this.isCommunityDesktop(this.desk),

@@ -60,7 +60,7 @@ export default {
       header:{
         title:'Steam好友',
         // ifyIcon:'mdi:steam',
-        showIcon:"/img/appLogo/steam.png",
+        showIcon:"/logo/steam.svg",
 
       }
     }

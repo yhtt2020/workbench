@@ -372,14 +372,16 @@ export default {
     header() {
       return {
         title: this.paperTitle,
-        //  ifyIcon: "fluent:image-multiple-16-regular",
-        showIcon: "/img/appLogo/wallpaper.png",
+       //  ifyIcon: "fluent:image-multiple-16-regular",
+        showIcon:"/logo/wallpaper.svg",
+
       };
     },
     options() {
       return {
         defaultData: {
           customSize: "4x4",
+          _updateFlag: "24531",
         },
         customDel: this.openWay === "nav" ? true : false,
         disableEdit: this.isCommunityDesktop(this.desk),

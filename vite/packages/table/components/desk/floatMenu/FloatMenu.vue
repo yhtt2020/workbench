@@ -27,8 +27,12 @@ const props = defineProps({
   aloneZoom: {},
   alone: {},
   hide: {},
+  communityInfo:{
+    type:Object,
+    default:()=>{}
+  }
 });
-const { zoom, alone, aloneZoom, hide }: any = toRefs(props);
+const { zoom, alone, aloneZoom, hide,communityInfo }: any = toRefs(props);
 const emits = defineEmits([
   "scrollbarRedirect",
   "exit",
@@ -303,6 +307,15 @@ const updateArrange = (newV) => {
     getFreeLayoutState.value.option.magnet = false;
   }
 };
+
+
+// 判断当前社群角色权限
+const deskRole = computed(()=>{
+  console.log('测试',communityInfo.value);
+  if(communityInfo.value){
+    return communityInfo.value?.role === 'member'
+  }
+})
 </script>
 
 <template>
@@ -311,7 +324,7 @@ const updateArrange = (newV) => {
     resetPosition
     v-model:y="floatMenuStore.y"
     v-model:x="floatMenuStore.x"
-    :index="100"
+    :index="123"
     disabledHandle=".floatMenu"
     :firstPosition="firstPosition"
     :test="false"
@@ -320,6 +333,7 @@ const updateArrange = (newV) => {
       class="select-none cursor-move z-24 xt-modal rounded-xl p-3 no-drag xt-shadow xt-b"
       style="touch-action: none; width: 255px"
     >
+
       <xt-text type="2" class="mb-3">
         <template #center> 编辑桌面 </template>
         <template #right>
@@ -332,44 +346,139 @@ const updateArrange = (newV) => {
           />
         </template>
       </xt-text>
-      <xt-tab
-        :boxStyle="{ 'border-radius': '10px' }"
-        :itemStyle="{ 'border-radius': '6px' }"
-        v-model="currentMode"
-        :list="deskList"
-        class="h-10 p-1 xt-bg-t-2 mb-3"
-        style="font-size: 14px !important"
-      />
-      <div class="flex my-3">
-        <Item v-for="item in defaultMenu" :item="item" class="mr-2" />
-      </div>
-      <template v-if="isFreeLayout && currentMode === 'free'">
-        <xt-text type="2" class="mb-3 mt-2">滚动模式</xt-text>
-        <div>
-          <xt-option-select
-            class="floatMenu"
-            v-model="getFreeLayoutState.mode.scroll"
-            :list="scrollList"
-            @cb="updateScroll"
-            :border="false"
-          />
-        </div>
-        <xt-text type="2" class="mb-3 mt-2">排列模式</xt-text>
-        <xt-option-select
-          :border="false"
-          :list="arrangeList"
-          @cb="updateArrange"
-          v-model="getFreeLayoutState.mode.arrange"
+
+      <!-- deskRole 为true是社群桌面成员桌面的状态,为false是个人和社群管理员桌面的状态 -->
+      <template v-if="!deskRole">
+        <xt-tab
+          :boxStyle="{ 'border-radius': '10px' }"
+          :itemStyle="{ 'border-radius': '6px' }"
+          v-model="currentMode"
+          :list="deskList"
+          class="h-10 p-1 xt-bg-t-2 mb-3"
+          style="font-size: 14px !important"
         />
-        <!-- <xt-text type="2" class="mb-3 mt-2">画布设置</xt-text>
         <div class="flex my-3">
-          <Item
-            v-for="(item, index) in freeLayoutMenu"
-            :key="index"
-            :item="item"
-            :class="{ 'mr-2': index !== freeLayoutMenu.length - 1 }"
+          <Item v-for="item in defaultMenu" :item="item" class="mr-2" />
+        </div>
+        <template v-if="isFreeLayout && currentMode === 'free'">
+          <xt-text type="2" class="mb-3 mt-2">滚动模式</xt-text>
+          <div>
+            <xt-option-select
+              class="floatMenu"
+              v-model="getFreeLayoutState.mode.scroll"
+              :list="scrollList"
+              @cb="updateScroll"
+              :border="false"
+            />
+          </div>
+          <xt-text type="2" class="mb-3 mt-2">排列模式</xt-text>
+          <xt-option-select
+            :border="false"
+            :list="arrangeList"
+            @cb="updateArrange"
+            v-model="getFreeLayoutState.mode.arrange"
           />
-        </div> -->
+          <!-- <xt-text type="2" class="mb-3 mt-2">画布设置</xt-text>
+          <div class="flex my-3">
+            <Item
+              v-for="(item, index) in freeLayoutMenu"
+              :key="index"
+              :item="item"
+              :class="{ 'mr-2': index !== freeLayoutMenu.length - 1 }"
+            />
+          </div> -->
+          <div class="mb-3 mt-2 flex items-center">
+            桌面缩放
+            <xt-new-icon
+              @click="resetZoom()"
+              class="xt-text-2 ml-1"
+              color="var(--secondary-text)"
+              size="16"
+              icon="fluent:arrow-counterclockwise-20-filled"
+            />
+          </div>
+          <div class="flex items-center">
+            <Item v-for="item in canvasMenu" :item="item" class="mr-2"></Item>
+            <XtInput
+              v-model="freeLayoutZoom"
+              class="flex-1 relative xt-b overflow-hidden floatMenu xt-bg-t-2"
+              style="width: 60px; height: 40px; border-radius: 10px"
+              type=""
+            >
+              <template #addonAfter>
+                <div
+                  class="h-full flex items-center xt-text justify-between px-4 relative xt-bg-2"
+                  style="border-radius: 0px 8px 8px 0"
+                ></div>
+                <div
+                  class="absolute xt-text top-1/2 -translate-y-1/2 text-base"
+                  style="left: 8px"
+                >
+                  %
+                </div>
+              </template>
+            </XtInput>
+          </div>
+        </template>
+        <template v-if="currentMode == 'default'">
+          <div class="mb-3 mt-2 flex items-center">
+            小组件缩放
+            <xt-new-icon
+              @click="resetZoom()"
+              class="xt-text-2 ml-1"
+              color="var(--secondary-text)"
+              size="16"
+              icon="fluent:arrow-counterclockwise-20-filled"
+            />
+          </div>
+          <div class="flex items-center">
+            <Item v-for="item in canvasMenu" :item="item" class="mr-2"></Item>
+            <XtInput
+              v-if="alone"
+              v-model="defaultAloneZoom"
+              class="flex-1 relative xt-b overflow-hidden floatMenu xt-bg-t-2"
+              style="width: 60px; height: 40px; border-radius: 10px"
+              type=""
+            >
+              <template #addonAfter>
+                <div
+                  class="h-full flex items-center xt-text justify-between px-4 relative xt-bg-2"
+                  style="border-radius: 0px 8px 8px 0"
+                ></div>
+                <div
+                  class="absolute xt-text top-1/2 -translate-y-1/2 text-base"
+                  style="left: 8px"
+                >
+                  %
+                </div>
+              </template>
+            </XtInput>
+            <XtInput
+              v-else
+              v-model="defaultZoom"
+              class="flex-1 relative xt-b overflow-hidden floatMenu xt-bg-t-2"
+              style="width: 60px; height: 40px; border-radius: 10px"
+              type=""
+            >
+              <template #addonAfter>
+                <div
+                  class="h-full flex items-center xt-text justify-between px-4 relative xt-bg-2"
+                  style="border-radius: 0px 8px 8px 0"
+                ></div>
+                <div
+                  class="absolute xt-text top-1/2 -translate-y-1/2 text-base"
+                  style="left: 8px"
+                >
+                  %
+                </div>
+              </template>
+            </XtInput>
+          </div>
+        </template>
+
+      </template>
+      
+      <template v-else>
         <div class="mb-3 mt-2 flex items-center">
           桌面缩放
           <xt-new-icon
@@ -403,61 +512,7 @@ const updateArrange = (newV) => {
           </XtInput>
         </div>
       </template>
-      <template v-if="currentMode == 'default'">
-        <div class="mb-3 mt-2 flex items-center">
-          小组件缩放
-          <xt-new-icon
-            @click="resetZoom()"
-            class="xt-text-2 ml-1"
-            color="var(--secondary-text)"
-            size="16"
-            icon="fluent:arrow-counterclockwise-20-filled"
-          />
-        </div>
-        <div class="flex items-center">
-          <Item v-for="item in canvasMenu" :item="item" class="mr-2"></Item>
-          <XtInput
-            v-if="alone"
-            v-model="defaultAloneZoom"
-            class="flex-1 relative xt-b overflow-hidden floatMenu xt-bg-t-2"
-            style="width: 60px; height: 40px; border-radius: 10px"
-            type=""
-          >
-            <template #addonAfter>
-              <div
-                class="h-full flex items-center xt-text justify-between px-4 relative xt-bg-2"
-                style="border-radius: 0px 8px 8px 0"
-              ></div>
-              <div
-                class="absolute xt-text top-1/2 -translate-y-1/2 text-base"
-                style="left: 8px"
-              >
-                %
-              </div>
-            </template>
-          </XtInput>
-          <XtInput
-            v-else
-            v-model="defaultZoom"
-            class="flex-1 relative xt-b overflow-hidden floatMenu xt-bg-t-2"
-            style="width: 60px; height: 40px; border-radius: 10px"
-            type=""
-          >
-            <template #addonAfter>
-              <div
-                class="h-full flex items-center xt-text justify-between px-4 relative xt-bg-2"
-                style="border-radius: 0px 8px 8px 0"
-              ></div>
-              <div
-                class="absolute xt-text top-1/2 -translate-y-1/2 text-base"
-                style="left: 8px"
-              >
-                %
-              </div>
-            </template>
-          </XtInput>
-        </div>
-      </template>
+
 
       <div class="mt-3 flex justify-between">
         <xt-button

@@ -12,6 +12,8 @@ export const useAppCenterStore = defineStore("useAppCenterStore", {
     loginCb:()=>{},
     // 我的应用列表
     myApps: [],
+    // 开始菜单数据，只存储图标中的id
+    startMenu: [],
     // 当前选中的应用
     current:'MyApps',
     // 最近使用
@@ -30,7 +32,7 @@ export const useAppCenterStore = defineStore("useAppCenterStore", {
     enabled: true,
     strategies: [
       {
-        paths: ['myApps', 'recentUsed', 'defaultPath', 'installPath', 'showTip'],
+        paths: ['myApps', 'recentUsed', 'defaultPath', 'installPath', 'showTip', 'startMenu'],
         storage: localStorage,
       },
     ],

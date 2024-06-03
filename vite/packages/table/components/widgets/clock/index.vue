@@ -141,6 +141,7 @@ export default {
           currentStatus: "font",
           currentZoom: 100,
           name: dateTimeStamp(Date.now()),
+          _updateFlag: "24531",
         },
         this.desk
       );
@@ -166,7 +167,7 @@ export default {
   },
   computed: {
     ...mapWritableState(appStore, ["backgroundImage"]),
- 
+
 
     // 组件头部
     header() {

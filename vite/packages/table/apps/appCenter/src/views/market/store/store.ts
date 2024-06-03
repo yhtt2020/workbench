@@ -2,15 +2,16 @@ import { defineStore } from "pinia";
 import { get, post } from "../../../../../../js/axios/request";
 import { sUrl } from "../../../../../../consts";
 import { appHelper } from '../hooks/appHelper'
-import { getConfig } from "../../../../../../js/axios/serverApi";
 const ad = sUrl('/app/good/getGoodAdv')
 const download = sUrl('/app/good/app/downloadCount')
+const searchApp = sUrl('/app/good/app/findAppByAppNameNew')
 // getGoodAdv:'/app/good/getGoodAdv'
 export const useMarketStore = defineStore("useMarketStore", {
     state: () => ({
         recommendUrl:'/app/good/getGoodRecommend',
         recommendList: [],
         adList: [],
+        searchApps: [],
     }),
     getters: {},
     actions: {
@@ -32,16 +33,22 @@ export const useMarketStore = defineStore("useMarketStore", {
         // 获取广告位
         async getAd() {
             const res = await post(ad)
-            const list = res.map(item => this.resetAdType(item))
+            const list = this.resetAdType(res[0])
             this.adList = list
             // console.log(res,list,'ad')
         },
         // 重置图片
         resetAdType(data) {
-            return {
+            return [
+            {
                 img:data.img1,
                 url:data.link1
+            },
+            {
+                img:data.img2,
+                url:data.link2
             }
+        ]
         },
         // 重置格式
         resetGoodsType(data){
@@ -57,7 +64,25 @@ export const useMarketStore = defineStore("useMarketStore", {
         // 下载次数
         async downloadCount(id) {
             const res = await post(download,{id})
-            console.log(res)
+            // console.log(res)
+        },
+
+        resetSearchType(item){
+                return {
+                    id: item.appNanoid,
+                    Summary: item.summary,
+                    value: item.app,
+                    type: 'lightApp',
+                    icon: item.cover,
+                    name: item.alias
+                }
+        },
+        // 搜索应用
+        async searchApp(appName) {
+            const res = await post(searchApp,{appName})
+            // console.log(res)
+            this.searchApps = res[0].map(item => this.resetSearchType(item))
+            // console.log(this.searchApps)
         }
     },
     persist: {

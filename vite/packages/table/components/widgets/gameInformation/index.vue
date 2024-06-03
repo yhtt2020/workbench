@@ -113,7 +113,7 @@ export default {
       return {
         title: "电竞资讯",
         // ifyIcon:'fluent:games-16-filled',
-        showIcon: "/img/appLogo/gameInformation.png",
+        showIcon:"/logo/news.svg",
         refresh: {
           fn: this.refreshNow,
           tip: "刷新",
@@ -125,6 +125,7 @@ export default {
       return {
         defaultData: {
           customSize: "4x4",
+          _updateFlag: "24531",
         },
         customDel: this.openWay === "nav" ? true : false,
         disableEdit:this.isCommunityDesktop(this.desk),

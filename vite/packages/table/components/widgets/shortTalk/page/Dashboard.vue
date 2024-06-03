@@ -196,6 +196,7 @@ export default {
         customDel: this.openWay === "nav" ? true : false,
         defaultData: {
           customSize: "2x4",
+          _updateFlag: "24531",
         },
         disableEdit: this.isCommunityDesktop(this.desk),
       };
@@ -241,7 +242,7 @@ export default {
       header: {
         title: "社区数据",
         // ifyIcon:'majesticons:monitor-line',
-        showIcon: "/img/appLogo/shortDashboard.png",
+        showIcon:"/logo/shortDashboard.svg",
         rightIcon: [
           {
             ifyIcon: "fluent:open-20-filled",

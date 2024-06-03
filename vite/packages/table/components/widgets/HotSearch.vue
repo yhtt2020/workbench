@@ -106,19 +106,20 @@ export default {
       return {
         title: "微博热搜",
         // ifyIcon:'ri:weibo-fill',
-        showIcon: "/img/appLogo/weibo.png",
-        refresh: {
-          state: this.refreshFlag ? true : false,
-          fn: this.refreshNow,
-          tip: "刷新",
-        },
-      };
+        showIcon:"/logo/weibo.svg",
+        refresh:{
+          state:this.refreshFlag ? true : false,
+          fn:this.refreshNow,
+          tip:'刷新',
+        }
+      }
     },
     options() {
       return {
         customDel: this.openWay === "nav" ? true : false,
         defaultData: {
           customSize: "2x4",
+          _updateFlag: "24531",
         },
         disableEdit: this.isCommunityDesktop(this.desk),
       };

@@ -8,7 +8,9 @@ export const useGlobalStore = defineStore("useGlobalStore", {
     // 登录显示
     loginVisible: false,
     // 登录回调
-    loginCb:()=>{}
+    loginCb: () => {},
+    windowWidth: 0,
+    windowHeight: 0,
   }),
   getters: {},
   actions: {},

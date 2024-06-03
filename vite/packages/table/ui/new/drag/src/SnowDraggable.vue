@@ -37,7 +37,11 @@ import {
   onUnmounted,
   nextTick,
 } from "vue";
-import { useWindowSize } from "./hooks/useWindowSize";
+import { useGlobalStore } from "../../../../apps/global/store";
+import { storeToRefs } from "pinia";
+const globalStore = useGlobalStore();
+const { windowHeight, windowWidth } = storeToRefs(globalStore);
+
 import { useElementSize, vElementSize } from "./hooks/useElementSize";
 import {
   getSnapGrid,
@@ -271,9 +275,12 @@ watch(
   }
 );
 const isDisabled = ref(props.disabled);
-watch(()=>props.disabled, (val) => {
-  isDisabled.value = val;
-});
+watch(
+  () => props.disabled,
+  (val) => {
+    isDisabled.value = val;
+  }
+);
 watch(rotate, () => {
   getElementSize(elementSize.value);
 });
@@ -395,12 +402,24 @@ onMounted(() => {
             ResetElementPosition();
           }, 200);
         });
-      } else {
-        useWindowSize((size: any) => {
-          parentSize.value = size;
-          ResetElementPosition();
-        }, 200);
       }
+    },
+    {
+      immediate: true,
+    }
+  );
+  watch(
+    [() => windowHeight.value, () => windowWidth.value],
+    () => {
+      if (parent.value) {
+        return;
+      }
+
+      parentSize.value = {
+        width: windowWidth.value,
+        height: windowHeight.value,
+      };
+      ResetElementPosition();
     },
     {
       immediate: true,

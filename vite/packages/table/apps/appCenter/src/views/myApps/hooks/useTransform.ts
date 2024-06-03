@@ -1,5 +1,10 @@
+import { useReplaceData } from './useReplaceData';
 import { nanoid } from "nanoid";
 import { defaultData } from "../../../../../../ui/hooks/useDataConversion";
+import { useAppCenterStore } from './../../../store';
+import { storeToRefs } from "pinia";
+import navigationData from "../../../../../../js/data/tableData";
+import { message } from 'ant-design-vue';
 
 const typeArr = [
     'ttapp',
@@ -44,3 +49,27 @@ export const defaultStartMenu = [
     'gameIndex',
 
 ]
+
+
+export const resetType = (list) => {
+    // console.log(list.length, 'list')
+    const appCenterStore = useAppCenterStore()
+    const { startMenu } = storeToRefs(appCenterStore)
+    if(list.length == 0 || !list.some(item => item.type === 'systemApp')){
+        message.info('正在为您加载数据，请稍后')
+        // console.log(list,'222')
+        const sysApps = useReplaceData(navigationData.systemAppList);
+        sysApps.forEach((item) => {
+            list.push(item)
+            let i = defaultStartMenu.find((r) => r === item.value)
+            if(i){
+                startMenu.value.unshift(item.id)
+            }
+        })
+    }
+    console.log(startMenu.value,'<<<<<<<<<<<')
+    list = list.map((item) => {
+        return useTransform(item)
+    })
+    return list
+}

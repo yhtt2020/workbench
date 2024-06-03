@@ -123,7 +123,7 @@ export default {
       header:{
         title:'音频',
         // ifyIcon:'fluent:speaker-2-16-regular'
-        showIcon:"/img/appLogo/audio.png",
+        showIcon:"/logo/voice.svg",
 
       },
       customSize:'2x4',
@@ -136,6 +136,7 @@ export default {
       return {
         defaultData: {
           customSize: '2x4',
+          _updateFlag: "24531",
         },
         customDel:this.openWay === 'nav' ? true : false
       }
