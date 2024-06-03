@@ -400,6 +400,7 @@ export default {
         this.$bus.off("startAdjust");
         this.$bus.off("lockScreen");
         this.$bus.off("scrollbarUpdate");
+        this.$bus.off("redirect");
         let obj = {
           id: 20,
           newIcon: "fluent:more-horizontal-16-filled",
