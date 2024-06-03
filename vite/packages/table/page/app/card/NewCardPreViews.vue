@@ -194,6 +194,7 @@ import { comCanUse } from "../../../permission/usePlat";
 import { cdnUrl } from "../../../consts";
 import { chatCommunityStore } from "../../../apps/chat/store/chatCommunity";
 import { addCardList } from "../../../apps/communityDesk/store/desktopOtherData";
+import { communityAuth } from "../../../apps/communityDesk/hooks/deskCreateMethod";
 
 export default {
   emits: ["close", "addSuccess"],
@@ -244,23 +245,6 @@ export default {
         return comCanUse(item.name);
       });
     },
-
-    // 根据当前桌面数据进行检测是否为社群管理员桌面
-    ownerDeskVisible() {
-      if (this.desk.hasOwnProperty("communityNo")) {
-        const deskCommunityId = this.desk?.communityNo;
-        const found = this.myCommunity.find((item) => {
-          return Number(deskCommunityId) === Number(item?.communityInfo?.no);
-        });
-        if (found) {
-          return found?.role === "owner";
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    },
   },
   mounted() {},
   data() {
@@ -300,6 +284,8 @@ export default {
   },
   methods: {
     ...mapActions(cardStore, ["addCard"]),
+    communityAuth,
+
     // 添加图标保存
     save() {
       if (this.edit.src.length === 0) return message.error("图标不能为空");
@@ -348,33 +334,38 @@ export default {
       });
     },
     addNewCard(item) {
-      // 检测是否符合要求团队桌面需要适配的组件
-      const satisfyVisible = this.addCardList.some((addItem) => {
-        return String(item?.name) === String(addItem);
-      });
-      if (this.ownerDeskVisible && satisfyVisible) {
-        window.$ui.confirm(
-          "当前组件数据将会存储在团队桌面中",
-          `${
-            item?.cname === "桌面便签"
-              ? `${item?.cname}数据不会存储到你的备忘录应用中`
-              : ""
-          }`,
-          {
-            ok: () => {
-              this.addCallback(item);
-            },
-            okText: "确定",
-            noText: "取消",
-            type: "link",
-          }
-        );
+      if (!this.communityAuth(this.desk?.communityNo)) {
+        this.addCardPublic(item);
       } else {
-        this.addCallback(item);
+        // 检测是否符合要求团队桌面需要适配的组件
+        const satisfyVisible = this.addCardList.some((addItem) => {
+          return String(item?.name) === String(addItem);
+        });
+        if (this.communityAuth(this.desk?.communityNo) && satisfyVisible) {
+          window.$ui.confirm(
+            "当前组件数据将会存储在团队桌面中",
+            `${
+              item?.cname === "桌面便签"
+                ? `${item?.cname}数据不会存储到你的备忘录应用中`
+                : ""
+            }`,
+            {
+              ok: () => {
+                this.addCardPublic(item);
+              },
+              okText: "确定",
+              noText: "取消",
+              type: "link",
+            }
+          );
+        } else {
+          this.addCardPublic(item);
+        }
       }
     },
 
-    addCallback(item) {
+    // 抽取公共方法触发
+    addCardPublic(item) {
       if (item.option[1] != undefined) {
         this.fullScreen(item);
       } else {
@@ -427,6 +418,12 @@ export default {
       );
       this.$emit("addSuccess");
       message.success("添加成功！");
+
+      // 处理社群桌面添加组小组件的回调
+      if (this.communityAuth(this.desk?.communityNo)) {
+        this.$bus.emit("updateSync");
+      }
+
       completeTask("m0101", () => {
         this.closeCardDetails();
       });
@@ -434,12 +431,6 @@ export default {
       if (item.name == "yuanCommunity") {
         completeTask("m0302");
       }
-      setTimeout(() => {
-        // 处理社群桌面添加组小组件的回调
-        if (this.ownerDeskVisible) {
-          this.$bus.emit("updateSync");
-        }
-      }, 200);
     },
     closeMarket(val) {
       this.openRemote = val;
