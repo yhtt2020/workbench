@@ -26,8 +26,8 @@ export default {
   inject: ["modalParams"],
   mounted() {
 
-    if (this.modalParams) {
-      this.selectTopicIndex = this.modalParams;
+    if (this.modalParams?.id) {
+      this.selectTopicIndex = this.modalParams.id;
     }
   },
   components: { LeftTab, HeaderView, MainView, ChatLeft, Chat },

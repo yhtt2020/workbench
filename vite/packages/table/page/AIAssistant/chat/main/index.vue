@@ -44,12 +44,16 @@ export default {
       flag: false,
     };
   },
+  inject:['modalParams'],
   mounted() {
     let search = this.$route.params.value;
     if (search) {
       this.addTopic();
       this.onSearch(search);
+    }else if (this.modalParams?.search) {
+      this.onSearch(this.modalParams.search);
     }
+
   },
   methods: {
     ...mapActions(aiStore, ["addTopic"]),

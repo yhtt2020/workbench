@@ -9,7 +9,7 @@ import SystemSearch from "./SystemSearch.vue";
 import WebSearch from "./WebSearch.vue";
 import AISearch from "./AISearch.vue";
 import { HistoryData } from "./types";
-
+// 右边新建对话，左边询问ai助手
 const emit = defineEmits(["close", "openCardSet"]);
 
 const data: any = inject("data");
