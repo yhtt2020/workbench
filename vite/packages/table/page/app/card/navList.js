@@ -593,7 +593,7 @@ export const NavList = [
         sizes: ["2x2", "4x2"],
         option: [
           {
-            name: "AggregatedSearch",
+            name: "AggregateSearch",
             imgName:'aggregateSearch',
             size: "2x4",
             zoom: "20",
