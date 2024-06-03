@@ -1,14 +1,13 @@
 <template>
-    <LeftTab>
-
-        <div class="flex h-full">
-          <ChatLeft v-if="selectTab == 'Chat'"></ChatLeft>
-        </div>
-        <div class="flex h-full flex-col flex-1 w-0" >
-          <HeaderView></HeaderView>
-          <Chat></Chat>
-        </div>
-    </LeftTab>
+  <LeftTab>
+    <div class="flex h-full">
+      <ChatLeft v-if="selectTab == 'Chat'"></ChatLeft>
+    </div>
+    <div class="flex h-full flex-col flex-1 w-0">
+      <HeaderView></HeaderView>
+      <Chat></Chat>
+    </div>
+  </LeftTab>
 </template>
 
 <script>
@@ -22,7 +21,14 @@ import { aiStore } from "../../store/ai";
 
 export default {
   computed: {
-    ...mapWritableState(aiStore, ["isFull", "selectTab"]),
+    ...mapWritableState(aiStore, ["isFull", "selectTab", "selectTopicIndex"]),
+  },
+  inject: ["modalParams"],
+  mounted() {
+
+    if (this.modalParams) {
+      this.selectTopicIndex = this.modalParams;
+    }
   },
   components: { LeftTab, HeaderView, MainView, ChatLeft, Chat },
 };

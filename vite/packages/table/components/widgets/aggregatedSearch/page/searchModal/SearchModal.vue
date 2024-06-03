@@ -5,10 +5,10 @@ import { useEventListener, useDebounce, useDebounceFn } from "@vueuse/core";
 import { openBrowser } from "../../utils/open";
 import { sourceList, openWithList, defaultSourceList } from "../../config/data";
 
-import History from "./History.vue";
-import System from "./System.vue";
-import Search from "./Search.vue";
-
+import HistorySearch from "./HistorySearch.vue";
+import SystemSearch from "./SystemSearch.vue";
+import WebSearch from "./WebSearch.vue";
+import AISearch from "./AISearch.vue";
 import { HistoryData } from "./types";
 
 const emit = defineEmits(["close", "openCardSet"]);
@@ -274,7 +274,7 @@ useEventListener("keyup", tabEventUp);
                 <div
                   v-for="item in tabSourceList"
                   class="w-full h-10 flex items-center justify-between p-2 mb-2 text-sm hover:tt-theme-bg-2 cursor-pointer"
-                  style="border-radius: 10px"
+                  style="border-radius: 10px; z-index: 999999999999"
                   :class="[
                     {
                       'tt-theme-bg-2': currentSource.name == item.name,
@@ -314,11 +314,14 @@ useEventListener("keyup", tabEventUp);
       <main
         class="w-full overflow-hidden flex flex-col px-3"
         style="height: 508px"
-        v-if="data.historyList.length > 0 || words"
+        v-if="
+          data.historyList.length > 0 || words || currentSource.name == 'AI助手'
+        "
       >
-        <System v-if="words && currentSource.name == '工作台'" />
-        <Search v-if="words && isWebSource" @search="search" />
-        <History v-if="!words && data.historyList.length > 0" />
+        <AISearch v-if="currentSource.name == 'AI助手'" />
+        <SystemSearch v-else-if="words && currentSource.name == '工作台'" />
+        <WebSearch v-else-if="words && isWebSource" @search="search" />
+        <HistorySearch v-else-if="!words && data.historyList.length > 0" />
       </main>
       <footer
         class="h-10 tt-bg-2-t flex items-center justify-between p-3 pr-2 text-xs"

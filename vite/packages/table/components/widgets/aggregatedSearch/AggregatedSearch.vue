@@ -9,27 +9,28 @@ const header = {
   title: "聚合搜索",
   showIcon: "/logo/aggregateSearch.svg",
 };
-const cloneSourceList = JSON.parse(JSON.stringify(sourceList))
+const cloneSourceList = JSON.parse(JSON.stringify(sourceList));
+const defaultData = {
+  // 搜索源列表
+  sourceList: cloneSourceList,
+  // 搜索源
+  source: cloneSourceList[0],
+  webSource: cloneSourceList[0],
+  // 打开方式
+  openWith: "system",
+  // 记住上次使用的搜索方式
+  lastUse: false,
+  // 历史记录
+  historyList: [],
+  noBorder: true,
+  customSize: "4x2",
+  _updateFlag: "24532",
+};
 const options = computed(() => {
   return {
     // 初始化数据
-    defaultData: {
-      // 搜索源列表
-      sourceList: cloneSourceList,
-      // 搜索源
-      source: cloneSourceList[0],
-      webSource: cloneSourceList[0],
-      // 打开方式
-      openWith: "system",
-      // 记住上次使用的搜索方式
-      lastUse: false,
-      // 历史记录
-      historyList: [],
-      noBorder: true,
-      customSize: "4x2",
-      _updateFlag: "24531",
-    },
-    noBorder: customData.value.noBorder,
+    defaultData,
+    noBorder: customData.value?.noBorder,
   };
 });
 const customSize = computed(() => {
