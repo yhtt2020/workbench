@@ -238,7 +238,7 @@ export default {
     if (this.currentId == 'M0302') {
       this.updateNavIndex(7)
     }
-    // 用于是否满足社群桌面条件的小组件卡片数据。
+    // 过滤满足社群桌面条件的小组件卡片数据。
     const mapFilter = this.baseNavList.map((nav) => {
       const filterChildren = nav.children.filter((item) => {
         return !this.disabledCard.includes(item.name)
