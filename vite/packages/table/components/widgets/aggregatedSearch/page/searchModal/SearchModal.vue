@@ -121,10 +121,9 @@ const search: any = async (value?: any) => {
   }
   let word = value ? value.name : words.value;
   let searchUrl = currentSource.value.searchUrl + encodeURIComponent(word);
-
   const history: HistoryData = {
     name: word,
-    source: currentSource.value,
+    source: currentSource.value.icon,
     value: searchUrl,
     showType: "网页",
     openWith: currentOpenWith.value.value,
