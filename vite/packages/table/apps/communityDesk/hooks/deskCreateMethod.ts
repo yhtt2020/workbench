@@ -81,3 +81,17 @@ export const communityAuth = (no:any) => {
     return currentCommunity.value?.item?.role  === 'owner';
   }
 };
+
+
+// 判断数组是否有更新变化
+export const isArrayEqual = (oldList:any,newList:any) =>{
+  if (oldList.length !== newList.length) {
+    return false;
+  }
+  for (let i = 0; i < oldList.length; i++) {
+    if (oldList[i] !== newList[i]) {
+      return false;
+    }
+  }
+  return true;
+}

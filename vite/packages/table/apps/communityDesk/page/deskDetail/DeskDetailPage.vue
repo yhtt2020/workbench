@@ -18,7 +18,12 @@
           v-model:settings="currentDesk.settings"
           :key="currentDeskId"
           :keepAddIcon="keepAddIcon"
-          @changeEditing="editing = !editing"
+          @changeEditing="
+            () => {
+              editing = !editing;
+              this.editSync();
+            }
+          "
           @onArrange="onArrange"
           :communityInfo="communityInfo"
         >
@@ -111,7 +116,12 @@
           :key="currentDeskId"
           :keepAddIcon="keepAddIcon"
           @onArrange="onArrange"
-          @changeEditing="()=>{editing = !editing; showRightMenu = false}"
+          @changeEditing="
+            () => {
+              editing = !editing;
+              showRightMenu = false;
+            }
+          "
           :communityInfo="communityInfo"
         >
           <!-- 拿菜单数据 -->
@@ -327,7 +337,7 @@ import { communityNavStore } from "../../../../components/bottomPanel/store/comm
 // 其他文件
 import menuMinis from "../../hooks/communityMenu";
 import { completeTask } from "../../../task/task";
-import { communityAuth } from "../../hooks/deskCreateMethod";
+import { communityAuth,isArrayEqual } from "../../hooks/deskCreateMethod";
 import { disabledCard } from "../../store/desktopOtherData";
 
 export default {
@@ -480,9 +490,11 @@ export default {
       // 接收定时器临时变量
       loadTime: null,
       // 是否开启右键菜单弹窗
-      showRightMenu:false,
+      showRightMenu: false,
       // 社群桌面禁用的组件
       disabledCard,
+      // 用于桌面编辑弹窗关闭时做编比较处理
+      // originalCards:[],
     };
   },
 
@@ -652,6 +664,9 @@ export default {
 
     // 默认触发
     this.setCurrentDefaultDesk();
+
+    // 获取旧的数据
+    this.originalCards = [...this.currentDesk.cards];
   },
 
   methods: {
@@ -674,6 +689,7 @@ export default {
       "clearDeskList",
     ]),
     communityAuth,
+    isArrayEqual,
 
     // 设置桌面id的切换方法
     setCurrentDeskId(id) {
@@ -925,8 +941,8 @@ export default {
          * 当前是社群管理员桌面场景的需求
          * -- 需要将本地window图标进行过滤剔除
          * -- 需要将社群桌面中不能使用的组件进行过滤剔除
-         * 
-         * **/ 
+         *
+         * **/
         const newCards = g?.cards?.filter((card) => {
           if (card?.name === "myIcons") {
             const newIconList = _.filter(
@@ -939,8 +955,7 @@ export default {
             if (newIconList.length !== 0) {
               return card;
             }
-          } 
-          else if(this.disabledCard.includes(card?.name) === false){
+          } else if (this.disabledCard.includes(card?.name) === false) {
             return card;
           }
         });
@@ -1049,6 +1064,18 @@ export default {
     showMore() {
       this.$emit("showMore");
     },
+
+    // 编辑关闭时进行同步
+    editSync(){
+      if(!this.editing){
+        const isSync = this.isArrayEqual(this.originalCards,this.currentDesk?.cards);
+        if(!isSync){
+          this.syncSaveCommunity(); 
+          // 同步之后重新赋值
+          this.originalCards = [...this.currentDesk?.cards];
+        }
+      }
+    }
   },
 
   watch: {
@@ -1063,6 +1090,21 @@ export default {
       immediate: true,
       deep: true,
     },
+
+    // 监听卡片变化
+    //  "currentDesk.cards": {
+    //   handler(newVal) {
+    //     console.log('查看this.editing',this.editing);
+    //     // if(this.editing){
+    //     //   console.log('测试-true情况下',newVal)
+    //     // }
+    //     // else {
+    //     //   console.log('测试-false情况下',newVal)
+    //     // }
+    //   },
+    //   deep: true,
+    //   immediate: true,
+    // },
   },
 };
 </script>
