@@ -11,7 +11,7 @@ const aiStore: any = useAiStore();
 const { recentList, chatList } = storeToRefs(aiStore);
 const data: any = inject("data");
 const words: any = inject("words");
-
+const ctrlSelectIndex: any = inject("ctrlSelectIndex");
 const search = () => {
   let res: any = aiStore.addTopic();
   let historyData: HistoryData = {
@@ -29,11 +29,7 @@ const search = () => {
 };
 
 const openAi = (item: any) => {
-  const obj = {
-    showType: "AI助手",
-    value: item.id,
-  };
-  open(obj);
+  open(item);
 };
 const time = (timestamp) => {
   const targetDate = dayjs(timestamp);
@@ -74,18 +70,32 @@ const list = computed(() => {
       icon: item.icon.name,
       text: lastChat,
       type: lastTime,
+      showType: "AI助手",
+      value: {
+      id: item.id,
+    },
     };
   });
   console.log("res :>> ", res);
   return res;
+});
+const currentIndex = computed(() => {
+  if (ctrlSelectIndex.value < 0) {
+    ctrlSelectIndex.value = list.value.length - 1;
+  }
+  if (ctrlSelectIndex.value > list.value.length - 1) {
+    ctrlSelectIndex.value = 0;
+  }
+  return ctrlSelectIndex.value % list.value.length;
 });
 </script>
 
 <template>
   <div class="flex flex-col h-full w-full">
     <div
+      v-if="words"
       @click="search"
-      class="w-full p-3 h-11 flex rounded-xl cursor-pointer hover:tt-theme-bg-2"
+      class="w-full p-3 mt-3 h-11 flex rounded-xl cursor-pointer hover:tt-theme-bg-2"
     >
       <xt-mix-icon icon="/logo/ai.svg" type="select" size="24" class="mr-2.5" />
       创建新对话
@@ -94,7 +104,14 @@ const list = computed(() => {
       <div class="text-sm tt-text-2">最近对话</div>
     </div>
     <Scrollbar>
-      <Item @click="openAi(item)" v-for="item in list" :data="item"> </Item>
+      <Item
+        @click="openAi(item)"
+        v-for="item in list"
+        :data="item"
+        :index="index"
+        :diffIndex="1"
+      >
+      </Item>
     </Scrollbar>
   </div>
 </template>

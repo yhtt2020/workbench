@@ -112,9 +112,9 @@ const surplusIcon = computed(() => {
     const sourceList = customData.value.sourceList.filter(
       (item) => item.name !== customData.value.source.name
     );
-    arr = sourceList.slice(0, 3);
+    arr = sourceList.slice(0, 2);
   }
-  arr = customData.value.sourceList?.slice(1, 4);
+  arr = customData.value.sourceList?.slice(1,3);
   arr?.unshift(...defaultSourceList);
 
   return arr;

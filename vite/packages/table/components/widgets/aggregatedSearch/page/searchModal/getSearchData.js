@@ -86,7 +86,7 @@ export const getNoteData = async (word) => {
     return {
       ...item,
       name: item.customData.title,
-      icon: "/img/appLogo/note.png",
+      icon: "/logo/note.svg",
       value: {
         customIndex: item.id,
       },

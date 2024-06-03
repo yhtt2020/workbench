@@ -42,7 +42,7 @@ const webSource = ref();
 /** 用于判断是否属于web搜索源 */
 const isWebSource = computed(() => {
   const name = currentSource.value.name;
-  if (name == "工作台" || name == "文件") {
+  if (name === "工作台" || name === "文件" || name === "AI助手") {
     return false;
   }
   return true;
@@ -165,9 +165,7 @@ const eventDown = (e) => {
   /** 组合键 */
   // ctrl+tab
   if (e.key == "Tab" && e.ctrlKey) {
-    if (words.value.length == 0) {
-      return;
-    }
+
     e.preventDefault();
 
     openWithIndex.value = (openWithIndex.value + 1) % openWithList.length;
