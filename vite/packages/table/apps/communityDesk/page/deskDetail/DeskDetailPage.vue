@@ -328,6 +328,7 @@ import { communityNavStore } from "../../../../components/bottomPanel/store/comm
 import menuMinis from "../../hooks/communityMenu";
 import { completeTask } from "../../../task/task";
 import { communityAuth } from "../../hooks/deskCreateMethod";
+import { disabledCard } from "../../store/desktopOtherData";
 
 export default {
   name: "DeskDetailPage",
@@ -480,6 +481,8 @@ export default {
       loadTime: null,
       // 是否开启右键菜单弹窗
       showRightMenu:false,
+      // 社群桌面禁用的组件
+      disabledCard,
     };
   },
 
@@ -918,7 +921,12 @@ export default {
         g.id = `${this.communityInfo?.no}${nanoid(8)}`;
         g.communityNo = this.communityInfo?.no;
 
-        // 当前是社群桌面场景,需要将本地window图标进行过滤剔除
+        /**
+         * 当前是社群管理员桌面场景的需求
+         * -- 需要将本地window图标进行过滤剔除
+         * -- 需要将社群桌面中不能使用的组件进行过滤剔除
+         * 
+         * **/ 
         const newCards = g?.cards?.filter((card) => {
           if (card?.name === "myIcons") {
             const newIconList = _.filter(
@@ -931,10 +939,14 @@ export default {
             if (newIconList.length !== 0) {
               return card;
             }
-          } else {
+          } 
+          else if(this.disabledCard.includes(card?.name) === false){
             return card;
           }
         });
+
+        // console.log('查看newCards',newCards);
+
         // 将卡片数据进行过滤后,重新进行赋值
         g.cards = newCards;
 
