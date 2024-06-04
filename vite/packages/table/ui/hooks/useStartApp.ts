@@ -13,6 +13,9 @@ import { useTTAppStore } from "../../apps/ttApp/src/store";
 import { storeToRefs } from "pinia";
 import fs from "fs";
 import { appsStore } from "../../store/apps";
+
+// @ts-ignore
+
 async function runApp(uri) {
   console.log("打开uri", uri);
   try {
@@ -40,7 +43,7 @@ async function runApp(uri) {
           "cwd",
           require("path").dirname(realPath)
         );
-        window.$models.win32.openApp(realPath, "", "", false, true);
+        (window as any).$models.win32.openApp(realPath, "", "", false, true);
         //let child=cp.spawn(realPath, {detached: true,cwd:require('path').dirname(realPath),stdio: 'ignore',windowsHide:true,})
         //child.unref()
         // setTimeout(()=>{
@@ -51,7 +54,7 @@ async function runApp(uri) {
     } else {
       var fs = require("fs");
       if (realPath === "我的电脑") {
-        window.$models.win32.openApp(
+        (window as any).$models.win32.openApp(
           "explorer",
           "shell:MyComputerFolder",
           "",
@@ -61,7 +64,7 @@ async function runApp(uri) {
         return true;
       }
       if (realPath === "回收站") {
-        window.$models.win32.openApp(
+        (window as any).$models.win32.openApp(
           "explorer",
           "shell:RecycleBinFolder",
           "",
@@ -90,7 +93,7 @@ async function runApp(uri) {
         });
       } else {
         console.log("执行路径C，普通文件", realPath);
-        window.$models.win32.openApp(realPath, "", "", false, true);
+        (window as any).$models.win32.openApp(realPath, "", "", false, true);
         //cp.spawn(realPath, {detached: true,cwd:require('path').dirname(realPath),stdio: 'ignore',windowsVerbatimArguments:true})
       }
     }
@@ -112,7 +115,7 @@ export const startApp = async (type, value, router?) => {
   }
   switch (type) {
     case "ttapp":
-      const ttappStore = useTTAppStore();
+      const ttappStore:any = useTTAppStore();
       const { modal } = storeToRefs(ttappStore);
       ttappStore.enterApp(value);
       break;
@@ -144,14 +147,14 @@ export const startApp = async (type, value, router?) => {
       //   package: isObject ? value.package :  value,
       // });
       // 更换打开方式，打开新增应用
-      ipc.send("executeApp", { app: JSON.parse(JSON.stringify(value)) });
+      (ipc as any).send("executeApp", { app: JSON.parse(JSON.stringify(value)) });
       break;
     // 酷应用
     case "coolApp":
       // router.push({ name: "app", params: value });
       // console.log('value = ;' ,value)
       // 新版打开方式,详细细节可以在vite\packages\table\page\AppFrame.vue中查看
-      const useAppStore = appsStore();
+      const useAppStore:any = appsStore();
       const info = {
         type,
         ...value,
@@ -269,12 +272,15 @@ export const openSysApp = (value, router) => {
     case "income":
       useAppModal("income").openApp();
       break;
+    case "my":
+      useAppModal("gallery").openApp();
+      break;
     case 'apps':
       useMit.emit('openAppCenter')
       break;
     default:
       // 通过路由打开
-      window.$ui.router.push({ name: value });
+      (window as any).$ui.router.push({ name: value });
       break;
   }
 };
@@ -299,7 +305,7 @@ const openFixedApp = {
 // 打开小队判断
 const openTeam = async () => {
   const store = useComStore();
-  const team = teamStore();
+  const team:any = teamStore();
   await team.updateMy(0);
   if (team.status === false) {
     store.showTeamTip = true;

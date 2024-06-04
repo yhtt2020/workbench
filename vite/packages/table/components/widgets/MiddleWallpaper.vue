@@ -229,7 +229,7 @@ import {
   wallpaperOptions,
   selectWallPaper,
 } from "../../page/gallery/data/gallery";
-import { getFileName } from "../../page/gallery/libs/utils";
+import { getFileName } from "../../apps/galleryApp/libs/utils";
 import { paperGet, bingGet } from "../../js/axios/request";
 
 import Widget from "../card/Widget.vue";
@@ -237,6 +237,7 @@ import WallpaperWidgetModal from "../paperModal/WallpaperWidgetModal.vue";
 import GalleryModal from "../paperModal/PaperApp.vue";
 import { usePlat } from "../../ui/hooks/usePlat";
 import { communityNavStore } from "../bottomPanel/store/communityNavStore";
+import { useAppModal } from "../../apps/appModal/src/hook/useAppModal";
 
 let fs;
 let path;
@@ -296,7 +297,8 @@ export default {
           newIcon: "fluent:image-multiple-16-regular",
           title: "在应用中打开",
           fn: () => {
-            this.goGallery(this.customData.value);
+            const { openApp } = useAppModal("gallery");
+            openApp();
           },
         },
         {

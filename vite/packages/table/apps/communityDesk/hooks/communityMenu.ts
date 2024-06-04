@@ -4,6 +4,8 @@ import {
   mainData,
 } from "../../../components/desk/freeLayout/config";
 import { generateSearchResultTime } from "../hooks/deskCreateMethod";
+import { useAppModal } from "../../appModal/src/hook/useAppModal";
+
 
 /**社群管理员模块**/
 function communityMenus() {
@@ -148,7 +150,9 @@ function communityMenus() {
       newIcon: "fluent:image-multiple-16-filled",
       name: "更换壁纸",
       fn: () => {
-        this.$bus.emit("lockScreen");
+        const { openApp } = useAppModal("gallery");
+        openApp();
+        // this.$bus.emit("lockScreen");
       },
     },
     {
@@ -295,7 +299,9 @@ function memberMenus() {
       newIcon: "fluent:image-multiple-16-filled",
       name: "更换壁纸",
       fn: () => {
-        this.$bus.emit("lockScreen");
+        // this.$bus.emit("lockScreen");
+        const { openApp } = useAppModal("gallery");
+        openApp();
       },
     },
     {
