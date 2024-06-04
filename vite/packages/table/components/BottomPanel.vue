@@ -165,7 +165,6 @@ import EditIcon from "./desk/navigationBar/components/EditIcon/EditIcon.vue";
 import _ from "lodash-es";
 import { nanoid } from "nanoid";
 import Drop from "./desk/navigationBar/components/folder/Drop.vue";
-import { useWindowSize } from "../ui/new/drag/src/hooks/useWindowSize";
 import Common from "./desk/navigationBar/components/Common.vue";
 import { useElementSize } from "../ui/new/drag/src/hooks/useElementSize";
 import ControlModal from "../apps/control/page/Control.vue";
@@ -184,6 +183,8 @@ import ComNavSearch from "./bottomPanel/search/ComNavSearch.vue";
 import { chatCommunityStore } from "../apps/chat/store/chatCommunity";
 import DeskAppModal from "./bottomPanel/desk/DeskAppList.vue";
 import { startApp } from "../ui/hooks/useStartApp";
+
+import { useGlobalStore } from "../apps/global/store";
 
 import mainMin from './windowPanel/hook/mainMenu'
 import ExtraMenu from './windowPanel/components/ExtraMenu.vue';
@@ -237,9 +238,6 @@ export default {
       controlVisible: false,
       controlLeft: 100,
       skipSimple: false,
-      // window高宽
-      parentWidth: 0,
-      parentHeight: 0,
       hoverTabs: false,
       // 删除导航区域显示
       delZone: false,
@@ -314,31 +312,6 @@ export default {
       }
     });
     this.noticeFlag = true;
-    // 当窗口尺寸发生变化时，更新父级尺寸，并更新导航栏相关数据
-    this.useWindowSize((size) => {
-      const { width: windowWidth, height: windowHeight } = {
-        width: size.width.value,
-        height: size.height.value,
-      };
-
-      // 更新父级尺寸状态
-      this.parentWidth = windowWidth;
-      this.parentHeight = windowHeight;
-
-      // 根据当前导航格式计算最大宽度和额外宽度
-      let macWidth = this.communityNavVisible ? windowWidth - 540 : windowWidth - 200;
-      let macExtraWidth = this.communityNavVisible ? 540 : 200;
-      let maxWidth = this.currentNavFormat === 'mac' ? macWidth : windowWidth * 0.6;
-      let extraWidth = this.currentNavFormat === 'mac' ? macExtraWidth : windowWidth * 0.3;
-
-      // 计算当前可添加的最多图标个数
-      this.maxItemNum = Math.round(maxWidth / this.realSize);
-
-      // 计算导航栏缩放比例
-      const scale =
-        windowWidth / (extraWidth + this.copyFootNav.length * this.realSize);
-      this.navAttribute.navSize = Math.min(100, Math.round(scale * 100));
-    }, 200);
 
     window.addEventListener("mousemove", this.listenMouse);
     // 点击团队导航打开团队组件
@@ -391,6 +364,7 @@ export default {
     ...mapWritableState(taskStore, ["isTask"]),
     ...mapWritableState(useDeskStore, ["isEnterBar"]),
     ...mapWritableState(controlStore, ["firstNavVisible"]),
+    ...mapWritableState(useGlobalStore, ["windowWidth", "windowHeight"]),
     // 判断当前导航栏格式，来确定图标大小
     realSize() {
       return this.currentNavFormat === "mac" ? 72 : 60;
@@ -435,6 +409,23 @@ export default {
     },
   },
   watch: {
+    windowWidth:{
+      handler(val){
+        // 根据当前导航格式计算最大宽度和额外宽度
+        let macWidth = this.communityNavVisible ? val - 540 : val - 200;
+        let macExtraWidth = this.communityNavVisible ? 540 : 200;
+        let maxWidth = this.currentNavFormat === 'mac' ? macWidth : val * 0.6;
+        let extraWidth = this.currentNavFormat === 'mac' ? macExtraWidth : val * 0.3;
+
+        this.maxItemNum = Math.floor(maxWidth / this.realSize);
+        // 计算导航栏缩放比例
+        const scale =
+          val / (extraWidth + this.copyFootNav.length * this.realSize);
+        this.navAttribute.navSize = Math.min(100, Math.round(scale * 100));
+        // console.log('maxM:>>>',this.maxItemNum,'navSize:>>>',this.navAttribute.navSize)
+      },
+      immediate: true
+    },
     // 自动隐藏状态下，鼠标是否在导航栏区域
     isLeaveBar(val) {
       this.isFootBar = val;
@@ -624,7 +615,6 @@ export default {
       this.hoverIndex = -1;
     },
     hoverRealItemId,
-    useWindowSize,
     useMergeFolder,
     //  点击头像框打开控制中心
     openControl(event) {
