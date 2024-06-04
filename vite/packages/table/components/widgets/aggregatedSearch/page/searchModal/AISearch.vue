@@ -13,6 +13,14 @@ const data: any = inject("data");
 const words: any = inject("words");
 const ctrlSelectIndex: any = inject("ctrlSelectIndex");
 const search = () => {
+  if (diff.value && ctrlSelectIndex.value == 0) {
+    aiSearch();
+  } else {
+    let index = ctrlSelectIndex.value - diff.value;
+    openAi(list.value[index]);
+  }
+};
+const aiSearch = () => {
   let res: any = aiStore.addTopic();
   let historyData: HistoryData = {
     name: res.name,
@@ -27,6 +35,7 @@ const search = () => {
   historyData.value.search = words.value;
   open(historyData);
 };
+
 watch(
   () => words.value,
   (val) => {
@@ -92,7 +101,7 @@ const list = computed(() => {
 const currentIndex = computed(() => {
   let length = list.value.length;
   if (words.value) {
-    length + 1;
+    length += 1;
   }
   if (ctrlSelectIndex.value < 0) {
     ctrlSelectIndex.value = length - 1;
@@ -116,29 +125,26 @@ defineExpose({
 </script>
 <template>
   <div class="flex flex-col h-full w-full">
-    <div
+    <Item
       v-if="words"
-      @click="search"
-      class="w-full p-3 mt-3 h-11 flex rounded-xl cursor-pointer hover:tt-theme-bg-2"
-      :class="{
-        'xt-theme-bg-2': ctrlSelectIndex == 0,
+      @click="aiSearch"
+      class="mt-3"
+      :data="{
+        icon: '/logo/ai.svg',
+        name: '创建新对话',
       }"
+      :select="ctrlSelectIndex == 0"
     >
-      <xt-mix-icon icon="/logo/ai.svg" type="select" size="24" class="mr-2.5" />
-      创建新对话
-    </div>
+    </Item>
     <div class="flex p-3">
       <div class="text-sm tt-text-2">最近对话</div>
     </div>
-    diff {{ diff }},current {{ currentIndex }}
     <Scrollbar>
       <Item
         @click="openAi(item)"
         v-for="(item, index) in list"
         :select="index + diff == currentIndex"
         :data="item"
-        :index="index"
-        :diffIndex="1"
       >
       </Item>
     </Scrollbar>

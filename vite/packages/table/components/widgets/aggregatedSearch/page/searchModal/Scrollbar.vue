@@ -8,8 +8,6 @@ const scrollbar = ref(null);
 const searchScrollbar = ref(null);
 
 watch(ctrlSelectIndex, (val, oldVal) => {
-  // 往前
-  console.log("Math.abs(val - oldVal)  :>> ", Math.abs(val - oldVal));
   if (Math.abs(val - oldVal) > 1) {
     searchScrollbar.value.scrollTop = val * 48;
   } else if (val > 3) {
