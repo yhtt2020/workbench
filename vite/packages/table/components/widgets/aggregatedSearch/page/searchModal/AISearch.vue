@@ -72,8 +72,8 @@ const list = computed(() => {
       type: lastTime,
       showType: "AI助手",
       value: {
-      id: item.id,
-    },
+        id: item.id,
+      },
     };
   });
   console.log("res :>> ", res);
@@ -87,6 +87,9 @@ const currentIndex = computed(() => {
     ctrlSelectIndex.value = 0;
   }
   return ctrlSelectIndex.value % list.value.length;
+});
+defineExpose({
+  search,
 });
 </script>
 
@@ -106,7 +109,8 @@ const currentIndex = computed(() => {
     <Scrollbar>
       <Item
         @click="openAi(item)"
-        v-for="item in list"
+        v-for="(item, index) in list"
+        :select="index == currentIndex"
         :data="item"
         :index="index"
         :diffIndex="1"

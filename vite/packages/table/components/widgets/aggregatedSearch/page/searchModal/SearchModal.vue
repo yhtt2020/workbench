@@ -160,6 +160,8 @@ const openCardSet = () => {
 const debouncedChangeTabVisible = useDebounceFn(() => {
   tabVisible.value = false;
 }, 500);
+const AIRef: any = ref();
+const SystemRef: any = ref();
 /** 相关事件 */
 const eventDown = (e) => {
   /** 组合键 */
@@ -193,7 +195,12 @@ const eventDown = (e) => {
   // enter
   if (e.key === "Enter") {
     e.preventDefault();
-    if (words.value.length > 0) {
+    const name = currentSource.value.name;
+    if (name === "AI助手") {
+      AIRef.value.search();
+    } else if (words.value.length > 0) {
+      if (isWebSource.value) {
+      }
       // 有bug
       // search(recommendList.value[ctrlSelectIndex.value]);
     } else {
@@ -311,8 +318,11 @@ useEventListener("keyup", tabEventUp);
           data.historyList.length > 0 || words || currentSource.name == 'AI助手'
         "
       >
-        <AISearch v-if="currentSource.name == 'AI助手'" />
-        <SystemSearch v-else-if="words && currentSource.name == '工作台'" />
+        <AISearch v-if="currentSource.name == 'AI助手'" ref="AIRef" />
+        <SystemSearch
+          v-else-if="words && currentSource.name == '工作台'"
+          ref="SystemRef"
+        />
         <WebSearch v-else-if="words && isWebSource" @search="search" />
         <HistorySearch v-else-if="!words && data.historyList.length > 0" />
       </main>
