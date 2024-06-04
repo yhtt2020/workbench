@@ -5,11 +5,11 @@
   >
     <template v-for="item in buttonList">
       <xt-button
-        :w="113"
         :h="40"
         :radius="8"
         class="ml-3 xt-bg-t-2"
         type="primary"
+        style="width:auto !important; padding: 0 16px"
         @click="item.fn"
       >
         <div class="flex items-center">

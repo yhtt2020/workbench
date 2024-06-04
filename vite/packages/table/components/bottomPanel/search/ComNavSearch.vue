@@ -137,7 +137,25 @@ const getSearchResult = () => {
 
 // 选择社群
 const selectCommunity = async (item, index) => {
-  comNav.setCurrentCommunity(item, index);
+  // 检测当前桌面是否已经切换到社群桌面
+  if (!settings.value.isCommunity) {
+    if (item.role === "owner") {
+      comNav.setCurrentCommunity(item, index);
+      const newDeskList = getCommunityDeskList(item.communityInfo);
+      // 当社群桌面列表没有时,会自动默认创建一个空桌面
+      if (newDeskList.length === 0) {
+        proxy.$bus.emit("openCommunityDesk");
+      } 
+    }
+    // 成员
+    else if (item.role === "member") {
+      loadSyncDesk(item?.no);
+      comNav.setCurrentCommunity(item, index);
+    }
+  }
+  else {
+    comNav.setCurrentCommunity(item, index);
+  }
   // 选择后进行弹窗关闭
   emit("close");
 };

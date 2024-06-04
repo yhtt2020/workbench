@@ -116,7 +116,7 @@
       <template v-else>
         <div class="flex flex-col items-center justify-center h-full">
           <xt-ify-icon icon="fluent-emoji:alarm-clock" class="pb-4" size="56" />
-          <span class="xt-text xt-font font-16">暂无数据</span>
+          <span class="xt-text-2 xt-font font-14">暂无数据</span>
         </div>
       </template>
 
@@ -145,7 +145,6 @@
           @click="onSetCountDown"
         </xt-menu>        
       </div>-->
-      
     </div>
     <div
       @click="onSetup"
@@ -277,16 +276,43 @@ export default {
   },
   data() {
     return {
-      header:{
-        title:'闹钟',
-        showIcon:"/logo/clock.svg",
-
+      header: {
+        title: "闹钟",
+        showIcon: "/logo/clock.svg",
       },
-      simpleImage: '/public/img/test/load-ail.png',
+      simpleImage: "/public/img/test/load-ail.png",
       visible: false,
       value1: dayjs("00:00:00", "HH:mm"),
       custom: false,
       menuList: [
+        {
+          newIcon: "fluent:clock-12-filled",
+          title: "3分钟",
+          fn: () => {
+            this.onCountDown(3);
+          },
+        },
+        {
+          newIcon: "fluent:clock-12-filled",
+          title: "10分钟",
+          fn: () => {
+            this.onCountDown(10);
+          },
+        },
+        {
+          newIcon: "fluent:clock-12-filled",
+          title: "30分钟",
+          fn: () => {
+            this.onCountDown(30);
+          },
+        },
+        {
+          newIcon: "fluent:clock-12-filled",
+          title: "自定义",
+          fn: () => {
+            this.onCountDown(300);
+          },
+        },
         {
           icon: "shezhi1",
           title: "设置",
@@ -356,6 +382,34 @@ export default {
       this.menuList = [];
     } else {
       this.menuList = [
+        {
+          newIcon: "fluent:clock-12-filled",
+          title: "3分钟",
+          fn: () => {
+            this.onCountDown(3);
+          },
+        },
+        {
+          newIcon: "fluent:clock-12-filled",
+          title: "10分钟",
+          fn: () => {
+            this.onCountDown(10);
+          },
+        },
+        {
+          newIcon: "fluent:clock-12-filled",
+          title: "30分钟",
+          fn: () => {
+            this.onCountDown(30);
+          },
+        },
+        {
+          newIcon: "fluent:clock-12-filled",
+          title: "自定义",
+          fn: () => {
+            this.onCountDown(300);
+          },
+        },
         {
           icon: "shezhi1",
           title: "设置",

@@ -18,8 +18,13 @@
     >
       暂无卡片
     </div>
+
+    <!--
+      communityInfo?.role !== 'member' ? editing : showRightMenu
+      这里做社群桌面是否为成员场景的情况
+    -->
     <FloatMenu
-      v-if="editing"
+      v-if="communityInfo?.role !== 'member' ? editing : showRightMenu"
       @addIcon="newAddIcon"
       @addFolder="addFolder"
       @add="newAddCard"
@@ -34,6 +39,7 @@
       :hide="hide"
       :communityInfo="communityInfo"
     />
+
     <Drop :classes="getClasses()">
       <!-- 自由布局 -->
       <FreeLayoutScrollbar
@@ -187,16 +193,15 @@
     >
       <NewAddCard
         v-if="addCardVisible"
+        :desk="currentDesk"
         @close="hideAddCard"
         @addSuccess="hideAddCard"
-        :desk="currentDesk"
         @onBack="
           () => {
             this.addCardVisible = false;
             console.log('返回');
           }
         "
-        :communityRole="communityRole"
       ></NewAddCard>
     </div>
   </transition>
@@ -204,9 +209,9 @@
   <!-- 添加图标 -->
   <EditNewNavigation
     v-if="editVisible"
+    :communityRole="communityInfo?.role ? true : false"
     @setQuick="editVisible = false"
     @addIcon="addIcon"
-    :communityRole="communityRole"
   ></EditNewNavigation>
   <GalleryModal ref="galleryRef" />
 </template>
@@ -327,6 +332,12 @@ export default {
       type: Object,
       required: true,
     },
+    // 社群成员桌面下开启右键菜单
+    showRightMenu:{
+      type: Boolean,
+      required: true,
+      default: false,
+    }
   },
   watch: {
     /**
@@ -388,6 +399,7 @@ export default {
         this.$bus.off("startAdjust");
         this.$bus.off("lockScreen");
         this.$bus.off("scrollbarUpdate");
+        this.$bus.off("redirect");
         let obj = {
           id: 20,
           newIcon: "fluent:more-horizontal-16-filled",
@@ -742,8 +754,8 @@ export default {
      */
     stashLayout() {
       let bound = {
-        // width: this.$refs.deskContainer.clientWidth,
-        // height: this.$refs.deskContainer.clientHeight,
+        // width: this.$refs.deskContainer?.clientWidth,
+        // height: this.$refs.deskContainer?.clientHeight,
         width: this.deskSize.width,
         height: this.deskSize.height,
       };
@@ -759,8 +771,8 @@ export default {
         return;
       }
       let bound = {
-        // width: this.$refs.deskContainer.clientWidth,
-        // height: this.$refs.deskContainer.clientHeight,
+        // width: this.$refs.deskContainer?.clientWidth,
+        // height: this.$refs.deskContainer?.clientHeight,
         width: this.deskSize.width,
         height: this.deskSize.height,
       };
@@ -774,8 +786,8 @@ export default {
     getLayoutSize() {
       if (!this.isFreeLayout) {
         this.currentDesk.layoutSize = {
-          // width: this.$refs.deskContainer.clientWidth,
-          // height: this.$refs.deskContainer.clientHeight,
+          // width: this.$refs.deskContainer?.clientWidth,
+          // height: this.$refs.deskContainer?.clientHeight,
           width: this.deskSize.width,
           height: this.deskSize.height,
         };
@@ -788,8 +800,8 @@ export default {
             setTimeout(() => {
               this.$nextTick(() => {
                 const fullLayoutSize = {
-                  // width: this.$refs.deskContainer.clientWidth,
-                  // height: this.$refs.deskContainer.clientHeight,
+                  // width: this.$refs.deskContainer?.clientWidth,
+                  // height: this.$refs.deskContainer?.clientHeight,
                   width: this.deskSize.width,
                   height: this.deskSize.height,
                 };
