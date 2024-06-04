@@ -200,7 +200,7 @@ export default {
       header:{
         title:'快捷键',
         // ifyIcon:"fluent:flash-16-regular",
-        showIcon:"/logo/directive.svg",
+        showIcon:"/logo/shortCut.svg",
         titleHover:true,
         titleHoverName:'打开应用',
       }
