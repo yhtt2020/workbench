@@ -125,21 +125,22 @@ defineExpose({
 </script>
 <template>
   <div class="flex flex-col h-full w-full">
-    <Item
-      v-if="words"
-      @click="aiSearch"
-      class="mt-3"
-      :data="{
-        icon: '/logo/ai.svg',
-        name: '创建新对话',
-      }"
-      :select="ctrlSelectIndex == 0"
-    >
-    </Item>
-    <div class="flex p-3">
-      <div class="text-sm tt-text-2">最近对话</div>
-    </div>
     <Scrollbar>
+      <Item
+        v-if="words"
+        @click="aiSearch"
+        class="mt-3"
+        :data="{
+          icon: '/logo/ai.svg',
+          name: '创建新对话',
+        }"
+        :select="ctrlSelectIndex == 0"
+      >
+      </Item>
+      <div class="flex p-3">
+        <div class="text-sm tt-text-2">最近对话</div>
+      </div>
+
       <Item
         @click="openAi(item)"
         v-for="(item, index) in list"
