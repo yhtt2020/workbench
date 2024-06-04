@@ -357,6 +357,61 @@ export const cardStore = defineStore(
         }
         findCard.customData = {...findCard.customData, ...newData}
       },
+      /**
+       * 找寻索引组件的customData
+       * @param customIndex 组件的customIndex索引
+       * @param desk 当前的桌面
+       * @returns 返回找到的数据
+       */
+      getCustomData(customIndex, desk) {
+        if (!desk) {
+          throw '未提交desk参数，此参数必须提供'
+        }
+        let currentDesk = desk// || this.getCurrentDesk()
+        const findCard = currentDesk.cards.find(el => {
+          return customIndex === el.id
+        })
+        if (!findCard) {
+          throw '未找到需要设置的组件'
+        }
+        return findCard.customData
+      },
+
+      /**
+       * 更新桌面的customData，多个值的变更请一次性提交，newData为对象
+       * @param customIndex 组件的customIndex索引
+       * @param newData 变更的数据，可一次性变更多个来提升性能
+       * @param desk 当前的桌面
+       */
+      updateDeskData(customIndex, newData, desk) {
+        if (!desk) {
+          throw '未提交desk参数，此参数必须提供'
+        }
+        let currentDesk = desk || this.getCurrentDesk()
+        if(currentDesk.customData){
+          currentDesk.customData[customIndex] = { ...newData }
+        }else{
+          currentDesk.customData = {}
+          currentDesk.customData[customIndex] = { ...newData }
+        }
+      },
+      /**
+       * 返回desk存储的customData
+       * @param customIndex 组件的customIndex索引
+       * @param desk 当前的桌面
+       * @returns 返回找到的数据
+       */
+      getDeskData(customIndex, desk) {
+        if (!desk) {
+          throw '未提交desk参数，此参数必须提供'
+        }
+        let currentDesk = desk || this.getCurrentDesk()
+        if(currentDesk.customData){
+          return  currentDesk.customData[customIndex]
+        }else{
+          return {}
+        }
+      },
       async removeCard(customIndex, desk, flag) {
         let currentDesk = this.getCurrentDesk()
         desk = desk || currentDesk
