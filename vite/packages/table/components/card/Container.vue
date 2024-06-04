@@ -222,23 +222,28 @@
           imgSize="75"
         >
           <div
-            class="flex-1 h-full rounded-b-lg"
-            :style="[
-              {
-                background: body.bg,
-                color: body.color,
-                padding: body.scroll ? '0 14px' : '0 14px 14px 14px',
-              },
-            ]"
+            class="h-full rounded-b-lg"
+            :style="{ background: options.showColor ? 'var(--main-bg)' : '' }"
           >
-            <Resize
-              v-model:size="currentSize"
-              :modalSize="options.modalSize"
-              :resize="options.resize"
-              @resize="resize"
+            <div
+              class="flex-1 h-full rounded-b-lg"
+              :style="[
+                {
+                  background: body.bg,
+                  color: body.color,
+                  padding: body.scroll ? '0 14px' : '0 14px 14px 14px',
+                },
+              ]"
             >
-              <slot></slot>
-            </Resize>
+              <Resize
+                v-model:size="currentSize"
+                :modalSize="options.modalSize"
+                :resize="options.resize"
+                @resize="resize"
+              >
+                <slot></slot>
+              </Resize>
+            </div>
           </div>
         </xt-status>
 
@@ -334,14 +339,13 @@ onBeforeMount(() => {
     // console.time("组件数据更新");
     props.customData = _.defaults(currentData, defaultData);
     props.customData._updateFlag = defaultData._updateFlag;
-    // props.customData = _.merge(props.customData, props.options.defaultData);
-    // console.timeEnd("组件数据更新");
     // console.log(
     //   "组件数据更新 ID :>> ",
     //   props.customIndex,
     //   " name :>> ",
     //   props.header.title
     // );
+    // console.timeEnd("组件数据更新");
   }
 });
 

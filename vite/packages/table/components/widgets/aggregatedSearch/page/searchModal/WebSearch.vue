@@ -6,12 +6,13 @@ import { highLightKeywords } from "../../utils";
 import { sourceList, openWithList, defaultSourceList } from "../../config/data";
 
 import Scrollbar from "./Scrollbar.vue";
-const words = inject("words");
-const isWebSource = inject("isWebSource");
-const currentSource = inject("currentSource");
-const ctrlSelectIndex = inject("ctrlSelectIndex");
-const currentOpenWith = inject("currentOpenWith");
-const data = inject("data");
+import { watchDebounced } from "@vueuse/core";
+const words: any = inject("words");
+const isWebSource: any = inject("isWebSource");
+const currentSource: any = inject("currentSource");
+const ctrlSelectIndex: any = inject("ctrlSelectIndex");
+const currentOpenWith: any = inject("currentOpenWith");
+const data: any = inject("data");
 const emit = defineEmits(["search"]);
 const search = (data) => {
   emit("search", data);
@@ -23,12 +24,6 @@ const selectWebSource = (newSource) => {
   data.value.webSource = newSource;
   currentSource.value = newSource;
 };
-
-watch([words, currentSource], async (val) => {
-  // 重置下标
-  ctrlSelectIndex.value = 0;
-  await getRecommend();
-});
 
 // 获取推荐
 const getRecommend = async () => {
@@ -56,6 +51,16 @@ const getRecommend = async () => {
   let { data } = await axios.get(recommendUrl);
   recommendList.value = handlers[name]?.(data) || handlers["default"]();
 };
+watchDebounced(
+  [words, currentSource],
+  async (val) => {
+    // 重置下标
+    ctrlSelectIndex.value = 0;
+    console.log("触发更新 :>> ");
+    await getRecommend();
+  },
+  { debounce: 200, immediate: true }
+);
 
 const handlers = {
   百度: (data) =>

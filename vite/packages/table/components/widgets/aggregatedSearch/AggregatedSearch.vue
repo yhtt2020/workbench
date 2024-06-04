@@ -7,29 +7,30 @@ import SearchModal from "./page/searchModal/SearchModal.vue";
 
 const header = {
   title: "聚合搜索",
-  showIcon: "/img/appLogo/aggregateSearch.png",
+  showIcon: "/logo/aggregateSearch.svg",
 };
-const cloneSourceList = JSON.parse(JSON.stringify(sourceList))
+const cloneSourceList = JSON.parse(JSON.stringify(sourceList));
+const defaultData = {
+  // 搜索源列表
+  sourceList: cloneSourceList,
+  // 搜索源
+  source: cloneSourceList[0],
+  webSource: cloneSourceList[0],
+  // 打开方式
+  openWith: "system",
+  // 记住上次使用的搜索方式
+  lastUse: false,
+  // 历史记录
+  historyList: [],
+  noBorder: true,
+  customSize: "4x2",
+  _updateFlag: "24532",
+};
 const options = computed(() => {
   return {
     // 初始化数据
-    defaultData: {
-      // 搜索源列表
-      sourceList: cloneSourceList,
-      // 搜索源
-      source: cloneSourceList[0],
-      webSource: cloneSourceList[0],
-      // 打开方式
-      openWith: "system",
-      // 记住上次使用的搜索方式
-      lastUse: false,
-      // 历史记录
-      historyList: [],
-      noBorder: true,
-      customSize: "4x2",
-      _updateFlag: "24531",
-    },
-    noBorder: customData.value.noBorder,
+    defaultData,
+    noBorder: customData.value?.noBorder,
   };
 });
 const customSize = computed(() => {
@@ -88,13 +89,10 @@ const menuList = computed(() => {
   ];
   return menu;
 });
-const listSort = (newIndex, oldIndex) => {
+const listSort = (oldIndex, newIndex) => {
   let sourceList = customData.value.sourceList;
-
-  [sourceList[newIndex], sourceList[oldIndex]] = [
-    sourceList[oldIndex],
-    sourceList[newIndex],
-  ];
+  let movedItem = sourceList.splice(oldIndex, 1)[0]; // 从旧位置移除
+  sourceList.splice(newIndex, 0, movedItem); // 插入到新位置
 };
 const lastIcon = computed(() => {
   // 最后使用有记录时
@@ -111,9 +109,9 @@ const surplusIcon = computed(() => {
     const sourceList = customData.value.sourceList.filter(
       (item) => item.name !== customData.value.source.name
     );
-    arr = sourceList.slice(0, 3);
+    arr = sourceList.slice(0, 2);
   }
-  arr = customData.value.sourceList?.slice(1, 4);
+  arr = customData.value.sourceList?.slice(1, 3);
   arr?.unshift(...defaultSourceList);
 
   return arr;

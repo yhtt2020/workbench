@@ -455,27 +455,6 @@
   resolved "https://registry.npmmirror.com/@interactjs/types/-/types-1.10.27.tgz"
   integrity sha512-BUdv0cvs4H5ODuwft2Xp4eL8Vmi3LcihK42z0Ft/FbVJZoRioBsxH+LlsBdK4tAie7PqlKGy+1oyOncu1nQ6eA==
 
-"@intlify/core-base@9.13.1":
-  version "9.13.1"
-  resolved "https://registry.npmmirror.com/@intlify/core-base/-/core-base-9.13.1.tgz"
-  integrity sha512-+bcQRkJO9pcX8d0gel9ZNfrzU22sZFSA0WVhfXrf5jdJOS24a+Bp8pozuS9sBI9Hk/tGz83pgKfmqcn/Ci7/8w==
-  dependencies:
-    "@intlify/message-compiler" "9.13.1"
-    "@intlify/shared" "9.13.1"
-
-"@intlify/message-compiler@9.13.1":
-  version "9.13.1"
-  resolved "https://registry.npmmirror.com/@intlify/message-compiler/-/message-compiler-9.13.1.tgz"
-  integrity sha512-SKsVa4ajYGBVm7sHMXd5qX70O2XXjm55zdZB3VeMFCvQyvLew/dLvq3MqnaIsTMF1VkkOb9Ttr6tHcMlyPDL9w==
-  dependencies:
-    "@intlify/shared" "9.13.1"
-    source-map-js "^1.0.2"
-
-"@intlify/shared@9.13.1":
-  version "9.13.1"
-  resolved "https://registry.npmmirror.com/@intlify/shared/-/shared-9.13.1.tgz"
-  integrity sha512-u3b6BKGhE6j/JeRU6C/RL2FgyJfy6LakbtfeVF8fJXURpZZTzfh3e05J0bu0XPw447Q6/WUp3C4ajv4TMS4YsQ==
-
 "@isaacs/cliui@^8.0.2":
   version "8.0.2"
   resolved "https://registry.npmmirror.com/@isaacs/cliui/-/cliui-8.0.2.tgz"
@@ -838,16 +817,16 @@
     tim-profanity-filter-plugin latest
     tim-upload-plugin latest
 
-"@tencentcloud/chat-uikit-vue@^2.1.1":
-  version "2.1.1"
-  resolved "https://registry.npmmirror.com/@tencentcloud/chat-uikit-vue/-/chat-uikit-vue-2.1.1.tgz"
-  integrity sha512-/8OVt2E+Cowl9dsTFJuC+F499ScMDzk9X3mHxWb7AOQza/gxQxbGWtiU5NBaDLkuo/H6UiiSDPWxhxL9J23i5g==
+"@tencentcloud/chat-uikit-vue@^2.1.4":
+  version "2.1.4"
+  resolved "https://registry.npmmirror.com/@tencentcloud/chat-uikit-vue/-/chat-uikit-vue-2.1.4.tgz#62a90beeeeaf0c265834880932def824a6daed6d"
+  integrity sha512-8qVs06FAgGHCFJjigiDZY9hxseBl0efKk0HHFZT+1km1gz+orQFn4bdwMEf+uqjAxlXzbf8vijIYDVVM9Fw3/w==
   dependencies:
     "@tencentcloud/call-uikit-vue" latest
     "@tencentcloud/call-uikit-vue2" latest
     "@tencentcloud/call-uikit-vue2.6" latest
     "@tencentcloud/chat-uikit-engine" latest
-    "@tencentcloud/room-uikit-vue" latest
+    "@tencentcloud/roomkit-web-vue3" latest
     "@tencentcloud/tui-core" latest
     "@tencentcloud/tui-customer-service-plugin" latest
     "@tencentcloud/tui-emoji-plugin" latest
@@ -866,30 +845,23 @@
     lodash "^4.17.21"
     vue-clipboard3 "2.0.0"
 
-"@tencentcloud/chat@^3.2.3", "@tencentcloud/chat@latest":
+"@tencentcloud/chat@latest":
   version "3.3.0"
   resolved "https://registry.npmmirror.com/@tencentcloud/chat/-/chat-3.3.0.tgz"
   integrity sha512-Gs0j05/gkKYGvbc9mPDq8B9Rd/WMPCtbiii4usJtS4rekjnlgE4zN4ey93ICwlIpEENToXZumg46Neijb4xzag==
 
-"@tencentcloud/room-uikit-vue@latest":
-  version "0.0.4"
-  resolved "https://registry.npmmirror.com/@tencentcloud/room-uikit-vue/-/room-uikit-vue-0.0.4.tgz"
-  integrity sha512-bSAS2bmE8DBEAcikgPd/p+HNL7wHqe3CSE1CXw7lu7qxb1f0E7JPpJAsW3SDqFsg9o8P0jfYK8DDtIdESSGCCQ==
+"@tencentcloud/roomkit-web-vue3@latest":
+  version "2.3.3"
+  resolved "https://registry.npmmirror.com/@tencentcloud/roomkit-web-vue3/-/roomkit-web-vue3-2.3.3.tgz#03cf1bf0a88504e2d6dee84348f21fd748a16224"
+  integrity sha512-utis+Gj5vao4bsV068TZfRJwqs7y8idmwGie+ScaeBpMfht10fAljPRZwTj6a7EDY8ieuMf/yddfoRjwXG5tGA==
   dependencies:
     "@tencentcloud/chat" latest
     "@tencentcloud/tui-core" latest
-    "@tencentcloud/tuiroom-engine-js" "^2.1.0"
-    axios "^0.27.2"
-    events "^3.3.0"
+    "@tencentcloud/tuiroom-engine-js" "^2.3.3"
+    "@tencentcloud/universal-api" "^2.0.9"
     interactjs "^1.10.26"
-    js-cookie "^3.0.1"
     mitt "^3.0.0"
-    pinia "^2.0.13"
-    qs "^6.10.3"
     rtc-detect "^1.0.3"
-    vue "^3.2.25"
-    vue-i18n "^9.2.2"
-    vue-router "^4.0.14"
 
 "@tencentcloud/tui-core@latest":
   version "2.0.6"
@@ -917,14 +889,19 @@
     "@tencentcloud/tui-core" latest
     "@vue/composition-api" "^1.0.0-rc.1"
 
-"@tencentcloud/tuiroom-engine-js@^2.1.0":
-  version "2.2.4"
-  resolved "https://registry.npmmirror.com/@tencentcloud/tuiroom-engine-js/-/tuiroom-engine-js-2.2.4.tgz"
-  integrity sha512-LO7+9PrG1iHwyRs9vC7yyHRdLHh4AbXGZ4DMluKTZubi1Sm4b6x/AkMOe2mG/DFSQfM3EBHn5yOXbo71DzHsBA==
+"@tencentcloud/tuiroom-engine-js@^2.3.3":
+  version "2.3.3"
+  resolved "https://registry.npmmirror.com/@tencentcloud/tuiroom-engine-js/-/tuiroom-engine-js-2.3.3.tgz#8700184ebfa639859e7fce6ee64fd4759175e03a"
+  integrity sha512-3CEFcteXFWbsNrw8eFt5JBCLpZxd84EPdZtba0JYReOVXGy5yDWUBxXyQlD0UXCk39ZSYlArR4Z6y6IOFkdIGA==
   dependencies:
-    "@tencentcloud/chat" "^3.2.3"
+    "@tencentcloud/chat" latest
     rtc-detect "^0.0.5"
-    trtc-cloud-js-sdk "^2.3.3"
+    trtc-cloud-js-sdk "^2.4.2"
+
+"@tencentcloud/universal-api@^2.0.9", "@tencentcloud/universal-api@^2.1.4":
+  version "2.1.4"
+  resolved "https://registry.npmmirror.com/@tencentcloud/universal-api/-/universal-api-2.1.4.tgz#7d281cff64be482b7a748f00ee64b9c722c10c14"
+  integrity sha512-DKlbGEpoDZ09KvHheV0LNUEBjZEjOFdfe4nqMY+HVJI0X242/22f2kXxmfP0b/6YCul6pEUUu2TwIWZnnwcYDQ==
 
 "@tencentcloud/universal-api@latest":
   version "2.0.6"
@@ -1644,14 +1621,6 @@ aws4@^1.8.0:
   resolved "https://registry.npmmirror.com/aws4/-/aws4-1.12.0.tgz"
   integrity sha512-NmWvPnx0F1SfrQbYwOi7OeaNGokp9XhzNioJ/CSBs8Qa4vxug81mhJEAVZwxXuBmYB5KDRfMq/F3RR0BIU7sWg==
 
-axios@^0.27.2:
-  version "0.27.2"
-  resolved "https://registry.npmmirror.com/axios/-/axios-0.27.2.tgz"
-  integrity sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==
-  dependencies:
-    follow-redirects "^1.14.9"
-    form-data "^4.0.0"
-
 axios@^1.6.1:
   version "1.6.7"
   resolved "https://registry.npmmirror.com/axios/-/axios-1.6.7.tgz"
@@ -1742,17 +1711,6 @@ buffer@^5.5.0, buffer@^5.6.0:
   dependencies:
     base64-js "^1.3.1"
     ieee754 "^1.1.13"
-
-call-bind@^1.0.7:
-  version "1.0.7"
-  resolved "https://registry.npmmirror.com/call-bind/-/call-bind-1.0.7.tgz"
-  integrity sha512-GHTSNSYICQ7scH7sZ+M2rFopRoLh8t2bLSW6BbgrtLsahOIB5iyAVJf9GjWK3cYTDaMj4XdBpM1cA6pIS0Kv2w==
-  dependencies:
-    es-define-property "^1.0.0"
-    es-errors "^1.3.0"
-    function-bind "^1.1.2"
-    get-intrinsic "^1.2.4"
-    set-function-length "^1.2.1"
 
 camelcase-css@^2.0.1:
   version "2.0.1"
@@ -2147,15 +2105,6 @@ deferred-leveldown@~5.3.0:
     abstract-leveldown "~6.2.1"
     inherits "^2.0.3"
 
-define-data-property@^1.1.4:
-  version "1.1.4"
-  resolved "https://registry.npmmirror.com/define-data-property/-/define-data-property-1.1.4.tgz"
-  integrity sha512-rBMvIzlpA8v6E+SJZoo++HAYqsLrkg7MSfIinMPFhmkorw7X+dOXVJQs+QT69zGkzMyfDnIMN2Wid1+NbL3T+A==
-  dependencies:
-    es-define-property "^1.0.0"
-    es-errors "^1.3.0"
-    gopd "^1.0.1"
-
 delayed-stream@~1.0.0:
   version "1.0.0"
   resolved "https://registry.npmmirror.com/delayed-stream/-/delayed-stream-1.0.0.tgz"
@@ -2386,18 +2335,6 @@ errno@^0.1.1, errno@~0.1.1:
   integrity sha512-dJ6oBr5SQ1VSd9qkk7ByRgb/1SH4JZjCHSW/mr63/QcXO9zLVxvJ6Oy13nio03rxpSnVDDjFor75SjVeZWPW/A==
   dependencies:
     prr "~1.0.1"
-
-es-define-property@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.npmmirror.com/es-define-property/-/es-define-property-1.0.0.tgz"
-  integrity sha512-jxayLKShrEqqzJ0eumQbVhTYQM27CfT1T35+gCgDFoL82JLsXqTJ76zv6A0YLOgEnLUMvLzsDsGIrl8NFpT2gQ==
-  dependencies:
-    get-intrinsic "^1.2.4"
-
-es-errors@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.npmmirror.com/es-errors/-/es-errors-1.3.0.tgz"
-  integrity sha512-Zf5H2Kxt2xjTvbJvP2ZWLEICxA6j+hAmMzIlypy4xcBg1vKVnx89Wy0GbS+kf5cwCVFFzdCFh2XSCFNULS6csw==
 
 es5-ext@^0.10.35, es5-ext@^0.10.50, es5-ext@^0.10.62, es5-ext@~0.10.14:
   version "0.10.63"
@@ -2643,11 +2580,6 @@ eventemitter3@^4.0.7:
   resolved "https://registry.npmmirror.com/eventemitter3/-/eventemitter3-4.0.7.tgz"
   integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
 
-events@^3.3.0:
-  version "3.3.0"
-  resolved "https://registry.npmmirror.com/events/-/events-3.3.0.tgz"
-  integrity sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==
-
 ext@^1.1.2:
   version "1.7.0"
   resolved "https://registry.npmmirror.com/ext/-/ext-1.7.0.tgz"
@@ -2747,7 +2679,7 @@ find-up@^4.1.0:
     locate-path "^5.0.0"
     path-exists "^4.0.0"
 
-follow-redirects@^1.14.9, follow-redirects@^1.15.4:
+follow-redirects@^1.15.4:
   version "1.15.5"
   resolved "https://registry.npmmirror.com/follow-redirects/-/follow-redirects-1.15.5.tgz"
   integrity sha512-vSFWUON1B+yAw1VN4xMfxgn5fTUiaOzAJCKBwIIgT/+7CuGy9+r+5gITvP62j3RmaD5Ph65UaERdOSRGUzZtgw==
@@ -2819,7 +2751,7 @@ fsevents@~2.3.2:
   resolved "https://registry.npmmirror.com/fsevents/-/fsevents-2.3.3.tgz#cac6407785d03675a2a5e1a5305c697b347d90d6"
   integrity sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==
 
-function-bind@^1.1.1, function-bind@^1.1.2:
+function-bind@^1.1.1:
   version "1.1.2"
   resolved "https://registry.npmmirror.com/function-bind/-/function-bind-1.1.2.tgz"
   integrity sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==
@@ -2859,17 +2791,6 @@ get-caller-file@^2.0.1:
   version "2.0.5"
   resolved "https://registry.npmmirror.com/get-caller-file/-/get-caller-file-2.0.5.tgz"
   integrity sha512-DyFP3BM/3YHTQOCUL/w0OZHR0lpKeGrxotcHWcqNEdnltqFwXVfhEBQ94eIo34AfQpo0rGki4cyIiftY06h2Fg==
-
-get-intrinsic@^1.1.3, get-intrinsic@^1.2.4:
-  version "1.2.4"
-  resolved "https://registry.npmmirror.com/get-intrinsic/-/get-intrinsic-1.2.4.tgz"
-  integrity sha512-5uYhsJH8VJBTv7oslg4BznJYhDoRI6waYCxMmCdnTrcCrHA/fCFKoTFz2JKKE0HdDFUF7/oQuhzumXJK7paBRQ==
-  dependencies:
-    es-errors "^1.3.0"
-    function-bind "^1.1.2"
-    has-proto "^1.0.1"
-    has-symbols "^1.0.3"
-    hasown "^2.0.0"
 
 get-size@^2.0.2:
   version "2.0.3"
@@ -2927,13 +2848,6 @@ good-listener@^1.2.2:
   dependencies:
     delegate "^3.1.2"
 
-gopd@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.npmmirror.com/gopd/-/gopd-1.0.1.tgz"
-  integrity sha512-d65bNlIadxvpb/A2abVdlqKqV563juRnZ1Wtk6s1sIR8uNsXR70xqIzVqxVf1eTqDunwT2MkczEeaezCKTZhwA==
-  dependencies:
-    get-intrinsic "^1.1.3"
-
 graceful-fs@^4.1.2, graceful-fs@^4.1.6:
   version "4.2.11"
   resolved "https://registry.npmmirror.com/graceful-fs/-/graceful-fs-4.2.11.tgz"
@@ -2962,23 +2876,6 @@ has-flag@^3.0.0:
   resolved "https://registry.npmmirror.com/has-flag/-/has-flag-3.0.0.tgz"
   integrity sha512-sKJf1+ceQBr4SMkvQnBDNDtf4TXpVhVGateu0t918bl30FnbE2m4vNLX+VWe/dpjlb+HugGYzW7uQXH98HPEYw==
 
-has-property-descriptors@^1.0.2:
-  version "1.0.2"
-  resolved "https://registry.npmmirror.com/has-property-descriptors/-/has-property-descriptors-1.0.2.tgz"
-  integrity sha512-55JNKuIW+vq4Ke1BjOTjM2YctQIvCT7GFzHwmfZPGo5wnrgkid0YQtnAleFSqumZm4az3n2BS+erby5ipJdgrg==
-  dependencies:
-    es-define-property "^1.0.0"
-
-has-proto@^1.0.1:
-  version "1.0.3"
-  resolved "https://registry.npmmirror.com/has-proto/-/has-proto-1.0.3.tgz"
-  integrity sha512-SJ1amZAJUiZS+PhsVLf5tGydlaVB8EdFpaSO4gmiUKUOxk8qzn5AIy4ZeJUmh22znIdk/uMAUT2pl3FxzVUH+Q==
-
-has-symbols@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.npmmirror.com/has-symbols/-/has-symbols-1.0.3.tgz"
-  integrity sha512-l3LCuF6MgDNwTDKkdYGEihYjt5pRPbEg46rtlmnSPlUbgmB8LOIrKJbYYFBSbnPaJexMKtiPO8hmeRjRz2Td+A==
-
 has-unicode@^2.0.1:
   version "2.0.1"
   resolved "https://registry.npmmirror.com/has-unicode/-/has-unicode-2.0.1.tgz"
@@ -2990,13 +2887,6 @@ has@^1.0.3:
   integrity sha512-f2dvO0VU6Oej7RkWJGrehjbzMAjFp5/VKPp5tTpWIV4JHHZK1/BxbFRtf/siA2SWTe09caDmVtYYzWEIbBS4zw==
   dependencies:
     function-bind "^1.1.1"
-
-hasown@^2.0.0:
-  version "2.0.2"
-  resolved "https://registry.npmmirror.com/hasown/-/hasown-2.0.2.tgz"
-  integrity sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==
-  dependencies:
-    function-bind "^1.1.2"
 
 hevue-img-preview@^6.1.0:
   version "6.1.0"
@@ -3239,11 +3129,6 @@ jquery@^3.5.1, jquery@^3.6.3:
   version "3.7.1"
   resolved "https://registry.npmmirror.com/jquery/-/jquery-3.7.1.tgz"
   integrity sha512-m4avr8yL8kmFN8psrbFFFmB/If14iN5o9nw/NgnnM+kybDJpRsAynV2BsfpTYrTRysYUdADVD7CkUUizgkpLfg==
-
-js-cookie@^3.0.1:
-  version "3.0.5"
-  resolved "https://registry.npmmirror.com/js-cookie/-/js-cookie-3.0.5.tgz"
-  integrity sha512-cEiJEAEoIbWfCZYKWhVwFuvPX1gETRYPw6LlaTKoxD3s2AkXzkCjnp6h0V77ozyqj0jakteJ4YqDJT830+lVGw==
 
 "js-tokens@^3.0.0 || ^4.0.0":
   version "4.0.0"
@@ -3965,11 +3850,6 @@ object-hash@^3.0.0:
   resolved "https://registry.npmmirror.com/object-hash/-/object-hash-3.0.0.tgz"
   integrity sha512-RSn9F68PjH9HqtltsSnqYC1XXoWe9Bju5+213R98cNGttag9q9yAOTzdbsqvIa7aNm5WffBZFpWYr2aWrklWAw==
 
-object-inspect@^1.13.1:
-  version "1.13.1"
-  resolved "https://registry.npmmirror.com/object-inspect/-/object-inspect-1.13.1.tgz"
-  integrity sha512-5qoj1RUiKOMsCCNLV1CBiPYE10sziTsnmNxkAI/rZhiD63CF7IqdFGC/XzjWjpSgLf0LxXX3bDFIh0E18f6UhQ==
-
 object.omit@^3.0.0:
   version "3.0.0"
   resolved "https://registry.npmmirror.com/object.omit/-/object.omit-3.0.0.tgz"
@@ -4135,7 +4015,7 @@ pify@^4.0.1:
   resolved "https://registry.npmmirror.com/pify/-/pify-4.0.1.tgz"
   integrity sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==
 
-pinia@^2.0.13, pinia@^2.0.23:
+pinia@^2.0.23:
   version "2.1.7"
   resolved "https://registry.npmmirror.com/pinia/-/pinia-2.1.7.tgz"
   integrity sha512-+C2AHFtcFqjPih0zpYuvof37SFxMQ7OEG2zV9jRI12i9BOy3YQVAHwdKtyyc8pDcDyIc33WCIsZaCFWU7WWxGQ==
@@ -4543,13 +4423,6 @@ qrcode@^1.5.3:
     pngjs "^5.0.0"
     yargs "^15.3.1"
 
-qs@^6.10.3:
-  version "6.12.1"
-  resolved "https://registry.npmmirror.com/qs/-/qs-6.12.1.tgz"
-  integrity sha512-zWmv4RSuB9r2mYQw3zxQuHWeU+42aKi1wWig/j4ele4ygELZ7PEO6MM7rim9oAQH2A5MWfsAVf/jPvTPgCbvUQ==
-  dependencies:
-    side-channel "^1.0.6"
-
 qs@~6.5.2:
   version "6.5.3"
   resolved "https://registry.npmmirror.com/qs/-/qs-6.5.3.tgz"
@@ -4825,18 +4698,6 @@ set-blocking@^2.0.0:
   resolved "https://registry.npmmirror.com/set-blocking/-/set-blocking-2.0.0.tgz"
   integrity sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==
 
-set-function-length@^1.2.1:
-  version "1.2.2"
-  resolved "https://registry.npmmirror.com/set-function-length/-/set-function-length-1.2.2.tgz"
-  integrity sha512-pgRc4hJ4/sNjWCSS9AmnS40x3bNMDTknHgL5UaMBTMyJnU90EgWh1Rz+MC9eFu4BuN/UwZjKQuY/1v3rM7HMfg==
-  dependencies:
-    define-data-property "^1.1.4"
-    es-errors "^1.3.0"
-    function-bind "^1.1.2"
-    get-intrinsic "^1.2.4"
-    gopd "^1.0.1"
-    has-property-descriptors "^1.0.2"
-
 shallow-equal@^1.0.0:
   version "1.2.1"
   resolved "https://registry.npmmirror.com/shallow-equal/-/shallow-equal-1.2.1.tgz"
@@ -4861,16 +4722,6 @@ shepherd.js@^11.1.0:
   dependencies:
     "@floating-ui/dom" "^1.5.1"
     deepmerge "^4.3.1"
-
-side-channel@^1.0.6:
-  version "1.0.6"
-  resolved "https://registry.npmmirror.com/side-channel/-/side-channel-1.0.6.tgz"
-  integrity sha512-fDW/EZ6Q9RiO8eFG8Hj+7u/oW+XrPTIChwCOM2+th2A6OblDtYYIpve9m+KvI9Z4C9qSEXlaGR6bTEYHReuglA==
-  dependencies:
-    call-bind "^1.0.7"
-    es-errors "^1.3.0"
-    get-intrinsic "^1.2.4"
-    object-inspect "^1.13.1"
 
 signal-exit@^3.0.0:
   version "3.0.7"
@@ -5002,16 +4853,7 @@ stealthy-require@^1.1.1:
   resolved "https://registry.npmmirror.com/stealthy-require/-/stealthy-require-1.1.1.tgz"
   integrity sha512-ZnWpYnYugiOVEY5GkcuJK1io5V8QmNYChG62gSit9pQVGErXtrKuPC55ITaVSukmMta5qpMU7vqLt2Lnni4f/g==
 
-"string-width-cjs@npm:string-width@^4.2.0":
-  version "4.2.3"
-  resolved "https://registry.npmmirror.com/string-width/-/string-width-4.2.3.tgz"
-  integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
-  dependencies:
-    emoji-regex "^8.0.0"
-    is-fullwidth-code-point "^3.0.0"
-    strip-ansi "^6.0.1"
-
-"string-width@^1.0.2 || 2 || 3 || 4", string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
+"string-width-cjs@npm:string-width@^4.2.0", "string-width@^1.0.2 || 2 || 3 || 4", string-width@^4.1.0, string-width@^4.2.0, string-width@^4.2.3:
   version "4.2.3"
   resolved "https://registry.npmmirror.com/string-width/-/string-width-4.2.3.tgz"
   integrity sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==
@@ -5041,14 +4883,7 @@ string_decoder@~0.10.x:
   resolved "https://registry.npmmirror.com/string_decoder/-/string_decoder-0.10.31.tgz"
   integrity sha512-ev2QzSzWPYmy9GuqfIVildA4OdcGLeFZQrq5ys6RtiuF+RQQiZWr8TZNyAcuVXyQRYfEO+MsoB/1BuQVhOJuoQ==
 
-"strip-ansi-cjs@npm:strip-ansi@^6.0.1":
-  version "6.0.1"
-  resolved "https://registry.npmmirror.com/strip-ansi/-/strip-ansi-6.0.1.tgz"
-  integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
-  dependencies:
-    ansi-regex "^5.0.1"
-
-strip-ansi@^6.0.0, strip-ansi@^6.0.1:
+"strip-ansi-cjs@npm:strip-ansi@^6.0.1", strip-ansi@^6.0.0, strip-ansi@^6.0.1:
   version "6.0.1"
   resolved "https://registry.npmmirror.com/strip-ansi/-/strip-ansi-6.0.1.tgz"
   integrity sha512-Y38VPSHcqkFrCpFnQ9vuSXmquuv5oXOKpGeT6aGrr3o3Gc9AlVa6JBfUSOCnbxGGZF+/0ooI7KrPuUSztUdU5A==
@@ -5278,17 +5113,17 @@ trim-repeated@^2.0.0:
   dependencies:
     escape-string-regexp "^5.0.0"
 
-trtc-cloud-js-sdk@^2.3.3:
-  version "2.3.4"
-  resolved "https://registry.npmmirror.com/trtc-cloud-js-sdk/-/trtc-cloud-js-sdk-2.3.4.tgz"
-  integrity sha512-WKizPuQYXIDnxOzyv88iKBBORlELDderbvbDdqU08y9BGKo0JXNULJnu8nrEQOd8GYZmEgbbL34e/oigAj7N6g==
+trtc-cloud-js-sdk@^2.4.2:
+  version "2.4.3"
+  resolved "https://registry.npmmirror.com/trtc-cloud-js-sdk/-/trtc-cloud-js-sdk-2.4.3.tgz#98063b9c02ab634624fab296f28ad507f8e0417b"
+  integrity sha512-qK1O0cEnrMxEBvmLkSw7nXaEAMoM+uJDembjTcfNQoUX8z+I3QRFhT7PwhHNFFPJ6HEaJ4+3ZU7K66GEwgz/eg==
   dependencies:
-    trtc-sdk-v5 "5.4.2"
+    trtc-sdk-v5 "5.5.2"
 
-trtc-sdk-v5@5.4.2:
-  version "5.4.2"
-  resolved "https://registry.npmmirror.com/trtc-sdk-v5/-/trtc-sdk-v5-5.4.2.tgz"
-  integrity sha512-gue3WeRdj8e9fr3SFm+zwH5S7q/LwOz4IA63Q/ZB4s5i1lK/GyAoo5uxCHTg1afP0mApB+A+Qrma9kmDO+cejQ==
+trtc-sdk-v5@5.5.2:
+  version "5.5.2"
+  resolved "https://registry.npmmirror.com/trtc-sdk-v5/-/trtc-sdk-v5-5.5.2.tgz#1eb2bcbebcfcd7f699cd26cfef2dd153fd9b995c"
+  integrity sha512-E7K28df6h9HWfT0AQRY2WqAIJXKyJ/tHMv5nJMQE/pylpPqYRRzeGsx+pyotJQoxCLE+InucMxN3UVrfQeBaZQ==
   dependencies:
     webrtc-adapter "^8.2.3"
 
@@ -5533,15 +5368,6 @@ vue-demi@^0.13.8:
   resolved "https://registry.npmmirror.com/vue-demi/-/vue-demi-0.13.11.tgz"
   integrity sha512-IR8HoEEGM65YY3ZJYAjMlKygDQn25D5ajNFNoKh9RSDMQtlzCxtfQjdQgv9jjK+m3377SsJXY8ysq8kLCZL25A==
 
-vue-i18n@^9.2.2:
-  version "9.13.1"
-  resolved "https://registry.npmmirror.com/vue-i18n/-/vue-i18n-9.13.1.tgz"
-  integrity sha512-mh0GIxx0wPtPlcB1q4k277y0iKgo25xmDPWioVVYanjPufDBpvu5ySTjP5wOrSvlYQ2m1xI+CFhGdauv/61uQg==
-  dependencies:
-    "@intlify/core-base" "9.13.1"
-    "@intlify/shared" "9.13.1"
-    "@vue/devtools-api" "^6.5.0"
-
 vue-justified-layout@^0.2.0:
   version "0.2.0"
   resolved "https://registry.npmmirror.com/vue-justified-layout/-/vue-justified-layout-0.2.0.tgz"
@@ -5550,7 +5376,7 @@ vue-justified-layout@^0.2.0:
     justified-layout "^3.0.0"
     vue "^2.2"
 
-vue-router@4.2.5, vue-router@^4.0.14:
+vue-router@4.2.5:
   version "4.2.5"
   resolved "https://registry.npmmirror.com/vue-router/-/vue-router-4.2.5.tgz"
   integrity sha512-DIUpKcyg4+PTQKfFPX88UWhlagBEBEfJ5A8XDXRJLUnZOvcpMF8o/dnL90vpVkGaPbjvXazV/rC1qBKrZlFugw==
@@ -5643,7 +5469,7 @@ vue3-selecto@^1.12.2:
   dependencies:
     selecto "~1.26.3"
 
-vue@3.3.8, vue@^3.2.25:
+vue@3.3.8:
   version "3.3.8"
   resolved "https://registry.npmmirror.com/vue/-/vue-3.3.8.tgz"
   integrity sha512-5VSX/3DabBikOXMsxzlW8JyfeLKlG9mzqnWgLQLty88vdZL7ZJgrdgBOmrArwxiLtmS+lNNpPcBYqrhE6TQW5w==

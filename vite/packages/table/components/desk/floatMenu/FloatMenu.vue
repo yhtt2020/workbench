@@ -13,15 +13,17 @@ import { useWidgetStore } from "../../card/store";
 import Item from "./Item.vue";
 import { useFloatMenuStore } from "./store";
 import { message } from "ant-design-vue";
+import { communityDeskStore } from "../../../apps/communityDesk/store/communityDeskStore";
 
 const widgetStore = useWidgetStore();
 widgetStore.edit = true;
 const floatMenuStore = useFloatMenuStore();
 const { firstPosition } = storeToRefs(floatMenuStore);
-
 const freeLayoutStore: any = useFreeLayoutStore();
 const { getFreeLayoutState, freeLayoutEnv, isFreeLayout, isSelectAll }: any =
   storeToRefs(freeLayoutStore);
+const communityDesk:any = communityDeskStore();
+
 const props = defineProps({
   zoom: {},
   aloneZoom: {},
@@ -311,11 +313,20 @@ const updateArrange = (newV) => {
 
 // 判断当前社群角色权限
 const deskRole = computed(()=>{
-  console.log('测试',communityInfo.value);
   if(communityInfo.value){
     return communityInfo.value?.role === 'member'
   }
 })
+
+// 还原云存储的缩放比例
+const resetDeskZoom = async() =>{
+  communityDesk.setCurrentDeskNo(communityInfo.value?.no);
+  const result = await communityDesk.getCommunityData();
+  freeLayoutStore.setFreeLayoutData(result?.id,result?.freeLayoutData);
+  freeLayoutStore.setFreeLayoutState(result?.id,result?.freeLayoutState);
+  freeLayoutZoom.value = result?.freeLayoutState?.canvas?.zoom * 100;
+}
+
 </script>
 
 <template>
@@ -482,7 +493,7 @@ const deskRole = computed(()=>{
         <div class="mb-3 mt-2 flex items-center">
           桌面缩放
           <xt-new-icon
-            @click="resetZoom()"
+            @click="resetDeskZoom()"
             class="xt-text-2 ml-1"
             color="var(--secondary-text)"
             size="16"

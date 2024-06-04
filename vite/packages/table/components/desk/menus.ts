@@ -159,7 +159,9 @@ function deskMenus() {
           id: 0,
           newIcon: "fluent:settings-16-regular",
           name: "系统设置",
-          fn: this.showSystemSet,
+          fn:()=>{
+            this.$bus.emit('openSystemSet')
+          },
           // disabled: import.meta.env.DEV ? false : true,
         },
         {
