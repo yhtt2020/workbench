@@ -2,15 +2,14 @@
 import { ref, computed, inject, watch, provide, onMounted } from "vue";
 import { useEventListener, useDebounce, useDebounceFn } from "@vueuse/core";
 
-import { openBrowser } from "../../utils/open";
+import { open } from "../../utils/open";
 import { sourceList, openWithList, defaultSourceList } from "../../config/data";
-
-import History from "./History.vue";
-import System from "./System.vue";
-import Search from "./Search.vue";
-
+import HistorySearch from "./HistorySearch.vue";
+import SystemSearch from "./SystemSearch.vue";
+import WebSearch from "./WebSearch.vue";
+import AISearch from "./AISearch.vue";
 import { HistoryData } from "./types";
-
+// 右边新建对话，左边询问ai助手
 const emit = defineEmits(["close", "openCardSet"]);
 
 const data: any = inject("data");
@@ -43,7 +42,7 @@ const webSource = ref();
 /** 用于判断是否属于web搜索源 */
 const isWebSource = computed(() => {
   const name = currentSource.value.name;
-  if (name == "工作台" || name == "文件") {
+  if (name === "工作台" || name === "文件" || name === "AI助手") {
     return false;
   }
   return true;
@@ -110,29 +109,32 @@ const tabSourceList = computed(() => {
 /** 历史搜索 */
 const historySearch = (index: number) => {
   let item = data.value.historyList[index];
-  openBrowser(item.value, currentOpenWith.value.value);
+  open(item);
 };
 /** 搜索 */
 const search: any = async (value?: any) => {
   if (!isWebSource.value) return;
+  console.log("value :>> ", value);
   if (data.value.lastUse) {
     data.value.source = currentSource.value;
     data.value.openWith = currentOpenWith.value.value;
   }
   let word = value ? value.name : words.value;
   let searchUrl = currentSource.value.searchUrl + encodeURIComponent(word);
-
   const history: HistoryData = {
     name: word,
-    source: currentSource.value,
+    source: currentSource.value.icon,
     value: searchUrl,
     showType: "网页",
     openWith: currentOpenWith.value.value,
   };
+  // item.openWith, item.value
+  console.log("history :>> ", history);
+  console.log("currentOpenWith.value.value :>> ", currentOpenWith.value.value);
 
   data.value.historyList.push(history);
 
-  openBrowser(searchUrl, currentOpenWith.value.value);
+  open(history);
   close();
 };
 /** 关闭弹窗 */
@@ -158,14 +160,13 @@ const openCardSet = () => {
 const debouncedChangeTabVisible = useDebounceFn(() => {
   tabVisible.value = false;
 }, 500);
+const AIRef: any = ref();
+const SystemRef: any = ref();
 /** 相关事件 */
 const eventDown = (e) => {
   /** 组合键 */
   // ctrl+tab
   if (e.key == "Tab" && e.ctrlKey) {
-    if (words.value.length == 0) {
-      return;
-    }
     e.preventDefault();
 
     openWithIndex.value = (openWithIndex.value + 1) % openWithList.length;
@@ -174,9 +175,6 @@ const eventDown = (e) => {
   }
   // ctrl + [1-9]
   if (e.ctrlKey && e.key.match(/^[1-9]$/)) {
-    if (words.value.length == 0) {
-      return;
-    }
     e.preventDefault();
     ctrlSelectIndex.value = e.key - 1;
     return;
@@ -194,7 +192,12 @@ const eventDown = (e) => {
   // enter
   if (e.key === "Enter") {
     e.preventDefault();
-    if (words.value.length > 0) {
+    const name = currentSource.value.name;
+    if (name === "AI助手") {
+      AIRef.value.search();
+    } else if (words.value.length > 0) {
+      if (isWebSource.value) {
+      }
       // 有bug
       // search(recommendList.value[ctrlSelectIndex.value]);
     } else {
@@ -203,17 +206,11 @@ const eventDown = (e) => {
     return;
   }
   if (e.key === "ArrowUp") {
-    if (words.value.length == 0) {
-      return;
-    }
     e.preventDefault();
     ctrlSelectIndex.value -= 1;
     return;
   }
   if (e.key === "ArrowDown") {
-    if (words.value.length == 0) {
-      return;
-    }
     e.preventDefault();
     ctrlSelectIndex.value += 1;
     return;
@@ -274,7 +271,7 @@ useEventListener("keyup", tabEventUp);
                 <div
                   v-for="item in tabSourceList"
                   class="w-full h-10 flex items-center justify-between p-2 mb-2 text-sm hover:tt-theme-bg-2 cursor-pointer"
-                  style="border-radius: 10px"
+                  style="border-radius: 10px; z-index: 999999999999"
                   :class="[
                     {
                       'tt-theme-bg-2': currentSource.name == item.name,
@@ -314,11 +311,17 @@ useEventListener("keyup", tabEventUp);
       <main
         class="w-full overflow-hidden flex flex-col px-3"
         style="height: 508px"
-        v-if="data.historyList.length > 0 || words"
+        v-if="
+          data.historyList.length > 0 || words || currentSource.name == 'AI助手'
+        "
       >
-        <System v-if="words && currentSource.name == '工作台'" />
-        <Search v-if="words && isWebSource" @search="search" />
-        <History v-if="!words && data.historyList.length > 0" />
+        <AISearch v-if="currentSource.name == 'AI助手'" ref="AIRef" />
+        <SystemSearch
+          v-else-if="words && currentSource.name == '工作台'"
+          ref="SystemRef"
+        />
+        <WebSearch v-else-if="words && isWebSource" @search="search" />
+        <HistorySearch v-else-if="!words && data.historyList.length > 0" />
       </main>
       <footer
         class="h-10 tt-bg-2-t flex items-center justify-between p-3 pr-2 text-xs"

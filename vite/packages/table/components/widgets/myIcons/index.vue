@@ -16,7 +16,7 @@
     <droppable-area @drop="handleDrop">
       <xt-container
         :header="header"
-        :customSize="'1x1'"
+        v-model:customSize="customData.customSize"
         :customIndex="customIndex"
         :size="customSize"
         :options="options"
@@ -139,6 +139,7 @@ import { nanoid } from "nanoid";
 import { useFreeLayoutStore } from "../../desk/freeLayout/store";
 import { update } from "../../../apps/appCenter/src/views/developer/hooks/update";
 import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
+import { sizeTransform } from "./set/options";
 
 export default {
   props: {
@@ -172,9 +173,13 @@ export default {
       iconsSetVisible: false,
       options: {
         custom: true,
-        disabledDelete: 
-        true, disabledNav:true,
+        disabledDelete: true,
+        disabledNav: true,
         disableEdit: this.isCommunityDesktop(this.desk),
+        defaultData: {
+          customSize: "1x1",
+          _updateFlag: "2461",
+        },
       }, // 卡片核心配置
       // 卡片类相关数据
       modelVisible: false, // 卡片弹窗是否可见
@@ -400,6 +405,21 @@ export default {
         this.isSelect = false;
       }
     },
+    "customData.customSize"(newV, oldV) {
+      if (this.edit.size === undefined) {
+        this.customData.customSize = "1x1";
+      } else {
+        this.customData.customSize = sizeTransform[this.edit.size];
+      }
+    },
+
+    // customData: {
+    //   handler(newVal) {
+    //     console.log("1x1填充 :>> ", newVal);
+    //   },
+    //   deep: true,
+    //   immediate: true,
+    // },
   },
   methods: {
     ...mapActions(cardStore, ["updateCustomData", "addCard"]),
@@ -629,7 +649,8 @@ export default {
           value: this.edit.value,
         },
       };
-
+      this.customData.customSize = sizeTransform[this.edit.size];
+      console.log(this.customData.customSize, "<<<<<<<<");
       console.log(
         "      this.customData.iconList[this.index] :>> ",
         this.customData.iconList[this.index]

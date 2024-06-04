@@ -204,6 +204,16 @@ export const appearanceOptions = [
   },
 ];
 
+// 图标尺寸转换
+export const sizeTransform = {
+  mini: "1x1",
+  mini1: "2x1",
+  small: "2x2",
+  default: "2x4",
+  long: "4x2",
+  big: "4x4",
+};
+
 export const appearanceColorOptions = [
   {
     type: "info",

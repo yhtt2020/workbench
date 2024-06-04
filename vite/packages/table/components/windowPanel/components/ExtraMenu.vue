@@ -16,16 +16,20 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, computed, getCurrentInstance, onUnmounted } from 'vue'
+import { ref, computed, getCurrentInstance, onUnmounted, onMounted } from 'vue'
 import { useRouter } from 'vue-router';
 import { startApp } from '../../../ui/hooks/useStartApp';
 import {usePlat} from "../../../ui/hooks/usePlat";
+import { cacheStore } from '../../../ui/components/Menu/cacheTag';
+import { storeToRefs } from 'pinia';
+
+const store = cacheStore();
+const { isHide } = storeToRefs(store);
 
 const router = useRouter()
 
 const { proxy } = getCurrentInstance()
 const client=ref(usePlat('client'))
-// const emit = defineEmits(['click'])
 
 const list = ref([
     {
@@ -35,7 +39,8 @@ const list = ref([
         cb:()=>{
             startApp('systemApp', 'fullscreen', router)
             console.log('全屏显示',iconList.value)
-            proxy.$bus.emit('closeMenus')
+            // proxy.$bus.emit('closeMenus')
+            isHide.value = true
         }
     },
     {
@@ -44,7 +49,8 @@ const list = ref([
         disabled:'web',
         cb:()=>{
             startApp('systemApp', 'setting', router)
-            proxy.$bus.emit('closeMenus')
+            // proxy.$bus.emit('closeMenus')
+            isHide.value = true
         }
     },
     {
@@ -53,7 +59,8 @@ const list = ref([
         disabled:'client',
         cb:()=>{
             startApp('systemApp', 'lock', router)
-            proxy.$bus.emit('closeMenus')
+            // proxy.$bus.emit('closeMenus')
+            isHide.value = true
         }
     },
     {
@@ -62,7 +69,8 @@ const list = ref([
         disabled:'client',
         cb:()=>{
             startApp('systemApp', 'power', router)
-            proxy.$bus.emit('closeMenus')
+            // proxy.$bus.emit('closeMenus')
+            isHide.value = true
         }
     }
 ])
@@ -76,9 +84,15 @@ const iconList = computed(() => {
     }
 })
 
-// onUnmounted(() => {
-//     console.log('onBeforeUnmount关闭了')
-//     proxy.$bus.off('closeMenus')
+onUnmounted(() => {
+    console.log('onBeforeUnmount关闭了')
+    isHide.value = false
+})
+
+// onMounted(() => {
+//     proxy.$bus.on('closeMenus', () => {
+//         console.log('关闭了')
+//     })
 // })
 </script>
 <style lang='scss' scoped>
