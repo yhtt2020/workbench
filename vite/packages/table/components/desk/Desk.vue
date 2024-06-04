@@ -277,10 +277,6 @@ export default {
       required: false,
       default: () => {
         return {
-          // dragStartPredicate: {
-          //   distance: 10,
-          //   delay: 1000,
-          // },
           dragAutoScroll: {},
           layout: {
             // fillGaps: true,
@@ -333,6 +329,20 @@ export default {
     },
   },
   watch: {
+    /**
+     * 原则上需要监听的数据应该是具体的数据
+     * 而不是currentDesk整个对象
+     */
+    // 此处和 "currentDesk.settings" 有相同的判断逻辑
+    // currentDesk: {
+    //   handler(newVal) {
+    //     if (!this.isFreeLayout) {
+    //       // newVal.layoutSize = this.getLayoutSize();
+    //       this.muuriOptions.layout.horizontal = !newVal.settings?.vDirection;
+    //     }
+    //   },
+    //   deep: true,
+    // },
     adjustLayout(val) {
       if (val) {
         this.toggleEditing();
@@ -360,15 +370,7 @@ export default {
         });
       },
     },
-    currentDesk: {
-      handler(newVal) {
-        if (!this.isFreeLayout) {
-          // newVal.layoutSize = this.getLayoutSize();
-          this.muuriOptions.layout.horizontal = !newVal.settings?.vDirection;
-        }
-      },
-      deep: true,
-    },
+
     deskSize: {
       handler(newVal) {
         if (!this.isFreeLayout) {
@@ -509,17 +511,6 @@ export default {
     };
   },
   mounted() {
-    // 空桌面添加图标保持弹窗
-    // this.editVisible = this.keepAddIcon;
-    // this.$bus.on("addCard", (data) => {
-    //   let value = _.cloneDeep(data);
-    //   console.log("value :>> ", this.currentDesk);
-    //   this.currentDesk.cards.push({
-    //     name: "folder",
-    //     id: Date.now(),
-    //     customData: value,
-    //   });
-    // });
     // 自动打开编辑
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();
@@ -546,13 +537,11 @@ export default {
       this.showGrid = true;
     }
     this.loaded = true;
-    // this.resetLayout();
   },
   unmounted() {
     if (this.fullScreen) {
       this.fullScreen = false;
     }
-    // window.removeEventListener("resize", this.resizeHandler);
   },
   methods: {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
@@ -574,7 +563,9 @@ export default {
         return "100%";
       } else {
         if (this.usingSettings.vDirection === true) {
-          return (this.usingSettings.containerWidth || this.deskSize.width) + "px";
+          return (
+            (this.usingSettings.containerWidth || this.deskSize.width) + "px"
+          );
         } else {
           return "100%";
         }
@@ -588,7 +579,9 @@ export default {
           return "100%";
         } else {
           console.log("this.usingSettings :>> ", this.usingSettings);
-          return (this.usingSettings.containerHeight || this.deskSize.height) + "px";
+          return (
+            (this.usingSettings.containerHeight || this.deskSize.height) + "px"
+          );
         }
       }
     },
@@ -752,7 +745,7 @@ export default {
         // width: this.$refs.deskContainer.clientWidth,
         // height: this.$refs.deskContainer.clientHeight,
         width: this.deskSize.width,
-          height: this.deskSize.height,
+        height: this.deskSize.height,
       };
       this.stashBound = bound;
     },
@@ -769,7 +762,7 @@ export default {
         // width: this.$refs.deskContainer.clientWidth,
         // height: this.$refs.deskContainer.clientHeight,
         width: this.deskSize.width,
-          height: this.deskSize.height,
+        height: this.deskSize.height,
       };
       this.adjustZoom = bound.height / this.stashBound.height;
       this.update();
@@ -798,7 +791,7 @@ export default {
                   // width: this.$refs.deskContainer.clientWidth,
                   // height: this.$refs.deskContainer.clientHeight,
                   width: this.deskSize.width,
-          height: this.deskSize.height,
+                  height: this.deskSize.height,
                 };
                 const settings = this.currentDesk.settings;
                 const oldLayoutSize = this.settings.layoutSize;
