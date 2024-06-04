@@ -372,7 +372,6 @@ export default {
     deskSize: {
       handler(newVal) {
         if (!this.isFreeLayout) {
-          // this.currentDesk.layoutSize
           this.currentDesk.layoutSize = this.getLayoutSize();
         }
       },
@@ -546,13 +545,8 @@ export default {
     if (window.showed) {
       this.showGrid = true;
     }
-    // this.resizeHandler = () => {
-    //   this.currentDesk.layoutSize = this.getLayoutSize();
-    // };
-    // this.getLayoutSize();
-    // window.addEventListener("resize", this.resizeHandler);
     this.loaded = true;
-    this.resetLayout();
+    // this.resetLayout();
   },
   unmounted() {
     if (this.fullScreen) {

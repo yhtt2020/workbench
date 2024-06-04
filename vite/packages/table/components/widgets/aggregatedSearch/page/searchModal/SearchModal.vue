@@ -165,7 +165,6 @@ const eventDown = (e) => {
   /** 组合键 */
   // ctrl+tab
   if (e.key == "Tab" && e.ctrlKey) {
-
     e.preventDefault();
 
     openWithIndex.value = (openWithIndex.value + 1) % openWithList.length;
@@ -203,17 +202,11 @@ const eventDown = (e) => {
     return;
   }
   if (e.key === "ArrowUp") {
-    if (words.value.length == 0) {
-      return;
-    }
     e.preventDefault();
     ctrlSelectIndex.value -= 1;
     return;
   }
   if (e.key === "ArrowDown") {
-    if (words.value.length == 0) {
-      return;
-    }
     e.preventDefault();
     ctrlSelectIndex.value += 1;
     return;
