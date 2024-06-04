@@ -71,6 +71,9 @@ const time = (timestamp) => {
   }
 };
 const list = computed(() => {
+  if (!recentList.value) {
+    return [];
+  }
   let res = recentList.value.map((item) => {
     // 获取最后一个用户对话
     let chat = [...chatList.value[item.id]]

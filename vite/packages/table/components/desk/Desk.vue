@@ -370,7 +370,6 @@ export default {
         });
       },
     },
-
     deskSize: {
       handler(newVal) {
         if (!this.isFreeLayout) {
