@@ -96,4 +96,11 @@ export const defaultSourceList = [
     searchUrl: "",
     recommendUrl: "",
   },
+  {
+    name: "AI助手",
+    icon: "/logo/ai.svg",
+    iconType: "select",
+    searchUrl: "",
+    recommendUrl: "",
+  },
 ];
