@@ -141,7 +141,7 @@
                   }"
                 >
                   <component
-                    :desk="desk"
+                    :desk="currentDesk"
                     :is="item.name"
                     :customIndex="item.id"
                     :customData="item.customData"
@@ -327,7 +327,7 @@ export default {
       type: Boolean,
       default: () => false,
     },
-    communityInfo:{
+    communityInfo: {
       type: Object,
       required: true,
     },
@@ -362,24 +362,22 @@ export default {
     },
     currentDesk: {
       handler(newVal) {
-        this.desk = newVal;
         if (!this.isFreeLayout) {
-          newVal.layoutSize = this.getLayoutSize();
-
-
-          // if (!newVal.settings) {
-          //   newVal.settings=
-          //     .settings = {
-          //     cardZoom: 100,
-          //     marginTop: 0,
-          //     cardMargin: 5,//卡片间隙
-          //     vDirection: false,
-          //   }
-          // }
+          // newVal.layoutSize = this.getLayoutSize();
           this.muuriOptions.layout.horizontal = !newVal.settings?.vDirection;
         }
       },
       deep: true,
+    },
+    deskSize: {
+      handler(newVal) {
+        if (!this.isFreeLayout) {
+          // this.currentDesk.layoutSize
+          this.currentDesk.layoutSize = this.getLayoutSize();
+        }
+      },
+      deep: true,
+      immediate: true,
     },
     // 监听ID变化
     "currentDesk.id": {
@@ -447,7 +445,11 @@ export default {
     ]),
     ...mapWritableState(useFloatMenuStore, ["menus"]),
     ...mapWritableState(useNavigationStore, ["selectNav", "isDesk"]),
-    ...mapWritableState(useDeskStore, ["autoOpenEdit", "adjustLayout"]),
+    ...mapWritableState(useDeskStore, [
+      "autoOpenEdit",
+      "adjustLayout",
+      "deskSize",
+    ]),
     ...mapWritableState(useAppCenterStore, ["visible"]),
     // 根据当前桌面配置确定展示的对应桌面设置
     currentDeskEnv() {
@@ -484,7 +486,6 @@ export default {
   },
   data() {
     return {
-      desk: this.currentDesk,
       showGrid: false,
       loaded: false,
       vurriEnable: false,
@@ -545,11 +546,11 @@ export default {
     if (window.showed) {
       this.showGrid = true;
     }
-    this.resizeHandler = () => {
-      this.currentDesk.layoutSize = this.getLayoutSize();
-    };
-    this.getLayoutSize();
-    window.addEventListener("resize", this.resizeHandler);
+    // this.resizeHandler = () => {
+    //   this.currentDesk.layoutSize = this.getLayoutSize();
+    // };
+    // this.getLayoutSize();
+    // window.addEventListener("resize", this.resizeHandler);
     this.loaded = true;
     this.resetLayout();
   },
@@ -557,7 +558,7 @@ export default {
     if (this.fullScreen) {
       this.fullScreen = false;
     }
-    window.removeEventListener("resize", this.resizeHandler);
+    // window.removeEventListener("resize", this.resizeHandler);
   },
   methods: {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
@@ -579,7 +580,7 @@ export default {
         return "100%";
       } else {
         if (this.usingSettings.vDirection === true) {
-          return (this.usingSettings.containerWidth || 1024) + "px";
+          return (this.usingSettings.containerWidth || this.deskSize.width) + "px";
         } else {
           return "100%";
         }
@@ -593,7 +594,7 @@ export default {
           return "100%";
         } else {
           console.log("this.usingSettings :>> ", this.usingSettings);
-          return (this.usingSettings.containerHeight || 800) + "px";
+          return (this.usingSettings.containerHeight || this.deskSize.height) + "px";
         }
       }
     },
@@ -754,8 +755,10 @@ export default {
      */
     stashLayout() {
       let bound = {
-        width: this.$refs.deskContainer.clientWidth,
-        height: this.$refs.deskContainer.clientHeight,
+        // width: this.$refs.deskContainer.clientWidth,
+        // height: this.$refs.deskContainer.clientHeight,
+        width: this.deskSize.width,
+          height: this.deskSize.height,
       };
       this.stashBound = bound;
     },
@@ -769,8 +772,10 @@ export default {
         return;
       }
       let bound = {
-        width: this.$refs.deskContainer.clientWidth,
-        height: this.$refs.deskContainer.clientHeight,
+        // width: this.$refs.deskContainer.clientWidth,
+        // height: this.$refs.deskContainer.clientHeight,
+        width: this.deskSize.width,
+          height: this.deskSize.height,
       };
       this.adjustZoom = bound.height / this.stashBound.height;
       this.update();
@@ -782,8 +787,10 @@ export default {
     getLayoutSize() {
       if (!this.isFreeLayout) {
         this.currentDesk.layoutSize = {
-          width: this.$refs.deskContainer.clientWidth,
-          height: this.$refs.deskContainer.clientHeight,
+          // width: this.$refs.deskContainer.clientWidth,
+          // height: this.$refs.deskContainer.clientHeight,
+          width: this.deskSize.width,
+          height: this.deskSize.height,
         };
         if (this.currentDesk?.settings?.preparing) {
           message.loading({
@@ -794,8 +801,10 @@ export default {
             setTimeout(() => {
               this.$nextTick(() => {
                 const fullLayoutSize = {
-                  width: this.$refs.deskContainer.clientWidth,
-                  height: this.$refs.deskContainer.clientHeight,
+                  // width: this.$refs.deskContainer.clientWidth,
+                  // height: this.$refs.deskContainer.clientHeight,
+                  width: this.deskSize.width,
+          height: this.deskSize.height,
                 };
                 const settings = this.currentDesk.settings;
                 const oldLayoutSize = this.settings.layoutSize;

@@ -32,9 +32,10 @@ import { useNavBarStore } from "./navigationBar/navBar";
 import { useElementSize } from "@vueuse/core";
 const target = ref(null);
 
-const updateSize =(data)=>{
-  deskSize.value = data
-}
+const updateSize = (data) => {
+  console.log('data :>> ', data);
+  deskSize.value = data;
+};
 const folderStore = useFolderStore();
 const { isDrag } = storeToRefs(folderStore);
 // 自由布局
@@ -43,7 +44,8 @@ const { isFreeLayout, getFreeLayoutData, freeLayoutEnv } =
   storeToRefs(freeLayoutStore);
 // 桌面
 const deskStore = useDeskStore();
-const { isEnterFolder, mouseInElement, isEnterBar ,deskSize} = storeToRefs(deskStore);
+const { isEnterFolder, mouseInElement, isEnterBar, deskSize } =
+  storeToRefs(deskStore);
 
 mouseInElement.value = useMouseInElement(target);
 // 图标组件
