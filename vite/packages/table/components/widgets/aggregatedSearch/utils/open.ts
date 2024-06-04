@@ -13,7 +13,7 @@ export const openBrowser = (type: string, url: string) => {
 };
 
 export const open = (item) => {
-  console.log('item :>> ', item);
+  console.log("item :>> ", item);
   let showType = item.showType;
   if (!showType) {
     return;
@@ -26,5 +26,7 @@ export const open = (item) => {
     useAppModal("note").openApp(item.value);
   } else if (showType === "群聊") {
     useGroupJump(item.value);
+  } else if (showType == "AI助手") {
+    useAppModal("ai").openApp(item.value);
   }
 };

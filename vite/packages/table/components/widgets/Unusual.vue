@@ -30,7 +30,7 @@
         {{ normalButtonTitle }}
       </xt-button>
       <template v-if="menuAble">
-        <xt-menu :menus="menuList" name="name" fn="cb">
+        <xt-menu :menus="menuList" model="click" name="name" fn="cb">
           <xt-button
             type="text"
             h="32"
