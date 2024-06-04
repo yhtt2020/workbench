@@ -27,7 +27,17 @@ const search = () => {
   historyData.value.search = words.value;
   open(historyData);
 };
-
+watch(
+  () => words.value,
+  (val) => {
+    if (val) {
+      ctrlSelectIndex.value = 0;
+    }
+  },
+  {
+    immediate: true,
+  }
+);
 const openAi = (item: any) => {
   open(item);
 };
@@ -80,25 +90,39 @@ const list = computed(() => {
   return res;
 });
 const currentIndex = computed(() => {
-  if (ctrlSelectIndex.value < 0) {
-    ctrlSelectIndex.value = list.value.length - 1;
+  let length = list.value.length;
+  if (words.value) {
+    length + 1;
   }
-  if (ctrlSelectIndex.value > list.value.length - 1) {
+  if (ctrlSelectIndex.value < 0) {
+    ctrlSelectIndex.value = length - 1;
+  }
+  if (ctrlSelectIndex.value > length - 1) {
     ctrlSelectIndex.value = 0;
   }
-  return ctrlSelectIndex.value % list.value.length;
+  return ctrlSelectIndex.value % length;
+});
+
+const diff = computed(() => {
+  if (words.value) {
+    return 1;
+  } else {
+    return 0;
+  }
 });
 defineExpose({
   search,
 });
 </script>
-
 <template>
   <div class="flex flex-col h-full w-full">
     <div
       v-if="words"
       @click="search"
       class="w-full p-3 mt-3 h-11 flex rounded-xl cursor-pointer hover:tt-theme-bg-2"
+      :class="{
+        'xt-theme-bg-2': ctrlSelectIndex == 0,
+      }"
     >
       <xt-mix-icon icon="/logo/ai.svg" type="select" size="24" class="mr-2.5" />
       创建新对话
@@ -106,11 +130,12 @@ defineExpose({
     <div class="flex p-3">
       <div class="text-sm tt-text-2">最近对话</div>
     </div>
+    diff {{ diff }},current {{ currentIndex }}
     <Scrollbar>
       <Item
         @click="openAi(item)"
         v-for="(item, index) in list"
-        :select="index == currentIndex"
+        :select="index + diff == currentIndex"
         :data="item"
         :index="index"
         :diffIndex="1"

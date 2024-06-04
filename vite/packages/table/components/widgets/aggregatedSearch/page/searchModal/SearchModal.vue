@@ -175,9 +175,7 @@ const eventDown = (e) => {
   }
   // ctrl + [1-9]
   if (e.ctrlKey && e.key.match(/^[1-9]$/)) {
-    if (words.value.length == 0) {
-      return;
-    }
+
     e.preventDefault();
     ctrlSelectIndex.value = e.key - 1;
     return;

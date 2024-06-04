@@ -7,8 +7,16 @@ const ctrlSelectIndex = inject("ctrlSelectIndex");
 const scrollbar = ref(null);
 const searchScrollbar = ref(null);
 
-watch(ctrlSelectIndex, (val) => {
-  searchScrollbar.value.scrollTop = ctrlSelectIndex.value * 44;
+watch(ctrlSelectIndex, (val, oldVal) => {
+  // 往前
+  console.log("Math.abs(val - oldVal)  :>> ", Math.abs(val - oldVal));
+  if (Math.abs(val - oldVal) > 1) {
+    searchScrollbar.value.scrollTop = val * 48;
+  } else if (val > 3) {
+    searchScrollbar.value.scrollTop += 48;
+  } else if (val < 3) {
+    searchScrollbar.value.scrollTop = 0;
+  }
 });
 const initScrollbar = () => {
   scrollbar.value = new PerfectScrollbar(searchScrollbar.value, {});
@@ -24,10 +32,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div
-    class="flex-1 w-full overflow-hidden relative"
-    ref="searchScrollbar"
-  >
+  <div class="flex-1 w-full overflow-hidden relative" ref="searchScrollbar">
     <slot></slot>
   </div>
 </template>

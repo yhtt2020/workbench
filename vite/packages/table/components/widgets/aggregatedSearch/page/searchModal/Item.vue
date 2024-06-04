@@ -16,7 +16,7 @@ watch(
 
 <template>
   <div
-    class="w-full flex items-center h-11 p-2.5 cursor-pointer rounded-xl hover:tt-theme-bg-2"
+    class="w-full flex items-center h-11 p-2.5 cursor-pointer rounded-xl hover:tt-theme-bg-2 mb-1"
     :class="{
       'xt-theme-bg-2': select,
     }"
