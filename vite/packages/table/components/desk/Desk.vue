@@ -381,7 +381,6 @@ export default {
         });
       },
     },
-
     deskSize: {
       handler(newVal) {
         if (!this.isFreeLayout) {
@@ -590,7 +589,6 @@ export default {
         if (this.usingSettings.vDirection === true) {
           return "100%";
         } else {
-          console.log("this.usingSettings :>> ", this.usingSettings);
           return (
             (this.usingSettings.containerHeight || this.deskSize.height) + "px"
           );

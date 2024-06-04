@@ -89,13 +89,10 @@ const menuList = computed(() => {
   ];
   return menu;
 });
-const listSort = (newIndex, oldIndex) => {
+const listSort = (oldIndex, newIndex) => {
   let sourceList = customData.value.sourceList;
-
-  [sourceList[newIndex], sourceList[oldIndex]] = [
-    sourceList[oldIndex],
-    sourceList[newIndex],
-  ];
+  let movedItem = sourceList.splice(oldIndex, 1)[0]; // 从旧位置移除
+  sourceList.splice(newIndex, 0, movedItem); // 插入到新位置
 };
 const lastIcon = computed(() => {
   // 最后使用有记录时
@@ -114,7 +111,7 @@ const surplusIcon = computed(() => {
     );
     arr = sourceList.slice(0, 2);
   }
-  arr = customData.value.sourceList?.slice(1,3);
+  arr = customData.value.sourceList?.slice(1, 3);
   arr?.unshift(...defaultSourceList);
 
   return arr;

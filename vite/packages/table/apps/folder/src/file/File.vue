@@ -305,7 +305,6 @@ const fileDisabled = (item) => {
 // 保存数据
 const save = (edit) => {
   const data = useIconConversionFile(edit);
-  console.log("data :>> ", data);
   data.useCount = currentItem.value.useCount;
   data.id = currentItem.value.id;
   data.type = iconStore.edit.type;

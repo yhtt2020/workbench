@@ -111,14 +111,18 @@ const historySearch = (index: number) => {
   let item = data.value.historyList[index];
   open(item);
 };
-/** 搜索 */
-const search: any = async (value?: any) => {
-  if (!isWebSource.value) return;
-  console.log("value :>> ", value);
+const saveSearchSource = () => {
   if (data.value.lastUse) {
     data.value.source = currentSource.value;
     data.value.openWith = currentOpenWith.value.value;
   }
+};
+provide("saveSearchSource", saveSearchSource);
+/** 搜索 */
+const search: any = async (value?: any) => {
+  if (!isWebSource.value) return;
+  console.log("value :>> ", value);
+  saveSearchSource();
   let word = value ? value.name : words.value;
   let searchUrl = currentSource.value.searchUrl + encodeURIComponent(word);
   const history: HistoryData = {

@@ -12,6 +12,7 @@ const { recentList, chatList } = storeToRefs(aiStore);
 const data: any = inject("data");
 const words: any = inject("words");
 const ctrlSelectIndex: any = inject("ctrlSelectIndex");
+const saveSearchSource = inject("saveSearchSource");
 const search = () => {
   if (diff.value && ctrlSelectIndex.value == 0) {
     aiSearch();
@@ -32,6 +33,7 @@ const aiSearch = () => {
     openWith: "AI助手",
   };
   data.value.historyList.push(historyData);
+  saveSearchSource()
   historyData.value.search = words.value;
   open(historyData);
 };
@@ -71,6 +73,9 @@ const time = (timestamp) => {
   }
 };
 const list = computed(() => {
+  if (!recentList.value) {
+    return [];
+  }
   let res = recentList.value.map((item) => {
     // 获取最后一个用户对话
     let chat = [...chatList.value[item.id]]
