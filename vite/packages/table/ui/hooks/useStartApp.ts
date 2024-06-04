@@ -273,7 +273,7 @@ export const openSysApp = (value, router) => {
       useAppModal("income").openApp();
       break;
     case "my":
-      useAppModal("gallery").openApp();
+      useAppModal("galleryModalApp").openApp();
       break;
     case 'apps':
       useMit.emit('openAppCenter')

@@ -150,7 +150,7 @@ function communityMenus() {
       newIcon: "fluent:image-multiple-16-filled",
       name: "更换壁纸",
       fn: () => {
-        const { openApp } = useAppModal("gallery");
+        const { openApp } = useAppModal("galleryModalApp");
         openApp();
         // this.$bus.emit("lockScreen");
       },
@@ -300,7 +300,7 @@ function memberMenus() {
       name: "更换壁纸",
       fn: () => {
         // this.$bus.emit("lockScreen");
-        const { openApp } = useAppModal("gallery");
+        const { openApp } = useAppModal("galleryModalApp");
         openApp();
       },
     },

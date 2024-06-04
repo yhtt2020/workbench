@@ -212,7 +212,7 @@
       :modelValue="wallModelValue"
       @updateCustomDatas="updatePaperSource"
     />
-    <GalleryModal ref="galleryRef" />
+    <!-- <GalleryModal ref="galleryRef" /> -->
   </teleport>
 </template>
 
@@ -229,12 +229,12 @@ import {
   wallpaperOptions,
   selectWallPaper,
 } from "../../page/gallery/data/gallery";
-import { getFileName } from "../../apps/galleryApp/libs/utils";
+import { getFileName } from "../../page/gallery/libs/utils";
 import { paperGet, bingGet } from "../../js/axios/request";
 
 import Widget from "../card/Widget.vue";
-import WallpaperWidgetModal from "../paperModal/WallpaperWidgetModal.vue";
-import GalleryModal from "../paperModal/PaperApp.vue";
+import WallpaperWidgetModal from "../../apps/galleryModal/components/WallpaperWidgetModal.vue";
+// import GalleryModal from "../paperModal/PaperApp.vue";
 import { usePlat } from "../../ui/hooks/usePlat";
 import { communityNavStore } from "../bottomPanel/store/communityNavStore";
 import { useAppModal } from "../../apps/appModal/src/hook/useAppModal";
@@ -249,7 +249,7 @@ if (usePlat("client")) {
 export default {
   name: "MiddleWallpaper",
 
-  components: { Widget, newIcon, WallpaperWidgetModal, GalleryModal },
+  components: { Widget, newIcon, WallpaperWidgetModal, },
 
   props: {
     desk: {

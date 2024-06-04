@@ -31,7 +31,7 @@ export const runList = [
     ...defaultData,
   },
   {
-    name:"gallery",
+    name:"galleryModalApp",
     cname:"壁纸",
     icon:"/logo/wallpaper.svg",
     ...defaultData,

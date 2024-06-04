@@ -14,8 +14,6 @@
     </template>
 
     <!-- 社群桌面 -->
-    <!-- <router-view></router-view> -->
-
     <CommunityGroupDesk
     :communityVisible="communityVisible"
     ref="deskGroupRef"
@@ -68,7 +66,6 @@
     ></div>
   </teleport>
 
-  <GalleryModal ref="galleryRef" />
 </template>
 
 <script>
@@ -85,7 +82,6 @@ import UpdateMyInfo from "../components/comp/UpdateMyInfo.vue";
 import ScalePanel from "./ScalePanel.vue";
 import GuidePanel from "./GuidePanel.vue";
 import WebLogin from "./WebLogin.vue";
-import GalleryModal from "../components/paperModal/PaperApp.vue";
 import CommunityGroupDesk from "../apps/communityDesk/page/CommunityGroupDesk.vue";
 
 import { taskStore } from "../apps/task/store";
@@ -197,7 +193,6 @@ export default {
     // Audio,
     NewGuidePage,
     UpdateMyInfo,
-    GalleryModal,
     ScalePanel,
     GuidePanel,
     WebLogin,

@@ -1,4 +1,20 @@
 <template>
+  <div>
+
+  </div>
+</template>
+
+<script>
+  export default {
+    
+  }
+</script>
+
+<style scoped>
+
+</style>
+
+<!-- <template>
  <xt-modal v-model="widgetVisible" v-if="widgetVisible" full :footer="false" boxClass="px-3 pt-3" ref="modalRef">
     <template #header-center>
       <div class="xt-font xt-text font-16 font-400">壁纸小组件设置</div>
@@ -14,7 +30,7 @@
 </template>
 
 <script>
-import { wallpaperOptions } from '../../page/gallery/data/gallery'
+import { wallpaperOptions } from '../../../page/gallery/data/gallery'
 
 export default {
  name:'WallpaperWidgetModal',
@@ -58,4 +74,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-</style>
+</style> -->
