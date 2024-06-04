@@ -10,29 +10,27 @@ const emit = defineEmits([
   "update:openWith",
 ]);
 const sortableRef = ref();
-const sourceList = ref(data.value.sourceList);
+
 onMounted(() => {
-  nextTick(() => {
-    setTimeout(() => {
-      new Sortable(sortableRef.value, {
-        animation: 150,
-        // 开始拖拽时
-        onStart: function (evt: any) {},
-        // 结束拖拽时
-        onEnd({ oldIndex, newIndex }: any) {
-          // console.log(" newIndex, oldIndex :>> ", newIndex, oldIndex);
-          emit("listSort", oldIndex, newIndex);
-          // let movedItem = sourceList.value.splice(oldIndex, 1)[0]; // 从旧位置移除
-          // sourceList.value.splice(newIndex, 0, movedItem); // 插入到新位置
-          // [sourceList.value[newIndex], sourceList.value[oldIndex]] = [
-          //   sourceList.value[oldIndex],
-          //   sourceList.value[newIndex],
-          // ];
-          // emit("listSort", sourceList);
-        },
-      });
-    }, 100);
-  });
+  setTimeout(() => {
+    new Sortable(sortableRef.value, {
+      animation: 150,
+      // 开始拖拽时
+      onStart: function (evt: any) {},
+      // 结束拖拽时
+      onEnd({ oldIndex, newIndex }: any) {
+        // console.log(" newIndex, oldIndex :>> ", newIndex, oldIndex);
+        emit("listSort", oldIndex, newIndex);
+        // let movedItem = sourceList.value.splice(oldIndex, 1)[0]; // 从旧位置移除
+        // sourceList.value.splice(newIndex, 0, movedItem); // 插入到新位置
+        // [sourceList.value[newIndex], sourceList.value[oldIndex]] = [
+        //   sourceList.value[oldIndex],
+        //   sourceList.value[newIndex],
+        // ];
+        // emit("listSort", sourceList);
+      },
+    });
+  }, 100);
 });
 const updateLastUse = (val) => {
   emit("update:lastUse", val);
@@ -122,7 +120,7 @@ const menuIndex = ref(0);
       </div>
     </template>
 
-    <xt-option-box>
+    <xt-option-box class="mt-3">
       <xt-option-info
         title="无边框模式"
         isSwitch

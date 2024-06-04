@@ -33,7 +33,6 @@ import { useElementSize } from "@vueuse/core";
 const target = ref(null);
 
 const updateSize = (data) => {
-  console.log('data :>> ', data);
   deskSize.value = data;
 };
 const folderStore = useFolderStore();
