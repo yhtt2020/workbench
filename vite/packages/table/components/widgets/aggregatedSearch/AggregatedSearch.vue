@@ -7,7 +7,7 @@ import SearchModal from "./page/searchModal/SearchModal.vue";
 
 const header = {
   title: "聚合搜索",
-  showIcon: "/img/appLogo/aggregateSearch.png",
+  showIcon: "/logo/aggregateSearch.svg",
 };
 const cloneSourceList = JSON.parse(JSON.stringify(sourceList))
 const options = computed(() => {

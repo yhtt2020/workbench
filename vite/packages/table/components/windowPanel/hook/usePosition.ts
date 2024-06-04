@@ -1,5 +1,7 @@
+import { useGlobalStore } from './../../../apps/Global/store';
 import { useNavigationStore } from './../../desk/navigationBar/navigationStore';
 import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
 /**
  * 动态调整元素的定位
  * @param event 鼠标点击的位置
@@ -38,7 +40,7 @@ export const usePosition = (event, itemSize) => {
     // 计算 y 坐标，并根据导航属性的缩放调整
     const y = isTop ? NavH + min : windowHeight - itemHeight - min - NavH;
 
-    return { x, y: y };
+    return { x, y: y < 0 ? 0 : y };
 }
 
 /**
@@ -49,3 +51,25 @@ export const usePosition = (event, itemSize) => {
  * top = winH - elementH - 10 - 80
  * 
  */
+
+// 获取当前导航栏的最多图标数和缩放比例
+export const getCurrent = (iconSize:number, num:number) => {
+    const useNav = useNavigationStore();
+    const { navAttribute, currentNavFormat, currentNavPosition, communityNavVisible } = storeToRefs(useNav);
+    const globalStore = useGlobalStore();
+    const { windowWidth, windowHeight } = storeToRefs(globalStore);
+    const res = computed(() => {
+      // 根据当前导航格式计算最大宽度和额外宽度
+      let macWidth = communityNavVisible.value ? windowWidth.value - 540 : windowWidth.value - 200;
+      let macExtraWidth = communityNavVisible.value ? 540 : 200;
+      let maxWidth = currentNavFormat.value === 'mac' ? macWidth : windowWidth.value * 0.6;
+      let extraWidth = currentNavFormat.value === 'mac' ? macExtraWidth : windowWidth.value * 0.3;
+
+      const maxNum = Math.floor(maxWidth / iconSize);
+      const scale = windowWidth.value / (extraWidth + num * iconSize);
+
+      return { maxNum, scale };
+    })
+
+    return res
+}
