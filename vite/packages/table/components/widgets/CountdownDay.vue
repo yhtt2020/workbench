@@ -46,7 +46,6 @@
           }
         "
       />
-
     </div>
 
     <div class="mt-1 content" style="height: 100%; overflow: hidden" v-else>
@@ -232,8 +231,13 @@ import { timerStore } from "../../store/timer";
 import { Icon as newIcon } from "@iconify/vue";
 import { communityNavStore } from "../bottomPanel/store/communityNavStore";
 import CardSettingExplain from "../CardSettingExplain.vue";
-import { communityAuth } from "../../apps/communityDesk/hooks/deskCreateMethod";
+import {
+  communityAuth,
+  communityMember,
+} from "../../apps/communityDesk/hooks/deskCreateMethod";
 import Unusual from "./Unusual.vue";
+import { saveData } from "../../save/saveData";
+import { loadData } from "../../save/loadData";
 
 export default {
   name: "CountdownDay",
@@ -298,9 +302,9 @@ export default {
       header: {
         title: "纪念日",
         // ifyIcon:'fluent:calendar-16-regular',
-        showIcon:"/logo/countdownDay.svg",
-      }
-    }
+        showIcon: "/logo/countdownDay.svg",
+      },
+    };
   },
   computed: {
     ...mapWritableState(cardStore, ["countdownDay"]),
@@ -346,6 +350,21 @@ export default {
         },
       ];
     }
+
+    this.$nextTick(() => {
+      if (communityMember(this.desk?.communityNo)) {
+        const target = {
+          customIndex: this.customIndex,
+          desk: this.desk,
+        };
+        loadData("desk", target).then((rs) => {
+          console.log("查看rs", rs);
+          if (rs) {
+            this.countdownDays = rs;
+          }
+        });
+      }
+    });
   },
   methods: {
     ...mapActions(cardStore, [
@@ -387,6 +406,8 @@ export default {
 
     onContextMenuClick(e, index) {
       this.removeCountdownDay(index);
+      this.saveCountdownDay();
+      this.$bus.emit("updateSync");
     },
     goAddEvent() {
       this.goAddFlag = true;
@@ -402,6 +423,8 @@ export default {
         dateValue: timeStamp(this.dateValue.valueOf()),
         customIndex: this.customIndex,
       });
+      this.saveCountdownDay();
+      this.$bus.emit("updateSync");
       this.eventValue = "";
       this.dateValue = null;
       message.info("添加成功！");
@@ -420,14 +443,22 @@ export default {
         this.countdownDays = this.countdownDay;
       }
     },
-
     // 开启右侧抽屉弹窗
     openRightDrawer() {
-      if (this.communityRole) {
-        this.settingVisible = false;
-      } else {
-        this.settingVisible = true;
+      if (!communityMember(this.desk?.communityNo)) {
+        if (this.communityRole) {
+          this.settingVisible = false;
+        } else {
+          this.settingVisible = true;
+        }
       }
+    },
+    saveCountdownDay() {
+      const target = {
+        customIndex: this.customIndex,
+        desk: this.desk,
+      };
+      saveData(this.countdownDay, "desk", target);
     },
   },
   watch: {

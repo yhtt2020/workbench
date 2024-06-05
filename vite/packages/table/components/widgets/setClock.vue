@@ -222,7 +222,6 @@ export default {
             }
             let dateSpan = timeStamp(timeSpan)
 
-
             this.addClock({
                 clockType: this.defaultType.name,
                 eventValue: this.eventValue,

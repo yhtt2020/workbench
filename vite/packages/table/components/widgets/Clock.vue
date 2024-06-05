@@ -253,7 +253,10 @@ import SetupClock from "./setClock.vue";
 import { communityNavStore } from "../bottomPanel/store/communityNavStore";
 import Unusual from "./Unusual.vue";
 import CardSettingExplain from "../CardSettingExplain.vue";
-import { communityAuth } from "../../apps/communityDesk/hooks/deskCreateMethod";
+import { communityAuth,communityMember } from "../../apps/communityDesk/hooks/deskCreateMethod";
+import { saveData } from "../../save/saveData";
+import { loadData } from "../../save/loadData";
+
 
 export default {
   name: "Clock",

@@ -297,6 +297,7 @@ export default {
     }
 
     this.$nextTick(() => {
+      // hhh
       if (communityMember(this.desk?.communityNo)) {
         const target = {
           customIndex: this.customIndex,

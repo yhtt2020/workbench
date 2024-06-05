@@ -265,12 +265,12 @@ export default {
 
     sendImg(img) {
       this.myData.img = img;
-      this.saveData();
+      this.saveCustomData();
     },
     // 替换图片
     updateImg(img) {
       this.myData.img = img;
-      this.saveData();
+      this.saveCustomData();
     },
     // 无边框
     updateBorder(val) {
@@ -279,23 +279,23 @@ export default {
     // 底部名称
     updateName(val) {
       this.showName = val;
-      this.saveData();
+      this.saveCustomData();
     },
     // 名称
     updateInput(val) {
       this.myData.title = val;
-      this.saveData();
+      this.saveCustomData();
     },
     // 链接
     updateLink(val) {
       this.myData.link = val;
-      this.saveData();
+      this.saveCustomData();
       // console.log('updateLink',this.myData.link);
     },
     // 本地文件路径
     localFile(val) {
       this.myData.link = val;
-      this.saveData();
+      this.saveCustomData();
       // console.log('localFile',val);
     },
     openApp() {
@@ -352,7 +352,7 @@ export default {
       }
     },
     // 保存数据到缓存
-    saveData() {
+    saveCustomData(){
       // if (!Object.keys(this.myData.img).length > 0) {
       //   message.warning("未添加小组件封面");
       //   return;
