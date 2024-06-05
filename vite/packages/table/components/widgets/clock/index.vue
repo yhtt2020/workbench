@@ -303,6 +303,7 @@ export default {
     // 更新时钟样式
     updateClockStyle(e) {
       this.updateCustomData(this.customIndex, { clockId: e }, this.desk);
+      // this.$bus.emit("updateSync");
     },
   },
 

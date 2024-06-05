@@ -124,6 +124,12 @@ import { usePlat } from "../../../ui/hooks/usePlat";
 import CustomModal from "./components/CustomModal.vue";
 import Unusual from "../Unusual.vue";
 
+import { saveData } from "../../../save/saveData";
+import { loadData } from "../../../save/loadData";
+
+import { communityAuth,communityMember } from "../../../apps/communityDesk/hooks/deskCreateMethod";
+
+
 let appModel;
 if (usePlat("client")) {
   appModel = window.$models.appModel;
@@ -252,7 +258,7 @@ export default {
         this.myData.img = {};
         if (imgReg.test(openPath[0])) {
           this.myData.img.src = openPath[0];
-          this.saveData();
+          this.saveCustomData()
         } else if (videoReg.test(openPath[0])) {
           this.myData.img.srcProtocol = openPath[0];
           this.$nextTick(() => {
@@ -367,6 +373,17 @@ export default {
         },
         this.desk
       );
+
+      if(communityAuth(this.desk?.communityNo)){
+        const target = {
+          communityIndex:this.communityIndex,
+          desk:this.desk,
+        }
+  
+        saveData(this.myData,"desk",target);
+        this.$bus.emit("updateSync");
+      }
+
       // message.success("保存成功");
       // this.panelVisible = false;
     },

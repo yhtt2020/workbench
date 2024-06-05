@@ -267,7 +267,7 @@ export default {
     // 初始化
     this.accToken = this.access_token;
     this.accUrl = this.baseUrl;
-    this.init();
+    // this.init();
 
     if (this.options.disableEdit) {
       this.sizeList = [];
@@ -379,17 +379,19 @@ export default {
 
     // 提交社区数据
     submitAccToken(accToken, accUrl) {
-      const target = {
-        customIndex: this.customIndex,
-        desk: this.desk,
-      };
       this.changeAccToken(accToken, accUrl);
-      const tokenData = {
-        accToken: accToken,
-        accUrl: accUrl,
-      };
-      saveData(tokenData, "desk", target);
-      this.$bus.emit("updateSync");
+      if(this.communityAuth(this.desk?.communityNo)){
+        const target = {
+          customIndex: this.customIndex,
+          desk: this.desk,
+        };
+        const tokenData = {
+          accToken: accToken,
+          accUrl: accUrl,
+        };
+        saveData(tokenData, "desk", target);
+        this.$bus.emit("updateSync");
+      }
     },
   },
   watch: {
