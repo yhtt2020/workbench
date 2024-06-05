@@ -155,13 +155,7 @@ import { noteStore } from "../../../apps/note/store";
 import Modal from "../../Modal.vue";
 import { DTPWeb, LPA_JobNames } from "dtpweb";
 import RadioTab from "../../../components/RadioTab.vue";
-import {
-  validateDrive,
-  startPrint,
-  doPreview,
-  doJob,
-} from "../../card/hooks/print";
-import { useAppModal } from "../../../hooks";
+
 import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
 
 import CardSettingExplain from '../../CardSettingExplain.vue';
