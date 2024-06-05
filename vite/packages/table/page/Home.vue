@@ -42,6 +42,7 @@
       v-if="showGuide"
       @closeShowGuide="closeShowGuide"
       :deskId="deskId"
+    @changeDesk="changeDesk"
     ></NewGuidePage>
     <!-- 右上方的缩放推荐 -->
     <ScalePanel v-if="visibleScale" @closeScale="closeScale"></ScalePanel>
@@ -488,7 +489,7 @@ export default {
           let desks = _.cloneDeep(DESKS);
 
           this.desks = desks;
-          this.currentDesk = this.desks[0];
+          // this.currentDesk = this.desks[0];
           this.currentDeskIndex = {
             name: this.desk[0]?.name,
             id: this.desk[0]?.id,
