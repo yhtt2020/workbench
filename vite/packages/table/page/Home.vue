@@ -15,15 +15,13 @@
 
     <!-- 社群桌面 -->
     <CommunityGroupDesk
-    :communityVisible="communityVisible"
-    ref="deskGroupRef"
-    :settings="settings"
-    :desk-list="desks"
-    v-model:currentDeskId="this.currentDeskId"
-    @changeDesk="changeDesk"
-  />
-
-
+      :communityVisible="communityVisible"
+      ref="deskGroupRef"
+      :settings="settings"
+      :desk-list="desks"
+      v-model:currentDeskId="this.currentDeskId"
+      @changeDesk="changeDesk"
+    />
   </div>
   <!-- 检测到用户头像为默认头像时触发用户中心个人信息修改弹窗 -->
   <div
@@ -42,7 +40,7 @@
       v-if="showGuide"
       @closeShowGuide="closeShowGuide"
       :deskId="deskId"
-    @changeDesk="changeDesk"
+      @changeDesk="changeDesk"
     ></NewGuidePage>
     <!-- 右上方的缩放推荐 -->
     <ScalePanel v-if="visibleScale" @closeScale="closeScale"></ScalePanel>
@@ -66,7 +64,6 @@
       style="z-index: 900"
     ></div>
   </teleport>
-
 </template>
 
 <script>
@@ -731,12 +728,12 @@ export default {
         }
       },
     },
+  },
 
-    beforeUnmount() {
-      let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
-      this.lastHeight = cardsHeight;
-      // console.log("销毁组件",cardsHeight);
-    },
+  beforeUnmount() {
+    let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
+    this.lastHeight = cardsHeight;
+    // console.log("销毁组件",cardsHeight);
   },
 };
 </script>
