@@ -37,6 +37,7 @@ const { width, height } = useWindowSize();
 watch(
   [() => width.value, () => height.value],
   ([newWidth, newHeight]) => {
+    if (newWidth === 0 || newHeight === 0) return;
     windowWidth.value = newWidth;
     windowHeight.value = newHeight;
   },

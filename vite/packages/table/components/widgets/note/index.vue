@@ -14,7 +14,8 @@
     style="background: #191919 !important"
     :delete="deleteCard"
   >
-    <teleport to="body">
+    <!-- <div @click="test">测试</div> -->
+      <teleport to="body">
       <xt-msg
         title="确定删除小组件"
         text="默认仅删除小组件，备忘录数据不会清除。"
@@ -166,6 +167,10 @@ import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
 import CardSettingExplain from '../../CardSettingExplain.vue';
 import { communityAuth } from "../../../apps/communityDesk/hooks/deskCreateMethod"
 
+import { validateDrive, startPrint, doPreview, doJob  } from '../../card/hooks/print'
+import { saveData } from '../../../save/saveData'
+import { loadData } from '../../../save/loadData'
+import {useAppModal} from '../../../hooks'
 export default {
   name: "便签",
   components: {
@@ -226,6 +231,7 @@ export default {
         title: this.customData.title,
         resize: this.options.disableEdit ? false : true,
         customDel: this.customDel,
+        showColor: this.showColor
       };
     },
     options() {
@@ -247,6 +253,7 @@ export default {
       fontColor: "white",
       tmpTitle: "桌面标签",
       settingVisible: false,
+      showColor: false,
       menuList: [
         {
           newIcon: "fluent:copy-20-regular",
@@ -367,7 +374,7 @@ export default {
   mounted() {
     this.text = this.customData.text;
     this.colorIndex = this.customData.colorIndex;
-    this.options.showColor = this.customData.showColor;
+    this.showColor = this.customData.showColor;
     this.tmpTitle = this.customData.title;
     this.background = this.customData.background;
     this.colors = this.customData.color;
@@ -490,7 +497,41 @@ export default {
     ...mapActions(noteStore, ["changeDeskBg", "saveDeskTitle"]),
     ...mapActions(communityNavStore, ["isCommunityDesktop"]),
     communityAuth,
+    test(){
+      const data = {
+        text: '78456',
+      }
+      const target = {
+        customIndex: this.customIndex,
+        desk: this.desk,
+        name: 'test',
+      }
+      // saveData({ text: '132456' }, 'card', {
+      //   customIndex: this.customIndex,
+      //   desk: this.desk,
+      // })
 
+      // saveData(data, 'card', target)
+      // saveData(data, 'desk', target)
+
+      saveData(data, 'system', target)
+
+      // console.log('data, system, target', data, 'system', target);
+      console.log('loadData card', loadData('card', target).then(res =>{
+        console.log('res card',res);
+      }));
+
+      console.log('loadData desk', loadData('desk', target).then(res =>{
+        console.log('res desk',res);
+      }));
+
+      console.log('loadData system', loadData('system', target).then(res =>{
+        console.log('res system',res);
+      }));
+
+
+      // getData('system');
+    },
     // 自定义删除卡片
     deleteCard() {
       this.$emit("deleteCard");
@@ -622,7 +663,7 @@ export default {
       this.updateCustomData(
         this.customIndex,
         {
-          showColor: this.options.showColor,
+          showColor: this.showColor,
         },
         this.desk
       );
