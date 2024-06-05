@@ -13,17 +13,18 @@ import { storeToRefs } from "pinia";
 import Scrollbar from "./Scrollbar.vue";
 import { HistoryData } from "./types";
 import { useAppModal } from "../../../../../hooks";
-const words = inject("words");
+const words: any  = inject("words");
 const isWebSource = inject("isWebSource");
 const currentSource = inject("currentSource");
-const ctrlSelectIndex = inject("ctrlSelectIndex");
-const saveSearchSource = inject("saveSearchSource");
+const ctrlSelectIndex: any = inject("ctrlSelectIndex");
+const saveSearchSource = inject("saveSearchSource") as Function;
 
 const data = inject("data");
 
 const currentIndex = ref(0);
 import { startApp } from "../../../../../ui/hooks/useStartApp";
 import { open } from "../../utils/open.js";
+import { watchDebounced } from "@vueuse/core";
 
 // const { type , value } = currentItem.value
 //             startApp(type, value, router)
@@ -70,16 +71,16 @@ const systemList = ref([
       }
     },
   },
-  {
-    name: "剪切板",
-    fn: async (words) => {
-      // 获取剪切板数据
-      let clipboardData = await getClipboardData(words);
-      if (clipboardData) {
-        return clipboardData;
-      }
-    },
-  },
+  // {
+  //   name: "剪切板",
+  //   fn: async (words) => {
+  //     // 获取剪切板数据
+  //     let clipboardData = await getClipboardData(words);
+  //     if (clipboardData) {
+  //       return clipboardData;
+  //     }
+  //   },
+  // },
   {
     name: "群聊",
     fn: async (words) => {
@@ -90,10 +91,10 @@ const systemList = ref([
       }
     },
   },
-  {
-    name: "系统",
-    fn: async (words) => {},
-  },
+  // {
+  //   name: "系统",
+  //   fn: async (words) => {},
+  // },
 ]);
 const searchList = ref([]);
 const loading = ref(false);
@@ -111,7 +112,7 @@ const allSearch = async (val) => {
     return;
   }
 
-  let arr :any= [];
+  let arr: any = [];
   for (let item of systemList.value) {
     if (item.name === "全部") {
       continue;
@@ -129,23 +130,21 @@ const allSearch = async (val) => {
 
   searchList.value = arr;
 };
-
-watch(
+watchDebounced(
   [words, currentIndex],
-  (val) => {
+  async (val) => {
     ctrlSelectIndex.value = 0;
-    allSearch(words.value);
+    await allSearch(words.value);
   },
-  {
-    immediate: true,
-  }
+  { debounce: 200, immediate: true }
 );
+
 const selectAll = (name) => {
   currentIndex.value = systemList.value.findIndex((item) => item.name === name);
 };
 const openNote = (data) => {};
 const openSystemApp = (obj, name) => {
-console.log('obj :>> ', obj);
+  console.log("obj :>> ", obj);
   const history: HistoryData = {
     name: obj.name,
     source: obj.icon,
@@ -153,10 +152,10 @@ console.log('obj :>> ', obj);
     showType: name,
     openWith: obj.type,
   };
-  saveSearchSource()
+  saveSearchSource();
   data.value.historyList.push(history);
 
-  open(history)
+  open(history);
 };
 </script>
 
@@ -215,9 +214,9 @@ console.log('obj :>> ', obj);
       </div>
     </template>
     <template v-else> 无数据 </template>
-    <div>
+    <!-- <div>
       {{ items }}
-    </div>
+    </div> -->
   </Scrollbar>
 </template>
 
