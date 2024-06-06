@@ -157,6 +157,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 初始化自由布局状态数据
     async initFreeLayoutState() {
+      console.log('"initFreeLayoutState" :>> ', "initFreeLayoutState");
       if (!this.getFreeLayoutState) {
         this.freeLayoutState[this.getCurrentDeskId] = _.cloneDeep(
           this.defaultState

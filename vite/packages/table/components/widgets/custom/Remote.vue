@@ -2,7 +2,6 @@
   <!--  <div class="card  gradient gradient&#45;&#45;14  content small" style="display: flex;flex-direction: column;align-content: center;align-items: center">-->
   <!--&lt;!&ndash;  <my-list id="my" > <slot></slot></my-list>&ndash;&gt;-->
   <!--  </div>-->
-  <xt-task :modelValue="m03031" @cb="openRightMenu">
     <xt-container
       :header="header"
       v-model:customSize="customData.customSize"
@@ -72,7 +71,6 @@
         </template>
       </div>
     </xt-container>
-  </xt-task>
 
   <a-drawer v-model:visible="panelVisible">
     <CardSettingExplain v-if="communityAuth(desk?.communityNo)" />
