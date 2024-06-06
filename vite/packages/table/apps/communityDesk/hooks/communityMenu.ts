@@ -114,6 +114,9 @@ function communityMenus() {
                 mainList: this.currentDesk.cards,
                 cb: (position: any) => {
                   this.$bus.emit("cutCanvas", position);
+                  setTimeout(()=>{
+                    this.syncSaveCommunity();
+                  },1500);
                 },
               });
             },
