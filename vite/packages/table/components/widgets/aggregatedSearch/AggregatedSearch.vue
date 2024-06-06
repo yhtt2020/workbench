@@ -24,7 +24,9 @@ const defaultData = {
   historyList: [],
   noBorder: true,
   customSize: "4x2",
-  _updateFlag: "24532",
+  _updateFlag: "245661",
+  bgMode: "default",
+  bgColor: "#508BFE",
 };
 const options = computed(() => {
   return {
@@ -89,11 +91,7 @@ const menuList = computed(() => {
   ];
   return menu;
 });
-const listSort = (oldIndex, newIndex) => {
-  let sourceList = customData.value.sourceList;
-  let movedItem = sourceList.splice(oldIndex, 1)[0]; // 从旧位置移除
-  sourceList.splice(newIndex, 0, movedItem); // 插入到新位置
-};
+
 const lastIcon = computed(() => {
   // 最后使用有记录时
   if (customData.value.lastUse) {
@@ -109,9 +107,9 @@ const surplusIcon = computed(() => {
     const sourceList = customData.value.sourceList.filter(
       (item) => item.name !== customData.value.source.name
     );
-    arr = sourceList.slice(0, 2);
+    arr = sourceList.slice(0, 3);
   }
-  arr = customData.value.sourceList?.slice(1, 3);
+  arr = customData.value.sourceList?.slice(1, 4);
   arr?.unshift(...defaultSourceList);
 
   return arr;
@@ -179,13 +177,7 @@ const surplusIcon = computed(() => {
   </xt-container>
 
   <!-- 卡片设置 -->
-  <CardSet
-    v-if="cardSetVisible"
-    @close="cardSetVisible = false"
-    v-model:lastUse="customData.lastUse"
-    v-model:openWith="customData.openWith"
-    @listSort="listSort"
-  />
+  <CardSet v-if="cardSetVisible" @close="cardSetVisible = false" />
   <!-- 搜索 -->
   <SearchModal
     :specifySource="searchSource"

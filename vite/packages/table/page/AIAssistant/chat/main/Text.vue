@@ -16,7 +16,7 @@
       spellcheck="false"
       placeholder="开始聊天吧"
       @input="onInput"
-      @keydown.enter.exact.prevent="onSearch"
+      @keydown.enter.exact.prevent.stop="onSearch"
       v-model="search"
     >
     </textarea>
