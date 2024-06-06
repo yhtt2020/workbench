@@ -301,6 +301,10 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
       // console.log('this.freeLayoutState', this.freeLayoutState);
       this.freeLayoutState[id] = { ...state };
     },
+    getFreeLayout1() {
+      console.log("this.freeLayoutData", this.freeLayoutData);
+      console.log("this.freeLayoutState", this.freeLayoutState);
+    },
   },
   persist: {
     enabled: true,

@@ -2,6 +2,8 @@
   <div class="fixed overflow-hidden modal-center xt-modal tran" :class="popState ? 'pop' : step == 5 ? 'theme' : 'Popup'"
     style="">
     <!--  -->
+    <!-- <div @click="test">测试</div>
+    <div @click="test2">测试2</div> -->
     <div v-if="!popState" class="h-full">
       <!-- 返回按钮 -->
       <div v-if="step !== 0 && guideList.length > 1" @click="prevStep" class="absolute ml-4 top-icon no-drag">
@@ -94,7 +96,7 @@
       <div style="z-index: 9999">
         <!-- @afterAdded="afterAdded" -->
         <Preview :deskTypeObj="deskTypeObj" :scheme="scheme" :showModal="showModal"
-          @closePreview="closePreview" @addStep="nextStep"></Preview>
+          @closePreview="closePreview" @addStep="nextStep" @changeDesk="changeDesk"></Preview>
       </div>
     </teleport>
   </div>
@@ -218,6 +220,7 @@ export default {
       "getFreeLayoutState",
       "defaultState",
       "previewFlag",
+      "freeLayoutId"
     ]),
     ...mapWritableState(useWidgetStore, ["edit"]),
     cardList() {
@@ -300,7 +303,7 @@ export default {
   watch: {
   },
   methods: {
-    ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData", "setFreeLayoutData", "setFreeLayoutState", 'renewFreeLayout',]),
+    ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData", "setFreeLayoutData", "setFreeLayoutState", 'renewFreeLayout', "getFreeLayout1"]),
 
     // 设置自由布局数据
     showFreeLayout(type) {
@@ -428,6 +431,22 @@ export default {
         content: "分析完成，请继续完成桌面定制。",
         key: "preparing",
       });
+    },
+
+    changeDesk(id){
+      console.log('NewGuidePage', id)
+      this.$emit('changeDesk', { id: id })
+    },
+
+    test(){
+      console.log('this.desks', this.desks)
+      console.log('this.getFreeLayout1', this.getFreeLayout1())
+    },
+    test2(){
+      // this.freeLayoutId =
+      console.log('this.getFreeLayout1', this.getFreeLayout1())
+      this.$emit('changeDesk', { id: this.desks[1].id })
+      this.$emit('changeDesk', { id: this.desks[0].id })
     },
 
     // 添加文件夹

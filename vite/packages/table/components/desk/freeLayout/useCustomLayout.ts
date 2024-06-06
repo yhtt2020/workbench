@@ -1,8 +1,9 @@
 import { storeToRefs } from "pinia";
 import { nanoid } from "nanoid";
 import _ from "lodash";
-
+// useAddCard,
 import { useAddCard, useDelCard } from "../../../ui/hooks/useAddCard";
+// import { useAddCard } from '../../../hooks'
 import { getSnapGrid } from "../../../ui/new/drag/src/hooks/utils";
 import {
   useGridToWidth,
@@ -279,14 +280,16 @@ const updateCardPosition = (top, left, item) => {
   };
 
   if (item.id) return;
+  
+  useAddCard( item.name, { ...item?.customData}, id );
 
-  useAddCard(
-    item.name,
-    {
-      ...item?.customData,
-    },
-    id
-  );
+  // useAddCard(
+  //   {
+  //     name: item.name,
+  //     id,
+  //     data: item?.customData,
+  //   },
+  // );
 
   return id;
 };
