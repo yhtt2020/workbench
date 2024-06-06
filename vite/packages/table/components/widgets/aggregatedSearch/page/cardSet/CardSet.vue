@@ -34,6 +34,18 @@ const colorList = [
     value: "custom",
   },
 ];
+const sizeList = computed(() => {
+  return [
+    {
+      name: data.value.noBorder ? "2x1" : "2x2",
+      value: "2",
+    },
+    {
+      name: data.value.noBorder ? "4x1" : "4x2",
+      value: "4",
+    },
+  ];
+});
 </script>
 
 <template>
@@ -82,6 +94,15 @@ const colorList = [
           />
         </xt-option-box>
         <xt-option-box>
+          <xt-option-info title="小组件尺寸" />
+          <xt-option-tab
+            :list="sizeList"
+            v-model="data.currentSize"
+            circle
+            style="height: 40px"
+          />
+        </xt-option-box>
+        <xt-option-box>
           <xt-option-info title="小组件颜色" />
           <xt-option-tab
             :list="colorList"
@@ -89,7 +110,10 @@ const colorList = [
             circle
             style="height: 40px"
           />
-          <xt-option-color v-model:color="data.bgColor" v-if="data.bgMode != 'default'" />
+          <xt-option-color
+            v-model:color="data.bgColor"
+            v-if="data.bgMode != 'default'"
+          />
         </xt-option-box>
       </template>
     </xt-scrollbar>

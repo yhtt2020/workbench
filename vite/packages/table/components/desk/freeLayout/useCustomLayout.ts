@@ -1,17 +1,11 @@
 import { storeToRefs } from "pinia";
 import { nanoid } from "nanoid";
 import _ from "lodash";
-// useAddCard,
+
 import { useAddCard, useDelCard } from "../../../ui/hooks/useAddCard";
-// import { useAddCard } from '../../../hooks'
-import { getSnapGrid } from "../../../ui/new/drag/src/hooks/utils";
-import {
-  useGridToWidth,
-  useHeightToGrid,
-  useElementSize,
-} from "../../../ui/hooks/useCardSize";
+
+import { useGridToWidth, useElementSize } from "../../../ui/hooks/useCardSize";
 import { useFreeLayoutStore } from "../freeLayout/store";
-import { useCutLayout } from "./useCutLayout";
 
 const defaultOptions = {
   mainList: [],
@@ -26,6 +20,7 @@ export const useCustomLayout = async (options) => {
   // 合并默认配置和用户配置
   const mergedOptions = _.merge({}, defaultOptions, options);
   const { mainList, headerList, folderList, columns, cb, test } = mergedOptions;
+
   let layoutWidth = useGridToWidth(columns * 2);
 
   let currentLeft = 0;
@@ -48,9 +43,7 @@ export const useCustomLayout = async (options) => {
   //
   let fillWidth = 0;
   let fillHeight = 0;
-  // 1 实现卡片分类
-  const { arr2x2, arr2x4, arr4x4, arr1x1, arrSpecial } =
-    cardClassification(mainList);
+
   /**
    * 换行填充
    * 采用高度优先
@@ -120,7 +113,6 @@ export const useCustomLayout = async (options) => {
     currentTop += prevHeight + 12;
     prevHeight = 0;
   };
-  let lastHeight = 0;
   const cardPositionInit = (arr: any) => {
     if (!arr.length) return;
     // 循环取出
@@ -147,7 +139,6 @@ export const useCustomLayout = async (options) => {
 
       updateCardPosition(currentTop, currentLeft, item);
       currentLeft += width + 12;
-      lastHeight = prevHeight;
       prevWidth = currentWidth;
       prevHeight = currentHeight;
     }
@@ -184,6 +175,43 @@ export const useCustomLayout = async (options) => {
   // 隐藏
   getFreeLayoutState.value.system.hide = true;
   let positioningId = await addPositioningData();
+  // 定制头部
+
+  if (headerList && headerList.length) {
+    let { arr2x2: header2x2, arr2x4: header2x4 } =
+      cardClassification(headerList);
+    prevHeight = 420;
+    let length2x2 = header2x2.length;
+    for (let i = 0; i < length2x2; i++) {
+      fill(header2x2);
+    }
+
+    let length2x4 = header2x4.length;
+    for (let i = 0; i < length2x4; i++) {
+      fill(header2x4);
+    }
+    currentLeft = 0;
+    fillLeft = 0;
+    currentTop += prevHeight + 12;
+    prevHeight = 0;
+  }
+
+  if (folderList && folderList.length) {
+    let { arr2x2: folder2x2 } = cardClassification(folderList);
+    prevHeight = 204;
+    let length2x2 = folder2x2.length;
+    for (let i = 0; i < length2x2; i++) {
+      fill(folder2x2);
+    }
+    currentLeft = 0;
+    fillLeft = 0;
+    currentTop += prevHeight + 12;
+    prevHeight = 0;
+  }
+
+  // 1 实现卡片分类
+  const { arr2x2, arr2x4, arr4x4, arr1x1, arrSpecial } =
+    cardClassification(mainList);
   cardPositionInit(arrSpecial);
   cardPositionInit(arr4x4);
   cardPositionInit(arr2x4);
@@ -280,8 +308,8 @@ const updateCardPosition = (top, left, item) => {
   };
 
   if (item.id) return;
-  
-  useAddCard( item.name, { ...item?.customData}, id );
+
+  useAddCard(item.name, { ...item?.customData }, id);
 
   // useAddCard(
   //   {

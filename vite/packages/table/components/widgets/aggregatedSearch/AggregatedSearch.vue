@@ -28,7 +28,8 @@ const defaultData = {
   historyList: [],
   noBorder: true,
   customSize: "4x2",
-  _updateFlag: "245661",
+  currentSize: "4",
+  _updateFlag: "2466",
   bgMode: "default",
   bgColor: "#508BFE",
 };
@@ -42,11 +43,14 @@ const options = computed(() => {
 });
 
 const customSize = computed(() => {
+  const size = customData.value.currentSize || 4;
+
   if (customData.value.noBorder) {
-    customData.value.customSize = "4x1";
+    customData.value.customSize = size + "x1";
   } else {
-    customData.value.customSize = "4x2";
+    customData.value.customSize = size + "x2";
   }
+
   return customData.value.customSize;
 });
 
@@ -60,7 +64,6 @@ provide("data", customData);
 const searchStyle = computed(() => {
   if (!customData.value.noBorder) {
     return {
-
       "border-radius": "12px",
       height: "100%",
     };
@@ -111,14 +114,18 @@ const lastIcon = computed(() => {
 const surplusIcon = computed(() => {
   // surplusIcon
   let arr: any = [];
-  // 最后使用有记录时
-  if (customData.value.lastUse) {
-    const sourceList = customData.value.sourceList.filter(
-      (item) => item.name !== customData.value.source.name
-    );
-    arr = sourceList.slice(0, 3);
+  if (customData.value.currentSize == "4") {
+    // 最后使用有记录时
+    if (customData.value.lastUse) {
+      const sourceList = customData.value.sourceList.filter(
+        (item) => item.name !== customData.value.source.name
+      );
+      arr = sourceList.slice(0, 3);
+    }
+    arr = customData.value.sourceList?.slice(1, 4);
   }
-  arr = customData.value.sourceList?.slice(1, 4);
+
+  // 添加默认源
   arr?.unshift(...defaultSourceList);
 
   return arr;
