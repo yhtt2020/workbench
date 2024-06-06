@@ -338,7 +338,6 @@ export default {
     },
     onClockMenuClick(index) {
       this.removeClock(index, 1);
-      // console.log(this.clockEvent,this.filterClockEvent)
       this.filterClock(this.defaultDataType);
       this.$emit("syncClockData");
     },

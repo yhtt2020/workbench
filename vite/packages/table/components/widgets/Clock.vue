@@ -182,15 +182,15 @@
           font-weight: 600;
         "
       >
-        {{ clockEvent[0].dateValue.hours }}:{{
-          clockEvent[0].dateValue.minutes
+        {{ clockEvent[0]?.dateValue?.hours }}:{{
+          clockEvent[0]?.dateValue?.minutes
         }}
       </div>
       <div
         class="text-more font-14"
         style="font-family: PingFangSC-Regular !important; font-size: 16px"
       >
-        {{ clockEvent[0].eventValue }}
+        {{ clockEvent[0]?.eventValue }}
       </div>
     </div>
   </xt-container>
@@ -253,10 +253,12 @@ import SetupClock from "./setClock.vue";
 import { communityNavStore } from "../bottomPanel/store/communityNavStore";
 import Unusual from "./Unusual.vue";
 import CardSettingExplain from "../CardSettingExplain.vue";
-import { communityAuth,communityMember } from "../../apps/communityDesk/hooks/deskCreateMethod";
+import {
+  communityAuth,
+  communityMember,
+} from "../../apps/communityDesk/hooks/deskCreateMethod";
 import { saveData } from "../../save/saveData";
 import { loadData } from "../../save/loadData";
-
 
 export default {
   name: "Clock",
@@ -425,18 +427,18 @@ export default {
       ];
     }
 
-    // 
-    if(communityMember(this.desk?.communityNo)){
+    // 成员桌面场景读取存储数据
+    if (communityMember(this.desk?.communityNo)) {
       const target = {
-        customIndex:this.customIndex,
-        desk:this.desk
-      }
-      loadData("desk",target).then((rs)=>{
-        console.log('查看rs',rs);
-        if(rs){
-          this.clockEvent = rs;
+        customIndex: this.customIndex,
+        desk: this.desk,
+      };
+      loadData("desk", target).then((rs) => {
+        if (rs) {
+          // 这里是返回一个对象,需要通过数组方法进行转换
+          this.clockEvent = Object.keys(rs).map((key) => rs[key]);
         }
-      })
+      });
     }
   },
   emit: ["delete"],
@@ -466,7 +468,9 @@ export default {
     },
     onSetup() {
       // this.topClockSettingVisible = true
-      this.changeSettingStatus();
+      if(!communityMember(this.desk?.communityNo)){
+        this.changeSettingStatus();
+      }
       // this.$router.push({
       //   name: 'addCardSetting',
       //   params: {
@@ -479,6 +483,9 @@ export default {
       this.removeCard(this.customIndex);
       this.dCountDown();
       this.visible = false;
+      if (communityAuth(this.desk?.communityNo)) {
+        this.$bus.emit("updateSync");
+      }
     },
     onCountDown(value) {
       switch (value) {
@@ -507,9 +514,11 @@ export default {
     deleteCountDown() {
       this.dCountDown();
     },
+    // 关闭自定义
     closeCustom() {
       this.custom = false;
     },
+    // 添加自定义
     addCustom() {
       this.setCountDown({
         hours: parseFloat(this.value1.$H),
@@ -519,14 +528,16 @@ export default {
       this.custom = false;
     },
     // 同步闹钟数据进行社群成员桌面分享
-    saveClockData(){
+    saveClockData() {
       this.topClockSettingVisible = false;
-      const target = {
-        customIndex:this.customIndex,
-        desk:this.desk
+      if (communityAuth(this.desk?.communityNo)) {
+        const target = {
+          customIndex: this.customIndex,
+          desk: this.desk,
+        };
+        saveData(this.clockEvent, "desk", target);
+        this.$bus.emit("updateSync");
       }
-      saveData(this.clockEvent,"desk",target);
-      this.$bus.emit("updateSync");
     },
   },
 };
