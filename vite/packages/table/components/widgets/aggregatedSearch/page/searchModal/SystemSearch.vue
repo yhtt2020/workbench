@@ -19,7 +19,7 @@ const currentSource = inject("currentSource");
 const ctrlSelectIndex: any = inject("ctrlSelectIndex");
 const saveSearchSource = inject("saveSearchSource") as Function;
 
-const data = inject("data");
+const data:any = inject("data");
 
 const currentIndex = ref(0);
 import { startApp } from "../../../../../ui/hooks/useStartApp";
@@ -142,7 +142,7 @@ watchDebounced(
 const selectAll = (name) => {
   currentIndex.value = systemList.value.findIndex((item) => item.name === name);
 };
-const openNote = (data) => {};
+
 const openSystemApp = (obj, name) => {
   console.log("obj :>> ", obj);
   const history: HistoryData = {

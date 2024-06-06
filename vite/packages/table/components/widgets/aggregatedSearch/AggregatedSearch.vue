@@ -5,10 +5,14 @@ import { sourceList, defaultSourceList } from "./config/data";
 import CardSet from "./page/cardSet/CardSet.vue";
 import SearchModal from "./page/searchModal/SearchModal.vue";
 
-const header = {
-  title: "聚合搜索",
-  showIcon: "/logo/aggregateSearch.svg",
-};
+const header = computed(() => {
+  return {
+    title: "聚合搜索",
+    showIcon: "/logo/aggregateSearch.svg",
+    bg: customData.value.bgMode == "header" ? customData.value.bgColor : "",
+  };
+});
+
 const cloneSourceList = JSON.parse(JSON.stringify(sourceList));
 const defaultData = {
   // 搜索源列表
@@ -33,8 +37,10 @@ const options = computed(() => {
     // 初始化数据
     defaultData,
     noBorder: customData.value?.noBorder,
+    bg: customData.value.bgMode == "custom" ? customData.value.bgColor : "",
   };
 });
+
 const customSize = computed(() => {
   if (customData.value.noBorder) {
     customData.value.customSize = "4x1";
@@ -54,14 +60,17 @@ provide("data", customData);
 const searchStyle = computed(() => {
   if (!customData.value.noBorder) {
     return {
+
       "border-radius": "12px",
       height: "100%",
     };
   } else {
     return {
+      background:
+        customData.value.bgMode != "default" ? customData.value.bgColor : "",
       "border-radius": "10px",
       height: "56px",
-      border: "1px solid rgba(255,255,255,0.1)",
+      // border: "1px solid rgba(255,255,255,0.1)",
     };
   }
 });
@@ -133,7 +142,7 @@ const surplusIcon = computed(() => {
         :style="searchStyle"
         :class="[
           customData.noBorder
-            ? 'h-[56px] xt-shadow xt-border xt-filter tt-bg'
+            ? 'h-[56px] xt-shadow xt-filter tt-bg'
             : 'flex-1 tt-bg-2-t',
         ]"
       >
