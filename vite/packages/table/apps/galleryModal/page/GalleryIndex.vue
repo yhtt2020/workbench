@@ -5,7 +5,7 @@
      <xt-left-menu
        :list="newGalleryList"
        leftClass="xt-bg-m rounded-l-xl"
-       leftMargin="mr-0 py-3"
+       leftMargin="mr-0 pb-3 mb-0"
        model="id"
        v-model:index="leftIndex"
        w="64"
@@ -20,7 +20,7 @@
      <xt-left-menu
        :list="newGalleryList"
        leftClass="xt-bg-m rounded-l-xl"
-       leftMargin="mr-0 py-3"
+       leftMargin="mr-0 pb-3 mb-0"
        model="id"
        v-model:index="leftIndex"
        w="64"
@@ -141,8 +141,20 @@ const currentPaperTab = (item) => {
 <style lang="scss" scoped>
 :deep(.xt-bt) {
   border-top: none !important;
+  
 }
 :deep(.xt-br) {
   border-right: none !important;
+  & .xt-container{
+    & div:first-of-type{
+      margin: 0 !important;
+    }
+  }
 }
 </style>
+
+<!-- & div{
+    & div{
+      margin-bottom: 3px !important;
+    }
+  } -->

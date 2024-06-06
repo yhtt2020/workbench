@@ -97,6 +97,7 @@
             :newIcon="'fluent:play-16-filled'"
             :placement="'bottomRight'"
             class="mr-3"
+            :zIndex="10000000"
           >
             <div class="xt-modal rounded-xl p-1 xt-b">
               <template v-for="item in list">
@@ -196,6 +197,7 @@ import MyEmptyStatus from "./components/empty/MyEmptyStatus.vue";
 import MyContent from "./components/content/MyContent.vue";
 import PaperRightDrawer from "./components/drawer/PaperRightDrawer.vue";
 import { usePlat } from "../../ui/hooks/usePlat";
+import { message } from "ant-design-vue";
 
 let fs, path;
 if (usePlat("client")) {
@@ -292,15 +294,19 @@ export default {
           imageArr.push({ src: el.path });
         }
       }
-      window.Spotlight.show(imageArr, {
-        control: "autofit,page,fullscreen,close,zoom,prev,next",
-        play: true,
-        autoslide: true,
-        infinite: true,
-        progress: false,
-        title: false,
-        autoplay: true,
-      });
+      if (imageArr.length !== 0) {
+        window.Spotlight.show(imageArr, {
+          control: "autofit,page,fullscreen,close,zoom,prev,next",
+          play: true,
+          autoslide: true,
+          infinite: true,
+          progress: false,
+          title: false,
+          autoplay: true,
+        });
+      } else {
+        message.warning("请先添加图片");
+      }
     },
     playActive() {
       const playArr = [];
@@ -316,15 +322,19 @@ export default {
           playArr.push({ src: el.path });
         }
       }
-      window.Spotlight.show(playArr, {
-        control: "autofit,page,fullscreen,close,zoom,prev,next",
-        play: true,
-        autoslide: true,
-        infinite: true,
-        progress: false,
-        title: false,
-        autoplay: true,
-      });
+      if (playArr.length !== 0) {
+        window.Spotlight.show(playArr, {
+          control: "autofit,page,fullscreen,close,zoom,prev,next",
+          play: true,
+          autoslide: true,
+          infinite: true,
+          progress: false,
+          title: false,
+          autoplay: true,
+        });
+      } else {
+        message.warning("请先添加图片");
+      }
     },
 
     // 开启抽屉菜单
