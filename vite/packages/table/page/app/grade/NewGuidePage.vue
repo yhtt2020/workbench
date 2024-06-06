@@ -218,6 +218,7 @@ export default {
     ...mapWritableState(useFreeLayoutStore, [
       "isFreeLayout",
       "getFreeLayoutState",
+      "getFreeLayoutData",
       "defaultState",
       "previewFlag",
       "freeLayoutId"
@@ -307,16 +308,89 @@ export default {
 
     // 设置自由布局数据
     showFreeLayout(type) {
-      if (type == 'game') {
-        this.setFreeLayoutData('mj36hf6h', this.gameDesk.freeLayoutData)
-        this.setFreeLayoutState('mj36hf6h', this.gameDesk.freeLayoutState)
+      
         this.scheme = { ...GameDesk }
-      } else {
-        this.setFreeLayoutData('mj36hf6h', this.assistDesk.freeLayoutData)
-        this.setFreeLayoutState('mj36hf6h', this.assistDesk.freeLayoutState)
-        this.scheme = { ...AssistDesk }
-      }
+      this.showModal = true
 
+      if (type == 'game') {
+        let res =  {
+        "1705970982703": {
+          "left": 2050,
+          "top": 2382,
+          "index": 1,
+          "id": 1705970982703
+        },
+        "1705970993302": {
+          "left": 2050,
+          "top": 2814,
+          "index": 1,
+          "id": 1705970993302
+        },
+        "1705971024022": {
+          "left": 2342,
+          "top": 2814,
+          "index": 1,
+          "id": 1705971024022
+        },
+        "1705971024714": {
+          "left": 2634,
+          "top": 2814,
+          "index": 1,
+          "id": 1705971024714
+        },
+        "1705971025192": {
+          "left": 2926,
+          "top": 2814,
+          "index": 1,
+          "id": 1705971025192
+        },
+        "1705971046081": {
+          "left": 2050,
+          "top": 2598,
+          "index": 1,
+          "id": 1705971046081
+        },
+        "1705971085518": {
+          "left": 2342,
+          "top": 2382,
+          "index": 1,
+          "id": 1705971085518
+        },
+        "1705971100326": {
+          "left": 2634,
+          "top": 2382,
+          "index": 1,
+          "id": 1705971100326
+        },
+        "1705971107883": {
+          "left": 2926,
+          "top": 2382,
+          "index": 1,
+          "id": 1705971107883
+        }
+      }
+      this.setFreeLayoutState('mj36hf6h', this.gameDesk.freeLayoutState)
+        let t1 = _.cloneDeep(res)
+        console.log('this.gameDesk.freeLayoutData11',t1)
+        this.freeLayoutId = 'mj36hf6h'
+        console.log('this.getFreeLayoutData 111',this.getFreeLayoutData)
+
+        this.setFreeLayoutData('mj36hf6h', t1)
+        console.log('this.getFreeLayoutData 222',this.getFreeLayoutData)
+        // this.renewFreeLayout()
+        setTimeout(()=>{
+          let t2 = _.cloneDeep(res)
+         
+          this.setFreeLayoutData('mj36hf6h', t2)
+          // this.setFreeLayoutState('mj36hf6h', this.gameDesk.freeLayoutState)
+        },100)
+      } 
+      // else {
+      //   this.setFreeLayoutData('mj36hf6h', this.assistDesk.freeLayoutData)
+      //   this.setFreeLayoutState('mj36hf6h', this.assistDesk.freeLayoutState)
+      //   this.scheme = { ...AssistDesk }
+      // }
+      // this.getFreeLayout1()
       this.showModal = true
       this.previewFlag = true
       this.edit = true
@@ -711,7 +785,7 @@ export default {
         // 这步有可能 会被ai传回数据格式错误 导致报错
         let tmp = JSON.parse(res)
 
-        if (tmp.game.length + tmp.programs.length != exeList.length) return
+        if (tmp.game?.length + tmp.programs.length != exeList.length) return
 
 
         tmp.file = folderList
