@@ -212,7 +212,7 @@
       class="flex"
       :class="communityAuth(desk?.communityNo) ? 'mt-4' : 'mt-0'"
     >
-      <SetupClock></SetupClock>
+      <SetupClock @syncClockData="saveClockData"></SetupClock>
     </div>
   </a-drawer>
 
@@ -424,6 +424,20 @@ export default {
         },
       ];
     }
+
+    // 
+    if(communityMember(this.desk?.communityNo)){
+      const target = {
+        customIndex:this.customIndex,
+        desk:this.desk
+      }
+      loadData("desk",target).then((rs)=>{
+        console.log('查看rs',rs);
+        if(rs){
+          this.clockEvent = rs;
+        }
+      })
+    }
   },
   emit: ["delete"],
   methods: {
@@ -503,6 +517,16 @@ export default {
         seconds: parseFloat(this.value1.$s),
       });
       this.custom = false;
+    },
+    // 同步闹钟数据进行社群成员桌面分享
+    saveClockData(){
+      this.topClockSettingVisible = false;
+      const target = {
+        customIndex:this.customIndex,
+        desk:this.desk
+      }
+      saveData(this.clockEvent,"desk",target);
+      this.$bus.emit("updateSync");
     },
   },
 };
