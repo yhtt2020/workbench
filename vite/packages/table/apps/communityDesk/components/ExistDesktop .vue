@@ -1,29 +1,19 @@
 <!-- 添加已经创建的桌面数据 -->
 <template>
-  <xt-modal v-if="existDeskVisible" v-model="existDeskVisible" custom>
+  <xt-modal
+    v-if="existDeskVisible"
+    v-model="existDeskVisible"
+    title="选择已有桌面"
+    @close="existDeskVisible = false"
+  >
     <div style="width: 500px; height: 480px" class="flex flex-col p-4">
-      <!-- 头部 -->
-      <div class="w-full flex items-center justify-between mb-4">
-        <xt-button w="40" h="40" @click="prevStep">
-          <div class="flex items-center justify-center">
-            <xt-ify-icon icon="fluent:chevron-left-16-regular" size="20" />
-          </div>
-        </xt-button>
-        <span class="xt-text xt-font font-16">选择桌面</span>
-        <xt-button w="40" h="40" @click="existDeskVisible = false">
-          <div class="flex items-center justify-center">
-            <xt-ify-icon icon="fluent:dismiss-16-regular" size="20" />
-          </div>
-        </xt-button>
-      </div>
-
       <!-- 中间桌面数据选择 -->
-      <div style="height: 150px" class="grow">
+      <div style="height: 420px" class="grow">
         <xt-scrollbar :y="true" class="h-full">
           <template v-for="item in deskList">
             <div
-              class="flex items-center xt-bg-2 px-6 py-4 mb-4 rounded-lg"
-              :class="{ 'select-active': item.id === currentDesk.id }"
+              class="flex items-center xt-bg-2 px-6 py-4 mb-4 rounded-lg select-hover pointer"
+              :class="{ 'select-active': item.id === deskItemId }"
               @click="selectDesk(item)"
             >
               <xt-ify-icon
@@ -62,6 +52,7 @@ import { storeToRefs } from "pinia";
 import { cardStore } from "../../../store/card";
 import { communityNavStore } from "../../../components/bottomPanel/store/communityNavStore";
 import _ from "lodash-es";
+import { nanoid } from "nanoid";
 
 // 获取全局事件总线程
 const { proxy } = getCurrentInstance();
@@ -74,10 +65,6 @@ const { desks } = storeToRefs(cardStore());
 const communityNav = communityNavStore();
 const { currentCommunity } = storeToRefs(communityNav);
 
-
-// 用于接收当前选中的桌面数据
-const currentDesk = ref({});
-
 // 获取个人桌面已经创建的桌面数据
 const deskList = computed(() => {
   const filterDesks = _.filter(desks.value, (desk) => {
@@ -85,6 +72,9 @@ const deskList = computed(() => {
   });
   return filterDesks;
 });
+
+// 用于接收当前选中的桌面数据
+const deskItemId = ref(deskList.value[0]?.id);
 
 // 开启已经创建的桌面数据选择弹窗
 const existDeskVisible = ref(false);
@@ -100,26 +90,36 @@ const prevStep = () => {
 
 // 选择需要的桌面
 const selectDesk = (item) => {
-  currentDesk.value = item;
+  deskItemId.value = item.id;
 };
 
 // 添加桌面
 const addDesk = () => {
-  proxy.$bus.emit("updateSetting");
-  const no = currentCommunity.value.item?.no;
-  const option = {
-    ...currentDesk.value,
-    communityNo: no,
-    communityDeskId: `${no}_${currentDesk.value?.id}`,
-  };
-  // 避免重复添加
-  const index = _.findIndex(desks.value, (desk) => {
-    return  Number(no) === Number(desk?.communityNo) && String(desk.id) === String(option.id);
+  // 获取选择中的桌面数据;
+  const deskFound = deskList.value.find((desk) => {
+    return String(desk.id) === String(deskItemId.value);
   });
-  if (index === -1) {
-    desks.value.unshift(option);
+  // 社群id;
+  const no = currentCommunity.value.item?.no;
+  if (deskFound) {
+    const option = {
+      ...deskFound,
+      communityNo: no,
+      id:`${nanoid(5)}`,
+    };
+    // 避免重复添加
+    const index = _.findIndex(desks.value, (desk) => {
+      return (
+        Number(no) === Number(desk?.communityNo) &&
+        String(desk.id) === String(option.id)
+      );
+    });
+    if (index === -1) {
+      desks.value.unshift(option);
+    }
+    existDeskVisible.value = false;
+    proxy.$bus.emit("updateSync");
   }
-  existDeskVisible.value = false;
 };
 
 defineExpose({
@@ -131,5 +131,10 @@ defineExpose({
 .select-active {
   background: rgba(80, 139, 254, 0.2) !important;
   border: 2px solid rgba(80, 139, 254, 0.85);
+}
+.select-hover {
+  &:hover {
+    background: rgba(80, 139, 254, 0.2) !important;
+  }
 }
 </style>

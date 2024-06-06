@@ -148,11 +148,11 @@ import { moreMenus, extraRightMenu, mergeIconFolder } from '../components/desk/n
 import { Notifications } from '../js/common/sessionNotice'
 import { startApp } from '../ui/hooks/useStartApp'
 import { defaultFolderData } from '../apps/folder/src/components/options'
-import { useWindowSize } from '../ui/new/drag/src/hooks/useWindowSize'
 import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
 import { hoverRealItemId } from '../components/desk/navigationBar/hook/hoverRealItemId'
 import { deleteIcon, checkItems } from '../components/card/hooks/addCardToNav'
 
+import { useGlobalStore } from "../apps/global/store";
 // 子菜单混入
 import menuMin from './windowPanel/hook/menu'
 // 主菜单混入
@@ -270,6 +270,7 @@ export default {
     ...mapWritableState(appStore, ['settings']),
     ...mapWritableState(useDeskStore, ['isEnterBar']),
     ...mapWritableState(useNavBarStore, ['isEnterDesk']),
+    ...mapWritableState(useGlobalStore, ["windowWidth", "windowHeight"]),
     // 判断当前为左侧栏还是右侧栏，返回拖拽id
     currentId() {
       if (this.currentNav === 'left') {
@@ -360,43 +361,43 @@ export default {
     } else {
       this.sideList = this.rightNavigationList
     }
-    /**
-     * 监听窗口变化,更新导航栏最大添加个数
-     */
-    this.useWindowSize((size) => {
-      // 获取最大可添加图标个数
-      const windowWidth = size.height.value * 0.8
-      this.parentSize = windowWidth
-      this.maxItemNum = Math.floor((windowWidth) / 72)
-      // console.log(windowWidth,this.maxItemNum,'<<<<<+++=======')
-      const height = windowWidth / (this.navigationList.length * 72)
-      this.navAttribute.navSize = height.toFixed(2) * 100
-      this.navAttribute.navSize = this.navAttribute.navSize < 100 ? this.navAttribute.navSize : 100
-    }, 200)
   },
   watch: {
+    windowHeight:{
+      handler(val){
+        // console.log('windowHeight:>>>v',val,'windowWidth:>>>w',this.windowHeight)
+        const H = val * 0.72
+        this.parentSize = H
+        this.maxItemNum = Math.floor(H / 72)
+        const height = H / (this.navigationList.length * 72)
+        this.navAttribute.navSize = Math.min(100,height.toFixed(2) * 100)
+        // console.log('maxM:>>>',this.maxItemNum,'navSize:>>>',this.navAttribute.navSize)
+      },
+      immediate: true
+    },
     delZone(val) {
       this.delNav = val
     },
     navigationList: {
       handler(newVal, oldVal) {
         // 获取最大可添加图标个数
-        const windowWidth = this.parentSize
-        this.maxItemNum = Math.floor((windowWidth) / 72)
+        // console.log(this.navigationList.length > this.maxItemNum,'maxM:>>',this.maxItemNum,'navSize:>>>',this.navigationList.length)
         if (this.navigationList.length > this.maxItemNum && this.maxItemNum !== 0) {
           if (this.noticeFlag && this.limitFlag) {
             window.$ui.confirm('最多只能添加' + this.maxItemNum + '个', '若继续添加将缩小导航栏', {
               ok: () => {
-                const width = this.parentSize / (this.navigationList.length * 72)
-                this.navAttribute.navSize = width.toFixed(2) * 100
+                const scale = this.parentSize / (this.navigationList.length * 72)
+                this.navAttribute.navSize = Math.min(100,scale.toFixed(2) * 100)
                 this.noticeFlag = false
+                // console.log('maxM:>>>2',this.maxItemNum,'navSize:>>>2',this.navAttribute.navSize)
+
               },
               noText: false,
             })
           }
           if (this.noticeFlag) return
-          const width = this.parentSize / (this.navigationList.length * 72)
-          this.navAttribute.navSize = width.toFixed(2) * 100
+          const scale = this.parentSize / (this.navigationList.length * 72)
+          this.navAttribute.navSize = Math.min(100,scale.toFixed(2) * 100)
         }
       },
       immediate: true,
@@ -846,7 +847,6 @@ export default {
     closeFolder() {
       this.folderVisible = false
     },
-    useWindowSize,
     // 添加导航图标
     // editNavigation(item) {
     //   if (item.component) {

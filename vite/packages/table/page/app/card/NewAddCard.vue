@@ -160,6 +160,7 @@ import { singleStore } from '../../../js/common/single'
 import { taskStore } from '../../../apps/task/store'
 import { getCardData } from '../../../apps/ttApp/src/hooks/getCardData'
 import { comCanUse } from '../../../permission/usePlat'
+import { disabledCard } from "../../../apps/communityDesk/store/desktopOtherData";
 
 export default {
   name: 'AddCard',
@@ -225,6 +226,8 @@ export default {
       },
       keyword: '', //真正搜索词
       searching: false,
+      // 社群桌面场景下不能使用的组件数据
+      disabledCard,
     }
   },
   unmounted () {
@@ -235,20 +238,10 @@ export default {
     if (this.currentId == 'M0302') {
       this.updateNavIndex(7)
     }
-    // 用于是否满足社群桌面条件的小组件卡片数据。
-    const disabledCard = [
-      'Audio',
-      'capture',
-      'supervisory',
-      'shortcutKey',
-      'myFriends',
-      'gameAssis',
-      'clipBoard',
-      'Courier',
-    ]
+    // 过滤满足社群桌面条件的小组件卡片数据。
     const mapFilter = this.baseNavList.map((nav) => {
       const filterChildren = nav.children.filter((item) => {
-        return !disabledCard.includes(item.name)
+        return !this.disabledCard.includes(item.name)
       })
       return {
         ...nav,

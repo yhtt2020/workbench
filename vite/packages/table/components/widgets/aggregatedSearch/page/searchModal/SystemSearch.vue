@@ -17,6 +17,8 @@ const words = inject("words");
 const isWebSource = inject("isWebSource");
 const currentSource = inject("currentSource");
 const ctrlSelectIndex = inject("ctrlSelectIndex");
+const saveSearchSource = inject("saveSearchSource");
+
 const data = inject("data");
 
 const currentIndex = ref(0);
@@ -143,7 +145,7 @@ const selectAll = (name) => {
 };
 const openNote = (data) => {};
 const openSystemApp = (obj, name) => {
-  console.log("data :>> ", obj.icon);
+console.log('obj :>> ', obj);
   const history: HistoryData = {
     name: obj.name,
     source: obj.icon,
@@ -151,7 +153,7 @@ const openSystemApp = (obj, name) => {
     showType: name,
     openWith: obj.type,
   };
-
+  saveSearchSource()
   data.value.historyList.push(history);
 
   open(history)

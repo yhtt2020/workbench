@@ -48,13 +48,13 @@ defineExpose({
     <div
       v-for="(item, index) in data.historyList"
       @click="search(index)"
-      class="text-sm p-3 w-full h-12 rounded-lg flex items-center justify-between hover:tt-theme-bg-2"
+      class="text-sm p-3 w-full h-12 rounded-lg flex items-center justify-between hover:tt-theme-bg-2 cursor-pointer"
       :class="{
         'xt-theme-bg-2': index == historyIndex,
       }"
     >
       <div class="flex items-center">
-        <xt-mix-icon :icon="item.icon" type="select" class="mr-2.5" />
+        <xt-mix-icon :icon="item.source" type="select" class="mr-2.5" />
         {{ item.name }}
       </div>
       <a-dropdown

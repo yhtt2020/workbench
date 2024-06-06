@@ -339,14 +339,13 @@ onBeforeMount(() => {
     // console.time("组件数据更新");
     props.customData = _.defaults(currentData, defaultData);
     props.customData._updateFlag = defaultData._updateFlag;
-    // props.customData = _.merge(props.customData, props.options.defaultData);
-    // console.timeEnd("组件数据更新");
     // console.log(
     //   "组件数据更新 ID :>> ",
     //   props.customIndex,
     //   " name :>> ",
     //   props.header.title
     // );
+    // console.timeEnd("组件数据更新");
   }
 });
 

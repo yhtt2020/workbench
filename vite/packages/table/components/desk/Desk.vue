@@ -18,8 +18,13 @@
     >
       暂无卡片
     </div>
+
+    <!--
+      communityInfo?.role !== 'member' ? editing : showRightMenu
+      这里做社群桌面是否为成员场景的情况
+    -->
     <FloatMenu
-      v-if="editing"
+      v-if="communityInfo?.role !== 'member' ? editing : showRightMenu"
       @addIcon="newAddIcon"
       @addFolder="addFolder"
       @add="newAddCard"
@@ -34,6 +39,7 @@
       :hide="hide"
       :communityInfo="communityInfo"
     />
+
     <Drop :classes="getClasses()">
       <!-- 自由布局 -->
       <FreeLayoutScrollbar
@@ -141,7 +147,7 @@
                   }"
                 >
                   <component
-                    :desk="desk"
+                    :desk="currentDesk"
                     :is="item.name"
                     :customIndex="item.id"
                     :customData="item.customData"
@@ -187,16 +193,15 @@
     >
       <NewAddCard
         v-if="addCardVisible"
+        :desk="currentDesk"
         @close="hideAddCard"
         @addSuccess="hideAddCard"
-        :desk="currentDesk"
         @onBack="
           () => {
             this.addCardVisible = false;
             console.log('返回');
           }
         "
-        :communityRole="communityRole"
       ></NewAddCard>
     </div>
   </transition>
@@ -204,9 +209,9 @@
   <!-- 添加图标 -->
   <EditNewNavigation
     v-if="editVisible"
+    :communityRole="communityInfo?.role ? true : false"
     @setQuick="editVisible = false"
     @addIcon="addIcon"
-    :communityRole="communityRole"
   ></EditNewNavigation>
   <GalleryModal ref="galleryRef" />
 </template>
@@ -277,10 +282,6 @@ export default {
       required: false,
       default: () => {
         return {
-          // dragStartPredicate: {
-          //   distance: 10,
-          //   delay: 1000,
-          // },
           dragAutoScroll: {},
           layout: {
             // fillGaps: true,
@@ -327,12 +328,32 @@ export default {
       type: Boolean,
       default: () => false,
     },
-    communityInfo:{
+    communityInfo: {
       type: Object,
       required: true,
     },
+    // 社群成员桌面下开启右键菜单
+    showRightMenu:{
+      type: Boolean,
+      required: true,
+      default: false,
+    }
   },
   watch: {
+    /**
+     * 原则上需要监听的数据应该是具体的数据
+     * 而不是currentDesk整个对象
+     */
+    // 此处和 "currentDesk.settings" 有相同的判断逻辑
+    // currentDesk: {
+    //   handler(newVal) {
+    //     if (!this.isFreeLayout) {
+    //       // newVal.layoutSize = this.getLayoutSize();
+    //       this.muuriOptions.layout.horizontal = !newVal.settings?.vDirection;
+    //     }
+    //   },
+    //   deep: true,
+    // },
     adjustLayout(val) {
       if (val) {
         this.toggleEditing();
@@ -360,26 +381,14 @@ export default {
         });
       },
     },
-    currentDesk: {
+    deskSize: {
       handler(newVal) {
-        this.desk = newVal;
         if (!this.isFreeLayout) {
-          newVal.layoutSize = this.getLayoutSize();
-
-
-          // if (!newVal.settings) {
-          //   newVal.settings=
-          //     .settings = {
-          //     cardZoom: 100,
-          //     marginTop: 0,
-          //     cardMargin: 5,//卡片间隙
-          //     vDirection: false,
-          //   }
-          // }
-          this.muuriOptions.layout.horizontal = !newVal.settings?.vDirection;
+          this.currentDesk.layoutSize = this.getLayoutSize();
         }
       },
       deep: true,
+      immediate: true,
     },
     // 监听ID变化
     "currentDesk.id": {
@@ -389,6 +398,7 @@ export default {
         this.$bus.off("startAdjust");
         this.$bus.off("lockScreen");
         this.$bus.off("scrollbarUpdate");
+        this.$bus.off("redirect");
         let obj = {
           id: 20,
           newIcon: "fluent:more-horizontal-16-filled",
@@ -447,7 +457,11 @@ export default {
     ]),
     ...mapWritableState(useFloatMenuStore, ["menus"]),
     ...mapWritableState(useNavigationStore, ["selectNav", "isDesk"]),
-    ...mapWritableState(useDeskStore, ["autoOpenEdit", "adjustLayout"]),
+    ...mapWritableState(useDeskStore, [
+      "autoOpenEdit",
+      "adjustLayout",
+      "deskSize",
+    ]),
     ...mapWritableState(useAppCenterStore, ["visible"]),
     // 根据当前桌面配置确定展示的对应桌面设置
     currentDeskEnv() {
@@ -484,7 +498,6 @@ export default {
   },
   data() {
     return {
-      desk: this.currentDesk,
       showGrid: false,
       loaded: false,
       vurriEnable: false,
@@ -509,17 +522,6 @@ export default {
     };
   },
   mounted() {
-    // 空桌面添加图标保持弹窗
-    // this.editVisible = this.keepAddIcon;
-    // this.$bus.on("addCard", (data) => {
-    //   let value = _.cloneDeep(data);
-    //   console.log("value :>> ", this.currentDesk);
-    //   this.currentDesk.cards.push({
-    //     name: "folder",
-    //     id: Date.now(),
-    //     customData: value,
-    //   });
-    // });
     // 自动打开编辑
     this.$bus.on("startAdjust", () => {
       this.toggleEditing();
@@ -545,19 +547,12 @@ export default {
     if (window.showed) {
       this.showGrid = true;
     }
-    this.resizeHandler = () => {
-      this.currentDesk.layoutSize = this.getLayoutSize();
-    };
-    this.getLayoutSize();
-    window.addEventListener("resize", this.resizeHandler);
     this.loaded = true;
-    this.resetLayout();
   },
   unmounted() {
     if (this.fullScreen) {
       this.fullScreen = false;
     }
-    window.removeEventListener("resize", this.resizeHandler);
   },
   methods: {
     ...mapActions(useFreeLayoutStore, ["clearFreeLayoutData"]),
@@ -579,7 +574,9 @@ export default {
         return "100%";
       } else {
         if (this.usingSettings.vDirection === true) {
-          return (this.usingSettings.containerWidth || 1024) + "px";
+          return (
+            (this.usingSettings.containerWidth || this.deskSize.width) + "px"
+          );
         } else {
           return "100%";
         }
@@ -592,8 +589,9 @@ export default {
         if (this.usingSettings.vDirection === true) {
           return "100%";
         } else {
-          console.log("this.usingSettings :>> ", this.usingSettings);
-          return (this.usingSettings.containerHeight || 800) + "px";
+          return (
+            (this.usingSettings.containerHeight || this.deskSize.height) + "px"
+          );
         }
       }
     },
@@ -754,8 +752,10 @@ export default {
      */
     stashLayout() {
       let bound = {
-        width: this.$refs.deskContainer.clientWidth,
-        height: this.$refs.deskContainer.clientHeight,
+        // width: this.$refs.deskContainer?.clientWidth,
+        // height: this.$refs.deskContainer?.clientHeight,
+        width: this.deskSize.width,
+        height: this.deskSize.height,
       };
       this.stashBound = bound;
     },
@@ -769,8 +769,10 @@ export default {
         return;
       }
       let bound = {
-        width: this.$refs.deskContainer.clientWidth,
-        height: this.$refs.deskContainer.clientHeight,
+        // width: this.$refs.deskContainer?.clientWidth,
+        // height: this.$refs.deskContainer?.clientHeight,
+        width: this.deskSize.width,
+        height: this.deskSize.height,
       };
       this.adjustZoom = bound.height / this.stashBound.height;
       this.update();
@@ -782,8 +784,10 @@ export default {
     getLayoutSize() {
       if (!this.isFreeLayout) {
         this.currentDesk.layoutSize = {
-          width: this.$refs.deskContainer.clientWidth,
-          height: this.$refs.deskContainer.clientHeight,
+          // width: this.$refs.deskContainer?.clientWidth,
+          // height: this.$refs.deskContainer?.clientHeight,
+          width: this.deskSize.width,
+          height: this.deskSize.height,
         };
         if (this.currentDesk?.settings?.preparing) {
           message.loading({
@@ -794,8 +798,10 @@ export default {
             setTimeout(() => {
               this.$nextTick(() => {
                 const fullLayoutSize = {
-                  width: this.$refs.deskContainer.clientWidth,
-                  height: this.$refs.deskContainer.clientHeight,
+                  // width: this.$refs.deskContainer?.clientWidth,
+                  // height: this.$refs.deskContainer?.clientHeight,
+                  width: this.deskSize.width,
+                  height: this.deskSize.height,
                 };
                 const settings = this.currentDesk.settings;
                 const oldLayoutSize = this.settings.layoutSize;

@@ -11,7 +11,7 @@ import {
   useElementSize,
 } from "../../../ui/hooks/useCardSize";
 import { useFreeLayoutStore } from "../freeLayout/store";
-import {useCutLayout } from './useCutLayout'
+import { useCutLayout } from "./useCutLayout";
 
 const defaultOptions = {
   mainList: [],
@@ -23,218 +23,142 @@ const defaultOptions = {
 };
 
 export const useCustomLayout = async (options) => {
-  const resetLeft = () => {
-    left = freeLayoutEnv.value.scrollLeft / scaleFactor + position;
-    const [snappedX, snappedY] = getSnapGrid(
-      [134, 96],
-      left,
-      top,
-      getFreeLayoutState.value.canvas.width /
-        getFreeLayoutState.value.canvas.zoom,
-      getFreeLayoutState.value.canvas.height /
-        getFreeLayoutState.value.canvas.zoom,
-      6
-    );
-    // left = snappedX;
+  // 合并默认配置和用户配置
+  const mergedOptions = _.merge({}, defaultOptions, options);
+  const { mainList, headerList, folderList, columns, cb, test } = mergedOptions;
+  let layoutWidth = useGridToWidth(columns * 2);
+
+  let currentLeft = 0;
+  let currentTop = 0;
+  // 换行检测
+  const isExceedMaxWidth = (width: any) => {
+    if (currentLeft + width > layoutWidth) {
+      return true;
+    }
   };
-  // 卡片数据展示
-  const itemStatus = (item) => {
-    if (!test) return;
-    const { width, height }: any = useElementSize(item.customData.customSize);
+  // 当前元素宽高
+  let currentWidth = 0;
+  let currentHeight = 0;
+  // 上一个元素宽高
+  let prevWidth = 0;
+  let prevHeight = 0;
+  //
+  let fillTop = 0;
+  let fillLeft = 0;
+  //
+  let fillWidth = 0;
+  let fillHeight = 0;
+  // 1 实现卡片分类
+  const { arr2x2, arr2x4, arr4x4, arr1x1, arrSpecial } =
+    cardClassification(mainList);
+  /**
+   * 换行填充
+   * 采用高度优先
+   */
+  const fillGap = () => {
+    // 无位置
+    if (isExceedMaxWidth(134)) {
+      return;
+    }
 
-    console.log(
-      "\u001b[34m" +
-        "----------------数据处理开始----------------" +
-        "\u001b[0m"
-    );
-    console.log(
-      "id :>> ",
-      item?.id,
-      ",name :>> ",
-      item.customData.name || item.name,
-      ",元素width :>> ",
-      width,
-      ",当前位置left :>> ",
-      left - freeLayoutEnv.value.scrollLeft,
-      ",当前位置缩放后left :>> ",
-      left - freeLayoutEnv.value.scrollLeft / scaleFactor,
-      "item",
-      item
-    );
+    if (arr2x4.length > 0 && prevHeight - 420 >= 0) {
+      console.log("2x4填充 :>> ");
+      fill(arr2x4);
+    } else if (arr2x2.length > 0 && prevHeight - 204 >= 0) {
+      console.log("2x2填充 :>> ");
+      fill(arr2x2);
+    } else if (arr1x1.length > 0 && prevHeight - 204 >= 0) {
+      console.log("1x1填充 :>> ");
+      fill(arr1x1);
+    } else {
+      return;
+    }
+
+    fillGap();
   };
-  // 换行数据展示
-  const widthDetectionStatus = (width, res, active) => {
-    if (!test) return;
-    console.log(
-      "\u001b[31m" + "----------------换行检测----------------" + "\u001b[0m"
-    );
-    console.log(
-      "当前元素宽度",
-      width,
-      "画布宽度 :>> ",
-      layoutWidth,
-      "当前宽度 :>> ",
-      res,
-      "是否换行 :>> ",
-      active
-    );
+  // 当前top
+  const fill = (arr: any) => {
+    const item = arr[0];
+    const { width, height }: any = useElementSize(item?.customData?.customSize);
+    /**
+     * 判断是否需要换行
+     */
+    if (fillTop + height > prevHeight + currentTop) {
+      console.log("填充过程换行 :>> ");
+      // 换行
+      currentLeft += fillWidth + 12;
+      fillLeft = currentLeft;
+      // 重置填充高度
+      fillTop = currentTop;
+    }
+    /**
+     * 判断是否超出最大宽度
+     */
+    if (isExceedMaxWidth(134)) {
+      // 数据归还
+      console.log("超出了 :>> ");
+      return;
+    }
+
+    console.log("完成一次填充 :>> ", item);
+    // 将数据分离原数组
+    arr.splice(0, 1);
+    updateCardPosition(fillTop, fillLeft, item);
+    fillTop += height + 12;
+    fillWidth = width;
+    fillHeight = height;
   };
-  // 检测是否超出
-  const widthDetection = (width) => {
-    let res =
-      left - freeLayoutEnv.value.scrollLeft / scaleFactor - position + width;
+  const start = () => {
+    if (currentLeft > 0) {
+      console.log("填充启动 :>> ");
+      fillTop = currentTop;
+      fillLeft = currentLeft;
+      fillGap();
+    }
 
-    // const active = res > layoutWidth + columns;
-    const active = res > layoutWidth;
-    widthDetectionStatus(width, res, active);
-
-    return active;
+    currentLeft = 0;
+    currentTop += prevHeight + 12;
+    prevHeight = 0;
   };
-  // // 设置卡片数据
-  // const setData = (arr: any) => {
-  //   currentHeight = 0;
-  //   let last = true;
-  //   // 遍历每个需要渲染的元素
-  //   for (let item of arr.splice(0, arr.length)) {
-  //     // 打印元素信息
-  //     itemStatus(item);
-  //     // 获取元素大小
-  //     const { width, height }: any = useElementSize(item.customData.customSize);
-  // 宽度超出容器宽度
-  //     if (res > layoutWidth) {
-  //       console.log("宽度超出容器宽度 :>> ");
-  //       currentTop = top;
-  //       // 填充空缺的数据
-  //       fillGapAlgorithm();
-  //       resetLeft();
-  //       top += height + 12;
-  //     }
-  //     // 宽度等于容器宽度
-  //     else if (res == layoutWidth) {
-  //       console.log("宽度等于容器宽度 :>> ");
-  //       addCard(top, left, item);
-  //       resetLeft();
-  //       top += height + 12;
-  //       continue;
-  //     }
-  //     if (!last && height != currentHeight) {
-  //       console.log(
-  //         `----------------高度不相等${height - currentHeight}----------------`
-  //       );
-  //       // 先填充空缺的数据
-  //       let res =
-  //         left - freeLayoutEnv.value.scrollLeft / scaleFactor - position;
-  //       currentTop += currentHeight + 12;
-
-  //       fillHeight = currentHeight;
-  //       if (res) {
-  //         fillGapAlgorithm();
-  //       }
-  //       // 重置位置
-  //       resetLeft();
-  //     }
-  //     // 宽度小于容器宽度
-  //     addCard(top, left, item);
-  //     left += width + 12;
-  //     currentHeight = height;
-
-  //     fillHeight = currentHeight;
-  //     if (last) last = false;
-  //   }
-  //   // 循环结束
-  //   currentTop = top;
-  //   let res = left - freeLayoutEnv.value.scrollLeft / scaleFactor - position;
-  //   if (res) {
-  //     fillGapAlgorithm();
-  //   }
-  //   resetLeft();
-  //   fillHeight = 0;
-  //   top += currentHeight + 12;
-  // };
-  // 设置卡片数据
-  const setData = (arr: any) => {
-    currentHeight = 0;
-    let last = true;
-    for (let item of arr.splice(0, arr.length)) {
-      // 处理元素位置
+  let lastHeight = 0;
+  const cardPositionInit = (arr: any) => {
+    if (!arr.length) return;
+    // 循环取出
+    for (const item of arr.splice(0, arr.length)) {
+      // 获取宽高
       const { width, height }: any = useElementSize(item.customData.customSize);
-      itemStatus(item);
-      // 元素超出
-      let res =
-        left - freeLayoutEnv.value.scrollLeft / scaleFactor - position + width;
-      // 宽度等于容器宽度
-      if (res == layoutWidth) {
-        console.log("宽度等于容器宽度 :>> ");
-        addCard(top, left, item);
-        resetLeft();
-        top += height + 12;
-        currentTop = top;
-        continue;
-      } else if (res > layoutWidth) {
-        console.log(
-          "\u001b[31m" +
-            `----------------元素超出${
-              height - currentHeight
-            }----------------` +
-            "\u001b[0m"
-        );
-        currentTop = top;
-        // 先填充空缺的数据
-        fillGapAlgorithm();
-        // 重置位置
-        resetLeft();
-        // 增加高度
-        top += currentHeight + 12;
+
+      currentWidth = width;
+      currentHeight = height;
+      // 是否换行
+      if (isExceedMaxWidth(width)) {
+        console.log("换行介入 :>> ");
+        start();
+      } else if (prevHeight != 0 && prevHeight != currentHeight) {
+        console.log("高度不相等介入 :>> ");
+        /**
+         * 是否两个元素高度不一致
+         * 为 0 代表第一次 则不换行
+         */
+        currentLeft = 0;
+        currentTop += prevHeight + 12;
       }
-      if (!last && height != currentHeight) {
-        console.log(
-          "\u001b[31m" +
-            `----------------高度不相等${
-              height - currentHeight
-            }----------------` +
-            "\u001b[0m"
-        );
-        // 先填充空缺的数据
-        let res =
-          left - freeLayoutEnv.value.scrollLeft / scaleFactor - position;
-        currentTop += currentHeight + 12;
-        currentHeight = height;
-        console.log("元素超出 get currentHeight :>> ", currentHeight);
+      console.log("正常添加 :>> ", item);
 
-        fillHeight = currentHeight;
-        if (res) {
-          fillGapAlgorithm();
-        }
-        // 重置位置
-        resetLeft();
-        addCard(top, left, item);
-        left += width + 12;
-      } else {
-        addCard(top, left, item);
-        left += width + 12;
-        currentHeight = height;
-      }
-      fillHeight = currentHeight;
-      if (last) last = false;
-      console.log(
-        "\u001b[34m" +
-          "----------------数据处理结束----------------" +
-          "\u001b[0m"
-      );
+      updateCardPosition(currentTop, currentLeft, item);
+      currentLeft += width + 12;
+      lastHeight = prevHeight;
+      prevWidth = currentWidth;
+      prevHeight = currentHeight;
     }
-
-    currentTop = top;
-
-    let res = left - freeLayoutEnv.value.scrollLeft / scaleFactor - position;
-    if (res) {
-      fillGapAlgorithm();
-    }
-    resetLeft();
-    fillHeight = 0;
-    top += currentHeight + 12;
+    start();
   };
-  // 获取元素宽度
-  // 缩放算法
+
+  const freeLayoutStore: any = useFreeLayoutStore();
+  const { getFreeLayoutState, freeLayoutEnv } = storeToRefs(freeLayoutStore);
+  let position;
+  let containerWidth = freeLayoutEnv.value.scrollWidth;
+  let scaleFactor = 1;
   const scaleAlgorithm = () => {
     let currentZoom = getFreeLayoutState.value.canvas.zoom;
     if (layoutWidth * currentZoom >= containerWidth) {
@@ -247,169 +171,42 @@ export const useCustomLayout = async (options) => {
     }
     scaleFactor = currentZoom;
   };
-  // 填充算法
-  const fillGapAlgorithm = async () => {
-    // 无余数
-    if (arr2x4.length == 0 && arr2x2.length == 0 && arr1x1.length == 0) {
-      return true;
-    }
-    // 无位置
-    let active = widthDetection(134);
-    console.log("active :>> ", active);
-    if (active) {
-      console.log("无位置 :>> ");
-      return;
-    }
-    // 可以存放2x4
-    if (arr2x4.length > 0 && fillHeight - 280 >= 0) {
-      fill(arr2x4);
-    } else if (arr2x2.length > 0) {
-      fill(arr2x2);
-    } else if (arr1x1.length > 0) {
-      fill(arr1x1);
-    } else {
-      return;
-    }
+  scaleAlgorithm();
 
-    fillGapAlgorithm();
-  };
-  // 填充实现
-  const fill = async (arr, height = fillHeight) => {
-    let flag = false;
-    let itemWidth = 280,
-      itemHeight = 204;
-    for (let item of arr.splice(0, 1)) {
-      if (!item) return;
-      const { width, height }: any = useElementSize(item.customData.customSize);
-      itemWidth = width;
-      itemHeight = height;
-
-      flag = fillHeight - itemHeight < 0;
-
-      if (flag) {
-        array.push(item);
-        return;
-      }
-      fillHeight -= height;
-      itemStatus(item);
-      addCard(currentTop, left, item);
-      currentTop += height + 12;
-    }
-    if (fillHeight - 96 < 0) {
-      console.log("换列操作 :>> ");
-      currentTop = top;
-      left += itemWidth + 12;
-      fillHeight = currentHeight;
-    }
-    return;
-  };
-
-  // 合并默认配置和用户配置
-  const mergedOptions = _.merge({}, defaultOptions, options);
-  const { mainList, headerList, folderList, columns, cb, test } = mergedOptions;
-
-  const freeLayoutStore: any = useFreeLayoutStore();
-  const { getFreeLayoutData, getFreeLayoutState, freeLayoutEnv } =
-    storeToRefs(freeLayoutStore);
+  /**
+   * 初始化自由布局
+   */ // 扩展画布大小
   getFreeLayoutState.value.canvas.height += 20000;
   getFreeLayoutState.value.canvas.width += 20000;
-  getFreeLayoutState.value.system.hide = true;
+  // 启用自由布局
   if (!getFreeLayoutState.value.system.isFreeLayout)
     getFreeLayoutState.value.system.isFreeLayout = true;
-
+  // 隐藏
+  getFreeLayoutState.value.system.hide = true;
   let positioningId = await addPositioningData();
-  let containerWidth = freeLayoutEnv.value.scrollWidth;
-  let layoutWidth = useGridToWidth(columns * 2);
-  let scaleFactor = 1;
-  let position = 50;
-  // 重置left坐标
-
-  let left = 1;
-  let top = freeLayoutEnv.value.scrollTop / scaleFactor + 12;
-  let currentHeight;
-  let currentTop = top;
-  let fillHeight;
-
-  scaleAlgorithm();
-  // 初始化数据
-  resetLeft();
-
-  let { arr2x2, arr2x4, arr4x4, arr1x1, arrSpecial } = arraySplit(mainList);
-
-  let a = [...arr2x2];
-  let b = [...arr2x4];
-  let c = [...arr4x4];
-  let d = [...arrSpecial];
-  console.log("不规则大小 :>> ", d);
-  console.log("4x4 :>> ", c);
-  console.log("2x4 :>> ", b);
-  console.log("2x2 :>> ", a);
-  let array: any = [];
-  // 定制头部
-  if (headerList && headerList.length) {
-    let { arr2x2: header2x2, arr2x4: header2x4 } = arraySplit(headerList);
-    let e = [...header2x2];
-    console.log("e :>> ", e);
-    let num2x2 = header2x2.length;
-    currentHeight = 420;
-    fillHeight = currentHeight;
-    for (let index = 0; index < num2x2; index++) {
-      fill(header2x2, 420);
-    }
-    setData(header2x4);
-  }
-
-  // 定制文件夹
-  if (folderList && folderList.length) {
-    let { arr2x2: folder2x2 } = arraySplit(folderList);
-    resetLeft();
-    setData(folder2x2);
-    resetLeft();
-    currentHeight = 0;
-    currentTop = top;
-    fillHeight = 0;
-  }
-  resetLeft();
-  // mainList
-  if (arrSpecial.length > 0) {
-    setData(arrSpecial);
-  }
-  if (arr4x4.length > 0) {
-    setData(arr4x4);
-  }
-  if (arr2x4.length > 0) {
-    setData(arr2x4);
-  }
-  if (arr2x2.length > 0) {
-    setData(arr2x2);
-  }
-  if (arr1x1.length > 0) {
-    setData(arr1x1);
-  }
-
+  cardPositionInit(arrSpecial);
+  cardPositionInit(arr4x4);
+  cardPositionInit(arr2x4);
+  cardPositionInit(arr2x2);
+  cardPositionInit(arr1x1);
   // 开始收尾
   useDelCard(positioningId);
   cb && cb(position);
-  // resetLeft();
-  // getFreeLayoutState.value.mode.align = "custom";
-  // const zoom = getFreeLayoutState.value.canvas.zoom;
-  // getFreeLayoutState.value.line.centerLine.y =
-  //   freeLayoutEnv.value.scrollTop / scaleFactor
-  // getFreeLayoutState.value.line.centerLine.x =
-  //   (left - position + freeLayoutEnv.value.scrollWidth / 2) / zoom;
-  // getFreeLayoutState.value.system.hide = false;
 };
-const arraySplit = (arr) => {
-  let arr2x2: any = [];
-  let arr2x4: any = [];
-  let arr4x4: any = [];
-  let arr1x1: any = [];
-  let arrSpecial: any = [];
-
-  console.log("拿到需要整理的数组 :>> ", arr);
+/**
+ * 卡片分类
+ */
+const cardClassification = (arr) => {
+  console.log("1、卡片分类 :>> ");
+  const arr2x2: any = [];
+  const arr2x4: any = [];
+  const arr4x4: any = [];
+  const arr1x1: any = [];
+  const arrSpecial: any = [];
+  const arrNoInfo: any = [];
   arr.forEach((item) => {
-    if (!item.customData?.customSize) {
-      console.log("无信息元素 item.customData :>> ", item.customData);
+    if (!item?.customData?.customSize) {
+      arrNoInfo.push(item);
       return;
     }
 
@@ -430,6 +227,19 @@ const arraySplit = (arr) => {
       arrSpecial.push(item);
     }
   });
+
+  let a = [...arr2x2];
+  let b = [...arr2x4];
+  let c = [...arr4x4];
+  let d = [...arr1x1];
+  let e = [...arrSpecial];
+  console.log("arr2x2 :>> ", a.length, a);
+  console.log("arr2x4 :>> ", b.length, b);
+  console.log("arr4x4 :>> ", c.length, c);
+  console.log("arr1x1 :>> ", d.length, d);
+  console.log("arrSpecial :>> ", e.length, e);
+  console.log("arrNoInfo :>> ", arrNoInfo.length, arrNoInfo);
+
   return {
     arr2x2,
     arr2x4,
@@ -444,18 +254,17 @@ const arraySplit = (arr) => {
  * 用于打开自由布局画布
  */
 const addPositioningData = () => {
-  return new Promise((resolve, reject) => {
-    let positioningId = addCard(-999, -999, {});
+  return new Promise((resolve) => {
+    let positioningId = updateCardPosition(-999, -999, {});
     setTimeout(() => {
       resolve(positioningId);
     }, 100); // 在100毫秒后返回
   });
 };
 // 添加卡片
-const addCard = (top, left, item) => {
+const updateCardPosition = (top, left, item) => {
   const freeLayoutStore: any = useFreeLayoutStore();
-  const { getFreeLayoutData, getFreeLayoutState, freeLayoutEnv } =
-    storeToRefs(freeLayoutStore);
+  const { getFreeLayoutData } = storeToRefs(freeLayoutStore);
 
   let id = item?.id || nanoid(4);
 
@@ -463,10 +272,9 @@ const addCard = (top, left, item) => {
     id = item?.id || Date.now();
   }
 
-  let a = left;
   getFreeLayoutData.value[id] = {
-    left: a,
-    top: top,
+    left,
+    top,
     index: 1,
     id,
   };
