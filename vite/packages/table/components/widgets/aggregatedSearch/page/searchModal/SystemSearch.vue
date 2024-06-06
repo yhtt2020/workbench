@@ -13,13 +13,13 @@ import { storeToRefs } from "pinia";
 import Scrollbar from "./Scrollbar.vue";
 import { HistoryData } from "./types";
 import { useAppModal } from "../../../../../hooks";
-const words: any  = inject("words");
+const words: any = inject("words");
 const isWebSource = inject("isWebSource");
 const currentSource = inject("currentSource");
 const ctrlSelectIndex: any = inject("ctrlSelectIndex");
 const saveSearchSource = inject("saveSearchSource") as Function;
 
-const data:any = inject("data");
+const data: any = inject("data");
 
 const currentIndex = ref(0);
 import { startApp } from "../../../../../ui/hooks/useStartApp";
@@ -213,7 +213,16 @@ const openSystemApp = (obj, name) => {
         <!-- <div class="ml-1 text-xs tt-text-3">{{ data.name }}</div> -->
       </div>
     </template>
-    <template v-else> 无数据 </template>
+    <template v-else>
+      <div class=" w-full h-full flex flex-col items-center justify-center">
+        <xt-ify-icon
+          icon="fluent-emoji:magnifying-glass-tilted-right"
+          size="56"
+          class="mb-4"
+        />
+        <span class="xt-text xt-font font-16">没有找到相关内容</span>
+      </div>
+    </template>
     <!-- <div>
       {{ items }}
     </div> -->
