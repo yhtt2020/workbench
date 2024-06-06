@@ -368,9 +368,10 @@ export default {
       );
       if(this.communityAuth(this.desk?.communityNo)){
         const target = {
-          communityIndex:this.communityIndex,
-          desk:this.desk,
+          customIndex: this.customIndex,
+          desk: this.desk,
         };
+        console.log('打印查看und',target);
         const option = {
           url:this.url,
         }

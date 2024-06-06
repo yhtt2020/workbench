@@ -376,10 +376,9 @@ export default {
 
       if(communityAuth(this.desk?.communityNo)){
         const target = {
-          communityIndex:this.communityIndex,
-          desk:this.desk,
-        }
-  
+          customIndex: this.customIndex,
+          desk: this.desk,
+        };
         saveData(this.myData,"desk",target);
         this.$bus.emit("updateSync");
       }

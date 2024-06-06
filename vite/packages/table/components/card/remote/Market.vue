@@ -1,7 +1,6 @@
 <template>
   <!-- <div style="width:100%;height:100%;overflow:auto"> -->
   <div>
-    <xt-task id="m0303" no="3"></xt-task>
     <div class="head-nav" id="nav" v-if="listType === 'my'">
       <span>我分享外部小组件（{{ shareList.length }}）</span>
       <div class="block-btn" @click="shareNow">立即分享</div>

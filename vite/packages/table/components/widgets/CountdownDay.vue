@@ -424,10 +424,14 @@ export default {
         customIndex: this.customIndex,
       });
       this.saveCountdownDay();
-      this.$bus.emit("updateSync");
       this.eventValue = "";
       this.dateValue = null;
       message.info("添加成功！");
+      if (communityAuth(this.desk?.communityNo)) {
+        setTimeout(() => {
+          this.$bus.emit("updateSync");
+        }, 200);
+      }
     },
     setCountdownDay() {
       let countdownDay = JSON.parse(JSON.stringify(this.countdownDay));
