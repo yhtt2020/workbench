@@ -1,16 +1,26 @@
 <template>
   <div class="flex items-center justify-center h-full" v-if="!data.length">
-
     <template v-if="disableEdit">
-       <div class="flex flex-col w-full items-center justify-center">
-         <xt-ify-icon icon="fluent-emoji:ballot-box-with-ballot" size="56" class="mb-4"/>
-         <span class="xt-text-2 font-14 xt-font">当前没有任务,放松一下</span>
-       </div>
+      <div class="flex flex-col w-full items-center justify-center">
+        <xt-ify-icon
+          icon="fluent-emoji:ballot-box-with-ballot"
+          size="56"
+          class="mb-4"
+        />
+        <span class="xt-text-2 font-14 xt-font">当前没有任务,放松一下</span>
+      </div>
     </template>
 
     <template v-else>
-      <div class="flex flex-col w-full items-center justify-center pointer" @click="goTodo">
-        <xt-ify-icon icon="fluent-emoji:ballot-box-with-ballot" size="56" class="mb-4"/>
+      <div
+        class="flex flex-col w-full items-center justify-center pointer"
+        @click="goTodo"
+      >
+        <xt-ify-icon
+          icon="fluent-emoji:ballot-box-with-ballot"
+          size="56"
+          class="mb-4"
+        />
         <span class="xt-text-2 font-14 xt-font">点击进入待办应用</span>
       </div>
     </template>
@@ -30,7 +40,11 @@
   >
     <div v-for="(task, index) in data" :key="task.nanoid">
       <div class="task-item">
-        <div class="todo-style" style="min-width: 32px">
+        <div
+          class="todo-style"
+          style="min-width: 32px"
+          v-if="!communityMember(todoDesk?.communityNo)"
+        >
           <!-- <a-checkbox v-model:checked="task.completed"></a-checkbox> -->
           <a-checkbox @change="changeState($event, task)"></a-checkbox>
         </div>
@@ -86,14 +100,19 @@ import VueCustomScrollbar from "../../../../../src/components/vue-scrollbar.vue"
 import Emoji from "../../comp/Emoji.vue";
 import XtButton from "../../../ui/libs/Button/index.vue";
 import { PlusSquareOutlined } from "@ant-design/icons-vue";
+import { communityMember } from "../../../apps/communityDesk/hooks/deskCreateMethod";
 
 export default {
   name: "TaskList",
   props: {
     data: [] as ITaskInfo[],
-    disableEdit:{
-      type:Boolean,
-    }
+    disableEdit: {
+      type: Boolean,
+    },
+    todoDesk: {
+      type: Object,
+      default: () => {},
+    },
   },
   components: {
     XtButton,
@@ -125,9 +144,10 @@ export default {
   },
   methods: {
     ...mapActions(taskStore, ["setActiveTask", "removeTask"]),
+    communityMember,
 
     goTodo() {
-      if(!this.disableEdit){
+      if (!this.disableEdit) {
         this.$router.push({ name: "todo" });
       }
     },
@@ -167,6 +187,7 @@ export default {
           item.completed = false;
         }
       });
+      //   this.$bus.emit("updateSync");
     },
   },
   beforeDestroy() {
