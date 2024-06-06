@@ -323,7 +323,7 @@ export default {
     toggleInput() {
       this.addVisible = !this.addVisible;
       setTimeout(() => {
-        this.$refs.input.focus();
+        this.$refs.input?.focus();
       }, 200);
     },
     getTodoType(item, index) {

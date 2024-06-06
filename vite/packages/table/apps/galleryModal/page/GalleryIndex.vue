@@ -6,6 +6,8 @@
        :list="newGalleryList"
        leftClass="xt-bg-m rounded-l-xl"
        leftMargin="mr-0 py-3"
+       model="id"
+       v-model:index="leftIndex"
        w="64"
        :last="Math.floor(newGalleryList.length - 1)"
        :rightW="'w-full'"
@@ -19,6 +21,8 @@
        :list="newGalleryList"
        leftClass="xt-bg-m rounded-l-xl"
        leftMargin="mr-0 py-3"
+       model="id"
+       v-model:index="leftIndex"
        w="64"
        end="1"
        :rightW="'w-full'"
@@ -31,7 +35,7 @@
 </template>
 
 <script setup>
-import { computed, getCurrentInstance, nextTick, onMounted, ref } from "vue";
+import { computed, getCurrentInstance, nextTick, onMounted, ref,watch } from "vue";
 import _ from "lodash-es";
 import { storeToRefs } from "pinia";
 
@@ -45,7 +49,8 @@ const { currentID } = storeToRefs(pickPaper);
 const paperLeftList = ref([
   {
     newIcon: "fluent:star-16-filled",
-    id: "m",
+    id: 0,
+    type:"m",
     bg: "var(--secondary-bg)",
     callBack: (item) => {
       currentPaperTab(item);
@@ -53,7 +58,8 @@ const paperLeftList = ref([
   },
   {
     newIcon: "fluent:emoji-smile-slight-24-filled",
-    id: "w",
+    id: 1,
+    type:"w",
     bg: "var(--secondary-bg)",
     callBack: (item) => {
       currentPaperTab(item);
@@ -61,7 +67,8 @@ const paperLeftList = ref([
   },
   {
     newIcon: "uim:bing",
-    id: "b",
+    id: 2,
+    type:"b",
     bg: "var(--secondary-bg)",
     callBack: (item) => {
       currentPaperTab(item);
@@ -69,7 +76,8 @@ const paperLeftList = ref([
   },
   {
     newIcon: "fluent:image-multiple-16-filled",
-    id: "p",
+    id: 3,
+    type:"p",
     bg: "var(--secondary-bg)",
     callBack: (item) => {
       currentPaperTab(item);
@@ -77,7 +85,8 @@ const paperLeftList = ref([
   },
   {
     newIcon: "fluent:image-sparkle-16-filled",
-    id: "l",
+    id: 4,
+    type:"l",
     bg: "var(--secondary-bg)",
     callBack: (item) => {
       currentPaperTab(item);
@@ -85,7 +94,8 @@ const paperLeftList = ref([
   },
   {
     newIcon: "fluent:settings-16-filled",
-    id: "s",
+    id: 5,
+    type:"s",
     route: { name: "papersSetting" },
     callBack: (item) => {
       currentPaperTab(item);
@@ -93,10 +103,11 @@ const paperLeftList = ref([
   },
 ]);
 
+
 // 根据当前环境是网页端还是PC端,如果是网页端需要将设置进行屏蔽
 const newGalleryList = computed(() => {
   const filterArr = _.filter(paperLeftList.value, (item) => {
-    return item.id !== "s";
+    return item.type !== "s";
   });
   if (window.$usePlat("web")) return filterArr;
   return paperLeftList.value;
@@ -111,10 +122,20 @@ const endNumVisible = computed(() => {
   }
 });
 
+// 根据当前页面选中左侧栏下标选中
+const leftIndex = computed(()=>{
+  const found = paperLeftList.value.find((item)=>{
+    return String(item.type) === String(currentID.value);
+  })
+  return found?.id;
+})
+
 /**左侧栏tab切换**/
 const currentPaperTab = (item) => {
-  currentID.value = item.id;
+  currentID.value = item.type;
 };
+
+
 </script>
 
 <style lang="scss" scoped>
