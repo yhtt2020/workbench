@@ -6,8 +6,6 @@
       <template #extraMenu>
         <ExtraMenu />
       </template>
-      <!-- 1{{currentDesk}}2 -->
-      <!-- {{ currentDesk && currentDesk?.cards?.length > 0 }} -->
       <Desk
         v-if="currentDesk && currentDesk?.cards?.length > 0"
         :key="currentDeskId"

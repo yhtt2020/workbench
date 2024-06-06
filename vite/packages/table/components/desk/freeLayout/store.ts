@@ -294,7 +294,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     setFreeLayoutData(id, data) {
       // console.log('this.freeLayoutData', this.freeLayoutData);
 
-      this.freeLayoutData[id] = { ...data };
+      this.freeLayoutData[id] = data
     },
     setFreeLayoutState(id, state) {
       // console.log('this.freeLayoutState', this.freeLayoutState);
