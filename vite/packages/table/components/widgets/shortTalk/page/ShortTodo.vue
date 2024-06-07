@@ -177,7 +177,6 @@ export default {
       customSize: "2x4",
       header: {
         title: "社区待办",
-        // ifyIcon:'fluent:checkbox-checked-16-regular',
         showIcon:"/logo/todo.svg",
         rightIcon: [
           {

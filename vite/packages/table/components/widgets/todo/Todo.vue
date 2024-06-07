@@ -23,6 +23,7 @@
           class="content-box"
           :data="notFinish"
           :disableEdit="options?.disableEdit"
+          :todoDesk="desk"
         ></Tasklist>
 
         <div
@@ -125,7 +126,10 @@ import { taskStore } from "../../../page/app/todo/stores/task";
 import { listStore } from "../../../page/app/todo/stores/list";
 import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
 import CardSettingExplain from "../../CardSettingExplain.vue";
-import { communityAuth } from "../../../apps/communityDesk/hooks/deskCreateMethod";
+import { communityAuth,communityMember } from "../../../apps/communityDesk/hooks/deskCreateMethod";
+import { saveData } from "../../../save/saveData";
+import { loadData } from "../../../save/loadData";
+
 
 export default {
   name: "Todo",
@@ -280,6 +284,18 @@ export default {
         },
       ];
     }
+
+    if(communityMember(this.desk?.communityNo)){
+      const target = {
+          customIndex:this.customIndex,
+          desk:this.desk
+        }
+        loadData("desk",target).then((rs)=>{
+          if(rs){
+            this.taskList =  Object.keys(rs).map(key => (rs[key]))
+          }
+        })
+    }
   },
   methods: {
     ...mapActions(communityNavStore, ["isCommunityDesktop"]),
@@ -291,6 +307,14 @@ export default {
     added() {
       this.getTodoType(this.selectTodo);
       message.success("添加任务成功。");
+      if(this.communityAuth(this.desk?.communityNo)){
+        const target = {
+          customIndex:this.customIndex,
+          desk:this.desk
+        }
+        saveData(this.notFinish,"desk",target);
+        this.$bus.emit("updateSync");
+      }
     },
     showDrawer() {
       this.openSettings = true;
@@ -299,7 +323,7 @@ export default {
     toggleInput() {
       this.addVisible = !this.addVisible;
       setTimeout(() => {
-        this.$refs.input.focus();
+        this.$refs.input?.focus();
       }, 200);
     },
     getTodoType(item, index) {

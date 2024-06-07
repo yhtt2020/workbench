@@ -649,7 +649,7 @@ export default {
 
     // 根据桌面id默认显示当前桌面
     if (this.deskList.length > 0) {
-      this.currentDesk = this.deskList[0];
+      // this.currentDesk = this.deskList[0];
     }
     this.deskList.forEach((desk) => {
       if (!desk.id) {

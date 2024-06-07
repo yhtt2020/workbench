@@ -35,7 +35,7 @@
           v-show="this.setVisible"
           class="xt-active-btn"
           style="width: 64px; height: 40px"
-          @click="changeAccToken(accToken, accUrl)"
+          @click="submitEcharts(accToken, accUrl)"
         >
           提交
         </div>
@@ -160,8 +160,13 @@ import { shortTalkStore } from "../store";
 import { useToast } from "vue-toastification";
 import Unusual from "../../Unusual.vue";
 import { communityNavStore } from "../../../bottomPanel/store/communityNavStore";
-import { communityAuth } from "../../../../apps/communityDesk/hooks/deskCreateMethod";
+import {
+  communityAuth,
+  communityMember,
+} from "../../../../apps/communityDesk/hooks/deskCreateMethod";
 import CardSettingExplain from "../../../CardSettingExplain.vue";
+import { saveData } from "../../../../save/saveData";
+import { loadData } from "../../../../save/loadData";
 
 const toast = useToast();
 
@@ -297,7 +302,7 @@ export default {
       header: {
         title: "社区访问数据/每日/全部",
         // ifyIcon:'fluent:arrow-trending-lines-20-filled',
-        showIcon:"/logo/ShortChart.svg",
+        showIcon: "/logo/ShortChart.svg",
 
         rightIcon: [
           {
@@ -400,6 +405,20 @@ export default {
       this.getChartData(this.customData).then(() => {
         // 添加判断 如果没有获取到数据就停止
         this.changeBarChart();
+      });
+
+      // 将社群成员桌面获取的云端存储数据进行赋值
+      this.$nextTick(() => {
+        if (communityMember(this.desk?.communityNo)) {
+          const target = {
+            customIndex: this.customIndex,
+            desk: this.desk,
+          };
+          loadData("desk", target).then((rs) => {
+            console.log("查看rs", rs);
+            // this.changeAccToken(rs.accToken, rs.accUrl);
+          });
+        }
       });
     },
     // 初始化柱状图
@@ -568,6 +587,7 @@ export default {
         },
         this.desk
       );
+      this.$bus.emit('updateSync');
       if (boolean) {
         toast.success("保存成功");
       }
@@ -578,6 +598,22 @@ export default {
     },
     shortBack() {
       this.settingVisible = true;
+    },
+
+    // 社区图表配置项提交
+    submitEcharts(accToken,accUrl) {
+      this.changeAccToken(accToken,accUrl);
+      this.saveEchartsOption({accToken,accUrl});
+    },
+
+    // 保存数据的公共方法
+    saveEchartsOption(params) {
+      const target = {
+        customIndex: this.customIndex,
+        desk: this.desk,
+      };
+      saveData(params,"desk",target);
+      this.$bus.emit('updateSync');
     },
   },
   watch: {

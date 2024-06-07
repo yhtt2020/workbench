@@ -44,7 +44,6 @@
           </div>
         </template>
       </template>
-
     </div>
 
     <!-- 设置面板 -->
@@ -59,7 +58,7 @@
           v-show="this.setVisible"
           class="xt-active-btn"
           style="width: 64px; height: 40px"
-          @click="changeAccToken(accToken, accUrl)"
+          @click="submitAccToken(accToken, accUrl)"
         >
           提交
         </div>
@@ -147,9 +146,15 @@ import { mapActions, mapState, mapWritableState } from "pinia";
 import { shortTalkStore } from "../store";
 import Unusual from "../../Unusual.vue";
 import { communityNavStore } from "../../../bottomPanel/store/communityNavStore";
-import { communityAuth } from "../../../../apps/communityDesk/hooks/deskCreateMethod";
+import {
+  communityAuth,
+  communityMember,
+} from "../../../../apps/communityDesk/hooks/deskCreateMethod";
 
 import CardSettingExplain from "../../../CardSettingExplain.vue";
+
+import { saveData } from "../../../../save/saveData";
+import { loadData } from "../../../../save/loadData";
 
 export default {
   components: {
@@ -183,7 +188,9 @@ export default {
       default: "desk",
     },
   },
+
   emit: ["delete"],
+
   computed: {
     ...mapWritableState(shortTalkStore, [
       "mockData",
@@ -202,6 +209,7 @@ export default {
       };
     },
   },
+
   data() {
     return {
       settings: {
@@ -242,7 +250,7 @@ export default {
       header: {
         title: "社区数据",
         // ifyIcon:'majesticons:monitor-line',
-        showIcon:"/logo/shortDashboard.svg",
+        showIcon: "/logo/shortDashboard.svg",
         rightIcon: [
           {
             ifyIcon: "fluent:open-20-filled",
@@ -251,6 +259,7 @@ export default {
       },
     };
   },
+
   mounted() {
     if (this.customData.customSize === undefined) {
       this.customData.customSize = "2x4";
@@ -258,7 +267,7 @@ export default {
     // 初始化
     this.accToken = this.access_token;
     this.accUrl = this.baseUrl;
-    this.init();
+    // this.init();
 
     if (this.options.disableEdit) {
       this.sizeList = [];
@@ -286,7 +295,24 @@ export default {
         },
       ];
     }
+
+    this.$nextTick(() => {
+      // hhh
+      if (communityMember(this.desk?.communityNo)) {
+        const target = {
+          customIndex: this.customIndex,
+          desk: this.desk,
+        };
+        loadData("desk", target).then((rs) => {
+          this.changeAccToken(rs.accToken, rs.accUrl);
+          this.init();
+        });
+      } else {
+        this.init();
+      }
+    });
   },
+
   methods: {
     ...mapActions(cardStore, ["updateCustomData"]),
     ...mapActions(shortTalkStore, ["getBoardData", "changeAccToken"]),
@@ -349,6 +375,23 @@ export default {
     settingBack() {
       this.settingVisible = true;
       this.setVisible = true;
+    },
+
+    // 提交社区数据
+    submitAccToken(accToken, accUrl) {
+      this.changeAccToken(accToken, accUrl);
+      if(this.communityAuth(this.desk?.communityNo)){
+        const target = {
+          customIndex: this.customIndex,
+          desk: this.desk,
+        };
+        const tokenData = {
+          accToken: accToken,
+          accUrl: accUrl,
+        };
+        saveData(tokenData, "desk", target);
+        this.$bus.emit("updateSync");
+      }
     },
   },
   watch: {

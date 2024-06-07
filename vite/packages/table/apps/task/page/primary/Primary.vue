@@ -101,7 +101,7 @@ let chapter = computed(() => {
 // 获取当前任务的下标
 const stage = computed(() => {
   let index = 0;
-  chapter.value.tasks.find((item) => {
+  chapter.value?.tasks?.find((item) => {
     if (store.taskID === item.id) {
       return true;
     }

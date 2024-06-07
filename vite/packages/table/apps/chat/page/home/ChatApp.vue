@@ -5,7 +5,6 @@
       :list="updateChatAppList"
       last="1"
       :end="endList"
-      :index="currentChatIndex"
     >
       <div class="w-full h-full">
         <router-view></router-view>
