@@ -87,7 +87,6 @@ const chooseBg = (item) => {
   emit("cb", props.colorList[`${"color" + colorIndex.value}`]);
 };
 const updateBackground = (item) => {
-  console.log("item :>> ", item);
   emit("cb", item);
 
   emit("update:color", item);
