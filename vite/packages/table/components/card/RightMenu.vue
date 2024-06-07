@@ -205,7 +205,6 @@ const updateCardSize = (item) => {
  */
 
 const updateSize = (size) => {
-  console.log("11111 :>> ", 11111);
   emits("update:size", size);
 };
 function indexAdd() {
