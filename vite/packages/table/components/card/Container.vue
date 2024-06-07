@@ -8,6 +8,8 @@
 <template>
   <!-- 右键菜单 -->
   <!-- v-if="init" -->
+  <!-- update:currentSize -->
+  <!-- {{ currentSize }} -->
   <RightMenu
     v-model:size="currentSize"
     :menus="menus"
@@ -570,7 +572,9 @@ watch(
 watch(
   () => currentSize.value,
   (val) => {
+    console.log('2222 :>> ', 2222);
     emits("update:customSize", val);
+    emits("resize", val);
   }
 );
 

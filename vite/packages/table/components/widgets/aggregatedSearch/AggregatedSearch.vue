@@ -130,16 +130,34 @@ const surplusIcon = computed(() => {
 
   return arr;
 });
+const sizeList = computed(() => {
+  return [
+    {
+      name: customData.value.noBorder ? "2x1" : "2x2",
+      value: customData.value.noBorder ? "2x1" : "2x2",
+    },
+    {
+      name: customData.value.noBorder ? "4x1" : "4x2",
+      value: customData.value.noBorder ? "4x1" : "4x2",
+    },
+  ];
+});
+const updateSize = (val) => {
+  customData.value.customSize = val;
+  customData.value.currentSize  = [...val][0]
+};
 </script>
 
 <template>
   <xt-container
+    v-model:customSize="customSize"
     :customIndex="customIndex"
     :customData="customData"
     :options="options"
     :menuList="menuList"
-    :customSize="customSize"
     :header="header"
+    :sizeList="sizeList"
+    @resize="updateSize"
     class="xt-theme-b"
   >
     <div class="w-full h-full flex flex-col justify-center">
