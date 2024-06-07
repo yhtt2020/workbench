@@ -111,7 +111,7 @@ import hevueImgPreview from "hevue-img-preview";
 // init TUIKit
 
 const notice = new Notifications();
-window.$notice = notice;
+(window as any).$notice = notice;
 
 dayjs.locale("zh-cn");
 
