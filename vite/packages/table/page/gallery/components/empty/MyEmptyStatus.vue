@@ -14,8 +14,11 @@
 </template>
 
 <script>
+import { mapActions,mapWritableState} from "pinia";
 import { Icon as EmptyIcon } from '@iconify/vue';
 import { galleryList } from '../../data/gallery';
+import { pickPaperStore } from "../../store/PickPaperStore";
+
 export default {
   components:{
     EmptyIcon,
@@ -30,6 +33,7 @@ export default {
   },
 
   computed:{
+    ...mapWritableState(pickPaperStore,["currentID"]),
     emptyList(){
       if(window.$usePlat("client")){
         return galleryList.list;
@@ -46,19 +50,21 @@ export default {
 
   methods:{
     goDetail(item){
-      if(this.isModal){
-        if(item.index !== 'i'){
-          this.$bus.emit('updatePage',item);
-        }
-        else {
-          this.$emit('importLocal');
-        }
-      }
-      else {
-        const hasRoute = item.hasOwnProperty('route');
-        if(hasRoute){ this.$router.push(item.route)  }
-        else { this.$emit('importLocal') }
-      }
+      console.log('测试',item);
+      this.currentID = item.index;
+      // if(this.isModal){
+      //   if(item.index !== 'i'){
+      //     this.$bus.emit('updatePage',item);
+      //   }
+      //   else {
+      //     this.$emit('importLocal');
+      //   }
+      // }
+      // else {
+      //   const hasRoute = item.hasOwnProperty('route');
+      //   if(hasRoute){ this.$router.push(item.route)  }
+      //   else { this.$emit('importLocal') }
+      // }
     },
   },
 }

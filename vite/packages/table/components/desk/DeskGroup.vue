@@ -843,7 +843,7 @@ export default {
           return !desk.hasOwnProperty("communityNo");
         });
         if (filterList.length > 0) {
-          this.currentDesk = filterList[0];
+          // this.currentDesk = filterList[0];
         }
       },
       immediate: true,

@@ -1,268 +1,439 @@
 <template>
   <div class="w-full h-full flex flex-col">
-    <div class=" flex items-center justify-between mb-2" :class="isModal ? 'h-8' : 'h-10'">
+    <div
+      class="flex items-center justify-between mb-2"
+      :class="isModal ? 'h-8' : 'h-10'"
+    >
       <div class="flex items-center justify-center">
-        <MyIcon icon="fluent:star-16-filled" style="font-size:20px;" class="mr-2 xt-text"/>
-        <span  class="s-text xt-text xt-font" :class="isModal ? 'font-14 ' : 'font-16 '">我的收藏 （{{ myPapers.length }}）</span>
+        <MyIcon
+          icon="fluent:star-16-filled"
+          style="font-size: 20px"
+          class="mr-2 xt-text"
+        />
+        <span
+          class="s-text xt-text xt-font"
+          :class="isModal ? 'font-14 ' : 'font-16 '"
+          >我的收藏 （{{ myPapers.length }}）</span
+        >
       </div>
 
-      <div class="flex items-center justify-center ">
+      <div class="flex items-center justify-center">
         <template v-if="!isModal">
-          <xt-button @click="playAll" class="mr-3 "  h="40" w="113" style="border-radius: 8px;background: rgba(0,0,0,0.2) !important;">
+          <xt-button
+            @click="playAll"
+            class="mr-3"
+            h="40"
+            w="113"
+            style="
+              border-radius: 8px;
+              background: rgba(0, 0, 0, 0.2) !important;
+            "
+          >
             <div class="flex items-center justify-center">
-              <MyIcon icon="fluent:play-16-filled" style="font-size:1.25rem;" class="xt-active-text mr-2" />
-              <span  class="s-text xt-active-text xt-font font-16 font-400" v-if="!isModal">轮播全部</span>
+              <MyIcon
+                icon="fluent:play-16-filled"
+                style="font-size: 1.25rem"
+                class="xt-active-text mr-2"
+              />
+              <span
+                class="s-text xt-active-text xt-font font-16 font-400"
+                v-if="!isModal"
+                >轮播全部</span
+              >
             </div>
           </xt-button>
-          <xt-button w="154" h="40" @click="playActive" class="mr-3 " style="background: rgba(0,0,0,0.2) !important;border-radius: 8px;">
+          <xt-button
+            w="154"
+            h="40"
+            @click="playActive"
+            class="mr-3"
+            style="
+              background: rgba(0, 0, 0, 0.2) !important;
+              border-radius: 8px;
+            "
+          >
             <div class="flex items-center justify-center">
-              <MyIcon icon="fluent:play-16-filled" style="font-size:1.25rem;" class="xt-active-text mr-2"/>
-              <span  class="s-text xt-active-text xt-font font-16 font-400">轮播选中（ {{ activePapers.length }} ）</span>
+              <MyIcon
+                icon="fluent:play-16-filled"
+                style="font-size: 1.25rem"
+                class="xt-active-text mr-2"
+              />
+              <span class="s-text xt-active-text xt-font font-16 font-400"
+                >轮播选中（ {{ activePapers.length }} ）</span
+              >
             </div>
           </xt-button>
-          <xt-button h="40" w="154" style="border-radius: 8px;background: rgba(0,0,0,0.2) !important;" @click="openRight" v-if="isWeb">
+          <xt-button
+            h="40"
+            w="154"
+            style="
+              border-radius: 8px;
+              background: rgba(0, 0, 0, 0.2) !important;
+            "
+            @click="openRight"
+            v-if="isWeb"
+          >
             <div class="flex items-center justify-center">
-              <MyIcon icon="fluent:arrow-download-16-filled" style="font-size:1.25rem;" class="xt-active-text mr-2" />
-              <span  class="s-text xt-active-text xt-font font-16 font-400" v-if="!isModal">导入本地图片</span>
+              <MyIcon
+                icon="fluent:arrow-download-16-filled"
+                style="font-size: 1.25rem"
+                class="xt-active-text mr-2"
+              />
+              <span
+                class="s-text xt-active-text xt-font font-16 font-400"
+                v-if="!isModal"
+                >导入本地图片</span
+              >
             </div>
           </xt-button>
         </template>
 
         <template v-else>
-          <xt-dropdown :w="32" :h="32" :iconSize="16" :trigger="'hover'" :newIcon="'fluent:play-16-filled'" :placement="'bottomRight'" class="mr-3">
+          <xt-dropdown
+            :w="32"
+            :h="32"
+            :iconSize="16"
+            :trigger="'hover'"
+            :newIcon="'fluent:play-16-filled'"
+            :placement="'bottomRight'"
+            class="mr-3"
+            :zIndex="10000000"
+          >
             <div class="xt-modal rounded-xl p-1 xt-b">
               <template v-for="item in list">
-                <div class="flex items-center pl-3 cursor-pointer box text-base xt-text" style="width: 184px; height: 44px; border-radius: 8px" @click="item.callBack">
-                  <xt-new-icon :icon="item.icon" size="16" class="mr-3"></xt-new-icon>
+                <div
+                  class="flex items-center pl-3 cursor-pointer box text-base xt-text"
+                  style="width: 184px; height: 44px; border-radius: 8px"
+                  @click="item.callBack"
+                >
+                  <xt-new-icon
+                    :icon="item.icon"
+                    size="16"
+                    class="mr-3"
+                  ></xt-new-icon>
                   {{ item.name }}
                 </div>
               </template>
             </div>
           </xt-dropdown>
-          <xt-button w="32" h="32" class="xt-bg-2 mr-3" style="border-radius: 8px;" @click="openRight"  v-if="isWeb">
+          <xt-button
+            w="32"
+            h="32"
+            class="xt-bg-2 mr-3"
+            style="border-radius: 8px"
+            @click="openRight"
+            v-if="isWeb"
+          >
             <div class="flex items-center justify-center">
-              <MyIcon icon="fluent:arrow-download-16-filled" style="font-size:1rem" />
+              <MyIcon
+                icon="fluent:arrow-download-16-filled"
+                style="font-size: 1rem"
+              />
             </div>
           </xt-button>
-          <ClosePaperButton />
         </template>
       </div>
     </div>
 
     <div class="flex-1 h-4/5">
       <template v-if="myPapers.length === 0">
-        <MyEmptyStatus :isModal="isModal" @importLocal="openRight"/>
+        <MyEmptyStatus :isModal="isModal" @importLocal="openRight" />
       </template>
       <template v-else>
-        <MyContent :myPaperList="myPapers" :isModal="isModal" @paperSetting="openBottom" @playPaperVideo="playPaperVideo"/>
+        <MyContent
+          :myPaperList="myPapers"
+          :isModal="isModal"
+          @paperSetting="openBottom"
+          @playPaperVideo="playPaperVideo"
+        />
       </template>
     </div>
   </div>
 
-  <PaperRightDrawer ref="rightDrawerRef" :loadStaticPaper="loadStaticPaper" :getLoadLively="getLoadLively"/>
+  <PaperRightDrawer
+    ref="rightDrawerRef"
+    :loadStaticPaper="loadStaticPaper"
+    :getLoadLively="getLoadLively"
+  />
 
-  <div v-show="previewVideoVisible" style="position: fixed;left: 0;right: 0;top: 0;bottom: 0;z-index:9999999" id="previwer">
-    <div id="actions" class="no-drag" style="position: fixed;right: 2em;top: 2em;z-index: 9999999999;">
-     <div @click="closePreview" class="btn pointer" style="background: rgba(0,0,0,0.76);min-width: 4em;">
-       <Icon icon="guanbi1" style="font-size: 2em"></Icon>
-     </div>
+  <div
+    v-show="previewVideoVisible"
+    style="
+      position: fixed;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      z-index: 9999999;
+    "
+    id="previwer"
+  >
+    <div
+      id="actions"
+      class="no-drag"
+      style="position: fixed; right: 2em; top: 2em; z-index: 9999999999"
+    >
+      <div
+        @click="closePreview"
+        class="btn pointer"
+        style="background: rgba(0, 0, 0, 0.76); min-width: 4em"
+      >
+        <Icon icon="guanbi1" style="font-size: 2em"></Icon>
+      </div>
     </div>
     <div id="my-mse"></div>
   </div>
 </template>
 
 <script>
-import { mapWritableState, mapActions } from 'pinia';
-import { paperStore } from '../../store/paper';
-import { Icon as MyIcon } from '@iconify/vue';
-import { fileImageExtension,changeTime } from './libs/utils';
-import Spotlight from 'spotlight.js';
-import Player from 'xgplayer/dist/simple_player';
+import { mapWritableState, mapActions } from "pinia";
+import { paperStore } from "../../store/paper";
+import { Icon as MyIcon } from "@iconify/vue";
+import { fileImageExtension, changeTime } from "./libs/utils";
+import Spotlight from "spotlight.js";
+import Player from "xgplayer/dist/simple_player";
 
-import MyEmptyStatus from './components/empty/MyEmptyStatus.vue';
-import MyContent from './components/content/MyContent.vue';
-import PaperRightDrawer from './components/drawer/PaperRightDrawer.vue';
-import ClosePaperButton from './components/close/ClosePaperButton.vue';
-import { usePlat } from '../../ui/hooks/usePlat';
+import MyEmptyStatus from "./components/empty/MyEmptyStatus.vue";
+import MyContent from "./components/content/MyContent.vue";
+import PaperRightDrawer from "./components/drawer/PaperRightDrawer.vue";
+import { usePlat } from "../../ui/hooks/usePlat";
+import { message } from "ant-design-vue";
 
-let fs,path
- if (usePlat('client')) {
-   fs = window.$models.fs
-    path = require('path')
- }
+let fs, path;
+if (usePlat("client")) {
+  fs = window.$models.fs;
+  path = require("path");
+}
 export default {
+  components: { MyIcon, MyContent, MyEmptyStatus, PaperRightDrawer },
 
-  components:{ MyIcon,MyContent,MyEmptyStatus,PaperRightDrawer,ClosePaperButton},
+  props: ["isModal"],
 
-  props:['isModal'],
-
-  data(){
-    return{
-      currentPaper: null,//当前壁纸，显示菜单用
-      paperTime:'',
+  data() {
+    return {
+      currentPaper: null, //当前壁纸，显示菜单用
+      paperTime: "",
       previewVideoVisible: false,
-      list:[
-        { name:'轮播全部',callBack:()=>{ this.playAll() },icon:'fluent:play-16-filled',id:0, },
-        { name:'轮播选中',callBack:()=>{ this.playActive()  },icon:'fluent:play-16-filled',id:1, }
-      ]
-    }
+      list: [
+        {
+          name: "轮播全部",
+          callBack: () => {
+            this.playAll();
+          },
+          icon: "fluent:play-16-filled",
+          id: 0,
+        },
+        {
+          name: "轮播选中",
+          callBack: () => {
+            this.playActive();
+          },
+          icon: "fluent:play-16-filled",
+          id: 1,
+        },
+      ],
+    };
   },
 
-  computed:{
-    ...mapWritableState(paperStore,['settings','myPapers','activePapers']),
-    updateList(){
-      if(this.activePapers){
-        const mapList = this.list.map((item)=>{
-          if(item.id === 1 && this.activePapers.length !== 0){
-            return {name:`${item.name} (${this.activePapers.length})`,callBack:item.callBack,icon:item.icon,id:item.id}
+  computed: {
+    ...mapWritableState(paperStore, ["settings", "myPapers", "activePapers"]),
+    updateList() {
+      if (this.activePapers) {
+        const mapList = this.list.map((item) => {
+          if (item.id === 1 && this.activePapers.length !== 0) {
+            return {
+              name: `${item.name} (${this.activePapers.length})`,
+              callBack: item.callBack,
+              icon: item.icon,
+              id: item.id,
+            };
+          } else {
+            return item;
           }
-          else {
-            return item
-          }
-        })
-        return mapList
+        });
+        return mapList;
       }
     },
     // 判断是发web端
-    isWeb(){
-      return window.$usePlat("client")
-    }
+    isWeb() {
+      return window.$usePlat("client");
+    },
   },
 
-  mounted(){
-    $('#previwer').mousemove(() => {
-      $('#actions').show();
-      if (this.timer) {  clearTimeout(this.timer); }
+  mounted() {
+    $("#previwer").mousemove(() => {
+      $("#actions").show();
+      if (this.timer) {
+        clearTimeout(this.timer);
+      }
       this.timer = setTimeout(() => {
-        $('#actions').fadeOut();
-      }, 5000)
+        $("#actions").fadeOut();
+      }, 5000);
     });
-    if(this.settings.savePath !== ''){
+    if (this.settings.savePath !== "") {
       this.getLoadLively();
       this.loadStaticPaper();
     }
-
   },
 
-  methods:{
-    ...mapActions(paperStore,['addToStaticPaper']),
+  methods: {
+    ...mapActions(paperStore, ["addToStaticPaper"]),
     fileImageExtension,
     // 播放全部和播放选中
-    playAll(){
+    playAll() {
       const imageArr = [];
-      for(const el of this.myPapers){
-        if(fileImageExtension(el)){
-          const elOption = { 'src-mp4': `file://${el.src}`, media: 'video', poster: el.path};
+      for (const el of this.myPapers) {
+        if (fileImageExtension(el)) {
+          const elOption = {
+            "src-mp4": `file://${el.src}`,
+            media: "video",
+            poster: el.path,
+          };
           imageArr.push(elOption);
+        } else {
+          imageArr.push({ src: el.path });
         }
-        else { imageArr.push({src: el.path,}); }
       }
-      window.Spotlight.show(imageArr,{
-        control: 'autofit,page,fullscreen,close,zoom,prev,next',
-        play: true, autoslide: true,  infinite: true,
-        progress: false,  title: false, autoplay: true,
-      })
+      if (imageArr.length !== 0) {
+        window.Spotlight.show(imageArr, {
+          control: "autofit,page,fullscreen,close,zoom,prev,next",
+          play: true,
+          autoslide: true,
+          infinite: true,
+          progress: false,
+          title: false,
+          autoplay: true,
+        });
+      } else {
+        message.warning("请先添加图片");
+      }
     },
-    playActive(){
+    playActive() {
       const playArr = [];
-      for(const el of this.activePapers){
-        if(fileImageExtension(el)){
-          const playOption = {   'src-mp4': el.srcProtocol, media: 'video',  poster: el.path };
+      for (const el of this.activePapers) {
+        if (fileImageExtension(el)) {
+          const playOption = {
+            "src-mp4": el.srcProtocol,
+            media: "video",
+            poster: el.path,
+          };
           playArr.push(playOption);
+        } else {
+          playArr.push({ src: el.path });
         }
-        else { playArr.push({ src: el.path, }); }
       }
-      window.Spotlight.show(playArr,{
-        control: 'autofit,page,fullscreen,close,zoom,prev,next',
-        play: true, autoslide: true,  infinite: true,
-        progress: false,  title: false, autoplay: true,
-      });
+      if (playArr.length !== 0) {
+        window.Spotlight.show(playArr, {
+          control: "autofit,page,fullscreen,close,zoom,prev,next",
+          play: true,
+          autoslide: true,
+          infinite: true,
+          progress: false,
+          title: false,
+          autoplay: true,
+        });
+      } else {
+        message.warning("请先添加图片");
+      }
     },
 
     // 开启抽屉菜单
-    openRight(){   this.$refs.rightDrawerRef.openRightDrawer() },
-    openBottom(item){
+    openRight() {
+      this.$refs.rightDrawerRef.openRightDrawer();
+    },
+    openBottom(item) {
       this.$refs.bottomDrawerRef.openBottomDrawer();
       this.currentPaper = item;
     },
 
     //获取本地文件图片和视频数据
-    getLoadLively(){
-      fs.pathExists(path.join(this.settings.savePath, 'lively')).then((exists)=>{
-        if(exists){
-          const videos = fs.readdirSync(path.join(this.settings.savePath, 'lively'));
-          for(const item of videos){
-            let videoPath = path.join(this.settings.savePath, 'lively', item);
-            const filename = path.basename(videoPath, '.mp4');
-            const livelyItem = {
-              src:videoPath,
-              path: `https://up.apps.vip/lively/${filename}.jpg`,
-              srcProtocol: 'file://' + path.join(this.settings.savePath, 'lively', item),
-            };
-            this.addToStaticPaper(livelyItem);
+    getLoadLively() {
+      fs.pathExists(path.join(this.settings.savePath, "lively")).then(
+        (exists) => {
+          if (exists) {
+            const videos = fs.readdirSync(
+              path.join(this.settings.savePath, "lively")
+            );
+            for (const item of videos) {
+              let videoPath = path.join(this.settings.savePath, "lively", item);
+              const filename = path.basename(videoPath, ".mp4");
+              const livelyItem = {
+                src: videoPath,
+                path: `https://up.apps.vip/lively/${filename}.jpg`,
+                srcProtocol:
+                  "file://" + path.join(this.settings.savePath, "lively", item),
+              };
+              this.addToStaticPaper(livelyItem);
+            }
           }
         }
-      })
+      );
     },
-    loadStaticPaper(){
-      const staticDir = path.join(path.join(this.settings.savePath), 'static');
+    loadStaticPaper() {
+      const staticDir = path.join(path.join(this.settings.savePath), "static");
       // 判断文件目录是否存在
-      fs.pathExists(staticDir).then((exists)=>{
+      fs.pathExists(staticDir).then((exists) => {
         // 存在就读取指定壁纸目录
-        if (exists){
+        if (exists) {
           let promptPaper = fs.readdirSync(staticDir);
-          for(const item of promptPaper){
-            this.getFileCreatedTime(path.join(`${staticDir}/${item}`)).then((createTime)=>{
-              this.paperTime = changeTime(createTime)
-            })
+          for (const item of promptPaper) {
+            this.getFileCreatedTime(path.join(`${staticDir}/${item}`)).then(
+              (createTime) => {
+                this.paperTime = changeTime(createTime);
+              }
+            );
             let image = {
-              title: false,  src: `file://${staticDir}/${item}`,
-              path: `file://${staticDir}/${item}`,time: this.paperTime
+              title: false,
+              src: `file://${staticDir}/${item}`,
+              path: `file://${staticDir}/${item}`,
+              time: this.paperTime,
             };
             this.addToStaticPaper(image);
           }
         }
-      })
+      });
     },
 
     // 获取文件时间
     async getFileCreatedTime(filePath) {
       try {
-        const stats = await fs.stat(filePath)
-        return stats.birthtime
+        const stats = await fs.stat(filePath);
+        return stats.birthtime;
       } catch (err) {
-        console.error(err)
+        console.error(err);
       }
     },
 
     // 播放动态壁纸
-    playPaperVideo(img){
-      $('#actions').show();
+    playPaperVideo(img) {
+      $("#actions").show();
       this.timer = setTimeout(() => {
-        $('#actions').fadeOut()
-      }, 5000)
+        $("#actions").fadeOut();
+      }, 5000);
       this.previewVideoVisible = true;
-      if (window.$xgplayer) { window.$xgplayer.destroy(); };
+      if (window.$xgplayer) {
+        window.$xgplayer.destroy();
+      }
       const url = `${img.srcProtocol}`;
       window.$xgplayer = new Player({
-        id: 'my-mse',
+        id: "my-mse",
         url: url,
         // fitVideoSize: 'fixWidth',
-        fitVideoSize: 'fixWidth',
+        fitVideoSize: "fixWidth",
         // width:300,
         // height:300,
-        videoFillMode:'auto',
+        videoFillMode: "auto",
         loop: true,
         fluid: true,
         videoInit: true,
         autoplay: true,
-      })
+      });
     },
     // 关闭动态壁纸播放
-    closePreview(){
+    closePreview() {
       if (window.$xgplayer) {
-        window.$xgplayer.destroy()
-        window.$xgplayer = null
+        window.$xgplayer.destroy();
+        window.$xgplayer = null;
       }
       this.previewVideoVisible = false;
     },
@@ -271,8 +442,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.box{
-  &:hover{
+.box {
+  &:hover {
     background: var(--active-secondary-bg);
   }
 }

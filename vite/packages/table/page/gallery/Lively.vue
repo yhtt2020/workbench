@@ -6,7 +6,6 @@
       <span class="xt-font xt-text font-400" :class="isModal ? 'font-14':'font-16'">动态壁纸</span>
     </div>
 
-    <ClosePaperButton v-if="isModal"/>
    </div>
 
    <div class="flex-1 h-4/5">
@@ -116,7 +115,6 @@ import { message } from 'ant-design-vue'
 import { paperStore } from '../../store/paper'
 import { isDownLoad } from './libs/utils';
 
-import ClosePaperButton from './components/close/ClosePaperButton.vue'
 import { usePlat } from '../../ui/hooks/usePlat'
 
 const lively = [
@@ -169,7 +167,7 @@ let fs,path
 export default {
   name: 'Lively',
 
-  components: { Template,ClosePaperButton },
+  components: { Template, },
 
   props:['isModal'],
 

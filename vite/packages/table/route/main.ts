@@ -71,7 +71,7 @@ import Clipboard from "../apps/clipboard/page/Clipboard.vue";
 import WorkDesk from "../page/work/Desk.vue";
 /*便签*/
 import Note from "../apps/note/index.vue";
-import Income from '../apps/income/index.vue'
+import Income from "../apps/income/index.vue";
 /**聊天团队模式开始**/
 import ChatIndex from "../apps/chat/page/home/ChatIndex.vue";
 import Chat from "../apps/chat/page/home/ChatApp.vue";
@@ -99,11 +99,13 @@ import ShortcutKeyRoute from "../apps/shortcutKey/route";
 import BarrageRoute from "../apps/barrage/route";
 import Power from "../page/Power.vue";
 import Remote from "../apps/console/pages/Remote.vue";
-import SharedDesk from  '../page/SharedDesk.vue';
+import SharedDesk from "../page/SharedDesk.vue";
+
+// 壁纸弹窗应用
+import GalleryIndex from "../apps/galleryModal/page/GalleryIndex.vue"
 
 export default [
   {
-
     path: "/main",
     name: "main",
     // component: Main,
@@ -112,15 +114,22 @@ export default [
       default: Main,
       ai: AIAssistant,
       note: Note,
-      // shortcutKey: ShortcutKeyRoute,
       clipboard: Clipboard,
-      income:Income
+      income: Income,
+      galleryModalApp:GalleryIndex
     },
     props: true,
     children: [
       ...DeckRoute,
       ShortcutKeyRoute,
-
+      {
+        path: "/galleryModalApp",
+        name: "galleryModalApp",
+        component:GalleryIndex,
+        meta: {
+          tab1: "galleryModal",
+        },
+      },
       {
         path: "/income",
         name: "income",

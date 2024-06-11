@@ -119,9 +119,12 @@ import { mapWritableState, mapActions } from "pinia";
 import { cardStore } from "../../../store/card";
 // import RemoteShare from '../../card/remote/RemoteShare.vue';
 import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
-import { communityAuth } from "../../../apps/communityDesk/hooks/deskCreateMethod";
+import { communityAuth,communityMember } from "../../../apps/communityDesk/hooks/deskCreateMethod";
 import CardSettingExplain from "../../CardSettingExplain.vue";
 import Unusual from "../Unusual.vue";
+
+import { saveData } from "../../../save/saveData";
+import { loadData } from "../../../save/loadData";
 
 function loadScript(src, id, callback) {
   const s = document.createElement("script", id);
@@ -228,69 +231,7 @@ export default {
       this.height = this.ensureEvenNumber(newHeight);
     },
   },
-  methods: {
-    ...mapActions(cardStore, ["updateCustomData"]),
-    ...mapActions(communityNavStore, ["isCommunityDesktop"]),
-    communityAuth,
-
-    openRightMenu() {
-      this.$refs.remote.menuVisible = true;
-    },
-    closeModal(val) {
-      this.showCommunity = val;
-    },
-    ensureEvenNumber(value) {
-      const parsedValue = parseInt(value);
-      return Math.ceil(parsedValue / 2) * 2;
-    },
-    save() {
-      this.$refs.remote.visible = false;
-      this.panelVisible = false;
-      this.customData.width = this.width / 2;
-      this.customData.height = this.height / 2;
-      this.customData.url = this.url;
-      this.updateCustomData(
-        this.customIndex,
-        {
-          customSize: `${this.width}x${this.height}`,
-        },
-        this.desk
-      );
-      message.success("修改成功");
-    },
-    closeShare(val) {
-      this.openShare = val;
-    },
-    setUA() {
-      //暂时没有办法实现此处展现为移动端的界面
-    },
-    deleteCard() {
-      this.$emit("delete");
-    },
-    //   let contentWindow=this.$refs.myIframe.contentWindow
-    //   console.log('当前的contentwindow-',contentWindow)
-    //   const ua='Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/112.0.0.0'
-    //   var setUA = function() {
-    //     if (Object.defineProperty) {
-    //       Object.defineProperty(contentWindow.navigator, 'userAgent', {
-    //         configurable: true,
-    //         get: function () {
-    //           return ua;
-    //         }
-    //       });
-    //     } else if (Object.prototype.__defineGetter__) {
-    //       contentWindow.navigator.__defineGetter__('userAgent', function () {
-    //         return ua;
-    //       });
-    //     } else {
-    //       alert('browser not supported');
-    //     }
-    //   };
-    //   setUA()
-    //   contentWindow.location.reload()
-    //   console.log(contentWindow.navigator.userAgent)
-    // }
-  },
+  
   computed: {
     ...mapWritableState(taskStore, ["taskID", "step"]),
 
@@ -396,6 +337,84 @@ export default {
     //   window.customElements.upgrade(document.getElementById('my'))
     // })
   },
+
+  methods: {
+    ...mapActions(cardStore, ["updateCustomData"]),
+    ...mapActions(communityNavStore, ["isCommunityDesktop"]),
+    communityAuth,
+
+    openRightMenu() {
+      this.$refs.remote.menuVisible = true;
+    },
+    closeModal(val) {
+      this.showCommunity = val;
+    },
+    ensureEvenNumber(value) {
+      const parsedValue = parseInt(value);
+      return Math.ceil(parsedValue / 2) * 2;
+    },
+    save() {
+      this.$refs.remote.visible = false;
+      this.panelVisible = false;
+      this.customData.width = this.width / 2;
+      this.customData.height = this.height / 2;
+      this.customData.url = this.url;
+      this.updateCustomData(
+        this.customIndex,
+        {
+          customSize: `${this.width}x${this.height}`,
+        },
+        this.desk
+      );
+      if(this.communityAuth(this.desk?.communityNo)){
+        const target = {
+          customIndex: this.customIndex,
+          desk: this.desk,
+        };
+        console.log('打印查看und',target);
+        const option = {
+          url:this.url,
+        }
+        saveData(option,"desk",target);
+        this.$bus.emit("updateSync");
+      }
+      message.success("修改成功");
+
+    },
+    closeShare(val) {
+      this.openShare = val;
+    },
+    setUA() {
+      //暂时没有办法实现此处展现为移动端的界面
+    },
+    deleteCard() {
+      this.$emit("delete");
+    },
+    //   let contentWindow=this.$refs.myIframe.contentWindow
+    //   console.log('当前的contentwindow-',contentWindow)
+    //   const ua='Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/112.0.0.0'
+    //   var setUA = function() {
+    //     if (Object.defineProperty) {
+    //       Object.defineProperty(contentWindow.navigator, 'userAgent', {
+    //         configurable: true,
+    //         get: function () {
+    //           return ua;
+    //         }
+    //       });
+    //     } else if (Object.prototype.__defineGetter__) {
+    //       contentWindow.navigator.__defineGetter__('userAgent', function () {
+    //         return ua;
+    //       });
+    //     } else {
+    //       alert('browser not supported');
+    //     }
+    //   };
+    //   setUA()
+    //   contentWindow.location.reload()
+    //   console.log(contentWindow.navigator.userAgent)
+    // }
+  },
+
   unmounted() {
     // document.getElementById(this.id).remove()
   },

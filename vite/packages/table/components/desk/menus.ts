@@ -1,6 +1,9 @@
 import { useCustomLayout } from "./freeLayout/useCustomLayout";
 import { headerData, mainData } from "./freeLayout/config";
 import { useAddCard } from "../../hooks";
+import { useAppModal  } from "../../apps/appModal/src/hook/useAppModal";
+
+
 function deskMenus() {
   let currentHide = null;
   if (this.isFreeLayout) {
@@ -117,7 +120,8 @@ function deskMenus() {
       newIcon: "fluent:image-multiple-16-regular",
       name: "更换壁纸",
       fn: () => {
-        this.$refs.galleryRef.openPaperAppModal();
+        const { openApp } = useAppModal("galleryModalApp");
+        openApp();
       },
     },
     // {
