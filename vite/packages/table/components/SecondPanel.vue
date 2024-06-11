@@ -19,7 +19,6 @@
       </div>
       <GradeSmallTip powerType="lockWallpaper" lastPowerType="动态壁纸" v-if="menu.title === '动态壁纸'" :limit="false"></GradeSmallTip>
     </div>
-    <!-- <xt-task :modelValue="M01035"></xt-task> -->
   </div>
 </template>
 
