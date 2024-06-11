@@ -155,22 +155,12 @@ import { noteStore } from "../../../apps/note/store";
 import Modal from "../../Modal.vue";
 import { DTPWeb, LPA_JobNames } from "dtpweb";
 import RadioTab from "../../../components/RadioTab.vue";
-import {
-  validateDrive,
-  startPrint,
-  doPreview,
-  doJob,
-} from "../../card/hooks/print";
 import { useAppModal } from "../../../hooks";
 import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
-
 import CardSettingExplain from '../../CardSettingExplain.vue';
 import { communityAuth } from "../../../apps/communityDesk/hooks/deskCreateMethod"
-
-import { validateDrive, startPrint, doPreview, doJob  } from '../../card/hooks/print'
 import { saveData } from '../../../save/saveData'
 import { loadData } from '../../../save/loadData'
-import {useAppModal} from '../../../hooks'
 export default {
   name: "便签",
   components: {
