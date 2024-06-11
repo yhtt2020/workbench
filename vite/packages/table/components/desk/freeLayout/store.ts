@@ -157,6 +157,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     },
     // 初始化自由布局状态数据
     async initFreeLayoutState() {
+      console.log('"initFreeLayoutState" :>> ', "initFreeLayoutState");
       if (!this.getFreeLayoutState) {
         this.freeLayoutState[this.getCurrentDeskId] = _.cloneDeep(
           this.defaultState
@@ -294,11 +295,15 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     setFreeLayoutData(id, data) {
       // console.log('this.freeLayoutData', this.freeLayoutData);
 
-      this.freeLayoutData[id] = { ...data };
+      this.freeLayoutData[id] = data
     },
     setFreeLayoutState(id, state) {
       // console.log('this.freeLayoutState', this.freeLayoutState);
       this.freeLayoutState[id] = { ...state };
+    },
+    getFreeLayout1() {
+      console.log("this.freeLayoutData", this.freeLayoutData);
+      console.log("this.freeLayoutState", this.freeLayoutState);
     },
   },
   persist: {

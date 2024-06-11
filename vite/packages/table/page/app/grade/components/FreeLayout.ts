@@ -25,7 +25,8 @@ export const FreeLayoutStore = defineStore('FreeLayoutStore', {
               "name": "AggregateSearch",
               // // "id": 1705971216198,
               "customData": {
-                "sortType": "work",
+                "noBorder": false,
+                "currentSize": 2,
                 "customSize": "2x2"
               },
               "data": {}

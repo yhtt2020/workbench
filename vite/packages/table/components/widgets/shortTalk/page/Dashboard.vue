@@ -265,9 +265,22 @@ export default {
       this.customData.customSize = "2x4";
     }
     // 初始化
-    this.accToken = this.access_token;
-    this.accUrl = this.baseUrl;
-    // this.init();
+    if (communityMember(this.desk?.communityNo)) {
+      const target = {
+        customIndex: 'shortTalk',
+        desk: this.desk,
+      };
+      loadData("desk", target).then((rs) => {
+        this.accToken = rs?.accToken;
+        this.accUrl = rs?.accUrl;
+        this.init();
+      });
+    }else{
+      this.accToken = this.access_token;
+      this.accUrl = this.baseUrl;
+      this.init();
+    }
+
 
     if (this.options.disableEdit) {
       this.sizeList = [];
@@ -296,21 +309,21 @@ export default {
       ];
     }
 
-    this.$nextTick(() => {
-      // hhh
-      if (communityMember(this.desk?.communityNo)) {
-        const target = {
-          customIndex: this.customIndex,
-          desk: this.desk,
-        };
-        loadData("desk", target).then((rs) => {
-          this.changeAccToken(rs.accToken, rs.accUrl);
-          this.init();
-        });
-      } else {
-        this.init();
-      }
-    });
+    // this.$nextTick(() => {
+    //   // hhh
+    //   if (communityMember(this.desk?.communityNo)) {
+    //     const target = {
+    //       customIndex: this.customIndex,
+    //       desk: this.desk,
+    //     };
+    //     loadData("desk", target).then((rs) => {
+    //       this.changeAccToken(rs.accToken, rs.accUrl);
+    //       this.init();
+    //     });
+    //   } else {
+    //     this.init();
+    //   }
+    // });
   },
 
   methods: {
@@ -347,8 +360,12 @@ export default {
       } else {
         this.options.title = this.customData.optionTitle;
       }
+      let config = {
+        access_token: this.accToken,
+        baseUrl: this.accUrl,
+      }
       // 初始化获取详细数据
-      this.getBoardData();
+      this.getBoardData(config);
     },
     // 修改设置的数组
     handleChange(keys, direction, moveKeys) {
@@ -382,7 +399,7 @@ export default {
       this.changeAccToken(accToken, accUrl);
       if(this.communityAuth(this.desk?.communityNo)){
         const target = {
-          customIndex: this.customIndex,
+          customIndex: 'shortTalk',
           desk: this.desk,
         };
         const tokenData = {
