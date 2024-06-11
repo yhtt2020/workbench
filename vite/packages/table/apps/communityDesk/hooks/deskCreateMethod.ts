@@ -105,3 +105,8 @@ export const communityMember = (no:any) => {
     return currentCommunity.value?.item?.role  === 'member';
   }
 };
+
+// 处理icon图标颜色渲染
+export const communityIconType = (url:any)=>{
+  if(url?.includes("color=#")) return 'select';
+}
