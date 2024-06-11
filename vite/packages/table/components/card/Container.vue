@@ -266,6 +266,7 @@ import {
   getCurrentInstance,
   toRefs,
   nextTick,
+  provide,
 } from "vue";
 import { storeToRefs } from "pinia";
 import { cardStore as useCardStore } from "../../store/card";
@@ -309,7 +310,10 @@ const init = ref(false);
 // const freeLayoutStore = useFreeLayoutStore();
 
 const props = defineProps(defaultProps);
-const { header } = toRefs(props);
+
+const { header, customData, customIndex } = toRefs(props);
+
+
 const courierStatus = computed(() => {
   return !window.$usePlat("client");
 });
@@ -349,8 +353,12 @@ onBeforeMount(() => {
     // );
     // console.timeEnd("组件数据更新");
   }
-});
+  provide("_data", customData.value);
+  provide("_data1", props.customData);
+  // provide("_index", props.customIndex);
+  // provide("_desk", props.desk);
 
+});
 onMounted(() => {
   // 防止自定义时，无法获取到container导致卡死
   if (container.value) {

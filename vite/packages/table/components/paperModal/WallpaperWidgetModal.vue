@@ -30,7 +30,7 @@ export default {
 
  computed:{
   isFull(){
-    return this.$refs.modalRef.isFull
+    // return this.$refs.modalRef.isFull
   },
   modelVal(){
     if(this.modelValue !== undefined){

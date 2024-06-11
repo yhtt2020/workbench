@@ -11,6 +11,15 @@
     @resize="resize"
     @delete="deleteCard"
   >
+  <ClockSettingModal
+    ref="clockSettingRef"
+    :customIndex="customIndex"
+    :desk="desk"
+    :customData="customData"
+    @updateClockStyle="updateClockStyle"
+    :isFull="false"
+    @restZoom="restZoom"
+  />
     <div class="box no-drag" @click="fullScreen">
       <div
         style="width: 100%; height: 100%"
@@ -30,15 +39,7 @@
     </div>
   </xt-container>
 
-  <ClockSettingModal
-    ref="clockSettingRef"
-    :customIndex="customIndex"
-    :desk="desk"
-    :customData="customData"
-    @updateClockStyle="updateClockStyle"
-    :isFull="false"
-    @restZoom="restZoom"
-  />
+
 
   <ClockFullScreen
     v-if="isClockFullScreen"
@@ -77,6 +78,7 @@ export default {
     ClockFullScreen,
   },
   emit: ["delete"],
+  inject:['_data'],
   props: {
     customIndex: { type: Number, default: 0 },
     customData: {
@@ -113,6 +115,7 @@ export default {
     };
   },
   mounted() {
+    console.log('乌鱼子 this._data :>> ', this._data);
     // console.log(this.desk,'clock')
     // 当底部导航栏为windows模式时，点击导航栏中的时间，进入时间全屏
     this.$bus.on("openClockFullScreen", (data) => {

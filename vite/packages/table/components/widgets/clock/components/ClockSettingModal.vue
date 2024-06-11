@@ -45,7 +45,7 @@
 
         <div class="flex flex-col xt-bg-2 p-4 rounded-lg mb-4 " >
           <div class="flex flex-col">
-            <span class="xt-text mb-3 font-16">时钟样式</span> 
+            <span class="xt-text mb-3 font-16">时钟样式</span>
             <xt-option-tab  v-model="customData.currentStatus" :list="clockTabList" circle  style="height: 40px;margin-bottom: 0 !important;" />
           </div>
 
@@ -100,6 +100,7 @@ export default{
   components:{
     ClockStyle,
   },
+  inject:['_data'],
   props:{
     customData:{ type:Object,default:()=>{} },
     desk:{type:Object,default:()=>{}},
@@ -107,6 +108,12 @@ export default{
     zIndex:{  type:String,  default:'1000'},
     isFull:{  type:Boolean, default:false, }
   },
+  mounted(){
+    console.log('22222222 :>> ', 22222222);
+console.log('this._data :>> ', this._data);
+  },
+
+
   data(){
     return{
       clockTabList:clockTabList,
