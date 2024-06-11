@@ -107,6 +107,10 @@ export default {
     setCurrentDeskId(id){
      this.$emit('tabDeskId',id);
     },
+
+    clickDesk(){
+      this.$emit('clickTabDesk')
+    },
     
   },
 };

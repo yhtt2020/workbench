@@ -5,10 +5,14 @@ import { sourceList, defaultSourceList } from "./config/data";
 import CardSet from "./page/cardSet/CardSet.vue";
 import SearchModal from "./page/searchModal/SearchModal.vue";
 
-const header = {
-  title: "聚合搜索",
-  showIcon: "/logo/aggregateSearch.svg",
-};
+const header = computed(() => {
+  return {
+    title: "聚合搜索",
+    showIcon: "/logo/aggregateSearch.svg",
+    bg: customData.value.bgMode == "header" ? customData.value.bgColor : "",
+  };
+});
+
 const cloneSourceList = JSON.parse(JSON.stringify(sourceList));
 const defaultData = {
   // 搜索源列表
@@ -24,21 +28,29 @@ const defaultData = {
   historyList: [],
   noBorder: true,
   customSize: "4x2",
-  _updateFlag: "24532",
+  currentSize: "4",
+  _updateFlag: "2466",
+  bgMode: "default",
+  bgColor: "#508BFE",
 };
 const options = computed(() => {
   return {
     // 初始化数据
     defaultData,
     noBorder: customData.value?.noBorder,
+    bg: customData.value.bgMode == "custom" ? customData.value.bgColor : "",
   };
 });
+
 const customSize = computed(() => {
+  const size = customData.value.currentSize || 4;
+
   if (customData.value.noBorder) {
-    customData.value.customSize = "4x1";
+    customData.value.customSize = size + "x1";
   } else {
-    customData.value.customSize = "4x2";
+    customData.value.customSize = size + "x2";
   }
+
   return customData.value.customSize;
 });
 
@@ -57,9 +69,11 @@ const searchStyle = computed(() => {
     };
   } else {
     return {
+      background:
+        customData.value.bgMode != "default" ? customData.value.bgColor : "",
       "border-radius": "10px",
       height: "56px",
-      border: "1px solid rgba(255,255,255,0.1)",
+      // border: "1px solid rgba(255,255,255,0.1)",
     };
   }
 });
@@ -89,11 +103,7 @@ const menuList = computed(() => {
   ];
   return menu;
 });
-const listSort = (oldIndex, newIndex) => {
-  let sourceList = customData.value.sourceList;
-  let movedItem = sourceList.splice(oldIndex, 1)[0]; // 从旧位置移除
-  sourceList.splice(newIndex, 0, movedItem); // 插入到新位置
-};
+
 const lastIcon = computed(() => {
   // 最后使用有记录时
   if (customData.value.lastUse) {
@@ -104,28 +114,50 @@ const lastIcon = computed(() => {
 const surplusIcon = computed(() => {
   // surplusIcon
   let arr: any = [];
-  // 最后使用有记录时
-  if (customData.value.lastUse) {
-    const sourceList = customData.value.sourceList.filter(
-      (item) => item.name !== customData.value.source.name
-    );
-    arr = sourceList.slice(0, 2);
+  if (customData.value.currentSize == "4") {
+    // 最后使用有记录时
+    if (customData.value.lastUse) {
+      const sourceList = customData.value.sourceList.filter(
+        (item) => item.name !== customData.value.source.name
+      );
+      arr = sourceList.slice(0, 3);
+    }
+    arr = customData.value.sourceList?.slice(1, 4);
   }
-  arr = customData.value.sourceList?.slice(1, 3);
+
+  // 添加默认源
   arr?.unshift(...defaultSourceList);
 
   return arr;
 });
+const sizeList = computed(() => {
+  return [
+    {
+      name: customData.value.noBorder ? "2x1" : "2x2",
+      value: customData.value.noBorder ? "2x1" : "2x2",
+    },
+    {
+      name: customData.value.noBorder ? "4x1" : "4x2",
+      value: customData.value.noBorder ? "4x1" : "4x2",
+    },
+  ];
+});
+const updateSize = (val) => {
+  customData.value.customSize = val;
+  customData.value.currentSize  = [...val][0]
+};
 </script>
 
 <template>
   <xt-container
+    v-model:customSize="customSize"
     :customIndex="customIndex"
     :customData="customData"
     :options="options"
     :menuList="menuList"
-    :customSize="customSize"
     :header="header"
+    :sizeList="sizeList"
+    @resize="updateSize"
     class="xt-theme-b"
   >
     <div class="w-full h-full flex flex-col justify-center">
@@ -135,7 +167,7 @@ const surplusIcon = computed(() => {
         :style="searchStyle"
         :class="[
           customData.noBorder
-            ? 'h-[56px] xt-shadow xt-border xt-filter tt-bg'
+            ? 'h-[56px] xt-shadow xt-filter tt-bg'
             : 'flex-1 tt-bg-2-t',
         ]"
       >
@@ -179,13 +211,7 @@ const surplusIcon = computed(() => {
   </xt-container>
 
   <!-- 卡片设置 -->
-  <CardSet
-    v-if="cardSetVisible"
-    @close="cardSetVisible = false"
-    v-model:lastUse="customData.lastUse"
-    v-model:openWith="customData.openWith"
-    @listSort="listSort"
-  />
+  <CardSet v-if="cardSetVisible" @close="cardSetVisible = false" />
   <!-- 搜索 -->
   <SearchModal
     :specifySource="searchSource"

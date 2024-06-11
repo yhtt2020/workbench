@@ -47,7 +47,6 @@
           <PickDropDetail :isModal="isModal" @emitPick="updateList" />
         </xt-dropdown>
 
-        <ClosePaperButton v-if="isModal" />
       </div>
     </div>
 
@@ -183,7 +182,6 @@ import { taskStore } from "../../apps/task/store";
 import { message } from "ant-design-vue";
 import { paperGet } from "../../js/axios/request";
 
-import ClosePaperButton from "./components/close/ClosePaperButton.vue";
 import PickDropDetail from "./components/content/PickDropDetail.vue";
 import GradeSmallTip from "../../components/GradeSmallTip.vue";
 import MinSelect from "./components/select/MinSelect.vue";
@@ -201,7 +199,6 @@ export default {
   props: ["isModal"],
 
   components: {
-    ClosePaperButton,
     PickDropDetail,
     GradeSmallTip,
     MinSelect,

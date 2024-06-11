@@ -14,18 +14,14 @@
     </template>
 
     <!-- 社群桌面 -->
-    <!-- <router-view></router-view> -->
-
     <CommunityGroupDesk
-    :communityVisible="communityVisible"
-    ref="deskGroupRef"
-    :settings="settings"
-    :desk-list="desks"
-    v-model:currentDeskId="this.currentDeskId"
-    @changeDesk="changeDesk"
-  />
-
-
+      :communityVisible="communityVisible"
+      ref="deskGroupRef"
+      :settings="settings"
+      :desk-list="desks"
+      v-model:currentDeskId="this.currentDeskId"
+      @changeDesk="changeDesk"
+    />
   </div>
   <!-- 检测到用户头像为默认头像时触发用户中心个人信息修改弹窗 -->
   <div
@@ -44,6 +40,7 @@
       v-if="showGuide"
       @closeShowGuide="closeShowGuide"
       :deskId="deskId"
+      @changeDesk="changeDesk"
     ></NewGuidePage>
     <!-- 右上方的缩放推荐 -->
     <ScalePanel v-if="visibleScale" @closeScale="closeScale"></ScalePanel>
@@ -67,8 +64,6 @@
       style="z-index: 900"
     ></div>
   </teleport>
-
-  <GalleryModal ref="galleryRef" />
 </template>
 
 <script>
@@ -85,7 +80,6 @@ import UpdateMyInfo from "../components/comp/UpdateMyInfo.vue";
 import ScalePanel from "./ScalePanel.vue";
 import GuidePanel from "./GuidePanel.vue";
 import WebLogin from "./WebLogin.vue";
-import GalleryModal from "../components/paperModal/PaperApp.vue";
 import CommunityGroupDesk from "../apps/communityDesk/page/CommunityGroupDesk.vue";
 
 import { taskStore } from "../apps/task/store";
@@ -197,7 +191,6 @@ export default {
     // Audio,
     NewGuidePage,
     UpdateMyInfo,
-    GalleryModal,
     ScalePanel,
     GuidePanel,
     WebLogin,
@@ -493,7 +486,7 @@ export default {
           let desks = _.cloneDeep(DESKS);
 
           this.desks = desks;
-          this.currentDesk = this.desks[0];
+          // this.currentDesk = this.desks[0];
           this.currentDeskIndex = {
             name: this.desk[0]?.name,
             id: this.desk[0]?.id,
@@ -735,12 +728,12 @@ export default {
         }
       },
     },
+  },
 
-    beforeUnmount() {
-      let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
-      this.lastHeight = cardsHeight;
-      // console.log("销毁组件",cardsHeight);
-    },
+  beforeUnmount() {
+    let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
+    this.lastHeight = cardsHeight;
+    // console.log("销毁组件",cardsHeight);
   },
 };
 </script>

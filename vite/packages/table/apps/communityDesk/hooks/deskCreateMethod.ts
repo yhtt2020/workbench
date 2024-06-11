@@ -73,7 +73,7 @@ export const generateSearchResultTime = (timestamp: number) => {
   }
 };
 
-// 根据当前社群号来获取当前社群的管理员权限
+// 根据当前社群号来获取当前社群的管理员
 export const communityAuth = (no:any) => {
   const { currentCommunity } = storeToRefs(communityNavStore() as any);
   const communityNo = currentCommunity.value?.item?.no;
@@ -95,3 +95,13 @@ export const isArrayEqual = (oldList:any,newList:any) =>{
   }
   return true;
 }
+
+
+// 根据当前社群号来获取当前社群的成员
+export const communityMember = (no:any) => {
+  const { currentCommunity } = storeToRefs(communityNavStore() as any);
+  const communityNo = currentCommunity.value?.item?.no;
+  if(Number(no) === Number(communityNo)){
+    return currentCommunity.value?.item?.role  === 'member';
+  }
+};

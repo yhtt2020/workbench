@@ -135,10 +135,10 @@ onMounted(() => {
     animation: 150,
     handle: "." + sortableBox.value,
     disabled: data.value.sort === "free" ? false : true,
-    onEnd: function (evt) {
-      setTimeout(() => {
-        collisionDetection(evt.to.childNodes);
-      }, 100);
+    onEnd: function ({ oldIndex, newIndex }) {
+      let sourceList = data.value.list;
+      let movedItem = sourceList.splice(oldIndex, 1)[0]; // 从旧位置移除
+      sourceList.splice(newIndex, 0, movedItem); // 插入到新位置
     },
   });
 });
