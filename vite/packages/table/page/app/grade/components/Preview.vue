@@ -19,7 +19,7 @@
     <div class="flex justify-center items-center preview" id="previewContent">
       <!-- 市场分享 桌面布局定位 -->
       <!-- noFullScreen 去掉右上角的退出全屏按钮 -->
-      <Desk :noFullScreen="false"  :freeLayout="true" :currentDesk="displayScheme" :settings="displayScheme.settings" :notTrigger="true" :editing="false"></Desk>
+      <Desk :noFullScreen="false" :currentDesk="displayScheme" :settings="displayScheme.settings" :notTrigger="true" :editing="false"></Desk>
     </div>
     <div class="foot flex ">
       <div class="flex" style="padding: 0">
@@ -60,6 +60,7 @@ import { FreeLayoutStore } from "./FreeLayout";
 import {useFreeLayoutStore} from '../../../../components/desk/freeLayout/store'
 import { useWidgetStore } from "../../../../components/card/store";
 import { NavList } from '../../card/navList'
+import { homeStore } from '../../../../store/home'
 import _ from 'lodash-es'
 export default {
   name: 'Preview',
@@ -113,6 +114,9 @@ export default {
     ...mapWritableState(appStore, ['fullScreen','userInfo']),
     ...mapWritableState(FreeLayoutStore, ["assistDesk", "gameDesk"]),
     ...mapWritableState(useWidgetStore, ["edit"]),
+    ...mapWritableState(cardStore, ["desks"]),
+    ...mapWritableState(useFreeLayoutStore, ["freeLayoutId"]),
+    ...mapWritableState(homeStore, ["currentDeskId", "currentDeskIndex"]),
     tagList () {
       if (this.scheme.tags) {
         return this.scheme.tags.split(',')
@@ -192,6 +196,8 @@ export default {
     // 添加头部卡片
     addHeaderCard(){
       // 将数据添加到桌面
+      this.$emit('changeDesk', this.desks[0].id)
+      this.freeLayoutId = this.desks[0].id
       setTimeout(() => {
         this.clearFreeLayoutData()
         let header;
@@ -204,6 +210,15 @@ export default {
           headerList: header,
           cb: (position) => {
             this.$bus.emit("cutCanvas",position);
+            setTimeout(() => {
+              // this.$emit('changeDesk', "")
+              this.$emit('changeDesk', this.desks[0].id)
+              this.currentDeskId = this.desks[0].id
+              this.currentDeskIndex = {
+                name: this.desks[0].id,
+                title: this.desks[0].name,
+              }
+            }, 10);
           },
         });
       }, 2);

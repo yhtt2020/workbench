@@ -25,7 +25,6 @@
         :customData="customData"
         :desk="desk"
       >
-        <xt-task :modelValue="m0202" @cb="handleMenu">
           <drag-and-follow
             :isSelect="isSelect"
             :length="this.iconsRefs.length"
@@ -75,7 +74,6 @@
             ></icon>
             <!-- </template> -->
           </drag-and-follow>
-        </xt-task>
       </xt-container>
     </droppable-area>
     <!-- 卡片核心 -->

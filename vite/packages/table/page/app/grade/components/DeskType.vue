@@ -2,7 +2,7 @@
     <div class="text-center font-16 xt-text " style="padding-top: 80px;">定制你的桌面</div>
     <div class="mt-3 text-center xt-text-2 font-16 text-hidden">选择你的使用偏好，我们将为你添加推荐的数据，支持选择多个偏好。</div>
     <a-row :gutter="20" class="flex justify-center mt-6">
-      <a-col v-for="item in deskType">
+      <a-col v-for="item in deskType" :key="item.key">
         <div 
         class="px-4 pt-5 setting-panel pointer"
         @click="changeType(item.key)">

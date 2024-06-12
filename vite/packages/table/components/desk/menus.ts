@@ -16,11 +16,14 @@ function deskMenus() {
       id: 0,
       newIcon: "fluent:add-16-filled",
       name: "测试组件",
-      disabled: false,
+      disabled: true,
       fn: () => {
-        // AggregatedSearch
         useAddCard({
-          name: "AggregatedSearch",
+          name: "AggregateSearch",
+          data: {
+            noBorder: false,
+            currentSize: 2,
+          },
         });
       },
     },
@@ -163,8 +166,8 @@ function deskMenus() {
           id: 0,
           newIcon: "fluent:settings-16-regular",
           name: "系统设置",
-          fn:()=>{
-            this.$bus.emit('openSystemSet')
+          fn: () => {
+            this.$bus.emit("openSystemSet");
           },
           // disabled: import.meta.env.DEV ? false : true,
         },
