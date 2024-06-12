@@ -1,26 +1,6 @@
 <template>
   <div class="flex flex-row">
    <template v-for="item in menuList">
-      <xt-task
-        v-if="m02022 && item.title == '移动'"
-        :modelValue="m02022"
-        @cb="item.fn()"
-      >
-        <div class="option h-24 w-24 ml-4" @click="item.fn()">
-          <Icon class="icon" :icon="item.icon"></Icon>
-          {{ item.title }}
-        </div>
-      </xt-task>
-      <xt-task
-        v-else-if="m02024 && item.title == '合并'"
-        :modelValue="m02024"
-        @cb="item.fn()"
-      >
-        <div class="option h-24 w-24 ml-4" @click="item.fn()">
-          <Icon class="icon" :icon="item.icon"></Icon>
-          {{ item.title }}
-        </div>
-      </xt-task>
       <div class="option h-24 w-24 ml-4" @click="item.fn()">
         <Icon class="icon" :icon="item.icon"></Icon>
         {{ item.title }}

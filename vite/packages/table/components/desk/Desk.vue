@@ -213,7 +213,6 @@
     @setQuick="editVisible = false"
     @addIcon="addIcon"
   ></EditNewNavigation>
-  <GalleryModal ref="galleryRef" />
 </template>
 
 <script>
@@ -234,7 +233,6 @@ import { useFloatMenuStore } from "./floatMenu/store";
 import EditNewNavigation from "./addIcon/EditNewNavigation.vue";
 import _ from "lodash-es";
 import { registerFolder } from "../../apps/folder/src/hooks/register";
-import GalleryModal from "../paperModal/PaperApp.vue";
 import { useAddCard } from "../../ui/hooks/useAddCard";
 import { useDeskStore } from "./store";
 import { useFileConversionIcon } from "../../apps/folder/src/hooks/useDataConversion";
@@ -250,7 +248,6 @@ export default {
   components: {
     AppCenter,
     EditNewNavigation,
-    GalleryModal,
     Drop,
     LoadingOutlined,
   },
@@ -385,6 +382,17 @@ export default {
       handler(newVal) {
         if (!this.isFreeLayout) {
           this.currentDesk.layoutSize = this.getLayoutSize();
+          newVal.layoutSize = this.getLayoutSize();
+          // if (!newVal.settings) {
+          //   newVal.settings=
+          //     .settings = {
+          //     cardZoom: 100,
+          //     marginTop: 0,
+          //     cardMargin: 5,//卡片间隙
+          //     vDirection: false,
+          //   }
+          // }
+          this.muuriOptions.layout.horizontal = !newVal.settings?.vDirection;
         }
       },
       deep: true,
@@ -396,7 +404,6 @@ export default {
         // 同步更新自由布局ID
         this.freeLayoutId = newVal;
         this.$bus.off("startAdjust");
-        this.$bus.off("lockScreen");
         this.$bus.off("scrollbarUpdate");
         this.$bus.off("redirect");
         let obj = {
@@ -530,12 +537,6 @@ export default {
       this.freeLayoutScrollbarUpdate();
     });
 
-    this.$bus.on("lockScreen", () => {
-      this.$refs.galleryRef.openPaperAppModal();
-      setTimeout(() => {
-        this.$bus.emit("lockScreenSet");
-      }, 300);
-    });
 
     // 社群成员桌面触发位置还原
     this.$bus.on("redirect", () => {

@@ -60,7 +60,7 @@
     </div>
     <!-- 左侧区域结束 -->
     <!-- 主体区域开始 -->
-    <div class="flex flex-1 w-0">
+    <div class="flex flex-1" :class="rightW">
       <slot></slot>
     </div>
     <!-- 主体区域结束 -->
@@ -129,6 +129,11 @@ const props = defineProps({
   disabled: {
     default: "false",
   },
+  // 这里的宽度影响到壁纸那边使用,所以为了防止其他地方样式出问题暂时这样写
+  rightW:{
+    type:String,
+    default:'w-0',
+  }
 });
 // 全屏控制
 const full = ref(false);

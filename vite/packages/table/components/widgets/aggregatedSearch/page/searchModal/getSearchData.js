@@ -39,6 +39,8 @@ export const getLikeData = (word) => {
     let name = item.rename ? item.rename : item.name;
     if (name.includes(word) || item.url.includes(word)) {
       item.name = name;
+      item.value = item.url;
+      item.type = "system";
       arr.push(item);
     }
   });
@@ -102,14 +104,17 @@ export const getNoteData = async (word) => {
 export const getTodoData = (word) => {
   // 待办数据
   const taskStore = useTaskStore();
-  const { tasks } = storeToRefs(taskStore);
+  const { currentTasks, tasks,activeTask } = storeToRefs(taskStore);
+  console.log(" currentTasks.value :>> ", currentTasks.value);
+  console.log('tasks.value :>> ', tasks.value);
+  console.log('activeTask :>> ', activeTask);
   let arr = [];
-  tasks.value.forEach((item) => {
+  currentTasks.value.forEach((item) => {
     if (item.title.includes(word) || item.description.includes(word)) {
       arr.push({
         ...item,
         name: item.title,
-        icon: "/img/appLogo/todo.png",
+        icon: "/logo/todo.svg",
       });
     }
   });

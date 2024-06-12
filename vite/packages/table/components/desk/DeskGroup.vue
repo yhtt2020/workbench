@@ -417,7 +417,6 @@
       </div>
     </div>
     <div v-else>
-      <xt-task id="M0102" no="3"></xt-task>
       <div class="mt-4 desk-title">标题</div>
       <a-input
         v-model:value="deskTitle"
@@ -426,7 +425,6 @@
         placeholder="请输入"
         spellcheck="false"
       />
-      <xt-task id="M0102" no="4" @cb="doAddDesk">
         <span class="desk-title">初始布局</span>
         <div class="mt-6">
           <HorizontalPanel
@@ -442,7 +440,6 @@
           @click="doAddDesk"
           >立即添加
         </xt-button>
-      </xt-task>
 
       <div>
         <div class="btn-item" @click="importDesk">导入桌面</div>
@@ -843,7 +840,7 @@ export default {
           return !desk.hasOwnProperty("communityNo");
         });
         if (filterList.length > 0) {
-          this.currentDesk = filterList[0];
+          // this.currentDesk = filterList[0];
         }
       },
       immediate: true,

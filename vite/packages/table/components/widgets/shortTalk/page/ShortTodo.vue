@@ -26,14 +26,7 @@
       <template v-for="(item, index) in this.todoList" :key="index">
         <div
           class="dash-cell pointer"
-          :class="
-            (item.num == 0 || item.num == undefined
-              ? 'green'
-              : item.num < 100
-              ? 'yellow'
-              : 'red',
-            index > 1 ? 'mt-3' : '')
-          "
+          :class="item.num == 0 || item.num == undefined ? 'green' : item.num < 100 ? 'yellow' : 'red', index > 1 ? 'mt-3' : ''"
           @click="jumpUrl(item.url)"
         >
           <div class="cell-title">{{ item.title }}</div>
@@ -102,8 +95,13 @@ import { cardStore } from "../../../../store/card";
 import browser from "../../../../js/common/browser";
 import Unusual from "../../Unusual.vue";
 import { communityNavStore } from "../../../bottomPanel/store/communityNavStore";
-import { communityAuth } from "../../../../apps/communityDesk/hooks/deskCreateMethod";
 import CardSettingExplain from "../../../CardSettingExplain.vue";
+import {
+  communityAuth,
+  communityMember,
+} from "../../../../apps/communityDesk/hooks/deskCreateMethod";
+import { saveData } from "../../../../save/saveData";
+import { loadData } from "../../../../save/loadData";
 
 export default {
   components: {
@@ -177,7 +175,6 @@ export default {
       customSize: "2x4",
       header: {
         title: "社区待办",
-        // ifyIcon:'fluent:checkbox-checked-16-regular',
         showIcon:"/logo/todo.svg",
         rightIcon: [
           {
@@ -190,9 +187,22 @@ export default {
   emit: ["delete"],
   mounted() {
     // 初始化
-    this.accToken = this.access_token;
-    this.accUrl = this.baseUrl;
-    this.getTodoData();
+    if (communityMember(this.desk?.communityNo)) {
+      const target = {
+        customIndex: 'shortTalk',
+        desk: this.desk,
+      };
+      loadData("desk", target).then((rs) => {
+        this.accToken = rs?.accToken;
+        this.accUrl = rs?.accUrl;
+        this.init()
+      });
+    }else{
+      // 初始化
+      this.accToken = this.access_token;
+      this.accUrl = this.baseUrl;
+      this.init()
+    }
     this.customData.customSize = "2x4";
 
     if (this.options.disableEdit) {
@@ -219,6 +229,18 @@ export default {
     changeVisible() {
       this.settingVisible = false;
       this.changeAccToken(this.accToken, this.accUrl);
+      if(this.communityAuth(this.desk?.communityNo)){
+        const target = {
+          customIndex: 'shortTalk',
+          desk: this.desk,
+        };
+        const tokenData = {
+          accToken: this.accToken,
+          accUrl: this.accUrl,
+        };
+        saveData(tokenData, "desk", target);
+        this.$bus.emit("updateSync");
+      }
     },
     jumpUrl(url) {
       browser.openInUserSelect(url);
@@ -229,19 +251,26 @@ export default {
     deleteCard() {
       this.$emit("delete");
     },
+    init(){
+      let config = {
+        access_token: this.accToken,
+        baseUrl: this.accUrl,
+      }
+      this.getTodoData(config);
+    }
   },
   watch: {
     // 监听token 跟 url
     access_token: {
       handler(newVal, oldVal) {
         this.accToken = this.access_token;
-        this.getTodoData();
+        this.init()
       },
     },
     baseUrl: {
       handler(newVal, oldVal) {
         this.accUrl = this.baseUrl;
-        this.getTodoData();
+        this.init()
       },
     },
   },

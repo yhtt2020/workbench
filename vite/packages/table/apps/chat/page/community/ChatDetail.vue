@@ -60,19 +60,19 @@ const router = useRouter();
 
 const currentChatType = computed(() => {
   /**有状态就以状态为准进行会话切换**/ 
-  if(currentContact.value.type === 'group' && currentContact.value.groupID !== ""){
-    const name = currentContact.value.groupID;
+  if(currentContact.value?.type === 'group' && currentContact.value?.groupID !== ""){
+    const name = currentContact.value?.groupID;
     TUIConversationService?.switchConversation(name);
   }
   /**没有状态就默认选择会话列表中的第一个会话**/ 
-  else if(currentContact.value.type === 'group' && currentContact.value.groupID === ""){
+  else if(currentContact.value?.type === 'group' && currentContact.value?.groupID === ""){
     // 当前list是获取所有群聊会话列表
     const list = TUIStore?.storeMap?.conversation?.store?.conversationList;
     // 如果缓存中的会话是空的,就从会话列表中获取第一个会话;
     const currentID = list[0]?.conversationID;
     TUIConversationService?.switchConversation(currentID);
   }
-  return currentContact.value.type;
+  return currentContact.value?.type;
 });
 
 /**监听当前工作台的状态**/
