@@ -266,7 +266,7 @@ function memberMenus() {
       newIcon: "fluent:cloud-arrow-up-16-filled",
       fn: () => {
         this.loadCommunityCloud();
-        this.$router.go(0);
+        // this.$router.go(0);
       },
       contentAble: true,
       newContent:
