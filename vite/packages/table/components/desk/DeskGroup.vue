@@ -530,6 +530,7 @@ import {useDeskStore} from "./store";
 import {completeTask} from "../../apps/task/task";
 import NewGuidePage from "../../page/app/grade/NewGuidePage.vue";
 import ExtraMenu from "../../components/windowPanel/components/ExtraMenu.vue";
+import {localCache} from "../../js/axios/serverCache";
 
 export default {
   name: "DeskGroup",
@@ -744,9 +745,18 @@ export default {
     });
 
     this.hotDesk.push(this.apiList[0].children[0]);
-    this.getRecommend({goodType: "desk"}).then(data => {
-      this.recommendList = data
-    })
+    let cache=localCache.get('recommendDesks')
+    if(cache){
+      this.recommendList=cache
+    }else{
+      this.getRecommend({goodType: "desk"}).then(data => {
+        if(data){
+          this.recommendList = data
+          localCache.set('recommendDesks',data,500)
+        }
+      })
+    }
+
   },
   computed: {
     ...mapWritableState(deskStore, ["apiList"]),
