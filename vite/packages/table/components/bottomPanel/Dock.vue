@@ -177,7 +177,7 @@ import {
   extraRightMenu,
 } from "../../components/desk/navigationBar/index";
 import { useMergeFolder } from "../../components/desk/navigationBar/hook/mergeFolder.ts";
-import { Notifications } from "../../js/common/sessionNotice";
+import { Notifications } from "../../js/chat/sessionNotice";
 import { defaultFolderData } from "../../apps/folder/src/components/options";
 import { hoverRealItemId } from "../desk/navigationBar/hook/hoverRealItemId";
 import { mergeData } from "../../ui/hooks/useDataConversion";
@@ -900,4 +900,4 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped></style>../../js/chat/sessionNotice.ts

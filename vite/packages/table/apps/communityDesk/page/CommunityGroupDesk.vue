@@ -69,7 +69,6 @@ export default {
     // 当前桌面id
     currentDeskId: {
       type: String,
-      required: true,
     },
   },
 
@@ -140,14 +139,14 @@ export default {
         desk.cards = [];
       }
       this.deskList.unshift({...desk,communityDeskId: `${this.communityInfo?.no}_${desk?.id}`,});
-      this.$emit("changeDesk", { id: desk.id });
+      this.$emit("changeCommunityDesk", { id: desk.id });
       this.deskTitle = "";
     },
 
     // 更新桌面id
     updateId(id) {
       this.$emit("update:currentDeskId", id);
-      this.$emit("changeDesk", { id: id });
+      this.$emit("changeCommunityDesk", { id: id });
     },
 
     // 解决桌面卡片数据重置

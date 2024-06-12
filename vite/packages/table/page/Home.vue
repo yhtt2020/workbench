@@ -16,12 +16,12 @@
     <!-- 社群桌面 -->
     <CommunityGroupDesk
       :communityVisible="communityVisible"
-      ref="deskGroupRef"
       :settings="settings"
       :desk-list="desks"
       v-model:currentDeskId="this.currentDeskId"
-      @changeDesk="changeDesk"
+      @changeCommunityDesk="changeDesk"
     />
+    <!--  ref="deskGroupRef" -->
   </div>
   <!-- 检测到用户头像为默认头像时触发用户中心个人信息修改弹窗 -->
   <div
@@ -496,7 +496,7 @@ export default {
             name: initDesk?.name,
             id: initDesk?.id,
           };
-          this.currentDeskId = this.desk[0]?.id;
+          this.currentDeskId = initDesk?.id;
           console.log(_.cloneDeep(this.desks), "修改后的desks");
 
           // web端打开功能介绍提示弹窗

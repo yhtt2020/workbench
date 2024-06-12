@@ -272,7 +272,7 @@ export default {
     },
     currentDesk: {
       type: Object,
-      required: true,
+      required: false,
     },
     muuriOptions: {
       type: Object,
@@ -327,12 +327,10 @@ export default {
     },
     communityInfo: {
       type: Object,
-      required: true,
     },
     // 社群成员桌面下开启右键菜单
     showRightMenu:{
       type: Boolean,
-      required: true,
       default: false,
     }
   },

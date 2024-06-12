@@ -104,7 +104,6 @@ export default {
     },
     currentDeskId: {
       type: String,
-      required: true,
     },
   },
 

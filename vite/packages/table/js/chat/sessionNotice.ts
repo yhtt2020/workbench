@@ -279,6 +279,7 @@ export class Notifications {
 
   // 社群消息通知
   public async receiveNotification(msg: any) {
+    
     // const app:any = appStore();
     // const {settings, userInfo} = storeToRefs(app);
     // const data = {...msg.data[0]};

@@ -97,7 +97,7 @@ import { initSocket } from "./js/socket/socket";
 initSocket();
 import initStores from "./initStores";
 
-import { Notifications } from "./js/common/sessionNotice";
+import { Notifications } from "./js/chat/sessionNotice";
 
 import Wujie from "wujie-vue3";
 
