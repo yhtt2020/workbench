@@ -327,12 +327,12 @@ export default {
     },
     communityInfo: {
       type: Object,
-      required: true,
+      required: false,
     },
     // 社群成员桌面下开启右键菜单
     showRightMenu:{
       type: Boolean,
-      required: true,
+      required: false,
       default: false,
     }
   },
