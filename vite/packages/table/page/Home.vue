@@ -343,10 +343,13 @@ export default {
       }
     }
 
-    // 更新社群桌面
-    // this.$bus.on("changeCurrentDesk", (desk) => {
-    //   this.changeDesk(desk);
-    // });
+    // 接收群聊通知消息的回调方法
+    const groupOnMessageReceived = (evt) =>{
+      window.$notice.receiveNotification(evt);
+    }
+    // 监听群聊消息全局接收
+    window.$chat?.chat?.on(window.$chat.EVENT.MESSAGE_RECEIVED,groupOnMessageReceived)
+
   },
   created() {
     if (this.currentDesk.cards.length) {
@@ -486,10 +489,12 @@ export default {
           let desks = _.cloneDeep(DESKS);
 
           this.desks = desks;
+          // console.log('查看desk',this.desks[0]);
+          const initDesk = this.desks[0]
           // this.currentDesk = this.desks[0];
           this.currentDeskIndex = {
-            name: this.desk[0]?.name,
-            id: this.desk[0]?.id,
+            name: initDesk?.name,
+            id: initDesk?.id,
           };
           this.currentDeskId = this.desk[0]?.id;
           console.log(_.cloneDeep(this.desks), "修改后的desks");
