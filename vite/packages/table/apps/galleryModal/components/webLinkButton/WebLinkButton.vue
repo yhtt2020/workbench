@@ -29,21 +29,15 @@ const downloadFile = () => {
   const newContentUrl = content.split("?")[0];
   // 获取文件
   const file = newContentUrl?.split("/")[newContentUrl?.split("/")?.length - 1];
-  console.log('查看content',content);
-  console.log('查看newContentUrl',newContentUrl);
-  console.log('查看file',newContentUrl?.split("/"));
-
   // 进行转换
   const blob = new Blob([content], { type: "text/plain" });
   const newUrl = window.URL.createObjectURL(blob);
-
   // 创建一个a元素进行操作
   const a = document.createElement("a");
   a.href = newUrl;
   a.download = file;
   a.click();
   window.URL.revokeObjectURL(newUrl);
-  
 };
 </script>
 
