@@ -1,13 +1,13 @@
 <template>
   <teleport to="body">
     <!-- 应用弹窗 -->
-    <FloatApp 
+    <FloatApp
       :appPos="position"
       v-if="appsVisible"
       @close="appsVisible = false"
     />
     <!-- 文件夹弹窗 -->
-    <FloatFolder 
+    <FloatFolder
       v-if="folderVisible"
       :folderPos="position"
       :customData="customData"
@@ -46,7 +46,7 @@
     </div>
   </transition>
   </teleport>
-  
+
   <!-- 快速搜索 底部栏区域 -->
   <div
     id="bottomPanel"
@@ -55,7 +55,6 @@
     style="z-index: 99; min-width: 80px"
     :style="[{ borderRadius: navAttribute.navRadius + 'px' },boxStyle]"
   >
-    <xt-task id="M0104" no="1" :mask="false" class="w-full">
       <div
         style="
           display: flex;
@@ -152,7 +151,6 @@
           </div>
         </div>
       </div>
-    </xt-task>
   </div>
 </template>
 
@@ -541,7 +539,7 @@ export default {
       if (item.component) {
         this.componentId = item.component;
         if (item.component === "EditNewNavigation") {
-          
+
           this.selectNav = "foot";
         }
       } else {
@@ -865,9 +863,9 @@ export default {
      */
     resetElementPosition(custom = undefined) {
       const draggableSize = (
-        this.currentItem?.cardData?.customData?.customSize || 
-        this.currentItem?.customSize || 
-        this.resize || 
+        this.currentItem?.cardData?.customData?.customSize ||
+        this.currentItem?.customSize ||
+        this.resize ||
         '1x1').split("x");
       // console.log(draggableSize)
       // 元素坐标
