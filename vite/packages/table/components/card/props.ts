@@ -10,8 +10,8 @@ export const defaultProps = {
    * 小组件索引
    */
   customIndex: {
-    type: String,
-    default: '',
+    type: Number,
+    default: 0,
   },
   /**
    * 小组件数据

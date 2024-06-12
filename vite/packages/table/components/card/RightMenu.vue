@@ -103,7 +103,7 @@ const props = defineProps({
     },
   },
   customIndex: {
-    type:String
+    type:Number
   },
   sizeType: {},
   model: {

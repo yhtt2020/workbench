@@ -475,7 +475,6 @@
   ></ExportDesk>
   <div style="z-index: 9999">
     <DeskPreview
-      :addDesk="addDesk"
       :deskList="deskList"
       :scheme="scheme"
       :showModal="showModal"
@@ -551,7 +550,7 @@ export default {
     NewGuidePage,
     ExtraMenu,
   },
-  emits: ["update:currentDeskId", "showMore"],
+  emits: ["update:currentDeskId", "showMore",'changeDesk'],
   props: {
     settings: {
       type: Object,

@@ -132,6 +132,7 @@ export default {
   components: {
     Desk,
   },
+  emits:['afterAdded','closeGroup','closePreview'],
   data() {
     return {
       // 添加
@@ -363,7 +364,7 @@ export default {
       this.$emit("closePreview", false);
       this.fullScreen = false;
     },
-    
+
     getPreviewHeight() {
       this.$nextTick(() => {
         if (this.fullScreen) {
