@@ -102,7 +102,9 @@ const props = defineProps({
       return [];
     },
   },
-  customIndex: {},
+  customIndex: {
+    type:String
+  },
   sizeType: {},
   model: {
     default: "contextmenu",
