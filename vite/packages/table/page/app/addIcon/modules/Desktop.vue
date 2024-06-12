@@ -1,12 +1,10 @@
 <template>
-  <!-- <xt-task :inClass="{'h-full':true}" outClass="h-full" id="m0201" no="4"> -->
       <Icon
         ref="iconRef"
         :isSelect="true"
         :data="allApps"
         @updateSelectApps="updateSelectApps"
       ></Icon>
-  <!-- </xt-task> -->
 </template>
 
 <script>
