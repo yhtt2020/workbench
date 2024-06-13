@@ -22,24 +22,22 @@
       @restZoom="restZoom"
     />
     <ClockFullScreen
-    v-if="isClockFullScreen"
-    :customData="customData"
-    :clock="customData.clockId"
-    :bgZoom="customData.bgZoom"
-    :imgUrl="fullImage"
-    @updateClockStyle="updateClockStyle"
-    @updateBgZoom="updateBgZoom"
-    @exit="isClockFullScreen = false"
-  >
-  </ClockFullScreen>
+      v-if="isClockFullScreen"
+      :customData="customData"
+      :clock="customData.clockId"
+      :bgZoom="customData.bgZoom"
+      :imgUrl="fullImage"
+      @updateClockStyle="updateClockStyle"
+      @updateBgZoom="updateBgZoom"
+      @exit="isClockFullScreen = false"
+    >
+    </ClockFullScreen>
     <div class="box no-drag" @click="fullScreen">
       <div
         style="width: 100%; height: 100%"
         class="flex items-center justify-center"
-        :style="sliderScale"
       >
-      <!-- -->
-
+        <!-- :style="sliderScale" -->
         <component
           :is="customData.clockId"
           :noBg="true"
@@ -47,16 +45,14 @@
           :isSnow="customData.enableSecond"
           :hideDate="false"
           :clockFont="customData.font"
-
+          :style="{ zoom: cardZoom }"
         >
-        <!-- :style="{ zoom: customZoom }" -->
-      </component>
-        <!-- <Weather/> -->
+          <!-- customZoom -->
+        </component>
       </div>
     </div>
+    {{}}
   </xt-container>
-
-
 </template>
 
 <script>
@@ -75,6 +71,9 @@ import { DEFAULT } from "../../../js/const/default";
 
 import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
 
+import { communityMember } from "../../../apps/communityDesk/hooks/deskCreateMethod";
+import { loadData } from "../../../save/loadData";
+
 export default {
   mixins: [mixin],
 
@@ -84,7 +83,9 @@ export default {
     ClockFullScreen,
     // Weather
   },
+
   emit: ["delete"],
+
   props: {
     customIndex: { type: Number, default: 0 },
     customData: {
@@ -121,7 +122,6 @@ export default {
     };
   },
   mounted() {
-    console.log("this.cities :>> ", this.city);
     // console.log(this.desk,'clock')
     // 当底部导航栏为windows模式时，点击导航栏中的时间，进入时间全屏
     this.$bus.on("openClockFullScreen", (data) => {
@@ -175,20 +175,73 @@ export default {
     }
   },
   computed: {
+    cardZoom() {
+      // 获取当前时钟ID
+      let clockID = this.customData.clockId;
+      // 时钟缩放列表
+      let zoomList = {
+        clock1: [1, 0.35],
+        clock2: [1, 0.5],
+        clock3: [1, 0.5],
+        clock4: [1, 0.5],
+        clock5: [1, 0.5],
+        clock6: [1, 0.3],
+        clock7: [1, 0.15],
+      };
+
+      // 时钟秒针缩放列表
+      let secondList = {
+        clock1: 0.8,
+        clock2: 0.8,
+        clock3: 1,
+        clock4: 0.8,
+        clock5: 0.8,
+        clock6: 1,
+        clock7: 0.6,
+      };
+      let second = this.customData.enableSecond ? secondList[clockID] : 1;
+
+      const currentZoom = zoomList[clockID];
+      let res = this.customData.customSize.split("x");
+      let w = parseInt(res[0]);
+      let h = parseInt(res[1]);
+      let num = 0;
+      let zoom = currentZoom[num];
+      // 最大数
+      let max = w > h ? w : h;
+      // 宽度高度相差
+      if (w - h >= 2) {
+        max = h;
+      } else if (h - w >= 2) {
+        max = w;
+      }
+      if (w == h) {
+        num = 1;
+        zoom += currentZoom[num] * (max -2) - currentZoom[num] ;
+      } else if (h == 1) {
+        max = 1;
+      } else if (w > 2 && h > 2) {
+        num = 1;
+        zoom += currentZoom[num] * max;
+      }
+      return zoom * second;
+    },
     ...mapWritableState(appStore, ["backgroundImage", "settings"]),
     sizeList() {
       return [
         {
-          // name: this.customData.noBorder ? "2x1" : "2x2",
-          // value:  this.customData.noBorder ? "2x1" : "2x2",
-          name: this.options.noBorder ? "2x1" : "2x2",
-          value: this.options.noBorder ? "2x1" : "2x2",
+
+          name: "2x1",
+          value: "2x1",
         },
         {
-          // name:  this.customData.noBorder ? "4x1" : "4x2",
-          // value:  this.customData.noBorder ? "4x1" : "4x2",
-          name: this.options.noBorder ? "4x1" : "4x2",
-          value: this.options.noBorder ? "4x1" : "4x2",
+       
+          name: "4x1",
+          value: "4x1",
+        },
+        {
+          name: "2x2",
+          value: "2x2",
         },
         {
           name: "4x2",
@@ -222,10 +275,10 @@ export default {
         // bg: !this.customData.backgroundFrame ? "transparent" : "",
         resize: !this.isCommunityDesktop(this.desk) ? true : false,
 
-        noBorder:this.customData.noBorder,
+        noBorder: this.customData.noBorder,
 
         defaultData: {
-          noBorder:false,
+          noBorder: false,
           backgroundFrame: true,
           clockId: "clock4",
           imgUrl: DEFAULT.WALLPAPER,
@@ -294,6 +347,73 @@ export default {
         }
       }
     },
+  },
+
+  mounted() {
+    // console.log(this.desk,'clock')
+    // 当底部导航栏为windows模式时，点击导航栏中的时间，进入时间全屏
+    this.$bus.on("openClockFullScreen", (data) => {
+      this.isClockFullScreen = data;
+    });
+    if (typeof this.customData.enableSecond === "undefined") {
+      this.customData.enableSecond = false;
+    }
+    if (typeof this.customData.backgroundFrame === "undefined") {
+      this.customData.backgroundFrame = true;
+    }
+    if (this.customData.customZoom === undefined) {
+      this.updateCustomData(
+        this.customIndex,
+        {
+          backgroundFrame: true,
+          clockId: "clock4",
+          imgUrl: DEFAULT.WALLPAPER,
+          blurs: 3,
+          bgZoom: 100,
+          zoom: 1.5,
+          customSize: "2x2",
+          font: "font-family: '优设标题黑' !important;",
+          fontColor: "#FFFFFF",
+          enableSecond: false,
+          currentStatus: "font",
+          currentZoom: 100,
+          name: dateTimeStamp(Date.now()),
+          _updateFlag: "24531",
+        },
+        this.desk
+      );
+    }
+    // 在不切换页面的情况下,通过定时器来实现自动更新时钟日期标题
+    this.clockTime = setInterval(() => {
+      this.clockDay = this.dateTimeStamp(Date.now());
+    }, 12 * 60 * 60 * 1000);
+
+    if (this.options.disableEdit) {
+      this.menuList = [];
+    } else {
+      this.menuList = [
+        {
+          icon: "shezhi1",
+          title: "设置",
+          fn: () => {
+            this.$refs.clockSettingRef.openClockModal();
+          },
+        },
+      ];
+    }
+
+    if (communityMember(this.desk?.communityNo)) {
+      //
+      const target = {
+        customIndex: this.customIndex,
+        desk: this.desk,
+      };
+      loadData("desk", target).then((rs) => {
+        if (rs) {
+          this.updateCustomData(this.customIndex, { ...rs }, this.desk);
+        }
+      });
+    }
   },
 
   methods: {

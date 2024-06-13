@@ -30,4 +30,10 @@ export const runList = [
     icon: "/logo/memorandum.svg",
     ...defaultData,
   },
+  {
+    name:"galleryModalApp",
+    cname:"壁纸",
+    icon:"/logo/wallpaper.svg",
+    ...defaultData,
+  }
 ];

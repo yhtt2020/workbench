@@ -1,5 +1,5 @@
 <template>
-  <xt-modal v-model="clockVisible" v-if="clockVisible" title="时钟设置" :index="zIndex">
+  <xt-modal v-model="clockVisible" v-if="clockVisible" title="时钟设置" :index="zIndex" @close="closeClockModal">
     <div style="height: calc(66vh);width: 500px;">
       <xt-scrollbar  :y="true" style="height: 100%;">
         <div class="flex flex-col xt-bg-2 p-4 rounded-lg mb-4">
@@ -17,11 +17,11 @@
           </div>
           <div class="flex flex-col" v-if="!isFull">
             <div class="flex justify-between mb-2.5">
-             <span class="xt-font xt-text font-16">背景框</span>
+             <span class="xt-font xt-text font-16">无边框模式</span>
              <a-switch v-model:checked="customData.noBorder"/>
             </div>
             <span class="xt-font xt-text-2 font-14">
-             显示时钟组件的背景框。
+             关闭时钟组件的背景框。
             </span>
           </div>
           <div class="my-4" v-if="!isFull">
@@ -92,6 +92,9 @@
 import { clockTabList,clockSelectList } from '../hooks/clockList';
 import mixin from "../hooks/clockMixin.js";
 import { localCache } from '../../../../js/axios/serverCache';
+import { communityAuth,communityMember } from "../../../../apps/communityDesk/hooks/deskCreateMethod";
+import { saveData } from "../../../../save/saveData";
+
 
 import ClockStyle from '../clockState/ClockStyle.vue';
 
@@ -109,8 +112,6 @@ export default{
     isFull:{  type:Boolean, default:false, }
   },
   mounted(){
-    console.log('22222222 :>> ', 22222222);
-console.log('this._data :>> ', this._data);
   },
 
 
@@ -166,6 +167,19 @@ console.log('this._data :>> ', this._data);
     // 重置缩放
     restZoom(){
       this.$emit("restZoom")
+    },
+
+    // 关闭时钟组件设置弹窗
+    closeClockModal(){
+      this.clockVisible = false;
+      if(communityAuth(this.desk?.communityNo)){
+        const target = {
+          customIndex:this.customIndex,
+          desk:this.desk
+        }
+        saveData(this.customData,"desk",target);
+        this.$bus.emit("updateSync");
+      }
     }
   },
 

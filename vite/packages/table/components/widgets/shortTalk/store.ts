@@ -187,14 +187,15 @@ export const shortTalkStore = defineStore("shortTalkStore", {
   // getters:{},
   actions: {
     // 处理请求地址
-    qUrl(url){
-      return this.baseUrl + url
+    qUrl(url, baseUrl){
+      let base = baseUrl?baseUrl:this.baseUrl
+      return base + url
     },
     
     // 初始化 图表 请求数据
     async getChartData(customData){
       if (customData.defaultPlatType) {
-        await post( this.qUrl('/oauth/authorization/getCensus')+"?access_token=" + this.access_token,{
+        await post( this.qUrl('/oauth/authorization/getCensus', customData?.baseUrl)+"?access_token=" + customData?.access_token,{
           "content":{
             "sign":"access,interact",
             "access":{
@@ -229,8 +230,8 @@ export const shortTalkStore = defineStore("shortTalkStore", {
       }
     },
     // 初始化 数据板 请求数据
-    async getBoardData(){
-      await post( this.qUrl('/oauth/authorization/getCensus')+"?access_token=" + this.access_token,{
+    async getBoardData(customData){
+      await post( this.qUrl('/oauth/authorization/getCensus', customData?.baseUrl)+"?access_token=" + customData?.access_token,{
         "content":{
           "sign":"all_visit,week_thread,month_thread,all_thread,week_post,month_post,all_post,week_support,month_support,all_support,month_register,today_visit,week_visit,month_visit ,today_thread ,today_post,today_support,today_register,week_register,all_register",
           "access":{
@@ -256,8 +257,8 @@ export const shortTalkStore = defineStore("shortTalkStore", {
       })
     },
     // 初始化 待办 请求数据
-    async getTodoData(){
-      await post( this.qUrl('/oauth/authorization/getCensus')+"?access_token=" + this.access_token,{
+    async getTodoData(customData){
+      await post( this.qUrl('/oauth/authorization/getCensus', customData?.baseUrl)+"?access_token=" + customData?.access_token,{
         "content":{
           "sign":"audit_thread,audit_post,audit_channel_post,report,audit_forum_member,audit_forum",
           "access":{

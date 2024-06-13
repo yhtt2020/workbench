@@ -48,8 +48,7 @@ export const COMPONENT_LIMIT = {
     "GameStrategy",
     "GamesDiscount",
     "DiscountPercentage",
-    "customAssembly",,
-    "notes",
+    "customAssembly",
   ],
 };
 /**

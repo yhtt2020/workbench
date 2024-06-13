@@ -19,7 +19,7 @@
     <div class="flex justify-center items-center preview" id="previewContent">
       <!-- 市场分享 桌面布局定位 -->
       <!-- noFullScreen 去掉右上角的退出全屏按钮 -->
-      <Desk :noFullScreen="false"  :freeLayout="true" :currentDesk="displayScheme" :settings="displayScheme.settings" :notTrigger="true" :editing="false"></Desk>
+      <Desk :noFullScreen="false" :currentDesk="displayScheme" :settings="displayScheme.settings" :notTrigger="true" :editing="false"></Desk>
     </div>
     <div class="foot flex ">
       <div class="flex" style="padding: 0">

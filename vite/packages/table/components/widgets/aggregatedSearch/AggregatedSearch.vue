@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, watch, computed, toRefs, provide } from "vue";
-import _ from "lodash-es";
 import { sourceList, defaultSourceList } from "./config/data";
 import CardSet from "./page/cardSet/CardSet.vue";
 import SearchModal from "./page/searchModal/SearchModal.vue";
@@ -57,6 +56,7 @@ const customSize = computed(() => {
 const props = defineProps({
   customIndex: {},
   customData: {},
+  desk:{}
 });
 const { customData }: any = toRefs(props);
 provide("data", customData);
@@ -157,6 +157,7 @@ const updateSize = (val) => {
     :menuList="menuList"
     :header="header"
     :sizeList="sizeList"
+    :desk="desk"
     @resize="updateSize"
     class="xt-theme-b"
   >

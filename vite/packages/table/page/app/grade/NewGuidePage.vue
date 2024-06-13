@@ -90,8 +90,6 @@
         </div>
       </div>
     </div>
-    <!-- 壁纸模块 -->
-    <GalleryModal ref="paperModal" />
     <teleport to="body">
       <div style="z-index: 9999">
         <!-- @afterAdded="afterAdded" -->
@@ -117,7 +115,6 @@ import { nanoid } from 'nanoid'
 import { NavList } from '../card/navList'
 import { navStore } from '../../../store/nav';
 import { message } from "ant-design-vue";
-import GalleryModal from "../../../components/paperModal/PaperApp.vue";
 import DeskType from "./components/DeskType.vue";
 import DeskIcon from "./components/DeskIcon.vue";
 import CardList from "./components/CardList.vue";
@@ -132,11 +129,11 @@ import { useFreeLayoutStore } from "../../../components/desk/freeLayout/store";
 import { useWidgetStore } from "../../../components/card/store";
 import { useCustomLayout } from "../../../components/desk/freeLayout/useCustomLayout";
 import { taskStore } from "../../../apps/task/store";
+import { useAppModal } from "../../../apps/appModal/src/hook/useAppModal";
 
 export default {
   components: {
     MyIcon,
-    GalleryModal,
     DeskType,
     DeskIcon,
     CardList,
@@ -218,6 +215,7 @@ export default {
     ...mapWritableState(useFreeLayoutStore, [
       "isFreeLayout",
       "getFreeLayoutState",
+      "getFreeLayoutData",
       "defaultState",
       "previewFlag",
       "freeLayoutId"
@@ -307,19 +305,33 @@ export default {
 
     // 设置自由布局数据
     showFreeLayout(type) {
+      this.freeLayoutId = 'mj36hf6h'
       if (type == 'game') {
-        this.setFreeLayoutData('mj36hf6h', this.gameDesk.freeLayoutData)
+        let res = {...this.gameDesk.freeLayoutData}
         this.setFreeLayoutState('mj36hf6h', this.gameDesk.freeLayoutState)
         this.scheme = { ...GameDesk }
-      } else {
-        this.setFreeLayoutData('mj36hf6h', this.assistDesk.freeLayoutData)
+        let t1 = _.cloneDeep(res)
+        this.setFreeLayoutData('mj36hf6h', t1)
+        setTimeout(()=>{
+          let t2 = _.cloneDeep(res)
+          this.setFreeLayoutData('mj36hf6h', t2)
+        },500)
+      } 
+      else {
+        let res = {...this.assistDesk.freeLayoutData}
         this.setFreeLayoutState('mj36hf6h', this.assistDesk.freeLayoutState)
         this.scheme = { ...AssistDesk }
+        let t1 = _.cloneDeep(res)
+        this.setFreeLayoutData('mj36hf6h', t1)
+        setTimeout(()=>{
+          let t2 = _.cloneDeep(res)
+          this.setFreeLayoutData('mj36hf6h', t2)
+        },500)
       }
-
       this.showModal = true
       this.previewFlag = true
       this.edit = true
+      // this.getFreeLayout1()
     },
 
     closePreview() {
@@ -328,7 +340,8 @@ export default {
     },
     // 触发打开壁纸弹窗
     openPaperModal() {
-      this.$refs.paperModal.openPaperAppModal()
+      // this.$refs.paperModal.openPaperAppModal()
+      useAppModal('galleryModalApp').openApp();
     },
 
     // 调整类型
@@ -711,7 +724,7 @@ export default {
         // 这步有可能 会被ai传回数据格式错误 导致报错
         let tmp = JSON.parse(res)
 
-        if (tmp.game.length + tmp.programs.length != exeList.length) return
+        if (tmp.game?.length + tmp.programs.length != exeList.length) return
 
 
         tmp.file = folderList

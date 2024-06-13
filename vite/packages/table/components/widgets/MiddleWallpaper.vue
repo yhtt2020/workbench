@@ -5,10 +5,10 @@
       v-model:customSize="customData.customSize"
       :options="options"
       :customIndex="customIndex"
-      :menuList="menuList"
       :sizeList="sizeList"
       ref="cardSlot"
       :customData="customData"
+      :menuList="newMenu" 
       class="cardSlot"
       :desk="desk"
       @delete="deleteCard"
@@ -207,12 +207,11 @@
   </a-spin>
 
   <teleport to="body">
-    <WallpaperWidgetModal
-      ref="paperWidgetRef"
+    <WallpaperWidgetModal />
+    <!-- <GalleryModal ref="galleryRef" /> -->
+    <!-- ref="paperWidgetRef"
       :modelValue="wallModelValue"
-      @updateCustomDatas="updatePaperSource"
-    />
-    <GalleryModal ref="galleryRef" />
+      @updateCustomDatas="updatePaperSource" -->
   </teleport>
 </template>
 
@@ -233,10 +232,12 @@ import { getFileName } from "../../page/gallery/libs/utils";
 import { paperGet, bingGet } from "../../js/axios/request";
 
 import Widget from "../card/Widget.vue";
-import WallpaperWidgetModal from "../paperModal/WallpaperWidgetModal.vue";
-import GalleryModal from "../paperModal/PaperApp.vue";
+// import WallpaperWidgetModal from "../../apps/galleryModal/components/WallpaperWidgetModal.vue";
+// import GalleryModal from "../paperModal/PaperApp.vue";
 import { usePlat } from "../../ui/hooks/usePlat";
 import { communityNavStore } from "../bottomPanel/store/communityNavStore";
+import { useAppModal } from "../../apps/appModal/src/hook/useAppModal";
+import { pickPaperStore } from "../../page/gallery/store/PickPaperStore";
 
 let fs;
 let path;
@@ -248,7 +249,7 @@ if (usePlat("client")) {
 export default {
   name: "MiddleWallpaper",
 
-  components: { Widget, newIcon, WallpaperWidgetModal, GalleryModal },
+  components: { Widget, newIcon },
 
   props: {
     desk: {
@@ -296,7 +297,8 @@ export default {
           newIcon: "fluent:image-multiple-16-regular",
           title: "在应用中打开",
           fn: () => {
-            this.goGallery(this.customData.value);
+            const { openApp } = useAppModal("galleryModalApp");
+            openApp();
           },
         },
         {
@@ -359,7 +361,9 @@ export default {
           newIcon: "fluent:settings-16-regular",
           title: "设置",
           fn: () => {
-            this.$refs.paperWidgetRef.openWidgetModal();
+            this.currentID = "s";
+            const { openApp } = useAppModal("galleryModalApp");
+            openApp();
           },
         },
       ],
@@ -368,13 +372,13 @@ export default {
 
   computed: {
     ...mapWritableState(paperStore, ["myPapers", "settings"]),
+    ...mapWritableState(pickPaperStore, ["currentID"]),
 
     header() {
       return {
         title: this.paperTitle,
-       //  ifyIcon: "fluent:image-multiple-16-regular",
-        showIcon:"/logo/wallpaper.svg",
-
+        //  ifyIcon: "fluent:image-multiple-16-regular",
+        showIcon: "/logo/wallpaper.svg",
       };
     },
     options() {
@@ -445,7 +449,7 @@ export default {
       }
     },
 
-    //
+    
     imagesList() {
       return [this.getCustomDataPaper].map((img, index) => {
         return img.src;
@@ -468,6 +472,20 @@ export default {
         };
       }
     },
+
+    // 判断环境处理右键菜单
+    newMenu(){
+      if(window.$usePlat("web")){
+        const filterArr = this.menuList.filter((item)=>{
+          return item.title !== "设置"
+        });
+        return filterArr;
+      }
+      else {
+        return this.menuList;
+      }
+    },
+
   },
 
   mounted() {

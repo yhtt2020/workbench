@@ -8,6 +8,7 @@
   >
     <xt-container
       v-model:status="status"
+      :desk="desk"
       :modalSize="modalSize"
       :options="options"
       :customIndex="customIndex"
@@ -189,6 +190,7 @@ const addFile = (data) => {
  */
 const props = defineProps({
   customData: {},
+  desk:{},
   customIndex: {},
   expand: {
     default: () => {

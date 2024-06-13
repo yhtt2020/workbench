@@ -7,9 +7,6 @@
  -->
 <template>
   <!-- 右键菜单 -->
-  <!-- v-if="init" -->
-  <!-- update:currentSize -->
-  <!-- {{ currentSize }} -->
   <RightMenu
     v-model:size="currentSize"
     :menus="menus"
@@ -17,7 +14,10 @@
     :sizeList="sizeList"
     :disableHierarchy="options.hierarchy"
   >
-    <div class="menu-box">
+    <div
+      class="menu-box"
+      :class="[options.noBorder ? 'hover:tt-theme-bg-2 rounded-xl' : '']"
+    >
       <!-- 离线模式-->
       <div
         class="mask rounded-xl"
@@ -60,14 +60,6 @@
           <!--  主体内容插槽2  -->
         </slot>
       </div>
-      <!-- <div
-        v-else-if="options?.noBorder"
-        ref="container"
-        :style="[getSize]"
-        :class="[edit ? 'editing' : '']"
-      >
-        <slot></slot>
-      </div> -->
       <!-- 默认模式 -->
       <div
         v-else
@@ -215,32 +207,18 @@
           :name="header.title"
           :status="envLimitStatus"
           :plat="platLimit"
-          imgSize="75"
+          :imgSize="75"
         >
-          <div
-            class="h-full rounded-b-lg"
-            :style="{ background: options.showColor ? 'var(--main-bg)' : '' }"
-          >
-            <div
-              class="flex-1 h-full rounded-b-lg"
-              :style="[
-                {
-                  background: body.bg,
-                  color: body.color,
-                  padding: body.scroll ? '0 14px' : '0 14px 14px 14px',
-                },
-              ]"
+          <div class="h-full rounded-b-lg" :style="[bodyStyle]">
+            <Resize
+              v-model:size="currentSize"
+              :modalSize="options.modalSize"
+              :resize="options.resize"
+              :odd="options.odd"
+              @resize="resize"
             >
-              <Resize
-                v-model:size="currentSize"
-                :modalSize="options.modalSize"
-                :resize="options.resize"
-                :odd="options.odd"
-                @resize="resize"
-              >
-                <slot></slot>
-              </Resize>
-            </div>
+              <slot></slot>
+            </Resize>
           </div>
         </xt-status>
         <!-- 小组件主体结束 -->
@@ -348,6 +326,7 @@ onBeforeMount(() => {
   }
 });
 provide("_data", customData);
+provide("_index", customIndex);
 onMounted(() => {
   // 防止自定义时，无法获取到container导致卡死
   if (container.value) {
@@ -447,7 +426,28 @@ const containerStyle = computed(() => {
     color,
   };
 });
+const bodyStyle = computed(() => {
+  let background = "none";
+  if (props.body?.bg) {
+    background = props.body.bg;
+  }
 
+  // 字体色
+  let color = "";
+  if (props.body?.color) {
+    background = props.body.color;
+  }
+  // 边框
+  let padding = "";
+  if (!props.options?.noBorder) {
+    padding = props.body.scroll ? "0 14px" : "0 14px 14px 14px";
+  }
+  return {
+    background,
+    color,
+    padding,
+  };
+});
 // 添加到导航栏的数据
 const addObj = computed(() => {
   return {
