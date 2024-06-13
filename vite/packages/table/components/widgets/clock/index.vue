@@ -115,6 +115,18 @@ export default {
       isClockFullScreen: false,
       bgZoom: this.customData.bgZoom,
       clockDay: this.dateTimeStamp(Date.now()),
+      //  zoom: "1.05",
+      //  zooms: {
+      //   // 无限拉伸是0, 1*1是1 2*2是2
+      //   clock1: [155, 35, 35],
+      //   clock2: [160, 66, 50],
+      //   clock3: [150, 0, 80],
+      //   clock4: [140, 0, 30],
+      //   clock5: [150, 0, 25],
+      //   clock6: [180, 0, 80],
+      //  },
+      //  bgZoom: 0,
+      //  widthHeightObj: {}
     };
   },
 
