@@ -1,43 +1,10 @@
 <script setup lang="ts">
 import { ref, inject, onMounted, nextTick, computed } from "vue";
-import { openWithList } from "../../config/data";
-import Sortable from "sortablejs";
-const data: any = inject("data");
-const emit = defineEmits([
-  "close",
-  "listSort",
-  "update:lastUse",
-  "update:openWith",
-]);
-const sortableRef = ref();
+import Attribute from "./Attribute.vue";
 
-onMounted(() => {
-  setTimeout(() => {
-    new Sortable(sortableRef.value, {
-      animation: 150,
-      // 开始拖拽时
-      onStart: function (evt: any) {},
-      // 结束拖拽时
-      onEnd({ oldIndex, newIndex }: any) {
-        // console.log(" newIndex, oldIndex :>> ", newIndex, oldIndex);
-        emit("listSort", oldIndex, newIndex);
-        // let movedItem = sourceList.value.splice(oldIndex, 1)[0]; // 从旧位置移除
-        // sourceList.value.splice(newIndex, 0, movedItem); // 插入到新位置
-        // [sourceList.value[newIndex], sourceList.value[oldIndex]] = [
-        //   sourceList.value[oldIndex],
-        //   sourceList.value[newIndex],
-        // ];
-        // emit("listSort", sourceList);
-      },
-    });
-  }, 100);
-});
-const updateLastUse = (val) => {
-  emit("update:lastUse", val);
-};
-const updateOpenWith = (val) => {
-  emit("update:openWith", val);
-};
+const data: any = inject("data");
+const emit = defineEmits(["close"]);
+
 const close = () => {
   emit("close");
 };
@@ -52,17 +19,50 @@ const leftMenu = [
   },
 ];
 const menuIndex = ref(0);
+
+const colorList = [
+  {
+    name: "默认",
+    value: "default",
+  },
+  {
+    name: "标题栏",
+    value: "header",
+  },
+  {
+    name: "自定义背景色",
+    value: "custom",
+  },
+];
+const sizeList = computed(() => {
+  return [
+    {
+      name: data.value.noBorder ? "2x1" : "2x2",
+      value: "2",
+    },
+    {
+      name: data.value.noBorder ? "4x1" : "4x2",
+      value: "4",
+    },
+  ];
+});
 </script>
 
 <template>
-  <xt-modal :model-value="true" @close="close" :mask="false">
+  <xt-modal
+    :model-value="true"
+    @close="close"
+    :mask="false"
+    boxClass=""
+    headerClass="p-4"
+  >
     <!-- 导航 -->
-    <!-- <template #nav>
-      <div class="h-full w-[200px] p-3 tt-main-bg">
+    <template #nav>
+      <div class="w-[200px] p-3 tt-main-bg h-[634px]">
         <div
           v-for="(item, index) in leftMenu"
           :key="index"
-          class="flex items-center p-3 mb-3 cursor-pointer"
+          class="flex items-center p-3 mb-3 cursor-pointer rounded-xl"
           :class="{
             'tt-theme-bg-2': menuIndex === index,
           }"
@@ -72,7 +72,7 @@ const menuIndex = ref(0);
           {{ item.name }}
         </div>
       </div>
-    </template> -->
+    </template>
     <!-- 头部 -->
     <template #header-left>
       <div class="flex items-center">
@@ -80,58 +80,43 @@ const menuIndex = ref(0);
         {{ leftMenu[menuIndex].name }}
       </div>
     </template>
-    <div class="w-[468px]"></div>
-    <template v-if="menuIndex === 0">
-      <xt-option-box>
-        <xt-option-info
-          title="记住上次使用的搜索方式"
-          isSwitch
-          v-model:switch="data.lastUse"
-          @updateSwitchCb="updateLastUse"
-        />
-        <hr />
-        <xt-option-info title="网页默认打开方式" />
-        <xt-option-select
-          v-model:select="data.openWith"
-          :list="openWithList"
-          @cb="updateOpenWith"
-        />
-        <div class="mb-3"></div>
-      </xt-option-box>
-      <div class="flex justify-between text-sm mb-3">
-        <div>搜索引擎</div>
-        <div class="tt-text-2">长按拖拽排序</div>
-      </div>
-      <div
-        class="flex flex-col w-full tt-bg-2 rounded-xl p-3"
-        ref="sortableRef"
-      >
-        <div
-          v-for="item in data.sourceList"
-          :key="item.name"
-          class="w-full h-12 flex justify-between items-center cursor-move"
-        >
-          <div class="flex">
-            <xt-mix-icon :icon="item.icon" type="select" class="mr-3" />
-            {{ item.name }}
-          </div>
-          <xt-mix-icon icon="fluent:line-horizontal-3-20-filled" class="mr-3" />
-        </div>
-      </div>
-    </template>
-
-    <xt-option-box class="mt-3">
-      <xt-option-info
-        title="无边框模式"
-        isSwitch
-        v-model:switch="data.noBorder"
-      />
-    </xt-option-box>
-    <!--
-    <xt-option-box>
-      <xt-option-info title="无边框模式" />
-      <xt-option-select />
-    </xt-option-box> -->
+    <xt-scrollbar
+      class="w-[468px] h-[570px] overflow-hidden px-4 pb-4"
+      :y="true"
+    >
+      <Attribute v-if="menuIndex === 0" />
+      <template v-else>
+        <xt-option-box class="">
+          <xt-option-info
+            title="无边框模式"
+            isSwitch
+            v-model:switch="data.noBorder"
+          />
+        </xt-option-box>
+        <xt-option-box>
+          <xt-option-info title="小组件尺寸" />
+          <xt-option-tab
+            :list="sizeList"
+            v-model="data.currentSize"
+            circle
+            style="height: 40px"
+          />
+        </xt-option-box>
+        <xt-option-box>
+          <xt-option-info title="小组件颜色" />
+          <xt-option-tab
+            :list="colorList"
+            v-model="data.bgMode"
+            circle
+            style="height: 40px"
+          />
+          <xt-option-color
+            v-model:color="data.bgColor"
+            v-if="data.bgMode != 'default'"
+          />
+        </xt-option-box>
+      </template>
+    </xt-scrollbar>
   </xt-modal>
 </template>
 <style lang="scss" scoped></style>

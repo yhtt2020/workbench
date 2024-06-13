@@ -92,7 +92,7 @@ const NewAddCard = defineAsyncComponent(
 );
 import MyIcons from "../widgets/myIcons/index.vue";
 
-import AggregateSearch from "../widgets/aggregate/AggregateSearch.vue";
+// import AggregateSearch from "../widgets/aggregate/AggregateSearch.vue";
 import AggregateSearchFullScreen from "../widgets/aggregate/AggregateSearchFullScreen.vue";
 import GameStrategy from "../widgets/games/GameStrategy.vue";
 
@@ -127,10 +127,10 @@ const TTAppModal = defineAsyncComponent(
   () => import("../../apps/ttApp/src/modules/modal")
 );
 
-import AggregatedSearch from "../widgets/aggregatedSearch";
+import AggregateSearch from "../widgets/aggregatedSearch";
 export default {
   components: {
-    AggregatedSearch,
+    AggregateSearch,
     TTAppCard,
     TTAppModal,
     Test,
@@ -190,7 +190,7 @@ export default {
     Clocks,
     Notes,
     GameStrategy,
-    AggregateSearch,
+    // AggregateSearch,
     AggregateSearchFullScreen,
     MyIcons,
     SmallRank,

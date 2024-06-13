@@ -18,7 +18,7 @@ export const open = (item) => {
   if (!showType) {
     return;
   }
-  if (showType === "网页") {
+  if (showType === "网页" || showType === "收藏") {
     openBrowser(item.openWith, item.value);
   } else if (showType === "应用") {
     startApp(item.openWith, item.value);
@@ -28,5 +28,9 @@ export const open = (item) => {
     useGroupJump(item.value);
   } else if (showType == "AI助手") {
     useAppModal("ai").openApp(item.value);
+  } else if (showType == "待办") {
+    window.$ui.router.push({
+      name: "todo",
+    });
   }
 };

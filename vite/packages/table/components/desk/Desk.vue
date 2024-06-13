@@ -213,7 +213,6 @@
     @setQuick="editVisible = false"
     @addIcon="addIcon"
   ></EditNewNavigation>
-  <GalleryModal ref="galleryRef" />
 </template>
 
 <script>
@@ -234,7 +233,6 @@ import { useFloatMenuStore } from "./floatMenu/store";
 import EditNewNavigation from "./addIcon/EditNewNavigation.vue";
 import _ from "lodash-es";
 import { registerFolder } from "../../apps/folder/src/hooks/register";
-import GalleryModal from "../paperModal/PaperApp.vue";
 import { useAddCard } from "../../ui/hooks/useAddCard";
 import { useDeskStore } from "./store";
 import { useFileConversionIcon } from "../../apps/folder/src/hooks/useDataConversion";
@@ -250,7 +248,6 @@ export default {
   components: {
     AppCenter,
     EditNewNavigation,
-    GalleryModal,
     Drop,
     LoadingOutlined,
   },
@@ -330,12 +327,12 @@ export default {
     },
     communityInfo: {
       type: Object,
-      required: true,
+      required: false,
     },
     // 社群成员桌面下开启右键菜单
     showRightMenu:{
       type: Boolean,
-      required: true,
+      required: false,
       default: false,
     }
   },
@@ -355,6 +352,7 @@ export default {
     //   deep: true,
     // },
     adjustLayout(val) {
+      console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb')
       if (val) {
         this.toggleEditing();
         this.adjustLayout = false;
@@ -362,6 +360,7 @@ export default {
     },
     deskMenus: {
       handler(newVal) {
+        console.log('wwwwwwwwwwwwwwwwwwwwwww')
         this.deskMenus.forEach((item) => {
           this.addMenu(item);
         });
@@ -371,6 +370,7 @@ export default {
     },
     loaded: {
       handler() {
+        console.log('zzzzzzzzzzzzzzzzzzzz33333333333333333333')
         this.$nextTick(() => {
           setTimeout(() => {
             if (!window.showed) {
@@ -383,20 +383,33 @@ export default {
     },
     deskSize: {
       handler(newVal) {
+        console.log('9999999999999999999999')
         if (!this.isFreeLayout) {
+          console.log('尺寸变化了，干哈嘎嘎')
           this.currentDesk.layoutSize = this.getLayoutSize();
+          newVal.layoutSize = this.getLayoutSize();
+          // if (!newVal.settings) {
+          //   newVal.settings=
+          //     .settings = {
+          //     cardZoom: 100,
+          //     marginTop: 0,
+          //     cardMargin: 5,//卡片间隙
+          //     vDirection: false,
+          //   }
+          // }
+          this.muuriOptions.layout.horizontal = !newVal.settings?.vDirection;
         }
       },
-      deep: true,
+      deep: false,
       immediate: true,
     },
     // 监听ID变化
     "currentDesk.id": {
       handler(newVal) {
+        console.log('66666666666666666666666')
         // 同步更新自由布局ID
         this.freeLayoutId = newVal;
         this.$bus.off("startAdjust");
-        this.$bus.off("lockScreen");
         this.$bus.off("scrollbarUpdate");
         this.$bus.off("redirect");
         let obj = {
@@ -422,6 +435,7 @@ export default {
     },
     "currentDesk.settings": {
       handler(newVal) {
+        console.log('33333333333333333333333')
         if (!this.isFreeLayout) {
           if (!newVal) {
             newVal = {
@@ -441,6 +455,7 @@ export default {
     },
     "currentDesk.settings.vDirection": {
       handler(newVal) {
+        console.log('222222222222222222222222222222')
         this.key = Date.now();
       },
       deep: true,
@@ -530,12 +545,6 @@ export default {
       this.freeLayoutScrollbarUpdate();
     });
 
-    this.$bus.on("lockScreen", () => {
-      this.$refs.galleryRef.openPaperAppModal();
-      setTimeout(() => {
-        this.$bus.emit("lockScreenSet");
-      }, 300);
-    });
 
     // 社群成员桌面触发位置还原
     this.$bus.on("redirect", () => {

@@ -453,5 +453,9 @@ export default {
   background-position: center !important;
 
 }
+
+.hevue-imgpreview-wrap{
+  z-index: 1000000 !important;
+}
 </style>
 

@@ -178,14 +178,14 @@ export default {
     },
   },
   async mounted () {
-    let cats = await this.getCategories('desk')
-
-    this.categories = cats
-    if (cats?.length > 0) {
-      this.categoryId = cats[0].id
-    }
-    this.update()
-    this.setSelectVal(this.deskId)
+    this.getCategories('desk').then(cats=>{
+      this.categories = cats
+      if (cats?.length > 0) {
+        this.categoryId = cats[0].id
+      }
+      this.update()
+      this.setSelectVal(this.deskId)
+    })
   },
   methods: {
     ...mapActions(deskStore, ['setDeskList']),

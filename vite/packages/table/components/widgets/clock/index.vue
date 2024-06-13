@@ -68,6 +68,9 @@ import { DEFAULT } from "../../../js/const/default";
 
 import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
 
+import { communityMember } from "../../../apps/communityDesk/hooks/deskCreateMethod";
+import { loadData } from "../../../save/loadData";
+
 export default {
   mixins: [mixin],
 
@@ -76,7 +79,9 @@ export default {
     ClockSettingModal,
     ClockFullScreen,
   },
+
   emit: ["delete"],
+
   props: {
     customIndex: { type: Number, default: 0 },
     customData: {
@@ -112,62 +117,9 @@ export default {
       clockDay: this.dateTimeStamp(Date.now()),
     };
   },
-  mounted() {
-    // console.log(this.desk,'clock')
-    // 当底部导航栏为windows模式时，点击导航栏中的时间，进入时间全屏
-    this.$bus.on("openClockFullScreen", (data) => {
-      this.isClockFullScreen = data;
-    });
-    if (typeof this.customData.enableSecond === "undefined") {
-      this.customData.enableSecond = false;
-    }
-    if (typeof this.customData.backgroundFrame === "undefined") {
-      this.customData.backgroundFrame = true;
-    }
-    if (this.customData.customZoom === undefined) {
-      this.updateCustomData(
-        this.customIndex,
-        {
-          backgroundFrame: true,
-          clockId: "clock4",
-          imgUrl: DEFAULT.WALLPAPER,
-          blurs: 3,
-          bgZoom: 100,
-          zoom: 1.5,
-          customSize: "2x2",
-          font: "font-family: '优设标题黑' !important;",
-          fontColor: "#FFFFFF",
-          enableSecond: false,
-          currentStatus: "font",
-          currentZoom: 100,
-          name: dateTimeStamp(Date.now()),
-          _updateFlag: "24531",
-        },
-        this.desk
-      );
-    }
-    // 在不切换页面的情况下,通过定时器来实现自动更新时钟日期标题
-    this.clockTime = setInterval(() => {
-      this.clockDay = this.dateTimeStamp(Date.now());
-    }, 12 * 60 * 60 * 1000);
 
-    if (this.options.disableEdit) {
-      this.menuList = [];
-    } else {
-      this.menuList = [
-        {
-          icon: "shezhi1",
-          title: "设置",
-          fn: () => {
-            this.$refs.clockSettingRef.openClockModal();
-          },
-        },
-      ];
-    }
-  },
   computed: {
     ...mapWritableState(appStore, ["backgroundImage"]),
-
 
     // 组件头部
     header() {
@@ -259,11 +211,76 @@ export default {
     },
   },
 
+  mounted() {
+    // console.log(this.desk,'clock')
+    // 当底部导航栏为windows模式时，点击导航栏中的时间，进入时间全屏
+    this.$bus.on("openClockFullScreen", (data) => {
+      this.isClockFullScreen = data;
+    });
+    if (typeof this.customData.enableSecond === "undefined") {
+      this.customData.enableSecond = false;
+    }
+    if (typeof this.customData.backgroundFrame === "undefined") {
+      this.customData.backgroundFrame = true;
+    }
+    if (this.customData.customZoom === undefined) {
+      this.updateCustomData(
+        this.customIndex,
+        {
+          backgroundFrame: true,
+          clockId: "clock4",
+          imgUrl: DEFAULT.WALLPAPER,
+          blurs: 3,
+          bgZoom: 100,
+          zoom: 1.5,
+          customSize: "2x2",
+          font: "font-family: '优设标题黑' !important;",
+          fontColor: "#FFFFFF",
+          enableSecond: false,
+          currentStatus: "font",
+          currentZoom: 100,
+          name: dateTimeStamp(Date.now()),
+          _updateFlag: "24531",
+        },
+        this.desk
+      );
+    }
+    // 在不切换页面的情况下,通过定时器来实现自动更新时钟日期标题
+    this.clockTime = setInterval(() => {
+      this.clockDay = this.dateTimeStamp(Date.now());
+    }, 12 * 60 * 60 * 1000);
+
+    if (this.options.disableEdit) {
+      this.menuList = [];
+    } else {
+      this.menuList = [
+        {
+          icon: "shezhi1",
+          title: "设置",
+          fn: () => {
+            this.$refs.clockSettingRef.openClockModal();
+          },
+        },
+      ];
+    }
+
+    if (communityMember(this.desk?.communityNo)) {
+      //
+      const target = {
+        customIndex: this.customIndex,
+        desk: this.desk,
+      };
+      loadData("desk", target).then((rs) => {
+        if (rs) {
+          this.updateCustomData(this.customIndex, { ...rs }, this.desk);
+        }
+      });
+    }
+  },
+
   methods: {
     ...mapActions(cardStore, ["updateCustomData"]),
     ...mapActions(communityNavStore, ["isCommunityDesktop"]),
-
-
 
     dateTimeStamp,
     deleteCard() {

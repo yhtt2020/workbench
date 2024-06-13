@@ -1,6 +1,9 @@
 import { useCustomLayout } from "./freeLayout/useCustomLayout";
 import { headerData, mainData } from "./freeLayout/config";
 import { useAddCard } from "../../hooks";
+import { useAppModal  } from "../../apps/appModal/src/hook/useAppModal";
+
+
 function deskMenus() {
   let currentHide = null;
   if (this.isFreeLayout) {
@@ -13,11 +16,14 @@ function deskMenus() {
       id: 0,
       newIcon: "fluent:add-16-filled",
       name: "测试组件",
-      disabled: false,
+      disabled: true,
       fn: () => {
-        // AggregatedSearch
         useAddCard({
-          name: "AggregatedSearch",
+          name: "AggregateSearch",
+          data: {
+            noBorder: false,
+            currentSize: 2,
+          },
         });
       },
     },
@@ -117,7 +123,8 @@ function deskMenus() {
       newIcon: "fluent:image-multiple-16-regular",
       name: "更换壁纸",
       fn: () => {
-        this.$refs.galleryRef.openPaperAppModal();
+        const { openApp } = useAppModal("galleryModalApp");
+        openApp();
       },
     },
     // {
@@ -159,8 +166,8 @@ function deskMenus() {
           id: 0,
           newIcon: "fluent:settings-16-regular",
           name: "系统设置",
-          fn:()=>{
-            this.$bus.emit('openSystemSet')
+          fn: () => {
+            this.$bus.emit("openSystemSet");
           },
           // disabled: import.meta.env.DEV ? false : true,
         },

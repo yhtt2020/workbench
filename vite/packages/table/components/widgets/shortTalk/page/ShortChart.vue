@@ -12,7 +12,7 @@
     @delete="deleteCard"
   >
     <Unusual
-      v-if="!this.access_token || !this.baseUrl"
+      v-if="!accToken || !accUrl"
       title="请完成小组件配置"
       :disableEdit="options.disableEdit"
       :newIcon="'fluent-emoji:memo'"
@@ -35,7 +35,7 @@
           v-show="this.setVisible"
           class="xt-active-btn"
           style="width: 64px; height: 40px"
-          @click="changeAccToken(accToken, accUrl)"
+          @click="submitEcharts(accToken, accUrl)"
         >
           提交
         </div>
@@ -160,8 +160,13 @@ import { shortTalkStore } from "../store";
 import { useToast } from "vue-toastification";
 import Unusual from "../../Unusual.vue";
 import { communityNavStore } from "../../../bottomPanel/store/communityNavStore";
-import { communityAuth } from "../../../../apps/communityDesk/hooks/deskCreateMethod";
+import {
+  communityAuth,
+  communityMember,
+} from "../../../../apps/communityDesk/hooks/deskCreateMethod";
 import CardSettingExplain from "../../../CardSettingExplain.vue";
+import { saveData } from "../../../../save/saveData";
+import { loadData } from "../../../../save/loadData";
 
 const toast = useToast();
 
@@ -183,9 +188,6 @@ export default {
     customData: {
       type: Object,
       default: () => {},
-    },
-    menuList: {
-      type: Array,
     },
     desk: {
       type: Object,
@@ -297,7 +299,7 @@ export default {
       header: {
         title: "社区访问数据/每日/全部",
         // ifyIcon:'fluent:arrow-trending-lines-20-filled',
-        showIcon:"/logo/ShortChart.svg",
+        showIcon: "/logo/ShortChart.svg",
 
         rightIcon: [
           {
@@ -310,8 +312,39 @@ export default {
   },
   emit: ["delete"],
   async mounted() {
-    this.accToken = this.access_token;
-    this.accUrl = this.baseUrl;
+
+    if(this.communityAuth(this.desk?.communityNo)){
+      // 初始化
+      this.accToken = this.access_token;
+      this.accUrl = this.baseUrl;
+
+      const target = {
+        customIndex: 'shortTalk',
+        desk: this.desk,
+      };
+      const tokenData = {
+        accToken: this.accToken,
+        accUrl: this.accUrl,
+      };
+      saveData(tokenData, "desk", target);
+      this.$bus.emit("updateSync");
+    }
+    // 初始化
+    if (communityMember(this.desk?.communityNo)) {
+      const target = {
+        customIndex: 'shortTalk',
+        desk: this.desk,
+      };
+      loadData("desk", target).then((rs) => {
+        this.accToken = rs?.accToken;
+        this.accUrl = rs?.accUrl;
+        this.init();
+      });
+    }else{
+      this.accToken = this.access_token;
+      this.accUrl = this.baseUrl;
+      this.init();
+    }
     if (this.customData.time) {
       this.timeVal = this.customData.time;
     } else {
@@ -328,7 +361,6 @@ export default {
       this.init();
     }, this.timeVal * 1000);
 
-    this.init();
 
     if (this.options.disableEdit) {
       this.menuList = [];
@@ -393,11 +425,13 @@ export default {
         this.defaultPlatType = this.customData.defaultPlatType;
         this.customData.customSize = "4x4";
       }
+      let config = {
+        ...this.customData,
+        access_token: this.accToken,
+        baseUrl: this.accUrl,
+      }
 
-      // this.accToken = this.access_token
-      // this.accUrl = this.baseUrl
-
-      this.getChartData(this.customData).then(() => {
+      this.getChartData(config).then(() => {
         // 添加判断 如果没有获取到数据就停止
         this.changeBarChart();
       });
@@ -453,7 +487,7 @@ export default {
         (this.series = [
           {
             type: "bar",
-            data: this.access.visit.series,
+            data: this.access?.visit.series,
             name: "访问次数",
             label: {
               show: true,
@@ -470,7 +504,7 @@ export default {
           },
           {
             type: "bar",
-            data: this.access.login.series,
+            data: this.access?.login.series,
             name: "访问人数",
             label: {
               show: true,
@@ -489,13 +523,13 @@ export default {
           (this.legend = ["访问次数", "访问人数"]);
 
         // x轴
-        this.xData = this.interact.post.xAxis;
+        this.xData = this.interact?.post.xAxis;
         // y轴
       } else {
         (this.series = [
           {
             type: "bar",
-            data: this.interact.post.series,
+            data: this.interact?.post.series,
             name: "发布",
             label: {
               show: true,
@@ -512,7 +546,7 @@ export default {
           },
           {
             type: "bar",
-            data: this.interact.support.series,
+            data: this.interact?.support.series,
             name: "点赞",
             label: {
               show: true,
@@ -528,7 +562,7 @@ export default {
           },
           {
             type: "bar",
-            data: this.interact.thread.series,
+            data: this.interact?.thread.series,
             name: "评论",
             label: {
               show: true,
@@ -546,7 +580,7 @@ export default {
           // 图例
           (this.legend = ["发布", "点赞", "评论"]);
         // x轴
-        this.xData = this.interact.post.xAxis;
+        this.xData = this.interact?.post.xAxis;
       }
       this.initEcharts();
     },
@@ -568,6 +602,7 @@ export default {
         },
         this.desk
       );
+      this.$bus.emit('updateSync');
       if (boolean) {
         toast.success("保存成功");
       }
@@ -579,13 +614,35 @@ export default {
     shortBack() {
       this.settingVisible = true;
     },
+
+    // 社区图表配置项提交
+    submitEcharts(accToken,accUrl) {
+      if(this.communityAuth(this.desk?.communityNo)){
+        const target = {
+          customIndex: 'shortTalk',
+          desk: this.desk,
+        };
+        const tokenData = {
+          accToken: accToken,
+          accUrl: accUrl,
+        };
+        saveData(tokenData, "desk", target);
+        this.$bus.emit("updateSync");
+      }
+      this.changeAccToken(accToken,accUrl);
+    },
   },
   watch: {
     // 监听token 跟 url
     access_token: {
       handler(newVal, oldVal) {
-        this.accToken = this.access_token;
-        this.getChartData(this.customData).then(() => {
+        this.accToken = this.access_token;      
+        let config = {
+          ...this.customData,
+          access_token: this.accToken,
+          baseUrl: this.accUrl,
+        }
+        this.getChartData(config).then(() => {
           this.changeCharts();
         });
       },
@@ -593,7 +650,12 @@ export default {
     baseUrl: {
       handler(newVal, oldVal) {
         this.accUrl = this.baseUrl;
-        this.getChartData(this.customData).then(() => {
+        let config = {
+          ...this.customData,
+          access_token: this.accToken,
+          baseUrl: this.accUrl,
+        }
+        this.getChartData(config).then(() => {
           this.changeCharts();
         });
       },

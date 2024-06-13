@@ -23,7 +23,7 @@
             {{ item.name }}
           </div>
         </template>
-        <template v-else-if="sizes.length > 0">
+        <!-- <template v-if="sizes.length > 0">
           <div
             v-for="item in sizes"
             class="w-12 h-8 mr-2 text-sm xt-bg-2 xt-base-btn"
@@ -32,7 +32,7 @@
           >
             {{ item.title }}
           </div>
-        </template>
+        </template> -->
       </div>
     </template>
 
@@ -47,9 +47,9 @@
         />
         <hr />
       </template>
-      <template v-else>
-        <!-- 等待新版全部适配 应该删掉下面部分 -->
-        <div
+      <!-- <template v-else> -->
+      <!-- 等待新版全部适配 应该删掉下面部分 -->
+      <!-- <div
           class="flex flex-row items-center mb-3 ml-4"
           v-if="sizes && sizes.length > 0"
         >
@@ -65,8 +65,8 @@
           style="border: none; border-top: 1px solid rgba(255, 255, 255, 0.1)"
           class="my-8 ml-4 mr-4"
           v-if="sizes && sizes.length > 0"
-        />
-      </template>
+        /> -->
+      <!-- </template> -->
     </template>
   </xt-mix-menu>
 </template>
@@ -80,7 +80,12 @@ import { useFreeLayoutStore } from "./../desk/freeLayout/store";
 // 初始化操作
 const freeLayoutStore = useFreeLayoutStore();
 const { getFreeLayoutData, isFreeLayout } = storeToRefs(freeLayoutStore);
-const emits = defineEmits(["sizeType", "onClick", "update:currentSize"]);
+const emits = defineEmits([
+  "sizeType",
+  "onClick",
+  "update:currentSize",
+  "update:size",
+]);
 
 const props = defineProps({
   // 右键菜单数据
@@ -97,7 +102,9 @@ const props = defineProps({
       return [];
     },
   },
-  customIndex: {},
+  customIndex: {
+    type:Number
+  },
   sizeType: {},
   model: {
     default: "contextmenu",

@@ -4,7 +4,7 @@
     <xt-mix-menu ref="mixMenu" :menus="menus" class="w-full h-full">
       <!-- 导航栏 -->
       <template #extraMenu>
-        <ExtraMenu />
+        <ExtraMenu/>
       </template>
       <Desk
         v-if="currentDesk && currentDesk?.cards?.length > 0"
@@ -251,7 +251,7 @@
           <!--          </a-tooltip>-->
           <a-tooltip placement="bottom" title="菜单">
             <div class="pl-3">
-              <!-- <xt-task :modelValue="getStep" @cb="showMenu" :mask="false">
+              <!--
                 <xt-mix-menu
                   :menus="$refs.currentDeskRef?.dropdownMenu"
                   model="all"
@@ -267,7 +267,7 @@
                     />
                   </div>
                 </xt-mix-menu>
-              </xt-task> -->
+          -->
             </div>
           </a-tooltip>
         </div>
@@ -417,7 +417,6 @@
       </div>
     </div>
     <div v-else>
-      <xt-task id="M0102" no="3"></xt-task>
       <div class="mt-4 desk-title">标题</div>
       <a-input
         v-model:value="deskTitle"
@@ -426,23 +425,21 @@
         placeholder="请输入"
         spellcheck="false"
       />
-      <xt-task id="M0102" no="4" @cb="doAddDesk">
-        <span class="desk-title">初始布局</span>
-        <div class="mt-6">
-          <HorizontalPanel
-            v-model:selectType="selectDesk"
-            :navList="deskType"
-          ></HorizontalPanel>
-        </div>
-        <!-- <div @click="doAddDesk" class="btn-item xt-active-bg xt-text">立即添加</div> -->
-        <xt-button
-          class="mt-4"
-          style="width: 100%"
-          type="theme"
-          @click="doAddDesk"
-          >立即添加
-        </xt-button>
-      </xt-task>
+      <span class="desk-title">初始布局</span>
+      <div class="mt-6">
+        <HorizontalPanel
+          v-model:selectType="selectDesk"
+          :navList="deskType"
+        ></HorizontalPanel>
+      </div>
+      <!-- <div @click="doAddDesk" class="btn-item xt-active-bg xt-text">立即添加</div> -->
+      <xt-button
+        class="mt-4"
+        style="width: 100%"
+        type="theme"
+        @click="doAddDesk"
+      >立即添加
+      </xt-button>
 
       <div>
         <div class="btn-item" @click="importDesk">导入桌面</div>
@@ -478,7 +475,6 @@
   ></ExportDesk>
   <div style="z-index: 9999">
     <DeskPreview
-      :addDesk="addDesk"
       :deskList="deskList"
       :scheme="scheme"
       :showModal="showModal"
@@ -500,39 +496,40 @@
       @onClose="hideMarket"
     ></NewAddCard>
   </div>
-  <input ref="fileRef" style="display: none" type="file" />
+  <input ref="fileRef" style="display: none" type="file"/>
 </template>
 
 <script>
 import Desk from "./Desk.vue";
-import { useNavigationStore } from "../desk/navigationBar/navigationStore";
-import { appStore } from "../../store";
-import { taskStore } from "../../apps/task/store";
-import { mapActions, mapWritableState } from "pinia";
+import {useNavigationStore} from "../desk/navigationBar/navigationStore";
+import {appStore} from "../../store";
+import {taskStore} from "../../apps/task/store";
+import {mapActions, mapWritableState} from "pinia";
 // import GameListDrawer from "../game/GameListDrawer.vue";
 import AllDeskList from "./AllDeskList.vue";
-import { message, Modal, notification } from "ant-design-vue";
+import {message, Modal, notification} from "ant-design-vue";
 import HorizontalPanel from "../HorizontalPanel.vue";
 import ExportDesk from "./ExportDesk.vue";
-import { nanoid } from "nanoid";
+import {nanoid} from "nanoid";
 // import Template from "../../../user/pages/Template.vue";
 
-import { deskTemplates } from "../../js/data/deskTemplates";
+import {deskTemplates} from "../../js/data/deskTemplates";
 import DeskMarket from "../../page/app/card/DeskMarket.vue";
-import { deskStore } from "../../store/desk";
+import {deskStore} from "../../store/desk";
 import ShareDesk from "./ShareDesk.vue";
 import NewAddCard from "../../page/app/card/NewAddCard.vue";
 import DeskPreview from "./DeskPreview.vue";
-import { marketStore } from "../../store/market";
+import {marketStore} from "../../store/market";
 import Icon from "../Icon.vue";
 import VueCustomScrollbar from "../../../../src/components/vue-scrollbar.vue";
 import Emoji from "../comp/Emoji.vue";
-import { useFreeLayoutStore } from "./freeLayout/store";
-import { useFloatMenuStore } from "./floatMenu/store";
-import { useDeskStore } from "./store";
-import { completeTask } from "../../apps/task/task";
+import {useFreeLayoutStore} from "./freeLayout/store";
+import {useFloatMenuStore} from "./floatMenu/store";
+import {useDeskStore} from "./store";
+import {completeTask} from "../../apps/task/task";
 import NewGuidePage from "../../page/app/grade/NewGuidePage.vue";
 import ExtraMenu from "../../components/windowPanel/components/ExtraMenu.vue";
+import {localCache} from "../../js/axios/serverCache";
 
 export default {
   name: "DeskGroup",
@@ -553,7 +550,7 @@ export default {
     NewGuidePage,
     ExtraMenu,
   },
-  emits: ["update:currentDeskId", "showMore"],
+  emits: ["update:currentDeskId", "showMore",'changeDesk'],
   props: {
     settings: {
       type: Object,
@@ -662,7 +659,7 @@ export default {
         wheelPropagation: true,
         currentItemId: -1,
       },
-      currentAddTab: { name: "market" },
+      currentAddTab: {name: "market"},
       key: Date.now(),
       moreDesksVisible: false, //显示更多桌面
       allDeskListVisible: false,
@@ -671,12 +668,12 @@ export default {
       addDeskVisible: false,
       shareDeskVisible: false,
       deskType: [
-        { title: "日常桌面", name: "daily" },
-        { title: "游戏桌面", name: "game" },
-        { title: "办公桌面", name: "work" },
-        { title: "空白桌面", name: "empty" },
+        {title: "日常桌面", name: "daily"},
+        {title: "游戏桌面", name: "game"},
+        {title: "办公桌面", name: "work"},
+        {title: "空白桌面", name: "empty"},
       ],
-      selectDesk: { title: "日常桌面", name: "daily" },
+      selectDesk: {title: "日常桌面", name: "daily"},
       deskTitle: "",
       hotDesk: [],
       scheme: {},
@@ -684,19 +681,19 @@ export default {
       deskCode: "",
       shareCode: false,
       exportModal: false,
-      layoutSize: { width: 0, height: 0 },
+      layoutSize: {width: 0, height: 0},
       deskMarketVisible: false, //桌面市场
       panelIndex: 0,
       currentAddMethod: [
-        { title: "从市场添加", name: "market" },
-        { title: "自行添加", name: "custom" },
+        {title: "从市场添加", name: "market"},
+        {title: "自行添加", name: "custom"},
       ],
       recommendList: [], //推荐桌面
 
       keepAddIcon: false, // 保持添加图标
     };
   },
-  async mounted() {
+  mounted() {
     this.$bus.on("M0104", () => {
       this.currentAddTab.name = "custom";
       this.addDeskVisible = true;
@@ -747,7 +744,18 @@ export default {
     });
 
     this.hotDesk.push(this.apiList[0].children[0]);
-    this.recommendList = await this.getRecommend({ goodType: "desk" });
+    let cache=localCache.get('recommendDesks')
+    if(cache){
+      this.recommendList=cache
+    }else{
+      this.getRecommend({goodType: "desk"}).then(data => {
+        if(data){
+          this.recommendList = data
+          localCache.set('recommendDesks',data,500)
+        }
+      })
+    }
+
   },
   computed: {
     ...mapWritableState(deskStore, ["apiList"]),
@@ -843,7 +851,7 @@ export default {
           return !desk.hasOwnProperty("communityNo");
         });
         if (filterList.length > 0) {
-          this.currentDesk = filterList[0];
+          // this.currentDesk = filterList[0];
         }
       },
       immediate: true,
@@ -923,7 +931,7 @@ export default {
       completeTask("m0203");
       this.hideMarket();
     },
-    openPreview({ scheme, showModal, addDesk }) {
+    openPreview({scheme, showModal, addDesk}) {
       this.scheme = scheme;
       this.showModal = showModal;
       this.addDesk = addDesk;
@@ -974,7 +982,7 @@ export default {
     },
     setCurrentDeskId(id) {
       this.$emit("update:currentDeskId", id);
-      this.$emit("changeDesk", { id: id });
+      this.$emit("changeDesk", {id: id});
     },
     showAll() {
       this.allDeskListVisible = true;
@@ -1014,7 +1022,7 @@ export default {
 
         // try {
         needImportDesk = JSON.parse(file);
-        const { desk, freeLayoutData, freeLayoutState } = needImportDesk;
+        const {desk, freeLayoutData, freeLayoutState} = needImportDesk;
         let cardsHeight = document.getElementById("cardContent")?.offsetHeight;
         desk.forEach((g) => {
           let oldId = g.id;
@@ -1133,7 +1141,7 @@ export default {
       }
 
       this.deskList.unshift(desk);
-      this.$emit("changeDesk", { id: desk.id });
+      this.$emit("changeDesk", {id: desk.id});
       this.deskTitle = "";
       this.key = Date.now();
       this.addDeskVisible = false;
@@ -1193,7 +1201,7 @@ export default {
               this.deskList.splice(index, 1);
               // 二次过滤
               const secondaryList = this.filterPersonalDeskList(this.deskList);
-              this.$emit("changeDesk", { id: secondaryList[0]?.id });
+              this.$emit("changeDesk", {id: secondaryList[0]?.id});
               this.clearFreeLayout(this.currentDeskId);
               // 删除桌面数据
               this.key = Date.now();
