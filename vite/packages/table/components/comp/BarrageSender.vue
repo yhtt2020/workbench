@@ -1,157 +1,168 @@
 <template>
   <a-input-group class="barrage-sender" compact>
-    <a-input  style="width:calc(100% - 70px);border:none" @keyup.enter="postBarrage" v-model:value="postContent"
-             :placeholder="'发送至'+currentChannel.title+'频道'">
+    <a-input
+      style="width: calc(100% - 70px); border: none"
+      @keyup.enter="postBarrage"
+      v-model:value="postContent"
+      :placeholder="'发送至' + currentChannel.title + '频道'"
+    >
       <template #addonBefore>
-        <span style="color:var(--primary-text)">{{ currentChannel.title }}</span>
+        <span style="color: var(--primary-text)">{{
+          currentChannel.title
+        }}</span>
       </template>
     </a-input>
-    <xt-button  
-      style="border-top-left-radius: 0;border-bottom-left-radius: 0;border-radius:6px" 
-      type="theme" 
-      :w="70" :h="32" class="xt-text" @click="postBarrage" >
-      发送 
-      <GradeSmallTipVue 
-        powerType="barrage" 
-        lastPowerType="发弹幕">
+    <xt-button
+      style="
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+        border-radius: 6px;
+      "
+      type="theme"
+      :w="70"
+      :h="32"
+      class="xt-text"
+      @click="postBarrage"
+    >
+      发送
+      <GradeSmallTipVue powerType="barrage" lastPowerType="发弹幕">
       </GradeSmallTipVue>
     </xt-button>
   </a-input-group>
-  
 </template>
 
 <script>
-import { message } from 'ant-design-vue'
-import { mapActions, mapState, mapWritableState } from 'pinia'
-import { teamStore } from '../../store/team'
+import { message } from "ant-design-vue";
+import { mapActions, mapState, mapWritableState } from "pinia";
+import { teamStore } from "../../store/team";
 // import {completeTask} from "../../apps/task/page/branch/task.ts"
-import {completeTask} from "../../apps/task/task"
-import { appStore } from '../../store'
-import GradeSmallTipVue from '../GradeSmallTip.vue'
-import { reconnect } from '../../permission/user/useUserPermit'
-import { usePermissionStore } from '../../permission/store'
+import { completeTask } from "../../apps/task/task";
+import { appStore } from "../../store";
+import GradeSmallTipVue from "../GradeSmallTip.vue";
+import { reconnect } from "../../permission/user/useUserPermit";
+import { usePermissionStore } from "../../permission/store";
 export default {
-  name: 'BarrageSender',
-  components:{
+  name: "BarrageSender",
+  components: {
     GradeSmallTipVue,
   },
-  props:['currentChannel'],
-  emits:['loadTeamBarrage','loadAllBarrages'],
-  data(){
+  props: ["currentChannel"],
+  emits: ["loadTeamBarrage", "loadAllBarrages"],
+  data() {
     return {
-      postContent:'',
-      CONST:[]
+      postContent: "",
+      CONST: [],
+    };
+  },
+  mounted() {
+    console.log("this.currentChannel.name :>> ", this.currentChannel.name);
+
+    if (!this.$usePlat()) {
+      this.CONST = tsbApi.barrage.CONST;
     }
   },
-  mounted () {
-    console.log('this.currentChannel.name :>> ', this.currentChannel.name);
-
-if (!this.$usePlat()) {
-  this.CONST = tsbApi.barrage.CONST
-}
+  computed: {
+    ...mapState(teamStore, ["my", "myTeamNo", "myTeam"]),
+    ...mapWritableState(appStore, ["userInfo", "lvInfo", "loginVisible"]),
+    ...mapWritableState(usePermissionStore, ["currentEnv"]),
   },
-  computed:{
-    ...mapState(teamStore, ['my','myTeamNo','myTeam']),
-    ...mapWritableState(appStore,['userInfo','lvInfo', 'loginVisible']),
-    ...mapWritableState(usePermissionStore,['currentEnv']),
-  },
-  methods:{
-    ...mapActions(teamStore,['updateMy']),
-    async postBarrage () {
-      if(window.$useEnv('guest')){
-        this.loginVisible = true
-      }else if(this.currentEnv == 'offline'){
-        reconnect()
-      }else{
-        if(this.lvInfo.lv < 1){
-          this.checkLevel()
-          return
+  methods: {
+    ...mapActions(teamStore, ["updateMy"]),
+    async postBarrage() {
+      if (window.$useEnv("guest")) {
+        this.loginVisible = true;
+      } else if (this.currentEnv == "offline") {
+        reconnect();
+      } else {
+        if (this.lvInfo.lv < 1) {
+          this.checkLevel();
+          return;
         }
         if (!this.postContent) {
-          message.error('请输入弹幕内容')
-          return
+          message.error("请输入弹幕内容");
+          return;
         } else {
-          completeTask('Z0501')
-          let channelType=this.CONST.CHANNEL.PUBLIC
-          let pageUrl='table'
-          if(this.currentChannel.name!=='all'){
-            channelType=this.CONST.CHANNEL.TEAM
-            pageUrl=this.myTeamNo
-            completeTask('Z0502')
-            if(String(pageUrl).trim()===''){
-              await this.updateMy()
-              if(String(pageUrl).trim()===''){
-                message.error('小队号错误，无法发送弹幕')
+          let channelType = this.CONST.CHANNEL.PUBLIC;
+          let pageUrl = "table";
+          // 小队弹幕发送逻辑
+          if (this.currentChannel.name !== "all") {
+            channelType = this.CONST.CHANNEL.TEAM;
+            pageUrl = this.myTeamNo;
+            completeTask("Z0502");
+            if (String(pageUrl).trim() === "") {
+              await this.updateMy();
+              if (String(pageUrl).trim() === "") {
+                message.error("小队号错误，无法发送弹幕");
               }
-              return
+              return;
             }
           }
-          let data = {
-            channel_type:channelType ,
-            content: this.postContent,
-            page_url: String(pageUrl),
-          }
-          let rs = await tsbApi.barrage.add(data)
-          if (rs.status) {
-            this.postContent = ''
-            if (!this.hideAdmin) {
-              this.hideAdmin = true
-            }
-            console.log('33233333 :>> ', 33233333);
-            message.success('弹幕发送成功')
-
-            setTimeout(() => {
-              if(this.currentChannel.name==='all'){
-                this.$emit('loadAllBarrages')
-              }else{
-                this.$emit('loadTeamBarrage')
+          // 全网弹幕发送逻辑
+          else if (this.currentChannel.name === "all") {
+            let data = {
+              channel_type: channelType,
+              content: this.postContent,
+              page_url: String(pageUrl),
+            };
+            let rs = await tsbApi.barrage.add(data);
+            if (rs.status) {
+              this.postContent = "";
+              if (!this.hideAdmin) {
+                this.hideAdmin = true;
               }
-            }, 5000)
-          } else {
-            console.error(rs)
-            message.error('弹幕发送失败，失败原因：' + rs)
+              message.success("弹幕发送成功");
+              completeTask("Z0501");
+              setTimeout(() => {
+                if (this.currentChannel.name === "all") {
+                  this.$emit("loadAllBarrages");
+                } else {
+                  this.$emit("loadTeamBarrage");
+                }
+              }, 5000);
+            } else {
+              console.error(rs);
+              message.error("弹幕发送失败，失败原因：" + rs);
+            }
           }
         }
       }
-
     },
-    checkLevel(){
-      let hour = this.lvInfo.remainHour
+    checkLevel() {
+      let hour = this.lvInfo.remainHour;
       window.$ui.confirm(
         `解锁该功能需要达到「1」级`,
         `保持工作台登录在线，即可升级，距离解锁该功能还需要「${hour}」小时`,
-        
+
         {
-          ok: () => {
-            
-          },
-          noText:false,
-          okText:'OK',
-          type: 'warning',
-        },
-      )
-      }
-  }
-}
+          ok: () => {},
+          noText: false,
+          okText: "OK",
+          type: "warning",
+        }
+      );
+    },
+  },
+};
 </script>
 
 <style lang="scss">
-.barrage-sender{
-  .ant-input-group{
+.barrage-sender {
+  .ant-input-group {
     border: none;
   }
-  .ant-input-group-addon{
+  .ant-input-group-addon {
     border-radius: 6px;
     border-bottom-right-radius: 0;
     border-top-right-radius: 0;
   }
-  .ant-input,.ant-input-group-addon{
-    &::-webkit-input-placeholder{
-      color:var(--secondary-text) !important;
+  .ant-input,
+  .ant-input-group-addon {
+    &::-webkit-input-placeholder {
+      color: var(--secondary-text) !important;
     }
-    border-color:var(--secondary-bg);
+    border-color: var(--secondary-bg);
     background: var(--secondary-bg);
-    color:var(--primary-text) !important;
+    color: var(--primary-text) !important;
   }
 }
 </style>
