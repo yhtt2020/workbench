@@ -21,7 +21,7 @@
         </div> -->
     <div class="overflow-hidden dash-board" style="height: 365px">
       <Unusual
-        v-if="!this.access_token || !this.baseUrl"
+        v-if="!accToken || !accUrl"
         :disableEdit="options.disableEdit"
         :newIcon="'fluent-emoji:chart-increasing'"
         :title="'请完成小组件配置'"
@@ -264,6 +264,24 @@ export default {
     if (this.customData.customSize === undefined) {
       this.customData.customSize = "2x4";
     }
+
+    if(this.communityAuth(this.desk?.communityNo)){
+      // 初始化
+      this.accToken = this.access_token;
+      this.accUrl = this.baseUrl;
+      
+      const target = {
+        customIndex: 'shortTalk',
+        desk: this.desk,
+      };
+      const tokenData = {
+        accToken: this.accToken,
+        accUrl: this.accUrl,
+      };
+      saveData(tokenData, "desk", target);
+      this.$bus.emit("updateSync");
+    }
+
     // 初始化
     if (communityMember(this.desk?.communityNo)) {
       const target = {
