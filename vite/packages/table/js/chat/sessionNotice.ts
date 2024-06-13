@@ -26,7 +26,7 @@ export class Notifications {
         props: { noticeType: "notice" },
         listeners: {
           nowCheck: function () {
-            appStore().hideNoticeEntry();
+            (appStore() as any).hideNoticeEntry();
           },
         },
       },
@@ -50,13 +50,13 @@ export class Notifications {
         props: {
           content: msg,
           noticeType: "notice",
-          isPlay: appStore().$state.settings.noticePlay,
+          isPlay: (appStore() as any).$state.settings.noticePlay,
           title: title,
           changeIcon: changeIcon,
         },
         listeners: {
           nowCheck: function () {
-            appStore().hideNoticeEntry();
+            (appStore() as any).hideNoticeEntry();
           },
         },
       },
@@ -82,7 +82,7 @@ export class Notifications {
 
   public noticeStrong(notice) {
     const msg = this._convertNoticeMsg(notice);
-    noticeStore().putMessageData(msg, "strong");
+    (noticeStore() as any).putMessageData(msg, "strong");
     if (this.noticeModal) {
       console.log("显示消息弹窗");
       this.showNoticeModal(msg);
@@ -105,7 +105,7 @@ export class Notifications {
   }
 
   public noticeWeak(notice: Object) {
-    const { settings } = storeToRefs(appStore());
+    const { settings } = storeToRefs(appStore() as any);
     const msg = this._convertNoticeMsg(notice);
     console.error("通知的消息体", msg);
     let content = {
@@ -131,7 +131,7 @@ export class Notifications {
         },
       },
     };
-    noticeStore().putMessageData(msg, "weak");
+    (noticeStore() as any).putMessageData(msg, "weak");
     toast.info(content, {
       id: "notice_" + notice.id,
       icon: false,
@@ -147,20 +147,19 @@ export class Notifications {
 
   // 消息弱提醒
   public messageWeak(msg: any, conversationID: any) {
-    const { settings } = storeToRefs(appStore());
-    noticeStore().putMessageData(msg);
+    const { settings } = storeToRefs(appStore() as any);
+    (noticeStore() as any).putMessageData(msg);
     toast.info(
       {
         component: MessageNoticeToast,
         props: { msg, type: "message", play: settings.value.enablePlay },
         listeners: {
           putNotice: function () {
-            console.log("关闭并存储数据", msg);
+            // console.log("关闭并存储数据", msg);
           },
-
           messageExamine: function () {
-            chatStore().updateConversation(conversationID);
-            appStore().hideNoticeEntry();
+            (chatStore() as any).updateConversation(conversationID);
+            (appStore() as any).hideNoticeEntry();
             router.push({ name: "chatMain" });
             TUIConversationService.switchConversation(conversationID);
           },
@@ -181,19 +180,18 @@ export class Notifications {
 
   // 消息强提醒
   public messageStrong(msg: any, conversationID: any) {
-    const { settings } = storeToRefs(appStore());
-    noticeStore().putMessageData(msg);
+    const { settings } = storeToRefs(appStore() as any);
+    (noticeStore() as any).putMessageData(msg);
     toast.info(
       {
         component: SystemNoticeToast,
         props: { msg, type: "notice", play: settings.value.noticePlay },
         listeners: {
           putNotice: function () {
-            console.log("关闭并存储数据", msg);
+            // console.log("关闭并存储数据", msg);
           },
-
           systemExamine: function () {
-            chatStore().updateConversation(conversationID);
+            (chatStore() as any).updateConversation(conversationID);
             router.push({ name: "chatMain" });
             TUIConversationService.switchConversation(conversationID);
           },
@@ -250,93 +248,137 @@ export class Notifications {
     }
   }
 
-  // 解析系统通知消息方法
-  private async translateGroupSystemNotice(message: any) {
-    // const groupResult = await (window as any).$TUIKit.tim.getGroupList()
-    // // console.log('请求返回结果',groupResult);
-    // const groupList = groupResult?.data?.groupList
-    // // console.log('查看群聊列表',groupList);
-    // const findGroup = groupList.find((item: any) => {
-    //   return String(item.groupID) === String(message.to)
-    // })
-    // // console.log('获取群聊数据',findGroup);
-    // let numArr: any;
-    // if (message.payload.data === 'group_create') {
-    //   const extension = message.payload.extension
-    //   //console.log('排查',extension);
-    //   numArr = this.extractNumbersFromString(extension)
-    //   // console.log('查看strArr',numArr);
-    // }
-    // const option = {
-    //   userIDList: message.payload.data === 'group_create' ? [`${numArr[0]}`] : message.payload.userIDList ? message.payload.userIDList : [`${message.payload.operatorID}`]
-    // }
-    // // console.log('查看参数配置',option);
-    // const res = await (window as any).$TUIKit.tim.getUserProfile(option)
-    // // console.log('获取用户名称',res.data);
-    // let userinfo = res.data[0]
-    // // console.log('排查::>>',userinfo);
-    // const groupName = findGroup?.name === undefined ? message.payload.groupProfile.name : findGroup?.name;
-    // const username = userinfo === undefined ? message.nick : userinfo?.nick;
-    // // console.log('查看用户昵称',username);
-    // console.log('验证通知消息类型', message.payload.operationType);
-    // switch (message.payload.operationType) {
-    //   case TIM.TYPES.GRP_TIP_MBR_JOIN:
-    //     // console.log('查看消息通知为什么有两条',message.payload);
-    //     return `${username} 申请加入群组：${groupName}`;
-    //   case TIM.TYPES.GRP_TIP_MBR_QUIT:
-    //     return `${username} 退出群组：${groupName}`;
-    //   case 3:
-    //     return `申请加入群组：${groupName} 被拒绝`;
-    //   case 4:
-    //     return `你被管理员${username} 踢出：${groupName}群组`;
-    //   case 5:
-    //     return `群：${groupName} 被 ${username} 解散`;
-    //   case 6:
-    //     return `${username} 创建群：${groupName}`;
-    //   case 7:
-    //     return `${username} 邀请你加群：${groupName}`;
-    //   case 8:
-    //     return `你退出群组：${groupName}`;
-    //   case 12:
-    //     return `${username} 邀请你加群：${groupName}`;
-    //   case 13:
-    //     return `${username} 同意加群：${groupName}`;
-    //   case 14:
-    //     return `${username} 拒接加群：${groupName}`;
-    //   case undefined && message.payload.data === 'group_create':
-    //     return `${username} 创建群：${groupName}`;
-    //   default:
-    //     break;
-    // }
-  }
-
   // 社群消息通知
   public async receiveNotification(msg: any) {
     const { settings, userInfo } = storeToRefs(appStore() as any);
     const data = { ...msg.data[0] };
+
+    // 获取群聊消息基础内容
+    const rs = await (
+      window as any
+    ).$TUIKit.TUIConversation?.getConversationProfile(data.conversationID);
+    const muteVisible =
+      rs.data?.conversation?.groupProfile?.selfInfo?.messageRemindType;
+
+    // 获取当前会话id
+    const currentConversationID = rs.data?.conversation?.conversationID;
+
     // 消息通知满足条件
     const config = {
       // 消息通知开关
       enable: settings.value.noticeEnable === false,
       // 是否在聊天页面
-      global: router.currentRoute.value.fullPath !== "/chatMain",
+      global: router.currentRoute.value.fullPath === "/chatMain",
       // 提示音开关
       soundSwitch: settings.value.enablePlay,
       // @全部消息
       atMsg: data.atUserList.length !== 0,
       // @我的消息
       atMeMsg: data.atUserList.includes(String(userInfo.value.uid)),
+      // 消息免打扰
+      msgMute: muteVisible === "AcceptAndNotify",
+      // 当前会话
+      currentConversation: currentConversationID !== data.conversationID,
     };
 
-    // 当前消息开关是否开启,以及当前页面是否在群里页面中
-    console.log("当前群聊页面以及当前开关开启", config.enable && config.global);
-    if (config.enable && config.global) {
-      console.log("当前群聊页面以及当前开关开启",);
-    } else {
-      // console.log(
-      //   "当前群聊页面以及当前开关开启",
-      //   config.enable && config.global
-      // );
+    // 消息内容为text是否存在
+    const isText = data.payload.hasOwnProperty("text");
+
+    // 当前消息开关是否开启
+    if (config.enable) {
+      // 区分当前路由是否在群聊页面中
+      if (config.global) {
+        // 纯文字情况下
+        if (isText) {
+          // 非当前会话
+          if (!config.currentConversation) {
+            if (config.atMeMsg || config.atMsg) {
+              const strongEl: HTMLAudioElement =
+                this.createSoundStrongElement();
+              strongEl.play();
+            }
+            // 非@消息
+            else {
+              const playElement: HTMLAudioElement = this.createSoundElement();
+              playElement.play();
+            }
+          }
+        }
+        // 其他消息内容,其中包含(文件、图片、等等)
+        else {
+          console.log("除纯文本除外,文件消息", data);
+        }
+      }
+      // 全局情况下
+      else {
+        // 纯文字情况下
+        if (isText) {
+          const rs = await handleMsgContent(data);
+          // @我的  @所有人
+          if (config.atMeMsg || config.atMsg) {
+            // 提示音开关是否开启
+            if (config.soundSwitch) {
+              if (config.msgMute) {
+                this.messageStrong(rs, data.conversationID);
+              }
+            }
+          }
+          // 其他场景
+          else {
+            // 提示音开关是否开启
+            if (config.soundSwitch) {
+              if (config.msgMute) {
+                this.messageWeak(rs, data.conversationID);
+              }
+            }
+          }
+        }
+        // 其他消息内容,其中包含(文件、图片、等等)
+        else {
+          console.log("除纯文本除外,文件消息", data);
+        }
+      }
     }
   }
+}
+
+// 处理群聊消息纯文本
+async function handleMsgContent(data: any) {
+  // 区分是好友还是群聊常量
+  const handleType = data.conversationType;
+  // 好友
+  if (handleType === "C2C") {
+    const friendContent = {
+      icon: data.avatar,
+      title: `好友${data.nick}的消息`,
+      conversationID: data.conversationID,
+      body: getTextMsgContent(data),
+      time: data.time,
+      type: "message",
+    };
+    return friendContent;
+  }
+  // 群聊
+  else if (handleType === "GROUP") {
+    // 获取群聊列表
+    const groupRs = await (window as any).$TUIKit?.chat?.getGroupList();
+    const groupList = groupRs?.data?.groupList;
+    const found = _.find(groupList, (item: any) => {
+      return String(item.groupID) === String(data.to);
+    });
+    // 需要的参数
+    const textContent = {
+      icon: found?.avatar,
+      title: found?.name,
+      body: getTextMsgContent(data),
+      conversationID: data.conversationID,
+      time: data.time,
+      type: "message",
+    };
+    return textContent;
+  }
+}
+// 获取纯文本消息内容,返回字符串
+function getTextMsgContent(data: any) {
+  return `${data.nick}：${data.payload.text}`;
 }
