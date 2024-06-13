@@ -1,193 +1,225 @@
-import {useToast} from 'vue-toastification'
-import {appStore} from '../../store'
-import {chatStore} from '../../store/chat'
-import {noticeStore} from '../../page/notice/store/noticeStore'
-import {storeToRefs} from 'pinia'
-import {router} from "../../router";
-import _ from 'lodash-es'
+import { useToast } from "vue-toastification";
+import { appStore } from "../../store";
+import { chatStore } from "../../store/chat";
+import { noticeStore } from "../../page/notice/store/noticeStore";
+import { storeToRefs } from "pinia";
+import { router } from "../../router";
+import _ from "lodash-es";
 import { TUIConversationService } from "@tencentcloud/chat-uikit-engine";
 
-import ClockNoticeToast from '../../page/notice/toast/ClockNoticeToast.vue'
-import SystemNoticeToast from '../../page/notice/toast/SystemNoticeToast.vue'
-import MessageNoticeToast from '../../page/notice/toast/MessageNoticeToast.vue'
-import NoticeToast from '../../page/notice/toast/NoticeToast.vue'
+import ClockNoticeToast from "../../page/notice/toast/ClockNoticeToast.vue";
+import SystemNoticeToast from "../../page/notice/toast/SystemNoticeToast.vue";
+import MessageNoticeToast from "../../page/notice/toast/MessageNoticeToast.vue";
+import NoticeToast from "../../page/notice/toast/NoticeToast.vue";
 
-const toast = useToast()
+const toast = useToast();
 
 export class Notifications {
-  noticeModal=null
-  public showNoticeModal(message){
-    this.noticeModal.showModal(message)
+  noticeModal = null;
+  public showNoticeModal(message) {
+    this.noticeModal.showModal(message);
   }
   public NoticeToast() {
-    toast.info({
-      component: NoticeToast,
-      props: {noticeType: 'notice',},
-      listeners: {
-        'nowCheck': function () {
-          appStore().hideNoticeEntry()
+    toast.info(
+      {
+        component: NoticeToast,
+        props: { noticeType: "notice" },
+        listeners: {
+          nowCheck: function () {
+            appStore().hideNoticeEntry();
+          },
         },
+      },
+      {
+        icon: false,
+        closeOnClick: false,
+        closeButton: false,
+        pauseOnFocusLoss: true,
+        pauseOnHover: true,
+        timeout: 0,
+        toastClassName: "notice-toast",
       }
-    }, {
-      icon: false, closeOnClick: false, closeButton: false, pauseOnFocusLoss: true,
-      pauseOnHover: true, timeout: 0, toastClassName: 'notice-toast'
-    })
+    );
   }
 
   // 闹钟的通知
   public clockToast(msg: any, title: any, changeIcon: any) {
-    toast.info({
-      component: ClockNoticeToast,
-      props: {
-        content: msg,
-        noticeType: 'notice',
-        isPlay: appStore().$state.settings.noticePlay,
-        title: title,
-        changeIcon: changeIcon
-      },
-      listeners: {
-        'nowCheck': function () {
-          appStore().hideNoticeEntry()
+    toast.info(
+      {
+        component: ClockNoticeToast,
+        props: {
+          content: msg,
+          noticeType: "notice",
+          isPlay: appStore().$state.settings.noticePlay,
+          title: title,
+          changeIcon: changeIcon,
         },
+        listeners: {
+          nowCheck: function () {
+            appStore().hideNoticeEntry();
+          },
+        },
+      },
+      {
+        icon: false,
+        closeOnClick: false,
+        closeButton: false,
+        pauseOnFocusLoss: true,
+        pauseOnHover: true,
+        timeout: 0,
+        toastClassName: "notice-toast",
       }
-    }, {
-      icon: false, closeOnClick: false, closeButton: false, pauseOnFocusLoss: true,
-      pauseOnHover: true, timeout: 0, toastClassName: 'notice-toast'
-    })
+    );
   }
 
   public notice(msg) {
     if (msg.noticeType === 1) {
-      this.noticeWeak(msg)
+      this.noticeWeak(msg);
     } else if (msg.noticeType === 2) {
-      this.noticeStrong(msg)
+      this.noticeStrong(msg);
     }
   }
 
   public noticeStrong(notice) {
-    const msg=this._convertNoticeMsg(notice)
-    noticeStore().putMessageData(msg, 'strong');
-    if(this.noticeModal){
-      console.log('显示消息弹窗')
-      this.showNoticeModal(msg)
+    const msg = this._convertNoticeMsg(notice);
+    noticeStore().putMessageData(msg, "strong");
+    if (this.noticeModal) {
+      console.log("显示消息弹窗");
+      this.showNoticeModal(msg);
     }
   }
 
-  public _convertNoticeMsg(notice){
+  public _convertNoticeMsg(notice) {
     const msg = {
-      id:notice.id,
-      type: 'push',
-      title: notice.title || '推送消息',
-      icon: '/icons/newspaper.svg',
+      id: notice.id,
+      type: "push",
+      title: notice.title || "推送消息",
+      icon: "/icons/newspaper.svg",
       covers: notice.covers,
       body: notice.summary,
-      content:notice.content,
+      content: notice.content,
       time: Date.now(),
-      urls: notice.urls
-    }
-    return msg
+      urls: notice.urls,
+    };
+    return msg;
   }
 
   public noticeWeak(notice: Object) {
-    const {settings} = storeToRefs(appStore())
-    const msg=this._convertNoticeMsg(notice)
-    console.error('通知的消息体', msg)
-    let content={
-      component: MessageNoticeToast, props: {
-        msg, type: 'push', play: settings.value.enablePlay,
+    const { settings } = storeToRefs(appStore());
+    const msg = this._convertNoticeMsg(notice);
+    console.error("通知的消息体", msg);
+    let content = {
+      component: MessageNoticeToast,
+      props: {
+        msg,
+        type: "push",
+        play: settings.value.enablePlay,
       },
       listeners: {
         closeToast: () => {
-          console.log('关闭消息', 'notice_' + notice.id)
-          toast.dismiss('notice_' + notice.id)
+          console.log("关闭消息", "notice_" + notice.id);
+          toast.dismiss("notice_" + notice.id);
         },
         pause: () => {
-          console.log('停止lo')
-          toast.update('notice_' + notice.id, {
-            content:content,
+          console.log("停止lo");
+          toast.update("notice_" + notice.id, {
+            content: content,
             options: {
-              timeout: false
-            }
-          })
-        }
-      }
-    }
-    noticeStore().putMessageData(msg, 'weak');
+              timeout: false,
+            },
+          });
+        },
+      },
+    };
+    noticeStore().putMessageData(msg, "weak");
     toast.info(content, {
-      id: 'notice_' + notice.id,
-      icon: false, closeOnClick: false, closeButton: false, pauseOnFocusLoss: true,
-      pauseOnHover: true, timeout: 20000, toastClassName: 'notice-toast',
-      onClose() {
-      }
-    })
+      id: "notice_" + notice.id,
+      icon: false,
+      closeOnClick: false,
+      closeButton: false,
+      pauseOnFocusLoss: true,
+      pauseOnHover: true,
+      timeout: 20000,
+      toastClassName: "notice-toast",
+      onClose() {},
+    });
   }
 
   // 消息弱提醒
   public messageWeak(msg: any, conversationID: any) {
-    const {settings} = storeToRefs(appStore())
+    const { settings } = storeToRefs(appStore());
     noticeStore().putMessageData(msg);
     toast.info(
       {
         component: MessageNoticeToast,
-        props: {msg, type: 'message', play: settings.value.enablePlay},
+        props: { msg, type: "message", play: settings.value.enablePlay },
         listeners: {
-          'putNotice': function () {
-            console.log('关闭并存储数据', msg);
+          putNotice: function () {
+            console.log("关闭并存储数据", msg);
           },
 
-          'messageExamine': function () {
-            chatStore().updateConversation(conversationID)
+          messageExamine: function () {
+            chatStore().updateConversation(conversationID);
             appStore().hideNoticeEntry();
-            router.push({name: 'chatMain'});
+            router.push({ name: "chatMain" });
             TUIConversationService.switchConversation(conversationID);
-          }
+          },
         },
       },
       {
-        icon: false, closeOnClick: false, closeButton: false, pauseOnFocusLoss: true,
-        pauseOnHover: true, timeout: 5000, toastClassName: 'notice-toast',
-        onClose() {
-        },
+        icon: false,
+        closeOnClick: false,
+        closeButton: false,
+        pauseOnFocusLoss: true,
+        pauseOnHover: true,
+        timeout: 5000,
+        toastClassName: "notice-toast",
+        onClose() {},
       }
-    )
-
+    );
   }
 
   // 消息强提醒
   public messageStrong(msg: any, conversationID: any) {
-    const {settings} = storeToRefs(appStore())
+    const { settings } = storeToRefs(appStore());
     noticeStore().putMessageData(msg);
     toast.info(
       {
         component: SystemNoticeToast,
-        props: {msg, type: 'notice', play: settings.value.noticePlay},
+        props: { msg, type: "notice", play: settings.value.noticePlay },
         listeners: {
-          'putNotice': function () {
-            console.log('关闭并存储数据', msg);
+          putNotice: function () {
+            console.log("关闭并存储数据", msg);
           },
 
-          'systemExamine': function () {
-            chatStore().updateConversation(conversationID)
-            router.push({name: 'chatMain'});
+          systemExamine: function () {
+            chatStore().updateConversation(conversationID);
+            router.push({ name: "chatMain" });
             TUIConversationService.switchConversation(conversationID);
-          }
-        }
+          },
+        },
       },
       {
-        icon: false, closeOnClick: false, closeButton: false, pauseOnFocusLoss: true,
-        pauseOnHover: true, timeout: 0, toastClassName: 'notice-toast',
+        icon: false,
+        closeOnClick: false,
+        closeButton: false,
+        pauseOnFocusLoss: true,
+        pauseOnHover: true,
+        timeout: 0,
+        toastClassName: "notice-toast",
       }
-    )
-
+    );
   }
 
   // 创建音频播放组件
   private createSoundElement(): HTMLAudioElement {
-    let audioElement = document.getElementById('messageAudio') as HTMLAudioElement;
+    let audioElement = document.getElementById(
+      "messageAudio"
+    ) as HTMLAudioElement;
     if (!audioElement) {
-      audioElement = document.createElement('audio');
-      audioElement.src = '/sound/message.mp3'
-      audioElement.setAttribute('id', 'messageAudio');
+      audioElement = document.createElement("audio");
+      audioElement.src = "/sound/message.mp3";
+      audioElement.setAttribute("id", "messageAudio");
       document.body.appendChild(audioElement);
     }
     return audioElement;
@@ -195,11 +227,13 @@ export class Notifications {
 
   // 创建音频强提醒
   private createSoundStrongElement(): HTMLAudioElement {
-    let audioElement = document.getElementById('messageAudio') as HTMLAudioElement;
+    let audioElement = document.getElementById(
+      "messageAudio"
+    ) as HTMLAudioElement;
     if (!audioElement) {
-      audioElement = document.createElement('audio');
-      audioElement.src = '/sound/notice.mp3'
-      audioElement.setAttribute('id', 'messageAudio');
+      audioElement = document.createElement("audio");
+      audioElement.src = "/sound/notice.mp3";
+      audioElement.setAttribute("id", "messageAudio");
       document.body.appendChild(audioElement);
     }
     return audioElement;
@@ -276,106 +310,33 @@ export class Notifications {
     // }
   }
 
-
   // 社群消息通知
   public async receiveNotification(msg: any) {
-    
-    // const app:any = appStore();
-    // const {settings, userInfo} = storeToRefs(app);
-    // const data = {...msg.data[0]};
-    // const server = (window as any).$TUIKit.TUIServer.TUIChat.store;
-    // const config = {
-    //   enable: settings.value.noticeEnable === false, // 消息通知开关
-    //   global: router.options.history.state.current !== '/chatMain', // 是否在聊天页面
-    //   cue: settings.value.enablePlay, // 提示音开关
-    //   currentSession: server.conversation?.conversationID === data.conversationID, // 当前会话
-    //   atMsg: data.atUserList.length !== 0, // @全部消息
-    //   atMeMsg: data.atUserList.includes(String(userInfo.value.uid)), // @我的消息
-    //   currentDisturb: server.conversation?.groupProfile?.selfInfo.messageRemindType === 'AcceptAndNotify', // 免打扰
-    //   emptyData: Object.keys(server.conversation).length === 0 // 空数据
-    // };
-    // // 消息内容为text是否存在
-    // const isText = data.payload.hasOwnProperty('text');
-    // if(isText){
-    //   app.showNoticeEntry();
-    //   // 好友
-    //   if(data.conversationType === 'C2C'){
-    //     // 好友消息内容
-    //     const friendContent = {
-    //      icon: data.avatar,title: `好友${data.nick}的消息`,
-    //      conversationID: data.conversationID,
-    //      body: `${data.nick}：${data.payload.text}`,
-    //      time: data.time,type: 'message',
-    //     }
-    //     // 通知开关打开情况下、全局情况下、提示音按钮开启情况下、关闭免打扰情况下
-    //     if(config.enable && config.global && config.cue && config.currentDisturb) return this.messageWeak(friendContent, data.conversationID);
-    //     // 通知开关打开、局部情况下、提示音开启情况下、不是当前会话情况下、关闭免打扰的情况下
-    //     if(config.enable && !config.global && config.cue && !config.currentSession && config.currentDisturb){
-    //       const playElement: HTMLAudioElement = this.createSoundElement();
-    //       playElement.play();
-    //     }
-    //   }
-    //   // 群聊
-    //   else{
-    //     const groupResult = await (window as any).$TUIKit.tim.getGroupList();
-    //     const groupList = groupResult?.data?.groupList;
-    //     const findItem = groupList.find((item: any) => {
-    //      return String(item.groupID) === String(data.to)
-    //     });
-    //     const textContent = {
-    //       icon: findItem.avatar, title: findItem.name,
-    //       body: `${data.nick}：${data.payload.text}`,
-    //       conversationID: data.conversationID,
-    //       time: data.time, type: 'message',
-    //     }
-    //     // console.log('测试-1-全局',config.enable && config.global && config.cue && !config.currentDisturb);
-    //     // console.log('测试-1.1-全局',config);
-    //     // console.log('测试-2-局部',config.enable && !config.global && config.cue && !config.currentSession && config.currentDisturb);
-    //     // console.log('测试-2.1-局部',config);
-    //     // 群聊全局
-    //     if(config.enable && config.global && config.cue && config.currentDisturb){
-    //       // @我和@所有人 强提醒
-    //       if (config.atMeMsg && config.atMsg) return this.messageStrong(textContent, data.conversationID);
-    //       // 弱提醒
-    //       this.messageWeak(textContent, data.conversationID)
-    //     }
-    //     else if (config.enable && !config.global && config.cue && !config.currentSession && config.currentDisturb) {
-    //       // @我和@所有人
-    //       if (config.atMeMsg && config.atMsg) {  // 强提醒
-    //         const strongEl: HTMLAudioElement = this.createSoundStrongElement()
-    //         strongEl.play()
-    //       }
-    //       else {
-    //        const playElement: HTMLAudioElement = this.createSoundElement();
-    //        playElement.play()
-    //       }
-    //     }
-    //   }
-    // }
-    // else{
-    //   if (data.conversationType !== 'C2C'){
-    //     // 将群聊通知的用户uid进行中文昵称显示
-    //     const systemText = await this.translateGroupSystemNotice(data)
-    //     // 通知、提示音开关是否打开
-    //     if (config.enable && config.cue || !config.currentDisturb) {
-    //      const systemContent = {
-    //       title: '社群沟通',  icon: '/icons/IM.png',
-    //       time: data.time,type: 'system',
-    //       body: systemText,
-    //       conversationID: data.conversationID,
-    //      }
-    //      this.messageWeak(systemContent, data?.conversationID)
-    //     }
-    //   }
-    // }
+    const { settings, userInfo } = storeToRefs(appStore() as any);
+    const data = { ...msg.data[0] };
+    // 消息通知满足条件
+    const config = {
+      // 消息通知开关
+      enable: settings.value.noticeEnable === false,
+      // 是否在聊天页面
+      global: router.currentRoute.value.fullPath !== "/chatMain",
+      // 提示音开关
+      soundSwitch: settings.value.enablePlay,
+      // @全部消息
+      atMsg: data.atUserList.length !== 0,
+      // @我的消息
+      atMeMsg: data.atUserList.includes(String(userInfo.value.uid)),
+    };
+
+    // 当前消息开关是否开启,以及当前页面是否在群里页面中
+    console.log("当前群聊页面以及当前开关开启", config.enable && config.global);
+    if (config.enable && config.global) {
+      console.log("当前群聊页面以及当前开关开启",);
+    } else {
+      // console.log(
+      //   "当前群聊页面以及当前开关开启",
+      //   config.enable && config.global
+      // );
+    }
   }
-
 }
-
-
-
-
-
-
-
-
