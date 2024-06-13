@@ -17,11 +17,10 @@ if (usePlat('client')) {
     client = new steamUser({
       enablePicsCache: true
     });
+    window.client=client
   },1000)
 }
 
-
-window.client = client
 // @ts-ignore
 export const steamUserStore = defineStore("steamUser", {
   state: () => ({
