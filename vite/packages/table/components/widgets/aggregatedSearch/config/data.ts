@@ -89,13 +89,13 @@ export const defaultSourceList = [
     searchUrl: "",
     recommendUrl: "",
   },
-  {
-    name: "文件",
-    icon: "/img/appLogo/folder.png",
-    iconType: "select",
-    searchUrl: "",
-    recommendUrl: "",
-  },
+  // {
+  //   name: "文件",
+  //   icon: "/img/appLogo/folder.png",
+  //   iconType: "select",
+  //   searchUrl: "",
+  //   recommendUrl: "",
+  // },
   {
     name: "AI助手",
     icon: "/logo/ai.svg",
