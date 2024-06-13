@@ -7,41 +7,21 @@
     v-model:customSize="customData.customSize"
     :header="header"
     :options="options"
+    :sizeList="sizeList"
     @leftClick="fullScreen"
     @resize="resize"
     @delete="deleteCard"
   >
-  <ClockSettingModal
-    ref="clockSettingRef"
-    :customIndex="customIndex"
-    :desk="desk"
-    :customData="customData"
-    @updateClockStyle="updateClockStyle"
-    :isFull="false"
-    @restZoom="restZoom"
-  />
-    <div class="box no-drag" @click="fullScreen">
-      <div
-        style="width: 100%; height: 100%"
-        class="flex items-center justify-center"
-        :style="sliderScale"
-      >
-        <component
-          :is="customData.clockId"
-          :noBg="true"
-          :customData="customData"
-          :isSnow="customData.enableSecond"
-          :hideDate="false"
-          :clockFont="customData.font"
-          :style="{ zoom: customZoom }"
-        ></component>
-      </div>
-    </div>
-  </xt-container>
-
-
-
-  <ClockFullScreen
+    <ClockSettingModal
+      ref="clockSettingRef"
+      :customIndex="customIndex"
+      :desk="desk"
+      :customData="customData"
+      @updateClockStyle="updateClockStyle"
+      :isFull="false"
+      @restZoom="restZoom"
+    />
+    <ClockFullScreen
     v-if="isClockFullScreen"
     :customData="customData"
     :clock="customData.clockId"
@@ -52,6 +32,31 @@
     @exit="isClockFullScreen = false"
   >
   </ClockFullScreen>
+    <div class="box no-drag" @click="fullScreen">
+      <div
+        style="width: 100%; height: 100%"
+        class="flex items-center justify-center"
+        :style="sliderScale"
+      >
+      <!-- -->
+
+        <component
+          :is="customData.clockId"
+          :noBg="true"
+          :customData="customData"
+          :isSnow="customData.enableSecond"
+          :hideDate="false"
+          :clockFont="customData.font"
+
+        >
+        <!-- :style="{ zoom: customZoom }" -->
+      </component>
+        <!-- <Weather/> -->
+      </div>
+    </div>
+  </xt-container>
+
+
 </template>
 
 <script>
@@ -59,9 +64,10 @@ import mixin from "./hooks/clockMixin.js";
 import { mapActions, mapWritableState } from "pinia";
 // import { defaultClockData } from "../../../apps/folder/src/components/options";
 import { cardStore } from "../../../store/card";
+// import { weatherStore } from "../../../store/weather";
 import { appStore } from "../../../store";
 import { dateTimeStamp } from "./hooks/clockList";
-
+// import Weather from './components/Weather.vue'
 import Resize from "../../../apps/folder/src/components/Resize.vue";
 import ClockSettingModal from "./components/ClockSettingModal.vue";
 import ClockFullScreen from "./clockState/ClockFullScreen.vue";
@@ -76,9 +82,9 @@ export default {
     Resize,
     ClockSettingModal,
     ClockFullScreen,
+    // Weather
   },
   emit: ["delete"],
-  inject:['_data'],
   props: {
     customIndex: { type: Number, default: 0 },
     customData: {
@@ -115,7 +121,7 @@ export default {
     };
   },
   mounted() {
-    console.log('乌鱼子 this._data :>> ', this._data);
+    console.log("this.cities :>> ", this.city);
     // console.log(this.desk,'clock')
     // 当底部导航栏为windows模式时，点击导航栏中的时间，进入时间全屏
     this.$bus.on("openClockFullScreen", (data) => {
@@ -169,8 +175,31 @@ export default {
     }
   },
   computed: {
-    ...mapWritableState(appStore, ["backgroundImage"]),
-
+    ...mapWritableState(appStore, ["backgroundImage", "settings"]),
+    sizeList() {
+      return [
+        {
+          // name: this.customData.noBorder ? "2x1" : "2x2",
+          // value:  this.customData.noBorder ? "2x1" : "2x2",
+          name: this.options.noBorder ? "2x1" : "2x2",
+          value: this.options.noBorder ? "2x1" : "2x2",
+        },
+        {
+          // name:  this.customData.noBorder ? "4x1" : "4x2",
+          // value:  this.customData.noBorder ? "4x1" : "4x2",
+          name: this.options.noBorder ? "4x1" : "4x2",
+          value: this.options.noBorder ? "4x1" : "4x2",
+        },
+        {
+          name: "4x2",
+          value: "4x2",
+        },
+        {
+          name: "4x4",
+          value: "4x4",
+        },
+      ];
+    },
 
     // 组件头部
     header() {
@@ -185,13 +214,18 @@ export default {
       };
       return headerOption;
     },
+
     // 配置数据
     options() {
       return {
-        shadow: !this.customData.backgroundFrame,
-        bg: !this.customData.backgroundFrame ? "transparent" : "",
+        // shadow: !this.customData.backgroundFrame,
+        // bg: !this.customData.backgroundFrame ? "transparent" : "",
         resize: !this.isCommunityDesktop(this.desk) ? true : false,
+
+        noBorder:this.customData.noBorder,
+
         defaultData: {
+          noBorder:false,
           backgroundFrame: true,
           clockId: "clock4",
           imgUrl: DEFAULT.WALLPAPER,
@@ -265,8 +299,6 @@ export default {
   methods: {
     ...mapActions(cardStore, ["updateCustomData"]),
     ...mapActions(communityNavStore, ["isCommunityDesktop"]),
-
-
 
     dateTimeStamp,
     deleteCard() {

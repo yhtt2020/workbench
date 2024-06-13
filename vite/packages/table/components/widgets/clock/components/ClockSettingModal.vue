@@ -18,7 +18,7 @@
           <div class="flex flex-col" v-if="!isFull">
             <div class="flex justify-between mb-2.5">
              <span class="xt-font xt-text font-16">背景框</span>
-             <a-switch v-model:checked="customData.backgroundFrame"/>
+             <a-switch v-model:checked="customData.noBorder"/>
             </div>
             <span class="xt-font xt-text-2 font-14">
              显示时钟组件的背景框。

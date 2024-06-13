@@ -4,14 +4,16 @@ import clock3 from "../clock3/clock3.vue";
 import clock4 from "../clock4/clock4.vue";
 import clock5 from "../clock5/clock5.vue";
 import clock6 from "../clock6/clock6.vue";
+import clock7 from "../clock7/clock7.vue";
 
 export default {
-    components: {
-        clock1,
-        clock2,
-        clock3,
-        clock4,
-        clock5,
-        clock6,
-    },
-}
+  components: {
+    clock1,
+    clock2,
+    clock3,
+    clock4,
+    clock5,
+    clock6,
+    clock7,
+  },
+};
