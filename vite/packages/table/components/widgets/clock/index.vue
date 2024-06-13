@@ -178,9 +178,11 @@ export default {
     cardZoom() {
       // 获取当前时钟ID
       let clockID = this.customData.clockId;
+      console.log("clockID :>> ", clockID);
       // 时钟缩放列表
       let zoomList = {
-        clock1: [1, 0.35],
+        // 应该没问题
+        clock1: [1, 0.25],
         clock2: [1, 0.5],
         clock3: [1, 0.5],
         clock4: [1, 0.5],
@@ -194,7 +196,7 @@ export default {
         clock1: 0.8,
         clock2: 0.8,
         clock3: 1,
-        clock4: 0.8,
+        clock4: 0.6,
         clock5: 0.8,
         clock6: 1,
         clock7: 0.6,
@@ -215,9 +217,12 @@ export default {
       } else if (h - w >= 2) {
         max = w;
       }
-      if (w == h) {
+      if (w == 2 && h == 2) {
+        num = 0;
+        zoom = 1;
+      } else if (w == h) {
         num = 1;
-        zoom += currentZoom[num] * (max -2) - currentZoom[num] ;
+        zoom += currentZoom[num] * (max - 2) - currentZoom[num];
       } else if (h == 1) {
         max = 1;
       } else if (w > 2 && h > 2) {
@@ -230,12 +235,10 @@ export default {
     sizeList() {
       return [
         {
-
           name: "2x1",
           value: "2x1",
         },
         {
-       
           name: "4x1",
           value: "4x1",
         },
@@ -486,7 +489,7 @@ export default {
   }
 
   :deep(.clock4) {
-    transform: scale(0.65);
+    //transform: scale(0.65);
     & .ant-row {
       flex-flow: nowrap !important;
       margin-left: 0 !important;
