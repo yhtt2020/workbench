@@ -172,6 +172,7 @@ const debouncedChangeTabVisible = useDebounceFn(() => {
 }, 500);
 const AIRef: any = ref();
 const SystemRef: any = ref();
+const webRef: any = ref();
 /** 相关事件 */
 const eventDown = (e) => {
   /** 组合键 */
@@ -203,14 +204,18 @@ const eventDown = (e) => {
   if (e.key === "Enter") {
     e.preventDefault();
     const name = currentSource.value.name;
+    // ai搜索
     if (name === "AI助手") {
       AIRef.value.search();
-    } else if (words.value.length > 0) {
+    }
+    // web搜索
+    else if (words.value.length > 0) {
       if (isWebSource.value) {
+        webRef.value.enterSearch();
       }
-      // 有bug
-      // search(recommendList.value[ctrlSelectIndex.value]);
-    } else {
+    }
+    // 历史搜索
+    else {
       historySearch(ctrlSelectIndex.value);
     }
     return;
@@ -337,7 +342,11 @@ useEventListener("keyup", tabEventUp);
           ref="SystemRef"
         />
         <FileSearch v-else-if="words && currentSource.name == '文件'" />
-        <WebSearch v-else-if="words && isWebSource" @search="search" />
+        <WebSearch
+          v-else-if="words && isWebSource"
+          @search="search"
+          ref="webRef"
+        />
         <HistorySearch v-else-if="!words && data.historyList.length > 0" />
       </main>
       <footer

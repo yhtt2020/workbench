@@ -212,6 +212,8 @@ const cutCanvas = async (config) => {
   }
   // 下边
   const currentMaxBottom = bottom + viewHeight;
+  console.log('getFreeLayoutState.value.canvas.height :>> ', getFreeLayoutState.value.canvas.height);
+  console.log('currentMaxBottom :>> ', currentMaxBottom);
   if (
     Math.abs(getFreeLayoutState.value.canvas.height - currentMaxBottom) > space
   ) {
@@ -232,6 +234,7 @@ const cutCanvas = async (config) => {
     }
   }, 50);
   if (!redirect) return;
+  console.log('111111111 :>> ', 111111111);
   let x = Infinity;
   let y = Infinity;
   setTimeout(() => {
