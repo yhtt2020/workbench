@@ -19,19 +19,19 @@ const height = computed(() => {
 
 <template>
   <div
-    class="flex items-center justify-center"
+    class="flex justify-center"
     v-if="city"
-    :class="[height < 2 ? 'flex-col' : '']"
+    :class="[height < 2 ? 'flex-col ml-2' : '']"
   >
-    <div class="flex items-center">
+    <div class="flex">
       <div
-        class="text-[30px] flex justify-center items-center"
+        class="text-[30px] flex "
         :class="'qi-' + city.now.icon + '-fill'"
       ></div>
       <div class="text-[22px] font-bold ml-2.5">{{ city.now.temp }} °</div>
     </div>
 
-    <div class="flex" :class="[height >= 2 ? 'flex-col ml-4' : '']">
+    <div class="flex flex-col" :class="[height >= 2 ? ' ml-4' : '']">
       <div class="flex items-center font-bold my-1">
         {{ city.adm2 }}
         <div>·</div>
