@@ -8,6 +8,7 @@
     :header="header"
     :options="options"
     :sizeList="sizeList"
+    :resizeOptions="resizeOptions"
     @leftClick="fullScreen"
     @resize="resize"
     @delete="deleteCard"
@@ -193,14 +194,14 @@ export default {
       console.log("clockID :>> ", clockID);
       // 时钟缩放列表
       let zoomList = {
-        // 应该没问题
-        clock1: [1, 0.25],
-        clock2: [1, 0.5],
-        clock3: [1, 0.5],
-        clock4: [1, 0.5],
-        clock5: [1, 0.5],
-        clock6: [1, 0.3],
-        clock7: [1, 0.15],
+        // 下标0为默认，下标1为高度为1时无边框时，下边2为高度为1非无边框时
+        clock1: [0.25, 1, 0.7],
+        clock2: [0.5,1, 0.7],
+        clock3: [0.5, 0.5, 0.2],
+        clock4: [0.6, 0.9, 0.5],
+        clock5: [0.5, 0.7, 0.4],
+        clock6: [0.3, 0.65, 0.35],
+        clock7: [0.1, 0.8, 0.5],
       };
 
       // 时钟秒针缩放列表
@@ -220,30 +221,48 @@ export default {
       let w = parseInt(res[0]);
       let h = parseInt(res[1]);
       let num = 0;
-      let zoom = currentZoom[num];
+      let zoom = 1;
       // 最大数
       let max = w > h ? w : h;
-      // 宽度高度相差
+      // 宽度高度相差调整最大值
       if (w - h >= 2) {
         max = h;
       } else if (h - w >= 2) {
         max = w;
       }
+      // 宽高为2
       if (w == 2 && h == 2) {
         num = 0;
         zoom = 1;
-      } else if (w == h) {
-        num = 1;
+      }
+      // 宽高相等
+      else if (w == h) {
+        num = 0;
         zoom += currentZoom[num] * (max - 2) - currentZoom[num];
-      } else if (h == 1) {
-        max = 1;
-      } else if (w > 2 && h > 2) {
-        num = 1;
+      }
+      // 高度为1
+      else if (h == 1) {
+        if (this.customData.noBorder) {
+          num = 1;
+        } else {
+          num = 2;
+        }
+        zoom = currentZoom[num];
+      }
+      // 宽高大于2x2
+      else if (w > 2 && h > 2) {
+        num = 0;
         zoom += currentZoom[num] * max;
       }
       return zoom * second;
     },
     ...mapWritableState(appStore, ["backgroundImage", "settings"]),
+    resizeOptions() {
+      return {
+        minH: 1,
+        odd: true,
+      };
+    },
     sizeList() {
       return [
         {
