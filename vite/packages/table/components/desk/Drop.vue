@@ -6,7 +6,7 @@
     @dragover="handleDragover"
     @dragenter="handleDragenter"
     ref="target"
-    v-element-size="updateSize"
+    v-element-size="debounceUpdateSize"
     @click="test"
   >
     <slot></slot>
@@ -22,7 +22,7 @@ import { useAddCard } from "../../ui/hooks/useAddCard";
 import { useDeskStore } from "./store";
 import { useFreeLayoutStore } from "./freeLayout/store";
 import { vElementSize } from "../../hooks";
-import { useMouseInElement } from "@vueuse/core";
+import { useMouseInElement, useDebounceFn } from "@vueuse/core";
 
 import { useFolderStore } from "../../apps/folder/src/store";
 
@@ -33,8 +33,12 @@ import { useElementSize } from "@vueuse/core";
 const target = ref(null);
 
 const updateSize = (data) => {
+  console.log('"触发一次" :>> ', "触发一次");
   deskSize.value = data;
 };
+const debounceUpdateSize = useDebounceFn((data) => {
+  updateSize(data);
+}, 1000);
 const folderStore = useFolderStore();
 const { isDrag } = storeToRefs(folderStore);
 // 自由布局

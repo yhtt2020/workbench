@@ -65,15 +65,15 @@ const paperLeftList = ref([
       currentPaperTab(item);
     },
   },
-  {
-    newIcon: "uim:bing",
-    id: 2,
-    type:"b",
-    bg: "var(--secondary-bg)",
-    callBack: (item) => {
-      currentPaperTab(item);
-    },
-  },
+  // {
+  //   newIcon: "uim:bing",
+  //   id: 2,
+  //   type:"b",
+  //   bg: "var(--secondary-bg)",
+  //   callBack: (item) => {
+  //     currentPaperTab(item);
+  //   },
+  // },
   {
     newIcon: "fluent:image-multiple-16-filled",
     id: 3,
@@ -83,15 +83,15 @@ const paperLeftList = ref([
       currentPaperTab(item);
     },
   },
-  {
-    newIcon: "fluent:image-sparkle-16-filled",
-    id: 4,
-    type:"l",
-    bg: "var(--secondary-bg)",
-    callBack: (item) => {
-      currentPaperTab(item);
-    },
-  },
+  // {
+  //   newIcon: "fluent:image-sparkle-16-filled",
+  //   id: 4,
+  //   type:"l",
+  //   bg: "var(--secondary-bg)",
+  //   callBack: (item) => {
+  //     currentPaperTab(item);
+  //   },
+  // },
   {
     newIcon: "fluent:settings-16-filled",
     id: 5,

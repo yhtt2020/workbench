@@ -28,7 +28,7 @@
             <div class="flex flex-wrap gap-2 mt-4" v-if="list.length > 0">
                 <template v-for="(item, index) in list" :key="item.id">
                     <xt-menu :menus="menus" @onMounted="getItem(item)">
-                        <Item :size="140" :isApp="true" :item="item" :info="getInfo(item)" :showFolder="false"/>
+                        <Item :size="140" :isApp="true" :item="item" :info="getInfo(item)" :showFolder="false" @clickRightListItem="open"/>
                     </xt-menu>
                 </template>
             </div>
@@ -95,13 +95,7 @@ const arr = ref([
         newIcon: "fluent:open-16-regular",
         callBack: () => {
           //
-            const { type, value, id } = currentItem.value
-            startApp(type, value, router)
-            // currentItem.value.lastUseTime = Date.now()
-            // console.log(myApps.value.find((item) => item.id === id),'this is item')
-            let item = myApps.value.find((item) => item.id === id)
-            item.lastUseTime = Date.now()
-            visible.value = false
+            open(currentItem.value)
         }
     },
     {
@@ -212,6 +206,15 @@ onMounted(() => {
     // myApps.value = myApps.value.map(item => useTransform(item));
     list.value = resetType(myApps.value);
 });
+
+// 打开应用
+const open = (item) => {
+    const { type, value, id } = item
+    startApp(type, value, router)
+    let i = myApps.value.find((item) => item.id === id)
+    i.lastUseTime = Date.now()
+    visible.value = false
+}
 
 
 // onUnmounted(() => {

@@ -2,6 +2,7 @@ import { TUIComponents, genTestUserSig, TUIChatKit } from "./apps/TUIKit";
 import TUINotification from "./apps/TUIKit/components/TUINotification/index";
 import TUIChatEngine from "@tencentcloud/chat-uikit-engine";
 import TencentCloudChat from "@tencentcloud/chat";
+import { TUILogin } from "@tencentcloud/tui-core";
 
 /**引入sdkID**/
 import { SDKAppID } from "./js/chat/chat";
@@ -32,14 +33,14 @@ function loadChat() {
     (window as any).$TUIKit = TUIChatEngine;
 
     /**将chat挂载在window.$chat  这里继承原先的sdk**/
-    (window as any).$chat = TUIChatEngine;
+    (window as any).$chat = TUILogin;
 
     /**
      * 关闭日志，如果需要调试，改为4。
      * release 级别，SDK 输出关键信息，生产环境时建议使用
-     * (window as any).$chat?.chat?.setLogLevel(1);
+     *  (window as any).$TUIKit?.chat?.setLogLevel(1);
      * **/
-    (window as any).$chat?.chat?.setLogLevel(1);
+    (window as any).$TUIKit?.chat?.setLogLevel(1);
 
     /**关闭系统弹窗提示**/
     TUINotification.setNotificationConfiguration({

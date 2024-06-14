@@ -7,9 +7,6 @@
  -->
 <template>
   <!-- 右键菜单 -->
-  <!-- v-if="init" -->
-  <!-- update:currentSize -->
-  <!-- {{ currentSize }} -->
   <RightMenu
     v-model:size="currentSize"
     :menus="menus"
@@ -17,7 +14,10 @@
     :sizeList="sizeList"
     :disableHierarchy="options.hierarchy"
   >
-    <div class="menu-box">
+    <div
+      class="menu-box"
+      :class="[options.noBorder ? 'hover:tt-theme-bg-2 rounded-xl' : '']"
+    >
       <!-- 离线模式-->
       <div
         class="mask rounded-xl"
@@ -60,14 +60,6 @@
           <!--  主体内容插槽2  -->
         </slot>
       </div>
-      <div
-        v-else-if="options?.noBorder"
-        ref="container"
-        :style="[getSize]"
-        :class="[edit ? 'editing' : '']"
-      >
-        <slot></slot>
-      </div>
       <!-- 默认模式 -->
       <div
         v-else
@@ -75,21 +67,15 @@
         class="flex flex-col widget rounded-xl"
         :class="[
           edit ? 'editing' : '',
-          options.shadow ? '' : 'shadow xt-shadow',
+          options.shadow || options.noBorder ? '' : 'shadow xt-shadow',
         ]"
         @touchmove="handleTouchStart"
         style=""
-        :style="[
-          getSize,
-          {
-            background: options.bg || 'var( --primary-bg)',
-            color: options.color || 'var(--primary-text)',
-          },
-        ]"
+        :style="[getSize, containerStyle]"
       >
         <!-- 小组件头部开始 -->
         <header
-          v-if="!header.disabled"
+          v-if="!header.disabled && !options.noBorder"
           @dragstart.stop="titleDragStart"
           draggable="true"
           class="flex items-center justify-between w-full"
@@ -223,32 +209,18 @@
           :plat="platLimit"
           :imgSize="75"
         >
-          <div
-            class="h-full rounded-b-lg"
-            :style="{ background: options.showColor ? 'var(--main-bg)' : '' }"
-          >
-            <div
-              class="flex-1 h-full rounded-b-lg"
-              :style="[
-                {
-                  background: body.bg,
-                  color: body.color,
-                  padding: body.scroll ? '0 14px' : '0 14px 14px 14px',
-                },
-              ]"
+          <div class="h-full rounded-b-lg" :style="[bodyStyle]">
+            <Resize
+              v-model:size="currentSize"
+              :modalSize="options.modalSize"
+              :resize="options.resize"
+              :odd="options.odd"
+              @resize="resize"
             >
-              <Resize
-                v-model:size="currentSize"
-                :modalSize="options.modalSize"
-                :resize="options.resize"
-                @resize="resize"
-              >
-                <slot></slot>
-              </Resize>
-            </div>
+              <slot></slot>
+            </Resize>
           </div>
         </xt-status>
-
         <!-- 小组件主体结束 -->
       </div>
     </div>
@@ -266,6 +238,7 @@ import {
   getCurrentInstance,
   toRefs,
   nextTick,
+  provide,
 } from "vue";
 import { storeToRefs } from "pinia";
 import { cardStore as useCardStore } from "../../store/card";
@@ -309,7 +282,9 @@ const init = ref(false);
 // const freeLayoutStore = useFreeLayoutStore();
 
 const props = defineProps(defaultProps);
-const { header } = toRefs(props);
+
+const { header, customData, customIndex } = toRefs(props);
+
 const courierStatus = computed(() => {
   return !window.$usePlat("client");
 });
@@ -350,7 +325,8 @@ onBeforeMount(() => {
     // console.timeEnd("组件数据更新");
   }
 });
-
+provide("_data", customData);
+provide("_index", customIndex);
 onMounted(() => {
   // 防止自定义时，无法获取到container导致卡死
   if (container.value) {
@@ -431,7 +407,47 @@ const deleteObj = computed(() => {
 const cardData = computed(() => {
   return useConversionCard(props);
 });
+// 容器样式
+const containerStyle = computed(() => {
+  // 背景色
+  let background = "var(--primary-bg)";
+  if (props.options.noBorder) {
+    background = "none";
+  } else if (props.options.bg) {
+    background = props.options.bg;
+  }
+  // 字体色
+  let color = "var(--primary-text)";
+  if (props.options.color) {
+    background = props.options.color;
+  }
+  return {
+    background,
+    color,
+  };
+});
+const bodyStyle = computed(() => {
+  let background = "none";
+  if (props.body?.bg) {
+    background = props.body.bg;
+  }
 
+  // 字体色
+  let color = "";
+  if (props.body?.color) {
+    background = props.body.color;
+  }
+  // 边框
+  let padding = "";
+  if (!props.options?.noBorder) {
+    padding = props.body.scroll ? "0 14px" : "0 14px 14px 14px";
+  }
+  return {
+    background,
+    color,
+    padding,
+  };
+});
 // 添加到导航栏的数据
 const addObj = computed(() => {
   return {
@@ -481,20 +497,22 @@ const addObj = computed(() => {
 // 实际渲染的右键菜单
 const menus = computed(() => {
   const platLimit = props.platLimit || " ";
-  if (usePlat(platLimit)) return [addObj.value, deleteObj.value];
-  // if (xxx) return []
-  let menu = [...props.menuList, addObj.value, deleteObj.value];
-  // 在社群成员桌面的场景下,需要的处理
-  const filterMenu = props.menuList.filter((item) => {
-    return titleOption.some((some) => {
-      return String(some) !== String(item.title);
-    });
-  });
-  if (props?.options?.disableEdit) {
-    return filterMenu;
-  } else {
-    return menu;
+  if (usePlat(platLimit)) {
+    return [addObj.value, deleteObj.value];
   }
+
+  // 在社群成员桌面的场景下,需要的处理
+  if (props?.options?.disableEdit) {
+    const filterMenu = props.menuList.filter((item) => {
+      return titleOption.some((some) => {
+        return String(some) !== String(item.title);
+      });
+    });
+    return filterMenu;
+  }
+
+  let menu = [...props.menuList, addObj.value, deleteObj.value];
+  return menu;
 });
 // 头部左侧显示区域状态
 const leftHover = computed(() => {
