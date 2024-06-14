@@ -52,5 +52,11 @@ export default defineComponent({
   flex:1;
   border-radius:10px;
   overflow: hidden;
+  
+}
+
+
+:deep(.ant-image-preview-wrap){
+  z-index: 1000001 !important;
 }
 </style>
