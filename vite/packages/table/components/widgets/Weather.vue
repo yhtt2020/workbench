@@ -26,7 +26,7 @@
             添加城市
           </xt-button>
         </div> -->
-        
+
       </div>
       <div @click="enterWeather" v-else>
         <template v-if="defaultCity.now && defaultCity.d7 && defaultCity.h24 && defaultCity.d7.daily">
@@ -139,7 +139,7 @@ export default {
   },
   computed: {
     ...mapState(weatherStore, ['cities','reloadAll']),
-  
+
 
     header(){
       return {

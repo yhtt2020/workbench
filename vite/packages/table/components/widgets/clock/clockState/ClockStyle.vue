@@ -23,6 +23,9 @@
     <div class="clock-box xt-bg-t-2 no-drag pointer" @click="updateClockStyle('clock6')">
       <clock6 ></clock6>
     </div>
+    <div class="clock-box xt-bg-t-2 no-drag pointer" @click="updateClockStyle('clock7')">
+      <clock7></clock7>
+    </div>
   </div>
 
 <!-- <div class="text-base" style="margin: 12px 0">时钟样式</div>

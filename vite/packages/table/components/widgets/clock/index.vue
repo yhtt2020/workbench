@@ -7,16 +7,37 @@
     v-model:customSize="customData.customSize"
     :header="header"
     :options="options"
+    :sizeList="sizeList"
     @leftClick="fullScreen"
     @resize="resize"
     @delete="deleteCard"
   >
+    <ClockSettingModal
+      ref="clockSettingRef"
+      :customIndex="customIndex"
+      :desk="desk"
+      :customData="customData"
+      @updateClockStyle="updateClockStyle"
+      :isFull="false"
+      @restZoom="restZoom"
+    />
+    <ClockFullScreen
+      v-if="isClockFullScreen"
+      :customData="customData"
+      :clock="customData.clockId"
+      :bgZoom="customData.bgZoom"
+      :imgUrl="fullImage"
+      @updateClockStyle="updateClockStyle"
+      @updateBgZoom="updateBgZoom"
+      @exit="isClockFullScreen = false"
+    >
+    </ClockFullScreen>
     <div class="box no-drag" @click="fullScreen">
       <div
         style="width: 100%; height: 100%"
         class="flex items-center justify-center"
-        :style="sliderScale"
       >
+        <!-- :style="sliderScale" -->
         <component
           :is="customData.clockId"
           :noBg="true"
@@ -24,33 +45,14 @@
           :isSnow="customData.enableSecond"
           :hideDate="false"
           :clockFont="customData.font"
-          :style="{ zoom: customZoom }"
-        ></component>
+          :style="{ zoom: cardZoom }"
+        >
+          <!-- customZoom -->
+        </component>
       </div>
     </div>
+    {{}}
   </xt-container>
-
-  <ClockSettingModal
-    ref="clockSettingRef"
-    :customIndex="customIndex"
-    :desk="desk"
-    :customData="customData"
-    @updateClockStyle="updateClockStyle"
-    :isFull="false"
-    @restZoom="restZoom"
-  />
-
-  <ClockFullScreen
-    v-if="isClockFullScreen"
-    :customData="customData"
-    :clock="customData.clockId"
-    :bgZoom="customData.bgZoom"
-    :imgUrl="fullImage"
-    @updateClockStyle="updateClockStyle"
-    @updateBgZoom="updateBgZoom"
-    @exit="isClockFullScreen = false"
-  >
-  </ClockFullScreen>
 </template>
 
 <script>
@@ -58,9 +60,10 @@ import mixin from "./hooks/clockMixin.js";
 import { mapActions, mapWritableState } from "pinia";
 // import { defaultClockData } from "../../../apps/folder/src/components/options";
 import { cardStore } from "../../../store/card";
+// import { weatherStore } from "../../../store/weather";
 import { appStore } from "../../../store";
 import { dateTimeStamp } from "./hooks/clockList";
-
+// import Weather from './components/Weather.vue'
 import Resize from "../../../apps/folder/src/components/Resize.vue";
 import ClockSettingModal from "./components/ClockSettingModal.vue";
 import ClockFullScreen from "./clockState/ClockFullScreen.vue";
@@ -78,6 +81,7 @@ export default {
     Resize,
     ClockSettingModal,
     ClockFullScreen,
+    // Weather
   },
 
   emit: ["delete"],
@@ -115,11 +119,155 @@ export default {
       isClockFullScreen: false,
       bgZoom: this.customData.bgZoom,
       clockDay: this.dateTimeStamp(Date.now()),
+      //  zoom: "1.05",
+      //  zooms: {
+      //   // 无限拉伸是0, 1*1是1 2*2是2
+      //   clock1: [155, 35, 35],
+      //   clock2: [160, 66, 50],
+      //   clock3: [150, 0, 80],
+      //   clock4: [140, 0, 30],
+      //   clock5: [150, 0, 25],
+      //   clock6: [180, 0, 80],
+      //  },
+      //  bgZoom: 0,
+      //  widthHeightObj: {}
     };
   },
+  mounted() {
+    // console.log(this.desk,'clock')
+    // 当底部导航栏为windows模式时，点击导航栏中的时间，进入时间全屏
+    this.$bus.on("openClockFullScreen", (data) => {
+      this.isClockFullScreen = data;
+    });
+    if (typeof this.customData.enableSecond === "undefined") {
+      this.customData.enableSecond = false;
+    }
+    if (typeof this.customData.backgroundFrame === "undefined") {
+      this.customData.backgroundFrame = true;
+    }
+    if (this.customData.customZoom === undefined) {
+      this.updateCustomData(
+        this.customIndex,
+        {
+          backgroundFrame: true,
+          clockId: "clock4",
+          imgUrl: DEFAULT.WALLPAPER,
+          blurs: 3,
+          bgZoom: 100,
+          zoom: 1.5,
+          customSize: "2x2",
+          font: "font-family: '优设标题黑' !important;",
+          fontColor: "#FFFFFF",
+          enableSecond: false,
+          currentStatus: "font",
+          currentZoom: 100,
+          name: dateTimeStamp(Date.now()),
+          _updateFlag: "24531",
+        },
+        this.desk
+      );
+    }
+    // 在不切换页面的情况下,通过定时器来实现自动更新时钟日期标题
+    this.clockTime = setInterval(() => {
+      this.clockDay = this.dateTimeStamp(Date.now());
+    }, 12 * 60 * 60 * 1000);
 
+    if (this.options.disableEdit) {
+      this.menuList = [];
+    } else {
+      this.menuList = [
+        {
+          icon: "shezhi1",
+          title: "设置",
+          fn: () => {
+            this.$refs.clockSettingRef.openClockModal();
+          },
+        },
+      ];
+    }
+  },
   computed: {
-    ...mapWritableState(appStore, ["backgroundImage"]),
+    cardZoom() {
+      // 获取当前时钟ID
+      let clockID = this.customData.clockId;
+      console.log("clockID :>> ", clockID);
+      // 时钟缩放列表
+      let zoomList = {
+        // 应该没问题
+        clock1: [1, 0.25],
+        clock2: [1, 0.5],
+        clock3: [1, 0.5],
+        clock4: [1, 0.5],
+        clock5: [1, 0.5],
+        clock6: [1, 0.3],
+        clock7: [1, 0.15],
+      };
+
+      // 时钟秒针缩放列表
+      let secondList = {
+        clock1: 0.8,
+        clock2: 0.8,
+        clock3: 1,
+        clock4: 0.6,
+        clock5: 0.8,
+        clock6: 1,
+        clock7: 0.6,
+      };
+      let second = this.customData.enableSecond ? secondList[clockID] : 1;
+
+      const currentZoom = zoomList[clockID];
+      let res = this.customData.customSize.split("x");
+      let w = parseInt(res[0]);
+      let h = parseInt(res[1]);
+      let num = 0;
+      let zoom = currentZoom[num];
+      // 最大数
+      let max = w > h ? w : h;
+      // 宽度高度相差
+      if (w - h >= 2) {
+        max = h;
+      } else if (h - w >= 2) {
+        max = w;
+      }
+      if (w == 2 && h == 2) {
+        num = 0;
+        zoom = 1;
+      } else if (w == h) {
+        num = 1;
+        zoom += currentZoom[num] * (max - 2) - currentZoom[num];
+      } else if (h == 1) {
+        max = 1;
+      } else if (w > 2 && h > 2) {
+        num = 1;
+        zoom += currentZoom[num] * max;
+      }
+      return zoom * second;
+    },
+    ...mapWritableState(appStore, ["backgroundImage", "settings"]),
+    sizeList() {
+      return [
+        {
+          name: "2x1",
+          value: "2x1",
+        },
+        {
+          name: "4x1",
+          value: "4x1",
+        },
+        {
+          name: "2x2",
+          value: "2x2",
+        },
+        {
+          name: "4x2",
+          value: "4x2",
+        },
+        {
+          name: "4x4",
+          value: "4x4",
+        },
+      ];
+    },
 
     // 组件头部
     header() {
@@ -134,13 +282,18 @@ export default {
       };
       return headerOption;
     },
+
     // 配置数据
     options() {
       return {
-        shadow: !this.customData.backgroundFrame,
-        bg: !this.customData.backgroundFrame ? "transparent" : "",
+        // shadow: !this.customData.backgroundFrame,
+        // bg: !this.customData.backgroundFrame ? "transparent" : "",
         resize: !this.isCommunityDesktop(this.desk) ? true : false,
+
+        noBorder: this.customData.noBorder,
+
         defaultData: {
+          noBorder: false,
           backgroundFrame: true,
           clockId: "clock4",
           imgUrl: DEFAULT.WALLPAPER,
@@ -348,7 +501,7 @@ export default {
   }
 
   :deep(.clock4) {
-    transform: scale(0.65);
+    //transform: scale(0.65);
     & .ant-row {
       flex-flow: nowrap !important;
       margin-left: 0 !important;

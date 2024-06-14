@@ -2,7 +2,7 @@
   <div style="padding-top: 20px;padding-left: 20px">
     <a-row :gutter="20">
       <a-col :span="6" >
-        <FrameAvatar   @click="showCard" :avatar-size="50" :frame-url="userInfo.equippedItems?.frameDetail.image" class="mt-3 ml-3 cursor-pointer" :size="50" :avatar-url="userInfo.avatar"></FrameAvatar>
+        <FrameAvatar   @click="showCard" :avatar-size="50" :frame-url="userInfo?.equippedItems?.frameDetail?.image" class="mt-3 ml-3 cursor-pointer" :size="50" :avatar-url="userInfo.avatar"></FrameAvatar>
       </a-col>
       <a-col :span="18">
         <div class=" mb-1 2 font-bold truncate"> {{ userInfo.nickname }}

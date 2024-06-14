@@ -4,10 +4,16 @@ import { useEventListener, useDebounce, useDebounceFn } from "@vueuse/core";
 
 import { open } from "../../utils/open";
 import { sourceList, openWithList, defaultSourceList } from "../../config/data";
+// 历史搜索
 import HistorySearch from "./HistorySearch.vue";
+// 系统搜索
 import SystemSearch from "./SystemSearch.vue";
+// 网页搜索
 import WebSearch from "./WebSearch.vue";
+// AI搜索
 import AISearch from "./AISearch.vue";
+// 文件搜索
+import FileSearch from "./FileSearch.vue";
 import { HistoryData } from "./types";
 // 右边新建对话，左边询问ai助手
 const emit = defineEmits(["close", "openCardSet"]);
@@ -17,7 +23,7 @@ const props: any = defineProps({
   // 指定搜索源
   specifySource: {},
 });
-const historyRef: any = ref();
+
 /** 搜索数据 */
 const words = ref("");
 const debounceWord = useDebounce(words, 200);
@@ -266,7 +272,12 @@ useEventListener("keyup", tabEventUp);
             }"
           >
             <div class="flex items-center">
-              <xt-mix-icon :icon="currentSource.icon" type="select" size="24" />
+              <xt-mix-icon
+                :icon="currentSource.icon"
+                type="select"
+                size="24"
+                class="tt-no-bg"
+              />
             </div>
             <template #overlay>
               <div
@@ -309,6 +320,7 @@ useEventListener("keyup", tabEventUp);
           icon="fluent:search-16-regular"
           @click="search()"
           boxSize="32"
+          class="tt-no-bg"
         />
       </header>
 
@@ -324,6 +336,7 @@ useEventListener("keyup", tabEventUp);
           v-else-if="words && currentSource.name == '工作台'"
           ref="SystemRef"
         />
+        <FileSearch v-else-if="words && currentSource.name == '文件'" />
         <WebSearch v-else-if="words && isWebSource" @search="search" />
         <HistorySearch v-else-if="!words && data.historyList.length > 0" />
       </main>

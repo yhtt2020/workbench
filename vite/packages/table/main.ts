@@ -97,7 +97,7 @@ import { initSocket } from "./js/socket/socket";
 initSocket();
 import initStores from "./initStores";
 
-import { Notifications } from "./js/common/sessionNotice";
+import { Notifications } from "./js/chat/sessionNotice";
 
 import Wujie from "wujie-vue3";
 
@@ -111,7 +111,7 @@ import hevueImgPreview from "hevue-img-preview";
 // init TUIKit
 
 const notice = new Notifications();
-window.$notice = notice;
+(window as any).$notice = notice;
 
 dayjs.locale("zh-cn");
 
