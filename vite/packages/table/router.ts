@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHashHistory,createWebHistory } from "vue-router";
 import routes from "./route/route";
 import { cardStore } from "./store/card";
 import { appStore } from "./store";
@@ -9,7 +9,7 @@ import { useUserPermit } from "../table/permission/user/useUserPermit";
 import cache from "../table/components/card/hooks/cache";
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes,
 });
 router.beforeEach(async (to, from, next) => {
