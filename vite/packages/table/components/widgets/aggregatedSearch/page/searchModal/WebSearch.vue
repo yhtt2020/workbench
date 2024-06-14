@@ -141,7 +141,7 @@ const recommendIndex = computed(() => {
       }"
       @click="search(item)"
     >
-      <div v-html="highLightKeywords(item.name, words)"></div>
+      <div v-html="highLightKeywords(words, item.name)"></div>
       <a-dropdown
         placements="bottom"
         :overlayStyle="{
