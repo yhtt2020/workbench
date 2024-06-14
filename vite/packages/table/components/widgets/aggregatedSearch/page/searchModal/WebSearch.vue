@@ -124,7 +124,7 @@ defineExpose({
     class="w-full relative flex overflow-hidden tab-container flex-nowrap whitespace-nowrap mb-1"
   >
     <div
-      v-for="item in sourceList"
+      v-for="item in data.sourceList"
       @click="selectWebSource(item)"
       :style="[
         {
