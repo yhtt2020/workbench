@@ -13,8 +13,9 @@ import MarketList from "../apps/shortcutKey/page/MarketList.vue";
 import InviteProcess from '../page/chat/page/process/inviteProcess.vue';
 import NextProcess from '../page/chat/page/process/NextProcess.vue';
 import SharedDesk from "../page/SharedDesk.vue";
-
-const routes = [
+import Home from '../page/Home.vue'
+import {usePlat} from "../permission/usePlat";
+let routes = [
   ...main,
   //...index,
   {
@@ -30,8 +31,8 @@ const routes = [
     ]
   },
   {
-    path:'',
-    name:'splash',
+    path:'/',
+    name:'start',
     component: Splash
   },
   {
@@ -71,5 +72,16 @@ const routes = [
     component:NextProcess,
   }
 ]
-
+// if(!usePlat('client')){
+//   console.log('进行修正')
+//   let main=routes.findIndex(item=>{
+//     if(item.path==='/'){
+//       return true
+//     }
+//   })
+//   routes[main].path='/'
+//   routes[main].name='start'
+//   routes[main].component=Home
+//   console.log(routes,'修正后')
+// }
 export default routes

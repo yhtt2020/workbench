@@ -172,10 +172,12 @@ export default {
   async mounted () {
     if(!usePlat('client')){
       document.body.classList.add('web')
+    }else{
+      this.$router.push({
+        name:'splash'
+      })
     }
-    this.$router.push({
-      name:'splash'
-    })
+
     window.addEventListener('resize', () => {
       document.body.classList.add('window')
     })
