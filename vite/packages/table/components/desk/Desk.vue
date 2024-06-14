@@ -40,6 +40,7 @@
       :communityInfo="communityInfo"
     />
 
+    <!-- 图标拖拽放置区域和桌面大小 -->
     <Drop :classes="getClasses()">
       <!-- 自由布局 -->
       <FreeLayoutScrollbar
@@ -330,29 +331,21 @@ export default {
       required: false,
     },
     // 社群成员桌面下开启右键菜单
-    showRightMenu:{
+    showRightMenu: {
       type: Boolean,
       required: false,
       default: false,
-    }
+    },
   },
   watch: {
     /**
      * 原则上需要监听的数据应该是具体的数据
      * 而不是currentDesk整个对象
      */
-    // 此处和 "currentDesk.settings" 有相同的判断逻辑
-    // currentDesk: {
-    //   handler(newVal) {
-    //     if (!this.isFreeLayout) {
-    //       // newVal.layoutSize = this.getLayoutSize();
-    //       this.muuriOptions.layout.horizontal = !newVal.settings?.vDirection;
-    //     }
-    //   },
-    //   deep: true,
+    // currentDesk() {
     // },
     adjustLayout(val) {
-      console.log('bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb')
+      console.log("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
       if (val) {
         this.toggleEditing();
         this.adjustLayout = false;
@@ -360,7 +353,7 @@ export default {
     },
     deskMenus: {
       handler(newVal) {
-        console.log('wwwwwwwwwwwwwwwwwwwwwww')
+        console.log("wwwwwwwwwwwwwwwwwwwwwww");
         this.deskMenus.forEach((item) => {
           this.addMenu(item);
         });
@@ -370,7 +363,7 @@ export default {
     },
     loaded: {
       handler() {
-        console.log('zzzzzzzzzzzzzzzzzzzz33333333333333333333')
+        console.log("zzzzzzzzzzzzzzzzzzzz33333333333333333333");
         this.$nextTick(() => {
           setTimeout(() => {
             if (!window.showed) {
@@ -383,9 +376,9 @@ export default {
     },
     deskSize: {
       handler(newVal) {
-        console.log('9999999999999999999999')
+        console.log("9999999999999999999999");
         if (!this.isFreeLayout) {
-          console.log('尺寸变化了，干哈嘎嘎')
+          console.log("尺寸变化了，干哈嘎嘎");
           this.currentDesk.layoutSize = this.getLayoutSize();
           newVal.layoutSize = this.getLayoutSize();
           // if (!newVal.settings) {
@@ -406,7 +399,7 @@ export default {
     // 监听ID变化
     "currentDesk.id": {
       handler(newVal) {
-        console.log('66666666666666666666666')
+        console.log("66666666666666666666666");
         // 同步更新自由布局ID
         this.freeLayoutId = newVal;
         this.$bus.off("startAdjust");
@@ -435,7 +428,7 @@ export default {
     },
     "currentDesk.settings": {
       handler(newVal) {
-        console.log('33333333333333333333333')
+        console.log("33333333333333333333333");
         if (!this.isFreeLayout) {
           if (!newVal) {
             newVal = {
@@ -455,7 +448,7 @@ export default {
     },
     "currentDesk.settings.vDirection": {
       handler(newVal) {
-        console.log('222222222222222222222222222222')
+        console.log("222222222222222222222222222222");
         this.key = Date.now();
       },
       deep: true,
@@ -544,7 +537,6 @@ export default {
     this.$bus.on("scrollbarUpdate", () => {
       this.freeLayoutScrollbarUpdate();
     });
-
 
     // 社群成员桌面触发位置还原
     this.$bus.on("redirect", () => {
