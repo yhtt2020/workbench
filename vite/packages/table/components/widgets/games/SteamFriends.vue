@@ -70,6 +70,7 @@ export default {
     options(){
       return {
         customDel: this.openWay === "nav" ? true : false,
+        cardName: 'Steam好友'
       }
     }
   },

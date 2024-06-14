@@ -138,7 +138,8 @@ export default {
           customSize: '2x4',
           _updateFlag: "24531",
         },
-        customDel:this.openWay === 'nav' ? true : false
+        customDel:this.openWay === 'nav' ? true : false,
+        cardName: '音频'
       }
     }
   },
