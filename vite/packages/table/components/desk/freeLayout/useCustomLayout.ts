@@ -2,8 +2,7 @@ import { storeToRefs } from "pinia";
 import { nanoid } from "nanoid";
 import _ from "lodash";
 // useAddCard,
-import {  useDelCard } from "../../../ui/hooks/useAddCard";
-import { useAddCard } from '../../../hooks'
+import { useAddCard ,useDelCard} from '../../../hooks'
 import { getSnapGrid } from "../../../ui/new/drag/src/hooks/utils";
 import {
   useGridToWidth,
@@ -180,6 +179,7 @@ export const useCustomLayout = async (options) => {
   // 隐藏
   getFreeLayoutState.value.system.hide = true;
   let positioningId = await addPositioningData();
+  console.log('positioningId :>> ', positioningId);
   // 定制头部
 
   if (headerList && headerList.length) {
@@ -313,7 +313,7 @@ const updateCardPosition = (top, left, item) => {
   };
 
   if (item.id) return;
-  
+
   // useAddCard( item.name, { ...item?.customData}, id );
 
   useAddCard(

@@ -80,7 +80,6 @@ const selectTab = (item) => {
 };
 // 切换不同支线
 const selectBranchTab = (item) => {
-  console.log("222222222 :>> ", 222222222);
   icon.value = item.newIcon;
   currentTask.value = "Branch";
   task.value = tasks[item.value];

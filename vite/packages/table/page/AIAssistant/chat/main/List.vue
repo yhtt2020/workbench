@@ -95,10 +95,7 @@ watch(
         for (let item of div) {
           const dataId = item.getAttribute("data-id");
           if (modalParams?.chatId == dataId) {
-            let obj = item.getBoundingClientRect();
             let top = item.offsetTop;
-            console.log("obj :>> ", obj);
-            console.log("item :>> ", item);
             content.scrollTo(0, top);
           }
         }

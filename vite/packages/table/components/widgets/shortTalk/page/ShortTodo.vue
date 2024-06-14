@@ -13,7 +13,7 @@
     @delete="deleteCard"
   >
     <Unusual
-      v-if="!this.access_token || !this.baseUrl"
+      v-if="!accToken || !accUrl"
       :disableEdit="options.disableEdit"
       :newIcon="'fluent-emoji:memo'"
       :title="'请完成小组件配置'"
@@ -186,6 +186,22 @@ export default {
   },
   emit: ["delete"],
   mounted() {
+    if(this.communityAuth(this.desk?.communityNo)){
+      // 初始化
+      this.accToken = this.access_token;
+      this.accUrl = this.baseUrl;
+      const target = {
+        customIndex: 'shortTalk',
+        desk: this.desk,
+      };
+      const tokenData = {
+        accToken: this.accToken,
+        accUrl: this.accUrl,
+      };
+      saveData(tokenData, "desk", target);
+      this.$bus.emit("updateSync");
+    }
+
     // 初始化
     if (communityMember(this.desk?.communityNo)) {
       const target = {

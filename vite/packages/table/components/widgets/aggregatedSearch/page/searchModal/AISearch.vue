@@ -92,7 +92,7 @@ const list = computed(() => {
         // containsKeywordRegex
         if (data.content.includes(words.value)) {
           let text = htmlToString(data.content);
-          data.content = highLightKeywords(text, words.value);
+          data.content = highLightKeywords(words.value, text);
 
           chatArr.push(data);
         }

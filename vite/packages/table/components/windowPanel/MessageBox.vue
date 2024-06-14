@@ -109,9 +109,9 @@ const { countDowntime } = storeToRefs(useCountDown)
 const useTimer = timerStore()
 
 type propsType = {
-    boxClass:string, // 在底部时，状态框的类样式
-    isTop:boolean, // 是否在顶部，当在顶部时，便不再使用状态框，而是直接显示里面的状态块
-    mainClass:string // 状态框中查看状态块的定位样式
+    boxClass?:string, // 在底部时，状态框的类样式
+    isTop?:boolean, // 是否在顶部，当在顶部时，便不再使用状态框，而是直接显示里面的状态块
+    mainClass?:string // 状态框中查看状态块的定位样式
 }
 const props = withDefaults(defineProps<propsType>(), {
     boxClass:'',

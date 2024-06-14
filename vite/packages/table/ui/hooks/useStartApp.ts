@@ -13,6 +13,7 @@ import { useTTAppStore } from "../../apps/ttApp/src/store";
 import { storeToRefs } from "pinia";
 import fs from "fs";
 import { appsStore } from "../../store/apps";
+import { useAppCenterStore } from "../../apps/appCenter/src/store";
 
 // @ts-ignore
 
@@ -276,7 +277,11 @@ export const openSysApp = (value, router) => {
       useAppModal("galleryModalApp").openApp();
       break;
     case 'apps':
-      useMit.emit('openAppCenter')
+      // useMit.emit('openAppCenter')
+      // 跳转到新版应用中心
+      const appCenterStore = useAppCenterStore();
+      const { visible } = storeToRefs(appCenterStore);
+      visible.value = true;
       break;
     default:
       // 通过路由打开

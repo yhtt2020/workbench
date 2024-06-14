@@ -31,9 +31,6 @@ import {useFreeLayoutStore} from '../desk/freeLayout/store'
 
 export default {
   name: 'Vuuri',
-  date () {
-    currentDragGrid:''
-  },
   props: {
     /**
      * Optional class name to add to the grid. If not, one will be provided
@@ -120,8 +117,15 @@ export default {
     }
   },
   data () {
-
     return {
+      syncFunc:_.debounce((newItems)=>{
+        console.log('数据变化')
+        this._sync(newItems, this.copiedItems)
+      },1000,{
+        trailing:true,
+        leading:false
+      }),
+      currentDragGrid:'',
       updateEvent:null,
       /**
        * Deep copy of props items
@@ -144,9 +148,8 @@ export default {
       deep: true,
       handler (newItems, oldValue) {
         if (this.isFreeLayout) return
-        console.log('数据变化')
         if (!this.internallySet) {
-          this._sync(newItems, this.copiedItems)
+            this.syncFunc(newItems)
         }
       }
     },
