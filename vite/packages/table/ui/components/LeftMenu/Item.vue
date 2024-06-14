@@ -48,7 +48,7 @@
         <!-- antd插槽 -->
         <div
           v-if="item.slot"
-          style="width: 40px; height: 40px; border-radius: 10px"
+          style="width: 40px; height: 40px; border-radius: 10px;position: absolute; z-index: 100;"
           class="xt-bg-2 xt-base-btn"
         >
           <slot :name="item.slot"> </slot>
@@ -63,7 +63,7 @@
           <img
             :src="item.img"
             :style="[imgSize, imgBg]"
-            style="border-radius: 10px; object-fit: cover"
+            style="border-radius: 10px; object-fit: cover;position: absolute; z-index: 100;"
           />
         </div>
         <!-- icon -->
@@ -74,6 +74,7 @@
           radius="10"
           :type="type"
           :icon="item.icon"
+           style="position: absolute !important; z-index: 100 !important;"
         />
         <xt-new-icon
           v-else
@@ -82,6 +83,7 @@
           :icon="item.full ? full : item.newIcon"
           :bgStyle="iconBg(item.bg)"
           radius="10"
+          style="position: absolute !important; z-index: 100 !important;"
         />
       </div>
     </xt-menu>

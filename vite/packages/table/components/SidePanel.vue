@@ -145,7 +145,7 @@ import ExtraMenu from './windowPanel/components/ExtraMenu.vue';
 
 import { renderIcon } from '../js/common/common'
 import { moreMenus, extraRightMenu, mergeIconFolder } from '../components/desk/navigationBar/index'
-import { Notifications } from '../js/common/sessionNotice'
+import { Notifications } from '../js/chat/sessionNotice'
 import { startApp } from '../ui/hooks/useStartApp'
 import { defaultFolderData } from '../apps/folder/src/components/options'
 import { replaceType } from '../components/desk/navigationBar/hook/replaceType'
@@ -944,3 +944,4 @@ export default {
 }
 </style>
 ../js/common/single
+../js/chat/sessionNotice

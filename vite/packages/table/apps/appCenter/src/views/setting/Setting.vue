@@ -9,7 +9,7 @@
         </div>
         <xt-option-box>
             <xt-option-info 
-                title="显示最近使用（开发中）"
+                title="显示最近使用"
                 info="在应用开始菜单中显示最近使用数据。"
                 :isSwitch="true"
                 v-model:switch="recentUsed"
@@ -17,7 +17,7 @@
         </xt-option-box>
         <xt-option-box v-if="!usePlat('web')">
             <xt-option-info 
-                title="软件下载安装路径（开发中）"
+                title="软件下载安装路径"
                 info="选择软件类型的应用下载安装的文件路径"
                 icon="fluent:arrow-clockwise-16-regular"
                 @onIconClick="resetPath"

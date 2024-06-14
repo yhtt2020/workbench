@@ -16,6 +16,11 @@ export default defineComponent({
       }else{
         return []
       }
+    },
+
+    // 消息调整内容
+    noticeContent(){
+     return this.content?.body ?  this.content?.body : this.content?.content;
     }
   },
   mounted() {
@@ -36,7 +41,7 @@ export default defineComponent({
      </ImagePreviewGroup>
    </div>
    <div>
-     {{ content.content }}
+     {{ noticeContent }}
    </div>
  </div>
 

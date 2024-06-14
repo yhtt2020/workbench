@@ -44,6 +44,7 @@ import XtTitle from "./libs/Title/index.vue"
 import XtStatus from "./libs/Status/index.vue"
 import XtPreview from "./libs/Preview/index.vue"
 import XtPreDesk from "./libs/PreDesk/index.vue"
+import XtWebLinkButton from "../apps/galleryModal/components/webLinkButton/WebLinkButton.vue"
 
 
 // 卡片控制器
@@ -90,4 +91,5 @@ export default function (app: App): void {
   app.component('XtStatus',XtStatus)
   app.component('XtPreview',XtPreview)
   app.component('XtPreDesk',XtPreDesk)
+  app.component('XtWebLinkButton',XtWebLinkButton)
 }

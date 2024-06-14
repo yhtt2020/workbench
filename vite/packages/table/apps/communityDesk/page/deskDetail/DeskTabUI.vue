@@ -15,7 +15,19 @@
             style="width: 38px; height: 38px"
             class="flex items-center justify-center"
           >
-            <a-avatar :src="communityInfo?.icon" :size="38" shape="square" />
+            <xt-mix-icon
+              v-if="retrieveIcon(communityInfo?.icon)"
+              :icon="communityInfo?.icon"
+              :type="communityIconType(communityInfo?.icon)"
+              class="mr-2"
+              size="40"
+            />
+            <a-avatar
+              v-else
+              :src="communityInfo?.icon"
+              :size="38"
+              shape="square"
+            />
           </div>
 
           <!-- 桌面切换列表 -->
@@ -66,6 +78,8 @@
 </template>
 
 <script>
+import { communityIconType } from "../../hooks/deskCreateMethod";
+
 export default {
   props: {
     showTopBar: {
@@ -90,11 +104,11 @@ export default {
     },
     currentDeskId: {
       type: String,
-      required: true,
     },
   },
 
   methods: {
+    communityIconType,
     // 鼠标事件
     handleMouseEnter() {
       this.$bus.emit("stopHide");
@@ -104,14 +118,17 @@ export default {
     },
 
     // 切换桌面
-    setCurrentDeskId(id){
-     this.$emit('tabDeskId',id);
+    setCurrentDeskId(id) {
+      this.$emit("tabDeskId", id);
     },
 
-    clickDesk(){
-      this.$emit('clickTabDesk')
+    clickDesk() {
+      this.$emit("clickTabDesk");
     },
-    
+
+    retrieveIcon(url) {
+      return url?.includes("color=#");
+    },
   },
 };
 </script>

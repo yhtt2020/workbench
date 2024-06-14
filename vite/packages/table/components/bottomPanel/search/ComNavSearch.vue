@@ -34,7 +34,14 @@
           :class="currentCommunity.index === index ? 'select' : ''"
         >
           <div class="flex items-center">
-            <div style="width: 40px; height: 40px" class="mr-3">
+            <xt-mix-icon
+              v-if="retrieveIcon(item?.communityInfo?.icon)"
+              :icon="item?.communityInfo?.icon"
+              :type="communityIconType(item?.communityInfo?.icon)"
+              class="mr-2"
+              size="40"
+            />
+            <div style="width: 40px; height: 40px" class="mr-3" v-else>
               <img
                 :src="item.communityInfo.icon"
                 alt=""
@@ -46,12 +53,6 @@
               {{ item.communityInfo.name }}
             </span>
           </div>
-
-          <xt-ify-icon
-            icon="fluent:checkmark-circle-16-filled"
-            v-if="currentCommunity.index === index"
-            style="color: rgba(80, 139, 254, 0.6)"
-          ></xt-ify-icon>
         </div>
       </div>
     </xt-scrollbar>
@@ -72,7 +73,10 @@ import { chatCommunityStore } from "../../../apps/chat/store/chatCommunity";
 import { communityNavStore } from "../store/communityNavStore";
 import { useRouter } from "vue-router";
 import { appStore } from "../../../store";
-import { getCommunityDeskList } from "../../../apps/communityDesk/hooks/deskCreateMethod";
+import {
+  getCommunityDeskList,
+  communityIconType,
+} from "../../../apps/communityDesk/hooks/deskCreateMethod";
 import { communityDeskStore } from "../../../apps/communityDesk/store/communityDeskStore";
 import { cardStore } from "../../../store/card";
 import _ from "lodash-es";
@@ -145,15 +149,14 @@ const selectCommunity = async (item, index) => {
       // 当社群桌面列表没有时,会自动默认创建一个空桌面
       if (newDeskList.length === 0) {
         proxy.$bus.emit("openCommunityDesk");
-      } 
+      }
     }
     // 成员
     else if (item.role === "member") {
       loadSyncDesk(item?.no);
       comNav.setCurrentCommunity(item, index);
     }
-  }
-  else {
+  } else {
     comNav.setCurrentCommunity(item, index);
   }
   // 选择后进行弹窗关闭
@@ -165,6 +168,11 @@ const loadSyncDesk = async (no) => {
   communityDesk.setCurrentDeskNo(no);
   communityDesk.loadCommunityDeskDetail();
   communityDesk.loadCommunityDeskAll();
+};
+
+// 给从图标选择器中的图标进行颜色样式处理
+const retrieveIcon = (url) => {
+  return url?.includes("color=#");
 };
 </script>
 

@@ -16,12 +16,12 @@
     <!-- 社群桌面 -->
     <CommunityGroupDesk
       :communityVisible="communityVisible"
-      ref="deskGroupRef"
       :settings="settings"
       :desk-list="desks"
       v-model:currentDeskId="this.currentDeskId"
-      @changeDesk="changeDesk"
+      @changeCommunityDesk="changeDesk"
     />
+    <!--  ref="deskGroupRef" -->
   </div>
   <!-- 检测到用户头像为默认头像时触发用户中心个人信息修改弹窗 -->
   <div
@@ -343,10 +343,13 @@ export default {
       }
     }
 
-    // 更新社群桌面
-    // this.$bus.on("changeCurrentDesk", (desk) => {
-    //   this.changeDesk(desk);
-    // });
+    // 接收群聊通知消息的回调方法
+    const groupOnMessageReceived = (evt) =>{
+      window.$notice.receiveNotification(evt);
+    }
+    // 监听群聊消息全局接收
+    window.$chat?.chat?.on(window.$chat.EVENT.MESSAGE_RECEIVED,groupOnMessageReceived)
+
   },
   created() {
     if (this.currentDesk.cards.length) {
@@ -486,12 +489,14 @@ export default {
           let desks = _.cloneDeep(DESKS);
 
           this.desks = desks;
+          // console.log('查看desk',this.desks[0]);
+          const initDesk = this.desks[0]
           // this.currentDesk = this.desks[0];
           this.currentDeskIndex = {
-            name: this.desk[0]?.name,
-            id: this.desk[0]?.id,
+            name: initDesk?.name,
+            id: initDesk?.id,
           };
-          this.currentDeskId = this.desk[0]?.id;
+          this.currentDeskId = initDesk?.id;
           console.log(_.cloneDeep(this.desks), "修改后的desks");
 
           // web端打开功能介绍提示弹窗

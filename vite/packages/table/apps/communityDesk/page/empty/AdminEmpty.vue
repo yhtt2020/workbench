@@ -1,7 +1,14 @@
 <!-- 社群管理员的空白桌面 -->
 <template>
   <div class="flex items-center justify-center w-full pt-6 pb-3">
-    <a-avatar :src="comInfo?.icon" :size="56" shape="square" />
+    <xt-mix-icon
+      v-if="retrieveIcon(comInfo?.icon)"
+      :icon="comInfo?.icon"
+      :type="communityIconType(comInfo?.icon)"
+      class="mr-2"
+      size="40"
+    />
+    <a-avatar :src="comInfo?.icon" :size="56" shape="square" v-else />
   </div>
   <div
     class="xt-text w-full flex items-center justify-center"
@@ -18,6 +25,7 @@
 
 <script setup>
 import { toRefs, ref } from "vue";
+import { communityIconType } from "../../hooks/deskCreateMethod";
 
 const props = defineProps({
   comInfo: {
@@ -35,6 +43,10 @@ const scrollbarSettings = {
   suppressScrollX: true,
   wheelPropagation: true,
   currentItemId: -1,
+};
+
+const retrieveIcon = (url) => {
+  return url?.includes("color=#");
 };
 </script>
 
