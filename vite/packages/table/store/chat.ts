@@ -11,9 +11,8 @@ import _ from "lodash-es";
 const getUserSigUrl = sUrl("/app/chat/getUserSig");
 
 // IM相关包引入
-import { TUIChatKit } from "../apps/TUIKit";
 import { SDKAppID } from "../js/chat/chat";
-import TUIChatEngine from "@tencentcloud/chat-uikit-engine";
+import { loadChat } from "../chat";
 
 // @ts-ignore
 export const chatStore = defineStore("chatStore", {
@@ -66,6 +65,7 @@ export const chatStore = defineStore("chatStore", {
   actions: {
     // IM聊天登录
     async login() {
+      await loadChat();
       const { uid } = (appStore() as any).$state.userInfo;
       await this.getUserSig();
       const imOption = {
@@ -74,13 +74,13 @@ export const chatStore = defineStore("chatStore", {
         userID: `${uid}`,
       };
       await this.imLogin(imOption);
-      await this.updateUserInfo();
+      // await this.updateUserInfo();
     },
 
     // IM登录方法
     async imLogin(option: any) {
       const { SDKAppID,userID,userSig } = option;
-      await TUIChatEngine.login({
+      await (window as any).$chat.login({
         SDKAppID,
         userID,
         userSig,
@@ -91,7 +91,7 @@ export const chatStore = defineStore("chatStore", {
     async updateUserInfo() {
       const app: any = appStore();
       let { userInfo } = storeToRefs(app);
-      await (window as any).$chat?.chat?.updateMyProfile({
+      await (window as any).$TUIKit?.chat?.updateMyProfile({
         nick: userInfo.value.nickname,
         avatar: userInfo.value.avatar,
         selfSignature: String(userInfo.value.signature),

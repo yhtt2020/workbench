@@ -74,7 +74,12 @@ export default {
     currentSize(newV) {
       this.$emit("update:size", newV);
     },
+    '_data.noBorder'(newV) {
+      console.log('"chufalelaaaaa" :>> ', "chufalelaaaaa");
+      this.dragCallBack(this.size);
+    },
   },
+  inject: ["_data"],
   mounted() {
     this.drag();
     // 初始化
@@ -89,8 +94,13 @@ export default {
       let str = e.split("x");
       let width = str[0];
       let height = str[1];
-      this.w = width * 134 + (width - 1) * 12 - 28 + "px";
-      this.h = height * 96 + (height - 1) * 12 - 46 - 14 + "px";
+      if (this.noBorder) {
+        this.w = "100%";
+        this.h = "100%";
+      } else {
+        this.w = width * 134 + (width - 1) * 12 - 28 + "px";
+        this.h = height * 96 + (height - 1) * 12 - 46 - 14 + "px";
+      }
     },
     findN(value, num = 134) {
       value = parseFloat(value);
@@ -158,6 +168,12 @@ export default {
         },
         { capture: true }
       );
+    },
+  },
+  computed: {
+    noBorder() {
+
+      return this._data.noBorder;
     },
   },
   beforeUnmount() {

@@ -46,7 +46,6 @@
         >
           <PickDropDetail :isModal="isModal" @emitPick="updateList" />
         </xt-dropdown>
-
       </div>
     </div>
 
@@ -96,6 +95,7 @@
                     class="mr-2 xt-bg-t-3 img-button"
                     style="border-radius: 8px; opacity: 0"
                     @click="download(img)"
+                    v-if="!isWeb"
                   >
                     <div class="flex items-center justify-center">
                       <xt-new-icon
@@ -105,6 +105,21 @@
                       ></xt-new-icon>
                     </div>
                   </xt-button>
+
+                  <!--  -->
+                  <!--   -->
+                  <xt-web-link-button v-else class="img-button" style="opacity: 0" :url="img.src">
+                    <template #a-button>
+                      <div class="flex items-center justify-center">
+                        <xt-new-icon
+                          icon="fluent:arrow-download-16-filled"
+                          :size="20"
+                          :color="'var(--active-text)'"
+                        ></xt-new-icon>
+                      </div>
+                    </template>
+                  </xt-web-link-button>
+
                   <xt-button
                     :w="isModal ? 32 : 40"
                     :h="isModal ? 32 : 40"
@@ -189,7 +204,7 @@ import { completeTask } from "../../apps/task/task";
 import { usePlat } from "../../ui/hooks/usePlat";
 
 let fs, path;
-if (usePlat('client')) {
+if (usePlat("client")) {
   fs = window.$models.fs;
   path = require("path");
 }
@@ -251,6 +266,10 @@ export default {
       return this.pickImageData.map((item) => {
         return item.path;
       });
+    },
+
+    isWeb() {
+      return window.$usePlat("web");
     },
   },
 
@@ -359,7 +378,7 @@ export default {
         "确定将此壁纸设置为系统桌面壁纸？注意，此处设置不是工作台的壁纸。",
         "",
         {
-          index:100010,
+          index: 100010,
           ok: () => {
             message.info("正在为您下载并设桌面壁纸");
             tsbApi.system.setPaper(img.path);
@@ -378,7 +397,7 @@ export default {
           "您尚未设置壁纸保存目录，请设置目录，设置目录后下载将自动开始。",
           "",
           {
-            index:100010,
+            index: 100010,
             ok: async () => {
               await this.queryStart();
             },

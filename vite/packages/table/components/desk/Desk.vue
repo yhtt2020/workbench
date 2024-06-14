@@ -272,7 +272,7 @@ export default {
     },
     currentDesk: {
       type: Object,
-      required: true,
+      required: false,
     },
     muuriOptions: {
       type: Object,

@@ -70,7 +70,6 @@ export default {
   },
   methods: {
     ...mapActions(communityNavStore, ["isCommunityDesktop"]),
-
     onPanelChange (value, mode) {},
     ...mapActions(cardStore, ['removeCard']),
    async moveToday(){

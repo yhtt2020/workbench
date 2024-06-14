@@ -17,11 +17,11 @@
           </div>
           <div class="flex flex-col" v-if="!isFull">
             <div class="flex justify-between mb-2.5">
-             <span class="xt-font xt-text font-16">背景框</span>
-             <a-switch v-model:checked="customData.backgroundFrame"/>
+             <span class="xt-font xt-text font-16">无边框模式</span>
+             <a-switch v-model:checked="customData.noBorder"/>
             </div>
             <span class="xt-font xt-text-2 font-14">
-             显示时钟组件的背景框。
+             关闭时钟组件的背景框。
             </span>
           </div>
           <div class="my-4" v-if="!isFull">
@@ -45,7 +45,7 @@
 
         <div class="flex flex-col xt-bg-2 p-4 rounded-lg mb-4 " >
           <div class="flex flex-col">
-            <span class="xt-text mb-3 font-16">时钟样式</span> 
+            <span class="xt-text mb-3 font-16">时钟样式</span>
             <xt-option-tab  v-model="customData.currentStatus" :list="clockTabList" circle  style="height: 40px;margin-bottom: 0 !important;" />
           </div>
 
@@ -103,6 +103,7 @@ export default{
   components:{
     ClockStyle,
   },
+  inject:['_data'],
   props:{
     customData:{ type:Object,default:()=>{} },
     desk:{type:Object,default:()=>{}},
@@ -110,6 +111,10 @@ export default{
     zIndex:{  type:String,  default:'1000'},
     isFull:{  type:Boolean, default:false, }
   },
+  mounted(){
+  },
+
+
   data(){
     return{
       clockTabList:clockTabList,

@@ -17,46 +17,43 @@
       ]"
       :class="[leftClass, leftMargin]"
     >
-    <template  v-for="list in listOption"
-    >
-    <div class="w-full" :class="list?.class" v-if="list.array.length">
-        <Float
-          @itemClick="itemClick"
-          :list="item.children"
-          v-for="item in list.array"
-          :data="item"
-        >
-          <!-- float组件中用于等级显示 -->
-          <template #[item.slot] v-for="item in item.children">
-            <slot :name="item.slot"></slot>
-          </template>
-          <div
-            class="relative flex flex-col items-center justify-center cursor-pointer"
-            :class="[list?.boxClass]"
+      <template v-for="list in listOption">
+        <div class="w-full" :class="list?.class" v-if="list.array.length"  @contextmenu.prevent>
+          <Float
+            @itemClick="itemClick"
+            :list="item.children"
+            v-for="item in list.array"
+            :data="item"
           >
-            <Box :item="item" :id="currentIndex" :model="model">
-              <Item :item="item" v-bind="list?.itemOption">
-                <template #[item.slot]>
-                  <slot :name="item.slot"></slot>
-                </template>
-              </Item>
-            </Box>
+            <!-- float组件中用于等级显示 -->
+            <template #[item.slot] v-for="item in item.children">
+              <slot :name="item.slot"></slot>
+            </template>
             <div
-              v-if="item.name"
-              style="height: 16px; margin-top: 2px"
-              class="w-full text-xs text-center truncate xt-text-2"
+              class="relative flex flex-col items-center justify-center cursor-pointer"
+              :class="[list?.boxClass]"
             >
-              {{ item.name }}
+              <Box :item="item" :id="currentIndex" :model="model">
+                <Item :item="item" v-bind="list?.itemOption">
+                  <template #[item.slot]>
+                    <slot :name="item.slot"></slot>
+                  </template>
+                </Item>
+              </Box>
+              <div
+                v-if="item.name"
+                style="height: 16px; margin-top: 2px"
+                class="w-full text-xs text-center truncate xt-text-2"
+              >
+                {{ item.name }}
+              </div>
             </div>
-          </div>
-          <template #content>
-            <slot :name="item.float"> </slot>
-          </template>
-        </Float>
-      </div>
-
-  </template>
-
+            <template #content>
+              <slot :name="item.float"> </slot>
+            </template>
+          </Float>
+        </div>
+      </template>
     </div>
     <!-- 左侧区域结束 -->
     <!-- 主体区域开始 -->
@@ -130,10 +127,10 @@ const props = defineProps({
     default: "false",
   },
   // 这里的宽度影响到壁纸那边使用,所以为了防止其他地方样式出问题暂时这样写
-  rightW:{
-    type:String,
-    default:'w-0',
-  }
+  rightW: {
+    type: String,
+    default: "w-0",
+  },
 });
 // 全屏控制
 const full = ref(false);
@@ -187,7 +184,7 @@ const listOption = computed(() => {
     },
     {
       boxClass: "mt-2",
-      array: props.end > 0 ? newList.value.slice(-1 * props.end):[],
+      array: props.end > 0 ? newList.value.slice(-1 * props.end) : [],
       itemOption: {
         type: "",
         bg: "",
