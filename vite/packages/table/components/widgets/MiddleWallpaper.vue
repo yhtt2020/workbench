@@ -2,7 +2,7 @@
   <a-spin tip="加载中..." :spinning="imgSpin" size="large">
     <xt-container
       :header="header"
-      v-model:customSize="customData.customSize"
+      v-model:customSize="wallPaperSize"
       :options="options"
       :customIndex="customIndex"
       :sizeList="sizeList"
@@ -486,6 +486,10 @@ export default {
       }
     },
 
+    // 实时获取图标组件的大小
+    wallPaperSize(){
+      return this.customData?.customSize;
+    }
   },
 
   mounted() {

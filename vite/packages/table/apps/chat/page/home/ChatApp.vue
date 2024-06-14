@@ -117,7 +117,7 @@ const leftList = ref([
             reconnect();
           } else {
             triggerAddModal(item);
-            completeTask("Z0601");
+            // completeTask("Z0601");
           }
         },
       },
@@ -132,7 +132,7 @@ const leftList = ref([
             reconnect();
           } else {
             triggerAddModal(item);
-            completeTask("Z0601");
+            // completeTask("Z0601");
           }
         },
       },
@@ -147,7 +147,7 @@ const leftList = ref([
             reconnect();
           } else {
             triggerAddModal(item);
-            completeTask("Z0601");
+            // completeTask("Z0601");
           }
         },
       },
@@ -171,7 +171,7 @@ const leftList = ref([
             reconnect();
           } else {
             triggerAddModal(item);
-            completeTask("Z0601");
+            // completeTask("Z0601");
           }
         },
       },

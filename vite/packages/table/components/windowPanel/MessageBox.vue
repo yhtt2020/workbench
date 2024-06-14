@@ -48,7 +48,7 @@ import { storeToRefs } from 'pinia';
 
 import { getClientIcon,getCover,getIcon } from '../../js/common/game';
 import { usePosition } from './hook/usePosition.ts';
-import { Notifications } from '../../js/common/sessionNotice';
+import { Notifications } from '../../js/chat/sessionNotice';
 
 import TopCourier from '../widgets/courier/TopCourier.vue';
 import TopTomato from '../../apps/tomato/widget/TopTomato.vue';
@@ -119,7 +119,7 @@ const props = withDefaults(defineProps<propsType>(), {
     mainClass:''
 })
 
-const { boxClass,isTop } = toRefs(props)
+const { boxClass,isTop ,mainClass} = toRefs(props)
 
 // 番茄钟时间填充
 const displayNum = (num:number) => {
@@ -356,3 +356,4 @@ watch(() => useTimer.appDate.minutes, (newVal, oldVal) => {
 // })
 </script>
 <style lang='scss' scoped></style>
+../../js/chat/sessionNotice.ts
