@@ -310,6 +310,7 @@ export default {
         },
         customDel: this.openWay === "nav" ? true : false,
         disableEdit: this.isCommunityDesktop(this.desk),
+        cardName: '时钟'
       };
     },
     // 拖拽缩放

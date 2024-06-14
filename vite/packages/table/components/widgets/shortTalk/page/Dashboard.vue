@@ -206,6 +206,7 @@ export default {
           _updateFlag: "24531",
         },
         disableEdit: this.isCommunityDesktop(this.desk),
+        cardName: '短说数据看板'
       };
     },
   },

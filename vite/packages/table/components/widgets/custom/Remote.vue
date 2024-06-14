@@ -259,6 +259,7 @@ export default {
         shadow: this.customData.hideFrame,
         customDel: this.openWay === "nav" ? true : false,
         disableEdit: this.isCommunityDesktop(this.desk) ? true : false,
+        cardName: '外部小组件'
       };
     },
     header() {

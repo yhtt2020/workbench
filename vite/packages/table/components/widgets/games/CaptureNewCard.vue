@@ -107,7 +107,8 @@ export default {
     ...mapState(captureStore,['images','videos','settings']),
     options(){
       return {
-        customDel:this.openWay === 'nav' ? true : false
+        customDel:this.openWay === 'nav' ? true : false,
+        cardName: '捕获'
       }
     }
   },
