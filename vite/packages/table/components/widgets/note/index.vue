@@ -3,7 +3,6 @@
     @leftClick="enterNote"
     @delete="removeNote"
     v-model:customSize="customData.customSize"
-    :platLimit="['web']"
     :header="header"
     :body="bodyOptions"
     :customData="customData"
