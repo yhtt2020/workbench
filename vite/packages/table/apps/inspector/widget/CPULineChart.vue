@@ -168,7 +168,8 @@ export default {
     },
     options(){
       return {
-         customDel:this.openWay === 'nav' ? true : false
+         customDel:this.openWay === 'nav' ? true : false,
+         cardName: '系统性能监控'
       }
     },
   },

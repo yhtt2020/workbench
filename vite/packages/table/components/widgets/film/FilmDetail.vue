@@ -109,7 +109,8 @@
     computed: {
       options(){
         return {
-          customDel:this.openWay === 'nav' ? true : false
+          customDel:this.openWay === 'nav' ? true : false,
+          cardName: '正在热映'
         }
       }
     },

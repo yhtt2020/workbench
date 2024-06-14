@@ -191,6 +191,7 @@ export default {
           customSize: this.customData?.customSize || "2x2",
         },
         disableEdit: this.isCommunityDesktop(this.desk),
+        cardName: 'ai助手'
       };
     },
   },

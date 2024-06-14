@@ -38,6 +38,7 @@ const options = computed(() => {
     defaultData,
     noBorder: customData.value?.noBorder,
     bg: customData.value.bgMode == "custom" ? customData.value.bgColor : "",
+    cardName: '聚合搜索'
   };
 });
 

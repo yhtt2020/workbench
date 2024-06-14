@@ -177,6 +177,7 @@ export default {
       return {
         customDel: this.openWay === "nav" ? true : false,
         disableEdit:this.isCommunityDesktop(this.desk),
+        cardName: 'Epic喜加一'
       };
     },
   },

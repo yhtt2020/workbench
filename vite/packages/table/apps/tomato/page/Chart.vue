@@ -77,6 +77,7 @@ export default {
         type: "timer",
         noTitle: true,
         disableEdit:this.isCommunityDesktop(this.desk),
+        cardName: '番茄钟'
       };
     },
   },

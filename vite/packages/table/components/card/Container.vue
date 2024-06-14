@@ -204,7 +204,7 @@
         <!-- 小组件头部结束 -->
         <!-- 小组件主体开始 -->
         <xt-status
-          :name="header.title"
+          :name="options.cardName"
           :status="envLimitStatus"
           :plat="platLimit"
           :imgSize="75"
