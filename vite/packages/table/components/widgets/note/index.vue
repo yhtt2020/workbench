@@ -3,7 +3,6 @@
     @leftClick="enterNote"
     @delete="removeNote"
     v-model:customSize="customData.customSize"
-    :platLimit="['web']"
     :header="header"
     :body="bodyOptions"
     :customData="customData"
@@ -469,6 +468,7 @@ export default {
         {
           newIcon: "fluent:open-20-filled",
           title: "跳转便签",
+          disabled: !window.$usePlat('client'),
           fn: () => {
             const { openApp } = useAppModal("note");
             openApp({
@@ -503,12 +503,6 @@ export default {
       this.removeValue = false;
     },
     async ok() {
-      // 删除便签时需要清除db数据
-      let getDb = await tsbApi.db.find({
-        selector: {
-          _id: "note:" + this.customIndex,
-        },
-      });
       // 在触发删除前，设置可以删除卡片
       this.customDel = false;
       // 保存变化前的是否保留数据
@@ -519,19 +513,27 @@ export default {
         this.removeValue = false;
         this.isRemove = temp;
       });
-      if (this.isRemove && getDb.docs.length) {
-        await tsbApi.db.put({
-          ...getDb.docs[0],
-          isDelete: true,
-          deskId: "",
-          deskName: "",
+      if(this.$usePlat()){
+        // 删除便签时需要清除db数据
+        let getDb = await tsbApi.db.find({
+          selector: {
+            _id: "note:" + this.customIndex,
+          },
         });
-      } else {
-        await tsbApi.db.put({
-          ...getDb.docs[0],
-          deskId: "",
-          deskName: "",
-        });
+        if (this.isRemove && getDb.docs.length) {
+          await tsbApi.db.put({
+            ...getDb.docs[0],
+            isDelete: true,
+            deskId: "",
+            deskName: "",
+          });
+        } else {
+          await tsbApi.db.put({
+            ...getDb.docs[0],
+            deskId: "",
+            deskName: "",
+          });
+        }
       }
     },
 
