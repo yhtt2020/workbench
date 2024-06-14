@@ -204,13 +204,18 @@ const eventDown = (e) => {
   if (e.key === "Enter") {
     e.preventDefault();
     const name = currentSource.value.name;
+    // ai搜索
     if (name === "AI助手") {
       AIRef.value.search();
-    } else if (words.value.length > 0) {
+    }
+    // web搜索
+    else if (words.value.length > 0) {
       if (isWebSource.value) {
-        webRef.value.enterSearch()
+        webRef.value.enterSearch();
       }
-    } else {
+    }
+    // 历史搜索
+    else {
       historySearch(ctrlSelectIndex.value);
     }
     return;
