@@ -212,9 +212,9 @@
           <div class="h-full rounded-b-lg" :style="[bodyStyle]">
             <Resize
               v-model:size="currentSize"
+              v-bind="resizeOptions"
               :modalSize="options.modalSize"
               :resize="options.resize"
-              :odd="options.odd"
               @resize="resize"
             >
               <slot></slot>

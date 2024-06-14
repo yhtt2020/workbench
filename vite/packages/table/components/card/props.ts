@@ -1,7 +1,10 @@
 /**
- * 新增参数前，请先确定当前参数是否无法完成
+ * 新增参数前，请先确定当前参数是否无法完成！
+ * 新增参数前，请先确定当前参数是否无法完成！
+ * 新增参数前，请先确定当前参数是否无法完成！
  *
- * 均为重构后新的数据结构 和旧版有差异 需要阅读源码
+ */
+/**
  * 所有参数默认值请都设置为false 请勿随意修改默认值
  */
 export const defaultProps = {
@@ -175,4 +178,14 @@ export const defaultProps = {
    * outside 鼠标是否悬浮与小组件
    */
   status: {},
+  /**
+   * 控制resize组件 会通过v-bind将对象传入组件中
+   * 组件路径 vite\packages\table\components\card\Resize.vue
+   */
+  resizeOptions: {
+    type: Object,
+    default: () => {
+      return {};
+    },
+  },
 };

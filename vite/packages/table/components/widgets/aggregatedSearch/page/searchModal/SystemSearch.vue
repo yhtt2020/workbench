@@ -28,74 +28,80 @@ import { watchDebounced } from "@vueuse/core";
 
 // const { type , value } = currentItem.value
 //             startApp(type, value, router)
-const systemList = ref([
-  {
-    name: "全部",
-    fn: async (words) => {},
-  },
-  {
-    name: "收藏",
-    fn: async (words) => {
-      let likeData = getLikeData(words);
-      if (likeData) {
-        return likeData;
-      }
+const systemList = computed(() => {
+  let res = [
+    {
+      name: "全部",
+      fn: async (words) => {},
     },
-  },
-  {
-    name: "应用",
-    fn: async (words) => {
-      // 获取应用数据
-      let appData = getAppData(words);
-      if (appData) {
-        return appData;
-      }
+    {
+      name: "收藏",
+      fn: async (words) => {
+        let likeData = getLikeData(words);
+        if (likeData) {
+          return likeData;
+        }
+      },
     },
-  },
-  {
-    name: "备忘录",
-    fn: async (words) => {
-      let noteData = await getNoteData(words);
-      if (noteData) {
-        return noteData;
-      }
+    {
+      name: "应用",
+      fn: async (words) => {
+        // 获取应用数据
+        let appData = getAppData(words);
+        if (appData) {
+          return appData;
+        }
+      },
     },
-  },
-  {
-    name: "待办",
-    fn: async (words) => {
-      // 获取待办数据
-      let todoData = getTodoData(words);
-      if (todoData) {
-        return todoData;
-      }
+
+    {
+      name: "待办",
+      fn: async (words) => {
+        // 获取待办数据
+        let todoData = getTodoData(words);
+        if (todoData) {
+          return todoData;
+        }
+      },
     },
-  },
-  // {
-  //   name: "剪切板",
-  //   fn: async (words) => {
-  //     // 获取剪切板数据
-  //     let clipboardData = await getClipboardData(words);
-  //     if (clipboardData) {
-  //       return clipboardData;
-  //     }
-  //   },
-  // },
-  {
-    name: "群聊",
-    fn: async (words) => {
-      // 获取群聊数据
-      let groupData = getGroupData(words);
-      if (groupData) {
-        return groupData;
-      }
+    // {
+    //   name: "剪切板",
+    //   fn: async (words) => {
+    //     // 获取剪切板数据
+    //     let clipboardData = await getClipboardData(words);
+    //     if (clipboardData) {
+    //       return clipboardData;
+    //     }
+    //   },
+    // },
+    {
+      name: "群聊",
+      fn: async (words) => {
+        // 获取群聊数据
+        let groupData = getGroupData(words);
+        if (groupData) {
+          return groupData;
+        }
+      },
     },
-  },
-  // {
-  //   name: "系统",
-  //   fn: async (words) => {},
-  // },
-]);
+    // {
+    //   name: "系统",
+    //   fn: async (words) => {},
+    // },
+  ];
+  if (window.$usePlat("client")) {
+    res.push({
+      name: "备忘录",
+      fn: async (words) => {
+        let noteData = await getNoteData(words);
+        if (noteData) {
+          return noteData;
+        }
+      },
+    });
+  }
+  return res;
+});
 const searchList = ref([]);
 const loading = ref(false);
 const allSearch = async (val) => {
@@ -133,6 +139,7 @@ const allSearch = async (val) => {
 watchDebounced(
   [words, currentIndex],
   async (val) => {
+    console.log("watchDebounced :>> ", 123);
     ctrlSelectIndex.value = 0;
     await allSearch(words.value);
   },
@@ -214,7 +221,7 @@ const openSystemApp = (obj, name) => {
       </div>
     </template>
     <template v-else>
-      <div class=" w-full h-full flex flex-col items-center justify-center">
+      <div class="w-full h-full flex flex-col items-center justify-center">
         <xt-ify-icon
           icon="fluent-emoji:magnifying-glass-tilted-right"
           size="56"

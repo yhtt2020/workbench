@@ -13,7 +13,7 @@
       <Weather v-if="size[0] > 2" />
     </div>
     <Calendar
-    class="ml-3"
+      class="ml-3"
       v-if="size[0] >= 4 && size[1] >= 2"
       style="
         color: var(--primary-text) !important;
@@ -24,7 +24,7 @@
       :attributes="attributes"
       transparent
       borderless
-      color="var(--primary-text)"
+      color="theme-bg"
     >
     </Calendar>
   </div>
@@ -101,6 +101,19 @@ onUnmounted(() => {
 }
 :deep(.vc-header) {
   display: none !important;
+}
+:deep(.vc-theme-bg) {
+  // background: var(--tt-theme-color) !important;
+  --vc-accent-50: var(--tt-theme-color) !important;
+  --vc-accent-100: var(--tt-theme-color) !important;
+  --vc-accent-200: var(--tt-theme-color) !important;
+  --vc-accent-300: var(--tt-theme-color) !important;
+  --vc-accent-400: var(--tt-theme-color) !important;
+  --vc-accent-500: var(--tt-theme-color) !important;
+  --vc-accent-600: var(--tt-theme-color) !important;
+  --vc-accent-700: var(--tt-theme-color) !important;
+  --vc-accent-800: var(--tt-theme-color) !important;
+  --vc-accent-900: var(--tt-theme-color) !important;
 }
 // .class="vc-weekdays"
 </style>
