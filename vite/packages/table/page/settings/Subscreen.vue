@@ -110,7 +110,6 @@ export default {
       });
     },
     remove(targetKey) {
-      console.log('确认删除分屏 :>> ', 222222222);
       window.$ui.confirm(
         "确认删除分屏？",
         "此操作不可恢复，将丢失分屏全部的设置，请谨慎操作。",

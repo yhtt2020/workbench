@@ -5,6 +5,7 @@
     v-model:customSize="customData.customSize"
     :platLimit="['web']"
     :header="header"
+    :body="bodyOptions"
     :customData="customData"
     :customIndex="customIndex"
     :options="noteOptions"
@@ -14,7 +15,6 @@
     style="background: #191919 !important"
     :delete="deleteCard"
   >
-    <!-- <div @click="test">测试</div> -->
     <teleport to="body">
       <xt-msg
         title="确定删除小组件"
@@ -119,8 +119,8 @@
         <div class="flex" style="justify-content: space-between">
           <div class="xt-text xt-font font-16">仅在标题处显示主题色</div>
           <a-switch
-            v-model:checked="options.showColor"
-            @change="this.changeShowColor"
+            v-model:checked="showColor"
+            @change="changeShowColor"
           ></a-switch>
         </div>
 
@@ -202,6 +202,11 @@ export default {
     content() {
       return this.customData.text;
     },
+    bodyOptions(){
+      return  {
+        bg:this.showColor ? 'var(--main-bg)' : ''
+      }
+    },
     header() {
       return {
         title: this.customData.title,
@@ -219,7 +224,6 @@ export default {
         title: this.customData.title,
         resize: this.options.disableEdit ? false : true,
         customDel: this.customDel,
-        showColor: this.showColor,
       };
     },
     options() {
@@ -362,7 +366,7 @@ export default {
   mounted() {
     this.text = this.customData.text;
     this.colorIndex = this.customData.colorIndex;
-    this.showColor = this.customData.showColor;
+    this.showColor = this.customData.showColor ? true : false;
     this.tmpTitle = this.customData.title;
     this.background = this.customData.background;
     this.colors = this.customData.color;
@@ -485,49 +489,6 @@ export default {
     ...mapActions(noteStore, ["changeDeskBg", "saveDeskTitle"]),
     ...mapActions(communityNavStore, ["isCommunityDesktop"]),
     communityAuth,
-    test() {
-      const data = {
-        text: "78456",
-      };
-      const target = {
-        customIndex: this.customIndex,
-        desk: this.desk,
-        name: "test",
-      };
-      // saveData({ text: '132456' }, 'card', {
-      //   customIndex: this.customIndex,
-      //   desk: this.desk,
-      // })
-
-      // saveData(data, 'card', target)
-      // saveData(data, 'desk', target)
-
-      saveData(data, "system", target);
-
-      // console.log('data, system, target', data, 'system', target);
-      console.log(
-        "loadData card",
-        loadData("card", target).then((res) => {
-          console.log("res card", res);
-        })
-      );
-
-      console.log(
-        "loadData desk",
-        loadData("desk", target).then((res) => {
-          console.log("res desk", res);
-        })
-      );
-
-      console.log(
-        "loadData system",
-        loadData("system", target).then((res) => {
-          console.log("res system", res);
-        })
-      );
-
-      // getData('system');
-    },
     // 自定义删除卡片
     deleteCard() {
       this.$emit("deleteCard");

@@ -33,19 +33,6 @@ const getRecommend = async () => {
   }
   // 搜索源不符合
   const name = currentSource.value.name;
-  if (name === "工作台") {
-    return;
-  }
-  if (name === "文件") {
-    const desktopApps = await ipc.sendSync("getDeskApps");
-    recommendList.value = desktopApps.filter((item) => {
-      let res = item.name.includes(words.value);
-      if (res) {
-        return item;
-      }
-    });
-    return;
-  }
   let recommendUrl =
     currentSource.value.recommendUrl + encodeURIComponent(words.value);
   let { data } = await axios.get(recommendUrl);

@@ -69,7 +69,12 @@ export const defaultProps = {
         // 是否允许添加到导航栏
         disabledNav: false,
         // 在社群成员桌面的情况下禁用组件编辑
-        disableEdit:false,
+        disableEdit: false,
+        /**
+         * 无边框模式
+         * 开启后会移除header部分和背景色
+         */
+        noBorder: false,
       };
     },
   },
