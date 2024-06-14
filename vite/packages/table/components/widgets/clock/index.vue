@@ -196,12 +196,12 @@ export default {
       let zoomList = {
         // 下标0为默认，下标1为高度为1时无边框时，下边2为高度为1非无边框时
         clock1: [0.25, 1, 0.7],
-        clock2: [0.5,1, 0.7],
+        clock2: [0.5, 1, 0.7],
         clock3: [0.5, 0.5, 0.2],
         clock4: [0.6, 0.9, 0.5],
         clock5: [0.5, 0.7, 0.4],
         clock6: [0.3, 0.65, 0.35],
-        clock7: [0.1, 0.8, 0.5],
+        clock7: [0.05, 0.8, 0.5],
       };
 
       // 时钟秒针缩放列表
@@ -254,7 +254,10 @@ export default {
         num = 0;
         zoom += currentZoom[num] * max;
       }
-      return zoom * second;
+
+      let zoomRatio = this.customData.currentZoom / 100;
+      console.log("zoomRatio :>> ", zoomRatio);
+      return zoom * second * zoomRatio;
     },
     ...mapWritableState(appStore, ["backgroundImage", "settings"]),
     resizeOptions() {
@@ -483,7 +486,7 @@ export default {
     },
     // 重置卡片组件设置中缩放比例
     restZoom() {
-      this.updateCustomData(this.customIndex, { currentZoom: 110 }, this.desk);
+      this.updateCustomData(this.customIndex, { currentZoom: 100 }, this.desk);
     },
     // 更新全屏情况下的缩放比例
     updateBgZoom(e) {
@@ -493,6 +496,7 @@ export default {
     // 更新时钟样式
     updateClockStyle(e) {
       this.updateCustomData(this.customIndex, { clockId: e }, this.desk);
+      this.updateCustomData(this.customIndex, { currentZoom:100 }, this.desk);
     },
   },
 
