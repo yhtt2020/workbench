@@ -981,6 +981,10 @@ export default {
       this.$emit("showMore");
     },
     setCurrentDeskId(id) {
+      if (this.showGuide) {
+        message.info("定制过程中无法操作");
+        return
+      }
       this.$emit("update:currentDeskId", id);
       this.$emit("changeDesk", {id: id});
     },

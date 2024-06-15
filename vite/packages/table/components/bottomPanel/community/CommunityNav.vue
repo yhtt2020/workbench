@@ -49,6 +49,7 @@ import Avatar from "../../desk/navigationBar/components/Avatar.vue";
 import _ from "lodash-es";
 import { cardStore } from "../../../store/card";
 
+import {message} from "ant-design-vue";
 // 路由
 const router: any = useRouter();
 
@@ -58,7 +59,7 @@ const { myCommunity } = storeToRefs(communityNav);
 const comNav: any = communityNavStore();
 const { settingType, currentCommunity } = storeToRefs(comNav);
 const app: any = appStore();
-const { settings } = storeToRefs(app);
+const { settings, showGuide } = storeToRefs(app);
 const communityDesk: any = communityDeskStore();
 const { syncDesk, communityDeskInfo } = storeToRefs(communityDesk);
 const card: any = cardStore();
@@ -166,6 +167,10 @@ const openNav = async (event: any) => {
 
 //  进入社群桌面
 const openDesk = async () => {
+  if(showGuide.value) {
+    message.info("定制过程中无法操作");
+    return
+  }
   // 获取社群信息数据
   const communityInfo: any = currentCommunity.value?.item;
   // 根据当前路由检测是否在home页面
