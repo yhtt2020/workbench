@@ -181,8 +181,15 @@
             style="width: 100%"
             class="w-full rounded-full"
           >
-            <icon style="font-size: 16px" class="mr-1" icon="tianjia1"></icon>
-            加为好友
+            <div class="flex items-center justify-center">
+              <xt-ify-icon
+                icon="fluent:add-circle-12-filled"
+                size="20"
+                class="mr-1"
+              />
+              <!-- <icon style="font-size: 16px" class="mr-1" icon="tianjia1"></icon> -->
+              加为好友
+            </div>
           </XtButton>
           <XtButton
             @click="deleteFriend"
@@ -190,8 +197,15 @@
             style="width: 100%"
             class="w-full rounded-full"
           >
-            <icon style="font-size: 16px" class="mr-1" icon="guanbi2"></icon>
-            解除好友
+            <div class="flex items-center justify-center">
+              <xt-ify-icon
+                icon="fluent:dismiss-circle-16-filled"
+                class="mr-1"
+                size="20"
+              />
+              <!-- <icon style="font-size: 16px" class="mr-1" icon="guanbi2"></icon> -->
+              解除好友
+            </div>
           </XtButton>
         </a-col>
 
@@ -200,8 +214,16 @@
             @click="sendMessage"
             :type="relationship === 'yes' ? 'theme' : 'default'"
             style="width: 100%"
-            >发消息</XtButton
           >
+            <div class="flex items-center justify-center">
+              <xt-ify-icon
+                icon="fluent:chat-16-filled"
+                size="20"
+                class="mr-1"
+              />
+              发消息
+            </div>
+          </XtButton>
         </a-col>
       </a-row>
       <div class="text-center" v-else-if="$useEnv('guest')">
@@ -339,7 +361,7 @@ export default {
     },
     addToBlacklist() {
       // 升级后调用IM的api方法
-      const chat = window.$chat?.chat;
+      const chat = window.$TUIKit?.chat;
       let promise = chat?.addToBlacklist({
         userIDList: [String(this.uid)],
       }); // 请注意：即使只添加一个用户账号到黑名单，也需要用数组类型，例如：userIDList: ['user1']
@@ -357,7 +379,7 @@ export default {
     },
     removeFromBlacklist() {
       // 升级后调用IM的api方法
-      const chat = window.$chat?.chat;
+      const chat = window.$TUIKit?.chat;
       let promise = chat?.removeFromBlacklist({
         userIDList: [String(this.uid)],
       }); // 请注意：即使只从黑名单中移除一个用户账号，也需要用数组类型，例如：userIDList: ['user1']
@@ -376,7 +398,7 @@ export default {
         return;
       }
       // 升级后调用IM的api方法
-      const chat = window.$chat?.chat;
+      const chat = window.$TUIKit?.chat;
       let promise = chat?.addFriend({
         to: String(this.uid),
         source: "AddSource_Type_UserCard",
@@ -400,7 +422,7 @@ export default {
     },
     deleteFriend() {
       // 升级后调用IM的api方法
-      const chat = window.$chat?.chat;
+      const chat = window.$TUIKit?.chat;
       let promise = chat?.deleteFriend({
         userIDList: [String(this.uid)],
         type: TencentCloudChat.TYPES.SNS_DELETE_TYPE_BOTH,
@@ -431,7 +453,7 @@ export default {
     },
     async checkBlacklist() {
       // 升级后调用IM的api方法
-      const chat = window.$chat?.chat;
+      const chat = window.$TUIKit?.chat;
       let promise = chat?.getBlacklist();
       promise
         .then((imResponse) => {
@@ -473,7 +495,7 @@ export default {
         console.log("需要检查");
         try {
           // 升级后调用IM的api方法
-          const chat = window.$chat?.chat;
+          const chat = window.$TUIKit?.chat;
           console.log([String(this.uid)]);
           let rs = await chat?.checkFriend({
             userIDList: [String(this.uid)],
