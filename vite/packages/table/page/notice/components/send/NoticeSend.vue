@@ -15,9 +15,9 @@
      <div class="flex items-center justify-end" style="width:500px;">
       <div class="flex items-center mr-3">
         <span class="xt-font xt-text font-14">To：</span>
-        <xt-select style="width: 110px;" v-model="msgSetting.targetType" :list="targetList"  :border="false" zIndex="1200" :borderClass="'rounded-md'"></xt-select>
+        <xt-select style="width: 110px;" v-model="msgSetting.targetType" :list="targetList"  :border="false" zIndex="10000001" :borderClass="'rounded-md'"></xt-select>
       </div>
-      <xt-select style="max-width: 140px;" :list="list" v-model="msgSetting.noticeType" :border="false" zIndex="1200" :borderClass="'rounded-md'"></xt-select>
+      <xt-select style="max-width: 140px;" :list="list" v-model="msgSetting.noticeType" :border="false" zIndex="10000001" :borderClass="'rounded-md'"></xt-select>
 
       <xt-dropdown :buttonVisible="true" w="70" title="发送" h="32" class="mx-3" :buttonClass="'xt-active-bg'" :placement="'bottomRight'">
         <template #sendTitle>

@@ -58,8 +58,8 @@ const selectList = ref([])
 
 // 通过计算属性获取自己创建的社群
 const getMyCommunity = computed(()=>{
- const list = myCommunity.value.communityList;
- const filterList = list.filter((item)=>{
+ const list = myCommunity.value;
+ const filterList = list?.filter((item)=>{
   return item.role === 'owner'
  })
  return filterList

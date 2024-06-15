@@ -14,15 +14,16 @@
       <div v-for="item in displayList" class="mb-3">
         <xt-menu name="name" @contextmenu="revID = item" :menus="menus">
           <div class="w-full h-full flex flex-col p-4 xt-bg-2 rounded-xl">
+            <!-- 标题 -->
             <div class="flex justify-between mb-3">
               <div class="flex">
                 <a-avatar
                   :size="24"
                   shape="square"
-                  :src="item.content.icon"
+                  :src="item?.content?.icon ? item?.content?.icon : item?.icon"
                 ></a-avatar>
                 <div class="font-16 font-400 xt-font xt-text ml-3">
-                  {{ item.content.title }}
+                  {{ item?.content?.title ? item?.content?.title : item?.title }}
                 </div>
               </div>
               <xt-button
@@ -40,19 +41,23 @@
                 </div>
               </xt-button>
             </div>
+
+            <!-- 内容 -->
             <div class="font-16 font-400 xt-font xt-text mb-2">
-              <NoticeBody :content="item.content"></NoticeBody>
+              <NoticeBody :noticeContent="item"></NoticeBody>
             </div>
+            
+            <!-- 查看按钮 -->
             <div class="flex justify-between">
               <div
                 class="flex items-center justify-center xt-font"
                 style="color: var(--disable-text)"
               >
-                {{ formatTime(item.content.time) }}
+                {{ item?.content?.time ?  formatTime(item?.content?.time) : formatTime(item?.time)}}
               </div>
               <div class="flex flex-end gap-2">
                 <UrlButtons
-                  @viewNow="reviewMessage(item.content.conversationID)"
+                  @viewNow="reviewMessage(item)"
                   :urls="item.urls"
                 ></UrlButtons>
               </div>
@@ -154,11 +159,11 @@ export default {
     ...mapActions(chatStore, ["updateConversation"]),
     ...mapActions(noticeStore, ["delSingleHistoryNotice", "clear"]),
     // 消息详情查看
-    reviewMessage(conversationID) {
-      if(conversationID){
-        this.updateConversation(conversationID), 
+    reviewMessage(data) {
+      if(data?.content?.conversationID){
+        this.updateConversation(data?.content?.conversationID), 
         this.$router.push({ name: "chatMain" });
-        TUIConversationService.switchConversation(conversationID);
+        TUIConversationService.switchConversation(data?.content?.conversationID);
       }
       this.$emit("close");
     },
