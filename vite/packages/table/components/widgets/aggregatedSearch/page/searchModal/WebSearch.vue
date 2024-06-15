@@ -60,7 +60,7 @@ watchDebounced(
     if (val[2] < 2) {
       scrollbarRef.value?.update({
         attributeKey: "data-id",
-        attributeValue: currentSource.value.name,
+        attributeValue: data.value.sourceList[0].name,
         direction: "left",
       });
     }
@@ -134,13 +134,6 @@ defineExpose({
   enterSearch,
 });
 const scrollbarRef: any = ref(null);
-// setTimeout(() => {
-//   scrollbarRef.value.update({
-//     attributeKey: "data-id",
-//     attributeValue: "GitHub",
-//     direction: "left",
-//   });
-// }, 1000);
 </script>
 
 <template>
