@@ -304,6 +304,7 @@ export default {
             ? this.customData.selectList[0].name || "元社区"
             : "元社区",
         disableEdit: this.isCommunityDesktop(this.desk),
+        cardName: '元社区'
       };
     },
     forumList() {

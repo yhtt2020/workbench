@@ -122,6 +122,7 @@ export default {
           _updateFlag: "24531",
         },
         disableEdit: this.isCommunityDesktop(this.desk),
+        cardName: '微博热搜'
       };
     },
   },

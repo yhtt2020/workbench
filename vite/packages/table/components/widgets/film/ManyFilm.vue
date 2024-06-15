@@ -210,6 +210,7 @@ export default {
         },
         customDel: this.openWay === "nav" ? true : false,
         disableEdit: this.isCommunityDesktop(this.desk),
+        cardName: '正在热映'
       };
     },
   },
