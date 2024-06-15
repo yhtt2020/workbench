@@ -136,10 +136,10 @@ export const noticeStore = defineStore("notice", {
       for (const li of list) {
         await tsbApi.db.remove(li);
       }
+      message.success("已为您清空本地消息（不包含推送等网络消息）");
 
       // 做刷新操作
       setTimeout(()=>{
-        message.success("已为您清空本地消息（不包含推送等网络消息）");
         this.getNoticeList();
       },500);
     },
