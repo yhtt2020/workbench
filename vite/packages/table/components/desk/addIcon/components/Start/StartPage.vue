@@ -42,15 +42,25 @@ const chooseTeam = (item) => {
 };
 
 const newMenu = computed(() => {
+
+  let newMenu = menu
+  
+  // web端屏蔽收藏夹入口
+  if(window.$usePlat()){
+    newMenu.list = (newMenu?.list as any).filter((item:any)=>{
+      return item.component !== 'Browser'
+    })
+  }
+  
   // 根据社群桌面角色权限
   if(!props.communityRole){
-    return menu;
+    return newMenu;
   }
   else {
-    const filterMenu = (menu?.list as any).filter((menu:any)=>{
-      return menu.component !== 'Windows'
+    const filterMenu = (newMenu?.list as any).filter((newMenu:any)=>{
+      return newMenu.component !== 'Windows'
     })
-    return {...menu,list:filterMenu};
+    return {...newMenu,list:filterMenu};
   }
 });
 //
