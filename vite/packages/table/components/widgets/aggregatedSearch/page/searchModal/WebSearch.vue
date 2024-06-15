@@ -10,6 +10,7 @@ import { watchDebounced } from "@vueuse/core";
 const words: any = inject("words");
 const isWebSource: any = inject("isWebSource");
 const currentSource: any = inject("currentSource");
+const altIndex: any = inject("altIndex");
 const ctrlSelectIndex: any = inject("ctrlSelectIndex");
 const currentOpenWith: any = inject("currentOpenWith");
 const data: any = inject("data");
@@ -44,11 +45,26 @@ const getRecommend = async () => {
   recommendList.value = handlers[name]?.(data) || handlers["default"]();
 };
 watchDebounced(
-  [words, currentSource],
-  async (val) => {
+  [words, currentSource, altIndex],
+  async (val: any) => {
     // 重置下标
     ctrlSelectIndex.value = 0;
-    console.log("触发更新 :>> ");
+    console.log("触发更新 :>> ", val);
+    if (val[2] > 6) {
+      scrollbarRef.value?.update({
+        attributeKey: "data-id",
+        attributeValue: currentSource.value.name,
+        direction: "left",
+      });
+    }
+    if (val[2] < 2) {
+      scrollbarRef.value?.update({
+        attributeKey: "data-id",
+        attributeValue: currentSource.value.name,
+        direction: "left",
+      });
+    }
+    recommendList.value = [];
     await getRecommend();
   },
   { debounce: 200, immediate: true }
@@ -97,6 +113,12 @@ const handlers = {
         name: item.name,
       };
     }),
+  GitHub: () => {
+    /**
+     * 无接口返回空数组
+     */
+    return [];
+  },
   default: () => [words.value],
 };
 const recommendIndex = computed(() => {
@@ -109,13 +131,22 @@ const recommendIndex = computed(() => {
   return ctrlSelectIndex.value % recommendList.value.length;
 });
 defineExpose({
-  enterSearch
-})
+  enterSearch,
+});
+const scrollbarRef: any = ref(null);
+// setTimeout(() => {
+//   scrollbarRef.value.update({
+//     attributeKey: "data-id",
+//     attributeValue: "GitHub",
+//     direction: "left",
+//   });
+// }, 1000);
 </script>
 
 <template>
-  <xt-scrollbar
-    :x="true"
+  <xt-scrollbar-v2
+    ref="scrollbarRef"
+    direction="x"
     style="
       border-bottom: 1px solid var(--tt-primary-border-color);
       height: 50px;
@@ -126,6 +157,7 @@ defineExpose({
     <div
       v-for="item in data.sourceList"
       @click="selectWebSource(item)"
+      :data-id="item.name"
       :style="[
         {
           'border-bottom':
@@ -139,7 +171,7 @@ defineExpose({
       <xt-mix-icon :icon="item.icon" type="select" size="20" class="mr-2" />
       <span class="">{{ item.name }}</span>
     </div>
-  </xt-scrollbar>
+  </xt-scrollbar-v2>
   <Scrollbar>
     <div
       class="w-full p-3 h-11 flex justify-between rounded-xl cursor-pointer hover:tt-theme-bg-2"
@@ -191,6 +223,17 @@ defineExpose({
                   </div> -->
         </template>
       </a-dropdown>
+    </div>
+    <div
+      v-if="!recommendList.length"
+      class="w-full h-full flex flex-col items-center justify-center"
+    >
+      <xt-ify-icon
+        icon="fluent-emoji:magnifying-glass-tilted-right"
+        size="56"
+        class="mb-4"
+      />
+      <span class="xt-text xt-font font-16">没有找到相关内容</span>
     </div>
   </Scrollbar>
 </template>
