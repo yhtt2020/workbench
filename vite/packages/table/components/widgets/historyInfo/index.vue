@@ -119,6 +119,7 @@ export default {
       return {
         customDel: this.openWay === "nav" ? true : false,
         disableEdit:this.isCommunityDesktop(this.desk),
+        cardName: '历史上的今天'
       };
     },
   },

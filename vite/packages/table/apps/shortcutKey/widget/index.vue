@@ -504,7 +504,8 @@ export default {
     ...mapState(keyStore, ['recentlyUsedList']),
     options () {
       return {
-        customDel: this.openWay === 'nav' ? true : false
+        customDel: this.openWay === 'nav' ? true : false,
+        cardName: '快捷键'
       }
     },
     displayList () {

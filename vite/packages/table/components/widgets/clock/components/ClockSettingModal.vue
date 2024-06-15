@@ -138,6 +138,7 @@ export default{
   computed:{
     // 缩放滑块阈值
     maxScale(){
+      return 200
       const width = this.customData.customSize.split("x")[0];
       const height = this.customData.customSize.split("x")[1];
       let max = width < height ? width : height;

@@ -17,6 +17,11 @@ const emit = defineEmits(["search"]);
 const search = (data) => {
   emit("search", data);
 };
+const enterSearch = () => {
+  // webRef
+  let res = recommendList.value[ctrlSelectIndex.value];
+  emit("search", res);
+};
 // 推荐列表
 const recommendList = ref([]);
 const selectWebSource = (newSource) => {
@@ -103,6 +108,9 @@ const recommendIndex = computed(() => {
   }
   return ctrlSelectIndex.value % recommendList.value.length;
 });
+defineExpose({
+  enterSearch
+})
 </script>
 
 <template>
@@ -116,7 +124,7 @@ const recommendIndex = computed(() => {
     class="w-full relative flex overflow-hidden tab-container flex-nowrap whitespace-nowrap mb-1"
   >
     <div
-      v-for="item in sourceList"
+      v-for="item in data.sourceList"
       @click="selectWebSource(item)"
       :style="[
         {

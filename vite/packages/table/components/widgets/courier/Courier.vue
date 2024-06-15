@@ -280,7 +280,8 @@ export default {
           _updateFlag: "24531",
           customSize: this.customData.customSize !== undefined ? this.customData.customSize : '4x4',
         },
-        customDel: this.openWay === 'nav' ? true : false
+        customDel: this.openWay === 'nav' ? true : false,
+        cardName: '快递'
       }
     },
 
