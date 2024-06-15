@@ -29,7 +29,7 @@
               <xt-button
                 w="21"
                 h="21"
-                @click="delSingleHistoryNotice(item)"
+                @click="clearSpecifyHistory(item)"
                 v-if="item.type !== 'push'"
               >
                 <div class="flex items-center justify-center">
@@ -106,7 +106,7 @@ export default {
           name: "删除通知",
           callBack: (item) => {
             // console.log("删除", this.revID);
-            this.delSingleHistoryNotice(this.revID);
+            this.clearSpecifyHistory(this.revID);
           },
           newIcon: "akar-icons:trash-can",
         },
@@ -157,7 +157,7 @@ export default {
   methods: {
     formatTime,
     ...mapActions(chatStore, ["updateConversation"]),
-    ...mapActions(noticeStore, ["delSingleHistoryNotice", "clear"]),
+    ...mapActions(noticeStore, ["clearSpecifyHistory", "clear"]),
     // 消息详情查看
     reviewMessage(data) {
       if(data?.content?.conversationID){

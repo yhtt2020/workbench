@@ -16,8 +16,6 @@ export default {
   },
   computed: {
     covers() {
-      console.log('this.noticeContent-1',this.noticeContent);
-
       if (this.noticeContent?.content?.covers) {
         return JSON.parse(this.noticeContent?.content?.covers);
       } else {
@@ -27,9 +25,9 @@ export default {
 
     // 消息调整内容
     noticeContent() {
-      console.log('this.noticeContent-2',this.noticeContent);
-      
-      if (this.noticeContent?.content?.content) {
+      if (this.noticeContent?.body) {
+        return this.noticeContent?.body;
+      } else if (this.noticeContent?.content?.content) {
         return (
           `${this.noticeContent?.content?.body}` +
           `<br/>` +

@@ -1,12 +1,5 @@
 <template>
-  <xt-left-menu
-    :list="filterList"
-    model="id"
-    last="5"
-    end="3"
-    leftMargin="py-3"
-    leftClass="xt-bg-m"
-  >
+  <xt-left-menu :list="filterList" model="id" leftMargin="py-3" leftClass="xt-bg-m" :end="3">
     <template v-if="top.type !== 'setting'">
       <div class="flex flex-col w-full">
         <div
@@ -75,7 +68,6 @@ const top = ref({
 
 const editorRef = ref(null);
 const selectTab = (item) => {
-  // console.log('查看数据',item);
   top.value = item;
 };
 
@@ -90,7 +82,6 @@ const enableNotice = () => {
 
 const clearAll = () => {
   notice.clear();
-  message.success("已为您清空本地消息（不包含推送等网络消息）");
 };
 
 const close = () => {

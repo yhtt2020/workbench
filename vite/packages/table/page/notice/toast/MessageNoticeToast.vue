@@ -50,7 +50,7 @@
         class="font-16"
         style="color: var(--secondary-text); margin-bottom: 24px"
       >
-        <NoticeBody @pause="pause" :content="msg"></NoticeBody>
+        <NoticeBody @pause="pause" :noticeContent="msg"></NoticeBody>
       </div>
 
       <div class="flex items-center justify-between gap-2">

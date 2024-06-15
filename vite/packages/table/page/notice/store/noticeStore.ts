@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { sUrl } from "../../../consts";
 import dbStorage from "../../../store/dbStorage";
 import { post } from "../../../js/axios/request";
+import { message } from "ant-design-vue";
 
 const addNotice = sUrl("/app/notice/add"); // 创建消息
 const sendNotice = sUrl("/app/notice/startPush"); // 推送消息
@@ -49,8 +50,6 @@ export const noticeStore = defineStore("notice", {
   actions: {
     // 获取db数据库中的数据
     async getNoticeList() {
-      // 将数据多次转换成一次性请求,并且把数组进行解构
-      this.delAllHistoryNotice();
       let rs = await tsbApi.db.find({
         selector: {
           _id: {
@@ -64,33 +63,37 @@ export const noticeStore = defineStore("notice", {
       } else {
         list = [];
       }
+
+      // 在线推送消息请求
       const onlineNoticeRs = await post(sUrl("/app/notice/getList"), {
         page: 1,
       });
       if (onlineNoticeRs.status) {
         let onlineNotices: any = [];
         // 判断onlineNoticeRs.data.list是否为null,处理报错问题
-        if(onlineNoticeRs.data.list){
-          for (const notice of onlineNoticeRs.data.list) {
-           let has = list.some((li: any) => {
-             return li.content.id === notice.id;
-           });
-           if (!has) {
-            const convertedData: any = (window as any).$notice._convertNoticeMsg(notice);
-            onlineNotices.push({
-              ...convertedData,
-              type: convertedData.type,
-              noticeType: notice.noticeType,
+        if (onlineNoticeRs?.data?.list) {
+          for (const notice of onlineNoticeRs?.data?.list) {
+            let has = list.some((li: any) => {
+              return li.content.id === notice.id;
             });
-            this.putMessageData(
-              {...convertedData},
-              notice.noticeType
-            );
-           }
+            if (!has) {
+              const convertedData: any = (
+                window as any
+              ).$notice._convertNoticeMsg(notice);
+              const pushOption = {
+                ...convertedData,
+                type: convertedData?.type,
+                noticeType: notice?.noticeType,
+              };
+              onlineNotices.push(pushOption);
+              this.putMessageData({ ...convertedData }, notice?.noticeType);
+            }
           }
         }
         list = [...list, ...onlineNotices];
       }
+
+      // 根据时间戳进行排序
       const sortData = list.sort((a: any, b: any) => {
         return b.createTime - a.createTime;
       });
@@ -99,35 +102,21 @@ export const noticeStore = defineStore("notice", {
 
     // 将忽略的消息通知进行数据库存储
     async putMessageData(data: any, type: any) {
-      const time = data.time;
+      const time = data?.time;
       const message = {
         _id: `message:${time}`,
         type: data.type,
         noticeType: type,
         content: { ...data },
-        createTime:time,
-        updateTime:time,
+        createTime: time,
+        updateTime: time,
       };
-      // console.log('写入数据',message)
+
       await tsbApi.db.put(message);
       await this.getNoticeList();
     },
 
-    // 将全部历史消息通知进行清除
-    async delAllHistoryNotice(type: any) {
-      const data = await Promise.all([
-        ...(await tsbApi.db.allDocs("weakMessage:")).rows,
-        ...(await tsbApi.db.allDocs("weakSystem:")).rows,
-        ...(await tsbApi.db.allDocs("strongNotice:")).rows,
-      ]);
-      for (const item of data) {
-        await tsbApi.db.remove(item.doc);
-      }
-    },
-
-    /**
-     * 新的清空方法，弃用老方法
-     */
+    // 新的清空方法，弃用老方法
     async clear() {
       let rs = await tsbApi.db.find({
         selector: {
@@ -136,6 +125,7 @@ export const noticeStore = defineStore("notice", {
           },
         },
       });
+
       let list: any = [];
       if (rs.docs) {
         list = rs.docs;
@@ -144,16 +134,46 @@ export const noticeStore = defineStore("notice", {
       }
 
       for (const li of list) {
-        this.removePushMsg(li);
         await tsbApi.db.remove(li);
       }
-      this.getNoticeList();
+
+      // 做刷新操作
+      setTimeout(()=>{
+        message.success("已为您清空本地消息（不包含推送等网络消息）");
+        this.getNoticeList();
+      },500);
     },
 
-    // 将单个历史消息通知进行删除
-    async delSingleHistoryNotice(item: any) {
+    // 清空指定的历史消息通知
+    async clearSpecifyHistory(item: any) {
       await tsbApi.db.remove(item);
       await this.getNoticeList();
+    },
+
+    // 删除推送消息
+    async removePushMsg(data: any) {
+      await tsbApi.db.remove(data);
+      await post(deleteNotice, { id: String(data?.content?.id) });
+      await this.getNoticeList();
+    },
+
+    // 清空编辑数据
+    initMsgData() {
+      this.msgSetting = initMsgSetting;
+    },
+
+    // 将编辑好消息发送出去
+    async pushNoticeMsg(id: any) {
+      const res = await post(sendNotice, { noticeId: `${id}` });
+      if (res.status === 1) {
+        this.initMsgData();
+        const index = this.draftBox.findIndex((find: any) => {
+          return Number(find.id) === Number(id);
+        });
+        this.draftBox.splice(index, 1);
+        this.getNoticeList();
+        return res;
+      }
     },
 
     // 创建一个推送消息
@@ -185,31 +205,7 @@ export const noticeStore = defineStore("notice", {
       }
     },
 
-    // 将编辑好消息发送出去
-    async pushNoticeMsg(id: any) {
-      const res = await post(sendNotice, { noticeId: `${id}` });
-      if (res.status === 1) {
-        this.initMsgData();
-        const index = this.draftBox.findIndex((find: any) => {
-          return Number(find.id) === Number(id);
-        });
-        this.draftBox.splice(index, 1);
-        this.getNoticeList();
-        return res;
-      }
-    },
 
-    // 删除推送消息
-    async removePushMsg(data: any) {
-      await tsbApi.db.remove(data);
-      await post(deleteNotice, { id: String(data.content.id) });
-      await this.getNoticeList();
-    },
-
-    // 清空编辑数据
-    initMsgData() {
-      this.msgSetting = initMsgSetting;
-    },
   },
 
   persist: {
