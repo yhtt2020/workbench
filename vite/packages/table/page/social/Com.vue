@@ -109,7 +109,7 @@ import { mapState, mapActions } from 'pinia'
 import browser from '../../js/common/browser'
 import { appStore } from '../../store'
 import FrameAvatar from '../../components/avatar/FrameAvatar.vue'
-
+import config from '../../../../package.json'
 export default {
   name: 'Com',
   components: { FrameAvatar, SingIn, VueCustomScrollbar, HorizontalPanel, GradePanel, vuuri },
@@ -137,8 +137,10 @@ export default {
     }
   },
   mounted () {
-    if (!this.$usePlat()) {
+    if (!this.$usePlat('client')) {
       this.appVersion = tsbApi.runtime.appVersion
+    }else{
+      this.appVersion= config.version
     }
     axios.get('https://a.apps.vip/download/updateLog.json?t=' + Date.now()).then(data => {
       this.updateLog = data.data

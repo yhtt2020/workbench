@@ -66,7 +66,7 @@ import { useNavigationStore } from "../../../../components/desk/navigationBar/na
 import CategoryFloat from "../../components/suspendMode/CategoryFloat.vue";
 import PageDoesNotExist from "../empty/PageDoesNotExist.vue";
 import RightDetailMain from "./RightDetailMain.vue";
-/**后期需要使用时再开放**/ 
+/**后期需要使用时再开放**/
 // import CommunityHeader from "../../components/suspendMode/CommunityHeader.vue";
 import Article from "../../../../components/Article.vue";
 import CommunityDetailEmpty from "../empty/CommunityDetailEmpty.vue";
@@ -156,8 +156,8 @@ const getCommunityByNo = (no: any) => {
         }
       }
     });
-  } 
-  
+  }
+
   else {
     /**工作台离线模式或者是其他模式  这里走的是不想要token情况下的接口**/
     currentAPI.getApiPostByNo({ no: no }).then((rs: any) => {

@@ -136,7 +136,7 @@ const cancelJoin = () => {
 /**立即加入**/
 const joinNow = async () => {
   const currentID = currentUnGroupInfo.value?.groupID;
-  /**是否存在**/ 
+  /**是否存在**/
   const index = _.findIndex(currentGroupList.value, (item) => {
     return String(item?.groupID) === String(currentID);
   });

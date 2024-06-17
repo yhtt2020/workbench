@@ -65,7 +65,7 @@ const props = defineProps({
 });
 const { userList } = toRefs(props);
 
-/**解构store缓存数据**/ 
+/**解构store缓存数据**/
 const chat = chatStore();
 const app = appStore();
 const { userInfo } = storeToRefs(app);
