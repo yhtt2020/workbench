@@ -137,7 +137,7 @@ export default {
     }
   },
   mounted () {
-    if (!this.$usePlat('client')) {
+    if (this.$usePlat('client')) {
       this.appVersion = tsbApi.runtime.appVersion
     }else{
       this.appVersion= config.version
