@@ -616,11 +616,6 @@ const onEsc = (event) => {
 
 // 初始化
 const init = () => {
-  // 获取菜单高度
-  // bottomBar.value = document.getElementsByClassName("xt-main-bottom-bar")[0];
-  // if (bottomBar.value) barHeight = bottomBar.value.clientHeight;
-  // else if () {}
-
   // 初始化弹窗位置
   initPosition();
 

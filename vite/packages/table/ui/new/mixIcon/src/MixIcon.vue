@@ -9,32 +9,32 @@
     :isUpload="upload"
   />
   <!-- <div class="inline-block"> -->
-    <div
-      class="flex items-center justify-center cursor-pointer xt-text-2"
-      :class="class"
-      :style="[style, boxStyle]"
-      @click="onClick"
-    >
-      <img
-        v-if="currentType == 'select'"
-        :src="iconUrl"
-        :class="iconClass"
-        :style="[
-          iconStyle,
-          mixIconStyle,
-          {
-            filter: color ? `drop-shadow(#${color} 1000px 0)` : '',
-            transform: color ? 'translateX(-1000px)' : '',
-          },
-        ]"
-      />
-      <IfyIcon
-        v-else-if="currentType == 'ify'"
-        :icon="icon"
-        :style="[iconStyle, mixIconStyle]"
-        :class="iconClass"
-      />
-    </div>
+  <div
+    class="flex items-center justify-center cursor-pointer xt-text-2"
+    :class="class"
+    :style="[style, boxStyle]"
+    @click="onClick"
+  >
+    <img
+      v-if="currentType == 'select'"
+      :src="iconUrl"
+      :class="iconClass"
+      :style="[
+        iconStyle,
+        mixIconStyle,
+        {
+          filter: color ? `drop-shadow(#${color} 1000px 0)` : '',
+          transform: color ? 'translateX(-1000px)' : '',
+        },
+      ]"
+    />
+    <IfyIcon
+      v-else-if="currentType == 'ify'"
+      :icon="icon"
+      :style="[iconStyle, mixIconStyle]"
+      :class="iconClass"
+    />
+  </div>
   <!-- </div> -->
 </template>
 
@@ -123,6 +123,10 @@ const props = defineProps({
 });
 const currentType = computed(() => {
   let icon = iconUrl.value;
+
+  if (typeof icon !== "string") {
+    return "ify";
+  }
   // 网络路径判断
   const networkPath = icon.substring(0, 4);
   if (networkPath === "http") {
