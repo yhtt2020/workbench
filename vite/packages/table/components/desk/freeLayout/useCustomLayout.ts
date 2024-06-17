@@ -58,13 +58,16 @@ export const useCustomLayout = async (options) => {
       return;
     }
 
+    console.log("prevHeight :>> ", prevHeight);
     if (arr2x4.length > 0 && prevHeight - 420 >= 0) {
       console.log("2x4填充 :>> ");
       fill(arr2x4);
     } else if (arr2x2.length > 0 && prevHeight - 204 >= 0) {
       console.log("2x2填充 :>> ");
       fill(arr2x2);
-    } else if (arr1x1.length > 0 && prevHeight - 204 >= 0) {
+    }
+    // 没单独处理无法使用 实际使用96
+    else if (arr1x1.length > 0 && prevHeight - 204 >= 0) {
       console.log("1x1填充 :>> ");
       fill(arr1x1);
     } else {
@@ -80,6 +83,7 @@ export const useCustomLayout = async (options) => {
     /**
      * 判断是否需要换行
      */
+    console.log('height :>> ',item, height);
     if (fillTop + height > prevHeight + currentTop) {
       console.log("填充过程换行 :>> ");
       // 换行

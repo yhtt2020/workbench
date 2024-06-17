@@ -449,7 +449,8 @@ const getModalPosition = computed(() => {
   // 无遮罩层的情况
   else {
     // 防止弹窗越界，超出屏幕
-    let h = (windowHeight.value - bottomBarHeight.value - modalHeight.value) / 2
+    let h =
+      (windowHeight.value - bottomBarHeight.value - modalHeight.value) / 2;
     top = h < 0 ? 0 : h;
     left = (windowWidth.value - modalWidth.value) / 2;
   }
@@ -656,9 +657,22 @@ const init = () => {
   setTimeout(() => {
     if (!scrollbar.value || !props.isScrollbar) return;
     perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
+
+    modal.value.addEventListener("keydown", handleKeyDown, {
+      capture: true,
+    });
   }, 50);
 };
 
+// 键盘事件
+const handleKeyDown = (event) => {
+  if (event.code === "Space") {
+    event.stopPropagation();
+  }
+  if (event.ctrlKey && (event.key === "A" || event.key === "a")) {
+    event.stopPropagation();
+  }
+};
 // 挂载前
 onBeforeMount(() => {});
 
@@ -681,6 +695,10 @@ onBeforeUnmount(() => {
       capture: true,
     });
   }
+
+  modal.value.removeEventListener("keydown", handleKeyDown, {
+    capture: true,
+  });
 });
 
 // 抛出事件

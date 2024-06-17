@@ -272,9 +272,6 @@ const props = defineProps(defaultProps);
 
 const { header, customData, customIndex } = toRefs(props);
 
-const courierStatus = computed(() => {
-  return !window.$usePlat("client");
-});
 const envLimitStatus = computed(() => {
   return props.envLimit.filter((item) => item != "offline");
 });
