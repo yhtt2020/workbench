@@ -94,19 +94,23 @@ export const defaultProps = {
       return {
         // 禁用头部区域
         disabled: false,
-        // 左侧图标 适配旧版icon 适配新版newIcon
+        // 左侧图标 新增 mixIcon: '直接传要显示的图标',
+        mixIcon: "",
+        // 左侧图标 废弃 （适配旧版icon 适配新版newIcon）
         icon: "",
         ifyIcon: "",
         /**
          * 右侧图标
          * {
-         *    icon: '旧版图标',
-         *    ifyIcon: '新版图标',
-         *    showIcon: '图标选择器的图标 小庄定义的命名规范'
+         *    新增
+         *    mixIcon: '直接传要显示的图标',
          *    fn: 点击回调,
          *    tip：'提示文字',
          *    disabled: 禁用 true为禁用 false为不禁用
          * }
+         *    废弃 icon: '旧版图标',
+         *    废弃 ifyIcon: '新版图标',
+         *    废弃 showIcon: '图标选择器的图标 小庄定义的命名规范'
          */
         rightIcon: [],
         /**
