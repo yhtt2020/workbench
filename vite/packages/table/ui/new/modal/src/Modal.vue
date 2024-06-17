@@ -18,6 +18,7 @@
     >
       <div
         @click="modalClick"
+        @keydown="handleKeyDown"
         :class="[custom ? '' : boxClass]"
         ref="modal"
         class="relative flex flex-col overflow-hidden text-base no-drag rounded-xl xt-modal xt-shadow xt-text"
@@ -657,10 +658,6 @@ const init = () => {
   setTimeout(() => {
     if (!scrollbar.value || !props.isScrollbar) return;
     perfectScrollbar.value = new PerfectScrollbar(scrollbar.value, {});
-
-    modal.value.addEventListener("keydown", handleKeyDown, {
-      capture: true,
-    });
   }, 50);
 };
 
@@ -695,10 +692,6 @@ onBeforeUnmount(() => {
       capture: true,
     });
   }
-
-  modal.value.removeEventListener("keydown", handleKeyDown, {
-    capture: true,
-  });
 });
 
 // 抛出事件
