@@ -21,7 +21,6 @@
         <div
           class="w-full"
           :class="list?.class"
-          v-if="list.array.length"
           @contextmenu.prevent
         >
           <Float
@@ -188,16 +187,9 @@ const listOption = computed(() => {
       },
     },
   ];
-  console.log('newList.value.slice(0, props.last) :>> ', newList.value.slice(0, props.last));
-  console.log(
-    "newList.value.slice(props.last, -1 * props.end) :>> ",
-    newList.value.slice(props.last, -1 * props.end)
-  );
+
   if (props.end) {
-    console.log(
-      "newList.value.slice(-1 * props.end) :>> ",
-      newList.value.slice(-1 * props.end)
-    );
+
     res.push({
       boxClass: "mt-2",
       array: newList.value.slice(-1 * props.end),
