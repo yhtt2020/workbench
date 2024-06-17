@@ -111,25 +111,12 @@
                 >
                   <xt-ify-icon v-if="leftHover" :icon="header.leftHoverIcon" />
                   <template v-else>
-                    <xt-icon
-                      v-if="header.icon"
-                      :icon="header.icon"
-                      type=""
-                      size="19"
+                    <xt-mix-icon
+                      v-if="mixIcon"
+                      :icon="mixIcon"
                       w="20"
-                    />
-                    <xt-ify-icon
-                      v-else-if="header.ifyIcon"
-                      :icon="header.ifyIcon"
-                    />
-                    <xt-icon-show
-                      v-else-if="header.showIcon"
-                      boxW="20"
-                      boxH="20"
-                      w="18"
-                      h="18"
-                      :modelValue="header.showIcon"
-                      :click="false"
+                      h="20"
+                      class="tt-no-bg"
                     />
                   </template>
                 </div>
@@ -391,6 +378,20 @@ const status = computed(() => {
   return {
     outside: isOutside.value,
   };
+});
+const mixIcon = computed(() => {
+  if (props.header.mixIcon) {
+    return props.header.mixIcon;
+  }
+  if (props.header.icon) {
+    return props.header.icon;
+  }
+  if (props.header.ifyIcon) {
+    return props.header.ifyIcon;
+  }
+  if (props.header.showIcon) {
+    return props.header.showIcon;
+  }
 });
 // 删除小组件的数据
 const deleteObj = computed(() => {
