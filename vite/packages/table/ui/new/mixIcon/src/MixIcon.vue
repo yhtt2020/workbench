@@ -8,21 +8,15 @@
     :menus="menus"
     :isUpload="upload"
   />
-  <div class="inline-block">
+  <!-- <div class="inline-block"> -->
     <div
       class="flex items-center justify-center cursor-pointer xt-text-2"
       :class="class"
       :style="[style, boxStyle]"
       @click="onClick"
     >
-      <IfyIcon
-        v-if="type == 'ify'"
-        :icon="icon"
-        :style="[iconStyle, mixIconStyle]"
-        :class="iconClass"
-      />
       <img
-        v-else-if="type == 'select'"
+        v-if="currentType == 'select'"
         :src="iconUrl"
         :class="iconClass"
         :style="[
@@ -34,8 +28,14 @@
           },
         ]"
       />
+      <IfyIcon
+        v-else-if="currentType == 'ify'"
+        :icon="icon"
+        :style="[iconStyle, mixIconStyle]"
+        :class="iconClass"
+      />
     </div>
-  </div>
+  <!-- </div> -->
 </template>
 
 <script setup>
@@ -67,7 +67,10 @@ const props = defineProps({
   style: {},
   iconClass: {},
   iconStyle: {},
-  // select ify
+  /**
+   * 现在无需传入了 内部通过currentType自行判断
+   * select ify
+   */
   type: {
     type: String,
     default: "ify",
@@ -118,6 +121,21 @@ const props = defineProps({
     default: 6,
   },
 });
+const currentType = computed(() => {
+  let icon = iconUrl.value;
+  // 网络路径判断
+  const networkPath = icon.substring(0, 4);
+  if (networkPath === "http") {
+    return "select";
+  }
+  // 本地路径判断
+  const localPath = icon.substring(0, 1);
+  if (localPath === "." || localPath === "/") {
+    return "select";
+  }
+  // 不满足属于其他图标
+  return "ify";
+});
 const emits = defineEmits(["update:icon", "cb", "click"]);
 
 const onClick = () => {
@@ -148,19 +166,6 @@ watch(
     iconUrl.value = newV;
   }
 );
-// const randomIcon = () => {
-//   visible.value = true;
-//   return new Promise((resolve) => {
-//     setTimeout(() => {
-//       let res = icon.value.onRandom();
-//       resolve(res);
-//     }, 1);
-//   });
-// };
-
-// defineExpose({
-//   randomIcon,
-// });
 </script>
 
 <style lang="scss" scoped></style>
