@@ -13,7 +13,8 @@ export const defaultProps = {
    * 小组件索引
    */
   customIndex: {
-    type: Number,
+    type: Number || String,
+    required: true,
     default: 0,
   },
   /**
@@ -21,7 +22,12 @@ export const defaultProps = {
    */
   customData: {
     type: Object,
-    default: () => {},
+    required: true,
+    default: () => {
+      return {
+        customSize: "2x2",
+      };
+    },
   },
   /**
    * 小组件所属桌面
@@ -131,6 +137,7 @@ export const defaultProps = {
   },
   // 控制小组件主体区域
   body: {
+    type: Object,
     default: () => {
       return {
         // 是否开启滚动条边距

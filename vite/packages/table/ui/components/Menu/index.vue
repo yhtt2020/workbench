@@ -269,6 +269,7 @@ onUnmounted(() => {
   window.removeEventListener("click", handleCloseMenu, { capture: true });
   window.removeEventListener("contextmenu", handleCloseMenu, { capture: true });
 });
+
 // onBeforeUnmount(() => {
 //   // window.addEventListener("click", handleCloseMenu, { capture: true });
 //   // window.addEventListener("contextmenu", handleCloseMenu, { capture: true });
