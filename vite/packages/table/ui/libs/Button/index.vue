@@ -11,10 +11,10 @@
     }"
   >
     <slot name="prefix" v-if="iconPosition == 'prefix'">
-      <xt-new-icon v-if="icon" :icon="icon" :size="iconSize"  />
+      <xt-new-icon v-if="icon" :icon="icon" :size="iconSize" />
       <xt-ify-icon v-if="ifyIcon" :icon="ifyIcon" :size="iconSize" />
     </slot>
-    <span >
+    <span>
       <slot></slot>
     </span>
     <slot name="postfix" v-if="iconPosition == 'postfix'">
@@ -83,8 +83,19 @@ const buttonStyle = computed(() => {
 
 function copyToClipboard() {
   if (!copy.value) return;
-  require("electron").clipboard.writeText(copy.value);
-  message.success("已成功复制到剪切板");
+  if (navigator.clipboard) {
+    navigator.clipboard
+      .writeText(copy.value)
+      .then(function () {
+        message.success("已成功复制到剪切板");
+      })
+      .catch(function (err) {
+        console.error("Could not copy text: ", err);
+      });
+  } else {
+    require("electron").clipboard.writeText(copy.value);
+    message.success("已成功复制到剪切板");
+  }
 }
 
 function copyStr(text) {
