@@ -399,6 +399,7 @@ export default {
     // 监听ID变化
     "currentDesk.id": {
       handler(newVal) {
+        this.updateIndependentBg();
         console.log("66666666666666666666666");
         // 同步更新自由布局ID
         this.freeLayoutId = newVal;
@@ -425,6 +426,12 @@ export default {
       },
       deep: true,
       immediate: true,
+    },
+    "currentDesk.settings.bg": {
+      handler(newVal) {
+        this.updateIndependentBg();
+      },
+      deep: true,
     },
     "currentDesk.settings": {
       handler(newVal) {
@@ -560,6 +567,25 @@ export default {
     ...mapActions(cardStore, ["addCard"]),
     ...mapActions(useDeskStore, ["addMenu"]),
     // ...mapActions(taskStore, ["initTask"]),
+    /**
+     * 用于处理独立壁纸
+     */
+    updateIndependentBg() {
+      let bg = this.currentDesk.settings?.bg;
+      console.log('bg111 :>> ', bg);
+
+      // 当bg不存在 或者 不使用独立壁纸时
+      if (!bg || !bg.start) {
+        this.$bus.emit("updateIndependentBg", false);
+        return;
+      }
+
+      console.log('bg222 :>> ', bg);
+      this.$bus.emit("updateIndependentBg", bg);
+      return bg.value;
+
+      // if
+    },
     getClasses() {
       if (this.usingSettings.vDirection) {
         if (this.usingSettings.vDirection === true) {

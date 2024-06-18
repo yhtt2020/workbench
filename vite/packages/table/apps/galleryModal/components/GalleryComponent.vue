@@ -1,13 +1,13 @@
 <template>
   <div class="w-full h-full xt-modal flex items-center justify-center rounded-r-xl px-4 pt-4 pb-0">
-    <!-- 我的收藏 -->
+    <!-- 我的收藏 1 -->
     <template v-if="pageStatus === 'm'">
-      <My :isModal="true" />
+      <My :isModal="true"  @updateIndependentBg="updateIndependentBg"/>
     </template>
 
-    <!-- 精选壁纸 -->
+    <!-- 精选壁纸 1 -->
     <template v-else-if="pageStatus === 'w'">
-      <SiftPaper :isModal="true" />
+      <SiftPaper :isModal="true" @updateIndependentBg="updateIndependentBg" />
     </template>
 
     <!-- 必应壁纸 -->
@@ -15,9 +15,9 @@
       <Bing :isModal="true" />
     </template>
 
-    <!-- 拾光壁纸 -->
+    <!-- 拾光壁纸 1 -->
     <template v-else-if="pageStatus === 'p'">
-      <Picking :isModal="true" />
+      <Picking :isModal="true"   @updateIndependentBg="updateIndependentBg"/>
     </template>
 
     <!-- 动态壁纸 -->
@@ -33,8 +33,8 @@
 </template>
 
 <script setup>
-import { ref, toRefs } from "vue";
-
+import { ref, toRefs ,getCurrentInstance} from "vue";
+const {proxy} = getCurrentInstance()
 import My from "../../../page/gallery/My.vue";
 import Bing from "../../../page/gallery/Bing.vue";
 import Lively from "../../../page/gallery/Lively.vue";
@@ -49,6 +49,16 @@ const props = defineProps({
     required: true,
   },
 });
+
+const updateIndependentBg=(img) =>{
+  console.log('updateIndependentBg :>> ', img);
+     if (img.srcProtocol){
+        proxy.$bus.emit('independentBg',`file://${img.src}`)
+      } else {
+        proxy.$bus.emit('independentBg',img.path)
+      }
+
+}
 
 const { pageStatus }  = toRefs(props);
 

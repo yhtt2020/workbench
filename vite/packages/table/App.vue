@@ -53,13 +53,45 @@
     <!--    <div class="fixed inset-0 video-container " style="background: #00000000">-->
     <!--    </div>-->
   </template>
+
+  <!-- 独立壁纸 -->
+  <template v-if="independentBg">
+    <div class="fixed top-0 left-0 right-0 bottom-0 video-container">
+      <!-- 纯图片 -->
+      <img
+        v-if="independentBg.mode === 'img' && independentBg.value !== ''"
+        id="wallpaper"
+        style="object-fit: cover; width: 100%; height: 100%"
+        :src="independentBg.value"
+      />
+      <!-- 纯色 -->
+      <div
+        v-if="independentBg.mode === 'color' && independentBg.value !== ''"
+        class="w-full h-full"
+        :style="{ background: independentBg.value }"
+      ></div>
+      <!-- 动态 -->
+      <video
+        v-if="independentBg.mode === 'video' && independentBg.value !== ''"
+        class="fullscreen-video"
+        playsinline=""
+        autoplay=""
+        muted=""
+        loop=""
+        ref="backgroundVideo"
+      >
+        <source :src="independentBg.value" type="video/mp4" id="bgVid" />
+      </video>
+      <div v-else class="w-full h-full"></div>
+    </div>
+  </template>
   <template v-else>
     <div class="fixed inset-0 video-container " v-if="backgroundImage.runpath">
       <video class="fullscreen-video" playsinline="" autoplay="" muted="" loop="" ref="backgroundVideo">
         <source :src="videoPath" type="video/mp4" id="bgVid">
       </video>
     </div>
-
+    <!-- 壁纸展示位置 -->
     <div v-else-if="backgroundName.name === 'img' &&  backgroundImage.path !== ''"
          class="fixed bg-image inset-0 video-container ">
       <img id="wallpaper" style="object-fit: cover;width: 100%;height: 100%" :src="backgroundImage.path">
@@ -166,10 +198,21 @@ export default {
       videoPath: '',
       frameStoreVisible: false,
       showNoticeModal: false,
+      // 独立壁纸
+      independentBg:false
     }
   },
 
   async mounted () {
+    // 监听独立壁纸切换
+    this.$bus.on('updateIndependentBg',(val)=>{
+      console.log('updateIndependentBg :>> ', val);
+      if (!val) {
+        this.independentBg = false
+      }
+      this.independentBg = val
+
+    })
     if(!usePlat('client')){
       document.body.classList.add('web')
     }

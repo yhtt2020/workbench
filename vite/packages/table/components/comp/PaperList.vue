@@ -4,7 +4,7 @@
       <a-col class="image-wrapper " v-for="(img,index) in list" :span="6" style="">
         <div class="w-full h-full pointer bing-paper" >
           <xt-mix-menu :menus="bingMenu" fn="callBack" @mounted="paperCurrent = img" :stopPropagation="false">
-            <xt-preview-img 
+            <xt-preview-img
               :imgList="imgList"
               :index="index">
               <img class="image-item pointer" :src="img.src" :data-source="img.path" style="position: relative">
@@ -156,7 +156,6 @@ export default {
 
     // 设置工作台背景和桌面壁纸
     setAppPaper(img){
-
       if(img !== null){  message.info('正在为您设置背景'); }
       if (img.srcProtocol){ this.setBackgroundImage({path: '',  runpath: `file://${img.src}`}); }
       else {

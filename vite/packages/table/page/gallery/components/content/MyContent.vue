@@ -70,7 +70,7 @@ let fs,path
 
  export default {
    name: "MyContent",
-
+   inject:['modalParams','modalStatus'],
    components:{
     MyContentIcon,
    },
@@ -265,6 +265,12 @@ let fs,path
     },
     // 设置工作台背景和桌面壁纸
     setAppPaper(img){
+
+      if (this.modalParams?.independent) {
+        this.$emit('updateIndependentBg',img)
+        return
+
+      }
       completeTask('M0201',()=>{
         this.$bus.emit('closePaperModal')
       })

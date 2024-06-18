@@ -4,7 +4,6 @@ import axios from "axios";
 
 import { highLightKeywords } from "../../utils";
 import { sourceList, openWithList, defaultSourceList } from "../../config/data";
-
 import Scrollbar from "./Scrollbar.vue";
 import { watchDebounced } from "@vueuse/core";
 const words: any = inject("words");
