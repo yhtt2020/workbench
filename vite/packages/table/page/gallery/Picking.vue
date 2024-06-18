@@ -365,10 +365,10 @@ inject:['modalParams'],
 
     // 设置壁纸
     setAppPaper(img) {
-      if (this.modalParams?.independent) {
+      // if (this.modalParams?.independent) {
        this.$emit('updateIndependentBg',img)
         return
-      }
+      // }
       message.info("正在为您设置壁纸");
       this.setBackgroundImage(img);
       completeTask("m0201", () => {

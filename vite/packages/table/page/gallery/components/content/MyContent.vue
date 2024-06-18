@@ -265,15 +265,13 @@ let fs,path
     },
     // 设置工作台背景和桌面壁纸
     setAppPaper(img){
-
-      if (this.modalParams?.independent) {
-        this.$emit('updateIndependentBg',img)
-        return
-
-      }
       completeTask('M0201',()=>{
         this.$bus.emit('closePaperModal')
       })
+      // if (this.modalParams?.independent) {
+        this.$emit('updateIndependentBg',img)
+        return
+      // }
       if(img !== null){
         message.info('正在为您设置背景');
       }

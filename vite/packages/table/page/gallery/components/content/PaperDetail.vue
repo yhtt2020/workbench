@@ -150,7 +150,7 @@ inject:['modalParams'],
             completeTask("M0201", () => {
               this.$bus.emit("closePaperModal");
             });
-           
+
             this.setAppPaper(this.currentPaperImg);
 
           },
@@ -274,10 +274,10 @@ inject:['modalParams'],
 
     // 设置工作台背景和桌面壁纸
     setAppPaper(img) {
-      if (this.modalParams?.independent) {
+      // if (this.modalParams?.independent) {
        this.$emit('updateIndependentBg',img)
         return
-      }
+      // }
       completeTask("M0201", () => {
         this.$bus.emit("closePaperModal");
       });

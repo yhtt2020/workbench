@@ -182,19 +182,18 @@ const { myCommunity } = storeToRefs(chatCommunity);
 const currentDeskSettings = computed(() => {
   return getCurrentDesk.value.settings;
 });
-const init = () => {
-  let bg = currentDeskSettings.value.hasOwnProperty("bg");
-  if (!bg) {
-
-    currentDeskSettings.value["bg"] = {
-      start: false,
-      mode: "img",
-      imgValue: "",
-      colorValue:""
-    };
-  }
-};
-init();
+// const init = () => {
+//   let bg = currentDeskSettings.value.hasOwnProperty("bg");
+//   if (!bg) {
+//     currentDeskSettings.value["bg"] = {
+//       start: false,
+//       mode: "img",
+//       imgValue: DEFAULT.WALLPAPER,
+//       colorValue: "#508BFE",
+//     };
+//   }
+// };
+// init();
 const deskBg = computed(() => {
   return currentDeskSettings.value.bg;
 });

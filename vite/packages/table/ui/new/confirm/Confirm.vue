@@ -39,7 +39,8 @@
         </div>
         <!-- 按钮 -->
         <div class="flex items-center justify-end">
-          <xt-button
+ <slot name="footer">
+  <xt-button
             v-if="noText"
             :w="noButtonWidth"
             h="40"
@@ -56,6 +57,7 @@
             @click="onConfirmClick()"
             >{{ okText }}
           </xt-button>
+ </slot>
         </div>
       </div>
     </Transition>
@@ -157,6 +159,9 @@ const onConfirmClick = () => {
   ok.value && ok.value();
   onCloseClick();
 };
+defineExpose({
+ close: onCloseClick
+})
 </script>
 
 <style lang="scss" scoped>
