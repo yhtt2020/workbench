@@ -1,5 +1,4 @@
 export const highLightKeywords = (keywords, text) => {
-  console.log("text :>> ", text);
   if (!text) return;
   if (typeof keywords !== "string" || keywords === "") {
     keywords = text;

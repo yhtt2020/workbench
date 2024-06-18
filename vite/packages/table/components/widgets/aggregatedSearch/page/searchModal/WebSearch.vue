@@ -25,7 +25,9 @@ const enterSearch = () => {
 };
 // 推荐列表
 const recommendList = ref([]);
-const selectWebSource = (newSource) => {
+const selectWebSource = (newSource, index) => {
+  console.log("index :>> ", index);
+  altIndex.value = index;
   // 修改实际web搜索源
   data.value.webSource = newSource;
   currentSource.value = newSource;
@@ -45,25 +47,32 @@ const getRecommend = async () => {
   recommendList.value = handlers[name]?.(data) || handlers["default"]();
 };
 watchDebounced(
-  [words, currentSource, altIndex],
-  async (val: any) => {
-    // 重置下标
-    ctrlSelectIndex.value = 0;
+  () => altIndex.value,
+  (val) => {
     console.log("触发更新 :>> ", val);
-    if (val[2] > 6) {
+
+    if (val > 6) {
       scrollbarRef.value?.update({
         attributeKey: "data-id",
         attributeValue: currentSource.value.name,
         direction: "left",
       });
     }
-    if (val[2] < 2) {
+    if (val < 2) {
       scrollbarRef.value?.update({
         attributeKey: "data-id",
         attributeValue: data.value.sourceList[0].name,
         direction: "left",
       });
     }
+  }
+);
+watchDebounced(
+  [words, currentSource],
+  async (val: any) => {
+    // 重置下标
+    ctrlSelectIndex.value = 0;
+
     recommendList.value = [];
     await getRecommend();
   },
@@ -148,8 +157,8 @@ const scrollbarRef: any = ref(null);
     class="w-full relative flex overflow-hidden tab-container flex-nowrap whitespace-nowrap mb-1"
   >
     <div
-      v-for="item in data.sourceList"
-      @click="selectWebSource(item)"
+      v-for="(item,index) in data.sourceList"
+      @click="selectWebSource(item, index)"
       :data-id="item.name"
       :style="[
         {
