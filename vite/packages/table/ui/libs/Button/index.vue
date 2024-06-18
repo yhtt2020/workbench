@@ -83,7 +83,10 @@ const buttonStyle = computed(() => {
 
 function copyToClipboard() {
   if (!copy.value) return;
-  if (navigator.clipboard) {
+  if (window.$usePlat("client")) {
+    require("electron").clipboard.writeText(copy.value);
+    message.success("已成功复制到剪切板");
+  } else if (navigator.clipboard) {
     navigator.clipboard
       .writeText(copy.value)
       .then(function () {
@@ -92,9 +95,6 @@ function copyToClipboard() {
       .catch(function (err) {
         console.error("Could not copy text: ", err);
       });
-  } else {
-    require("electron").clipboard.writeText(copy.value);
-    message.success("已成功复制到剪切板");
   }
 }
 
