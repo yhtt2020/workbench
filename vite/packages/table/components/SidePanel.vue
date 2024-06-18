@@ -217,6 +217,7 @@ export default {
       maxItemNum: 0,
       floatCard:{},
       floatCardVisible: false,
+      comVisible: false,
     }
   },
   props: {
@@ -365,13 +366,21 @@ export default {
   watch: {
     windowHeight:{
       handler(val){
-        // console.log('windowHeight:>>>v',val,'windowWidth:>>>w',this.windowHeight)
+        // 当侧边导航栏不显示时，不计算缩放后的高度
+        if(!(this.navigationToggle[0] || this.navigationToggle[1])) return
+        // 侧边导航栏可利用的高度
         const H = val * 0.72
+        // 导航栏图标个数
+        const length = this.sortId === 'left' ? this.sideNavigationList.length : this.rightNavigationList.length
         this.parentSize = H
+        // 最多个数
         this.maxItemNum = Math.floor(H / 72)
-        const height = H / (this.navigationList.length * 72)
-        this.navAttribute.navSize = Math.min(100,height.toFixed(2) * 100)
-        // console.log('maxM:>>>',this.maxItemNum,'navSize:>>>',this.navAttribute.navSize)
+        // 比例
+        // 容错，防止在最小窗口出现Infinity，导致比例直接回到100，页面错误
+        const scale = H / (length * 72) == 'Infinity' ? 0.4 : H / (length * 72)
+        // 取最小值，防止超出1
+        this.navAttribute.navSize = Math.min(100,scale.toFixed(2) * 100)
+        // console.log('maxM:>>>',this.maxItemNum,'navSize:>>>',this.navAttribute.navSize,'scale:>>>',scale, 'H:>>>',H, 'navList:>>>',length * 72)
       },
       immediate: true
     },
