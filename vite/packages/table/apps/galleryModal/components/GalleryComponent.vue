@@ -51,7 +51,7 @@ const props = defineProps({
 });
 
 const updateIndependentBg=(img) =>{
-  console.log('updateIndependentBg :>> ', img);
+
      if (img.srcProtocol){
         proxy.$bus.emit('independentBg',`file://${img.src}`)
       } else {

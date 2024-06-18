@@ -5,12 +5,12 @@
     </div>
   </template>
   <xt-option-box>
-    <xt-option-info title="独立桌面" isSwitch v-model:switch="deskBg.start" />
-    <!-- <xt-update-desk-bg /> -->
+    <xt-option-info title="独立壁纸" isSwitch v-model:switch="deskBg.start" />
     <xt-option-bg
       v-if="deskBg.start"
       v-model:mode="deskBg.mode"
-      v-model:value="deskBg.value"
+      v-model:colorValue="deskBg.colorValue"
+      v-model:imgValue="deskBg.imgValue"
     />
   </xt-option-box>
 
@@ -185,10 +185,12 @@ const currentDeskSettings = computed(() => {
 const init = () => {
   let bg = currentDeskSettings.value.hasOwnProperty("bg");
   if (!bg) {
+
     currentDeskSettings.value["bg"] = {
       start: false,
       mode: "img",
-      value: "",
+      imgValue: "",
+      colorValue:""
     };
   }
 };

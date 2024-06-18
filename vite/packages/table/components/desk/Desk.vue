@@ -572,15 +572,11 @@ export default {
      */
     updateIndependentBg() {
       let bg = this.currentDesk.settings?.bg;
-      console.log('bg111 :>> ', bg);
-
       // 当bg不存在 或者 不使用独立壁纸时
       if (!bg || !bg.start) {
         this.$bus.emit("updateIndependentBg", false);
         return;
       }
-
-      console.log('bg222 :>> ', bg);
       this.$bus.emit("updateIndependentBg", bg);
       return bg.value;
 

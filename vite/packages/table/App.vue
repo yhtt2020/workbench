@@ -59,20 +59,20 @@
     <div class="fixed top-0 left-0 right-0 bottom-0 video-container">
       <!-- 纯图片 -->
       <img
-        v-if="independentBg.mode === 'img' && independentBg.value !== ''"
+        v-if="independentBg.mode === 'img' && independentBg.imgValue !== ''"
         id="wallpaper"
         style="object-fit: cover; width: 100%; height: 100%"
-        :src="independentBg.value"
+        :src="independentBg.imgValue"
       />
       <!-- 纯色 -->
       <div
-        v-if="independentBg.mode === 'color' && independentBg.value !== ''"
+        v-if="independentBg.mode === 'color' && independentBg.colorValue !== ''"
         class="w-full h-full"
-        :style="{ background: independentBg.value }"
+        :style="{ background: independentBg.colorValue }"
       ></div>
       <!-- 动态 -->
       <video
-        v-if="independentBg.mode === 'video' && independentBg.value !== ''"
+        v-if="independentBg.mode === 'video' && independentBg.imgValue !== ''"
         class="fullscreen-video"
         playsinline=""
         autoplay=""
@@ -80,7 +80,7 @@
         loop=""
         ref="backgroundVideo"
       >
-        <source :src="independentBg.value" type="video/mp4" id="bgVid" />
+        <source :src="independentBg.imgValue" type="video/mp4" id="bgVid" />
       </video>
       <div v-else class="w-full h-full"></div>
     </div>
@@ -206,7 +206,6 @@ export default {
   async mounted () {
     // 监听独立壁纸切换
     this.$bus.on('updateIndependentBg',(val)=>{
-      console.log('updateIndependentBg :>> ', val);
       if (!val) {
         this.independentBg = false
       }
