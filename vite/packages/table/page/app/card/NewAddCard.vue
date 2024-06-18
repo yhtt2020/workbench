@@ -248,7 +248,7 @@ export default {
         children: filterChildren,
       }
     })
-    if (this.desk.hasOwnProperty('communityNo')) {
+    if (this.desk?.hasOwnProperty('communityNo')) {
       // 重新赋值
       this.baseNavList = mapFilter
     }
