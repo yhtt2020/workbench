@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <Teleport to="body">
     <!-- 蒙版 -->
     <Transition name="fade">
       <div
@@ -28,8 +28,11 @@
         <!-- 标题 -->
         <div class="flex items-center">
           <div class="mr-4">
-
-            <XtIfyIcon icon="fluent:info-12-filled" size="24" :style="[typeStyle]" />
+            <XtIfyIcon
+              icon="fluent:info-12-filled"
+              size="24"
+              :style="[typeStyle]"
+            />
           </div>
           <span>{{ title }}</span>
         </div>
@@ -39,29 +42,29 @@
         </div>
         <!-- 按钮 -->
         <div class="flex items-center justify-end">
- <slot name="footer">
-  <xt-button
-            v-if="noText"
-            :w="noButtonWidth"
-            h="40"
-            @click="onCancelClick()"
-          >
-            <span class="xt-text-2">{{ noText }}</span>
-          </xt-button>
-          <xt-button
-            v-if="okText"
-            :w="okButtonWidth"
-            h="40"
-            class="ml-3"
-            type="theme"
-            @click="onConfirmClick()"
-            >{{ okText }}
-          </xt-button>
- </slot>
+          <slot name="footer">
+            <xt-button
+              v-if="noText"
+              :w="noButtonWidth"
+              h="40"
+              @click="onCancelClick()"
+            >
+              <span class="xt-text-2">{{ noText }}</span>
+            </xt-button>
+            <xt-button
+              v-if="okText"
+              :w="okButtonWidth"
+              h="40"
+              class="ml-3"
+              type="theme"
+              @click="onConfirmClick()"
+              >{{ okText }}
+            </xt-button>
+          </slot>
         </div>
       </div>
     </Transition>
-  </div>
+  </Teleport>
 </template>
 
 <script setup lang="ts">
@@ -118,6 +121,7 @@ const props = withDefaults(defineProps<ConfirmProps>(), {
   noButtonWidth: "64",
 });
 const { close, duration, no, ok, type }: any = toRefs(props);
+const emit = defineEmits(["close"]);
 // 控制显示
 const isVisible = ref(false);
 const show = () => {
@@ -143,6 +147,7 @@ const onCloseClick = () => {
   // 等待动画完全关闭后触发关闭回调
   setTimeout(() => {
     close.value && close.value();
+    emit("close");
   }, parseInt(duration.value.replace("0.", "").replace("s", "")) * 100);
 };
 /**
@@ -160,8 +165,8 @@ const onConfirmClick = () => {
   onCloseClick();
 };
 defineExpose({
- close: onCloseClick
-})
+  close: onCloseClick,
+});
 </script>
 
 <style lang="scss" scoped>

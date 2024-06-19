@@ -35,6 +35,8 @@
   <xt-confirm
     @close="open = false"
     v-if="open"
+    :maskIndex="999999"
+    :mask="true"
     ref="confirm"
     title="选择当前壁纸所需要设置的桌面"
   >
@@ -108,7 +110,7 @@ const currentImg = ref();
 // 更新壁纸
 const updateBg = (img) => {
   // 有独立参数 说明为独立壁纸
-  if (modalParams?.value?.independent) {
+  if (modalParams?.independent) {
     updateIndependentBg(img);
     return;
   }
@@ -128,7 +130,7 @@ const updateCommonBg = (img) => {
   if (img !== null) {
     message.info("正在为您设置背景");
   }
-  proxy.$bus.emit("setIndependentBg",false);
+  // proxy.$bus.emit("setIndependentBg",false);
   if (img.srcProtocol) {
     appStore().setBackgroundImage({ path: "", runpath: `file://${img.src}` });
   } else {
