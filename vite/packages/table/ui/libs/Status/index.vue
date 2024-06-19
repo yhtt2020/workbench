@@ -11,7 +11,7 @@
       ></xt-new-icon>
     </div>
     <div class="mt-4 font-14 xt-text-2" :style="{ fontSize: fontSize }">
-      {{ name }} 在 {{ ENV_MAP[plat] }} 下不可用
+      {{ name }} 在 {{ statusName }} 下不可用
     </div>
   </div>
   <slot v-else></slot>
@@ -33,6 +33,10 @@ export default {
   components: {},
   computed: {
     ...mapWritableState(usePermissionStore, ["token", "isGuest", "isSingle", "isOffline"]),
+    statusName() {
+      if(this.ENV_MAP[this.platform]) return this.ENV_MAP[this.platform]
+      else return this.ENV_MAP[this.plat]
+    }
   },
   mounted() {
     if(this.plat) {
