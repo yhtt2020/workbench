@@ -152,7 +152,7 @@ export class Notifications {
     toast.info(
       {
         component: MessageNoticeToast,
-        props: { msg, type: "message", play: settings.value.enablePlay },
+        props: { msg, type: "message", play: settings.value.messagePlay },
         listeners: {
           putNotice: function () {
             // console.log("关闭并存储数据", msg);
@@ -256,9 +256,9 @@ export class Notifications {
     // 获取群聊消息基础内容
     const rs = await (
       window as any
-    ).$TUIKit.TUIConversation?.getConversationProfile(data.conversationID);
-    const muteVisible =
-      rs.data?.conversation?.groupProfile?.selfInfo?.messageRemindType;
+    ).$TUIKit?.TUIConversation?.getConversationProfile(data.conversationID);
+
+    const muteVisible = rs.data?.conversation?.messageRemindType;
 
     // 获取当前会话id
     const currentConversationID = rs.data?.conversation?.conversationID;
@@ -288,25 +288,17 @@ export class Notifications {
     if (config.enable) {
       // 区分当前路由是否在群聊页面中
       if (config.global) {
-        // 纯文字情况下
-        if (isText) {
-          // 非当前会话
-          if (!config.currentConversation) {
-            if (config.atMeMsg || config.atMsg) {
-              const strongEl: HTMLAudioElement =
-                this.createSoundStrongElement();
-              strongEl.play();
-            }
-            // 非@消息
-            else {
-              const playElement: HTMLAudioElement = this.createSoundElement();
-              playElement.play();
-            }
+        // 非当前会话
+        if (!config.currentConversation) {
+          if (config.atMeMsg || config.atMsg) {
+            const strongEl: HTMLAudioElement = this.createSoundStrongElement();
+            strongEl.play();
           }
-        }
-        // 其他消息内容,其中包含(文件、图片、等等)
-        else {
-          console.log("除纯文本除外,文件消息", data);
+          // 非@消息
+          else {
+            const playElement: HTMLAudioElement = this.createSoundElement();
+            playElement.play();
+          }
         }
       }
       // 全局情况下
@@ -335,10 +327,16 @@ export class Notifications {
         }
         // 其他消息内容,其中包含(文件、图片、等等)
         else {
-          console.log("除纯文本除外,文件消息", data);
+          const fileRs = await handlerMesFileContent(data);
+          if (config.soundSwitch) {
+            if (config.msgMute) {
+              this.messageWeak(fileRs, data.conversationID);
+            }
+          }
         }
       }
     }
+
   }
 }
 
@@ -381,4 +379,61 @@ async function handleMsgContent(data: any) {
 // 获取纯文本消息内容,返回字符串
 function getTextMsgContent(data: any) {
   return `${data.nick}：${data.payload.text}`;
+}
+
+// 解析群聊文件消息
+async function handlerMesFileContent(data: any) {
+  // 区分是好友还是群聊常量
+  const handleType = data.conversationType;
+  // 好友
+  if (handleType === "C2C") {
+     const friendContent = {
+       icon: data.avatar,
+       title: `好友${data.nick}的消息`,
+       conversationID: data.conversationID,
+       body: getMsgFileData(data),
+       time: data.time,
+       type: "message",
+     };
+     return friendContent;
+  }
+  // 群聊
+  else if (handleType === "GROUP") {
+    // 获取群聊列表
+    const groupRs = await (window as any).$TUIKit?.chat?.getGroupList();
+    const groupList = groupRs?.data?.groupList;
+    const found = _.find(groupList, (item: any) => {
+      return String(item.groupID) === String(data.to);
+    });
+    // 需要的参数
+     const textContent = {
+       icon: found?.avatar,
+       title: found?.name,
+       body: getMsgFileData(data),
+       conversationID: data.conversationID,
+       time: data.time,
+       type: "message",
+     };
+     return textContent;
+  }
+}
+// 获取文件发送提示信息的描述
+function getMsgFileData(data: any) {
+  // 文件的
+  if (data?.payload?.hasOwnProperty("downloadFlag")) {
+    if (data?.payload?.fileName) {
+      return `${data?.nick}发送了一个文件: ${data?.payload?.fileName}`;
+    } else {
+      return `${data?.nick}发送了一个文件`;
+    }
+  }
+  // 图片的
+  else if (data?.payload?.hasOwnProperty("imageFormat")){
+    return `${data?.nick}发送了一张图片文件`;
+  }
+  // 视频的
+  else if(data?.payload?.hasOwnProperty("videoFormat")){
+    return `${data?.nick}发送了一视频文件`
+  }
+
 }

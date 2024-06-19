@@ -100,7 +100,7 @@ export default defineComponent({
   watch: {
     messageType: {
       handler(newVal) {
-        if (this.play && newVal === "message") {
+        if (this.type === "message" && this.play) {
           this.setMessagePlay();
           if (this.settings.messagePlay) {
             this.$nextTick(() => {
