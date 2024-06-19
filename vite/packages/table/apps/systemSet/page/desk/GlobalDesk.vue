@@ -31,9 +31,9 @@
     <hr />
     <xt-option-info
       title="组件间距"
-      info="调节组件之间的间距，默认为 12px。"
+      info="调节组件之间的间距，默认为 6px。"
       icon="fluent:arrow-clockwise-16-regular"
-      @onIconClick="globalSettings.cardMargin = 12"
+      @onIconClick="globalSettings.cardMargin = 6"
     />
     <xt-option-slider
       v-model:slider="globalSettings.cardMargin"
@@ -87,7 +87,7 @@
 </template>
 <script setup>
 import { useRouter } from "vue-router";
-import { ref, toRefs, computed } from "vue";
+import { ref, toRefs, computed ,watch} from "vue";
 import { storeToRefs } from "pinia";
 import { appStore } from "../../../../store";
 import { useDeskStore } from "../../../../components/desk/store";
@@ -99,7 +99,7 @@ const app = appStore();
 const cardStore = useCardStore();
 // 这个应该是全局桌面参数
 const { settings: globalSettings } = storeToRefs(cardStore);
-const { settings} = storeToRefs(app);
+const { settings } = storeToRefs(app);
 
 const currentDeskSettings = computed(() => {
   return getCurrentDesk.value.settings;
@@ -121,6 +121,13 @@ const fallingList = ref([
     name: "叶",
   },
 ]);
+
+watch(
+  () => globalSettings.value.cardMargin,
+  (val) => {
+    globalSettings.value.cardMargin = Math.floor(val)
+  }
+);
 </script>
 
 <style lang="scss" scoped></style>
