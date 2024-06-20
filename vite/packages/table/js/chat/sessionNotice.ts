@@ -250,6 +250,8 @@ export class Notifications {
 
   // 社群消息通知
   public async receiveNotification(msg: any) {
+    console.log("消息通知", msg);
+
     const { settings, userInfo } = storeToRefs(appStore() as any);
     const data = { ...msg.data[0] };
 
@@ -286,25 +288,34 @@ export class Notifications {
 
     // 当前消息开关是否开启
     if (config.enable) {
-      // 区分当前路由是否在群聊页面中
-      if (config.global) {
-        // 非当前会话
-        if (!config.currentConversation) {
+      /**
+       * 纯文本消息
+       * 好友、群聊
+       * config.global 为true是局部,false是全局
+       * config.currentConversation 为true是当前所在会话,false是非当前所在会话中
+       * config.atMeMsg config.atMsg 为true是@的消息, false则相反
+       * **/
+      if (isText) {
+        if (config.global) {
           if (config.atMeMsg || config.atMsg) {
-            const strongEl: HTMLAudioElement = this.createSoundStrongElement();
-            strongEl.play();
+            // 提示音开关是否开启
+            if (config.soundSwitch) {
+              if (config.msgMute) {
+                const strongEl: HTMLAudioElement =
+                  this.createSoundStrongElement();
+                strongEl.play();
+              }
+            }
+          } else {
+            if (config.soundSwitch) {
+              if (config.msgMute) {
+                const playElement: HTMLAudioElement = this.createSoundElement();
+                playElement.play();
+              }
+            }
           }
-          // 非@消息
-          else {
-            const playElement: HTMLAudioElement = this.createSoundElement();
-            playElement.play();
-          }
-        }
-      }
-      // 全局情况下
-      else {
-        // 纯文字情况下
-        if (isText) {
+        } else {
+          // 获取提示通知文字信息
           const rs = await handleMsgContent(data);
           // @我的  @所有人
           if (config.atMeMsg || config.atMsg) {
@@ -325,8 +336,25 @@ export class Notifications {
             }
           }
         }
-        // 其他消息内容,其中包含(文件、图片、等等)
-        else {
+      } else {
+        /**
+         * 除纯文本之外的消息通知,
+         * 判断是否为群聊系统消息
+         * **/
+        if (data?.payload?.hasOwnProperty("operationType")) {
+          
+          // 获取群聊系统消息通知内容
+          const systemRs = await handlerSystemMsg(data);
+          if (config.soundSwitch) {
+            if (config.msgMute) {
+              this.messageWeak(systemRs, data.conversationID);
+            }
+            else {
+              this.messageWeak(systemRs, data.conversationID);
+            }
+          }
+        } else {
+          // 获取文件类型的消息通知文本
           const fileRs = await handlerMesFileContent(data);
           if (config.soundSwitch) {
             if (config.msgMute) {
@@ -336,7 +364,6 @@ export class Notifications {
         }
       }
     }
-
   }
 }
 
@@ -387,15 +414,15 @@ async function handlerMesFileContent(data: any) {
   const handleType = data.conversationType;
   // 好友
   if (handleType === "C2C") {
-     const friendContent = {
-       icon: data.avatar,
-       title: `好友${data.nick}的消息`,
-       conversationID: data.conversationID,
-       body: getMsgFileData(data),
-       time: data.time,
-       type: "message",
-     };
-     return friendContent;
+    const friendContent = {
+      icon: data.avatar,
+      title: `好友${data.nick}的消息`,
+      conversationID: data.conversationID,
+      body: getMsgFileData(data),
+      time: data.time,
+      type: "message",
+    };
+    return friendContent;
   }
   // 群聊
   else if (handleType === "GROUP") {
@@ -406,15 +433,18 @@ async function handlerMesFileContent(data: any) {
       return String(item.groupID) === String(data.to);
     });
     // 需要的参数
-     const textContent = {
-       icon: found?.avatar,
-       title: found?.name,
-       body: getMsgFileData(data),
-       conversationID: data.conversationID,
-       time: data.time,
-       type: "message",
-     };
-     return textContent;
+    const textContent = {
+      icon: found?.avatar,
+      title: found?.name,
+      body: getMsgFileData(data),
+      conversationID: data.conversationID,
+      time: data.time,
+      type: "message",
+    };
+
+    console.log("测试", textContent);
+
+    return textContent;
   }
 }
 // 获取文件发送提示信息的描述
@@ -428,12 +458,95 @@ function getMsgFileData(data: any) {
     }
   }
   // 图片的
-  else if (data?.payload?.hasOwnProperty("imageFormat")){
+  else if (data?.payload?.hasOwnProperty("imageFormat")) {
     return `${data?.nick}发送了一张图片文件`;
   }
   // 视频的
-  else if(data?.payload?.hasOwnProperty("videoFormat")){
-    return `${data?.nick}发送了一视频文件`
+  else if (data?.payload?.hasOwnProperty("videoFormat")) {
+    return `${data?.nick}发送了一视频文件`;
+  }
+}
+
+/**
+ * 处理群聊系统消息通知
+ * **/
+async function handlerSystemMsg(data: any) {
+  const systemTextRs = await getSystemMsgText(data);
+  // 获取群聊列表
+  const groupRs = await (window as any).$TUIKit?.chat?.getGroupList();
+  const groupList = groupRs?.data?.groupList;
+  const found = _.find(groupList, (item: any) => {
+    return String(item.groupID) === String(data.to);
+  });
+  // 需要的参数
+  const systemTextContent = {
+    icon: found?.avatar,
+    title: found?.name,
+    body: systemTextRs,
+    conversationID: data.conversationID,
+    time: data.time,
+    type: "message",
+  };
+  return systemTextContent;
+}
+/**
+ *获取群聊系统消息通知
+ * 例如:群聊加入、群聊申请加入、退出群聊、发布新公告、同意xxx加入群聊,拒绝xxx加入群聊
+ * **/
+async function getSystemMsgText(data: any) {
+  // 获取类型
+  const getOperationType = data?.payload?.operationType;
+  const dataPayload = data?.payload;
+  const payloadFile = data?.payload?.groupProfile;
+
+  // 获取自己用户的uid
+  const { userInfo } = storeToRefs(appStore() as any);
+  // 获取用户昵称
+  let nickRs: any;
+  // 判断是不是和自己的uid相同
+  if (Number(dataPayload?.operatorID) === Number(userInfo.value?.uid)) {
+    nickRs = await (window as any).$TUIKit?.chat?.getUserProfile({
+      userIDList: [`${userInfo.value?.uid}`],
+    });
+  } else {
+    nickRs = await (window as any).$TUIKit?.chat?.getUserProfile({
+      userIDList: [data?.payload?.operatorID],
+    });
+  }
+  const nickName = nickRs?.data[0]?.nick;
+
+  // 群聊申请加入
+  if (dataPayload?.hasOwnProperty("authentication") && getOperationType === 1) {
+    return `${nickName}: 申请加入 ${
+      payloadFile?.name ? payloadFile?.name : payloadFile?.groupName
+    } 群聊`;
   }
 
+  // 退出群聊
+  else if (
+    dataPayload?.operationType === 2 &&
+    Number(dataPayload?.operatorID) !== Number(userInfo.value?.uid)
+  ) {
+    return `${nickName}: 退出 ${payloadFile?.groupName} 群聊`;
+  }
+
+  //  加入群聊
+  else if (
+    dataPayload?.operationType === 1 &&
+    Number(dataPayload?.operatorID) !== Number(userInfo.value?.uid)
+  ) {
+    return `${nickName}: 加入 ${
+      payloadFile?.name ? payloadFile?.name : payloadFile?.groupName
+    } 群聊`;
+  }
+
+  // xx同意xx加入群聊
+  else if (
+    dataPayload?.operationType === 1 &&
+    Number(dataPayload?.operatorID) === Number(userInfo.value?.uid)
+  ) {
+    return `${nickName} 同意 ${data?.nick} 加入 ${
+      payloadFile?.name ? payloadFile?.name : payloadFile?.groupName
+    }群聊`;
+  }
 }
