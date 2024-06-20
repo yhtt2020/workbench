@@ -230,6 +230,8 @@ export class Notifications {
   // 社群消息通知
   public async receiveNotification(msg: any) {
 
+    console.log('测试',msg);
+
     const { settings, userInfo } = storeToRefs(appStore() as any);
     const data = { ...msg.data[0] };
 

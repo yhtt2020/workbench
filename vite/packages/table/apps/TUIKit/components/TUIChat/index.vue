@@ -111,11 +111,11 @@ TUIStore.watch(StoreName.CONV, {
     // TUIChat 每次切换会话，需要初始化 chatType;
     TUIChatConfig.setChatType(conversation?.type);
     // 由 TUICustomerServicePlugin 插件判断如果当前会话是客服会话，则设置 chatType 并激活会话。
-    TUICore.callService({
-      serviceName: TUIConstants.TUICustomerServicePlugin.SERVICE.NAME,
-      method: TUIConstants.TUICustomerServicePlugin.SERVICE.METHOD.ACTIVE_CONVERSATION,
-      params: { conversationID: conversation?.conversationID },
-    });
+    // TUICore.callService({
+    //   serviceName: TUIConstants.TUICustomerServicePlugin.SERVICE.NAME,
+    //   method: TUIConstants.TUICustomerServicePlugin.SERVICE.METHOD.ACTIVE_CONVERSATION,
+    //   params: { conversationID: conversation?.conversationID },
+    // });
     currentConversationID.value = conversation?.conversationID;
     isGroup.value = conversation?.type === TUIChatEngine.TYPES.CONV_GROUP;
     if (isUniFrameWork && isGroup.value && groupID.value !== conversation?.groupProfile?.groupID) {

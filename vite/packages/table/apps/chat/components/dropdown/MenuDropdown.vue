@@ -2,13 +2,13 @@
 <template>
   <xt-menu
     name="name"
-    :menus="menus"
-    @contextmenu="currentMenu.revID = item"
+    :menus=" hasRole ?  menus : []"
+    @contextmenu.prevent="currentMenu.revID = item"
     class="w-full"
   >
     <div
       class="flex items-center rounded-lg px-6 py-2.5 pointer dropdown-hover"
-      @click="handleCurrentMenu"
+      @click="hasRole ?  handleCurrentMenu : ''"
     >
       <div class="flex items-center">
         <div class="flex items-center">
@@ -46,12 +46,14 @@ import { ref, reactive, computed, nextTick, toRefs, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { message } from "ant-design-vue";
 import { chatCommunityStore } from "../../store/chatCommunity";
+import _ from "lodash-es";
 
 /**子频道链接修改设置**/
 import ChannelUpdateLink from "../link/ChannelUpdateLink.vue";
 
 const emit = defineEmits(["currentClick"]);
 const chatCommunity = chatCommunityStore();
+const { myCommunity } = storeToRefs(chatCommunity);
 
 const props = defineProps({
   // 当前社群数据
@@ -160,6 +162,20 @@ const menus = computed(() => {
 const handleCurrentMenu = () => {
   emit("currentClick", item);
 };
+
+
+/**加入社群条件**/
+const hasRole = computed(() => {
+  const currentFind = _.find(myCommunity.value, (item) => {
+    return Number(item?.route?.params?.no) === Number(no.value);
+  });
+  if (currentFind && currentFind.role) {
+    return true;
+  } else {
+    return false;
+  }
+});
+
 
 //     const unread = computed(()=>{
 //       const jsonProp = props.item.props;
