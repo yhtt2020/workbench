@@ -1037,9 +1037,6 @@ export default {
     // 监听当前社群变化
     communityInfo: {
       handler(newVal) {
-        // 默认选中桌面方法
-        // this.setCurrentDefaultDesk();
-        
         // 加载数据
         if(this.deskMember){
           this.loadCommunityCloud();
@@ -1049,20 +1046,16 @@ export default {
       deep: true,
     },
 
-    // 监听卡片变化
-    //  "currentDesk.cards": {
-    //   handler(newVal) {
-    //     console.log('查看this.editing',this.editing);
-    //     // if(this.editing){
-    //     //   console.log('测试-true情况下',newVal)
-    //     // }
-    //     // else {
-    //     //   console.log('测试-false情况下',newVal)
-    //     // }
-    //   },
-    //   deep: true,
-    //   immediate: true,
-    // },
+    // 监听id
+     "currentDeskId": {
+      handler(newVal) {
+        if(newVal === undefined){
+          this.setCurrentDefaultDesk();
+        }
+      },
+      deep: true,
+      immediate: true,
+    },
   },
 };
 </script>
