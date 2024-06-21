@@ -139,9 +139,9 @@ export const noticeStore = defineStore("notice", {
       message.success("已为您清空本地消息（不包含推送等网络消息）");
 
       // 做刷新操作
-      setTimeout(()=>{
+      setTimeout(() => {
         this.getNoticeList();
-      },500);
+      }, 500);
     },
 
     // 清空指定的历史消息通知
@@ -204,8 +204,6 @@ export const noticeStore = defineStore("notice", {
         return res.data.id;
       }
     },
-
-
   },
 
   persist: {

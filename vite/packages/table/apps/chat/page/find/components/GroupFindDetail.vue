@@ -96,7 +96,7 @@ const enterGroup = async (item) => {
 const handlerConversationList = (conversationID) => {
   chat.updateConversation(conversationID);
   router.push({ name: "chatMain" });
-  TUIConversationService.switchConversation(conversationID);
+  window.$TUIKit?.TUIConversation?.switchConversation(conversationID);
 };
 </script>
 

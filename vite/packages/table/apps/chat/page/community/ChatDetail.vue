@@ -66,7 +66,8 @@ const currentChatType = computed(() => {
   if(currentContact.value?.type === 'group' && currentContact.value?.groupID !== ""){
     if(list?.length > 0){
       const name = currentContact.value?.groupID;
-      TUIConversationService?.switchConversation(name);
+      window.$TUIKit?.TUIConversation?.switchConversation(name);
+      // TUIConversationService?.switchConversation(name);
     }
   }
   /**没有状态就默认选择会话列表中的第一个会话**/ 
@@ -74,7 +75,8 @@ const currentChatType = computed(() => {
     if(list?.length > 0){
       // 如果缓存中的会话是空的,就从会话列表中获取第一个会话;
       const currentID = list[0]?.conversationID;
-      TUIConversationService?.switchConversation(currentID);
+      window.$TUIKit?.TUIConversation?.switchConversation(currentID)
+      // TUIConversationService?.switchConversation(currentID);
     }
   }
   return currentContact.value?.type;

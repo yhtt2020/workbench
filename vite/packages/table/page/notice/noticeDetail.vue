@@ -23,7 +23,9 @@
                   :src="item?.content?.icon ? item?.content?.icon : item?.icon"
                 ></a-avatar>
                 <div class="font-16 font-400 xt-font xt-text ml-3">
-                  {{ item?.content?.title ? item?.content?.title : item?.title }}
+                  {{
+                    item?.content?.title ? item?.content?.title : item?.title
+                  }}
                 </div>
               </div>
               <xt-button
@@ -46,14 +48,18 @@
             <div class="font-16 font-400 xt-font xt-text mb-2">
               <NoticeBody :noticeContent="item"></NoticeBody>
             </div>
-            
+
             <!-- 查看按钮 -->
             <div class="flex justify-between">
               <div
                 class="flex items-center justify-center xt-font"
                 style="color: var(--disable-text)"
               >
-                {{ item?.content?.time ?  formatTime(item?.content?.time) : formatTime(item?.time)}}
+                {{
+                  item?.content?.time
+                    ? formatTime(item?.content?.time)
+                    : formatTime(item?.time)
+                }}
               </div>
               <div class="flex flex-end gap-2">
                 <UrlButtons
@@ -81,7 +87,6 @@ import { TUIConversationService } from "@tencentcloud/chat-uikit-engine";
 import EmptyStatus from "../../apps/chat/page/empty/EmptyStatus.vue";
 import UrlButtons from "./part/UrlButtons.vue";
 import NoticeBody from "./part/NoticeBody.vue";
-
 
 export default {
   props: ["list", "type"],
@@ -160,10 +165,12 @@ export default {
     ...mapActions(noticeStore, ["clearSpecifyHistory", "clear"]),
     // 消息详情查看
     reviewMessage(data) {
-      if(data?.content?.conversationID){
-        this.updateConversation(data?.content?.conversationID), 
-        this.$router.push({ name: "chatMain" });
-        TUIConversationService.switchConversation(data?.content?.conversationID);
+      if (data?.content?.conversationID) {
+        this.updateConversation(data?.content?.conversationID),
+          this.$router.push({ name: "chatMain" });
+        window.$TUIKit?.TUIConversation?.switchConversation(
+          data?.content?.conversationID
+        );
       }
       this.$emit("close");
     },

@@ -259,7 +259,7 @@ const create = async () => {
         const { group } = res.data;
         const conversationID = `GROUP${group.groupID}`;
         router.push({ name: "chatMain" });
-        TUIConversationService.switchConversation(conversationID);
+        window.$TUIKit?.TUIConversation?.switchConversation(conversationID);
         completeTask("Z0601");
         closeNext();
       }

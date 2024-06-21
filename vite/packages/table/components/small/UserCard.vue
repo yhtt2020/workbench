@@ -52,7 +52,7 @@
         </div>
       </div>
 
-      <div v-if=" Number(myUserInfo.uid) !== Number(uid) ">
+      <div v-if="Number(myUserInfo.uid) !== Number(uid)">
         <a-dropdown
           overlayClassName="xt-text"
           :overlayStyle="{
@@ -249,7 +249,7 @@ import { appStore } from "../../store";
 import FrameAvatar from "../avatar/FrameAvatar.vue";
 import FrameStoreWidget from "../team/FrameStoreWidget.vue";
 // import TencentCloudChat from "tim-js-sdk";
-import TencentCloudChat from '@tencentcloud/chat';
+import TencentCloudChat from "@tencentcloud/chat";
 import { message } from "ant-design-vue";
 import { useLogout } from "../../permission/user/useLogout";
 import { useEnv } from "../../permission/useEnv";
@@ -478,7 +478,7 @@ export default {
         const conversationID = `C2C${this.uid}`;
         /**补充当前群聊进入时的状态**/
         this.currentContact = { type: "group", groupID: conversationID };
-        TUIConversationService.switchConversation(conversationID);
+        window.$TUIKit?.TUIConversation?.switchConversation(conversationID);
         this.$emit("close");
       }
     },
@@ -487,7 +487,7 @@ export default {
         //不是本人，则需要验证好友关系
         console.log("需要检查");
         try {
-          let rs = await  window.$chat?.chat?.checkFriend({
+          let rs = await window.$chat?.chat?.checkFriend({
             userIDList: [String(this.uid)],
             type: TencentCloudChat.TYPES.SNS_CHECK_TYPE_SINGLE,
           });
