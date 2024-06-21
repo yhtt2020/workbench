@@ -48,7 +48,7 @@ export const pickPaperStore = defineStore('pickPaper',{
       cateHow:'',
     },
    },
-   currentID:null,
+   currentID:'m',
  }),
 
  actions:{
