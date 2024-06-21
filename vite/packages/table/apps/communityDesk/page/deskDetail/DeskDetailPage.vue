@@ -618,6 +618,7 @@ export default {
     // 成员情况下进行云端数据初始化加载
     if (this.deskMember) {
       this.loadCommunityCloud();
+      this.setCurrentDefaultDesk();
     }
     // 默认触发
     // this.setCurrentDefaultDesk();
@@ -744,14 +745,18 @@ export default {
     loadCommunityCloud() {
       this.setCurrentDeskNo(this.communityInfo.no);
       this.loadCommunityDeskAll();
-      this.setCurrentDefaultDesk();
     },
 
     // 设置当前桌面的默认状态
     setCurrentDefaultDesk() {
-      if(this.currentDeskId === undefined){
-        this.setCurrentDeskId(this.communityDeskList[0]?.id);
-      }
+      this.$nextTick(()=>{
+        console.log('查看-this.currentDeskId',this.currentDeskId);
+        if(this.currentDeskId === undefined){
+          console.log('测试',this.communityDeskList);
+          console.log('测试',this.communityDeskList[0]?.id);
+          this.setCurrentDeskId(this.communityDeskList[0]?.id);
+        }
+      })
 
       // // 过滤出与当前社群相关联的桌面列表
       // const filterDeskList = _.filter(this.deskList, (desk) => {
@@ -1049,6 +1054,7 @@ export default {
     // 监听id
      "currentDeskId": {
       handler(newVal) {
+        console.log('测试',newVal);
         if(newVal === undefined){
           this.setCurrentDefaultDesk();
         }
