@@ -50,50 +50,18 @@ export default defineComponent({
     },
   },
   mounted() {
-    window.addEventListener("focus", () => {
-      // console.log("进入页面,获取焦点");
+    window.onblur = () => {
+      this.setLockTimer();
+    };
+    window.onfocus = () => {
+      // console.log("获取焦点");
       // console.log(this.lockTimer);
-    window.addEventListener("focus", () => {
-      // console.log("进入页面,获取焦点");
-      // console.log(this.lockTimer);
+
       this.clearLockTimer();
-    });
-
-    window.addEventListener("blur", () => {
-      // console.log("离开页面,失去焦点");
-      // console.log(this.lockTimer);
-      this.setLockTimer();
-    });
-
-    // window.onblur = () => {
-    //   this.setLockTimer();
-    // };
-    // window.onfocus = () => {
-    //   console.log("获取焦点");
-
-    //   this.clearLockTimer();
-    //   console.log(this.lockTimer);
-    // };
-    });
-
-    window.addEventListener("blur", () => {
-      // console.log("离开页面,失去焦点");
-      // console.log(this.lockTimer);
-      this.setLockTimer();
-    });
-
-    // window.onblur = () => {
-    //   this.setLockTimer();
-    // };
-    // window.onfocus = () => {
-    //   console.log("获取焦点");
-
-    //   this.clearLockTimer();
-    //   console.log(this.lockTimer);
-    // };
+    };
   },
   methods: {
-    goPaperSettings()  {
+    goPaperSettings() {
       this.$router.push({
         name: "papersSetting",
       });
@@ -124,9 +92,6 @@ export default defineComponent({
     },
     setLockTimer() {
       this.lockTimeout = (this.settings.lockTimeout || defaultLockTime) - 1;
-      // console.log("测试", this.lockTimer !== null);
-
-      // console.log("测试", this.lockTimer !== null);
 
       if (this.settings.enable) {
         //只有启用了锁屏才会触发这个效果
@@ -134,14 +99,11 @@ export default defineComponent({
           this.showLockTip = true;
         }
         // 清除定时器操作
-        else if (this.lockTimer !== null) {
+        else if (this.lockTimer) {
           this.clearLockTimer();
         }
 
-
         this.lockTimer = setInterval(() => {
-          console.log("倒计时-setInterval-1000");
-
           // console.log("倒计时-setInterval-1000");
 
           if (!this.settings.enable) {

@@ -155,7 +155,7 @@ export class Notifications {
   // 消息弱提醒
   public messageWeak(msg: any, conversationID: any) {
     const { settings } = storeToRefs(appStore() as any);
-    // (noticeStore() as any).putMessageData(msg);
+    (noticeStore() as any).putMessageData(msg);
     toast.info(
       {
         component: MessageNoticeToast,
@@ -168,7 +168,9 @@ export class Notifications {
             (chatStore() as any).updateConversation(conversationID);
             (appStore() as any).hideNoticeEntry();
             router.push({ name: "chatMain" });
-            (window as any).$TUIKit?.TUIConversation?.switchConversation(conversationID);
+            (window as any).$TUIKit?.TUIConversation?.switchConversation(
+              conversationID
+            );
           },
         },
       },
@@ -188,7 +190,7 @@ export class Notifications {
   // 消息强提醒
   public messageStrong(msg: any, conversationID: any) {
     const { settings } = storeToRefs(appStore() as any);
-    // (noticeStore() as any).putMessageData(msg);
+    (noticeStore() as any).putMessageData(msg);
     toast.info(
       {
         component: SystemNoticeToast,
@@ -200,7 +202,9 @@ export class Notifications {
           systemExamine: function () {
             (chatStore() as any).updateConversation(conversationID);
             router.push({ name: "chatMain" });
-            (window as any).$TUIKit?.TUIConversation?.switchConversation(conversationID);
+            (window as any).$TUIKit?.TUIConversation?.switchConversation(
+              conversationID
+            );
           },
         },
       },
@@ -229,10 +233,8 @@ export class Notifications {
 
   // 社群消息通知
   public async receiveNotification(msg: any) {
-
-    console.log('测试',msg);
-    console.log('测试',Date.now());
-
+    console.log("测试", msg);
+    console.log("测试", Date.now());
 
     const { settings, userInfo } = storeToRefs(appStore() as any);
     const data = { ...msg.data[0] };
@@ -254,10 +256,10 @@ export class Notifications {
       global: router.currentRoute.value.fullPath === "/chatMain",
       // 提示音开关
       soundSwitch: settings.value.enablePlay,
-      // @全部消息
-      atMsg: data.atUserList.length !== 0,
-      // @我的消息
-      atMeMsg: data.atUserList.includes(String(userInfo.value.uid)),
+      // @消息
+      atMsg:
+        data.atUserList.length !== 0 ||
+        data.atUserList.includes(String(userInfo.value.uid)),
       // 消息免打扰
       msgMute: muteVisible === "AcceptAndNotify",
       // 当前会话
@@ -274,29 +276,35 @@ export class Notifications {
        * 好友、群聊
        * config.global 为true是局部,false是全局
        * config.currentConversation 为true是当前所在会话,false是非当前所在会话中
-       * config.atMeMsg config.atMsg 为true是@的消息, false则相反
+       * config.atMsg 为true是@的消息, false则相反
        * **/
       if (isText) {
         if (config.global) {
           if (!config.currentConversation) {
-            if (config.atMeMsg || config.atMsg) {
+            if (config.atMsg) {
               handleMsgSound(config, "strong");
             } else {
               handleMsgSound(config, "weak");
             }
           }
-        } else {
+        }
+
+        // 获取提示通知文字信息
+        else {
           // 获取提示通知文字信息
           const rs = await handleMsgContent(data);
-          // @我的  @所有人
-          if (config.atMeMsg || config.atMsg) {
+          // @消息
+          if (config.atMsg) {
             // 提示音开关是否开启
             if (config.soundSwitch) {
               if (config.msgMute) {
                 this.messageStrong(rs, data.conversationID);
               }
             }
-          } else {
+          }
+
+          // 其他消息提示
+          else {
             // 提示音开关是否开启
             if (config.soundSwitch) {
               if (config.msgMute) {
@@ -305,10 +313,11 @@ export class Notifications {
             }
           }
         }
-      } else {
-        /**
-         * 除纯文本之外的消息通知,
-         * **/
+      }
+
+      // 除纯文本之外的消息提示
+      else {
+        // 群聊系统消息通知
         if (data?.payload?.hasOwnProperty("operationType")) {
           // 获取群聊系统消息通知内容
           const systemRs = await handlerSystemMsg(data);
@@ -317,7 +326,10 @@ export class Notifications {
               this.messageWeak(systemRs, data.conversationID);
             }
           }
-        } else if (data?.payload?.hasOwnProperty("extension")) {
+        }
+
+        // 创建群聊的系统消息通知
+        else if (data?.payload?.hasOwnProperty("extension")) {
           // 获取群聊系统消息通知内容
           const systemRs = await handlerSystemMsg(data);
           if (config.soundSwitch) {
@@ -325,7 +337,10 @@ export class Notifications {
               this.messageWeak(systemRs, data.conversationID);
             }
           }
-        } else {
+        }
+
+        // 文件之类的消息通知
+        else {
           // 局部
           if (config.global) {
             // 非当前会话
@@ -336,7 +351,10 @@ export class Notifications {
                 }
               }
             }
-          } else {
+          }
+
+          // 全局
+          else {
             // 获取文件类型的消息通知文本
             const fileRs = await handlerMesFileContent(data);
             if (config.soundSwitch) {
@@ -348,7 +366,6 @@ export class Notifications {
         }
       }
     }
-    
   }
 }
 
@@ -367,7 +384,10 @@ function handleMsgSound(config: any, type: any) {
         strongEl.play();
       }
     }
-  } else if (type === "weak") {
+  }
+
+  // 弱提示
+  else if (type === "weak") {
     if (config.soundSwitch) {
       if (config.msgMute) {
         const playElement: HTMLAudioElement = createSoundElement();
