@@ -155,7 +155,7 @@ export class Notifications {
   // 消息弱提醒
   public messageWeak(msg: any, conversationID: any) {
     const { settings } = storeToRefs(appStore() as any);
-    (noticeStore() as any).putMessageData(msg);
+    // (noticeStore() as any).putMessageData(msg);
     toast.info(
       {
         component: MessageNoticeToast,
@@ -168,7 +168,7 @@ export class Notifications {
             (chatStore() as any).updateConversation(conversationID);
             (appStore() as any).hideNoticeEntry();
             router.push({ name: "chatMain" });
-            TUIConversationService.switchConversation(conversationID);
+            (window as any).$TUIKit?.TUIConversation?.switchConversation(conversationID);
           },
         },
       },
@@ -188,7 +188,7 @@ export class Notifications {
   // 消息强提醒
   public messageStrong(msg: any, conversationID: any) {
     const { settings } = storeToRefs(appStore() as any);
-    (noticeStore() as any).putMessageData(msg);
+    // (noticeStore() as any).putMessageData(msg);
     toast.info(
       {
         component: SystemNoticeToast,
@@ -200,7 +200,7 @@ export class Notifications {
           systemExamine: function () {
             (chatStore() as any).updateConversation(conversationID);
             router.push({ name: "chatMain" });
-            TUIConversationService.switchConversation(conversationID);
+            (window as any).$TUIKit?.TUIConversation?.switchConversation(conversationID);
           },
         },
       },
@@ -231,6 +231,8 @@ export class Notifications {
   public async receiveNotification(msg: any) {
 
     console.log('测试',msg);
+    console.log('测试',Date.now());
+
 
     const { settings, userInfo } = storeToRefs(appStore() as any);
     const data = { ...msg.data[0] };
@@ -313,8 +315,6 @@ export class Notifications {
           if (config.soundSwitch) {
             if (config.msgMute) {
               this.messageWeak(systemRs, data.conversationID);
-            } else {
-              this.messageWeak(systemRs, data.conversationID);
             }
           }
         } else if (data?.payload?.hasOwnProperty("extension")) {
@@ -322,8 +322,6 @@ export class Notifications {
           const systemRs = await handlerSystemMsg(data);
           if (config.soundSwitch) {
             if (config.msgMute) {
-              this.messageWeak(systemRs, data.conversationID);
-            } else {
               this.messageWeak(systemRs, data.conversationID);
             }
           }
@@ -350,6 +348,7 @@ export class Notifications {
         }
       }
     }
+    
   }
 }
 

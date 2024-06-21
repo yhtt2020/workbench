@@ -21,8 +21,6 @@
       v-model:currentDeskId="communityDeskMemoryId"
       @changeCommunityDesk="handlerCommunityMemory"
     />
-
-    
   </div>
   <!-- 检测到用户头像为默认头像时触发用户中心个人信息修改弹窗 -->
   <div
@@ -98,7 +96,7 @@ import { usePermissionStore } from "../permission/store";
 import { useUpdateUserInfo } from "../permission/user/useUserPermit";
 import cache from "../components/card/hooks/cache";
 // import { communityDeskStore } from "../apps/communityDesk/store/communityDeskStore";
-import {communityNavStore} from "../components/bottomPanel/store/communityNavStore";
+import { communityNavStore } from "../components/bottomPanel/store/communityNavStore";
 
 import { isMain } from "../js/common/screenUtils";
 // 检查当前网络状态
@@ -131,7 +129,7 @@ if (usePlat("client")) {
 
 export default {
   name: "Home",
-  
+
   data() {
     return {
       visibleAdd: false,
@@ -299,9 +297,9 @@ export default {
       return this.appSettings.isCommunity;
     },
     // 实时读取社群桌面记忆id
-    communityDeskMemoryId(){
-      const communityNo = this.currentCommunity?.item.no
-      if(communityNo !== 1){
+    communityDeskMemoryId() {
+      const communityNo = this.currentCommunity?.item.no;
+      if (communityNo !== 1) {
         return this.communityDeskMemory[communityNo];
       }
     },
@@ -361,7 +359,7 @@ export default {
     // 监听群聊消息全局接收
     window.$chat?.chat?.on(
       window.$chat.EVENT.MESSAGE_RECEIVED,
-      groupOnMessageReceived
+      _.debounce(groupOnMessageReceived, 500)
     );
   },
   created() {
@@ -388,6 +386,7 @@ export default {
     if (this.reserveTimer) {
       clearInterval(this.reserveTimer);
     }
+    // window.$chat?.chat?.off(window.$chat.EVENT.MESSAGE_RECEIVED);
   },
   methods: {
     /**
@@ -466,8 +465,8 @@ export default {
       }
     },
     // 记录社群桌面存储
-    handlerCommunityMemory(p){
-     this.communityDeskMemory[p.no] = p.id;
+    handlerCommunityMemory(p) {
+      this.communityDeskMemory[p.no] = p.id;
     },
 
     // 覆写当前工作台状态
