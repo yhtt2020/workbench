@@ -183,7 +183,20 @@ const handleCurrentMenu = () => {
     }
   }
   else if(hasRole.value){
+    if(window.$currentEnv() !== 'online'){
+    window.$ui.confirm("登录提示", "目前处于游客模式，请登录后体验完整功能。", {
+      ok: () => {
+        loginVisible.value = true;
+      },
+      okText: "立即登录",
+      noText: "暂不登录",
+      okButtonWidth: "95",
+      noButtonWidth: "95",
+    });
+  }
+  else if(hasRole.value){
     emit("currentClick", item);
+  }
   }
 };
 
