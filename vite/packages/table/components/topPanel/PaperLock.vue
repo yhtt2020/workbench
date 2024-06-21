@@ -36,7 +36,9 @@ export default defineComponent({
             t += "0";
           }
           t += min + "分";
+          t += min + "分";
           if (sec < 10) {
+            t += "0";
             t += "0";
           }
           t += sec.toFixed(0) + "秒";
@@ -48,6 +50,9 @@ export default defineComponent({
     },
   },
   mounted() {
+    window.addEventListener("focus", () => {
+      // console.log("进入页面,获取焦点");
+      // console.log(this.lockTimer);
     window.addEventListener("focus", () => {
       // console.log("进入页面,获取焦点");
       // console.log(this.lockTimer);
@@ -69,9 +74,26 @@ export default defineComponent({
     //   this.clearLockTimer();
     //   console.log(this.lockTimer);
     // };
+    });
+
+    window.addEventListener("blur", () => {
+      // console.log("离开页面,失去焦点");
+      // console.log(this.lockTimer);
+      this.setLockTimer();
+    });
+
+    // window.onblur = () => {
+    //   this.setLockTimer();
+    // };
+    // window.onfocus = () => {
+    //   console.log("获取焦点");
+
+    //   this.clearLockTimer();
+    //   console.log(this.lockTimer);
+    // };
   },
   methods: {
-    goPaperSettings() {
+    goPaperSettings()  {
       this.$router.push({
         name: "papersSetting",
       });
@@ -88,9 +110,22 @@ export default defineComponent({
           this.showLockTip = false;
         }
       }, 200);
+      // console.log("清理掉锁屏倒计时");
+      setTimeout(() => {
+        // console.log("倒计时-setTimeout-1000");
+
+        if (this.lockTimer) {
+          clearInterval(this.lockTimer);
+          this.lockTimer = null;
+          this.lockTimeout = this.settings.lockTimeout;
+          this.showLockTip = false;
+        }
+      }, 200);
     },
     setLockTimer() {
       this.lockTimeout = (this.settings.lockTimeout || defaultLockTime) - 1;
+      // console.log("测试", this.lockTimer !== null);
+
       // console.log("测试", this.lockTimer !== null);
 
       if (this.settings.enable) {
@@ -103,8 +138,11 @@ export default defineComponent({
           this.clearLockTimer();
         }
 
+
         this.lockTimer = setInterval(() => {
           console.log("倒计时-setInterval-1000");
+
+          // console.log("倒计时-setInterval-1000");
 
           if (!this.settings.enable) {
             //如果发现被禁用了，则直接取消
