@@ -168,7 +168,7 @@ const getCommunityByNo = (no: any) => {
       } else {
         /**当前社群存在逻辑**/
         currentPageExist.value = false;
-        const myIndex = _.findIndex(myCommunity.value, (item: any) => {
+        const myIndex = (_ as any).findIndex(myCommunity.value, (item: any) => {
           return Number(item?.communityInfo?.no) === Number(no);
         });
         if (myIndex === -1) {
@@ -188,6 +188,7 @@ const getCommunityByNo = (no: any) => {
           };
           // console.log('离线状态',option);
           chatCommunity.loadCurrentCommunity(option)
+          chatCommunity.getCommunityTree(no);
           // myCommunity.value.push(option);
         }
       }

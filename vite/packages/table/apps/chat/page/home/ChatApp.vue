@@ -367,10 +367,10 @@ onMounted(() => {
   if (window.$currentEnv() === "online") {
     chatCommunity.getMyCommunity();
   }
-  proxy.$bus.on("getChatUnread", (data) => {
-    console.log("获取未读消息数", data);
-    currentData.value.unread = data;
-  });
+  // proxy.$bus.on("getChatUnread", (data) => {
+  //   // console.log("获取未读消息数", data);
+  //   // currentData.value.unread = data;
+  // });
 });
 </script>
 
