@@ -39,16 +39,43 @@
         >
           <aside class="left">
             <!-- 将conversation.getAvatar()替换成conversation.groupProfile.avatar来实现真实图片展示,从而达到demo图片的替换  -->
-  
+
             <!-- conversation?.type === 'GROUP'是否为群聊,
               群聊走conversation?.groupProfile?.avatar
               好友走conversation?.userProfile?.avatar
               来处理IM自定义的头像
                :borderRadius="conversation?.type === 'GROUP' ? '5px':'50%'"
                群聊是正方形,好友是圆形 -->
-  
+
+            <!-- xt-mix-icon是渲染通过公告图标选择器进行图标选择的渲染组件 -->
+
+            <xt-mix-icon
+              v-if="
+                retrieveIcon(
+                  conversation?.type === 'GROUP'
+                    ? conversation?.groupProfile?.avatar
+                    : conversation?.userProfile?.avatar
+                )
+              "
+              :icon="
+                conversation?.type === 'GROUP'
+                  ? conversation?.groupProfile?.avatar
+                  : conversation?.userProfile?.avatar
+              "
+              :type="
+                communityIconType(
+                  conversation?.type === 'GROUP'
+                    ? conversation?.groupProfile?.avatar
+                    : conversation?.userProfile?.avatar
+                )
+              "
+              class="mr-2"
+              size="30"
+            />
+
             <Avatar
               useSkeletonAnimation
+              v-else
               :url="
                 conversation?.type === 'GROUP'
                   ? conversation?.groupProfile?.avatar
@@ -57,6 +84,7 @@
               size="30px"
               :borderRadius="conversation?.type === 'GROUP' ? '5px' : '50%'"
             />
+
             <div
               v-if="userOnlineStatusMap && isShowUserOnlineStatus(conversation)"
               :class="[
@@ -71,6 +99,7 @@
                   : 'online-status-offline',
               ]"
             />
+
             <span
               v-if="conversation.unreadCount > 0 && !conversation.isMuted"
               class="num"
@@ -116,10 +145,12 @@
               </div>
             </div>
             <div class="content-footer">
-              <span class="time">{{ conversation.getLastMessage("time") }}</span>
+              <span class="time">{{
+                conversation.getLastMessage("time")
+              }}</span>
               <!-- IM的UI图标组件 -->
               <!-- <Icon v-if="conversation.isMuted" :file="muteIcon" /> -->
-  
+
               <!-- 新版替换的图标组件 -->
               <xt-ify-icon
                 v-if="conversation.isMuted"
@@ -129,7 +160,7 @@
               />
             </div>
           </div>
-  
+
           <!-- 新增置顶标记图标 -->
           <div class="isPined-icon" v-if="conversation.isPinned"></div>
         </div>
@@ -158,6 +189,9 @@ import muteIcon from "../../../assets/icon/mute.svg";
 import SessionEmpty from "../../../../chat/page/empty/SessionEmpty.vue";
 
 import { isPC, isH5, isUniFrameWork, isMobile } from "../../../utils/env";
+
+// 处理icon图标颜色渲染
+import { communityIconType } from "../../../../communityDesk/hooks/deskCreateMethod";
 
 interface IUserStatus {
   statusType: number;
@@ -373,6 +407,11 @@ const text = (conversation: any) => {
     return "";
   }
 };
+
+// 调整公告图标作为头像的转换
+function retrieveIcon(url) {
+  return url?.includes("color=#");
+}
 
 // 暴露给父组件，当监听到滑动事件时关闭actionsMenu
 defineExpose({ closeChildren: closeConversationActionMenu });
