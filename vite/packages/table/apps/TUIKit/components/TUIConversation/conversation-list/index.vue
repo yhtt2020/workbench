@@ -409,7 +409,7 @@ const text = (conversation: any) => {
 };
 
 // 调整公告图标作为头像的转换
-function retrieveIcon(url) {
+function retrieveIcon(url:any) {
   return url?.includes("color=#");
 }
 
