@@ -10,7 +10,8 @@
           >
             <span class="mr-1">ID:</span>{{ props.forumId }}
           </div>
-          <div class="flex w-[200px] h-[40px] justify-center xt-bg rounded-lg">
+
+          <div class="flex w-[200px] h-[40px] justify-center xt-bg rounded-lg max-size">
             <div
               v-for="(item, index) in menuList"
               :key="index"
@@ -22,6 +23,32 @@
               {{ item.name }}
             </div>
           </div>
+
+          <div class="xt-bg w-[80px] min-size h-[40px] text-center ml-3 leading-10 rounded-lg font-16" style="display: none;">
+            <a-dropdown
+              trigger="click"
+              placement="bottom"
+              overlayStyle="background-color: var(--primary-bg); padding-left:3px ;padding-right:3px; width: 100px;"
+            >
+              <span class="ant-dropdown-link" @click.prevent>
+                {{ menuList[currentIndex].name }}
+                <DownOutlined class="text-sm" />
+              </span>
+              <template #overlay>
+                <a-menu class="text-center xt-bg">
+                  <a-menu-item
+                    v-for="(item, index) in menuList"
+                    :key="index"
+                    @click="setCurrentIndex(index)"
+                  >
+                    <span class="text-center xt-text">{{ item.name }}</span>
+                  </a-menu-item>
+                </a-menu>
+              </template>
+            </a-dropdown>
+          </div>
+
+
           <div
             class="xt-bg w-[115px] h-[40px] text-center ml-3 leading-10 rounded-lg font-16"
             style="cursor: pointer"
@@ -100,12 +127,14 @@
           :forumId="props.forumId"
         />
       </div>
+
       <a-spin
         tip="Loading..."
         v-if="refreshFlag"
         size="large"
         style="margin-top: 28%"
       ></a-spin>
+
       <div class="flex justify-center flex-auto" style="height: 0" v-else>
         <!-- 左侧卡片区域 -->
         <vue-custom-scrollbar
@@ -368,7 +397,7 @@ onUpdated(() => {
 });
 </script>
 <style lang='scss' scoped>
-@media screen and (max-width: 1200px) {
+@media screen and (max-width:940px) {
   .thread-list {
     width: 100% !important;
     margin-left: 10px;
@@ -379,8 +408,16 @@ onUpdated(() => {
     width: 100% !important;
     margin-right: 10px;
   }
+
+  .max-size{
+     display: none;
+  }
+  .min-size{
+    display: block !important;
+  }
+
   /**
-    .detail-visible {
+  .detail-visible {
     display: none;
   }
   **/
