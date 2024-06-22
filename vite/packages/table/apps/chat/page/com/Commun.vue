@@ -1,169 +1,171 @@
 <!-- 版块首页 -->
 <template>
-  <div @resize="updateScroller" class="container flex flex-col xt-text">
-    <div class="top-bar">
-      <div class="left shrink h-[40px] flex">
-        <div
-          class="h-[40px] xt-bg rounded-lg text-center font-16 mr-3 xt-text-2 pl-1 pr-1"
-          style="line-height: 40px"
-        >
-          <span class="mr-1">ID:</span>{{ props.forumId }}
-        </div>
-        <div class="flex w-[200px] h-[40px] justify-center xt-bg rounded-lg">
+  <div class="flex w-full h-full px-4">
+    <div @resize="updateScroller" class="container flex flex-col xt-text">
+      <div class="top-bar">
+        <div class="left shrink h-[40px] flex">
           <div
-            v-for="(item, index) in menuList"
-            :key="index"
-            class="w-[64px] h-[32px] mt-1 mb-1 text-center leading-8 font-16"
-            :class="[{ action: currentIndex == index }]"
-            style="cursor: pointer"
-            @click="setCurrentIndex(index)"
+            class="h-[40px] xt-bg rounded-lg text-center font-16 mr-3 xt-text-2 pl-1 pr-1"
+            style="line-height: 40px"
           >
-            {{ item.name }}
+            <span class="mr-1">ID:</span>{{ props.forumId }}
+          </div>
+          <div class="flex w-[200px] h-[40px] justify-center xt-bg rounded-lg">
+            <div
+              v-for="(item, index) in menuList"
+              :key="index"
+              class="w-[64px] h-[32px] mt-1 mb-1 text-center leading-8 font-16"
+              :class="[{ action: currentIndex == index }]"
+              style="cursor: pointer"
+              @click="setCurrentIndex(index)"
+            >
+              {{ item.name }}
+            </div>
+          </div>
+          <div
+            class="xt-bg w-[115px] h-[40px] text-center ml-3 leading-10 rounded-lg font-16"
+            style="cursor: pointer"
+          >
+            <a-dropdown
+              trigger="click"
+              placement="bottom"
+              overlayStyle="background-color: var(--primary-bg); padding-left:3px ;padding-right:3px; width: 100px;"
+            >
+              <span class="ant-dropdown-link" @click.prevent>
+                {{ checkMenuList[checkMenuCurrentIndex].type }}
+                <DownOutlined class="text-sm" />
+              </span>
+              <template #overlay>
+                <a-menu class="text-center xt-bg">
+                  <a-menu-item
+                    v-for="(item, index) in checkMenuList"
+                    :key="index"
+                    @click="handleMenuItemClick(index)"
+                  >
+                    <span class="text-center xt-text">{{ item.type }}</span>
+                  </a-menu-item>
+                </a-menu>
+              </template>
+            </a-dropdown>
           </div>
         </div>
-        <div
-          class="xt-bg w-[115px] h-[40px] text-center ml-3 leading-10 rounded-lg font-16"
-          style="cursor: pointer"
-        >
-          <a-dropdown
-            trigger="click"
-            placement="bottom"
-            overlayStyle="background-color: var(--primary-bg); padding-left:3px ;padding-right:3px; width: 100px;"
-          >
-            <span class="ant-dropdown-link" @click.prevent>
-              {{ checkMenuList[checkMenuCurrentIndex].type }}
-              <DownOutlined class="text-sm" />
-            </span>
-            <template #overlay>
-              <a-menu class="text-center xt-bg">
-                <a-menu-item
-                  v-for="(item, index) in checkMenuList"
-                  :key="index"
-                  @click="handleMenuItemClick(index)"
-                >
-                  <span class="text-center xt-text">{{ item.type }}</span>
-                </a-menu-item>
-              </a-menu>
-            </template>
-          </a-dropdown>
-        </div>
-      </div>
-      <div class="flex mr-6 right">
-        <xt-button
-          type="primary"
-          style="
-            color: var(--active-bg);
-            width: 83px;
-            height: 40px;
-            background: rgba(80, 139, 254, 0.2);
-          "
-          @click="visibleModal"
-        >
-          <Icon
-            class="pr-1 text-xl xt-theme-text"
-            style="font-size: 22px; vertical-align: sub; margin-right: 6px"
-            icon="akar-icons:circle-plus-fill"
-          />发布
-        </xt-button>
-        <a-tooltip title="刷新" placement="bottom">
+        <div class="flex right">
           <xt-button
-            class="ml-3 border-0 rounded-md xt-bg pointer"
-            @click="refreshPost"
-            style="flex-shrink: 0; width: 40px; height: 40px"
+            type="primary"
+            style="
+              color: var(--active-bg);
+              width: 83px;
+              height: 40px;
+              background: rgba(80, 139, 254, 0.2);
+            "
+            @click="visibleModal"
           >
             <Icon
-              class="text-lg xt-text"
-              style="vertical-align: sub"
-              icon="akar-icons:arrow-clockwise"
-            />
+              class="pr-1 text-xl xt-theme-text"
+              style="font-size: 22px; vertical-align: sub; margin-right: 6px"
+              icon="akar-icons:circle-plus-fill"
+            />发布
           </xt-button>
-        </a-tooltip>
-        <a-tooltip title="前往元社区" placement="bottom">
-          <xt-button
-            class="ml-3 border-0 rounded-md xt-bg pointer"
-            @click="goYuan"
-            style="flex-shrink: 0; width: 40px; height: 40px"
-          >
-            <Icon
-              class="text-lg xt-text"
-              style="vertical-align: sub"
-              icon="majesticons:open"
-            />
-          </xt-button>
-        </a-tooltip>
-      </div>
-      <publishModal
-        v-if="showPublishModal"
-        :showPublishModal="showPublishModal"
-        @handleOk="modalVisible"
-        :forumId="props.forumId"
-      />
-    </div>
-    <a-spin
-      tip="Loading..."
-      v-if="refreshFlag"
-      size="large"
-      style="margin-top: 28%"
-    ></a-spin>
-    <div class="flex justify-center flex-auto" style="height: 0" v-else>
-      <!-- 左侧卡片区域 -->
-      <vue-custom-scrollbar
-        ref="threadListRef"
-        :key="current"
-        :class="{ 'detail-visible': detailVisible }"
-        class="w-full thread-list"
-        :settings="settingsScroller"
-        style="height: 100%; overflow: hidden; flex-shrink: 0"
-        :style="{ width: detailVisible ? '40%' : '70%' }"
-      >
-        <div class="flex justify-center content">
-          <!-- 循环渲染多个 ComCard -->
-          <a-empty
-            v-if="comCards.list?.length === 0"
-            description="暂无内容"
-            image="/img/test/load-ail.png"
-            style="margin-top: 30%"
-          ></a-empty>
-          <template v-else>
-            <ComCard
-              v-for="(card, index) in comCards.list"
-              :key="index"
-              :cardData="card"
-              @click="showDetail(index)"
-              :detailVisible="detailVisible"
-              class="xt-bg"
-              :style="{
-                backgroundColor:
-                  selectedIndex === index
-                    ? 'var(--active-secondary-bg) !important'
-                    : 'var(--primary-bg) !important',
-                flex: 1,
-              }"
+          <a-tooltip title="刷新" placement="bottom">
+            <xt-button
+              class="ml-3 border-0 rounded-md xt-bg pointer"
+              @click="refreshPost"
+              style="flex-shrink: 0; width: 40px; height: 40px"
             >
-            </ComCard>
-            <a-pagination
-              v-model:current="current"
-              :total="totalPost"
-              simple
-              @change="changePage"
-              class="xt-text-2"
-            />
-          </template>
+              <Icon
+                class="text-lg xt-text"
+                style="vertical-align: sub"
+                icon="akar-icons:arrow-clockwise"
+              />
+            </xt-button>
+          </a-tooltip>
+          <a-tooltip title="前往元社区" placement="bottom">
+            <xt-button
+              class="ml-3 border-0 rounded-md xt-bg pointer"
+              @click="goYuan"
+              style="flex-shrink: 0; width: 40px; height: 40px"
+            >
+              <Icon
+                class="text-lg xt-text"
+                style="vertical-align: sub"
+                icon="majesticons:open"
+              />
+            </xt-button>
+          </a-tooltip>
         </div>
-      </vue-custom-scrollbar>
-      <!-- 右侧详情区域 -->
-      <vue-custom-scrollbar
-        class="ml-2 rounded-lg thread-detail xt-bg"
-        :key="selectedIndex"
-        v-if="detailVisible"
-        :settings="settingsScroller"
-        style="height: 100%"
-        :style="{ width: detailVisible ? '55%' : '40%' }"
-      >
-        <div class="h-full detail" v-if="detailVisible">
-          <DetailCard :cardData="detailText" @closeDetail="closeDetail" />
-        </div>
-      </vue-custom-scrollbar>
+        <publishModal
+          v-if="showPublishModal"
+          :showPublishModal="showPublishModal"
+          @handleOk="modalVisible"
+          :forumId="props.forumId"
+        />
+      </div>
+      <a-spin
+        tip="Loading..."
+        v-if="refreshFlag"
+        size="large"
+        style="margin-top: 28%"
+      ></a-spin>
+      <div class="flex justify-center flex-auto" style="height: 0" v-else>
+        <!-- 左侧卡片区域 -->
+        <vue-custom-scrollbar
+          ref="threadListRef"
+          :key="current"
+          :class="{ 'detail-visible': detailVisible }"
+          class="w-full thread-list"
+          :settings="settingsScroller"
+          style="height: 100%; overflow: hidden; flex-shrink: 0"
+          :style="{ width: detailVisible ? '40%' : '70%' }"
+        >
+          <div class="flex justify-center content">
+            <!-- 循环渲染多个 ComCard -->
+            <a-empty
+              v-if="comCards.list?.length === 0"
+              description="暂无内容"
+              image="/img/test/load-ail.png"
+              style="margin-top: 30%"
+            ></a-empty>
+            <template v-else>
+              <ComCard
+                v-for="(card, index) in comCards.list"
+                :key="index"
+                :cardData="card"
+                @click="showDetail(index)"
+                :detailVisible="detailVisible"
+                class="xt-bg"
+                :style="{
+                  backgroundColor:
+                    selectedIndex === index
+                      ? 'var(--active-secondary-bg) !important'
+                      : 'var(--primary-bg) !important',
+                  flex: 1,
+                }"
+              >
+              </ComCard>
+              <a-pagination
+                v-model:current="current"
+                :total="totalPost"
+                simple
+                @change="changePage"
+                class="xt-text-2"
+              />
+            </template>
+          </div>
+        </vue-custom-scrollbar>
+        <!-- 右侧详情区域 -->
+        <vue-custom-scrollbar
+          class="ml-2 rounded-lg thread-detail xt-bg"
+          :key="selectedIndex"
+          v-if="detailVisible"
+          :settings="settingsScroller"
+          style="height: 100%"
+          :style="{ width: detailVisible ? '55%' : '40%' }"
+        >
+          <div class="h-full detail" v-if="detailVisible">
+            <DetailCard :cardData="detailText" @closeDetail="closeDetail" />
+          </div>
+        </vue-custom-scrollbar>
+      </div>
     </div>
   </div>
 </template>
@@ -377,9 +379,11 @@ onUpdated(() => {
     width: 100% !important;
     margin-right: 10px;
   }
-  .detail-visible {
+  /**
+    .detail-visible {
     display: none;
   }
+  **/
 }
 .container {
   width: 100%;
@@ -389,8 +393,8 @@ onUpdated(() => {
     height: 40px;
     margin-top: 12px;
     margin-bottom: 12px;
-    margin-left: 12px;
-    // margin-right: 12px;
+    /**margin-left: 12px;**/
+    /**margin-right: 12px;**/ 
     display: flex;
     justify-content: space-between;
     /**当屏幕最大宽度为767px**/
