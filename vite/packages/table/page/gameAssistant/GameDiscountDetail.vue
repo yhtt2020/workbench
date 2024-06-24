@@ -52,184 +52,15 @@
     >
       <div class="detail-container">
         <div v-if="loading"></div>
-        <WheelCastingUnit
-          :loading="loading"
-          v-else
-          :wheelList="wheelData"
-        ></WheelCastingUnit>
-        <div
-          class="flex flex-col min-width detail-bg ml-4 rounded-lg px-4 py-4"
-        >
-          <span
-            style="
-              font-size: 16px;
-              font-weight: 400;
-              color: var(--primary-text);
-            "
-          >
-            {{ discountDetail?.content }}
-          </span>
-          <div class="flex justify-between items-center mt-4">
-            <span
-              style="
-                font-size: 16px;
-                font-weight: 400;
-                color: var(--secondary-text);
-              "
-            >
-              发行日期
-            </span>
-            <span
-              style="
-                font-size: 16px;
-                font-weight: 400;
-                color: var(--primary-text);
-              "
-            >
-              {{ discountDetail?.IssueDate }}
-            </span>
+        <div class="top-detail flex" v-else>
+          <div class="wheelCastingUnit-container">
+            <WheelCastingUnit
+              :loading="loading"
+              :wheelList="wheelData"
+            />
           </div>
-          <div class="flex justify-between items-center mt-4">
-            <span
-              style="
-                font-size: 16px;
-                font-weight: 400;
-                color: var(--secondary-text);
-              "
-            >
-              发行商
-            </span>
-            <span
-              style="
-                font-size: 16px;
-                font-weight: 400;
-                color: var(--primary-text);
-              "
-            >
-              {{ discountDetail?.publisher }}
-            </span>
-          </div>
-          <div class="flex justify-between items-center mt-4">
-            <span
-              style="
-                font-size: 16px;
-                font-weight: 400;
-                color: var(--secondary-text);
-              "
-            >
-              开发商
-            </span>
-            <span
-              style="
-                font-size: 16px;
-                font-weight: 400;
-                color: var(--primary-text);
-              "
-            >
-              {{ discountDetail?.developers }}
-            </span>
-          </div>
-          <span
-            class="w-1/3 mt-1"
-            style="
-              font-size: 16px;
-              font-weight: 400;
-              color: var(--secondary-text);
-            "
-          >
-            标签
-          </span>
-          <div class="flex items-center mt-1">
-            <span
-              v-for="item in discountDetail?.genres"
-              class="rounded-lg mr-1"
-              style="
-                background: rgba(255, 255, 255, 0.4);
-                padding: 2px 6px 1px 6px;
-              "
-            >
-              {{ item?.description }}
-            </span>
-          </div>
-          <span
-            class="mt-4 mb-3"
-            style="
-              font-size: 16px;
-              font-weight: 400;
-              color: var(--secondary-text);
-            "
-          >
-            语言
-          </span>
-          <span
-            style="
-              font-size: 16px;
-              font-weight: 400;
-              color: var(--secondary-text);
-            "
-          >
-            {{ discountDetail?.language }}
-          </span>
-          <div
-            style="padding: 12px 13px"
-            class="detail-bg flex rounded-lg items-center justify-between mt-6"
-          >
-            <div class="flex flex-col mt-1">
-              <span
-                style="
-                  font-size: 16px;
-                  font-weight: 400;
-                  color: var(--secondary-text);
-                "
-              >
-                价格
-              </span>
-              <span
-                style="
-                  font-size: 14px;
-                  max-width: 120px;
-                  font-weight: 400;
-                  color: var(--secondary-text);
-                "
-              >
-                特价促销！{{ acquisitionDate(exTime) }}截止
-              </span>
-            </div>
-            <div class="flex flex-col">
-              <span
-                class="line-through mr-2"
-                style="
-                  text-align: right;
-                  color: rgba(255, 255, 255, 0.4);
-                  font-size: 14px;
-                  font-weight: 400;
-                "
-              >
-                {{ discountDetail?.oldPrice }}
-              </span>
-              <div>
-                <span
-                  class="mr-2 rounded-lg oswald-font"
-                  style="
-                    color: var(--active-text);
-                    padding: 2px 4px 5px 4px;
-                    background: rgba(255, 77, 79, 1);
-                  "
-                >
-                  -{{ discountDetail?.percent }}%
-                </span>
-                <span
-                  class="oswald-font"
-                  style="
-                    font-size: 18px;
-                    color: rgba(255, 77, 79, 1);
-                    font-weight: 500;
-                  "
-                >
-                  {{ discountDetail?.newPrice }}
-                </span>
-              </div>
-            </div>
+          <div class="flex-1">
+            <DetailRightText :detailData="discountDetail" :detailTime="exTime"/>
           </div>
         </div>
       </div>
@@ -274,6 +105,7 @@ import { gameStrategyStore } from "../../store/gameStrategyStore";
 import WheelCastingUnit from "../../components/WheelCastingUnit.vue";
 import ShareToChat from "../../ui/chat/ShareToChat.vue";
 import GameDiscountTab from "./components/GameDiscountTab.vue";
+import DetailRightText from "./components/DetailRightText.vue";
 
 export default {
   name: "GameDiscountDetail",
@@ -282,6 +114,7 @@ export default {
     ShareToChat,
     GameDiscountTab,
     WheelCastingUnit,
+    DetailRightText,
   },
 
   props: {
@@ -456,6 +289,10 @@ export default {
   font-family: Oswald-SemiBold;
 }
 
+.wheelCastingUnit-container{
+  width: 600px !important;
+}
+
 @media screen and (max-width: 1224px) {
   #detail-name {
     max-width: 120px;
@@ -467,8 +304,18 @@ export default {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    justify-content: center !important;
   }
+
+  .top-detail {
+    flex-direction: row !important;
+    align-items: center !important;
+    max-width: 960px !important;
+  }
+
+  .wheelCastingUnit-container {
+    width: 600px !important;
+  }
+
   .min-width {
     max-width: 600px !important;
     margin: 24px 0 0 0 !important;
@@ -506,7 +353,6 @@ export default {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    justify-content: center !important;
   }
   .wheel-content {
     max-width: 500px !important;
@@ -533,6 +379,15 @@ export default {
         }
       }
     }
+  }
+  .top-detail {
+    flex-direction: column !important;
+    align-items: center !important;
+    max-width: 500px !important;
+  }
+
+  .wheelCastingUnit-container {
+    width: 500px !important;
   }
 }
 </style>

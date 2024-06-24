@@ -186,7 +186,6 @@ export default {
 
       // 进入详情页
       else {
-        console.log('测试',val);
         this.$bus.emit('enterDetail',val)
       }
     },
