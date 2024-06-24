@@ -73,7 +73,7 @@ const currentData = ref({
 })
 
 watchEffect(()=>{
-  console.log('查看',props.content,props.messageItem);
+  // console.log('查看',props.content,props.messageItem);
   currentData.value.data = {
     ...props.messageItem,
     ...props.content,
