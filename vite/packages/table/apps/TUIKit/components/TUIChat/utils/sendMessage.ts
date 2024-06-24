@@ -88,10 +88,12 @@ export const sendMessages = async (
       }
       enableSampleTaskStatus('sendMessage');
     } catch (error: any) {
+      // console.log('测试',error);
+      // error?.message
       Toast({
         message: sendMessageErrorCodeMap.get(error?.code)
           ? TUITranslateService.t(`TUIChat.${sendMessageErrorCodeMap.get(error.code) as string}`)
-          : error?.message,
+          : '你已经被禁言了',
         type: TOAST_TYPE.ERROR,
       });
       // 如果消息发送失败，且该消息为引用消息，清除引用消息信息

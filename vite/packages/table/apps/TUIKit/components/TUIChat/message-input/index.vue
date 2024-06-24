@@ -1,6 +1,11 @@
 <template>
   <div class="message-input-wrapper">
-    <div :class="['message-input-container', !isPC && 'message-input-container-h5']">
+    <div
+      :class="[
+        'message-input-container',
+        !isPC && 'message-input-container-h5',
+      ]"
+    >
       <MessageInputEditor
         ref="editor"
         :placeholder="props.placeholder"
@@ -14,10 +19,7 @@
         @onTyping="onTyping"
         @onAt="onAt"
       />
-      <MessageInputButton
-        v-if="!props.isMuted"
-        @sendMessage="sendMessage"
-      />
+      <MessageInputButton v-if="!props.isMuted" @sendMessage="sendMessage" />
       <MessageInputAt
         v-if="props.enableAt"
         ref="messageInputAtRef"
@@ -34,20 +36,22 @@ import {
   TUIStore,
   StoreName,
   IConversationModel,
-} from '@tencentcloud/chat-uikit-engine';
-import { ref } from '../../../adapter-vue';
-import MessageInputEditor from './message-input-editor.vue';
-import MessageInputAt from './message-input-at/index.vue';
-import MessageInputButton from './message-input-button.vue';
-import MessageInputQuote from './message-input-quote/index.vue';
-import { sendMessages, sendTyping } from '../utils/sendMessage';
-import { transformEmojiValueToKey } from '../utils/emojiList';
-import { isPC, isH5 } from '../../../utils/env';
+} from "@tencentcloud/chat-uikit-engine";
+import { ref } from "../../../adapter-vue";
+import MessageInputEditor from "./message-input-editor.vue";
+import MessageInputAt from "./message-input-at/index.vue";
+import MessageInputButton from "./message-input-button.vue";
+import MessageInputQuote from "./message-input-quote/index.vue";
+import { sendMessages, sendTyping } from "../utils/sendMessage";
+import { transformEmojiValueToKey } from "../utils/emojiList";
+import { isPC, isH5 } from "../../../utils/env";
+import { message } from "ant-design-vue";
+import * as sns from "../../../../../js/common/sns";
 
 const props = defineProps({
   placeholder: {
     type: String,
-    default: 'this is placeholder',
+    default: "this is placeholder",
   },
   isMuted: {
     type: Boolean,
@@ -55,7 +59,7 @@ const props = defineProps({
   },
   muteText: {
     type: String,
-    default: '',
+    default: "",
   },
   enableInput: {
     type: Boolean,
@@ -73,9 +77,15 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  mutedShow: {
+    type: Boolean,
+  },
+  currentGroupID: {
+    type: String,
+  },
 });
 
-const emit = defineEmits(['sendMessage', 'resetReplyOrReference', 'onTyping']);
+const emit = defineEmits(["sendMessage", "resetReplyOrReference", "onTyping"]);
 const editor = ref<InstanceType<typeof MessageInputEditor>>();
 const messageInputAtRef = ref<InstanceType<typeof MessageInputAt>>();
 const currentConversation = ref<IConversationModel>();
@@ -95,20 +105,43 @@ const onAt = (show: boolean) => {
 };
 
 const sendMessage = async () => {
-  const _editorContentList = editor.value?.getEditorContent();
-  if (!_editorContentList || !currentConversation.value) return;
-  const editorContentList = _editorContentList.map((editor: any) => {
-    if (editor.type === 'text') {
-      editor.payload.text = transformEmojiValueToKey(editor.payload.text);
-    }
-    return editor;
+  const tk = (window as any).$TUIKit?.TUIStore?.storeMap;
+  const friendArr = tk?.friend?.store?.friendList;
+  const ownerID = tk?.group?.store?.currentGroup?.ownerID;
+  const selfID = tk?.group?.store?.currentGroup?.selfInfo?.userID;
+  const memberVisible =
+    tk?.group?.store?.currentGroup?.selfInfo?.role === "member";
+  const found = friendArr.find((friend: any) => {
+    return Number(friend?.userID) === Number(ownerID);
   });
-  await sendMessages(
-    editorContentList,
-    currentConversation.value,
-  );
-  emit('sendMessage');
-  editor.value?.resetEditor();
+
+  // console.log("测试", tk?.group?.store?.currentGroup?.selfInfo?.role);
+
+  if (!found) {
+    message.info("当前群主和你不是好友,请先添加好友,暂时发送不了消息");
+    editor.value?.resetEditor();
+  }
+
+  // 被禁言
+  else if (props.mutedShow) {
+    if (memberVisible) {
+      message.error("您在当前群聊中被禁言了,暂时无法发送消息");
+      editor.value?.resetEditor();
+    }
+  } else {
+    const _editorContentList = editor.value?.getEditorContent();
+    if (!_editorContentList || !currentConversation.value) return;
+    const editorContentList = _editorContentList.map((editor: any) => {
+      if (editor.type === "text") {
+        editor.payload.text = transformEmojiValueToKey(editor.payload.text);
+      }
+      return editor;
+    });
+    await sendMessages(editorContentList, currentConversation.value);
+
+    emit("sendMessage");
+    editor.value?.resetEditor();
+  }
 };
 
 const insertEmoji = (emoji: any) => {
