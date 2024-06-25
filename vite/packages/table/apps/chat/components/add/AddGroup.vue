@@ -109,6 +109,7 @@ import TUIChatEngine, {
 import { message } from "ant-design-vue";
 import _ from "lodash-es";
 import { completeTask } from "../../../task/task";
+import { isTaskFinish } from "../../../task/utils";
 
 const data = ref({
   searchId: "",
@@ -189,15 +190,31 @@ const joinCurrentGroup = async (group) => {
       type: group?.type,
     };
     const res = await window.$chat?.chat.joinGroup(options);
-    if (res.data.status === "WaitAdminApproval") {
-      message.success("入群申请已发出,等待群主和管理员审核");
-    } else if (res.data.status === "JoinedSuccess") {
-      message.success("群聊添加成功");
-    } else if (res.data.status === "AlreadyInGroup") {
-      message.success("已经在群聊中");
+    switch (res?.data?.status) {
+      case "WaitAdminApproval":
+        message.success("入群申请已发出,等待群主和管理员审核");
+        // isTaskFinish("Z0603");
+        // console.log('测试-1',);
+        if (isTaskFinish("Z0603")) {
+          completeTask("Z0603");
+        }
+        closeAdd();
+        break;
+      case "JoinedSuccess":
+        message.success("群聊添加成功");
+        if (isTaskFinish("Z0603")) {
+          completeTask("Z0603");
+        }
+        closeAdd();
+        break;
+      case "AlreadyInGroup":
+        message.success("已经在群聊中");
+        if (isTaskFinish("Z0603")) {
+          completeTask("Z0603");
+        }
+        closeAdd();
+        break;
     }
-    completeTask("Z0601");
-    closeAdd();
   }
 };
 

@@ -142,6 +142,7 @@ export default {
               });
             });
         } else {
+          const url = `${getPreferenceUrl}?cc=cn&&l=cn`;
           sendRequest(url, {}, { localCache: true, localTtl: 60 * 12 * 60 })
             .then((rs) => {
               if (rs.status === 200) {
@@ -186,7 +187,7 @@ export default {
 
       // 进入详情页
       else {
-        this.$bus.emit('enterDetail',val)
+        this.$bus.emit("enterDetail", val);
       }
     },
   },

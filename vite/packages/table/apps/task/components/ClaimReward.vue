@@ -134,12 +134,12 @@ const taskLastGuide = () =>{
 
 const goTask = () => {
   // 完成主线第一章所有任务后的预告提示
-  if(currentTask.value.suf === 'M0201'){
+  if(currentTask.value?.suf === 'M0201'){
     rewardVisible.value = false;
     taskFirstGuide()
   }
   // 完成主线所有任务后的预告提示
-  else if(currentTask.value.suf === ''){
+  else if(currentTask.value?.suf === ''){
     rewardVisible.value = false;
     taskLastGuide();
   }
