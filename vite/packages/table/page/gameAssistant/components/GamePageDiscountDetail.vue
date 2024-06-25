@@ -1,8 +1,7 @@
-<!-- 游戏折扣详情页面 -->
 <template>
   <div
-    class="w-full h-full flex items-center justify-center"
     v-if="isLoading === true"
+    class="w-full h-full flex items-center justify-center"
   >
     <a-spin />
   </div>
@@ -16,66 +15,82 @@
     class="mt-3 px-3"
     style="height: calc(100vh - 16.5em)"
   >
-    <div class="steam-top-content w-full mb-4">
-      <template v-for="item in discountList?.slice(0, 2)">
-        <div
-          @click="enterDiscountDetail(item)"
-          class="steam-top-item rounded-lg flex pointer flex-col discount-bg"
-        >
-          <img
-            :src="item.header_image"
-            alt=""
-            class="rounded-t-lg"
-            style="width: 100%; height: 100%; object-fit: cover"
-          />
+    <div class="flex items-center justify-center flex-col w-full">
+      <!-- 顶部 -->
+      <div class="all-content-w mb-4 flex items-center justify-center">
+        <template v-for="item in discountList?.slice(0, 2)">
+          <div
+            class="top-item xt-bg rounded-lg pointer flex flex-col"
+            @click="enterDiscountDetail(item)"
+          >
+            <!-- 图片 -->
+            <img
+              :src="item.header_image"
+              alt=""
+              class="rounded-t-lg"
+              style="width: 100%; height: 100%; object-fit: cover"
+            />
 
-          <div class="p-2.5 name-text">{{ item.name }}</div>
+            <!-- 折扣游戏名称 -->
+            <span
+              class="p-2.5 font-18 xt-text"
+              style="font-family: PingFangSC-Semibold"
+            >
+              {{ item.name }}
+            </span>
 
-          <div class="px-2.5 mb-3" style="color: var(--secondary-text)">
-            优惠截止时间: {{ deadline(item.discount_expiration) }}
+            <div class="px-2.5 mb-3" style="color: var(--secondary-text)">
+              优惠截止时间: {{ deadline(item.discount_expiration) }}
+            </div>
+
+            <div class="px-2.5 flex items-center mb-3">
+              <span class="percent px-1 rounded-md">
+                -{{ item.discount_percent }}%
+              </span>
+              <span class="final-price ml-3">
+                {{ currencyFormat(item.final_price, item.currency) }}
+              </span>
+
+              <span class="line-through old-price ml-3">
+                {{ currencyFormat(item.original_price, item.currency) }}
+              </span>
+            </div>
           </div>
+        </template>
+      </div>
 
-          <div class="px-2.5 flex items-center mb-3">
-            <span class="percent px-1 rounded-md">
-              -{{ item.discount_percent }}%
-            </span>
-            <span class="final-price ml-3">
-              {{ currencyFormat(item.final_price, item.currency) }}
-            </span>
+      <!-- 底部 -->
+      <div class="all-content-w flex items-center justify-center">
+        <div class="bottom-container">
+          <template v-for="item in discountList?.slice(2)">
+            <div
+              class="xt-bg-2 bottom-item pointer rounded-lg flex flex-col"
+              @click="enterDiscountDetail(item)"
+            >
+              <!-- 游戏图片 -->
+              <img
+                :src="item.header_image"
+                alt=""
+                class="rounded-t-lg mb-3"
+                style="width: 100%; height: 100%; object-fit: cover"
+              />
 
-            <span class="line-through old-price ml-3">
-              {{ currencyFormat(item.original_price, item.currency) }}
-            </span>
-          </div>
+              <!-- 价格 -->
+              <div class="px-3 flex items-center mb-3">
+                <span class="percent-bottom px-1 rounded-md">
+                  -{{ item.discount_percent }}%
+                </span>
+                <span class="final-price ml-2">
+                  {{ currencyFormat(item.final_price, item.currency) }}
+                </span>
+                <span class="line-through old-price ml-2">
+                  {{ currencyFormat(item.original_price, item.currency) }}
+                </span>
+              </div>
+            </div>
+          </template>
         </div>
-      </template>
-    </div>
-
-    <div class="steam-bottom-content">
-      <template v-for="item in discountList?.slice(2)">
-        <div
-          @click="enterDiscountDetail(item)"
-          class="steam-bottom-item discount-bg pointer rounded-lg flex flex-col mr-2"
-        >
-          <img
-            :src="item.header_image"
-            alt=""
-            class="rounded-t-lg mb-3"
-            style="width: 100%; height: 100%; object-fit: cover"
-          />
-          <div class="px-3 flex items-center mb-3">
-            <span class="percent-bottom px-1 rounded-md">
-              -{{ item.discount_percent }}%
-            </span>
-            <span class="final-price ml-2">
-              {{ currencyFormat(item.final_price, item.currency) }}
-            </span>
-            <span class="line-through old-price ml-2">
-              {{ currencyFormat(item.original_price, item.currency) }}
-            </span>
-          </div>
-        </div>
-      </template>
+      </div>
     </div>
   </vue-custom-scrollbar>
 </template>
@@ -199,41 +214,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.place-name {
-  background: var(--primary-bg);
-  color: var(--primary-text);
-}
-.name-text {
-  font-family: PingFangSC-Semibold;
-  font-size: 18px;
-  color: var(--primary-text);
-  font-weight: 600;
-}
-.discount-bg {
-  background: var(--primary-bg);
-}
-
-//steam特惠内容区域
-.steam-top-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.steam-bottom-content {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-}
-
-.steam-top-item {
-  max-width: 484px;
-  margin-right: 12px;
-}
-.steam-bottom-item {
-  max-width: 236px;
-}
-
+/**数字样式**/
 .old-price {
   font-family: Oswald;
   font-size: 12px;
@@ -262,120 +243,119 @@ export default {
   max-width: 80px;
 }
 
-@media screen and (max-width: 840px) {
-  .steam-top-content {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    flex-direction: column !important;
-    margin-bottom: 0 !important;
+/**列表响应式**/
+.all-content {
+  &-w {
+    max-width: 950px !important;
+    flex-direction: row !important;
   }
-  .steam-bottom-content {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    flex-direction: column !important;
+
+  @media screen and (max-width: 840px) {
+    &-w {
+      width: calc(100% / 1);
+      flex-direction: column !important;
+    }
   }
-  .steam-top-item {
-    margin-bottom: 16px !important;
-    margin-right: 0 !important;
+
+  @media screen and (min-width: 841px) and (max-width: 1074px){
+    &-w {
+      width: calc(100% / 1);
+    }
   }
-  .steam-bottom-item {
+
+  @media screen and (min-width: 1141px) and (max-width: 1380px){
+    &-w {
+      width: calc(100% / 1);
+    }
+  }
+
+  @media screen and (min-width: 1381px) and (max-width: 1512px){
+    &-w {
+      width: calc(100% / 1);
+    }
+  }
+
+  @media screen and (min-width: 1512px){
+    &-w {
+      width: calc(100% / 1);
+    }
+  }
+}
+
+.top{
+  &-item {
     max-width: 484px !important;
-    margin-bottom: 16px;
-    margin-right: 0 !important;
+    margin-bottom: 0!important;
+  }
+  &-item:nth-of-type(1) {
+    margin-right: 16px !important;
+  }
+
+  @media screen and (max-width: 840px) {
+    &-item {
+      width: calc(100% / 1); 
+      margin-bottom: 16px !important;
+    }
+    &-item:nth-of-type(1) {
+      margin-right: 0 !important;
+    }
+    &-item:nth-of-type(2) {
+      margin-bottom:  0 !important;
+    }
+  }
+
+  @media screen and (min-width: 841px) and (max-width: 1074px) {
+    &-item {
+      width: calc(100% / 2) ;
+    }
+  }
+
+  @media screen and (min-width: 1141px) and (max-width: 1380px) {
+    &-item {
+      width: calc(100% / 1) ;
+    }
+  }
+
+  @media screen and (min-width: 1380px) {
+    &-item {
+      width: calc(100% / 1) ;
+    }
   }
 }
 
-@media screen and (min-width: 841px) and (max-width: 1074px) {
-  .steam-bottom-item {
-    width: calc(100% / 1);
-    margin-bottom: 16px !important;
+.bottom {
+  &-container {
+    display: grid !important;
+    grid-template-columns: repeat(
+      4,
+      1fr
+    ) !important; /* 指定每行显示四列，每列平均分配剩余空间 */
+    gap: 16px !important; /* 设置列与列之间的间隔 */
   }
-  .steam-bottom-content {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+
+  @media screen and (max-width: 840px) {
+    &-container {
+      display: flex !important;
+      align-items: center;
+      justify-content: center !important;
+      flex-direction: column !important;
+      width: 484px !important;
+    }
+    &-item {
+      width: 100% !important;
+    }
   }
-  .epic-container {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-  .steam-top-item {
-    width: calc(100% / 1);
+
+  @media screen and (min-width: 841px) and (max-width: 1074px) {
+    &-container {
+      display: grid !important;
+      grid-template-columns: repeat(
+        2,
+        1fr
+      ) !important; /* 指定每行显示四列，每列平均分配剩余空间 */
+      gap: 16px !important; /* 设置列与列之间的间隔 */
+    }
   }
 }
 
-@media screen and (min-width: 1075px) and (max-width: 1140px) {
-  .steam-bottom-item {
-    width: calc(100% / 2);
-    margin-bottom: 16px !important;
-  }
-  .steam-bottom-content {
-    display: flex !important;
-  }
-
-  .steam-top-item {
-    width: calc(100% / 1);
-  }
-}
-
-@media screen and (min-width: 1141px) and (max-width: 1380px) {
-  .steam-bottom-item {
-    width: calc(100% / 3);
-    margin-bottom: 16px !important;
-  }
-  .steam-bottom-content {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  .steam-top-item {
-    width: calc(100% / 1);
-  }
-}
-
-@media screen and (min-width: 1381px) and (max-width: 1512px) {
-  .steam-bottom-item {
-    width: calc(100% / 4.5);
-    margin-bottom: 16px !important;
-  }
-  .steam-bottom-content {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    flex-wrap: wrap !important;
-  }
-  .steam-top-item {
-    width: calc(100% / 1);
-  }
-}
-
-@media screen and (min-width: 1512px) {
-  .steam-bottom-content {
-    width: 1000px !important;
-    margin: 0 auto;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-  }
-  .steam-bottom-item {
-    margin-bottom: 16px !important;
-    width: calc(100% / 1);
-  }
-  .steam-top-item {
-    width: calc(100% / 1);
-  }
-  .steam-top-item {
-    width: calc(100% / 1);
-  }
-}
-
-::v-deep .ps__thumb-y {
-  display: none !important;
-}
 </style>
