@@ -13,8 +13,9 @@
     @touchend.stop
     :settings="settingsScroller"
     class="mt-3 px-3"
-    style="height: calc(100vh - 16.5em)"
+    style="height: calc(100vh - 15rem)"
   >
+    <div style="height: 16px"></div>
     <div class="flex items-center justify-center flex-col w-full">
       <!-- 顶部 -->
       <div class="all-content-w mb-4 flex items-center justify-center">
@@ -92,6 +93,7 @@
         </div>
       </div>
     </div>
+    <div style="height: 16px"></div>
   </vue-custom-scrollbar>
 </template>
 
@@ -257,35 +259,35 @@ export default {
     }
   }
 
-  @media screen and (min-width: 841px) and (max-width: 1074px){
+  @media screen and (min-width: 841px) and (max-width: 1074px) {
     &-w {
       width: calc(100% / 1);
     }
   }
 
-  @media screen and (min-width: 1141px) and (max-width: 1380px){
+  @media screen and (min-width: 1141px) and (max-width: 1380px) {
     &-w {
       width: calc(100% / 1);
     }
   }
 
-  @media screen and (min-width: 1381px) and (max-width: 1512px){
+  @media screen and (min-width: 1381px) and (max-width: 1512px) {
     &-w {
       width: calc(100% / 1);
     }
   }
 
-  @media screen and (min-width: 1512px){
+  @media screen and (min-width: 1512px) {
     &-w {
       width: calc(100% / 1);
     }
   }
 }
 
-.top{
+.top {
   &-item {
     max-width: 484px !important;
-    margin-bottom: 0!important;
+    margin-bottom: 0 !important;
   }
   &-item:nth-of-type(1) {
     margin-right: 16px !important;
@@ -293,32 +295,32 @@ export default {
 
   @media screen and (max-width: 840px) {
     &-item {
-      width: calc(100% / 1); 
+      width: calc(100% / 1);
       margin-bottom: 16px !important;
     }
     &-item:nth-of-type(1) {
       margin-right: 0 !important;
     }
     &-item:nth-of-type(2) {
-      margin-bottom:  0 !important;
+      margin-bottom: 0 !important;
     }
   }
 
   @media screen and (min-width: 841px) and (max-width: 1074px) {
     &-item {
-      width: calc(100% / 2) ;
+      width: calc(100% / 2);
     }
   }
 
   @media screen and (min-width: 1141px) and (max-width: 1380px) {
     &-item {
-      width: calc(100% / 1) ;
+      width: calc(100% / 1);
     }
   }
 
   @media screen and (min-width: 1380px) {
     &-item {
-      width: calc(100% / 1) ;
+      width: calc(100% / 1);
     }
   }
 }
@@ -357,5 +359,4 @@ export default {
     }
   }
 }
-
 </style>
