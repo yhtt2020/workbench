@@ -211,6 +211,7 @@ export default {
       taskID: "taskID",
       taskTmp: "taskTmp",
       taskStep: "step",
+      smallMize:"smallMize",
     }),
     ...mapWritableState(useFreeLayoutStore, [
       "isFreeLayout",
@@ -649,7 +650,9 @@ export default {
 
     // 预览桌面
     preview() {
-      this.popState = true
+      this.popState = true;
+      // 关闭任务中心小弹窗
+      if(!this.smallMize) return this.smallMize = true;
     },
 
     // 关闭预览桌面
