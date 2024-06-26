@@ -193,7 +193,7 @@ export const teamStore = defineStore("teamStore", {
         cache: cache
       }
       let data = await get(getMy, params)
-      if (data) {
+      if (data.status) {
         this.my = data.data
         let teamNo = 0
         if (this.my.created.hasOwnProperty('no')) {

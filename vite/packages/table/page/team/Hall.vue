@@ -1,22 +1,25 @@
 <template>
 
-  <a-row :gutter="20">
-    <a-col :span="8">
-      <HorizontalPanel :navList="teamNavList" v-model:selectType="teamType"></HorizontalPanel>
-    </a-col>
-    <a-col :span="3">
-      <div @click="random" style="background: var(--primary-bg);;color: var(--primary-text);"
-           class="s-bg pointer h-12 w-24 rounded-lg flex justify-center items-center px-3">
-        <icon class="mr-1" style="font-size: 1.2em" icon="shuaxin"></icon>
-        换一换
-      </div>
-    </a-col>
-  </a-row>
-  <div style="flex: 1;overflow:hidden;" class="">
-    <vue-custom-scrollbar id="containerWrapper" :settings="settingsScroller" style="height: 100%">
-      <TeamList @showAction="showAction" :list="showTeam"></TeamList>
-    </vue-custom-scrollbar>
+  <div class="m-auto h-full" style="max-width: 1200px;">
+    <a-row :gutter="20">
+      <a-col :span="8">
+        <HorizontalPanel :navList="teamNavList" v-model:selectType="teamType"></HorizontalPanel>
+      </a-col>
+      <a-col :span="3">
+        <div @click="random" style="background: var(--primary-bg);;color: var(--primary-text);"
+             class="s-bg pointer h-12 w-24 rounded-lg flex justify-center items-center px-3">
+          <icon class="mr-1" style="font-size: 1.2em" icon="shuaxin"></icon>
+          换一换
+        </div>
+      </a-col>
+    </a-row>
+    <div style="flex: 1;overflow:hidden;" class="">
+      <vue-custom-scrollbar id="containerWrapper" :settings="settingsScroller" style="height: 100%">
+        <TeamList @showAction="showAction" :list="showTeam"></TeamList>
+      </vue-custom-scrollbar>
+    </div>
   </div>
+
 
 
   <a-drawer placement="right" v-model:visible="actionVisible">

@@ -320,7 +320,7 @@ export default {
     options() {
       return {
         customDel: this.openWay === "nav" ? true : false,
-        disableEdit:this.isCommunityDesktop(this.desk),
+        disableEdit:this.desk&&this.isCommunityDesktop(this.desk),
         cardName: '签到'
       };
     },

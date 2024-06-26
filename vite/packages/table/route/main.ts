@@ -222,6 +222,11 @@ export default [
         },
       },
       {
+        path:'/hall',
+        component: Hall,
+        name:'hall'
+      },
+      {
         path: "/app",
         name: "app",
         component: AppFrame,
