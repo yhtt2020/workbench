@@ -18,6 +18,7 @@
     >
       <div
         @click="modalClick"
+        @keydown="handleKeyDown"
         :class="[custom ? '' : boxClass]"
         ref="modal"
         class="relative flex flex-col overflow-hidden text-base no-drag rounded-xl xt-modal xt-shadow xt-text"
@@ -449,7 +450,8 @@ const getModalPosition = computed(() => {
   // 无遮罩层的情况
   else {
     // 防止弹窗越界，超出屏幕
-    let h = (windowHeight.value - bottomBarHeight.value - modalHeight.value) / 2
+    let h =
+      (windowHeight.value - bottomBarHeight.value - modalHeight.value) / 2;
     top = h < 0 ? 0 : h;
     left = (windowWidth.value - modalWidth.value) / 2;
   }
@@ -614,11 +616,6 @@ const onEsc = (event) => {
 
 // 初始化
 const init = () => {
-  // 获取菜单高度
-  // bottomBar.value = document.getElementsByClassName("xt-main-bottom-bar")[0];
-  // if (bottomBar.value) barHeight = bottomBar.value.clientHeight;
-  // else if () {}
-
   // 初始化弹窗位置
   initPosition();
 
@@ -659,6 +656,15 @@ const init = () => {
   }, 50);
 };
 
+// 键盘事件
+const handleKeyDown = (event) => {
+  if (event.code === "Space") {
+    event.stopPropagation();
+  }
+  if (event.ctrlKey && (event.key === "A" || event.key === "a")) {
+    event.stopPropagation();
+  }
+};
 // 挂载前
 onBeforeMount(() => {});
 

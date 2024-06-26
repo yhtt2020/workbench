@@ -67,7 +67,15 @@ export const cardStore = defineStore(
 
       };
     },
-    getters: {},
+    getters: {
+      currentDesk(){
+        let id=  homeStore().currentDeskId
+        let res=  this.desks.find((item)=>{
+            item.id == id
+        })
+        return res
+      }
+    },
     actions: {
       switchToDesk(index) {
         let desk = this.desks[index]

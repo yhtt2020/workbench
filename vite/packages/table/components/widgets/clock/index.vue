@@ -135,7 +135,6 @@ export default {
     };
   },
   mounted() {
-    // console.log(this.desk,'clock')
     // 当底部导航栏为windows模式时，点击导航栏中的时间，进入时间全屏
     this.$bus.on("openClockFullScreen", (data) => {
       this.isClockFullScreen = data;
@@ -191,7 +190,6 @@ export default {
     cardZoom() {
       // 获取当前时钟ID
       let clockID = this.customData.clockId;
-      console.log("clockID :>> ", clockID);
       // 时钟缩放列表
       let zoomList = {
         // 下标0为默认，下标1为高度为1时无边框时，下边2为高度为1非无边框时
@@ -256,7 +254,6 @@ export default {
       }
 
       let zoomRatio = this.customData.currentZoom / 100;
-      console.log("zoomRatio :>> ", zoomRatio);
       return zoom * second * zoomRatio;
     },
     ...mapWritableState(appStore, ["backgroundImage", "settings"]),

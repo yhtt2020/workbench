@@ -238,7 +238,7 @@ import { useAddCard } from "../../ui/hooks/useAddCard";
 import { useDeskStore } from "./store";
 import { useFileConversionIcon } from "../../apps/folder/src/hooks/useDataConversion";
 import { taskStore } from "../../apps/task/store";
-
+import { DEFAULT } from "../../js/const/default";
 import Drop from "./Drop.vue";
 import AppCenter from "../../apps/appCenter";
 import { useAppCenterStore } from "../../apps/appCenter/src/store";
@@ -399,6 +399,7 @@ export default {
     // 监听ID变化
     "currentDesk.id": {
       handler(newVal) {
+        this.updateIndependentBg();
         console.log("66666666666666666666666");
         // 同步更新自由布局ID
         this.freeLayoutId = newVal;
@@ -426,6 +427,12 @@ export default {
       deep: true,
       immediate: true,
     },
+    "currentDesk.settings.bg": {
+      handler(newVal) {
+        this.updateIndependentBg();
+      },
+      deep: true,
+    },
     "currentDesk.settings": {
       handler(newVal) {
         console.log("33333333333333333333333");
@@ -436,6 +443,12 @@ export default {
               marginTop: 0,
               cardMargin: 5, //卡片间隙
               vDirection: false,
+              bg: {
+                start: false,
+                mode: "img",
+                imgValue: DEFAULT.WALLPAPER,
+                colorValue: "#508BFE",
+              },
             };
           }
           this.muuriOptions.layout.horizontal = !newVal.vDirection;
@@ -537,7 +550,15 @@ export default {
     this.$bus.on("scrollbarUpdate", () => {
       this.freeLayoutScrollbarUpdate();
     });
-
+    this.$bus.on("setIndependentBg", (val) => {
+      if (!val) {
+        this.currentDesk.settings.bg.start = false;
+        return;
+      }
+      this.currentDesk.settings.bg.start = true;
+      this.currentDesk.settings.bg.mode = "img";
+      this.currentDesk.settings.bg.imgValue = val;
+    });
     // 社群成员桌面触发位置还原
     this.$bus.on("redirect", () => {
       this.$nextTick(() => {
@@ -560,6 +581,20 @@ export default {
     ...mapActions(cardStore, ["addCard"]),
     ...mapActions(useDeskStore, ["addMenu"]),
     // ...mapActions(taskStore, ["initTask"]),
+    /**
+     * 用于处理独立壁纸
+     */
+    updateIndependentBg() {
+      // 获取设置中独立壁纸对象
+      let bg = this.currentDesk.settings?.bg;
+      // 当不使用独立壁纸时
+      if (!bg || !bg?.start) {
+        this.$bus.emit("updateIndependentBg", false);
+        return;
+      }
+      this.$bus.emit("updateIndependentBg", bg);
+      return bg.value;
+    },
     getClasses() {
       if (this.usingSettings.vDirection) {
         if (this.usingSettings.vDirection === true) {

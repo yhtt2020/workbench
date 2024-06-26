@@ -70,7 +70,7 @@ let fs,path
 
  export default {
    name: "MyContent",
-
+   inject:['modalParams','modalStatus'],
    components:{
     MyContentIcon,
    },
@@ -268,6 +268,10 @@ let fs,path
       completeTask('M0201',()=>{
         this.$bus.emit('closePaperModal')
       })
+      // if (this.modalParams?.independent) {
+        this.$emit('updateIndependentBg',img)
+        return
+      // }
       if(img !== null){
         message.info('正在为您设置背景');
       }

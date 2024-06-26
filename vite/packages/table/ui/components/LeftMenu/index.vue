@@ -18,7 +18,11 @@
       :class="[leftClass, leftMargin]"
     >
       <template v-for="list in listOption">
-        <div class="w-full" :class="list?.class" v-if="list.array.length"  @contextmenu.prevent>
+        <div
+          class="w-full"
+          :class="list?.class"
+          @contextmenu.prevent
+        >
           <Float
             @itemClick="itemClick"
             :list="item.children"
@@ -169,7 +173,7 @@ const newList = computed(() => {
 
 // 渲染的列表配置项
 const listOption = computed(() => {
-  return [
+  let res = [
     {
       boxClass: "mb-2",
       array: newList.value.slice(0, props.last),
@@ -182,15 +186,20 @@ const listOption = computed(() => {
         w: "40",
       },
     },
-    {
+  ];
+
+  if (props.end) {
+
+    res.push({
       boxClass: "mt-2",
-      array: props.end > 0 ? newList.value.slice(-1 * props.end) : [],
+      array: newList.value.slice(-1 * props.end),
       itemOption: {
         type: "",
         bg: "",
       },
-    },
-  ];
+    });
+  }
+  return res;
 });
 
 // 动态获取ID

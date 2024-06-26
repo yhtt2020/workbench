@@ -8,7 +8,7 @@
     </div>
 
     <div class="flex-1 h-4/5">
-      <PaperDetail :paperList="selectWallPaper" :isModal="isModal"/>
+      <PaperDetail :paperList="selectWallPaper" :isModal="isModal" @updateIndependentBg="updateIndependentBg"/>
     </div>
   </div>
 </template>
@@ -24,6 +24,7 @@ export default {
   components:{
    PaperDetail,
   },
+  inject:['modalParams'],
 
   data(){
     return{
@@ -32,6 +33,9 @@ export default {
   },
 
   methods:{
+    updateIndependentBg(val){
+      this.$emit('updateIndependentBg',val)
+    },
     closeSiftPaper(){
       this.$bus.emit('closePaper');
     },

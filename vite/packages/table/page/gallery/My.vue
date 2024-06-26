@@ -143,6 +143,7 @@
         <MyContent
           :myPaperList="myPapers"
           :isModal="isModal"
+          @updateIndependentBg="updateIndependentBg"
           @paperSetting="openBottom"
           @playPaperVideo="playPaperVideo"
         />
@@ -279,6 +280,9 @@ export default {
   methods: {
     ...mapActions(paperStore, ["addToStaticPaper"]),
     fileImageExtension,
+    updateIndependentBg(val) {
+      this.$emit('updateIndependentBg',val)
+    },
     // 播放全部和播放选中
     playAll() {
       const imageArr = [];
