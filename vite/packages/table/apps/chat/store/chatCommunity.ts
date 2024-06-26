@@ -47,6 +47,8 @@ export const chatCommunityStore = defineStore("chatCommunity", {
     categoryList: [],
     // 当前社群详情
     currentCommunity: null,
+    // 当前右键下拉菜单的接收区域
+    rightMenuItem:{},
   }),
 
   actions: {
@@ -326,6 +328,7 @@ export const chatCommunityStore = defineStore("chatCommunity", {
           "communityTreeList",
           "categoryList",
           "currentCommunity",
+          "rightMenuItem",
         ],
         storage: localStorage,
       },

@@ -206,13 +206,13 @@
     </xt-container>
   </a-spin>
 
-  <teleport to="body">
+  <!-- <teleport to="body">
     <WallpaperWidgetModal />
-    <!-- <GalleryModal ref="galleryRef" /> -->
-    <!-- ref="paperWidgetRef"
+    <GalleryModal ref="galleryRef" />
+    ref="paperWidgetRef"
       :modelValue="wallModelValue"
-      @updateCustomDatas="updatePaperSource" -->
-  </teleport>
+      @updateCustomDatas="updatePaperSource"
+  </teleport> -->
 </template>
 
 <script>

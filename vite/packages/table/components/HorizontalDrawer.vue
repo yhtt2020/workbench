@@ -2,7 +2,6 @@
   <a-drawer v-model:visible="detailDisplay" :title="drawerTitle" @close="onClose"
   :bodyStyle="{textAlign:'left',overflow:'hidden',}" placement="right"  width="500"
   >
-
    <vue-custom-scrollbar  @touchstart.stop @touchmove.stop @touchend.stop  :settings="settingsScroller" style="height: 86vh;">
     <div class="w-full h-12 flex items-center  justify-center pointer my-4 rounded-lg s-list"
       v-for="(item,index) in rightSelect" :class="defaultGameIndex === index ? 'drawer-active':''" @click="selectedAreaSuit(item,index)"
@@ -60,9 +59,6 @@ export default {
         if(this.selectRegion && this.rightSelect.length > 0){
           this.defaultGameIndex = this.rightSelect.findIndex(el=>{
             return el.id === this.selectRegion
-          })
-          this.defaultGameIndex = this.rightSelect.findIndex(el=>{
-            return el.appid === this.selectRegion
           })
         }
       }

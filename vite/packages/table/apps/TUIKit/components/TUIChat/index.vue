@@ -17,12 +17,16 @@
             !isPC && 'tui-chat-H5-header',
             isUniFrameWork && 'tui-chat-uniapp-header',
           ]"
-          @closeChat="closeChat" @clickNotice="openDrawer"
+          @closeChat="closeChat"
+          @clickNotice="openDrawer"
           @clickGroup="handleManageGroup"
         />
         <Forward />
         <MessageList
-          :class="['tui-chat-message-list', !isPC && 'tui-chat-h5-message-list']"
+          :class="[
+            'tui-chat-message-list',
+            !isPC && 'tui-chat-h5-message-list',
+          ]"
           :isGroup="isGroup"
           :groupID="groupID"
           @handleEditor="handleEditor"
@@ -30,7 +34,11 @@
         <!-- 兼容 uni 打包支付宝小程序 v-show 无效问题 -->
         <MessageInputToolbar
           v-if="isToolbarShow"
-          :class="['tui-chat-message-input-toolbar', !isPC && 'tui-chat-h5-message-input-toolbar', isUniFrameWork && 'tui-chat-uni-message-input-toolbar']"
+          :class="[
+            'tui-chat-message-input-toolbar',
+            !isPC && 'tui-chat-h5-message-input-toolbar',
+            isUniFrameWork && 'tui-chat-uni-message-input-toolbar',
+          ]"
           @insertEmoji="insertEmoji"
         />
         <MessageInput
@@ -42,6 +50,8 @@
             isWeChat && 'tui-chat-wx-message-input',
           ]"
           :isMuted="false"
+          :currentGroupID="groupID"
+          :mutedShow="mutedVisible"
           :muteText="TUITranslateService.t('TUIChat.您已被管理员禁言')"
           :placeholder="TUITranslateService.t('TUIChat.请输入消息')"
           @handleToolbarListShow="handleToolbarListShow"
@@ -60,7 +70,7 @@
       <!-- 新增 群公告抽屉弹窗页面 -->
       <NoticeDrawer ref="noticeRef" :groupID="groupID" />
       <!-- 新增 群管理抽屉弹窗页面 -->
-      <ManageDrawer ref="groupRef" :groupID="groupID"/>
+      <ManageDrawer ref="groupRef" :groupID="groupID" />
       <!-- 新增 群消息转发页面 -->
       <ForwardModal />
     </div>
@@ -74,34 +84,37 @@ import TUIChatEngine, {
   StoreName,
   IMessageModel,
   IConversationModel,
-} from '@tencentcloud/chat-uikit-engine';
-import TUICore, { TUIConstants, ExtensionInfo } from '@tencentcloud/tui-core';
-import { ref, onUnmounted } from '../../adapter-vue';
-import ChatHeader from './chat-header/index.vue';
-import MessageList from './message-list/index.vue';
-import MessageInput from './message-input/index.vue';
-import Forward from './forward/index.vue';
-import MessageInputToolbar from './message-input-toolbar/index.vue';
-import { isPC, isWeChat, isUniFrameWork } from '../../utils/env';
-import TUIChatConfig from './config';
+} from "@tencentcloud/chat-uikit-engine";
+import TUICore, { TUIConstants, ExtensionInfo } from "@tencentcloud/tui-core";
+import { ref, onUnmounted, computed } from "../../adapter-vue";
+import ChatHeader from "./chat-header/index.vue";
+import MessageList from "./message-list/index.vue";
+import MessageInput from "./message-input/index.vue";
+import Forward from "./forward/index.vue";
+import MessageInputToolbar from "./message-input-toolbar/index.vue";
+import { isPC, isWeChat, isUniFrameWork } from "../../utils/env";
+import TUIChatConfig from "./config";
 
 // 新增
-import NoticeDrawer from "../../../chat/components/managerDrawer/NoticeDrawer.vue"
+import NoticeDrawer from "../../../chat/components/managerDrawer/NoticeDrawer.vue";
 import ManageDrawer from "../../../chat/components/managerDrawer/ManageDrawer.vue";
 import ForwardModal from "../../../chat/components/manager/ForwardModal.vue";
 
-const emits = defineEmits(['closeChat']);
+const emits = defineEmits(["closeChat"]);
 const isToolbarShow = ref<boolean>(!isUniFrameWork);
 const messageInputRef = ref();
 const currentConversationID = ref();
 // 是否显示群组管理
 const isGroup = ref(false);
-const groupID = ref('');
+const groupID = ref("");
 const groupManageExt = ref<ExtensionInfo | undefined>(undefined);
 
 // 新增
 const noticeRef = ref(null);
 const groupRef = ref(null);
+const member: any = ref({
+  muteMember: [],
+});
 
 TUIStore.watch(StoreName.CONV, {
   currentConversation: (conversation: IConversationModel) => {
@@ -111,23 +124,39 @@ TUIStore.watch(StoreName.CONV, {
     // TUIChat 每次切换会话，需要初始化 chatType;
     TUIChatConfig.setChatType(conversation?.type);
     // 由 TUICustomerServicePlugin 插件判断如果当前会话是客服会话，则设置 chatType 并激活会话。
-    TUICore.callService({
-      serviceName: TUIConstants.TUICustomerServicePlugin.SERVICE.NAME,
-      method: TUIConstants.TUICustomerServicePlugin.SERVICE.METHOD.ACTIVE_CONVERSATION,
-      params: { conversationID: conversation?.conversationID },
-    });
+    // TUICore.callService({
+    //   serviceName: TUIConstants.TUICustomerServicePlugin.SERVICE.NAME,
+    //   method: TUIConstants.TUICustomerServicePlugin.SERVICE.METHOD.ACTIVE_CONVERSATION,
+    //   params: { conversationID: conversation?.conversationID },
+    // });
     currentConversationID.value = conversation?.conversationID;
     isGroup.value = conversation?.type === TUIChatEngine.TYPES.CONV_GROUP;
-    if (isUniFrameWork && isGroup.value && groupID.value !== conversation?.groupProfile?.groupID) {
-      const extList = TUICore.getExtensionList(TUIConstants.TUIChat.EXTENSION.CHAT_HEADER.EXT_ID, {
-        filterManageGroup: !isGroup.value,
-      });
+    if (
+      isUniFrameWork &&
+      isGroup.value &&
+      groupID.value !== conversation?.groupProfile?.groupID
+    ) {
+      const extList = TUICore.getExtensionList(
+        TUIConstants.TUIChat.EXTENSION.CHAT_HEADER.EXT_ID,
+        {
+          filterManageGroup: !isGroup.value,
+        }
+      );
       groupManageExt.value = extList[0];
     }
     if (isUniFrameWork && !isGroup.value) {
       groupManageExt.value = undefined;
     }
     groupID.value = conversation?.groupProfile?.groupID;
+  },
+});
+
+TUIStore.watch(StoreName.GRP, {
+  currentGroupMemberList: (memberList) => {
+    const time = new Date().getTime();
+    member.value.muteMember = Array.from(memberList).filter(
+      (item: any) => item?.muteUntil * 1000 - time > 0
+    );
   },
 });
 
@@ -141,7 +170,7 @@ const reset = () => {
 };
 
 const closeChat = (conversationID: string) => {
-  emits('closeChat', conversationID);
+  emits("closeChat", conversationID);
   reset();
 };
 
@@ -151,7 +180,7 @@ const insertEmoji = (emojiObj: object) => {
 
 const handleToolbarListShow = (show?: boolean) => {
   if (isUniFrameWork) {
-    isToolbarShow.value = (show === undefined) ? !isToolbarShow.value : show;
+    isToolbarShow.value = show === undefined ? !isToolbarShow.value : show;
   } else {
     isToolbarShow.value = true;
   }
@@ -160,13 +189,13 @@ const handleToolbarListShow = (show?: boolean) => {
 const handleEditor = (message: IMessageModel, type: string) => {
   if (!message || !type) return;
   switch (type) {
-    case 'reference':
+    case "reference":
       // todo
       break;
-    case 'reply':
+    case "reply":
       // todo
       break;
-    case 'reedit':
+    case "reedit":
       if (message?.payload?.text) {
         messageInputRef?.value?.reEdit(message?.payload?.text);
       }
@@ -181,11 +210,34 @@ const handleGroup = () => {
 };
 
 // 新增 开启公告弹窗
-const openDrawer = () =>{
+const openDrawer = () => {
   noticeRef.value.openNoticeDrawer();
-}
-const handleManageGroup = () =>{
+};
+const handleManageGroup = () => {
   groupRef.value.openManageDrawer();
-}
+};
+
+// 通过计算属性动态获取是否开启禁言模式
+const mutedVisible = computed(() => {
+  const tk = (window as any).$TUIKit?.TUIStore?.storeMap;
+  const isMutedVisible = Array.from(member.value?.muteMember).some(
+    (item: any) => {
+      return Number(item?.userID) === Number((appStore() as any).userInfo?.uid);
+    }
+  );
+
+  const allMutedVisible = tk?.group?.store?.currentGroup?.muteAllMembers;
+
+  if (allMutedVisible) {
+    return true;
+  } else if (isMutedVisible) {
+    return true;
+  } else {
+    return false;
+  }
+});
+
+
+
 </script>
 <style scoped lang="scss" src="./style/index.scss"></style>

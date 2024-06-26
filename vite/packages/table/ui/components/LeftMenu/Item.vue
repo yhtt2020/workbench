@@ -43,12 +43,23 @@
   </template>
 
   <template v-else>
-    <xt-menu :menus="item.menu" name="label" :stopPropagation="false">
+    <xt-menu
+      :menus="item.menu"
+      name="label"
+      @contextmenu="getItem(item)"
+      :stopPropagation="false"
+    >
       <div class="flex flex-col justify-center items-center cursor-pointer">
         <!-- antd插槽 -->
         <div
           v-if="item.slot"
-          style="width: 40px; height: 40px; border-radius: 10px;position: absolute; z-index: 100;"
+          style="
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            position: absolute;
+            z-index: 100;
+          "
           class="xt-bg-2 xt-base-btn"
         >
           <slot :name="item.slot"> </slot>
@@ -63,7 +74,12 @@
           <img
             :src="item.img"
             :style="[imgSize, imgBg]"
-            style="border-radius: 10px; object-fit: cover;position: absolute; z-index: 100;"
+            style="
+              border-radius: 10px;
+              object-fit: cover;
+              position: absolute;
+              z-index: 100;
+            "
           />
         </div>
         <!-- icon -->
@@ -74,7 +90,7 @@
           radius="10"
           :type="type"
           :icon="item.icon"
-           style="position: absolute !important; z-index: 100 !important;"
+          style="position: absolute !important; z-index: 100 !important"
         />
         <xt-new-icon
           v-else
@@ -83,7 +99,7 @@
           :icon="item.full ? full : item.newIcon"
           :bgStyle="iconBg(item.bg)"
           radius="10"
-          style="position: absolute !important; z-index: 100 !important;"
+          style="position: absolute !important; z-index: 100 !important"
         />
       </div>
     </xt-menu>
@@ -95,8 +111,13 @@ import { ref, computed, watch, toRefs } from "vue";
 import { storeToRefs } from "pinia";
 import { useRoute, useRouter } from "vue-router";
 import { appStore } from "../../../store";
+import { chatCommunityStore } from "../../../apps/chat/store/chatCommunity";
+
 const store = appStore();
 const { fullScreen } = storeToRefs(store);
+
+const { rightMenuItem } = storeToRefs(chatCommunityStore());
+
 const props = defineProps({
   item: {},
   id: {},
@@ -159,6 +180,16 @@ watch(fullScreen, (val) => {
     data.value = !data.value;
   }
 });
+
+/**
+ * 获取当前右键菜单选中的item,
+ * 这里暂时群聊这块使用到,
+ * 后期需求需要再做调整。
+ * **/
+const getItem = (data) => {
+  rightMenuItem.value.no = data?.cno
+};
+
 // const route = useRoute();
 // const currentPage = ref(route.path);
 // watch(route, (newRoute) => {

@@ -98,8 +98,8 @@ export default {
 
     // 右上角关闭按钮
     closeNotice() {
-      ctx.emit("closeToast");
-      ctx.emit("putNotice");
+      this.$emit("closeToast");
+      this.$emit("putNotice");
     },
 
     //  const talkLater = () =>{  // 点击稍后再说按钮
@@ -109,8 +109,8 @@ export default {
 
     viewNow() {
       // 点击立即查看
-      ctx.emit("closeToast");
-      ctx.emit("systemExamine");
+      this.$emit("closeToast");
+      this.$emit("systemExamine");
     },
   },
 

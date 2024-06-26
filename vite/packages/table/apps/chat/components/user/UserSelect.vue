@@ -40,9 +40,11 @@
       <div class="flex flex-col mt-4">
         <div class="flex items-center justify-between w-full mb-4">
           <span class="font-14 xt-text">最近聊天</span>
-          <a-checkbox v-model:checked="currentChecked" v-if="isRadio">全选</a-checkbox>
+          <a-checkbox v-model:checked="currentChecked" v-if="isRadio"
+            >全选</a-checkbox
+          >
         </div>
-        <xt-scrollbar :y="true" style="height: 304px" >
+        <xt-scrollbar :y="true" style="height: 304px">
           <div class="flex flex-col" v-if="currentList.length !== 0">
             <template v-for="(item, index) in currentList">
               <div
@@ -50,9 +52,16 @@
                 :class="{ 'select-bg': isSelect(index) }"
                 @click="selectForward(item)"
               >
+                <xt-mix-icon
+                  v-if="retrieveIcon(item?.avatar)"
+                  :icon="item?.avatar"
+                  :type="communityIconType(item?.avatar)"
+                  class="mr-2"
+                  size="32"
+                />
                 <a-avatar
                   shape="square"
-                  v-if="item.type === 'GROUP'"
+                  v-else-if="item.type === 'GROUP'"
                   size="32"
                   :src="item?.avatar"
                 />
@@ -87,9 +96,16 @@
               class="flex p-3 w-full rounded-lg justify-between items-center pointer"
             >
               <div class="flex items-center">
+                <xt-mix-icon
+                  v-if="retrieveIcon(item?.avatar)"
+                  :icon="item?.avatar"
+                  :type="communityIconType(item?.avatar)"
+                  class="mr-2"
+                  size="32"
+                />
                 <a-avatar
                   shape="square"
-                  v-if="item.type === 'GROUP'"
+                  v-else-if="item.type === 'GROUP'"
                   size="32"
                   :src="item?.avatar"
                 />
@@ -140,6 +156,7 @@
 <script setup>
 import { ref, toRefs, watch, watchEffect } from "vue";
 import _ from "lodash-es";
+import { communityIconType } from "../../../communityDesk/hooks/deskCreateMethod";
 
 const emit = defineEmits(["close", "forward"]);
 
@@ -149,12 +166,12 @@ const props = defineProps({
     default: () => [],
   },
   // 区分单选多选
-  isRadio:{
+  isRadio: {
     type: Boolean,
     default: true,
-  }
+  },
 });
-const { currentLeftList,isRadio } = toRefs(props);
+const { currentLeftList, isRadio } = toRefs(props);
 
 const currentList = ref([]);
 // 右侧选中列表
@@ -182,10 +199,10 @@ const currentChecked = ref(false);
 watch(
   () => currentChecked.value,
   (newVal) => {
-    if(newVal){
+    if (newVal) {
       currentRightList.value = currentList.value;
-    }else {
-      currentRightList.value  = []
+    } else {
+      currentRightList.value = [];
     }
   }
 );
@@ -198,7 +215,7 @@ watchEffect(() => {
 
 // 实现选中功能
 const selectForward = (item) => {
-  if(isRadio.value){
+  if (isRadio.value) {
     const index = _.findIndex(currentRightList.value, function (findItem) {
       return findItem?.userID === item?.userID;
     });
@@ -207,8 +224,7 @@ const selectForward = (item) => {
     } else {
       currentRightList.value.push(item);
     }
-  }
-  else {
+  } else {
     const index = _.findIndex(currentRightList.value, function (findItem) {
       return findItem?.userID === item?.userID;
     });
@@ -239,13 +255,17 @@ const handleClose = () => {
 // 确定转发
 const handleForward = () => {
   // emit("forward", currentRightList.value);
-  if(isRadio.value){
+  if (isRadio.value) {
     emit("forward", currentRightList.value);
-  }
-  else {
+  } else {
     emit("forward", currentRightList.value[0]);
   }
 };
+
+// 调整公告图标作为头像的转换
+function retrieveIcon(url) {
+  return url?.includes("color=#");
+}
 </script>
 
 <style lang="scss" scoped>

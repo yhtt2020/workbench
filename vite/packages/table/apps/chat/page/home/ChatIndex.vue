@@ -14,9 +14,9 @@ const { proxy } = getCurrentInstance();
 const chatServer = window.$chat?.chat;
 
 onMounted(() => {
-  chatServer?.on(TUIChatEngine.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, (e) => {
-    proxy.$bus.emit("getChatUnread", e?.data);
-  });
+  // chatServer?.on(TUIChatEngine.EVENT.TOTAL_UNREAD_MESSAGE_COUNT_UPDATED, (e) => {
+  //   proxy.$bus.emit("getChatUnread", e?.data);
+  // });
 });
 </script>
 

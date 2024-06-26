@@ -730,6 +730,10 @@ onBeforeUnmount(() => {
 
 // 优化根据社群桌面进行处理
 const newLeftMenu = computed(() => {
+  // web端隐藏收藏夹选项
+  if(window.$usePlat()) leftMenu.value = leftMenu.value.filter((menu: any) => {
+    return menu.name !== "收藏夹"
+  });
   if (props.communityRole) {
     const filterMenu = leftMenu.value.filter((menu: any) => {
       return menu.name !== "Win" && menu.id !== 0;

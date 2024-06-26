@@ -129,7 +129,7 @@ import { completeTask } from "../../../../apps/task/task";
 
 export default {
   props: ["isModal", "paperList"],
-
+inject:['modalParams'],
   data() {
     return {
       options: { url: "data-source" },
@@ -147,10 +147,12 @@ export default {
           newIcon: "fluent:desktop-16-filled",
           name: "设为工作台背景",
           callBack: () => {
-            this.setAppPaper(this.currentPaperImg);
             completeTask("M0201", () => {
               this.$bus.emit("closePaperModal");
             });
+
+            this.setAppPaper(this.currentPaperImg);
+
           },
         },
         {
@@ -272,6 +274,10 @@ export default {
 
     // 设置工作台背景和桌面壁纸
     setAppPaper(img) {
+      // if (this.modalParams?.independent) {
+       this.$emit('updateIndependentBg',img)
+        return
+      // }
       completeTask("M0201", () => {
         this.$bus.emit("closePaperModal");
       });

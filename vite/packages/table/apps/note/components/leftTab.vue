@@ -1,6 +1,6 @@
 <template>
   <!-- xt-main-bg -->
-   <xt-left-menu :list="this.menuList" last="2" model="id" end="0" leftClass=" py-3">
+   <xt-left-menu :list="this.menuList" last="2" model="id" :end="0" leftClass=" py-3">
 
 <div class="pr-3 py-3 w-full h-full">
   <slot></slot>

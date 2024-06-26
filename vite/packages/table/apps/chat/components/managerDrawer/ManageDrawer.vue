@@ -22,11 +22,20 @@
           ></xt-ify-icon>
         </div>
         <div class="flex items-center pointer">
+          <xt-mix-icon
+            v-if="retrieveIcon(manageInfo.avatar)"
+            :icon="manageInfo.avatar"
+            :type="communityIconType(manageInfo.avatar)"
+            class="mr-2"
+            size="48"
+          />
           <a-avatar
+            v-else
             :src="manageInfo.avatar"
             size="48"
             shape="square"
           ></a-avatar>
+
           <span class="ml-3 xt-text-2 font-14 xt-font">{{
             manageInfo.groupName
           }}</span>
@@ -50,7 +59,11 @@
           ></xt-ify-icon>
         </div>
         <span class="w-full xt-text-2 xt-font font-14">
-          {{ manageInfo.notification !== '' ? manageInfo.notification : '暂无群公告' }}
+          {{
+            manageInfo.notification !== ""
+              ? manageInfo.notification
+              : "暂无群公告"
+          }}
         </span>
       </div>
 
@@ -62,7 +75,9 @@
         >
           <span class="xt-text font-16 xt-font">群成员</span>
           <div class="flex">
-            <span class="xt-text-2 xt-font font-14">{{ currentMemberList.length }}人</span>
+            <span class="xt-text-2 xt-font font-14"
+              >{{ currentMemberList.length }}人</span
+            >
             <xt-ify-icon
               icon="fluent:chevron-right-28-filled"
               class="xt-text-2"
@@ -332,7 +347,7 @@
   />
 
   <!-- 群聊转让 -->
-  <GroupTransfer ref="groupTransferRef" :currentGroupID="manageInfo?.groupID"/>
+  <GroupTransfer ref="groupTransferRef" :currentGroupID="manageInfo?.groupID" />
 </template>
 
 <script setup>
@@ -351,6 +366,8 @@ import {
   inviteName,
   sortMembers,
 } from "../../hooks/groupType";
+
+import { communityIconType } from "../../../communityDesk/hooks/deskCreateMethod";
 
 import GroupName from "../manager/GroupName.vue";
 import NoticeDrawer from "./NoticeDrawer.vue";
@@ -510,7 +527,7 @@ const updateJoin = async (data) => {
   };
   const res = await chat.updateGroupProfile(options);
   if (res.code === 0) {
-    const  group  = res.data?.group;
+    const group = res.data?.group;
     manageInfo.value.join = group.joinOption;
     message.success("加群方式修改成功");
     joinRef.value.joinVisible = false;
@@ -524,9 +541,9 @@ const updateInvite = async (data) => {
     inviteOption: data,
   };
   const res = await chat.updateGroupProfile(options);
-  console.log('测试',res);
+  console.log("测试", res);
   if (res.code === 0) {
-    const group  = res.data.group;
+    const group = res.data.group;
     manageInfo.value.invite = group.inviteOption;
     message.success("邀请方式修改成功");
     inviteRef.value.inviteVisible = false;
@@ -534,8 +551,13 @@ const updateInvite = async (data) => {
 };
 
 // 转让群聊
-const transferGroup = () =>{
+const transferGroup = () => {
   groupTransferRef.value.openTransferModal();
+};
+
+// 调整公告图标作为头像的转换
+function retrieveIcon(url) {
+  return url?.includes("color=#");
 }
 
 defineExpose({

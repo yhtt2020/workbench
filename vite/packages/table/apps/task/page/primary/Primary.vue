@@ -113,20 +113,20 @@ const stage = computed(() => {
 
 // 获取任务进度
 const progress = computed(() => {
-  let res = (stage.value / chapter.value.tasks.length) * 100;
+  let res = (stage.value / chapter.value?.tasks?.length) * 100;
   return res;
 });
 
 // 获取当前任务
 const currentTask = computed(() => {
-  return chapter.value.tasks[stage.value];
+  return chapter.value?.tasks[stage.value];
 });
 
 // 获取当前章节的任务所有奖励
 const currentTaskReward = computed(()=>{
   const getChapList  =  [];
 
-  for(const item of chapter.value.tasks){
+  for(const item of chapter.value?.tasks){
     const list =  getCurrentTaskReward(item.id);
     if(list){
       for(const childrenItem of list){

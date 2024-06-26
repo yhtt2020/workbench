@@ -1,11 +1,7 @@
 <!-- 群聊应用 -->
 <template>
   <div class="w-full h-full">
-    <xt-left-menu
-      :list="updateChatAppList"
-      last="1"
-      :end="endList"
-    >
+    <xt-left-menu :list="updateChatAppList" last="1" :end="endList">
       <div class="w-full h-full">
         <router-view></router-view>
       </div>
@@ -68,8 +64,8 @@ const chatCommunity = chatCommunityStore();
 const appS = appStore();
 const { proxy } = getCurrentInstance();
 
-const usePermission = usePermissionStore()
-const { myCommunity, setting } = storeToRefs(chatCommunity);
+const usePermission = usePermissionStore();
+const { myCommunity, setting, rightMenuItem } = storeToRefs(chatCommunity);
 const { loginVisible } = storeToRefs(appS);
 const { userInfo, lvInfo } = appS;
 
@@ -110,9 +106,9 @@ const leftList = ref([
         name: "发起群聊",
         index: "launch",
         callBack: (item) => {
-          if (usePermission.currentEnv === 'guest') {
+          if (usePermission.currentEnv === "guest") {
             loginVisible.value = true;
-          }else if(usePermission.currentEnv === 'offline'){
+          } else if (usePermission.currentEnv === "offline") {
             reconnect();
           } else {
             triggerAddModal(item);
@@ -125,9 +121,9 @@ const leftList = ref([
         name: "加入群聊",
         index: "addGroup",
         callBack: (item) => {
-          if (usePermission.currentEnv === 'guest') {
+          if (usePermission.currentEnv === "guest") {
             loginVisible.value = true;
-          }else if(usePermission.currentEnv === 'offline'){
+          } else if (usePermission.currentEnv === "offline") {
             reconnect();
           } else {
             triggerAddModal(item);
@@ -140,9 +136,9 @@ const leftList = ref([
         name: "添加好友",
         index: "addFriend",
         callBack: (item) => {
-          if (usePermission.currentEnv === 'guest') {
+          if (usePermission.currentEnv === "guest") {
             loginVisible.value = true;
-          }else if(usePermission.currentEnv === 'offline'){
+          } else if (usePermission.currentEnv === "offline") {
             reconnect();
           } else {
             triggerAddModal(item);
@@ -164,9 +160,9 @@ const leftList = ref([
         index: "joinCom",
         name: "加入社群",
         callBack: (item) => {
-          if (usePermission.currentEnv === 'guest') {
+          if (usePermission.currentEnv === "guest") {
             loginVisible.value = true;
-          }else if(usePermission.currentEnv === 'offline'){
+          } else if (usePermission.currentEnv === "offline") {
             reconnect();
           } else {
             triggerAddModal(item);
@@ -206,8 +202,9 @@ const menuList = ref([
     newIcon: "fluent:arrow-upload-16-filled",
     label: "置顶",
     callBack: () => {
-      const no = router.currentRoute.value?.params?.no;
-      chatCommunity.topSort(no);
+      if (rightMenuItem.value?.no) {
+        chatCommunity.topSort(rightMenuItem.value?.no);
+      }
     },
   },
 ]);
@@ -217,8 +214,9 @@ const unMenuList = ref([
     newIcon: "fluent:arrow-download-16-filled",
     label: "取消置顶",
     callBack: () => {
-      const no = router.currentRoute.value?.params?.no;
-      chatCommunity.unSetTopSort(no);
+      if (rightMenuItem.value?.no) {
+        chatCommunity.unSetTopSort(rightMenuItem.value?.no);
+      }
     },
   },
 ]);
@@ -255,10 +253,13 @@ const chatAppList = computed(() => {
       }
     }
   });
-  if(usePermission.currentEnv === 'guest' || usePermission.currentEnv === 'single'){
-    const find = mapList.length - 2
-    mapList[0] = mapList[find]
-    mapList.splice(find - 1, 2)
+  if (
+    usePermission.currentEnv === "guest" ||
+    usePermission.currentEnv === "single"
+  ) {
+    const find = mapList.length - 2;
+    mapList[0] = mapList[find];
+    mapList.splice(find - 1, 2);
   }
   return mapList;
 });
@@ -297,9 +298,12 @@ const currentNo = computed(() => {
 
 // 底部按钮数量
 const endList = computed(() => {
-  if(usePermission.currentEnv === 'guest' || usePermission.currentEnv === 'single'){
+  if (
+    usePermission.currentEnv === "guest" ||
+    usePermission.currentEnv === "single"
+  ) {
     return leftList.value.length - 2;
-  }else{
+  } else {
     return leftList.value.length;
   }
 });
@@ -349,9 +353,9 @@ const triggerAddModal = (item) => {
 
 //触发社群创建入口
 const createCommunity = () => {
-  if (usePermission.currentEnv === 'guest') {
+  if (usePermission.currentEnv === "guest") {
     loginVisible.value = true;
-  }else if(usePermission.currentEnv === 'offline'){
+  } else if (usePermission.currentEnv === "offline") {
     reconnect();
   } else {
     proxy.$bus.emit("createModal");
@@ -359,13 +363,13 @@ const createCommunity = () => {
 };
 
 onMounted(() => {
-  if(window.$currentEnv() === 'online'){
+  if (window.$currentEnv() === "online") {
     chatCommunity.getMyCommunity();
   }
-  proxy.$bus.on("getChatUnread", (data) => {
-    console.log("获取未读消息数", data);
-    currentData.value.unread = data;
-  });
+  // proxy.$bus.on("getChatUnread", (data) => {
+  //   // console.log("获取未读消息数", data);
+  //   // currentData.value.unread = data;
+  // });
 });
 </script>
 

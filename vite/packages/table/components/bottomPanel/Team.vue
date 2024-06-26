@@ -47,6 +47,8 @@ import { nanoid } from 'nanoid';
 import { useComStore } from './comStore';
 // import { storeToRefs } from 'pinia';
 const store = useComStore()
+
+const teamKey = ref(Date.now())
 // const {showTeamTip,showMyProp} = storeToRefs(store)
 
 const props = defineProps<{

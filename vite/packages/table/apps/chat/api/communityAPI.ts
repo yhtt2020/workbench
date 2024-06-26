@@ -47,12 +47,15 @@ export class CommunityAPI {
 
   // 获取社群频道列表
   async getCommunityListChannel(data:any){
-    const res  = await post(sUrl("/app/community/channel/getList"),data);
+    const res  = await apiPost("/app/community/channel/getList",data);
+    console.log("获取社群频道列表",res);
+    
     return res;
   }
   // 获取社群树状频道列表
   async getCommunityTreeListChannel(data:any){
-    const res  = await post(sUrl("/app/community/channel/getTreeList"),data);
+    const res  = await apiPost("/app/community/channel/getTreeList",data);
+    console.log(" 获取社群树状频道列表",res);
     return res;
   }
 

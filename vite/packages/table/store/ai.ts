@@ -75,7 +75,8 @@ export const aiStore = defineStore("aiStore", {
       let id = Date.now();
       this.topicList[id] = {
         icon: {
-          name: "message",
+          name: useGetEmoji(),
+          type: "emoji",
           id: 0,
         },
         id,
@@ -98,7 +99,7 @@ export const aiStore = defineStore("aiStore", {
 
       let id = Date.now();
       obj.id = nanoid(4);
-      const objId= obj.id
+      const objId = obj.id;
       obj.time = id;
       obj.icon.type = "emoji";
       obj.icon.name = useGetEmoji();

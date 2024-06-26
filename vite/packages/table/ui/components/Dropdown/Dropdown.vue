@@ -76,7 +76,7 @@ const props = defineProps({
   /**处理层级**/
   zIndex: {
     type: Number,
-    default: 1000,
+    default: 100001,
   },
 });
 </script>

@@ -1,9 +1,18 @@
 <template>
   <template v-if="checkIsCommunity">
     <div class="rounded-lg mb-4 xt-bg-2 px-4 py-3.5 flex flex-col">
-      <SyncCommunityDesk :deskInfo="community"  />
+      <SyncCommunityDesk :deskInfo="community" />
     </div>
   </template>
+  <xt-option-box>
+    <xt-option-info title="独立壁纸" isSwitch v-model:switch="deskBg.start" />
+    <xt-option-bg
+      v-if="deskBg.start"
+      v-model:mode="deskBg.mode"
+      v-model:colorValue="deskBg.colorValue"
+      v-model:imgValue="deskBg.imgValue"
+    />
+  </xt-option-box>
 
   <!-- 满足communityRole为true时可以看见设置参数,不能编辑,反之相反 -->
   <div :class="communityRole ? 'disable-edit' : ''">
@@ -108,7 +117,7 @@
           icon="fluent:arrow-clockwise-16-regular"
           @onIconClick="currentDeskSettings.cardZoom = 100"
         />
-        
+
         <xt-option-slider
           v-model:slider="currentDeskSettings.cardZoom"
           :min="20"
@@ -150,7 +159,6 @@
 
     <FreeLayoutState v-else />
   </div>
-
 </template>
 
 <script setup>
@@ -174,6 +182,22 @@ const { myCommunity } = storeToRefs(chatCommunity);
 const currentDeskSettings = computed(() => {
   return getCurrentDesk.value.settings;
 });
+// const init = () => {
+//   let bg = currentDeskSettings.value.hasOwnProperty("bg");
+//   if (!bg) {
+//     currentDeskSettings.value["bg"] = {
+//       start: false,
+//       mode: "img",
+//       imgValue: DEFAULT.WALLPAPER,
+//       colorValue: "#508BFE",
+//     };
+//   }
+// };
+// init();
+const deskBg = computed(() => {
+  return currentDeskSettings.value.bg;
+});
+
 // 桌面布局切换
 const currentLayout = ref(isFreeLayout.value === true ? "free" : "fixed");
 const layoutList = ref([

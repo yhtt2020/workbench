@@ -41,7 +41,7 @@ import GameCommunity from "../page/gameAssistant/GameCommunity.vue";
 import GameDiscount from "../page/gameAssistant/GameDiscount.vue";
 import GameIntroduction from "../page/gameAssistant/GameIntroduction.vue";
 import MyGame from "../page/gameAssistant/MyGame.vue";
-import GameDiscountDetail from "../page/gameAssistant/GameDiscountDetail.vue";
+// import GameDiscountDetail from "../page/gameAssistant/GameDiscountDetail.vue";
 import Message from "../page/social/Message.vue";
 import Team from "../page/Team.vue";
 import Hall from "../page/team/Hall.vue";
@@ -519,6 +519,7 @@ export default [
         path: "/gameAssistant",
         name: "gameAssistant",
         component: GameAssistant,
+        props: true,
         children: [
           {
             path: "/gameIndex",
@@ -558,6 +559,7 @@ export default [
             meta: {
               tab1: "game",
             },
+            props: true,
           },
           {
             path: "/gameIntroduction",
@@ -575,15 +577,15 @@ export default [
               tab1: "game",
             },
           },
-          {
-            path: "/GameDiscountDetail",
-            name: "GameDiscountDetail",
-            component: GameDiscountDetail,
-            props: true,
-            meta: {
-              tab1: "game",
-            },
-          },
+          // {
+          //   path: "/GameDiscountDetail/:id",
+          //   name: "GameDiscountDetail",
+          //   component: GameDiscountDetail,
+          //   props: true,
+          //   meta: {
+          //     tab1: "game",
+          //   },
+          // },
           {
             path: "/GameCapture",
             name: "GameCapture",

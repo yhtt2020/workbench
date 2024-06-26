@@ -46,7 +46,7 @@ const smallTeam = teamStore();
 const { currentId, startList, claimRewardsList, completedList, rewardVisible,smallMize,isTaskDrawer } =
   storeToRefs(store);
 const { hasTeam,team } = storeToRefs(smallTeam);
-const { userInfo } = storeToRefs(app);
+const { userInfo,showGuide } = storeToRefs(app);
 
 const router = useRouter();
 const props = defineProps({
@@ -73,9 +73,11 @@ const getGuide = () => {
 
 // 任务引导
 const startTask = () => {
+  
   startList.value.push(props.task.id);
   startList.value = [...new Set(startList.value)];
   smallMize.value = false;
+  if(showGuide.value) return showGuide.value  = false;
 
   // console.log("props.task.id :>> ", props.task.id);
   currentId.value = props.task.id;

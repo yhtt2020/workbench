@@ -11,6 +11,7 @@ export const useGlobalStore = defineStore("useGlobalStore", {
     loginCb: () => {},
     windowWidth: 0,
     windowHeight: 0,
+    menus: {},
   }),
   getters: {},
   actions: {},

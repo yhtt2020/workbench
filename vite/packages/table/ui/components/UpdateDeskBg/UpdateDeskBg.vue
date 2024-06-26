@@ -45,7 +45,8 @@ const openPaperModal = () => {
 // 计算属性获取当前壁纸数据
 const backImage = computed(() => {
   if (backgroundImage.value.path !== "") {
-    return { src: backgroundImage.value.src };
+    // console.log('测试',backgroundImage.value);
+    return { src: backgroundImage.value.path };
   } else {
     return { src: DEFAULT.WALLPAPER };
   }

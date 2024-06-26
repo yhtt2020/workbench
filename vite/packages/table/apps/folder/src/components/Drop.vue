@@ -64,10 +64,19 @@ const { navBarId, navBarItem, isLeaveBar, isEnterDesk } =
 //
 const drop = ref(null);
 
+const props = defineProps({
+  stopDrop:{
+    type:Boolean,
+  }
+})
+
 /**
  * 处理drop放置
  */
 const handleDrop = async (dragEvent) => {
+
+  if(props.stopDrop) { return }
+
   console.log("拖拽元素放置 :>> ", dragEvent.dataTransfer);
   isEnterFolder.value = false;
   // 非自定义模式禁止图标组件添加
@@ -128,6 +137,7 @@ const handleDrop = async (dragEvent) => {
  * 处理darg进入
  */
 const handleDragenter = (dragEvent) => {
+  if(props.stopDrop) { return }
   currentId.value = index.value;
   isEnterFolder.value = true;
   console.log("拖拽元素在放置区移动 :>> ");
@@ -137,6 +147,7 @@ const handleDragenter = (dragEvent) => {
  * 处理darg离开
  */
 const handleDragleave = (dragEvent) => {
+  if(props.stopDrop) { return }
   isEnterFolder.value = false;
 
   // console.log("拖拽元素离开放置区 :>> ");
@@ -146,6 +157,7 @@ const handleDragleave = (dragEvent) => {
  * 处理鼠标弹起
  */
 const handleMouseUp = (e) => {
+  if(props.stopDrop) { return }
   // console.log("鼠标弹起 :>> ",e.ctrlKey);
   let isCtrl = e.ctrlKey;
   // 非自定义模式禁止图标组件添加
@@ -195,6 +207,7 @@ const handleMouseleave = (dragEvent) => {
   isDragIcon.value = false;
 };
 const handleMouseover = (dragEvent) => {
+  if(props.stopDrop) { return }
   // console.log("鼠标进入 :>> ");
   if (iconDrag.value) {
     isDragIcon.value = true;

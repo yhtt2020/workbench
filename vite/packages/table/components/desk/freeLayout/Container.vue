@@ -330,7 +330,7 @@ const dragStart = () => {
 const dragStop = (item) => {
   setTimeout(() => {
     cutCanvas({});
-  }, 10);
+  }, 5);
 
   if (!isSelectAll.value) {
     return;

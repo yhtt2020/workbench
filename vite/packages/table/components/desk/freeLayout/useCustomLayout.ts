@@ -2,7 +2,7 @@ import { storeToRefs } from "pinia";
 import { nanoid } from "nanoid";
 import _ from "lodash";
 // useAddCard,
-import { useAddCard ,useDelCard} from '../../../hooks'
+import { useAddCard, useDelCard } from "../../../hooks";
 import { getSnapGrid } from "../../../ui/new/drag/src/hooks/utils";
 import {
   useGridToWidth,
@@ -10,7 +10,6 @@ import {
   useElementSize,
 } from "../../../ui/hooks/useCardSize";
 import { useFreeLayoutStore } from "../freeLayout/store";
-
 const defaultOptions = {
   mainList: [],
   headerList: [],
@@ -26,7 +25,6 @@ export const useCustomLayout = async (options) => {
   const { mainList, headerList, folderList, columns, cb, test } = mergedOptions;
 
   let layoutWidth = useGridToWidth(columns * 2);
-
   let currentLeft = 0;
   let currentTop = 0;
   // 换行检测
@@ -132,6 +130,7 @@ export const useCustomLayout = async (options) => {
         start();
       } else if (prevHeight != 0 && prevHeight != currentHeight) {
         console.log("高度不相等介入 :>> ");
+        start();
         /**
          * 是否两个元素高度不一致
          * 为 0 代表第一次 则不换行
@@ -179,7 +178,7 @@ export const useCustomLayout = async (options) => {
   // 隐藏
   getFreeLayoutState.value.system.hide = true;
   let positioningId = await addPositioningData();
-  console.log('positioningId :>> ', positioningId);
+  console.log("positioningId :>> ", positioningId);
   // 定制头部
 
   if (headerList && headerList.length) {
@@ -316,13 +315,11 @@ const updateCardPosition = (top, left, item) => {
 
   // useAddCard( item.name, { ...item?.customData}, id );
 
-  useAddCard(
-    {
-      name: item.name,
-      id,
-      data: item?.customData,
-    },
-  );
+  useAddCard({
+    name: item.name,
+    id,
+    data: item?.customData,
+  });
 
   return id;
 };

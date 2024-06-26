@@ -36,7 +36,7 @@
       >
         <div style="height: 60vh" class="flex items-center justify-center">
           <div class="flex flex-col">
-            <CategoryEmpty  :no="no" />
+            <CategoryEmpty :no="no" />
           </div>
         </div>
       </template>
@@ -89,16 +89,18 @@
 
                 <!-- 右键下拉菜单 -->
                 <template #rightDropdown>
-                  <div
-                    class="flex items-center justify-center"
-                    v-if="currentInfoDetail?.role !== 'member'"
-                  >
-                    <RightDropdown
-                      :newIcon="'fluent:more-horizontal-16-filled'"
-                      :list="childrenList"
-                      :dropItem="item"
-                    />
-                  </div>
+                  <template v-if="hasRole">
+                    <div
+                      class="flex items-center justify-center"
+                      v-if="currentInfoDetail?.role !== 'member'"
+                    >
+                      <RightDropdown
+                        :newIcon="'fluent:more-horizontal-16-filled'"
+                        :list="childrenList"
+                        :dropItem="item"
+                      />
+                    </div>
+                  </template>
                 </template>
 
                 <!-- 内容 -->
@@ -316,8 +318,19 @@ watch(props.no,(v,ov)=>{
   deep:true,
   immediate:true
 })
+
+/**加入社群条件**/
+const hasRole = computed(() => {
+  const currentFind = _.find(myCommunity.value, (item) => {
+    return Number(item?.route?.params?.no) === Number(no.value);
+  });
+  if (currentFind && currentFind.role) {
+    return true;
+  } else {
+    return false;
+  }
+});
 </script>
 
 <style lang="scss" scoped>
-
 </style>

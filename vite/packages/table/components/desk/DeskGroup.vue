@@ -730,7 +730,7 @@ export default {
       return String(desk.id) === String(this.currentDeskId);
     });
     if (found && found.hasOwnProperty("communityNo")) {
-      this.setCurrentDeskId(filterList[0].id);
+      this.setCurrentDeskId(filterList[0]?.id);
     }
 
     // 个人桌面正常操作
@@ -981,6 +981,10 @@ export default {
       this.$emit("showMore");
     },
     setCurrentDeskId(id) {
+      if (this.showGuide) {
+        message.info("定制过程中无法操作");
+        return
+      }
       this.$emit("update:currentDeskId", id);
       this.$emit("changeDesk", {id: id});
     },

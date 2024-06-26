@@ -50,7 +50,7 @@
         class="font-16"
         style="color: var(--secondary-text); margin-bottom: 24px"
       >
-        <NoticeBody @pause="pause" :content="msg"></NoticeBody>
+        <NoticeBody @pause="pause" :noticeContent="msg"></NoticeBody>
       </div>
 
       <div class="flex items-center justify-between gap-2">
@@ -100,7 +100,7 @@ export default defineComponent({
   watch: {
     messageType: {
       handler(newVal) {
-        if (this.play && newVal === "message") {
+        if (this.type === "message" && this.play) {
           this.setMessagePlay();
           if (this.settings.messagePlay) {
             this.$nextTick(() => {

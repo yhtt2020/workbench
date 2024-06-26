@@ -18,10 +18,9 @@
       :communityVisible="communityVisible"
       :settings="settings"
       :desk-list="desks"
-      v-model:currentDeskId="this.currentDeskId"
-      @changeCommunityDesk="changeDesk"
+      v-model:currentDeskId="communityDeskMemoryId"
+      @changeCommunityDesk="handlerCommunityMemory"
     />
-    <!--  ref="deskGroupRef" -->
   </div>
   <!-- 检测到用户头像为默认头像时触发用户中心个人信息修改弹窗 -->
   <div
@@ -96,7 +95,8 @@ import { usePlat } from "../ui/hooks/usePlat";
 import { usePermissionStore } from "../permission/store";
 import { useUpdateUserInfo } from "../permission/user/useUserPermit";
 import cache from "../components/card/hooks/cache";
-import { communityDeskStore } from "../apps/communityDesk/store/communityDeskStore";
+// import { communityDeskStore } from "../apps/communityDesk/store/communityDeskStore";
+import { communityNavStore } from "../components/bottomPanel/store/communityNavStore";
 
 import { isMain } from "../js/common/screenUtils";
 // 检查当前网络状态
@@ -129,6 +129,7 @@ if (usePlat("client")) {
 
 export default {
   name: "Home",
+
   data() {
     return {
       visibleAdd: false,
@@ -242,6 +243,7 @@ export default {
       "currentDeskId",
       "currentDeskIndex",
       "currentInit",
+      "communityDeskMemory",
     ]),
     ...mapWritableState(useFreeLayoutStore, [
       "freeLayoutData",
@@ -258,7 +260,7 @@ export default {
       "isGuest",
       "currentEnv",
     ]),
-    ...mapWritableState(communityDeskStore, ["communityCurrentDesk"]),
+    ...mapWritableState(communityNavStore, ["currentCommunity"]),
 
     deskGroupRef() {
       return this.$refs.deskGroupRef;
@@ -293,6 +295,13 @@ export default {
     /**区分个人桌面和社群桌面**/
     communityVisible() {
       return this.appSettings.isCommunity;
+    },
+    // 实时读取社群桌面记忆id
+    communityDeskMemoryId() {
+      const communityNo = this.currentCommunity?.item.no;
+      if (communityNo !== 1) {
+        return this.communityDeskMemory[communityNo];
+      }
     },
   },
   async mounted() {
@@ -344,12 +353,14 @@ export default {
     }
 
     // 接收群聊通知消息的回调方法
-    const groupOnMessageReceived = (evt) =>{
+    const groupOnMessageReceived = (evt) => {
       window.$notice.receiveNotification(evt);
-    }
+    };
     // 监听群聊消息全局接收
-    window.$chat?.chat?.on(window.$chat.EVENT.MESSAGE_RECEIVED,groupOnMessageReceived)
-
+    window.$chat?.chat?.on(
+      window.$chat.EVENT.MESSAGE_RECEIVED,
+      _.debounce(groupOnMessageReceived, 500)
+    );
   },
   created() {
     if (this.currentDesk.cards.length) {
@@ -375,6 +386,7 @@ export default {
     if (this.reserveTimer) {
       clearInterval(this.reserveTimer);
     }
+    // window.$chat?.chat?.off(window.$chat.EVENT.MESSAGE_RECEIVED);
   },
   methods: {
     /**
@@ -452,6 +464,10 @@ export default {
         };
       }
     },
+    // 记录社群桌面存储
+    handlerCommunityMemory(p) {
+      this.communityDeskMemory[p.no] = p.id;
+    },
 
     // 覆写当前工作台状态
     setStatus() {
@@ -490,7 +506,7 @@ export default {
 
           this.desks = desks;
           // console.log('查看desk',this.desks[0]);
-          const initDesk = this.desks[0]
+          const initDesk = this.desks[0];
           // this.currentDesk = this.desks[0];
           this.currentDeskIndex = {
             name: initDesk?.name,

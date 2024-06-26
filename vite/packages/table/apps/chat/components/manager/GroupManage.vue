@@ -31,7 +31,7 @@
         <span class="xt-text xt-font font-16 mb-4">群管理员</span>
         <div class="flex items-center admin-container">
           <!-- 显示群管理员列表 -->
-          <template v-for="item in adminList">
+          <template v-for="item in member.admin">
             <div
               class="flex items-center admin-item justify-center flex-col mr-3"
             >
@@ -99,7 +99,7 @@
         <div class="my-3" style="background: var(--divider); height: 1px"></div>
         <div class="flex items-center admin-container">
           <!-- 显示群管理员列表 -->
-          <template v-for="item in muteList">
+          <template v-for="item in member.muteMember">
             <div
               class="flex items-center admin-item justify-center flex-col mr-3"
             >
@@ -137,7 +137,7 @@
           <xt-button
             w="32"
             h="32"
-            style="background: rgba(255, 77, 79, 0.2); border-radius: 8px;"
+            style="background: rgba(255, 77, 79, 0.2); border-radius: 8px"
             @click="deleteMemberMute"
           >
             <div class="flex items-center justify-center">
@@ -158,8 +158,12 @@
   <DeleteGroupManage ref="deleteRoleRef" @update="deleteRoleData" />
 
   <!-- 设置群成员禁言 -->
-  <AddMemberMute ref="addMuteRef" @updateMute="setMuteList"/>
-  <DeleteMemberMute ref="deleteMuteRef" @deleteMute="delMuteList" :muteList="muteList"/>
+  <AddMemberMute ref="addMuteRef" @updateMute="setMuteList" />
+  <DeleteMemberMute
+    ref="deleteMuteRef"
+    @deleteMute="delMuteList"
+    :muteList="member.muteMember"
+  />
 </template>
 
 <script setup>
@@ -194,9 +198,16 @@ const props = defineProps({
 });
 const { groupInfo } = toRefs(props);
 
-const adminList = ref([]);
-// 被禁言的用户列表
-const muteList = ref([]);
+const member = ref({
+  admin:[],
+  member:[],
+  muteMember:[]
+})
+
+// const adminList = ref([]);
+// // 被禁言的用户列表
+// const muteList = ref([]);
+
 const updateRoleRef = ref(null);
 const deleteRoleRef = ref(null);
 const addMuteRef = ref(null);
@@ -204,18 +215,29 @@ const deleteMuteRef = ref(null);
 
 const getGroupAdminList = () => {
   TUIStore.watch(StoreName.GRP, {
-    currentGroupMemberList: (data) => {
-      // console.log('data',data);
-      // 群管理员列表
-      const adminArr = _.filter(data, function (item) {
-        return item?.role === "Admin";
+    currentGroupMemberList: (memberList) => {
+      member.value = {
+        admin: [],
+        member: [],
+        muteMember: [],
+      };
+      Array.from(memberList).map((item) => {
+        switch (item?.role) {
+          case TUIChatEngine.TYPES.GRP_MBR_ROLE_ADMIN:
+            member.value.admin.push(item);
+            break;
+          case TUIChatEngine.TYPES.GRP_MBR_ROLE_MEMBER:
+            member.value.member.push(item);
+            break;
+          default:
+            break;
+        }
+        return item;
       });
-      adminList.value = adminArr;
-      // 被禁言的成员列表
-      const muteArr = _.filter(data, function (item) {
-        return item?.muteUntil !== 0;
-      });
-      muteList.value = muteArr;
+      const time = new Date().getTime();
+      member.value.muteMember = Array.from(memberList).filter(
+        (item) => item?.muteUntil * 1000 - time > 0,
+      );
     },
   });
 };
@@ -301,48 +323,54 @@ const updateMuteAllChecked = (evt) => {
 };
 
 // 设置群成员禁言
-const setMemberMute = () =>{
+const setMemberMute = () => {
   addMuteRef.value.openMuteModal();
 };
-const setMuteList = (list) =>{
-  for(const item of list){
+const setMuteList = (list) => {
+  for (const item of list) {
     const option = {
       groupID: groupInfo.value?.groupID,
       userID: item.userID,
       muteTime: 600,
-    }
-    chat.setGroupMemberMuteTime(option).then((res) => {
-      if(res.code === 0){
-        message.success("设置禁言成功");
-      }
-    }).catch((err) => {
-      message.error("你不是群主,只有群主才有权限操作");
-    })
+    };
+    chat
+      .setGroupMemberMuteTime(option)
+      .then((res) => {
+        if (res.code === 0) {
+          message.success("设置禁言成功");
+        }
+      })
+      .catch((err) => {
+        message.error("你不是群主,只有群主才有权限操作");
+      });
   }
   addMuteRef.value.muteVisible = false;
-}
+};
 
 // 解除群成员禁言
 const deleteMemberMute = () => {
   deleteMuteRef.value.openDeleteMuteModal();
 };
-const delMuteList = (list) =>{
-  for(const item of list){
+const delMuteList = (list) => {
+  for (const item of list) {
     const option = {
       groupID: groupInfo.value?.groupID,
       userID: item.userID,
       muteTime: 0,
-    }
-    chat.setGroupMemberMuteTime(option).then((res) => {
-      if(res.code === 0){
-        message.success("解除禁言成功");
-      }
-    }).catch((err) => {
-      message.error("你不是群主,只有群主才有权限操作");
-    })
+    };
+    chat
+      .setGroupMemberMuteTime(option)
+      .then((res) => {
+        if (res.code === 0) {
+          message.success("解除禁言成功");
+        }
+      })
+      .catch((err) => {
+        message.error("你不是群主,只有群主才有权限操作");
+      });
   }
   deleteMuteRef.value.deleteMuteVisible = false;
-}
+};
 
 defineExpose({
   openGroupManageDrawer,

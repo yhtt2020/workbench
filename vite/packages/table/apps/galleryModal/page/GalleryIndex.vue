@@ -15,7 +15,7 @@
        <GalleryComponent :pageStatus="currentID" />
      </xt-left-menu>
    </template>
- 
+
    <template v-else>
      <xt-left-menu
        :list="newGalleryList"
@@ -44,7 +44,7 @@ import GalleryComponent from "../components/GalleryComponent.vue";
 
 const pickPaper = pickPaperStore();
 const { currentID } = storeToRefs(pickPaper);
-
+// 111
 /**壁纸左侧列表**/
 const paperLeftList = ref([
   {
@@ -65,15 +65,15 @@ const paperLeftList = ref([
       currentPaperTab(item);
     },
   },
-  // {
-  //   newIcon: "uim:bing",
-  //   id: 2,
-  //   type:"b",
-  //   bg: "var(--secondary-bg)",
-  //   callBack: (item) => {
-  //     currentPaperTab(item);
-  //   },
-  // },
+  {
+    newIcon: "uim:bing",
+    id: 2,
+    type:"b",
+    bg: "var(--secondary-bg)",
+    callBack: (item) => {
+      currentPaperTab(item);
+    },
+  },
   {
     newIcon: "fluent:image-multiple-16-filled",
     id: 3,
@@ -107,7 +107,7 @@ const paperLeftList = ref([
 // 根据当前环境是网页端还是PC端,如果是网页端需要将设置进行屏蔽
 const newGalleryList = computed(() => {
   const filterArr = _.filter(paperLeftList.value, (item) => {
-    return item.type !== "s";
+    return item.type !== "s" && item.type !== 'b';
   });
   if (window.$usePlat("web")) return filterArr;
   return paperLeftList.value;
@@ -141,7 +141,7 @@ const currentPaperTab = (item) => {
 <style lang="scss" scoped>
 :deep(.xt-bt) {
   border-top: none !important;
-  
+
 }
 :deep(.xt-br) {
   border-right: none !important;

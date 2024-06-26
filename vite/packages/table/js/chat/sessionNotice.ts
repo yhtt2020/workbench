@@ -6,6 +6,13 @@ import { storeToRefs } from "pinia";
 import { router } from "../../router";
 import _ from "lodash-es";
 import { TUIConversationService } from "@tencentcloud/chat-uikit-engine";
+import {
+  handleMsgContent,
+  handlerMesFileContent,
+  handlerSystemMsg,
+  createSoundStrongElement,
+  createSoundElement,
+} from "./hook/noticeHook";
 
 import ClockNoticeToast from "../../page/notice/toast/ClockNoticeToast.vue";
 import SystemNoticeToast from "../../page/notice/toast/SystemNoticeToast.vue";
@@ -152,7 +159,7 @@ export class Notifications {
     toast.info(
       {
         component: MessageNoticeToast,
-        props: { msg, type: "message", play: settings.value.enablePlay },
+        props: { msg, type: "message", play: settings.value.messagePlay },
         listeners: {
           putNotice: function () {
             // console.log("关闭并存储数据", msg);
@@ -161,7 +168,9 @@ export class Notifications {
             (chatStore() as any).updateConversation(conversationID);
             (appStore() as any).hideNoticeEntry();
             router.push({ name: "chatMain" });
-            TUIConversationService.switchConversation(conversationID);
+            (window as any).$TUIKit?.TUIConversation?.switchConversation(
+              conversationID
+            );
           },
         },
       },
@@ -193,7 +202,9 @@ export class Notifications {
           systemExamine: function () {
             (chatStore() as any).updateConversation(conversationID);
             router.push({ name: "chatMain" });
-            TUIConversationService.switchConversation(conversationID);
+            (window as any).$TUIKit?.TUIConversation?.switchConversation(
+              conversationID
+            );
           },
         },
       },
@@ -209,34 +220,6 @@ export class Notifications {
     );
   }
 
-  // 创建音频播放组件
-  private createSoundElement(): HTMLAudioElement {
-    let audioElement = document.getElementById(
-      "messageAudio"
-    ) as HTMLAudioElement;
-    if (!audioElement) {
-      audioElement = document.createElement("audio");
-      audioElement.src = "/sound/message.mp3";
-      audioElement.setAttribute("id", "messageAudio");
-      document.body.appendChild(audioElement);
-    }
-    return audioElement;
-  }
-
-  // 创建音频强提醒
-  private createSoundStrongElement(): HTMLAudioElement {
-    let audioElement = document.getElementById(
-      "messageAudio"
-    ) as HTMLAudioElement;
-    if (!audioElement) {
-      audioElement = document.createElement("audio");
-      audioElement.src = "/sound/notice.mp3";
-      audioElement.setAttribute("id", "messageAudio");
-      document.body.appendChild(audioElement);
-    }
-    return audioElement;
-  }
-
   // 获取字符串中的数字
   private extractNumbersFromString(str: any) {
     const regex = /\d+/g; // 匹配一个或多个数字的正则表达式
@@ -250,15 +233,17 @@ export class Notifications {
 
   // 社群消息通知
   public async receiveNotification(msg: any) {
+    console.log("测试", msg);
+    console.log("测试", Date.now());
+
     const { settings, userInfo } = storeToRefs(appStore() as any);
     const data = { ...msg.data[0] };
 
     // 获取群聊消息基础内容
     const rs = await (
       window as any
-    ).$TUIKit.TUIConversation?.getConversationProfile(data.conversationID);
-    const muteVisible =
-      rs.data?.conversation?.groupProfile?.selfInfo?.messageRemindType;
+    ).$TUIKit?.TUIConversation?.getConversationProfile(data.conversationID);
+    const muteVisible = rs.data?.conversation?.messageRemindType;
 
     // 获取当前会话id
     const currentConversationID = rs.data?.conversation?.conversationID;
@@ -271,10 +256,10 @@ export class Notifications {
       global: router.currentRoute.value.fullPath === "/chatMain",
       // 提示音开关
       soundSwitch: settings.value.enablePlay,
-      // @全部消息
-      atMsg: data.atUserList.length !== 0,
-      // @我的消息
-      atMeMsg: data.atUserList.includes(String(userInfo.value.uid)),
+      // @消息
+      atMsg:
+        data.atUserList.length !== 0 ||
+        data.atUserList.includes(String(userInfo.value.uid)),
       // 消息免打扰
       msgMute: muteVisible === "AcceptAndNotify",
       // 当前会话
@@ -286,36 +271,30 @@ export class Notifications {
 
     // 当前消息开关是否开启
     if (config.enable) {
-      // 区分当前路由是否在群聊页面中
-      if (config.global) {
-        // 纯文字情况下
-        if (isText) {
-          // 非当前会话
+      /**
+       * 纯文本消息
+       * 好友、群聊
+       * config.global 为true是局部,false是全局
+       * config.currentConversation 为true是当前所在会话,false是非当前所在会话中
+       * config.atMsg 为true是@的消息, false则相反
+       * **/
+      if (isText) {
+        if (config.global) {
           if (!config.currentConversation) {
-            if (config.atMeMsg || config.atMsg) {
-              const strongEl: HTMLAudioElement =
-                this.createSoundStrongElement();
-              strongEl.play();
-            }
-            // 非@消息
-            else {
-              const playElement: HTMLAudioElement = this.createSoundElement();
-              playElement.play();
+            if (config.atMsg) {
+              handleMsgSound(config, "strong");
+            } else {
+              handleMsgSound(config, "weak");
             }
           }
         }
-        // 其他消息内容,其中包含(文件、图片、等等)
+
+        // 获取提示通知文字信息
         else {
-          console.log("除纯文本除外,文件消息", data);
-        }
-      }
-      // 全局情况下
-      else {
-        // 纯文字情况下
-        if (isText) {
+          // 获取提示通知文字信息
           const rs = await handleMsgContent(data);
-          // @我的  @所有人
-          if (config.atMeMsg || config.atMsg) {
+          // @消息
+          if (config.atMsg) {
             // 提示音开关是否开启
             if (config.soundSwitch) {
               if (config.msgMute) {
@@ -323,7 +302,8 @@ export class Notifications {
               }
             }
           }
-          // 其他场景
+
+          // 其他消息提示
           else {
             // 提示音开关是否开启
             if (config.soundSwitch) {
@@ -333,52 +313,86 @@ export class Notifications {
             }
           }
         }
-        // 其他消息内容,其中包含(文件、图片、等等)
+      }
+
+      // 除纯文本之外的消息提示
+      else {
+        // 群聊系统消息通知
+        if (data?.payload?.hasOwnProperty("operationType")) {
+          // 获取群聊系统消息通知内容
+          const systemRs = await handlerSystemMsg(data);
+          if (config.soundSwitch) {
+            if (config.msgMute) {
+              this.messageWeak(systemRs, data.conversationID);
+            }
+          }
+        }
+
+        // 创建群聊的系统消息通知
+        else if (data?.payload?.hasOwnProperty("extension")) {
+          // 获取群聊系统消息通知内容
+          const systemRs = await handlerSystemMsg(data);
+          if (config.soundSwitch) {
+            if (config.msgMute) {
+              this.messageWeak(systemRs, data.conversationID);
+            }
+          }
+        }
+
+        // 文件之类的消息通知
         else {
-          console.log("除纯文本除外,文件消息", data);
+          // 局部
+          if (config.global) {
+            // 非当前会话
+            if (config.currentConversation) {
+              if (config.soundSwitch) {
+                if (config.msgMute) {
+                  handleMsgSound(config, "weak");
+                }
+              }
+            }
+          }
+
+          // 全局
+          else {
+            // 获取文件类型的消息通知文本
+            const fileRs = await handlerMesFileContent(data);
+            if (config.soundSwitch) {
+              if (config.msgMute) {
+                this.messageWeak(fileRs, data.conversationID);
+              }
+            }
+          }
         }
       }
     }
   }
 }
 
-// 处理群聊消息纯文本
-async function handleMsgContent(data: any) {
-  // 区分是好友还是群聊常量
-  const handleType = data.conversationType;
-  // 好友
-  if (handleType === "C2C") {
-    const friendContent = {
-      icon: data.avatar,
-      title: `好友${data.nick}的消息`,
-      conversationID: data.conversationID,
-      body: getTextMsgContent(data),
-      time: data.time,
-      type: "message",
-    };
-    return friendContent;
+/**
+ * 提取提示音的公共方法
+ * type   提示音分为强类型和弱类型
+ * config 获取配置参数
+ * config.soundSwitch 提示音开关是否开启
+ * config.msgMute     群聊是否开启免打扰
+ * **/
+function handleMsgSound(config: any, type: any) {
+  if (type === "strong") {
+    if (config.soundSwitch) {
+      if (config.msgMute) {
+        const strongEl: HTMLAudioElement = createSoundStrongElement();
+        strongEl.play();
+      }
+    }
   }
-  // 群聊
-  else if (handleType === "GROUP") {
-    // 获取群聊列表
-    const groupRs = await (window as any).$TUIKit?.chat?.getGroupList();
-    const groupList = groupRs?.data?.groupList;
-    const found = _.find(groupList, (item: any) => {
-      return String(item.groupID) === String(data.to);
-    });
-    // 需要的参数
-    const textContent = {
-      icon: found?.avatar,
-      title: found?.name,
-      body: getTextMsgContent(data),
-      conversationID: data.conversationID,
-      time: data.time,
-      type: "message",
-    };
-    return textContent;
+
+  // 弱提示
+  else if (type === "weak") {
+    if (config.soundSwitch) {
+      if (config.msgMute) {
+        const playElement: HTMLAudioElement = createSoundElement();
+        playElement.play();
+      }
+    }
   }
-}
-// 获取纯文本消息内容,返回字符串
-function getTextMsgContent(data: any) {
-  return `${data.nick}：${data.payload.text}`;
 }

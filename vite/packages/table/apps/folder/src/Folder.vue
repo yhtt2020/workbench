@@ -5,17 +5,18 @@
     @updateBg="updateBg"
     ref="folder"
     class="tt-folder-container"
+    :stopDrop="folderMember"
   >
     <xt-container
       v-model:status="status"
       :desk="desk"
-      :modalSize="modalSize"
+      :modalSize="folderMember ? [] : modalSize"
       :options="options"
       :customIndex="customIndex"
       :customData="customData"
       :header="header"
       :menuList="menuList"
-      :sizeList="autoSizeList"
+      :sizeList="folderMember ? [] : autoSizeList"
       @leftClick="leftClick"
       v-model:customSize="customData.customSize"
       @delete="deleteFn"
@@ -31,6 +32,7 @@
         <Null
           :size="customData.customSize"
           @addFile="addFileClick"
+          :memberVisible="folderMember"
           v-if="!navBar.isOut"
         />
         <slot name="navEmpty"></slot>
@@ -50,7 +52,7 @@
           :list="customData.list"
           :layout="customData.layout"
           :model="customData.model"
-          :modalSize="modalSize"
+          :modalSize="folderMember ? [] :  modalSize"
           @deleteFile="deleteFile"
           @updateFile="updateFile"
           @updateList="updateList"
@@ -134,6 +136,8 @@ const EditNewNavigation = defineAsyncComponent(() =>
 const ModelCard = defineAsyncComponent(() =>
   import("../../../components/windowPanel/components/ModelCard.vue")
 );
+
+import { communityMember } from "../../communityDesk/hooks/deskCreateMethod";
 
 const { proxy } = getCurrentInstance();
 const router = useRouter();
@@ -239,8 +243,23 @@ const emit = defineEmits([
 ]);
 
 const refreshState = ref(false);
+
+// 区分当前桌面是社群还是个人
+const folderMember = computed(()=>{
+  console.log('成员桌面',communityMember(props.desk?.communityNo))
+  return communityMember(props.desk?.communityNo);
+})
+
 const header = computed(() => {
-  if (!navBar.value.isOut) {
+
+  if(folderMember.value){
+    return {
+      showIcon: customData.value.icon,
+      title: customData.value.name,
+    }
+  }
+
+  else if (!navBar.value.isOut) {
     return {
     // disabled: navBar.value.disableHeader,
       showIcon: customData.value.icon,
@@ -319,12 +338,13 @@ const options = computed(() => {
     secondary: {
       customSize: "",
     },
-    resize: resize.value,
+    resize: folderMember.value ? false : resize.value,
     modalSize: modalSize.value,
-    customDel: true,
+    customDel: folderMember.value ? false : true,
     rightMenuVisible: navBar.value.customRight,
     // 隐藏菜单中添加到导航栏的选项
     disabledNav: true,
+    disableEdit:folderMember.value ? true : false,
   };
 });
 
@@ -438,7 +458,23 @@ watch(
  */
 const setVisible = ref(false);
 const menuList = computed(() => {
-  if (!navBar.value.isOut) {
+  // console.log(folderMember.value);
+  if(folderMember.value){
+    return [
+      {
+        title: "一键打开全部",
+        newIcon: "fluent:open-16-regular",
+        fn: openAllFile,
+      },
+      {
+        newIcon: layout.value,
+        title: "排列方式",
+        fn: layoutClick,
+      },
+    ]
+  }
+
+  else if (!navBar.value.isOut) {
     return [
       {
         title: "一键打开全部",
@@ -708,6 +744,7 @@ onMounted(async () => {
     editVisible.value = false;
   })
 });
+
 
 defineExpose({
   openSetVisible,

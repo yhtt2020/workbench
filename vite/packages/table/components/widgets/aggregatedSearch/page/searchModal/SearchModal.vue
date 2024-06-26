@@ -173,6 +173,9 @@ const debouncedChangeTabVisible = useDebounceFn(() => {
 const AIRef: any = ref();
 const SystemRef: any = ref();
 const webRef: any = ref();
+
+const altIndex = ref(0);
+provide("altIndex", altIndex);
 /** 相关事件 */
 const eventDown = (e) => {
   /** 组合键 */
@@ -195,6 +198,7 @@ const eventDown = (e) => {
     if (words.value.length == 0) {
       return;
     }
+    altIndex.value = e.key - 1;
     e.preventDefault();
     currentSource.value = data.value.sourceList[e.key - 1];
     return;

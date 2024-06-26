@@ -1,40 +1,40 @@
 <template>
-  <!-- 管理员 -->
-  <template v-if="communityAuth(communityInfo?.no)">
-    <div class="relative flex flex-col h-full">
-      <xt-mix-menu class="w-full h-full" :menus="deskMenu" ref="mixMenu">
-        <!-- 导航栏 -->
-        <template #extraMenu>
-          <ExtraMenu />
+  <div class="relative flex flex-col h-full">
+    <xt-mix-menu class="w-full h-full" :menus="deskMenu" ref="mixMenu">
+      <!-- 导航栏 -->
+      <template #extraMenu>
+        <ExtraMenu />
+      </template>
+
+      <!-- 桌面组件加载 -->
+      <Desk
+        v-if="currentDesk && currentDesk?.cards?.length > 0"
+        :global-settings="settings"
+        :editing="editing"
+        ref="currentDeskRef"
+        :currentDesk="currentDesk"
+        v-model:settings="currentDesk.settings"
+        :key="currentDeskId"
+        :keepAddIcon="keepAddIcon"
+        @changeEditing="
+          () => {
+            editing = !editing;
+            this.editSync();
+          }
+        "
+        @onArrange="onArrange"
+        :communityInfo="communityInfo"
+      >
+        <!-- 拿菜单数据 -->
+        <template #settingsAllAfter>
+          <slot name="settingsAll"></slot>
         </template>
+      </Desk>
 
-        <!-- 桌面组件加载 -->
-        <Desk
-          v-if="currentDesk && currentDesk?.cards?.length > 0"
-          :global-settings="settings"
-          :editing="editing"
-          ref="currentDeskRef"
-          :currentDesk="currentDesk"
-          v-model:settings="currentDesk.settings"
-          :key="currentDeskId"
-          :keepAddIcon="keepAddIcon"
-          @changeEditing="
-            () => {
-              editing = !editing;
-              this.editSync();
-            }
-          "
-          @onArrange="onArrange"
-          :communityInfo="communityInfo"
-        >
-          <!-- 拿菜单数据 -->
-          <template #settingsAllAfter>
-            <slot name="settingsAll"></slot>
-          </template>
-        </Desk>
-
-        <!-- 空状态 -->
-        <template v-else>
+      <!-- 空状态 -->
+      <template v-else>
+        <!-- 管理员 -->
+        <template v-if="deskAuth">
           <slot name="empty">
             <div class="flex items-center justify-center w-full h-full">
               <div class="panel-top xt-bg">
@@ -74,93 +74,41 @@
               </div>
             </div>
           </slot>
-
-          <!-- 隐藏的桌面页面 -->
-          <span v-show="false">
-            <Desk
-              ref="currentDeskRef"
-              :editing="editing"
-              :key="key"
-              :currentDesk="currentDesk"
-              :communityInfo="communityInfo"
-            />
-          </span>
         </template>
-      </xt-mix-menu>
 
-      <DeskTabUI
-        :showTopBar="showTopBar"
-        :fullScreen="fullScreen"
-        :communityInfo="communityInfo"
-        :tabList="displayDesks"
-        :showTabs="showTabs"
-        :currentDeskId="currentDeskId"
-        @tabDeskId="setCurrentDeskId"
-      />
-    </div>
-  </template>
-
-  <!-- 成员 -->
-  <template v-else>
-    <div class="relative flex flex-col h-full">
-      <xt-mix-menu class="w-full h-full" :menus="deskMenu" ref="mixMenu">
-        <!-- editing -->
-        <Desk
-          v-if="currentDesk && currentDesk?.cards?.length > 0"
-          :global-settings="settings"
-          :editing="false"
-          :showRightMenu="showRightMenu"
-          ref="currentDeskRef"
-          :currentDesk="currentDesk"
-          v-model:settings="currentDesk.settings"
-          :key="currentDeskId"
-          :keepAddIcon="keepAddIcon"
-          @onArrange="onArrange"
-          @changeEditing="
-            () => {
-              editing = !editing;
-              showRightMenu = false;
-            }
-          "
-          :communityInfo="communityInfo"
-        >
-          <!-- 拿菜单数据 -->
-          <template #settingsAllAfter>
-            <slot name="settingsAll"></slot>
-          </template>
-        </Desk>
-
-        <template v-else>
+        <template v-else-if="deskMember">
           <slot name="empty">
             <div class="flex items-center justify-center w-full h-full">
               <NoAdminEmpty />
             </div>
           </slot>
-
-          <span v-show="false">
-            <Desk
-              ref="currentDeskRef"
-              :editing="editing"
-              :key="key"
-              :currentDesk="currentDesk"
-              :communityInfo="communityInfo"
-            />
-          </span>
         </template>
-      </xt-mix-menu>
 
-      <DeskTabUI
-        v-if="displayDesks.length > 0"
-        :showTopBar="showTopBar"
-        :fullScreen="fullScreen"
-        :communityInfo="communityInfo"
-        :tabList="displayDesks"
-        :showTabs="showTabs"
-        :currentDeskId="currentDeskId"
-        @tabDeskId="setCurrentDeskId"
-      />
-    </div>
-  </template>
+        <!-- 隐藏的桌面页面 -->
+        <span v-show="false">
+          <Desk
+            v-if="deskAuth"
+            ref="currentDeskRef"
+            :editing="editing"
+            :key="key"
+            :currentDesk="currentDesk"
+            :communityInfo="communityInfo"
+          />
+        </span>
+      </template>
+    </xt-mix-menu>
+
+    <DeskTabUI
+      v-if="displayDesks.length > 0"
+      :showTopBar="showTopBar"
+      :fullScreen="fullScreen"
+      :communityInfo="communityInfo"
+      :tabList="displayDesks"
+      :showTabs="showTabs"
+      :currentDeskId="currentDeskId"
+      @tabDeskId="setCurrentDeskId"
+    />
+  </div>
 
   <!-- 添加桌面弹窗式 -->
   <xt-modal
@@ -337,7 +285,11 @@ import { communityNavStore } from "../../../../components/bottomPanel/store/comm
 // 其他文件
 import menuMinis from "../../hooks/communityMenu";
 import { completeTask } from "../../../task/task";
-import { communityAuth, isArrayEqual } from "../../hooks/deskCreateMethod";
+import {
+  communityAuth,
+  isArrayEqual,
+  communityMember,
+} from "../../hooks/deskCreateMethod";
 import { disabledCard } from "../../store/desktopOtherData";
 
 export default {
@@ -372,7 +324,6 @@ export default {
     // 当前桌面id
     currentDeskId: {
       type: String,
-      default: "0",
     },
   },
 
@@ -533,14 +484,22 @@ export default {
       return this.currentCommunity?.item;
     },
 
+    /**
+     * 社群桌面角色
+     * deskMember 成员
+     * deskAuth 管理员
+     * **/
+    deskAuth() {
+      return this.communityAuth(this.communityInfo?.no);
+    },
+    deskMember() {
+      return this.communityMember(this.communityInfo?.no);
+    },
+
     // 右键下拉菜单
     deskMenu() {
-      /**当前社群具备管理员资格**/
-      if (this.communityAuth(this.communityInfo?.no)) {
-        return this.communityMenus;
-      } else {
-        return this.memberMenus;
-      }
+      if (this.deskAuth) return this.communityMenus;
+      if (this.deskMember) return this.memberMenus;
     },
 
     // 过滤出当前社群名下所有桌面的列表
@@ -551,9 +510,8 @@ export default {
       const newArr = _.filter(filterList, (desk) => {
         return Number(this.communityInfo.no) === Number(desk.communityNo);
       });
-      if (this.communityAuth(this.communityInfo?.no)) {
-        return newArr;
-      } else {
+      if (this.deskAuth) return newArr;
+      if (this.deskMember) {
         const deskId = _.map(this.syncDesk?.desks, (desk) => {
           return desk.id;
         });
@@ -592,13 +550,16 @@ export default {
 
     // 当前桌面
     currentDesk() {
+      // console.log("查看this.currentDeskId", this.currentDeskId);
+      // console.log("查看this.deskList", this.deskList);
       let deskItem = this.deskList.find((desk) => {
         if (desk.hasOwnProperty("communityNo")) {
           if (Number(this.communityInfo?.no) === Number(desk?.communityNo)) {
-            return desk.id === this.currentDeskId;
+            return String(desk.id) === String(this.currentDeskId);
           }
         }
       });
+      // console.log("测试", deskItem);
       if (deskItem !== undefined) {
         if (this.communityInfo.role === "member") {
           // 是处理社群成员桌面时获取云端的数据进行自由布局的同步
@@ -640,13 +601,11 @@ export default {
     this.$bus.on("updateSync", () => {
       this.syncSaveCommunity();
     });
-
     // 获取推荐桌面数据
     this.hotDesk.push(this.apiList[0].children[0]);
     this.getRecommend({ goodType: "desk" }).then((rs) => {
       this.recommendList = rs;
     });
-
     // 根据桌面id默认显示当前桌面
     if (this.deskList.length > 0) {
       // this.currentDesk = this.deskList[0];
@@ -656,15 +615,13 @@ export default {
         desk.id = desk.nanoid;
       }
     });
-
     // 成员情况下进行云端数据初始化加载
-    if (!this.communityRole) {
+    if (this.deskMember) {
       this.loadCommunityCloud();
+      this.setCurrentDefaultDesk();
     }
-
     // 默认触发
-    this.setCurrentDefaultDesk();
-
+    // this.setCurrentDefaultDesk();
     // 获取旧的数据
     this.originalCards = [...this.currentDesk.cards];
   },
@@ -690,6 +647,7 @@ export default {
     ]),
     communityAuth,
     isArrayEqual,
+    communityMember,
 
     // 设置桌面id的切换方法
     setCurrentDeskId(id) {
@@ -747,6 +705,7 @@ export default {
             const index = this.deskList.findIndex((desk) => {
               return String(desk?.id) === String(this.currentDesk?.id);
             });
+            // console.log('index',index);
             this.deskList.splice(index, 1);
           }
           this.$emit("updateCurrentDesk", this.communityDeskList[0]?.id);
@@ -786,28 +745,36 @@ export default {
     loadCommunityCloud() {
       this.setCurrentDeskNo(this.communityInfo.no);
       this.loadCommunityDeskAll();
-      this.setCurrentDefaultDesk();
     },
 
     // 设置当前桌面的默认状态
     setCurrentDefaultDesk() {
-      // 过滤出与当前社群相关联的桌面列表
-      const filterDeskList = _.filter(this.deskList, (desk) => {
-        if (desk.hasOwnProperty("communityNo")) {
-          return Number(this.communityInfo.no) === Number(desk?.communityNo);
+      this.$nextTick(()=>{
+        console.log('查看-this.currentDeskId',this.currentDeskId);
+        if(this.currentDeskId === undefined){
+          console.log('测试',this.communityDeskList);
+          console.log('测试',this.communityDeskList[0]?.id);
+          this.setCurrentDeskId(this.communityDeskList[0]?.id);
         }
-      });
-      // 检测是不是已经从个人桌面切换到社群桌面的处理逻辑
-      const found = _.find(this.deskList, (desk) => {
-        return String(this.currentDeskId) === String(desk.id);
-      });
-      if (found && !found?.communityNo) {
-        this.setCurrentDeskId(filterDeskList[0]?.id);
-      } else {
-        if (Number(found?.communityNo) !== Number(this.communityInfo.no)) {
-          this.setCurrentDeskId(filterDeskList[0]?.id);
-        }
-      }
+      })
+
+      // // 过滤出与当前社群相关联的桌面列表
+      // const filterDeskList = _.filter(this.deskList, (desk) => {
+      //   if (desk.hasOwnProperty("communityNo")) {
+      //     return Number(this.communityInfo.no) === Number(desk?.communityNo);
+      //   }
+      // });
+      // // 检测是不是已经从个人桌面切换到社群桌面的处理逻辑
+      // const found = _.find(this.deskList, (desk) => {
+      //   return String(this.currentDeskId) === String(desk.id);
+      // });
+      // if (found && !found?.communityNo) {
+      //   this.setCurrentDeskId(filterDeskList[0]?.id);
+      // } else {
+      //   if (Number(found?.communityNo) !== Number(this.communityInfo.no)) {
+      //     this.setCurrentDeskId(filterDeskList[0]?.id);
+      //   }
+      // }
     },
 
     //  图标整理
@@ -1013,7 +980,7 @@ export default {
       }
       this.layoutSize = this.$refs.currentDeskRef.getLayoutSize();
       this.exportModal = true;
-      this.$refs.currentDeskRef.hideMenu();
+      this.$refs.currentDeskRef?.hideMenu();
     },
 
     // 关闭桌面导出
@@ -1023,7 +990,7 @@ export default {
 
     // 设置全屏
     setFullScreen(flag = true) {
-      this.$refs.currentDeskRef.setFullScreen(flag);
+      this.$refs.currentDeskRef?.setFullScreen(flag);
     },
 
     // 分享桌面
@@ -1031,7 +998,7 @@ export default {
       this.$refs.shareDeskRef.update();
       this.$refs.shareDeskRef.setSelectVal(this.currentDeskId);
       this.shareDeskVisible = true;
-      this.$refs.currentDeskRef.hideMenu();
+      this.$refs.currentDeskRef?.hideMenu();
     },
 
     // 关闭桌面分享
@@ -1041,7 +1008,7 @@ export default {
 
     // 添加卡片
     addCard() {
-      this.$refs.currentDeskRef.newAddCard();
+      this.$refs.currentDeskRef?.newAddCard();
     },
 
     // 显示
@@ -1049,7 +1016,7 @@ export default {
       this.allDeskListVisible = true;
     },
     showMenu() {
-      this.$refs.currentDeskRef.showMenu();
+      this.$refs.currentDeskRef?.showMenu();
     },
     showMore() {
       this.$emit("showMore");
@@ -1065,7 +1032,7 @@ export default {
         if (!isSync) {
           this.syncSaveCommunity();
           // 同步之后重新赋值
-          this.originalCards = [...this.currentDesk?.cards];
+          // this.originalCards = [...this.currentDesk?.cards];
         }
       }
     },
@@ -1075,32 +1042,30 @@ export default {
     // 监听当前社群变化
     communityInfo: {
       handler(newVal) {
-        // 默认选中桌面方法
-        this.setCurrentDefaultDesk();
         // 加载数据
-        this.loadCommunityCloud();
+        if(this.deskMember){
+          this.loadCommunityCloud();
+        }
       },
       immediate: true,
       deep: true,
     },
 
-    // 监听卡片变化
-    //  "currentDesk.cards": {
-    //   handler(newVal) {
-    //     console.log('查看this.editing',this.editing);
-    //     // if(this.editing){
-    //     //   console.log('测试-true情况下',newVal)
-    //     // }
-    //     // else {
-    //     //   console.log('测试-false情况下',newVal)
-    //     // }
-    //   },
-    //   deep: true,
-    //   immediate: true,
-    // },
+    // 监听id
+     "currentDeskId": {
+      handler(newVal) {
+        console.log('测试',newVal);
+        if(newVal === undefined){
+          this.setCurrentDefaultDesk();
+        }
+      },
+      deep: true,
+      immediate: true,
+    },
   },
 };
 </script>
+
 
 <style lang="scss" scoped>
 .panel-top {
