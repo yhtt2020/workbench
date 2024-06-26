@@ -298,7 +298,7 @@ export default {
     },
     // 实时读取社群桌面记忆id
     communityDeskMemoryId() {
-      const communityNo = this.currentCommunity?.item.no;
+      const communityNo = this.currentCommunity?.item?.no;
       if (communityNo !== 1) {
         return this.communityDeskMemory[communityNo];
       }
