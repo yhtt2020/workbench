@@ -10,6 +10,7 @@
     :header="header"
     v-model:customSize="customData.customSize"
     @delete="deleteCard"
+    :platLimit="['web']"
   >
     <div
       class="mt-1 content"
