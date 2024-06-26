@@ -51,7 +51,8 @@
           </div>
         </div>
       </div>
-      <div>
+
+      <div v-if="Number(myUserInfo.uid) !== Number(uid)">
         <a-dropdown
           overlayClassName="xt-text"
           :overlayStyle="{
@@ -181,8 +182,15 @@
             style="width: 100%"
             class="w-full rounded-full"
           >
-            <icon style="font-size: 16px" class="mr-1" icon="tianjia1"></icon>
-            加为好友
+            <div class="flex items-center justify-center">
+              <xt-ify-icon
+                icon="fluent:add-circle-12-filled"
+                size="20"
+                class="mr-1"
+              />
+              <!-- <icon style="font-size: 16px" class="mr-1" icon="tianjia1"></icon> -->
+              加为好友
+            </div>
           </XtButton>
           <XtButton
             @click="deleteFriend"
@@ -190,8 +198,15 @@
             style="width: 100%"
             class="w-full rounded-full"
           >
-            <icon style="font-size: 16px" class="mr-1" icon="guanbi2"></icon>
-            解除好友
+            <div class="flex items-center justify-center">
+              <xt-ify-icon
+                icon="fluent:dismiss-circle-16-filled"
+                class="mr-1"
+                size="20"
+              />
+              <!-- <icon style="font-size: 16px" class="mr-1" icon="guanbi2"></icon> -->
+              解除好友
+            </div>
           </XtButton>
         </a-col>
 
@@ -200,8 +215,16 @@
             @click="sendMessage"
             :type="relationship === 'yes' ? 'theme' : 'default'"
             style="width: 100%"
-            >发消息</XtButton
           >
+            <div class="flex items-center justify-center">
+              <xt-ify-icon
+                icon="fluent:chat-16-filled"
+                size="20"
+                class="mr-1"
+              />
+              发消息
+            </div>
+          </XtButton>
         </a-col>
       </a-row>
       <div class="text-center" v-else-if="$useEnv('guest')">
@@ -225,7 +248,8 @@ import OnlineGradeDisplay from "../team/OnlineGradeDisplay.vue";
 import { appStore } from "../../store";
 import FrameAvatar from "../avatar/FrameAvatar.vue";
 import FrameStoreWidget from "../team/FrameStoreWidget.vue";
-import TencentCloudChat from "tim-js-sdk";
+// import TencentCloudChat from "tim-js-sdk";
+import TencentCloudChat from "@tencentcloud/chat";
 import { message } from "ant-design-vue";
 import { useLogout } from "../../permission/user/useLogout";
 import { useEnv } from "../../permission/useEnv";
@@ -338,9 +362,7 @@ export default {
       this.checkBlacklist();
     },
     addToBlacklist() {
-      // 升级后调用IM的api方法
-      const chat = window.$chat?.chat;
-      let promise = chat?.addToBlacklist({
+      let promise = window.$chat?.chat?.addToBlacklist({
         userIDList: [String(this.uid)],
       }); // 请注意：即使只添加一个用户账号到黑名单，也需要用数组类型，例如：userIDList: ['user1']
       promise
@@ -356,9 +378,7 @@ export default {
         });
     },
     removeFromBlacklist() {
-      // 升级后调用IM的api方法
-      const chat = window.$chat?.chat;
-      let promise = chat?.removeFromBlacklist({
+      let promise = window.$chat?.chat?.removeFromBlacklist({
         userIDList: [String(this.uid)],
       }); // 请注意：即使只从黑名单中移除一个用户账号，也需要用数组类型，例如：userIDList: ['user1']
       promise
@@ -375,9 +395,7 @@ export default {
         message.error("必须先解除黑名单才可加为好友。");
         return;
       }
-      // 升级后调用IM的api方法
-      const chat = window.$chat?.chat;
-      let promise = chat?.addFriend({
+      let promise = window.$chat?.chat?.addFriend({
         to: String(this.uid),
         source: "AddSource_Type_UserCard",
         remark: "通过好友列表添加",
@@ -399,9 +417,7 @@ export default {
         });
     },
     deleteFriend() {
-      // 升级后调用IM的api方法
-      const chat = window.$chat?.chat;
-      let promise = chat?.deleteFriend({
+      let promise = window.$chat?.chat?.deleteFriend({
         userIDList: [String(this.uid)],
         type: TencentCloudChat.TYPES.SNS_DELETE_TYPE_BOTH,
       });
@@ -431,8 +447,7 @@ export default {
     },
     async checkBlacklist() {
       // 升级后调用IM的api方法
-      const chat = window.$chat?.chat;
-      let promise = chat?.getBlacklist();
+      let promise = window.$chat?.chat?.getBlacklist();
       promise
         .then((imResponse) => {
           if (imResponse.data.includes(String(this.uid))) {
@@ -463,7 +478,7 @@ export default {
         const conversationID = `C2C${this.uid}`;
         /**补充当前群聊进入时的状态**/
         this.currentContact = { type: "group", groupID: conversationID };
-        TUIConversationService.switchConversation(conversationID);
+        window.$TUIKit?.TUIConversation?.switchConversation(conversationID);
         this.$emit("close");
       }
     },
@@ -472,10 +487,7 @@ export default {
         //不是本人，则需要验证好友关系
         console.log("需要检查");
         try {
-          // 升级后调用IM的api方法
-          const chat = window.$chat?.chat;
-          console.log([String(this.uid)]);
-          let rs = await chat?.checkFriend({
+          let rs = await window.$chat?.chat?.checkFriend({
             userIDList: [String(this.uid)],
             type: TencentCloudChat.TYPES.SNS_CHECK_TYPE_SINGLE,
           });

@@ -123,13 +123,13 @@ const communityNavList = computed(() => {
         },
       }),
       createNavEntry({
-        icon: currentCommunity.value.defaultItem.icon,
+        icon: currentCommunity.value?.defaultItem?.icon,
         name: "社群主应用",
         fn: () => {
           if ((currentCommunity.value.item as any).role) {
             router.push({
               name: "myCommunity",
-              params: { ...currentCommunity.value.item },
+              params: { ...currentCommunity.value?.item },
             });
           } else {
             /**调整路由名称**/

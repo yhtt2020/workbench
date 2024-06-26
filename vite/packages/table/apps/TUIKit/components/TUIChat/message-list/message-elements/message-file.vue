@@ -73,7 +73,7 @@ const currentData = ref({
 })
 
 watchEffect(()=>{
-  console.log('查看',props.content,props.messageItem);
+  // console.log('查看',props.content,props.messageItem);
   currentData.value.data = {
     ...props.messageItem,
     ...props.content,
@@ -114,11 +114,11 @@ const download = () => {
 
 /**最新修改 与3D模型有关**/
 const is3dFile = (fileName: any) => {
-  const ext = require("path").extname(fileName);
-  const is3D = _.some(fileSuffix, (item: any) => {
-    return String(ext) === String(item);
-  });
-  return is3D;
+  // const ext = require("path").extname(fileName);
+  // const is3D = _.some(fileSuffix, (item: any) => {
+  //   return String(ext) === String(item);
+  // });
+  return false;
 };
 const judgeSize = (size: any) => {
   if (currentData.value.data?.showModel) {

@@ -98,7 +98,8 @@
     <vue-custom-scrollbar :settings="settingsScroller" style="height: calc(100vh - 15.8em);margin-left: 1em"
                           class="mt-3 mr-3">
       <div v-for="item in gameIntroductionList" style="width: calc(100vw - 275px)" @click="openUrl(item.href)"
-           class="h-14 guide-bg mb-3 rounded-xl nav-top-game flex flex-row items-center px-4 inline-block pointer">
+           class="h-14 guide-bg mb-3 rounded-xl nav-top-game  items-center px-4 inline-block pointer">
+           <!-- flex flex-row -->
         <div class="round-dot mr-4 flex-shrink-0"></div>
         <div class="text-more inline-block" style="color: var(--primary-text);">{{ item.title }}</div>
         <div class="ml-auto flex-shrink-0" style="color: var(--secondary-text);">{{ item.date }}</div>

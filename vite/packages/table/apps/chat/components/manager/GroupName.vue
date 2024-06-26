@@ -49,7 +49,15 @@
               >
                 <!-- 头像 -->
                 <div class="overflow-hidden">
+                  <xt-mix-icon
+                    v-if="retrieveIcon(data.avatar)"
+                    :icon="data.avatar"
+                    :type="communityIconType(data.avatar)"
+                    class="mr-2"
+                    size="64"
+                  />
                   <a-avatar
+                    v-else
                     :src="data.avatar"
                     :size="64"
                     shape="square"
@@ -114,7 +122,21 @@
         </template>
         <template v-else>
           <div class="flex flex-col w-full items-center justify-center">
-            <a-avatar shape="square" :size="64" :src="data.avatar"></a-avatar>
+            <xt-mix-icon
+              v-if="retrieveIcon(data.avatar)"
+              :icon="data.avatar"
+              :type="communityIconType(data.avatar)"
+              class="mr-2"
+              size="48"
+            />
+
+            <a-avatar
+              shape="square"
+              v-else
+              :size="64"
+              :src="data.avatar"
+            ></a-avatar>
+
             <a-input
               v-model:value="data.groupName"
               :spellcheck="false"
@@ -138,6 +160,7 @@ import { emit } from "process";
 import { computed, nextTick, ref, toRefs } from "vue";
 import { fileUpload } from "../../../../components/card/hooks/imageProcessing";
 import { TUIStore, StoreName } from "@tencentcloud/chat-uikit-engine";
+import { communityIconType } from "../../../communityDesk/hooks/deskCreateMethod";
 
 const emits = defineEmits(["closeName"]);
 const props = defineProps({
@@ -222,11 +245,16 @@ const saveGroupName = async () => {
     avatar: data.value.avatar,
   };
   // console.log("排查参数是否正确", option, chat);
-  const res =  await chat.updateGroupProfile(option)
-  if(res.code === 0){
+  const res = await chat.updateGroupProfile(option);
+  if (res.code === 0) {
     manageNameVisible.value = false;
   }
 };
+
+// 调整公告图标作为头像的转换
+function retrieveIcon(url) {
+  return url?.includes("color=#");
+}
 
 defineExpose({
   openNameDrawer,

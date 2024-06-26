@@ -4,5 +4,5 @@ import { TUIConversationService } from "@tencentcloud/chat-uikit-engine";
 export const useGroupJump = (groupId:any) =>{
   const name = `GROUP${groupId}`;
   (window as any).$ui.router.push({name:'chatMain'});
-  TUIConversationService?.switchConversation(name);
+  (window as any).$TUIKit?.TUIConversation?.switchConversation(name);
 }

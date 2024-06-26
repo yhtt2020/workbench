@@ -3,6 +3,7 @@ import TUINotification from "./apps/TUIKit/components/TUINotification/index";
 import TUIChatEngine from "@tencentcloud/chat-uikit-engine";
 import TencentCloudChat from "@tencentcloud/chat";
 import { TUILogin } from "@tencentcloud/tui-core";
+import TIMUploadPlugin from 'tim-upload-plugin';
 
 /**引入sdkID**/
 import { SDKAppID } from "./js/chat/chat";
@@ -15,6 +16,9 @@ let options = {
  * SDK 实例通常用 chat 表示
  */
 let chat = TencentCloudChat.create(options);
+
+// 注册腾讯云即时通信 IM 上传插件，即时通信 IM SDK 发送图片、语音、视频、文件等消息需要使用上传插件，将文件上传到腾讯云对象存储
+chat.registerPlugin({'tim-upload-plugin': TIMUploadPlugin});
 
 // const TUIKit: any = {
 //   TUIComponents,

@@ -18,7 +18,7 @@
       <div
         class="rounded-full flex items-center justify-center font-400 xt-active-text"
         v-else-if="item.info"
-        style="position: absolute; font-size: 10px; z-index: 50"
+        style="position: absolute; font-size: 10px;"
         :class="[infoBg]"
       >
         {{ item.info[2] }}
@@ -27,14 +27,14 @@
 
     <!-- 置顶 -->
     <div
-      class="absolute flex items-center justify-center font-400 xt-active-text z-10"
+      class="absolute flex items-center justify-center font-400 xt-active-text"
       style="width: 16px; height: 16px; font-size: 10px"
       :style="[topPosition]"
       v-if="topState"
     >
       <div
         class="rounded-tr-lg rounded-bl-md flex items-center justify-center font-400 xt-active-text w-4 h-4"
-        style="position: absolute; font-size: 10px; z-index: 50"
+        style="position: absolute; font-size: 10px; z-index: 110 !important"
         :class="[topBg]"  v-if="topState.state"
       >
         <xt-ify-icon size="12" :icon="topState.icon" class="xt-text" />

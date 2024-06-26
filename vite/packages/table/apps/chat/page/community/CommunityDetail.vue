@@ -168,7 +168,7 @@ const getCommunityByNo = (no: any) => {
       } else {
         /**当前社群存在逻辑**/
         currentPageExist.value = false;
-        const myIndex = _.findIndex(myCommunity.value, (item: any) => {
+        const myIndex = (_ as any).findIndex(myCommunity.value, (item: any) => {
           return Number(item?.communityInfo?.no) === Number(no);
         });
         if (myIndex === -1) {
@@ -188,6 +188,7 @@ const getCommunityByNo = (no: any) => {
           };
           // console.log('离线状态',option);
           chatCommunity.loadCurrentCommunity(option)
+          chatCommunity.getCommunityTree(no);
           // myCommunity.value.push(option);
         }
       }
@@ -285,7 +286,7 @@ const handleCurrentItem = async (data: any) => {
         const isDisable = groupList[index]?.joinOption === "DisableApply";
         if (enableGroup[0] === "yes") {
           const name = `GROUP${groupProps.groupID}`;
-          TUIConversationService.switchConversation(name);
+          window.$TUIKit?.TUIConversation?.switchConversation(name);
         } else {
           if (isDisable) {
             currentData.value.group = groups[index];
@@ -295,7 +296,7 @@ const handleCurrentItem = async (data: any) => {
         }
       } else {
         /**当前群聊为公开群**/
-        const res = await window.$chat?.chat.searchGroupByID(
+        const res = await (window as any).$chat?.chat.searchGroupByID(
           groupProps.groupID
         );
         const isDisable = res.data.group.joinOption !== "DisableApply";
@@ -304,7 +305,7 @@ const handleCurrentItem = async (data: any) => {
         /**判断有没有加入社群, yes表示已经加入, not表示没有加入**/
         if (enableGroup[0] === "yes") {
           const name = `GROUP${groupProps.groupID}`;
-          TUIConversationService.switchConversation(name);
+          (window as any).$TUIKit?.TUIConversation?.switchConversation(name);
         } else {
           /**isDisable判断群聊是否禁止加入**/
           if (isDisable) {

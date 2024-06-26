@@ -1,113 +1,125 @@
-import {defineStore} from "pinia";
+import { defineStore } from "pinia";
 import dbStorage from "./dbStorage";
-import {compareTime, randomData, sendRequest} from '../js/axios/api'
+import { compareTime, randomData, sendRequest } from "../js/axios/api";
 
 // @ts-ignore
 export const steamStore = defineStore("steam", {
   state: () => ({
-    steamCC: {id: "cc", name: '国区'},
+    steamCC: { id: "cc", name: "国区" },
     data: {},
     dataDetail: {}, // 应用详情
     weekList: [],
     nextWeekLits: [],
-    discountDetail:{}, // 游戏助手折扣推荐详情
+    discountDetail: {}, // 游戏助手折扣推荐详情
   }),
   actions: {
     getRandomList(list) {
-      const randomArr = randomData(list, 4)
-      return randomArr
+      const randomArr = randomData(list, 4);
+      return randomArr;
     },
     async getData(cc) {
-      if (typeof this.data !== 'object') {
-        this.data = {}
+      if (typeof this.data !== "object") {
+        this.data = {};
       }
 
-
       //命中缓存
-      const discountList = this.data[cc]
+      const discountList = this.data[cc];
       if (discountList) {
-        if (!compareTime(discountList.expiresDate)) {   // 将对象里面的时间进行判断是否大于12小时
+        if (!compareTime(discountList.expiresDate)) {
+          // 将对象里面的时间进行判断是否大于12小时
           //无需做任何操作
-          return
+          return;
         }
       }
 
-      let res = await sendRequest(`https://store.steampowered.com/api/featuredcategories/?cc=${cc}&l=${cc}`,{},{
-        localCache:true,
-        localTtl:12*60*60
-      })
+      let res = await sendRequest(
+        `https://store.steampowered.com/api/featuredcategories/?cc=${cc}&l=${cc}`,
+        {},
+        {
+          localCache: true,
+          localTtl: 12 * 60 * 60,
+        }
+      );
       if (res && res.headers) {
-        const date = new Date(res.headers.expires)
+        const date = new Date(res.headers.expires);
         const requestObj = {
           cc: cc,
           expiresDate: date,
-          list: res.data.specials.items
-        }
-        this.updateGameData(cc, requestObj)
-      }else{
-        this.updateGameData(cc,{})
+          list: res.data.specials.items,
+        };
+        this.updateGameData(cc, requestObj);
+      } else {
+        this.updateGameData(cc, {});
       }
-
-
     },
     // 根据编码分类列表数据存储
     setGameData(value) {
-      const findIndex = this.data.findIndex(el => {
-        return el.cc === value.cc
-      })
+      const findIndex = this.data.findIndex((el) => {
+        return el.cc === value.cc;
+      });
       if (findIndex === -1) {
-        this.data.push(value)
-        localStorage.setItem("gameData", JSON.stringify(this.data))
-        const getGame = localStorage.getItem("gameData")
+        this.data.push(value);
+        localStorage.setItem("gameData", JSON.stringify(this.data));
+        const getGame = localStorage.getItem("gameData");
         if (getGame) {
-          this.data = JSON.parse(getGame)
+          this.data = JSON.parse(getGame);
         }
       } else {
-        return
+        return;
       }
     },
     // 详情数据存储
     setGameDetail(value) {
-      this.dataDetail = value
-      localStorage.setItem("detail", JSON.stringify(this.dataDetail))
-      const getDetail = localStorage.getItem("detail")
+      this.dataDetail = value;
+      localStorage.setItem("detail", JSON.stringify(this.dataDetail));
+      const getDetail = localStorage.getItem("detail");
       if (getDetail) {
-        this.dataDetail = JSON.parse(getDetail)
+        this.dataDetail = JSON.parse(getDetail);
       }
     },
     // 通过时间更新数据
     updateGameData(cc, value) {
-      this.data[cc] = value
+      this.data[cc] = value;
     },
 
     // 获取折扣推荐详情数据
-    async getDiscountDetail(id:number,v:string){
-      const url = `https://store.steampowered.com/api/appdetails?appids=${id}&cc=${v}&l=${v}`
-      const result = await sendRequest(url,{},{localCache:true,localTtl:60*12*60})
-      const res = result.data[id].data
-      const newLanguages = res.supported_languages.replaceAll('<strong>*</strong>','') // 将语言中的strong标签去除
-      console.log(res)
-      this.discountDetail.name = res.name
-      this.discountDetail.content = res.short_description
-      if(res.movies){
-        this.discountDetail.movie_image = res.movies.concat(res.screenshots)
-      }else{
-        this.discountDetail.movie_image=res.screenshots
+    async getDiscountDetail(id: number, v: string) {
+      const url = `https://store.steampowered.com/api/appdetails?appids=${id}&cc=${v}&l=${v}`;
+      const rs = await sendRequest(
+        url,
+        {},
+        { localCache: true, localTtl: 60 * 12 * 60 }
+      );
+
+      if (rs.status === 200) {
+        const { data } = rs?.data[id];
+        // 将语言中的strong标签去除
+        const newLanguages = data?.supported_languages?.replaceAll(
+          "<strong>*</strong>",
+          ""
+        );
+        this.discountDetail.name = data?.name;
+        this.discountDetail.content = data?.short_description;
+        if (data?.movies) {
+          this.discountDetail.movie_image = data?.movies?.concat(
+            data?.screenshots
+          );
+        } else {
+          this.discountDetail.movie_image = data?.screenshots;
+        }
+        this.discountDetail.appid=data?.steam_appid
+        this.discountDetail.header=data?.header_image
+        this.discountDetail.IssueDate = data?.release_date.date
+        this.discountDetail.developers = data?.developers[0]
+        this.discountDetail.language = newLanguages.split('<br>')[0]
+        this.discountDetail.publisher = data?.publishers[0]
+        this.discountDetail.genres = data?.genres
+        this.discountDetail.percent = data?.price_overview?.discount_percent
+        this.discountDetail.newPrice = data?.price_overview?.final_formatted
+        this.discountDetail.gameIntroduction = data?.detailed_description
       }
-
-      this.discountDetail.appid=res.steam_appid
-      this.discountDetail.header=res.header_image
-      this.discountDetail.IssueDate = res.release_date.date
-      this.discountDetail.developers = res.developers[0]
-      this.discountDetail.language = newLanguages.split('<br>')[0]
-      this.discountDetail.publisher = res.publishers[0]
-      this.discountDetail.genres = res.genres
-      this.discountDetail.percent = res.price_overview.discount_percent
-      this.discountDetail.newPrice = res.price_overview.final_formatted
-      this.discountDetail.gameIntroduction = res.detailed_description
-      // console.log('命中更新',this.discountDetail.movie_image);
+      return rs;
     },
-
   },
   // persist: {
   //   enabled: true,

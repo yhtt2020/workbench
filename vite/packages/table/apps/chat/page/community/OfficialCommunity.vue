@@ -83,7 +83,7 @@ const handleCurrentItem = async (data) => {
       // 判断有没有加入社群, yes表示已经加入, not表示没有加入
       if (enableGroup[0] === "yes") {
         const name = `GROUP${data.props.id}`;
-        TUIConversationService.switchConversation(name);
+        window.$TUIKit?.TUIConversation?.switchConversation(name);
       } else {
         // isDisable 禁止加入
         if (isDisable) return (data.group = res.data.group);

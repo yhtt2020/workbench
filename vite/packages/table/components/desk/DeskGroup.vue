@@ -730,7 +730,7 @@ export default {
       return String(desk.id) === String(this.currentDeskId);
     });
     if (found && found.hasOwnProperty("communityNo")) {
-      this.setCurrentDeskId(filterList[0].id);
+      this.setCurrentDeskId(filterList[0]?.id);
     }
 
     // 个人桌面正常操作

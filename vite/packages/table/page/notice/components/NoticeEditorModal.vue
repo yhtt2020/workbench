@@ -40,7 +40,7 @@ const list = ref([
 ])
 
 const isFull = computed(()=>{
-  return modelRef.value.isFull;
+  return modelRef.value?.isFull;
 })
 
 const menuList = computed(()=>{

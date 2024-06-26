@@ -2,8 +2,8 @@
 <template>
   <xt-menu
     name="name"
-    :menus="menus"
-    @contextmenu="currentMenu.revID = item"
+    :menus="hasRole ? menus : []"
+    @contextmenu.prevent="currentMenu.revID = item"
     class="w-full"
   >
     <div
@@ -46,12 +46,17 @@ import { ref, reactive, computed, nextTick, toRefs, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { message } from "ant-design-vue";
 import { chatCommunityStore } from "../../store/chatCommunity";
+import _ from "lodash-es";
+
+import { useGlobalStore } from "../../../Global/store";
 
 /**子频道链接修改设置**/
 import ChannelUpdateLink from "../link/ChannelUpdateLink.vue";
 
 const emit = defineEmits(["currentClick"]);
 const chatCommunity = chatCommunityStore();
+const { myCommunity } = storeToRefs(chatCommunity);
+const { loginVisible } = storeToRefs(useGlobalStore());
 
 const props = defineProps({
   // 当前社群数据
@@ -158,8 +163,54 @@ const menus = computed(() => {
 
 /**事件**/
 const handleCurrentMenu = () => {
-  emit("currentClick", item);
+
+  console.log('测试',item);
+
+  if(window.$currentEnv() !== 'online'){
+    if(item.value?.type === 'group'){
+      window.$ui.confirm("登录提示", "目前处于游客模式，请登录后体验完整功能。", {
+        ok: () => {
+          loginVisible.value = true;
+        },
+        okText: "立即登录",
+        noText: "暂不登录",
+        okButtonWidth: "95",
+        noButtonWidth: "95",
+      });
+    }
+    else{
+      emit("currentClick", item);
+    }
+  }
+  else if(hasRole.value){
+    if(window.$currentEnv() !== 'online'){
+    window.$ui.confirm("登录提示", "目前处于游客模式，请登录后体验完整功能。", {
+      ok: () => {
+        loginVisible.value = true;
+      },
+      okText: "立即登录",
+      noText: "暂不登录",
+      okButtonWidth: "95",
+      noButtonWidth: "95",
+    });
+  }
+  else if(hasRole.value){
+    emit("currentClick", item);
+  }
+  }
 };
+
+/**加入社群条件**/
+const hasRole = computed(() => {
+  const currentFind = _.find(myCommunity.value, (item) => {
+    return Number(item?.route?.params?.no) === Number(no.value);
+  });
+  if (currentFind && currentFind.role) {
+    return true;
+  } else {
+    return false;
+  }
+});
 
 //     const unread = computed(()=>{
 //       const jsonProp = props.item.props;
@@ -169,12 +220,11 @@ const handleCurrentMenu = () => {
 //         return 0;
 //       }
 //     })
-
 </script>
 
 <style lang="scss" scoped>
-.dropdown-hover{
-  &:hover{
+.dropdown-hover {
+  &:hover {
     background: var(--active-secondary-bg);
   }
 }

@@ -87,7 +87,7 @@ export default {
   },
 
   computed: {
-    ...mapWritableState(homeStore, ["currentDeskId"]),
+    ...mapWritableState(homeStore, ["currentDeskId","communityDeskMemory"]),
     ...mapWritableState(cardStore, ["settings", "desks"]),
     ...mapWritableState(communityNavStore, ["currentCommunity"]),
 
@@ -99,9 +99,14 @@ export default {
   mounted() {
     // 触发管理员创建默认空桌面
     this.$bus.on("openCommunityDesk", () => {
-      this.$nextTick(() => {
+      const newArr = this.desks?.filter((desk)=>{
+        if(desk?.communityNo && Number(desk?.communityNo) === Number(this.communityInfo?.no)){
+          return desk;
+        }
+      })
+      if(newArr.length === 0){
         this.doAddDesk("空白桌面");
-      });
+      }
     });
 
     // 
@@ -139,14 +144,14 @@ export default {
         desk.cards = [];
       }
       this.deskList.unshift({...desk,communityDeskId: `${this.communityInfo?.no}_${desk?.id}`,});
-      this.$emit("changeCommunityDesk", { id: desk.id });
+      this.$emit("changeCommunityDesk", { id: desk.id,no:this.communityInfo?.no });
       this.deskTitle = "";
     },
 
     // 更新桌面id
     updateId(id) {
       this.$emit("update:currentDeskId", id);
-      this.$emit("changeCommunityDesk", { id: id });
+      this.$emit("changeCommunityDesk", { id: id,no:this.communityInfo?.no});
     },
 
     // 解决桌面卡片数据重置

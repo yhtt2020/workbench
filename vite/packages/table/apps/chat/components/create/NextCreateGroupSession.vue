@@ -166,6 +166,7 @@ import { message } from "ant-design-vue";
 import { TUIConversationService } from "@tencentcloud/chat-uikit-engine";
 import { completeTask } from "../../../task/task";
 import { useRouter } from "vue-router";
+import { isTaskFinish } from "../../../task/utils";
 
 const chat = window.$chat?.chat;
 const router = useRouter();
@@ -259,8 +260,10 @@ const create = async () => {
         const { group } = res.data;
         const conversationID = `GROUP${group.groupID}`;
         router.push({ name: "chatMain" });
-        TUIConversationService.switchConversation(conversationID);
-        completeTask("Z0601");
+        window.$TUIKit?.TUIConversation?.switchConversation(conversationID);
+        if(isTaskFinish("Z0601")){
+          completeTask("Z0601");
+        }
         closeNext();
       }
     } else {
