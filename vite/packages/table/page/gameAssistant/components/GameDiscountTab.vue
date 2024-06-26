@@ -1,7 +1,7 @@
 <!-- 游戏折扣类型切换公共组件 -->
 <template>
   <!-- 顶部tab切换 -->
-  <div class="flex justify-between h-12 items-center " :class="mb">
+  <div class="flex justify-between h-12 items-center" :class="mb">
     <xt-option-tab
       v-if="isTab"
       :list="gameRecommendType"
@@ -10,13 +10,16 @@
       style="height: 40px; max-width: 450px; margin-bottom: 0 !important"
     />
 
-    
-
     <xt-button
       :radius="8"
       h="40"
-      style="width: auto !important; padding-left: 16px; padding-right: 16px"
+      style="
+        width: auto !important;
+        padding-left: 16px;
+        padding-right: 16px
+      "
       type="default"
+      class="xt-bg-t-2"
       @click="openRightDrawer"
       v-if="currentGameType === 'discount'"
     >
@@ -48,10 +51,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  mb:{
-    type:String,
-    default:'mb-4'
-  }
+  mb: {
+    type: String,
+    default: "mb-4",
+  },
 });
 
 const { proxy } = getCurrentInstance();
@@ -67,10 +70,9 @@ const regionDrawer = ref(null);
 // 获取游戏区服名称
 const getGameAreaName = (data) => {
   currentGameArea.value = { id: data.id, name: data.name, local: data.local };
-  if(props.isTab){
+  if (props.isTab) {
     proxy.$bus.emit("updateDiscountData");
-  }
-  else {
+  } else {
     proxy.$bus.emit("handleDiscountData");
   }
 };
