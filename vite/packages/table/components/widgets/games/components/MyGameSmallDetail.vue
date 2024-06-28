@@ -95,12 +95,14 @@ import { ref, toRefs,computed, onUnmounted } from "vue";
 import { storeToRefs } from "pinia";
 import { steamUserStore } from "../../../../store/steamUser";
 import { getDateTime } from "../../../../util";
+import { gameGuideStore } from "../../../../page/gameAssistant/store/gameGuideStore";
 import { useRouter } from "vue-router";
 
 // 解构store数据
 const { smallDetailVisible, searchWords, runningGame } = storeToRefs(
   steamUserStore()
 );
+const { gameAppId } = storeToRefs(gameGuideStore())
 
 const emit = defineEmits(['close']);
 
@@ -144,10 +146,14 @@ const totalTime = (time) => {
 
 // 进入游戏攻略
 const enterGameGuide = () => {
-  // searchWords.value = mySmallDetailItem.value;
-  // router.push({
-  //   name: "gameIntroduction",
-  // });
+  searchWords.value[mySmallDetailItem.value.appid] = {
+    text: mySmallDetailItem.value?.name,
+    video: mySmallDetailItem.value?.name,
+  };
+  gameAppId.value = mySmallDetailItem.value.appid;
+  router.push({
+    name: "gameIntroduction",
+  });
 };
 
 // 开始游戏

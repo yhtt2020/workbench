@@ -94,7 +94,7 @@
           </div>
         </xt-button>
 
-        <xt-button w="185" h="40" :radius="8">
+        <xt-button w="185" h="40" :radius="8" @click="enterGameGuide">
           <div class="flex items-center justify-center">
             <xt-ify-icon
               icon="akar-icons:trophy"
@@ -167,7 +167,7 @@
             </span>
             <div class="flex items-center justify-center">
               <xt-ify-icon
-                icon="heroicons:cpu-chip-16-solid"
+                icon="gravity-ui:gpu"
                 size="16"
                 class="xt-text mr-2"
               />
@@ -186,10 +186,17 @@ import { storeToRefs } from "pinia";
 import { steamUserStore } from "../../../../store/steamUser";
 import { getDateTime } from "../../../../util";
 import { inspectorStore } from "../../../../store/inspector";
+import { gameGuideStore } from "../../../../page/gameAssistant/store/gameGuideStore";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 // 解构store数据
-const { detailVisible, runningGame } = storeToRefs(steamUserStore());
+const { detailVisible, runningGame, searchWords } = storeToRefs(
+  steamUserStore()
+);
 const { displayData } = storeToRefs(inspectorStore());
+const { gameAppId } = storeToRefs(gameGuideStore())
 
 const props = defineProps({
   // 指定我的游戏详情
@@ -248,6 +255,18 @@ const closeGame = () => {
 // 开始游戏
 const startGame = () => {
   steamUserStore().playGame(largeDataDetail.value);
+};
+
+// 进入游戏攻略
+const enterGameGuide = () => {
+  searchWords.value[largeDataDetail.value.appid] = {
+    text: largeDataDetail.value?.name,
+    video: largeDataDetail.value?.name,
+  };
+  gameAppId.value = largeDataDetail.value.appid;
+  router.push({
+    name: "gameIntroduction",
+  });
 };
 </script>
 
