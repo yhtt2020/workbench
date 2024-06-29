@@ -99,7 +99,7 @@ import { gameGuideStore } from "../../../../page/gameAssistant/store/gameGuideSt
 import { useRouter } from "vue-router";
 
 // 解构store数据
-const { smallDetailVisible, searchWords, runningGame } = storeToRefs(
+const { smallDetailVisible, searchWords, runningGame,recentGameList } = storeToRefs(
   steamUserStore()
 );
 const { gameAppId } = storeToRefs(gameGuideStore())
@@ -150,6 +150,12 @@ const enterGameGuide = () => {
     text: mySmallDetailItem.value?.name,
     video: mySmallDetailItem.value?.name,
   };
+  const isSome = recentGameList.value.some((item)=>{
+    return String(item.appid) === String(mySmallDetailItem.value.appid)
+  })
+  if(!isSome){
+    recentGameList.value.push(mySmallDetailItem.value)
+  }
   gameAppId.value = mySmallDetailItem.value.appid;
   router.push({
     name: "gameIntroduction",

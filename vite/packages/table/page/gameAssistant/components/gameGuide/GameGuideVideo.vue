@@ -1,13 +1,23 @@
 <!-- 游戏攻略视频 -->
 <template>
+  <template v-if="loadingVisible === true">
+    <div class="flex items-center justify-center w-full h-full">
+      <a-spin />
+    </div>
+  </template>
+
   <xt-scrollbar
     class="flex-1 w-full h-full overflow-hidden"
     :x="false"
     :y="true"
+    v-else
   >
     <div class="flex flex-row flex-wrap pt-4 pr-4">
       <template v-for="(item, index) in videoList" :key="index">
-        <div class="pb-4 pl-4 game-list-item flex-shrink-0 pointer" @click="openUrl(item.arcurl)">
+        <div
+          class="pb-4 pl-4 game-list-item flex-shrink-0 pointer"
+          @click="openUrl(item.arcurl)"
+        >
           <div class="relative flex flex-col mb-2">
             <!-- 图片 -->
             <div style="height: 65.5%" class="rounded-lg">
@@ -28,9 +38,9 @@
                   <xt-ify-icon icon="bi:play-btn-fill" class="xt-text" />
                   <span class="ml-1 xt-text">
                     {{
-                      item.play.toString().slice(0, 2) +
+                      item.play?.toString()?.slice(0, 2) +
                       "." +
-                      item.play.toString().slice(0, 4).slice(3)
+                      item.play?.toString()?.slice(0, 4)?.slice(3)
                     }}万
                   </span>
                 </div>
@@ -58,7 +68,10 @@
           </div>
 
           <div class="flex px-2 items-center">
-            <span class="xt-text-2 font-12 font-400 mr-3 truncate" style="max-width: 120px;">
+            <span
+              class="xt-text-2 font-12 font-400 mr-3 truncate"
+              style="max-width: 120px"
+            >
               {{ item.author }}
             </span>
             <span class="xt-text-2 font-12 font-400">
@@ -75,7 +88,7 @@
 <script>
 import { GetBiliData } from "../../hooks/getGameGuideDetail";
 import { fixHttp } from "../../../../util";
-import browser from '../../../../js/common/browser';
+import browser from "../../../../js/common/browser";
 
 export default {
   name: "GameGuideVideo",
@@ -90,25 +103,39 @@ export default {
     return {
       // 视频列表
       videoList: [],
+      // 加载状态
+      loadingVisible: false,
     };
   },
 
   mounted() {
     this.$nextTick(() => {
-      this.getVideoList();
+      this.getVideoList(this.gameName);
+    });
+    this.$bus.on("updateGameGuide", (name) => {
+      this.getVideoList(name);
     });
   },
 
   methods: {
     // 获取bi站视频列表
-    getVideoList() {
-      new GetBiliData().biliSearch(this.gameName).then((rs) => {
-        if (rs?.status === 200) {
-          const { data } = rs?.data;
-          const { video } = data?.result;
-          this.videoList = video;
-        }
-      });
+    getVideoList(name) {
+      if (!this.loadingVisible) {
+        this.loadingVisible = true;
+        new GetBiliData()
+          .biliSearch(name)
+          .then((rs) => {
+            if (rs?.status === 200) {
+              this.loadingVisible = false;
+              const { data } = rs?.data;
+              const { video } = data?.result;
+              this.videoList = video;
+            }
+          })
+          .finally(() => {
+            this.loadingVisible = false;
+          });
+      }
     },
 
     // 将图片转换
@@ -128,8 +155,8 @@ export default {
     },
 
     // 查看bi站视频详情
-    openUrl(url){
-      browser.openInSystem(url)
+    openUrl(url) {
+      browser.openInSystem(url);
     },
   },
 };

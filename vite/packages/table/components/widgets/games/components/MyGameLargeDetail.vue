@@ -196,7 +196,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 // 解构store数据
-const { detailVisible, runningGame, searchWords } = storeToRefs(
+const { detailVisible, runningGame, searchWords,recentGameList } = storeToRefs(
   steamUserStore()
 );
 const { displayData } = storeToRefs(inspectorStore());
@@ -267,6 +267,12 @@ const enterGameGuide = () => {
     text: largeDataDetail.value?.name,
     video: largeDataDetail.value?.name,
   };
+  const isSome = recentGameList.value.some((item)=>{
+    return String(item.appid) === String(largeDataDetail.value.appid)
+  })
+  if(!isSome){
+    recentGameList.value.push(largeDataDetail.value)
+  }
   gameAppId.value = largeDataDetail.value.appid;
   router.push({
     name: "gameIntroduction",

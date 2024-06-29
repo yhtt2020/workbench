@@ -6,8 +6,12 @@
     :y="true"
   >
     <template v-if="imgTextList.length === 0">
-      <div class="flex items-center  h-full w-full justify-center flex-col">
-        <xt-ify-icon icon="fluent-emoji:magnifying-glass-tilted-right" size="64" class="mb-4"/>
+      <div class="flex items-center h-full w-full justify-center flex-col">
+        <xt-ify-icon
+          icon="fluent-emoji:magnifying-glass-tilted-right"
+          size="64"
+          class="mb-4"
+        />
         <span class="xt-text-2 xt-font font-14">没有找到相关内容</span>
       </div>
     </template>
@@ -15,7 +19,7 @@
     <div class="w-full flex flex-col" v-else>
       <template v-for="(item, index) in imgTextList" :key="index">
         <div
-          class="h-14 mb-3 rounded-xl xt-bg-2 flex items-center px-4 pointer justify-between"
+          class="h-14 mb-3 rounded-xl xt-bg-t-2 flex items-center px-4 pointer justify-between"
           @click="openUrl(item.url)"
         >
           <div class="round-dot mr-4 flex-shrink-0"></div>
@@ -52,14 +56,17 @@ export default {
 
   mounted() {
     this.$nextTick(() => {
-      this.getGameImgTextData();
+      this.getGameImgTextData(this.gameName);
+    });
+    this.$bus.on("updateGameGuide", (name) => {
+      this.getGameImgTextData(name);
     });
   },
 
   methods: {
     // 获取游戏图文攻略数据
-    getGameImgTextData() {
-      new GetImgTextData().imgTextSearch(this.gameName).then((rs) => {
+    getGameImgTextData(name) {
+      new GetImgTextData().imgTextSearch(name).then((rs) => {
         if (rs.status === 200) {
           this.imgTextList = rs?.data;
         }
@@ -70,6 +77,10 @@ export default {
     openUrl(url) {
       browser.openInSystem(url);
     },
+  },
+
+  unmounted() {
+    this.$bus.off("updateGameGuide");
   },
 };
 </script>

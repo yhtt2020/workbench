@@ -6,7 +6,7 @@
         <a-select
           style="border: 1px solid rgba(255, 255, 255, 0.1)"
           v-model:value="currentSearchName"
-          class="w-60 h-10 rounded-lg mr-3 text-xs s-bg"
+          class="w-60 h-10 rounded-lg mr-3 text-xs xt-bg-t-2"
           size="large"
           :bordered="false"
           @change="getCurrentGame"
@@ -24,9 +24,9 @@
         style="
           height: 40px;
           width: 240px;
-          background: var(--secondary-bg) !important;
           margin-bottom: 0 !important;
         "
+        class="xt-bg-t-2"
         v-model="selectType"
       />
 
@@ -36,7 +36,7 @@
         h="40"
         :radius="8"
         @click="openDrawer('search')"
-        class="mx-2"
+        class="mx-2 xt-bg-t-2"
       >
         <div class="flex items-center justify-center">
           <xt-ify-icon icon="fluent:search-16-filled" size="20" />
@@ -44,7 +44,7 @@
       </xt-button>
 
       <!-- 查看官网信息按钮 -->
-      <xt-button w="40" h="40" :radius="8" @click="openDrawer('tip')">
+      <xt-button w="40" h="40" :radius="8" @click="openDrawer('tip')" class="xt-bg-t-2">
         <div class="flex items-center justify-center">
           <xt-ify-icon icon="mingcute:warning-fill" size="20" />
         </div>
@@ -77,7 +77,7 @@
     </template>
 
     <template v-if="drawerType && drawerType === 'search'">
-      <GameGuideSearch :searchVal="currentSearchName" />
+      <GameGuideSearch :searchVal="currentSearchName" @close="drawerVisible = false"/>
     </template>
 
     <template v-else-if="drawerType && drawerType === 'tip'">
@@ -184,8 +184,11 @@ export default {
 
     // 获取下拉菜单选中的游戏
     getCurrentGame(evt) {
-      // this.gameAppId = evt;
-      // this.currentSearchName = this.searchWords[evt]?.text;
+      const found = this.recentGameList.find((item)=>{
+        return String(item.name) === String(evt);
+      })
+      this.gameAppId = found?.appid;
+      this.$bus.emit('updateGameGuide',evt);
     },
   },
 };
