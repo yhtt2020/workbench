@@ -5,9 +5,9 @@
     :x="false"
     :y="true"
   >
-    <div class="flex flex-row flex-wrap ml-3 p-3">
+    <div class="flex flex-row flex-wrap pt-4 pr-4">
       <template v-for="(item, index) in videoList" :key="index">
-        <div class="pb-3 pl-3 game-list-item flex-shrink-0 pointer" @click="openUrl(item.arcurl)">
+        <div class="pb-4 pl-4 game-list-item flex-shrink-0 pointer" @click="openUrl(item.arcurl)">
           <div class="relative flex flex-col mb-2">
             <!-- 图片 -->
             <div style="height: 65.5%" class="rounded-lg">

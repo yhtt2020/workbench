@@ -51,17 +51,17 @@
       </xt-button>
     </div>
     <div
-      class="flex xt-bg-t-2 w-full rounded-xl items-center justify-center"
+      class="flex w-full rounded-xl items-center justify-center"
       style="height: calc(100vh - 10rem)"
+      :class="selectType === 'video' ? 'xt-bg-t-2' : ''"
     >
-       <template v-if="selectType === 'video'">
-          <GameGuideVideo :gameName="currentSearchName"/>
-       </template>
+      <template v-if="selectType === 'video'">
+        <GameGuideVideo :gameName="currentSearchName" />
+      </template>
 
-       
-       <template v-else-if="selectType === 'text'">
-          <GameGuideImgText :gameName="currentSearchName"/>
-       </template>
+      <template v-else-if="selectType === 'text'">
+        <GameGuideImgText :gameName="currentSearchName" />
+      </template>
     </div>
   </div>
 
@@ -94,7 +94,7 @@ import { gameGuideStore } from "./store/gameGuideStore";
 
 import GameGuideSearch from "./components/gameGuide/GameGuideSearch.vue";
 import GameGuideFromInfo from "./components/gameGuide/GameGuideFromInfo.vue";
-import GameGuideVideo from './components/gameGuide/GameGuideVideo.vue';
+import GameGuideVideo from "./components/gameGuide/GameGuideVideo.vue";
 import GameGuideImgText from "./components/gameGuide/GameGuideImgText.vue";
 
 export default {
@@ -104,7 +104,7 @@ export default {
     GameGuideSearch,
     GameGuideFromInfo,
     GameGuideVideo,
-    GameGuideImgText
+    GameGuideImgText,
   },
 
   data() {
@@ -164,19 +164,16 @@ export default {
         this.searchWords[this.currentGame.appid] = val;
       },
     },
-    currentSearchName(){
-      if(this.gameAppId){
+    currentSearchName() {
+      if (this.gameAppId) {
         return this.searchWords[this.gameAppId]?.text;
+      } else {
+        return this.currentGame.name;
       }
-      else {
-        return this.currentGame.name
-      }
-    }
+    },
   },
 
-  mounted() {
-  
-  },
+  mounted() {},
 
   methods: {
     // 开启搜索右侧弹窗
@@ -190,9 +187,6 @@ export default {
       // this.gameAppId = evt;
       // this.currentSearchName = this.searchWords[evt]?.text;
     },
-
-    
-
   },
 };
 </script>
