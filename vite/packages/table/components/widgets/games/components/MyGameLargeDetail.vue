@@ -24,6 +24,10 @@
         </div>
       </div>
 
+      <span class="truncate px-1 mb-2 font-16 xt-font" style="max-width: 180px">
+        {{ largeDataDetail?.name }}
+      </span>
+
       <div class="large-container mb-4">
         <span class="xt-text-2 font-14">
           最近游玩 : {{ getDateMyTime(largeDataDetail?.time) }}

@@ -11,7 +11,7 @@
         placeholder="视频关键词"
         style="border-radius: 12px; background: var(--secondary-bg)"
         class="no-drag h-10 w-full"
-        v-model:value="searchVal.video"
+        v-model:value="searchVal" 
       />
     </div>
 
@@ -19,10 +19,10 @@
 
     <div class="line">
       <a-input
-        placeholder="视频关键词"
+        placeholder="图文攻略关键词"
         style="border-radius: 12px; background: var(--secondary-bg)"
         class="no-drag h-10 w-full"
-        v-model:value="searchVal.text"
+        v-model:value="searchVal"
       />
     </div>
 
@@ -31,24 +31,23 @@
       <a-input
         placeholder="搜索"
         class="no-drag h-10 w-full"
-        v-model:value="searchVal.text"
         style="border-radius: 12px; background: var(--secondary-bg)"
+        v-model:value="searchVal"
       />
     </div>
     <xt-button w="420" h="40" type="theme" :radius="8"> 搜索 </xt-button>
   </div>
 </template>
 
-<script>
-export default {
-  name: "GameGuideSearch",
-  props: {
-    searchVal: {
-      type: Object,
-      default: () => {},
-    },
+<script setup>
+import { ref, toRefs } from "vue";
+
+const props = defineProps({
+  searchVal: {
+    type: String,
   },
-};
+});
+const { searchVal } = toRefs(props);
 </script>
 
 <style lang="scss" scoped>

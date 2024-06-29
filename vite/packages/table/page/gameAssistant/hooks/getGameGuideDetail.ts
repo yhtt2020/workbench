@@ -11,18 +11,16 @@ export class GetBiliData {
     const rs = await axios.get(url);
     return rs;
   }
-
-  // 获取数据的api
-  async getBiliDetail() {}
 }
 
 // 获取游戏攻略图文的API
 export class GetImgTextData {
   // 搜索
-  async imgTextSearch(keyWord:any) {
-   
+  async imgTextSearch(keyWord: any) {
+    const newKeyWord = encodeURIComponent(keyWord);
+    const url = `https://so.gamersky.com/all/handbook?s=${newKeyWord}`;
+    const rs = await axios.get(url);
+    console.log('测试',rs);
+    
   }
-
-  // 获取数据
-  async getImgTextDetail() {}
 }
