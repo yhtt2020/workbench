@@ -2,7 +2,7 @@
   <xt-left-menu
     :list="menuList"
     last="1"
-    :end="endMenu"
+    end="2"
     model="id"
     class="w-full"
     :class="modalClass"
@@ -93,7 +93,7 @@ const list = ref([
 ]);
 const modalStatus = inject("modalStatus");
 const endMenu = computed(() => {
-  return modalStatus ? 2 : 3;
+  return 2
 });
 
 const leftClass = computed(() => {

@@ -5,8 +5,8 @@
             icon="fluent:building-shop-16-regular"
         >
             <template #right>
-                <xt-button w="98" h="32" radius="8" icon="" @click="putaway">我要上架</xt-button>
-                <xt-button w="127" h="32" radius="8" type="theme" @click="putaway">全部应用（{{ searchApps?.length }}）</xt-button>
+                <xt-button w="98" h="32" radius="8" icon="" @click="putaway" v-if="!usePlat('web')">我要上架</xt-button>
+                <xt-button w="127" h="32" radius="8" type="theme" @click="putaway" v-if="!usePlat('web')">全部应用（{{ searchApps?.length }}）</xt-button>
             </template>
         </Header>
         <ImgList :list="adList"></ImgList>
@@ -59,16 +59,21 @@ const Item = defineAsyncComponent(() => import('./components/Item.vue'))
 const target = ref(null)
 
 onMounted( async() => {
+    // 获取应用列表
     await store.getRecommendList()
+    // 获取广告图片
     await store.getAd()
+    // 通过搜索接口去获取全部应用
     await store.searchApp('')
+    // 检查是否已经安装
     check(recommendList.value)
 })
 // 检查是否已经安装
 const check = async(list) => {
+    const allList = await appModel.getAllApps()
     for(const item of list) {
         if( !usePlat('web')) {
-            const allList = await appModel.getAllApps()
+            console.log('allList>>>>:',allList)
             item.isInstalled = allList.find(app => app.appid === item.id)
         } else {
             item.isInstalled = false

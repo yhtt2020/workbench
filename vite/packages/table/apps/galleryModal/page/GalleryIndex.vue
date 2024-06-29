@@ -15,7 +15,7 @@
        <GalleryComponent :pageStatus="currentID" />
      </xt-left-menu>
    </template>
- 
+
    <template v-else>
      <xt-left-menu
        :list="newGalleryList"
@@ -44,7 +44,7 @@ import GalleryComponent from "../components/GalleryComponent.vue";
 
 const pickPaper = pickPaperStore();
 const { currentID } = storeToRefs(pickPaper);
-
+// 111
 /**壁纸左侧列表**/
 const paperLeftList = ref([
   {
@@ -141,7 +141,7 @@ const currentPaperTab = (item) => {
 <style lang="scss" scoped>
 :deep(.xt-bt) {
   border-top: none !important;
-  
+
 }
 :deep(.xt-br) {
   border-right: none !important;

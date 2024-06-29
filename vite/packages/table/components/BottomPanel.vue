@@ -411,6 +411,8 @@ export default {
   watch: {
     windowWidth:{
       handler(val){
+        // 当底部导航栏不存在时，不需要缩放
+        if(!this.navigationToggle[2]) return
         // 根据当前导航格式计算最大宽度和额外宽度
         let macWidth = this.communityNavVisible ? val - 540 : val - 200;
         let macExtraWidth = this.communityNavVisible ? 540 : 200;

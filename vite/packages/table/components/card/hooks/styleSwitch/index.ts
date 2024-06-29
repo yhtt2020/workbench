@@ -11,10 +11,6 @@ export const initStyle = () => {
     if (styleColor) setColor(Style, styleColor);
   });
 
-  console.log(
-    ' getStyleColor("--active-bg") :>> ',
-    getStyleColor("--active-bg")
-  );
   setColor("--tt-theme-color", getStyleColor("--active-bg"));
   setColor(
     "--tt-theme-secondary-color",
