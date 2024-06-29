@@ -32,6 +32,8 @@
         </div>
       </template>
     </div>
+
+    <div style="height: 70px"></div>
   </xt-scrollbar>
 </template>
  
