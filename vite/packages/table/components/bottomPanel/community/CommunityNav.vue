@@ -101,6 +101,12 @@ const createNavEntry = (options: any) => ({
 
 // 团队导航
 const communityNavList = computed(() => {
+  console.log(communityNav.myCommunity,'当前的社群')
+  if(!currentCommunity.value.defaultItem){
+    if(communityNav.myCommunity?.length>0){
+      currentCommunity.value.defaultItem=communityNav.myCommunity[0]
+    }
+  }
   // 团队导航重复项
   const baseItems = [
     {
@@ -134,7 +140,7 @@ const communityNavList = computed(() => {
             });
           } else {
             /**调整路由名称**/
-            router.push({ name: "officialCommunity", params: { no: 1 } });
+           // router.push({ name: "officialCommunity", params: { no: 1 } });
           }
         },
       }),
