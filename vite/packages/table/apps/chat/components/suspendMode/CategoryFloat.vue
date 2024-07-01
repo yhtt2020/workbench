@@ -307,6 +307,18 @@ const handleCommunity = (data) => {
   proxy.$bus.emit("handleCurrentCommunity", data);
 };
 
+watch(props.no,(v,ov)=>{
+  chatCommunity.communityTreeList={
+    firstChannel: [],
+    // 子级树状
+    secondaryChannel: [],
+  }
+  chatCommunity.getCommunityTree(props.no)
+},{
+  deep:true,
+  immediate:true
+})
+
 /**加入社群条件**/
 const hasRole = computed(() => {
   const currentFind = _.find(myCommunity.value, (item) => {

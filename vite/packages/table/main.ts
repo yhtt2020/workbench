@@ -107,9 +107,12 @@ import type { TT } from "./permission/global/type";
 
 import hevueImgPreview from "hevue-img-preview";
 
+import tsbApi from './js/lib/tsbApi'
 // Your SDKAppID
 // init TUIKit
-
+if(!usePlat('client')){
+  (window as any).tsbApi=tsbApi
+}
 const notice = new Notifications();
 (window as any).$notice = notice;
 

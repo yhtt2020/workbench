@@ -6,8 +6,7 @@
         <router-view></router-view>
       </div>
       <template v-for="item in updateChatAppList" #[item.float]>
-        <OfficialCategoryFloat v-if="currentNo === 1" />
-        <CategoryFloat :no="item.communityInfo.no" v-else />
+        <CategoryFloat :no="item.communityInfo.no" />
       </template>
       <template #createChat>
         <GradeSmallTip
@@ -394,7 +393,7 @@ onMounted(() => {
 }
 </style>
 
-<!-- 
+<!--
 
  /**初始化挂载**/
 //  onMounted(() => {
@@ -405,7 +404,7 @@ onMounted(() => {
 //       //   })
 //       //   console.log(list)
 //       // },2000)
-      
+
 //       com.getMyCommunity();
 //       com.getCommunityTree();
 //       // 游客模式下 隐藏 聊天对话 和 通讯录

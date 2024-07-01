@@ -2,22 +2,21 @@ export const NavList = [
   {
     cname: "推荐",
     children: [
-
-      // {
-      //   name: "myIcons",
-      //   cname: "图标组件",
-      //   detail: "添加一个链接到外部网页的小组件，可以实现各种自定义功能",
-      //   sizes: ["自定义大小"],
-      //   option: [
-      //     {
-      //       name: "myIcons",
-      //       imgName:'myIcons',
-      //       size: "自定义大小",
-      //       zoom: "20",
-      //     },
-      //   ],
-      //   time: "2023/6/28",
-      // },
+      {
+        name: "search",
+        cname: "聚合搜索",
+        detail: "集成必应、百度、Google、B站等主流搜索。同时支持工作台内容搜索。",
+        sizes: ["2x2", "4x2"],
+        option: [
+          {
+            name: "AggregateSearch",
+            imgName:'aggregateSearch',
+            size: "2x4",
+            zoom: "20",
+          },
+        ],
+        time: "2023/5/24",
+      },
       {
         name: 'AIaides',
         cname: 'AI助手',
@@ -36,7 +35,7 @@ export const NavList = [
       {
         name: "clocks",
         cname: "时钟",
-        detail: "桌面时钟，支持多种时钟样式选择，一键进入全屏桌搭模式。",
+        detail: "桌面时钟，支持多种时钟样式选择，一键进入全屏桌搭模式。支持天气日历的同显。",
         sizes: ["自定义大小", "6种样式", "全屏模式"],
         option: [
           {
@@ -589,7 +588,7 @@ export const NavList = [
       {
         name: "search",
         cname: "聚合搜索",
-        detail: "集成必应、百度、Google、B站等主流搜索。",
+        detail: "集成必应、百度、Google、B站等主流搜索。同时支持工作台内容搜索。",
         sizes: ["2x2", "4x2"],
         option: [
           {

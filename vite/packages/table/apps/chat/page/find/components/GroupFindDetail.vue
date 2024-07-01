@@ -86,7 +86,7 @@ const addGroup = async (id) => {
 // 进入群聊
 const enterGroup = async (item) => {
   const conversationID = `GROUP${item.groupID}`;
-  /**补充群聊进入状态**/ 
+  /**补充群聊进入状态**/
   currentContact.value = {
     type: "group",
     groupID:conversationID,

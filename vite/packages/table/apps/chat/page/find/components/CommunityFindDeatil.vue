@@ -9,7 +9,7 @@
         <div style="height: 150px; margin-bottom: 30px">
           <img
             class="w-full h-full rounded-t-xl object-cover"
-            src="https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/Yzzj-zana-AI6F-jnTG"
+            :src="getBg(item.bg)"
           />
         </div>
         <div
@@ -66,6 +66,7 @@ import { storeToRefs } from "pinia";
 import { chatCommunityStore } from "../../../store/chatCommunity";
 import _ from "lodash-es";
 import { useRouter } from "vue-router";
+import {cdnUrl} from "../../../../../consts";
 
 const props = defineProps({
   detailList: {
@@ -80,7 +81,14 @@ const router = useRouter();
 /**解构store数据**/
 const chatCommunity = chatCommunityStore();
 const { myCommunity } = storeToRefs(chatCommunity);
-
+const getBg= (bg)=>{
+  if(!bg){
+     let i=Math.floor(Math.random() * 10) + 1
+     return cdnUrl('/community_bg/'+i+'.jpg')
+  }else{
+    return bg
+  }
+}
 // 进入相对应社群
 const enterCommunity = (data) => {
   const no = data.no;
@@ -111,9 +119,9 @@ const enterCommunity = (data) => {
 @media screen and (min-width: 965px) {
   .content-list {
     width: 100%;
-    display: grid !important;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: 16px;
+    display: flex;
+    gap:10px;
+    flex-wrap: wrap;
   }
   .content-item {
     width: calc(100% / 1);

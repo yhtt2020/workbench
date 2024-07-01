@@ -11,17 +11,6 @@ export const chatCommunityStore = defineStore("chatCommunity", {
   state: () => ({
     // 我的社群
     myCommunity: [
-      {
-        img: "/icons/logo128.png",
-        float: "",
-        id: 0,
-        noBg: true,
-        tab: "OfficialCommunity",
-        type: "OfficialCommunity",
-        menuVisible: true,
-        route: { name: "officialCommunity", params: { no: 1 } },
-        top: ["tr", "blue", { icon: "fluent:pin-16-filled" }, 0],
-      },
     ],
     // 设置当前社群详情的社群号
     currentCommunityNo: null,

@@ -14,7 +14,7 @@
       <!-- 群聊会话 -->
       <template v-if="currentChatType === 'group'">
         <TUIChat>
-          <h1>欢迎使用腾讯云即时通信IM</h1>
+          <h1>欢迎使用群聊</h1>
         </TUIChat>
       </template>
 
@@ -62,7 +62,7 @@ const currentChatType = computed(() => {
   // 当前list是获取所有群聊会话列表
   const list = TUIStore?.storeMap?.conversation?.store?.conversationList;
 
-  /**有状态就以状态为准进行会话切换**/ 
+  /**有状态就以状态为准进行会话切换**/
   if(currentContact.value?.type === 'group' && currentContact.value?.groupID !== ""){
     if(list?.length > 0){
       const name = currentContact.value?.groupID;
@@ -70,7 +70,7 @@ const currentChatType = computed(() => {
       // TUIConversationService?.switchConversation(name);
     }
   }
-  /**没有状态就默认选择会话列表中的第一个会话**/ 
+  /**没有状态就默认选择会话列表中的第一个会话**/
   else if(currentContact.value?.type === 'group' && currentContact.value?.groupID === ""){
     if(list?.length > 0){
       // 如果缓存中的会话是空的,就从会话列表中获取第一个会话;

@@ -46,15 +46,10 @@ const { no } = toRefs(props);
 
 
 const communityName = computed(()=>{
-  if(no.value === 1){
-    return '天天工作台官方社群';
-  }
-  else {
     const index = _.findIndex(myCommunity.value,(item)=>{ return Number(no.value) === Number(item.cno) });
     if(index > -1){
       return myCommunity.value[index]?.communityInfo?.name;
-    }
-  }
+ }
 })
 
 </script>

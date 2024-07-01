@@ -49,9 +49,8 @@ export default {
 //   }
 // })
     this.loading=true
-if (!this.$usePlat()) {
-  this.CONST = tsbApi.barrage.CONST
-}
+    this.CONST = tsbApi.barrage.CONST
+
     if(this.defaultChannel==='team'){
       this.channelList=this.channelList.reverse()
       this.currentChannel={name:'team',title:'小队'}

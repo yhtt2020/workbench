@@ -312,7 +312,7 @@ const openTeam = async () => {
   const store = useComStore();
   const team:any = teamStore();
   await team.updateMy(0);
-  if (team.status === false) {
+  if (team.team?.status === false) {
     store.showTeamTip = true;
   } else {
     team.teamVisible = !team.teamVisible;

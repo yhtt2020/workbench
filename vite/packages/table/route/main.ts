@@ -222,6 +222,11 @@ export default [
         },
       },
       {
+        path:'/hall',
+        component: Hall,
+        name:'hall'
+      },
+      {
         path: "/app",
         name: "app",
         component: AppFrame,
@@ -323,7 +328,7 @@ export default [
               rememberChildrenPosition: true,
             },
             redirect: {
-              name: "chatMain",
+              name: "chatFind",
             },
             children: [
               /**群聊会话列表路由**/
@@ -352,7 +357,7 @@ export default [
               },
               /**其他社群路由**/
               {
-                path: "/com/:no",
+                path: "/com/:no/channel/:channelId?",
                 name: "myCommunity",
                 component: MyCommunity,
                 props: true,

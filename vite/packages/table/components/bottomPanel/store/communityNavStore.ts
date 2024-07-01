@@ -36,23 +36,6 @@ export const communityNavStore = defineStore("communityNav", {
     fileType: "all",
     // 在多个群聊的情况下，当前选中的群聊和选中的下标
     currentCommunity: {
-      item: {
-        value: "task",
-        name: "想天官方社群",
-        icon: "/icons/logo128.png",
-        bg: "",
-        isBg: false,
-        mode: "app",
-        type: "systemApp",
-        id: nanoid(11),
-        no: 1,
-        cno: 1,
-        role: "member",
-      },
-      defaultItem: {
-        icon: "/logo/community.svg",
-      },
-      index: null,
     },
   }),
 
