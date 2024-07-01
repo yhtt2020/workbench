@@ -153,7 +153,6 @@ const selectCommunity = async (item, index) => {
     }
     // 成员
     else if (item.role === "member") {
-      loadSyncDesk(item?.no);
       comNav.setCurrentCommunity(item, index);
     }
   } else {
@@ -161,13 +160,6 @@ const selectCommunity = async (item, index) => {
   }
   // 选择后进行弹窗关闭
   emit("close");
-};
-
-// 加载云端数据处理方法
-const loadSyncDesk = async (no) => {
-  communityDesk.setCurrentDeskNo(no);
-  communityDesk.loadCommunityDeskDetail();
-  communityDesk.loadCommunityDeskAll();
 };
 
 // 给从图标选择器中的图标进行颜色样式处理

@@ -6,7 +6,6 @@ import {
 import { generateSearchResultTime } from "../hooks/deskCreateMethod";
 import { useAppModal } from "../../appModal/src/hook/useAppModal";
 
-
 /**社群管理员模块**/
 function communityMenus() {
   let currentHide = null;
@@ -44,8 +43,10 @@ function communityMenus() {
       fn: this.syncSaveCommunity,
       contentAble: true,
       newContent:
-        this.setting.saveSyncTime !== ""
-          ? `上次更新:${generateSearchResultTime(this.setting.saveSyncTime)}`
+        this.setting[this.communityInfo?.no].time !== ""
+          ? `上次更新:${generateSearchResultTime(
+              this.setting[this.communityInfo?.no].time
+            )}`
           : "",
     },
     { id: 2, divider: true },
@@ -114,9 +115,9 @@ function communityMenus() {
                 mainList: this.currentDesk.cards,
                 cb: (position: any) => {
                   this.$bus.emit("cutCanvas", position);
-                  setTimeout(()=>{
+                  setTimeout(() => {
                     this.syncSaveCommunity();
-                  },1500);
+                  }, 1500);
                 },
               });
             },
@@ -266,12 +267,13 @@ function memberMenus() {
       newIcon: "fluent:cloud-arrow-up-16-filled",
       fn: () => {
         this.loadCommunityCloud();
-        // this.$router.go(0);
       },
       contentAble: true,
       newContent:
-        this.setting.getSyncTime !== ""
-          ? `上次更新:${generateSearchResultTime(this.setting.getSyncTime)}`
+        this.setting[this.communityInfo?.no].time !== ""
+          ? `上次更新:${generateSearchResultTime(
+              this.setting[this.communityInfo?.no].time
+            )}`
           : "",
     },
     { id: 2, divider: true },

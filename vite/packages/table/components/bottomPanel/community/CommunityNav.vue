@@ -61,7 +61,7 @@ const { settingType, currentCommunity } = storeToRefs(comNav);
 const app: any = appStore();
 const { settings, showGuide } = storeToRefs(app);
 const communityDesk: any = communityDeskStore();
-const { syncDesk, communityDeskInfo } = storeToRefs(communityDesk);
+const { loadDesk,loadDeskAll, communityDeskInfo } = storeToRefs(communityDesk);
 const card: any = cardStore();
 const { desks } = storeToRefs(card);
 
@@ -198,17 +198,17 @@ const enterOwnerDesk = (communityInfo: any) => {
   }
   // 成员
   else if (communityInfo?.role === "member") {
-    loadSyncDesk(communityInfo?.no);
-    settings.value.isCommunity = false;
+    const no = communityInfo?.no;
+    if(!loadDesk.value[no]){
+      communityDesk.downloadCommunityAllDesktop(no)
+      settings.value.isCommunity = false;
+    }
+    else {
+      settings.value.isCommunity = false;
+    }
   }
 };
 
-// 加载云端数据处理方法
-const loadSyncDesk = (no: any) => {
-  communityDesk.setCurrentDeskNo(no);
-  communityDesk.loadCommunityDeskAll();
-  communityDesk.loadCommunityDeskDetail();
-};
 
 onMounted(() => {
   proxy.$bus.on("updateSetting", () => {

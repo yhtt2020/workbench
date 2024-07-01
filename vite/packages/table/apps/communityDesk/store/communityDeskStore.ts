@@ -1,112 +1,106 @@
-// 社群桌面数据
 import { defineStore } from "pinia";
 import _ from "lodash-es";
 import archiveHelper from "../../../js/lib/archiveHelper";
 import { message } from "ant-design-vue";
 import { cardStore } from "../../../store/card";
 
-message.config({
-  maxCount: 1,
-});
-
+// 应用id
 const communityNavAppId = "c100001";
 // 社群桌面列表的缓存key
-const communityDeskAll = "DeskList";
+const COM_DESK_ALL = "DeskList";
 // 社群桌面详情缓存key
-const communityDeskDetail = "DeskDetail";
+const COM_DESK_DETAIL = "DeskDetail";
 
 // @ts-ignore
 export const communityDeskStore = defineStore("communityDesk", {
   state: () => ({
-    // 指定社群中的所有桌面列表(用于云端存储)
-    communityDesk: {
-      communityDeskNo: "",
-      // 社群桌面列表 结构 {name:"桌面名称",deskId:"桌面id"} 用于云端存档
-      communityAllDesk: [],
-      // 社群桌面数据详情  结构 { deskId:'桌面id',cards:'桌面卡片数据',}
-      communityAllDeskDetail: {},
-    },
-    // 云端读取读取返回的社群桌面数据
-    syncDesk: {
-      desks: [],
-    },
-    // 设置
-    setting: {
-      // 云端同步时间
-      getSyncTime: Date.now(),
-      saveSyncTime: Date.now(),
-    },
-    // 存储社群信息
-    communityDeskInfo: {},
-    // 需要存储当前桌面的自由布局数据
-    deskLayout: {
-      freeLayoutData: {},
-      freeLayoutState: {},
-    },
-  }),
+    // 存储桌面的本地数据
+    saveDesk: {},
+    // 存储当前社群的所有桌面列表
+    saveDeskAll: [],
+    // 存储当前社群编号和当前桌面的id (用于存储失败时,二次使用)
+    saveDeskNo: "",
+    saveDeskId: "",
 
+    // 读取云端同步的当前桌面数据
+    loadDesk: {},
+    // 读取云端同步的所有桌面列表数据
+    loadDeskAll: {},
+
+    // 设置
+    setting: {},
+  }),
   actions: {
-    // 设置当前桌面数据
-    setCurrentDeskNo(data: any) {
-      this.communityDesk.communityDeskNo = data;
-    },
-    // 设置当前指定社群所有桌面列表
-    setCurrentDeskAllList(list: any) {
-      const mapList = _.map(list, (desk: any) => {
+    /**
+     * 设置数据
+     * @param no        社群id
+     * @param desk      当前桌面
+     * @param deskList  当前社群所有桌面列表
+     * @param freeData  当前桌面的自由布局数据
+     * **/
+    setCommunityDesktopData(no: any, desk: any, deskList: any, freeData: any) {
+      // 解构
+      const { freeLayoutData, freeLayoutState } = freeData;
+      // 所有桌面列表
+      const mapList = _.map(deskList, (desk: any) => {
         return {
           name: desk.name,
           id: desk.id,
         };
       });
-      this.communityDesk.currentList = list;
-      this.communityDesk.currentList = list;
-      this.communityDesk.communityAllDesk = mapList;
-    },
-    // 设置当前指定社群中所选中的桌面详情数据存储
-    setCurrentDeskData(currentDesk: any) {
-      this.communityDesk.communityAllDeskDetail = currentDesk;
-    },
-    // 设置社群信息
-    setCommunityInfo(info: any) {
-      this.communityDeskInfo = info;
-    },
-    // 获取社群指定桌面自由布局参数
-    setDeskLayoutData(freeData: any, freeState: any) {
-      this.deskLayout.freeLayoutData = freeData;
-      this.deskLayout.freeLayoutState = freeState;
+      this.saveDeskAll = mapList;
+      // 桌面id
+      const id = desk.id;
+      // 本地的社群id
+      this.saveDeskNo = no;
+      // 本地的桌面id
+      this.saveDeskId = id;
+      if (!this.saveDesk[no]) this.saveDesk[no] = {};
+      // 管理员情况下的存储本地数据
+      this.saveDesk[no][id] = {
+        ...desk,
+        freeLayoutData: freeLayoutData,
+        freeLayoutState: freeLayoutState,
+      };
     },
 
-    // 保存当前社群名下的所有桌面列表
-    async saveCommunityDesk(force = 0) {
-      const communityNo = this.communityDesk.communityDeskNo;
-      // 将当前社群名下的所有桌面列表进行云端存储
+    /**
+     * 上传社群同步所有桌面的列表数据
+     * @param no 当前社群的id
+     * @param force 是否重新存储
+     * **/
+    uploadCommunityAllDesktop(no: any, force: any) {
       const saveDeskList = archiveHelper.saveToCommunity(
-        communityNo,
+        no,
         communityNavAppId,
         {
-          desksAll: this.communityDesk.communityAllDesk,
+          desksAll: this.saveDeskAll,
           _v: Date.now(),
         },
         force,
-        communityDeskAll
+        COM_DESK_ALL
       );
       saveDeskList.then((rs: any) => {
-        if (rs.status) {
+        if (rs?.status) {
           message.success("保存成功，并已为您自动同步至云端。");
           // 获取更新时间
-          this.setting.saveSyncTime = rs?.data?.archive?.updateTime;
-        } else if (rs.code === 401) {
-          message.error("保存失败，原因：" + rs.info);
-        } else if (rs.code === 404) {
-          message.error("保存失败，原因：" + rs.info);
+          if (!this.setting[no]) return (this.setting[no] = {});
+          this.setting[no] = { time: rs?.data?.archive?.updateTime };
+        } else if (rs?.code === 401) {
+          message.error("保存失败，原因：" + rs?.info);
+        } else if (rs?.code === 404) {
+          message.error("保存失败，原因：" + rs?.info);
         } else {
           (window as any).$ui.confirm(
             "同步助手",
             `保存失败，由于${rs.data?.userInfo?.nickname}正在编辑存档，故无法同步，是否强制同步？此操作将强制写入数据，可能导致存储内容丢失。`,
             {
               ok: async () => {
-                let result = await this.syncCommunityDesk(1);
-                if (result.status) {
+                let result = await this.uploadCommunityAllDesktop(
+                  this.saveDeskNo,
+                  1
+                );
+                if (result?.status) {
                   message.success("数据强制保存成功。");
                 } else {
                   message.error("强制保存失败。");
@@ -114,135 +108,104 @@ export const communityDeskStore = defineStore("communityDesk", {
               },
             }
           );
-        }
-      });
-    },
-    // 保存当前社群名下所选中的桌面数据
-    async saveCommunityDeskDetail(force = 0) {
-      const communityNo = this.communityDesk.communityDeskNo;
-      // 桌面详情的缓存key
-      const saveKey = `_${communityDeskDetail}${communityNo}`;
-      // 将当前社群名下选中的桌面详情进行云端存储
-      const saveDeskDetail = archiveHelper.saveToCommunity(
-        communityNo,
-        communityNavAppId,
-        {
-          deskDetail: {
-            ...this.communityDesk.communityAllDeskDetail,
-            freeLayoutData: this.deskLayout.freeLayoutData,
-            freeLayoutState: this.deskLayout.freeLayoutState,
-          },
-          _v: Date.now(),
-        },
-        force,
-        saveKey
-      );
-      saveDeskDetail.then((rs: any) => {
-        if (rs.status) {
-          // 获取更新时间
-          this.setting.saveSyncTime = rs?.data?.archive?.updateTime;
-        } else if (rs.code === 401) {
-          message.error("保存失败，原因：" + rs.info);
-        } else if (rs.code === 404) {
-          message.error("保存失败，原因：" + rs.info);
-        } else {
-          (window as any).$ui.confirm(
-            "同步助手",
-            `保存失败，由于${rs.data?.userInfo?.nickname}正在编辑存档，故无法同步，是否强制同步？此操作将强制写入数据，可能导致存储内容丢失。`,
-            {
-              ok: async () => {
-                let result = await this.saveCommunityDeskDetail(1);
-                if (result.status) {
-                  message.success("数据强制保存成功。");
-                } else {
-                  message.error("强制保存失败。");
-                }
-              },
-            }
-          );
-        }
-      });
-    },
-    // 读取当前社群名下云端存储的所有桌面列表
-    loadCommunityDeskAll() {
-      const communityNo = this.communityDesk.communityDeskNo;
-      const getDeskDataAll = archiveHelper.loadFromCommunity(
-        communityNo,
-        communityNavAppId,
-        communityDeskAll
-      );
-      getDeskDataAll.then((rs: any) => {
-        if (rs.status) {
-          // console.log('查看云端数据结果-全部桌面数据',rs);
-          const archiveData = rs.data?.data;
-          if (archiveData.desksAll) {
-            this.syncDesk.desks = archiveData?.desksAll;
-          }
-          this.setting.getSyncTime = archiveData?._v;
-          this.loadCommunityDeskDetail();
-        } else {
-          if (rs.code === 404) {
-            this.syncDesk.desks = [];
-            this.setting.getSyncTime = Date.now();
-          }
-        }
-      });
-    },
-    // 读取当前社群名下云端存储的桌面详情
-    loadCommunityDeskDetail() {
-      // 获取社群id
-      const communityNo = this.communityDesk.communityDeskNo;
-      // 桌面详情的缓存key
-      const loadKey = `_${communityDeskDetail}${communityNo}`;
-      const getDeskDetail = archiveHelper.loadFromCommunity(
-        communityNo,
-        communityNavAppId,
-        loadKey
-      );
-      getDeskDetail.then((rs: any) => {
-        // console.log('查看云端数据结果-当前桌面数据',rs);
-        if (rs.status) {
-          const archiveData = rs.data?.data?.deskDetail;
-          if (archiveData) {
-            // 将id进行遍历返回
-            const deskId = _.map(this.syncDesk.desks, (desk: any) => {
-              return desk?.id;
-            });
-            // 根据云端桌面列表进行检测存入本地的桌面列表中
-            const existDeskId = _.some(deskId, (id: any) => {
-              return String(id) === String(archiveData?.id);
-            });
-            if (existDeskId) {
-              const index = _.findIndex(
-                (cardStore() as any).desks,
-                (desk: any) => {
-                  return String(desk.id) === String(archiveData?.id);
-                }
-              );
-              if (index === -1) {
-                (cardStore() as any).desks.unshift(archiveData);
-              } else {
-                (cardStore() as any).desks.splice(index, 1, archiveData);
-              }
-            }
-          }
-          this.setting.getSyncTime = rs.data?.data?._v;
         }
       });
     },
 
-    // 获取云存储数据
-    async getCommunityData(){
-      // 获取社群id
-      const communityNo = this.communityDesk.communityDeskNo;
-      // 桌面详情的缓存key
-      const loadKey = `_${communityDeskDetail}${communityNo}`;
-      const rs = await archiveHelper.loadFromCommunity(
-        communityNo,
+    /**
+     * 上传社群同步当前桌面数据
+     * @param no     当前社群的id
+     * @param deskId 当前桌面的id
+     * @param force 是否重新存储
+     * **/
+    uploadCommunityCurrentDesktop(no: any, deskId: any, force: any) {
+      const saveDeskDetail = archiveHelper.saveToCommunity(
+        no,
         communityNavAppId,
-        loadKey
+        {
+          deskDetail: this.saveDesk[no][deskId],
+          _v: Date.now(),
+        },
+        force,
+        `_${COM_DESK_DETAIL}${no}`
       );
-      return rs.data?.data?.deskDetail;
+      saveDeskDetail.then((rs: any) => {
+        if (rs?.status) {
+          // 获取更新时间
+          if (!this.setting[no]) return (this.setting[no] = {});
+          this.setting[no] = { time: rs?.data?.archive?.updateTime };
+        } else if (rs?.code === 401) {
+          message.error("保存失败，原因：" + rs?.info);
+        } else if (rs?.code === 404) {
+          message.error("保存失败，原因：" + rs?.info);
+        } else {
+          (window as any).$ui.confirm(
+            "同步助手",
+            `保存失败，由于${rs.data?.userInfo?.nickname}正在编辑存档，故无法同步，是否强制同步？此操作将强制写入数据，可能导致存储内容丢失。`,
+            {
+              ok: async () => {
+                let result = await this.uploadCommunityCurrentDesktop(
+                  this.saveDeskNo,
+                  this.saveDeskId,
+                  1
+                );
+                if (result?.status) {
+                  message.success("数据强制保存成功。");
+                } else {
+                  message.error("强制保存失败。");
+                }
+              },
+            }
+          );
+        }
+      });
+    },
+
+    /**
+     * 下载(或读取)社群同步所有桌面数据
+     * @param no     社群id
+     * **/
+    downloadCommunityAllDesktop(no: any) {
+      const getDeskDataAll = archiveHelper.loadFromCommunity(
+        no,
+        communityNavAppId,
+        COM_DESK_ALL
+      );
+      getDeskDataAll.then((rs: any) => {
+        if (rs?.status === 1) {
+          const { data } = rs?.data;
+          this.loadDeskAll[no] = data?.desksAll;
+          this.setting[no] = { time: data?._v };
+        } else if (rs.code === 404) {
+          this.loadDeskAll[no] = [];
+          this.setting[no] = { time: Date.now() };
+        }
+      });
+    },
+
+    /**
+     * 下载(或读取) 社群同步当前桌面数据
+     * **/
+    downloadCommunityCurrentDesktop(no: any,) {
+      if (!this.loadDesk[no]) return (this.loadDesk[no] = {});
+      const getDeskDetail = archiveHelper.loadFromCommunity(
+        no,
+        communityNavAppId,
+        `_${COM_DESK_DETAIL}${no}`
+      );
+      getDeskDetail.then((rs: any) => {
+        if (rs?.status) {
+          const { data } = rs?.data;
+          const someVisible = _.some(this.loadDeskAll[no], (item: any) => {
+            return String(item?.id) === String(data?.deskDetail?.id);
+          });
+          
+          if(someVisible){
+            this.loadDesk[no][data?.deskDetail?.id] = data?.deskDetail;
+          }
+          this.setting[no] = { time: data?._v };
+        }
+      });
     },
   },
 
@@ -251,11 +214,12 @@ export const communityDeskStore = defineStore("communityDesk", {
     strategies: [
       {
         paths: [
-          "communityDesk",
-          "syncDesk",
-          "setting",
-          "communityDeskInfo",
-          "deskLayout",
+          "saveDesk",
+          "saveDeskAll",
+          "loadDesk",
+          "saveDeskNo",
+          "loadDeskAll",
+          "saveDeskId",
         ],
         storage: localStorage,
       },
