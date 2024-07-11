@@ -5,9 +5,9 @@
     </div>
   </template>
   <xt-option-box>
-    <xt-option-info title="独立壁纸" isSwitch v-model:switch="deskBg.start" />
+    <xt-option-info title="独立壁纸" v-if="deskBg?.start" isSwitch v-model:switch="deskBg.start" />
     <xt-option-bg
-      v-if="deskBg.start"
+      v-if="deskBg?.start"
       v-model:mode="deskBg.mode"
       v-model:colorValue="deskBg.colorValue"
       v-model:imgValue="deskBg.imgValue"

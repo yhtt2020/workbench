@@ -8,7 +8,7 @@
       :sizeList="sizeList"
       ref="cardSlot"
       :customData="customData"
-      :menuList="newMenu" 
+      :menuList="newMenu"
       class="cardSlot"
       :desk="desk"
       @delete="deleteCard"
@@ -389,7 +389,7 @@ export default {
         },
         customDel: this.openWay === "nav" ? true : false,
         disableEdit: this.isCommunityDesktop(this.desk),
-        cardName: '壁纸'
+        cardName: "壁纸",
       };
     },
     // 组件标题
@@ -450,7 +450,6 @@ export default {
       }
     },
 
-    
     imagesList() {
       return [this.getCustomDataPaper].map((img, index) => {
         return img.src;
@@ -475,32 +474,33 @@ export default {
     },
 
     // 判断环境处理右键菜单
-    newMenu(){
-      if(window.$usePlat("web")){
-        const filterArr = this.menuList.filter((item)=>{
-          return item.title !== "设置"
+    newMenu() {
+      if (window.$usePlat("web")) {
+        const filterArr = this.menuList.filter((item) => {
+          return item.title !== "设置";
         });
         return filterArr;
-      }
-      else {
+      } else {
         return this.menuList;
       }
     },
 
     // 实时获取图标组件的大小
-    wallPaperSize(){
+    wallPaperSize() {
       return this.customData?.customSize;
-    }
+    },
   },
 
   mounted() {
     this.$nextTick(() => {
+      if (!this.customData) return;
       if (this.customData.value !== undefined) {
         this.initPaperList(this.customData.value);
       } else {
         this.initPaperList("timeline");
       }
     });
+    if (!this.customData) return;
     if (this.customData.customSize === undefined) {
       this.customData.customSize = "4x4";
     }

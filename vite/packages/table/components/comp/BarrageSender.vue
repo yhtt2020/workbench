@@ -68,6 +68,7 @@ export default {
   },
   methods: {
     ...mapActions(teamStore, ["updateMy"]),
+    // 弹幕发送
     async postBarrage() {
       if (window.$useEnv("guest")) {
         this.loginVisible = true;
@@ -77,26 +78,33 @@ export default {
         if (this.lvInfo.lv < 1) {
           this.checkLevel();
           return;
-        }
-        if (!this.postContent) {
+        } else if (!this.postContent) {
           message.error("请输入弹幕内容");
           return;
         } else {
           let channelType = this.CONST.CHANNEL.PUBLIC;
           let pageUrl = "table";
+
           // 小队弹幕发送逻辑
-          if (this.currentChannel.name !== "all") {
+          if (this.currentChannel.name === "team") {
             channelType = this.CONST.CHANNEL.TEAM;
             pageUrl = this.myTeamNo;
-            completeTask("Z0502");
+            const data = {
+              channel_type: channelType,
+              content: this.postContent,
+              page_url: String(pageUrl),
+            };
             if (String(pageUrl).trim() === "") {
               await this.updateMy();
               if (String(pageUrl).trim() === "") {
                 message.error("小队号错误，无法发送弹幕");
               }
               return;
+            } else {
+              this.postBarrageMsg(this.currentChannel.name, data);
             }
           }
+
           // 全网弹幕发送逻辑
           else if (this.currentChannel.name === "all") {
             let data = {
@@ -104,29 +112,13 @@ export default {
               content: this.postContent,
               page_url: String(pageUrl),
             };
-            let rs = await tsbApi.barrage.add(data);
-            if (rs.status) {
-              this.postContent = "";
-              if (!this.hideAdmin) {
-                this.hideAdmin = true;
-              }
-              message.success("弹幕发送成功");
-              completeTask("Z0501");
-              setTimeout(() => {
-                if (this.currentChannel.name === "all") {
-                  this.$emit("loadAllBarrages");
-                } else {
-                  this.$emit("loadTeamBarrage");
-                }
-              }, 5000);
-            } else {
-              console.error(rs);
-              message.error("弹幕发送失败，失败原因：" + rs);
-            }
+            this.postBarrageMsg(this.currentChannel.name, data);
           }
         }
       }
     },
+
+    // 检测账号等级
     checkLevel() {
       let hour = this.lvInfo.remainHour;
       window.$ui.confirm(
@@ -140,6 +132,36 @@ export default {
           type: "warning",
         }
       );
+    },
+
+    // 发送弹幕消息公告方法
+    async postBarrageMsg(type, data) {
+      let rs = await tsbApi.barrage.add(data);
+      if (rs.status) {
+        this.postContent = "";
+        if (!this.hideAdmin) {
+          this.hideAdmin = true;
+        }
+        message.success("弹幕发送成功");
+        // 判断是否为小队发送,如果是就执行任务中心的小队引导任务显示完成
+        if (type === "team") {
+          setTimeout(() => {
+            this.$emit("loadTeamBarrage");
+          }, 5000);
+          completeTask("Z0502");
+        } 
+        
+        // 判断是否为全网发送,如果是就执行任务中心的全网引导任务显示完成
+        else if (type === "all") {
+          setTimeout(() => {
+            this.$emit("loadAllBarrages");
+          }, 5000);
+          completeTask("Z0501");
+        }
+      } else {
+        console.error(rs);
+        message.error("弹幕发送失败，失败原因：" + rs);
+      }
     },
   },
 };
