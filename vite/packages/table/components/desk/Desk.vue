@@ -443,18 +443,21 @@ export default {
               marginTop: 0,
               cardMargin: 5, //卡片间隙
               vDirection: false,
-              bg: {
-                start: false,
-                mode: "img",
-                imgValue: DEFAULT.WALLPAPER,
-                colorValue: "#508BFE",
-              },
+
             };
           }
           this.muuriOptions.layout.horizontal = !newVal.vDirection;
           this.currentDesk.settings = newVal;
           this.update();
         }
+        if (!newVal.bg) {
+          this.currentDesk.settings.bg = {
+                start: false,
+                mode: "img",
+                imgValue: DEFAULT.WALLPAPER,
+                colorValue: "#508BFE",
+              }
+          }
       },
       deep: true,
       immediate: true,
