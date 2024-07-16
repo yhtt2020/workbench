@@ -125,7 +125,6 @@ export default {
         trailing:true,
         leading:false
       }),
-      currentDragGrid:'',
       updateEvent:null,
       /**
        * Deep copy of props items
