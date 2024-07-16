@@ -450,7 +450,7 @@ export default {
           this.currentDesk.settings = newVal;
           this.update();
         }
-        if (!newVal.bg) {
+        if (typeof newVal.bg !== "object") {
           this.currentDesk.settings.bg = {
                 start: false,
                 mode: "img",
