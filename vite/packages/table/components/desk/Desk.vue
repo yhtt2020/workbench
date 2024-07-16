@@ -450,14 +450,14 @@ export default {
           this.currentDesk.settings = newVal;
           this.update();
         }
-        // if (typeof newVal.bg !== "object") {
-        //   this.currentDesk.settings.bg = {
-        //         start: false,
-        //         mode: "img",
-        //         imgValue: DEFAULT.WALLPAPER,
-        //         colorValue: "#508BFE",
-        //       }
-        //   }
+        if (typeof newVal.bg !== "object") {
+          this.currentDesk.settings.bg = {
+                start: false,
+                mode: "img",
+                imgValue: DEFAULT.WALLPAPER,
+                colorValue: "#508BFE",
+              }
+          }
       },
       deep: true,
       immediate: true,
