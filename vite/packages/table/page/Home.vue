@@ -278,6 +278,10 @@ export default {
         return desk.id === this.currentDeskId;
       });
       if (find) {
+        if(!find.cards){
+          console.log('已经丢失了',find)
+          return find
+        }
         find.cards.forEach((e) => {
           if (!e.data) {
             e.data = {};
@@ -507,7 +511,7 @@ export default {
           this.desks = desks;
           // console.log('查看desk',this.desks[0]);
           const initDesk = this.desks[0];
-          // this.currentDesk = this.desks[0];
+          //this.currentDesk = this.desks[0];
           this.currentDeskIndex = {
             name: initDesk?.name,
             id: initDesk?.id,
@@ -704,8 +708,14 @@ export default {
     },
   },
   watch: {
+    'currentDesk.cards':{
+      handler(newVal,oldVal){
+      },
+      deep:true,
+    },
     desks: {
-      handler(newVal, oldVal) {},
+      handler(newVal, oldVal) {
+      },
       deep: true,
     },
     // currentDeskIndex: {

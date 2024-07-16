@@ -1,15 +1,11 @@
 import { createRouter, createWebHashHistory,createWebHistory } from "vue-router";
 import routes from "./route/route";
-import { cardStore } from "./store/card";
 import { appStore } from "./store";
 import { message } from "ant-design-vue";
 import { usePlatLimit, usePlat } from "../table/ui/hooks/usePlat";
 import { useUserPermit } from "../table/permission/user/useUserPermit";
-// import cache from "../"
-import cache from "../table/components/card/hooks/cache";
-
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(),
   routes,
 });
 router.beforeEach(async (to, from, next) => {

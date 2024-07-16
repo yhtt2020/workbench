@@ -12,21 +12,21 @@
         </div>
         <div class="flex" style="justify-content: flex-end;">
             <div class="flex justify-between mt-3">
-                <xt-button 
-                    @click="neverTips" 
-                    type="default" 
-                    w="124" 
-                    h="32" 
-                    radius="8" 
+                <xt-button
+                    @click="neverTips"
+                    type="default"
+                    w="124"
+                    h="32"
+                    radius="8"
                     :plain="true"
-                    class="mr-4" 
+                    class="mr-4"
                     style="background-color: var(--secondary-bg);">下次不再提示</xt-button>
-                <xt-button 
-                    @click="close" 
-                    type="theme" 
-                    w="84" 
-                    h="32" 
-                    radius="8" 
+                <xt-button
+                    @click="close"
+                    type="theme"
+                    w="84"
+                    h="32"
+                    radius="8"
                     :plain="true"
                     style="background-color: var(--active-bg);">好的</xt-button>
             </div>

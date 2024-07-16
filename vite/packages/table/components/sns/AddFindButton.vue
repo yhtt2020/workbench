@@ -53,7 +53,7 @@ export default {
       else {
          this.$emit('login')
       }
-        
+
     },
     async checkFriendship() {
       this.relationship = await sns.checkFriendship(this.uid)

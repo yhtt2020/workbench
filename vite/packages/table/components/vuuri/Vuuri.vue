@@ -340,6 +340,9 @@ export default {
      * @private
      */
     _reOrderWithItem (item) {
+      if(!item){
+        return
+      }
       const $grid = item.getGrid()
       let i = 0
       const itemKeys = $grid.getItems().reduce((accum, item) => {

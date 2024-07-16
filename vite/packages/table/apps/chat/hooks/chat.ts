@@ -5,7 +5,7 @@ import _ from "lodash-es";
 import { useNavigationStore } from "../../../components/desk/navigationBar/navigationStore";
 import { appStore } from "../../../store";
 
-/**群聊退出登录操作**/ 
+/**群聊退出登录操作**/
 export const chatLogout = () => {
   (window as any).$chat?.chat?.logout();
   (window as any).$TUIKit.TUIStore.storeMap.conversation.store.conversationList = [];

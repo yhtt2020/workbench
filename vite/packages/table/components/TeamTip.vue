@@ -12,7 +12,7 @@
                 </a-col>
                 <a-col>
 
-                  <div  class="title" >创建小队</div>作为队长，创建您的小队，<strong class="text-white">限时抢占小队靓号</strong>，<a @click="more">了解更多</a>
+                  <div  class="title xt-text-2" >创建小队</div>作为队长，创建您的小队，<strong class="text-white">限时抢占小队靓号</strong>，<a @click="more">了解更多</a>
                 </a-col>
 
               </a-row>
@@ -26,7 +26,7 @@
                 <a-col  class="pt-3">
                   <UsergroupAddOutlined class="text-white icon"/>
                 </a-col>
-                <a-col><div class="title">加入小队</div>作为小队成员，加入小队，<a @click="goHall">前往小队大厅</a></a-col>
+                <a-col><div class="title xt-text-2">加入小队</div>作为小队成员，加入小队，<a @click="goHall">前往小队大厅</a></a-col>
 
               </a-row>
               <a-row class="mt-4" :gutter="10">

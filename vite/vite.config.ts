@@ -31,6 +31,15 @@ export default defineConfig({
   optimizeDeps:{
     exclude:['wujie','wujie-vue3']
   },
+  // server:{
+  //   proxy:{
+  //     '/api': {
+  //       target: 'http://your-backend-server',
+  //       changeOrigin: true,
+  //       rewrite: (path) => path.replace(/^\/api/, ''),
+  //     }
+  //   }
+  // },
   plugins: [
 
     vue({
@@ -41,7 +50,7 @@ export default defineConfig({
     // require("tailwindcss"),
     // require("autoprefixer"),
   ],
-  base: "./",
+  base: "/",
   build: {
     //sourcemap:true,//不打包sourcemap
     rollupOptions: {
