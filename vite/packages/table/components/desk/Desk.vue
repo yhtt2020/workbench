@@ -396,6 +396,7 @@ export default {
     // 监听ID变化
     "currentDesk.id": {
       handler(newVal) {
+        this.key=Date.now()
         this.updateIndependentBg();
         // 同步更新自由布局ID
         this.freeLayoutId = newVal;

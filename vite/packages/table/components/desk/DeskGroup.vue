@@ -1139,6 +1139,14 @@ export default {
         id: nanoid(4),
         icon: "desktop",
         cards: this.cleanMuuriData(deskTemplates[this.selectDesk.name]),
+        //初始桌面模式修改为居中垂直
+        settings:{
+          vDirection:true,
+          fitMod:'center',
+          enableZoom:true,
+          cardMargin:6,
+          containerWidth:1200
+        }
       };
       if (deskName) {
         desk.cards = [];
