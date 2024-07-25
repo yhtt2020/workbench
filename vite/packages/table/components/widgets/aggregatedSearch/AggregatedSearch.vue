@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, watch, computed, toRefs, provide } from "vue";
-import { sourceList, defaultSourceList } from "./config/data";
+import {ref, watch, computed, toRefs, provide} from "vue";
+import {sourceList, defaultSourceList} from "./config/data";
 import CardSet from "./page/cardSet/CardSet.vue";
 import SearchModal from "./page/searchModal/SearchModal.vue";
 
@@ -57,9 +57,9 @@ const customSize = computed(() => {
 const props = defineProps({
   customIndex: {},
   customData: {},
-  desk:{}
+  desk: {}
 });
-const { customData }: any = toRefs(props);
+const {customData}: any = toRefs(props);
 provide("data", customData);
 
 const searchStyle = computed(() => {
@@ -132,20 +132,28 @@ const surplusIcon = computed(() => {
   return arr;
 });
 const sizeList = computed(() => {
-  return [
-    {
-      name: customData.value.noBorder ? "2x1" : "2x2",
-      value: customData.value.noBorder ? "2x1" : "2x2",
-    },
-    {
-      name: customData.value.noBorder ? "4x1" : "4x2",
-      value: customData.value.noBorder ? "4x1" : "4x2",
-    },
-  ];
+  let sizes = []
+  if (customData.value.noBorder) {
+    sizes = [
+      '2x1', '4x1', '6x1', '8x1'
+    ]
+  } else {
+    sizes = [
+      '2x2', '4x2', '6x2', '8x2'
+    ]
+  }
+  return sizes.map(item => {
+    return {
+      name: item,
+      value: item
+    }
+  })
+
+
 });
 const updateSize = (val) => {
   customData.value.customSize = val;
-  customData.value.currentSize  = [...val][0]
+  customData.value.currentSize = [...val][0]
 };
 </script>
 
@@ -160,16 +168,16 @@ const updateSize = (val) => {
     :sizeList="sizeList"
     :desk="desk"
     @resize="updateSize"
-    class="xt-theme-b"
+    class="xt-theme-b items-center"
   >
-    <div class="w-full h-full flex flex-col justify-center">
+    <div class="w-full h-full flex flex-col justify-center  " :class="{'max-w-[705px] m-auto':customData.noBorder}">
       <div
         @click="openSearch(null)"
-        class="w-full flex justify-between p-4 cursor-pointer"
+        class="w-full flex justify-between p-4 cursor-pointer "
         :style="searchStyle"
         :class="[
           customData.noBorder
-            ? 'h-[56px] xt-shadow xt-filter tt-bg'
+            ? 'h-[56px] xt-shadow xt-filter tt-bg max-w-[705px]'
             : 'flex-1 tt-bg-2-t',
         ]"
       >
@@ -188,7 +196,7 @@ const updateSize = (val) => {
           class="h-full flex"
           :class="customData.noBorder ? 'items-center' : ' items-end'"
         >
-          <xt-mix-icon icon="fluent:search-16-regular" class="tt-no-bg" />
+          <xt-mix-icon icon="fluent:search-16-regular" class="tt-no-bg"/>
         </div>
       </div>
       <div v-if="!customData.noBorder" class="flex mt-3 justify-between">
@@ -213,7 +221,7 @@ const updateSize = (val) => {
   </xt-container>
 
   <!-- 卡片设置 -->
-  <CardSet v-if="cardSetVisible" @close="cardSetVisible = false" />
+  <CardSet v-if="cardSetVisible" @close="cardSetVisible = false"/>
   <!-- 搜索 -->
   <SearchModal
     :specifySource="searchSource"
