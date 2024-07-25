@@ -130,7 +130,7 @@ const communityNavList = computed(() => {
         },
       }),
       createNavEntry({
-        icon: currentCommunity.value?.defaultItem?.icon,
+        icon: currentCommunity.value?.defaultItem?.icon || '/logo/home.svg',
         name: "社群主应用",
         fn: () => {
           if ((currentCommunity.value.item as any).role) {
