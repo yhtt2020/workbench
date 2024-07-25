@@ -54,63 +54,9 @@
     <!--    </div>-->
   </template>
 
-  <!-- 独立壁纸 -->
-  <template v-if="independentBg">
-    <div class="fixed top-0 left-0 right-0 bottom-0 video-container">
-      <!-- 纯图片 -->
-      <img
-        v-if="independentBg.mode === 'img' && independentBg.imgValue !== ''"
-        id="wallpaper"
-        style="object-fit: cover; width: 100%; height: 100%"
-        :src="independentBg.imgValue"
-      />
-      <!-- 纯色 -->
-      <div
-        v-if="independentBg.mode === 'color' && independentBg.colorValue !== ''"
-        class="w-full h-full"
-        :style="{ background: independentBg.colorValue }"
-      ></div>
-      <!-- 动态 -->
-      <video
-        v-if="independentBg.mode === 'video' && independentBg.imgValue !== ''"
-        class="fullscreen-video"
-        playsinline=""
-        autoplay=""
-        muted=""
-        loop=""
-        ref="backgroundVideo"
-      >
-        <source :src="independentBg.imgValue" type="video/mp4" id="bgVid" />
-      </video>
-      <div v-else class="w-full h-full"></div>
-    </div>
-  </template>
-  <template v-else>
-    <div class="fixed inset-0 video-container " v-if="backgroundImage.runpath">
-      <video class="fullscreen-video" playsinline="" autoplay="" muted="" loop="" ref="backgroundVideo">
-        <source :src="videoPath" type="video/mp4" id="bgVid">
-      </video>
-    </div>
-    <!-- 壁纸展示位置 -->
-    <div v-else-if="backgroundName.name === 'img' &&  backgroundImage.path !== ''"
-         class="fixed bg-image inset-0 video-container ">
-      <img id="wallpaper" style="object-fit: cover;width: 100%;height: 100%" :src="backgroundImage.path">
-    </div>
-
-    <div v-else-if="backgroundName.name === 'color' && backgroundColor.color "
-         class="fixed bg-image inset-0 video-container ">
-      <div class="w-full h-full " :style="{background:`${backgroundColor.color}`}"></div>
-    </div>
-
-    <div v-else>
-      <!-- 修改默认壁纸 -->
-      <div class="fixed inset-0  none-bg default-bg"  :style="{'z-index':-1}">
-      </div>
-    </div>
-  </template>
-
+  <DeskBg></DeskBg>
   <div class="fixed inset-0 background-img-blur-light" style="z-index: -1"></div>
-
+~
   <div v-if="taggingScreen" class="px-10 rounded-lg"
        style="pointer-events:none;background: rgba(51,51,51,0.9);font-size: 8em;position: fixed;right: 10px;bottom: 10px;z-index: 999;">
     {{ screenDetail.title || '主屏' }}
@@ -168,6 +114,7 @@ import Global from './apps/global/Global.vue'
 // import { taskStore } from './apps/task/store'
 import { usePlat } from './ui/hooks/usePlat'
 import { useLogin } from '../table/permission/user/useLogin'
+import DeskBg from './components/DeskBg.vue'
 notification.config({
   top: '70px',//设置notification默认距离顶部位置
   rtl: false,
@@ -186,7 +133,7 @@ let startX,
 const distX = 80 //滑动感知最小距离
 const distY = 80 //滑动感知最小距离
 export default {
-  components: { Global, ModalNotice, FrameStoreWidget, Modal, UserCard, Barrage, DndProvider, },
+  components: { DeskBg, Global, ModalNotice, FrameStoreWidget, Modal, UserCard, Barrage, DndProvider, },
   data () {
     return {
       HTML5Backend,
@@ -195,23 +142,15 @@ export default {
       locale: zhCN,
       visible: false,
       dialogVisible: false,
-      videoPath: '',
+
       frameStoreVisible: false,
       showNoticeModal: false,
-      // 独立壁纸
-      independentBg:false
+
     }
   },
 
   async mounted () {
-    // 监听独立壁纸切换
-    this.$bus.on('updateIndependentBg',(val)=>{
-      if (!val) {
-        this.independentBg = false
-      }
-      this.independentBg = val
 
-    })
     if(!usePlat('client')){
       document.body.classList.add('web')
     }else{
@@ -291,7 +230,7 @@ export default {
   computed: {
     ...mapWritableState(cardStore, ['customComponents', 'clockEvent', 'clockFlag']),
     ...mapWritableState(timerStore, ['appDate']),
-    ...mapWritableState(appStore, ['styles','userCardVisible', 'fullScreen', 'userCardUid', 'userCardUserInfo', 'settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundImage', 'backgroundColor', 'backgroundName', 'loginVisible']),
+    ...mapWritableState(appStore, ['styles','userCardVisible', 'fullScreen', 'userCardUid', 'userCardUserInfo', 'settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundColor', 'loginVisible']),
     ...mapWritableState(codeStore, ['myCode']),
     ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo', 'runningTableApps']),
     ...mapWritableState(screenStore, ['taggingScreen', 'screenDetail']),
@@ -431,40 +370,7 @@ export default {
       },
       immediate: true,
     },
-    'backgroundImage': {
-      handler () {
-        if (this.backgroundImage.runpath) {
-          // document.body.style.setProperty('--suspensiondBackGround', "rgb(26,26,26,.65)");
-          // document.body.style.setProperty('--suspensiondBackGroundBlur', 50 + 'px');
-          // document.body.style.setProperty('--gradient', "rgb(26,26,26,.65)");
-          // document.body.style.setProperty('--suspensiondBackGroundBoxShadow', "0px 0px 10px 0px rgba(0,0,0,0.5)");
 
-          document.body.style.backgroundImage = ''
-          this.videoPath = this.backgroundImage.runpath
-          this.$nextTick(() => {
-            this.$refs.backgroundVideo.load()
-            this.$refs.backgroundVideo.play()
-
-          })
-        } else if (this.backgroundImage.path !== '') {
-          // document.body.style.setProperty('--suspensiondBackGround', "rgb(26,26,26,.65)");
-          // document.body.style.setProperty('--suspensiondBackGroundBlur', 50 + 'px');
-          // document.body.style.setProperty('--gradient', "rgb(26,26,26,.65)");
-          // document.body.style.setProperty('--suspensiondBackGroundBoxShadow', "0px 0px 10px 0px rgba(0,0,0,0.5)");
-
-        } else {
-          // document.body.style.setProperty('--suspensiondBackGround', "rgb(33, 33, 33)");
-          // document.body.style.setProperty('--suspensiondBackGroundBlur', 0 + 'px');
-          // document.body.style.setProperty('--gradient', "linear-gradient(-33deg,#333333, #212121)");
-          // document.body.style.setProperty('--suspensiondBackGroundBoxShadow', "0px");
-
-          document.body.style.background = '#191919'
-        }
-
-      },
-      immediate: true,
-      deep: true
-    },
     'styles': {
       handler () {
         if (usePlat('client')) {
