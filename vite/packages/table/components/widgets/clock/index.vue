@@ -189,7 +189,7 @@ export default {
   computed: {
     cardZoom() {
       // 获取当前时钟ID
-      let clockID = this.customData.clockId;
+      let clockID = this.customData.clockId || 'clock1';
       // 时钟缩放列表
       let zoomList = {
         // 下标0为默认，下标1为高度为1时无边框时，下边2为高度为1非无边框时
