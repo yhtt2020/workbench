@@ -33,7 +33,6 @@ import { useElementSize } from "@vueuse/core";
 const target = ref(null);
 
 const updateSize = (data) => {
-  console.log('"触发一次" :>> ', "触发一次");
   deskSize.value = data;
 };
 const debounceUpdateSize = useDebounceFn((data) => {

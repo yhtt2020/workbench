@@ -12,7 +12,7 @@ export interface imgPreviewProps {
     imgList: Array<string>; // 预览图片列表,需要传入只包含图片地址的数组，否则无法预览
     maskClose?: boolean; // 点击遮罩关闭
     controlOption?:{
-        controlBar?: boolean; // 控制条 
+        controlBar?: boolean; // 控制条
         closeBtn?: boolean; // 关闭按钮
         arrowBtn?: boolean; // 箭头按钮
     };
@@ -29,7 +29,7 @@ const props = withDefaults(defineProps<imgPreviewProps>(),{
         arrowBtn: true,
     },
     index: 0
-}) 
+})
 
 const visible = ref(false)
 
@@ -56,7 +56,6 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
     visible.value = false
-    console.log('imgPreview unmounted');
 })
 
 </script>

@@ -458,13 +458,11 @@
       />
     </div>
   </a-drawer>
-
+  <!-- 分享桌面小组件 -->
   <ShareDesk
-    v-if="shareDeskVisible"
     ref="shareDeskRef"
     :deskList="deskList"
     :deskRef="$refs.currentDeskRef"
-    :openDrawer="shareDeskVisible"
     @closeShare="closeShare"
   ></ShareDesk>
   <ExportDesk
@@ -666,7 +664,6 @@ export default {
       editing: false, //编辑桌面
 
       addDeskVisible: false,
-      shareDeskVisible: false,
       deskType: [
         {title: "日常桌面", name: "daily"},
         {title: "游戏桌面", name: "game"},
@@ -937,18 +934,20 @@ export default {
       this.addDesk = addDesk;
     },
     shareDesk() {
+      console.log('触发分享桌面')
       if (!this.showGuide) {
-        this.shareDeskVisible = true;
-        this.$nextTick(() => {
-          this.$refs.shareDeskRef.update();
-          this.$refs.shareDeskRef.setSelectVal(this.currentDeskId);
-        });
+        console.log('展示桌面分享')
+        setTimeout(() => {
+          this.$refs.shareDeskRef.showShareType();
+           this.$refs.shareDeskRef.update();
+           this.$refs.shareDeskRef.setSelectVal(this.currentDeskId);
+        },500);
       } else {
         message.info("定制过程中无法操作");
       }
     },
     closeShare() {
-      this.shareDeskVisible = false;
+      this.$refs.shareDeskRef.close()
     },
     startEdit() {
       this.key = Date.now();

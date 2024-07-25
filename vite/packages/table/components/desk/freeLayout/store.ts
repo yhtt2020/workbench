@@ -211,7 +211,7 @@ export const useFreeLayoutStore = defineStore("useFreeLayoutStore", {
     // 初始化当前环境
     initFreeLayoutEnv() {
       this.freeLayoutEnv = this.defaultFreeLayoutEnv;
-      console.log("初始化当前环境成功 :>> ", this.freeLayoutEnv);
+      //console.log("初始化当前环境成功 :>> ", this.freeLayoutEnv);
     },
     // 拷贝原数据
     copyData() {

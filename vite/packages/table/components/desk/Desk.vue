@@ -373,9 +373,7 @@ export default {
     },
     deskSize: {
       handler(newVal) {
-        console.log("9999999999999999999999");
         if (!this.isFreeLayout) {
-          console.log("尺寸变化了，干哈嘎嘎");
           this.currentDesk.layoutSize = this.getLayoutSize();
           newVal.layoutSize = this.getLayoutSize();
           // if (!newVal.settings) {

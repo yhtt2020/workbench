@@ -119,7 +119,6 @@ export default {
   data () {
     return {
       syncFunc:_.debounce((newItems)=>{
-        console.log('数据变化')
         this._sync(newItems, this.copiedItems)
       },1000,{
         trailing:true,
