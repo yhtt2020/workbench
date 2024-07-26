@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-center">
+  <div class="flex items-center justify-center text-shadow">
     <div
       class="flex items-center justify-center"
       :class="size[1] > 1 ? 'flex-col' : ''"
@@ -116,4 +116,7 @@ onUnmounted(() => {
   --vc-accent-900: var(--tt-theme-color) !important;
 }
 // .class="vc-weekdays"
+.text-shadow{
+  text-shadow:0px 0px 9px rgb(0 0 0 / 45%);
+}
 </style>
