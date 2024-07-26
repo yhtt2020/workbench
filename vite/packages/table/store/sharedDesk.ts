@@ -1,5 +1,6 @@
 import {defineStore} from "pinia";
 import {apiGet} from "../js/axios/request";
+import shareHelper from "../js/lib/shareHelper";
 
 export const sharedDeskStore = defineStore("sharedDesk", {
   state: () => ({
@@ -9,8 +10,8 @@ export const sharedDeskStore = defineStore("sharedDesk", {
     }
   ),
   actions:{
-    async getDeskInfo(id){
-      let rs=await apiGet('/app/good/desk/info',{id:id})
+    async getDeskInfo(code){
+      let rs=await shareHelper.get(code)
       console.log(rs,'返回结果')
 
       return rs

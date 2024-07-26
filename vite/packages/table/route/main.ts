@@ -122,6 +122,7 @@ export default [
     children: [
       ...DeckRoute,
       ShortcutKeyRoute,
+
       {
         path: "/galleryModalApp",
         name: "galleryModalApp",

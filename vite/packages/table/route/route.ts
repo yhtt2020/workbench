@@ -12,16 +12,16 @@ import MarketList from "../apps/shortcutKey/page/MarketList.vue";
 // 社群邀请流程
 import InviteProcess from '../page/chat/page/process/inviteProcess.vue';
 import NextProcess from '../page/chat/page/process/NextProcess.vue';
-import SharedDesk from "../page/SharedDesk.vue";
+import Shared from "../page/Shared.vue";
 import Home from '../page/Home.vue'
 import {usePlat} from "../permission/usePlat";
 let routes = [
   ...main,
   //...index,
   {
-    path:'/s/:id',
-    name:'SharedDesk',
-    component: SharedDesk,
+    path:'/s/:code/:password?',
+    name:'Shared',
+    component: Shared,
   },
   {
     path: '/lock',
