@@ -528,6 +528,7 @@ import {completeTask} from "../../apps/task/task";
 import NewGuidePage from "../../page/app/grade/NewGuidePage.vue";
 import ExtraMenu from "../../components/windowPanel/components/ExtraMenu.vue";
 import {localCache} from "../../js/axios/serverCache";
+import { EMPTY_DESK } from '../../js/const/default'
 
 export default {
   name: "DeskGroup",
@@ -810,7 +811,7 @@ export default {
         ...filterNewList.filter((desk) => {
           return !desk.pin;
         }),
-      ].slice(0, 4);
+      ];
       const sortList = newDeskList.sort((a, b) => {
         if (b.pin) {
           //置顶的桌面排最前面
@@ -1148,7 +1149,9 @@ export default {
         }
       };
       if (deskName) {
-        desk.cards = [];
+        desk.cards = this.cleanMuuriData(
+          EMPTY_DESK
+        );
       }
 
       this.deskList.unshift(desk);

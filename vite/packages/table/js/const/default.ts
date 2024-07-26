@@ -1,6 +1,128 @@
 /*
 此文件主要定义各种默认值
 */
+//空白桌面的初始化模板
+export const EMPTY_DESK=[
+  {
+    "name": "clocks",
+    "id": 1721972328874,
+    "customData": {
+      "noBorder": true,
+      "backgroundFrame": true,
+      "clockId": "clock7",
+      "imgUrl": "https://a.apps.vip/papers/jose-gil-2pNdTBn4C7U-unsplash.jpg",
+      "blurs": 3,
+      "bgZoom": 100,
+      "zoom": 1.5,
+      "customSize": "8x2",
+      "font": "font-family: '优设标题黑' !important;",
+      "fontColor": "#FFFFFF",
+      "enableSecond": false,
+      "currentStatus": "style",
+      "currentZoom": 100,
+      "name": "7月26日  周五",
+      "_updateFlag": "24531",
+      "customZoom": 110
+    },
+    "data": {}
+  },
+  {
+    "name": "AggregateSearch",
+    "id": 1721972333227,
+    "customData": {
+      "customSize": "8x1",
+      "sourceList": [
+        {
+          "name": "百度",
+          "icon": "/img/appLogo/baidu.webp",
+          "iconType": "select",
+          "searchUrl": "https://www.baidu.com/s?wd=",
+          "recommendUrl": "https://www.baidu.com/sugrec?prod=pc&wd="
+        },
+        {
+          "name": "Bilibili",
+          "icon": "/img/appLogo/bilibili.webp",
+          "iconType": "select",
+          "searchUrl": "https://search.bilibili.com/all?keyword=",
+          "recommendUrl": "https://s.search.bilibili.com/main/suggest?func=suggest&term="
+        },
+        {
+          "name": "微博",
+          "icon": "/img/appLogo/weibo.webp",
+          "iconType": "select",
+          "searchUrl": "https://s.weibo.com/weibo?q=",
+          "recommendUrl": "https://weibo.com/ajax/side/search?q="
+        },
+        {
+          "name": "知乎",
+          "icon": "/img/appLogo/zhihu.webp",
+          "iconType": "select",
+          "searchUrl": "https://www.zhihu.com/search?type=content&q=",
+          "recommendUrl": "https://www.zhihu.com/api/v4/search/suggest?q="
+        },
+        {
+          "name": "优酷",
+          "icon": "/img/appLogo/youku.webp",
+          "iconType": "select",
+          "searchUrl": "https://so.youku.com/search_video/q_",
+          "recommendUrl": "https://suggest.video.iqiyi.com/?key="
+        },
+        {
+          "name": "豆瓣",
+          "icon": "/img/appLogo/douban.webp",
+          "iconType": "select",
+          "searchUrl": "https://www.douban.com/search?q=",
+          "recommendUrl": "https://www.douban.com/j/search_suggest?debug=true&q="
+        },
+        {
+          "name": "必应",
+          "icon": "/img/appLogo/bing.webp",
+          "iconType": "select",
+          "searchUrl": "https://www.bing.com/search?q=",
+          "recommendUrl": "https://api.bing.com/osjson.aspx?query="
+        },
+        {
+          "name": "谷歌",
+          "icon": "/img/appLogo/google.webp",
+          "iconType": "select",
+          "searchUrl": "https://www.google.com/search?q=",
+          "recommendUrl": "https://www.google.com/search?q="
+        },
+        {
+          "name": "GitHub",
+          "icon": "/img/appLogo/github.webp",
+          "iconType": "select",
+          "searchUrl": "https://github.com/search?q=",
+          "recommendUrl": "https://api.github.com/search/repositories?q="
+        }
+      ],
+      "source": {
+        "name": "百度",
+        "icon": "/img/appLogo/baidu.webp",
+        "iconType": "select",
+        "searchUrl": "https://www.baidu.com/s?wd=",
+        "recommendUrl": "https://www.baidu.com/sugrec?prod=pc&wd="
+      },
+      "webSource": {
+        "name": "百度",
+        "icon": "/img/appLogo/baidu.webp",
+        "iconType": "select",
+        "searchUrl": "https://www.baidu.com/s?wd=",
+        "recommendUrl": "https://www.baidu.com/sugrec?prod=pc&wd="
+      },
+      "openWith": "system",
+      "lastUse": false,
+      "historyList": [],
+      "noBorder": true,
+      "currentSize": "8",
+      "_updateFlag": "2466",
+      "bgMode": "default",
+      "bgColor": "#508BFE",
+      "sortType": "work"
+    },
+    "data": {}
+  }
+]
 
 
 //Web版的默认桌面
