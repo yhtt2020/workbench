@@ -935,9 +935,7 @@ export default {
       this.addDesk = addDesk;
     },
     shareDesk() {
-      console.log('触发分享桌面')
       if (!this.showGuide) {
-        console.log('展示桌面分享')
         setTimeout(() => {
           this.$refs.shareDeskRef.showShareType();
            this.$refs.shareDeskRef.update();

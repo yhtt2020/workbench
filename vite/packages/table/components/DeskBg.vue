@@ -6,7 +6,7 @@ import {appStore} from "../store";
 export default defineComponent({
   name: "DeskBg",
   computed: {
-    ...mapWritableState(appStore, [ 'backgroundImage', 'backgroundName']),
+    ...mapWritableState(appStore, [ 'backgroundImage', 'backgroundName','settings','backgroundColor']),
   },
   data(){
     return {
@@ -26,6 +26,16 @@ export default defineComponent({
     })
   },
   watch: {
+    'settings.transparent': {
+      handler () {
+        if (this.settings.transparent) {
+          $('body').css('background', 'transparent')
+        } else {
+          $('body').css('background', 'rgb(25, 25, 25)')
+        }
+      }
+      // document.body.attributes['background']=''
+    },
     'backgroundImage': {
       handler() {
         if (this.backgroundImage.runpath) {
@@ -117,10 +127,17 @@ export default defineComponent({
       <div class="fixed inset-0  none-bg default-bg" :style="{'z-index':-1}">
       </div>
     </div>
+    <div class="fixed inset-0 background-img-blur-light" style="z-index: -1"></div>
   </template>
 
 </template>
 
 <style scoped lang="scss">
 
+.default-bg {
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-position: center !important;
+
+}
 </style>
