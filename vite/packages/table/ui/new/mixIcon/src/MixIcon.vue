@@ -132,11 +132,17 @@ const currentType = computed(() => {
   if (networkPath === "http") {
     return "select";
   }
+
   // 本地路径判断
   const localPath = icon.substring(0, 1);
   if (localPath === "." || localPath === "/") {
     return "select";
   }
+  let local = icon.split(".");
+  if (local.length > 1) {
+    return "select";
+  }
+
   // 不满足属于其他图标
   return "ify";
 });
