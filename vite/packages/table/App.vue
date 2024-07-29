@@ -55,8 +55,7 @@
   </template>
 
   <DeskBg></DeskBg>
-  <div class="fixed inset-0 background-img-blur-light" style="z-index: -1"></div>
-~
+
   <div v-if="taggingScreen" class="px-10 rounded-lg"
        style="pointer-events:none;background: rgba(51,51,51,0.9);font-size: 8em;position: fixed;right: 10px;bottom: 10px;z-index: 999;">
     {{ screenDetail.title || '主屏' }}
@@ -230,7 +229,7 @@ export default {
   computed: {
     ...mapWritableState(cardStore, ['customComponents', 'clockEvent', 'clockFlag']),
     ...mapWritableState(timerStore, ['appDate']),
-    ...mapWritableState(appStore, ['styles','userCardVisible', 'fullScreen', 'userCardUid', 'userCardUserInfo', 'settings', 'routeUpdateTime', 'userInfo', 'init', 'backgroundColor', 'loginVisible']),
+    ...mapWritableState(appStore, ['styles','userCardVisible', 'fullScreen', 'userCardUid', 'userCardUserInfo', 'settings', 'routeUpdateTime', 'userInfo', 'init',  'loginVisible']),
     ...mapWritableState(codeStore, ['myCode']),
     ...mapWritableState(appsStore, ['runningApps', 'runningAppsInfo', 'runningTableApps']),
     ...mapWritableState(screenStore, ['taggingScreen', 'screenDetail']),
@@ -310,16 +309,7 @@ export default {
 
   },
   watch: {
-    'settings.transparent': {
-      handler () {
-        if (this.settings.transparent) {
-          $('body').css('background', 'transparent')
-        } else {
-          $('body').css('background', 'rgb(25, 25, 25)')
-        }
-      }
-      // document.body.attributes['background']=''
-    },
+
     // "appDate.minutes": {
     //   handler(newVal, oldVal) {
     //     this.sortClock()
@@ -397,12 +387,6 @@ export default {
   width: 100%;
 }
 
-.default-bg {
-  background-size: cover !important;
-  background-repeat: no-repeat !important;
-  background-position: center !important;
-
-}
 
 .hevue-imgpreview-wrap{
   z-index: 1000000 !important;

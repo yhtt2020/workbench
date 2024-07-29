@@ -22,6 +22,9 @@ export const getCommunityDeskList = (communityInfo: any) => {
 export const generateSearchResultTime = (timestamp: number) => {
   // console.log("时间转换", timestamp);
 
+  if(!timestamp){
+    return '从未'
+  }
   const now = new Date().getTime();
   // 时间差
   const diff = now - timestamp;

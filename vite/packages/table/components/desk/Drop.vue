@@ -81,7 +81,6 @@ const handleDrop = async (dragEvent) => {
       };
 
       const id = Date.now();
-      console.log("我提供的id :>> ", id);
 
       const { offsetX, offsetY } = dragEvent;
       const addCard = () => {
@@ -93,8 +92,6 @@ const handleDrop = async (dragEvent) => {
           id
         );
       };
-
-      console.log("2222 :>> ", 2222);
       if (isFreeLayout.value) {
         getFreeLayoutData.value[id] = {
           left: offsetX,

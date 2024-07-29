@@ -583,6 +583,10 @@ export default {
 
       // 成员情况
       else if (this.deskMember) {
+        if(!this.currentDeskId){
+          //未设置当前桌面id
+          return option
+        }
         if (
           !this.loadDesk[this.communityInfo?.no] &&
           !this.currentDeskId &&

@@ -210,7 +210,7 @@ function communityMenus() {
           newIcon: "fluent:share-android-24-filled",
           name: "分享桌面",
           fn: this.shareDesk,
-          disabled: (window as any).$usePlat(),
+          // disabled: (window as any).$usePlat(),
         },
         {
           id: 6,
