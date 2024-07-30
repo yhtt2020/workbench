@@ -68,7 +68,7 @@ export default {
     };
   },
   computed: {
-    ...mapWritableState(appStore, ["showWindowController"]),
+    ...mapWritableState(appStore, ["showWindowController",'settings']),
   },
   async mounted() {
     if (!window.$usePlat('client')) return;
@@ -77,9 +77,29 @@ export default {
   },
   methods: {
     // 关闭按钮
-    close() {
+    async close () {
       if (isMain()) {
-        ipc.send("exitTable");
+        let closeMethod = this.settings.closeMethod
+        if (!closeMethod) {
+          window.$ui.confirm('关闭行为','首次点击关闭，请选择合适的行为，是隐藏工作台（以备快速打开）还是彻底退出工作台？您稍候可在设置中修改。',{
+            okText: '隐藏',
+            noText: '退出',
+            ok :()=> {
+              this.settings.closeMethod= 'hide'
+              tsbApi.window.hide()
+            },
+            no: ()=> {
+              this.settings.closeMethod ='close'
+              ipc.send("exitTable");
+            }
+          })
+        }else{
+          if(closeMethod === 'close'){
+            ipc.send("exitTable");
+          }else{
+            tsbApi.window.hide()
+          }
+        }
       } else {
         ipc.send("closeScreen", { fullDomain: getSign() });
       }

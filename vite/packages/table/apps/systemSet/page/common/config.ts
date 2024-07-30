@@ -34,3 +34,18 @@ export const rightMenuList = [
     value: "default",
   },
 ];
+
+export const closeMethodList=[
+  {
+    name:'退出',
+    value:'close'
+  },
+  {
+    name:'隐藏',
+    value:'hide'
+  },
+  {
+    name:'询问',
+    value:''
+  }
+]

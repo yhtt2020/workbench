@@ -78,13 +78,22 @@
       isSwitch
       v-model:switch="hardware"
     />
+
   </xt-option-box>
   <!-- 4 -->
-  <xt-option-box v-if="!$usePlat()">
+  <xt-option-box v-if="$usePlat('client')">
     <xt-option-info title="双击托盘菜单默认打开" />
     <xt-option-tab
       v-model="trayMode"
       :list="trayList"
+      circle
+      style="height: 40px"
+    />
+    <hr />
+    <xt-option-info title="点击窗口关闭按钮执行的行为" />
+    <xt-option-tab
+      v-model="appSettings.closeMethod"
+      :list="closeMethodList"
       circle
       style="height: 40px"
     />
@@ -115,7 +124,7 @@ import { storeToRefs } from "pinia";
 import { cardStore as useCardStore } from "../../../../store/card";
 import { appStore as useAppStore } from "../../../../store";
 import { useWidgetStore } from "../../../../components/card/store";
-import { browserList, rightMenuList, trayList } from "./config";
+import { browserList, rightMenuList, trayList,closeMethodList } from "./config";
 
 import ChooseScreen from "../../../../page/ChooseScreen.vue";
 import Zoom from "./Zoom.vue";
