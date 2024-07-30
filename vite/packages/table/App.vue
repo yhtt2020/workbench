@@ -54,7 +54,7 @@
     <!--    </div>-->
   </template>
 
-  <DeskBg></DeskBg>
+  <DeskBg v-else></DeskBg>
 
   <div v-if="taggingScreen" class="px-10 rounded-lg"
        style="pointer-events:none;background: rgba(51,51,51,0.9);font-size: 8em;position: fixed;right: 10px;bottom: 10px;z-index: 999;">
