@@ -63,6 +63,7 @@ export default {
         ...mapActions(navStore, ['setFootNavigationList', 'sortFootNavigationList', 'removeFootNavigationList', 'setSideNavigationList', 'sortSideNavigationList', 'removeSideNavigationList', 'setRightNavigationList', 'sortRightNavigationList', 'removeRightNavigationList', 'setNavigationToggle']),
         // 添加图标的主要函数
         clickRightListItem(item, index) {
+          console.log('222 :>> ', 222);
             this.$emit('clickRightListItem', item, index)
             //
             completeTask('M0102',()=>{
