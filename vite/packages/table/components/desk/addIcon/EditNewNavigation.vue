@@ -28,7 +28,7 @@
       ></StartPage>
       <!-- 左侧导航栏 -->
       <!-- communityRole ? newLeftMenu.length - 1 : 6 -->
-      <!--  last="6" 
+      <!--  last="6"
         end="1"  -->
       <xt-left-menu
         v-else
@@ -594,8 +594,10 @@ const addIcon = (item: object | undefined) => {
       message.error(`${item.name} 已被禁止添加到桌面`);
       return;
     }
+    completeTask("m0102");
     if (currentDeskId.value === defaultTitle.value.id) {
       emit("addIcon", item);
+
     } else {
       // 添加图标到其他桌面
       const target = desks.value.find((i) => i.id === defaultTitle.value.id);
