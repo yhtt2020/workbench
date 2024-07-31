@@ -40,8 +40,9 @@ const emit = defineEmits(['addIcon', 'close'])
 const saveIcon = (item) => {
     // console.log(item,'before')
     const icon = useIconConversionFile(item)
+    icon.value = item.value
     // console.log(icon,'after')
-    emit('addIcon',icon)
+    emit('addIcon',icon) 
     linkVisible.value = false
 }
 
