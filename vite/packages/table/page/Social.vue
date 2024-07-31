@@ -52,6 +52,15 @@ export default {
               name: 'invite',
             }
         },
+        {
+          title: '我的分享',
+          index: 'myShare',
+          icon:'tianjiachengyuan',
+          route:
+            {
+              name: 'shareRecord',
+            }
+        },
        {
          title: '等级权益',
            index: 'grade',
@@ -77,14 +86,14 @@ export default {
           name:'rank'
         }
        },
-       {
-        title:'推广中心',
-        index:'promotion',
-        icon:'trophy',
-        route:{
-          name:'promotion'
-        }
-       },
+       // {
+       //  title:'推广中心',
+       //  index:'promotion',
+       //  icon:'trophy',
+       //  route:{
+       //    name:'promotion'
+       //  }
+       // },
        {
         title:'账单(开发中)',
         index:'bill',

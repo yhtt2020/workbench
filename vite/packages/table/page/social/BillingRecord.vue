@@ -10,8 +10,8 @@
     <GiftRecord></GiftRecord>
   </template>
  </div>
- 
- 
+
+
 </template>
 
 <script>
@@ -32,11 +32,11 @@ export default {
     return{
       recordType:[
         {title:'账单记录',name:'check'},
-        {title:'礼物记录',name:'gift'}
+        // {title:'礼物记录',name:'gift'}
       ],
       defaultRecord:{title:'账单记录',name:'check'},
     }
-  }, 
+  },
 
   watch:{
     defaultRecord:{

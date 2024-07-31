@@ -5,7 +5,7 @@ import { message } from "ant-design-vue";
 import { usePlatLimit, usePlat } from "../table/ui/hooks/usePlat";
 import { useUserPermit } from "../table/permission/user/useUserPermit";
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes,
 });
 router.beforeEach(async (to, from, next) => {

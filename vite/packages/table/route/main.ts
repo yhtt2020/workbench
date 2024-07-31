@@ -103,7 +103,7 @@ import SharedDesk from "../page/SharedDesk.vue";
 
 // 壁纸弹窗应用
 import GalleryIndex from "../apps/galleryModal/page/GalleryIndex.vue"
-
+import ShareRecord from '../page/social/ShareRecord.vue'
 export default [
   {
     path: "/main",
@@ -252,6 +252,11 @@ export default [
             path: "",
             name: "com",
             component: Com,
+          },
+          {
+            path:'/shareRecord',
+            name:'shareRecord',
+            component: ShareRecord
           },
           {
             path: "/my",
