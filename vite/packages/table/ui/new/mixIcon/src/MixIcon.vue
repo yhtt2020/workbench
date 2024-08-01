@@ -23,8 +23,8 @@
         iconStyle,
         mixIconStyle,
         {
-          filter: color ? `drop-shadow(#${color} 1000px 0)` : '',
-          transform: color ? 'translateX(-1000px)' : '',
+          filter: color ? `drop-shadow(#${color} 9999px 0)` : '',
+          transform: color ? 'translateX(-9999px)' : '',
         },
       ]"
     />
