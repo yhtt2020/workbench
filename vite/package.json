@@ -1,7 +1,7 @@
 {
   "name": "render",
   "private": true,
-  "version": "11.5.0",
+  "version": "11.5.1",
   "scripts": {
     "dev": "vite",
     "start": "node ./script/dev",
