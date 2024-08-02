@@ -49,12 +49,10 @@
         <!--        </div>-->
       </div>
     </div>
-    <div>
-      <div style="width: 100%"  @click="showMy">查看我的分享</div>
-    </div>
 
     <div class="flex p-4 pt-3 gap-2">
-      <xt-button style="width: 100%" type="theme" @click="showShare">确认分享</xt-button>
+      <xt-button style="flex:1" @click="showMy">查看我的分享</xt-button>
+      <xt-button style="flex:2" type="theme" @click="showShare">确认分享</xt-button>
 
     </div>
 
@@ -233,6 +231,7 @@ import { Icon } from '@iconify/vue'
 import { usePlat } from '../../permission/usePlat'
 import { formatTime, formatTimestamp } from '../../util'
 import shareHelper from '../../js/lib/shareHelper'
+import {Server} from '../../consts'
 
 export default {
   name: 'ShareDesk',
@@ -365,6 +364,9 @@ export default {
   methods: {
     ...mapActions(deskStore, ['setDeskList']),
     ...mapActions(marketStore, ['getCategories', 'addDesk']),
+    showMy(){
+      this.$router.push({name:'shareRecord'})
+    },
     showShare () {
       this.chooseShareTargetVisible = false
       if (this.target === 'market') {
@@ -391,10 +393,14 @@ export default {
       this.sharePwd = nanoid(6)
     },
     getShareLink(pwd=false){
+      let baseUrl=window.location.origin
+      if(usePlat('client')){
+        baseUrl=Server.webUrl
+      }
       if(this.needPwd && pwd){
-        return `${window.location.origin}/s/${this.shareData.code}/${this.sharePwd}`
+        return `${baseUrl}/s/${this.shareData.code}/${this.sharePwd}`
       }else{
-        return `${window.location.origin}/s/${this.shareData.code}`
+        return `${baseUrl}/s/${this.shareData.code}`
       }
     },
     getShareWords(){

@@ -4,12 +4,15 @@ let Server = {
   //正式环境配置
   baseUrl: 'https://wad.apps.vip/api',
   cdn:'https://a.apps.vip/cdn',
-  clientId:10001
+  clientId:10001,
+  webUrl:'https://web.apps.vip',
+  officialUrl:'https://www.apps.vip'
 }
 if(dev){
   //开发环境配置
   Server.baseUrl='http://localhost:9001'
   Server.clientId=10010
+  Server.webUrl='http://localhost:1600/html/table.html/#'
 }
 
 
