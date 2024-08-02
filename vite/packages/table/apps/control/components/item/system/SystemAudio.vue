@@ -94,11 +94,18 @@ onMounted(async () => {
   defaultOutput.value = await getDefaultVolume();
   mute.value = defaultOutput.value.muted;
 });
-
+const play = () => {
+  // 音乐的播放交互逻辑
+  console.log(props.status,'props')
+  if (props.status === "null") {
+    window.$models.win32.sendKeyboard(0xb3,true);
+  }
+};
 const lastSong = () => {
+  console.log('上一首歌')
   // 做上一首音乐的播放交互逻辑
   if (props.status === "null") {
-    window.$models.win32.sendKeyboard(0xb1);
+    window.$models.win32.sendKeyboard(0xb1,true);
   }
 };
 const setMuted = (muteValue, event) => {
@@ -110,8 +117,9 @@ const setMuted = (muteValue, event) => {
 };
 const nextSong = () => {
   // 做下一首音乐的播放交互逻辑
+  console.log('下一首歌')
   if (props.status === "null") {
-    window.$models.win32.sendKeyboard(0xb0);
+    window.$models.win32.sendKeyboard(0xb0,true);
   }
 };
 
@@ -148,12 +156,7 @@ const setVolume = (event) => {
   defaultOutput.value.volume = Number(((val / 258) * 100).toFixed(2));
 };
 
-const play = () => {
-  // 音乐的播放交互逻辑
-  if (props.status === "null") {
-    window.$models.win32.sendKeyboard(0xb3);
-  }
-};
+
 
 const list = ref([
   {
@@ -164,7 +167,7 @@ const list = ref([
     },
   },
   {
-    icon: "fluent:play-16-filled",
+    icon: "fluent:video-play-pause-20-filled",
     color: "var(--primary-text)",
     fn: () => {
       play();
@@ -184,11 +187,11 @@ const list = ref([
 
 // 根据判断调整播放图标
 const updateList = computed(() => {
-  if (status.value.music.playing) {
-    list.value[1].icon = "fluent:pause-16-filled";
-  } else {
-    list.value[1].icon = "fluent:play-16-filled";
-  }
+  // if (status.value.music.playing) {
+  //   list.value[1].icon = "fluent:pause-16-filled";
+  // } else {
+  //   list.value[1].icon = "fluent:play-16-filled";
+  // }
   return list.value;
 });
 </script>
