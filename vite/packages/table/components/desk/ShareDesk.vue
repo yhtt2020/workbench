@@ -7,13 +7,13 @@
       <h2 style="text-align: center" class="mb-3">分享成功</h2>
       <p>快点复制分享链接吧。</p>
       <div class="flex mb-2">
-        <div   style="width:400px" class="xt-modal xt-b  mr-2 rounded-md p-1" >{{getShareLink()}}</div> <xt-button @click="copyToClipboard(getShareLink())">复制</xt-button>
+        <div   style="width:400px" class="xt-modal xt-b  mr-2 rounded-md p-1 pointer" @click="openLink(getShareLink())" >{{getShareLink()}}</div> <xt-button @click="copyToClipboard(getShareLink())">复制</xt-button>
       </div>
       <div class="flex mb-2" v-if="needPwd">
-      <div   style="width:400px" class="xt-modal xt-b  mr-2 rounded-md p-1" >{{getShareLink(true)}}</div> <xt-button @click="copyToClipboard(getShareLink(true))">复制</xt-button>
+      <div   style="width:400px" class="xt-modal xt-b  mr-2 rounded-md p-1 pointer" @click="openLink(getShareLink(true))" >{{getShareLink(true)}}</div> <xt-button @click="copyToClipboard(getShareLink(true))">复制</xt-button>
       </div>
       <div class="flex mb-2">
-      <div  style="width:400px"  class="xt-modal xt-b  mr-2 rounded-md p-1" >{{getShareWords()}}</div> <xt-button @click="copyToClipboard(getShareWords())">复制</xt-button>
+      <div  style="width:400px"  class="xt-modal xt-b  mr-2 rounded-md p-1 pointer" @click="openLink(getShareWords())">{{getShareWords()}}</div> <xt-button @click="copyToClipboard(getShareWords())">复制</xt-button>
       </div>
       <div class="flex flex-col items-center justify-center mt-6">
         <xt-button @click="shareResultVisible=false" type="theme">关闭</xt-button>
@@ -403,6 +403,9 @@ export default {
         return `${baseUrl}/s/${this.shareData.code}`
       }
     },
+    openLink(url){
+      browser.openInSystem(url)
+    },
     getShareWords(){
       return '我给您分享了一个导航桌面，快来看看吧，链接地址是：'+this.getShareLink(true)
     },
@@ -418,7 +421,7 @@ export default {
     async doShareToPublic () {
 
       let pwd=this.needPwd?this.sharePwd:''
-      let rs = await shareHelper.create('','',pwd, this.parseTime(), 'desk', this.getShareDeskData())
+      let rs = await shareHelper.create('','',pwd, this.parseTime(), 'desk', this.getShareDeskData(false))
       if(rs?.status){
         message.success('分享成功')
         this.shareToPublic = false
@@ -506,10 +509,10 @@ export default {
     delLabel (index) {
       this.tagList.splice(index, 1)
     },
-    getShareDeskData () {
+    getShareDeskData (removeData=true) {
       let cloneDesk = JSON.parse(JSON.stringify(this.sharingDesk))
-      if (this.defaultType.name === 'notData') {
-        //如果选择不保留数据，则进行清理
+      if (removeData) {
+        //如果选择不保留数据，则进行清理，此处要对不同的组件进行不同的清理数据处理，不能一概而论
         cloneDesk.cards.forEach((item, index) => {
           if (item.name !== 'folder') {
             item.customData = {}
@@ -551,7 +554,7 @@ export default {
         await this.getPreview()
         cover = await pathUpload(this.capture)
       }
-      const template = this.getShareDeskData()
+      const template = this.getShareDeskData(this.defaultType.name === 'notData')
 
       this.scheme = {
         cover: cover,
