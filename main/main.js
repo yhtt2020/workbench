@@ -607,19 +607,50 @@ app.on('open-url', function(e, url) {
 app.on('open-file', function(e, url) {
   handleUrlOpen('file://'+url)
 })
-app.on('second-instance', function(e, argv, workingDir) {
-	if (mainWindow) {
-		if (mainWindow.isMinimized()) {
-			mainWindow.restore()
-		}
-		mainWindow.focus()
-		// add a tab with the new URL
-		handleCommandLineArguments(argv)
-	}else{
-    createWindow()
+app.on('second-instance', async function (e, argv, workingDir) {
+  let secondMethod = settings.get('secondMethod')
+  if (!secondMethod) {
+    //确认默认打开方式
+    let choose = await dialog.showMessageBox({
+      type: 'info',
+      defaultId: 0,
+      title: '打开方式选择',
+      buttons: ['打开工作台', '打开浏览器'],
+      message: '请选择您是要打开工作台还是打开内置浏览器。',
+      checkboxLabel: '记住选择',
+    })
+    if (choose.checkboxChecked) {
+      settings.set('secondMethod', choose.response === 0 ? 'table' : 'browser')
+    }
+    if (choose.response === 0) {
+      runTable()
+    } else {
+      runBrowser()
+    }
+  } else if (secondMethod === 'browser') {
+    runBrowser(argv)
+  } else {
+    runTable()
   }
 })
+function runBrowser(argv){
+  //打开浏览器
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) {
+      mainWindow.restore()
+    }
+    mainWindow.focus()
+    // add a tab with the new URL
+    handleCommandLineArguments(argv)
+  }else{
+    createWindow()
+  }
+}
 
+function runTable(){
+  //打开工作台
+  global.tableManager.init().then()
+}
 /**
  * Emitted when the application is activated, which usually happens when clicks on the applications's dock icon
  * https://github.com/electron/electron/blob/master/docs/api/app.md#event-activate-os-x

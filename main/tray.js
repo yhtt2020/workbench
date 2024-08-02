@@ -184,10 +184,7 @@ app.whenReady().then(() => {
         // if(trayWindow){
         //   trayWindow.focus()
         // }
-        global.tableManager.init().then(() => {
-          global.tableWin.window.show()
-          global.tableWin.window.focus()
-        })
+        global.tableManager.init().then()
         timeCount = 0
       }
     }, 300)
