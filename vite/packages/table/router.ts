@@ -5,7 +5,8 @@ import { message } from "ant-design-vue";
 import { usePlatLimit, usePlat } from "../table/ui/hooks/usePlat";
 import { useUserPermit } from "../table/permission/user/useUserPermit";
 const router = createRouter({
-  history: createWebHistory(),
+  //在开发调试模式下，需要使用webHash模式，否则进去空白，打包换回webHistory
+  history: createWebHashHistory(),
   routes,
 });
 router.beforeEach(async (to, from, next) => {
