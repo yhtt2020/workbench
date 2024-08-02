@@ -106,8 +106,9 @@ import GalleryIndex from "../apps/galleryModal/page/GalleryIndex.vue"
 import ShareRecord from '../page/social/ShareRecord.vue'
 export default [
   {
-    path: "/main",
+    path: "",
     name: "main",
+
     // component: Main,
     // 注册应用弹窗路由
     components: {
@@ -120,6 +121,14 @@ export default [
     },
     props: true,
     children: [
+      {
+        path: "",
+        name: "home",
+        component: Home,
+        meta: {
+          tab1: "home",
+        },
+      },
       ...DeckRoute,
       ShortcutKeyRoute,
 
@@ -214,14 +223,7 @@ export default [
         name: "inspector",
         component: Inspector,
       },
-      {
-        path: "",
-        name: "home",
-        component: Home,
-        meta: {
-          tab1: "home",
-        },
-      },
+
       {
         path:'/hall',
         component: Hall,

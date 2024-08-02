@@ -3,6 +3,7 @@ import cache from "../components/card/hooks/cache";
 
 import { ALL_LIMITS, COMPONENT_LIMIT, PRIORITY, ROUTER_LIMIT } from "./config";
 import { isWeb, isWin, isMac, isOffline, isGuest } from "./useBaseEnv";
+import {useRoute} from "vue-router";
 
 // 提示
 const showConfirm = (name) => {
