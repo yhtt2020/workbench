@@ -19,7 +19,14 @@ const shareHelper = {
     })
   },
   my(page=1,limit=10){
-    return apiPost('/app/share/my')
+    return apiPost('/app/share/my',{
+      page,limit
+    })
+  },
+  remove(code){
+    return apiPost('/app/share/remove',{
+      code
+    })
   }
 
 }
