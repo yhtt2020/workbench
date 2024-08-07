@@ -50,7 +50,7 @@
       >
         <FreeLayoutCanvas
           class="home-widgets"
-          v-if="isFreeLayout == true && $route.path == '/main' && freeLayout"
+          v-if="isFreeLayout == true && $route.path == '/' && freeLayout"
         >
           <FreeLayoutContainer
             :currentDesk="currentDesk"
