@@ -166,6 +166,16 @@
         </span>
       </template>
     </xt-mix-menu>
+    <a-popconfirm
+      title="新添加了桌面，是否切换过去？您也可以手动切换。"
+      ok-text="切换到新桌面"
+      cancel-text="不提示"
+      @confirm="switchToNew"
+      v-model:visible="hasNew"
+      @cancel="clearNew"
+    >
+
+
     <div
       v-if="showTopBar && !fullScreen"
       class="flex flex-row xt-main-top-util-bar desk-group-switcher"
@@ -273,6 +283,7 @@
         </div>
       </div>
     </div>
+    </a-popconfirm>
   </div>
 
   <!-- 添加桌面 弹窗 -->
@@ -772,7 +783,11 @@ export default {
       "selectNav",
       "jumpDesk",
     ]),
-
+    hasNew(){
+      return this.deskList.findIndex(d=>{
+        return d.new
+      }) >-1
+    },
     currentDesk() {
       let currentDesk = this.deskList.find((desk) => {
         return desk.id === this.currentDeskId;
@@ -989,6 +1004,20 @@ export default {
     showAll() {
       this.allDeskListVisible = true;
     },
+    clearNew(){
+      this.deskList.forEach(d=>{
+        d.new=false
+      })
+    },
+    switchToNew(){
+      let found=this.deskList.find(d=>{
+        return d.new
+      })
+      if(found){
+        found.new=false
+        this.setCurrentDeskId(found.id)
+      }
+   },
     async importDesk() {
       // openFile
       let that = this;
@@ -1045,7 +1074,7 @@ export default {
           // 将导入的便签重新修改时间
           g?.cards?.forEach((item, index) => {
             //移除桌面相关的便签卡片
-            if (item.name === "notes" && !this.$usePlat()) {
+            if (item.name === "notes" && !this.$usePlat('client')) {
               const now = new Date().getTime();
               const obj = {
                 ...item,
@@ -1057,7 +1086,7 @@ export default {
                 deskId: g.id,
                 deskName: g.name,
               };
-              if (!this.$usePlat()) {
+              if (!this.$usePlat('client')) {
                 tsbApi.db.put(obj);
               }
               g.cards[index] = obj;
