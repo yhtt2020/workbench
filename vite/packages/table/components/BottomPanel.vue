@@ -422,9 +422,9 @@ export default {
         this.maxItemNum = Math.floor(maxWidth / this.realSize);
         // 计算导航栏缩放比例
         const scale =
-          val / (extraWidth + this.copyFootNav.length * this.realSize);
-        this.navAttribute.navSize = Math.min(100, Math.round(scale * 100));
-        // console.log('maxM:>>>',this.maxItemNum,'navSize:>>>',this.navAttribute.navSize)
+          val/  (extraWidth + this.copyFootNav.length * this.realSize) ;
+        //加上原尺寸，防止尺寸缩放丢失
+        this.navAttribute.navSize = Math.min(this.navAttribute.navSize ,100, Math.round(scale * 100));
       },
       immediate: true
     },
