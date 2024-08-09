@@ -38,10 +38,14 @@
 import { computed, getCurrentInstance, nextTick, onMounted, ref,watch } from "vue";
 import _ from "lodash-es";
 import { storeToRefs } from "pinia";
-
 import { pickPaperStore } from "../../../page/gallery/store/PickPaperStore";
 import GalleryComponent from "../components/GalleryComponent.vue";
-
+const {proxy} = getCurrentInstance()
+onMounted(()=>{
+  proxy.$bus.on("",()=>{
+    currentPaperTab({type:"s"})
+  })
+})
 const pickPaper = pickPaperStore();
 const { currentID } = storeToRefs(pickPaper);
 // 111
@@ -132,8 +136,10 @@ const leftIndex = computed(()=>{
 
 /**左侧栏tab切换**/
 const currentPaperTab = (item) => {
+  console.log('item :>> ', item);
   currentID.value = item.type;
 };
+
 
 
 </script>
