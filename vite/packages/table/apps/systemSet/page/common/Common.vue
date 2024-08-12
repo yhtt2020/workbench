@@ -132,6 +132,7 @@ import { cardStore as useCardStore } from "../../../../store/card";
 import { appStore as useAppStore } from "../../../../store";
 import { useWidgetStore } from "../../../../components/card/store";
 import { browserList, rightMenuList, trayList,closeMethodList } from "./config";
+import { useAppModal } from "../../../../hooks";
 
 import ChooseScreen from "../../../../page/ChooseScreen.vue";
 import Zoom from "./Zoom.vue";
@@ -185,8 +186,11 @@ const itemList = computed(() => {
       name: "锁屏设置",
       icon: "fluent:lock-closed-16-regular",
       fn: () => {
-        // router.push({ name: "papersSetting" });
-        proxy.$bus.emit("lockScreen");
+        const { openApp } = useAppModal("galleryModalApp");
+        openApp();
+        setTimeout(() => {
+          proxy.$bus.emit("lockScreen");
+        }, 500);
       },
       disabled: false,
     },
@@ -201,7 +205,6 @@ const trayMode = ref("table");
 watch(
   () => trayMode.value,
   async (value) => {
-
     await tsbApi.settings.set("trayOpen", value);
   }
 );
@@ -303,5 +306,4 @@ onMounted(async () => {
 });
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
