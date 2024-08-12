@@ -73,6 +73,13 @@
     />
     <hr />
     <xt-option-info
+      title="自动检测升级"
+      info="检测到新版本时自动下载，并提示重启更新，如遇功能异常，请手动检测升级。"
+      isSwitch
+      v-model:switch="autoCheckUpdate"
+    />
+    <hr />
+    <xt-option-info
       title="显卡硬件加速"
       info="关闭显卡硬件加速可以减少显卡占用，但会提升处理器占用，重启生效"
       isSwitch
@@ -222,7 +229,14 @@ watch(
  * 开机自启动
  */
 const isAutoRun = ref(false);
-
+const autoCheckUpdate=ref(true)
+// 监听是否开机自启动
+watch(
+  () => autoCheckUpdate.value,
+  async (value) => {
+    await tsbApi.settings.set('autoCheckUpdate',value);
+  }
+);
 // 监听是否开机自启动
 watch(
   () => isAutoRun.value,
@@ -245,6 +259,9 @@ onMounted(async () => {
   browserMode.value = (await tsbApi.settings.get("openUrlBrowser")) || "system";
   // 获取开机自启动
   isAutoRun.value = await tsbApi.settings.get("autoRun");
+  //自动检测升级
+  autoCheckUpdate.value=await tsbApi.settings.get('autoCheckUpdate')===undefined?true:await tsbApi.settings.get('autoCheckUpdate')
+
   //硬件加速
   hardware.value = await tsbApi.settings.get("hardware");
   if (hardware.value === undefined) {
