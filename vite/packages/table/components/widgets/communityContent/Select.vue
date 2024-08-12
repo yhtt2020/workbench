@@ -1,10 +1,10 @@
 <template>
-    <a-select 
+    <a-select
         :zIndex="( 9999999 + 10 )"
-        v-model:value="currentMultiple" 
-        mode="multiple" 
-        show-search 
-        style="width: 100%; padding: 0 !important" 
+        v-model:value="currentMultiple"
+        mode="multiple"
+        show-search
+        style="width: 100%; padding: 0 !important"
         class="rounded-xl"
         :options="list"
         :filter-option="filterOption"

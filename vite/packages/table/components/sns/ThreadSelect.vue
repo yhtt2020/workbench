@@ -32,12 +32,19 @@ const fetch=debounce(async (val) => {
 const value=ref([])
 const list = ref([])
 const emits = defineEmits(["update:value", "cb"]);
-
+const props=defineProps({
+  mod:
+    {
+      type: String,
+      default: ''
+    }
+})
 watch(value, () => {
   emits("update:value", value.value);
   emits("cb", value.value);
 });
 onMounted(()=>{
+
   list.value = list.value.map((item)=>{
     return {
       value:item.value,
@@ -53,7 +60,7 @@ onMounted(()=>{
     placeholder="请输入帖子id或者帖子标题进行查找"
     :zIndex="( 9999999 + 10 )"
     v-model:value="value"
-    mode="multiple"
+    :mode="mod"
     show-search
     style="width: 100%; padding: 0 !important"
     class="rounded-xl"
@@ -69,16 +76,16 @@ onMounted(()=>{
 </template>
 
 <style scoped lang="scss">
-:deep(.ant-select-selection-item) {
-  background: var(--secondary-bg) !important;
-  background: none;
-  width: 96px;
-  height: 28px;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  border-radius: 8px !important;
-}
+//:deep(.ant-select-selection-item) {
+//  background: var(--secondary-bg) !important;
+//  background: none;
+//  width: 96px;
+//  height: 28px;
+//  display: flex;
+//  justify-content: space-around;
+//  align-items: center;
+//  border-radius: 8px !important;
+//}
 
 /* anticon-close */
 :deep(.anticon) {
@@ -91,5 +98,9 @@ onMounted(()=>{
   background: var(--secondary-transp-bg) !important;
   border-radius: 8px !important;
   min-height: 40px;
+}
+
+:deep(.ant-select-selection-item,.ant-select-selection-placeholder){
+  line-height: 38px!important;
 }
 </style>

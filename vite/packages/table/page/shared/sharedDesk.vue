@@ -20,14 +20,18 @@ const props = defineProps({
 })
 
 const showContentDetail = ref(true)
-const selectThreadId=ref(0)
+const selectThreadId=ref('')
 const {userInfo} = toRefs(appStore())
 const desk = ref({})
 const canEdit=ref(false)
+const threadInfo=ref({})
 onMounted(() => {
   try {
     desk.value = JSON.parse(JSON.parse(props.sharedData.data))
     console.log(props.sharedData, 'shareddata')
+    if(props.sharedData.threadId){
+      threadInfo.value=JSON.parse(props.sharedData.threadInfo)
+    }
   } catch (e) {
     console.error(e)
   }
@@ -140,10 +144,36 @@ const doLike=async () => {
 }
 
 
-const confirmThreadId=()=>{
+const setThreadId=async (val) => {
+  if(val===0){
+    let rs = await apiPost('/app/share/edit', {
+      code: props.shareCode,
+      threadId: 0
+    })
+    if (rs.status) {
+      props.sharedData.threadId=0
+      props.sharedData.threadInfo={}
+      selectThreadId.value=''
+      threadInfo.value={}
+      message.success('取消关联帖子成功')
+    } else {
+      message.error('取消关联帖子失败')
+    }
+  }else{
 
+    let rs = await apiPost('/app/share/edit', {
+      code: props.shareCode,
+      threadId: selectThreadId.value
+    })
+    if (rs.status) {
+      props.sharedData.threadId=selectThreadId.value
+      threadInfo.value=JSON.parse(rs.data.threadInfo)
+      message.success('关联帖子成功')
+    } else {
+      message.error('关联帖子失败')
+    }
+  }
 
-    console.log('threadId=',selectThreadId.value)
 }
 </script>
 
@@ -177,32 +207,38 @@ const confirmThreadId=()=>{
               />
             </div>
           </div>
-          <div v-if="sharedData.threadInfo" class="xt-bg-2 p-2 m-4 rounded-md content-area">
+          <div v-if="sharedData.threadId" class="xt-bg-2 p-2 m-4 rounded-md content-area pointer relative">
             <a-row >
-              <a-col :span="8">
+              <a-col :span="8" v-if="threadInfo.cover">
                 <img class="rounded-md w-[100px] h-[60px] object-cover"
-                     src="https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/Q_Cj-9a1K-qpok-mvCL"/>
+                     :src="threadInfo.cover"/>
               </a-col>
-              <a-col :span="16">
-                <div class="font-16 xt-text text-more">分享一个适合独立游戏开发者的桌面</div>
+              <a-col :span="threadInfo.cover?16:24">
+                <div class="font-16 xt-text text-more">{{threadInfo.title}}</div>
                 <div>
                   <a-avatar :src="sharedData.userInfo.avatar"></a-avatar>
                   {{ sharedData.userInfo.nickname }}
                 </div>
               </a-col>
             </a-row>
+            <div v-if="canEdit" @click="setThreadId(0)" style="position:absolute;right:-15px;top:-15px">
+              <xt-mix-icon
+                icon="fluent:dismiss-16-filled"
+                boxSize="32"
+                style="background: none"
+              />
+            </div>
           </div>
           <div v-else-if="canEdit && !hideTip" class="xt-bg-2 p-2 m-4 rounded-md content-area">
             <div class="font-16 xt-text text-more">此桌面暂未关联内容</div>
             <div class="font-14 xt-text-2">您可以在元社区发表任意内容，发表内容会自动与此桌面进行关联。可大大增加桌面曝光。</div>
             <div  class="m-2">
-              {{selectThreadId}}
               <ThreadSelect v-model:value="selectThreadId"></ThreadSelect>
             </div>
             <a-row >
 
               <div class="flex gap-2 m-2">
-                <xt-button size="md" @click="setHideTip" type="default">不再提示</xt-button>    <xt-button size="md" @click="confirmThreadId" type="theme">确认关联</xt-button>   <xt-button  size="md" @click="" type="theme">发内容</xt-button>
+                <xt-button size="md" @click="setHideTip" type="default">不再提示</xt-button>    <xt-button size="md" @click="setThreadId" type="theme">确认关联</xt-button>   <xt-button  size="md" @click="" type="theme">发内容</xt-button>
               </div>
 
             </a-row>
@@ -258,7 +294,7 @@ const confirmThreadId=()=>{
                  style="border-radius: 12px; width: 54px; height: 54px;">
               <xt-new-icon icon="fluent:comment-multiple-16-regular">
               </xt-new-icon>&nbsp;
-              {{ sharedData.collectCount || '' }}
+              {{ threadInfo.replyCount || '' }}
             </div>
           </div>
         </div>
