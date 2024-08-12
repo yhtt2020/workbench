@@ -115,6 +115,8 @@ const saveDesk = () => {
   })
 
 }
+const liked=ref(props.sharedData.liked)
+
 const doLike=async () => {
   let rs = await apiPost('/app/like/doLike', {
     "businessId": "10001",
@@ -124,9 +126,11 @@ const doLike=async () => {
   if(rs.status){
     if(rs.data.like===1){
       props.sharedData.likeCount++
+      liked.value=true
       message.success('点赞成功')
     }else{
       props.sharedData.likeCount--
+      liked.value=false
       message.success('取消点赞成功')
     }
   }else{
@@ -235,7 +239,10 @@ const doLike=async () => {
             </div><!---->
             <div @click="doLike" class="relative flex items-center justify-center"
                  style="border-radius: 12px; width: 54px; height: 54px;">
-              <xt-new-icon icon="fluent:thumb-like-16-regular">
+
+              <xt-new-icon v-if="liked" icon="fluent:thumb-like-16-filled">
+              </xt-new-icon>&nbsp;
+              <xt-new-icon v-else  icon="fluent:thumb-like-16-regular">
               </xt-new-icon>&nbsp;
               {{ sharedData.likeCount || '' }}
             </div><!---->
