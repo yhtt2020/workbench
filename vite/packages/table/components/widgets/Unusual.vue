@@ -4,7 +4,7 @@
   >
     <xt-ify-icon :icon="newIcon" size="56" class="mb-4" />
 
-   
+
     <template v-if="disableEdit">
       <div class="mb-4 xt-text-2 font-14" v-if="description">
         {{ description }}
@@ -45,7 +45,8 @@
 
       <template v-else>
         <xt-button
-          type="text"
+          @click="addEvent"
+          type="theme"
           v-if="addButtonTitle"
           h="32"
           style="width: auto !important;padding: 0 16px;"
@@ -99,6 +100,10 @@ const { newIcon, normalButtonTitle, addButtonTitle, menuAble, buttonColor,title,
 // 添加
 const  add = () => {
   emit('back');
+}
+
+const addEvent=()=>{
+  emit('add')
 }
 
 </script>

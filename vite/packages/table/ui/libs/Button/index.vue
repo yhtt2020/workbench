@@ -5,9 +5,9 @@
     class="flex items-center justify-center text-base xt-text"
     :class="[buttonStyle]"
     :style="{
-      width: block ? '100%' : w + 'px',
-      height: h + 'px',
-      'border-radius': radius + 'px',
+      width: block ? '100%' : width + 'px',
+      height: height + 'px',
+      'border-radius': corner + 'px',
     }"
   >
     <slot name="prefix" v-if="iconPosition == 'prefix'">
@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { toRefs, computed } from "vue";
+import {toRefs, computed, onMounted, ref} from "vue";
 import { useThrottleFn } from "@vueuse/core";
 import { message } from "ant-design-vue";
 
@@ -35,6 +35,8 @@ interface ButtonProps {
   w?: number | string;
   // 高度
   h?: number | string;
+  //快速定义常用尺寸
+  size?:'sm'|'md'|'lg',
   // 圆角
   radius?: number | string;
   /**
@@ -110,6 +112,34 @@ function copyStr(text) {
   document.body.removeChild(textarea);
   return copySuccessful;
 }
+const width=ref('120')
+const height=ref('80')
+const corner=ref('6')
+onMounted(()=>{
+  if(props.size){
+    switch (props.size) {
+      case "lg":
+        width.value='120'
+        height.value='48'
+        corner.value='8'
+        break
+      case "md":
+        width.value='80'
+        height.value='40'
+        corner.value='6'
+        break
+      case "sm":
+        width.value='60'
+        height.value='30'
+        corner.value='4'
+    }
+  }else{
+    width.value=String(props.w)
+    height.value=String(props.h)
+    corner.value=String(props.radius)
+  }
+  console.log(height.value,width.value,props)
+})
 </script>
 
 <style lang="scss" scoped>

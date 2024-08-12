@@ -110,6 +110,7 @@ import AIaides from '../widgets/AIaides.vue'
 import OilPrices from '../widgets/OilPrices.vue'
 
 import YuanCommunity from '../widgets/yuanCommunity/YuanCommunity.vue'
+import CommunityContent from '../widgets/communityContent/communityContent.vue'
 import Courier from '../widgets/courier/Courier.vue'
 import Goods from '../../apps/goods/Goods.vue'
 import FreeLayoutScrollbar from "./freeLayout/Scrollbar.vue";
@@ -200,6 +201,7 @@ export default {
     AIaides,
     OilPrices,
     YuanCommunity,
+    CommunityContent,
     Courier,
     Goods
   },

@@ -5,6 +5,9 @@ import {appStore} from '../../store'
 import {useRouter} from "vue-router";
 import {nanoid} from "nanoid";
 import {cardStore} from "../../store/card";
+import ThreadSelect from "../../components/sns/ThreadSelect.vue";
+import {apiPost} from "../../js/axios/request";
+import {message} from "ant-design-vue";
 
 const props = defineProps({
   shareCode: {
@@ -17,8 +20,9 @@ const props = defineProps({
 })
 
 const showContentDetail = ref(true)
-const {userInfo} = toRefs(appStore)
+const {userInfo} = toRefs(appStore())
 const desk = ref({})
+const canEdit=ref(false)
 onMounted(() => {
   try {
     desk.value = JSON.parse(JSON.parse(props.sharedData.data))
@@ -27,6 +31,7 @@ onMounted(() => {
     console.error(e)
   }
 
+  canEdit.value= userInfo.value.uid===props.sharedData.uid
 
 })
 
@@ -39,7 +44,16 @@ const deskSettings = computed(() => {
 const goHome = () => {
   window.$app.$router.push({name: 'home'})
 }
+const hideTip=ref(localStorage.getItem('hideSourceTip')==='1')
 
+const setHideTip=()=>{
+  localStorage.setItem('hideSourceTip','1')
+  hideTip.value=true
+}
+const setShowTip=()=>{
+  localStorage.removeItem('hideSourceTip')
+  hideTip.value=false
+}
 const saveDesk = () => {
   let g = desk.value
   const {freeLayoutState, freeLayoutData} = g
@@ -101,6 +115,24 @@ const saveDesk = () => {
   })
 
 }
+const doLike=async () => {
+  let rs = await apiPost('/app/like/doLike', {
+    "businessId": "10001",
+    "entityId": props.shareCode,
+    like:1
+  })
+  if(rs.status){
+    if(rs.data.like===1){
+      props.sharedData.likeCount++
+      message.success('点赞成功')
+    }else{
+      props.sharedData.likeCount--
+      message.success('取消点赞成功')
+    }
+  }else{
+    message.error('操作失败')
+  }
+}
 </script>
 
 <template>
@@ -115,9 +147,13 @@ const saveDesk = () => {
         style="position:absolute;left: 50%;margin-left: -200px;bottom: 10px;border: 1px solid var(--divider); backdrop-filter: blur(50px);width: 400px;z-index:99"
         class="xt-bg xt-shadow rounded-2xl p-3  items-center justify-between communityNav m-auto">
 
-        <div v-if="showContentDetail">
+        <div v-if="showContentDetail && (sharedData.threadInfo || canEdit)">
+
           <div>
-            <div>
+            <div v-if="canEdit">
+              管理面板
+            </div>
+            <div v-else>
               桌面来源
             </div>
 
@@ -129,8 +165,8 @@ const saveDesk = () => {
               />
             </div>
           </div>
-          <div class="xt-bg-2 p-2 m-4 rounded-md content-area">
-            <a-row>
+          <div v-if="sharedData.threadInfo" class="xt-bg-2 p-2 m-4 rounded-md content-area">
+            <a-row >
               <a-col :span="8">
                 <img class="rounded-md w-[100px] h-[60px] object-cover"
                      src="https://jxxt-1257689580.cos.ap-chengdu.myqcloud.com/Q_Cj-9a1K-qpok-mvCL"/>
@@ -143,10 +179,29 @@ const saveDesk = () => {
                 </div>
               </a-col>
             </a-row>
+          </div>
+          <div v-else-if="canEdit && !hideTip" class="xt-bg-2 p-2 m-4 rounded-md content-area">
+            <div class="font-16 xt-text text-more">此桌面暂未关联内容</div>
+            <div class="font-14 xt-text-2">您可以在元社区发表任意内容，发表内容会自动与此桌面进行关联。可大大增加桌面曝光。</div>
+            <div  class="m-2">
+              <div>请输入帖子id或者帖子标题进行查找。</div>
+              <ThreadSelect ></ThreadSelect>
+            </div>
+            <a-row >
+
+              <div class="flex gap-2 m-2">
+                <xt-button size="md" @click="setHideTip" type="default">不再提示</xt-button>    <xt-button size="md" @click="" type="theme">确认关联</xt-button>   <xt-button  size="md" @click="" type="theme">发内容</xt-button>
+              </div>
+
+            </a-row>
+
 
           </div>
+          <div class="flex gap-1 m-2" v-if="canEdit">
+            <xt-button ifyIcon="fluent:sound-source-20-filled"  @click="setShowTip">来源</xt-button>  <xt-button ifyIcon="fluent:document-edit-16-filled" >编辑</xt-button>  <xt-button ifyIcon="fluent:save-16-filled" >保存</xt-button>  <xt-button ifyIcon="fluent:delete-16-filled" >删除</xt-button>
+          </div>
         </div>
-        <div v-else @click="showContentDetail=true" class="xt-bg-2 rounded-lg p-1 btn-show pointer">
+        <div v-if="!showContentDetail && (sharedData.threadInfo || canEdit)" @click="showContentDetail=true" class="xt-bg-2 rounded-lg p-1 btn-show pointer">
 
           <xt-mix-icon
             icon="fluent:chevron-up-24-filled"
@@ -176,23 +231,20 @@ const saveDesk = () => {
               <xt-new-icon icon="fluent:collections-16-regular">
               </xt-new-icon>&nbsp;
               保存此桌面&nbsp;
-              {{ sharedData.collectCount || 0 }}
+              {{ sharedData.collectCount || '' }}
             </div><!---->
-            <div class="relative flex items-center justify-center"
+            <div @click="doLike" class="relative flex items-center justify-center"
                  style="border-radius: 12px; width: 54px; height: 54px;">
               <xt-new-icon icon="fluent:thumb-like-16-regular">
               </xt-new-icon>&nbsp;
-              {{ sharedData.supportCount || 0 }}
+              {{ sharedData.likeCount || '' }}
             </div><!---->
             <div class="relative flex items-center justify-center"
                  style="border-radius: 12px; width: 54px; height: 54px;">
               <xt-new-icon icon="fluent:comment-multiple-16-regular">
               </xt-new-icon>&nbsp;
-              {{ sharedData.collectCount || 0 }}
+              {{ sharedData.collectCount || '' }}
             </div>
-          </div>
-          <div v-if="sharedData.uid===userInfo?.uid">
-            操作面板
           </div>
         </div>
       </div>

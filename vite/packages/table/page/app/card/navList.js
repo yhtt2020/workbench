@@ -904,7 +904,7 @@ export const NavList = [
       },
       {
         name:'yuanCommunity',
-        cname:'社区动态',
+        cname:'社区版块帖子列表',
         detail:'元社区里又发了什么好玩的事情？时刻关注热门和最新动态。',
         sizes:['4x4','4x6'],
         option:[
@@ -916,6 +916,33 @@ export const NavList = [
           }
         ],
         time:'2023/10/11'
+      },
+      {
+        name:'communityContent',
+        cname:'社区内容',
+        detail:'可以发表一个帖子、动态并显示在桌面上',
+        sizes:['2x2','4x4','4x6'],
+        option:[
+          {
+            name:'communityContent',
+            imgName:'communityContent',
+            size:'2x2',
+            zoom:'12'
+          },
+          {
+            name:'communityContent',
+            imgName:'communityContent',
+            size:'4x4',
+            zoom:'12'
+          },
+          {
+            name:'communityContent',
+            imgName:'communityContent',
+            size:'4x6',
+            zoom:'12'
+          }
+        ],
+        time:'2024/8/7'
       },
     ],
   },

@@ -412,9 +412,9 @@ export default {
       this.defaultSection = this.customData.defaultForum;
       this.isLoading = true;
       let target = "";
-      if (this.customData.defaultForum.index) {
+      if (this.customData.defaultForum?.index) {
         target = this.customData.defaultForum.value.id;
-      } else if (this.customData.defaultForum.value) {
+      } else if (this.customData.defaultForum?.value) {
         target = this.customData.defaultForum.value;
       } else {
         target = this.customData.defaultForum;
