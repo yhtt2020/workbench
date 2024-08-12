@@ -84,7 +84,7 @@ export const useNavigationStore = defineStore("useNavigationStore", {
     strategies: [
       {
         // storage: dbStorage,
-        path: ["communityNavVisible", "currentNavFormat", "currentNavPosition", 'currentMainH'],
+        path: ["communityNavVisible", "currentNavFormat", "currentNavPosition", 'currentMainH','navAttribute','iconRadius'],
         storage: localStorage,
       },
     ],
