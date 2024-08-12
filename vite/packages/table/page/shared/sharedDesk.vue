@@ -20,6 +20,7 @@ const props = defineProps({
 })
 
 const showContentDetail = ref(true)
+const selectThreadId=ref(0)
 const {userInfo} = toRefs(appStore())
 const desk = ref({})
 const canEdit=ref(false)
@@ -137,6 +138,13 @@ const doLike=async () => {
     message.error('操作失败')
   }
 }
+
+
+const confirmThreadId=()=>{
+
+
+    console.log('threadId=',selectThreadId.value)
+}
 </script>
 
 <template>
@@ -188,13 +196,13 @@ const doLike=async () => {
             <div class="font-16 xt-text text-more">此桌面暂未关联内容</div>
             <div class="font-14 xt-text-2">您可以在元社区发表任意内容，发表内容会自动与此桌面进行关联。可大大增加桌面曝光。</div>
             <div  class="m-2">
-              <div>请输入帖子id或者帖子标题进行查找。</div>
-              <ThreadSelect ></ThreadSelect>
+              {{selectThreadId}}
+              <ThreadSelect v-model:value="selectThreadId"></ThreadSelect>
             </div>
             <a-row >
 
               <div class="flex gap-2 m-2">
-                <xt-button size="md" @click="setHideTip" type="default">不再提示</xt-button>    <xt-button size="md" @click="" type="theme">确认关联</xt-button>   <xt-button  size="md" @click="" type="theme">发内容</xt-button>
+                <xt-button size="md" @click="setHideTip" type="default">不再提示</xt-button>    <xt-button size="md" @click="confirmThreadId" type="theme">确认关联</xt-button>   <xt-button  size="md" @click="" type="theme">发内容</xt-button>
               </div>
 
             </a-row>
