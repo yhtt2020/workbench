@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import Desk from "../../components/desk/Desk.vue";
-import {computed, defineProps, onMounted, ref, toRef, toRefs, watch} from 'vue'
+import {computed, defineProps, h, onMounted, onUnmounted, ref, toRef, toRefs, watch} from 'vue'
 import {appStore} from '../../store'
 import {useRouter} from "vue-router";
 import {nanoid} from "nanoid";
 import {cardStore} from "../../store/card";
 import ThreadSelect from "../../components/sns/ThreadSelect.vue";
 import {apiPost} from "../../js/axios/request";
-import {message} from "ant-design-vue";
+import {Button, message, notification} from "ant-design-vue";
 import Interaction from "../../components/sns/Interaction.vue";
 import shareHelper from "../../js/lib/shareHelper";
 
@@ -22,25 +22,28 @@ const props = defineProps({
 })
 
 const showContentDetail = ref(true)
-const selectThreadId=ref('')
+const selectThreadId = ref('')
 const {userInfo} = toRefs(appStore())
 const desk = ref({})
-const canEdit=ref(false)
-const threadInfo=ref({})
+const canEdit = ref(false)
+const threadInfo = ref({})
 onMounted(() => {
   try {
     desk.value = JSON.parse(JSON.parse(props.sharedData.data))
+    document.title=(props.sharedData.title||'桌面分享') +' - 分享桌面'
     console.log(props.sharedData, 'shareddata')
-    if(props.sharedData.threadId){
-      threadInfo.value=JSON.parse(props.sharedData.threadInfo)
+    if (props.sharedData.threadId) {
+      threadInfo.value = JSON.parse(props.sharedData.threadInfo)
     }
   } catch (e) {
     console.error(e)
   }
 
-  canEdit.value= userInfo.value.uid===props.sharedData.uid
+  canEdit.value = userInfo.value.uid === props.sharedData.uid
 
 })
+const editModalVisible = ref(false)
+
 
 const deskSettings = computed(() => {
   const settings = desk.value.settings
@@ -51,17 +54,17 @@ const deskSettings = computed(() => {
 const goHome = () => {
   window.$app.$router.push({name: 'home'})
 }
-const hideTip=ref(localStorage.getItem('hideSourceTip')==='1')
-
-const setHideTip=()=>{
-  localStorage.setItem('hideSourceTip','1')
-  hideTip.value=true
+const hideTip = ref(localStorage.getItem('hideSourceTip') === '1')
+const editing = ref(false)
+const setHideTip = () => {
+  localStorage.setItem('hideSourceTip', '1')
+  hideTip.value = true
 }
-const setShowTip=()=>{
-  if(hideTip.value===true){
+const setShowTip = () => {
+  if (hideTip.value === true) {
     localStorage.removeItem('hideSourceTip')
-    hideTip.value=false
-  }else{
+    hideTip.value = false
+  } else {
     setHideTip()
   }
 }
@@ -82,8 +85,8 @@ const saveDesk = () => {
   //   g.deskHeight
   // ).toFixed();
   g.icon = "desktop";
-  g.name='保存的桌面'
-  g.new=true
+  g.name = '保存的桌面'
+  g.new = true
   // g.settings.zoom = parseInt(cardZoom);
   g.id = nanoid(8);
   // 将导入的便签重新修改时间
@@ -126,62 +129,62 @@ const saveDesk = () => {
   })
 
 }
-const liked=ref(props.sharedData.liked)
+const liked = ref(props.sharedData.liked)
 
-const doLike=async () => {
+const doLike = async () => {
   let rs = await apiPost('/app/like/doLike', {
     "businessId": "10001",
     "entityId": props.shareCode,
-    like:1
+    like: 1
   })
-  if(rs.status){
-    if(rs.data.like===1){
+  if (rs.status) {
+    if (rs.data.like === 1) {
       props.sharedData.likeCount++
-      liked.value=true
+      liked.value = true
       message.success('点赞成功')
-    }else{
+    } else {
       props.sharedData.likeCount--
-      liked.value=false
+      liked.value = false
       message.success('取消点赞成功')
     }
-  }else{
+  } else {
     message.error('操作失败')
   }
 }
 
 
-const setThreadId=async (val) => {
-  if(val===undefined){
-    if(selectThreadId.value===undefined){
+const setThreadId = async (val) => {
+  if (val === undefined) {
+    if (selectThreadId.value === undefined) {
       message.error('未设置有效内容ID')
       return
     }
-    val=selectThreadId.value
+    val = selectThreadId.value
   }
-  val=Number(val)
-  if(val===0){
+  val = Number(val)
+  if (val === 0) {
     let rs = await apiPost('/app/share/edit', {
       code: props.shareCode,
       threadId: 0
     })
     if (rs.status) {
-      props.sharedData.threadId=0
-      props.sharedData.threadInfo={}
-      selectThreadId.value=''
-      threadInfo.value={}
+      props.sharedData.threadId = 0
+      props.sharedData.threadInfo = {}
+      selectThreadId.value = ''
+      threadInfo.value = {}
       message.success('取消关联帖子成功')
     } else {
       message.error('取消关联帖子失败')
     }
-  }else{
+  } else {
 
     let rs = await apiPost('/app/share/edit', {
       code: props.shareCode,
       threadId: val
     })
     if (rs.status) {
-      props.sharedData.threadId=val
-      threadInfo.value=JSON.parse(rs.data.threadInfo)
+      props.sharedData.threadId = val
+      threadInfo.value = JSON.parse(rs.data.threadInfo)
       message.success('关联帖子成功')
     } else {
       message.error('关联帖子失败')
@@ -190,48 +193,143 @@ const setThreadId=async (val) => {
 
 }
 const intRef = ref();
-const publish=()=>{
+const publish = () => {
   intRef.value.showPublish()
 }
-const showThreadDetail=()=>{
+const showThreadDetail = () => {
   intRef.value.showThreadDetail(threadInfo.value.id)
 }
-const publishOk=async (data) => {
-  console.log('网上传3',data)
+const publishOk = async (data) => {
+  console.log('网上传3', data)
   await setThreadId(data.thread_id)
 }
-const remove=()=>{
-  let code=props.shareCode
+const hasToSave = ref(false)
+const changeEdit = () => {
+  if (canEdit) {
+    editing.value = !editing.value
+    if (editing.value) {
+
+      notification.info({
+        message: '分享小助手',
+        description:
+          '您已进入编辑模式，别忘了点击保存按钮保存桌面布局。',
+        onClick: () => {
+        }
+      })
+    } else {
+      notification.info({
+        message: '分享小助手',
+        description:
+          '您已经退出编辑模式，已为您用红色标记保存按钮，别忘了点击保存按钮保存桌面布局。',
+      })
+      hasToSave.value = true
+    }
+  } else {
+    message.error('您不是此分享链接的创建者，无法进行编辑，您可以尝试保存此桌面，然后自行修改。')
+  }
+}
+const getShareDeskData = (removeData = true) => {
+  let cloneDesk = JSON.parse(JSON.stringify(desk.value))
+  if (removeData) {
+    //如果选择不保留数据，则进行清理，此处要对不同的组件进行不同的清理数据处理，不能一概而论
+    cloneDesk.cards.forEach((item, index) => {
+      if (item.name !== 'folder') {
+        item.customData = {}
+      }
+    })
+  }
+  cloneDesk.cards.forEach((item, index) => {
+    delete item._$muuri_id
+  })
+
+  let settings = {}
+  if (cloneDesk.settings?.enableZoom) {
+    settings = cloneDesk.settings
+  } else {
+    settings = this.settings
+  }
+  // settings.cardZoom = Number(settings.cardZoom) * Number(this.shareFullCardZoom)
+  // settings.cardMargin = Number(settings.cardMargin) * Number(this.shareFullCardZoom)
+  const template = JSON.stringify({
+    cards: cloneDesk.cards,
+    settings: settings,
+    customData: {}
+  })
+  return template
+}
+const save = async () => {
+  let rs = await apiPost('/app/share/edit', {
+    code: props.shareCode,
+    data: getShareDeskData(false)
+  })
+  if (rs.status) {
+    hasToSave.value = false
+    message.success('保存成功')
+  } else {
+    message.error('保存失败')
+  }
+}
+const showEditModal = () => {
+  form.value.title = props.sharedData.title
+  form.value.summary = props.sharedData.summary
+  editModalVisible.value = true
+}
+const saveEdit = async () => {
+  let rs = await apiPost('/app/share/edit', {
+    code: props.shareCode,
+    title: form.value.title,
+    summary: form.value.summary
+  })
+  if (rs.status) {
+    editModalVisible.value = false
+    props.sharedData.title = form.value.title
+    props.sharedData.summary = form.value.summary
+    document.title=props.sharedData.title +' - 分享桌面'
+    message.success('保存成功')
+  } else {
+    message.error('保存失败')
+  }
+}
+const remove = () => {
+  let code = props.shareCode
   window.$ui.confirm(
     '删除确认',
     "确定删除此记录，删除后，分享链接将彻底失效。此操作不可撤销！",
     {
-      noText:'立即删除',
-      okText:'取消',
-      no:()=>{
-        shareHelper.remove(code).then(data=>{
-          if(data.status){
+      noText: '立即删除',
+      okText: '取消',
+      no: () => {
+        shareHelper.remove(code).then(data => {
+          if (data.status) {
             message.success('删除成功，即将跳转回首页')
-            setTimeout(()=>{
+            setTimeout(() => {
               goHome()
-            },3000)
+            }, 3000)
 
-          }else{
+          } else {
             message.error('删除失败')
           }
         })
       },
-      okButtonWidth:'95',
-      noButtonWidth:'95',
+      okButtonWidth: '95',
+      noButtonWidth: '95',
     })
 }
+const form = ref({
+  title: '',
+  summary: ''
+})
+onUnmounted(()=>{
+    document.title='天天工作台'
+})
+
 </script>
 
 <template>
   <div class="p-4 gap-4 flex flex-col " style="height: 100vh" v-if="Object.keys(desk).length>0">
     <div style="flex:1;height:0">
       <Desk :freeLayout="false" v-if="Object.keys(desk).length>0" :key="shareCode" :settings="deskSettings"
-            :current-desk="desk" :editing="false">
+            :current-desk="desk" :editing="editing" @changeEditing="changeEdit">
       </Desk>
     </div>
     <div style="height: 54px;overflow: visible">
@@ -257,14 +355,15 @@ const remove=()=>{
               />
             </div>
           </div>
-          <div @click="showThreadDetail" v-if="sharedData.threadId" class="xt-bg-2 p-2 m-4 rounded-md content-area pointer relative">
-            <a-row >
+          <div @click="showThreadDetail" v-if="sharedData.threadId"
+               class="xt-bg-2 p-2 m-4 rounded-md content-area pointer relative">
+            <a-row>
               <a-col :span="8" v-if="threadInfo.cover">
                 <img class="rounded-md w-[100px] h-[60px] object-cover"
                      :src="threadInfo.cover"/>
               </a-col>
               <a-col :span="threadInfo.cover?16:24">
-                <div class="font-16 xt-text text-more">{{threadInfo.title}}</div>
+                <div class="font-16 xt-text text-more">{{ threadInfo.title }}</div>
                 <div>
                   <a-avatar :src="sharedData.userInfo.avatar"></a-avatar>
                   {{ sharedData.userInfo.nickname }}
@@ -281,28 +380,38 @@ const remove=()=>{
           </div>
           <div v-else-if="canEdit && !hideTip" class="xt-bg-2 p-2 m-4 rounded-md content-area">
             <div class="font-16 xt-text text-more">此桌面暂未关联内容</div>
-            <div class="font-14 xt-text-2">您可以在元社区发表任意内容，发表内容会自动与此桌面进行关联。可大大增加桌面曝光。</div>
-            <div  class="m-2">
+            <div class="font-14 xt-text-2">
+              您可以在元社区发表任意内容，发表内容会自动与此桌面进行关联。可大大增加桌面曝光。
+            </div>
+            <div class="m-2">
               <ThreadSelect v-model:value="selectThreadId"></ThreadSelect>
             </div>
-            <a-row >
+            <a-row>
 
               <div class="flex gap-2 m-2">
-                <xt-button size="md" @click="setHideTip" type="default">不再提示</xt-button>    <xt-button size="md" @click="setThreadId" type="theme">确认关联</xt-button>
+                <xt-button size="md" @click="setHideTip" type="default">不再提示</xt-button>
+                <xt-button size="md" @click="setThreadId" type="theme">确认关联</xt-button>
               </div>
 
             </a-row>
 
 
           </div>
-          <div v-if="!sharedData.threadId" class="flex gap-2 m-2" >
-            <xt-button @click="publish" block  size="md" type="theme">发内容并关联</xt-button>
+          <div v-if="!sharedData.threadId" class="flex gap-2 m-2">
+            <xt-button @click="publish" block size="md" type="theme">发内容并关联</xt-button>
           </div>
           <div class="flex gap-1 m-2" v-if="canEdit">
-            <xt-button ifyIcon="fluent:sound-source-20-filled"  @click="setShowTip">来源</xt-button>  <xt-button ifyIcon="fluent:document-edit-16-filled" >编辑</xt-button>  <xt-button ifyIcon="fluent:save-16-filled" >保存</xt-button>  <xt-button @click="remove" ifyIcon="fluent:delete-16-filled" >删除</xt-button>
+            <xt-button ifyIcon="fluent:sound-source-20-filled" @click="setShowTip">来源</xt-button>
+            <xt-button @click="showEditModal" ifyIcon="fluent:document-edit-16-filled">编辑</xt-button>
+            <xt-button @click="save"
+                       :type="hasToSave?'error':'default'"
+                       ifyIcon="fluent:save-16-filled">保存
+            </xt-button>
+            <xt-button @click="remove" ifyIcon="fluent:delete-16-filled">删除</xt-button>
           </div>
         </div>
-        <div v-if="!showContentDetail && (sharedData.threadInfo || canEdit)" @click="showContentDetail=true" class="xt-bg-2 rounded-lg p-1 btn-show pointer">
+        <div v-if="!showContentDetail && (sharedData.threadInfo || canEdit)" @click="showContentDetail=true"
+             class="xt-bg-2 rounded-lg p-1 btn-show pointer">
 
           <xt-mix-icon
             icon="fluent:chevron-up-24-filled"
@@ -339,7 +448,7 @@ const remove=()=>{
 
               <xt-new-icon v-if="liked" icon="fluent:thumb-like-16-filled">
               </xt-new-icon>&nbsp;
-              <xt-new-icon v-else  icon="fluent:thumb-like-16-regular">
+              <xt-new-icon v-else icon="fluent:thumb-like-16-regular">
               </xt-new-icon>&nbsp;
               {{ sharedData.likeCount || '' }}
             </div><!---->
@@ -359,6 +468,26 @@ const remove=()=>{
     </div>
   </div>
 
+  <xt-modal v-model="editModalVisible" custom
+            boxClass="rounded-xl"
+            :mask="true"
+            :index="850">
+    <div style="width: 400px" class="p-4">
+      <h2 style="text-align: center" class="mb-3">编辑分享桌面信息</h2>
+      <div class="p-4 mb-4 text-base xt-bg-2 rounded-xl">
+        <div class="mb-4">分享标题</div>
+        <xt-input v-model="form.title" class="xt-modal xt-b mb-4"
+                  placeholder="输入一个标题，用于显示在网页"></xt-input>
+        <div class="mb-4">介绍内容</div>
+        <xt-textarea v-model:data="form.summary" class="xt-modal xt-b mb-4" placeholder="输入介绍"></xt-textarea>
+      </div>
+      <div class="flex gap-8 justify-center">
+        <xt-button @click="saveEdit" type="theme">保存</xt-button>
+        <xt-button @click="editModalVisible=false" type="default">取消</xt-button>
+      </div>
+
+    </div>
+  </xt-modal>
   <Interaction ref="intRef" @publishOk="publishOk"></Interaction>
   <!--  <Desk-->
   <!--    :muuriOptions="muuriOptions"-->

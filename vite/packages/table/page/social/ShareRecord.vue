@@ -49,6 +49,11 @@ const columns=[
     width: '20%',
   },
   {
+    title: '标题',
+    dataIndex: 'title',
+    width: '20%',
+  },
+  {
     title: '口令',
     dataIndex: 'alias',
     width: '20%',
