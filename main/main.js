@@ -625,7 +625,7 @@ app.on('second-instance', async function (e, argv, workingDir) {
     if (choose.response === 0) {
       runTable()
     } else {
-      runBrowser()
+      runBrowser(argv)
     }
   } else if (secondMethod === 'browser') {
     runBrowser(argv)
