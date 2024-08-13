@@ -131,8 +131,8 @@
                                         </a-row>
                                     <!-- </viewer> -->
 
-                                
-                                    
+
+
                                 </template>
 
                             </div>
@@ -282,7 +282,7 @@ const refresh = async () => {
     await store.getCommunityPostReply(detailTid)
 }
 const content = computed(() => {
-    return emojiReplace(props.cardData.pc_summary);
+    return emojiReplace(props.cardData.content);
 });
 const title = computed(() => {
     return emojiReplace(props.cardData.title);

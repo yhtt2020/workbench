@@ -8,6 +8,8 @@ import {cardStore} from "../../store/card";
 import ThreadSelect from "../../components/sns/ThreadSelect.vue";
 import {apiPost} from "../../js/axios/request";
 import {message} from "ant-design-vue";
+import Interaction from "../../components/sns/Interaction.vue";
+import shareHelper from "../../js/lib/shareHelper";
 
 const props = defineProps({
   shareCode: {
@@ -56,8 +58,12 @@ const setHideTip=()=>{
   hideTip.value=true
 }
 const setShowTip=()=>{
-  localStorage.removeItem('hideSourceTip')
-  hideTip.value=false
+  if(hideTip.value===true){
+    localStorage.removeItem('hideSourceTip')
+    hideTip.value=false
+  }else{
+    setHideTip()
+  }
 }
 const saveDesk = () => {
   let g = desk.value
@@ -145,6 +151,14 @@ const doLike=async () => {
 
 
 const setThreadId=async (val) => {
+  if(val===undefined){
+    if(selectThreadId.value===undefined){
+      message.error('未设置有效内容ID')
+      return
+    }
+    val=selectThreadId.value
+  }
+  val=Number(val)
   if(val===0){
     let rs = await apiPost('/app/share/edit', {
       code: props.shareCode,
@@ -163,10 +177,10 @@ const setThreadId=async (val) => {
 
     let rs = await apiPost('/app/share/edit', {
       code: props.shareCode,
-      threadId: selectThreadId.value
+      threadId: val
     })
     if (rs.status) {
-      props.sharedData.threadId=selectThreadId.value
+      props.sharedData.threadId=val
       threadInfo.value=JSON.parse(rs.data.threadInfo)
       message.success('关联帖子成功')
     } else {
@@ -174,6 +188,42 @@ const setThreadId=async (val) => {
     }
   }
 
+}
+const intRef = ref();
+const publish=()=>{
+  intRef.value.showPublish()
+}
+const showThreadDetail=()=>{
+  intRef.value.showThreadDetail(threadInfo.value.id)
+}
+const publishOk=async (data) => {
+  console.log('网上传3',data)
+  await setThreadId(data.thread_id)
+}
+const remove=()=>{
+  let code=props.shareCode
+  window.$ui.confirm(
+    '删除确认',
+    "确定删除此记录，删除后，分享链接将彻底失效。此操作不可撤销！",
+    {
+      noText:'立即删除',
+      okText:'取消',
+      no:()=>{
+        shareHelper.remove(code).then(data=>{
+          if(data.status){
+            message.success('删除成功，即将跳转回首页')
+            setTimeout(()=>{
+              goHome()
+            },3000)
+
+          }else{
+            message.error('删除失败')
+          }
+        })
+      },
+      okButtonWidth:'95',
+      noButtonWidth:'95',
+    })
 }
 </script>
 
@@ -207,7 +257,7 @@ const setThreadId=async (val) => {
               />
             </div>
           </div>
-          <div v-if="sharedData.threadId" class="xt-bg-2 p-2 m-4 rounded-md content-area pointer relative">
+          <div @click="showThreadDetail" v-if="sharedData.threadId" class="xt-bg-2 p-2 m-4 rounded-md content-area pointer relative">
             <a-row >
               <a-col :span="8" v-if="threadInfo.cover">
                 <img class="rounded-md w-[100px] h-[60px] object-cover"
@@ -221,7 +271,7 @@ const setThreadId=async (val) => {
                 </div>
               </a-col>
             </a-row>
-            <div v-if="canEdit" @click="setThreadId(0)" style="position:absolute;right:-15px;top:-15px">
+            <div v-if="canEdit" @click.stop="setThreadId(0)" style="position:absolute;right:-15px;top:-15px">
               <xt-mix-icon
                 icon="fluent:dismiss-16-filled"
                 boxSize="32"
@@ -238,15 +288,18 @@ const setThreadId=async (val) => {
             <a-row >
 
               <div class="flex gap-2 m-2">
-                <xt-button size="md" @click="setHideTip" type="default">不再提示</xt-button>    <xt-button size="md" @click="setThreadId" type="theme">确认关联</xt-button>   <xt-button  size="md" @click="" type="theme">发内容</xt-button>
+                <xt-button size="md" @click="setHideTip" type="default">不再提示</xt-button>    <xt-button size="md" @click="setThreadId" type="theme">确认关联</xt-button>
               </div>
 
             </a-row>
 
 
           </div>
+          <div v-if="!sharedData.threadId" class="flex gap-2 m-2" >
+            <xt-button @click="publish" block  size="md" type="theme">发内容并关联</xt-button>
+          </div>
           <div class="flex gap-1 m-2" v-if="canEdit">
-            <xt-button ifyIcon="fluent:sound-source-20-filled"  @click="setShowTip">来源</xt-button>  <xt-button ifyIcon="fluent:document-edit-16-filled" >编辑</xt-button>  <xt-button ifyIcon="fluent:save-16-filled" >保存</xt-button>  <xt-button ifyIcon="fluent:delete-16-filled" >删除</xt-button>
+            <xt-button ifyIcon="fluent:sound-source-20-filled"  @click="setShowTip">来源</xt-button>  <xt-button ifyIcon="fluent:document-edit-16-filled" >编辑</xt-button>  <xt-button ifyIcon="fluent:save-16-filled" >保存</xt-button>  <xt-button @click="remove" ifyIcon="fluent:delete-16-filled" >删除</xt-button>
           </div>
         </div>
         <div v-if="!showContentDetail && (sharedData.threadInfo || canEdit)" @click="showContentDetail=true" class="xt-bg-2 rounded-lg p-1 btn-show pointer">
@@ -290,19 +343,23 @@ const setThreadId=async (val) => {
               </xt-new-icon>&nbsp;
               {{ sharedData.likeCount || '' }}
             </div><!---->
-            <div class="relative flex items-center justify-center"
-                 style="border-radius: 12px; width: 54px; height: 54px;">
-              <xt-new-icon icon="fluent:comment-multiple-16-regular">
-              </xt-new-icon>&nbsp;
-              {{ threadInfo.replyCount || '' }}
-            </div>
+
+            <template v-if="sharedData.threadId">
+              <div @click="showThreadDetail" class="relative flex items-center justify-center"
+                   style="border-radius: 12px; width: 54px; height: 54px;">
+                <xt-new-icon icon="fluent:comment-multiple-16-regular">
+                </xt-new-icon>&nbsp;
+                {{ threadInfo.replyCount || '' }}
+              </div>
+            </template>
+
           </div>
         </div>
       </div>
     </div>
   </div>
 
-
+  <Interaction ref="intRef" @publishOk="publishOk"></Interaction>
   <!--  <Desk-->
   <!--    :muuriOptions="muuriOptions"-->
   <!--    :freeLayout="false"-->
