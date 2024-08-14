@@ -89,22 +89,26 @@ const saveDesk = () => {
   g.new = true
   // g.settings.zoom = parseInt(cardZoom);
   g.id = nanoid(8);
+
+  const now = new Date().getTime();
   // 将导入的便签重新修改时间
   g?.cards?.forEach((item, index) => {
     //移除桌面相关的便签卡片
-    if (item.name === "notes" && !this.$usePlat('client')) {
-      const now = new Date().getTime();
+    let i=0
+    if (item.name === "notes" && ! $usePlat('client')) {
+      let time=now+i
+      i++
       const obj = {
         ...item,
-        id: now,
-        _id: "note:" + now,
-        createTime: now,
-        updateTime: now,
+        id: nanoid(8),
+        _id: "note:" + time,
+        createTime: time,
+        updateTime: time,
         isDelete: false,
         deskId: g.id,
         deskName: g.name,
       };
-      if (!this.$usePlat('client')) {
+      if ($usePlat('client')) {
         tsbApi.db.put(obj);
       }
       g.cards[index] = obj;
