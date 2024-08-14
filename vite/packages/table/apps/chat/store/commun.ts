@@ -332,6 +332,7 @@ export const useCommunityStore = defineStore("forumStore", {
           60 * 60 * 12
         );
       }
+      return res.data
     },
     //查看帖子回复
     async getCommunityPostReply(id, page = 1) {
@@ -479,6 +480,7 @@ export const useCommunityStore = defineStore("forumStore", {
           is_weibo: is_weibo,
           cover: cover,
         });
+        return res
         // console.log(res,'threadPost');
       } catch (error) {
         console.error(error);
@@ -526,6 +528,7 @@ export const useCommunityStore = defineStore("forumStore", {
           id: id,
           is_attention_at: is_attention_at,
         });
+        return res
         // console.log(res,'threadPost');
       } catch (error) {
         console.error(error);

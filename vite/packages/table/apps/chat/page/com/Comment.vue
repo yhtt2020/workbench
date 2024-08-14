@@ -1,7 +1,10 @@
 <!-- 版块评论页 -->
 <template>
   <div class="w-full">
-    <reply @addComment="getReplyText" />
+    <reply v-if="isLogged" @addComment="getReplyText" />
+    <div class="login-tip" v-else>
+      请<a @click="showLogin">登录</a>后进行评论。
+    </div>
     <div class="mb-4 text-smxt-text">评论 {{ props.reply }}</div>
     <a-spin v-if="isLoading" style="margin: 30% 50%" />
     <template v-else>
@@ -13,6 +16,7 @@
         :key="index"
         :uid="props.uid"
       ></MainReplyComment>
+
       <!-- </div> -->
     </template>
 
@@ -33,10 +37,22 @@ import { ref, computed, onMounted, watch } from "vue";
 import MainReplyComment from "./MainReplyComment.vue";
 import reply from "./Replys.vue";
 import { useCommunityStore } from "../../store/commun";
+import {appStore} from '../../../../store'
 import DataStatu from "../../../../components/widgets/DataStatu.vue";
+import { useLogin } from '../../../../permission/user/useLogin'
 const current = ref(1);
 const list = ref([]);
 const isLoading = ref(false);
+const isLogged=ref(!!appStore().userInfo?.uid)
+const showLogin=()=>{
+  $app.loginModal()
+}
+watch(()=> appStore().userInfo,()=>{
+  console.log('用户数据变化')
+  isLogged.value=!!appStore().userInfo?.uid
+},{
+  deep:true
+})
 const changePage = async () => {
   if (list.value.length == 0) {
     list.value = commentList.value.list;
@@ -113,6 +129,15 @@ watch(
 
 :deep(.ant-pagination-simple .ant-pagination-next .ant-pagination-item-link) {
   color: var(--secondary-text) !important;
+}
+.login-tip{
+  padding: 20px;
+  border: var(--primary-bg) 1px solid;
+  background: var(--secondary-bg);
+  margin-bottom: 15px;
+  border-radius: 6px;
+  font-size: 16px;
+  text-align: center;
 }
 </style>
 

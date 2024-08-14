@@ -181,6 +181,7 @@
 </template>
 
 <script setup lang='ts'>
+
 import { ref, computed, reactive, onMounted, watch } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import Comment from '../../../apps/chat/page/com/Comment.vue';
@@ -191,6 +192,7 @@ import browser from '../../../js/common/browser';
 import emojiReplace from '../../../js/chat/emoji'
 import { message } from "ant-design-vue";
 import Detail from '../../../apps/chat/page/com/Detail.vue';
+const isLogged=ref(!!appStore().userInfo?.uid)
 // ../../../page/chat/com/Detail.vue
 import { Item } from 'ant-design-vue/lib/menu';
 const props = defineProps({
@@ -250,7 +252,16 @@ const isLike = computed(() => {
 })
 //
 let tid = store.communityPostDetail?.pay_set?.tid ? store.communityPostDetail?.pay_set?.tid : store.communityPostDetail?.id
+watch(()=> appStore().userInfo,()=>{
+  console.log('用户数据变化')
+  isLogged.value=!!appStore().userInfo?.uid
+},{
+  deep:true
+})
 const clickLike = async () => {
+  if(!isLogged.value){
+    return message.info('请登录后再进行操作。')
+  }
     await store.getCommunityLike("thread", tid)
     message.success(store.communitySupport.info)
     refresh()
@@ -260,6 +271,9 @@ const isCollect = computed(() => {
 })
 // 收藏
 const clickCollect = async () => {
+  if(!isLogged.value){
+    return message.info('请登录后再进行操作。')
+  }
     if (store.communityPostDetail.is_collect == 0) {
         await store.getCommunityCollect(tid)
         message.success(store.communityCollect.info)

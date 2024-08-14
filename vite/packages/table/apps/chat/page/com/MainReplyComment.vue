@@ -135,7 +135,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from "vue";
+import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { MessageOutlined, LikeOutlined } from "@ant-design/icons-vue";
 import ReplyComment from "./ReplyComment.vue";
 import replyComments from "./ReplyComments.vue";
@@ -147,6 +147,7 @@ import { useCommunityStore } from "../../store/commun";
 import { Icon as replyIcon } from "@iconify/vue";
 const store = useCommunityStore();
 const useUserStore = appStore();
+const isLogged=ref(!!appStore().userInfo?.uid)
 // 接收评论列表
 const props = defineProps({
   commentList: {
@@ -172,13 +173,25 @@ const content = computed(() => {
 
 // 点赞
 const clickLike = async () => {
+  if(!isLogged.value){
+    return message.info('请登录后再进行操作。')
+  }
   await store.getCommunityLike("reply", props.commentList.user.uid);
   message.success(store.communitySupport.info);
 };
 // 点赞数
 const supportCount = ref(props.commentList.support_count);
+watch(()=> appStore().userInfo,()=>{
+  console.log('用户数据变化')
+  isLogged.value=!!appStore().userInfo?.uid
+},{
+  deep:true
+})
 // 回复评论框状态改变
 const replyStatus = () => {
+  if(!isLogged.value){
+    return message.info('请登录后再进行操作。')
+  }
   replyVisible.value = !replyVisible.value;
 };
 
