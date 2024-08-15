@@ -60,132 +60,137 @@ function deskMenus() {
   // } else {
   //   currentHide = this.hide;
   // }
-  return [
-    {
-      id: 1,
-      newIcon: "fluent:add-16-filled",
-      name: "添加图标",
-      fn: newAddIcon,
-    },
-    {
-      id: 2,
-      newIcon: "fluent:collections-add-24-regular",
-      name: "添加小组件",
-      fn: newAddCard,
-    },
-    {
-      id: 3,
-      newIcon: "fluent:apps-add-in-20-filled",
-      name: "添加更多",
-      children: [
-        {
-          id: 2,
-          newIcon: "fluent:app-folder-16-regular",
-          name: "添加图标分组",
-          fn: addFolder,
-        },
-        // {
-        //   id: 3,
-        //   newIcon: "mingcute:windows-line",
-        //   name: "导入系统桌面图标",
-        //   fn: this.arrange,
-        //   disabled: !window.$usePlat("client"),
-        // },
-      ],
-    },
-    // { id: 5, divider: true },
-    // {
-    //   id: 5.1,
-    //   newIcon: "fluent:glance-horizontal-16-regular",
-    //   name: "整理桌面",
-    //   disabled: !isFreeLayout.value,
-    //   fn: () => {
-    //     window.$ui.confirm(
-    //       "整理桌面",
-    //       `整理桌面会将当前自由布局卡片重新规整排列`,
-    //       {
-    //         ok: () => {
-    //           useCustomLayout({
-    //             mainList: desk.value.cards,
-    //             // test: false,
-    //             cb: (position) => {
-    //               this.$bus.emit("cutCanvas", position);
-    //             },
-    //           });
-    //         },
-    //         type: "warning",
-    //       }
-    //     );
-    //   },
-    // },
-    // {
-    //   id: 6,
-    //   newIcon: editing.value
-    //     ? "fluent:record-stop-16-regular"
-    //     : "fluent:window-new-16-regular",
-    //   name: editing.value ? "停止调整" : "调整桌面布局",
-    //   fn: toggleEditing,
-    // },
-    // {
-    //   id: 7,
-    //   newIcon: "fluent:resize-large-16-regular",
-    //   name: "复原桌面位置",
-    //   disabled: isFreeLayout.value ? false : true,
-    //   fn: this.freeLayoutScrollbarRedirect,
-    // },
-    // {
-    //   id: 9,
-    //   newIcon: "fluent:image-multiple-16-regular",
-    //   name: "更换壁纸",
-    //   fn: () => {
-    //     const { openApp } = useAppModal("galleryModalApp");
-    //     openApp();
-    //   },
-    // },
-    // {
-    //   id: 20,
-    //   newIcon: "fluent:more-horizontal-16-filled",
-    //   name: "更多",
-    //   lock: true,
-    //   children: [
-    //     {
-    //       id: 0,
-    //       newIcon: "fluent:settings-16-regular",
-    //       name: "系统设置",
-    //       fn: () => {
-    //         this.$bus.emit("openSystemSet");
-    //       },
-    //       // disabled: import.meta.env.DEV ? false : true,
-    //     },
-    //     {
-    //       id: 1,
-    //       newIcon: "fluent:settings-16-regular",
-    //       name: "桌面设置",
-    //       fn: this.showSetting,
-    //     },
-    //     {
-    //       id: 7,
-    //       newIcon: this.hide
-    //         ? "fluent:eye-16-regular"
-    //         : "fluent:eye-off-16-regular",
-    //       name: currentHide ? "显示小组件" : "隐藏小组件",
-    //       fn: () => {
-    //         // if (this.isFreeLayout) {
-    //         //   this.getFreeLayoutState.system.hide =
-    //         //     !this.getFreeLayoutState?.system?.hide;
-    //         // } else {
-    //         //   if (this.hide) {
-    //         //     this.showDesk();
-    //         //   } else {
-    //         //     this.hideDesk();
-    //         //   }
-    //         // }
-    //       },
-    //       disabled: false,
-    //     },
-    //   ],
-    // },
-  ];
+  if(canEdit.value){
+    return [
+      {
+        id: 1,
+        newIcon: "fluent:add-16-filled",
+        name: "添加图标",
+        fn: newAddIcon,
+      },
+      {
+        id: 2,
+        newIcon: "fluent:collections-add-24-regular",
+        name: "添加小组件",
+        fn: newAddCard,
+      },
+      {
+        id: 3,
+        newIcon: "fluent:apps-add-in-20-filled",
+        name: "添加更多",
+        children: [
+          {
+            id: 2,
+            newIcon: "fluent:app-folder-16-regular",
+            name: "添加图标分组",
+            fn: addFolder,
+          },
+          // {
+          //   id: 3,
+          //   newIcon: "mingcute:windows-line",
+          //   name: "导入系统桌面图标",
+          //   fn: this.arrange,
+          //   disabled: !window.$usePlat("client"),
+          // },
+        ],
+      },
+      // { id: 5, divider: true },
+      // {
+      //   id: 5.1,
+      //   newIcon: "fluent:glance-horizontal-16-regular",
+      //   name: "整理桌面",
+      //   disabled: !isFreeLayout.value,
+      //   fn: () => {
+      //     window.$ui.confirm(
+      //       "整理桌面",
+      //       `整理桌面会将当前自由布局卡片重新规整排列`,
+      //       {
+      //         ok: () => {
+      //           useCustomLayout({
+      //             mainList: desk.value.cards,
+      //             // test: false,
+      //             cb: (position) => {
+      //               this.$bus.emit("cutCanvas", position);
+      //             },
+      //           });
+      //         },
+      //         type: "warning",
+      //       }
+      //     );
+      //   },
+      // },
+      // {
+      //   id: 6,
+      //   newIcon: editing.value
+      //     ? "fluent:record-stop-16-regular"
+      //     : "fluent:window-new-16-regular",
+      //   name: editing.value ? "停止调整" : "调整桌面布局",
+      //   fn: toggleEditing,
+      // },
+      // {
+      //   id: 7,
+      //   newIcon: "fluent:resize-large-16-regular",
+      //   name: "复原桌面位置",
+      //   disabled: isFreeLayout.value ? false : true,
+      //   fn: this.freeLayoutScrollbarRedirect,
+      // },
+      // {
+      //   id: 9,
+      //   newIcon: "fluent:image-multiple-16-regular",
+      //   name: "更换壁纸",
+      //   fn: () => {
+      //     const { openApp } = useAppModal("galleryModalApp");
+      //     openApp();
+      //   },
+      // },
+      // {
+      //   id: 20,
+      //   newIcon: "fluent:more-horizontal-16-filled",
+      //   name: "更多",
+      //   lock: true,
+      //   children: [
+      //     {
+      //       id: 0,
+      //       newIcon: "fluent:settings-16-regular",
+      //       name: "系统设置",
+      //       fn: () => {
+      //         this.$bus.emit("openSystemSet");
+      //       },
+      //       // disabled: import.meta.env.DEV ? false : true,
+      //     },
+      //     {
+      //       id: 1,
+      //       newIcon: "fluent:settings-16-regular",
+      //       name: "桌面设置",
+      //       fn: this.showSetting,
+      //     },
+      //     {
+      //       id: 7,
+      //       newIcon: this.hide
+      //         ? "fluent:eye-16-regular"
+      //         : "fluent:eye-off-16-regular",
+      //       name: currentHide ? "显示小组件" : "隐藏小组件",
+      //       fn: () => {
+      //         // if (this.isFreeLayout) {
+      //         //   this.getFreeLayoutState.system.hide =
+      //         //     !this.getFreeLayoutState?.system?.hide;
+      //         // } else {
+      //         //   if (this.hide) {
+      //         //     this.showDesk();
+      //         //   } else {
+      //         //     this.hideDesk();
+      //         //   }
+      //         // }
+      //       },
+      //       disabled: false,
+      //     },
+      //   ],
+      // },
+    ];
+  }else{
+    return []
+  }
+
 }
 const editModalVisible = ref(false)
 const menus=ref([])
@@ -222,10 +227,7 @@ const  newAddIcon=()=> {
 //   deskRef.value.newAddIcon();
 // }
 const newAddCard=()=> {
-  addCardVisible.value=true
-}
-const hideAddCard=()=>{
-  addCardVisible.value=false
+  deskRef.value.newAddCard()
 }
 const  addFolder=()=> {
   registerFolder(desk.value);
@@ -673,39 +675,6 @@ const deskRef=ref()
 
     </div>
   </xt-modal>
-  <EditNewNavigation
-    v-if="editVisible"
-    @setQuick="editVisible = false"
-    @addIcon="addIcon"
-  ></EditNewNavigation>
-  <!-- 添加小组件 -->
-  <transition name="fade">
-    <div
-      class="home-blur"
-      style="
-        position: fixed;
-        top: 0;
-        right: 0;
-        left: 0;
-        bottom: 0;
-        z-index: 999;
-      "
-      v-if="addCardVisible"
-    >
-      <NewAddCard
-        v-if="addCardVisible"
-        :desk="desk"
-        @close="hideAddCard"
-        @addSuccess="hideAddCard"
-        @onBack="
-          () => {
-            this.addCardVisible = false;
-            console.log('返回');
-          }
-        "
-      ></NewAddCard>
-    </div>
-  </transition>
   <Interaction ref="intRef" @publishOk="publishOk"></Interaction>
   <!--  <Desk-->
   <!--    :muuriOptions="muuriOptions"-->

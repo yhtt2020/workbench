@@ -138,7 +138,6 @@ onMounted(()=>{
     height.value=String(props.h)
     corner.value=String(props.radius)
   }
-  console.log(height.value,width.value,props)
 })
 </script>
 
