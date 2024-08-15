@@ -164,7 +164,7 @@
                                         :class="{ 'xt-bg': !isCollect, 'xt-active-bg': isCollect }"
                                         style="width: 57px;height: 32px;border: none;cursor: pointer;">
                                         <div class="flex items-center justify-center">
-                                            <img src="../../../../../public/icons/collect.png" alt=""  class="w-[20px] h-[20px] mr-1">
+                                            <img src="../../../../../public/icons/collect.png" alt="" class="w-[20px] h-[20px] mr-1">
                                             {{ cardData.collect_count }}
                                         </div>
                                         </xt-button>
@@ -193,7 +193,7 @@ import { ref, computed, reactive, onMounted, watch } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import Comment from '../../../apps/chat/page/com/Comment.vue';
 import { useCommunityStore } from '../../../apps/chat/store/commun'
-import { appStore } from '../../../../table/store'
+import { appStore } from '../../../store'
 import { Icon } from '@iconify/vue';
 import browser from '../../../js/common/browser';
 import emojiReplace from '../../../js/chat/emoji'

@@ -30,7 +30,7 @@
     </header>
     <!-- 主体 -->
     <main class="mt-3">
-      <slot>主体默认内容</slot>
+      <slot></slot>
     </main>
     <!-- 尾部 -->
     <slot name="footer">

@@ -76,7 +76,7 @@
       >
       </PublishModal>
       <div v-if="showDetailModal">
-        <detailModal
+        <DetailModal
           v-if="toggleDetail"
           :cardData="cardData"
           :showDetailModal="showDetailModal"
@@ -110,8 +110,8 @@ import { mapWritableState, mapActions } from "pinia";
 import { useCommunityStore } from "../../../apps/chat/store/commun";
 import { yuanCommunityStore } from "../../../store/yuanCommunity";
 import Unusual from "../Unusual.vue";
-import detailModal from "./DetailModal.vue";
-import MinDetailModal from "./MinDetailModal.vue";
+import DetailModal from "../../sns/int/DetailModal.vue";
+import MinDetailModal from "../../sns/int/MinDetailModal.vue";
 import CommunitySetting from "./CommunitySetting.vue";
 import PublishModal from "./Detail/PublishModal.vue";
 import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
@@ -123,7 +123,7 @@ export default {
     YuanIcon,
     communItem,
     RadioTab,
-    detailModal,
+    DetailModal,
     MinDetailModal,
     Unusual,
     CommunitySetting,

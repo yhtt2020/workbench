@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
-import detailModal from "../widgets/communityContent/detailModal.vue";
-import MinDetailModal from "../widgets/communityContent/MinDetailModal.vue";
+import detailModal from "./int/DetailModal.vue";
+import MinDetailModal from "./int/MinDetailModal.vue";
 import PublishModal from "../widgets/communityContent/Detail/PublishModal.vue";
 import {computed, ref} from "vue";
 import {yuanCommunityStore} from "../../store/yuanCommunity";
