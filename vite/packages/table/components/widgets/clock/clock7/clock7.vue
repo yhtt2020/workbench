@@ -10,11 +10,11 @@
           min
         }}</span>
       </div>
-      <Weather v-if="size[0] > 2" />
+      <Weather v-if="size[0] > 2 && customData.showWeather" />
     </div>
     <Calendar
       class="ml-3"
-      v-if="size[0] >= 4 && size[1] >= 2"
+      v-if="size[0] >= 4 && size[1] >= 2  && customData.showCalendar"
       style="
         color: var(--primary-text) !important;
         zoom: 0.8;
@@ -63,6 +63,13 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  customData:{
+    type:Object,
+    default:{
+      showWeather:true,
+      showCalendar:true
+    }
+  }
 });
 
 // 组件方法

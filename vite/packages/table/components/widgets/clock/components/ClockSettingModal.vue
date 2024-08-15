@@ -40,6 +40,32 @@
               <a-slider v-model:value="customData.currentZoom" :max="maxScale" :min="50" />
             </div>
           </template>
+          <template v-if="customData.clockId==='clock7'">
+            <div class="my-4" >
+              <div class="xt-bb mx-auto"></div>
+            </div>
+            <div class="flex flex-col">
+              <div class="flex justify-between mb-2.5">
+                <span class="xt-font xt-text font-16">显示日历</span>
+                <a-switch v-model:checked="customData.showCalendar"/>
+              </div>
+              <span class="xt-font xt-text-2 font-14">
+            </span>
+            </div>
+            <div class="my-4" >
+              <div class="xt-bb mx-auto"></div>
+            </div>
+            <div class="flex flex-col">
+              <div class="flex justify-between mb-2.5">
+                <span class="xt-font xt-text font-16">显示天气</span>
+                <a-switch v-model:checked="customData.showWeather"/>
+              </div>
+              <span class="xt-font xt-text-2 font-14">
+              需要先<a @click="goWeather">设置</a>天气，否则不显示
+            </span>
+            </div>
+          </template>
+
            <slot name="modelScale" v-else></slot>
         </div>
 
@@ -155,6 +181,9 @@ export default{
   },
 
   methods:{
+    goWeather(){
+      this.$router.push({name:'weather'})
+    },
     openClockModal(){
       this.clockVisible = true;
     },

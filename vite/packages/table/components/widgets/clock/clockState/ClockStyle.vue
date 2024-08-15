@@ -1,5 +1,8 @@
 <template>
   <div class="flex flex-col h-full">
+    <div class="clock-box xt-bg-t-2 no-drag pointer" @click="updateClockStyle('clock7')">
+      <clock7></clock7>
+    </div>
     <div class="clock-box xt-bg-t-2 mb-3 pointer" @click="updateClockStyle('clock1')">
       <clock1 :showBackground="false"></clock1>
     </div>
@@ -23,9 +26,7 @@
     <div class="clock-box xt-bg-t-2 no-drag pointer" @click="updateClockStyle('clock6')">
       <clock6 ></clock6>
     </div>
-    <div class="clock-box xt-bg-t-2 no-drag pointer" @click="updateClockStyle('clock7')">
-      <clock7></clock7>
-    </div>
+
   </div>
 
 <!-- <div class="text-base" style="margin: 12px 0">时钟样式</div>
