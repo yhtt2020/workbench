@@ -438,7 +438,7 @@ const addMoreIcon = (bar: String, tip: String) => {
     multipleList.value.forEach((item) => {
       navMap.value[bar].unshift(item);
     });
-    message.success("添加成功");
+    message.success("成功添加图标至桌面末尾");
     isMultiple.value = false;
     multipleList.value = [];
     // 兼容收藏夹
@@ -619,7 +619,7 @@ const addIcon = (item: object | undefined) => {
       }
     }
 
-    message.success("添加成功");
+    message.success("成功添加图标至桌面末尾");
   }
 
   setTimeout(() => {

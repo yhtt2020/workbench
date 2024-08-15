@@ -195,7 +195,7 @@ export default{
         this.updateClock(localCache.get('clockName'));
        }
       },
-      immediate:true,
+      immediate:false,
     },
     "customData.currentZoom":{
       handler(newV){

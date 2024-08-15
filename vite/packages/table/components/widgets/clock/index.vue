@@ -134,62 +134,62 @@ export default {
       //  widthHeightObj: {}
     };
   },
-  mounted() {
-    // 当底部导航栏为windows模式时，点击导航栏中的时间，进入时间全屏
-    this.$bus.on("openClockFullScreen", (data) => {
-      this.isClockFullScreen = data;
-    });
-    if (typeof this.customData.enableSecond === "undefined") {
-      this.customData.enableSecond = false;
-    }
-    if (typeof this.customData.backgroundFrame === "undefined") {
-      this.customData.backgroundFrame = true;
-    }
-    if (this.customData.customZoom === undefined) {
-      this.updateCustomData(
-        this.customIndex,
-        {
-          backgroundFrame: true,
-          clockId: "clock4",
-          imgUrl: DEFAULT.WALLPAPER,
-          blurs: 3,
-          bgZoom: 100,
-          zoom: 1.5,
-          customSize: "2x2",
-          font: "font-family: '优设标题黑' !important;",
-          fontColor: "#FFFFFF",
-          enableSecond: false,
-          currentStatus: "font",
-          currentZoom: 100,
-          name: dateTimeStamp(Date.now()),
-          _updateFlag: "24531",
-        },
-        this.desk
-      );
-    }
-    // 在不切换页面的情况下,通过定时器来实现自动更新时钟日期标题
-    this.clockTime = setInterval(() => {
-      this.clockDay = this.dateTimeStamp(Date.now());
-    }, 12 * 60 * 60 * 1000);
-
-    if (this.options.disableEdit) {
-      this.menuList = [];
-    } else {
-      this.menuList = [
-        {
-          icon: "shezhi1",
-          title: "设置",
-          fn: () => {
-            this.$refs.clockSettingRef.openClockModal();
-          },
-        },
-      ];
-    }
-  },
+  // mounted() {
+  //   // 当底部导航栏为windows模式时，点击导航栏中的时间，进入时间全屏
+  //   this.$bus.on("openClockFullScreen", (data) => {
+  //     this.isClockFullScreen = data;
+  //   });
+  //   if (typeof this.customData.enableSecond === "undefined") {
+  //     this.customData.enableSecond = false;
+  //   }
+  //   if (typeof this.customData.backgroundFrame === "undefined") {
+  //     this.customData.backgroundFrame = true;
+  //   }
+  //   if (this.customData.customZoom === undefined) {
+  //     this.updateCustomData(
+  //       this.customIndex,
+  //       {
+  //         backgroundFrame: true,
+  //         clockId: "clock4",
+  //         imgUrl: DEFAULT.WALLPAPER,
+  //         blurs: 3,
+  //         bgZoom: 100,
+  //         zoom: 1.5,
+  //         customSize: "2x2",
+  //         font: "font-family: '优设标题黑' !important;",
+  //         fontColor: "#FFFFFF",
+  //         enableSecond: false,
+  //         currentStatus: "font",
+  //         currentZoom: 100,
+  //         name: dateTimeStamp(Date.now()),
+  //         _updateFlag: "24531",
+  //       },
+  //       this.desk
+  //     );
+  //   }
+  //   // 在不切换页面的情况下,通过定时器来实现自动更新时钟日期标题
+  //   this.clockTime = setInterval(() => {
+  //     this.clockDay = this.dateTimeStamp(Date.now());
+  //   }, 12 * 60 * 60 * 1000);
+  //
+  //   if (this.options.disableEdit) {
+  //     this.menuList = [];
+  //   } else {
+  //     this.menuList = [
+  //       {
+  //         icon: "shezhi1",
+  //         title: "设置",
+  //         fn: () => {
+  //           this.$refs.clockSettingRef.openClockModal();
+  //         },
+  //       },
+  //     ];
+  //   }
+  // },
   computed: {
     cardZoom() {
       // 获取当前时钟ID
-      let clockID = this.customData.clockId || 'clock1';
+      let clockID = this.customData.clockId || 'clock7';
       // 时钟缩放列表
       let zoomList = {
         // 下标0为默认，下标1为高度为1时无边框时，下边2为高度为1非无边框时
@@ -314,7 +314,7 @@ export default {
         defaultData: {
           noBorder: false,
           backgroundFrame: true,
-          clockId: "clock4",
+          clockId: "clock7",
           imgUrl: DEFAULT.WALLPAPER,
           blurs: 3,
           bgZoom: 100,
@@ -385,6 +385,7 @@ export default {
   },
 
   mounted() {
+    console.log({...this.customData},'载入的时候customData')
     // console.log(this.desk,'clock')
     // 当底部导航栏为windows模式时，点击导航栏中的时间，进入时间全屏
     this.$bus.on("openClockFullScreen", (data) => {
@@ -401,7 +402,7 @@ export default {
         this.customIndex,
         {
           backgroundFrame: true,
-          clockId: "clock4",
+          clockId: "clock7",
           imgUrl: DEFAULT.WALLPAPER,
           blurs: 3,
           bgZoom: 100,
@@ -458,10 +459,6 @@ export default {
     dateTimeStamp,
     deleteCard() {
       this.$emit("delete");
-    },
-    // 更换时钟组件
-    updateClockStyle(e) {
-      this.updateCustomData(this.customIndex, { clockId: e }, this.desk);
     },
     // 时组件全屏
     fullScreen() {

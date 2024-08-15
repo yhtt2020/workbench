@@ -300,13 +300,7 @@ onBeforeMount(() => {
     // console.time("组件数据更新");
     props.customData = _.defaults(currentData, defaultData);
     props.customData._updateFlag = defaultData._updateFlag;
-    // console.log(
-    //   "组件数据更新 ID :>> ",
-    //   props.customIndex,
-    //   " name :>> ",
-    //   props.header.title
-    // );
-    // console.timeEnd("组件数据更新");
+
   }
 });
 provide("_data", customData);
