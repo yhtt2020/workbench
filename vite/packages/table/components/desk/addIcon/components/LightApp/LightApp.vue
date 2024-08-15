@@ -12,8 +12,10 @@ import { mergeData } from '../../../../../ui/hooks/useDataConversion';
 import { useReplace } from '../../hook/useReplace';
 import { useFilterList } from '../../hook/useFilterList';
 
-const appModel = window.$models.appModel
-
+let appModel
+if(usePlat('client')){
+  appModel = window.$models.appModel
+}
 const lightApp = ref<string[]>([])
 
 const emit = defineEmits(['addIcon'])

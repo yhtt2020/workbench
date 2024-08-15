@@ -3,7 +3,7 @@ import { storeToRefs } from "pinia";
 import { useFreeLayoutStore } from "../../components/desk/freeLayout/store";
 import { cardStore } from "../../store/card";
 
-export const useAddCard = (name, customData = {}, id: any = Date.now()) => {
+export const useAddCard = (name, customData = {}, id: any = Date.now(),desk?) => {
   const freeLayoutStore = useFreeLayoutStore();
   const { getCurrentDesk }: any = storeToRefs(freeLayoutStore);
   const card: any = cardStore();
@@ -13,7 +13,7 @@ export const useAddCard = (name, customData = {}, id: any = Date.now()) => {
       id,
       customData,
     },
-    getCurrentDesk.value
+    desk?desk:getCurrentDesk.value
   );
   return id;
 };

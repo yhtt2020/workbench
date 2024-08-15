@@ -554,6 +554,9 @@ const leftMenu = ref<LeftMenuType[]>([
     id: 6,
   },
 ]);
+if(!$usePlat('client')){
+  leftMenu.value.splice(0,1)
+}
 
 // 选择左侧导航栏
 const chooseItem = (item: any, i?: any) => {
@@ -586,7 +589,7 @@ const addIcon = (item: object | undefined) => {
       // 在导航栏添加图标，完成任务
       completeTask("m0105");
       navMap.value[tag].unshift(item);
-      message.success("添加成功");
+      message.success("成功添加图标至桌面末尾");
     }
   } else {
     // 图标禁止被添加到桌面

@@ -10,6 +10,16 @@ import {apiPost} from "../../js/axios/request";
 import {Button, message, notification} from "ant-design-vue";
 import Interaction from "../../components/sns/Interaction.vue";
 import shareHelper from "../../js/lib/shareHelper";
+import ExtraMenu from "../../components/windowPanel/components/ExtraMenu.vue";
+import {useAddCard, useAppModal} from "../../hooks";
+import {useCustomLayout} from "../../components/desk/freeLayout/useCustomLayout";
+import {headerData, mainData} from "../../components/desk/freeLayout/config";
+import EditNewNavigation from "../../components/desk/addIcon/EditNewNavigation.vue";
+import {registerFolder} from "../../apps/folder/src/hooks/register";
+const isFreeLayout=ref(false)//todo 完成自由桌面
+
+const addCardVisible=ref(false)
+const editVisible=ref(false)
 
 const props = defineProps({
   shareCode: {
@@ -41,8 +51,144 @@ onMounted(() => {
 
   canEdit.value = userInfo.value.uid === props.sharedData.uid
 
+  menus.value=deskMenus()
 })
+function deskMenus() {
+  let currentHide = false;
+  // if (this.isFreeLayout) {
+  //   currentHide = this.getFreeLayoutState?.system?.hide;
+  // } else {
+  //   currentHide = this.hide;
+  // }
+  return [
+    {
+      id: 1,
+      newIcon: "fluent:add-16-filled",
+      name: "添加图标",
+      fn: newAddIcon,
+    },
+    {
+      id: 2,
+      newIcon: "fluent:collections-add-24-regular",
+      name: "添加小组件",
+      fn: newAddCard,
+    },
+    {
+      id: 3,
+      newIcon: "fluent:apps-add-in-20-filled",
+      name: "添加更多",
+      children: [
+        {
+          id: 2,
+          newIcon: "fluent:app-folder-16-regular",
+          name: "添加图标分组",
+          fn: addFolder,
+        },
+        // {
+        //   id: 3,
+        //   newIcon: "mingcute:windows-line",
+        //   name: "导入系统桌面图标",
+        //   fn: this.arrange,
+        //   disabled: !window.$usePlat("client"),
+        // },
+      ],
+    },
+    // { id: 5, divider: true },
+    // {
+    //   id: 5.1,
+    //   newIcon: "fluent:glance-horizontal-16-regular",
+    //   name: "整理桌面",
+    //   disabled: !isFreeLayout.value,
+    //   fn: () => {
+    //     window.$ui.confirm(
+    //       "整理桌面",
+    //       `整理桌面会将当前自由布局卡片重新规整排列`,
+    //       {
+    //         ok: () => {
+    //           useCustomLayout({
+    //             mainList: desk.value.cards,
+    //             // test: false,
+    //             cb: (position) => {
+    //               this.$bus.emit("cutCanvas", position);
+    //             },
+    //           });
+    //         },
+    //         type: "warning",
+    //       }
+    //     );
+    //   },
+    // },
+    // {
+    //   id: 6,
+    //   newIcon: editing.value
+    //     ? "fluent:record-stop-16-regular"
+    //     : "fluent:window-new-16-regular",
+    //   name: editing.value ? "停止调整" : "调整桌面布局",
+    //   fn: toggleEditing,
+    // },
+    // {
+    //   id: 7,
+    //   newIcon: "fluent:resize-large-16-regular",
+    //   name: "复原桌面位置",
+    //   disabled: isFreeLayout.value ? false : true,
+    //   fn: this.freeLayoutScrollbarRedirect,
+    // },
+    // {
+    //   id: 9,
+    //   newIcon: "fluent:image-multiple-16-regular",
+    //   name: "更换壁纸",
+    //   fn: () => {
+    //     const { openApp } = useAppModal("galleryModalApp");
+    //     openApp();
+    //   },
+    // },
+    // {
+    //   id: 20,
+    //   newIcon: "fluent:more-horizontal-16-filled",
+    //   name: "更多",
+    //   lock: true,
+    //   children: [
+    //     {
+    //       id: 0,
+    //       newIcon: "fluent:settings-16-regular",
+    //       name: "系统设置",
+    //       fn: () => {
+    //         this.$bus.emit("openSystemSet");
+    //       },
+    //       // disabled: import.meta.env.DEV ? false : true,
+    //     },
+    //     {
+    //       id: 1,
+    //       newIcon: "fluent:settings-16-regular",
+    //       name: "桌面设置",
+    //       fn: this.showSetting,
+    //     },
+    //     {
+    //       id: 7,
+    //       newIcon: this.hide
+    //         ? "fluent:eye-16-regular"
+    //         : "fluent:eye-off-16-regular",
+    //       name: currentHide ? "显示小组件" : "隐藏小组件",
+    //       fn: () => {
+    //         // if (this.isFreeLayout) {
+    //         //   this.getFreeLayoutState.system.hide =
+    //         //     !this.getFreeLayoutState?.system?.hide;
+    //         // } else {
+    //         //   if (this.hide) {
+    //         //     this.showDesk();
+    //         //   } else {
+    //         //     this.hideDesk();
+    //         //   }
+    //         // }
+    //       },
+    //       disabled: false,
+    //     },
+    //   ],
+    // },
+  ];
+}
 const editModalVisible = ref(false)
+const menus=ref([])
 
 
 const deskSettings = computed(() => {
@@ -66,6 +212,32 @@ const setShowTip = () => {
     hideTip.value = false
   } else {
     setHideTip()
+  }
+}
+const  newAddIcon=()=> {
+  deskRef.value.newAddIcon()
+}
+// 添加图标
+// const addIcon=()=> {
+//   deskRef.value.newAddIcon();
+// }
+const newAddCard=()=> {
+  addCardVisible.value=true
+}
+const hideAddCard=()=>{
+  addCardVisible.value=false
+}
+const  addFolder=()=> {
+  registerFolder(desk.value);
+}
+
+const toggleEditing=()=>{
+  if (this.editing) {
+    if (this.editing) {
+      message.info("已关闭拖拽调整");
+    } else {
+      message.info("您可以直接拖拽图标调整位置");
+    }
   }
 }
 const saveDesk = () => {
@@ -325,16 +497,25 @@ const form = ref({
 })
 onUnmounted(()=>{
     document.title='天天工作台'
+
 })
+
+const deskRef=ref()
 
 </script>
 
 <template>
   <div class="p-4 gap-4 flex flex-col " style="height: 100vh" v-if="Object.keys(desk).length>0">
     <div style="flex:1;height:0">
-      <Desk :freeLayout="false" v-if="Object.keys(desk).length>0" :key="shareCode" :settings="deskSettings"
+      <xt-mix-menu ref="mixMenu" :menus="menus" class="w-full h-full">
+        <!-- 导航栏 -->
+        <template #extraMenu>
+          <ExtraMenu/>
+        </template>
+      <Desk ref="deskRef" :global-settings="{cardZoom:100}" :freeLayout="false" v-if="Object.keys(desk).length>0" :key="shareCode" v-model:settings="deskSettings"
             :current-desk="desk" :editing="editing" @changeEditing="changeEdit">
       </Desk>
+      </xt-mix-menu>
     </div>
     <div style="height: 54px;overflow: visible">
       <div
@@ -492,6 +673,39 @@ onUnmounted(()=>{
 
     </div>
   </xt-modal>
+  <EditNewNavigation
+    v-if="editVisible"
+    @setQuick="editVisible = false"
+    @addIcon="addIcon"
+  ></EditNewNavigation>
+  <!-- 添加小组件 -->
+  <transition name="fade">
+    <div
+      class="home-blur"
+      style="
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        z-index: 999;
+      "
+      v-if="addCardVisible"
+    >
+      <NewAddCard
+        v-if="addCardVisible"
+        :desk="desk"
+        @close="hideAddCard"
+        @addSuccess="hideAddCard"
+        @onBack="
+          () => {
+            this.addCardVisible = false;
+            console.log('返回');
+          }
+        "
+      ></NewAddCard>
+    </div>
+  </transition>
   <Interaction ref="intRef" @publishOk="publishOk"></Interaction>
   <!--  <Desk-->
   <!--    :muuriOptions="muuriOptions"-->
@@ -501,6 +715,7 @@ onUnmounted(()=>{
   <!--    :notTrigger="true"-->
   <!--    :editing="false"-->
   <!--  ></Desk>-->
+
 </template>
 
 <style scoped lang="scss">

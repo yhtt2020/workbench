@@ -200,7 +200,6 @@
         @onBack="
           () => {
             this.addCardVisible = false;
-            console.log('返回');
           }
         "
       ></NewAddCard>
@@ -776,7 +775,7 @@ export default {
       this.useAddCard("myIcons", {
         iconList: [{ ...file }],
         newIcon: true,
-      });
+      },undefined,this.currentDesk);
       // this.editVisible = false;
     },
     /**

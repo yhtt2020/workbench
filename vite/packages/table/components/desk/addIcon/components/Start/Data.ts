@@ -2,11 +2,23 @@ export const menu = {
   title: "选择图标类型",
   info: "你可以从以下图标资源中进行选择",
   list: [
-    {
-      newIcon: "mingcute:windows-line",
-      name: "Windows桌面图标",
-      component:"Windows"
-    },
+    ...($usePlat('client')?[
+      {
+        newIcon: "mingcute:windows-line",
+        name: "Windows桌面图标",
+        component:"Windows"
+      },
+      {
+        newIcon: "fluent:window-multiple-16-regular",
+        name: "轻应用",
+        component:"LightApp"
+      },
+      {
+        newIcon: "fluent:star-16-regular",
+        name: "浏览器收藏夹",
+        component:"Browser"
+      },
+    ]:[]),
     {
       newIcon: "fluent:settings-16-regular",
       name: "系统应用和功能",
@@ -17,20 +29,11 @@ export const menu = {
       name: "网址导航",
       component:"WebSite"
     },
-    {
-      newIcon: "fluent:star-16-regular",
-      name: "浏览器收藏夹",
-      component:"Browser"
-    },
+
     {
       newIcon: "fluent:grid-16-regular",
       name: "酷应用",
       component:"CoolApp"
-    },
-    {
-      newIcon: "fluent:window-multiple-16-regular",
-      name: "轻应用",
-      component:"LightApp"
     },
     {
       name: "自定义图标",
