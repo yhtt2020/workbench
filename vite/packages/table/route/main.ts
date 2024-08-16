@@ -99,7 +99,6 @@ import ShortcutKeyRoute from "../apps/shortcutKey/route";
 import BarrageRoute from "../apps/barrage/route";
 import Power from "../page/Power.vue";
 import Remote from "../apps/console/pages/Remote.vue";
-import SharedDesk from "../page/SharedDesk.vue";
 
 // 壁纸弹窗应用
 import GalleryIndex from "../apps/galleryModal/page/GalleryIndex.vue"
@@ -111,7 +110,7 @@ export default [
 
     // component: Main,
     // 注册应用弹窗路由
-    components: {
+    components:{
       default: Main,
       ai: AIAssistant,
       note: Note,
@@ -119,6 +118,7 @@ export default [
       income: Income,
       galleryModalApp:GalleryIndex
     },
+
     props: true,
     children: [
       {

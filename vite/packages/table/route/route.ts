@@ -15,13 +15,27 @@ import NextProcess from '../page/chat/page/process/NextProcess.vue';
 import Shared from "../page/Shared.vue";
 import Home from '../page/Home.vue'
 import {usePlat} from "../permission/usePlat";
+import AIAssistant from "../page/AIAssistant/index.vue";
+import Note from "../apps/note/index.vue";
+import Clipboard from "../apps/clipboard/page/Clipboard.vue";
+import Income from "../apps/income/index.vue";
+import GalleryIndex from "../apps/galleryModal/page/GalleryIndex.vue";
 let routes = [
   ...main,
   //...index,
+
   {
     path:'/s/:code/:password?',
     name:'Shared',
-    component: Shared,
+    props: true,
+    components:{
+      default: Shared,
+      ai: AIAssistant,
+      note: Note,
+      clipboard: Clipboard,
+      income: Income,
+      galleryModalApp:GalleryIndex
+    },
   },
   {
     path: '/lock',
