@@ -504,11 +504,16 @@ export default {
           // 非web端打开缩放提示弹窗
           this.visibleScale = true;
         } else {
-          console.log(_.cloneDeep(DESKS));
-          console.log(_.cloneDeep(this.desks), "修改前的desks");
+          //非客户端的初始化流程
           let desks = _.cloneDeep(DESKS);
+          if(this.desks.length>1){
+            console.log('走到了初始化length>1流程')
+            this.desks = [...desks,this.desks[0]];
+          }else{
+            console.log('走到了初始化基础流程')
+            this.desks = desks;
+          }
 
-          this.desks = desks;
           // console.log('查看desk',this.desks[0]);
           const initDesk = this.desks[0];
           //this.currentDesk = this.desks[0];
