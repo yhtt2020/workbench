@@ -6,7 +6,7 @@ import { usePlatLimit, usePlat } from "../table/ui/hooks/usePlat";
 import { useUserPermit } from "../table/permission/user/useUserPermit";
 const router = createRouter({
   //在开发调试模式下，需要使用webHash模式，否则进去空白，打包换回webHistory
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes,
 });
 router.beforeEach(async (to, from, next) => {
@@ -16,18 +16,7 @@ router.beforeEach(async (to, from, next) => {
       window._hmt.push(['_trackPageview', '/#' + to.fullPath])
     }
   }
-  console.log('to.name :>> ', to.name);
-  console.log("to, from :>> ", to, from);
-  // if (to.name === "splash" && usePlat("web")) {
-  //   next({
-  //     name: "home",
-  //   });
-  // }
-  // 用户信息判断 优先级1
-  // console.time("Run Time");
   await useUserPermit();
-  // console.timeEnd("Run Time");
-
   // 用户环境判断 优先级2
   if (
     usePlatLimit("web", to.name, {
