@@ -97,7 +97,7 @@
                   </video>
                 </div>
                 <!-- 正文元素 -->
-                <div class="mt-4 mb-2">
+                <div class="mt-4 mb-2 article-body">
                   <div>
                     <div class="title" style="color: var(--primary-text);font-size: 16px; "
                          v-if="threadData.title" :innerHTML="title"></div>
@@ -316,7 +316,13 @@ const fullScreen = () => {
   isFullScreen.value = !isFullScreen.value
 }
 </script>
+<style>
+.article-body img{
+  max-width: 100% !important;
+}
+</style>
 <style lang='scss' scoped>
+
 .card {
   display: flex;
   // 占满整个父元素
