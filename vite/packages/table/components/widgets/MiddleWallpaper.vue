@@ -2,7 +2,7 @@
   <a-spin tip="加载中..." :spinning="imgSpin" size="large">
     <xt-container
       :header="header"
-      v-model:customSize="wallPaperSize"
+      v-model:customSize="customSize"
       :options="options"
       :customIndex="customIndex"
       :sizeList="sizeList"
@@ -68,10 +68,7 @@
             <template v-else>
               <div
                 v-for="(img, index) in [getCustomDataPaper]"
-                :style="{
-                  width: `${imgWH.width}px`,
-                  height: `${imgWH.height}px`,
-                }"
+                style="width: calc(100% + 14px);height:calc(100% + 12px)"
                 class="overflow-hidden rounded-lg"
               >
                 <xt-preview-img
@@ -205,6 +202,7 @@
       </div>
     </xt-container>
   </a-spin>
+  <QueryWallpaperSettingMethod ref="queryRef"></QueryWallpaperSettingMethod>
 
   <!-- <teleport to="body">
     <WallpaperWidgetModal />
@@ -238,6 +236,7 @@ import { usePlat } from "../../ui/hooks/usePlat";
 import { communityNavStore } from "../bottomPanel/store/communityNavStore";
 import { useAppModal } from "../../apps/appModal/src/hook/useAppModal";
 import { pickPaperStore } from "../../page/gallery/store/PickPaperStore";
+import QueryWallpaperSettingMethod from '../../apps/galleryModal/QueryWallpaperSettingMethod.vue'
 
 let fs;
 let path;
@@ -249,7 +248,7 @@ if (usePlat("client")) {
 export default {
   name: "MiddleWallpaper",
 
-  components: { Widget, newIcon },
+  components: { QueryWallpaperSettingMethod, Widget, newIcon },
 
   props: {
     desk: {
@@ -272,7 +271,7 @@ export default {
   data() {
     return {
       // 组件配置
-
+      customSize:'',
       // 壁纸数据
       imgList: [],
       imgIndex: 0,
@@ -458,6 +457,7 @@ export default {
 
     // 计算图片的宽高
     imgWH() {
+      console.log('重新计算壁纸尺寸',this.customData,this.customData.customSize )
       if (this.customData && this.customData.customSize !== undefined) {
         let arr = this.customData.customSize.split("x");
         const result = {
@@ -492,6 +492,7 @@ export default {
   },
 
   mounted() {
+    this.customSize=this.customData?.customSize
     this.$nextTick(() => {
       if (!this.customData) return;
       if (this.customData.value !== undefined) {
@@ -653,11 +654,13 @@ export default {
 
     // 设置工作台壁纸
     setDeskPaper(paper) {
-      message.info("正在设置桌面壁纸");
-      this.setBackgroundImage(paper);
-      setTimeout(() => {
-        message.success("桌面壁纸设置完成");
-      }, 800);
+      this.$refs.queryRef.show(paper.src)
+      // message.info("正在设置桌面壁纸");
+      // this.setBackgroundImage(paper);
+      // console.log(paper)
+      // setTimeout(() => {
+      //   message.success("桌面壁纸设置完成");
+      // }, 800);
     },
 
     // 下载
@@ -764,8 +767,13 @@ export default {
   },
   watch: {
     customSize(newVal, oldVal) {
+      console.log('变动了')
       this.customData.customSize = newVal;
+
     },
+    'customData.customSize':(newVal,oldVal)=>{
+      console.log('变动了')
+    }
   },
 };
 </script>

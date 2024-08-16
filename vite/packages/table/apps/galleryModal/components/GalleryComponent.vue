@@ -31,37 +31,10 @@
     <template v-else-if="pageStatus === 's'">
       <Setting :isModal="true" />
     </template>
+    <QueryWallpaperSettingMethod ref="queryRef"></QueryWallpaperSettingMethod>
   </div>
-  <xt-confirm
-    @close="open = false"
-    v-if="open"
-    :maskIndex="999999"
-    :mask="true"
-    ref="confirm"
-    title="选择当前壁纸所需要设置的桌面"
-  >
-    <template #footer>
-      <xt-button :w="120" h="40" @click="onConfirmClick">
-        <span class="xt-text-2">取消</span>
-      </xt-button>
-      <xt-button
-        :w="120"
-        h="40"
-        class="ml-3"
-        type="theme"
-        @click="onConfirmClick('common')"
-        >通用桌面
-      </xt-button>
-      <xt-button
-        :w="120"
-        h="40"
-        class="ml-3"
-        type="theme"
-        @click="onConfirmClick('independent')"
-        >当前桌面
-      </xt-button>
-    </template>
-  </xt-confirm>
+
+
 </template>
 
 <script setup>
@@ -71,7 +44,6 @@ import { appStore } from "../../../store";
 // setBackgroundImage
 // ...mapActions(appStore, ["setBackgroundImage"]),
 //
-const { proxy } = getCurrentInstance();
 import My from "../../../page/gallery/My.vue";
 import SiftPaper from "../../../page/gallery/SiftPaper.vue";
 import Picking from "../../../page/gallery/Picking.vue";
@@ -79,6 +51,8 @@ import Picking from "../../../page/gallery/Picking.vue";
 import Bing from "../../../page/gallery/Bing.vue";
 import Lively from "../../../page/gallery/Lively.vue";
 import Setting from "../../../page/gallery/Setting.vue";
+import QueryWallpaperSettingMethod from '../QueryWallpaperSettingMethod.vue'
+const { proxy } = getCurrentInstance();
 // impor
 const confirm = ref();
 
@@ -96,17 +70,10 @@ const close = () => {
   currentImg.value = null;
   open.value = false;
 };
-const onConfirmClick = (type) => {
-  if (type === "common") {
-    updateCommonBg(currentImg.value);
-  } else if (type === "independent") {
-    // updateIndependentBg(currentImg.value);
-    proxy.$bus.emit("setIndependentBg", currentImg.value.path);
-  }
-  close();
-};
+
 const open = ref(false);
 const currentImg = ref();
+const queryRef=ref()
 // 更新壁纸
 const updateBg = (img) => {
   // 有独立参数 说明为独立壁纸
@@ -115,8 +82,8 @@ const updateBg = (img) => {
     return;
   }
   // 无壁纸
-  open.value = true;
-  currentImg.value = img;
+
+  queryRef.value.show(img.src)
   return;
 };
 const updateIndependentBg = (img) => {
@@ -126,21 +93,7 @@ const updateIndependentBg = (img) => {
     proxy.$bus.emit("independentBg", img.path);
   }
 };
-const updateCommonBg = (img) => {
-  if (img !== null) {
-    message.info("正在为您设置背景");
-  }
-  // proxy.$bus.emit("setIndependentBg",false);
-  if (img.srcProtocol) {
-    appStore().setBackgroundImage({ path: "", runpath: `file://${img.src}` });
-  } else {
-    if (!img.path) {
-      img.path = img.src;
-    } else {
-      appStore().setBackgroundImage(img);
-    }
-  }
-};
+
 
 const { pageStatus } = toRefs(props);
 </script>
