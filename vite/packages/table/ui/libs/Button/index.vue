@@ -11,22 +11,22 @@
     }"
   >
     <slot name="prefix" v-if="iconPosition == 'prefix'">
-      <xt-new-icon v-if="icon" :icon="icon" :size="iconSize" />
-      <xt-ify-icon v-if="ifyIcon" :icon="ifyIcon" :size="iconSize" />
+      <xt-new-icon v-if="icon" :icon="icon" :size="iconSize"/>
+      <xt-ify-icon v-if="ifyIcon" :icon="ifyIcon" :size="iconSize"/>
     </slot>
     <span>
       <slot></slot>
     </span>
     <slot name="postfix" v-if="iconPosition == 'postfix'">
-      <xt-new-icon v-if="icon" :icon="icon" :size="iconSize" />
+      <xt-new-icon v-if="icon" :icon="icon" :size="iconSize"/>
     </slot>
   </button>
 </template>
 
 <script setup lang="ts">
 import {toRefs, computed, onMounted, ref} from "vue";
-import { useThrottleFn } from "@vueuse/core";
-import { message } from "ant-design-vue";
+import {useThrottleFn} from "@vueuse/core";
+import {message} from "ant-design-vue";
 
 interface ButtonProps {
   // 节流时间
@@ -36,7 +36,7 @@ interface ButtonProps {
   // 高度
   h?: number | string;
   //快速定义常用尺寸
-  size?:'sm'|'md'|'lg',
+  size?: 'sm' | 'md' | 'lg',
   // 圆角
   radius?: number | string;
   /**
@@ -59,6 +59,7 @@ interface ButtonProps {
   copy?: string;
   ifyIcon?: string;
 }
+
 const props = withDefaults(defineProps<ButtonProps>(), {
   throttleTime: 500,
   w: 120,
@@ -69,7 +70,7 @@ const props = withDefaults(defineProps<ButtonProps>(), {
   iconSize: 24,
   copy: "",
 });
-const { throttleTime, type, disabled, block, plain, copy } = toRefs(props);
+const {throttleTime, type, disabled, block, plain, copy} = toRefs(props);
 
 const emits = defineEmits(["click"]);
 const handleClick = useThrottleFn(() => {
@@ -112,32 +113,33 @@ function copyStr(text) {
   document.body.removeChild(textarea);
   return copySuccessful;
 }
-const width=ref('120')
-const height=ref('80')
-const corner=ref('6')
-onMounted(()=>{
-  if(props.size){
+
+const width = ref('120')
+const height = ref('80')
+const corner = ref('6')
+onMounted(() => {
+  if (props.size) {
     switch (props.size) {
       case "lg":
-        width.value='120'
-        height.value='48'
-        corner.value='8'
+        width.value = '120'
+        height.value = '48'
+        corner.value = '8'
         break
       case "md":
-        width.value='80'
-        height.value='40'
-        corner.value='6'
+        width.value = '80'
+        height.value = '40'
+        corner.value = '6'
         break
       case "sm":
-        width.value='60'
-        height.value='30'
-        corner.value='4'
+        width.value = '60'
+        height.value = '30'
+        corner.value = '4'
     }
-  }else{
-    width.value=String(props.w)
-    height.value=String(props.h)
-    corner.value=String(props.radius)
   }
+  width.value = props.w ? String(props.w) : width.value
+  height.value = props.h ? String(props.h) : height.value
+  corner.value = props.radius ? String(props.radius) : corner.value
+
 })
 </script>
 

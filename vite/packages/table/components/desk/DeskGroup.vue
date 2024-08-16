@@ -166,14 +166,22 @@
         </span>
       </template>
     </xt-mix-menu>
-    <a-popconfirm
-      title="新添加了桌面，是否切换过去？您也可以手动切换。"
-      ok-text="切换到新桌面"
-      cancel-text="不提示"
-      @confirm="switchToNew"
-      v-model:visible="hasNew"
-      @cancel="clearNew"
-    >
+    <xt-modal v-model="hasNew"  custom
+              boxClass="rounded-xl" :mask="false"
+              :index="850">
+      <div class="p-4" style="width:400px">
+        <h3 class="text-center">
+          新桌面提示
+        </h3>
+        <p>新添加了桌面，是否切换过去？您也可以按照下图所示方式进行手动切换。</p>
+        <a-image class="p-2" src="/img/switch.jpg"></a-image>
+        <div class="flex gap-4 m-2 justify-center">
+          <xt-button @click="switchToNew" :w="120" type="theme" size="md">切换到新桌面</xt-button> <xt-button size="md" @click="clearNew">不再提示</xt-button>
+        </div>
+
+      </div>
+
+    </xt-modal>
 
 
     <div
@@ -283,7 +291,6 @@
         </div>
       </div>
     </div>
-    </a-popconfirm>
   </div>
 
   <!-- 添加桌面 弹窗 -->
