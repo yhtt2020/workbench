@@ -217,6 +217,7 @@ export default {
   },
   data() {
     return {
+      canResize:false,//解锁底部导航栏自动调节尺寸
       isFootBar:false,
       fixedPosition:'position:fixed;bottom:0px;z-index:9;',
       dragItem: null,
@@ -276,6 +277,9 @@ export default {
     window.removeEventListener("mousemove", this.listenMouse);
   },
   mounted() {
+    setTimeout(()=>{
+      this.canResize=true
+    },5000)
     // 当自动隐藏时，切换桌面时，关闭自动隐藏
     this.$bus.on("stopHide", () => {
       this.hoverTabs = true;
@@ -411,6 +415,9 @@ export default {
   watch: {
     windowWidth:{
       handler(val){
+        if(!this.canResize){
+          return
+        }
         // 当底部导航栏不存在时，不需要缩放
         if(!this.navigationToggle[2]) return
         // 根据当前导航格式计算最大宽度和额外宽度
