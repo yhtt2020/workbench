@@ -59,7 +59,7 @@ export default {
     },
   },
   // 卡片类图标打开其卡片弹窗
-  emits: ["openCard"],
+  emits: ["openCard","customEvent","onEdit"],
   data() {
     return {
       visible: false,
@@ -250,11 +250,13 @@ export default {
     // 单图标点击
     iconClick(event) {
       if (event.ctrlKey && event.button === 0) {
-        this.$emit("custom-event");
+        this.$emit("customEvent");
         return;
       }
 
-      if (this.edit) return;
+      if (this.edit)
+        this.$emit('onEdit')
+        return;
       if (this.newIcon) {
         console.log(this.newIcon, "open");
         console.log("this.open.type :>> ", this.open.type);

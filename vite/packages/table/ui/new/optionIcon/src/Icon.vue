@@ -11,6 +11,7 @@
         :select="true"
         :upload="upload"
         @cb="updateIcon"
+        ref="iconRef"
         :menus="menus"
       />
     </div>
@@ -72,6 +73,12 @@ watch(
     currentIcon.value = newV;
   }
 );
+const iconRef=ref()
+const showUpload=()=>{
+  iconRef.value.showUpload()
+}
+
+defineExpose({showUpload})
 </script>
 
 <style lang="scss" scoped></style>

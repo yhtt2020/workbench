@@ -7,13 +7,13 @@
       <xt-tab v-model="currentTab" :list="TabList" style="width: 168px" class="p-1 xt-bg-t-2" v-if="!linkLimit.hideTab"
         :boxStyle="{ 'border-radius': '10px' }" :itemStyle="{ 'border-radius': '6px' }" /></template>
     <div style="height: 50vh">
-      <div class="flex justify-center mb-3" style="zoom: 0.8" v-if="!linkLimit.hideIcon">
-        <Icon v-if="visible" v-bind="edit" :edit="true"></Icon>
+      <div @click="showUpload" class="flex justify-center mb-3" style="zoom: 0.8" v-if="!linkLimit.hideIcon">
+        <Icon @onEdit="showUpload" v-if="visible" v-bind="edit" :edit="true"></Icon>
       </div>
-      <div style="width: 452px" v-if="currentTab == 'attribute'">
+      <div style="width: 452px"  v-if="currentTab == 'attribute'">
         <xt-option-form :options="attributeOptions" :data="edit">
           <template #custom>
-            <LocalApp @click="" @onLocalApp="updateApp"></LocalApp>
+            <LocalApp  @onLocalApp="updateApp"></LocalApp>
           </template>
         </xt-option-form>
         <div></div>
@@ -22,7 +22,7 @@
         <div class="p-4 mb-4 xt-bg-2 rounded-xl">
           <xt-option-info title="图标和名称" info="支持自定义图标和名称。" icon="fluent:arrow-clockwise-16-regular"
             @onIconClick="refreshIcon" />
-          <xt-option-icon v-model:icon="edit.src" v-model:input="edit.titleValue" />
+          <xt-option-icon ref="iconRef" v-model:icon="edit.src" v-model:input="edit.titleValue" />
         </div>
         <xt-option-form :options="appearanceNameOptions" :data="edit" />
         <xt-option-form :options="appearanceOptions" :data="edit" />
@@ -55,6 +55,10 @@
   import { getHostAddress } from "../../../widgets/myIcons/edit/hooks/getHostAddress";
   const { proxy } = getCurrentInstance();
 
+  const iconRef=ref()
+  const showUpload=()=>{
+    iconRef.value.showUpload()
+  }
   // const iconStore = myIcons();
   // const { edit } = storeToRefs(iconStore);
   const edit = ref({

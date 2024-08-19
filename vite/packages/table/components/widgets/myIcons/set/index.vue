@@ -38,7 +38,7 @@
                 />
               </div>
               <div v-show="!edit.value">
-                <LocalApp ref="localApp" @click="" @onLocalApp="updateApp" />
+                <LocalApp ref="localApp"  @onLocalApp="updateApp" />
               </div>
             </template>
             <template #mode>
@@ -53,8 +53,8 @@
         </template>
       </div>
       <div v-else style="width: 452px">
-        <div class="flex justify-center mb-3" style="zoom: 0.8">
-          <Icon v-bind="edit" :edit="true"></Icon>
+        <div @click="showUpload" class="flex justify-center mb-3" style="zoom: 0.8">
+          <Icon @onEdit="showUpload"  v-bind="edit" :edit="true"></Icon>
         </div>
         <div class="p-4 mb-4 xt-bg-2 rounded-xl">
           <xt-option-info
@@ -63,7 +63,7 @@
             icon="fluent:arrow-clockwise-16-regular"
             @onIconClick="refreshIcon"
           />
-          <xt-option-icon
+          <xt-option-icon ref="iconRef"
             v-model:icon="edit.src"
             v-model:input="edit.titleValue"
           />
@@ -105,7 +105,11 @@ import { getHostAddress } from "../edit/hooks/getHostAddress";
 const Form = defineAsyncComponent(() =>
   import("../../../../ui/new/optionForm/src/Form.vue")
 );
+const iconRef=ref()
 const { proxy } = getCurrentInstance();
+const showUpload=()=>{
+  iconRef.value.showUpload()
+}
 const modeList = computed(() => {
   let res = [
     {

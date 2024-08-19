@@ -6,6 +6,7 @@
     :defaultIcon="icon"
     :maskIndex="index"
     :menus="menus"
+    ref="iconRef"
     :isUpload="upload"
   />
   <!-- <div class="inline-block"> -->
@@ -39,10 +40,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from "vue";
+import { ref, onMounted, computed, watch,nextTick } from "vue";
 import { Icon as IfyIcon } from "@iconify/vue";
 
-const visible = ref("");
+const visible = ref(false);
 const mixIconStyle = computed(() => {
   return {
     width: (props.w || props.size) + "px",
@@ -58,6 +59,13 @@ const boxStyle = computed(() => {
     borderRadius: props.boxR + "px",
   };
 });
+
+const iconRef=ref()
+const showUpload=async () => {
+  visible.value = true
+  await nextTick()
+  iconRef.value.showUpload()
+}
 
 const props = defineProps({
   class: {
@@ -176,6 +184,7 @@ watch(
     iconUrl.value = newV;
   }
 );
+defineExpose({showUpload})
 </script>
 
 <style lang="scss" scoped></style>
