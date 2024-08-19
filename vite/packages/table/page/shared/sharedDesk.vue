@@ -54,7 +54,7 @@ onMounted(() => {
   menus.value=deskMenus()
 })
 function deskMenus() {
-  let currentHide = false;
+  let currentHide = hide.value
   // if (this.isFreeLayout) {
   //   currentHide = this.getFreeLayoutState?.system?.hide;
   // } else {
@@ -94,7 +94,7 @@ function deskMenus() {
           // },
         ],
       },
-      // { id: 5, divider: true },
+      { id: 5, divider: true },
       // {
       //   id: 5.1,
       //   newIcon: "fluent:glance-horizontal-16-regular",
@@ -119,14 +119,14 @@ function deskMenus() {
       //     );
       //   },
       // },
-      // {
-      //   id: 6,
-      //   newIcon: editing.value
-      //     ? "fluent:record-stop-16-regular"
-      //     : "fluent:window-new-16-regular",
-      //   name: editing.value ? "停止调整" : "调整桌面布局",
-      //   fn: toggleEditing,
-      // },
+      {
+        id: 6,
+        newIcon: editing.value
+          ? "fluent:record-stop-16-regular"
+          : "fluent:window-new-16-regular",
+        name: editing.value ? "停止调整" : "调整桌面布局",
+        fn: toggleEditing,
+      },
       // {
       //   id: 7,
       //   newIcon: "fluent:resize-large-16-regular",
@@ -134,14 +134,42 @@ function deskMenus() {
       //   disabled: isFreeLayout.value ? false : true,
       //   fn: this.freeLayoutScrollbarRedirect,
       // },
+      {
+        id: 9,
+        newIcon: "fluent:image-multiple-16-regular",
+        name: "更换壁纸",
+        fn: () => {
+          const { openApp } = useAppModal("galleryModalApp");
+          openApp();
+        },
+      },
       // {
-      //   id: 9,
-      //   newIcon: "fluent:image-multiple-16-regular",
-      //   name: "更换壁纸",
+      //   id: 7,
+      //   newIcon: hide.value
+      //     ? "fluent:eye-16-regular"
+      //     : "fluent:eye-off-16-regular",
+      //   name: currentHide ? "显示小组件" : "隐藏小组件",
       //   fn: () => {
-      //     const { openApp } = useAppModal("galleryModalApp");
-      //     openApp();
+      //     console.log('qiehuan',hide.value)
+      //     // if (this.isFreeLayout) {
+      //     //   this.getFreeLayoutState.system.hide =
+      //     //     !this.getFreeLayoutState?.system?.hide;
+      //     // } else {
+      //     //   if (this.hide) {
+      //     //     this.showDesk();
+      //     //   } else {
+      //     //     this.hideDesk();
+      //     //   }
+      //     // }
+      //     if (hide.value) {
+      //       hide.value=false
+      //       deskRef.value.showDesk();
+      //     } else {
+      //       hide.value=true
+      //       deskRef.value.hideDesk();
+      //     }
       //   },
+      //   disabled: false,
       // },
       // {
       //   id: 20,
@@ -149,41 +177,22 @@ function deskMenus() {
       //   name: "更多",
       //   lock: true,
       //   children: [
-      //     {
-      //       id: 0,
-      //       newIcon: "fluent:settings-16-regular",
-      //       name: "系统设置",
-      //       fn: () => {
-      //         this.$bus.emit("openSystemSet");
-      //       },
-      //       // disabled: import.meta.env.DEV ? false : true,
-      //     },
-      //     {
-      //       id: 1,
-      //       newIcon: "fluent:settings-16-regular",
-      //       name: "桌面设置",
-      //       fn: this.showSetting,
-      //     },
-      //     {
-      //       id: 7,
-      //       newIcon: this.hide
-      //         ? "fluent:eye-16-regular"
-      //         : "fluent:eye-off-16-regular",
-      //       name: currentHide ? "显示小组件" : "隐藏小组件",
-      //       fn: () => {
-      //         // if (this.isFreeLayout) {
-      //         //   this.getFreeLayoutState.system.hide =
-      //         //     !this.getFreeLayoutState?.system?.hide;
-      //         // } else {
-      //         //   if (this.hide) {
-      //         //     this.showDesk();
-      //         //   } else {
-      //         //     this.hideDesk();
-      //         //   }
-      //         // }
-      //       },
-      //       disabled: false,
-      //     },
+      //     // {
+      //     //   id: 0,
+      //     //   newIcon: "fluent:settings-16-regular",
+      //     //   name: "系统设置",
+      //     //   fn: () => {
+      //     //     this.$bus.emit("openSystemSet");
+      //     //   },
+      //     //   // disabled: import.meta.env.DEV ? false : true,
+      //     // },
+      //     // {
+      //     //   id: 1,
+      //     //   newIcon: "fluent:settings-16-regular",
+      //     //   name: "桌面设置",
+      //     //   fn: showSetting,
+      //     // },
+      //
       //   ],
       // },
     ];
@@ -192,6 +201,7 @@ function deskMenus() {
   }
 
 }
+const hide=ref(false)
 const editModalVisible = ref(false)
 const menus=ref([])
 
@@ -234,13 +244,10 @@ const  addFolder=()=> {
 }
 
 const toggleEditing=()=>{
-  if (this.editing) {
-    if (this.editing) {
-      message.info("已关闭拖拽调整");
-    } else {
-      message.info("您可以直接拖拽图标调整位置");
-    }
-  }
+  deskRef.value.toggleEditing()
+}
+const showSetting=()=>{
+  deskRef.value.showSetting()
 }
 const saveDesk = () => {
   let g = desk.value
