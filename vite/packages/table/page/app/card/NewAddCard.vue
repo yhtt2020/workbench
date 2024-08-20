@@ -235,6 +235,7 @@ export default {
     }
   },
   async mounted () {
+  
     if (this.currentId == 'M0302') {
       this.updateNavIndex(7)
     }
@@ -332,10 +333,11 @@ export default {
   watch: {
     selectNav: {
       handler (newV) {
+        console.log('触发selectNav事件')
         if (newV.name === 'desktop') {
           this.getDeskData().then(()=>{
             this.navIndex = 0
-            this.updateDesks(0)
+            this.updateDesks(0,0)
           })
 
 
@@ -445,6 +447,7 @@ export default {
      * @returns {Promise<void>}
      */
     async updateDesks (categoryIndex = this.categoryIndex, index) {
+      console.log('执行Updatedesks',categoryIndex,index)
       this.categoryIndex = index
       const keyWord = this.keyword
       const order =
