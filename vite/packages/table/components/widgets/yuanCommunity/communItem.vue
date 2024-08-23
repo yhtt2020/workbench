@@ -42,7 +42,7 @@ const img = computed(() => {
     return imageList.value[0].image
 })
 const contentText = computed(() => {
-    return emojiReplace(detailPost.value.summary)
+    return emojiReplace(detailPost.value.title||detailPost.value.summary)
 })
 </script>
 <style lang='scss' scoped>

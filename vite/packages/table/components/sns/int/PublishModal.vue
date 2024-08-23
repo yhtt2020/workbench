@@ -36,14 +36,14 @@
 
 <script setup lang='ts'>
 import {ref, reactive, computed, toRefs, watch} from 'vue'
-import DynamicItem from './DynamicItem.vue';
-import PostItem from './PostItem.vue';
-import {publishList} from './options'
-import ShowImage from './ShowImage.vue'
+import DynamicItem from '../../widgets/communityContent/Detail/DynamicItem.vue';
+import PostItem from '../../widgets/communityContent/Detail/PostItem.vue';
+import {publishList} from '../../widgets/communityContent/Detail/options'
+import ShowImage from '../../widgets/communityContent/Detail/ShowImage.vue'
 import {message} from 'ant-design-vue'
 import {storeToRefs} from 'pinia';
-import {useCommunityStore} from '../../../../apps/chat/store/commun'
-import {yuanCommunityStore} from '../../../../store/yuanCommunity'
+import {useCommunityStore} from '../../../apps/chat/store/commun'
+import {yuanCommunityStore} from '../../../store/yuanCommunity'
 
 const useCommunStore = useCommunityStore()
 
@@ -81,7 +81,7 @@ const publishPost = async () => {
           if(typeof img!=='string'){
             img=JSON.stringify(img)
           }
-          let rs = await useCommunStore.getCommunityPublishPost(defaultSection.value, img, dynamic.content)
+          let rs = await useCommunStore.getCommunityPublishPost(defaultSection.value.value, img, dynamic.content)
           resolve(rs)
         });
       } else if (postContent.value.content || postContent.value.imagesList.length > 0 && defaultType.value == 'post') {
@@ -93,7 +93,7 @@ const publishPost = async () => {
           if(typeof img!=='string'){
             img=JSON.stringify(img)
           }
-          let rs = await useCommunStore.getPublishPost(defaultSection.value, img, post.content, title, post.coverList)
+          let rs = await useCommunStore.getPublishPost(defaultSection.value.value, img, post.content, title, post.coverList)
           resolve(rs)
         });
 

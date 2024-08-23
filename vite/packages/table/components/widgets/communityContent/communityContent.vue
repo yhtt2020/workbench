@@ -116,7 +116,7 @@ import Unusual from "../Unusual.vue";
 import detailModal from "../../sns/int/DetailModal.vue";
 import MinDetailModal from "../../sns/int/MinDetailModal.vue";
 import CommunitySetting from "./CommunitySetting.vue";
-import PublishModal from "./Detail/PublishModal.vue";
+import PublishModal from "../../sns/int/PublishModal.vue";
 import { communityNavStore } from "../../bottomPanel/store/communityNavStore";
 
 export default {

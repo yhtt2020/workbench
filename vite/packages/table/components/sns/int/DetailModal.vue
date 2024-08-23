@@ -127,7 +127,7 @@
                         <img class="mb-2 mr-2 rounded-md image-item pointer cover-lm"
                              :src="img.image" :data-source="threadData.image[index].image"
                              @contextmenu.stop="showMenu(img)"
-                             style="position: relative object-fit: fill;">
+                             style="position: relative ;object-fit: cover;">
                       </xt-preview-img>
                     </a-col>
                   </a-row>

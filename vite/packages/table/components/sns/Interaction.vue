@@ -2,7 +2,7 @@
 
 import detailModal from "./int/DetailModal.vue";
 import MinDetailModal from "./int/MinDetailModal.vue";
-import PublishModal from "../widgets/communityContent/Detail/PublishModal.vue";
+import PublishModal from "./int/PublishModal.vue";
 import {computed, ref} from "vue";
 import {yuanCommunityStore} from "../../store/yuanCommunity";
 import {emits} from "v-calendar/dist/types/src/use/datePicker";
