@@ -26,16 +26,6 @@ export default defineComponent({
     })
   },
   watch: {
-    'settings.transparent': {
-      handler () {
-        if (this.settings.transparent) {
-          $('body').css('background', 'transparent')
-        } else {
-          $('body').css('background', 'rgb(25, 25, 25)')
-        }
-      }
-      // document.body.attributes['background']=''
-    },
     'backgroundImage': {
       handler() {
         if (this.backgroundImage.runpath) {
@@ -129,6 +119,7 @@ export default defineComponent({
     </div>
     <div class="fixed inset-0 background-img-blur-light" style="z-index: -1"></div>
   </template>
+
 
 </template>
 

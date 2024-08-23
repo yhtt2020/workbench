@@ -309,7 +309,19 @@ export default {
 
   },
   watch: {
-
+    'settings.transparent': {
+      //监听透明背景处理事件，不知道为什么在deskbg组件里就是监听不到
+      handler (newVal,oldVal) {
+        if (newVal) {
+          document.body.classList.add('transparent')
+        } else {
+          document.body.classList.remove('transparent')
+        }
+      },
+      immediate: true,
+      deep:true,
+      // document.body.attributes['background']=''
+    },
     // "appDate.minutes": {
     //   handler(newVal, oldVal) {
     //     this.sortClock()
@@ -382,7 +394,9 @@ export default {
 
 <style>
 @import "./assets/common.css";
-
+.transparent{
+  background: transparent;
+}
 .a-container {
   width: 100%;
 }

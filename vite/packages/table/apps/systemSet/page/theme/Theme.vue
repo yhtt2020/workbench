@@ -45,9 +45,10 @@
     </template>
     <hr />
     <xt-option-info
-      v-if="!$usePlat()"
+      v-if="$usePlat('client')"
       isSwitch
-      v-model:switch="appSettings.transparent"
+      v-model:switch="settings.transparent"
+      @updateSwitchCb="updateTransparent"
       title="透明背景"
       info="设置工作台窗口背景为透明，此功能下小组件的背景模糊会失效。"
     />
@@ -60,7 +61,7 @@
 import { storeToRefs } from "pinia";
 import { appStore as useAppStore } from "../../../../store";
 import { setThemeSwitch } from "../../../../components/card/hooks/themeSwitch";
-import { onMounted, ref,getCurrentInstance } from "vue";
+import { onMounted, ref,getCurrentInstance ,watch} from "vue";
 import { getBgColor } from "../../../../components/card/hooks/styleSwitch/getStyle";
 import { completeTask } from "../../../task/task";
 import { setTheme,setThemeColor } from "../../../ttApp/src/modules/wujie/useWuJieBus";
@@ -69,12 +70,16 @@ import {
   setSecondaryBgColor,
 } from "../../../../components/card/hooks/styleSwitch/setStyle";
 const appStore: any = useAppStore();
+
 const {
-  settings: appSettings,
+  settings,
   styles,
   backgroundName,
   backgroundSettings,
 } = storeToRefs(appStore);
+const updateTransparent=(val)=>{
+  settings.value.transparent=val
+}
 const themeModeList = [
   {
     name: "深色",
