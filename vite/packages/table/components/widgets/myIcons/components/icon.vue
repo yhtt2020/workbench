@@ -255,8 +255,11 @@ export default {
       }
 
       if (this.edit)
+      {
         this.$emit('onEdit')
         return;
+      }
+
       if (this.newIcon) {
         console.log(this.newIcon, "open");
         console.log("this.open.type :>> ", this.open.type);
