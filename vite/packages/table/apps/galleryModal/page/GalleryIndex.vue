@@ -55,6 +55,7 @@ const paperLeftList = ref([
     newIcon: "fluent:star-16-filled",
     id: 0,
     type:"m",
+    name:'我的收藏',
     bg: "var(--secondary-bg)",
     callBack: (item) => {
       currentPaperTab(item);
@@ -64,6 +65,7 @@ const paperLeftList = ref([
     newIcon: "fluent:emoji-smile-slight-24-filled",
     id: 1,
     type:"w",
+    name:'精选壁纸',
     bg: "var(--secondary-bg)",
     callBack: (item) => {
       currentPaperTab(item);
@@ -73,6 +75,7 @@ const paperLeftList = ref([
     newIcon: "uim:bing",
     id: 2,
     type:"b",
+    name:'必应壁纸',
     bg: "var(--secondary-bg)",
     callBack: (item) => {
       currentPaperTab(item);
@@ -82,24 +85,27 @@ const paperLeftList = ref([
     newIcon: "fluent:image-multiple-16-filled",
     id: 3,
     type:"p",
+    name:'拾光壁纸',
     bg: "var(--secondary-bg)",
     callBack: (item) => {
       currentPaperTab(item);
     },
   },
-  // {
-  //   newIcon: "fluent:image-sparkle-16-filled",
-  //   id: 4,
-  //   type:"l",
-  //   bg: "var(--secondary-bg)",
-  //   callBack: (item) => {
-  //     currentPaperTab(item);
-  //   },
-  // },
+  {
+    newIcon: "fluent:image-sparkle-16-filled",
+    id: 4,
+    type:"l",
+    name:'动态壁纸',
+    bg: "var(--secondary-bg)",
+    callBack: (item) => {
+      currentPaperTab(item);
+    },
+  },
   {
     newIcon: "fluent:settings-16-filled",
     id: 5,
     type:"s",
+    name:'设置',
     route: { name: "papersSetting" },
     callBack: (item) => {
       currentPaperTab(item);

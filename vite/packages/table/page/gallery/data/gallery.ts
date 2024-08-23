@@ -164,5 +164,5 @@ export const wallpaperOptions = [
     name: 'Wallhaven',value: 'wallhaven',label: 'Wallhaven',
     path: '/wallhaven/v3',
   },
-  // {value:'动态壁纸',name:'lively',path:'https://api.nguaduot.cn/timeline/v2'}
+  {value:'动态壁纸',name:'lively',path:'https://api.nguaduot.cn/timeline/v2'}
 ]

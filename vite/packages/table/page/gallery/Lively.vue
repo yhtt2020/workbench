@@ -114,7 +114,7 @@ import Template from '../../../user/pages/Template.vue'
 import { message } from 'ant-design-vue'
 import { paperStore } from '../../store/paper'
 import { isDownLoad } from './libs/utils';
-
+import {cdnUrl} from "../../consts";
 import { usePlat } from '../../ui/hooks/usePlat'
 
 const lively = [
@@ -250,12 +250,12 @@ export default {
 
     getCover (item) {
       let filename = item.name.substring(0, item.name.lastIndexOf('.'))
-      filename = `https://up.apps.vip/lively/${filename}.jpg`
+      filename = cdnUrl(`/lively/${filename}.jpg`)
       return filename
     },
     getVideo (item) {
       let filename = item.name
-      filename = `https://up.apps.vip/lively/${filename}`
+      filename = cdnUrl(`/lively/${filename}`)
       return filename
     },
     getWidth (item) {
