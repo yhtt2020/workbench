@@ -82,7 +82,7 @@
             placeholder="请输入"
             class="pl-1 search input-txt"
           ></a-input>
-          <p class="ml-1">管理后台地址</p>
+          <p class="ml-1">管理后台地址（例如：https://admin.osx.com）</p>
           <a-input
             spellcheck="false"
             style="border-radius: 10px"
@@ -270,7 +270,7 @@ export default {
       // 初始化
       this.accToken = this.access_token;
       this.accUrl = this.baseUrl;
-      
+
       const target = {
         customIndex: 'shortTalk',
         desk: this.desk,

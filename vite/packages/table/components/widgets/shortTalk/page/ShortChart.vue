@@ -67,7 +67,7 @@
             placeholder="请输入"
             class="pl-1 search input-txt"
           ></a-input>
-          <p class="mt-2 ml-1">管理后台地址</p>
+          <p class="mt-2 ml-1">管理后台地址（例如：https://admin.osx.com）</p>
           <a-input
             spellcheck="false"
             style="border-radius: 10px"
@@ -637,7 +637,7 @@ export default {
     // 监听token 跟 url
     access_token: {
       handler(newVal, oldVal) {
-        this.accToken = this.access_token;      
+        this.accToken = this.access_token;
         let config = {
           ...this.customData,
           access_token: this.accToken,
