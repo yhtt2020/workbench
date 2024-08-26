@@ -80,7 +80,7 @@
         <vue-custom-scrollbar
           :class="previewFlag ? 'z-50' : ''"
           class="no-drag"
-          key="scrollbar"
+          :key="scrollbar"
           id="scrollerBar"
           :settings="{
             ...scrollbarSettings,
@@ -114,49 +114,48 @@
             }"
             :class="notTrigger ? 'trigger' : ''"
           >
-            <vuuri
-              v-show="showGrid"
-              :key="key"
-              v-if="
-                (currentDesk.cards.length > 0 && !hide && !isFreeLayout) ||
-                !freeLayout
-              "
-              item-key="id"
-              :get-item-margin="
+            <template v-if="  (currentDesk.cards.length > 0 && !hide && !isFreeLayout)|| !freeLayout">
+              <vuuri
+                v-show="showGrid"
+                :key="key"
+                item-key="id"
+                :get-item-margin="
                 () => {
                   return usingSettings.cardMargin * this.adjustZoom + 'px';
                 }
               "
-              group-id="grid.id"
-              :drag-enabled="editing"
-              v-model="currentDesk.cards"
-              :style="{
+                group-id="grid.id"
+                :drag-enabled="editing"
+                v-model="currentDesk.cards"
+                :style="{
                 width: settings.vDirection ? '100%' : 'auto',
                 height: settings.vDirection ? 'auto' : '100%',
               }"
-              class="grid home-widgets"
-              ref="grid"
-              :options="muuriOptions"
-            >
-              <template #item="{ item }">
-                <div
-                  :style="{
+                class="grid home-widgets"
+                ref="grid"
+                :options="muuriOptions"
+              >
+                <template #item="{ item }">
+                  <div
+                    :style="{
                     zoom: (
                       (usingSettings.cardZoom * this.adjustZoom) /
                       100
                     ).toFixed(2),
                   }"
-                >
-                  <component
-                    :desk="currentDesk"
-                    :is="item.name"
-                    :customIndex="item.id"
-                    :customData="item.customData"
                   >
-                  </component>
-                </div>
-              </template>
-            </vuuri>
+                    <component
+                      :desk="currentDesk"
+                      :is="item.name"
+                      :customIndex="item.id"
+                      :customData="item.customData"
+                    >
+                    </component>
+                  </div>
+                </template>
+              </vuuri>
+            </template>
+
             <!-- 加载状态 -->
             <div
               class="xt-text"
@@ -171,7 +170,7 @@
                 left: 50%;
               "
             >
-              <LoadingOutlined />
+              <LoadingOutlined/>
             </div>
           </div>
         </vue-custom-scrollbar>
@@ -205,7 +204,7 @@
       ></NewAddCard>
     </div>
   </transition>
-  <AppCenter v-if="visible" />
+  <AppCenter v-if="visible"/>
   <!-- 添加图标 -->
   <EditNewNavigation
     v-if="editVisible"
@@ -218,29 +217,30 @@
 <script>
 // 挂载组件请到下面文件
 import componentsMinis from "./components.ts";
-import { LoadingOutlined } from "@ant-design/icons-vue";
+import {LoadingOutlined} from "@ant-design/icons-vue";
 import menuMinis from "./menus.ts";
-import { useNavigationStore } from "./navigationBar/navigationStore";
-import { navStore } from "../../store/nav";
+import {useNavigationStore} from "./navigationBar/navigationStore";
+import {navStore} from "../../store/nav";
 import Muuri from "muuri";
-import { message } from "ant-design-vue";
-import { mapWritableState, mapActions } from "pinia";
-import { appStore } from "../../store";
-import { cardStore } from "../../store/card";
-import { useWidgetStore } from "../card/store";
-import { useFreeLayoutStore } from "./freeLayout/store";
-import { useFloatMenuStore } from "./floatMenu/store";
+import {message} from "ant-design-vue";
+import {mapWritableState, mapActions} from "pinia";
+import {appStore} from "../../store";
+import {cardStore} from "../../store/card";
+import {useWidgetStore} from "../card/store";
+import {useFreeLayoutStore} from "./freeLayout/store";
+import {useFloatMenuStore} from "./floatMenu/store";
 import EditNewNavigation from "./addIcon/EditNewNavigation.vue";
 import _ from "lodash-es";
-import { registerFolder } from "../../apps/folder/src/hooks/register";
-import { useAddCard } from "../../ui/hooks/useAddCard";
-import { useDeskStore } from "./store";
-import { useFileConversionIcon } from "../../apps/folder/src/hooks/useDataConversion";
-import { taskStore } from "../../apps/task/store";
-import { DEFAULT } from "../../js/const/default";
+import {registerFolder} from "../../apps/folder/src/hooks/register";
+import {useAddCard} from "../../ui/hooks/useAddCard";
+import {useDeskStore} from "./store";
+import {useFileConversionIcon} from "../../apps/folder/src/hooks/useDataConversion";
+import {taskStore} from "../../apps/task/store";
+import {DEFAULT} from "../../js/const/default";
 import Drop from "./Drop.vue";
 import AppCenter from "../../apps/appCenter";
-import { useAppCenterStore } from "../../apps/appCenter/src/store";
+import {useAppCenterStore} from "../../apps/appCenter/src/store";
+
 export default {
   name: "Desk",
   emits: ["changeEditing"],
@@ -337,7 +337,14 @@ export default {
     },
   },
   watch: {
-
+    key: {
+      handler() {
+        if(this.$refs.grid){
+          //这行不加的话，会导致方向丢失
+          this.muuriOptions.layout.horizontal = !this.settings.vDirection;
+        }
+      }
+    },
     /**
      * 原则上需要监听的数据应该是具体的数据
      * 而不是currentDesk整个对象
@@ -394,7 +401,7 @@ export default {
     // 监听ID变化
     "currentDesk.id": {
       handler(newVal) {
-        this.key=Date.now()
+        this.key = Date.now()
         this.updateIndependentBg();
         // 同步更新自由布局ID
         this.freeLayoutId = newVal;
@@ -446,12 +453,12 @@ export default {
         }
         if (typeof newVal.bg !== "object") {
           this.currentDesk.settings.bg = {
-                start: false,
-                mode: "img",
-                imgValue: DEFAULT.WALLPAPER,
-                colorValue: "#508BFE",
-              }
+            start: false,
+            mode: "img",
+            imgValue: DEFAULT.WALLPAPER,
+            colorValue: "#508BFE",
           }
+        }
       },
       deep: true,
       immediate: true,
@@ -465,6 +472,7 @@ export default {
   },
   computed: {
     ...mapWritableState(navStore, ["navigationToggle"]),
+    ...mapWritableState(cardStore, ["key"]),
     ...mapWritableState(appStore, ["fullScreen", "showGuide"]),
     ...mapWritableState(useWidgetStore, ["rightModel"]),
     ...mapWritableState(useFreeLayoutStore, [
@@ -515,14 +523,14 @@ export default {
   },
   data() {
     return {
+      scrollbar:Date.now(),
       showGrid: false,
       loaded: false,
       vurriEnable: false,
-      stashBound: { width: 0, height: 0, zoom: 0 },
+      stashBound: {width: 0, height: 0, zoom: 0},
       adjustZoom: 1,
       settingVisible: false,
       hide: false,
-      key: Date.now(),
       menuVisible: false,
       addCardVisible: false,
       scrollbarSettings: {
@@ -774,9 +782,9 @@ export default {
       const file = this.useFileConversionIcon(item);
       // console.log(file,'<<<<<<<<<<<<')
       this.useAddCard("myIcons", {
-        iconList: [{ ...file }],
+        iconList: [{...file}],
         newIcon: true,
-      },undefined,this.currentDesk);
+      }, undefined, this.currentDesk);
       // this.editVisible = false;
     },
     /**
@@ -879,7 +887,8 @@ export default {
       return this.adjustZoom;
     },
   },
-  beforeDestroy() {},
+  beforeDestroy() {
+  },
 };
 </script>
 

@@ -13,6 +13,7 @@ export const cardStore = defineStore(
     state: () => {
       return {
         moved: false,
+        key:Date.now(),
         desks: [{
           name: '基础桌面',
           nanoid: nanoid(4),
@@ -429,6 +430,22 @@ export const cardStore = defineStore(
 
         // this.customComponents.splice(customIndex,1);
 
+      },
+      async copyCard(customIndex,desk,flag){
+        let currentDesk = this.getCurrentDesk()
+        desk = desk || currentDesk
+        let index=desk.cards.findIndex(item => {
+          return String(item.id) === String(customIndex)
+        })
+        let card=desk.cards[index]
+
+        if(card){
+          card={...card}
+        }
+        card.id=nanoid(6)
+        card.key=card.id
+        desk.cards.splice(index,0,card)
+        this.key=Date.now()
       },
       setDataEmpty() {
       },

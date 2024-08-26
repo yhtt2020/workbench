@@ -342,6 +342,7 @@ const emits = defineEmits([
   "update:customSize",
   "leftClick",
   "delete",
+  "copy",
   "resize",
   "update:data",
   "update:status",
@@ -394,7 +395,14 @@ const deleteObj = computed(() => {
     disabled: props.options?.disabledDelete ? true : false,
   };
 });
-
+// 复制小组件的数据
+const copyObj = computed(() => {
+  return {
+    newIcon: "fluent:copy-select-24-regular",
+    fn: copyCard,
+    title: "复制",
+  };
+});
 // 卡片数据转为图标数据格式
 const cardData = computed(() => {
   return useConversionCard(props);
@@ -490,7 +498,7 @@ const addObj = computed(() => {
 const menus = computed(() => {
   const platLimit = props.platLimit || " ";
   if (usePlat(platLimit)) {
-    return [addObj.value, deleteObj.value];
+    return [addObj.value,copyObj.value, deleteObj.value];
   }
 
   // 在社群成员桌面的场景下,需要的处理
@@ -503,7 +511,7 @@ const menus = computed(() => {
     return filterMenu;
   }
 
-  let menu = [...props.menuList, addObj.value, deleteObj.value];
+  let menu = [...props.menuList, addObj.value,copyObj.value, deleteObj.value];
   return menu;
 });
 // 头部左侧显示区域状态
@@ -632,12 +640,24 @@ const removeCard = () => {
     proxy.$bus.emit("updateSync");
   }
 };
+const copyCard=()=>{
+  emits("copy", copyEvent);
+  // 属于自定义删除事件
+  if (props.options.customCopy) return;
+  copyEvent();
+  // 将社群桌面的数据进行同步,只限社群管理员。
+  if (props.desk?.hasOwnProperty("communityNo")) {
+    proxy.$bus.emit("updateSync");
+  }
+}
 // 实际删除事件
 const customDelete = () => {
   // useDelCard(props.customIndex);
   cardStore.removeCard(props.customIndex, props.desk);
 };
-
+const copyEvent=()=>{
+  cardStore.copyCard(props.customIndex, props.desk);
+}
 // 设置自定义数据
 const setCustomData = (key, data) => {
   let obj = {};
