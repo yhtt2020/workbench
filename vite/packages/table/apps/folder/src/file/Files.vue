@@ -22,7 +22,7 @@
       <img
         ref="img"
         :src="src"
-        class="w-full h-full"
+        class="w-full h-full object-cover"
         v-else
         :style="[item.color]"
       />
