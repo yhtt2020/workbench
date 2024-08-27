@@ -129,12 +129,14 @@ const TTAppModal = defineAsyncComponent(
 );
 
 import AggregateSearch from "../widgets/aggregatedSearch";
+import Image from '../widgets/Image.vue'
 export default {
   components: {
     AggregateSearch,
     TTAppCard,
     TTAppModal,
     Test,
+    Image,
     Folder,
     FreeLayoutScrollbar,
     FloatMenu,
