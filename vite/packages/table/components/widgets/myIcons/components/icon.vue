@@ -31,7 +31,7 @@
       :style="[textSize]"
       :data-index="index"
     >
-      <div class="wf truncate">
+      <div class="wf truncate text-shadow">
         {{ titleValue }}
       </div>
     </div>
