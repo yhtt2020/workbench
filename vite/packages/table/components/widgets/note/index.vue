@@ -348,7 +348,7 @@ export default {
       setData.background = this.color.color1;
     }
     if (!this.customData.customSize) {
-      setData.customSize = "2x4";
+      setData.customSize = "2x2";
     }
     if (!this.customData.text) {
       setData.text = "";
