@@ -69,6 +69,7 @@ export const defaultProps = {
         defaultData: {},
         // 自定义删除打开后默认删除事件不执行，再删除回调上提供原删除事件
         customDel: false,
+        customCopy:false,
         // 开启后所有事件相关提示信息会进行输出
         debug: false,
         // 是否开启下拉菜单右侧还是左侧显示
