@@ -500,8 +500,8 @@ export default {
     // 编辑多图标组件中的单个图标
     editIcons(index) {
       this.index = index;
-      this.settingVisible = true;
       this.edit = this.customData.iconList[index];
+      this.settingVisible = true;
       // this.openEdit();
     },
     // 全屏拖拽添加图标

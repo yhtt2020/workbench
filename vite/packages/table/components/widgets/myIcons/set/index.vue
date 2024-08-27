@@ -1,5 +1,5 @@
 <template>
-  <xt-modal
+  <xt-modal style="width:500px"
     v-model="visible"
     v-if="visible"
     :footer="0"
