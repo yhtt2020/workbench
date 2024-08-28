@@ -83,7 +83,7 @@ const updateBg = (img) => {
   }
   // 无壁纸
 
-  queryRef.value.show(img.src)
+  queryRef.value.show(img.path)
   return;
 };
 const updateIndependentBg = (img) => {

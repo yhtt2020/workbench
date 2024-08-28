@@ -1,40 +1,45 @@
 <template>
-  <div
-    class="w-full h-full boxs no-drag"
-    ref="textRef"
-    :style="{ width: w, height: h }"
-  >
+  <template v-if="!resize">
+    <slot></slot>
+  </template>
+  <template v-else>
     <div
-      class="w-full h-full"
-      :style="{
+      class="w-full h-full boxs no-drag"
+      ref="textRef"
+      :style="{ width: w, height: h }"
+    >
+      <div
+        class="w-full h-full"
+        :style="{
         display: isDrag ? 'none' : 'block',
       }"
-    >
-      <slot>333</slot>
+      >
+        <slot></slot>
+      </div>
+      <div
+        v-if="isDrag"
+        class="flex items-center justify-center w-full h-full text-lg xt-theme-b rounded-xl xt-theme-bg-2"
+      >
+        正 在 拖 拽 中
+      </div>
+      <svg
+        @mousedown.stop
+        t="1684744355055"
+        ref="dragRef"
+        class="icon drag-boxs no-drag"
+        viewBox="0 0 1024 1024"
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        p-id="10063"
+      >
+        <path
+          d="M469.333333 256a85.333333 85.333333 0 1 1-85.333333-85.333333 85.333333 85.333333 0 0 1 85.333333 85.333333z m-85.333333 170.666667a85.333333 85.333333 0 1 0 85.333333 85.333333 85.333333 85.333333 0 0 0-85.333333-85.333333z m0 256a85.333333 85.333333 0 1 0 85.333333 85.333333 85.333333 85.333333 0 0 0-85.333333-85.333333z m256-341.333334a85.333333 85.333333 0 1 0-85.333333-85.333333 85.333333 85.333333 0 0 0 85.333333 85.333333z m0 85.333334a85.333333 85.333333 0 1 0 85.333333 85.333333 85.333333 85.333333 0 0 0-85.333333-85.333333z m0 256a85.333333 85.333333 0 1 0 85.333333 85.333333 85.333333 85.333333 0 0 0-85.333333-85.333333z"
+          p-id="10064"
+        ></path>
+      </svg>
     </div>
-    <div
-      v-if="isDrag"
-      class="flex items-center justify-center w-full h-full text-lg xt-theme-b rounded-xl xt-theme-bg-2"
-    >
-      正 在 拖 拽 中
-    </div>
-    <svg
-      v-show="resize"
-      @mousedown.stop
-      t="1684744355055"
-      ref="dragRef"
-      class="icon drag-boxs no-drag"
-      viewBox="0 0 1024 1024"
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
-      p-id="10063"
-    >
-      <path
-        d="M469.333333 256a85.333333 85.333333 0 1 1-85.333333-85.333333 85.333333 85.333333 0 0 1 85.333333 85.333333z m-85.333333 170.666667a85.333333 85.333333 0 1 0 85.333333 85.333333 85.333333 85.333333 0 0 0-85.333333-85.333333z m0 256a85.333333 85.333333 0 1 0 85.333333 85.333333 85.333333 85.333333 0 0 0-85.333333-85.333333z m256-341.333334a85.333333 85.333333 0 1 0-85.333333-85.333333 85.333333 85.333333 0 0 0 85.333333 85.333333z m0 85.333334a85.333333 85.333333 0 1 0 85.333333 85.333333 85.333333 85.333333 0 0 0-85.333333-85.333333z m0 256a85.333333 85.333333 0 1 0 85.333333 85.333333 85.333333 85.333333 0 0 0-85.333333-85.333333z"
-        p-id="10064"
-      ></path>
-    </svg>
-  </div>
+  </template>
+
 </template>
 
 <script>
@@ -81,13 +86,16 @@ export default {
   },
   inject: ["_data"],
   mounted() {
-    this.drag();
-    // 初始化
-    if (this.modalSize) {
-      this.dragCallBack(this.modalSize);
-    } else {
-      this.dragCallBack(this.size);
+    if(this.resize){
+      this.drag();
+      // 初始化
+      if (this.modalSize) {
+        this.dragCallBack(this.modalSize);
+      } else {
+        this.dragCallBack(this.size);
+      }
     }
+
   },
   methods: {
     dragCallBack(e) {
@@ -177,8 +185,10 @@ export default {
     },
   },
   beforeUnmount() {
-    let dragRef = this.$refs.dragRef;
-    dragRef?.removeEventListener("mousedown", () => {});
+    if(this.resize){
+      let dragRef = this.$refs.dragRef;
+      dragRef?.removeEventListener("mousedown", () => {});
+    }
   },
 };
 </script>

@@ -570,10 +570,17 @@ const getSize = computed(() => {
   w = str[0];
   h = str[1];
   cardH.value = str[1];
-  return {
-    width: w * 134 + (w - 1) * 12 + "px",
-    height: h * 96 + (h - 1) * 12 + "px",
+  let size= {
+    width: w * 134 + (w - 1) * 12 ,
+    height: h * 96 + (h - 1) * 12 ,
   };
+  // if(props.options.noBorder){
+  //   size.width+=30
+  //   size.height+=30
+  // }
+  size.width = size.width+ "px"
+  size.height = size.height+ "px"
+  return size
 });
 
 /**

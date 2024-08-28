@@ -15,7 +15,7 @@ if (usePlat('client')) {
 
 // 判断文件是否为图片
 export function fileImageExtension(filePath:any){
- const fileExtensions = filePath.src.split('.').pop()
+ const fileExtensions = filePath.src?.split('.').pop()
  const extensions = ['mp4', 'mpeg', 'avi', 'rmvb']
  return extensions.indexOf(fileExtensions) !== -1;
 }

@@ -14,23 +14,23 @@
       @delete="deleteCard"
     >
       <div
-        class="absolute inset-0"
-        style="border-radius: 8px; z-index: 1100; left: -14px; top: -45px"
+        :class="isMiddle?'middle-wrap':'small-wrap'"
+
       >
         <template v-if="imgList.length <= 0">
           <div
             class="flex flex-col items-center justify-center w-full"
-            :class="paperSize === 2 ? 'h-full' : 'h-60'"
+            :class="isSmall ? 'h-full' : 'h-60'"
           >
             <newIcon
               icon="fluent-emoji:framed-picture"
               style="font-size: 3.5rem"
-              v-if="paperSize === 2"
+              v-if="isSmall"
             />
             <div
               class="p-3 rounded-lg xt-font xt-text font-14 xt-bg-t-2 font-400"
-              :class="paperSize === 2 ? 'my-6' : 'my-2'"
-              :style="paperSize === 2 ? { width: 'auto' } : { width: '210px' }"
+              :class="isSmall ? 'my-6' : 'my-2'"
+              :style="isSmall ? { width: 'auto' } : { width: '210px' }"
             >
               我们提供多种壁纸源供你选择，快快挑选喜爱的壁纸，加入收藏吧。
             </div>
@@ -41,35 +41,39 @@
               type="theme"
               style="border-radius: 8px"
               @click="goPickOut"
-              >去挑选</xt-button
+            >去挑选
+            </xt-button
             >
           </div>
         </template>
 
         <template v-else>
-          <div class="w-full h-full hover-container pointer">
-            <video
-              class="fullscreen-video"
-              ref="wallpaperVideo"
-              style="border-radius: 8px; object-fit: cover"
-              playsinline=""
-              autoplay=""
-              muted=""
-              loop=""
-              v-if="getCustomDataPaper.srcProtocol"
-            >
-              <source
-                :src="getCustomDataPaper.srcProtocol"
-                type="video/mp4"
-                id="bgVid"
-              />
-            </video>
+          <div class="w-full h-full hover-container pointer flex flex-wrap  paper-list">
+
             <!-- <viewer :images="[getCustomDataPaper]" :options="imgOption" v-else> -->
-            <template v-else>
+            <template v-for="(img, index) in getCustomDataPaper">
+              <video
+                class="fullscreen-video"
+                ref="wallpaperVideo"
+                style="border-radius: 8px; object-fit: cover"
+                playsinline=""
+                autoplay=""
+                muted=""
+                loop=""
+                v-if="img.srcProtocol"
+              >
+                <source
+                  :src="img.srcProtocol"
+                  type="video/mp4"
+                  id="bgVid"
+                />
+              </video>
               <div
-                v-for="(img, index) in [getCustomDataPaper]"
-                style="width: calc(100% + 14px);height:calc(100% + 12px)"
-                class="overflow-hidden rounded-lg"
+               v-else
+                style=""
+                :style="isSmall?'width: 100% ;height:100% ':'width:auto;height:auto'
+                "
+                class="overflow-hidden rounded-lg img-item"
               >
                 <xt-preview-img
                   :imgList="imagesList"
@@ -81,16 +85,69 @@
                     arrowBtn: true,
                   }"
                   :index="index"
-                  class="w-full h-full"
+                  class="w-full h-full relative"
                 >
-                  <img
-                    :src="img.src"
-                    :data-source="img.path"
-                    :alt="img.resolution"
-                    class="relative object-cover w-full h-full rounded-lg pointer"
+                  <img :class="isMiddle?'small-img':'full-img'"
+                       :src="img.src"
+                       :data-source="img.path"
+                       :alt="img.resolution"
+                       class="relative object-cover w-full h-full rounded-lg pointer"
                   />
+                  <div @click.stop class="tools">
+                    <xt-button
+                      w="40"
+                      h="40"
+                      class="xt-bg-t-3"
+                      style="border-radius: 8px; margin: 0 12px 10px 0"
+                      @click="collect(img.path)"
+                    >
+                      <div class="flex items-center justify-center">
+                        <xt-new-icon
+                          icon="fluent:star-16-regular"
+                          v-if="!isInMyPapers(img.path)"
+                          size="20"
+                        ></xt-new-icon>
+                        <xt-new-icon
+                          icon="fluent:star-16-filled"
+                          v-else
+                          size="20"
+                          :color="'var(--warning)'"
+                        ></xt-new-icon>
+                      </div>
+                    </xt-button>
+                    <xt-button
+                      w="40"
+                      h="40"
+                      class="xt-bg-t-3"
+                      style="border-radius: 8px; margin: 0 12px 10px 0"
+                      v-if="isMiddle"
+                      @click="download(img.path)"
+                    >
+                      <div class="flex items-center justify-center">
+                        <xt-new-icon
+                          icon="fluent:arrow-download-16-regular"
+                          size="20"
+                        ></xt-new-icon>
+                      </div>
+                    </xt-button>
+                    <xt-button
+                      w="40"
+                      h="40"
+                      class="xt-bg-t-3"
+                      style="border-radius: 8px; margin: 0 12px 10px 0"
+                      @click="setDeskPaper(img)"
+                    >
+                      <div class="flex items-center justify-center">
+                        <xt-new-icon
+                          icon="fluent:desktop-16-regular"
+                          size="20"
+                        ></xt-new-icon>
+                      </div>
+                    </xt-button>
+                  </div>
                 </xt-preview-img>
               </div>
+
             </template>
             <!-- </viewer> -->
 
@@ -99,9 +156,8 @@
               style="
                 opacity: 0;
                 z-index: 1 !important;
-                bottom: -12px;
-                right: -12px;
               "
+              :style="isMiddle?'top:20px;left:20px;':'top:10px;left:10px;'"
             >
               <xt-button
                 w="40"
@@ -131,27 +187,7 @@
                   ></xt-new-icon>
                 </div>
               </xt-button>
-              <xt-button
-                w="40"
-                h="40"
-                class="xt-bg-t-3"
-                style="border-radius: 8px; margin: 0 12px 10px 0"
-                @click="collect"
-              >
-                <div class="flex items-center justify-center">
-                  <xt-new-icon
-                    icon="fluent:star-16-regular"
-                    v-if="!isInMyPapers"
-                    size="20"
-                  ></xt-new-icon>
-                  <xt-new-icon
-                    icon="fluent:star-16-filled"
-                    v-else
-                    size="20"
-                    :color="'var(--warning)'"
-                  ></xt-new-icon>
-                </div>
-              </xt-button>
+
               <xt-button
                 w="40"
                 h="40"
@@ -167,35 +203,8 @@
                   ></xt-new-icon>
                 </div>
               </xt-button>
-              <xt-button
-                w="40"
-                h="40"
-                class="xt-bg-t-3"
-                style="border-radius: 8px; margin: 0 12px 10px 0"
-                v-if="paperSize == 4"
-                @click="download(getCustomDataPaper)"
-              >
-                <div class="flex items-center justify-center">
-                  <xt-new-icon
-                    icon="fluent:arrow-download-16-regular"
-                    size="20"
-                  ></xt-new-icon>
-                </div>
-              </xt-button>
-              <xt-button
-                w="40"
-                h="40"
-                class="xt-bg-t-3"
-                style="border-radius: 8px; margin: 0 12px 10px 0"
-                @click="setDeskPaper(getCustomDataPaper)"
-              >
-                <div class="flex items-center justify-center">
-                  <xt-new-icon
-                    icon="fluent:desktop-16-regular"
-                    size="20"
-                  ></xt-new-icon>
-                </div>
-              </xt-button>
+
+
             </div>
           </div>
         </template>
@@ -214,28 +223,28 @@
 </template>
 
 <script>
-import { mapActions, mapWritableState } from "pinia";
+import {mapActions, mapWritableState} from "pinia";
 import axios from "axios";
-import { message } from "ant-design-vue";
-import { paperStore } from "../../store/paper";
-import { appStore } from "../../store";
-import { cardStore } from "../../store/card";
-import { lively, lively2 } from "../../js/data/livelyData";
-import { Icon as newIcon } from "@iconify/vue";
+import {message} from "ant-design-vue";
+import {paperStore} from "../../store/paper";
+import {appStore} from "../../store";
+import {cardStore} from "../../store/card";
+import {lively, lively2} from "../../js/data/livelyData";
+import {Icon as newIcon} from "@iconify/vue";
 import {
   wallpaperOptions,
   selectWallPaper,
 } from "../../page/gallery/data/gallery";
-import { getFileName } from "../../page/gallery/libs/utils";
-import { paperGet, bingGet } from "../../js/axios/request";
+import {getFileName} from "../../page/gallery/libs/utils";
+import {paperGet, bingGet} from "../../js/axios/request";
 
 import Widget from "../card/Widget.vue";
 // import WallpaperWidgetModal from "../../apps/galleryModal/components/WallpaperWidgetModal.vue";
 // import GalleryModal from "../paperModal/PaperApp.vue";
-import { usePlat } from "../../ui/hooks/usePlat";
-import { communityNavStore } from "../bottomPanel/store/communityNavStore";
-import { useAppModal } from "../../apps/appModal/src/hook/useAppModal";
-import { pickPaperStore } from "../../page/gallery/store/PickPaperStore";
+import {usePlat} from "../../ui/hooks/usePlat";
+import {communityNavStore} from "../bottomPanel/store/communityNavStore";
+import {useAppModal} from "../../apps/appModal/src/hook/useAppModal";
+import {pickPaperStore} from "../../page/gallery/store/PickPaperStore";
 import QueryWallpaperSettingMethod from '../../apps/galleryModal/QueryWallpaperSettingMethod.vue'
 
 let fs;
@@ -248,7 +257,7 @@ if (usePlat("client")) {
 export default {
   name: "MiddleWallpaper",
 
-  components: { QueryWallpaperSettingMethod, Widget, newIcon },
+  components: {QueryWallpaperSettingMethod, Widget, newIcon},
 
   props: {
     desk: {
@@ -260,7 +269,8 @@ export default {
     },
     customData: {
       type: Object,
-      default: () => {},
+      default: () => {
+      },
     },
     openWay: {
       type: String,
@@ -271,7 +281,7 @@ export default {
   data() {
     return {
       // 组件配置
-      customSize:'',
+      customSize: '',
       // 壁纸数据
       imgList: [],
       imgIndex: 0,
@@ -287,29 +297,42 @@ export default {
 
       // 大小切换
       sizeList: [
-        { value: "2x2", name: "2x2" },
-        { value: "4x4", name: "4x4" },
+        {value: "2x2", name: "2x2"},
+        {value: "4x4", name: "4x4"},
       ],
       // 右键菜单
-      menuList: [
+    };
+  },
+
+  computed: {
+    ...mapWritableState(paperStore, ["myPapers", "settings"]),
+    ...mapWritableState(pickPaperStore, ["currentID"]),
+    isMiddle() {
+      return +this.paperSize === +4
+    },
+    isSmall() {
+      return +this.paperSize === +2
+    },
+    menuList() {
+      return [
         {
           newIcon: "fluent:image-multiple-16-regular",
           title: "在应用中打开",
           fn: () => {
-            const { openApp } = useAppModal("galleryModalApp");
+            const {openApp} = useAppModal("galleryModalApp");
             openApp();
           },
         },
         {
           newIcon: "fluent:chevron-up-16-regular",
-          title: "上一张",
+          title: this.isMiddle ? "上一组" : "上一张",
           fn: () => {
             this.lastImg();
           },
         },
         {
           newIcon: "fluent:chevron-down-16-regular",
-          title: "下一张",
+          title: this.isMiddle ? "下一组" : "下一张",
           fn: () => {
             this.nextImg();
           },
@@ -321,60 +344,55 @@ export default {
             this.randomImg();
           },
         },
-        {
-          newIcon: "fluent:star-16-regular",
-          title: "添加到收藏",
-          fn: () => {
-            this.collect();
-          },
-        },
-        {
-          newIcon: "fluent:more-horizontal-16-regular",
-          title: "更多",
-          lock: true,
-          children: [
-            {
-              newIcon: "fluent:desktop-16-regular",
-              title: "设为工作台壁纸",
-              fn: () => {
-                this.setDeskPaper(this.getCustomDataPaper);
-              },
-            },
-            {
-              newIcon: "fluent:desktop-16-regular",
-              title: "设为系统桌面壁纸",
-              fn: () => {
-                this.setSystemPaper(this.getCustomDataPaper);
-              },
-            },
-            {
-              newIcon: "fluent:arrow-download-16-regular",
-              title: "下载",
-              fn: () => {
-                this.download(this.getCustomDataPaper);
-              },
-            },
-          ],
-        },
+        // {
+        //   newIcon: "fluent:star-16-regular",
+        //   title: "添加到收藏",
+        //   fn: () => {
+        //     this.collect();
+        //   },
+        // },
+        // {
+        //   newIcon: "fluent:more-horizontal-16-regular",
+        //   title: "更多",
+        //   lock: true,
+        //   children: [
+        //     {
+        //       newIcon: "fluent:desktop-16-regular",
+        //       title: "设为工作台壁纸",
+        //       fn: () => {
+        //         this.setDeskPaper(this.getCustomDataPaper);
+        //       },
+        //     },
+        //     {
+        //       newIcon: "fluent:desktop-16-regular",
+        //       title: "设为系统桌面壁纸",
+        //       fn: () => {
+        //         this.setSystemPaper(this.getCustomDataPaper);
+        //       },
+        //     },
+        //     {
+        //       newIcon: "fluent:arrow-download-16-regular",
+        //       title: "下载",
+        //       fn: () => {
+        //         this.download(this.getCustomDataPaper);
+        //       },
+        //     },
+        //   ],
+        // },
         {
           newIcon: "fluent:settings-16-regular",
           title: "设置",
           fn: () => {
             this.currentID = "s";
-            const { openApp } = useAppModal("galleryModalApp");
+            const {openApp} = useAppModal("galleryModalApp");
             openApp();
           },
         },
-      ],
-    };
-  },
-
-  computed: {
-    ...mapWritableState(paperStore, ["myPapers", "settings"]),
-    ...mapWritableState(pickPaperStore, ["currentID"]),
-
+      ]
+    },
     header() {
       return {
+        disabled: true,
         title: this.paperTitle,
         //  ifyIcon: "fluent:image-multiple-16-regular",
         showIcon: "/logo/wallpaper.svg",
@@ -430,34 +448,25 @@ export default {
         this.imgSpin = false;
         return this.customData.paper;
       } else {
-        return this.imgList[0];
+        if (this.isMiddle) {
+          return this.imgList.slice(0, 3);
+        } else {
+          return this.imgList.slice(0,1);
+        }
+
       }
     },
 
-    // 判断是否添加到收藏中
-    isInMyPapers() {
-      if (this.customData.paper !== undefined) {
-        const index = this.myPapers.findIndex((img) => {
-          return String(this.customData.paper.src) === String(img.src);
-        });
-        return index > -1;
-      } else {
-        const initIndex = this.myPapers.findIndex((img) => {
-          return String(this.imgList[this.imgIndex].src) === String(img.src);
-        });
-        return initIndex > -1;
-      }
-    },
 
     imagesList() {
-      return [this.getCustomDataPaper].map((img, index) => {
-        return img.src;
+      return this.getCustomDataPaper.map((img, index) => {
+        return img.path;
       });
     },
 
     // 计算图片的宽高
     imgWH() {
-      console.log('重新计算壁纸尺寸',this.customData,this.customData.customSize )
+      console.log('重新计算壁纸尺寸', this.customData, this.customData.customSize)
       if (this.customData && this.customData.customSize !== undefined) {
         let arr = this.customData.customSize.split("x");
         const result = {
@@ -492,7 +501,7 @@ export default {
   },
 
   mounted() {
-    this.customSize=this.customData?.customSize
+    this.customSize = this.customData?.customSize
     this.$nextTick(() => {
       if (!this.customData) return;
       if (this.customData.value !== undefined) {
@@ -510,8 +519,8 @@ export default {
       this.sizeList = [];
     } else {
       this.sizeList = [
-        { value: "2x2", name: "2x2" },
-        { value: "4x4", name: "4x4" },
+        {value: "2x2", name: "2x2"},
+        {value: "4x4", name: "4x4"},
       ];
     }
   },
@@ -553,12 +562,13 @@ export default {
               let pickImage = res.data.data;
               const mapImageList = pickImage.map((img) => {
                 let randomIndex = Math.floor(Math.random() * animations.length);
+                console.log('找到', img)
                 const returnObj = {
                   animations: animations[randomIndex],
                   path: img.imgurl,
                   resolution: img.size,
                   no: img.no,
-                  src: img.imgurl,
+                  src: img.thumburl || img.imgurl,
                   //  src:img.thumburl,
                 };
                 return returnObj;
@@ -602,26 +612,47 @@ export default {
       }
     },
 
+    // 判断是否添加到收藏中
+    isInMyPapers(src) {
+      const index = this.myPapers.findIndex((img) => {
+        return String(src) === String(img.src);
+      });
+      return index > -1;
+    },
     // 更新壁纸源数据以及更新customData
     updatePaperSource(val) {
       this.customData.value = val;
       this.initPaperList(val);
     },
-
+    resetImg(){
+      let gap = this.isMiddle ? 4 : 1
+      this.customData.paper = this.imgList.slice(this.imgIndex *gap, this.imgIndex * gap + gap)
+    },
     // 上一张壁纸和下一张壁纸
     lastImg() {
-      this.customData.paper = this.imgList[this.imgIndex];
+
       this.imgIndex -= 1;
       if (this.imgIndex < 0) {
-        this.imgIndex = this.imgList.length - 1;
+        this.imgIndex = 0;//this.imgList.length - 1;
       }
+      this.resetImg()
+
     },
     nextImg() {
-      this.customData.paper = this.imgList[this.imgIndex];
       this.imgIndex += 1;
-      if (this.imgIndex >= this.imgList.length) {
-        this.imgIndex = 0;
+      let gap = this.isMiddle ? 4 : 1
+      if (this.imgIndex * gap + gap >= this.imgList.length) {
+        this.imgIndex = this.imgList.length - gap;//this.imgList.length - 1;
+        if (this.imgIndex <= 0) {
+          this.imgIndex = 0
+        }
       }
+      this.resetImg()
+      // this.customData.paper = this.imgList[this.imgIndex];
+      // this.imgIndex += 1;
+      // if (this.imgIndex >= this.imgList.length) {
+      //   this.imgIndex = 0;
+      // }
     },
 
     // 随机壁纸
@@ -629,32 +660,34 @@ export default {
       this.randomFlag = true;
       setTimeout(() => {
         this.randomFlag = false;
-        let nmb = parseInt(Math.random() * this.imgList.length);
-        this.imgIndex === nmb ? this.randomImg() : (this.imgIndex = nmb);
-        this.customData.paper = this.imgList[this.imgIndex];
+        let gap=this.isMiddle?4:1
+        let nmb = parseInt(Math.random() * (this.imgList.length/gap));
+        console.log('随机到了',nmb,this.imgIndex)
+        if(this.imgIndex!==nmb){
+          console.log('随机到了',nmb)
+          this.imgIndex = nmb
+          this.resetImg()
+          this.randomFlag = false;
+        }else{
+          this.randomImg()
+        }
+
       }, 500);
     },
 
     // 收藏壁纸
-    collect() {
+    collect(path) {
       if (this.customData && this.customData.value === "my") {
-        this.removeToMyPaper(
-          this.customData.paper !== undefined
-            ? this.customData.paper
-            : this.imgList[this.imgIndex]
-        );
+        this.removeToMyPaper({src:path});
       } else {
-        let image =
-          this.customData.paper !== undefined
-            ? this.customData.paper
-            : this.imgList[this.imgIndex];
-        this.removeToMyPaper(image);
+
+        this.removeToMyPaper({src:path});
       }
     },
 
     // 设置工作台壁纸
     setDeskPaper(paper) {
-      this.$refs.queryRef.show(paper.src)
+      this.$refs.queryRef.show(paper.path || paper.src)
       // message.info("正在设置桌面壁纸");
       // this.setBackgroundImage(paper);
       // console.log(paper)
@@ -674,7 +707,8 @@ export default {
             ok: async () => {
               await this.queryStart();
             },
-            no: () => {},
+            no: () => {
+            },
             noText: "取消",
             type: "warning",
           }
@@ -689,8 +723,10 @@ export default {
         } else {
           window.$ui.confirm("图片已下载", "", {
             index: 1020,
-            ok: async () => {},
-            no: () => {},
+            ok: async () => {
+            },
+            no: () => {
+            },
             noText: null,
             type: "warning",
           });
@@ -716,7 +752,8 @@ export default {
           item.done = 1;
           message.success("下载完成");
         },
-        willDownload: (args) => {},
+        willDownload: (args) => {
+        },
       });
     },
     async queryStart() {
@@ -743,7 +780,8 @@ export default {
               message.info("正在为您下载并设桌面壁纸");
               tsbApi.system.setPaper(paper.path);
             },
-            no: () => {},
+            no: () => {
+            },
             noText: "取消",
             type: "warning",
           }
@@ -760,9 +798,9 @@ export default {
     goGallery(value) {
       const paperType = ["wallhaven", "timeline", "glutton"];
       if (paperType.includes(value))
-        return this.$router.push({ name: "pickingPaper" });
-      if (value === "my") return this.$router.push({ name: "my" });
-      if (value === "bing") return this.$router.push({ name: "bing" });
+        return this.$router.push({name: "pickingPaper"});
+      if (value === "my") return this.$router.push({name: "my"});
+      if (value === "bing") return this.$router.push({name: "bing"});
     },
   },
   watch: {
@@ -771,7 +809,9 @@ export default {
       this.customData.customSize = newVal;
 
     },
-    'customData.customSize':(newVal,oldVal)=>{
+    'customData.customSize'(newVal,oldVal){
+      this.imgIndex=0
+       this.resetImg()
       console.log('变动了')
     }
   },
@@ -779,6 +819,49 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.tools {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 1;
+}
+.img-item{
+  .tools{
+    display: none;
+  }
+  &:hover{
+    .tools{
+      display: block;
+    }
+  }
+}
+.small-img {
+  width: 265px;
+  height: 190px;
+}
+.middle-wrap{
+
+  padding-top:15px;
+  width: 100%;
+  height:100%
+}
+.small-wrap{
+  margin: -14px;
+  margin-top: 0px;
+  width: calc(100% + 28px);
+  height: calc(100% + 14px);
+}
+.full-img{
+  width: 100%;
+  height: 100%;
+}
+.paper-list {
+  gap: 10px;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+
 .hover-container {
   &:hover {
     .hover-item {
@@ -786,15 +869,16 @@ export default {
     }
   }
 }
+
 .xt-bg-t-3 {
   background: rgba(0, 0, 0, 0.5) !important;
 }
 
 .top-shadow {
   background-image: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0.3) 0%,
-    rgba(0, 0, 0, 0) 100%
+      180deg,
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0) 100%
   );
   z-index: 100;
 }
@@ -810,6 +894,7 @@ export default {
 :deep(.ant-image-preview-root) {
   background: red !important;
 }
+
 </style>
 
 <!--   border:1px solid red  !important;
