@@ -32,6 +32,7 @@
             </div>
           </xt-mix-menu>
         </div>
+
         <!-- <img   class="image-item pointer" :src="img.src" :data-source="img.path" style="position: relative">
         <div class="flex"></div> -->
         <!-- <div style="position: absolute;right: 0;top: -10px ;padding: 10px">
@@ -68,6 +69,7 @@
     </a-col>
   </a-row>
 </a-drawer> -->
+  <QueryWallpaperSettingMethod ref="queryRef"></QueryWallpaperSettingMethod>
 </template>
 
 <script>
@@ -79,10 +81,12 @@ import { isInMyPapers,getFileName } from '../../page/gallery/libs/utils';
 
 import GradeSmallTip from "../GradeSmallTip.vue";
 import {completeTask} from '../../apps/task/task'
+import QueryWallpaperSettingMethod from "../../apps/galleryModal/QueryWallpaperSettingMethod.vue";
 export default {
   name: 'PaperList',
   props:['list','isModal','imgList'],
   components:{
+    QueryWallpaperSettingMethod,
     GradeSmallTip
   },
   data(){
@@ -95,7 +99,8 @@ export default {
       bingMenu:[
        {
         newIcon:'fluent:desktop-16-regular',name:'设为工作台背景',
-        callBack:()=>{ this.setAppPaper(this.paperCurrent) ,
+        callBack:()=>{
+          this.setAppPaper(this.paperCurrent)
           completeTask('M0201',()=>{
             this.$bus.emit('closePaperModal')
           })
@@ -156,15 +161,18 @@ export default {
 
     // 设置工作台背景和桌面壁纸
     setAppPaper(img){
-      if(img !== null){  message.info('正在为您设置背景'); }
-      if (img.srcProtocol){ this.setBackgroundImage({path: '',  runpath: `file://${img.src}`}); }
-      else {
-       if (!img.path) { img.path = img.src }
-       else { this.setBackgroundImage(img) }
-      }
-      completeTask('M0201',()=>{
-        this.$bus.emit('closePaperModal')
-      })
+
+      this.$refs.queryRef.show(img.srcProtocol||img.path|| img.src)
+
+      // if(img !== null){  message.info('正在为您设置背景'); }
+      // if (img.srcProtocol){ this.setBackgroundImage({path: '',  runpath: `file://${img.src}`}); }
+      // else {
+      //  if (!img.path) { img.path = img.src }
+      //  else { this.setBackgroundImage(img) }
+      // }
+      // completeTask('M0201',()=>{
+      //   this.$bus.emit('closePaperModal')
+      // })
       // message.info('正在为您设置壁纸')
       // this.setBackgroundImage(this.paperCurrent.path)
       // this.visibleMenu = false

@@ -199,6 +199,7 @@ import MyContent from "./components/content/MyContent.vue";
 import PaperRightDrawer from "./components/drawer/PaperRightDrawer.vue";
 import { usePlat } from "../../ui/hooks/usePlat";
 import { message } from "ant-design-vue";
+import {cdnUrl} from "../../consts";
 
 let fs, path;
 if (usePlat("client")) {
@@ -363,7 +364,7 @@ export default {
               const filename = path.basename(videoPath, ".mp4");
               const livelyItem = {
                 src: videoPath,
-                path: `https://up.apps.vip/lively/${filename}.jpg`,
+                path: cdnUrl(`/lively/${filename}.jpg`),
                 srcProtocol:
                   "file://" + path.join(this.settings.savePath, "lively", item),
               };

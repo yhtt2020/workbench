@@ -26,6 +26,15 @@ export default defineComponent({
     })
   },
   watch: {
+    'independentBg':{
+      handler(){
+        this.$nextTick(() => {
+          this.$refs.backgroundVideo.load()
+          this.$refs.backgroundVideo.play()
+        })
+      },
+      deep:true,
+    },
     'backgroundImage': {
       handler() {
         if (this.backgroundImage.runpath) {

@@ -52,7 +52,6 @@
         </component>
       </div>
     </div>
-    {{}}
   </xt-container>
 </template>
 

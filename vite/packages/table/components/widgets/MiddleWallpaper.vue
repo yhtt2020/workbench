@@ -466,7 +466,6 @@ export default {
 
     // 计算图片的宽高
     imgWH() {
-      console.log('重新计算壁纸尺寸', this.customData, this.customData.customSize)
       if (this.customData && this.customData.customSize !== undefined) {
         let arr = this.customData.customSize.split("x");
         const result = {
@@ -523,6 +522,10 @@ export default {
         {value: "4x4", name: "4x4"},
       ];
     }
+
+    if(!Array.isArray(this.getCustomDataPaper)){
+      this.resetImg()
+    }
   },
 
   methods: {
@@ -562,7 +565,6 @@ export default {
               let pickImage = res.data.data;
               const mapImageList = pickImage.map((img) => {
                 let randomIndex = Math.floor(Math.random() * animations.length);
-                console.log('找到', img)
                 const returnObj = {
                   animations: animations[randomIndex],
                   path: img.imgurl,
@@ -662,9 +664,7 @@ export default {
         this.randomFlag = false;
         let gap=this.isMiddle?4:1
         let nmb = parseInt(Math.random() * (this.imgList.length/gap));
-        console.log('随机到了',nmb,this.imgIndex)
         if(this.imgIndex!==nmb){
-          console.log('随机到了',nmb)
           this.imgIndex = nmb
           this.resetImg()
           this.randomFlag = false;
@@ -805,14 +805,12 @@ export default {
   },
   watch: {
     customSize(newVal, oldVal) {
-      console.log('变动了')
       this.customData.customSize = newVal;
 
     },
     'customData.customSize'(newVal,oldVal){
       this.imgIndex=0
        this.resetImg()
-      console.log('变动了')
     }
   },
 };

@@ -115,7 +115,9 @@ let fs,path
       liveMenu:[
        {
         newIcon:'fluent:desktop-16-filled',name:'设为工作台背景',
-        callBack:()=>{ this.setAppPaper(this.myCurrentID) }
+        callBack:()=>{
+          this.setAppPaper(this.myCurrentID)
+        }
        },
        {
         newIcon:'fluent:delete-16-filled',name:'删除该壁纸',color: 'var(--error)',
