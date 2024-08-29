@@ -196,7 +196,7 @@
           :plat="platLimit"
           :imgSize="75"
         >
-          <div class="h-full rounded-b-lg" :style="[bodyStyle]">
+          <div class="flex-1 h-0 rounded-b-lg" :style="[bodyStyle]">
             <Resize
               v-model:size="currentSize"
               v-bind="resizeOptions"
