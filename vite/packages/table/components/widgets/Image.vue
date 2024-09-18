@@ -10,6 +10,7 @@ const props = defineProps({
   desk: {}
 })
 const option = {
+  noBorder:true,
   resize: true,
 }
 const sizeList = [
@@ -63,8 +64,19 @@ const updateSize = (val) => {
 <template>
   <xt-container @resize="updateSize" :menu-list="menuList" v-model:customSize="customData.customSize"
                 :customIndex="customIndex" :sizeList="sizeList" :custom-data="customData" :desk="desk" :header="header"
-                :options="option">
-    图片组件图片组件
+                 :options="option">
+    <template v-if="customData.imgList">
+      <div @click="" class="w-full h-full" v-if="customData.imgList.length===1">
+        <img :style="{'object-fit':img.objectFit}" class="w-full h-full rounded-lg" v-for="img in customData.imgList" :src="img.src">
+      </div>
+      <div v-else>
+        {{customData.imgList}}
+      </div>
+    </template>
+    <div v-else>
+      <xt-button type="theme" size="sm" @click="settingVisible=true">点此设置图片</xt-button>
+    </div>
+
   </xt-container>
 
   <ImageSet  v-if="settingVisible"

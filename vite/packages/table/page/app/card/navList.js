@@ -122,7 +122,7 @@ export const NavList = [
       {
         name: "image",
         cname: "图片",
-        detail: "添加可自由调整大小的图片",
+        detail: "添加可自由调整大小的单张或者多张图片（开发中）",
         sizes: ["自定义大小"],
         option: [
           {
