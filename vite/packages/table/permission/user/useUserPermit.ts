@@ -59,6 +59,8 @@ const setUserInfo = async () => {
 
   // 有用户信息
   if (userStore.userInfo) {
+    //补充聊天登录逻辑
+    (chatStore() as any)?.login();
     return userStore.userInfo;
   }
   // 无用户信息发送请求

@@ -555,13 +555,21 @@ export default {
       this.freeLayoutScrollbarUpdate();
     });
     this.$bus.on("setIndependentBg", (val) => {
+      console.log('监听设置壁纸',val)
       if (!val) {
         this.currentDesk.settings.bg.start = false;
         return;
       }
-      this.currentDesk.settings.bg.start = true;
-      this.currentDesk.settings.bg.mode = "img";
-      this.currentDesk.settings.bg.imgValue = val;
+      if(val.endsWith('.mp4')){
+        this.currentDesk.settings.bg.start = true;
+        this.currentDesk.settings.bg.mode = "video";
+        this.currentDesk.settings.bg.imgValue = val;
+      }else{
+        this.currentDesk.settings.bg.start = true;
+        this.currentDesk.settings.bg.mode = "img";
+        this.currentDesk.settings.bg.imgValue = val;
+      }
+
     });
     // 社群成员桌面触发位置还原
     this.$bus.on("redirect", () => {

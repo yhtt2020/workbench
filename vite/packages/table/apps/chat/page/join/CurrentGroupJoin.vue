@@ -136,13 +136,22 @@ const cancelJoin = () => {
 /**立即加入**/
 const joinNow = async () => {
   const currentID = currentUnGroupInfo.value?.groupID;
+  if(!currentID){
+    return message.error('群聊ID无效')
+  }
   /**是否存在**/
   const index = _.findIndex(currentGroupList.value, (item) => {
     return String(item?.groupID) === String(currentID);
   });
   if (index === -1) {
     const option = { groupID: currentID };
-    const res = await window.$chat?.chat?.joinGroup(option);
+    let res
+    try{
+     res= await window.$chat?.chat?.joinGroup(option);
+    }catch (e) {
+      return message.error('群聊状态异常，请联系社群管理员')
+    }
+
     if (res.code === 0) {
       if (res.data.status === "WaitAdminApproval") {
         message.success("入群申请已发出,等待群主和管理员审核");

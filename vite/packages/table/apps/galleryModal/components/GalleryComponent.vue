@@ -14,7 +14,7 @@
 
     <!-- 必应壁纸 -->
     <template v-else-if="pageStatus === 'b'">
-      <Bing :isModal="true" />
+      <Bing :isModal="true"  @updateIndependentBg="updateBg" />
     </template>
 
     <!-- 拾光壁纸 1 -->
@@ -82,8 +82,7 @@ const updateBg = (img) => {
     return;
   }
   // 无壁纸
-
-  queryRef.value.show(img.path)
+  queryRef.value.show(img.srcProtocol||img.path|| img.src)
   return;
 };
 const updateIndependentBg = (img) => {
