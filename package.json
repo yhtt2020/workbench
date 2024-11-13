@@ -47,7 +47,7 @@
     "electron-find": "^1.0.7",
     "electron-localstorage": "^1.0.5",
     "electron-log": "^4.4.4",
-    "electron-screenshots-plus": "^0.5.7",
+    "electron-screenshots": "^0.5.27",
     "electron-shortcut-capture": "^1.1.13-12",
     "electron-squirrel-startup": "^1.0.0",
     "electron-updater": "^4.3.9",

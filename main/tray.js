@@ -120,8 +120,8 @@ function openToolbox() {
 }
 
 //截图回传事件实现
-const Screenshots = require('electron-screenshots-plus').default
-const screenshots = new Screenshots({});
+const sc = require('electron-screenshots')
+const screenshots = new sc({});
 //注册截图
 app.whenReady().then(() => {
   let cbs = []
@@ -131,12 +131,13 @@ app.whenReady().then(() => {
       event: event,
       cbId: args.cbId,
     })
+    screenshots.startCapture()
     require('electron').globalShortcut.register("esc", () => {
       if (screenshots.$win?.isFocused()) {
         screenshots.endCapture();
       }
     });
-    screenshots.startCapture()
+
   })
   setTimeout(()=>{
     global.keyMapManager.regWithNotification('capture',async()=>{
