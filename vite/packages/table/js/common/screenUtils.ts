@@ -18,8 +18,13 @@ function isMain(){
   return sign === 'table.com';
 }
 function isWin(){
-  if (!window.$usePlat('client')) return
-  return process.platform==='win32'
+  if (!window.$usePlat('client'))
+  { 
+    return false
+  }else{
+    return process.platform==='win32'
+  }
+  
 }
 export {
   getSign,isMain,isWin

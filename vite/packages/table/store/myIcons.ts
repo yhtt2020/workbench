@@ -4,6 +4,7 @@ export const myIcons = defineStore("myIcons", {
   state: () => ({
     // 添加卡片的数据
     iconOption: {
+      actions:[],//指令类型数据存储
       /**
        * mini 1*1
        * small 2*2

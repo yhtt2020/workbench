@@ -93,7 +93,7 @@ function doKey(item) {
     })
   }
   notification.info({
-    message: item.title + ' ：' + item.keys.join(' + '),
+    message: item.title?item.title+' ：':'' + item.keys.join(' + '),
     icon: h(RocketFilled)
   })
   return true

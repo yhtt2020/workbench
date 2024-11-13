@@ -5,7 +5,7 @@ import MinDetailModal from "./int/MinDetailModal.vue";
 import PublishModal from "./int/PublishModal.vue";
 import {computed, ref} from "vue";
 import {yuanCommunityStore} from "../../store/yuanCommunity";
-import {emits} from "v-calendar/dist/types/src/use/datePicker";
+import {defineEmits} from "vue";
 import {useCommunityStore} from "../../apps/chat/store/commun";
 import {message} from "ant-design-vue";
 

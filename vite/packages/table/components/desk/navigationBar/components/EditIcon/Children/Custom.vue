@@ -28,7 +28,7 @@ import { ref, defineAsyncComponent, onMounted, watch } from 'vue'
 // import EditName from './EditName.vue';
 const dropDown = defineAsyncComponent(() => import('../../dropDown/DropDown.vue'))
 import {data} from '../../dropDown/Data'
-const iconLink = ref([{ title: '网站链接', name: 'link' }, { title: '系统程序或文件', name: 'tableApp' }])
+const iconLink = ref([{ title: '网站链接', name: 'link' }, { title: '系统程序或文件', name: 'tableApp' }, { title: '快捷指令', name: 'action' }])
 const openWay = ref([
   { title: "系统默认", name: "default" },
   { title: '工作台内', name: "internal" },

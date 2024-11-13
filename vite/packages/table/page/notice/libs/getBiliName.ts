@@ -1,5 +1,5 @@
 import axios from 'axios';
-import cheerio from 'cheerio';
+import * as cheerio from 'cheerio';
 
 const getName = {
  // 获取b站视频标题

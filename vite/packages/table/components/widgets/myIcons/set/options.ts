@@ -86,7 +86,23 @@ export const attributeOptions = [
   },
   {
     type: "children",
-    flag: "app",
+    flag: "action",
+    flagKey: "mode",
+    children: [
+      {
+        type: "info",
+        title: "快捷指令",
+        info: "在弹出窗内选择合适的指令",
+      },
+      {
+        type: "setAction",
+        actionKey: "actions",
+      },
+    ],
+  },
+  {
+    type: "children",
+    flag:'app',
     flagKey: "mode",
     children: [
       {

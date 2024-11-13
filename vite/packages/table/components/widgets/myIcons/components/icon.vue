@@ -47,6 +47,7 @@ import { sizeValues } from "./iconConfig";
 import { renderIcon } from "../../../../js/common/common";
 import { startApp } from "../../../../ui/hooks/useStartApp";
 import { checkIsIfyIcon } from "../../../card/hooks/addCardToNav";
+import {ActionHandler} from "../../../../js/action/actionHandler";
 export default {
   mixins: [editProps],
   props: {
@@ -248,14 +249,13 @@ export default {
     },
     startApp,
     // 单图标点击
-    iconClick(event) {
+    async iconClick(event) {
       if (event.ctrlKey && event.button === 0) {
         this.$emit("customEvent");
         return;
       }
 
-      if (this.edit)
-      {
+      if (this.edit) {
         this.$emit('onEdit')
         return;
       }
@@ -263,9 +263,10 @@ export default {
       if (this.newIcon) {
         console.log(this.newIcon, "open");
         console.log("this.open.type :>> ", this.open.type);
-        console.log("this.open.type :>> ", this.open.value);
+        console.log("this.open.value :>> ", this.open.value);
         this.startApp(this.open.type, this.open.value, this.$router);
       } else if (this.open !== undefined && this.open.value !== "") {
+        console.log('type=card或者startapp条件')
         // 链接
         console.log("lianjie :>> ");
         if (this.open.type === "card") {
@@ -278,7 +279,7 @@ export default {
       } else if (this.link !== "") {
         // 其他应用
         this.openApp(this.linkValue);
-      } else message.error("你还未设置链接/快捷方式");
+      }  else message.error("你还未设置链接/快捷方式");
     },
     // 复制来到 旧版打开app
     openApp() {

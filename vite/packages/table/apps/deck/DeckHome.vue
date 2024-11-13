@@ -1,5 +1,5 @@
 <template>
-  <template v-if="!isWin()">
+  <template v-if="isWin()">
     <div v-if="this.grids.length === 0" class="w-full p-5 box item-content" style="max-height: 100%">
       <a-result class="w-full rounded-lg xt-text" style="background: none;width:100%"
                 status="success" title="使用快捷指令"

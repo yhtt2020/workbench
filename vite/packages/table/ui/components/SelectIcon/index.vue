@@ -104,6 +104,9 @@
         </div>
         <a-avatar @click="startCapture()" style="margin-top: 98px;" v-else shape="square" :size="126"
                   :src="captureImg"></a-avatar>
+        <div class="mt-2">
+          点击截图后，请将鼠标移动至需要截屏的屏幕，倒计时2秒后将在鼠标所在屏幕截图。
+        </div>
       </div>
 
       <!-- 自定义上传 -->
@@ -139,6 +142,7 @@ import iconList from './iconList/icon'
 import emojisList from './iconList/emojis'
 import goodsList from './iconList/goods'
 import {cdnUrl} from '../../../consts'
+import {message} from "ant-design-vue";
 
 // 全部的数组
 const allList = {
@@ -209,6 +213,10 @@ const {menus} = toRefs(props)
 const captureImg = ref(null)
 
 const startCapture = () => {
+  if(!$usePlat('client')){
+    message.error('此功能仅限客户端使用')
+  }
+  message.info('请在2秒内将鼠标移动至需要截屏的屏幕，倒计时结束后将在鼠标所在屏幕开始截图。',2)
   const cbId = Date.now()
   ipc.once(cbId, (event, args) => {
     var f;
@@ -225,11 +233,10 @@ const startCapture = () => {
         }
       })
     });
-    console.log(args, '收到的数据')
   })
-  ipc.send('capture', {
-    cbId: cbId,
-  })``
+  setTimeout(()=>{
+    require('electron').ipcRenderer.send('capture', {cbId: cbId})
+  },2000)
 }
 // 动态搜索
 const search = computed(() => {

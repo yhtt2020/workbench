@@ -104,6 +104,11 @@ export default {
     refreshKeys:{
       type:Function,
       defalut: () => {}
+    },
+    custom:{
+      //如果是custom，则
+      type:Boolean,
+      default:false,
     }
   },
   data () {
@@ -586,9 +591,9 @@ export default {
       if(!keyArrTmp.length) return message.info('不能为空')
 
       // 单键情况下 只能选中F1-F12
-      if (keyArrTmp.length == 1 && !(keyArrTmp[0]?.field == "keyList[0]" && keyArrTmp[0]?.index >=1 && keyArrTmp[0]?.index <= 12)) {
-        return message.info('单键情况下只能使用F1-F12')
-      }
+      // if (keyArrTmp.length == 1 && !(keyArrTmp[0]?.field == "keyList[0]" && keyArrTmp[0]?.index >=1 && keyArrTmp[0]?.index <= 12)) {
+      //   return message.info('单键情况下只能使用F1-F12')
+      // }
 
       // 快捷键或字母选中数量
       keyArrTmp.forEach(item=>{
@@ -599,9 +604,9 @@ export default {
 
       // 多键情况下 修饰键可以多选 快捷键和字母只能选一个
       if(keyArrTmp.length){
-        if (keyNum == 0) {
+        if (keyNum == 0 ) {
           return message.info('请选择至少一个按键或字母')
-        }else if(!(keyArrTmp.length - keyNum)){
+        }else if(!(keyArrTmp.length - keyNum) && 0 ){//取消修饰键要求  //  }else if(!(keyArrTmp.length - keyNum) ){
           return message.info('请选择至少一个修饰键')
         }else if(keyNum > 1){
           return message.info('快捷键或字母只能选中一个')
@@ -618,10 +623,24 @@ export default {
           keyCut = item.key
         }
       })
+      let rs=true
+      let keys = []
+      this.keyContent.keyArr.map(item => {
+        keys.push(item.key)
+      })
+      this.keyContent.keys = keys
+      this.keyContent.keyStr = keys.join(' + ')
+        // 快捷键存入
+      if(this.$props?.custom){
+        this.keyContent.keyStr = keys.join(' + ')
+        //自定义按键，直接返回即可
+        message.success('快捷键设置成功')
+        this.$emit('saveKey', this.keyContent)
+        this.$emit('closeKeyBoard')
+        return
+      }
 
-      // 快捷键存入
-      let rs = ipc.sendSync('setKeyMap', {key: this.$props?.type, shortcut: keyCut})
-
+      rs = ipc.sendSync('setKeyMap', {key: this.$props?.type, shortcut: keyCut})
       // 成功后将数据存入store
       if (rs) {
         this.$props.refreshKeys()
@@ -640,13 +659,6 @@ export default {
         this.$emit('closeKeyBoard')
         return
       }
-      let keys = []
-      this.keyContent.keyArr.map(item => {
-        keys.push(item.key)
-      })
-
-      this.keyContent.keys = keys
-      this.keyContent.keyStr = keys.join(' + ')
 
       // 判断组合键是否重复
       let arr = this.keyContent.keys
