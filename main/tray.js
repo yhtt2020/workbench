@@ -131,6 +131,11 @@ app.whenReady().then(() => {
       event: event,
       cbId: args.cbId,
     })
+    require('electron').globalShortcut.register("esc", () => {
+      if (screenshots.$win?.isFocused()) {
+        screenshots.endCapture();
+      }
+    });
     screenshots.startCapture()
   })
   setTimeout(()=>{
@@ -153,12 +158,8 @@ app.whenReady().then(() => {
   });
   // 点击取消按钮回调事件
   screenshots.on("cancel", () => {
+    require('electron').globalShortcut.unregister('esc')
     console.log("capture", "cancel1");
-  });
-  screenshots.on("cancel", (e) => {
-    // 执行了preventDefault
-    // 点击取消不会关闭截图窗口
-    e.preventDefault();
   });
   // 点击保存按钮回调事件
   screenshots.on("save", (e, buffer, bounds) => {
