@@ -1,11 +1,11 @@
-const { Tray } = require('electron')
+const {Tray} = require('electron')
 const baseApi = require('./src/api/baseApi.js')
 var osu = require('node-os-utils')
 const ToolboxManager = require('./src/main/toolboxManager')
 // const {require} = require("@electron/remote");
 // var viewMap = require('viewManager.js')
 
-function sendIPCToTrayWindow (action, data) {
+function sendIPCToTrayWindow(action, data) {
   // if there are no windows, create a new one
   if (trayWindow === null) {
 
@@ -14,26 +14,26 @@ function sendIPCToTrayWindow (action, data) {
   }
 }
 
-async function getUserInfo () {
+async function getUserInfo() {
   try {
     await baseApi.init()
   } catch (e) {
     console.error(e)
   }
-  let rs = await baseApi.axios('/app/getUserInfo', { fields: 'uid,fans,follow,grade,post_count,signature,nickname,avatar,frame' }, 'get')
+  let rs = await baseApi.axios('/app/getUserInfo', {fields: 'uid,fans,follow,grade,post_count,signature,nickname,avatar,frame'}, 'get')
   return rs
 }
 
 let trayWindow = null
 
-async function getTrayWindow () {
+async function getTrayWindow() {
   if (trayWindow === null) {
     await createTrayWin()
   }
   return trayWindow
 }
 
-async function getMemory () {
+async function getMemory() {
   const mem = await osu.mem.info()
   const info = {
     mem: mem
@@ -41,7 +41,7 @@ async function getMemory () {
   return info
 }
 
-async function createTrayWin () {
+async function createTrayWin() {
   const windowInstance = await windowManager.create({
       name: 'tray',
       windowOption:
@@ -94,7 +94,7 @@ async function createTrayWin () {
   trayWindow.webContents.openDevTools()
 }
 
-function getUrl (url) {
+function getUrl(url) {
   let protocolUrl
   protocolUrl = `tsbapp://./${url}` // todo 需要验证正式环境的协议情况
   if (isDevelopmentMode) {
@@ -103,7 +103,7 @@ function getUrl (url) {
   return protocolUrl
 }
 
-function openWorktable () {
+function openWorktable() {
   if (global.tableWin && !global.tableWin.window.isDestroyed()) {
     global.tableWin.window.show()
     global.tableWin.window.focus()
@@ -114,12 +114,58 @@ function openWorktable () {
   }
 }
 
-function openToolbox () {
+function openToolbox() {
   ToolboxManager.ensure()
   global.toolboxManager.open()
 }
 
-function openBrowser () {
+//截图回传事件实现
+const Screenshots = require('electron-screenshots-plus').default
+const screenshots = new Screenshots({});
+//注册截图
+app.whenReady().then(() => {
+  let cbs = []
+  ipc.on('capture', (event, args) => {
+    cbs.push({
+      sender:event.sender,
+      event: event,
+      cbId: args.cbId,
+    })
+    screenshots.startCapture()
+  })
+  setTimeout(()=>{
+    global.keyMapManager.regWithNotification('capture',async()=>{
+      console.log('注册截图快捷键')
+      screenshots.startCapture();
+    }, ()=>{
+    },'请在工作台快捷键设置处修改工作台快捷键。')
+  },10000)
+
+  // 点击确定按钮回调事件
+  screenshots.on("ok", (e, buffer, bounds) => {
+    cbs.forEach((e) => {
+      e.sender.send(String(e.cbId),{
+        buffer,
+        bounds
+      })
+    })
+    cbs=[]
+  });
+  // 点击取消按钮回调事件
+  screenshots.on("cancel", () => {
+    console.log("capture", "cancel1");
+  });
+  screenshots.on("cancel", (e) => {
+    // 执行了preventDefault
+    // 点击取消不会关闭截图窗口
+    e.preventDefault();
+  });
+  // 点击保存按钮回调事件
+  screenshots.on("save", (e, buffer, bounds) => {
+  });
+})
+
+function openBrowser() {
   if (!mainWindow) {
     createWindow()
   } else {
@@ -150,14 +196,14 @@ app.whenReady().then(() => {
         if (result.data.data.uid) {
           event.reply('userInfo', result.data)
         } else {
-          event.reply('userInfo', { data: { uid: -2 } }) // -2代表异常
+          event.reply('userInfo', {data: {uid: -2}}) // -2代表异常
         }
       }).catch(() => {
-        event.reply('userInfo', { data: { uid: -2 } }) // -2代表异常
+        event.reply('userInfo', {data: {uid: -2}}) // -2代表异常
       })
     } else {
       event.reply('userInfo', {
-        data: { uid: -1 } // -1代表未登录
+        data: {uid: -1} // -1代表未登录
       })
     }
   })
@@ -203,12 +249,14 @@ app.whenReady().then(() => {
 
   })
 
+
   tray.on('right-click', () => {
     let tableRunning = global.tableWin && !global.tableWin.window.isDestroyed()
     const keyM = global.keyMapManager
     const tool = keyM.getKeyMap('superTools', true)
     const table = keyM.getKeyMap('table', true)
     const globalSearch = keyM.getKeyMap('globalSearch', true)
+    const capture = keyM.getKeyMap('capture', true)
     let tpl = [
 
       {
@@ -223,6 +271,13 @@ app.whenReady().then(() => {
         Accelerator: tool,
         click: () => {
           openToolbox()
+        }
+      },
+      {
+        label: '截图' + '         ' + capture,
+        Accelerator: capture,
+        click: () => {
+          screenshots.startCapture()
         }
       },
       {
@@ -290,8 +345,8 @@ app.whenReady().then(() => {
       {
         label: '检测升级',
         click: () => {
-          const Updater=require('./src/main/update')
-          let updater=new Updater()
+          const Updater = require('./src/main/update')
+          let updater = new Updater()
           updater.checkUpdate(true)
         }
       },
@@ -303,24 +358,24 @@ app.whenReady().then(() => {
     tpl.push(
       {
         label: '社区和反馈',
-        click () {
+        click() {
           require('electron').shell.openPath(userDataPath)
         },
         submenu: [{
           label: '打开官网',
-          click () {
+          click() {
             require('electron').shell.openExternal('https://www.apps.vip')
           }
         },
           {
             label: '产品社区',
-            click () {
+            click() {
               require('electron').shell.openExternal('https://s.apps.vip')
             }
           },
           {
             label: '提交bug和建议',
-            click () {
+            click() {
               require('electron').shell.openExternal('https://s.apps.vip/forum?id=100304')
             }
           }]
@@ -328,14 +383,14 @@ app.whenReady().then(() => {
       ,
       {
         label: '打开用户数据目录',
-        click () {
+        click() {
           require('electron').shell.showItemInFolder(userDataPath)
         }
       }
       ,
       {
         label: '全部退出',
-        click () {
+        click() {
           global.trayExit = true
           app.exit()
         }
@@ -343,7 +398,7 @@ app.whenReady().then(() => {
     if (tableRunning) {
       tpl.splice(tpl.length - 1, 0, {
         label: '退出工作台',
-        click () {
+        click() {
           global.tableManager.close()
         }
       })

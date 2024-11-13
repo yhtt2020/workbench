@@ -43,7 +43,7 @@ const props = defineProps({
   },
   menus:{
     default:()=>{
-      return ["icon", "emoji"]
+      return ["icon", "emoji","截图"]
     }
   }
 });

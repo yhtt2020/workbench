@@ -15,7 +15,7 @@
           <span v-for="(item,index) in menus" :key="index" @click="onSelChange(index)"
                 :class="selIndex == index ? 'active':''">{{ item }}</span>
           <span @click="onSelChange(menus.length)" v-if="isUpload"
-                :class="selIndex == menus.length ? 'active':''">自定义</span>
+                :class="selIndex == menus.length ? 'active':''">上传</span>
         </div>
         <div class="flex ">
           <div class="flex items-center pointer xt-text mr-3" @click="clearAvatar">移除</div>
@@ -24,7 +24,7 @@
       </div>
       <!--  搜索栏 随机 颜色选择 -->
       <div class="flex pt-3 pl-3 pr-3 action-search" style="justify-content: space-between;"
-           v-if="selIndex != menus.length">
+           v-if="['icon','emoji'].includes(menus[selIndex])">
         <a-input
           style="height:40px;background: var(--secondary-bg);
             color: var(--primary-text);
@@ -80,7 +80,7 @@
 
 
       <!-- 渲染的列表  需要将show 换成 if-->
-      <div v-if="selIndex != menus.length" class="flex flex-wrap pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar"
+      <div v-if="menus[selIndex]=='emoji'" class="flex flex-wrap pl-1 pr-1 overflow-hidden overflow-y-auto xt-scrollbar"
            style="height: 290px;">
         <div v-for="(item,index) in search" :key="index" @click="onSelectIcon(item.name)"
              class="flex items-center justify-center mt-2 ml-2 overflow-hidden pointer xt-bg-2"
@@ -94,6 +94,16 @@
                       height="32"></a-avatar>
           </a-tooltip>
         </div>
+      </div>
+      <!--  截图    -->
+      <div v-if="menus[selIndex]=='截图'" class="flex flex-col flex-wrap items-center px-6"
+           style="height: 290px;">
+        <div v-if="!captureImg" class="flex items-center justify-center pointer " @click="startCapture()"
+             style="margin-top: 98px;height: 126px;width: 126px;background: var(--secondary-bg);border: 1px dashed rgba(255,255,255,0.1);border-radius: 6px;">
+          <Icon icon="fluent:screen-cut-20-filled" width="48" height="48"/>
+        </div>
+        <a-avatar @click="startCapture()" style="margin-top: 98px;" v-else shape="square" :size="126"
+                  :src="captureImg"></a-avatar>
       </div>
 
       <!-- 自定义上传 -->
@@ -122,13 +132,13 @@
 </template>
 
 <script setup>
-import { ref, toRefs, onMounted, onBeforeUnmount, computed, nextTick, } from 'vue'
-import { fileUpload } from '../../../components/card/hooks/imageProcessing'
-import { Icon } from '@iconify/vue'
+import {ref, toRefs, onMounted, onBeforeUnmount, computed, nextTick,} from 'vue'
+import {fileUpload} from '../../../components/card/hooks/imageProcessing'
+import {Icon} from '@iconify/vue'
 import iconList from './iconList/icon'
 import emojisList from './iconList/emojis'
 import goodsList from './iconList/goods'
-import { cdnUrl } from '../../../consts'
+import {cdnUrl} from '../../../consts'
 
 // 全部的数组
 const allList = {
@@ -167,7 +177,7 @@ const props = defineProps({
   // 选择器数组
   menus: {
     default: () => {
-      return ['icon', 'emoji']
+      return ['icon', 'emoji', '截图']
     }
   },
   // 颜色数组
@@ -195,8 +205,32 @@ const props = defineProps({
   }
 
 })
-const { menus } = toRefs(props)
+const {menus} = toRefs(props)
+const captureImg = ref(null)
 
+const startCapture = () => {
+  const cbId = Date.now()
+  ipc.once(cbId, (event, args) => {
+    var f;
+    const savePath = require('path').join(globalArgs['user-data-dir'], 'icons', String(cbId) + '.jpg')
+    fs.open(savePath, "w", function (err, fd) {
+      fs.write(fd,args.buffer, function (err, fd) {
+        //判断是否出错
+        if (!err) {
+          f = fd;
+          captureImg.value = savePath
+          emits('getAvatar', 'file://' +savePath)
+        } else {
+          console.log(err);
+        }
+      })
+    });
+    console.log(args, '收到的数据')
+  })
+  ipc.send('capture', {
+    cbId: cbId,
+  })``
+}
 // 动态搜索
 const search = computed(() => {
   let tmpList = []
@@ -232,6 +266,11 @@ const onSelectIcon = (name) => {
     emits('getAvatar', cdnUrl(`/icon_select/${type}/${name}.svg?color=${color}`))
   } else if (type == 'goods') {
     emits('getAvatar', cdnUrl(`/goods_select/${name}.svg`))
+  } else if (type == '截图') {
+    if (!captureImg.value) {
+      return
+    }
+    emits('getAvatar', 'file://' + captureImg.value)
   } else {
     emits('getAvatar', cdnUrl(`/icon_select/${type}/${name}.svg`))
   }
