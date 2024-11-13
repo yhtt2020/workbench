@@ -277,9 +277,9 @@ export default {
     window.removeEventListener("mousemove", this.listenMouse);
   },
   mounted() {
-    setTimeout(()=>{
-      this.canResize=true
-    },5000)
+    // setTimeout(()=>{
+    //   this.canResize=true
+    // },5000)
     // 当自动隐藏时，切换桌面时，关闭自动隐藏
     this.$bus.on("stopHide", () => {
       this.hoverTabs = true;
