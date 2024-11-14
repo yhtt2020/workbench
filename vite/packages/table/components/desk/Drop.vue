@@ -57,7 +57,18 @@ const { classes } = defineProps(["classes"]);
 //
 const navBar = useNavBarStore();
 const { proxy } = getCurrentInstance();
-
+const pureName=(name)=>{
+  if(name.endsWith('.lnk')){
+    return  name.substring(0,name.length-4);
+  }
+  if(name.endsWith('.url')){
+   return name.substring(0,name.length-4);
+  }
+  if(name.endsWith('.exe')){
+    return name.substring(0,name.length-4);
+  }
+  return name
+}
 const handleDrop = async (dragEvent) => {
   console.log("handleDrop", isEnterBar.value);
   if (isEnterBar.value || isEnterFolder.value) {
@@ -70,13 +81,14 @@ const handleDrop = async (dragEvent) => {
   if (files && files.length > 0) {
     for (const file of files) {
       const fileImage = await tsbApi.system.extractFileIcon(file.path);
+
       const obj = {
         ...iconOption,
         open: {
           type: "tableApp",
           value: file.path,
         },
-        titleValue: file.name,
+        titleValue: pureName(file.name),
         src: fileImage,
       };
 
