@@ -38,7 +38,7 @@ export const clipboardStore = defineStore("clipboardStore", {
     previewShow: false,//预览
     settings: {
       historyCapacity: 86400,//历史容量，默认一天
-      enable: false,
+      enable: true,
       duration: 500,//ms
       codeHighlight: true, // 是否打开代码高亮
       showLineNumber: true, // 是否显示行号
