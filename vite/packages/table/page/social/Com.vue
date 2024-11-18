@@ -99,7 +99,7 @@
 import GradePanel from '../../components/comp/GradePanel.vue'
 import { message } from 'ant-design-vue'
 import axios from 'axios'
-import { Server } from '../../consts'
+import {cdnUrl, Server} from '../../consts'
 import vuuri from '../../components/vuuriHome/Vuuri.vue'
 import HorizontalPanel from '../../components/HorizontalPanel.vue'
 import VueCustomScrollbar from '../../../../src/components/vue-scrollbar.vue'
@@ -142,7 +142,9 @@ export default {
     }else{
       this.appVersion= config.version
     }
-    axios.get('https://a.apps.vip/download/updateLog.json?t=' + Date.now()).then(data => {
+    const logUrl= cdnUrl('/updateLog.json?t=')
+
+    axios.get(logUrl+ Date.now()).then(data => {
       this.updateLog = data.data
     })
   },

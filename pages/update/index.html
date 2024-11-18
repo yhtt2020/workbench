@@ -116,7 +116,7 @@
       }
     },
     mounted () {
-      axios.get('https://a.apps.vip/download/updateLog.json?t=' + Date.now()).then(data => {
+      axios.get('https://a.apps.vip/cdn/updateLog.json?t=' + Date.now()).then(data => {
         try {
           this.updateLog = data.data
         } catch (e) {
