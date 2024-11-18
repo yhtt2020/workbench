@@ -393,6 +393,10 @@ export default {
           //   }
           // }
           this.muuriOptions.layout.horizontal = !newVal.settings?.vDirection;
+        }else {
+         this.$nextTick(()=>{
+          this.freeLayoutScrollbarRedirect()
+         })
         }
       },
       deep: false,
