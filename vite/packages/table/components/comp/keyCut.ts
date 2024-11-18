@@ -53,6 +53,27 @@ export const keyCutStore = defineStore("keyCutStore", {
           },
         ]
       },
+      capture:{
+        keys:['Ctrl','Alt','A'],
+        title:'内置截图工具',
+        keyArr:[
+          {
+            field:'modifierKeyOne',
+            index: 0,
+            key: 'Ctrl',
+          },
+          {
+            field:'modifierKeyOne',
+            index:5,
+            key: 'Alt',
+          },
+          {
+            field:'keyList[1]',
+            index: 0,
+            key: 'A',
+          },
+        ]
+      },
     },
   }),
   getters: {},
