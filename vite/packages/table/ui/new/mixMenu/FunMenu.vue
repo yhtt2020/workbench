@@ -64,6 +64,12 @@ const props = defineProps({
   menuWidth: {
     default: "w-full",
   },
+  // 是否禁用右键点击事件
+   beforeCreateFn:{
+    default:()=>{
+      return ()=>true
+    }
+   },
 });
 const menu = ref(null);
 const { menus, model, height, stopPropagation } = toRefs(props);
@@ -106,6 +112,8 @@ const followList = computed(() => {
   return menus.value;
 });
 function beforeCreate() {
+  if (!props.beforeCreateFn()) return;
+
   return rightModel.value == "follow";
 }
 
@@ -144,6 +152,8 @@ function defaultListContextmenu(event) {
       return;
     }
   }
+
+  if (!props.beforeCreateFn()) return;
 
   if (rightModel.value == "default") {
     onBeforeCreate();

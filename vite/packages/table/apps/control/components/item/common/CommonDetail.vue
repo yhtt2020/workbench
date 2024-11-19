@@ -24,7 +24,7 @@
     <div
       class="rounded-xl pointer category-button xt-bg-t-2 flex items-center justify-center flex-col"
       style="height: 120px; width: 252px">
-      <Screen />
+      <Screen :isClick="true" />
     </div>
   </template>
 

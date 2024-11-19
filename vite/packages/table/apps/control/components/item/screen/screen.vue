@@ -4,7 +4,7 @@
       
       <div class="tab select" :style="{marginLeft: index>0?'8px':0}" v-for="(item, index) in screenList"
       :key="index">
-        <xt-mix-menu :menus="menuList" @mounted="currentIndex = index">
+        <xt-mix-menu :menus="menuList" @mounted="currentIndex = index" :beforeCreateFn="beforeCreateFn">
           <div class="flex items-center h-full" @click="setScreen(item)" style="flex-direction: column;">
             <MyIcon icon="fluent:desktop-16-regular" width="24" height="24" color="rgba(255,255,255,0.85)" style="margin-top: 22px" />
             <span>{{ item.title }}</span>
@@ -34,6 +34,10 @@ export default {
     }
   },
   props: {
+    isClick: {
+      type: Boolean,
+      default: false
+    },
   },
   computed: {
     ...mapWritableState(screenStore, ["screenTip", 'screenList', 'addScreen', 'renameScreen', 'renameIndex']),
@@ -68,24 +72,31 @@ export default {
   watch: {
   },
   methods: {
-    add(){
-      this.addScreen = true
+    beforeCreateFn(){
+      if(this.isClick){
+        return true
+      }else{
+        return false
+      }
     },
-    close(){
-      this.screenTip = false
+    add(){
+      if(this.isClick){
+        this.addScreen = true
+      }
     },
     setScreen(item){
-      console.log('item', item)
-      tsbApi.window.setBounds({
-        x: item.position[0],
-        y: item.position[1],
-        width: item.width,
-        height: item.height
-      })
-
-      setTimeout(()=>{
-        this.screenTip = false
-      },500)
+      if(this.isClick){
+        tsbApi.window.setBounds({
+          x: item.position[0],
+          y: item.position[1],
+          width: item.width,
+          height: item.height
+        })
+  
+        setTimeout(()=>{
+          this.screenTip = false
+        },500)
+      }
     }
 
   },
