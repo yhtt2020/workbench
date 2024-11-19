@@ -100,7 +100,7 @@
     <!-- 图片列表 -->
     <template v-if="clipItem.type === 'image'">
 
-      <ImageItem  @previewItem="previewItem" :clip-item="clipItem"></ImageItem>
+      <ImageItem  @fav="fav" @save="save" @previewItem="previewItem" :clip-item="clipItem"></ImageItem>
 
       <!-- 列表主界面 -->
       <!--    <div style="width: 338px;height:420px;" v-if="controlsShow === false" class="flex flex-col"-->
@@ -370,6 +370,7 @@ export default {
     ClipVideo,
     ClipAudio
   },
+  emits:['fav','save'],
   props: {
     clipItem: {
       type: Object,
@@ -482,6 +483,12 @@ export default {
       // if (this.clipItem.type === 'image') {
       //   this.img = toRaw(this.clipItem.content).toDataURL()
       // }
+    },
+    fav(){
+      this.$emit('fav')
+    },
+    save(){
+      this.$emit('save')
     },
     getType (type) {
       switch (type) {

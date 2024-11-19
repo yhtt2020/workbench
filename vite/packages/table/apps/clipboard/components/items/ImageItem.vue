@@ -6,11 +6,14 @@ import {codeLanguage} from '../../../../js/data/clipTheme.js'
 import {mapWritableState} from "pinia";
 import {clipboardStore} from "../../store";
 import XtButton from "../../../../ui/libs/Button/index.vue";
-import {EditOutlined} from '@ant-design/icons-vue'
+import {EditOutlined, HeartOutlined, SaveOutlined} from '@ant-design/icons-vue'
+import fs from "fs";
+import {message} from "ant-design-vue";
 
 export default {
   props: ['clipItem'],
-  components: {XtButton, textCodeMirror, ClipCodemirror, ClipItemWidget,EditOutlined},
+  components: {XtButton, textCodeMirror, ClipCodemirror, ClipItemWidget, EditOutlined, HeartOutlined, SaveOutlined},
+  emits:['fav','save'],
   computed: {
     ...mapWritableState(clipboardStore, ['settings']),
     textDisplayTypes() {
@@ -24,11 +27,11 @@ export default {
       return this.textType
     },
   },
-  watch :{
-    'settings.codeHighlight':{
-      handler(){
+  watch: {
+    'settings.codeHighlight': {
+      handler() {
         this.textType.reverse()
-        this.textDisplayTypes=this.textType[0]
+        this.textDisplayTypes = this.textType[0]
       }
     }
   },
@@ -60,21 +63,28 @@ export default {
         this.tab = ''
       }
     },
-    editImage(){
-      this.$emit('previewItem',{
-        item:this.clipItem,
-        action:'editImage'
+    editImage() {
+      this.$emit('previewItem', {
+        item: this.clipItem,
+        action: 'editImage'
       })
     },
-    handleImage(){
-      const args={
-        type:'image',
-        args:{
-          'filePath':this.clipItem.path
+    fav() {
+      this.$emit('fav')
+      this.$refs.widget.fav()
+    },
+    save() {
+      this.$refs.widget.save()
+    },
+    handleImage() {
+      const args = {
+        type: 'image',
+        args: {
+          'filePath': this.clipItem.path
         }
       }
-      ipc.send('handleFileAssign',args)
-      console.log('发送handle',args)
+      ipc.send('handleFileAssign', args)
+      console.log('发送handle', args)
     },
     // 文本底部tab切换
     selectItem(item) {
@@ -99,8 +109,8 @@ export default {
     switchTab(tab) {
       this.$refs.widget.switchTab('item')
     },
-    previewItem(){
-      this.$emit('previewItem', {item:this.clipItem})
+    previewItem() {
+      this.$emit('previewItem', {item: this.clipItem})
     }
 
   }
@@ -110,19 +120,34 @@ export default {
 </script>
 
 <template>
-  <ClipItemWidget @previewItem="previewItem" ref="widget" @tabChanged="tabChanged" :menu-list="menuList" :clipItem="clipItem">
+  <ClipItemWidget  @previewItem="previewItem" ref="widget" @tabChanged="tabChanged" :menu-list="menuList"
+                  :clipItem="clipItem">
     <template #body>
       <!-- 纯文本情况下 -->
-      <img  @click="previewItem"   :src="clipItem.path" alt="" class=" w-full h-full pointer  object-scale-down">
+      <img @click="previewItem" :src="clipItem.path" alt="" class=" w-full h-full pointer  object-scale-down">
     </template>
     <template #footer>
       <div class="p-1 w-full">
-        <div class="flex items-center justify-center" style="gap:20px" >
+        <div class="flex items-center justify-center" style="gap:20px">
+          <a-tooltip title="收藏">
+            <xt-button type="theme" size="mini" :w="40" :h="32" @click="fav">
+              <HeartOutlined></HeartOutlined>
+            </xt-button>
+          </a-tooltip>
+          <a-tooltip title="保存">
+            <xt-button type="theme" size="mini" :w="40" :h="32" @click="save">
+              <SaveOutlined></SaveOutlined>
+            </xt-button>
+          </a-tooltip>
           <a-tooltip title="直接编辑">
-            <xt-button type="theme" size="mini" :w="40" :h="32" @click="editImage"> <EditOutlined></EditOutlined></xt-button>
+            <xt-button type="theme" size="mini" :w="40" :h="32" @click="editImage">
+              <EditOutlined></EditOutlined>
+            </xt-button>
           </a-tooltip>
           <a-tooltip title="图片编辑器轻应用">
-            <xt-button size="mini" :w="40" :h="32" @click="handleImage">  <a-avatar  src="https://a.apps.vip/imageEditor/icon.svg"></a-avatar></xt-button>
+            <xt-button size="mini" :w="40" :h="32" @click="handleImage">
+              <a-avatar src="https://a.apps.vip/imageEditor/icon.svg"></a-avatar>
+            </xt-button>
           </a-tooltip>
         </div>
       </div>

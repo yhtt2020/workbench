@@ -35,8 +35,8 @@ watch(()=>items,(newValue)=>{
     <transition>
     <div v-if="showRecent" style="position: fixed;left: 30px;top:50px;z-index: 102;">
       <div style="position: relative">
-        <div style="position:absolute !important;right:-5px;top:-5px" >
-          <xt-mix-icon @click="showRecent=false" icon='fluent:dismiss-16-filled'/>
+        <div style="position:absolute !important;right:5px;top:5px" >
+          <xt-mix-icon class="" @click="showRecent=false" icon='fluent:dismiss-16-regular'/>
         </div>
 
         <div class="s-bg"  style="border-radius: 8px;overflow: hidden;background: var(--secondary-bg)">

@@ -8,6 +8,7 @@ import {message} from "ant-design-vue";
 import browser from "../../../js/common/browser";
 import _ from 'lodash-es'
 import ClipMenuList from "./ClipMenuList.vue";
+import fs from "fs";
 
 export default {
   name: "ClipItemWidget",
@@ -80,6 +81,9 @@ export default {
     backClip() {
       this.tab = 'item'
     },
+    fav(){
+      this.$refs.menuListRef.fav()
+    },
     showMenu() {
       this.tab = 'menu'
     },
@@ -94,6 +98,9 @@ export default {
     },
     previewItem(event) {
       this.$emit('previewItem', event)
+    },
+    save(){
+      this.$refs.menuListRef.saveAs()
     }
   }
 }
@@ -129,7 +136,7 @@ export default {
     </div>
   </div>
   <!-- 操作界面 -->
-  <div v-else-if="tab==='menu'" style="width: 338px;height:420px;">
+  <div v-show="tab==='menu'" style="width: 338px;height:420px;">
     <div class="flex  flex-col rounded-lg px-4 py-3 h-full default-content">
       <div class="flex mb-3">
         <div class="w-12  button-active bt-default h-12 rounded-lg pointer flex items-center justify-center"
@@ -141,11 +148,11 @@ export default {
         </div>
       </div>
       <!-- 快捷键按钮 -->
-      <div class="flex flex-col">
+      <div class="flex flex-1 flex-col h-0">
         <vue-custom-scrollbar :settings="settingsScroller" style="height: 100%;">
-          <template v-if="tab==='menu'">
-            <ClipMenuList @clickItem="hideMenu" @previewItem="previewItem" :clip-item="clipItem"></ClipMenuList>
-          </template>
+          <div v-show="tab==='menu'">
+            <ClipMenuList ref="menuListRef"  @clickItem="hideMenu" @previewItem="previewItem" :clip-item="clipItem"></ClipMenuList>
+          </div>
           <!-- 代码语言切换界面 -->
 
         </vue-custom-scrollbar>
@@ -153,7 +160,7 @@ export default {
     </div>
 
   </div>
-  <slot v-else-if="tab==='other'" name="otherTabs">
+  <slot v-if="tab==='other'" name="otherTabs">
   </slot>
 
 </template>

@@ -67,6 +67,7 @@ export default {
             message.success('添加收藏成功。')
           }
         },
+
         {
           title: '删除', shortKeys: 'Delete', id: 'd', fn: (item) => {
             this.remove(item)
@@ -82,6 +83,15 @@ export default {
         _.remove(menuList, (item) => {
           return item.title === '添加到收藏'
         })
+      }
+      if(this.clipItem.type==='image'){
+        menuList.splice(menuList.findIndex(item=>{
+          return item.title=='添加到收藏'
+        }),0, {
+          title: '另存为', shortKeys: 'Ctrl + Shift + S', id: 'css', fn: (item) => {
+            this.saveAs(item)
+          }
+        }, )
       }
       if(this.hidePreview){
         _.remove(menuList, (item) => {
@@ -113,6 +123,36 @@ export default {
     },
     clickItem(){
       this.$emit('clickItem')
+    },
+    fav(){
+      this.addToCollection(this.clipItem)
+      message.success('添加收藏成功。')
+    },
+    async saveAs(){
+      let savePath = await tsbApi.dialog.showSaveDialog({
+        title: '选择保存位置',
+        message: '请选择保存位置',
+        defaultPath: this.clipItem.filename,
+        filters: [],
+        properties: [
+          'createDirectory',
+          'showOverwriteConfirmation'
+        ]
+      })
+      const fs = require('fs')
+      if (!savePath) {
+        return
+      }
+      console.log(this.clipItem)
+      fs.copyFile(this.clipItem.path, savePath,(err)=>{
+        if (!err) {
+          message.success('保存成功。')
+          require('electron').shell.showItemInFolder(savePath)
+          return
+        } else {
+          message.error('保存失败，请确认文件权限。')
+        }
+      })
     }
   }
 }
