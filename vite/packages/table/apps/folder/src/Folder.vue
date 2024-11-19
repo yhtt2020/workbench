@@ -246,7 +246,7 @@ const refreshState = ref(false);
 
 // 区分当前桌面是社群还是个人
 const folderMember = computed(()=>{
-  console.log('成员桌面',communityMember(props.desk?.communityNo))
+  // console.log('成员桌面',communityMember(props.desk?.communityNo))
   return communityMember(props.desk?.communityNo);
 })
 

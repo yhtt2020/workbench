@@ -1,68 +1,41 @@
-import { defineStore } from 'pinia';
-import dbStorage from '../../../store/dbStorage';
-import axios from 'axios';
+import { defineStore } from "pinia";
+// import dbStorage from "../../../store/dbStorage";
 
 // @ts-ignore
-export const pickPaperStore = defineStore('pickPaper',{
- state:()=>({
-   pickParams:{
-    // 排序
-    tabList: [
-      { index: "D", name: "最新", value: "date" },
-      { index: "S", name: "趋势", value: "score" },
-      { index: "R", name: "随机", value: "random" },
-    ],
+export const pickPaperStore = defineStore("pickPaper", {
+  state:()=>({
+    /**当前左侧列表选择下标**/
+    currentID:'m',
 
-    // 接口参数
-    paperSelect:[
-      { name: '拾光',  value: '/timeline/v3', synopsis: '时光如歌,岁月如诗' },
-      { name: '贪食鬼', value: '/glutton/v3', synopsis: '饕餮盛宴' },
-      { name: '贪吃蛇', value: '/snake/v3', synopsis: '' },
-      { name: 'wallhaven', value: '/wallhaven/v3', synopsis: 'The best wallpapers on the Net' }
-    ],
+    /**壁纸接口类型配置**/
+    paperApi:'timeline',
 
-    // 子类参数
-    paperList:[
-      { name:'全部',value:'' },
-      { name:'风光',value:'landscape' },
-      { name:'人物',value:'character' },
-      { name:'生灵',value:'living' },
-      { name: "其他", value: 'general' },
-    ],
+    /**拾光壁纸排序**/
+    orderValue:'date',
 
-    // 大类参数
-    largeList:[
-      { name:'全部',value:'' },
-      { name:'摄影',value:'photography' },
-      { name:'其他',value:'general' }
-    ],
+    /**大类默认参数**/
+    cateHowValue:'',
 
-    // 配置项
-    setting:{
-      order:{ index: "D", name: "最新", value: "date" },
-      paperValue:'/timeline/v3',
-      score: 99999999,
-      no: 99999999,
-      dateTime: (new Date().getFullYear())+(new Date().getMonth() + 1).toString().padStart(2, '0')+ ( new Date().getDate().toString().padStart(2, '0')) ,
-      cateWhat:'',
-      cateHow:'',
-    },
+    /**子类默认参数**/
+    cateWhatValue:'',
+
+    /**壁纸源昵称和简介**/
+    paperNick:{
+      name:'',
+      synopsis:'',
+    }, 
+
+  }),
+
+  actions:{},
+
+  persist: {
+    enabled: true,
+    strategies: [
+      {
+        paths: ['paperApi','currentID','orderValue','cateHowValue','cateWhatValue','paperNick',],
+        storage: localStorage,
+      },
+    ],
    },
-   currentID:'m',
- }),
-
- actions:{
-    
- },
-
- persist: {
-  enabled: true,
-  strategies: [
-    {
-      paths: ['pickParams','currentID'],
-      storage: dbStorage,
-    },
-  ],
- },
-
-})
+});
