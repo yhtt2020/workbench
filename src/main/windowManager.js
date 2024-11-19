@@ -377,6 +377,28 @@ class WindowManager {
       await this.bindRememberBoundsEvents(name, window, defaultBounds)
     }
 
+    // 监听窗口位置大小
+    window.on('resize', () => {
+      const { width, height } = window.getBounds();
+      const position = window.getPosition();
+      let obj = {
+        width: width,
+        height: height,
+        position: position,
+      }
+      window.webContents.send("start-watch-window-size-position", obj);
+    });
+    window.on('move', () => {
+      const { width, height } = window.getBounds();
+      const position = window.getPosition();
+      let obj = {
+        width: width,
+        height: height,
+        position: position,
+      }
+      window.webContents.send("start-watch-window-size-position", obj);
+    });
+
     window.on('closed', () => {
       this.ensureInstanceRemoved('window', name)
     })

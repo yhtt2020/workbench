@@ -51,6 +51,12 @@ export const screenStore = defineStore('screen', {
     currentTip: 'zoom',
     taggingScreen:false,//标记屏幕
     screenDetail:{},//当前屏幕信息
+    screenList:[],//当前窗口的位置大小存储 现版本最多记忆三条
+    screenTip: false,//是否弹出桌面记忆设置弹窗
+    addScreen: false,//是否弹出新增桌面记忆弹窗
+    renameScreen: false,//是否弹出桌面记忆重命名弹窗
+    renameIndex: -1,
+    currentScreen: {},//当前桌面位置大小信息
 
     timerTag:0,
   })
@@ -225,6 +231,7 @@ export const screenStore = defineStore('screen', {
     enabled: true,
     strategies: [{
       storage: dbStorage,
+      paths: ['screenList']
     }]
   }
 
