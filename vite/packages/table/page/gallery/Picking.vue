@@ -279,6 +279,7 @@ export default {
       let currentTop =  $("#pick-wrapper").scrollTop() + $("#pick-wrapper").height() + 20 ;
       let topVisible = currentTop >= $("#pick-images").prop("scrollHeight");
       if(topVisible && this.isLoading === false){
+        // 将返回数据中最后一条的 no 值减1作为下次请求的 no 参数，即可获取下一页数据
         let newNo = this.pickImageData[this.pickImageData.length - 1]?.no - 1;
         this.getWallpaperSourceList(newNo,true);
       }
