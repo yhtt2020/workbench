@@ -63,6 +63,7 @@ export default {
         this.screen_name = ''
         this.$message.success("新增成功");
         this.addScreen = false
+        this.screenTip = false
         
       }else{
         this.$message.error("请输入桌面记忆名称");

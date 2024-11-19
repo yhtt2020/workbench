@@ -63,6 +63,7 @@ export default {
                 this.screenList[this.renameIndex].title = this.screen_name
                 this.$message.success("重命名成功");
                 this.renameScreen = false
+                this.screenTip = false
               },
             });
         
