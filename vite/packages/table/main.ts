@@ -108,6 +108,11 @@ import type { TT } from "./permission/global/type";
 import hevueImgPreview from "hevue-img-preview";
 
 import tsbApi from './js/lib/tsbApi'
+
+const { ipcRenderer } = require("electron");
+import {screenStore} from "./store/screen";
+
+                    
 // Your SDKAppID
 // init TUIKit
 if(!usePlat('client')){
@@ -216,6 +221,13 @@ app.component("vueCustomScrollbar", vueCustomScrollbar);
 if (usePlat('client')) {
   window.USER_DATA_PATH = window.globalArgs["user-data-dir"]; //挂载一个用户数据目录的常量，方便后续开发
 }
+
+// 监听窗口位置尺寸变化
+ipcRenderer.on("start-watch-window-size-position", (event, data) => {
+  const screen = screenStore()
+  screen.screenTip = true
+  screen.currentScreen = data
+});
 
 window.$app = $app;
 initStores();

@@ -1,6 +1,6 @@
 <!-- 控制中心删除页 -->
 <template>
-  <div class="mt-3" style="height: 400px;">
+  <div class="mt-3">
     <Vuuri
       v-model="controlList"
       group-id="id"
@@ -90,7 +90,7 @@ onMounted(() => {
 }
 :deep(.muuri-grid) {
   background: transparent !important;
-  height: 400px !important;
+  min-height: 400px !important;
 }
 :deep(.muuri-item-content) {
   background: transparent !important;

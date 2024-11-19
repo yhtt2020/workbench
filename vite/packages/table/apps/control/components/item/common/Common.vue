@@ -53,6 +53,7 @@ const controlList = computed(() => {
     "audio",
     "energy-save-mode",
     "shake",
+    "window-size-position",
   ];
   let filterList = currentControlList.value.filter(
     (item) => !arr.includes(item.id)

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import {onMounted, ref} from "vue";
 import ImageSet from "./image/ImageSet.vue";
-import SliderSet from "./image/SliderSet.vue";
+// import SliderSet from "./image/SliderSet.vue";
 import {image} from './image/image'
 import {storeToRefs} from "pinia";
 const props = defineProps({

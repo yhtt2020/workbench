@@ -20,6 +20,13 @@
       <UserUnLogin v-else />
     </div>
   </template>
+  <template v-else-if="controlIndex === 'window-size-position'">
+    <div
+      class="rounded-xl pointer category-button xt-bg-t-2 flex items-center justify-center flex-col"
+      style="height: 120px; width: 252px">
+      <Screen :isClick="true" />
+    </div>
+  </template>
 
   <!-- 控制中心其他按钮 -->
   <template v-else>
@@ -66,6 +73,7 @@ import { setThemeSwitch } from "../../../../../components/card/hooks/themeSwitch
 
 import UserControl from "../user/UserControl.vue";
 import UserUnLogin from "../user/UserUnLogin.vue";
+import Screen from "../screen/screen.vue";
 import SystemAudio from "../system/SystemAudio.vue";
 
 const { proxy } = getCurrentInstance();

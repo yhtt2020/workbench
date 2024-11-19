@@ -6,7 +6,7 @@
   </div>
 
   <!-- 添加控制中心的数据 -->
-  <div style="height: 400px;" v-if="controlList.length !== 0">
+  <div v-if="controlList.length !== 0">
     <Vuuri
       v-model="controlList"
       group-id="id"
@@ -71,7 +71,7 @@ const controlList = computed(() => {
 }
 :deep(.muuri-grid) {
   background: transparent !important;
-  height: 400px !important;
+  min-height: 400px !important;
 }
 :deep(.muuri-item-content) {
   background: transparent !important;

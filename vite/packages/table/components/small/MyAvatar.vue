@@ -6,6 +6,7 @@ import FrameAvatar from '../avatar/FrameAvatar.vue'
 import { mapWritableState } from 'pinia'
 import { messageStore } from '../../store/message'
 import { appStore } from '../../store'
+import { screenStore } from '../../store/screen'
 import { Modal } from 'ant-design-vue'
 import Emoji from '../comp/Emoji.vue'
 import {isMain} from '../../js/common/screenUtils'
@@ -29,10 +30,13 @@ export default {
   computed: {
     ...mapWritableState(messageStore, ['messageIndex', 'totalCount']),
     ...mapWritableState(appStore, ['userInfo', 'settings', 'lvInfo', 'simple']),
+    ...mapWritableState(screenStore, ['screenTip']),
     ...mapWritableState(usePermissionStore, ['currentEnv']),
   },
   mounted () {
     console.log('this.userInfo :>> ', this.userInfo);
+    // 隐藏桌面记忆弹窗
+    this.screenTip = false
     this.lastTime = Number(localStorage.getItem('lastBarrageMessageTime'))
     this.setMinute()
     // this.loadMessages()
